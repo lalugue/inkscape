@@ -20,6 +20,7 @@ Build-Depends:
  software-properties-common,
  libart-2.0-dev,
  libaspell-dev,
+ libgspell-1-dev,
  libblas3,
  liblapack3,
  libboost-dev,
