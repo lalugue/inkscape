@@ -509,6 +509,7 @@ public:
     // The snapshot store. Used to mask redraw delay on zoom/rotate.
     Geom::IntRect _snapshot_rect;
     Geom::Affine _snapshot_affine;
+    Geom::IntPoint _snapshot_static_offset = {0, 0};
     Cairo::RefPtr<Cairo::ImageSurface> _snapshot_store, _snapshot_outline_store;
     Cairo::RefPtr<Cairo::Region> _snapshot_clean_region;
 
@@ -1832,24 +1833,21 @@ Canvas::on_draw(const Cairo::RefPtr<::Cairo::Context> &cr)
             // Turn off anti-aliasing for huge performance gains. Only applies to this compositing step.
             cr->set_antialias(Cairo::ANTIALIAS_NONE);
 
-            // Blit background to complement of both clean regions, if solid (and therefore not already drawn).
-            if (is_backing_store && d->solid_background) {
-                if (d->prefs.debug_framecheck) f = FrameCheck::Event("composite", 2);
-                cr->save();
-                cr->set_fill_rule(Cairo::FILL_RULE_EVEN_ODD);
-                cr->rectangle(0, 0, get_allocation().get_width(), get_allocation().get_height());
-                cr->translate(-_pos.x(), -_pos.y());
-                cr->transform(geom_to_cairo(_affine * d->_store_affine.inverse()));
-                region_to_path(cr, d->updater->clean_region);
-                cr->transform(geom_to_cairo(d->_store_affine * d->_snapshot_affine.inverse()));
-                region_to_path(cr, d->_snapshot_clean_region);
-                cr->clip();
-                cr->set_source(_background);
-                cr->set_operator(Cairo::OPERATOR_SOURCE);
-                Cairo::SurfacePattern(cr->get_source()->cobj()).set_filter(Cairo::FILTER_FAST);
-                cr->paint();
-                cr->restore();
-            }
+            // Blit untransformed snapshot store to complement of transformed snapshot clean region.
+            if (d->prefs.debug_framecheck) f = FrameCheck::Event("composite", 2);
+            cr->save();
+            cr->set_fill_rule(Cairo::FILL_RULE_EVEN_ODD);
+            cr->rectangle(0, 0, get_allocation().get_width(), get_allocation().get_height());
+            cr->translate(-_pos.x(), -_pos.y());
+            cr->transform(geom_to_cairo(_affine * d->_snapshot_affine.inverse()));
+            region_to_path(cr, d->_snapshot_clean_region);
+            cr->clip();
+            cr->transform(geom_to_cairo(d->_snapshot_affine * _affine.inverse()));
+            cr->translate(_pos.x(), _pos.y());
+            cr->set_operator(is_backing_store && d->solid_background ? Cairo::OPERATOR_SOURCE : Cairo::OPERATOR_OVER);
+            cr->set_source(snapshot_store, d->_snapshot_static_offset.x(), d->_snapshot_static_offset.y());
+            cr->paint();
+            cr->restore();
 
             // Draw transformed snapshot, clipped to its clean region and the complement of the store's clean region.
             if (d->prefs.debug_framecheck) f = FrameCheck::Event("composite", 1);
@@ -2020,6 +2018,12 @@ Canvas::on_draw(const Cairo::RefPtr<::Cairo::Context> &cr)
 
     // Notify the update strategy that another frame has passed.
     d->updater->frame();
+
+    // Just-for-1.2 flicker "prevention": save the last offset the store was drawn at outside of decoupled mode,
+    // so we can continue to draw a static snapshot upon next going into decoupled mode.
+    if (!d->decoupled_mode) {
+        d->_snapshot_static_offset = d->_store_rect.min() - _pos;
+    }
 
     return true;
 }
