@@ -862,34 +862,6 @@ SPDesktopWidget::cms_adjust_set_sensitive(bool enabled)
 }
 
 /**
- * \store dessktop position
- */
-void SPDesktopWidget::storeDesktopPosition(bool store_maximize)
-{
-    Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-    bool maxed = desktop->is_maximized();
-    bool full = desktop->is_fullscreen();
-    // Don't store max/full when setting max/full (it's about to change)
-    if (store_maximize) {
-        prefs->setBool("/desktop/geometry/fullscreen", full);
-        prefs->setBool("/desktop/geometry/maximized", maxed);
-    }
-    // Don't save geom for maximized, fullscreen or iconified windows.
-    // It just tells you the current maximized size, which is not
-    // as useful as whatever value it had previously.
-    if (!desktop->is_iconified() && !maxed && !full) {
-        gint w = -1;
-        gint h, x, y;
-        desktop->getWindowGeometry(x, y, w, h);
-        g_assert(w != -1);
-        prefs->setInt("/desktop/geometry/width", w);
-        prefs->setInt("/desktop/geometry/height", h);
-        prefs->setInt("/desktop/geometry/x", x);
-        prefs->setInt("/desktop/geometry/y", y);
-    }
-}
-
-/**
  * \pre this->desktop->main != 0
  */
 void
@@ -952,10 +924,18 @@ SPDesktopWidget::letZoomGrabFocus()
 void
 SPDesktopWidget::getWindowGeometry (gint &x, gint &y, gint &w, gint &h)
 {
-    if (window)
-    {
+    if (window) {
         window->get_size (w, h);
         window->get_position (x, y);
+        // The get_positon is very unreliable (see Gtk docs) and will often return zero.
+        if (!x && !y) {
+            if (Glib::RefPtr<Gdk::Window> w = window->get_window()) {
+                Gdk::Rectangle rect;
+                w->get_frame_extents(rect);
+                x = rect.get_x();
+                y = rect.get_y();
+            }
+        }
     }
 }
 
@@ -1057,7 +1037,6 @@ SPDesktopWidget::maximize()
         if (desktop->is_maximized()) {
             gtk_window_unmaximize(topw);
         } else {
-            storeDesktopPosition(false);
             gtk_window_maximize(topw);
         }
     }
@@ -1072,7 +1051,6 @@ SPDesktopWidget::fullscreen()
             gtk_window_unfullscreen(topw);
             // widget layout is triggered by the resulting window_state_event
         } else {
-            storeDesktopPosition(false);
             gtk_window_fullscreen(topw);
             // widget layout is triggered by the resulting window_state_event
         }

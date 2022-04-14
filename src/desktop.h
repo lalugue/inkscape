@@ -420,7 +420,6 @@ public:
     bool isToolboxButtonActive (gchar const *id);
     void updateCanvasNow();
     void updateDialogs();
-    void storeDesktopPosition();
 
     void enableInteraction();
     void disableInteraction();
