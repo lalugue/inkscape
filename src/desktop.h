@@ -429,7 +429,7 @@ public:
     void clearWaitingCursor();
     bool isWaitingCursor() const { return waiting_cursor; };
 
-    void toggleGuidesLock();
+    void toggleLockGuides();
 
     void toggleColorProfAdjust();
     bool colorProfAdjustEnabled();
