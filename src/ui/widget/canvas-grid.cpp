@@ -289,8 +289,8 @@ CanvasGrid::SignalEvent(GdkEvent *event)
         }
     }
 
-    // Pass kwyboard events back to the desktop root handler so TextTool can work
-    if (event->type == GDK_KEY_PRESS || event->type == GDK_KEY_RELEASE) {
+    // Pass keyboard events back to the desktop root handler so TextTool can work
+    if ((event->type == GDK_KEY_PRESS || event->type == GDK_KEY_RELEASE) && !_canvas->get_current_canvas_item()) {
         return sp_desktop_root_handler(event, _dtw->desktop);
     }
     return false;
