@@ -123,7 +123,6 @@ Architecture: all
 Depends:
  ${misc:Depends},
  ${python3:Depends},
- ruby | ruby-interpreter,
 Conflicts:
  inkscape
 Description: Data files for Inkscape
