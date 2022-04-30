@@ -14,8 +14,8 @@
 #include <iostream>
 
 #include <giomm.h>  // Not <gtkmm.h>! To eventually allow a headless version!
-#include <gtkmm.h>  // OK, we lied. We pop-up an message dialog if external editor not found and if we have a GUI.
 #include <glibmm/i18n.h>
+#include <gtkmm.h>  // OK, we lied. We pop-up an message dialog if external editor not found and if we have a GUI.
 
 #include "desktop.h"
 #include "document.h"
@@ -23,29 +23,40 @@
 #include "inkscape-application.h"
 #include "inkscape-window.h"
 #include "message-stack.h"
+#include "object/sp-clippath.h"
+#include "object/sp-image.h"
+#include "object/sp-rect.h"
+#include "object/uri.h"
 #include "preferences.h"
 #include "selection.h"            // Selection
-
-#include "object/sp-image.h"
-#include "object/sp-clippath.h"
-#include "object/sp-rect.h"
 #include "ui/dialog-run.h"
 #include "ui/tools/select-tool.h"
 #include "util/format_size.h"
 #include "xml/href-attribute-helper.h"
 
+namespace {
 Glib::ustring image_get_editor_name(bool is_svg)
 {
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-
-    Glib::ustring editor;
     if (is_svg) {
-        editor = prefs->getString("/options/svgeditor/value", "inkscape");
-    } else {
-        editor = prefs->getString("/options/bitmapeditor/value", "gimp");
+        return prefs->getString("/options/svgeditor/value", "inkscape");
     }
-    return editor;
+    return prefs->getString("/options/bitmapeditor/value", "gimp");
 }
+
+Inkscape::URI get_base_path_uri(SPDocument const &document)
+{
+    if (const char *document_base = document.getDocumentBase()) {
+        return Inkscape::URI::from_dirname(document_base);
+    }
+    return Inkscape::URI::from_dirname(Glib::get_current_dir().c_str());
+}
+
+bool has_svg_extension(std::string const &filename)
+{
+    return Glib::str_has_suffix(filename, ".svg") || Glib::str_has_suffix(filename, ".SVG");
+}
+}  // namespace
 
 // Note that edits are external to Inkscape and thus we cannot undo them!
 void image_edit(InkscapeApplication *app)
@@ -56,78 +67,53 @@ void image_edit(InkscapeApplication *app)
         return;
     }
 
-    auto document = selection->document();
-
     for (auto item : selection->items()) {
-        auto image = cast<SPImage>(item);
-        if (image) {
+        if (!is<SPImage>(item)) {
+            continue;
+        }
 
-            Inkscape::XML::Node *node = item->getRepr();
-            const gchar *href = Inkscape::getHrefAttribute(*node).second;
-            if (!href) {
-                show_output("image_edit: no xlink:href");
-                continue;
-            }
+        const char *href = Inkscape::getHrefAttribute(*item->getRepr()).second;
+        if (!href) {
+            show_output("image_edit: no xlink:href");
+            continue;
+        }
 
-            if (strncmp (href, "data", 4) == 0) {
-                show_output("image_edit: cannot edit embedded image");
-                continue;
-            }
+        auto const uri = Inkscape::URI(href, get_base_path_uri(*selection->document()));
+        if (uri.hasScheme("data")) {
+            // data URL scheme, see https://www.ietf.org/rfc/rfc2397.txt
+            std::cerr << "image_edit: cannot edit embedded image" << std::endl;
+            continue;
+        }
+        if (const char *other_scheme = uri.getScheme(); other_scheme && !uri.hasScheme("file")) {
+            // any other scheme than 'file'
+            std::cerr << "image_edit: cannot edit image (scheme '" << other_scheme << "' not supported)"
+                      << std::endl;
+            continue;
+        }
 
-            // Find filename.
-            std::string filename = href;
-            if (strncmp (href, "file", 4) == 0) {
-                filename = Glib::filename_from_uri(href);
-            }
+        std::string const filename = uri.toNativeFilename();
+        std::string const command = Glib::shell_quote(image_get_editor_name(has_svg_extension(filename))) + " " +
+                                    Glib::shell_quote(filename);
 
-            if (Glib::path_is_absolute(filename)) {
-                // Do nothing
-            } else if (document->getDocumentBase()) {
-                filename = Glib::build_filename(document->getDocumentBase(), filename);
+        const char *const message = _("Failed to edit external image.\n<small>Note: Path to editor can be set in "
+                                      "Preferences dialog.</small>");
+        try {
+            Glib::spawn_command_line_async(command);
+        } catch (Glib::SpawnError &error) {
+            if (auto window = app->get_active_window()) {
+                auto dialog = std::make_unique<Gtk::MessageDialog>(*window, message, true, Gtk::MessageType::WARNING, Gtk::ButtonsType::OK);
+                dialog->property_destroy_with_parent() = true;
+                dialog->set_name("SetEditorDialog");
+                dialog->set_title(_("External Edit Image:"));
+                dialog->set_secondary_text(
+                    Glib::ustring::compose(_("System error message: %1"), error.what().raw()));
+                Inkscape::UI::dialog_show_modal_and_selfdestruct(std::move(dialog));
             } else {
-                filename = Glib::build_filename(Glib::get_current_dir(), filename);
+                show_output(Glib::ustring("image_edit: ") + message);
             }
-
-            // Bitmap or SVG?
-            bool is_svg = false;
-            if (filename.substr(filename.find_last_of(".") + 1) == "SVG" ||
-                filename.substr(filename.find_last_of(".") + 1) == "svg") {
-                is_svg = true;
-            }
-
-            // Get editor.
-            auto editor = image_get_editor_name(is_svg);
-
-#ifdef _WIN32
-            // Parsing is done according to Unix shell rules, need to enclose editor path by single
-            // quotes (everything before file extension).
-            int            index = editor.find(".exe");
-            if (index < 0) index = editor.find(".bat");
-            if (index < 0) index = editor.find(".com");
-            if (index < 0) index = editor.length();
-
-            editor.insert(index, "'");
-            editor.insert(0, "'");
-#endif
-            Glib::ustring command = editor + " '" + filename + "'";
-
-            GError* error = nullptr;
-            g_spawn_command_line_async(command.c_str(), &error);
-            if (error) {
-                Glib::ustring message = _("Failed to edit external image.\n<small>Note: Path to editor can be set in Preferences dialog.</small>");
-                Glib::ustring message2 = Glib::ustring::compose(_("System error message: %1"), error->message);
-                if (auto window = app->get_active_window()) {
-                    auto dialog = std::make_unique<Gtk::MessageDialog>(*window, message, true, Gtk::MessageType::WARNING, Gtk::ButtonsType::OK);
-                    dialog->property_destroy_with_parent() = true;
-                    dialog->set_name("SetEditorDialog");
-                    dialog->set_title(_("External Edit Image:"));
-                    dialog->set_secondary_text(message2);
-                    Inkscape::UI::dialog_show_modal_and_selfdestruct(std::move(dialog));
-                } else {
-                    show_output(Glib::ustring("image_edit: ") + message.raw());
-                }
-                g_error_free(error);
-            }
+        } catch (Glib::ShellError &error) {
+            std::cerr << "image_edit: " << message << "\n"
+                      << Glib::ustring::compose(_("System error message: %1"), error.what()) << std::endl;
         }
     }
 }
