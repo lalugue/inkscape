@@ -5383,7 +5383,7 @@ msgstr "Seleccionar página:"
 #: ../src/extension/internal/vsd-input.cpp:147
 #, c-format
 msgid "out of %i"
-msgstr "fuera de %i"
+msgstr "de %i"
 
 #: ../src/extension/internal/cdr-input.cpp:155
 #: ../src/extension/internal/pdfinput/pdf-input.cpp:105
@@ -17082,7 +17082,7 @@ msgid ""
 "light is projected outside this cone."
 msgstr ""
 "Este es el ángulo entre el eje del foco de luz (p.ej. el eje entre la fuente de "
-"luz y el punto al que apunta) y el cono de luz. No se proyecta luza fuera de este "
+"luz y el punto al que apunta) y el cono de luz. No se proyecta luz fuera de este "
 "núcleo."
 
 #: ../src/ui/dialog/filter-effects-dialog.cpp:1257
