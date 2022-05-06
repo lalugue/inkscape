@@ -6127,7 +6127,7 @@ msgid ""
 "Rearrange selected objects; usage: [graph | exchange | exchangez | rotate | "
 "randomize | unclump]"
 msgstr ""
-"Gewählte Objekte anordnen; Verwendung: [graph |exchange | exchangez | rotate"
+"Gewählte Objekte anordnen; Verwendung: [graph | exchange | exchangez | rotate"
 " | randomize | unclump]"
 
 #: ../src/actions/actions-object-align.cpp:783
