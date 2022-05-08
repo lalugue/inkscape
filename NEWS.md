@@ -1,4 +1,4 @@
-Inkscape 1.2-beta
+Inkscape 1.2
 
 Release highlights
 
