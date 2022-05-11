@@ -68,6 +68,7 @@ parts:
       - zlib1g-dev
     stage-packages:
       - heif-gdk-pixbuf
+      - gir1.2-gtk-3.0
       - libatkmm-1.6-1v5
       - libboost-filesystem1.74.0
       - libcairomm-1.0-1v5
@@ -107,6 +108,8 @@ parts:
       - -*canberra*so* # We don't have sound permissions anyway
       - -usr/lib/*/gtk-2.0
     override-build: |
+      patch -p1 --batch --directory=$SNAPCRAFT_PART_SRC --input=$SNAPCRAFT_PART_SRC/snap/local/filedialog-native.patch
+      patch -p1 --batch --directory=$SNAPCRAFT_PART_SRC --input=$SNAPCRAFT_PART_SRC/snap/local/glib-spawn-no-close.patch
       sed -i.bak -e 's|Icon=${INKSCAPE_ICONPATH}|Icon=${SNAP}/share/inkscape/branding/inkscape.svg|g' $SNAPCRAFT_PART_SRC/org.inkscape.Inkscape.desktop.template
       snapcraftctl build
       INKSCAPE_VERSION=`g++ -I${SNAPCRAFT_PART_SRC}/src ${SNAPCRAFT_PART_BUILD}/src/inkscape-version.cpp ${SNAPCRAFT_PROJECT_DIR}/snap/local/print-inkscape-version.cpp -o print-inkscape-version && ./print-inkscape-version`
@@ -133,7 +136,9 @@ parts:
       - scour
       - virtualenv
     stage-packages:
+      - optipng
       - pstoedit
+      - texlive-latex-base
   snap-helpers:
     plugin: dump
     source: snap/local/scripts
@@ -162,12 +167,14 @@ parts:
       - ibus-gtk3
       - libibus-1.0-5
       - fcitx-frontend-gtk3
+      - librsvg2-common # SVG pixbuf loader
     prime:
       - -*canberra*so* # We don't have sound permissions anyway
       - -usr/lib/*/gtk-2.0
     override-prime: |
       snapcraftctl prime
       glib-compile-schemas ${SNAPCRAFT_PRIME}/usr/share/glib-2.0/schemas/
+    after: [inkscape, snap-helpers, python-deps] # Last so we compile all the schemas
 
 apps:
   inkscape:
@@ -183,9 +190,6 @@ apps:
       - dot-config-inkscape
       - raw-usb # plotter support
       - network # for extension manager
-# TODO: Remove with portals
-      - home
-      - removable-media
     slots:
       - inkscape-dbus
     desktop: share/applications/org.inkscape.Inkscape.desktop
@@ -202,9 +206,6 @@ apps:
       - x11
       - unity7
       - dot-config-inkscape
-# TODO: Remove with portals
-      - home
-      - removable-media
 
 hooks:
   configure:
