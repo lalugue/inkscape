@@ -289,8 +289,7 @@ LPEPowerMask::doOnRemove (SPLPEItem const* lpeitem)
 {
     SPMask *mask = lpeitem->getMaskObject();
     if (mask) {
-        Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-        if (keep_paths || prefs->getBool("/options/onungroup", false)) {
+        if (keep_paths) {
             return;
         }
         invert.param_setValue(false);
