@@ -721,7 +721,7 @@
                 </child>
               </object>
             </child>
-            <child>
+            <!--<child>
               <object class="GtkFlowBoxChild">
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
@@ -744,7 +744,7 @@
                   </object>
                 </child>
               </object>
-            </child>
+            </child>-->
           </object>
           <packing>
             <property name="expand">False</property>
