@@ -117,7 +117,7 @@ parts:
       snapcraftctl set-version "${INKSCAPE_VERSION}"
     override-prime: |
       snapcraftctl prime
-      sed -i "s| inkscape| inkscape.inkscape|" $SNAPCRAFT_PRIME/share/bash-completion/completions/inkscape
+      sed -i "s|_have.*$||" $SNAPCRAFT_PRIME/share/bash-completion/completions/inkscape
     parse-info: [ share/metainfo/org.inkscape.Inkscape.appdata.xml ]
   python-deps:
     plugin: python
