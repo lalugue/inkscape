@@ -15741,8 +15741,8 @@ msgid "Inkscape website"
 msgstr "Úsáideor"
 
 #: ../src/ui/dialog/aboutbox.cpp:90
-msgid "© 2019 Inkscape Developers"
-msgstr "© 2019 Lucht Forbartha Inkscape"
+msgid "© 2022 Inkscape Developers"
+msgstr "© 2022 Lucht Forbartha Inkscape"
 
 #: ../src/ui/dialog/aboutbox.cpp:91
 msgid ""

@@ -36554,8 +36554,8 @@ msgstr "پروانهٔ اینک‌اسکیپ"
 
 #: ../share/ui/inkscape-about.glade:286
 msgctxt "Brief copyright notice at the footer of the About screen"
-msgid "© 2021 Inkscape Developers"
-msgstr "© ۲۰۲۱ توسعه‌دهندگان اینک‌اسکیپ"
+msgid "© 2022 Inkscape Developers"
+msgstr "© ۲۰۲۲ توسعه‌دهندگان اینک‌اسکیپ"
 
 #: ../share/ui/inkscape-about.glade:303
 msgid "Link to the official website"

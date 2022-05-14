@@ -16077,7 +16077,7 @@ msgid "Inkscape website"
 msgstr "ইঙ্কস্কেপ: _বেসিক"
 
 #: ../src/ui/dialog/aboutbox.cpp:90
-msgid "© 2019 Inkscape Developers"
+msgid "© 2022 Inkscape Developers"
 msgstr ""
 
 #: ../src/ui/dialog/aboutbox.cpp:91

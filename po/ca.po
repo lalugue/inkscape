@@ -1,7 +1,7 @@
 # translation of inkscape.pot to Catalan
 # Inkscape translation to Catalan.
 # This file is distributed under the same license as the Inkscape package.
-# Copyright © 2000-2007, 2008 Free Software Foundation, Inc.
+# Copyright © 2022-2007, 2008 Free Software Foundation, Inc.
 #
 # Quico Llach <quico@softcatala.org>, 2000. Traducció sodipodi.
 # Francesc Dorca <f.dorca@filnet.es>, 2003. Traducció sodipodi.
@@ -35416,8 +35416,8 @@ msgstr "Tots els fitxers d'Inkscape"
 #: ../share/ui/inkscape-about.glade:286
 #, fuzzy
 msgctxt "Brief copyright notice at the footer of the About screen"
-msgid "© 2021 Inkscape Developers"
-msgstr "© 2019 Desenvolupadors de l'Inkscape"
+msgid "© 2022 Inkscape Developers"
+msgstr "© 2022 Desenvolupadors de l'Inkscape"
 
 #: ../share/ui/inkscape-about.glade:303
 msgid "Link to the official website"

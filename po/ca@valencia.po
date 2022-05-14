@@ -15212,8 +15212,8 @@ msgid "Inkscape website"
 msgstr "Lloc web de l'Inkscape"
 
 #: ../src/ui/dialog/aboutbox.cpp:90
-msgid "© 2019 Inkscape Developers"
-msgstr "© 2019 desenvolupadors de l'Inkscape"
+msgid "© 2022 Inkscape Developers"
+msgstr "© 2022 desenvolupadors de l'Inkscape"
 
 #: ../src/ui/dialog/aboutbox.cpp:91
 msgid ""

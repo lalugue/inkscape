@@ -34181,8 +34181,8 @@ msgstr "잉크스케이프 라이선스"
 
 #: ../share/ui/inkscape-about.glade:286
 msgctxt "Brief copyright notice at the footer of the About screen"
-msgid "© 2021 Inkscape Developers"
-msgstr "© 2021 잉크스케이프 개발자"
+msgid "© 2022 Inkscape Developers"
+msgstr "© 2022 잉크스케이프 개발자"
 
 #: ../share/ui/inkscape-about.glade:303
 msgid "Link to the official website"

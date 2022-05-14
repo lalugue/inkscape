@@ -15896,8 +15896,8 @@ msgid "Inkscape website"
 msgstr "Inkscape verkkosivu"
 
 #: ../src/ui/dialog/aboutbox.cpp:90
-msgid "© 2019 Inkscape Developers"
-msgstr "© 2019 Inkscape Kehittäjät"
+msgid "© 2022 Inkscape Developers"
+msgstr "© 2022 Inkscape Kehittäjät"
 
 #: ../src/ui/dialog/aboutbox.cpp:91
 msgid ""

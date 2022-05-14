@@ -34065,8 +34065,8 @@ msgstr "Notkunarleyfi Inkscape"
 
 #: ../share/ui/inkscape-about.glade:286
 msgctxt "Brief copyright notice at the footer of the About screen"
-msgid "© 2021 Inkscape Developers"
-msgstr "© 2021 Inkscape hönnuðirnir"
+msgid "© 2022 Inkscape Developers"
+msgstr "© 2022 Inkscape hönnuðirnir"
 
 #: ../share/ui/inkscape-about.glade:303
 msgid "Link to the official website"

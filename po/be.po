@@ -16245,7 +16245,7 @@ msgstr "Inkscape (Развой)"
 
 #: ../src/ui/dialog/aboutbox.cpp:90
 #, fuzzy
-msgid "© 2019 Inkscape Developers"
+msgid "© 2022 Inkscape Developers"
 msgstr "Inkscape (Развой)"
 
 #: ../src/ui/dialog/aboutbox.cpp:91

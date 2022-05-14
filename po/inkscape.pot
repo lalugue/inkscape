@@ -34174,7 +34174,7 @@ msgstr ""
 
 #: ../share/ui/inkscape-about.glade:286
 msgctxt "Brief copyright notice at the footer of the About screen"
-msgid "© 2021 Inkscape Developers"
+msgid "© 2022 Inkscape Developers"
 msgstr ""
 
 #: ../share/ui/inkscape-about.glade:303

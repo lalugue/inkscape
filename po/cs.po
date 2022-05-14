@@ -34120,8 +34120,8 @@ msgstr "Licence Inkscape"
 
 #: ../share/ui/inkscape-about.glade:281
 msgctxt "Brief copyright notice at the footer of the About screen"
-msgid "© 2021 Inkscape Developers"
-msgstr "© 2021 Vývojáři Inkscape"
+msgid "© 2022 Inkscape Developers"
+msgstr "© 2022 Vývojáři Inkscape"
 
 #: ../share/ui/inkscape-about.glade:298
 msgid "Link to the official website"
@@ -43314,9 +43314,6 @@ msgstr "Polovina výšky písma"
 #~ msgid "Inkscape website"
 #~ msgstr "Webová stránka Inkscape"
 
-#~ msgid "© 2020 Inkscape Developers"
-#~ msgstr "© 2020 Vývojáři Inkscape"
-
 #~ msgid ""
 #~ "Open Source Scalable Vector Graphics Editor\n"
 #~ "Draw Freely."
@@ -44220,10 +44217,6 @@ msgstr "Polovina výšky písma"
 #~ msgid "_Canvas Orientation"
 #~ msgstr "_Orientace strany"
 
-#~ msgctxt "Brief copyright notice at the footer of the About screen"
-#~ msgid "© 2019 Inkscape Developers"
-#~ msgstr "© 2019 Vývojáři Inkscape"
-
 #~ msgid "A4 (Portrait)"
 #~ msgstr "A4 (na výšku)"
 
@@ -44320,8 +44313,8 @@ msgstr "Polovina výšky písma"
 #~ msgid "<b>Extra roughen</b> Add a extra layer of rough"
 #~ msgstr "<b>Extra zdrsnění</b> Přidává další vrstvu drsnosti"
 
-#~ msgid "© 2019 Inkscape Developers"
-#~ msgstr "© 2019 Inkscape vývojáři"
+#~ msgid "© 2022 Inkscape Developers"
+#~ msgstr "© 2022 Inkscape vývojáři"
 
 #~ msgid "JessyInk script version {0} installed."
 #~ msgstr "JessyInk skript verze {0} nainstalována."

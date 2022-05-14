@@ -15761,8 +15761,8 @@ msgid "Inkscape website"
 msgstr "Website Inkscape"
 
 #: ../src/ui/dialog/aboutbox.cpp:90
-msgid "© 2019 Inkscape Developers"
-msgstr "© 2019 Pengembang Inkscape"
+msgid "© 2022 Inkscape Developers"
+msgstr "© 2022 Pengembang Inkscape"
 
 #: ../src/ui/dialog/aboutbox.cpp:91
 #, fuzzy
