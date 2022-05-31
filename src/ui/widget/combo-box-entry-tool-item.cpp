@@ -69,7 +69,10 @@ ComboBoxEntryToolItem::ComboBoxEntryToolItem(Glib::ustring name,
       _warning(nullptr),
       _warning_cb(nullptr),
       _warning_cb_id(0),
-      _warning_cb_blocked(false)
+      _warning_cb_blocked(false),
+      _isload(true),
+      _markup(false)
+
 {
     set_name(name);
 
@@ -568,14 +571,14 @@ gboolean ComboBoxEntryToolItem::combo_box_popup_cb(ComboBoxEntryToolItem *widget
 {
     auto w = reinterpret_cast<ComboBoxEntryToolItem *>(data);
     GtkComboBox *comboBoxEntry = GTK_COMBO_BOX(w->_combobox);
-    static int already_clicked = 0;
-    if ((already_clicked == 1) && w->_cell_data_func) {
+    if (!w->_isload && !w->_markup && w->_cell_data_func) {
         // first click is always displaying something wrong.
         // Second loading of the screen should have preallocated space, and only has to render the text now
         gtk_cell_layout_set_cell_data_func(GTK_CELL_LAYOUT(comboBoxEntry), w->_cell,
                                            GtkCellLayoutDataFunc(w->_cell_data_func), widget, nullptr);
+        w->_markup = true;
     }
-    already_clicked++;
+    w->_isload = false;
     return true;
 }
 
