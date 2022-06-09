@@ -286,8 +286,6 @@ void BatchExport::refreshItems()
 {
     if (!_desktop || !_document) return;
 
-    _document->ensureUpToDate();
-
     // Create New List of Items
     std::set<SPItem *> itemsList;
     std::set<SPPage *> pageList;

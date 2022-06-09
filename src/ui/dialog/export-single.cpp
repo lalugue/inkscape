@@ -140,6 +140,7 @@ void SingleExport::selectionChanged(Inkscape::Selection *selection)
     if (!_desktop || _desktop->getSelection() != selection) {
         return;
     }
+
     Glib::ustring pref_key_name = prefs->getString("/dialogs/export/exportarea/value");
     for (auto [key, name] : selection_names) {
         if (name == pref_key_name && current_key != key && key != SELECTION_SELECTION) {
@@ -265,7 +266,6 @@ void SingleExport::refreshArea()
 {
     if (_document) {
         Geom::OptRect bbox;
-        _document->ensureUpToDate();
 
         switch (current_key) {
             case SELECTION_SELECTION:
