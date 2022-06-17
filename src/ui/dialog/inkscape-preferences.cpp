@@ -1088,6 +1088,13 @@ void InkscapePreferences::initPageTools()
         _recently_used_fonts_size.changed_signal.connect([](double new_size) {
             Inkscape::RecentlyUsedFonts* recently_used_fonts = Inkscape::RecentlyUsedFonts::get();
             recently_used_fonts->change_max_list_size(new_size); });
+
+        _page_text.add_group_header( _("Text and Font dialog"));
+        std::vector<PrefItem> lister = {
+            { _("List fonts and styles"), 0, _("List fonts and styles separately"), true },
+            { _("Unified font browser"), 1, _("Show all font styles in a single list") }
+        };
+        _page_text.add_line(true, _("Font selector"), *Gtk::make_managed<PrefRadioButtons>(lister, "/options/font/browser"), "", "", false, reset_icon());
     }
 
     //_page_text.add_group_header( _("Text units"));

@@ -75,6 +75,12 @@ public:
 
     void disconnect() { _connection.disconnect(); }
 
+    sigc::connection release() {
+        auto con = _connection;
+        _connection = sigc::connection{};
+        return con;
+    }
+
 private:
     sigc::connection _connection;
 };

@@ -105,6 +105,12 @@ public:
     auto get_descr() const { return descr; }
     auto get_font() const { return p_font; }
 
+    double get_caps_height() const { return _caps_height; }
+    double get_E_height() const { return _E_height; }
+    bool is_fixed_width() const { return _fixed_width; }
+    bool is_oblique() const { return _oblique; }
+    unsigned short family_class() const { return _family_class; }
+
 private:
     void acquire(PangoFont *p_font, PangoFontDescription *descr);
     void release();
@@ -140,6 +146,12 @@ private:
     double  _ascent_max;   // Maximum ascent of all glyphs in font.
     double  _descent_max;  // Maximum descent of all glyphs in font.
     int     _design_units; // Design units, (units per em, typically 1000 or 2048).
+    double  _caps_height = 0.0; // Caps height, if found in OS/2
+    double  _E_height = 0.0; // Capital E height, if E glyph present
+    double  _italic_angle = 0.0; // angle for oblique fonts, if specified in a font
+    bool _fixed_width = false; // monospaced font (if advertised as such)
+    bool _oblique = false;  // oblique or italic font
+    unsigned short _family_class = 0; // OS/2 sFamily class field
 
     // Baselines
     double _baselines[SP_CSS_BASELINE_SIZE];

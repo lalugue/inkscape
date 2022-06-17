@@ -28,6 +28,7 @@
 #include "ui/widget/font-variants.h"    // for FontVariants
 #include "ui/widget/font-variations.h"  // for FontVariations
 #include "util/action-accel.h"          // for ActionAccel
+#include "ui/widget/font-list.h"
 
 namespace Glib {
 class ustring;
@@ -113,7 +114,7 @@ protected:
      * @param self pointer to the current instance of the dialog.
      */
     void onChange ();
-    void onFontFeatures (Gtk::Widget * widgt, int pos);
+    void on_page_changed(Gtk::Widget* widgt, int pos);
 
     // Callback to handle changes in the search entry.
     void on_search_entry_changed();
@@ -156,7 +157,12 @@ protected:
     SPCSSAttr *fillTextStyle ();
 
 private:
+    void apply_changes(bool continuous);
     Glib::RefPtr<Gtk::Builder> builder;
+
+    /*
+     * All the dialogs widgets
+     */
 
     // Tab 1: Font ---------------------- //
     Gtk::Box &settings_and_filters_box;
@@ -172,8 +178,7 @@ private:
     Gtk::ListBox &collections_list;
     Gtk::Label &preview_label;  // Share with variants tab?
 
-    Inkscape::UI::Widget::FontSelector font_selector;
-    Inkscape::UI::Widget::FontVariations font_variations;
+    std::unique_ptr<FontSelectorInterface> font_list;
 
     // Tab 2: Text ---------------------- //
     Gtk::TextView *text_view;
@@ -186,6 +191,8 @@ private:
     // Shared ------- ------------------ //
     Gtk::Button &setasdefault_button;
     Gtk::Button &apply_button;
+    Gtk::Box& _apply_box;
+    bool _use_browser = false;
 
     // Signals
     auto_connection selectChangedConn;
@@ -195,6 +202,8 @@ private:
     auto_connection fontFeaturesChangedConn;
     auto_connection fontCollectionsChangedSelection;
     auto_connection fontCollectionsUpdate;
+    auto_connection _apply_font;
+    auto_connection _font_changed;
 
     // Other
     double selected_fontsize = 12;

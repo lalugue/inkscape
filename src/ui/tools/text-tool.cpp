@@ -746,11 +746,9 @@ bool TextTool::root_handler(CanvasEvent const &event)
                             if (mod_ctrl_only(event) && text) {
                                 auto const style = sp_te_style_at_position(text, std::min(text_sel_start, text_sel_end));
                                 auto const css = sp_repr_css_attr_new();
-                                if (style->font_weight.computed == SP_CSS_FONT_WEIGHT_NORMAL
-                                    || style->font_weight.computed == SP_CSS_FONT_WEIGHT_100
-                                    || style->font_weight.computed == SP_CSS_FONT_WEIGHT_200
-                                    || style->font_weight.computed == SP_CSS_FONT_WEIGHT_300
-                                    || style->font_weight.computed == SP_CSS_FONT_WEIGHT_400)
+                                const auto weight = static_cast<int>(style->font_weight.computed);
+                                if (weight == SP_CSS_FONT_WEIGHT_NORMAL
+                                    || (weight >= SP_CSS_FONT_WEIGHT_100 && weight <= SP_CSS_FONT_WEIGHT_400))
                                 {
                                     sp_repr_css_set_property(css, "font-weight", "bold");
                                 } else {

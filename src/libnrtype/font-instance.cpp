@@ -275,7 +275,16 @@ void FontInstance::find_font_metrics()
     if (face->units_per_EM != 0) {  // If zero then it's a bitmap font.
 
         auto os2 = (TT_OS2*)FT_Get_Sfnt_Table(face, ft_sfnt_os2);
+
+        if (auto post = (TT_Postscript*)FT_Get_Sfnt_Table(face, ft_sfnt_post)) {
+            _italic_angle = FTFixedToDouble(post->italicAngle);
+            _fixed_width = post->isFixedPitch != 0;
+            // fsSelection mask: oblique/italic = 0x201
+            _oblique = post->italicAngle != 0 || (os2 && (os2->fsSelection & 0x201) != 0);
+        }
+
         if (os2) {
+            _family_class = os2->sFamilyClass;
             _ascent  = std::fabs((double)os2->sTypoAscender / face->units_per_EM);
             _descent = std::fabs((double)os2->sTypoDescender/ face->units_per_EM);
         } else {

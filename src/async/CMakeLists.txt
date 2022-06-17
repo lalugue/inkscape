@@ -2,10 +2,11 @@
 
 set(async_SRC
 	async.cpp
-
 	async.h
 	channel.h
 	background-progress.h
+	background-task.h
+	operation-stream.h
 	progress.h
 	progress-splitter.h
 )

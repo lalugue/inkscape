@@ -213,6 +213,7 @@ set(ui_SRC
 	widget/fill-style.cpp
 	widget/font-button.cpp
 	widget/font-collection-selector.cpp
+	widget/font-list.cpp
 	widget/font-selector.cpp
 	widget/font-variants.cpp
 	widget/font-variations.cpp

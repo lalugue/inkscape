@@ -20,6 +20,9 @@
 #include <stdexcept>
 #include <string>
 #include <vector>
+#include <memory>
+
+#include "font-selector.h"
 
 #include "libnrtype/font-factory.h"
 #include "libnrtype/font-instance.h"
@@ -32,6 +35,10 @@
 #include "util-string/ustring-format.h"
 
 namespace Inkscape::UI::Widget {
+
+std::unique_ptr<FontSelectorInterface> FontSelector::create_font_selector() {
+    return std::make_unique<FontSelector>();
+}
 
 FontSelector::FontSelector(bool with_size, bool with_variations)
     : Gtk::Box(Gtk::Orientation::VERTICAL)
@@ -517,7 +524,8 @@ FontSelector::on_variations_changed() {
 void
 FontSelector::changed_emit() {
     signal_block = true;
-    signal_changed.emit (get_fontspec());
+    _signal_changed.emit (get_fontspec());
+    _signal_apply.emit();
     if (initial) {
         initial = false;
         family_treecolumn.unset_cell_data_func (family_cell);

@@ -16,10 +16,12 @@
 #include <gtkmm/sizegroup.h>
 #include <gtkmm/label.h>
 #include <gtkmm/scale.h>
+#include <gtkmm/spinbutton.h>
 
 #include "libnrtype/OpenTypeUtil.h"
 
 #include "style.h"
+#include "ui/operation-blocker.h"
 
 namespace Inkscape {
 namespace UI {
@@ -32,20 +34,22 @@ namespace Widget {
 class FontVariationAxis : public Gtk::Box
 {
 public:
-    FontVariationAxis(Glib::ustring name, OTVarAxis const &axis);
+    FontVariationAxis(Glib::ustring name, OTVarAxis const &axis, Glib::ustring label, Glib::ustring tooltip);
     Glib::ustring get_name() { return name; }
-    Gtk::Label* get_label() { return label; }
-    double get_value() { return scale->get_value(); }
-    int get_precision() { return precision; }
-    Gtk::Scale* get_scale() { return scale; }
-    double get_def() { return def; }
+    Gtk::Label* get_label()  { return label; }
+    double get_value()       { return edit->get_value(); }
+    int get_precision()      { return precision; }
+    Gtk::Scale* get_scale()  { return scale; }
+    double get_def()         { return def; }
+    Gtk::SpinButton* get_editbox() { return edit; }
+    void set_value(double value);
 
 private:
-
     // Widgets
     Glib::ustring name;
     Gtk::Label* label;
     Gtk::Scale* scale;
+    Gtk::SpinButton* edit = nullptr;
 
     int precision;
     double def = 0.0; // Default value
@@ -59,23 +63,18 @@ private:
  */
 class FontVariations : public Gtk::Box
 {
-
 public:
-
     /**
      * Constructor
      */
     FontVariations();
-
-protected:
-
-public:
 
     /**
      * Update GUI.
      */
     void update(const Glib::ustring& font_spec);
 
+#if false
     /**
      * Fill SPCSSAttr based on settings of buttons.
      */
@@ -85,28 +84,33 @@ public:
      * Get CSS String
      */
     Glib::ustring get_css_string();
+#endif
 
-    Glib::ustring get_pango_string();
-
-    void on_variations_change();
+    Glib::ustring get_pango_string(bool include_defaults = false) const;
 
     /**
      * Let others know that user has changed GUI settings.
      * (Used to enable 'Apply' and 'Default' buttons.)
      */
     sigc::connection connectChanged(sigc::slot<void ()> slot) {
-        return signal_changed.connect(slot);
+        return _signal_changed.connect(slot);
     }
 
     // return true if there are some variations present
     bool variations_present() const;
 
+    // provide access to label and spin button size groups
+    Glib::RefPtr<Gtk::SizeGroup> get_size_group(int index);
+
 private:
+    void build_ui(const std::map<Glib::ustring, OTVarAxis>& axes);
 
-    std::vector<FontVariationAxis*> axes;
-    Glib::RefPtr<Gtk::SizeGroup> size_group;
-
-    sigc::signal<void ()> signal_changed;
+    std::vector<FontVariationAxis*> _axes;
+    Glib::RefPtr<Gtk::SizeGroup> _size_group;
+    Glib::RefPtr<Gtk::SizeGroup> _size_group_edit;
+    sigc::signal<void ()> _signal_changed;
+    std::map<Glib::ustring, OTVarAxis> _open_type_axes;
+    OperationBlocker _update;
 };
 
  

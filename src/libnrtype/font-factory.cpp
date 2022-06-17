@@ -10,6 +10,14 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#include <memory>
+#include <pango/pango-font.h>
+#include <pango/pango-fontmap.h>
+#include <pangomm/fontdescription.h>
+#include <pangomm/fontfamily.h>
+#include <pangomm/fontmap.h>
+#include <vector>
+#include "inkscape-application.h"
 #ifdef HAVE_CONFIG_H
 #include "config.h"  // only include where actually required!
 #endif
@@ -108,8 +116,13 @@ PangoFontDescription *ink_font_description_from_style(SPStyle const *style)
         case SP_CSS_FONT_WEIGHT_LIGHTER:
         case SP_CSS_FONT_WEIGHT_BOLDER:
         default:
-            g_warning("FaceFromStyle: Unrecognized font_weight.computed value");
-            pango_font_description_set_weight(descr, PANGO_WEIGHT_NORMAL);
+            if (style->font_weight.computed > 0 && style->font_weight.computed <= 1000) {
+                pango_font_description_set_weight(descr, static_cast<PangoWeight>(style->font_weight.computed));
+            }
+            else {
+                g_warning("FaceFromStyle: Unrecognized font_weight.computed value");
+                pango_font_description_set_weight(descr, PANGO_WEIGHT_NORMAL);
+            }
             break;
     }
     // PANGO_WIEGHT_ULTRAHEAVY not used (not CSS2)
@@ -197,6 +210,7 @@ FontFactory::FontFactory()
     : fontServer(pango_ft2_font_map_new())
     , fontContext(pango_font_map_create_context(fontServer))
 {
+    _font_map = Glib::wrap(fontServer);
     pango_ft2_font_map_set_resolution(PANGO_FT2_FONT_MAP(fontServer), 72, 72);
 #if PANGO_VERSION_CHECK(1,48,0)
     pango_fc_font_map_set_default_substitute(PANGO_FC_FONT_MAP(fontServer), FactorySubstituteFunc, this, nullptr);
@@ -209,7 +223,7 @@ FontFactory::~FontFactory()
 {
     loaded.clear();
     g_object_unref(fontContext);
-    g_object_unref(fontServer);
+    fontServer = 0; // freed by _font_map
 }
 
 void FontFactory::refreshConfig()
@@ -264,7 +278,7 @@ Glib::ustring FontFactory::ConstructFontSpecification(FontInstance *font)
  */
 char const *sp_font_description_get_family(PangoFontDescription const *fontDescr)
 {
-    static auto const fontNameMap = std::map<Glib::ustring, Glib::ustring>{
+    static auto const fontNameMap = std::map<std::string, std::string>{
         { "Sans", "sans-serif" },
         { "Serif", "serif" },
         { "Monospace", "monospace" }
@@ -396,6 +410,33 @@ std::map<std::string, PangoFontFamily *> FontFactory::GetUIFamilies()
 
     g_free(families);
     return result;
+}
+
+std::vector<Glib::RefPtr<Pango::FontFamily>> FontFactory::get_font_families() {
+    auto list = _font_map->list_families();
+    std::vector<Glib::RefPtr<Pango::FontFamily>> sorted;
+    sorted.reserve(list.size());
+
+    for (auto&& family : list) {
+        auto name = family->get_name();
+        if (name.empty()) {
+            std::cerr << "FontFactory::get_font_families - Missing font family name! " << std::endl;
+            continue;
+        }
+        if (!g_utf8_validate(name.c_str(), -1, nullptr)) {
+            std::cerr << "FontFactory::get_font_families - Illegal characters in font family name ";
+            std::cerr << "Ignoring font '" << name << "'" << std::endl;
+            continue;
+        }
+
+        sorted.emplace_back(family);
+    }
+
+    std::sort(sorted.begin(), sorted.end(), [](const Glib::RefPtr<Pango::FontFamily>& a, const Glib::RefPtr<Pango::FontFamily>& b){
+        return a->get_name() < b->get_name();
+    });
+    
+    return sorted;
 }
 
 std::vector<StyleNames> FontFactory::GetUIStyles(PangoFontFamily *in)
@@ -572,6 +613,18 @@ std::shared_ptr<FontInstance> FontFactory::FaceFromFontSpecification(char const 
     }
 
     return font;
+}
+
+std::unique_ptr<FontInstance> FontFactory::create_face(PangoFontDescription* descr) {
+    // Mandatory huge size (hinting workaround).
+    pango_font_description_set_size(descr, fontSize * PANGO_SCALE);
+
+    if (!sp_font_description_get_family(descr)) {
+        return {};
+    }
+
+    auto descr_copy = pango_font_description_copy(descr);
+    return std::make_unique<FontInstance>(pango_font_map_load_font(fontServer, fontContext, descr), descr_copy);
 }
 
 std::shared_ptr<FontInstance> FontFactory::Face(PangoFontDescription *descr, bool canFail)

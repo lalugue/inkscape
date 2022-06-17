@@ -20,6 +20,7 @@
 ../share/ui/dialog-xml.glade
 ../share/ui/display-popup.glade
 ../share/ui/extension-pdfinput.glade
+../share/ui/font-list.glade
 ../share/ui/gradient-edit.glade
 ../share/ui/image-properties.glade
 ../share/ui/inkscape-about.glade

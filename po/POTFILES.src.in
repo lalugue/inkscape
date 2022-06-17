@@ -403,8 +403,10 @@ ${_build_dir}/share/templates/templates.h
 ../src/ui/widget/fill-style.cpp
 ../src/ui/widget/filter-effect-chooser.cpp
 ../src/ui/widget/font-collection-selector.cpp
+../src/ui/widget/font-list.cpp
 ../src/ui/widget/font-selector.cpp
 ../src/ui/widget/font-variants.cpp
+../src/ui/widget/font-variations.cpp
 ../src/ui/widget/gradient-editor.cpp
 ../src/ui/widget/gradient-selector.cpp
 ../src/ui/widget/gradient-vector-selector.cpp
@@ -428,6 +430,7 @@ ${_build_dir}/share/templates/templates.h
 ../src/ui/widget/template-list.cpp
 ../src/util/enums.h
 ../src/util/font-collections.h
+../src/util/font-tags.cpp
 ../src/util/paper.cpp
 ../src/vanishing-point.cpp
 ../src/widgets/sp-attribute-widget.cpp
