@@ -29,6 +29,7 @@
 #include "ui/widget/font-variations.h"  // for FontVariations
 #include "util/action-accel.h"          // for ActionAccel
 
+#include "ui/widget/font-list.h"
 namespace Glib {
 class ustring;
 } // namespace Glib
@@ -156,6 +157,9 @@ protected:
 
 private:
     Glib::RefPtr<Gtk::Builder> builder;
+
+//TEST ONLY -------
+Inkscape::UI::Widget::FontList font_list;
 
     // Tab 1: Font ---------------------- //
     Gtk::Box &settings_and_filters_box;

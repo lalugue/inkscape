@@ -135,6 +135,8 @@ TextEdit::TextEdit()
     filter_menu_button.set_always_show_image(true);
     filter_menu_button.set_label(_("Collections"));
 
+notebook->prepend_page(font_list, "Test");
+
 #ifdef WITH_GSPELL
     /*
        TODO: Use computed xml:lang attribute of relevant element, if present, to specify the

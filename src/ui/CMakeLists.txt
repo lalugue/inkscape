@@ -217,6 +217,7 @@ set(ui_SRC
 	widget/filter-effect-chooser.cpp
 	widget/fill-style.cpp
 	widget/font-button.cpp
+	widget/font-list.cpp
 	widget/font-selector.cpp
 	widget/font-selector-toolbar.cpp
 	widget/font-variants.cpp
