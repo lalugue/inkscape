@@ -3968,7 +3968,9 @@ void ObjectSet::setClipGroup()
     }
 }
 
-void ObjectSet::unsetMask(const bool apply_clip_path, const bool skip_undo) {
+void ObjectSet::unsetMask(const bool apply_clip_path, const bool skip_undo,
+                          const bool delete_helper_group)
+{
     SPDocument *doc = document();
     Inkscape::XML::Document *xml_doc = doc->getReprDoc();
 
@@ -4017,7 +4019,7 @@ void ObjectSet::unsetMask(const bool apply_clip_path, const bool skip_undo) {
         i->setAttribute(attributeName, "none");
 
         SPGroup *group = dynamic_cast<SPGroup *>(i);
-        if (ungroup_masked && group) {
+        if (ungroup_masked && group && delete_helper_group) {
                 // if we had previously enclosed masked object in group,
                 // add it to list so we can ungroup it later
 
