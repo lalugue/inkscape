@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Inkscape 1.2.x\n"
 "Report-Msgid-Bugs-To: inkscape-translator@lists.inkscape.org\n"
-"POT-Creation-Date: 2022-05-08 20:13+0000\n"
-"PO-Revision-Date: 2022-05-09 00:40+0200\n"
+"POT-Creation-Date: 2022-06-11 12:43+0000\n"
+"PO-Revision-Date: 2022-06-19 10:04+0200\n"
 "Last-Translator: Martin Srebotnjak <miles@filmsi.net>\n"
 "Language-Team: Martin Srebotnjak <miles@filmsi.net>\n"
 "Language: sl_SI\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n"
 "%100==4 ? 3 : 0);\n"
 "X-Launchpad-Export-Date: 2016-12-29 00:28+0000\n"
-"X-Generator: Poedit 3.0.1\n"
+"X-Generator: Poedit 3.1\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
 #: ../share/filters/filters.svg.h:2
@@ -6295,7 +6295,7 @@ msgstr "Določi inverzni izrezek predmeta"
 #: ../src/actions/actions-object.cpp:277
 #, fuzzy
 msgid "Apply inverse clipping path to selection (Power Clip LPE)"
-msgstr "Uporabi inverzno pot obrezovanja na izboru (močna porezava LPE)"
+msgstr "Uveljavi inverzno pot obrezovanja na izboru (močna porezava LPE)"
 
 #: ../src/actions/actions-object.cpp:278
 msgid "Object Clip Release"
@@ -6332,7 +6332,7 @@ msgstr "Določi inverzno masko predmeta"
 #: ../src/actions/actions-object.cpp:281
 #, fuzzy
 msgid "Apply inverse mask to selection (Power Mask LPE)"
-msgstr "Uporabi inverzno masko na izbiri (močna maska LPE)"
+msgstr "Uveljavi inverzno masko na izboru (močna maska LPE)"
 
 #: ../src/actions/actions-object.cpp:282
 msgid "Object Mask Release"
@@ -9789,8 +9789,8 @@ msgstr "Vrsta stapljanja:"
 #: ../src/extension/internal/filter/textures.h:79
 #: ../src/extension/internal/filter/transparency.h:63
 #: ../src/live_effects/lpe-copy_rotate.cpp:45
-#: ../src/live_effects/lpe-tiling.cpp:807
-#: ../src/live_effects/lpe-tiling.cpp:835
+#: ../src/live_effects/lpe-tiling.cpp:823
+#: ../src/live_effects/lpe-tiling.cpp:851
 #: ../src/ui/dialog/inkscape-preferences.cpp:1901
 #: ../src/ui/dialog/inkscape-preferences.cpp:1949
 #: ../src/ui/widget/filter-effect-chooser.cpp:21 ../share/ui/menus.ui:468
@@ -11010,7 +11010,7 @@ msgid "Convert image to an engraving made of vertical and horizontal lines"
 msgstr "Pretvori sliko v gravuro iz navpičnih in vodoravnih črt"
 
 #: ../src/extension/internal/filter/paint.h:341
-#: ../src/widgets/desktop-widget.cpp:1518
+#: ../src/widgets/desktop-widget.cpp:1515
 #: ../share/ui/align-and-distribute.ui:64
 msgid "Drawing"
 msgstr "Risanje"
@@ -12887,15 +12887,15 @@ msgstr "Zapri up. vmesnik po izvedbi vseh dejanj"
 msgid "Start Inkscape in interactive shell mode"
 msgstr "Poženi Inkscape v interaktivnem načinu v lupini."
 
-#: ../src/inkscape.cpp:413 ../src/ui/dialog/symbols.cpp:617
+#: ../src/inkscape.cpp:420 ../src/ui/dialog/symbols.cpp:617
 msgid "Untitled document"
 msgstr "Neimenovan dokument"
 
-#: ../src/inkscape.cpp:442
+#: ../src/inkscape.cpp:449
 msgid "Inkscape encountered an internal error and will close now.\n"
 msgstr "Inkscape je naletel na notranjo napako in se bo zato zaprl.\n"
 
-#: ../src/inkscape.cpp:443
+#: ../src/inkscape.cpp:450
 msgid ""
 "Automatic backups of unsaved documents were done to the following "
 "locations:\n"
@@ -12903,7 +12903,7 @@ msgstr ""
 "Samodejno shranjevanje neshranjenih dokumentov je bilo opravljeno, na "
 "sledeče lokacije:\n"
 
-#: ../src/inkscape.cpp:444
+#: ../src/inkscape.cpp:451
 msgid "Automatic backup of the following documents failed:\n"
 msgstr "Samodejno shranjevanje sledečih dokumentov ni uspelo:\n"
 
@@ -13621,42 +13621,42 @@ msgstr "Različica LPE"
 msgid "No effect"
 msgstr "Brez učinkov"
 
-#: ../src/live_effects/effect.cpp:1797
+#: ../src/live_effects/effect.cpp:1811
 msgid "<b>Default value:</b> "
 msgstr "<b>Privzeta vrednost:</b> "
 
-#: ../src/live_effects/effect.cpp:1798 ../src/live_effects/effect.cpp:1872
+#: ../src/live_effects/effect.cpp:1812 ../src/live_effects/effect.cpp:1886
 msgid "<b>Default value overridden:</b> "
 msgstr "<b>Privzeta vrednost preglašena:</b> "
 
-#: ../src/live_effects/effect.cpp:1800 ../src/live_effects/effect.cpp:1869
+#: ../src/live_effects/effect.cpp:1814 ../src/live_effects/effect.cpp:1883
 msgid "Update"
 msgstr "Posodobi"
 
-#: ../src/live_effects/effect.cpp:1803 ../src/live_effects/effect.cpp:1883
+#: ../src/live_effects/effect.cpp:1817 ../src/live_effects/effect.cpp:1897
 msgid "Set"
 msgstr "Nastavi"
 
-#: ../src/live_effects/effect.cpp:1823
+#: ../src/live_effects/effect.cpp:1837
 #: ../share/extensions/image_attributes.inx:22
 #: ../share/extensions/image_attributes.inx:48
 msgid "Unset"
 msgstr "Odnastavi"
 
-#: ../src/live_effects/effect.cpp:1840
+#: ../src/live_effects/effect.cpp:1854
 msgid "</b>: Set default parameters"
 msgstr "</b>: nastavi privzete parametre"
 
-#: ../src/live_effects/effect.cpp:1886
+#: ../src/live_effects/effect.cpp:1900
 msgid "<b>Default value:</b> Default"
 msgstr "<b>Privzeta vrednost:</b> privzeto"
 
-#: ../src/live_effects/effect.cpp:1957
+#: ../src/live_effects/effect.cpp:1971
 #, c-format
 msgid "Editing parameter <b>%s</b>."
 msgstr "Urejanje parametra <b>%s</b>."
 
-#: ../src/live_effects/effect.cpp:1962
+#: ../src/live_effects/effect.cpp:1976
 msgid "None of the applied path effect's parameters can be edited on-canvas."
 msgstr ""
 "Nobenega izmed parametrov uporabljenega učinka poti ni mogoče neposredno "
@@ -17190,7 +17190,6 @@ msgid "Random scale"
 msgstr "Naključna sprememba velikosti"
 
 #: ../src/live_effects/lpe-tiling.cpp:97
-#, fuzzy
 msgid "Randomize scale"
 msgstr "Naključno merilo"
 
@@ -17202,62 +17201,62 @@ msgstr "Seme"
 msgid "Randomization seed"
 msgstr "Naključno seme"
 
-#: ../src/live_effects/lpe-tiling.cpp:634
+#: ../src/live_effects/lpe-tiling.cpp:650
 msgid "Mirroring mode"
 msgstr "Način zrcaljenja"
 
-#: ../src/live_effects/lpe-tiling.cpp:668
+#: ../src/live_effects/lpe-tiling.cpp:684
 #: ../share/extensions/color_randomize.inx:3
 #: ../share/extensions/render_alphabetsoup.inx:8
 msgid "Randomize"
 msgstr "Naključno"
 
-#: ../src/live_effects/lpe-tiling.cpp:669
+#: ../src/live_effects/lpe-tiling.cpp:685
 msgid "Randomization seed for random mode for scaling, rotation and gaps"
 msgstr ""
 "Naključno seme za naključni način za spremembo velikosti, sukanje in vrzeli"
 
-#: ../src/live_effects/lpe-tiling.cpp:703
+#: ../src/live_effects/lpe-tiling.cpp:719
 msgid "Offset rows"
 msgstr "Vrstice zamika"
 
-#: ../src/live_effects/lpe-tiling.cpp:705
+#: ../src/live_effects/lpe-tiling.cpp:721
 msgid "Offset alternate rows"
 msgstr "Zamakni izmenične vrstice"
 
-#: ../src/live_effects/lpe-tiling.cpp:706
+#: ../src/live_effects/lpe-tiling.cpp:722
 msgid "Offset cols"
 msgstr "Stolpci zamika"
 
-#: ../src/live_effects/lpe-tiling.cpp:708
+#: ../src/live_effects/lpe-tiling.cpp:724
 msgid "Offset alternate cols"
 msgstr "Zamakni izmenične stolpce"
 
-#: ../src/live_effects/lpe-tiling.cpp:722
-#: ../src/live_effects/lpe-tiling.cpp:764
+#: ../src/live_effects/lpe-tiling.cpp:738
+#: ../src/live_effects/lpe-tiling.cpp:780
 msgid "Interpolate X"
 msgstr "Interpoliraj X"
 
-#: ../src/live_effects/lpe-tiling.cpp:724
-#: ../src/live_effects/lpe-tiling.cpp:766
+#: ../src/live_effects/lpe-tiling.cpp:740
+#: ../src/live_effects/lpe-tiling.cpp:782
 msgid "Interpolate Y"
 msgstr "Interpoliraj Y"
 
-#: ../src/live_effects/lpe-tiling.cpp:726
-#: ../src/live_effects/lpe-tiling.cpp:768
+#: ../src/live_effects/lpe-tiling.cpp:742
+#: ../src/live_effects/lpe-tiling.cpp:784
 msgid "Interpolate both"
 msgstr "Interpoliraj oboje"
 
-#: ../src/live_effects/lpe-tiling.cpp:728
+#: ../src/live_effects/lpe-tiling.cpp:744
 msgid "No interpolation"
 msgstr "Brez interpolacije"
 
-#: ../src/live_effects/lpe-tiling.cpp:730
-#: ../src/live_effects/lpe-tiling.cpp:772
+#: ../src/live_effects/lpe-tiling.cpp:746
+#: ../src/live_effects/lpe-tiling.cpp:788
 msgid "Interpolate random"
 msgstr "Interpoliraj naključno"
 
-#: ../src/live_effects/lpe-tiling.cpp:743
+#: ../src/live_effects/lpe-tiling.cpp:759
 msgid ""
 "Blend scale from <b>left to right</b> (left column uses original scale, "
 "right column uses new scale)"
@@ -17265,7 +17264,7 @@ msgstr ""
 "Zmešaj spremembo velikosti od <b>leve proti desni</b> (levi stolpec "
 "uporablja izvirno spremembo velikosti, desni novo)"
 
-#: ../src/live_effects/lpe-tiling.cpp:744
+#: ../src/live_effects/lpe-tiling.cpp:760
 msgid ""
 "Blend scale from <b>top to bottom</b> (top row uses original scale, bottom "
 "row uses new scale)"
@@ -17273,7 +17272,7 @@ msgstr ""
 "Zmešaj spremembo velikosti od <b>vrha proti dnu</b> (vrhnja vrstica "
 "uporablja izvorno spremembo velikosti, vrstica na dnu pa novo)"
 
-#: ../src/live_effects/lpe-tiling.cpp:745
+#: ../src/live_effects/lpe-tiling.cpp:761
 msgid ""
 "Blend scale <b>diagonally</b> (top left tile uses original scale, bottom "
 "right tile uses new scale)"
@@ -17281,20 +17280,20 @@ msgstr ""
 "Zmešaj spremembo velikosti <b>diagonalno</b> (tlakovec levo zgoraj uporablja "
 "izvorno spremembo velikosti, tlakovec desno spodaj pa novo)"
 
-#: ../src/live_effects/lpe-tiling.cpp:746
+#: ../src/live_effects/lpe-tiling.cpp:762
 msgid "Uniform scale"
 msgstr "Enakomerna sprememba velikosti"
 
-#: ../src/live_effects/lpe-tiling.cpp:747
+#: ../src/live_effects/lpe-tiling.cpp:763
 msgid "Random scale (hit <b>Randomize</b> button to shuffle)"
 msgstr ""
 "Naključno merilo (kliknite gumb <b>Naključno</b> za premešanje zaporedja)"
 
-#: ../src/live_effects/lpe-tiling.cpp:770
+#: ../src/live_effects/lpe-tiling.cpp:786
 msgid "Interpolate none"
 msgstr "Ne interpoliraj ničesar"
 
-#: ../src/live_effects/lpe-tiling.cpp:785
+#: ../src/live_effects/lpe-tiling.cpp:801
 msgid ""
 "Blend rotation from <b>left to right</b> (left column uses original "
 "rotation, right column uses new rotation)"
@@ -17302,7 +17301,7 @@ msgstr ""
 "Zmešaj sukanje od <b>leve proti desni</b> (levi stolpec uporablja izvorno "
 "sukanje, desni pa novo)"
 
-#: ../src/live_effects/lpe-tiling.cpp:786
+#: ../src/live_effects/lpe-tiling.cpp:802
 msgid ""
 "Blend rotation from <b>top to bottom</b> (top row uses original rotation, "
 "bottom row uses new rotation)"
@@ -17310,7 +17309,7 @@ msgstr ""
 "Zmešaj sukanje od <b>vrha proti dnu</b> (vrstica na vrhu uporablja izvorno "
 "sukanje, vrstica na dnu pa novo)"
 
-#: ../src/live_effects/lpe-tiling.cpp:787
+#: ../src/live_effects/lpe-tiling.cpp:803
 msgid ""
 "Blend rotation <b>diagonally</b> (top left tile uses original rotation, "
 "bottom right tile uses new rotation)"
@@ -17318,39 +17317,39 @@ msgstr ""
 "Zmešaj sukanje <b>diagonalno</b> (tlakovec levo zgoraj uporablja izvorno "
 "sukanje, tlakovec desno spodaj pa novo)"
 
-#: ../src/live_effects/lpe-tiling.cpp:788
+#: ../src/live_effects/lpe-tiling.cpp:804
 msgid "Uniform rotation"
 msgstr "Enakomerno vrtenje"
 
-#: ../src/live_effects/lpe-tiling.cpp:789
+#: ../src/live_effects/lpe-tiling.cpp:805
 msgid "Random rotation (hit <b>Randomize</b> button to shuffle)"
 msgstr ""
 "Naključno vrtenje (pritisnite gumb <b>Naključno</b> za premešan vrstni red)"
 
-#: ../src/live_effects/lpe-tiling.cpp:809
-#: ../src/live_effects/lpe-tiling.cpp:837
+#: ../src/live_effects/lpe-tiling.cpp:825
+#: ../src/live_effects/lpe-tiling.cpp:853
 msgid "Random"
 msgstr "Naključno"
 
-#: ../src/live_effects/lpe-tiling.cpp:816
+#: ../src/live_effects/lpe-tiling.cpp:832
 msgid "All horizontal gaps have the same width"
 msgstr "Vse vodoravne vrzeli imajo enako širino"
 
-#: ../src/live_effects/lpe-tiling.cpp:817
+#: ../src/live_effects/lpe-tiling.cpp:833
 msgid "Random horizontal gaps (hit <b>Randomize</b> button to shuffle)"
 msgstr ""
 "Naključne vodoravne vrzeli (pritisnite gumb <b>Naključno</b> za premešanje)"
 
-#: ../src/live_effects/lpe-tiling.cpp:844
+#: ../src/live_effects/lpe-tiling.cpp:860
 msgid "All vertical gaps have the same height"
 msgstr "Vse navpične vrzeli imajo enako višino"
 
-#: ../src/live_effects/lpe-tiling.cpp:845
+#: ../src/live_effects/lpe-tiling.cpp:861
 msgid "Random vertical gaps (hit <b>Randomize</b> button to shuffle)"
 msgstr ""
 "Naključne navpične vrzeli (kliknite gumb <b>Naključno</b> za premešanje)"
 
-#: ../src/live_effects/lpe-tiling.cpp:1474
+#: ../src/live_effects/lpe-tiling.cpp:1497
 msgid ""
 "<b>Horizontal gaps between tiles</b>: drag to adjust, <b>Shift+click</b> to "
 "reset"
@@ -17358,7 +17357,7 @@ msgstr ""
 "<b>Vodoravne vrzeli med tlakovci</b>: povlecite za prilagoditev, <b>dvigalka"
 "+kliknite</b> za ponastavitev"
 
-#: ../src/live_effects/lpe-tiling.cpp:1479
+#: ../src/live_effects/lpe-tiling.cpp:1502
 msgid ""
 "<b>Vertical gaps between tiles</b>: drag to adjust, <b>Shift+click</b> to "
 "reset"
@@ -17765,25 +17764,25 @@ msgstr "v %s"
 msgid "without URI"
 msgstr "brez URI"
 
-#: ../src/object/sp-ellipse.cpp:398 ../src/ui/toolbar/arc-toolbar.cpp:165
+#: ../src/object/sp-ellipse.cpp:417 ../src/ui/toolbar/arc-toolbar.cpp:165
 msgid "Slice"
 msgstr "Nareži"
 
-#: ../src/object/sp-ellipse.cpp:401 ../src/ui/toolbar/arc-toolbar.cpp:175
+#: ../src/object/sp-ellipse.cpp:420 ../src/ui/toolbar/arc-toolbar.cpp:175
 msgid "Chord"
 msgstr "Tetiva"
 
-#: ../src/object/sp-ellipse.cpp:404
+#: ../src/object/sp-ellipse.cpp:423
 msgid "Arc"
 msgstr "Lok"
 
-#: ../src/object/sp-ellipse.cpp:409
+#: ../src/object/sp-ellipse.cpp:428
 #: ../src/ui/dialog/inkscape-preferences.cpp:849
 #: ../src/ui/toolbar/pencil-toolbar.cpp:410 ../share/extensions/frame.inx:7
 msgid "Ellipse"
 msgstr "Elipsa"
 
-#: ../src/object/sp-ellipse.cpp:411
+#: ../src/object/sp-ellipse.cpp:430
 #: ../share/extensions/render_barcode_qrcode.inx:81
 msgid "Circle"
 msgstr "Krog"
@@ -19571,11 +19570,11 @@ msgstr "_Zakleni vse plasti"
 msgid "_Unlock all layers"
 msgstr "_Odkleni vse plasti"
 
-#: ../src/ui/contextmenu.cpp:331
+#: ../src/ui/contextmenu.cpp:328
 msgid "Unhid objects"
 msgstr "Razkrij predmete"
 
-#: ../src/ui/contextmenu.cpp:331
+#: ../src/ui/contextmenu.cpp:328
 msgid "Unlocked objects"
 msgstr "Odklenjeni predmeti"
 
@@ -26052,14 +26051,6 @@ msgstr ""
 "Odznačite za uporabo spodnjega izbranega predmeta kot poti obrezovanja ali "
 "maske"
 
-#: ../src/ui/dialog/inkscape-preferences.cpp:2585
-msgid "When ungroup, clip/mask is preserved in childrens"
-msgstr "Pri razdruževanju ohrani porezavo/masko v podrejenih elementih"
-
-#: ../src/ui/dialog/inkscape-preferences.cpp:2587
-msgid "Uncheck this to remove clip/mask on ungroup"
-msgstr "Odstranite potrditev, da odstranite porezavo/masko ob razdruževanju"
-
 #: ../src/ui/dialog/inkscape-preferences.cpp:2588
 msgid "Remove clippath/mask object after applying"
 msgstr "Odstrani pot obrezovanja oz. masko predmeta po uporabi"
@@ -26421,47 +26412,40 @@ msgstr ""
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2782
 #, fuzzy
-#| msgid "Layout padding"
 msgid "Buffer padding"
-msgstr "Zapolnjevanje postavitve"
+msgstr "Zapolnjevanje vmesnih con"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2782
 msgid "Do not throw away rendered content in this area around the window yet"
 msgstr "Ne zavrzi še upodobljene vsebine na tem področju okoli okna"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2784
-#, fuzzy
 msgid "Min size for coarsener algorithm"
 msgstr "Najmanjša velikost za algoritem grobljenja"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2784
-#, fuzzy
 msgid ""
 "Coarsener algorithm only processes rectangles smaller/thinner than this."
-msgstr "Pogrobi le pravotoktnike, manjše/tanjše od tega."
+msgstr "Pogrobi le pravokotnike, manjše/tanjše od tega."
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2786
-#, fuzzy
 msgid "Glue size for coarsener algorithm"
 msgstr "Velikost lepila za algoritem grobljenja"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2786
-#, fuzzy
 msgid "Coarsener algorithm absorbs nearby rectangles within this distance."
 msgstr "Algoritem grobljenja vsrka bližnje pravokotnike na tej razdalji."
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2788
-#, fuzzy
 msgid "Min fullness for coarsener algorithm"
 msgstr "Najmanjša polnost za algoritem grobljenja"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2788
-#, fuzzy
 msgid ""
 "Refuse coarsening algorithm's attempt if the result would be more empty than "
 "this."
 msgstr ""
-"Zavrnite poskus algoritma grobljenja, če bi bil rezultat bolj prazen od tega."
+"Zavrne poskus algoritma grobljenja, če bi bil rezultat bolj prazen od tega."
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2790
 msgid "Debugging, profiling and experiments"
@@ -27249,7 +27233,7 @@ msgstr "Pod trenutnim"
 msgid "As sublayer of current"
 msgstr "Kot podplast trenutnega"
 
-#: ../src/ui/dialog/livepatheffect-add.cpp:621
+#: ../src/ui/dialog/livepatheffect-add.cpp:618
 msgid ""
 "You don't have any favorites yet. Click on the favorites star again to see "
 "all LPEs."
@@ -27257,13 +27241,13 @@ msgstr ""
 "Nimate še nobenih priljubljenih. Če želite videti vse LPE, znova kliknite "
 "zvezdico priljubljenih."
 
-#: ../src/ui/dialog/livepatheffect-add.cpp:625
+#: ../src/ui/dialog/livepatheffect-add.cpp:622
 msgid "These are your favorite effects"
 msgstr "To so vaši najljubši učinki"
 
-#: ../src/ui/dialog/livepatheffect-add.cpp:630
-#: ../src/ui/dialog/livepatheffect-add.cpp:642
-#: ../src/ui/dialog/livepatheffect-add.cpp:651
+#: ../src/ui/dialog/livepatheffect-add.cpp:627
+#: ../src/ui/dialog/livepatheffect-add.cpp:639
+#: ../src/ui/dialog/livepatheffect-add.cpp:648
 msgid "Nothing found! Please try again with different search terms."
 msgstr "Ni zadetkov! Poskusite z drugim iskalnim izrazom."
 
@@ -27918,11 +27902,11 @@ msgstr "<i>Preverjanje ...</i>"
 msgid "Fix spelling"
 msgstr "Popravi črkovanje"
 
-#: ../src/ui/dialog/startup.cpp:340
+#: ../src/ui/dialog/startup.cpp:341
 msgid "Browse for other files..."
 msgstr "Prebrskaj druge datoteke ..."
 
-#: ../src/ui/dialog/startup.cpp:488
+#: ../src/ui/dialog/startup.cpp:489
 msgid "Open a different file"
 msgstr "Odpri drugo datoteko"
 
@@ -28826,7 +28810,7 @@ msgstr ""
 msgid "<b>Resize</b> the filter effect region"
 msgstr "<b>Spremeni velikost</b> območja učinkovanja filtra"
 
-#: ../src/ui/knot/knot.cpp:314
+#: ../src/ui/knot/knot.cpp:309
 msgid "Node or handle drag canceled."
 msgstr "Preklican premik vozlišča ali ročice."
 
@@ -28988,7 +28972,7 @@ msgstr "Ni kategorije"
 msgid "Canvas"
 msgstr "Platno"
 
-#: ../src/ui/modifiers.cpp:61 ../src/widgets/desktop-widget.cpp:1522
+#: ../src/ui/modifiers.cpp:61 ../src/widgets/desktop-widget.cpp:1519
 #: ../share/ui/dialog-export.glade:482 ../share/ui/dialog-export.glade:923
 #: ../share/extensions/printing_marks.inx:18
 msgid "Selection"
@@ -31878,7 +31862,7 @@ msgstr "Slog pisave"
 
 #: ../src/ui/toolbar/text-toolbar.cpp:310
 #: ../src/ui/toolbar/text-toolbar.cpp:1971
-#: ../src/ui/widget/font-selector.cpp:32 ../src/ui/widget/font-selector.cpp:152
+#: ../src/ui/widget/font-selector.cpp:32 ../src/ui/widget/font-selector.cpp:164
 msgid "Font size"
 msgstr "Velikost pisave"
 
@@ -34232,7 +34216,6 @@ msgid "Feature settings in CSS form (e.g. \"wxyz\" or \"wxyz\" 3)."
 msgstr "Nastavitve funkcij v obrazcu CSS (npr. »wxyz« ali »wxyz« 3)."
 
 #: ../src/ui/widget/gradient-editor.cpp:223
-#, fuzzy
 msgid "Stop color"
 msgstr "Barva konca"
 
@@ -34973,14 +34956,13 @@ msgid "Set stroke width"
 msgstr "Določite debelino poteze"
 
 #: ../src/ui/widget/stroke-style.cpp:1009
-#, fuzzy
 msgid "Set stroke dash"
 msgstr "Določite črtico poteze"
 
 #: ../src/ui/widget/stroke-style.cpp:1031
 #, fuzzy
 msgid "Set stroke miter"
-msgstr "Določite sredico poteze"
+msgstr "Določite zajero poteze"
 
 #: ../src/ui/widget/stroke-style.cpp:1088
 msgid "Set stroke style"
@@ -35167,37 +35149,37 @@ msgstr "sivinsko"
 msgid "print colors preview"
 msgstr "predogled tiskanja barv"
 
-#: ../src/widgets/desktop-widget.cpp:835
+#: ../src/widgets/desktop-widget.cpp:832
 msgid "Locked all guides"
 msgstr "Zaklenjena vsa vodila"
 
-#: ../src/widgets/desktop-widget.cpp:837
+#: ../src/widgets/desktop-widget.cpp:834
 msgid "Unlocked all guides"
 msgstr "Odklenjena vsa vodila"
 
-#: ../src/widgets/desktop-widget.cpp:854
+#: ../src/widgets/desktop-widget.cpp:851
 msgid "Color-managed display is <b>enabled</b> in this window"
 msgstr "Barvno upravljan prikaz je v tem oknu <b>omogočen</b>."
 
-#: ../src/widgets/desktop-widget.cpp:856
+#: ../src/widgets/desktop-widget.cpp:853
 msgid "Color-managed display is <b>disabled</b> in this window"
 msgstr "Barvno upravljan prikaz je v tem oknu <b>onemogočen</b>."
 
-#: ../src/widgets/desktop-widget.cpp:1006
+#: ../src/widgets/desktop-widget.cpp:1003
 msgid "Note:"
 msgstr "Opomba:"
 
-#: ../src/widgets/desktop-widget.cpp:1514 ../share/ui/dialog-export.glade:518
+#: ../src/widgets/desktop-widget.cpp:1511 ../share/ui/dialog-export.glade:518
 #: ../share/ui/page-properties.glade:799 ../share/ui/align-and-distribute.ui:60
 #: ../share/extensions/voronoi2svg.inx:15
 msgid "Page"
 msgstr "Stran"
 
-#: ../src/widgets/desktop-widget.cpp:1526
+#: ../src/widgets/desktop-widget.cpp:1523
 msgid "Centre Page"
 msgstr "Središče strani"
 
-#: ../src/widgets/desktop-widget.cpp:1869
+#: ../src/widgets/desktop-widget.cpp:1866
 msgid "Create guide"
 msgstr "Ustvari vodilo"
 
@@ -43483,7 +43465,7 @@ msgstr "Mreževina-preliv v pot"
 #: ../share/extensions/path_mesh_m2p.inx:12
 #, fuzzy
 msgid "Patches"
-msgstr "Popravki"
+msgstr "Obliži"
 
 #: ../share/extensions/path_mesh_m2p.inx:13
 #: ../share/extensions/polyhedron_3d.inx:77
@@ -43768,10 +43750,8 @@ msgstr ""
 "v vseh sistemih."
 
 #: ../share/extensions/pdflatex.inx:19
-#, fuzzy
-#| msgid "Customize greyscale components"
 msgid "Custom preamble code"
-msgstr "Prilagodi sivinske komponente"
+msgstr "Uvodna koda po meri"
 
 #: ../share/extensions/perfectboundcover.inx:3
 msgid "Perfect-Bound Cover Template"
@@ -46587,7 +46567,7 @@ msgstr ""
 "ohranjati živahno skupnost uporabnikov in razvijalcev z odprtim, v skupnost "
 "usmerjenim razvojem."
 
-#: ../org.inkscape.Inkscape.appdata.xml.in:40
+#: ../org.inkscape.Inkscape.appdata.xml.in:43
 msgid "Main application window"
 msgstr "Glavno okno programa"
 
