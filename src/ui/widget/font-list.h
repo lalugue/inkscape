@@ -20,26 +20,36 @@ public:
     struct FontInfo {
         Glib::RefPtr<Pango::FontFamily> ff;
         Glib::RefPtr<Pango::FontFace> face;
-        // Glib::ustring css_name;     // Style as Pango/CSS would write it.
-        // Glib::ustring display_name; // Style as Font designer named it.
         double weight;  // proxy for font weight - how black it is
         double width;   // proxy for font width - how compressed/extended it is
+        bool monospaced;
+        bool oblique;
     };
 private:
     enum class Sort { by_name, by_weight, by_width };
     void sort_fonts(Sort order);
     void filter();
-    void filter(Glib::ustring text);
+    struct Show {
+        bool monospaced;
+        bool oblique;
+        bool others;
+    };
+    void filter(Glib::ustring text, const Show& params);
 
     Glib::RefPtr<Gtk::Builder> _builder;
     Gtk::Grid& _main_grid;
     Gtk::TreeView& _font_list;
     Gtk::TreeViewColumn _text_column;
-    Gtk::CellRendererText _cell_renderer;
     Glib::RefPtr<Gtk::ListStore> _font_list_store;
     std::vector<FontInfo> _fonts;
     Sort _order = Sort::by_name;
     Glib::ustring _filter;
+
+    class CellFontRenderer : public Gtk::CellRendererText {
+    public:
+        Gtk::Widget* _tree = nullptr;
+        void render_vfunc(const ::Cairo::RefPtr< ::Cairo::Context>& cr, Widget& widget, const Gdk::Rectangle& background_area, const Gdk::Rectangle& cell_area, Gtk::CellRendererState flags) override;
+    } _cell_renderer;
 };
 
 }}} // namespaces

@@ -263,6 +263,16 @@ void FontInstance::init_face()
 #endif // FreeType
 }
 
+static FT_BBox get_glyph_bbox(FT_Face face, FT_UInt glyph_index) {
+    FT_Load_Glyph(face, glyph_index, FT_LOAD_NO_SCALE);
+    FT_Glyph glyph;
+    FT_Get_Glyph(face->glyph, &glyph);
+    FT_BBox box;
+    FT_Glyph_Get_CBox(glyph, FT_GLYPH_BBOX_UNSCALED, &box);
+    FT_Done_Glyph(glyph);
+    return box;
+}
+
 // Internal function to find baselines
 void FontInstance::find_font_metrics()
 {
@@ -275,6 +285,21 @@ void FontInstance::find_font_metrics()
     if (face->units_per_EM != 0) {  // If zero then it's a bitmap font.
 
         auto os2 = (TT_OS2*)FT_Get_Sfnt_Table(face, ft_sfnt_os2);
+
+        if (auto post = (TT_Postscript*)FT_Get_Sfnt_Table(face, ft_sfnt_post)) {
+            _italic_angle = FTFixedToDouble(post->italicAngle);
+            _fixed_width = post->isFixedPitch != 0;
+            // fsSelection mask: oblique/italic = 0x201
+            _oblique = post->italicAngle != 0 || (os2 && (os2->fsSelection & 0x201) != 0);
+
+            if (os2) {
+        //         if (post->italicAngle && os2->fsSelection == 0) {
+        // g_message("ital: %f  is fixed: %d  fam: %x  sel: %x - %s", FTFixedToDouble(post->italicAngle), (int)post->isFixedPitch,
+        //  (int)os2->sFamilyClass, (int)os2->fsSelection, pango_font_description_to_string(descr) );
+        //     }
+            }
+
+        }
         if (os2) {
             _ascent  = std::fabs((double)os2->sTypoAscender / face->units_per_EM);
             _descent = std::fabs((double)os2->sTypoDescender/ face->units_per_EM);
@@ -297,6 +322,8 @@ void FontInstance::find_font_metrics()
         if (os2 && os2->version >= 0x0002 && os2->version != 0xffffu) {
             // Only os/2 version 2 and above have sxHeight, 0xffff marks "old Mac fonts" without table
             _xheight = std::fabs((double)os2->sxHeight / face->units_per_EM);
+
+            _caps_height = std::fabs(static_cast<double>(os2->sCapHeight) / face->units_per_EM);
         } else {
             // Measure 'x' height in font. Recommended option by XSL standard if no sxHeight.
             FT_UInt index = FT_Get_Char_Index(face, 'x');
@@ -327,31 +354,27 @@ void FontInstance::find_font_metrics()
         }
 
         if (index != 0) {
-            FT_Load_Glyph(face, index, FT_LOAD_NO_SCALE);
-            FT_Glyph aglyph;
-            FT_Get_Glyph(face->glyph, &aglyph);
-            FT_BBox acbox;
-            FT_Glyph_Get_CBox(aglyph, FT_GLYPH_BBOX_UNSCALED, &acbox);
+            auto acbox = get_glyph_bbox(face, index);
             double math = (double)(acbox.yMin + acbox.yMax) / 2.0 / face->units_per_EM;
             _baselines[ SP_CSS_BASELINE_MATHEMATICAL ] = math;
             // std::cout << "Math baseline: - bbox: y_min: " << acbox.yMin
             //           << "  y_max: " << acbox.yMax
             //           << "  math: " << math << std::endl;
-            FT_Done_Glyph(aglyph);
         }
 
         // Find hanging baseline... assume it is at top of 'म'.
         index = FT_Get_Char_Index(face, 0x092E); // 'म'
         if (index != 0) {
-            FT_Load_Glyph(face, index, FT_LOAD_NO_SCALE);
-            FT_Glyph aglyph;
-            FT_Get_Glyph(face->glyph, &aglyph);
-            FT_BBox acbox;
-            FT_Glyph_Get_CBox(aglyph, FT_GLYPH_BBOX_UNSCALED, &acbox);
+            auto acbox = get_glyph_bbox(face, index);
             double hanging = (double)acbox.yMax / face->units_per_EM;
             _baselines[ SP_CSS_BASELINE_HANGING ] = hanging;
             // std::cout << "Hanging baseline:  प: " << hanging << std::endl;
-            FT_Done_Glyph(aglyph);
+        }
+
+        index = FT_Get_Char_Index(face, 'E');
+        if (index != 0) {
+            auto box = get_glyph_bbox(face, index);
+            _E_height = static_cast<double>(box.yMax - box.yMin) / face->units_per_EM;
         }
     }
 
