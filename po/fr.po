@@ -17629,10 +17629,6 @@ msgstr "Monter le chemin"
 msgid "Move path down"
 msgstr "Descendre le chemin"
 
-#: ../src/live_effects/parameter/patharray.cpp:309
-msgid "Remove path"
-msgstr "Supprimer le chemin"
-
 #: ../src/live_effects/parameter/patharray.cpp:344
 msgid "Link patharray parameter to path"
 msgstr "Lier les paramètres de chemin au chemin"

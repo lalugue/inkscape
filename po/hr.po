@@ -5361,7 +5361,7 @@ msgid ""
 "<defs> of the document"
 msgstr ""
 "Ukloni nekorištene definicije (kao što su gradijenti ili isijecajuće staze) "
-"iz <definicija> dokumenta"
+"iz <defs> dokumenta"
 
 #: ../src/actions/actions-file-window.cpp:126
 #: ../src/live_effects/lpe-fill-between-many.cpp:39
@@ -34267,7 +34267,7 @@ msgstr "<b>Višestruki stilovi</b>"
 
 #: ../src/ui/widget/paint-selector.cpp:532
 msgid "<b>Paint is undefined</b>"
-msgstr "<b>Boja nije određena<b>"
+msgstr "<b>Boja nije određena</b>"
 
 #: ../src/ui/widget/paint-selector.cpp:540
 msgid "<b>No paint</b>"
@@ -34458,7 +34458,7 @@ msgstr "Kružni gradijent (linija)"
 
 #: ../src/ui/widget/selected-style.cpp:214
 msgid "<b>M</b>"
-msgstr "<b>M<b>"
+msgstr "<b>M</b>"
 
 #: ../src/ui/widget/selected-style.cpp:216
 msgid "Mesh gradient (fill)"
