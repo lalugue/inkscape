@@ -5,6 +5,7 @@ set(util_SRC
     document-fonts.cpp
 	expression-evaluator.cpp
 	format_size.cpp
+	font-discovery.cpp
 	funclog.cpp
 	pool.cpp
     font-collections.cpp
@@ -30,6 +31,7 @@ set(util_SRC
 	expression-evaluator.h
     font-collections.h
 	fixed_point.h
+	font-discovery.h
 	format.h
 	format_size.h
 	forward-pointer-iterator.h

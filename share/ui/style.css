@@ -247,6 +247,10 @@ iconview *:hover {
     opacity: 0.5;
 }
 
+.secondary {
+    opacity: 0.7;
+}
+
 .halfrem-vert-space {
     margin-top: 0.5rem;
 }

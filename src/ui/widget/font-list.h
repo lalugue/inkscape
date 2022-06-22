@@ -8,6 +8,7 @@
 #include <gtkmm/box.h>
 #include <gtkmm/treeview.h>
 #include <gtkmm/liststore.h>
+#include "util/font-discovery.h"
 
 namespace Inkscape {
 namespace UI {
@@ -17,17 +18,19 @@ class FontList : public Gtk::Box {
 public:
     FontList();
     
-    struct FontInfo {
-        Glib::RefPtr<Pango::FontFamily> ff;
-        Glib::RefPtr<Pango::FontFace> face;
-        double weight;  // proxy for font weight - how black it is
-        double width;   // proxy for font width - how compressed/extended it is
-        bool monospaced;
-        bool oblique;
-    };
+    // implementation details ------------
+
+    // struct FontInfo {
+    //     Glib::RefPtr<Pango::FontFamily> ff;
+    //     Glib::RefPtr<Pango::FontFace> face;
+    //     double weight;  // proxy for font weight - how black it is
+    //     double width;   // proxy for font width - how compressed/extended it is
+    //     bool monospaced;
+    //     bool oblique;
+    // };
+    // enum class Sort { by_name, by_weight, by_width };
 private:
-    enum class Sort { by_name, by_weight, by_width };
-    void sort_fonts(Sort order);
+    void sort_fonts(Inkscape::FontOrder order);
     void filter();
     struct Show {
         bool monospaced;
@@ -42,7 +45,7 @@ private:
     Gtk::TreeViewColumn _text_column;
     Glib::RefPtr<Gtk::ListStore> _font_list_store;
     std::vector<FontInfo> _fonts;
-    Sort _order = Sort::by_name;
+    Inkscape::FontOrder _order = Inkscape::FontOrder::by_name;
     Glib::ustring _filter;
 
     class CellFontRenderer : public Gtk::CellRendererText {
