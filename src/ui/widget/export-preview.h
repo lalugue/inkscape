@@ -16,6 +16,8 @@
 #include "document.h"
 
 class SPObject;
+class SPItem;
+
 namespace Glib {
 class Timer;
 }
@@ -45,9 +47,12 @@ private:
     Glib::Timer *renderTimer = nullptr;
     bool pending = false;
     gdouble minDelay = 0.1;
+
+    std::vector<SPItem *> _hidden_excluded;
+    bool _hidden_requested = false;
 public:
     void setDocument(SPDocument *document);
-    void refreshHide(const std::vector<SPItem *> *list);
+    void refreshHide(const std::vector<SPItem *> &list = {});
     void hide_other_items_recursively(SPObject *o, const std::vector<SPItem *> &list);
     void setItem(SPItem *item);
     void setDbox(double x0, double x1, double y0, double y1);
@@ -63,6 +68,7 @@ private:
     void refreshPreview();
     void renderPreview();
     bool refreshCB();
+    void performHide(const std::vector<SPItem *> *list);
 };
 } // namespace Dialog
 } // namespace UI
