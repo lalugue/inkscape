@@ -123,9 +123,21 @@ void sort_fonts(std::vector<FontInfo>& fonts, FontOrder order) {
     }
 }
 
+Glib::ustring get_fontspec(const Glib::ustring& family, const Glib::ustring& face) {
+    return face.empty() ? family : family + ", " + face;
+    // return family + ", " + (face.empty() ? "Normal" : face);
+}
+
+Glib::ustring get_fontspec(const Glib::RefPtr<Pango::FontFamily>& ff, const Glib::RefPtr<Pango::FontFace>& face) {
+    if (!ff | !face) return Glib::ustring();
+
+    return get_fontspec(ff->get_name(), face->get_name());
+}
+
 Pango::FontDescription get_font_description(const Glib::RefPtr<Pango::FontFamily>& ff, const Glib::RefPtr<Pango::FontFace>& face) {
-    auto name = face->get_name();
-    auto desc = Pango::FontDescription(name.empty() ? ff->get_name() : ff->get_name() + ", " + name);
+    if (!face) return Pango::FontDescription("sans serif");
+
+    auto desc = face->describe(); // Pango::FontDescription(get_fontspec(ff, face));
     desc.unset_fields(Pango::FONT_MASK_SIZE);
     return desc;
 }

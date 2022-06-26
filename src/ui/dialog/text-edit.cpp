@@ -165,6 +165,8 @@ notebook->prepend_page(font_list, "Test");
     fontCollectionsUpdate = font_collections->connect_update([=]() { display_font_collections(); });
     fontCollectionsChangedSelection = font_collections->connect_selection_update([=]() { display_font_collections(); });
 
+font_list.signal_changed().connect([=](){ onChange(); });
+font_list.signal_apply().connect([=](){ onChange(); /*apply_button->clicked();*/ onApply(); });
     font_selector.set_name("TextEdit");
     change_font_count_label();
 
@@ -250,9 +252,10 @@ void TextEdit::onReadSelection ( bool dostyle, bool /*docontent*/ )
         // Update family/style based on selection.
         font_lister->selection_update();
         Glib::ustring fontspec = font_lister->get_fontspec();
-
+g_message("cur spec: %s", fontspec.c_str());
         // Update Font Face.
         font_selector.update_font ();
+font_list.set_current_font(font_lister->get_font_family(), font_lister->get_font_style());
 
         // Update Size.
         Inkscape::Preferences *prefs = Inkscape::Preferences::get();
@@ -260,6 +263,7 @@ void TextEdit::onReadSelection ( bool dostyle, bool /*docontent*/ )
         double size = sp_style_css_size_px_to_units(query.font_size.computed, unit);
         font_selector.update_size (size);
         selected_fontsize = size;
+font_list.set_current_size(size);
         // Update font features (variant) widget
         //int result_features =
         sp_desktop_query_style (desktop, &query, QUERY_STYLE_PROPERTY_FONTVARIANTS);
@@ -310,7 +314,7 @@ void TextEdit::setPreviewText (Glib::ustring const &font_spec, Glib::ustring con
     int unit = prefs->getInt("/options/font/unitType", SP_CSS_UNIT_PT);
     double pt_size =
         Inkscape::Util::Quantity::convert(
-            sp_style_css_size_units_to_px(font_selector.get_fontsize(), unit), "px", "pt");
+            sp_style_css_size_units_to_px(font_list.get_fontsize(), unit), "px", "pt");
     pt_size = std::min(pt_size, 100.0);
     // Pango font size is in 1024ths of a point
     auto const size = static_cast<int>(pt_size * PANGO_SCALE);
@@ -397,7 +401,7 @@ SPCSSAttr *TextEdit::fillTextStyle ()
 {
         SPCSSAttr *css = sp_repr_css_attr_new ();
 
-        Glib::ustring fontspec = font_selector.get_fontspec();
+        Glib::ustring fontspec = font_list.get_fontspec();
 
         if( !fontspec.empty() ) {
 
@@ -409,10 +413,10 @@ SPCSSAttr *TextEdit::fillTextStyle ()
             Inkscape::Preferences *prefs = Inkscape::Preferences::get();
             int unit = prefs->getInt("/options/font/unitType", SP_CSS_UNIT_PT);
             if (prefs->getBool("/options/font/textOutputPx", true)) {
-                os << sp_style_css_size_units_to_px(font_selector.get_fontsize(), unit)
+                os << sp_style_css_size_units_to_px(font_list.get_fontsize(), unit)
                    << sp_style_get_css_unit_string(SP_CSS_UNIT_PX);
             } else {
-                os << font_selector.get_fontsize() << sp_style_get_css_unit_string(unit);
+                os << font_list.get_fontsize() << sp_style_get_css_unit_string(unit);
             }
             sp_repr_css_set_property (css, "font-size", os.str().c_str());
         }
@@ -454,7 +458,7 @@ void TextEdit::onApply()
         }
     }
     if (items == 1) {
-        double factor = font_selector.get_fontsize() / selected_fontsize;
+        double factor = font_list.get_fontsize() / selected_fontsize;
         prefs->setDouble("/options/font/scaleLineHeightFromFontSIze", factor);
     }
     sp_desktop_set_style(desktop, css, true);
@@ -479,7 +483,7 @@ void TextEdit::onApply()
     }
 
     // Update FontLister
-    Glib::ustring fontspec = font_selector.get_fontspec();
+    Glib::ustring fontspec = font_list.get_fontspec();
     if( !fontspec.empty() ) {
         Inkscape::FontLister *fontlister = Inkscape::FontLister::get_instance();
         fontlister->set_fontspec( fontspec, false );
@@ -548,7 +552,7 @@ void TextEdit::display_font_collections()
 void TextEdit::onFontFeatures(Gtk::Widget * widgt, int pos)
 {
     if (pos == 1) {
-        Glib::ustring fontspec = font_selector.get_fontspec();
+        Glib::ustring fontspec = font_list.get_fontspec();
         if (!fontspec.empty()) {
             auto res = FontFactory::get().FaceFromFontSpecification(fontspec.c_str());
             if (res) {
@@ -608,7 +612,7 @@ void TextEdit::onChange()
     text_buffer->get_bounds(start, end);
     Glib::ustring str = text_buffer->get_text(start, end);
 
-    Glib::ustring fontspec = font_selector.get_fontspec();
+    Glib::ustring fontspec = font_list.get_fontspec();
     Glib::ustring features = font_features.get_markup();
     auto const &phrase = str.empty() ? getSamplePhrase() : str;
     setPreviewText(fontspec, features, phrase);
