@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: inkscape-translator@lists.inkscape.org\n"
 "POT-Creation-Date: 2021-03-27 02:51+0200\n"
-"PO-Revision-Date: 2022-04-11 10:46+0000\n"
+"PO-Revision-Date: 2022-06-24 13:48+0000\n"
 "Last-Translator: Sveinn í Felli <sv1@fellsnet.is>\n"
 "Language-Team: Icelandic\n"
 "Language: is\n"
@@ -11128,7 +11128,7 @@ msgstr "Upphaf- og endar hvers búts verða helmingur af stærð"
 
 #: ../src/live_effects/lpe-dashed-stroke.cpp:22
 msgid "Equalize dashes"
-msgstr ""
+msgstr "Jafna strik"
 
 #: ../src/live_effects/lpe-dashed-stroke.cpp:22
 msgid ""
@@ -11181,19 +11181,19 @@ msgstr "nálægasta, snúa fyrsta"
 
 #: ../src/live_effects/lpe-embrodery-stitch.cpp:36
 msgid "traveling salesman 2-opt (fast, bad)"
-msgstr ""
+msgstr "stysta leið milli allra punkta 2-valkosta (hratt, slæmt)"
 
 #: ../src/live_effects/lpe-embrodery-stitch.cpp:37
 msgid "traveling salesman 3-opt (fast, ok)"
-msgstr ""
+msgstr "stysta leið milli allra punkta 3-valkosta (hratt, gott)"
 
 #: ../src/live_effects/lpe-embrodery-stitch.cpp:38
 msgid "traveling salesman 4-opt (seconds)"
-msgstr ""
+msgstr "stysta leið milli allra punkta 4-valkosta (sekúndur)"
 
 #: ../src/live_effects/lpe-embrodery-stitch.cpp:39
 msgid "traveling salesman 5-opt (minutes)"
-msgstr ""
+msgstr "stysta leið milli allra punkta 5-valkosta (mínútur)"
 
 #: ../src/live_effects/lpe-embrodery-stitch.cpp:47
 msgid "straight line"
@@ -11332,7 +11332,7 @@ msgstr "Stefna"
 
 #: ../src/live_effects/lpe-extrude.cpp:26
 msgid "Defines the direction and magnitude of the extrusion"
-msgstr ""
+msgstr "Skilgreinir stefnu og magn útpressunar"
 
 #: ../src/live_effects/lpe-fill-between-many.cpp:27
 msgid "Without LPEs"
@@ -11348,7 +11348,7 @@ msgstr "Með öllum LPE-ferilbrellum"
 
 #: ../src/live_effects/lpe-fill-between-many.cpp:35
 msgid "Paths from which to take the original path data"
-msgstr ""
+msgstr "Ferlar þar sem á að ná í upprunaleg ferilgögn"
 
 #: ../src/live_effects/lpe-fill-between-many.cpp:36
 msgid "LPEs:"
@@ -11379,19 +11379,19 @@ msgstr "Sjálfvirkur viðsnúningur"
 
 #: ../src/live_effects/lpe-fill-between-strokes.cpp:21
 msgid "Second path:"
-msgstr ""
+msgstr "Næsti ferill:"
 
 #: ../src/live_effects/lpe-fill-between-strokes.cpp:21
 msgid "Second path from which to take the original path data"
-msgstr ""
+msgstr "Annar ferill þar sem á að ná í upprunaleg ferilgögn"
 
 #: ../src/live_effects/lpe-fill-between-strokes.cpp:22
 msgid "Reverse Second"
-msgstr ""
+msgstr "Snúa við næsta"
 
 #: ../src/live_effects/lpe-fill-between-strokes.cpp:22
 msgid "Reverses the second path order"
-msgstr ""
+msgstr "Snýr við röð næsta ferils"
 
 #: ../src/live_effects/lpe-fillet-chamfer.cpp:35
 #: ../src/ui/toolbar/text-toolbar.cpp:567
@@ -11422,11 +11422,11 @@ msgstr "Eining"
 
 #: ../src/live_effects/lpe-fillet-chamfer.cpp:46
 msgid "Method to calculate the fillet or chamfer"
-msgstr ""
+msgstr "Aðferð til að reikna kverkrúnnun eða hornskurð"
 
 #: ../src/live_effects/lpe-fillet-chamfer.cpp:48
 msgid "Mode, e.g. fillet or chamfer"
-msgstr ""
+msgstr "Hamur, t.d. kverkrúnnun eða hornskurður"
 
 #: ../src/live_effects/lpe-fillet-chamfer.cpp:50
 msgid "Radius, in unit or %"
@@ -11733,7 +11733,7 @@ msgstr "Merki þverana"
 
 #: ../src/live_effects/lpe-knot.cpp:373
 msgid "Crossing signs"
-msgstr ""
+msgstr "Merki þverana"
 
 #: ../src/live_effects/lpe-knot.cpp:668
 msgid ""
@@ -24246,7 +24246,7 @@ msgstr "Lárétt X-framskrið:"
 
 #: ../src/ui/dialog/svg-fonts-dialog.cpp:460
 msgid "Default glyph width for horizontal text"
-msgstr ""
+msgstr "Sjálfgefin breidd staftákna fyrir láréttan texta"
 
 #: ../src/ui/dialog/svg-fonts-dialog.cpp:461
 msgid "Horiz. Origin X:"
@@ -24288,6 +24288,7 @@ msgstr "Einingar á em:"
 msgid ""
 "Display units per <italic>em</italic> (nominally width of 'M' character)"
 msgstr ""
+"Skjáeiningar á hvert <italic>em</italic> (skilgreindri breidd 'M'-bókstafsins)"
 
 #: ../src/ui/dialog/svg-fonts-dialog.cpp:466
 msgid "Ascent:"
@@ -25247,6 +25248,8 @@ msgid ""
 "When scaling, scale selection symmetrically around its rotation center. When "
 "rotating/skewing, transform relative to opposite corner/edge."
 msgstr ""
+"Við kvörðun skal kvarða myndval samhverft í kringum snúningsmiðjupunkt þess."
+" Við snúning/skekkingu skal ummynda miðað við mótstætt horn/brún."
 
 #: ../src/ui/modifiers.cpp:53
 msgid "No Transform Snapping"
@@ -25420,7 +25423,7 @@ msgstr "Aðlaga <b>ferhyrnt</b> svæði textans."
 
 #: ../src/ui/shape-editor-knotholders.cpp:1916
 msgid "Adjust the <b>inline size</b> (line length) of the text."
-msgstr ""
+msgstr "Aðlaga <b>stærð innan línu</b> (línulengd) textans."
 
 #: ../src/ui/shape-editor-knotholders.cpp:1953
 msgid "Drag to resize the <b>flowed text frame</b>"
@@ -25601,7 +25604,7 @@ msgstr "Haldfang á sjálfvirkt mýktum hnút"
 #: ../src/ui/tool/node.cpp:615
 msgctxt "Path handle tip"
 msgid "node control handle"
-msgstr "stýrihaldfang á lið"
+msgstr "stýrihaldfang á hnúti"
 
 #: ../src/ui/tool/node.cpp:621
 #, c-format
@@ -25684,6 +25687,8 @@ msgid ""
 "<b>%s</b>: drag to shape the path, hover to lock, Shift+S to make smooth, "
 "Shift+Y to make symmetric. (more: %s)"
 msgstr ""
+"<b>%s</b>: draga til að forma ferilinn, yfirsvif til að læsa, Shift+S til að"
+" gera mjúkt, Shift+Y til að gera samhverft (meira: %s)"
 
 #: ../src/ui/tool/node.cpp:701
 #, c-format
@@ -25692,6 +25697,8 @@ msgid ""
 "<b>%s</b>: drag to shape the path, hover to lock, Shift+Y to make symmetric. "
 "(more: %s)"
 msgstr ""
+"<b>%s</b>: draga til að forma ferilinn, yfirsvif til að læsa, Shift+Y til að"
+" gera samhverft (meira: %s)"
 
 #: ../src/ui/tool/node.cpp:710
 #, c-format
@@ -25700,6 +25707,8 @@ msgid ""
 "<b>%s</b>: drag to make smooth, hover to lock, Shift+Y to make symmetric. "
 "(more: %s)"
 msgstr ""
+"<b>%s</b>: draga til að gera mjúkt, yfirsvif til að læsa, Shift+Y til að gera"
+" samhverft (meira: %s)"
 
 #: ../src/ui/tool/node.cpp:719
 #, c-format
@@ -26781,7 +26790,7 @@ msgstr "Snúa við mælingu"
 #: ../src/ui/toolbar/measure-toolbar.cpp:179
 #: ../src/ui/toolbar/measure-toolbar.cpp:180
 msgid "Phantom measure"
-msgstr ""
+msgstr "Draugamæling"
 
 #: ../src/ui/toolbar/measure-toolbar.cpp:188
 #: ../src/ui/toolbar/measure-toolbar.cpp:189
@@ -27308,7 +27317,7 @@ msgstr "Endar"
 
 #: ../src/ui/toolbar/pencil-toolbar.cpp:523
 msgid "Line endings when drawing with pressure-sensitive PowerPencil"
-msgstr ""
+msgstr "Línuendingar þegar teiknað er með þrýstingsnæmum PowerPencil-penna"
 
 #: ../src/ui/toolbar/rect-toolbar.cpp:96
 msgid "W:"
@@ -27426,46 +27435,60 @@ msgstr "Ummynda með verkfærastiku"
 #: ../src/ui/toolbar/select-toolbar.cpp:486
 msgid "Now <b>stroke width</b> is <b>scaled</b> when objects are scaled."
 msgstr ""
+"Núna er <b>breidd stroku</b> <b>kvörðuð</b> þegar hlutir eru kvarðaðir."
 
 #: ../src/ui/toolbar/select-toolbar.cpp:488
 msgid "Now <b>stroke width</b> is <b>not scaled</b> when objects are scaled."
 msgstr ""
+"Núna er <b>breidd stroku</b> <b>ekki kvörðuð</b> þegar hlutir eru kvarðaðir."
 
 #: ../src/ui/toolbar/select-toolbar.cpp:499
 msgid ""
 "Now <b>rounded rectangle corners</b> are <b>scaled</b> when rectangles are "
 "scaled."
 msgstr ""
+"Núna eru <b>rúnnuð horn í rétthyrningum</b> <b>kvörðuð</b> þegar"
+" rétthyrningar eru kvarðaðir."
 
 #: ../src/ui/toolbar/select-toolbar.cpp:501
 msgid ""
 "Now <b>rounded rectangle corners</b> are <b>not scaled</b> when rectangles "
 "are scaled."
 msgstr ""
+"Núna eru <b>rúnnuð horn í rétthyrningum</b> <b>ekki kvörðuð</b> þegar"
+" rétthyrningar eru kvarðaðir."
 
 #: ../src/ui/toolbar/select-toolbar.cpp:512
 msgid ""
 "Now <b>gradients</b> are <b>transformed</b> along with their objects when "
 "those are transformed (moved, scaled, rotated, or skewed)."
 msgstr ""
+"Núna eru <b>litstiglar</b> <b>ummyndaðir</b> ásamt hlutum sínum þegar þeim er"
+" umbreytt (fært, kvarðað, snúið eða skekkt)."
 
 #: ../src/ui/toolbar/select-toolbar.cpp:514
 msgid ""
 "Now <b>gradients</b> remain <b>fixed</b> when objects are transformed "
 "(moved, scaled, rotated, or skewed)."
 msgstr ""
+"Núna haldast <b>litstiglar</b> <b>fastir</b> þegar hlutum er umbreytt (fært,"
+" kvarðað, snúið eða skekkt)."
 
 #: ../src/ui/toolbar/select-toolbar.cpp:525
 msgid ""
 "Now <b>patterns</b> are <b>transformed</b> along with their objects when "
 "those are transformed (moved, scaled, rotated, or skewed)."
 msgstr ""
+"Núna eru <b>mynstur <b>ummynduð</b> ásamt hlutum sínum þegar þeim er umbreytt"
+" (fært, kvarðað, snúið eða skekkt)."
 
 #: ../src/ui/toolbar/select-toolbar.cpp:527
 msgid ""
 "Now <b>patterns</b> remain <b>fixed</b> when objects are transformed (moved, "
 "scaled, rotated, or skewed)."
 msgstr ""
+"Núna haldast <b>mynstur <b>föst</b> þegar hlutum er umbreytt (fært, kvarðað,"
+" snúið eða skekkt)."
 
 #: ../src/ui/toolbar/spiral-toolbar.cpp:79
 msgid "just a curve"
@@ -28622,18 +28645,20 @@ msgstr "Búa til 3D kassa"
 msgid ""
 "<b>Guide path selected</b>; start drawing along the guide with <b>Ctrl</b>"
 msgstr ""
+"<b>Stoðlínuferill valinn</b>; byrjaðu að teikna meðfram stoðlínunni með <b"
+">Ctrl</b>"
 
 #: ../src/ui/tools/calligraphic-tool.cpp:516
 msgid "<b>Select a guide path</b> to track with <b>Ctrl</b>"
-msgstr ""
+msgstr "<b>Veldu stoðlínuferil</b> til að línuteikna meðfram <b>Ctrl</b>"
 
 #: ../src/ui/tools/calligraphic-tool.cpp:651
 msgid "Tracking: <b>connection to guide path lost!</b>"
-msgstr ""
+msgstr "Línuteiknun: <b>tenging við stoðlínuferil rofnaði!</b>"
 
 #: ../src/ui/tools/calligraphic-tool.cpp:651
 msgid "<b>Tracking</b> a guide path"
-msgstr ""
+msgstr "<b>Línuteiknun</b> meðfram stoðlínuferli"
 
 #: ../src/ui/tools/calligraphic-tool.cpp:654
 msgid "<b>Drawing</b> a calligraphic stroke"
@@ -28745,14 +28770,16 @@ msgid ""
 msgid_plural ""
 "Area filled, path with <b>%d</b> nodes created and unioned with selection."
 msgstr[0] ""
+"Svæði fyllt, ferill með <b>%d</b> hnút útbúinn og sameinað myndvalinu."
 msgstr[1] ""
+"Svæði fyllt, ferill með <b>%d</b> hnútum útbúinn og sameinað myndvalinu."
 
 #: ../src/ui/tools/flood-tool.cpp:480
 #, c-format
 msgid "Area filled, path with <b>%d</b> node created."
 msgid_plural "Area filled, path with <b>%d</b> nodes created."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Svæði fyllt, ferill með <b>%d</b> hnút útbúinn."
+msgstr[1] "Svæði fyllt, ferill með <b>%d</b> hnútum útbúinn."
 
 #: ../src/ui/tools/flood-tool.cpp:751 ../src/ui/tools/flood-tool.cpp:1056
 msgid "<b>Area is not bounded</b>, cannot fill."
@@ -28763,6 +28790,8 @@ msgid ""
 "<b>Only the visible part of the bounded area was filled.</b> If you want to "
 "fill all of the area, undo, zoom out, and fill again."
 msgstr ""
+"<b>Aðeins sýnilegur hluti afmarkaða svæðisins var fylltur.</b> Ef þú vilt"
+" fylla allt svæðið, ættirðu að afturkalla, renna frá og fylla aftur."
 
 #: ../src/ui/tools/flood-tool.cpp:1076 ../src/ui/tools/flood-tool.cpp:1217
 msgid "Fill bounded area"
@@ -29272,6 +29301,8 @@ msgid ""
 "<b>Draw over</b> objects to select them; release <b>%s</b> to switch to "
 "rubberband selection"
 msgstr ""
+"<b>Draga yfir</b> hluti til að velja þá; slepptu <b>%s</b> til að skipta yfir"
+" í valmörk"
 
 #: ../src/ui/tools/select-tool.cpp:632
 #, c-format
@@ -29279,6 +29310,8 @@ msgid ""
 "<b>Drag near</b> objects to select them; press <b>%s</b> to switch to touch "
 "selection"
 msgstr ""
+"<b>Draga nálægt</b> hlutum til að velja þá; ýttu á <b>%s</b> til að skipta"
+" yfir í snertival"
 
 #: ../src/ui/tools/select-tool.cpp:635
 #, c-format
@@ -29286,6 +29319,8 @@ msgid ""
 "<b>Drag around</b> objects to select them; press <b>%s</b> to switch to "
 "touch selection"
 msgstr ""
+"<b>Draga</b> í kringum hluti til að velja þá; ýttu á <b>%s</b> til að skipta"
+" yfir í snertival"
 
 #: ../src/ui/tools/select-tool.cpp:1055
 msgid "Selected object is not a group. Cannot enter."
@@ -34779,7 +34814,7 @@ msgstr ""
 
 #: ../share/extensions/inkex/deprecated.py:143
 msgid "Use `self.svg.get_ids()` instead of {} and `doc_ids`."
-msgstr ""
+msgstr "Notaðu `self.svg.get_ids()` í staðinn fyrir {} og `doc_ids`."
 
 #: ../share/extensions/inkex/deprecated.py:148
 msgid "{} has been removed"
@@ -34928,6 +34963,11 @@ msgid ""
 "update the JessyInk script.\n"
 "\n"
 msgstr ""
+"JessyInk-skriftan er ekki sett upp í þessari SVG-skrá eða er úr annarri"
+" útgáfu en JessyInk-forritsaukinn. Veldu \"setja upp/uppfæra...\" úr"
+" \"JessyInk\"-undirvalmyndinni í \"Forritsaukar\"-valmyndinni til að setja"
+" upp eða uppfæra JessyInk-skriftuna.\n"
+"\n"
 
 #: ../share/extensions/jessyink_master_slide.py:43
 msgid "Layer not found. Removed current master slide selection.\n"
@@ -35104,6 +35144,8 @@ msgid ""
 "The first selected object is neither a path nor a group.\n"
 "Try using the procedure Path->Object to Path."
 msgstr ""
+"Fyrsti valdi hluturinn er hvorki ferill né hópur.\n"
+"Prófaðu að nota aðgerðirnar 'Ferill -> Hlutur í feril'."
 
 #: ../share/extensions/path_envelope.py:55
 msgid "Second selected path is too short. Must be four or more nodes."
@@ -35124,6 +35166,9 @@ msgid ""
 "required by this extension. Please install them.  On a Debian-like system "
 "this can be done with the command, sudo apt-get install python-numpy."
 msgstr ""
+"Mistókst að flytja inn numpy eða numpy.linalg einingar. Þessar einingar eru"
+" nauðsynlegar fyrir forritsviðaukann. Settu þær upp.  Á Debian-ættuðum kerfum"
+" er hægt að gera það með skipuninni \"sudo apt-get install python-numpy\"."
 
 #: ../share/extensions/perspective.py:46
 msgid "This extension requires two selected objects."
@@ -36145,6 +36190,8 @@ msgid ""
 "In order to use the extension, select a rectangle first. The rectangle will "
 "serve as bounding box of the plot."
 msgstr ""
+"Til að nota þennan forritsauka þarftu fyrst að velja ferhyrning."
+" Ferhyrningurinn mun nýtast sem umgjörð fyrir línuritið."
 
 #: ../share/extensions/funcplot.inx:53
 msgid "Function:"
@@ -36506,7 +36553,7 @@ msgstr "Mappa:"
 #: ../share/extensions/gcodetools_lathe.inx:63
 #: ../share/extensions/gcodetools_path_to_gcode.inx:43
 msgid "Z safe height for G00 move over blank:"
-msgstr ""
+msgstr "Örugg hæð Z fyrir yfirfærslu G00 yfir rennslisefni:"
 
 #: ../share/extensions/gcodetools_area.inx:84
 #: ../share/extensions/gcodetools_dxf_points.inx:30
@@ -36730,7 +36777,7 @@ msgstr "graffiti-punktar"
 #: ../share/extensions/gcodetools_graffiti.inx:30
 #: ../share/extensions/gcodetools_orientation_points.inx:13
 msgid "in-out reference point"
-msgstr ""
+msgstr "inn/út viðmiðunarpunktur"
 
 #: ../share/extensions/gcodetools_graffiti.inx:33
 #: ../share/extensions/gcodetools_orientation_points.inx:15
@@ -36795,11 +36842,11 @@ msgstr "Hliðra ferli"
 
 #: ../share/extensions/gcodetools_lathe.inx:16
 msgid "Lathe X axis remap:"
-msgstr ""
+msgstr "Endurvörpun á X-ás rennslis:"
 
 #: ../share/extensions/gcodetools_lathe.inx:17
 msgid "Lathe Z axis remap:"
-msgstr ""
+msgstr "Endurvörpun á Z-ás rennslis:"
 
 #: ../share/extensions/gcodetools_lathe.inx:20
 msgid "Lathe modify path"
@@ -36812,6 +36859,10 @@ msgid ""
 "with a rectangular cutter.\n"
 "        "
 msgstr ""
+"\n"
+"            Þessi aðgerð breytir ferlinum þannig að mögulegt sé að skera hann"
+" með ferhyrndum skera.\n"
+"        "
 
 #: ../share/extensions/gcodetools_orientation_points.inx:4
 msgid "Orientation points"
@@ -39580,6 +39631,8 @@ msgid ""
 "This extension creates a parametric plot of a vector valued function (in "
 "variable t)."
 msgstr ""
+"Þessi forritsviðauki útbýr parametrískt línurit vektorgildis falls (í breytu"
+" t)."
 
 #: ../share/extensions/param_curves.inx:48
 msgid "X-Function:"
@@ -39662,6 +39715,14 @@ msgid ""
 "first node of the path.\n"
 "    * Step: numbering step between two nodes."
 msgstr ""
+"Þessi forritsviðauki skiptir út hnútum myndvalsins með tölusettum punktum"
+" miðað við eftirfarandi valkosti:\n"
+"    * Leturstærð: stærð á merkingum hnútnúmers (20px, 12pt...).\n"
+"    * Punktstærð: þvermál punkta sem settir eru á ferilhnúta placed at path"
+" nodes (10px, 2mm...).\n"
+"    * Númer upphafspunkts: fyrsta talan í rununni, úthlutað á fyrsta hnút"
+" ferilsins.\n"
+"    * Þrepun: þrep tölusetningar milli tveggja hnúta."
 
 #: ../share/extensions/path_to_absolute.inx:3
 msgid "To Absolute"
@@ -40976,6 +41037,10 @@ msgid ""
 "objects inside a single selected group, or a selection of multiple objects "
 "on the current drawing level (layer or group)."
 msgstr ""
+"Þessi forritsviðauki breytir z-röðun (hæð á myndfleti) hluta byggt á"
+" staðsetningu þeirra á myndfletinum eða fyrirliggjandi z-röðun þeirra."
+" Myndval: Forritsviðaukinn endurstaflar hlutum innan staks valins hóps eða"
+" vali margra hluta í teikningunni (lagi eða hóp)."
 
 #: ../share/extensions/restack.inx:51 ../share/extensions/ungroup_deep.inx:12
 msgid "Arrange"
@@ -41046,6 +41111,7 @@ msgid ""
 "Include an area of the given size around the Inkscape page in the final "
 "document."
 msgstr ""
+"Hafa svæði af tiltekinni stærð í kringum Inkscape-síðuna í lokaskjalinu."
 
 #: ../share/extensions/scribus_export_pdf.inx:16
 msgid "Show bleed marks"
@@ -41981,6 +42047,8 @@ msgid ""
 "This extension allows you to create interactive elements in your drawing. "
 "These will react to user actions when the file is viewed in a web browser."
 msgstr ""
+"Þessi forritsviðauki gerir kleift að útbúa gagnvirk atriði í teikningum."
+" Þessi atriði bregðast við aðgerðum notandans þegar skráin er skoðuð í vafra."
 
 #: ../share/extensions/web_interactive_mockup.inx:22
 msgid ""
