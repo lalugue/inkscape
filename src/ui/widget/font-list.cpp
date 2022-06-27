@@ -16,6 +16,7 @@
 #include "iconrenderer.h"
 #include "ui/builder-utils.h"
 #include "ui/icon-loader.h"
+#include "svg/css-ostringstream.h"
 
 using Inkscape::UI::create_builder;
 
@@ -43,7 +44,19 @@ Glib::ustring get_full_name(const Inkscape::FontInfo& font_info) {
     if (!font_info.face) return "";
 
     auto desc = font_info.face->describe();
-    return /*font_info.ff->get_name() + ' ' +*/ desc.to_string(); // font_info.face->get_name();
+
+// g_message("full: '%s' '%s' - '%s', s: '%s'", font_info.ff->get_name().c_str(), font_info.face->get_name().c_str(), desc.to_string().c_str(), style.c_str());
+
+    auto name = desc.to_string();
+    // TODO: sanitize name, remove some stray characters; delegate this to common fn
+    auto& raw = name.raw();
+    if (raw.size() > 0 && raw[raw.size() - 1] == ',') {
+        auto copy = name.raw();
+        copy.pop_back();
+        name = copy;
+    }
+
+    return name;
 }
 
 class CellFontRenderer : public Gtk::CellRendererText {
@@ -83,7 +96,7 @@ void get_cell_data_func(Gtk::CellRenderer* cell_renderer, const Gtk::TreeIter& i
         missing ? "Sans" : Inkscape::get_font_description(font.ff, font.face).to_string());
     auto markup = Glib::ustring::format("<span size='", renderer._font_size, "%' font='", font_desc, "'>", text, "</span>");
     if (renderer._show_font_name) {
-        markup += Glib::ustring::format("\n<span size='small'>", fname, "</span>");
+        markup += Glib::ustring::format("\n<span size='small' font='Noto Sans'>", fname, "</span>");
     }
     renderer.set_property("markup", markup);
     renderer._font = font;
@@ -239,17 +252,17 @@ FontList::FontList() :
     // _text_column.pack_start(*_cell_icon_renderer, false);
     _text_column.pack_start(*_cell_renderer, true);
     _text_column.set_fixed_width(100); // limit minimal width to keep entire dialog narrow; column can still grow
-    _text_column.add_attribute(*_cell_renderer, "text", 0);
+    // _text_column.add_attribute(*_cell_renderer, "text", 0);
     _text_column.set_cell_data_func(*_cell_renderer, &get_cell_data_func);
     _text_column.set_expand();
     // _text_column.add_attribute(ico->property_icon(), g_column_model.icon);
     _font_list.append_column(_text_column);
 
-    _icon_column.pack_start(*_cell_icon_renderer, false);
-    _icon_column.set_fixed_width(16);
+    // _icon_column.pack_start(*_cell_icon_renderer, false);
+    // _icon_column.set_fixed_width(16);
     // _icon_column.add_attribute(*_cell_icon_renderer, "icon", 0);
-    _icon_column.add_attribute(ico->property_icon(), g_column_model.icon);
-    _font_list.append_column(_icon_column); //"ico", *_cell_icon_renderer);
+    // _icon_column.add_attribute(ico->property_icon(), g_column_model.icon);
+    // _font_list.append_column(_icon_column); //"ico", *_cell_icon_renderer);
 
     _font_list.set_search_column(-1); // disable, we have a separate search/filter
     _font_list.set_enable_search(false);
@@ -260,12 +273,18 @@ g_message("get font start");
 g_message("get font done");
 
     const auto step = std::pow(2.0, 1.0 / 3.0);
+    // formula for slow exponential growth for font size slider: cube root of 2 to the power N;
+    // use only whole numbers (ints); start from '4' (index+6), smaller sizes are not very useful;
+    // exponential progression is used to cover range of more interesting font sizes
+    auto size_growth = [=](double index) { return static_cast<int>(std::round(std::pow(step, index + 6))); };
+    // inverse of the above exponential formula
+    auto inverse = [=](double size) { return std::log(size) / std::log(step) - 6; };
+
     _font_size_scale.signal_value_changed().connect([=](){
         if (_update.pending()) return;
 
         auto scoped = _update.block();
-        auto index = _font_size_scale.get_value();
-        auto size = static_cast<int>(std::round(std::pow(step, index + 6)));
+        auto size = size_growth(_font_size_scale.get_value());
         _font_size.get_entry()->set_text(std::to_string(size));
         _signal_changed.emit();
     });
@@ -278,9 +297,7 @@ g_message("get font done");
         if (!text.empty()) {
             auto size = ::atof(text.c_str());
             if (size > 0) {
-                auto index = std::log(size) / std::log(step) - 6;
-                _font_size_scale.set_value(index);
-            
+                _font_size_scale.set_value(inverse(size));
                 _signal_changed.emit();
             }
         }
@@ -295,26 +312,29 @@ g_message("get font done");
             _signal_changed.emit();
         }
     });
+
+    // double-click to apply:
     _font_list.signal_row_activated().connect([=](const Gtk::TreeModel::Path& path, Gtk::TreeViewColumn*){
         if (!_update.pending()) {
             auto scoped = _update.block();
-        // g_message("act row");
             _signal_apply.emit();
         }
     });
 
-    // _font_list.signal_button_release_event().connect([=](GdkEventButton* btn){
-    //     if (btn->button == 1) {}
-    //     return true;
-    // });
 }
 
 void CellFontRenderer::render_vfunc(const ::Cairo::RefPtr<::Cairo::Context>& cr, Gtk::Widget& widget, const Gdk::Rectangle& background_area, const Gdk::Rectangle& cell_area, Gtk::CellRendererState flags) {
 
-    CellRendererText::render_vfunc(cr, widget, background_area, cell_area, flags);
+    Gdk::Rectangle bgnd(background_area);
+    Gdk::Rectangle area(cell_area);
+    auto margin = _missing ? 20 : 4; // space for icon
+    bgnd.set_x(bgnd.get_x() + margin);
+    area.set_x(area.get_x() + margin);
+
+    CellRendererText::render_vfunc(cr, widget, bgnd, area, flags);
 
     if (_missing) {
-        // missing font
+        // missing font: draw icon?
     }
 
     // add separator if we display two lines per font
@@ -350,11 +370,10 @@ void FontList::sort_fonts(Inkscape::FontOrder order) {
 
 bool FontList::select_font(const Glib::ustring& fontspec) {
     bool found = false;
-    // auto fontspec = Inkscape::get_fontspec(font.ff, font.face);
 
     _font_list_store->foreach([&](const Gtk::TreeModel::Path& path, const Gtk::TreeModel::iterator& iter){
         const auto& row = *iter;
-        const auto& cur_font = row.get_value(g_column_model.font);
+        const auto& font = row.get_value(g_column_model.font);
         auto missing = row.get_value(g_column_model.missing);
         if (missing) {
             auto spec = row.get_value(g_column_model.missing_name);
@@ -365,8 +384,8 @@ bool FontList::select_font(const Glib::ustring& fontspec) {
                 return true; // stop
             }
         }
-        else { //if (cur_font.ff == font.ff && cur_font.face == font.face) {
-            auto spec = Inkscape::get_fontspec(cur_font.ff, cur_font.face);
+        else {
+            auto spec = Inkscape::get_inkscape_fontspec(font.ff, font.face);
             if (spec == fontspec) {
                 _font_list.get_selection()->select(row);
                 _font_list.scroll_to_row(path);
@@ -412,6 +431,7 @@ void FontList::filter(Glib::ustring text, const Show& params) {
 
     _font_list_store->freeze_notify();
     _font_list_store->clear();
+    _extra_fonts = 0;
     // _fspec_to_row.clear();
 
     for (auto&& f : _fonts) {
@@ -443,11 +463,20 @@ void FontList::filter(Glib::ustring text, const Show& params) {
 
     _font_list_store->thaw_notify();
 
+    update_font_count();
+}
+
+void FontList::update_font_count() {
     auto& font_count = get_widget<Gtk::Label>(_builder, "font-count");
     auto count = _font_list_store->children().size();
     auto total = _fonts.size();
-    font_count.set_text(count == total ? _("All fonts") : Glib::ustring::format(count, ' ', _("of"), ' ', total, ' ', _("fonts")));
-
+    // count could be larger than total if we insert "missing" font(s)
+    auto label = count >= total ? _("All fonts") : Glib::ustring::format(count, ' ', _("of"), ' ', total, ' ', _("fonts"));
+    // if (_extra_fonts > 0) {
+    //     // indicate that extra rows were inserted to avoid surprises of incorrect count
+    //     label += Glib::ustring::format(" +", _extra_fonts);
+    // }
+    font_count.set_text(label);
 }
 
 double FontList::get_fontsize() const {
@@ -461,9 +490,14 @@ double FontList::get_fontsize() const {
 
 Glib::ustring FontList::get_fontspec() const {
     if (auto iter = _font_list.get_selection()->get_selected()) {
+        auto missing = iter->get_value(g_column_model.missing);
+        if (missing) {
+            return iter->get_value(g_column_model.missing_name);
+        }
         const auto& font = iter->get_value(g_column_model.font);
-        return Inkscape::get_fontspec(font.ff, font.face);
-        // return get_font_description(font->ff, font->face).to_string();
+        auto fspec = Inkscape::get_inkscape_fontspec(font.ff, font.face);
+// g_message("get fspec: %s", fspec.c_str());
+        return fspec;
     }
 
     return "Sans"; // no selection
@@ -471,14 +505,13 @@ Glib::ustring FontList::get_fontspec() const {
 
 void FontList::set_current_font(const Glib::ustring& family, const Glib::ustring& face) {
     if (_update.pending()) return;
-    // if (family.empty() && face.empty()) {
-        //
-        // return;
-    // }
-g_message("setcur: %s - %s", family.c_str(), face.c_str());
+// g_message("setcur: %s - %s", family.c_str(), face.c_str());
 
     auto fontspec = Inkscape::get_fontspec(family, face);
-    if (fontspec == _current_fspec) return;
+    if (fontspec == _current_fspec) {
+        select_font(fontspec);
+        return;
+    }
 
     _current_fspec = fontspec;
 
@@ -491,14 +524,15 @@ void FontList::set_current_size(double size) {
     _current_fsize = size;
     if (_update.pending()) return;
     //todo
-g_message("set fsize: %f", size);
+// g_message("set fsize: %f", size);
 
-    _font_size.get_entry()->set_text(std::to_string(size));
-    // _font_size_scale.set_value(size);
+    CSSOStringStream os;
+    os.precision(3);os << size;
+    _font_size.get_entry()->set_text(os.str());
 }
 
 void FontList::add_font(const Glib::ustring& fontspec, bool select) {
-g_message("addfnt: %s", fontspec.c_str());
+// g_message("addfnt: %s", fontspec.c_str());
     // auto it = std::find_if(begin(_fonts), end(_fonts), [&](const FontInfo& f){
     //     return Inkscape::get_fontspec(f.ff, f.face) == fontspec;
     // });
@@ -510,45 +544,31 @@ g_message("addfnt: %s", fontspec.c_str());
     if (found) return;
 
     auto it = std::find_if(begin(_fonts), end(_fonts), [&](const FontInfo& f){
-        return Inkscape::get_fontspec(f.ff, f.face) == fontspec;
+        return Inkscape::get_inkscape_fontspec(f.ff, f.face) == fontspec;
     });
 
     if (it != end(_fonts)) {
-//         _font_list_store->foreach([&](const Gtk::TreeModel::Path& path, const Gtk::TreeModel::iterator& iter){
-//             const auto& row = *iter;
-//             const auto& font = row.get_value(g_column_model.font);
-//             if (it->ff == font.ff && it->face == font.face) {
-// g_message("addfnt3: %s", fontspec.c_str());
-//                 if (select) {
-//                     _font_list.get_selection()->select(row);
-//                     _font_list.scroll_to_row(path);
-//                 }
-//                 found = true;
-//                 return true; // stop
-//             }
-//             return false; // continue
-//         });
+        // font found in the "all fonts" vector, but
+// g_message("addfnt4: %s", fontspec.c_str());
+        // this font is filtered out; add it temporarily to the tree list
+        Gtk::TreeModel::iterator treeModelIter = _font_list_store->prepend();
+        auto& top_row = *treeModelIter;
+        top_row[g_column_model.font] = *it;
+        top_row[g_column_model.missing] = false;
+        top_row[g_column_model.missing_name] = Glib::ustring();
+        top_row[g_column_model.icon] = 0;
+        // _fspec_to_row[fontspec.raw()] = &top_row;
 
-        // if (!found) {
-g_message("addfnt4: %s", fontspec.c_str());
-            // this font is filtered out; add it temporarily to the tree list
-            Gtk::TreeModel::iterator treeModelIter = _font_list_store->prepend();
-            auto& top_row = *treeModelIter;
-            top_row[g_column_model.font] = *it;
-            top_row[g_column_model.missing] = false;
-            top_row[g_column_model.missing_name] = Glib::ustring();
-            top_row[g_column_model.icon] = 0;
-            // _fspec_to_row[fontspec.raw()] = &top_row;
+        if (select) {
+            _font_list.get_selection()->select(top_row);
+            auto path = _font_list_store->get_path(treeModelIter);
+            _font_list.scroll_to_row(path);
+        }
 
-            if (select) {
-                _font_list.get_selection()->select(top_row);
-                auto path = _font_list_store->get_path(treeModelIter);
-                _font_list.scroll_to_row(path);
-            }
-        // }
+        ++_extra_fonts; // extra font entry inserted
     }
     else {
-g_message("addfnt5: %s", fontspec.c_str());
+// g_message("addfnt5: %s", fontspec.c_str());
         // font not found; insert a placeholder to show missing font: font is used in a document,
         // but not available in the system
         Inkscape::FontInfo missing;
@@ -565,8 +585,11 @@ g_message("addfnt5: %s", fontspec.c_str());
             auto path = _font_list_store->get_path(treeModelIter);
             _font_list.scroll_to_row(path);
         }
+
+        ++_extra_fonts; // extra font entry for a missing font added
     }
-g_message("addfnt6: %s", fontspec.c_str());
+// g_message("addfnt6: %s", fontspec.c_str());
+    update_font_count();
 }
 
 }}} // namespaces

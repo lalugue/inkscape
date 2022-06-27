@@ -103,7 +103,10 @@ void sort_fonts(std::vector<FontInfo>& fonts, FontOrder order) {
                 auto na = a.ff->get_name();
                 auto nb = b.ff->get_name();
                 if (na != nb) {
+                    // lexicographical order:
                     return na < nb;
+                    // alphabetical order:
+                    //return na.raw() < nb.raw();
                 }
                 return get_font_style_order(a.face->describe()) < get_font_style_order(b.face->describe());
             });
@@ -125,19 +128,25 @@ void sort_fonts(std::vector<FontInfo>& fonts, FontOrder order) {
 
 Glib::ustring get_fontspec(const Glib::ustring& family, const Glib::ustring& face) {
     return face.empty() ? family : family + ", " + face;
-    // return family + ", " + (face.empty() ? "Normal" : face);
 }
 
-Glib::ustring get_fontspec(const Glib::RefPtr<Pango::FontFamily>& ff, const Glib::RefPtr<Pango::FontFace>& face) {
+Glib::ustring get_face_style(const Pango::FontDescription& desc) {
+    Pango::FontDescription copy(desc);
+    copy.unset_fields(Pango::FONT_MASK_FAMILY);
+    copy.unset_fields(Pango::FONT_MASK_SIZE);
+    return copy.to_string();
+}
+
+Glib::ustring get_inkscape_fontspec(const Glib::RefPtr<Pango::FontFamily>& ff, const Glib::RefPtr<Pango::FontFace>& face) {
     if (!ff | !face) return Glib::ustring();
 
-    return get_fontspec(ff->get_name(), face->get_name());
+    return get_fontspec(ff->get_name(), get_face_style(face->describe()));
 }
 
 Pango::FontDescription get_font_description(const Glib::RefPtr<Pango::FontFamily>& ff, const Glib::RefPtr<Pango::FontFace>& face) {
     if (!face) return Pango::FontDescription("sans serif");
 
-    auto desc = face->describe(); // Pango::FontDescription(get_fontspec(ff, face));
+    auto desc = face->describe();
     desc.unset_fields(Pango::FONT_MASK_SIZE);
     return desc;
 }

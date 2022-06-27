@@ -3,7 +3,7 @@
 #ifndef INKSCAPE_UI_WIDGET_FONT_LIST_H
 #define INKSCAPE_UI_WIDGET_FONT_LIST_H
 
-#include <unordered_map>
+// #include <unordered_map>
 #include <vector>
 #include <gtkmm/builder.h>
 #include <gtkmm/grid.h>
@@ -46,6 +46,7 @@ private:
     void filter(Glib::ustring text, const Show& params);
     void add_font(const Glib::ustring& fontspec, bool select);
     bool select_font(const Glib::ustring& fontspec);
+    void update_font_count();
 
     sigc::signal<void ()> _signal_changed;
     sigc::signal<void ()> _signal_apply;
@@ -66,6 +67,7 @@ private:
     Glib::ustring _current_fspec;
     double _current_fsize = 0.0;
     OperationBlocker _update;
+    int _extra_fonts = 0;
 };
 
 }}} // namespaces

@@ -3,6 +3,7 @@
 #include <vector>
 #include <pangomm.h>
 namespace Inkscape {
+
 struct FontInfo {
     Glib::RefPtr<Pango::FontFamily> ff;
     Glib::RefPtr<Pango::FontFace> face;
@@ -22,7 +23,10 @@ void sort_fonts(std::vector<FontInfo>& fonts, FontOrder order);
 
 Pango::FontDescription get_font_description(const Glib::RefPtr<Pango::FontFamily>& ff, const Glib::RefPtr<Pango::FontFace>& face);
 
-Glib::ustring get_fontspec(const Glib::RefPtr<Pango::FontFamily>& ff, const Glib::RefPtr<Pango::FontFace>& face);
 Glib::ustring get_fontspec(const Glib::ustring& family, const Glib::ustring& face);
+
+Glib::ustring get_face_style(const Pango::FontDescription& desc);
+
+Glib::ustring get_inkscape_fontspec(const Glib::RefPtr<Pango::FontFamily>& ff, const Glib::RefPtr<Pango::FontFace>& face);
 
 } // namespace

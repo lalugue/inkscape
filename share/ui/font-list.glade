@@ -13,6 +13,12 @@
     <property name="step-increment">10</property>
     <property name="page-increment">20</property>
   </object>
+  <object class="GtkImage" id="close">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="icon-name">close-button-symbolic</property>
+    <property name="icon_size">1</property>
+  </object>
   <object class="GtkImage" id="img-gear">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
@@ -413,26 +419,6 @@
       </packing>
     </child>
     <child>
-      <object class="GtkLabel" id="font-count">
-        <property name="visible">True</property>
-        <property name="can-focus">False</property>
-        <property name="halign">end</property>
-        <property name="valign">start</property>
-        <property name="margin-end">5</property>
-        <property name="margin-top">3</property>
-        <property name="margin-bottom">3</property>
-        <property name="label" translatable="yes">&lt;small&gt;256 fonts&lt;/small&gt;</property>
-        <property name="use-markup">True</property>
-        <style>
-          <class name="secondary"/>
-        </style>
-      </object>
-      <packing>
-        <property name="left-attach">3</property>
-        <property name="top-attach">1</property>
-      </packing>
-    </child>
-    <child>
       <object class="GtkSeparator">
         <property name="visible">True</property>
         <property name="can-focus">False</property>
@@ -454,7 +440,7 @@
         <child>
           <object class="GtkMenuButton" id="btn-sort">
             <property name="visible">True</property>
-            <property name="can-focus">False</property>
+            <property name="can-focus">True</property>
             <property name="focus-on-click">False</property>
             <property name="receives-default">True</property>
             <property name="halign">start</property>
@@ -502,7 +488,7 @@
         <child>
           <object class="GtkMenuButton" id="btn-filter">
             <property name="visible">True</property>
-            <property name="can-focus">False</property>
+            <property name="can-focus">True</property>
             <property name="focus-on-click">False</property>
             <property name="receives-default">True</property>
             <property name="halign">start</property>
@@ -548,7 +534,7 @@
         <child>
           <object class="GtkToggleButton" id="btn-options">
             <property name="visible">True</property>
-            <property name="can-focus">False</property>
+            <property name="can-focus">True</property>
             <property name="receives-default">True</property>
             <property name="image">img-gear</property>
             <property name="relief">none</property>
@@ -602,7 +588,8 @@
         <property name="no-show-all">True</property>
         <property name="margin-start">5</property>
         <property name="margin-end">5</property>
-        <property name="margin-bottom">5</property>
+        <property name="margin-top">5</property>
+        <property name="margin-bottom">3</property>
         <property name="row-spacing">3</property>
         <property name="column-spacing">3</property>
         <child>
@@ -622,7 +609,7 @@
             <property name="visible">True</property>
             <property name="can-focus">False</property>
             <property name="halign">start</property>
-            <property name="label" translatable="yes">Size</property>
+            <property name="label" translatable="yes">Preview size</property>
           </object>
           <packing>
             <property name="left-attach">0</property>
@@ -747,7 +734,7 @@
       </object>
       <packing>
         <property name="left-attach">0</property>
-        <property name="top-attach">2</property>
+        <property name="top-attach">1</property>
         <property name="width">4</property>
       </packing>
     </child>
@@ -832,13 +819,111 @@
       </packing>
     </child>
     <child>
-      <placeholder/>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
-      <placeholder/>
+      <object class="GtkBox">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <property name="margin-start">4</property>
+        <property name="margin-end">5</property>
+        <property name="margin-top">2</property>
+        <property name="margin-bottom">2</property>
+        <child>
+          <object class="GtkScrolledWindow">
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="vscrollbar-policy">never</property>
+            <child>
+              <object class="GtkViewport">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <child>
+                  <object class="GtkBox" id="tag-box">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="label" translatable="yes">Favorite</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkButton">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="focus-on-click">False</property>
+                            <property name="receives-default">True</property>
+                            <property name="image">close</property>
+                            <property name="relief">none</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
+                        <style>
+                          <class name="tag-box"/>
+                        </style>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkLabel" id="font-count">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="halign">end</property>
+            <property name="valign">center</property>
+            <property name="margin-start">4</property>
+            <property name="margin-top">3</property>
+            <property name="margin-bottom">3</property>
+            <property name="label" translatable="yes">&lt;small&gt;256 fonts&lt;/small&gt;</property>
+            <property name="use-markup">True</property>
+            <style>
+              <class name="secondary"/>
+            </style>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+      </object>
+      <packing>
+        <property name="left-attach">0</property>
+        <property name="top-attach">2</property>
+        <property name="width">4</property>
+      </packing>
     </child>
   </object>
 </interface>

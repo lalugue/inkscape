@@ -403,6 +403,7 @@ SPCSSAttr *TextEdit::fillTextStyle ()
 
         Glib::ustring fontspec = font_list.get_fontspec();
 
+    g_message("fill style %s", fontspec.c_str());
         if( !fontspec.empty() ) {
 
             Inkscape::FontLister *fontlister = Inkscape::FontLister::get_instance();
@@ -412,6 +413,7 @@ SPCSSAttr *TextEdit::fillTextStyle ()
             Inkscape::CSSOStringStream os;
             Inkscape::Preferences *prefs = Inkscape::Preferences::get();
             int unit = prefs->getInt("/options/font/unitType", SP_CSS_UNIT_PT);
+    g_message("fill style %f", font_list.get_fontsize());
             if (prefs->getBool("/options/font/textOutputPx", true)) {
                 os << sp_style_css_size_units_to_px(font_list.get_fontsize(), unit)
                    << sp_style_get_css_unit_string(SP_CSS_UNIT_PX);

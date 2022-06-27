@@ -289,16 +289,16 @@ void FontInstance::find_font_metrics()
         if (auto post = (TT_Postscript*)FT_Get_Sfnt_Table(face, ft_sfnt_post)) {
             _italic_angle = FTFixedToDouble(post->italicAngle);
             _fixed_width = post->isFixedPitch != 0;
-            // fsSelection mask: oblique/italic = 0x201
-            _oblique = post->italicAngle != 0 || (os2 && (os2->fsSelection & 0x201) != 0);
-
-            if (os2) {
-        //         if (post->italicAngle && os2->fsSelection == 0) {
-        // g_message("ital: %f  is fixed: %d  fam: %x  sel: %x - %s", FTFixedToDouble(post->italicAngle), (int)post->isFixedPitch,
-        //  (int)os2->sFamilyClass, (int)os2->fsSelection, pango_font_description_to_string(descr) );
-        //     }
+            auto desc = pango_font_description_to_string(descr);
+            if (desc && strstr(desc, "Italic")) {
+                g_free(desc);
+                // some fonts don't report italics at all, so use their name
+                _oblique = true;
             }
-
+            else {
+                // fsSelection mask: oblique/italic = 0x201
+                _oblique = post->italicAngle != 0 || (os2 && (os2->fsSelection & 0x201) != 0);
+            }
         }
         if (os2) {
             _ascent  = std::fabs((double)os2->sTypoAscender / face->units_per_EM);
