@@ -920,8 +920,6 @@ void SPDocument::fitToRect(Geom::Rect const &rect, bool with_margins)
         margin_bottom = Inkscape::Util::Quantity::convert(margin_bottom, nv_units, "px");
     }
 
-    double y_dir = yaxisdir();
-
     Geom::Rect const rect_with_margins(
             rect.min() - Geom::Point(margin_left, margin_top),
             rect.max() + Geom::Point(margin_right, margin_bottom));
@@ -937,17 +935,26 @@ void SPDocument::fitToRect(Geom::Rect const &rect, bool with_margins)
     // rect in desktop coordinates after changing document dimensions
     auto rect_with_margins_dt_new = rect_with_margins * doc2dt();
 
-    Geom::Translate const tr(-rect_with_margins_dt_new.min());
-    root->translateChildItems(tr);
+    bool y_down = is_yaxisdown();
 
-    if(nv) {
-        Geom::Translate tr2(-rect_with_margins_dt_old.min());
-        nv->translateGuides(tr2);
-        nv->translateGrids(tr2);
-        _page_manager->movePages(tr2);
+    // Translate drawing contents to the origin
+    double const box_x = rect_with_margins_dt_new[Geom::X].min();
+    double const box_y = y_down ? rect_with_margins_dt_new[Geom::Y].min()
+        : rect_with_margins_dt_new.height() - rect_with_margins_dt_old[Geom::Y].max();
+    auto const corrective_translation = Geom::Translate(-box_x, -box_y);
+    root->translateChildItems(corrective_translation);
 
-        // update the viewport so the drawing appears to stay where it was
-        nv->scrollAllDesktops(-tr2[0], -tr2[1] * y_dir, false);
+    if (nv) {
+        // Calculate the required translation of on-canvas gadgets
+        double const delta_x = rect_with_margins_dt_old[Geom::X].min();
+        double const delta_y = y_down ? rect_with_margins_dt_old[Geom::Y].min()
+            : rect_with_margins_dt_new.height() - rect_with_margins_dt_new[Geom::Y].max();
+        auto const on_canvas_gadget_translation = Geom::Translate(-delta_x, -delta_y);
+
+        nv->translateGuides(on_canvas_gadget_translation);
+        nv->translateGrids(on_canvas_gadget_translation);
+        _page_manager->movePages(corrective_translation);
+        nv->scrollAllDesktops(delta_x, delta_y * yaxisdir(), false);
     }
 }
 

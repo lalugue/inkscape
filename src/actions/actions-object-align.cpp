@@ -105,7 +105,7 @@ object_align(const Glib::VariantBase& value, InkscapeApplication *app)
     double sy1 = 0;
 
     // clang-format off
-    for (auto token : tokens) {
+    for (auto const &token : tokens) {
 
         // Target
         if      (token == "last"     ) target = ObjectAlignTarget::LAST;
@@ -213,10 +213,10 @@ object_align(const Glib::VariantBase& value, InkscapeApplication *app)
 
     g_return_if_fail(b);
 
-    // if (desktop->is_yaxisdown()) {
-    //     std::swap(a.my0, a.my1);
-    //     std::swap(a.sy0, a.sy1);
-    // }
+    if (auto desktop = selection->desktop(); desktop && !desktop->is_yaxisdown()) {
+        std::swap(my0, my1);
+        std::swap(sy0, sy1);
+    }
 
     // Generate the move point from the selected bounding box
     Geom::Point mp = Geom::Point(mx0 * b->min()[Geom::X] + mx1 * b->max()[Geom::X],
@@ -467,8 +467,7 @@ object_align_text(const Glib::VariantBase& value, InkscapeApplication *app)
     auto orientation = Geom::Dim2::X;
     auto direction = Inkscape::Selection::HORIZONTAL;
 
-    for (auto token : tokens) {
-
+    for (auto const &token : tokens) {
         // Target
         if      (token == "last"     ) target = ObjectAlignTarget::LAST;
         else if (token == "first"    ) target = ObjectAlignTarget::FIRST;
