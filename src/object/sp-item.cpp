@@ -1185,7 +1185,12 @@ Inkscape::DrawingItem *SPItem::invoke_show(Inkscape::Drawing &drawing, unsigned 
 
             // Update bbox, in case the clip uses bbox units
             cp->setBBox(clip_key, item_bbox);
-            cp->requestDisplayUpdate(SP_OBJECT_MODIFIED_FLAG);
+            if (document == cp->document) {
+                // Request a display update only within the same document. This is to prevent spurious
+                // updates in a "reference document" set with SPDocument::set_reference_document().
+                // Sourcing a clip from an external reference document should not taint it.
+                cp->requestDisplayUpdate(SP_OBJECT_MODIFIED_FLAG);
+            }
         }
         if (mask_ref && mask_ref->getObject()) {
             SPMask *mask = mask_ref->getObject();
@@ -1201,7 +1206,10 @@ Inkscape::DrawingItem *SPItem::invoke_show(Inkscape::Drawing &drawing, unsigned 
 
             // Update bbox, in case the mask uses bbox units
             mask->sp_mask_set_bbox(mask_key, item_bbox);
-            mask->requestDisplayUpdate(SP_OBJECT_MODIFIED_FLAG);
+            if (document == mask->document) {
+                // Do not taint a reference document - see the comment above.
+                mask->requestDisplayUpdate(SP_OBJECT_MODIFIED_FLAG);
+            }
         }
 
         SPPaintServer *fill_ps = style->getFillPaintServer();
