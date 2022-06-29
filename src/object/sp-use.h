@@ -68,10 +68,11 @@ public:
 	SPItem const *root() const;
     int cloneDepth() const;
 
-	SPItem *unlink();
-	SPItem *get_original();
-	Geom::Affine get_parent_transform();
-	Geom::Affine get_root_transform();
+    SPItem *unlink();
+    SPItem *get_original() const;
+    Geom::Affine get_parent_transform() const;
+    Geom::Affine get_root_transform() const;
+    bool anyInChain(bool (*predicate)(SPItem const *)) const;
 
 private:
     void href_changed();

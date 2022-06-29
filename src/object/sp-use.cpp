@@ -334,6 +334,39 @@ SPItem const *SPUse::root() const {
 }
 
 /**
+ * @brief Test the passed predicate on all items in a chain of uses.
+ *
+ * The chain includes this item, all of its intermediate ancestors in a chain of uses, as well as
+ * the ultimate original item.
+ *
+ * @return Whether any of the items in the chain satisfies the predicate.
+ */
+bool SPUse::anyInChain(bool (*predicate)(SPItem const *)) const
+{
+    int const depth = cloneDepth();
+    if (depth < 0) {
+        return predicate(this);
+    }
+
+    SPItem const *item = this;
+    if (predicate(item)) {
+        return true;
+    }
+
+    for (int i = 0; i < depth; ++i) {
+        if (auto const *intermediate_clone = dynamic_cast<SPUse const *>(item)) {
+            item = intermediate_clone->get_original();
+            if (predicate(item)) {
+                return true;
+            }
+        } else {
+            break;
+        }
+    }
+    return false;
+}
+
+/**
  * Get the number of dereferences or calls to get_original() needed to get an object
  * which is not an svg:use. Returns -1 if there is no original object.
  */
@@ -357,11 +390,12 @@ int SPUse::cloneDepth() const {
  * Returns the effective transform that goes from the ultimate original to given SPUse, both ends
  * included.
  */
-Geom::Affine SPUse::get_root_transform() {
+Geom::Affine SPUse::get_root_transform() const
+{
     //track the ultimate source of a chain of uses
     SPObject *orig = this->child;
 
-    std::vector<SPItem*> chain;
+    std::vector<SPItem const *> chain;
     chain.push_back(this);
 
     while (dynamic_cast<SPUse *>(orig)) {
@@ -375,12 +409,12 @@ Geom::Affine SPUse::get_root_transform() {
     Geom::Affine t(Geom::identity());
 
     for (auto i=chain.rbegin(); i!=chain.rend(); ++i) {
-        SPItem *i_tem = *i;
+        auto *i_tem = *i;
 
         // "An additional transformation translate(x,y) is appended to the end (i.e.,
         // right-side) of the transform attribute on the generated 'g', where x and y
         // represent the values of the x and y attributes on the 'use' element." - http://www.w3.org/TR/SVG11/struct.html#UseElement
-        SPUse *i_use = dynamic_cast<SPUse *>(i_tem);
+        auto i_use = dynamic_cast<SPUse const *>(i_tem);
         if (i_use) {
             if ((i_use->x._set && i_use->x.computed != 0) || (i_use->y._set && i_use->y.computed != 0)) {
                 t = t * Geom::Translate(i_use->x._set ? i_use->x.computed : 0, i_use->y._set ? i_use->y.computed : 0);
@@ -396,7 +430,8 @@ Geom::Affine SPUse::get_root_transform() {
  * Returns the transform that leads to the use from its immediate original.
  * Does not include the original's transform if any.
  */
-Geom::Affine SPUse::get_parent_transform() {
+Geom::Affine SPUse::get_parent_transform() const
+{
     Geom::Affine t(Geom::identity());
 
     if ((this->x._set && this->x.computed != 0) || (this->y._set && this->y.computed != 0)) {
@@ -734,7 +769,8 @@ SPItem *SPUse::unlink() {
     return item;
 }
 
-SPItem *SPUse::get_original() {
+SPItem *SPUse::get_original() const
+{
     SPItem *ref = nullptr;
 
         if (this->ref){
