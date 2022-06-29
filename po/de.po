@@ -20,20 +20,21 @@
 # Michael Rack <miohna@freenet.de>, 2018.
 # Frank Beckmann, 2019.
 # ModProg <dev@modprog.de>, 2021.
+# Milo Ivir <mail@milotype.de>, 2022.
 msgid ""
 msgstr ""
 "Project-Id-Version: inkscape\n"
 "Report-Msgid-Bugs-To: inkscape-translator@lists.inkscape.org\n"
-"POT-Creation-Date: 2022-04-08 09:00+0000\n"
-"PO-Revision-Date: 2022-04-16 00:02+0200\n"
-"Last-Translator: Maren Hachmann <marenhachmann@yahoo.com>\n"
+"POT-Creation-Date: 2022-04-05 22:05+0200\n"
+"PO-Revision-Date: 2022-06-27 13:02+0200\n"
+"Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 19.12.3\n"
+"X-Generator: Poedit 3.0\n"
 "X-Poedit-Basepath: .\n"
 "X-Poedit-SourceCharset: utf-8\n"
 "X-Language: de_DE\n"
@@ -4762,7 +4763,7 @@ msgstr "'Unicode-Zeichen' öffnen"
 
 #: ../src/actions/actions-dialogs.cpp:41
 msgid "Select Unicode characters from a palette"
-msgstr "Wählen Sie Unicode-Zeichen aus einer Glyphenpalette aus"
+msgstr "Wähle Unicode-Zeichen aus einer Glyphenpalette aus"
 
 #: ../src/actions/actions-dialogs.cpp:42
 msgid "Open Icon Preview"
@@ -5277,8 +5278,8 @@ msgid ""
 "<small>Note: Path to editor can be set in Preferences dialog.</small>"
 msgstr ""
 "Externe Grafik kann nicht bearbeitet werden.\n"
-"<small>Hinweis: Das Programm zum Bearbeiten kann in den Einstellungen gewählt"
-" werden.</small>"
+"<small>Hinweis: Das Programm zum Bearbeiten kann in den Einstellungen "
+"gewählt werden.</small>"
 
 #: ../src/actions/actions-element-image.cpp:107
 msgid "System error message: %1"
@@ -5295,8 +5296,8 @@ msgstr "Extern bearbeiten"
 #: ../src/actions/actions-element-image.cpp:129
 msgid "Edit image externally (image must be selected and not embedded)."
 msgstr ""
-"Grafik mit externem Editor bearbeiten (das Bild muss ausgewählt sein und darf"
-" nicht eingebettet sein)."
+"Grafik mit externem Editor bearbeiten (das Bild muss ausgewählt sein und "
+"darf nicht eingebettet sein)."
 
 #: ../src/actions/actions-file-window.cpp:115
 #: ../src/ui/dialog/document-properties.cpp:902
@@ -5446,7 +5447,7 @@ msgstr "Dateinamen angeben"
 
 #: ../src/actions/actions-help-url.cpp:113 ../share/ui/menus.ui:1204
 msgid "Ask Us a Question"
-msgstr "Fragen Sie uns"
+msgstr "Stell uns eine Frage"
 
 #: ../src/actions/actions-help-url.cpp:114 ../share/ui/menus.ui:1247
 msgid "Command Line Options"
@@ -5871,8 +5872,8 @@ msgstr "Knoten horizontal ausrichten"
 #: ../src/actions/actions-node-align.cpp:95
 msgid "Align selected nodes horizontally; usage [last|first|middle|min|max]"
 msgstr ""
-"Ausgewählte Knoten horizontal ausrichten; Optionen:"
-" [last|first|middle|min|max]"
+"Ausgewählte Knoten horizontal ausrichten; Optionen: [last|first|middle|min|"
+"max]"
 
 #: ../src/actions/actions-node-align.cpp:96
 msgid "Align nodes vertically"
@@ -6017,9 +6018,8 @@ msgid ""
 "Align selected text alignment points; usage: [[vertical | horizontal] [last|"
 "first|biggest|smallest|page|drawing|selection]?"
 msgstr ""
-"Textanker der gewählten Textobjekte ausrichten; Verwendung: [[vertical |"
-" horizontal] [last|"
-"first|biggest|smallest|page|drawing|selection]?"
+"Textanker der gewählten Textobjekte ausrichten; Verwendung: [[vertical | "
+"horizontal] [last|first|biggest|smallest|page|drawing|selection]?"
 
 #: ../src/actions/actions-object-align.cpp:768
 msgid "Distribute objects"
@@ -6088,8 +6088,8 @@ msgstr "Mittelpunkte vertikal verteilen"
 #: ../src/actions/actions-object-align.cpp:775
 msgid "Distribute vertically with even spacing between centers."
 msgstr ""
-"Vertikal gleichmäßig verteilen, mit gleichen Abständen zwischen den"
-" Mittelpunkten."
+"Vertikal gleichmäßig verteilen, mit gleichen Abständen zwischen den "
+"Mittelpunkten."
 
 #: ../src/actions/actions-object-align.cpp:776
 msgid "Even bottom edges"
@@ -6127,8 +6127,8 @@ msgid ""
 "Rearrange selected objects; usage: [graph | exchange | exchangez | rotate | "
 "randomize | unclump]"
 msgstr ""
-"Gewählte Objekte anordnen; Verwendung: [graph | exchange | exchangez | rotate"
-" | randomize | unclump]"
+"Gewählte Objekte anordnen; Verwendung: [graph | exchange | exchangez | "
+"rotate | randomize | unclump]"
 
 #: ../src/actions/actions-object-align.cpp:783
 msgid "Rearrange as graph"
@@ -6193,26 +6193,26 @@ msgid ""
 "anchors: last, first, biggest, smallest, page, drawing, selection; possible "
 "alignments: left, hcenter, right, top, vcenter, bottom."
 msgstr ""
-"Verwendung: Anker<Leertaste>Ausrichtung<Leertaste>optionale zweite"
-" Ausrichtung. Mögliche Werte für Anker: last, first, biggest, smallest, page,"
-" drawing, selection; mögliche Werte für Ausrichtung: left, hcenter, right,"
-" top, vcenter, bottom."
+"Verwendung: Anker<Leertaste>Ausrichtung<Leertaste>optionale zweite "
+"Ausrichtung. Mögliche Werte für Anker: last, first, biggest, smallest, page, "
+"drawing, selection; mögliche Werte für Ausrichtung: left, hcenter, right, "
+"top, vcenter, bottom."
 
 #: ../src/actions/actions-object-align.cpp:798
 msgid ""
 "Enter distribution type. Possible values: left, hcenter, right, top, "
 "vcenter, bottom, hgap, vgap."
 msgstr ""
-"Art der Verteilung angeben. Mögliche Werte: left, hcenter, right, "
-"top, vcenter, bottom, hgap, vgap"
+"Art der Verteilung angeben. Mögliche Werte: left, hcenter, right, top, "
+"vcenter, bottom, hgap, vgap"
 
 #: ../src/actions/actions-object-align.cpp:799
 msgid ""
 "Enter arrange method. Possible values: graph, exchange, exchangez, rotate, "
 "randomize, unclump."
 msgstr ""
-"Methode für das Anordnen wählen; Mögliche Werte: graph, exchange, exchangez,"
-" rotate, randomize, unclump."
+"Methode für das Anordnen wählen; Mögliche Werte: graph, exchange, exchangez, "
+"rotate, randomize, unclump."
 
 #: ../src/actions/actions-object-align.cpp:800
 msgid "Enter two comma-separated numbers: horizontal,vertical"
@@ -6327,8 +6327,8 @@ msgid ""
 "Create a self-clipping group to which objects (not contributing to the clip-"
 "path) can be added"
 msgstr ""
-"Erzeugt eine auf die eigene Kontur beschnittene Gruppe, zu der weitere"
-" Objekte (nicht Teil des Ausschneidepfades) hinzugefügt werden können"
+"Erzeugt eine auf die eigene Kontur beschnittene Gruppe, zu der weitere "
+"Objekte (nicht Teil des Ausschneidepfades) hinzugefügt werden können"
 
 #: ../src/actions/actions-object.cpp:280
 msgid "Object Mask Set"
@@ -6608,8 +6608,8 @@ msgstr "Den Namen der Exportdatei angeben"
 #: ../src/actions/actions-output.cpp:270
 msgid "Enter 1/0 for Yes/No to overwrite exported file"
 msgstr ""
-"Mit 1 oder 0 (Ja/Nein) angeben, ob zuvor exportierte Dateien überschrieben"
-" werden sollen"
+"Mit 1 oder 0 (Ja/Nein) angeben, ob zuvor exportierte Dateien überschrieben "
+"werden sollen"
 
 #: ../src/actions/actions-output.cpp:272
 msgid "Enter string for export area, formatted like x0:y0:x1:y1"
@@ -6618,8 +6618,8 @@ msgstr "Zeichenkette für Exportbereich angeben, Formatierung: x0:y0:x1:y1"
 #: ../src/actions/actions-output.cpp:273
 msgid "Enter 1/0 for Yes/No to export drawing area"
 msgstr ""
-"Mit 1 oder 0 (Ja/Nein) angeben, ob die gesamte Zeichnung exportiert werden"
-" soll"
+"Mit 1 oder 0 (Ja/Nein) angeben, ob die gesamte Zeichnung exportiert werden "
+"soll"
 
 #: ../src/actions/actions-output.cpp:274
 msgid "Enter 1/0 for Yes/No to export page area"
@@ -6650,8 +6650,8 @@ msgstr "Zu exportierende ID angeben"
 #: ../src/actions/actions-output.cpp:281
 msgid "Enter 1/0 for Yes/No to export only given ID"
 msgstr ""
-"Mit 1 oder 0 (Ja/Nein) angeben, ob nur die angegebene ID exportiert werden"
-" soll"
+"Mit 1 oder 0 (Ja/Nein) angeben, ob nur die angegebene ID exportiert werden "
+"soll"
 
 #: ../src/actions/actions-output.cpp:283
 msgid "Enter 1/0 for Yes/No to export plain SVG"
@@ -6670,8 +6670,8 @@ msgstr ""
 #: ../src/actions/actions-output.cpp:286
 msgid "Enter 1/0 for Yes/No to convert text to path on export"
 msgstr ""
-"Mit 1 oder 0 (Ja/Nein) angeben, ob Texte beim Export in Pfade umgewandwandelt"
-" werden sollen"
+"Mit 1 oder 0 (Ja/Nein) angeben, ob Texte beim Export in Pfade umgewandelt "
+"werden sollen"
 
 #: ../src/actions/actions-output.cpp:287
 msgid "Enter integer number 2 or 3 for PS Level"
@@ -6689,32 +6689,30 @@ msgstr ""
 #: ../src/actions/actions-output.cpp:290
 msgid "Enter 1/0 for Yes/No to use export hints from document"
 msgstr ""
-"Mit 1 oder 0 (Ja/Nein) angeben, ob die Exporthinweise im Dokument verwendet"
-" werden sollen"
+"Mit 1 oder 0 (Ja/Nein) angeben, ob die Exporthinweise im Dokument verwendet "
+"werden sollen"
 
 #: ../src/actions/actions-output.cpp:291
 msgid "Enter string for background color, e.g. #ff007f or rgb(255, 0, 128)"
 msgstr ""
-"Zeichenkette für die Hintergrundfarbe eingeben, z.B. #ff007f oder rgb(255, 0,"
-" 128)"
+"Zeichenkette für die Hintergrundfarbe eingeben, z.B. #ff007f oder rgb(255, "
+"0, 128)"
 
 #: ../src/actions/actions-output.cpp:292
 msgid ""
 "Enter number for background opacity, either between 0.0 and 1.0, or 1 up to "
 "255"
 msgstr ""
-"Zahl für Hintergrunddeckkraft der exportierten Rastergrafik eingeben (0.0 bis"
-" 1.0 oder 1 bis "
-"255)"
+"Zahl für Hintergrunddeckkraft der exportierten Rastergrafik eingeben (0.0 "
+"bis 1.0 oder 1 bis 255)"
 
 #: ../src/actions/actions-output.cpp:293
 msgid ""
 "Enter string for PNG Color Mode, one of Gray_1/Gray_2/Gray_4/Gray_8/Gray_16/"
 "RGB_8/RGB_16/GrayAlpha_8/GrayAlpha_16/RGBA_8/RGBA_16"
 msgstr ""
-"Farbmodus für zu exportierendes PNG angeben. Optionen: Gray_1/"
-"Gray_2/Gray_4/Gray_8/Gray_16/RGB_8/RGB_16/GrayAlpha_8/GrayAlpha_16/RGBA_8/"
-"RGBA_16."
+"Farbmodus für zu exportierendes PNG angeben. Optionen: Gray_1/Gray_2/Gray_4/"
+"Gray_8/Gray_16/RGB_8/RGB_16/GrayAlpha_8/GrayAlpha_16/RGBA_8/RGBA_16."
 
 #: ../src/actions/actions-output.cpp:294
 msgid "Enter 1/0 for Yes/No to use dithering"
@@ -7086,7 +7084,7 @@ msgstr "Konturfarbe"
 #: ../src/actions/actions-selection-window.cpp:118
 msgid "Select all objects with the same stroke as the selected objects"
 msgstr ""
-"Wählen Sie alle Objekte mit der gleichen Kontur wie die ausgewählten Objekte"
+"Wähle alle Objekte mit der gleichen Kontur wie die ausgewählten Objekte"
 
 #: ../src/actions/actions-selection-window.cpp:119
 msgid "Stroke Style"
@@ -7097,8 +7095,8 @@ msgid ""
 "Select all objects with the same stroke style (width, dash, markers) as the "
 "selected objects"
 msgstr ""
-"Wählen Sie alle Objekte mit dem gleichen Konturstil (Breite, Bindestrich, "
-"Marker) wie die ausgewählten Objekte"
+"Wähle alle Objekte mit dem gleichen Konturstil (Breite, Bindestrich, Marker) "
+"wie die ausgewählten Objekte"
 
 #: ../src/actions/actions-selection-window.cpp:120
 msgid "Object Type"
@@ -7109,8 +7107,8 @@ msgid ""
 "Select all objects with the same object type (rect, arc, text, path, bitmap "
 "etc) as the selected objects"
 msgstr ""
-"Wählen Sie alle Objekte mit dem gleichen Objekttyp (Rechteck, Bogen, Text, "
-"Pfad, Bitmap etc.) wie die ausgewählten Objekte"
+"Wähle alle Objekte mit dem gleichen Objekttyp (Rechteck, Bogen, Text, Pfad, "
+"Bitmap etc.) wie die ausgewählten Objekte"
 
 #: ../src/actions/actions-selection-window.cpp:121
 #: ../src/actions/actions-selection.cpp:247
@@ -7256,8 +7254,8 @@ msgid ""
 "Flow text around a frame (path or shape), only available for SVG 2.0 Flow "
 "text."
 msgstr ""
-"Text um ein Objekt fließen lassen (Pfad oder Form), nur verfügbar für"
-" SVG-2.0-Fließtexte"
+"Text um ein Objekt fließen lassen (Pfad oder Form), nur verfügbar für "
+"SVG-2.0-Fließtexte"
 
 #: ../src/actions/actions-text.cpp:71
 msgid "Unflow"
@@ -7342,8 +7340,8 @@ msgid ""
 "<b>Click</b> a shape to start editing its markers. <b>Drag controls</b> to "
 "change orientation, scale, and position."
 msgstr ""
-"Auf ein Objekt <b>klicken</b>, um Knotenmarkierungen zu bearbeiten. <b"
-">Anfasser ziehen</b>, um Drehung, Größe und Position zu ändern."
+"Auf ein Objekt <b>klicken</b>, um Knotenmarkierungen zu bearbeiten. "
+"<b>Anfasser ziehen</b>, um Drehung, Größe und Position zu ändern."
 
 #: ../src/actions/actions-tools.cpp:88
 msgid ""
@@ -7420,8 +7418,8 @@ msgstr ""
 #: ../src/actions/actions-tools.cpp:97
 msgid "To tweak a path by pushing, select it and drag over it."
 msgstr ""
-"Um eine Pfadform zu justieren, wählen Sie diesen aus und klicken und ziehen "
-"Sie mit der Maus darüber."
+"Um einen Pfad zu justieren, wähle diesen aus und klicke und ziehe mit der "
+"Maus darüber."
 
 #: ../src/actions/actions-tools.cpp:98
 msgid ""
@@ -7452,7 +7450,7 @@ msgstr "<b>Ziehen</b> zum Radieren."
 
 #: ../src/actions/actions-tools.cpp:102
 msgid "Choose a subtool from the toolbar"
-msgstr "Wählen Sie ein Werkzeug aus der Werkzeugleiste"
+msgstr "Wähle ein Werkzeug aus der Werkzeugleiste"
 
 #: ../src/actions/actions-tools.cpp:103
 msgid "Create and manage pages."
@@ -7737,23 +7735,24 @@ msgstr "Skalierungsfaktor eingeben, z.B. 1,5"
 #: ../src/actions/actions-transform.cpp:130
 msgid "Enter positive or negative number to grow/shrink selection"
 msgstr ""
-"Positive oder negative Zahl eingeben, um die Auswahl zu vergrößern/verkleinern"
+"Positive oder negative Zahl eingeben, um die Auswahl zu vergrößern/"
+"verkleinern"
 
 #: ../src/actions/actions-transform.cpp:131
 msgid ""
 "Enter positive or negative number to grow or shrink selection relative to "
 "preference step value"
 msgstr ""
-"Positive oder negative Zahl eingeben, um die Auswahl um Vielfache der"
-" Schrittweite zu vergrößern/verkleinern"
+"Positive oder negative Zahl eingeben, um die Auswahl um Vielfache der "
+"Schrittweite zu vergrößern/verkleinern"
 
 #: ../src/actions/actions-transform.cpp:132
 msgid ""
 "Enter positive or negative number to grow or shrink selection relative to "
 "zoom level"
 msgstr ""
-"Positive oder negative Zahl eingeben, um die Auswahl relativ zum aktuellen"
-" Zoom zu vergrößern/verkleinern"
+"Positive oder negative Zahl eingeben, um die Auswahl relativ zum aktuellen "
+"Zoom zu vergrößern/verkleinern"
 
 #. TRANSLATORS: Please don't translate link unless the page exists in your language. Add your language code to
 #. the link this way: https://inkscape.org/[lang]/learn/tutorials/
@@ -8049,14 +8048,13 @@ msgstr ""
 #: ../src/context-fns.cpp:48 ../src/context-fns.cpp:77
 msgid "<b>Current layer is hidden</b>. Unhide it to be able to draw on it."
 msgstr ""
-"<b>Aktuelle Ebene ist ausgeblendet</b>. Sichtbar schalten, um darauf zu "
+"<b>Aktuelle Ebene ist ausgeblendet</b>. Blende sie ein, um auf ihr zu "
 "zeichnen."
 
 #: ../src/context-fns.cpp:54 ../src/context-fns.cpp:83
 msgid "<b>Current layer is locked</b>. Unlock it to be able to draw on it."
 msgstr ""
-"<b>Aktuelle Ebene ist gesperrt</b>. Entsperren Sie sie, um darauf zu "
-"zeichnen."
+"<b>Aktuelle Ebene ist gesperrt</b>. Entsperre sie, um auf ihr zu zeichnen."
 
 #: ../src/desktop-events.cpp:329
 msgid "Move guide"
@@ -12113,9 +12111,8 @@ msgid ""
 "was created in an older version of Inkscape (90 DPI) and we need to make it "
 "compatible with newer versions (96 DPI). Tell us about this file:\n"
 msgstr ""
-"wurde in einer alten Version von Inkscape (90 DPI) erstellt\n"
-" und muss nun mit neueren Versionen kompatibel (96 DPI) gemacht werden. \n"
-"Bitte wählen Sie aus:\n"
+"wurde in einer alten Version von Inkscape (90 DPI) erstellt und muss nun mit "
+"neueren Versionen kompatibel (96 DPI) gemacht werden. Bitte wähle aus:\n"
 
 #: ../src/file-update.cpp:403
 msgid ""
@@ -12149,7 +12146,7 @@ msgstr ""
 
 #: ../src/file-update.cpp:414
 msgid "Create a backup file in same directory."
-msgstr "Sicherungsdatei im selben Verzeichnis erstellen"
+msgstr "Sicherungsdatei im selben Verzeichnis erstellen."
 
 #: ../src/file-update.cpp:415
 msgid "More details..."
@@ -12202,7 +12199,7 @@ msgstr ""
 "Ausgabe, die auf präzise Abmessungen und Positionen angewiesen ist (z.B. 3D-"
 "Druck).\n"
 "\n"
-"Weitere Informationen über diese Änderung finden Sie in der <a href='https://"
+"Weitere Informationen über diese Änderung findest Du in der <a href='https://"
 "inkscape.org/de/lernen/haufig-gestellte-fragen/#dpi_change'>Inkscape FAQ</"
 "a></small>"
 
@@ -12221,8 +12218,8 @@ msgstr "Dokument noch nicht gespeichtert. Kann nicht zurücksetzen."
 #: ../src/file.cpp:180
 msgid "Changes will be lost! Are you sure you want to reload document %1?"
 msgstr ""
-"Änderungen gehen verloren! Sind Sie sicher, dass Sie das Dokument %1 erneut "
-"laden möchten?"
+"Änderungen gehen verloren! Bist Du sicher, dass Du das Dokument %1 erneut "
+"laden möchtest?"
 
 #: ../src/file.cpp:194
 msgid "Document reverted."
@@ -12234,7 +12231,7 @@ msgstr "Dokument nicht zurückgesetzt."
 
 #: ../src/file.cpp:346
 msgid "Select file to open"
-msgstr "Wählen Sie die zu öffnende Datei"
+msgstr "Wähle die zu öffnende Datei"
 
 #: ../src/file.cpp:434
 msgid "Clean up document"
@@ -12271,8 +12268,8 @@ msgstr "Dokument wurde nicht gespeichert."
 msgid ""
 "File %s is write protected. Please remove write protection and try again."
 msgstr ""
-"Datei %s ist schreibgeschützt! Bitte entfernen Sie den Schreibschutz und "
-"versuchen es dann erneut."
+"Datei %s ist schreibgeschützt! Entferne den Schreibschutz und versuche es "
+"dann erneut."
 
 #: ../src/file.cpp:498 ../src/file.cpp:532
 #, c-format
@@ -12340,7 +12337,7 @@ msgstr "Laden der gewünschten Datei %s fehlgeschlagen"
 
 #: ../src/file.cpp:1235
 msgid "Select file to import"
-msgstr "Wählen Sie die zu importierende Datei"
+msgstr "Wähle die zu importierende Datei"
 
 #: ../src/filter-enums.cpp:24
 msgid "Color Matrix"
@@ -12685,8 +12682,8 @@ msgid ""
 "Create a unique instance of Inkscape with the application ID 'org.inkscape."
 "Inkscape.TAG'"
 msgstr ""
-"Eine neue Inkscape-Instanz mit der Anwendungs-ID 'org.inkscape.Inkscape.TAG'"
-" erzeugen"
+"Eine neue Inkscape-Instanz mit der Anwendungs-ID 'org.inkscape.Inkscape.TAG' "
+"erzeugen"
 
 #: ../src/inkscape-application.cpp:692
 msgid "File import"
@@ -13608,8 +13605,8 @@ msgid ""
 "Create multiple copies of an object following a grid layout. Customize size, "
 "rotation, distances, style and tiling symmetry."
 msgstr ""
-"Erstellt gitterförmig angeordnete Kopien eines Objektes. Größe, Drehung,"
-" Abstände, Stile und Kachelsymmetrie können konfiguriert werden."
+"Erstellt gitterförmig angeordnete Kopien eines Objektes. Größe, Drehung, "
+"Abstände, Stile und Kachelsymmetrie können konfiguriert werden."
 
 #: ../src/live_effects/effect.cpp:657
 msgctxt "path effect"
@@ -17032,7 +17029,7 @@ msgid ""
 "5*offset)"
 msgstr ""
 "Skalierungsfaktor im Bezug auf Krümmung und Länge der Konstruktionslinien "
-"(Versuchen Sie 5*Versatz)"
+"(Versuche 5*Versatz)"
 
 #: ../src/live_effects/lpe-sketch.cpp:54
 msgid "Max. length:"
@@ -17344,8 +17341,8 @@ msgid ""
 "Minimize gaps between scaled objects (does not work with rotation/diagonal "
 "mode)"
 msgstr ""
-"Abstände zwischen Objekten unterschiedlicher Größe minimieren (nicht für"
-" Drehung / diagonalen Modus)"
+"Abstände zwischen Objekten unterschiedlicher Größe minimieren (nicht für "
+"Drehung / diagonalen Modus)"
 
 #: ../src/live_effects/lpe-tiling.cpp:85
 msgid "Interpolate rotation X"
@@ -17368,8 +17365,8 @@ msgid ""
 "Split elements, so they can be selected, styled, and moved (if grouped) "
 "independently"
 msgstr ""
-"Elemente aufteilen, so dass sie einzeln ausgewählt, unterschiedlich gefärbt"
-" und verschoben (wenn gruppiert) werden können"
+"Elemente aufteilen, so dass sie einzeln ausgewählt, unterschiedlich gefärbt "
+"und verschoben (wenn gruppiert) werden können"
 
 #: ../src/live_effects/lpe-tiling.cpp:88
 msgid "Mirror rows in X"
@@ -17414,8 +17411,8 @@ msgstr "Transformationen spiegeln"
 #: ../src/live_effects/lpe-tiling.cpp:93
 msgid "Link styles in split mode, can also be used to reset style of copies"
 msgstr ""
-"Stil von Objekten soll sich im Vereinzelungs-Modus nicht ändern lassen. Kann"
-" auch verwendet werden, um den Stil der einzelnen Kopien zurückzusetzen."
+"Stil von Objekten soll sich im Vereinzelungs-Modus nicht ändern lassen. Kann "
+"auch verwendet werden, um den Stil der einzelnen Kopien zurückzusetzen."
 
 #: ../src/live_effects/lpe-tiling.cpp:94
 msgid "Random gaps X"
@@ -17517,24 +17514,24 @@ msgid ""
 "Blend scale from <b>left to right</b> (left column uses original scale, "
 "right column uses new scale)"
 msgstr ""
-"Größe ändert sich von <b>links nach rechts</b> (linke Spalte ursprüngliche"
-" Größe, rechte die neue Größe)"
+"Größe ändert sich von <b>links nach rechts</b> (linke Spalte ursprüngliche "
+"Größe, rechte die neue Größe)"
 
 #: ../src/live_effects/lpe-tiling.cpp:743
 msgid ""
 "Blend scale from <b>top to bottom</b> (top row uses original scale, bottom "
 "row uses new scale)"
 msgstr ""
-"Größe ändert sich von <b>oben nach unten</b> (oberste Reihe ursprüngliche"
-" Größe, unterste neue Größe)"
+"Größe ändert sich von <b>oben nach unten</b> (oberste Reihe ursprüngliche "
+"Größe, unterste neue Größe)"
 
 #: ../src/live_effects/lpe-tiling.cpp:744
 msgid ""
 "Blend scale <b>diagonally</b> (top left tile uses original scale, bottom "
 "right tile uses new scale)"
 msgstr ""
-"Größe ändert sich <b>diagonal</b> (Kachel links oben ursprüngliche Größe,"
-" rechts unten neue Größe)"
+"Größe ändert sich <b>diagonal</b> (Kachel links oben ursprüngliche Größe, "
+"rechts unten neue Größe)"
 
 #: ../src/live_effects/lpe-tiling.cpp:745
 msgid "Uniform scale"
@@ -17554,24 +17551,24 @@ msgid ""
 "Blend rotation from <b>left to right</b> (left column uses original "
 "rotation, right column uses new rotation)"
 msgstr ""
-"Drehung ändert sich von <b>links nach rechts</b> (linke Spalte ursprüngliche"
-" Drehung, rechte die neue Drehung)"
+"Drehung ändert sich von <b>links nach rechts</b> (linke Spalte ursprüngliche "
+"Drehung, rechte die neue Drehung)"
 
 #: ../src/live_effects/lpe-tiling.cpp:785
 msgid ""
 "Blend rotation from <b>top to bottom</b> (top row uses original rotation, "
 "bottom row uses new rotation)"
 msgstr ""
-"Drehung ändert sich von <b>oben nach unten</b> (oberste Reihe ursprüngliche"
-" Drehung, unterste die neue Drehung)"
+"Drehung ändert sich von <b>oben nach unten</b> (oberste Reihe ursprüngliche "
+"Drehung, unterste die neue Drehung)"
 
 #: ../src/live_effects/lpe-tiling.cpp:786
 msgid ""
 "Blend rotation <b>diagonally</b> (top left tile uses original rotation, "
 "bottom right tile uses new rotation)"
 msgstr ""
-"Drehung ändert sich <b>diagonal</b> (Kachel links oben ursprüngliche Drehung,"
-" rechts unten die neue Drehung)"
+"Drehung ändert sich <b>diagonal</b> (Kachel links oben ursprüngliche "
+"Drehung, rechts unten die neue Drehung)"
 
 #: ../src/live_effects/lpe-tiling.cpp:787
 msgid "Uniform rotation"
@@ -17594,8 +17591,8 @@ msgstr "Alle horizontalen Abstände sind gleich breit"
 #: ../src/live_effects/lpe-tiling.cpp:816
 msgid "Random horizontal gaps (hit <b>Randomize</b> button to shuffle)"
 msgstr ""
-"Zufällige horizontale Abstände (Schaltfläche <b>Zufallsänderung</b>, um neu"
-" zu würfeln)"
+"Zufällige horizontale Abstände (Schaltfläche <b>Zufallsänderung</b>, um neu "
+"zu würfeln)"
 
 #: ../src/live_effects/lpe-tiling.cpp:843
 msgid "All vertical gaps have the same height"
@@ -17604,16 +17601,16 @@ msgstr "Alle vertikalen Abstände sind gleich hoch"
 #: ../src/live_effects/lpe-tiling.cpp:844
 msgid "Random vertical gaps (hit <b>Randomize</b> button to shuffle)"
 msgstr ""
-"Zufällige vertikale Abstände (Schaltfläche <b>Zufallsänderung</b>, um neu zu"
-" würfeln)"
+"Zufällige vertikale Abstände (Schaltfläche <b>Zufallsänderung</b>, um neu zu "
+"würfeln)"
 
 #: ../src/live_effects/lpe-tiling.cpp:1447
 msgid ""
 "<b>Horizontal gaps between tiles</b>: drag to adjust, <b>Shift+click</b> to "
 "reset"
 msgstr ""
-"<b>Horizontale Abstände zwischen Kacheln</b>: Ziehen zum Anpassen, <b>Umschalt"
-"+Klick</b> zum Zurücksetzen"
+"<b>Horizontale Abstände zwischen Kacheln</b>: Ziehen zum Anpassen, "
+"<b>Umschalt+Klick</b> zum Zurücksetzen"
 
 #: ../src/live_effects/lpe-tiling.cpp:1452
 msgid ""
@@ -17745,7 +17742,7 @@ msgstr "_Maximale Komplexität:"
 
 #: ../src/live_effects/lpe-vonkoch.cpp:54
 msgid "Disable effect if the output is too complex"
-msgstr "Deaktivieren Sie den Effekt, wenn die Ausgabe zu komplex wird"
+msgstr "Deaktiviere den Effekt, wenn die Ausgabe zu komplex wird"
 
 #: ../src/live_effects/parameter/bool.cpp:88
 msgid "Change bool parameter"
@@ -18431,13 +18428,13 @@ msgstr "Pfad zerschneiden"
 #: ../src/path/path-boolop.cpp:434
 msgid "Select <b>at least 1 path</b> to perform a boolean union."
 msgstr ""
-"Wählen Sie <b>mindestens 1 Pfad</b> aus, um eine boole'sche Vereinigung "
+"Wähle <b>mindestens 1 Pfad</b> aus, um eine boole'sche Vereinigung "
 "auszuführen."
 
 #: ../src/path/path-boolop.cpp:440
 msgid "Select <b>at least 2 paths</b> to perform a boolean operation."
 msgstr ""
-"Wählen Sie <b>mindestens 2 Pfade</b> aus, um eine boole'sche Operation "
+"Wähle <b>mindestens 2 Pfade</b> aus, um eine boole'sche Operation "
 "auszuführen."
 
 #: ../src/path/path-boolop.cpp:446
@@ -19147,7 +19144,7 @@ msgstr "Objekte zu Hilfslinien"
 
 #: ../src/selection-chemistry.cpp:3228
 msgid "Select <b>objects</b> to convert to symbol."
-msgstr "Wählen Sie <b>Objekte</b> zum Konvertieren in ein Symbol aus."
+msgstr "Wähle <b>Objekte</b> zum Konvertieren in ein Symbol."
 
 #: ../src/selection-chemistry.cpp:3363
 msgid "Group to symbol"
@@ -19552,15 +19549,15 @@ msgstr "Spur: %1.  %2 Knoten"
 #: ../src/trace/trace.cpp:65 ../src/trace/trace.cpp:130
 #: ../src/trace/trace.cpp:138 ../src/trace/trace.cpp:229
 msgid "Select an <b>image</b> to trace"
-msgstr "Wählen Sie ein <b>Bild</b> zum Nachzeichnen aus"
+msgstr "Wähle ein <b>Bild</b> zum Nachzeichnen aus"
 
 #: ../src/trace/trace.cpp:100
 msgid "Select only one <b>image</b> to trace"
-msgstr "Wählen Sie nur ein <b>Bild</b> zum Nachzeichnen aus"
+msgstr "Wähle nur ein <b>Bild</b> zum Nachzeichnen aus"
 
 #: ../src/trace/trace.cpp:118
 msgid "Select one image and one or more shapes above it"
-msgstr "Wählen Sie ein Bild und eine oder mehrere Formen über diesem aus"
+msgstr "Wähle ein Bild und eine oder mehrere Formen über diesem aus"
 
 #: ../src/trace/trace.cpp:220
 msgid "Trace: No active desktop"
@@ -19886,7 +19883,7 @@ msgstr ""
 "<span weight=\"bold\" size=\"larger\">Änderungen an Dokument „%s“ vor dem "
 "Schließen speichern?</span>\n"
 "\n"
-"Wenn Sie schließen, ohne zu speichern, dann gehen Ihre Änderungen verloren."
+"Wenn Du ohne zu speichern schließt, dann gehen Deine Änderungen verloren."
 
 #: ../src/ui/desktop/document-check.cpp:56
 #: ../src/ui/desktop/document-check.cpp:101
@@ -19911,7 +19908,7 @@ msgstr ""
 "<span weight=\"bold\" size=\"larger\">Die Datei „%s“ wurde in einem "
 "möglicherweise verlustbehafteten Format gespeichert!</span>\n"
 "\n"
-"Möchten Sie das Dokument als Inkscape-SVG speichern?"
+"Möchtest Du das Dokument als Inkscape-SVG speichern?"
 
 #: ../src/ui/desktop/document-check.cpp:103
 msgid "_Save as Inkscape SVG"
@@ -20057,7 +20054,7 @@ msgstr "<b>P6M</b>: Reflexion + 60&#176; Drehung"
 
 #: ../src/ui/dialog/clonetiler.cpp:156
 msgid "Select one of the 17 symmetry groups for the tiling"
-msgstr "Wählen Sie eine der 17 Symmetriegruppen zum Kacheln aus"
+msgstr "Wähle eine der 17 Symmetriegruppen zum Kacheln aus"
 
 #: ../src/ui/dialog/clonetiler.cpp:179
 msgid "S_hift"
@@ -21122,8 +21119,7 @@ msgstr "<b>Externe Skriptdateien:</b>"
 
 #: ../src/ui/dialog/document-properties.cpp:844
 msgid "Add the current file name or browse for a file"
-msgstr ""
-"Fügen Sie den aktuellen Dateinamen hinzu oder suchen Sie nach einer Datei"
+msgstr "Füge den aktuellen Dateinamen hinzu oder suche nach einer Datei"
 
 #: ../src/ui/dialog/document-properties.cpp:847
 #: ../src/ui/dialog/document-properties.cpp:905
@@ -21132,7 +21128,7 @@ msgid "Remove"
 msgstr "Entfernen"
 
 #: ../src/ui/dialog/document-properties.cpp:892
-#: ../share/ui/dialog-export.glade:783 ../share/ui/dialog-export.glade:1081
+#: ../share/ui/dialog-export.glade:783 ../share/ui/dialog-export.glade:1080
 msgid "Filename"
 msgstr "Dateiname"
 
@@ -21248,7 +21244,7 @@ msgstr "Exportiere %1"
 
 #: ../src/ui/dialog/export-batch.cpp:592 ../src/ui/dialog/export-single.cpp:636
 msgid "Select a filename for exporting"
-msgstr "Wählen Sie einen Namen für die zu exportierende Datei"
+msgstr "Wähle einen Namen für die zu exportierende Datei"
 
 #: ../src/ui/dialog/export-batch.cpp:662 ../src/ui/dialog/export-single.cpp:864
 msgid "Export in progress"
@@ -21278,11 +21274,11 @@ msgstr "Der zum Exportieren gewählte Bereich ist ungültig"
 
 #: ../src/ui/dialog/export.cpp:221 ../src/ui/dialog/export.cpp:329
 msgid "You have to enter a filename."
-msgstr "Sie müssen einen Dateinamen angeben"
+msgstr "Du musst einen Dateinamen angeben"
 
 #: ../src/ui/dialog/export.cpp:222 ../src/ui/dialog/export.cpp:330
 msgid "You have to enter a filename"
-msgstr "Sie müssen einen Dateinamen angeben"
+msgstr "Du musst einen Dateinamen angeben"
 
 #: ../src/ui/dialog/export.cpp:227
 msgid "Raster Export Error"
@@ -21979,8 +21975,9 @@ msgid ""
 "Modifies pixel colors based on a transformation matrix. Useful for adjusting "
 "color hue and saturation."
 msgstr ""
-"Ändert die Farben von Pixeln in Abhängigkeit von einer Transformationsmatrix."
-" Hilfreich für die Anpassung von Farbton oder Sättigung."
+"Ändert die Farben von Pixeln in Abhängigkeit von einer "
+"Transformationsmatrix. Hilfreich für die Anpassung von Farbton oder "
+"Sättigung."
 
 #: ../src/ui/dialog/filter-effects-dialog.cpp:2861
 msgid ""
@@ -21997,16 +21994,16 @@ msgid ""
 "Composites two images using one of the Porter-Duff blending modes or the "
 "arithmetic mode described in SVG standard."
 msgstr ""
-"Mischt zwei Bilder mittels eines der Porter-Duff-Mischmodi oder des"
-" arithmetischen Modus aus dem SVG-Standard"
+"Mischt zwei Bilder mittels eines der Porter-Duff-Mischmodi oder des "
+"arithmetischen Modus aus dem SVG-Standard"
 
 #: ../src/ui/dialog/filter-effects-dialog.cpp:2869
 msgid ""
 "Performs a convolution on the input image enabling effects like blur, "
 "sharpening, embossing and edge detection."
 msgstr ""
-"Verrechnet das Eingabebild und ermöglicht dadurch Effekte wie Unschärfe,"
-" Schärfen, Prägen und Kantenerkennung."
+"Verrechnet das Eingabebild und ermöglicht dadurch Effekte wie Unschärfe, "
+"Schärfen, Prägen und Kantenerkennung."
 
 #: ../src/ui/dialog/filter-effects-dialog.cpp:2873
 #: ../src/ui/dialog/filter-effects-dialog.cpp:2905
@@ -22077,8 +22074,8 @@ msgid ""
 "Offsets the input by an user-defined amount. Commonly used for drop shadow "
 "effects."
 msgstr ""
-"Verschiebt das Eingabebild um einen benutzerdefinierten Betrag, z.B. für"
-" Schlagschatten."
+"Verschiebt das Eingabebild um einen benutzerdefinierten Betrag, z.B. für "
+"Schlagschatten."
 
 #: ../src/ui/dialog/filter-effects-dialog.cpp:2909
 msgid ""
@@ -22093,8 +22090,8 @@ msgid ""
 "Renders Perlin noise, which is useful to generate textures such as clouds, "
 "fire, smoke, marble or granite."
 msgstr ""
-"Erzeugt Perlin-Rauschen, z.B. für Texturen wie Wolken, Feuer, Rauch, Marmor"
-" oder Granit."
+"Erzeugt Perlin-Rauschen, z.B. für Texturen wie Wolken, Feuer, Rauch, Marmor "
+"oder Granit."
 
 #: ../src/ui/dialog/filter-effects-dialog.cpp:2933
 msgid "Duplicate filter primitive"
@@ -22425,11 +22422,11 @@ msgstr "Keine Objekte gefunden"
 
 #: ../src/ui/dialog/find.cpp:1043
 msgid "Select an object type"
-msgstr "Wählen Sie einen Objekttyp"
+msgstr "Wähle einen Objekttyp"
 
 #: ../src/ui/dialog/find.cpp:1061
 msgid "Select a property"
-msgstr "Wählen Sie eine Eigenschaft aus"
+msgstr "Wähle eine Eigenschaft"
 
 #: ../src/ui/dialog/font-substitution.cpp:67
 msgid ""
@@ -22445,7 +22442,7 @@ msgstr "Schriftartersetzung"
 
 #: ../src/ui/dialog/font-substitution.cpp:89
 msgid "Select all the affected items"
-msgstr "Wählen Sie alle betroffenen Elemente aus"
+msgstr "Wähle alle betroffenen Elemente aus"
 
 #: ../src/ui/dialog/font-substitution.cpp:94
 msgid "Don't show this warning again"
@@ -23516,7 +23513,7 @@ msgstr "_Beschriftung:"
 
 #: ../src/ui/dialog/guides.cpp:47
 msgid "Optionally give this guideline a name"
-msgstr "Vergeben Sie optional einen Namen für die Hilfslinie"
+msgstr "Vergebe optional einen Namen für die Hilfslinie"
 
 #: ../src/ui/dialog/guides.cpp:48
 msgid "_Angle:"
@@ -23926,8 +23923,8 @@ msgid ""
 "Visualize the direction of selected paths by drawing small arrows in the "
 "middle of each outline segment"
 msgstr ""
-"Veranschaulichen Sie die Richtung der ausgewählten Pfade, in dem Sie kleine "
-"Pfeile in die Mitte jedes Rand-Segments zeichnen."
+"Veranschaulicht die Richtung der ausgewählten Pfade, indem kleine Pfeile in "
+"die Mitte jedes Rand-Segments gezeichnet werden."
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:927
 msgid "Show temporary path outline"
@@ -23983,7 +23980,7 @@ msgid ""
 "get the other behavior"
 msgstr ""
 "Verschieben des Anfassers zum nächsten gelöschten Knoten, damit es der "
-"Origianlform ähnelt; halten Sie für das andere Verhalten Strg gedrückt"
+"Origianlform ähnelt; halte für das andere Verhalten die Taste Strg gedrückt"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:940
 msgid "Object paint style"
@@ -24138,10 +24135,10 @@ msgid ""
 "preserved in the file for later use. (Note: This setting only affects new "
 "gradients.)"
 msgstr ""
-"Wenn aktiviert, werden nicht verwendete Farbverläufe automatisch aus der"
-" SVG-Datei gelöscht. Wenn deaktiviert, werden nicht verwendete Farbverläufe"
-" in der Datei für die spätere Verwendung gespeichert. Eine Änderung dieser"
-" Einstellung wirkt sich nur auf neu erzeugte Verläufe aus."
+"Wenn aktiviert, werden nicht verwendete Farbverläufe automatisch aus der SVG-"
+"Datei gelöscht. Wenn deaktiviert, werden nicht verwendete Farbverläufe in "
+"der Datei für die spätere Verwendung gespeichert. Eine Änderung dieser "
+"Einstellung wirkt sich nur auf neu erzeugte Verläufe aus."
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:1063
 msgid "If on, connector attachment points will not be shown for text objects"
@@ -24579,7 +24576,7 @@ msgid ""
 "real length. This information is used when zooming to 1:1, 1:2, etc., to "
 "display objects in their true sizes"
 msgstr ""
-"Verschieben Sie den Schieberegler, bis die Länge der Maßbandes auf ihrem "
+"Verschiebe den Schieberegler, bis die Länge der Maßbandes auf ihrem "
 "Bildschirm der echten Größe entspricht. Diese Information wird genutzt, um "
 "beim Zoom auf 1:1, 1:2, usw. das Objekt in realistischen Größen darzustellen."
 
@@ -25332,8 +25329,8 @@ msgid ""
 "mouse)"
 msgstr ""
 "Die Möglichkeiten eines Grafiktabletts oder anderen druckempfindlichen "
-"Geräts verwenden. Schalten Sie dies nur aus, wenn Sie Probleme mit dem Gerät "
-"haben (Sie können es immer noch als Maus verwenden)."
+"Geräts verwenden. Schalte dies nur aus, wenn Du Probleme mit dem Gerät hast "
+"(Du kannst es immer noch als Maus verwenden)."
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2123
 msgid "Switch tool based on tablet device"
@@ -25468,7 +25465,7 @@ msgid ""
 "Print warning if invalid or non-useful attributes found. Database files "
 "located in inkscape_data_dir/attributes."
 msgstr ""
-"Gebe Warnung aus, wenn ungültige oder nicht-nützliche Attribute gefunden "
+"Gib Warnung aus, wenn ungültige oder nicht-nützliche Attribute gefunden "
 "werden. Datenbank-Dateien liegen in inkscape_data_dir/Attribute."
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2167
@@ -25488,7 +25485,7 @@ msgid ""
 "Print warning if inappropriate style properties found (i.e. 'font-family' "
 "set on a <rect>). Database files located in inkscape_data_dir/attributes."
 msgstr ""
-"Gebe Warnung aus, wenn ungeeignete Stil-Eigenschaften gefunden werden (dh "
+"Gib Warnung aus, wenn ungeeignete Stil-Eigenschaften gefunden werden (dh "
 "'Schrift-Familie' auf einem <rect> gesetzt). Datenbank-Dateien liegen in "
 "inkscape_data_dir/Attribute."
 
@@ -25523,7 +25520,7 @@ msgstr "Redundante Stileigenschaften löschen"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2186
 msgid "Check Attributes and Style Properties on"
-msgstr "Überprüfen Sie Attribute und Style-Eigenschaften auf"
+msgstr "Attribute und Style-Eigenschaften überprüfen beim"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2188
 msgid "Reading"
@@ -25534,9 +25531,8 @@ msgid ""
 "Check attributes and style properties on reading in SVG files (including "
 "those internal to Inkscape which will slow down startup)"
 msgstr ""
-"Überprüfen Sie die Attribute und Style-Eigenschaften beim Lesen von SVG-"
-"Dateien (einschließlich derjenigen internen von Inkscape die den Start "
-"verlangsamen)"
+"Attribute und Style-Eigenschaften beim Lesen von SVG-Dateien überprüfen "
+"(einschließlich derjenigen internen von Inkscape die den Start verlangsamen)"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2190
 msgid "Editing"
@@ -25547,8 +25543,8 @@ msgid ""
 "Check attributes and style properties while editing SVG files (may slow down "
 "Inkscape, mostly useful for debugging)"
 msgstr ""
-"Überprüfen Sie die Attribute und Style-Eigenschaften während der Bearbeitung "
-"von SVG-Dateien (kann Inkscape verlangsamen, meist nützlich zur Fehlersuche)"
+"Attribute und Style-Eigenschaften während der Bearbeitung von SVG-Dateien "
+"überprüfen (kann Inkscape verlangsamen, meist nützlich zur Fehlersuche)"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2192
 msgid "Writing"
@@ -25557,8 +25553,7 @@ msgstr "Schreiben"
 #: ../src/ui/dialog/inkscape-preferences.cpp:2193
 msgid "Check attributes and style properties on writing out SVG files"
 msgstr ""
-"Überprüfen Sie die Attribut- und Style-Eigenschaften beim Schreiben von SVG-"
-"Dateien"
+"Attribute und Style-Eigenschaften beim Schreiben von SVG-Dateien überprüfen"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2195
 msgid "SVG output"
@@ -25933,8 +25928,8 @@ msgid ""
 "Check this to make the 'select same' functions work like the select all "
 "functions, restricting to current layer only."
 msgstr ""
-"Auswählen, um die Funktion 'Das Gleiche wählen' genauso wie 'Alles auswählen'"
-" auf die aktuelle Ebene zu beschränken."
+"Auswählen, um die Funktion 'Das Gleiche wählen' genauso wie 'Alles "
+"auswählen' auf die aktuelle Ebene zu beschränken."
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2399
 msgid "Wrap when cycling objects in z-order"
@@ -25947,8 +25942,8 @@ msgstr "Alt+Scroll-Rad"
 #: ../src/ui/dialog/inkscape-preferences.cpp:2403
 msgid "Wrap around at start and end when cycling objects in z-order"
 msgstr ""
-"Beim Auswählen von Objekten in Stapelordnung nach dem letzten Objekt am"
-" anderen Ende neu anfangen"
+"Beim Auswählen von Objekten in Stapelordnung nach dem letzten Objekt am "
+"anderen Ende neu anfangen"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2406
 msgid "Paste above selection instead of layer-top"
@@ -26154,8 +26149,8 @@ msgstr ""
 #: ../src/ui/dialog/inkscape-preferences.cpp:2477
 msgid "Show snap distance in case of alignment or distribution snap"
 msgstr ""
-"Bei Verwendung des Ausrichten- oder Verteilungseinrastens den Einrastabstand"
-" anzeigen"
+"Bei Verwendung des Ausrichten- oder Verteilungseinrastens den Einrastabstand "
+"anzeigen"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2479
 msgid "What should snap"
@@ -26457,8 +26452,8 @@ msgstr ""
 #: ../src/ui/dialog/inkscape-preferences.cpp:2583
 msgid "Uncheck this to remove clip/mask on ungroup"
 msgstr ""
-"Deaktivieren, um beim Auflösen von Gruppen auch das Ausschneiden/die"
-" Maskierung zu beenden."
+"Deaktivieren, um beim Auflösen von Gruppen auch das Ausschneiden/die "
+"Maskierung zu beenden."
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2584
 msgid "Remove clippath/mask object after applying"
@@ -26567,9 +26562,9 @@ msgid ""
 "copies that are mirrored differently between the rows and the columns) for "
 "Tiling LPE"
 msgstr ""
-"Erlaubt die Verwendung von 16 fortgeschrittenen Spiegeloptionen für das"
-" Kachelmuster (Kacheln können in Reihen und Spalten unterschiedlich"
-" gespiegelt werden) im Kacheln-Pfadeffekt."
+"Erlaubt die Verwendung von 16 fortgeschrittenen Spiegeloptionen für das "
+"Kachelmuster (Kacheln können in Reihen und Spalten unterschiedlich "
+"gespiegelt werden) im Kacheln-Pfadeffekt."
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2633
 msgid "Live Path Effects (LPE)"
@@ -26659,8 +26654,8 @@ msgid ""
 "How to update continually changing content when it can't be redrawn fast "
 "enough"
 msgstr ""
-"Auf welche Weise sich ständig verändernder Inhalt dargestellt werden soll,"
-" wenn er nicht schnell genug neu berechnet werden kann"
+"Auf welche Weise sich ständig verändernder Inhalt dargestellt werden soll, "
+"wenn er nicht schnell genug neu berechnet werden kann"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2666
 #: ../src/ui/dialog/inkscape-preferences.cpp:2690
@@ -26734,9 +26729,9 @@ msgid ""
 "generated PNG files. To update the display after changing this option, just "
 "zoom out/in."
 msgstr ""
-"Glättet Farbverläufe. Die Größe der erzeugten PNG-Dateien kann hierdurch"
-" stark ansteigen. Um nach einer Änderung dieser Option die Anzeige zu"
-" aktualisieren, bitte kurz hinein- oder herauszoomen."
+"Glättet Farbverläufe. Die Größe der erzeugten PNG-Dateien kann hierdurch "
+"stark ansteigen. Um nach einer Änderung dieser Option die Anzeige zu "
+"aktualisieren, bitte kurz hinein- oder herauszoomen."
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2726
 msgid "Enable developer mode"
@@ -26779,9 +26774,9 @@ msgid ""
 "Use an alternative, more obvious bisection strategy: just chop tile in half "
 "along the larger dimension until small enough"
 msgstr ""
-"Verwendet eine alternative, einleuchtendere Aufteilungsstrategie:"
-" zerschneidet einfach die Kachel der Länge nach in zwei Teile, bis sie klein"
-" genug ist"
+"Verwendet eine alternative, einleuchtendere Aufteilungsstrategie: "
+"zerschneidet einfach die Kachel der Länge nach in zwei Teile, bis sie klein "
+"genug ist"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2772
 msgid "Smallest tile size for new bisector"
@@ -26799,8 +26794,8 @@ msgstr "px"
 msgid ""
 "Halve rendering tile rectangles until their largest dimension is this small"
 msgstr ""
-"Die Renderkachelrechtecke so lange halbieren, bis ihre längste Seite diese"
-" Größe hat"
+"Die Renderkachelrechtecke so lange halbieren, bis ihre längste Seite diese "
+"Größe hat"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2774
 #: ../share/ui/color-palette.glade:271
@@ -26812,8 +26807,8 @@ msgid ""
 "The \"tile size\" parameter previously hard-coded into Inkscape's original "
 "tile bisector."
 msgstr ""
-"Der Parameter für 'Kachelgröße', der zuvor im Originalalgorithmus zum"
-" Aufteilen hartkodiert war"
+"Der Parameter für 'Kachelgröße', der zuvor im Originalalgorithmus zum "
+"Aufteilen hartkodiert war"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2776
 msgid "Transformation threshold"
@@ -26824,9 +26819,9 @@ msgid ""
 "How much the viewing transformation can change before throwing away the "
 "current redraw and starting again"
 msgstr ""
-"Wie sehr der aktuell sichtbare Ausschnitt sich"
-" verschieben/verkleinern/vergrößern darf, bevor das aktuelle Neuzeichnen"
-" verworfen wird und ein neuer Neuzeichnenvorgang begonnen wird"
+"Wie sehr der aktuell sichtbare Ausschnitt sich verschieben/verkleinern/"
+"vergrößern darf, bevor das aktuelle Neuzeichnen verworfen wird und ein neuer "
+"Neuzeichnenvorgang begonnen wird"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2778
 msgid "Buffer padding"
@@ -26835,7 +26830,8 @@ msgstr "Pufferbereich"
 #: ../src/ui/dialog/inkscape-preferences.cpp:2778
 msgid "Do not throw away rendered content in this area around the window yet"
 msgstr ""
-"Diesen bereits gerenderten Bereich außerhalb des Fensters noch nicht verwerfen"
+"Diesen bereits gerenderten Bereich außerhalb des Fensters noch nicht "
+"verwerfen"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2780
 msgid "Min size for coarsener algorithm"
@@ -26845,8 +26841,8 @@ msgstr "Minimale Größe für den Coarsener-Algorithmus"
 msgid ""
 "Coarsener algorithm only processes rectangles smaller/thinner than this."
 msgstr ""
-"Der Coarsener-Algorithmus verarbeitet nur Rechtecke, die kleiner/schmaler als"
-" dieser Wert sind."
+"Der Coarsener-Algorithmus verarbeitet nur Rechtecke, die kleiner/schmaler "
+"als dieser Wert sind."
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2782
 msgid "Glue size for coarsener algorithm"
@@ -26866,8 +26862,8 @@ msgid ""
 "Refuse coarsening algorithm's attempt if the result would be more empty than "
 "this."
 msgstr ""
-"Den Versuch des Coarsener-Algorithmus ablehnen, wenn das Ergebnis leerer wäre"
-" als der gegebene Wert."
+"Den Versuch des Coarsener-Algorithmus ablehnen, wenn das Ergebnis leerer "
+"wäre als der gegebene Wert."
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2786
 msgid "Debugging, profiling and experiments"
@@ -26912,8 +26908,8 @@ msgstr "Neugezeichnete Bereiche hervorheben"
 #: ../src/ui/dialog/inkscape-preferences.cpp:2796
 msgid "Paint a translucent random colour over each newly drawn tile"
 msgstr ""
-"Übermalt jede neu gezeichnete Kachel mit einer zufälligen, durchscheinenden"
-" Farbe"
+"Übermalt jede neu gezeichnete Kachel mit einer zufälligen, durchscheinenden "
+"Farbe"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2798
 msgid "Show unclean region"
@@ -26932,8 +26928,8 @@ msgid ""
 "Show the region that still contains a saved copy of previously rendered "
 "content in blue"
 msgstr ""
-"Färbt die Region, die noch eine gespeicherte Kopie des zuvor gerenderten"
-" Inhaltes enthält, blau ein"
+"Färbt die Region, die noch eine gespeicherte Kopie des zuvor gerenderten "
+"Inhaltes enthält, blau ein"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2802
 msgid "Show clean region's fragmentation"
@@ -26944,8 +26940,8 @@ msgid ""
 "Show the outlines of the rectangles in the region where rendering is "
 "complete in green"
 msgstr ""
-"Färbt die Umrisse der Rechtecke in dem Bereich, in dem das Rendern"
-" abgeschlossen ist, grün ein"
+"Färbt die Umrisse der Rechtecke in dem Bereich, in dem das Rendern "
+"abgeschlossen ist, grün ein"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2804
 msgid "Disable redraw"
@@ -26990,7 +26986,7 @@ msgid "_SVG editor:"
 msgstr "SVG-Editor:"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2823
-#: ../share/ui/dialog-export.glade:816 ../share/ui/dialog-export.glade:1090
+#: ../share/ui/dialog-export.glade:816 ../share/ui/dialog-export.glade:1089
 #: ../share/extensions/guillotine.inx:15 ../share/extensions/layer2png.inx:29
 #: ../share/extensions/plotter.inx:98
 #: ../share/extensions/prepare_file_save_as.inx:8
@@ -27075,7 +27071,7 @@ msgid "Include"
 msgstr "Als Objekt(e) übernehmen"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2858
-#: ../share/ui/dialog-export.glade:958
+#: ../share/ui/dialog-export.glade:957
 msgid "Pages"
 msgstr "Seiten"
 
@@ -27102,8 +27098,7 @@ msgstr "Dateiauflösung überschreiben"
 #: ../src/ui/dialog/inkscape-preferences.cpp:2877
 msgid "Use default bitmap resolution in favor of information from file"
 msgstr ""
-"Verwenden Sie Standard-Bitmap-Auflösung zu Gunsten von Informationen aus der "
-"Datei"
+"Standard-Bitmap-Auflösung anstatt Informationen aus der Datei verwenden"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2881
 msgid "Images in Outline Mode"
@@ -27126,8 +27121,8 @@ msgid ""
 "Select a file of predefined shortcuts and modifiers to use. Any "
 "customizations you create will be added separately to %1"
 msgstr ""
-"Wählen Sie eine Datei mit vordefinierten Tastenkürzeln. Jedes "
-"benutzerdefinierte Kürzel, das erstellt wird, wird einzeln zu %1 hinzugefügt."
+"Wähle eine Datei mit vordefinierten Tastenkürzeln. Jedes benutzerdefinierte "
+"Kürzel, das erstellt wird, wird einzeln zu %1 hinzugefügt."
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2898
 msgid "Keyboard file:"
@@ -27239,7 +27234,7 @@ msgstr "Tastaturkürzel neu vergeben?"
 # File: ../src/ui/dialog/inkscape-preferences.cpp, line: 2153
 #: ../src/ui/dialog/inkscape-preferences.cpp:3133
 msgid "Are you sure you want to reassign this shortcut?"
-msgstr "Sind Sie sicher, dass Sie dieses Tastaturkürzel neu vergeben möchten?"
+msgstr "Bist Du sicher, dass Du dieses Tastaturkürzel neu vergeben möchten?"
 
 # Denglish but should be short (used in shortcut labels)
 #: ../src/ui/dialog/inkscape-preferences.cpp:3331 ../src/ui/shortcuts.cpp:636
@@ -27723,7 +27718,7 @@ msgstr "Pfadeffekte können nicht auf Symbole angewendet werden"
 
 #: ../src/ui/dialog/livepatheffect-editor.cpp:334
 msgid "Click add button to convert clone"
-msgstr "Klicken Sie auf Hinzufügen, um Klon zu konvertieren"
+msgstr "Klicke auf Hinzufügen, um Klon zu konvertieren"
 
 #: ../src/ui/dialog/livepatheffect-editor.cpp:339
 #: ../src/ui/dialog/livepatheffect-editor.cpp:343
@@ -28063,8 +28058,8 @@ msgid ""
 "<b>Hold ALT</b> while hovering over item to highlight, <b>hold SHIFT</b> and "
 "click to hide/lock all."
 msgstr ""
-"<b>Alt</b> festhalten, um Objekt hervorzuheben, wenn die Maus sich darüber"
-" befindet, <b>Umschalt + Klicken</b> zum Verbergen/Sperren aller Objekte"
+"<b>Alt</b> festhalten, um Objekt hervorzuheben, wenn die Maus sich darüber "
+"befindet, <b>Umschalt + Klicken</b> zum Verbergen/Sperren aller Objekte"
 
 #: ../src/ui/dialog/objects.cpp:836
 msgid "Switch to layers only view."
@@ -28523,7 +28518,7 @@ msgstr "Glyphe hinzufügen"
 #: ../src/ui/dialog/svg-fonts-dialog.cpp:1103
 #: ../src/ui/dialog/svg-fonts-dialog.cpp:1143
 msgid "Select a <b>path</b> to define the curves of a glyph"
-msgstr "Wählen Sie einen <b>Pfad</b> aus, der die Form der Glyphe bestimmt."
+msgstr "Wähle einen <b>Pfad</b> aus, der die Form der Glyphe bestimmt."
 
 #: ../src/ui/dialog/svg-fonts-dialog.cpp:1111
 #: ../src/ui/dialog/svg-fonts-dialog.cpp:1151
@@ -29171,8 +29166,8 @@ msgstr ""
 "<span weight=\"bold\" size=\"larger\">Eine Datei namens „%s“ existiert "
 "bereits. Soll diese ersetzt werden?</span>\n"
 "\n"
-"Die Datei existiert bereits in „%s“. Sie zu ersetzen wird ihren Inhalt "
-"überschreiben."
+"Die Datei existiert bereits in „%s“. Wenn Du sie ersetzt wird der Inhalt "
+"überschrieben."
 
 #: ../src/ui/interface.cpp:159 ../share/extensions/web_set_att.inx:25
 #: ../share/extensions/web_transmit_att.inx:23
@@ -29410,7 +29405,7 @@ msgid "Canvas"
 msgstr "Arbeitsfläche"
 
 #: ../src/ui/modifiers.cpp:61 ../src/widgets/desktop-widget.cpp:1556
-#: ../share/ui/dialog-export.glade:482 ../share/ui/dialog-export.glade:923
+#: ../share/ui/dialog-export.glade:482 ../share/ui/dialog-export.glade:922
 #: ../share/extensions/printing_marks.inx:18
 msgid "Selection"
 msgstr "Auswahl"
@@ -29594,7 +29589,7 @@ msgstr "Ziehen, um die Größe des <b>Fließtext-Rahmens</b> zu ändern"
 
 #: ../src/ui/shortcuts.cpp:851
 msgid "Select a file to import"
-msgstr "Wählen Sie die zu importierende Datei"
+msgstr "Wähle die zu importierende Datei"
 
 #: ../src/ui/shortcuts.cpp:852 ../src/ui/shortcuts.cpp:885
 msgid "Inkscape shortcuts (*.xml)"
@@ -30318,7 +30313,7 @@ msgstr "3D-Box: Perspektive ändern (Winkel der unendlichen Achse)"
 
 #: ../src/ui/toolbar/calligraphy-toolbar.cpp:77
 msgid "Choose a preset"
-msgstr "Wählen Sie eine Vorlage"
+msgstr "Wähle eine Vorlage"
 
 #: ../src/ui/toolbar/calligraphy-toolbar.cpp:90
 msgid "Add/Edit Profile"
@@ -33033,8 +33028,8 @@ msgid ""
 "fill all of the area, undo, zoom out, and fill again."
 msgstr ""
 "<b>Nur der sichtbare Teil des abgegrenzten Gebiets wurde gefüllt.</b> Wenn "
-"Sie das gesamte Gebiet füllen wollen, dann machen Sie rückgängig, zoomen "
-"heraus, und füllen Sie noch einmal."
+"Du das gesamte Gebiet füllen möchtest, mache es rückgängig, zoome heraus und "
+"fülle es erneut."
 
 #: ../src/ui/tools/flood-tool.cpp:1069 ../src/ui/tools/flood-tool.cpp:1215
 msgid "Fill bounded area"
@@ -33546,7 +33541,7 @@ msgstr ""
 #: ../src/ui/tools/select-tool.cpp:95
 msgid "Click selection again to toggle scale/rotation handles"
 msgstr ""
-"Klicken Sie auf die Auswahl, um zwischen Skalieren und Rotieren umzuschalten"
+"Klicke auf die Auswahl, um zwischen Skalieren und Rotieren umzuschalten"
 
 # !!!
 #: ../src/ui/tools/select-tool.cpp:165
@@ -34829,10 +34824,10 @@ msgid ""
 "pattern on canvas. Use <b>Object &gt; Pattern &gt; Objects to Pattern</b> to "
 "create a new pattern from selection."
 msgstr ""
-"Benutzen Sie das <b>Knotenwerkzeug</b>, um Position, Winkel und Größe des "
-"Musters auf der Arbeitsfläche anzupassen. Mit <b>Objekt &gt; Muster &gt; "
-"Objekte in Füllmuster umwandeln</b> lassen sich neue Füllmuster von "
-"ausgewählten Objekten erzeugen."
+"Benutze das <b>Knotenwerkzeug</b>, um Position, Winkel und Größe des Musters "
+"auf der Arbeitsfläche anzupassen. Mit <b>Objekt &gt; Muster &gt; Objekte in "
+"Füllmuster umwandeln</b> lassen sich neue Füllmuster von ausgewählten "
+"Objekten erzeugen."
 
 #: ../src/ui/widget/paint-selector.cpp:1258
 msgid "<b>Pattern fill</b>"
@@ -35701,8 +35696,8 @@ msgid ""
 "Don't pop up the export options and use the previously used or default "
 "options."
 msgstr ""
-"Die Exportoptionen nicht anzeigen, stattdessen die zuletzt verwendeten oder"
-" die Standardeinstellungen verwenden."
+"Die Exportoptionen nicht anzeigen, stattdessen die zuletzt verwendeten oder "
+"die Standardeinstellungen verwenden."
 
 #: ../share/ui/dialog-export.glade:340 ../share/extensions/restack.inx:32
 #: ../share/extensions/text_extract.inx:19
@@ -35778,35 +35773,35 @@ msgstr "Einen Teil des Dokuments exportieren"
 msgid "Single Image"
 msgstr "Einzelbild"
 
-#: ../share/ui/dialog-export.glade:928
+#: ../share/ui/dialog-export.glade:927
 msgid "Export selected objects to separate files"
 msgstr "Gewählte Objekte in getrennte Dateien exportieren"
 
-#: ../share/ui/dialog-export.glade:940
+#: ../share/ui/dialog-export.glade:939
 msgid "Layers"
 msgstr "Ebenen"
 
-#: ../share/ui/dialog-export.glade:945
+#: ../share/ui/dialog-export.glade:944
 msgid "Export layers as separate files"
 msgstr "Jede Ebene als einzelne Datei exportieren"
 
-#: ../share/ui/dialog-export.glade:963
+#: ../share/ui/dialog-export.glade:962
 msgid "Export pages as separate files"
 msgstr "Jede Seite als einzelne Datei exportieren"
 
-#: ../share/ui/dialog-export.glade:983
+#: ../share/ui/dialog-export.glade:982
 msgid "Preview"
 msgstr "Vorschau"
 
-#: ../share/ui/dialog-export.glade:1011
+#: ../share/ui/dialog-export.glade:1010
 msgid "Export Selected Only"
 msgstr "Nur ausgewählte Objekte exportieren"
 
-#: ../share/ui/dialog-export.glade:1126
+#: ../share/ui/dialog-export.glade:1125
 msgid "Export to multiple files and file formats"
 msgstr "In mehrere Dateien und Dateiformate exportieren"
 
-#: ../share/ui/dialog-export.glade:1127
+#: ../share/ui/dialog-export.glade:1126
 msgid "Batch Export"
 msgstr "Mehrfachexport"
 
@@ -36860,8 +36855,8 @@ msgid ""
 "SVG element positions are expressed in user units."
 msgstr ""
 "Die Skalierung des Dokumentes bestimmt die Bedeutung der Nutzereinheit.\n"
-"Die Positionen von SVG-Elementen werden im Quellcode der Datei in"
-" Nutzereinheiten angegeben."
+"Die Positionen von SVG-Elementen werden im Quellcode der Datei in "
+"Nutzereinheiten angegeben."
 
 #: ../share/ui/page-properties.glade:457
 msgid "Predefined paper sizes to choose from"
@@ -37907,7 +37902,7 @@ msgstr "Nicht-unterstütztes Tag: {}\n"
 #: ../share/extensions/dimension.py:107
 #: ../share/extensions/generate_voronoi.py:80
 msgid "Please select an object"
-msgstr "Bitte wählen Sie ein Objekt."
+msgstr "Bitte wähle ein Objekt"
 
 #: ../share/extensions/docinfo.py:42
 msgid "New Document (unsaved)"
@@ -37930,8 +37925,8 @@ msgid ""
 "An object that has the extrude parameter set was detected. The imported "
 "figure may be displayed incorrectly."
 msgstr ""
-"Es wurde ein Objekt mit einem Extrudieren-Parameter gefunden. Die importierte"
-" Zeichnung kann fehlerhaft dargestellt werden."
+"Es wurde ein Objekt mit einem Extrudieren-Parameter gefunden. Die "
+"importierte Zeichnung kann fehlerhaft dargestellt werden."
 
 #: ../share/extensions/dxf_outlines.py:213
 msgid ""
@@ -37939,23 +37934,23 @@ msgid ""
 "required by the ROBO option.Please install them and try again."
 msgstr ""
 "Der Import der numpy oder numpy.linalg-Module ist fehlgeschlagen. Diese "
-"Module werden von der Erweiterung benötigt. Bitte installieren Sie diese und "
-"versuchen es erneut."
+"Module werden von der Erweiterung benötigt. Installiere sie und versuche es "
+"erneut."
 
 #: ../share/extensions/dxf_outlines.py:355
 msgid ""
 "Too many nested groups. Please use the \"Deep Ungroup\" extension first."
 msgstr ""
-"Zu viele ineinander verschachtelte Gruppen. Bitte zunächst die Erweiterung"
-" \"Alle Gruppen aufheben\" anwenden."
+"Zu viele ineinander verschachtelte Gruppen. Bitte zunächst die Erweiterung "
+"\"Alle Gruppen aufheben\" anwenden."
 
 #: ../share/extensions/dxf_outlines.py:370
 msgid ""
 "Error: Field 'Layer match name' must be filled when using 'By name match' "
 "option"
 msgstr ""
-"Fehler: Das Feld 'Übereinstimmender Ebenenname' ist für die Option 'Nach"
-" Namensübereinstimmung' erforderlich."
+"Fehler: Das Feld 'Übereinstimmender Ebenenname' ist für die Option 'Nach "
+"Namensübereinstimmung' erforderlich."
 
 #: ../share/extensions/dxf_outlines.py:439
 msgid "Warning: Layer '{}' not found!"
@@ -37973,16 +37968,16 @@ msgstr "Mindestens ein Objekt auswählen!"
 msgid ""
 "x-interval cannot be zero. Please modify 'Start X value' or 'End X value'"
 msgstr ""
-"Die x-Achse muss länger sein als 0. Bitte den Start- oder Endwert für x"
-" ändern."
+"Die x-Achse muss länger sein als 0. Bitte den Start- oder Endwert für x "
+"ändern."
 
 #: ../share/extensions/funcplot.py:81
 msgid ""
 "y-interval cannot be zero. Please modify 'Y value of rectangle's top' or 'Y "
 "value of rectangle's bottom'"
 msgstr ""
-"Die y-Achse muss länger sein als 0. Bitte entweder den Wert für y an der"
-" Ober- oder der Unterkante des Rechtecks ändern."
+"Die y-Achse muss länger sein als 0. Bitte entweder den Wert für y an der "
+"Ober- oder der Unterkante des Rechtecks ändern."
 
 #: ../share/extensions/funcplot.py:112
 msgid "Invalid function specification"
@@ -37990,7 +37985,7 @@ msgstr "Ungültige Angabe für die Funktion"
 
 #: ../share/extensions/funcplot.py:296
 msgid "Please select a rectangle"
-msgstr "Bitte wählen Sie ein Rechteck"
+msgstr "Bitte wähle ein Rechteck"
 
 #: ../share/extensions/gimp_xcf.py:127
 msgid "This extension requires at least one non empty layer."
@@ -38009,8 +38004,8 @@ msgid ""
 "To use the export hints option, you need to have previously exported the "
 "document. Otherwise no export hints exist!"
 msgstr ""
-"Um die Exporthinweise verwenden zu können, muss das Dokument zuvor schon"
-" einmal exportiert worden sein. Sonst wurden diese noch nicht angelegt!"
+"Um die Exporthinweise verwenden zu können, muss das Dokument zuvor schon "
+"einmal exportiert worden sein. Sonst wurden diese noch nicht angelegt!"
 
 #: ../share/extensions/guillotine.py:191
 msgid ""
@@ -38036,8 +38031,8 @@ msgstr "Schriftart nicht gefunden, Zeichentabelle kann nicht erzeugt werden"
 #: ../share/extensions/hershey.py:1383
 msgid "Unable to process text. Consider unlinking cloned text."
 msgstr ""
-"Text konnte nicht verarbeitet werden. Die Klonverbindung geklonter Texte"
-" sollte aufgehoben werden."
+"Text konnte nicht verarbeitet werden. Die Klonverbindung geklonter Texte "
+"sollte aufgehoben werden."
 
 #: ../share/extensions/hershey.py:2014
 msgid "Warning: unable to load SVG stroke fonts."
@@ -38053,8 +38048,8 @@ msgid ""
 msgstr ""
 "Warnung: Fließtext in einer Form kann nicht konvertiert werden.\n"
 "Bitte vorher mittels Text > Fließtext aufheben umwandeln.\n"
-"Wenn das fragliche Objekt nicht zu identifizieren ist, nimm bitte Kontakt zum"
-" Support auf."
+"Wenn das fragliche Objekt nicht zu identifizieren ist, nimm bitte Kontakt "
+"zum Support auf."
 
 #: ../share/extensions/hpgl_decoder.py:41
 msgid "Movements"
@@ -38125,8 +38120,8 @@ msgstr "Kann Encoding {} nicht dekodieren"
 #: ../share/extensions/image_extract.py:196
 msgid "Unable to extract image, file {} already exists."
 msgstr ""
-"Bild kann nicht extrahiert werden, es existiert bereits eine Datei mit dem"
-" Namen {}."
+"Bild kann nicht extrahiert werden, es existiert bereits eine Datei mit dem "
+"Namen {}."
 
 #: ../share/extensions/image_extract.py:204
 msgid "Unable to write to {}"
@@ -38339,8 +38334,8 @@ msgstr "Attribut {} konnte nicht auf {} gesetzt werden"
 #: ../share/extensions/interp_att_g.py:158
 msgid "You selected 'Other'. Please enter an attribute to interpolate."
 msgstr ""
-"'Andere' wurde ausgewählt. Geben Sie bitte ein Attribut ein, das "
-"interpoliert werden soll."
+"Du hast 'Andere' ausgewählt. Gib ein Attribut ein, das interpoliert werden "
+"soll."
 
 #: ../share/extensions/interp_att_g.py:185
 msgid "There is no selection to interpolate"
@@ -38351,7 +38346,7 @@ msgid ""
 "To assign an effect, please select an object.\n"
 "\n"
 msgstr ""
-"Um einen Effekt zuzuweisen, wählen Sie bitte ein Objekt.\n"
+"Um einen Effekt zuzuweisen, wähle ein Objekt.\n"
 "\n"
 
 #: ../share/extensions/jessyink_effects.py:43
@@ -38359,8 +38354,8 @@ msgid ""
 "No object selected. Please select the object you want to assign an effect to "
 "and then press apply.\n"
 msgstr ""
-"Kein Objekt ausgewählt. Bitte wählen Sie das gewünschte Objekt für den "
-"Effekt aus und drücken Sie dann anwenden.\n"
+"Kein Objekt ausgewählt. Wähle das gewünschte Objekt für den Effekt aus und "
+"drücke dann „Anwenden“.\n"
 
 #: ../share/extensions/jessyink_install.py:37
 msgid ""
@@ -38371,7 +38366,7 @@ msgid ""
 "\n"
 msgstr ""
 "Das JessyInk-Skript ist in dieser SVG-Datei nicht installiert oder hat eine "
-"andere Version als die JessyInk-Erweiterung. Bitte wählen Sie „Installation/"
+"andere Version als die JessyInk-Erweiterung. Wähle „Installation/"
 "Aktualisierung…“ aus dem „JessyInk“ Untermenü des „Erweiterungen“-Menüs, um "
 "das JessyInk-Skript zu installieren oder zu aktualisieren.\n"
 "\n"
@@ -38487,7 +38482,7 @@ msgstr " in {0!s} s"
 
 #: ../share/extensions/jessyink_transitions.py:41
 msgid "Please enter a layer name."
-msgstr "Bitte geben Sie einen Ebenennamen ein."
+msgstr "Gib einen Ebenennamen ein."
 
 #: ../share/extensions/jessyink_transitions.py:49
 msgid "Layer '{}' not found."
@@ -38513,8 +38508,8 @@ msgid ""
 "No object selected. Please select the object you want to assign a view to "
 "and then press apply.\n"
 msgstr ""
-"Kein Objekt ausgewählt. Bitte wählen Sie das gewünschte Objekt für die "
-"Zuweisung einer Ansicht und drücken Sie dann anwenden.\n"
+"Kein Objekt ausgewählt. Wähle das gewünschte Objekt für die Zuweisung einer "
+"Ansicht und drücke dann anwenden.\n"
 
 #: ../share/extensions/layer2png.py:98
 msgid "Slice: '{}' does not exist."
@@ -38602,7 +38597,7 @@ msgstr ""
 
 #: ../share/extensions/path_envelope.py:31
 msgid "You must select two objects only."
-msgstr "Sie dürfen nur zwei Objekte auswählen."
+msgstr "Du darfst nur zwei Objekte auswählen."
 
 #: ../share/extensions/path_envelope.py:49
 #: ../share/extensions/perspective.py:92
@@ -38611,7 +38606,7 @@ msgid ""
 "Try using Object->Ungroup."
 msgstr ""
 "Das als zweites gewählte Objekt ist eine Gruppe, kein Pfad.\n"
-"Versuchen Sie den Befehl Objekt -> Gruppierung aufheben."
+"Versuche den Befehl Objekt -> Gruppierung aufheben."
 
 #: ../share/extensions/path_envelope.py:55
 #: ../share/extensions/perspective.py:98
@@ -38620,7 +38615,7 @@ msgid ""
 "Try using the procedure Path->Object to Path."
 msgstr ""
 "Das als zweites ausgewählte Objekt ist kein Pfad.\n"
-" Versuchen Sie den Befehl Pfad | Objekt in Pfad umwandeln."
+"Versuche den Befehl Pfad | Objekt in Pfad umwandeln."
 
 #: ../share/extensions/path_envelope.py:62
 #: ../share/extensions/perspective.py:105
@@ -38629,7 +38624,7 @@ msgid ""
 "Try using the procedure Path->Object to Path."
 msgstr ""
 "Das zuerst gewählte Objekt ist weder ein Pfad noch eine Gruppe.\n"
-" Versuchen Sie den Befehl Pfad | Objekt in Pfad umwandeln."
+" Versuche den Befehl Pfad | Objekt in Pfad umwandeln."
 
 #: ../share/extensions/path_envelope.py:72
 msgid "Second selected path is too short. Must be four or more nodes."
@@ -38657,16 +38652,16 @@ msgid ""
 "Please choose a larger object or set 'Space between copies' > 0"
 msgstr ""
 "Die Gesamtlänge des Musters ist zu kurz.\n"
-"Bitte ein größeres Objekt wählen oder einen 'Abstand zwischen Kopien' > 0"
-" wählen."
+"Bitte ein größeres Objekt wählen oder einen 'Abstand zwischen Kopien' > 0 "
+"wählen."
 
 #: ../share/extensions/pathalongpath.py:198
 msgid ""
 "The 'stretch' option requires that the pattern must have non-zero width :\n"
 "Please edit the pattern width."
 msgstr ""
-"Die Option 'Strecken' erfordert ein Musterobjekt mit einer Breite größer als"
-" null.\n"
+"Die Option 'Strecken' erfordert ein Musterobjekt mit einer Breite größer als "
+"null.\n"
 "Bitte die Breite des Musters ändern."
 
 #: ../share/extensions/pdflatex.py:75
@@ -38680,9 +38675,9 @@ msgid ""
 "this can be done with the command, sudo apt-get install python-numpy."
 msgstr ""
 "Der Import der numpy oder numpy.linalg-Module ist fehlgeschlagen. Diese "
-"Module werden von der Erweiterung benötigt. Bitte installieren Sie diese und "
-"versuchen es erneut. Auf einem Debian-Betriebssystem können Sie dafür "
-"folgenden Befehl nutzen: sudo apt-get install python-numpy"
+"Module werden von der Erweiterung benötigt. Installiere sie und versuche es "
+"erneut. Auf einem Debian-Betriebssystem kannst Du dafür folgenden Befehl "
+"nutzen: sudo apt-get install python-numpy"
 
 #: ../share/extensions/perspective.py:52
 msgid "This extension requires two selected objects."
@@ -38705,8 +38700,8 @@ msgstr "TR: Die Auswahl enthält Transformationen mit Scheren/Drehen"
 #: ../share/extensions/pixelsnap.py:323
 msgid "Selection contains non-symetric scaling, can't snap stroke width"
 msgstr ""
-"Die Auswahl enthält nicht-symmetrische Skalierungen, kann nicht an"
-" Linienbreite einrasten"
+"Die Auswahl enthält nicht-symmetrische Skalierungen, kann nicht an "
+"Linienbreite einrasten"
 
 #: ../share/extensions/pixelsnap.py:341
 msgid "Path: Selection contains transformations with skew/rotation"
@@ -38759,9 +38754,9 @@ msgid ""
 "compression level options. Please try to disable \"Interlaced\" or set "
 "\"Level\" to 1 or higher."
 msgstr ""
-"Der Befehl für OptiPNG ist fehlerhaft, eventuell sind die Optionen für"
-" Interlacing und Kompressionslevel nicht kompatibel. Bitte 'Interlaced'"
-" deaktivieren oder für 'Level' einen Wert größer null wählen."
+"Der Befehl für OptiPNG ist fehlerhaft, eventuell sind die Optionen für "
+"Interlacing und Kompressionslevel nicht kompatibel. Bitte 'Interlaced' "
+"deaktivieren oder für 'Level' einen Wert größer null wählen."
 
 #: ../share/extensions/raster_output_png.py:51
 msgid "The optipng command failed with the following message:"
@@ -38788,8 +38783,8 @@ msgstr "Die Zeichenkette ist zu lang für die Darstellung als QR-Code"
 msgid ""
 "Wrong symbol '{}' in alphanumeric representation: Should be [A-Z, 0-9] or {}"
 msgstr ""
-"Ungültiges Zeichen '{}' für alphanumerischen Inhalt. Es dürfen nur [A-Z, 0-9]"
-" oder {} verwendet werden."
+"Ungültiges Zeichen '{}' für alphanumerischen Inhalt. Es dürfen nur [A-Z, "
+"0-9] oder {} verwendet werden."
 
 #: ../share/extensions/render_barcode_qrcode.py:1122
 msgid "Please enter an input text"
@@ -38825,16 +38820,15 @@ msgstr "Nichts zu tun, keine Aktion gewählt."
 
 #: ../share/extensions/replace_font.py:227
 msgid "Please enter a search string in the find box."
-msgstr "Bitte geben Sie eine Suchphrase in das Suchfeld ein."
+msgstr "Gib eine Suchphrase in das Suchfeld ein."
 
 #: ../share/extensions/replace_font.py:233
 msgid "Please enter a replacement font in the replace with box."
-msgstr "Bitte geben Sie eine Ersetzungsschriftart im „Ersetzen mit“-Feld ein."
+msgstr "Gib eine Ersetzungsschriftart im „Ersetzen mit“-Feld ein."
 
 #: ../share/extensions/replace_font.py:240
 msgid "Please enter a replacement font in the replace all box."
-msgstr ""
-"Bitte geben Sie eine Ersetzungsschriftart im „Alles ersetzen“-Feld ein."
+msgstr "Gib eine Ersetzungsschriftart im „Alles ersetzen“-Feld ein."
 
 #: ../share/extensions/restack.py:57
 msgid "There is no selection to restack."
@@ -38862,8 +38856,8 @@ msgid ""
 "Please only link a single color profile in the document settings. No output "
 "generated."
 msgstr ""
-"Bitte verknüpfe in den Dokumenteinstellungen nur ein einziges Farbprofil. Es"
-" wurde keine Ausgabe erzeugt."
+"Bitte verknüpfe in den Dokumenteinstellungen nur ein einziges Farbprofil. Es "
+"wurde keine Ausgabe erzeugt."
 
 #: ../share/extensions/setup_typography_canvas.py:71
 msgid "xheight"
@@ -38889,9 +38883,9 @@ msgstr ""
 "\n"
 "Fehlermeldung: %s\n"
 "\n"
-"Der SVG-zu-Synfig-Konverter ist für die Umwandlung von SVG-Dateien, die mit"
-" Inkscape erstellt wurden, bestimmt. Nicht unterstützte Funktionen finden"
-" sich häufig in SVG-Dateien, die von anderen Programmen erzeugt wurden.\n"
+"Der SVG-zu-Synfig-Konverter ist für die Umwandlung von SVG-Dateien, die mit "
+"Inkscape erstellt wurden, bestimmt. Nicht unterstützte Funktionen finden "
+"sich häufig in SVG-Dateien, die von anderen Programmen erzeugt wurden.\n"
 
 #: ../share/extensions/synfig_prepare.py:313
 msgid "An error occurred during document preparation"
@@ -38901,8 +38895,8 @@ msgstr "Es ist ein Fehler beim Vorbereiten des Dokuments aufgetreten."
 msgid ""
 "Element {} uses a flow region that is not a rectangle. First unflow text."
 msgstr ""
-"Das Element {} verwendet eine nicht-rechteckige Fließtextform. Text zunächst"
-" aus der Form lösen."
+"Das Element {} verwendet eine nicht-rechteckige Fließtextform. Text zunächst "
+"aus der Form lösen."
 
 #: ../share/extensions/triangle.py:126
 msgid "Invalid Triangle Specifications."
@@ -38910,26 +38904,26 @@ msgstr "Ungültige Dreieckseigenschaften"
 
 #: ../share/extensions/voronoi2svg.py:163
 msgid "Please select objects!"
-msgstr "Bitte wählen Sie ein Objekt!"
+msgstr "Wähle Objekte aus!"
 
 #: ../share/extensions/web_interactive_mockup.py:37
 msgid ""
 "You must select at least two elements. The last one is the object you want "
 "to go to."
 msgstr ""
-"Es müssen mindestens zwei Elemente ausgewählt werden. Das zuletzt gewählte "
-"ist das Objekt, zu dessen Ansicht gewechselt werden soll."
+"Du musst mindestens zwei Elemente auswählen. Das zuletzt gewählte ist das "
+"Objekt, zu dessen Ansicht gewechselt werden soll."
 
 #: ../share/extensions/web_set_att.py:54
 #: ../share/extensions/web_transmit_att.py:42
 msgid "You must select at least two elements."
-msgstr "Sie müssen zwei Elemente auswählen."
+msgstr "Du musst mindestens zwei Elemente auswählen."
 
 #: ../share/extensions/webslicer_create_group.py:41
 msgid ""
 "You must to select some \"Slicer rectangles\" or other \"Layout groups\"."
 msgstr ""
-"Sie müssen einige „Slicer“-Rechtecke oder andere Layoutgruppen auswählen."
+"Du musst einige „Slicer“-Rechtecke oder andere Layoutgruppen auswählen."
 
 #: ../share/extensions/webslicer_create_group.py:50
 #, python-brace-format
@@ -38938,7 +38932,7 @@ msgstr "Das Element “{key}“ ist nicht in der „Web Slicer“-Ebene"
 
 #: ../share/extensions/webslicer_export.py:44
 msgid "You must give a directory to export the slices."
-msgstr "ZUum Export der Teile müssen Sie ein Verzeichnis angeben."
+msgstr "Zum Export der Teile musst Du ein Verzeichnis angeben."
 
 #: ../share/extensions/webslicer_export.py:57
 msgid "Can't create '{}': {}."
@@ -39306,8 +39300,8 @@ msgstr ""
 "(1) Benannte Ebenen erkennen und importieren\n"
 "\n"
 "(2) Die Skalierung des Dokuments korrigieren, falls nötig\n"
-"    (Illustrator exportiert SVG-Dateien ggf. mit nur 75% der tatsächlichen"
-" Größe)\n"
+"    (Illustrator exportiert SVG-Dateien ggf. mit nur 75% der tatsächlichen "
+"Größe)\n"
 
 #: ../share/extensions/doc_ai_convert.inx:18
 msgid "How to export SVG from Illustrator"
@@ -39328,7 +39322,7 @@ msgid ""
 msgstr ""
 "Beste Ergebnisse beim Exportieren aus AI\n"
 "lassen sich auf folgende Art erreichen:\n"
-"* Beim Benennen von Ebenen in AI entweder:\\ "
+"* Beim Benennen von Ebenen in AI entweder:\\n\n"
 "    * Nur eine Zahl als Ebenenname verwenden oder\n"
 "    * Ein Leerzeichen in jeden Ebenennamen einfügen\n"
 "* Datei > Exportieren > Exportieren als…\n"
@@ -39527,7 +39521,7 @@ msgid ""
 "            "
 msgstr ""
 "Diese Erweiterung zeichnet Geometrien bezüglich eines Dreiecks, definiert "
-"durch die ersten drei Punkte des ausgewählten Pfades. Sie können vorgegebene "
+"durch die ersten drei Punkte des ausgewählten Pfades. Du kannst vorgegebene "
 "Objekte wählen oder eigene erstellen.\n"
 "             \n"
 "Alle Längeneinheiten sind Inkscape-Pixel, Winkel werden in Radiant "
@@ -39554,8 +39548,8 @@ msgstr ""
 "Der Radius eines Kreises um einen gegebenen Punkt kann durch eine Fomel mit "
 "den Parametern Seitenlänge, Winkel, etc. gegeben sein. Es ist ebenfalls "
 "möglich, die isogonal und isotomisch Konjugierten dieses Punktes zu "
-"zeichnen. Beachten Sie, dass es bei bestimmten Punkten zu einem Division-"
-"durch-Null-Fehler kommen kann.\n"
+"zeichnen. Beachte, dass es bei bestimmten Punkten zu einem Division-durch-"
+"Null-Fehler kommen kann.\n"
 "            "
 
 #: ../share/extensions/dxf12_outlines.inx:3
@@ -39632,9 +39626,9 @@ msgid ""
 "- limited support for BLOCKS, use AutoCAD Explode Blocks instead, if needed."
 msgstr ""
 "- AutoCAD Version 13 und neuer.\n"
-"- für manuelle Größenänderung gehen Sie davon aus, dass die Einheit der dxf-"
+"- bei manueller Größenänderung gehe davon aus, dass die Einheit der dxf-"
 "Zeichnung mm ist.\n"
-"- gehen Sie von der Einheit Pixel bei 96 dpi für die SVG-Zeichnung aus.\n"
+"- gehe bei einer SVG-Zeichnung von der Einheit Pixel aus, bei 96 dpi.\n"
 "- Skalierungsfaktor und Ursprung gelten nur für manuelle Größenänderung.\n"
 "- Zur Bestimmung des Textskalierungsfaktors siehe "
 "dxf_input_text_scale_factor.svg \n"
@@ -39642,8 +39636,8 @@ msgstr ""
 "- „Lesen aus Datei“ verwendet die Variable $MEASUREMENT.\n"
 "- Ebenen werden nur bei „Datei &gt Öffnen“ erhalten, nicht bei "
 "„Importieren“.\n"
-"- BLOCKS werden nicht voll unterstützt. Verwenden Sie AutoCAD Explode "
-"Blocks, falls nötig."
+"- BLOCKS werden nicht voll unterstützt. Verwende AutoCAD Explode Blocks, "
+"falls nötig."
 
 #: ../share/extensions/dxf_input.inx:42
 msgid "AutoCAD DXF R13 (*.dxf)"
@@ -39667,8 +39661,8 @@ msgid ""
 "Unlinke Bézier curves, ROBO-Master compatible splines have zero curvature at "
 "the end points. This may lead to distorted shapes."
 msgstr ""
-"Anders als Bézierkurven haben ROBO-Master-kompatible Splines eine Krümmung"
-" von 0 an den Endpunkten. Dies kann zu einer Verformung führen."
+"Anders als Bézierkurven haben ROBO-Master-kompatible Splines eine Krümmung "
+"von 0 an den Endpunkten. Dies kann zu einer Verformung führen."
 
 #: ../share/extensions/dxf_outlines.inx:10
 msgid "use LWPOLYLINE type of line output"
@@ -39781,9 +39775,9 @@ msgstr ""
 "nicht aber mit Inkscape.\n"
 "- Die LWPOLYLINE-Ausgabe erzeugt eine vielfach verbundene Polylinie. "
 "Deaktivieren um eine ältere Version der LINE-Ausgabe zu verwenden.\n"
-"- Sie können entweder alle, nur sichtbare oder namensgleiche Ebenen "
-"exportieren (ignoriert Groß-/Kleinschreibung, Komma (,) trennt die einzelnen "
-"Namen)."
+"- Du kannst entweder alle, nur sichtbare oder namensgleiche Ebenen "
+"exportieren (ignoriert Groß-/Kleinschreibung, benutze Komma (,) als "
+"Trennzeichen)"
 
 #: ../share/extensions/dxf_outlines.inx:50
 msgid "Desktop Cutting Plotter (AutoCAD DXF R14) (*.dxf)"
@@ -39834,8 +39828,8 @@ msgid ""
 "The PS/EPS importer can try to determine the page orientation such that the "
 "majority of the text runs left-to-right."
 msgstr ""
-"Der PS/EPS-Import kann versuchen, die Seitenausrichtung automatisch zu"
-" bestimmen, so dass der größte Teil des Textes von links nach rechts läuft."
+"Der PS/EPS-Import kann versuchen, die Seitenausrichtung automatisch zu "
+"bestimmen, so dass der größte Teil des Textes von links nach rechts läuft."
 
 #: ../share/extensions/eps_input.inx:11 ../share/extensions/ps_input.inx:10
 msgid "Page by page"
@@ -39879,9 +39873,9 @@ msgid ""
 "false, they will be inserted in newly created group. Only applies to "
 "mode=lines."
 msgstr ""
-"Falls aktiviert, werden alle Verbindungslinien in einen einzigen Pfad"
-" geschrieben. Falls deaktiviert, wird eine Gruppe für die Verbindungslinien"
-" erzeugt. Option gilt nur für den Linienmodus."
+"Falls aktiviert, werden alle Verbindungslinien in einen einzigen Pfad "
+"geschrieben. Falls deaktiviert, wird eine Gruppe für die Verbindungslinien "
+"erzeugt. Option gilt nur für den Linienmodus."
 
 #: ../share/extensions/extrude.inx:17
 msgid ""
@@ -39897,15 +39891,14 @@ msgid ""
 "            "
 msgstr ""
 "\n"
-"Diese Erweiterung verbindet korrespondierende Knoten der gewählten Pfade"
-" durch Linien miteinander. Sie funktioniert daher am besten, wenn alle Pfade"
-" dieselbe Anzahl an Knoten haben.\n"
+"Diese Erweiterung verbindet korrespondierende Knoten der gewählten Pfade "
+"durch Linien miteinander. Sie funktioniert daher am besten, wenn alle Pfade "
+"dieselbe Anzahl an Knoten haben.\n"
 "\n"
 "Wahlweise können die Bereiche zwischen den Linien gefüllt werden. \n"
-"Hierfür können Rechtecke oder Kopien der Pfadsegmente verwendet werden."
-"\n"
-"Die Linien werden in der Stapelordnung zwischen den beiden Objekten"
-" eingefügt.\n"
+"Hierfür können Rechtecke oder Kopien der Pfadsegmente verwendet werden.\n"
+"Die Linien werden in der Stapelordnung zwischen den beiden Objekten "
+"eingefügt.\n"
 "            "
 
 #: ../share/extensions/fig_input.inx:3
@@ -39985,9 +39978,9 @@ msgid ""
 "selected object(s). Relative offset is usually preferable over absolute "
 "offset if the selection height and width differ significantly."
 msgstr ""
-"Ein positiver Wert schiebt den Rahmen über die Objektkanten hinaus. Ein"
-" relativer Abstand ist normalerweise besser geeignet als ein absoluter, wenn"
-" Höhe und Breite des Objektes sich stark unterscheiden."
+"Ein positiver Wert schiebt den Rahmen über die Objektkanten hinaus. Ein "
+"relativer Abstand ist normalerweise besser geeignet als ein absoluter, wenn "
+"Höhe und Breite des Objektes sich stark unterscheiden."
 
 #: ../share/extensions/frame.inx:19
 msgid "Style of the frame:"
@@ -40187,14 +40180,14 @@ msgid ""
 "of the pattern and get an empty border."
 msgstr ""
 "Erstellt ein zufälliges Muster aus Voronoi-Zellen. Das Muster wird später im "
-"Füllungs- und Kontur-Dialog verfügbar sein. Sie müssen dazu ein Objekt oder "
-"ein Gruppe auswählen.\n"
+"Füllungs- und Kontur-Dialog verfügbar sein. Du musst ein Objekt oder ein "
+"Gruppe auswählen.\n"
 "\n"
-"Ist der Rand null, wird das Muster an den Kanten unterbrochen. Nehmen Sie "
-"einen positiven Wert, am besten größer als die Zellgröße, um einen "
-"fließenden Übergang zwischen den einzelnen Musterkacheln zu erhalten. Nehmen "
-"Sie einen negativen Wert, um die Mustergröße zu reduzieren und einen leeren "
-"Rand zu erzeugen."
+"Ist der Rand null, wird das Muster an den Kanten unterbrochen. Nimm einen "
+"positiven Wert, am besten größer als die Zellgröße, um einen fließenden "
+"Übergang zwischen den einzelnen Musterkacheln zu erhalten. Nimm einen "
+"negativen Wert, um die Mustergröße zu reduzieren und einen leeren Rand zu "
+"erzeugen."
 
 #: ../share/extensions/gimp_xcf.inx:3
 msgid "GIMP XCF"
@@ -40217,9 +40210,9 @@ msgid ""
 "Convert the first rectangular grid to a Gimp grid (note that the default "
 "Inkscape grid is very narrow when shown in Gimp)."
 msgstr ""
-"Wandelt das erste rechteckige Gitter in ein Gimp-Gitter um (Hinweis: das"
-" Standard-Inkscape-Gitter ist sehr eng, wenn es unverändert in Gimp verwendet"
-" wird)."
+"Wandelt das erste rechteckige Gitter in ein Gimp-Gitter um (Hinweis: das "
+"Standard-Inkscape-Gitter ist sehr eng, wenn es unverändert in Gimp verwendet "
+"wird)."
 
 # !!!
 #: ../share/extensions/gimp_xcf.inx:11
@@ -40250,9 +40243,9 @@ msgstr ""
 "Diese Erweiterung exportiert das Dokument mit den folgenden Optionen in das "
 "Gimp XCF-Format :\n"
 "\n"
-"Jede Ebene ersten Ranges wird in eine Gimp-Ebene umgewandelt. Unterebenen"
-" werden miteinander verknüpft und zusammen mit ihrer Elternebene ersten"
-" Ranges in eine einzige Gimp-Ebene umgewandelt."
+"Jede Ebene ersten Ranges wird in eine Gimp-Ebene umgewandelt. Unterebenen "
+"werden miteinander verknüpft und zusammen mit ihrer Elternebene ersten "
+"Ranges in eine einzige Gimp-Ebene umgewandelt."
 
 #: ../share/extensions/gimp_xcf.inx:23 ../share/extensions/gimp_xcf.inx:24
 msgid "GIMP XCF maintaining layers (*.xcf)"
@@ -40503,8 +40496,8 @@ msgid ""
 "On which pages the guides are created, e.g. \"1, 2, 4-6, 8-\". Default: All "
 "pages."
 msgstr ""
-"Auf welchen Seiten die Hilfslinien angelegt werden sollen. Standard: auf"
-" allen Seiten."
+"Auf welchen Seiten die Hilfslinien angelegt werden sollen. Standard: auf "
+"allen Seiten."
 
 #: ../share/extensions/guides_creator.inx:8
 msgid "Regular guides"
@@ -40852,10 +40845,10 @@ msgid ""
 "other HPGL files please change their file extension to .plt, make sure you "
 "have UniConverter installed and open them again."
 msgstr ""
-"Bitte beachten Sie, dass nur HPGL-Dateien geöffnet werden können, welche mit "
-"Inkscape erstellt wurden. Um andere HPGL-Dateien zu öffnen, ändern Sie die "
-"Dateiendung zu .plt, stellen Sie sicher das UniConverter installiert ist und "
-"öffnen Sie die Datei erneut."
+"Bitte beachte, dass nur HPGL-Dateien geöffnet werden können, welche mit "
+"Inkscape erstellt wurden. Um andere HPGL-Dateien zu öffnen, ändere die "
+"Dateiendung zu .plt, stelle sicher das UniConverter installiert ist und "
+"öffne die Datei erneut."
 
 #: ../share/extensions/hpgl_input.inx:8 ../share/extensions/hpgl_output.inx:10
 #: ../share/extensions/plotter.inx:68
@@ -40911,9 +40904,9 @@ msgid ""
 "Please use the plotter extension (Extensions menu) to plot directly over a "
 "serial connection."
 msgstr ""
-"Bitte stellen Sie sicher, dass alle Objekte, die Sie speichern möchten, in "
-"Pfade konvertiert wurden. Bitte verwenden Sie die Plotter-Erweiterung "
-"(Erweiterungsmenü), um direkt über eine serielle Verbindung zu plotten."
+"Stelle sicher, dass alle Objekte die Du speichern möchtest, in Pfade "
+"konvertiert wurden. Verwende die Plotter-Erweiterung (Erweiterungsmenü), um "
+"direkt über eine serielle Verbindung zu plotten."
 
 #: ../share/extensions/hpgl_output.inx:9 ../share/extensions/plotter.inx:67
 msgid "Plotter Settings"
@@ -41001,11 +40994,11 @@ msgid ""
 "put your drawings in the corresponding layers. This overrules the pen number "
 "and speed value from the menu option above."
 msgstr ""
-"Möchten Sie mehrere Stifte und Geschwindigkeiten für Ihren Stiftplotter "
-"verwenden, so erstellen Sie für jeden Stift eine eigene Ebene, benennen "
-"diese nach dem Schema „Pen1 Speed10“, „Pen2“ usw. und erstellen Sie Ihre "
-"Zeichnung in der entsprechenden Ebene. Dies hat Vorrang vor der obigen "
-"Stiftnummer- und Geschwindigkeits-Einstellung."
+"Möchtest Du mehrere Stifte und Geschwindigkeiten für Deinen Stiftplotter "
+"verwenden, so erstelle für jeden Stift eine eigene Ebene, benenne diese nach "
+"dem Schema „Pen1 Speed10“, „Pen2“ usw. und erstelle Deine Zeichnung in der "
+"entsprechenden Ebene. Dies hat Vorrang vor der obigen Stiftnummer- und "
+"Geschwindigkeits-Einstellung."
 
 #: ../share/extensions/hpgl_output.inx:27 ../share/extensions/plotter.inx:85
 msgid "Plot Features"
@@ -41081,8 +41074,8 @@ msgid ""
 "please consult the manual or homepage for your plotter."
 msgstr ""
 "Alle Einstellungen hängen vom verwendeten Plotter ab. Für mehr Informationen "
-"beachten Sie dessen Bedienungsanleitung oder die Informationen auf der "
-"Webseite des Plotterherstellers."
+"beachte dessen Bedienungsanleitung oder die Informationen auf der Webseite "
+"des Plotterherstellers."
 
 #: ../share/extensions/hpgl_output.inx:40
 msgid "Export an HP Graphics Language file"
@@ -41185,8 +41178,8 @@ msgid ""
 "Relative paths are interpreted with respect to the current file location. "
 "Missing folders are created automatically."
 msgstr ""
-"Relative Pfade werden als relativ zum Speicherort des Dokuments"
-" interpretiert. Fehlende Ordner werden automatisch erstellt."
+"Relative Pfade werden als relativ zum Speicherort des Dokuments "
+"interpretiert. Fehlende Ordner werden automatisch erstellt."
 
 #: ../share/extensions/image_extract.inx:7
 msgid "File name base:"
@@ -41198,9 +41191,9 @@ msgid ""
 "image id for the file names. The file extension will be appended "
 "automatically."
 msgstr ""
-"Präfix für die Bilddateien. Am Ende des Namens wird ein Zähler angehängt."
-" Leer lassen, um die ID des Bildes als Dateiname zu verwenden. Die"
-" Dateinamenserweiterung wird automatisch gewählt."
+"Präfix für die Bilddateien. Am Ende des Namens wird ein Zähler angehängt. "
+"Leer lassen, um die ID des Bildes als Dateiname zu verwenden. Die "
+"Dateinamenserweiterung wird automatisch gewählt."
 
 #: ../share/extensions/image_extract.inx:9
 #: ../share/extensions/image_extract_selected.inx:10
@@ -41213,8 +41206,8 @@ msgid ""
 "After saving the image file, the image data is replaced with a link to that "
 "file."
 msgstr ""
-"Nach dem Speichern der Bilddatei werden die eingebetteten Bilddaten durch"
-" einen Link zur Datei ersetzt."
+"Nach dem Speichern der Bilddatei werden die eingebetteten Bilddaten durch "
+"einen Link zur Datei ersetzt."
 
 #: ../share/extensions/image_extract_selected.inx:3
 msgid "Extract Image"
@@ -41230,9 +41223,9 @@ msgid ""
 "a folder is given instead of a filename, the image id is used as filename. "
 "The file extension is appended or corrected automatically."
 msgstr ""
-"Relative Pfade hängen vom Ablageort der Datei ab. Wenn statt eines Dateinamen"
-" ein Ordner angegeben wird, wird die ID des Bildes als Dateiname verwendet."
-" Die Dateinamenserweiterung wird automatisch angehängt."
+"Relative Pfade hängen vom Ablageort der Datei ab. Wenn statt eines "
+"Dateinamen ein Ordner angegeben wird, wird die ID des Bildes als Dateiname "
+"verwendet. Die Dateinamenserweiterung wird automatisch angehängt."
 
 #: ../share/extensions/ink2canvas.inx:3
 msgid "Convert to html5 canvas"
@@ -41268,10 +41261,10 @@ msgid ""
 "other path's node positions. The second option removes extra nodes of the "
 "longer path (yields good results if both subpaths have equal length)"
 msgstr ""
-"Die erste Option diskretisiert beide Pfade vor dem Interpolieren erneut"
-" anhand der Position der Knoten des anderen Pfades. Die zweite Option"
-" entfernt überzählige Knoten im längeren Pfad (liefert gute Ergebnisse wenn"
-" beide Pfade etwa gleich lang sind)."
+"Die erste Option diskretisiert beide Pfade vor dem Interpolieren erneut "
+"anhand der Position der Knoten des anderen Pfades. Die zweite Option "
+"entfernt überzählige Knoten im längeren Pfad (liefert gute Ergebnisse wenn "
+"beide Pfade etwa gleich lang sind)."
 
 #: ../share/extensions/interp.inx:8
 msgid "Split paths into segments of equal lengths"
@@ -41323,7 +41316,8 @@ msgid ""
 "If you selected \"Other\" above, you must specify the details for this "
 "\"other\" here."
 msgstr ""
-"Falls Sie „Andere“ wählen, so müssen Sie diese Anderen hier spezifizieren."
+"Wenn Du oben „Andere“ gewählt hast, so musst Du diese „Andere“ hier "
+"spezifizieren."
 
 #: ../share/extensions/interp_att_g.inx:20
 msgid "Other Attribute:"
@@ -41423,9 +41417,9 @@ msgid ""
 "JessyInk presentation. Please see code.google.com/p/jessyink for more "
 "details."
 msgstr ""
-"Diese Erweiterung erlaubt Ihnen, Autotexte in eine JessyInk-Präsentation "
-"einzufügen, zu aktualisieren und zu löschen. Bitte schauen Sie auf code."
-"google.com/p/jessyink für weitere Details."
+"Diese Erweiterung erlaubt Dir, Autotexte in eine JessyInk-Präsentation "
+"einzufügen, zu aktualisieren und zu löschen. Weitere Details findest Du auf "
+"code.google.com/p/jessyink."
 
 #: ../share/extensions/jessyink_autotexts.inx:21
 #: ../share/extensions/jessyink_effects.inx:33
@@ -41498,9 +41492,9 @@ msgid ""
 "JessyInk presentation. Please see code.google.com/p/jessyink for more "
 "details."
 msgstr ""
-"Diese Erweiterung erlaubt Ihnen, Objekteffekte für eine JessyInk-"
-"Präsentation einzufügen, zu aktualisieren und zu löschen. Bitte schauen Sie "
-"auf code.google.com/p/jessyink für weitere Details."
+"Diese Erweiterung erlaubt Dir, Objekteffekte für eine JessyInk-Präsentation "
+"einzufügen, zu aktualisieren und zu löschen. Weitere Details findest Du auf "
+"code.google.com/p/jessyink."
 
 #: ../share/extensions/jessyink_export.inx:3
 msgid "JessyInk zipped pdf or png output"
@@ -41524,9 +41518,9 @@ msgid ""
 "an export layer in your browser. Please see code.google.com/p/jessyink for "
 "more details."
 msgstr ""
-"Diese Erweiterung erlaubt Ihnen eine JessyInk-Präsentation zu exportieren, "
-"wenn Sie einen Export-Layer in Ihrem Browser erstellt haben. Bitte schauen "
-"Sie auf code.google.com/p/jessyink für weitere Details."
+"Diese Erweiterung erlaubt Dir eine JessyInk-Präsentation zu exportieren, "
+"wenn Du einen Export-Layer in Deinem Browser erstellt hast. Weitere Details "
+"findest Du auf code.google.com/p/jessyink."
 
 #: ../share/extensions/jessyink_export.inx:21
 msgid "JessyInk zipped pdf or png output (*.zip)"
@@ -41550,10 +41544,9 @@ msgid ""
 "to turn your SVG file into a presentation. Please see code.google.com/p/"
 "jessyink for more details."
 msgstr ""
-"Diese Erweiterung erlaubt Ihnen, ein JessyInk-Skript in Ihre SVG-Datei "
-"einzufügen, wenn Sie Ihre SVG-Datei in eine Präsentation umwandeln möchten "
-"oder Ihre Präsentation zu aktualisieren. Bitte schauen Sie auf code.google."
-"com/p/jessyink für weitere Details."
+"Diese Erweiterung erlaubt Dir, ein JessyInk-Skript zu installieren und zu "
+"aktualisieren, um Deine SVG-Datei in eine Präsentation umzuwandeln. Weitere "
+"Details findest Du auf code.google.com/p/jessyink."
 
 #: ../share/extensions/jessyink_key_bindings.inx:3
 msgid "Key bindings"
@@ -41736,9 +41729,8 @@ msgid ""
 "This extension allows you customize the key bindings JessyInk uses. Please "
 "see code.google.com/p/jessyink for more details."
 msgstr ""
-"Diese Erweiterung erlaubt Ihnen, die Tastenkombinationen zu verändern, die "
-"JessyInk benutzt. Für weitere Details besuchen Sie bitte code.google.com/p/"
-"jessyink."
+"Diese Erweiterung erlaubt Dir, die Tastenkombinationen zu verändern, die "
+"JessyInk benutzt. Weitere Details findest Du auf code.google.com/p/jessyink."
 
 #: ../share/extensions/jessyink_master_slide.inx:3
 msgid "Master slide"
@@ -41758,9 +41750,8 @@ msgid ""
 "This extension allows you to change the master slide JessyInk uses. Please "
 "see code.google.com/p/jessyink for more details."
 msgstr ""
-"Diese Erweiterung erlaubt Ihnen, den Folienmaster zu verändern, den JessyInk "
-"benutzt. Bitte schauen Sie auf code.google.com/p/jessyink für weitere "
-"Details."
+"Diese Erweiterung erlaubt Dir, den Folienmaster zu verändern, den JessyInk "
+"benutzt. Weitere Details findest Du auf code.google.com/p/jessyink."
 
 #: ../share/extensions/jessyink_mouse_handler.inx:3
 #: ../share/extensions/jessyink_mouse_handler.inx:6
@@ -41785,8 +41776,8 @@ msgid ""
 "This extension allows you customize the mouse handler JessyInk uses. Please "
 "see code.google.com/p/jessyink for more details."
 msgstr ""
-"Diese Erweiterung erlaubt Ihnen, die Mausbedienung in JessyInk zu verändern. "
-"Für weitere Details besuchen Sie bitte code.google.com/p/jessyink."
+"Diese Erweiterung erlaubt Dir, die Mausbedienung in JessyInk zu verändern. "
+"Weitere Details findest Du auf code.google.com/p/jessyink."
 
 #: ../share/extensions/jessyink_summary.inx:3
 msgid "Summary"
@@ -41798,9 +41789,9 @@ msgid ""
 "effects and transitions contained in this SVG file. Please see code.google."
 "com/p/jessyink for more details."
 msgstr ""
-"Diese Erweiterung erlaubt Ihnen, Informationen über das JessyInk-Skript, "
-"Effekte und Übergänge zu erhalten, die zu dieser SVG-Datei gehören. Bitte "
-"schauen Sie auf code.google.com/p/jessyink für weitere Details."
+"Diese Erweiterung erlaubt Dir, Informationen über das JessyInk-Skript, "
+"Effekte und Übergänge zu erhalten, die zu dieser SVG-Datei gehören. Weitere "
+"Details findest Du auf code.google.com/p/jessyink."
 
 #: ../share/extensions/jessyink_transitions.inx:3
 msgid "Transitions"
@@ -41825,9 +41816,9 @@ msgid ""
 "This extension allows you to change the transition JessyInk uses for the "
 "selected layer. Please see code.google.com/p/jessyink for more details."
 msgstr ""
-"Diese Erweiterung erlaubt Ihnen den Übergang zu ändern, den JessyInk für die "
-"ausgewählte Ebene benutzt. Bitte schauen Sie auf code.google.com/p/jessyink "
-"für weitere Details."
+"Diese Erweiterung erlaubt Dir, den Übergang zu ändern, den JessyInk für die "
+"ausgewählte Ebene benutzt. Weitere Details findest Du auf code.google.com/p/"
+"jessyink."
 
 #: ../share/extensions/jessyink_uninstall.inx:3
 msgid "Uninstall/remove"
@@ -41836,8 +41827,8 @@ msgstr "Deinstallieren/Entfernen"
 #: ../share/extensions/jessyink_uninstall.inx:7
 msgid "Please select the parts of JessyInk you want to uninstall/remove."
 msgstr ""
-"Bitte wählen Sie die Teile von JessyInk aus, die Sie aus der Präsentation "
-"löschen möchten."
+"Bitte wähle die Teile von JessyInk aus, die Du aus der Präsentation löschen "
+"möchten."
 
 #: ../share/extensions/jessyink_uninstall.inx:8
 msgid "Remove script"
@@ -41868,8 +41859,8 @@ msgid ""
 "This extension allows you to uninstall the JessyInk script. Please see code."
 "google.com/p/jessyink for more details."
 msgstr ""
-"Diese Erweiterung erlaubt Ihnen das JessyInk-Skript zu entfernen. Bitte "
-"schauen Sie auf code.google.com/p/jessyink für weitere Details."
+"Diese Erweiterung erlaubt Dir, das JessyInk-Skript zu entfernen. Weitere "
+"Details findest Du auf code.google.com/p/jessyink."
 
 #: ../share/extensions/jessyink_video.inx:3
 msgid "Video"
@@ -41882,9 +41873,9 @@ msgid ""
 "presentation. Please see code.google.com/p/jessyink for more details."
 msgstr ""
 "Diese Erweiterung fügt der derzeitigen Folie (Ebene) ein JessyInk-Video-"
-"Element hinzu. Dieses Element erlaubt Ihnen, ein Video in Ihre JessyInk-"
-"Präsentation zu integrieren. Bitte schauen Sie auf code.google.com/p/"
-"jessyink für weitere Details."
+"Element hinzu. Dieses Element erlaubt die Integration eines Videos in Deine "
+"JessyInk-Präsentation. Weitere Details findest Du auf code.google.com/p/"
+"jessyink."
 
 #: ../share/extensions/jessyink_view.inx:3
 #: ../share/extensions/polyhedron_3d.inx:32
@@ -41897,8 +41888,7 @@ msgstr "Ansicht entfernen"
 
 #: ../share/extensions/jessyink_view.inx:10
 msgid "Choose order number 0 to set the initial view of a slide."
-msgstr ""
-"Wählen Sie die Nummer 0, um die initiale Ansicht einer Folie zu setzen."
+msgstr "Wähle die Nummer 0, um die initiale Ansicht einer Folie zu setzen."
 
 # Is a view = slide?...
 #: ../share/extensions/jessyink_view.inx:13
@@ -41906,9 +41896,9 @@ msgid ""
 "This extension allows you to set, update and remove views for a JessyInk "
 "presentation. Please see code.google.com/p/jessyink for more details."
 msgstr ""
-"Diese Erweiterung erlaubt Ihnen, Ansichten für eine JessyInk-Präsentation zu "
-"aktualisieren und zu löschen. Bitte schauen Sie auf code.google.com/p/"
-"jessyink für weitere Details."
+"Diese Erweiterung erlaubt Dir, Ansichten für eine JessyInk-Präsentation zu "
+"aktualisieren und zu löschen. Weitere Details findest Du auf code.google.com/"
+"p/jessyink."
 
 #: ../share/extensions/jitternodes.inx:3
 msgid "Jitter nodes"
@@ -42480,10 +42470,10 @@ msgid ""
 "inline style attributes. Please use a name which best describes the kinds of "
 "objects and their common context for best effect."
 msgstr ""
-"Alle gewählten Knoten werden zusammen gruppiert und mit den gemeinsamen Stil-"
-"Einstellungen eine neue Klasse erstellt. Diese ersetzt die bisherigen Linien-"
-"Stil-Einstellungen. Bitte wählen Sie einen Namen, welcher am Besten die "
-"Objekte und deren gemeinsame Eigenschaften am besten beschreibt."
+"Alle gewählten Knoten werden zusammen gruppiert und aus deren gemeinsamen "
+"Stil-Einstellungen wird eine neue Klasse erstellt. Diese ersetzt die "
+"bisherigen Linien-Stil-Einstellungen. Wähle einen Namen, welcher am Besten "
+"die Objekte und deren gemeinsame Eigenschaften beschreibt."
 
 #: ../share/extensions/merge_styles.inx:8
 msgid "New Class Name:"
@@ -42712,8 +42702,8 @@ msgstr ""
 "    Plotter\n"
 "    usw.\n"
 "\n"
-"Für weitere Informationen besuchen Sie die Entwickler-Seite unter http://www."
-"cnc-club.ru/gcodetools"
+"Für weitere Informationen besuche die Entwickler-Seite unter http://www.cnc-"
+"club.ru/gcodetools"
 
 #: ../share/extensions/other/gcodetools/gcodetools_about.inx:23
 #: ../share/extensions/other/gcodetools/gcodetools_area.inx:104
@@ -42751,7 +42741,7 @@ msgstr ""
 "Diese Erweiterung berechnet Gcode für Pfade mittels Kreisinterpolation oder "
 "linearer Bewegung, wenn nötig.\n"
 "\n"
-"Einführungen, Handbücher und Unterstützung finden Sie\n"
+"Einführungen, Handbücher und Unterstützung findest Du\n"
 "im englischsprachigen Support-Forum:\n"
 "    http://www.cnc-club.ru/gcodetools\n"
 "und im russischsprachigen Support-Forum:\n"
@@ -42870,9 +42860,9 @@ msgid ""
 msgstr ""
 "\n"
 "Nutzungshinweise:\n"
-"1. Wählen Sie alle Versatzobjekte aus (graue Umrandung)\n"
+"1. Wähle alle Versatzobjekte aus (graue Umrandung)\n"
 "2. Objekt > Gruppierung aufheben (Umschalt+Strg+G)\n"
-"3. Klicken Sie auf Anwenden.\n"
+"3. Klicke auf Anwenden.\n"
 "\n"
 "(Vermutlich) zu kleine Objekte werden dann z.B. mit farbigen Pfeilen "
 "markiert.\n"
@@ -43147,10 +43137,10 @@ msgstr ""
 "\n"
 "\n"
 "Konvertiert ausgewählte Objekte zu Bohr-Punkten (wie die DXF-Import-"
-"Erweiterung). Sie können auch die ursprüngliche Form speichern. Nur der "
+"Erweiterung). Du kannst auch die ursprüngliche Form speichern. Nur der "
 "Startpunkt jeder Kurve wird verwendet.\n"
 "\n"
-"Sie können auch manuell ein Objekt auswählen, den XML-Editor öffnen (Umschalt"
+"Du kannst auch manuell ein Objekt auswählen, den XML-Editor öffnen (Umschalt"
 "+Strg+X) und den XML-Tag 'dxfpoint' mit einem beliebigen Wert hinzufügen "
 "oder entfernen.\n"
 "          "
@@ -43309,16 +43299,16 @@ msgstr ""
 "Nur 3-Punkt-Modus: Nicht alle drei auf einer Linie anlegen (stattdessen 2-"
 "Punkt-Modus verwenden).\n"
 "\n"
-"Sie können die Z-Oberflächen und Z-Tiefen-Werte später mit dem Text-Werkzeug "
+"Du kannst die Z-Oberflächen und Z-Tiefen-Werte später mit dem Text-Werkzeug "
 "verändern (3. Koordinaten).\n"
 "\n"
 "Wenn es keine Orientierungspunkte in der aktuellen Ebene gibt, werden die "
 "von der Ebene darüber verwendet.\n"
 "\n"
-"Die Gruppierung von Orientierungspunkten nicht aufheben! Sie können die "
-"Gruppe mit Doppelklick oder Strg+Eingabetaste betreten.\n"
+"Die Gruppierung von Orientierungspunkten nicht aufheben! Du kannst sie per "
+"Doppelklick auswählen um die Grpppe zu betreten oder mit Strg+Klick.\n"
 "\n"
-"Klicken Sie auf Anwenden, um die Kontrollpunkte (unabhängiger Satz für jede "
+"Klicke auf Anwenden, um die Kontrollpunkte (unabhängiger Satz für jede "
 "Ebene) zu erstellen.\n"
 "            "
 
@@ -43402,14 +43392,14 @@ msgstr ""
 "Skalierung, Spiegel, eine Drehung in XY-Ebene) des Pfades benutzt.\n"
 "Nur 3-Punkt-Modus: Nicht alle drei auf einer Linie anlegen (stattdessen 2-"
 "Punkt-Modus verwenden).\n"
-"Sie können die Z-Oberflächen und Z-Tiefen-Werte später mit dem Text-Werkzeug "
+"Du kannst die Z-Oberflächen und Z-Tiefen-Werte später mit dem Text-Werkzeug "
 "verändern (3. Koordinaten).\n"
 " Wenn es keine Orientierungspunkte in der aktuellen Ebene gibt, werden die "
 "von der Ebene darüber verwendet.\n"
 "Die Gruppierung von Orientierungspunkten nicht aufheben!\n"
-"Sie können die Gruppe mit Doppelklick oder Strg+Eingabetaste betreten. "
-"Klicken Sie auf Anwenden, um die Kontrollpunkte (unabhängiger Satz für jede "
-"Ebene) zu erstellen.\n"
+"Du kannst die Gruppe mit Doppelklick oder Strg+Eingabetaste betreten. Klicke "
+"auf Anwenden, um die Kontrollpunkte (unabhängiger Satz für jede Ebene) zu "
+"erstellen.\n"
 "      "
 
 #: ../share/extensions/other/gcodetools/gcodetools_orientation_points.inx:35
@@ -43438,7 +43428,7 @@ msgstr ""
 "Diese Erweiterung berechnet Gcode für Pfade mittels Kreisinterpolation oder "
 "linearer Bewegung, wenn nötig.\n"
 "\n"
-"Einführungen, Handbücher und Unterstützung finden Sie\n"
+"Einführungen, Handbücher und Unterstützung findest Du\n"
 "im englischsprachigen Support-Forum:\n"
 "    http://www.cnc-club.ru/gcodetools\n"
 "und im russischsprachigen Support-Forum:\n"
@@ -43565,8 +43555,8 @@ msgid ""
 "            "
 msgstr ""
 "\n"
-"Der ausgewählte Werkzeugtyp gibt passende Standardwerte vor. Sie können "
-"diese Werte später mit dem Textwerkzeug ändern.\n"
+"Der ausgewählte Werkzeugtyp gibt passende Standardwerte vor. Du kannst diese "
+"Werte später mit dem Textwerkzeug ändern.\n"
 "\n"
 "Es wird das oberste Werkzeug (Z-Ordnung) in der aktiven Ebene verwendet. "
 "Wenn kein Werkzeug innerhalb der aktuellen Ebene vorhanden ist, wird eines "
@@ -43603,7 +43593,7 @@ msgstr ""
 "Diese Erweiterung berechnet Gcode für Pfade mittels Kreisinterpolation oder "
 "linearer Bewegung, wenn nötig.\n"
 "\n"
-"Einführungen, Handbücher und Unterstützung finden Sie\n"
+"Einführungen, Handbücher und Unterstützung findest Du\n"
 "im englischsprachigen Support-Forum:\n"
 "    http://www.cnc-club.ru/gcodetools\n"
 "und im russischsprachigen Support-Forum:\n"
@@ -43941,7 +43931,7 @@ msgstr "Scour - Ein SVG-Bereiniger"
 
 #: ../share/extensions/output_scour.inx:104
 msgid "For details please refer to"
-msgstr "Details finden Sie unter"
+msgstr "Details findest Du unter"
 
 #: ../share/extensions/output_scour.inx:105
 msgid "https://github.com/scour-project/scour"
@@ -44011,8 +44001,8 @@ msgid ""
 "scales.\n"
 "First derivatives are always determined numerically."
 msgstr ""
-"Wählen Sie ein Rechteck vor Aufruf der Erweiterung aus. Aus diesem bestimmen "
-"sich X- und Y-Skala.\n"
+"Wähle ein Rechteck vor Aufruf der Erweiterung aus. Aus diesem bestimmen sich "
+"X- und Y-Skala.\n"
 "\n"
 "Erste Ableitungen werden immer nummerisch bestimmt."
 
@@ -44119,8 +44109,8 @@ msgid ""
 "This extension replaces the paths in the selection with numbered dots in "
 "place of their nodes."
 msgstr ""
-"Diese Erweiterung ersetzt den ausgewählten Pfad mit nummerierten Punkten"
-" anstelle der Knoten."
+"Diese Erweiterung ersetzt den ausgewählten Pfad mit nummerierten Punkten "
+"anstelle der Knoten."
 
 #: ../share/extensions/path_to_absolute.inx:3
 msgid "To Absolute"
@@ -44144,9 +44134,9 @@ msgid ""
 "will rotate along with the path direction. With \"Ribbon\", the pattern will "
 "stay upright, so the result will look like a printed ribbon."
 msgstr ""
-"Es gibt zwei unterschiedliche Verformungsmodi: \"Schlange\" bedeutet, dass"
-" das Muster sich mit der Krümmung des Pfades dreht. Mit \"Band\" bleibt das"
-" Muster aufrecht, so dass es im Ergebnis wie ein bedrucktes Band aussieht."
+"Es gibt zwei unterschiedliche Verformungsmodi: \"Schlange\" bedeutet, dass "
+"das Muster sich mit der Krümmung des Pfades dreht. Mit \"Band\" bleibt das "
+"Muster aufrecht, so dass es im Ergebnis wie ein bedrucktes Band aussieht."
 
 #: ../share/extensions/pathalongpath.inx:16
 msgid "Snake"
@@ -44179,8 +44169,8 @@ msgid ""
 "The option \"Pattern is vertical\" rotates the pattern by 90 degrees before "
 "applying it to the path."
 msgstr ""
-"Die Option \"Muster ist senkrecht\" dreht das Muster um 90°, bevor es auf den"
-" Pfad angewendet wird."
+"Die Option \"Muster ist senkrecht\" dreht das Muster um 90°, bevor es auf "
+"den Pfad angewendet wird."
 
 #: ../share/extensions/pathalongpath.inx:23
 msgid "Duplicate the pattern before deformation"
@@ -44209,8 +44199,8 @@ msgid ""
 "The pattern can be bent along multiple paths at once, the only condition is "
 "that these must be path objects, no other object types are allowed."
 msgstr ""
-"Das Muster kann problemlos auch entlang mehrerer Pfade auf einmal gebogen"
-" werden – es müssen jedoch auch alle Objekte wirklich Pfade sein."
+"Das Muster kann problemlos auch entlang mehrerer Pfade auf einmal gebogen "
+"werden – es müssen jedoch auch alle Objekte wirklich Pfade sein."
 
 #: ../share/extensions/pathalongpath.inx:30
 msgid ""
@@ -44219,12 +44209,12 @@ msgid ""
 "add any new nodes to your pattern objects. To avoid this, either add more "
 "nodes to your pattern objects, or convert all segments to curves beforehand."
 msgstr ""
-"Wenn der Pfad enge Kurven hat, denen das Muster folgen soll, sieht das"
-" Ergebnis möglicherweise nicht wie gewünscht aus. Das liegt daran, dass die"
-" Erweiterung nicht die dafür notwendigen Knoten in das Musterobjekt einfügen"
-" kann. Um diese Situation zu vermeiden, können entweder weitere Knoten in das"
-" Musterobjekt eingefügt werden oder alle Segmente des Musterobjektes in"
-" Kurven umgewandelt werden."
+"Wenn der Pfad enge Kurven hat, denen das Muster folgen soll, sieht das "
+"Ergebnis möglicherweise nicht wie gewünscht aus. Das liegt daran, dass die "
+"Erweiterung nicht die dafür notwendigen Knoten in das Musterobjekt einfügen "
+"kann. Um diese Situation zu vermeiden, können entweder weitere Knoten in das "
+"Musterobjekt eingefügt werden oder alle Segmente des Musterobjektes in "
+"Kurven umgewandelt werden."
 
 #: ../share/extensions/pathscatter.inx:8
 msgid "Follow path orientation"
@@ -44287,13 +44277,13 @@ msgid ""
 "objects (alternating or randomly) on the path, if you select the option for "
 "picking group members."
 msgstr ""
-"Diese Erweiterung platziert Kopien eines Musterobjektes entlang eines oder"
-" mehrerer Pfade, ohne die Kopien zu verformen. Das Muster muss aus einem"
-" einzelnen Pfad oder einer Gruppe von Pfaden, Formen oder Klonen bestehen. Es"
-" muss in der Auswahl ganz oben liegen. Alle anderen gewählten Objekte müssen"
-" Pfade sein. Es können auch (abwechselnd oder zufällig wechselnd) mehrere"
-" unterschiedliche Objekte platziert werden, wenn die Option 'Gruppenelemente"
-" auswählen' aktiv ist."
+"Diese Erweiterung platziert Kopien eines Musterobjektes entlang eines oder "
+"mehrerer Pfade, ohne die Kopien zu verformen. Das Muster muss aus einem "
+"einzelnen Pfad oder einer Gruppe von Pfaden, Formen oder Klonen bestehen. Es "
+"muss in der Auswahl ganz oben liegen. Alle anderen gewählten Objekte müssen "
+"Pfade sein. Es können auch (abwechselnd oder zufällig wechselnd) mehrere "
+"unterschiedliche Objekte platziert werden, wenn die Option 'Gruppenelemente "
+"auswählen' aktiv ist."
 
 # File: ../share/extensions/pdflatex.inx, line: 3
 #: ../share/extensions/pdflatex.inx:3
@@ -44328,12 +44318,12 @@ msgid ""
 "by using 'standalone'. However, the required packages might not be available "
 "on all systems."
 msgstr ""
-"Ohne die Dokument-Klasse 'standalone' können andere Schriftgrößen als 10pt"
-" erreicht werden, indem das ausgegebene PDF skaliert wird (intern wird die"
-" Dokument-Klasse 'minimal' verwendet). Bessere Abstände für alle"
-" Schriftgrößen lassen sich mit 'standalone' erreichen. Das hierfür"
-" erforderliche Paket ist jedoch möglicherweise nicht auf allen Systemen"
-" verfügbar."
+"Ohne die Dokument-Klasse 'standalone' können andere Schriftgrößen als 10pt "
+"erreicht werden, indem das ausgegebene PDF skaliert wird (intern wird die "
+"Dokument-Klasse 'minimal' verwendet). Bessere Abstände für alle "
+"Schriftgrößen lassen sich mit 'standalone' erreichen. Das hierfür "
+"erforderliche Paket ist jedoch möglicherweise nicht auf allen Systemen "
+"verfügbar."
 
 #: ../share/extensions/pdflatex.inx:19
 msgid "Custom preamble code"
@@ -44480,8 +44470,8 @@ msgstr "Plotten"
 msgid ""
 "Please make sure that all objects you want to plot are converted to paths."
 msgstr ""
-"Bitte achten Sie darauf, dass alle Objekte, die Sie plotten möchten, in "
-"Pfade konvertiert wurden."
+"Bitte achte darauf, dass alle Objekte die Du plotten möchten, in Pfade "
+"konvertiert wurden."
 
 #: ../share/extensions/plotter.inx:9
 msgid "Connection Settings"
@@ -44622,7 +44612,7 @@ msgid ""
 "plotter manufacturer for drivers if needed."
 msgstr ""
 "Es können serielle Verbindungen oder ein USB-Seriell-Konverter verwendet "
-"werden. Fragen Sie Ihren Plotter-Hersteller wenn Sie Treiber benötigen."
+"werden. Frage Deinen Plotter-Hersteller, wenn Du Treiber benötigst."
 
 #: ../share/extensions/plotter.inx:65
 msgid "Parallel (LPT) connections are not supported."
@@ -44707,10 +44697,10 @@ msgid ""
 "layers. This overrides the pen number and pen speed options in the menu "
 "above."
 msgstr ""
-"Möchten Sie verschiedene Stifte und Schreibgeschwindigkeiten beim Plotten "
-"mit dem Stift verwenden, so erstellen Sie für jeden Stift und dessen "
-"Stiftgeschwindigkeit eine eigene Ebene, benennen diese nach dem Schema „Pen "
-"1 Speed 10“, „Pen 2 Speed 20“ usw. und erstellen Sie Ihre Zeichnung in der "
+"Möchtest Du verschiedene Stifte und Schreibgeschwindigkeiten beim Plotten "
+"mit dem Stift verwenden, so erstelle für jeden Stift und dessen "
+"Stiftgeschwindigkeit eine eigene Ebene, benenne diese nach dem Schema „Pen 1 "
+"Speed 10“, „Pen 2 Speed 20“ usw. und erstelle Deine Zeichnung in der "
 "entsprechenden Ebene. Dies hat Vorrang vor den obigen Einstellungen für "
 "Stiftnummer und Schreibgeschwindigkeit."
 
@@ -45323,9 +45313,8 @@ msgid ""
 "With 'Auto', the extension will choose the best size, depending upon the "
 "length of the text and the selected error correction level."
 msgstr ""
-"Mit „Auto“ wird die geeignetste Größe des Barcodes in Abhängigkeit von der"
-" Textlänge und des "
-"Fehlerkorrekturlevels automatisch gewählt."
+"Mit „Auto“ wird die geeignetste Größe des Barcodes in Abhängigkeit von der "
+"Textlänge und des Fehlerkorrekturlevels automatisch gewählt."
 
 #: ../share/extensions/render_barcode_qrcode.inx:49
 msgid ""
@@ -45333,10 +45322,10 @@ msgid ""
 "some other way, choose a high error correction level. Higher error "
 "correction levels mean that the text that can be encoded must be shorter."
 msgstr ""
-"Wenn es wahrscheinlich ist, dass der QR-Code schmutzig wird oder sich die"
-" Lesbarkeit durch andere Ursachen verschlechtern könnte, sollte ein höheres"
-" Fehlerkorrekturlevel gewählt werden. Dies bedeutet umgekehrt, dass die"
-" maximal mögliche Textlänge, die kodiert werden kann, kürzer ist."
+"Wenn es wahrscheinlich ist, dass der QR-Code schmutzig wird oder sich die "
+"Lesbarkeit durch andere Ursachen verschlechtern könnte, sollte ein höheres "
+"Fehlerkorrekturlevel gewählt werden. Dies bedeutet umgekehrt, dass die "
+"maximal mögliche Textlänge, die kodiert werden kann, kürzer ist."
 
 #: ../share/extensions/render_barcode_qrcode.inx:49
 msgid "Error correction level:"
@@ -45368,9 +45357,9 @@ msgid ""
 "'ALPHAnum': can only encode capital letters and some symbols, sufficient for "
 "most web urls."
 msgstr ""
-"'Bytes' kann jeden möglichen Text kodieren, 'Nur Zahlen' darf nur Zahlen"
-" enthalten, 'ALPHAnumerisch' kann nur Großbuchstaben und einige Symbole"
-" kodieren, was für die meisten Internetadressen ausreichend ist."
+"'Bytes' kann jeden möglichen Text kodieren, 'Nur Zahlen' darf nur Zahlen "
+"enthalten, 'ALPHAnumerisch' kann nur Großbuchstaben und einige Symbole "
+"kodieren, was für die meisten Internetadressen ausreichend ist."
 
 #: ../share/extensions/render_barcode_qrcode.inx:56
 msgid "Bytes array"
@@ -45430,8 +45419,8 @@ msgid ""
 "The ID of the selected symbol. Open the XML editor to find it as the value "
 "for 'xlink:href' for a selected instance of the symbol."
 msgstr ""
-"Die ID des gewählten Symbols. Im XML-Editor als Wert für 'xlink:href' für das"
-" ausgewählte Symbol zu finden."
+"Die ID des gewählten Symbols. Im XML-Editor als Wert für 'xlink:href' für "
+"das ausgewählte Symbol zu finden."
 
 #: ../share/extensions/render_barcode_qrcode.inx:88
 msgid "Symbol ID:"
@@ -45448,8 +45437,8 @@ msgid ""
 "Manually define the group ID of the generated QR code. Leave blank to have "
 "it auto-generated."
 msgstr ""
-"Die Gruppen-ID des generierten QR-Codes manuell festlegen; freilassen, um sie"
-" automatisch generieren zu lassen"
+"Die Gruppen-ID des generierten QR-Codes manuell festlegen; freilassen, um "
+"sie automatisch generieren zu lassen"
 
 #: ../share/extensions/render_barcode_qrcode.inx:93
 msgid "Group ID:"
@@ -45535,8 +45524,8 @@ msgstr "Schriftarten auflisten"
 msgid ""
 "Choose this tab if you would like to see a list of the fonts used/found."
 msgstr ""
-"Schließen Sie diesen Tab, wenn Sie eine Liste der verwendeten/gefundenen "
-"Schriftarten sehen möchten."
+"Wähle diesen Tab aus, wenn Du eine Liste der verwendeten/gefundenen "
+"Schriftarten sehen möchtest."
 
 #: ../share/extensions/replace_font.inx:21
 msgid "Work on:"
@@ -45940,7 +45929,7 @@ msgstr "Lokalisierung"
 
 #: ../share/extensions/svgcalendar.inx:44
 msgid "You may change the names for other languages:"
-msgstr "Sie können die Namen der anderen Sprachen ändern:"
+msgstr "Für andere Sprachen kannst Du die Namen ändern:"
 
 #: ../share/extensions/svgcalendar.inx:45
 msgid "Month names:"
@@ -46035,8 +46024,8 @@ msgid ""
 "Select your system encoding. More information at http://docs.python.org/"
 "library/codecs.html#standard-encodings."
 msgstr ""
-"(Wählen Sie die Systemkodierung. Mehr Informationen dazu unter http://docs."
-"python.org/library/codecs.html#standard-encodings)"
+"(Wähle die Systemkodierung. Mehr Informationen dazu unter http://docs.python."
+"org/library/codecs.html#standard-encodings)"
 
 #: ../share/extensions/svgfont2layers.inx:3
 msgid "Convert SVG Font to Glyph Layers"
@@ -46466,22 +46455,22 @@ msgstr "Buchstaben"
 msgid ""
 "Threshold for separating manual kerns into words (multiples of font size)"
 msgstr ""
-"Grenzwert für Interpretation manueller Unterschneidungen als Leerzeichen"
-" zwischen Wörtern (in Mehrfachen der Schriftgröße)"
+"Grenzwert für Interpretation manueller Unterschneidungen als Leerzeichen "
+"zwischen Wörtern (in Mehrfachen der Schriftgröße)"
 
 #: ../share/extensions/text_split.inx:16
 msgid "This effect splits texts into different lines, words or letters."
 msgstr ""
 "Dieser Effekt teilt den Text in unterschiedliche Zeilen, Wörter oder "
-"Buchstaben auf. Wählen Sie unten, wie Ihr Text geteilt werden soll."
+"Buchstaben auf."
 
 #: ../share/extensions/text_split.inx:17
 msgid ""
 "Doing so leads the text to lose a lot of its semantics. Only use this effect "
 "if you know what you're doing!"
 msgstr ""
-"Dies führt dazu, dass der Textzusammenhang verloren geht. Verwende diese"
-" Erweiterung nur, wenn Du genau weißt, was Du tust!"
+"Dies führt dazu, dass der Textzusammenhang verloren geht. Verwende diese "
+"Erweiterung nur, wenn Du genau weißt, was Du tust!"
 
 #: ../share/extensions/text_split.inx:19
 msgid ""
@@ -46489,9 +46478,9 @@ msgid ""
 "flowed text elements and manual kerns. It does not work for TextPath "
 "elements."
 msgstr ""
-"Diese Erweiterung funktioniert sowohl mit normalen Texten, SVG2- und"
-" SVG1.2-Fließtexten und manuellen Unterschneidungen. Sie ist nicht geeignet"
-" für Text-an-Pfad."
+"Diese Erweiterung funktioniert sowohl mit normalen Texten, SVG2- und SVG1.2-"
+"Fließtexten und manuellen Unterschneidungen. Sie ist nicht geeignet für Text-"
+"an-Pfad."
 
 #: ../share/extensions/text_split.inx:21
 msgid ""
@@ -46500,10 +46489,10 @@ msgid ""
 "processed, but will be misaligned. Automatic line breaks in legacy flowtext "
 "(flowroot elements) are ignored."
 msgstr ""
-"Hinweis: Die Erweiterung verwendet nur eine grobe Schätzung für die Position"
-" von Wörtern und Buchstaben. Text mit anderen Schreibrichtungen wird"
-" verarbeitet, das Ergebnis wird jedoch verschoben sein. Automatische"
-" Zeilenumbrüche in altem Inkscape-Fließtext (flowroot) werden ignoriert."
+"Hinweis: Die Erweiterung verwendet nur eine grobe Schätzung für die Position "
+"von Wörtern und Buchstaben. Text mit anderen Schreibrichtungen wird "
+"verarbeitet, das Ergebnis wird jedoch verschoben sein. Automatische "
+"Zeilenumbrüche in altem Inkscape-Fließtext (flowroot) werden ignoriert."
 
 #: ../share/extensions/text_titlecase.inx:3
 msgid "Title Case"
@@ -46691,7 +46680,7 @@ msgid ""
 "This extension allows you to create interactive elements in your drawing. "
 "These will react to user actions when the file is viewed in a web browser."
 msgstr ""
-"Diese Erweiterung erlaubt es, interaktive Elemente in die Zeichnung zu "
+"Diese Erweiterung erlaubt Dir, interaktive Elemente in die Zeichnung zu "
 "integrieren. Diese Elemente reagieren auf Benutzeraktionen, wenn man die "
 "Datei in einem Webbrowser anzeigt."
 
@@ -46818,7 +46807,7 @@ msgstr "Starte es zuvor"
 #: ../share/extensions/web_transmit_att.inx:25
 msgid "The next parameter is useful when you select more than two elements"
 msgstr ""
-"Der nächste Parameter ist nützlich, wenn Sie mehr als zwei Elemente wählen."
+"Der nächste Parameter ist nützlich, wenn Du mehr als zwei Elemente wählst."
 
 #: ../share/extensions/web_set_att.inx:28
 msgid "Source and destination of setting:"
@@ -46854,7 +46843,7 @@ msgid ""
 "If you want to set more than one attribute, you must separate this with a "
 "space, and only with a space."
 msgstr ""
-"Wenn Sie mehr als ein Attribut setzen wollen, müssen Sie diese mit einzelnen "
+"Wenn Du mehr als ein Attribut setzen willst, musst Du diese mit einzelnen "
 "Leerzeichen trennen."
 
 #: ../share/extensions/web_set_att.inx:43
@@ -46868,11 +46857,11 @@ msgstr "Sende Attribute"
 
 #: ../share/extensions/web_transmit_att.inx:7
 msgid "Attribute to transmit:"
-msgstr "Attribute zum Senden"
+msgstr "Attribute zum Senden:"
 
 #: ../share/extensions/web_transmit_att.inx:8
 msgid "When to transmit:"
-msgstr "Wann wollen Sie senden"
+msgstr "Wann senden:"
 
 #: ../share/extensions/web_transmit_att.inx:26
 msgid "Source and destination of transmitting:"
@@ -46899,7 +46888,7 @@ msgid ""
 "If you want to transmit more than one attribute, you should separate this "
 "with a space, and only with a space."
 msgstr ""
-"Wenn Sie mehr als nur ein Attribut übertragen wollen, müssen Sie diese mit "
+"Wenn Du mehr als nur ein Attribut übertragen willst, musst Du diese mit "
 "einzelnen Leerzeichen trennen."
 
 #: ../share/extensions/webslicer_create_group.inx:3
@@ -46950,8 +46939,8 @@ msgid ""
 "it). To use this, you must to select some \"Slicer rectangles\" first."
 msgstr ""
 "Die Layoutgruppe dient nur zum Erstellen einer besseren Codegeneration "
-"(falls benötigt). Um sie zu benutzen müssen Sie zuerst ein paar „Slicer“-"
-"Rechtecke markieren."
+"(falls benötigt). Um sie zu benutzen musst Du zuerst ein paar „Slicer“-"
+"Rechtecke wählen."
 
 # Any idea on how to translate the very specific term "slicer" to German?
 #: ../share/extensions/webslicer_create_group.inx:30
@@ -47122,8 +47111,8 @@ msgid ""
 "All sliced images, and optionally - code, will be generated as you had "
 "configured and saved to one directory."
 msgstr ""
-"Alle „gesliceten“ Bilder und optionaler Code werden so erstellt, wie Sie ihn "
-"konfiguriert haben und in einem Verzeichnis gespeichert."
+"Alle „gesliceten“ Bilder und optionaler Code werden so erstellt, wie Du sie "
+"konfiguriert hast und in einem Verzeichnis gespeichert."
 
 #: ../share/extensions/whirl.inx:3
 msgid "Whirl"
@@ -47160,6 +47149,12 @@ msgstr "Linien hinter der Sphäre verstecken"
 #: ../share/extensions/xaml2svg.inx:3
 msgid "XAML Input"
 msgstr "XAML einlesen"
+
+#: ../org.inkscape.Inkscape.appdata.xml.in:8
+#, fuzzy
+#| msgid "Use Inkscape's fonts directory"
+msgid "The Inkscape Community"
+msgstr "Inkscape-Community-Moderator"
 
 #: ../org.inkscape.Inkscape.appdata.xml.in:11
 #: ../org.inkscape.Inkscape.desktop.template:5
@@ -47213,6 +47208,322 @@ msgstr ""
 msgid "Main application window"
 msgstr "Hauptfenster"
 
+#: ../org.inkscape.Inkscape.appdata.xml.in:46
+#, fuzzy
+#| msgid "Inkscape 1.1"
+msgid "Inkscape 1.2"
+msgstr "Inkscape 1.1"
+
+#: ../org.inkscape.Inkscape.appdata.xml.in:48
+#, fuzzy
+#| msgid "Multiple stops"
+msgid "Multiple pages support"
+msgstr "Mehrere Zwischenfarben"
+
+#: ../org.inkscape.Inkscape.appdata.xml.in:49
+msgid "Editable markers and dash patterns"
+msgstr ""
+
+# File: ../src/ui/dialog/align-and-distribute.cpp, line: 1107
+#: ../org.inkscape.Inkscape.appdata.xml.in:50
+#, fuzzy
+#| msgid "Enable on-canvas alignment handles"
+msgid "On-canvas alignment and snapping"
+msgstr "Anfasser für das Ausrichten auf der Zeichenfläche aktivieren"
+
+#: ../org.inkscape.Inkscape.appdata.xml.in:51
+msgid "Selectable origin for numerical transforms"
+msgstr ""
+
+#: ../org.inkscape.Inkscape.appdata.xml.in:52
+msgid "Single dialog for alignment options"
+msgstr ""
+
+#: ../org.inkscape.Inkscape.appdata.xml.in:53
+msgid "Gradient editing in Fill and Stroke dialog"
+msgstr ""
+
+#: ../org.inkscape.Inkscape.appdata.xml.in:54
+#, fuzzy
+#| msgid "Layers and Object_s"
+msgid "Layers and Objects dialog merged"
+msgstr "Ebenen und Objekte"
+
+#: ../org.inkscape.Inkscape.appdata.xml.in:55
+#, fuzzy
+#| msgid "Import settings"
+msgid "New UI for Snap settings"
+msgstr "Importeinstellungen"
+
+#: ../org.inkscape.Inkscape.appdata.xml.in:56
+#, fuzzy
+#| msgid "Custom stroke options"
+msgid "More customization options"
+msgstr "Benutzerdefinierte Konturoptionen"
+
+#: ../org.inkscape.Inkscape.appdata.xml.in:57
+msgid "Various performance improvements and bugfixes"
+msgstr ""
+
+#: ../org.inkscape.Inkscape.appdata.xml.in:64
+msgid "Inkscape 1.1"
+msgstr "Inkscape 1.1"
+
+#: ../org.inkscape.Inkscape.appdata.xml.in:66
+#, fuzzy
+#| msgid "Show Welcome dialog"
+msgid "Welcome dialog"
+msgstr "Willkommensdialog anzeigen"
+
+#: ../org.inkscape.Inkscape.appdata.xml.in:67
+msgid "Command palette to search for functions"
+msgstr ""
+
+#: ../org.inkscape.Inkscape.appdata.xml.in:68
+#, fuzzy
+#| msgid "Roughen parts of paths"
+msgid "Copypaste parts of paths"
+msgstr "Teile von Pfaden aufrauen"
+
+#: ../org.inkscape.Inkscape.appdata.xml.in:69
+msgid "Complete rework of the dialog docking system"
+msgstr ""
+
+#: ../org.inkscape.Inkscape.appdata.xml.in:70
+#, fuzzy
+#| msgid "outline overlay"
+msgid "New outline overlay mode"
+msgstr "Umrissüberlagerung"
+
+#: ../org.inkscape.Inkscape.appdata.xml.in:71
+#, fuzzy
+#| msgid "Export as SVG 1.1 per settings in Preferences dialog"
+msgid "Search field in Preferences dialog"
+msgstr ""
+"Als SVG 1.1 entsprechend der Einstellungen im Einstellungsdialog exportieren"
+
+#: ../org.inkscape.Inkscape.appdata.xml.in:72
+msgid "Improved Export PNG dialog"
+msgstr ""
+
+#: ../org.inkscape.Inkscape.appdata.xml.in:73
+msgid "Ability to directly export JPG, TIFF, optimized PNG, and WebP"
+msgstr ""
+
+#: ../org.inkscape.Inkscape.appdata.xml.in:74
+#, fuzzy
+#| msgid "Stroke is averaged over selected objects"
+msgid "Paste now pastes directly above selected object"
+msgstr "Konturfarbe wird über ausgewählte Objekte gemittelt"
+
+#: ../org.inkscape.Inkscape.appdata.xml.in:75
+#, fuzzy
+#| msgid "Rotation angle"
+msgid "Beta Extension Manager"
+msgstr "Drehwinkel"
+
+#: ../org.inkscape.Inkscape.appdata.xml.in:82
+#, fuzzy
+#| msgid "Inkscape 1.1"
+msgid "Inkscape 1.0"
+msgstr "Inkscape 1.1"
+
+#: ../org.inkscape.Inkscape.appdata.xml.in:84
+msgid "Theming support and more new customization options"
+msgstr ""
+
+#: ../org.inkscape.Inkscape.appdata.xml.in:85
+msgid "Better HiDPI (high resolution) screen support"
+msgstr ""
+
+#: ../org.inkscape.Inkscape.appdata.xml.in:86
+msgid "Native support for macOS with a signed and notarized .dmg file"
+msgstr ""
+
+#: ../org.inkscape.Inkscape.appdata.xml.in:87
+msgid "Coordinate origin in top left corner by default"
+msgstr ""
+
+#: ../org.inkscape.Inkscape.appdata.xml.in:88
+msgid "Canvas rotation and mirroring"
+msgstr ""
+
+# File: ../src/ui/dialog/align-and-distribute.cpp, line: 1107
+#: ../org.inkscape.Inkscape.appdata.xml.in:89
+#, fuzzy
+#| msgid "Enable on-canvas alignment handles"
+msgid "On-Canvas alignment of objects"
+msgstr "Anfasser für das Ausrichten auf der Zeichenfläche aktivieren"
+
+#: ../org.inkscape.Inkscape.appdata.xml.in:90
+#, fuzzy
+#| msgid "Split Mode: X-Ray"
+msgid "Split view and X-Ray modes"
+msgstr "Geteilte Ansicht: Röntgen"
+
+#: ../org.inkscape.Inkscape.appdata.xml.in:91
+msgid ""
+"PowerPencil for drawing editable, variable width strokes with a pressure "
+"sensitive graphics tablet"
+msgstr ""
+
+#: ../org.inkscape.Inkscape.appdata.xml.in:92
+#, fuzzy
+#| msgid "Export options"
+msgid "New PNG export options"
+msgstr "Exportoptionen"
+
+#: ../org.inkscape.Inkscape.appdata.xml.in:93
+msgid "Integrated centerline tracing for vectorizing line drawings"
+msgstr ""
+
+#: ../org.inkscape.Inkscape.appdata.xml.in:94
+msgid "Searchable Symbols dialog"
+msgstr ""
+
+#: ../org.inkscape.Inkscape.appdata.xml.in:95
+#, fuzzy
+#| msgid "Live Path Effects (LPE)"
+msgid "New Live Path Effect (LPE) selection dialog"
+msgstr "Pfadeffekte (LPE)"
+
+#: ../org.inkscape.Inkscape.appdata.xml.in:96
+msgid ""
+"New Corners (Fillet/chamfer) LPE, (lossless) Boolean Operation LPE "
+"(experimental), Offset LPE and Measure Segments LPE (and more!)"
+msgstr ""
+
+#: ../org.inkscape.Inkscape.appdata.xml.in:97
+msgid ""
+"Path operations, deselection of a large number of paths as well as grouping/"
+"ungrouping are much faster now"
+msgstr ""
+
+#: ../org.inkscape.Inkscape.appdata.xml.in:98
+msgid "Much improved text line-height settings"
+msgstr ""
+
+#: ../org.inkscape.Inkscape.appdata.xml.in:99
+msgid ""
+"Variable fonts support (only if compiled with pango library version &gt;= "
+"1.41.1)"
+msgstr ""
+
+#: ../org.inkscape.Inkscape.appdata.xml.in:100
+#, fuzzy
+#| msgid "Create flowed text"
+msgid "Browser-compatible flowed text"
+msgstr "Fließtext erstellen"
+
+#: ../org.inkscape.Inkscape.appdata.xml.in:101
+msgid ""
+"Extensions programming interface updated, with many new options - Note: this "
+"introduces breaking changes, some third-party extensions will have to be "
+"updated to work with Inkscape 1.0"
+msgstr ""
+
+#: ../org.inkscape.Inkscape.appdata.xml.in:102
+#, fuzzy
+#| msgid "Phonetic Extensions"
+msgid "Python 3 support for extensions"
+msgstr "Phonetische Erweiterungen"
+
+#: ../org.inkscape.Inkscape.appdata.xml.in:110
+msgid "Bugfix release"
+msgstr ""
+
+#: ../org.inkscape.Inkscape.appdata.xml.in:111
+msgid "More python3 compatibility for extensions"
+msgstr ""
+
+#: ../org.inkscape.Inkscape.appdata.xml.in:118
+#: ../org.inkscape.Inkscape.appdata.xml.in:131
+#: ../org.inkscape.Inkscape.appdata.xml.in:144
+msgid "New 0.92.x bugfix release."
+msgstr ""
+
+#: ../org.inkscape.Inkscape.appdata.xml.in:120
+#, fuzzy
+#| msgid "Open Align and Distribute"
+msgid "Improvements to the align and distribute tool"
+msgstr "'Ausrichten und verteilen' öffnen"
+
+#: ../org.inkscape.Inkscape.appdata.xml.in:121
+msgid "Support for piping standard input and output"
+msgstr ""
+
+#: ../org.inkscape.Inkscape.appdata.xml.in:122
+msgid "The color slider can be constrained to stepped values"
+msgstr ""
+
+#: ../org.inkscape.Inkscape.appdata.xml.in:123
+#, fuzzy
+#| msgid "Transform in increments"
+msgid "Performance improvements"
+msgstr "Schrittweise transformieren"
+
+#: ../org.inkscape.Inkscape.appdata.xml.in:124
+#: ../org.inkscape.Inkscape.appdata.xml.in:137
+msgid "And many more bugfixes"
+msgstr ""
+
+#: ../org.inkscape.Inkscape.appdata.xml.in:133
+msgid "New command-line options to control page size when exporting to SVG"
+msgstr ""
+
+#: ../org.inkscape.Inkscape.appdata.xml.in:134
+msgid "Support for left-to-right languages in the text tool"
+msgstr ""
+
+#: ../org.inkscape.Inkscape.appdata.xml.in:135
+#, fuzzy
+#| msgctxt "Polar arrange tab"
+#| msgid "First selected circle/ellipse/arc"
+msgid "Improvements to the circle/ellipse/arc tool"
+msgstr "Zuerst ausgewählte(r) Kreis/Ellipse/Bogen"
+
+#: ../org.inkscape.Inkscape.appdata.xml.in:136
+msgid "Support for multi-line text when exporting to PDF+LaTeX"
+msgstr ""
+
+#: ../org.inkscape.Inkscape.appdata.xml.in:146
+msgid "Better importing and exporting"
+msgstr ""
+
+#: ../org.inkscape.Inkscape.appdata.xml.in:147
+msgid "Greater stability when printing on Windows"
+msgstr ""
+
+#: ../org.inkscape.Inkscape.appdata.xml.in:148
+#, fuzzy
+#| msgid "Invert fill and stroke colors"
+msgid "Improved fill and stroke HSL color selection"
+msgstr "Füllungs- und Konturfarben invertieren"
+
+#: ../org.inkscape.Inkscape.appdata.xml.in:149
+msgid "Greater stability when reverting and saving files"
+msgstr ""
+
+#: ../org.inkscape.Inkscape.appdata.xml.in:150
+msgid "An additional handle at the center of shapes"
+msgstr ""
+
+#: ../org.inkscape.Inkscape.appdata.xml.in:151
+msgid "A command line option for updating the file's DPI"
+msgstr ""
+
+#: ../org.inkscape.Inkscape.appdata.xml.in:152
+msgid "Improvements to user-defined shortcuts"
+msgstr ""
+
+#: ../org.inkscape.Inkscape.appdata.xml.in:153
+msgid "Migration to Gitlab to make contribution easier"
+msgstr ""
+
+#: ../org.inkscape.Inkscape.appdata.xml.in:154
+msgid "And many more bugfixes!"
+msgstr ""
+
 #: ../org.inkscape.Inkscape.desktop.template:8
 msgid "Create and edit Scalable Vector Graphics images"
 msgstr "Skalierbare Vektorgrafiken erstellen und bearbeiten"
@@ -47220,12 +47531,6 @@ msgstr "Skalierbare Vektorgrafiken erstellen und bearbeiten"
 #: ../org.inkscape.Inkscape.desktop.template:9
 msgid "image;editor;vector;drawing;"
 msgstr "image;editor;vector;drawing;"
-
-#
-# File: ../org.inkscape.Inkscape.desktop.template, line: 17
-#: ../org.inkscape.Inkscape.desktop.template:17
-msgid "${INKSCAPE_ICONPATH}"
-msgstr "${INKSCAPE_ICONPATH}"
 
 #: ../org.inkscape.Inkscape.desktop.template:22
 msgid "New Drawing"
@@ -47401,6 +47706,11 @@ msgstr "en"
 #: ../share/ui/units.xml:99
 msgid "Half of font height"
 msgstr "en (Halbgeviert)"
+
+#
+# File: ../org.inkscape.Inkscape.desktop.template, line: 17
+#~ msgid "${INKSCAPE_ICONPATH}"
+#~ msgstr "${INKSCAPE_ICONPATH}"
 
 #, fuzzy
 #~ msgid "Open FillStroke"
@@ -49213,9 +49523,6 @@ msgstr "en (Halbgeviert)"
 
 #~ msgid "Tablet-fruit Pad Pro"
 #~ msgstr "Obsttablet Pad Pro"
-
-#~ msgid "Inkscape 1.1"
-#~ msgstr "Inkscape 1.1"
 
 #~ msgid ""
 #~ "%d ENTITIES of type POLYLINE encountered and ignored. Please try to "
