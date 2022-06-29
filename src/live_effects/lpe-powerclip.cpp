@@ -218,7 +218,7 @@ LPEPowerClip::doOnRemove (SPLPEItem const* /*lpeitem*/)
     if (!document) {
         return;
     }
-    if (keep_paths) {
+    if (keep_paths || document->onungroup) {
         SPObject *clip_path = sp_lpe_item->getClipObject();
         if (clip_path) {
             SPLPEItem *childitem = dynamic_cast<SPLPEItem *>(clip_path->childList(true).front());

@@ -289,7 +289,7 @@ LPEPowerMask::doOnRemove (SPLPEItem const* lpeitem)
 {
     SPMask *mask = lpeitem->getMaskObject();
     if (mask) {
-        if (keep_paths) {
+        if (keep_paths || lpeitem->document->onungroup) {
             return;
         }
         invert.param_setValue(false);

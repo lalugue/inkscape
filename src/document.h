@@ -345,7 +345,7 @@ public:
     // Garbage collecting ----------------------
     void queueForOrphanCollection(SPObject *object);
     void collectOrphans();
-
+    bool onungroup = false;
 
     // Actions ---------------------------------
     Glib::RefPtr<Gio::SimpleActionGroup> getActionGroup() { return action_group; }
@@ -364,6 +364,7 @@ private:
     bool virgin ;   ///< Has the document never been touched?
     bool modified_since_save = false;
     bool modified_since_autosave = false;
+
     sigc::connection modified_connection;
     sigc::connection rerouting_connection;
 
