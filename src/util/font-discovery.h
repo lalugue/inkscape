@@ -7,8 +7,9 @@ namespace Inkscape {
 struct FontInfo {
     Glib::RefPtr<Pango::FontFamily> ff;
     Glib::RefPtr<Pango::FontFace> face;
-    double weight = 0;   // proxy for font weight - how black it is
-    double width = 0;    // proxy for font width - how compressed/extended it is
+    float weight = 0;   // proxy for font weight - how black it is
+    float width = 0;    // proxy for font width - how compressed/extended it is
+    unsigned short family_kind = 0; // OS/2 family class
     bool monospaced = false; // fixed-width font
     bool oblique = false;    // italic or oblique font
 };

@@ -679,9 +679,9 @@ button.square-button image {
 
 .tag-box {
     background-color: alpha(@theme_fg_color, 0.15);
-    /* opacity: 0.4; */
     border-radius: 50px;
-    margin: 0px;
+    margin: 0;
+    margin-right: 1px;
 }
 
 .tag-box label {

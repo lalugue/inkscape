@@ -109,6 +109,8 @@ public:
     double get_E_height() const { return _E_height; }
     bool is_fixed_width() const { return _fixed_width; }
     bool is_oblique() const { return _oblique; }
+    unsigned short family_class() const { return _family_class; }
+
 private:
     void acquire(PangoFont *p_font, PangoFontDescription *descr);
     void release();
@@ -148,7 +150,8 @@ private:
     double  _E_height = 0.0; // Capital E height, if E glyph present
     double  _italic_angle = 0.0; // angle for oblique fonts, if specified in a font
     bool _fixed_width = false; // monospaced font (if advertised as such)
-    bool _oblique = false; // oblique or italic font
+    bool _oblique = false;  // oblique or italic font
+    unsigned short _family_class = 0; // OS/2 sFamily class field
 
     // Baselines
     double _baselines[SP_CSS_BASELINE_SIZE];

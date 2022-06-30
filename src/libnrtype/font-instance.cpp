@@ -286,6 +286,12 @@ void FontInstance::find_font_metrics()
 
         auto os2 = (TT_OS2*)FT_Get_Sfnt_Table(face, ft_sfnt_os2);
 
+        if (os2) {
+            _family_class = os2->sFamilyClass;
+            // _panose_family = os2->panose[0];
+// if (os2->sFamilyClass) g_message("%04x - %s", (int)os2->sFamilyClass, desc);
+        }
+
         if (auto post = (TT_Postscript*)FT_Get_Sfnt_Table(face, ft_sfnt_post)) {
             _italic_angle = FTFixedToDouble(post->italicAngle);
             _fixed_width = post->isFixedPitch != 0;

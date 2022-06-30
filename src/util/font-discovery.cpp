@@ -160,6 +160,7 @@ void save_font_cache(const std::vector<FontInfo>& fonts) {
     Glib::ustring oblique("oblique");
     Glib::ustring weight("weight");
     Glib::ustring width("width");
+    Glib::ustring family("family");
 
     for (auto&& font : fonts) {
         auto desc = get_font_description(font.ff, font.face);
@@ -168,6 +169,7 @@ void save_font_cache(const std::vector<FontInfo>& fonts) {
         keyfile->set_boolean(group, oblique, font.oblique);
         keyfile->set_double(group, weight, font.weight);
         keyfile->set_double(group, width, font.width);
+        keyfile->set_integer(group, family, font.family_kind);
     }
 
     std::string filename = Glib::build_filename(Inkscape::IO::Resource::profile_path(), font_cache);
@@ -193,6 +195,7 @@ std::unordered_map<std::string, FontInfo> load_cached_font_info() {
             Glib::ustring oblique("oblique");
             Glib::ustring weight("weight");
             Glib::ustring width("width");
+            Glib::ustring family("family");
 
             for (auto&& group : keyfile->get_groups()) {
                 FontInfo font;
@@ -200,6 +203,7 @@ std::unordered_map<std::string, FontInfo> load_cached_font_info() {
                 font.oblique = keyfile->get_boolean(group, oblique);
                 font.weight = keyfile->get_double(group, weight);
                 font.width = keyfile->get_double(group, width);
+                font.family_kind = keyfile->get_integer(group, family);
 
                 info[group.raw()] = font;
             }
@@ -250,6 +254,7 @@ std::vector<FontInfo> get_all_fonts() {
                     auto font = FontFactory::get().Face(desc.gobj());
                     info.monospaced = font->is_fixed_width();
                     info.oblique = font->is_oblique();
+                    info.family_kind = font->family_class();
                     auto glyph = font->LoadGlyph(font->MapUnicodeChar('E'));
                     if (glyph) {
                         // bbox: L T R B
