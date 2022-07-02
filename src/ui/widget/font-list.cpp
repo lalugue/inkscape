@@ -72,6 +72,10 @@ Glib::ustring get_full_name(const Inkscape::FontInfo& font_info, bool real_font_
 
 class CellFontRenderer : public Gtk::CellRendererText {
 public:
+    CellFontRenderer() {
+       _face = Cairo::ToyFontFace::create("Noto", Cairo::FONT_SLANT_NORMAL, Cairo::FONT_WEIGHT_NORMAL);
+    }
+
     ~CellFontRenderer() override = default;
 
     Gtk::Widget* _tree = nullptr;
@@ -80,8 +84,10 @@ public:
     int _font_size = 200; // size in %, where 100 is normal UI font size
     Glib::ustring _sample_text; // text to render (font preview)
     bool _missing = false;
-    int _width = 0;
-    int _height = 0;
+    // int _width = 0;
+    // int _height = 0;
+    Glib::ustring _name;
+    Cairo::RefPtr<const Cairo::ToyFontFace> _face;
 
     void render_vfunc(const ::Cairo::RefPtr< ::Cairo::Context>& cr, Gtk::Widget& widget, const Gdk::Rectangle& background_area, const Gdk::Rectangle& cell_area, Gtk::CellRendererState flags) override;
 /*
@@ -134,11 +140,68 @@ void get_cell_data_func(Gtk::CellRenderer* cell_renderer, Gtk::TreeModel::Row ro
         //     // get font name with CSS style
         //     fname = Glib::Markup::escape_text(get_full_name(font, false));
         // }
-        markup += Glib::ustring::format("\n<span allow_breaks='false' size='small' font='Noto Sans'>", fname, "</span>");
+    renderer._name = fname; // Glib::ustring::format("\n<span allow_breaks='false' size='small' font='Noto Sans'>", fname, "</span>");
+        // markup += Glib::ustring::format("\n<span allow_breaks='false' size='small' font='Noto Sans'>", fname, "</span>");
     }
     renderer.set_property("markup", markup);
     renderer._font = font;
     renderer._missing = missing;
+}
+
+void CellFontRenderer::render_vfunc(const ::Cairo::RefPtr<::Cairo::Context>& cr, Gtk::Widget& widget, const Gdk::Rectangle& background_area, const Gdk::Rectangle& cell_area, Gtk::CellRendererState flags) {
+    Gdk::Rectangle bgnd(background_area);
+    Gdk::Rectangle area(cell_area);
+    auto margin = _missing ? 8 : 0; // extra space for icon
+    bgnd.set_x(bgnd.get_x() + margin);
+    area.set_x(area.get_x() + margin);
+    const auto name_font_size = 10; // attempt to select <small> text size
+    const auto bottom = area.get_y() + area.get_height(); // bottom where the info font name will be placed
+    Glib::RefPtr<Pango::Layout> layout;
+    int text_height = 0;
+
+    if (_show_font_name) {
+        layout = _tree->create_pango_layout(_name);
+        Pango::FontDescription font("Noto"); // wide range of character support
+        font.set_weight(Pango::WEIGHT_NORMAL);
+        font.set_size(name_font_size * PANGO_SCALE);
+        layout->set_font_description(font);
+        int text_width = 0;
+        // get the text dimensions
+        layout->get_pixel_size(text_width, text_height);
+        // shrink area to prevent overlap
+        area.set_height(area.get_height() - text_height);
+    }
+
+    CellRendererText::render_vfunc(cr, widget, bgnd, area, flags);
+
+    if (_missing) {
+        // missing font
+    }
+
+    if (_show_font_name) {
+        auto context = _tree->get_style_context();
+        Gtk::StateFlags sflags = _tree->get_state_flags();
+        if (flags & Gtk::CELL_RENDERER_SELECTED) {
+            sflags |= Gtk::STATE_FLAG_SELECTED;
+        }
+        Gdk::RGBA fg = context->get_color(sflags);
+        cr->save();
+        cr->set_source_rgba(fg.get_red(), fg.get_green(), fg.get_blue(), 0.6);
+        cr->move_to(area.get_x() + 2, bottom - text_height);
+        layout->show_in_cairo_context(cr);
+
+        /* 
+        cr->set_source_rgba(fg.get_red(), fg.get_green(), fg.get_blue(), 0.12);
+
+        auto y = background_area.get_y() + background_area.get_height() - 1;
+        cr->move_to(background_area.get_x(), y);
+        cr->line_to(background_area.get_x() + background_area.get_width(), y);
+        cr->set_line_width(1);
+        cr->stroke();
+        */
+        cr->restore();
+    }
+
 }
 
 static void set_icon(Gtk::Button& btn, gchar const* pixmap) {
@@ -186,12 +249,14 @@ FontList::FontList() :
     _font_tags(Inkscape::FontTags::get())
 {
     _cell_renderer = std::make_unique<CellFontRenderer>();
-    static_cast<CellFontRenderer*>(_cell_renderer.get())->_tree = &_font_list;
+    auto font_renderer = static_cast<CellFontRenderer*>(_cell_renderer.get());
+    font_renderer->_tree = &_font_list;
 
     _cell_icon_renderer = std::make_unique<IconRenderer>();
     auto ico = static_cast<IconRenderer*>(_cell_icon_renderer.get());
     ico->add_icon("empty-icon-symbolic");
     ico->add_icon("missing-element-symbolic");
+    ico->set_fixed_size(16, 16);
 
     _grid_renderer = std::make_unique<CellFontRenderer>();
     auto renderer = static_cast<CellFontRenderer*>(_grid_renderer.get());
@@ -257,17 +322,28 @@ FontList::FontList() :
     auto search = &get_widget<Gtk::SearchEntry>(_builder, "font-search");
     search->signal_changed().connect([=](){ filter(); });
 
+    auto set_row_height = [=](int font_size_percent) {
+        font_renderer->_font_size = font_size_percent;
+        // TODO: use pango layout to calc sizes
+        int hh = (font_renderer->_show_font_name ? 10 : 0) + 18 * font_renderer->_font_size / 100;
+        font_renderer->set_fixed_size(-1, hh);
+        // resize rows
+        _font_list.set_fixed_height_mode(false);
+        _font_list.set_fixed_height_mode();
+    };
     auto set_grid_size = [=](int font_size_percent) {
+        renderer->_font_size = font_size_percent;
+        // TODO: use pango layout to calc sizes
         int size = 20 * font_size_percent / 100;
         renderer->set_fixed_size(size * 4 / 3, size);
     };
 
     auto size = &get_widget<Gtk::Scale>(_builder, "preview-font-size");
-    size->set_value(get_renderer(*_cell_renderer)._font_size);
+    size->set_value(font_renderer->_font_size);
     size->signal_value_changed().connect([=](){
-        get_renderer(*_cell_renderer)._font_size = size->get_value();
-        renderer->_font_size = size->get_value();
-        set_grid_size(renderer->_font_size);
+        auto font_size = size->get_value();
+        set_row_height(font_size);
+        set_grid_size(font_size);
         // _font_list.queue_draw();
         // resize
         filter();
@@ -275,14 +351,18 @@ FontList::FontList() :
 
     auto show_names = &get_widget<Gtk::CheckButton>(_builder, "show-font-name");
     show_names->signal_toggled().connect([=](){
-        get_renderer(*_cell_renderer)._show_font_name = show_names->get_active();
+        bool show = show_names->get_active();
+        //TODO: refactor to fn
+        font_renderer->_show_font_name = show;
+        set_row_height(font_renderer->_font_size);
+        _font_list.set_grid_lines(show ? Gtk::TREE_VIEW_GRID_LINES_HORIZONTAL : Gtk::TREE_VIEW_GRID_LINES_NONE);
         // resize
         filter();
     });
 
     auto sample = &get_widget<Gtk::Entry>(_builder, "sample-text");
     sample->signal_changed().connect([=](){
-        get_renderer(*_cell_renderer)._sample_text = sample->get_text();
+        font_renderer->_sample_text = sample->get_text();
         renderer->_sample_text = sample->get_text();
         filter();
     });
@@ -307,7 +387,8 @@ FontList::FontList() :
         });
     }
 
-    // _text_column.pack_start(*_cell_icon_renderer, false);
+    _text_column.set_sizing(Gtk::TREE_VIEW_COLUMN_FIXED);
+    _text_column.pack_start(*_cell_icon_renderer, false);
     _cell_renderer->property_ellipsize() = Pango::ELLIPSIZE_END;
     _text_column.pack_start(*_cell_renderer, true);
     _text_column.set_fixed_width(100); // limit minimal width to keep entire dialog narrow; column can still grow
@@ -316,15 +397,11 @@ FontList::FontList() :
         get_cell_data_func(r, row);
     });
     _text_column.set_expand();
-    // _text_column.add_attribute(ico->property_icon(), g_column_model.icon);
+    _text_column.add_attribute(ico->property_icon(), g_column_model.icon);
     _font_list.append_column(_text_column);
 
-    // _icon_column.pack_start(*_cell_icon_renderer, false);
-    // _icon_column.set_fixed_width(16);
-    // _icon_column.add_attribute(*_cell_icon_renderer, "icon", 0);
-    // _icon_column.add_attribute(ico->property_icon(), g_column_model.icon);
-    // _font_list.append_column(_icon_column); //"ico", *_cell_icon_renderer);
-
+    _font_list.set_fixed_height_mode();
+    set_row_height(font_renderer->_font_size);
     _font_list.set_search_column(-1); // disable, we have a separate search/filter
     _font_list.set_enable_search(false);
     _font_list.set_model(_font_list_store);
@@ -335,7 +412,6 @@ FontList::FontList() :
     renderer->_sample_text = "Aa";
     _font_grid.set_cell_data_func(*renderer, [=](const Gtk::TreeModel::const_iterator& it) {
         Gtk::TreeModel::Row row = *it;
-// g_message("grid: %s", row.get_value(g_column_model.font).face->describe().to_string().c_str());
         get_cell_data_func(renderer, row);
     });
 
@@ -392,7 +468,7 @@ for (auto&& f : _fonts) {
 }
 
     const auto step = std::pow(2.0, 1.0 / 3.0);
-    // formula for slow exponential growth for font size slider: cube root of 2 to the power N;
+    // formula for slow exponential growth for font size slider: cube root of 2 to the power of N;
     // use only whole numbers (ints); start from '4' (index+6), smaller sizes are not very useful;
     // exponential progression is used to cover range of more interesting font sizes
     auto size_growth = [=](double index) { return static_cast<int>(std::round(std::pow(step, index + 6))); };
@@ -449,41 +525,6 @@ for (auto&& f : _fonts) {
         // update tag checkboxes
         add_categories(_font_tags.get_tags());
     }, false);
-
-}
-
-
-void CellFontRenderer::render_vfunc(const ::Cairo::RefPtr<::Cairo::Context>& cr, Gtk::Widget& widget, const Gdk::Rectangle& background_area, const Gdk::Rectangle& cell_area, Gtk::CellRendererState flags) {
-    Gdk::Rectangle bgnd(background_area);
-    Gdk::Rectangle area(cell_area);
-    auto margin = _missing ? 20 : 4; // space for icon
-    bgnd.set_x(bgnd.get_x() + margin);
-    area.set_x(area.get_x() + margin);
-
-    CellRendererText::render_vfunc(cr, widget, bgnd, area, flags);
-
-    if (_missing) {
-        // missing font: draw icon?
-    }
-
-    // add separator if we display two lines per font
-    if (_show_font_name) {
-        auto context = _tree->get_style_context();
-        Gtk::StateFlags sflags = _tree->get_state_flags();
-        if (flags & Gtk::CELL_RENDERER_SELECTED) {
-            sflags |= Gtk::STATE_FLAG_SELECTED;
-        }
-        Gdk::RGBA fg = context->get_color(sflags);
-        cr->save();
-        cr->set_source_rgba(fg.get_red(), fg.get_green(), fg.get_blue(), 0.12);
-
-        auto y = background_area.get_y() + background_area.get_height() - 1;
-        cr->move_to(background_area.get_x(), y);
-        cr->line_to(background_area.get_x() + background_area.get_width(), y);
-        cr->set_line_width(1);
-        cr->stroke();
-        cr->restore();
-    }
 }
 
 void FontList::sort_fonts(Inkscape::FontOrder order) {
@@ -561,7 +602,7 @@ void FontList::filter(Glib::ustring text, const Show& params) {
 
     auto active_categories = _font_tags.get_selected_tags();
     auto apply_categories = !active_categories.empty();
-// g_message("apply cat: %s", apply_categories?"yes":"no");
+
     _font_list_store->freeze_notify();
     _font_list_store->clear();
     _extra_fonts = 0;
