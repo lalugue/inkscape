@@ -5781,16 +5781,16 @@ msgid "Align nodes horizontally"
 msgstr "Lerrokatu nodoak horizontalean"
 
 #: ../src/actions/actions-node-align.cpp:95
-msgid "Align selected nodes horizontally; usage [last|first|middle|min|max]"
-msgstr "Lerrokatu hautatutako nodoak horizontalean; erabilera [last|first|middle|min|max]"
+msgid "Align selected nodes horizontally; usage [last|first|middle|min|max|pref]"
+msgstr "Lerrokatu hautatutako nodoak horizontalean; erabilera [last|first|middle|min|max|pref]"
 
 #: ../src/actions/actions-node-align.cpp:96
 msgid "Align nodes vertically"
 msgstr "Lerrokatu nodoak bertikalean"
 
 #: ../src/actions/actions-node-align.cpp:96
-msgid "Align selected nodes vertically; usage [last|first|middle|min|max]"
-msgstr "Lerrokatu hautatutako nodoak bertikalean; erabilera [last|first|middle|min|max]"
+msgid "Align selected nodes vertically; usage [last|first|middle|min|max|pref]"
+msgstr "Lerrokatu hautatutako nodoak bertikalean; erabilera [last|first|middle|min|max|pref]"
 
 #: ../src/actions/actions-node-align.cpp:97
 msgid "Distribute nodes horizontally"
@@ -5852,8 +5852,8 @@ msgstr "Lerrokatu objektuak"
 #: ../src/actions/actions-object-align.cpp:757
 msgid ""
 "Align selected objects; usage: [[left|hcenter|right] || [top|vcenter|"
-"bottom]] [last|first|biggest|smallest|page|drawing|selection]? group? anchor?"
-msgstr "Lerrokatu hautatutako objektuak; erabilera: [[left|hcenter|right] || [top|vcenter|bottom]] [last|first|biggest|smallest|page|drawing|selection]? group? anchor?"
+"bottom]] [last|first|biggest|smallest|page|drawing|selection|pref]? group? anchor?"
+msgstr "Lerrokatu hautatutako objektuak; erabilera: [[left|hcenter|right] || [top|vcenter|bottom]] [last|first|biggest|smallest|page|drawing|selection|pref]? group? anchor?"
 
 #: ../src/actions/actions-object-align.cpp:759
 msgid "Align to selection's left edge"
@@ -6002,7 +6002,7 @@ msgid "Distribute text objects"
 msgstr "Banatu testu-objektuak"
 
 #: ../src/actions/actions-object-align.cpp:778
-msgid "Distribute text alignment points; usage [vertical | horizontal ]"
+msgid "Distribute text alignment points; usage [vertical | horizontal]"
 msgstr "Banatu testuen lerrokatze-puntuak; erabilera [vertical | horizontal]"
 
 #: ../src/actions/actions-object-align.cpp:779
@@ -6080,9 +6080,9 @@ msgstr "Kendu objektuen arteko gainjartzeak: komaz bereizitako bi zenbaki behar 
 #: ../src/actions/actions-object-align.cpp:797
 msgid ""
 "Enter anchor<space>alignment<space>optional second alignment. Possible "
-"anchors: last, first, biggest, smallest, page, drawing, selection; possible "
+"anchors: last, first, biggest, smallest, page, drawing, selection, pref; possible "
 "alignments: left, hcenter, right, top, vcenter, bottom."
-msgstr "Sartu aingura-lerrokatzearen aukerako bigarren lerrokatzea. Balizko aingurak: last, first, biggest, smallest, page, drawing, selection; possible alignments: left, hcenter, right, top, vcenter, bottom."
+msgstr "Sartu aingura-lerrokatzearen aukerako bigarren lerrokatzea. Balizko aingurak: last, first, biggest, smallest, page, drawing, selection, pref; possible alignments: left, hcenter, right, top, vcenter, bottom."
 
 #: ../src/actions/actions-object-align.cpp:798
 msgid ""

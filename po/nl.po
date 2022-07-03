@@ -4602,10 +4602,10 @@ msgstr "Objecten uitlijnen"
 #: ../src/actions/actions-object-align.cpp:356
 msgid ""
 "Align selected objects; usage: [[left|hcenter|right] || [top|vcenter|bottom]] [last|first|biggest|"
-"smallest|page|drawing|selection]? group? anchor?"
+"smallest|page|drawing|selection|pref]? group? anchor?"
 msgstr ""
-"Geselecteerde objecten uitlijnen; gebruik: [[links|hcentrum|rechts] || [bovenaan|vcentrum|"
-"onderaan]] [laatste|eerste|grootste|kleinste|pagina|tekening|selectie]? Groep? Anker?"
+"Geselecteerde objecten uitlijnen; gebruik: [[left|hcenter|right] || [top|vcenter|bottom"
+"]] [last|first|biggest|smallest|page|drawing|selection|pref]? group? anchor?"
 
 #: ../src/actions/actions-object-align.cpp:357
 msgid "Distribute objects"
@@ -4615,8 +4615,7 @@ msgstr "Objecten verdelen"
 msgid ""
 "Distribute selected objects; usage: [hgap | left | hcenter | right | vgap | top | vcenter | bottom]"
 msgstr ""
-"Geselecteerde objecten distribueren: Gebruik: [hgat | links | hcentrym | rechts | vgat | boven | "
-"vcentrum | onderaan]"
+"Geselecteerde objecten distribueren: Gebruik: [hgap | left | hcenter | right | vgap | top | vcenter | bottom]"
 
 #: ../src/actions/actions-object.cpp:144
 msgid "Set Attribute"

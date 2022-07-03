@@ -5863,18 +5863,18 @@ msgid "Align nodes horizontally"
 msgstr "Poravnaj vozlišča vodoravno"
 
 #: ../src/actions/actions-node-align.cpp:95
-msgid "Align selected nodes horizontally; usage [last|first|middle|min|max]"
+msgid "Align selected nodes horizontally; usage [last|first|middle|min|max|pref]"
 msgstr ""
-"Poravnaj izbrana vozlišča vodoravno; raba: [zadnje|prvo|srednje|najm|najv]"
+"Poravnaj izbrana vozlišča vodoravno; raba: [last|first|middle|min|max|pref]"
 
 #: ../src/actions/actions-node-align.cpp:96
 msgid "Align nodes vertically"
 msgstr "Poravnaj vozlišča navpično"
 
 #: ../src/actions/actions-node-align.cpp:96
-msgid "Align selected nodes vertically; usage [last|first|middle|min|max]"
+msgid "Align selected nodes vertically; usage [last|first|middle|min|max|pref]"
 msgstr ""
-"Izbrana vozlišča poravnajte navpično; raba [zadnji|prvi|srednji|najm|najv]"
+"Izbrana vozlišča poravnajte navpično; raba [last|first|middle|min|max|pref]"
 
 #: ../src/actions/actions-node-align.cpp:97
 msgid "Distribute nodes horizontally"
@@ -5938,10 +5938,10 @@ msgstr "Poravnaj predmete"
 #: ../src/actions/actions-object-align.cpp:757
 msgid ""
 "Align selected objects; usage: [[left|hcenter|right] || [top|vcenter|"
-"bottom]] [last|first|biggest|smallest|page|drawing|selection]? group? anchor?"
+"bottom]] [last|first|biggest|smallest|page|drawing|selection|pref]? group? anchor?"
 msgstr ""
 "Poravnajte izbrane predmete; raba: [[left|hcenter|right] || [top|vcenter|"
-"bottom]] [last|first|biggest|smallest|page|drawing|selection]? group? anchor?"
+"bottom]] [last|first|biggest|smallest|page|drawing|selection|pref]? group? anchor?"
 
 #: ../src/actions/actions-object-align.cpp:759
 msgid "Align to selection's left edge"
@@ -6094,8 +6094,8 @@ msgid "Distribute text objects"
 msgstr "Porazdeli besedilne predmete"
 
 #: ../src/actions/actions-object-align.cpp:778
-msgid "Distribute text alignment points; usage [vertical | horizontal ]"
-msgstr "Porazdeli točke poravnave besedila; raba: [navpično | vodoravno ]"
+msgid "Distribute text alignment points; usage [vertical | horizontal]"
+msgstr "Porazdeli točke poravnave besedila; raba: [navpično | vodoravno]"
 
 #: ../src/actions/actions-object-align.cpp:779
 msgid "Distribute text alignment points horizontally"
@@ -6178,12 +6178,12 @@ msgstr ""
 #, fuzzy
 msgid ""
 "Enter anchor<space>alignment<space>optional second alignment. Possible "
-"anchors: last, first, biggest, smallest, page, drawing, selection; possible "
+"anchors: last, first, biggest, smallest, page, drawing, selection, pref; possible "
 "alignments: left, hcenter, right, top, vcenter, bottom."
 msgstr ""
 "Podajte drugo poravnavo za sidro<space>poravnavo<space>neobvezno. Možna "
-"sidra: zadnja, prva, največja, najmanjša, stran, risba, izbira; možne "
-"poravnave: levo, hcenter, desno, vrh, vcenter, dno."
+"sidra: last, first, biggest, smallest, page, drawing, selection, pref; možne "
+"poravnave: left, hcenter, right, top, vcenter, bottom."
 
 #: ../src/actions/actions-object-align.cpp:798
 msgid ""

@@ -5871,20 +5871,20 @@ msgid "Align nodes horizontally"
 msgstr "Csomópontok vízszintes igazítása"
 
 #: ../src/actions/actions-node-align.cpp:95
-msgid "Align selected nodes horizontally; usage [last|first|middle|min|max]"
+msgid "Align selected nodes horizontally; usage [last|first|middle|min|max|pref]"
 msgstr ""
 "Kijelölt csomópontok vízszintes igazítása; alkalmazás: [last|first|middle|"
-"min|max]"
+"min|max|pref]"
 
 #: ../src/actions/actions-node-align.cpp:96
 msgid "Align nodes vertically"
 msgstr "Csomópontok függőleges igazítása"
 
 #: ../src/actions/actions-node-align.cpp:96
-msgid "Align selected nodes vertically; usage [last|first|middle|min|max]"
+msgid "Align selected nodes vertically; usage [last|first|middle|min|max|pref]"
 msgstr ""
 "Kijelölt csomópontok függőleges igazítása; alkalmazás: [last|first|middle|"
-"min|max]"
+"min|max|pref]"
 
 #: ../src/actions/actions-node-align.cpp:97
 msgid "Distribute nodes horizontally"
@@ -5948,10 +5948,10 @@ msgstr "Objektumok igazítása"
 #: ../src/actions/actions-object-align.cpp:757
 msgid ""
 "Align selected objects; usage: [[left|hcenter|right] || [top|vcenter|"
-"bottom]] [last|first|biggest|smallest|page|drawing|selection]? group? anchor?"
+"bottom]] [last|first|biggest|smallest|page|drawing|selection|pref]? group? anchor?"
 msgstr ""
 "Kijelölt objektumok igazítása; alkalmazás: [[left|hcenter|right] || [top|"
-"vcenter|bottom]] [last|first|biggest|smallest|page|drawing|selection]? "
+"vcenter|bottom]] [last|first|biggest|smallest|page|drawing|selection|pref]? "
 "group? anchor?"
 
 #: ../src/actions/actions-object-align.cpp:759
@@ -6188,11 +6188,11 @@ msgstr ""
 #: ../src/actions/actions-object-align.cpp:797
 msgid ""
 "Enter anchor<space>alignment<space>optional second alignment. Possible "
-"anchors: last, first, biggest, smallest, page, drawing, selection; possible "
+"anchors: last, first, biggest, smallest, page, drawing, selection, pref; possible "
 "alignments: left, hcenter, right, top, vcenter, bottom."
 msgstr ""
 "Adja meg a horgonyigazítás opcionális második igazítását. Lehetséges "
-"horgonyok: last, first, biggest, smallest, page, drawing, selection; "
+"horgonyok: last, first, biggest, smallest, page, drawing, selection, pref; "
 "lehetséges igazítások: left, hcenter, right, top, vcenter, bottom."
 
 #: ../src/actions/actions-object-align.cpp:798

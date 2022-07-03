@@ -5843,18 +5843,18 @@ msgid "Align nodes horizontally"
 msgstr "Aligner les nœuds horizontalement"
 
 #: ../src/actions/actions-node-align.cpp:95
-msgid "Align selected nodes horizontally; usage [last|first|middle|min|max]"
-msgstr "Aligner les nœuds horizontalement; avec [last|first|middle|min|max]"
+msgid "Align selected nodes horizontally; usage [last|first|middle|min|max|pref]"
+msgstr "Aligner les nœuds horizontalement; avec [last|first|middle|min|max|pref]"
 
 #: ../src/actions/actions-node-align.cpp:96
 msgid "Align nodes vertically"
 msgstr "Aligner les nœuds verticalement"
 
 #: ../src/actions/actions-node-align.cpp:96
-msgid "Align selected nodes vertically; usage [last|first|middle|min|max]"
+msgid "Align selected nodes vertically; usage [last|first|middle|min|max|pref]"
 msgstr ""
 "Aligner les nœuds sélectionnés verticalement; utilisation [last|first|middle|min|"
-"max]"
+"max|pref]"
 
 #: ../src/actions/actions-node-align.cpp:97
 msgid "Distribute nodes horizontally"
@@ -5923,10 +5923,10 @@ msgstr "Aligner les objets"
 #: ../src/actions/actions-object-align.cpp:757
 msgid ""
 "Align selected objects; usage: [[left|hcenter|right] || [top|vcenter|bottom]] "
-"[last|first|biggest|smallest|page|drawing|selection]? group? anchor?"
+"[last|first|biggest|smallest|page|drawing|selection|pref]? group? anchor?"
 msgstr ""
 "Aligner les objets sélectionnés; utilisation : [[left|hcenter|right] || [top|"
-"vcenter|bottom]] [last|first|biggest|smallest|page|drawing|selection]? group? "
+"vcenter|bottom]] [last|first|biggest|smallest|page|drawing|selection|pref]? group? "
 "anchor?"
 
 #: ../src/actions/actions-object-align.cpp:759
@@ -6082,8 +6082,8 @@ msgid "Distribute text objects"
 msgstr "Distribuer des objets texte"
 
 #: ../src/actions/actions-object-align.cpp:778
-msgid "Distribute text alignment points; usage [vertical | horizontal ]"
-msgstr "Distribuer des ancres de texte; avec [vertical | horizontal ]"
+msgid "Distribute text alignment points; usage [vertical | horizontal]"
+msgstr "Distribuer des ancres de texte; avec [vertical | horizontal]"
 
 #: ../src/actions/actions-object-align.cpp:779
 msgid "Distribute text alignment points horizontally"
@@ -6165,11 +6165,11 @@ msgstr ""
 #: ../src/actions/actions-object-align.cpp:797
 msgid ""
 "Enter anchor<space>alignment<space>optional second alignment. Possible anchors: "
-"last, first, biggest, smallest, page, drawing, selection; possible alignments: "
+"last, first, biggest, smallest, page, drawing, selection, pref; possible alignments: "
 "left, hcenter, right, top, vcenter, bottom."
 msgstr ""
 "Entrer : \"ancrer<space>alignement<space>second alignement\". Ancres : last, "
-"first, biggest, smallest, page, drawing, selection; Alignements : left, hcenter, "
+"first, biggest, smallest, page, drawing, selection, pref; Alignements : left, hcenter, "
 "right, top, vcenter, bottom."
 
 #: ../src/actions/actions-object-align.cpp:798

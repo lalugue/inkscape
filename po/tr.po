@@ -4644,10 +4644,10 @@ msgstr "Nesneleri hizala"
 #: ../src/actions/actions-object-align.cpp:356
 msgid ""
 "Align selected objects; usage: [[left|hcenter|right] || [top|vcenter|"
-"bottom]] [last|first|biggest|smallest|page|drawing|selection]? group? anchor?"
+"bottom]] [last|first|biggest|smallest|page|drawing|selection|pref]? group? anchor?"
 msgstr ""
 "Seçili nesneleri hizala; kullanım: [[left|hcenter|right] || [top|vcenter|"
-"bottom]] [last|first|biggest|smallest|page|drawing|selection]? group? anchor?"
+"bottom]] [last|first|biggest|smallest|page|drawing|selection|pref]? group? anchor?"
 
 #: ../src/actions/actions-object-align.cpp:357
 msgid "Distribute objects"

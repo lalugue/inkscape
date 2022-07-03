@@ -5875,20 +5875,19 @@ msgid "Align nodes horizontally"
 msgstr "Alinhar nós horizontalmente"
 
 #: ../src/actions/actions-node-align.cpp:95
-msgid "Align selected nodes horizontally; usage [last|first|middle|min|max]"
+msgid "Align selected nodes horizontally; usage [last|first|middle|min|max|pref]"
 msgstr ""
-"Alinha os nós selecionados horizontalmente; uso [último|primeiro|meio|mínimo|"
-"máximo]"
+"Alinha os nós selecionados horizontalmente; uso [last|first|middle|min|max|pref"
+"]"
 
 #: ../src/actions/actions-node-align.cpp:96
 msgid "Align nodes vertically"
 msgstr "Alinhar nós verticalmente"
 
 #: ../src/actions/actions-node-align.cpp:96
-msgid "Align selected nodes vertically; usage [last|first|middle|min|max]"
+msgid "Align selected nodes vertically; usage [last|first|middle|min|max|pref]"
 msgstr ""
-"Alinhe os nós selecionados verticalmente; uso [último|primeiro|meio|mínimo|"
-"máximo]"
+"Alinhe os nós selecionados verticalmente; uso [last|first|middle|min|max|pref]"
 
 #: ../src/actions/actions-node-align.cpp:97
 msgid "Distribute nodes horizontally"
@@ -5956,10 +5955,10 @@ msgstr "Alinhar objetos"
 #: ../src/actions/actions-object-align.cpp:757
 msgid ""
 "Align selected objects; usage: [[left|hcenter|right] || [top|vcenter|"
-"bottom]] [last|first|biggest|smallest|page|drawing|selection]? group? anchor?"
+"bottom]] [last|first|biggest|smallest|page|drawing|selection|pref]? group? anchor?"
 msgstr ""
 "Alinha os objetos selecionados; uso: [[left|hcenter|right] || [top|vcenter|"
-"bottom]] [last|first|biggest|smallest|page|drawing|selection]? grupo? âncora?"
+"bottom]] [last|first|biggest|smallest|page|drawing|selection|pref]? grupo? âncora?"
 
 #: ../src/actions/actions-object-align.cpp:759
 msgid "Align to selection's left edge"
@@ -6117,7 +6116,7 @@ msgid "Distribute text objects"
 msgstr "Distribuir objetos de texto"
 
 #: ../src/actions/actions-object-align.cpp:778
-msgid "Distribute text alignment points; usage [vertical | horizontal ]"
+msgid "Distribute text alignment points; usage [vertical | horizontal]"
 msgstr ""
 "Distribuir pontos de alinhamento de texto; uso [vertical | horizontais]"
 
@@ -6201,12 +6200,12 @@ msgstr ""
 #: ../src/actions/actions-object-align.cpp:797
 msgid ""
 "Enter anchor<space>alignment<space>optional second alignment. Possible "
-"anchors: last, first, biggest, smallest, page, drawing, selection; possible "
+"anchors: last, first, biggest, smallest, page, drawing, selection, pref; possible "
 "alignments: left, hcenter, right, top, vcenter, bottom."
 msgstr ""
 "Insira âncora<espaço>alinhamento<espaço>segundo alinhamento opcional. "
-"Possíveis âncoras: última, primeira, maior, menor, página, desenho, seleção; "
-"alinhamentos possíveis: esquerda, centroH, direito, topo, centroV, base."
+"Possíveis âncoras: last, first, biggest, smallest, page, drawing, selection, pref; "
+"alinhamentos possíveis: left, hcenter, right, top, vcenter, bottom."
 
 #: ../src/actions/actions-object-align.cpp:798
 msgid ""

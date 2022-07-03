@@ -4612,7 +4612,7 @@ msgstr "Jafna hluti"
 #: ../src/actions/actions-object-align.cpp:356
 msgid ""
 "Align selected objects; usage: [[left|hcenter|right] || [top|vcenter|"
-"bottom]] [last|first|biggest|smallest|page|drawing|selection]? group? anchor?"
+"bottom]] [last|first|biggest|smallest|page|drawing|selection|pref]? group? anchor?"
 msgstr ""
 
 #: ../src/actions/actions-object-align.cpp:357
@@ -27479,7 +27479,7 @@ msgid ""
 "Now <b>patterns</b> are <b>transformed</b> along with their objects when "
 "those are transformed (moved, scaled, rotated, or skewed)."
 msgstr ""
-"Núna eru <b>mynstur <b>ummynduð</b> ásamt hlutum sínum þegar þeim er umbreytt"
+"Núna eru <b>mynstur</b> <b>ummynduð</b> ásamt hlutum sínum þegar þeim er umbreytt"
 " (fært, kvarðað, snúið eða skekkt)."
 
 #: ../src/ui/toolbar/select-toolbar.cpp:527
@@ -27487,7 +27487,7 @@ msgid ""
 "Now <b>patterns</b> remain <b>fixed</b> when objects are transformed (moved, "
 "scaled, rotated, or skewed)."
 msgstr ""
-"Núna haldast <b>mynstur <b>föst</b> þegar hlutum er umbreytt (fært, kvarðað,"
+"Núna haldast <b>mynstur</b> <b>föst</b> þegar hlutum er umbreytt (fært, kvarðað,"
 " snúið eða skekkt)."
 
 #: ../src/ui/toolbar/spiral-toolbar.cpp:79

@@ -5814,16 +5814,16 @@ msgid "Align nodes horizontally"
 msgstr "ノードを水平方向に整列"
 
 #: ../src/actions/actions-node-align.cpp:95
-msgid "Align selected nodes horizontally; usage [last|first|middle|min|max]"
-msgstr "選択ノードを共通の水平線上に整列: 使用法 [last|first|middle|min|max]"
+msgid "Align selected nodes horizontally; usage [last|first|middle|min|max|pref]"
+msgstr "選択ノードを共通の水平線上に整列: 使用法 [last|first|middle|min|max|pref]"
 
 #: ../src/actions/actions-node-align.cpp:96
 msgid "Align nodes vertically"
 msgstr "ノードを垂直方向に整列"
 
 #: ../src/actions/actions-node-align.cpp:96
-msgid "Align selected nodes vertically; usage [last|first|middle|min|max]"
-msgstr "選択ノードを共通の垂直線上に整列: 用例 [last|first|middle|min|max]"
+msgid "Align selected nodes vertically; usage [last|first|middle|min|max|pref]"
+msgstr "選択ノードを共通の垂直線上に整列: 用例 [last|first|middle|min|max|pref]"
 
 #: ../src/actions/actions-node-align.cpp:97
 msgid "Distribute nodes horizontally"
@@ -5890,10 +5890,10 @@ msgstr "オブジェクトを整列"
 #: ../src/actions/actions-object-align.cpp:757
 msgid ""
 "Align selected objects; usage: [[left|hcenter|right] || [top|vcenter|"
-"bottom]] [last|first|biggest|smallest|page|drawing|selection]? group? anchor?"
+"bottom]] [last|first|biggest|smallest|page|drawing|selection|pref]? group? anchor?"
 msgstr ""
 "選択オブジェクトを整列。用例:  [[left|hcenter|right] || [top|vcenter|"
-"bottom]] [last|first|biggest|smallest|page|drawing|selection]? group? anchor?"
+"bottom]] [last|first|biggest|smallest|page|drawing|selection|pref]? group? anchor?"
 
 #: ../src/actions/actions-object-align.cpp:759
 msgid "Align to selection's left edge"
@@ -6046,8 +6046,8 @@ msgid "Distribute text objects"
 msgstr "テキストオブジェクトを配置"
 
 #: ../src/actions/actions-object-align.cpp:778
-msgid "Distribute text alignment points; usage [vertical | horizontal ]"
-msgstr "テキストの配置ポイントを配置します。使用法 [vertical | horizontal ]"
+msgid "Distribute text alignment points; usage [vertical | horizontal]"
+msgstr "テキストの配置ポイントを配置します。使用法 [vertical | horizontal]"
 
 #: ../src/actions/actions-object-align.cpp:779
 msgid "Distribute text alignment points horizontally"
@@ -6128,11 +6128,11 @@ msgstr ""
 #: ../src/actions/actions-object-align.cpp:797
 msgid ""
 "Enter anchor<space>alignment<space>optional second alignment. Possible "
-"anchors: last, first, biggest, smallest, page, drawing, selection; possible "
+"anchors: last, first, biggest, smallest, page, drawing, selection, pref; possible "
 "alignments: left, hcenter, right, top, vcenter, bottom."
 msgstr ""
 "アンカー<スペース>配置<スペース>オプションで 2 番目の配置 を入力。指定可能な"
-"アンカー:: last, first, biggest, smallest, page, drawing, selection; 指定可能"
+"アンカー:: last, first, biggest, smallest, page, drawing, selection, pref; 指定可能"
 "な配置: left, hcenter, right, top, vcenter, bottom"
 
 #: ../src/actions/actions-object-align.cpp:798
