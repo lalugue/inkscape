@@ -742,7 +742,6 @@ bool
 Canvas::on_enter_notify_event(GdkEventCrossing *crossing_event)
 {
     if (crossing_event->window != get_window()->gobj()) {
-        std::cout << "  WHOOPS... this does really happen" << std::endl;
         return false;
     }
     return d->add_to_bucket(reinterpret_cast<GdkEvent*>(crossing_event));
@@ -752,7 +751,6 @@ bool
 Canvas::on_leave_notify_event(GdkEventCrossing *crossing_event)
 {
     if (crossing_event->window != get_window()->gobj()) {
-        std::cout << "  WHOOPS... this does really happen" << std::endl;
         return false;
     }
     d->last_mouse = {};
