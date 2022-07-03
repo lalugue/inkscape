@@ -8,7 +8,7 @@
 
 namespace std {
     template<>
-    struct ::std::hash<Glib::RefPtr<Pango::FontFace>> {
+    struct hash<Glib::RefPtr<Pango::FontFace>> {
         ::std::size_t operator () (const Glib::RefPtr<Pango::FontFace>& face) const {
             return ::std::hash<void*>()(face.get());
         }
