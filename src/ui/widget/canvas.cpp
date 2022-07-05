@@ -105,7 +105,7 @@ struct PrefBase
     std::unique_ptr<Preferences::PreferencesObserver> obs;
     std::function<void()> action;
     operator T() const {return t;}
-    PrefBase(const char *path, T def) : path(path), def(def) {enable();}
+    PrefBase(const char *path, T def) : path(path), def(def) {}
     void act() {if (action) action();}
     void enable() {t = static_cast<Pref<T>*>(this)->read(); act(); obs = Inkscape::Preferences::get()->createObserver(path, [this] (const Preferences::Entry &e) {t = static_cast<Pref<T>*>(this)->changed(e); act();});}
     void disable() {t = def; act(); obs.reset();}
@@ -115,7 +115,7 @@ struct PrefBase
 template<>
 struct Pref<bool> : PrefBase<bool>
 {
-    Pref(const char *path, bool def = false) : PrefBase(path, def) {}
+    Pref(const char *path, bool def = false) : PrefBase(path, def) {enable();}
     bool read() {return Inkscape::Preferences::get()->getBool(path, def);}
     bool changed(const Preferences::Entry &e) {return e.getBool(def);}
 };
@@ -124,7 +124,7 @@ template<>
 struct Pref<int> : PrefBase<int>
 {
     int min, max;
-    Pref(const char *path, int def, int min, int max) : min(min), max(max), PrefBase(path, def) {}
+    Pref(const char *path, int def, int min, int max) : PrefBase(path, def), min(min), max(max) {enable();}
     int read() {return Inkscape::Preferences::get()->getIntLimited(path, def, min, max);}
     int changed(const Preferences::Entry &e) {return e.getIntLimited(def, min, max);}
 };
@@ -133,7 +133,7 @@ template<>
 struct Pref<double> : PrefBase<double>
 {
     double min, max;
-    Pref(const char *path, double def, double min, double max) : min(min), max(max), PrefBase(path, def) {}
+    Pref(const char *path, double def, double min, double max) : PrefBase(path, def), min(min), max(max) {enable();}
     double read() {return Inkscape::Preferences::get()->getDoubleLimited(path, def, min, max);}
     double changed(const Preferences::Entry &e) {return e.getDoubleLimited(def, min, max);}
 };
