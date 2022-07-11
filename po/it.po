@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Inkscape 1.2\n"
 "Report-Msgid-Bugs-To: inkscape-translator@lists.inkscape.org\n"
-"POT-Creation-Date: 2022-05-10 14:31+0000\n"
-"PO-Revision-Date: 2022-05-11 13:49+0200\n"
+"POT-Creation-Date: 2022-07-10 01:25+0000\n"
+"PO-Revision-Date: 2022-07-12 09:40+0200\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
 "Language: it\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.0.1\n"
+"X-Generator: Poedit 3.1.1\n"
 
 #: ../share/filters/filters.svg.h:2
 msgid "Fast Crop"
@@ -4947,7 +4947,7 @@ msgstr "Mostra o nascondi tutte le sottofinestre"
 
 #: ../src/actions/actions-edit-document.cpp:57
 #: ../src/actions/actions-edit-document.cpp:69
-#: ../src/selection-chemistry.cpp:4347
+#: ../src/selection-chemistry.cpp:4356
 msgid "Fit Page to Drawing"
 msgstr "Adatta pagina al disegno"
 
@@ -5021,35 +5021,35 @@ msgstr "Parametro successivo effetto su tracciato"
 msgid "Show next editable path effect parameter"
 msgstr "Mostra il successivo parametro modificabile dell'effetto su tracciato"
 
-#: ../src/actions/actions-edit.cpp:267
+#: ../src/actions/actions-edit.cpp:276
 msgid "Objects to Pattern"
 msgstr "Da oggetti a motivo"
 
-#: ../src/actions/actions-edit.cpp:267
+#: ../src/actions/actions-edit.cpp:276
 msgid "Convert selection to a rectangle with tiled pattern fill"
 msgstr "Converte la selezione in un rettangolo a motivo"
 
-#: ../src/actions/actions-edit.cpp:268
+#: ../src/actions/actions-edit.cpp:277
 msgid "Pattern to Objects"
 msgstr "Da motivo a oggetti"
 
-#: ../src/actions/actions-edit.cpp:268
+#: ../src/actions/actions-edit.cpp:277
 msgid "Extract objects from a tiled pattern fill"
 msgstr "Estrae un oggetto da un motivo"
 
-#: ../src/actions/actions-edit.cpp:269
+#: ../src/actions/actions-edit.cpp:278
 msgid "Objects to Marker"
 msgstr "Da oggetti a delimitatore"
 
-#: ../src/actions/actions-edit.cpp:269
+#: ../src/actions/actions-edit.cpp:278
 msgid "Convert selection to a line marker"
 msgstr "Converte la selezione in un delimitatore di tracciato"
 
-#: ../src/actions/actions-edit.cpp:270
+#: ../src/actions/actions-edit.cpp:279
 msgid "Objects to Guides"
 msgstr "Da oggetti a guide"
 
-#: ../src/actions/actions-edit.cpp:270
+#: ../src/actions/actions-edit.cpp:279
 msgid ""
 "Convert selected objects to a collection of guidelines aligned with their "
 "edges"
@@ -5057,73 +5057,73 @@ msgstr ""
 "Converte gli oggetti selezionati in un insieme di linee guida orientate "
 "secondo gli spigoli"
 
-#: ../src/actions/actions-edit.cpp:271 ../src/ui/toolbar/eraser-toolbar.cpp:70
+#: ../src/actions/actions-edit.cpp:280 ../src/ui/toolbar/eraser-toolbar.cpp:70
 msgid "Cut"
 msgstr "Taglia"
 
-#: ../src/actions/actions-edit.cpp:271
+#: ../src/actions/actions-edit.cpp:280
 msgid "Cut selection to clipboard"
 msgstr "Taglia la selezione e la sposta negli appunti"
 
-#: ../src/actions/actions-edit.cpp:272
+#: ../src/actions/actions-edit.cpp:281
 msgid "Copy"
 msgstr "Copia"
 
-#: ../src/actions/actions-edit.cpp:272
+#: ../src/actions/actions-edit.cpp:281
 msgid "Copy selection to clipboard"
 msgstr "Copia la selezione negli appunti"
 
-#: ../src/actions/actions-edit.cpp:273
+#: ../src/actions/actions-edit.cpp:282
 msgid "Paste Style"
 msgstr "Incolla Stile"
 
-#: ../src/actions/actions-edit.cpp:273
+#: ../src/actions/actions-edit.cpp:282
 msgid "Apply the style of the copied object to selection"
 msgstr "Applica alla selezione lo stile dell'oggetto copiato"
 
-#: ../src/actions/actions-edit.cpp:274
+#: ../src/actions/actions-edit.cpp:283
 msgid "Paste Size"
 msgstr "Incolla Dimensioni"
 
-#: ../src/actions/actions-edit.cpp:274
+#: ../src/actions/actions-edit.cpp:283
 msgid "Scale selection to match the size of the copied object"
 msgstr "Ridimensiona la selezione alla stessa dimensione dell'oggetto copiato"
 
-#: ../src/actions/actions-edit.cpp:275
+#: ../src/actions/actions-edit.cpp:284
 msgid "Paste Width"
 msgstr "Incolla Larghezza"
 
-#: ../src/actions/actions-edit.cpp:275
+#: ../src/actions/actions-edit.cpp:284
 msgid "Scale selection horizontally to match the width of the copied object"
 msgstr ""
 "Ridimensiona la selezione orizzontalmente per adattarsi alla larghezza "
 "dell'oggetto copiato"
 
-#: ../src/actions/actions-edit.cpp:276
+#: ../src/actions/actions-edit.cpp:285
 msgid "Paste Height"
 msgstr "Incolla Altezza"
 
-#: ../src/actions/actions-edit.cpp:276
+#: ../src/actions/actions-edit.cpp:285
 msgid "Scale selection vertically to match the height of the copied object"
 msgstr ""
 "Ridimensiona la selezione verticalmente per adattarsi all'altezza "
 "dell'oggetto copiato"
 
-#: ../src/actions/actions-edit.cpp:277 ../share/ui/menus.ui:174
+#: ../src/actions/actions-edit.cpp:286 ../share/ui/menus.ui:174
 msgid "Paste Size Separately"
 msgstr "Incolla dimensioni separatamente"
 
-#: ../src/actions/actions-edit.cpp:277
+#: ../src/actions/actions-edit.cpp:286
 msgid "Scale each selected object to match the size of the copied object"
 msgstr ""
 "Ridimensiona ogni oggetto selezionato alla dimensione dell'oggetto "
 "selezionato"
 
-#: ../src/actions/actions-edit.cpp:278 ../share/ui/menus.ui:179
+#: ../src/actions/actions-edit.cpp:287 ../share/ui/menus.ui:179
 msgid "Paste Width Separately"
 msgstr "Incolla larghezza separatamente"
 
-#: ../src/actions/actions-edit.cpp:278
+#: ../src/actions/actions-edit.cpp:287
 msgid ""
 "Scale each selected object horizontally to match the width of the copied "
 "object"
@@ -5131,11 +5131,11 @@ msgstr ""
 "Ridimensiona orizzontalmente ogni oggetto selezionato alla dimensione "
 "dell'oggetto copiato"
 
-#: ../src/actions/actions-edit.cpp:279 ../share/ui/menus.ui:184
+#: ../src/actions/actions-edit.cpp:288 ../share/ui/menus.ui:184
 msgid "Paste Height Separately"
 msgstr "Incolla altezza separatamente"
 
-#: ../src/actions/actions-edit.cpp:279
+#: ../src/actions/actions-edit.cpp:288
 msgid ""
 "Scale each selected object vertically to match the height of the copied "
 "object"
@@ -5143,29 +5143,29 @@ msgstr ""
 "Ridimensiona verticalmente ogni oggetto selezionato all'altezza dell'oggetto "
 "copiato"
 
-#: ../src/actions/actions-edit.cpp:280 ../src/filter-enums.cpp:95
+#: ../src/actions/actions-edit.cpp:289 ../src/filter-enums.cpp:95
 #: ../src/selection-chemistry.cpp:585
 msgid "Duplicate"
 msgstr "Duplica"
 
-#: ../src/actions/actions-edit.cpp:280
+#: ../src/actions/actions-edit.cpp:289
 msgid "Duplicate Selected Objects"
 msgstr "Duplica gli oggetti selezionati"
 
-#: ../src/actions/actions-edit.cpp:281
+#: ../src/actions/actions-edit.cpp:290
 msgid "Create Clone"
 msgstr "Crea Clone"
 
-#: ../src/actions/actions-edit.cpp:281
+#: ../src/actions/actions-edit.cpp:290
 msgid "Create a clone (a copy linked to the original) of selected object"
 msgstr ""
 "Crea un clone dell'oggetto selezionato (una copia collegata all'originale)"
 
-#: ../src/actions/actions-edit.cpp:282
+#: ../src/actions/actions-edit.cpp:291
 msgid "Unlink Clone"
 msgstr "Scollega Clone"
 
-#: ../src/actions/actions-edit.cpp:282
+#: ../src/actions/actions-edit.cpp:291
 msgid ""
 "Cut the selected clones' links to the originals, turning them into "
 "standalone objects"
@@ -5173,35 +5173,35 @@ msgstr ""
 "Rimuove i collegamenti tra i cloni e gli originali, trasformandoli in "
 "oggetti separati"
 
-#: ../src/actions/actions-edit.cpp:283
+#: ../src/actions/actions-edit.cpp:292
 msgid "Unlink Clones recursively"
 msgstr "Scollega Cloni ricorsivamente"
 
-#: ../src/actions/actions-edit.cpp:283
+#: ../src/actions/actions-edit.cpp:292
 msgid "Unlink all clones in the selection, even if they are in groups."
 msgstr "Scollega i cloni nella selezione, anche se sono in un gruppo"
 
-#: ../src/actions/actions-edit.cpp:284 ../share/ui/menus.ui:229
+#: ../src/actions/actions-edit.cpp:293 ../share/ui/menus.ui:229
 msgid "Relink to Copied"
 msgstr "Ricollega alla copia"
 
-#: ../src/actions/actions-edit.cpp:284
+#: ../src/actions/actions-edit.cpp:293
 msgid "Relink the selected clones to the object currently on the clipboard"
 msgstr "Ricollega i cloni selezionati con l'oggetto attualmente negli appunti"
 
-#: ../src/actions/actions-edit.cpp:285
+#: ../src/actions/actions-edit.cpp:294
 msgid "Select Original"
 msgstr "Seleziona Originale"
 
-#: ../src/actions/actions-edit.cpp:285
+#: ../src/actions/actions-edit.cpp:294
 msgid "Select the object to which the selected clone is linked"
 msgstr "Seleziona l'oggetto a cui il clone selezionato è collegato"
 
-#: ../src/actions/actions-edit.cpp:286 ../share/ui/menus.ui:239
+#: ../src/actions/actions-edit.cpp:295 ../share/ui/menus.ui:239
 msgid "Clone original path (LPE)"
 msgstr "Clona tracciato originale (LPE)"
 
-#: ../src/actions/actions-edit.cpp:286
+#: ../src/actions/actions-edit.cpp:295
 msgid ""
 "Creates a new path, applies the Clone original LPE, and refers it to the "
 "selected path"
@@ -5209,46 +5209,54 @@ msgstr ""
 "Crea un nuovo tracciato e applica Clona tracciato originale LPE, "
 "collegandolo al tracciato selezionato"
 
-#: ../src/actions/actions-edit.cpp:287 ../src/selection-chemistry.cpp:372
+#: ../src/actions/actions-edit.cpp:296 ../src/selection-chemistry.cpp:372
 #: ../src/ui/dialog/swatches.cpp:269 ../src/ui/toolbar/eraser-toolbar.cpp:65
 #: ../src/ui/tools/text-tool.cpp:971
 msgid "Delete"
 msgstr "Elimina"
 
-#: ../src/actions/actions-edit.cpp:287
+#: ../src/actions/actions-edit.cpp:296
 msgid "Delete selected items, nodes or text."
 msgstr "Elimina gli oggetti, i nodi o testo selezionati"
 
-#: ../src/actions/actions-edit.cpp:288
+#: ../src/actions/actions-edit.cpp:297
 msgid "Delete Items"
 msgstr "Elimina oggetti"
 
-#: ../src/actions/actions-edit.cpp:288
+#: ../src/actions/actions-edit.cpp:297
 msgid "Delete selected items"
 msgstr "Elimina oggetti selezionati"
 
-#: ../src/actions/actions-edit.cpp:289
+#: ../src/actions/actions-edit.cpp:298
 msgid "Paste Path Effect"
 msgstr "Incolla Effetto sul tracciato"
 
-#: ../src/actions/actions-edit.cpp:289
+#: ../src/actions/actions-edit.cpp:298
 msgid "Apply the path effect of the copied object to selection"
 msgstr "Applica alla selezione l'effetto su tracciato dell'oggetto copiato"
 
-#: ../src/actions/actions-edit.cpp:290
+#: ../src/actions/actions-edit.cpp:299
 msgid "Remove Path Effect"
 msgstr "Rimuovi Effetti sul tracciato"
 
-#: ../src/actions/actions-edit.cpp:290
+#: ../src/actions/actions-edit.cpp:299
 msgid "Remove any path effects from selected objects"
 msgstr "Rimuove tutti gli effetti su tracciato dagli oggetti selezionati"
 
-#: ../src/actions/actions-edit.cpp:291 ../src/selection-chemistry.cpp:4116
+#: ../src/actions/actions-edit.cpp:300 ../src/ui/widget/selected-style.cpp:278
+msgid "Swap fill and stroke"
+msgstr "Inverti riempimento e contorno"
+
+#: ../src/actions/actions-edit.cpp:300 ../src/selection-chemistry.cpp:4201
+msgid "Swap fill and stroke of an object"
+msgstr "Inverti riempimento e contorno di un oggetto"
+
+#: ../src/actions/actions-edit.cpp:301 ../src/selection-chemistry.cpp:4124
 #: ../share/ui/toolbar-page.ui:53
 msgid "Fit Page to Selection"
 msgstr "Adatta pagina alla selezione"
 
-#: ../src/actions/actions-edit.cpp:291
+#: ../src/actions/actions-edit.cpp:301
 msgid "Fit the page to the current selection"
 msgstr "Adatta la pagina alla selezione attuale"
 
@@ -5812,7 +5820,7 @@ msgstr "Sposta selezione al livello inferiore all'attuale"
 msgid "Move Selection to Layer..."
 msgstr "Sposta selezione al li_vello..."
 
-#: ../src/actions/actions-layer.cpp:468 ../src/selection-chemistry.cpp:1588
+#: ../src/actions/actions-layer.cpp:468 ../src/selection-chemistry.cpp:1594
 msgid "Move selection to layer"
 msgstr "Sposta selezione al livello"
 
@@ -5880,68 +5888,69 @@ msgstr "Esci dal Gruppo"
 msgid "Exit group"
 msgstr "Esci dal gruppo"
 
-#: ../src/actions/actions-node-align.cpp:95
+#: ../src/actions/actions-node-align.cpp:90
 msgid "Align nodes horizontally"
 msgstr "Allinea i nodi orizzontalmente"
 
-#: ../src/actions/actions-node-align.cpp:95
-msgid "Align selected nodes horizontally; usage [last|first|middle|min|max|pref]"
+#: ../src/actions/actions-node-align.cpp:90
+msgid ""
+"Align selected nodes horizontally; usage [last|first|middle|min|max|pref]"
 msgstr ""
 "Allinea i nodi selezionati orizzontalmente; utilizzo: [last|first|middle|min|"
 "max|pref]"
 
-#: ../src/actions/actions-node-align.cpp:96
+#: ../src/actions/actions-node-align.cpp:91
 msgid "Align nodes vertically"
 msgstr "Allinea i nodi verticalmente"
 
-#: ../src/actions/actions-node-align.cpp:96
+#: ../src/actions/actions-node-align.cpp:91
 msgid "Align selected nodes vertically; usage [last|first|middle|min|max|pref]"
 msgstr ""
 "Allinea i nodi selezionati verticalmente; utilizzo: [last|first|middle|min|"
 "max|pref]"
 
-#: ../src/actions/actions-node-align.cpp:97
+#: ../src/actions/actions-node-align.cpp:92
 msgid "Distribute nodes horizontally"
 msgstr "Distribuisci nodi orizzontalmente"
 
-#: ../src/actions/actions-node-align.cpp:97
+#: ../src/actions/actions-node-align.cpp:92
 msgid "Distribute selected nodes horizontally."
 msgstr "Distribuisce orizzontalmente i nodi selezionati"
 
-#: ../src/actions/actions-node-align.cpp:98
+#: ../src/actions/actions-node-align.cpp:93
 msgid "Distribute nodes vertically"
 msgstr "Distribuisce nodi verticalmente"
 
-#: ../src/actions/actions-node-align.cpp:98
+#: ../src/actions/actions-node-align.cpp:93
 msgid "Distribute selected nodes vertically."
 msgstr "Distribuisce verticalmente i nodi selezionati"
 
-#: ../src/actions/actions-node-align.cpp:105
-#: ../src/actions/actions-node-align.cpp:106
+#: ../src/actions/actions-node-align.cpp:100
+#: ../src/actions/actions-node-align.cpp:101
 msgid "Enter string for alignment anchor, one of: first/last/middle/min/max"
 msgstr ""
 "Inserisci stringa per il punto di riferimento dell'allineamento, una tra: "
 "first/last/middle/min/max"
 
-#: ../src/actions/actions-object-align.cpp:259
-#: ../src/actions/actions-object-align.cpp:552
+#: ../src/actions/actions-object-align.cpp:267
+#: ../src/actions/actions-object-align.cpp:565
 #: ../share/ui/align-and-distribute.ui:637
 msgid "Align"
 msgstr "Allineamento"
 
-#: ../src/actions/actions-object-align.cpp:379
-#: ../src/actions/actions-object-align.cpp:455
+#: ../src/actions/actions-object-align.cpp:387
+#: ../src/actions/actions-object-align.cpp:463
 #: ../share/ui/align-and-distribute.ui:836
 msgid "Distribute"
 msgstr "Distribuzione"
 
-#: ../src/actions/actions-object-align.cpp:713
+#: ../src/actions/actions-object-align.cpp:726
 #: ../share/ui/align-and-distribute.ui:971
 msgid "Rearrange"
 msgstr "Riordina"
 
-#: ../src/actions/actions-object-align.cpp:748
-#: ../src/actions/actions-object-align.cpp:790
+#: ../src/actions/actions-object-align.cpp:761
+#: ../src/actions/actions-object-align.cpp:803
 #: ../src/ui/toolbar/connector-toolbar.cpp:153
 #: ../share/ui/align-and-distribute.ui:1080
 msgid "Remove overlaps"
@@ -5949,90 +5958,91 @@ msgstr "Rimuovi sovrapposizione"
 
 #
 # File: ../src/ui/dialog/align-and-distribute.cpp, line: 1107
-#: ../src/actions/actions-object-align.cpp:755
+#: ../src/actions/actions-object-align.cpp:768
 msgid "Enable on-canvas alignment"
 msgstr "Abilita allineamento sull'area di lavoro"
 
 #
 # File: ../src/ui/dialog/align-and-distribute.cpp, line: 1107
-#: ../src/actions/actions-object-align.cpp:755
+#: ../src/actions/actions-object-align.cpp:768
 msgid "Enable on-canvas alignment handles."
 msgstr "Abilita maniglie di allineamento sull'area di lavoro"
 
-#: ../src/actions/actions-object-align.cpp:757
+#: ../src/actions/actions-object-align.cpp:770
 msgid "Align objects"
 msgstr "Allinea oggetti"
 
-#: ../src/actions/actions-object-align.cpp:757
+#: ../src/actions/actions-object-align.cpp:770
 msgid ""
 "Align selected objects; usage: [[left|hcenter|right] || [top|vcenter|"
-"bottom]] [last|first|biggest|smallest|page|drawing|selection|pref]? group? anchor?"
+"bottom]] [last|first|biggest|smallest|page|drawing|selection|pref]? group? "
+"anchor?"
 msgstr ""
 "Allinea gli oggetti selezionati; utilizzo: [[left|hcenter|right] || [top|"
 "vcenter|bottom]] [last|first|biggest|smallest|page|drawing|selection|pref]? "
 "group? anchor?"
 
-#: ../src/actions/actions-object-align.cpp:759
-msgid "Align to selection's left edge"
-msgstr "Allinea al margine sinistro della selezione"
+#: ../src/actions/actions-object-align.cpp:772
+msgid "Align to left edge"
+msgstr "Allinea al margine sinistro"
 
-#: ../src/actions/actions-object-align.cpp:759
-msgid "Align selection horizontally to selection's left edge."
-msgstr "Allinea selezione orizzontalmente al margine sinistro della selezione"
+#: ../src/actions/actions-object-align.cpp:772
+msgid "Align selection horizontally to left edge."
+msgstr "Allinea selezione orizzontalmente al margine sinistro"
 
-#: ../src/actions/actions-object-align.cpp:760
-msgid "Align to selection's horizontal center"
-msgstr "Allinea al centro orizzontale della selezione"
+#: ../src/actions/actions-object-align.cpp:773
+msgid "Align to horizontal center"
+msgstr "Allinea al centro orizzontale"
 
-#: ../src/actions/actions-object-align.cpp:760
-msgid "Align selection horizontally to the selection's center."
-msgstr "Allinea selezione orizzontalmente al centro della selezione"
+#: ../src/actions/actions-object-align.cpp:773
+msgid "Align selection horizontally to the center."
+msgstr "Allinea selezione orizzontalmente al centro"
 
-#: ../src/actions/actions-object-align.cpp:761
-msgid "Align to selection's right edge"
-msgstr "Allinea al margine destro della selezione"
+#: ../src/actions/actions-object-align.cpp:774
+msgid "Align to right edge"
+msgstr "Allinea al margine destro"
 
-#: ../src/actions/actions-object-align.cpp:761
-msgid "Align selection horizontally to selection's right edge."
-msgstr "Allinea selezione orizzontalmente al margine destro della selezione"
+#: ../src/actions/actions-object-align.cpp:774
+msgid "Align selection horizontally to right edge."
+msgstr "Allinea selezione orizzontalmente al margine destro"
 
-#: ../src/actions/actions-object-align.cpp:762
-msgid "Align to selection's top edge"
-msgstr "Allinea al margine superiore della selezione"
+#: ../src/actions/actions-object-align.cpp:775
+msgid "Align to top edge"
+msgstr "Allinea al margine superiore"
 
-#: ../src/actions/actions-object-align.cpp:762
-msgid "Align selection vertically to selection's top edge."
-msgstr "Allinea selezione verticalmente al margine superiore della selezione"
+#: ../src/actions/actions-object-align.cpp:775
+msgid "Align selection vertically to top edge."
+msgstr "Allinea selezione verticalmente al margine superiore"
 
-#: ../src/actions/actions-object-align.cpp:763
-msgid "Align to selection's bottom edge"
-msgstr "Allinea al margine inferiore della selezione"
+#: ../src/actions/actions-object-align.cpp:776
+msgid "Align to bottom edge"
+msgstr "Allinea al margine inferiore"
 
-#: ../src/actions/actions-object-align.cpp:763
-msgid "Align selection vertically to selection's bottom edge."
-msgstr "Allinea selezione verticalmente al margine inferiore della selezione"
+#: ../src/actions/actions-object-align.cpp:776
+msgid "Align selection vertically to bottom edge."
+msgstr "Allinea selezione verticalmente al margine inferiore"
 
-#: ../src/actions/actions-object-align.cpp:764
-msgid "Align to selection's vertical center"
-msgstr "Allinea al centro verticale della selezione"
+#: ../src/actions/actions-object-align.cpp:777
+msgid "Align to vertical center"
+msgstr "Allinea al centro verticale"
 
-#: ../src/actions/actions-object-align.cpp:764
-msgid "Align selection vertically to the selection's center."
-msgstr "Allinea selezione verticalmente al centro della selezione"
+#: ../src/actions/actions-object-align.cpp:777
+msgid "Align selection vertically to the center."
+msgstr "Allinea selezione verticalmente al centro"
 
-#: ../src/actions/actions-object-align.cpp:765
-msgid "Align to selection's center"
-msgstr "Allinea al centro della selezione"
+#: ../src/actions/actions-object-align.cpp:778
+msgid "Align to center"
+msgstr "Allinea al centro"
 
-#: ../src/actions/actions-object-align.cpp:765
-msgid "Align selection to the selection's center."
-msgstr "Allinea selezione al centro della selezione"
+#: ../src/actions/actions-object-align.cpp:778
+msgid "Align selection to the center."
+msgstr "Allinea selezione al centro"
 
-#: ../src/actions/actions-object-align.cpp:766
+#: ../src/actions/actions-object-align.cpp:779
 msgid "Align text objects"
 msgstr "Allinea oggetti di testo"
 
-#: ../src/actions/actions-object-align.cpp:766
+#: ../src/actions/actions-object-align.cpp:779
 msgid ""
 "Align selected text alignment points; usage: [[vertical | horizontal] [last|"
 "first|biggest|smallest|page|drawing|selection]?"
@@ -6040,11 +6050,11 @@ msgstr ""
 "Allinea gli oggetti di testo selezionati; utilizzo: [ [vertical | "
 "horizontal] [last|first|biggest|smallest|page|drawing|selection]?"
 
-#: ../src/actions/actions-object-align.cpp:768
+#: ../src/actions/actions-object-align.cpp:781
 msgid "Distribute objects"
 msgstr "Distribuisci oggetti"
 
-#: ../src/actions/actions-object-align.cpp:768
+#: ../src/actions/actions-object-align.cpp:781
 msgid ""
 "Distribute selected objects; usage: [hgap | left | hcenter | right | vgap | "
 "top | vcenter | bottom]"
@@ -6052,109 +6062,109 @@ msgstr ""
 "Distribuisce gli oggetti selezionati; utilizzo: [hgap | left | hcenter | "
 "right | vgap | top | vcenter | bottom]"
 
-#: ../src/actions/actions-object-align.cpp:769
+#: ../src/actions/actions-object-align.cpp:782
 msgid "Even horizontal gaps"
 msgstr "Spaziamento omogeneo interstizi orizzontali"
 
-#: ../src/actions/actions-object-align.cpp:769
+#: ../src/actions/actions-object-align.cpp:782
 msgid "Distribute horizontally with even horizontal gaps."
 msgstr "Distribuzione orizzontale con spaziatura omogenea degli interstizi"
 
-#: ../src/actions/actions-object-align.cpp:770
+#: ../src/actions/actions-object-align.cpp:783
 msgid "Even left edges"
 msgstr "Spaziamento omogeneo margini sinistri"
 
-#: ../src/actions/actions-object-align.cpp:770
+#: ../src/actions/actions-object-align.cpp:783
 msgid "Distribute horizontally with even spacing between left edges."
 msgstr ""
 "Distribuzione orizzontale con spaziatura omogenea dei margini sinistri degli "
 "oggetti"
 
-#: ../src/actions/actions-object-align.cpp:771
+#: ../src/actions/actions-object-align.cpp:784
 msgid "Even horizontal centers"
 msgstr "Spaziamento omogeneo orizzontale centri"
 
-#: ../src/actions/actions-object-align.cpp:771
+#: ../src/actions/actions-object-align.cpp:784
 msgid "Distribute horizontally with even spacing between centers."
 msgstr ""
 "Distribuzione orizzontale con spaziatura omogenea dei centri degli oggetti"
 
-#: ../src/actions/actions-object-align.cpp:772
+#: ../src/actions/actions-object-align.cpp:785
 msgid "Even right edges"
 msgstr "Spaziamento omogeneo margini destri"
 
-#: ../src/actions/actions-object-align.cpp:772
+#: ../src/actions/actions-object-align.cpp:785
 msgid "Distribute horizontally with even spacing between right edges."
 msgstr ""
 "Distribuzione orizzontale con spaziatura omogenea dei margini destri degli "
 "oggetti"
 
-#: ../src/actions/actions-object-align.cpp:773
+#: ../src/actions/actions-object-align.cpp:786
 msgid "Even vertical gaps"
 msgstr "Spaziamento omogeneo interstizi verticali"
 
-#: ../src/actions/actions-object-align.cpp:773
+#: ../src/actions/actions-object-align.cpp:786
 msgid "Distribute vertically with even vertical gaps."
 msgstr "Distribuzione verticale con spaziatura omogenea degli interstizi"
 
-#: ../src/actions/actions-object-align.cpp:774
+#: ../src/actions/actions-object-align.cpp:787
 msgid "Even top edges"
 msgstr "Spaziamento omogeneo margini superiori"
 
-#: ../src/actions/actions-object-align.cpp:774
+#: ../src/actions/actions-object-align.cpp:787
 msgid "Distribute vertically with even spacing between top edges."
 msgstr ""
 "Distribuzione verticale con spaziatura omogenea dei margini superiori degli "
 "oggetti"
 
-#: ../src/actions/actions-object-align.cpp:775
+#: ../src/actions/actions-object-align.cpp:788
 msgid "Even vertical centers"
 msgstr "Spaziamento omogeneo verticale centri"
 
-#: ../src/actions/actions-object-align.cpp:775
+#: ../src/actions/actions-object-align.cpp:788
 msgid "Distribute vertically with even spacing between centers."
 msgstr ""
 "Distribuzione verticale con spaziatura omogenea dei centri degli oggetti"
 
-#: ../src/actions/actions-object-align.cpp:776
+#: ../src/actions/actions-object-align.cpp:789
 msgid "Even bottom edges"
 msgstr "Spaziamento omogeneo margini inferiori"
 
-#: ../src/actions/actions-object-align.cpp:776
+#: ../src/actions/actions-object-align.cpp:789
 msgid "Distribute vertically with even spacing between bottom edges."
 msgstr ""
 "Distribuzione verticale con spaziatura omogenea dei margini inferiori degli "
 "oggetti"
 
-#: ../src/actions/actions-object-align.cpp:778
-#: ../src/actions/actions-object-align.cpp:779
-#: ../src/actions/actions-object-align.cpp:780
+#: ../src/actions/actions-object-align.cpp:791
+#: ../src/actions/actions-object-align.cpp:792
+#: ../src/actions/actions-object-align.cpp:793
 msgid "Distribute text objects"
 msgstr "Distribuisci oggetti di testo"
 
-#: ../src/actions/actions-object-align.cpp:778
+#: ../src/actions/actions-object-align.cpp:791
 msgid "Distribute text alignment points; usage [vertical | horizontal]"
 msgstr ""
 "Distribuisce oggetti di testo (usando le ancore come riferimento); utilizzo: "
 "[vertical | horizontal]"
 
-#: ../src/actions/actions-object-align.cpp:779
+#: ../src/actions/actions-object-align.cpp:792
 msgid "Distribute text alignment points horizontally"
 msgstr ""
 "Distribuisce oggetti di testo orizzontalmente (usando le ancore come "
 "riferimento)"
 
-#: ../src/actions/actions-object-align.cpp:780
+#: ../src/actions/actions-object-align.cpp:793
 msgid "Distribute text alignment points vertically"
 msgstr ""
 "Distribuisce oggetti di testo verticalmete (usando le ancore come "
 "riferimento)"
 
-#: ../src/actions/actions-object-align.cpp:782
+#: ../src/actions/actions-object-align.cpp:795
 msgid "Rearrange objects"
 msgstr "Riordina oggetti"
 
-#: ../src/actions/actions-object-align.cpp:782
+#: ../src/actions/actions-object-align.cpp:795
 msgid ""
 "Rearrange selected objects; usage: [graph | exchange | exchangez | rotate | "
 "randomize | unclump]"
@@ -6162,58 +6172,58 @@ msgstr ""
 "Riordina gli oggetti selezionati; utilizzo: [graph | exchange | exchangez | "
 "rotate | randomize | unclump]"
 
-#: ../src/actions/actions-object-align.cpp:783
+#: ../src/actions/actions-object-align.cpp:796
 msgid "Rearrange as graph"
 msgstr "Riordina come grafico"
 
-#: ../src/actions/actions-object-align.cpp:783
+#: ../src/actions/actions-object-align.cpp:796
 msgid "Nicely arrange selected connector network."
 msgstr "Riordina per abbellire la rete di connettori selezionati"
 
-#: ../src/actions/actions-object-align.cpp:784
+#: ../src/actions/actions-object-align.cpp:797
 msgid "Exchange in selection order"
 msgstr "Scambia in ordine di selezione"
 
-#: ../src/actions/actions-object-align.cpp:784
+#: ../src/actions/actions-object-align.cpp:797
 msgid "Exchange positions of selected objects - selection order."
 msgstr "Scambia le posizioni degli oggetti selezionati - ordine di selezione"
 
-#: ../src/actions/actions-object-align.cpp:785
+#: ../src/actions/actions-object-align.cpp:798
 msgid "Exchange in z-order"
 msgstr "Scambia in ordine-z"
 
-#: ../src/actions/actions-object-align.cpp:785
+#: ../src/actions/actions-object-align.cpp:798
 msgid "Exchange positions of selected objects - stacking order."
 msgstr "Scambia le posizioni degli oggetti selezionati - ordine di impilamento"
 
-#: ../src/actions/actions-object-align.cpp:786
+#: ../src/actions/actions-object-align.cpp:799
 msgid "Exchange around center"
 msgstr "Scambia attorno al centro"
 
-#: ../src/actions/actions-object-align.cpp:786
+#: ../src/actions/actions-object-align.cpp:799
 msgid "Exchange positions of selected objects - rotate around center point."
 msgstr ""
 "Scambia le posizioni degli oggetti selezionati - rotazione attorno al punto "
 "centrale"
 
-#: ../src/actions/actions-object-align.cpp:787
+#: ../src/actions/actions-object-align.cpp:800
 msgid "Random exchange"
 msgstr "Scambio casuale"
 
-#: ../src/actions/actions-object-align.cpp:787
+#: ../src/actions/actions-object-align.cpp:800
 msgid "Randomize centers in both dimensions."
 msgstr "Rende casuali le posizioni centrali su entrambe le dimensioni"
 
-#: ../src/actions/actions-object-align.cpp:788
+#: ../src/actions/actions-object-align.cpp:801
 msgid "Unclump"
 msgstr "Sparpaglia"
 
-#: ../src/actions/actions-object-align.cpp:788
+#: ../src/actions/actions-object-align.cpp:801
 msgid "Unclump objects: try to equalize edge-to-edge distances."
 msgstr ""
 "Sparpaglia oggetti: prova a rendere più uguali gli interstizi tra gli oggetti"
 
-#: ../src/actions/actions-object-align.cpp:790
+#: ../src/actions/actions-object-align.cpp:803
 msgid ""
 "Remove overlaps between objects: requires two comma separated numbers "
 "(horizontal and vertical gaps)."
@@ -6221,17 +6231,17 @@ msgstr ""
 "Rimuovi sovrapposizione degli oggetti: ha bisogno di 2 numeri separati da "
 "una virgola"
 
-#: ../src/actions/actions-object-align.cpp:797
+#: ../src/actions/actions-object-align.cpp:810
 msgid ""
 "Enter anchor<space>alignment<space>optional second alignment. Possible "
-"anchors: last, first, biggest, smallest, page, drawing, selection, pref; possible "
-"alignments: left, hcenter, right, top, vcenter, bottom."
+"anchors: last, first, biggest, smallest, page, drawing, selection, pref; "
+"possible alignments: left, hcenter, right, top, vcenter, bottom."
 msgstr ""
 "Inserisci ancora di <space>allineamento<space> secondo argomento opzionale. "
-"Ancore possibili: last, first, biggest, smallest, page, drawing, selection, pref; "
-"Allineamenti possibili: left, hcenter, right, top, vcenter, bottom."
+"Ancore possibili: last, first, biggest, smallest, page, drawing, selection, "
+"pref; Allineamenti possibili: left, hcenter, right, top, vcenter, bottom."
 
-#: ../src/actions/actions-object-align.cpp:798
+#: ../src/actions/actions-object-align.cpp:811
 msgid ""
 "Enter distribution type. Possible values: left, hcenter, right, top, "
 "vcenter, bottom, hgap, vgap."
@@ -6239,7 +6249,7 @@ msgstr ""
 "Inserisci il tipo di distribuzione. Valori possibili: left, hcenter, right, "
 "top, vcenter, bottom, hgap, vgap"
 
-#: ../src/actions/actions-object-align.cpp:799
+#: ../src/actions/actions-object-align.cpp:812
 msgid ""
 "Enter arrange method. Possible values: graph, exchange, exchangez, rotate, "
 "randomize, unclump."
@@ -6249,7 +6259,7 @@ msgstr ""
 
 #
 # File: ../share/extensions/nicechart.inx, line: 45
-#: ../src/actions/actions-object-align.cpp:800
+#: ../src/actions/actions-object-align.cpp:813
 msgid "Enter two comma-separated numbers: horizontal,vertical"
 msgstr "Inserisci due numeri separati da una virgola: orizzontale,verticale"
 
@@ -6257,7 +6267,7 @@ msgstr "Inserisci due numeri separati da una virgola: orizzontale,verticale"
 msgid "Set Inverse Clip(LPE)"
 msgstr "Imposta fissaggio inverso (LPE)"
 
-#: ../src/actions/actions-object.cpp:132 ../src/selection-chemistry.cpp:4091
+#: ../src/actions/actions-object.cpp:132 ../src/selection-chemistry.cpp:4099
 msgid "Release clipping path"
 msgstr "Rimuovi fissaggio"
 
@@ -6265,7 +6275,7 @@ msgstr "Rimuovi fissaggio"
 msgid "Set Inverse Mask (LPE)"
 msgstr "Imposta maschera invertita (LPE)"
 
-#: ../src/actions/actions-object.cpp:172 ../src/selection-chemistry.cpp:4093
+#: ../src/actions/actions-object.cpp:172 ../src/selection-chemistry.cpp:4101
 msgid "Release mask"
 msgstr "Rimuovi maschera"
 
@@ -6976,7 +6986,7 @@ msgid "Group selected objects"
 msgstr "Raggruppa gli oggetti selezionati"
 
 #: ../src/actions/actions-selection-object.cpp:154
-#: ../src/object/sp-item-group.cpp:739 ../src/selection-chemistry.cpp:932
+#: ../src/object/sp-item-group.cpp:751 ../src/selection-chemistry.cpp:932
 msgid "Ungroup"
 msgstr "Dividi"
 
@@ -7319,7 +7329,7 @@ msgstr "Rimuovi trasformazioni"
 msgid "Remove all manual kerns and glyph rotations from a text object"
 msgstr "Rimuove tutte le trasformazioni e rotazioni da un oggetto testuale"
 
-#: ../src/actions/actions-tools.cpp:80
+#: ../src/actions/actions-tools.cpp:92
 msgid ""
 "<b>Click</b> to Select and Transform objects, <b>Drag</b> to select many "
 "objects."
@@ -7327,11 +7337,11 @@ msgstr ""
 "<b>Fai clic</b> per selezionare e trasformare gli oggetti, <b>Trascina</b> "
 "per selezionare più oggetti."
 
-#: ../src/actions/actions-tools.cpp:81
+#: ../src/actions/actions-tools.cpp:93
 msgid "Modify selected path points (nodes) directly."
 msgstr "Modifica direttamente i nodi selezionati del tracciato"
 
-#: ../src/actions/actions-tools.cpp:82
+#: ../src/actions/actions-tools.cpp:94
 msgid ""
 "<b>Drag</b> to create a rectangle. <b>Drag controls</b> to round corners and "
 "resize. <b>Click</b> to select."
@@ -7339,7 +7349,7 @@ msgstr ""
 "<b>Trascina</b> per creare un rettangolo. <b>Trascina i controlli</b> per "
 "arrotondare gli angoli e ridimensionare. <b>Fai clic</b> per selezionare."
 
-#: ../src/actions/actions-tools.cpp:83
+#: ../src/actions/actions-tools.cpp:95
 msgid ""
 "<b>Drag</b> to create an ellipse. <b>Drag controls</b> to make an arc or "
 "segment. <b>Click</b> to select."
@@ -7347,7 +7357,7 @@ msgstr ""
 "<b>Trascina</b> per creare un'ellisse. <b>Trascina i controlli</b> per farne "
 "un arco o un segmento. <b>Fai clic</b> per selezionare."
 
-#: ../src/actions/actions-tools.cpp:84
+#: ../src/actions/actions-tools.cpp:96
 msgid ""
 "<b>Drag</b> to create a star. <b>Drag controls</b> to edit the star shape. "
 "<b>Click</b> to select."
@@ -7355,7 +7365,7 @@ msgstr ""
 "<b>Trascina</b> per creare una stella. <b>Trascina i controlli</b> per "
 "modificarne la forma. <b>Fai clic</b> per selezionare."
 
-#: ../src/actions/actions-tools.cpp:85
+#: ../src/actions/actions-tools.cpp:97
 msgid ""
 "<b>Drag</b> to create a 3D box. <b>Drag controls</b> to resize in "
 "perspective. <b>Click</b> to select (with <b>Ctrl+Alt</b> for single faces)."
@@ -7364,7 +7374,7 @@ msgstr ""
 "ridimensionarlo in prospettiva. <b>Fai clic</b> per selezionare (con <b>Ctrl"
 "+Alt</b> per le singole facce)."
 
-#: ../src/actions/actions-tools.cpp:86
+#: ../src/actions/actions-tools.cpp:98
 msgid ""
 "<b>Drag</b> to create a spiral. <b>Drag controls</b> to edit the spiral "
 "shape. <b>Click</b> to select."
@@ -7372,7 +7382,7 @@ msgstr ""
 "<b>Trascina</b> per creare una spirale. <b>Trascina i controlli</b> per "
 "modificarne la forma. <b>Fai clic</b> per selezionare."
 
-#: ../src/actions/actions-tools.cpp:87
+#: ../src/actions/actions-tools.cpp:99
 msgid ""
 "<b>Click</b> a shape to start editing its markers. <b>Drag controls</b> to "
 "change orientation, scale, and position."
@@ -7381,7 +7391,7 @@ msgstr ""
 "<b>Trascina i controlli</b> per cambiare orientazione, dimensioni, e "
 "posizione."
 
-#: ../src/actions/actions-tools.cpp:88
+#: ../src/actions/actions-tools.cpp:100
 msgid ""
 "<b>Drag</b> to create a freehand line. <b>Shift</b> appends to selected "
 "path, <b>Alt</b> activates sketch mode."
@@ -7390,7 +7400,7 @@ msgstr ""
 "aggiungere al tracciato selezionato, <b>Alt</b> per attivare la modalità a "
 "mano libera."
 
-#: ../src/actions/actions-tools.cpp:89
+#: ../src/actions/actions-tools.cpp:101
 msgid ""
 "<b>Click</b> or <b>click and drag</b> to start a path; with <b>Shift</b> to "
 "append to selected path. <b>Ctrl+click</b> to create single dots (straight "
@@ -7400,7 +7410,7 @@ msgstr ""
 "<b>Maiusc</b> per accodare al percorso selezionato. <b>Ctrl+Clic</b> per "
 "creare punti singoli (solo in modalità linea semplice)."
 
-#: ../src/actions/actions-tools.cpp:90
+#: ../src/actions/actions-tools.cpp:102
 msgid ""
 "<b>Drag</b> to draw a calligraphic stroke; with <b>Ctrl</b> to track a guide "
 "path. <b>Arrow keys</b> adjust width (left/right) and angle (up/down)."
@@ -7409,7 +7419,7 @@ msgstr ""
 "ricalcare un tracciato guida. Le <b>frecce</b> modificano la larghezza "
 "(sinistra/destra) o l'angolo (su/giù)."
 
-#: ../src/actions/actions-tools.cpp:91 ../src/ui/tools/text-tool.cpp:1794
+#: ../src/actions/actions-tools.cpp:103 ../src/ui/tools/text-tool.cpp:1794
 msgid ""
 "<b>Click</b> to select or create text, <b>drag</b> to create flowed text; "
 "then type."
@@ -7417,7 +7427,7 @@ msgstr ""
 "<b>Fai clic</b> per selezionare o creare un testo, <b>trascina</b> per "
 "creare un testo sagomato; quindi scrivere."
 
-#: ../src/actions/actions-tools.cpp:92
+#: ../src/actions/actions-tools.cpp:104
 msgid ""
 "<b>Drag</b> or <b>double click</b> to create a gradient on selected objects, "
 "<b>drag handles</b> to adjust gradients."
@@ -7425,7 +7435,7 @@ msgstr ""
 "<b>Trascina</b> o <b>doppio Clic</b> per creare un gradiente sull'oggetto "
 "selezionato; <b>trascina le maniglie</b> per modificare il gradiente"
 
-#: ../src/actions/actions-tools.cpp:93
+#: ../src/actions/actions-tools.cpp:105
 msgid ""
 "<b>Drag</b> or <b>double click</b> to create a mesh on selected objects, "
 "<b>drag handles</b> to adjust meshes."
@@ -7434,7 +7444,7 @@ msgstr ""
 "sull'oggetto selezionato, <b>trascina le maniglie</b> per modificare il "
 "gradiente"
 
-#: ../src/actions/actions-tools.cpp:94
+#: ../src/actions/actions-tools.cpp:106
 msgid ""
 "<b>Click</b> or <b>drag around an area</b> to zoom in, <b>Shift+click</b> to "
 "zoom out."
@@ -7442,11 +7452,11 @@ msgstr ""
 "<b>Fai clic</b> o <b>seleziona una zona</b> per ingrandire, <b>Maiusc+Clic</"
 "b> per rimpicciolire"
 
-#: ../src/actions/actions-tools.cpp:95
+#: ../src/actions/actions-tools.cpp:107
 msgid "<b>Drag</b> to measure the dimensions of objects."
 msgstr "<b>Trascina</b> per misurare le dimensioni degli oggetti"
 
-#: ../src/actions/actions-tools.cpp:96 ../src/ui/tools/dropper-tool.cpp:361
+#: ../src/actions/actions-tools.cpp:108 ../src/ui/tools/dropper-tool.cpp:361
 msgid ""
 "<b>Click</b> to set fill, <b>Shift+click</b> to set stroke; <b>drag</b> to "
 "average color in area; with <b>Alt</b> to pick inverse color; <b>Ctrl+C</b> "
@@ -7457,13 +7467,13 @@ msgstr ""
 "colore medio di un'area; <b>Alt</b> per prelevare il colore inverso; <b>Ctrl"
 "+C</b> per copiare negli appunti il colore sotto al mouse"
 
-#: ../src/actions/actions-tools.cpp:97
+#: ../src/actions/actions-tools.cpp:109
 msgid "To tweak a path by pushing, select it and drag over it."
 msgstr ""
 "Per ritoccare un tracciato tramite distorsione, selezionarlo e rimodellarlo "
 "trascinando"
 
-#: ../src/actions/actions-tools.cpp:98
+#: ../src/actions/actions-tools.cpp:110
 msgid ""
 "<b>Drag</b>, <b>click</b> or <b>click and scroll</b> to spray the selected "
 "objects."
@@ -7471,11 +7481,11 @@ msgstr ""
 "<b>Trascina</b>, <b>fai clic</b>, <b>fai clic e scorri</b> per spruzzare gli "
 "oggetti selezionati"
 
-#: ../src/actions/actions-tools.cpp:99
+#: ../src/actions/actions-tools.cpp:111
 msgid "<b>Click and drag</b> between shapes to create a connector."
 msgstr "<b>Fai clic e trascina</b> tra le forme per creare un connettore"
 
-#: ../src/actions/actions-tools.cpp:100
+#: ../src/actions/actions-tools.cpp:112
 msgid ""
 "<b>Click</b> to paint a bounded area, <b>Shift+click</b> to union the new "
 "fill with the current selection, <b>Ctrl+click</b> to change the clicked "
@@ -7485,216 +7495,216 @@ msgstr ""
 "unire il nuovo riempimento alla selezione attuale, <b>Ctrl+Clic</b> per "
 "applicare al riempimento e al contorno dell'oggetto le impostazioni attuali"
 
-#: ../src/actions/actions-tools.cpp:101
+#: ../src/actions/actions-tools.cpp:113
 msgid "<b>Drag</b> to erase."
 msgstr "<b>Trascina</b> per cancellare"
 
-#: ../src/actions/actions-tools.cpp:102
+#: ../src/actions/actions-tools.cpp:114
 msgid "Choose a subtool from the toolbar"
 msgstr "Seleziona una sottobarra dalla barra degli strumenti"
 
-#: ../src/actions/actions-tools.cpp:103
+#: ../src/actions/actions-tools.cpp:115
 msgid "Create and manage pages."
 msgstr "Crea e gestisci pagine"
 
-#: ../src/actions/actions-tools.cpp:368
+#: ../src/actions/actions-tools.cpp:351
 msgid "Select Tool"
 msgstr "Strumento Seleziona tutto"
 
-#: ../src/actions/actions-tools.cpp:368
+#: ../src/actions/actions-tools.cpp:351
 msgid "Select and transform objects"
 msgstr "Seleziona e trasforma oggetti"
 
-#: ../src/actions/actions-tools.cpp:369
+#: ../src/actions/actions-tools.cpp:352
 msgid "Node Tool"
 msgstr "Strumento Nodo"
 
-#: ../src/actions/actions-tools.cpp:369
+#: ../src/actions/actions-tools.cpp:352
 msgid "Edit paths by nodes"
 msgstr "Modifica tracciati dai nodi"
 
-#: ../src/actions/actions-tools.cpp:371
+#: ../src/actions/actions-tools.cpp:354
 msgid "Rectangle Tool"
 msgstr "Strumento Rettangolo"
 
-#: ../src/actions/actions-tools.cpp:371
+#: ../src/actions/actions-tools.cpp:354
 msgid "Create rectangles and squares"
 msgstr "Crea rettangoli e quadrati"
 
-#: ../src/actions/actions-tools.cpp:372
+#: ../src/actions/actions-tools.cpp:355
 msgid "Ellipse/Arc Tool"
 msgstr "Strumento Ellisse/Arco"
 
-#: ../src/actions/actions-tools.cpp:372
+#: ../src/actions/actions-tools.cpp:355
 msgid "Create circles, ellipses and arcs"
 msgstr "Crea cerchi, ellissi e archi"
 
-#: ../src/actions/actions-tools.cpp:373
+#: ../src/actions/actions-tools.cpp:356
 msgid "Star/Polygon Tool"
 msgstr "Strumento Stella/Poligono"
 
-#: ../src/actions/actions-tools.cpp:373
+#: ../src/actions/actions-tools.cpp:356
 msgid "Create stars and polygons"
 msgstr "Crea stelle e poligoni"
 
-#: ../src/actions/actions-tools.cpp:374
+#: ../src/actions/actions-tools.cpp:357
 msgid "3D Box Tool"
 msgstr "Strumento Solido 3D"
 
-#: ../src/actions/actions-tools.cpp:374
+#: ../src/actions/actions-tools.cpp:357
 msgid "Create 3D Boxes"
 msgstr "Crea solidi 3D"
 
-#: ../src/actions/actions-tools.cpp:375
+#: ../src/actions/actions-tools.cpp:358
 msgid "Spiral Tool"
 msgstr "Strumento Spirale"
 
-#: ../src/actions/actions-tools.cpp:375
+#: ../src/actions/actions-tools.cpp:358
 msgid "Create spirals"
 msgstr "Crea spirali"
 
-#: ../src/actions/actions-tools.cpp:376
+#: ../src/actions/actions-tools.cpp:359
 msgid "Marker Tool"
 msgstr "Strumento Delimitatore"
 
-#: ../src/actions/actions-tools.cpp:376
+#: ../src/actions/actions-tools.cpp:359
 msgid "Edit markers"
 msgstr "Modifica delimitatori"
 
-#: ../src/actions/actions-tools.cpp:378
+#: ../src/actions/actions-tools.cpp:361
 msgid "Pen Tool"
 msgstr "Strumento Penna"
 
-#: ../src/actions/actions-tools.cpp:378
+#: ../src/actions/actions-tools.cpp:361
 msgid "Draw Bezier curves and straight lines"
 msgstr "Disegna tracciati e linee dritte"
 
-#: ../src/actions/actions-tools.cpp:379
+#: ../src/actions/actions-tools.cpp:362
 msgid "Pencil Tool"
 msgstr "Strumento Matita"
 
-#: ../src/actions/actions-tools.cpp:379
+#: ../src/actions/actions-tools.cpp:362
 msgid "Draw freehand lines"
 msgstr "Disegna linee a mano libera"
 
-#: ../src/actions/actions-tools.cpp:380
+#: ../src/actions/actions-tools.cpp:363
 msgid "Calligraphy Tool"
 msgstr "Strumento Pennino"
 
-#: ../src/actions/actions-tools.cpp:380
+#: ../src/actions/actions-tools.cpp:363
 msgid "Draw calligraphic or brush strokes"
 msgstr "Crea linee calligrafiche o pennellate"
 
-#: ../src/actions/actions-tools.cpp:381
+#: ../src/actions/actions-tools.cpp:364
 msgid "Text Tool"
 msgstr "Strumento Testo"
 
-#: ../src/actions/actions-tools.cpp:381
+#: ../src/actions/actions-tools.cpp:364
 msgid "Create and edit text objects"
 msgstr "Crea e modifica gli oggetti testuali"
 
-#: ../src/actions/actions-tools.cpp:383
+#: ../src/actions/actions-tools.cpp:366
 msgid "Gradient Tool"
 msgstr "Strumento Gradiente"
 
-#: ../src/actions/actions-tools.cpp:383
+#: ../src/actions/actions-tools.cpp:366
 msgid "Create and edit gradients"
 msgstr "Crea e modifica i gradienti"
 
-#: ../src/actions/actions-tools.cpp:384
+#: ../src/actions/actions-tools.cpp:367
 msgid "Mesh Tool"
 msgstr "Strumento Gradiente a maglia"
 
-#: ../src/actions/actions-tools.cpp:384
+#: ../src/actions/actions-tools.cpp:367
 msgid "Create and edit meshes"
 msgstr "Crea e modifica i gradienti a maglia"
 
-#: ../src/actions/actions-tools.cpp:385
+#: ../src/actions/actions-tools.cpp:368
 msgid "Dropper Tool"
 msgstr "Strumento Contagocce"
 
-#: ../src/actions/actions-tools.cpp:385 ../src/ui/widget/color-notebook.cpp:201
+#: ../src/actions/actions-tools.cpp:368 ../src/ui/widget/color-notebook.cpp:201
 msgid "Pick colors from image"
 msgstr "Preleva colore dall'immagine"
 
-#: ../src/actions/actions-tools.cpp:386
+#: ../src/actions/actions-tools.cpp:369
 msgid "Paint Bucket Tool"
 msgstr "Strumento Secchiello"
 
-#: ../src/actions/actions-tools.cpp:386
+#: ../src/actions/actions-tools.cpp:369
 msgid "Fill bounded areas"
 msgstr "Colora aree delimitate"
 
-#: ../src/actions/actions-tools.cpp:388
+#: ../src/actions/actions-tools.cpp:371
 msgid "Tweak Tool"
 msgstr "Strumento Ritocco"
 
-#: ../src/actions/actions-tools.cpp:388
+#: ../src/actions/actions-tools.cpp:371
 msgid "Tweak objects by sculpting or painting"
 msgstr "Ritocca oggetti scolpendoli o ridipingendoli"
 
-#: ../src/actions/actions-tools.cpp:389
+#: ../src/actions/actions-tools.cpp:372
 msgid "Spray Tool"
 msgstr "Strumento Spray"
 
-#: ../src/actions/actions-tools.cpp:389
+#: ../src/actions/actions-tools.cpp:372
 msgid "Spray copies or clones of objects"
 msgstr "Spruzza copie o cloni degli oggetti"
 
-#: ../src/actions/actions-tools.cpp:390
+#: ../src/actions/actions-tools.cpp:373
 msgid "Eraser Tool"
 msgstr "Strumento Gomma"
 
-#: ../src/actions/actions-tools.cpp:390
+#: ../src/actions/actions-tools.cpp:373
 msgid "Erase objects or paths"
 msgstr "Cancella oggetti o tracciati"
 
-#: ../src/actions/actions-tools.cpp:391
+#: ../src/actions/actions-tools.cpp:374
 msgid "Connector Tool"
 msgstr "Strumento Connettore"
 
-#: ../src/actions/actions-tools.cpp:391
+#: ../src/actions/actions-tools.cpp:374
 msgid "Create diagram connectors"
 msgstr "Crea connettori di diagramma"
 
-#: ../src/actions/actions-tools.cpp:392
+#: ../src/actions/actions-tools.cpp:375
 #: ../src/ui/dialog/inkscape-preferences.cpp:868
 msgid "LPE Tool"
 msgstr "Strumento LPE"
 
-#: ../src/actions/actions-tools.cpp:392
+#: ../src/actions/actions-tools.cpp:375
 msgid "Do geometric constructions"
 msgstr "Crea costruzioni geometriche"
 
-#: ../src/actions/actions-tools.cpp:394
+#: ../src/actions/actions-tools.cpp:377
 msgid "Zoom Tool"
 msgstr "Strumento Ingranditore"
 
-#: ../src/actions/actions-tools.cpp:394
+#: ../src/actions/actions-tools.cpp:377
 msgid "Zoom in or out"
 msgstr "Ingrandisce o rimpicciolisce"
 
-#: ../src/actions/actions-tools.cpp:395
+#: ../src/actions/actions-tools.cpp:378
 msgid "Measure Tool"
 msgstr "Strumento Misura"
 
-#: ../src/actions/actions-tools.cpp:395
+#: ../src/actions/actions-tools.cpp:378
 msgid "Measure objects"
 msgstr "Misura gli oggetti"
 
-#: ../src/actions/actions-tools.cpp:396
+#: ../src/actions/actions-tools.cpp:379
 msgid "Pages Tool"
 msgstr "Strumento Pagine"
 
-#: ../src/actions/actions-tools.cpp:396
+#: ../src/actions/actions-tools.cpp:379
 msgid "Create and edit document pages"
 msgstr "Crea e modifica le pagine del documento"
 
-#: ../src/actions/actions-tools.cpp:398
+#: ../src/actions/actions-tools.cpp:381
 msgid "Toggle Tool"
 msgstr "Strumento Alterna"
 
-#: ../src/actions/actions-tools.cpp:398
+#: ../src/actions/actions-tools.cpp:381
 msgid "Toggle between Select tool and last used tool"
 msgstr "Alterna tra l'ultimo strumento utilizzato e Seleziona Oggetti"
 
@@ -7706,7 +7716,7 @@ msgstr "Muovi"
 msgid "Translate selected objects (dx,dy)"
 msgstr "Muove gli oggetti selezionati (dx,dy)"
 
-#: ../src/actions/actions-transform.cpp:115 ../src/selection-chemistry.cpp:1962
+#: ../src/actions/actions-transform.cpp:115 ../src/selection-chemistry.cpp:1968
 #: ../src/seltrans.cpp:520 ../src/ui/dialog/transformation.cpp:837
 msgid "Rotate"
 msgstr "Ruota"
@@ -8522,7 +8532,7 @@ msgstr "Documento memoria %d"
 msgid "Memory document %1"
 msgstr "Documento memoria %1"
 
-#: ../src/document.cpp:982
+#: ../src/document.cpp:989
 #, c-format
 msgid "Unnamed document %d"
 msgstr "Documento senza nome %d"
@@ -9447,7 +9457,7 @@ msgstr "su %i"
 #: ../src/ui/desktop/document-check.cpp:57
 #: ../src/ui/desktop/document-check.cpp:102
 #: ../src/ui/dialog/calligraphic-profile-rename.cpp:51
-#: ../src/ui/dialog/export-batch.cpp:671 ../src/ui/dialog/export-single.cpp:873
+#: ../src/ui/dialog/export-batch.cpp:670 ../src/ui/dialog/export-single.cpp:870
 #: ../src/ui/dialog/filedialogimpl-gtkmm.cpp:244
 #: ../src/ui/dialog/filedialogimpl-gtkmm.cpp:556
 #: ../src/ui/dialog/guides.cpp:182 ../src/ui/dialog/layer-properties.cpp:42
@@ -9896,8 +9906,8 @@ msgstr "Tipo miscela:"
 #: ../src/extension/internal/filter/textures.h:79
 #: ../src/extension/internal/filter/transparency.h:63
 #: ../src/live_effects/lpe-copy_rotate.cpp:45
-#: ../src/live_effects/lpe-tiling.cpp:807
-#: ../src/live_effects/lpe-tiling.cpp:835
+#: ../src/live_effects/lpe-tiling.cpp:823
+#: ../src/live_effects/lpe-tiling.cpp:851
 #: ../src/ui/dialog/inkscape-preferences.cpp:1901
 #: ../src/ui/dialog/inkscape-preferences.cpp:1949
 #: ../src/ui/widget/filter-effect-chooser.cpp:21 ../share/ui/menus.ui:468
@@ -9988,7 +9998,7 @@ msgstr "Diffusa"
 
 #: ../src/extension/internal/filter/bumps.h:100
 #: ../src/extension/internal/filter/bumps.h:335
-#: ../src/ui/tools/measure-tool.cpp:1163 ../share/ui/dialog-export.glade:288
+#: ../src/ui/tools/measure-tool.cpp:1164 ../share/ui/dialog-export.glade:288
 #: ../share/extensions/interp_att_g.inx:9
 msgid "Height"
 msgstr "Altezza"
@@ -10877,7 +10887,7 @@ msgid "Open"
 msgstr "Apri"
 
 #: ../src/extension/internal/filter/morphology.h:67
-#: ../src/ui/tools/measure-tool.cpp:1169 ../share/ui/dialog-export.glade:301
+#: ../src/ui/tools/measure-tool.cpp:1170 ../share/ui/dialog-export.glade:301
 #: ../share/extensions/interp_att_g.inx:8
 msgid "Width"
 msgstr "Larghezza"
@@ -11109,7 +11119,7 @@ msgid "Clean-up"
 msgstr "Pulisci"
 
 #: ../src/extension/internal/filter/paint.h:244
-#: ../src/ui/tools/measure-tool.cpp:1137 ../share/extensions/measure.inx:6
+#: ../src/ui/tools/measure-tool.cpp:1138 ../share/extensions/measure.inx:6
 msgid "Length"
 msgstr "Lunghezza"
 
@@ -11119,7 +11129,7 @@ msgstr ""
 "Converte l'immagine in una incisione fatta di linee verticali e orizzontali"
 
 #: ../src/extension/internal/filter/paint.h:341
-#: ../src/widgets/desktop-widget.cpp:1518
+#: ../src/widgets/desktop-widget.cpp:1515
 #: ../share/ui/align-and-distribute.ui:64
 msgid "Drawing"
 msgstr "Disegno"
@@ -13038,16 +13048,16 @@ msgstr "Chiudi l'interfaccia grafica dopo l'esecuzione di tutte le azioni"
 msgid "Start Inkscape in interactive shell mode"
 msgstr "Avvia Inkscape in modalità interattiva da terminale"
 
-#: ../src/inkscape.cpp:413 ../src/ui/dialog/symbols.cpp:617
+#: ../src/inkscape.cpp:420 ../src/ui/dialog/symbols.cpp:617
 msgid "Untitled document"
 msgstr "Documento senza nome"
 
-#: ../src/inkscape.cpp:442
+#: ../src/inkscape.cpp:449
 msgid "Inkscape encountered an internal error and will close now.\n"
 msgstr ""
 "Si è verificato un errore interno ed Inkscape verrà chiuso immediatamente\n"
 
-#: ../src/inkscape.cpp:443
+#: ../src/inkscape.cpp:450
 msgid ""
 "Automatic backups of unsaved documents were done to the following "
 "locations:\n"
@@ -13055,7 +13065,7 @@ msgstr ""
 "I backup automatici dei documenti non salvati sono stati fatti ai seguenti "
 "indirizzi:\n"
 
-#: ../src/inkscape.cpp:444
+#: ../src/inkscape.cpp:451
 msgid "Automatic backup of the following documents failed:\n"
 msgstr "Fallito il backup automatico dei seguenti documenti:\n"
 
@@ -13782,42 +13792,42 @@ msgstr "Versione LPE"
 msgid "No effect"
 msgstr "Nessun effetto"
 
-#: ../src/live_effects/effect.cpp:1797
+#: ../src/live_effects/effect.cpp:1821
 msgid "<b>Default value:</b> "
 msgstr "<b>Valore predefinito:</b> "
 
-#: ../src/live_effects/effect.cpp:1798 ../src/live_effects/effect.cpp:1872
+#: ../src/live_effects/effect.cpp:1822 ../src/live_effects/effect.cpp:1896
 msgid "<b>Default value overridden:</b> "
 msgstr "<b>Valore predefinito sovrascritto:</b> "
 
-#: ../src/live_effects/effect.cpp:1800 ../src/live_effects/effect.cpp:1869
+#: ../src/live_effects/effect.cpp:1824 ../src/live_effects/effect.cpp:1893
 msgid "Update"
 msgstr "Aggiorna"
 
-#: ../src/live_effects/effect.cpp:1803 ../src/live_effects/effect.cpp:1883
+#: ../src/live_effects/effect.cpp:1827 ../src/live_effects/effect.cpp:1907
 msgid "Set"
 msgstr "Imposta"
 
-#: ../src/live_effects/effect.cpp:1823
+#: ../src/live_effects/effect.cpp:1847
 #: ../share/extensions/image_attributes.inx:22
 #: ../share/extensions/image_attributes.inx:48
 msgid "Unset"
 msgstr "Annulla impostazione"
 
-#: ../src/live_effects/effect.cpp:1840
+#: ../src/live_effects/effect.cpp:1864
 msgid "</b>: Set default parameters"
 msgstr "</b>: Imposta parametri predefiniti"
 
-#: ../src/live_effects/effect.cpp:1886
+#: ../src/live_effects/effect.cpp:1910
 msgid "<b>Default value:</b> Default"
 msgstr "<b>Valore predefinito:</b> Predefinito"
 
-#: ../src/live_effects/effect.cpp:1957
+#: ../src/live_effects/effect.cpp:1981
 #, c-format
 msgid "Editing parameter <b>%s</b>."
 msgstr "Modifica del parametro <b>%s</b>"
 
-#: ../src/live_effects/effect.cpp:1962
+#: ../src/live_effects/effect.cpp:1986
 msgid "None of the applied path effect's parameters can be edited on-canvas."
 msgstr ""
 "Nessuno dei parametri dell'effetto su tracciato applicato può essere "
@@ -13956,8 +13966,8 @@ msgstr ""
 msgid "Hide width knot"
 msgstr "Nascondi maniglia larghezza"
 
-#: ../src/live_effects/lpe-bendpath.cpp:201
-#: ../src/live_effects/lpe-patternalongpath.cpp:292
+#: ../src/live_effects/lpe-bendpath.cpp:221
+#: ../src/live_effects/lpe-patternalongpath.cpp:305
 msgid "Change the width"
 msgstr "Modifica larghezza"
 
@@ -14848,27 +14858,27 @@ msgstr "Raggio minimo:"
 msgid "Minimum radius, low values can be slow"
 msgstr "Raggio minimo, valori piccoli possono rallentarne l'esecuzione"
 
-#: ../src/live_effects/lpe-interpolate.cpp:30
+#: ../src/live_effects/lpe-interpolate.cpp:27
 msgid "Trajectory:"
 msgstr "Traiettoria:"
 
-#: ../src/live_effects/lpe-interpolate.cpp:30
+#: ../src/live_effects/lpe-interpolate.cpp:27
 msgid "Path along which intermediate steps are created."
 msgstr "Tracciato lungo il quale creare i passaggi intermedi"
 
-#: ../src/live_effects/lpe-interpolate.cpp:32
+#: ../src/live_effects/lpe-interpolate.cpp:29
 msgid "Steps_:"
 msgstr "_Passi:"
 
-#: ../src/live_effects/lpe-interpolate.cpp:32
+#: ../src/live_effects/lpe-interpolate.cpp:29
 msgid "Determines the number of steps from start to end path."
 msgstr "Determina il numero di passi dall'inizio alla fine del tracciato"
 
-#: ../src/live_effects/lpe-interpolate.cpp:33
+#: ../src/live_effects/lpe-interpolate.cpp:30
 msgid "E_quidistant spacing"
 msgstr "Spaziatura e_quidistante"
 
-#: ../src/live_effects/lpe-interpolate.cpp:34
+#: ../src/live_effects/lpe-interpolate.cpp:31
 msgid ""
 "If true, the spacing between intermediates is constant along the length of "
 "the path. If false, the distance depends on the location of the nodes of the "
@@ -17425,62 +17435,62 @@ msgstr "Seme"
 msgid "Randomization seed"
 msgstr "Rendi seme casuale"
 
-#: ../src/live_effects/lpe-tiling.cpp:634
+#: ../src/live_effects/lpe-tiling.cpp:650
 msgid "Mirroring mode"
 msgstr "Modalità riflessione"
 
-#: ../src/live_effects/lpe-tiling.cpp:668
+#: ../src/live_effects/lpe-tiling.cpp:684
 #: ../share/extensions/color_randomize.inx:3
 #: ../share/extensions/render_alphabetsoup.inx:8
 msgid "Randomize"
 msgstr "Casualizza"
 
-#: ../src/live_effects/lpe-tiling.cpp:669
+#: ../src/live_effects/lpe-tiling.cpp:685
 msgid "Randomization seed for random mode for scaling, rotation and gaps"
 msgstr ""
 "Casualizza il seme per la modalità casuale di scala, ruota e spaziatura"
 
-#: ../src/live_effects/lpe-tiling.cpp:703
+#: ../src/live_effects/lpe-tiling.cpp:719
 msgid "Offset rows"
 msgstr "Scostamento righe"
 
-#: ../src/live_effects/lpe-tiling.cpp:705
+#: ../src/live_effects/lpe-tiling.cpp:721
 msgid "Offset alternate rows"
 msgstr "Scostamento righe alternate"
 
-#: ../src/live_effects/lpe-tiling.cpp:706
+#: ../src/live_effects/lpe-tiling.cpp:722
 msgid "Offset cols"
 msgstr "Scostamento colonne"
 
-#: ../src/live_effects/lpe-tiling.cpp:708
+#: ../src/live_effects/lpe-tiling.cpp:724
 msgid "Offset alternate cols"
 msgstr "Scostamento colonne alternate"
 
-#: ../src/live_effects/lpe-tiling.cpp:722
-#: ../src/live_effects/lpe-tiling.cpp:764
+#: ../src/live_effects/lpe-tiling.cpp:738
+#: ../src/live_effects/lpe-tiling.cpp:780
 msgid "Interpolate X"
 msgstr "Interpola X"
 
-#: ../src/live_effects/lpe-tiling.cpp:724
-#: ../src/live_effects/lpe-tiling.cpp:766
+#: ../src/live_effects/lpe-tiling.cpp:740
+#: ../src/live_effects/lpe-tiling.cpp:782
 msgid "Interpolate Y"
 msgstr "Interpola Y"
 
-#: ../src/live_effects/lpe-tiling.cpp:726
-#: ../src/live_effects/lpe-tiling.cpp:768
+#: ../src/live_effects/lpe-tiling.cpp:742
+#: ../src/live_effects/lpe-tiling.cpp:784
 msgid "Interpolate both"
 msgstr "Interpola entrambi"
 
-#: ../src/live_effects/lpe-tiling.cpp:728
+#: ../src/live_effects/lpe-tiling.cpp:744
 msgid "No interpolation"
 msgstr "Non interpolare"
 
-#: ../src/live_effects/lpe-tiling.cpp:730
-#: ../src/live_effects/lpe-tiling.cpp:772
+#: ../src/live_effects/lpe-tiling.cpp:746
+#: ../src/live_effects/lpe-tiling.cpp:788
 msgid "Interpolate random"
 msgstr "Interpola casualmente"
 
-#: ../src/live_effects/lpe-tiling.cpp:743
+#: ../src/live_effects/lpe-tiling.cpp:759
 msgid ""
 "Blend scale from <b>left to right</b> (left column uses original scale, "
 "right column uses new scale)"
@@ -17488,7 +17498,7 @@ msgstr ""
 "Distribuisci la scala da <b>sinistra a destra</b> (a sinistra la scala "
 "originale, a destra la nuova scala)"
 
-#: ../src/live_effects/lpe-tiling.cpp:744
+#: ../src/live_effects/lpe-tiling.cpp:760
 msgid ""
 "Blend scale from <b>top to bottom</b> (top row uses original scale, bottom "
 "row uses new scale)"
@@ -17496,7 +17506,7 @@ msgstr ""
 "Distribuisci la scala dall'<b>alto al basso</b> (in alto la scala originale, "
 "in basso la nuova scala)"
 
-#: ../src/live_effects/lpe-tiling.cpp:745
+#: ../src/live_effects/lpe-tiling.cpp:761
 msgid ""
 "Blend scale <b>diagonally</b> (top left tile uses original scale, bottom "
 "right tile uses new scale)"
@@ -17505,21 +17515,21 @@ msgstr ""
 "originale, in basso a destra la nuova scala)"
 
 # the blending is done diagonally from top left to bottom right Giambattista Caltabiano
-#: ../src/live_effects/lpe-tiling.cpp:746
+#: ../src/live_effects/lpe-tiling.cpp:762
 msgid "Uniform scale"
 msgstr "Scala uniforme"
 
-#: ../src/live_effects/lpe-tiling.cpp:747
+#: ../src/live_effects/lpe-tiling.cpp:763
 msgid "Random scale (hit <b>Randomize</b> button to shuffle)"
 msgstr ""
 "Scala casualmente (premi il bottone <b>Casualizza</b> per scalare "
 "casualmente)"
 
-#: ../src/live_effects/lpe-tiling.cpp:770
+#: ../src/live_effects/lpe-tiling.cpp:786
 msgid "Interpolate none"
 msgstr "Non interpolare"
 
-#: ../src/live_effects/lpe-tiling.cpp:785
+#: ../src/live_effects/lpe-tiling.cpp:801
 msgid ""
 "Blend rotation from <b>left to right</b> (left column uses original "
 "rotation, right column uses new rotation)"
@@ -17527,7 +17537,7 @@ msgstr ""
 "Distribuisci la rotazione da <b>sinistra a destra</b> (a sinistra la "
 "rotazione originale, a destra la nuova rotazione)"
 
-#: ../src/live_effects/lpe-tiling.cpp:786
+#: ../src/live_effects/lpe-tiling.cpp:802
 msgid ""
 "Blend rotation from <b>top to bottom</b> (top row uses original rotation, "
 "bottom row uses new rotation)"
@@ -17535,7 +17545,7 @@ msgstr ""
 "Distribuisci la rotazione dall'<b>alto al basso</b> (in alto la rotazione "
 "originale, in basso la nuova rotazione)"
 
-#: ../src/live_effects/lpe-tiling.cpp:787
+#: ../src/live_effects/lpe-tiling.cpp:803
 msgid ""
 "Blend rotation <b>diagonally</b> (top left tile uses original rotation, "
 "bottom right tile uses new rotation)"
@@ -17544,42 +17554,42 @@ msgstr ""
 "rotazione originale, in basso a destra la nuova rotazione)"
 
 # the blending is done diagonally from top left to bottom right Giambattista Caltabiano
-#: ../src/live_effects/lpe-tiling.cpp:788
+#: ../src/live_effects/lpe-tiling.cpp:804
 msgid "Uniform rotation"
 msgstr "Rotazione uniforme"
 
-#: ../src/live_effects/lpe-tiling.cpp:789
+#: ../src/live_effects/lpe-tiling.cpp:805
 msgid "Random rotation (hit <b>Randomize</b> button to shuffle)"
 msgstr ""
 "Rotazione casuale (premi il bottone <b>Casualizza</b> per ruotare "
 "casualmente)"
 
-#: ../src/live_effects/lpe-tiling.cpp:809
-#: ../src/live_effects/lpe-tiling.cpp:837
+#: ../src/live_effects/lpe-tiling.cpp:825
+#: ../src/live_effects/lpe-tiling.cpp:853
 msgid "Random"
 msgstr "Casualmente"
 
-#: ../src/live_effects/lpe-tiling.cpp:816
+#: ../src/live_effects/lpe-tiling.cpp:832
 msgid "All horizontal gaps have the same width"
 msgstr "Tutte le spaziature orizzontali hanno la stessa larghezza"
 
-#: ../src/live_effects/lpe-tiling.cpp:817
+#: ../src/live_effects/lpe-tiling.cpp:833
 msgid "Random horizontal gaps (hit <b>Randomize</b> button to shuffle)"
 msgstr ""
 "Spaziature orizzontali casuali (premi il bottone <b>Casualizza</b> per "
 "spaziare casualmente)"
 
-#: ../src/live_effects/lpe-tiling.cpp:844
+#: ../src/live_effects/lpe-tiling.cpp:860
 msgid "All vertical gaps have the same height"
 msgstr "Tutte le spaziature verticali hanno la stessa altezza"
 
-#: ../src/live_effects/lpe-tiling.cpp:845
+#: ../src/live_effects/lpe-tiling.cpp:861
 msgid "Random vertical gaps (hit <b>Randomize</b> button to shuffle)"
 msgstr ""
 "Spaziature verticali casuali (premi il bottone <b>Casualizza</b> per "
 "spaziare casualmente)"
 
-#: ../src/live_effects/lpe-tiling.cpp:1474
+#: ../src/live_effects/lpe-tiling.cpp:1497
 msgid ""
 "<b>Horizontal gaps between tiles</b>: drag to adjust, <b>Shift+click</b> to "
 "reset"
@@ -17587,7 +17597,7 @@ msgstr ""
 "<b>Spaziatura orizzontale tra le tile</b>: trascina per modificare; premi "
 "<b>Maiusc+Clic</b> per ripristinare lo stato originale"
 
-#: ../src/live_effects/lpe-tiling.cpp:1479
+#: ../src/live_effects/lpe-tiling.cpp:1502
 msgid ""
 "<b>Vertical gaps between tiles</b>: drag to adjust, <b>Shift+click</b> to "
 "reset"
@@ -17803,7 +17813,7 @@ msgstr ""
 "finestra modifica, <b>Ctrl+Alt+Clic</b> reimposta"
 
 #: ../src/live_effects/parameter/originalpath.cpp:65
-#: ../src/live_effects/parameter/path.cpp:286
+#: ../src/live_effects/parameter/path.cpp:311
 #: ../src/live_effects/parameter/patharray.cpp:182
 msgid "Link to path in clipboard"
 msgstr "Collega a tracciato negli appunti"
@@ -17818,23 +17828,23 @@ msgstr "Seleziona originale"
 msgid "Link to item"
 msgstr "Collega a oggetto"
 
-#: ../src/live_effects/parameter/path.cpp:251
+#: ../src/live_effects/parameter/path.cpp:276
 msgid "Edit on-canvas"
 msgstr "Modifica sul disegno"
 
-#: ../src/live_effects/parameter/path.cpp:263
+#: ../src/live_effects/parameter/path.cpp:288
 msgid "Copy path"
 msgstr "Copia tracciato"
 
-#: ../src/live_effects/parameter/path.cpp:275
+#: ../src/live_effects/parameter/path.cpp:300
 msgid "Paste path"
 msgstr "Incolla tracciato"
 
-#: ../src/live_effects/parameter/path.cpp:576
+#: ../src/live_effects/parameter/path.cpp:601
 msgid "Paste path parameter"
 msgstr "Incolla parametri tracciato"
 
-#: ../src/live_effects/parameter/path.cpp:604
+#: ../src/live_effects/parameter/path.cpp:629
 #: ../src/live_effects/parameter/patharray.cpp:144
 msgid "Link path parameter to path"
 msgstr "Lega il parametro del tracciato al tracciato"
@@ -17990,25 +18000,25 @@ msgstr "a %s"
 msgid "without URI"
 msgstr "senza URI"
 
-#: ../src/object/sp-ellipse.cpp:398 ../src/ui/toolbar/arc-toolbar.cpp:165
+#: ../src/object/sp-ellipse.cpp:417 ../src/ui/toolbar/arc-toolbar.cpp:165
 msgid "Slice"
 msgstr "Sezione"
 
-#: ../src/object/sp-ellipse.cpp:401 ../src/ui/toolbar/arc-toolbar.cpp:175
+#: ../src/object/sp-ellipse.cpp:420 ../src/ui/toolbar/arc-toolbar.cpp:175
 msgid "Chord"
 msgstr "Corda"
 
-#: ../src/object/sp-ellipse.cpp:404
+#: ../src/object/sp-ellipse.cpp:423
 msgid "Arc"
 msgstr "Arco"
 
-#: ../src/object/sp-ellipse.cpp:409
+#: ../src/object/sp-ellipse.cpp:428
 #: ../src/ui/dialog/inkscape-preferences.cpp:849
 #: ../src/ui/toolbar/pencil-toolbar.cpp:410 ../share/extensions/frame.inx:7
 msgid "Ellipse"
 msgstr "Ellisse"
 
-#: ../src/object/sp-ellipse.cpp:411
+#: ../src/object/sp-ellipse.cpp:430
 #: ../share/extensions/render_barcode_qrcode.inx:81
 msgid "Circle"
 msgstr "Cerchio"
@@ -18381,19 +18391,19 @@ msgstr "Da oggetto a tracciato"
 msgid "<b>No objects</b> to convert to path in the selection."
 msgstr "<b>Nessun oggetto</b> nella selezione da convertire in tracciato"
 
-#: ../src/path-chemistry.cpp:602
+#: ../src/path-chemistry.cpp:605
 msgid "Select <b>path(s)</b> to reverse."
 msgstr "Seleziona il <b>tracciato</b> da invertire"
 
-#: ../src/path-chemistry.cpp:610
+#: ../src/path-chemistry.cpp:613
 msgid "Reversing paths..."
 msgstr "Inversione tracciati..."
 
-#: ../src/path-chemistry.cpp:644
+#: ../src/path-chemistry.cpp:647
 msgid "Reverse path"
 msgstr "Inverti tracciato"
 
-#: ../src/path-chemistry.cpp:647
+#: ../src/path-chemistry.cpp:650
 msgid "<b>No paths</b> to reverse in the selection."
 msgstr "<b>Nessun tracciato</b> da invertire nella selezione"
 
@@ -18882,146 +18892,146 @@ msgstr ""
 msgid "Remove live path effect"
 msgstr "Rimuovi effetto dinamico su tracciato"
 
-#: ../src/selection-chemistry.cpp:1385
+#: ../src/selection-chemistry.cpp:1384
 msgid "Select <b>object(s)</b> to remove filters from."
 msgstr "Seleziona l'<b>oggetto</b> da cui rimuovere i filtri"
 
-#: ../src/selection-chemistry.cpp:1400
+#: ../src/selection-chemistry.cpp:1404
 #: ../src/ui/dialog/filter-effects-dialog.cpp:1633
 msgid "Remove filter"
 msgstr "Rimuovi filtro"
 
-#: ../src/selection-chemistry.cpp:1409
+#: ../src/selection-chemistry.cpp:1413
 msgid "Paste size"
 msgstr "Incolla dimensione"
 
-#: ../src/selection-chemistry.cpp:1417
+#: ../src/selection-chemistry.cpp:1421
 msgid "Paste size separately"
 msgstr "Incolla dimensione separatamente"
 
-#: ../src/selection-chemistry.cpp:1446
+#: ../src/selection-chemistry.cpp:1451
 msgid "Select <b>object(s)</b> to move to the layer above."
 msgstr "Seleziona l'<b>oggetto</b> da spostare al livello superiore"
 
-#: ../src/selection-chemistry.cpp:1471
+#: ../src/selection-chemistry.cpp:1476
 msgid "Raise to next layer"
 msgstr "Sposta al livello successivo"
 
-#: ../src/selection-chemistry.cpp:1478
+#: ../src/selection-chemistry.cpp:1483
 msgid "No more layers above."
 msgstr "Nessun livello superiore"
 
-#: ../src/selection-chemistry.cpp:1491
+#: ../src/selection-chemistry.cpp:1497
 msgid "Select <b>object(s)</b> to move to the layer below."
 msgstr "Seleziona l'<b>oggetto</b> da spostare al livello inferiore"
 
-#: ../src/selection-chemistry.cpp:1516
+#: ../src/selection-chemistry.cpp:1522
 msgid "Lower to previous layer"
 msgstr "Sposta al livello precedente"
 
-#: ../src/selection-chemistry.cpp:1523
+#: ../src/selection-chemistry.cpp:1529
 msgid "No more layers below."
 msgstr "Nessun livello inferiore"
 
-#: ../src/selection-chemistry.cpp:1563
+#: ../src/selection-chemistry.cpp:1569
 msgid "Select <b>object(s)</b> to move."
 msgstr "Seleziona l'<b>oggetto</b> da muovere"
 
-#: ../src/selection-chemistry.cpp:1691 ../src/seltrans.cpp:384
+#: ../src/selection-chemistry.cpp:1697 ../src/seltrans.cpp:384
 msgid "Cannot transform an embedded SVG."
 msgstr "Impossibile trasformare un SVG incorporato"
 
-#: ../src/selection-chemistry.cpp:1842
+#: ../src/selection-chemistry.cpp:1848
 msgid "Remove transform"
 msgstr "Rimuovi trasformazione"
 
-#: ../src/selection-chemistry.cpp:1943 ../share/ui/menus.ui:898
+#: ../src/selection-chemistry.cpp:1949 ../share/ui/menus.ui:898
 msgid "Rotate 90° CCW"
 msgstr "Ruota di 90° anti-orari"
 
-#: ../src/selection-chemistry.cpp:1943 ../share/ui/menus.ui:892
+#: ../src/selection-chemistry.cpp:1949 ../share/ui/menus.ui:892
 msgid "Rotate 90° CW"
 msgstr "Ruota di 90° orari"
 
-#: ../src/selection-chemistry.cpp:2321
+#: ../src/selection-chemistry.cpp:2327
 msgid "Rotate by pixels"
 msgstr "Ruota tramite pixel"
 
-#: ../src/selection-chemistry.cpp:2348
+#: ../src/selection-chemistry.cpp:2354
 msgid "Grow"
 msgstr "Allarga"
 
-#: ../src/selection-chemistry.cpp:2348
+#: ../src/selection-chemistry.cpp:2354
 msgid "Shrink"
 msgstr "Restringi"
 
-#: ../src/selection-chemistry.cpp:2372
+#: ../src/selection-chemistry.cpp:2378
 msgid "Scale by whole factor"
 msgstr "Ridimensiona di un fattore intero"
 
-#: ../src/selection-chemistry.cpp:2385
+#: ../src/selection-chemistry.cpp:2391
 msgid "Move vertically"
 msgstr "Muovi verticalmente"
 
-#: ../src/selection-chemistry.cpp:2387
+#: ../src/selection-chemistry.cpp:2393
 msgid "Move horizontally"
 msgstr "Muovi orizzontalmente"
 
-#: ../src/selection-chemistry.cpp:2389 ../src/selection-chemistry.cpp:2412
+#: ../src/selection-chemistry.cpp:2395 ../src/selection-chemistry.cpp:2418
 #: ../src/seltrans.cpp:516 ../src/ui/dialog/transformation.cpp:750
 msgid "Move"
 msgstr "Muovi"
 
-#: ../src/selection-chemistry.cpp:2408
+#: ../src/selection-chemistry.cpp:2414
 msgid "Move vertically by pixels"
 msgstr "Scosta verticalmente di pixel"
 
-#: ../src/selection-chemistry.cpp:2410
+#: ../src/selection-chemistry.cpp:2416
 msgid "Move horizontally by pixels"
 msgstr "Scosta orizzontalmente di pixel"
 
-#: ../src/selection-chemistry.cpp:2616
+#: ../src/selection-chemistry.cpp:2622
 msgid "The selection has no applied path effect."
 msgstr "La selezione non ha applicato alcun effetto su tracciato"
 
-#: ../src/selection-chemistry.cpp:2674 ../src/ui/dialog/clonetiler.cpp:2081
+#: ../src/selection-chemistry.cpp:2680 ../src/ui/dialog/clonetiler.cpp:2081
 msgid "Select an <b>object</b> to clone."
 msgstr "Seleziona un <b>oggetto</b> da clonare"
 
-#: ../src/selection-chemistry.cpp:2710
+#: ../src/selection-chemistry.cpp:2716
 msgctxt "Action"
 msgid "Clone"
 msgstr "Clona"
 
-#: ../src/selection-chemistry.cpp:2719
+#: ../src/selection-chemistry.cpp:2725
 msgid "Select <b>clones</b> to relink."
 msgstr "Seleziona i <b>cloni</b> da ricollegare"
 
-#: ../src/selection-chemistry.cpp:2727
+#: ../src/selection-chemistry.cpp:2733
 msgid "Copy an <b>object</b> to clipboard to relink clones to."
 msgstr "Copia un <b>oggetto</b> negli appunti per ricollegargli i cloni"
 
-#: ../src/selection-chemistry.cpp:2747
+#: ../src/selection-chemistry.cpp:2753
 msgid "<b>No clones to relink</b> in the selection."
 msgstr "<b>Nessun clone da ricollegare</b> nella selezione"
 
-#: ../src/selection-chemistry.cpp:2749
+#: ../src/selection-chemistry.cpp:2755
 msgid "Relink clone"
 msgstr "Ricollega clone"
 
-#: ../src/selection-chemistry.cpp:2758 ../src/selection-chemistry.cpp:2847
+#: ../src/selection-chemistry.cpp:2764 ../src/selection-chemistry.cpp:2853
 msgid "Select <b>clones</b> to unlink."
 msgstr "Seleziona i <b>cloni</b> da scollegare"
 
-#: ../src/selection-chemistry.cpp:2835 ../src/selection-chemistry.cpp:2873
+#: ../src/selection-chemistry.cpp:2841 ../src/selection-chemistry.cpp:2879
 msgid "<b>No clones to unlink</b> in the selection."
 msgstr "<b>Nessun clone da scollegare</b> nella selezione"
 
-#: ../src/selection-chemistry.cpp:2839
+#: ../src/selection-chemistry.cpp:2845
 msgid "Unlink clone"
 msgstr "Scollega clone"
 
-#: ../src/selection-chemistry.cpp:2854
+#: ../src/selection-chemistry.cpp:2860
 msgid ""
 "Unable to unlink. Check the setting for 'Unlinking Clones' in your "
 "preferences."
@@ -19029,11 +19039,11 @@ msgstr ""
 "Impossibile scollegare. Controlla le impostazioni di ‘Scollega Cloni’ nelle "
 "Preferenze."
 
-#: ../src/selection-chemistry.cpp:2876
+#: ../src/selection-chemistry.cpp:2882
 msgid "Unlink clone recursively"
 msgstr "Scollega clone ricorsivamente"
 
-#: ../src/selection-chemistry.cpp:2920
+#: ../src/selection-chemistry.cpp:2926
 msgid ""
 "Select a <b>clone</b> to go to its original. Select a <b>linked offset</b> "
 "to go to its source. Select a <b>text on path</b> to go to the path. Select "
@@ -19044,7 +19054,7 @@ msgstr ""
 "su tracciato</b> per andare al tracciato. Seleziona un <b>testo sagomato</b> "
 "per andare alla sua cornice."
 
-#: ../src/selection-chemistry.cpp:2961
+#: ../src/selection-chemistry.cpp:2967
 msgid ""
 "<b>Cannot find</b> the object to select (orphaned clone, offset, textpath, "
 "flowed text?)"
@@ -19052,126 +19062,122 @@ msgstr ""
 "<b>Impossibile trovare</b> l'oggetto da selezionare (clone orfano, "
 "proiezione, testo su percorso o testo sagomato?)"
 
-#: ../src/selection-chemistry.cpp:2968
+#: ../src/selection-chemistry.cpp:2974
 msgid ""
 "The object you're trying to select is <b>not visible</b> (it is in &lt;"
 "defs&gt;)"
 msgstr ""
 "L'oggetto che si vuole selezionare <b>non è visibile</b> (è in &lt;defs&gt;)"
 
-#: ../src/selection-chemistry.cpp:3067
+#: ../src/selection-chemistry.cpp:3073
 msgid "Fill between many"
 msgstr "Riempimento tra più tracciati"
 
-#: ../src/selection-chemistry.cpp:3069
+#: ../src/selection-chemistry.cpp:3075
 msgid "Clone original"
 msgstr "Clona originale"
 
-#: ../src/selection-chemistry.cpp:3074
+#: ../src/selection-chemistry.cpp:3080
 msgid "Select path(s) to fill."
 msgstr "Seleziona il tracciato da riempire"
 
-#: ../src/selection-chemistry.cpp:3089
+#: ../src/selection-chemistry.cpp:3095
 msgid "Select <b>object(s)</b> to convert to marker."
 msgstr "Seleziona l'<b>oggetto</b> da convertire in delimitatore"
 
-#: ../src/selection-chemistry.cpp:3152
+#: ../src/selection-chemistry.cpp:3158
 msgid "Objects to marker"
 msgstr "Da oggetto a delimitatore"
 
-#: ../src/selection-chemistry.cpp:3175
+#: ../src/selection-chemistry.cpp:3181
 msgid "Select <b>object(s)</b> to convert to guides."
 msgstr "Seleziona l'<b>oggetto</b> da convertire in guide"
 
-#: ../src/selection-chemistry.cpp:3196
+#: ../src/selection-chemistry.cpp:3202
 msgid "Objects to guides"
 msgstr "Da oggetto a guida"
 
-#: ../src/selection-chemistry.cpp:3227
+#: ../src/selection-chemistry.cpp:3233
 msgid "Select <b>objects</b> to convert to symbol."
 msgstr "Seleziona gli <b>oggetti</b> da convertire in simbolo"
 
-#: ../src/selection-chemistry.cpp:3362
+#: ../src/selection-chemistry.cpp:3368
 msgid "Group to symbol"
 msgstr "Gruppo a simbolo"
 
-#: ../src/selection-chemistry.cpp:3379
+#: ../src/selection-chemistry.cpp:3385
 msgid "unSymbol all selected symbols"
 msgstr ""
 
-#: ../src/selection-chemistry.cpp:3393
+#: ../src/selection-chemistry.cpp:3399
 msgid "Select <b>object(s)</b> to convert to pattern."
 msgstr "Seleziona l'<b>oggetto</b> da convertire in motivo"
 
-#: ../src/selection-chemistry.cpp:3479
+#: ../src/selection-chemistry.cpp:3485
 msgid "Objects to pattern"
 msgstr "Da oggetto a motivo"
 
-#: ../src/selection-chemistry.cpp:3491
+#: ../src/selection-chemistry.cpp:3497
 msgid "Select an <b>object with pattern fill</b> to extract objects from."
 msgstr ""
 "Seleziona un <b>oggetto con motivo di riempimento</b> da cui estrarre "
 "l'oggetto"
 
-#: ../src/selection-chemistry.cpp:3551
+#: ../src/selection-chemistry.cpp:3557
 msgid "<b>No pattern fills</b> in the selection."
 msgstr "<b>Nessun motivo di riempimento</b> nella selezione"
 
-#: ../src/selection-chemistry.cpp:3553
+#: ../src/selection-chemistry.cpp:3559
 msgid "Pattern to objects"
 msgstr "Da motivo a oggetto"
 
-#: ../src/selection-chemistry.cpp:3567
+#: ../src/selection-chemistry.cpp:3573
 msgid "Select <b>object(s)</b> to make a bitmap copy."
 msgstr "Seleziona l'<b>oggetto</b> di cui fare una copia bitmap"
 
-#: ../src/selection-chemistry.cpp:3572
+#: ../src/selection-chemistry.cpp:3578
 msgid "Rendering bitmap..."
 msgstr "Creazione bitmap..."
 
-#: ../src/selection-chemistry.cpp:3659
+#: ../src/selection-chemistry.cpp:3665
 msgid "Create bitmap"
 msgstr "Crea bitmap"
 
-#: ../src/selection-chemistry.cpp:3680 ../src/selection-chemistry.cpp:3787
+#: ../src/selection-chemistry.cpp:3686 ../src/selection-chemistry.cpp:3793
 msgid "Select <b>object(s)</b> to create clippath or mask from."
 msgstr "Seleziona l'<b>oggetto</b> da cui creare la maschera o il fissaggio"
 
-#: ../src/selection-chemistry.cpp:3763
+#: ../src/selection-chemistry.cpp:3769
 msgid "Create Clip Group"
 msgstr "Crea gruppo di ritaglio"
 
-#: ../src/selection-chemistry.cpp:3791
+#: ../src/selection-chemistry.cpp:3797
 msgid "Select mask object and <b>object(s)</b> to apply clippath or mask to."
 msgstr ""
 "Selezionare l'oggetto maschera e l'<b>oggetto</b> a cui applicare la "
 "maschera o il fissaggio"
 
-#: ../src/selection-chemistry.cpp:3958
+#: ../src/selection-chemistry.cpp:3964
 msgid "Set clipping path"
 msgstr "Imposta fissaggio"
 
-#: ../src/selection-chemistry.cpp:3960
+#: ../src/selection-chemistry.cpp:3966
 msgid "Set mask"
 msgstr "Imposta maschera"
 
-#: ../src/selection-chemistry.cpp:3972
+#: ../src/selection-chemistry.cpp:3980
 msgid "Select <b>object(s)</b> to remove clippath or mask from."
 msgstr "Seleziona l'<b>oggetto</b> da cui rimuovere la maschera o il fissaggio"
 
-#: ../src/selection-chemistry.cpp:4109
+#: ../src/selection-chemistry.cpp:4117
 msgid "Select <b>object(s)</b> to fit canvas to."
 msgstr "Seleziona l'<b>oggetto</b> a cui adattare l'area di lavoro"
 
-#: ../src/selection-chemistry.cpp:4192
-msgid "Swap fill and stroke of an object"
-msgstr "Inverti riempimento e contorno di un oggetto"
-
-#: ../src/selection-chemistry.cpp:4211
+#: ../src/selection-chemistry.cpp:4220
 msgid "Select <b>path(s)</b> to create fill between."
 msgstr "Seleziona i <b>tracciati</b> da riempire"
 
-#: ../src/selection-chemistry.cpp:4266
+#: ../src/selection-chemistry.cpp:4275
 msgid "Create linked fill object between paths"
 msgstr "Crea riempimento collegato tra tracciati"
 
@@ -19804,11 +19810,11 @@ msgstr "B_locca tutti i livelli"
 msgid "_Unlock all layers"
 msgstr "_Sblocca tutti i livelli"
 
-#: ../src/ui/contextmenu.cpp:331
+#: ../src/ui/contextmenu.cpp:328
 msgid "Unhid objects"
 msgstr "Oggetti mostrati"
 
-#: ../src/ui/contextmenu.cpp:331
+#: ../src/ui/contextmenu.cpp:328
 msgid "Unlocked objects"
 msgstr "Oggetti sbloccati"
 
@@ -19853,6 +19859,10 @@ msgstr ""
 #: ../src/ui/desktop/document-check.cpp:103
 msgid "_Save as Inkscape SVG"
 msgstr "_Salva come Inkscape SVG"
+
+#: ../src/ui/desktop/menubar.cpp:185
+msgid "No items found"
+msgstr "Nessun oggetto trovato"
 
 #: ../src/ui/dialog/attrdialog.cpp:106 ../src/ui/tools/text-tool.cpp:1896
 msgid "Type text"
@@ -20720,17 +20730,133 @@ msgstr "Ignora i messaggi di log"
 msgid "Close Tab"
 msgstr "Chiudi pannello"
 
-#: ../src/ui/dialog/dialog-data.h:45
+#: ../src/ui/dialog/dialog-data.cpp:31
+msgid "_Align and Distribute"
+msgstr "_Allinea e distribuisci"
+
+#: ../src/ui/dialog/dialog-data.cpp:32
+msgid "Create Tiled Clones"
+msgstr "Crea cloni in serie"
+
+#: ../src/ui/dialog/dialog-data.cpp:33
+msgid "_Document Properties"
+msgstr "Proprietà del _documento"
+
+#: ../src/ui/dialog/dialog-data.cpp:34
+msgid "_Export"
+msgstr "_Esporta"
+
+#: ../src/ui/dialog/dialog-data.cpp:35
+msgid "_Fill and Stroke"
+msgstr "Riempimento e Contorni"
+
+#: ../src/ui/dialog/dialog-data.cpp:36
+msgid "Filter _Editor"
+msgstr "_Editore di filtri"
+
+#: ../src/ui/dialog/dialog-data.cpp:37
+msgid "_Find/Replace"
+msgstr "T_rova/Sostituisci"
+
+#: ../src/ui/dialog/dialog-data.cpp:38
+msgid "_Unicode Characters"
+msgstr "Caratteri _Unicode"
+
+#: ../src/ui/dialog/dialog-data.cpp:39 ../share/ui/menus.ui:616
+msgid "Icon Preview"
+msgstr "Anteprima icona"
+
+#: ../src/ui/dialog/dialog-data.cpp:40
+msgid "_Input Devices"
+msgstr "Dispositivi di _input"
+
+#: ../src/ui/dialog/dialog-data.cpp:41
+msgid "Path E_ffects"
+msgstr "E_ffetti su tracciato"
+
+#: ../src/ui/dialog/dialog-data.cpp:42 ../share/ui/menus.ui:1277
+msgid "About _Memory"
+msgstr "Informazioni sulla _memoria"
+
+#: ../src/ui/dialog/dialog-data.cpp:43
+msgid "_Messages"
+msgstr "Messaggi"
+
+#: ../src/ui/dialog/dialog-data.cpp:44
+msgid "_Object attributes"
+msgstr "Attributi _oggetto"
+
+#: ../src/ui/dialog/dialog-data.cpp:45
+msgid "_Object Properties"
+msgstr "Proprietà _oggetto"
+
+#: ../src/ui/dialog/dialog-data.cpp:46
+msgid "Layers and Object_s"
+msgstr "Livelli e Oggetti"
+
+#: ../src/ui/dialog/dialog-data.cpp:47
+msgid "_Paint Servers"
+msgstr "_Trame"
+
+#: ../src/ui/dialog/dialog-data.cpp:48 ../share/ui/menus.ui:346
+msgid "P_references"
+msgstr "P_referenze"
+
+#: ../src/ui/dialog/dialog-data.cpp:49
+msgid "_Selectors and CSS"
+msgstr "_Selettori e CSS"
+
+#: ../src/ui/dialog/dialog-data.cpp:50
+msgid "SVG Font Editor"
+msgstr "Editore Caratteri SVG"
+
+#: ../src/ui/dialog/dialog-data.cpp:51
+msgid "S_watches"
+msgstr "Campio_ni"
+
+#: ../src/ui/dialog/dialog-data.cpp:52
+msgid "S_ymbols"
+msgstr "Simboli"
+
+#: ../src/ui/dialog/dialog-data.cpp:53
+msgid "_Text and Font"
+msgstr "_Testo e carattere"
+
+#: ../src/ui/dialog/dialog-data.cpp:54
+msgid "_Trace Bitmap"
+msgstr "Ve_ttorizza bitmap"
+
+#: ../src/ui/dialog/dialog-data.cpp:55
+msgid "Transfor_m"
+msgstr "Trasformazioni"
+
+#: ../src/ui/dialog/dialog-data.cpp:56
+msgid "Undo _History"
+msgstr "Cronologia modifiche"
+
+#: ../src/ui/dialog/dialog-data.cpp:57
+msgid "_XML Editor"
+msgstr "Editore _XML"
+
+#: ../src/ui/dialog/dialog-data.cpp:59
+msgid "Check Spellin_g"
+msgstr "Controlla orto_grafia"
+
+#: ../src/ui/dialog/dialog-data.cpp:62
+msgid "Prototype"
+msgstr "Prototipo"
+
+#: ../src/ui/dialog/dialog-data.h:35
 #: ../share/extensions/image_attributes.inx:10
 msgid "Basic"
 msgstr "Basilare"
 
-#: ../src/ui/dialog/dialog-data.h:46
+#: ../src/ui/dialog/dialog-data.h:36
 #: ../src/ui/dialog/inkscape-preferences.cpp:1879
 msgid "Advanced"
 msgstr "Avanzate"
 
-#: ../src/ui/dialog/dialog-data.h:47
+#: ../src/ui/dialog/dialog-data.h:37
 #: ../share/extensions/jessyink_autotexts.inx:6
 #: ../share/extensions/jessyink_effects.inx:6
 #: ../share/extensions/jessyink_export.inx:7
@@ -20740,129 +20866,13 @@ msgstr "Avanzate"
 msgid "Settings"
 msgstr "Impostazioni"
 
-#: ../src/ui/dialog/dialog-data.h:48
+#: ../src/ui/dialog/dialog-data.h:38
 msgid "Diagnostic"
 msgstr "Diagnostico"
 
-#: ../src/ui/dialog/dialog-data.h:49 ../share/extensions/interp_att_g.inx:15
+#: ../src/ui/dialog/dialog-data.h:39 ../share/extensions/interp_att_g.inx:15
 msgid "Other"
 msgstr "Altro"
-
-#: ../src/ui/dialog/dialog-data.h:60
-msgid "_Align and Distribute"
-msgstr "_Allinea e distribuisci"
-
-#: ../src/ui/dialog/dialog-data.h:61
-msgid "Create Tiled Clones"
-msgstr "Crea cloni in serie"
-
-#: ../src/ui/dialog/dialog-data.h:62
-msgid "_Document Properties"
-msgstr "Proprietà del _documento"
-
-#: ../src/ui/dialog/dialog-data.h:63
-msgid "_Export"
-msgstr "_Esporta"
-
-#: ../src/ui/dialog/dialog-data.h:64
-msgid "_Fill and Stroke"
-msgstr "Riempimento e Contorni"
-
-#: ../src/ui/dialog/dialog-data.h:65
-msgid "Filter _Editor"
-msgstr "_Editore di filtri"
-
-#: ../src/ui/dialog/dialog-data.h:66
-msgid "_Find/Replace"
-msgstr "T_rova/Sostituisci"
-
-#: ../src/ui/dialog/dialog-data.h:67
-msgid "_Unicode Characters"
-msgstr "Caratteri _Unicode"
-
-#: ../src/ui/dialog/dialog-data.h:68 ../share/ui/menus.ui:616
-msgid "Icon Preview"
-msgstr "Anteprima icona"
-
-#: ../src/ui/dialog/dialog-data.h:69
-msgid "_Input Devices"
-msgstr "Dispositivi di _input"
-
-#: ../src/ui/dialog/dialog-data.h:70
-msgid "Path E_ffects"
-msgstr "E_ffetti su tracciato"
-
-#: ../src/ui/dialog/dialog-data.h:71 ../share/ui/menus.ui:1277
-msgid "About _Memory"
-msgstr "Informazioni sulla _memoria"
-
-#: ../src/ui/dialog/dialog-data.h:72
-msgid "_Messages"
-msgstr "Messaggi"
-
-#: ../src/ui/dialog/dialog-data.h:73
-msgid "_Object attributes"
-msgstr "Attributi _oggetto"
-
-#: ../src/ui/dialog/dialog-data.h:74
-msgid "_Object Properties"
-msgstr "Proprietà _oggetto"
-
-#: ../src/ui/dialog/dialog-data.h:75
-msgid "Layers and Object_s"
-msgstr "Livelli e Oggetti"
-
-#: ../src/ui/dialog/dialog-data.h:76
-msgid "_Paint Servers"
-msgstr "_Trame"
-
-#: ../src/ui/dialog/dialog-data.h:77 ../share/ui/menus.ui:346
-msgid "P_references"
-msgstr "P_referenze"
-
-#: ../src/ui/dialog/dialog-data.h:78
-msgid "_Selectors and CSS"
-msgstr "_Selettori e CSS"
-
-#: ../src/ui/dialog/dialog-data.h:79
-msgid "SVG Font Editor"
-msgstr "Editore Caratteri SVG"
-
-#: ../src/ui/dialog/dialog-data.h:80
-msgid "S_watches"
-msgstr "Campio_ni"
-
-#: ../src/ui/dialog/dialog-data.h:81
-msgid "S_ymbols"
-msgstr "Simboli"
-
-#: ../src/ui/dialog/dialog-data.h:82
-msgid "_Text and Font"
-msgstr "_Testo e carattere"
-
-#: ../src/ui/dialog/dialog-data.h:83
-msgid "_Trace Bitmap"
-msgstr "Ve_ttorizza bitmap"
-
-#: ../src/ui/dialog/dialog-data.h:84
-msgid "Transfor_m"
-msgstr "Trasformazioni"
-
-#: ../src/ui/dialog/dialog-data.h:85
-msgid "Undo _History"
-msgstr "Cronologia modifiche"
-
-#: ../src/ui/dialog/dialog-data.h:86
-msgid "_XML Editor"
-msgstr "Editore _XML"
-
-#: ../src/ui/dialog/dialog-data.h:88
-msgid "Check Spellin_g"
-msgstr "Controlla orto_grafia"
-
-#: ../src/ui/dialog/dialog-data.h:91
-msgid "Prototype"
-msgstr "Prototipo"
 
 #: ../src/ui/dialog/dialog-multipaned.cpp:515
 msgid "You can drop dockable dialogs here."
@@ -21154,58 +21164,58 @@ msgstr "Rimuovi griglia"
 msgid "Changed default display unit"
 msgstr "Cambiata unità visualizzata"
 
-#: ../src/ui/dialog/export-batch.cpp:307
+#: ../src/ui/dialog/export-batch.cpp:305
 #, c-format
 msgid "%d Item"
 msgid_plural "%d Items"
 msgstr[0] "%d Oggetto"
 msgstr[1] "%d Oggetti"
 
-#: ../src/ui/dialog/export-batch.cpp:317
+#: ../src/ui/dialog/export-batch.cpp:315
 #, c-format
 msgid "%d Layer"
 msgid_plural "%d Layers"
 msgstr[0] "%d Livello"
 msgstr[1] "%d Livelli"
 
-#: ../src/ui/dialog/export-batch.cpp:324
+#: ../src/ui/dialog/export-batch.cpp:322
 #, c-format
 msgid "%d Page"
 msgid_plural "%d Pages"
 msgstr[0] "%d Pagina"
 msgstr[1] "%d Pagine"
 
-#: ../src/ui/dialog/export-batch.cpp:462
+#: ../src/ui/dialog/export-batch.cpp:460
 msgid "No items selected."
 msgstr "Nessun oggetto selezionato"
 
-#: ../src/ui/dialog/export-batch.cpp:548 ../src/ui/dialog/export-batch.cpp:550
+#: ../src/ui/dialog/export-batch.cpp:546 ../src/ui/dialog/export-batch.cpp:548
 msgid "Exporting %1 files"
 msgstr "Esportazione di %1 file"
 
-#: ../src/ui/dialog/export-batch.cpp:564 ../src/ui/dialog/export-single.cpp:563
+#: ../src/ui/dialog/export-batch.cpp:562 ../src/ui/dialog/export-single.cpp:561
 msgid "Exporting %1"
 msgstr "Esportazione di %1"
 
-#: ../src/ui/dialog/export-batch.cpp:592 ../src/ui/dialog/export-single.cpp:636
+#: ../src/ui/dialog/export-batch.cpp:591 ../src/ui/dialog/export-single.cpp:633
 msgid "Select a filename for exporting"
 msgstr "Seleziona il nome del file per l'esportazione"
 
-#: ../src/ui/dialog/export-batch.cpp:662 ../src/ui/dialog/export-single.cpp:864
+#: ../src/ui/dialog/export-batch.cpp:661 ../src/ui/dialog/export-single.cpp:861
 msgid "Export in progress"
 msgstr "Esportazione in corso"
 
-#: ../src/ui/dialog/export-single.cpp:316
+#: ../src/ui/dialog/export-single.cpp:314
 msgid "First Page"
 msgstr "Prima pagina"
 
 #. TRANSLATORS: %1 will be the filename, %2 the width, and %3 the height of the image
+#: ../src/ui/dialog/export-single.cpp:548
 #: ../src/ui/dialog/export-single.cpp:550
-#: ../src/ui/dialog/export-single.cpp:552
 msgid "Exporting %1 (%2 x %3)"
 msgstr "Sto esportando %1 (%2 x %3)"
 
-#: ../src/ui/dialog/export-single.cpp:612
+#: ../src/ui/dialog/export-single.cpp:610
 msgid "Set Export Options"
 msgstr "Imposta Opzioni esportazione"
 
@@ -27609,7 +27619,7 @@ msgstr "Un sottolivello dell'attuale"
 
 #
 # File: ../src/ui/dialog/livepatheffect-add.cpp, line: 472
-#: ../src/ui/dialog/livepatheffect-add.cpp:621
+#: ../src/ui/dialog/livepatheffect-add.cpp:618
 msgid ""
 "You don't have any favorites yet. Click on the favorites star again to see "
 "all LPEs."
@@ -27617,13 +27627,13 @@ msgstr ""
 "Non hai ancora nessun favorito. Fai clic sulla stella dei favoriti per "
 "visualizzare tutti gli effetti su tracciato."
 
-#: ../src/ui/dialog/livepatheffect-add.cpp:625
+#: ../src/ui/dialog/livepatheffect-add.cpp:622
 msgid "These are your favorite effects"
 msgstr "I tuoi effetti favoriti"
 
-#: ../src/ui/dialog/livepatheffect-add.cpp:630
-#: ../src/ui/dialog/livepatheffect-add.cpp:642
-#: ../src/ui/dialog/livepatheffect-add.cpp:651
+#: ../src/ui/dialog/livepatheffect-add.cpp:627
+#: ../src/ui/dialog/livepatheffect-add.cpp:639
+#: ../src/ui/dialog/livepatheffect-add.cpp:648
 msgid "Nothing found! Please try again with different search terms."
 msgstr "Nessuna occorrenza trovata! Prova un termine di ricerca differente."
 
@@ -28274,11 +28284,11 @@ msgstr "<i>Controllo...</i>"
 msgid "Fix spelling"
 msgstr "Correggi ortografia"
 
-#: ../src/ui/dialog/startup.cpp:340
+#: ../src/ui/dialog/startup.cpp:341
 msgid "Browse for other files..."
 msgstr "Cerca altri file..."
 
-#: ../src/ui/dialog/startup.cpp:488
+#: ../src/ui/dialog/startup.cpp:489
 msgid "Open a different file"
 msgstr "Apri un file differente"
 
@@ -29188,7 +29198,7 @@ msgstr ""
 msgid "<b>Resize</b> the filter effect region"
 msgstr "<b>Ridimensiona</b> la regione del filtro"
 
-#: ../src/ui/knot/knot.cpp:314
+#: ../src/ui/knot/knot.cpp:309
 msgid "Node or handle drag canceled."
 msgstr "Nodo o maniglia cancellato"
 
@@ -29351,7 +29361,7 @@ msgstr "Nessuna categoria"
 msgid "Canvas"
 msgstr "Tela"
 
-#: ../src/ui/modifiers.cpp:61 ../src/widgets/desktop-widget.cpp:1522
+#: ../src/ui/modifiers.cpp:61 ../src/widgets/desktop-widget.cpp:1519
 #: ../share/ui/dialog-export.glade:482 ../share/ui/dialog-export.glade:923
 #: ../share/extensions/printing_marks.inx:18
 msgid "Selection"
@@ -32272,7 +32282,7 @@ msgstr "Stile carattere"
 
 #: ../src/ui/toolbar/text-toolbar.cpp:310
 #: ../src/ui/toolbar/text-toolbar.cpp:1971
-#: ../src/ui/widget/font-selector.cpp:32 ../src/ui/widget/font-selector.cpp:152
+#: ../src/ui/widget/font-selector.cpp:32 ../src/ui/widget/font-selector.cpp:164
 msgid "Font size"
 msgstr "Dimensione carattere"
 
@@ -32795,17 +32805,17 @@ msgstr ""
 msgid "Create ellipse"
 msgstr "Crea ellisse"
 
-#: ../src/ui/tools/box3d-tool.cpp:325 ../src/ui/tools/box3d-tool.cpp:331
-#: ../src/ui/tools/box3d-tool.cpp:337 ../src/ui/tools/box3d-tool.cpp:343
-#: ../src/ui/tools/box3d-tool.cpp:349 ../src/ui/tools/box3d-tool.cpp:355
+#: ../src/ui/tools/box3d-tool.cpp:327 ../src/ui/tools/box3d-tool.cpp:333
+#: ../src/ui/tools/box3d-tool.cpp:339 ../src/ui/tools/box3d-tool.cpp:345
+#: ../src/ui/tools/box3d-tool.cpp:351 ../src/ui/tools/box3d-tool.cpp:357
 msgid "Change perspective (angle of PLs)"
 msgstr "Cambia prospettiva (angolo degli assi prospettici)"
 
-#: ../src/ui/tools/box3d-tool.cpp:521
+#: ../src/ui/tools/box3d-tool.cpp:525
 msgid "<b>3D Box</b>; with <b>Shift</b> to extrude along the Z axis"
 msgstr "<b>Solido 3D</b>; <b>Maiusc</b> per estrudere lungo l'asse Z"
 
-#: ../src/ui/tools/box3d-tool.cpp:543
+#: ../src/ui/tools/box3d-tool.cpp:547
 msgid "Create 3D box"
 msgstr "Crea solido 3D"
 
@@ -33147,19 +33157,19 @@ msgstr "Converti misura in oggetto"
 msgid "Add global measure line"
 msgstr "Aggiungi misurazione complessiva"
 
-#: ../src/ui/tools/measure-tool.cpp:1128
+#: ../src/ui/tools/measure-tool.cpp:1129
 msgid "Selected"
 msgstr "Selezionato"
 
-#: ../src/ui/tools/measure-tool.cpp:1130
+#: ../src/ui/tools/measure-tool.cpp:1131
 msgid "Not selected"
 msgstr "Non selezionato"
 
-#: ../src/ui/tools/measure-tool.cpp:1145
+#: ../src/ui/tools/measure-tool.cpp:1146
 msgid "Press 'CTRL' to measure into group"
 msgstr "Premi 'Ctrl' per misurare all'interno del gruppo"
 
-#: ../src/ui/tools/measure-tool.cpp:1342 ../src/ui/tools/measure-tool.cpp:1344
+#: ../src/ui/tools/measure-tool.cpp:1343 ../src/ui/tools/measure-tool.cpp:1345
 #, c-format
 msgid "Crossing %lu"
 msgstr "Intersezione %lu"
@@ -35019,10 +35029,6 @@ msgstr "Copia colore"
 msgid "Paste color"
 msgstr "Incolla colore"
 
-#: ../src/ui/widget/selected-style.cpp:278
-msgid "Swap fill and stroke"
-msgstr "Inverti riempimento e contorno"
-
 #: ../src/ui/widget/selected-style.cpp:282
 #: ../src/ui/widget/selected-style.cpp:575
 #: ../src/ui/widget/selected-style.cpp:583
@@ -35496,39 +35502,39 @@ msgstr "scala di grigi"
 msgid "print colors preview"
 msgstr "anteprima colori stampa"
 
-#: ../src/widgets/desktop-widget.cpp:835
+#: ../src/widgets/desktop-widget.cpp:832
 msgid "Locked all guides"
 msgstr "Tutte le guide sono bloccate"
 
-#: ../src/widgets/desktop-widget.cpp:837
+#: ../src/widgets/desktop-widget.cpp:834
 msgid "Unlocked all guides"
 msgstr "Tutte le guide sono sbloccate"
 
-#: ../src/widgets/desktop-widget.cpp:854
+#: ../src/widgets/desktop-widget.cpp:851
 msgid "Color-managed display is <b>enabled</b> in this window"
 msgstr ""
 "La gestione del colore del display è <b>abilitata</b> in questa finestra"
 
-#: ../src/widgets/desktop-widget.cpp:856
+#: ../src/widgets/desktop-widget.cpp:853
 msgid "Color-managed display is <b>disabled</b> in this window"
 msgstr ""
 "La gestione del colore del display è <b>disabilitata</b> in questa finestra"
 
-#: ../src/widgets/desktop-widget.cpp:1006
+#: ../src/widgets/desktop-widget.cpp:1003
 msgid "Note:"
 msgstr "Nota:"
 
-#: ../src/widgets/desktop-widget.cpp:1514 ../share/ui/dialog-export.glade:518
+#: ../src/widgets/desktop-widget.cpp:1511 ../share/ui/dialog-export.glade:518
 #: ../share/ui/page-properties.glade:799 ../share/ui/align-and-distribute.ui:60
 #: ../share/extensions/voronoi2svg.inx:15
 msgid "Page"
 msgstr "Pagina"
 
-#: ../src/widgets/desktop-widget.cpp:1526
+#: ../src/widgets/desktop-widget.cpp:1523
 msgid "Centre Page"
 msgstr "Centra pagina"
 
-#: ../src/widgets/desktop-widget.cpp:1869
+#: ../src/widgets/desktop-widget.cpp:1868
 msgid "Create guide"
 msgstr "Crea guida"
 
@@ -35540,47 +35546,47 @@ msgstr "rimuovi"
 msgid "Set attribute"
 msgstr "Imposta attributo"
 
-#: ../src/widgets/toolbox.cpp:125
+#: ../src/widgets/toolbox.cpp:126
 msgid "Style of new rectangles"
 msgstr "Stile dei nuovi rettangoli"
 
-#: ../src/widgets/toolbox.cpp:126
+#: ../src/widgets/toolbox.cpp:127
 msgid "Style of new ellipses"
 msgstr "Stile delle nuove ellissi"
 
-#: ../src/widgets/toolbox.cpp:127
+#: ../src/widgets/toolbox.cpp:128
 msgid "Style of new stars"
 msgstr "Stile dei nuovi poligoni"
 
-#: ../src/widgets/toolbox.cpp:128
+#: ../src/widgets/toolbox.cpp:129
 msgid "Style of new 3D boxes"
 msgstr "Stile dei nuovi solidi 3D"
 
-#: ../src/widgets/toolbox.cpp:129
+#: ../src/widgets/toolbox.cpp:130
 msgid "Style of new spirals"
 msgstr "Stile delle nuove spirali"
 
-#: ../src/widgets/toolbox.cpp:130
+#: ../src/widgets/toolbox.cpp:131
 msgid "Style of new paths created by Pencil"
 msgstr "Stile dei nuovi tracciati creati con il «Pastello»"
 
-#: ../src/widgets/toolbox.cpp:131
+#: ../src/widgets/toolbox.cpp:132
 msgid "Style of new paths created by Pen"
 msgstr "Stile dei nuovi tracciati creati con la «Penna»"
 
-#: ../src/widgets/toolbox.cpp:132
+#: ../src/widgets/toolbox.cpp:133
 msgid "Style of new calligraphic strokes"
 msgstr "Stile delle nuove linee calligrafiche"
 
-#: ../src/widgets/toolbox.cpp:139
+#: ../src/widgets/toolbox.cpp:140
 msgid "Color/opacity used for color tweaking"
 msgstr "Colore/Opacità usato per il ritocco del colore"
 
-#: ../src/widgets/toolbox.cpp:143
+#: ../src/widgets/toolbox.cpp:144
 msgid "Style of Paint Bucket fill objects"
 msgstr "Stile dei nuovi oggetti creati con il «Secchiello»"
 
-#: ../src/widgets/toolbox.cpp:144 ../src/widgets/toolbox.cpp:145
+#: ../src/widgets/toolbox.cpp:145 ../src/widgets/toolbox.cpp:146
 msgid "TBD"
 msgstr "Da definire"
 
@@ -47375,7 +47381,7 @@ msgstr ""
 "operazioni su tracciati, tracciare bitmap e molto altro. Inoltre Inkscape "
 "supporta un'attiva comunità di utenti e sviluppatori."
 
-#: ../org.inkscape.Inkscape.appdata.xml.in:40
+#: ../org.inkscape.Inkscape.appdata.xml.in:43
 msgid "Main application window"
 msgstr "Finestra applicazione"
 
@@ -47570,6 +47576,21 @@ msgstr "metà-em"
 #: ../share/ui/units.xml:99
 msgid "Half of font height"
 msgstr "Metà altezza carattere"
+
+#~ msgid "Align to selection's left edge"
+#~ msgstr "Allinea al margine sinistro della selezione"
+
+#~ msgid "Align to selection's right edge"
+#~ msgstr "Allinea al margine destro della selezione"
+
+#~ msgid "Align to selection's top edge"
+#~ msgstr "Allinea al margine superiore della selezione"
+
+#~ msgid "Align to selection's bottom edge"
+#~ msgstr "Allinea al margine inferiore della selezione"
+
+#~ msgid "Align to selection's center"
+#~ msgstr "Allinea al centro della selezione"
 
 #~ msgid "Show or hide guides (drag from a ruler to create a guide)"
 #~ msgstr ""
