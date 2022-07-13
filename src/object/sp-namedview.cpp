@@ -213,6 +213,7 @@ void SPNamedView::build(SPDocument *document, Inkscape::XML::Node *repr) {
     this->readAttr(SPAttr::BORDERCOLOR);
     this->readAttr(SPAttr::BORDEROPACITY);
     this->readAttr(SPAttr::PAGECOLOR);
+    this->readAttr(SPAttr::INKSCAPE_PAGEOPACITY);
     this->readAttr(SPAttr::INKSCAPE_DESK_COLOR);
     this->readAttr(SPAttr::INKSCAPE_DESK_CHECKERBOARD);
     this->readAttr(SPAttr::INKSCAPE_PAGESHADOW);
