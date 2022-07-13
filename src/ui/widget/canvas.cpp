@@ -2606,7 +2606,13 @@ CanvasPrivate::on_idle()
             // Check for timeout.
             auto now = g_get_monotonic_time();
             auto elapsed = now - start_time;
-            if (elapsed > prefs.render_time_limit) {
+            bool fixchoping = false;
+            #ifdef _WIN32 
+                fixchoping = true;
+            #elif defined(__APPLE__)
+                fixchoping = true;
+            #endif
+            if (elapsed > ((fixchoping && prefs.render_time_limit == 1000) ? 80000 : prefs.render_time_limit)) {
                 // Timed out. Temporarily return to GTK main loop, and come back here when next idle.
                 if (prefs.debug_logging) std::cout << "Timed out: " << g_get_monotonic_time() - start_time << " us" << std::endl;
                 framecheckobj.subtype = 1;
