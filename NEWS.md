@@ -1,3 +1,16 @@
+Inkscape 1.2.1
+
+Released on 2022-07-16
+
+
+    Fix a data loss crash
+    Show filtered objects on all pages of exported multipage documents
+    Various crash fixes and translation improvements
+
+
+
+
+
 Inkscape 1.2
 
 Release highlights

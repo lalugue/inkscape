@@ -44,6 +44,17 @@
     </screenshot>
   </screenshots>
   <releases>
+    <release version="1.2.1" date="2022-07-14">
+      <description>
+        <p>Inkscape 1.2.1</p>
+        <ul>
+          <li>Fix a data loss crash</li>
+          <li>Show filtered objects on all pages of exported multipage documents</li>
+          <li>Various crash fixes and translation improvements</li>
+        </ul>
+      </description>
+      <url>http://wiki.inkscape.org/wiki/index.php/Release_notes/1.2.1</url>
+    </release>
     <release version="1.2" date="2022-05-16">
       <description>
         <p>Inkscape 1.2</p>
