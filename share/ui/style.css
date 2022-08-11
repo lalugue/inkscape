@@ -661,6 +661,11 @@ scale.tight-slider {
     padding: 8px 4px 7px 4px;
 }
 
+scale.small-slider {
+    padding-top: 7px;
+    padding-bottom: 7px;
+}
+
 /* add .small-marks class to Gtk::Scale to have smaller font used, since markup didn't work there */
 scale.small-marks.marks-after {
     font-size: smaller;

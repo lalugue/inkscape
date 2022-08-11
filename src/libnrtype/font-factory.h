@@ -12,6 +12,9 @@
 
 #include <functional>
 #include <algorithm>
+#include <glibmm/refptr.h>
+#include <pangomm/fontfamily.h>
+#include <pangomm/fontmap.h>
 #include <utility>
 #include <memory>
 #include <map>
@@ -82,6 +85,8 @@ public:
     // Retrieves style information about a font family.
     std::vector<StyleNames> GetUIStyles(PangoFontFamily *in);
 
+    std::vector<Glib::RefPtr<Pango::FontFamily>> get_font_families();
+
     /// Retrieve a FontInstance from a style object, first trying to use the font-specification, the CSS information
     std::shared_ptr<FontInstance> FaceFromStyle(SPStyle const *style);
     // Various functions to get a FontInstance from different descriptions.
@@ -107,6 +112,7 @@ private:
     // Pango data. Backend-specific structures are cast to these opaque types.
     PangoFontMap *fontServer;
     PangoContext *fontContext;
+    Glib::RefPtr<Pango::FontMap> _font_map;
 
     // A hashmap of all the loaded font instances, indexed by their PangoFontDescription.
     // Note: Since pango already does that, using the PangoFont could work too.

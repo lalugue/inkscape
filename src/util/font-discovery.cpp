@@ -1,8 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 
 #include "font-discovery.h"
+#include "inkscape-version.h"
 #include "io/resource.h"
 
+#include <glibmm/ustring.h>
 #include <libnrtype/font-factory.h>
 #include <libnrtype/font-instance.h>
 #include <glibmm/keyfile.h>
@@ -126,8 +128,19 @@ void sort_fonts(std::vector<FontInfo>& fonts, FontOrder order) {
     }
 }
 
+Glib::ustring get_fontspec(const Glib::ustring& family, const Glib::ustring& face, const Glib::ustring& variations) {
+    if (variations.empty()) {
+        return face.empty() ? family : family + ", " + face;
+    }
+    else {
+        return (face.empty() ? family : family + ", " + face) + " " + variations;
+        // currently font variations replace style
+        // return family + ", " + variations;
+    }
+}
+
 Glib::ustring get_fontspec(const Glib::ustring& family, const Glib::ustring& face) {
-    return face.empty() ? family : family + ", " + face;
+    return get_fontspec(family, face, Glib::ustring());
 }
 
 Glib::ustring get_face_style(const Pango::FontDescription& desc) {
@@ -137,10 +150,23 @@ Glib::ustring get_face_style(const Pango::FontDescription& desc) {
     return copy.to_string();
 }
 
-Glib::ustring get_inkscape_fontspec(const Glib::RefPtr<Pango::FontFamily>& ff, const Glib::RefPtr<Pango::FontFace>& face) {
-    if (!ff | !face) return Glib::ustring();
+Glib::ustring get_inkscape_fontspec_from_string(const Glib::ustring& inkscape_fontspec, const Glib::ustring& variations) {
+    Pango::FontDescription font(inkscape_fontspec);
 
-    return get_fontspec(ff->get_name(), get_face_style(face->describe()));
+    if (variations.empty()) {
+        // get face name
+
+        return get_fontspec(font.get_family(), "");
+    }
+    else {
+        return get_fontspec(font.get_family(), Glib::ustring(), variations);
+    }
+}
+
+Glib::ustring get_inkscape_fontspec(const Glib::RefPtr<Pango::FontFamily>& ff, const Glib::RefPtr<Pango::FontFace>& face, const Glib::ustring& variations) {
+    if (!ff) return Glib::ustring();
+
+    return get_fontspec(ff->get_name(), face ? get_face_style(face->describe()) : Glib::ustring(), variations);
 }
 
 Pango::FontDescription get_font_description(const Glib::RefPtr<Pango::FontFamily>& ff, const Glib::RefPtr<Pango::FontFace>& face) {
@@ -151,7 +177,7 @@ Pango::FontDescription get_font_description(const Glib::RefPtr<Pango::FontFamily
     return desc;
 }
 
-const char font_cache[] = "font-cache-v1.ini";
+const char font_cache[] = "font-cache-v1.01.ini";
 
 void save_font_cache(const std::vector<FontInfo>& fonts) {
     auto keyfile = std::make_unique<Glib::KeyFile>();
@@ -161,6 +187,7 @@ void save_font_cache(const std::vector<FontInfo>& fonts) {
     Glib::ustring weight("weight");
     Glib::ustring width("width");
     Glib::ustring family("family");
+    Glib::ustring variable("variable");
 
     for (auto&& font : fonts) {
         auto desc = get_font_description(font.ff, font.face);
@@ -170,6 +197,7 @@ void save_font_cache(const std::vector<FontInfo>& fonts) {
         keyfile->set_double(group, weight, font.weight);
         keyfile->set_double(group, width, font.width);
         keyfile->set_integer(group, family, font.family_kind);
+        keyfile->set_boolean(group, variable, font.variable_font);
     }
 
     std::string filename = Glib::build_filename(Inkscape::IO::Resource::profile_path(), font_cache);
@@ -196,6 +224,7 @@ std::unordered_map<std::string, FontInfo> load_cached_font_info() {
             Glib::ustring weight("weight");
             Glib::ustring width("width");
             Glib::ustring family("family");
+            Glib::ustring variable("variable");
 
             for (auto&& group : keyfile->get_groups()) {
                 FontInfo font;
@@ -204,6 +233,7 @@ std::unordered_map<std::string, FontInfo> load_cached_font_info() {
                 font.weight = keyfile->get_double(group, weight);
                 font.width = keyfile->get_double(group, width);
                 font.family_kind = keyfile->get_integer(group, family);
+                font.variable_font = keyfile->get_boolean(group, variable);
 
                 info[group.raw()] = font;
             }
@@ -220,13 +250,11 @@ std::vector<FontInfo> get_all_fonts() {
     std::vector<FontInfo> fonts;
     auto cache = load_cached_font_info();
 
-    std::vector<PangoFontFamily*> families;
-    FontFactory::get().GetUIFamilies(families);
+    auto families = FontFactory::get().get_font_families();
 
     bool update_cache = false;
 
-    for (auto font_family : families) {
-        auto ff = Glib::wrap(font_family);
+    for (auto ff : families) {
         auto faces = ff->list_faces();
         std::set<std::string> styles;
         for (auto face : faces) {
@@ -255,6 +283,7 @@ std::vector<FontInfo> get_all_fonts() {
                     info.monospaced = font->is_fixed_width();
                     info.oblique = font->is_oblique();
                     info.family_kind = font->family_class();
+                    info.variable_font = !font->get_opentype_varaxes().empty();
                     auto glyph = font->LoadGlyph(font->MapUnicodeChar('E'));
                     if (glyph) {
                         // bbox: L T R B

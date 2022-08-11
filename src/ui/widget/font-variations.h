@@ -16,6 +16,7 @@
 #include <gtkmm/sizegroup.h>
 #include <gtkmm/label.h>
 #include <gtkmm/scale.h>
+#include <gtkmm/spinbutton.h>
 
 #include "libnrtype/OpenTypeUtil.h"
 
@@ -34,11 +35,12 @@ class FontVariationAxis : public Gtk::Grid
 public:
     FontVariationAxis(Glib::ustring name, OTVarAxis const &axis);
     Glib::ustring get_name() { return name; }
-    Gtk::Label* get_label() { return label; }
-    double get_value() { return scale->get_value(); }
-    int get_precision() { return precision; }
-    Gtk::Scale* get_scale() { return scale; }
-    double get_def() { return def; }
+    Gtk::Label* get_label()  { return label; }
+    double get_value()       { return scale->get_adjustment()->get_value(); }
+    int get_precision()      { return precision; }
+    Gtk::Scale* get_scale()  { return scale; }
+    double get_def()         { return def; }
+    Gtk::SpinButton* get_editbox() { return edit; }
 
 private:
 
@@ -46,6 +48,7 @@ private:
     Glib::ustring name;
     Gtk::Label* label;
     Gtk::Scale* scale;
+    Gtk::SpinButton* edit = nullptr;
 
     int precision;
     double def = 0.0; // Default value
@@ -86,7 +89,7 @@ public:
      */
     Glib::ustring get_css_string();
 
-    Glib::ustring get_pango_string();
+    Glib::ustring get_pango_string(bool include_defaults = false) const;
 
     void on_variations_change();
 
@@ -101,11 +104,13 @@ public:
     // return true if there are some variations present
     bool variations_present() const;
 
+    Glib::RefPtr<Gtk::SizeGroup> get_size_group(int index);
+
 private:
 
     std::vector<FontVariationAxis*> axes;
     Glib::RefPtr<Gtk::SizeGroup> size_group;
-
+    Glib::RefPtr<Gtk::SizeGroup> size_group_edit;
     sigc::signal<void ()> signal_changed;
 };
 

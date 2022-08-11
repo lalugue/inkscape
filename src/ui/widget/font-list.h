@@ -15,9 +15,10 @@
 #include <gtkmm/listbox.h>
 #include <gtkmm/liststore.h>
 #include <gtkmm/scale.h>
+#include "ui/widget/font-variations.h"
+#include "ui/operation-blocker.h"
 #include "util/font-discovery.h"
 #include "util/font-tags.h"
-#include "ui/operation-blocker.h"
 
 namespace Inkscape {
 namespace UI {
@@ -82,6 +83,7 @@ private:
     int _extra_fonts = 0;
     Gtk::ListBox& _tag_list;
     Inkscape::FontTags& _font_tags;
+    FontVariations _font_variations;
 };
 
 }}} // namespaces

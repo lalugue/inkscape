@@ -10,6 +10,10 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#include <pangomm/fontdescription.h>
+#include <pangomm/fontfamily.h>
+#include <pangomm/fontmap.h>
+#include <vector>
 #ifdef HAVE_CONFIG_H
 #include "config.h"  // only include where actually required!
 #endif
@@ -208,6 +212,7 @@ FontFactory::FontFactory()
     : fontServer(pango_ft2_font_map_new())
     , fontContext(pango_font_map_create_context(fontServer))
 {
+    _font_map = Glib::wrap(fontServer);
     pango_ft2_font_map_set_resolution(PANGO_FT2_FONT_MAP(fontServer), 72, 72);
 #if PANGO_VERSION_CHECK(1,48,0)
     pango_fc_font_map_set_default_substitute(PANGO_FC_FONT_MAP(fontServer), FactorySubstituteFunc, this, nullptr);
@@ -407,6 +412,33 @@ std::map<std::string, PangoFontFamily *> FontFactory::GetUIFamilies()
 
     g_free(families);
     return result;
+}
+
+std::vector<Glib::RefPtr<Pango::FontFamily>> FontFactory::get_font_families() {
+    auto list = _font_map->list_families();
+    std::vector<Glib::RefPtr<Pango::FontFamily>> sorted;
+    sorted.reserve(list.size());
+
+    for (auto&& family : list) {
+        auto name = family->get_name();
+        if (name.empty()) {
+            std::cerr << "FontFactory::get_font_families - Missing font family name! " << std::endl;
+            continue;
+        }
+        if (!g_utf8_validate(name.c_str(), -1, nullptr)) {
+            std::cerr << "FontFactory::get_font_families - Illegal characters in font family name ";
+            std::cerr << "Ignoring font '" << name << "'" << std::endl;
+            continue;
+        }
+
+        sorted.emplace_back(family);
+    }
+
+    std::sort(sorted.begin(), sorted.end(), [](const Glib::RefPtr<Pango::FontFamily>& a, const Glib::RefPtr<Pango::FontFamily>& b){
+        return a->get_name() < b->get_name();
+    });
+    
+    return sorted;
 }
 
 std::vector<StyleNames> FontFactory::GetUIStyles(PangoFontFamily *in)

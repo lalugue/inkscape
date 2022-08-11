@@ -17,6 +17,7 @@ FontTags& FontTags::get() {
         ft.add_tag(FontTag{"decorative", "Decorative"});
         ft.add_tag(FontTag{"symbols", "Symbols"});
         ft.add_tag(FontTag{"monospace", "Monospace"});
+        ft.add_tag(FontTag{"variable", "Variable"});
     }
     return ft;
 }
