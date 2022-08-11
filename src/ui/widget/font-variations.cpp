@@ -9,6 +9,7 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#include <cmath>
 #include <glibmm/refptr.h>
 #include <glibmm/ustring.h>
 #include <gtkmm/adjustment.h>
@@ -91,7 +92,6 @@ std::pair<Glib::ustring, Glib::ustring> get_axis_name(const Glib::ustring& abbr)
 FontVariationAxis::FontVariationAxis(Glib::ustring name_, OTVarAxis const &axis, Glib::ustring label_, Glib::ustring tooltip)
     : name(std::move(name_))
 {
-
     // std::cout << "FontVariationAxis::FontVariationAxis:: "
     //           << " name: " << name
     //           << " min:  " << axis.minimum
@@ -103,7 +103,7 @@ FontVariationAxis::FontVariationAxis(Glib::ustring name_, OTVarAxis const &axis,
 
     label = Gtk::make_managed<Gtk::Label>(label_ + ":");
     label->set_tooltip_text(tooltip);
-    label->set_xalign(0.0f);
+    label->set_xalign(0.0f); // left-align
     add(*label);
 
     edit = Gtk::make_managed<Gtk::SpinButton>();
@@ -114,22 +114,27 @@ FontVariationAxis::FontVariationAxis(Glib::ustring name_, OTVarAxis const &axis,
     edit->set_tooltip_text(tooltip);
     add(*edit);
 
-    precision = 2 - int( log10(axis.maximum - axis.minimum));
+    auto magnitude = static_cast<int>(log10(axis.maximum - axis.minimum));
+    precision = 2 - magnitude;
     if (precision < 0) precision = 0;
 
     auto adj = Gtk::Adjustment::create(axis.set_val, axis.minimum, axis.maximum);
-    adj->set_step_increment(1);
+    auto step = pow(10.0, -precision);
+    adj->set_step_increment(step);
+    adj->set_page_increment(step * 10.0);
     edit->set_adjustment(adj);
     edit->set_digits(precision);
 
     auto adj_scale = Gtk::Adjustment::create(axis.set_val, axis.minimum, axis.maximum);
+    adj_scale->set_step_increment(step);
+    adj_scale->set_page_increment(step * 10.0);
     scale = Gtk::make_managed<Gtk::Scale>();
-    scale->set_digits(precision);
+    scale->set_digits (precision);
     scale->set_hexpand(true);
     scale->set_adjustment(adj_scale);
     scale->get_style_context()->add_class("small-slider");
     scale->set_draw_value(false);
-    add( *scale );
+    add(*scale);
 
     // sync slider with spin button
     g_object_bind_property(adj->gobj(), "value", adj_scale->gobj(), "value", GBindingFlags(G_BINDING_SYNC_CREATE | G_BINDING_BIDIRECTIONAL));
@@ -172,18 +177,19 @@ void FontVariations::update(Glib::ustring const &font_spec)
         // std::cout << "Creating axis: " << a.first << std::endl;
         auto label_tooltip = get_axis_name(a.first);
         auto axis = Gtk::make_managed<FontVariationAxis>(a.first, a.second, label_tooltip.first, label_tooltip.second);
-        axes.push_back( axis );
-        add( *axis );
-        size_group->add_widget( *(axis->get_label()) ); // Keep labels the same width
+        axes.push_back(axis);
+        add(*axis);
+        size_group->add_widget(*(axis->get_label())); // Keep labels the same width
         size_group_edit->add_widget(*axis->get_editbox());
         axis->get_scale()->get_adjustment()->signal_value_changed().connect(
-            [=](){ on_variations_change(); }
+            [=](){ signal_changed.emit (); }
         );
     }
 
     show_all_children();
 }
 
+#if false
 void
 FontVariations::fill_css( SPCSSAttr *css ) {
 
@@ -214,6 +220,7 @@ FontVariations::get_css_string() {
 
     return css_string;
 }
+#endif
 
 Glib::ustring
 FontVariations::get_pango_string(bool include_defaults) const {
@@ -244,12 +251,6 @@ FontVariations::get_pango_string(bool include_defaults) const {
     }
 
     return pango_string;
-}
-
-void
-FontVariations::on_variations_change() {
-    // std::cout << "FontVariations::on_variations_change: " << get_css_string() << std::endl;;
-    signal_changed.emit ();
 }
 
 bool FontVariations::variations_present() const {

@@ -43,7 +43,6 @@ public:
     Gtk::SpinButton* get_editbox() { return edit; }
 
 private:
-
     // Widgets
     Glib::ustring name;
     Gtk::Label* label;
@@ -62,23 +61,18 @@ private:
  */
 class FontVariations : public Gtk::Grid
 {
-
 public:
-
     /**
      * Constructor
      */
     FontVariations();
-
-protected:
-
-public:
 
     /**
      * Update GUI.
      */
     void update(const Glib::ustring& font_spec);
 
+#if false
     /**
      * Fill SPCSSAttr based on settings of buttons.
      */
@@ -88,10 +82,9 @@ public:
      * Get CSS String
      */
     Glib::ustring get_css_string();
+#endif
 
     Glib::ustring get_pango_string(bool include_defaults = false) const;
-
-    void on_variations_change();
 
     /**
      * Let others know that user has changed GUI settings.
@@ -104,10 +97,10 @@ public:
     // return true if there are some variations present
     bool variations_present() const;
 
+    // provide access to label and spin button size groups
     Glib::RefPtr<Gtk::SizeGroup> get_size_group(int index);
 
 private:
-
     std::vector<FontVariationAxis*> axes;
     Glib::RefPtr<Gtk::SizeGroup> size_group;
     Glib::RefPtr<Gtk::SizeGroup> size_group_edit;
