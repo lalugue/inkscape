@@ -252,10 +252,9 @@ void TextEdit::onReadSelection ( bool dostyle, bool /*docontent*/ )
         // Update family/style based on selection.
         font_lister->selection_update();
         Glib::ustring fontspec = font_lister->get_fontspec();
-g_message("cur spec: %s", fontspec.c_str());
         // Update Font Face.
         font_selector.update_font ();
-font_list.set_current_font(font_lister->get_font_family(), font_lister->get_font_style());
+        font_list.set_current_font(font_lister->get_font_family(), font_lister->get_font_style());
 
         // Update Size.
         Inkscape::Preferences *prefs = Inkscape::Preferences::get();
@@ -263,7 +262,7 @@ font_list.set_current_font(font_lister->get_font_family(), font_lister->get_font
         double size = sp_style_css_size_px_to_units(query.font_size.computed, unit);
         font_selector.update_size (size);
         selected_fontsize = size;
-font_list.set_current_size(size);
+        font_list.set_current_size(size);
         // Update font features (variant) widget
         //int result_features =
         sp_desktop_query_style (desktop, &query, QUERY_STYLE_PROPERTY_FONTVARIANTS);
@@ -403,7 +402,7 @@ SPCSSAttr *TextEdit::fillTextStyle ()
 
         Glib::ustring fontspec = font_list.get_fontspec();
 
-    g_message("fill style %s", fontspec.c_str());
+    // g_message("fill style %s", fontspec.c_str());
         if( !fontspec.empty() ) {
 
             Inkscape::FontLister *fontlister = Inkscape::FontLister::get_instance();
@@ -413,7 +412,7 @@ SPCSSAttr *TextEdit::fillTextStyle ()
             Inkscape::CSSOStringStream os;
             Inkscape::Preferences *prefs = Inkscape::Preferences::get();
             int unit = prefs->getInt("/options/font/unitType", SP_CSS_UNIT_PT);
-    g_message("fill style %f", font_list.get_fontsize());
+    // g_message("fill style %f", font_list.get_fontsize());
             if (prefs->getBool("/options/font/textOutputPx", true)) {
                 os << sp_style_css_size_units_to_px(font_list.get_fontsize(), unit)
                    << sp_style_get_css_unit_string(SP_CSS_UNIT_PX);

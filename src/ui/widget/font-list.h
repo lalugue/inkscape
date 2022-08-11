@@ -3,9 +3,9 @@
 #ifndef INKSCAPE_UI_WIDGET_FONT_LIST_H
 #define INKSCAPE_UI_WIDGET_FONT_LIST_H
 
-// #include <unordered_map>
+#include <gtkmm/treepath.h>
+#include <sigc++/connection.h>
 #include <vector>
-// #include <giomm/liststore.h>
 #include <gtkmm/builder.h>
 #include <gtkmm/grid.h>
 #include <gtkmm/box.h>
@@ -15,6 +15,7 @@
 #include <gtkmm/listbox.h>
 #include <gtkmm/liststore.h>
 #include <gtkmm/scale.h>
+#include "helper/auto-connection.h"
 #include "ui/widget/font-variations.h"
 #include "ui/operation-blocker.h"
 #include "util/font-discovery.h"
@@ -58,6 +59,7 @@ private:
     void update_filterbar();
     Gtk::Box* create_pill_box(const FontTag& ftag);
     void sync_font_tag(const FontTag* ftag, bool selected);
+    void scroll_to_row(Gtk::TreePath path);
 
     sigc::signal<void ()> _signal_changed;
     sigc::signal<void ()> _signal_apply;
@@ -84,6 +86,7 @@ private:
     Gtk::ListBox& _tag_list;
     Inkscape::FontTags& _font_tags;
     FontVariations _font_variations;
+    auto_connection _scroll;
 };
 
 }}} // namespaces

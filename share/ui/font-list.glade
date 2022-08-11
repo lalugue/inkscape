@@ -554,6 +554,7 @@
         <property name="visible">True</property>
         <property name="can-focus">False</property>
         <property name="margin-start">5</property>
+        <property name="margin-end">1</property>
         <property name="spacing">3</property>
         <child>
           <object class="GtkLabel" id="font-size-label">
@@ -728,6 +729,7 @@
         <property name="visible">True</property>
         <property name="can-focus">False</property>
         <property name="margin-start">5</property>
+        <property name="margin-end">1</property>
         <property name="margin-bottom">2</property>
         <property name="orientation">vertical</property>
         <child>

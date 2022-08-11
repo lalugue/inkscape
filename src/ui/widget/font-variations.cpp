@@ -10,6 +10,7 @@
  */
 
 #include <glibmm/refptr.h>
+#include <glibmm/ustring.h>
 #include <gtkmm/adjustment.h>
 #include <gtkmm/enums.h>
 #include <gtkmm/object.h>
@@ -17,11 +18,13 @@
 #include <gtkmm/spinbutton.h>
 #include <iostream>
 #include <iomanip>
+#include <map>
 
 #include <gtkmm.h>
 #include <glibmm/i18n.h>
 
 #include <libnrtype/font-instance.h>
+#include <utility>
 #include "libnrtype/font-factory.h"
 
 #include "font-variations.h"
@@ -35,7 +38,57 @@ namespace Inkscape {
 namespace UI {
 namespace Widget {
 
-FontVariationAxis::FontVariationAxis(Glib::ustring name_, OTVarAxis const &axis)
+std::pair<Glib::ustring, Glib::ustring> get_axis_name(const Glib::ustring& abbr) {
+    // Transformed axis names;
+    // from https://fonts.google.com/knowledge/using_type/introducing_parametric_axes
+    // CC BY-SA 4.0
+    static std::map<std::string, std::pair<Glib::ustring, Glib::ustring>> map = {
+        // “Grade” (GRAD in CSS) is an axis that can be used to alter stroke thicknesses (or other forms)
+        // without affecting the type's overall width, inter-letter spacing, or kerning — unlike altering weight.
+        {"GRAD", std::make_pair(_("Grade"), _("Alter stroke thicknesses (or other forms) without affecting the type's overall width"))},
+        // “Parametric Thick Stroke”, XOPQ, is a reference to its logical name, “X Opaque”,
+        // which describes how it alters the opaque stroke forms of glyphs typically in the X dimension
+        {"XOPQ", std::make_pair(_("X-opaque"), _("Alter the opaque stroke forms of glyphs in the X dimension"))},
+        // “Parametric Thin Stroke”, YOPQ, is a reference to its logical name, “Y Opaque”,
+        // which describes how it alters the opaque stroke forms of glyphs typically in the Y dimension 
+        {"YOPQ", std::make_pair(_("Y-opaque"), _("Alter the opaque stroke forms of glyphs in the Y dimension"))},
+        // “Parametric Counter Width”, XTRA, is a reference to its logical name, “X-Transparent,”
+        // which describes how it alters a font’s transparent spaces (also known as negative shapes)
+        // inside and around all glyphs along the X dimension
+        {"XTRA", std::make_pair(_("X-transparent"), _("Alter the transparent spaces inside and around all glyphs along the X dimension"))},
+        // “Parametric Lowercase Height”
+        {"YTLC", std::make_pair(_("Lowercase height"), _("Vary the height of counters and other spaces between the baseline and x-height"))},
+        // “Parametric Uppercase Counter Height”
+        {"YTUC", std::make_pair(_("Uppercase height"), _("Vary the height of uppercase letterforms"))},
+        // “Parametric Ascender Height”
+        {"YTAS", std::make_pair(_("Ascender height"), _("Vary the height of lowercase ascenders"))},
+        // “Parametric Descender Depth”
+        {"YTDE", std::make_pair(_("Descender depth"), _("Vary the depth of lowercase descenders"))},
+        // “Parametric Figure Height”
+        {"YTFI", std::make_pair(_("Figure height"), _("Vary the height of figures"))},
+        // “Optical Size”
+        // Optical sizes in a variable font are different versions of a typeface optimized for use at singular specific sizes,
+        // such as 14 pt or 144 pt. Small (or body) optical sizes tend to have less stroke contrast, more open and wider spacing,
+        // and a taller x-height than those of their large (or display) counterparts.
+        {"OpticalSize", std::make_pair(_("Optical size"), _("Optimize the typeface for use at specific size"))},
+        // Slant controls the font file’s slant parameter for oblique styles.
+        {"Slant", std::make_pair(_("Slant"), _("Controls the font file’s slant parameter for oblique styles"))},
+        // Weight controls the font file’s weight parameter. 
+        {"Weight", std::make_pair(_("Weight"), _("Controls the font file’s weight parameter"))},
+        // Width controls the font file’s width parameter.
+        {"Width", std::make_pair(_("Width"), _("Controls the font file’s width parameter"))},
+    };
+
+    auto it = map.find(abbr.raw());
+    if (it != end(map)) {
+        return it->second;
+    }
+    else {
+        return std::make_pair(abbr, "");
+    }
+}
+
+FontVariationAxis::FontVariationAxis(Glib::ustring name_, OTVarAxis const &axis, Glib::ustring label_, Glib::ustring tooltip)
     : name(std::move(name_))
 {
 
@@ -48,7 +101,8 @@ FontVariationAxis::FontVariationAxis(Glib::ustring name_, OTVarAxis const &axis)
 
     set_column_spacing(3);
 
-    label = Gtk::make_managed<Gtk::Label>(name + ":");
+    label = Gtk::make_managed<Gtk::Label>(label_ + ":");
+    label->set_tooltip_text(tooltip);
     label->set_xalign(0.0f);
     add(*label);
 
@@ -57,6 +111,7 @@ FontVariationAxis::FontVariationAxis(Glib::ustring name_, OTVarAxis const &axis)
     edit->set_valign(Gtk::ALIGN_CENTER);
     edit->set_margin_top(2);
     edit->set_margin_bottom(2);
+    edit->set_tooltip_text(tooltip);
     add(*edit);
 
     precision = 2 - int( log10(axis.maximum - axis.minimum));
@@ -115,7 +170,8 @@ void FontVariations::update(Glib::ustring const &font_spec)
 
     for (auto &a : res->get_opentype_varaxes()) {
         // std::cout << "Creating axis: " << a.first << std::endl;
-        auto const axis = Gtk::make_managed<FontVariationAxis>(a.first, a.second);
+        auto label_tooltip = get_axis_name(a.first);
+        auto axis = Gtk::make_managed<FontVariationAxis>(a.first, a.second, label_tooltip.first, label_tooltip.second);
         axes.push_back( axis );
         add( *axis );
         size_group->add_widget( *(axis->get_label()) ); // Keep labels the same width

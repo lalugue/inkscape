@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 
+#include <glibmm/main.h>
+#include <glibmm/priorities.h>
 #include <glibmm/ustring.h>
 #include <gtkmm/label.h>
 #include <pangomm/fontdescription.h>
@@ -36,7 +38,7 @@ struct FontListColumnModel : public Gtk::TreeModelColumnRecord {
     Gtk::TreeModelColumn<bool> injected;
     Gtk::TreeModelColumn<Glib::ustring> missing_name;
     Gtk::TreeModelColumn<int> icon;
-    
+
     FontListColumnModel() {
         add(missing_name);
         add(missing);
@@ -577,7 +579,7 @@ bool FontList::select_font(const Glib::ustring& fontspec) {
             auto spec = row.get_value(g_column_model.missing_name);
             if (spec == fontspec) {
                 _font_list.get_selection()->select(row);
-                _font_list.scroll_to_row(path);
+                scroll_to_row(path);
                 found = true;
                 return true; // stop
             }
@@ -587,7 +589,7 @@ bool FontList::select_font(const Glib::ustring& fontspec) {
             auto spec = Inkscape::get_inkscape_fontspec(font.ff, font.face, font.variations);
             if (spec == fontspec) {
                 _font_list.get_selection()->select(row);
-                _font_list.scroll_to_row(path);
+                scroll_to_row(path);
                 found = true;
                 return true; // stop
             }
@@ -749,9 +751,8 @@ void FontList::set_current_font(const Glib::ustring& family, const Glib::ustring
     _current_fspec = fontspec;
 
     if (!fontspec.empty()) {
-        add_font(fontspec, true);
-
         _font_variations.update(fontspec);
+        add_font(fontspec, true);
     }
 }
 
@@ -783,10 +784,10 @@ void FontList::add_font(const Glib::ustring& fontspec, bool select) {
     });
 
     // fonts with variations will not be found, we need to remove " @ axis=value" part
-    auto at = fontspec.find('@');
+    auto at = fontspec.rfind('@');
     if (it == end(_fonts) && at != Glib::ustring::npos && at > 0) {
         // remove variations and try to match existing font
-        while (at > 0 && fontspec.raw()[at - 1] == ' ') at--; // trim spaces
+        while (at > 0 && fontspec[at - 1] == ' ') at--; // trim spaces
         auto fspec = fontspec.substr(0, at);
 // g_message("try match: '%s'", fspec.c_str());
         it = std::find_if(begin(_fonts), end(_fonts), [&](const FontInfo& f){
@@ -814,7 +815,7 @@ void FontList::add_font(const Glib::ustring& fontspec, bool select) {
         if (select) {
             _font_list.get_selection()->select(row);
             auto path = _font_list_store->get_path(iter);
-            _font_list.scroll_to_row(path);
+            scroll_to_row(path);
         }
 
         ++_extra_fonts; // extra font entry inserted
@@ -867,7 +868,7 @@ void FontList::add_font(const Glib::ustring& fontspec, bool select) {
         if (select) {
             _font_list.get_selection()->select(*iter);
             auto path = _font_list_store->get_path(iter);
-            _font_list.scroll_to_row(path);
+            scroll_to_row(path);
         }
 
         ++_extra_fonts; // extra font entry for a missing font added
@@ -948,6 +949,16 @@ void FontList::sync_font_tag(const FontTag* ftag, bool selected) {
         update_filterbar();
     }
     //todo as needed
+}
+
+void FontList::scroll_to_row(Gtk::TreePath path) {
+    // delay scroll request to let widget layout complete (due to hiding or showing variable font widgets);
+    // keep track of connection so we can disconnect in a destructor if it is still pending at that point
+    _scroll = Glib::signal_timeout().connect([=](){
+        _font_list.scroll_to_row(path);
+        return false; // <- false means disconnect
+    }, 50, Glib::PRIORITY_LOW);
+    // fudge factor of 50ms; ideally wait for layout pass to complete before scrolling to the row
 }
 
 }}} // namespaces
