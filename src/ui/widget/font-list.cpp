@@ -1,9 +1,12 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 
+#include <algorithm>
+#include <array>
 #include <glibmm/main.h>
 #include <glibmm/priorities.h>
 #include <glibmm/ustring.h>
 #include <gtkmm/label.h>
+#include <iterator>
 #include <pangomm/fontdescription.h>
 #include <pangomm/fontfamily.h>
 #include <set>
@@ -50,7 +53,30 @@ struct FontListColumnModel : public Gtk::TreeModelColumnRecord {
 
 FontListColumnModel g_column_model; // model for font list
 
-// construct fonr name from Pango face and family; if real font name is true, return
+static std::array<int, 34> g_font_sizes = {
+    4, 5, 6, 7, 8, 9, 10, 12, 14, 16, 18, 20, 24, 28, 32, 36,
+    44, 56, 64, 72, 80, 96, 112, 128, 144, 160, 192, 224, 256,
+    300, 400, 500, 600, 800
+};
+
+static int index_to_font_size(int index) {
+    if (index < 0) {
+        return g_font_sizes.front();
+    }
+    else if (index >= g_font_sizes.size()) {
+        return g_font_sizes.back();
+    }
+    else {
+        return g_font_sizes[index];
+    }
+}
+
+static int font_size_to_index(double size) {
+    auto it = std::lower_bound(begin(g_font_sizes), end(g_font_sizes), static_cast<int>(size));
+    return std::distance(begin(g_font_sizes), it);
+}
+
+// construct font name from Pango face and family; if real font name is true, return
 // font name as it is recorded in the font itself, as far as Pango allows it;
 // otherwise return font name with CSS style string
 Glib::ustring get_full_name(const Inkscape::FontInfo& font_info, bool real_font_name) {
@@ -489,19 +515,13 @@ for (auto&& f : _fonts) {
     }
 }
 
-    const auto step = std::pow(2.0, 1.0 / 3.0);
-    // formula for slow exponential growth for font size slider: cube root of 2 to the power of N;
-    // use only whole numbers (ints); start from '4' (index+6), smaller sizes are not very useful;
-    // exponential progression is used to cover range of more interesting font sizes
-    auto size_growth = [=](double index) { return static_cast<int>(std::round(std::pow(step, index + 6))); };
-    // inverse of the above exponential formula
-    auto inverse = [=](double size) { return std::log(size) / std::log(step) - 6; };
-
+    _font_size_scale.get_adjustment()->set_lower(0);
+    _font_size_scale.get_adjustment()->set_upper(g_font_sizes.size() - 1);
     _font_size_scale.signal_value_changed().connect([=](){
         if (_update.pending()) return;
 
         auto scoped = _update.block();
-        auto size = size_growth(_font_size_scale.get_value());
+        auto size = index_to_font_size(_font_size_scale.get_value());
         _font_size.get_entry()->set_text(std::to_string(size));
         _signal_changed.emit();
     });
@@ -514,7 +534,7 @@ for (auto&& f : _fonts) {
         if (!text.empty()) {
             auto size = ::atof(text.c_str());
             if (size > 0) {
-                _font_size_scale.set_value(inverse(size));
+                _font_size_scale.set_value(font_size_to_index(size));
                 _signal_changed.emit();
             }
         }
@@ -741,12 +761,13 @@ void FontList::set_current_font(const Glib::ustring& family, const Glib::ustring
 
     auto fontspec = Inkscape::get_fontspec(family, face);
     if (fontspec == _current_fspec) {
-        select_font(fontspec);
+        auto fspec = get_fontspec_without_variants(fontspec);
+        select_font(fspec);
         return;
     }
 // {
-    // auto desc = Pango::FontDescription(fontspec);
-    // g_message("set cur font: fspec: '%s', desc: '%s'", fontspec.c_str(), desc.to_string().c_str());
+//     auto desc = Pango::FontDescription(fontspec);
+//     g_message("set cur font: fspec: '%s', desc: '%s'", fontspec.c_str(), desc.to_string().c_str());
 // }
     _current_fspec = fontspec;
 
@@ -784,11 +805,10 @@ void FontList::add_font(const Glib::ustring& fontspec, bool select) {
     });
 
     // fonts with variations will not be found, we need to remove " @ axis=value" part
-    auto at = fontspec.rfind('@');
-    if (it == end(_fonts) && at != Glib::ustring::npos && at > 0) {
+    auto fspec = get_fontspec_without_variants(fontspec);
+    // auto at = fontspec.rfind('@');
+    if (it == end(_fonts) && fspec != fontspec) {
         // remove variations and try to match existing font
-        while (at > 0 && fontspec[at - 1] == ' ') at--; // trim spaces
-        auto fspec = fontspec.substr(0, at);
 // g_message("try match: '%s'", fspec.c_str());
         it = std::find_if(begin(_fonts), end(_fonts), [&](const FontInfo& f){
             return Inkscape::get_inkscape_fontspec(f.ff, f.face, f.variations) == fspec;
@@ -952,6 +972,7 @@ void FontList::sync_font_tag(const FontTag* ftag, bool selected) {
 }
 
 void FontList::scroll_to_row(Gtk::TreePath path) {
+// g_message("scrl to: %s", path.to_string().c_str());
     // delay scroll request to let widget layout complete (due to hiding or showing variable font widgets);
     // keep track of connection so we can disconnect in a destructor if it is still pending at that point
     _scroll = Glib::signal_timeout().connect([=](){

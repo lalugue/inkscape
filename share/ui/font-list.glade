@@ -578,8 +578,19 @@
             <property name="margin-bottom">2</property>
             <property name="has-entry">True</property>
             <items>
-              <item translatable="yes">4</item>
+              <item translatable="yes">6</item>
+              <item translatable="yes">7</item>
+              <item translatable="yes">8</item>
+              <item translatable="yes">9</item>
               <item translatable="yes">10</item>
+              <item translatable="yes">12</item>
+              <item translatable="yes">14</item>
+              <item translatable="yes">16</item>
+              <item translatable="yes">20</item>
+              <item translatable="yes">24</item>
+              <item translatable="yes">32</item>
+              <item translatable="yes">48</item>
+              <item translatable="yes">72</item>
               <item translatable="yes">144</item>
             </items>
             <child internal-child="entry">
@@ -588,7 +599,7 @@
                 <property name="activates-default">True</property>
                 <property name="width-chars">6</property>
                 <property name="max-width-chars">6</property>
-                <property name="text" translatable="yes">10</property>
+                <property name="text" translatable="yes">8</property>
                 <property name="truncate-multiline">True</property>
                 <property name="caps-lock-warning">False</property>
               </object>

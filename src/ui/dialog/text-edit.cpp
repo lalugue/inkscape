@@ -135,7 +135,6 @@ TextEdit::TextEdit()
     filter_menu_button.set_always_show_image(true);
     filter_menu_button.set_label(_("Collections"));
 
-notebook->prepend_page(font_list, "Test");
 
 #ifdef WITH_GSPELL
     /*
@@ -169,6 +168,10 @@ font_list.signal_changed().connect([=](){ onChange(); });
 font_list.signal_apply().connect([=](){ onChange(); /*apply_button->clicked();*/ onApply(); });
     font_selector.set_name("TextEdit");
     change_font_count_label();
+
+    _font_changed = font_list.signal_changed().connect([=](){ onChange(); });
+    _apply_font = font_list.signal_apply().connect([=](){ onChange(); /*apply_button->clicked();*/ onApply(); });
+    // font_selector.set_name("TextEdit");
 
     show_all_children();
 }
@@ -253,14 +256,14 @@ void TextEdit::onReadSelection ( bool dostyle, bool /*docontent*/ )
         font_lister->selection_update();
         Glib::ustring fontspec = font_lister->get_fontspec();
         // Update Font Face.
-        font_selector.update_font ();
+        // font_selector.update_font ();
         font_list.set_current_font(font_lister->get_font_family(), font_lister->get_font_style());
 
         // Update Size.
         Inkscape::Preferences *prefs = Inkscape::Preferences::get();
         int unit = prefs->getInt("/options/font/unitType", SP_CSS_UNIT_PT);
         double size = sp_style_css_size_px_to_units(query.font_size.computed, unit);
-        font_selector.update_size (size);
+        // font_selector.update_size (size);
         selected_fontsize = size;
         font_list.set_current_size(size);
         // Update font features (variant) widget

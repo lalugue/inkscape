@@ -158,9 +158,6 @@ protected:
 private:
     Glib::RefPtr<Gtk::Builder> builder;
 
-//TEST ONLY -------
-Inkscape::UI::Widget::FontList font_list;
-
     // Tab 1: Font ---------------------- //
     Gtk::Box &settings_and_filters_box;
     Gtk::MenuButton &filter_menu_button;
@@ -176,6 +173,7 @@ Inkscape::UI::Widget::FontList font_list;
     Gtk::Label &preview_label;  // Share with variants tab?
 
     Inkscape::UI::Widget::FontSelector font_selector;
+    Inkscape::UI::Widget::FontList font_list;
     Inkscape::UI::Widget::FontVariations font_variations;
 
     // Tab 2: Text ---------------------- //
@@ -198,6 +196,8 @@ Inkscape::UI::Widget::FontList font_list;
     auto_connection fontFeaturesChangedConn;
     auto_connection fontCollectionsChangedSelection;
     auto_connection fontCollectionsUpdate;
+    auto_connection _apply_font;
+    auto_connection _font_changed;
 
     // Other
     double selected_fontsize = 12;

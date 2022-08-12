@@ -32,6 +32,8 @@ Glib::ustring get_fontspec(const Glib::ustring& family, const Glib::ustring& fac
 
 Glib::ustring get_face_style(const Pango::FontDescription& desc);
 
+Glib::ustring get_fontspec_without_variants(const Glib::ustring& fontspec);
+
 Glib::ustring get_inkscape_fontspec(
     const Glib::RefPtr<Pango::FontFamily>& ff,
     const Glib::RefPtr<Pango::FontFace>& face,

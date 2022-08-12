@@ -321,4 +321,15 @@ std::vector<FontInfo> get_all_fonts() {
     return fonts;
 }
 
+Glib::ustring get_fontspec_without_variants(const Glib::ustring& fontspec) {
+    auto at = fontspec.rfind('@');
+    if (at != Glib::ustring::npos && at > 0) {
+        // remove variations
+        while (at > 0 && fontspec[at - 1] == ' ') at--; // trim spaces
+
+        return fontspec.substr(0, at);
+    }
+    return fontspec;
+}
+
 } // namespace
