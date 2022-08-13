@@ -156,7 +156,7 @@ TextEdit::TextEdit()
     apply_button.signal_clicked().connect([=](){ onApply(); });
     fontChangedConn = font_selector.connectChanged(sigc::mem_fun(*this, &TextEdit::onFontChange));
     fontFeaturesChangedConn = font_features.connectChanged([=](){ onChange(); });
-    notebook->signal_switch_page().connect(sigc::mem_fun(*this, &TextEdit::onFontFeatures));
+    // notebook->signal_switch_page().connect(sigc::mem_fun(*this, &TextEdit::onFontFeatures));
     search_entry.signal_search_changed().connect([=](){ on_search_entry_changed(); });
     reset_button.signal_clicked().connect([=](){ on_reset_button_pressed(); });
     collection_editor_button.signal_clicked().connect([=](){ on_fcm_button_clicked(); });
@@ -170,10 +170,19 @@ font_list.signal_apply().connect([=](){ onChange(); /*apply_button->clicked();*/
     change_font_count_label();
 
     _font_changed = font_list.signal_changed().connect([=](){ onChange(); });
+    // text_buffer->signal_changed().connect(sigc::mem_fun(*this, &TextEdit::onChange));
+    // setasdefault_button->signal_clicked().connect(sigc::mem_fun(*this, &TextEdit::onSetDefault));
+    // apply_button->signal_clicked().connect(sigc::mem_fun(*this, &TextEdit::onApply));
+    // fontChangedConn = font_selector.connectChanged(sigc::mem_fun(*this, &TextEdit::onFontChange));
+    fontFeaturesChangedConn = font_features.connectChanged(sigc::mem_fun(*this, &TextEdit::onChange));
+    notebook->signal_switch_page().connect(sigc::mem_fun(*this, &TextEdit::on_page_changed));
+    _font_changed = font_list.signal_changed().connect([=](){ apply_changes(true); });
     _apply_font = font_list.signal_apply().connect([=](){ onChange(); /*apply_button->clicked();*/ onApply(); });
     // font_selector.set_name("TextEdit");
 
     show_all_children();
+
+    on_page_changed(nullptr, 0);
 }
 
 TextEdit::~TextEdit() = default;
@@ -447,6 +456,10 @@ void TextEdit::onSetDefault()
 
 void TextEdit::onApply()
 {
+    apply_changes(false);
+}
+
+void TextEdit::apply_changes(bool continuous) {
     blocked = true;
 
     SPDesktop *desktop = getDesktop();
@@ -494,8 +507,13 @@ void TextEdit::onApply()
     }
 
     // complete the transaction
-    DocumentUndo::done(desktop->getDocument(), _("Set text style"), INKSCAPE_ICON("draw-text"));
-    apply_button.set_sensitive ( false );
+    if (continuous) {
+        DocumentUndo::maybeDone(desktop->getDocument(), "text-style", _("Set text style"), INKSCAPE_ICON("draw-text"));
+    }
+    else {
+        DocumentUndo::done(desktop->getDocument(), _("Set text style"), INKSCAPE_ICON("draw-text"));
+        apply_button.set_sensitive(false);
+    }
 
     sp_repr_css_attr_unref (css);
     Inkscape::FontLister::get_instance()->update_font_list(desktop->getDocument());
@@ -553,8 +571,13 @@ void TextEdit::display_font_collections()
     }
 }
 
-void TextEdit::onFontFeatures(Gtk::Widget * widgt, int pos)
+// void TextEdit::onFontFeatures(Gtk::Widget * widgt, int pos)
+// {}
+
+void TextEdit::on_page_changed(Gtk::Widget*, int pos)
 {
+    pos == 0 ? _apply_box->hide() : _apply_box->show();
+
     if (pos == 1) {
         Glib::ustring fontspec = font_list.get_fontspec();
         if (!fontspec.empty()) {

@@ -21,6 +21,7 @@
 #include "libnrtype/OpenTypeUtil.h"
 
 #include "style.h"
+#include "ui/operation-blocker.h"
 
 namespace Inkscape {
 namespace UI {
@@ -36,11 +37,12 @@ public:
     FontVariationAxis(Glib::ustring name, OTVarAxis const &axis, Glib::ustring label, Glib::ustring tooltip);
     Glib::ustring get_name() { return name; }
     Gtk::Label* get_label()  { return label; }
-    double get_value()       { return scale->get_adjustment()->get_value(); }
+    double get_value()       { return edit->get_value(); }
     int get_precision()      { return precision; }
     Gtk::Scale* get_scale()  { return scale; }
     double get_def()         { return def; }
     Gtk::SpinButton* get_editbox() { return edit; }
+    void set_value(double value);
 
 private:
     // Widgets
@@ -91,7 +93,7 @@ public:
      * (Used to enable 'Apply' and 'Default' buttons.)
      */
     sigc::connection connectChanged(sigc::slot<void ()> slot) {
-        return signal_changed.connect(slot);
+        return _signal_changed.connect(slot);
     }
 
     // return true if there are some variations present
@@ -101,10 +103,14 @@ public:
     Glib::RefPtr<Gtk::SizeGroup> get_size_group(int index);
 
 private:
-    std::vector<FontVariationAxis*> axes;
-    Glib::RefPtr<Gtk::SizeGroup> size_group;
-    Glib::RefPtr<Gtk::SizeGroup> size_group_edit;
-    sigc::signal<void ()> signal_changed;
+    void build_ui(const std::map<Glib::ustring, OTVarAxis>& axes);
+
+    std::vector<FontVariationAxis*> _axes;
+    Glib::RefPtr<Gtk::SizeGroup> _size_group;
+    Glib::RefPtr<Gtk::SizeGroup> _size_group_edit;
+    sigc::signal<void ()> _signal_changed;
+    std::map<Glib::ustring, OTVarAxis> _open_type_axes;
+    OperationBlocker _update;
 };
 
  

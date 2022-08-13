@@ -53,10 +53,11 @@ struct FontListColumnModel : public Gtk::TreeModelColumnRecord {
 
 FontListColumnModel g_column_model; // model for font list
 
-static std::array<int, 34> g_font_sizes = {
+// list of font sizes for a slider; combo box has its own list
+static std::array<int, 38> g_font_sizes = {
     4, 5, 6, 7, 8, 9, 10, 12, 14, 16, 18, 20, 24, 28, 32, 36,
     44, 56, 64, 72, 80, 96, 112, 128, 144, 160, 192, 224, 256,
-    300, 400, 500, 600, 800
+    300, 350, 400, 450, 500, 550, 600, 700, 800
 };
 
 static int index_to_font_size(int index) {
@@ -758,6 +759,7 @@ Glib::ustring FontList::get_fontspec() const {
 void FontList::set_current_font(const Glib::ustring& family, const Glib::ustring& face) {
     if (_update.pending()) return;
 // g_message("setcur: %s - %s", family.c_str(), face.c_str());
+    auto scoped = _update.block();
 
     auto fontspec = Inkscape::get_fontspec(family, face);
     if (fontspec == _current_fspec) {

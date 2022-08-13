@@ -659,7 +659,7 @@ Inkscape::Pixbuf const *FontInstance::PixBuf(int glyph_id)
     auto pixbuf = Inkscape::Pixbuf::create_from_buffer(svg.raw());
 
     // Ensure exists in cairo format before locking it down. (Rendering code requires cairo format.)
-    pixbuf->ensurePixelFormat(Inkscape::Pixbuf::PF_CAIRO);
+    if (pixbuf) pixbuf->ensurePixelFormat(Inkscape::Pixbuf::PF_CAIRO);
 
     // And cache it.
     glyph_iter->second.pixbuf.reset(pixbuf);

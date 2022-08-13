@@ -9,6 +9,7 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#include <algorithm>
 #include <cmath>
 #include <glibmm/refptr.h>
 #include <glibmm/ustring.h>
@@ -25,6 +26,7 @@
 #include <glibmm/i18n.h>
 
 #include <libnrtype/font-instance.h>
+#include <string>
 #include <utility>
 #include "libnrtype/font-factory.h"
 
@@ -39,9 +41,9 @@ namespace Inkscape {
 namespace UI {
 namespace Widget {
 
-std::pair<Glib::ustring, Glib::ustring> get_axis_name(const Glib::ustring& abbr) {
+std::pair<Glib::ustring, Glib::ustring> get_axis_name(const std::string& tag, const Glib::ustring& abbr) {
     // Transformed axis names;
-    // from https://fonts.google.com/knowledge/using_type/introducing_parametric_axes
+    // mainly from https://fonts.google.com/knowledge/using_type/introducing_parametric_axes
     // CC BY-SA 4.0
     static std::map<std::string, std::pair<Glib::ustring, Glib::ustring>> map = {
         // “Grade” (GRAD in CSS) is an axis that can be used to alter stroke thicknesses (or other forms)
@@ -71,16 +73,39 @@ std::pair<Glib::ustring, Glib::ustring> get_axis_name(const Glib::ustring& abbr)
         // Optical sizes in a variable font are different versions of a typeface optimized for use at singular specific sizes,
         // such as 14 pt or 144 pt. Small (or body) optical sizes tend to have less stroke contrast, more open and wider spacing,
         // and a taller x-height than those of their large (or display) counterparts.
-        {"OpticalSize", std::make_pair(_("Optical size"), _("Optimize the typeface for use at specific size"))},
+        {"opsz", std::make_pair(_("Optical size"), _("Optimize the typeface for use at specific size"))},
         // Slant controls the font file’s slant parameter for oblique styles.
-        {"Slant", std::make_pair(_("Slant"), _("Controls the font file’s slant parameter for oblique styles"))},
+        {"slnt", std::make_pair(_("Slant"), _("Controls the font file’s slant parameter for oblique styles"))},
+        // Italic
+        {"ital", std::make_pair(_("Italic"), _("Turns on the font’s italic forms"))},
         // Weight controls the font file’s weight parameter. 
-        {"Weight", std::make_pair(_("Weight"), _("Controls the font file’s weight parameter"))},
+        {"wght", std::make_pair(_("Weight"), _("Controls the font file’s weight parameter"))},
         // Width controls the font file’s width parameter.
-        {"Width", std::make_pair(_("Width"), _("Controls the font file’s width parameter"))},
+        {"wdth", std::make_pair(_("Width"), _("Controls the font file’s width parameter"))},
+        // Flare - flaring of the stems
+        {"FLAR", std::make_pair(_("Flare"), _("Controls the flaring of the stems"))},
+        // Volume - The volume axis works only in combination with the Flare axis. It transforms the serifs
+        // and adds a little more edge to details.
+        {"VOLM", std::make_pair(_("Volume"), _("Volume works in combination with flare to transform serifs"))},
+        // Softness
+        {"SOFT", std::make_pair(_("Softness"), _("Softness makes letterforms more soft and rounded"))},
+        // Casual
+        {"CASL", std::make_pair(_("Casual"), _("Adjust the letterforms from a more serious style to a more casual style"))},
+        // Cursive
+        {"CRSV", std::make_pair(_("Cursive"), _("Control the substitution of cursive forms"))},
+        // Fill
+        {"FILL", std::make_pair(_("Fill"), _("Fill can turn transparent forms opaque"))},
+        // Monospace
+        {"MONO", std::make_pair(_("Monospace"), _("Adjust the glyphs from a proportional width to a fixed width"))},
+        // Wonky
+        {"WONK", std::make_pair(_("Wonky"), _("Binary switch used to control substitution of “wonky” forms"))},
+        // Element shape
+        {"ESHP", std::make_pair(_("Element shape"), _("Selection of the base element glyphs are composed of"))},
+        // Element grid
+        {"EGRD", std::make_pair(_("Element grid"), _("Controls how many elements are used per one grid unit"))},
     };
 
-    auto it = map.find(abbr.raw());
+    auto it = map.find(tag);
     if (it != end(map)) {
         return it->second;
     }
@@ -142,6 +167,11 @@ FontVariationAxis::FontVariationAxis(Glib::ustring name_, OTVarAxis const &axis,
     def = axis.def; // Default value
 }
 
+void FontVariationAxis::set_value(double value) {
+    if (get_value() != value) {
+        scale->get_adjustment()->set_value(value);
+    }
+}
 
 // ------------------------------------------------------------- //
 
@@ -151,38 +181,85 @@ FontVariations::FontVariations () :
     // std::cout << "FontVariations::FontVariations" << std::endl;
     set_orientation( Gtk::ORIENTATION_VERTICAL );
     set_name ("FontVariations");
-    size_group = Gtk::SizeGroup::create(Gtk::SIZE_GROUP_HORIZONTAL);
-    size_group_edit = Gtk::SizeGroup::create(Gtk::SIZE_GROUP_HORIZONTAL);
+    _size_group = Gtk::SizeGroup::create(Gtk::SIZE_GROUP_HORIZONTAL);
+    _size_group_edit = Gtk::SizeGroup::create(Gtk::SIZE_GROUP_HORIZONTAL);
     show_all_children();
 }
-
 
 // Update GUI based on query.
 void FontVariations::update(Glib::ustring const &font_spec)
 {
+    auto res = FontFactory::get().FaceFromFontSpecification(font_spec.c_str());
+    const auto& axes = res ? res->get_opentype_varaxes() : std::map<Glib::ustring, OTVarAxis>();
+
+    bool rebuild = false;
+    if (_open_type_axes.size() != axes.size()) {
+        rebuild = true;
+    }
+    else {
+        // compare axes
+        bool identical = std::equal(begin(axes), end(axes), begin(_open_type_axes));
+        // if identical, then there's nothing to do
+        if (identical) return;
+
+        bool same_def = std::equal(begin(axes), end(axes), begin(_open_type_axes), [=](const auto& a, const auto& b){
+            return a.first == b.first && a.second.same_definition(b.second);
+        });
+
+        // different axes definitions?
+        if (!same_def) rebuild = true;
+    }
+
+    auto scoped(_update.block());
+
+    if (rebuild) {
+        // rebuild UI if variable axes definitions have changed
+        build_ui(axes);
+    }
+    else {
+        // update UI in-place, some values are different
+        auto it = begin(axes);
+        for (auto& axis : _axes) {
+            if (it != end(axes) && axis->get_name() == it->first) {
+                const auto eps = 0.00001;
+                if (abs(axis->get_value() - it->second.set_val) > eps) {
+                    axis->set_value(it->second.set_val);
+                }
+            }
+            else {
+                g_message("axis definition mismatch '%s'", axis->get_name().c_str());
+            }
+            ++it;
+        }
+    }
+
+    _open_type_axes = axes;
+}
+
+
+void FontVariations::build_ui(const std::map<Glib::ustring, OTVarAxis>& ot_axes) {
+    // remove existing widgets, if any
     auto children = get_children();
     for (auto child : children) {
         if (auto group = dynamic_cast<FontVariationAxis*>(child)) {
-            size_group->remove_widget(*group->get_label());
-            size_group_edit->remove_widget(*group->get_editbox());
+            _size_group->remove_widget(*group->get_label());
+            _size_group_edit->remove_widget(*group->get_editbox());
         }
         remove(*child);
     }
-    axes.clear();
 
-    auto res = FontFactory::get().FaceFromFontSpecification(font_spec.c_str());
-    if (!res) return;
-
-    for (auto &a : res->get_opentype_varaxes()) {
+    _axes.clear();
+    // create new widgets
+    for (const auto& a : ot_axes) {
         // std::cout << "Creating axis: " << a.first << std::endl;
-        auto label_tooltip = get_axis_name(a.first);
+        auto label_tooltip = get_axis_name(a.second.tag, a.first);
         auto axis = Gtk::make_managed<FontVariationAxis>(a.first, a.second, label_tooltip.first, label_tooltip.second);
-        axes.push_back(axis);
+        _axes.push_back(axis);
         add(*axis);
-        size_group->add_widget(*(axis->get_label())); // Keep labels the same width
-        size_group_edit->add_widget(*axis->get_editbox());
-        axis->get_scale()->get_adjustment()->signal_value_changed().connect(
-            [=](){ signal_changed.emit (); }
+        _size_group->add_widget(*(axis->get_label())); // Keep labels the same width
+        _size_group_edit->add_widget(*axis->get_editbox());
+        axis->get_editbox()->get_adjustment()->signal_value_changed().connect(
+            [=](){ if (!_update.pending()) {_signal_changed.emit();} }
         );
     }
 
@@ -227,11 +304,11 @@ FontVariations::get_pango_string(bool include_defaults) const {
 
     Glib::ustring pango_string;
 
-    if (!axes.empty()) {
+    if (!_axes.empty()) {
 
         pango_string += "@";
 
-        for (auto axis: axes) {
+        for (const auto& axis: _axes) {
             if (!include_defaults && axis->get_value() == axis->get_def()) continue;
             Glib::ustring name = axis->get_name();
 
@@ -254,13 +331,13 @@ FontVariations::get_pango_string(bool include_defaults) const {
 }
 
 bool FontVariations::variations_present() const {
-    return !axes.empty();
+    return !_axes.empty();
 }
 
 Glib::RefPtr<Gtk::SizeGroup> FontVariations::get_size_group(int index) {
     switch (index) {
-        case 0: return size_group;
-        case 1: return size_group_edit;
+        case 0: return _size_group;
+        case 1: return _size_group_edit;
         default: return Glib::RefPtr<Gtk::SizeGroup>();
     }
 }

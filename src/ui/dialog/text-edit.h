@@ -113,7 +113,7 @@ protected:
      * @param self pointer to the current instance of the dialog.
      */
     void onChange ();
-    void onFontFeatures (Gtk::Widget * widgt, int pos);
+    void on_page_changed(Gtk::Widget* widgt, int pos);
 
     // Callback to handle changes in the search entry.
     void on_search_entry_changed();
@@ -156,7 +156,12 @@ protected:
     SPCSSAttr *fillTextStyle ();
 
 private:
+    void apply_changes(bool continuous);
     Glib::RefPtr<Gtk::Builder> builder;
+
+    /*
+     * All the dialogs widgets
+     */
 
     // Tab 1: Font ---------------------- //
     Gtk::Box &settings_and_filters_box;
@@ -174,7 +179,6 @@ private:
 
     Inkscape::UI::Widget::FontSelector font_selector;
     Inkscape::UI::Widget::FontList font_list;
-    Inkscape::UI::Widget::FontVariations font_variations;
 
     // Tab 2: Text ---------------------- //
     Gtk::TextView &text_view;
@@ -187,6 +191,7 @@ private:
     // Shared ------- ------------------ //
     Gtk::Button &setasdefault_button;
     Gtk::Button &apply_button;
+    Gtk::Box* _apply_box = nullptr;
 
     // Signals
     auto_connection selectChangedConn;

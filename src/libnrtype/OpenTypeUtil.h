@@ -11,6 +11,7 @@
 #ifndef SEEN_OPENTYPEUTIL_H
 #define SEEN_OPENTYPEUTIL_H
 
+#include <string>
 #ifndef USE_PANGO_WIN32
 
 #include <map>
@@ -50,18 +51,41 @@ public:
         , set_val(500)
         , index(-1) {};
 
-    OTVarAxis(double _minimum, double _def, double _maximum, double _set_val, int _index)
+    OTVarAxis(double _minimum, double _def, double _maximum, double _set_val, int _index, std::string tag)
         : minimum(_minimum)
         , def(_def) // Default
         , maximum(_maximum)
         , set_val(_set_val)
-        , index  (_index) {};
+        , index  (_index)
+        , tag(std::move(tag)) {};
+
+    // c++20... bool operator == (const OTVarAxis& other) const = default;
+    bool operator == (const OTVarAxis& other) const {
+        return
+            minimum == other.minimum &&
+            def == other.def &&
+            maximum == other.maximum &&
+            set_val == other.set_val &&
+            index == other.index &&
+            tag == other.tag;
+    }
+
+    // compare axis definition, ignore set value
+    bool same_definition(const OTVarAxis& other) const {
+        return
+            minimum == other.minimum &&
+            def == other.def &&
+            maximum == other.maximum &&
+            index == other.index &&
+            tag == other.tag;
+    }
 
     double minimum;
     double def;
     double maximum;
     double set_val;
     int    index;  // Index in OpenType file (since we use a map).
+    std::string tag;
 };
 
 // A particular instance of a variable font.
