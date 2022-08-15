@@ -45,20 +45,21 @@ std::pair<Glib::ustring, Glib::ustring> get_axis_name(const std::string& tag, co
     // Transformed axis names;
     // mainly from https://fonts.google.com/knowledge/using_type/introducing_parametric_axes
     // CC BY-SA 4.0
+    // Standard axes guide for reference: https://variationsguide.typenetwork.com
     static std::map<std::string, std::pair<Glib::ustring, Glib::ustring>> map = {
         // “Grade” (GRAD in CSS) is an axis that can be used to alter stroke thicknesses (or other forms)
         // without affecting the type's overall width, inter-letter spacing, or kerning — unlike altering weight.
-        {"GRAD", std::make_pair(_("Grade"), _("Alter stroke thicknesses (or other forms) without affecting the type's overall width"))},
+        {"GRAD", std::make_pair(_("Grade"), _("Alter stroke thicknesses (or other forms) without affecting the type’s overall width"))},
         // “Parametric Thick Stroke”, XOPQ, is a reference to its logical name, “X Opaque”,
         // which describes how it alters the opaque stroke forms of glyphs typically in the X dimension
-        {"XOPQ", std::make_pair(_("X-opaque"), _("Alter the opaque stroke forms of glyphs in the X dimension"))},
+        {"XOPQ", std::make_pair(_("X opaque"), _("Alter the opaque stroke forms of glyphs in the X dimension"))},
         // “Parametric Thin Stroke”, YOPQ, is a reference to its logical name, “Y Opaque”,
         // which describes how it alters the opaque stroke forms of glyphs typically in the Y dimension 
-        {"YOPQ", std::make_pair(_("Y-opaque"), _("Alter the opaque stroke forms of glyphs in the Y dimension"))},
+        {"YOPQ", std::make_pair(_("Y opaque"), _("Alter the opaque stroke forms of glyphs in the Y dimension"))},
         // “Parametric Counter Width”, XTRA, is a reference to its logical name, “X-Transparent,”
         // which describes how it alters a font’s transparent spaces (also known as negative shapes)
         // inside and around all glyphs along the X dimension
-        {"XTRA", std::make_pair(_("X-transparent"), _("Alter the transparent spaces inside and around all glyphs along the X dimension"))},
+        {"XTRA", std::make_pair(_("X transparent"), _("Alter the transparent spaces inside and around all glyphs along the X dimension"))},
         // “Parametric Lowercase Height”
         {"YTLC", std::make_pair(_("Lowercase height"), _("Vary the height of counters and other spaces between the baseline and x-height"))},
         // “Parametric Uppercase Counter Height”
@@ -69,19 +70,6 @@ std::pair<Glib::ustring, Glib::ustring> get_axis_name(const std::string& tag, co
         {"YTDE", std::make_pair(_("Descender depth"), _("Vary the depth of lowercase descenders"))},
         // “Parametric Figure Height”
         {"YTFI", std::make_pair(_("Figure height"), _("Vary the height of figures"))},
-        // “Optical Size”
-        // Optical sizes in a variable font are different versions of a typeface optimized for use at singular specific sizes,
-        // such as 14 pt or 144 pt. Small (or body) optical sizes tend to have less stroke contrast, more open and wider spacing,
-        // and a taller x-height than those of their large (or display) counterparts.
-        {"opsz", std::make_pair(_("Optical size"), _("Optimize the typeface for use at specific size"))},
-        // Slant controls the font file’s slant parameter for oblique styles.
-        {"slnt", std::make_pair(_("Slant"), _("Controls the font file’s slant parameter for oblique styles"))},
-        // Italic
-        {"ital", std::make_pair(_("Italic"), _("Turns on the font’s italic forms"))},
-        // Weight controls the font file’s weight parameter. 
-        {"wght", std::make_pair(_("Weight"), _("Controls the font file’s weight parameter"))},
-        // Width controls the font file’s width parameter.
-        {"wdth", std::make_pair(_("Width"), _("Controls the font file’s width parameter"))},
         // Flare - flaring of the stems
         {"FLAR", std::make_pair(_("Flare"), _("Controls the flaring of the stems"))},
         // Volume - The volume axis works only in combination with the Flare axis. It transforms the serifs
@@ -103,6 +91,20 @@ std::pair<Glib::ustring, Glib::ustring> get_axis_name(const std::string& tag, co
         {"ESHP", std::make_pair(_("Element shape"), _("Selection of the base element glyphs are composed of"))},
         // Element grid
         {"EGRD", std::make_pair(_("Element grid"), _("Controls how many elements are used per one grid unit"))},
+        // “Optical Size”
+        // Optical sizes in a variable font are different versions of a typeface optimized for use at singular specific sizes,
+        // such as 14 pt or 144 pt. Small (or body) optical sizes tend to have less stroke contrast, more open and wider spacing,
+        // and a taller x-height than those of their large (or display) counterparts.
+        {"opsz", std::make_pair(_("Optical size"), _("Optimize the typeface for use at specific size"))},
+        // Slant controls the font file’s slant parameter for oblique styles.
+        {"slnt", std::make_pair(_("Slant"), _("Controls the font file’s slant parameter for oblique styles"))},
+        // Italic
+        {"ital", std::make_pair(_("Italic"), _("Turns on the font’s italic forms"))},
+        // Weight controls the font file’s weight parameter. 
+        {"wght", std::make_pair(_("Weight"), _("Controls the font file’s weight parameter"))},
+        // Width controls the font file’s width parameter.
+        {"wdth", std::make_pair(_("Width"), _("Controls the font file’s width parameter"))},
+        //TODO: add more standard axes descriptions...
     };
 
     auto it = map.find(tag);

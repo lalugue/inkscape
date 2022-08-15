@@ -39,8 +39,8 @@ Glib::ustring get_inkscape_fontspec(
     const Glib::RefPtr<Pango::FontFace>& face,
     const Glib::ustring& variations);
 
-Glib::ustring get_inkscape_fontspec_from_string(
-    const Glib::ustring& inkscape_fontspec,
-    const Glib::ustring& variations);
+// combine font style, weight, stretch and other traits to come up with a value
+// that can be used to order font faces within the same family
+int get_font_style_order(const Pango::FontDescription& desc);
 
 } // namespace

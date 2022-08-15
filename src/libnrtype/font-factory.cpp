@@ -10,6 +10,7 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#include <pango/pango-font.h>
 #include <pangomm/fontdescription.h>
 #include <pangomm/fontfamily.h>
 #include <pangomm/fontmap.h>
@@ -111,8 +112,15 @@ PangoFontDescription *ink_font_description_from_style(SPStyle const *style)
         case SP_CSS_FONT_WEIGHT_LIGHTER:
         case SP_CSS_FONT_WEIGHT_BOLDER:
         default:
-            g_warning("FaceFromStyle: Unrecognized font_weight.computed value");
-            pango_font_description_set_weight(descr, PANGO_WEIGHT_NORMAL);
+            if (style->font_weight.computed > 0 && style->font_weight.computed <= 1000) {
+                // int weight = style->font_weight.computed / 100;
+                // weight *= 100;
+                pango_font_description_set_weight(descr, static_cast<PangoWeight>(style->font_weight.computed));
+            }
+            else {
+                g_warning("FaceFromStyle: Unrecognized font_weight.computed value");
+                pango_font_description_set_weight(descr, PANGO_WEIGHT_NORMAL);
+            }
             break;
     }
     // PANGO_WIEGHT_ULTRAHEAVY not used (not CSS2)

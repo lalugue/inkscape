@@ -25,8 +25,11 @@
 
 #include <algorithm>
 #include <cmath>
+#include <cstdlib>
 #include <glibmm/regex.h>
+#include <glibmm/ustring.h>
 
+#include "style-enums.h"
 #include "style-internal.h"
 #include "style.h"
 
@@ -796,6 +799,61 @@ void SPIEnum<T>::read(gchar const *str)
     }
 }
 
+// special read() version for font-weight attribute to handle numerical values,
+// values which Pango supports and some fonts require
+template <>
+void SPIEnum<SPCSSFontWeight>::read(gchar const *str) {
+    if (!str) return;
+
+    if (!strcmp(str, "inherit")) {
+        set = true;
+        inherit = true;
+    } else {
+        auto const *enums = get_enums<SPCSSFontWeight>();
+        bool translated = false;
+        for (unsigned i = 0; enums[i].key; i++) {
+            if (!strcmp(str, enums[i].key)) {
+                set = true;
+                inherit = false;
+                value = static_cast<SPCSSFontWeight>(enums[i].value);
+                translated = true;
+                break;
+            }
+        }
+        // translate numbers only; no leading spaces or trailing characters accepted
+        // to make it as strict as key matching above
+        if (!translated && isdigit(*str)) {
+            char* end = nullptr;
+            auto weight = strtol(str, &end, 10);
+            if (end && (*end == '\0' || *end == ' ') && weight > 0 && weight <= 1000) {
+                set = true;
+                inherit = false;
+                value = static_cast<SPCSSFontWeight>(weight);
+            }
+        }
+
+        // type-specialized subroutine
+        update_computed();
+    }
+}
+
+template <>
+const Glib::ustring SPIEnum<SPCSSFontWeight>::get_value() const {
+    if (this->inherit) return Glib::ustring("inherit");
+    auto const *enums = get_enums<SPCSSFontWeight>();
+    auto val = static_cast<int>(value);
+    for (unsigned i = 0; enums[i].key; ++i) {
+        if (enums[i].value == val) {
+            return Glib::ustring(enums[i].key);
+        }
+    }
+    if (val > 0 && val <= 1000) {
+        return Glib::ustring::format(val);
+    }
+    return Glib::ustring("");
+}
+
+
 template <typename T>
 const Glib::ustring SPIEnum<T>::get_value() const
 {
@@ -816,9 +874,9 @@ void SPIEnum<SPCSSFontWeight>::update_computed_cascade(SPCSSFontWeight const &p_
     // expressible in the current font family, but that's difficult to
     // find out, so jumping by 3 seems an appropriate approximation
     if (value == SP_CSS_FONT_WEIGHT_LIGHTER) {
-        computed = static_cast<SPCSSFontWeight>(std::max<int>(SP_CSS_FONT_WEIGHT_100, int(p_computed) - 3));
+        computed = static_cast<SPCSSFontWeight>(std::max<int>(SP_CSS_FONT_WEIGHT_100, int(p_computed) - 3 * 100));
     } else if (value == SP_CSS_FONT_WEIGHT_BOLDER) {
-        computed = static_cast<SPCSSFontWeight>(std::min<int>(SP_CSS_FONT_WEIGHT_900, p_computed + 3));
+        computed = static_cast<SPCSSFontWeight>(std::min<int>(SP_CSS_FONT_WEIGHT_900, p_computed + 3 * 100));
     }
 }
 

@@ -24,6 +24,7 @@
 #include <gtkmm/cellrenderertext.h>
 #include <gtkmm/settings.h>
 #include <libnrtype/font-instance.h>
+#include <string>
 
 #include "font-factory.h"
 #include "desktop.h"
@@ -737,6 +738,7 @@ std::pair<Glib::ustring, Glib::ustring> FontLister::selection_update()
     std::pair<Glib::ustring, Glib::ustring> ui = ui_from_fontspec(fontspec);
     set_font_family(ui.first);
     set_font_style(ui.second);
+// g_message("sel upd: %s", ui.second.c_str());
 
 #ifdef DEBUG_FONT
     std::cout << "   family_row:           :" << current_family_row << ":" << std::endl;
@@ -942,6 +944,7 @@ void FontLister::fill_css(SPCSSAttr *css, Glib::ustring fontspec)
 
     PangoFontDescription *desc = pango_font_description_from_string(fontspec.c_str());
     PangoWeight weight = pango_font_description_get_weight(desc);
+// g_message("fill css: %d %s", int(weight), ui.second.c_str());
     switch (weight) {
         case PANGO_WEIGHT_THIN:
             sp_repr_css_set_property(css, "font-weight", "100");
@@ -978,6 +981,16 @@ void FontLister::fill_css(SPCSSAttr *css, Glib::ustring fontspec)
             break;
         case PANGO_WEIGHT_ULTRAHEAVY:
             sp_repr_css_set_property(css, "font-weight", "1000");
+            break;
+        default:
+            // Pango can report arbitrary numeric weights, not just those values
+            // with corresponding convenience enums
+            if (weight > 0 && weight < 1000) {
+                sp_repr_css_set_property(css, "font-weight", std::to_string(weight).c_str());
+            }
+            else {
+                g_message("Pango reported font weight of %d ignored (font: '%s').", weight, fontspec.c_str());
+            }
             break;
     }
 

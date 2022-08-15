@@ -35,18 +35,29 @@ namespace Inkscape {
 namespace UI {
 namespace Widget {
 
+enum class FontClass {
+    NORMAL,  // regular fonts, present (installed)
+    MISSING, // font used in a document, but not installed / not available
+    SPECIAL, // synthetic Sans-Serif family
+    RECENT   // most recently used font (not implemented yet)
+};
+
 struct FontListColumnModel : public Gtk::TreeModelColumnRecord {
+    // font metadata for installed fonts only
     Gtk::TreeModelColumn<Inkscape::FontInfo> font;
-    Gtk::TreeModelColumn<bool> missing;
+    // font's class
+    Gtk::TreeModelColumn<FontClass> font_class;
     Gtk::TreeModelColumn<bool> injected;
-    Gtk::TreeModelColumn<Glib::ustring> missing_name;
-    Gtk::TreeModelColumn<int> icon;
+    // fontspec for fonts that are not installed, but used in a document
+    Gtk::TreeModelColumn<Glib::ustring> alt_fontspec;
+    // icon to show next to a font name (if any)
+    Gtk::TreeModelColumn<Glib::ustring> icon_name;
 
     FontListColumnModel() {
-        add(missing_name);
-        add(missing);
+        add(alt_fontspec);
+        add(font_class);
         add(injected);
-        add(icon);
+        add(icon_name);
         add(font);
     }
 };
@@ -106,6 +117,17 @@ Glib::ustring get_full_name(const Inkscape::FontInfo& font_info, bool real_font_
     return name;
 }
 
+Glib::ustring get_alt_name(const Glib::ustring& fontspec) {
+    static Glib::ustring sans = "sans-serif";
+    if (fontspec.find(sans) != Glib::ustring::npos) {
+        auto end = fontspec[sans.size()];
+        if (end == 0 || end == ' ' || end == ',') {
+            return _("Sans Serif") + fontspec.substr(sans.size());
+        }
+    }
+    return fontspec; // use font spec verbatim
+}
+
 class CellFontRenderer : public Gtk::CellRendererText {
 public:
     CellFontRenderer() {
@@ -151,38 +173,29 @@ CellFontRenderer& get_renderer(Gtk::CellRenderer& renderer) {
     return dynamic_cast<CellFontRenderer&>(renderer);
 }
 
-void get_cell_data_func(Gtk::CellRenderer* cell_renderer, Gtk::TreeModel::Row row) { // const Gtk::TreeIter& iter) {
+void get_cell_data_func(Gtk::CellRenderer* cell_renderer, Gtk::TreeModel::Row row) {
     auto& renderer = get_renderer(*cell_renderer);
 
-    // Gtk::TreeModel::Row row = *iter;
     const Inkscape::FontInfo& font = row[g_column_model.font];
-    bool missing = row[g_column_model.missing];
-    int icon = row[g_column_model.icon];
-    Glib::ustring&& missing_name = row[g_column_model.missing_name];
-// if (missing){
-    // g_message("missing font: %s", missing_name.c_str());
-// }
-    auto name = missing ? missing_name : get_full_name(font, true);
-    auto fname = Glib::Markup::escape_text(name);
+    auto font_class = row[g_column_model.font_class];
+    auto present = !!font.ff;
+    Glib::ustring&& icon_name = row[g_column_model.icon_name];
+    Glib::ustring&& alt = row[g_column_model.alt_fontspec];
+
+    auto name = Glib::Markup::escape_text(present ? get_full_name(font, true) : get_alt_name(alt));
     // if no sample text given, then render font name
-    auto text = renderer._sample_text.empty() ? fname : renderer._sample_text;
-// if (font.face) {
-//     text += ':' + std::to_string(font.weight); // font.face->describe().get_weight());
-// }
+    auto text = renderer._sample_text.empty() ? name : renderer._sample_text;
+
     auto font_desc = Glib::Markup::escape_text(
-        missing ? "Sans" : Inkscape::get_font_description(font.ff, font.face).to_string());
+        present ? Inkscape::get_font_description(font.ff, font.face).to_string() : (alt.empty() ? "sans-serif" : alt));
     auto markup = Glib::ustring::format("<span allow_breaks='false' size='", renderer._font_size, "%' font='", font_desc, "'>", text, "</span>");
+
     if (renderer._show_font_name) {
-        // if (!missing) {
-        //     // get font name with CSS style
-        //     fname = Glib::Markup::escape_text(get_full_name(font, false));
-        // }
-    renderer._name = fname; // Glib::ustring::format("\n<span allow_breaks='false' size='small' font='Noto Sans'>", fname, "</span>");
-        // markup += Glib::ustring::format("\n<span allow_breaks='false' size='small' font='Noto Sans'>", fname, "</span>");
+        renderer._name = name;
     }
     renderer.set_property("markup", markup);
     renderer._font = font;
-    renderer._icon_margin = icon > 0;
+    renderer._icon_margin = false;// !icon_name.empty();
 }
 
 void CellFontRenderer::render_vfunc(const ::Cairo::RefPtr<::Cairo::Context>& cr, Gtk::Widget& widget, const Gdk::Rectangle& background_area, const Gdk::Rectangle& cell_area, Gtk::CellRendererState flags) {
@@ -289,11 +302,8 @@ FontList::FontList() :
     auto font_renderer = static_cast<CellFontRenderer*>(_cell_renderer.get());
     font_renderer->_tree = &_font_list;
 
-    _cell_icon_renderer = std::make_unique<IconRenderer>();
-    auto ico = static_cast<IconRenderer*>(_cell_icon_renderer.get());
-    ico->add_icon("empty-icon-symbolic");
-    ico->add_icon("missing-element-symbolic");
-    ico->add_icon("settings-symbolic");
+    _cell_icon_renderer = std::make_unique<Gtk::CellRendererPixbuf>();
+    auto ico = static_cast<Gtk::CellRendererPixbuf*>(_cell_icon_renderer.get());
     ico->set_fixed_size(16, 16);
 
     _grid_renderer = std::make_unique<CellFontRenderer>();
@@ -435,6 +445,7 @@ FontList::FontList() :
 
     _text_column.set_sizing(Gtk::TREE_VIEW_COLUMN_FIXED);
     _text_column.pack_start(*_cell_icon_renderer, false);
+    _text_column.add_attribute(ico->property_icon_name(), g_column_model.icon_name);
     _cell_renderer->property_ellipsize() = Pango::ELLIPSIZE_END;
     _text_column.pack_start(*_cell_renderer, true);
     _text_column.set_fixed_width(100); // limit minimal width to keep entire dialog narrow; column can still grow
@@ -443,7 +454,6 @@ FontList::FontList() :
         get_cell_data_func(r, row);
     });
     _text_column.set_expand();
-    _text_column.add_attribute(ico->property_icon(), g_column_model.icon);
     _font_list.append_column(_text_column);
 
     _font_list.set_fixed_height_mode();
@@ -595,9 +605,11 @@ bool FontList::select_font(const Glib::ustring& fontspec) {
 
     _font_list_store->foreach([&](const Gtk::TreeModel::Path& path, const Gtk::TreeModel::iterator& iter){
         const auto& row = *iter;
-        auto missing = row.get_value(g_column_model.missing);
-        if (missing) {
-            auto spec = row.get_value(g_column_model.missing_name);
+        const auto& font = row.get_value(g_column_model.font);
+        // auto font_class = row.get_value(g_column_model.font_class);
+        // auto missing = row.get_value(g_column_model.missing);
+        if (!font.ff) {
+            auto spec = row.get_value(g_column_model.alt_fontspec);
             if (spec == fontspec) {
                 _font_list.get_selection()->select(row);
                 scroll_to_row(path);
@@ -638,7 +650,7 @@ void FontList::filter() {
     // params.monospaced = monospaced.get_active();
     // params.oblique = oblique.get_active();
     // params.others = others.get_active();
-    filter(search.get_text(), params);
+    populate_font_store(search.get_text(), params);
 
     if (!_current_fspec.empty()) {
         add_font(_current_fspec, false);
@@ -650,7 +662,8 @@ void FontList::filter() {
     }
 }
 
-void FontList::filter(Glib::ustring text, const Show& params) {
+// add fonts to the font store taking filtring params into account
+void FontList::populate_font_store(Glib::ustring text, const Show& params) {
     auto filter = text.lowercase();
 
     auto active_categories = _font_tags.get_selected_tags();
@@ -660,6 +673,20 @@ void FontList::filter(Glib::ustring text, const Show& params) {
     _font_list_store->clear();
     _extra_fonts = 0;
     // _fspec_to_row.clear();
+
+    if (text.empty()) {
+        // add sans-serifs
+
+        for (auto fontspec : {"sans-serif, Normal", "sans-serif, Italic", "sans-serif, Bold", "sans-serif, Bold Italic"}) {
+            Gtk::TreeModel::iterator treeModelIter = _font_list_store->append();
+            auto& row = *treeModelIter;
+            row[g_column_model.font] = FontInfo();
+            row[g_column_model.font_class] = FontClass::SPECIAL;
+            row[g_column_model.alt_fontspec] = fontspec;
+            row[g_column_model.icon_name] = "generic-font-symbolic";
+            ++_extra_fonts;
+        }
+    }
 
     for (auto&& f : _fonts) {
         bool filter_in = false;
@@ -695,9 +722,9 @@ void FontList::filter(Glib::ustring text, const Show& params) {
         Gtk::TreeModel::iterator treeModelIter = _font_list_store->append();
         auto& row = *treeModelIter;
         row[g_column_model.font] = f;
-        row[g_column_model.missing] = false;
-        row[g_column_model.missing_name] = Glib::ustring();
-        row[g_column_model.icon] = 0;
+        row[g_column_model.font_class] = FontClass::NORMAL;
+        row[g_column_model.alt_fontspec] = Glib::ustring();
+        row[g_column_model.icon_name] = Glib::ustring();
     }
 
     // for (auto&& row : _font_list_store->children()) {
@@ -735,25 +762,34 @@ double FontList::get_fontsize() const {
 
 Glib::ustring FontList::get_fontspec() const {
     if (auto iter = _font_list.get_selection()->get_selected()) {
-        auto missing = iter->get_value(g_column_model.missing);
-        if (missing) {
-            auto&& name = iter->get_value(g_column_model.missing_name);
+        const auto& font = iter->get_value(g_column_model.font);
+        // auto font_class = iter->get_value(g_column_model.font_class);
+        if (font.ff) {
             auto variations = _font_variations.get_pango_string(true);
-            auto fspec = Inkscape::get_inkscape_fontspec_from_string(name, variations);
-    // g_message("get missing fspec: %s", fspec.c_str());
+            auto fspec = Inkscape::get_inkscape_fontspec(font.ff, font.face, variations);
+// if (font.face) {
+// auto desc = font.face->describe();
+//     Pango::FontDescription copy(desc);
+//     copy.unset_fields(Pango::FONT_MASK_FAMILY);
+//     copy.unset_fields(Pango::FONT_MASK_SIZE);
+//     copy.unset_fields(Pango::FONT_MASK_VARIATIONS);
+//     copy.unset_fields(Pango::FONT_MASK_VARIANT);
+//     copy.unset_fields(Pango::FONT_MASK_WEIGHT);
+// g_message("conv: '%s' -> '%s'", desc.to_string().c_str(), copy.to_string().c_str());
+// }
+    // g_message("get fspec: %s - face: %s", fspec.c_str(), font.face ? font.face->describe().to_string().c_str() : "-");
             return fspec;
         }
         else {
-            const auto& font = iter->get_value(g_column_model.font);
-            auto variations = _font_variations.get_pango_string(true);
-            auto fspec = Inkscape::get_inkscape_fontspec(font.ff, font.face, variations);
-    // g_message("get fspec: %s - face: %s", fspec.c_str(), font.face ? font.face->describe().to_string().c_str() : "-");
-
-            return fspec;
+            // missing fonts don't have known variation that we could tweak,
+            // so ignore _font_variations UI and simply return alt_fontspec
+            auto&& name = iter->get_value(g_column_model.alt_fontspec);
+    // g_message("get missing fspec: ('%s') ", name.c_str());
+            return name;
         }
     }
-
-    return "Sans"; // no selection
+// g_message("no selection");
+    return "sans-serif"; // no selection
 }
 
 void FontList::set_current_font(const Glib::ustring& family, const Glib::ustring& face) {
@@ -762,6 +798,7 @@ void FontList::set_current_font(const Glib::ustring& family, const Glib::ustring
     auto scoped = _update.block();
 
     auto fontspec = Inkscape::get_fontspec(family, face);
+// g_message("setcur 2: '%s'", fontspec.c_str());
     if (fontspec == _current_fspec) {
         auto fspec = get_fontspec_without_variants(fontspec);
         select_font(fspec);
@@ -785,8 +822,11 @@ void FontList::set_current_size(double size) {
     //todo
 // g_message("set fsize: %f", size);
 
+    auto scoped = _update.block();
     CSSOStringStream os;
-    os.precision(3);os << size;
+    os.precision(3);
+    os << size;
+    _font_size_scale.set_value(font_size_to_index(size));
     _font_size.get_entry()->set_text(os.str());
 }
 
@@ -810,7 +850,7 @@ void FontList::add_font(const Glib::ustring& fontspec, bool select) {
     auto fspec = get_fontspec_without_variants(fontspec);
     // auto at = fontspec.rfind('@');
     if (it == end(_fonts) && fspec != fontspec) {
-        // remove variations and try to match existing font
+        // try to match existing font
 // g_message("try match: '%s'", fspec.c_str());
         it = std::find_if(begin(_fonts), end(_fonts), [&](const FontInfo& f){
             return Inkscape::get_inkscape_fontspec(f.ff, f.face, f.variations) == fspec;
@@ -828,10 +868,10 @@ void FontList::add_font(const Glib::ustring& fontspec, bool select) {
         Gtk::TreeModel::iterator iter = _font_list_store->prepend();
         auto& row = *iter;
         row[g_column_model.font] = *it;
-        row[g_column_model.missing] = false;
+        // row[g_column_model.missing] = false;
         row[g_column_model.injected] = true;
-        row[g_column_model.missing_name] = Glib::ustring();
-        row[g_column_model.icon] = 0;
+        row[g_column_model.alt_fontspec] = Glib::ustring();
+        // row[g_column_model.icon] = 0;
         // _fspec_to_row[fontspec.raw()] = &row;
 
         if (select) {
@@ -845,6 +885,7 @@ void FontList::add_font(const Glib::ustring& fontspec, bool select) {
     else {
 // g_message("no match for '%s'", fontspec.c_str());
         bool missing_font = true;
+        auto font_class = FontClass::MISSING;
         Inkscape::FontInfo subst;
 
         auto desc = Pango::FontDescription(fontspec);
@@ -861,6 +902,7 @@ void FontList::add_font(const Glib::ustring& fontspec, bool select) {
             });
             if (it != end(_fonts)) {
                 missing_font = false;
+                font_class = FontClass::NORMAL;
                 subst.ff = it->ff;
             }
             // missing_font = it == end(_fonts);
@@ -879,10 +921,12 @@ void FontList::add_font(const Glib::ustring& fontspec, bool select) {
         }
         auto& row = *iter;
         row[g_column_model.font] = subst;
-        row[g_column_model.missing] = missing_font;
+        row[g_column_model.font_class] = font_class;
+        // row[g_column_model.missing] = missing_font;
         row[g_column_model.injected] = true;
-        row[g_column_model.missing_name] = fontspec;// TODO fname?
-        row[g_column_model.icon] = missing_font ? 1 : (vars.empty() ? 0 : 2);
+        row[g_column_model.alt_fontspec] = fontspec;// TODO fname?
+        // row[g_column_model.icon] = missing_font ? 1 : (vars.empty() ? 0 : 2);
+        row[g_column_model.icon_name] = missing_font ? "missing-element-symbolic" : (vars.empty() ? "" : "settings-symbolic");
 // g_message("addfnt5: %s", fontspec.c_str());
         // auto& top_row = *treeModelIter;
         // _fspec_to_row[fontspec.raw()] = &top_row;

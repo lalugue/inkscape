@@ -3,12 +3,14 @@
 #include "font-discovery.h"
 #include "inkscape-version.h"
 #include "io/resource.h"
+#include "svg/css-ostringstream.h"
 
 #include <glibmm/ustring.h>
 #include <libnrtype/font-factory.h>
 #include <libnrtype/font-instance.h>
 #include <glibmm/keyfile.h>
 #include <glibmm/miscutils.h>
+#include <pangomm/fontdescription.h>
 #include <unordered_map>
 
 #ifdef G_OS_WIN32
@@ -102,6 +104,7 @@ void sort_fonts(std::vector<FontInfo>& fonts, FontOrder order) {
     switch (order) {
         case FontOrder::by_name:
             std::sort(begin(fonts), end(fonts), [](const FontInfo& a, const FontInfo& b) {
+                // check family names first
                 auto na = a.ff->get_name();
                 auto nb = b.ff->get_name();
                 if (na != nb) {
@@ -133,9 +136,12 @@ Glib::ustring get_fontspec(const Glib::ustring& family, const Glib::ustring& fac
         return face.empty() ? family : family + ", " + face;
     }
     else {
-        return (face.empty() ? family : family + ", " + face) + " " + variations;
+        auto desc = (face.empty() ? family : family + ", " + face) + " " + variations;
         // currently font variations replace style
         // return family + ", " + variations;
+        // Pango::FontDescription copy(desc);
+        // return copy.to_string();
+        return desc;
     }
 }
 
@@ -147,20 +153,27 @@ Glib::ustring get_face_style(const Pango::FontDescription& desc) {
     Pango::FontDescription copy(desc);
     copy.unset_fields(Pango::FONT_MASK_FAMILY);
     copy.unset_fields(Pango::FONT_MASK_SIZE);
-    return copy.to_string();
-}
-
-Glib::ustring get_inkscape_fontspec_from_string(const Glib::ustring& inkscape_fontspec, const Glib::ustring& variations) {
-    Pango::FontDescription font(inkscape_fontspec);
-
-    if (variations.empty()) {
-        // get face name
-
-        return get_fontspec(font.get_family(), "");
+    // copy.unset_fields(Pango::FONT_MASK_VARIATIONS);
+    // copy.unset_fields(Pango::FONT_MASK_VARIANT);
+    // copy.unset_fields(Pango::FONT_MASK_WEIGHT);
+    auto str = copy.to_string();
+/*
+    static const auto WEIGHT = Glib::ustring(" weight=");
+    auto pos = str.find(WEIGHT);
+    if (pos != Glib::ustring::npos) {
+        auto weight = ::atof(str.substr(pos + WEIGHT.size()).c_str());
+        copy.unset_fields(Pango::FONT_MASK_WEIGHT);
+// g_message("strip weight: %f %s (%s) %d", weight, str.c_str(), str.substr(pos+WEIGHT.size()).c_str(), int(pos));
+        str = copy.to_string();
+        if (weight > 0) {
+            CSSOStringStream ost;
+            ost << str << " @weight=" << weight;
+            str = ost.str();
+        }
+g_message("strip weight: '%s'", str.c_str());
     }
-    else {
-        return get_fontspec(font.get_family(), Glib::ustring(), variations);
-    }
+*/
+    return str;
 }
 
 Glib::ustring get_inkscape_fontspec(const Glib::RefPtr<Pango::FontFamily>& ff, const Glib::RefPtr<Pango::FontFace>& face, const Glib::ustring& variations) {

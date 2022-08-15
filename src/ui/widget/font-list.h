@@ -49,7 +49,7 @@ private:
         bool oblique;
         bool others;
     };
-    void filter(Glib::ustring text, const Show& params);
+    void populate_font_store(Glib::ustring text, const Show& params);
     void add_font(const Glib::ustring& fontspec, bool select);
     bool select_font(const Glib::ustring& fontspec);
     void update_font_count();
