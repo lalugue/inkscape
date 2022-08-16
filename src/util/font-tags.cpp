@@ -1,4 +1,5 @@
 #include "font-tags.h"
+#include <glibmm/i18n.h>
 
 namespace Inkscape {
 
@@ -10,14 +11,15 @@ FontTags& FontTags::get() {
     static FontTags ft;
     if (init) {
         init = false;
-        ft.add_tag(FontTag{"favorites", "Favorites"});
-        ft.add_tag(FontTag{"sans", "Sans Serif"});
-        ft.add_tag(FontTag{"serif", "Serif"});
-        ft.add_tag(FontTag{"script", "Script"});
-        ft.add_tag(FontTag{"decorative", "Decorative"});
-        ft.add_tag(FontTag{"symbols", "Symbols"});
-        ft.add_tag(FontTag{"monospace", "Monospace"});
-        ft.add_tag(FontTag{"variable", "Variable"});
+        ft.add_tag(FontTag{"favorites",  _("Favorites")});
+        ft.add_tag(FontTag{"sans",       _("Sans Serif")});
+        ft.add_tag(FontTag{"serif",      _("Serif")});
+        ft.add_tag(FontTag{"script",     _("Script")});
+        ft.add_tag(FontTag{"decorative", _("Decorative")});
+        ft.add_tag(FontTag{"symbols",    _("Symbols")});
+        ft.add_tag(FontTag{"monospace",  _("Monospace")});
+        ft.add_tag(FontTag{"variable",   _("Variable")});
+        ft.add_tag(FontTag{"oblique",    _("Oblique")});
     }
     return ft;
 }

@@ -3,6 +3,8 @@
 #ifndef INKSCAPE_UI_WIDGET_FONT_LIST_H
 #define INKSCAPE_UI_WIDGET_FONT_LIST_H
 
+#include <glibmm/ustring.h>
+#include <gtkmm/treemodel.h>
 #include <gtkmm/treepath.h>
 #include <sigc++/connection.h>
 #include <vector>
@@ -27,7 +29,7 @@ namespace Widget {
 
 class FontList : public Gtk::Box {
 public:
-    FontList();
+    FontList(Glib::ustring preferences_path);
 
     // get font selected in this FontList, if any
     Glib::ustring get_fontspec() const;
@@ -60,6 +62,7 @@ private:
     Gtk::Box* create_pill_box(const FontTag& ftag);
     void sync_font_tag(const FontTag* ftag, bool selected);
     void scroll_to_row(Gtk::TreePath path);
+    Gtk::TreeModel::iterator get_selected_font() const;
 
     sigc::signal<void ()> _signal_changed;
     sigc::signal<void ()> _signal_apply;
@@ -87,6 +90,8 @@ private:
     Inkscape::FontTags& _font_tags;
     FontVariations _font_variations;
     auto_connection _scroll;
+    Glib::ustring _prefs;
+    bool _view_mode_list = true;
 };
 
 }}} // namespaces

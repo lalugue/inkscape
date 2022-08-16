@@ -107,7 +107,7 @@ TextEdit::TextEdit()
     , setasdefault_button      (get_widget<Gtk::Button>     (builder, "setasdefault_button"))
     , apply_button             (get_widget<Gtk::Button>     (builder, "apply_button"))
 
-    , blocked(false)
+    , font_list("/font-selector")
     , _undo{"doc.undo"}
     , _redo{"doc.redo"}
 {
@@ -177,7 +177,7 @@ font_list.signal_apply().connect([=](){ onChange(); /*apply_button->clicked();*/
     fontFeaturesChangedConn = font_features.connectChanged(sigc::mem_fun(*this, &TextEdit::onChange));
     notebook->signal_switch_page().connect(sigc::mem_fun(*this, &TextEdit::on_page_changed));
     _font_changed = font_list.signal_changed().connect([=](){ apply_changes(true); });
-    _apply_font = font_list.signal_apply().connect([=](){ onChange(); /*apply_button->clicked();*/ onApply(); });
+    _apply_font = font_list.signal_apply().connect([=](){ onChange(); onSetDefault(); });
     // font_selector.set_name("TextEdit");
 
     show_all_children();
