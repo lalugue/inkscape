@@ -8,14 +8,13 @@ set(util_SRC
 	font-discovery.cpp
 	font-tags.cpp
 	funclog.cpp
-	pool.cpp
-    font-collections.cpp
 	share.cpp
     object-renderer.cpp
 	paper.cpp
 	preview.cpp
 	statics.cpp
     recently-used-fonts.cpp
+	pool.cpp
 	units.cpp
 	ziptool.cpp
 

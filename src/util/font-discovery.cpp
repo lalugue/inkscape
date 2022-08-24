@@ -1,17 +1,26 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 
 #include "font-discovery.h"
+#include "async/progress.h"
+#include "helper/auto-connection.h"
+#include "inkscape-application.h"
 #include "inkscape-version.h"
 #include "io/resource.h"
+#include "statics.h"
 #include "svg/css-ostringstream.h"
 
+#include <algorithm>
 #include <glibmm/ustring.h>
+#include <iostream>
 #include <libnrtype/font-factory.h>
 #include <libnrtype/font-instance.h>
 #include <glibmm/keyfile.h>
 #include <glibmm/miscutils.h>
+#include <memory>
 #include <pangomm/fontdescription.h>
+#include <sigc++/connection.h>
 #include <unordered_map>
+#include <vector>
 
 #ifdef G_OS_WIN32
 #include <filesystem>
@@ -90,6 +99,18 @@ double calculate_font_width(Pango::FontDescription& desc) {
     return static_cast<double>(ink.get_width()) / PANGO_SCALE / strlen(txt);
 }
 
+// construct font name from Pango face and family;
+// return font name as it is recorded in the font itself, as far as Pango allows it
+Glib::ustring get_full_font_name(Glib::RefPtr<Pango::FontFamily> ff, Glib::RefPtr<Pango::FontFace> face) {
+    if (!ff) return "";
+
+    auto family = ff->get_name();
+    auto face_name = face ? face->get_name() : Glib::ustring();
+    auto name = face_name.empty() ? family : family + ' ' + face_name;
+    return name;
+}
+
+
 // calculate value to order font's styles
 int get_font_style_order(const Pango::FontDescription& desc) {
     return
@@ -99,30 +120,59 @@ int get_font_style_order(const Pango::FontDescription& desc) {
         desc.get_variant();
 }
 
+// sort fonts in-place by name using lexicographical order; if 'sans_first' is true place "Sans" font first
+void sort_fonts_by_name(std::vector<FontInfo>& fonts, bool sans_first) {
+    std::sort(begin(fonts), end(fonts), [=](const FontInfo& a, const FontInfo& b) {
+        auto na = a.ff->get_name();
+        auto nb = b.ff->get_name();
+        if (sans_first) {
+            bool sans_a = a.synthetic && a.ff->get_name() == "Sans";
+            bool sans_b = b.synthetic && b.ff->get_name() == "Sans";
+            if (sans_a != sans_b) {
+                return sans_a;
+            }
+        }
+        // check family names first
+        if (na != nb) {
+            // lexicographical order:
+            return na < nb;
+            // alphabetical order:
+            //return na.raw() < nb.raw();
+        }
+        return get_font_style_order(a.face->describe()) < get_font_style_order(b.face->describe());
+    });
+}
+
 // sort fonts in requested order, in-place
-void sort_fonts(std::vector<FontInfo>& fonts, FontOrder order) {
+void sort_fonts(std::vector<FontInfo>& fonts, FontOrder order, bool sans_first) {
     switch (order) {
         case FontOrder::by_name:
-            std::sort(begin(fonts), end(fonts), [](const FontInfo& a, const FontInfo& b) {
-                // check family names first
-                auto na = a.ff->get_name();
-                auto nb = b.ff->get_name();
-                if (na != nb) {
-                    // lexicographical order:
-                    return na < nb;
-                    // alphabetical order:
-                    //return na.raw() < nb.raw();
-                }
-                return get_font_style_order(a.face->describe()) < get_font_style_order(b.face->describe());
-            });
+            sort_fonts_by_name(fonts, sans_first);
             break;
 
         case FontOrder::by_weight:
-            std::sort(begin(fonts), end(fonts), [](const FontInfo& a, const FontInfo& b) { return a.weight < b.weight; });
+            // there are many repetitions for weight, due to font substitutions, so sort by name first
+            sort_fonts_by_name(fonts, sans_first);
+            std::stable_sort(begin(fonts), end(fonts), [](const FontInfo& a, const FontInfo& b) { return a.weight < b.weight; });
+/*{
+double w = 0;
+std::vector<double> deltas;
+for (auto& f : fonts) {
+    deltas.push_back(f.weight - w);
+    w = f.weight;
+}
+std::sort(begin(deltas), end(deltas));
+std::cout << "Weight deltas: ";
+for (auto d : deltas) {
+    std::cout << d << ' ';
+}
+std::cout << "\n";
+}*/
             break;
 
         case FontOrder::by_width:
-            std::sort(begin(fonts), end(fonts), [](const FontInfo& a, const FontInfo& b) { return a.width < b.width; });
+            sort_fonts_by_name(fonts, sans_first);
+            std::stable_sort(begin(fonts), end(fonts), [](const FontInfo& a, const FontInfo& b) { return a.width < b.width; });
             break;
 
         default:
@@ -190,27 +240,51 @@ Pango::FontDescription get_font_description(const Glib::RefPtr<Pango::FontFamily
     return desc;
 }
 
-const char font_cache[] = "font-cache-v1.01.ini";
+const char font_cache[] = "font-cache-v1.02.ini";
+enum FontCacheFlags : int {
+    Normal = 0,
+    Monospace = 0x01,
+    Oblique   = 0x02,
+    Variable  = 0x04,
+    Synthetic = 0x08,
+};
 
 void save_font_cache(const std::vector<FontInfo>& fonts) {
     auto keyfile = std::make_unique<Glib::KeyFile>();
 
-    Glib::ustring mono("monospaced");
-    Glib::ustring oblique("oblique");
+    // Glib::ustring mono("monospaced");
+    // Glib::ustring oblique("oblique");
     Glib::ustring weight("weight");
     Glib::ustring width("width");
     Glib::ustring family("family");
-    Glib::ustring variable("variable");
+    // Glib::ustring variable("variable");
+    // Glib::ustring synthetic("synthetic");
+    Glib::ustring fontflags("flags");
 
     for (auto&& font : fonts) {
         auto desc = get_font_description(font.ff, font.face);
         auto group = desc.to_string(); 
-        keyfile->set_boolean(group, mono, font.monospaced);
-        keyfile->set_boolean(group, oblique, font.oblique);
+        int flags = FontCacheFlags::Normal;
+        if (font.monospaced) {
+            flags |= FontCacheFlags::Monospace;
+        }
+        if (font.oblique) {
+            flags |= FontCacheFlags::Oblique;
+        }
+        if (font.variable_font) {
+            flags |= FontCacheFlags::Variable;
+        }
+        if (font.synthetic) {
+            flags |= FontCacheFlags::Synthetic;
+        }
+        // keyfile->set_boolean(group, mono, font.monospaced);
+        // keyfile->set_boolean(group, oblique, font.oblique);
         keyfile->set_double(group, weight, font.weight);
         keyfile->set_double(group, width, font.width);
         keyfile->set_integer(group, family, font.family_kind);
-        keyfile->set_boolean(group, variable, font.variable_font);
+        // keyfile->set_boolean(group, variable, font.variable_font);
+        // keyfile->set_boolean(group, synthetic, font.synthetic);
+        keyfile->set_integer(group, fontflags, flags);
     }
 
     std::string filename = Glib::build_filename(Inkscape::IO::Resource::profile_path(), font_cache);
@@ -232,21 +306,37 @@ std::unordered_map<std::string, FontInfo> load_cached_font_info() {
 
         if (exists && keyfile->load_from_file(filename)) {
 
-            Glib::ustring mono("monospaced");
-            Glib::ustring oblique("oblique");
+            // Glib::ustring mono("monospaced");
+            // Glib::ustring oblique("oblique");
             Glib::ustring weight("weight");
             Glib::ustring width("width");
             Glib::ustring family("family");
-            Glib::ustring variable("variable");
+            // Glib::ustring variable("variable");
+            // Glib::ustring synthetic("synthetic");
+            Glib::ustring fontflags("flags");
 
             for (auto&& group : keyfile->get_groups()) {
                 FontInfo font;
-                font.monospaced = keyfile->get_boolean(group, mono);
-                font.oblique = keyfile->get_boolean(group, oblique);
+                auto flags = keyfile->get_integer(group, fontflags);
+                if (flags & FontCacheFlags::Monospace) {
+                    font.monospaced = true;
+                }
+                if (flags & FontCacheFlags::Oblique) {
+                    font.oblique = true;
+                }
+                if (flags & FontCacheFlags::Variable) {
+                    font.variable_font = true;
+                }
+                if (flags & FontCacheFlags::Synthetic) {
+                    font.synthetic = true;
+                }
+                // font.monospaced = keyfile->get_boolean(group, mono);
+                // font.oblique = keyfile->get_boolean(group, oblique);
                 font.weight = keyfile->get_double(group, weight);
                 font.width = keyfile->get_double(group, width);
                 font.family_kind = keyfile->get_integer(group, family);
-                font.variable_font = keyfile->get_boolean(group, variable);
+                // font.variable_font = keyfile->get_boolean(group, variable);
+                // font.synthetic = keyfile->get_boolean(group, synthetic);
 
                 info[group.raw()] = font;
             }
@@ -261,17 +351,36 @@ std::unordered_map<std::string, FontInfo> load_cached_font_info() {
 
 std::vector<FontInfo> get_all_fonts() {
     std::vector<FontInfo> fonts;
+    return fonts;
+}
+
+std::shared_ptr<const std::vector<FontInfo>> get_all_fonts(Async::Progress<double, Glib::ustring, std::vector<FontInfo>>& progress) {
+    auto result = std::make_shared<std::vector<FontInfo>>();
+    auto& fonts = *result;
     auto cache = load_cached_font_info();
 
+    std::vector<FontInfo> empty;
+    progress.report_or_throw(0, "", empty);
     auto families = FontFactory::get().get_font_families();
 
+    progress.throw_if_cancelled();
     bool update_cache = false;
 
+    double counter = 0.0;
     for (auto ff : families) {
+        bool synthetic_font = false;
+        auto default_face = ff->get_face();
+        if (default_face && default_face->is_synthesized()) {
+            synthetic_font = true;
+        }
+
+        std::vector<FontInfo> family;
         auto faces = ff->list_faces();
         std::set<std::string> styles;
         for (auto face : faces) {
-            if (face->is_synthesized()) continue;
+            // skip synthetic faces of normal fonts, they pollute listing with fake entries,
+            // but let entirely synthetic fonts in ("Sans", "Monospace", etc)
+            if (!synthetic_font && face->is_synthesized()) continue;
 
             auto desc = face->describe();
             desc.unset_fields(Pango::FONT_MASK_SIZE);
@@ -281,6 +390,7 @@ std::vector<FontInfo> get_all_fonts() {
             styles.insert(key);
 
             FontInfo info = { ff, face };
+            info.synthetic = synthetic_font;
 
             desc = get_font_description(ff, face);
             auto it = cache.find(desc.to_string().raw());
@@ -324,14 +434,20 @@ std::vector<FontInfo> get_all_fonts() {
             info.ff = ff;
             info.face = face;
             fonts.emplace_back(info);
+
+            family.emplace_back(info);
+            // progress.report_or_throw(counter / families.size(), get_full_font_name(ff, face));
         }
+        progress.report_or_throw(++counter / families.size(), ff->get_name(), family);
     }
 
     if (update_cache) {
         save_font_cache(fonts);
     }
 
-    return fonts;
+    progress.report_or_throw(1, "", empty);
+
+    return result;
 }
 
 Glib::ustring get_fontspec_without_variants(const Glib::ustring& fontspec) {
@@ -343,6 +459,54 @@ Glib::ustring get_fontspec_without_variants(const Glib::ustring& fontspec) {
         return fontspec.substr(0, at);
     }
     return fontspec;
+}
+
+FontDiscovery& FontDiscovery::get() {
+    struct ConstructibleFontDiscovery : FontDiscovery {};
+    static auto factory = Inkscape::Util::Static<ConstructibleFontDiscovery>();
+    return factory.get();
+}
+
+FontDiscovery::FontDiscovery() {
+    if (auto i = InkscapeApplication::instance()) {
+        i->gio_app()->signal_shutdown().connect([=](){
+// g_message("gio app shutdown; cancel font load");
+            _loading.cancel();
+        });
+    }
+
+    _connection = _loading.subscribe([=](const MessageType& msg) {
+        if (auto result = Async::Msg::get_result(msg)) {
+            // cache results
+            _fonts = *result;
+    // g_message(" fonts loaded: %ld", _fonts->size());
+        }
+        else if (auto progress = Async::Msg::get_progress(msg)) {
+            // 
+        }
+        // propagate events
+        _events.emit(msg);
+    });
+}
+
+auto_connection FontDiscovery::connect_to_fonts(std::function<void (const MessageType&)> fn) {
+
+    auto_connection con = static_cast<sigc::connection>(_events.connect(fn));
+
+    if (!_fonts && !_loading.is_running()) {
+        // load fonts async
+        _loading.start(
+            [=](Async::Progress<double, Glib::ustring, std::vector<FontInfo>>& p) { return get_all_fonts(p); }
+        );
+    }
+    else if (_fonts) {
+        // fonts already loaded
+    // g_message("provide fonts: %ld", _fonts->size());
+
+        _events.emit(Async::Msg::OperationResult<FontsPayload>{_fonts});
+    }
+
+    return con;
 }
 
 } // namespace

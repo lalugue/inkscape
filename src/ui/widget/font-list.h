@@ -73,6 +73,8 @@ private:
     Gtk::IconView& _font_grid;
     Glib::RefPtr<Gtk::ListStore> _font_list_store;
     Gtk::Box& _tag_box;
+    Gtk::Box& _info_box;
+    Gtk::Box& _progress_box;
     // std::unordered_map<std::string, const Gtk::TreeRow*> _fspec_to_row;
     std::vector<FontInfo> _fonts;
     Inkscape::FontOrder _order = Inkscape::FontOrder::by_name;
@@ -92,6 +94,8 @@ private:
     auto_connection _scroll;
     Glib::ustring _prefs;
     bool _view_mode_list = true;
+    auto_connection _font_stream;
+    std::size_t _initializing = 0;
 };
 
 }}} // namespaces

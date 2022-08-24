@@ -1,29 +1,55 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 
+#include <functional>
 #include <glibmm/ustring.h>
+#include <memory>
+#include <sigc++/connection.h>
+#include <sigc++/signal.h>
 #include <vector>
 #include <pangomm.h>
+#include "async/operation-stream.h"
+#include "helper/auto-connection.h"
+#include "message.h"
+
 namespace Inkscape {
 
 struct FontInfo {
     Glib::RefPtr<Pango::FontFamily> ff;
     Glib::RefPtr<Pango::FontFace> face;
     Glib::ustring variations;   // pango-style font variations (if any)
-    float weight = 0;           // proxy for font weight - how black it is
-    float width = 0;            // proxy for font width - how compressed/extended it is
+    double weight = 0;           // proxy for font weight - how black it is
+    double width = 0;            // proxy for font width - how compressed/extended it is
     unsigned short family_kind = 0; // OS/2 family class
     bool monospaced = false;    // fixed-width font
     bool oblique = false;       // italic or oblique font
     bool variable_font = false; // this is variable font
+    bool synthetic = false;     // this is an alias, like "Sans" or "Monospace"
 };
 
 enum class FontOrder { by_name, by_weight, by_width };
+
+class FontDiscovery {
+public:
+    static FontDiscovery& get();
+
+    typedef std::shared_ptr<const std::vector<FontInfo>> FontsPayload;
+    typedef Async::Msg::Message<FontsPayload, double, Glib::ustring, std::vector<FontInfo>> MessageType;
+
+    auto_connection connect_to_fonts(std::function<void (const MessageType&)> fn);
+
+private:
+    FontDiscovery();
+    FontsPayload _fonts;
+    auto_connection _connection;
+    Inkscape::Async::OperationStream<FontsPayload, double, Glib::ustring, std::vector<FontInfo>> _loading;
+    sigc::signal<void (const MessageType&)>_events;
+};
 
 // Use font factory and cached font details to return a list of all fonts available to Inkscape
 std::vector<FontInfo> get_all_fonts();
 
 // change order
-void sort_fonts(std::vector<FontInfo>& fonts, FontOrder order);
+void sort_fonts(std::vector<FontInfo>& fonts, FontOrder order, bool sans_first);
 
 Pango::FontDescription get_font_description(const Glib::RefPtr<Pango::FontFamily>& ff, const Glib::RefPtr<Pango::FontFace>& face);
 
@@ -42,5 +68,7 @@ Glib::ustring get_inkscape_fontspec(
 // combine font style, weight, stretch and other traits to come up with a value
 // that can be used to order font faces within the same family
 int get_font_style_order(const Pango::FontDescription& desc);
+
+Glib::ustring get_full_font_name(Glib::RefPtr<Pango::FontFamily> ff, Glib::RefPtr<Pango::FontFace> face);
 
 } // namespace

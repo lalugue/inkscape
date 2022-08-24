@@ -11,10 +11,12 @@
  */
 
 #include <pango/pango-font.h>
+#include <pango/pango-fontmap.h>
 #include <pangomm/fontdescription.h>
 #include <pangomm/fontfamily.h>
 #include <pangomm/fontmap.h>
 #include <vector>
+#include "inkscape-application.h"
 #ifdef HAVE_CONFIG_H
 #include "config.h"  // only include where actually required!
 #endif
@@ -233,7 +235,8 @@ FontFactory::~FontFactory()
 {
     loaded.clear();
     g_object_unref(fontContext);
-    g_object_unref(fontServer);
+    fontServer = 0; // freed by _font_map
+    // _font_map.reset();
 }
 
 void FontFactory::refreshConfig()
@@ -288,7 +291,7 @@ Glib::ustring FontFactory::ConstructFontSpecification(FontInstance *font)
  */
 char const *sp_font_description_get_family(PangoFontDescription const *fontDescr)
 {
-    static auto const fontNameMap = std::map<Glib::ustring, Glib::ustring>{
+    static auto const fontNameMap = std::map<std::string, std::string>{
         { "Sans", "sans-serif" },
         { "Serif", "serif" },
         { "Monospace", "monospace" }

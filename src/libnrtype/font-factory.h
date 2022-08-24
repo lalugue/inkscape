@@ -10,6 +10,7 @@
 #ifndef LIBNRTYPE_FONT_FACTORY_H
 #define LIBNRTYPE_FONT_FACTORY_H
 
+#include <cstddef>
 #include <functional>
 #include <algorithm>
 #include <glibmm/refptr.h>

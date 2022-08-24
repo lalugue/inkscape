@@ -7,7 +7,9 @@
 #include <glibmm/ustring.h>
 #include <gtkmm/cellrenderertext.h>
 #include <gtkmm/label.h>
+#include <gtkmm/progressbar.h>
 #include <gtkmm/treeiter.h>
+#include <iostream>
 #include <iterator>
 #include <iomanip>
 #include <pangomm/fontdescription.h>
@@ -25,6 +27,7 @@
 #include <pangomm.h>
 #include <libnrtype/font-factory.h>
 #include <libnrtype/font-instance.h>
+#include <vector>
 
 #include "font-list.h"
 #include "iconrenderer.h"
@@ -95,12 +98,7 @@ static int font_size_to_index(double size) {
 // construct font name from Pango face and family;
 // return font name as it is recorded in the font itself, as far as Pango allows it
 Glib::ustring get_full_name(const Inkscape::FontInfo& font_info) {
-    if (!font_info.ff) return "";
-
-    auto family = font_info.ff->get_name();
-    auto face = font_info.face ? font_info.face->get_name() : Glib::ustring();
-    auto name = face.empty() ? family : family + ' ' + face;
-    return name;
+    return get_full_font_name(font_info.ff, font_info.face);
 }
 
 Glib::ustring get_alt_name(const Glib::ustring& fontspec) {
@@ -286,6 +284,8 @@ FontList::FontList(Glib::ustring preferences_path) :
     _font_size(get_widget<Gtk::ComboBoxText>(_builder, "font-size")),
     _font_size_scale(get_widget<Gtk::Scale>(_builder, "font-size-scale")),
     _tag_box(get_widget<Gtk::Box>(_builder, "tag-box")),
+    _info_box(get_widget<Gtk::Box>(_builder, "info-box")),
+    _progress_box(get_widget<Gtk::Box>(_builder, "progress-box")),
     _font_tags(Inkscape::FontTags::get())
 {
     _cell_renderer = std::make_unique<CellFontRenderer>();
@@ -540,7 +540,39 @@ FontList::FontList(Glib::ustring preferences_path) :
     show_list->signal_toggled().connect([=]() { set_list_view_mode(true); });
     show_grid->signal_toggled().connect([=]() { set_list_view_mode(false); });
 
-    _fonts = Inkscape::get_all_fonts();
+    _fonts.clear();
+    _initializing = 0;
+    _font_stream = FontDiscovery::get().connect_to_fonts([=](const FontDiscovery::MessageType& msg){
+        if (auto r = Async::Msg::get_result(msg)) {
+            _fonts = **r;
+            sort_fonts(_order);
+            filter();
+        }
+        else if (auto p = Async::Msg::get_progress(msg)) {
+            // show progress
+            _info_box.hide();
+            _progress_box.show();
+            auto& progress = get_widget<Gtk::ProgressBar>(_builder, "init-progress");
+            progress.set_fraction(std::get<double>(*p));
+            progress.set_text(std::get<Glib::ustring>(*p));
+            auto&& family = std::get<std::vector<FontInfo>>(*p);
+            _fonts.insert(_fonts.end(), family.begin(), family.end());
+            auto delta = _fonts.size() - _initializing;
+            // refresh fonts; at first more frequently, every new 100, but then more slowly, as it gets costly
+            if (delta > 500 || (_fonts.size() < 500 && delta > 100)) {
+                _initializing = _fonts.size();
+                sort_fonts(_order);
+                filter();
+            }
+        }
+        else if (Async::Msg::is_finished(msg)) {
+            // hide progress
+            _progress_box.hide();
+            _info_box.show();
+        }
+    });
+
+    // _fonts = Inkscape::get_all_fonts();
 
 // fake some tags
 for (auto&& f : _fonts) {
@@ -645,7 +677,7 @@ for (auto&& f : _fonts) {
 }
 
 void FontList::sort_fonts(Inkscape::FontOrder order) {
-    Inkscape::sort_fonts(_fonts, order);
+    Inkscape::sort_fonts(_fonts, order, true);
 
     if (const char* icon = get_sort_icon(order)) {
         auto& sort = get_widget<Gtk::Image>(_builder, "sort-icon");
@@ -717,6 +749,9 @@ void FontList::filter() {
     }
 }
 
+// icon for synthetic fonts
+static Glib::ustring SYNTHETIC = "generic-font-symbolic";
+
 // add fonts to the font store taking filtring params into account
 void FontList::populate_font_store(Glib::ustring text, const Show& params) {
     auto filter = text.lowercase();
@@ -730,9 +765,9 @@ void FontList::populate_font_store(Glib::ustring text, const Show& params) {
     _font_list_store->clear();
     _extra_fonts = 0;
     // _fspec_to_row.clear();
-
+/*
     if (text.empty()) {
-        // add sans-serifs
+        // add sans-serifs?
 
         for (auto fontspec : {"sans-serif, Normal", "sans-serif, Italic", "sans-serif, Bold", "sans-serif, Bold Italic"}) {
             Gtk::TreeModel::iterator treeModelIter = _font_list_store->append();
@@ -740,11 +775,11 @@ void FontList::populate_font_store(Glib::ustring text, const Show& params) {
             row[g_column_model.font] = FontInfo();
             // row[g_column_model.font_class] = FontClass::SPECIAL;
             row[g_column_model.alt_fontspec] = fontspec;
-            row[g_column_model.icon_name] = "generic-font-symbolic";
+            row[g_column_model.icon_name] = SYNTHETIC;
             ++_extra_fonts;
         }
     }
-
+*/
     for (auto&& f : _fonts) {
         bool filter_in = false;
         /*
@@ -781,7 +816,7 @@ void FontList::populate_font_store(Glib::ustring text, const Show& params) {
         row[g_column_model.font] = f;
         // row[g_column_model.font_class] = FontClass::NORMAL;
         row[g_column_model.alt_fontspec] = Glib::ustring();
-        row[g_column_model.icon_name] = Glib::ustring();
+        row[g_column_model.icon_name] = f.synthetic ? SYNTHETIC : Glib::ustring();
     }
 
     // for (auto&& row : _font_list_store->children()) {
