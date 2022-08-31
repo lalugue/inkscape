@@ -64,6 +64,7 @@
 #include "file.h"                   // sp_file_convert_dpi
 #include "inkscape.h"               // Inkscape::Application
 #include "path-prefix.h"            // Data directory
+#include "event-log.h"
 
 #include "include/glibmm_version.h"
 
@@ -104,6 +105,7 @@
 #include "actions/actions-transform.h"              // Actions
 #include "actions/actions-text.h"                   // Actions
 #include "actions/actions-window.h"                 // Actions
+#include "actions/actions-undo-document.h"
 
 // With GUI
 #include "actions/actions-tutorial.h"               // Actions
@@ -661,6 +663,7 @@ InkscapeApplication::InkscapeApplication()
     add_actions_tutorial(this);             // actions for opening tutorials (with GUI only)
     add_actions_transform(this);            // actions for transforming selected objects
     add_actions_window(this);               // actions for windows
+    add_actions_undo_app(this);             // Actions to undo/redo from the application level
 
     // ====================== Command Line ======================
 
@@ -1707,6 +1710,15 @@ int InkscapeApplication::get_number_of_windows() const {
           [&](int sum, auto& v){ return sum + static_cast<int>(v.second.size()); });
     }
     return 0;
+}
+
+void InkscapeApplication::set_active_document(SPDocument* document)
+{
+    _active_document = document;
+    if (document) {
+        // Keep macOS undo menu items upto date.
+        document->get_event_log()->updateUndoVerbs();
+    }
 }
 
 /*

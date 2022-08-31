@@ -372,26 +372,29 @@ void EventLog::removeDialogConnection(Gtk::TreeView *event_list_view, CallbackMa
 void
 EventLog::updateUndoVerbs()
 {
-    if (_document) {
-
-        auto group = _document->getActionGroup();
-        if (group) {
-            auto undo_action = group->lookup_action("undo");
-            auto redo_action = group->lookup_action("redo");
-            auto undo_saction = Glib::RefPtr<Gio::SimpleAction>::cast_dynamic(undo_action);
-            auto redo_saction = Glib::RefPtr<Gio::SimpleAction>::cast_dynamic(redo_action);
-            // GTK4
-            // auto undo_saction = dynamic_cast<Gio::SimpleAction*>(undo_action);
-            // auto redo_saction = dynamic_cast<Gio::SimpleAction*>(redo_action);
-            if (!undo_saction || !redo_saction) {
-                std::cerr << "EventLog::updateUndoVerbs: can't find undo or redo action!" << std::endl;
-                return;
-            }
-
-            // Enable/disable menu items.
-            undo_saction->set_enabled(static_cast<bool>(_getUndoEvent()));
-            redo_saction->set_enabled(static_cast<bool>(_getRedoEvent()));
+    auto updateActions = [=](Gio::ActionMap *actions) {
+        auto undo_action = actions->lookup_action("undo");
+        auto redo_action = actions->lookup_action("redo");
+        auto undo_saction = Glib::RefPtr<Gio::SimpleAction>::cast_dynamic(undo_action);
+        auto redo_saction = Glib::RefPtr<Gio::SimpleAction>::cast_dynamic(redo_action);
+        // GTK4
+        // auto undo_saction = dynamic_cast<Gio::SimpleAction*>(undo_action);
+        // auto redo_saction = dynamic_cast<Gio::SimpleAction*>(redo_action);
+        if (!undo_saction || !redo_saction) {
+            std::cerr << "EventLog::updateUndoVerbs: can't find undo or redo action!" << std::endl;
+            return;
         }
+
+        // Enable/disable menu items.
+        undo_saction->set_enabled(static_cast<bool>(_getUndoEvent()));
+        redo_saction->set_enabled(static_cast<bool>(_getRedoEvent()));
+    };
+
+    if (_document) {
+        updateActions(_document->getActionGroup().operator->());
+    }
+    if (auto *app = InkscapeApplication::instance()) {
+        updateActions(app->gio_app());
     }
 }
 

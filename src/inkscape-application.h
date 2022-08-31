@@ -68,7 +68,7 @@ public:
     // In headless mode, these are set for each file processed.
     // With GUI, these are set everytime the cursor enters an InkscapeWindow.
     SPDocument*           get_active_document() { return _active_document; };
-    void                  set_active_document(SPDocument* document) { _active_document = document; };
+    void                  set_active_document(SPDocument* document);
 
     Inkscape::Selection*  get_active_selection() { return _active_selection; }
     void                  set_active_selection(Inkscape::Selection* selection)

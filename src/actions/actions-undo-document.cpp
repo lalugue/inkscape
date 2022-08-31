@@ -59,6 +59,7 @@ redo(SPDocument* document)
     Inkscape::DocumentUndo::redo(document);
 }
 
+
 std::vector<std::vector<Glib::ustring>> raw_data_undo_document =
 {
     // clang-format off
@@ -83,6 +84,23 @@ add_actions_undo_document(SPDocument* document)
         return;
     }
     app->get_action_extra_data().add_data(raw_data_undo_document);
+}
+
+std::vector<std::vector<Glib::ustring>> raw_data_undo_app =
+{
+    // clang-format off
+    {"app.undo",                                N_("Undo"),                   "Edit Document",     N_("Undo last action")},
+    {"app.redo",                                N_("Redo"),                   "Edit Document",     N_("Do again the last undone action")},
+    // clang-format on
+};
+
+void
+add_actions_undo_app(InkscapeApplication* app)
+{
+    auto gapp = app->gio_app();
+    gapp->add_action( "undo", [=]{ undo(app->get_active_window()->get_desktop()->getDocument()); });
+    gapp->add_action( "redo", [=]{ redo(app->get_active_window()->get_desktop()->getDocument()); });
+    app->get_action_extra_data().add_data(raw_data_undo_app);
 }
 
 /*
