@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Inkscape 1.2.x\n"
 "Report-Msgid-Bugs-To: inkscape-translator@lists.inkscape.org\n"
-"POT-Creation-Date: 2022-07-04 02:44+0000\n"
-"PO-Revision-Date: 2022-07-04 07:16+0200\n"
+"POT-Creation-Date: 2022-08-22 06:49+0000\n"
+"PO-Revision-Date: 2022-09-12 20:38+0200\n"
 "Last-Translator: Martin Srebotnjak <miles@filmsi.net>\n"
 "Language-Team: Martin Srebotnjak <miles@filmsi.net>\n"
 "Language: sl_SI\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n"
 "%100==4 ? 3 : 0);\n"
 "X-Launchpad-Export-Date: 2016-12-29 00:28+0000\n"
-"X-Generator: Poedit 3.1\n"
+"X-Generator: Poedit 3.1.1\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
 #: ../share/filters/filters.svg.h:2
@@ -2521,10 +2521,9 @@ msgid "lime (#00FF00)"
 msgstr "limetna (#00FF00)"
 
 #: ../share/palettes/palettes.h:102
-#, fuzzy
 msgctxt "Palette"
 msgid "honeydew (#F0FFF0)"
-msgstr "medenino (#F0FFF0)"
+msgstr "honeydew (#F0FFF0, medena)"
 
 #: ../share/palettes/palettes.h:103
 msgctxt "Palette"
@@ -2577,10 +2576,9 @@ msgid "mediumturquoise (#48D1CC)"
 msgstr "srednja turkizna (#48D1CC)"
 
 #: ../share/palettes/palettes.h:113
-#, fuzzy
 msgctxt "Palette"
 msgid "darkslategray (#2F4F4F)"
-msgstr "darkslategray (#2F4F4F)"
+msgstr "temna skrilasta siva (#2F4F4F)"
 
 #: ../share/palettes/palettes.h:114
 msgctxt "Palette"
@@ -2633,10 +2631,9 @@ msgid "lightblue (#ADD8E6)"
 msgstr "svetlomodra (#ADD8E6)"
 
 #: ../share/palettes/palettes.h:124
-#, fuzzy
 msgctxt "Palette"
 msgid "deepskyblue (#00BFFF)"
-msgstr "deepskyblue (#00BFFF)"
+msgstr "deepskyblue (#00BFFF, modrina neba)"
 
 #: ../share/palettes/palettes.h:125
 msgctxt "Palette"
@@ -2654,28 +2651,24 @@ msgid "steelblue (#4682B4)"
 msgstr "jekleno modra (#4682B4)"
 
 #: ../share/palettes/palettes.h:128
-#, fuzzy
 msgctxt "Palette"
 msgid "aliceblue (#F0F8FF)"
-msgstr "aliceblue (#F0F8FF)"
+msgstr "aliceblue (#F0F8FF, Aličina modra)"
 
 #: ../share/palettes/palettes.h:129
-#, fuzzy
 msgctxt "Palette"
 msgid "dodgerblue (#1E90FF)"
-msgstr "dodgerblue (#1E90FF)"
+msgstr "dodgerska modra (#1E90FF)"
 
 #: ../share/palettes/palettes.h:130
-#, fuzzy
 msgctxt "Palette"
 msgid "slategray (#708090)"
-msgstr "slategray (#708090)"
+msgstr "skrilasta siva (#708090)"
 
 #: ../share/palettes/palettes.h:131
-#, fuzzy
 msgctxt "Palette"
 msgid "lightslategray (#778899)"
-msgstr "lightslategray (#778899)"
+msgstr "svetla skrilasta siva (#778899)"
 
 #: ../share/palettes/palettes.h:132
 msgctxt "Palette"
@@ -2728,22 +2721,19 @@ msgid "ghostwhite (#F8F8FF)"
 msgstr "bela duhov (#F8F8FF)"
 
 #: ../share/palettes/palettes.h:142
-#, fuzzy
 msgctxt "Palette"
 msgid "slateblue (#6A5ACD)"
-msgstr "slateblue (#6A5ACD) "
+msgstr "skrilasta modra (#6A5ACD)"
 
 #: ../share/palettes/palettes.h:143
-#, fuzzy
 msgctxt "Palette"
 msgid "darkslateblue (#483D8B)"
-msgstr "darkslateblue (#483D8B)"
+msgstr "temna skrilasta modra (#483D8B)"
 
 #: ../share/palettes/palettes.h:144
-#, fuzzy
 msgctxt "Palette"
 msgid "mediumslateblue (#7B68EE)"
-msgstr "srednje velikaplav (#7B68EE)"
+msgstr "srednja skrilasta modra (#7B68EE)"
 
 #: ../share/palettes/palettes.h:145
 msgctxt "Palette"
@@ -2826,10 +2816,9 @@ msgid "hotpink (#FF69B4)"
 msgstr "vroča roza (#FF69B4)"
 
 #: ../share/palettes/palettes.h:161
-#, fuzzy
 msgctxt "Palette"
 msgid "lavenderblush (#FFF0F5)"
-msgstr "lavenderblush (#FFF0F5)"
+msgstr "lavenderblush (#FFF0F5, rdečica sivke)"
 
 #: ../share/palettes/palettes.h:162
 msgctxt "Palette"
@@ -2852,10 +2841,9 @@ msgid "lightpink (#FFB6C1)"
 msgstr "svetlo roza (#FFB6C1)"
 
 #: ../share/palettes/palettes.h:166
-#, fuzzy
 msgctxt "Palette"
 msgid "rebeccapurple (#663399)"
-msgstr "rebeccapurple (#663399)"
+msgstr "rebeccapurple (#663399, Rebekina vijolična)"
 
 #: ../share/palettes/palettes.h:167
 msgctxt "Palette"
@@ -3531,10 +3519,9 @@ msgid "Over the Phone"
 msgstr "Prek telefona"
 
 #: ../share/symbols/symbols.h:139
-#, fuzzy
 msgctxt "Symbol"
 msgid "Hip Balloon"
-msgstr "Balon s kolkom"
+msgstr "Balon za zabavo"
 
 #: ../share/symbols/symbols.h:140
 msgctxt "Symbol"
@@ -4051,19 +4038,16 @@ msgid "CD label 120x120 disc disk"
 msgstr "CD nalepka 120x120 za plošček"
 
 #: ../share/templates/templates.h:1
-#, fuzzy
 msgid "LaTeX Beamer"
-msgstr "Žaromet LaTeX"
+msgstr "Beamer LaTeX"
 
 #: ../share/templates/templates.h:1
-#, fuzzy
 msgid "LaTeX beamer template with helping grid."
-msgstr "Predloga žaromet LaTeX s pomožno mrežo."
+msgstr "Predloga Beamer LaTeX s pomožno mrežo."
 
 #: ../share/templates/templates.h:1
-#, fuzzy
 msgid "LaTex LaTeX latex grid beamer"
-msgstr "Mrežni žaromet LaTex LaTeX latex"
+msgstr "Mrežni Beamer LaTex LaTeX latex"
 
 #: ../share/templates/templates.h:1
 msgid "Typography Canvas"
@@ -4519,7 +4503,6 @@ msgid "Toggle snapping to clip paths"
 msgstr "Preklopi pripenjanje na poti izrezkov"
 
 #: ../src/actions/actions-canvas-snapping.cpp:275
-#, fuzzy
 msgid "Simple Snap Bounding Box"
 msgstr "Enostavno pripni na okvire"
 
@@ -5903,10 +5886,9 @@ msgstr "Navpično razporedi izbrana vozlišča."
 
 #: ../src/actions/actions-node-align.cpp:100
 #: ../src/actions/actions-node-align.cpp:101
-#, fuzzy
 msgid "Enter string for alignment anchor, one of: first/last/middle/min/max"
 msgstr ""
-"Podajte niz za sidro poravnave, možne izbire: prva/zadnja/srednja/najm./najv."
+"Podajte niz za sidro poravnave, možne izbire: first/last/middle/min/max"
 
 #: ../src/actions/actions-object-align.cpp:267
 #: ../src/actions/actions-object-align.cpp:565
@@ -5947,10 +5929,12 @@ msgstr "Poravnaj predmete"
 #: ../src/actions/actions-object-align.cpp:770
 msgid ""
 "Align selected objects; usage: [[left|hcenter|right] || [top|vcenter|"
-"bottom]] [last|first|biggest|smallest|page|drawing|selection|pref]? group? anchor?"
+"bottom]] [last|first|biggest|smallest|page|drawing|selection|pref]? group? "
+"anchor?"
 msgstr ""
 "Poravnajte izbrane predmete; raba: [[left|hcenter|right] || [top|vcenter|"
-"bottom]] [last|first|biggest|smallest|page|drawing|selection|pref]? group? anchor?"
+"bottom]] [last|first|biggest|smallest|page|drawing|selection|pref]? group? "
+"anchor?"
 
 #: ../src/actions/actions-object-align.cpp:772
 msgid "Align to left edge"
@@ -6104,7 +6088,7 @@ msgstr "Porazdeli besedilne predmete"
 
 #: ../src/actions/actions-object-align.cpp:791
 msgid "Distribute text alignment points; usage [vertical | horizontal]"
-msgstr "Porazdeli točke poravnave besedila; raba: [navpično | vodoravno]"
+msgstr "Porazdeli točke poravnave besedila; raba: [vertical | horizontal]"
 
 #: ../src/actions/actions-object-align.cpp:792
 msgid "Distribute text alignment points horizontally"
@@ -6119,13 +6103,12 @@ msgid "Rearrange objects"
 msgstr "Prerazporedi predmete"
 
 #: ../src/actions/actions-object-align.cpp:795
-#, fuzzy
 msgid ""
 "Rearrange selected objects; usage: [graph | exchange | exchangez | rotate | "
 "randomize | unclump]"
 msgstr ""
-"Prerazporedi izbrane predmete; uporaba: [graf | izmenjava | izmenjavaz | "
-"zavrti | naključno | razlomasti]"
+"Prerazporedi izbrane predmete; uporaba: [graph | exchange | exchangez | "
+"rotate | randomize | unclump]"
 
 #: ../src/actions/actions-object-align.cpp:796
 msgid "Rearrange as graph"
@@ -6184,15 +6167,14 @@ msgstr ""
 "števili (vodoravne in navpične vrzeli)."
 
 #: ../src/actions/actions-object-align.cpp:810
-#, fuzzy
 msgid ""
 "Enter anchor<space>alignment<space>optional second alignment. Possible "
 "anchors: last, first, biggest, smallest, page, drawing, selection, pref; "
 "possible alignments: left, hcenter, right, top, vcenter, bottom."
 msgstr ""
-"Podajte drugo poravnavo za sidro<space>poravnavo<space>neobvezno. Možna "
-"sidra: zadnja, prva, največja, najmanjša, stran, risba, izbira; možne "
-"poravnave: levo, hcenter, desno, vrh, vcenter, dno."
+"Podajte drugo neobvezno<space>poravnavo<space>za sidro. Možna sidra:  last, "
+"first, biggest, smallest, page, drawing, selection, pref; možne poravnave: "
+"left, hcenter, right, top, vcenter, bottom."
 
 #: ../src/actions/actions-object-align.cpp:811
 msgid ""
@@ -6302,9 +6284,8 @@ msgid "Object Clip Set Inverse"
 msgstr "Določi inverzni izrezek predmeta"
 
 #: ../src/actions/actions-object.cpp:277
-#, fuzzy
 msgid "Apply inverse clipping path to selection (Power Clip LPE)"
-msgstr "Uveljavi inverzno pot obrezovanja na izboru (močna porezava LPE)"
+msgstr "Uveljavi inverzno pot obrezovanja na izboru (izrezek moči LPE)"
 
 #: ../src/actions/actions-object.cpp:278
 msgid "Object Clip Release"
@@ -6339,9 +6320,8 @@ msgid "Object Mask Set Inverse"
 msgstr "Določi inverzno masko predmeta"
 
 #: ../src/actions/actions-object.cpp:281
-#, fuzzy
 msgid "Apply inverse mask to selection (Power Mask LPE)"
-msgstr "Uveljavi inverzno masko na izboru (močna maska LPE)"
+msgstr "Uveljavi inverzno masko na izboru (maska moči LPE)"
 
 #: ../src/actions/actions-object.cpp:282
 msgid "Object Mask Release"
@@ -9141,7 +9121,6 @@ msgid "Threshold:"
 msgstr "Doseg:"
 
 #: ../src/extension/internal/bitmap/threshold.cpp:48
-#, fuzzy
 msgid "Threshold selected bitmap(s)"
 msgstr "Prag izbranih bitnih slik"
 
@@ -9186,7 +9165,7 @@ msgid "Number of inset/outset copies of the object to make"
 msgstr "Število notranjih/zunanjih kopij predmeta"
 
 #: ../src/extension/internal/bluredge.cpp:145
-#: ../share/extensions/extrude.inx:32
+#: ../share/extensions/extrude.inx:42
 #: ../share/extensions/generate_voronoi.inx:20
 #: ../share/extensions/interp.inx:17 ../share/extensions/motion.inx:12
 #: ../share/extensions/pathalongpath.inx:36
@@ -10528,9 +10507,8 @@ msgstr "Barvni izmik"
 
 #: ../src/extension/internal/filter/color.h:1648
 #: ../src/ui/widget/filter-effect-chooser.cpp:29
-#, fuzzy
 msgid "Color Burn"
-msgstr "Preosvetljevanje"
+msgstr "Barvno preosvetljevanje"
 
 #: ../src/extension/internal/filter/color.h:1650
 #: ../src/ui/widget/filter-effect-chooser.cpp:30
@@ -12992,12 +12970,9 @@ msgid "Bend an object along the curvature of another path"
 msgstr "Upogni predmet ob ukrivljenosti druge poti"
 
 #: ../src/live_effects/effect.cpp:116
-#, fuzzy
-#| msgctxt "path effect"
-#| msgid "Gears"
 msgctxt "path effect"
 msgid "Gears"
-msgstr "Naprave"
+msgstr "Prestave"
 
 #: ../src/live_effects/effect.cpp:119
 msgid "Create interlocking, configurable gears based on the nodes of a path"
@@ -13114,10 +13089,9 @@ msgstr ""
 "uporabite slog poteze predmeta."
 
 #: ../src/live_effects/effect.cpp:274
-#, fuzzy
 msgctxt "path effect"
 msgid "Power stroke"
-msgstr "Močna poteza"
+msgstr "Poteza moči"
 
 #: ../src/live_effects/effect.cpp:277
 msgid ""
@@ -13247,11 +13221,9 @@ msgstr ""
 "kotom, zaokrožen, ekstrapoliran lok, ...)"
 
 #: ../src/live_effects/effect.cpp:418
-#, fuzzy
-#| msgid "Pattern stroke"
 msgctxt "path effect"
 msgid "Taper stroke"
-msgstr "Vzorčasta poteza"
+msgstr "Zožena poteza"
 
 #: ../src/live_effects/effect.cpp:421
 msgid "Let the path's ends narrow down to a tip"
@@ -13353,10 +13325,9 @@ msgstr ""
 "številnimi drugimi možnostmi prilagoditev"
 
 #: ../src/live_effects/effect.cpp:537
-#, fuzzy
 msgctxt "path effect"
 msgid "Corners (Fillet/Chamfer)"
-msgstr "Koti (File/Chamfer)"
+msgstr "Oglišča (file/posneti rob)"
 
 #: ../src/live_effects/effect.cpp:540
 msgid ""
@@ -13367,7 +13338,6 @@ msgstr ""
 "odrežite"
 
 #: ../src/live_effects/effect.cpp:550
-#, fuzzy
 msgctxt "path effect"
 msgid "Power clip"
 msgstr "Izrezek moči"
@@ -13377,7 +13347,6 @@ msgid "Invert, hide or flatten a clip (apply like a Boolean operation)"
 msgstr "Preobrni, skrij ali splošči izrezek (uporabi kot operacijo Boolean)"
 
 #: ../src/live_effects/effect.cpp:563
-#, fuzzy
 msgctxt "path effect"
 msgid "Power mask"
 msgstr "Maska moči"
@@ -13630,42 +13599,42 @@ msgstr "Različica LPE"
 msgid "No effect"
 msgstr "Brez učinkov"
 
-#: ../src/live_effects/effect.cpp:1811
+#: ../src/live_effects/effect.cpp:1821
 msgid "<b>Default value:</b> "
 msgstr "<b>Privzeta vrednost:</b> "
 
-#: ../src/live_effects/effect.cpp:1812 ../src/live_effects/effect.cpp:1886
+#: ../src/live_effects/effect.cpp:1822 ../src/live_effects/effect.cpp:1896
 msgid "<b>Default value overridden:</b> "
 msgstr "<b>Privzeta vrednost preglašena:</b> "
 
-#: ../src/live_effects/effect.cpp:1814 ../src/live_effects/effect.cpp:1883
+#: ../src/live_effects/effect.cpp:1824 ../src/live_effects/effect.cpp:1893
 msgid "Update"
 msgstr "Posodobi"
 
-#: ../src/live_effects/effect.cpp:1817 ../src/live_effects/effect.cpp:1897
+#: ../src/live_effects/effect.cpp:1827 ../src/live_effects/effect.cpp:1907
 msgid "Set"
 msgstr "Nastavi"
 
-#: ../src/live_effects/effect.cpp:1837
+#: ../src/live_effects/effect.cpp:1847
 #: ../share/extensions/image_attributes.inx:22
 #: ../share/extensions/image_attributes.inx:48
 msgid "Unset"
 msgstr "Odnastavi"
 
-#: ../src/live_effects/effect.cpp:1854
+#: ../src/live_effects/effect.cpp:1864
 msgid "</b>: Set default parameters"
 msgstr "</b>: nastavi privzete parametre"
 
-#: ../src/live_effects/effect.cpp:1900
+#: ../src/live_effects/effect.cpp:1910
 msgid "<b>Default value:</b> Default"
 msgstr "<b>Privzeta vrednost:</b> privzeto"
 
-#: ../src/live_effects/effect.cpp:1971
+#: ../src/live_effects/effect.cpp:1981
 #, c-format
 msgid "Editing parameter <b>%s</b>."
 msgstr "Urejanje parametra <b>%s</b>."
 
-#: ../src/live_effects/effect.cpp:1976
+#: ../src/live_effects/effect.cpp:1986
 msgid "None of the applied path effect's parameters can be edited on-canvas."
 msgstr ""
 "Nobenega izmed parametrov uporabljenega učinka poti ni mogoče neposredno "
@@ -13804,8 +13773,8 @@ msgstr ""
 msgid "Hide width knot"
 msgstr "Skrij vozel širine"
 
-#: ../src/live_effects/lpe-bendpath.cpp:201
-#: ../src/live_effects/lpe-patternalongpath.cpp:325
+#: ../src/live_effects/lpe-bendpath.cpp:221
+#: ../src/live_effects/lpe-patternalongpath.cpp:305
 msgid "Change the width"
 msgstr "Spremeni širino"
 
@@ -14081,7 +14050,6 @@ msgstr "Zlij poti"
 #: ../src/live_effects/lpe-copy_rotate.cpp:55
 #: ../src/live_effects/lpe-mirror_symmetry.cpp:60
 #: ../src/live_effects/lpe-slice.cpp:52 ../src/live_effects/lpe-tiling.cpp:73
-#, fuzzy
 msgid "lpesatellites"
 msgstr "lpesateliti"
 
@@ -14589,28 +14557,24 @@ msgid "Unit"
 msgstr "Enota"
 
 #: ../src/live_effects/lpe-fillet-chamfer.cpp:43
-#, fuzzy
 msgid "Method to calculate the fillet or chamfer"
-msgstr "Metoda za izračun fileja ali šamferja"
+msgstr "Metoda za izračun fileja ali posnetega roba"
 
 #: ../src/live_effects/lpe-fillet-chamfer.cpp:45
-#, fuzzy
 msgid "Mode, e.g. fillet or chamfer"
-msgstr "Način, npr. file ali šamfer"
+msgstr "Način, npr. file ali posneti rob"
 
 #: ../src/live_effects/lpe-fillet-chamfer.cpp:47
 msgid "Radius, in unit or %"
 msgstr "Polmer, v enotah ali %"
 
 #: ../src/live_effects/lpe-fillet-chamfer.cpp:49
-#, fuzzy
 msgid "Chamfer steps:"
-msgstr "Koraki šamferja:"
+msgstr "Koraki posnetega roba:"
 
 #: ../src/live_effects/lpe-fillet-chamfer.cpp:49
-#, fuzzy
 msgid "Chamfer steps"
-msgstr "Koraki šamferja"
+msgstr "Koraki posnetega roba"
 
 #: ../src/live_effects/lpe-fillet-chamfer.cpp:51
 msgid "Radius in %"
@@ -14639,27 +14603,23 @@ msgstr "Uveljavi spremembe, če je polmer večji od 0"
 
 #: ../src/live_effects/lpe-fillet-chamfer.cpp:238
 #: ../src/ui/dialog/lpe-fillet-chamfer-properties.cpp:59
-#, fuzzy
 msgid "Fillet"
 msgstr "File"
 
 #: ../src/live_effects/lpe-fillet-chamfer.cpp:243
 #: ../src/ui/dialog/lpe-fillet-chamfer-properties.cpp:61
-#, fuzzy
 msgid "Inverse fillet"
 msgstr "Inverzni file"
 
 #: ../src/live_effects/lpe-fillet-chamfer.cpp:249
 #: ../src/ui/dialog/lpe-fillet-chamfer-properties.cpp:63
-#, fuzzy
 msgid "Chamfer"
-msgstr "Šamfer"
+msgstr "Posneti rob"
 
 #: ../src/live_effects/lpe-fillet-chamfer.cpp:254
 #: ../src/ui/dialog/lpe-fillet-chamfer-properties.cpp:65
-#, fuzzy
 msgid "Inverse chamfer"
-msgstr "Preobrni šamfer"
+msgstr "Inverzni posneti rob"
 
 #: ../src/live_effects/lpe-gears.cpp:206
 msgid "_Teeth:"
@@ -14689,27 +14649,27 @@ msgstr "Najm. polmer:"
 msgid "Minimum radius, low values can be slow"
 msgstr "Najmanjši polmer, nizke vrednosti lahko upočasnijo delovanje"
 
-#: ../src/live_effects/lpe-interpolate.cpp:30
+#: ../src/live_effects/lpe-interpolate.cpp:27
 msgid "Trajectory:"
 msgstr "Tirnica:"
 
-#: ../src/live_effects/lpe-interpolate.cpp:30
+#: ../src/live_effects/lpe-interpolate.cpp:27
 msgid "Path along which intermediate steps are created."
 msgstr "Pot, vzdolž katere naj bodo ustvarjeni vmesni koraki"
 
-#: ../src/live_effects/lpe-interpolate.cpp:32
+#: ../src/live_effects/lpe-interpolate.cpp:29
 msgid "Steps_:"
 msgstr "Koraki_:"
 
-#: ../src/live_effects/lpe-interpolate.cpp:32
+#: ../src/live_effects/lpe-interpolate.cpp:29
 msgid "Determines the number of steps from start to end path."
 msgstr "Določa število korakov od začetka do konca poti."
 
-#: ../src/live_effects/lpe-interpolate.cpp:33
+#: ../src/live_effects/lpe-interpolate.cpp:30
 msgid "E_quidistant spacing"
 msgstr "E_kvidistančen razmik"
 
-#: ../src/live_effects/lpe-interpolate.cpp:34
+#: ../src/live_effects/lpe-interpolate.cpp:31
 msgid ""
 "If true, the spacing between intermediates is constant along the length of "
 "the path. If false, the distance depends on the location of the nodes of the "
@@ -14777,7 +14737,6 @@ msgstr "Sredica"
 
 #: ../src/live_effects/lpe-jointype.cpp:41
 #: ../src/live_effects/lpe-offset.cpp:68
-#, fuzzy
 msgid "Miter Clip"
 msgstr "Izrezek zajere"
 
@@ -14856,21 +14815,18 @@ msgstr "Spoj pod kotom:"
 
 #: ../src/live_effects/lpe-jointype.cpp:67
 #: ../src/live_effects/lpe-offset.cpp:84
-#, fuzzy
 msgid "Maximum length of the miter join (in units of stroke width)"
-msgstr "Največja dolžina spoja z zajero (v enotah kot debelina poteze)"
+msgstr "Največja dolžina spoja z zajero (v enotah debeline poteze)"
 
 #: ../src/live_effects/lpe-jointype.cpp:68
 #: ../src/live_effects/lpe-offset.cpp:85
-#, fuzzy
 msgid "Force miter"
-msgstr "Vsili zajero/sredico"
+msgstr "Vsili zajero"
 
 #: ../src/live_effects/lpe-jointype.cpp:68
 #: ../src/live_effects/lpe-offset.cpp:85
-#, fuzzy
 msgid "Overrides the miter limit and forces a join."
-msgstr "Preglasi mejo sredice/zajere in vsili spoj."
+msgstr "Preglasi mejo zajere in vsili spoj."
 
 #: ../src/live_effects/lpe-knot.cpp:359
 msgid "_Gap length:"
@@ -15901,9 +15857,8 @@ msgid "Envelope deformation"
 msgstr "Deformacija ovojnice"
 
 #: ../src/live_effects/lpe-perspective-envelope.cpp:48
-#, fuzzy
 msgid "Overflow perspective"
-msgstr "Perspektiva prekoračena"
+msgstr "Prekorači perspektivo"
 
 #: ../src/live_effects/lpe-perspective-envelope.cpp:49
 msgid "Type"
@@ -16011,9 +15966,8 @@ msgid "Set color and opacity of the background"
 msgstr "Nastavi barvo in prekrivnost ozadja"
 
 #: ../src/live_effects/lpe-powerstroke.cpp:131
-#, fuzzy
 msgid "CubicBezierSmooth"
-msgstr "CubicBezierSmooth"
+msgstr "Glajenje s kubičnimi Bezierji"
 
 #: ../src/live_effects/lpe-powerstroke.cpp:154
 #: ../src/ui/toolbar/pencil-toolbar.cpp:224
@@ -16291,9 +16245,8 @@ msgstr ""
 "1=privzeto"
 
 #: ../src/live_effects/lpe-rough-hatches.cpp:226
-#, fuzzy
 msgid "Magnitude jitter: 1st side:"
-msgstr "Trema magnitude: 1. stran:"
+msgstr "Drget magnitude: 1. stran:"
 
 #: ../src/live_effects/lpe-rough-hatches.cpp:226
 msgid "Randomly moves 'bottom' half-turns to produce magnitude variations."
@@ -16312,9 +16265,8 @@ msgstr ""
 "Naključno premakne 'zgornje' polobrate, s čimer povzroči variacije velikosti."
 
 #: ../src/live_effects/lpe-rough-hatches.cpp:228
-#, fuzzy
 msgid "Parallelism jitter: 1st side:"
-msgstr "Trema vzporednosti: 1. stran:"
+msgstr "Drget vzporednosti: 1. stran:"
 
 #: ../src/live_effects/lpe-rough-hatches.cpp:228
 msgid ""
@@ -16457,7 +16409,6 @@ msgid "Max. displacement in Y"
 msgstr "Največja razmestitev Y"
 
 #: ../src/live_effects/lpe-roughen.cpp:50
-#, fuzzy
 msgid "Global randomize"
 msgstr "Globalna naključnost"
 
@@ -16648,7 +16599,6 @@ msgid "Change number of simplify steps "
 msgstr "Spremeni število korakov poenostavitve "
 
 #: ../src/live_effects/lpe-simplify.cpp:28
-#, fuzzy
 msgid "Roughly threshold:"
 msgstr "Grobi prag:"
 
@@ -16916,45 +16866,40 @@ msgid "Stroke width:"
 msgstr "Debelina poteze:"
 
 #: ../src/live_effects/lpe-taperstroke.cpp:89
-#, fuzzy
 msgid "The (non-tapered) width of the path"
-msgstr "Širina (brez upada) poti"
+msgstr "Širina (brez zožitve) poti"
 
 #: ../src/live_effects/lpe-taperstroke.cpp:90
 msgid "Start offset:"
 msgstr "Začetni odmik:"
 
 #: ../src/live_effects/lpe-taperstroke.cpp:90
-#, fuzzy
 msgid "Taper distance from path start"
-msgstr "Upadaj razdalja od začetka poti"
+msgstr "Razdalja zožitve od začetka poti"
 
 #: ../src/live_effects/lpe-taperstroke.cpp:91
 msgid "End offset:"
 msgstr "Končni zamik:"
 
 #: ../src/live_effects/lpe-taperstroke.cpp:91
-#, fuzzy
 msgid "The ending position of the taper"
-msgstr "Končni položaj upada"
+msgstr "Končni položaj zožitve"
 
 #: ../src/live_effects/lpe-taperstroke.cpp:92
 msgid "Start smoothing:"
 msgstr "Začetek glajenja:"
 
 #: ../src/live_effects/lpe-taperstroke.cpp:92
-#, fuzzy
 msgid "Amount of smoothing to apply to the start taper"
-msgstr "Količina glajenja, ki se nanaša na začetni upad"
+msgstr "Količina glajenja, ki se nanaša na začetno zožitev"
 
 #: ../src/live_effects/lpe-taperstroke.cpp:93
 msgid "End smoothing:"
 msgstr "Konec glajenja:"
 
 #: ../src/live_effects/lpe-taperstroke.cpp:93
-#, fuzzy
 msgid "Amount of smoothing to apply to the end taper"
-msgstr "Količina glajenja, ki se uporablja za končni upad"
+msgstr "Količina glajenja, ki se nanaša za končno zožitev"
 
 #: ../src/live_effects/lpe-taperstroke.cpp:94
 msgid "Join type:"
@@ -16969,41 +16914,36 @@ msgid "Start direction:"
 msgstr "Začetna smer:"
 
 #: ../src/live_effects/lpe-taperstroke.cpp:95
-#, fuzzy
 msgid "Direction of the taper at the path start"
-msgstr "Smer upada na začetku poti"
+msgstr "Smer zožitve na začetku poti"
 
 #: ../src/live_effects/lpe-taperstroke.cpp:96
 msgid "End direction:"
 msgstr "Končna smer:"
 
 #: ../src/live_effects/lpe-taperstroke.cpp:96
-#, fuzzy
 msgid "Direction of the taper at the path end"
-msgstr "Smer upada na koncu poti"
+msgstr "Smer zožitve na koncu poti"
 
 #: ../src/live_effects/lpe-taperstroke.cpp:97
-#, fuzzy
 msgid "Limit for miter joins"
 msgstr "Omejitev za spoje z zajero"
 
 #: ../src/live_effects/lpe-taperstroke.cpp:471
-#, fuzzy
 msgid ""
 "<b>Start point of the taper</b>: drag to alter the taper, <b>Shift+click</b> "
 "changes the taper direction"
 msgstr ""
-"Začetna <b>točka taperja</b>: povlecite, da spremenite taper, <b>Shift"
-"+kliknite</b> spremeni smer taperja"
+"<b>Začetna točka zožitve</b>: povlecite, da spremenite zožitev, <b>dvigalka"
+"+klik</b> spremeni smer zožitve"
 
 #: ../src/live_effects/lpe-taperstroke.cpp:476
-#, fuzzy
 msgid ""
 "<b>End point of the taper</b>: drag to alter the taper, <b>Shift+click</b> "
 "changes the taper direction"
 msgstr ""
-"Končna <b>točka taperja:</b>povlecite, da spremenite taper, <b>Shift"
-"+kliknite</b> spremeni smer taperja"
+"<b>Končna točka zožitve:</b>povlecite, da spremenite zožitev, <b>dvigalka"
+"+klik</b> spremeni smer zožitve"
 
 #: ../src/live_effects/lpe-tiling.cpp:74
 msgid "Columns"
@@ -17513,79 +17453,71 @@ msgid "Change font button parameter"
 msgstr "Spremeni parameter gumba pisave"
 
 #: ../src/live_effects/parameter/nodesatellitesarray.cpp:206
-#, fuzzy
 msgid ""
 "<b>Chamfer</b>: <b>Ctrl+Click</b> toggles type, <b>Shift+Click</b> open "
 "dialog, <b>Ctrl+Alt+Click</b> reset"
 msgstr ""
-"<b>Chamfer</b>: <b>Ctrl+Click</b> preklopi vrsta, <b>Shift+Kliknite</b> "
-"odprto pogovorno okno, <b>Ctrl+Alt+Ponastavi</b>"
+"<b>Posneti rob</b>: <b>krmilka+klik</b> preklopi vrsto, <b>dvigalka+klik</b> "
+"odpre pogovorno okno, <b>krmilka+izmenjalka+klik</b> ponastavi"
 
 #: ../src/live_effects/parameter/nodesatellitesarray.cpp:210
-#, fuzzy
 msgid ""
 "<b>Inverse Chamfer</b>: <b>Ctrl+Click</b> toggles type, <b>Shift+Click</b> "
 "open dialog, <b>Ctrl+Alt+Click</b> reset"
 msgstr ""
-"<b>Inverzna chamfer</b>: <b>Ctrl+Click</b> preklopne vrste, <b>Shift"
-"+Kliknite</b> odprto pogovorno okno, <b>Ctrl+Alt+Ponastavi</b>"
+"<b>Inverzni posneti rob</b>: <b>krmilka+klik</b> preklopi vrsto, <b>dvigalka"
+"+klik</b> odpre pogovorno okno, <b>krmilka+izmenjalka+klik</b> ponastavi"
 
 #: ../src/live_effects/parameter/nodesatellitesarray.cpp:214
-#, fuzzy
 msgid ""
 "<b>Inverse Fillet</b>: <b>Ctrl+Click</b> toggles type, <b>Shift+Click</b> "
 "open dialog, <b>Ctrl+Alt+Click</b> reset"
 msgstr ""
-"<b>Inverzna file</b>: <b>Ctrl+Kliknite</b> preklopne vrstice, <b>Shift"
-"+Kliknite</b> odprto pogovorno okno, <b>Ctrl+Alt+Ponastavi</b>"
+"<b>Inverzni file</b>: <b>krmilka+klik</b> preklopi vrsto, <b>dvigalka+klik</"
+"b> odpre pogovorno okno, <b>krmilka+izmenjalka+klik</b> ponastavi"
 
 #: ../src/live_effects/parameter/nodesatellitesarray.cpp:218
-#, fuzzy
 msgid ""
 "<b>Fillet</b>: <b>Ctrl+Click</b> toggles type, <b>Shift+Click</b> open "
 "dialog, <b>Ctrl+Alt+Click</b> reset"
 msgstr ""
-"<b>File</b>: <b>Ctrl+Click</b> preklopi vrsta, <b>Shift+Kliknite odprto</b> "
-"pogovorno okno, <b>Ctrl+Alt+Ponastavi</b>"
+"<b>File</b>: <b>krmilka+klik</b> preklopi vrsto, <b>dvigalkai+klik</b> odpre "
+"pogovorno okno, <b>krmilka+izmenjalka+klik</b> ponastavi"
 
 #: ../src/live_effects/parameter/nodesatellitesarray.cpp:457
-#, fuzzy
 msgid ""
 "<b>Chamfer</b>: <b>Ctrl+Click</b> toggles type, <b>Shift+Click</b> open "
 "dialog, <b>Ctrl+Alt+Click</b> resets"
 msgstr ""
-"<b>Chamfer</b>: <b>Ctrl+Click</b> preklopi vrsta, <b>Shift+Kliknite</b> "
-"odprto pogovorno okno, <b>Ctrl+Alt+Kliknite</b> ponastavi"
+"<b>Posneti rob</b>: <b>krmilka+klik</b> preklopi vrsto, <b>dvigalka+klik</b> "
+"odpre pogovorno okno, <b>krmilka+izmenjalka+klik</b> ponastavi"
 
 #: ../src/live_effects/parameter/nodesatellitesarray.cpp:461
-#, fuzzy
 msgid ""
 "<b>Inverse Chamfer</b>: <b>Ctrl+Click</b> toggles type, <b>Shift+Click</b> "
 "open dialog, <b>Ctrl+Alt+Click</b> resets"
 msgstr ""
-"<b>Inverza Chamfer</b>: <b>Ctrl+Click</b> preklopi vrsta, <b>Shift+Kliknite</"
-"b> odprto pogovorno okno, <b>Ctrl+Alt+Kliknite</b> ponastavi"
+"<b>Inverzni posneti rob</b>: <b>krmilka+klik</b> preklopi vrsto, <b>dvigalka"
+"+klik</b> odpre pogovorno okno, <b>krmilka+izmenjalka+klik</b> ponastavi"
 
 #: ../src/live_effects/parameter/nodesatellitesarray.cpp:465
-#, fuzzy
 msgid ""
 "<b>Inverse Fillet</b>: <b>Ctrl+Click</b> toggles type, <b>Shift+Click</b> "
 "open dialog, <b>Ctrl+Alt+Click</b> resets"
 msgstr ""
-"<b>Inverse File</b>: <b>Ctrl+Click</b> preklopniki vrsta, <b>Shift+Kliknite</"
-"b> odprto pogovorno okno, <b>Ctrl+Alt+Kliknite</b> ponastavi"
+"<b>Inverzni file</b>: <b>krmilka+klik</b> preklopi vrsto, <b>dvigalka+klik</"
+"b> odpre pogovorno okno, <b>krmilka+izmenjalka+klik</b> ponastavi"
 
 #: ../src/live_effects/parameter/nodesatellitesarray.cpp:469
-#, fuzzy
 msgid ""
 "<b>Fillet</b>: <b>Ctrl+Click</b> toggles type, <b>Shift+Click</b> open "
 "dialog, <b>Ctrl+Alt+Click</b> resets"
 msgstr ""
-"<b>File</b>: <b>Ctrl+Click</b> preklopi tip, <b>Shift+Kliknite</b> odprto "
-"pogovorno okno, <b>Ctrl+Alt+Kliknite</b> ponastavi"
+"<b>File</b>: <b>krmilka+klik</b> preklopi vrsto, <b>dvigalka+klik</b> odpre "
+"pogovorno okno, <b>krmilka+izmenjalka+klik</b> ponastavi"
 
 #: ../src/live_effects/parameter/originalpath.cpp:65
-#: ../src/live_effects/parameter/path.cpp:286
+#: ../src/live_effects/parameter/path.cpp:311
 #: ../src/live_effects/parameter/patharray.cpp:182
 msgid "Link to path in clipboard"
 msgstr "Poveži s potjo v odložišču"
@@ -17600,23 +17532,23 @@ msgstr "Izberi izvirnik"
 msgid "Link to item"
 msgstr "Poveži z elementom"
 
-#: ../src/live_effects/parameter/path.cpp:251
+#: ../src/live_effects/parameter/path.cpp:276
 msgid "Edit on-canvas"
 msgstr "Uredi na platnu"
 
-#: ../src/live_effects/parameter/path.cpp:263
+#: ../src/live_effects/parameter/path.cpp:288
 msgid "Copy path"
 msgstr "Kopiraj pot"
 
-#: ../src/live_effects/parameter/path.cpp:275
+#: ../src/live_effects/parameter/path.cpp:300
 msgid "Paste path"
 msgstr "Prilepi pot"
 
-#: ../src/live_effects/parameter/path.cpp:576
+#: ../src/live_effects/parameter/path.cpp:601
 msgid "Paste path parameter"
 msgstr "Prilepi parameter poti"
 
-#: ../src/live_effects/parameter/path.cpp:604
+#: ../src/live_effects/parameter/path.cpp:629
 #: ../src/live_effects/parameter/patharray.cpp:144
 msgid "Link path parameter to path"
 msgstr "Poveži parameter poti s potjo"
@@ -17923,7 +17855,7 @@ msgstr "%s; <i>filtrirano</i>"
 msgid "Line"
 msgstr "Črta"
 
-#: ../src/object/sp-lpe-item.cpp:295 ../src/object/sp-lpe-item.cpp:1103
+#: ../src/object/sp-lpe-item.cpp:295 ../src/object/sp-lpe-item.cpp:1101
 msgid "An exception occurred during execution of the Path Effect."
 msgstr "Pri izvedbi učinka poti je prišlo do izjeme."
 
@@ -17936,17 +17868,14 @@ msgid "Set marker size"
 msgstr "Določite velikost oznake"
 
 #: ../src/object/sp-marker.cpp:605
-#, fuzzy
 msgid "Set marker scale with stroke"
 msgstr "Določite merilo črtic skupaj s potezo"
 
 #: ../src/object/sp-marker.cpp:616
-#, fuzzy
 msgid "Set marker offset"
 msgstr "Določite odmik oznak"
 
 #: ../src/object/sp-marker.cpp:626
-#, fuzzy
 msgid "Set marker uniform scaling"
 msgstr "Določite poenoteno spreminjanje velikosti oznak"
 
@@ -18076,13 +18005,12 @@ msgid "%s (%s, %s)"
 msgstr "%s (%s, %s)"
 
 #: ../src/object/sp-tref.cpp:213
-#, fuzzy
 msgid "Cloned Character Data"
-msgstr "Podatki o kloniranih znakih"
+msgstr "Podatki kloniranih znakov"
 
 #: ../src/object/sp-tref.cpp:229
 msgid " from "
-msgstr " od "
+msgstr " iz "
 
 #: ../src/object/sp-tref.cpp:235 ../src/object/sp-use.cpp:277
 msgid "[orphaned]"
@@ -18869,7 +18797,6 @@ msgid "Group to symbol"
 msgstr "Skupina v simbol"
 
 #: ../src/selection-chemistry.cpp:3385
-#, fuzzy
 msgid "unSymbol all selected symbols"
 msgstr "razSimboli vse izbrane simbole"
 
@@ -20561,9 +20488,8 @@ msgid "SVG Font Editor"
 msgstr "Urejevalnik pisav SVG"
 
 #: ../src/ui/dialog/dialog-data.cpp:51
-#, fuzzy
 msgid "S_watches"
-msgstr "I_zvlečki"
+msgstr "Pa_lete"
 
 #: ../src/ui/dialog/dialog-data.cpp:52
 msgid "S_ymbols"
@@ -25005,7 +24931,7 @@ msgid ""
 "If set, write the CSS name of the color when available (e.g. 'red' or "
 "'magenta') instead of the numeric value"
 msgstr ""
-"Če je nastavljeno, zapiši ime CSS barve (npr. 'red' ali 'magenta'), če je na "
+"Če je nastavljeno, zapiši ime barve CSS (npr. 'red' ali 'magenta'), če je na "
 "voljo, namesto njene številske vrednosti."
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2136
@@ -26246,7 +26172,6 @@ msgid "Full redraw"
 msgstr "Popoln ponoven izris"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2665
-#, fuzzy
 msgid "Multiscale"
 msgstr "Večstrano spreminjanje merila"
 
@@ -26427,7 +26352,6 @@ msgstr ""
 "prerisovanje in začnete znova"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2782
-#, fuzzy
 msgid "Buffer padding"
 msgstr "Zapolnjevanje vmesnih con"
 
@@ -26850,9 +26774,8 @@ msgid "Spellcheck"
 msgstr "Preverjanje črkovanja"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:3459
-#, fuzzy
 msgid "Latency _skew:"
-msgstr "Latenca _nagiba:"
+msgstr "_Nagib latence:"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:3460
 msgid ""
@@ -27350,14 +27273,12 @@ msgid "Radius (pixels):"
 msgstr "Polmer (slik. točke):"
 
 #: ../src/ui/dialog/lpe-fillet-chamfer-properties.cpp:53
-#, fuzzy
 msgid "Chamfer subdivisions:"
-msgstr "Podrazdelki šamferja:"
+msgstr "Podrazdelki posnetega roba:"
 
 #: ../src/ui/dialog/lpe-fillet-chamfer-properties.cpp:116
-#, fuzzy
 msgid "Modify Fillet-Chamfer"
-msgstr "Spremeni file-šamfer"
+msgstr "Spremeni file / posneti rob"
 
 #: ../src/ui/dialog/lpe-fillet-chamfer-properties.cpp:117
 msgid "_Modify"
@@ -28727,9 +28648,8 @@ msgid "Drop SVG"
 msgstr "Spusti SVG"
 
 #: ../src/ui/drag-and-drop.cpp:345
-#, fuzzy
 msgid "Drop Symbol"
-msgstr "Simbol spusta"
+msgstr "Spusti simbol"
 
 #: ../src/ui/drag-and-drop.cpp:367
 msgid "Drop bitmap image"
@@ -30586,7 +30506,6 @@ msgstr "Izmeri obratno"
 
 #: ../src/ui/toolbar/measure-toolbar.cpp:179
 #: ../src/ui/toolbar/measure-toolbar.cpp:180
-#, fuzzy
 msgid "Phantom measure"
 msgstr "Fantomska meritev"
 
@@ -30749,7 +30668,6 @@ msgid "WARNING: Mesh SVG Syntax Subject to Change"
 msgstr "OPOZORILO: skladnja mreževine v SVG se še spreminja"
 
 #: ../src/ui/toolbar/mesh-toolbar.cpp:325
-#, fuzzy
 msgctxt "Type"
 msgid "Coons"
 msgstr "Coons"
@@ -30764,9 +30682,8 @@ msgstr "Glajenje"
 
 #. TRANSLATORS: Type of Smoothing. See https://en.wikipedia.org/wiki/Coons_patch
 #: ../src/ui/toolbar/mesh-toolbar.cpp:334
-#, fuzzy
 msgid "Coons: no smoothing. Bicubic: smoothing across patch boundaries."
-msgstr "Kovanci: brez glajenja. Bikubično: glajenje čez meje obliža."
+msgstr "Coons: brez glajenja. Bikubično: glajenje čez meje obliža."
 
 #: ../src/ui/toolbar/mesh-toolbar.cpp:532
 msgid ""
@@ -31162,9 +31079,8 @@ msgid "Shape of new paths drawn by this tool"
 msgstr "Oblika novih poti, ustvarjenih s svinčnikom"
 
 #: ../src/ui/toolbar/pencil-toolbar.cpp:439
-#, fuzzy
 msgid "Scale of the width of the power stroke shape."
-msgstr "Sprememba merila širine lika močne poteze."
+msgstr "Sprememba merila širine lika poteze moči."
 
 #: ../src/ui/toolbar/pencil-toolbar.cpp:489
 msgctxt "Cap"
@@ -33602,9 +33518,8 @@ msgid "_B:"
 msgstr "_B:"
 
 #: ../src/ui/widget/color-icc-selector.cpp:171
-#, fuzzy
 msgid "G:"
-msgstr "G:"
+msgstr "S:"
 
 #: ../src/ui/widget/color-icc-selector.cpp:171
 #: ../share/extensions/nicechart.inx:69
@@ -33717,7 +33632,6 @@ msgid "HSV"
 msgstr "HSV"
 
 #: ../src/ui/widget/color-scales.cpp:59
-#, fuzzy
 msgid "HSLuv"
 msgstr "HSLuv"
 
@@ -33726,24 +33640,18 @@ msgid "Color Wheel"
 msgstr "Barvni krog"
 
 #: ../src/ui/widget/color-scales.cpp:547
-#, fuzzy
-#| msgctxt "Gap"
-#| msgid "_V:"
 msgid "_V:"
 msgstr "_V:"
 
 #: ../src/ui/widget/color-scales.cpp:610
-#, fuzzy
 msgid "_H*:"
 msgstr "_H*:"
 
 #: ../src/ui/widget/color-scales.cpp:615
-#, fuzzy
 msgid "_S*:"
 msgstr "_S*:"
 
 #: ../src/ui/widget/color-scales.cpp:619
-#, fuzzy
 msgid "_L*:"
 msgstr "_L*:"
 
@@ -33931,15 +33839,11 @@ msgid "All petite"
 msgstr "Vse majcene"
 
 #: ../src/ui/widget/font-variants.cpp:169
-#, fuzzy
 msgctxt "Font feature"
 msgid "Unicase"
 msgstr "Enomerne črke"
 
 #: ../src/ui/widget/font-variants.cpp:170
-#, fuzzy
-#| msgctxt "Symbol"
-#| msgid "Sailing"
 msgctxt "Font feature"
 msgid "Titling"
 msgstr "Napisi"
@@ -33950,10 +33854,9 @@ msgid "Numeric"
 msgstr "Številke"
 
 #: ../src/ui/widget/font-variants.cpp:173
-#, fuzzy
 msgctxt "Font feature"
 msgid "Lining"
-msgstr "Podloga"
+msgstr "Črtni lik"
 
 #: ../src/ui/widget/font-variants.cpp:174
 msgctxt "Font feature"
@@ -33972,10 +33875,9 @@ msgid "Proportional"
 msgstr "Sorazmerno"
 
 #: ../src/ui/widget/font-variants.cpp:177
-#, fuzzy
 msgctxt "Font feature"
 msgid "Tabular"
-msgstr "Tabelaren"
+msgstr "Tabelarne"
 
 #: ../src/ui/widget/font-variants.cpp:178
 msgctxt "Font feature"
@@ -33998,7 +33900,6 @@ msgid "Default Fractions"
 msgstr "Privzeti ulomki"
 
 #: ../src/ui/widget/font-variants.cpp:182
-#, fuzzy
 msgctxt "Font feature"
 msgid "Ordinal"
 msgstr "Števke"
@@ -34143,9 +34044,8 @@ msgid "Normal style."
 msgstr "Navaden slog."
 
 #: ../src/ui/widget/font-variants.cpp:354
-#, fuzzy
 msgid "Lining numerals. OpenType table: 'lnum'"
-msgstr "Števke za podloževanje. Tabela OpenType: »lnum«"
+msgstr "Črtne števke. Tabela OpenType: »lnum«"
 
 #: ../src/ui/widget/font-variants.cpp:355
 msgid "Old style numerals. OpenType table: 'onum'"
@@ -34586,10 +34486,8 @@ msgid "Radial gradient (stroke)"
 msgstr "Krožen preliv (poteza)"
 
 #: ../src/ui/widget/selected-style.cpp:214
-#, fuzzy
-#| msgid "<b>L</b>"
 msgid "<b>M</b>"
-msgstr "<b>v</b>"
+msgstr "<b>S</b>"
 
 #: ../src/ui/widget/selected-style.cpp:216
 msgid "Mesh gradient (fill)"
@@ -34972,7 +34870,6 @@ msgid "Set stroke dash"
 msgstr "Določite črtico poteze"
 
 #: ../src/ui/widget/stroke-style.cpp:1031
-#, fuzzy
 msgid "Set stroke miter"
 msgstr "Določite zajero poteze"
 
@@ -35019,9 +34916,9 @@ msgid "Stroke width: %.5g%s"
 msgstr "Debelina poteze: %.5g%s"
 
 #: ../src/ui/widget/style-swatch.cpp:352
-#, fuzzy, c-format
+#, c-format
 msgid "O: %2.0f"
-msgstr "O: %2.0f"
+msgstr "P: %2.0f"
 
 #: ../src/ui/widget/style-swatch.cpp:360
 #, c-format
@@ -35029,9 +34926,8 @@ msgid "Opacity: %2.1f %%"
 msgstr "Prekrivnost: %2.1f %%"
 
 #: ../src/ui/widget/swatch-selector.cpp:49
-#, fuzzy
 msgid "Swatch color"
-msgstr "Barva palete barv"
+msgstr "Barva palete"
 
 #: ../src/ui/widget/swatch-selector.cpp:101
 msgid "Change swatch color"
@@ -35456,7 +35352,6 @@ msgid "Set as _default"
 msgstr "_Nastavi kot privzeto"
 
 #: ../share/ui/dialog-trace.glade:74
-#, fuzzy
 msgid ""
 "This dialog allows you to automatically convert a raster graphic into vector "
 "paths. Several options are available for different use cases:\n"
@@ -35485,32 +35380,33 @@ msgid ""
 "  4) If your goal is to get few nodes and good precision, manual tracing is "
 "always best."
 msgstr ""
-"\n"
 "To pogovorno okno omogoča samodejno pretvorbo rastrske grafike v vektorske "
 "poti. Za različne primere uporabe je na voljo več možnosti:\n"
-" * \"Odrezanost svetlosti\" zazna področja, ki so temnejša od vrednosti "
-"praga in ustvari pot, ki jih ogradi (z uporabo potrace).\n"
-" * \"Zaznavanje roba\" zazna spremembe, večje od dane vrednosti praga v "
+" * »Porezava svetlosti« zazna področja, ki so temnejša od vrednosti praga in "
+"ustvari pot, ki jih ogradi (z uporabo potrace).\n"
+" * »Zaznavanje roba« zazna spremembe, večje od dane vrednosti praga v "
 "svetlosti barvnih obližev in ustvarja poti za ločevanje (z uporabo "
 "potrace).\n"
-" * \"Kvantizacijo barv\" loči sliko na dano število barv, in jih loči s "
-"potjo (z uporabo potrace).\n"
-" * \"Autotrace\" uporablja algoritem autotrace z dano možnostjo.\n"
-" * \"Centerline sledenje\" poskuša vektorizira črto risbo (z autotrace).\n"
-" * »Več pregledov« možnosti ločiti sliko na več skeniranja, odvisno od "
-"svetlosti, ločevanja barv ali sive ravni (z uporabo potrace) ali z uporabo "
-"algoritma samodejnih sledi, in ustvarite več poti za te.\n"
+" * »Kvantizacija barv« loči sliko na dano število barv, in jih loči s potjo "
+"(z uporabo potrace).\n"
+" * »Samodejno sledenje« uporablja algoritem autotrace z dano možnostjo.\n"
+" * »Sledenje sredinske črte« poskuša vektorizira črtno risbo (z autotrace).\n"
+" * Možnosti »Večbarvno« ločijo sliko na več skenov, odvisno od svetlosti, "
+"ločevanja barv ali sivinskih ravni (z uporabo potrace) ali z uporabo "
+"algoritma samodejnih sledi, ter za slednje ustvari več poti.\n"
 " * Zavihek »Rastrska slika« omogoča uporabo algoritma za prepoznavanje "
-"slikovnih točk ali tistega za depixelizing za vektorizacijo rastrskih slik.\n"
+"slikovnih točk ali tistega za raztočkovanje za vektorizacijo rastrskih "
+"slik.\n"
 "\n"
 "* OPOMBA:\n"
 "  1) Shranite svoje delo pred sledenje\n"
-"  2) Oglejte si število pik: \"Sledite piksel art\" ustvari do eno pot na "
-"pikslo. Ni priporočljivo za slike, ki niso slikovna umetnost.\n"
-"  3) Avtotrace je počasneje od potrace, ni priporočljivo za velike slike. "
-"Priporočljivo je predobdelati slike za povečanje kontrasta.\n"
-"  4) Če je vaš cilj, da bi dobili malo nodes in dobro natančnost, ročno "
-"sledenje je vedno najboljše."
+"  2) Oglejte si število pik: »Sledi slikovnim točkam« ustvari do eno pot na "
+"slikovno točko. Ni priporočljivo za slike, ki niso slikovna umetnost.\n"
+"  3) Samodejno sledenje (autotrace) je počasneje od potrace, ni "
+"priporočljivo za velike slike. Priporočljivo je predobdelati slike za "
+"povečanje kontrasta.\n"
+"  4) Če je vaš cilj, da bi dobili malo vozlišč in dobro natančnost, je ročno "
+"sledenje vedno najboljše."
 
 #: ../share/ui/dialog-trace.glade:175 ../share/ui/dialog-trace.glade:756
 msgid "Speckles"
@@ -35630,7 +35526,6 @@ msgid "Autotrace (slower)"
 msgstr "Samodejno oriši (počasneje)"
 
 #: ../share/ui/dialog-trace.glade:643
-#, fuzzy
 msgid "Scans"
 msgstr "Število pregledov"
 
@@ -36631,9 +36526,8 @@ msgid "Minimum horizontal gap (in pixel units) between bounding boxes"
 msgstr "Najmanjši vodoravni razmik (v slik. točkah) med obrobnimi okviri"
 
 #: ../share/ui/align-and-distribute.ui:1031
-#, fuzzy
 msgid "V:"
-msgstr "V:"
+msgstr "N:"
 
 #: ../share/ui/align-and-distribute.ui:1046
 msgid "Mininum vertical gap (in pixel units) between bounding boxes"
@@ -38199,7 +38093,7 @@ msgstr ""
 "Prosimo, uredite širino vzorca."
 
 #: ../share/extensions/pdflatex.py:75
-msgid "An exception occured during LaTeX compilation: "
+msgid "An exception occurred during LaTeX compilation: "
 msgstr "Pri prevajanju LaTeX je prišlo do izjeme: "
 
 #: ../share/extensions/perspective.py:44
@@ -38363,7 +38257,6 @@ msgid "There is no selection to restack."
 msgstr "Ni izbora za ponovno skladanje."
 
 #: ../share/extensions/scribus_export_pdf.py:93
-#, fuzzy
 msgid "You need at least 7mm bleed to show cutting marks or color marks"
 msgstr ""
 "Potrebujete vsaj 7 mm prelivanja, da pokažete oznake rezanja ali barvne "
@@ -39395,23 +39288,43 @@ msgstr ""
 #: ../share/extensions/extrude.inx:17
 msgid ""
 "\n"
-"This effect draws lines between each nth node of each selected \n"
-"path. It therefore works best if all selected paths have the \n"
+"This effect draws lines between each nth node of each selected\n"
+"path. It therefore works best if all selected paths have the\n"
 "same number of nodes.\n"
 "\n"
-"It can be chosen whether these regions are filled and whether \n"
-"the fill uses rectangles or copies of the path segments.\n"
+"There are 3 main options:\n"
+"- lines: segments are created between the corresponding nodes.\n"
+"  It is possible to select the option \"Combine lines to single\n"
+"  path\" so that the segments that are created are subpaths of a\n"
+"  single path; otherwise, the segments that are created are\n"
+"  separate paths grouped together.\n"
+"- polygons: Polygons with straight lines are created between\n"
+"  corresponding pairs of nodes of each path. The polygons are\n"
+"  grouped together.\n"
+"- follow curves: the same as polygons, but the 'segments' of the\n"
+"  path that lie on top of the original paths will follow The\n"
+"  same curves as on the original path.\n"
 "\n"
 "The lines will be inserted above the bottom of the two elements.\n"
 "            "
 msgstr ""
 "\n"
-"Ta učinek nariše črte med vsakim n-tim vozliščem vsake\n"
-"izbrane poti. Zato najbolje deluje, če imajo vse izbrane poti \n"
+"Ta učinek nariše črte med vsakim n-tim vozliščem vsake izbrane\n"
+"poti. Zato najbolje deluje, če imajo vse izbrane poti\n"
 "enako število vozlišč.\n"
 "\n"
-"Izberete lahko, ali so ta področja zapolnjena in ali \n"
-"polnilo uporablja pravokotnike ali kopije odsekov poti.\n"
+"Na voljo so 3 glavne možnosti:\n"
+"- vrstice: odseki so ustvarjeni med ustreznimi vozlišči.\n"
+"  Možnost »Združi vrstice v enojno pot«, tako da so odseki,\n"
+"  ki so ustvarjeni, podpoti ene same poti;\n"
+"  v nasprotnem primeru so odseki, ki so ustvarjeni,\n"
+"  ločene poti, združene skupaj.\n"
+"- mnogokotniki: med njimi se ustvarjajo mnogokotniki z ravnimi\n"
+"  črtami med ustreznimi pari vozlišč vsake poti. Mnogokotniki\n"
+"  so združeni skupaj;\n"
+"- sledi krivuljam: enako kot mnogokotniki, vendar »odseki«\n"
+"  poti, ki leži na vrhu izvornih poti sledijo\n"
+"  enakim krivuljam kot na prvotni poti.\n"
 "\n"
 "Črte bodo vstavljene nad dno dveh elementov.\n"
 "            "
@@ -40742,11 +40655,10 @@ msgstr "Metoda interpolacije:"
 msgid ""
 "The first option rediscretizes both paths before the interpolation with the "
 "other path's node positions. The second option removes extra nodes of the "
-"longer path (yields good results if both subpaths have equal length)"
+"longer path."
 msgstr ""
 "Prva možnost ponovno diskretizira obe poti pred interpolacijo s položaji "
-"vozlišč druge poti. Druga možnost odstrani dodatna vozlišča daljše poti "
-"(prinaša dobre rezultate, če sta obe podpoti enake dolžine)"
+"vozlišč druge poti. Druga možnost odstrani dodatna vozlišča daljše poti."
 
 #: ../share/extensions/interp.inx:8
 msgid "Split paths into segments of equal lengths"
@@ -42337,9 +42249,8 @@ msgstr "Pot v Gcode"
 #: ../share/extensions/other/gcodetools/gcodetools_area.inx:49
 #: ../share/extensions/other/gcodetools/gcodetools_lathe.inx:29
 #: ../share/extensions/other/gcodetools/gcodetools_path_to_gcode.inx:9
-#, fuzzy
 msgid "Biarc interpolation tolerance:"
-msgstr "Toleranca interpolacije Biarc:"
+msgstr "Toleranca interpolacije dvojnega loka:"
 
 #: ../share/extensions/other/gcodetools/gcodetools_area.inx:50
 #: ../share/extensions/other/gcodetools/gcodetools_lathe.inx:30
@@ -42386,7 +42297,6 @@ msgstr "Razvrsti poti za zmanjšanje hitre razdalje"
 #: ../share/extensions/other/gcodetools/gcodetools_area.inx:60
 #: ../share/extensions/other/gcodetools/gcodetools_lathe.inx:40
 #: ../share/extensions/other/gcodetools/gcodetools_path_to_gcode.inx:20
-#, fuzzy
 msgid ""
 "\n"
 "Biarc interpolation tolerance is the maximum distance between path and its "
@@ -42398,12 +42308,12 @@ msgid ""
 "points.\n"
 msgstr ""
 "\n"
-"Toleranca interpolacije biarc je največja razdalja med potjo in njenim "
-"približkom.\n"
+"Toleranca interpolacije dvojnega loka (biarc) je največja razdalja med potjo "
+"in njenim približkom.\n"
 "Segment bo razdeljen na dva segmenta, če razdalja med segmentom poti in "
-"njegovim približkom presega toleranco interpolacije biarc.\n"
+"njegovim približkom presega toleranco interpolacije dvojnega loka (biarc).\n"
 "Za globinsko funkcijo c=intenzivnost barv od 0,0 (bela) do 1,0 (črna), d je "
-"globina, opredeljena z orientacijsko točko, s - površina, opredeljena z "
+"globina, opredeljena z orientacijsko točko, s je površina, opredeljena z "
 "orientacijskimi točkami.\n"
 
 #: ../share/extensions/other/gcodetools/gcodetools_area.inx:68
@@ -42801,19 +42711,16 @@ msgid "Offset path"
 msgstr "Pot zamika"
 
 #: ../share/extensions/other/gcodetools/gcodetools_lathe.inx:16
-#, fuzzy
 msgid "Lathe X axis remap:"
-msgstr "Preslikava osi toka X:"
+msgstr "Preslikava osi X struženja:"
 
 #: ../share/extensions/other/gcodetools/gcodetools_lathe.inx:17
-#, fuzzy
 msgid "Lathe Z axis remap:"
-msgstr "Preslikava osi toka Z:"
+msgstr "Preslikava osi Z struženja:"
 
 #: ../share/extensions/other/gcodetools/gcodetools_lathe.inx:20
-#, fuzzy
 msgid "Lathe modify path"
-msgstr "Pot za spreminjanje toka"
+msgstr "Pot za spreminjanje struženja"
 
 #: ../share/extensions/other/gcodetools/gcodetools_lathe.inx:21
 msgid ""
@@ -42987,9 +42894,8 @@ msgid "tangent knife"
 msgstr "tangentni nož"
 
 #: ../share/extensions/other/gcodetools/gcodetools_tools_library.inx:16
-#, fuzzy
 msgid "lathe cutter"
-msgstr "rezalec toka"
+msgstr "rezalnik struženja"
 
 #: ../share/extensions/other/gcodetools/gcodetools_tools_library.inx:17
 msgid "graffiti"
@@ -43475,7 +43381,6 @@ msgid "Mesh-Gradient to Path"
 msgstr "Mreževina-preliv v pot"
 
 #: ../share/extensions/path_mesh_m2p.inx:12
-#, fuzzy
 msgid "Patches"
 msgstr "Obliži"
 
@@ -43751,12 +43656,12 @@ msgstr "Uporabi samostojni razred dokumentov"
 msgid ""
 "Without the standalone document class, font sizes other than 10pt are "
 "achieved by scaling the resulting PDF output (internally, the document class "
-"'minimal' is used). More correct spacing for all font sizes can be achived "
+"'minimal' is used). More correct spacing for all font sizes can be achieved "
 "by using 'standalone'. However, the required packages might not be available "
 "on all systems."
 msgstr ""
-"Brez samostojnega razreda dokumentov velikosti pisav, ki niso enake 10 tč, "
-"dosežemo z velikostjo končnega izhoda PDF (interno se uporablja razred "
+"Brez samostojnega razreda dokumentov dosežemo velikosti pisav, ki niso enake "
+"10 tč, z velikostjo končnega izhoda PDF (interno se uporablja razred "
 "dokumentov »minimalno«). Bolj pravilen razmik za vse velikosti pisav lahko "
 "dosežete z uporabo »samostojno«. Vendar zahtevani paketi morda niso na voljo "
 "v vseh sistemih."
@@ -44842,9 +44747,8 @@ msgid "Symbol ID:"
 msgstr "ID simbola:"
 
 #: ../share/extensions/render_barcode_qrcode.inx:91
-#, fuzzy
 msgid "Smooth square value (0-1):"
-msgstr "Gladka kvadratna vrednost (0-1):"
+msgstr "Kvadratna vrednost glajenja (0-1):"
 
 #: ../share/extensions/render_barcode_qrcode.inx:92
 msgid ""
@@ -44867,7 +44771,6 @@ msgid "https://www.qrcode.com"
 msgstr "https://www.qrcode.com"
 
 #: ../share/extensions/render_gear_rack.inx:3
-#, fuzzy
 msgid "Rack Gear"
 msgstr "Zobnik pogona"
 
@@ -44887,11 +44790,11 @@ msgstr "Stični kot:"
 #: ../share/extensions/render_gears.inx:3
 #: ../share/extensions/render_gears.inx:19
 msgid "Gear"
-msgstr "Naprava"
+msgstr "Pogon"
 
 #: ../share/extensions/render_gears.inx:5
 msgid "Number of teeth:"
-msgstr "Število zobcev:"
+msgstr "Število zobov:"
 
 #: ../share/extensions/render_gears.inx:6
 msgid "Circular pitch (tooth size):"
@@ -45029,17 +44932,29 @@ msgstr "Premešaj Z-zaporedje"
 
 #: ../share/extensions/restack.inx:42
 msgid ""
-"This extension changes the z-order of objects based on their position on the "
-"canvas or their current z-order. Selection: The extension restacks either "
-"objects inside a single selected group, or a selection of multiple objects "
-"on the current drawing level (layer or group)."
+"\n"
+"This extension changes the z-order of objects based on their position\n"
+"on the canvas or their current z-order.\n"
+"The extension restacks all the selected objects. Groups are treated as\n"
+"a single object.\n"
+"If elements of a group are selected together with external objects,\n"
+"the elements of the group are extracted and positioned next to the other\n"
+"objects being restacked (elements on different layers are brought together\n"
+"to the same layer).\n"
+"            "
 msgstr ""
-"Ta razširitev spremeni z-vrstni red predmetov na podlagi njihovega položaja "
-"na platnu ali trenutnem z-vrstnem redu. Izbor: Razširitev ponovno zloži "
-"predmete znotraj ene izbrane skupine ali izbor več predmetov na trenutni "
-"ravni risbe (plast ali skupina)."
+"\n"
+"Ta razširitev spremeni z-vrstni red predmetov na podlagi njihovega\n"
+"položaja na platnu ali trenutnem z-vrstnem redu.\n"
+"Razširitev ponovno zloži predmete. Skupine se obravnavajo kot\n"
+"en sam predmet.\n"
+"Če so elementi v skupini izbrani skupaj z zunanjimi predmeti,\n"
+"se elementi skupine izločijo in postavijo ob druge predmete, ki jih\n"
+"je potrebno ponovno zložiti (elementi na različnih plasteh so postavljeni\n"
+"skupaj na isto plast).\n"
+"            "
 
-#: ../share/extensions/restack.inx:51 ../share/extensions/ungroup_deep.inx:12
+#: ../share/extensions/restack.inx:57 ../share/extensions/ungroup_deep.inx:12
 msgid "Arrange"
 msgstr "Razporedi"
 
@@ -45100,9 +45015,8 @@ msgid "PDF title (mandatory for PDF/X):"
 msgstr "Naslov PDF (obvezno za PDF/X):"
 
 #: ../share/extensions/scribus_export_pdf.inx:15
-#, fuzzy
 msgid "Bleed added around the document (mm):"
-msgstr "Razlezovanje, dodano okoli dokumenta (mm):"
+msgstr "Prelivanje, dodano okoli dokumenta (mm):"
 
 #: ../share/extensions/scribus_export_pdf.inx:15
 msgid ""
@@ -45365,9 +45279,8 @@ msgid "Week number column name:"
 msgstr "Ime stoplca številke tedna:"
 
 #: ../share/extensions/svgcalendar.inx:48
-#, fuzzy
 msgid "Wk"
-msgstr "T"
+msgstr "Td"
 
 #: ../share/extensions/svgcalendar.inx:49
 msgid "Char Encoding:"
