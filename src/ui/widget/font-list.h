@@ -6,6 +6,8 @@
 #include <glibmm/ustring.h>
 #include <gtkmm/treemodel.h>
 #include <gtkmm/treepath.h>
+#include <gtkmm/widget.h>
+#include <memory>
 #include <sigc++/connection.h>
 #include <vector>
 #include <gtkmm/builder.h>
@@ -22,26 +24,33 @@
 #include "ui/operation-blocker.h"
 #include "util/font-discovery.h"
 #include "util/font-tags.h"
+#include "font-selector-interface.h"
 
 namespace Inkscape {
 namespace UI {
 namespace Widget {
 
-class FontList : public Gtk::Box {
+class FontList : public Gtk::Box, public FontSelectorInterface {
 public:
+    static std::unique_ptr<FontSelectorInterface> create_font_list(Glib::ustring pref_path);
+
     FontList(Glib::ustring preferences_path);
 
     // get font selected in this FontList, if any
-    Glib::ustring get_fontspec() const;
-    double get_fontsize() const;
+    Glib::ustring get_fontspec() const override;
+    double get_fontsize() const override;
 
     // show requested font in a FontList
-    void set_current_font(const Glib::ustring& family, const Glib::ustring& face);
+    void set_current_font(const Glib::ustring& family, const Glib::ustring& face) override;
     // 
-    void set_current_size(double size);
+    void set_current_size(double size) override;
 
-    sigc::signal<void ()>& signal_changed() { return _signal_changed; }
-    sigc::signal<void ()>& signal_apply() { return _signal_apply; }
+    sigc::signal<void ()>& signal_changed() override { return _signal_changed; }
+    sigc::signal<void ()>& signal_apply() override { return _signal_apply; }
+
+    Gtk::Widget* box() override { return this; }
+
+    ~FontList() override = default;
 
 private:
     void sort_fonts(Inkscape::FontOrder order);

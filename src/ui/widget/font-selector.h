@@ -40,8 +40,10 @@
 #include <gtkmm/treemodel.h>
 #include <gtkmm/treeview.h>
 #include <sigc++/connection.h>
+#include <memory>
 #include <sigc++/signal.h>
 
+#include "ui/widget/font-selector-interface.h"
 #include "ui/widget/font-variations.h"
 #include "ui/widget/scrollprotected.h"
 
@@ -62,9 +64,10 @@ namespace Inkscape::UI::Widget {
  *     best match to the original font style (as not all fonts have the same style options).
  *   Emit a signal when any change is made to a child widget.
  */
-class FontSelector : public Gtk::Grid
+class FontSelector : public Gtk::Grid, public FontSelectorInterface
 {
 public:
+    static std::unique_ptr<FontSelectorInterface> create_font_selector();
 
     /**
      * Constructor
@@ -72,6 +75,7 @@ public:
     FontSelector (bool with_size = true, bool with_variations = true);
     void hide_others();
 
+    ~FontSelector() override = default;
 protected:
 
     // Font family
@@ -112,7 +116,8 @@ private:
     void on_variations_changed();
 
     // Signals
-    sigc::signal<void (Glib::ustring)> signal_changed;
+    sigc::signal<void (Glib::ustring)> _signal_changed;
+    sigc::signal<void ()> _signal_apply;
     void changed_emit();
     bool signal_block;
 
@@ -129,6 +134,16 @@ private:
     // For drag and drop.
     void on_drag_start(const Glib::RefPtr<Gdk::DragContext> &context);
     void on_drag_data_get(Glib::RefPtr<Gdk::DragContext> const &context, Gtk::SelectionData &selection_data, guint info, guint time) override;
+
+    // font selector interface
+    Gtk::Widget* box() override { return this; }
+    Glib::ustring get_fontspec() const override { return const_cast<FontSelector*>(this)->get_fontspec(true); }
+    double get_fontsize() const override { return font_size; };
+    void set_current_font(const Glib::ustring& family, const Glib::ustring& face) override { update_font(); }
+    void set_current_size(double size) override { update_size(size); };
+    sigc::signal<void ()>& signal_changed() override { return dummy; }
+    sigc::signal<void ()>& signal_apply() override { return _signal_apply; }
+    sigc::signal<void ()> dummy;
 
 public:
     /**
@@ -154,7 +169,7 @@ public:
      * (Used to enable 'Apply' and 'Default' buttons.)
      */
     sigc::connection connectChanged(sigc::slot<void (Glib::ustring)> slot) {
-        return signal_changed.connect(slot);
+        return _signal_changed.connect(slot);
     }
 };
 

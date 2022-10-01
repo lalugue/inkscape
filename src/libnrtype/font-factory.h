@@ -97,6 +97,8 @@ public:
     std::shared_ptr<FontInstance> FaceFromFontSpecification(char const *fontSpecification);
     std::shared_ptr<FontInstance> Face(PangoFontDescription *descr, bool canFail = true);
 
+    std::unique_ptr<FontInstance> create_face(PangoFontDescription* descr);
+
 # ifdef _WIN32
     void AddFontFilesWin32(char const *directory_path);
 # endif

@@ -10,6 +10,7 @@
 #include "svg/css-ostringstream.h"
 
 #include <algorithm>
+#include <cairo-ft.h>
 #include <glibmm/ustring.h>
 #include <iostream>
 #include <libnrtype/font-factory.h>
@@ -17,7 +18,9 @@
 #include <glibmm/keyfile.h>
 #include <glibmm/miscutils.h>
 #include <memory>
+#include <pango/pango-fontmap.h>
 #include <pangomm/fontdescription.h>
+#include <pangomm/fontmap.h>
 #include <sigc++/connection.h>
 #include <unordered_map>
 #include <vector>
@@ -361,6 +364,12 @@ std::shared_ptr<const std::vector<FontInfo>> get_all_fonts(Async::Progress<doubl
 
     std::vector<FontInfo> empty;
     progress.report_or_throw(0, "", empty);
+
+// auto pfm = pango_cairo_font_map_get_default();
+// auto fm = Glib::wrap(pfm, true);
+// auto families = fm->list_families();
+// cairo_ft_font_face_create_for_ft_face(FT_Face face, int load_flags)
+
     auto families = FontFactory::get().get_font_families();
 
     progress.throw_if_cancelled();
@@ -374,6 +383,7 @@ std::shared_ptr<const std::vector<FontInfo>> get_all_fonts(Async::Progress<doubl
             synthetic_font = true;
         }
 
+        progress.report_or_throw(counter / families.size(), ff->get_name(), empty);
         std::vector<FontInfo> family;
         auto faces = ff->list_faces();
         std::set<std::string> styles;
@@ -391,6 +401,7 @@ std::shared_ptr<const std::vector<FontInfo>> get_all_fonts(Async::Progress<doubl
 
             FontInfo info = { ff, face };
             info.synthetic = synthetic_font;
+            bool valid = false;
 
             desc = get_font_description(ff, face);
             auto it = cache.find(desc.to_string().raw());
@@ -402,19 +413,22 @@ std::shared_ptr<const std::vector<FontInfo>> get_all_fonts(Async::Progress<doubl
                 double caps_height = 0.0;
 
                 try {
-                    auto font = FontFactory::get().Face(desc.gobj());
-                    info.monospaced = font->is_fixed_width();
-                    info.oblique = font->is_oblique();
-                    info.family_kind = font->family_class();
-                    info.variable_font = !font->get_opentype_varaxes().empty();
-                    auto glyph = font->LoadGlyph(font->MapUnicodeChar('E'));
-                    if (glyph) {
-                        // bbox: L T R B
-                        caps_height = glyph->bbox[3] - glyph->bbox[1]; // caps height normalized to 0..1
-                        auto& path = glyph->pathvector;
-    // g_message("ch: %f", caps_height);
-    // caps_height = font->get_E_height();
-                        // auto& b = glyph->bbox;
+                    auto font = FontFactory::get().create_face(desc.gobj());
+                    if (!font) {
+                        g_warning("Cannot load font %s", key.c_str());
+                    }
+                    else {
+                        valid = true;
+                        info.monospaced = font->is_fixed_width();
+                        info.oblique = font->is_oblique();
+                        info.family_kind = font->family_class();
+                        info.variable_font = !font->get_opentype_varaxes().empty();
+                        auto glyph = font->LoadGlyph(font->MapUnicodeChar('E'));
+                        if (glyph) {
+                            // bbox: L T R B
+                            caps_height = glyph->bbox[3] - glyph->bbox[1]; // caps height normalized to 0..1
+                            auto& path = glyph->pathvector;
+                        }
                     }
                 }
                 catch (...) {
@@ -429,16 +443,18 @@ std::shared_ptr<const std::vector<FontInfo>> get_all_fonts(Async::Progress<doubl
             else {
                 // font in a cache already
                 info = it->second;
+                valid = true;
             }
 
-            info.ff = ff;
-            info.face = face;
-            fonts.emplace_back(info);
+            if (valid) {
+                info.ff = ff;
+                info.face = face;
+                fonts.emplace_back(info);
 
-            family.emplace_back(info);
-            // progress.report_or_throw(counter / families.size(), get_full_font_name(ff, face));
+                family.emplace_back(info);
+            }
         }
-        progress.report_or_throw(++counter / families.size(), ff->get_name(), family);
+        progress.report_or_throw(++counter / families.size(), "", family);
     }
 
     if (update_cache) {
@@ -501,9 +517,8 @@ auto_connection FontDiscovery::connect_to_fonts(std::function<void (const Messag
     }
     else if (_fonts) {
         // fonts already loaded
-    // g_message("provide fonts: %ld", _fonts->size());
-
         _events.emit(Async::Msg::OperationResult<FontsPayload>{_fonts});
+        _events.emit(Async::Msg::OperationFinished());
     }
 
     return con;

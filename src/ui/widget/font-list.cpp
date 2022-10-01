@@ -12,6 +12,7 @@
 #include <iostream>
 #include <iterator>
 #include <iomanip>
+#include <memory>
 #include <pangomm/fontdescription.h>
 #include <pangomm/fontfamily.h>
 #include <set>
@@ -42,12 +43,9 @@ namespace Inkscape {
 namespace UI {
 namespace Widget {
 
-// enum class FontClass {
-//     NORMAL,  // regular fonts, present (installed)
-//     MISSING, // font used in a document, but not installed / not available
-//     SPECIAL, // synthetic Sans-Serif family
-//     RECENT   // most recently used font (not implemented yet)
-// };
+std::unique_ptr<FontSelectorInterface> FontList::create_font_list(Glib::ustring path) {
+    return std::make_unique<FontList>(path);
+}
 
 struct FontListColumnModel : public Gtk::TreeModelColumnRecord {
     // font metadata for installed fonts only
@@ -542,6 +540,9 @@ FontList::FontList(Glib::ustring preferences_path) :
 
     _fonts.clear();
     _initializing = 0;
+    _info_box.hide();
+    _progress_box.show();
+
     _font_stream = FontDiscovery::get().connect_to_fonts([=](const FontDiscovery::MessageType& msg){
         if (auto r = Async::Msg::get_result(msg)) {
             _fonts = **r;
@@ -572,8 +573,7 @@ FontList::FontList(Glib::ustring preferences_path) :
         }
     });
 
-    // _fonts = Inkscape::get_all_fonts();
-
+#if false
 // fake some tags
 for (auto&& f : _fonts) {
     if (f.ff->get_name().find("Helvetica") != Glib::ustring::npos) {
@@ -604,6 +604,7 @@ for (auto&& f : _fonts) {
         _font_tags.tag_font(f.face, "oblique");
     }
 }
+#endif
 
     _font_size_scale.get_adjustment()->set_lower(0);
     _font_size_scale.get_adjustment()->set_upper(g_font_sizes.size() - 1);
@@ -749,8 +750,18 @@ void FontList::filter() {
     }
 }
 
-// icon for synthetic fonts
-static Glib::ustring SYNTHETIC = "generic-font-symbolic";
+Glib::ustring get_font_icon(const FontInfo& font, bool missing_font) {
+    if (missing_font) {
+        return "missing-element-symbolic";
+    }
+    else if (font.variable_font) {
+        return ""; // todo
+    }
+    else if (font.synthetic) {
+        return "generic-font-symbolic";
+    }
+    return Glib::ustring();
+}
 
 // add fonts to the font store taking filtring params into account
 void FontList::populate_font_store(Glib::ustring text, const Show& params) {
@@ -816,7 +827,7 @@ void FontList::populate_font_store(Glib::ustring text, const Show& params) {
         row[g_column_model.font] = f;
         // row[g_column_model.font_class] = FontClass::NORMAL;
         row[g_column_model.alt_fontspec] = Glib::ustring();
-        row[g_column_model.icon_name] = f.synthetic ? SYNTHETIC : Glib::ustring();
+        row[g_column_model.icon_name] = get_font_icon(f, false);
     }
 
     // for (auto&& row : _font_list_store->children()) {
@@ -980,6 +991,7 @@ void FontList::add_font(const Glib::ustring& fontspec, bool select) {
         row[g_column_model.alt_fontspec] = Glib::ustring();
         // row[g_column_model.icon] = 0;
         // _fspec_to_row[fontspec.raw()] = &row;
+        row[g_column_model.icon_name] = get_font_icon(*it, false);
 
         if (select) {
             _font_list.get_selection()->select(row);
@@ -1033,7 +1045,7 @@ void FontList::add_font(const Glib::ustring& fontspec, bool select) {
         row[g_column_model.injected] = true;
         row[g_column_model.alt_fontspec] = fontspec;// TODO fname?
         // row[g_column_model.icon] = missing_font ? 1 : (vars.empty() ? 0 : 2);
-        row[g_column_model.icon_name] = missing_font ? "missing-element-symbolic" : (vars.empty() ? "" : "settings-symbolic");
+        row[g_column_model.icon_name] = get_font_icon(subst, missing_font);
 // g_message("addfnt5: %s", fontspec.c_str());
         // auto& top_row = *treeModelIter;
         // _fspec_to_row[fontspec.raw()] = &top_row;

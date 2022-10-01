@@ -208,7 +208,6 @@ int main(int argc, char *argv[])
 
     auto ret = InkscapeApplication().gio_app()->run(argc, argv);
 
-g_message("GIO app finished --------- ");
 #ifdef _WIN32
     // switch back to initial console encoding
     SetConsoleOutputCP(initial_cp);

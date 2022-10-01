@@ -28,8 +28,8 @@
 #include "ui/widget/font-variants.h"    // for FontVariants
 #include "ui/widget/font-variations.h"  // for FontVariations
 #include "util/action-accel.h"          // for ActionAccel
-
 #include "ui/widget/font-list.h"
+
 namespace Glib {
 class ustring;
 } // namespace Glib
@@ -177,8 +177,9 @@ private:
     Gtk::ListBox &collections_list;
     Gtk::Label &preview_label;  // Share with variants tab?
 
-    Inkscape::UI::Widget::FontSelector font_selector;
-    Inkscape::UI::Widget::FontList font_list;
+    // Inkscape::UI::Widget::FontSelector font_selector;
+
+    std::unique_ptr<FontSelectorInterface> font_list;
 
     // Tab 2: Text ---------------------- //
     Gtk::TextView &text_view;
@@ -192,6 +193,7 @@ private:
     Gtk::Button &setasdefault_button;
     Gtk::Button &apply_button;
     Gtk::Box* _apply_box = nullptr;
+    bool _use_browser = false;
 
     // Signals
     auto_connection selectChangedConn;

@@ -10,6 +10,7 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#include <memory>
 #include <pango/pango-font.h>
 #include <pango/pango-fontmap.h>
 #include <pangomm/fontdescription.h>
@@ -626,6 +627,18 @@ std::shared_ptr<FontInstance> FontFactory::FaceFromFontSpecification(char const 
     }
 
     return font;
+}
+
+std::unique_ptr<FontInstance> FontFactory::create_face(PangoFontDescription* descr) {
+    // Mandatory huge size (hinting workaround).
+    pango_font_description_set_size(descr, fontSize * PANGO_SCALE);
+
+    if (!sp_font_description_get_family(descr)) {
+        return {};
+    }
+
+    auto descr_copy = pango_font_description_copy(descr);
+    return std::make_unique<FontInstance>(pango_font_map_load_font(fontServer, fontContext, descr), descr_copy);
 }
 
 std::shared_ptr<FontInstance> FontFactory::Face(PangoFontDescription *descr, bool canFail)

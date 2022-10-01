@@ -694,7 +694,7 @@
                 <property name="valign">center</property>
                 <property name="margin-start">5</property>
                 <property name="hexpand">True</property>
-                <property name="text" translatable="yes">Font name</property>
+                <property name="text" translatable="yes">...</property>
                 <property name="show-text">True</property>
                 <property name="ellipsize">end</property>
               </object>

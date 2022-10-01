@@ -17,6 +17,9 @@
 #include <glibmm/i18n.h>
 #include <glibmm/markup.h>
 #include <gtkmm/targetentry.h>
+#include <memory>
+
+#include "font-selector.h"
 
 #include "libnrtype/font-lister.h"
 #include "libnrtype/font-instance.h"
@@ -35,6 +38,10 @@ namespace Inkscape::UI::Widget {
         Gtk::TargetEntry{"text/plain", {}, 0},
     };
     return target_entries;
+}
+
+std::unique_ptr<FontSelectorInterface> FontSelector::create_font_selector() {
+    return std::make_unique<FontSelector>();
 }
 
 FontSelector::FontSelector (bool with_size, bool with_variations)
@@ -528,7 +535,8 @@ FontSelector::on_variations_changed() {
 void
 FontSelector::changed_emit() {
     signal_block = true;
-    signal_changed.emit (get_fontspec());
+    _signal_changed.emit (get_fontspec());
+    _signal_apply.emit();
     if (initial) {
         initial = false;
         family_treecolumn.unset_cell_data_func (family_cell);
