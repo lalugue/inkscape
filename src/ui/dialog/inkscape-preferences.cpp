@@ -2715,7 +2715,7 @@ void InkscapePreferences::initPageRendering()
                            _("Lowest quality (considerable artifacts), but display is fastest"));
 
 #ifdef CAIRO_HAS_DITHER
-    _cairo_dithering.init(_("Use dithering"), "/options/dithering/value", true);
+    _cairo_dithering.init(_("Use dithering"), "/options/dithering/render", false);
     _page_rendering.add_line(false, "", _cairo_dithering, "",  _("Makes gradients smoother. This can significantly impact the size of generated PNG files. To update the display after changing this option, just zoom out/in."));
 #endif
 

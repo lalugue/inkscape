@@ -1645,7 +1645,7 @@ InkscapeApplication::on_handle_local_options(const Glib::RefPtr<Glib::VariantDic
         if (val == "true") _file_export.export_png_use_dithering = true;
         else if (val == "false") _file_export.export_png_use_dithering = false;
         else std::cerr << "invalid value for export-png-use-dithering. Ignoring." << std::endl;
-    } else _file_export.export_png_use_dithering = prefs->getBool("/options/dithering/value", true);
+    } else _file_export.export_png_use_dithering = prefs->getBool("/options/dithering/render", false);
 
 
     GVariantDict *options_copy = options->gobj_copy();
