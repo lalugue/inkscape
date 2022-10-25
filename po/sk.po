@@ -5477,7 +5477,7 @@ msgstr "Vstup EMF"
 
 #: ../src/extension/internal/emf-inout.cpp:3639
 msgid "Enhanced Metafiles (*.emf)"
-msgstr "Rozšírené Metasúbory (*.wmf)"
+msgstr "Rozšírené Metasúbory (*.emf)"
 
 #: ../src/extension/internal/emf-inout.cpp:3640
 msgid "Enhanced Metafiles"
