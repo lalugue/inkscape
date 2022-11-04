@@ -117,7 +117,7 @@ appimage:linux:
       - Inkscape*.AppImage*
 
 
-inkscape:macos:
+inkscape:macos:x64:
   stage: build
   tags:
     - mac
@@ -128,6 +128,7 @@ inkscape:macos:
     - if: '$CI_PROJECT_NAMESPACE == "dehesselle"'
   variables:
     SDKROOT: /opt/sdks/MacOSX10.13.sdk
+    INK_BUILD: $CI_PIPELINE_IID
   before_script:
     # workaround: after_script doesn't run for cancelled/timed out jobs, leaving
     #             non-ephemeral runners in an unclean state
@@ -141,8 +142,44 @@ inkscape:macos:
   artifacts:
     expire_in: 1 year
     paths:
-      - Inkscape.dmg
+      - Inkscape*.dmg
       - toolset_overlay.tar.xz
+
+
+inkscape:macos:arm:
+  extends: inkscape:macos:x64
+  tags:
+    - macarm
+  when: manual   # on-demand only as we don't have a 24/7 runner
+  variables:
+    SDKROOT: /opt/sdks/MacOSX11.3.sdk
+  after_script:
+    - packaging/macos/uninstall_toolset.sh
+
+
+# This job uses GitLab's shared runners for macOS. Please note:
+#   - Its purpose is to verify that our CI works on common platforms. The
+#     artifacts produced here are neither used for testing nor official
+#     releases.
+#   - The produced artifact does not provide the same backward compatibility
+#     as the one from 'inkscape:macos'. The minimum supported OS version is
+#     the one from the image being used.
+#   - This job is "on demand only" on purpose as it is very expensive.
+#     https://docs.gitlab.com/ee/ci/pipelines/cicd_minutes.html#cost-factor
+inkscape:macos:x64:gitlab:
+  extends: inkscape:macos:x64
+  tags:
+    - shared-macos-amd64
+  image: macos-10.15-xcode-11
+  when: manual
+  variables:
+    CCACHE_DIR: $CI_PROJECT_DIR/ccache
+    SYS_USRLOCAL_IGNORE: "true"
+    SDKROOT: ""
+  cache:
+    key: "cache-macos"
+    paths:
+      - $CI_PROJECT_DIR/ccache
 
 
 inkscape:windows:x64: &windows_job
@@ -201,7 +238,7 @@ test:linux:
       - build/testfiles
     when: on_failure
 
-test:macos:
+test:macos:x64:
   stage: test
   tags:
     - mac
@@ -211,8 +248,8 @@ test:macos:
     - if: '$CI_PROJECT_NAMESPACE == "inkscape"'
     - if: '$CI_PROJECT_NAMESPACE == "dehesselle"'
   dependencies:
-    - inkscape:macos
-  needs: ["inkscape:macos"]
+    - inkscape:macos:x64
+  needs: ["inkscape:macos:x64"]
   variables:
     SDKROOT: /opt/sdks/MacOSX10.13.sdk
   before_script:
