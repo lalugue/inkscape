@@ -103,6 +103,7 @@ GdkpixbufInput::open(Inkscape::Extension::Input *mod, char const *uri)
 
         width *= xscale;
         height *= yscale;
+        doc->setWidthAndHeight(Util::Quantity(width, "px"), Util::Quantity(height, "px"));
 
         delete ir; // deleting NULL is safe
 
