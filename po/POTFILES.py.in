@@ -26,6 +26,7 @@
 ../share/extensions/ink2canvas_lib/svg.py
 ../share/extensions/inkex/bezier.py
 ../share/extensions/inkex/deprecated/deprecatedeffect.py
+../share/extensions/inkex/elements/_parser.py
 ../share/extensions/inkex/elements/_selected.py
 ../share/extensions/inkex/localization.py
 ../share/extensions/inkex/utils.py
