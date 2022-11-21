@@ -27,6 +27,7 @@ public:
 
     Inkscape::Filters::FilterMorphologyOperator Operator;
     NumberOptNumber radius;
+    Geom::Rect calculate_region(Geom::Rect region) override;
 
 protected:
 	void build(SPDocument* doc, Inkscape::XML::Node* repr) override;
