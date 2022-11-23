@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hu\n"
 "Report-Msgid-Bugs-To: inkscape-translator@lists.inkscape.org\n"
-"POT-Creation-Date: 2022-07-04 02:44+0000\n"
-"PO-Revision-Date: 2022-07-04 12:41+0000\n"
+"POT-Creation-Date: 2022-11-21 20:04+0000\n"
+"PO-Revision-Date: 2022-11-23 21:58+0000\n"
 "Last-Translator: Gyuris Gellért <jobel@ujevangelizacio.hu>, 2022\n"
 "Language-Team: Hungarian (https://www.transifex.com/fsf-hu/teams/77907/hu/)\n"
 "Language: hu\n"
@@ -5920,25 +5920,25 @@ msgstr ""
 
 #: ../src/actions/actions-object-align.cpp:267
 #: ../src/actions/actions-object-align.cpp:565
-#: ../share/ui/align-and-distribute.ui:637
+#: ../share/ui/align-and-distribute.ui:638
 msgid "Align"
 msgstr "Igazítás"
 
 #: ../src/actions/actions-object-align.cpp:387
 #: ../src/actions/actions-object-align.cpp:463
-#: ../share/ui/align-and-distribute.ui:836
+#: ../share/ui/align-and-distribute.ui:837
 msgid "Distribute"
 msgstr "Elrendezés"
 
 #: ../src/actions/actions-object-align.cpp:726
-#: ../share/ui/align-and-distribute.ui:971
+#: ../share/ui/align-and-distribute.ui:972
 msgid "Rearrange"
 msgstr "Átrendezés"
 
 #: ../src/actions/actions-object-align.cpp:761
 #: ../src/actions/actions-object-align.cpp:803
 #: ../src/ui/toolbar/connector-toolbar.cpp:153
-#: ../share/ui/align-and-distribute.ui:1080
+#: ../share/ui/align-and-distribute.ui:1081
 msgid "Remove overlaps"
 msgstr "Átfedések eltávolítása"
 
@@ -6960,7 +6960,7 @@ msgid "Pop selected objects out of group"
 msgstr "Kijelölt objektumok kipöckölése a csoportból"
 
 #: ../src/actions/actions-selection-object.cpp:156
-#: ../src/extension/internal/gdkpixbuf-input.cpp:201
+#: ../src/extension/internal/gdkpixbuf-input.cpp:202
 #: ../src/object/sp-anchor.cpp:145
 #: ../src/ui/dialog/inkscape-preferences.cpp:2855
 #: ../src/ui/dialog/inkscape-preferences.cpp:2862
@@ -7859,19 +7859,23 @@ msgstr "Az Inkscape névjegye"
 msgid "Inkscape version, authors, license"
 msgstr "Az Inkscape verziója, szerzők, licenc"
 
-#: ../src/actions/actions-undo-document.cpp:65
+#: ../src/actions/actions-undo-document.cpp:66
+#: ../src/actions/actions-undo-document.cpp:92
 msgid "Undo"
 msgstr "Visszavonás"
 
-#: ../src/actions/actions-undo-document.cpp:65
+#: ../src/actions/actions-undo-document.cpp:66
+#: ../src/actions/actions-undo-document.cpp:92
 msgid "Undo last action"
 msgstr "A legutóbbi művelet visszavonása"
 
-#: ../src/actions/actions-undo-document.cpp:66
+#: ../src/actions/actions-undo-document.cpp:67
+#: ../src/actions/actions-undo-document.cpp:93
 msgid "Redo"
 msgstr "Újra"
 
-#: ../src/actions/actions-undo-document.cpp:66
+#: ../src/actions/actions-undo-document.cpp:67
+#: ../src/actions/actions-undo-document.cpp:93
 msgid "Do again the last undone action"
 msgstr "A legutóbbi visszavont művelet ismételt végrehajtása"
 
@@ -9244,7 +9248,7 @@ msgid "Number of inset/outset copies of the object to make"
 msgstr "Az objektumról készítendő zsugorított illetve nyújtott másolatok száma"
 
 #: ../src/extension/internal/bluredge.cpp:145
-#: ../share/extensions/extrude.inx:32
+#: ../share/extensions/extrude.inx:42
 #: ../share/extensions/generate_voronoi.inx:20
 #: ../share/extensions/interp.inx:17 ../share/extensions/motion.inx:12
 #: ../share/extensions/pathalongpath.inx:36
@@ -9948,7 +9952,7 @@ msgstr "Szórt"
 
 #: ../src/extension/internal/filter/bumps.h:100
 #: ../src/extension/internal/filter/bumps.h:335
-#: ../src/ui/tools/measure-tool.cpp:1164 ../share/ui/dialog-export.glade:288
+#: ../src/ui/tools/measure-tool.cpp:1164 ../share/ui/dialog-export.glade:289
 #: ../share/extensions/interp_att_g.inx:9
 msgid "Height"
 msgstr "Magasság"
@@ -10839,7 +10843,7 @@ msgid "Open"
 msgstr "Megnyitás"
 
 #: ../src/extension/internal/filter/morphology.h:67
-#: ../src/ui/tools/measure-tool.cpp:1170 ../share/ui/dialog-export.glade:301
+#: ../src/ui/tools/measure-tool.cpp:1170 ../share/ui/dialog-export.glade:302
 #: ../share/extensions/interp_att_g.inx:8
 msgid "Width"
 msgstr "Szélesség"
@@ -11321,7 +11325,7 @@ msgstr "Külső"
 
 #: ../src/extension/internal/filter/textures.h:83
 #: ../src/ui/toolbar/page-toolbar.cpp:242
-#: ../src/ui/widget/page-properties.cpp:300 ../share/ui/dialog-export.glade:536
+#: ../src/ui/widget/page-properties.cpp:300 ../share/ui/dialog-export.glade:537
 #: ../share/ui/toolbar-page.ui:33 ../share/extensions/color_custom.inx:3
 #: ../share/extensions/markers_strokepaint.inx:15
 #: ../share/extensions/restack.inx:19
@@ -11418,16 +11422,16 @@ msgstr "Kivágás"
 msgid "Repaint anything visible monochrome"
 msgstr "Minden látható átfestése egyszínűre"
 
-#: ../src/extension/internal/gdkpixbuf-input.cpp:191
+#: ../src/extension/internal/gdkpixbuf-input.cpp:192
 #, c-format
 msgid "%s bitmap image import"
 msgstr "%s bitkép importálása"
 
-#: ../src/extension/internal/gdkpixbuf-input.cpp:199
+#: ../src/extension/internal/gdkpixbuf-input.cpp:200
 msgid "Image Import Type:"
 msgstr "Bitkép importálási típus:"
 
-#: ../src/extension/internal/gdkpixbuf-input.cpp:199
+#: ../src/extension/internal/gdkpixbuf-input.cpp:200
 msgid ""
 "Embed results in stand-alone, larger SVG files. Link references a file "
 "outside this SVG document and all files must be moved together."
@@ -11436,17 +11440,17 @@ msgstr ""
 "állományt kapcsolunk ehhez az SVG-fájlhoz és minden fájlt együtt kell "
 "mozgatni."
 
-#: ../src/extension/internal/gdkpixbuf-input.cpp:200
+#: ../src/extension/internal/gdkpixbuf-input.cpp:201
 #: ../src/ui/dialog/inkscape-preferences.cpp:2855
 #: ../src/ui/dialog/inkscape-preferences.cpp:2862
 msgid "Embed"
 msgstr "Beágyaz"
 
-#: ../src/extension/internal/gdkpixbuf-input.cpp:204
+#: ../src/extension/internal/gdkpixbuf-input.cpp:205
 msgid "Image DPI:"
 msgstr "Kép DPI:"
 
-#: ../src/extension/internal/gdkpixbuf-input.cpp:204
+#: ../src/extension/internal/gdkpixbuf-input.cpp:205
 msgid ""
 "Take information from file or use default bitmap import resolution as "
 "defined in the preferences."
@@ -11454,20 +11458,20 @@ msgstr ""
 "Információk kinyerése a fájlból, vagy a beállításokban meghatározott "
 "alapértelmezett bitkép-importálási felbontás alkalmazása."
 
-#: ../src/extension/internal/gdkpixbuf-input.cpp:205
+#: ../src/extension/internal/gdkpixbuf-input.cpp:206
 msgid "From file"
 msgstr "Fájlból"
 
-#: ../src/extension/internal/gdkpixbuf-input.cpp:206
+#: ../src/extension/internal/gdkpixbuf-input.cpp:207
 msgid "Default import resolution"
 msgstr "Alapértelmezett importálási felbontás"
 
-#: ../src/extension/internal/gdkpixbuf-input.cpp:209
+#: ../src/extension/internal/gdkpixbuf-input.cpp:210
 #: ../src/extension/internal/svg.h:31
 msgid "Image Rendering Mode:"
 msgstr "Képmegjelenítési mód:"
 
-#: ../src/extension/internal/gdkpixbuf-input.cpp:209
+#: ../src/extension/internal/gdkpixbuf-input.cpp:210
 #: ../src/extension/internal/svg.h:31
 msgid ""
 "When an image is upscaled, apply smoothing or keep blocky (pixelated). (Will "
@@ -11476,32 +11480,32 @@ msgstr ""
 "Felülméretezett kép esetén simítás alkalmazása vagy darabosan (pixelesen) "
 "való megtartása. (Nem fog működni minden böngészőben.)"
 
-#: ../src/extension/internal/gdkpixbuf-input.cpp:210
+#: ../src/extension/internal/gdkpixbuf-input.cpp:211
 #: ../src/extension/internal/svg.h:32
 #: ../src/ui/dialog/inkscape-preferences.cpp:2869
 msgid "None (auto)"
 msgstr "Nincs (automatikus)"
 
-#: ../src/extension/internal/gdkpixbuf-input.cpp:211
+#: ../src/extension/internal/gdkpixbuf-input.cpp:212
 #: ../src/extension/internal/svg.h:33
 #: ../src/ui/dialog/inkscape-preferences.cpp:2869
 msgid "Smooth (optimizeQuality)"
 msgstr "Simított (optimizeQuality)"
 
-#: ../src/extension/internal/gdkpixbuf-input.cpp:212
+#: ../src/extension/internal/gdkpixbuf-input.cpp:213
 #: ../src/extension/internal/svg.h:34
 #: ../src/ui/dialog/inkscape-preferences.cpp:2869
 msgid "Blocky (optimizeSpeed)"
 msgstr "Darabos (optimizeSpeed)"
 
-#: ../src/extension/internal/gdkpixbuf-input.cpp:215
+#: ../src/extension/internal/gdkpixbuf-input.cpp:216
 #: ../src/extension/internal/svg.h:36
 msgid "Hide the dialog next time and always apply the same actions."
 msgstr ""
 "A párbeszédablak következő alkalommal való elrejtése és a megadott műveletek "
 "hasonló módon való alkalmazása."
 
-#: ../src/extension/internal/gdkpixbuf-input.cpp:215
+#: ../src/extension/internal/gdkpixbuf-input.cpp:216
 #: ../src/extension/internal/svg.h:36
 msgid "Don't ask again"
 msgstr "Ne kérdezze újra"
@@ -11916,8 +11920,8 @@ msgstr ""
 "dokumentumban)."
 
 #: ../src/extension/internal/svg.h:28
-msgid "Open SVG image directly using its path"
-msgstr "SVG-kép közvetlen megnyitása az útvonala alkalmazásával"
+msgid "Open SVG image as separate document"
+msgstr "SVG-kép megnyitása önálló dokumentumként"
 
 #: ../src/extension/internal/svg.h:30
 msgid "DPI for rendered SVG"
@@ -12309,7 +12313,7 @@ msgstr "Dokumentum mentése…"
 msgid "Import Pages"
 msgstr "Oldalak importálása"
 
-#: ../src/file.cpp:1176 ../src/inkscape-application.cpp:837
+#: ../src/file.cpp:1176 ../src/inkscape-application.cpp:840
 #, c-format
 msgid "Failed to load the requested file %s"
 msgstr "Nem sikerült betölteni a kért fájlt (%s)"
@@ -12597,54 +12601,54 @@ msgstr "Színátmenet egy vagy több közbenső fázisának áthelyezése"
 msgid "Delete gradient stop(s)"
 msgstr "Színátmenet egy vagy több fázisának törlése"
 
-#: ../src/inkscape-application.cpp:384
+#: ../src/inkscape-application.cpp:386
 msgid "Broken links have been changed to point to existing files."
 msgstr ""
 "A törött linkek módosítva lettek, hogy a létező fájlokra hivatkozzanak."
 
-#: ../src/inkscape-application.cpp:673
+#: ../src/inkscape-application.cpp:676
 msgid "file1 [file2 [fileN]]"
 msgstr "fájl1 [fájl2 [fájlN]]"
 
-#: ../src/inkscape-application.cpp:674
+#: ../src/inkscape-application.cpp:677
 msgid "Process (or open) one or more files."
 msgstr "Egy vagy több fájl feldolgozása (vagy megnyitása)."
 
-#: ../src/inkscape-application.cpp:675
+#: ../src/inkscape-application.cpp:678
 msgid "Examples:"
 msgstr "Példák:"
 
-#: ../src/inkscape-application.cpp:676
+#: ../src/inkscape-application.cpp:679
 msgid "Export input SVG (%1) to PDF (%2) format:"
 msgstr "Bemeneti SVG (%1) exportálása PDF (%2) formátumba:"
 
-#: ../src/inkscape-application.cpp:678
+#: ../src/inkscape-application.cpp:681
 msgid "Export input files (%1) to PNG format keeping original name (%2):"
 msgstr ""
 "Bemeneti fájlok (%1) exportálása PNG formátumba az eredeti név (%2) "
 "megtartásával"
 
-#: ../src/inkscape-application.cpp:680
+#: ../src/inkscape-application.cpp:683
 msgid "See %1 and %2 for more details."
 msgstr "További információk: %1 és %2."
 
-#: ../src/inkscape-application.cpp:685
+#: ../src/inkscape-application.cpp:688
 msgid "Print Inkscape version"
 msgstr "Inkscape verziószámának kiírása"
 
-#: ../src/inkscape-application.cpp:686
+#: ../src/inkscape-application.cpp:689
 msgid "Print debugging information"
 msgstr "Hibakeresési információ kiírása"
 
-#: ../src/inkscape-application.cpp:687
+#: ../src/inkscape-application.cpp:690
 msgid "Print system data directory"
 msgstr "Rendszeradatmappa kiírása"
 
-#: ../src/inkscape-application.cpp:688
+#: ../src/inkscape-application.cpp:691
 msgid "Print user data directory"
 msgstr "Felhasználói adatmappa kiírása"
 
-#: ../src/inkscape-application.cpp:689
+#: ../src/inkscape-application.cpp:692
 msgid ""
 "Create a unique instance of Inkscape with the application ID 'org.inkscape."
 "Inkscape.TAG'"
@@ -12652,27 +12656,27 @@ msgstr ""
 "Egy egyedi példányt hogy létre az Inkscape-ből „org.inkscape.Inkscape.CÍMKE” "
 "alkalmazásazonosítóval."
 
-#: ../src/inkscape-application.cpp:692
+#: ../src/inkscape-application.cpp:695
 msgid "File import"
 msgstr "Fájlimportálás"
 
-#: ../src/inkscape-application.cpp:693
+#: ../src/inkscape-application.cpp:696
 msgid "Read input file from standard input (stdin)"
 msgstr "Bemeneti fájl olvasása a szabványos bemenetről (stdin)"
 
-#: ../src/inkscape-application.cpp:694
+#: ../src/inkscape-application.cpp:697
 msgid "PDF page number to import"
 msgstr "Importálandó PDF-oldalszám "
 
-#: ../src/inkscape-application.cpp:694
+#: ../src/inkscape-application.cpp:697
 msgid "PAGE"
 msgstr "OLDAL"
 
-#: ../src/inkscape-application.cpp:695
+#: ../src/inkscape-application.cpp:698
 msgid "Use poppler when importing via commandline"
 msgstr "Poppler alkalmazása parancssori importáláskor"
 
-#: ../src/inkscape-application.cpp:696
+#: ../src/inkscape-application.cpp:699
 msgid ""
 "Method used to convert pre-0.92 document dpi, if needed: [none|scale-viewbox|"
 "scale-document]"
@@ -12680,21 +12684,21 @@ msgstr ""
 "A 0.92 előtti dokumentumok DPI-jének átalakítási módszere, ha szükség van "
 "erre: [none|scale-viewbox|scale-document]"
 
-#: ../src/inkscape-application.cpp:696
+#: ../src/inkscape-application.cpp:699
 msgid "METHOD"
 msgstr "MÓDSZER"
 
-#: ../src/inkscape-application.cpp:697
+#: ../src/inkscape-application.cpp:700
 msgid "Do not fix pre-0.92 document's text baseline spacing on opening"
 msgstr ""
 "Megnyitáskor a 0.92 előtti fájlok szövegalapvonal térközének javítása nem "
 "kerül végrehajtásra"
 
-#: ../src/inkscape-application.cpp:700
+#: ../src/inkscape-application.cpp:703
 msgid "File export"
 msgstr "Fájlexportálás"
 
-#: ../src/inkscape-application.cpp:701
+#: ../src/inkscape-application.cpp:704
 msgid ""
 "Output file name (defaults to input filename; file type is guessed from "
 "extension if present; use '-' to write to stdout)"
@@ -12703,153 +12707,153 @@ msgstr ""
 "kiterjesztésből kerül meghatározásra, ha van ilyen; „-” karakterrel lehet az "
 "stdout-ra írni)"
 
-#: ../src/inkscape-application.cpp:701
+#: ../src/inkscape-application.cpp:704
 msgid "FILENAME"
 msgstr "FÁJLNÉV"
 
-#: ../src/inkscape-application.cpp:702
+#: ../src/inkscape-application.cpp:705
 msgid ""
 "Overwrite input file (otherwise add '_out' suffix if type doesn't change)"
 msgstr ""
 "Bemeneti fájl felülírása (egyébként egy „_out” utótagot ad hozzá, ha a típus "
 "nem változik)"
 
-#: ../src/inkscape-application.cpp:703
+#: ../src/inkscape-application.cpp:706
 msgid "File type(s) to export: [svg,png,ps,eps,pdf,emf,wmf,xaml]"
 msgstr "Exportálandó típus(ok): [svg,png,ps,eps,pdf,emf,wmf,xaml]"
 
-#: ../src/inkscape-application.cpp:703
+#: ../src/inkscape-application.cpp:706
 msgid "TYPE[,TYPE]*"
 msgstr "TÍPUS[,TÍPUS]*"
 
-#: ../src/inkscape-application.cpp:704
+#: ../src/inkscape-application.cpp:707
 msgid "Extension ID to use for exporting"
 msgstr "Az exportáláshoz használt kiterjesztésazonosító"
 
-#: ../src/inkscape-application.cpp:704
+#: ../src/inkscape-application.cpp:707
 msgid "EXTENSION-ID"
 msgstr "KITERJESZTÉSAZONOSÍTÓ"
 
-#: ../src/inkscape-application.cpp:707
+#: ../src/inkscape-application.cpp:710
 msgid "Export geometry"
 msgstr "Exportálási geometria"
 
-#: ../src/inkscape-application.cpp:708
+#: ../src/inkscape-application.cpp:711
 msgid "Area to export is page"
 msgstr "Az exportálandó terület az oldal"
 
-#: ../src/inkscape-application.cpp:709
+#: ../src/inkscape-application.cpp:712
 msgid "Area to export is whole drawing (ignoring page size)"
 msgstr "Az exportálandó terület a rajz (oldalméret figyelmen kívül hagyása)"
 
-#: ../src/inkscape-application.cpp:710
+#: ../src/inkscape-application.cpp:713
 msgid "Area to export in SVG user units"
 msgstr "Az exportálandó terület SVG felhasználói mértékegységekkel."
 
-#: ../src/inkscape-application.cpp:710
+#: ../src/inkscape-application.cpp:713
 msgid "x0:y0:x1:y1"
 msgstr "x0:y0:x1:y1"
 
-#: ../src/inkscape-application.cpp:711
+#: ../src/inkscape-application.cpp:714
 msgid "Snap the bitmap export area outwards to the nearest integer values"
 msgstr ""
 "Az exportálandó képpontos terület illesztése kifelé a legközelebbi egész "
 "értékekhez"
 
-#: ../src/inkscape-application.cpp:712
+#: ../src/inkscape-application.cpp:715
 msgid "Resolution for bitmaps and rasterized filters; default is 96"
 msgstr ""
 "Bitképek és szűrök raszterizálására használatos felbontás (alapértelmezetten "
 "96)"
 
-#: ../src/inkscape-application.cpp:712 ../src/ui/widget/export-lists.cpp:156
+#: ../src/inkscape-application.cpp:715 ../src/ui/widget/export-lists.cpp:156
 #: ../src/ui/widget/rendering-options.cpp:34
-#: ../share/ui/dialog-export.glade:423 ../share/extensions/layer2png.inx:12
+#: ../share/ui/dialog-export.glade:424 ../share/extensions/layer2png.inx:12
 msgid "DPI"
 msgstr "DPI"
 
-#: ../src/inkscape-application.cpp:713
+#: ../src/inkscape-application.cpp:716
 msgid "Bitmap width in pixels (overrides --export-dpi)"
 msgstr ""
 "Az exportálandó bitkép szélessége képpontban (felülbírálja az export-dpi "
 "értéket)"
 
-#: ../src/inkscape-application.cpp:713
+#: ../src/inkscape-application.cpp:716
 msgid "WIDTH"
 msgstr "SZÉLESSÉG"
 
-#: ../src/inkscape-application.cpp:714
+#: ../src/inkscape-application.cpp:717
 msgid "Bitmap height in pixels (overrides --export-dpi)"
 msgstr ""
 "Az exportálandó bitkép szélessége képpontban (felülbírálja az --export-dpi "
 "kapcsolót)"
 
-#: ../src/inkscape-application.cpp:714
+#: ../src/inkscape-application.cpp:717
 msgid "HEIGHT"
 msgstr "MAGASSÁG"
 
-#: ../src/inkscape-application.cpp:715
+#: ../src/inkscape-application.cpp:718
 msgid "Margin around export area: units of page size for SVG, mm for PS/PDF"
 msgstr ""
 "Az exportálandó terület körüli margó: SVG esetén az oldalméret mértékegysége "
 "szerint, valamint PS, PDF esetén mm-ben"
 
-#: ../src/inkscape-application.cpp:715
+#: ../src/inkscape-application.cpp:718
 msgid "MARGIN"
 msgstr "MARGÓ"
 
-#: ../src/inkscape-application.cpp:718
+#: ../src/inkscape-application.cpp:721
 msgid "Export options"
 msgstr "Exportálási beállítások"
 
-#: ../src/inkscape-application.cpp:719
+#: ../src/inkscape-application.cpp:722
 msgid "ID(s) of object(s) to export"
 msgstr "Az exportálandó objektum(ok) azonosítója vagy azonosítói."
 
-#: ../src/inkscape-application.cpp:719
+#: ../src/inkscape-application.cpp:722
 msgid "OBJECT-ID[;OBJECT-ID]*"
 msgstr "OBJEKTUMAZONOSÍTÓ[;OBJEKTUMAZONOSÍTÓ]*"
 
-#: ../src/inkscape-application.cpp:720
+#: ../src/inkscape-application.cpp:723
 msgid "Hide all objects except object with ID selected by export-id"
 msgstr ""
 "Az export-id által kijelölt azonosítón kívüli minden objektum elrejtése"
 
-#: ../src/inkscape-application.cpp:721
+#: ../src/inkscape-application.cpp:724
 msgid "Remove Inkscape-specific SVG attributes/properties"
 msgstr "Inksape specifikus attribútumok és tulajdonságok eltávolítása"
 
-#: ../src/inkscape-application.cpp:722
+#: ../src/inkscape-application.cpp:725
 msgid "Postscript level (2 or 3); default is 3"
 msgstr "Postscript szint (2 vagy 3); alapértelmezett: 3"
 
-#: ../src/inkscape-application.cpp:722
+#: ../src/inkscape-application.cpp:725
 msgid "LEVEL"
 msgstr "SZINT"
 
-#: ../src/inkscape-application.cpp:723
+#: ../src/inkscape-application.cpp:726
 msgid "PDF version (1.4 or 1.5); default is 1.5"
 msgstr "PDF-verzió (1.4 vagy 1.5); 1.5 az alapértelmezett"
 
-#: ../src/inkscape-application.cpp:723
+#: ../src/inkscape-application.cpp:726
 msgid "VERSION"
 msgstr "VERZIÓ"
 
-#: ../src/inkscape-application.cpp:724
+#: ../src/inkscape-application.cpp:727
 msgid "Convert text to paths (PS/EPS/PDF/SVG)"
 msgstr "Szövegobjektum átalakítása útvonalakká (PS, EPS, PDF, SVG)"
 
-#: ../src/inkscape-application.cpp:725
+#: ../src/inkscape-application.cpp:728
 msgid "Export text separately to LaTeX file (PS/EPS/PDF)"
 msgstr "A szöveg külön exportálása LaTeX fájlba (PS/EPS/PDF) "
 
-#: ../src/inkscape-application.cpp:726
+#: ../src/inkscape-application.cpp:729
 msgid "Render objects without filters instead of rasterizing (PS/EPS/PDF)"
 msgstr ""
 "Szűrővel rendelkező objektumok megjelenítése szűrők nélkül raszterizálás "
 "helyett (PS, EPS, PDF)"
 
-#: ../src/inkscape-application.cpp:727
+#: ../src/inkscape-application.cpp:730
 msgid ""
 "Use stored filename and DPI hints when exporting object selected by --export-"
 "id"
@@ -12857,25 +12861,25 @@ msgstr ""
 "Tárolt fájlnév és DPI-információk használata exportáláskor (csak export-id "
 "esetén)"
 
-#: ../src/inkscape-application.cpp:728
+#: ../src/inkscape-application.cpp:731
 msgid "Background color for exported bitmaps (any SVG color string)"
 msgstr "Az exportált bitkép háttérszíne (bármilyen SVG szín szöveg)"
 
-#: ../src/inkscape-application.cpp:728
+#: ../src/inkscape-application.cpp:731
 msgid "COLOR"
 msgstr "SZÍN"
 
-#: ../src/inkscape-application.cpp:730
+#: ../src/inkscape-application.cpp:733
 msgid "Background opacity for exported bitmaps (0.0 to 1.0, or 1 to 255)"
 msgstr ""
 "Az exportált bitkép hátterének átlátszatlansága (vagy 0,0 és 1,0 közt, vagy "
 "1 és 255 közt)"
 
-#: ../src/inkscape-application.cpp:730
+#: ../src/inkscape-application.cpp:733
 msgid "VALUE"
 msgstr "ÉRTÉK"
 
-#: ../src/inkscape-application.cpp:731
+#: ../src/inkscape-application.cpp:734
 msgid ""
 "Color mode (bit depth and color type) for exported bitmaps (Gray_1/Gray_2/"
 "Gray_4/Gray_8/Gray_16/RGB_8/RGB_16/GrayAlpha_8/GrayAlpha_16/RGBA_8/RGBA_16)"
@@ -12883,94 +12887,94 @@ msgstr ""
 "Az exportálandó bitkép színmódja (bitmélység és színtípus) (Gray_1/Gray_2/"
 "Gray_4/Gray_8/Gray_16/RGB_8/RGB_16/GrayAlpha_8/GrayAlpha_16/RGBA_8/RGBA_16)"
 
-#: ../src/inkscape-application.cpp:731
+#: ../src/inkscape-application.cpp:734
 msgid "COLOR-MODE"
 msgstr "SZÍNMÓD"
 
-#: ../src/inkscape-application.cpp:732
+#: ../src/inkscape-application.cpp:735
 msgid "Force dithering or disables it"
 msgstr "Zajmoduláció kényszerítése vagy letiltása"
 
-#: ../src/inkscape-application.cpp:735
+#: ../src/inkscape-application.cpp:738
 msgid "Query object/document geometry"
 msgstr "Lekérdezett objektum/ dokumentum geometriája"
 
-#: ../src/inkscape-application.cpp:736
+#: ../src/inkscape-application.cpp:739
 msgid "ID(s) of object(s) to be queried"
 msgstr "A lekérdezett objektum(ok) azonosítója vagy azonosítói."
 
-#: ../src/inkscape-application.cpp:736 ../src/inkscape-application.cpp:746
+#: ../src/inkscape-application.cpp:739 ../src/inkscape-application.cpp:749
 msgid "OBJECT-ID[,OBJECT-ID]*"
 msgstr "OBJEKTUMAZONOSÍTÓ[,OBJEKTUMAZONOSÍTÓ]*"
 
-#: ../src/inkscape-application.cpp:737
+#: ../src/inkscape-application.cpp:740
 msgid "Print bounding boxes of all objects"
 msgstr "Az összes objektum határoló dobozának kiírása."
 
-#: ../src/inkscape-application.cpp:738
+#: ../src/inkscape-application.cpp:741
 msgid "X coordinate of drawing or object (if specified by --query-id)"
 msgstr ""
 "A rajz (illetve, ha az meg van adva, a --query-id opcióval megadott "
 "objektum) X koordinátája"
 
-#: ../src/inkscape-application.cpp:739
+#: ../src/inkscape-application.cpp:742
 msgid "Y coordinate of drawing or object (if specified by --query-id)"
 msgstr ""
 "A rajz (illetve, ha az meg van adva, a --query-id opcióval megadott "
 "objektum) Y koordinátája"
 
-#: ../src/inkscape-application.cpp:740
+#: ../src/inkscape-application.cpp:743
 msgid "Width of drawing or object (if specified by --query-id)"
 msgstr ""
 "A rajz (illetve, ha az meg van adva, a --query-id opcióval megadott "
 "objektum) szélessége"
 
-#: ../src/inkscape-application.cpp:741
+#: ../src/inkscape-application.cpp:744
 msgid "Height of drawing or object (if specified by --query-id)"
 msgstr ""
 "A rajz (illetve, ha az meg van adva, a --query-id opcióval megadott "
 "objektum) magassága"
 
-#: ../src/inkscape-application.cpp:744
+#: ../src/inkscape-application.cpp:747
 msgid "Advanced file processing"
 msgstr "Fejlett fájlfeldolgozás"
 
-#: ../src/inkscape-application.cpp:745
+#: ../src/inkscape-application.cpp:748
 msgid "Remove unused definitions from the <defs> section(s) of document"
 msgstr ""
 "A nem használt definíciók eltávolítása a dokumentum <defs>-szakaszából, ill. "
 "szakaszaiból"
 
-#: ../src/inkscape-application.cpp:746
+#: ../src/inkscape-application.cpp:749
 msgid "Select objects: comma-separated list of IDs"
 msgstr "Objektumok kijelölése: ID-k vesszővel elválasztott felsorolása"
 
-#: ../src/inkscape-application.cpp:750
+#: ../src/inkscape-application.cpp:753
 msgid "List of actions (with optional arguments) to execute"
 msgstr "Futtatható műveletek felsorolása (opcionális argumentumokkal)"
 
-#: ../src/inkscape-application.cpp:750
+#: ../src/inkscape-application.cpp:753
 msgid "ACTION(:ARG)[;ACTION(:ARG)]*"
 msgstr "MŰVELET(:ARGUMENTUM)[;MŰVELET(:ARGUMENTUM)]*"
 
-#: ../src/inkscape-application.cpp:751
+#: ../src/inkscape-application.cpp:754
 msgid "List all available actions"
 msgstr "Elérhető összes művelet felsorolása"
 
-#: ../src/inkscape-application.cpp:754
+#: ../src/inkscape-application.cpp:757
 #: ../src/ui/dialog/inkscape-preferences.cpp:1502
 msgid "Interface"
 msgstr "Felület"
 
-#: ../src/inkscape-application.cpp:755
+#: ../src/inkscape-application.cpp:758
 msgid "With graphical user interface (required by some actions)"
 msgstr "Grafikus felhasználói felülettel (egyes műveletekhez szükséges)"
 
-#: ../src/inkscape-application.cpp:756
+#: ../src/inkscape-application.cpp:759
 msgid "Close GUI after executing all actions"
 msgstr "Grafikus felület bezárása, ha minden művelet lefutott"
 
-#: ../src/inkscape-application.cpp:758
+#: ../src/inkscape-application.cpp:761
 msgid "Start Inkscape in interactive shell mode"
 msgstr "Az Inkscape indítása interaktív parancsértelmező-módban"
 
@@ -13724,42 +13728,42 @@ msgstr "élő útvonaleffektus verziója"
 msgid "No effect"
 msgstr "Nincs effektus"
 
-#: ../src/live_effects/effect.cpp:1811
+#: ../src/live_effects/effect.cpp:1821
 msgid "<b>Default value:</b> "
 msgstr "<b>Alapértelmezett érték:</b> "
 
-#: ../src/live_effects/effect.cpp:1812 ../src/live_effects/effect.cpp:1886
+#: ../src/live_effects/effect.cpp:1822 ../src/live_effects/effect.cpp:1896
 msgid "<b>Default value overridden:</b> "
 msgstr "<b>Alapértelmezett érték felülírva:</b> "
 
-#: ../src/live_effects/effect.cpp:1814 ../src/live_effects/effect.cpp:1883
+#: ../src/live_effects/effect.cpp:1824 ../src/live_effects/effect.cpp:1893
 msgid "Update"
 msgstr "Frissítés"
 
-#: ../src/live_effects/effect.cpp:1817 ../src/live_effects/effect.cpp:1897
+#: ../src/live_effects/effect.cpp:1827 ../src/live_effects/effect.cpp:1907
 msgid "Set"
 msgstr "Beállítás"
 
-#: ../src/live_effects/effect.cpp:1837
+#: ../src/live_effects/effect.cpp:1847
 #: ../share/extensions/image_attributes.inx:22
 #: ../share/extensions/image_attributes.inx:48
 msgid "Unset"
 msgstr "Beállítatlan"
 
-#: ../src/live_effects/effect.cpp:1854
+#: ../src/live_effects/effect.cpp:1864
 msgid "</b>: Set default parameters"
 msgstr "</b>: Alapértelmezett paraméterek beállítása"
 
-#: ../src/live_effects/effect.cpp:1900
+#: ../src/live_effects/effect.cpp:1910
 msgid "<b>Default value:</b> Default"
 msgstr "<b>Alapértelmezett érték:</b> Alapértelmezett"
 
-#: ../src/live_effects/effect.cpp:1971
+#: ../src/live_effects/effect.cpp:1981
 #, c-format
 msgid "Editing parameter <b>%s</b>."
 msgstr "<b>%s</b> paraméter szerkesztése."
 
-#: ../src/live_effects/effect.cpp:1976
+#: ../src/live_effects/effect.cpp:1986
 msgid "None of the applied path effect's parameters can be edited on-canvas."
 msgstr ""
 "Az alkalmazott útvonaleffektus egyetlen paramétere sem szerkeszthető a "
@@ -13898,8 +13902,8 @@ msgstr ""
 msgid "Hide width knot"
 msgstr "Csomószélesség elrejtése"
 
-#: ../src/live_effects/lpe-bendpath.cpp:201
-#: ../src/live_effects/lpe-patternalongpath.cpp:325
+#: ../src/live_effects/lpe-bendpath.cpp:221
+#: ../src/live_effects/lpe-patternalongpath.cpp:305
 msgid "Change the width"
 msgstr "Szélesség módosítása"
 
@@ -14778,28 +14782,28 @@ msgstr "Minimális sugár:"
 msgid "Minimum radius, low values can be slow"
 msgstr "Minimális sugár, kisebb értékek lassúak lehetnek"
 
-#: ../src/live_effects/lpe-interpolate.cpp:30
+#: ../src/live_effects/lpe-interpolate.cpp:27
 msgid "Trajectory:"
 msgstr "Pályagörbe:"
 
-#: ../src/live_effects/lpe-interpolate.cpp:30
+#: ../src/live_effects/lpe-interpolate.cpp:27
 msgid "Path along which intermediate steps are created."
 msgstr "Azon útvonal, amely mentén a köztes lépések létrejönnek."
 
-#: ../src/live_effects/lpe-interpolate.cpp:32
+#: ../src/live_effects/lpe-interpolate.cpp:29
 msgid "Steps_:"
 msgstr "_Lépések:"
 
-#: ../src/live_effects/lpe-interpolate.cpp:32
+#: ../src/live_effects/lpe-interpolate.cpp:29
 msgid "Determines the number of steps from start to end path."
 msgstr ""
 "A kezdeti útvonaltól a vég-útvonalig megtett lépések számát határozza meg."
 
-#: ../src/live_effects/lpe-interpolate.cpp:33
+#: ../src/live_effects/lpe-interpolate.cpp:30
 msgid "E_quidistant spacing"
 msgstr "_Egyenletes helykihagyás"
 
-#: ../src/live_effects/lpe-interpolate.cpp:34
+#: ../src/live_effects/lpe-interpolate.cpp:31
 msgid ""
 "If true, the spacing between intermediates is constant along the length of "
 "the path. If false, the distance depends on the location of the nodes of the "
@@ -15640,7 +15644,7 @@ msgstr "Csak a max. és min. vetületi  értékek kiszámítása"
 #: ../share/extensions/color_hsl_adjust.inx:17
 #: ../share/extensions/color_randomize.inx:12
 #: ../share/extensions/draw_from_triangle.inx:41
-#: ../share/extensions/dxf_input.inx:27 ../share/extensions/dxf_outlines.inx:35
+#: ../share/extensions/dxf_input.inx:27 ../share/extensions/dxf_outlines.inx:34
 #: ../share/extensions/extrude.inx:16 ../share/extensions/funcplot.inx:47
 #: ../share/extensions/generate_voronoi.inx:11
 #: ../share/extensions/gimp_xcf.inx:14 ../share/extensions/interp_att_g.inx:44
@@ -16605,7 +16609,7 @@ msgstr "<b>Beállítások</b>Durvasági beállítások módosítása"
 
 #: ../src/live_effects/lpe-ruler.cpp:23
 #: ../src/live_effects/lpe-taperstroke.cpp:80
-#: ../share/ui/dialog-export.glade:314 ../share/extensions/restack.inx:25
+#: ../share/ui/dialog-export.glade:315 ../share/extensions/restack.inx:25
 #: ../share/extensions/text_extract.inx:12
 #: ../share/extensions/text_merge.inx:12
 msgid "Left"
@@ -16613,7 +16617,7 @@ msgstr "Bal"
 
 #: ../src/live_effects/lpe-ruler.cpp:24
 #: ../src/live_effects/lpe-taperstroke.cpp:81
-#: ../share/ui/dialog-export.glade:327 ../share/extensions/restack.inx:27
+#: ../share/ui/dialog-export.glade:328 ../share/extensions/restack.inx:27
 #: ../share/extensions/text_extract.inx:14
 #: ../share/extensions/text_merge.inx:14
 msgid "Right"
@@ -17679,7 +17683,7 @@ msgstr ""
 "b> visszaállít"
 
 #: ../src/live_effects/parameter/originalpath.cpp:65
-#: ../src/live_effects/parameter/path.cpp:286
+#: ../src/live_effects/parameter/path.cpp:311
 #: ../src/live_effects/parameter/patharray.cpp:182
 msgid "Link to path in clipboard"
 msgstr "Vágólapon lévő útvonalhoz való kapcsolás"
@@ -17694,23 +17698,23 @@ msgstr "Eredeti kijelölése"
 msgid "Link to item"
 msgstr "Elemhez való hozzákapcsolás"
 
-#: ../src/live_effects/parameter/path.cpp:251
+#: ../src/live_effects/parameter/path.cpp:276
 msgid "Edit on-canvas"
 msgstr "Szerkesztés a rajzvásznon"
 
-#: ../src/live_effects/parameter/path.cpp:263
+#: ../src/live_effects/parameter/path.cpp:288
 msgid "Copy path"
 msgstr "Útvonal másolása"
 
-#: ../src/live_effects/parameter/path.cpp:275
+#: ../src/live_effects/parameter/path.cpp:300
 msgid "Paste path"
 msgstr "Útvonal beillesztése"
 
-#: ../src/live_effects/parameter/path.cpp:576
+#: ../src/live_effects/parameter/path.cpp:601
 msgid "Paste path parameter"
 msgstr "Útvonal-paraméter beillesztése"
 
-#: ../src/live_effects/parameter/path.cpp:604
+#: ../src/live_effects/parameter/path.cpp:629
 #: ../src/live_effects/parameter/patharray.cpp:144
 msgid "Link path parameter to path"
 msgstr "Útvonal-paraméter kapcsolása útvonalhoz"
@@ -18015,7 +18019,7 @@ msgstr "%s; <i>szűrt</i>"
 msgid "Line"
 msgstr "Vonal"
 
-#: ../src/object/sp-lpe-item.cpp:295 ../src/object/sp-lpe-item.cpp:1103
+#: ../src/object/sp-lpe-item.cpp:295 ../src/object/sp-lpe-item.cpp:1101
 msgid "An exception occurred during execution of the Path Effect."
 msgstr "Kivétel (hiba) történt az útvonaleffektus végrehajtása közben."
 
@@ -20944,7 +20948,7 @@ msgid "Remove"
 msgstr "Eltávolítás"
 
 #: ../src/ui/dialog/document-properties.cpp:892
-#: ../share/ui/dialog-export.glade:783 ../share/ui/dialog-export.glade:1081
+#: ../share/ui/dialog-export.glade:784 ../share/ui/dialog-export.glade:1083
 msgid "Filename"
 msgstr "Fájlnév"
 
@@ -21201,7 +21205,7 @@ msgid "All Executable Files"
 msgstr "Minden futtatható fájl"
 
 #: ../src/ui/dialog/filedialogimpl-win32.cpp:588
-#: ../share/ui/dialog-export.glade:201
+#: ../share/ui/dialog-export.glade:202
 msgid "Show Preview"
 msgstr "Előnézet megjelenítése"
 
@@ -26786,7 +26790,7 @@ msgid "_SVG editor:"
 msgstr "_SVG-szerkesztő:"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2827
-#: ../share/ui/dialog-export.glade:816 ../share/ui/dialog-export.glade:1090
+#: ../share/ui/dialog-export.glade:817 ../share/ui/dialog-export.glade:1092
 #: ../share/extensions/guillotine.inx:15 ../share/extensions/layer2png.inx:29
 #: ../share/extensions/plotter.inx:98
 #: ../share/extensions/prepare_file_save_as.inx:8
@@ -26872,7 +26876,7 @@ msgid "Include"
 msgstr "Beágyazás"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2862
-#: ../share/ui/dialog-export.glade:958
+#: ../share/ui/dialog-export.glade:960
 msgid "Pages"
 msgstr "Oldalak"
 
@@ -29200,7 +29204,7 @@ msgid "Canvas"
 msgstr "Rajzvászon"
 
 #: ../src/ui/modifiers.cpp:61 ../src/widgets/desktop-widget.cpp:1519
-#: ../share/ui/dialog-export.glade:482 ../share/ui/dialog-export.glade:923
+#: ../share/ui/dialog-export.glade:483 ../share/ui/dialog-export.glade:925
 #: ../share/extensions/printing_marks.inx:18
 msgid "Selection"
 msgstr "Kijelölés"
@@ -29981,7 +29985,7 @@ msgstr "Kör, ellipszis vagy körív függőleges sugara"
 #: ../src/ui/toolbar/rect-toolbar.cpp:174
 #: ../src/ui/toolbar/select-toolbar.cpp:266
 #: ../src/ui/toolbar/text-toolbar.cpp:329
-#: ../src/ui/toolbar/text-toolbar.cpp:355 ../share/ui/dialog-export.glade:137
+#: ../src/ui/toolbar/text-toolbar.cpp:355 ../share/ui/dialog-export.glade:138
 msgid "Units"
 msgstr "Mértékegység"
 
@@ -31407,7 +31411,7 @@ msgid "Width of rectangle"
 msgstr "A téglalap szélessége"
 
 #: ../src/ui/toolbar/rect-toolbar.cpp:125
-#: ../share/ui/align-and-distribute.ui:1003
+#: ../share/ui/align-and-distribute.ui:1004
 msgid "H:"
 msgstr "V:"
 
@@ -35157,19 +35161,23 @@ msgstr "Jelölők, körvonal, kitöltés"
 msgid "Set markers"
 msgstr "Jelölőelemek beállítása"
 
-#: ../src/ui/widget/stroke-style.cpp:968
+#: ../src/ui/widget/stroke-style.cpp:572
+msgid "Remove hairline stroke"
+msgstr "Hajszálvékony körvonal eltávolítása"
+
+#: ../src/ui/widget/stroke-style.cpp:972
 msgid "Set stroke width"
 msgstr "Körvonalszélesség beállítása"
 
-#: ../src/ui/widget/stroke-style.cpp:1009
+#: ../src/ui/widget/stroke-style.cpp:1013
 msgid "Set stroke dash"
 msgstr "Körvonalminta beállítása"
 
-#: ../src/ui/widget/stroke-style.cpp:1031
+#: ../src/ui/widget/stroke-style.cpp:1035
 msgid "Set stroke miter"
 msgstr "Körvonalvég beállítása"
 
-#: ../src/ui/widget/stroke-style.cpp:1088
+#: ../src/ui/widget/stroke-style.cpp:1092
 msgid "Set stroke style"
 msgstr "Körvonalstílus beállítása"
 
@@ -35357,7 +35365,7 @@ msgstr ""
 msgid "Note:"
 msgstr "Megjegyzés:"
 
-#: ../src/widgets/desktop-widget.cpp:1511 ../share/ui/dialog-export.glade:518
+#: ../src/widgets/desktop-widget.cpp:1511 ../share/ui/dialog-export.glade:519
 #: ../share/ui/page-properties.glade:799 ../share/ui/align-and-distribute.ui:60
 #: ../share/extensions/voronoi2svg.inx:15
 msgid "Page"
@@ -35451,19 +35459,19 @@ msgstr "Másolás kattintással"
 msgid "Ctrl+F"
 msgstr "Ctrl+F"
 
-#: ../share/ui/dialog-export.glade:107
+#: ../share/ui/dialog-export.glade:108
 msgid "Image Size"
 msgstr "Képméret"
 
-#: ../share/ui/dialog-export.glade:216
+#: ../share/ui/dialog-export.glade:217
 msgid "Export Selected only"
 msgstr "Csak a kijelölt exportálása"
 
-#: ../share/ui/dialog-export.glade:230
+#: ../share/ui/dialog-export.glade:231
 msgid "Hide Export Settings"
 msgstr "Exportálási beállítások elrejtése"
 
-#: ../share/ui/dialog-export.glade:234
+#: ../share/ui/dialog-export.glade:235
 msgid ""
 "Don't pop up the export options and use the previously used or default "
 "options."
@@ -35471,19 +35479,19 @@ msgstr ""
 "Ne jelenítse meg az exportálási lehetőségeket, és használja a korábban "
 "használt vagy alapértelmezett beállításokat."
 
-#: ../share/ui/dialog-export.glade:340 ../share/extensions/restack.inx:32
+#: ../share/ui/dialog-export.glade:341 ../share/extensions/restack.inx:32
 #: ../share/extensions/text_extract.inx:19
 #: ../share/extensions/text_merge.inx:19
 msgid "Bottom"
 msgstr "Alsó"
 
-#: ../share/ui/dialog-export.glade:353 ../share/extensions/restack.inx:30
+#: ../share/ui/dialog-export.glade:354 ../share/extensions/restack.inx:30
 #: ../share/extensions/text_extract.inx:17
 #: ../share/extensions/text_merge.inx:17
 msgid "Top"
 msgstr "Felső"
 
-#: ../share/ui/dialog-export.glade:366
+#: ../share/ui/dialog-export.glade:367
 msgid ""
 "Width\n"
 "(px)"
@@ -35491,7 +35499,7 @@ msgstr ""
 "Szélesség\n"
 "(px)"
 
-#: ../share/ui/dialog-export.glade:380
+#: ../share/ui/dialog-export.glade:381
 msgid ""
 "Height\n"
 "(px)"
@@ -35499,81 +35507,81 @@ msgstr ""
 "Magasság\n"
 "(px)"
 
-#: ../share/ui/dialog-export.glade:488
+#: ../share/ui/dialog-export.glade:489
 msgid "Export selected objects"
 msgstr "Kijelölt objektumok exportálása"
 
-#: ../share/ui/dialog-export.glade:500
+#: ../share/ui/dialog-export.glade:501
 #: ../share/extensions/doc_ai_convert.inx:33 ../share/extensions/docinfo.inx:8
 #: ../share/extensions/dpi90to96.inx:11 ../share/extensions/dpi96to90.inx:11
 msgid "Document"
 msgstr "Dokumentum"
 
-#: ../share/ui/dialog-export.glade:506
+#: ../share/ui/dialog-export.glade:507
 msgid "Export everything inside document"
 msgstr "Minden elem exportálása a dokumentumon belül"
 
-#: ../share/ui/dialog-export.glade:524
+#: ../share/ui/dialog-export.glade:525
 msgid "Export cropped content inside the page"
 msgstr "Kivágott tartalom exportálása az oldalon belül"
 
-#: ../share/ui/dialog-export.glade:542
+#: ../share/ui/dialog-export.glade:543
 msgid "Export custom area by specifying coordinates"
 msgstr "Egyéni terület exportálása koordináták megadásával"
 
-#: ../share/ui/dialog-export.glade:568
+#: ../share/ui/dialog-export.glade:569
 msgid "Select the previous page"
 msgstr "Előző oldal kijelölése"
 
-#: ../share/ui/dialog-export.glade:601
+#: ../share/ui/dialog-export.glade:602
 msgid "Select the next page"
 msgstr "Következő oldal kijelölése"
 
-#: ../share/ui/dialog-export.glade:782
+#: ../share/ui/dialog-export.glade:783
 msgid "Browse export directory"
 msgstr "Exportálási mappa böngészése"
 
-#: ../share/ui/dialog-export.glade:794
+#: ../share/ui/dialog-export.glade:795
 msgid "Select export format"
 msgstr "Exportálási formátum kijelölése"
 
-#: ../share/ui/dialog-export.glade:843
+#: ../share/ui/dialog-export.glade:844
 msgid "Export a part of document"
 msgstr "A dokumentum egy részének exportálása"
 
-#: ../share/ui/dialog-export.glade:844
+#: ../share/ui/dialog-export.glade:845
 msgid "Single Image"
 msgstr "Egyetlen kép"
 
-#: ../share/ui/dialog-export.glade:928
+#: ../share/ui/dialog-export.glade:930
 msgid "Export selected objects to separate files"
 msgstr "Kijelölt objektumok exportálása különálló fájlokba"
 
-#: ../share/ui/dialog-export.glade:940
+#: ../share/ui/dialog-export.glade:942
 msgid "Layers"
 msgstr "Rétegek"
 
-#: ../share/ui/dialog-export.glade:945
+#: ../share/ui/dialog-export.glade:947
 msgid "Export layers as separate files"
 msgstr "Rétegek exportálása különálló fájlként"
 
-#: ../share/ui/dialog-export.glade:963
+#: ../share/ui/dialog-export.glade:965
 msgid "Export pages as separate files"
 msgstr "Oldalak exportálása különálló fájlként"
 
-#: ../share/ui/dialog-export.glade:983
+#: ../share/ui/dialog-export.glade:985
 msgid "Preview"
 msgstr "Előnézet"
 
-#: ../share/ui/dialog-export.glade:1011
+#: ../share/ui/dialog-export.glade:1013
 msgid "Export Selected Only"
 msgstr "Csak kijelölt exportálása"
 
-#: ../share/ui/dialog-export.glade:1126
+#: ../share/ui/dialog-export.glade:1128
 msgid "Export to multiple files and file formats"
 msgstr "Exportálás több fájlba és fájlformátumba"
 
-#: ../share/ui/dialog-export.glade:1127
+#: ../share/ui/dialog-export.glade:1129
 msgid "Batch Export"
 msgstr "Kötegelt exportálás"
 
@@ -36750,92 +36758,92 @@ msgstr "Legkisebb objektum"
 msgid "Selection Area"
 msgstr "Kijelölt terület"
 
-#: ../share/ui/align-and-distribute.ui:336
+#: ../share/ui/align-and-distribute.ui:337
 msgid "Enable on-canvas alignment handles"
 msgstr "A vásznon lévő igazítási fogantyúk engedélyezése"
 
-#: ../share/ui/align-and-distribute.ui:352 ../share/extensions/frame.inx:10
+#: ../share/ui/align-and-distribute.ui:353 ../share/extensions/frame.inx:10
 msgid "Treat selection as group"
 msgstr "Kijelölés csoportként való kezelése"
 
-#: ../share/ui/align-and-distribute.ui:364
+#: ../share/ui/align-and-distribute.ui:365
 msgid "Alignment handles with third click"
 msgstr "Igazítási fogantyúk harmadik kattintással"
 
-#: ../share/ui/align-and-distribute.ui:377
+#: ../share/ui/align-and-distribute.ui:378
 msgid "Move/align selection as group"
 msgstr "Kijelölés mozgatása/igazítása csoportként"
 
-#: ../share/ui/align-and-distribute.ui:400
-#: ../share/ui/align-and-distribute.ui:1131
+#: ../share/ui/align-and-distribute.ui:401
+#: ../share/ui/align-and-distribute.ui:1133
 msgid "Relative to:"
 msgstr "Relatív ehhez:"
 
-#: ../share/ui/align-and-distribute.ui:449
+#: ../share/ui/align-and-distribute.ui:450
 msgid "Align right edges of objects to the left edge of anchor"
 msgstr "Az objektumok jobb éleinek igazítása a horgony bal éléhez"
 
-#: ../share/ui/align-and-distribute.ui:464
+#: ../share/ui/align-and-distribute.ui:465
 msgid "Align left edges"
 msgstr "Bal élek igazítása"
 
-#: ../share/ui/align-and-distribute.ui:479
+#: ../share/ui/align-and-distribute.ui:480
 msgid "Center on vertical axis"
 msgstr "Középre igazítás a függőleges tengelyhez"
 
-#: ../share/ui/align-and-distribute.ui:494
+#: ../share/ui/align-and-distribute.ui:495
 msgid "Align right edges"
 msgstr "Jobb élek igazítása"
 
-#: ../share/ui/align-and-distribute.ui:509
+#: ../share/ui/align-and-distribute.ui:510
 msgid "Align left edges of objects to the right edge of anchor"
 msgstr "Az objektumok bal éleinek igazítása a horgony jobb éléhez"
 
-#: ../share/ui/align-and-distribute.ui:524
+#: ../share/ui/align-and-distribute.ui:525
 msgid "Align baseline anchors of texts horizontally"
 msgstr "A szövegek alapvonal-horgonyainak vízszintes igazítása"
 
-#: ../share/ui/align-and-distribute.ui:539
+#: ../share/ui/align-and-distribute.ui:540
 msgid "Align bottom edges of objects to the top edge of anchor"
 msgstr "Az objektumok alsó széleinek igazítása a horgony felső éléhez"
 
-#: ../share/ui/align-and-distribute.ui:554
+#: ../share/ui/align-and-distribute.ui:555
 msgid "Align top edges"
 msgstr "Felső élek igazítása"
 
-#: ../share/ui/align-and-distribute.ui:569
+#: ../share/ui/align-and-distribute.ui:570
 msgid "Center on horizontal axis"
 msgstr "Középre igazítás a vízszintes tengelyhez"
 
-#: ../share/ui/align-and-distribute.ui:584
+#: ../share/ui/align-and-distribute.ui:585
 msgid "Align bottom edges"
 msgstr "Alsó élek igazítása"
 
-#: ../share/ui/align-and-distribute.ui:599
+#: ../share/ui/align-and-distribute.ui:600
 msgid "Align top edges of objects to bottom edge of anchor"
 msgstr "Az objektumok felső éleinek igazítása a horgony alsó éléhez"
 
-#: ../share/ui/align-and-distribute.ui:614
+#: ../share/ui/align-and-distribute.ui:615
 msgid "Align baselines of texts"
 msgstr "A szövegek alapvonalainak igazítása"
 
-#: ../share/ui/align-and-distribute.ui:1018
+#: ../share/ui/align-and-distribute.ui:1019
 msgid "Minimum horizontal gap (in pixel units) between bounding boxes"
 msgstr ""
 "A minimális vízszintes helykihagyás (pixelben mérve) a határoló téglalapok "
 "között"
 
-#: ../share/ui/align-and-distribute.ui:1031
+#: ../share/ui/align-and-distribute.ui:1032
 msgid "V:"
 msgstr "F:"
 
-#: ../share/ui/align-and-distribute.ui:1046
+#: ../share/ui/align-and-distribute.ui:1047
 msgid "Mininum vertical gap (in pixel units) between bounding boxes"
 msgstr ""
 "A minimális függőleges helykihagyás (pixelben mérve) a határoló téglalapok "
 "között"
 
-#: ../share/ui/align-and-distribute.ui:1063
+#: ../share/ui/align-and-distribute.ui:1064
 msgid ""
 "Move objects as little as possible so that their bounding boxes do not "
 "overlap"
@@ -36843,19 +36851,19 @@ msgstr ""
 "Az objektumok határoló téglalapjai közötti átfedés eltávolítása az "
 "objektumok lehető legkisebb mértékben való elmozdításával"
 
-#: ../share/ui/align-and-distribute.ui:1180
+#: ../share/ui/align-and-distribute.ui:1182
 msgid "Align selected nodes to a common horizontal line"
 msgstr "A kijelölt csomópontok igazítása egy közös vízszintes vonalra"
 
-#: ../share/ui/align-and-distribute.ui:1195
+#: ../share/ui/align-and-distribute.ui:1197
 msgid "Align selected nodes to a common vertical line"
 msgstr "A kijelölt csomópontok igazítása egy közös függőleges vonalra"
 
-#: ../share/ui/align-and-distribute.ui:1218
+#: ../share/ui/align-and-distribute.ui:1220
 msgid "Align Nodes"
 msgstr "Csomópontok igazítása"
 
-#: ../share/ui/align-and-distribute.ui:1298
+#: ../share/ui/align-and-distribute.ui:1300
 msgid "Distribute Nodes"
 msgstr "Csomópontok elrendezése"
 
@@ -37692,7 +37700,7 @@ msgstr ""
 "Olyan objektumot észlelve, amelynél be van állítva a kihúzási paraméter. Az "
 "importált ábra helytelenül jelenhet meg."
 
-#: ../share/extensions/dxf_outlines.py:213
+#: ../share/extensions/dxf_outlines.py:216
 msgid ""
 "Failed to import the numpy or numpy.linalg modules. These modules are "
 "required by the ROBO option.Please install them and try again."
@@ -37701,14 +37709,14 @@ msgstr ""
 "paraméterhez van szükség ezekre a modulokra. Telepítse ezeket, majd "
 "próbálkozzon újra."
 
-#: ../share/extensions/dxf_outlines.py:355
+#: ../share/extensions/dxf_outlines.py:357
 msgid ""
 "Too many nested groups. Please use the \"Deep Ungroup\" extension first."
 msgstr ""
 "Túl sok beágyazott csoport. Előbb használja a „Mély csoportbontás” "
 "kiterjesztést."
 
-#: ../share/extensions/dxf_outlines.py:370
+#: ../share/extensions/dxf_outlines.py:372
 msgid ""
 "Error: Field 'Layer match name' must be filled when using 'By name match' "
 "option"
@@ -37779,33 +37787,41 @@ msgstr ""
 "A felszeletelt bitképek el lettek mentve:\n"
 "\n"
 
-#: ../share/extensions/hershey.py:385
+#: ../share/extensions/hershey.py:386
 msgid "Width or height attribute missing on toplevel <svg> tag"
 msgstr ""
 "A szélesség vagy a magasság attribútum hiányzik a legfelső szintű <svg> "
 "címkében"
 
-#: ../share/extensions/hershey.py:731
+#: ../share/extensions/hershey.py:732
 msgid "Error parsing SVG font at {}"
 msgstr "Hiba az SVG-betűkészlet értelmezésében itt {}"
 
-#: ../share/extensions/hershey.py:804
+#: ../share/extensions/hershey.py:805
 msgid "Font not found; Unable to generate glyph table."
 msgstr ""
 "Nem található a betűkészlet; nem sikerült betűkészletjel-táblázatot "
 "készíteni."
 
-#: ../share/extensions/hershey.py:1383
+#: ../share/extensions/hershey.py:1384
 msgid "Unable to process text. Consider unlinking cloned text."
 msgstr ""
 "Nem lehet feldolgozni a szöveget. Fontolja meg klónozott szövegek "
 "lekapcsolását."
 
-#: ../share/extensions/hershey.py:2014
+#: ../share/extensions/hershey.py:2018
 msgid "Warning: unable to load SVG stroke fonts."
 msgstr "Figyelmeztetés: nem lehet betölteni az SVG-körvonal betűkészleteket."
 
-#: ../share/extensions/hershey.py:2019
+#: ../share/extensions/hershey.py:2023
+msgid ""
+"Warning: unable to render text.\n"
+"Please use Text > Remove Manual Kerns to convert it prior to use ."
+msgstr ""
+"Figyelmeztetés: a szöveg nem képezhető le.\n"
+"Előbb a Szöveg → Kézi alávágások eltávolítása funkcióval át kell alakítani."
+
+#: ../share/extensions/hershey.py:2031
 msgid ""
 "Warning: unable to convert text flowed into a frame.\n"
 "Please use Text > Unflow to convert it prior to use.\n"
@@ -37846,11 +37862,11 @@ msgstr ""
 msgid "Attribute \"xlink:href\" not set on node {}."
 msgstr "Az „xlink:href” attribútum nincs beállítva a csomóponthoz {}."
 
-#: ../share/extensions/image_embed.py:89 ../share/extensions/media_zip.py:106
+#: ../share/extensions/image_embed.py:93 ../share/extensions/media_zip.py:106
 msgid "File not found \"{}\". Unable to embed image."
 msgstr "A fájl nem található: „{}”. A képet nem lehet beágyazni."
 
-#: ../share/extensions/image_embed.py:110
+#: ../share/extensions/image_embed.py:114
 #, python-format
 msgid ""
 "%s is not of type image/png, image/jpeg, image/bmp, image/gif, image/tiff, "
@@ -38068,6 +38084,26 @@ msgid ""
 msgstr ""
 "{} immár egy metódus az SvgDocumentElement osztályban. A „self.svg."
 "add_unit(value)” használandó helyette."
+
+#: ../share/extensions/inkex/elements/_parser.py:102
+msgid ""
+"A parsing error occured, which means you are likely working with a non-"
+"conformant SVG file. The following errors were found:\n"
+msgstr ""
+"Feldolgozási hiba történt, vagyis valószínűleg nem megfelelő SVG-fájllal "
+"dolgozik. A következő hibák fordultak elő:\n"
+
+#: ../share/extensions/inkex/elements/_parser.py:108
+msgid "{}. Line {}, column {}"
+msgstr "{}. sor {}, oszlop {}"
+
+#: ../share/extensions/inkex/elements/_parser.py:114
+msgid ""
+"\n"
+"Processing will continue; however we encourage you to fix your file manually."
+msgstr ""
+"\n"
+"A feldolgozás folytatódik, de javasoljuk a fájl manuális javítását."
 
 #: ../share/extensions/interp.py:78
 msgid "At least two paths need to be selected"
@@ -38412,7 +38448,7 @@ msgstr ""
 "Módosítsa a minta szélességét."
 
 #: ../share/extensions/pdflatex.py:75
-msgid "An exception occured during LaTeX compilation: "
+msgid "An exception occurred during LaTeX compilation: "
 msgstr "Kivétel történt a LaTeX fordítása során:"
 
 #: ../share/extensions/perspective.py:44
@@ -39391,55 +39427,41 @@ msgstr "ROBO-Master-kompatibilis spline kimenet (néhány alakzatot eltorzíthat
 
 #: ../share/extensions/dxf_outlines.inx:9
 msgid ""
-"Unlinke Bézier curves, ROBO-Master compatible splines have zero curvature at "
+"Unlike Bézier curves, ROBO-Master compatible splines have zero curvature at "
 "the end points. This may lead to distorted shapes."
 msgstr ""
 "A Bézier-görbéktől eltérően a ROBO-Master-kompatibilis spline-ok végpontjai "
 "nulla görbülettel rendelkeznek. Ez torz alakzatokat okozhat."
 
 #: ../share/extensions/dxf_outlines.inx:10
-msgid "use LWPOLYLINE type of line output"
+msgid "Use LWPOLYLINE type of line output"
 msgstr "LWPOLYLINE típus használata a vonal kimenetéül"
 
 #: ../share/extensions/dxf_outlines.inx:11
+msgid "Use Document unit as base unit"
+msgstr "Dokumentum egység alkalmazása alap mértékegységként"
+
+#: ../share/extensions/dxf_outlines.inx:12
 msgid "Base unit:"
 msgstr "Alap mértékegység:"
 
 #: ../share/extensions/dxf_outlines.inx:12
-msgid "pt"
-msgstr "pt"
+msgid ""
+"Only takes effect if the previous parameter is disabled. 1 user unit in the "
+"SVG file will correspond to 1 (selected unit) in the DXF file"
+msgstr ""
+"Csak akkor lép hatályba, ha az előző paraméter le van tiltva. 1 felhasználói "
+"egység az SVG fájlban 1 (kiválasztott egységnek) felel meg a DXF fájlban."
 
 #: ../share/extensions/dxf_outlines.inx:13
-msgid "pc"
-msgstr "pc"
+msgid "px (unitless)"
+msgstr "px (egység nélküli)"
 
 #: ../share/extensions/dxf_outlines.inx:14
-#: ../share/extensions/render_gears.inx:10
-msgid "px"
-msgstr "px"
+msgid "ft"
+msgstr "ft"
 
 #: ../share/extensions/dxf_outlines.inx:15
-#: ../share/extensions/other/gcodetools/gcodetools_area.inx:85
-#: ../share/extensions/other/gcodetools/gcodetools_dxf_points.inx:31
-#: ../share/extensions/other/gcodetools/gcodetools_engraving.inx:43
-#: ../share/extensions/other/gcodetools/gcodetools_graffiti.inx:36
-#: ../share/extensions/other/gcodetools/gcodetools_graffiti.inx:72
-#: ../share/extensions/other/gcodetools/gcodetools_lathe.inx:65
-#: ../share/extensions/other/gcodetools/gcodetools_orientation_points.inx:18
-#: ../share/extensions/other/gcodetools/gcodetools_path_to_gcode.inx:45
-#: ../share/extensions/render_gears.inx:12
-msgid "mm"
-msgstr "mm"
-
-#: ../share/extensions/dxf_outlines.inx:16
-msgid "cm"
-msgstr "cm"
-
-#: ../share/extensions/dxf_outlines.inx:17
-msgid "m"
-msgstr "m"
-
-#: ../share/extensions/dxf_outlines.inx:18
 #: ../share/extensions/other/gcodetools/gcodetools_area.inx:86
 #: ../share/extensions/other/gcodetools/gcodetools_dxf_points.inx:32
 #: ../share/extensions/other/gcodetools/gcodetools_engraving.inx:44
@@ -39452,35 +39474,52 @@ msgstr "m"
 msgid "in"
 msgstr "in"
 
-#: ../share/extensions/dxf_outlines.inx:19
-msgid "ft"
-msgstr "ft"
+#: ../share/extensions/dxf_outlines.inx:16
+#: ../share/extensions/other/gcodetools/gcodetools_area.inx:85
+#: ../share/extensions/other/gcodetools/gcodetools_dxf_points.inx:31
+#: ../share/extensions/other/gcodetools/gcodetools_engraving.inx:43
+#: ../share/extensions/other/gcodetools/gcodetools_graffiti.inx:36
+#: ../share/extensions/other/gcodetools/gcodetools_graffiti.inx:72
+#: ../share/extensions/other/gcodetools/gcodetools_lathe.inx:65
+#: ../share/extensions/other/gcodetools/gcodetools_orientation_points.inx:18
+#: ../share/extensions/other/gcodetools/gcodetools_path_to_gcode.inx:45
+#: ../share/extensions/render_gears.inx:12
+msgid "mm"
+msgstr "mm"
 
-#: ../share/extensions/dxf_outlines.inx:21
+#: ../share/extensions/dxf_outlines.inx:17
+msgid "cm"
+msgstr "cm"
+
+#: ../share/extensions/dxf_outlines.inx:18
+msgid "m"
+msgstr "m"
+
+#: ../share/extensions/dxf_outlines.inx:20
 msgid "Character Encoding:"
 msgstr "Karakterkódolás:"
 
-#: ../share/extensions/dxf_outlines.inx:28
+#: ../share/extensions/dxf_outlines.inx:27
 msgid "Layer export selection:"
 msgstr "Rétegexport kijelölés:"
 
-#: ../share/extensions/dxf_outlines.inx:29
+#: ../share/extensions/dxf_outlines.inx:28
 msgid "All (default)"
 msgstr "Összes (alapértelmezett)"
 
-#: ../share/extensions/dxf_outlines.inx:30
+#: ../share/extensions/dxf_outlines.inx:29
 msgid "Visible only"
 msgstr "Csak a láthatók"
 
-#: ../share/extensions/dxf_outlines.inx:31
+#: ../share/extensions/dxf_outlines.inx:30
 msgid "By name match"
 msgstr "Névilleszkedés alapján"
 
-#: ../share/extensions/dxf_outlines.inx:33
+#: ../share/extensions/dxf_outlines.inx:32
 msgid "Layer match name:"
 msgstr "Rétegilleszkedési név:"
 
-#: ../share/extensions/dxf_outlines.inx:36
+#: ../share/extensions/dxf_outlines.inx:35
 msgid ""
 "- AutoCAD Release 14 DXF format.\n"
 "- The base unit parameter specifies in what unit the coordinates are output "
@@ -39511,11 +39550,11 @@ msgstr ""
 "vagy csak a nevük alapján illeszkedőekét (nem kis- és nagybetű érzékeny, "
 "vesszővel (,) lehet elválasztani az értékeket)"
 
-#: ../share/extensions/dxf_outlines.inx:50
+#: ../share/extensions/dxf_outlines.inx:49
 msgid "Desktop Cutting Plotter (AutoCAD DXF R14) (*.dxf)"
 msgstr "Asztali vágó rajzgép (AutoCAD DXF R14) (*.dxf)"
 
-#: ../share/extensions/dxf_outlines.inx:51
+#: ../share/extensions/dxf_outlines.inx:50
 msgid "Desktop Cutting Plotter"
 msgstr "Asztali vágó rajzgép"
 
@@ -39612,23 +39651,43 @@ msgstr ""
 #: ../share/extensions/extrude.inx:17
 msgid ""
 "\n"
-"This effect draws lines between each nth node of each selected \n"
-"path. It therefore works best if all selected paths have the \n"
+"This effect draws lines between each nth node of each selected\n"
+"path. It therefore works best if all selected paths have the\n"
 "same number of nodes.\n"
 "\n"
-"It can be chosen whether these regions are filled and whether \n"
-"the fill uses rectangles or copies of the path segments.\n"
+"There are 3 main options:\n"
+"- lines: segments are created between the corresponding nodes.\n"
+"  It is possible to select the option \"Combine lines to single\n"
+"  path\" so that the segments that are created are subpaths of a\n"
+"  single path; otherwise, the segments that are created are\n"
+"  separate paths grouped together.\n"
+"- polygons: Polygons with straight lines are created between\n"
+"  corresponding pairs of nodes of each path. The polygons are\n"
+"  grouped together.\n"
+"- follow curves: the same as polygons, but the 'segments' of the\n"
+"  path that lie on top of the original paths will follow The\n"
+"  same curves as on the original path.\n"
 "\n"
 "The lines will be inserted above the bottom of the two elements.\n"
 "            "
 msgstr ""
 "\n"
-"Ez az effektus vonalakat rajzol minden kijelölt útvonal n-edik csomópontja "
-"között. Ezért akkor működik a legjobban, ha az összes kijelölt útvonalnak "
-"azonos számú csomópontja van.\n"
+"Ez az effektus vonalakat rajzol minden kijelölt útvonal n-edik \n"
+"csomópontja között. Ezért akkor működik a legjobban, ha az \n"
+"összes kijelölt útvonalnak azonos számú csomópontja van. \n"
 "\n"
-"Kiválasztható, hogy ezek a területek ki legyenek-e töltve, és hogy a "
-"kitöltés téglalapokat vagy az útvonalszegmensek másolatait használja.\n"
+"3 fő lehetőség van:\n"
+"- A megfelelő csomópontok között szegmensek jönnek létre. Lehetőség van a "
+"„Vonalak összevonása egyetlen útvonallá” opció kiválasztására, így a "
+"létrehozott szegmensek egyetlen útvonal alútvonalai lesznek; ellenkező "
+"esetben a létrehozott szegmensek különálló, csoportosított útvonalak "
+"lesznek.\n"
+"- poligonok: Az egyes útvonalak megfelelő csomópontpárjai között egyenes "
+"vonalakkal ellátott sokszögek jönnek létre. A sokszögek csoportosítva "
+"vannak.\n"
+"- görbék követése: Ugyanaz, mint a poligonok, de az eredeti útvonalak "
+"tetején fekvő \"szegmensek\" ugyanazokat a görbéket követik, mint az eredeti "
+"ösvényen.\n"
 "\n"
 "A vonalak a két elem alja fölé kerülnek beillesztésre."
 
@@ -40965,12 +41024,11 @@ msgstr "Interpolációs módszer:"
 msgid ""
 "The first option rediscretizes both paths before the interpolation with the "
 "other path's node positions. The second option removes extra nodes of the "
-"longer path (yields good results if both subpaths have equal length)"
+"longer path."
 msgstr ""
 "Az első opció újradiszkretizálja mindkét útvonalat a második útvonal "
 "csomóponthelyeivel való interpoláció előtt. A második opció eltávolítja az "
-"extra csomópontokat a hosszabbik útvonalból (akkor ad jó eredményt, ha "
-"mindkét útvonal azonos hosszúságú)"
+"extra csomópontokat a hosszabbik útvonalból."
 
 #: ../share/extensions/interp.inx:8
 msgid "Split paths into segments of equal lengths"
@@ -43977,7 +44035,7 @@ msgstr "Önálló dokumentumosztály használata"
 msgid ""
 "Without the standalone document class, font sizes other than 10pt are "
 "achieved by scaling the resulting PDF output (internally, the document class "
-"'minimal' is used). More correct spacing for all font sizes can be achived "
+"'minimal' is used). More correct spacing for all font sizes can be achieved "
 "by using 'standalone'. However, the required packages might not be available "
 "on all systems."
 msgstr ""
@@ -45137,6 +45195,10 @@ msgstr "Nyomásszög (°):"
 msgid "Diameter of center hole (0 for none):"
 msgstr "Középső lyuk átmérője (0: nincs):"
 
+#: ../share/extensions/render_gears.inx:10
+msgid "px"
+msgstr "px"
+
 #: ../share/extensions/render_gears.inx:14
 msgid "Unit of measurement for both circular pitch and center diameter."
 msgstr "Mértékegység a körívhez és az átmérőhöz."
@@ -45262,18 +45324,28 @@ msgstr "Összekevert z-sorrend"
 
 #: ../share/extensions/restack.inx:42
 msgid ""
-"This extension changes the z-order of objects based on their position on the "
-"canvas or their current z-order. Selection: The extension restacks either "
-"objects inside a single selected group, or a selection of multiple objects "
-"on the current drawing level (layer or group)."
+"\n"
+"This extension changes the z-order of objects based on their position\n"
+"on the canvas or their current z-order.\n"
+"The extension restacks all the selected objects. Groups are treated as\n"
+"a single object.\n"
+"If elements of a group are selected together with external objects,\n"
+"the elements of the group are extracted and positioned next to the other\n"
+"objects being restacked (elements on different layers are brought together\n"
+"to the same layer).\n"
+"            "
 msgstr ""
-"Ez a kiterjesztés módosítja az objektumok z-sorrendjét a vásznon való "
-"helyzetük vagy a jelenlegi z-sorrendjük alapján. Kijelölés: A kiterjesztés "
-"újrarendezi a kijelölt csoportban az objektumokat, vagy több objektum "
-"kijelölése esetén ezen objektumokat a rajz jelenlegi szintjén (csoport vagy "
-"réteg)."
+"\n"
+"Ez a bővítmény az objektumok z-sorrendjét a vásznon elfoglalt \n"
+"pozíciójuk vagy az aktuális z-sorrendjük alapján változtatja meg. \n"
+"A kiterjesztés az összes kijelölt objektumot újra egymásra rakja. \n"
+"A csoportokat egyetlen objektumként kezeli. Ha egy csoport \n"
+"elemei külső objektumokkal együtt vannak kijelölve, a csoport \n"
+"elemei kivonásra kerülnek, és a többi újrarendezett objektum \n"
+"mellé kerülnek (a különböző rétegeken lévő elemek ugyanarra \n"
+"a rétegre kerülnek)."
 
-#: ../share/extensions/restack.inx:51 ../share/extensions/ungroup_deep.inx:12
+#: ../share/extensions/restack.inx:57 ../share/extensions/ungroup_deep.inx:12
 msgid "Arrange"
 msgstr "Elrendezés"
 
