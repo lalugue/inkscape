@@ -38,6 +38,7 @@ base-devel \
 $ARCH-toolchain \
 $ARCH-autotools \
 $ARCH-cmake \
+$ARCH-meson \
 $ARCH-ninja
 
 # install Inkscape dependencies (required)
