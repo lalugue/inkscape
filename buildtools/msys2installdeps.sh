@@ -85,6 +85,7 @@ $ARCH-scour
 eval pacman -S $PACMAN_OPTIONS \
 $ARCH-python-appdirs \
 $ARCH-python-beautifulsoup4 \
+$ARCH-python-filelock \
 $ARCH-python-msgpack \
 $ARCH-python-lockfile \
 $ARCH-python-cachecontrol \
