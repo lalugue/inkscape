@@ -1,3 +1,13 @@
+Inkscape 1.2.2
+
+Released on 2022-12-05
+
+    Fix freezes and crashes
+    Ocal import available on windows
+    Dithering disabled by default because of performance concerns
+    Various crash fixes and translation improvements
+
+
 Inkscape 1.2.1
 
 Released on 2022-07-16

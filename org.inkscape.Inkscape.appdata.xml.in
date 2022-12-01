@@ -44,6 +44,17 @@
     </screenshot>
   </screenshots>
   <releases>
+    <release version="1.2.2" date="2022-12-05">
+      <description>
+        <p>Inkscape 1.2.2</p>
+        <ul>
+          <li>Fix freezes and crashes</li>
+          <li>Dithering disabled by default because of performance concerns</li>
+          <li>Various crash fixes and translation improvements</li>
+        </ul>
+      </description>
+      <url>http://wiki.inkscape.org/wiki/index.php/Release_notes/1.2.2</url>
+    </release>
     <release version="1.2.1" date="2022-07-14">
       <description>
         <p>Inkscape 1.2.1</p>
