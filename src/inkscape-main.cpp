@@ -18,6 +18,7 @@
 
 #include "inkscape-application.h"
 #include "path-prefix.h"
+#include "streq.h"
 
 #include "io/resource.h"
 
@@ -163,7 +164,7 @@ static void convert_legacy_options(int &argc, char **&argv)
     char *file = nullptr;
 
     for (int i = 0; i < argc; ++i) {
-        if (g_str_equal(argv[i], "--without-gui") || g_str_equal(argv[i], "-z")) {
+        if (streq(argv[i], "--without-gui") || streq(argv[i], "-z")) {
             std::cerr << "Warning: Option --without-gui= is deprecated" << std::endl;
             continue;
         }
@@ -181,7 +182,7 @@ static void convert_legacy_options(int &argc, char **&argv)
             if (g_str_has_prefix(argv[i], s.c_str())) {
                 std::cerr << "Warning: Option " << s << " is deprecated" << std::endl;
 
-                if (g_str_equal(type, "plain-svg")) {
+                if (streq(type, "plain-svg")) {
                     argv_new.push_back(g_strdup("--export-plain-svg"));
                     type = "svg";
                 }

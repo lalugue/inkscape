@@ -51,7 +51,7 @@ static bool href_needs_rebasing(char const *href)
 
     // Don't change non-file URIs (like data or http)
     auto scheme = Glib::make_unique_ptr_gfree(g_uri_parse_scheme(href));
-    return !scheme || g_str_equal(scheme.get(), "file");
+    return !scheme || streq(scheme.get(), "file");
 }
 
 AttributeVector
