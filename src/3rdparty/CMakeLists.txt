@@ -18,7 +18,7 @@ if(WITH_INTERNAL_CAIRO)
         GIT_REPOSITORY https://gitlab.freedesktop.org/cairo/cairo.git
         GIT_TAG 12cd2bcbb260f4ed64a72b64bd2fdd593f683bbc
         SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/cairo
-        PATCH_COMMAND git checkout ${CMAKE_CURRENT_SOURCE_DIR}/cairo/src && git apply --unsafe-paths --directory ${CMAKE_CURRENT_SOURCE_DIR}/cairo/ ${CMAKE_SOURCE_DIR}/packaging/cairo.patch
+        PATCH_COMMAND git checkout ${CMAKE_CURRENT_SOURCE_DIR}/cairo/src && git apply --unsafe-paths --directory ${CMAKE_CURRENT_SOURCE_DIR}/cairo/ ${CMAKE_SOURCE_DIR}/packaging/cairo.patch ${CMAKE_SOURCE_DIR}/packaging/cairo-win32.patch
         CONFIGURE_COMMAND meson setup --buildtype=debugoptimized -Dgtk_doc=false . ${CMAKE_CURRENT_SOURCE_DIR}/cairo && ninja clean
         BUILD_COMMAND meson compile
         INSTALL_COMMAND meson install
