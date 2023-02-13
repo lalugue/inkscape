@@ -138,12 +138,19 @@ void LayerPropertiesDialog::_close()
 void LayerPropertiesDialog::_doCreate()
 {
     LayerRelativePosition position = LPOS_ABOVE;
+
     if (_position_visible) {
-        Gtk::ListStore::iterator activeRow(_layer_position_combo.get_active());
-        position = activeRow->get_value(_dropdown_columns.position);
-        int index = _layer_position_combo.get_active_row_number();
+        int index = 0;
+        if (_layer_position_radio[1].get_active()) {
+            position = LPOS_BELOW;
+            index = 1;
+        } else if (_layer_position_radio[2].get_active()) {
+            position = LPOS_CHILD;
+            index = 2;
+        }
         Preferences::get()->setInt("/dialogs/layerProp/addLayerPosition", index);
     }
+
     Glib::ustring name(_layer_name_entry.get_text());
     if (name.empty()) {
         return;
@@ -233,39 +240,31 @@ void LayerPropertiesDialog::_setup_position_controls()
     }
 
     _position_visible = true;
-    _dropdown_list = Gtk::ListStore::create(_dropdown_columns);
-    _layer_position_combo.set_model(_dropdown_list);
-    _layer_position_combo.pack_start(_label_renderer);
-    _layer_position_combo.set_cell_data_func(_label_renderer,
-                                             [=](Gtk::TreeModel::const_iterator const &row) {
-        _prepareLabelRenderer(row);
-    });
-
-    Gtk::ListStore::iterator row;
-    row = _dropdown_list->append();
-    row->set_value(_dropdown_columns.position, LPOS_ABOVE);
-    row->set_value(_dropdown_columns.name, Glib::ustring(_("Above current")));
-    _layer_position_combo.set_active(row);
-    row = _dropdown_list->append();
-    row->set_value(_dropdown_columns.position, LPOS_BELOW);
-    row->set_value(_dropdown_columns.name, Glib::ustring(_("Below current")));
-    row = _dropdown_list->append();
-    row->set_value(_dropdown_columns.position, LPOS_CHILD);
-    row->set_value(_dropdown_columns.name, Glib::ustring(_("As sublayer of current")));
-
-    int position = Preferences::get()->getIntLimited("/dialogs/layerProp/addLayerPosition", 0, 0, 2);
-    _layer_position_combo.set_active(position);
 
     _layer_position_label.set_label(_("Position:"));
     _layer_position_label.set_halign(Gtk::ALIGN_START);
-    _layer_position_label.set_valign(Gtk::ALIGN_CENTER);
-
-    _layer_position_combo.set_halign(Gtk::ALIGN_FILL);
-    _layer_position_combo.set_valign(Gtk::ALIGN_FILL);
-    _layer_position_combo.set_hexpand();
-    _layout_table.attach(_layer_position_combo, 1, 1, 1, 1);
-
+    _layer_position_label.set_valign(Gtk::ALIGN_START);
     _layout_table.attach(_layer_position_label, 0, 1, 1, 1);
+
+    int position = Preferences::get()->getIntLimited("/dialogs/layerProp/addLayerPosition", 0, 0, 2);
+    
+    Gtk::RadioButtonGroup group;
+    _layer_position_radio[0].set_group(group);
+    _layer_position_radio[1].set_group(group);
+    _layer_position_radio[2].set_group(group);
+    _layer_position_radio[0].set_label(_("Above current"));
+    _layer_position_radio[1].set_label(_("Below current"));
+    _layer_position_radio[2].set_label(_("As sublayer of current"));
+    _layer_position_radio[0].set_active(position == LPOS_ABOVE);
+    _layer_position_radio[1].set_active(position == LPOS_BELOW);
+    _layer_position_radio[2].set_active(position == LPOS_CHILD);
+    
+    auto vbox = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL, 0));
+    vbox->pack_start(_layer_position_radio[0], false, false, 0);
+    vbox->pack_start(_layer_position_radio[1], false, false, 0);
+    vbox->pack_start(_layer_position_radio[2], false, false, 0);
+    
+    _layout_table.attach(*vbox, 1, 1, 1, 1);
 
     show_all_children();
 }

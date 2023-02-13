@@ -22,6 +22,8 @@
 #include <gtkmm/gesture.h> // Gtk::EventSequenceState
 #include <gtkmm/grid.h>
 #include <gtkmm/label.h>
+#include <gtkmm/box.h>
+#include <gtkmm/radiobutton.h>
 #include <gtkmm/liststore.h>
 #include <gtkmm/scrolledwindow.h>
 #include <gtkmm/treestore.h>
@@ -84,7 +86,7 @@ private:
     Gtk::Label        _layer_name_label;
     Gtk::Entry        _layer_name_entry;
     Gtk::Label        _layer_position_label;
-    Gtk::ComboBox     _layer_position_combo;
+    Gtk::RadioButton  _layer_position_radio[3];
     Gtk::Grid         _layout_table;
 
     bool              _position_visible = false;
@@ -114,7 +116,6 @@ private:
 
     PositionDropdownColumns _dropdown_columns;
     Gtk::CellRendererText _label_renderer;
-    Glib::RefPtr<Gtk::ListStore> _dropdown_list;
 
     Gtk::Button _close_button;
     Gtk::Button _apply_button;
