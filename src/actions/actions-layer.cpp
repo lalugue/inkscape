@@ -21,12 +21,16 @@
 #include "actions-helper.h"
 #include "desktop.h"
 #include "document-undo.h"
+#include "document.h"
 #include "inkscape-application.h"
 #include "inkscape-window.h"
 #include "message-stack.h"
 #include "selection.h"
 #include "ui/icon-names.h"
 #include "ui/dialog/layer-properties.h"
+#include "document-undo.h"
+#include "layer-manager.h"
+#include "object/sp-root.h"
 
 /*
  * A layer is a group <g> element with a special Inkscape attribute (Inkscape:groupMode) set to
@@ -45,6 +49,20 @@ layer_new(InkscapeWindow* win)
 
     // New Layer
     Inkscape::UI::Dialog::LayerPropertiesDialog::showCreate(dt, dt->layerManager().currentLayer());
+}
+
+void
+layer_new_above(InkscapeWindow* win)
+{
+    auto desktop = win->get_desktop();
+    auto document = desktop->getDocument();
+    auto current_layer = desktop->layerManager().currentLayer();
+    auto new_layer = Inkscape::create_layer(document->getRoot(), current_layer, Inkscape::LPOS_ABOVE);
+    desktop->layerManager().renameLayer(new_layer, current_layer->label(), true);
+    desktop->getSelection()->clear();
+    desktop->layerManager().setCurrentLayer(new_layer);
+    Inkscape::DocumentUndo::done(document, _("Add layer"), INKSCAPE_ICON("layer-new"));
+    desktop->messageStack()->flash(Inkscape::NORMAL_MESSAGE, _("New layer created."));
 }
 
 void
@@ -460,6 +478,7 @@ std::vector<std::vector<Glib::ustring>> raw_data_layer =
 {
     // clang-format off
     {"win.layer-new",                       N_("Add Layer"),                        "Layer",     N_("Create a new layer")},
+    {"win.layer-new-above",                 N_("Add Layer Above"),                  "Layer",     N_("Create a new layer above current")},
     {"win.layer-duplicate",                 N_("Duplicate Current Layer"),          "Layer",     N_("Duplicate the current layer")},
     {"win.layer-delete",                    N_("Delete Current Layer"),             "Layer",     N_("Delete the current layer")},
     {"win.layer-rename",                    N_("Rename Layer"),                     "Layer",     N_("Rename the current layer")},
@@ -493,6 +512,7 @@ add_actions_layer(InkscapeWindow* win)
 {
     // clang-format off
     win->add_action("layer-new",                            sigc::bind(sigc::ptr_fun(&layer_new), win));
+    win->add_action("layer-new-above",                      sigc::bind(sigc::ptr_fun(&layer_new_above), win));
     win->add_action("layer-duplicate",                      sigc::bind(sigc::ptr_fun(&layer_duplicate), win));
     win->add_action("layer-delete",                         sigc::bind(sigc::ptr_fun(&layer_delete), win));
     win->add_action("layer-rename",                         sigc::bind(sigc::ptr_fun(&layer_rename), win));

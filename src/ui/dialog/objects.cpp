@@ -963,6 +963,15 @@ ObjectsPanel::ObjectsPanel()
         { selection_color = get_color_with_class(_tree.get_style_context(), "theme_selected_bg_color"); };
     set_selection_color();
 
+    auto enter_layer_label_editing_mode = [=]() {
+        layerChanged(getDesktop()->layerManager().currentLayer());
+        auto path = getWatcher(_layer->getRepr())->getTreePath();
+        _tree.set_cursor(path, *_tree.get_column(0), true /* start_editing */);
+        _is_editing = true;
+    };
+    auto& add_layer_btn = get_widget<Gtk::Button>(_builder, "insert-layer");
+    add_layer_btn.signal_clicked().connect(enter_layer_label_editing_mode);
+
     _tree_style = _tree.signal_style_updated().connect([=](){
         set_selection_color();
 
@@ -1638,7 +1647,8 @@ Gtk::EventSequenceState ObjectsPanel::on_click(Gtk::GestureMultiPress const &ges
 
             // true == hide menu item for opening this dialog!
             auto menu = std::make_shared<ContextMenu>(getDesktop(), item, true);
-            UI::popup_at(*menu, *this, ex, ey);
+            // popup context menu pointing to the clicked tree row:
+            UI::popup_at(*menu, _tree, ex, ey);
             UI::on_hide_reset(std::move(menu));
         } else if (should_set_current_layer()) {
             getDesktop()->layerManager().setCurrentLayer(item, true);

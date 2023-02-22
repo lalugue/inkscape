@@ -81,8 +81,8 @@ private:
 
 enum LayerRelativePosition {
     LPOS_ABOVE,
-    LPOS_BELOW,
     LPOS_CHILD,
+    LPOS_BELOW,
 };
     
 SPObject *create_layer(SPObject *root, SPObject *layer, LayerRelativePosition position);

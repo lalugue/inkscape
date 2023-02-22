@@ -42,7 +42,8 @@ LayerPropertiesDialog::LayerPropertiesDialog(LayerPropertiesDialogType type)
     , _close_button(_("_Cancel"), true)
 {
     auto mainVBox = get_content_area();
-    _layout_table.set_row_spacing(4);
+    mainVBox->get_style_context()->add_class("popup-dialog-margins");
+    _layout_table.set_row_spacing(8);
     _layout_table.set_column_spacing(4);
 
     // Layer name widgets
@@ -58,7 +59,7 @@ LayerPropertiesDialog::LayerPropertiesDialog(LayerPropertiesDialogType type)
     _layer_name_entry.set_hexpand();
     _layout_table.attach(_layer_name_entry, 1, 0, 1, 1);
 
-    UI::pack_start(*mainVBox, _layout_table, true, true, 4);
+    UI::pack_start(*mainVBox, _layout_table, true, true, 8);
 
     // Buttons
     _close_button.set_can_default();
@@ -142,10 +143,10 @@ void LayerPropertiesDialog::_doCreate()
     if (_position_visible) {
         int index = 0;
         if (_layer_position_radio[1].get_active()) {
-            position = LPOS_BELOW;
+            position = LPOS_CHILD;
             index = 1;
         } else if (_layer_position_radio[2].get_active()) {
-            position = LPOS_CHILD;
+            position = LPOS_BELOW;
             index = 2;
         }
         Preferences::get()->setInt("/dialogs/layerProp/addLayerPosition", index);
@@ -235,7 +236,7 @@ void LayerPropertiesDialog::_setup()
 void LayerPropertiesDialog::_setup_position_controls()
 {
     if (!_layer || _desktop->getDocument()->getRoot() == _layer) {
-        // no layers yet, so option above/below/sublayer is useless
+        // no layers yet, so option above/below/sublayer is not applicable
         return;
     }
 
@@ -247,24 +248,25 @@ void LayerPropertiesDialog::_setup_position_controls()
     _layout_table.attach(_layer_position_label, 0, 1, 1, 1);
 
     int position = Preferences::get()->getIntLimited("/dialogs/layerProp/addLayerPosition", 0, 0, 2);
-    
+
     Gtk::RadioButtonGroup group;
     _layer_position_radio[0].set_group(group);
     _layer_position_radio[1].set_group(group);
     _layer_position_radio[2].set_group(group);
     _layer_position_radio[0].set_label(_("Above current"));
-    _layer_position_radio[1].set_label(_("Below current"));
-    _layer_position_radio[2].set_label(_("As sublayer of current"));
+    _layer_position_radio[1].set_label(_("As sublayer of current"));
+    _layer_position_radio[1].get_style_context()->add_class("indent");
+    _layer_position_radio[2].set_label(_("Below current"));
     _layer_position_radio[0].set_active(position == LPOS_ABOVE);
-    _layer_position_radio[1].set_active(position == LPOS_BELOW);
-    _layer_position_radio[2].set_active(position == LPOS_CHILD);
-    
-    auto vbox = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL, 0));
-    vbox->pack_start(_layer_position_radio[0], false, false, 0);
-    vbox->pack_start(_layer_position_radio[1], false, false, 0);
-    vbox->pack_start(_layer_position_radio[2], false, false, 0);
-    
-    _layout_table.attach(*vbox, 1, 1, 1, 1);
+    _layer_position_radio[1].set_active(position == LPOS_CHILD);
+    _layer_position_radio[2].set_active(position == LPOS_BELOW);
+
+    auto& vbox = *Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_VERTICAL, 3);
+    UI::pack_start(vbox, _layer_position_radio[0], false, false);
+    UI::pack_start(vbox, _layer_position_radio[1], false, false);
+    UI::pack_start(vbox, _layer_position_radio[2], false, false);
+
+    _layout_table.attach(vbox, 1, 1, 1, 1);
 
     show_all_children();
 }

@@ -1277,3 +1277,8 @@ frame.flat > border {
     background-color:transparent;
     background-image:image(@theme_bg_color);
 }
+
+/* Adding some margins for popup dialogs, so the content is not touching the window borders */
+.popup-dialog-margins {
+    margin: 0.75em;
+}
