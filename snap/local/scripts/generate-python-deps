@@ -1,5 +1,0 @@
-#!/bin/bash
-
-( for dir in `find $1 -name pyproject.toml -exec dirname {} \;`; do
-    ( cd $dir && ~/.local/bin/poetry show -n --only main --no-ansi ) | cut -d " " -f 1
-done ) | sort -u | xargs pip3 install
