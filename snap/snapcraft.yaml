@@ -123,23 +123,18 @@ parts:
       snapcraftctl prime
       sed -i "s|_have.*$||" $SNAPCRAFT_PRIME/share/bash-completion/completions/inkscape
     parse-info: [ share/metainfo/org.inkscape.Inkscape.appdata.xml ]
+    after: [python-deps] # Grab the network stuff first
   python-deps:
     plugin: python
     source: .
-    python-packages:
-      - six
-      - lxml
-      - numpy
-      - cssselect
-      - pip
-      - appdirs
-      - requests
-      - pillow
-      - cachecontrol[filecache]
-      - pyserial
-      - packaging
-      - scour
-      - virtualenv
+    build-packages:
+      - python3-pip
+    override-build: |
+      export PYTHONUSERBASE=${SNAPCRAFT_PART_INSTALL}
+      pip3 install poetry
+      ( for dir in `find ${SNAPCRAFT_PROJECT_DIR}/share/extensions -name pyproject.toml -exec dirname {} \;`; do
+          ( cd $dir && poetry show -n --only main --no-ansi ) | cut -d " " -f 1
+        done ) | sort -u | xargs pip3 install --user --no-compile --find-links
     stage-packages:
       - optipng
       - pstoedit
