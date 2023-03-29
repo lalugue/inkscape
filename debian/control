@@ -14,6 +14,7 @@ Build-Depends:
  libgspell-1-dev,
  libboost-dev,
  libboost-filesystem-dev,
+ libboost-stacktrace-dev,
  libcairo2-dev (>=1.16),
  libcdr-dev,
  libdouble-conversion-dev,
