@@ -120,6 +120,10 @@ public:
     SPDesktop *getDesktop() const { return _desktop; }
     SPGroup *currentLayer() const;
 
+    // name of the last active tool (if known) before *this* one, or empty string
+    void set_last_active_tool(Glib::ustring last_tool);
+    const Glib::ustring& get_last_active_tool() const;
+
 private:
     std::unique_ptr<Preferences::PreferencesObserver> pref_observer;
     std::string _prefs_path;
@@ -217,6 +221,7 @@ private:
     void _schedule_delayed_snap_event();
     auto_connection _dse_timeout_conn;
     bool _dse_callback_in_process = false;
+    Glib::ustring _last_active_tool;
 };
 
 void sp_event_context_read(ToolBase *tool, char const *key);

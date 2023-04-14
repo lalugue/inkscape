@@ -93,6 +93,7 @@ set(ui_SRC
 	tools/measure-tool.cpp
 	tools/mesh-tool.cpp
 	tools/node-tool.cpp
+	tools/object-picker-tool.cpp
 	tools/pages-tool.cpp
 	tools/pencil-tool.cpp
 	tools/pen-tool.cpp
@@ -438,6 +439,7 @@ set(ui_SRC
 	tools/measure-tool.h
 	tools/mesh-tool.h
 	tools/node-tool.h
+	tools/object-picker-tool.h
 	tools/pages-tool.h
 	tools/pen-tool.h
 	tools/pencil-tool.h

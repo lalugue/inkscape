@@ -20,15 +20,19 @@
 #include <glibmm/markup.h>
 #include <glibmm/ustring.h>
 #include <gtkmm/button.h>
+#include <gtkmm/entry.h>
 #include <gtkmm/enums.h>
 #include <gtkmm/grid.h>
 #include <gtkmm/label.h>
+#include <gtkmm/object.h>
 #include <gtkmm/radiobutton.h>
 #include <gtkmm/spinbutton.h>
 #include <gtkmm/treemodel.h>
 #include <2geom/rect.h>
 
 #include "desktop.h"
+// #include "helper/auto-connection.h"
+// #include "live_effects/effect-enum.h"
 #include "mod360.h"
 #include "selection.h"
 #include "streq.h"
@@ -40,6 +44,7 @@
 #include "object/sp-anchor.h"
 #include "object/sp-ellipse.h"
 #include "object/sp-image.h"
+#include "object/sp-item.h"
 #include "object/sp-lpe-item.h"
 #include "object/sp-namedview.h"
 #include "object/sp-object.h"
@@ -52,6 +57,8 @@
 #include "ui/icon-names.h"
 #include "ui/pack.h"
 #include "ui/tools/node-tool.h"
+#include "ui/tools/object-picker-tool.h"
+#include "ui/util.h"
 #include "ui/widget/image-properties.h"
 #include "ui/widget/spinbutton.h"
 #include "ui/widget/style-swatch.h"
@@ -262,7 +269,7 @@ details::AttributesPanel::AttributesPanel() {
 }
 
 void details::AttributesPanel::update_panel(SPObject* object, SPDesktop* desktop) {
-    if (object) {
+    if (object && object->document) {
         auto scoped(_update.block());
         auto units = object->document->getNamedView() ? object->document->getNamedView()->display_units : nullptr;
         // auto init_units = desktop->getNamedView()->display_units;
@@ -352,7 +359,10 @@ public:
         auto anchor = cast<SPAnchor>(object);
         auto changed = _anchor != anchor;
         _anchor = anchor;
-        if (!anchor) return;
+        if (!anchor) {
+            _picker.disconnect();
+            return;
+        }
 
         std::vector<Glib::ustring> labels;
         std::vector<Glib::ustring> attrs;
@@ -363,7 +373,41 @@ public:
                 attrs.emplace_back(anchor_desc[len].attribute);
                 len += 1;
             }
-            _table->set_object(anchor, labels, attrs, (GtkWidget*)_table->gobj());
+            if (_first_time_update) {
+                _first_time_update = false;
+                _table->set_object(anchor, labels, attrs, (GtkWidget*)_table->gobj());
+            }
+            else {
+                _table->change_object(anchor);
+            }
+            if (auto grid = dynamic_cast<Gtk::Grid*>(get_first_child(*_table))) {
+                auto button = Gtk::make_managed<Gtk::Button>();
+                button->show();
+                button->set_margin_start(4);
+                button->set_image_from_icon_name("object-pick");
+                button->signal_clicked().connect([=](){
+                    if (!_desktop) return;
+
+                    auto active_tool = get_active_tool(_desktop);
+                    if (active_tool != "Picker") {
+                        // activate object picker tool 
+                        set_active_tool(_desktop, "Picker");
+                    }
+                    if (auto tool = dynamic_cast<Inkscape::UI::Tools::ObjectPickerTool*>(_desktop->getTool())) {
+                        _picker = tool->signal_object_picked.connect([=](SPObject* item){
+                            // set anchor href
+                            auto edit = dynamic_cast<Gtk::Entry*>(grid->get_child_at(1, 0));
+                            if (edit && item) {
+                                Glib::ustring id = "#";
+                                edit->set_text(id + item->getId());
+                            }
+                            _picker.disconnect();
+                            return false; // no more object picking
+                        });
+                    }
+                });
+                grid->attach(*button, 2, 0);
+            }
         }
         else {
             _table->reread_properties();
@@ -373,6 +417,8 @@ public:
 private:
     std::unique_ptr<SPAttributeTable> _table;
     SPAnchor* _anchor = nullptr;
+    auto_connection _picker;
+    bool _first_time_update = true;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -23,6 +23,7 @@
 #include "ui/tools/measure-tool.h"
 #include "ui/tools/mesh-tool.h"
 #include "ui/tools/node-tool.h"
+#include "ui/tools/object-picker-tool.h"
 #include "ui/tools/pages-tool.h"
 #include "ui/tools/pencil-tool.h"
 #include "ui/tools/rect-tool.h"
@@ -92,6 +93,8 @@ ToolBase *ToolFactory::createObject(SPDesktop *desktop, std::string const &id)
         tool = new TweakTool(desktop);
     else if (id == "/tools/zoom")
         tool = new ZoomTool(desktop);
+    else if (id == "/tools/picker")
+        tool = new ObjectPickerTool(desktop);
     else {
         fprintf(stderr, "WARNING: unknown tool: %s", id.c_str());
         // Backup tool prevents crashes in signals that expect a tool to exist.

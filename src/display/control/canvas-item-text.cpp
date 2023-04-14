@@ -188,6 +188,12 @@ void CanvasItemText::set_fontsize(double fontsize)
     });
 }
 
+Geom::Rect CanvasItemText::get_text_size() const {
+    return Geom::Rect::from_xywh(0, 0,
+                                 _text_size.x_advance + _border * 2,
+                                 _text_extent.height + _border * 2);
+}
+
 /**
  * Load the sizes of the text extent using the given font.
  */

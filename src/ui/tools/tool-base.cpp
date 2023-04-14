@@ -1741,6 +1741,14 @@ void ToolBase::_schedule_delayed_snap_event()
     }, value * 1000.0);
 }
 
+void ToolBase::set_last_active_tool(Glib::ustring last_tool) {
+    _last_active_tool = std::move(last_tool);
+}
+
+const Glib::ustring& ToolBase::get_last_active_tool() const {
+    return _last_active_tool;
+}
+
 } // namespace Tools
 } // namespace UI
 } // namespace Inkscape

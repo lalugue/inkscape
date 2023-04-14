@@ -460,6 +460,27 @@ SPPage *PageManager::getPageAt(Geom::Point pos) const
 }
 
 /**
+ * This provides a simple way of selecting a page based on their layering
+ * Pages which are entirely contained within another are selected before
+ * their larger parents.
+*/
+SPPage *PageManager::findPageAt(Geom::Point pos) const
+{
+    SPPage* ret = nullptr;
+    for (auto &page : getPages()) {
+        auto rect = page->getSensitiveRect();
+        // If the point is inside the page boundry
+        if (rect.contains(pos)) {
+            // If we don't have a page yet, or the new page is inside the old one.
+            if (!ret || ret->getSensitiveRect().contains(rect)) {
+                ret = page;
+            }
+        }
+    }
+    return ret;
+}
+
+/**
  * Returns the page attached to the viewport, or nullptr if no pages
  * or none of the pages are the viewport page.
  */

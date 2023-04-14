@@ -48,6 +48,8 @@ public:
     void set_adjust(Geom::Point const &adjust_pt);
     void set_fixed_line(bool fixed_line);
 
+    Geom::Rect get_text_size() const;
+
 protected:
     ~CanvasItemText() override = default;
 

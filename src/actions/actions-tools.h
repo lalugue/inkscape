@@ -40,7 +40,8 @@ enum tools_enum {
   TOOLS_PAINTBUCKET,
   TOOLS_ERASER,
   TOOLS_LPETOOL,
-  TOOLS_PAGES
+  TOOLS_PAGES,
+  TOOLS_PICKER
 };
 
 class InkscapeWindow;

@@ -62,6 +62,7 @@ public:
     Geom::Rect getSelectedPageRect() const;
     Geom::Affine getSelectedPageAffine() const;
     Geom::Point nextPageLocation() const;
+    SPPage *findPageAt(Geom::Point pos) const;
 
     void enablePages();
     void disablePages();

@@ -47,10 +47,7 @@ public:
 
 static std::map<Glib::ustring, ToolData> const &get_tool_data()
 {
-    static std::map<Glib::ustring, ToolData> tool_data;
-
-    if (tool_data.empty()) {
-        tool_data = {
+    static std::map<Glib::ustring, ToolData> tool_data = {
         // clang-format off
     {"Select",       {TOOLS_SELECT,          PREFS_PAGE_TOOLS_SELECTOR,       "/tools/select",          }},
     {"Node",         {TOOLS_NODES,           PREFS_PAGE_TOOLS_NODE,           "/tools/nodes",           }},
@@ -76,19 +73,16 @@ static std::map<Glib::ustring, ToolData> const &get_tool_data()
     {"PaintBucket",  {TOOLS_PAINTBUCKET,     PREFS_PAGE_TOOLS_PAINTBUCKET,    "/tools/paintbucket",     }},
     {"Eraser",       {TOOLS_ERASER,          PREFS_PAGE_TOOLS_ERASER,         "/tools/eraser",          }},
     {"LPETool",      {TOOLS_LPETOOL,         PREFS_PAGE_TOOLS, /* No Page */  "/tools/lpetool",         }},
-    {"Pages",        {TOOLS_PAGES,           PREFS_PAGE_TOOLS,                "/tools/pages",           }}
+    {"Pages",        {TOOLS_PAGES,           PREFS_PAGE_TOOLS,                "/tools/pages",           }},
+    {"Picker",       {TOOLS_PICKER,          PREFS_PAGE_TOOLS, /* No Page */  "/tools/picker",          }}
         // clang-format on
-        };
-    }
+    };
     return tool_data;
 }
 
 static std::map<Glib::ustring, Glib::ustring> const &get_tool_msg()
 {
-    static std::map<Glib::ustring, Glib::ustring> tool_msg;
-
-    if (tool_msg.empty()) {
-        tool_msg = {
+    static std::map<Glib::ustring, Glib::ustring> tool_msg = {
         // clang-format off
     {"Select",       _("<b>Click</b> to Select and Transform objects, <b>Drag</b> to select many objects.")                                                                                                                   },
     {"Node",         _("Modify selected path points (nodes) directly.")                                                                                                                                                       },
@@ -114,10 +108,10 @@ static std::map<Glib::ustring, Glib::ustring> const &get_tool_msg()
     {"PaintBucket",  _("<b>Click</b> to paint a bounded area, <b>Shift+click</b> to union the new fill with the current selection, <b>Ctrl+click</b> to change the clicked object's fill and stroke to the current setting.") },
     {"Eraser",       _("<b>Drag</b> to erase.")                                                                                                                                                                               },
     {"LPETool",      _("Choose a subtool from the toolbar")                                                                                                                                                                   },
-    {"Pages",        _("Create and manage pages.")}
+    {"Pages",        _("Create and manage pages.")},
+    {"Picker",       _("Pick objects.")}
         // clang-format on
-        };
-    }
+    };
     return tool_msg;
 }
 
@@ -253,6 +247,10 @@ tool_switch(Glib::ustring const &tool, InkscapeWindow *win)
     // Setting tool via preference path is a bit strange.
     dt->tipsMessageContext()->set(Inkscape::NORMAL_MESSAGE, get_tool_msg().at(tool).c_str());
     dt->setTool(tool_data.at(tool).pref_path);
+
+    if (auto new_tool = dt->getTool()) {
+        new_tool->set_last_active_tool(current_tool);
+    }
 }
 
 /**
