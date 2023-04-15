@@ -23,6 +23,8 @@
 
 #include "io/resource.h"
 
+#include "util/xim_fix.h"
+
 static void set_extensions_env()
 {
     // add inkscape to PATH, so the correct version is always available to extensions by simply calling "inkscape"
@@ -200,6 +202,30 @@ int main(int argc, char *argv[])
     SetConsoleOutputCP(CP_UTF8);
     fflush(stdout); // empty buffer, just to be safe (see warning in documentation for _setmode)
     _setmode(_fileno(stdout), _O_BINARY); // binary mode seems required for this to work properly
+#endif
+
+#if !defined(_WIN32) && GTK_MAJOR_VERSION == 3
+    // the XIM input method can cause graphical artifacts
+    constexpr auto GTK_IM_MODULE = "GTK_IM_MODULE";
+    auto gtk_im_module = Glib::getenv(GTK_IM_MODULE);
+
+    if (Inkscape::Util::workaround_xim_module(gtk_im_module)) {
+        std::cerr << "Message: XIM input method is not supported" << std::endl;
+
+        if (!gtk_im_module.empty()) {
+            /* TODO: we're outputting data in an environment variable to the terminal.
+             * is ther a way to escape the string so that we send only a) prinatble
+             * characters b) no VT escape sequences? */
+            std::cerr << "Setting the " << GTK_IM_MODULE << " environment variable as `"
+                      << gtk_im_module << "'" << std::endl;
+            constexpr bool overwrite = true;
+            Glib::setenv(GTK_IM_MODULE, gtk_im_module, overwrite);
+        }
+        else {
+            std::cerr << "Unsetting the " << GTK_IM_MODULE << " environment variable" << std::endl;
+            Glib::unsetenv(GTK_IM_MODULE);
+        }
+    }
 #endif
 
     set_xdg_env();

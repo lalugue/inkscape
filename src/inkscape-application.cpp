@@ -110,6 +110,7 @@
 #include "util/scope_exit.h"
 #include "util/statics.h"
 #include "util/units.h"           // Redimension window
+#include "util/xim_fix.h"
 
 #ifdef ENABLE_NLS
 // Native Language Support - shouldn't this always be used?
@@ -1029,6 +1030,25 @@ InkscapeApplication::process_document(SPDocument* document, std::string output_p
 void
 InkscapeApplication::on_startup()
 {
+#if !defined(_WIN32) && GTK_MAJOR_VERSION == 3
+    // the XIM input method can cause graphical artifacts
+    Glib::RefPtr<Gtk::Settings> settings = Gtk::Settings::get_default();
+    std::string gtk_im_module = settings->property_gtk_im_module().get_value();
+    if (Inkscape::Util::workaround_xim_module(gtk_im_module)) {
+        std::cerr << "Message: XIM input method is not supported" << std::endl;
+
+        if (!gtk_im_module.empty()) {
+            std::cerr << "Setting GtkSettings::gtk-im-module as `"
+                      << gtk_im_module << "'" << std::endl;
+            settings->property_gtk_im_module().set_value(gtk_im_module);
+        }
+        else {
+            std::cerr << "Setting GtkSettings::gtk-im-module as NULL" << std::endl;
+            g_object_set(settings->gobj(), "gtk-im-module", nullptr, nullptr);
+        }
+    }
+#endif
+
     // Deprecated...
     Inkscape::Application::create(_with_gui);
 
