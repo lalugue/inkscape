@@ -15,6 +15,7 @@ set(util_SRC
 	statics.cpp
     recently-used-fonts.cpp
 	units.cpp
+	xim_fix.cpp
 	ziptool.cpp
 
 
@@ -49,6 +50,7 @@ set(util_SRC
 	statics.h
 	trim.h
 	units.h
+	xim_fix.h
 	ziptool.h
 	numeric/converters.h
 )
