@@ -29,6 +29,11 @@ class ToggleToolButton;
 class ToolItem;
 } // namespace Gtk
 
+namespace Gtk {
+class Grid;
+class ToggleButton;
+} // namespace Gtk
+
 class SPDesktop;
 
 namespace Inkscape {
@@ -39,6 +44,7 @@ namespace UI {
 
 namespace Widget {
 class UnitTracker;
+class SpinButton;
 } // namespace Widget
 
 namespace Toolbar {
@@ -47,20 +53,23 @@ class SelectToolbar final : public Toolbar {
     using parent_type = Toolbar;
 
 private:
+    Glib::RefPtr<Gtk::Builder> _builder;
     std::unique_ptr<UI::Widget::UnitTracker> _tracker;
 
-    Glib::RefPtr<Gtk::Adjustment>  _adj_x;
-    Glib::RefPtr<Gtk::Adjustment>  _adj_y;
-    Glib::RefPtr<Gtk::Adjustment>  _adj_w;
-    Glib::RefPtr<Gtk::Adjustment>  _adj_h;
-    Gtk::ToggleToolButton         *_lock_btn;
-    Gtk::ToggleToolButton         *_select_touch_btn;
-    Gtk::ToggleToolButton         *_transform_stroke_btn;
-    Gtk::ToggleToolButton         *_transform_corners_btn;
-    Gtk::ToggleToolButton         *_transform_gradient_btn;
-    Gtk::ToggleToolButton         *_transform_pattern_btn;
+    Gtk::ToggleButton *_select_touch_btn;
 
-    std::vector<Gtk::ToolItem *> _context_items;
+    Gtk::ToggleButton *_transform_stroke_btn;
+    Gtk::ToggleButton *_transform_corners_btn;
+    Gtk::ToggleButton *_transform_gradient_btn;
+    Gtk::ToggleButton *_transform_pattern_btn;
+
+    Inkscape::UI::Widget::SpinButton &_x_btn;
+    Inkscape::UI::Widget::SpinButton &_y_btn;
+    Inkscape::UI::Widget::SpinButton &_w_btn;
+    Inkscape::UI::Widget::SpinButton &_h_btn;
+    Gtk::ToggleButton *_lock_btn;
+
+    std::vector<Gtk::Widget *> _context_items;
     std::vector<auto_connection> _connections;
 
     bool _update;
@@ -78,6 +87,7 @@ private:
     void toggle_corners();
     void toggle_gradient();
     void toggle_pattern();
+    void setup_derived_spin_button(Inkscape::UI::Widget::SpinButton &, const Glib::ustring &);
 
 protected:
     SelectToolbar(SPDesktop *desktop);

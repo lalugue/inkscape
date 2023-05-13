@@ -24,17 +24,19 @@
 #include "desktop.h"
 #include "document-undo.h"
 #include "document.h"
-#include "selection.h"
+#include "io/resource.h"
 #include "message-stack.h"
-#include "selection-chemistry.h"
 #include "object/sp-item-transform.h"
 #include "object/sp-namedview.h"
 #include "page-manager.h"
+#include "selection-chemistry.h"
+#include "ui/builder-utils.h"
 #include "ui/icon-names.h"
 #include "ui/widget/canvas.h" // Focus widget
 #include "ui/widget/combo-tool-item.h"
 #include "ui/widget/spin-button-tool-item.h"
 #include "ui/widget/spinbutton.h"
+#include "ui/widget/toolbar-menu-button.h"
 #include "ui/widget/unit-tracker.h"
 #include "widgets/widget-sizes.h"
 
@@ -46,250 +48,135 @@ using Inkscape::Util::unit_table;
 
 namespace Inkscape::UI::Toolbar {
 
-SelectToolbar::SelectToolbar(SPDesktop *desktop) :
-    Toolbar(desktop),
-    _tracker{std::make_unique<UnitTracker>(Inkscape::Util::UNIT_TYPE_LINEAR)},
-    _lock_btn(Gtk::make_managed<Gtk::ToggleToolButton>()),
-    _select_touch_btn(Gtk::make_managed<Gtk::ToggleToolButton>()),
-    _transform_stroke_btn(Gtk::make_managed<Gtk::ToggleToolButton>()),
-    _transform_corners_btn(Gtk::make_managed<Gtk::ToggleToolButton>()),
-    _transform_gradient_btn(Gtk::make_managed<Gtk::ToggleToolButton>()),
-    _transform_pattern_btn(Gtk::make_managed<Gtk::ToggleToolButton>()),
-    _update(false),
-    _action_prefix("selector:toolbar:")
+SelectToolbar::SelectToolbar(SPDesktop *desktop)
+    : Toolbar(desktop)
+    , _tracker(new UnitTracker(Inkscape::Util::UNIT_TYPE_LINEAR))
+    , _update(false)
+    , _action_prefix("selector:toolbar:")
+    , _builder(initialize_builder("toolbar-select.ui"))
+    , _x_btn(get_derived_widget<Inkscape::UI::Widget::SpinButton>(_builder, "_x_btn"))
+    , _y_btn(get_derived_widget<Inkscape::UI::Widget::SpinButton>(_builder, "_y_btn"))
+    , _w_btn(get_derived_widget<Inkscape::UI::Widget::SpinButton>(_builder, "_w_btn"))
+    , _h_btn(get_derived_widget<Inkscape::UI::Widget::SpinButton>(_builder, "_h_btn"))
 {
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
 
-    {
-        auto const button = Gtk::make_managed<Gtk::ToolButton>(N_("Select Al_l"));
-        button->set_tooltip_text(N_("Select all objects"));
-        button->set_icon_name(INKSCAPE_ICON("edit-select-all"));
-        // Must use C API until GTK4
-        gtk_actionable_set_action_name(GTK_ACTIONABLE(button->gobj()), "win.select-all");
-        add(*button);
+    _builder->get_widget("select-toolbar", _toolbar);
+    if (!_toolbar) {
+        std::cerr << "InkscapeWindow: Failed to load select toolbar!" << std::endl;
     }
 
-    {
-        auto const button = Gtk::make_managed<Gtk::ToolButton>(N_("Select All in All La_yers"));
-        button->set_tooltip_text(N_("Select all objects in all visible and unlocked layers"));
-        button->set_icon_name(INKSCAPE_ICON("edit-select-all-layers"));
-        // Must use C API until GTK4
-        gtk_actionable_set_action_name(GTK_ACTIONABLE(button->gobj()), "win.select-all-layers");
-        add(*button);
-    }
+    // TODO: Remove if not needed.
+    Gtk::Button *deselect_btn;
 
-    {
-        auto const button = Gtk::make_managed<Gtk::ToolButton>(N_("D_eselect"));
-        button->set_tooltip_text(N_("Deselect any selected objects"));
-        button->set_icon_name(INKSCAPE_ICON("edit-select-none"));
-        // Must use C API until GTK4
-        gtk_actionable_set_action_name(GTK_ACTIONABLE(button->gobj()), "win.select-none");
-        add(*button);
-        _context_items.push_back(button);
-    }
+    Gtk::Button *rotate_left_btn;
+    Gtk::Button *rotate_right_btn;
+    Gtk::Button *flip_horizontal_btn;
+    Gtk::Button *flip_vertical_btn;
 
-    _select_touch_btn->set_label(_("Select by touch"));
-    _select_touch_btn->set_tooltip_text(_("Toggle selection box to select all touched objects."));
-    _select_touch_btn->set_icon_name(INKSCAPE_ICON("selection-touch"));
+    Gtk::Button *raise_to_top_btn;
+    Gtk::Button *raise_one_step_btn;
+    Gtk::Button *lower_one_step_btn;
+    Gtk::Button *lower_to_bottom_btn;
+
+    Gtk::Box *x_box;
+    Gtk::Box *y_box;
+    Gtk::Box *w_box;
+    Gtk::Box *h_box;
+    Gtk::Box *unit_menu_box;
+
+    _builder->get_widget("deselect_btn", deselect_btn);
+    _builder->get_widget("_select_touch_btn", _select_touch_btn);
+
+    _builder->get_widget("rotate_left_btn", rotate_left_btn);
+    _builder->get_widget("rotate_right_btn", rotate_right_btn);
+    _builder->get_widget("flip_horizontal_btn", flip_horizontal_btn);
+    _builder->get_widget("flip_vertical_btn", flip_vertical_btn);
+
+    _builder->get_widget("raise_to_top_btn", raise_to_top_btn);
+    _builder->get_widget("raise_one_step_btn", raise_one_step_btn);
+    _builder->get_widget("lower_one_step_btn", lower_one_step_btn);
+    _builder->get_widget("lower_to_bottom_btn", lower_to_bottom_btn);
+
+    _builder->get_widget("_transform_stroke_btn", _transform_stroke_btn);
+    _builder->get_widget("_transform_corners_btn", _transform_corners_btn);
+    _builder->get_widget("_transform_gradient_btn", _transform_gradient_btn);
+    _builder->get_widget("_transform_pattern_btn", _transform_pattern_btn);
+
+    _builder->get_widget("x_box", x_box);
+    _builder->get_widget("y_box", y_box);
+    _builder->get_widget("w_box", w_box);
+    _builder->get_widget("_lock_btn", _lock_btn);
+    _builder->get_widget("h_box", h_box);
+    _builder->get_widget("unit_menu_box", unit_menu_box);
+
+    setup_derived_spin_button(_x_btn, "X");
+    setup_derived_spin_button(_y_btn, "Y");
+    setup_derived_spin_button(_w_btn, "width");
+    setup_derived_spin_button(_h_btn, "height");
+
+    auto unit_menu = _tracker->create_tool_item(_("Units"), (""));
+    unit_menu_box->add(*unit_menu);
+
+    // ************************************************************
+    // Fetch all the ToolbarMenuButtons at once from the UI file
+    // Menu Button #1
+    Gtk::Box *popover_box1;
+    _builder->get_widget("popover_box1", popover_box1);
+
+    Inkscape::UI::Widget::ToolbarMenuButton *menu_btn1 = nullptr;
+    _builder->get_widget_derived("menu_btn1", menu_btn1);
+
+    // Menu Button #2
+    Gtk::Box *popover_box2;
+    _builder->get_widget("popover_box2", popover_box2);
+
+    Inkscape::UI::Widget::ToolbarMenuButton *menu_btn2 = nullptr;
+    _builder->get_widget_derived("menu_btn2", menu_btn2);
+
+    // Initialize all the ToolbarMenuButtons.
+    // Note: Do not initialize the these widgets right after fetching from
+    // the UI file.
+    auto children = _toolbar->get_children();
+
+    menu_btn1->init(1, "tag1", "some-icon", popover_box1, children);
+    _expanded_menu_btns.push(menu_btn1);
+    menu_btn2->init(2, "tag2", "some-icon", popover_box2, children);
+    _expanded_menu_btns.push(menu_btn2);
+
+    // ************************************************************
+
+    add(*_toolbar);
+
     _select_touch_btn->set_active(prefs->getBool("/tools/select/touch_box", false));
     _select_touch_btn->signal_toggled().connect(sigc::mem_fun(*this, &SelectToolbar::toggle_touch));
 
-    add(*_select_touch_btn);
-
-    add(* Gtk::make_managed<Gtk::SeparatorToolItem>());
-
-    {
-        auto const button = Gtk::make_managed<Gtk::ToolButton>(N_("Rotate _90\xc2\xb0 CCW"));
-        button->set_tooltip_text(N_("Rotate selection 90\xc2\xb0 counter-clockwise"));
-        button->set_icon_name(INKSCAPE_ICON("object-rotate-left"));
-        // Must use C API until GTK4
-        gtk_actionable_set_action_name(GTK_ACTIONABLE(button->gobj()), "app.object-rotate-90-ccw");
-        add(*button);
-        _context_items.push_back(button);
-    }
-
-    {
-        auto const button = Gtk::make_managed<Gtk::ToolButton>(N_("Rotate _90\xc2\xb0 CW"));
-        button->set_tooltip_text(N_("Rotate selection 90\xc2\xb0 clockwise"));
-        button->set_icon_name(INKSCAPE_ICON("object-rotate-right"));
-        // Must use C API until GTK4
-        gtk_actionable_set_action_name(GTK_ACTIONABLE(button->gobj()), "app.object-rotate-90-cw");
-        add(*button);
-        _context_items.push_back(button);
-    }
-
-    {
-        auto const button = Gtk::make_managed<Gtk::ToolButton>(N_("Flip _Horizontal"));
-        button->set_tooltip_text(N_("Flip selected objects horizontally"));
-        button->set_icon_name(INKSCAPE_ICON("object-flip-horizontal"));
-        // Must use C API until GTK4
-        gtk_actionable_set_action_name(GTK_ACTIONABLE(button->gobj()), "app.object-flip-horizontal");
-        add(*button);
-        _context_items.push_back(button);
-    }
-
-    {
-        auto const button = Gtk::make_managed<Gtk::ToolButton>(N_("Flip _Vertical"));
-        button->set_tooltip_text(N_("Flip selected objects vertically"));
-        button->set_icon_name(INKSCAPE_ICON("object-flip-vertical"));
-        // Must use C API until GTK4
-        gtk_actionable_set_action_name(GTK_ACTIONABLE(button->gobj()), "app.object-flip-vertical");
-        add(*button);
-        _context_items.push_back(button);
-    }
-
-    add(* Gtk::make_managed<Gtk::SeparatorToolItem>());
-
-    {
-        auto const button = Gtk::make_managed<Gtk::ToolButton>(N_("Raise to _Top"));
-        button->set_tooltip_text(N_("Raise selection to top"));
-        button->set_icon_name(INKSCAPE_ICON("selection-top"));
-        // Must use C API until GTK4
-        gtk_actionable_set_action_name(GTK_ACTIONABLE(button->gobj()), "app.selection-top");
-        add(*button);
-        _context_items.push_back(button);
-    }
-
-    {
-        auto const button = Gtk::make_managed<Gtk::ToolButton>(N_("_Raise"));
-        button->set_tooltip_text(N_("Raise selection one step"));
-        button->set_icon_name(INKSCAPE_ICON("selection-raise"));
-        // Must use C API until GTK4
-        gtk_actionable_set_action_name(GTK_ACTIONABLE(button->gobj()), "app.selection-raise");
-        add(*button);
-        _context_items.push_back(button);
-    }
-
-    {
-        auto const button = Gtk::make_managed<Gtk::ToolButton>(N_("_Lower"));
-        button->set_tooltip_text(N_("Lower selection one step"));
-        button->set_icon_name(INKSCAPE_ICON("selection-lower"));
-        // Must use C API until GTK4
-        gtk_actionable_set_action_name(GTK_ACTIONABLE(button->gobj()), "app.selection-lower");
-        add(*button);
-        _context_items.push_back(button);
-    }
-
-    {
-        auto const button = Gtk::make_managed<Gtk::ToolButton>(N_("Lower to _Bottom"));
-        button->set_tooltip_text(N_("Lower selection to bottom"));
-        button->set_icon_name(INKSCAPE_ICON("selection-bottom"));
-        // Must use C API until GTK4
-        gtk_actionable_set_action_name(GTK_ACTIONABLE(button->gobj()), "app.selection-bottom");
-        add(*button);
-        _context_items.push_back(button);
-    }
-
-    add(* Gtk::make_managed<Gtk::SeparatorToolItem>());
-
     _tracker->addUnit(unit_table.getUnit("%"));
-    _tracker->setActiveUnit( desktop->getNamedView()->display_units );
+    _tracker->setActiveUnit(desktop->getNamedView()->display_units);
 
-    // x-value control
-    auto x_val = prefs->getDouble("/tools/select/X", 0.0);
-    _adj_x = Gtk::Adjustment::create(x_val, -1e6, 1e6, SPIN_STEP, SPIN_PAGE_STEP);
-    _adj_x->signal_value_changed().connect(sigc::bind(sigc::mem_fun(*this, &SelectToolbar::any_value_changed), _adj_x));
-    _tracker->addAdjustment(_adj_x->gobj());
+    // Use StyleContext to check if the child is a context item.
+    for (auto child : _toolbar->get_children()) {
+        auto style_context = child->get_style_context();
+        bool is_context_item = style_context->has_class("context_item");
 
-    auto const x_btn = Gtk::make_managed<UI::Widget::SpinButtonToolItem>("select-x",
-                                                                         C_("Select toolbar", "X:"),
-                                                                         _adj_x,
-                                                                         SPIN_STEP, 3);
-    x_btn->get_spin_button()->addUnitTracker(_tracker.get());
-    x_btn->set_focus_widget(_desktop->getCanvas());
-    x_btn->set_all_tooltip_text(C_("Select toolbar", "Horizontal coordinate of selection"));
-    _context_items.push_back(x_btn);
-    add(*x_btn);
+        if (is_context_item) {
+            _context_items.push_back(child);
+        }
+    }
 
-    // y-value control
-    auto y_val = prefs->getDouble("/tools/select/Y", 0.0);
-    _adj_y = Gtk::Adjustment::create(y_val, -1e6, 1e6, SPIN_STEP, SPIN_PAGE_STEP);
-    _adj_y->signal_value_changed().connect(sigc::bind(sigc::mem_fun(*this, &SelectToolbar::any_value_changed), _adj_y));
-    _tracker->addAdjustment(_adj_y->gobj());
-
-    auto const y_btn = Gtk::make_managed<UI::Widget::SpinButtonToolItem>("select-y",
-                                                                         C_("Select toolbar", "Y:"),
-                                                                         _adj_y,
-                                                                         SPIN_STEP, 3);
-    y_btn->get_spin_button()->addUnitTracker(_tracker.get());
-    y_btn->set_focus_widget(_desktop->getCanvas());
-    y_btn->set_all_tooltip_text(C_("Select toolbar", "Vertical coordinate of selection"));
-    _context_items.push_back(y_btn);
-    add(*y_btn);
-
-    // width-value control
-    auto w_val = prefs->getDouble("/tools/select/width", 0.0);
-    _adj_w = Gtk::Adjustment::create(w_val, 0.0, 1e6, SPIN_STEP, SPIN_PAGE_STEP);
-    _adj_w->signal_value_changed().connect(sigc::bind(sigc::mem_fun(*this, &SelectToolbar::any_value_changed), _adj_w));
-    _tracker->addAdjustment(_adj_w->gobj());
-
-    auto const w_btn = Gtk::make_managed<UI::Widget::SpinButtonToolItem>("select-width",
-                                                                         C_("Select toolbar", "W:"),
-                                                                         _adj_w,
-                                                                         SPIN_STEP, 3);
-    w_btn->get_spin_button()->addUnitTracker(_tracker.get());
-    w_btn->set_focus_widget(_desktop->getCanvas());
-    w_btn->set_all_tooltip_text(C_("Select toolbar", "Width of selection"));
-    _context_items.push_back(w_btn);
-    add(*w_btn);
-
-    // lock toggle
-    _lock_btn->set_label(_("Lock width and height"));
-    _lock_btn->set_tooltip_text(_("When locked, change both width and height by the same proportion"));
-    _lock_btn->set_icon_name(INKSCAPE_ICON("object-unlocked"));
-    _lock_btn->signal_toggled().connect(sigc::mem_fun(*this, &SelectToolbar::toggle_lock));
-    _lock_btn->set_name("lock");
-    add(*_lock_btn);
-
-    // height-value control
-    auto h_val = prefs->getDouble("/tools/select/height", 0.0);
-    _adj_h = Gtk::Adjustment::create(h_val, 0.0, 1e6, SPIN_STEP, SPIN_PAGE_STEP);
-    _adj_h->signal_value_changed().connect(sigc::bind(sigc::mem_fun(*this, &SelectToolbar::any_value_changed), _adj_h));
-    _tracker->addAdjustment(_adj_h->gobj());
-
-    auto const h_btn = Gtk::make_managed<UI::Widget::SpinButtonToolItem>("select-height",
-                                                                   C_("Select toolbar", "H:"),
-                                                                   _adj_h,
-                                                                   SPIN_STEP, 3);
-    h_btn->get_spin_button()->addUnitTracker(_tracker.get());
-    h_btn->set_focus_widget(_desktop->getCanvas());
-    h_btn->set_all_tooltip_text(C_("Select toolbar", "Height of selection"));
-    _context_items.push_back(h_btn);
-    add(*h_btn);
-
-    // units menu
-    auto unit_menu = _tracker->create_tool_item(_("Units"), ("") );
-    add(*unit_menu);
-
-    add(* Gtk::make_managed<Gtk::SeparatorToolItem>());
-
-    _transform_stroke_btn->set_label(_("Scale stroke width"));
-    _transform_stroke_btn->set_tooltip_text(_("When scaling objects, scale the stroke width by the same proportion"));
-    _transform_stroke_btn->set_icon_name(INKSCAPE_ICON("transform-affect-stroke"));
     _transform_stroke_btn->set_active(prefs->getBool("/options/transform/stroke", true));
     _transform_stroke_btn->signal_toggled().connect(sigc::mem_fun(*this, &SelectToolbar::toggle_stroke));
-    add(*_transform_stroke_btn);
 
-    _transform_corners_btn->set_label(_("Scale rounded corners"));
-    _transform_corners_btn->set_tooltip_text(_("When scaling rectangles, scale the radii of rounded corners"));
-    _transform_corners_btn->set_icon_name(INKSCAPE_ICON("transform-affect-rounded-corners"));
     _transform_corners_btn->set_active(prefs->getBool("/options/transform/rectcorners", true));
     _transform_corners_btn->signal_toggled().connect(sigc::mem_fun(*this, &SelectToolbar::toggle_corners));
-    add(*_transform_corners_btn);
 
-    _transform_gradient_btn->set_label(_("Move gradients"));
-    _transform_gradient_btn->set_tooltip_text(_("Move gradients (in fill or stroke) along with the objects"));
-    _transform_gradient_btn->set_icon_name(INKSCAPE_ICON("transform-affect-gradient"));
     _transform_gradient_btn->set_active(prefs->getBool("/options/transform/gradient", true));
     _transform_gradient_btn->signal_toggled().connect(sigc::mem_fun(*this, &SelectToolbar::toggle_gradient));
-    add(*_transform_gradient_btn);
 
-    _transform_pattern_btn->set_label(_("Move patterns"));
-    _transform_pattern_btn->set_tooltip_text(_("Move patterns (in fill or stroke) along with the objects"));
-    _transform_pattern_btn->set_icon_name(INKSCAPE_ICON("transform-affect-pattern"));
     _transform_pattern_btn->set_active(prefs->getBool("/options/transform/pattern", true));
     _transform_pattern_btn->signal_toggled().connect(sigc::mem_fun(*this, &SelectToolbar::toggle_pattern));
-    add(*_transform_pattern_btn);
+
+    _lock_btn->signal_toggled().connect(sigc::mem_fun(*this, &SelectToolbar::toggle_lock));
 
     assert(desktop);
     auto *selection = desktop->getSelection();
@@ -324,6 +211,21 @@ SelectToolbar::create(SPDesktop *desktop)
 {
     auto toolbar = new SelectToolbar(desktop);
     return toolbar->Gtk::Widget::gobj();
+}
+
+void SelectToolbar::setup_derived_spin_button(Inkscape::UI::Widget::SpinButton &btn, const Glib::ustring &name)
+{
+    Inkscape::Preferences *prefs = Inkscape::Preferences::get();
+
+    const Glib::ustring path = "/tools/select/" + name;
+    auto val = prefs->getDouble(path, 0.0);
+    auto adj = btn.get_adjustment();
+    adj->set_value(val);
+    adj->signal_value_changed().connect(sigc::bind(sigc::mem_fun(*this, &SelectToolbar::any_value_changed), adj));
+    _tracker->addAdjustment(adj->gobj());
+
+    btn.addUnitTracker(_tracker.get());
+    btn.set_defocus_widget(_desktop->getCanvas());
 }
 
 void
@@ -366,6 +268,11 @@ SelectToolbar::any_value_changed(Glib::RefPtr<Gtk::Adjustment>& adj)
     gdouble old_w = bbox_user->dimensions()[Geom::X];
     gdouble old_h = bbox_user->dimensions()[Geom::Y];
     gdouble new_w, new_h, new_x, new_y = 0;
+
+    auto _adj_x = _x_btn.get_adjustment();
+    auto _adj_y = _y_btn.get_adjustment();
+    auto _adj_w = _w_btn.get_adjustment();
+    auto _adj_h = _h_btn.get_adjustment();
 
     if (unit->type == Inkscape::Util::UNIT_TYPE_LINEAR) {
         new_w = Quantity::convert(_adj_w->get_value(), unit, "px");
@@ -480,6 +387,11 @@ SelectToolbar::layout_widget_update(Inkscape::Selection *sel)
                 x -= page.left();
                 y -= page.top();
             }
+
+            auto _adj_x = _x_btn.get_adjustment();
+            auto _adj_y = _y_btn.get_adjustment();
+            auto _adj_w = _w_btn.get_adjustment();
+            auto _adj_h = _h_btn.get_adjustment();
 
             if (unit->type == Inkscape::Util::UNIT_TYPE_DIMENSIONLESS) {
                 double const val = unit->factor * 100;

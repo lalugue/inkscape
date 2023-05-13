@@ -76,7 +76,7 @@ CalligraphyToolbar::CalligraphyToolbar(SPDesktop *desktop)
 
         auto const profile_selector_ti = Gtk::make_managed<Gtk::ToolItem>();
         profile_selector_ti->add(*_profile_selector_combo);
-        add(*profile_selector_ti);
+        pack_end(*profile_selector_ti, false, false, 2);
 
         _profile_selector_combo->signal_changed().connect(sigc::mem_fun(*this, &CalligraphyToolbar::change_profile));
     }
@@ -87,10 +87,10 @@ CalligraphyToolbar::CalligraphyToolbar(SPDesktop *desktop)
         profile_edit_item->set_tooltip_text(_("Add or edit calligraphic profile"));
         profile_edit_item->set_icon_name(INKSCAPE_ICON("document-properties"));
         profile_edit_item->signal_clicked().connect(sigc::mem_fun(*this, &CalligraphyToolbar::edit_profile));
-        add(*profile_edit_item);
+        pack_end(*profile_edit_item, false, false, 2);
     }
 
-    add(* Gtk::make_managed<Gtk::SeparatorToolItem>());
+    pack_end(*Gtk::manage(new Gtk::SeparatorToolItem()), false, false, 2);
 
     {
         /* Width */
@@ -106,7 +106,7 @@ CalligraphyToolbar::CalligraphyToolbar(SPDesktop *desktop)
         width_item->set_focus_widget(desktop->getCanvas());
         _width_adj->signal_value_changed().connect(sigc::mem_fun(*this, &CalligraphyToolbar::width_value_changed));
         _widget_map["width"] = G_OBJECT(_width_adj->gobj());
-        add(*width_item);
+        pack_end(*width_item, false, false, 2);
         _tracker->addAdjustment(_width_adj->gobj());
         width_item->set_sensitive(true);
     }
@@ -114,7 +114,7 @@ CalligraphyToolbar::CalligraphyToolbar(SPDesktop *desktop)
     /* Unit Menu */
     {
         auto unit_menu_ti = _tracker->create_tool_item(_("Units"), "");
-        add(*unit_menu_ti);
+        pack_end(*unit_menu_ti, false, false, 2);
         unit_menu_ti->signal_changed_after().connect(sigc::mem_fun(*this, &CalligraphyToolbar::unit_changed));
     }
 
@@ -154,7 +154,7 @@ CalligraphyToolbar::CalligraphyToolbar(SPDesktop *desktop)
         thinning_item->set_focus_widget(desktop->getCanvas());
         _thinning_adj->signal_value_changed().connect(sigc::mem_fun(*this, &CalligraphyToolbar::velthin_value_changed));
         _widget_map["thinning"] = G_OBJECT(_thinning_adj->gobj());
-        add(*thinning_item);
+        pack_end(*thinning_item, false, false, 2);
         thinning_item->set_sensitive(true);
     }
 
@@ -170,11 +170,11 @@ CalligraphyToolbar::CalligraphyToolbar(SPDesktop *desktop)
         mass_item->set_focus_widget(desktop->getCanvas());
         _mass_adj->signal_value_changed().connect(sigc::mem_fun(*this, &CalligraphyToolbar::mass_value_changed));
         _widget_map["mass"] = G_OBJECT(_mass_adj->gobj());
-        add(*mass_item);
+        pack_end(*mass_item, false, false, 2);
         mass_item->set_sensitive(true);
     }
 
-    add(* Gtk::make_managed<Gtk::SeparatorToolItem>());
+    pack_end(*Gtk::manage(new Gtk::SeparatorToolItem()), false, false, 2);
 
     {
         /* Angle */
@@ -188,7 +188,7 @@ CalligraphyToolbar::CalligraphyToolbar(SPDesktop *desktop)
         _angle_item->set_focus_widget(desktop->getCanvas());
         _angle_adj->signal_value_changed().connect(sigc::mem_fun(*this, &CalligraphyToolbar::angle_value_changed));
         _widget_map["angle"] = G_OBJECT(_angle_adj->gobj());
-        add(*_angle_item);
+        pack_end(*_angle_item, false, false, 2);
         _angle_item->set_sensitive(true);
     }
 
@@ -216,11 +216,11 @@ CalligraphyToolbar::CalligraphyToolbar(SPDesktop *desktop)
         flatness_item->set_focus_widget(desktop->getCanvas());
         _fixation_adj->signal_value_changed().connect(sigc::mem_fun(*this, &CalligraphyToolbar::flatness_value_changed));
         _widget_map["flatness"] = G_OBJECT(_fixation_adj->gobj());
-        add(*flatness_item);
+        pack_end(*flatness_item, false, false, 2);
         flatness_item->set_sensitive(true);
     }
 
-    add(* Gtk::make_managed<Gtk::SeparatorToolItem>());
+    pack_end(*Gtk::manage(new Gtk::SeparatorToolItem()), false, false, 2);
 
     {
         /* Cap Rounding */
@@ -236,11 +236,11 @@ CalligraphyToolbar::CalligraphyToolbar(SPDesktop *desktop)
         cap_rounding_item->set_focus_widget(desktop->getCanvas());
         _cap_rounding_adj->signal_value_changed().connect(sigc::mem_fun(*this, &CalligraphyToolbar::cap_rounding_value_changed));
         _widget_map["cap_rounding"] = G_OBJECT(_cap_rounding_adj->gobj());
-        add(*cap_rounding_item);
+        pack_end(*cap_rounding_item, false, false, 2);
         cap_rounding_item->set_sensitive(true);
     }
 
-    add(* Gtk::make_managed<Gtk::SeparatorToolItem>());
+    pack_end(*Gtk::manage(new Gtk::SeparatorToolItem()), false, false, 2);
 
     {
         /* Tremor */
@@ -254,7 +254,7 @@ CalligraphyToolbar::CalligraphyToolbar(SPDesktop *desktop)
         tremor_item->set_focus_widget(desktop->getCanvas());
         _tremor_adj->signal_value_changed().connect(sigc::mem_fun(*this, &CalligraphyToolbar::tremor_value_changed));
         _widget_map["tremor"] = G_OBJECT(_tremor_adj->gobj());
-        add(*tremor_item);
+        pack_end(*tremor_item, false, false, 2);
         tremor_item->set_sensitive(true);
     }
 
@@ -270,7 +270,7 @@ CalligraphyToolbar::CalligraphyToolbar(SPDesktop *desktop)
         wiggle_item->set_focus_widget(desktop->getCanvas());
         _wiggle_adj->signal_value_changed().connect(sigc::mem_fun(*this, &CalligraphyToolbar::wiggle_value_changed));
         _widget_map["wiggle"] = G_OBJECT(_wiggle_adj->gobj());
-        add(*wiggle_item);
+        pack_end(*wiggle_item, false, false, 2);
         wiggle_item->set_sensitive(true);
     }
 

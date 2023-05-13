@@ -268,6 +268,7 @@ set(ui_SRC
 	widget/swatch-selector.cpp
 	widget/template-list.cpp
 	widget/text.cpp
+	widget/toolbar-menu-button.cpp
 	widget/unit-menu.cpp
 	widget/unit-tracker.cpp
 

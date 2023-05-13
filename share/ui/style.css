@@ -719,6 +719,10 @@ button.square-button image {
     margin: 7px 3px;
 }
 
+.toolbar-menu-button-popover-box {
+    margin: 3px;
+}
+
 /* for dialogs with "Apply" button (or equivalent) - larger hit target */
 .wide-apply-button {
     min-width: 150px;

@@ -11,7 +11,12 @@
 #ifndef SEEN_TOOLBAR_H
 #define SEEN_TOOLBAR_H
 
+#include <gtkmm/box.h>
+#include <gtkmm/builder.h>
 #include <gtkmm/toolbar.h>
+#include <stack>
+
+#include "ui/widget/toolbar-menu-button.h"
 
 namespace Glib {
 class ustring;
@@ -35,21 +40,30 @@ namespace Inkscape::UI::Toolbar {
  *         function that adds all the required tool-items and returns the
  *         toolbar as a GtkWidget
  */
-class Toolbar : public Gtk::Toolbar {
+
+class Toolbar : public Gtk::Box
+{
+public:
+    Gtk::Box *_toolbar;
+    std::stack<Inkscape::UI::Widget::ToolbarMenuButton *> _expanded_menu_btns;
+    std::stack<Inkscape::UI::Widget::ToolbarMenuButton *> _collapsed_menu_btns;
+
 protected:
     SPDesktop *_desktop;
 
     /**
      * \brief A default constructor that just assigns the desktop
      */
-    Toolbar(SPDesktop *desktop)
-        : _desktop(desktop)
-    {}
+    Toolbar(SPDesktop *desktop);
 
     Gtk::ToolItem         * add_label(const Glib::ustring &label_text);
     Gtk::ToggleToolButton * add_toggle_button(const Glib::ustring &label_text,
                                               const Glib::ustring &tooltip_text);
     void add_separator();
+    Glib::RefPtr<Gtk::Builder> initialize_builder(const char *file_name);
+    void resize_handler(Gtk::Allocation &allocation);
+    void move_children(Gtk::Box *src, Gtk::Box *dest, std::vector<std::pair<int, Gtk::Widget *>> children,
+                       bool is_expanding = false);
 
 protected:
     static GtkWidget * create(SPDesktop *desktop);
