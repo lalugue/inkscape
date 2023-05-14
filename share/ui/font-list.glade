@@ -23,6 +23,11 @@
     <property name="can-focus">False</property>
     <property name="icon-name">glyph-list-symbolic</property>
   </object>
+  <object class="GtkImage" id="img-edit">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="icon-name">edit</property>
+  </object>
   <object class="GtkImage" id="img-gear">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
@@ -36,7 +41,7 @@
   <object class="GtkPopover" id="filter-popover">
     <property name="can-focus">False</property>
     <child>
-      <!-- n-columns=1 n-rows=3 -->
+      <!-- n-columns=2 n-rows=3 -->
       <object class="GtkGrid">
         <property name="visible">True</property>
         <property name="can-focus">False</property>
@@ -51,19 +56,21 @@
             <property name="visible">True</property>
             <property name="can-focus">False</property>
             <property name="halign">start</property>
-            <property name="label" translatable="yes">Categories:</property>
+            <property name="label" translatable="yes">Font collections:</property>
           </object>
           <packing>
             <property name="left-attach">0</property>
             <property name="top-attach">0</property>
+            <property name="width">2</property>
           </packing>
         </child>
         <child>
           <object class="GtkButton" id="id-reset-filter">
-            <property name="label" translatable="yes">Show all fonts</property>
+            <property name="label" translatable="yes">All fonts</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="receives-default">True</property>
+            <property name="tooltip-text" translatable="yes">Show all fonts</property>
             <property name="halign">center</property>
             <property name="image">img-reset</property>
             <property name="always-show-image">True</property>
@@ -75,8 +82,8 @@
         </child>
         <child>
           <object class="GtkScrolledWindow">
-            <property name="width-request">130</property>
-            <property name="height-request">200</property>
+            <property name="width-request">180</property>
+            <property name="height-request">240</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="shadow-type">in</property>
@@ -97,6 +104,24 @@
           <packing>
             <property name="left-attach">0</property>
             <property name="top-attach">1</property>
+            <property name="width">2</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkButton" id="id-edit-collections">
+            <property name="label" translatable="yes">Collections</property>
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+            <property name="tooltip-text" translatable="yes">Edit font collections</property>
+            <property name="action-name">win.dialog-open</property>
+            <property name="action-target">'FontCollections'</property>
+            <property name="image">img-edit</property>
+            <property name="always-show-image">True</property>
+          </object>
+          <packing>
+            <property name="left-attach">1</property>
+            <property name="top-attach">2</property>
           </packing>
         </child>
       </object>
@@ -306,7 +331,7 @@
                   <object class="GtkImage">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
-                    <property name="icon-name">filter-symbolic</property>
+                    <property name="icon-name">font_collections</property>
                   </object>
                   <packing>
                     <property name="expand">False</property>

@@ -116,8 +116,6 @@ PangoFontDescription *ink_font_description_from_style(SPStyle const *style)
         case SP_CSS_FONT_WEIGHT_BOLDER:
         default:
             if (style->font_weight.computed > 0 && style->font_weight.computed <= 1000) {
-                // int weight = style->font_weight.computed / 100;
-                // weight *= 100;
                 pango_font_description_set_weight(descr, static_cast<PangoWeight>(style->font_weight.computed));
             }
             else {
@@ -237,7 +235,6 @@ FontFactory::~FontFactory()
     loaded.clear();
     g_object_unref(fontContext);
     fontServer = 0; // freed by _font_map
-    // _font_map.reset();
 }
 
 void FontFactory::refreshConfig()

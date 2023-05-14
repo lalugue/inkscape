@@ -3,6 +3,7 @@
  * Author:
  *   Felipe Corrêa da Silva Sanches <juca@members.fsf.org>
  *   Tavmjong Bah <tavmjong@free.fr>
+ *   Michael Kowalski <michal_kowalski@hotmail.com>
  *
  * Copyright (C) 2018 Felipe Corrêa da Silva Sanches, Tavmong Bah
  *
@@ -34,8 +35,6 @@
 #include "font-variations.h"
 
 // For updating from selection
-#include "desktop.h"
-#include "object/sp-text.h"
 #include "svg/css-ostringstream.h"
 
 namespace Inkscape {
@@ -62,6 +61,9 @@ std::pair<Glib::ustring, Glib::ustring> get_axis_name(const std::string& tag, co
         // inside and around all glyphs along the X dimension
         {"XTRA", std::make_pair(_("X transparent"), _("Alter the transparent spaces inside and around all glyphs along the X dimension"))},
         {"YTRA", std::make_pair(_("Y transparent"), _("Alter the transparent spaces inside and around all glyphs along the Y dimension"))},
+        // Width/height of Chinese glyphs
+        {"XTCH", std::make_pair(_("X transparent Chinese"), _("Alter the width of Chinese glyphs"))},
+        {"YTCH", std::make_pair(_("Y transparent Chinese"), _("Alter the height of Chinese glyphs"))},
         // “Parametric Lowercase Height”
         {"YTLC", std::make_pair(_("Lowercase height"), _("Vary the height of counters and other spaces between the baseline and x-height"))},
         // “Parametric Uppercase Counter Height”
@@ -72,6 +74,8 @@ std::pair<Glib::ustring, Glib::ustring> get_axis_name(const std::string& tag, co
         {"YTDE", std::make_pair(_("Descender depth"),  _("Vary the depth of lowercase descenders"))},
         // “Parametric Figure Height”
         {"YTFI", std::make_pair(_("Figure height"), _("Vary the height of figures"))},
+        // "Serif rise" - found in the wild (https://github.com/googlefonts/amstelvar)
+        {"YTSE", std::make_pair(_("Serif rise"),  _("Vary the shape of the serifs"))},
         // Flare - flaring of the stems
         {"FLAR", std::make_pair(_("Flare"),         _("Controls the flaring of the stems"))},
         // Volume - The volume axis works only in combination with the Flare axis. It transforms the serifs

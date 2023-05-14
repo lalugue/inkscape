@@ -151,8 +151,8 @@ public:
      */
     void update_font ();
     void update_size (double size);
-    void unset_model();
-    void set_model();
+    void unset_model() override;
+    void set_model() override;
 
     /**
      * Get fontspec based on current settings. (Does not handle size, yet.)

@@ -24,6 +24,10 @@ public:
 
     // get UI element
     virtual Gtk::Widget* box() = 0;
+
+    // legacy font selector
+    virtual void set_model() = 0;
+    virtual void unset_model() = 0;
 };
 
 #endif

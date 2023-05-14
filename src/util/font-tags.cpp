@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: GPL-2.0-or-later
 #include "font-tags.h"
 #include <glibmm/i18n.h>
 
@@ -6,16 +7,15 @@ namespace Inkscape {
 FontTags::FontTags() {}
 
 FontTags& FontTags::get() {
-    //todo
     static bool init = true;
     static FontTags ft;
     if (init) {
         init = false;
-        ft.add_tag(FontTag{"favorites",  _("Favorites")});
+        // ft.add_tag(FontTag{"favorites",  _("Favorites")});
         ft.add_tag(FontTag{"sans",       _("Sans Serif")});
         ft.add_tag(FontTag{"serif",      _("Serif")});
         ft.add_tag(FontTag{"script",     _("Script")});
-        ft.add_tag(FontTag{"decorative", _("Decorative")});
+        // ft.add_tag(FontTag{"decorative", _("Decorative")});
         ft.add_tag(FontTag{"symbols",    _("Symbols")});
         ft.add_tag(FontTag{"monospace",  _("Monospace")});
         ft.add_tag(FontTag{"variable",   _("Variable")});
@@ -25,9 +25,7 @@ FontTags& FontTags::get() {
 }
 
 std::vector<FontTag> FontTags::get_tags() const {
-    //
     return _tags;
-    // return std::vector<FontTag>();
 }
 
 void FontTags::add_tag(const FontTag& tag) {

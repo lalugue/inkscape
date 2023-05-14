@@ -4,6 +4,7 @@ set(util_SRC
 	action-accel.cpp
     document-fonts.cpp
 	expression-evaluator.cpp
+    font-collections.cpp
 	format_size.cpp
 	font-discovery.cpp
 	font-tags.cpp

@@ -1,4 +1,9 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
+/** @file
+ * @brief Font browser and selector
+ *
+ * Copyright (C) 2022-2023 Michael Kowalski
+ */
 
 #ifndef INKSCAPE_UI_WIDGET_FONT_LIST_H
 #define INKSCAPE_UI_WIDGET_FONT_LIST_H
@@ -26,9 +31,7 @@
 #include "util/font-tags.h"
 #include "font-selector-interface.h"
 
-namespace Inkscape {
-namespace UI {
-namespace Widget {
+namespace Inkscape::UI::Widget {
 
 class FontList : public Gtk::Box, public FontSelectorInterface {
 public:
@@ -51,6 +54,10 @@ public:
     Gtk::Widget* box() override { return this; }
 
     ~FontList() override = default;
+
+    // no op, not used
+    void set_model() override {};
+    void unset_model() override {};
 
 private:
     void sort_fonts(Inkscape::FontOrder order);
@@ -84,7 +91,6 @@ private:
     Gtk::Box& _tag_box;
     Gtk::Box& _info_box;
     Gtk::Box& _progress_box;
-    // std::unordered_map<std::string, const Gtk::TreeRow*> _fspec_to_row;
     std::vector<FontInfo> _fonts;
     Inkscape::FontOrder _order = Inkscape::FontOrder::by_name;
     Glib::ustring _filter;
@@ -107,6 +113,6 @@ private:
     std::size_t _initializing = 0;
 };
 
-}}} // namespaces
+} // namespaces
 
 #endif // INKSCAPE_UI_WIDGET_FONT_LIST_H

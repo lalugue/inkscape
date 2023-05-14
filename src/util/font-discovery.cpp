@@ -4,10 +4,8 @@
 #include "async/progress.h"
 #include "helper/auto-connection.h"
 #include "inkscape-application.h"
-#include "inkscape-version.h"
 #include "io/resource.h"
 #include "statics.h"
-#include "svg/css-ostringstream.h"
 
 #include <algorithm>
 #include <cairo-ft.h>
@@ -32,7 +30,7 @@ namespace filesystem = std::filesystem;
 // Waiting for compiler on MacOS to catch up to C++x17
 #include <boost/filesystem.hpp>
 namespace filesystem = boost::filesystem;
-#endif
+#endif // G_OS_WIN32
 
 namespace Inkscape {
 
@@ -40,15 +38,12 @@ namespace Inkscape {
 // black pixels (alpha channel). This is imperfect, but reasonable proxy for font weight, as long
 // as Pango can instantiate correct font.
 double calculate_font_weight(Pango::FontDescription& desc, double caps_height) {
-// g_message("fch: %f\n", caps_height);
     // pixmap with enough room for a few characters; the rest will be cropped
     auto surface = Cairo::ImageSurface::create(Cairo::FORMAT_ARGB32, 128, 64);
     auto context = Cairo::Context::create(surface);
     auto layout = Pango::Layout::create(context);
     const char* txt = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     layout->set_text(txt);
-    // Glib::ustring name(pango_font_family_get_name(ff) + (',' + style));
-    // Pango::FontDescription desc(name);
     auto size = 22 * PANGO_SCALE;
     if (caps_height > 0) {
         size /= caps_height;
@@ -58,15 +53,6 @@ double calculate_font_weight(Pango::FontDescription& desc, double caps_height) {
     context->move_to(1, 1);
     layout->show_in_cairo_context(context);
     surface->flush();
-
-/* test to check bounds:
-static int ii = 0;
-std::ostringstream ost;
-// if (desc.to_string().find("Roboto") != Glib::ustring::npos) {
-  ost << "/Users/mike/junk/test-" << ii++ << '-' << desc.to_string() << ".png";
-  surface->write_to_png(ost.str().c_str());
-// }
-*/
 
     auto pixels = surface->get_data();
     auto width = surface->get_width();
@@ -80,7 +66,6 @@ std::ostringstream ost;
         }
     }
     auto weight = sum / (width * height);
-// g_message("%d %d %d - %s %f", width, stride, height, name.c_str(), weight);
     return weight;
 }
 
@@ -91,14 +76,11 @@ double calculate_font_width(Pango::FontDescription& desc) {
     auto layout = Pango::Layout::create(context);
     const char* txt = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     layout->set_text(txt);
-    // Glib::ustring name(pango_font_family_get_name(ff) + (',' + style));
-    // Pango::FontDescription desc(name);
     desc.set_size(72 * PANGO_SCALE);
     layout->set_font_description(desc);
     // layout->show_in_cairo_context(context);
     Pango::Rectangle ink, rect;
     layout->get_extents(ink, rect);
-// g_message("%d %d - %s", ink.get_width() / PANGO_SCALE, rect.get_width() / PANGO_SCALE, name.c_str());
     return static_cast<double>(ink.get_width()) / PANGO_SCALE / strlen(txt);
 }
 
@@ -157,20 +139,6 @@ void sort_fonts(std::vector<FontInfo>& fonts, FontOrder order, bool sans_first) 
             // there are many repetitions for weight, due to font substitutions, so sort by name first
             sort_fonts_by_name(fonts, sans_first);
             std::stable_sort(begin(fonts), end(fonts), [](const FontInfo& a, const FontInfo& b) { return a.weight < b.weight; });
-/*{
-double w = 0;
-std::vector<double> deltas;
-for (auto& f : fonts) {
-    deltas.push_back(f.weight - w);
-    w = f.weight;
-}
-std::sort(begin(deltas), end(deltas));
-std::cout << "Weight deltas: ";
-for (auto d : deltas) {
-    std::cout << d << ' ';
-}
-std::cout << "\n";
-}*/
             break;
 
         case FontOrder::by_width:
@@ -190,10 +158,6 @@ Glib::ustring get_fontspec(const Glib::ustring& family, const Glib::ustring& fac
     }
     else {
         auto desc = (face.empty() ? family : family + ", " + face) + " " + variations;
-        // currently font variations replace style
-        // return family + ", " + variations;
-        // Pango::FontDescription copy(desc);
-        // return copy.to_string();
         return desc;
     }
 }
@@ -206,26 +170,7 @@ Glib::ustring get_face_style(const Pango::FontDescription& desc) {
     Pango::FontDescription copy(desc);
     copy.unset_fields(Pango::FONT_MASK_FAMILY);
     copy.unset_fields(Pango::FONT_MASK_SIZE);
-    // copy.unset_fields(Pango::FONT_MASK_VARIATIONS);
-    // copy.unset_fields(Pango::FONT_MASK_VARIANT);
-    // copy.unset_fields(Pango::FONT_MASK_WEIGHT);
     auto str = copy.to_string();
-/*
-    static const auto WEIGHT = Glib::ustring(" weight=");
-    auto pos = str.find(WEIGHT);
-    if (pos != Glib::ustring::npos) {
-        auto weight = ::atof(str.substr(pos + WEIGHT.size()).c_str());
-        copy.unset_fields(Pango::FONT_MASK_WEIGHT);
-// g_message("strip weight: %f %s (%s) %d", weight, str.c_str(), str.substr(pos+WEIGHT.size()).c_str(), int(pos));
-        str = copy.to_string();
-        if (weight > 0) {
-            CSSOStringStream ost;
-            ost << str << " @weight=" << weight;
-            str = ost.str();
-        }
-g_message("strip weight: '%s'", str.c_str());
-    }
-*/
     return str;
 }
 
@@ -243,7 +188,11 @@ Pango::FontDescription get_font_description(const Glib::RefPtr<Pango::FontFamily
     return desc;
 }
 
-const char font_cache[] = "font-cache-v1.02.ini";
+// Font cache is a text file that stores under each font name some of its metadata, like average weight and height,
+// as well as flags (monospaced, variable, oblique, synthetic font). It is kept to speed up font metadata discovery.
+const char font_cache[] = "font-cache.ini";
+const char cache_header[] = "@font-cache@";
+constexpr auto cache_version = 1.0;
 enum FontCacheFlags : int {
     Normal = 0,
     Monospace = 0x01,
@@ -255,13 +204,10 @@ enum FontCacheFlags : int {
 void save_font_cache(const std::vector<FontInfo>& fonts) {
     auto keyfile = std::make_unique<Glib::KeyFile>();
 
-    // Glib::ustring mono("monospaced");
-    // Glib::ustring oblique("oblique");
+    keyfile->set_double(cache_header, "version", cache_version);
     Glib::ustring weight("weight");
     Glib::ustring width("width");
     Glib::ustring family("family");
-    // Glib::ustring variable("variable");
-    // Glib::ustring synthetic("synthetic");
     Glib::ustring fontflags("flags");
 
     for (auto&& font : fonts) {
@@ -280,13 +226,9 @@ void save_font_cache(const std::vector<FontInfo>& fonts) {
         if (font.synthetic) {
             flags |= FontCacheFlags::Synthetic;
         }
-        // keyfile->set_boolean(group, mono, font.monospaced);
-        // keyfile->set_boolean(group, oblique, font.oblique);
         keyfile->set_double(group, weight, font.weight);
         keyfile->set_double(group, width, font.width);
         keyfile->set_integer(group, family, font.family_kind);
-        // keyfile->set_boolean(group, variable, font.variable_font);
-        // keyfile->set_boolean(group, synthetic, font.synthetic);
         keyfile->set_integer(group, fontflags, flags);
     }
 
@@ -309,16 +251,17 @@ std::unordered_map<std::string, FontInfo> load_cached_font_info() {
 
         if (exists && keyfile->load_from_file(filename)) {
 
-            // Glib::ustring mono("monospaced");
-            // Glib::ustring oblique("oblique");
+            auto ver = keyfile->get_double(cache_header, "version");
+            if (std::abs(ver - cache_version) > 0.0001) return info;
+
             Glib::ustring weight("weight");
             Glib::ustring width("width");
             Glib::ustring family("family");
-            // Glib::ustring variable("variable");
-            // Glib::ustring synthetic("synthetic");
             Glib::ustring fontflags("flags");
 
             for (auto&& group : keyfile->get_groups()) {
+                if (group == cache_header) continue;
+
                 FontInfo font;
                 auto flags = keyfile->get_integer(group, fontflags);
                 if (flags & FontCacheFlags::Monospace) {
@@ -333,13 +276,9 @@ std::unordered_map<std::string, FontInfo> load_cached_font_info() {
                 if (flags & FontCacheFlags::Synthetic) {
                     font.synthetic = true;
                 }
-                // font.monospaced = keyfile->get_boolean(group, mono);
-                // font.oblique = keyfile->get_boolean(group, oblique);
                 font.weight = keyfile->get_double(group, weight);
                 font.width = keyfile->get_double(group, width);
                 font.family_kind = keyfile->get_integer(group, family);
-                // font.variable_font = keyfile->get_boolean(group, variable);
-                // font.synthetic = keyfile->get_boolean(group, synthetic);
 
                 info[group.raw()] = font;
             }
@@ -365,11 +304,6 @@ std::shared_ptr<const std::vector<FontInfo>> get_all_fonts(Async::Progress<doubl
     std::vector<FontInfo> empty;
     progress.report_or_throw(0, "", empty);
 
-// auto pfm = pango_cairo_font_map_get_default();
-// auto fm = Glib::wrap(pfm, true);
-// auto families = fm->list_families();
-// cairo_ft_font_face_create_for_ft_face(FT_Face face, int load_flags)
-
     auto families = FontFactory::get().get_font_families();
 
     progress.throw_if_cancelled();
@@ -378,11 +312,12 @@ std::shared_ptr<const std::vector<FontInfo>> get_all_fonts(Async::Progress<doubl
     double counter = 0.0;
     for (auto ff : families) {
         bool synthetic_font = false;
+#if PANGO_VERSION_CHECK(1,46,0)
         auto default_face = ff->get_face();
         if (default_face && default_face->is_synthesized()) {
             synthetic_font = true;
         }
-
+#endif
         progress.report_or_throw(counter / families.size(), ff->get_name(), empty);
         std::vector<FontInfo> family;
         auto faces = ff->list_faces();
@@ -450,7 +385,6 @@ std::shared_ptr<const std::vector<FontInfo>> get_all_fonts(Async::Progress<doubl
                 info.ff = ff;
                 info.face = face;
                 fonts.emplace_back(info);
-
                 family.emplace_back(info);
             }
         }
@@ -486,7 +420,6 @@ FontDiscovery& FontDiscovery::get() {
 FontDiscovery::FontDiscovery() {
     if (auto i = InkscapeApplication::instance()) {
         i->gio_app()->signal_shutdown().connect([=](){
-// g_message("gio app shutdown; cancel font load");
             _loading.cancel();
         });
     }
@@ -495,7 +428,6 @@ FontDiscovery::FontDiscovery() {
         if (auto result = Async::Msg::get_result(msg)) {
             // cache results
             _fonts = *result;
-    // g_message(" fonts loaded: %ld", _fonts->size());
         }
         else if (auto progress = Async::Msg::get_progress(msg)) {
             // 

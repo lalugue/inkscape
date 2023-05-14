@@ -17,7 +17,6 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include <memory>
 #ifdef HAVE_CONFIG_H
 # include "config.h"  // only include where actually required!
 #endif
@@ -26,6 +25,7 @@
 
 #include <algorithm>
 #include <initializer_list>
+#include <memory>
 #include <string>
 
 #include <glibmm/i18n.h>
@@ -107,6 +107,7 @@ TextEdit::TextEdit()
       // Shared
     , setasdefault_button      (get_widget<Gtk::Button>     (builder, "setasdefault_button"))
     , apply_button             (get_widget<Gtk::Button>     (builder, "apply_button"))
+    , _apply_box               (get_widget<Gtk::Box>        (builder, "apply-box"))
     , _undo{"doc.undo"}
     , _redo{"doc.redo"}
 {
@@ -125,12 +126,19 @@ TextEdit::TextEdit()
     auto feat_box = &get_widget<Gtk::Box>     (builder, "feat_box");
     text_buffer = Glib::RefPtr<Gtk::TextBuffer>::cast_static(builder->get_object("text_buffer"));
 
+    if (_use_browser) {
+        // hide settings and filter box
+        settings_and_filters_box.set_visible(false);
+        font_count_label.set_track_visited_links(false);
+        preview_label.set_visible(false);
+    }
+
+    font_list->box()->show_all();
     UI::pack_start(*font_box, *font_list->box(), true, true);
     font_box->reorder_child(*font_list->box(), 2);
     UI::pack_start(*feat_box, font_features, true, true);
     feat_box->reorder_child(font_features, 1);
 
-    // filter_popover->set_modal(false); // Stay open until button clicked again.
     filter_popover.signal_show().connect([=](){
         // update font collections checkboxes
         display_font_collections();
@@ -139,7 +147,6 @@ TextEdit::TextEdit()
     filter_menu_button.set_image_from_icon_name(INKSCAPE_ICON("font_collections"));
     filter_menu_button.set_always_show_image(true);
     filter_menu_button.set_label(_("Collections"));
-
 
 #ifdef WITH_GSPELL
     /*
@@ -160,9 +167,7 @@ TextEdit::TextEdit()
     
     setasdefault_button.signal_clicked().connect([=](){ onSetDefault(); });
     apply_button.signal_clicked().connect([=](){ onApply(); });
-    // fontChangedConn = font_selector.connectChanged(sigc::mem_fun(*this, &TextEdit::onFontChange));
     fontFeaturesChangedConn = font_features.connectChanged([=](){ onChange(); });
-    // notebook->signal_switch_page().connect(sigc::mem_fun(*this, &TextEdit::onFontFeatures));
     search_entry.signal_search_changed().connect([=](){ on_search_entry_changed(); });
     reset_button.signal_clicked().connect([=](){ on_reset_button_pressed(); });
     collection_editor_button.signal_clicked().connect([=](){ on_fcm_button_clicked(); });
@@ -170,20 +175,12 @@ TextEdit::TextEdit()
     fontCollectionsUpdate = font_collections->connect_update([=]() { display_font_collections(); });
     fontCollectionsChangedSelection = font_collections->connect_selection_update([=]() { display_font_collections(); });
 
-// font_list.signal_changed().connect([=](){ onChange(); });
-// font_list.signal_apply().connect([=](){ onChange(); /*apply_button->clicked();*/ onApply(); });
-    // font_selector.set_name("TextEdit");
     change_font_count_label();
 
-    // text_buffer->signal_changed().connect(sigc::mem_fun(*this, &TextEdit::onChange));
-    // setasdefault_button->signal_clicked().connect(sigc::mem_fun(*this, &TextEdit::onSetDefault));
-    // apply_button->signal_clicked().connect(sigc::mem_fun(*this, &TextEdit::onApply));
-    // fontChangedConn = font_selector.connectChanged(sigc::mem_fun(*this, &TextEdit::onFontChange));
     fontFeaturesChangedConn = font_features.connectChanged(sigc::mem_fun(*this, &TextEdit::onChange));
     notebook->signal_switch_page().connect(sigc::mem_fun(*this, &TextEdit::on_page_changed));
     _font_changed = font_list->signal_changed().connect([=](){ apply_changes(true); });
     _apply_font = font_list->signal_apply().connect([=](){ onChange(); onSetDefault(); });
-    // font_selector.set_name("TextEdit");
 
     show_all_children();
 
@@ -277,7 +274,6 @@ void TextEdit::onReadSelection ( bool dostyle, bool /*docontent*/ )
         Inkscape::Preferences *prefs = Inkscape::Preferences::get();
         int unit = prefs->getInt("/options/font/unitType", SP_CSS_UNIT_PT);
         double size = sp_style_css_size_px_to_units(query.font_size.computed, unit);
-        // font_selector.update_size (size);
         selected_fontsize = size;
         font_list->set_current_size(size);
         // Update font features (variant) widget
@@ -299,6 +295,8 @@ void TextEdit::onReadSelection ( bool dostyle, bool /*docontent*/ )
 void TextEdit::setPreviewText (Glib::ustring const &font_spec, Glib::ustring const &font_features,
                                Glib::ustring const &phrase)
 {
+    if (_use_browser) return;
+
     if (font_spec.empty()) {
         preview_label.set_markup("");
         preview_label2.set_markup("");
@@ -419,7 +417,6 @@ SPCSSAttr *TextEdit::fillTextStyle ()
 
         Glib::ustring fontspec = font_list->get_fontspec();
 
-    // g_message("fill style %s", fontspec.c_str());
         if( !fontspec.empty() ) {
 
             Inkscape::FontLister *fontlister = Inkscape::FontLister::get_instance();
@@ -429,7 +426,6 @@ SPCSSAttr *TextEdit::fillTextStyle ()
             Inkscape::CSSOStringStream os;
             Inkscape::Preferences *prefs = Inkscape::Preferences::get();
             int unit = prefs->getInt("/options/font/unitType", SP_CSS_UNIT_PT);
-    // g_message("fill style %f", font_list.get_fontsize());
             if (prefs->getBool("/options/font/textOutputPx", true)) {
                 os << sp_style_css_size_units_to_px(font_list->get_fontsize(), unit)
                    << sp_style_get_css_unit_string(SP_CSS_UNIT_PX);
@@ -541,7 +537,6 @@ void TextEdit::display_font_collections()
             // toggle font system collection
             font_collections->update_selected_collections(col);
         });
-// g_message("tag: %s", tag.display_name.c_str());
         auto const row = Gtk::make_managed<Gtk::ListBoxRow>();
         row->set_can_focus(false);
         row->add(*btn);
@@ -567,7 +562,6 @@ void TextEdit::display_font_collections()
             // toggle font collection
             font_collections->update_selected_collections(col);
         });
-// g_message("tag: %s", tag.display_name.c_str());
         auto const row = Gtk::make_managed<Gtk::ListBoxRow>();
         row->set_can_focus(false);
         row->add(*btn);
@@ -576,12 +570,9 @@ void TextEdit::display_font_collections()
     }
 }
 
-// void TextEdit::onFontFeatures(Gtk::Widget * widgt, int pos)
-// {}
-
 void TextEdit::on_page_changed(Gtk::Widget*, int pos)
 {
-    pos == 0 && _use_browser ? _apply_box->hide() : _apply_box->show();
+    _apply_box.set_visible(pos != 0 || !_use_browser); // font browser doesn't use "Apply" button
 
     if (pos == 1) {
         Glib::ustring fontspec = font_list->get_fontspec();
@@ -596,16 +587,14 @@ void TextEdit::on_page_changed(Gtk::Widget*, int pos)
 
 void TextEdit::on_search_entry_changed()
 {
-    auto search_txt = search_entry->get_text();
-    //TODO
-    // font_selector->unset_model();
+    auto search_txt = search_entry.get_text();
+    font_list->unset_model();
     Inkscape::FontLister *font_lister = Inkscape::FontLister::get_instance();
     font_lister->show_results(search_txt);
 
     SPDocument *document = getDesktop()->getDocument();
     font_lister->add_document_fonts_at_top(document);
-    //TODO
-    // font_selector.set_model();
+    font_list->set_model();
 }
 
 void TextEdit::on_reset_button_pressed()

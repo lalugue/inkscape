@@ -26,7 +26,6 @@ struct FontTag {
 
 class FontTags {
 public:
-// TODO: remove; needs to be per document if not free
     static FontTags& get();
 
     std::vector<FontTag> get_tags() const;
@@ -52,4 +51,4 @@ private:
     sigc::signal<void (const FontTag*, bool)> _signal_tag_changed;
 };
 
-}
+} // namespace

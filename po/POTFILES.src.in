@@ -432,6 +432,7 @@ ${_build_dir}/share/templates/templates.h
 ../src/ui/widget/template-list.cpp
 ../src/util/enums.h
 ../src/util/font-collections.h
+../src/util/font-tags.cpp
 ../src/util/paper.cpp
 ../src/vanishing-point.cpp
 ../src/widgets/paintdef.cpp

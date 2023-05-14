@@ -9,7 +9,6 @@
 #include <pangomm.h>
 #include "async/operation-stream.h"
 #include "helper/auto-connection.h"
-#include "message.h"
 
 namespace Inkscape {
 

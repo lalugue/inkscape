@@ -738,7 +738,6 @@ std::pair<Glib::ustring, Glib::ustring> FontLister::selection_update()
     std::pair<Glib::ustring, Glib::ustring> ui = ui_from_fontspec(fontspec);
     set_font_family(ui.first);
     set_font_style(ui.second);
-// g_message("sel upd: %s", ui.second.c_str());
 
 #ifdef DEBUG_FONT
     std::cout << "   family_row:           :" << current_family_row << ":" << std::endl;
@@ -944,7 +943,6 @@ void FontLister::fill_css(SPCSSAttr *css, Glib::ustring fontspec)
 
     PangoFontDescription *desc = pango_font_description_from_string(fontspec.c_str());
     PangoWeight weight = pango_font_description_get_weight(desc);
-// g_message("fill css: %d %s", int(weight), ui.second.c_str());
     switch (weight) {
         case PANGO_WEIGHT_THIN:
             sp_repr_css_set_property(css, "font-weight", "100");

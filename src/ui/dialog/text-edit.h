@@ -177,8 +177,6 @@ private:
     Gtk::ListBox &collections_list;
     Gtk::Label &preview_label;  // Share with variants tab?
 
-    // Inkscape::UI::Widget::FontSelector font_selector;
-
     std::unique_ptr<FontSelectorInterface> font_list;
 
     // Tab 2: Text ---------------------- //
@@ -192,7 +190,7 @@ private:
     // Shared ------- ------------------ //
     Gtk::Button &setasdefault_button;
     Gtk::Button &apply_button;
-    Gtk::Box* _apply_box = nullptr;
+    Gtk::Box& _apply_box;
     bool _use_browser = false;
 
     // Signals
