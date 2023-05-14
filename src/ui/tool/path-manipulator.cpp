@@ -702,13 +702,15 @@ unsigned PathManipulator::_deleteStretch(NodeList::iterator start, NodeList::ite
     bool keep_shape = mode == NodeDeleteMode::automatic || mode == NodeDeleteMode::curve_fit;
 
     if ((mode == NodeDeleteMode::automatic || mode == NodeDeleteMode::inverse_auto) && start.prev() && end) {
+        auto angle_flat = Inkscape::Preferences::get()->getDoubleLimited("/tools/node/flat-cusp-angle", 135, 1, 180);
         for (NodeList::iterator cur = start; cur != end; cur = cur.next()) {
             auto back =  cur->back() ->isDegenerate() ? cur.prev()->position() : cur->back() ->position();
             auto front = cur->front()->isDegenerate() ? cur.next()->position() : cur->front()->position();
             auto angle = get_angle(back, cur->position(), front);
             auto a = fmod(fabs(angle), 2*M_PI);
             auto diff = fabs(a - M_PI);
-            bool flat = diff < M_PI / 4; // flat if *somewhat* close to 180 degrees (+-45deg)
+            auto tolerance = (180 - angle_flat) * M_PI / 180;
+            bool flat = diff < tolerance; // flat if *somewhat* close to 180 degrees (+-tolerance)
             if (!flat && Geom::distance(back, front) > 1) {
                 // detected a cusp, so we'll try to remove nodes and insert line segment, rather than fitting a curve
                 // if in auto mode, or the opposite in inverse_auto

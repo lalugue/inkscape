@@ -268,6 +268,7 @@ protected:
     UI::Widget::PrefCheckButton _t_node_single_node_transform_handles;
     UI::Widget::PrefCheckButton _t_node_delete_preserves_shape;
     UI::Widget::PrefColorPicker _t_node_pathoutline_color;
+    UI::Widget::PrefSpinButton  _t_node_delete_flat_corner;
 
     // Command Palette
     UI::Widget::PrefCheckButton _cp_show_full_action_name;
