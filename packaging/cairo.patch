@@ -1,371 +1,195 @@
-From e0d713b9bbd6d4a1e27e18c15141fa7f568001c7 Mon Sep 17 00:00:00 2001
+From 311f986ecc9a41888d96ff56688ee823c6d8bb7e Mon Sep 17 00:00:00 2001
 From: Marc Jeanmougin <marc@jeanmougin.fr>
-Date: Wed, 29 May 2019 09:44:09 +0200
-Subject: [PATCH 1/3] Enable access to the pixman dithering path Code to choose
- between dithering quality is modeled on the filter rendering choice
+Date: Thu, 25 May 2023 18:50:38 +0200
+Subject: [PATCH] Enable access to the pixman dithering path
 
 ---
- src/cairo-gl-gradient.c     |  4 +++-
- src/cairo-image-source.c    | 48 +++++++++++++++++++++++++++++++++++++
- src/cairo-pattern-private.h |  1 +
- src/cairo-pattern.c         | 45 ++++++++++++++++++++++++++++++++++
- src/cairo.h                 | 14 +++++++++++
- 5 files changed, 111 insertions(+), 1 deletion(-)
+ doc/public/cairo-sections.txt                 |   3 +
+ src/cairo-backend-private.h                   |   2 +
+ src/cairo-default-context.c                   |  19 +++++++
+ src/cairo-gstate-private.h                    |   9 +++
+ src/cairo-gstate.c                            |  19 +++++++
+ src/cairo-image-surface.c                     |  23 ++++++++
+ src/cairo-surface-private.h                   |   2 +
+ src/cairo-surface.c                           |  14 ++++-
+ src/cairo.c                                   |  44 +++++++++++++++
+ src/cairo.h                                   |  28 +++++++++
+ src/cairoint.h                                |   6 ++
+ test/dithergradient.c                         |  53 ++++++++++++++++++
+ test/meson.build                              |   1 +
+ .../dithergradient.image.argb32.ref.png       | Bin 0 -> 10442 bytes
+ .../dithergradient.image.rgb24.ref.png        | Bin 0 -> 10442 bytes
+ 15 files changed, 220 insertions(+), 3 deletions(-)
+ create mode 100644 test/dithergradient.c
+ create mode 100644 test/reference/dithergradient.image.argb32.ref.png
+ create mode 100644 test/reference/dithergradient.image.rgb24.ref.png
 
-diff --git a/src/cairo-gl-gradient.c b/src/cairo-gl-gradient.c
-index 293d4e30e..a22cca729 100644
---- a/src/cairo-gl-gradient.c
-+++ b/src/cairo-gl-gradient.c
-@@ -160,7 +160,9 @@ _cairo_gl_gradient_render (const cairo_gl_context_t    *ctx,
- 
-     pixman_image_set_filter (gradient, PIXMAN_FILTER_BILINEAR, NULL, 0);
-     pixman_image_set_repeat (gradient, PIXMAN_REPEAT_PAD);
--
-+#if PIXMAN_VERSION >= PIXMAN_VERSION_ENCODE(0,39,0)
-+    pixman_image_set_dither (gradient, PIXMAN_DITHER_BEST);
-+#endif
-     image = pixman_image_create_bits (gradient_pixman_format, width, 1,
- 				      bytes, sizeof(uint32_t)*width);
-     if (unlikely (image == NULL)) {
-diff --git a/src/cairo-image-source.c b/src/cairo-image-source.c
-index c56845ab2..274f43df7 100644
---- a/src/cairo-image-source.c
-+++ b/src/cairo-image-source.c
-@@ -383,6 +383,30 @@ _pixman_image_for_gradient (const cairo_gradient_pattern_t *pattern,
- 
- 	pixman_image_set_repeat (pixman_image, pixman_repeat);
-     }
-+#if PIXMAN_VERSION >= PIXMAN_VERSION_ENCODE(0,39,0) 
-+    {
-+	pixman_dither_t pixman_dither;
-+
-+	switch (pattern->base.dither) {
-+	default:
-+	case CAIRO_DITHER_NONE:
-+	case CAIRO_DITHER_DEFAULT:
-+	    pixman_dither = PIXMAN_DITHER_NONE;
-+	    break;
-+	case CAIRO_DITHER_FAST:
-+	    pixman_dither = PIXMAN_DITHER_FAST;
-+	    break;
-+	case CAIRO_DITHER_GOOD:
-+	    pixman_dither = PIXMAN_DITHER_GOOD;
-+	    break;
-+	case CAIRO_DITHER_BEST:
-+	    pixman_dither = PIXMAN_DITHER_BEST;
-+	    break;
-+	}
-+
-+	pixman_image_set_dither (pixman_image, pixman_dither);
-+    }
-+#endif
- 
-     return pixman_image;
- }
-@@ -1047,6 +1071,30 @@ _pixman_image_set_properties (pixman_image_t *pixman_image,
- 
- 	pixman_image_set_repeat (pixman_image, pixman_repeat);
-     }
-+#if PIXMAN_VERSION >= PIXMAN_VERSION_ENCODE(0,39,0)
-+    {
-+	pixman_dither_t pixman_dither;
-+
-+	switch (pattern->dither) {
-+	default:
-+	case CAIRO_DITHER_NONE:
-+	case CAIRO_DITHER_DEFAULT:
-+	    pixman_dither = PIXMAN_DITHER_NONE;
-+	    break;
-+	case CAIRO_DITHER_FAST:
-+	    pixman_dither = PIXMAN_DITHER_FAST;
-+	    break;
-+	case CAIRO_DITHER_GOOD:
-+	    pixman_dither = PIXMAN_DITHER_GOOD;
-+	    break;
-+	case CAIRO_DITHER_BEST:
-+	    pixman_dither = PIXMAN_DITHER_BEST;
-+	    break;
-+	}
-+
-+	pixman_image_set_dither (pixman_image, pixman_dither);
-+    }
-+#endif
- 
-     if (pattern->has_component_alpha)
- 	pixman_image_set_component_alpha (pixman_image, TRUE);
-diff --git a/src/cairo-pattern-private.h b/src/cairo-pattern-private.h
-index f6138fb70..96ae4f615 100644
---- a/src/cairo-pattern-private.h
-+++ b/src/cairo-pattern-private.h
-@@ -70,6 +70,7 @@ struct _cairo_pattern {
-     cairo_pattern_type_t	type;
- 
-     cairo_filter_t		filter;
-+    cairo_dither_t    dither;
-     cairo_extend_t		extend;
-     cairo_bool_t		has_component_alpha;
-     cairo_bool_t		is_userfont_foreground;
-diff --git a/src/cairo-pattern.c b/src/cairo-pattern.c
-index 6bd3edfd8..6cf907f36 100644
---- a/src/cairo-pattern.c
-+++ b/src/cairo-pattern.c
-@@ -74,6 +74,7 @@ static const cairo_solid_pattern_t _cairo_pattern_nil = {
- 
-       CAIRO_PATTERN_TYPE_SOLID,		/* type */
-       CAIRO_FILTER_DEFAULT,		/* filter */
-+      CAIRO_DITHER_DEFAULT,   /* dither */
-       CAIRO_EXTEND_GRADIENT_DEFAULT,	/* extend */
-       FALSE,				/* has component alpha */
-       FALSE,				/* is_userfont_foreground */
-@@ -91,6 +92,7 @@ static const cairo_solid_pattern_t _cairo_pattern_nil_null_pointer = {
- 
-       CAIRO_PATTERN_TYPE_SOLID,		/* type */
-       CAIRO_FILTER_DEFAULT,		/* filter */
-+      CAIRO_DITHER_DEFAULT,   /* dither */
-       CAIRO_EXTEND_GRADIENT_DEFAULT,	/* extend */
-       FALSE,				/* has component alpha */
-       FALSE,				/* is_userfont_foreground */
-@@ -108,6 +110,7 @@ const cairo_solid_pattern_t _cairo_pattern_black = {
- 
-       CAIRO_PATTERN_TYPE_SOLID,		/* type */
-       CAIRO_FILTER_NEAREST,		/* filter */
-+      CAIRO_DITHER_DEFAULT,   /* dither */
-       CAIRO_EXTEND_REPEAT,		/* extend */
-       FALSE,				/* has component alpha */
-       FALSE,				/* is_userfont_foreground */
-@@ -126,6 +129,7 @@ const cairo_solid_pattern_t _cairo_pattern_clear = {
- 
-       CAIRO_PATTERN_TYPE_SOLID,		/* type */
-       CAIRO_FILTER_NEAREST,		/* filter */
-+      CAIRO_DITHER_DEFAULT,   /* dither */
-       CAIRO_EXTEND_REPEAT,		/* extend */
-       FALSE,				/* has component alpha */
-       FALSE,				/* is_userfont_foreground */
-@@ -144,6 +148,7 @@ const cairo_solid_pattern_t _cairo_pattern_white = {
- 
-       CAIRO_PATTERN_TYPE_SOLID,		/* type */
-       CAIRO_FILTER_NEAREST,		/* filter */
-+      CAIRO_DITHER_DEFAULT,   /* dither */
-       CAIRO_EXTEND_REPEAT,		/* extend */
-       FALSE,				/* has component alpha */
-       FALSE,				/* is_userfont_foreground */
-@@ -235,6 +240,7 @@ _cairo_pattern_init (cairo_pattern_t *pattern, cairo_pattern_type_t type)
- 	pattern->extend = CAIRO_EXTEND_GRADIENT_DEFAULT;
- 
-     pattern->filter    = CAIRO_FILTER_DEFAULT;
-+    pattern->dither    = CAIRO_DITHER_DEFAULT;
-     pattern->opacity   = 1.0;
- 
-     pattern->has_component_alpha = FALSE;
-@@ -2074,6 +2080,28 @@ cairo_pattern_set_filter (cairo_pattern_t *pattern, cairo_filter_t filter)
-     _cairo_pattern_notify_observers (pattern, CAIRO_PATTERN_NOTIFY_FILTER);
- }
- 
-+/**
-+ * cairo_pattern_set_dither:
-+ * @pattern: a #cairo_pattern_t
-+ * @filter: a #cairo_dither_t describing the dithering to use
-+ *
-+ * See #cairo_dither_t for details on each algorithm.
-+ *
-+ * Since: TODO
-+ **/
-+void
-+cairo_pattern_set_dither (cairo_pattern_t *pattern, cairo_dither_t dither)
-+{
-+    if (pattern->status)
-+	return;
-+
-+    pattern->dither = dither;
-+    _cairo_pattern_notify_observers (pattern, CAIRO_PATTERN_NOTIFY_FILTER);
-+    /* We probably can notify the same observers as when we notify filter
-+     * changes (?) TODO CHECK THAT */
-+}
-+
-+
- /**
-  * cairo_pattern_get_filter:
-  * @pattern: a #cairo_pattern_t
-@@ -2091,6 +2119,23 @@ cairo_pattern_get_filter (cairo_pattern_t *pattern)
-     return pattern->filter;
- }
- 
-+/**
-+ * cairo_pattern_get_dither:
-+ * @pattern: a #cairo_pattern_t
-+ *
-+ * Gets the current dithering for a pattern.  See #cairo_dither_t
-+ * for details.
-+ *
-+ * Return value: the current dithering algorithm of the pattern
-+ *
-+ * Since: TODO
-+ **/
+diff --git a/doc/public/cairo-sections.txt b/doc/public/cairo-sections.txt
+index 5f53fc49c..0dc0dfb77 100644
+--- a/doc/public/cairo-sections.txt
++++ b/doc/public/cairo-sections.txt
+@@ -642,6 +642,9 @@ cairo_get_antialias
+ cairo_set_dash
+ cairo_get_dash_count
+ cairo_get_dash
 +cairo_dither_t
-+cairo_pattern_get_dither (cairo_pattern_t *pattern)
-+{
-+    return pattern->dither;
-+}
-+
- /**
-  * cairo_pattern_set_extend:
-  * @pattern: a #cairo_pattern_t
-diff --git a/src/cairo.h b/src/cairo.h
-index fb1da4146..1c911d09d 100644
---- a/src/cairo.h
-+++ b/src/cairo.h
-@@ -3003,12 +3003,26 @@ typedef enum _cairo_filter {
-     CAIRO_FILTER_GAUSSIAN
- } cairo_filter_t;
++cairo_set_dither
++cairo_get_dither
+ cairo_fill_rule_t
+ cairo_set_fill_rule
+ cairo_get_fill_rule
+diff --git a/src/cairo-backend-private.h b/src/cairo-backend-private.h
+index 86689c795..e9b2b9731 100644
+--- a/src/cairo-backend-private.h
++++ b/src/cairo-backend-private.h
+@@ -64,6 +64,7 @@ struct _cairo_backend {
  
-+typedef enum _cairo_dither {
-+    CAIRO_DITHER_NONE,
-+    CAIRO_DITHER_DEFAULT,
-+    CAIRO_DITHER_FAST,
-+    CAIRO_DITHER_GOOD,
-+    CAIRO_DITHER_BEST
-+} cairo_dither_t;
-+
- cairo_public void
- cairo_pattern_set_filter (cairo_pattern_t *pattern, cairo_filter_t filter);
+     cairo_status_t (*set_antialias) (void *cr, cairo_antialias_t antialias);
+     cairo_status_t (*set_dash) (void *cr, const double *dashes, int num_dashes, double offset);
++    cairo_status_t (*set_dither) (void *cr, cairo_dither_t dither);
+     cairo_status_t (*set_fill_rule) (void *cr, cairo_fill_rule_t fill_rule);
+     cairo_status_t (*set_line_cap) (void *cr, cairo_line_cap_t line_cap);
+     cairo_status_t (*set_line_join) (void *cr, cairo_line_join_t line_join);
+@@ -76,6 +77,7 @@ struct _cairo_backend {
  
- cairo_public cairo_filter_t
- cairo_pattern_get_filter (cairo_pattern_t *pattern);
- 
-+cairo_public void
-+cairo_pattern_set_dither (cairo_pattern_t *pattern, cairo_dither_t dither);
-+
-+cairo_public cairo_dither_t
-+cairo_pattern_get_dither (cairo_pattern_t *pattern);
-+
- cairo_public cairo_status_t
- cairo_pattern_get_rgba (cairo_pattern_t *pattern,
- 			double *red, double *green,
--- 
-2.25.1
-
-
-From 659173b4bb01e2de438d894dca9ed01838eaf028 Mon Sep 17 00:00:00 2001
-From: Marc Jeanmougin <marc@jeanmougin.fr>
-Date: Sat, 27 Mar 2021 23:53:28 +0100
-Subject: [PATCH 2/3] Expose dithering property at the image surface level.
-
-Copies the property on push_group
----
- src/cairo-default-context.c       |  6 ++-
- src/cairo-image-source.c          | 40 ++----------------
- src/cairo-image-surface-private.h |  1 +
- src/cairo-image-surface.c         | 67 +++++++++++++++++++++++++++++++
- src/cairo.h                       | 22 ++++++----
- src/cairoint.h                    |  5 +++
- 6 files changed, 96 insertions(+), 45 deletions(-)
-
+     cairo_antialias_t (*get_antialias) (void *cr);
+     void (*get_dash) (void *cr, double *dashes, int *num_dashes, double *offset);
++    cairo_dither_t (*get_dither) (void *cr);
+     cairo_fill_rule_t (*get_fill_rule) (void *cr);
+     cairo_line_cap_t (*get_line_cap) (void *cr);
+     cairo_line_join_t (*get_line_join) (void *cr);
 diff --git a/src/cairo-default-context.c b/src/cairo-default-context.c
-index 567c5d4d5..24af125da 100644
+index 87370cdc7..788bdab8d 100644
 --- a/src/cairo-default-context.c
 +++ b/src/cairo-default-context.c
-@@ -180,7 +180,11 @@ _cairo_default_context_push_group (void *abstract_cr, cairo_content_t content)
- 	if (unlikely (status))
- 	    goto bail;
+@@ -441,6 +441,15 @@ _cairo_default_context_set_dash (void *abstract_cr,
+ 				   dashes, num_dashes, offset);
+ }
  
--	/* Set device offsets on the new surface so that logically it appears at
-+	/* copies over the dither property */
-+	cairo_image_surface_set_dither(group_surface,
-+					 cairo_image_surface_get_dither(parent_surface));
++static cairo_status_t
++_cairo_default_context_set_dither (void *abstract_cr,
++                                     cairo_dither_t dither)
++{
++    cairo_default_context_t *cr = abstract_cr;
 +
-+    /* Set device offsets on the new surface so that logically it appears at
- 	 * the same location on the parent surface -- when we pop_group this,
- 	 * the source pattern will get fixed up for the appropriate target surface
- 	 * device offsets, so we want to set our own surface offsets from /that/,
-diff --git a/src/cairo-image-source.c b/src/cairo-image-source.c
-index 274f43df7..93daff3c0 100644
---- a/src/cairo-image-source.c
-+++ b/src/cairo-image-source.c
-@@ -385,24 +385,8 @@ _pixman_image_for_gradient (const cairo_gradient_pattern_t *pattern,
-     }
- #if PIXMAN_VERSION >= PIXMAN_VERSION_ENCODE(0,39,0) 
-     {
--	pixman_dither_t pixman_dither;
--
--	switch (pattern->base.dither) {
--	default:
--	case CAIRO_DITHER_NONE:
--	case CAIRO_DITHER_DEFAULT:
--	    pixman_dither = PIXMAN_DITHER_NONE;
--	    break;
--	case CAIRO_DITHER_FAST:
--	    pixman_dither = PIXMAN_DITHER_FAST;
--	    break;
--	case CAIRO_DITHER_GOOD:
--	    pixman_dither = PIXMAN_DITHER_GOOD;
--	    break;
--	case CAIRO_DITHER_BEST:
--	    pixman_dither = PIXMAN_DITHER_BEST;
--	    break;
--	}
-+	pixman_dither_t pixman_dither =
-+        _pixman_dither_from_cairo_dither(pattern->base.dither);
++    return _cairo_gstate_set_dither (cr->gstate, dither);
++}
++
+ static cairo_status_t
+ _cairo_default_context_set_miter_limit (void *abstract_cr,
+ 					double limit)
+@@ -469,6 +478,14 @@ _cairo_default_context_get_dash (void *abstract_cr,
+     _cairo_gstate_get_dash (cr->gstate, dashes, num_dashes, offset);
+ }
  
- 	pixman_image_set_dither (pixman_image, pixman_dither);
-     }
-@@ -1073,24 +1057,8 @@ _pixman_image_set_properties (pixman_image_t *pixman_image,
-     }
- #if PIXMAN_VERSION >= PIXMAN_VERSION_ENCODE(0,39,0)
-     {
--	pixman_dither_t pixman_dither;
--
--	switch (pattern->dither) {
--	default:
--	case CAIRO_DITHER_NONE:
--	case CAIRO_DITHER_DEFAULT:
--	    pixman_dither = PIXMAN_DITHER_NONE;
--	    break;
--	case CAIRO_DITHER_FAST:
--	    pixman_dither = PIXMAN_DITHER_FAST;
--	    break;
--	case CAIRO_DITHER_GOOD:
--	    pixman_dither = PIXMAN_DITHER_GOOD;
--	    break;
--	case CAIRO_DITHER_BEST:
--	    pixman_dither = PIXMAN_DITHER_BEST;
--	    break;
--	}
-+	pixman_dither_t pixman_dither =
-+        _pixman_dither_from_cairo_dither (pattern->dither);
++static cairo_dither_t
++_cairo_default_context_get_dither (void *abstract_cr)
++{
++    cairo_default_context_t *cr = abstract_cr;
++
++    return _cairo_gstate_get_dither (cr->gstate);
++}
++
+ static cairo_fill_rule_t
+ _cairo_default_context_get_fill_rule (void *abstract_cr)
+ {
+@@ -1383,6 +1400,7 @@ static const cairo_backend_t _cairo_default_context_backend = {
  
- 	pixman_image_set_dither (pixman_image, pixman_dither);
-     }
-diff --git a/src/cairo-image-surface-private.h b/src/cairo-image-surface-private.h
-index 2b7921133..c06b9737b 100644
---- a/src/cairo-image-surface-private.h
-+++ b/src/cairo-image-surface-private.h
-@@ -78,6 +78,7 @@ struct _cairo_image_surface {
-     unsigned owns_data : 1;
-     unsigned transparency : 2;
-     unsigned color : 2;
-+    cairo_dither_t dither : 3;
- };
- #define to_image_surface(S) ((cairo_image_surface_t *)(S))
+     _cairo_default_context_set_antialias,
+     _cairo_default_context_set_dash,
++    _cairo_default_context_set_dither,
+     _cairo_default_context_set_fill_rule,
+     _cairo_default_context_set_line_cap,
+     _cairo_default_context_set_line_join,
+@@ -1394,6 +1412,7 @@ static const cairo_backend_t _cairo_default_context_backend = {
+     _cairo_default_context_set_tolerance,
+     _cairo_default_context_get_antialias,
+     _cairo_default_context_get_dash,
++    _cairo_default_context_get_dither,
+     _cairo_default_context_get_fill_rule,
+     _cairo_default_context_get_line_cap,
+     _cairo_default_context_get_line_join,
+diff --git a/src/cairo-gstate-private.h b/src/cairo-gstate-private.h
+index fe1556b03..e97ce1906 100644
+--- a/src/cairo-gstate-private.h
++++ b/src/cairo-gstate-private.h
+@@ -44,6 +44,7 @@ struct _cairo_gstate {
+     double opacity;
+     double tolerance;
+     cairo_antialias_t antialias;
++    cairo_dither_t dither;
  
+     cairo_stroke_style_t stroke_style;
+ 
+@@ -399,4 +400,12 @@ _cairo_gstate_set_antialias (cairo_gstate_t *gstate,
+ cairo_private cairo_antialias_t
+ _cairo_gstate_get_antialias (cairo_gstate_t *gstate);
+ 
++cairo_private cairo_status_t
++_cairo_gstate_set_dither (cairo_gstate_t *gstate,
++                            cairo_dither_t dither);
++
++cairo_private cairo_dither_t
++_cairo_gstate_get_dither (cairo_gstate_t *gstate);
++
++
+ #endif /* CAIRO_GSTATE_PRIVATE_H */
+diff --git a/src/cairo-gstate.c b/src/cairo-gstate.c
+index 8a253468d..e3d6abc72 100644
+--- a/src/cairo-gstate.c
++++ b/src/cairo-gstate.c
+@@ -93,6 +93,7 @@ _cairo_gstate_init (cairo_gstate_t  *gstate,
+ 
+     gstate->tolerance = CAIRO_GSTATE_TOLERANCE_DEFAULT;
+     gstate->antialias = CAIRO_ANTIALIAS_DEFAULT;
++    gstate->dither = CAIRO_DITHER_DEFAULT; //why not from target
+ 
+     _cairo_stroke_style_init (&gstate->stroke_style);
+ 
+@@ -150,6 +151,7 @@ _cairo_gstate_init_copy (cairo_gstate_t *gstate, cairo_gstate_t *other)
+ 
+     gstate->tolerance = other->tolerance;
+     gstate->antialias = other->antialias;
++    gstate->dither = other->dither;
+ 
+     status = _cairo_stroke_style_init_copy (&gstate->stroke_style,
+ 					    &other->stroke_style);
+@@ -2168,6 +2170,23 @@ _cairo_gstate_get_antialias (cairo_gstate_t *gstate)
+     return gstate->antialias;
+ }
+ 
++cairo_status_t
++_cairo_gstate_set_dither (cairo_gstate_t *gstate,
++                            cairo_dither_t dither)
++{
++    gstate->dither = dither;
++    if (gstate->target) gstate->target->dither = dither; //maybe unnecessary
++
++    return CAIRO_STATUS_SUCCESS;
++}
++
++cairo_dither_t
++_cairo_gstate_get_dither (cairo_gstate_t *gstate)
++{
++    return gstate->dither;
++}
++
++
+ /**
+  * _cairo_gstate_transform_glyphs_to_backend:
+  * @gstate: a #cairo_gstate_t
 diff --git a/src/cairo-image-surface.c b/src/cairo-image-surface.c
-index 3b11eb981..977bb48e6 100644
+index 3b11eb981..aaad1c17b 100644
 --- a/src/cairo-image-surface.c
 +++ b/src/cairo-image-surface.c
-@@ -169,6 +169,7 @@ _cairo_image_surface_init (cairo_image_surface_t *surface,
-     surface->owns_data = FALSE;
-     surface->transparency = CAIRO_IMAGE_UNKNOWN;
-     surface->color = CAIRO_IMAGE_UNKNOWN_COLOR;
-+    surface->dither = CAIRO_DITHER_DEFAULT;
- 
-     surface->width = pixman_image_get_width (pixman_image);
-     surface->height = pixman_image_get_height (pixman_image);
-@@ -248,6 +249,25 @@ _pixman_format_from_masks (cairo_format_masks_t *masks,
+@@ -248,6 +248,27 @@ _pixman_format_from_masks (cairo_format_masks_t *masks,
      return TRUE;
  }
  
 +#if PIXMAN_VERSION >= PIXMAN_VERSION_ENCODE(0,39,0)
-+/* Convenience function to convert cairo_dither_t into pixman_dither_t */
-+pixman_dither_t _pixman_dither_from_cairo_dither(cairo_dither_t dither)
++/* Convenience function to convert #cairo_dither_t into #pixman_dither_t */
++pixman_dither_t
++_pixman_dither_from_cairo_dither (cairo_dither_t dither)
 +{
 +    switch(dither) {
 +    default:
@@ -382,82 +206,159 @@ index 3b11eb981..977bb48e6 100644
 +}
 +#endif
 +
++
  /* A mask consisting of N bits set to 1. */
  #define MASK(N) ((1UL << (N))-1)
  
-@@ -631,6 +651,30 @@ cairo_image_surface_get_width (cairo_surface_t *surface)
+@@ -938,6 +959,8 @@ _cairo_image_surface_paint (void			*abstract_surface,
+ 			    const cairo_clip_t		*clip)
+ {
+     cairo_image_surface_t *surface = abstract_surface;
++    pixman_dither_t pixman_dither = _pixman_dither_from_cairo_dither(surface->base.dither);
++    pixman_image_set_dither (surface->pixman_image, pixman_dither);
+ 
+     TRACE ((stderr, "%s (surface=%d)\n",
+ 	    __FUNCTION__, surface->base.unique_id));
+diff --git a/src/cairo-surface-private.h b/src/cairo-surface-private.h
+index 35b559f9c..40149500d 100644
+--- a/src/cairo-surface-private.h
++++ b/src/cairo-surface-private.h
+@@ -83,6 +83,8 @@ struct _cairo_surface {
+     double x_resolution;
+     double y_resolution;
+ 
++    cairo_dither_t dither;
++
+     /* The resolution that should be used when generating image-based
+      * fallback; generally only used by the analysis/paginated
+      * surfaces
+diff --git a/src/cairo-surface.c b/src/cairo-surface.c
+index f1292e0bb..4f6a165dc 100644
+--- a/src/cairo-surface.c
++++ b/src/cairo-surface.c
+@@ -121,19 +121,25 @@ const cairo_surface_t name = {					\
+     { NULL, NULL },			/* device_transform_observers */ \
+     0.0,				/* x_resolution */	\
+     0.0,				/* y_resolution */	\
++    CAIRO_DITHER_DEFAULT,              /* dither */    \
+     0.0,				/* x_fallback_resolution */	\
+     0.0,				/* y_fallback_resolution */	\
+     NULL,				/* snapshot_of */	\
+     NULL,				/* snapshot_detach */	\
+     { NULL, NULL },			/* snapshots */		\
+     { NULL, NULL },			/* snapshot */		\
+-    { CAIRO_ANTIALIAS_DEFAULT,		/* antialias */		\
++    {                                   /* font options begin */\
++      CAIRO_ANTIALIAS_DEFAULT,		/* antialias */		\
+       CAIRO_SUBPIXEL_ORDER_DEFAULT,	/* subpixel_order */	\
+       CAIRO_LCD_FILTER_DEFAULT,		/* lcd_filter */	\
+       CAIRO_HINT_STYLE_DEFAULT,		/* hint_style */	\
+       CAIRO_HINT_METRICS_DEFAULT,	/* hint_metrics */	\
+-      CAIRO_ROUND_GLYPH_POS_DEFAULT	/* round_glyph_positions */	\
+-    },					/* font_options */		\
++      CAIRO_ROUND_GLYPH_POS_DEFAULT,	/* round_glyph_positions */	\
++      NULL,                            /* variations */ \
++      CAIRO_COLOR_MODE_DEFAULT,                /* color mode */ \
++      CAIRO_COLOR_PALETTE_DEFAULT,     /* color palette */ \
++      NULL, 0,                         /* custom palette */ \
++    },					/* font_options end */		\
+     NULL,                               /* foreground_source */		\
+     FALSE,                              /* foreground_used */   \
  }
- slim_hidden_def (cairo_image_surface_get_width);
+@@ -432,6 +438,7 @@ _cairo_surface_init (cairo_surface_t			*surface,
+ 
+     surface->x_resolution = CAIRO_SURFACE_RESOLUTION_DEFAULT;
+     surface->y_resolution = CAIRO_SURFACE_RESOLUTION_DEFAULT;
++    surface->dither = CAIRO_DITHER_DEFAULT;
+ 
+     surface->x_fallback_resolution = CAIRO_SURFACE_FALLBACK_RESOLUTION_DEFAULT;
+     surface->y_fallback_resolution = CAIRO_SURFACE_FALLBACK_RESOLUTION_DEFAULT;
+@@ -459,6 +466,7 @@ _cairo_surface_copy_similar_properties (cairo_surface_t *surface,
+     cairo_surface_set_fallback_resolution (surface,
+ 					   other->x_fallback_resolution,
+ 					   other->y_fallback_resolution);
++    surface->dither = other->dither;
+ }
+ 
+ /**
+diff --git a/src/cairo.c b/src/cairo.c
+index 3d4fea601..8facb9a3c 100644
+--- a/src/cairo.c
++++ b/src/cairo.c
+@@ -1393,6 +1393,50 @@ cairo_get_dash (cairo_t *cr,
+     cr->backend->get_dash (cr, dashes, NULL, offset);
+ }
  
 +/**
-+ * cairo_image_surface_get_dither:
-+ * @surface: a #cairo_image_surface_t
++ * cairo_get_dither:
++ * @cr: a cairo context
 + *
-+ * Get the current dithering method
++ * Gets the current dithering mode, as set by
++ * cairo_set_dither().
 + *
-+ * Return value: the current dithering method.
++ * Return value: the current dithering mode.
 + *
-+ * Since: TODO
++ * Since: 1.18
 + **/
 +cairo_dither_t
-+cairo_image_surface_get_dither (cairo_surface_t *surface)
++cairo_get_dither (cairo_t *cr)
 +{
-+    cairo_image_surface_t *image_surface = (cairo_image_surface_t *) surface;
++    if (unlikely (cr->status))
++        return CAIRO_DITHER_DEFAULT;
 +
-+    if (! _cairo_surface_is_image (surface)) {
-+	_cairo_error_throw (CAIRO_STATUS_SURFACE_TYPE_MISMATCH);
-+	return CAIRO_DITHER_DEFAULT;
-+    }
-+
-+    return image_surface->dither;
++    return cr->backend->get_dither (cr);
 +}
-+//slim_hidden_def (cairo_image_surface_get_dither);
++
++/**
++ * cairo_set_dither:
++ * @cr: a #cairo_t
++ * @dither: the new antialiasing mode
++ *
++ * Set the dithering mode of the rasterizer used for drawing shapes.
++ * This value is a hint, and a particular backend may or may not support
++ * a particular value.  At the current time, only pixman is supported.
++ *
++ * Since: 1.18
++ **/
++void
++cairo_set_dither (cairo_t *cr, cairo_dither_t dither)
++{
++    cairo_status_t status;
++
++    if (unlikely (cr->status))
++       return;
++
++    status = cr->backend->set_dither (cr, dither);
++    if (unlikely (status))
++       _cairo_set_error (cr, status);
++}
 +
  /**
-  * cairo_image_surface_get_height:
-  * @surface: a #cairo_image_surface_t
-@@ -792,6 +836,7 @@ _cairo_image_surface_snapshot (void *abstract_surface)
- 
- 	clone->transparency = image->transparency;
- 	clone->color = image->color;
-+	clone->dither = image->dither;
- 
- 	clone->owns_data = TRUE;
- 	return &clone->base;
-@@ -1361,3 +1406,25 @@ error:
-     cairo_surface_destroy (image);
-     return to_image_surface (_cairo_surface_create_in_error (status));
- }
-+
-+cairo_public int
-+cairo_image_surface_set_dither (cairo_surface_t *surface, cairo_dither_t dither)
-+{
-+    cairo_image_surface_t *image_surface = (cairo_image_surface_t *) surface;
-+
-+    if (! _cairo_surface_is_image (surface)) {
-+	_cairo_error_throw (CAIRO_STATUS_SURFACE_TYPE_MISMATCH);
-+	return 0;
-+    }
-+
-+    image_surface->dither = dither;
-+    if (image_surface->pixman_image) {
-+#if PIXMAN_VERSION >= PIXMAN_VERSION_ENCODE(0,39,0)
-+        pixman_image_set_dither(image_surface->pixman_image,
-+                _pixman_dither_from_cairo_dither(dither));
-+#endif
-+    }
-+
-+}
-+//slim_hidden_def (cairo_image_surface_set_dither);
-+
+  * cairo_set_miter_limit:
+  * @cr: a cairo context
 diff --git a/src/cairo.h b/src/cairo.h
-index 1c911d09d..76db87d2e 100644
+index a2c955281..495305176 100644
 --- a/src/cairo.h
 +++ b/src/cairo.h
-@@ -427,6 +427,14 @@ typedef enum _cairo_format {
+@@ -429,6 +429,31 @@ typedef enum _cairo_format {
      CAIRO_FORMAT_RGBA128F  = 7
  } cairo_format_t;
  
++/**
++ * cairo_dither_t:
++ * @CAIRO_DITHER_NONE: No dithering.
++ * @CAIRO_DITHER_DEFAULT: Default choice at cairo compile time. Currently NONE.
++ * @CAIRO_DITHER_FAST: Corresponds to PIXMAN_DITHER_FAST
++ * @CAIRO_DITHER_GOOD: Corresponds to PIXMAN_DITHER_GOOD
++ * @CAIRO_DITHER_BEST: Corresponds to PIXMAN_DITHER_BEST
++ *
++ *  #cairo_dither_t is modeled on pixman dithering algorithm choice.
++ * As of Pixman 0.40, FAST corresponds to a 8x8 ordered bayer noise and GOOD
++ * and BEST use an ordered 64x64 precomputed blue noise.
++ *
++ * Since: 1.18
++ **/
++#define CAIRO_HAS_DITHER
 +typedef enum _cairo_dither {
 +    CAIRO_DITHER_NONE,
 +    CAIRO_DITHER_DEFAULT,
@@ -466,194 +367,531 @@ index 1c911d09d..76db87d2e 100644
 +    CAIRO_DITHER_BEST
 +} cairo_dither_t;
 +
++cairo_public void
++cairo_set_dither (cairo_t *pattern, cairo_dither_t dither);
  
  /**
   * cairo_write_func_t:
-@@ -2607,6 +2615,12 @@ cairo_image_surface_create_for_data (unsigned char	       *data,
- cairo_public unsigned char *
- cairo_image_surface_get_data (cairo_surface_t *surface);
+@@ -2079,6 +2104,9 @@ cairo_get_target (cairo_t *cr);
+ cairo_public cairo_surface_t *
+ cairo_get_group_target (cairo_t *cr);
  
 +cairo_public cairo_dither_t
-+cairo_image_surface_get_dither (cairo_surface_t *surface);
++cairo_get_dither (cairo_t *cr);
 +
-+cairo_public int
-+cairo_image_surface_set_dither (cairo_surface_t *surface, cairo_dither_t dither);
-+
- cairo_public cairo_format_t
- cairo_image_surface_get_format (cairo_surface_t *surface);
- 
-@@ -3003,14 +3017,6 @@ typedef enum _cairo_filter {
-     CAIRO_FILTER_GAUSSIAN
- } cairo_filter_t;
- 
--typedef enum _cairo_dither {
--    CAIRO_DITHER_NONE,
--    CAIRO_DITHER_DEFAULT,
--    CAIRO_DITHER_FAST,
--    CAIRO_DITHER_GOOD,
--    CAIRO_DITHER_BEST
--} cairo_dither_t;
--
- cairo_public void
- cairo_pattern_set_filter (cairo_pattern_t *pattern, cairo_filter_t filter);
- 
+ /**
+  * cairo_path_data_type_t:
+  * @CAIRO_PATH_MOVE_TO: A move-to operation, since 1.0
 diff --git a/src/cairoint.h b/src/cairoint.h
-index 80b695feb..a8442b5fe 100644
+index ddbbe7baa..0c94f1e02 100644
 --- a/src/cairoint.h
 +++ b/src/cairoint.h
-@@ -1592,6 +1592,11 @@ cairo_private cairo_bool_t
+@@ -1610,6 +1610,12 @@ cairo_private cairo_bool_t
  _pixman_format_to_masks (pixman_format_code_t	 pixman_format,
  			 cairo_format_masks_t	*masks);
  
 +#if PIXMAN_VERSION >= PIXMAN_VERSION_ENCODE(0,39,0)
 +cairo_private pixman_dither_t
-+_pixman_dither_from_cairo_dither(cairo_dither_t dither);
++_pixman_dither_from_cairo_dither (cairo_dither_t dither);
 +#endif
++
 +
  cairo_private void
  _cairo_image_scaled_glyph_fini (cairo_scaled_font_t *scaled_font,
  				cairo_scaled_glyph_t *scaled_glyph);
--- 
-2.25.1
-
-
-From edf60824e871d2393136303761135bb49986fa33 Mon Sep 17 00:00:00 2001
-From: Marc Jeanmougin <marc@jeanmougin.fr>
-Date: Mon, 29 Mar 2021 12:18:56 +0200
-Subject: [PATCH 3/3] make lint tests pass
-
----
- src/cairo-image-surface.c | 20 +++++++++++++++-----
- src/cairo-pattern.c       |  4 ++--
- src/cairoint.h            |  4 +++-
- 3 files changed, 20 insertions(+), 8 deletions(-)
-
-diff --git a/src/cairo-image-surface.c b/src/cairo-image-surface.c
-index 977bb48e6..d2f544a68 100644
---- a/src/cairo-image-surface.c
-+++ b/src/cairo-image-surface.c
-@@ -250,8 +250,9 @@ _pixman_format_from_masks (cairo_format_masks_t *masks,
- }
- 
- #if PIXMAN_VERSION >= PIXMAN_VERSION_ENCODE(0,39,0)
--/* Convenience function to convert cairo_dither_t into pixman_dither_t */
--pixman_dither_t _pixman_dither_from_cairo_dither(cairo_dither_t dither)
-+/* Convenience function to convert #cairo_dither_t into #pixman_dither_t */
-+pixman_dither_t
-+_pixman_dither_from_cairo_dither (cairo_dither_t dither)
- {
-     switch(dither) {
-     default:
-@@ -659,7 +660,7 @@ slim_hidden_def (cairo_image_surface_get_width);
-  *
-  * Return value: the current dithering method.
-  *
-- * Since: TODO
-+ * Since: 1.18
-  **/
- cairo_dither_t
- cairo_image_surface_get_dither (cairo_surface_t *surface)
-@@ -673,7 +674,7 @@ cairo_image_surface_get_dither (cairo_surface_t *surface)
- 
-     return image_surface->dither;
- }
--//slim_hidden_def (cairo_image_surface_get_dither);
-+slim_hidden_def (cairo_image_surface_get_dither);
- 
- /**
-  * cairo_image_surface_get_height:
-@@ -1407,6 +1408,15 @@ error:
-     return to_image_surface (_cairo_surface_create_in_error (status));
- }
- 
-+/**
-+ * cairo_image_surface_set_dither:
-+ * @surface: a #cairo_image_surface_t
-+ * @dither: a #cairo_dither_t
+diff --git a/test/dithergradient.c b/test/dithergradient.c
+new file mode 100644
+index 000000000..26b76eab1
+--- /dev/null
++++ b/test/dithergradient.c
+@@ -0,0 +1,53 @@
++/*
++ * Copyright © 2023 Marc Jeanmougin
 + *
-+ * Sets the current dithering method
++ * Permission to use, copy, modify, distribute, and sell this software
++ * and its documentation for any purpose is hereby granted without
++ * fee, provided that the above copyright notice appear in all copies
++ * and that both that copyright notice and this permission notice
++ * appear in supporting documentation, and that the name of
++ * Red Hat, Inc. not be used in advertising or publicity pertaining to
++ * distribution of the software without specific, written prior
++ * permission. Red Hat, Inc. makes no representations about the
++ * suitability of this software for any purpose.  It is provided "as
++ * is" without express or implied warranty.
 + *
-+ * Since: 1.18
-+ **/
- cairo_public int
- cairo_image_surface_set_dither (cairo_surface_t *surface, cairo_dither_t dither)
- {
-@@ -1426,5 +1436,5 @@ cairo_image_surface_set_dither (cairo_surface_t *surface, cairo_dither_t dither)
-     }
- 
- }
--//slim_hidden_def (cairo_image_surface_set_dither);
-+slim_hidden_def (cairo_image_surface_set_dither);
- 
-diff --git a/src/cairo-pattern.c b/src/cairo-pattern.c
-index 6cf907f36..7d05b06a1 100644
---- a/src/cairo-pattern.c
-+++ b/src/cairo-pattern.c
-@@ -2087,7 +2087,7 @@ cairo_pattern_set_filter (cairo_pattern_t *pattern, cairo_filter_t filter)
-  *
-  * See #cairo_dither_t for details on each algorithm.
-  *
-- * Since: TODO
-+ * Since: 1.18
-  **/
- void
- cairo_pattern_set_dither (cairo_pattern_t *pattern, cairo_dither_t dither)
-@@ -2128,7 +2128,7 @@ cairo_pattern_get_filter (cairo_pattern_t *pattern)
-  *
-  * Return value: the current dithering algorithm of the pattern
-  *
-- * Since: TODO
-+ * Since: 1.18
-  **/
- cairo_dither_t
- cairo_pattern_get_dither (cairo_pattern_t *pattern)
-diff --git a/src/cairoint.h b/src/cairoint.h
-index a8442b5fe..274d43556 100644
---- a/src/cairoint.h
-+++ b/src/cairoint.h
-@@ -1594,7 +1594,7 @@ _pixman_format_to_masks (pixman_format_code_t	 pixman_format,
- 
- #if PIXMAN_VERSION >= PIXMAN_VERSION_ENCODE(0,39,0)
- cairo_private pixman_dither_t
--_pixman_dither_from_cairo_dither(cairo_dither_t dither);
-+_pixman_dither_from_cairo_dither (cairo_dither_t dither);
- #endif
- 
- cairo_private void
-@@ -1982,6 +1982,8 @@ slim_hidden_proto (cairo_image_surface_get_format);
- slim_hidden_proto (cairo_image_surface_get_height);
- slim_hidden_proto (cairo_image_surface_get_stride);
- slim_hidden_proto (cairo_image_surface_get_width);
-+slim_hidden_proto (cairo_image_surface_get_dither);
-+slim_hidden_proto (cairo_image_surface_set_dither);
- slim_hidden_proto (cairo_line_to);
- slim_hidden_proto (cairo_mask);
- slim_hidden_proto (cairo_matrix_init);
++ * RED HAT, INC. DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS
++ * SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
++ * FITNESS, IN NO EVENT SHALL RED HAT, INC. BE LIABLE FOR ANY SPECIAL,
++ * INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER
++ * RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION
++ * OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
++ * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
++ *
++ * Author: Marc Jeanmougin <marc@jeanmougin.fr>
++ */
++
++#include "cairo-test.h"
++
++/* History:
++ * 
++ * 2023: v3 of a patch to use pixman dithering with cairo
++ */
++static cairo_test_status_t
++draw (cairo_t *cr, int width, int height)
++{
++    cairo_pattern_t *gradient = cairo_pattern_create_linear (0, 0, width, 0);
++    cairo_pattern_add_color_stop_rgba (gradient, 0., 25./255, 25./255, 25./255, 1.0);
++    cairo_pattern_add_color_stop_rgba (gradient, 1., 45./255, 45./255, 45./255, 1.0);
++    
++    cairo_set_source (cr, gradient);
++    cairo_set_dither (cr, CAIRO_DITHER_BEST);
++    cairo_paint (cr);
++
++    cairo_pattern_destroy (gradient);
++
++    return CAIRO_TEST_SUCCESS;
++}
++
++CAIRO_TEST (dithergradient,
++	    "Testing the creation of a dithered gradient (in argb32)",
++	    "gradient, dither", /* keywords */
++	    NULL, /* requirements */
++	    400, 100,
++	    NULL, draw)
+diff --git a/test/meson.build b/test/meson.build
+index 1d76d5daa..68fcee4c1 100644
+--- a/test/meson.build
++++ b/test/meson.build
+@@ -124,6 +124,7 @@ test_sources = [
+   'device-offset-fractional.c',
+   'device-offset-positive.c',
+   'device-offset-scale.c',
++  'dithergradient.c',
+   'error-setters.c',
+   'extend-pad.c',
+   'extend-pad-border.c',
+diff --git a/test/reference/dithergradient.image.argb32.ref.png b/test/reference/dithergradient.image.argb32.ref.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..c44e123806d8f7ea7a85aaa5a8875f5c221c151b
+GIT binary patch
+literal 10442
+zcmV;*C^grKP)<h;3K|Lk000e1NJLTq00EEy003kN0ssI2C#mru00006VoOIv0RI60
+z0RN!9r;`8xAOJ~3K~#90<(<Kn8`+L)sl0DmJ+J@&Q1zg$Pa!q{Mx=Yaft4}HC4~-2
+z5Cj;q%XYo~{`>E_Ua!~d{eGXHGjm=%xilnZ(AWQ*X|LnYR<y-F!H;kcX&HdZkHx^H
+zyW4&vV|&XQ(l9LK+;)B2>223B9No3jw+t`UpWye8cE+0iTejceYRB-|{{2#v8hK()
+zqH{lXsI8s?syRQ8Y&fZi^=B-7-a1DLY=M2k$Ho&2>04z9g<>EW#sPGVJU-V*k&}E*
+zdX<CUhugTCt_Luq73b;%NWaCN14@@aU_4eEZ_`H}oPqvT+pYH|hTGlYO2dqN_jx-X
+z@82&J#*AOTF4T@AL3Tg0`yqO457g2ak8gAz3?>vYw~Yh!pwKPgxvC*9uLedj92bpn
+zz8ERS0>5X7I05+9#?#5%y`<ei(=Bt%uYuSjOI>B`5amXSE#m<0EJP__A6$!?s~|tp
+zzhAL7G~_hx3qH~mxyJn5HgP<tsLh|c{!ye!Vb7KNxOd`o4`XqiHT-c?#MV&V4RC%!
+zI&MqEMhC{ya~%`#FS{eES=H&VankX-10#Fbr^*ICZ3^*lUsY}@r3GGanRy|t7!}e$
+zDzH!W@8y?-t^>Ujmn9~5&Kv`)E*&=<b)t5D=W0Bl#hHb*i2q#p6j7>3EupU$>qesB
+zinj0Iibx0mfafC%rD!iYo#eJVv^3oAQ*L#!C81`=ya+?5Ha7aD*_S=KT9l4e`GNCe
+zr!BK@Iz<@K#yg+k-!FXD&NWds9(6;<O^JSxNBMGuUduD@F7myuA4O#&xdMCH^Czwk
+zm=-@{UqFj3sW8xWyIh4X@trFlLGuG(s}kT1Z7q_Z{c7woV)T37MyuQgj)_E*!~+pO
+zdPh+lZn}zU_n#l>U;dKtVD)J=xDgG!)WqQnUYmd0vnA3Uz2~xUJV@xW-pvoM&V%pX
+z@s8t<2Vx=B(_9r30Z);_Emyj05ZDIf%T(7T{NRME@y@5dVHX!o@)A~wXNWF>EO-4V
+zEwR(KXQQ4EU6JJ2_y_y<Yp%0A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
+Aw*UYD
+
+literal 0
+HcmV?d00001
+
+diff --git a/test/reference/dithergradient.image.rgb24.ref.png b/test/reference/dithergradient.image.rgb24.ref.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..c44e123806d8f7ea7a85aaa5a8875f5c221c151b
+GIT binary patch
+literal 10442
+zcmV;*C^grKP)<h;3K|Lk000e1NJLTq00EEy003kN0ssI2C#mru00006VoOIv0RI60
+z0RN!9r;`8xAOJ~3K~#90<(<Kn8`+L)sl0DmJ+J@&Q1zg$Pa!q{Mx=Yaft4}HC4~-2
+z5Cj;q%XYo~{`>E_Ua!~d{eGXHGjm=%xilnZ(AWQ*X|LnYR<y-F!H;kcX&HdZkHx^H
+zyW4&vV|&XQ(l9LK+;)B2>223B9No3jw+t`UpWye8cE+0iTejceYRB-|{{2#v8hK()
+zqH{lXsI8s?syRQ8Y&fZi^=B-7-a1DLY=M2k$Ho&2>04z9g<>EW#sPGVJU-V*k&}E*
+zdX<CUhugTCt_Luq73b;%NWaCN14@@aU_4eEZ_`H}oPqvT+pYH|hTGlYO2dqN_jx-X
+z@82&J#*AOTF4T@AL3Tg0`yqO457g2ak8gAz3?>vYw~Yh!pwKPgxvC*9uLedj92bpn
+zz8ERS0>5X7I05+9#?#5%y`<ei(=Bt%uYuSjOI>B`5amXSE#m<0EJP__A6$!?s~|tp
+zzhAL7G~_hx3qH~mxyJn5HgP<tsLh|c{!ye!Vb7KNxOd`o4`XqiHT-c?#MV&V4RC%!
+zI&MqEMhC{ya~%`#FS{eES=H&VankX-10#Fbr^*ICZ3^*lUsY}@r3GGanRy|t7!}e$
+zDzH!W@8y?-t^>Ujmn9~5&Kv`)E*&=<b)t5D=W0Bl#hHb*i2q#p6j7>3EupU$>qesB
+zinj0Iibx0mfafC%rD!iYo#eJVv^3oAQ*L#!C81`=ya+?5Ha7aD*_S=KT9l4e`GNCe
+zr!BK@Iz<@K#yg+k-!FXD&NWds9(6;<O^JSxNBMGuUduD@F7myuA4O#&xdMCH^Czwk
+zm=-@{UqFj3sW8xWyIh4X@trFlLGuG(s}kT1Z7q_Z{c7woV)T37MyuQgj)_E*!~+pO
+zdPh+lZn}zU_n#l>U;dKtVD)J=xDgG!)WqQnUYmd0vnA3Uz2~xUJV@xW-pvoM&V%pX
+z@s8t<2Vx=B(_9r30Z);_Emyj05ZDIf%T(7T{NRME@y@5dVHX!o@)A~wXNWF>EO-4V
+zEwR(KXQQ4EU6JJ2_y_y<Yp%0A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
+Aw*UYD
+
+literal 0
+HcmV?d00001
+
 -- 
-2.25.1
-
-
-From b2e0f1d6f69ad3013dfb8d677f7b3ee9fac0fceb Mon Sep 17 00:00:00 2001
-From: Marc Jeanmougin <marc@jeanmougin.fr>
-Date: Mon, 24 Jan 2022 21:28:44 +0100
-Subject: [PATCH] add define to detect patched cairo
-
----
- src/cairo.h | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/src/cairo.h b/src/cairo.h
-index 76db87d2e..934bf65d0 100644
---- a/src/cairo.h
-+++ b/src/cairo.h
-@@ -2615,6 +2615,7 @@ cairo_image_surface_create_for_data (unsigned char	       *data,
- cairo_public unsigned char *
- cairo_image_surface_get_data (cairo_surface_t *surface);
- 
-+#define CAIRO_HAS_DITHER
- cairo_public cairo_dither_t
- cairo_image_surface_get_dither (cairo_surface_t *surface);
- 
--- 
-2.25.1
+2.39.2
 

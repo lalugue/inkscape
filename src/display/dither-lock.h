@@ -12,7 +12,7 @@ class DitherLock
 {
 public:
     DitherLock(DrawingContext &dc, bool on)
-        : _cr(dc.rawTarget())
+        : _cr(dc.raw())
         , _on(on)
     {
         if (_on) {
@@ -28,7 +28,7 @@ public:
     }
 
 private:
-    cairo_surface_t *_cr;
+    cairo_t *_cr;
     bool _on;
 };
 

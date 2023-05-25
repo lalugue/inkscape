@@ -1068,10 +1068,10 @@ ink_cairo_set_hairline(cairo_t *ct)
 #endif
 }
 
-void ink_cairo_set_dither(cairo_surface_t *surface, bool enabled)
+void ink_cairo_set_dither(cairo_t *context, bool enabled)
 {
 #ifdef CAIRO_HAS_DITHER
-    cairo_image_surface_set_dither(surface, enabled ? CAIRO_DITHER_BEST : CAIRO_DITHER_NONE);
+    cairo_set_dither(context, enabled ? CAIRO_DITHER_BEST : CAIRO_DITHER_NONE);
 #endif
 }
 
