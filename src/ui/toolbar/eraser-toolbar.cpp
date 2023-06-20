@@ -111,7 +111,7 @@ EraserToolbar::EraserToolbar(SPDesktop *desktop)
     {
         _usepressure = add_toggle_button(_("Eraser Pressure"),
                                          _("Use the pressure of the input device to alter the width of the pen"));
-        _usepressure->set_icon_name(INKSCAPE_ICON("draw-use-pressure"));
+        _usepressure->set_image_from_icon_name(INKSCAPE_ICON("draw-use-pressure"));
         _pressure_pusher.reset(new UI::SimplePrefPusher(_usepressure, "/tools/eraser/usepressure"));
         _usepressure->signal_toggled().connect(sigc::mem_fun(*this, &EraserToolbar::usepressure_toggled));
     }
@@ -199,7 +199,7 @@ EraserToolbar::EraserToolbar(SPDesktop *desktop)
     {
         _split = add_toggle_button(_("Break apart cut items"),
                                    _("Break apart cut items"));
-        _split->set_icon_name(INKSCAPE_ICON("distribute-randomize"));
+        _split->set_image_from_icon_name(INKSCAPE_ICON("distribute-randomize"));
         _split->set_active( prefs->getBool("/tools/eraser/break_apart", false) );
         _split->signal_toggled().connect(sigc::mem_fun(*this, &EraserToolbar::toggle_break_apart));
     }

@@ -64,16 +64,16 @@ private:
     UI::Widget::SpinButtonToolItem *_spray_population;
     UI::Widget::SpinButtonToolItem *_spray_rotation;
     UI::Widget::SpinButtonToolItem *_spray_scale;
-    Gtk::ToggleToolButton *_usepressurescale;
-    Gtk::ToggleToolButton *_picker;
-    Gtk::ToggleToolButton *_pick_center;
-    Gtk::ToggleToolButton *_pick_inverse_value;
-    Gtk::ToggleToolButton *_pick_fill;
-    Gtk::ToggleToolButton *_pick_stroke;
-    Gtk::ToggleToolButton *_pick_no_overlap;
-    Gtk::ToggleToolButton *_over_transparent;
-    Gtk::ToggleToolButton *_over_no_transparent;
-    Gtk::ToggleToolButton *_no_overlap;
+    Gtk::ToggleButton *_usepressurescale;
+    Gtk::ToggleButton *_picker;
+    Gtk::ToggleButton *_pick_center;
+    Gtk::ToggleButton *_pick_inverse_value;
+    Gtk::ToggleButton *_pick_fill;
+    Gtk::ToggleButton *_pick_stroke;
+    Gtk::ToggleButton *_pick_no_overlap;
+    Gtk::ToggleButton *_over_transparent;
+    Gtk::ToggleButton *_over_no_transparent;
+    Gtk::ToggleButton *_no_overlap;
     UI::Widget::SpinButtonToolItem *_offset;
 
     void width_value_changed();
@@ -86,8 +86,7 @@ private:
     void update_widgets();
     void scale_value_changed();
     void offset_value_changed();
-    void on_pref_toggled(Gtk::ToggleToolButton *btn,
-                         const Glib::ustring&   path);
+    void on_pref_toggled(Gtk::ToggleButton *btn, const Glib::ustring &path);
     void toggle_no_overlap();
     void toggle_pressure_scale();
     void toggle_picker();

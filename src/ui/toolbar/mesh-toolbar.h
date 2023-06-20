@@ -53,8 +53,8 @@ class MeshToolbar final : public Toolbar {
     std::vector<Gtk::RadioToolButton *> _new_fillstroke_buttons;
     UI::Widget::ComboToolItem *_select_type_item;
 
-    Gtk::ToggleToolButton *_edit_fill_item;
-    Gtk::ToggleToolButton *_edit_stroke_item;
+    Gtk::ToggleButton *_edit_fill_item;
+    Gtk::ToggleButton *_edit_stroke_item;
 
     Glib::RefPtr<Gtk::Adjustment> _row_adj;
     Glib::RefPtr<Gtk::Adjustment> _col_adj;

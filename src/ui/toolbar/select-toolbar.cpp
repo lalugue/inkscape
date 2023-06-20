@@ -54,10 +54,6 @@ SelectToolbar::SelectToolbar(SPDesktop *desktop)
     , _update(false)
     , _action_prefix("selector:toolbar:")
     , _builder(initialize_builder("toolbar-select.ui"))
-    , _x_btn(get_derived_widget<Inkscape::UI::Widget::SpinButton>(_builder, "_x_btn"))
-    , _y_btn(get_derived_widget<Inkscape::UI::Widget::SpinButton>(_builder, "_y_btn"))
-    , _w_btn(get_derived_widget<Inkscape::UI::Widget::SpinButton>(_builder, "_w_btn"))
-    , _h_btn(get_derived_widget<Inkscape::UI::Widget::SpinButton>(_builder, "_h_btn"))
 {
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
 
@@ -104,10 +100,14 @@ SelectToolbar::SelectToolbar(SPDesktop *desktop)
     _builder->get_widget("_transform_pattern_btn", _transform_pattern_btn);
 
     _builder->get_widget("x_box", x_box);
+    _builder->get_widget_derived("_x_btn", _x_btn);
     _builder->get_widget("y_box", y_box);
+    _builder->get_widget_derived("_y_btn", _y_btn);
     _builder->get_widget("w_box", w_box);
+    _builder->get_widget_derived("_w_btn", _w_btn);
     _builder->get_widget("_lock_btn", _lock_btn);
     _builder->get_widget("h_box", h_box);
+    _builder->get_widget_derived("_h_btn", _h_btn);
     _builder->get_widget("unit_menu_box", unit_menu_box);
 
     setup_derived_spin_button(_x_btn, "X");
@@ -118,7 +118,6 @@ SelectToolbar::SelectToolbar(SPDesktop *desktop)
     auto unit_menu = _tracker->create_tool_item(_("Units"), (""));
     unit_menu_box->add(*unit_menu);
 
-    // ************************************************************
     // Fetch all the ToolbarMenuButtons at once from the UI file
     // Menu Button #1
     Gtk::Box *popover_box1;
@@ -143,8 +142,6 @@ SelectToolbar::SelectToolbar(SPDesktop *desktop)
     _expanded_menu_btns.push(menu_btn1);
     menu_btn2->init(2, "tag2", "some-icon", popover_box2, children);
     _expanded_menu_btns.push(menu_btn2);
-
-    // ************************************************************
 
     add(*_toolbar);
 
@@ -213,19 +210,19 @@ SelectToolbar::create(SPDesktop *desktop)
     return toolbar->Gtk::Widget::gobj();
 }
 
-void SelectToolbar::setup_derived_spin_button(Inkscape::UI::Widget::SpinButton &btn, const Glib::ustring &name)
+void SelectToolbar::setup_derived_spin_button(Inkscape::UI::Widget::SpinButton *btn, const Glib::ustring &name)
 {
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
 
     const Glib::ustring path = "/tools/select/" + name;
     auto val = prefs->getDouble(path, 0.0);
-    auto adj = btn.get_adjustment();
+    auto adj = btn->get_adjustment();
     adj->set_value(val);
     adj->signal_value_changed().connect(sigc::bind(sigc::mem_fun(*this, &SelectToolbar::any_value_changed), adj));
     _tracker->addAdjustment(adj->gobj());
 
-    btn.addUnitTracker(_tracker.get());
-    btn.set_defocus_widget(_desktop->getCanvas());
+    btn->addUnitTracker(_tracker.get());
+    btn->set_defocus_widget(_desktop->getCanvas());
 }
 
 void
@@ -269,10 +266,10 @@ SelectToolbar::any_value_changed(Glib::RefPtr<Gtk::Adjustment>& adj)
     gdouble old_h = bbox_user->dimensions()[Geom::Y];
     gdouble new_w, new_h, new_x, new_y = 0;
 
-    auto _adj_x = _x_btn.get_adjustment();
-    auto _adj_y = _y_btn.get_adjustment();
-    auto _adj_w = _w_btn.get_adjustment();
-    auto _adj_h = _h_btn.get_adjustment();
+    auto _adj_x = _x_btn->get_adjustment();
+    auto _adj_y = _y_btn->get_adjustment();
+    auto _adj_w = _w_btn->get_adjustment();
+    auto _adj_h = _h_btn->get_adjustment();
 
     if (unit->type == Inkscape::Util::UNIT_TYPE_LINEAR) {
         new_w = Quantity::convert(_adj_w->get_value(), unit, "px");
@@ -388,10 +385,10 @@ SelectToolbar::layout_widget_update(Inkscape::Selection *sel)
                 y -= page.top();
             }
 
-            auto _adj_x = _x_btn.get_adjustment();
-            auto _adj_y = _y_btn.get_adjustment();
-            auto _adj_w = _w_btn.get_adjustment();
-            auto _adj_h = _h_btn.get_adjustment();
+            auto _adj_x = _x_btn->get_adjustment();
+            auto _adj_y = _y_btn->get_adjustment();
+            auto _adj_w = _w_btn->get_adjustment();
+            auto _adj_h = _h_btn->get_adjustment();
 
             if (unit->type == Inkscape::Util::UNIT_TYPE_DIMENSIONLESS) {
                 double const val = unit->factor * 100;

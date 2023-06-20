@@ -124,7 +124,7 @@ MeasureToolbar::MeasureToolbar(SPDesktop *desktop)
     {
         _only_selected_item = add_toggle_button(_("Measure only selected"),
                                                 _("Measure only selected"));
-        _only_selected_item->set_icon_name(INKSCAPE_ICON("snap-bounding-box-center"));
+        _only_selected_item->set_image_from_icon_name(INKSCAPE_ICON("snap-bounding-box-center"));
         _only_selected_item->set_active(prefs->getBool("/tools/measure/only_selected", false));
         _only_selected_item->signal_toggled().connect(sigc::mem_fun(*this, &MeasureToolbar::toggle_only_selected));
     }
@@ -133,7 +133,7 @@ MeasureToolbar::MeasureToolbar(SPDesktop *desktop)
     {
         _ignore_1st_and_last_item = add_toggle_button(_("Ignore first and last"),
                                                       _("Ignore first and last"));
-        _ignore_1st_and_last_item->set_icon_name(INKSCAPE_ICON("draw-geometry-line-segment"));
+        _ignore_1st_and_last_item->set_image_from_icon_name(INKSCAPE_ICON("draw-geometry-line-segment"));
         _ignore_1st_and_last_item->set_active(prefs->getBool("/tools/measure/ignore_1st_and_last", true));
         _ignore_1st_and_last_item->signal_toggled().connect(sigc::mem_fun(*this, &MeasureToolbar::toggle_ignore_1st_and_last));
     }
@@ -142,7 +142,7 @@ MeasureToolbar::MeasureToolbar(SPDesktop *desktop)
     {
         _inbetween_item = add_toggle_button(_("Show measures between items"),
                                             _("Show measures between items"));
-        _inbetween_item->set_icon_name(INKSCAPE_ICON("distribute-randomize"));
+        _inbetween_item->set_image_from_icon_name(INKSCAPE_ICON("distribute-randomize"));
         _inbetween_item->set_active(prefs->getBool("/tools/measure/show_in_between", true));
         _inbetween_item->signal_toggled().connect(sigc::mem_fun(*this, &MeasureToolbar::toggle_show_in_between));
     }
@@ -151,7 +151,7 @@ MeasureToolbar::MeasureToolbar(SPDesktop *desktop)
     {
         _show_hidden_item = add_toggle_button(_("Show hidden intersections"),
                                               _("Show hidden intersections"));
-        _show_hidden_item->set_icon_name(INKSCAPE_ICON("object-hidden"));
+        _show_hidden_item->set_image_from_icon_name(INKSCAPE_ICON("object-hidden"));
         _show_hidden_item->set_active(prefs->getBool("/tools/measure/show_hidden", true));
         _show_hidden_item->signal_toggled().connect(sigc::mem_fun(*this, &MeasureToolbar::toggle_show_hidden)) ;
     }
@@ -160,7 +160,7 @@ MeasureToolbar::MeasureToolbar(SPDesktop *desktop)
     {
         _all_layers_item = add_toggle_button(_("Measure all layers"),
                                              _("Measure all layers"));
-        _all_layers_item->set_icon_name(INKSCAPE_ICON("dialog-layers"));
+        _all_layers_item->set_image_from_icon_name(INKSCAPE_ICON("dialog-layers"));
         _all_layers_item->set_active(prefs->getBool("/tools/measure/all_layers", true));
         _all_layers_item->signal_toggled().connect(sigc::mem_fun(*this, &MeasureToolbar::toggle_all_layers));
     }

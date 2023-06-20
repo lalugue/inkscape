@@ -59,8 +59,8 @@ private:
     UI::Widget::SpinButtonToolItem *_cap_rounding;
     UI::Widget::SpinButtonToolItem *_tremor;
 
-    Gtk::ToggleToolButton *_usepressure;
-    Gtk::ToggleToolButton *_split;
+    Gtk::ToggleButton *_usepressure;
+    Gtk::ToggleButton *_split;
 
     Glib::RefPtr<Gtk::Adjustment> _width_adj;
     Glib::RefPtr<Gtk::Adjustment> _mass_adj;

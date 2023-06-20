@@ -2,14 +2,14 @@
 
 #include "simple-pref-pusher.h"
 
-#include <gtkmm/toggletoolbutton.h>
+#include <gtkmm/togglebutton.h>
 
 namespace Inkscape {
 namespace UI {
-SimplePrefPusher::SimplePrefPusher( Gtk::ToggleToolButton *btn, Glib::ustring const &path ) :
-    Observer(path),
-    _btn(btn),
-    freeze(false)
+SimplePrefPusher::SimplePrefPusher(Gtk::ToggleButton *btn, Glib::ustring const &path)
+    : Observer(path)
+    , _btn(btn)
+    , freeze(false)
 {
     freeze = true;
     _btn->set_active( Inkscape::Preferences::get()->getBool(observed_path) );

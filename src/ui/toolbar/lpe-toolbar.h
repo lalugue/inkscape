@@ -59,10 +59,10 @@ class LPEToolbar : public Toolbar {
 private:
     std::unique_ptr<UI::Widget::UnitTracker> _tracker;
     std::vector<Gtk::RadioToolButton *> _mode_buttons;
-    Gtk::ToggleToolButton *_show_bbox_item;
-    Gtk::ToggleToolButton *_bbox_from_selection_item;
-    Gtk::ToggleToolButton *_measuring_item;
-    Gtk::ToggleToolButton *_open_lpe_dialog_item;
+    Gtk::ToggleButton *_show_bbox_item;
+    Gtk::ToggleButton *_bbox_from_selection_item;
+    Gtk::ToggleButton *_measuring_item;
+    Gtk::ToggleButton *_open_lpe_dialog_item;
     UI::Widget::ComboToolItem *_line_segment_combo;
     UI::Widget::ComboToolItem *_units_item;
 

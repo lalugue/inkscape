@@ -12,7 +12,7 @@
 
 #include <gtkmm/label.h>
 #include <gtkmm/separatortoolitem.h>
-#include <gtkmm/toggletoolbutton.h>
+#include <gtkmm/togglebutton.h>
 
 #include "desktop.h"
 #include "io/resource.h"
@@ -50,9 +50,7 @@ Toolbar::add_label(const Glib::ustring &label_text)
  *
  * \returns The toggle button
  */
-Gtk::ToggleToolButton *
-Toolbar::add_toggle_button(const Glib::ustring &label_text,
-                           const Glib::ustring &tooltip_text)
+Gtk::ToggleButton *Toolbar::add_toggle_button(const Glib::ustring &label_text, const Glib::ustring &tooltip_text)
 {
     auto const btn = Gtk::make_managed<Gtk::ToggleToolButton>(label_text);
     btn->set_tooltip_text(tooltip_text);

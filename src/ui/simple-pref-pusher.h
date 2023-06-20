@@ -5,17 +5,17 @@
 #include "preferences.h"
 
 namespace Gtk {
-class ToggleToolButton;
+class ToggleButton;
 }
 
 namespace Inkscape {
 namespace UI {
 
 /**
- * A simple mediator class that sets the state of a Gtk::ToggleToolButton when
+ * A simple mediator class that sets the state of a Gtk::ToggleButton when
  * a preference is changed.  Unlike the PrefPusher class, this does not provide
  * the reverse process, so you still need to write your own handler for the
- * "toggled" signal on the ToggleToolButton.
+ * "toggled" signal on the ToggleButton.
  */
 class SimplePrefPusher : public Inkscape::Preferences::Observer
 {
@@ -30,8 +30,7 @@ public:
      * @param callback function to invoke when changes are pushed.
      * @param cbData data to be passed on to the callback function.
      */
-    SimplePrefPusher(Gtk::ToggleToolButton *btn,
-                     Glib::ustring const &  path);
+    SimplePrefPusher(Gtk::ToggleButton *btn, Glib::ustring const &path);
 
     /**
      * Destructor that unregisters the preference callback.
@@ -45,7 +44,7 @@ public:
 
 
 private:
-    Gtk::ToggleToolButton *_btn;
+    Gtk::ToggleButton *_btn;
     bool freeze;
 };
 

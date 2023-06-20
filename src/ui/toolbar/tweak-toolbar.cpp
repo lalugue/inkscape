@@ -85,7 +85,7 @@ TweakToolbar::TweakToolbar(SPDesktop *desktop)
     {
         _pressure_item = add_toggle_button(_("Pressure"),
                                            _("Use the pressure of the input device to alter the force of tweak action"));
-        _pressure_item->set_icon_name(INKSCAPE_ICON("draw-use-pressure"));
+        _pressure_item->set_image_from_icon_name(INKSCAPE_ICON("draw-use-pressure"));
         _pressure_item->signal_toggled().connect(sigc::mem_fun(*this, &TweakToolbar::pressure_state_changed));
         _pressure_item->set_active(prefs->getBool("/tools/tweak/usepressure", true));
     }

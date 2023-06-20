@@ -72,9 +72,9 @@ private:
     Glib::RefPtr<Gtk::Adjustment> _tremor_adj;
     Glib::RefPtr<Gtk::Adjustment> _fixation_adj;
     Glib::RefPtr<Gtk::Adjustment> _cap_rounding_adj;
-    Gtk::ToggleToolButton *_usepressure;
-    Gtk::ToggleToolButton *_tracebackground;
-    Gtk::ToggleToolButton *_usetilt;
+    Gtk::ToggleButton *_usepressure;
+    Gtk::ToggleButton *_tracebackground;
+    Gtk::ToggleButton *_usetilt;
 
     std::unique_ptr<SimplePrefPusher> _tracebackground_pusher;
     std::unique_ptr<SimplePrefPusher> _usepressure_pusher;
@@ -95,9 +95,8 @@ private:
     void update_presets_list();
     void tilt_state_changed();
     void unit_changed(int not_used);
-    void on_pref_toggled(Gtk::ToggleToolButton *item,
-                         const Glib::ustring&   path);
-    
+    void on_pref_toggled(Gtk::ToggleButton *item, const Glib::ustring &path);
+
 protected:
     CalligraphyToolbar(SPDesktop *desktop);
 

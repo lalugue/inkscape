@@ -54,7 +54,7 @@ private:
     Gtk::ToolButton *_stops_add_item;
     Gtk::ToolButton *_stops_delete_item;
     Gtk::ToolButton *_stops_reverse_item;
-    Gtk::ToggleToolButton *_linked_item;
+    Gtk::ToggleButton *_linked_item;
 
     UI::Widget::SpinButtonToolItem *_offset_item;
 

@@ -104,7 +104,7 @@ LPEToolbar::LPEToolbar(SPDesktop *desktop)
     {
         _show_bbox_item = add_toggle_button(_("Show limiting bounding box"),
                                             _("Show bounding box (used to cut infinite lines)"));
-        _show_bbox_item->set_icon_name(INKSCAPE_ICON("show-bounding-box"));
+        _show_bbox_item->set_image_from_icon_name(INKSCAPE_ICON("show-bounding-box"));
         _show_bbox_item->signal_toggled().connect(sigc::mem_fun(*this, &LPEToolbar::toggle_show_bbox));
         _show_bbox_item->set_active(prefs->getBool( "/tools/lpetool/show_bbox", true ));
     }
@@ -114,7 +114,7 @@ LPEToolbar::LPEToolbar(SPDesktop *desktop)
         // TODO: Shouldn't this just be a button (not toggle button)?
         _bbox_from_selection_item = add_toggle_button(_("Get limiting bounding box from selection"),
                                                       _("Set limiting bounding box (used to cut infinite lines) to the bounding box of current selection"));
-        _bbox_from_selection_item->set_icon_name(INKSCAPE_ICON("draw-geometry-set-bounding-box"));
+        _bbox_from_selection_item->set_image_from_icon_name(INKSCAPE_ICON("draw-geometry-set-bounding-box"));
         _bbox_from_selection_item->signal_toggled().connect(sigc::mem_fun(*this, &LPEToolbar::toggle_set_bbox));
         _bbox_from_selection_item->set_active(false);
     }
@@ -154,7 +154,7 @@ LPEToolbar::LPEToolbar(SPDesktop *desktop)
     {
         _measuring_item = add_toggle_button(_("Display measuring info"),
                                             _("Display measuring info for selected items"));
-        _measuring_item->set_icon_name(INKSCAPE_ICON("draw-geometry-show-measuring-info"));
+        _measuring_item->set_image_from_icon_name(INKSCAPE_ICON("draw-geometry-show-measuring-info"));
         _measuring_item->signal_toggled().connect(sigc::mem_fun(*this, &LPEToolbar::toggle_show_measuring_info));
         _measuring_item->set_active( prefs->getBool( "/tools/lpetool/show_measuring_info", true ) );
     }
@@ -174,7 +174,7 @@ LPEToolbar::LPEToolbar(SPDesktop *desktop)
         // TODO: Shouldn't this be a regular Gtk::ToolButton (not toggle)?
         _open_lpe_dialog_item = add_toggle_button(_("Open LPE dialog"),
                                                   _("Open LPE dialog (to adapt parameters numerically)"));
-        _open_lpe_dialog_item->set_icon_name(INKSCAPE_ICON("dialog-geometry"));
+        _open_lpe_dialog_item->set_image_from_icon_name(INKSCAPE_ICON("dialog-geometry"));
         _open_lpe_dialog_item->signal_toggled().connect(sigc::mem_fun(*this, &LPEToolbar::open_lpe_dialog));
         _open_lpe_dialog_item->set_active(false);
     }

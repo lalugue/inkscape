@@ -57,8 +57,7 @@ protected:
     Toolbar(SPDesktop *desktop);
 
     Gtk::ToolItem         * add_label(const Glib::ustring &label_text);
-    Gtk::ToggleToolButton * add_toggle_button(const Glib::ustring &label_text,
-                                              const Glib::ustring &tooltip_text);
+    Gtk::ToggleButton *add_toggle_button(const Glib::ustring &label_text, const Glib::ustring &tooltip_text);
     void add_separator();
     Glib::RefPtr<Gtk::Builder> initialize_builder(const char *file_name);
     void resize_handler(Gtk::Allocation &allocation);

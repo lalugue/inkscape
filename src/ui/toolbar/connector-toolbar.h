@@ -54,9 +54,9 @@ class ConnectorToolbar
 	, private XML::NodeObserver
 {
 private:
-    Gtk::ToggleToolButton *_orthogonal;
-    Gtk::ToggleToolButton *_directed_item;
-    Gtk::ToggleToolButton *_overlap_item;
+    Gtk::ToggleButton *_orthogonal;
+    Gtk::ToggleButton *_directed_item;
+    Gtk::ToggleButton *_overlap_item;
 
     Glib::RefPtr<Gtk::Adjustment> _curvature_adj;
     Glib::RefPtr<Gtk::Adjustment> _spacing_adj;

@@ -37,7 +37,7 @@ class SPDesktop;
 
 namespace Gtk {
 class RadioToolButton;
-class ToggleToolButton;
+class ToggleButton;
 class ToolButton;
 }
 
@@ -58,7 +58,7 @@ private:
     bool const _tool_is_pencil;
     std::vector<Gtk::RadioToolButton *> _mode_buttons;
 
-    Gtk::ToggleToolButton *_pressure_item = nullptr;
+    Gtk::ToggleButton *_pressure_item = nullptr;
     UI::Widget::SpinButtonToolItem *_minpressure = nullptr;
     UI::Widget::SpinButtonToolItem *_maxpressure = nullptr;
     UI::Widget::SpinButtonToolItem *_shapescale = nullptr;
@@ -70,7 +70,7 @@ private:
     UI::Widget::ComboToolItem *_shape_item = nullptr;
     UI::Widget::ComboToolItem *_cap_item = nullptr;
 
-    Gtk::ToggleToolButton *_simplify = nullptr;
+    Gtk::ToggleButton *_simplify = nullptr;
 
     bool _freeze = false;
 

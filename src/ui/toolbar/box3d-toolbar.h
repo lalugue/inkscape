@@ -70,9 +70,9 @@ private:
     Glib::RefPtr<Gtk::Adjustment> _angle_y_adj;
     Glib::RefPtr<Gtk::Adjustment> _angle_z_adj;
 
-    Gtk::ToggleToolButton *_vp_x_state_item;
-    Gtk::ToggleToolButton *_vp_y_state_item;
-    Gtk::ToggleToolButton *_vp_z_state_item;
+    Gtk::ToggleButton *_vp_x_state_item;
+    Gtk::ToggleButton *_vp_y_state_item;
+    Gtk::ToggleButton *_vp_z_state_item;
 
     XML::Node *_repr{nullptr};
     bool _freeze{false};
@@ -83,11 +83,8 @@ private:
     void check_ec(SPDesktop* desktop, Inkscape::UI::Tools::ToolBase* tool);
     void selection_changed(Inkscape::Selection *selection);
     void resync_toolbar(Inkscape::XML::Node *persp_repr);
-    void set_button_and_adjustment(Persp3D                        *persp,
-                                   Proj::Axis                      axis,
-                                   Glib::RefPtr<Gtk::Adjustment>&  adj,
-                                   UI::Widget::SpinButtonToolItem *spin_btn,
-                                   Gtk::ToggleToolButton          *toggle_btn);
+    void set_button_and_adjustment(Persp3D *persp, Proj::Axis axis, Glib::RefPtr<Gtk::Adjustment> &adj,
+                                   UI::Widget::SpinButtonToolItem *spin_btn, Gtk::ToggleButton *toggle_btn);
     double normalize_angle(double a);
 
     sigc::connection _changed;

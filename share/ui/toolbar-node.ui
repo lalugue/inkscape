@@ -1,26 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Generated with glade 3.40.0 -->
 <interface>
-  <requires lib="gtk+" version="3.22"/>
-  <object class="GtkAdjustment" id="_h_adj">
+  <requires lib="gtk+" version="3.24"/>
+  <object class="GtkAdjustment" id="_nodes_x_adj">
     <property name="lower">-1000000</property>
     <property name="upper">1000000</property>
     <property name="step-increment">0.10</property>
     <property name="page-increment">5</property>
   </object>
-  <object class="GtkAdjustment" id="_w_adj">
-    <property name="lower">-1000000</property>
-    <property name="upper">1000000</property>
-    <property name="step-increment">0.10</property>
-    <property name="page-increment">5</property>
-  </object>
-  <object class="GtkAdjustment" id="_x_adj">
-    <property name="lower">-1000000</property>
-    <property name="upper">1000000</property>
-    <property name="step-increment">0.10</property>
-    <property name="page-increment">5</property>
-  </object>
-  <object class="GtkAdjustment" id="_y_adj">
+  <object class="GtkAdjustment" id="_nodes_y_adj">
     <property name="lower">-1000000</property>
     <property name="upper">1000000</property>
     <property name="step-increment">0.10</property>
@@ -66,20 +54,30 @@
     <property name="can-focus">False</property>
     <property name="icon-name">show-node-handles</property>
   </object>
-  <object class="GtkImage" id="image17">
-    <property name="visible">True</property>
-    <property name="can-focus">False</property>
-    <property name="icon-name">corners</property>
-  </object>
   <object class="GtkImage" id="image19">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
-    <property name="icon-name">show-node-handles</property>
+    <property name="icon-name">show-path-outline</property>
   </object>
   <object class="GtkImage" id="image2">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
-    <property name="icon-name">node-delete</property>
+    <property name="icon-name">node-join</property>
+  </object>
+  <object class="GtkImage" id="image20">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="icon-name">object-to-path</property>
+  </object>
+  <object class="GtkImage" id="image21">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="icon-name">stroke-to-path</property>
+  </object>
+  <object class="GtkImage" id="image22">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="icon-name">path-effect-parameter-next</property>
   </object>
   <object class="GtkImage" id="image3">
     <property name="visible">True</property>
@@ -94,7 +92,7 @@
   <object class="GtkImage" id="image5">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
-    <property name="icon-name">node-join-segment</property>
+    <property name="icon-name">node-delete-segment</property>
   </object>
   <object class="GtkImage" id="image6">
     <property name="visible">True</property>
@@ -116,11 +114,65 @@
     <property name="can-focus">False</property>
     <property name="icon-name">node-type-auto-smooth</property>
   </object>
+  <object class="GtkMenu" id="insert_node_menu">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <child>
+      <object class="GtkMenuItem" id="insert_min_x_item">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <property name="tooltip-text" translatable="yes">Insert new nodes at min X into selected segments</property>
+        <property name="label" translatable="yes">Insert node at min X</property>
+      </object>
+    </child>
+    <child>
+      <object class="GtkMenuItem" id="insert_max_x_item">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <property name="tooltip-text" translatable="yes">Insert new nodes at max X into selected segments</property>
+        <property name="label" translatable="yes">Insert node at max X</property>
+      </object>
+    </child>
+    <child>
+      <object class="GtkMenuItem" id="insert_min_y_item">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <property name="tooltip-text" translatable="yes">Insert new nodes at min Y into selected segments</property>
+        <property name="label" translatable="yes">Insert node at min Y</property>
+      </object>
+    </child>
+    <child>
+      <object class="GtkMenuItem" id="insert_max_y_item">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <property name="tooltip-text" translatable="yes">Insert new nodes at max Y into selected segments</property>
+        <property name="label" translatable="yes">Insert node at max Y</property>
+      </object>
+    </child>
+  </object>
   <object class="GtkPopover" id="popover1">
     <property name="can-focus">False</property>
     <property name="modal">False</property>
     <child>
       <object class="GtkBox" id="popover_box1">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <property name="valign">center</property>
+        <property name="spacing">3</property>
+        <child>
+          <placeholder/>
+        </child>
+        <style>
+          <class name="toolbar-menu-button-popover-box"/>
+        </style>
+      </object>
+    </child>
+  </object>
+  <object class="GtkPopover" id="popover2">
+    <property name="can-focus">False</property>
+    <property name="modal">False</property>
+    <child>
+      <object class="GtkBox" id="popover_box2">
         <property name="visible">True</property>
         <property name="can-focus">False</property>
         <property name="valign">center</property>
@@ -140,18 +192,19 @@
     <property name="valign">center</property>
     <property name="spacing">3</property>
     <child>
-      <object class="GtkMenuButton" id="menu_btn1">
+      <object class="GtkMenuButton" id="insert_node_item">
         <property name="visible">True</property>
         <property name="can-focus">True</property>
         <property name="focus-on-click">False</property>
         <property name="receives-default">True</property>
+        <property name="tooltip-text" translatable="yes">Insert new nodes into selected segments</property>
         <property name="relief">none</property>
-        <property name="popover">popover1</property>
+        <property name="popup">insert_node_menu</property>
         <child>
           <object class="GtkImage" id="image18">
             <property name="visible">True</property>
             <property name="can-focus">False</property>
-            <property name="icon-name">icon1</property>
+            <property name="icon-name">node-add</property>
           </object>
         </child>
       </object>
@@ -162,7 +215,7 @@
       </packing>
     </child>
     <child>
-      <object class="GtkButton">
+      <object class="GtkButton" id="delete_item">
         <property name="visible">True</property>
         <property name="can-focus">True</property>
         <property name="can-default">True</property>
@@ -171,9 +224,6 @@
         <property name="image">image1</property>
         <property name="relief">none</property>
         <property name="always-show-image">True</property>
-        <style>
-          <class name="tag1"/>
-        </style>
       </object>
       <packing>
         <property name="expand">False</property>
@@ -193,7 +243,7 @@
       </packing>
     </child>
     <child>
-      <object class="GtkButton">
+      <object class="GtkButton" id="join_item">
         <property name="visible">True</property>
         <property name="can-focus">True</property>
         <property name="receives-default">False</property>
@@ -201,9 +251,6 @@
         <property name="image">image2</property>
         <property name="relief">none</property>
         <property name="always-show-image">True</property>
-        <style>
-          <class name="tag1"/>
-        </style>
       </object>
       <packing>
         <property name="expand">False</property>
@@ -212,7 +259,7 @@
       </packing>
     </child>
     <child>
-      <object class="GtkButton">
+      <object class="GtkButton" id="break_item">
         <property name="visible">True</property>
         <property name="can-focus">True</property>
         <property name="receives-default">False</property>
@@ -220,10 +267,6 @@
         <property name="image">image3</property>
         <property name="relief">none</property>
         <property name="always-show-image">True</property>
-        <style>
-          <class name="context_item"/>
-          <class name="tag1"/>
-        </style>
       </object>
       <packing>
         <property name="expand">False</property>
@@ -243,7 +286,7 @@
       </packing>
     </child>
     <child>
-      <object class="GtkButton">
+      <object class="GtkButton" id="join_segment_item">
         <property name="visible">True</property>
         <property name="can-focus">True</property>
         <property name="receives-default">True</property>
@@ -259,7 +302,7 @@
       </packing>
     </child>
     <child>
-      <object class="GtkButton">
+      <object class="GtkButton" id="delete_segment_item">
         <property name="visible">True</property>
         <property name="can-focus">True</property>
         <property name="receives-default">True</property>
@@ -286,14 +329,20 @@
       </packing>
     </child>
     <child>
-      <object class="GtkButton">
+      <object class="GtkMenuButton" id="menu_btn1">
         <property name="visible">True</property>
         <property name="can-focus">True</property>
-        <property name="receives-default">False</property>
-        <property name="tooltip-text" translatable="yes">Make selected nodes corner</property>
-        <property name="image">image6</property>
+        <property name="focus-on-click">False</property>
+        <property name="receives-default">True</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
+        <property name="popover">popover1</property>
+        <child>
+          <object class="GtkImage" id="image17">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="icon-name">icon1</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="expand">False</property>
@@ -302,14 +351,17 @@
       </packing>
     </child>
     <child>
-      <object class="GtkButton">
+      <object class="GtkButton" id="cusp_item">
         <property name="visible">True</property>
         <property name="can-focus">True</property>
         <property name="receives-default">False</property>
-        <property name="tooltip-text" translatable="yes">Make selected nodes smooth</property>
-        <property name="image">image7</property>
+        <property name="tooltip-text" translatable="yes">Make selected nodes corner</property>
+        <property name="image">image6</property>
         <property name="relief">none</property>
         <property name="always-show-image">True</property>
+        <style>
+          <class name="tag1"/>
+        </style>
       </object>
       <packing>
         <property name="expand">False</property>
@@ -318,14 +370,17 @@
       </packing>
     </child>
     <child>
-      <object class="GtkButton">
+      <object class="GtkButton" id="smooth_item">
         <property name="visible">True</property>
         <property name="can-focus">True</property>
         <property name="receives-default">False</property>
-        <property name="tooltip-text" translatable="yes">Make selected nodes symmetric</property>
-        <property name="image">image8</property>
+        <property name="tooltip-text" translatable="yes">Make selected nodes smooth</property>
+        <property name="image">image7</property>
         <property name="relief">none</property>
         <property name="always-show-image">True</property>
+        <style>
+          <class name="tag1"/>
+        </style>
       </object>
       <packing>
         <property name="expand">False</property>
@@ -334,7 +389,26 @@
       </packing>
     </child>
     <child>
-      <object class="GtkButton">
+      <object class="GtkButton" id="symmetric_item">
+        <property name="visible">True</property>
+        <property name="can-focus">True</property>
+        <property name="receives-default">False</property>
+        <property name="tooltip-text" translatable="yes">Make selected nodes symmetric</property>
+        <property name="image">image8</property>
+        <property name="relief">none</property>
+        <property name="always-show-image">True</property>
+        <style>
+          <class name="tag1"/>
+        </style>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="fill">True</property>
+        <property name="position">12</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkButton" id="auto_item">
         <property name="visible">True</property>
         <property name="can-focus">True</property>
         <property name="receives-default">False</property>
@@ -342,11 +416,14 @@
         <property name="image">image9</property>
         <property name="relief">none</property>
         <property name="always-show-image">True</property>
+        <style>
+          <class name="tag1"/>
+        </style>
       </object>
       <packing>
         <property name="expand">False</property>
         <property name="fill">True</property>
-        <property name="position">12</property>
+        <property name="position">13</property>
       </packing>
     </child>
     <child>
@@ -358,11 +435,11 @@
       <packing>
         <property name="expand">False</property>
         <property name="fill">True</property>
-        <property name="position">13</property>
+        <property name="position">14</property>
       </packing>
     </child>
     <child>
-      <object class="GtkButton">
+      <object class="GtkButton" id="line_item">
         <property name="visible">True</property>
         <property name="can-focus">True</property>
         <property name="receives-default">False</property>
@@ -374,11 +451,11 @@
       <packing>
         <property name="expand">False</property>
         <property name="fill">True</property>
-        <property name="position">14</property>
+        <property name="position">15</property>
       </packing>
     </child>
     <child>
-      <object class="GtkButton">
+      <object class="GtkButton" id="curve_item">
         <property name="visible">True</property>
         <property name="can-focus">True</property>
         <property name="receives-default">False</property>
@@ -390,7 +467,7 @@
       <packing>
         <property name="expand">False</property>
         <property name="fill">True</property>
-        <property name="position">15</property>
+        <property name="position">16</property>
       </packing>
     </child>
     <child>
@@ -402,11 +479,11 @@
       <packing>
         <property name="expand">False</property>
         <property name="fill">True</property>
-        <property name="position">16</property>
+        <property name="position">17</property>
       </packing>
     </child>
     <child>
-      <object class="GtkButton">
+      <object class="GtkButton" id="lpe_corners_item">
         <property name="visible">True</property>
         <property name="can-focus">True</property>
         <property name="receives-default">False</property>
@@ -419,57 +496,13 @@
       <packing>
         <property name="expand">False</property>
         <property name="fill">True</property>
-        <property name="position">17</property>
+        <property name="position">18</property>
       </packing>
     </child>
     <child>
       <object class="GtkSeparator">
         <property name="visible">True</property>
         <property name="can-focus">False</property>
-        <property name="margin-end">2</property>
-      </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">18</property>
-      </packing>
-    </child>
-    <child>
-      <object class="GtkBox" id="x_box">
-        <property name="visible">True</property>
-        <property name="can-focus">False</property>
-        <property name="margin-start">4</property>
-        <child>
-          <object class="GtkLabel">
-            <property name="visible">True</property>
-            <property name="can-focus">False</property>
-            <property name="label" translatable="yes">X:</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">0</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkSpinButton" id="_x_btn">
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
-            <property name="tooltip-text" translatable="yes">Horizontal coordinate of selection</property>
-            <property name="width-chars">10</property>
-            <property name="adjustment">_x_adj</property>
-            <property name="climb-rate">0.10</property>
-            <property name="digits">3</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">1</property>
-          </packing>
-        </child>
-        <style>
-          <class name="context_item"/>
-        </style>
       </object>
       <packing>
         <property name="expand">False</property>
@@ -478,41 +511,15 @@
       </packing>
     </child>
     <child>
-      <object class="GtkBox" id="y_box">
+      <object class="GtkButton" id="object_to_path_item">
         <property name="visible">True</property>
-        <property name="can-focus">False</property>
-        <child>
-          <object class="GtkLabel">
-            <property name="visible">True</property>
-            <property name="can-focus">False</property>
-            <property name="label" translatable="yes">Y:</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">0</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkSpinButton" id="_y_btn">
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
-            <property name="tooltip-text" translatable="yes">Vertical coordinate of selection</property>
-            <property name="width-chars">10</property>
-            <property name="text" translatable="yes">0.000</property>
-            <property name="adjustment">_y_adj</property>
-            <property name="climb-rate">0.10</property>
-            <property name="digits">3</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">1</property>
-          </packing>
-        </child>
-        <style>
-          <class name="context_item"/>
-        </style>
+        <property name="can-focus">True</property>
+        <property name="receives-default">False</property>
+        <property name="tooltip-text" translatable="yes">Convert selected object to path</property>
+        <property name="action-name">app.object-to-path</property>
+        <property name="image">image20</property>
+        <property name="relief">none</property>
+        <property name="always-show-image">True</property>
       </object>
       <packing>
         <property name="expand">False</property>
@@ -521,12 +528,15 @@
       </packing>
     </child>
     <child>
-      <object class="GtkBox" id="unit_menu_box">
+      <object class="GtkButton" id="stroke_to_path_item">
         <property name="visible">True</property>
-        <property name="can-focus">False</property>
-        <child>
-          <placeholder/>
-        </child>
+        <property name="can-focus">True</property>
+        <property name="receives-default">False</property>
+        <property name="tooltip-text" translatable="yes">Convert selected object's stroke to paths</property>
+        <property name="action-name">app.object-stroke-to-path</property>
+        <property name="image">image21</property>
+        <property name="relief">none</property>
+        <property name="always-show-image">True</property>
       </object>
       <packing>
         <property name="expand">False</property>
@@ -547,14 +557,41 @@
       </packing>
     </child>
     <child>
-      <object class="GtkToggleButton" id="_object_edit_clip_path_item">
+      <object class="GtkBox" id="_nodes_x_box">
         <property name="visible">True</property>
-        <property name="can-focus">True</property>
-        <property name="receives-default">False</property>
-        <property name="tooltip-text" translatable="yes">Show clipping path(s) of selected object(s)</property>
-        <property name="image">image13</property>
-        <property name="relief">none</property>
-        <property name="always-show-image">True</property>
+        <property name="can-focus">False</property>
+        <property name="margin-start">4</property>
+        <child>
+          <object class="GtkLabel">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="label" translatable="yes">X:</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkSpinButton" id="_nodes_x_item">
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="tooltip-text" translatable="yes">X coordinate of selected node(s)</property>
+            <property name="width-chars">10</property>
+            <property name="adjustment">_nodes_x_adj</property>
+            <property name="climb-rate">0.10</property>
+            <property name="digits">3</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <style>
+          <class name="context_item"/>
+        </style>
       </object>
       <packing>
         <property name="expand">False</property>
@@ -563,14 +600,41 @@
       </packing>
     </child>
     <child>
-      <object class="GtkToggleButton" id="_object_edit_mask_path_item">
+      <object class="GtkBox" id="_nodes_y_box">
         <property name="visible">True</property>
-        <property name="can-focus">True</property>
-        <property name="receives-default">False</property>
-        <property name="tooltip-text" translatable="yes">Show mask(s) of selected object(s)</property>
-        <property name="image">image14</property>
-        <property name="relief">none</property>
-        <property name="always-show-image">True</property>
+        <property name="can-focus">False</property>
+        <child>
+          <object class="GtkLabel">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="label" translatable="yes">Y:</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkSpinButton" id="_nodes_y_item">
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="tooltip-text" translatable="yes">Y coordinate of selected node(s)</property>
+            <property name="width-chars">10</property>
+            <property name="text" translatable="yes">0.000</property>
+            <property name="adjustment">_nodes_y_adj</property>
+            <property name="climb-rate">0.10</property>
+            <property name="digits">3</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <style>
+          <class name="context_item"/>
+        </style>
       </object>
       <packing>
         <property name="expand">False</property>
@@ -579,15 +643,12 @@
       </packing>
     </child>
     <child>
-      <object class="GtkButton">
+      <object class="GtkBox" id="unit_menu_box">
         <property name="visible">True</property>
-        <property name="can-focus">True</property>
-        <property name="receives-default">False</property>
-        <property name="tooltip-text" translatable="yes">Show next editable path effect parameter</property>
-        <property name="action-name">win.path-effect-parameter-next</property>
-        <property name="image">image17</property>
-        <property name="relief">none</property>
-        <property name="always-show-image">True</property>
+        <property name="can-focus">False</property>
+        <child>
+          <placeholder/>
+        </child>
       </object>
       <packing>
         <property name="expand">False</property>
@@ -608,12 +669,13 @@
       </packing>
     </child>
     <child>
-      <object class="GtkToggleButton" id="_show_transform_handles_item">
+      <object class="GtkButton" id="_nodes_lpeedit_item">
         <property name="visible">True</property>
         <property name="can-focus">True</property>
-        <property name="receives-default">False</property>
-        <property name="tooltip-text" translatable="yes">Show transformation handles for selected nodes</property>
-        <property name="image">image15</property>
+        <property name="receives-default">True</property>
+        <property name="tooltip-text" translatable="yes">Show next editable path effect parameter</property>
+        <property name="action-name">win.path-effect-parameter-next</property>
+        <property name="image">image22</property>
         <property name="relief">none</property>
         <property name="always-show-image">True</property>
       </object>
@@ -624,19 +686,37 @@
       </packing>
     </child>
     <child>
-      <object class="GtkToggleButton" id="_show_handles_item">
+      <object class="GtkSeparator">
         <property name="visible">True</property>
-        <property name="can-focus">True</property>
-        <property name="receives-default">False</property>
-        <property name="tooltip-text" translatable="yes">Show Bezier handles of selected nodes</property>
-        <property name="image">image16</property>
-        <property name="relief">none</property>
-        <property name="always-show-image">True</property>
+        <property name="can-focus">False</property>
+        <property name="margin-end">2</property>
       </object>
       <packing>
         <property name="expand">False</property>
         <property name="fill">True</property>
         <property name="position">28</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkMenuButton" id="menu_btn2">
+        <property name="visible">True</property>
+        <property name="can-focus">True</property>
+        <property name="focus-on-click">False</property>
+        <property name="receives-default">True</property>
+        <property name="relief">none</property>
+        <property name="popover">popover2</property>
+        <child>
+          <object class="GtkImage" id="image23">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="icon-name">icon2</property>
+          </object>
+        </child>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="fill">True</property>
+        <property name="position">29</property>
       </packing>
     </child>
     <child>
@@ -648,30 +728,91 @@
         <property name="image">image19</property>
         <property name="relief">none</property>
         <property name="always-show-image">True</property>
+        <style>
+          <class name="tag2"/>
+        </style>
       </object>
       <packing>
         <property name="expand">False</property>
         <property name="fill">True</property>
-        <property name="position">29</property>
+        <property name="position">30</property>
       </packing>
     </child>
-  </object>
-  <object class="GtkPopover" id="popover2">
-    <property name="can-focus">False</property>
-    <property name="modal">False</property>
     <child>
-      <object class="GtkBox" id="popover_box2">
+      <object class="GtkToggleButton" id="_show_handles_item">
         <property name="visible">True</property>
-        <property name="can-focus">False</property>
-        <property name="valign">center</property>
-        <property name="spacing">3</property>
-        <child>
-          <placeholder/>
-        </child>
+        <property name="can-focus">True</property>
+        <property name="receives-default">False</property>
+        <property name="tooltip-text" translatable="yes">Show Bezier handles of selected nodes</property>
+        <property name="image">image16</property>
+        <property name="relief">none</property>
+        <property name="always-show-image">True</property>
         <style>
-          <class name="toolbar-menu-button-popover-box"/>
+          <class name="tag2"/>
         </style>
       </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="fill">True</property>
+        <property name="position">31</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkToggleButton" id="_show_transform_handles_item">
+        <property name="visible">True</property>
+        <property name="can-focus">True</property>
+        <property name="receives-default">False</property>
+        <property name="tooltip-text" translatable="yes">Show transformation handles for selected nodes</property>
+        <property name="image">image15</property>
+        <property name="relief">none</property>
+        <property name="always-show-image">True</property>
+        <style>
+          <class name="tag2"/>
+        </style>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="fill">True</property>
+        <property name="position">32</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkToggleButton" id="_object_edit_mask_path_item">
+        <property name="visible">True</property>
+        <property name="can-focus">True</property>
+        <property name="receives-default">False</property>
+        <property name="tooltip-text" translatable="yes">Show mask(s) of selected object(s)</property>
+        <property name="image">image14</property>
+        <property name="relief">none</property>
+        <property name="always-show-image">True</property>
+        <style>
+          <class name="tag2"/>
+        </style>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="fill">True</property>
+        <property name="position">33</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkToggleButton" id="_object_edit_clip_path_item">
+        <property name="visible">True</property>
+        <property name="can-focus">True</property>
+        <property name="receives-default">False</property>
+        <property name="tooltip-text" translatable="yes">Show clipping path(s) of selected object(s)</property>
+        <property name="image">image13</property>
+        <property name="relief">none</property>
+        <property name="always-show-image">True</property>
+        <style>
+          <class name="tag2"/>
+        </style>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="fill">True</property>
+        <property name="position">34</property>
+      </packing>
     </child>
   </object>
 </interface>

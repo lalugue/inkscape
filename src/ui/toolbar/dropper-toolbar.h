@@ -40,8 +40,8 @@ namespace Toolbar {
 class DropperToolbar : public Toolbar {
 private:
     // Tool widgets
-    Gtk::ToggleToolButton *_pick_alpha_button; ///< Control whether to pick opacity
-    Gtk::ToggleToolButton *_set_alpha_button;  ///< Control whether to set opacity
+    Gtk::ToggleButton *_pick_alpha_button; ///< Control whether to pick opacity
+    Gtk::ToggleButton *_set_alpha_button;  ///< Control whether to set opacity
 
     // Event handlers
     void on_pick_alpha_button_toggled();

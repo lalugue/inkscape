@@ -126,7 +126,7 @@ SprayToolbar::SprayToolbar(SPDesktop *desktop) :
     {
         auto pressure_item = add_toggle_button(_("Pressure"),
                                                _("Use the pressure of the input device to alter the width of spray area"));
-        pressure_item->set_icon_name(INKSCAPE_ICON("draw-use-pressure"));
+        pressure_item->set_image_from_icon_name(INKSCAPE_ICON("draw-use-pressure"));
         _usepressurewidth_pusher.reset(new UI::SimplePrefPusher(pressure_item, "/tools/spray/usepressurewidth"));
         pressure_item->signal_toggled().connect(sigc::bind(sigc::mem_fun(*this, &SprayToolbar::on_pref_toggled),
                                                            pressure_item,
@@ -151,7 +151,7 @@ SprayToolbar::SprayToolbar(SPDesktop *desktop) :
     {
         auto pressure_population_item = add_toggle_button(_("Pressure"),
                                                           _("Use the pressure of the input device to alter the amount of sprayed objects"));
-        pressure_population_item->set_icon_name(INKSCAPE_ICON("draw-use-pressure"));
+        pressure_population_item->set_image_from_icon_name(INKSCAPE_ICON("draw-use-pressure"));
         _usepressurepopulation_pusher.reset(new UI::SimplePrefPusher(pressure_population_item, "/tools/spray/usepressurepopulation"));
         pressure_population_item->signal_toggled().connect(sigc::bind(sigc::mem_fun(*this, &SprayToolbar::on_pref_toggled),
                                                                       pressure_population_item,
@@ -194,7 +194,7 @@ SprayToolbar::SprayToolbar(SPDesktop *desktop) :
     {
         _usepressurescale = add_toggle_button(_("Pressure"),
                                               _("Use the pressure of the input device to alter the scale of new items"));
-        _usepressurescale->set_icon_name(INKSCAPE_ICON("draw-use-pressure"));
+        _usepressurescale->set_image_from_icon_name(INKSCAPE_ICON("draw-use-pressure"));
         _usepressurescale->set_active(prefs->getBool("/tools/spray/usepressurescale", false));
         _usepressurescale->signal_toggled().connect(sigc::mem_fun(*this, &SprayToolbar::toggle_pressure_scale));
     }
@@ -237,7 +237,7 @@ SprayToolbar::SprayToolbar(SPDesktop *desktop) :
     {
         _over_no_transparent = add_toggle_button(_("Apply over no transparent areas"),
                                                  _("Apply over no transparent areas"));
-        _over_no_transparent->set_icon_name(INKSCAPE_ICON("object-visible"));
+        _over_no_transparent->set_image_from_icon_name(INKSCAPE_ICON("object-visible"));
         _over_no_transparent->set_active(prefs->getBool("/tools/spray/over_no_transparent", true));
         _over_no_transparent->signal_toggled().connect(sigc::bind(sigc::mem_fun(*this, &SprayToolbar::on_pref_toggled),
                                                                   _over_no_transparent,
@@ -248,7 +248,7 @@ SprayToolbar::SprayToolbar(SPDesktop *desktop) :
     {
         _over_transparent = add_toggle_button(_("Apply over transparent areas"),
                                               _("Apply over transparent areas"));
-        _over_transparent->set_icon_name(INKSCAPE_ICON("object-hidden"));
+        _over_transparent->set_image_from_icon_name(INKSCAPE_ICON("object-hidden"));
         _over_transparent->set_active(prefs->getBool("/tools/spray/over_transparent", true));
         _over_transparent->signal_toggled().connect(sigc::bind(sigc::mem_fun(*this, &SprayToolbar::on_pref_toggled),
                                                                _over_transparent,
@@ -259,7 +259,7 @@ SprayToolbar::SprayToolbar(SPDesktop *desktop) :
     {
         _pick_no_overlap = add_toggle_button(_("No overlap between colors"),
                                              _("No overlap between colors"));
-        _pick_no_overlap->set_icon_name(INKSCAPE_ICON("symbol-bigger"));
+        _pick_no_overlap->set_image_from_icon_name(INKSCAPE_ICON("symbol-bigger"));
         _pick_no_overlap->set_active(prefs->getBool("/tools/spray/pick_no_overlap", false));
         _pick_no_overlap->signal_toggled().connect(sigc::bind(sigc::mem_fun(*this, &SprayToolbar::on_pref_toggled),
                                                               _pick_no_overlap,
@@ -270,7 +270,7 @@ SprayToolbar::SprayToolbar(SPDesktop *desktop) :
     {
         _no_overlap = add_toggle_button(_("Prevent overlapping objects"),
                                         _("Prevent overlapping objects"));
-        _no_overlap->set_icon_name(INKSCAPE_ICON("distribute-randomize"));
+        _no_overlap->set_image_from_icon_name(INKSCAPE_ICON("distribute-randomize"));
         _no_overlap->set_active(prefs->getBool("/tools/spray/no_overlap", false));
         _no_overlap->signal_toggled().connect(sigc::mem_fun(*this, &SprayToolbar::toggle_no_overlap));
     }
@@ -295,7 +295,7 @@ SprayToolbar::SprayToolbar(SPDesktop *desktop) :
     {
         _picker = add_toggle_button(_("Pick color from the drawing. You can use clonetiler trace dialog for advanced effects. In clone mode original fill or stroke colors must be unset."),
                                     _("Pick color from the drawing. You can use clonetiler trace dialog for advanced effects. In clone mode original fill or stroke colors must be unset."));
-        _picker->set_icon_name(INKSCAPE_ICON("color-picker"));
+        _picker->set_image_from_icon_name(INKSCAPE_ICON("color-picker"));
         _picker->set_active(prefs->getBool("/tools/spray/picker", false));
         _picker->signal_toggled().connect(sigc::mem_fun(*this, &SprayToolbar::toggle_picker));
     }
@@ -304,7 +304,7 @@ SprayToolbar::SprayToolbar(SPDesktop *desktop) :
     {
         _pick_fill = add_toggle_button(_("Apply picked color to fill"),
                                        _("Apply picked color to fill"));
-        _pick_fill->set_icon_name(INKSCAPE_ICON("paint-solid"));
+        _pick_fill->set_image_from_icon_name(INKSCAPE_ICON("paint-solid"));
         _pick_fill->set_active(prefs->getBool("/tools/spray/pick_fill", false));
         _pick_fill->signal_toggled().connect(sigc::bind(sigc::mem_fun(*this, &SprayToolbar::on_pref_toggled),
                                                         _pick_fill,
@@ -315,7 +315,7 @@ SprayToolbar::SprayToolbar(SPDesktop *desktop) :
     {
         _pick_stroke = add_toggle_button(_("Apply picked color to stroke"),
                                          _("Apply picked color to stroke"));
-        _pick_stroke->set_icon_name(INKSCAPE_ICON("no-marker"));
+        _pick_stroke->set_image_from_icon_name(INKSCAPE_ICON("no-marker"));
         _pick_stroke->set_active(prefs->getBool("/tools/spray/pick_stroke", false));
         _pick_stroke->signal_toggled().connect(sigc::bind(sigc::mem_fun(*this, &SprayToolbar::on_pref_toggled),
                                                           _pick_stroke,
@@ -326,7 +326,7 @@ SprayToolbar::SprayToolbar(SPDesktop *desktop) :
     {
         _pick_inverse_value = add_toggle_button(_("Inverted pick value, retaining color in advanced trace mode"),
                                                 _("Inverted pick value, retaining color in advanced trace mode"));
-        _pick_inverse_value->set_icon_name(INKSCAPE_ICON("object-tweak-shrink"));
+        _pick_inverse_value->set_image_from_icon_name(INKSCAPE_ICON("object-tweak-shrink"));
         _pick_inverse_value->set_active(prefs->getBool("/tools/spray/pick_inverse_value", false));
         _pick_inverse_value->signal_toggled().connect(sigc::bind(sigc::mem_fun(*this, &SprayToolbar::on_pref_toggled),
                                                                  _pick_inverse_value,
@@ -337,7 +337,7 @@ SprayToolbar::SprayToolbar(SPDesktop *desktop) :
     {
         _pick_center = add_toggle_button(_("Pick from center instead of average area."),
                                          _("Pick from center instead of average area."));
-        _pick_center->set_icon_name(INKSCAPE_ICON("snap-bounding-box-center"));
+        _pick_center->set_image_from_icon_name(INKSCAPE_ICON("snap-bounding-box-center"));
         _pick_center->set_active(prefs->getBool("/tools/spray/pick_center", true));
         _pick_center->signal_toggled().connect(sigc::bind(sigc::mem_fun(*this, &SprayToolbar::on_pref_toggled),
                                                           _pick_center,
@@ -510,9 +510,7 @@ SprayToolbar::toggle_picker()
     update_widgets();
 }
 
-void
-SprayToolbar::on_pref_toggled(Gtk::ToggleToolButton *btn,
-                              const Glib::ustring&   path)
+void SprayToolbar::on_pref_toggled(Gtk::ToggleButton *btn, const Glib::ustring &path)
 {
     auto prefs = Inkscape::Preferences::get();
     bool active = btn->get_active();

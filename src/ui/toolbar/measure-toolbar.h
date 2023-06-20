@@ -49,11 +49,11 @@ private:
     Glib::RefPtr<Gtk::Adjustment> _scale_adj;
     Glib::RefPtr<Gtk::Adjustment> _offset_adj;
 
-    Gtk::ToggleToolButton *_only_selected_item;
-    Gtk::ToggleToolButton *_ignore_1st_and_last_item;
-    Gtk::ToggleToolButton *_inbetween_item;
-    Gtk::ToggleToolButton *_show_hidden_item;
-    Gtk::ToggleToolButton *_all_layers_item;
+    Gtk::ToggleButton *_only_selected_item;
+    Gtk::ToggleButton *_ignore_1st_and_last_item;
+    Gtk::ToggleButton *_inbetween_item;
+    Gtk::ToggleButton *_show_hidden_item;
+    Gtk::ToggleButton *_all_layers_item;
 
     Gtk::ToolButton *_reverse_item;
     Gtk::ToolButton *_to_phantom_item;

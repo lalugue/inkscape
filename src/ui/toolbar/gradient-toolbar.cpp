@@ -414,7 +414,7 @@ GradientToolbar::GradientToolbar(SPDesktop *desktop)
     {
         _linked_item = add_toggle_button(_("Link gradients"),
                                          _("Link gradients to change all related gradients"));
-        _linked_item->set_icon_name(INKSCAPE_ICON("object-unlocked"));
+        _linked_item->set_image_from_icon_name(INKSCAPE_ICON("object-unlocked"));
         _linked_item->signal_toggled().connect(sigc::mem_fun(*this, &GradientToolbar::linked_changed));
 
         bool linkedmode = prefs->getBool("/options/forkgradientvectors/value", true);
@@ -829,9 +829,9 @@ GradientToolbar::linked_changed()
 {
     bool active = _linked_item->get_active();
     if ( active ) {
-        _linked_item->set_icon_name(INKSCAPE_ICON("object-locked"));
+        _linked_item->set_image_from_icon_name(INKSCAPE_ICON("object-locked"));
     } else {
-        _linked_item->set_icon_name(INKSCAPE_ICON("object-unlocked"));
+        _linked_item->set_image_from_icon_name(INKSCAPE_ICON("object-unlocked"));
     }
 
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();

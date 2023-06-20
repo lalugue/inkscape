@@ -50,7 +50,7 @@ private:
     UI::Widget::SpinButtonToolItem *_force_item;
     UI::Widget::SpinButtonToolItem *_fidelity_item;
 
-    Gtk::ToggleToolButton *_pressure_item;
+    Gtk::ToggleButton *_pressure_item;
 
     Glib::RefPtr<Gtk::Adjustment> _width_adj;
     Glib::RefPtr<Gtk::Adjustment> _force_adj;
@@ -59,10 +59,10 @@ private:
     std::vector<Gtk::RadioToolButton *> _mode_buttons;
 
     UI::Widget::LabelToolItem *_channels_label;
-    Gtk::ToggleToolButton *_doh_item;
-    Gtk::ToggleToolButton *_dos_item;
-    Gtk::ToggleToolButton *_dol_item;
-    Gtk::ToggleToolButton *_doo_item;
+    Gtk::ToggleButton *_doh_item;
+    Gtk::ToggleButton *_dos_item;
+    Gtk::ToggleButton *_dol_item;
+    Gtk::ToggleButton *_doo_item;
 
     void width_value_changed();
     void force_value_changed();

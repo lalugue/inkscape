@@ -63,10 +63,10 @@ private:
     Gtk::ToggleButton *_transform_gradient_btn;
     Gtk::ToggleButton *_transform_pattern_btn;
 
-    Inkscape::UI::Widget::SpinButton &_x_btn;
-    Inkscape::UI::Widget::SpinButton &_y_btn;
-    Inkscape::UI::Widget::SpinButton &_w_btn;
-    Inkscape::UI::Widget::SpinButton &_h_btn;
+    Inkscape::UI::Widget::SpinButton *_x_btn = nullptr;
+    Inkscape::UI::Widget::SpinButton *_y_btn = nullptr;
+    Inkscape::UI::Widget::SpinButton *_w_btn = nullptr;
+    Inkscape::UI::Widget::SpinButton *_h_btn = nullptr;
     Gtk::ToggleButton *_lock_btn;
 
     std::vector<Gtk::Widget *> _context_items;
@@ -87,7 +87,7 @@ private:
     void toggle_corners();
     void toggle_gradient();
     void toggle_pattern();
-    void setup_derived_spin_button(Inkscape::UI::Widget::SpinButton &, const Glib::ustring &);
+    void setup_derived_spin_button(Inkscape::UI::Widget::SpinButton *, const Glib::ustring &);
 
 protected:
     SelectToolbar(SPDesktop *desktop);

@@ -69,7 +69,7 @@ PencilToolbar::PencilToolbar(SPDesktop *desktop,
         /* Use pressure */
         {
             _pressure_item = add_toggle_button(_("Use pressure input"), _("Use pressure input"));
-            _pressure_item->set_icon_name(INKSCAPE_ICON("draw-use-pressure"));
+            _pressure_item->set_image_from_icon_name(INKSCAPE_ICON("draw-use-pressure"));
             bool pressure = prefs->getBool("/tools/freehand/pencil/pressure", false);
             _pressure_item->set_active(pressure);
             _pressure_item->signal_toggled().connect(sigc::mem_fun(*this, &PencilToolbar::use_pencil_pressure));
@@ -123,7 +123,7 @@ PencilToolbar::PencilToolbar(SPDesktop *desktop,
         /* LPE simplify based tolerance */
         {
             _simplify = add_toggle_button(_("LPE based interactive simplify"), _("LPE based interactive simplify"));
-            _simplify->set_icon_name(INKSCAPE_ICON("interactive_simplify"));
+            _simplify->set_image_from_icon_name(INKSCAPE_ICON("interactive_simplify"));
             _simplify->set_active(prefs->getInt("/tools/freehand/pencil/simplify", 0));
             _simplify->signal_toggled().connect(sigc::mem_fun(*this, &PencilToolbar::simplify_lpe));
         }

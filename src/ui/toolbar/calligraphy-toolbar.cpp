@@ -83,9 +83,9 @@ CalligraphyToolbar::CalligraphyToolbar(SPDesktop *desktop)
 
     /*calligraphic profile editor */
     {
-        auto const profile_edit_item = Gtk::make_managed<Gtk::ToolButton>(_("Add/Edit Profile"));
+        auto profile_edit_item = Gtk::manage(new Gtk::Button(_("Add/Edit Profile")));
         profile_edit_item->set_tooltip_text(_("Add or edit calligraphic profile"));
-        profile_edit_item->set_icon_name(INKSCAPE_ICON("document-properties"));
+        profile_edit_item->set_image_from_icon_name(INKSCAPE_ICON("document-properties"));
         profile_edit_item->signal_clicked().connect(sigc::mem_fun(*this, &CalligraphyToolbar::edit_profile));
         pack_end(*profile_edit_item, false, false, 2);
     }
@@ -122,7 +122,7 @@ CalligraphyToolbar::CalligraphyToolbar(SPDesktop *desktop)
     {
         _usepressure = add_toggle_button(_("Pressure"),
                                          _("Use the pressure of the input device to alter the width of the pen"));
-        _usepressure->set_icon_name(INKSCAPE_ICON("draw-use-pressure"));
+        _usepressure->set_image_from_icon_name(INKSCAPE_ICON("draw-use-pressure"));
         _widget_map["usepressure"] = G_OBJECT(_usepressure->gobj());
         _usepressure_pusher.reset(new SimplePrefPusher(_usepressure, "/tools/calligraphic/usepressure"));
         _usepressure->signal_toggled().connect(sigc::bind(sigc::mem_fun(*this, &CalligraphyToolbar::on_pref_toggled),
@@ -134,7 +134,7 @@ CalligraphyToolbar::CalligraphyToolbar(SPDesktop *desktop)
     {
         _tracebackground = add_toggle_button(_("Trace Background"),
                                             _("Trace the lightness of the background by the width of the pen (white - minimum width, black - maximum width)"));
-        _tracebackground->set_icon_name(INKSCAPE_ICON("draw-trace-background"));
+        _tracebackground->set_image_from_icon_name(INKSCAPE_ICON("draw-trace-background"));
         _widget_map["tracebackground"] = G_OBJECT(_tracebackground->gobj());
         _tracebackground_pusher.reset(new SimplePrefPusher(_tracebackground, "/tools/calligraphic/tracebackground"));
         _tracebackground->signal_toggled().connect(sigc::bind(sigc::mem_fun(*this, &CalligraphyToolbar::on_pref_toggled),
@@ -196,7 +196,7 @@ CalligraphyToolbar::CalligraphyToolbar(SPDesktop *desktop)
     {
         _usetilt = add_toggle_button(_("Tilt"),
                                      _("Use the tilt of the input device to alter the angle of the pen's nib"));
-        _usetilt->set_icon_name(INKSCAPE_ICON("draw-use-tilt"));
+        _usetilt->set_image_from_icon_name(INKSCAPE_ICON("draw-use-tilt"));
         _widget_map["usetilt"] = G_OBJECT(_usetilt->gobj());
         _usetilt_pusher.reset(new SimplePrefPusher(_usetilt, "/tools/calligraphic/usetilt"));
         _usetilt->signal_toggled().connect(sigc::mem_fun(*this, &CalligraphyToolbar::tilt_state_changed));
@@ -351,9 +351,7 @@ CalligraphyToolbar::mass_value_changed()
     update_presets_list();
 }
 
-void
-CalligraphyToolbar::on_pref_toggled(Gtk::ToggleToolButton *item,
-                                    const Glib::ustring&   path)
+void CalligraphyToolbar::on_pref_toggled(Gtk::ToggleButton *item, const Glib::ustring &path)
 {
     auto prefs = Inkscape::Preferences::get();
     prefs->setBool(path, item->get_active());

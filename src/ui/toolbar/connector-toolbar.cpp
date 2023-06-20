@@ -78,7 +78,7 @@ ConnectorToolbar::ConnectorToolbar(SPDesktop *desktop)
     {
         _orthogonal = add_toggle_button(_("Orthogonal"),
                                         _("Make connector orthogonal or polyline"));
-        _orthogonal->set_icon_name(INKSCAPE_ICON("connector-orthogonal"));
+        _orthogonal->set_image_from_icon_name(INKSCAPE_ICON("connector-orthogonal"));
 
         bool tbuttonstate = prefs->getBool("/tools/connector/orthogonal");
         _orthogonal->set_active(( tbuttonstate ? TRUE : FALSE ));
@@ -127,7 +127,7 @@ ConnectorToolbar::ConnectorToolbar(SPDesktop *desktop)
     {
         _directed_item = add_toggle_button(_("Downwards"),
                                            _("Make connectors with end-markers (arrows) point downwards"));
-        _directed_item->set_icon_name(INKSCAPE_ICON("distribute-graph-directed"));
+        _directed_item->set_image_from_icon_name(INKSCAPE_ICON("distribute-graph-directed"));
 
         bool tbuttonstate = prefs->getBool("/tools/connector/directedlayout");
         _directed_item->set_active(tbuttonstate ? TRUE : FALSE);
@@ -140,7 +140,7 @@ ConnectorToolbar::ConnectorToolbar(SPDesktop *desktop)
     {
         _overlap_item = add_toggle_button(_("Remove overlaps"),
                                           _("Do not allow overlapping shapes"));
-        _overlap_item->set_icon_name(INKSCAPE_ICON("distribute-remove-overlaps"));
+        _overlap_item->set_image_from_icon_name(INKSCAPE_ICON("distribute-remove-overlaps"));
 
         bool tbuttonstate = prefs->getBool("/tools/connector/avoidoverlaplayout");
         _overlap_item->set_active(tbuttonstate ? TRUE : FALSE);
