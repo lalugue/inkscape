@@ -28,26 +28,22 @@
 #include "rect-toolbar.h"
 
 #include <glibmm/i18n.h>
-
 #include <gtkmm/separatortoolitem.h>
 #include <gtkmm/toolbutton.h>
 
 #include "desktop.h"
 #include "document-undo.h"
-#include "selection.h"
-
 #include "object/sp-namedview.h"
 #include "object/sp-rect.h"
-
+#include "selection.h"
+#include "ui/builder-utils.h"
 #include "ui/icon-names.h"
 #include "ui/tools/rect-tool.h"
 #include "ui/widget/canvas.h"
 #include "ui/widget/combo-tool-item.h"
 #include "ui/widget/label-tool-item.h"
 #include "ui/widget/spinbutton.h"
-#include "ui/widget/spin-button-tool-item.h"
 #include "ui/widget/unit-tracker.h"
-
 #include "widgets/widget-sizes.h"
 
 using Inkscape::UI::Widget::UnitTracker;
@@ -61,125 +57,104 @@ namespace Inkscape::UI::Toolbar {
 RectToolbar::RectToolbar(SPDesktop *desktop)
     : Toolbar(desktop)
     , _tracker(new UnitTracker(Inkscape::Util::UNIT_TYPE_LINEAR))
-    , _mode_item(Gtk::make_managed<UI::Widget::LabelToolItem>(_("<b>New:</b>")))
+    , _builder(initialize_builder("toolbar-rect.ui"))
 {
-    Inkscape::Preferences *prefs = Inkscape::Preferences::get();
+    _builder->get_widget("rect-toolbar", _toolbar);
+    if (!_toolbar) {
+        std::cerr << "InkscapeWindow: Failed to load rect toolbar!" << std::endl;
+    }
+
+    // TODO: Remove if not needed.
+    Gtk::Box *width_box;
+    Gtk::Box *height_box;
+    Gtk::Box *rx_box;
+    Gtk::Box *ry_box;
+    Gtk::Box *unit_menu_box;
+
+    _builder->get_widget("_mode_item", _mode_item);
+
+    _builder->get_widget("width_box", width_box);
+    _builder->get_widget_derived("_width_item", _width_item);
+
+    _builder->get_widget("height_box", height_box);
+    _builder->get_widget_derived("_height_item", _height_item);
+
+    _builder->get_widget("rx_box", rx_box);
+    _builder->get_widget_derived("_rx_item", _rx_item);
+
+    _builder->get_widget("ry_box", ry_box);
+    _builder->get_widget_derived("_ry_item", _ry_item);
+
+    _builder->get_widget("unit_menu_box", unit_menu_box);
+
+    _builder->get_widget("_not_rounded", _not_rounded);
+
+    auto unit_menu = _tracker->create_tool_item(_("Units"), (""));
+    unit_menu_box->add(*unit_menu);
 
     // rx/ry units menu: create
     //tracker->addUnit( SP_UNIT_PERCENT, 0 );
     // fixme: add % meaning per cent of the width/height
     auto init_units = desktop->getNamedView()->display_units;
     _tracker->setActiveUnit(init_units);
-    _mode_item->set_use_markup(true);
 
-    /* W */
-    {
-        auto width_val = prefs->getDouble("/tools/shapes/rect/width", 0);
-        width_val = Quantity::convert(width_val, "px", init_units);
+    setup_derived_spin_button(_width_item, "width");
+    setup_derived_spin_button(_height_item, "height");
+    setup_derived_spin_button(_rx_item, "rx");
+    setup_derived_spin_button(_ry_item, "ry");
 
-        _width_adj = Gtk::Adjustment::create(width_val, 0, 1e6, SPIN_STEP, SPIN_PAGE_STEP);
-        _width_item = Gtk::make_managed<UI::Widget::SpinButtonToolItem>("rect-width", _("W:"), _width_adj);
-        _width_item->get_spin_button()->addUnitTracker(_tracker);
-        _width_item->set_focus_widget(_desktop->getCanvas());
-        _width_item->set_all_tooltip_text(_("Width of rectangle"));
-    
-        _width_adj->signal_value_changed().connect(sigc::bind(sigc::mem_fun(*this, &RectToolbar::value_changed),
-                                                              _width_adj,
-                                                              "width",
-                                                              &SPRect::setVisibleWidth));
-        _tracker->addAdjustment(_width_adj->gobj());
-        _width_item->set_sensitive(false);
+    // Fetch all the ToolbarMenuButtons at once from the UI file
+    // Menu Button #1
+    Gtk::Box *popover_box1;
+    _builder->get_widget("popover_box1", popover_box1);
 
-        std::vector<double> values = {1, 2, 3, 5, 10, 20, 50, 100, 200, 500};
-        _width_item->set_custom_numeric_menu_data(values);
-    }
+    Inkscape::UI::Widget::ToolbarMenuButton *menu_btn1 = nullptr;
+    _builder->get_widget_derived("menu_btn1", menu_btn1);
 
-    /* H */
-    {
-        auto height_val = prefs->getDouble("/tools/shapes/rect/height", 0);
-        height_val = Quantity::convert(height_val, "px", init_units);
+    // Initialize all the ToolbarMenuButtons.
+    // Note: Do not initialize the these widgets right after fetching from
+    // the UI file.
+    auto children = _toolbar->get_children();
 
-        _height_adj = Gtk::Adjustment::create(height_val, 0, 1e6, SPIN_STEP, SPIN_PAGE_STEP);
-        _height_adj->signal_value_changed().connect(sigc::bind(sigc::mem_fun(*this, &RectToolbar::value_changed),
-                                                               _height_adj,
-                                                               "height",
-                                                               &SPRect::setVisibleHeight));
-        _tracker->addAdjustment(_height_adj->gobj());
-
-        std::vector<double> values = { 1,  2,  3,  5, 10, 20, 50, 100, 200, 500};
-        _height_item = Gtk::make_managed<UI::Widget::SpinButtonToolItem>("rect-height", _("H:"), _height_adj);
-        _height_item->get_spin_button()->addUnitTracker(_tracker);
-        _height_item->set_custom_numeric_menu_data(values);
-        _height_item->set_all_tooltip_text(_("Height of rectangle"));
-        _height_item->set_focus_widget(_desktop->getCanvas());
-        _height_item->set_sensitive(false);
-    }
-
-    /* rx */
-    {
-        std::vector<Glib::ustring> labels = {_("not rounded"), "", "", "", "", "", "", "",  ""};
-        std::vector<double>        values = {             0.5,  1,  2,  3,  5, 10, 20, 50, 100};
-        auto rx_val = prefs->getDouble("/tools/shapes/rect/rx", 0);
-        rx_val = Quantity::convert(rx_val, "px", init_units);
-
-        _rx_adj = Gtk::Adjustment::create(rx_val, 0, 1e6, SPIN_STEP, SPIN_PAGE_STEP);
-        _rx_adj->signal_value_changed().connect(sigc::bind(sigc::mem_fun(*this, &RectToolbar::value_changed),
-                                                           _rx_adj,
-                                                           "rx",
-                                                           &SPRect::setVisibleRx));
-        _tracker->addAdjustment(_rx_adj->gobj());
-        _rx_item = Gtk::make_managed<UI::Widget::SpinButtonToolItem>("rect-rx", _("Rx:"), _rx_adj);
-        _rx_item->get_spin_button()->addUnitTracker(_tracker);
-        _rx_item->set_all_tooltip_text(_("Horizontal radius of rounded corners"));
-        _rx_item->set_focus_widget(_desktop->getCanvas());
-        _rx_item->set_custom_numeric_menu_data(values, labels);
-    }
-
-    /* ry */
-    {
-        std::vector<Glib::ustring> labels = {_("not rounded"), "", "", "", "", "", "", "",  ""};
-        std::vector<double>        values = {             0.5,  1,  2,  3,  5, 10, 20, 50, 100};
-        auto ry_val = prefs->getDouble("/tools/shapes/rect/ry", 0);
-        ry_val = Quantity::convert(ry_val, "px", init_units);
-
-        _ry_adj = Gtk::Adjustment::create(ry_val, 0, 1e6, SPIN_STEP, SPIN_PAGE_STEP);
-        _ry_adj->signal_value_changed().connect(sigc::bind(sigc::mem_fun(*this, &RectToolbar::value_changed),
-                                                           _ry_adj,
-                                                           "ry",
-                                                           &SPRect::setVisibleRy));
-        _tracker->addAdjustment(_ry_adj->gobj());
-        _ry_item = Gtk::make_managed<UI::Widget::SpinButtonToolItem>("rect-ry", _("Ry:"), _ry_adj);
-        _ry_item->get_spin_button()->addUnitTracker(_tracker);
-        _ry_item->set_all_tooltip_text(_("Vertical radius of rounded corners"));
-        _ry_item->set_focus_widget(_desktop->getCanvas());
-        _ry_item->set_custom_numeric_menu_data(values, labels);
-    }
-
-    // add the units menu
-    auto unit_menu_ti = _tracker->create_tool_item(_("Units"), (""));
-
-    /* Reset */
-    {
-        _not_rounded = Gtk::make_managed<Gtk::ToolButton>(_("Not rounded"));
-        _not_rounded->set_tooltip_text(_("Make corners sharp"));
-        _not_rounded->set_icon_name(INKSCAPE_ICON("rectangle-make-corners-sharp"));
-        _not_rounded->signal_clicked().connect(sigc::mem_fun(*this, &RectToolbar::defaults));
-        _not_rounded->set_sensitive(true);
-    }
-
-    add(*_mode_item);
-    add(*_width_item);
-    add(*_height_item);
-    add(*_rx_item);
-    add(*_ry_item);
-    add(*unit_menu_ti);
-    add(* Gtk::make_managed<Gtk::SeparatorToolItem>());
-    add(*_not_rounded);
-    show_all();
-    
-    sensitivize();
+    menu_btn1->init(1, "tag1", "some-icon", popover_box1, children);
+    _expanded_menu_btns.push(menu_btn1);
 
     _desktop->connectEventContextChanged(sigc::mem_fun(*this, &RectToolbar::watch_ec));
+
+    add(*_toolbar);
+
+    sensitivize();
+    show_all();
+}
+
+void RectToolbar::setup_derived_spin_button(UI::Widget::SpinButton *btn, const Glib::ustring &name)
+{
+    auto init_units = _desktop->getNamedView()->display_units;
+    Inkscape::Preferences *prefs = Inkscape::Preferences::get();
+    auto adj = btn->get_adjustment();
+    const Glib::ustring path = "/tools/shapes/rect/" + name;
+    auto val = prefs->getDouble(path, 0);
+    val = Quantity::convert(val, "px", init_units);
+    adj->set_value(val);
+
+    if (name == "width") {
+        adj->signal_value_changed().connect(
+            sigc::bind(sigc::mem_fun(*this, &RectToolbar::value_changed), adj, name.c_str(), &SPRect::setVisibleWidth));
+    } else if (name == "height") {
+        adj->signal_value_changed().connect(sigc::bind(sigc::mem_fun(*this, &RectToolbar::value_changed), adj,
+                                                       name.c_str(), &SPRect::setVisibleHeight));
+    } else if (name == "rx") {
+        adj->signal_value_changed().connect(
+            sigc::bind(sigc::mem_fun(*this, &RectToolbar::value_changed), adj, name.c_str(), &SPRect::setVisibleRx));
+    } else if (name == "ry") {
+        adj->signal_value_changed().connect(
+            sigc::bind(sigc::mem_fun(*this, &RectToolbar::value_changed), adj, name.c_str(), &SPRect::setVisibleRy));
+    }
+
+    _tracker->addAdjustment(adj->gobj());
+
+    btn->addUnitTracker(_tracker.get());
+    btn->set_defocus_widget(_desktop->getCanvas());
 }
 
 RectToolbar::~RectToolbar()
@@ -247,7 +222,8 @@ RectToolbar::value_changed(Glib::RefPtr<Gtk::Adjustment>&  adj,
 void
 RectToolbar::sensitivize()
 {
-    if (_rx_adj->get_value() == 0 && _ry_adj->get_value() == 0 && _single) { // only for a single selected rect (for now)
+    if (_rx_item->get_adjustment()->get_value() == 0 && _ry_item->get_adjustment()->get_value() == 0 &&
+        _single) { // only for a single selected rect (for now)
         _not_rounded->set_sensitive(false);
     } else {
         _not_rounded->set_sensitive(true);
@@ -257,8 +233,8 @@ RectToolbar::sensitivize()
 void
 RectToolbar::defaults()
 {
-    _rx_adj->set_value(0.0);
-    _ry_adj->set_value(0.0);
+    _rx_item->get_adjustment()->set_value(0.0);
+    _ry_item->get_adjustment()->set_value(0.0);
 
     sensitivize();
 }
@@ -358,11 +334,16 @@ void RectToolbar::notifyAttributeChanged(Inkscape::XML::Node &repr, GQuark,
         return;
     }
 
+    auto rx_adj = _rx_item->get_adjustment();
+    auto ry_adj = _ry_item->get_adjustment();
+    auto width_adj = _width_item->get_adjustment();
+    auto height_adj = _height_item->get_adjustment();
+
     if (auto rect = cast<SPRect>(_item)) {
-        _rx_adj    ->set_value(Quantity::convert(rect->getVisibleRx(),     "px", unit));
-        _ry_adj    ->set_value(Quantity::convert(rect->getVisibleRy(),     "px", unit));
-        _width_adj ->set_value(Quantity::convert(rect->getVisibleWidth(),  "px", unit));
-        _height_adj->set_value(Quantity::convert(rect->getVisibleHeight(), "px", unit));
+        rx_adj->set_value(Quantity::convert(rect->getVisibleRx(), "px", unit));
+        ry_adj->set_value(Quantity::convert(rect->getVisibleRy(), "px", unit));
+        width_adj->set_value(Quantity::convert(rect->getVisibleWidth(), "px", unit));
+        height_adj->set_value(Quantity::convert(rect->getVisibleHeight(), "px", unit));
     }
 
     sensitivize();

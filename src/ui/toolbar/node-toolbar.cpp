@@ -247,7 +247,6 @@ NodeToolbar::NodeToolbar(SPDesktop *desktop)
 
 void NodeToolbar::setup_derived_spin_button(Inkscape::UI::Widget::SpinButton *btn, const Glib::ustring &name)
 {
-    std::vector<double> values = {1, 2, 3, 5, 10, 20, 50, 100, 200, 500};
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
 
     const Glib::ustring path = "/tools/nodes/" + name;
@@ -256,8 +255,6 @@ void NodeToolbar::setup_derived_spin_button(Inkscape::UI::Widget::SpinButton *bt
     adj->set_value(val);
     adj->signal_value_changed().connect(sigc::bind(sigc::mem_fun(*this, &NodeToolbar::value_changed), Geom::X));
 
-    // TODO: Fix this.
-    // btn->set_custom_numeric_menu_data(values);
     _tracker->addAdjustment(adj->gobj());
     btn->addUnitTracker(_tracker.get());
     btn->set_defocus_widget(_desktop->canvas);

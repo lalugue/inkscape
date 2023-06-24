@@ -29,9 +29,9 @@
  */
 
 #include <gtkmm/adjustment.h>
+#include <gtkmm/builder.h>
 
 #include "toolbar.h"
-
 #include "xml/node-observer.h"
 
 class SPDesktop;
@@ -55,8 +55,8 @@ class ToolBase;
 }
 
 namespace Widget {
-class LabelToolItem;
-class SpinButtonToolItem;
+class Label;
+class SpinButton;
 class UnitTracker;
 }
 
@@ -66,17 +66,19 @@ class RectToolbar
 	, private Inkscape::XML::NodeObserver
 {
 private:
-    UI::Widget::UnitTracker *_tracker;
+    Glib::RefPtr<Gtk::Builder> _builder;
+    std::unique_ptr<UI::Widget::UnitTracker> _tracker;
+    // UI::Widget::UnitTracker *_tracker;
 
     XML::Node *_repr{nullptr};
     SPItem *_item;
 
-    UI::Widget::LabelToolItem      *_mode_item;
-    UI::Widget::SpinButtonToolItem *_width_item;
-    UI::Widget::SpinButtonToolItem *_height_item;
-    UI::Widget::SpinButtonToolItem *_rx_item;
-    UI::Widget::SpinButtonToolItem *_ry_item;
-    Gtk::ToolButton *_not_rounded;
+    Gtk::Label *_mode_item;
+    UI::Widget::SpinButton *_width_item;
+    UI::Widget::SpinButton *_height_item;
+    UI::Widget::SpinButton *_rx_item;
+    UI::Widget::SpinButton *_ry_item;
+    Gtk::Button *_not_rounded;
 
     Glib::RefPtr<Gtk::Adjustment> _width_adj;
     Glib::RefPtr<Gtk::Adjustment> _height_adj;
@@ -86,6 +88,7 @@ private:
     bool _freeze{false};
     bool _single{true};
 
+    void setup_derived_spin_button(UI::Widget::SpinButton *btn, const Glib::ustring &name);
     void value_changed(Glib::RefPtr<Gtk::Adjustment>&  adj,
                        gchar const                    *value_name,
                        void (SPRect::*setter)(gdouble));
