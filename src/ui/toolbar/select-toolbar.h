@@ -63,10 +63,10 @@ private:
     Gtk::ToggleButton *_transform_gradient_btn;
     Gtk::ToggleButton *_transform_pattern_btn;
 
-    Inkscape::UI::Widget::SpinButton *_x_btn = nullptr;
-    Inkscape::UI::Widget::SpinButton *_y_btn = nullptr;
-    Inkscape::UI::Widget::SpinButton *_w_btn = nullptr;
-    Inkscape::UI::Widget::SpinButton *_h_btn = nullptr;
+    Inkscape::UI::Widget::SpinButton *_x_btn;
+    Inkscape::UI::Widget::SpinButton *_y_btn;
+    Inkscape::UI::Widget::SpinButton *_w_btn;
+    Inkscape::UI::Widget::SpinButton *_h_btn;
     Gtk::ToggleButton *_lock_btn;
 
     std::vector<Gtk::Widget *> _context_items;

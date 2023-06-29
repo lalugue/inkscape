@@ -80,11 +80,6 @@ private:
     UI::Widget::SpinButton *_ry_item;
     Gtk::Button *_not_rounded;
 
-    Glib::RefPtr<Gtk::Adjustment> _width_adj;
-    Glib::RefPtr<Gtk::Adjustment> _height_adj;
-    Glib::RefPtr<Gtk::Adjustment> _rx_adj;
-    Glib::RefPtr<Gtk::Adjustment> _ry_adj;
-
     bool _freeze{false};
     bool _single{true};
 

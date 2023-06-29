@@ -28,14 +28,11 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#include <gtkmm/builder.h>
+
 #include "axis-manip.h"
 #include "toolbar.h"
-
 #include "xml/node-observer.h"
-
-namespace Gtk {
-class Adjustment;
-}
 
 class Persp3D;
 class SPDesktop;
@@ -49,7 +46,7 @@ class Node;
 
 namespace UI {
 namespace Widget {
-class SpinButtonToolItem;
+class SpinButton;
 }
 
 namespace Tools {
@@ -62,13 +59,11 @@ class Box3DToolbar
 	, private XML::NodeObserver
 {
 private:
-    UI::Widget::SpinButtonToolItem *_angle_x_item;
-    UI::Widget::SpinButtonToolItem *_angle_y_item;
-    UI::Widget::SpinButtonToolItem *_angle_z_item;
+    Glib::RefPtr<Gtk::Builder> _builder;
 
-    Glib::RefPtr<Gtk::Adjustment> _angle_x_adj;
-    Glib::RefPtr<Gtk::Adjustment> _angle_y_adj;
-    Glib::RefPtr<Gtk::Adjustment> _angle_z_adj;
+    UI::Widget::SpinButton *_angle_x_item;
+    UI::Widget::SpinButton *_angle_y_item;
+    UI::Widget::SpinButton *_angle_z_item;
 
     Gtk::ToggleButton *_vp_x_state_item;
     Gtk::ToggleButton *_vp_y_state_item;
@@ -83,8 +78,8 @@ private:
     void check_ec(SPDesktop* desktop, Inkscape::UI::Tools::ToolBase* tool);
     void selection_changed(Inkscape::Selection *selection);
     void resync_toolbar(Inkscape::XML::Node *persp_repr);
-    void set_button_and_adjustment(Persp3D *persp, Proj::Axis axis, Glib::RefPtr<Gtk::Adjustment> &adj,
-                                   UI::Widget::SpinButtonToolItem *spin_btn, Gtk::ToggleButton *toggle_btn);
+    void set_button_and_adjustment(Persp3D *persp, Proj::Axis axis, UI::Widget::SpinButton *spin_btn,
+                                   Gtk::ToggleButton *toggle_btn);
     double normalize_angle(double a);
 
     sigc::connection _changed;
@@ -99,6 +94,7 @@ protected:
 
 public:
     static GtkWidget * create(SPDesktop *desktop);
+    void setup_derived_spin_button(UI::Widget::SpinButton *btn, const Glib::ustring &name);
 };
 
 }

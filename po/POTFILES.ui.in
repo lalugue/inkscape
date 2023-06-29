@@ -34,6 +34,7 @@
 ../share/ui/menus.ui
 ../share/ui/statusbar.ui
 ../share/ui/toolbar-booleans.ui
+../share/ui/toolbar-box3d.ui
 ../share/ui/toolbar-commands.ui
 ../share/ui/toolbar-node.ui
 ../share/ui/toolbar-page.ui

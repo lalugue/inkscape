@@ -75,8 +75,8 @@ private:
     Gtk::ToggleButton *_object_edit_mask_path_item;
     Gtk::ToggleButton *_object_edit_clip_path_item;
 
-    UI::Widget::SpinButton *_nodes_x_item = nullptr;
-    UI::Widget::SpinButton *_nodes_y_item = nullptr;
+    UI::Widget::SpinButton *_nodes_x_item;
+    UI::Widget::SpinButton *_nodes_y_item;
 
     bool _freeze;
 
