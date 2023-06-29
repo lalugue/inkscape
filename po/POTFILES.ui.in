@@ -41,5 +41,6 @@
 ../share/ui/toolbar-rect.ui
 ../share/ui/toolbar-select.ui
 ../share/ui/toolbar-snap.ui
+../share/ui/toolbar-spiral.ui
 ../share/ui/toolbar-tool-prefs.ui
 ../share/ui/toolbar-zoom.ui

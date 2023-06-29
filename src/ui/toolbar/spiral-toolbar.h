@@ -28,16 +28,16 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include "toolbar.h"
-
 #include <gtkmm/adjustment.h>
+#include <gtkmm/builder.h>
 
+#include "toolbar.h"
 #include "xml/node-observer.h"
 
 class SPDesktop;
 
 namespace Gtk {
-class ToolButton;
+class Label;
 }
 
 namespace Inkscape {
@@ -49,8 +49,7 @@ class Node;
 
 namespace UI {
 namespace Widget {
-class LabelToolItem;
-class SpinButtonToolItem;
+class SpinButton;
 }
 
 namespace Toolbar {
@@ -59,24 +58,18 @@ class SpiralToolbar
 	, private XML::NodeObserver
 {
 private:
-    UI::Widget::LabelToolItem *_mode_item;
+    Glib::RefPtr<Gtk::Builder> _builder;
+    Gtk::Label *_mode_item;
 
-    UI::Widget::SpinButtonToolItem *_revolution_item;
-    UI::Widget::SpinButtonToolItem *_expansion_item;
-    UI::Widget::SpinButtonToolItem *_t0_item;
-
-    Gtk::ToolButton *_reset_item;
-
-    Glib::RefPtr<Gtk::Adjustment> _revolution_adj;
-    Glib::RefPtr<Gtk::Adjustment> _expansion_adj;
-    Glib::RefPtr<Gtk::Adjustment> _t0_adj;
+    UI::Widget::SpinButton *_revolution_item;
+    UI::Widget::SpinButton *_expansion_item;
+    UI::Widget::SpinButton *_t0_item;
 
     bool _freeze{false};
 
     XML::Node *_repr{nullptr};
 
-    void value_changed(Glib::RefPtr<Gtk::Adjustment> &adj,
-                       Glib::ustring const           &value_name);
+    void value_changed(Glib::RefPtr<Gtk::Adjustment> &adj, Glib::ustring const &value_name);
     void defaults();
     void selection_changed(Inkscape::Selection *selection);
 
@@ -92,7 +85,7 @@ protected:
 
 public:
     static GtkWidget * create(SPDesktop *desktop);
-
+    void setup_derived_spin_button(UI::Widget::SpinButton *btn, const Glib::ustring &name, double default_value);
 };
 }
 }
