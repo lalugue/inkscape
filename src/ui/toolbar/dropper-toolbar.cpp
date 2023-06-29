@@ -25,13 +25,14 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#include "dropper-toolbar.h"
+
 #include <glibmm/i18n.h>
 
-#include "dropper-toolbar.h"
+#include "desktop.h"
 #include "document-undo.h"
 #include "preferences.h"
-#include "desktop.h"
-
+#include "ui/builder-utils.h"
 #include "ui/widget/canvas.h" // Grab focus
 
 namespace Inkscape {
@@ -63,15 +64,18 @@ void DropperToolbar::on_set_alpha_button_toggled()
  */
 DropperToolbar::DropperToolbar(SPDesktop *desktop)
     : Toolbar(desktop)
+    , _builder(initialize_builder("toolbar-dropper.ui"))
 {
+    _builder->get_widget("dropper-toolbar", _toolbar);
+    if (!_toolbar) {
+        std::cerr << "InkscapeWindow: Failed to load dropper toolbar!" << std::endl;
+    }
+
     // Add widgets to toolbar
-    add_label(_("Opacity:"));
-    _pick_alpha_button = add_toggle_button(_("Pick"),
-                                           _("Pick both the color and the alpha (transparency) under cursor; "
-                                             "otherwise, pick only the visible color premultiplied by alpha"));
-    _set_alpha_button = add_toggle_button(_("Assign"),
-                                          _("If alpha was picked, assign it to selection "
-                                            "as fill or stroke transparency"));
+    _builder->get_widget("_pick_alpha_button", _pick_alpha_button);
+    _builder->get_widget("_set_alpha_button", _set_alpha_button);
+
+    add(*_toolbar);
 
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
 

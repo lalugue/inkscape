@@ -119,6 +119,7 @@ RectToolbar::RectToolbar(SPDesktop *desktop)
     menu_btn1->init(1, "tag1", "some-icon", popover_box1, children);
     _expanded_menu_btns.push(menu_btn1);
 
+    _not_rounded->signal_clicked().connect(sigc::mem_fun(*this, &RectToolbar::defaults));
     _desktop->connectEventContextChanged(sigc::mem_fun(*this, &RectToolbar::watch_ec));
 
     add(*_toolbar);
@@ -139,16 +140,16 @@ void RectToolbar::setup_derived_spin_button(UI::Widget::SpinButton *btn, const G
 
     if (name == "width") {
         adj->signal_value_changed().connect(
-            sigc::bind(sigc::mem_fun(*this, &RectToolbar::value_changed), adj, name.c_str(), &SPRect::setVisibleWidth));
+            sigc::bind(sigc::mem_fun(*this, &RectToolbar::value_changed), adj, "width", &SPRect::setVisibleWidth));
     } else if (name == "height") {
-        adj->signal_value_changed().connect(sigc::bind(sigc::mem_fun(*this, &RectToolbar::value_changed), adj,
-                                                       name.c_str(), &SPRect::setVisibleHeight));
+        adj->signal_value_changed().connect(
+            sigc::bind(sigc::mem_fun(*this, &RectToolbar::value_changed), adj, "height", &SPRect::setVisibleHeight));
     } else if (name == "rx") {
         adj->signal_value_changed().connect(
-            sigc::bind(sigc::mem_fun(*this, &RectToolbar::value_changed), adj, name.c_str(), &SPRect::setVisibleRx));
+            sigc::bind(sigc::mem_fun(*this, &RectToolbar::value_changed), adj, "rx", &SPRect::setVisibleRx));
     } else if (name == "ry") {
         adj->signal_value_changed().connect(
-            sigc::bind(sigc::mem_fun(*this, &RectToolbar::value_changed), adj, name.c_str(), &SPRect::setVisibleRy));
+            sigc::bind(sigc::mem_fun(*this, &RectToolbar::value_changed), adj, "ry", &SPRect::setVisibleRy));
     }
 
     _tracker->addAdjustment(adj->gobj());

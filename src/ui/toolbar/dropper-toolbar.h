@@ -28,6 +28,8 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#include <gtkmm/builder.h>
+
 #include "toolbar.h"
 
 namespace Inkscape {
@@ -39,6 +41,7 @@ namespace Toolbar {
  */
 class DropperToolbar : public Toolbar {
 private:
+    Glib::RefPtr<Gtk::Builder> _builder;
     // Tool widgets
     Gtk::ToggleButton *_pick_alpha_button; ///< Control whether to pick opacity
     Gtk::ToggleButton *_set_alpha_button;  ///< Control whether to set opacity
