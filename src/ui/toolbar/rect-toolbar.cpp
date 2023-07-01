@@ -64,25 +64,16 @@ RectToolbar::RectToolbar(SPDesktop *desktop)
         std::cerr << "InkscapeWindow: Failed to load rect toolbar!" << std::endl;
     }
 
-    // TODO: Remove if not needed.
-    Gtk::Box *width_box;
-    Gtk::Box *height_box;
-    Gtk::Box *rx_box;
-    Gtk::Box *ry_box;
     Gtk::Box *unit_menu_box;
 
     _builder->get_widget("_mode_item", _mode_item);
 
-    _builder->get_widget("width_box", width_box);
     _builder->get_widget_derived("_width_item", _width_item);
 
-    _builder->get_widget("height_box", height_box);
     _builder->get_widget_derived("_height_item", _height_item);
 
-    _builder->get_widget("rx_box", rx_box);
     _builder->get_widget_derived("_rx_item", _rx_item);
 
-    _builder->get_widget("ry_box", ry_box);
     _builder->get_widget_derived("_ry_item", _ry_item);
 
     _builder->get_widget("unit_menu_box", unit_menu_box);

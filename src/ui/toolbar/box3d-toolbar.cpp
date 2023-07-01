@@ -59,20 +59,12 @@ Box3DToolbar::Box3DToolbar(SPDesktop *desktop)
         std::cerr << "InkscapeWindow: Failed to load Box3D toolbar!" << std::endl;
     }
 
-    // TODO: Remove if not needed.
-    Gtk::Box *angle_x_box;
-    Gtk::Box *angle_y_box;
-    Gtk::Box *angle_z_box;
-
-    _builder->get_widget("angle_x_box", angle_x_box);
     _builder->get_widget_derived("_angle_x_item", _angle_x_item);
     _builder->get_widget("_vp_x_state_item", _vp_x_state_item);
 
-    _builder->get_widget("angle_y_box", angle_y_box);
     _builder->get_widget_derived("_angle_y_item", _angle_y_item);
     _builder->get_widget("_vp_y_state_item", _vp_y_state_item);
 
-    _builder->get_widget("angle_z_box", angle_z_box);
     _builder->get_widget_derived("_angle_z_item", _angle_z_item);
     _builder->get_widget("_vp_z_state_item", _vp_z_state_item);
 

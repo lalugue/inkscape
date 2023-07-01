@@ -113,8 +113,6 @@ NodeToolbar::NodeToolbar(SPDesktop *desktop)
     Gtk::Button *object_to_path_item;
     Gtk::Button *stroke_to_path_item;
 
-    Gtk::Box *_nodes_x_box;
-    Gtk::Box *_nodes_y_box;
     Gtk::Box *unit_menu_box;
 
     // TODO: Implement insert_node_item.
@@ -140,9 +138,7 @@ NodeToolbar::NodeToolbar(SPDesktop *desktop)
     _builder->get_widget("object_to_path_item", object_to_path_item);
     _builder->get_widget("stroke_to_path_item", stroke_to_path_item);
 
-    _builder->get_widget("_nodes_x_box", _nodes_x_box);
     _builder->get_widget_derived("_nodes_x_item", _nodes_x_item);
-    _builder->get_widget("_nodes_y_box", _nodes_y_box);
     _builder->get_widget_derived("_nodes_y_item", _nodes_y_item);
     _builder->get_widget("unit_menu_box", unit_menu_box);
 

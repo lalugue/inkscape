@@ -2,30 +2,42 @@
 <!-- Generated with glade 3.40.0 -->
 <interface>
   <requires lib="gtk+" version="3.22"/>
-  <object class="GtkAdjustment" id="_height_adj">
+  <object class="GtkAdjustment" id="_magnitude_adj">
+    <property name="lower">2</property>
+    <property name="upper">1024</property>
+    <property name="step-increment">1</property>
+    <property name="page-increment">5</property>
+  </object>
+  <object class="GtkAdjustment" id="_randomization_adj">
     <property name="upper">1000000</property>
     <property name="step-increment">0.10</property>
     <property name="page-increment">5</property>
   </object>
-  <object class="GtkAdjustment" id="_rx_adj">
-    <property name="upper">1000000</property>
-    <property name="step-increment">0.10</property>
-    <property name="page-increment">5</property>
+  <object class="GtkAdjustment" id="_roundedness_adj">
+    <property name="lower">-10</property>
+    <property name="upper">10</property>
+    <property name="step-increment">0.01</property>
+    <property name="page-increment">0.10</property>
   </object>
-  <object class="GtkAdjustment" id="_ry_adj">
-    <property name="upper">1000000</property>
-    <property name="step-increment">0.10</property>
-    <property name="page-increment">5</property>
-  </object>
-  <object class="GtkAdjustment" id="_width_adj">
-    <property name="upper">1000000</property>
-    <property name="step-increment">0.10</property>
-    <property name="page-increment">5</property>
+  <object class="GtkAdjustment" id="_spoke_adj">
+    <property name="upper">1</property>
+    <property name="step-increment">0.01</property>
+    <property name="page-increment">0.10</property>
   </object>
   <object class="GtkImage" id="image2">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
-    <property name="icon-name">rectangle-make-corners-sharp</property>
+    <property name="icon-name">edit-clear</property>
+  </object>
+  <object class="GtkImage" id="image3">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="icon-name">draw-polygon</property>
+  </object>
+  <object class="GtkImage" id="image4">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="icon-name">draw-star</property>
   </object>
   <object class="GtkPopover" id="popover1">
     <property name="can-focus">False</property>
@@ -45,7 +57,7 @@
       </object>
     </child>
   </object>
-  <object class="GtkBox" id="rect-toolbar">
+  <object class="GtkBox" id="star-toolbar">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
     <property name="valign">center</property>
@@ -66,17 +78,22 @@
       </packing>
     </child>
     <child>
-      <object class="GtkBox" id="width_box">
+      <object class="GtkBox" id="flat_item_box">
         <property name="visible">True</property>
         <property name="can-focus">False</property>
-        <property name="tooltip-text" translatable="yes">Width of rectangle</property>
         <property name="margin-end">3</property>
+        <property name="spacing">3</property>
         <child>
-          <object class="GtkLabel">
+          <object class="GtkToggleButton" id="flat_polygon_button">
             <property name="visible">True</property>
-            <property name="can-focus">False</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+            <property name="tooltip-text" translatable="yes">Regular polygon (with one handle) 
+instead of a star</property>
             <property name="margin-end">3</property>
-            <property name="label" translatable="yes">W:</property>
+            <property name="image">image3</property>
+            <property name="relief">none</property>
+            <property name="always-show-image">True</property>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -85,14 +102,14 @@
           </packing>
         </child>
         <child>
-          <object class="GtkSpinButton" id="_width_item">
+          <object class="GtkToggleButton" id="flat_star_button">
             <property name="visible">True</property>
             <property name="can-focus">True</property>
-            <property name="width-chars">10</property>
-            <property name="text" translatable="yes">0.000</property>
-            <property name="adjustment">_width_adj</property>
-            <property name="climb-rate">0.10</property>
-            <property name="digits">3</property>
+            <property name="receives-default">True</property>
+            <property name="tooltip-text" translatable="yes">Star instead of a regular polygon (with one handle)</property>
+            <property name="image">image4</property>
+            <property name="relief">none</property>
+            <property name="always-show-image">True</property>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -108,17 +125,29 @@
       </packing>
     </child>
     <child>
-      <object class="GtkBox" id="height_box">
+      <object class="GtkSeparator">
         <property name="visible">True</property>
         <property name="can-focus">False</property>
-        <property name="tooltip-text" translatable="yes">Height of rectangle</property>
+        <property name="margin-end">3</property>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="fill">True</property>
+        <property name="position">2</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkBox" id="magnitude_box">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <property name="tooltip-text" translatable="yes">Number of corners of a polygon or star</property>
         <property name="margin-end">3</property>
         <child>
           <object class="GtkLabel">
             <property name="visible">True</property>
             <property name="can-focus">False</property>
             <property name="margin-end">3</property>
-            <property name="label" translatable="yes">H:</property>
+            <property name="label" translatable="yes">Corners:</property>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -127,12 +156,53 @@
           </packing>
         </child>
         <child>
-          <object class="GtkSpinButton" id="_height_item">
+          <object class="GtkSpinButton" id="_magnitude_item">
             <property name="visible">True</property>
             <property name="can-focus">True</property>
-            <property name="width-chars">10</property>
+            <property name="width-chars">5</property>
             <property name="text" translatable="yes">0.000</property>
-            <property name="adjustment">_height_adj</property>
+            <property name="adjustment">_magnitude_adj</property>
+            <property name="climb-rate">0.10</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="fill">True</property>
+        <property name="position">3</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkBox" id="_spoke_box">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <property name="tooltip-text" translatable="yes">Base radius to tip radius ratio</property>
+        <property name="margin-end">3</property>
+        <child>
+          <object class="GtkLabel">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="margin-end">3</property>
+            <property name="label" translatable="yes">Spoke Ratio:</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkSpinButton" id="_spoke_item">
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="width-chars">7</property>
+            <property name="text" translatable="yes">0.000</property>
+            <property name="adjustment">_spoke_adj</property>
             <property name="climb-rate">0.10</property>
             <property name="digits">3</property>
           </object>
@@ -146,7 +216,7 @@
       <packing>
         <property name="expand">False</property>
         <property name="fill">True</property>
-        <property name="position">2</property>
+        <property name="position">4</property>
       </packing>
     </child>
     <child>
@@ -159,7 +229,7 @@
         <property name="relief">none</property>
         <property name="popover">popover1</property>
         <child>
-          <object class="GtkImage" id="image18">
+          <object class="GtkImage" id="image1">
             <property name="visible">True</property>
             <property name="can-focus">False</property>
             <property name="icon-name">icon1</property>
@@ -169,65 +239,21 @@
       <packing>
         <property name="expand">False</property>
         <property name="fill">True</property>
-        <property name="position">4</property>
-      </packing>
-    </child>
-    <child>
-      <object class="GtkBox" id="rx_box">
-        <property name="visible">True</property>
-        <property name="can-focus">False</property>
-        <property name="tooltip-text" translatable="yes">Horizontal radius of rounded corners</property>
-        <property name="margin-end">3</property>
-        <child>
-          <object class="GtkLabel">
-            <property name="visible">True</property>
-            <property name="can-focus">False</property>
-            <property name="margin-end">3</property>
-            <property name="label" translatable="yes">Rx:</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">0</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkSpinButton" id="_rx_item">
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
-            <property name="width-chars">10</property>
-            <property name="adjustment">_rx_adj</property>
-            <property name="climb-rate">0.10</property>
-            <property name="digits">3</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">1</property>
-          </packing>
-        </child>
-        <style>
-          <class name="tag1"/>
-        </style>
-      </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
         <property name="position">5</property>
       </packing>
     </child>
     <child>
-      <object class="GtkBox" id="ry_box">
+      <object class="GtkBox" id="roundedness_box">
         <property name="visible">True</property>
         <property name="can-focus">False</property>
-        <property name="tooltip-text" translatable="yes">Vertical radius of rounded corners</property>
+        <property name="tooltip-text" translatable="yes">How rounded are the corners (0 for sharp)</property>
         <property name="margin-end">3</property>
         <child>
           <object class="GtkLabel">
             <property name="visible">True</property>
             <property name="can-focus">False</property>
             <property name="margin-end">3</property>
-            <property name="label" translatable="yes">Ry:</property>
+            <property name="label" translatable="yes">Rounded:</property>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -236,12 +262,11 @@
           </packing>
         </child>
         <child>
-          <object class="GtkSpinButton" id="_ry_item">
+          <object class="GtkSpinButton" id="_roundedness_item">
             <property name="visible">True</property>
             <property name="can-focus">True</property>
-            <property name="width-chars">10</property>
-            <property name="text" translatable="yes">0.000</property>
-            <property name="adjustment">_ry_adj</property>
+            <property name="width-chars">7</property>
+            <property name="adjustment">_roundedness_adj</property>
             <property name="climb-rate">0.10</property>
             <property name="digits">3</property>
           </object>
@@ -262,15 +287,42 @@
       </packing>
     </child>
     <child>
-      <object class="GtkBox" id="unit_menu_box">
+      <object class="GtkBox" id="randomization_box">
         <property name="visible">True</property>
         <property name="can-focus">False</property>
+        <property name="tooltip-text" translatable="yes">Scatter randomly the corners and angles</property>
         <property name="margin-end">3</property>
         <child>
-          <placeholder/>
+          <object class="GtkLabel">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="margin-end">3</property>
+            <property name="label" translatable="yes">Randomized:</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkSpinButton" id="_randomization_item">
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="width-chars">7</property>
+            <property name="text" translatable="yes">0.000</property>
+            <property name="adjustment">_randomization_adj</property>
+            <property name="climb-rate">0.10</property>
+            <property name="digits">3</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">1</property>
+          </packing>
         </child>
         <style>
-          <class name="tag2"/>
+          <class name="tag1"/>
         </style>
       </object>
       <packing>
@@ -292,7 +344,7 @@
       </packing>
     </child>
     <child>
-      <object class="GtkButton" id="_not_rounded">
+      <object class="GtkButton" id="_reset_item">
         <property name="visible">True</property>
         <property name="can-focus">True</property>
         <property name="receives-default">True</property>

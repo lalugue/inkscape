@@ -29,16 +29,17 @@
  */
 
 #include <gtkmm/adjustment.h>
+#include <gtkmm/builder.h>
 
 #include "toolbar.h"
-
 #include "xml/node-observer.h"
 
 class SPDesktop;
 
 namespace Gtk {
-class RadioToolButton;
-class ToolButton;
+class Button;
+class Label;
+class ToggleButton;
 }
 
 namespace Inkscape {
@@ -54,8 +55,7 @@ class ToolBase;
 }
 
 namespace Widget {
-class LabelToolItem;
-class SpinButtonToolItem;
+class SpinButton;
 }
 
 namespace Toolbar {
@@ -64,26 +64,25 @@ class StarToolbar
 	, private XML::NodeObserver
 {
 private:
-    UI::Widget::LabelToolItem *_mode_item;
-    std::vector<Gtk::RadioToolButton *> _flat_item_buttons;
-    UI::Widget::SpinButtonToolItem *_magnitude_item;
-    UI::Widget::SpinButtonToolItem *_spoke_item;
-    UI::Widget::SpinButtonToolItem *_roundedness_item;
-    UI::Widget::SpinButtonToolItem *_randomization_item;
-    Gtk::ToolButton *_reset_item;
+    Glib::RefPtr<Gtk::Builder> _builder;
+    Gtk::Label *_mode_item;
+    std::vector<Gtk::ToggleButton *> _flat_item_buttons;
+    UI::Widget::SpinButton *_magnitude_item;
+    UI::Widget::SpinButton *_spoke_item;
+    UI::Widget::SpinButton *_roundedness_item;
+    UI::Widget::SpinButton *_randomization_item;
+    Gtk::Button *_reset_item;
+
+    // To set both the label and the spin button invisible.
+    Gtk::Box *_spoke_box;
 
     XML::Node *_repr{nullptr};
 
-    Glib::RefPtr<Gtk::Adjustment> _magnitude_adj;
-    Glib::RefPtr<Gtk::Adjustment> _spoke_adj;
-    Glib::RefPtr<Gtk::Adjustment> _roundedness_adj;
-    Glib::RefPtr<Gtk::Adjustment> _randomization_adj;
-
+    bool _batchundo = false;
     bool _freeze{false};
     sigc::connection _changed;
-
-    bool _batchundo = false;
     
+    void setup_derived_spin_button(UI::Widget::SpinButton *btn, const Glib::ustring &name, float initial_value);
     void side_mode_changed(int mode);
     void magnitude_value_changed();
     void proportion_value_changed();
@@ -96,7 +95,6 @@ private:
 	void notifyAttributeChanged(Inkscape::XML::Node &node, GQuark name,
 								Inkscape::Util::ptr_shared old_value,
 								Inkscape::Util::ptr_shared new_value) final;
-
 
 protected:
     StarToolbar(SPDesktop *desktop);

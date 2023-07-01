@@ -57,22 +57,14 @@ SpiralToolbar::SpiralToolbar(SPDesktop *desktop)
         std::cerr << "InkscapeWindow: Failed to load spiral toolbar!" << std::endl;
     }
 
-    // TODO: Remove if not needed.
-    Gtk::Box *revolution_box;
-    Gtk::Box *expansion_box;
-    Gtk::Box *t0_box;
-
     Gtk::Button *reset_item;
 
     _builder->get_widget("_mode_item", _mode_item);
 
-    _builder->get_widget("revolution_box", revolution_box);
     _builder->get_widget_derived("_revolution_item", _revolution_item);
 
-    _builder->get_widget("expansion_box", expansion_box);
     _builder->get_widget_derived("_expansion_item", _expansion_item);
 
-    _builder->get_widget("t0_box", t0_box);
     _builder->get_widget_derived("_t0_item", _t0_item);
 
     _builder->get_widget("reset_item", reset_item);

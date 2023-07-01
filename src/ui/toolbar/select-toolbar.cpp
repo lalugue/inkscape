@@ -62,51 +62,19 @@ SelectToolbar::SelectToolbar(SPDesktop *desktop)
         std::cerr << "InkscapeWindow: Failed to load select toolbar!" << std::endl;
     }
 
-    // TODO: Remove if not needed.
-    Gtk::Button *deselect_btn;
-
-    Gtk::Button *rotate_left_btn;
-    Gtk::Button *rotate_right_btn;
-    Gtk::Button *flip_horizontal_btn;
-    Gtk::Button *flip_vertical_btn;
-
-    Gtk::Button *raise_to_top_btn;
-    Gtk::Button *raise_one_step_btn;
-    Gtk::Button *lower_one_step_btn;
-    Gtk::Button *lower_to_bottom_btn;
-
-    Gtk::Box *x_box;
-    Gtk::Box *y_box;
-    Gtk::Box *w_box;
-    Gtk::Box *h_box;
     Gtk::Box *unit_menu_box;
 
-    _builder->get_widget("deselect_btn", deselect_btn);
     _builder->get_widget("_select_touch_btn", _select_touch_btn);
-
-    _builder->get_widget("rotate_left_btn", rotate_left_btn);
-    _builder->get_widget("rotate_right_btn", rotate_right_btn);
-    _builder->get_widget("flip_horizontal_btn", flip_horizontal_btn);
-    _builder->get_widget("flip_vertical_btn", flip_vertical_btn);
-
-    _builder->get_widget("raise_to_top_btn", raise_to_top_btn);
-    _builder->get_widget("raise_one_step_btn", raise_one_step_btn);
-    _builder->get_widget("lower_one_step_btn", lower_one_step_btn);
-    _builder->get_widget("lower_to_bottom_btn", lower_to_bottom_btn);
 
     _builder->get_widget("_transform_stroke_btn", _transform_stroke_btn);
     _builder->get_widget("_transform_corners_btn", _transform_corners_btn);
     _builder->get_widget("_transform_gradient_btn", _transform_gradient_btn);
     _builder->get_widget("_transform_pattern_btn", _transform_pattern_btn);
 
-    _builder->get_widget("x_box", x_box);
     _builder->get_widget_derived("_x_btn", _x_btn);
-    _builder->get_widget("y_box", y_box);
     _builder->get_widget_derived("_y_btn", _y_btn);
-    _builder->get_widget("w_box", w_box);
     _builder->get_widget_derived("_w_btn", _w_btn);
     _builder->get_widget("_lock_btn", _lock_btn);
-    _builder->get_widget("h_box", h_box);
     _builder->get_widget_derived("_h_btn", _h_btn);
     _builder->get_widget("unit_menu_box", unit_menu_box);
 
