@@ -29,16 +29,17 @@
  */
 
 #include <gtkmm/adjustment.h>
+#include <gtkmm/builder.h>
 
 #include "toolbar.h"
-
 #include "xml/node-observer.h"
 
 class SPDesktop;
 class SPItem;
 
 namespace Gtk {
-class RadioToolButton;
+class Label;
+class ToggleButton;
 class ToolButton;
 }
 
@@ -55,8 +56,7 @@ class ToolBase;
 }
 
 namespace Widget {
-class LabelToolItem;
-class SpinButtonToolItem;
+class SpinButton;
 class UnitTracker;
 }
 
@@ -66,20 +66,18 @@ class ArcToolbar
 	, private XML::NodeObserver
 {
 private:
-    UI::Widget::UnitTracker *_tracker;
+    Glib::RefPtr<Gtk::Builder> _builder;
+    std::unique_ptr<UI::Widget::UnitTracker> _tracker;
 
-    UI::Widget::SpinButtonToolItem *_rx_item;
-    UI::Widget::SpinButtonToolItem *_ry_item;
+    UI::Widget::SpinButton *_rx_item;
+    UI::Widget::SpinButton *_ry_item;
+    UI::Widget::SpinButton *_start_item;
+    UI::Widget::SpinButton *_end_item;
 
-    UI::Widget::LabelToolItem *_mode_item;
+    Gtk::Label *_mode_item;
 
-    std::vector<Gtk::RadioToolButton *> _type_buttons;
-    Gtk::ToolButton *_make_whole;
-
-    Glib::RefPtr<Gtk::Adjustment> _rx_adj;
-    Glib::RefPtr<Gtk::Adjustment> _ry_adj;
-    Glib::RefPtr<Gtk::Adjustment> _start_adj;
-    Glib::RefPtr<Gtk::Adjustment> _end_adj;
+    std::vector<Gtk::ToggleButton *> _type_buttons;
+    Gtk::Button *_make_whole;
 
     bool _freeze{false};
     bool _single;
@@ -87,6 +85,8 @@ private:
     XML::Node *_repr{nullptr};
     SPItem *_item;
 
+    void setup_derived_spin_button(UI::Widget::SpinButton *btn, gchar const *name);
+    void setup_startend_button(UI::Widget::SpinButton *btn, gchar const *name);
     void value_changed(Glib::RefPtr<Gtk::Adjustment>&  adj,
                        gchar const                    *value_name);
     void startend_value_changed(Glib::RefPtr<Gtk::Adjustment>&  adj,

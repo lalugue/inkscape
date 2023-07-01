@@ -68,7 +68,6 @@ class RectToolbar
 private:
     Glib::RefPtr<Gtk::Builder> _builder;
     std::unique_ptr<UI::Widget::UnitTracker> _tracker;
-    // UI::Widget::UnitTracker *_tracker;
 
     XML::Node *_repr{nullptr};
     SPItem *_item;

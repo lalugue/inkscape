@@ -29,26 +29,18 @@
 
 #include <glibmm/i18n.h>
 
-#include <gtkmm/radiotoolbutton.h>
-#include <gtkmm/separatortoolitem.h>
-
 #include "desktop.h"
 #include "document-undo.h"
 #include "mod360.h"
-#include "selection.h"
-
 #include "object/sp-ellipse.h"
 #include "object/sp-namedview.h"
-
+#include "selection.h"
 #include "ui/icon-names.h"
 #include "ui/tools/arc-tool.h"
 #include "ui/widget/canvas.h"
 #include "ui/widget/combo-tool-item.h"
-#include "ui/widget/label-tool-item.h"
 #include "ui/widget/spinbutton.h"
-#include "ui/widget/spin-button-tool-item.h"
 #include "ui/widget/unit-tracker.h"
-
 #include "widgets/widget-sizes.h"
 
 using Inkscape::UI::Widget::UnitTracker;
@@ -62,145 +54,140 @@ namespace Toolbar {
 ArcToolbar::ArcToolbar(SPDesktop *desktop)
     : Toolbar(desktop)
     , _tracker(new UnitTracker(Inkscape::Util::UNIT_TYPE_LINEAR))
+    , _builder(initialize_builder("toolbar-arc.ui"))
 {
+    Inkscape::Preferences *prefs = Inkscape::Preferences::get();
+
+    _builder->get_widget("arc-toolbar", _toolbar);
+    if (!_toolbar) {
+        std::cerr << "InkscapeWindow: Failed to load arc toolbar!" << std::endl;
+    }
+
+    Gtk::Box *unit_menu_box;
+
+    Gtk::ToggleButton *slice_btn;
+    Gtk::ToggleButton *arc_btn;
+    Gtk::ToggleButton *chord_btn;
+
+    _builder->get_widget("_mode_item", _mode_item);
+
+    _builder->get_widget_derived("_rx_item", _rx_item);
+    _builder->get_widget_derived("_ry_item", _ry_item);
+
+    _builder->get_widget("unit_menu_box", unit_menu_box);
+
+    _builder->get_widget_derived("_start_item", _start_item);
+    _builder->get_widget_derived("_end_item", _end_item);
+
+    _builder->get_widget("slice_btn", slice_btn);
+    _builder->get_widget("arc_btn", arc_btn);
+    _builder->get_widget("chord_btn", chord_btn);
+
+    _builder->get_widget("_make_whole", _make_whole);
+
     auto init_units = desktop->getNamedView()->display_units;
     _tracker->setActiveUnit(init_units);
-    auto prefs = Inkscape::Preferences::get();
 
-    {
-        _mode_item = Gtk::make_managed<UI::Widget::LabelToolItem>(_("<b>New:</b>"));
-        _mode_item->set_use_markup(true);
-        add(*_mode_item);
+    auto unit_menu = _tracker->create_tool_item(_("Units"), (""));
+    unit_menu_box->add(*unit_menu);
+
+    setup_derived_spin_button(_rx_item, "rx");
+    setup_derived_spin_button(_ry_item, "ry");
+    setup_startend_button(_start_item, "start");
+    setup_startend_button(_end_item, "end");
+
+    _type_buttons.push_back(slice_btn);
+    _type_buttons.push_back(arc_btn);
+    _type_buttons.push_back(chord_btn);
+
+    gint type = prefs->getInt("/tools/shapes/arc/arc_type", 0);
+    _type_buttons[type]->set_active();
+    int btn_index = 0;
+
+    for (auto btn : _type_buttons) {
+        btn->set_sensitive();
+        btn->signal_clicked().connect(sigc::bind(sigc::mem_fun(*this, &ArcToolbar::type_changed), btn_index++));
     }
 
-    /* Radius X */
-    {
-        std::vector<double> values = {1, 2, 3, 5, 10, 20, 50, 100, 200, 500};
-        auto rx_val = prefs->getDouble("/tools/shapes/arc/rx", 0);
-        rx_val = Quantity::convert(rx_val, "px", init_units);
+    // Fetch all the ToolbarMenuButtons at once from the UI file
+    // Menu Button #1
+    Gtk::Box *popover_box1;
+    _builder->get_widget("popover_box1", popover_box1);
 
-        _rx_adj = Gtk::Adjustment::create(rx_val, 0, 1e6, SPIN_STEP, SPIN_PAGE_STEP);
-        _rx_item = Gtk::make_managed<UI::Widget::SpinButtonToolItem>("arc-rx", _("Rx:"), _rx_adj);
-        _rx_item->set_tooltip_text(_("Horizontal radius of the circle, ellipse, or arc"));
-        _rx_item->set_custom_numeric_menu_data(values);
-        _tracker->addAdjustment(_rx_adj->gobj());
-        _rx_item->get_spin_button()->addUnitTracker(_tracker);
-        _rx_item->set_focus_widget(desktop->getCanvas());
-        _rx_adj->signal_value_changed().connect(sigc::bind(sigc::mem_fun(*this, &ArcToolbar::value_changed),
-                                                           _rx_adj, "rx"));
-        _rx_item->set_sensitive(false);
-        add(*_rx_item);
-    }
+    Inkscape::UI::Widget::ToolbarMenuButton *menu_btn1 = nullptr;
+    _builder->get_widget_derived("menu_btn1", menu_btn1);
 
-    /* Radius Y */
-    {
-        std::vector<double> values = {1, 2, 3, 5, 10, 20, 50, 100, 200, 500};
-        auto ry_val = prefs->getDouble("/tools/shapes/arc/ry", 0);
-        ry_val = Quantity::convert(ry_val, "px", init_units);
+    // Menu Button #2
+    Gtk::Box *popover_box2;
+    _builder->get_widget("popover_box2", popover_box2);
 
-        _ry_adj = Gtk::Adjustment::create(ry_val, 0, 1e6, SPIN_STEP, SPIN_PAGE_STEP);
-        _ry_item = Gtk::make_managed<UI::Widget::SpinButtonToolItem>("arc-ry", _("Ry:"), _ry_adj);
-        _ry_item->set_tooltip_text(_("Vertical radius of the circle, ellipse, or arc"));
-        _ry_item->set_custom_numeric_menu_data(values);
-        _tracker->addAdjustment(_ry_adj->gobj());
-        _ry_item->get_spin_button()->addUnitTracker(_tracker);
-        _ry_item->set_focus_widget(desktop->getCanvas());
-        _ry_adj->signal_value_changed().connect(sigc::bind(sigc::mem_fun(*this, &ArcToolbar::value_changed),
-                                                           _ry_adj, "ry"));
-        _ry_item->set_sensitive(false);
-        add(*_ry_item);
-    }
+    Inkscape::UI::Widget::ToolbarMenuButton *menu_btn2 = nullptr;
+    _builder->get_widget_derived("menu_btn2", menu_btn2);
 
-    // add the units menu
-    {
-        auto unit_menu = _tracker->create_tool_item(_("Units"), ("") );
-        add(*unit_menu);
-    }
+    // Initialize all the ToolbarMenuButtons.
+    // Note: Do not initialize the these widgets right after fetching from
+    // the UI file.
+    auto children = _toolbar->get_children();
 
-    add(* Gtk::make_managed<Gtk::SeparatorToolItem>());
+    menu_btn1->init(1, "tag1", "some-icon", popover_box1, children);
+    _expanded_menu_btns.push(menu_btn1);
 
-    /* Start */
-    {
-        auto start_val = prefs->getDouble("/tools/shapes/arc/start", 0.0);
-        _start_adj = Gtk::Adjustment::create(start_val, -360.0, 360.0, 1.0, 10.0);
-        auto const eact = Gtk::make_managed<UI::Widget::SpinButtonToolItem>("arc-start", _("Start:"), _start_adj);
-        eact->set_tooltip_text(_("The angle (in degrees) from the horizontal to the arc's start point"));
-        eact->set_focus_widget(desktop->getCanvas());
-        add(*eact);
-    }
+    menu_btn2->init(2, "tag2", "some-icon", popover_box2, children);
+    _expanded_menu_btns.push(menu_btn2);
 
-    /* End */
-    {
-        auto end_val = prefs->getDouble("/tools/shapes/arc/end", 0.0);
-        _end_adj = Gtk::Adjustment::create(end_val, -360.0, 360.0, 1.0, 10.0);
-        auto const eact = Gtk::make_managed<UI::Widget::SpinButtonToolItem>("arc-end", _("End:"), _end_adj);
-        eact->set_tooltip_text(_("The angle (in degrees) from the horizontal to the arc's end point"));
-        eact->set_focus_widget(desktop->getCanvas());
-        add(*eact);
-    }
-    _start_adj->signal_value_changed().connect(sigc::bind(sigc::mem_fun(*this, &ArcToolbar::startend_value_changed),
-                                                          _start_adj, "start", _end_adj));
-    _end_adj->signal_value_changed().connect(  sigc::bind(sigc::mem_fun(*this, &ArcToolbar::startend_value_changed),
-                                                          _end_adj,   "end",   _start_adj));
+    add(*_toolbar);
 
-    add(* Gtk::make_managed<Gtk::SeparatorToolItem>());
-
-    /* Arc: Slice, Arc, Chord */
-    {
-        Gtk::RadioToolButton::Group type_group;
-
-        auto const slice_btn = Gtk::make_managed<Gtk::RadioToolButton>(_("Slice"));
-        slice_btn->set_tooltip_text(_("Switch to slice (closed shape with two radii)"));
-        slice_btn->set_icon_name(INKSCAPE_ICON("draw-ellipse-segment"));
-        _type_buttons.push_back(slice_btn);
-
-        auto const arc_btn = Gtk::make_managed<Gtk::RadioToolButton>(_("Arc >(Open)"));
-        arc_btn->set_tooltip_text(_("Switch to arc (unclosed shape)"));
-        arc_btn->set_icon_name(INKSCAPE_ICON("draw-ellipse-arc"));
-        _type_buttons.push_back(arc_btn);
-
-        auto const chord_btn = Gtk::make_managed<Gtk::RadioToolButton>(_("Chord"));
-        chord_btn->set_tooltip_text(_("Switch to chord (closed shape)"));
-        chord_btn->set_icon_name(INKSCAPE_ICON("draw-ellipse-chord"));
-        _type_buttons.push_back(chord_btn);
-
-        slice_btn->set_group(type_group);
-        arc_btn->set_group(type_group);
-        chord_btn->set_group(type_group);
-
-        gint type = prefs->getInt("/tools/shapes/arc/arc_type", 0);
-        _type_buttons[type]->set_active();
-
-        int btn_index = 0;
-        for (auto btn : _type_buttons)
-        {
-            btn->set_sensitive();
-            btn->signal_clicked().connect(sigc::bind(sigc::mem_fun(*this, &ArcToolbar::type_changed), btn_index++));
-            add(*btn);
-        }
-    }
-
-    add(* Gtk::make_managed<Gtk::SeparatorToolItem>());
-
-    /* Make Whole */
-    {
-        _make_whole = Gtk::make_managed<Gtk::ToolButton>(_("Make whole"));
-        _make_whole->set_tooltip_text(_("Make the shape a whole ellipse, not arc or segment"));
-        _make_whole->set_icon_name(INKSCAPE_ICON("draw-ellipse-whole"));
-        _make_whole->signal_clicked().connect(sigc::mem_fun(*this, &ArcToolbar::defaults));
-        add(*_make_whole);
-        _make_whole->set_sensitive(true);
-    }
+    _make_whole->signal_clicked().connect(sigc::mem_fun(*this, &ArcToolbar::defaults));
 
     _single = true;
+
     // sensitivize make whole and open checkbox
-    {
-        sensitivize( _start_adj->get_value(), _end_adj->get_value() );
-    }
+    sensitivize(_start_item->get_adjustment()->get_value(), _end_item->get_adjustment()->get_value());
 
     desktop->connectEventContextChanged(sigc::mem_fun(*this, &ArcToolbar::check_ec));
 
     show_all();
+
+    // TODO: Fix this.
+    menu_btn1->set_visible(false);
+    menu_btn2->set_visible(false);
+}
+
+void ArcToolbar::setup_derived_spin_button(UI::Widget::SpinButton *btn, gchar const *name)
+{
+    auto init_units = _desktop->getNamedView()->display_units;
+    Inkscape::Preferences *prefs = Inkscape::Preferences::get();
+    auto adj = btn->get_adjustment();
+    const Glib::ustring path = "/tools/shapes/arc/" + (Glib::ustring)name;
+    auto val = prefs->getDouble(path, 0);
+    val = Quantity::convert(val, "px", init_units);
+    adj->set_value(val);
+
+    adj->signal_value_changed().connect(sigc::bind(sigc::mem_fun(*this, &ArcToolbar::value_changed), adj, name));
+    _tracker->addAdjustment(adj->gobj());
+
+    btn->addUnitTracker(_tracker.get());
+    btn->set_defocus_widget(_desktop->getCanvas());
+    btn->set_sensitive(false);
+}
+
+void ArcToolbar::setup_startend_button(UI::Widget::SpinButton *btn, gchar const *name)
+{
+    Inkscape::Preferences *prefs = Inkscape::Preferences::get();
+    auto adj = btn->get_adjustment();
+    const Glib::ustring path = "/tools/shapes/arc/" + (Glib::ustring)name;
+    auto val = prefs->getDouble(path, 0);
+    adj->set_value(val);
+
+    btn->set_defocus_widget(_desktop->getCanvas());
+
+    if (name == "start") {
+        adj->signal_value_changed().connect(sigc::bind(sigc::mem_fun(*this, &ArcToolbar::startend_value_changed), adj,
+                                                       name, _end_item->get_adjustment()));
+    } else {
+        adj->signal_value_changed().connect(sigc::bind(sigc::mem_fun(*this, &ArcToolbar::startend_value_changed), adj,
+                                                       name, _start_item->get_adjustment()));
+    }
 }
 
 ArcToolbar::~ArcToolbar()
@@ -348,6 +335,13 @@ ArcToolbar::type_changed( int type )
     // in turn, prevent listener from responding
     _freeze = true;
 
+    // Set other buttons inactive before doing anything else.
+    for (int i = 0; i < _type_buttons.size(); i++) {
+        if (i != type && _type_buttons[i]->get_active()) {
+            _type_buttons[i]->set_active(false);
+        }
+    }
+
     Glib::ustring arc_type = "slice";
     bool open = false;
     switch (type) {
@@ -366,7 +360,7 @@ ArcToolbar::type_changed( int type )
         default:
             std::cerr << "sp_arctb_type_changed: bad arc type: " << type << std::endl;
     }
-               
+
     bool modmade = false;
     auto itemlist= _desktop->getSelection()->items();
     for(auto i=itemlist.begin();i!=itemlist.end();++i){
@@ -390,8 +384,8 @@ ArcToolbar::type_changed( int type )
 void
 ArcToolbar::defaults()
 {
-    _start_adj->set_value(0.0);
-    _end_adj->set_value(0.0);
+    _start_item->get_adjustment()->set_value(0.0);
+    _end_item->get_adjustment()->set_value(0.0);
 
     if(_desktop->getCanvas()) _desktop->getCanvas()->grab_focus();
 }
@@ -494,17 +488,17 @@ void ArcToolbar::notifyAttributeChanged(Inkscape::XML::Node &repr, GQuark,
 
         gdouble rx = ge->getVisibleRx();
         gdouble ry = ge->getVisibleRy();
-        _rx_adj->set_value(Quantity::convert(rx, "px", unit));
-        _ry_adj->set_value(Quantity::convert(ry, "px", unit));
+        _rx_item->get_adjustment()->set_value(Quantity::convert(rx, "px", unit));
+        _ry_item->get_adjustment()->set_value(Quantity::convert(ry, "px", unit));
     }
 
     gdouble start = repr.getAttributeDouble("sodipodi:start", 0.0);;
     gdouble end = repr.getAttributeDouble("sodipodi:end", 0.0);
 
-    _start_adj->set_value(mod360((start * 180)/M_PI));
-    _end_adj->set_value(mod360((end * 180)/M_PI));
+    _start_item->get_adjustment()->set_value(mod360((start * 180) / M_PI));
+    _end_item->get_adjustment()->set_value(mod360((end * 180) / M_PI));
 
-    sensitivize(_start_adj->get_value(), _end_adj->get_value());
+    sensitivize(_start_item->get_adjustment()->get_value(), _end_item->get_adjustment()->get_value());
 
     char const *arctypestr = nullptr;
     arctypestr = repr.attribute("sodipodi:arc-type");

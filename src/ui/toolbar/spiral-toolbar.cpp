@@ -39,7 +39,6 @@
 #include "ui/builder-utils.h"
 #include "ui/icon-names.h"
 #include "ui/widget/canvas.h"
-#include "ui/widget/label-tool-item.h"
 #include "ui/widget/spinbutton.h"
 
 using Inkscape::DocumentUndo;
@@ -62,9 +61,7 @@ SpiralToolbar::SpiralToolbar(SPDesktop *desktop)
     _builder->get_widget("_mode_item", _mode_item);
 
     _builder->get_widget_derived("_revolution_item", _revolution_item);
-
     _builder->get_widget_derived("_expansion_item", _expansion_item);
-
     _builder->get_widget_derived("_t0_item", _t0_item);
 
     _builder->get_widget("reset_item", reset_item);

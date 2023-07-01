@@ -41,7 +41,6 @@
 #include "ui/tools/rect-tool.h"
 #include "ui/widget/canvas.h"
 #include "ui/widget/combo-tool-item.h"
-#include "ui/widget/label-tool-item.h"
 #include "ui/widget/spinbutton.h"
 #include "ui/widget/unit-tracker.h"
 #include "widgets/widget-sizes.h"
@@ -69,15 +68,11 @@ RectToolbar::RectToolbar(SPDesktop *desktop)
     _builder->get_widget("_mode_item", _mode_item);
 
     _builder->get_widget_derived("_width_item", _width_item);
-
     _builder->get_widget_derived("_height_item", _height_item);
-
     _builder->get_widget_derived("_rx_item", _rx_item);
-
     _builder->get_widget_derived("_ry_item", _ry_item);
 
     _builder->get_widget("unit_menu_box", unit_menu_box);
-
     _builder->get_widget("_not_rounded", _not_rounded);
 
     auto unit_menu = _tracker->create_tool_item(_("Units"), (""));

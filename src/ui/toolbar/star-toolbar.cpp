@@ -61,17 +61,14 @@ StarToolbar::StarToolbar(SPDesktop *desktop)
     Gtk::ToggleButton *flat_star_button;
 
     _builder->get_widget("_mode_item", _mode_item);
-
     _builder->get_widget("flat_polygon_button", flat_polygon_button);
     _builder->get_widget("flat_star_button", flat_star_button);
 
-    _builder->get_widget_derived("_magnitude_item", _magnitude_item);
-
     _builder->get_widget("_spoke_box", _spoke_box);
+
+    _builder->get_widget_derived("_magnitude_item", _magnitude_item);
     _builder->get_widget_derived("_spoke_item", _spoke_item);
-
     _builder->get_widget_derived("_roundedness_item", _roundedness_item);
-
     _builder->get_widget_derived("_randomization_item", _randomization_item);
 
     _builder->get_widget("_reset_item", _reset_item);
