@@ -15,6 +15,7 @@
 
 #include "script.h"
 
+#include <memory>
 #include <glib/gstdio.h>
 #include <glibmm/convert.h>
 #include <glibmm/fileutils.h>
@@ -470,8 +471,6 @@ void Script::save(Inkscape::Extension::Output *module,
     if (success == false) {
         throw Inkscape::Extension::Output::save_failed();
     }
-
-    return;
 }
 
 
@@ -500,7 +499,6 @@ void Script::export_raster(Inkscape::Extension::Output *module,
     if (success == false) {
         throw Inkscape::Extension::Output::save_failed();
     }
-    return;
 }
 
 /**
@@ -633,8 +631,6 @@ void Script::_change_extension(Inkscape::Extension::Extension *module, SPDocumen
     } else {
         Inkscape::UI::gui_warning(_("The output from the extension could not be parsed."), parent_window);
     }
-
-    return;
 }
 
 /**  \brief  This function checks the stderr file, and if it has data,
@@ -657,14 +653,13 @@ void Script::showPopupError (const Glib::ustring &data,
     auto const textview = Gtk::make_managed<Gtk::TextView>();
     textview->set_editable(false);
     textview->set_wrap_mode(Gtk::WrapMode::WORD);
-    textview->set_visible(true);
     textview->get_buffer()->set_text(data);
 
     auto const scrollwindow = Gtk::make_managed<Gtk::ScrolledWindow>();
-    scrollwindow->add(*textview);
+    scrollwindow->set_child(*textview);
+
     scrollwindow->set_policy(Gtk::PolicyType::AUTOMATIC, Gtk::PolicyType::AUTOMATIC);
-    scrollwindow->set_shadow_type(Gtk::SHADOW_IN);
-    scrollwindow->set_visible(true);
+    scrollwindow->set_has_frame(true);
     scrollwindow->set_size_request(0, 60);
 
     auto const vbox = warning.get_content_area();
@@ -768,8 +763,8 @@ int Script::execute (const std::list<std::string> &in_command,
                                      nullptr,           // STDIN
                                      &stdout_pipe,   // STDOUT
                                      &stderr_pipe);  // STDERR
-    } catch (Glib::Error &e) {
-        g_critical("Script::execute(): failed to execute program '%s'.\n\tReason: %s", program.c_str(), e.what().data());
+    } catch (Glib::Error const &e) {
+        g_critical("Script::execute(): failed to execute program '%s'.\n\tReason: %s", program.c_str(), e.what());
         return 0;
     }
 
@@ -823,8 +818,6 @@ void Script::file_listener::init(int fd, Glib::RefPtr<Glib::MainLoop> main) {
     _channel->set_encoding();
     _conn = main->get_context()->signal_io().connect(sigc::mem_fun(*this, &file_listener::read), _channel, Glib::IOCondition::IO_IN | Glib::IOCondition::IO_HUP | Glib::IOCondition::IO_ERR);
     _main_loop = main;
-
-    return;
 }
 
 bool Script::file_listener::read(Glib::IOCondition condition) {
