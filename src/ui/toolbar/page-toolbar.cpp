@@ -59,12 +59,18 @@ public:
     Gtk::TreeModelColumn<Glib::ustring> key;
 };
 
-PageToolbar::PageToolbar(BaseObjectType *cobject, const Glib::RefPtr<Gtk::Builder> &builder, SPDesktop *desktop)
-    : Gtk::Toolbar(cobject)
-    , _desktop(desktop)
+PageToolbar::PageToolbar(SPDesktop *desktop)
+    : Toolbar(desktop)
     , combo_page_sizes(nullptr)
     , text_page_label(nullptr)
+    // TODO: Change the builder file to toolbar-page.ui
+    , builder(initialize_builder("page-toolbar.ui"))
 {
+    builder->get_widget("page-toolbar", _toolbar);
+    if (!_toolbar) {
+        std::cerr << "InkscapeWindow: Failed to load page toolbar!" << std::endl;
+    }
+
     builder->get_widget("page_sizes", combo_page_sizes);
     builder->get_widget("page_margins", text_page_margins);
     builder->get_widget("page_bleeds", text_page_bleeds);
@@ -91,6 +97,8 @@ PageToolbar::PageToolbar(BaseObjectType *cobject, const Glib::RefPtr<Gtk::Builde
     builder->get_widget_derived("margin_right", margin_right);
     builder->get_widget_derived("margin_bottom", margin_bottom);
     builder->get_widget_derived("margin_left", margin_left);
+
+    add(*_toolbar);
 
     if (text_page_label) {
         _label_edited = text_page_label->signal_changed().connect(sigc::mem_fun(*this, &PageToolbar::labelEdited));
@@ -162,10 +170,6 @@ PageToolbar::PageToolbar(BaseObjectType *cobject, const Glib::RefPtr<Gtk::Builde
             toolChanged(desktop, desktop->getTool());
         }
     });
-
-    // Constructed by a builder, so we're going to protect the widget from destruction.
-    this->reference();
-    was_referenced = true;
 }
 
 /**
@@ -508,14 +512,8 @@ void PageToolbar::selectionChanged(SPPage *page)
 
 GtkWidget *PageToolbar::create(SPDesktop *desktop)
 {
-    PageToolbar *toolbar = nullptr;
-    auto builder = Inkscape::UI::create_builder("toolbar-page.ui");
-    builder->get_widget_derived("page-toolbar", toolbar, desktop);
+    auto toolbar = new PageToolbar(desktop);
 
-    if (!toolbar) {
-        std::cerr << "InkscapeWindow: Failed to load page toolbar!" << std::endl;
-        return nullptr;
-    }
     // This widget will be auto-freed by the builder unless you have called reference();
     return toolbar->Gtk::Widget::gobj();
 }

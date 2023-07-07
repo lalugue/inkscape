@@ -30,8 +30,7 @@ class EntryCompletion;
 class Label;
 class ListStore;
 class Popover;
-class SeparatorToolItem;
-class ToolButton;
+class Button;
 } // namespace Gtk
 
 class SPDesktop;
@@ -50,10 +49,10 @@ class ToolBase;
 
 namespace Toolbar {
 
-class PageToolbar final : public Gtk::Toolbar
+class PageToolbar : public Toolbar
 {
 public:
-    PageToolbar(BaseObjectType *cobject, const Glib::RefPtr<Gtk::Builder> &builder, SPDesktop *desktop);
+    PageToolbar(SPDesktop *desktop);
     ~PageToolbar() final;
 
     static GtkWidget *create(SPDesktop *desktop);
@@ -73,7 +72,6 @@ protected:
     void setMarginText(SPPage *page = nullptr);
 
 private:
-    SPDesktop *_desktop;
     SPDocument *_document;
 
     void toolChanged(SPDesktop *desktop, Inkscape::UI::Tools::ToolBase *tool);
@@ -91,6 +89,7 @@ private:
     Inkscape::auto_connection _size_edited;
 
     bool was_referenced;
+    Glib::RefPtr<Gtk::Builder> builder;
     Gtk::ComboBoxText *combo_page_sizes;
     Gtk::Entry *entry_page_sizes;
     Gtk::Entry *text_page_margins;
@@ -99,11 +98,11 @@ private:
     Gtk::Entry *text_page_width;
     Gtk::Entry *text_page_height;
     Gtk::Label *label_page_pos;
-    Gtk::ToolButton *btn_page_backward;
-    Gtk::ToolButton *btn_page_foreward;
-    Gtk::ToolButton *btn_page_delete;
-    Gtk::ToolButton *btn_move_toggle;
-    Gtk::SeparatorToolItem *sep1;
+    Gtk::Button *btn_page_backward;
+    Gtk::Button *btn_page_foreward;
+    Gtk::Button *btn_page_delete;
+    Gtk::Button *btn_move_toggle;
+    Gtk::Separator *sep1;
 
     Glib::RefPtr<Gtk::ListStore> sizes_list;
     Glib::RefPtr<Gtk::ListStore> sizes_search;
