@@ -109,6 +109,9 @@ private:
     Gtk::Scale& _orient_slider;
     Gtk::Scale& _gap_x_slider;
     Gtk::Scale& _gap_y_slider;
+    Gtk::SpinButton& _gap_x_spin;
+    Gtk::SpinButton& _gap_y_spin;
+    bool _precise_gap_control = false;
     Gtk::Button& _edit_btn;
     Gtk::Label& _color_label;
     Gtk::Button& _color_btn;

@@ -22,6 +22,7 @@
 #include <gtkmm/image.h>
 #include <gtkmm/label.h>
 #include <gtkmm/paned.h>
+#include <gtkmm/radiobutton.h>
 #include <gtkmm/scale.h>
 #include <gtkmm/searchentry.h>
 #include <gtkmm/spinbutton.h>
@@ -92,6 +93,8 @@ PatternEditor::PatternEditor(const char* prefs, Inkscape::PatternManager& manage
     _orient_slider(get_widget<Gtk::Scale>(_builder, "orient")),
     _gap_x_slider(get_widget<Gtk::Scale>(_builder, "gap-x")),
     _gap_y_slider(get_widget<Gtk::Scale>(_builder, "gap-y")),
+    _gap_x_spin(get_widget<Gtk::SpinButton>(_builder, "gap-x-spin")),
+    _gap_y_spin(get_widget<Gtk::SpinButton>(_builder, "gap-y-spin")),
     _edit_btn(get_widget<Gtk::Button>(_builder, "edit-pattern")),
     _preview_img(get_widget<Gtk::Image>(_builder, "preview")),
     _preview(get_widget<Gtk::Viewport>(_builder, "preview-box")),
@@ -119,6 +122,22 @@ PatternEditor::PatternEditor(const char* prefs, Inkscape::PatternManager& manage
         _signal_color_changed.emit(color);
     });
 
+    // there's enough space for one set of controls only:
+    auto set_gap_control = [=](){
+        if (_precise_gap_control) {
+            _gap_x_slider.set_visible(false);
+            _gap_y_slider.set_visible(false);
+            _gap_x_spin.set_visible();
+            _gap_y_spin.set_visible();
+        }
+        else {
+            _gap_x_spin.set_visible(false);
+            _gap_y_spin.set_visible(false);
+            _gap_x_slider.set_visible();
+            _gap_y_slider.set_visible();
+        }
+    };
+
     _tile_size = Inkscape::Preferences::get()->getIntLimited(_prefs + "/tileSize", ITEM_WIDTH, 30, 1000);
     _tile_slider.set_value(tile_to_slider(_tile_size));
     _tile_slider.signal_change_value().connect([=](Gtk::ScrollType st, double value){
@@ -133,6 +152,23 @@ PatternEditor::PatternEditor(const char* prefs, Inkscape::PatternManager& manage
             Inkscape::Preferences::get()->setInt(_prefs + "/tileSize", size);
         }
         return true;
+    });
+    _precise_gap_control = Inkscape::Preferences::get()->getBool(_prefs + "/preciseGapControl", false);
+    auto precise_gap = &get_widget<Gtk::RadioButton>(_builder, "gap-spin");
+    auto& mouse_friendly = get_widget<Gtk::RadioButton>(_builder, "gap-slider");
+    if (_precise_gap_control) {
+        precise_gap->set_active();
+    }
+    else {
+        mouse_friendly.set_active();
+    }
+    precise_gap->signal_toggled().connect([=](){
+        auto precise = precise_gap->get_active();
+        if (_precise_gap_control != precise) {
+            _precise_gap_control = precise;
+            set_gap_control();
+            Inkscape::Preferences::get()->setBool(_prefs + "/preciseGapControl", precise);
+        }
     });
 
     auto show_labels = Inkscape::Preferences::get()->getBool(_prefs + "/showLabels", false);
@@ -158,6 +194,13 @@ PatternEditor::PatternEditor(const char* prefs, Inkscape::PatternManager& manage
         return true;
     });
 
+    for (auto spin : {&_gap_x_spin, &_gap_y_spin}) {
+        spin->signal_value_changed().connect([=](){
+            if (_update.pending() || !spin->is_sensitive()) return;
+            _signal_changed.emit();
+        });
+    }
+
     for (auto slider : {&_gap_x_slider, &_gap_y_slider}) {
         slider->set_increments(1, 1);
         slider->set_digits(0);
@@ -172,6 +215,8 @@ PatternEditor::PatternEditor(const char* prefs, Inkscape::PatternManager& manage
             return true;
         });
     }
+
+    set_gap_control();
 
     _angle_btn.signal_value_changed().connect([=]() {
         if (_update.pending() || !_angle_btn.is_sensitive()) return;
@@ -357,8 +402,10 @@ void PatternEditor::update_widgets_from_pattern(Glib::RefPtr<PatternItem>& patte
 
     double x_index = gap_to_slider(item.gap[Geom::X], _gap_x_slider.get_adjustment()->get_upper());
     _gap_x_slider.set_value(x_index);
+    _gap_x_spin.set_value(item.gap[Geom::X]);
     double y_index = gap_to_slider(item.gap[Geom::Y], _gap_y_slider.get_adjustment()->get_upper());
     _gap_y_slider.set_value(y_index);
+    _gap_y_spin.set_value(item.gap[Geom::Y]);
 
     if (item.color.has_value()) {
         _color_picker->setRgba32(item.color->toRGBA32(1.0));
@@ -647,10 +694,10 @@ bool PatternEditor::is_selected_scale_uniform() {
 
 Geom::Scale PatternEditor::get_selected_gap() {
     auto vx = _gap_x_slider.get_value();
-    auto gap_x = slider_to_gap(vx, _gap_x_slider.get_adjustment()->get_upper());
+    auto gap_x = _precise_gap_control ? _gap_x_spin.get_value() : slider_to_gap(vx, _gap_x_slider.get_adjustment()->get_upper());
 
     auto vy = _gap_y_slider.get_value();
-    auto gap_y = slider_to_gap(vy, _gap_y_slider.get_adjustment()->get_upper());
+    auto gap_y = _precise_gap_control ? _gap_y_spin.get_value() : slider_to_gap(vy, _gap_y_slider.get_adjustment()->get_upper());
 
     return Geom::Scale(gap_x, gap_y);
 }
