@@ -38,7 +38,7 @@ ZoomToolbar::create(SPDesktop *desktop)
         std::cerr << "ZoomToolbar: " << zoom_toolbar_builder_file.raw() << " file not read! " << ex.what().raw() << std::endl;
     }
 
-    Gtk::Toolbar* toolbar = nullptr;
+    Gtk::Box *toolbar = nullptr;
     builder->get_widget("zoom-toolbar", toolbar);
     if (!toolbar) {
         std::cerr << "InkscapeWindow: Failed to load zoom toolbar!" << std::endl;

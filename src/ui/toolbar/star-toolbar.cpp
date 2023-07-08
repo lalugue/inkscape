@@ -174,9 +174,6 @@ void StarToolbar::side_mode_changed(int mode)
     // in turn, prevent listener from responding
     _freeze = true;
 
-    Inkscape::Selection *selection = _desktop->getSelection();
-    bool modmade = false;
-
     if (_spoke_box) {
         _spoke_box->set_visible(!flat);
     }
@@ -359,7 +356,7 @@ void StarToolbar::defaults()
         // Ensure handler runs even if value not changed, to reset inner handle.
         magnitude_value_changed();
     } else {
-        _magnitude_adj->set_value(mag);
+        _magnitude_item->get_adjustment()->set_value(mag);
     }
     _spoke_item->get_adjustment()->set_value(prop);
     _roundedness_item->get_adjustment()->set_value(rounded);

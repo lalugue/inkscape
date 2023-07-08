@@ -1,7 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.38.2 -->
+<!-- Generated with glade 3.40.0 -->
 <interface>
   <requires lib="gtk+" version="3.22"/>
+  <object class="GtkAdjustment" id="_height_adj">
+    <property name="upper">1000000</property>
+    <property name="step-increment">0.10</property>
+    <property name="page-increment">5</property>
+  </object>
+  <object class="GtkAdjustment" id="_rx_adj">
+    <property name="upper">1000000</property>
+    <property name="step-increment">0.10</property>
+    <property name="page-increment">5</property>
+  </object>
+  <object class="GtkAdjustment" id="_ry_adj">
+    <property name="upper">1000000</property>
+    <property name="step-increment">0.10</property>
+    <property name="page-increment">5</property>
+  </object>
+  <object class="GtkAdjustment" id="_width_adj">
+    <property name="upper">1000000</property>
+    <property name="step-increment">0.10</property>
+    <property name="page-increment">5</property>
+  </object>
+  <object class="GtkImage" id="image1">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="tooltip-text" translatable="yes">Remove from Shape</property>
+    <property name="icon-name">shapebuilder-tool-union</property>
+  </object>
+  <object class="GtkImage" id="image2">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="icon-name">shapebuilder-tool-difference</property>
+  </object>
+  <object class="GtkImage" id="image3">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="icon-name">on</property>
+  </object>
+  <object class="GtkImage" id="image4">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="icon-name">off</property>
+  </object>
+  <object class="GtkImage" id="image5">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="icon-name">layer-delete</property>
+  </object>
   <object class="GtkAdjustment" id="opacity-adj">
     <property name="upper">100</property>
     <property name="step-increment">1</property>
@@ -22,144 +68,153 @@
       </object>
     </child>
   </object>
-  <object class="GtkToolbar" id="booleans-toolbar">
+  <object class="GtkBox" id="booleans-toolbar">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
+    <property name="valign">center</property>
+    <property name="spacing">3</property>
     <child>
-      <object class="GtkRadioToolButton" id="shape-add">
+      <object class="GtkToggleButton" id="_shape_add">
         <property name="visible">True</property>
-        <property name="can-focus">False</property>
+        <property name="can-focus">True</property>
+        <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Add to the Shape</property>
         <property name="action-name">win.shape-builder-mode</property>
-        <property name="action-target">0</property>
-        <property name="label" translatable="yes">Add</property>
-        <property name="icon-name">shapebuilder-tool-union</property>
+        <property name="image">image1</property>
+        <property name="relief">none</property>
+        <property name="always-show-image">True</property>
         <property name="active">True</property>
       </object>
       <packing>
         <property name="expand">False</property>
-        <property name="homogeneous">True</property>
+        <property name="fill">True</property>
+        <property name="position">0</property>
       </packing>
     </child>
     <child>
-      <object class="GtkRadioToolButton" id="shape-delete">
+      <object class="GtkToggleButton" id="_shape_delete">
         <property name="visible">True</property>
-        <property name="can-focus">False</property>
+        <property name="can-focus">True</property>
+        <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Remove from Shape</property>
         <property name="action-name">win.shape-builder-mode</property>
-        <property name="action-target">1</property>
-        <property name="label" translatable="yes">Delete</property>
-        <property name="icon-name">shapebuilder-tool-difference</property>
-        <property name="group">shape-add</property>
+        <property name="image">image2</property>
+        <property name="relief">none</property>
+        <property name="always-show-image">True</property>
       </object>
       <packing>
         <property name="expand">False</property>
-        <property name="homogeneous">True</property>
+        <property name="fill">True</property>
+        <property name="position">1</property>
       </packing>
     </child>
     <child>
-      <object class="GtkSeparatorToolItem">
+      <object class="GtkSeparator">
         <property name="visible">True</property>
         <property name="can-focus">False</property>
+        <property name="margin-end">3</property>
       </object>
       <packing>
         <property name="expand">False</property>
-        <property name="homogeneous">True</property>
+        <property name="fill">True</property>
+        <property name="position">2</property>
       </packing>
     </child>
     <child>
-      <object class="GtkToolItem">
+      <object class="GtkLabel">
         <property name="visible">True</property>
         <property name="can-focus">False</property>
+        <property name="margin-start">3</property>
+        <property name="margin-end">3</property>
+        <property name="label" translatable="yes">Finish:</property>
+        <property name="use-markup">True</property>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="fill">True</property>
+        <property name="position">3</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkButton" id="_confirm">
+        <property name="visible">True</property>
+        <property name="can-focus">True</property>
+        <property name="receives-default">True</property>
+        <property name="tooltip-text" translatable="yes">Accept</property>
+        <property name="image">image3</property>
+        <property name="relief">none</property>
+        <property name="always-show-image">True</property>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="fill">True</property>
+        <property name="position">4</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkButton" id="_cancel">
+        <property name="visible">True</property>
+        <property name="can-focus">True</property>
+        <property name="receives-default">True</property>
+        <property name="tooltip-text" translatable="yes">Cancel</property>
+        <property name="image">image4</property>
+        <property name="relief">none</property>
+        <property name="always-show-image">True</property>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="fill">True</property>
+        <property name="position">5</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkSeparator">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <property name="margin-end">3</property>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="fill">True</property>
+        <property name="position">6</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkMenuButton" id="opacity-toggle">
+        <property name="visible">True</property>
+        <property name="can-focus">True</property>
+        <property name="focus-on-click">False</property>
+        <property name="receives-default">True</property>
+        <property name="relief">none</property>
+        <property name="popover">opacity-popover</property>
         <child>
-          <object class="GtkLabel">
+          <object class="GtkImage">
             <property name="visible">True</property>
             <property name="can-focus">False</property>
-            <property name="margin-start">10</property>
-            <property name="margin-end">4</property>
-            <property name="label" translatable="yes">Finish:</property>
-            <property name="xalign">1</property>
+            <property name="icon-name">object-visible</property>
           </object>
         </child>
       </object>
       <packing>
         <property name="expand">False</property>
-        <property name="homogeneous">False</property>
+        <property name="fill">True</property>
+        <property name="position">8</property>
       </packing>
     </child>
     <child>
-      <object class="GtkToolButton" id="confirm">
+      <object class="GtkToggleButton" id="shape-replace">
         <property name="visible">True</property>
         <property name="can-focus">False</property>
-        <property name="label" translatable="yes">Accept</property>
-        <property name="use-underline">True</property>
-        <property name="icon-name">on</property>
-      </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="homogeneous">True</property>
-      </packing>
-    </child>
-    <child>
-      <object class="GtkToolButton" id="cancel">
-        <property name="visible">True</property>
-        <property name="can-focus">False</property>
-        <property name="label" translatable="yes">Cancel</property>
-        <property name="use-underline">True</property>
-        <property name="icon-name">off</property>
-      </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="homogeneous">True</property>
-      </packing>
-    </child>
-    <child>
-      <object class="GtkSeparatorToolItem">
-        <property name="visible">True</property>
-        <property name="can-focus">False</property>
-      </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="homogeneous">True</property>
-      </packing>
-    </child>
-    <child>
-      <object class="GtkToolItem" id="opacity-toggle">
-        <property name="visible">True</property>
-        <property name="can-focus">False</property>
-        <child>
-          <object class="GtkMenuButton">
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
-            <property name="focus-on-click">False</property>
-            <property name="receives-default">True</property>
-            <property name="popover">opacity-popover</property>
-            <child>
-              <object class="GtkImage">
-                <property name="visible">True</property>
-                <property name="can-focus">False</property>
-                <property name="icon-name">object-visible</property>
-              </object>
-            </child>
-          </object>
-        </child>
-      </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="homogeneous">True</property>
-      </packing>
-    </child>
-    <child>
-      <object class="GtkToggleToolButton" id="shape-replace">
-        <property name="visible">True</property>
-        <property name="can-focus">False</property>
+        <property name="receives-default">False</property>
         <property name="action-name">win.shape-builder-replace</property>
+        <property name="image">image5</property>
+        <property name="relief">none</property>
         <property name="use-underline">True</property>
-        <property name="icon-name">layer-delete</property>
       </object>
       <packing>
         <property name="expand">False</property>
-        <property name="homogeneous">True</property>
+        <property name="fill">True</property>
+        <property name="position">9</property>
       </packing>
     </child>
   </object>

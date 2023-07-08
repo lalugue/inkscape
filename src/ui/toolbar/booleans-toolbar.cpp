@@ -22,13 +22,32 @@
 
 namespace Inkscape::UI::Toolbar {
 
-BooleansToolbar::BooleansToolbar(BaseObjectType *cobject, const Glib::RefPtr<Gtk::Builder> &builder, SPDesktop *desktop)
-    : Gtk::Toolbar(cobject)
-    , _builder(builder)
-    , _adj_opacity(get_object<Gtk::Adjustment>(_builder, "opacity-adj"))
-    , _btn_confirm(get_widget<Gtk::ToolButton>(builder, "confirm"))
-    , _btn_cancel(get_widget<Gtk::ToolButton>(builder, "cancel"))
+BooleansToolbar::BooleansToolbar(SPDesktop *desktop)
+    : Toolbar(desktop)
+    , _builder(initialize_builder("toolbar-booleans.ui"))
 {
+    _builder->get_widget("booleans-toolbar", _toolbar);
+    if (!_toolbar) {
+        std::cerr << "InkscapeWindow: Failed to load booleans toolbar!" << std::endl;
+    }
+
+    _builder->get_widget("_shape_add", _btn_shape_add);
+    _builder->get_widget("opacity-adj", _adj_opacity);
+    _builder->get_widget("_shape_delete", _btn_shape_delete);
+    _builder->get_widget("_confirm", _btn_confirm);
+    _builder->get_widget("_cancel", _btn_cancel);
+
+    add(*_toolbar);
+
+    _mode_buttons.push_back(_btn_shape_add);
+    _mode_buttons.push_back(_btn_shape_delete);
+
+    int btn_index = 0;
+
+    for (auto btn : _mode_buttons) {
+        btn->signal_clicked().connect(sigc::bind(sigc::mem_fun(*this, &BooleansToolbar::mode_changed), btn_index++));
+    }
+
     _btn_confirm.signal_clicked().connect([=]{
         auto const tool = dynamic_cast<Tools::InteractiveBooleansTool *>(desktop->getTool());
         tool->shape_commit();
@@ -54,12 +73,20 @@ void BooleansToolbar::on_parent_changed(Gtk::Widget *) {
     _builder.reset();
 }
 
+void BooleansToolbar::mode_changed(int mode)
+{
+    // Set the other button inactive.
+    int index = (mode + 1) % 2;
+
+    if (_mode_buttons[index]->get_active()) {
+        _mode_buttons[index]->set_active(false);
+    }
+}
+
 GtkWidget *
 BooleansToolbar::create(SPDesktop *desktop)
 {
-    BooleansToolbar *toolbar;
-    auto builder = Inkscape::UI::create_builder("toolbar-booleans.ui");
-    builder->get_widget_derived("booleans-toolbar", toolbar, desktop);
+    auto toolbar = new BooleansToolbar(desktop);
     return toolbar->Gtk::Widget::gobj();
 }
 

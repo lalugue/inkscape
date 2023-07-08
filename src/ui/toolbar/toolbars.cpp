@@ -110,8 +110,8 @@ void Toolbars::create_toolbars(SPDesktop* desktop) {
     for (int i = 0 ; aux_toolboxes[i].type_name ; i++ ) {
         if (aux_toolboxes[i].create_func) {
             // Change create_func to return Gtk::Box!
-            GtkWidget* sub_toolbox_c = aux_toolboxes[i].create_func(desktop);
-            Gtk::Toolbar* sub_toolbox = Glib::wrap(GTK_TOOLBAR(sub_toolbox_c));
+            GtkWidget *sub_toolbox_c = aux_toolboxes[i].create_func(desktop);
+            Gtk::Box *sub_toolbox = Glib::wrap(GTK_BOX(sub_toolbox_c));
             sub_toolbox->set_name("SubToolBox");
 
             //               ===== Styling =====
@@ -128,7 +128,7 @@ void Toolbars::create_toolbars(SPDesktop* desktop) {
             }
 
             if ( prefs->getBool( "/toolbox/icononly", true) ) {
-                sub_toolbox->set_toolbar_style(Gtk::TOOLBAR_ICONS);
+                // sub_toolbox->set_toolbar_style(Gtk::TOOLBAR_ICONS);
             }
 
             // TODO Remove and rely on CSS (add class)

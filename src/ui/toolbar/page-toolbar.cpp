@@ -61,10 +61,7 @@ public:
 
 PageToolbar::PageToolbar(SPDesktop *desktop)
     : Toolbar(desktop)
-    , combo_page_sizes(nullptr)
-    , text_page_label(nullptr)
-    // TODO: Change the builder file to toolbar-page.ui
-    , builder(initialize_builder("page-toolbar.ui"))
+    , builder(initialize_builder("toolbar-page.ui"))
 {
     builder->get_widget("page-toolbar", _toolbar);
     if (!_toolbar) {
@@ -97,6 +94,22 @@ PageToolbar::PageToolbar(SPDesktop *desktop)
     builder->get_widget_derived("margin_right", margin_right);
     builder->get_widget_derived("margin_bottom", margin_bottom);
     builder->get_widget_derived("margin_left", margin_left);
+
+    // Fetch all the ToolbarMenuButtons at once from the UI file
+    // Menu Button #1
+    Gtk::Box *popover_box1;
+    builder->get_widget("popover_box1", popover_box1);
+
+    Inkscape::UI::Widget::ToolbarMenuButton *menu_btn1 = nullptr;
+    builder->get_widget_derived("menu_btn1", menu_btn1);
+
+    // Initialize all the ToolbarMenuButtons.
+    // Note: Do not initialize the these widgets right after fetching from
+    // the UI file.
+    auto children = _toolbar->get_children();
+
+    menu_btn1->init(1, "tag1", "some-icon", popover_box1, children);
+    _expanded_menu_btns.push(menu_btn1);
 
     add(*_toolbar);
 
@@ -170,6 +183,8 @@ PageToolbar::PageToolbar(SPDesktop *desktop)
             toolChanged(desktop, desktop->getTool());
         }
     });
+
+    // show_all();
 }
 
 /**

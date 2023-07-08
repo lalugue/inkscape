@@ -19,7 +19,6 @@
 #include <gtkmm/toolbar.h>
 
 #include "toolbar.h"
-
 #include "ui/widget/spinbutton.h"
 #include "helper/auto-connection.h"
 

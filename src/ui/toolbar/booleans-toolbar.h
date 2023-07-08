@@ -23,26 +23,33 @@ class ToolButton;
 class Widget;
 } // namespace Gtk
 
+#include "toolbar.h"
+
 class SPDesktop;
 
 namespace Inkscape::UI::Toolbar {
 
-class BooleansToolbar final : public Gtk::Toolbar
+class BooleansToolbar : public Toolbar
 {
 public:
     static GtkWidget *create(SPDesktop *desktop);
 
-    BooleansToolbar(BaseObjectType *cobject, const Glib::RefPtr<Gtk::Builder> &builder, SPDesktop *desktop);
+    BooleansToolbar(SPDesktop *desktop);
     ~BooleansToolbar() final;
 
     void on_parent_changed(Gtk::Widget *) final;
+    void mode_changed(int mode);
 
 private:
     Glib::RefPtr<Gtk::Builder> _builder;
     Glib::RefPtr<Gtk::Adjustment> _adj_opacity;
 
-    Gtk::ToolButton &_btn_confirm;
-    Gtk::ToolButton &_btn_cancel;
+    Gtk::ToggleButton *_btn_shape_add;
+    Gtk::ToggleButton *_btn_shape_delete;
+    std::vector<Gtk::ToggleButton *> _mode_buttons;
+
+    Gtk::Button *_btn_confirm;
+    Gtk::Button *_btn_cancel;
 };
 
 } // namespace Inkscape::UI::Toolbar
