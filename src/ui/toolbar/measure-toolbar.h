@@ -28,26 +28,29 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include "toolbar.h"
+#include <gtkmm/builder.h>
+#include <gtkmm/button.h>
 
-#include <gtkmm/adjustment.h>
+#include "toolbar.h"
 
 class SPDesktop;
 
 namespace Inkscape {
 namespace UI {
 namespace Widget {
+class SpinButton;
 class UnitTracker;
 }
 
 namespace Toolbar {
 class MeasureToolbar : public Toolbar {
 private:
+    Glib::RefPtr<Gtk::Builder> _builder;
     UI::Widget::UnitTracker *_tracker;
-    Glib::RefPtr<Gtk::Adjustment> _font_size_adj;
-    Glib::RefPtr<Gtk::Adjustment> _precision_adj;
-    Glib::RefPtr<Gtk::Adjustment> _scale_adj;
-    Glib::RefPtr<Gtk::Adjustment> _offset_adj;
+    UI::Widget::SpinButton *_font_size_item;
+    UI::Widget::SpinButton *_precision_item;
+    UI::Widget::SpinButton *_scale_item;
+    UI::Widget::SpinButton *_offset_item;
 
     Gtk::ToggleButton *_only_selected_item;
     Gtk::ToggleButton *_ignore_1st_and_last_item;
@@ -55,11 +58,11 @@ private:
     Gtk::ToggleButton *_show_hidden_item;
     Gtk::ToggleButton *_all_layers_item;
 
-    Gtk::ToolButton *_reverse_item;
-    Gtk::ToolButton *_to_phantom_item;
-    Gtk::ToolButton *_to_guides_item;
-    Gtk::ToolButton *_to_item_item;
-    Gtk::ToolButton *_mark_dimension_item;
+    Gtk::Button *_reverse_item;
+    Gtk::Button *_to_phantom_item;
+    Gtk::Button *_to_guides_item;
+    Gtk::Button *_to_item_item;
+    Gtk::Button *_mark_dimension_item;
 
     void fontsize_value_changed();
     void unit_changed(int notUsed);
@@ -82,6 +85,7 @@ protected:
 
 public:
     static GtkWidget * create(SPDesktop *desktop);
+    void setup_derived_spin_button(UI::Widget::SpinButton *btn, const Glib::ustring &name, double default_value);
 };
 
 }
