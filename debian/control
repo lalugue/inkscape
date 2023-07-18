@@ -89,6 +89,9 @@ Suggests:
 Conflicts:
  inkscape,
  inkscape-trunk-gtk3,
+ lib2geom-dev,
+ lib2geom1.2.0,
+ lib2geom1.3.0
 Replaces:
  inkscape-trunk-gtk3
 Description: vector-based drawing program (trunk build)
