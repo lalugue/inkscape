@@ -209,7 +209,21 @@ SPDesktopWidget::SPDesktopWidget(InkscapeWindow* inkscape_window)
 
     dtw->tool_toolbox = ToolboxFactory::createToolToolbox(inkscape_window);
     ToolboxFactory::setOrientation( dtw->tool_toolbox, GTK_ORIENTATION_VERTICAL );
-    dtw->_tbbox->pack1(*Glib::wrap(dtw->tool_toolbox), false, true);
+    dtw->_tbbox->pack1(*Glib::wrap(dtw->tool_toolbox), false, false);
+
+    auto adjust_pos = [=](){
+        int minimum_width, natural_width;
+        auto toolbox = Glib::wrap(dtw->tool_toolbox);
+        toolbox->get_preferred_width(minimum_width, natural_width);
+        if (minimum_width > 0) {
+            int pos = dtw->_tbbox->get_position();
+            int new_pos = pos + minimum_width / 2;
+            const auto max = 5; // max buttons in a row
+            new_pos = std::min(new_pos - new_pos % minimum_width, max * minimum_width);
+            if (pos != new_pos) dtw->_tbbox->set_position(new_pos);
+        }
+    };
+    dtw->_tbbox->property_position().signal_changed().connect([=](){ adjust_pos(); });
 
     _tb_snap_pos = prefs->createObserver("/toolbox/simplesnap", sigc::mem_fun(*this, &SPDesktopWidget::repack_snaptoolbar));
     repack_snaptoolbar();
@@ -267,6 +281,7 @@ SPDesktopWidget::SPDesktopWidget(InkscapeWindow* inkscape_window)
         int max = ToolboxFactory::max_pixel_size;
         int s = prefs->getIntLimited(ToolboxFactory::tools_icon_size, min, min, max);
         Inkscape::UI::set_icon_sizes(tool_toolbox, s);
+        adjust_pos();
     };
 
     // watch for changes
