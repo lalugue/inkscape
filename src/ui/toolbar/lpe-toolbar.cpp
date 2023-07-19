@@ -52,11 +52,12 @@ namespace UI {
 namespace Toolbar {
 
 LPEToolbar::LPEToolbar(SPDesktop *desktop)
-    : Toolbar(desktop),
-      _tracker(new UnitTracker(Util::UNIT_TYPE_LINEAR)),
-      _freeze(false),
-      _currentlpe(nullptr),
-      _currentlpeitem(nullptr)
+    : Toolbar(desktop)
+    , _builder(initialize_builder("toolbar-lpe.ui"))
+    , _tracker(new UnitTracker(Util::UNIT_TYPE_LINEAR))
+    , _freeze(false)
+    , _currentlpe(nullptr)
+    , _currentlpeitem(nullptr)
 {
     _tracker->setActiveUnit(_desktop->getNamedView()->display_units);
 
@@ -66,60 +67,22 @@ LPEToolbar::LPEToolbar(SPDesktop *desktop)
     auto prefs = Inkscape::Preferences::get();
     prefs->setString("/tools/lpetool/unit", unit->abbr);
 
-    /* Automatically create a list of LPEs that get added to the toolbar **/
-    {
-        Gtk::RadioToolButton::Group mode_group;
-
-        // The first toggle button represents the state that no subtool is active.
-        auto const inactive_mode_btn = Gtk::make_managed<Gtk::RadioToolButton>(mode_group, _("All inactive"));
-        inactive_mode_btn->set_tooltip_text(_("No geometric tool is active"));
-        inactive_mode_btn->set_icon_name(INKSCAPE_ICON("draw-geometry-inactive"));
-        _mode_buttons.push_back(inactive_mode_btn);
-
-        Inkscape::LivePathEffect::EffectType type;
-        for (int i = 1; i < num_subtools; ++i) { // i == 0 ia INVALIDE_LPE.
-
-            type =  lpesubtools[i].type;
-
-            auto const btn = Gtk::make_managed<Gtk::RadioToolButton>(mode_group, Inkscape::LivePathEffect::LPETypeConverter.get_label(type));
-            btn->set_tooltip_text(_(Inkscape::LivePathEffect::LPETypeConverter.get_label(type).c_str()));
-            btn->set_icon_name(lpesubtools[i].icon_name);
-            _mode_buttons.push_back(btn);
-        }
-
-        int btn_idx = 0;
-        for (auto btn : _mode_buttons) {
-            btn->set_sensitive(true);
-            add(*btn);
-            btn->signal_clicked().connect(sigc::bind(sigc::mem_fun(*this, &LPEToolbar::mode_changed), btn_idx++));
-        }
-
-        int mode = prefs->getInt("/tools/lpetool/mode", 0);
-        _mode_buttons[mode]->set_active();
+    _builder->get_widget("lpe-toolbar", _toolbar);
+    if (!_toolbar) {
+        std::cerr << "InkscapeWindow: Failed to load lpe toolbar!" << std::endl;
     }
 
-    add(* Gtk::make_managed<Gtk::SeparatorToolItem>());
+    Gtk::Box *mode_buttons_box;
+    Gtk::Box *line_segment_box;
+    Gtk::Box *units_box;
 
-    /* Show limiting bounding box */
-    {
-        _show_bbox_item = add_toggle_button(_("Show limiting bounding box"),
-                                            _("Show bounding box (used to cut infinite lines)"));
-        _show_bbox_item->set_image_from_icon_name(INKSCAPE_ICON("show-bounding-box"));
-        _show_bbox_item->signal_toggled().connect(sigc::mem_fun(*this, &LPEToolbar::toggle_show_bbox));
-        _show_bbox_item->set_active(prefs->getBool( "/tools/lpetool/show_bbox", true ));
-    }
-
-    /* Set limiting bounding box to bbox of current selection */
-    {
-        // TODO: Shouldn't this just be a button (not toggle button)?
-        _bbox_from_selection_item = add_toggle_button(_("Get limiting bounding box from selection"),
-                                                      _("Set limiting bounding box (used to cut infinite lines) to the bounding box of current selection"));
-        _bbox_from_selection_item->set_image_from_icon_name(INKSCAPE_ICON("draw-geometry-set-bounding-box"));
-        _bbox_from_selection_item->signal_toggled().connect(sigc::mem_fun(*this, &LPEToolbar::toggle_set_bbox));
-        _bbox_from_selection_item->set_active(false);
-    }
-
-    add(* Gtk::make_managed<Gtk::SeparatorToolItem>());
+    _builder->get_widget("mode_buttons_box", mode_buttons_box);
+    _builder->get_widget("_show_bbox_item", _show_bbox_item);
+    _builder->get_widget("_bbox_from_selection_item", _bbox_from_selection_item);
+    _builder->get_widget("line_segment_box", line_segment_box);
+    _builder->get_widget("_measuring_item", _measuring_item);
+    _builder->get_widget("units_box", units_box);
+    _builder->get_widget("_open_lpe_dialog_item", _open_lpe_dialog_item);
 
     /* Combo box to choose line segment type */
     {
@@ -145,61 +108,93 @@ LPEToolbar::LPEToolbar(SPDesktop *desktop)
         _line_segment_combo->set_active(0);
 
         _line_segment_combo->signal_changed().connect(sigc::mem_fun(*this, &LPEToolbar::change_line_segment_type));
-        add(*_line_segment_combo);
+        line_segment_box->add(*_line_segment_combo);
     }
 
-    add(* Gtk::make_managed<Gtk::SeparatorToolItem>());
+    // Configure mode buttons
+    int btn_index = 0;
 
-    /* Display measuring info for selected items */
-    {
-        _measuring_item = add_toggle_button(_("Display measuring info"),
-                                            _("Display measuring info for selected items"));
-        _measuring_item->set_image_from_icon_name(INKSCAPE_ICON("draw-geometry-show-measuring-info"));
-        _measuring_item->signal_toggled().connect(sigc::mem_fun(*this, &LPEToolbar::toggle_show_measuring_info));
-        _measuring_item->set_active( prefs->getBool( "/tools/lpetool/show_measuring_info", true ) );
+    for (auto child : mode_buttons_box->get_children()) {
+        auto btn = dynamic_cast<Gtk::ToggleButton *>(child);
+        _mode_buttons.push_back(btn);
+        btn->set_sensitive(true);
+        btn->signal_clicked().connect(sigc::bind(sigc::mem_fun(*this, &LPEToolbar::mode_changed), btn_index++));
     }
+
+    int mode = prefs->getInt("/tools/lpetool/mode", 0);
+    _mode_buttons[mode]->set_active();
 
     // Add the units menu
     {
-        _units_item = _tracker->create_tool_item(_("Units"), ("") );
-        add(*_units_item);
+        _units_item = _tracker->create_tool_item(_("Units"), (""));
         _units_item->signal_changed_after().connect(sigc::mem_fun(*this, &LPEToolbar::unit_changed));
         _units_item->set_sensitive( prefs->getBool("/tools/lpetool/show_measuring_info", true));
+        units_box->add(*_units_item);
     }
 
-    add(* Gtk::make_managed<Gtk::SeparatorToolItem>());
+    // Set initial states
+    _show_bbox_item->set_active(prefs->getBool("/tools/lpetool/show_bbox", true));
+    _bbox_from_selection_item->set_active(false);
+    _measuring_item->set_active(prefs->getBool("/tools/lpetool/show_measuring_info", true));
+    _open_lpe_dialog_item->set_active(false);
 
-    /* Open LPE dialog (to adapt parameters numerically) */
-    {
-        // TODO: Shouldn't this be a regular Gtk::ToolButton (not toggle)?
-        _open_lpe_dialog_item = add_toggle_button(_("Open LPE dialog"),
-                                                  _("Open LPE dialog (to adapt parameters numerically)"));
-        _open_lpe_dialog_item->set_image_from_icon_name(INKSCAPE_ICON("dialog-geometry"));
-        _open_lpe_dialog_item->signal_toggled().connect(sigc::mem_fun(*this, &LPEToolbar::open_lpe_dialog));
-        _open_lpe_dialog_item->set_active(false);
-    }
+    // Fetch all the ToolbarMenuButtons at once from the UI file
+    // Menu Button #1
+    Gtk::Box *popover_box1;
+    _builder->get_widget("popover_box1", popover_box1);
+
+    Inkscape::UI::Widget::ToolbarMenuButton *menu_btn1 = nullptr;
+    _builder->get_widget_derived("menu_btn1", menu_btn1);
+
+    // Initialize all the ToolbarMenuButtons.
+    // Note: Do not initialize the these widgets right after fetching from
+    // the UI file.
+    auto children = _toolbar->get_children();
+
+    menu_btn1->init(1, "tag1", "some-icon", popover_box1, children);
+    _expanded_menu_btns.push(menu_btn1);
+
+    // Signals.
+    _show_bbox_item->signal_toggled().connect(sigc::mem_fun(*this, &LPEToolbar::toggle_show_bbox));
+    _bbox_from_selection_item->signal_toggled().connect(sigc::mem_fun(*this, &LPEToolbar::toggle_set_bbox));
+    _measuring_item->signal_toggled().connect(sigc::mem_fun(*this, &LPEToolbar::toggle_show_measuring_info));
+    _open_lpe_dialog_item->signal_toggled().connect(sigc::mem_fun(*this, &LPEToolbar::open_lpe_dialog));
 
     desktop->connectEventContextChanged(sigc::mem_fun(*this, &LPEToolbar::watch_ec));
+
+    add(*_toolbar);
 
     show_all();
 }
 
-void
-LPEToolbar::set_mode(int mode)
+void LPEToolbar::set_mode(int mode)
 {
     _mode_buttons[mode]->set_active();
 }
 
-GtkWidget *
-LPEToolbar::create(SPDesktop *desktop)
+GtkWidget *LPEToolbar::create(SPDesktop *desktop)
 {
     auto toolbar = new LPEToolbar(desktop);
     return toolbar->Gtk::Widget::gobj();
 }
 
+void LPEToolbar::set_other_modes_inactive(int mode)
+{
+    int btn_index = 0;
+
+    for (auto btn : _mode_buttons) {
+        if (mode == btn_index++) {
+            continue;
+        }
+
+        if (btn->get_active()) {
+            btn->set_active(false);
+        }
+    }
+}
+
 // this is called when the mode is changed via the toolbar (i.e., one of the subtool buttons is pressed)
-void
-LPEToolbar::mode_changed(int mode)
+void LPEToolbar::mode_changed(int mode)
 {
     using namespace Inkscape::LivePathEffect;
 
@@ -213,6 +208,10 @@ LPEToolbar::mode_changed(int mode)
         // in turn, prevent listener from responding
         _freeze = true;
 
+        // Set all the other buttons as inactive.
+        set_mode(mode);
+        set_other_modes_inactive(mode);
+
         EffectType type = lpesubtools[mode].type;
 
         auto const lc = SP_LPETOOL_CONTEXT(_desktop->getTool());
@@ -221,6 +220,7 @@ LPEToolbar::mode_changed(int mode)
             // since the construction was already performed, we set the state back to inactive
             _mode_buttons[0]->set_active();
             mode = 0;
+            set_other_modes_inactive(0);
         } else {
             // switch to the chosen subtool
             SP_LPETOOL_CONTEXT(_desktop->getTool())->mode = type;
@@ -235,8 +235,8 @@ LPEToolbar::mode_changed(int mode)
     }
 }
 
-void
-LPEToolbar::toggle_show_bbox() {
+void LPEToolbar::toggle_show_bbox()
+{
     auto prefs = Inkscape::Preferences::get();
 
     bool show = _show_bbox_item->get_active();
@@ -247,8 +247,7 @@ LPEToolbar::toggle_show_bbox() {
     }
 }
 
-void
-LPEToolbar::toggle_set_bbox()
+void LPEToolbar::toggle_set_bbox()
 {
     auto selection = _desktop->getSelection();
 
@@ -274,8 +273,7 @@ LPEToolbar::toggle_set_bbox()
     _bbox_from_selection_item->set_active(false);
 }
 
-void
-LPEToolbar::change_line_segment_type(int mode)
+void LPEToolbar::change_line_segment_type(int mode)
 {
     using namespace Inkscape::LivePathEffect;
 
@@ -296,8 +294,7 @@ LPEToolbar::change_line_segment_type(int mode)
     _freeze = false;
 }
 
-void
-LPEToolbar::toggle_show_measuring_info()
+void LPEToolbar::toggle_show_measuring_info()
 {
     auto const lc = dynamic_cast<LpeTool *>(_desktop->getTool());
     if (!lc) {
@@ -314,8 +311,7 @@ LPEToolbar::toggle_show_measuring_info()
     _units_item->set_sensitive( show );
 }
 
-void
-LPEToolbar::unit_changed(int /* NotUsed */)
+void LPEToolbar::unit_changed(int /* NotUsed */)
 {
     Unit const *unit = _tracker->getActiveUnit();
     g_return_if_fail(unit != nullptr);
@@ -328,8 +324,7 @@ LPEToolbar::unit_changed(int /* NotUsed */)
     }
 }
 
-void
-LPEToolbar::open_lpe_dialog()
+void LPEToolbar::open_lpe_dialog()
 {
     if (dynamic_cast<LpeTool *>(_desktop->getTool())) {
         _desktop->getContainer()->new_dialog("LivePathEffect");
@@ -339,8 +334,7 @@ LPEToolbar::open_lpe_dialog()
     _open_lpe_dialog_item->set_active(false);
 }
 
-void
-LPEToolbar::watch_ec(SPDesktop* desktop, Inkscape::UI::Tools::ToolBase* tool)
+void LPEToolbar::watch_ec(SPDesktop *desktop, Inkscape::UI::Tools::ToolBase *tool)
 {
     if (SP_LPETOOL_CONTEXT(tool)) {
         // Watch selection
@@ -355,8 +349,7 @@ LPEToolbar::watch_ec(SPDesktop* desktop, Inkscape::UI::Tools::ToolBase* tool)
     }
 }
 
-void
-LPEToolbar::sel_modified(Inkscape::Selection *selection, guint /*flags*/)
+void LPEToolbar::sel_modified(Inkscape::Selection *selection, guint /*flags*/)
 {
     auto const tool = selection->desktop()->getTool();
     if (auto const lc = SP_LPETOOL_CONTEXT(tool)) {
@@ -364,8 +357,7 @@ LPEToolbar::sel_modified(Inkscape::Selection *selection, guint /*flags*/)
     }
 }
 
-void
-LPEToolbar::sel_changed(Inkscape::Selection *selection)
+void LPEToolbar::sel_changed(Inkscape::Selection *selection)
 {
     using namespace Inkscape::LivePathEffect;
     auto const tool = selection->desktop()->getTool();

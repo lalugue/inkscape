@@ -25,6 +25,7 @@ namespace Inkscape::UI::Toolbar {
 BooleansToolbar::BooleansToolbar(SPDesktop *desktop)
     : Toolbar(desktop)
     , _builder(initialize_builder("toolbar-booleans.ui"))
+    , _adj_opacity(get_object<Gtk::Adjustment>(_builder, "opacity-adj"))
 {
     _builder->get_widget("booleans-toolbar", _toolbar);
     if (!_toolbar) {
@@ -32,7 +33,6 @@ BooleansToolbar::BooleansToolbar(SPDesktop *desktop)
     }
 
     _builder->get_widget("_shape_add", _btn_shape_add);
-    _builder->get_widget("opacity-adj", _adj_opacity);
     _builder->get_widget("_shape_delete", _btn_shape_delete);
     _builder->get_widget("_confirm", _btn_confirm);
     _builder->get_widget("_cancel", _btn_cancel);
