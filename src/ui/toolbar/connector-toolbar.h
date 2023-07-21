@@ -29,15 +29,16 @@
  */
 
 #include <gtkmm/adjustment.h>
+#include <gtkmm/builder.h>
 
 #include "toolbar.h"
-
+#include "ui/widget/spinbutton.h"
 #include "xml/node-observer.h"
 
 class SPDesktop;
 
 namespace Gtk {
-class ToolButton;
+class Button;
 }
 
 namespace Inkscape {
@@ -54,13 +55,14 @@ class ConnectorToolbar
 	, private XML::NodeObserver
 {
 private:
-    Gtk::ToggleButton *_orthogonal;
-    Gtk::ToggleButton *_directed_item;
-    Gtk::ToggleButton *_overlap_item;
+    Glib::RefPtr<Gtk::Builder> _builder;
+    Gtk::ToggleButton *_orthogonal_btn;
+    Gtk::ToggleButton *_directed_btn;
+    Gtk::ToggleButton *_overlap_btn;
 
-    Glib::RefPtr<Gtk::Adjustment> _curvature_adj;
-    Glib::RefPtr<Gtk::Adjustment> _spacing_adj;
-    Glib::RefPtr<Gtk::Adjustment> _length_adj;
+    UI::Widget::SpinButton *_curvature_item;
+    UI::Widget::SpinButton *_spacing_item;
+    UI::Widget::SpinButton *_length_item;
 
     bool _freeze{false};
 
@@ -86,6 +88,7 @@ protected:
 
 public:
     static GtkWidget * create(SPDesktop *desktop);
+    void setup_derived_spin_button(UI::Widget::SpinButton *btn, const Glib::ustring &name, double default_value);
 
     static void event_attr_changed(Inkscape::XML::Node *repr,
                                    gchar const         *name,

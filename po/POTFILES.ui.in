@@ -37,6 +37,7 @@
 ../share/ui/toolbar-booleans.ui
 ../share/ui/toolbar-box3d.ui
 ../share/ui/toolbar-commands.ui
+../share/ui/toolbar-connector.ui
 ../share/ui/toolbar-dropper.ui
 ../share/ui/toolbar-lpe.ui
 ../share/ui/toolbar-measure.ui
