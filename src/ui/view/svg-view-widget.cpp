@@ -124,7 +124,7 @@ void SVGViewWidget::on_size_allocate(Gtk::Allocation &allocation)
         _width = width;
         _height = height;
 
-        doRescale();
+        if (_document) doRescale();
     }
 
     Gtk::Box::on_size_allocate(allocation);

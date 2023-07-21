@@ -121,12 +121,12 @@ Glib::RefPtr<Gdk::Pixbuf> svg_renderer::render(double scale) {
     return raw;
 }
 
-Cairo::RefPtr<Cairo::Surface> svg_renderer::render_surface(double scale) {
+Cairo::RefPtr<Cairo::ImageSurface> svg_renderer::render_surface(double scale) {
     auto pixbuf = do_render(scale);
-    if (!pixbuf) return Cairo::RefPtr<Cairo::Surface>();
+    if (!pixbuf) return Cairo::RefPtr<Cairo::ImageSurface>();
 
     // ref it by saying that we have no reference
-    auto surface = Cairo::RefPtr<Cairo::Surface>(new Cairo::Surface(pixbuf->getSurfaceRaw(), false));
+    auto surface = Cairo::RefPtr<Cairo::ImageSurface>(new Cairo::ImageSurface(pixbuf->getSurfaceRaw(), false));
     delete pixbuf;
     return surface;
 }

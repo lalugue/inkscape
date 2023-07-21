@@ -1290,3 +1290,24 @@ frame.flat > border {
 .popup-dialog-margins {
     margin: 0.75em;
 }
+
+/* About screen slide show transitions >>>>>>>>>>>>>>>>>>>>>>>>> */
+@keyframes fade_in_opacity {
+    0%   { opacity: 0; }
+    100% { opacity: 1; }
+}
+@keyframes fade_out_opacity {
+    0%   { opacity: 1; }
+    100% { opacity: 0; }
+}
+.fade-in {
+    animation: 1.2s fade_in_opacity 0s both;
+}
+.fade-out {
+    animation: 1.2s fade_out_opacity 0s both;
+}
+.background-transition {
+    transition-property: background-color;
+    transition-duration: 1.2s;
+}
+/* <<<<<<<<<<<<<<<<<<<<<<<< About screen slide show transitions */

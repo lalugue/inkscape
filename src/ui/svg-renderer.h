@@ -3,6 +3,7 @@
 #ifndef SEEN_SVG_RENDERER_H
 #define SEEN_SVG_RENDERER_H
 
+#include <cairomm/surface.h>
 #include <cstdint>
 #include <memory>
 #include <optional>
@@ -33,6 +34,7 @@ namespace Inkscape {
 // Gdk color to CSS rgb (no alpha)
 Glib::ustring rgba_to_css_color(const Gdk::RGBA& color);
 Glib::ustring rgba_to_css_color(const SPColor& color);
+Glib::ustring rgba_to_css_color(double r, double g, double b);
 // double to low precision string
 Glib::ustring double_to_css_value(double value);
 
@@ -51,7 +53,7 @@ public:
 
     // render document at given scale
     Glib::RefPtr<Gdk::Pixbuf> render(double scale);
-    Cairo::RefPtr<Cairo::Surface> render_surface(double scale);
+    Cairo::RefPtr<Cairo::ImageSurface> render_surface(double scale);
 
     // if set, draw checkerboard pattern before image
     void set_checkerboard_color(std::uint32_t rgba);
