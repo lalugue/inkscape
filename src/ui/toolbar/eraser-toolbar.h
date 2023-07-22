@@ -19,6 +19,7 @@
  *   Tavmjong Bah <tavmjong@free.fr>
  *   Abhishek Sharma
  *   Kris De Gussem <Kris.DeGussem@gmail.com>
+ *   Vaibhav Malik <vaibhavmalik2018@gmail.com>
  *
  * Copyright (C) 2004 David Turner
  * Copyright (C) 2003 MenTaLguY
@@ -28,15 +29,12 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#include <gtkmm/adjustment.h>
+#include <gtkmm/builder.h>
+
 #include "toolbar.h"
 
-#include <gtkmm/adjustment.h>
-
 class SPDesktop;
-
-namespace Gtk {
-class SeparatorToolItem;
-}
 
 namespace Inkscape {
 namespace UI {
@@ -47,30 +45,26 @@ enum class EraserToolMode;
 } // namespace Tools
 
 namespace Widget {
-class SpinButtonToolItem;
+class SpinButton;
 } // namespace Widget
 
 namespace Toolbar {
 class EraserToolbar : public Toolbar {
 private:
-    UI::Widget::SpinButtonToolItem *_width;
-    UI::Widget::SpinButtonToolItem *_mass;
-    UI::Widget::SpinButtonToolItem *_thinning;
-    UI::Widget::SpinButtonToolItem *_cap_rounding;
-    UI::Widget::SpinButtonToolItem *_tremor;
+    Glib::RefPtr<Gtk::Builder> _builder;
 
-    Gtk::ToggleButton *_usepressure;
-    Gtk::ToggleButton *_split;
+    UI::Widget::SpinButton *_width_item;
+    UI::Widget::SpinButton *_thinning_item;
+    UI::Widget::SpinButton *_cap_rounding_item;
+    UI::Widget::SpinButton *_tremor_item;
+    UI::Widget::SpinButton *_mass_item;
 
-    Glib::RefPtr<Gtk::Adjustment> _width_adj;
-    Glib::RefPtr<Gtk::Adjustment> _mass_adj;
-    Glib::RefPtr<Gtk::Adjustment> _thinning_adj;
-    Glib::RefPtr<Gtk::Adjustment> _cap_rounding_adj;
-    Glib::RefPtr<Gtk::Adjustment> _tremor_adj;
+    Gtk::ToggleButton *_usepressure_btn;
+    Gtk::ToggleButton *_split_btn;
 
     std::unique_ptr<SimplePrefPusher> _pressure_pusher;
 
-    std::vector<Gtk::SeparatorToolItem *> _separators;
+    std::vector<Gtk::Separator *> _separators;
 
     bool _freeze;
 
@@ -91,6 +85,7 @@ protected:
 
 public:
     static GtkWidget * create(SPDesktop *desktop);
+    void setup_derived_spin_button(UI::Widget::SpinButton *btn, const Glib::ustring &name, double default_value);
 };
 
 }

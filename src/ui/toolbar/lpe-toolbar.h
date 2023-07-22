@@ -36,7 +36,7 @@ class SPDesktop;
 class SPLPEItem;
 
 namespace Gtk {
-class RadioToolButton;
+class RadioButton;
 }
 
 namespace Inkscape {
@@ -61,7 +61,7 @@ class LPEToolbar : public Toolbar {
 private:
     Glib::RefPtr<Gtk::Builder> _builder;
     std::unique_ptr<UI::Widget::UnitTracker> _tracker;
-    std::vector<Gtk::ToggleButton *> _mode_buttons;
+    std::vector<Gtk::RadioButton *> _mode_buttons;
     Gtk::ToggleButton *_show_bbox_item;
     Gtk::ToggleButton *_bbox_from_selection_item;
     Gtk::ToggleButton *_measuring_item;
@@ -77,7 +77,6 @@ private:
     sigc::connection c_selection_modified;
     sigc::connection c_selection_changed;
 
-    void set_other_modes_inactive(int mode);
     void mode_changed(int mode);
     void unit_changed(int not_used);
     void sel_modified(Inkscape::Selection *selection, guint flags);

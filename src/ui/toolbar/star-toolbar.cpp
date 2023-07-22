@@ -153,12 +153,6 @@ GtkWidget *StarToolbar::create(SPDesktop *desktop)
 
 void StarToolbar::side_mode_changed(int mode)
 {
-    // Set the other button inactive before moving ahead.
-    int index = (mode + 1) % 2;
-    if (_flat_item_buttons[index]->get_active()) {
-        _flat_item_buttons[index]->set_active(false);
-    }
-
     bool const flat = mode == 0;
 
     if (DocumentUndo::getUndoSensitive(_desktop->getDocument())) {

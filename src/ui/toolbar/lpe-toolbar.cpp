@@ -27,13 +27,11 @@
 
 #include "lpe-toolbar.h"
 
-#include <gtkmm/radiotoolbutton.h>
-#include <gtkmm/separatortoolitem.h>
+#include <gtkmm/radiobutton.h>
 
 #include "selection.h"
 
 #include "live_effects/lpe-line_segment.h"
-
 #include "ui/dialog/dialog-container.h"
 #include "ui/icon-names.h"
 #include "ui/tools/lpe-tool.h"
@@ -115,7 +113,7 @@ LPEToolbar::LPEToolbar(SPDesktop *desktop)
     int btn_index = 0;
 
     for (auto child : mode_buttons_box->get_children()) {
-        auto btn = dynamic_cast<Gtk::ToggleButton *>(child);
+        auto btn = dynamic_cast<Gtk::RadioButton *>(child);
         _mode_buttons.push_back(btn);
         btn->set_sensitive(true);
         btn->signal_clicked().connect(sigc::bind(sigc::mem_fun(*this, &LPEToolbar::mode_changed), btn_index++));
@@ -178,21 +176,6 @@ GtkWidget *LPEToolbar::create(SPDesktop *desktop)
     return toolbar->Gtk::Widget::gobj();
 }
 
-void LPEToolbar::set_other_modes_inactive(int mode)
-{
-    int btn_index = 0;
-
-    for (auto btn : _mode_buttons) {
-        if (mode == btn_index++) {
-            continue;
-        }
-
-        if (btn->get_active()) {
-            btn->set_active(false);
-        }
-    }
-}
-
 // this is called when the mode is changed via the toolbar (i.e., one of the subtool buttons is pressed)
 void LPEToolbar::mode_changed(int mode)
 {
@@ -208,10 +191,6 @@ void LPEToolbar::mode_changed(int mode)
         // in turn, prevent listener from responding
         _freeze = true;
 
-        // Set all the other buttons as inactive.
-        set_mode(mode);
-        set_other_modes_inactive(mode);
-
         EffectType type = lpesubtools[mode].type;
 
         auto const lc = SP_LPETOOL_CONTEXT(_desktop->getTool());
@@ -220,7 +199,6 @@ void LPEToolbar::mode_changed(int mode)
             // since the construction was already performed, we set the state back to inactive
             _mode_buttons[0]->set_active();
             mode = 0;
-            set_other_modes_inactive(0);
         } else {
             // switch to the chosen subtool
             SP_LPETOOL_CONTEXT(_desktop->getTool())->mode = type;
