@@ -90,13 +90,12 @@ EraserToolbar::EraserToolbar(SPDesktop *desktop)
     int btn_index = 0;
 
     for (auto child : mode_buttons_box->get_children()) {
-        auto btn = dynamic_cast<Gtk::ToggleButton *>(child);
+        auto btn = dynamic_cast<Gtk::RadioButton *>(child);
 
         if (btn_index == eraser_mode) {
             btn->set_active();
         }
 
-        btn->set_sensitive(true);
         btn->signal_clicked().connect(sigc::bind(sigc::mem_fun(*this, &EraserToolbar::mode_changed), btn_index++));
     }
 
@@ -272,7 +271,6 @@ void EraserToolbar::usepressure_toggled()
     auto prefs = Inkscape::Preferences::get();
     prefs->setBool("/tools/eraser/usepressure", _usepressure_btn->get_active());
 }
-
 }
 }
 }

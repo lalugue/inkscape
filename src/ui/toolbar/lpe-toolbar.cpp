@@ -115,7 +115,6 @@ LPEToolbar::LPEToolbar(SPDesktop *desktop)
     for (auto child : mode_buttons_box->get_children()) {
         auto btn = dynamic_cast<Gtk::RadioButton *>(child);
         _mode_buttons.push_back(btn);
-        btn->set_sensitive(true);
         btn->signal_clicked().connect(sigc::bind(sigc::mem_fun(*this, &LPEToolbar::mode_changed), btn_index++));
     }
 
@@ -371,7 +370,6 @@ void LPEToolbar::sel_changed(Inkscape::Selection *selection)
         _line_segment_combo->set_sensitive(false);
     }
 }
-
 }
 }
 }

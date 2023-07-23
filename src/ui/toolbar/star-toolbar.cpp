@@ -49,7 +49,7 @@ StarToolbar::StarToolbar(SPDesktop *desktop)
     : Toolbar(desktop)
     , _builder(initialize_builder("toolbar-star.ui"))
 {
-    Inkscape::Preferences *prefs = Inkscape::Preferences::get();
+    auto *prefs = Inkscape::Preferences::get();
     bool is_flat_sided = prefs->getBool("/tools/shapes/star/isflatsided", false);
 
     _builder->get_widget("star-toolbar", _toolbar);
@@ -113,11 +113,12 @@ StarToolbar::StarToolbar(SPDesktop *desktop)
     _spoke_item->set_visible(!is_flat_sided);
 }
 
-void StarToolbar::setup_derived_spin_button(UI::Widget::SpinButton *btn, const Glib::ustring &name, float initial_value)
+void StarToolbar::setup_derived_spin_button(UI::Widget::SpinButton *btn, const Glib::ustring &name,
+                                            double default_value)
 {
-    Inkscape::Preferences *prefs = Inkscape::Preferences::get();
+    auto *prefs = Inkscape::Preferences::get();
     const Glib::ustring path = "/tools/shapes/star/" + name;
-    auto val = prefs->getDouble(path, initial_value);
+    auto val = prefs->getDouble(path, default_value);
 
     auto adj = btn->get_adjustment();
     adj->set_value(val);
@@ -132,7 +133,6 @@ void StarToolbar::setup_derived_spin_button(UI::Widget::SpinButton *btn, const G
         adj->signal_value_changed().connect(sigc::mem_fun(*this, &StarToolbar::randomized_value_changed));
     }
 
-    btn->set_sensitive(true);
     btn->set_defocus_widget(_desktop->getCanvas());
 }
 

@@ -19,6 +19,7 @@
  *   Tavmjong Bah <tavmjong@free.fr>
  *   Abhishek Sharma
  *   Kris De Gussem <Kris.DeGussem@gmail.com>
+ *   Vaibhav Malik <vaibhavmalik2018@gmail.com>
  *
  * Copyright (C) 2004 David Turner
  * Copyright (C) 2003 MenTaLguY
@@ -28,41 +29,44 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#include <gtkmm/builder.h>
+
 #include "toolbar.h"
 
 class SPDesktop;
 
 namespace Gtk {
-class RadioToolButton;
+class Label;
+class RadioButton;
+class ToggleButton;
 }
 
 namespace Inkscape {
 namespace UI {
 namespace Widget {
-class LabelToolItem;
-class SpinButtonToolItem;
+class SpinButton;
 }
 
 namespace Toolbar {
 class TweakToolbar : public Toolbar {
 private:
-    UI::Widget::SpinButtonToolItem *_width_item;
-    UI::Widget::SpinButtonToolItem *_force_item;
-    UI::Widget::SpinButtonToolItem *_fidelity_item;
+    Glib::RefPtr<Gtk::Builder> _builder;
+    std::vector<Gtk::RadioButton *> _mode_buttons;
 
-    Gtk::ToggleButton *_pressure_item;
+    UI::Widget::SpinButton *_width_item;
+    UI::Widget::SpinButton *_force_item;
+    UI::Widget::SpinButton *_fidelity_item;
 
-    Glib::RefPtr<Gtk::Adjustment> _width_adj;
-    Glib::RefPtr<Gtk::Adjustment> _force_adj;
-    Glib::RefPtr<Gtk::Adjustment> _fidelity_adj;
+    Gtk::Box *_fidelity_box;
 
-    std::vector<Gtk::RadioToolButton *> _mode_buttons;
+    Gtk::ToggleButton *_pressure_btn;
 
-    UI::Widget::LabelToolItem *_channels_label;
-    Gtk::ToggleButton *_doh_item;
-    Gtk::ToggleButton *_dos_item;
-    Gtk::ToggleButton *_dol_item;
-    Gtk::ToggleButton *_doo_item;
+    Gtk::Box *_channels_box;
+    Gtk::Label *_channels_label;
+    Gtk::ToggleButton *_doh_btn;
+    Gtk::ToggleButton *_dos_btn;
+    Gtk::ToggleButton *_dol_btn;
+    Gtk::ToggleButton *_doo_btn;
 
     void width_value_changed();
     void force_value_changed();
@@ -81,6 +85,7 @@ public:
     static GtkWidget * create(SPDesktop *desktop);
 
     void set_mode(int mode);
+    void setup_derived_spin_button(UI::Widget::SpinButton *btn, const Glib::ustring &name, double default_value);
 };
 }
 }

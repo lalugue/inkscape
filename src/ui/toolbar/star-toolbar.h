@@ -82,7 +82,7 @@ private:
     bool _freeze{false};
     sigc::connection _changed;
 
-    void setup_derived_spin_button(UI::Widget::SpinButton *btn, const Glib::ustring &name, float initial_value);
+    void setup_derived_spin_button(UI::Widget::SpinButton *btn, const Glib::ustring &name, double default_value);
     void side_mode_changed(int mode);
     void magnitude_value_changed();
     void proportion_value_changed();

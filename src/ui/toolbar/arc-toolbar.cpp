@@ -105,7 +105,6 @@ ArcToolbar::ArcToolbar(SPDesktop *desktop)
     int btn_index = 0;
 
     for (auto btn : _type_buttons) {
-        btn->set_sensitive();
         btn->signal_clicked().connect(sigc::bind(sigc::mem_fun(*this, &ArcToolbar::type_changed), btn_index++));
     }
 
