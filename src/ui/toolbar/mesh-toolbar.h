@@ -25,8 +25,8 @@ class SPObject;
 
 namespace Gtk {
 class Adjustment;
-class RadioToolButton;
-class ToggleToolButton;
+class RadioButton;
+class ToggleButton;
 } // namespace Gtk
 
 namespace Inkscape {
@@ -43,21 +43,23 @@ class ToolBase;
 
 namespace Widget {
 class ComboToolItem;
-class SpinButtonToolItem;
-} // namespace Widget
+class SpinButton;
+}
 
 namespace Toolbar {
+class MeshToolbar : public Toolbar {
+private:
+    Glib::RefPtr<Gtk::Builder> _builder;
 
-class MeshToolbar final : public Toolbar {
-    std::vector<Gtk::RadioToolButton *> _new_type_buttons;
-    std::vector<Gtk::RadioToolButton *> _new_fillstroke_buttons;
+    std::vector<Gtk::RadioButton *> _new_type_buttons;
+    std::vector<Gtk::RadioButton *> _new_fillstroke_buttons;
     UI::Widget::ComboToolItem *_select_type_item;
 
     Gtk::ToggleButton *_edit_fill_item;
     Gtk::ToggleButton *_edit_stroke_item;
 
-    Glib::RefPtr<Gtk::Adjustment> _row_adj;
-    Glib::RefPtr<Gtk::Adjustment> _col_adj;
+    UI::Widget::SpinButton *_row_item;
+    UI::Widget::SpinButton *_col_item;
 
     std::unique_ptr<UI::SimplePrefPusher> _edit_fill_pusher;
     std::unique_ptr<UI::SimplePrefPusher> _edit_stroke_pusher;
@@ -93,6 +95,7 @@ class MeshToolbar final : public Toolbar {
 
 public:
     static GtkWidget * create(SPDesktop *desktop);
+    void setup_derived_spin_button(UI::Widget::SpinButton *btn, const Glib::ustring &name, double default_value);
 };
 
 } // namespace Toolbar
