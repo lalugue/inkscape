@@ -39,8 +39,7 @@ class SPItem;
 
 namespace Gtk {
 class Label;
-class ToggleButton;
-class ToolButton;
+class RadioButton;
 }
 
 namespace Inkscape {
@@ -76,7 +75,7 @@ private:
 
     Gtk::Label *_mode_item;
 
-    std::vector<Gtk::ToggleButton *> _type_buttons;
+    std::vector<Gtk::RadioButton *> _type_buttons;
     Gtk::Button *_make_whole;
 
     bool _freeze{false};

@@ -52,7 +52,7 @@ Toolbar::add_label(const Glib::ustring &label_text)
  */
 Gtk::ToggleButton *Toolbar::add_toggle_button(const Glib::ustring &label_text, const Glib::ustring &tooltip_text)
 {
-    auto const btn = Gtk::make_managed<Gtk::ToggleToolButton>(label_text);
+    auto const btn = Gtk::make_managed<Gtk::ToggleButton>(label_text);
     btn->set_tooltip_text(tooltip_text);
     pack_end(*btn, false, false, 2);
     return btn;

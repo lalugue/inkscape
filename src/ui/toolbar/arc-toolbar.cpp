@@ -65,9 +65,9 @@ ArcToolbar::ArcToolbar(SPDesktop *desktop)
 
     Gtk::Box *unit_menu_box;
 
-    Gtk::ToggleButton *slice_btn;
-    Gtk::ToggleButton *arc_btn;
-    Gtk::ToggleButton *chord_btn;
+    Gtk::RadioButton *slice_btn;
+    Gtk::RadioButton *arc_btn;
+    Gtk::RadioButton *chord_btn;
 
     _builder->get_widget("_mode_item", _mode_item);
 
@@ -180,13 +180,10 @@ void ArcToolbar::setup_startend_button(UI::Widget::SpinButton *btn, gchar const 
 
     btn->set_defocus_widget(_desktop->getCanvas());
 
-    if (name == "start") {
-        adj->signal_value_changed().connect(sigc::bind(sigc::mem_fun(*this, &ArcToolbar::startend_value_changed), adj,
-                                                       name, _end_item->get_adjustment()));
-    } else {
-        adj->signal_value_changed().connect(sigc::bind(sigc::mem_fun(*this, &ArcToolbar::startend_value_changed), adj,
-                                                       name, _start_item->get_adjustment()));
-    }
+    // Using the end item's adjustment when the name is "start" is intentional.
+    auto adjustment = name == "start" ? _end_item->get_adjustment() : _start_item->get_adjustment();
+    adj->signal_value_changed().connect(
+        sigc::bind(sigc::mem_fun(*this, &ArcToolbar::startend_value_changed), adj, name, std::move(adjustment)));
 }
 
 ArcToolbar::~ArcToolbar()
@@ -333,13 +330,6 @@ ArcToolbar::type_changed( int type )
 
     // in turn, prevent listener from responding
     _freeze = true;
-
-    // Set other buttons inactive before doing anything else.
-    for (int i = 0; i < _type_buttons.size(); i++) {
-        if (i != type && _type_buttons[i]->get_active()) {
-            _type_buttons[i]->set_active(false);
-        }
-    }
 
     Glib::ustring arc_type = "slice";
     bool open = false;
