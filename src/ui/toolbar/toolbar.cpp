@@ -85,9 +85,16 @@ Glib::RefPtr<Gtk::Builder> Toolbar::initialize_builder(const char *file_name)
 
 void Toolbar::resize_handler(Gtk::Allocation &allocation)
 {
+    // Return if called in freeze state.
+    if (_freeze_resize) {
+        return;
+    }
+
     if (_toolbar == nullptr) {
         return;
     }
+
+    _freeze_resize = true;
 
     int min_w = 0;
     int nat_w = 0;
@@ -99,6 +106,7 @@ void Toolbar::resize_handler(Gtk::Allocation &allocation)
         // Now, check if there are any expanded ToolbarMenuButtons.
         // If there are none, then the toolbar size can not be reduced further.
         if (_expanded_menu_btns.empty()) {
+            _freeze_resize = false;
             return;
         }
 
@@ -110,6 +118,8 @@ void Toolbar::resize_handler(Gtk::Allocation &allocation)
 
         _expanded_menu_btns.pop();
         _collapsed_menu_btns.push(menu_btn);
+
+        _freeze_resize = false;
 
         // Check if the toolbar has become small enough otherwise recursively
         // call this handler again.
@@ -125,6 +135,7 @@ void Toolbar::resize_handler(Gtk::Allocation &allocation)
         // First check if "_moved_children" is empty.
         if (_collapsed_menu_btns.empty()) {
             // No ToolbarMenuButton is there to be expanded.
+            _freeze_resize = false;
             return;
         }
 
@@ -151,6 +162,8 @@ void Toolbar::resize_handler(Gtk::Allocation &allocation)
             _expanded_menu_btns.push(menu_btn);
         }
     }
+
+    _freeze_resize = false;
 }
 
 void Toolbar::move_children(Gtk::Box *src, Gtk::Box *dest, std::vector<std::pair<int, Gtk::Widget *>> children,

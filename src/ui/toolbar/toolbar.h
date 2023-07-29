@@ -50,6 +50,7 @@ public:
 
 protected:
     SPDesktop *_desktop;
+    bool _freeze_resize = false;
 
     /**
      * \brief A default constructor that just assigns the desktop

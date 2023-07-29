@@ -46,7 +46,6 @@ private:
 
     Gtk::ToggleButton *_btn_shape_add;
     Gtk::ToggleButton *_btn_shape_delete;
-    std::vector<Gtk::ToggleButton *> _mode_buttons;
 
     Gtk::Button *_btn_confirm;
     Gtk::Button *_btn_cancel;

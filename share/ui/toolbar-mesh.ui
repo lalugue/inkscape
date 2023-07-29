@@ -454,5 +454,8 @@
         <property name="position">13</property>
       </packing>
     </child>
+    <style>
+      <class name="toolbar"/>
+    </style>
   </object>
 </interface>

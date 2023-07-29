@@ -20,6 +20,16 @@ ToolbarMenuButton::ToolbarMenuButton(BaseObjectType *cobject, const Glib::RefPtr
     : Gtk::MenuButton(cobject)
 {
     // std::cout << "ToolbarMenuButton::BuilderConstructor()\n";
+    // Workaround to hide the widget by default and when there are no
+    // children in the popover.
+    set_visible(false);
+    signal_show().connect(
+        [=]() {
+            if (_popover_box->get_children().empty()) {
+                set_visible(false);
+            }
+        },
+        false);
 }
 
 ToolbarMenuButton::ToolbarMenuButton()
@@ -52,10 +62,8 @@ void ToolbarMenuButton::init(int priority, std::string tag, std::string icon_nam
         bool is_child = style_context->has_class(tag);
 
         if (is_child) {
-            _children.emplace_back(std::make_pair(pos, child));
+            _children.emplace_back(std::make_pair(pos++, child));
         }
-
-        pos++;
     }
 }
 

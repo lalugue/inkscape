@@ -319,6 +319,9 @@
         <property name="position">11</property>
       </packing>
     </child>
+    <style>
+      <class name="toolbar"/>
+    </style>
   </object>
   <object class="GtkPopover" id="margin_popover">
     <property name="can-focus">False</property>

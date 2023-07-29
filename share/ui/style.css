@@ -715,6 +715,11 @@ button.square-button image {
     font-size: smaller;
 }
 
+.toolbar {
+    margin-top: 4px;
+    margin-bottom: 4px;
+}
+
 .toolbar-separator {
     margin: 7px 3px;
 }

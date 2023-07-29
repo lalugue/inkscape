@@ -784,5 +784,8 @@
         <property name="position">27</property>
       </packing>
     </child>
+    <style>
+      <class name="toolbar"/>
+    </style>
   </object>
 </interface>

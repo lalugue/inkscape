@@ -288,5 +288,8 @@
         <property name="position">9</property>
       </packing>
     </child>
+    <style>
+      <class name="toolbar"/>
+    </style>
   </object>
 </interface>

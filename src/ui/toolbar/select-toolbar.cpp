@@ -101,9 +101,10 @@ SelectToolbar::SelectToolbar(SPDesktop *desktop)
     Inkscape::UI::Widget::ToolbarMenuButton *menu_btn2 = nullptr;
     _builder->get_widget_derived("menu_btn2", menu_btn2);
 
-    // Initialize all the ToolbarMenuButtons.
-    // Note: Do not initialize the these widgets right after fetching from
-    // the UI file.
+    // Initialize all the ToolbarMenuButtons only after all the children of the
+    // toolbar have been fetched. Otherwise, the children to be moved in the
+    // popover will get mapped to a different position and it will probably
+    // cause segfault.
     auto children = _toolbar->get_children();
 
     menu_btn1->init(1, "tag1", "some-icon", popover_box1, children);
