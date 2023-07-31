@@ -18,8 +18,6 @@
 #include <2geom/rect.h>
 #include <glibmm/i18n.h>
 #include <gtkmm/adjustment.h>
-#include <gtkmm/separatortoolitem.h>
-#include <gtkmm/togglebutton.h>
 
 #include "desktop.h"
 #include "document-undo.h"
@@ -34,7 +32,6 @@
 #include "ui/icon-names.h"
 #include "ui/widget/canvas.h" // Focus widget
 #include "ui/widget/combo-tool-item.h"
-#include "ui/widget/spin-button-tool-item.h"
 #include "ui/widget/spinbutton.h"
 #include "ui/widget/toolbar-menu-button.h"
 #include "ui/widget/unit-tracker.h"
@@ -55,7 +52,7 @@ SelectToolbar::SelectToolbar(SPDesktop *desktop)
     , _action_prefix("selector:toolbar:")
     , _builder(initialize_builder("toolbar-select.ui"))
 {
-    Inkscape::Preferences *prefs = Inkscape::Preferences::get();
+    auto *prefs = Inkscape::Preferences::get();
 
     _builder->get_widget("select-toolbar", _toolbar);
     if (!_toolbar) {

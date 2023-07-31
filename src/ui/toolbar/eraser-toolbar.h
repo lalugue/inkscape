@@ -64,8 +64,6 @@ private:
 
     std::unique_ptr<SimplePrefPusher> _pressure_pusher;
 
-    std::vector<Gtk::Separator *> _separators;
-
     bool _freeze;
 
     static guint _modeAsInt(Inkscape::UI::Tools::EraserToolMode mode);

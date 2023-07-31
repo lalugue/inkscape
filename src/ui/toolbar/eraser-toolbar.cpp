@@ -29,7 +29,6 @@
 #include "eraser-toolbar.h"
 
 #include <glibmm/i18n.h>
-#include <gtkmm/separator.h>
 
 #include "desktop.h"
 #include "document-undo.h"
@@ -81,10 +80,6 @@ EraserToolbar::EraserToolbar(SPDesktop *desktop)
     setup_derived_spin_button(_cap_rounding_item, "cap_rounding", 0.0);
     setup_derived_spin_button(_tremor_item, "tremor", 0.0);
     setup_derived_spin_button(_mass_item, "mass", 10);
-
-    // Insert the separators into the vector.
-    _separators.push_back(sep1);
-    _separators.push_back(sep2);
 
     // Configure mode buttons
     int btn_index = 0;

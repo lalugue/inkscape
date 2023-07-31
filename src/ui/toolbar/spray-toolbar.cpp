@@ -17,6 +17,7 @@
  *   Abhishek Sharma
  *   Kris De Gussem <Kris.DeGussem@gmail.com>
  *   Jabiertxo Arraiza <jabier.arraiza@marker.es>
+ *   Vaibhav Malik <vaibhavmalik2018@gmail.com>
  *
  * Copyright (C) 2004 David Turner
  * Copyright (C) 2003 MenTaLguY
@@ -29,21 +30,16 @@
 #include "spray-toolbar.h"
 
 #include <glibmm/i18n.h>
-
-#include <gtkmm/radiotoolbutton.h>
-#include <gtkmm/separatortoolitem.h>
+#include <gtkmm/radiobutton.h>
 
 #include "desktop.h"
-
+#include "ui/dialog/clonetiler.h"
+#include "ui/dialog/dialog-base.h"
+#include "ui/dialog/dialog-container.h"
 #include "ui/icon-names.h"
 #include "ui/simple-pref-pusher.h"
-
-#include "ui/dialog/clonetiler.h"
-#include "ui/dialog/dialog-container.h"
-#include "ui/dialog/dialog-base.h"
-
 #include "ui/widget/canvas.h"
-#include "ui/widget/spin-button-tool-item.h"
+#include "ui/widget/spinbutton.h"
 
 // Disabled in 0.91 because of Bug #1274831 (crash, spraying an object
 // with the mode: spray object in single path)
@@ -64,285 +60,177 @@ Inkscape::UI::Dialog::CloneTiler *get_clone_tiler_panel(SPDesktop *desktop)
 namespace Inkscape {
 namespace UI {
 namespace Toolbar {
-SprayToolbar::SprayToolbar(SPDesktop *desktop) :
-    Toolbar(desktop)
+
+SprayToolbar::SprayToolbar(SPDesktop *desktop)
+    : Toolbar(desktop)
+    , _builder(initialize_builder("toolbar-spray.ui"))
 {
-    Inkscape::Preferences *prefs = Inkscape::Preferences::get();
+    auto prefs = Inkscape::Preferences::get();
 
-    /* Mode */
-    {
-        add_label(_("Mode:"));
-
-        Gtk::RadioToolButton::Group mode_group;
-
-        auto const copy_mode_btn = Gtk::make_managed<Gtk::RadioToolButton>(mode_group, _("Spray with copies"));
-        copy_mode_btn->set_tooltip_text(_("Spray copies of the initial selection"));
-        copy_mode_btn->set_icon_name(INKSCAPE_ICON("spray-mode-copy"));
-        _mode_buttons.push_back(copy_mode_btn);
-
-        auto const clone_mode_btn = Gtk::make_managed<Gtk::RadioToolButton>(mode_group, _("Spray with clones"));
-        clone_mode_btn->set_tooltip_text(_("Spray clones of the initial selection"));
-        clone_mode_btn->set_icon_name(INKSCAPE_ICON("spray-mode-clone"));
-        _mode_buttons.push_back(clone_mode_btn);
-
-#ifdef ENABLE_SPRAY_MODE_SINGLE_PATH
-        auto const union_mode_btn = Gtk::make_managed<Gtk::RadioToolButton>(mode_group, _("Spray single path"));
-        union_mode_btn->set_tooltip_text(_("Spray objects in a single path"));
-        union_mode_btn->set_icon_name(INKSCAPE_ICON("spray-mode-union"));
-        _mode_buttons.push_back(union_mode_btn);
-#endif
-
-        auto const eraser_mode_btn = Gtk::make_managed<Gtk::RadioToolButton>(mode_group, _("Delete sprayed items"));
-        eraser_mode_btn->set_tooltip_text(_("Delete sprayed items from selection"));
-        eraser_mode_btn->set_icon_name(INKSCAPE_ICON("draw-eraser"));
-        _mode_buttons.push_back(eraser_mode_btn);
-
-        int btn_idx = 0;
-        for (auto btn : _mode_buttons) {
-            btn->set_sensitive(true);
-            add(*btn);
-            btn->signal_clicked().connect(sigc::bind(sigc::mem_fun(*this, &SprayToolbar::mode_changed), btn_idx++));
-        }
+    _builder->get_widget("spray-toolbar", _toolbar);
+    if (!_toolbar) {
+        std::cerr << "InkscapeWindow: Failed to load spray toolbar!" << std::endl;
     }
 
-    add(* Gtk::make_managed<Gtk::SeparatorToolItem>());
+    Gtk::Box *mode_buttons_box;
+    Gtk::ToggleButton *use_pressure_width_btn;
+    Gtk::ToggleButton *use_pressure_population_btn;
 
-    {
-        /* Width */
-        std::vector<Glib::ustring> labels = {_("(narrow spray)"), "", "", "", _("(default)"), "", "", "", "", _("(broad spray)")};
-        std::vector<double>        values = {                  1,  3,  5, 10,             15, 20, 30, 50, 75,                100};
-        auto width_val = prefs->getDouble("/tools/spray/width", 15);
-        _width_adj = Gtk::Adjustment::create(width_val, 1, 100, 1.0, 10.0);
-        auto const width_item = Gtk::make_managed<UI::Widget::SpinButtonToolItem>("spray-width", _("Width:"), _width_adj, 1, 0);
-        width_item->set_tooltip_text(_("The width of the spray area (relative to the visible canvas area)"));
-        width_item->set_custom_numeric_menu_data(values, labels);
-        width_item->set_focus_widget(desktop->getCanvas());
-        _width_adj->signal_value_changed().connect(sigc::mem_fun(*this, &SprayToolbar::width_value_changed));
-        add(*width_item);
-        width_item->set_sensitive(true);
+    _builder->get_widget("mode_buttons_box", mode_buttons_box);
+
+    _builder->get_widget_derived("_width_item", _width_item);
+    _builder->get_widget("use_pressure_width_btn", use_pressure_width_btn);
+    _builder->get_widget_derived("_population_item", _population_item);
+    _builder->get_widget("use_pressure_population_btn", use_pressure_population_btn);
+
+    _builder->get_widget("_rotation_box", _rotation_box);
+    _builder->get_widget_derived("_rotation_item", _rotation_item);
+    _builder->get_widget_derived("_scale_item", _scale_item);
+    _builder->get_widget("_use_pressure_scale_btn", _use_pressure_scale_btn);
+
+    _builder->get_widget_derived("_sd_item", _sd_item);
+    _builder->get_widget_derived("_mean_item", _mean_item);
+
+    _builder->get_widget("_over_no_transparent_btn", _over_no_transparent_btn);
+    _builder->get_widget("_over_transparent_btn", _over_transparent_btn);
+    _builder->get_widget("_pick_no_overlap_btn", _pick_no_overlap_btn);
+    _builder->get_widget("_no_overlap_btn", _no_overlap_btn);
+    _builder->get_widget("_offset_box", _offset_box);
+    _builder->get_widget_derived("_offset_item", _offset_item);
+
+    _builder->get_widget("_picker_btn", _picker_btn);
+    _builder->get_widget("_pick_fill_btn", _pick_fill_btn);
+    _builder->get_widget("_pick_stroke_btn", _pick_stroke_btn);
+    _builder->get_widget("_pick_inverse_value_btn", _pick_inverse_value_btn);
+    _builder->get_widget("_pick_center_btn", _pick_center_btn);
+
+    // Setup the spin buttons.
+    setup_derived_spin_button(_width_item, "width", 15);
+    setup_derived_spin_button(_population_item, "population", 70);
+    setup_derived_spin_button(_rotation_item, "rotation_variation", 0);
+    setup_derived_spin_button(_scale_item, "scale_variation", 0);
+    setup_derived_spin_button(_sd_item, "standard_deviation", 70);
+    setup_derived_spin_button(_mean_item, "mean", 0);
+    setup_derived_spin_button(_offset_item, "offset", 100);
+
+    // Configure mode buttons
+    int btn_index = 0;
+
+    for (auto child : mode_buttons_box->get_children()) {
+        auto btn = dynamic_cast<Gtk::RadioButton *>(child);
+        _mode_buttons.push_back(btn);
+        btn->signal_clicked().connect(sigc::bind(sigc::mem_fun(*this, &SprayToolbar::mode_changed), btn_index++));
     }
 
-    /* Use Pressure Width button */
-    {
-        auto pressure_item = add_toggle_button(_("Pressure"),
-                                               _("Use the pressure of the input device to alter the width of spray area"));
-        pressure_item->set_image_from_icon_name(INKSCAPE_ICON("draw-use-pressure"));
-        _usepressurewidth_pusher.reset(new UI::SimplePrefPusher(pressure_item, "/tools/spray/usepressurewidth"));
-        pressure_item->signal_toggled().connect(sigc::bind(sigc::mem_fun(*this, &SprayToolbar::on_pref_toggled),
-                                                           pressure_item,
-                                                           "/tools/spray/usepressurewidth"));
-    }
+    // Width pressure button.
+    _use_pressure_width_pusher.reset(new UI::SimplePrefPusher(use_pressure_width_btn, "/tools/spray/usepressurewidth"));
+    use_pressure_width_btn->signal_toggled().connect(sigc::bind(
+        sigc::mem_fun(*this, &SprayToolbar::on_pref_toggled), use_pressure_width_btn, "/tools/spray/usepressurewidth"));
 
-    {   /* Population */
-        std::vector<Glib::ustring> labels = {_("(low population)"), "", "", "", _("(default)"), "", _("(high population)")};
-        std::vector<double>        values = {                    5, 20, 35, 50,             70, 85,                    100};
-        auto population_val = prefs->getDouble("/tools/spray/population", 70);
-        _population_adj = Gtk::Adjustment::create(population_val, 1, 100, 1.0, 10.0);
-        _spray_population = Gtk::make_managed<UI::Widget::SpinButtonToolItem>("spray-population", _("Amount:"), _population_adj, 1, 0);
-        _spray_population->set_tooltip_text(_("Adjusts the number of items sprayed per click"));
-        _spray_population->set_custom_numeric_menu_data(values, labels);
-        _spray_population->set_focus_widget(desktop->getCanvas());
-        _population_adj->signal_value_changed().connect(sigc::mem_fun(*this, &SprayToolbar::population_value_changed));
-        add(*_spray_population);
-        _spray_population->set_sensitive(true);
-    }
+    // Population pressure button.
+    _use_pressure_population_pusher.reset(
+        new UI::SimplePrefPusher(use_pressure_population_btn, "/tools/spray/usepressurepopulation"));
+    use_pressure_population_btn->signal_toggled().connect(
+        sigc::bind(sigc::mem_fun(*this, &SprayToolbar::on_pref_toggled), use_pressure_population_btn,
+                   "/tools/spray/usepressurepopulation"));
 
-    /* Use Pressure Population button */
-    {
-        auto pressure_population_item = add_toggle_button(_("Pressure"),
-                                                          _("Use the pressure of the input device to alter the amount of sprayed objects"));
-        pressure_population_item->set_image_from_icon_name(INKSCAPE_ICON("draw-use-pressure"));
-        _usepressurepopulation_pusher.reset(new UI::SimplePrefPusher(pressure_population_item, "/tools/spray/usepressurepopulation"));
-        pressure_population_item->signal_toggled().connect(sigc::bind(sigc::mem_fun(*this, &SprayToolbar::on_pref_toggled),
-                                                                      pressure_population_item,
-                                                                      "/tools/spray/usepressurepopulation"));
-    }
+    // Scale pressure button.
+    _use_pressure_scale_btn->set_active(prefs->getBool("/tools/spray/usepressurescale", false));
+    _use_pressure_scale_btn->signal_toggled().connect(sigc::mem_fun(*this, &SprayToolbar::toggle_pressure_scale));
 
-    add(* Gtk::make_managed<Gtk::SeparatorToolItem>());
-
-    {   /* Rotation */
-        std::vector<Glib::ustring> labels = {_("(default)"), "", "", "", "", "", "", _("(high rotation variation)")};
-        std::vector<double>        values = {             0, 10, 25, 35, 50, 60, 80,                            100};
-        auto rotation_val = prefs->getDouble("/tools/spray/rotation_variation", 0);
-        _rotation_adj = Gtk::Adjustment::create(rotation_val, 0, 100, 1.0, 10.0);
-        _spray_rotation = Gtk::make_managed<UI::Widget::SpinButtonToolItem>("spray-rotation", _("Rotation:"), _rotation_adj, 1, 0);
-        // xgettext:no-c-format
-        _spray_rotation->set_tooltip_text(_("Variation of the rotation of the sprayed objects; 0% for the same rotation than the original object"));
-        _spray_rotation->set_custom_numeric_menu_data(values, labels);
-        _spray_rotation->set_focus_widget(desktop->getCanvas());
-        _rotation_adj->signal_value_changed().connect(sigc::mem_fun(*this, &SprayToolbar::rotation_value_changed));
-        add(*_spray_rotation);
-        _spray_rotation->set_sensitive();
-    }
-
-    {   /* Scale */
-        std::vector<Glib::ustring> labels = {_("(default)"), "", "", "", "", "", "", _("(high scale variation)")};
-        std::vector<double>        values = {             0, 10, 25, 35, 50, 60, 80,                         100};
-        auto scale_val = prefs->getDouble("/tools/spray/scale_variation", 0);
-        _scale_adj = Gtk::Adjustment::create(scale_val, 0, 100, 1.0, 10.0);
-        _spray_scale = Gtk::make_managed<UI::Widget::SpinButtonToolItem>("spray-scale", C_("Spray tool", "Scale:"), _scale_adj, 1, 0);
-        // xgettext:no-c-format
-        _spray_scale->set_tooltip_text(_("Variation in the scale of the sprayed objects; 0% for the same scale than the original object"));
-        _spray_scale->set_custom_numeric_menu_data(values, labels);
-        _spray_scale->set_focus_widget(desktop->getCanvas());
-        _scale_adj->signal_value_changed().connect(sigc::mem_fun(*this, &SprayToolbar::scale_value_changed));
-        add(*_spray_scale);
-        _spray_scale->set_sensitive(true);
-    }
-
-    /* Use Pressure Scale button */
-    {
-        _usepressurescale = add_toggle_button(_("Pressure"),
-                                              _("Use the pressure of the input device to alter the scale of new items"));
-        _usepressurescale->set_image_from_icon_name(INKSCAPE_ICON("draw-use-pressure"));
-        _usepressurescale->set_active(prefs->getBool("/tools/spray/usepressurescale", false));
-        _usepressurescale->signal_toggled().connect(sigc::mem_fun(*this, &SprayToolbar::toggle_pressure_scale));
-    }
-
-    add(* Gtk::make_managed<Gtk::SeparatorToolItem>());
-
-    {
-        /* Standard_deviation */
-        std::vector<Glib::ustring> labels = {_("(minimum scatter)"), "", "", "", "", "", _("(default)"), _("(maximum scatter)")};
-        std::vector<double>        values = {                     1,  5, 10, 20, 30, 50,             70,                    100};
-        auto sd_val = prefs->getDouble("/tools/spray/standard_deviation", 70);
-        _sd_adj = Gtk::Adjustment::create(sd_val, 1, 100, 1.0, 10.0);
-        auto const sd_item = Gtk::make_managed<UI::Widget::SpinButtonToolItem>("spray-standard-deviation", C_("Spray tool", "Scatter:"), _sd_adj, 1, 0);
-        sd_item->set_tooltip_text(_("Increase to scatter sprayed objects"));
-        sd_item->set_custom_numeric_menu_data(values, labels);
-        sd_item->set_focus_widget(desktop->getCanvas());
-        _sd_adj->signal_value_changed().connect(sigc::mem_fun(*this, &SprayToolbar::standard_deviation_value_changed));
-        add(*sd_item);
-        sd_item->set_sensitive(true);
-    }
-
-    {
-        /* Mean */
-        std::vector<Glib::ustring> labels = {_("(default)"), "", "", "", "", "", "", _("(maximum mean)")};
-        std::vector<double>        values = {             0,  5, 10, 20, 30, 50, 70,                 100};
-        auto mean_val = prefs->getDouble("/tools/spray/mean", 0);
-        _mean_adj = Gtk::Adjustment::create(mean_val, 0, 100, 1.0, 10.0);
-        auto const mean_item = Gtk::make_managed<UI::Widget::SpinButtonToolItem>("spray-mean", _("Focus:"), _mean_adj, 1, 0);
-        mean_item->set_tooltip_text(_("0 to spray a spot; increase to enlarge the ring radius"));
-        mean_item->set_custom_numeric_menu_data(values, labels);
-        mean_item->set_focus_widget(desktop->getCanvas());
-        _mean_adj->signal_value_changed().connect(sigc::mem_fun(*this, &SprayToolbar::mean_value_changed));
-        add(*mean_item);
-        mean_item->set_sensitive(true);
-    }
-
-    add(* Gtk::make_managed<Gtk::SeparatorToolItem>());
-
-    /* Over No Transparent */
-    {
-        _over_no_transparent = add_toggle_button(_("Apply over no transparent areas"),
-                                                 _("Apply over no transparent areas"));
-        _over_no_transparent->set_image_from_icon_name(INKSCAPE_ICON("object-visible"));
-        _over_no_transparent->set_active(prefs->getBool("/tools/spray/over_no_transparent", true));
-        _over_no_transparent->signal_toggled().connect(sigc::bind(sigc::mem_fun(*this, &SprayToolbar::on_pref_toggled),
-                                                                  _over_no_transparent,
+    // Over no transparent button.
+    _over_no_transparent_btn->set_active(prefs->getBool("/tools/spray/over_no_transparent", true));
+    _over_no_transparent_btn->signal_toggled().connect(sigc::bind(sigc::mem_fun(*this, &SprayToolbar::on_pref_toggled),
+                                                                  _over_no_transparent_btn,
                                                                   "/tools/spray/over_no_transparent"));
-    }
 
-    /* Over Transparent */
-    {
-        _over_transparent = add_toggle_button(_("Apply over transparent areas"),
-                                              _("Apply over transparent areas"));
-        _over_transparent->set_image_from_icon_name(INKSCAPE_ICON("object-hidden"));
-        _over_transparent->set_active(prefs->getBool("/tools/spray/over_transparent", true));
-        _over_transparent->signal_toggled().connect(sigc::bind(sigc::mem_fun(*this, &SprayToolbar::on_pref_toggled),
-                                                               _over_transparent,
-                                                               "/tools/spray/over_transparent"));
-    }
+    // Over transparent button.
+    _over_transparent_btn->set_active(prefs->getBool("/tools/spray/over_transparent", true));
+    _over_transparent_btn->signal_toggled().connect(sigc::bind(sigc::mem_fun(*this, &SprayToolbar::on_pref_toggled),
+                                                               _over_transparent_btn, "/tools/spray/over_transparent"));
 
-    /* Pick No Overlap */
-    {
-        _pick_no_overlap = add_toggle_button(_("No overlap between colors"),
-                                             _("No overlap between colors"));
-        _pick_no_overlap->set_image_from_icon_name(INKSCAPE_ICON("symbol-bigger"));
-        _pick_no_overlap->set_active(prefs->getBool("/tools/spray/pick_no_overlap", false));
-        _pick_no_overlap->signal_toggled().connect(sigc::bind(sigc::mem_fun(*this, &SprayToolbar::on_pref_toggled),
-                                                              _pick_no_overlap,
-                                                              "/tools/spray/pick_no_overlap"));
-    }
+    // Pick no overlap button.
+    _pick_no_overlap_btn->set_active(prefs->getBool("/tools/spray/pick_no_overlap", false));
+    _pick_no_overlap_btn->signal_toggled().connect(sigc::bind(sigc::mem_fun(*this, &SprayToolbar::on_pref_toggled),
+                                                              _pick_no_overlap_btn, "/tools/spray/pick_no_overlap"));
 
-    /* Overlap */
-    {
-        _no_overlap = add_toggle_button(_("Prevent overlapping objects"),
-                                        _("Prevent overlapping objects"));
-        _no_overlap->set_image_from_icon_name(INKSCAPE_ICON("distribute-randomize"));
-        _no_overlap->set_active(prefs->getBool("/tools/spray/no_overlap", false));
-        _no_overlap->signal_toggled().connect(sigc::mem_fun(*this, &SprayToolbar::toggle_no_overlap));
-    }
+    // Overlap button.
+    _no_overlap_btn->set_active(prefs->getBool("/tools/spray/no_overlap", false));
+    _no_overlap_btn->signal_toggled().connect(sigc::mem_fun(*this, &SprayToolbar::toggle_no_overlap));
 
-    /* Offset */
-    {
-        std::vector<Glib::ustring> labels = {_("(minimum offset)"), "", "", "", _("(default)"),  "",  "", _("(maximum offset)")};
-        std::vector<double>        values = {                    0, 25, 50, 75,            100, 150, 200,                  1000};
-        auto offset_val = prefs->getDouble("/tools/spray/offset", 100);
-        _offset_adj = Gtk::Adjustment::create(offset_val, 0, 1000, 1, 4);
-        _offset = Gtk::make_managed<UI::Widget::SpinButtonToolItem>("spray-offset", _("Offset %:"), _offset_adj, 0, 0);
-        _offset->set_tooltip_text(_("Increase to segregate objects more (value in percent)"));
-        _offset->set_custom_numeric_menu_data(values, labels);
-        _offset->set_focus_widget(desktop->getCanvas());
-        _offset_adj->signal_value_changed().connect(sigc::mem_fun(*this, &SprayToolbar::offset_value_changed));
-        add(*_offset);
-    }
+    // Picker button.
+    _picker_btn->set_active(prefs->getBool("/tools/spray/picker", false));
+    _picker_btn->signal_toggled().connect(sigc::mem_fun(*this, &SprayToolbar::toggle_picker));
 
-    add(* Gtk::make_managed<Gtk::SeparatorToolItem>());
+    // Pick fill button.
+    _pick_fill_btn->set_active(prefs->getBool("/tools/spray/pick_fill", false));
+    _pick_fill_btn->signal_toggled().connect(
+        sigc::bind(sigc::mem_fun(*this, &SprayToolbar::on_pref_toggled), _pick_fill_btn, "/tools/spray/pick_fill"));
 
-    /* Picker */
-    {
-        _picker = add_toggle_button(_("Pick color from the drawing. You can use clonetiler trace dialog for advanced effects. In clone mode original fill or stroke colors must be unset."),
-                                    _("Pick color from the drawing. You can use clonetiler trace dialog for advanced effects. In clone mode original fill or stroke colors must be unset."));
-        _picker->set_image_from_icon_name(INKSCAPE_ICON("color-picker"));
-        _picker->set_active(prefs->getBool("/tools/spray/picker", false));
-        _picker->signal_toggled().connect(sigc::mem_fun(*this, &SprayToolbar::toggle_picker));
-    }
+    // Pick stroke button.
+    _pick_stroke_btn->set_active(prefs->getBool("/tools/spray/pick_stroke", false));
+    _pick_stroke_btn->signal_toggled().connect(
+        sigc::bind(sigc::mem_fun(*this, &SprayToolbar::on_pref_toggled), _pick_stroke_btn, "/tools/spray/pick_stroke"));
 
-    /* Pick Fill */
-    {
-        _pick_fill = add_toggle_button(_("Apply picked color to fill"),
-                                       _("Apply picked color to fill"));
-        _pick_fill->set_image_from_icon_name(INKSCAPE_ICON("paint-solid"));
-        _pick_fill->set_active(prefs->getBool("/tools/spray/pick_fill", false));
-        _pick_fill->signal_toggled().connect(sigc::bind(sigc::mem_fun(*this, &SprayToolbar::on_pref_toggled),
-                                                        _pick_fill,
-                                                        "/tools/spray/pick_fill"));
-    }
-
-    /* Pick Stroke */
-    {
-        _pick_stroke = add_toggle_button(_("Apply picked color to stroke"),
-                                         _("Apply picked color to stroke"));
-        _pick_stroke->set_image_from_icon_name(INKSCAPE_ICON("no-marker"));
-        _pick_stroke->set_active(prefs->getBool("/tools/spray/pick_stroke", false));
-        _pick_stroke->signal_toggled().connect(sigc::bind(sigc::mem_fun(*this, &SprayToolbar::on_pref_toggled),
-                                                          _pick_stroke,
-                                                          "/tools/spray/pick_stroke"));
-    }
-
-    /* Inverse Value Size */
-    {
-        _pick_inverse_value = add_toggle_button(_("Inverted pick value, retaining color in advanced trace mode"),
-                                                _("Inverted pick value, retaining color in advanced trace mode"));
-        _pick_inverse_value->set_image_from_icon_name(INKSCAPE_ICON("object-tweak-shrink"));
-        _pick_inverse_value->set_active(prefs->getBool("/tools/spray/pick_inverse_value", false));
-        _pick_inverse_value->signal_toggled().connect(sigc::bind(sigc::mem_fun(*this, &SprayToolbar::on_pref_toggled),
-                                                                 _pick_inverse_value,
+    // Inverse value size button.
+    _pick_inverse_value_btn->set_active(prefs->getBool("/tools/spray/pick_inverse_value", false));
+    _pick_inverse_value_btn->signal_toggled().connect(sigc::bind(sigc::mem_fun(*this, &SprayToolbar::on_pref_toggled),
+                                                                 _pick_inverse_value_btn,
                                                                  "/tools/spray/pick_inverse_value"));
-    }
 
-    /* Pick from center */
-    {
-        _pick_center = add_toggle_button(_("Pick from center instead of average area."),
-                                         _("Pick from center instead of average area."));
-        _pick_center->set_image_from_icon_name(INKSCAPE_ICON("snap-bounding-box-center"));
-        _pick_center->set_active(prefs->getBool("/tools/spray/pick_center", true));
-        _pick_center->signal_toggled().connect(sigc::bind(sigc::mem_fun(*this, &SprayToolbar::on_pref_toggled),
-                                                          _pick_center,
-                                                          "/tools/spray/pick_center"));
-    }
+    // Pick from center button.
+    _pick_center_btn->set_active(prefs->getBool("/tools/spray/pick_center", true));
+    _pick_center_btn->signal_toggled().connect(
+        sigc::bind(sigc::mem_fun(*this, &SprayToolbar::on_pref_toggled), _pick_center_btn, "/tools/spray/pick_center"));
+
+    // Fetch all the ToolbarMenuButtons at once from the UI file
+    // Menu Button #1
+    Gtk::Box *popover_box1;
+    _builder->get_widget("popover_box1", popover_box1);
+
+    Inkscape::UI::Widget::ToolbarMenuButton *menu_btn1 = nullptr;
+    _builder->get_widget_derived("menu_btn1", menu_btn1);
+
+    // Menu Button #2
+    Gtk::Box *popover_box2;
+    _builder->get_widget("popover_box2", popover_box2);
+
+    Inkscape::UI::Widget::ToolbarMenuButton *menu_btn2 = nullptr;
+    _builder->get_widget_derived("menu_btn2", menu_btn2);
+
+    // Menu Button #3
+    Gtk::Box *popover_box3;
+    _builder->get_widget("popover_box3", popover_box3);
+
+    Inkscape::UI::Widget::ToolbarMenuButton *menu_btn3 = nullptr;
+    _builder->get_widget_derived("menu_btn3", menu_btn3);
+
+    // Menu Button #4
+    Gtk::Box *popover_box4;
+    _builder->get_widget("popover_box4", popover_box4);
+
+    Inkscape::UI::Widget::ToolbarMenuButton *menu_btn4 = nullptr;
+    _builder->get_widget_derived("menu_btn4", menu_btn4);
+
+    // Initialize all the ToolbarMenuButtons only after all the children of the
+    // toolbar have been fetched. Otherwise, the children to be moved in the
+    // popover will get mapped to a different position and it will probably
+    // cause segfault.
+    auto children = _toolbar->get_children();
+
+    menu_btn1->init(1, "tag1", "some-icon", popover_box1, children);
+    _expanded_menu_btns.push(menu_btn1);
+
+    menu_btn2->init(2, "tag2", "some-icon", popover_box2, children);
+    _expanded_menu_btns.push(menu_btn2);
+
+    menu_btn3->init(3, "tag3", "some-icon", popover_box3, children);
+    _expanded_menu_btns.push(menu_btn3);
+
+    menu_btn4->init(4, "tag4", "some-icon", popover_box4, children);
+    _expanded_menu_btns.push(menu_btn4);
+
+    add(*_toolbar);
 
     gint mode = prefs->getInt("/tools/spray/mode", 1);
     _mode_buttons[mode]->set_active();
@@ -350,142 +238,153 @@ SprayToolbar::SprayToolbar(SPDesktop *desktop) :
     init();
 }
 
-GtkWidget *
-SprayToolbar::create(SPDesktop *desktop)
+void SprayToolbar::setup_derived_spin_button(UI::Widget::SpinButton *btn, const Glib::ustring &name,
+                                             double default_value)
+{
+    auto *prefs = Inkscape::Preferences::get();
+    const Glib::ustring path = "/tools/spray/" + name;
+    auto val = prefs->getDouble(path, default_value);
+
+    auto adj = btn->get_adjustment();
+    adj->set_value(val);
+
+    if (name == "width") {
+        adj->signal_value_changed().connect(sigc::mem_fun(*this, &SprayToolbar::width_value_changed));
+    } else if (name == "population") {
+        adj->signal_value_changed().connect(sigc::mem_fun(*this, &SprayToolbar::population_value_changed));
+    } else if (name == "rotation_variation") {
+        adj->signal_value_changed().connect(sigc::mem_fun(*this, &SprayToolbar::rotation_value_changed));
+    } else if (name == "scale_variation") {
+        adj->signal_value_changed().connect(sigc::mem_fun(*this, &SprayToolbar::scale_value_changed));
+    } else if (name == "standard_deviation") {
+        adj->signal_value_changed().connect(sigc::mem_fun(*this, &SprayToolbar::standard_deviation_value_changed));
+    } else if (name == "mean") {
+        adj->signal_value_changed().connect(sigc::mem_fun(*this, &SprayToolbar::mean_value_changed));
+    } else if (name == "offset") {
+        adj->signal_value_changed().connect(sigc::mem_fun(*this, &SprayToolbar::offset_value_changed));
+    }
+
+    btn->set_defocus_widget(_desktop->getCanvas());
+}
+
+GtkWidget *SprayToolbar::create(SPDesktop *desktop)
 {
    auto toolbar = new SprayToolbar(desktop);
    return toolbar->Gtk::Widget::gobj();
 }
 
-void
-SprayToolbar::width_value_changed()
+void SprayToolbar::width_value_changed()
 {
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-    prefs->setDouble( "/tools/spray/width",
-            _width_adj->get_value());
+    prefs->setDouble("/tools/spray/width", _width_item->get_adjustment()->get_value());
 }
 
-void
-SprayToolbar::mean_value_changed()
+void SprayToolbar::mean_value_changed()
 {
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-    prefs->setDouble( "/tools/spray/mean",
-            _mean_adj->get_value());
+    prefs->setDouble("/tools/spray/mean", _mean_item->get_adjustment()->get_value());
 }
 
-void
-SprayToolbar::standard_deviation_value_changed()
+void SprayToolbar::standard_deviation_value_changed()
 {
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-    prefs->setDouble( "/tools/spray/standard_deviation",
-            _sd_adj->get_value());
+    prefs->setDouble("/tools/spray/standard_deviation", _sd_item->get_adjustment()->get_value());
 }
 
-void
-SprayToolbar::mode_changed(int mode)
+void SprayToolbar::mode_changed(int mode)
 {
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
     prefs->setInt("/tools/spray/mode", mode);
     init();
 }
 
-void
-SprayToolbar::init(){
+void SprayToolbar::init()
+{
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
     int mode = prefs->getInt("/tools/spray/mode", 0);
 
     bool show = true;
+
     if(mode == 3 || mode == 2){
         show = false;
     }
-    _no_overlap->set_visible(show);
-    _over_no_transparent->set_visible(show);
-    _over_transparent->set_visible(show);
-    _pick_no_overlap->set_visible(show);
-    _pick_stroke->set_visible(show);
-    _pick_fill->set_visible(show);
-    _pick_inverse_value->set_visible(show);
-    _pick_center->set_visible(show);
-    _picker->set_visible(show);
-    _offset->set_visible(show);
-    _pick_fill->set_visible(show);
-    _pick_stroke->set_visible(show);
-    _pick_inverse_value->set_visible(show);
-    _pick_center->set_visible(show);
+
+    _over_no_transparent_btn->set_visible(show);
+    _over_transparent_btn->set_visible(show);
+    _pick_no_overlap_btn->set_visible(show);
+    _no_overlap_btn->set_visible(show);
+
+    _picker_btn->set_visible(show);
+    _pick_fill_btn->set_visible(show);
+    _pick_stroke_btn->set_visible(show);
+    _pick_inverse_value_btn->set_visible(show);
+    _pick_center_btn->set_visible(show);
+    _offset_item->set_visible(show);
+
     if(mode == 2){
         show = true;
     }
-    _spray_rotation->set_visible(show);
+
+    _rotation_box->set_visible(show);
     update_widgets();
 }
 
-void
-SprayToolbar::population_value_changed()
+void SprayToolbar::population_value_changed()
 {
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-    prefs->setDouble( "/tools/spray/population",
-            _population_adj->get_value());
+    prefs->setDouble("/tools/spray/population", _population_item->get_adjustment()->get_value());
 }
 
-void
-SprayToolbar::rotation_value_changed()
+void SprayToolbar::rotation_value_changed()
 {
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-    prefs->setDouble( "/tools/spray/rotation_variation",
-            _rotation_adj->get_value());
+    prefs->setDouble("/tools/spray/rotation_variation", _rotation_item->get_adjustment()->get_value());
 }
 
-void
-SprayToolbar::update_widgets()
+void SprayToolbar::update_widgets()
 {
-    _offset_adj->set_value(100.0);
+    _offset_item->get_adjustment()->set_value(100.0);
 
-    bool no_overlap_is_active = _no_overlap->get_active() && _no_overlap->get_visible();
-    _offset->set_visible(no_overlap_is_active);
-    if (_usepressurescale->get_active()) {
-        _scale_adj->set_value(0.0);
-        _spray_scale->set_sensitive(false);
+    bool no_overlap_is_active = _no_overlap_btn->get_active() && _no_overlap_btn->get_visible();
+    _offset_box->set_visible(no_overlap_is_active);
+    if (_use_pressure_scale_btn->get_active()) {
+        _scale_item->get_adjustment()->set_value(0.0);
+        _scale_item->set_sensitive(false);
     } else {
-        _spray_scale->set_sensitive(true);
+        _scale_item->set_sensitive(true);
     }
 
-    bool picker_is_active = _picker->get_active() && _picker->get_visible();
-    _pick_fill->set_visible(picker_is_active);
-    _pick_stroke->set_visible(picker_is_active);
-    _pick_inverse_value->set_visible(picker_is_active);
-    _pick_center->set_visible(picker_is_active);
+    bool picker_is_active = _picker_btn->get_active() && _picker_btn->get_visible();
+    _pick_fill_btn->set_visible(picker_is_active);
+    _pick_stroke_btn->set_visible(picker_is_active);
+    _pick_inverse_value_btn->set_visible(picker_is_active);
+    _pick_center_btn->set_visible(picker_is_active);
 }
 
-void
-SprayToolbar::toggle_no_overlap()
+void SprayToolbar::toggle_no_overlap()
 {
     auto prefs = Inkscape::Preferences::get();
-    bool active = _no_overlap->get_active();
+    bool active = _no_overlap_btn->get_active();
     prefs->setBool("/tools/spray/no_overlap", active);
     update_widgets();
 }
 
-void
-SprayToolbar::scale_value_changed()
+void SprayToolbar::scale_value_changed()
 {
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-    prefs->setDouble( "/tools/spray/scale_variation",
-            _scale_adj->get_value());
+    prefs->setDouble("/tools/spray/scale_variation", _scale_item->get_adjustment()->get_value());
 }
 
-void
-SprayToolbar::offset_value_changed()
+void SprayToolbar::offset_value_changed()
 {
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-    prefs->setDouble( "/tools/spray/offset",
-            _offset_adj->get_value());
+    prefs->setDouble("/tools/spray/offset", _offset_item->get_adjustment()->get_value());
 }
 
-void
-SprayToolbar::toggle_pressure_scale()
+void SprayToolbar::toggle_pressure_scale()
 {
     auto prefs = Inkscape::Preferences::get();
-    bool active = _usepressurescale->get_active();
+    bool active = _use_pressure_scale_btn->get_active();
     prefs->setBool("/tools/spray/usepressurescale", active);
     if(active){
         prefs->setDouble("/tools/spray/scale_variation", 0);
@@ -493,11 +392,10 @@ SprayToolbar::toggle_pressure_scale()
     update_widgets();
 }
 
-void
-SprayToolbar::toggle_picker()
+void SprayToolbar::toggle_picker()
 {
     auto prefs = Inkscape::Preferences::get();
-    bool active = _picker->get_active();
+    bool active = _picker_btn->get_active();
     prefs->setBool("/tools/spray/picker", active);
     if(active){
         prefs->setBool("/dialogs/clonetiler/dotrace", false);
@@ -517,8 +415,7 @@ void SprayToolbar::on_pref_toggled(Gtk::ToggleButton *btn, const Glib::ustring &
     prefs->setBool(path, active);
 }
 
-void
-SprayToolbar::set_mode(int mode)
+void SprayToolbar::set_mode(int mode)
 {
     _mode_buttons[mode]->set_active();
 }

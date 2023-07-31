@@ -252,7 +252,6 @@
         <property name="relief">none</property>
         <property name="always-show-image">True</property>
         <style>
-          <class name="movable"/>
           <class name="tag1"/>
         </style>
       </object>

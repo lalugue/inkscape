@@ -62,8 +62,10 @@ void ToolbarMenuButton::init(int priority, std::string tag, std::string icon_nam
         bool is_child = style_context->has_class(tag);
 
         if (is_child) {
-            _children.emplace_back(std::make_pair(pos++, child));
+            _children.emplace_back(std::make_pair(pos, child));
         }
+
+        pos++;
     }
 }
 

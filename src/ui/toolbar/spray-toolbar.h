@@ -19,6 +19,7 @@
  *   Tavmjong Bah <tavmjong@free.fr>
  *   Abhishek Sharma
  *   Kris De Gussem <Kris.DeGussem@gmail.com>
+ *   Vaibhav Malik <vaibhavmalik2018@gmail.com>
  *
  * Copyright (C) 2004 David Turner
  * Copyright (C) 2003 MenTaLguY
@@ -28,53 +29,54 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#include <gtkmm/adjustment.h>
+#include <gtkmm/builder.h>
+
 #include "toolbar.h"
 
-#include <gtkmm/adjustment.h>
-
 class SPDesktop;
-
-namespace Gtk {
-class RadioToolButton;
-}
 
 namespace Inkscape {
 namespace UI {
 class SimplePrefPusher;
 
 namespace Widget {
-class SpinButtonToolItem;
+class SpinButton;
 }
 
 namespace Toolbar {
 class SprayToolbar : public Toolbar {
 private:
-    Glib::RefPtr<Gtk::Adjustment> _width_adj;
-    Glib::RefPtr<Gtk::Adjustment> _mean_adj;
-    Glib::RefPtr<Gtk::Adjustment> _sd_adj;
-    Glib::RefPtr<Gtk::Adjustment> _population_adj;
-    Glib::RefPtr<Gtk::Adjustment> _rotation_adj;
-    Glib::RefPtr<Gtk::Adjustment> _offset_adj;
-    Glib::RefPtr<Gtk::Adjustment> _scale_adj;
+    Glib::RefPtr<Gtk::Builder> _builder;
 
-    std::unique_ptr<SimplePrefPusher> _usepressurewidth_pusher;
-    std::unique_ptr<SimplePrefPusher> _usepressurepopulation_pusher;
+    std::vector<Gtk::RadioButton *> _mode_buttons;
 
-    std::vector<Gtk::RadioToolButton *> _mode_buttons;
-    UI::Widget::SpinButtonToolItem *_spray_population;
-    UI::Widget::SpinButtonToolItem *_spray_rotation;
-    UI::Widget::SpinButtonToolItem *_spray_scale;
-    Gtk::ToggleButton *_usepressurescale;
-    Gtk::ToggleButton *_picker;
-    Gtk::ToggleButton *_pick_center;
-    Gtk::ToggleButton *_pick_inverse_value;
-    Gtk::ToggleButton *_pick_fill;
-    Gtk::ToggleButton *_pick_stroke;
-    Gtk::ToggleButton *_pick_no_overlap;
-    Gtk::ToggleButton *_over_transparent;
-    Gtk::ToggleButton *_over_no_transparent;
-    Gtk::ToggleButton *_no_overlap;
-    UI::Widget::SpinButtonToolItem *_offset;
+    UI::Widget::SpinButton *_width_item;
+    UI::Widget::SpinButton *_population_item;
+
+    Gtk::Box *_rotation_box;
+    UI::Widget::SpinButton *_rotation_item;
+    UI::Widget::SpinButton *_scale_item;
+    Gtk::ToggleButton *_use_pressure_scale_btn;
+
+    UI::Widget::SpinButton *_sd_item;
+    UI::Widget::SpinButton *_mean_item;
+
+    Gtk::ToggleButton *_over_no_transparent_btn;
+    Gtk::ToggleButton *_over_transparent_btn;
+    Gtk::ToggleButton *_pick_no_overlap_btn;
+    Gtk::ToggleButton *_no_overlap_btn;
+    Gtk::Box *_offset_box;
+    UI::Widget::SpinButton *_offset_item;
+
+    Gtk::ToggleButton *_picker_btn;
+    Gtk::ToggleButton *_pick_fill_btn;
+    Gtk::ToggleButton *_pick_stroke_btn;
+    Gtk::ToggleButton *_pick_inverse_value_btn;
+    Gtk::ToggleButton *_pick_center_btn;
+
+    std::unique_ptr<SimplePrefPusher> _use_pressure_width_pusher;
+    std::unique_ptr<SimplePrefPusher> _use_pressure_population_pusher;
 
     void width_value_changed();
     void mean_value_changed();
@@ -90,6 +92,7 @@ private:
     void toggle_no_overlap();
     void toggle_pressure_scale();
     void toggle_picker();
+    void setup_derived_spin_button(UI::Widget::SpinButton *btn, const Glib::ustring &name, double default_value);
 
 protected:
     SprayToolbar(SPDesktop *desktop);
