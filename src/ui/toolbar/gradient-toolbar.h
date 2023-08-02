@@ -13,9 +13,9 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include "toolbar.h"
+#include <gtkmm/builder.h>
 
-#include <gtkmm/adjustment.h>
+#include "toolbar.h"
 
 class SPDesktop;
 class SPGradient;
@@ -24,9 +24,8 @@ class SPObject;
 
 namespace Gtk {
 class ComboBoxText;
-class RadioToolButton;
-class ToolButton;
-class ToolItem;
+class RadioButton;
+class Button;
 }
 
 namespace Inkscape {
@@ -39,37 +38,39 @@ class ToolBase;
 
 namespace Widget {
 class ComboToolItem;
-class SpinButtonToolItem;
+class SpinButton;
 }
 
 namespace Toolbar {
 class GradientToolbar : public Toolbar {
 private:
-    std::vector<Gtk::RadioToolButton *> _new_type_buttons;
-    std::vector<Gtk::RadioToolButton *> _new_fillstroke_buttons;
+    Glib::RefPtr<Gtk::Builder> _builder;
+
+    std::vector<Gtk::RadioButton *> _new_type_buttons;
+    std::vector<Gtk::RadioButton *> _new_fillstroke_buttons;
+
     UI::Widget::ComboToolItem *_select_cb;
+    Gtk::ToggleButton *_linked_btn;
+    Gtk::Button *_stops_reverse_btn;
     UI::Widget::ComboToolItem *_spread_cb;
+
     UI::Widget::ComboToolItem *_stop_cb;
+    UI::Widget::SpinButton *_offset_item;
 
-    Gtk::ToolButton *_stops_add_item;
-    Gtk::ToolButton *_stops_delete_item;
-    Gtk::ToolButton *_stops_reverse_item;
-    Gtk::ToggleButton *_linked_item;
+    Gtk::Button *_stops_add_btn;
+    Gtk::Button *_stops_delete_btn;
 
-    UI::Widget::SpinButtonToolItem *_offset_item;
-
-    Glib::RefPtr<Gtk::Adjustment> _offset_adj;
     bool _offset_adj_changed;
 
+    void setup_derived_spin_button(UI::Widget::SpinButton *btn, const Glib::ustring &name, double default_value);
     void new_type_changed(int mode);
     void new_fillstroke_changed(int mode);
     void gradient_changed(int active);
-    SPGradient * get_selected_gradient();
+    SPGradient *get_selected_gradient();
     void spread_changed(int active);
     void stop_changed(int active);
-    void select_dragger_by_stop(SPGradient          *gradient,
-                                UI::Tools::ToolBase *ev);
-    SPStop * get_selected_stop();
+    void select_dragger_by_stop(SPGradient *gradient, UI::Tools::ToolBase *ev);
+    SPStop *get_selected_stop();
     void stop_set_offset();
     void stop_offset_adjustment_changed();
     void add_stop();

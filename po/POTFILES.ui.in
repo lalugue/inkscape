@@ -40,6 +40,7 @@
 ../share/ui/toolbar-connector.ui
 ../share/ui/toolbar-dropper.ui
 ../share/ui/toolbar-eraser.ui
+../share/ui/toolbar-gradient.ui
 ../share/ui/toolbar-lpe.ui
 ../share/ui/toolbar-measure.ui
 ../share/ui/toolbar-mesh.ui

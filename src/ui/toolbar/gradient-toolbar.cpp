@@ -15,22 +15,20 @@
 
 #include "gradient-toolbar.h"
 
-#include <map>
 #include <glibmm/i18n.h>
 #include <gtkmm/comboboxtext.h>
-#include <gtkmm/radiotoolbutton.h>
-#include <gtkmm/separatortoolitem.h>
+#include <map>
 
 #include "desktop.h"
 #include "document-undo.h"
 #include "document.h"
 #include "gradient-chemistry.h"
 #include "gradient-drag.h"
-#include "selection.h"
 #include "object/sp-defs.h"
 #include "object/sp-linear-gradient.h"
 #include "object/sp-radial-gradient.h"
 #include "object/sp-stop.h"
+#include "selection.h"
 #include "style.h"
 #include "ui/icon-names.h"
 #include "ui/tools/gradient-tool.h"
@@ -39,8 +37,8 @@
 #include "ui/widget/color-preview.h"
 #include "ui/widget/combo-tool-item.h"
 #include "ui/widget/gradient-image.h"
-#include "ui/widget/spin-button-tool-item.h"
 #include "ui/widget/gradient-vector-selector.h"
+#include "ui/widget/spinbutton.h"
 
 using Inkscape::DocumentUndo;
 using Inkscape::UI::Tools::ToolBase;
@@ -325,65 +323,67 @@ void gr_read_selection( Inkscape::Selection *selection,
 namespace Inkscape::UI::Toolbar {
 
 GradientToolbar::GradientToolbar(SPDesktop *desktop)
-        : Toolbar(desktop)
+    : Toolbar(desktop)
+    , _builder(initialize_builder("toolbar-gradient.ui"))
 {
-    auto prefs = Inkscape::Preferences::get();
+    auto *prefs = Inkscape::Preferences::get();
 
-    /* New gradient linear or radial */
-    {
-        add_label(_("New:"));
-
-        Gtk::RadioToolButton::Group new_type_group;
-
-        auto const linear_button = Gtk::make_managed<Gtk::RadioToolButton>(new_type_group, _("linear"));
-        linear_button->set_tooltip_text(_("Create linear gradient"));
-        linear_button->set_icon_name(INKSCAPE_ICON("paint-gradient-linear"));
-        _new_type_buttons.push_back(linear_button);
-
-        auto const radial_button = Gtk::make_managed<Gtk::RadioToolButton>(new_type_group, _("radial"));
-        radial_button->set_tooltip_text(_("Create radial (elliptic or circular) gradient"));
-        radial_button->set_icon_name(INKSCAPE_ICON("paint-gradient-radial"));
-        _new_type_buttons.push_back(radial_button);
-
-        gint mode = prefs->getInt("/tools/gradient/newgradient", SP_GRADIENT_TYPE_LINEAR);
-        _new_type_buttons[ mode == SP_GRADIENT_TYPE_LINEAR ? 0 : 1 ]->set_active(); // linear == 1, radial == 2
-
-        int btn_index = 0;
-        for (auto btn : _new_type_buttons)
-        {
-            btn->set_sensitive(true);
-            btn->signal_clicked().connect(sigc::bind(sigc::mem_fun(*this, &GradientToolbar::new_type_changed), btn_index++));
-            add(*btn);
-        }
+    _builder->get_widget("gradient-toolbar", _toolbar);
+    if (!_toolbar) {
+        std::cerr << "InkscapeWindow: Failed to load gradient toolbar!" << std::endl;
     }
 
-    /* New gradient on fill or stroke*/
-    {
-        Gtk::RadioToolButton::Group new_fillstroke_group;
+    Gtk::Box *new_type_buttons_box;
+    Gtk::Box *new_fillstroke_buttons_box;
 
-        auto const fill_btn = Gtk::make_managed<Gtk::RadioToolButton>(new_fillstroke_group, _("fill"));
-        fill_btn->set_tooltip_text(_("Create gradient in the fill"));
-        fill_btn->set_icon_name(INKSCAPE_ICON("object-fill"));
-        _new_fillstroke_buttons.push_back(fill_btn);
+    Gtk::Box *select_box;
+    Gtk::Box *spread_box;
+    Gtk::Box *stop_box;
 
-        auto const stroke_btn = Gtk::make_managed<Gtk::RadioToolButton>(new_fillstroke_group, _("stroke"));
-        stroke_btn->set_tooltip_text(_("Create gradient in the stroke"));
-        stroke_btn->set_icon_name(INKSCAPE_ICON("object-stroke"));
-        _new_fillstroke_buttons.push_back(stroke_btn);
+    _builder->get_widget("new_type_buttons_box", new_type_buttons_box);
+    _builder->get_widget("new_fillstroke_buttons_box", new_fillstroke_buttons_box);
 
-        auto fsmode = (prefs->getInt("/tools/gradient/newfillorstroke", 1) != 0) ? Inkscape::FOR_FILL : Inkscape::FOR_STROKE;
-        _new_fillstroke_buttons[ fsmode == Inkscape::FOR_FILL ? 0 : 1 ]->set_active();
+    _builder->get_widget("select_box", select_box);
+    _builder->get_widget("_linked_btn", _linked_btn);
+    _builder->get_widget("_stops_reverse_btn", _stops_reverse_btn);
+    _builder->get_widget("spread_box", spread_box);
 
-        auto btn_index = 0;
-        for (auto btn : _new_fillstroke_buttons)
-        {
-            btn->signal_clicked().connect(sigc::bind(sigc::mem_fun(*this, &GradientToolbar::new_fillstroke_changed), btn_index++));
-            btn->set_sensitive();
-            add(*btn);
-        }
+    _builder->get_widget("stop_box", stop_box);
+    _builder->get_widget_derived("_offset_item", _offset_item);
+
+    _builder->get_widget("_stops_add_btn", _stops_add_btn);
+    _builder->get_widget("_stops_delete_btn", _stops_delete_btn);
+
+    // Setup the spin buttons.
+    _offset_adj_changed = false;
+    setup_derived_spin_button(_offset_item, "stopoffset", 0);
+
+    // Configure mode buttons
+    int btn_index = 0;
+
+    for (auto child : new_type_buttons_box->get_children()) {
+        auto btn = dynamic_cast<Gtk::RadioButton *>(child);
+        _new_type_buttons.push_back(btn);
+
+        btn->signal_clicked().connect(
+            sigc::bind(sigc::mem_fun(*this, &GradientToolbar::new_type_changed), btn_index++));
     }
 
-    add(* Gtk::make_managed<Gtk::SeparatorToolItem>());
+    gint mode = prefs->getInt("/tools/mesh/mesh_geometry", SP_MESH_GEOMETRY_NORMAL);
+    _new_type_buttons[mode]->set_active();
+
+    btn_index = 0;
+
+    for (auto child : new_fillstroke_buttons_box->get_children()) {
+        auto btn = dynamic_cast<Gtk::RadioButton *>(child);
+        _new_fillstroke_buttons.push_back(btn);
+
+        btn->signal_clicked().connect(
+            sigc::bind(sigc::mem_fun(*this, &GradientToolbar::new_fillstroke_changed), btn_index++));
+    }
+
+    mode = prefs->getInt("/tools/mesh/newfillorstroke");
+    _new_fillstroke_buttons[mode]->set_active();
 
     /* Gradient Select list*/
     {
@@ -406,30 +406,19 @@ GradientToolbar::GradientToolbar(SPDesktop *desktop)
         _select_cb->set_active( 0 );
         _select_cb->set_sensitive( false );
 
-        add(*_select_cb);
+        select_box->add(*_select_cb);
         _select_cb->signal_changed().connect(sigc::mem_fun(*this, &GradientToolbar::gradient_changed));
     }
 
-    // Gradients Linked toggle
-    {
-        _linked_item = add_toggle_button(_("Link gradients"),
-                                         _("Link gradients to change all related gradients"));
-        _linked_item->set_image_from_icon_name(INKSCAPE_ICON("object-unlocked"));
-        _linked_item->signal_toggled().connect(sigc::mem_fun(*this, &GradientToolbar::linked_changed));
+    // Configure the linked button.
+    _linked_btn->signal_toggled().connect(sigc::mem_fun(*this, &GradientToolbar::linked_changed));
 
-        bool linkedmode = prefs->getBool("/options/forkgradientvectors/value", true);
-        _linked_item->set_active(!linkedmode);
-    }
+    bool linkedmode = prefs->getBool("/options/forkgradientvectors/value", true);
+    _linked_btn->set_active(!linkedmode);
 
-    /* Reverse */
-    {
-        _stops_reverse_item = Gtk::make_managed<Gtk::ToolButton>(_("Reverse"));
-        _stops_reverse_item->set_tooltip_text(_("Reverse the direction of the gradient"));
-        _stops_reverse_item->set_icon_name(INKSCAPE_ICON("object-flip-horizontal"));
-        _stops_reverse_item->signal_clicked().connect(sigc::mem_fun(*this, &GradientToolbar::reverse));
-        add(*_stops_reverse_item);
-        _stops_reverse_item->set_sensitive(false);
-    }
+    // Configure the reverse button.
+    _stops_reverse_btn->signal_clicked().connect(sigc::mem_fun(*this, &GradientToolbar::reverse));
+    _stops_reverse_btn->set_sensitive(false);
 
     // Gradient Spread type (how a gradient is drawn outside its nominal area)
     {
@@ -461,12 +450,10 @@ GradientToolbar::GradientToolbar(SPDesktop *desktop)
         _spread_cb->set_sensitive(false);
 
         _spread_cb->signal_changed().connect(sigc::mem_fun(*this, &GradientToolbar::spread_changed));
-        add(*_spread_cb);
+        spread_box->add(*_spread_cb);
     }
 
-    add(* Gtk::make_managed<Gtk::SeparatorToolItem>());
-
-    /* Gradient Stop list */
+    // Gradient Stop list
     {
         UI::Widget::ComboToolItemColumns columns;
 
@@ -492,69 +479,77 @@ GradientToolbar::GradientToolbar(SPDesktop *desktop)
         _stop_cb->set_active( 0 );
         _stop_cb->set_sensitive( false );
 
-        add(*_stop_cb);
+        stop_box->add(*_stop_cb);
         _stop_cb->signal_changed().connect(sigc::mem_fun(*this, &GradientToolbar::stop_changed));
     }
 
-    /* Offset */
-    _offset_adj_changed = false;
-    {
-        auto offset_val = prefs->getDouble("/tools/gradient/stopoffset", 0);
-        _offset_adj = Gtk::Adjustment::create(offset_val, 0.0, 1.0, 0.01, 0.1);
-        _offset_item = Gtk::make_managed<UI::Widget::SpinButtonToolItem>("gradient-stopoffset", C_("Gradient", "Offset:"), _offset_adj, 0.01, 2);
-        _offset_item->set_tooltip_text(_("Offset of selected stop"));
-        _offset_item->set_focus_widget(desktop->getCanvas());
-        _offset_adj->signal_value_changed().connect(sigc::mem_fun(*this, &GradientToolbar::stop_offset_adjustment_changed));
-        add(*_offset_item);
-        _offset_item->set_sensitive(false);
-    }
+    // Configure the stops add button.
+    _stops_add_btn->signal_clicked().connect(sigc::mem_fun(*this, &GradientToolbar::add_stop));
+    _stops_add_btn->set_sensitive(false);
 
-    /* Add stop */
-    {
-        _stops_add_item = Gtk::make_managed<Gtk::ToolButton>(_("Insert new stop"));
-        _stops_add_item->set_tooltip_text(_("Insert new stop"));
-        _stops_add_item->set_icon_name(INKSCAPE_ICON("node-add"));
-        _stops_add_item->signal_clicked().connect(sigc::mem_fun(*this, &GradientToolbar::add_stop));
-        add(*_stops_add_item);
-        _stops_add_item->set_sensitive(false);
-    }
+    // Configure the stops add button.
+    _stops_delete_btn->signal_clicked().connect(sigc::mem_fun(*this, &GradientToolbar::remove_stop));
+    _stops_delete_btn->set_sensitive(false);
 
-    /* Delete stop */
-    {
-        _stops_delete_item = Gtk::make_managed<Gtk::ToolButton>(_("Delete stop"));
-        _stops_delete_item->set_tooltip_text(_("Delete stop"));
-        _stops_delete_item->set_icon_name(INKSCAPE_ICON("node-delete"));
-        _stops_delete_item->signal_clicked().connect(sigc::mem_fun(*this, &GradientToolbar::remove_stop));
-        add(*_stops_delete_item);
-        _stops_delete_item->set_sensitive(false);
-    }
+    // Fetch all the ToolbarMenuButtons at once from the UI file
+    // Menu Button #1
+    Gtk::Box *popover_box1;
+    _builder->get_widget("popover_box1", popover_box1);
 
+    Inkscape::UI::Widget::ToolbarMenuButton *menu_btn1 = nullptr;
+    _builder->get_widget_derived("menu_btn1", menu_btn1);
+
+    // Initialize all the ToolbarMenuButtons only after all the children of the
+    // toolbar have been fetched. Otherwise, the children to be moved in the
+    // popover will get mapped to a different position and it will probably
+    // cause segfault.
+    auto children = _toolbar->get_children();
+
+    menu_btn1->init(1, "tag1", "some-icon", popover_box1, children);
+    _expanded_menu_btns.push(menu_btn1);
+
+    add(*_toolbar);
+
+    // Signals.
     desktop->connectEventContextChanged(sigc::mem_fun(*this, &GradientToolbar::check_ec));
 
     show_all();
+}
+
+void GradientToolbar::setup_derived_spin_button(UI::Widget::SpinButton *btn, const Glib::ustring &name,
+                                                double default_value)
+{
+    auto *prefs = Inkscape::Preferences::get();
+    const Glib::ustring path = "/tools/gradient/" + name;
+    auto val = prefs->getDouble(path, default_value);
+
+    auto adj = btn->get_adjustment();
+    adj->set_value(val);
+
+    adj->signal_value_changed().connect(sigc::mem_fun(*this, &GradientToolbar::stop_offset_adjustment_changed));
+
+    btn->set_defocus_widget(_desktop->getCanvas());
+    btn->set_sensitive(false);
 }
 
 /**
  * Gradient auxiliary toolbar construction and setup.
  *
  */
-GtkWidget *
-GradientToolbar::create(SPDesktop * desktop)
+GtkWidget *GradientToolbar::create(SPDesktop *desktop)
 {
     auto toolbar = new GradientToolbar(desktop);
     return toolbar->Gtk::Widget::gobj();
 }
 
-void
-GradientToolbar::new_type_changed(int mode)
+void GradientToolbar::new_type_changed(int mode)
 {
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
     prefs->setInt("/tools/gradient/newgradient",
                   mode == 0 ? SP_GRADIENT_TYPE_LINEAR : SP_GRADIENT_TYPE_RADIAL);
 }
 
-void
-GradientToolbar::new_fillstroke_changed(int mode)
+void GradientToolbar::new_fillstroke_changed(int mode)
 {
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
     Inkscape::PaintTarget fsmode = (mode == 0) ? Inkscape::FOR_FILL : Inkscape::FOR_STROKE;
@@ -564,8 +559,7 @@ GradientToolbar::new_fillstroke_changed(int mode)
 /*
  * User selected a gradient from the combobox
  */
-void
-GradientToolbar::gradient_changed(int active)
+void GradientToolbar::gradient_changed(int active)
 {
     if (blocked) {
         return;
@@ -596,8 +590,7 @@ GradientToolbar::gradient_changed(int active)
 /**
  * \brief Return gradient selected in menu
  */
-SPGradient *
-GradientToolbar::get_selected_gradient()
+SPGradient *GradientToolbar::get_selected_gradient()
 {
     int active = _select_cb->get_active();
 
@@ -614,8 +607,7 @@ GradientToolbar::get_selected_gradient()
 /**
  * \brief User selected a spread method from the combobox
  */
-void
-GradientToolbar::spread_changed(int active)
+void GradientToolbar::spread_changed(int active)
 {
     if (blocked) {
         return;
@@ -642,8 +634,7 @@ GradientToolbar::spread_changed(int active)
 /**
  * \brief User selected a stop from the combobox
  */
-void
-GradientToolbar::stop_changed(int active)
+void GradientToolbar::stop_changed(int active)
 {
     if (blocked) {
         return;
@@ -659,9 +650,7 @@ GradientToolbar::stop_changed(int active)
     blocked = false;
 }
 
-void
-GradientToolbar::select_dragger_by_stop(SPGradient *gradient,
-                                        ToolBase   *ev)
+void GradientToolbar::select_dragger_by_stop(SPGradient *gradient, ToolBase *ev)
 {
     if (!blocked) {
         std::cerr << "select_dragger_by_stop: should be blocked!" << std::endl;
@@ -686,8 +675,7 @@ GradientToolbar::select_dragger_by_stop(SPGradient *gradient,
 /**
  * \brief Get stop selected by menu
  */
-SPStop *
-GradientToolbar::get_selected_stop()
+SPStop *GradientToolbar::get_selected_stop()
 {
     int active = _stop_cb->get_active();
 
@@ -705,8 +693,7 @@ GradientToolbar::get_selected_stop()
  *
  *  Set the offset widget value (based on which stop is selected)
  */
-void
-GradientToolbar::stop_set_offset()
+void GradientToolbar::stop_set_offset()
 {
     if (!blocked) {
         std::cerr << "gr_stop_set_offset: should be blocked!" << std::endl;
@@ -724,29 +711,20 @@ GradientToolbar::stop_set_offset()
 
     SPStop *prev = nullptr;
     prev = stop->getPrevStop();
-    if (prev != nullptr )  {
-        _offset_adj->set_lower(prev->offset);
-    } else {
-        _offset_adj->set_lower(0);
-    }
+    auto adj = _offset_item->get_adjustment();
+    adj->set_lower(prev != nullptr ? prev->offset : 0);
 
     SPStop *next = nullptr;
     next = stop->getNextStop();
-    if (next != nullptr ) {
-        _offset_adj->set_upper(next->offset);
-    } else {
-        _offset_adj->set_upper(1.0);
-    }
-
-    _offset_adj->set_value(stop->offset);
+    adj->set_lower(next != nullptr ? next->offset : 1.0);
+    adj->set_value(stop->offset);
     _offset_item->set_sensitive(true);
 }
 
 /**
  * \brief User changed the offset
  */
-void
-GradientToolbar::stop_offset_adjustment_changed()
+void GradientToolbar::stop_offset_adjustment_changed()
 {
     if (blocked) {
         return;
@@ -756,7 +734,7 @@ GradientToolbar::stop_offset_adjustment_changed()
 
     SPStop *stop = get_selected_stop();
     if (stop) {
-        stop->offset = _offset_adj->get_value();
+        stop->offset = _offset_item->get_adjustment()->get_value();
         _offset_adj_changed = true; // checked to stop changing the selected stop after the update of the offset
         stop->getRepr()->setAttributeCssDouble("offset", stop->offset);
 
@@ -769,8 +747,7 @@ GradientToolbar::stop_offset_adjustment_changed()
 /**
  * \brief Add stop to gradient
  */
-void
-GradientToolbar::add_stop()
+void GradientToolbar::add_stop()
 {
     if (!_desktop) {
         return;
@@ -789,8 +766,7 @@ GradientToolbar::add_stop()
 /**
  * \brief Remove stop from vector
  */
-void
-GradientToolbar::remove_stop()
+void GradientToolbar::remove_stop()
 {
     if (!_desktop) {
         return;
@@ -815,8 +791,7 @@ GradientToolbar::remove_stop()
 /**
  * \brief Reverse vector
  */
-void
-GradientToolbar::reverse()
+void GradientToolbar::reverse()
 {
     sp_gradient_reverse_selected_gradients(_desktop);
 }
@@ -824,14 +799,13 @@ GradientToolbar::reverse()
 /**
  * \brief Lock or unlock links
  */
-void
-GradientToolbar::linked_changed()
+void GradientToolbar::linked_changed()
 {
-    bool active = _linked_item->get_active();
+    bool active = _linked_btn->get_active();
     if ( active ) {
-        _linked_item->set_image_from_icon_name(INKSCAPE_ICON("object-locked"));
+        _linked_btn->set_image_from_icon_name(INKSCAPE_ICON("object-locked"));
     } else {
-        _linked_item->set_image_from_icon_name(INKSCAPE_ICON("object-unlocked"));
+        _linked_btn->set_image_from_icon_name(INKSCAPE_ICON("object-unlocked"));
     }
 
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
@@ -843,8 +817,7 @@ GradientToolbar::linked_changed()
  * Checks the current tool and connects gradient aux toolbox signals if it happens to be the gradient tool.
  * Called every time the current tool changes by signal emission.
  */
-void
-GradientToolbar::check_ec(SPDesktop *desktop, Tools::ToolBase *tool)
+void GradientToolbar::check_ec(SPDesktop *desktop, Tools::ToolBase *tool)
 {
     if (dynamic_cast<Tools::GradientTool const *>(tool)) {
         Inkscape::Selection *selection = desktop->getSelection();
@@ -880,8 +853,7 @@ GradientToolbar::check_ec(SPDesktop *desktop, Tools::ToolBase *tool)
 /**
  * Core function, setup all the widgets whenever something changes on the desktop
  */
-void
-GradientToolbar::selection_changed(Inkscape::Selection * /*selection*/)
+void GradientToolbar::selection_changed(Inkscape::Selection * /*selection*/)
 {
     if (blocked)
         return;
@@ -931,9 +903,9 @@ GradientToolbar::selection_changed(Inkscape::Selection * /*selection*/)
         _spread_cb->set_sensitive( gr_selected );
         _spread_cb->set_active( gr_selected ? (int)spr_selected : 0 );
 
-        _stops_add_item->set_sensitive((gr_selected && !gr_multi && drag && !drag->selected.empty()));
-        _stops_delete_item->set_sensitive((gr_selected && !gr_multi && drag && !drag->selected.empty()));
-        _stops_reverse_item->set_sensitive((gr_selected!= nullptr));
+        _stops_add_btn->set_sensitive((gr_selected && !gr_multi && drag && !drag->selected.empty()));
+        _stops_delete_btn->set_sensitive((gr_selected && !gr_multi && drag && !drag->selected.empty()));
+        _stops_reverse_btn->set_sensitive((gr_selected != nullptr));
 
         _stop_cb->set_sensitive( gr_selected && !gr_multi);
         _offset_item->set_sensitive(!gr_multi);
@@ -948,8 +920,7 @@ GradientToolbar::selection_changed(Inkscape::Selection * /*selection*/)
 /**
  * \brief Construct stop list
  */
-int
-GradientToolbar::update_stop_list( SPGradient *gradient, SPStop *new_stop, bool gr_multi)
+int GradientToolbar::update_stop_list(SPGradient *gradient, SPStop *new_stop, bool gr_multi)
 {
     if (!blocked) {
         std::cerr << "update_stop_list should be blocked!" << std::endl;
@@ -1025,8 +996,7 @@ GradientToolbar::update_stop_list( SPGradient *gradient, SPStop *new_stop, bool 
 /**
  * \brief Find position of new_stop in menu.
  */
-int
-GradientToolbar::select_stop_in_list(SPGradient *gradient, SPStop *new_stop)
+int GradientToolbar::select_stop_in_list(SPGradient *gradient, SPStop *new_stop)
 {
     int i = 0;
     for (auto& ochild: gradient->children) {
@@ -1043,8 +1013,7 @@ GradientToolbar::select_stop_in_list(SPGradient *gradient, SPStop *new_stop)
 /**
  * \brief Set stop in menu to match stops selected by draggers
  */
-void
-GradientToolbar::select_stop_by_draggers(SPGradient *gradient, ToolBase *ev)
+void GradientToolbar::select_stop_by_draggers(SPGradient *gradient, ToolBase *ev)
 {
     if (!blocked) {
         std::cerr << "select_stop_by_draggers should be blocked!" << std::endl;
@@ -1131,26 +1100,22 @@ GradientToolbar::select_stop_by_draggers(SPGradient *gradient, ToolBase *ev)
     }
 }
 
-void
-GradientToolbar::selection_modified(Inkscape::Selection *selection, guint /*flags*/)
+void GradientToolbar::selection_modified(Inkscape::Selection *selection, guint /*flags*/)
 {
     selection_changed(selection);
 }
 
-void
-GradientToolbar::drag_selection_changed(gpointer /*dragger*/)
+void GradientToolbar::drag_selection_changed(gpointer /*dragger*/)
 {
    selection_changed(nullptr);
 }
 
-void
-GradientToolbar::defs_release(SPObject * /*defs*/)
+void GradientToolbar::defs_release(SPObject * /*defs*/)
 {
     selection_changed(nullptr);
 }
 
-void
-GradientToolbar::defs_modified(SPObject * /*defs*/, guint /*flags*/)
+void GradientToolbar::defs_modified(SPObject * /*defs*/, guint /*flags*/)
 {
     selection_changed(nullptr);
 }
