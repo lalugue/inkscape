@@ -45,20 +45,24 @@ namespace Inkscape::UI {
 namespace Widget {
 class ComboToolItem;
 class UnitTracker;
+class SpinButton;
 } // namespace Widget
 
 namespace Toolbar {
 
 class PaintbucketToolbar final : public Toolbar {
 private:
-    UI::Widget::ComboToolItem *_channels_item;
-    UI::Widget::ComboToolItem *_autogap_item;
-
-    Glib::RefPtr<Gtk::Adjustment> _threshold_adj;
-    Glib::RefPtr<Gtk::Adjustment> _offset_adj;
+    Glib::RefPtr<Gtk::Builder> _builder;
 
     std::unique_ptr<UI::Widget::UnitTracker> _tracker;
 
+    UI::Widget::ComboToolItem *_channels_item;
+    UI::Widget::ComboToolItem *_autogap_item;
+
+    UI::Widget::SpinButton *_threshold_item;
+    UI::Widget::SpinButton *_offset_item;
+
+    void setup_derived_spin_button(UI::Widget::SpinButton *btn, const Glib::ustring &name, double default_value);
     void channels_changed(int channels);
     void threshold_changed();
     void offset_changed();
