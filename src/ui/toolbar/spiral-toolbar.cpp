@@ -80,7 +80,7 @@ SpiralToolbar::SpiralToolbar(SPDesktop *desktop)
     show_all();
 }
 
-void SpiralToolbar::setup_derived_spin_button(UI::Widget::SpinButton *btn, const Glib::ustring &name,
+void SpiralToolbar::setup_derived_spin_button(UI::Widget::SpinButton *btn, Glib::ustring const &name,
                                               double default_value)
 {
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();

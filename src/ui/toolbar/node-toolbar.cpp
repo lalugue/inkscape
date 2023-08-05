@@ -242,7 +242,7 @@ NodeToolbar::NodeToolbar(SPDesktop *desktop)
     menu_btn2->set_visible(false);
 }
 
-void NodeToolbar::setup_derived_spin_button(Inkscape::UI::Widget::SpinButton *btn, const Glib::ustring &name)
+void NodeToolbar::setup_derived_spin_button(Inkscape::UI::Widget::SpinButton *btn, Glib::ustring const &name)
 {
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
 

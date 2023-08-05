@@ -143,7 +143,7 @@ TweakToolbar::TweakToolbar(SPDesktop *desktop)
     }
 }
 
-void TweakToolbar::setup_derived_spin_button(UI::Widget::SpinButton *btn, const Glib::ustring &name,
+void TweakToolbar::setup_derived_spin_button(UI::Widget::SpinButton *btn, Glib::ustring const &name,
                                              double default_value)
 {
     auto *prefs = Inkscape::Preferences::get();

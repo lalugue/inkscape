@@ -82,7 +82,7 @@ private:
     bool _freeze{false};
     bool _single{true};
 
-    void setup_derived_spin_button(UI::Widget::SpinButton *btn, const Glib::ustring &name);
+    void setup_derived_spin_button(UI::Widget::SpinButton *btn, Glib::ustring const &name);
     void value_changed(Glib::RefPtr<Gtk::Adjustment>&  adj,
                        gchar const                    *value_name,
                        void (SPRect::*setter)(gdouble));

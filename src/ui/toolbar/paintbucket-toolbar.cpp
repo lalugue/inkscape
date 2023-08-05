@@ -155,7 +155,7 @@ PaintbucketToolbar::PaintbucketToolbar(SPDesktop *desktop)
     show_all();
 }
 
-void PaintbucketToolbar::setup_derived_spin_button(UI::Widget::SpinButton *btn, const Glib::ustring &name,
+void PaintbucketToolbar::setup_derived_spin_button(UI::Widget::SpinButton *btn, Glib::ustring const &name,
                                                    double default_value)
 {
     auto *prefs = Inkscape::Preferences::get();

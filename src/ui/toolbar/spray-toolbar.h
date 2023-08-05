@@ -75,6 +75,7 @@ private:
     Gtk::ToggleButton *_pick_inverse_value_btn;
     Gtk::ToggleButton *_pick_center_btn;
 
+    // TODO: Check if these can be moved to the constructor.
     std::unique_ptr<SimplePrefPusher> _use_pressure_width_pusher;
     std::unique_ptr<SimplePrefPusher> _use_pressure_population_pusher;
 
@@ -92,7 +93,7 @@ private:
     void toggle_no_overlap();
     void toggle_pressure_scale();
     void toggle_picker();
-    void setup_derived_spin_button(UI::Widget::SpinButton *btn, const Glib::ustring &name, double default_value);
+    void setup_derived_spin_button(UI::Widget::SpinButton *btn, Glib::ustring const &name, double default_value);
 
 protected:
     SprayToolbar(SPDesktop *desktop);

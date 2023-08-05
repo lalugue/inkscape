@@ -238,7 +238,7 @@ SprayToolbar::SprayToolbar(SPDesktop *desktop)
     init();
 }
 
-void SprayToolbar::setup_derived_spin_button(UI::Widget::SpinButton *btn, const Glib::ustring &name,
+void SprayToolbar::setup_derived_spin_button(UI::Widget::SpinButton *btn, Glib::ustring const &name,
                                              double default_value)
 {
     auto *prefs = Inkscape::Preferences::get();
@@ -420,7 +420,7 @@ void SprayToolbar::set_mode(int mode)
     _mode_buttons[mode]->set_active();
 }
 
-}
+} // namespace Toolbar
 }
 }
 

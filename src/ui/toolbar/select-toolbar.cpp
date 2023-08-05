@@ -176,7 +176,7 @@ SelectToolbar::create(SPDesktop *desktop)
     return toolbar->Gtk::Widget::gobj();
 }
 
-void SelectToolbar::setup_derived_spin_button(Inkscape::UI::Widget::SpinButton *btn, const Glib::ustring &name)
+void SelectToolbar::setup_derived_spin_button(Inkscape::UI::Widget::SpinButton *btn, Glib::ustring const &name)
 {
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
 

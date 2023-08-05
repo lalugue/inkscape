@@ -127,7 +127,7 @@ EraserToolbar::EraserToolbar(SPDesktop *desktop)
     set_eraser_mode_visibility(eraser_mode);
 }
 
-void EraserToolbar::setup_derived_spin_button(UI::Widget::SpinButton *btn, const Glib::ustring &name,
+void EraserToolbar::setup_derived_spin_button(UI::Widget::SpinButton *btn, Glib::ustring const &name,
                                               double default_value)
 {
     auto *prefs = Inkscape::Preferences::get();

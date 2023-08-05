@@ -109,7 +109,7 @@ private:
 
 protected:
     NodeToolbar(SPDesktop *desktop);
-    void setup_derived_spin_button(Inkscape::UI::Widget::SpinButton *btn, const Glib::ustring &name);
+    void setup_derived_spin_button(Inkscape::UI::Widget::SpinButton *btn, Glib::ustring const &name);
 
 public:
     static GtkWidget * create(SPDesktop *desktop);

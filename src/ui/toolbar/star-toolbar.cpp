@@ -114,7 +114,7 @@ StarToolbar::StarToolbar(SPDesktop *desktop)
     _spoke_item->set_visible(!is_flat_sided);
 }
 
-void StarToolbar::setup_derived_spin_button(UI::Widget::SpinButton *btn, const Glib::ustring &name,
+void StarToolbar::setup_derived_spin_button(UI::Widget::SpinButton *btn, Glib::ustring const &name,
                                             double default_value)
 {
     auto *prefs = Inkscape::Preferences::get();

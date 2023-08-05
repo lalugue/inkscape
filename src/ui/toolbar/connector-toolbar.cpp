@@ -128,7 +128,7 @@ ConnectorToolbar::ConnectorToolbar(SPDesktop *desktop)
     show_all();
 }
 
-void ConnectorToolbar::setup_derived_spin_button(UI::Widget::SpinButton *btn, const Glib::ustring &name,
+void ConnectorToolbar::setup_derived_spin_button(UI::Widget::SpinButton *btn, Glib::ustring const &name,
                                                  double default_value)
 {
     auto *prefs = Inkscape::Preferences::get();

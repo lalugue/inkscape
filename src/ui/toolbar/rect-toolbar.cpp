@@ -115,7 +115,7 @@ RectToolbar::RectToolbar(SPDesktop *desktop)
     show_all();
 }
 
-void RectToolbar::setup_derived_spin_button(UI::Widget::SpinButton *btn, const Glib::ustring &name)
+void RectToolbar::setup_derived_spin_button(UI::Widget::SpinButton *btn, Glib::ustring const &name)
 {
     auto init_units = _desktop->getNamedView()->display_units;
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();

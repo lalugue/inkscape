@@ -62,7 +62,7 @@ private:
 
     bool _offset_adj_changed;
 
-    void setup_derived_spin_button(UI::Widget::SpinButton *btn, const Glib::ustring &name, double default_value);
+    void setup_derived_spin_button(UI::Widget::SpinButton *btn, Glib::ustring const &name, double default_value);
     void new_type_changed(int mode);
     void new_fillstroke_changed(int mode);
     void gradient_changed(int active);

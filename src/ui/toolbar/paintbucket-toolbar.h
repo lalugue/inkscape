@@ -62,7 +62,7 @@ private:
     UI::Widget::SpinButton *_threshold_item;
     UI::Widget::SpinButton *_offset_item;
 
-    void setup_derived_spin_button(UI::Widget::SpinButton *btn, const Glib::ustring &name, double default_value);
+    void setup_derived_spin_button(UI::Widget::SpinButton *btn, Glib::ustring const &name, double default_value);
     void channels_changed(int channels);
     void threshold_changed();
     void offset_changed();

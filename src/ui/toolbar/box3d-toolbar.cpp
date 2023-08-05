@@ -90,7 +90,7 @@ Box3DToolbar::Box3DToolbar(SPDesktop *desktop)
     show_all();
 }
 
-void Box3DToolbar::setup_derived_spin_button(UI::Widget::SpinButton *btn, const Glib::ustring &name)
+void Box3DToolbar::setup_derived_spin_button(UI::Widget::SpinButton *btn, Glib::ustring const &name)
 {
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
     auto document = _desktop->getDocument();

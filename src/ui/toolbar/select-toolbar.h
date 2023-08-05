@@ -87,7 +87,7 @@ private:
     void toggle_corners();
     void toggle_gradient();
     void toggle_pattern();
-    void setup_derived_spin_button(Inkscape::UI::Widget::SpinButton *, const Glib::ustring &);
+    void setup_derived_spin_button(Inkscape::UI::Widget::SpinButton *, Glib::ustring const &);
 
 protected:
     SelectToolbar(SPDesktop *desktop);
