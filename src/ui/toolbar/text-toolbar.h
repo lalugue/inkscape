@@ -28,23 +28,21 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#include <gtkmm/adjustment.h>
+#include <sigc++/connection.h>
+
 #include "object/sp-item.h"
 #include "object/sp-object.h"
-#include "toolbar.h"
-#include "text-editing.h"
 #include "style.h"
-#include <gtkmm/adjustment.h>
-#include <gtkmm/box.h>
-#include <gtkmm/listbox.h>
-#include <gtkmm/popover.h>
-#include <gtkmm/separatortoolitem.h>
-#include <sigc++/connection.h>
+#include "text-editing.h"
+#include "toolbar.h"
 
 class SPDesktop;
 
 namespace Gtk {
 class ComboBoxText;
-class ToggleToolButton;
+class ToggleButton;
+class ListBox;
 }
 
 namespace Inkscape {
@@ -59,45 +57,42 @@ class TextTool;
 namespace Widget {
 class ComboBoxEntryToolItem;
 class ComboToolItem;
-class SpinButtonToolItem;
+class SpinButton;
 class UnitTracker;
 }
 
 namespace Toolbar {
 class TextToolbar : public Toolbar {
 private:
-    bool _freeze;
-    bool _text_style_from_prefs;
+    Glib::RefPtr<Gtk::Builder> _builder;
+
     UI::Widget::UnitTracker *_tracker;
     UI::Widget::UnitTracker *_tracker_fs;
-    Gtk::ListBox* font_collections_list;
+
+    std::vector<Gtk::RadioButton *> _alignment_buttons;
+    std::vector<Gtk::RadioButton *> _writing_buttons;
+    std::vector<Gtk::RadioButton *> _orientation_buttons;
+    std::vector<Gtk::RadioButton *> _direction_buttons;
+
+    Gtk::ListBox *_font_collections_list;
 
     UI::Widget::ComboBoxEntryToolItem *_font_family_item;
     UI::Widget::ComboBoxEntryToolItem *_font_size_item;
     UI::Widget::ComboToolItem *_font_size_units_item;
     UI::Widget::ComboBoxEntryToolItem *_font_style_item;
     UI::Widget::ComboToolItem *_line_height_units_item;
-    UI::Widget::SpinButtonToolItem *_line_height_item;
-    Gtk::ToggleToolButton *_superscript_item;
-    Gtk::ToggleToolButton *_subscript_item;
+    UI::Widget::SpinButton *_line_height_item;
+    Gtk::ToggleButton *_superscript_btn;
+    Gtk::ToggleButton *_subscript_btn;
 
-    UI::Widget::ComboToolItem *_align_item;
-    UI::Widget::ComboToolItem *_writing_mode_item;
-    UI::Widget::ComboToolItem *_orientation_item;
-    UI::Widget::ComboToolItem *_direction_item;
+    UI::Widget::SpinButton *_word_spacing_item;
+    UI::Widget::SpinButton *_letter_spacing_item;
+    UI::Widget::SpinButton *_dx_item;
+    UI::Widget::SpinButton *_dy_item;
+    UI::Widget::SpinButton *_rotation_item;
 
-    UI::Widget::SpinButtonToolItem *_word_spacing_item;
-    UI::Widget::SpinButtonToolItem *_letter_spacing_item;
-    UI::Widget::SpinButtonToolItem *_dx_item;
-    UI::Widget::SpinButtonToolItem *_dy_item;
-    UI::Widget::SpinButtonToolItem *_rotation_item;
-
-    Glib::RefPtr<Gtk::Adjustment> _line_height_adj;
-    Glib::RefPtr<Gtk::Adjustment> _word_spacing_adj;
-    Glib::RefPtr<Gtk::Adjustment> _letter_spacing_adj;
-    Glib::RefPtr<Gtk::Adjustment> _dx_adj;
-    Glib::RefPtr<Gtk::Adjustment> _dy_adj;
-    Glib::RefPtr<Gtk::Adjustment> _rotation_adj;
+    bool _freeze;
+    bool _text_style_from_prefs;
     bool _outer;
     SPItem *_sub_active_item;
     int _lineheight_unit;
@@ -107,18 +102,22 @@ private:
     int _cusor_numbers;
     SPStyle _query_cursor;
     double selection_fontsize;
+
     auto_connection fc_changed_selection;
     auto_connection fc_update;
     sigc::connection c_selection_changed;
     sigc::connection c_selection_modified;
     sigc::connection c_selection_modified_select_tool;
     sigc::connection c_subselection_changed;
+
+    void setup_derived_spin_button(UI::Widget::SpinButton *btn, Glib::ustring const &name, double default_value);
+    void configure_mode_buttons(Gtk::Box *box, Glib::ustring const &name);
     void text_outer_set_style(SPCSSAttr *css);
     void fontfamily_value_changed();
     void fontsize_value_changed();
     void subselection_wrap_toggle(bool start);
     void fontstyle_value_changed();
-    void script_changed(Gtk::ToggleToolButton *btn);
+    void script_changed(Gtk::ToggleButton *btn);
     void align_mode_changed(int mode);
     void writing_mode_changed(int mode);
     void orientation_changed(int mode);

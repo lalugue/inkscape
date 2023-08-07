@@ -196,16 +196,13 @@ ArcToolbar::~ArcToolbar()
     }
 }
 
-GtkWidget *
-ArcToolbar::create(SPDesktop *desktop)
+GtkWidget *ArcToolbar::create(SPDesktop *desktop)
 {
     auto toolbar = new ArcToolbar(desktop);
     return toolbar->Gtk::Widget::gobj();
 }
 
-void
-ArcToolbar::value_changed(Glib::RefPtr<Gtk::Adjustment>&  adj,
-                          gchar const                    *value_name)
+void ArcToolbar::value_changed(Glib::RefPtr<Gtk::Adjustment> &adj, gchar const *value_name)
 {
     // Per SVG spec "a [radius] value of zero disables rendering of the element".
     // However our implementation does not allow a setting of zero in the UI (not even in the XML editor)
@@ -263,10 +260,9 @@ ArcToolbar::value_changed(Glib::RefPtr<Gtk::Adjustment>&  adj,
     _freeze = false;
 }
 
-void
-ArcToolbar::startend_value_changed(Glib::RefPtr<Gtk::Adjustment>&  adj,
-                                   gchar const                    *value_name,
-                                   Glib::RefPtr<Gtk::Adjustment>&  other_adj)
+void ArcToolbar::startend_value_changed(Glib::RefPtr<Gtk::Adjustment> &adj, gchar const *value_name,
+                                        Glib::RefPtr<Gtk::Adjustment> &other_adj)
+
 {
     if (DocumentUndo::getUndoSensitive(_desktop->getDocument())) {
         Inkscape::Preferences *prefs = Inkscape::Preferences::get();
@@ -316,8 +312,7 @@ ArcToolbar::startend_value_changed(Glib::RefPtr<Gtk::Adjustment>&  adj,
     _freeze = false;
 }
 
-void
-ArcToolbar::type_changed( int type )
+void ArcToolbar::type_changed(int type)
 {
     if (DocumentUndo::getUndoSensitive(_desktop->getDocument())) {
         Inkscape::Preferences *prefs = Inkscape::Preferences::get();
@@ -371,8 +366,7 @@ ArcToolbar::type_changed( int type )
     _freeze = false;
 }
 
-void
-ArcToolbar::defaults()
+void ArcToolbar::defaults()
 {
     _start_item->get_adjustment()->set_value(0.0);
     _end_item->get_adjustment()->set_value(0.0);
@@ -380,8 +374,7 @@ ArcToolbar::defaults()
     if(_desktop->getCanvas()) _desktop->getCanvas()->grab_focus();
 }
 
-void
-ArcToolbar::sensitivize( double v1, double v2 )
+void ArcToolbar::sensitivize(double v1, double v2)
 {
     if (v1 == 0 && v2 == 0) {
         if (_single) { // only for a single selected ellipse (for now)
@@ -394,8 +387,7 @@ ArcToolbar::sensitivize( double v1, double v2 )
     }
 }
 
-void
-ArcToolbar::check_ec(SPDesktop* desktop, Inkscape::UI::Tools::ToolBase* tool)
+void ArcToolbar::check_ec(SPDesktop *desktop, Inkscape::UI::Tools::ToolBase *tool)
 {
     if (dynamic_cast<Tools::ArcTool const *>(tool)) {
         _changed = _desktop->getSelection()->connectChanged(sigc::mem_fun(*this, &ArcToolbar::selection_changed));
@@ -412,8 +404,7 @@ ArcToolbar::check_ec(SPDesktop* desktop, Inkscape::UI::Tools::ToolBase* tool)
     }
 }
 
-void
-ArcToolbar::selection_changed(Inkscape::Selection *selection)
+void ArcToolbar::selection_changed(Inkscape::Selection *selection)
 {
     int n_selected = 0;
     Inkscape::XML::Node *repr = nullptr;
