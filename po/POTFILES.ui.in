@@ -48,6 +48,7 @@
 ../share/ui/toolbar-node.ui
 ../share/ui/toolbar-page.ui
 ../share/ui/toolbar-paintbucket.ui
+../share/ui/toolbar-pencil.ui
 ../share/ui/toolbar-rect.ui
 ../share/ui/toolbar-select.ui
 ../share/ui/toolbar-snap.ui

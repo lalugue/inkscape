@@ -58,12 +58,8 @@ EraserToolbar::EraserToolbar(SPDesktop *desktop)
     }
 
     Gtk::Box *mode_buttons_box;
-    Gtk::Separator *sep1;
-    Gtk::Separator *sep2;
 
     _builder->get_widget("mode_buttons_box", mode_buttons_box);
-    _builder->get_widget("sep1", sep1);
-    _builder->get_widget("sep2", sep2);
 
     _builder->get_widget_derived("_width_item", _width_item);
     _builder->get_widget_derived("_thinning_item", _thinning_item);

@@ -28,17 +28,17 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include "toolbar.h"
-
-#include <gtkmm/adjustment.h>
+#include <gtkmm/builder.h>
 #include <vector>
+
+#include "toolbar.h"
 
 class SPDesktop;
 
 namespace Gtk {
-class RadioToolButton;
+class RadioButton;
 class ToggleButton;
-class ToolButton;
+class Button;
 }
 
 namespace Inkscape {
@@ -48,38 +48,40 @@ class Node;
 
 namespace UI {
 namespace Widget {
-class SpinButtonToolItem;
+class SpinButton;
 class ComboToolItem;
 }
 
 namespace Toolbar {
 class PencilToolbar : public Toolbar {
 private:
-    bool const _tool_is_pencil;
-    std::vector<Gtk::RadioToolButton *> _mode_buttons;
+    Glib::RefPtr<Gtk::Builder> _builder;
 
-    Gtk::ToggleButton *_pressure_item = nullptr;
-    UI::Widget::SpinButtonToolItem *_minpressure = nullptr;
-    UI::Widget::SpinButtonToolItem *_maxpressure = nullptr;
-    UI::Widget::SpinButtonToolItem *_shapescale = nullptr;
+    bool const _tool_is_pencil;
+    std::vector<Gtk::RadioButton *> _mode_buttons;
+    Gtk::Button *_flatten_spiro_bspline_btn;
+
+    Gtk::ToggleButton *_usepressure_btn;
+    Gtk::Box *_minpressure_box;
+    UI::Widget::SpinButton *_minpressure_item;
+    Gtk::Box *_maxpressure_box;
+    UI::Widget::SpinButton *_maxpressure_item;
+    UI::Widget::ComboToolItem *_cap_item;
+    UI::Widget::SpinButton *_tolerance_item;
+    Gtk::ToggleButton *_simplify_btn;
+    Gtk::Button *_flatten_simplify_btn;
+
+    UI::Widget::ComboToolItem *_shape_item;
+    Gtk::Box *_shapescale_box;
+    UI::Widget::SpinButton *_shapescale_item;
 
     XML::Node *_repr = nullptr;
-    Gtk::ToolButton *_flatten_spiro_bspline = nullptr;
-    Gtk::ToolButton *_flatten_simplify = nullptr;
-
-    UI::Widget::ComboToolItem *_shape_item = nullptr;
-    UI::Widget::ComboToolItem *_cap_item = nullptr;
-
-    Gtk::ToggleButton *_simplify = nullptr;
-
     bool _freeze = false;
 
-    Glib::RefPtr<Gtk::Adjustment> _minpressure_adj;
-    Glib::RefPtr<Gtk::Adjustment> _maxpressure_adj;
-    Glib::RefPtr<Gtk::Adjustment> _tolerance_adj;
-    Glib::RefPtr<Gtk::Adjustment> _shapescale_adj;
-
-    void add_freehand_mode_toggle();
+    void add_powerstroke_cap();
+    void add_shape_option();
+    void setup_derived_spin_button(UI::Widget::SpinButton *btn, Glib::ustring const &name, double default_value);
+    void hide_extra_widgets();
     void mode_changed(int mode);
     Glib::ustring const freehand_tool_name();
     void minpressure_value_changed();
@@ -87,8 +89,6 @@ private:
     void shapewidth_value_changed();
     void use_pencil_pressure();
     void tolerance_value_changed();
-    void add_advanced_shape_options();
-    void add_powerstroke_cap();
     void change_shape(int shape);
     void update_width_value(int shape);
     void change_cap(int cap);
