@@ -147,18 +147,14 @@ ArcToolbar::ArcToolbar(SPDesktop *desktop)
     desktop->connectEventContextChanged(sigc::mem_fun(*this, &ArcToolbar::check_ec));
 
     show_all();
-
-    // TODO: Fix this.
-    menu_btn1->set_visible(false);
-    menu_btn2->set_visible(false);
 }
 
-void ArcToolbar::setup_derived_spin_button(UI::Widget::SpinButton *btn, gchar const *name)
+void ArcToolbar::setup_derived_spin_button(UI::Widget::SpinButton *btn, Glib::ustring const &name)
 {
     auto init_units = _desktop->getNamedView()->display_units;
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
     auto adj = btn->get_adjustment();
-    const Glib::ustring path = "/tools/shapes/arc/" + (Glib::ustring)name;
+    const Glib::ustring path = "/tools/shapes/arc/" + static_cast<Glib::ustring>(name);
     auto val = prefs->getDouble(path, 0);
     val = Quantity::convert(val, "px", init_units);
     adj->set_value(val);
@@ -171,11 +167,11 @@ void ArcToolbar::setup_derived_spin_button(UI::Widget::SpinButton *btn, gchar co
     btn->set_sensitive(false);
 }
 
-void ArcToolbar::setup_startend_button(UI::Widget::SpinButton *btn, gchar const *name)
+void ArcToolbar::setup_startend_button(UI::Widget::SpinButton *btn, Glib::ustring const &name)
 {
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
     auto adj = btn->get_adjustment();
-    const Glib::ustring path = "/tools/shapes/arc/" + (Glib::ustring)name;
+    const Glib::ustring path = "/tools/shapes/arc/" + name;
     auto val = prefs->getDouble(path, 0);
     adj->set_value(val);
 
@@ -202,7 +198,7 @@ GtkWidget *ArcToolbar::create(SPDesktop *desktop)
     return toolbar->Gtk::Widget::gobj();
 }
 
-void ArcToolbar::value_changed(Glib::RefPtr<Gtk::Adjustment> &adj, gchar const *value_name)
+void ArcToolbar::value_changed(Glib::RefPtr<Gtk::Adjustment> &adj, Glib::ustring const &value_name)
 {
     // Per SVG spec "a [radius] value of zero disables rendering of the element".
     // However our implementation does not allow a setting of zero in the UI (not even in the XML editor)
@@ -239,7 +235,7 @@ void ArcToolbar::value_changed(Glib::RefPtr<Gtk::Adjustment> &adj, gchar const *
 
             auto ge = cast<SPGenericEllipse>(item);
 
-            if (!strcmp(value_name, "rx")) {
+            if (value_name == "rx") {
                 ge->setVisibleRx(Quantity::convert(adj->get_value(), unit, "px"));
             } else {
                 ge->setVisibleRy(Quantity::convert(adj->get_value(), unit, "px"));
@@ -260,7 +256,7 @@ void ArcToolbar::value_changed(Glib::RefPtr<Gtk::Adjustment> &adj, gchar const *
     _freeze = false;
 }
 
-void ArcToolbar::startend_value_changed(Glib::RefPtr<Gtk::Adjustment> &adj, gchar const *value_name,
+void ArcToolbar::startend_value_changed(Glib::RefPtr<Gtk::Adjustment> &adj, Glib::ustring const &value_name,
                                         Glib::RefPtr<Gtk::Adjustment> &other_adj)
 
 {
@@ -277,8 +273,6 @@ void ArcToolbar::startend_value_changed(Glib::RefPtr<Gtk::Adjustment> &adj, gcha
     // in turn, prevent listener from responding
     _freeze = true;
 
-    gchar* namespaced_name = g_strconcat("sodipodi:", value_name, nullptr);
-
     bool modmade = false;
     auto itemlist= _desktop->getSelection()->items();
     for(auto i=itemlist.begin();i!=itemlist.end();++i){
@@ -287,7 +281,7 @@ void ArcToolbar::startend_value_changed(Glib::RefPtr<Gtk::Adjustment> &adj, gcha
 
             auto ge = cast<SPGenericEllipse>(item);
 
-            if (!strcmp(value_name, "start")) {
+            if (value_name == "start") {
                 ge->start = (adj->get_value() * M_PI)/ 180;
             } else {
                 ge->end = (adj->get_value() * M_PI)/ 180;
@@ -301,12 +295,11 @@ void ArcToolbar::startend_value_changed(Glib::RefPtr<Gtk::Adjustment> &adj, gcha
         }
     }
 
-    g_free(namespaced_name);
-
     sensitivize( adj->get_value(), other_adj->get_value() );
 
     if (modmade) {
-        DocumentUndo::maybeDone(_desktop->getDocument(), value_name, _("Arc: Change start/end"), INKSCAPE_ICON("draw-ellipse"));
+        DocumentUndo::maybeDone(_desktop->getDocument(), value_name.c_str(), _("Arc: Change start/end"),
+                                INKSCAPE_ICON("draw-ellipse"));
     }
 
     _freeze = false;

@@ -398,8 +398,7 @@ public:
     void setTempHideOverlays(bool hide);
     void layoutWidget();
     void setToolboxFocusTo(char const *label);
-
-    Gtk::Toolbar *get_toolbar_by_name(const Glib::ustring& name);
+    Gtk::Box *get_toolbar_by_name(const Glib::ustring &name);
     Gtk::Widget *get_toolbox() const;
 
     void setToolboxAdjustmentValue(char const *id, double val);

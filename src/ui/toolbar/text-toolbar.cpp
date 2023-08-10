@@ -538,7 +538,6 @@ void TextToolbar::configure_mode_buttons(Gtk::Box *box, Glib::ustring const &nam
 {
     auto *prefs = Inkscape::Preferences::get();
     const Glib::ustring path = "/tools/text/" + name;
-    auto active_btn_index = prefs->getDouble(path, 0);
 
     int btn_index = 0;
 
@@ -547,25 +546,34 @@ void TextToolbar::configure_mode_buttons(Gtk::Box *box, Glib::ustring const &nam
 
         if (name == "align_mode") {
             _alignment_buttons.push_back(btn);
-            _alignment_buttons[active_btn_index]->set_active(true);
             btn->signal_clicked().connect(
                 sigc::bind(sigc::mem_fun(*this, &TextToolbar::align_mode_changed), btn_index++));
         } else if (name == "writing_mode") {
             _writing_buttons.push_back(btn);
-            _writing_buttons[active_btn_index]->set_active(true);
             btn->signal_clicked().connect(
                 sigc::bind(sigc::mem_fun(*this, &TextToolbar::writing_mode_changed), btn_index++));
         } else if (name == "orientation_mode") {
             _orientation_buttons.push_back(btn);
-            _orientation_buttons[active_btn_index]->set_active(true);
             btn->signal_clicked().connect(
                 sigc::bind(sigc::mem_fun(*this, &TextToolbar::orientation_changed), btn_index++));
         } else if (name == "direction_mode") {
             _direction_buttons.push_back(btn);
-            _direction_buttons[active_btn_index]->set_active(true);
             btn->signal_clicked().connect(
                 sigc::bind(sigc::mem_fun(*this, &TextToolbar::direction_changed), btn_index++));
         }
+    }
+
+    // Set the active button after all the buttons have been pushed.
+    auto active_btn_index = prefs->getDouble(path, 0);
+
+    if (name == "align_mode") {
+        _alignment_buttons[active_btn_index]->set_active(true);
+    } else if (name == "writing_mode") {
+        _writing_buttons[active_btn_index]->set_active(true);
+    } else if (name == "orientation_mode") {
+        _orientation_buttons[active_btn_index]->set_active(true);
+    } else if (name == "direction_mode") {
+        _direction_buttons[active_btn_index]->set_active(true);
     }
 }
 

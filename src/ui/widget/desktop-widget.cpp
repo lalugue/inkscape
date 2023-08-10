@@ -116,7 +116,7 @@ SPDesktopWidget::SPDesktopWidget(InkscapeWindow *inkscape_window, SPDocument *do
     Inkscape::UI::pack_end(*this, *_top_toolbars, false, true);
 
     /* Toolboxes */
-    command_toolbar = Gtk::make_managed<Inkscape::UI::Toolbar::CommandToolbar>();
+    command_toolbar = Gtk::make_managed<Inkscape::UI::Toolbar::CommandToolbar>(_desktop.get());
     _top_toolbars->attach(*command_toolbar, 0, 0);
 
     tool_toolbars = Gtk::make_managed<Inkscape::UI::Toolbar::Toolbars>();
@@ -650,8 +650,8 @@ void SPDesktopWidget::layoutWidgets()
         command_toolbar->set_hexpand(false);
     }
     // Toolbar is actually child:
-    command_toolbar->foreach([=](Gtk::Widget& widget) {
-        if (auto toolbar = dynamic_cast<Gtk::Toolbar *>(&widget)) {
+    command_toolbar->foreach ([=](Gtk::Widget &widget) {
+        if (auto toolbar = dynamic_cast<Gtk::Box *>(&widget)) {
             gtk_orientable_set_orientation(GTK_ORIENTABLE(toolbar->gobj()), orientation_c); // Missing in C++interface!
         }
     });
@@ -666,8 +666,7 @@ void SPDesktopWidget::layoutWidgets()
     Inkscape::UI::resize_widget_children(_top_toolbars);
 }
 
-Gtk::Toolbar *
-SPDesktopWidget::get_toolbar_by_name(const Glib::ustring& name)
+Gtk::Box *SPDesktopWidget::get_toolbar_by_name(const Glib::ustring &name)
 {
     // The name is actually attached to the GtkGrid that contains
     // the toolbar, so we need to get the grid first
@@ -677,7 +676,7 @@ SPDesktopWidget::get_toolbar_by_name(const Glib::ustring& name)
     if (!grid) return nullptr;
 
     auto child = grid->get_child_at(0,0);
-    auto tb = dynamic_cast<Gtk::Toolbar*>(child);
+    auto tb = dynamic_cast<Gtk::Box *>(child);
 
     return tb;
 }

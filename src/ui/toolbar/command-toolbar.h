@@ -6,6 +6,7 @@
 /*
  * Authors:
  *   Tavmjong Bah
+ *   Vaibhav Malik <vaibhavmalik2018@gmail.com>
  *
  * Copyright (C) 2023 Tavmjong Bah
  *
@@ -15,13 +16,22 @@
 #ifndef SEEN_TOOLBAR_COMMAND_H
 #define SEEN_TOOLBAR_COMMAND_H
 
-#include <gtkmm/box.h>
+#include "preferences.h"
+#include "toolbar.h"
+
+class InkscapeWindow;
+class SPDesktop;
 
 namespace Inkscape::UI::Toolbar {
 
-class CommandToolbar final : public Gtk::Box {
+class CommandToolbar final : public Toolbar
+{
 public:
-    CommandToolbar();
+    CommandToolbar(SPDesktop *desktop);
+    ~CommandToolbar() final = default;
+
+private:
+    Glib::RefPtr<Gtk::Builder> _builder;
 };
 
 } // namespace Inkscape::UI::Toolbar

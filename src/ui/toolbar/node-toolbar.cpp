@@ -236,10 +236,6 @@ NodeToolbar::NodeToolbar(SPDesktop *desktop)
     desktop->connectEventContextChanged(sigc::mem_fun(*this, &NodeToolbar::watch_ec));
 
     show_all();
-
-    // TODO: Fix this.
-    menu_btn1->set_visible(false);
-    menu_btn2->set_visible(false);
 }
 
 void NodeToolbar::setup_derived_spin_button(Inkscape::UI::Widget::SpinButton *btn, Glib::ustring const &name)

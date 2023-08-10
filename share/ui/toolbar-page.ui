@@ -129,6 +129,7 @@
     </child>
     <child>
       <object class="GtkComboBoxText" id="page_sizes">
+        <property name="model">page_sizes_list</property>
         <property name="width-request">250</property>
         <property name="visible">True</property>
         <property name="can-focus">False</property>

@@ -185,7 +185,7 @@ PageToolbar::PageToolbar(SPDesktop *desktop)
         }
     });
 
-    // show_all();
+    show_all();
 }
 
 /**
@@ -506,7 +506,7 @@ void PageToolbar::selectionChanged(SPPage *page)
     }
     if (!page_manager.hasPrevPage() && !page_manager.hasNextPage() && !page) {
         sep1->set_visible(false);
-        label_page_pos->get_parent()->set_visible(false);
+        label_page_pos->set_visible(false);
         btn_page_backward->set_visible(false);
         btn_page_foreward->set_visible(false);
         btn_page_delete->set_visible(false);
@@ -514,7 +514,7 @@ void PageToolbar::selectionChanged(SPPage *page)
     } else {
         // Set the forward and backward button sensitivities
         sep1->set_visible(true);
-        label_page_pos->get_parent()->set_visible(true);
+        label_page_pos->set_visible(true);
         btn_page_backward->set_visible(true);
         btn_page_foreward->set_visible(true);
         btn_page_backward->set_sensitive(page_manager.hasPrevPage());

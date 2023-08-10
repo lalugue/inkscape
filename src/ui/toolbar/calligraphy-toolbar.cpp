@@ -298,7 +298,7 @@ void CalligraphyToolbar::mass_value_changed()
     update_presets_list();
 }
 
-void CalligraphyToolbar::on_pref_toggled(Gtk::ToggleButton *item, const Glib::ustring &path)
+void CalligraphyToolbar::on_pref_toggled(Gtk::ToggleButton *item, Glib::ustring const &path)
 {
     auto prefs = Inkscape::Preferences::get();
     prefs->setBool(path, item->get_active());

@@ -84,13 +84,11 @@ private:
     XML::Node *_repr{nullptr};
     SPItem *_item;
 
-    void setup_derived_spin_button(UI::Widget::SpinButton *btn, gchar const *name);
-    void setup_startend_button(UI::Widget::SpinButton *btn, gchar const *name);
-    void value_changed(Glib::RefPtr<Gtk::Adjustment>&  adj,
-                       gchar const                    *value_name);
-    void startend_value_changed(Glib::RefPtr<Gtk::Adjustment>&  adj,
-                                gchar const                    *value_name,
-                                Glib::RefPtr<Gtk::Adjustment>&  other_adj);
+    void setup_derived_spin_button(UI::Widget::SpinButton *btn, Glib::ustring const &name);
+    void setup_startend_button(UI::Widget::SpinButton *btn, Glib::ustring const &name);
+    void value_changed(Glib::RefPtr<Gtk::Adjustment> &adj, Glib::ustring const &value_name);
+    void startend_value_changed(Glib::RefPtr<Gtk::Adjustment> &adj, Glib::ustring const &value_name,
+                                Glib::RefPtr<Gtk::Adjustment> &other_adj);
     void type_changed( int type );
     void defaults();
     void sensitivize( double v1, double v2 );
