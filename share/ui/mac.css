@@ -2,3 +2,8 @@
 button,
 spinbutton,
 combobox {box-shadow: none;}
+
+/* Fix for rare macOS systems that don't load the right system font */
+* {
+    font-family: ".AppleSystemUIFont", system-ui;
+}
