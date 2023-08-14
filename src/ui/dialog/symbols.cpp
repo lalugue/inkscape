@@ -1105,13 +1105,17 @@ void SymbolsDialog::set_info(const Glib::ustring& text) {
     get_widget<Gtk::Label>(_builder, "info").set_markup(info);
 }
 
-Cairo::RefPtr<Cairo::Surface> add_background(Cairo::RefPtr<Cairo::Surface> image, uint32_t rgb, double margin, double radius, int device_scale, std::optional<uint32_t> border = std::optional<uint32_t>()) {
-    auto w = image ? cairo_image_surface_get_width(image->cobj()) : 0;
-    auto h = image ? cairo_image_surface_get_height(image->cobj()) : 0;
-    auto width = w / device_scale + 2 * margin;
-    auto height = h / device_scale + 2 * margin;
+Cairo::RefPtr<Cairo::Surface> add_background(Cairo::RefPtr<Cairo::Surface> image,
+                                             uint32_t rgb,
+                                             double margin,
+                                             double radius,
+                                             unsigned size,
+                                             int device_scale,
+                                             std::optional<uint32_t> border = {})
+{
+    int total_size = size + 2 * margin;
 
-    auto surface = Cairo::ImageSurface::create(Cairo::FORMAT_ARGB32, width * device_scale, height * device_scale);
+    auto surface = Cairo::ImageSurface::create(Cairo::FORMAT_ARGB32, total_size * device_scale, total_size * device_scale);
     cairo_surface_set_device_scale(surface->cobj(), device_scale, device_scale);
     auto ctx = Cairo::Context::create(surface);
 
@@ -1120,12 +1124,11 @@ Cairo::RefPtr<Cairo::Surface> add_background(Cairo::RefPtr<Cairo::Surface> image
     if (border.has_value()) {
         x += 0.5 * device_scale;
         y += 0.5 * device_scale;
-        width -= device_scale;
-        height -= device_scale;
+        total_size -= device_scale;
     }
-    ctx->arc(x + width - radius, y + radius, radius, -M_PI_2, 0);
-    ctx->arc(x + width - radius, y + height - radius, radius, 0, M_PI_2);
-    ctx->arc(x + radius, y + height - radius, radius, M_PI_2, M_PI);
+    ctx->arc(x + total_size - radius, y + radius, radius, -M_PI_2, 0);
+    ctx->arc(x + total_size - radius, y + total_size - radius, radius, 0, M_PI_2);
+    ctx->arc(x + radius, y + total_size - radius, radius, M_PI_2, M_PI);
     ctx->arc(x + radius, y + radius, radius, M_PI, 3 * M_PI_2);
     ctx->close_path();
 
@@ -1198,7 +1201,7 @@ Cairo::RefPtr<Cairo::Surface> SymbolsDialog::draw_symbol(SPSymbol* symbol) {
         uint32_t background = 0xffffff00;
         double margin = 3.0;
         double radius = 3.0;
-        surface = add_background(image, background, margin, radius, device_scale);
+        surface = add_background(image, background, margin, radius, SYMBOL_ICON_SIZES[pack_size], device_scale);
     }
 
     return surface;
@@ -1216,6 +1219,7 @@ Cairo::RefPtr<Cairo::Surface> SymbolsDialog::draw_symbol(SPSymbol* symbol) {
 Cairo::RefPtr<Cairo::Surface> SymbolsDialog::drawSymbol(SPSymbol *symbol)
 {
     if (!symbol) return Cairo::RefPtr<Cairo::Surface>();
+
   // Create a copy repr of the symbol with id="the_symbol"
   Inkscape::XML::Node *repr = symbol->getRepr()->duplicate(preview_document->getReprDoc());
   repr->setAttribute("id", "the_symbol");
@@ -1274,8 +1278,7 @@ Cairo::RefPtr<Cairo::Surface> SymbolsDialog::drawSymbol(SPSymbol *symbol)
 
     if (fit_symbol->get_active()) {
       scale = psize / ceil(std::max(width, height));
-    }
-    else {
+    } else {
       scale = pow(2.0, scale_factor / 4.0) * psize / 32.0;
     }
 
@@ -1290,7 +1293,8 @@ Cairo::RefPtr<Cairo::Surface> SymbolsDialog::drawSymbol(SPSymbol *symbol)
 
   preview_document->getObjectByRepr(repr)->deleteObject(false);
 
-    return Cairo::RefPtr<Cairo::Surface>(new Cairo::Surface(surface, true));
+    return surface ? Cairo::RefPtr<Cairo::Surface>(new Cairo::Surface(surface, true))
+                   : Cairo::RefPtr<Cairo::Surface>();
 }
 
 /*
@@ -1338,6 +1342,9 @@ void SymbolsDialog::get_cell_data_func(Gtk::CellRenderer* cell_renderer, Gtk::Tr
             if (!doc) doc = getDocument();
             SPSymbol* symbol = doc ? cast<SPSymbol>(doc->getObjectById(id)) : nullptr;
             surface = draw_symbol(symbol);
+            if (!surface) {
+                surface = g_dummy;
+            }
             _image_cache.insert(cache_key, surface);
         }
     }
