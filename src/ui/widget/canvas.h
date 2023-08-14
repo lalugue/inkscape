@@ -71,7 +71,8 @@ public:
     void set_desk  (uint32_t rgba);
     void set_border(uint32_t rgba);
     void set_page  (uint32_t rgba);
-    uint32_t get_effective_background() const; // This function is now wrong.
+    uint32_t get_effective_background(const Geom::Point &point) const;
+    bool background_in_stores() const;
 
     //  Rendering modes
     void set_render_mode(Inkscape::RenderMode mode);
