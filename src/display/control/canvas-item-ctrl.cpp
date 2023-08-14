@@ -299,8 +299,12 @@ void CanvasItemCtrl::_render(CanvasItemBuffer &buf) const
     int strideb = work->get_stride();
     unsigned char *pxb = work->get_data();
 
-    // this code allow background become isolated from rendering so we can do things like outline overlay
-    uint32_t backcolor = get_canvas()->get_effective_background();
+    // Turn pixel position back into desktop coords for page or desk color
+    auto px2dt = Geom::Scale(buf.device_scale).inverse()
+               * Geom::Translate(_bounds->min())
+               * affine().inverse();
+    bool use_bg = !get_canvas()->background_in_stores();
+
     uint32_t *p = _cache.get();
     for (int i = 0; i < height; ++i) {
         auto pb = reinterpret_cast<uint32_t*>(pxb + i * strideb);
@@ -308,6 +312,13 @@ void CanvasItemCtrl::_render(CanvasItemBuffer &buf) const
             uint32_t base = *pb;
             uint32_t cc = *p++;
             uint32_t ac = cc & 0xff;
+            uint32_t backcolor = 0x00;
+
+            if (use_bg) {
+                // this code allow background become isolated from rendering so we can do things like outline overlay
+                backcolor = get_canvas()->get_effective_background(Geom::Point(j, i) * px2dt);
+            }
+
             if (*pb == 0 && cc != 0) {
                 base = backcolor;
             }

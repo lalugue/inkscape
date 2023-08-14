@@ -263,6 +263,7 @@ public:
     bool clip_to_page = false; // Whether to enable clip-to-page mode.
     PageInfo pi; // The list of page rectangles.
     std::optional<Geom::PathVector> calc_page_clip() const; // Union of the page rectangles if in clip-to-page mode, otherwise no clip.
+    bool is_point_on_page(const Geom::Point &point) const;
 
     int scale_factor = 1; // The device scale the stores are drawn at.
 
@@ -1664,10 +1665,22 @@ void Canvas::set_page(uint32_t rgba)
     queue_draw();
 }
 
-uint32_t Canvas::get_effective_background() const
+/**
+ * Gets the average desk color when desk is a checkerboard
+ */
+uint32_t Canvas::get_effective_background(const Geom::Point &point) const
 {
-    auto arr = checkerboard_darken(rgb_to_array(d->desk), 1.0f - 0.5f * SP_RGBA32_A_U(d->desk) / 255.0f);
+    auto color = d->is_point_on_page(point) ? d->rd.page : d->rd.desk;
+    auto arr = checkerboard_darken(rgb_to_array(color), 1.0f - 0.5f * SP_RGBA32_A_U(color) / 255.0f);
     return SP_RGBA32_F_COMPOSE(arr[0], arr[1], arr[2], 1.0);
+}
+
+/**
+ * Returns true if this canvas is painted using stores
+ */
+bool Canvas::background_in_stores() const
+{
+    return d->rd.background_in_stores_required;
 }
 
 void Canvas::set_render_mode(Inkscape::RenderMode mode)
@@ -1763,6 +1776,16 @@ std::optional<Geom::PathVector> CanvasPrivate::calc_page_clip() const
         pv.push_back(Geom::Path(rect));
     }
     return pv;
+}
+
+bool CanvasPrivate::is_point_on_page(const Geom::Point &point) const
+{
+    for (auto &rect : pi.pages) {
+        if (rect.contains(point)) {
+            return true;
+        }
+    }
+    return false;
 }
 
 // Set the cms transform
