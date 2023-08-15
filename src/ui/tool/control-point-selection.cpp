@@ -517,7 +517,7 @@ void ControlPointSelection::_updateTransformHandles(bool preserve_center)
  * the modifier state of the supplied event. */
 bool ControlPointSelection::_keyboardMove(KeyPressEvent const &event, Geom::Point const &dir)
 {
-    if (held_control(event)) return false;
+    if (held_ctrl(event)) return false;
     unsigned num = 1 + Tools::gobble_key_events(shortcut_key(event), 0);
 
     auto prefs = Preferences::get();

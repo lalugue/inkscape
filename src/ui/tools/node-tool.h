@@ -31,7 +31,7 @@ namespace Inkscape {
     class Selection;
     class Rubberband;
     class CanvasItemGroup;
-    class ButtonReleaseEvent;
+    struct ButtonReleaseEvent;
 }
 
 namespace Inkscape::UI::Tools {

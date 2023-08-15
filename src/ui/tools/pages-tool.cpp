@@ -274,9 +274,9 @@ bool PagesTool::root_handler(CanvasEvent const &event)
 
     inspect_event(event,
         [&] (ButtonPressEvent const &event) {
-            if (event.numPress() == 1 && event.button() == 1) {
+            if (event.num_press == 1 && event.button == 1) {
                 mouse_is_pressed = true;
-                drag_origin_w = event.eventPos();
+                drag_origin_w = event.pos;
                 drag_origin_dt = _desktop->w2d(drag_origin_w);
                 ret = true;
                 if (auto page = pageUnder(drag_origin_dt, false)) {
@@ -287,16 +287,16 @@ bool PagesTool::root_handler(CanvasEvent const &event)
                     dragging_viewbox = true;
                     set_cursor("page-dragging.svg");
                 } else {
-                    drag_origin_dt = getSnappedResizePoint(drag_origin_dt, event.modifiers(), {});
+                    drag_origin_dt = getSnappedResizePoint(drag_origin_dt, event.modifiers, {});
                 }
             }
         },
         [&] (MotionEvent const &event) {
-            auto point_w = event.eventPos();
+            auto point_w = event.pos;
             auto point_dt = _desktop->w2d(point_w);
-            bool snap = !(event.modifiers() & GDK_SHIFT_MASK);
+            bool snap = !(event.modifiers & GDK_SHIFT_MASK);
 
-            if (event.modifiers() & GDK_BUTTON1_MASK) {
+            if (event.modifiers & GDK_BUTTON1_MASK) {
                 if (!mouse_is_pressed) {
                     // this sometimes happens if the mouse was off the edge when the event started
                     drag_origin_w = point_w;
@@ -314,7 +314,7 @@ bool PagesTool::root_handler(CanvasEvent const &event)
                     _desktop->getCanvas()->enable_autoscroll();
                 } else if (on_screen_rect) {
                     // Continue to drag new box
-                    point_dt = getSnappedResizePoint(point_dt, event.modifiers(), drag_origin_dt);
+                    point_dt = getSnappedResizePoint(point_dt, event.modifiers, drag_origin_dt);
                     on_screen_rect = Geom::Rect(drag_origin_dt, point_dt);
                 } else if (Geom::distance(drag_origin_w, point_w) < drag_tolerance) {
                     // do not start dragging anything new if we're within tolerance from origin.
@@ -341,12 +341,12 @@ bool PagesTool::root_handler(CanvasEvent const &event)
             }
         },
         [&] (ButtonReleaseEvent const &event) {
-            if (event.button() != 1) {
+            if (event.button != 1) {
                 return;
             }
-            auto point_w = event.eventPos();
+            auto point_w = event.pos;
             auto point_dt = _desktop->w2d(point_w);
-            bool snap = !(event.modifiers() & GDK_SHIFT_MASK);
+            bool snap = !(event.modifiers & GDK_SHIFT_MASK);
             auto document = _desktop->getDocument();
 
             if (dragging_viewbox || dragging_item) {
@@ -383,11 +383,11 @@ bool PagesTool::root_handler(CanvasEvent const &event)
             _desktop->snapindicator->remove_snaptarget();
         },
         [&] (KeyPressEvent const &event) {
-            if (event.keyval() == GDK_KEY_Escape) {
+            if (event.keyval == GDK_KEY_Escape) {
                 mouse_is_pressed = false;
                 ret = true;
             }
-            if (event.keyval() == GDK_KEY_Delete) {
+            if (event.keyval == GDK_KEY_Delete) {
                 page_manager.deletePage(page_manager.move_objects());
 
                 Inkscape::DocumentUndo::done(_desktop->getDocument(), "Delete Page", INKSCAPE_ICON("tool-pages"));
@@ -428,7 +428,7 @@ void PagesTool::menu_popup(CanvasEvent const &event, SPObject *obj)
     SPPage *page = page_manager.getSelected();
     inspect_event(event,
         [&] (ButtonPressEvent const &event) {
-            drag_origin_dt = _desktop->w2d(event.eventPos());
+            drag_origin_dt = _desktop->w2d(event.pos);
             page = pageUnder(drag_origin_dt);
         },
         [&] (CanvasEvent const &event) {}

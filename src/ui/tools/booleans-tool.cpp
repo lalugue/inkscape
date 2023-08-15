@@ -21,7 +21,6 @@
 #include "document.h"
 #include "document-undo.h"
 #include "event-log.h"
-#include "include/macros.h"
 #include "selection.h"
 #include "ui/icon-names.h"
 #include "ui/modifiers.h"
@@ -205,14 +204,14 @@ void InteractiveBooleansTool::update_status()
 
 bool InteractiveBooleansTool::event_button_press_handler(ButtonPressEvent const &event)
 {
-    if (event.numPress() != 1) {
+    if (event.num_press != 1) {
         return false;
     }
 
-    if (event.button() == 1) {
-        boolean_builder->task_select(event.eventPos(), should_add(event.modifiers()));
+    if (event.button == 1) {
+        boolean_builder->task_select(event.pos, should_add(event.modifiers));
         return true;
-    } else if (event.button() == 3) {
+    } else if (event.button == 3) {
         // right click; do not eat it so that right-click menu can appear, but cancel dragging
         boolean_builder->task_cancel();
     }
@@ -222,22 +221,22 @@ bool InteractiveBooleansTool::event_button_press_handler(ButtonPressEvent const 
 
 bool InteractiveBooleansTool::event_motion_handler(MotionEvent const &event)
 {
-    bool add = should_add(event.modifiers());
+    bool add = should_add(event.modifiers);
 
-    if (event.modifiers() & GDK_BUTTON1_MASK) {
+    if (event.modifiers & GDK_BUTTON1_MASK) {
         if (boolean_builder->has_task()) {
-            return boolean_builder->task_add(event.eventPos());
+            return boolean_builder->task_add(event.pos);
         } else {
-            return boolean_builder->task_select(event.eventPos(), add);
+            return boolean_builder->task_select(event.pos, add);
         }
     } else {
-        return boolean_builder->highlight(event.eventPos(), add);
+        return boolean_builder->highlight(event.pos, add);
     }
 }
 
 bool InteractiveBooleansTool::event_button_release_handler(ButtonReleaseEvent const &event)
 {
-    if (event.button() == 1) {
+    if (event.button == 1) {
         boolean_builder->task_commit();
     }
     return true;
@@ -273,8 +272,8 @@ bool InteractiveBooleansTool::event_key_press_handler(KeyPressEvent const &event
             return true;
         case GDK_KEY_z:
         case GDK_KEY_Z:
-            if (event.modifiers() & INK_GDK_PRIMARY_MASK) {
-                return catch_undo(event.modifiers() & GDK_SHIFT_MASK);
+            if (event.modifiers & INK_GDK_PRIMARY_MASK) {
+                return catch_undo(event.modifiers & GDK_SHIFT_MASK);
             }
             break;
         default:

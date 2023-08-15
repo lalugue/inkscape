@@ -12,7 +12,7 @@
 #ifndef INKSCAPE_UI_TOOL_MODIFIER_TRACKER_H
 #define INKSCAPE_UI_TOOL_MODIFIER_TRACKER_H
 
-namespace Inkscape { class CanvasEvent; }
+namespace Inkscape { struct CanvasEvent; }
 namespace Inkscape::UI {
 
 class ModifierTracker

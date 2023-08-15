@@ -19,10 +19,10 @@ class SPDesktop;
 
 namespace Inkscape {
 class BooleanBuilder;
-class ButtonPressEvent;
-class ButtonReleaseEvent;
-class MotionEvent;
-class KeyPressEvent;
+struct ButtonPressEvent;
+struct ButtonReleaseEvent;
+struct MotionEvent;
+struct KeyPressEvent;
 
 namespace UI {
 namespace Tools {

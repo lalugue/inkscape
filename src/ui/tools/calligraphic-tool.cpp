@@ -51,8 +51,6 @@
 #include "display/curve.h"
 #include "display/drawing.h"
 
-#include "include/macros.h"
-
 #include "livarot/Path.h"
 
 #include "object/sp-shape.h"
@@ -155,23 +153,22 @@ void CalligraphicTool::reset(Geom::Point const &p)
     del = {};
 }
 
-void CalligraphicTool::extinput(MotionEvent const &canvas_event)
+void CalligraphicTool::extinput(ExtendedInput const &ext)
 {
-    auto event = canvas_event.CanvasEvent::original();
-    if (gdk_event_get_axis(event, GDK_AXIS_PRESSURE, &pressure)) {
-        pressure = std::clamp(pressure, DDC_MIN_PRESSURE, DDC_MAX_PRESSURE);
+    if (ext.pressure) {
+        pressure = std::clamp(*ext.pressure, DDC_MIN_PRESSURE, DDC_MAX_PRESSURE);
     } else {
         pressure = DDC_DEFAULT_PRESSURE;
     }
 
-    if (gdk_event_get_axis(event, GDK_AXIS_XTILT, &xtilt)) {
-        xtilt = std::clamp(xtilt, DDC_MIN_TILT, DDC_MAX_TILT);
+    if (ext.xtilt) {
+        xtilt = std::clamp(*ext.xtilt, DDC_MIN_TILT, DDC_MAX_TILT);
     } else {
         xtilt = DDC_DEFAULT_TILT;
     }
 
-    if (gdk_event_get_axis(event, GDK_AXIS_YTILT, &ytilt)) {
-        ytilt = std::clamp(ytilt, DDC_MIN_TILT, DDC_MAX_TILT);
+    if (ext.ytilt) {
+        ytilt = std::clamp(*ext.ytilt, DDC_MIN_TILT, DDC_MAX_TILT);
     } else {
         ytilt = DDC_DEFAULT_TILT;
     }
@@ -386,7 +383,7 @@ bool CalligraphicTool::root_handler(CanvasEvent const &event)
 
     inspect_event(event,
         [&] (ButtonPressEvent const &event) {
-            if (event.numPress() == 1 && event.button() == 1) {
+            if (event.num_press == 1 && event.button == 1) {
                 if (!have_viable_layer(_desktop, defaultMessageContext())) {
                     ret = true;
                     return;
@@ -410,8 +407,8 @@ bool CalligraphicTool::root_handler(CanvasEvent const &event)
         },
 
         [&] (MotionEvent const &event) {
-            auto motion_dt = _desktop->w2d(event.eventPos());
-            extinput(event);
+            auto motion_dt = _desktop->w2d(event.pos);
+            extinput(event.extinput);
 
             message_context->clear();
 
@@ -422,7 +419,7 @@ bool CalligraphicTool::root_handler(CanvasEvent const &event)
             Geom::Point pointer;
             Geom::Affine motion_to_curve;
 
-            if (event.modifiers() & GDK_CONTROL_MASK) { // hatching - sense the item
+            if (event.modifiers & GDK_CONTROL_MASK) { // hatching - sense the item
 
                 auto const selected = _desktop->getSelection()->singleItem();
                 if (selected && (is<SPShape>(selected) || is<SPText>(selected))) {
@@ -458,10 +455,10 @@ bool CalligraphicTool::root_handler(CanvasEvent const &event)
                 }
             }
 
-            if (is_drawing && (event.modifiers() & GDK_BUTTON1_MASK)) {
+            if (is_drawing && (event.modifiers & GDK_BUTTON1_MASK)) {
                 dragging = true;
 
-                if (event.modifiers() & GDK_CONTROL_MASK && hatch_item) { // hatching
+                if (event.modifiers & GDK_CONTROL_MASK && hatch_item) { // hatching
 
                     constexpr auto HATCH_VECTOR_ELEMENTS = 12;
                     constexpr auto INERTIA_ELEMENTS = 24;
@@ -615,11 +612,11 @@ bool CalligraphicTool::root_handler(CanvasEvent const &event)
             Geom::PathVector path = Geom::Path(Geom::Circle(0,0,1)); // Unit circle centered at origin.
 
             // Draw the hatching circle if necessary
-            if (event.modifiers() & GDK_CONTROL_MASK) {
+            if (event.modifiers & GDK_CONTROL_MASK) {
                 if (hatch_spacing == 0 && hatch_dist != 0) {
                     // Haven't set spacing yet: gray, center free, update radius live
 
-                    auto const c = _desktop->w2d(event.eventPos());
+                    auto const c = _desktop->w2d(event.pos);
                     path *= Geom::Scale(hatch_dist) * Geom::Translate(c);
 
                     hatch_area->set_bpath(std::move(path), true);
@@ -664,14 +661,14 @@ bool CalligraphicTool::root_handler(CanvasEvent const &event)
         },
 
     [&] (ButtonReleaseEvent const &event) {
-        auto const motion_dt = _desktop->w2d(event.eventPos());
+        auto const motion_dt = _desktop->w2d(event.pos);
 
         ungrabCanvasEvents();
 
         set_high_motion_precision(false);
         is_drawing = false;
 
-        if (dragging && event.button() == 1) {
+        if (dragging && event.button == 1) {
             dragging = false;
 
             apply(motion_dt);
@@ -682,7 +679,7 @@ bool CalligraphicTool::root_handler(CanvasEvent const &event)
             // Create object
             fit_and_split(true);
             if (accumulate()) {
-                set_to_accumulated(event.modifiers() & GDK_SHIFT_MASK, event.modifiers() & GDK_MOD1_MASK); // performs document_done
+                set_to_accumulated(event.modifiers & GDK_SHIFT_MASK, event.modifiers & GDK_MOD1_MASK); // performs document_done
             } else {
                 g_warning("Failed to create path: invalid data in dc->cal1 or dc->cal2");
             }
@@ -715,10 +712,10 @@ bool CalligraphicTool::root_handler(CanvasEvent const &event)
             message_context->clear();
             ret = true;
         } else if (!dragging
-                   && event.button() == 1
+                   && event.button == 1
                    && have_viable_layer(_desktop, defaultMessageContext()))
         {
-            spdc_create_single_dot(this, _desktop->w2d(event.eventPos()), "/tools/calligraphic", event.modifiers());
+            spdc_create_single_dot(this, _desktop->w2d(event.pos), "/tools/calligraphic", event.modifiers);
             ret = true;
         }
     },
@@ -727,7 +724,7 @@ bool CalligraphicTool::root_handler(CanvasEvent const &event)
         switch (get_latin_keyval(event)) {
         case GDK_KEY_Up:
         case GDK_KEY_KP_Up:
-            if (!MOD__CTRL_ONLY(event)) {
+            if (!mod_ctrl_only(event)) {
                 angle = std::min(angle + 5.0, 90.0);
                 _desktop->setToolboxAdjustmentValue("calligraphy-angle", angle);
                 ret = true;
@@ -735,7 +732,7 @@ bool CalligraphicTool::root_handler(CanvasEvent const &event)
             break;
         case GDK_KEY_Down:
         case GDK_KEY_KP_Down:
-            if (!MOD__CTRL_ONLY(event)) {
+            if (!mod_ctrl_only(event)) {
                 angle = std::max(angle - 5.0, -90.0);
                 _desktop->setToolboxAdjustmentValue("calligraphy-angle", angle);
                 ret = true;
@@ -743,7 +740,7 @@ bool CalligraphicTool::root_handler(CanvasEvent const &event)
             break;
         case GDK_KEY_Right:
         case GDK_KEY_KP_Right:
-            if (!MOD__CTRL_ONLY(event)) {
+            if (!mod_ctrl_only(event)) {
                 width = Quantity::convert(width, "px", unit);
                 width = std::min(width + 0.01, 1.0);
                 _desktop->setToolboxAdjustmentValue("calligraphy-width", width * 100); // the same spinbutton is for alt+x
@@ -752,7 +749,7 @@ bool CalligraphicTool::root_handler(CanvasEvent const &event)
             break;
         case GDK_KEY_Left:
         case GDK_KEY_KP_Left:
-            if (!MOD__CTRL_ONLY(event)) {
+            if (!mod_ctrl_only(event)) {
                 width = Quantity::convert(width, "px", unit);
                 width = std::max(width - 0.01, 0.00001);
                 _desktop->setToolboxAdjustmentValue("calligraphy-width", width * 100);
@@ -773,7 +770,7 @@ bool CalligraphicTool::root_handler(CanvasEvent const &event)
             break;
         case GDK_KEY_x:
         case GDK_KEY_X:
-            if (MOD__ALT_ONLY(event)) {
+            if (mod_alt_only(event)) {
                 _desktop->setToolboxFocusTo("calligraphy-width");
                 ret = true;
             }
@@ -787,7 +784,7 @@ bool CalligraphicTool::root_handler(CanvasEvent const &event)
             break;
         case GDK_KEY_z:
         case GDK_KEY_Z:
-            if (MOD__CTRL_ONLY(event) && is_drawing) {
+            if (mod_ctrl_only(event) && is_drawing) {
                 // if drawing, cancel, otherwise pass it up for undo
                 cancel();
                 ret = true;

@@ -26,7 +26,7 @@
 #include "enums.h" // TEMP TEMP
 
 class SPDesktop;
-namespace Inkscape { class MotionEvent; class ButtonReleaseEvent; }
+namespace Inkscape { struct MotionEvent; struct ButtonReleaseEvent; }
 namespace Inkscape::UI::Tools { class ToolBase; }
 
 namespace Inkscape::UI {

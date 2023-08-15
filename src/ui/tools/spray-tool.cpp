@@ -39,7 +39,6 @@
 #include "document.h"
 #include "filter-chemistry.h"
 #include "inkscape.h"
-#include "include/macros.h"
 #include "message-context.h"
 #include "path-chemistry.h"
 #include "selection.h"
@@ -270,10 +269,10 @@ void SprayTool::set(const Inkscape::Preferences::Entry& val) {
     }
 }
 
-static void sp_spray_extinput(SprayTool *tc, CanvasEvent const &event)
+static void sp_spray_extinput(SprayTool *tc, ExtendedInput const &ext)
 {
-    if (gdk_event_get_axis(event.original(), GDK_AXIS_PRESSURE, &tc->pressure)) {
-        tc->pressure = CLAMP(tc->pressure, TC_MIN_PRESSURE, TC_MAX_PRESSURE);
+    if (ext.pressure) {
+        tc->pressure = CLAMP(*ext.pressure, TC_MIN_PRESSURE, TC_MAX_PRESSURE);
     } else {
         tc->pressure = TC_DEFAULT_PRESSURE;
     }
@@ -1187,14 +1186,14 @@ bool SprayTool::root_handler(CanvasEvent const &event)
             dilate_area->set_visible(false);
         },
         [&] (ButtonPressEvent const &event) {
-            if (event.numPress() == 1 && event.button() == 1) {
+            if (event.num_press == 1 && event.button == 1) {
                 _desktop->getSelection()->restoreBackup();
                 if (Inkscape::have_viable_layer(_desktop, defaultMessageContext())) {
                     setCloneTilerPrefs();
-                    Geom::Point const motion_dt(_desktop->w2d(event.eventPos()));
+                    Geom::Point const motion_dt(_desktop->w2d(event.pos));
                     last_push = _desktop->dt2doc(motion_dt);
 
-                    sp_spray_extinput(this, event);
+                    sp_spray_extinput(this, event.extinput);
 
                     set_high_motion_precision();
                     is_drawing = true;
@@ -1206,7 +1205,7 @@ bool SprayTool::root_handler(CanvasEvent const &event)
                         single_path_output = nullptr;
                     }
 
-                    sp_spray_dilate(this, last_push, Geom::Point(0,0), event.modifiers() & GDK_SHIFT_MASK);
+                    sp_spray_dilate(this, last_push, Geom::Point(0,0), event.modifiers & GDK_SHIFT_MASK);
 
                     has_dilated = true;
                     ret = true;
@@ -1215,9 +1214,9 @@ bool SprayTool::root_handler(CanvasEvent const &event)
         },
         [&] (MotionEvent const &event) {
 
-            Geom::Point motion_dt(_desktop->w2d(event.eventPos()));
+            Geom::Point motion_dt(_desktop->w2d(event.pos));
             Geom::Point motion_doc(_desktop->dt2doc(motion_dt));
-            sp_spray_extinput(this, event);
+            sp_spray_extinput(this, event.extinput);
 
             // Draw the dilating cursor
             double radius = get_dilate_radius(this);
@@ -1239,8 +1238,8 @@ bool SprayTool::root_handler(CanvasEvent const &event)
             }
 
             // Dilating:
-            if (is_drawing && ( event.modifiers() & GDK_BUTTON1_MASK )) {
-                sp_spray_dilate(this, motion_doc, motion_doc - last_push, event.modifiers() & GDK_SHIFT_MASK ? true : false);
+            if (is_drawing && ( event.modifiers & GDK_BUTTON1_MASK )) {
+                sp_spray_dilate(this, motion_doc, motion_doc - last_push, event.modifiers & GDK_SHIFT_MASK ? true : false);
                 //this->last_push = motion_doc;
                 has_dilated = true;
 
@@ -1250,7 +1249,7 @@ bool SprayTool::root_handler(CanvasEvent const &event)
             }
         },
         [&] (ScrollEvent const &event) {
-            if (event.modifiers() == GDK_BUTTON1_MASK) {
+            if (event.modifiers == GDK_BUTTON1_MASK) {
                 std::cout << "SCROLL" << std::endl;
                 /* Spray with the scroll */
                 double temp ;
@@ -1259,13 +1258,13 @@ bool SprayTool::root_handler(CanvasEvent const &event)
                 _desktop->setToolboxAdjustmentValue("population", population * 100);
                 Geom::Point const scroll_dt = _desktop->point();;
 
-                switch (event.direction()) {
+                switch (event.direction) {
                     case GDK_SCROLL_DOWN:
                     case GDK_SCROLL_UP:
                     case GDK_SCROLL_SMOOTH:
                         if (Inkscape::have_viable_layer(_desktop, defaultMessageContext())) {
                             last_push = _desktop->dt2doc(scroll_dt);
-                            sp_spray_extinput(this, event);
+                            sp_spray_extinput(this, event.extinput);
                             is_drawing = true;
                             is_dilating = true;
                             has_dilated = false;
@@ -1289,16 +1288,16 @@ bool SprayTool::root_handler(CanvasEvent const &event)
         },
         [&] (ButtonReleaseEvent const &event) {
 
-            Geom::Point const motion_dt(_desktop->w2d(event.eventPos()));
+            Geom::Point const motion_dt(_desktop->w2d(event.pos));
 
             set_high_motion_precision(false);
             is_drawing = false;
 
-            if (is_dilating && event.button() == 1) {
+            if (is_dilating && event.button == 1) {
                 if (!has_dilated) {
                     // If we did not rub, do a light tap
                     pressure = 0.03;
-                    sp_spray_dilate(this, _desktop->dt2doc(motion_dt), Geom::Point(0,0), event.modifiers() & GDK_SHIFT_MASK);
+                    sp_spray_dilate(this, _desktop->dt2doc(motion_dt), Geom::Point(0,0), event.modifiers & GDK_SHIFT_MASK);
                 }
                 is_dilating = false;
                 has_dilated = false;
@@ -1321,30 +1320,30 @@ bool SprayTool::root_handler(CanvasEvent const &event)
             switch (get_latin_keyval (event)) {
                 case GDK_KEY_j:
                 case GDK_KEY_J:
-                    if (MOD__SHIFT_ONLY(event)) {
-                        sp_spray_switch_mode(this, SPRAY_MODE_COPY, MOD__SHIFT(event));
+                    if (mod_shift_only(event)) {
+                        sp_spray_switch_mode(this, SPRAY_MODE_COPY, mod_shift(event));
                         ret = true;
                     }
                     break;
                 case GDK_KEY_k:
                 case GDK_KEY_K:
-                    if (MOD__SHIFT_ONLY(event)) {
-                        sp_spray_switch_mode(this, SPRAY_MODE_CLONE, MOD__SHIFT(event));
+                    if (mod_shift_only(event)) {
+                        sp_spray_switch_mode(this, SPRAY_MODE_CLONE, mod_shift(event));
                         ret = true;
                     }
                     break;
 #ifdef ENABLE_SPRAY_MODE_SINGLE_PATH
                 case GDK_KEY_l:
                 case GDK_KEY_L:
-                    if (MOD__SHIFT_ONLY(event)) {
-                        sp_spray_switch_mode(this, SPRAY_MODE_SINGLE_PATH, MOD__SHIFT(event));
+                    if (mod_shift_only(event)) {
+                        sp_spray_switch_mode(this, SPRAY_MODE_SINGLE_PATH, mod_shift(event));
                         ret = true;
                     }
                     break;
 #endif
                 case GDK_KEY_Up:
                 case GDK_KEY_KP_Up:
-                    if (!MOD__CTRL_ONLY(event)) {
+                    if (!mod_ctrl_only(event)) {
                         population += 0.01;
                         if (population > 1.0) {
                             population = 1.0;
@@ -1355,7 +1354,7 @@ bool SprayTool::root_handler(CanvasEvent const &event)
                     break;
                 case GDK_KEY_Down:
                 case GDK_KEY_KP_Down:
-                    if (!MOD__CTRL_ONLY(event)) {
+                    if (!mod_ctrl_only(event)) {
                         population -= 0.01;
                         if (population < 0.0) {
                             population = 0.0;
@@ -1366,7 +1365,7 @@ bool SprayTool::root_handler(CanvasEvent const &event)
                     break;
                 case GDK_KEY_Right:
                 case GDK_KEY_KP_Right:
-                    if (!MOD__CTRL_ONLY(event)) {
+                    if (!mod_ctrl_only(event)) {
                         width += 0.01;
                         if (width > 1.0) {
                             width = 1.0;
@@ -1379,7 +1378,7 @@ bool SprayTool::root_handler(CanvasEvent const &event)
                     break;
                 case GDK_KEY_Left:
                 case GDK_KEY_KP_Left:
-                    if (!MOD__CTRL_ONLY(event)) {
+                    if (!mod_ctrl_only(event)) {
                         width -= 0.01;
                         if (width < 0.01) {
                             width = 0.01;
@@ -1405,7 +1404,7 @@ bool SprayTool::root_handler(CanvasEvent const &event)
                     break;
                 case GDK_KEY_x:
                 case GDK_KEY_X:
-                    if (MOD__ALT_ONLY(event)) {
+                    if (mod_alt_only(event)) {
                         _desktop->setToolboxFocusTo("spray-width");
                         ret = true;
                     }
@@ -1420,7 +1419,7 @@ bool SprayTool::root_handler(CanvasEvent const &event)
                 case GDK_KEY_Delete:
                 case GDK_KEY_KP_Delete:
                 case GDK_KEY_BackSpace:
-                    ret = deleteSelectedDrag(MOD__CTRL_ONLY(event));
+                    ret = deleteSelectedDrag(mod_ctrl_only(event));
                     break;
 
                 default:
@@ -1436,11 +1435,11 @@ bool SprayTool::root_handler(CanvasEvent const &event)
                     break;
                 case GDK_KEY_Control_L:
                 case GDK_KEY_Control_R:
-                    sp_spray_switch_mode (this, prefs->getInt("/tools/spray/mode"), MOD__SHIFT(event));
+                    sp_spray_switch_mode (this, prefs->getInt("/tools/spray/mode"), mod_shift(event));
                     message_context->clear();
                     break;
                 default:
-                    sp_spray_switch_mode (this, prefs->getInt("/tools/spray/mode"), MOD__SHIFT(event));
+                    sp_spray_switch_mode (this, prefs->getInt("/tools/spray/mode"), mod_shift(event));
                     break;
             }
         },

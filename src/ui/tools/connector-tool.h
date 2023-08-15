@@ -38,9 +38,9 @@ namespace Inkscape {
 class CanvasItemBpath;
 class Selection;
 namespace XML { class Node; }
-class ButtonPressEvent;
-class MotionEvent;
-class ButtonReleaseEvent;
+struct ButtonPressEvent;
+struct MotionEvent;
+struct ButtonReleaseEvent;
 } // namespace Inkscape
 
 #define SP_CONNECTOR_CONTEXT(obj) (dynamic_cast<Inkscape::UI::Tools::ConnectorTool*>((Inkscape::UI::Tools::ToolBase*)obj))

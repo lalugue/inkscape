@@ -19,9 +19,10 @@
 #include "box3d.h"
 
 #include <glibmm/i18n.h>
+#include <2geom/line.h>
+
 #include "attributes.h"
 #include "xml/document.h"
-#include "xml/repr.h"
 
 #include "bad-uri-exception.h"
 #include "box3d-side.h"
@@ -29,13 +30,9 @@
 #include "perspective-line.h"
 #include "persp3d-reference.h"
 #include "uri.h"
-#include <2geom/line.h>
 #include "sp-guide.h"
-#include "sp-namedview.h"
 
 #include "desktop.h"
-
-#include "include/macros.h"
 
 static void box3d_ref_changed(SPObject *old_ref, SPObject *ref, SPBox3D *box);
 

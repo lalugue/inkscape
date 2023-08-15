@@ -46,7 +46,7 @@ inline constexpr uint32_t CANVAS_ITEM_COLORS[] = { 0x0000ff7f, 0xff00007f, 0xfff
 
 namespace UI::Widget { class Canvas; }
 class CanvasItemGroup;
-class CanvasEvent;
+struct CanvasEvent;
 
 class CanvasItem
 {

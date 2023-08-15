@@ -32,8 +32,8 @@ class SPDesktop;
 
 namespace Inkscape {
 class CanvasItemGroup;
-class KeyPressEvent;
-class ButtonReleaseEvent;
+struct KeyPressEvent;
+struct ButtonReleaseEvent;
 
 namespace UI {
 class TransformHandleSet;

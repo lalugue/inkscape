@@ -27,7 +27,10 @@
 #include "ui/tools/dynamic-base.h"
 #include "object/sp-use.h"
 
-namespace Inkscape { class KeyPressEvent; }
+namespace Inkscape {
+struct KeyPressEvent;
+struct ExtendedInput;
+} // namespace Inkscape
 
 namespace Inkscape::UI::Tools {
 
@@ -113,7 +116,7 @@ private:
     bool _cutErase(EraseTarget target, bool store_survivers);
     bool _doWork();
     void _drawTemporaryBox();
-    void _extinput(CanvasEvent const &event);
+    void _extinput(ExtendedInput const &ext);
     void _failedBezierFallback();
     std::vector<EraseTarget> _filterByCollision(std::vector<EraseTarget> const &items, SPItem *with) const;
     std::vector<EraseTarget> _filterCutEraseables(std::vector<EraseTarget> const &items, bool silent = false);

@@ -26,9 +26,6 @@
 #include "document.h"
 #include "gradient-chemistry.h"
 #include "gradient-drag.h"
-#include "include/macros.h"
-#include "inkscape.h"
-#include "selection-chemistry.h"
 #include "selection.h"
 #include "snap.h"
 
@@ -49,10 +46,9 @@
 #include "ui/icon-names.h"
 #include "ui/knot/knot.h"
 #include "ui/tools/tool-base.h"
-#include "ui/widget/canvas.h" // Forced redraws
+#include "ui/widget/events/canvas-event.h"
 
 #include "xml/sp-css-attr.h"
-#include "xml/attribute-record.h"
 
 using Inkscape::DocumentUndo;
 using Inkscape::allPaintTargets;
@@ -2772,13 +2768,13 @@ void GrDrag::selected_move_screen(double x, double y)
  * @param event Event with type GDK_KEY_PRESS
  * @return True if the event was handled, false otherwise
  */
-bool GrDrag::key_press_handler(GdkEvent *event)
+bool GrDrag::key_press_handler(Inkscape::KeyPressEvent const &event)
 {
-    if (MOD__CTRL(event)) {
+    if (mod_ctrl(event)) {
         return false;
     }
 
-    auto keyval = Inkscape::UI::Tools::get_latin_keyval(&event->key);
+    auto keyval = Inkscape::UI::Tools::get_latin_keyval(event);
     double x_dir = 0;
     double y_dir = 0;
 
@@ -2815,11 +2811,11 @@ bool GrDrag::key_press_handler(GdkEvent *event)
 
     gint mul = 1 + Inkscape::UI::Tools::gobble_key_events(keyval, 0); // with any mask
 
-    if (MOD__SHIFT(event)) {
+    if (mod_shift(event)) {
         mul *= 10;
     }
 
-    if (MOD__ALT(event)) {
+    if (mod_alt(event)) {
         selected_move_screen(mul * x_dir, mul * y_dir);
     } else {
         auto *prefs = Inkscape::Preferences::get();

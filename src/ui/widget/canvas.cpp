@@ -50,7 +50,6 @@
 #include "ui/controller.h"
 #include "ui/tools/tool-base.h"      // Default cursor
 #include "ui/util.h"
-#include "ui/widget/desktop-widget.h"
 
 #include "canvas/updaters.h"         // Update strategies
 #include "canvas/framecheck.h"       // For frame profiling
@@ -832,12 +831,10 @@ void CanvasPrivate::autoscroll_begin(Geom::IntPoint const &to)
         displacement -= dpos;
 
         if (last_mouse) {
-            auto gdkevent = GdkEventUniqPtr(gdk_event_new(GDK_MOTION_NOTIFY));
-            gdkevent->motion.x = last_mouse->x();
-            gdkevent->motion.y = last_mouse->y();
-            gdkevent->motion.state = q->_state;
             ensure_geometry_uptodate();
-            auto event = MotionEvent(std::move(gdkevent), q->_state);
+            auto event = MotionEvent();
+            event.modifiers = q->_state;
+            event.pos = *last_mouse;
             emit_event(event);
         }
 
@@ -881,7 +878,13 @@ bool Canvas::on_scroll(GtkEventControllerScroll const * const controller,
     assert(gdkevent->type == GDK_SCROLL);
     _state = gdkevent->scroll.state;
 
-    auto event = ScrollEvent(std::move(gdkevent));
+    auto event = ScrollEvent();
+    event.modifiers = _state;
+    event.source_device = Util::GObjectPtr(gdk_event_get_source_device(gdkevent.get()), true);
+    event.delta = { gdkevent->scroll.delta_x, gdkevent->scroll.delta_y };
+    event.direction = gdkevent->scroll.direction;
+    event.extinput = extinput_from_gdkevent(gdkevent.get());
+
     return d->process_event(event);
 }
 
@@ -913,13 +916,20 @@ Gtk::EventSequenceState Canvas::on_button_pressed(Gtk::GestureMultiPress const &
         }
     }
 
-    auto event = ButtonPressEvent(std::move(gdkevent), 1);
+    auto event = ButtonPressEvent();
+    event.modifiers = _state;
+    event.source_device = Util::GObjectPtr(gdk_event_get_source_device(gdkevent.get()), true);
+    event.pos = *d->last_mouse;
+    event.button = gdkevent->button.button;
+    event.time = gdkevent->button.time;
+    event.num_press = 1;
+    event.extinput = extinput_from_gdkevent(gdkevent.get());
+    event.original = std::move(gdkevent);
+
     bool result = d->process_event(event);
 
     if (n_press > 1) {
-        auto gdkevent = GdkEventUniqPtr(gtk_get_current_event());
-        gdkevent->type = (GdkEventType)(GDK_BUTTON_PRESS + (n_press - 1) % 3);
-        auto event = ButtonPressEvent(std::move(gdkevent), n_press);
+        event.num_press = n_press;
         result = d->process_event(event);
     }
 
@@ -977,7 +987,13 @@ Gtk::EventSequenceState Canvas::on_button_released(Gtk::GestureMultiPress const 
         d->autoscroll_end();
     }
 
-    auto event = ButtonReleaseEvent(std::move(gdkevent));
+    auto event = ButtonReleaseEvent();
+    event.modifiers = _state;
+    event.source_device = Util::GObjectPtr(gdk_event_get_source_device(gdkevent.get()), true);
+    event.pos = *d->last_mouse;
+    event.button = gdkevent->button.button;
+    event.time = gdkevent->button.time;
+
     return d->process_event(event) ? Gtk::EVENT_SEQUENCE_CLAIMED : Gtk::EVENT_SEQUENCE_NONE;
 }
 
@@ -989,7 +1005,10 @@ void Canvas::on_enter(GtkEventControllerMotion const * const controller,
     _state = gdkevent->crossing.state;
     d->last_mouse = Geom::IntPoint(x, y);
 
-    auto event = EnterEvent(std::move(gdkevent), _state);
+    auto event = EnterEvent();
+    event.modifiers = _state;
+    event.pos = *d->last_mouse;
+
     d->process_event(event);
 }
 
@@ -1000,7 +1019,9 @@ void Canvas::on_leave(GtkEventControllerMotion const * const controller)
     _state = gdkevent->crossing.state;
     d->last_mouse = {};
 
-    auto event = LeaveEvent(std::move(gdkevent), _state);
+    auto event = LeaveEvent();
+    event.modifiers = _state;
+
     d->process_event(event);
 }
 
@@ -1016,7 +1037,15 @@ bool Canvas::on_key_pressed(GtkEventControllerKey const * /*controller*/,
     assert(gdkevent->type == GDK_KEY_PRESS);
     _state = gdkevent->key.state;
 
-    auto event = KeyPressEvent(std::move(gdkevent));
+    auto event = KeyPressEvent();
+    event.modifiers = _state;
+    event.source_device = Util::GObjectPtr(gdk_event_get_source_device(gdkevent.get()), true);
+    event.keyval = gdkevent->key.keyval;
+    event.hardware_keycode = gdkevent->key.hardware_keycode;
+    event.group = gdkevent->key.group;
+    event.time = gdkevent->key.time;
+    event.original = std::move(gdkevent);
+
     return d->process_event(event);
 }
 
@@ -1027,7 +1056,15 @@ bool Canvas::on_key_released(GtkEventControllerKey const * /*controller*/,
     assert(gdkevent->type == GDK_KEY_RELEASE);
     _state = gdkevent->key.state;
 
-    auto event = KeyReleaseEvent(std::move(gdkevent));
+    auto event = KeyReleaseEvent();
+    event.modifiers = _state;
+    event.source_device = Util::GObjectPtr(gdk_event_get_source_device(gdkevent.get()), true);
+    event.keyval = gdkevent->key.keyval;
+    event.hardware_keycode = gdkevent->key.hardware_keycode;
+    event.group = gdkevent->key.group;
+    event.time = gdkevent->key.time;
+    event.original = std::move(gdkevent);
+
     return d->process_event(event);
 }
 
@@ -1108,7 +1145,13 @@ void Canvas::on_motion(GtkEventControllerMotion const * const controller,
         d->autoscroll_end();
     }
 
-    auto event = MotionEvent(std::move(gdkevent), _state);
+    auto event = MotionEvent();
+    event.modifiers = _state;
+    event.source_device = Util::GObjectPtr(gdk_event_get_source_device(gdkevent.get()), true);
+    event.pos = *d->last_mouse;
+    event.time = gdkevent->motion.time;
+    event.extinput = extinput_from_gdkevent(gdkevent.get());
+
     d->process_event(event);
 }
 
@@ -1277,16 +1320,15 @@ bool CanvasPrivate::repick()
     // Synthesize events for old and new current items.
     bool retval = false;
     if (q->_current_canvas_item_new != q->_current_canvas_item &&
-        q->_current_canvas_item != nullptr                     &&
-        !q->_left_grabbed_item                                 ) {
-
-        auto gdkevent = GdkEventUniqPtr(gdk_event_new(GDK_LEAVE_NOTIFY));
-        gdkevent->crossing.state = q->_state;
-        auto event = LeaveEvent(std::move(gdkevent), q->_state);
+        q->_current_canvas_item &&
+        !q->_left_grabbed_item)
+    {
+        auto event = LeaveEvent();
+        event.modifiers = q->_state;
         retval = emit_event(event);
     }
 
-    if (q->_all_enter_events == false) {
+    if (!q->_all_enter_events) {
         // new_current_item may have been set to nullptr during the call to emitEvent() above.
         if (q->_current_canvas_item_new != q->_current_canvas_item && button_down) {
             q->_left_grabbed_item = true;
@@ -1299,11 +1341,9 @@ bool CanvasPrivate::repick()
     q->_current_canvas_item = q->_current_canvas_item_new;
 
     if (q->_current_canvas_item) {
-        auto gdkevent = GdkEventUniqPtr(gdk_event_new(GDK_ENTER_NOTIFY));
-        gdkevent->crossing.x = last_mouse->x();
-        gdkevent->crossing.y = last_mouse->y();
-        gdkevent->crossing.state = q->_state;
-        auto event = EnterEvent(std::move(gdkevent), q->_state);
+        auto event = EnterEvent();
+        event.modifiers = q->_state;
+        event.pos = *last_mouse; // nonempty by if condition
         retval = emit_event(event);
     }
 
@@ -1334,36 +1374,31 @@ bool CanvasPrivate::emit_event(CanvasEvent &event)
         return false;
     }
 
-    // Convert to world coordinates. We have two different cases due to different event structures.
-    auto conv = [&, this] (double &x, double &y) {
-        auto p = Geom::Point(x, y) + q->_pos;
+    // Convert to world coordinates.
+    auto conv = [&, this] (Geom::Point &p) {
+        p += q->_pos;
         if (stores.mode() == Stores::Mode::Decoupled) {
-            p *= q->_affine.inverse() * canvasitem_ctx->affine();
+            p = p * q->_affine.inverse() * canvasitem_ctx->affine();
         }
-        x = p.x();
-        y = p.y();
     };
 
-    switch (event.type()) {
-        case EventType::ENTER:
-        case EventType::LEAVE:
-            conv(event.original()->crossing.x, event.original()->crossing.y);
-            break;
-        case EventType::MOTION:
-        case EventType::BUTTON_PRESS:
-        case EventType::BUTTON_RELEASE:
-            conv(event.original()->motion.x, event.original()->motion.y);
-            break;
-        default:
-            break;
-    }
+    inspect_event(event,
+        [&] (EnterEvent &event) { conv(event.pos); },
+        [&] (MotionEvent &event) { conv(event.pos); },
+        [&] (ButtonEvent &event) { conv(event.pos); },
+        [&] (CanvasEvent &event) {}
+    );
 
     // Block undo/redo while anything is dragged.
-    if (event.type() == EventType::BUTTON_PRESS && static_cast<ButtonEvent const &>(event).button() == 1) {
-        q->_is_dragging = true;
-    } else if (event.type() == EventType::BUTTON_RELEASE) {
-        q->_is_dragging = false;
-    }
+    inspect_event(event,
+        [&] (ButtonPressEvent &event) {
+            if (event.button == 1) {
+                q->_is_dragging = true;
+            }
+        },
+        [&] (ButtonReleaseEvent &event) { q->_is_dragging = false; },
+        [&] (CanvasEvent &event) {}
+    );
 
     if (q->_current_canvas_item) {
         // Choose where to send event.

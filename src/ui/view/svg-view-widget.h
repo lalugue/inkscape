@@ -25,7 +25,7 @@ namespace Inkscape {
 
 class CanvasItemDrawing;
 class CanvasItemGroup;
-class CanvasEvent;
+struct CanvasEvent;
 class DrawingItem;
 
 namespace UI {

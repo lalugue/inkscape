@@ -345,7 +345,7 @@ bool ConnectorTool::item_handler(SPItem *item, CanvasEvent const &event)
 
     inspect_event(event,
     [&] (ButtonReleaseEvent const &event) {
-        if (event.button() == 1) {
+        if (event.button == 1) {
             if ((this->state == SP_CONNECTOR_CONTEXT_DRAGGING) && this->within_tolerance) {
                 this->_resetColors();
                 this->state = SP_CONNECTOR_CONTEXT_IDLE;
@@ -357,9 +357,9 @@ bool ConnectorTool::item_handler(SPItem *item, CanvasEvent const &event)
             }
 
             // find out clicked item, honoring Alt
-            auto const item = sp_event_context_find_item(_desktop, event.eventPos(), event.modifiers() & GDK_MOD1_MASK, false);
+            auto const item = sp_event_context_find_item(_desktop, event.pos, event.modifiers & GDK_MOD1_MASK, false);
 
-            if (event.modifiers() & GDK_SHIFT_MASK) {
+            if (event.modifiers & GDK_SHIFT_MASK) {
                 this->selection->toggle(item);
             } else {
                 this->selection->set(item);
@@ -376,7 +376,7 @@ bool ConnectorTool::item_handler(SPItem *item, CanvasEvent const &event)
         }
     },
     [&] (MotionEvent const &event) {
-        auto const item = _desktop->getItemAtPoint(event.eventPos(), false);
+        auto const item = _desktop->getItemAtPoint(event.pos, false);
         if (cc_item_is_shape(item)) {
             _setActiveShape(item);
         }
@@ -393,7 +393,7 @@ bool ConnectorTool::root_handler(CanvasEvent const &event)
 
     inspect_event(event,
     [&] (ButtonPressEvent const &event) {
-        if (event.numPress() == 1) {
+        if (event.num_press == 1) {
             ret = _handleButtonPress(event);
         }
     },
@@ -414,18 +414,18 @@ bool ConnectorTool::root_handler(CanvasEvent const &event)
 
 bool ConnectorTool::_handleButtonPress(ButtonPressEvent const &bevent)
 {
-    Geom::Point const event_w = bevent.eventPos();
+    Geom::Point const event_w = bevent.pos;
     /* Find desktop coordinates */
     Geom::Point p = _desktop->w2d(event_w);
 
     bool ret = false;
 
-    if (bevent.button() == 1) {
+    if (bevent.button == 1) {
         if (Inkscape::have_viable_layer(_desktop, defaultMessageContext()) == false) {
             return true;
         }
 
-        auto const event_w = bevent.eventPos();
+        auto const event_w = bevent.pos;
 
         saveDragOrigin(event_w);
 
@@ -492,7 +492,7 @@ bool ConnectorTool::_handleButtonPress(ButtonPressEvent const &bevent)
         default:
             break;
         }
-    } else if (bevent.button() == 3) {
+    } else if (bevent.button == 3) {
         if (this->state == SP_CONNECTOR_CONTEXT_REROUTING) {
             // A context menu is going to be triggered here,
             // so end the rerouting operation.
@@ -516,12 +516,12 @@ bool ConnectorTool::_handleMotionNotify(MotionEvent const &mevent)
 {
     bool ret = false;
 
-    if (mevent.modifiers() & (GDK_BUTTON2_MASK | GDK_BUTTON3_MASK)) {
+    if (mevent.modifiers & (GDK_BUTTON2_MASK | GDK_BUTTON3_MASK)) {
         // allow middle-button scrolling
         return false;
     }
 
-    auto const event_w = mevent.eventPos();
+    auto const event_w = mevent.pos;
 
     if (!checkDragMoved(event_w)) {
         return false;
@@ -535,7 +535,7 @@ bool ConnectorTool::_handleMotionNotify(MotionEvent const &mevent)
     switch (this->state) {
     case SP_CONNECTOR_CONTEXT_DRAGGING:
     {
-        gobble_motion_events(mevent.modifiers());
+        gobble_motion_events(mevent.modifiers);
         // This is movement during a connector creation.
         if ( this->npoints > 0 ) {
             m.setup(_desktop);
@@ -596,11 +596,11 @@ bool ConnectorTool::_handleButtonRelease(ButtonReleaseEvent const &revent)
 {
     bool ret = false;
 
-    if (revent.button() == 1) {
+    if (revent.button == 1) {
         SPDocument *doc = _desktop->getDocument();
         SnapManager &m = _desktop->namedview->snap_manager;
 
-        auto const event_w = revent.eventPos();
+        auto const event_w = revent.pos;
 
         // Find desktop coordinates.
         Geom::Point p = _desktop->w2d(event_w);

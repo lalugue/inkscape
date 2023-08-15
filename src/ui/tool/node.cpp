@@ -200,7 +200,7 @@ void Handle::setVisible(bool v)
 
 void Handle::_update_bspline_handles() {
     // move the handle and its opposite the same proportion
-    if (_pm()._isBSpline()){
+    if (_pm()._isBSpline()) {
         setPosition(_pm()._bsplineHandleReposition(this, false));
         double bspline_weight = _pm()._bsplineHandlePosition(this, false);
         other()->setPosition(_pm()._bsplineHandleReposition(other(), bspline_weight));
@@ -416,7 +416,7 @@ bool Handle::_eventHandler(Tools::ToolBase *event_context, CanvasEvent const &ev
     },
 
     [&] (ButtonPressEvent const &event) {
-        if (event.numPress() != 2) {
+        if (event.num_press != 2) {
             return;
         }
 
@@ -432,8 +432,9 @@ bool Handle::_eventHandler(Tools::ToolBase *event_context, CanvasEvent const &ev
 }
 
 // this function moves the handle and its opposite to the position specified by DEFAULT_START_POWER
-void Handle::handle_2button_press(){
-    if(_pm()._isBSpline()){
+void Handle::handle_2button_press()
+{
+    if (_pm()._isBSpline()) {
         setPosition(_pm()._bsplineHandleReposition(this, DEFAULT_START_POWER));
         this->other()->setPosition(_pm()._bsplineHandleReposition(this->other(), DEFAULT_START_POWER));
         _pm().update();
@@ -463,7 +464,7 @@ void Handle::dragged(Geom::Point &new_pos, MotionEvent const &event)
     }
     // with Ctrl, constrain to M_PI/rotationsnapsperpi increments from vertical
     // and the original position.
-    if (held_control(event)) {
+    if (held_ctrl(event)) {
         Inkscape::Preferences *prefs = Inkscape::Preferences::get();
         int snaps = 2 * prefs->getIntLimited("/options/rotationsnapsperpi/value", 12, 1, 1000);
 
@@ -489,7 +490,7 @@ void Handle::dragged(Geom::Point &new_pos, MotionEvent const &event)
         new_pos = result;
         // move the handle and its opposite in X fixed positions depending on parameter "steps with control" 
         // by default in live BSpline
-        if(_pm()._isBSpline()){
+        if (_pm()._isBSpline()) {
             setPosition(new_pos);
             int steps = _pm()._bsplineGetSteps();
             new_pos=_pm()._bsplineHandleReposition(this,ceilf(_pm()._bsplineHandlePosition(this, false)*steps)/steps);
@@ -542,7 +543,7 @@ void Handle::dragged(Geom::Point &new_pos, MotionEvent const &event)
         }
     }
     // if it is BSpline, but SHIFT or CONTROL are not pressed, fix it in the original position
-    if(_pm()._isBSpline() && !held_shift(event) && !held_control(event)){
+    if (_pm()._isBSpline() && !held_shift(event) && !held_ctrl(event)) {
         new_pos=_last_drag_origin();
     }
     _pm().update();
@@ -611,7 +612,7 @@ Glib::ustring Handle::_getTip(unsigned state) const
                          "node control handle");   // not expected
 
     if (state_held_alt(state) && !isBSpline) {
-        if (state_held_control(state)) {
+        if (state_held_ctrl(state)) {
             if (state_held_shift(state) && can_shift_rotate) {
                 s = format_tip(C_("Status line hint",
                     "<b>Shift+Ctrl+Alt</b>: "
@@ -638,7 +639,7 @@ Glib::ustring Handle::_getTip(unsigned state) const
         }
     }
     else {
-        if (state_held_control(state)) {
+        if (state_held_ctrl(state)) {
             if (state_held_shift(state) && can_shift_rotate && !isBSpline) {
                 s = format_tip(C_("Path handle tip",
                     "<b>Shift+Ctrl</b>: "
@@ -811,10 +812,10 @@ void Node::move(Geom::Point const &new_pos)
     Node * nextNode = n->nodeToward(n->front());
     Node * prevNode = n->nodeToward(n->back());
     nodeWeight = fmax(_pm()._bsplineHandlePosition(n->front(), false),_pm()._bsplineHandlePosition(n->back(), false));
-    if(prevNode){
+    if (prevNode) {
         prevNodeWeight = _pm()._bsplineHandlePosition(prevNode->front());
     }
-    if(nextNode){
+    if (nextNode) {
         nextNodeWeight = _pm()._bsplineHandlePosition(nextNode->back());
     }
 
@@ -826,13 +827,13 @@ void Node::move(Geom::Point const &new_pos)
     _back.setPosition(_back.position() + delta);
 
     // move the affected handles. First the node ones, later the adjoining ones.
-    if(_pm()._isBSpline()){
+    if (_pm()._isBSpline()) {
         _front.setPosition(_pm()._bsplineHandleReposition(this->front(),nodeWeight));
         _back.setPosition(_pm()._bsplineHandleReposition(this->back(),nodeWeight));
-        if(prevNode){
+        if (prevNode) {
             prevNode->front()->setPosition(_pm()._bsplineHandleReposition(prevNode->front(), prevNodeWeight));
         }
-        if(nextNode){
+        if (nextNode) {
             nextNode->back()->setPosition(_pm()._bsplineHandleReposition(nextNode->back(), nextNodeWeight));
         }
     }
@@ -849,10 +850,10 @@ void Node::transform(Geom::Affine const &m)
     Node * nextNode = n->nodeToward(n->front());
     Node * prevNode = n->nodeToward(n->back());
     nodeWeight = _pm()._bsplineHandlePosition(n->front());
-    if(prevNode){
+    if (prevNode) {
         prevNodeWeight = _pm()._bsplineHandlePosition(prevNode->front());
     }
-    if(nextNode){
+    if (nextNode) {
         nextNodeWeight = _pm()._bsplineHandlePosition(nextNode->back());
     }
 
@@ -864,13 +865,13 @@ void Node::transform(Geom::Affine const &m)
     _back.setPosition(_back.position() * m);
 
     // move the involved handles. First the node ones, later the adjoining ones.
-    if(_pm()._isBSpline()){
+    if (_pm()._isBSpline()) {
         _front.setPosition(_pm()._bsplineHandleReposition(this->front(), nodeWeight));
         _back.setPosition(_pm()._bsplineHandleReposition(this->back(), nodeWeight));
-        if(prevNode){
+        if (prevNode) {
             prevNode->front()->setPosition(_pm()._bsplineHandleReposition(prevNode->front(), prevNodeWeight));
         }
-        if(nextNode){
+        if (nextNode) {
             nextNode->back()->setPosition(_pm()._bsplineHandleReposition(nextNode->back(), nextNodeWeight));
         }
     }
@@ -1075,9 +1076,9 @@ void Node::setType(NodeType type, bool update_handles)
         }
         // in node type changes, for BSpline traces, we can either maintain them
         // with NO_POWER power in border mode, or give them the default power in curve mode.
-        if(_pm()._isBSpline()){
+        if (_pm()._isBSpline()) {
             double weight = NO_POWER;
-            if(_pm()._bsplineHandlePosition(this->front()) != NO_POWER ){
+            if (_pm()._bsplineHandlePosition(this->front()) != NO_POWER) {
                 weight = DEFAULT_START_POWER;
             }
             _front.setPosition(_pm()._bsplineHandleReposition(this->front(), weight));
@@ -1158,17 +1159,17 @@ bool Node::_eventHandler(Tools::ToolBase *event_context, CanvasEvent const &even
 
     inspect_event(event,
     [&] (ScrollEvent const &event) {
-        state = event.modifiers();
-        if (event.direction() == GDK_SCROLL_UP) {
+        state = event.modifiers;
+        if (event.direction == GDK_SCROLL_UP) {
             dir = 1;
-        } else if (event.direction() == GDK_SCROLL_DOWN) {
+        } else if (event.direction == GDK_SCROLL_DOWN) {
             dir = -1;
-        } else if (event.direction() == GDK_SCROLL_SMOOTH) {
-            dir = event.deltaY() > 0 ? -1 : 1;
+        } else if (event.direction == GDK_SCROLL_SMOOTH) {
+            dir = event.delta.y() > 0 ? -1 : 1;
         }
     },
     [&] (KeyPressEvent const &event) {
-        state = event.modifiers();
+        state = event.modifiers;
         switch (shortcut_key(event)) {
         case GDK_KEY_Page_Up:
             dir = 1;
@@ -1319,7 +1320,7 @@ void Node::_setState(State state)
             break;
         case STATE_CLICKED:
             // show the handles when selecting the nodes
-            if(_pm()._isBSpline()){
+            if (_pm()._isBSpline()) {
                 this->front()->setPosition(_pm()._bsplineHandleReposition(this->front()));
                 this->back()->setPosition(_pm()._bsplineHandleReposition(this->back()));
             }
@@ -1339,7 +1340,7 @@ bool Node::grabbed(MotionEvent const &event)
         return false;
     }
 
-    Geom::Point evp = event.eventPos();
+    Geom::Point evp = event.pos;
     Geom::Point rel_evp = evp - _last_click_event_point();
 
     // This should work even if dragtolerance is zero and evp coincides with node position.
@@ -1444,7 +1445,7 @@ void Node::dragged(Geom::Point &new_pos, MotionEvent const &event)
         scp_free.addVector(*back_direction);
     }
 
-    if (held_control(event)) {
+    if (held_ctrl(event)) {
         // We're about to consider a constrained snap, which is already limited to 1D
         // Therefore tangential or perpendicular snapping will not be considered, and therefore
         // all calls above to scp_free.addVector() and scp_free.addOrigin() can be neglected
@@ -1502,7 +1503,7 @@ void Node::dragged(Geom::Point &new_pos, MotionEvent const &event)
 
 bool Node::clicked(ButtonReleaseEvent const &event)
 {
-    if(_pm()._nodeClicked(this, event)) {
+    if (_pm()._nodeClicked(this, event)) {
         return true;
     }
     return SelectableControlPoint::clicked(event);
@@ -1601,7 +1602,7 @@ Glib::ustring Node::_getTip(unsigned state) const
         }
     }
 
-    else if (state_held_control(state)) {
+    else if (state_held_ctrl(state)) {
         if (state_held_alt(state)) {
             s = C_("Path node tip",
                    "<b>Ctrl+Alt</b>: move along handle lines or line segment, click to delete node");

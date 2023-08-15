@@ -92,18 +92,15 @@ void CanvasItemDrawing::_update(bool)
             // Fixme: These crossing events have no modifier state set.
 
             if (_active_item) {
-                auto gdkevent = GdkEventUniqPtr(gdk_event_new(GDK_LEAVE_NOTIFY));
-                auto event = LeaveEvent(std::move(gdkevent), {});
+                auto event = LeaveEvent();
                 _drawing_event_signal.emit(event, _active_item);
             }
 
             _active_item = new_drawing_item;
 
             if (_active_item) {
-                auto gdkevent = GdkEventUniqPtr(gdk_event_new(GDK_ENTER_NOTIFY));
-                gdkevent->crossing.x = _c.x();
-                gdkevent->crossing.y = _c.y();
-                auto event = EnterEvent(std::move(gdkevent), {});
+                auto event = EnterEvent();
+                event.pos = _c;
                 _drawing_event_signal.emit(event, _active_item);
             }
         }
@@ -130,12 +127,13 @@ bool CanvasItemDrawing::handle_event(CanvasEvent const &event)
         [&] (EnterEvent const &event) {
             if (!_cursor) {
                 if (_active_item) {
+                    // Fixme: This warning seems to fire a lot.
                     std::cerr << "CanvasItemDrawing::event_handler: cursor entered drawing with an active item!" << std::endl;
                 }
                 _cursor = true;
 
                 /* TODO ... event -> arena transform? */
-                _c = event.eventPos();
+                _c = event.pos;
 
                 _active_item = _drawing->pick(_c, _drawing->cursorTolerance(), _sticky * DrawingItem::PICK_STICKY | _pick_outline * DrawingItem::PICK_OUTLINE);
                 retval = _drawing_event_signal.emit(event, _active_item);
@@ -152,33 +150,32 @@ bool CanvasItemDrawing::handle_event(CanvasEvent const &event)
 
         [&] (MotionEvent const &event) {
             /* TODO ... event -> arena transform? */
-            _c = event.eventPos();
+            _c = event.pos;
 
             auto new_drawing_item = _drawing->pick(_c, _drawing->cursorTolerance(), _sticky * DrawingItem::PICK_STICKY | _pick_outline * DrawingItem::PICK_OUTLINE);
             if (_active_item != new_drawing_item) {
 
                 /* fixme: What is wrong? */
                 if (_active_item) {
-                    auto gdkevent = GdkEventUniqPtr(gdk_event_new(GDK_LEAVE_NOTIFY));
-                    auto event = LeaveEvent(std::move(gdkevent), {});
-                    retval = _drawing_event_signal.emit(event, _active_item);
+                    auto event2 = LeaveEvent();
+                    event2.modifiers = event.modifiers;
+                    retval = _drawing_event_signal.emit(event2, _active_item);
                 }
 
                 _active_item = new_drawing_item;
 
                 if (_active_item) {
-                    auto gdkevent = GdkEventUniqPtr(gdk_event_new(GDK_ENTER_NOTIFY));
-                    gdkevent->crossing.x = event.eventX();
-                    gdkevent->crossing.y = event.eventY();
-                    auto event = EnterEvent(std::move(gdkevent), {});
-                    retval = _drawing_event_signal.emit(event, _active_item);
+                    auto event2 = EnterEvent();
+                    event2.modifiers = event.modifiers;
+                    event2.pos = event.pos;
+                    retval = _drawing_event_signal.emit(event2, _active_item);
                 }
             }
             retval = retval || _drawing_event_signal.emit(event, _active_item);
         },
 
         [&] (ScrollEvent const &event) {
-            if (Modifiers::Modifier::get(Modifiers::Type::CANVAS_ZOOM)->active(event.modifiers())) {
+            if (Modifiers::Modifier::get(Modifiers::Type::CANVAS_ZOOM)->active(event.modifiers)) {
                 /* Zoom is emitted by the canvas as well, ignore here */
                 retval = false;
                 return;

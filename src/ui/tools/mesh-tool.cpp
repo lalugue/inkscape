@@ -29,7 +29,6 @@
 #include "document.h"
 #include "gradient-drag.h"
 #include "gradient-chemistry.h"
-#include "include/macros.h"
 #include "message-context.h"
 #include "message-stack.h"
 #include "rubberband.h"
@@ -440,7 +439,7 @@ bool MeshTool::root_handler(CanvasEvent const &event)
 
     inspect_event(event,
         [&] (ButtonPressEvent const &event) {
-            if (event.numPress() == 2 && event.button() == 1) {
+            if (event.num_press == 2 && event.button == 1) {
 
 #ifdef DEBUG_MESH
                 std::cout << "root_handler: GDK_2BUTTON_PRESS" << std::endl;
@@ -451,7 +450,7 @@ bool MeshTool::root_handler(CanvasEvent const &event)
                 //  If not over a line and no mesh, create new mesh for top selected object.
 
                 // Are we over a mesh line? (Should replace by CanvasItem event.)
-                auto over_curve = this->over_curve(event.eventPos());
+                auto over_curve = this->over_curve(event.pos);
 
                 if (!over_curve.empty()) {
                     // We take the first item in selection, because with doubleclick, the first click
@@ -483,7 +482,7 @@ bool MeshTool::root_handler(CanvasEvent const &event)
                 ret = true;
             }
 
-            if (event.numPress() == 1 && event.button() == 1) {
+            if (event.num_press == 1 && event.button == 1) {
 
 #ifdef DEBUG_MESH
                 std::cout << "root_handler: GDK_BUTTON_PRESS" << std::endl;
@@ -494,15 +493,15 @@ bool MeshTool::root_handler(CanvasEvent const &event)
                 //  Else set origin for drag which will create a new gradient.
 
                 // Are we over a mesh curve?
-                auto over_curve = this->over_curve(event.eventPos(), false);
+                auto over_curve = this->over_curve(event.pos, false);
 
                 if (!over_curve.empty()) {
                     for (auto it : over_curve) {
                         Inkscape::PaintTarget fill_or_stroke = it->is_fill ? Inkscape::FOR_FILL : Inkscape::FOR_STROKE;
                         GrDragger *dragger0 = _grdrag->getDraggerFor(it->item, POINT_MG_CORNER, it->corner0, fill_or_stroke);
                         GrDragger *dragger1 = _grdrag->getDraggerFor(it->item, POINT_MG_CORNER, it->corner1, fill_or_stroke);
-                        bool add    = (event.modifiers() & GDK_SHIFT_MASK);
-                        bool toggle = (event.modifiers() & GDK_CONTROL_MASK);
+                        bool add    = (event.modifiers & GDK_SHIFT_MASK);
+                        bool toggle = (event.modifiers & GDK_CONTROL_MASK);
                         if ( !add && !toggle ) {
                             _grdrag->deselectAll();
                         }
@@ -513,7 +512,7 @@ bool MeshTool::root_handler(CanvasEvent const &event)
 
                 } else {
 
-                    Geom::Point button_w(event.eventPos());
+                    Geom::Point button_w(event.pos);
 
                     // Save drag origin
                     saveDragOrigin(button_w);
@@ -536,14 +535,14 @@ bool MeshTool::root_handler(CanvasEvent const &event)
                         }
                     }
 
-                    if (has_mesh && !(event.modifiers() & GDK_CONTROL_MASK)) {
+                    if (has_mesh && !(event.modifiers & GDK_CONTROL_MASK)) {
                         Inkscape::Rubberband::get(_desktop)->start(_desktop, button_dt);
                     }
 
                     // remember clicked item, disregarding groups, honoring Alt; do nothing with Crtl to
                     // enable Ctrl+doubleclick of exactly the selected item(s)
-                    if (!(event.modifiers() & GDK_CONTROL_MASK)) {
-                        item_to_select = sp_event_context_find_item (_desktop, button_w, event.modifiers() & GDK_MOD1_MASK, TRUE);
+                    if (!(event.modifiers & GDK_CONTROL_MASK)) {
+                        item_to_select = sp_event_context_find_item (_desktop, button_w, event.modifiers & GDK_MOD1_MASK, TRUE);
                     }
 
                     if (!selection->isEmpty()) {
@@ -561,8 +560,8 @@ bool MeshTool::root_handler(CanvasEvent const &event)
         },
         [&] (MotionEvent const &event) {
             // Mouse move
-            if (dragging && (event.modifiers() & GDK_BUTTON1_MASK)) {
-                if (!checkDragMoved(event.eventPos())) {
+            if (dragging && (event.modifiers & GDK_BUTTON1_MASK)) {
+                if (!checkDragMoved(event.pos)) {
                     return;
                 }
  
@@ -570,7 +569,7 @@ bool MeshTool::root_handler(CanvasEvent const &event)
                 std::cout << "root_handler: GDK_MOTION_NOTIFY: Dragging" << std::endl;
 #endif
 
-                Geom::Point const motion_dt = _desktop->w2d(event.eventPos());
+                Geom::Point const motion_dt = _desktop->w2d(event.pos);
 
                 if (Inkscape::Rubberband::get(_desktop)->is_started()) {
                     Inkscape::Rubberband::get(_desktop)->move(motion_dt);
@@ -592,7 +591,7 @@ bool MeshTool::root_handler(CanvasEvent const &event)
                     auto &m = _desktop->namedview->snap_manager;
                     m.setup(_desktop);
 
-                    auto const motion_dt = _desktop->w2d(event.eventPos());
+                    auto const motion_dt = _desktop->w2d(event.pos);
                     m.preSnap(SnapCandidatePoint(motion_dt, SNAPSOURCE_OTHER_HANDLE));
                     m.unSetup();
                 }
@@ -605,7 +604,7 @@ bool MeshTool::root_handler(CanvasEvent const &event)
                 }
 
                 // Change cursor shape if over line
-                auto over_curve = this->over_curve(event.eventPos());
+                auto over_curve = this->over_curve(event.pos);
 
                 if (cursor_addnode && over_curve.empty()) {
                     set_cursor("mesh.svg");
@@ -618,16 +617,16 @@ bool MeshTool::root_handler(CanvasEvent const &event)
         },
         [&] (ButtonReleaseEvent const &event) {
             xyp = {};
-            if (event.button() == 1) {
+            if (event.button == 1) {
 
 #ifdef DEBUG_MESH
                 std::cout << "root_handler: GDK_BUTTON_RELEASE" << std::endl;
 #endif
 
                 // Check if over line
-                auto over_curve = this->over_curve(event.eventPos());
+                auto over_curve = this->over_curve(event.pos);
 
-                if ( (event.modifiers() & GDK_CONTROL_MASK) && (event.modifiers() & GDK_MOD1_MASK ) ) {
+                if ( (event.modifiers & GDK_CONTROL_MASK) && (event.modifiers & GDK_MOD1_MASK ) ) {
                     if (!over_curve.empty()) {
                         split_near_point(over_curve[0]->item, mousepoint_doc);
                         ret = true;
@@ -636,7 +635,7 @@ bool MeshTool::root_handler(CanvasEvent const &event)
                     dragging = false;
 
                     // Unless clicked with Ctrl (to enable Ctrl+doubleclick).
-                    if (event.modifiers() & GDK_CONTROL_MASK && !(event.modifiers() & GDK_SHIFT_MASK)) {
+                    if (event.modifiers & GDK_CONTROL_MASK && !(event.modifiers & GDK_SHIFT_MASK)) {
                         Inkscape::Rubberband::get(_desktop)->stop();
                         ret = true;
                     } else {
@@ -670,7 +669,7 @@ bool MeshTool::root_handler(CanvasEvent const &event)
                                     // this was a rubberband drag
                                     if (r->getMode() == RUBBERBAND_MODE_RECT) {
                                         Geom::OptRect const b = r->getRectangle();
-                                        if (!(event.modifiers() & GDK_SHIFT_MASK)) {
+                                        if (!(event.modifiers & GDK_SHIFT_MASK)) {
                                             _grdrag->deselectAll();
                                         }
                                         _grdrag->selectRect(*b);
@@ -684,7 +683,7 @@ bool MeshTool::root_handler(CanvasEvent const &event)
                                 // possible change in selection during a double click with overlapping objects.
                             } else {
                                 // No dragging, select clicked item if any.
-                                if (event.modifiers() & GDK_SHIFT_MASK) {
+                                if (event.modifiers & GDK_SHIFT_MASK) {
                                     selection->toggle(item_to_select);
                                 } else {
                                     _grdrag->deselectAll();
@@ -736,7 +735,7 @@ bool MeshTool::root_handler(CanvasEvent const &event)
 
                 case GDK_KEY_A:
                 case GDK_KEY_a:
-                    if (MOD__CTRL_ONLY(event) && _grdrag->isNonEmpty()) {
+                    if (mod_ctrl_only(event) && _grdrag->isNonEmpty()) {
                         _grdrag->selectAll();
                         ret = true;
                     }
@@ -764,7 +763,7 @@ bool MeshTool::root_handler(CanvasEvent const &event)
 
                 case GDK_KEY_i:
                 case GDK_KEY_I:
-                    if (MOD__SHIFT_ONLY(event)) {
+                    if (mod_shift_only(event)) {
                         // Shift+I - insert corners (alternate keybinding for keyboards
                         //           that don't have the Insert key)
                         this->corner_operation(MG_CORNER_INSERT);
@@ -782,7 +781,7 @@ bool MeshTool::root_handler(CanvasEvent const &event)
 
                 case GDK_KEY_b:  // Toggle mesh side between lineto and curveto.
                 case GDK_KEY_B:
-                    if (MOD__ALT(event) && _grdrag->isNonEmpty() && _grdrag->hasSelection()) {
+                    if (mod_alt(event) && _grdrag->isNonEmpty() && _grdrag->hasSelection()) {
                         corner_operation(MG_CORNER_SIDE_TOGGLE);
                         ret = true;
                     }
@@ -790,7 +789,7 @@ bool MeshTool::root_handler(CanvasEvent const &event)
 
                 case GDK_KEY_c:  // Convert mesh side from generic Bezier to Bezier approximating arc,
                 case GDK_KEY_C:  // preserving handle direction.
-                    if (MOD__ALT(event) && _grdrag->isNonEmpty() && _grdrag->hasSelection()) {
+                    if (mod_alt(event) && _grdrag->isNonEmpty() && _grdrag->hasSelection()) {
                         corner_operation(MG_CORNER_SIDE_ARC);
                         ret = true;
                     }
@@ -798,7 +797,7 @@ bool MeshTool::root_handler(CanvasEvent const &event)
 
                 case GDK_KEY_g:  // Toggle mesh tensor points on/off
                 case GDK_KEY_G:
-                    if (MOD__ALT(event) && _grdrag->isNonEmpty() && _grdrag->hasSelection()) {
+                    if (mod_alt(event) && _grdrag->isNonEmpty() && _grdrag->hasSelection()) {
                         corner_operation(MG_CORNER_TENSOR_TOGGLE);
                         ret = true;
                     }
@@ -806,7 +805,7 @@ bool MeshTool::root_handler(CanvasEvent const &event)
 
                 case GDK_KEY_j:  // Smooth corner color
                 case GDK_KEY_J:
-                    if (MOD__ALT(event) && _grdrag->isNonEmpty() && _grdrag->hasSelection()) {
+                    if (mod_alt(event) && _grdrag->isNonEmpty() && _grdrag->hasSelection()) {
                         corner_operation(MG_CORNER_COLOR_SMOOTH);
                         ret = true;
                     }
@@ -814,14 +813,14 @@ bool MeshTool::root_handler(CanvasEvent const &event)
 
                 case GDK_KEY_k:  // Pick corner color
                 case GDK_KEY_K:
-                    if (MOD__ALT(event) && _grdrag->isNonEmpty() && _grdrag->hasSelection()) {
+                    if (mod_alt(event) && _grdrag->isNonEmpty() && _grdrag->hasSelection()) {
                         corner_operation(MG_CORNER_COLOR_PICK);
                         ret = true;
                     }
                     break;
 
                 default:
-                    ret = _grdrag->key_press_handler(event.CanvasEvent::original());
+                    ret = _grdrag->key_press_handler(event);
                     break;
             }
         },

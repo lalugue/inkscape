@@ -17,11 +17,11 @@
 #include "ui/tools/tool-base.h"
 
 namespace Inkscape {
-  class ScrollEvent;
-  class SelTrans;
-  class SelectionDescriber;
-  class Selection;
-}
+struct ScrollEvent;
+class SelTrans;
+class SelectionDescriber;
+class Selection;
+} // namespace Inkscape
 
 namespace Inkscape::UI::Tools {
 

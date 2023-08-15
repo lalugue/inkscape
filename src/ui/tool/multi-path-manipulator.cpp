@@ -714,13 +714,13 @@ bool MultiPathManipulator::event(Inkscape::UI::Tools::ToolBase *tool, CanvasEven
                 } else {
                 */
                 auto mode =
-                    held_control(event) ?
+                    held_ctrl(event) ?
                         (del_preserves_shape ? NodeDeleteMode::inverse_auto : NodeDeleteMode::curve_fit) :
                         (del_preserves_shape ? NodeDeleteMode::automatic : NodeDeleteMode::line_segment);
                 deleteNodes(mode);
 
                 // Delete any selected gradient nodes as well
-                tool->deleteSelectedDrag(held_control(event));
+                tool->deleteSelectedDrag(held_ctrl(event));
             }
             ret = true;
             return;

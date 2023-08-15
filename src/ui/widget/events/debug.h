@@ -47,24 +47,24 @@ inline void dump_event(CanvasEvent const &event, char const *prefix, bool merge 
 
     inspect_event(event,
         [] (ButtonPressEvent const &event) {
-            std::cout << "ButtonPressEvent: " << event.button();
-            if (auto n = event.numPress(); n != 1) {
+            std::cout << "ButtonPressEvent: " << event.button;
+            if (auto n = event.num_press; n != 1) {
                 std::cout << " num_press: " << n;
             }
             std::cout << std::endl;
         },
         [] (ButtonReleaseEvent const &event) {
-            std::cout << "ButtonReleaseEvent: " << event.button() << std::endl;
+            std::cout << "ButtonReleaseEvent: " << event.button << std::endl;
         },
 
         [] (KeyPressEvent const &event) {
             std::cout << "KeyPressEvent: " << std::hex
-                      << " hardware: " << event.hardwareKeycode()
-                      << " state: "    << event.modifiers()
-                      << " keyval: "   << event.keyval() << std::endl;
+                      << " hardware: " << event.hardware_keycode
+                      << " state: "    << event.modifiers
+                      << " keyval: "   << event.keyval << std::endl;
         },
         [] (KeyReleaseEvent const &event) {
-            std::cout << "KeyReleaseEvent: " << event.hardwareKeycode() << std::endl;
+            std::cout << "KeyReleaseEvent: " << event.hardware_keycode << std::endl;
         },
 
         [] (MotionEvent const &event) {

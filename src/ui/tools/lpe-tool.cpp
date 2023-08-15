@@ -112,7 +112,7 @@ bool LpeTool::item_handler(SPItem *item, CanvasEvent const &event)
 
     inspect_event(event,
         [&] (ButtonPressEvent const &event) {
-            if (event.numPress() != 1 || event.button() != 1) {
+            if (event.num_press != 1 || event.button != 1) {
                 return;
             }
             // select the clicked item but do nothing else
@@ -144,7 +144,7 @@ bool LpeTool::root_handler(CanvasEvent const &event)
 
     inspect_event(event,
         [&] (ButtonPressEvent const &event) {
-            if (event.numPress() == 1 && event.button() == 1) {
+            if (event.num_press == 1 && event.button == 1) {
                 if (mode == LivePathEffect::INVALID_LPE) {
                     // don't do anything for now if we are inactive (except clearing the selection
                     // since this was a click into empty space)
@@ -154,7 +154,7 @@ bool LpeTool::root_handler(CanvasEvent const &event)
                     return;
                 }
 
-                saveDragOrigin(event.eventPos());
+                saveDragOrigin(event.pos);
 
                 auto prefs = Preferences::get();
                 int mode = prefs->getInt("/tools/lpetool/mode");

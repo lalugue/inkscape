@@ -29,8 +29,6 @@
 #include "selection.h"
 #include "snap.h"
 
-#include "include/macros.h"
-
 #include "object/sp-ellipse.h"
 #include "object/sp-namedview.h"
 
@@ -104,8 +102,8 @@ bool ArcTool::item_handler(SPItem *item, CanvasEvent const &event)
 {
     inspect_event(event,
         [&] (ButtonPressEvent const &event) {
-            if (event.numPress() == 1 && event.button() == 1) {
-                setup_for_drag_start(event.CanvasEvent::original());
+            if (event.num_press == 1 && event.button == 1) {
+                setup_for_drag_start(event);
             }
             // motion and release are always on root (why?)
         },
@@ -126,10 +124,11 @@ bool ArcTool::root_handler(CanvasEvent const &event)
 
     inspect_event(event,
         [&] (ButtonPressEvent const &event) {
-            if (event.numPress() == 1 && event.button() == 1) {
+            if (event.num_press == 1 && event.button == 1) {
                 dragging = true;
 
-                center = setup_for_drag_start(event.CanvasEvent::original());
+                setup_for_drag_start(event);
+                center = _desktop->w2d(event.pos);
 
                 // Snap center.
                 auto &m = _desktop->namedview->snap_manager;
@@ -143,13 +142,13 @@ bool ArcTool::root_handler(CanvasEvent const &event)
             }
         },
         [&] (MotionEvent const &event) {
-            if (dragging && (event.modifiers() & GDK_BUTTON1_MASK)) {
-                if (!checkDragMoved(event.eventPos())) {
+            if (dragging && (event.modifiers & GDK_BUTTON1_MASK)) {
+                if (!checkDragMoved(event.pos)) {
                     return;
                 }
 
-                auto const motion_dt = _desktop->w2d(event.eventPos());
-                drag(motion_dt, event.modifiers());
+                auto const motion_dt = _desktop->w2d(event.pos);
+                drag(motion_dt, event.modifiers);
 
                 gobble_motion_events(GDK_BUTTON1_MASK);
 
@@ -158,14 +157,14 @@ bool ArcTool::root_handler(CanvasEvent const &event)
                 auto &m = _desktop->namedview->snap_manager;
                 m.setup(_desktop);
 
-                auto const motion_dt = _desktop->w2d(event.eventPos());
+                auto const motion_dt = _desktop->w2d(event.pos);
                 m.preSnap(SnapCandidatePoint(motion_dt, SNAPSOURCE_NODE_HANDLE));
                 m.unSetup();
             }
         },
         [&] (ButtonReleaseEvent const &event) {
             xyp = {};
-            if (event.button() == 1) {
+            if (event.button == 1) {
                 dragging = false;
                 discard_delayed_snap_event();
 
@@ -174,7 +173,7 @@ bool ArcTool::root_handler(CanvasEvent const &event)
                     finishItem();
                 } else if (item_to_select) {
                     // no dragging, select clicked item if any
-                    if (event.modifiers() & GDK_SHIFT_MASK) {
+                    if (event.modifiers & GDK_SHIFT_MASK) {
                         selection->toggle(item_to_select);
                     } else if (!selection->includes(item_to_select)) {
                         selection->set(item_to_select);
@@ -201,7 +200,7 @@ bool ArcTool::root_handler(CanvasEvent const &event)
                 case GDK_KEY_Meta_L:  // Meta is when you press Shift+Alt (at least on my machine)
                 case GDK_KEY_Meta_R:
                     if (!dragging) {
-                        sp_event_show_modifier_tip(defaultMessageContext(), event.CanvasEvent::original(),
+                        sp_event_show_modifier_tip(defaultMessageContext(), event,
                                                    _("<b>Ctrl</b>: make circle or integer-ratio ellipse, snap arc/segment angle"),
                                                    _("<b>Shift</b>: draw around the starting point"),
                                                    nullptr);
@@ -210,7 +209,7 @@ bool ArcTool::root_handler(CanvasEvent const &event)
 
                 case GDK_KEY_x:
                 case GDK_KEY_X:
-                    if (MOD__ALT_ONLY(event)) {
+                    if (mod_alt_only(event)) {
                         _desktop->setToolboxFocusTo("arc-rx");
                         ret = true;
                     }
@@ -243,7 +242,7 @@ bool ArcTool::root_handler(CanvasEvent const &event)
                 case GDK_KEY_Delete:
                 case GDK_KEY_KP_Delete:
                 case GDK_KEY_BackSpace:
-                    ret = deleteSelectedDrag(MOD__CTRL_ONLY(event));
+                    ret = deleteSelectedDrag(mod_ctrl_only(event));
                     break;
 
                 default:
@@ -251,7 +250,7 @@ bool ArcTool::root_handler(CanvasEvent const &event)
             }
         },
         [&] (KeyReleaseEvent const &event) {
-            switch (event.keyval()) {
+            switch (event.keyval) {
                 case GDK_KEY_Alt_L:
                 case GDK_KEY_Alt_R:
                 case GDK_KEY_Control_L:

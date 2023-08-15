@@ -421,12 +421,12 @@ bool NodeTool::root_handler(CanvasEvent const &event)
     inspect_event(event,
     [&] (MotionEvent const &event) {
         sp_update_helperpath(_desktop);
-        auto over_item = sp_event_context_find_item(_desktop, event.eventPos(), false, true);
+        auto over_item = sp_event_context_find_item(_desktop, event.pos, false, true);
 
-        auto const motion_w = event.eventPos();
+        auto const motion_w = event.pos;
         auto const motion_dt = _desktop->w2d(motion_w);
 
-        if (event.modifiers() & GDK_BUTTON1_MASK) {
+        if (event.modifiers & GDK_BUTTON1_MASK) {
             if (rband->is_started()) {
                 rband->move(motion_dt);
             }
@@ -451,7 +451,7 @@ bool NodeTool::root_handler(CanvasEvent const &event)
         // We will show a pre-snap indication for when the user adds a node through double-clicking
         // Adding a node will only work when a path has been selected; if that's not the case then snapping is useless
         if (!_desktop->getSelection()->isEmpty()) {
-            if (!(event.modifiers() & GDK_SHIFT_MASK)) {
+            if (!(event.modifiers & GDK_SHIFT_MASK)) {
                 m.setup(_desktop);
                 auto scp = Inkscape::SnapCandidatePoint(motion_dt, Inkscape::SNAPSOURCE_OTHER_HANDLE);
                 m.preSnap(scp, true);
@@ -516,7 +516,7 @@ bool NodeTool::root_handler(CanvasEvent const &event)
 
         case GDK_KEY_a:
         case GDK_KEY_A:
-            if (held_control(event) && held_alt(event)) {
+            if (held_ctrl(event) && held_alt(event)) {
                 _selected_nodes->selectAll();
                 // Ctrl+A is handled in selection-chemistry.cpp via verb
                 update_tip(event);
@@ -527,7 +527,7 @@ bool NodeTool::root_handler(CanvasEvent const &event)
 
         case GDK_KEY_h:
         case GDK_KEY_H:
-            if (held_only_control(event)) {
+            if (held_only_ctrl(event)) {
                 prefs->setBool("/tools/nodes/show_handles", !show_handles);
                 ret = true;
                 return;
@@ -554,16 +554,16 @@ bool NodeTool::root_handler(CanvasEvent const &event)
     },
 
     [&] (ButtonPressEvent const &event) {
-        if (event.button() != 1) {
+        if (event.button != 1) {
             return;
         }
 
-        auto const event_pt = event.eventPos();
+        auto const event_pt = event.pos;
         auto const desktop_pt = _desktop->w2d(event_pt);
 
-        if (event.numPress() == 1) {
+        if (event.num_press == 1) {
 
-            if (Modifier::get(Modifiers::Type::SELECT_TOUCH_PATH)->active(event.modifiers())) {
+            if (Modifier::get(Modifiers::Type::SELECT_TOUCH_PATH)->active(event.modifiers)) {
                 rband->setMode(RUBBERBAND_MODE_TOUCHPATH);
             } else {
                 rband->defaultMode();
@@ -573,13 +573,13 @@ bool NodeTool::root_handler(CanvasEvent const &event)
             ret = true;
             return;
 
-        } else if (event.numPress() == 2) {
+        } else if (event.num_press == 2) {
 
             // If the selector received the doubleclick event, then we're at some distance from
             // the path; otherwise, the doubleclick event would have been received by
             // CurveDragPoint; we will insert nodes into the path anyway but only if we can snap
             // to the path. Otherwise the position would not be very well defined.
-            if (!(event.modifiers() & GDK_SHIFT_MASK)) {
+            if (!(event.modifiers & GDK_SHIFT_MASK)) {
                 auto &m = _desktop->namedview->snap_manager;
                 m.setup(_desktop);
                 auto scp = Inkscape::SnapCandidatePoint(desktop_pt, Inkscape::SNAPSOURCE_OTHER_HANDLE);
@@ -605,7 +605,7 @@ bool NodeTool::root_handler(CanvasEvent const &event)
     },
 
     [&] (ButtonReleaseEvent const &event) {
-        if (event.button() != 1) {
+        if (event.button != 1) {
             return;
         }
 
@@ -636,13 +636,13 @@ bool NodeTool::item_handler(SPItem *item, CanvasEvent const &event)
     // Node shape editors are handled differently than shape tools
     inspect_event(event,
     [&] (ButtonPressEvent const &event) {
-        if (event.numPress() != 1 || event.button() != 1) {
+        if (event.num_press != 1 || event.button != 1) {
             return;
         }
         for (auto &se : _shape_editors) {
             // This allows users to select an arbitary position in a pattern to edit on canvas.
             if (auto knotholder = se.second->knotholder) {
-                auto const point = event.eventPos();
+                auto const point = event.pos;
 
                 // This allows us to dive into groups and find what the real item is
                 if (_desktop->getItemAtPoint(point, true) != knotholder->getItem()) {
@@ -668,7 +668,7 @@ void NodeTool::update_tip(CanvasEvent const &event)
             return;
         }
 
-        auto modifiers_after = event.modifiers() ^ modifiers_change;
+        auto modifiers_after = event.modifiers ^ modifiers_change;
 
         if (state_held_shift(modifiers_after)) {
             if (_last_over) {
@@ -761,7 +761,7 @@ void NodeTool::select_area(Geom::Path const &path, ButtonReleaseEvent const &eve
         selection->setList(items);
     } else {
         bool shift = held_shift(event);
-        bool ctrl = held_control(event);
+        bool ctrl = held_ctrl(event);
 
         if (!shift) {
             // A/C. No modifier, selects all nodes, or selects all other nodes.
@@ -783,14 +783,14 @@ void NodeTool::select_area(Geom::Path const &path, ButtonReleaseEvent const &eve
 
 void NodeTool::select_point(ButtonReleaseEvent const &event)
 {
-    if (event.button() != 1) {
+    if (event.button != 1) {
         return;
     }
 
     auto selection = _desktop->getSelection();
 
-    auto item_clicked = sp_event_context_find_item(_desktop, event.eventPos(),
-        (event.modifiers() & GDK_MOD1_MASK) && !(event.modifiers() & GDK_CONTROL_MASK), true);
+    auto item_clicked = sp_event_context_find_item(_desktop, event.pos,
+        (event.modifiers & GDK_MOD1_MASK) && !(event.modifiers & GDK_CONTROL_MASK), true);
 
     if (!item_clicked) { // nothing under cursor
         // if no Shift, deselect

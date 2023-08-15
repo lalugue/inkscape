@@ -151,23 +151,22 @@ void EraserTool::_reset(Geom::Point p)
     del = Geom::Point(0, 0);
 }
 
-void EraserTool::_extinput(CanvasEvent const &canvas_event)
+void EraserTool::_extinput(ExtendedInput const &ext)
 {
-    auto event = canvas_event.CanvasEvent::original();
-    if (gdk_event_get_axis(event, GDK_AXIS_PRESSURE, &pressure)) {
-        pressure = std::clamp(pressure, min_pressure, max_pressure);
+    if (ext.pressure) {
+        pressure = std::clamp(*ext.pressure, min_pressure, max_pressure);
     } else {
         pressure = default_pressure;
     }
 
-    if (gdk_event_get_axis(event, GDK_AXIS_XTILT, &xtilt)) {
-        xtilt = std::clamp(xtilt, min_tilt, max_tilt);
+    if (ext.xtilt) {
+        xtilt = std::clamp(*ext.xtilt, min_tilt, max_tilt);
     } else {
         xtilt = default_tilt;
     }
 
-    if (gdk_event_get_axis(event, GDK_AXIS_YTILT, &ytilt)) {
-        ytilt = std::clamp(ytilt, min_tilt, max_tilt);
+    if (ext.ytilt) {
+        ytilt = std::clamp(*ext.ytilt, min_tilt, max_tilt);
     } else {
         ytilt = default_tilt;
     }
@@ -357,17 +356,17 @@ bool EraserTool::root_handler(CanvasEvent const &event)
 
     inspect_event(event,
         [&] (ButtonPressEvent const &event) {
-            if (event.numPress() == 1 && event.button() == 1) {
+            if (event.num_press == 1 && event.button == 1) {
                 if (!have_viable_layer(_desktop, defaultMessageContext())) {
                     return;
                     ret = true;
                 }
 
-                auto const button_w = event.eventPos();
+                auto const button_w = event.pos;
                 auto const button_dt = _desktop->w2d(button_w);
 
                 _reset(button_dt);
-                _extinput(event);
+                _extinput(event.extinput);
                 _apply(button_dt);
                 accumulated.reset();
 
@@ -388,13 +387,13 @@ bool EraserTool::root_handler(CanvasEvent const &event)
         },
 
         [&] (MotionEvent const &event) {
-            auto const motion_w = event.eventPos();
+            auto const motion_w = event.pos;
             auto const motion_dt = _desktop->w2d(motion_w);
-            _extinput(event);
+            _extinput(event.extinput);
 
             message_context->clear();
 
-            if (is_drawing && (event.modifiers() & GDK_BUTTON1_MASK)) {
+            if (is_drawing && (event.modifiers & GDK_BUTTON1_MASK)) {
                 dragging = true;
 
                 message_context->set(Inkscape::NORMAL_MESSAGE, _("<b>Drawing</b> an eraser stroke"));
@@ -419,11 +418,11 @@ bool EraserTool::root_handler(CanvasEvent const &event)
         },
 
         [&] (ButtonReleaseEvent const &event) {
-            if (event.button() != 1) {
+            if (event.button != 1) {
                 return;
             }
 
-            auto const motion_w = event.eventPos();
+            auto const motion_w = event.pos;
             auto const motion_dt = _desktop->w2d(motion_w);
 
             ungrabCanvasEvents();
@@ -492,11 +491,11 @@ bool EraserTool::root_handler(CanvasEvent const &event)
 bool EraserTool::_handleKeypress(KeyPressEvent const &key)
 {
     bool ret = false;
-    bool just_ctrl = (key.modifiers() & GDK_CONTROL_MASK)                      // Ctrl key is down
-                     && !(key.modifiers() & (GDK_MOD1_MASK | GDK_SHIFT_MASK)); // but not Alt or Shift
+    bool just_ctrl = (key.modifiers & GDK_CONTROL_MASK)                      // Ctrl key is down
+                     && !(key.modifiers & (GDK_MOD1_MASK | GDK_SHIFT_MASK)); // but not Alt or Shift
 
-    bool just_alt = (key.modifiers() & GDK_MOD1_MASK)                            // Alt is down
-                    && !(key.modifiers() & (GDK_CONTROL_MASK | GDK_SHIFT_MASK)); // but not Ctrl or Shift
+    bool just_alt = (key.modifiers & GDK_MOD1_MASK)                            // Alt is down
+                    && !(key.modifiers & (GDK_CONTROL_MASK | GDK_SHIFT_MASK)); // but not Ctrl or Shift
 
     switch (get_latin_keyval(key)) {
         case GDK_KEY_Right:

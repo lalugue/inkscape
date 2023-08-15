@@ -84,12 +84,12 @@ PencilTool::PencilTool(SPDesktop *desktop)
     this->anchor_statusbar = false;
 }
 
-PencilTool::~PencilTool() {
-}
+PencilTool::~PencilTool() = default;
 
-void PencilTool::_extinput(CanvasEvent const &event) {
-    if (gdk_event_get_axis (event.CanvasEvent::original(), GDK_AXIS_PRESSURE, &pressure)) {
-        pressure = CLAMP (pressure, DDC_MIN_PRESSURE, DDC_MAX_PRESSURE);
+void PencilTool::_extinput(ExtendedInput const &ext)
+{
+    if (ext.pressure) {
+        pressure = std::clamp(*ext.pressure, DDC_MIN_PRESSURE, DDC_MAX_PRESSURE);
         is_tablet = true;
     } else {
         pressure = DDC_DEFAULT_PRESSURE;
@@ -120,16 +120,15 @@ void PencilTool::_endpointSnap(Geom::Point &p, guint const state) {
  */
 bool PencilTool::root_handler(CanvasEvent const &event)
 {
-
     bool ret = false;
-
-    _extinput(event);
 
     inspect_event(event,
         [&] (ButtonPressEvent const &event) {
+            _extinput(event.extinput);
             ret = _handleButtonPress(event);
         },
         [&] (MotionEvent const &event) {
+            _extinput(event.extinput);
             ret = _handleMotionNotify(event);
         },
         [&] (ButtonReleaseEvent const &event) {
@@ -150,7 +149,7 @@ bool PencilTool::root_handler(CanvasEvent const &event)
 bool PencilTool::_handleButtonPress(ButtonPressEvent const &event)
 {
     bool ret = false;
-    if (event.numPress() == 1 && event.button() == 1) {
+    if (event.num_press == 1 && event.button == 1) {
         Inkscape::Selection *selection = _desktop->getSelection();
 
         if (Inkscape::have_viable_layer(_desktop, defaultMessageContext()) == false) {
@@ -161,14 +160,14 @@ bool PencilTool::_handleButtonPress(ButtonPressEvent const &event)
         grabCanvasEvents();
 
         /* Find desktop coordinates */
-        Geom::Point p = _desktop->w2d(event.eventPos());
+        Geom::Point p = _desktop->w2d(event.pos);
 
         /* Test whether we hit any anchor. */
-        SPDrawAnchor *anchor = spdc_test_inside(this, event.eventPos());
+        SPDrawAnchor *anchor = spdc_test_inside(this, event.pos);
         if (tablet_enabled) {
             anchor = nullptr;
         }
-        pencil_drag_origin_w = event.eventPos();
+        pencil_drag_origin_w = event.pos;
         pencil_within_tolerance = true;
         Inkscape::Preferences *prefs = Inkscape::Preferences::get();
         tablet_enabled = prefs->getBool("/tools/freehand/pencil/pressure", false);
@@ -181,12 +180,12 @@ bool PencilTool::_handleButtonPress(ButtonPressEvent const &event)
             default:
                 /* Set first point of sequence */
                 SnapManager &m = _desktop->namedview->snap_manager;
-                if (event.modifiers() & GDK_CONTROL_MASK) {
+                if (event.modifiers & GDK_CONTROL_MASK) {
                     m.setup(_desktop, true);
-                    if (!(event.modifiers() & GDK_SHIFT_MASK)) {
+                    if (!(event.modifiers & GDK_SHIFT_MASK)) {
                         m.freeSnapReturnByRef(p, Inkscape::SNAPSOURCE_NODE_HANDLE);
                       }
-                    spdc_create_single_dot(this, p, "/tools/freehand/pencil", event.modifiers());
+                    spdc_create_single_dot(this, p, "/tools/freehand/pencil", event.modifiers);
                     m.unSetup();
                     ret = true;
                     break;
@@ -208,7 +207,7 @@ bool PencilTool::_handleButtonPress(ButtonPressEvent const &event)
                         // anchor, which is handled by the sibling branch above)
                         selection->clear();
                         _desktop->messageStack()->flash(Inkscape::NORMAL_MESSAGE, _("Creating new path"));
-                    } else if (!(event.modifiers() & GDK_SHIFT_MASK)) {
+                    } else if (!(event.modifiers & GDK_SHIFT_MASK)) {
                         // This is the first click of a new curve; deselect item so that
                         // this curve is not combined with it (unless it is drawn from its
                         // anchor, which is handled by the sibling branch above)
@@ -236,14 +235,14 @@ bool PencilTool::_handleButtonPress(ButtonPressEvent const &event)
 }
 
 bool PencilTool::_handleMotionNotify(MotionEvent const &event) {
-    if ((event.modifiers() & GDK_CONTROL_MASK) && (event.modifiers() & GDK_BUTTON1_MASK)) {
+    if ((event.modifiers & GDK_CONTROL_MASK) && (event.modifiers & GDK_BUTTON1_MASK)) {
         // mouse was accidentally moved during Ctrl+click;
         // ignore the motion and create a single point
         _is_drawing = false;
         return true;
     }
 
-    if ((event.modifiers() & GDK_BUTTON2_MASK)) {
+    if ((event.modifiers & GDK_BUTTON2_MASK)) {
         // allow scrolling
         return false;
     }
@@ -255,18 +254,18 @@ bool PencilTool::_handleMotionNotify(MotionEvent const &event) {
         return false;
     }
     
-    if ( ( event.modifiers() & GDK_BUTTON1_MASK ) && this->_is_drawing) {
+    if ( ( event.modifiers & GDK_BUTTON1_MASK ) && this->_is_drawing) {
         /* Grab mouse, so release will not pass unnoticed */
         grabCanvasEvents();
     }
 
     /* Find desktop coordinates */
-    Geom::Point p = _desktop->w2d(event.eventPos());
+    Geom::Point p = _desktop->w2d(event.pos);
 
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
     if (pencil_within_tolerance) {
         gint const tolerance = prefs->getIntLimited("/options/dragtolerance/value", 0, 0, 100);
-        if ( Geom::LInfty(event.eventPos() - pencil_drag_origin_w ) < tolerance ) {
+        if ( Geom::LInfty(event.pos - pencil_drag_origin_w ) < tolerance ) {
             return false;   // Do not drag if we're within tolerance from origin.
         }
     }
@@ -276,7 +275,7 @@ bool PencilTool::_handleMotionNotify(MotionEvent const &event) {
     // motion notify coordinates as given (no snapping back to origin)
     pencil_within_tolerance = false;
     
-    anchor = spdc_test_inside(this, event.eventPos());
+    anchor = spdc_test_inside(this, event.pos);
 
     bool ret = false;
 
@@ -291,7 +290,7 @@ bool PencilTool::_handleMotionNotify(MotionEvent const &event) {
                 p = anchor->dp;
             } else {
                 Geom::Point ptnr(p);
-                _endpointSnap(ptnr, event.modifiers());
+                _endpointSnap(ptnr, event.modifiers);
                 p = ptnr;
             }
             _setEndpoint(p);
@@ -299,7 +298,7 @@ bool PencilTool::_handleMotionNotify(MotionEvent const &event) {
             break;
         default:
             /* We may be idle or already freehand */
-            if ( (event.modifiers() & GDK_BUTTON1_MASK) && _is_drawing ) {
+            if ( (event.modifiers & GDK_BUTTON1_MASK) && _is_drawing ) {
                 if (_state == SP_PENCIL_CONTEXT_IDLE) {
                     discard_delayed_snap_event();
                 }
@@ -323,7 +322,7 @@ bool PencilTool::_handleMotionNotify(MotionEvent const &event) {
                             _wps.emplace_back(0, 0);
                         }
                     }
-                    _addFreehandPoint(p, event.modifiers(), false);
+                    _addFreehandPoint(p, event.modifiers, false);
                     ret = true;
                 }
                 if (anchor && !anchor_statusbar) {
@@ -369,27 +368,27 @@ bool PencilTool::_handleButtonRelease(ButtonReleaseEvent const &event) {
 
     set_high_motion_precision(false);
 
-    if (event.button() == 1 && _is_drawing) {
+    if (event.button == 1 && _is_drawing) {
         _is_drawing = false;
 
         /* Find desktop coordinates */
-        Geom::Point p = _desktop->w2d(event.eventPos());
+        Geom::Point p = _desktop->w2d(event.pos);
 
         /* Test whether we hit any anchor. */
-        SPDrawAnchor *anchor = spdc_test_inside(this, event.eventPos());
+        SPDrawAnchor *anchor = spdc_test_inside(this, event.pos);
 
         switch (_state) {
             case SP_PENCIL_CONTEXT_IDLE:
                 /* Releasing button in idle mode means single click */
                 /* We have already set up start point/anchor in button_press */
-                if (!(event.modifiers() & GDK_CONTROL_MASK) && !is_tablet) {
+                if (!(event.modifiers & GDK_CONTROL_MASK) && !is_tablet) {
                     // Ctrl+click creates a single point so only set context in ADDLINE mode when Ctrl isn't pressed
                     _state = SP_PENCIL_CONTEXT_ADDLINE;
                 }
                 /*Or select the down item if we are in tablet mode*/
                 if (is_tablet) {
                     using namespace Inkscape::LivePathEffect;
-                    SPItem *item = sp_event_context_find_item(_desktop, event.eventPos(), false, false);
+                    SPItem *item = sp_event_context_find_item(_desktop, event.pos, false, false);
                     if (item && (!white_item || item != white_item)) {
                         if (is<SPLPEItem>(item)) {
                             Effect* lpe = cast<SPLPEItem>(item)->getCurrentLPE();
@@ -409,7 +408,7 @@ bool PencilTool::_handleButtonRelease(ButtonReleaseEvent const &event) {
                 if (anchor) {
                     p = anchor->dp;
                 } else {
-                    _endpointSnap(p, event.modifiers());
+                    _endpointSnap(p, event.modifiers);
                 }
                 ea = anchor;
                 _setEndpoint(p);
@@ -418,7 +417,7 @@ bool PencilTool::_handleButtonRelease(ButtonReleaseEvent const &event) {
                 discard_delayed_snap_event();
                 break;
             case SP_PENCIL_CONTEXT_FREEHAND:
-                if (event.modifiers() & GDK_MOD1_MASK && !tablet_enabled) {
+                if (event.modifiers & GDK_MOD1_MASK && !tablet_enabled) {
                     /* sketch mode: interpolate the sketched path and improve the current output path with the new interpolation. don't finish sketch */
                     _sketchInterpolate();
 
@@ -433,13 +432,13 @@ bool PencilTool::_handleButtonRelease(ButtonReleaseEvent const &event) {
                     } else {
                         Geom::Point p_end = p;
                         if (tablet_enabled) {
-                            _addFreehandPoint(p_end, event.modifiers(), true);
+                            _addFreehandPoint(p_end, event.modifiers, true);
                             _pressure_curve.reset();
                         } else {
-                            _endpointSnap(p_end, event.modifiers());
+                            _endpointSnap(p_end, event.modifiers);
                             if (p_end != p) {
                                 // then we must have snapped!
-                                _addFreehandPoint(p_end, event.modifiers(), true);
+                                _addFreehandPoint(p_end, event.modifiers, true);
                             }
                         }
                     }
@@ -513,7 +512,7 @@ bool PencilTool::_handleKeyPress(KeyPressEvent const &event) {
         case GDK_KEY_KP_Up:
         case GDK_KEY_KP_Down:
             // Prevent the zoom field from activation.
-            if (!state_held_only_control(event.modifiers())) {
+            if (!state_held_only_ctrl(event.modifiers)) {
                 ret = true;
             }
             break;
@@ -528,7 +527,7 @@ bool PencilTool::_handleKeyPress(KeyPressEvent const &event) {
             break;
         case GDK_KEY_z:
         case GDK_KEY_Z:
-            if (state_held_only_control(event.modifiers()) && _npoints != 0) {
+            if (state_held_only_ctrl(event.modifiers) && _npoints != 0) {
                 // if drawing, cancel, otherwise pass it up for undo
                 if (_state != SP_PENCIL_CONTEXT_IDLE) {
                     _cancel();
@@ -538,7 +537,7 @@ bool PencilTool::_handleKeyPress(KeyPressEvent const &event) {
             break;
         case GDK_KEY_g:
         case GDK_KEY_G:
-            if (state_held_only_shift(event.modifiers())) {
+            if (state_held_only_shift(event.modifiers)) {
                 _desktop->getSelection()->toGuides();
                 ret = true;
             }

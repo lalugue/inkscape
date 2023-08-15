@@ -142,24 +142,24 @@ bool SPKnot::eventHandler(Inkscape::CanvasEvent const &event)
 
     inspect_event(event,
     [&] (Inkscape::ButtonPressEvent const &event) {
-        if (event.button() != 1) {
+        if (event.button != 1) {
             return;
         }
-        if (event.numPress() == 2) {
-            doubleclicked_signal.emit(this, event.modifiers());
+        if (event.num_press == 2) {
+            doubleclicked_signal.emit(this, event.modifiers);
             grabbed = false;
             moved = false;
             consumed = true;
-        } else if (event.numPress() == 1 && desktop && desktop->event_context && !desktop->event_context->is_space_panning()) {
-            auto const p = desktop->w2d(event.eventPos());
-            startDragging(p, event.eventPos().floor(), event.time());
-            mousedown_signal.emit(this, event.modifiers());
+        } else if (event.num_press == 1 && desktop && desktop->event_context && !desktop->event_context->is_space_panning()) {
+            auto const p = desktop->w2d(event.pos);
+            startDragging(p, event.pos.floor(), event.time);
+            mousedown_signal.emit(this, event.modifiers);
             consumed = true;
         }
     },
 
     [&] (Inkscape::ButtonReleaseEvent const &event) {
-        if (event.button() == 1    &&
+        if (event.button == 1      &&
             desktop                &&
             desktop->event_context &&
             !desktop->event_context->is_space_panning())
@@ -180,9 +180,9 @@ bool SPKnot::eventHandler(Inkscape::CanvasEvent const &event)
 
                 if (moved) {
                     setFlag(SP_KNOT_DRAGGING, false);
-                    ungrabbed_signal.emit(this, event.modifiers());
+                    ungrabbed_signal.emit(this, event.modifiers);
                 } else {
-                    click_signal.emit(this, event.modifiers());
+                    click_signal.emit(this, event.modifiers);
                 }
 
                 grabbed = false;
@@ -194,7 +194,7 @@ bool SPKnot::eventHandler(Inkscape::CanvasEvent const &event)
     },
 
     [&] (Inkscape::MotionEvent const &event) {
-        if (!(event.modifiers() & GDK_BUTTON1_MASK) && flags & SP_KNOT_DRAGGING) {
+        if (!(event.modifiers & GDK_BUTTON1_MASK) && flags & SP_KNOT_DRAGGING) {
             pressure = 0;
 
             if (transform_escaped) {
@@ -209,9 +209,9 @@ bool SPKnot::eventHandler(Inkscape::CanvasEvent const &event)
 
                 if (moved) {
                     setFlag(SP_KNOT_DRAGGING, false);
-                    ungrabbed_signal.emit(this, event.modifiers());
+                    ungrabbed_signal.emit(this, event.modifiers);
                 } else {
-                    click_signal.emit(this, event.modifiers());
+                    click_signal.emit(this, event.modifiers);
                 }
 
                 grabbed = false;
@@ -224,7 +224,7 @@ bool SPKnot::eventHandler(Inkscape::CanvasEvent const &event)
         {
             consumed = true;
 
-            if (within_tolerance && Geom::LInfty(event.eventPos().floor() - xyp) < tolerance) {
+            if (within_tolerance && Geom::LInfty(event.pos.floor() - xyp) < tolerance) {
                 return; // do not drag if we're within tolerance from origin
             }
 
@@ -233,16 +233,15 @@ bool SPKnot::eventHandler(Inkscape::CanvasEvent const &event)
             // motion notify coordinates as given (no snapping back to origin)
             within_tolerance = false;
 
-            // Note: Synthesized events don't have a device.
-            if (event.original()->device && gdk_event_get_axis(event.CanvasEvent::original(), GDK_AXIS_PRESSURE, &pressure)) {
-                pressure = std::clamp(pressure, 0.0, 1.0);
+            if (event.extinput.pressure) {
+                pressure = std::clamp(*event.extinput.pressure, 0.0, 1.0);
             } else {
                 pressure = 0.5;
             }
 
             if (!moved) {
                 setFlag(SP_KNOT_DRAGGING, true);
-                grabbed_signal.emit(this, event.modifiers());
+                grabbed_signal.emit(this, event.modifiers);
             }
 
             desktop->event_context->snap_delay_handler(nullptr, this, event, Inkscape::UI::Tools::DelayedSnapEvent::KNOT_HANDLER);
@@ -292,7 +291,7 @@ bool SPKnot::eventHandler(Inkscape::CanvasEvent const &event)
                 if (moved) {
                     setFlag(SP_KNOT_DRAGGING, false);
 
-                    ungrabbed_signal.emit(this, event.modifiers());
+                    ungrabbed_signal.emit(this, event.modifiers);
 
                     DocumentUndo::undo(desktop->getDocument());
                     desktop->messageStack()->flash(Inkscape::NORMAL_MESSAGE, _("Node or handle drag canceled."));
@@ -326,15 +325,15 @@ bool SPKnot::eventHandler(Inkscape::CanvasEvent const &event)
 
 void SPKnot::handler_request_position(Inkscape::MotionEvent const &event)
 {
-    auto const motion_w = event.eventPos();
+    auto const motion_w = event.pos;
     auto const motion_dt = desktop->w2d(motion_w);
     auto p = motion_dt - grabbed_rel_pos;
 
-    requestPosition(p, event.modifiers());
+    requestPosition(p, event.modifiers);
     desktop->getCanvas()->enable_autoscroll();
     desktop->set_coordinate_status(pos); // display the coordinate of knot, not cursor - they may be different!
 
-    if (event.modifiers() & GDK_BUTTON1_MASK) {
+    if (event.modifiers & GDK_BUTTON1_MASK) {
         Inkscape::UI::Tools::gobble_motion_events(GDK_BUTTON1_MASK);
     }
 }

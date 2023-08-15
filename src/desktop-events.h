@@ -19,7 +19,7 @@ class SPGuide;
 
 namespace Inkscape {
 class CanvasItemGuideLine;
-class CanvasEvent;
+struct CanvasEvent;
 }
 
 typedef union _GdkEvent GdkEvent;

@@ -27,33 +27,15 @@
 #include <glibmm.h>
 #include <glibmm/i18n.h>
 
+#include "document.h"
 #include "gradient-chemistry.h"
-#include "inkscape.h"
 #include "preferences.h"
-#include "desktop.h"
-#include "document-undo.h"
-#include "layer-manager.h"
-#include "include/macros.h"
-#include "selection-chemistry.h"
-
-#include "io/resource.h"
 
 #include "object/sp-defs.h"
-#include "object/sp-linear-gradient.h"
-#include "object/sp-radial-gradient.h"
-#include "object/sp-root.h"
 #include "object/sp-stop.h"
-#include "style.h"
 
-#include "svg/css-ostringstream.h"
-
-#include "ui/dialog-events.h"
 #include "ui/selected-color.h"
-#include "ui/widget/color-notebook.h"
-#include "ui/widget/color-preview.h"
 #include "ui/widget/gradient-image.h"
-
-#include "xml/repr.h"
 
 using Inkscape::UI::SelectedColor;
 

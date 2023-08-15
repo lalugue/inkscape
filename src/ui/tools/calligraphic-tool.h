@@ -34,6 +34,7 @@ class Path;
 namespace Inkscape {
 
 class CanvasItemBpath;
+struct ExtendedInput;
 
 namespace UI {
 namespace Tools {
@@ -72,7 +73,7 @@ private:
 	void cancel();
 	void brush();
     bool apply(Geom::Point const &p);
-    void extinput(MotionEvent const &event);
+    void extinput(ExtendedInput const &ext);
     void reset(Geom::Point const &p);
 };
 

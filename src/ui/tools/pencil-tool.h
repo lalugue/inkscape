@@ -25,11 +25,12 @@ class SPShape;
 #define SP_IS_PENCIL_CONTEXT(obj) (dynamic_cast<const Inkscape::UI::Tools::PencilTool*>((const Inkscape::UI::Tools::ToolBase*)obj) != NULL)
 
 namespace Inkscape {
-class ButtonPressEvent;
-class MotionEvent;
-class ButtonReleaseEvent;
-class KeyPressEvent;
-class KeyReleaseEvent;
+struct ButtonPressEvent;
+struct MotionEvent;
+struct ButtonReleaseEvent;
+struct KeyPressEvent;
+struct KeyReleaseEvent;
+struct ExtendedInput;
 } // namespace Inkscape
 
 namespace Inkscape::UI::Tools {
@@ -74,7 +75,7 @@ private:
     void _fitAndSplit();
     void _interpolate();
     void _sketchInterpolate();
-    void _extinput(CanvasEvent const &event);
+    void _extinput(ExtendedInput const &ext);
     void _cancel();
     void _endpointSnap(Geom::Point &p, guint const state);
     std::vector<Geom::Point> _wps;

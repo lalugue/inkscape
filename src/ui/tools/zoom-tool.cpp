@@ -53,20 +53,20 @@ bool ZoomTool::root_handler(CanvasEvent const &event)
 
     inspect_event(event,
         [&] (ButtonPressEvent const &event) {
-            if (event.numPress() != 1) {
+            if (event.num_press != 1) {
                 return;
             }
 
-            auto const button_w = event.eventPos();
+            auto const button_w = event.pos;
             auto const button_dt = _desktop->w2d(button_w);
 
-            if (event.button() == 1) {
-                saveDragOrigin(event.eventPos());
+            if (event.button == 1) {
+                saveDragOrigin(event.pos);
                 Rubberband::get(_desktop)->start(_desktop, button_dt);
                 escaped = false;
                 ret = true;
-            } else if (event.button() == 3) {
-                double const zoom_rel = (event.modifiers() & GDK_SHIFT_MASK)
+            } else if (event.button == 3) {
+                double const zoom_rel = (event.modifiers & GDK_SHIFT_MASK)
                                        ? zoom_inc
                                        : 1 / zoom_inc;
                 _desktop->zoom_relative(button_dt, zoom_rel);
@@ -81,15 +81,15 @@ bool ZoomTool::root_handler(CanvasEvent const &event)
         },
 
         [&] (MotionEvent const &event) {
-            if (!(event.modifiers() & GDK_BUTTON1_MASK)) {
+            if (!(event.modifiers & GDK_BUTTON1_MASK)) {
                 return;
             }
 
-            if (!checkDragMoved(event.eventPos())) {
+            if (!checkDragMoved(event.pos)) {
                 return;
             }
 
-            auto const motion_dt = _desktop->w2d(event.eventPos());
+            auto const motion_dt = _desktop->w2d(event.pos);
             Rubberband::get(_desktop)->move(motion_dt);
             gobble_motion_events(GDK_BUTTON1_MASK);
 
@@ -97,15 +97,15 @@ bool ZoomTool::root_handler(CanvasEvent const &event)
         },
 
         [&] (ButtonReleaseEvent const &event) {
-            auto const button_dt = _desktop->w2d(event.eventPos());
+            auto const button_dt = _desktop->w2d(event.pos);
 
-            if (event.button() == 1) {
+            if (event.button == 1) {
                 auto const b = Rubberband::get(_desktop)->getRectangle();
 
-                if (b && !within_tolerance && !(event.modifiers() & GDK_SHIFT_MASK)) {
+                if (b && !within_tolerance && !(event.modifiers & GDK_SHIFT_MASK)) {
                     _desktop->set_display_area(*b, 10);
                 } else if (!escaped) {
-                    double const zoom_rel = (event.modifiers() & GDK_SHIFT_MASK)
+                    double const zoom_rel = (event.modifiers & GDK_SHIFT_MASK)
                                           ? 1 / zoom_inc
                                           : zoom_inc;
                     _desktop->zoom_relative(button_dt, zoom_rel);
@@ -140,7 +140,7 @@ bool ZoomTool::root_handler(CanvasEvent const &event)
                 case GDK_KEY_KP_Up:
                 case GDK_KEY_KP_Down:
                     // prevent the zoom field from activation
-                    if (!MOD__CTRL_ONLY(event)) {
+                    if (!mod_ctrl_only(event)) {
                         ret = true;
                     }
                     break;
@@ -153,7 +153,7 @@ bool ZoomTool::root_handler(CanvasEvent const &event)
                 case GDK_KEY_Delete:
                 case GDK_KEY_KP_Delete:
                 case GDK_KEY_BackSpace:
-                    ret = deleteSelectedDrag(MOD__CTRL_ONLY(event));
+                    ret = deleteSelectedDrag(mod_ctrl_only(event));
                     break;
 
                 default:

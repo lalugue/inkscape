@@ -23,6 +23,8 @@
 #include <gtkmm/accelkey.h>
 #include <sigc++/signal.h>
 
+namespace Inkscape { struct KeyEvent; }
+
 namespace Inkscape::Util {
 
 /** Gtk::AccelKey but with equality and less-than operators */
@@ -57,7 +59,7 @@ public:
  * Typical usage example:
  * \code{.cpp}
     auto accel = Inkscape::Util::ActionAccel("doc.undo");
-    GdkEventKey *key = get_from_somewhere();
+    KeyEvent const &key = get_from_somewhere();
     if (accel.isTriggeredBy(key)) {
         ... // do stuff
     }
@@ -109,11 +111,11 @@ public:
 
     /**
      * @brief Checks whether a given key event triggers this action.
-     * @param key - a pointer to a GdkEventKey struct containing key event data.
+     * @param key - a pointer to a KeyEvent containing key event data.
      * @return true if one of the keyboard shortcuts for the action is triggered by the passed event,
      *         false otherwise.
      */
-    bool isTriggeredBy(GdkEventKey const *key) const;
+    bool isTriggeredBy(KeyEvent const &key) const;
 
     /**
      * @brief Checks whether a key controller and its signal handler arguments trigger this action.

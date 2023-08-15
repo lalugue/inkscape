@@ -449,7 +449,7 @@ bool MeasureTool::root_handler(CanvasEvent const &event)
 
     inspect_event(event,
     [&] (ButtonPressEvent const &event) {
-        if (event.numPress() != 1 || event.button() != 1) {
+        if (event.num_press != 1 || event.button != 1) {
             return;
         }
         knot_start->hide();
@@ -458,8 +458,8 @@ bool MeasureTool::root_handler(CanvasEvent const &event)
         explicit_base_tmp = {};
         last_end = {};
 
-        saveDragOrigin(event.eventPos());
-        start_p = _desktop->w2d(event.eventPos());
+        saveDragOrigin(event.pos);
+        start_p = _desktop->w2d(event.pos);
 
         auto &snap_manager = _desktop->namedview->snap_manager;
         snap_manager.setup(_desktop);
@@ -474,21 +474,21 @@ bool MeasureTool::root_handler(CanvasEvent const &event)
         ret = true;
     },
     [&] (KeyPressEvent const &event) {
-        if (event.keyval() == GDK_KEY_Control_L || event.keyval() == GDK_KEY_Control_R) {
+        if (event.keyval == GDK_KEY_Control_L || event.keyval == GDK_KEY_Control_R) {
             explicit_base_tmp = explicit_base;
             explicit_base = end_p;
             showInfoBox(last_pos, true);
         }
     },
     [&] (KeyReleaseEvent const &event) {
-        if (event.keyval() == GDK_KEY_Control_L || event.keyval() == GDK_KEY_Control_R) {
+        if (event.keyval == GDK_KEY_Control_L || event.keyval == GDK_KEY_Control_R) {
             showInfoBox(last_pos, false);
         }
     },
     [&] (MotionEvent const &event) {
-        if (!(event.modifiers() & GDK_BUTTON1_MASK)) {
-            if (!(event.modifiers() & GDK_SHIFT_MASK)) {
-                auto const motion_dt = _desktop->w2d(event.eventPos());
+        if (!(event.modifiers & GDK_BUTTON1_MASK)) {
+            if (!(event.modifiers & GDK_SHIFT_MASK)) {
+                auto const motion_dt = _desktop->w2d(event.pos);
 
                 auto &snap_manager = _desktop->namedview->snap_manager;
                 snap_manager.setup(_desktop);
@@ -499,10 +499,10 @@ bool MeasureTool::root_handler(CanvasEvent const &event)
                 snap_manager.preSnap(scp);
                 snap_manager.unSetup();
             }
-            last_pos = event.eventPos();
-            showInfoBox(last_pos, event.modifiers() & GDK_CONTROL_MASK);
+            last_pos = event.pos;
+            showInfoBox(last_pos, event.modifiers & GDK_CONTROL_MASK);
         } else {
-            if (!checkDragMoved(event.eventPos())) {
+            if (!checkDragMoved(event.pos)) {
                 return;
             }
 
@@ -511,13 +511,13 @@ bool MeasureTool::root_handler(CanvasEvent const &event)
 
             measure_item.clear();
 
-            if (!last_end || Geom::LInfty(event.eventPos() - *last_end) > tolerance / 4.0) {
-                auto const motion_dt = _desktop->w2d(event.eventPos());
+            if (!last_end || Geom::LInfty(event.pos - *last_end) > tolerance / 4.0) {
+                auto const motion_dt = _desktop->w2d(event.pos);
                 end_p = motion_dt;
 
-                if (event.modifiers() & GDK_CONTROL_MASK) {
-                    spdc_endpoint_snap_rotation(this, end_p, start_p, event.modifiers());
-                } else if (!(event.modifiers() & GDK_SHIFT_MASK)) {
+                if (event.modifiers & GDK_CONTROL_MASK) {
+                    spdc_endpoint_snap_rotation(this, end_p, start_p, event.modifiers);
+                } else if (!(event.modifiers & GDK_SHIFT_MASK)) {
                     auto &snap_manager = _desktop->namedview->snap_manager;
                     snap_manager.setup(_desktop);
                     auto scp = SnapCandidatePoint(end_p, SNAPSOURCE_OTHER_HANDLE);
@@ -527,7 +527,7 @@ bool MeasureTool::root_handler(CanvasEvent const &event)
                     snap_manager.unSetup();
                 }
                 showCanvasItems();
-                last_end = event.eventPos();
+                last_end = event.pos;
             }
             gobble_motion_events(GDK_BUTTON1_MASK);
 
@@ -535,16 +535,16 @@ bool MeasureTool::root_handler(CanvasEvent const &event)
         }
     },
     [&] (ButtonReleaseEvent const &event) {
-        if (event.button() != 1) {
+        if (event.button != 1) {
             return;
         }
         knot_start->moveto(start_p);
         knot_start->show();
         if (last_end) {
             end_p = _desktop->w2d(*last_end);
-            if (event.modifiers() & GDK_CONTROL_MASK) {
-                spdc_endpoint_snap_rotation(this, end_p, start_p, event.modifiers());
-            } else if (!(event.modifiers() & GDK_SHIFT_MASK)) {
+            if (event.modifiers & GDK_CONTROL_MASK) {
+                spdc_endpoint_snap_rotation(this, end_p, start_p, event.modifiers);
+            } else if (!(event.modifiers & GDK_SHIFT_MASK)) {
                 auto &snap_manager = _desktop->namedview->snap_manager;
                 snap_manager.setup(_desktop);
                 auto scp = SnapCandidatePoint(end_p, SNAPSOURCE_OTHER_HANDLE);

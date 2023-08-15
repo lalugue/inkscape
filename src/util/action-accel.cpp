@@ -67,7 +67,7 @@ bool ActionAccel::_query()
     return false;
 }
 
-bool ActionAccel::isTriggeredBy(GdkEventKey const * const key) const
+bool ActionAccel::isTriggeredBy(KeyEvent const &key) const
 {
     auto const accelerator = Shortcuts::getInstance().get_from_event(key);
     return _accels.find(accelerator) != _accels.end();

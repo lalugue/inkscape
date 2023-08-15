@@ -32,8 +32,6 @@
 #include "display/control/canvas-item-bpath.h"
 #include "display/control/canvas-item-drawing.h"
 
-#include "include/macros.h"
-
 #include "object/sp-namedview.h"
 
 #include "svg/svg-color.h"
@@ -165,12 +163,12 @@ bool DropperTool::root_handler(CanvasEvent const &event)
 
     inspect_event(event,
         [&] (ButtonPressEvent const &event) {
-            if (event.numPress() != 1) {
+            if (event.num_press != 1) {
                 return;
             }
 
-            if (event.button() == 1) {
-                centre = event.eventPos();
+            if (event.button == 1) {
+                centre = event.pos;
                 dragging = true;
                 ret = true;
             }
@@ -183,7 +181,7 @@ bool DropperTool::root_handler(CanvasEvent const &event)
         },
 
         [&] (MotionEvent const &event) {
-            if (event.modifiers() & (GDK_BUTTON2_MASK | GDK_BUTTON3_MASK)) {
+            if (event.modifiers & (GDK_BUTTON2_MASK | GDK_BUTTON3_MASK)) {
                 // pass on middle and right drag
                 return;
             }
@@ -194,7 +192,7 @@ bool DropperTool::root_handler(CanvasEvent const &event)
                 // Calculate average
 
                 // Radius
-                double rw = std::min((event.eventPos() - centre).length(), 400.0);
+                double rw = std::min((event.pos - centre).length(), 400.0);
                 if (rw == 0) { // happens sometimes, little idea why...
                     return;
                 }
@@ -219,7 +217,7 @@ bool DropperTool::root_handler(CanvasEvent const &event)
                 }
             } else {
                 // Pick single pixel
-                pick_area = Geom::IntRect::from_xywh(0, 0, 1, 1) + event.eventPos().floor();
+                pick_area = Geom::IntRect::from_xywh(0, 0, 1, 1) + event.pos.floor();
             }
 
             auto canvas_item_drawing = _desktop->getCanvasDrawing();
@@ -268,7 +266,7 @@ bool DropperTool::root_handler(CanvasEvent const &event)
         },
 
         [&] (ButtonReleaseEvent const &event) {
-            if (event.button() != 1) {
+            if (event.button != 1) {
                 return;
             }
 
@@ -283,9 +281,9 @@ bool DropperTool::root_handler(CanvasEvent const &event)
             auto old_selection = std::vector<SPItem*>(selection->items().begin(), selection->items().end());
 
             if (dropping) {
-                auto const button_w = event.eventPos();
+                auto const button_w = event.pos;
                 // Remember clicked item, disregarding groups, honoring Alt.
-                item_to_select = sp_event_context_find_item(_desktop, button_w, event.modifiers() & GDK_MOD1_MASK, true);
+                item_to_select = sp_event_context_find_item(_desktop, button_w, event.modifiers & GDK_MOD1_MASK, true);
 
                 // Change selected object to object under cursor.
                 if (item_to_select) {
@@ -327,7 +325,7 @@ bool DropperTool::root_handler(CanvasEvent const &event)
                 case GDK_KEY_KP_Up:
                 case GDK_KEY_KP_Down:
                     // Prevent the zoom field from activating.
-                    if (!MOD__CTRL_ONLY(event)) {
+                    if (!mod_ctrl_only(event)) {
                         ret = true;
                     }
                     break;

@@ -463,10 +463,14 @@ void CanvasGrid::_rulerMotion(GtkEventControllerMotion const *controller, double
     // Synthesize the CanvasEvent.
     auto gdkevent = GdkEventUniqPtr(gtk_get_current_event());
     assert(gdkevent->type == GDK_MOTION_NOTIFY);
-    gdkevent->motion.x = pos.x();
-    gdkevent->motion.y = pos.y();
-    auto const state = gdkevent->motion.state;
-    auto const event = MotionEvent(std::move(gdkevent), state);
+
+    auto event = MotionEvent();
+    event.modifiers = gdkevent->motion.state;
+    event.source_device = Util::GObjectPtr(gdk_event_get_source_device(gdkevent.get()), true);
+    event.pos = pos;
+    event.time = gdkevent->motion.time;
+    event.extinput = extinput_from_gdkevent(gdkevent.get());
+
     rulerMotion(event, horiz);
 }
 
@@ -512,15 +516,15 @@ void CanvasGrid::rulerMotion(MotionEvent const &event, bool horiz)
     desktop->event_context->snap_delay_handler(this, nullptr, event, origin);
 
     // Explicitly show guidelines; if I draw a guide, I want them on.
-    if (event.eventPos()[horiz ? Geom::Y : Geom::X] >= 0) {
+    if (event.pos[horiz ? Geom::Y : Geom::X] >= 0) {
         desktop->namedview->setShowGuides(true);
     }
 
     // Get the snapped position and normal.
-    auto const event_w = _canvas->canvas_to_world(event.eventPos());
+    auto const event_w = _canvas->canvas_to_world(event.pos);
     auto event_dt = _dtw->desktop->w2d(event_w);
     auto normal = _normal;
-    if (!(event.modifiers() & GDK_SHIFT_MASK)) {
+    if (!(event.modifiers & GDK_SHIFT_MASK)) {
         ruler_snap_new_guide(desktop, event_dt, normal);
     }
 

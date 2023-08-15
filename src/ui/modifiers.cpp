@@ -213,7 +213,7 @@ unsigned long calculate_weight(KeyMask mask)
  * @param num_args - Number of Modifier::Type arguments to follow.
  * @param ... - One or more Modifier::Type arguments.
  */
-void responsive_tooltip(Inkscape::MessageContext *message_context, GdkEvent *event, int num_args, ...)
+void responsive_tooltip(MessageContext *message_context, KeyEvent const &event, int num_args, ...)
 {
     std::string ctrl_msg = "<b>Ctrl</b>: ";
     std::string shift_msg = "<b>Shift</b>: ";
@@ -244,7 +244,7 @@ void responsive_tooltip(Inkscape::MessageContext *message_context, GdkEvent *eve
     shift_msg.erase(shift_msg.size() - 2);
     alt_msg.erase(alt_msg.size() - 2);
 
-    Inkscape::UI::Tools::sp_event_show_modifier_tip(message_context, event,
+    UI::Tools::sp_event_show_modifier_tip(message_context, event,
         ctrl_msg.c_str(), shift_msg.c_str(), alt_msg.c_str());
 }
 

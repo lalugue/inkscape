@@ -127,16 +127,16 @@ bool MarkerTool::root_handler(CanvasEvent const &event)
     
     inspect_event(event,
         [&] (ButtonPressEvent const &event) {
-            if (event.numPress() == 1 && event.button() == 1) {
+            if (event.num_press == 1 && event.button == 1) {
 
-                item_to_select = sp_event_context_find_item (_desktop, event.eventPos(), event.modifiers() & GDK_MOD1_MASK, true);
+                item_to_select = sp_event_context_find_item (_desktop, event.pos, event.modifiers & GDK_MOD1_MASK, true);
 
                 grabCanvasEvents();
                 ret = true;
             }
         },
         [&] (ButtonReleaseEvent const &event) {
-            if (event.button() == 1) {
+            if (event.button == 1) {
                 if (item_to_select) {
                     // unselect all items, except for newly selected item
                     selection->set(item_to_select);

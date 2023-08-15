@@ -162,7 +162,7 @@ bool PathManipulator::event(Tools::ToolBase *, CanvasEvent const &event)
 
     inspect_event(event,
         [&] (MotionEvent const &event) {
-            _updateDragPoint(event.eventPos());
+            _updateDragPoint(event.pos);
         },
         [&] (CanvasEvent const &event) {}
     );
@@ -1641,8 +1641,8 @@ Inkscape::XML::Node *PathManipulator::_getXMLNode()
 
 bool PathManipulator::_nodeClicked(Node *n, ButtonReleaseEvent const &event)
 {
-    if (event.button() != 1) return false;
-    if (held_alt(event) && held_control(event)) {
+    if (event.button != 1) return false;
+    if (held_alt(event) && held_ctrl(event)) {
         // Ctrl+Alt+click: delete nodes
         hideDragPoint();
         NodeList::iterator iter = NodeList::get_iterator(n);
@@ -1664,7 +1664,7 @@ bool PathManipulator::_nodeClicked(Node *n, ButtonReleaseEvent const &event)
         _multi_path_manipulator._doneWithCleanup(_("Delete node"));
 
         return true;
-    } else if (held_control(event)) {
+    } else if (held_ctrl(event)) {
         // Ctrl+click: cycle between node types
         if (!n->isEndNode()) {
             n->setType(static_cast<NodeType>((n->type() + 1) % NODE_LAST_REAL_TYPE));
@@ -1690,7 +1690,7 @@ void PathManipulator::_handleUngrabbed()
 bool PathManipulator::_handleClicked(Handle *h, ButtonReleaseEvent const &event)
 {
     // retracting by Ctrl+click
-    if (event.button() == 1 && held_control(event)) {
+    if (event.button == 1 && held_ctrl(event)) {
         h->move(h->parent()->position());
         update();
         _commit(_("Retract handle"));

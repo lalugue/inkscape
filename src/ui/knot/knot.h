@@ -32,8 +32,8 @@ class SPItem;
 
 namespace Inkscape {
 class CanvasItemCtrl;
-class CanvasEvent;
-class MotionEvent;
+struct CanvasEvent;
+struct MotionEvent;
 }
 
 /**

@@ -222,19 +222,19 @@ bool ControlPoint::_eventHandler(Tools::ToolBase *tool, CanvasEvent const &event
             // we need to return true if there was a tip available, otherwise the tool's
             // handler will process this event and set the tool's message, overwriting
             // the point's message
-            return _updateTip(event.modifiers() ^ change);
+            return _updateTip(event.modifiers ^ change);
         }
         return false;
     };
 
     inspect_event(event,
     [&] (ButtonPressEvent const &event) {
-        if (event.numPress() == 1) {
+        if (event.num_press == 1) {
             next_release_doubleclick = 0;
-            if (event.button() == 1 && !tool->is_space_panning()) {
+            if (event.button == 1 && !tool->is_space_panning()) {
                 // 1st mouse button click. internally, start dragging, but do not emit signals
                 // or change position until drag tolerance is exceeded.
-                _drag_event_origin = event.eventPos();
+                _drag_event_origin = event.pos;
                 pointer_offset = _position - _desktop->w2d(_drag_event_origin);
                 _drag_initiated = false;
                 // route all events to this handler
@@ -245,9 +245,9 @@ bool ControlPoint::_eventHandler(Tools::ToolBase *tool, CanvasEvent const &event
             } else {
                 ret = _event_grab;
             }
-        } else if (event.numPress() == 2) {
+        } else if (event.num_press == 2) {
             // store the button number for next release
-            next_release_doubleclick = event.button();
+            next_release_doubleclick = event.button;
             ret = true;
         }
     },
@@ -257,7 +257,7 @@ bool ControlPoint::_eventHandler(Tools::ToolBase *tool, CanvasEvent const &event
             _desktop->snapindicator->remove_snaptarget(); 
             bool transferred = false;
             if (!_drag_initiated) {
-                if (Geom::LInfty(event.eventPos() - _drag_event_origin) <= drag_tolerance) {
+                if (Geom::LInfty(event.pos - _drag_event_origin) <= drag_tolerance) {
                     ret = true;
                     return;
                 }
@@ -271,7 +271,7 @@ bool ControlPoint::_eventHandler(Tools::ToolBase *tool, CanvasEvent const &event
 
             if (!transferred) {
                 // dragging in progress
-                auto new_pos = _desktop->w2d(event.eventPos()) + pointer_offset;
+                auto new_pos = _desktop->w2d(event.pos) + pointer_offset;
                 // the new position is passed by reference and can be changed in the handlers.
                 dragged(new_pos, event);
                 move(new_pos);
@@ -286,7 +286,7 @@ bool ControlPoint::_eventHandler(Tools::ToolBase *tool, CanvasEvent const &event
     },
 
     [&] (ButtonReleaseEvent const &event) {
-        if (_event_grab && event.button() == 1) {
+        if (_event_grab && event.button == 1) {
             // If we have any pending snap event, then invoke it now!
             // (This is needed because we might not have snapped on the latest GDK_MOTION_NOTIFY event
             // if the mouse speed was too high. This is inherent to the snap-delay mechanism.
@@ -296,7 +296,7 @@ bool ControlPoint::_eventHandler(Tools::ToolBase *tool, CanvasEvent const &event
             tool->process_delayed_snap_event();
 
             _canvas_item_ctrl->ungrab();
-            _setMouseover(this, event.modifiers());
+            _setMouseover(this, event.modifiers);
             _event_grab = false;
 
             if (_drag_initiated) {
@@ -317,7 +317,7 @@ bool ControlPoint::_eventHandler(Tools::ToolBase *tool, CanvasEvent const &event
     },
 
     [&] (EnterEvent const &event) {
-        _setMouseover(this, event.modifiers());
+        _setMouseover(this, event.modifiers);
         return true;
     },
 
@@ -345,19 +345,11 @@ bool ControlPoint::_eventHandler(Tools::ToolBase *tool, CanvasEvent const &event
             // make a fake event for dragging
             // ASSUMPTION: dragging a point without modifiers will never prevent us from moving it
             //             to its original position
-            auto gdkevent = GdkEventUniqPtr(gdk_event_new(GDK_MOTION_NOTIFY));
-            gdkevent->motion.window = event.original()->window;
-            gdkevent->motion.send_event = event.original()->send_event;
-            gdkevent->motion.time = event.time();
-            gdkevent->motion.x = _drag_event_origin.x(); // these two are normally not used in handlers
-            gdkevent->motion.y = _drag_event_origin.y(); // (and shouldn't be)
-            gdkevent->motion.axes = nullptr;
-            gdkevent->motion.state = 0; // unconstrained drag
-            gdkevent->motion.is_hint = false;
-            gdkevent->motion.device = nullptr;
-            gdkevent->motion.x_root = -1; // not used in handlers (and shouldn't be)
-            gdkevent->motion.y_root = -1; // can be used as a flag to check for cancelled drag
-            auto fake = MotionEvent(std::move(gdkevent), event.modifiers());
+            auto fake = MotionEvent();
+            fake.pos = _drag_event_origin;
+            fake.modifiers = 0; // unconstrained drag
+            fake.time = event.time;
+            fake.control_point_synthesized = true;
             dragged(new_pos, fake);
 
             _canvas_item_ctrl->ungrab();
@@ -472,7 +464,7 @@ void ControlPoint::transferGrab(ControlPoint *prev_point, MotionEvent const &eve
     _drag_initiated = true;
 
     prev_point->_setState(STATE_NORMAL);
-    _setMouseover(this, event.modifiers());
+    _setMouseover(this, event.modifiers);
 }
 
 void ControlPoint::_setState(State state)
@@ -521,7 +513,7 @@ void ControlPoint::_setLurking(bool lurking)
 
 bool ControlPoint::_is_drag_cancelled(MotionEvent const &event)
 {
-    return event.original()->x_root == -1;
+    return event.control_point_synthesized;
 }
 
 // dummy implementations for handlers

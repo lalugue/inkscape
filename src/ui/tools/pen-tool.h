@@ -26,11 +26,11 @@ namespace Inkscape {
 class CanvasItemCtrl;
 class CanvasItemCurve;
 
-class ButtonPressEvent;
-class MotionEvent;
-class ButtonReleaseEvent;
-class KeyPressEvent;
-class KeyReleaseEvent;
+struct ButtonPressEvent;
+struct MotionEvent;
+struct ButtonReleaseEvent;
+struct KeyPressEvent;
+struct KeyReleaseEvent;
 } // namespace Inkscape
 
 namespace Inkscape::UI::Tools {

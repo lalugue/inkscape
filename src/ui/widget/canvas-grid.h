@@ -26,7 +26,7 @@ class SPDocument;
 class SPDesktopWidget;
 
 namespace Inkscape {
-class MotionEvent;
+struct MotionEvent;
 class CanvasItemGuideLine;
 
 namespace UI {

@@ -40,9 +40,10 @@ class KnotHolder;
 namespace Inkscape {
 class MessageContext;
 class SelCue;
-class CanvasEvent;
-class MotionEvent;
-class KeyEvent;
+struct CanvasEvent;
+struct MotionEvent;
+struct KeyEvent;
+struct ButtonPressEvent;
 
 namespace UI {
 class ShapeEditor;
@@ -142,7 +143,7 @@ protected:
     SPItem *item_to_select = nullptr; ///< the item where mouse_press occurred, to
                                       ///< be selected if this is a click not drag
 
-    Geom::Point setup_for_drag_start(GdkEvent *ev);
+    void setup_for_drag_start(ButtonPressEvent const &ev);
     void saveDragOrigin(Geom::Point const &pos);
     bool checkDragMoved(Geom::Point const &pos);
 
@@ -224,7 +225,7 @@ void sp_event_context_read(ToolBase *ec, char const *key);
 gint gobble_key_events(guint keyval, guint mask);
 void gobble_motion_events(guint mask);
 
-void sp_event_show_modifier_tip(MessageContext *message_context, GdkEvent *event,
+void sp_event_show_modifier_tip(MessageContext *message_context, KeyEvent const &event,
                                 char const *ctrl_tip, char const *shift_tip, char const *alt_tip);
 
 void init_latin_keys_group();
@@ -232,7 +233,7 @@ void init_latin_keys_group();
 unsigned get_latin_keyval_impl(unsigned event_keyval, unsigned event_keycode,
                                GdkModifierType event_state, unsigned event_group,
                                unsigned *consumed_modifiers);
-unsigned get_latin_keyval(GdkEventKey const *event, unsigned *consumed_modifiers = nullptr);
+unsigned get_latin_keyval(GdkEventKey const *event, unsigned *consumed_modifiers = nullptr); // Todo: Remove.
 unsigned get_latin_keyval(GtkEventControllerKey const *controller,
                           unsigned keyval, unsigned keycode, GdkModifierType state,
                           unsigned *consumed_modifiers = nullptr);

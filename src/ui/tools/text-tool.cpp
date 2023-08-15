@@ -27,7 +27,6 @@
 #include "desktop.h"
 #include "document-undo.h"
 #include "document.h"
-#include "include/macros.h"
 #include "message-context.h"
 #include "message-stack.h"
 #include "rubberband.h"
@@ -75,24 +74,24 @@ TextTool::TextTool(SPDesktop *desktop)
         blink_time /= 2;
     }
 
-    cursor = make_canvasitem<CanvasItemCurve>(desktop->getCanvasControls());
+    cursor = make_canvasitem<CanvasItemCurve>(_desktop->getCanvasControls());
     cursor->set_stroke(0x000000ff);
     cursor->set_visible(false);
 
     // The rectangle box tightly wrapping text object when selected or under cursor.
-    indicator = make_canvasitem<CanvasItemRect>(desktop->getCanvasControls());
+    indicator = make_canvasitem<CanvasItemRect>(_desktop->getCanvasControls());
     indicator->set_stroke(0x0000ff7f);
     indicator->set_shadow(0xffffff7f, 1);
     indicator->set_visible(false);
 
     // The shape that the text is flowing into
-    frame = make_canvasitem<CanvasItemBpath>(desktop->getCanvasControls());
+    frame = make_canvasitem<CanvasItemBpath>(_desktop->getCanvasControls());
     frame->set_fill(0x00 /* zero alpha */, SP_WIND_RULE_NONZERO);
     frame->set_stroke(0x0000ff7f);
     frame->set_visible(false);
 
     // A second frame for showing the padding of the above frame
-    padding_frame = make_canvasitem<CanvasItemBpath>(desktop->getCanvasControls());
+    padding_frame = make_canvasitem<CanvasItemBpath>(_desktop->getCanvasControls());
     padding_frame->set_fill(0x00 /* zero alpha */, SP_WIND_RULE_NONZERO);
     padding_frame->set_stroke(0xccccccdf);
     padding_frame->set_visible(false);
@@ -101,7 +100,7 @@ TextTool::TextTool(SPDesktop *desktop)
 
     imc = gtk_im_multicontext_new();
     if (imc) {
-        auto canvas = desktop->getCanvas();
+        auto canvas = _desktop->getCanvas();
 
         /* im preedit handling is very broken in inkscape for
          * multi-byte characters.  See bug 1086769.
@@ -122,9 +121,9 @@ TextTool::TextTool(SPDesktop *desktop)
         }
     }
 
-    shape_editor = new ShapeEditor(desktop);
+    shape_editor = new ShapeEditor(_desktop);
 
-    auto item = desktop->getSelection()->singleItem();
+    auto item = _desktop->getSelection()->singleItem();
     if (is<SPFlowtext>(item) || is<SPText>(item)) {
         shape_editor->set_item(item);
     }
@@ -142,7 +141,7 @@ TextTool::TextTool(SPDesktop *desktop)
         sigc::mem_fun(*this, &TextTool::_styleQueried)
     );
 
-    _selectionChanged(desktop->getSelection());
+    _selectionChanged(_desktop->getSelection());
 
     auto prefs = Preferences::get();
     if (prefs->getBool("/tools/text/selcue")) {
@@ -186,22 +185,22 @@ bool TextTool::item_handler(SPItem *item, CanvasEvent const &event)
 
     inspect_event(event,
         [&] (ButtonPressEvent const &event) {
-            if (event.button() != 1) {
+            if (event.button != 1) {
                 return;
             }
-            auto const n_press = event.numPress() % 3; // cycle through selection modes on repeated clicking
+            auto const n_press = event.num_press % 3; // cycle through selection modes on repeated clicking
             if (n_press == 1) {
                 // this var allow too much lees subbselection queries
                 // reducing it to cursor iteracion, mouseup and down
                 // find out clicked item, disregarding groups
-                auto const item_ungrouped = _desktop->getItemAtPoint(event.eventPos(), true);
+                auto const item_ungrouped = _desktop->getItemAtPoint(event.pos, true);
                 if (is<SPText>(item_ungrouped) || is<SPFlowtext>(item_ungrouped)) {
                     _desktop->getSelection()->set(item_ungrouped);
                     if (text) {
                         // find out click point in document coordinates
-                        auto const p = _desktop->w2d(event.eventPos());
+                        auto const p = _desktop->w2d(event.pos);
                         // set the cursor closest to that point
-                        if (event.modifiers() & GDK_SHIFT_MASK) {
+                        if (event.modifiers & GDK_SHIFT_MASK) {
                             text_sel_start = old_start;
                             text_sel_end = sp_te_get_position_by_coords(text, p);
                         } else {
@@ -237,7 +236,7 @@ bool TextTool::item_handler(SPItem *item, CanvasEvent const &event)
             }
         },
         [&] (ButtonReleaseEvent const &event) {
-            if (event.button() == 1 && dragging_state) {
+            if (event.button == 1 && dragging_state) {
                 dragging_state = 0;
                 discard_delayed_snap_event();
                 _desktop->emit_text_cursor_moved(this, this);
@@ -375,7 +374,7 @@ bool TextTool::root_handler(CanvasEvent const &event)
 
     inspect_event(event,
         [&] (ButtonPressEvent const &event) {
-            if (event.button() != 1 || event.numPress() != 1) {
+            if (event.button != 1 || event.num_press != 1) {
                 return;
             }
 
@@ -384,9 +383,9 @@ bool TextTool::root_handler(CanvasEvent const &event)
                 return;
             }
 
-            saveDragOrigin(event.eventPos());
+            saveDragOrigin(event.pos);
 
-            auto button_dt = _desktop->w2d(event.eventPos());
+            auto button_dt = _desktop->w2d(event.pos);
 
             auto &m = _desktop->namedview->snap_manager;
             m.setup(_desktop);
@@ -403,12 +402,12 @@ bool TextTool::root_handler(CanvasEvent const &event)
             ret = true;
         },
         [&] (MotionEvent const &event) {
-            if (creating && event.modifiers() & GDK_BUTTON1_MASK) {
-                if (!checkDragMoved(event.eventPos())) {
+            if (creating && event.modifiers & GDK_BUTTON1_MASK) {
+                if (!checkDragMoved(event.pos)) {
                     return;
                 }
 
-                auto p = _desktop->w2d(event.eventPos());
+                auto p = _desktop->w2d(event.pos);
 
                 auto &m = _desktop->namedview->snap_manager;
                 m.setup(_desktop);
@@ -429,18 +428,18 @@ bool TextTool::root_handler(CanvasEvent const &event)
                 auto &m = _desktop->namedview->snap_manager;
                 m.setup(_desktop);
 
-                auto const motion_dt = _desktop->w2d(event.eventPos());
+                auto const motion_dt = _desktop->w2d(event.pos);
                 m.preSnap(SnapCandidatePoint(motion_dt, SNAPSOURCE_OTHER_HANDLE));
                 m.unSetup();
             }
 
-            if (event.modifiers() & GDK_BUTTON1_MASK && dragging_state) {
+            if (event.modifiers & GDK_BUTTON1_MASK && dragging_state) {
                 auto const layout = te_get_layout(text);
                 if (!layout) {
                     return;
                 }
                 // find out click point in document coordinates
-                auto const p = _desktop->w2d(event.eventPos());
+                auto const p = _desktop->w2d(event.pos);
                 // set the cursor closest to that point
                 auto new_end = sp_te_get_position_by_coords(text, p);
                 if (dragging_state == 2) {
@@ -471,7 +470,7 @@ bool TextTool::root_handler(CanvasEvent const &event)
             }
 
             // find out item under mouse, disregarding groups
-            auto const item_ungrouped = _desktop->getItemAtPoint(event.eventPos(), true, nullptr);
+            auto const item_ungrouped = _desktop->getItemAtPoint(event.pos, true, nullptr);
             if (is<SPText>(item_ungrouped) || is<SPFlowtext>(item_ungrouped)) {
                 auto const layout = te_get_layout(item_ungrouped);
                 if (layout->inputTruncated()) {
@@ -506,13 +505,13 @@ bool TextTool::root_handler(CanvasEvent const &event)
         },
 
         [&] (ButtonReleaseEvent const &event) {
-            if (event.button() != 1) {
+            if (event.button != 1) {
                 return;
             }
 
             discard_delayed_snap_event();
 
-            auto p1 = _desktop->w2d(event.eventPos());
+            auto p1 = _desktop->w2d(event.pos);
 
             auto &m = _desktop->namedview->snap_manager;
             m.setup(_desktop);
@@ -583,7 +582,7 @@ bool TextTool::root_handler(CanvasEvent const &event)
             auto const group0_keyval = get_latin_keyval(event);
 
             if (group0_keyval == GDK_KEY_KP_Add || group0_keyval == GDK_KEY_KP_Subtract) {
-                if (!(event.modifiers() & GDK_MOD2_MASK)) { // mod2 is NumLock; if on, type +/- keys
+                if (!(event.modifiers & GDK_MOD2_MASK)) { // mod2 is NumLock; if on, type +/- keys
                     return; // otherwise pass on keypad +/- so they can zoom
                 }
             }
@@ -593,13 +592,13 @@ bool TextTool::root_handler(CanvasEvent const &event)
 
                 // Input methods often use Ctrl+Shift+U for preediting (unimode).
                 // Override it so we can use our unimode.
-                bool preedit_activation = MOD__CTRL(event) && MOD__SHIFT(event) && !MOD__ALT(event)
+                bool preedit_activation = mod_ctrl(event) && mod_shift(event) && !mod_alt(event)
                                           && (group0_keyval == GDK_KEY_U || group0_keyval == GDK_KEY_u);
 
-                if (unimode || !imc || preedit_activation || !gtk_im_context_filter_keypress(imc, event.original())) {
+                if (unimode || !imc || preedit_activation || !gtk_im_context_filter_keypress(imc, &event.original->key)) {
                     // IM did not consume the key, or we're in unimode
 
-                    if (!MOD__CTRL_ONLY(event) && unimode) {
+                    if (!mod_ctrl_only(event) && unimode) {
                         /* TODO: ISO 14755 (section 3 Definitions) says that we should also
                            accept the first 6 characters of alphabets other than the latin
                            alphabet "if the Latin alphabet is not used".  The below is also
@@ -696,14 +695,14 @@ bool TextTool::root_handler(CanvasEvent const &event)
                     switch (group0_keyval) {
                         case GDK_KEY_x:
                         case GDK_KEY_X:
-                            if (MOD__ALT_ONLY(event)) {
+                            if (mod_alt_only(event)) {
                                 _desktop->setToolboxFocusTo("TextFontFamilyAction_entry");
                                 ret = true;
                                 return;
                             }
                             break;
                         case GDK_KEY_space:
-                            if (MOD__CTRL_ONLY(event)) {
+                            if (mod_ctrl_only(event)) {
                                 // No-break space
                                 if (!text) { // printable key; create text if none (i.e. if nascent_object)
                                     _setupText();
@@ -720,7 +719,7 @@ bool TextTool::root_handler(CanvasEvent const &event)
                             break;
                         case GDK_KEY_U:
                         case GDK_KEY_u:
-                            if (MOD__CTRL_ONLY(event) || (MOD__CTRL(event) && MOD__SHIFT(event))) {
+                            if (mod_ctrl_only(event) || (mod_ctrl(event) && mod_shift(event))) {
                                 if (unimode) {
                                     unimode = false;
                                     defaultMessageContext()->clear();
@@ -738,7 +737,7 @@ bool TextTool::root_handler(CanvasEvent const &event)
                             break;
                         case GDK_KEY_B:
                         case GDK_KEY_b:
-                            if (MOD__CTRL_ONLY(event) && text) {
+                            if (mod_ctrl_only(event) && text) {
                                 auto const style = sp_te_style_at_position(text, std::min(text_sel_start, text_sel_end));
                                 auto const css = sp_repr_css_attr_new();
                                 if (style->font_weight.computed == SP_CSS_FONT_WEIGHT_NORMAL
@@ -762,7 +761,7 @@ bool TextTool::root_handler(CanvasEvent const &event)
                             break;
                         case GDK_KEY_I:
                         case GDK_KEY_i:
-                            if (MOD__CTRL_ONLY(event) && text) {
+                            if (mod_ctrl_only(event) && text) {
                                 auto const style = sp_te_style_at_position(text, std::min(text_sel_start, text_sel_end));
                                 auto const css = sp_repr_css_attr_new();
                                 if (style->font_style.computed != SP_CSS_FONT_STYLE_NORMAL) {
@@ -782,7 +781,7 @@ bool TextTool::root_handler(CanvasEvent const &event)
 
                         case GDK_KEY_A:
                         case GDK_KEY_a:
-                            if (MOD__CTRL_ONLY(event) && text) {
+                            if (mod_ctrl_only(event) && text) {
                                 if (auto const layout = te_get_layout(text)) {
                                     text_sel_start = layout->begin();
                                     text_sel_end = layout->end();
@@ -824,12 +823,12 @@ bool TextTool::root_handler(CanvasEvent const &event)
 
                                 bool noSelection = false;
 
-                                if (MOD__CTRL(event)) {
+                                if (mod_ctrl(event)) {
                                     text_sel_start = text_sel_end;
                                 }
 
                                 if (text_sel_start == text_sel_end) {
-                                    if (MOD__CTRL(event)) {
+                                    if (mod_ctrl(event)) {
                                         text_sel_start.prevStartOfWord();
                                     } else {
                                         text_sel_start.prevCursorPosition();
@@ -866,12 +865,12 @@ bool TextTool::root_handler(CanvasEvent const &event)
                             if (text) {
                                 bool noSelection = false;
 
-                                if (MOD__CTRL(event)) {
+                                if (mod_ctrl(event)) {
                                     text_sel_start = text_sel_end;
                                 }
 
                                 if (text_sel_start == text_sel_end) {
-                                    if (MOD__CTRL(event)) {
+                                    if (mod_ctrl(event)) {
                                         text_sel_end.nextEndOfWord();
                                     } else {
                                         text_sel_end.nextCursorPosition();
@@ -903,9 +902,9 @@ bool TextTool::root_handler(CanvasEvent const &event)
                         case GDK_KEY_KP_Left:
                         case GDK_KEY_KP_4:
                             if (this->text) {
-                                if (MOD__ALT(event)) {
+                                if (mod_alt(event)) {
                                     int mul = 1 + gobble_key_events(get_latin_keyval(event), 0); // with any mask
-                                    if (MOD__SHIFT(event)) {
+                                    if (mod_shift(event)) {
                                         sp_te_adjust_kerning_screen(text, text_sel_start, text_sel_end, _desktop, Geom::Point(mul * -10, 0));
                                     } else {
                                         sp_te_adjust_kerning_screen(text, text_sel_start, text_sel_end, _desktop, Geom::Point(mul * -1, 0));
@@ -914,7 +913,7 @@ bool TextTool::root_handler(CanvasEvent const &event)
                                     _updateTextSelection();
                                     DocumentUndo::maybeDone(_desktop->getDocument(), "kern:left",  _("Kern to the left"), INKSCAPE_ICON("draw-text"));
                                 } else {
-                                    if (MOD__CTRL(event)) {
+                                    if (mod_ctrl(event)) {
                                         text_sel_end.cursorLeftWithControl();
                                     } else {
                                         text_sel_end.cursorLeft();
@@ -929,9 +928,9 @@ bool TextTool::root_handler(CanvasEvent const &event)
                         case GDK_KEY_KP_Right:
                         case GDK_KEY_KP_6:
                             if (text) {
-                                if (MOD__ALT(event)) {
+                                if (mod_alt(event)) {
                                     int mul = 1 + gobble_key_events(get_latin_keyval(event), 0); // with any mask
-                                    if (MOD__SHIFT(event)) {
+                                    if (mod_shift(event)) {
                                         sp_te_adjust_kerning_screen(text, text_sel_start, text_sel_end, _desktop, Geom::Point(mul * 10, 0));
                                     } else {
                                         sp_te_adjust_kerning_screen(text, text_sel_start, text_sel_end, _desktop, Geom::Point(mul * 1, 0));
@@ -940,7 +939,7 @@ bool TextTool::root_handler(CanvasEvent const &event)
                                     _updateTextSelection();
                                     DocumentUndo::maybeDone(_desktop->getDocument(), "kern:right",  _("Kern to the right"), INKSCAPE_ICON("draw-text"));
                                 } else {
-                                    if (MOD__CTRL(event)) {
+                                    if (mod_ctrl(event)) {
                                         text_sel_end.cursorRightWithControl();
                                     } else {
                                         text_sel_end.cursorRight();
@@ -955,9 +954,9 @@ bool TextTool::root_handler(CanvasEvent const &event)
                         case GDK_KEY_KP_Up:
                         case GDK_KEY_KP_8:
                             if (text) {
-                                if (MOD__ALT(event)) {
+                                if (mod_alt(event)) {
                                     int mul = 1 + gobble_key_events(get_latin_keyval(event), 0); // with any mask
-                                    if (MOD__SHIFT(event)) {
+                                    if (mod_shift(event)) {
                                         sp_te_adjust_kerning_screen(text, text_sel_start, text_sel_end, _desktop, Geom::Point(0, mul * -10));
                                     } else {
                                         sp_te_adjust_kerning_screen(text, text_sel_start, text_sel_end, _desktop, Geom::Point(0, mul * -1));
@@ -966,7 +965,7 @@ bool TextTool::root_handler(CanvasEvent const &event)
                                     _updateTextSelection();
                                     DocumentUndo::maybeDone(_desktop->getDocument(), "kern:up",  _("Kern up"), INKSCAPE_ICON("draw-text"));
                                 } else {
-                                    if (MOD__CTRL(event)) {
+                                    if (mod_ctrl(event)) {
                                         text_sel_end.cursorUpWithControl();
                                     } else {
                                         text_sel_end.cursorUp();
@@ -981,9 +980,9 @@ bool TextTool::root_handler(CanvasEvent const &event)
                         case GDK_KEY_KP_Down:
                         case GDK_KEY_KP_2:
                             if (text) {
-                                if (MOD__ALT(event)) {
+                                if (mod_alt(event)) {
                                     int mul = 1 + gobble_key_events(get_latin_keyval(event), 0); // with any mask
-                                    if (MOD__SHIFT(event)) {
+                                    if (mod_shift(event)) {
                                         sp_te_adjust_kerning_screen(text, text_sel_start, text_sel_end, _desktop, Geom::Point(0, mul * 10));
                                     } else {
                                         sp_te_adjust_kerning_screen(text, text_sel_start, text_sel_end, _desktop, Geom::Point(0, mul * 1));
@@ -992,7 +991,7 @@ bool TextTool::root_handler(CanvasEvent const &event)
                                     _updateTextSelection();
                                     DocumentUndo::maybeDone(_desktop->getDocument(), "kern:down",  _("Kern down"), INKSCAPE_ICON("draw-text"));
                                 } else {
-                                    if (MOD__CTRL(event)) {
+                                    if (mod_ctrl(event)) {
                                         text_sel_end.cursorDownWithControl();
                                     } else {
                                         text_sel_end.cursorDown();
@@ -1006,7 +1005,7 @@ bool TextTool::root_handler(CanvasEvent const &event)
                         case GDK_KEY_Home:
                         case GDK_KEY_KP_Home:
                             if (text) {
-                                if (MOD__CTRL(event)) {
+                                if (mod_ctrl(event)) {
                                     text_sel_end.thisStartOfShape();
                                 } else {
                                     text_sel_end.thisStartOfLine();
@@ -1019,7 +1018,7 @@ bool TextTool::root_handler(CanvasEvent const &event)
                         case GDK_KEY_End:
                         case GDK_KEY_KP_End:
                             if (text) {
-                                if (MOD__CTRL(event)) {
+                                if (mod_ctrl(event)) {
                                     text_sel_end.nextStartOfShape();
                                 } else {
                                     text_sel_end.thisEndOfLine();
@@ -1060,9 +1059,9 @@ bool TextTool::root_handler(CanvasEvent const &event)
                             return;
                         case GDK_KEY_bracketleft:
                             if (text) {
-                                if (MOD__ALT(event) || MOD__CTRL(event)) {
-                                    if (MOD__ALT(event)) {
-                                        if (MOD__SHIFT(event)) {
+                                if (mod_alt(event) || mod_ctrl(event)) {
+                                    if (mod_alt(event)) {
+                                        if (mod_shift(event)) {
                                             // FIXME: alt+shift+[] does not work, don't know why
                                             sp_te_adjust_rotation_screen(text, text_sel_start, text_sel_end, _desktop, -10);
                                         } else {
@@ -1081,9 +1080,9 @@ bool TextTool::root_handler(CanvasEvent const &event)
                             break;
                         case GDK_KEY_bracketright:
                             if (text) {
-                                if (MOD__ALT(event) || MOD__CTRL(event)) {
-                                    if (MOD__ALT(event)) {
-                                        if (MOD__SHIFT(event)) {
+                                if (mod_alt(event) || mod_ctrl(event)) {
+                                    if (mod_alt(event)) {
+                                        if (mod_shift(event)) {
                                             // FIXME: alt+shift+[] does not work, don't know why
                                             sp_te_adjust_rotation_screen(text, text_sel_start, text_sel_end, _desktop, 10);
                                         } else {
@@ -1103,16 +1102,16 @@ bool TextTool::root_handler(CanvasEvent const &event)
                         case GDK_KEY_less:
                         case GDK_KEY_comma:
                             if (text) {
-                                if (MOD__ALT(event)) {
-                                    if (MOD__CTRL(event)) {
-                                        if (MOD__SHIFT(event)) {
+                                if (mod_alt(event)) {
+                                    if (mod_ctrl(event)) {
+                                        if (mod_shift(event)) {
                                             sp_te_adjust_linespacing_screen(text, text_sel_start, text_sel_end, _desktop, -10);
                                         } else {
                                             sp_te_adjust_linespacing_screen(text, text_sel_start, text_sel_end, _desktop, -1);
                                         }
                                         DocumentUndo::maybeDone(_desktop->getDocument(), "linespacing:dec",  _("Contract line spacing"), INKSCAPE_ICON("draw-text"));
                                     } else {
-                                        if (MOD__SHIFT(event)) {
+                                        if (mod_shift(event)) {
                                             sp_te_adjust_tspan_letterspacing_screen(text, text_sel_start, text_sel_end, _desktop, -10);
                                         } else {
                                             sp_te_adjust_tspan_letterspacing_screen(text, text_sel_start, text_sel_end, _desktop, -1);
@@ -1129,16 +1128,16 @@ bool TextTool::root_handler(CanvasEvent const &event)
                         case GDK_KEY_greater:
                         case GDK_KEY_period:
                             if (text) {
-                                if (MOD__ALT(event)) {
-                                    if (MOD__CTRL(event)) {
-                                        if (MOD__SHIFT(event)) {
+                                if (mod_alt(event)) {
+                                    if (mod_ctrl(event)) {
+                                        if (mod_shift(event)) {
                                             sp_te_adjust_linespacing_screen(text, text_sel_start, text_sel_end, _desktop, 10);
                                         } else {
                                             sp_te_adjust_linespacing_screen(text, text_sel_start, text_sel_end, _desktop, 1);
                                         }
                                         DocumentUndo::maybeDone(_desktop->getDocument(), "linespacing:inc",  _("Expand line spacing"), INKSCAPE_ICON("draw-text"));
                                     } else {
-                                        if (MOD__SHIFT(event)) {
+                                        if (mod_shift(event)) {
                                             sp_te_adjust_tspan_letterspacing_screen(text, text_sel_start, text_sel_end, _desktop, 10);
                                         } else {
                                             sp_te_adjust_tspan_letterspacing_screen(text, text_sel_start, text_sel_end, _desktop, 1);
@@ -1157,7 +1156,7 @@ bool TextTool::root_handler(CanvasEvent const &event)
                     }
 
                     if (cursor_moved) {
-                        if (!MOD__SHIFT(event)) {
+                        if (!mod_shift(event)) {
                             text_sel_start = text_sel_end;
                         }
                         if (old_start != text_sel_start || old_end != text_sel_end) {
@@ -1175,7 +1174,7 @@ bool TextTool::root_handler(CanvasEvent const &event)
                      group0_keyval == GDK_KEY_Down  ||
                      group0_keyval == GDK_KEY_KP_Up ||
                      group0_keyval == GDK_KEY_KP_Down )
-                    && !MOD__CTRL_ONLY(event))
+                    && !mod_ctrl_only(event))
                 {
                     ret = true;
                 } else if (group0_keyval == GDK_KEY_Escape) { // cancel rubberband
@@ -1184,14 +1183,14 @@ bool TextTool::root_handler(CanvasEvent const &event)
                         ungrabCanvasEvents();
                         Rubberband::get(_desktop)->stop();
                     }
-                } else if ((group0_keyval == GDK_KEY_x || group0_keyval == GDK_KEY_X) && MOD__ALT_ONLY(event)) {
+                } else if ((group0_keyval == GDK_KEY_x || group0_keyval == GDK_KEY_X) && mod_alt_only(event)) {
                     _desktop->setToolboxFocusTo("TextFontFamilyAction_entry");
                     ret = true;
                 }
             }
         },
         [&] (KeyReleaseEvent const &event) {
-            if (!unimode && imc && gtk_im_context_filter_keypress(imc, event.original())) {
+            if (!unimode && imc && gtk_im_context_filter_keypress(imc, &event.original->key)) {
                 ret = true;
             }
         },
@@ -1596,7 +1595,7 @@ void TextTool::_updateCursor(bool scroll_to_see)
         }
 
         if (!curve.is_empty()) {
-            bool has_padding = std::fabs(padding) > 1e-12;
+            bool has_padding = std::abs(padding) > 1e-12;
 
             if (has_padding || exclusion_shape) {
                 // Should only occur for SVG2 autoflowed text

@@ -143,7 +143,7 @@ bool SVGViewWidget::event(CanvasEvent const &event, DrawingItem *drawing_item)
 
     inspect_event(event,
         [&] (ButtonPressEvent const &event) {
-            if (event.numPress() == 1 && event.button() == 1) {
+            if (event.num_press == 1 && event.button == 1) {
                 _clicking = true;
             }
         },
@@ -151,9 +151,9 @@ bool SVGViewWidget::event(CanvasEvent const &event, DrawingItem *drawing_item)
             _clicking = false;
         },
         [&] (ButtonReleaseEvent const &event) {
-            if (event.button() == 1 && _clicking && href) {
+            if (event.button == 1 && _clicking && href) {
                 if (auto window = dynamic_cast<Gtk::Window*>(_canvas->get_toplevel())) {
-                    window->show_uri(href, event.original()->time);
+                    window->show_uri(href, event.time);
                 }
             }
             _clicking = false;

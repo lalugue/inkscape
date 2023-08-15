@@ -202,7 +202,7 @@ public:
 protected:
     Glib::ustring _getTip(unsigned state) const override
     {
-        if (state_held_control(state)) {
+        if (state_held_ctrl(state)) {
             if (state_held_shift(state)) {
                 return C_("Transform handle tip",
                     "<b>Shift+Ctrl</b>: scale uniformly about the rotation center");
@@ -277,7 +277,7 @@ protected:
             m.setupIgnoreSelection(_th._desktop, true, &_unselected_points);
 
             Inkscape::PureScale *ptr;
-            if (held_control(event)) {
+            if (held_ctrl(event)) {
                 scale[0] = scale[1] = std::min(scale[0], scale[1]);
                 ptr = new Inkscape::PureScaleConstrained(Geom::Scale(scale[0], scale[1]), scc);
             } else {
@@ -356,7 +356,7 @@ protected:
             auto &m = _th._desktop->namedview->snap_manager;
             m.setupIgnoreSelection(_th._desktop, true, &_unselected_points);
 
-            bool uniform = held_control(event);
+            bool uniform = held_ctrl(event);
             auto psc = Inkscape::PureStretchConstrained(vs[d1], scc, d1, uniform);
             m.snapTransformed(_snap_points, _origin, psc);
             m.unSetup();
@@ -416,7 +416,7 @@ protected:
     {
         Geom::Point rotc = held_shift(event) ? _rot_opposite : _rot_center;
         double angle = Geom::angle_between(_origin - rotc, new_pos - rotc);
-        if (held_control(event)) {
+        if (held_ctrl(event)) {
             angle = snap_angle(angle);
         } else {
             auto &m = _th._desktop->namedview->snap_manager;
@@ -442,14 +442,14 @@ protected:
     Glib::ustring _getTip(unsigned state) const override
     {
         if (state_held_shift(state)) {
-            if (state_held_control(state)) {
+            if (state_held_ctrl(state)) {
                 return format_tip(C_("Transform handle tip",
                     "<b>Shift+Ctrl</b>: rotate around the opposite corner and snap "
                     "angle to %f° increments"), snap_increment_degrees());
             }
             return C_("Transform handle tip", "<b>Shift</b>: rotate around the opposite corner");
         }
-        if (state_held_control(state)) {
+        if (state_held_ctrl(state)) {
             return format_tip(C_("Transform handle tip",
                 "<b>Ctrl</b>: snap angle to %f° increments"), snap_increment_degrees());
         }
@@ -523,7 +523,7 @@ protected:
 
         double angle = atan(skew[d1] / scale[d1]);
 
-        if (held_control(event)) {
+        if (held_ctrl(event)) {
             angle = snap_angle(angle);
             skew[d1] = tan(angle) * scale[d1];
         } else {
@@ -576,14 +576,14 @@ protected:
     Glib::ustring _getTip(unsigned state) const override
     {
         if (state_held_shift(state)) {
-            if (state_held_control(state)) {
+            if (state_held_ctrl(state)) {
                 return format_tip(C_("Transform handle tip",
                     "<b>Shift+Ctrl</b>: skew about the rotation center with snapping "
                     "to %f° increments"), snap_increment_degrees());
             }
             return C_("Transform handle tip", "<b>Shift</b>: skew about the rotation center");
         }
-        if (state_held_control(state)) {
+        if (state_held_ctrl(state)) {
             return format_tip(C_("Transform handle tip",
                 "<b>Ctrl</b>: snap skew angle to %f° increments"), snap_increment_degrees());
         }
@@ -633,7 +633,7 @@ protected:
         auto &sm = _th._desktop->namedview->snap_manager;
         sm.setup(_th._desktop);
         bool snap = !held_shift(event) && sm.someSnapperMightSnap();
-        if (held_control(event)) {
+        if (held_ctrl(event)) {
             // constrain to axes
             Geom::Point origin = _last_drag_origin();
             std::vector<Inkscape::Snapper::SnapConstraint> constraints;

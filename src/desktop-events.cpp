@@ -175,17 +175,17 @@ bool sp_dt_guide_event(Inkscape::CanvasEvent const &event, Inkscape::CanvasItemG
 
     inspect_event(event,
         [&] (Inkscape::ButtonPressEvent const &event) {
-            if (event.numPress() == 2) {
-                if (event.button() == 1) {
+            if (event.num_press == 2) {
+                if (event.button == 1) {
                     drag_type = SP_DRAG_NONE;
                     desktop->event_context->discard_delayed_snap_event();
                     guide_item->ungrab();
                     Inkscape::UI::Dialogs::GuidelinePropertiesDialog::showDialog(guide, desktop);
                     ret = true;
                 }
-            } else if (event.numPress() == 1) {
-                if (event.button() == 1 && !guide->getLocked()) {
-                    auto const event_dt = desktop->w2d(event.eventPos());
+            } else if (event.num_press == 1) {
+                if (event.button == 1 && !guide->getLocked()) {
+                    auto const event_dt = desktop->w2d(event.pos);
 
                     // Due to the tolerance allowed when grabbing a guide, event_dt will generally
                     // be close to the guide but not just exactly on it. The drag origin calculated
@@ -194,10 +194,10 @@ bool sp_dt_guide_event(Inkscape::CanvasEvent const &event, Inkscape::CanvasItemG
                     // https://bugs.launchpad.net/inkscape/+bug/333762
                     drag_origin = Geom::projection(event_dt, Geom::Line(guide->getPoint(), guide->angle()));
 
-                    if (event.modifiers() & GDK_SHIFT_MASK) {
+                    if (event.modifiers & GDK_SHIFT_MASK) {
                         // with shift we rotate the guide
                         drag_type = SP_DRAG_ROTATE;
-                    } else if (event.modifiers() & GDK_CONTROL_MASK) {
+                    } else if (event.modifiers & GDK_CONTROL_MASK) {
                         drag_type = SP_DRAG_MOVE_ORIGIN;
                     } else {
                         drag_type = SP_DRAG_TRANSLATE;
@@ -221,9 +221,9 @@ bool sp_dt_guide_event(Inkscape::CanvasEvent const &event, Inkscape::CanvasItemG
             desktop->event_context->snap_delay_handler(guide_item, guide, event,
                                                        Inkscape::UI::Tools::DelayedSnapEvent::GUIDE_HANDLER);
 
-            auto event_dt = desktop->w2d(event.eventPos());
-            apply_snap(event_dt, event.modifiers());
-            move_guide(event_dt, event.modifiers(), false);
+            auto event_dt = desktop->w2d(event.pos);
+            apply_snap(event_dt, event.modifiers);
+            move_guide(event_dt, event.modifiers, false);
 
             guide_moved = true;
             desktop->set_coordinate_status(event_dt);
@@ -233,18 +233,18 @@ bool sp_dt_guide_event(Inkscape::CanvasEvent const &event, Inkscape::CanvasItemG
         },
 
         [&] (Inkscape::ButtonReleaseEvent const &event) {
-            if (drag_type == SP_DRAG_NONE || event.button() != 1) {
+            if (drag_type == SP_DRAG_NONE || event.button != 1) {
                 return;
             }
 
             desktop->event_context->discard_delayed_snap_event();
 
             if (guide_moved) {
-                auto event_dt = desktop->w2d(event.eventPos());
-                apply_snap(event_dt, event.modifiers());
+                auto event_dt = desktop->w2d(event.pos);
+                apply_snap(event_dt, event.modifiers);
 
-                if (guide_item->get_canvas()->world_point_inside_canvas(event.eventPos())) {
-                    move_guide(event_dt, event.modifiers(), true);
+                if (guide_item->get_canvas()->world_point_inside_canvas(event.pos)) {
+                    move_guide(event_dt, event.modifiers, true);
                     DocumentUndo::done(desktop->getDocument(), _("Move guide"), "");
                 } else {
                     // Undo movement of any attached shapes.
@@ -283,7 +283,7 @@ bool sp_dt_guide_event(Inkscape::CanvasEvent const &event, Inkscape::CanvasItemG
             Glib::RefPtr<Gdk::Cursor> cursor;
             if (guide->getLocked()) {
                 cursor = Inkscape::load_svg_cursor(display, window, "select.svg");
-            } else if (event.modifiers() & GDK_SHIFT_MASK && drag_type != SP_DRAG_MOVE_ORIGIN) {
+            } else if (event.modifiers & GDK_SHIFT_MASK && drag_type != SP_DRAG_MOVE_ORIGIN) {
                 cursor = Inkscape::load_svg_cursor(display, window, "rotate.svg");
             } else {
                 cursor = Gdk::Cursor::create(display, "grab");
@@ -407,7 +407,7 @@ void snoop_extended(Inkscape::CanvasEvent const &event, SPDesktop *desktop)
     }
 
     // Extract information about the source device of the event.
-    auto source_device = gdk_event_get_source_device(event.original());
+    auto source_device = event.source_device.get();
     if (!source_device) {
         // Not all event structures include a GdkDevice field but the above should!
         std::cerr << "snoop_extended: missing source device! " << (int)event.type() << std::endl;

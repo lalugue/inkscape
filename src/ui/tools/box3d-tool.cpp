@@ -113,8 +113,8 @@ bool Box3dTool::item_handler(SPItem *item, CanvasEvent const &event)
 {
     if (event.type() == EventType::BUTTON_PRESS) {
         auto &button_event = static_cast<ButtonPressEvent const &>(event);
-        if (button_event.numPress() == 1 && button_event.button() == 1) {
-            setup_for_drag_start(event.original());
+        if (button_event.num_press == 1 && button_event.button == 1) {
+            setup_for_drag_start(button_event);
         }
     }
 
@@ -137,17 +137,17 @@ bool Box3dTool::root_handler(CanvasEvent const &event)
 
     inspect_event(event,
         [&] (ButtonPressEvent const &event) {
-            if (event.numPress() != 1 || event.button() != 1) {
+            if (event.num_press != 1 || event.button != 1) {
                 return;
             }
 
-            auto const button_w = event.eventPos();
+            auto const button_w = event.pos;
             auto button_dt = _desktop->w2d(button_w);
 
             saveDragOrigin(button_w);
 
             // remember clicked box3d, *not* disregarding groups (since a 3D box is a group), honoring Alt
-            item_to_select = sp_event_context_find_item(_desktop, button_w, event.modifiers() & GDK_MOD1_MASK, event.modifiers() & GDK_CONTROL_MASK);
+            item_to_select = sp_event_context_find_item(_desktop, button_w, event.modifiers & GDK_MOD1_MASK, event.modifiers & GDK_CONTROL_MASK);
 
             dragging = true;
 
@@ -179,26 +179,26 @@ bool Box3dTool::root_handler(CanvasEvent const &event)
         },
 
     [&] (MotionEvent const &event) {
-        if (dragging && event.modifiers() & GDK_BUTTON1_MASK) {
+        if (dragging && event.modifiers & GDK_BUTTON1_MASK) {
             if (!cur_persp) {
                 // Can happen if perspective is deleted while dragging, e.g. on document closure.
                 ret = true;
                 return;
             }
 
-            if (!checkDragMoved(event.eventPos())) {
+            if (!checkDragMoved(event.pos)) {
                 return;
             }
 
-            auto const motion_w = event.eventPos();
+            auto const motion_w = event.pos;
             auto motion_dt = _desktop->w2d(motion_w);
 
             auto &m = _desktop->namedview->snap_manager;
             m.setup(_desktop, true, box3d.get());
             m.freeSnapReturnByRef(motion_dt, Inkscape::SNAPSOURCE_NODE_HANDLE);
-            ctrl_dragged  = event.modifiers() & GDK_CONTROL_MASK;
+            ctrl_dragged  = event.modifiers & GDK_CONTROL_MASK;
 
-            if (event.modifiers() & GDK_SHIFT_MASK && box3d) {
+            if (event.modifiers & GDK_SHIFT_MASK && box3d) {
                 // once shift is pressed, set extruded
                 extruded = true;
             }
@@ -240,7 +240,7 @@ bool Box3dTool::root_handler(CanvasEvent const &event)
             auto &m = _desktop->namedview->snap_manager;
             m.setup(_desktop);
 
-            auto const motion_w = event.eventPos();
+            auto const motion_w = event.pos;
             auto motion_dt = _desktop->w2d(motion_w);
             m.preSnap(Inkscape::SnapCandidatePoint(motion_dt, Inkscape::SNAPSOURCE_NODE_HANDLE));
             m.unSetup();
@@ -250,7 +250,7 @@ bool Box3dTool::root_handler(CanvasEvent const &event)
         [&] (ButtonReleaseEvent const &event) {
             xyp = {};
 
-            if (event.button() != 1) {
+            if (event.button != 1) {
                 return;
             }
 
@@ -265,7 +265,7 @@ bool Box3dTool::root_handler(CanvasEvent const &event)
                 finishItem(); // .. but finishItem() will be called from the destructor too and shall NOT fire such signals!
             } else if (item_to_select) {
                 // no dragging, select clicked box3d if any
-                if (event.modifiers() & GDK_SHIFT_MASK) {
+                if (event.modifiers & GDK_SHIFT_MASK) {
                     selection->toggle(item_to_select);
                 } else {
                     selection->set(item_to_select);
@@ -287,50 +287,50 @@ bool Box3dTool::root_handler(CanvasEvent const &event)
         case GDK_KEY_KP_Up:
         case GDK_KEY_KP_Down:
             // prevent the zoom field from activation
-            if (!MOD__CTRL_ONLY(event)) {
+            if (!mod_ctrl_only(event)) {
                 ret = true;
             }
             break;
 
         case GDK_KEY_bracketright:
-            document->getCurrentPersp3D()->rotate_VP (Proj::X, 180 / snaps * y_dir, MOD__ALT(event));
+            document->getCurrentPersp3D()->rotate_VP (Proj::X, 180 / snaps * y_dir, mod_alt(event));
             DocumentUndo::done(document, _("Change perspective (angle of PLs)"), INKSCAPE_ICON("draw-cuboid"));
             ret = true;
             break;
 
         case GDK_KEY_bracketleft:
-            document->getCurrentPersp3D()->rotate_VP (Proj::X, -180 / snaps * y_dir, MOD__ALT(event));
+            document->getCurrentPersp3D()->rotate_VP (Proj::X, -180 / snaps * y_dir, mod_alt(event));
             DocumentUndo::done(document, _("Change perspective (angle of PLs)"), INKSCAPE_ICON("draw-cuboid"));
             ret = true;
             break;
 
         case GDK_KEY_parenright:
-            document->getCurrentPersp3D()->rotate_VP (Proj::Y, 180 / snaps * y_dir, MOD__ALT(event));
+            document->getCurrentPersp3D()->rotate_VP (Proj::Y, 180 / snaps * y_dir, mod_alt(event));
             DocumentUndo::done(document, _("Change perspective (angle of PLs)"), INKSCAPE_ICON("draw-cuboid"));
             ret = true;
             break;
 
         case GDK_KEY_parenleft:
-            document->getCurrentPersp3D()->rotate_VP (Proj::Y, -180 / snaps * y_dir, MOD__ALT(event));
+            document->getCurrentPersp3D()->rotate_VP (Proj::Y, -180 / snaps * y_dir, mod_alt(event));
             DocumentUndo::done(document, _("Change perspective (angle of PLs)"), INKSCAPE_ICON("draw-cuboid"));
             ret = true;
             break;
 
         case GDK_KEY_braceright:
-            document->getCurrentPersp3D()->rotate_VP (Proj::Z, 180 / snaps * y_dir, MOD__ALT(event));
+            document->getCurrentPersp3D()->rotate_VP (Proj::Z, 180 / snaps * y_dir, mod_alt(event));
             DocumentUndo::done(document, _("Change perspective (angle of PLs)"), INKSCAPE_ICON("draw-cuboid"));
             ret = true;
             break;
 
         case GDK_KEY_braceleft:
-            document->getCurrentPersp3D()->rotate_VP (Proj::Z, -180 / snaps * y_dir, MOD__ALT(event));
+            document->getCurrentPersp3D()->rotate_VP (Proj::Z, -180 / snaps * y_dir, mod_alt(event));
             DocumentUndo::done(document, _("Change perspective (angle of PLs)"), INKSCAPE_ICON("draw-cuboid"));
             ret = true;
             break;
 
         case GDK_KEY_g:
         case GDK_KEY_G:
-            if (MOD__SHIFT_ONLY(event)) {
+            if (mod_shift_only(event)) {
                 _desktop->getSelection()->toGuides();
                 ret = true;
             }
@@ -338,7 +338,7 @@ bool Box3dTool::root_handler(CanvasEvent const &event)
 
         case GDK_KEY_p:
         case GDK_KEY_P:
-            if (MOD__SHIFT_ONLY(event)) {
+            if (mod_shift_only(event)) {
                 if (document->getCurrentPersp3D()) {
                     document->getCurrentPersp3D()->print_debugging_info();
                 }
@@ -348,11 +348,11 @@ bool Box3dTool::root_handler(CanvasEvent const &event)
 
         case GDK_KEY_x:
         case GDK_KEY_X:
-            if (MOD__ALT_ONLY(event)) {
+            if (mod_alt_only(event)) {
                 _desktop->setToolboxFocusTo("box3d-angle-x");
                 ret = true;
             }
-            if (MOD__SHIFT_ONLY(event)) {
+            if (mod_shift_only(event)) {
                 Persp3D::toggle_VPs(selection->perspList(), Proj::X);
                 _vpdrag->updateLines(); // FIXME: Shouldn't this be done automatically?
                 ret = true;
@@ -361,7 +361,7 @@ bool Box3dTool::root_handler(CanvasEvent const &event)
 
         case GDK_KEY_y:
         case GDK_KEY_Y:
-            if (MOD__SHIFT_ONLY(event)) {
+            if (mod_shift_only(event)) {
                 Persp3D::toggle_VPs(selection->perspList(), Proj::Y);
                 _vpdrag->updateLines(); // FIXME: Shouldn't this be done automatically?
                 ret = true;
@@ -370,7 +370,7 @@ bool Box3dTool::root_handler(CanvasEvent const &event)
 
         case GDK_KEY_z:
         case GDK_KEY_Z:
-            if (MOD__SHIFT_ONLY(event)) {
+            if (mod_shift_only(event)) {
                 Persp3D::toggle_VPs(selection->perspList(), Proj::Z);
                 _vpdrag->updateLines(); // FIXME: Shouldn't this be done automatically?
                 ret = true;
@@ -401,7 +401,7 @@ bool Box3dTool::root_handler(CanvasEvent const &event)
         case GDK_KEY_Delete:
         case GDK_KEY_KP_Delete:
         case GDK_KEY_BackSpace:
-            ret = deleteSelectedDrag(MOD__CTRL_ONLY(event));
+            ret = deleteSelectedDrag(mod_ctrl_only(event));
             break;
 
         default:

@@ -19,14 +19,9 @@
 
 #include "sp-attribute-widget.h"
 
-#include "include/macros.h"
 #include "document.h"
 #include "document-undo.h"
-
-#include "include/gtkmm_version.h"
-
 #include "object/sp-object.h"
-
 #include "xml/repr.h"
 
 using Inkscape::DocumentUndo;

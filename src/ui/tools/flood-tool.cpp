@@ -47,8 +47,6 @@
 #include "display/drawing-context.h"
 #include "display/drawing.h"
 
-#include "include/macros.h"
-
 #include "livarot/Path.h"
 #include "livarot/Shape.h"
 
@@ -1021,8 +1019,8 @@ bool FloodTool::item_handler(SPItem *item, CanvasEvent const &event)
 
     inspect_event(event,
     [&] (ButtonPressEvent const &event) {
-        if (event.numPress() == 1 && event.button() == 1 && event.modifiers() & GDK_CONTROL_MASK) {
-            auto const button_w = event.eventPos();
+        if (event.num_press == 1 && event.button == 1 && event.modifiers & GDK_CONTROL_MASK) {
+            auto const button_w = event.pos;
 
             auto item = sp_event_context_find_item(_desktop, button_w, true, true);
 
@@ -1045,14 +1043,14 @@ bool FloodTool::root_handler(CanvasEvent const &event)
 
     inspect_event(event,
     [&] (ButtonPressEvent const &event) {
-        if (event.numPress() == 1 && event.button() == 1 && !(event.modifiers() & GDK_CONTROL_MASK)) {
+        if (event.num_press == 1 && event.button == 1 && !(event.modifiers & GDK_CONTROL_MASK)) {
             if (have_viable_layer(_desktop, defaultMessageContext())) {
                 // save drag origin
-                saveDragOrigin(event.eventPos());
+                saveDragOrigin(event.pos);
 
                 dragging = true;
 
-                auto const p = _desktop->w2d(event.eventPos());
+                auto const p = _desktop->w2d(event.pos);
                 Rubberband::get(_desktop)->setMode(RUBBERBAND_MODE_TOUCHPATH);
                 Rubberband::get(_desktop)->start(_desktop, p);
             }
@@ -1060,12 +1058,12 @@ bool FloodTool::root_handler(CanvasEvent const &event)
     },
 
     [&] (MotionEvent const &event) {
-        if (dragging && event.modifiers() & GDK_BUTTON1_MASK) {
-            if (!checkDragMoved(event.eventPos())) {
+        if (dragging && event.modifiers & GDK_BUTTON1_MASK) {
+            if (!checkDragMoved(event.pos)) {
                 return;
             }
             
-            auto const p = _desktop->w2d(event.eventPos());
+            auto const p = _desktop->w2d(event.pos);
 
             if (Rubberband::get(_desktop)->is_started()) {
                 Rubberband::get(_desktop)->move(p);
@@ -1076,21 +1074,21 @@ bool FloodTool::root_handler(CanvasEvent const &event)
     },
 
     [&] (ButtonReleaseEvent const &event) {
-        if (event.button() == 1) {
+        if (event.button == 1) {
             auto r = Rubberband::get(_desktop);
 
             if (r->is_started()) {
                 dragging = false;
                 bool is_point_fill = within_tolerance;
-                bool is_touch_fill = event.modifiers() & GDK_MOD1_MASK;
+                bool is_touch_fill = event.modifiers & GDK_MOD1_MASK;
 
                 // It's possible for the user to sneakily change the tool while the
                 // Gtk main loop has control, so we save the current desktop address:
                 SPDesktop* current_desktop = _desktop;
 
                 current_desktop->setWaitingCursor();
-                sp_flood_do_flood_fill(current_desktop, event.eventPos(),
-                                       event.modifiers() & GDK_SHIFT_MASK,
+                sp_flood_do_flood_fill(current_desktop, event.pos,
+                                       event.modifiers & GDK_SHIFT_MASK,
                                        is_point_fill, is_touch_fill);
                 current_desktop->clearWaitingCursor();
                 r->stop();
@@ -1114,7 +1112,7 @@ bool FloodTool::root_handler(CanvasEvent const &event)
         case GDK_KEY_KP_Up:
         case GDK_KEY_KP_Down:
             // prevent the zoom field from activating
-            if (!MOD__CTRL_ONLY(event)) {
+            if (!mod_ctrl_only(event)) {
                 ret = true;
             }
             break;

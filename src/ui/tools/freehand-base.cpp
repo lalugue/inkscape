@@ -26,8 +26,6 @@
 #include "display/curve.h"
 #include "display/control/canvas-item-bpath.h"
 
-#include "include/macros.h"
-
 #include "live_effects/lpe-bendpath.h"
 #include "live_effects/lpe-patternalongpath.h"
 #include "live_effects/lpe-powerstroke.h"
@@ -115,7 +113,7 @@ bool FreehandBase::root_handler(CanvasEvent const &event)
                 case GDK_KEY_KP_Up:
                 case GDK_KEY_KP_Down:
                     // prevent the zoom field from activation
-                    if (!MOD__CTRL_ONLY(event)) {
+                    if (!mod_ctrl_only(event)) {
                         ret = true;
                     }
                     break;

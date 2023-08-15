@@ -46,6 +46,7 @@ class SPStop;
 namespace Inkscape {
 class Selection;
 class CanvasItemCurve;
+struct KeyPressEvent;
 } // namespace Inkscape
 
 /**
@@ -218,7 +219,7 @@ public: // FIXME: make more of this private!
     void selected_move(double x, double y, bool write_repr = true, bool scale_radial = false);
     void selected_move_screen(double x, double y);
 
-    bool key_press_handler(GdkEvent *event);
+    bool key_press_handler(Inkscape::KeyPressEvent const &event);
 
     GrDragger *select_next();
     GrDragger *select_prev();

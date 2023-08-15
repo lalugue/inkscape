@@ -19,7 +19,7 @@
 
 namespace Inkscape {
 
-class KeyEvent;
+struct KeyEvent;
 namespace UI::View { class View; }
 
 namespace XML {

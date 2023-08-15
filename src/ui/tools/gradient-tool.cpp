@@ -402,13 +402,13 @@ bool GradientTool::root_handler(CanvasEvent const &event)
 
     inspect_event(event,
     [&] (ButtonPressEvent const &event) {
-        if (event.button() != 1) {
+        if (event.button != 1) {
             return;
         }
 
-        if (event.numPress() == 2) {
+        if (event.num_press == 2) {
 
-            if (is_over_curve(event.eventPos())) {
+            if (is_over_curve(event.pos)) {
                 // we take the first item in selection, because with doubleclick, the first click
                 // always resets selection to the single object under cursor
                 add_stop_near_point(selection->items().front(), mousepoint_doc);
@@ -426,19 +426,19 @@ bool GradientTool::root_handler(CanvasEvent const &event)
             }
             ret = true;
 
-        } else if (event.numPress() == 1) {
+        } else if (event.num_press == 1) {
 
-            saveDragOrigin(event.eventPos());
+            saveDragOrigin(event.pos);
             dragging = true;
 
-            auto button_dt = _desktop->w2d(event.eventPos());
-            if (event.modifiers() & GDK_SHIFT_MASK && !(event.modifiers() & GDK_CONTROL_MASK)) {
+            auto button_dt = _desktop->w2d(event.pos);
+            if (event.modifiers & GDK_SHIFT_MASK && !(event.modifiers & GDK_CONTROL_MASK)) {
                 Rubberband::get(_desktop)->start(_desktop, button_dt);
             } else {
                 // remember clicked item, disregarding groups, honoring Alt; do nothing with Crtl to
                 // enable Ctrl+doubleclick of exactly the selected item(s)
-                if (!(event.modifiers() & GDK_CONTROL_MASK)) {
-                    item_to_select = sp_event_context_find_item(_desktop, event.eventPos(), event.modifiers() & GDK_MOD1_MASK, true);
+                if (!(event.modifiers & GDK_CONTROL_MASK)) {
+                    item_to_select = sp_event_context_find_item(_desktop, event.pos, event.modifiers & GDK_MOD1_MASK, true);
                 }
 
                 if (!selection->isEmpty()) {
@@ -455,18 +455,18 @@ bool GradientTool::root_handler(CanvasEvent const &event)
     },
 
     [&] (MotionEvent const &event) {
-        if (dragging && (event.modifiers() & GDK_BUTTON1_MASK)) {
-            if (!checkDragMoved(event.eventPos())) {
+        if (dragging && (event.modifiers & GDK_BUTTON1_MASK)) {
+            if (!checkDragMoved(event.pos)) {
                 return;
             }
 
-            auto const motion_dt = _desktop->w2d(event.eventPos());
+            auto const motion_dt = _desktop->w2d(event.pos);
 
             if (Rubberband::get(_desktop)->is_started()) {
                 Rubberband::get(_desktop)->move(motion_dt);
                 defaultMessageContext()->set(NORMAL_MESSAGE, _("<b>Draw around</b> handles to select them"));
             } else {
-                drag(motion_dt, event.original()->time);
+                drag(motion_dt, event.time);
             }
 
             gobble_motion_events(GDK_BUTTON1_MASK);
@@ -477,13 +477,13 @@ bool GradientTool::root_handler(CanvasEvent const &event)
                 auto &m = _desktop->namedview->snap_manager;
                 m.setup(_desktop);
 
-                auto const motion_dt = _desktop->w2d(event.eventPos());
+                auto const motion_dt = _desktop->w2d(event.pos);
 
                 m.preSnap(SnapCandidatePoint(motion_dt, SNAPSOURCE_OTHER_HANDLE));
                 m.unSetup();
             }
 
-            auto item = is_over_curve(event.eventPos());
+            auto item = is_over_curve(event.pos);
 
             if (cursor_addnode && !item) {
                 set_cursor("gradient.svg");
@@ -496,15 +496,15 @@ bool GradientTool::root_handler(CanvasEvent const &event)
     },
 
         [&] (ButtonReleaseEvent const &event) {
-            if (event.button() != 1) {
+            if (event.button != 1) {
                 return;
             }
 
             xyp = {};
 
-            auto item = is_over_curve(event.eventPos());
+            auto item = is_over_curve(event.pos);
 
-            if ((event.modifiers() & GDK_CONTROL_MASK) && (event.modifiers() & GDK_MOD1_MASK)) {
+            if ((event.modifiers & GDK_CONTROL_MASK) && (event.modifiers & GDK_MOD1_MASK)) {
                 if (item) {
                     add_stop_near_point(item, mousepoint_doc);
                     ret = true;
@@ -513,7 +513,7 @@ bool GradientTool::root_handler(CanvasEvent const &event)
                 dragging = false;
 
                 // unless clicked with Ctrl (to enable Ctrl+doubleclick).
-                if (event.modifiers() & GDK_CONTROL_MASK && !(event.modifiers() & GDK_SHIFT_MASK)) {
+                if (event.modifiers & GDK_CONTROL_MASK && !(event.modifiers & GDK_SHIFT_MASK)) {
                     ret = true;
                     Rubberband::get(_desktop)->stop();
                     return;
@@ -536,7 +536,7 @@ bool GradientTool::root_handler(CanvasEvent const &event)
                         // possible change in selection during a double click with overlapping objects
                     } else {
                         // no dragging, select clicked item if any
-                        if (event.modifiers() & GDK_SHIFT_MASK) {
+                        if (event.modifiers & GDK_SHIFT_MASK) {
                             selection->toggle(item_to_select);
                         } else {
                             _grdrag->deselectAll();
@@ -569,7 +569,7 @@ bool GradientTool::root_handler(CanvasEvent const &event)
         case GDK_KEY_Shift_R:
         case GDK_KEY_Meta_L:  // Meta is when you press Shift+Alt (at least on my machine)
         case GDK_KEY_Meta_R:
-            sp_event_show_modifier_tip(defaultMessageContext(), event.CanvasEvent::original(),
+            sp_event_show_modifier_tip(defaultMessageContext(), event,
                                         _("<b>Ctrl</b>: snap gradient angle"),
                                         _("<b>Shift</b>: draw gradient around the starting point"),
                                         nullptr);
@@ -577,7 +577,7 @@ bool GradientTool::root_handler(CanvasEvent const &event)
 
         case GDK_KEY_x:
         case GDK_KEY_X:
-            if (MOD__ALT_ONLY(event)) {
+            if (mod_alt_only(event)) {
                 _desktop->setToolboxFocusTo("altx-grad");
                 ret = true;
             }
@@ -585,7 +585,7 @@ bool GradientTool::root_handler(CanvasEvent const &event)
 
         case GDK_KEY_A:
         case GDK_KEY_a:
-            if (MOD__CTRL_ONLY(event) && _grdrag->isNonEmpty()) {
+            if (mod_ctrl_only(event) && _grdrag->isNonEmpty()) {
                 _grdrag->selectAll();
                 ret = true;
             }
@@ -593,7 +593,7 @@ bool GradientTool::root_handler(CanvasEvent const &event)
 
         case GDK_KEY_L:
         case GDK_KEY_l:
-            if (MOD__CTRL_ONLY(event) && _grdrag->isNonEmpty() && _grdrag->hasSelection()) {
+            if (mod_ctrl_only(event) && _grdrag->isNonEmpty() && _grdrag->hasSelection()) {
                 simplify(1e-4);
                 ret = true;
             }
@@ -611,7 +611,7 @@ bool GradientTool::root_handler(CanvasEvent const &event)
 
         case GDK_KEY_r:
         case GDK_KEY_R:
-            if (MOD__SHIFT_ONLY(event)) {
+            if (mod_shift_only(event)) {
                 sp_gradient_reverse_selected_gradients(_desktop);
                 ret = true;
             }
@@ -626,7 +626,7 @@ bool GradientTool::root_handler(CanvasEvent const &event)
 
         case GDK_KEY_i:
         case GDK_KEY_I:
-            if (MOD__SHIFT_ONLY(event)) {
+            if (mod_shift_only(event)) {
                 // Shift+I - insert stops (alternate keybinding for keyboards
                 //           that don't have the Insert key)
                 add_stops_between_selected_stops();
@@ -637,7 +637,7 @@ bool GradientTool::root_handler(CanvasEvent const &event)
         case GDK_KEY_Delete:
         case GDK_KEY_KP_Delete:
         case GDK_KEY_BackSpace:
-            ret = deleteSelectedDrag(MOD__CTRL_ONLY(event));
+            ret = deleteSelectedDrag(mod_ctrl_only(event));
             break;
 
         case GDK_KEY_Tab:
@@ -655,7 +655,7 @@ bool GradientTool::root_handler(CanvasEvent const &event)
             break;
 
         default:
-            ret = _grdrag->key_press_handler(event.CanvasEvent::original());
+            ret = _grdrag->key_press_handler(event);
             break;
         }
     },

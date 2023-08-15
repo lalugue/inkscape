@@ -757,8 +757,8 @@ Shortcuts::get_from(GtkEventControllerKey const * const controller,
 
 Gtk::AccelKey Shortcuts::get_from_event(KeyEvent const &event, bool fix)
 {
-    return get_from_event_impl(event.keyval(), event.hardwareKeycode(),
-                               static_cast<GdkModifierType>(event.modifiers()), event.group(), fix);
+    return get_from_event_impl(event.keyval, event.hardware_keycode,
+                               static_cast<GdkModifierType>(event.modifiers), event.group, fix);
 }
 
 // Get a list of filenames to populate menu

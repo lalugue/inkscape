@@ -18,6 +18,9 @@
 #include "message-context.h"
 
 namespace Inkscape {
+
+struct KeyEvent;
+
 namespace Modifiers {
 
 using KeyMask = int;
@@ -88,7 +91,7 @@ std::string   generate_label(KeyMask mask, std::string sep = "+");
 unsigned long calculate_weight(KeyMask mask);
 
 // Generate a responsivle tooltip set
-void responsive_tooltip(Inkscape::MessageContext *message_context, GdkEvent *event, int num_args, ...);
+void responsive_tooltip(MessageContext *message_context, KeyEvent const &event, int num_args, ...);
 
 int add_keyval(int state, int keyval, bool release = false);
 
