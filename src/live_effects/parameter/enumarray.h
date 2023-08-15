@@ -44,7 +44,7 @@ public:
     ~EnumArrayParam() override = default;
 
     Gtk::Widget *param_newWidget() override {
-        if (widget_is_visible) {
+        if (widget_is_visible && valid_index(_active_index)) {
             Inkscape::UI::Widget::RegisteredEnum<E> *regenum = Gtk::manage ( 
                 new Inkscape::UI::Widget::RegisteredEnum<E>( param_label, param_tooltip,
                         param_key, *enumdataconv, *param_wr, param_effect->getRepr(), param_effect->getSPDoc(), sorted ) );
