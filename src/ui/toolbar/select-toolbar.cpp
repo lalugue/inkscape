@@ -7,6 +7,7 @@
  *   bulia byak <buliabyak@users.sf.net>
  *   Jon A. Cruz <jon@joncruz.org>
  *   Abhishek Sharma
+ *   Vaibhav Malik <vaibhavmalik2018@gmail.com>
  *
  * Copyright (C) 2003-2005 authors
  *
@@ -17,7 +18,6 @@
 
 #include <2geom/rect.h>
 #include <glibmm/i18n.h>
-#include <gtkmm/adjustment.h>
 
 #include "desktop.h"
 #include "document-undo.h"
@@ -51,52 +51,37 @@ SelectToolbar::SelectToolbar(SPDesktop *desktop)
     , _update(false)
     , _action_prefix("selector:toolbar:")
     , _builder(initialize_builder("toolbar-select.ui"))
+    , _select_touch_btn(get_widget<Gtk::ToggleButton>(_builder, "_select_touch_btn"))
+    , _transform_stroke_btn(get_widget<Gtk::ToggleButton>(_builder, "_transform_stroke_btn"))
+    , _transform_corners_btn(get_widget<Gtk::ToggleButton>(_builder, "_transform_corners_btn"))
+    , _transform_gradient_btn(get_widget<Gtk::ToggleButton>(_builder, "_transform_gradient_btn"))
+    , _transform_pattern_btn(get_widget<Gtk::ToggleButton>(_builder, "_transform_pattern_btn"))
+    , _x_item(get_derived_widget<UI::Widget::SpinButton>(_builder, "_x_item"))
+    , _y_item(get_derived_widget<UI::Widget::SpinButton>(_builder, "_y_item"))
+    , _w_item(get_derived_widget<UI::Widget::SpinButton>(_builder, "_w_item"))
+    , _h_item(get_derived_widget<UI::Widget::SpinButton>(_builder, "_h_item"))
+    , _lock_btn(get_widget<Gtk::ToggleButton>(_builder, "_lock_btn"))
 {
-    auto *prefs = Inkscape::Preferences::get();
+    auto prefs = Inkscape::Preferences::get();
 
-    _builder->get_widget("select-toolbar", _toolbar);
-    if (!_toolbar) {
-        std::cerr << "InkscapeWindow: Failed to load select toolbar!" << std::endl;
-    }
+    _toolbar = &get_widget<Gtk::Box>(_builder, "select-toolbar");
 
-    Gtk::Box *unit_menu_box;
-
-    _builder->get_widget("_select_touch_btn", _select_touch_btn);
-
-    _builder->get_widget("_transform_stroke_btn", _transform_stroke_btn);
-    _builder->get_widget("_transform_corners_btn", _transform_corners_btn);
-    _builder->get_widget("_transform_gradient_btn", _transform_gradient_btn);
-    _builder->get_widget("_transform_pattern_btn", _transform_pattern_btn);
-
-    _builder->get_widget_derived("_x_btn", _x_btn);
-    _builder->get_widget_derived("_y_btn", _y_btn);
-    _builder->get_widget_derived("_w_btn", _w_btn);
-    _builder->get_widget("_lock_btn", _lock_btn);
-    _builder->get_widget_derived("_h_btn", _h_btn);
-    _builder->get_widget("unit_menu_box", unit_menu_box);
-
-    setup_derived_spin_button(_x_btn, "X");
-    setup_derived_spin_button(_y_btn, "Y");
-    setup_derived_spin_button(_w_btn, "width");
-    setup_derived_spin_button(_h_btn, "height");
+    setup_derived_spin_button(_x_item, "X");
+    setup_derived_spin_button(_y_item, "Y");
+    setup_derived_spin_button(_w_item, "width");
+    setup_derived_spin_button(_h_item, "height");
 
     auto unit_menu = _tracker->create_tool_item(_("Units"), (""));
-    unit_menu_box->add(*unit_menu);
+    get_widget<Gtk::Box>(_builder, "unit_menu_box").add(*unit_menu);
 
     // Fetch all the ToolbarMenuButtons at once from the UI file
     // Menu Button #1
-    Gtk::Box *popover_box1;
-    _builder->get_widget("popover_box1", popover_box1);
-
-    Inkscape::UI::Widget::ToolbarMenuButton *menu_btn1 = nullptr;
-    _builder->get_widget_derived("menu_btn1", menu_btn1);
+    auto popover_box1 = &get_widget<Gtk::Box>(_builder, "popover_box1");
+    auto menu_btn1 = &get_derived_widget<UI::Widget::ToolbarMenuButton>(_builder, "menu_btn1");
 
     // Menu Button #2
-    Gtk::Box *popover_box2;
-    _builder->get_widget("popover_box2", popover_box2);
-
-    Inkscape::UI::Widget::ToolbarMenuButton *menu_btn2 = nullptr;
-    _builder->get_widget_derived("menu_btn2", menu_btn2);
+    auto popover_box2 = &get_widget<Gtk::Box>(_builder, "popover_box2");
+    auto menu_btn2 = &get_derived_widget<UI::Widget::ToolbarMenuButton>(_builder, "menu_btn2");
 
     // Initialize all the ToolbarMenuButtons only after all the children of the
     // toolbar have been fetched. Otherwise, the children to be moved in the
@@ -111,8 +96,8 @@ SelectToolbar::SelectToolbar(SPDesktop *desktop)
 
     add(*_toolbar);
 
-    _select_touch_btn->set_active(prefs->getBool("/tools/select/touch_box", false));
-    _select_touch_btn->signal_toggled().connect(sigc::mem_fun(*this, &SelectToolbar::toggle_touch));
+    _select_touch_btn.set_active(prefs->getBool("/tools/select/touch_box", false));
+    _select_touch_btn.signal_toggled().connect(sigc::mem_fun(*this, &SelectToolbar::toggle_touch));
 
     _tracker->addUnit(unit_table.getUnit("%"));
     _tracker->setActiveUnit(desktop->getNamedView()->display_units);
@@ -127,19 +112,19 @@ SelectToolbar::SelectToolbar(SPDesktop *desktop)
         }
     }
 
-    _transform_stroke_btn->set_active(prefs->getBool("/options/transform/stroke", true));
-    _transform_stroke_btn->signal_toggled().connect(sigc::mem_fun(*this, &SelectToolbar::toggle_stroke));
+    _transform_stroke_btn.set_active(prefs->getBool("/options/transform/stroke", true));
+    _transform_stroke_btn.signal_toggled().connect(sigc::mem_fun(*this, &SelectToolbar::toggle_stroke));
 
-    _transform_corners_btn->set_active(prefs->getBool("/options/transform/rectcorners", true));
-    _transform_corners_btn->signal_toggled().connect(sigc::mem_fun(*this, &SelectToolbar::toggle_corners));
+    _transform_corners_btn.set_active(prefs->getBool("/options/transform/rectcorners", true));
+    _transform_corners_btn.signal_toggled().connect(sigc::mem_fun(*this, &SelectToolbar::toggle_corners));
 
-    _transform_gradient_btn->set_active(prefs->getBool("/options/transform/gradient", true));
-    _transform_gradient_btn->signal_toggled().connect(sigc::mem_fun(*this, &SelectToolbar::toggle_gradient));
+    _transform_gradient_btn.set_active(prefs->getBool("/options/transform/gradient", true));
+    _transform_gradient_btn.signal_toggled().connect(sigc::mem_fun(*this, &SelectToolbar::toggle_gradient));
 
-    _transform_pattern_btn->set_active(prefs->getBool("/options/transform/pattern", true));
-    _transform_pattern_btn->signal_toggled().connect(sigc::mem_fun(*this, &SelectToolbar::toggle_pattern));
+    _transform_pattern_btn.set_active(prefs->getBool("/options/transform/pattern", true));
+    _transform_pattern_btn.signal_toggled().connect(sigc::mem_fun(*this, &SelectToolbar::toggle_pattern));
 
-    _lock_btn->signal_toggled().connect(sigc::mem_fun(*this, &SelectToolbar::toggle_lock));
+    _lock_btn.signal_toggled().connect(sigc::mem_fun(*this, &SelectToolbar::toggle_lock));
 
     assert(desktop);
     auto *selection = desktop->getSelection();
@@ -169,30 +154,26 @@ void SelectToolbar::on_unrealize()
     parent_type::on_unrealize();
 }
 
-GtkWidget *
-SelectToolbar::create(SPDesktop *desktop)
+GtkWidget *SelectToolbar::create(SPDesktop *desktop)
 {
     auto toolbar = new SelectToolbar(desktop);
     return toolbar->Gtk::Widget::gobj();
 }
 
-void SelectToolbar::setup_derived_spin_button(Inkscape::UI::Widget::SpinButton *btn, Glib::ustring const &name)
+void SelectToolbar::setup_derived_spin_button(Inkscape::UI::Widget::SpinButton &btn, Glib::ustring const &name)
 {
-    Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-
     const Glib::ustring path = "/tools/select/" + name;
-    auto val = prefs->getDouble(path, 0.0);
-    auto adj = btn->get_adjustment();
+    auto val = Preferences::get()->getDouble(path, 0.0);
+    auto adj = btn.get_adjustment();
     adj->set_value(val);
     adj->signal_value_changed().connect(sigc::bind(sigc::mem_fun(*this, &SelectToolbar::any_value_changed), adj));
     _tracker->addAdjustment(adj->gobj());
 
-    btn->addUnitTracker(_tracker.get());
-    btn->set_defocus_widget(_desktop->getCanvas());
+    btn.addUnitTracker(_tracker.get());
+    btn.set_defocus_widget(_desktop->getCanvas());
 }
 
-void
-SelectToolbar::any_value_changed(Glib::RefPtr<Gtk::Adjustment>& adj)
+void SelectToolbar::any_value_changed(Glib::RefPtr<Gtk::Adjustment> &adj)
 {
     if (_update) {
         return;
@@ -232,10 +213,10 @@ SelectToolbar::any_value_changed(Glib::RefPtr<Gtk::Adjustment>& adj)
     gdouble old_h = bbox_user->dimensions()[Geom::Y];
     gdouble new_w, new_h, new_x, new_y = 0;
 
-    auto _adj_x = _x_btn->get_adjustment();
-    auto _adj_y = _y_btn->get_adjustment();
-    auto _adj_w = _w_btn->get_adjustment();
-    auto _adj_h = _h_btn->get_adjustment();
+    auto _adj_x = _x_item.get_adjustment();
+    auto _adj_y = _y_item.get_adjustment();
+    auto _adj_w = _w_item.get_adjustment();
+    auto _adj_h = _h_item.get_adjustment();
 
     if (unit->type == Inkscape::Util::UNIT_TYPE_LINEAR) {
         new_w = Quantity::convert(_adj_w->get_value(), unit, "px");
@@ -275,7 +256,7 @@ SelectToolbar::any_value_changed(Glib::RefPtr<Gtk::Adjustment>& adj)
     gdouble yrel = new_h / old_h;
 
     // Keep proportions if lock is on
-    if ( _lock_btn->get_active() ) {
+    if (_lock_btn.get_active()) {
         if (adj == _adj_h) {
             x1 = x0 + yrel * bbox_user->dimensions()[Geom::X];
         } else if (adj == _adj_w) {
@@ -322,8 +303,7 @@ SelectToolbar::any_value_changed(Glib::RefPtr<Gtk::Adjustment>& adj)
     _update = false;
 }
 
-void
-SelectToolbar::layout_widget_update(Inkscape::Selection *sel)
+void SelectToolbar::layout_widget_update(Inkscape::Selection *sel)
 {
     if (_update) {
         return;
@@ -343,18 +323,17 @@ SelectToolbar::layout_widget_update(Inkscape::Selection *sel)
             auto x = bbox->min()[X] + (width * sel->anchor_x);
             auto y = bbox->min()[Y] + (height * sel->anchor_y);
 
-            auto prefs = Inkscape::Preferences::get();
-            if (prefs->getBool("/options/origincorrection/page", true)) {
+            if (Preferences::get()->getBool("/options/origincorrection/page", true)) {
                 auto &pm = _desktop->getDocument()->getPageManager();
                 auto page = pm.getSelectedPageRect();
                 x -= page.left();
                 y -= page.top();
             }
 
-            auto _adj_x = _x_btn->get_adjustment();
-            auto _adj_y = _y_btn->get_adjustment();
-            auto _adj_w = _w_btn->get_adjustment();
-            auto _adj_h = _h_btn->get_adjustment();
+            auto _adj_x = _x_item.get_adjustment();
+            auto _adj_y = _y_item.get_adjustment();
+            auto _adj_w = _w_item.get_adjustment();
+            auto _adj_h = _h_item.get_adjustment();
 
             if (unit->type == Inkscape::Util::UNIT_TYPE_DIMENSIONLESS) {
                 double const val = unit->factor * 100;
@@ -378,8 +357,7 @@ SelectToolbar::layout_widget_update(Inkscape::Selection *sel)
     _update = false;
 }
 
-void
-SelectToolbar::on_inkscape_selection_modified(Inkscape::Selection *selection, guint flags)
+void SelectToolbar::on_inkscape_selection_modified(Inkscape::Selection *selection, guint flags)
 {
     assert(_desktop->getSelection() == selection);
     if ((flags & (SP_OBJECT_MODIFIED_FLAG        |
@@ -390,8 +368,7 @@ SelectToolbar::on_inkscape_selection_modified(Inkscape::Selection *selection, gu
     }
 }
 
-void
-SelectToolbar::on_inkscape_selection_changed(Inkscape::Selection *selection)
+void SelectToolbar::on_inkscape_selection_changed(Inkscape::Selection *selection)
 {
     assert(_desktop->getSelection() == selection);
     {
@@ -426,18 +403,18 @@ char const *SelectToolbar::get_action_key(double mh, double sh, double mv, doubl
     return _action_key.c_str();
 }
 
-void
-SelectToolbar::toggle_lock() {
+void SelectToolbar::toggle_lock()
+{
     // use this roundabout way of changing image to make sure its size is preserved
-    auto btn = static_cast<Gtk::ToggleButton*>(_lock_btn->get_child());
-    auto image = static_cast<Gtk::Image*>(btn->get_child());
+    auto btn = static_cast<Gtk::ToggleButton *>(_lock_btn.get_child());
+    auto image = static_cast<Gtk::Image *>(btn->get_child());
     if (!image) {
         g_warning("No GTK image in toolbar button 'lock'");
         return;
     }
     auto size = image->get_pixel_size();
 
-    if ( _lock_btn->get_active() ) {
+    if (_lock_btn.get_active()) {
         image->set_from_icon_name("object-locked", Gtk::ICON_SIZE_BUTTON);
     } else {
         image->set_from_icon_name("object-unlocked", Gtk::ICON_SIZE_BUTTON);
@@ -445,19 +422,15 @@ SelectToolbar::toggle_lock() {
     image->set_pixel_size(size);
 }
 
-void
-SelectToolbar::toggle_touch()
+void SelectToolbar::toggle_touch()
 {
-    Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-    prefs->setBool("/tools/select/touch_box", _select_touch_btn->get_active());
+    Preferences::get()->setBool("/tools/select/touch_box", _select_touch_btn.get_active());
 }
 
-void
-SelectToolbar::toggle_stroke()
+void SelectToolbar::toggle_stroke()
 {
-    Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-    bool active = _transform_stroke_btn->get_active();
-    prefs->setBool("/options/transform/stroke", active);
+    bool active = _transform_stroke_btn.get_active();
+    Preferences::get()->setBool("/options/transform/stroke", active);
     if ( active ) {
         _desktop->messageStack()->flash(Inkscape::INFORMATION_MESSAGE, _("Now <b>stroke width</b> is <b>scaled</b> when objects are scaled."));
     } else {
@@ -465,12 +438,10 @@ SelectToolbar::toggle_stroke()
     }
 }
 
-void
-SelectToolbar::toggle_corners()
+void SelectToolbar::toggle_corners()
 {
-    Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-    bool active = _transform_corners_btn->get_active();
-    prefs->setBool("/options/transform/rectcorners", active);
+    bool active = _transform_corners_btn.get_active();
+    Preferences::get()->setBool("/options/transform/rectcorners", active);
     if ( active ) {
         _desktop->messageStack()->flash(Inkscape::INFORMATION_MESSAGE, _("Now <b>rounded rectangle corners</b> are <b>scaled</b> when rectangles are scaled."));
     } else {
@@ -478,12 +449,10 @@ SelectToolbar::toggle_corners()
     }
 }
 
-void
-SelectToolbar::toggle_gradient()
+void SelectToolbar::toggle_gradient()
 {
-    Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-    bool active = _transform_gradient_btn->get_active();
-    prefs->setBool("/options/transform/gradient", active);
+    bool active = _transform_gradient_btn.get_active();
+    Preferences::get()->setBool("/options/transform/gradient", active);
     if ( active ) {
         _desktop->messageStack()->flash(Inkscape::INFORMATION_MESSAGE, _("Now <b>gradients</b> are <b>transformed</b> along with their objects when those are transformed (moved, scaled, rotated, or skewed)."));
     } else {
@@ -491,12 +460,10 @@ SelectToolbar::toggle_gradient()
     }
 }
 
-void
-SelectToolbar::toggle_pattern()
+void SelectToolbar::toggle_pattern()
 {
-    Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-    bool active = _transform_pattern_btn->get_active();
-    prefs->setInt("/options/transform/pattern", active);
+    bool active = _transform_pattern_btn.get_active();
+    Preferences::get()->setInt("/options/transform/pattern", active);
     if ( active ) {
         _desktop->messageStack()->flash(Inkscape::INFORMATION_MESSAGE, _("Now <b>patterns</b> are <b>transformed</b> along with their objects when those are transformed (moved, scaled, rotated, or skewed)."));
     } else {

@@ -19,6 +19,7 @@
  *   Tavmjong Bah <tavmjong@free.fr>
  *   Abhishek Sharma
  *   Kris De Gussem <Kris.DeGussem@gmail.com>
+ *   Vaibhav Malik <vaibhavmalik2018@gmail.com>
  *
  * Copyright (C) 2004 David Turner
  * Copyright (C) 2003 MenTaLguY
@@ -34,10 +35,6 @@
 
 class SPDesktop;
 class SPLPEItem;
-
-namespace Gtk {
-class RadioButton;
-}
 
 namespace Inkscape {
 class Selection;
@@ -61,11 +58,12 @@ class LPEToolbar : public Toolbar {
 private:
     Glib::RefPtr<Gtk::Builder> _builder;
     std::unique_ptr<UI::Widget::UnitTracker> _tracker;
+
     std::vector<Gtk::RadioButton *> _mode_buttons;
-    Gtk::ToggleButton *_show_bbox_item;
-    Gtk::ToggleButton *_bbox_from_selection_item;
-    Gtk::ToggleButton *_measuring_item;
-    Gtk::ToggleButton *_open_lpe_dialog_item;
+    Gtk::ToggleButton &_show_bbox_btn;
+    Gtk::ToggleButton &_bbox_from_selection_btn;
+    Gtk::ToggleButton &_measuring_btn;
+    Gtk::ToggleButton &_open_lpe_dialog_btn;
     UI::Widget::ComboToolItem *_line_segment_combo;
     UI::Widget::ComboToolItem *_units_item;
 
@@ -93,7 +91,7 @@ protected:
     LPEToolbar(SPDesktop *desktop);
 
 public:
-    static GtkWidget * create(SPDesktop *desktop);
+    static GtkWidget *create(SPDesktop *desktop);
     void set_mode(int mode);
 };
 

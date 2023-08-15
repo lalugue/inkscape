@@ -10,10 +10,6 @@
 
 #include "toolbar.h"
 
-#include <gtkmm/label.h>
-#include <gtkmm/separatortoolitem.h>
-#include <gtkmm/togglebutton.h>
-
 #include "desktop.h"
 #include "io/resource.h"
 
@@ -28,55 +24,13 @@ Toolbar::Toolbar(SPDesktop *desktop)
     signal_size_allocate().connect(sigc::mem_fun(*this, &Toolbar::resize_handler));
 }
 
-Gtk::ToolItem *
-Toolbar::add_label(const Glib::ustring &label_text)
+Glib::RefPtr<Gtk::Builder> Toolbar::initialize_builder(Glib::ustring const &file_name)
 {
-    auto const ti = Gtk::make_managed<Gtk::ToolItem>();
-
-    // For now, we always enable mnemonic
-    auto const label = Gtk::make_managed<Gtk::Label>(label_text, true);
-
-    ti->add(*label);
-    pack_end(*ti, false, false, 2);
-
-    return ti;
-}
-
-/**
- * \brief Add a toggle toolbutton to the toolbar
- *
- * \param[in] label_text   The text to display in the toolbar
- * \param[in] tooltip_text The tooltip text for the toolitem
- *
- * \returns The toggle button
- */
-Gtk::ToggleButton *Toolbar::add_toggle_button(const Glib::ustring &label_text, const Glib::ustring &tooltip_text)
-{
-    auto const btn = Gtk::make_managed<Gtk::ToggleButton>(label_text);
-    btn->set_tooltip_text(tooltip_text);
-    pack_end(*btn, false, false, 2);
-    return btn;
-}
-
-/**
- * \brief Add a separator line to the toolbar
- *
- * \details This is just a convenience wrapper for the
- *          standard GtkMM functionality
- */
-void
-Toolbar::add_separator()
-{
-    pack_end(*Gtk::manage(new Gtk::SeparatorToolItem()), false, false, 2);
-}
-
-Glib::RefPtr<Gtk::Builder> Toolbar::initialize_builder(const char *file_name)
-{
-    Glib::ustring select_toolbar_builder_file = get_filename(Inkscape::IO::Resource::UIS, file_name);
+    Glib::ustring toolbar_builder_file = get_filename(Inkscape::IO::Resource::UIS, file_name.c_str());
     auto builder = Gtk::Builder::create();
     try {
-        builder->add_from_file(select_toolbar_builder_file);
-    } catch (const Glib::Error &ex) {
+        builder->add_from_file(toolbar_builder_file);
+    } catch (Glib::Error const &ex) {
         std::cerr << "Failed to initialize the builder for: " << file_name << ex.what().raw() << std::endl;
     }
 
@@ -185,8 +139,7 @@ void Toolbar::move_children(Gtk::Box *src, Gtk::Box *dest, std::vector<std::pair
     }
 }
 
-GtkWidget *
-Toolbar::create(SPDesktop *desktop)
+GtkWidget *Toolbar::create(SPDesktop *desktop)
 {
     auto toolbar = Gtk::manage(new Toolbar(desktop));
     return toolbar->Gtk::Widget::gobj();

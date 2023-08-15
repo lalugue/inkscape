@@ -16,6 +16,7 @@
  *   Tavmjong Bah <tavmjong@free.fr>
  *   Abhishek Sharma
  *   Kris De Gussem <Kris.DeGussem@gmail.com>
+ *   Vaibhav Malik <vaibhavmalik2018@gmail.com>
  *
  * Copyright (C) 2004 David Turner
  * Copyright (C) 2003 MenTaLguY
@@ -41,19 +42,19 @@ namespace Toolbar {
 
 void DropperToolbar::on_pick_alpha_button_toggled()
 {
-    auto active = _pick_alpha_button->get_active();
+    auto active = _pick_alpha_btn.get_active();
 
     auto prefs = Inkscape::Preferences::get();
     prefs->setInt( "/tools/dropper/pick", active );
 
-    _set_alpha_button->set_sensitive(active);
+    _set_alpha_btn.set_sensitive(active);
     _desktop->getCanvas()->grab_focus();
 }
 
 void DropperToolbar::on_set_alpha_button_toggled()
 {
     auto prefs = Inkscape::Preferences::get();
-    prefs->setBool( "/tools/dropper/setalpha", _set_alpha_button->get_active( ) );
+    prefs->setBool("/tools/dropper/setalpha", _set_alpha_btn.get_active());
     _desktop->getCanvas()->grab_focus();
 }
 
@@ -65,15 +66,10 @@ void DropperToolbar::on_set_alpha_button_toggled()
 DropperToolbar::DropperToolbar(SPDesktop *desktop)
     : Toolbar(desktop)
     , _builder(initialize_builder("toolbar-dropper.ui"))
+    , _pick_alpha_btn(get_widget<Gtk::ToggleButton>(_builder, "_pick_alpha_btn"))
+    , _set_alpha_btn(get_widget<Gtk::ToggleButton>(_builder, "_set_alpha_btn"))
 {
-    _builder->get_widget("dropper-toolbar", _toolbar);
-    if (!_toolbar) {
-        std::cerr << "InkscapeWindow: Failed to load dropper toolbar!" << std::endl;
-    }
-
-    // Add widgets to toolbar
-    _builder->get_widget("_pick_alpha_button", _pick_alpha_button);
-    _builder->get_widget("_set_alpha_button", _set_alpha_button);
+    _toolbar = &get_widget<Gtk::Box>(_builder, "dropper-toolbar");
 
     add(*_toolbar);
 
@@ -83,18 +79,18 @@ DropperToolbar::DropperToolbar(SPDesktop *desktop)
     auto pickAlpha = prefs->getInt( "/tools/dropper/pick", 1 );
     auto setAlpha  = prefs->getBool( "/tools/dropper/setalpha", true);
 
-    _pick_alpha_button->set_active(pickAlpha);
-    _set_alpha_button->set_active(setAlpha);
+    _pick_alpha_btn.set_active(pickAlpha);
+    _set_alpha_btn.set_active(setAlpha);
 
     // Make sure the set-alpha button is disabled if we're not picking alpha
-    _set_alpha_button->set_sensitive(pickAlpha);
+    _set_alpha_btn.set_sensitive(pickAlpha);
 
     // Connect signal handlers
     auto pick_alpha_button_toggled_cb = sigc::mem_fun(*this, &DropperToolbar::on_pick_alpha_button_toggled);
     auto set_alpha_button_toggled_cb  = sigc::mem_fun(*this, &DropperToolbar::on_set_alpha_button_toggled);
 
-    _pick_alpha_button->signal_toggled().connect(pick_alpha_button_toggled_cb);
-    _set_alpha_button->signal_toggled().connect(set_alpha_button_toggled_cb);
+    _pick_alpha_btn.signal_toggled().connect(pick_alpha_button_toggled_cb);
+    _set_alpha_btn.signal_toggled().connect(set_alpha_button_toggled_cb);
 
     show_all();
 }

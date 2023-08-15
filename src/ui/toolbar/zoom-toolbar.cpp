@@ -5,50 +5,36 @@
  */
 /* Authors:
  *   Tavmjong Bah <tavmjong@free.fr>
-
+ *   Vaibhav Malik <vaibhavmalik2018@gmail.com>
+ *
  * Copyright (C) 2019 Tavmjong Bah
  *
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include <gtkmm.h>
-
 #include "zoom-toolbar.h"
 
 #include "desktop.h"
-#include "io/resource.h"
-
-using Inkscape::IO::Resource::UIS;
+#include "ui/builder-utils.h"
 
 namespace Inkscape {
 namespace UI {
 namespace Toolbar {
 
-GtkWidget *
-ZoomToolbar::create(SPDesktop *desktop)
+ZoomToolbar::ZoomToolbar(SPDesktop *desktop)
+    : Toolbar(desktop)
+    , _builder(initialize_builder("toolbar-zoom.ui"))
 {
-    Glib::ustring zoom_toolbar_builder_file = get_filename(UIS, "toolbar-zoom.ui");
-    auto builder = Gtk::Builder::create();
-    try
-    {
-        builder->add_from_file(zoom_toolbar_builder_file);
-    }
-    catch (const Glib::Error& ex)
-    {
-        std::cerr << "ZoomToolbar: " << zoom_toolbar_builder_file.raw() << " file not read! " << ex.what().raw() << std::endl;
-    }
+    _toolbar = &get_widget<Gtk::Box>(_builder, "zoom-toolbar");
 
-    Gtk::Box *toolbar = nullptr;
-    builder->get_widget("zoom-toolbar", toolbar);
-    if (!toolbar) {
-        std::cerr << "InkscapeWindow: Failed to load zoom toolbar!" << std::endl;
-        return nullptr;
-    }
+    add(*_toolbar);
 
-    toolbar->reference(); // Or it will be deleted when builder is destroyed since we haven't added
-                          // it to a container yet. This probably causes a memory leak but we'll
-                          // fix it when all toolbars are converted to use Gio::Actions.
+    show_all();
+}
 
+GtkWidget *ZoomToolbar::create(SPDesktop *desktop)
+{
+    auto toolbar = new ZoomToolbar(desktop);
     return toolbar->Gtk::Widget::gobj();
 }
 }

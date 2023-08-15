@@ -6,6 +6,7 @@
  *   bulia byak <bulia@dr.com>
  *   Johan Engelen <j.b.c.engelen@ewi.utwente.nl>
  *   Abhishek Sharma
+ *   Vaibhav Malik <vaibhavmalik2018@gmail.com>
  *
  * Copyright (C) 2007 Johan Engelen
  * Copyright (C) 2005 authors
@@ -30,6 +31,7 @@
 #include "object/sp-stop.h"
 #include "selection.h"
 #include "style.h"
+#include "ui/builder-utils.h"
 #include "ui/icon-names.h"
 #include "ui/tools/gradient-tool.h"
 #include "ui/util.h"
@@ -325,65 +327,46 @@ namespace Inkscape::UI::Toolbar {
 GradientToolbar::GradientToolbar(SPDesktop *desktop)
     : Toolbar(desktop)
     , _builder(initialize_builder("toolbar-gradient.ui"))
+    , _linked_btn(get_widget<Gtk::ToggleButton>(_builder, "_linked_btn"))
+    , _stops_reverse_btn(get_widget<Gtk::Button>(_builder, "_stops_reverse_btn"))
+    , _offset_item(get_derived_widget<UI::Widget::SpinButton>(_builder, "_offset_item"))
+    , _stops_add_btn(get_widget<Gtk::Button>(_builder, "_stops_add_btn"))
+    , _stops_delete_btn(get_widget<Gtk::Button>(_builder, "_stops_delete_btn"))
 {
     auto *prefs = Inkscape::Preferences::get();
 
-    _builder->get_widget("gradient-toolbar", _toolbar);
-    if (!_toolbar) {
-        std::cerr << "InkscapeWindow: Failed to load gradient toolbar!" << std::endl;
-    }
-
-    Gtk::Box *new_type_buttons_box;
-    Gtk::Box *new_fillstroke_buttons_box;
-
-    Gtk::Box *select_box;
-    Gtk::Box *spread_box;
-    Gtk::Box *stop_box;
-
-    _builder->get_widget("new_type_buttons_box", new_type_buttons_box);
-    _builder->get_widget("new_fillstroke_buttons_box", new_fillstroke_buttons_box);
-
-    _builder->get_widget("select_box", select_box);
-    _builder->get_widget("_linked_btn", _linked_btn);
-    _builder->get_widget("_stops_reverse_btn", _stops_reverse_btn);
-    _builder->get_widget("spread_box", spread_box);
-
-    _builder->get_widget("stop_box", stop_box);
-    _builder->get_widget_derived("_offset_item", _offset_item);
-
-    _builder->get_widget("_stops_add_btn", _stops_add_btn);
-    _builder->get_widget("_stops_delete_btn", _stops_delete_btn);
+    _toolbar = &get_widget<Gtk::Box>(_builder, "gradient-toolbar");
 
     // Setup the spin buttons.
     _offset_adj_changed = false;
     setup_derived_spin_button(_offset_item, "stopoffset", 0);
 
     // Configure mode buttons
-    int btn_index = 0;
+    for_each_child(get_widget<Gtk::Box>(_builder, "new_type_buttons_box"), [=](Gtk::Widget &item) {
+        static int btn_index = 0;
+        auto &btn = dynamic_cast<Gtk::RadioButton &>(item);
+        _new_type_buttons.push_back(&btn);
+        btn.signal_clicked().connect(sigc::bind(sigc::mem_fun(*this, &GradientToolbar::new_type_changed), btn_index++));
 
-    for (auto child : new_type_buttons_box->get_children()) {
-        auto btn = dynamic_cast<Gtk::RadioButton *>(child);
-        _new_type_buttons.push_back(btn);
+        return ForEachResult::_continue;
+    });
 
-        btn->signal_clicked().connect(
-            sigc::bind(sigc::mem_fun(*this, &GradientToolbar::new_type_changed), btn_index++));
-    }
+    int mode = prefs->getInt("/tools/gradient/newgradient", SP_GRADIENT_TYPE_LINEAR);
+    _new_type_buttons[mode == SP_GRADIENT_TYPE_LINEAR ? 0 : 1]->set_active(); // linear == 1, radial == 2
 
-    gint mode = prefs->getInt("/tools/mesh/mesh_geometry", SP_MESH_GEOMETRY_NORMAL);
-    _new_type_buttons[mode]->set_active();
-
-    btn_index = 0;
-
-    for (auto child : new_fillstroke_buttons_box->get_children()) {
-        auto btn = dynamic_cast<Gtk::RadioButton *>(child);
-        _new_fillstroke_buttons.push_back(btn);
-
-        btn->signal_clicked().connect(
+    for_each_child(get_widget<Gtk::Box>(_builder, "new_fillstroke_buttons_box"), [=](Gtk::Widget &item) {
+        static int btn_index = 0;
+        auto &btn = dynamic_cast<Gtk::RadioButton &>(item);
+        _new_fillstroke_buttons.push_back(&btn);
+        btn.signal_clicked().connect(
             sigc::bind(sigc::mem_fun(*this, &GradientToolbar::new_fillstroke_changed), btn_index++));
-    }
 
-    mode = prefs->getInt("/tools/mesh/newfillorstroke");
-    _new_fillstroke_buttons[mode]->set_active();
+        return ForEachResult::_continue;
+    });
+
+    auto fsmode =
+        (prefs->getInt("/tools/gradient/newfillorstroke", 1) != 0) ? Inkscape::FOR_FILL : Inkscape::FOR_STROKE;
+    _new_fillstroke_buttons[fsmode == Inkscape::FOR_FILL ? 0 : 1]->set_active();
 
     /* Gradient Select list*/
     {
@@ -406,19 +389,19 @@ GradientToolbar::GradientToolbar(SPDesktop *desktop)
         _select_cb->set_active( 0 );
         _select_cb->set_sensitive( false );
 
-        select_box->add(*_select_cb);
+        get_widget<Gtk::Box>(_builder, "select_box").add(*_select_cb);
         _select_cb->signal_changed().connect(sigc::mem_fun(*this, &GradientToolbar::gradient_changed));
     }
 
     // Configure the linked button.
-    _linked_btn->signal_toggled().connect(sigc::mem_fun(*this, &GradientToolbar::linked_changed));
+    _linked_btn.signal_toggled().connect(sigc::mem_fun(*this, &GradientToolbar::linked_changed));
 
     bool linkedmode = prefs->getBool("/options/forkgradientvectors/value", true);
-    _linked_btn->set_active(!linkedmode);
+    _linked_btn.set_active(!linkedmode);
 
     // Configure the reverse button.
-    _stops_reverse_btn->signal_clicked().connect(sigc::mem_fun(*this, &GradientToolbar::reverse));
-    _stops_reverse_btn->set_sensitive(false);
+    _stops_reverse_btn.signal_clicked().connect(sigc::mem_fun(*this, &GradientToolbar::reverse));
+    _stops_reverse_btn.set_sensitive(false);
 
     // Gradient Spread type (how a gradient is drawn outside its nominal area)
     {
@@ -450,7 +433,7 @@ GradientToolbar::GradientToolbar(SPDesktop *desktop)
         _spread_cb->set_sensitive(false);
 
         _spread_cb->signal_changed().connect(sigc::mem_fun(*this, &GradientToolbar::spread_changed));
-        spread_box->add(*_spread_cb);
+        get_widget<Gtk::Box>(_builder, "spread_box").add(*_spread_cb);
     }
 
     // Gradient Stop list
@@ -479,25 +462,22 @@ GradientToolbar::GradientToolbar(SPDesktop *desktop)
         _stop_cb->set_active( 0 );
         _stop_cb->set_sensitive( false );
 
-        stop_box->add(*_stop_cb);
+        get_widget<Gtk::Box>(_builder, "stop_box").add(*_stop_cb);
         _stop_cb->signal_changed().connect(sigc::mem_fun(*this, &GradientToolbar::stop_changed));
     }
 
     // Configure the stops add button.
-    _stops_add_btn->signal_clicked().connect(sigc::mem_fun(*this, &GradientToolbar::add_stop));
-    _stops_add_btn->set_sensitive(false);
+    _stops_add_btn.signal_clicked().connect(sigc::mem_fun(*this, &GradientToolbar::add_stop));
+    _stops_add_btn.set_sensitive(false);
 
     // Configure the stops add button.
-    _stops_delete_btn->signal_clicked().connect(sigc::mem_fun(*this, &GradientToolbar::remove_stop));
-    _stops_delete_btn->set_sensitive(false);
+    _stops_delete_btn.signal_clicked().connect(sigc::mem_fun(*this, &GradientToolbar::remove_stop));
+    _stops_delete_btn.set_sensitive(false);
 
     // Fetch all the ToolbarMenuButtons at once from the UI file
     // Menu Button #1
-    Gtk::Box *popover_box1;
-    _builder->get_widget("popover_box1", popover_box1);
-
-    Inkscape::UI::Widget::ToolbarMenuButton *menu_btn1 = nullptr;
-    _builder->get_widget_derived("menu_btn1", menu_btn1);
+    auto popover_box1 = &get_widget<Gtk::Box>(_builder, "popover_box1");
+    auto menu_btn1 = &get_derived_widget<UI::Widget::ToolbarMenuButton>(_builder, "menu_btn1");
 
     // Initialize all the ToolbarMenuButtons only after all the children of the
     // toolbar have been fetched. Otherwise, the children to be moved in the
@@ -516,20 +496,20 @@ GradientToolbar::GradientToolbar(SPDesktop *desktop)
     show_all();
 }
 
-void GradientToolbar::setup_derived_spin_button(UI::Widget::SpinButton *btn, Glib::ustring const &name,
+void GradientToolbar::setup_derived_spin_button(UI::Widget::SpinButton &btn, Glib::ustring const &name,
                                                 double default_value)
 {
     auto *prefs = Inkscape::Preferences::get();
     const Glib::ustring path = "/tools/gradient/" + name;
     auto val = prefs->getDouble(path, default_value);
 
-    auto adj = btn->get_adjustment();
+    auto adj = btn.get_adjustment();
     adj->set_value(val);
 
     adj->signal_value_changed().connect(sigc::mem_fun(*this, &GradientToolbar::stop_offset_adjustment_changed));
 
-    btn->set_defocus_widget(_desktop->getCanvas());
-    btn->set_sensitive(false);
+    btn.set_defocus_widget(_desktop->getCanvas());
+    btn.set_sensitive(false);
 }
 
 /**
@@ -705,20 +685,16 @@ void GradientToolbar::stop_set_offset()
         return;
     }
 
-    if (!_offset_item) {
-        return;
-    }
-
     SPStop *prev = nullptr;
     prev = stop->getPrevStop();
-    auto adj = _offset_item->get_adjustment();
+    auto adj = _offset_item.get_adjustment();
     adj->set_lower(prev != nullptr ? prev->offset : 0);
 
     SPStop *next = nullptr;
     next = stop->getNextStop();
     adj->set_lower(next != nullptr ? next->offset : 1.0);
     adj->set_value(stop->offset);
-    _offset_item->set_sensitive(true);
+    _offset_item.set_sensitive(true);
 }
 
 /**
@@ -734,7 +710,7 @@ void GradientToolbar::stop_offset_adjustment_changed()
 
     SPStop *stop = get_selected_stop();
     if (stop) {
-        stop->offset = _offset_item->get_adjustment()->get_value();
+        stop->offset = _offset_item.get_adjustment()->get_value();
         _offset_adj_changed = true; // checked to stop changing the selected stop after the update of the offset
         stop->getRepr()->setAttributeCssDouble("offset", stop->offset);
 
@@ -801,11 +777,11 @@ void GradientToolbar::reverse()
  */
 void GradientToolbar::linked_changed()
 {
-    bool active = _linked_btn->get_active();
+    bool active = _linked_btn.get_active();
     if ( active ) {
-        _linked_btn->set_image_from_icon_name(INKSCAPE_ICON("object-locked"));
+        _linked_btn.set_image_from_icon_name(INKSCAPE_ICON("object-locked"));
     } else {
-        _linked_btn->set_image_from_icon_name(INKSCAPE_ICON("object-unlocked"));
+        _linked_btn.set_image_from_icon_name(INKSCAPE_ICON("object-unlocked"));
     }
 
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
@@ -903,12 +879,12 @@ void GradientToolbar::selection_changed(Inkscape::Selection * /*selection*/)
         _spread_cb->set_sensitive( gr_selected );
         _spread_cb->set_active( gr_selected ? (int)spr_selected : 0 );
 
-        _stops_add_btn->set_sensitive((gr_selected && !gr_multi && drag && !drag->selected.empty()));
-        _stops_delete_btn->set_sensitive((gr_selected && !gr_multi && drag && !drag->selected.empty()));
-        _stops_reverse_btn->set_sensitive((gr_selected != nullptr));
+        _stops_add_btn.set_sensitive((gr_selected && !gr_multi && drag && !drag->selected.empty()));
+        _stops_delete_btn.set_sensitive((gr_selected && !gr_multi && drag && !drag->selected.empty()));
+        _stops_reverse_btn.set_sensitive((gr_selected != nullptr));
 
         _stop_cb->set_sensitive( gr_selected && !gr_multi);
-        _offset_item->set_sensitive(!gr_multi);
+        _offset_item.set_sensitive(!gr_multi);
 
         update_stop_list (gr_selected, nullptr, gr_multi);
         select_stop_by_draggers(gr_selected, ev);
@@ -1071,9 +1047,7 @@ void GradientToolbar::select_stop_by_draggers(SPGradient *gradient, ToolBase *ev
 
     if (n > 1) {
         // Multiple stops selected
-        if (_offset_item) {
-            _offset_item->set_sensitive(false);
-        }
+        _offset_item.set_sensitive(false);
 
         // Stop list always updated first... reinsert "Multiple stops" as first entry.
         UI::Widget::ComboToolItemColumns columns;

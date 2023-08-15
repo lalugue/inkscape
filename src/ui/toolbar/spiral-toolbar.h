@@ -19,6 +19,7 @@
  *   Tavmjong Bah <tavmjong@free.fr>
  *   Abhishek Sharma
  *   Kris De Gussem <Kris.DeGussem@gmail.com>
+ *   Vaibhav Malik <vaibhavmalik2018@gmail.com>
  *
  * Copyright (C) 2004 David Turner
  * Copyright (C) 2003 MenTaLguY
@@ -28,17 +29,12 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include <gtkmm/adjustment.h>
 #include <gtkmm/builder.h>
 
 #include "toolbar.h"
 #include "xml/node-observer.h"
 
 class SPDesktop;
-
-namespace Gtk {
-class Label;
-}
 
 namespace Inkscape {
 class Selection;
@@ -59,11 +55,11 @@ class SpiralToolbar
 {
 private:
     Glib::RefPtr<Gtk::Builder> _builder;
-    Gtk::Label *_mode_item;
+    Gtk::Label &_mode_item;
 
-    UI::Widget::SpinButton *_revolution_item;
-    UI::Widget::SpinButton *_expansion_item;
-    UI::Widget::SpinButton *_t0_item;
+    UI::Widget::SpinButton &_revolution_item;
+    UI::Widget::SpinButton &_expansion_item;
+    UI::Widget::SpinButton &_t0_item;
 
     bool _freeze{false};
 
@@ -84,8 +80,8 @@ protected:
     ~SpiralToolbar() override;
 
 public:
-    static GtkWidget * create(SPDesktop *desktop);
-    void setup_derived_spin_button(UI::Widget::SpinButton *btn, Glib::ustring const &name, double default_value);
+    static GtkWidget *create(SPDesktop *desktop);
+    void setup_derived_spin_button(UI::Widget::SpinButton &btn, Glib::ustring const &name, double default_value);
 };
 }
 }

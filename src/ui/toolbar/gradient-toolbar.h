@@ -7,6 +7,7 @@
  *
  * Authors:
  *   bulia byak <bulia@dr.com>
+ *   Vaibhav Malik <vaibhavmalik2018@gmail.com>
  *
  * Copyright (C) 2005 authors
  *
@@ -21,12 +22,6 @@ class SPDesktop;
 class SPGradient;
 class SPStop;
 class SPObject;
-
-namespace Gtk {
-class ComboBoxText;
-class RadioButton;
-class Button;
-}
 
 namespace Inkscape {
 class Selection;
@@ -50,19 +45,19 @@ private:
     std::vector<Gtk::RadioButton *> _new_fillstroke_buttons;
 
     UI::Widget::ComboToolItem *_select_cb;
-    Gtk::ToggleButton *_linked_btn;
-    Gtk::Button *_stops_reverse_btn;
+    Gtk::ToggleButton &_linked_btn;
+    Gtk::Button &_stops_reverse_btn;
     UI::Widget::ComboToolItem *_spread_cb;
 
     UI::Widget::ComboToolItem *_stop_cb;
-    UI::Widget::SpinButton *_offset_item;
+    UI::Widget::SpinButton &_offset_item;
 
-    Gtk::Button *_stops_add_btn;
-    Gtk::Button *_stops_delete_btn;
+    Gtk::Button &_stops_add_btn;
+    Gtk::Button &_stops_delete_btn;
 
     bool _offset_adj_changed;
 
-    void setup_derived_spin_button(UI::Widget::SpinButton *btn, Glib::ustring const &name, double default_value);
+    void setup_derived_spin_button(UI::Widget::SpinButton &btn, Glib::ustring const &name, double default_value);
     void new_type_changed(int mode);
     void new_fillstroke_changed(int mode);
     void gradient_changed(int active);
@@ -97,7 +92,7 @@ protected:
     GradientToolbar(SPDesktop *desktop);
 
 public:
-    static GtkWidget * create(SPDesktop *desktop);
+    static GtkWidget *create(SPDesktop *desktop);
 };
 
 }

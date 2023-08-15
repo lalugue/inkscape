@@ -43,7 +43,7 @@
       </packing>
     </child>
     <child>
-      <object class="GtkToggleButton" id="_pick_alpha_button">
+      <object class="GtkToggleButton" id="_pick_alpha_btn">
         <property name="label" translatable="yes">Pick</property>
         <property name="visible">True</property>
         <property name="can-focus">True</property>
@@ -58,7 +58,7 @@
       </packing>
     </child>
     <child>
-      <object class="GtkToggleButton" id="_set_alpha_button">
+      <object class="GtkToggleButton" id="_set_alpha_btn">
         <property name="label" translatable="yes">Assign</property>
         <property name="visible">True</property>
         <property name="can-focus">True</property>

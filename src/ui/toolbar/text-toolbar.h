@@ -19,6 +19,7 @@
  *   Tavmjong Bah <tavmjong@free.fr>
  *   Abhishek Sharma
  *   Kris De Gussem <Kris.DeGussem@gmail.com>
+ *   Vaibhav Malik <vaibhavmalik2018@gmail.com>
  *
  * Copyright (C) 2004 David Turner
  * Copyright (C) 2003 MenTaLguY
@@ -28,7 +29,6 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include <gtkmm/adjustment.h>
 #include <sigc++/connection.h>
 
 #include "object/sp-item.h"
@@ -38,12 +38,6 @@
 #include "toolbar.h"
 
 class SPDesktop;
-
-namespace Gtk {
-class ComboBoxText;
-class ToggleButton;
-class ListBox;
-}
 
 namespace Inkscape {
 class Selection;
@@ -64,6 +58,9 @@ class UnitTracker;
 namespace Toolbar {
 class TextToolbar : public Toolbar {
 private:
+    using ValueChangedMemFun = void (TextToolbar::*)();
+    using ModeChangedMemFun = void (TextToolbar::*)(int);
+
     Glib::RefPtr<Gtk::Builder> _builder;
 
     UI::Widget::UnitTracker *_tracker;
@@ -74,22 +71,22 @@ private:
     std::vector<Gtk::RadioButton *> _orientation_buttons;
     std::vector<Gtk::RadioButton *> _direction_buttons;
 
-    Gtk::ListBox *_font_collections_list;
+    Gtk::ListBox &_font_collections_list;
 
     UI::Widget::ComboBoxEntryToolItem *_font_family_item;
     UI::Widget::ComboBoxEntryToolItem *_font_size_item;
     UI::Widget::ComboToolItem *_font_size_units_item;
     UI::Widget::ComboBoxEntryToolItem *_font_style_item;
     UI::Widget::ComboToolItem *_line_height_units_item;
-    UI::Widget::SpinButton *_line_height_item;
-    Gtk::ToggleButton *_superscript_btn;
-    Gtk::ToggleButton *_subscript_btn;
+    UI::Widget::SpinButton &_line_height_item;
+    Gtk::ToggleButton &_superscript_btn;
+    Gtk::ToggleButton &_subscript_btn;
 
-    UI::Widget::SpinButton *_word_spacing_item;
-    UI::Widget::SpinButton *_letter_spacing_item;
-    UI::Widget::SpinButton *_dx_item;
-    UI::Widget::SpinButton *_dy_item;
-    UI::Widget::SpinButton *_rotation_item;
+    UI::Widget::SpinButton &_word_spacing_item;
+    UI::Widget::SpinButton &_letter_spacing_item;
+    UI::Widget::SpinButton &_dx_item;
+    UI::Widget::SpinButton &_dy_item;
+    UI::Widget::SpinButton &_rotation_item;
 
     bool _freeze;
     bool _text_style_from_prefs;
@@ -110,14 +107,16 @@ private:
     sigc::connection c_selection_modified_select_tool;
     sigc::connection c_subselection_changed;
 
-    void setup_derived_spin_button(UI::Widget::SpinButton *btn, Glib::ustring const &name, double default_value);
-    void configure_mode_buttons(Gtk::Box *box, Glib::ustring const &name);
+    void setup_derived_spin_button(UI::Widget::SpinButton &btn, Glib::ustring const &name, double default_value,
+                                   ValueChangedMemFun const value_changed_mem_fun);
+    void configure_mode_buttons(std::vector<Gtk::RadioButton *> &buttons, Gtk::Box &box, Glib::ustring const &name,
+                                ModeChangedMemFun const mode_changed_mem_fun);
     void text_outer_set_style(SPCSSAttr *css);
     void fontfamily_value_changed();
     void fontsize_value_changed();
     void subselection_wrap_toggle(bool start);
     void fontstyle_value_changed();
-    void script_changed(Gtk::ToggleButton *btn);
+    void script_changed(int mode);
     void align_mode_changed(int mode);
     void writing_mode_changed(int mode);
     void orientation_changed(int mode);
@@ -150,7 +149,7 @@ private:
     TextToolbar(SPDesktop *desktop);
 
 public:
-    static GtkWidget * create(SPDesktop *desktop);
+    static GtkWidget *create(SPDesktop *desktop);
 };
 }
 }

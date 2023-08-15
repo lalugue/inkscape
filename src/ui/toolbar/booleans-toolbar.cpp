@@ -4,6 +4,7 @@
  *
  * Authors:
  *   Martin Owens
+ *   Vaibhav Malik <vaibhavmalik2018@gmail.com>
  *
  * Copyright (C) 2022 authors
  *
@@ -25,44 +26,35 @@ namespace Inkscape::UI::Toolbar {
 BooleansToolbar::BooleansToolbar(SPDesktop *desktop)
     : Toolbar(desktop)
     , _builder(initialize_builder("toolbar-booleans.ui"))
-    , _adj_opacity(get_object<Gtk::Adjustment>(_builder, "_opacity_adj"))
 {
-    _builder->get_widget("booleans-toolbar", _toolbar);
-    if (!_toolbar) {
-        std::cerr << "InkscapeWindow: Failed to load booleans toolbar!" << std::endl;
-    }
+    _toolbar = &get_widget<Gtk::Box>(_builder, "booleans-toolbar");
 
-    _builder->get_widget("_shape_add", _btn_shape_add);
-    _builder->get_widget("_shape_delete", _btn_shape_delete);
-    _builder->get_widget("_confirm", _btn_confirm);
-    _builder->get_widget("_cancel", _btn_cancel);
+    auto adj_opacity = get_object<Gtk::Adjustment>(_builder, "opacity_adj");
 
-    add(*_toolbar);
-
-    _btn_confirm.signal_clicked().connect([=]{
+    get_widget<Gtk::Button>(_builder, "confirm_btn").signal_clicked().connect([=] {
         auto const tool = dynamic_cast<Tools::InteractiveBooleansTool *>(desktop->getTool());
         tool->shape_commit();
     });
-    _btn_cancel.signal_clicked().connect([=]{
+
+    get_widget<Gtk::Button>(_builder, "cancel_btn").signal_clicked().connect([=] {
         auto const tool = dynamic_cast<Tools::InteractiveBooleansTool *>(desktop->getTool());
         tool->shape_cancel();
     });
 
+    add(*_toolbar);
+
     auto prefs = Inkscape::Preferences::get();
-    _adj_opacity->set_value(prefs->getDouble("/tools/booleans/opacity", 0.5) * 100);
-    _adj_opacity->signal_value_changed().connect([=](){
+
+    adj_opacity->set_value(prefs->getDouble("/tools/booleans/opacity", 0.5) * 100);
+    adj_opacity->signal_value_changed().connect([=]() {
         auto const tool = dynamic_cast<Tools::InteractiveBooleansTool *>(desktop->getTool());
-        double value = (double)_adj_opacity->get_value() / 100;
+        double value = (double)adj_opacity->get_value() / 100;
         prefs->setDouble("/tools/booleans/opacity", value);
         tool->set_opacity(value);
     });
 }
 
 BooleansToolbar::~BooleansToolbar() = default;
-
-void BooleansToolbar::on_parent_changed(Gtk::Widget *) {
-    _builder.reset();
-}
 
 GtkWidget *BooleansToolbar::create(SPDesktop *desktop)
 {

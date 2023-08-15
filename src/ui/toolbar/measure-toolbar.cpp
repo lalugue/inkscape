@@ -16,6 +16,7 @@
  *   Tavmjong Bah <tavmjong@free.fr>
  *   Abhishek Sharma
  *   Kris De Gussem <Kris.DeGussem@gmail.com>
+ *   Vaibhav Malik <vaibhavmalik2018@gmail.com>
  *
  * Copyright (C) 2004 David Turner
  * Copyright (C) 2003 MenTaLguY
@@ -29,18 +30,15 @@
 
 #include <glibmm/i18n.h>
 
-#include <gtkmm/separatortoolitem.h>
-
 #include "desktop.h"
 #include "document-undo.h"
 #include "message-stack.h"
 #include "object/sp-namedview.h"
-
+#include "ui/builder-utils.h"
 #include "ui/icon-names.h"
 #include "ui/tools/measure-tool.h"
 #include "ui/widget/canvas.h"
 #include "ui/widget/combo-tool-item.h"
-// #include "ui/widget/label-tool-item.h"
 #include "ui/widget/spinbutton.h"
 #include "ui/widget/unit-tracker.h"
 
@@ -67,63 +65,39 @@ MeasureToolbar::MeasureToolbar(SPDesktop *desktop)
     : Toolbar(desktop)
     , _tracker(new UnitTracker(Inkscape::Util::UNIT_TYPE_LINEAR))
     , _builder(initialize_builder("toolbar-measure.ui"))
+    , _font_size_item(get_derived_widget<UI::Widget::SpinButton>(_builder, "_font_size_item"))
+    , _precision_item(get_derived_widget<UI::Widget::SpinButton>(_builder, "_precision_item"))
+    , _scale_item(get_derived_widget<UI::Widget::SpinButton>(_builder, "_scale_item"))
+    , _only_selected_btn(get_widget<Gtk::ToggleButton>(_builder, "_only_selected_btn"))
+    , _ignore_1st_and_last_btn(get_widget<Gtk::ToggleButton>(_builder, "_ignore_1st_and_last_btn"))
+    , _inbetween_btn(get_widget<Gtk::ToggleButton>(_builder, "_inbetween_btn"))
+    , _show_hidden_btn(get_widget<Gtk::ToggleButton>(_builder, "_show_hidden_btn"))
+    , _all_layers_btn(get_widget<Gtk::ToggleButton>(_builder, "_all_layers_btn"))
+    , _offset_item(get_derived_widget<UI::Widget::SpinButton>(_builder, "_offset_item"))
 {
     auto prefs = Inkscape::Preferences::get();
     auto unit = desktop->getNamedView()->getDisplayUnit();
     _tracker->setActiveUnitByAbbr(prefs->getString("/tools/measure/unit", unit->abbr).c_str());
 
-    _builder->get_widget("measure-toolbar", _toolbar);
-    if (!_toolbar) {
-        std::cerr << "InkscapeWindow: Failed to load measure toolbar!" << std::endl;
-    }
-
-    Gtk::Box *unit_menu_box;
-
-    // _builder->get_widget("_mode_item", _mode_item);
-
-    _builder->get_widget_derived("_font_size_item", _font_size_item);
-    _builder->get_widget_derived("_precision_item", _precision_item);
-    _builder->get_widget_derived("_scale_item", _scale_item);
-
-    _builder->get_widget("unit_menu_box", unit_menu_box);
-
-    _builder->get_widget("_only_selected_item", _only_selected_item);
-    _builder->get_widget("_ignore_1st_and_last_item", _ignore_1st_and_last_item);
-    _builder->get_widget("_inbetween_item", _inbetween_item);
-    _builder->get_widget("_show_hidden_item", _show_hidden_item);
-    _builder->get_widget("_all_layers_item", _all_layers_item);
-
-    _builder->get_widget("_reverse_item", _reverse_item);
-    _builder->get_widget("_to_phantom_item", _to_phantom_item);
-    _builder->get_widget("_to_guides_item", _to_guides_item);
-    _builder->get_widget("_to_item_item", _to_item_item);
-    _builder->get_widget("_mark_dimension_item", _mark_dimension_item);
-
-    _builder->get_widget_derived("_offset_item", _offset_item);
+    _toolbar = &get_widget<Gtk::Box>(_builder, "measure-toolbar");
 
     auto unit_menu = _tracker->create_tool_item(_("Units"), (""));
     unit_menu->signal_changed().connect(sigc::mem_fun(*this, &MeasureToolbar::unit_changed));
-    unit_menu_box->add(*unit_menu);
+    get_widget<Gtk::Box>(_builder, "unit_menu_box").add(*unit_menu);
 
-    setup_derived_spin_button(_font_size_item, "fontsize", 10.0);
-    setup_derived_spin_button(_precision_item, "precision", 2);
-    setup_derived_spin_button(_scale_item, "scale", 100.0);
-    setup_derived_spin_button(_offset_item, "offset", 5.0);
+    setup_derived_spin_button(_font_size_item, "fontsize", 10.0, &MeasureToolbar::fontsize_value_changed);
+    setup_derived_spin_button(_precision_item, "precision", 2, &MeasureToolbar::precision_value_changed);
+    setup_derived_spin_button(_scale_item, "scale", 100.0, &MeasureToolbar::scale_value_changed);
+    setup_derived_spin_button(_offset_item, "offset", 5.0, &MeasureToolbar::offset_value_changed);
 
     // Fetch all the ToolbarMenuButtons at once from the UI file
     // Menu Button #1
-    Gtk::Box *popover_box1;
-    _builder->get_widget("popover_box1", popover_box1);
-
-    Inkscape::UI::Widget::ToolbarMenuButton *menu_btn1 = nullptr;
-    _builder->get_widget_derived("menu_btn1", menu_btn1);
+    auto popover_box1 = &get_widget<Gtk::Box>(_builder, "popover_box1");
+    auto menu_btn1 = &get_derived_widget<UI::Widget::ToolbarMenuButton>(_builder, "menu_btn1");
 
     // Menu Button #2
-    Gtk::Box *popover_box2;
-    _builder->get_widget("popover_box2", popover_box2);
-
-    Inkscape::UI::Widget::ToolbarMenuButton *menu_btn2 = nullptr;
-    _builder->get_widget_derived("menu_btn2", menu_btn2);
+    auto popover_box2 = &get_widget<Gtk::Box>(_builder, "popover_box2");
+    auto menu_btn2 = &get_derived_widget<UI::Widget::ToolbarMenuButton>(_builder, "menu_btn2");
 
     // Initialize all the ToolbarMenuButtons only after all the children of the
     // toolbar have been fetched. Otherwise, the children to be moved in the
@@ -137,57 +111,57 @@ MeasureToolbar::MeasureToolbar(SPDesktop *desktop)
     _expanded_menu_btns.push(menu_btn2);
 
     // Signals.
-    _only_selected_item->set_active(prefs->getBool("/tools/measure/only_selected", false));
-    _only_selected_item->signal_toggled().connect(sigc::mem_fun(*this, &MeasureToolbar::toggle_only_selected));
+    _only_selected_btn.set_active(prefs->getBool("/tools/measure/only_selected", false));
+    _only_selected_btn.signal_toggled().connect(sigc::mem_fun(*this, &MeasureToolbar::toggle_only_selected));
 
-    _ignore_1st_and_last_item->set_active(prefs->getBool("/tools/measure/ignore_1st_and_last", true));
-    _ignore_1st_and_last_item->signal_toggled().connect(
+    _ignore_1st_and_last_btn.set_active(prefs->getBool("/tools/measure/ignore_1st_and_last", true));
+    _ignore_1st_and_last_btn.signal_toggled().connect(
         sigc::mem_fun(*this, &MeasureToolbar::toggle_ignore_1st_and_last));
 
-    _inbetween_item->set_active(prefs->getBool("/tools/measure/show_in_between", true));
-    _inbetween_item->signal_toggled().connect(sigc::mem_fun(*this, &MeasureToolbar::toggle_show_in_between));
+    _inbetween_btn.set_active(prefs->getBool("/tools/measure/show_in_between", true));
+    _inbetween_btn.signal_toggled().connect(sigc::mem_fun(*this, &MeasureToolbar::toggle_show_in_between));
 
-    _show_hidden_item->set_active(prefs->getBool("/tools/measure/show_hidden", true));
-    _show_hidden_item->signal_toggled().connect(sigc::mem_fun(*this, &MeasureToolbar::toggle_show_hidden));
+    _show_hidden_btn.set_active(prefs->getBool("/tools/measure/show_hidden", true));
+    _show_hidden_btn.signal_toggled().connect(sigc::mem_fun(*this, &MeasureToolbar::toggle_show_hidden));
 
-    _all_layers_item->set_active(prefs->getBool("/tools/measure/all_layers", true));
-    _all_layers_item->signal_toggled().connect(sigc::mem_fun(*this, &MeasureToolbar::toggle_all_layers));
+    _all_layers_btn.set_active(prefs->getBool("/tools/measure/all_layers", true));
+    _all_layers_btn.signal_toggled().connect(sigc::mem_fun(*this, &MeasureToolbar::toggle_all_layers));
 
-    _reverse_item->signal_clicked().connect(sigc::mem_fun(*this, &MeasureToolbar::reverse_knots));
+    get_widget<Gtk::Button>(_builder, "reverse_btn")
+        .signal_clicked()
+        .connect(sigc::mem_fun(*this, &MeasureToolbar::reverse_knots));
 
-    _to_phantom_item->signal_clicked().connect(sigc::mem_fun(*this, &MeasureToolbar::to_phantom));
+    get_widget<Gtk::Button>(_builder, "to_phantom_btn")
+        .signal_clicked()
+        .connect(sigc::mem_fun(*this, &MeasureToolbar::to_phantom));
 
-    _to_guides_item->signal_clicked().connect(sigc::mem_fun(*this, &MeasureToolbar::to_guides));
+    get_widget<Gtk::Button>(_builder, "to_guides_btn")
+        .signal_clicked()
+        .connect(sigc::mem_fun(*this, &MeasureToolbar::to_guides));
 
-    _to_item_item->signal_clicked().connect(sigc::mem_fun(*this, &MeasureToolbar::to_item));
+    get_widget<Gtk::Button>(_builder, "to_item_btn")
+        .signal_clicked()
+        .connect(sigc::mem_fun(*this, &MeasureToolbar::to_item));
 
-    _mark_dimension_item->signal_clicked().connect(sigc::mem_fun(*this, &MeasureToolbar::to_mark_dimension));
+    get_widget<Gtk::Button>(_builder, "mark_dimension_btn")
+        .signal_clicked()
+        .connect(sigc::mem_fun(*this, &MeasureToolbar::to_mark_dimension));
 
     add(*_toolbar);
 
     show_all();
 }
 
-void MeasureToolbar::setup_derived_spin_button(UI::Widget::SpinButton *btn, Glib::ustring const &name,
-                                               double default_value)
+void MeasureToolbar::setup_derived_spin_button(UI::Widget::SpinButton &btn, Glib::ustring const &name,
+                                               double default_value, ValueChangedMemFun const value_changed_mem_fun)
 {
-    auto prefs = Inkscape::Preferences::get();
-    auto adj = btn->get_adjustment();
+    auto adj = btn.get_adjustment();
     const Glib::ustring path = "/tools/measure/" + name;
-    auto val = prefs->getDouble(path, default_value);
+    auto val = Preferences::get()->getDouble(path, default_value);
     adj->set_value(val);
+    adj->signal_value_changed().connect(sigc::mem_fun(*this, value_changed_mem_fun));
 
-    if (name == "fontsize") {
-        adj->signal_value_changed().connect(sigc::mem_fun(*this, &MeasureToolbar::fontsize_value_changed));
-    } else if (name == "precision") {
-        adj->signal_value_changed().connect(sigc::mem_fun(*this, &MeasureToolbar::precision_value_changed));
-    } else if (name == "scale") {
-        adj->signal_value_changed().connect(sigc::mem_fun(*this, &MeasureToolbar::scale_value_changed));
-    } else if (name == "offset") {
-        adj->signal_value_changed().connect(sigc::mem_fun(*this, &MeasureToolbar::offset_value_changed));
-    }
-
-    btn->set_defocus_widget(_desktop->getCanvas());
+    btn.set_defocus_widget(_desktop->getCanvas());
 }
 
 GtkWidget *MeasureToolbar::create(SPDesktop *desktop)
@@ -199,8 +173,8 @@ GtkWidget *MeasureToolbar::create(SPDesktop *desktop)
 void MeasureToolbar::fontsize_value_changed()
 {
     if (DocumentUndo::getUndoSensitive(_desktop->getDocument())) {
-        auto prefs = Inkscape::Preferences::get();
-        prefs->setDouble(Glib::ustring("/tools/measure/fontsize"), _font_size_item->get_adjustment()->get_value());
+        Preferences::get()->setDouble(Glib::ustring("/tools/measure/fontsize"),
+                                      _font_size_item.get_adjustment()->get_value());
         MeasureTool *mt = get_measure_tool(_desktop);
         if (mt) {
             mt->showCanvasItems();
@@ -211,8 +185,7 @@ void MeasureToolbar::fontsize_value_changed()
 void MeasureToolbar::unit_changed(int /* notUsed */)
 {
     Glib::ustring const unit = _tracker->getActiveUnit()->abbr;
-    auto prefs = Inkscape::Preferences::get();
-    prefs->setString("/tools/measure/unit", unit);
+    Preferences::get()->setString("/tools/measure/unit", unit);
     MeasureTool *mt = get_measure_tool(_desktop);
     if (mt) {
         mt->showCanvasItems();
@@ -222,8 +195,8 @@ void MeasureToolbar::unit_changed(int /* notUsed */)
 void MeasureToolbar::precision_value_changed()
 {
     if (DocumentUndo::getUndoSensitive(_desktop->getDocument())) {
-        auto prefs = Inkscape::Preferences::get();
-        prefs->setInt(Glib::ustring("/tools/measure/precision"), _precision_item->get_adjustment()->get_value());
+        Preferences::get()->setInt(Glib::ustring("/tools/measure/precision"),
+                                   _precision_item.get_adjustment()->get_value());
         MeasureTool *mt = get_measure_tool(_desktop);
         if (mt) {
             mt->showCanvasItems();
@@ -234,8 +207,7 @@ void MeasureToolbar::precision_value_changed()
 void MeasureToolbar::scale_value_changed()
 {
     if (DocumentUndo::getUndoSensitive(_desktop->getDocument())) {
-        auto prefs = Inkscape::Preferences::get();
-        prefs->setDouble(Glib::ustring("/tools/measure/scale"), _scale_item->get_adjustment()->get_value());
+        Preferences::get()->setDouble(Glib::ustring("/tools/measure/scale"), _scale_item.get_adjustment()->get_value());
         MeasureTool *mt = get_measure_tool(_desktop);
         if (mt) {
             mt->showCanvasItems();
@@ -246,8 +218,8 @@ void MeasureToolbar::scale_value_changed()
 void MeasureToolbar::offset_value_changed()
 {
     if (DocumentUndo::getUndoSensitive(_desktop->getDocument())) {
-        auto prefs = Inkscape::Preferences::get();
-        prefs->setDouble(Glib::ustring("/tools/measure/offset"), _offset_item->get_adjustment()->get_value());
+        Preferences::get()->setDouble(Glib::ustring("/tools/measure/offset"),
+                                      _offset_item.get_adjustment()->get_value());
         MeasureTool *mt = get_measure_tool(_desktop);
         if (mt) {
             mt->showCanvasItems();
@@ -257,9 +229,8 @@ void MeasureToolbar::offset_value_changed()
 
 void MeasureToolbar::toggle_only_selected()
 {
-    auto prefs = Inkscape::Preferences::get();
-    bool active = _only_selected_item->get_active();
-    prefs->setBool("/tools/measure/only_selected", active);
+    bool active = _only_selected_btn.get_active();
+    Preferences::get()->setBool("/tools/measure/only_selected", active);
     if ( active ) {
         _desktop->messageStack()->flash(Inkscape::INFORMATION_MESSAGE, _("Measures only selected."));
     } else {
@@ -273,9 +244,8 @@ void MeasureToolbar::toggle_only_selected()
 
 void MeasureToolbar::toggle_ignore_1st_and_last()
 {
-    auto prefs = Inkscape::Preferences::get();
-    bool active = _ignore_1st_and_last_item->get_active();
-    prefs->setBool("/tools/measure/ignore_1st_and_last", active);
+    bool active = _ignore_1st_and_last_btn.get_active();
+    Preferences::get()->setBool("/tools/measure/ignore_1st_and_last", active);
     if ( active ) {
         _desktop->messageStack()->flash(Inkscape::INFORMATION_MESSAGE, _("Start and end measures inactive."));
     } else {
@@ -289,9 +259,8 @@ void MeasureToolbar::toggle_ignore_1st_and_last()
 
 void MeasureToolbar::toggle_show_in_between()
 {
-    auto prefs = Inkscape::Preferences::get();
-    bool active = _inbetween_item->get_active();
-    prefs->setBool("/tools/measure/show_in_between", active);
+    bool active = _inbetween_btn.get_active();
+    Preferences::get()->setBool("/tools/measure/show_in_between", active);
     if ( active ) {
         _desktop->messageStack()->flash(Inkscape::INFORMATION_MESSAGE, _("Compute all elements."));
     } else {
@@ -305,9 +274,8 @@ void MeasureToolbar::toggle_show_in_between()
 
 void MeasureToolbar::toggle_show_hidden()
 {
-    auto prefs = Inkscape::Preferences::get();
-    bool active = _show_hidden_item->get_active();
-    prefs->setBool("/tools/measure/show_hidden", active);
+    bool active = _show_hidden_btn.get_active();
+    Preferences::get()->setBool("/tools/measure/show_hidden", active);
     if ( active ) {
         _desktop->messageStack()->flash(Inkscape::INFORMATION_MESSAGE, _("Show all crossings."));
     } else {
@@ -321,9 +289,8 @@ void MeasureToolbar::toggle_show_hidden()
 
 void MeasureToolbar::toggle_all_layers()
 {
-    auto prefs = Inkscape::Preferences::get();
-    bool active = _all_layers_item->get_active();
-    prefs->setBool("/tools/measure/all_layers", active);
+    bool active = _all_layers_btn.get_active();
+    Preferences::get()->setBool("/tools/measure/all_layers", active);
     if ( active ) {
         _desktop->messageStack()->flash(Inkscape::INFORMATION_MESSAGE, _("Use all layers in the measure."));
     } else {

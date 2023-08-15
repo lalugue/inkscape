@@ -5,6 +5,7 @@
  * Authors:
  *   bulia byak <bulia@dr.com>
  *   Tavmjong Bah <tavmjong@free.fr>
+ *   Vaibhav Malik <vaibhavmalik2018@gmail.com>
  *
  * Copyright (C) 2012 authors
  * Copyright (C) 2005 authors
@@ -49,17 +50,19 @@ class SpinButton;
 namespace Toolbar {
 class MeshToolbar : public Toolbar {
 private:
+    using ValueChangedMemFun = void (MeshToolbar::*)();
+
     Glib::RefPtr<Gtk::Builder> _builder;
 
     std::vector<Gtk::RadioButton *> _new_type_buttons;
     std::vector<Gtk::RadioButton *> _new_fillstroke_buttons;
     UI::Widget::ComboToolItem *_select_type_item;
 
-    Gtk::ToggleButton *_edit_fill_item;
-    Gtk::ToggleButton *_edit_stroke_item;
+    Gtk::ToggleButton *_edit_fill_btn;
+    Gtk::ToggleButton *_edit_stroke_btn;
 
-    UI::Widget::SpinButton *_row_item;
-    UI::Widget::SpinButton *_col_item;
+    UI::Widget::SpinButton &_row_item;
+    UI::Widget::SpinButton &_col_item;
 
     std::unique_ptr<UI::SimplePrefPusher> _edit_fill_pusher;
     std::unique_ptr<UI::SimplePrefPusher> _edit_stroke_pusher;
@@ -71,6 +74,8 @@ private:
     sigc::connection c_defs_release;
     sigc::connection c_defs_modified;
 
+    void setup_derived_spin_button(UI::Widget::SpinButton &btn, Glib::ustring const &name, double default_value,
+                                   ValueChangedMemFun const value_changed_mem_fun);
     void new_geometry_changed(int mode);
     void new_fillstroke_changed(int mode);
     void row_changed();
@@ -94,8 +99,7 @@ private:
     ~MeshToolbar() final;
 
 public:
-    static GtkWidget * create(SPDesktop *desktop);
-    void setup_derived_spin_button(UI::Widget::SpinButton *btn, Glib::ustring const &name, double default_value);
+    static GtkWidget *create(SPDesktop *desktop);
 };
 
 } // namespace Toolbar

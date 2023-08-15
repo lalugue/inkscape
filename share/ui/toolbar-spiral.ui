@@ -182,7 +182,7 @@
       </packing>
     </child>
     <child>
-      <object class="GtkButton" id="reset_item">
+      <object class="GtkButton" id="reset_btn">
         <property name="visible">True</property>
         <property name="can-focus">True</property>
         <property name="receives-default">True</property>

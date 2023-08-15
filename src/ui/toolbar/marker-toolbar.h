@@ -5,6 +5,7 @@
  * Authors:
  * see git history
  * Rachana Podaralla <rpodaralla3@gatech.edu>
+ * Vaibhav Malik <vaibhavmalik2018@gmail.com>
  *
  * Copyright (C) 2018 Authors
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
@@ -24,7 +25,7 @@ protected:
     MarkerToolbar(SPDesktop *desktop);
 
 public:
-    static GtkWidget * create(SPDesktop *desktop);
+    static GtkWidget *create(SPDesktop *desktop);
 };
 
 }}}

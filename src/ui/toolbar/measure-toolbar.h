@@ -19,6 +19,7 @@
  *   Tavmjong Bah <tavmjong@free.fr>
  *   Abhishek Sharma
  *   Kris De Gussem <Kris.DeGussem@gmail.com>
+ *   Vaibhav Malik <vaibhavmalik2018@gmail.com>
  *
  * Copyright (C) 2004 David Turner
  * Copyright (C) 2003 MenTaLguY
@@ -29,7 +30,6 @@
  */
 
 #include <gtkmm/builder.h>
-#include <gtkmm/button.h>
 
 #include "toolbar.h"
 
@@ -45,25 +45,24 @@ class UnitTracker;
 namespace Toolbar {
 class MeasureToolbar : public Toolbar {
 private:
+    using ValueChangedMemFun = void (MeasureToolbar::*)();
+
     Glib::RefPtr<Gtk::Builder> _builder;
     UI::Widget::UnitTracker *_tracker;
-    UI::Widget::SpinButton *_font_size_item;
-    UI::Widget::SpinButton *_precision_item;
-    UI::Widget::SpinButton *_scale_item;
-    UI::Widget::SpinButton *_offset_item;
+    UI::Widget::SpinButton &_font_size_item;
+    UI::Widget::SpinButton &_precision_item;
+    UI::Widget::SpinButton &_scale_item;
 
-    Gtk::ToggleButton *_only_selected_item;
-    Gtk::ToggleButton *_ignore_1st_and_last_item;
-    Gtk::ToggleButton *_inbetween_item;
-    Gtk::ToggleButton *_show_hidden_item;
-    Gtk::ToggleButton *_all_layers_item;
+    Gtk::ToggleButton &_only_selected_btn;
+    Gtk::ToggleButton &_ignore_1st_and_last_btn;
+    Gtk::ToggleButton &_inbetween_btn;
+    Gtk::ToggleButton &_show_hidden_btn;
+    Gtk::ToggleButton &_all_layers_btn;
 
-    Gtk::Button *_reverse_item;
-    Gtk::Button *_to_phantom_item;
-    Gtk::Button *_to_guides_item;
-    Gtk::Button *_to_item_item;
-    Gtk::Button *_mark_dimension_item;
+    UI::Widget::SpinButton &_offset_item;
 
+    void setup_derived_spin_button(UI::Widget::SpinButton &btn, Glib::ustring const &name, double default_value,
+                                   ValueChangedMemFun const value_change_mem_fun);
     void fontsize_value_changed();
     void unit_changed(int notUsed);
     void precision_value_changed();
@@ -84,8 +83,7 @@ protected:
     MeasureToolbar(SPDesktop *desktop);
 
 public:
-    static GtkWidget * create(SPDesktop *desktop);
-    void setup_derived_spin_button(UI::Widget::SpinButton *btn, Glib::ustring const &name, double default_value);
+    static GtkWidget *create(SPDesktop *desktop);
 };
 
 }

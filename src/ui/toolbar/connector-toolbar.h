@@ -19,6 +19,7 @@
  *   Tavmjong Bah <tavmjong@free.fr>
  *   Abhishek Sharma
  *   Kris De Gussem <Kris.DeGussem@gmail.com>
+ *   Vaibhav Malik <vaibhavmalik2018@gmail.com>
  *
  * Copyright (C) 2004 David Turner
  * Copyright (C) 2003 MenTaLguY
@@ -28,7 +29,6 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include <gtkmm/adjustment.h>
 #include <gtkmm/builder.h>
 
 #include "toolbar.h"
@@ -36,10 +36,6 @@
 #include "xml/node-observer.h"
 
 class SPDesktop;
-
-namespace Gtk {
-class Button;
-}
 
 namespace Inkscape {
 class Selection;
@@ -55,19 +51,24 @@ class ConnectorToolbar
 	, private XML::NodeObserver
 {
 private:
-    Glib::RefPtr<Gtk::Builder> _builder;
-    Gtk::ToggleButton *_orthogonal_btn;
-    Gtk::ToggleButton *_directed_btn;
-    Gtk::ToggleButton *_overlap_btn;
+    using ValueChangedMemFun = void (ConnectorToolbar::*)();
 
-    UI::Widget::SpinButton *_curvature_item;
-    UI::Widget::SpinButton *_spacing_item;
-    UI::Widget::SpinButton *_length_item;
+    Glib::RefPtr<Gtk::Builder> _builder;
+
+    Gtk::ToggleButton &_orthogonal_btn;
+    Gtk::ToggleButton &_directed_btn;
+    Gtk::ToggleButton &_overlap_btn;
+
+    UI::Widget::SpinButton &_curvature_item;
+    UI::Widget::SpinButton &_spacing_item;
+    UI::Widget::SpinButton &_length_item;
 
     bool _freeze{false};
 
     Inkscape::XML::Node *_repr{nullptr};
 
+    void setup_derived_spin_button(UI::Widget::SpinButton &btn, Glib::ustring const &name, double default_value,
+                                   ValueChangedMemFun const value_changed_mem_fun);
     void path_set_avoid();
     void path_set_ignore();
     void orthogonal_toggled();
@@ -87,8 +88,7 @@ protected:
     ConnectorToolbar(SPDesktop *desktop);
 
 public:
-    static GtkWidget * create(SPDesktop *desktop);
-    void setup_derived_spin_button(UI::Widget::SpinButton *btn, Glib::ustring const &name, double default_value);
+    static GtkWidget *create(SPDesktop *desktop);
 
     static void event_attr_changed(Inkscape::XML::Node *repr,
                                    gchar const         *name,

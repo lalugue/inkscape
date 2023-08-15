@@ -19,6 +19,7 @@
  *   Tavmjong Bah <tavmjong@free.fr>
  *   Abhishek Sharma
  *   Kris De Gussem <Kris.DeGussem@gmail.com>
+ *   Vaibhav Malik <vaibhavmalik2018@gmail.com>
  *
  * Copyright (C) 2004 David Turner
  * Copyright (C) 2003 MenTaLguY
@@ -40,7 +41,7 @@ class SPDesktop;
 namespace Gtk {
 class Adjustment;
 class ComboBoxText;
-class ToggleToolButton;
+class ToggleButton;
 } // namespace Gtk
 
 namespace Inkscape::UI {
@@ -56,26 +57,28 @@ namespace Toolbar {
 
 class CalligraphyToolbar final : public Toolbar {
 private:
+    using ValueChangedMemFun = void (CalligraphyToolbar::*)();
+
     Glib::RefPtr<Gtk::Builder> _builder;
 
     std::unique_ptr<UI::Widget::UnitTracker> _tracker;
     bool _presets_blocked;
 
-    Gtk::ComboBoxText *_profile_selector_combo;
-    UI::Widget::SpinButton *_width_item;
+    Gtk::ComboBoxText &_profile_selector_combo;
+    UI::Widget::SpinButton &_width_item;
 
-    UI::Widget::SpinButton *_thinning_item;
-    UI::Widget::SpinButton *_mass_item;
+    UI::Widget::SpinButton &_thinning_item;
+    UI::Widget::SpinButton &_mass_item;
 
-    UI::Widget::SpinButton *_angle_item;
+    UI::Widget::SpinButton &_angle_item;
     Gtk::ToggleButton *_usetilt_btn;
 
-    UI::Widget::SpinButton *_flatness_item;
+    UI::Widget::SpinButton &_flatness_item;
 
-    UI::Widget::SpinButton *_cap_rounding_item;
+    UI::Widget::SpinButton &_cap_rounding_item;
 
-    UI::Widget::SpinButton *_tremor_item;
-    UI::Widget::SpinButton *_wiggle_item;
+    UI::Widget::SpinButton &_tremor_item;
+    UI::Widget::SpinButton &_wiggle_item;
 
     std::map<Glib::ustring, GObject *> _widget_map;
 
@@ -84,7 +87,8 @@ private:
     std::unique_ptr<SimplePrefPusher> _usepressure_pusher;
     std::unique_ptr<SimplePrefPusher> _usetilt_pusher;
 
-    void setup_derived_spin_button(UI::Widget::SpinButton *btn, Glib::ustring const &name, double default_value);
+    void setup_derived_spin_button(UI::Widget::SpinButton &btn, Glib::ustring const &name, double default_value,
+                                   ValueChangedMemFun const value_changed_mem_fun);
     void width_value_changed();
     void velthin_value_changed();
     void angle_value_changed();
@@ -106,7 +110,7 @@ protected:
     CalligraphyToolbar(SPDesktop *desktop);
 
 public:
-    static GtkWidget * create(SPDesktop *desktop);
+    static GtkWidget *create(SPDesktop *desktop);
 };
 
 } // namespace Inkscape::UI

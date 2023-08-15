@@ -11,9 +11,7 @@
 #ifndef SEEN_TOOLBAR_H
 #define SEEN_TOOLBAR_H
 
-#include <gtkmm/box.h>
 #include <gtkmm/builder.h>
-#include <gtkmm/toolbar.h>
 #include <stack>
 
 #include "ui/widget/toolbar-menu-button.h"
@@ -24,8 +22,7 @@ class ustring;
 
 namespace Gtk {
 class Label;
-class ToggleToolButton;
-class ToolItem;
+class ToggleButton;
 } // namespace Gtk;
 
 class SPDesktop;
@@ -57,16 +54,10 @@ protected:
      */
     Toolbar(SPDesktop *desktop);
 
-    Gtk::ToolItem         * add_label(const Glib::ustring &label_text);
-    Gtk::ToggleButton *add_toggle_button(const Glib::ustring &label_text, const Glib::ustring &tooltip_text);
-    void add_separator();
-    Glib::RefPtr<Gtk::Builder> initialize_builder(const char *file_name);
+    Glib::RefPtr<Gtk::Builder> initialize_builder(Glib::ustring const &file_name);
     void resize_handler(Gtk::Allocation &allocation);
     void move_children(Gtk::Box *src, Gtk::Box *dest, std::vector<std::pair<int, Gtk::Widget *>> children,
                        bool is_expanding = false);
-
-protected:
-    static GtkWidget * create(SPDesktop *desktop);
 };
 
 } // namespace Inkscape::UI::Toolbar

@@ -591,7 +591,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkSpinButton" id="_x_btn">
+          <object class="GtkSpinButton" id="_x_item">
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="tooltip-text" translatable="yes">Horizontal coordinate of selection</property>
@@ -635,7 +635,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkSpinButton" id="_y_btn">
+          <object class="GtkSpinButton" id="_y_item">
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="tooltip-text" translatable="yes">Vertical coordinate of selection</property>
@@ -680,7 +680,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkSpinButton" id="_w_btn">
+          <object class="GtkSpinButton" id="_w_item">
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="tooltip-text" translatable="yes">Width of selection</property>
@@ -742,7 +742,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkSpinButton" id="_h_btn">
+          <object class="GtkSpinButton" id="_h_item">
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="tooltip-text" translatable="yes">Height of selection</property>

@@ -289,7 +289,7 @@
       </packing>
     </child>
     <child>
-      <object class="GtkToggleButton" id="_show_bbox_item">
+      <object class="GtkToggleButton" id="_show_bbox_btn">
         <property name="visible">True</property>
         <property name="can-focus">True</property>
         <property name="receives-default">True</property>
@@ -306,7 +306,7 @@
       </packing>
     </child>
     <child>
-      <object class="GtkToggleButton" id="_bbox_from_selection_item">
+      <object class="GtkToggleButton" id="_bbox_from_selection_btn">
         <property name="visible">True</property>
         <property name="can-focus">True</property>
         <property name="receives-default">True</property>
@@ -363,7 +363,7 @@
       </packing>
     </child>
     <child>
-      <object class="GtkToggleButton" id="_measuring_item">
+      <object class="GtkToggleButton" id="_measuring_btn">
         <property name="visible">True</property>
         <property name="can-focus">True</property>
         <property name="receives-default">True</property>
@@ -408,7 +408,7 @@
       </packing>
     </child>
     <child>
-      <object class="GtkToggleButton" id="_open_lpe_dialog_item">
+      <object class="GtkToggleButton" id="_open_lpe_dialog_btn">
         <property name="visible">True</property>
         <property name="can-focus">True</property>
         <property name="receives-default">True</property>

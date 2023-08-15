@@ -19,6 +19,7 @@
  *   Tavmjong Bah <tavmjong@free.fr>
  *   Abhishek Sharma
  *   Kris De Gussem <Kris.DeGussem@gmail.com>
+ *   Vaibhav Malik <vaibhavmalik2018@gmail.com>
  *
  * Copyright (C) 2004 David Turner
  * Copyright (C) 2003 MenTaLguY
@@ -61,13 +62,13 @@ class Box3DToolbar
 private:
     Glib::RefPtr<Gtk::Builder> _builder;
 
-    UI::Widget::SpinButton *_angle_x_item;
-    UI::Widget::SpinButton *_angle_y_item;
-    UI::Widget::SpinButton *_angle_z_item;
+    UI::Widget::SpinButton &_angle_x_item;
+    UI::Widget::SpinButton &_angle_y_item;
+    UI::Widget::SpinButton &_angle_z_item;
 
-    Gtk::ToggleButton *_vp_x_state_item;
-    Gtk::ToggleButton *_vp_y_state_item;
-    Gtk::ToggleButton *_vp_z_state_item;
+    Gtk::ToggleButton &_vp_x_state_btn;
+    Gtk::ToggleButton &_vp_y_state_btn;
+    Gtk::ToggleButton &_vp_z_state_btn;
 
     XML::Node *_repr{nullptr};
     bool _freeze{false};
@@ -78,8 +79,8 @@ private:
     void check_ec(SPDesktop* desktop, Inkscape::UI::Tools::ToolBase* tool);
     void selection_changed(Inkscape::Selection *selection);
     void resync_toolbar(Inkscape::XML::Node *persp_repr);
-    void set_button_and_adjustment(Persp3D *persp, Proj::Axis axis, UI::Widget::SpinButton *spin_btn,
-                                   Gtk::ToggleButton *toggle_btn);
+    void set_button_and_adjustment(Persp3D *persp, Proj::Axis axis, UI::Widget::SpinButton &spin_btn,
+                                   Gtk::ToggleButton &toggle_btn);
     double normalize_angle(double a);
 
     sigc::connection _changed;
@@ -93,8 +94,8 @@ protected:
     ~Box3DToolbar() override;
 
 public:
-    static GtkWidget * create(SPDesktop *desktop);
-    void setup_derived_spin_button(UI::Widget::SpinButton *btn, Glib::ustring const &name);
+    static GtkWidget *create(SPDesktop *desktop);
+    void setup_derived_spin_button(UI::Widget::SpinButton &btn, Glib::ustring const &name, Proj::Axis const axis);
 };
 
 }

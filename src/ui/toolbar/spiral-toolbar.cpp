@@ -16,6 +16,7 @@
  *   Tavmjong Bah <tavmjong@free.fr>
  *   Abhishek Sharma
  *   Kris De Gussem <Kris.DeGussem@gmail.com>
+ *   Vaibhav Malik <vaibhavmalik2018@gmail.com>
  *
  * Copyright (C) 2004 David Turner
  * Copyright (C) 2003 MenTaLguY
@@ -50,21 +51,12 @@ namespace Toolbar {
 SpiralToolbar::SpiralToolbar(SPDesktop *desktop)
     : Toolbar(desktop)
     , _builder(initialize_builder("toolbar-spiral.ui"))
+    , _mode_item(get_widget<Gtk::Label>(_builder, "_mode_item"))
+    , _revolution_item(get_derived_widget<UI::Widget::SpinButton>(_builder, "_revolution_item"))
+    , _expansion_item(get_derived_widget<UI::Widget::SpinButton>(_builder, "_expansion_item"))
+    , _t0_item(get_derived_widget<UI::Widget::SpinButton>(_builder, "_t0_item"))
 {
-    _builder->get_widget("spiral-toolbar", _toolbar);
-    if (!_toolbar) {
-        std::cerr << "InkscapeWindow: Failed to load spiral toolbar!" << std::endl;
-    }
-
-    Gtk::Button *reset_item;
-
-    _builder->get_widget("_mode_item", _mode_item);
-
-    _builder->get_widget_derived("_revolution_item", _revolution_item);
-    _builder->get_widget_derived("_expansion_item", _expansion_item);
-    _builder->get_widget_derived("_t0_item", _t0_item);
-
-    _builder->get_widget("reset_item", reset_item);
+    _toolbar = &get_widget<Gtk::Box>(_builder, "spiral-toolbar");
 
     setup_derived_spin_button(_revolution_item, "revolution", 3.0);
     setup_derived_spin_button(_expansion_item, "expansion", 1.0);
@@ -72,7 +64,9 @@ SpiralToolbar::SpiralToolbar(SPDesktop *desktop)
 
     add(*_toolbar);
 
-    reset_item->signal_clicked().connect(sigc::mem_fun(*this, &SpiralToolbar::defaults));
+    get_widget<Gtk::Button>(_builder, "reset_btn")
+        .signal_clicked()
+        .connect(sigc::mem_fun(*this, &SpiralToolbar::defaults));
 
     _connection.reset(new sigc::connection(
         desktop->getSelection()->connectChanged(sigc::mem_fun(*this, &SpiralToolbar::selection_changed))));
@@ -80,19 +74,18 @@ SpiralToolbar::SpiralToolbar(SPDesktop *desktop)
     show_all();
 }
 
-void SpiralToolbar::setup_derived_spin_button(UI::Widget::SpinButton *btn, Glib::ustring const &name,
+void SpiralToolbar::setup_derived_spin_button(UI::Widget::SpinButton &btn, Glib::ustring const &name,
                                               double default_value)
 {
-    Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-    auto adj = btn->get_adjustment();
+    auto adj = btn.get_adjustment();
 
     const Glib::ustring path = "/tools/shapes/spiral/" + name;
-    auto val = prefs->getDouble(path, default_value);
+    auto val = Preferences::get()->getDouble(path, default_value);
     adj->set_value(val);
 
     adj->signal_value_changed().connect(sigc::bind(sigc::mem_fun(*this, &SpiralToolbar::value_changed), adj, name));
 
-    btn->set_defocus_widget(_desktop->getCanvas());
+    btn.set_defocus_widget(_desktop->getCanvas());
 }
 
 SpiralToolbar::~SpiralToolbar()
@@ -108,21 +101,16 @@ SpiralToolbar::~SpiralToolbar()
     }
 }
 
-GtkWidget *
-SpiralToolbar::create(SPDesktop *desktop)
+GtkWidget *SpiralToolbar::create(SPDesktop *desktop)
 {
     auto toolbar = new SpiralToolbar(desktop);
     return toolbar->Gtk::Widget::gobj();
 }
 
-void
-SpiralToolbar::value_changed(Glib::RefPtr<Gtk::Adjustment> &adj,
-                             Glib::ustring const           &value_name)
+void SpiralToolbar::value_changed(Glib::RefPtr<Gtk::Adjustment> &adj, Glib::ustring const &value_name)
 {
     if (DocumentUndo::getUndoSensitive(_desktop->getDocument())) {
-        Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-        prefs->setDouble("/tools/shapes/spiral/" + value_name,
-            adj->get_value());
+        Preferences::get()->setDouble("/tools/shapes/spiral/" + value_name, adj->get_value());
     }
 
     // quit if run by the attr_changed listener
@@ -156,23 +144,21 @@ SpiralToolbar::value_changed(Glib::RefPtr<Gtk::Adjustment> &adj,
     _freeze = false;
 }
 
-void
-SpiralToolbar::defaults()
+void SpiralToolbar::defaults()
 {
     // fixme: make settable
     gdouble rev = 3;
     gdouble exp = 1.0;
     gdouble t0 = 0.0;
 
-    _revolution_item->get_adjustment()->set_value(rev);
-    _expansion_item->get_adjustment()->set_value(exp);
-    _t0_item->get_adjustment()->set_value(t0);
+    _revolution_item.get_adjustment()->set_value(rev);
+    _expansion_item.get_adjustment()->set_value(exp);
+    _t0_item.get_adjustment()->set_value(t0);
 
     if(_desktop->getCanvas()) _desktop->getCanvas()->grab_focus();
 }
 
-void
-SpiralToolbar::selection_changed(Inkscape::Selection *selection)
+void SpiralToolbar::selection_changed(Inkscape::Selection *selection)
 {
     int n_selected = 0;
     Inkscape::XML::Node *repr = nullptr;
@@ -193,9 +179,9 @@ SpiralToolbar::selection_changed(Inkscape::Selection *selection)
     }
 
     if (n_selected == 0) {
-        _mode_item->set_markup(_("<b>New:</b>"));
+        _mode_item.set_markup(_("<b>New:</b>"));
     } else if (n_selected == 1) {
-        _mode_item->set_markup(_("<b>Change:</b>"));
+        _mode_item.set_markup(_("<b>Change:</b>"));
 
         if (repr) {
             _repr = repr;
@@ -206,7 +192,7 @@ SpiralToolbar::selection_changed(Inkscape::Selection *selection)
     } else {
         // FIXME: implement averaging of all parameters for multiple selected
         //gtk_label_set_markup(GTK_LABEL(l), _("<b>Average:</b>"));
-        _mode_item->set_markup(_("<b>Change:</b>"));
+        _mode_item.set_markup(_("<b>Change:</b>"));
     }
 }
 
@@ -222,13 +208,13 @@ void SpiralToolbar::notifyAttributeChanged(Inkscape::XML::Node &repr, GQuark, In
     _freeze = true;
 
     double revolution = repr.getAttributeDouble("sodipodi:revolution", 3.0);
-    _revolution_item->get_adjustment()->set_value(revolution);
+    _revolution_item.get_adjustment()->set_value(revolution);
 
     double expansion = repr.getAttributeDouble("sodipodi:expansion", 1.0);
-    _expansion_item->get_adjustment()->set_value(expansion);
+    _expansion_item.get_adjustment()->set_value(expansion);
 
     double t0 = repr.getAttributeDouble("sodipodi:t0", 0.0);
-    _t0_item->get_adjustment()->set_value(t0);
+    _t0_item.get_adjustment()->set_value(t0);
 
     _freeze = false;
 }

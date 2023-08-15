@@ -5,17 +5,14 @@
  * Authors:
  * see git history
  * Rachana Podaralla <rpodaralla3@gatech.edu>
+ * Vaibhav Malik <vaibhavmalik2018@gmail.com>
  *
  * Copyright (C) 2018 Authors
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include <glibmm/i18n.h>
 #include "marker-toolbar.h"
-#include "document-undo.h"
-#include "preferences.h"
-#include "desktop.h"
-#include "ui/widget/canvas.h"
+
 namespace Inkscape {
 namespace UI {
 namespace Toolbar {

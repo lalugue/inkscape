@@ -16,6 +16,7 @@
  *   Tavmjong Bah <tavmjong@free.fr>
  *   Abhishek Sharma
  *   Kris De Gussem <Kris.DeGussem@gmail.com>
+ *   Vaibhav Malik <vaibhavmalik2018@gmail.com>
  *
  * Copyright (C) 2004 David Turner
  * Copyright (C) 2003 MenTaLguY
@@ -38,6 +39,7 @@
 #include "object/sp-namedview.h"
 #include "object/sp-path.h"
 #include "selection.h"
+#include "ui/builder-utils.h"
 #include "ui/icon-names.h"
 #include "ui/tools/connector-tool.h"
 #include "ui/widget/canvas.h"
@@ -52,6 +54,13 @@ namespace Toolbar {
 ConnectorToolbar::ConnectorToolbar(SPDesktop *desktop)
     : Toolbar(desktop)
     , _builder(initialize_builder("toolbar-connector.ui"))
+
+    , _orthogonal_btn(get_widget<Gtk::ToggleButton>(_builder, "_orthogonal_btn"))
+    , _curvature_item(get_derived_widget<UI::Widget::SpinButton>(_builder, "_curvature_item"))
+    , _spacing_item(get_derived_widget<UI::Widget::SpinButton>(_builder, "_spacing_item"))
+    , _length_item(get_derived_widget<UI::Widget::SpinButton>(_builder, "_length_item"))
+    , _directed_btn(get_widget<Gtk::ToggleButton>(_builder, "_directed_btn"))
+    , _overlap_btn(get_widget<Gtk::ToggleButton>(_builder, "_overlap_btn"))
 {
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
 
@@ -60,52 +69,39 @@ ConnectorToolbar::ConnectorToolbar(SPDesktop *desktop)
         std::cerr << "InkscapeWindow: Failed to load connector toolbar!" << std::endl;
     }
 
-    Gtk::Button *avoid_btn;
-    Gtk::Button *ignore_btn;
-    Gtk::Button *graph_btn;
-
-    _builder->get_widget("avoid_btn", avoid_btn);
-    _builder->get_widget("ignore_btn", ignore_btn);
-    _builder->get_widget("_orthogonal_btn", _orthogonal_btn);
-
-    _builder->get_widget_derived("_curvature_item", _curvature_item);
-    _builder->get_widget_derived("_spacing_item", _spacing_item);
-
-    _builder->get_widget("graph_btn", graph_btn);
-
-    _builder->get_widget_derived("_length_item", _length_item);
-
-    _builder->get_widget("_directed_btn", _directed_btn);
-    _builder->get_widget("_overlap_btn", _overlap_btn);
-
-    setup_derived_spin_button(_curvature_item, "curvature", defaultConnCurvature);
-    setup_derived_spin_button(_spacing_item, "spacing", defaultConnSpacing);
-    setup_derived_spin_button(_length_item, "length", 100);
+    setup_derived_spin_button(_curvature_item, "curvature", defaultConnCurvature, &ConnectorToolbar::curvature_changed);
+    setup_derived_spin_button(_spacing_item, "spacing", defaultConnSpacing, &ConnectorToolbar::spacing_changed);
+    setup_derived_spin_button(_length_item, "length", 100, &ConnectorToolbar::length_changed);
 
     add(*_toolbar);
 
     // Orthogonal connectors toggle button
     bool tbuttonstate = prefs->getBool("/tools/connector/orthogonal");
-    _orthogonal_btn->set_active((tbuttonstate ? TRUE : FALSE));
+    _orthogonal_btn.set_active((tbuttonstate ? TRUE : FALSE));
 
     // Directed edges toggle button
     tbuttonstate = prefs->getBool("/tools/connector/directedlayout");
-    _directed_btn->set_active(tbuttonstate ? TRUE : FALSE);
+    _directed_btn.set_active(tbuttonstate ? TRUE : FALSE);
 
     // Avoid overlaps toggle button
     tbuttonstate = prefs->getBool("/tools/connector/avoidoverlaplayout");
-    _overlap_btn->set_active(tbuttonstate ? TRUE : FALSE);
+    _overlap_btn.set_active(tbuttonstate ? TRUE : FALSE);
 
     // Signals.
-    avoid_btn->signal_clicked().connect(sigc::mem_fun(*this, &ConnectorToolbar::path_set_avoid));
-    ignore_btn->signal_clicked().connect(sigc::mem_fun(*this, &ConnectorToolbar::path_set_ignore));
-    _orthogonal_btn->signal_toggled().connect(sigc::mem_fun(*this, &ConnectorToolbar::orthogonal_toggled));
+    get_widget<Gtk::Button>(_builder, "avoid_btn")
+        .signal_clicked()
+        .connect(sigc::mem_fun(*this, &ConnectorToolbar::path_set_avoid));
+    get_widget<Gtk::Button>(_builder, "ignore_btn")
+        .signal_clicked()
+        .connect(sigc::mem_fun(*this, &ConnectorToolbar::path_set_ignore));
+    get_widget<Gtk::Button>(_builder, "graph_btn")
+        .signal_clicked()
+        .connect(sigc::mem_fun(*this, &ConnectorToolbar::graph_layout));
 
-    graph_btn->signal_clicked().connect(sigc::mem_fun(*this, &ConnectorToolbar::graph_layout));
-
-    _directed_btn->signal_toggled().connect(sigc::mem_fun(*this, &ConnectorToolbar::directed_graph_layout_toggled));
+    _orthogonal_btn.signal_toggled().connect(sigc::mem_fun(*this, &ConnectorToolbar::orthogonal_toggled));
+    _directed_btn.signal_toggled().connect(sigc::mem_fun(*this, &ConnectorToolbar::directed_graph_layout_toggled));
+    _overlap_btn.signal_toggled().connect(sigc::mem_fun(*this, &ConnectorToolbar::nooverlaps_graph_layout_toggled));
     desktop->getSelection()->connectChanged(sigc::mem_fun(*this, &ConnectorToolbar::selection_changed));
-    _overlap_btn->signal_toggled().connect(sigc::mem_fun(*this, &ConnectorToolbar::nooverlaps_graph_layout_toggled));
 
     // Code to watch for changes to the connector-spacing attribute in
     // the XML.
@@ -128,31 +124,23 @@ ConnectorToolbar::ConnectorToolbar(SPDesktop *desktop)
     show_all();
 }
 
-void ConnectorToolbar::setup_derived_spin_button(UI::Widget::SpinButton *btn, Glib::ustring const &name,
-                                                 double default_value)
+void ConnectorToolbar::setup_derived_spin_button(UI::Widget::SpinButton &btn, Glib::ustring const &name,
+                                                 double default_value, ValueChangedMemFun const value_changed_mem_fun)
 {
-    auto *prefs = Inkscape::Preferences::get();
-    auto adj = btn->get_adjustment();
+    auto adj = btn.get_adjustment();
     const Glib::ustring path = "/tools/connector/" + name;
-    auto val = prefs->getDouble(path, default_value);
+    auto val = Preferences::get()->getDouble(path, default_value);
     adj->set_value(val);
+    adj->signal_value_changed().connect(sigc::mem_fun(*this, value_changed_mem_fun));
 
-    if (name == "curvature") {
-        adj->signal_value_changed().connect(sigc::mem_fun(*this, &ConnectorToolbar::curvature_changed));
-    } else if (name == "spacing") {
-        adj->signal_value_changed().connect(sigc::mem_fun(*this, &ConnectorToolbar::spacing_changed));
-    } else if (name == "length") {
-        adj->signal_value_changed().connect(sigc::mem_fun(*this, &ConnectorToolbar::length_changed));
-    }
-
-    btn->set_defocus_widget(_desktop->getCanvas());
+    btn.set_defocus_widget(_desktop->getCanvas());
 }
 
 GtkWidget *ConnectorToolbar::create(SPDesktop *desktop)
 {
     auto toolbar = new ConnectorToolbar(desktop);
     return toolbar->Gtk::Widget::gobj();
-} // end of ConnectorToolbar::prep()
+}
 
 void ConnectorToolbar::path_set_avoid()
 {
@@ -180,7 +168,7 @@ void ConnectorToolbar::orthogonal_toggled()
     // in turn, prevent callbacks from responding
     _freeze = true;
 
-    bool is_orthog = _orthogonal_btn->get_active();
+    bool is_orthog = _orthogonal_btn.get_active();
     gchar orthog_str[] = "orthogonal";
     gchar polyline_str[] = "polyline";
     gchar *value = is_orthog ? orthog_str : polyline_str ;
@@ -198,8 +186,7 @@ void ConnectorToolbar::orthogonal_toggled()
     }
 
     if (!modmade) {
-        Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-        prefs->setBool("/tools/connector/orthogonal", is_orthog);
+        Preferences::get()->setBool("/tools/connector/orthogonal", is_orthog);
     } else {
 
         DocumentUndo::done(doc, is_orthog ? _("Set connector type: orthogonal"): _("Set connector type: polyline"), INKSCAPE_ICON("draw-connector"));
@@ -225,7 +212,7 @@ void ConnectorToolbar::curvature_changed()
     // in turn, prevent callbacks from responding
     _freeze = true;
 
-    auto newValue = _curvature_item->get_adjustment()->get_value();
+    auto newValue = _curvature_item.get_adjustment()->get_value();
     gchar value[G_ASCII_DTOSTR_BUF_SIZE];
     g_ascii_dtostr(value, G_ASCII_DTOSTR_BUF_SIZE, newValue);
 
@@ -242,8 +229,7 @@ void ConnectorToolbar::curvature_changed()
     }
 
     if (!modmade) {
-        Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-        prefs->setDouble(Glib::ustring("/tools/connector/curvature"), newValue);
+        Preferences::get()->setDouble(Glib::ustring("/tools/connector/curvature"), newValue);
     }
     else {
         DocumentUndo::done(doc, _("Change connector curvature"), INKSCAPE_ICON("draw-connector"));
@@ -263,7 +249,7 @@ void ConnectorToolbar::spacing_changed()
     Inkscape::XML::Node *repr = _desktop->getNamedView()->getRepr();
 
     if (!repr->attribute("inkscape:connector-spacing") &&
-        (_spacing_item->get_adjustment()->get_value() == defaultConnSpacing)) {
+        (_spacing_item.get_adjustment()->get_value() == defaultConnSpacing)) {
         // Don't need to update the repr if the attribute doesn't
         // exist and it is being set to the default value -- as will
         // happen at startup.
@@ -278,7 +264,7 @@ void ConnectorToolbar::spacing_changed()
     // in turn, prevent listener from responding
     _freeze = true;
 
-    repr->setAttributeCssDouble("inkscape:connector-spacing", _spacing_item->get_adjustment()->get_value());
+    repr->setAttributeCssDouble("inkscape:connector-spacing", _spacing_item.get_adjustment()->get_value());
     _desktop->getNamedView()->updateRepr();
     bool modmade = false;
 
@@ -318,14 +304,12 @@ void ConnectorToolbar::graph_layout()
 
 void ConnectorToolbar::length_changed()
 {
-    Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-    prefs->setDouble("/tools/connector/length", _length_item->get_adjustment()->get_value());
+    Preferences::get()->setDouble("/tools/connector/length", _length_item.get_adjustment()->get_value());
 }
 
 void ConnectorToolbar::directed_graph_layout_toggled()
 {
-    auto prefs = Inkscape::Preferences::get();
-    prefs->setBool("/tools/connector/directedlayout", _directed_btn->get_active());
+    Preferences::get()->setBool("/tools/connector/directedlayout", _directed_btn.get_active());
 }
 
 void ConnectorToolbar::selection_changed(Inkscape::Selection *selection)
@@ -335,16 +319,15 @@ void ConnectorToolbar::selection_changed(Inkscape::Selection *selection)
     {
         gdouble curvature = cast<SPPath>(item)->connEndPair.getCurvature();
         bool is_orthog = cast<SPPath>(item)->connEndPair.isOrthogonal();
-        _orthogonal_btn->set_active(is_orthog);
-        _curvature_item->get_adjustment()->set_value(curvature);
+        _orthogonal_btn.set_active(is_orthog);
+        _curvature_item.get_adjustment()->set_value(curvature);
     }
 
 }
 
 void ConnectorToolbar::nooverlaps_graph_layout_toggled()
 {
-    Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-    prefs->setBool("/tools/connector/avoidoverlaplayout", _overlap_btn->get_active());
+    Preferences::get()->setBool("/tools/connector/avoidoverlaplayout", _overlap_btn.get_active());
 }
 
 void ConnectorToolbar::notifyAttributeChanged(Inkscape::XML::Node &repr, GQuark name_,
@@ -355,7 +338,7 @@ void ConnectorToolbar::notifyAttributeChanged(Inkscape::XML::Node &repr, GQuark 
     if (!_freeze && (strcmp(name, "inkscape:connector-spacing") == 0) ) {
         gdouble spacing = repr.getAttributeDouble("inkscape:connector-spacing", defaultConnSpacing);
 
-        _spacing_item->get_adjustment()->set_value(spacing);
+        _spacing_item.get_adjustment()->set_value(spacing);
 
         if (_desktop->getCanvas()) {
             _desktop->getCanvas()->grab_focus();

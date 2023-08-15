@@ -8,7 +8,7 @@
  *  Tavmjong Bah
  *  Alex Valavanis
  *  Mike Kowalski
- * 
+ *
  * Copyright (C) 2023 Tavmjong Bah
  *
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.

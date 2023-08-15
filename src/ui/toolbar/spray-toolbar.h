@@ -29,7 +29,6 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include <gtkmm/adjustment.h>
 #include <gtkmm/builder.h>
 
 #include "toolbar.h"
@@ -47,33 +46,35 @@ class SpinButton;
 namespace Toolbar {
 class SprayToolbar : public Toolbar {
 private:
+    using ValueChangedMemFun = void (SprayToolbar::*)();
+
     Glib::RefPtr<Gtk::Builder> _builder;
 
     std::vector<Gtk::RadioButton *> _mode_buttons;
 
-    UI::Widget::SpinButton *_width_item;
-    UI::Widget::SpinButton *_population_item;
+    UI::Widget::SpinButton &_width_item;
+    UI::Widget::SpinButton &_population_item;
 
-    Gtk::Box *_rotation_box;
-    UI::Widget::SpinButton *_rotation_item;
-    UI::Widget::SpinButton *_scale_item;
-    Gtk::ToggleButton *_use_pressure_scale_btn;
+    Gtk::Box &_rotation_box;
+    UI::Widget::SpinButton &_rotation_item;
+    UI::Widget::SpinButton &_scale_item;
+    Gtk::ToggleButton &_use_pressure_scale_btn;
 
-    UI::Widget::SpinButton *_sd_item;
-    UI::Widget::SpinButton *_mean_item;
+    UI::Widget::SpinButton &_sd_item;
+    UI::Widget::SpinButton &_mean_item;
 
-    Gtk::ToggleButton *_over_no_transparent_btn;
-    Gtk::ToggleButton *_over_transparent_btn;
-    Gtk::ToggleButton *_pick_no_overlap_btn;
-    Gtk::ToggleButton *_no_overlap_btn;
-    Gtk::Box *_offset_box;
-    UI::Widget::SpinButton *_offset_item;
+    Gtk::ToggleButton &_over_no_transparent_btn;
+    Gtk::ToggleButton &_over_transparent_btn;
+    Gtk::ToggleButton &_pick_no_overlap_btn;
+    Gtk::ToggleButton &_no_overlap_btn;
+    Gtk::Box &_offset_box;
+    UI::Widget::SpinButton &_offset_item;
 
-    Gtk::ToggleButton *_picker_btn;
-    Gtk::ToggleButton *_pick_fill_btn;
-    Gtk::ToggleButton *_pick_stroke_btn;
-    Gtk::ToggleButton *_pick_inverse_value_btn;
-    Gtk::ToggleButton *_pick_center_btn;
+    Gtk::ToggleButton &_picker_btn;
+    Gtk::ToggleButton &_pick_fill_btn;
+    Gtk::ToggleButton &_pick_stroke_btn;
+    Gtk::ToggleButton &_pick_inverse_value_btn;
+    Gtk::ToggleButton &_pick_center_btn;
 
     // TODO: Check if these can be moved to the constructor.
     std::unique_ptr<SimplePrefPusher> _use_pressure_width_pusher;
@@ -89,17 +90,18 @@ private:
     void update_widgets();
     void scale_value_changed();
     void offset_value_changed();
-    void on_pref_toggled(Gtk::ToggleButton *btn, const Glib::ustring &path);
+    void on_pref_toggled(bool active, const Glib::ustring &path);
     void toggle_no_overlap();
     void toggle_pressure_scale();
     void toggle_picker();
-    void setup_derived_spin_button(UI::Widget::SpinButton *btn, Glib::ustring const &name, double default_value);
+    void setup_derived_spin_button(UI::Widget::SpinButton &btn, Glib::ustring const &name, double default_value,
+                                   ValueChangedMemFun const value_changed_mem_fun);
 
 protected:
     SprayToolbar(SPDesktop *desktop);
 
 public:
-    static GtkWidget * create(SPDesktop *desktop);
+    static GtkWidget *create(SPDesktop *desktop);
 
     void set_mode(int mode);
 };

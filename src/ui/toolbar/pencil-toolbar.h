@@ -19,6 +19,7 @@
  *   Tavmjong Bah <tavmjong@free.fr>
  *   Abhishek Sharma
  *   Kris De Gussem <Kris.DeGussem@gmail.com>
+ *   Vaibhav Malik <vaibhavmalik2018@gmail.com>
  *
  * Copyright (C) 2004 David Turner
  * Copyright (C) 2003 MenTaLguY
@@ -29,17 +30,10 @@
  */
 
 #include <gtkmm/builder.h>
-#include <vector>
 
 #include "toolbar.h"
 
 class SPDesktop;
-
-namespace Gtk {
-class RadioButton;
-class ToggleButton;
-class Button;
-}
 
 namespace Inkscape {
 namespace XML {
@@ -55,32 +49,35 @@ class ComboToolItem;
 namespace Toolbar {
 class PencilToolbar : public Toolbar {
 private:
+    using ValueChangedMemFun = void (PencilToolbar::*)();
+
     Glib::RefPtr<Gtk::Builder> _builder;
 
     bool const _tool_is_pencil;
     std::vector<Gtk::RadioButton *> _mode_buttons;
-    Gtk::Button *_flatten_spiro_bspline_btn;
+    Gtk::Button &_flatten_spiro_bspline_btn;
 
-    Gtk::ToggleButton *_usepressure_btn;
-    Gtk::Box *_minpressure_box;
-    UI::Widget::SpinButton *_minpressure_item;
-    Gtk::Box *_maxpressure_box;
-    UI::Widget::SpinButton *_maxpressure_item;
+    Gtk::ToggleButton &_usepressure_btn;
+    Gtk::Box &_minpressure_box;
+    UI::Widget::SpinButton &_minpressure_item;
+    Gtk::Box &_maxpressure_box;
+    UI::Widget::SpinButton &_maxpressure_item;
     UI::Widget::ComboToolItem *_cap_item;
-    UI::Widget::SpinButton *_tolerance_item;
-    Gtk::ToggleButton *_simplify_btn;
-    Gtk::Button *_flatten_simplify_btn;
+    UI::Widget::SpinButton &_tolerance_item;
+    Gtk::ToggleButton &_simplify_btn;
+    Gtk::Button &_flatten_simplify_btn;
 
     UI::Widget::ComboToolItem *_shape_item;
-    Gtk::Box *_shapescale_box;
-    UI::Widget::SpinButton *_shapescale_item;
+    Gtk::Box &_shapescale_box;
+    UI::Widget::SpinButton &_shapescale_item;
 
     XML::Node *_repr = nullptr;
     bool _freeze = false;
 
     void add_powerstroke_cap();
     void add_shape_option();
-    void setup_derived_spin_button(UI::Widget::SpinButton *btn, Glib::ustring const &name, double default_value);
+    void setup_derived_spin_button(UI::Widget::SpinButton &btn, Glib::ustring const &name, double default_value,
+                                   ValueChangedMemFun const value_changed_mem_fun);
     void hide_extra_widgets();
     void mode_changed(int mode);
     Glib::ustring const freehand_tool_name();
@@ -101,8 +98,8 @@ protected:
   ~PencilToolbar() override;
 
 public:
-    static GtkWidget * create_pencil(SPDesktop *desktop);
-    static GtkWidget * create_pen(SPDesktop *desktop);
+    static GtkWidget *create_pencil(SPDesktop *desktop);
+    static GtkWidget *create_pen(SPDesktop *desktop);
 };
 }
 }

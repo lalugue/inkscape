@@ -19,6 +19,7 @@
  *   Tavmjong Bah <tavmjong@free.fr>
  *   Abhishek Sharma
  *   Kris De Gussem <Kris.DeGussem@gmail.com>
+ *   Vaibhav Malik <vaibhavmalik2018@gmail.com>
  *
  * Copyright (C) 2004 David Turner
  * Copyright (C) 2003 MenTaLguY
@@ -42,9 +43,12 @@ namespace Toolbar {
 class DropperToolbar : public Toolbar {
 private:
     Glib::RefPtr<Gtk::Builder> _builder;
-    // Tool widgets
-    Gtk::ToggleButton *_pick_alpha_button; ///< Control whether to pick opacity
-    Gtk::ToggleButton *_set_alpha_button;  ///< Control whether to set opacity
+
+    // Control whether to pick opacity.
+    Gtk::ToggleButton &_pick_alpha_btn;
+
+    // Control whether to set opacity.
+    Gtk::ToggleButton &_set_alpha_btn;
 
     // Event handlers
     void on_pick_alpha_button_toggled();
@@ -54,7 +58,7 @@ protected:
     DropperToolbar(SPDesktop *desktop);
 
 public:
-    static GtkWidget * create(SPDesktop *desktop);
+    static GtkWidget *create(SPDesktop *desktop);
 };
 }
 }

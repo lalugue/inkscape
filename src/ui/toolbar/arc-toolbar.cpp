@@ -16,6 +16,7 @@
  *   Tavmjong Bah <tavmjong@free.fr>
  *   Abhishek Sharma
  *   Kris De Gussem <Kris.DeGussem@gmail.com>
+ *   Vaibhav Malik <vaibhavmalik2018@gmail.com>
  *
  * Copyright (C) 2004 David Turner
  * Copyright (C) 2003 MenTaLguY
@@ -35,6 +36,7 @@
 #include "object/sp-ellipse.h"
 #include "object/sp-namedview.h"
 #include "selection.h"
+#include "ui/builder-utils.h"
 #include "ui/icon-names.h"
 #include "ui/tools/arc-tool.h"
 #include "ui/widget/canvas.h"
@@ -55,52 +57,31 @@ ArcToolbar::ArcToolbar(SPDesktop *desktop)
     : Toolbar(desktop)
     , _tracker(new UnitTracker(Inkscape::Util::UNIT_TYPE_LINEAR))
     , _builder(initialize_builder("toolbar-arc.ui"))
+    , _mode_item(get_widget<Gtk::Label>(_builder, "_mode_item"))
+    , _rx_item(get_derived_widget<UI::Widget::SpinButton>(_builder, "_rx_item"))
+    , _ry_item(get_derived_widget<UI::Widget::SpinButton>(_builder, "_ry_item"))
+    , _start_item(get_derived_widget<UI::Widget::SpinButton>(_builder, "_start_item"))
+    , _end_item(get_derived_widget<UI::Widget::SpinButton>(_builder, "_end_item"))
+    , _make_whole(get_widget<Gtk::Button>(_builder, "_make_whole"))
 {
-    Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-
-    _builder->get_widget("arc-toolbar", _toolbar);
-    if (!_toolbar) {
-        std::cerr << "InkscapeWindow: Failed to load arc toolbar!" << std::endl;
-    }
-
-    Gtk::Box *unit_menu_box;
-
-    Gtk::RadioButton *slice_btn;
-    Gtk::RadioButton *arc_btn;
-    Gtk::RadioButton *chord_btn;
-
-    _builder->get_widget("_mode_item", _mode_item);
-
-    _builder->get_widget_derived("_rx_item", _rx_item);
-    _builder->get_widget_derived("_ry_item", _ry_item);
-
-    _builder->get_widget("unit_menu_box", unit_menu_box);
-
-    _builder->get_widget_derived("_start_item", _start_item);
-    _builder->get_widget_derived("_end_item", _end_item);
-
-    _builder->get_widget("slice_btn", slice_btn);
-    _builder->get_widget("arc_btn", arc_btn);
-    _builder->get_widget("chord_btn", chord_btn);
-
-    _builder->get_widget("_make_whole", _make_whole);
+    _toolbar = &get_widget<Gtk::Box>(_builder, "arc-toolbar");
 
     auto init_units = desktop->getNamedView()->display_units;
     _tracker->setActiveUnit(init_units);
 
     auto unit_menu = _tracker->create_tool_item(_("Units"), (""));
-    unit_menu_box->add(*unit_menu);
+    get_widget<Gtk::Box>(_builder, "unit_menu_box").add(*unit_menu);
 
     setup_derived_spin_button(_rx_item, "rx");
     setup_derived_spin_button(_ry_item, "ry");
     setup_startend_button(_start_item, "start");
     setup_startend_button(_end_item, "end");
 
-    _type_buttons.push_back(slice_btn);
-    _type_buttons.push_back(arc_btn);
-    _type_buttons.push_back(chord_btn);
+    _type_buttons.push_back(&get_widget<Gtk::RadioButton>(_builder, "slice_btn"));
+    _type_buttons.push_back(&get_widget<Gtk::RadioButton>(_builder, "arc_btn"));
+    _type_buttons.push_back(&get_widget<Gtk::RadioButton>(_builder, "chord_btn"));
 
-    gint type = prefs->getInt("/tools/shapes/arc/arc_type", 0);
+    int type = Preferences::get()->getInt("/tools/shapes/arc/arc_type", 0);
     _type_buttons[type]->set_active();
     int btn_index = 0;
 
@@ -108,20 +89,15 @@ ArcToolbar::ArcToolbar(SPDesktop *desktop)
         btn->signal_clicked().connect(sigc::bind(sigc::mem_fun(*this, &ArcToolbar::type_changed), btn_index++));
     }
 
+    // TODO: Get rid of pointers.
     // Fetch all the ToolbarMenuButtons at once from the UI file
     // Menu Button #1
-    Gtk::Box *popover_box1;
-    _builder->get_widget("popover_box1", popover_box1);
-
-    Inkscape::UI::Widget::ToolbarMenuButton *menu_btn1 = nullptr;
-    _builder->get_widget_derived("menu_btn1", menu_btn1);
+    auto popover_box1 = &get_widget<Gtk::Box>(_builder, "popover_box1");
+    auto menu_btn1 = &get_derived_widget<UI::Widget::ToolbarMenuButton>(_builder, "menu_btn1");
 
     // Menu Button #2
-    Gtk::Box *popover_box2;
-    _builder->get_widget("popover_box2", popover_box2);
-
-    Inkscape::UI::Widget::ToolbarMenuButton *menu_btn2 = nullptr;
-    _builder->get_widget_derived("menu_btn2", menu_btn2);
+    auto popover_box2 = &get_widget<Gtk::Box>(_builder, "popover_box2");
+    auto menu_btn2 = &get_derived_widget<UI::Widget::ToolbarMenuButton>(_builder, "menu_btn2");
 
     // Initialize all the ToolbarMenuButtons only after all the children of the
     // toolbar have been fetched. Otherwise, the children to be moved in the
@@ -137,48 +113,46 @@ ArcToolbar::ArcToolbar(SPDesktop *desktop)
 
     add(*_toolbar);
 
-    _make_whole->signal_clicked().connect(sigc::mem_fun(*this, &ArcToolbar::defaults));
+    _make_whole.signal_clicked().connect(sigc::mem_fun(*this, &ArcToolbar::defaults));
 
     _single = true;
 
     // sensitivize make whole and open checkbox
-    sensitivize(_start_item->get_adjustment()->get_value(), _end_item->get_adjustment()->get_value());
+    sensitivize(_start_item.get_adjustment()->get_value(), _end_item.get_adjustment()->get_value());
 
     desktop->connectEventContextChanged(sigc::mem_fun(*this, &ArcToolbar::check_ec));
 
     show_all();
 }
 
-void ArcToolbar::setup_derived_spin_button(UI::Widget::SpinButton *btn, Glib::ustring const &name)
+void ArcToolbar::setup_derived_spin_button(UI::Widget::SpinButton &btn, Glib::ustring const &name)
 {
     auto init_units = _desktop->getNamedView()->display_units;
-    Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-    auto adj = btn->get_adjustment();
+    auto adj = btn.get_adjustment();
     const Glib::ustring path = "/tools/shapes/arc/" + static_cast<Glib::ustring>(name);
-    auto val = prefs->getDouble(path, 0);
+    auto val = Preferences::get()->getDouble(path, 0);
     val = Quantity::convert(val, "px", init_units);
     adj->set_value(val);
 
     adj->signal_value_changed().connect(sigc::bind(sigc::mem_fun(*this, &ArcToolbar::value_changed), adj, name));
     _tracker->addAdjustment(adj->gobj());
 
-    btn->addUnitTracker(_tracker.get());
-    btn->set_defocus_widget(_desktop->getCanvas());
-    btn->set_sensitive(false);
+    btn.addUnitTracker(_tracker.get());
+    btn.set_defocus_widget(_desktop->getCanvas());
+    btn.set_sensitive(false);
 }
 
-void ArcToolbar::setup_startend_button(UI::Widget::SpinButton *btn, Glib::ustring const &name)
+void ArcToolbar::setup_startend_button(UI::Widget::SpinButton &btn, Glib::ustring const &name)
 {
-    Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-    auto adj = btn->get_adjustment();
+    auto adj = btn.get_adjustment();
     const Glib::ustring path = "/tools/shapes/arc/" + name;
-    auto val = prefs->getDouble(path, 0);
+    auto val = Preferences::get()->getDouble(path, 0);
     adj->set_value(val);
 
-    btn->set_defocus_widget(_desktop->getCanvas());
+    btn.set_defocus_widget(_desktop->getCanvas());
 
     // Using the end item's adjustment when the name is "start" is intentional.
-    auto adjustment = name == "start" ? _end_item->get_adjustment() : _start_item->get_adjustment();
+    auto adjustment = name == "start" ? _end_item.get_adjustment() : _start_item.get_adjustment();
     adj->signal_value_changed().connect(
         sigc::bind(sigc::mem_fun(*this, &ArcToolbar::startend_value_changed), adj, name, std::move(adjustment)));
 }
@@ -213,9 +187,8 @@ void ArcToolbar::value_changed(Glib::RefPtr<Gtk::Adjustment> &adj, Glib::ustring
     SPDocument* document = _desktop->getDocument();
 
     if (DocumentUndo::getUndoSensitive(document)) {
-        Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-        prefs->setDouble(Glib::ustring("/tools/shapes/arc/") + value_name,
-            Quantity::convert(adj->get_value(), unit, "px"));
+        Preferences::get()->setDouble(Glib::ustring("/tools/shapes/arc/") + value_name,
+                                      Quantity::convert(adj->get_value(), unit, "px"));
     }
 
     // quit if run by the attr_changed listener
@@ -261,8 +234,7 @@ void ArcToolbar::startend_value_changed(Glib::RefPtr<Gtk::Adjustment> &adj, Glib
 
 {
     if (DocumentUndo::getUndoSensitive(_desktop->getDocument())) {
-        Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-        prefs->setDouble(Glib::ustring("/tools/shapes/arc/") + value_name, adj->get_value());
+        Preferences::get()->setDouble(Glib::ustring("/tools/shapes/arc/") + value_name, adj->get_value());
     }
 
     // quit if run by the attr_changed listener
@@ -308,8 +280,7 @@ void ArcToolbar::startend_value_changed(Glib::RefPtr<Gtk::Adjustment> &adj, Glib
 void ArcToolbar::type_changed(int type)
 {
     if (DocumentUndo::getUndoSensitive(_desktop->getDocument())) {
-        Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-        prefs->setInt("/tools/shapes/arc/arc_type", type);
+        Preferences::get()->setInt("/tools/shapes/arc/arc_type", type);
     }
 
     // quit if run by the attr_changed listener
@@ -361,8 +332,8 @@ void ArcToolbar::type_changed(int type)
 
 void ArcToolbar::defaults()
 {
-    _start_item->get_adjustment()->set_value(0.0);
-    _end_item->get_adjustment()->set_value(0.0);
+    _start_item.get_adjustment()->set_value(0.0);
+    _end_item.get_adjustment()->set_value(0.0);
 
     if(_desktop->getCanvas()) _desktop->getCanvas()->grab_focus();
 }
@@ -372,11 +343,11 @@ void ArcToolbar::sensitivize(double v1, double v2)
     if (v1 == 0 && v2 == 0) {
         if (_single) { // only for a single selected ellipse (for now)
             for (auto btn : _type_buttons) btn->set_sensitive(false);
-            _make_whole->set_sensitive(false);
+            _make_whole.set_sensitive(false);
         }
     } else {
         for (auto btn : _type_buttons) btn->set_sensitive(true);
-        _make_whole->set_sensitive(true);
+        _make_whole.set_sensitive(true);
     }
 }
 
@@ -421,12 +392,12 @@ void ArcToolbar::selection_changed(Inkscape::Selection *selection)
 
     _single = false;
     if (n_selected == 0) {
-        _mode_item->set_markup(_("<b>New:</b>"));
+        _mode_item.set_markup(_("<b>New:</b>"));
     } else if (n_selected == 1) {
         _single = true;
-        _mode_item->set_markup(_("<b>Change:</b>"));
-        _rx_item->set_sensitive(true);
-        _ry_item->set_sensitive(true);
+        _mode_item.set_markup(_("<b>Change:</b>"));
+        _rx_item.set_sensitive(true);
+        _ry_item.set_sensitive(true);
 
         if (repr) {
             _repr = repr;
@@ -438,7 +409,7 @@ void ArcToolbar::selection_changed(Inkscape::Selection *selection)
     } else {
         // FIXME: implement averaging of all parameters for multiple selected
         //gtk_label_set_markup(GTK_LABEL(l), _("<b>Average:</b>"));
-        _mode_item->set_markup(_("<b>Change:</b>"));
+        _mode_item.set_markup(_("<b>Change:</b>"));
         sensitivize( 1, 0 );
     }
 }
@@ -462,17 +433,17 @@ void ArcToolbar::notifyAttributeChanged(Inkscape::XML::Node &repr, GQuark,
 
         gdouble rx = ge->getVisibleRx();
         gdouble ry = ge->getVisibleRy();
-        _rx_item->get_adjustment()->set_value(Quantity::convert(rx, "px", unit));
-        _ry_item->get_adjustment()->set_value(Quantity::convert(ry, "px", unit));
+        _rx_item.get_adjustment()->set_value(Quantity::convert(rx, "px", unit));
+        _ry_item.get_adjustment()->set_value(Quantity::convert(ry, "px", unit));
     }
 
     gdouble start = repr.getAttributeDouble("sodipodi:start", 0.0);;
     gdouble end = repr.getAttributeDouble("sodipodi:end", 0.0);
 
-    _start_item->get_adjustment()->set_value(mod360((start * 180) / M_PI));
-    _end_item->get_adjustment()->set_value(mod360((end * 180) / M_PI));
+    _start_item.get_adjustment()->set_value(mod360((start * 180) / M_PI));
+    _end_item.get_adjustment()->set_value(mod360((end * 180) / M_PI));
 
-    sensitivize(_start_item->get_adjustment()->get_value(), _end_item->get_adjustment()->get_value());
+    sensitivize(_start_item.get_adjustment()->get_value(), _end_item.get_adjustment()->get_value());
 
     char const *arctypestr = nullptr;
     arctypestr = repr.attribute("sodipodi:arc-type");

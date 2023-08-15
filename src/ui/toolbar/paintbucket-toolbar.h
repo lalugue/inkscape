@@ -19,6 +19,7 @@
  *   Tavmjong Bah <tavmjong@free.fr>
  *   Abhishek Sharma
  *   Kris De Gussem <Kris.DeGussem@gmail.com>
+ *   Vaibhav Malik <vaibhavmalik2018@gmail.com>
  *
  * Copyright (C) 2004 David Turner
  * Copyright (C) 2003 MenTaLguY
@@ -52,6 +53,8 @@ namespace Toolbar {
 
 class PaintbucketToolbar final : public Toolbar {
 private:
+    using ValueChangedMemFun = void (PaintbucketToolbar::*)();
+
     Glib::RefPtr<Gtk::Builder> _builder;
 
     std::unique_ptr<UI::Widget::UnitTracker> _tracker;
@@ -59,10 +62,11 @@ private:
     UI::Widget::ComboToolItem *_channels_item;
     UI::Widget::ComboToolItem *_autogap_item;
 
-    UI::Widget::SpinButton *_threshold_item;
-    UI::Widget::SpinButton *_offset_item;
+    UI::Widget::SpinButton &_threshold_item;
+    UI::Widget::SpinButton &_offset_item;
 
-    void setup_derived_spin_button(UI::Widget::SpinButton *btn, Glib::ustring const &name, double default_value);
+    void setup_derived_spin_button(UI::Widget::SpinButton &btn, Glib::ustring const &name, double default_value,
+                                   ValueChangedMemFun const value_changed_mem_fun);
     void channels_changed(int channels);
     void threshold_changed();
     void offset_changed();
@@ -73,7 +77,7 @@ protected:
     PaintbucketToolbar(SPDesktop *desktop);
 
 public:
-    static GtkWidget * create(SPDesktop *desktop);
+    static GtkWidget *create(SPDesktop *desktop);
 };
 
 } // namespace Toolbar

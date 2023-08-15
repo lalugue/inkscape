@@ -19,6 +19,7 @@
  *   Tavmjong Bah <tavmjong@free.fr>
  *   Abhishek Sharma
  *   Kris De Gussem <Kris.DeGussem@gmail.com>
+ *   Vaibhav Malik <vaibhavmalik2018@gmail.com>
  *
  * Copyright (C) 2004 David Turner
  * Copyright (C) 2003 MenTaLguY
@@ -67,16 +68,16 @@ private:
     std::unique_ptr<UI::SimplePrefPusher> _pusher_edit_clipping_paths;
     std::unique_ptr<UI::SimplePrefPusher> _pusher_edit_masks;
 
-    Gtk::Button *_nodes_lpeedit_item;
+    Gtk::Button &_nodes_lpeedit_btn;
 
-    Gtk::ToggleButton *_show_helper_path_item;
-    Gtk::ToggleButton *_show_handles_item;
-    Gtk::ToggleButton *_show_transform_handles_item;
-    Gtk::ToggleButton *_object_edit_mask_path_item;
-    Gtk::ToggleButton *_object_edit_clip_path_item;
+    Gtk::ToggleButton *_show_helper_path_btn;
+    Gtk::ToggleButton *_show_handles_btn;
+    Gtk::ToggleButton *_show_transform_handles_btn;
+    Gtk::ToggleButton *_object_edit_mask_path_btn;
+    Gtk::ToggleButton *_object_edit_clip_path_btn;
 
-    UI::Widget::SpinButton *_nodes_x_item;
-    UI::Widget::SpinButton *_nodes_y_item;
+    UI::Widget::SpinButton &_nodes_x_item;
+    UI::Widget::SpinButton &_nodes_y_item;
 
     bool _freeze;
 
@@ -109,10 +110,10 @@ private:
 
 protected:
     NodeToolbar(SPDesktop *desktop);
-    void setup_derived_spin_button(Inkscape::UI::Widget::SpinButton *btn, Glib::ustring const &name);
+    void setup_derived_spin_button(Inkscape::UI::Widget::SpinButton &btn, Glib::ustring const &name);
 
 public:
-    static GtkWidget * create(SPDesktop *desktop);
+    static GtkWidget *create(SPDesktop *desktop);
 };
 
 } // namespace Toolbar

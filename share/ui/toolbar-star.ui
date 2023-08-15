@@ -355,7 +355,7 @@
       </packing>
     </child>
     <child>
-      <object class="GtkButton" id="_reset_item">
+      <object class="GtkButton" id="reset_btn">
         <property name="visible">True</property>
         <property name="can-focus">True</property>
         <property name="receives-default">True</property>
@@ -370,5 +370,8 @@
         <property name="position">9</property>
       </packing>
     </child>
+    <style>
+      <class name="toolbar"/>
+    </style>
   </object>
 </interface>

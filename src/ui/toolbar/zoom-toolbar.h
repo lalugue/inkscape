@@ -19,6 +19,7 @@
  *   Tavmjong Bah <tavmjong@free.fr>
  *   Abhishek Sharma
  *   Kris De Gussem <Kris.DeGussem@gmail.com>
+ *   Vaibhav Malik <vaibhavmalik2018@gmail.com>
  *
  * Copyright (C) 2004 David Turner
  * Copyright (C) 2003 MenTaLguY
@@ -27,6 +28,8 @@
  *
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
+
+#include <gtkmm/builder.h>
 
 #include "toolbar.h"
 
@@ -37,12 +40,16 @@ namespace Toolbar {
 /**
  * \brief A toolbar for controlling the zoom
  */
-class ZoomToolbar {
+class ZoomToolbar : public Toolbar
+{
+private:
+    Glib::RefPtr<Gtk::Builder> _builder;
+
 protected:
-    ZoomToolbar(SPDesktop *desktop) {};
+    ZoomToolbar(SPDesktop *desktop);
 
 public:
-    static GtkWidget * create(SPDesktop *desktop);
+    static GtkWidget *create(SPDesktop *desktop);
 };
 }
 }

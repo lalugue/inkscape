@@ -5,6 +5,7 @@
  */
 /* Authors:
  *   Martin Owens <doctormo@geek-2.com>
+ *   Vaibhav Malik <vaibhavmalik2018@gmail.com>
  *
  * Copyright (C) 2021 Martin Owens
  *
@@ -88,31 +89,26 @@ private:
     Inkscape::auto_connection _size_edited;
 
     bool was_referenced;
-    Glib::RefPtr<Gtk::Builder> builder;
-    Gtk::ComboBoxText *combo_page_sizes;
-    Gtk::Entry *entry_page_sizes;
-    Gtk::Entry *text_page_margins;
-    Gtk::Entry *text_page_bleeds;
-    Gtk::Entry *text_page_label;
-    Gtk::Entry *text_page_width;
-    Gtk::Entry *text_page_height;
-    Gtk::Label *label_page_pos;
-    Gtk::Button *btn_page_backward;
-    Gtk::Button *btn_page_foreward;
-    Gtk::Button *btn_page_delete;
-    Gtk::Button *btn_move_toggle;
-    Gtk::Separator *sep1;
+    Glib::RefPtr<Gtk::Builder> _builder;
+    Gtk::ComboBoxText &_combo_page_sizes;
+    Gtk::Entry *_entry_page_sizes;
+    Gtk::Entry &_text_page_margins;
+    Gtk::Entry &_text_page_bleeds;
+    Gtk::Entry &_text_page_label;
+    Gtk::Label &_label_page_pos;
+    Gtk::Button &_btn_page_backward;
+    Gtk::Button &_btn_page_foreward;
+    Gtk::Button &_btn_page_delete;
+    Gtk::Button &_btn_move_toggle;
+    Gtk::Separator &_sep1;
 
-    Glib::RefPtr<Gtk::ListStore> sizes_list;
-    Glib::RefPtr<Gtk::ListStore> sizes_search;
-    Glib::RefPtr<Gtk::EntryCompletion> sizes_searcher;
+    Glib::RefPtr<Gtk::ListStore> _sizes_list;
+    Glib::RefPtr<Gtk::ListStore> _sizes_search;
 
-    Gtk::Popover *margin_popover;
-
-    Inkscape::UI::Widget::MathSpinButton *margin_top;
-    Inkscape::UI::Widget::MathSpinButton *margin_right;
-    Inkscape::UI::Widget::MathSpinButton *margin_bottom;
-    Inkscape::UI::Widget::MathSpinButton *margin_left;
+    Inkscape::UI::Widget::MathSpinButton &_margin_top;
+    Inkscape::UI::Widget::MathSpinButton &_margin_right;
+    Inkscape::UI::Widget::MathSpinButton &_margin_bottom;
+    Inkscape::UI::Widget::MathSpinButton &_margin_left;
 
     double _unit_to_size(std::string number, std::string unit_str, std::string const &backup);
 };

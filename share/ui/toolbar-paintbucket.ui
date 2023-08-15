@@ -181,7 +181,7 @@
       </packing>
     </child>
     <child>
-      <object class="GtkBox" id="units_menu_box">
+      <object class="GtkBox" id="unit_menu_box">
         <property name="visible">True</property>
         <property name="can-focus">False</property>
         <property name="margin-end">3</property>

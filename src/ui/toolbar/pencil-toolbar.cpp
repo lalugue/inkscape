@@ -16,6 +16,7 @@
  *   Tavmjong Bah <tavmjong@free.fr>
  *   Abhishek Sharma
  *   Kris De Gussem <Kris.DeGussem@gmail.com>
+ *   Vaibhav Malik <vaibhavmalik2018@gmail.com>
  *
  * Copyright (C) 2004 David Turner
  * Copyright (C) 2003 MenTaLguY
@@ -28,7 +29,6 @@
 #include "pencil-toolbar.h"
 
 #include <glibmm/i18n.h>
-#include <gtkmm.h>
 
 #include "desktop.h"
 #include "display/curve.h"
@@ -42,10 +42,12 @@
 #include "live_effects/lpeobject.h"
 #include "object/sp-shape.h"
 #include "selection.h"
+#include "ui/builder-utils.h"
 #include "ui/icon-names.h"
 #include "ui/tools/freehand-base.h"
 #include "ui/tools/pen-tool.h"
 #include "ui/tools/pencil-tool.h"
+#include "ui/util.h"
 #include "ui/widget/canvas.h"
 #include "ui/widget/combo-tool-item.h"
 #include "ui/widget/spinbutton.h"
@@ -58,53 +60,34 @@ PencilToolbar::PencilToolbar(SPDesktop *desktop, bool pencil_mode)
     : Toolbar(desktop)
     , _tool_is_pencil(pencil_mode)
     , _builder(initialize_builder("toolbar-pencil.ui"))
+    , _flatten_spiro_bspline_btn(get_widget<Gtk::Button>(_builder, "_flatten_spiro_bspline_btn"))
+    , _usepressure_btn(get_widget<Gtk::ToggleButton>(_builder, "_usepressure_btn"))
+    , _minpressure_box(get_widget<Gtk::Box>(_builder, "_minpressure_box"))
+    , _minpressure_item(get_derived_widget<UI::Widget::SpinButton>(_builder, "_minpressure_item"))
+    , _maxpressure_box(get_widget<Gtk::Box>(_builder, "_maxpressure_box"))
+    , _maxpressure_item(get_derived_widget<UI::Widget::SpinButton>(_builder, "_maxpressure_item"))
+    , _tolerance_item(get_derived_widget<UI::Widget::SpinButton>(_builder, "_tolerance_item"))
+    , _simplify_btn(get_widget<Gtk::ToggleButton>(_builder, "_simplify_btn"))
+    , _flatten_simplify_btn(get_widget<Gtk::Button>(_builder, "_flatten_simplify_btn"))
+    , _shapescale_box(get_widget<Gtk::Box>(_builder, "_shapescale_box"))
+    , _shapescale_item(get_derived_widget<UI::Widget::SpinButton>(_builder, "_shapescale_item"))
 {
-    _builder->get_widget("pencil-toolbar", _toolbar);
-    if (!_toolbar) {
-        std::string const tool_name = _tool_is_pencil ? "pencil" : "pen";
-        std::cerr << "InkscapeWindow: Failed to load" << tool_name << "toolbar!" << std::endl;
-    }
-
-    Gtk::Box *mode_buttons_box;
-    Gtk::RadioButton *zigzag_btn;
-    Gtk::RadioButton *paraxial_btn;
-
-    Gtk::Box *pencil_only_box;
-
-    _builder->get_widget("mode_buttons_box", mode_buttons_box);
-    _builder->get_widget("zigzag_btn", zigzag_btn);
-    _builder->get_widget("paraxial_btn", paraxial_btn);
-
-    _builder->get_widget("_flatten_spiro_bspline_btn", _flatten_spiro_bspline_btn);
-
-    _builder->get_widget("_usepressure_btn", _usepressure_btn);
-
-    _builder->get_widget("pencil_only_box", pencil_only_box);
-    _builder->get_widget("_minpressure_box", _minpressure_box);
-    _builder->get_widget_derived("_minpressure_item", _minpressure_item);
-    _builder->get_widget("_maxpressure_box", _maxpressure_box);
-    _builder->get_widget_derived("_maxpressure_item", _maxpressure_item);
-    _builder->get_widget_derived("_tolerance_item", _tolerance_item);
-    _builder->get_widget("_simplify_btn", _simplify_btn);
-    _builder->get_widget("_flatten_simplify_btn", _flatten_simplify_btn);
-
-    _builder->get_widget("_shapescale_box", _shapescale_box);
-    _builder->get_widget_derived("_shapescale_item", _shapescale_item);
+    _toolbar = &get_widget<Gtk::Box>(_builder, "pencil-toolbar");
 
     auto prefs = Inkscape::Preferences::get();
 
     // Configure mode buttons
-    int btn_index = 0;
+    for_each_child(get_widget<Gtk::Box>(_builder, "mode_buttons_box"), [=](Gtk::Widget &item) {
+        static int btn_index = 0;
+        auto &btn = dynamic_cast<Gtk::RadioButton &>(item);
+        _mode_buttons.push_back(&btn);
+        btn.signal_clicked().connect(sigc::bind(sigc::mem_fun(*this, &PencilToolbar::mode_changed), btn_index++));
 
-    for (auto child : mode_buttons_box->get_children()) {
-        auto btn = dynamic_cast<Gtk::RadioButton *>(child);
-        _mode_buttons.push_back(btn);
-
-        btn->signal_clicked().connect(sigc::bind(sigc::mem_fun(*this, &PencilToolbar::mode_changed), btn_index++));
-    }
+        return ForEachResult::_continue;
+    });
 
     // Configure LPE bspline spiro flatten button.
-    _flatten_spiro_bspline_btn->signal_clicked().connect(sigc::mem_fun(*this, &PencilToolbar::flatten_spiro_bspline));
+    _flatten_spiro_bspline_btn.signal_clicked().connect(sigc::mem_fun(*this, &PencilToolbar::flatten_spiro_bspline));
 
     int freehandMode = prefs->getInt(
         (_tool_is_pencil ? "/tools/freehand/pencil/freehand-mode" : "/tools/freehand/pen/freehand-mode"), 0);
@@ -115,39 +98,36 @@ PencilToolbar::PencilToolbar(SPDesktop *desktop, bool pencil_mode)
 
     if (_tool_is_pencil) {
         // Setup the spin buttons.
-        setup_derived_spin_button(_minpressure_item, "minpressure", 0);
-        setup_derived_spin_button(_maxpressure_item, "maxpressure", 30);
-        setup_derived_spin_button(_tolerance_item, "tolerance", 3.0);
+        setup_derived_spin_button(_minpressure_item, "minpressure", 0, &PencilToolbar::minpressure_value_changed);
+        setup_derived_spin_button(_maxpressure_item, "maxpressure", 30, &PencilToolbar::maxpressure_value_changed);
+        setup_derived_spin_button(_tolerance_item, "tolerance", 3.0, &PencilToolbar::tolerance_value_changed);
 
         // Configure usepressure button.
         bool pressure = prefs->getBool("/tools/freehand/pencil/pressure", false);
-        _usepressure_btn->set_active(pressure);
-        _usepressure_btn->signal_toggled().connect(sigc::mem_fun(*this, &PencilToolbar::use_pencil_pressure));
+        _usepressure_btn.set_active(pressure);
+        _usepressure_btn.signal_toggled().connect(sigc::mem_fun(*this, &PencilToolbar::use_pencil_pressure));
 
         // Powerstoke combo item.
         add_powerstroke_cap();
 
         // Configure LPE simplify based tolerance button.
-        _simplify_btn->set_active(prefs->getInt("/tools/freehand/pencil/simplify", 0));
-        _simplify_btn->signal_toggled().connect(sigc::mem_fun(*this, &PencilToolbar::simplify_lpe));
+        _simplify_btn.set_active(prefs->getInt("/tools/freehand/pencil/simplify", 0));
+        _simplify_btn.signal_toggled().connect(sigc::mem_fun(*this, &PencilToolbar::simplify_lpe));
 
         // Configure LPE simplify flatten button.
-        _flatten_simplify_btn->signal_clicked().connect(sigc::mem_fun(*this, &PencilToolbar::simplify_flatten));
+        _flatten_simplify_btn.signal_clicked().connect(sigc::mem_fun(*this, &PencilToolbar::simplify_flatten));
     }
 
     // Advanced shape options.
     add_shape_option();
 
     // Setup the spin buttons.
-    setup_derived_spin_button(_shapescale_item, "shapescale", 2.0);
+    setup_derived_spin_button(_shapescale_item, "shapescale", 2.0, &PencilToolbar::shapewidth_value_changed);
 
     // Fetch all the ToolbarMenuButtons at once from the UI file
     // Menu Button #1
-    Gtk::Box *popover_box1;
-    _builder->get_widget("popover_box1", popover_box1);
-
-    Inkscape::UI::Widget::ToolbarMenuButton *menu_btn1 = nullptr;
-    _builder->get_widget_derived("menu_btn1", menu_btn1);
+    auto popover_box1 = &get_widget<Gtk::Box>(_builder, "popover_box1");
+    auto menu_btn1 = &get_derived_widget<UI::Widget::ToolbarMenuButton>(_builder, "menu_btn1");
 
     // Initialize all the ToolbarMenuButtons only after all the children of the
     // toolbar have been fetched. Otherwise, the children to be moved in the
@@ -167,9 +147,6 @@ PencilToolbar::PencilToolbar(SPDesktop *desktop, bool pencil_mode)
 
 void PencilToolbar::add_powerstroke_cap()
 {
-    Gtk::Box *powerstroke_cap_box;
-    _builder->get_widget("powerstroke_cap_box", powerstroke_cap_box);
-
     // Powerstroke cap combo tool item.
     UI::Widget::ComboToolItemColumns columns;
 
@@ -194,14 +171,11 @@ void PencilToolbar::add_powerstroke_cap()
 
     _cap_item->signal_changed().connect(sigc::mem_fun(*this, &PencilToolbar::change_cap));
 
-    powerstroke_cap_box->add(*_cap_item);
+    get_widget<Gtk::Box>(_builder, "powerstroke_cap_box").add(*_cap_item);
 }
 
 void PencilToolbar::add_shape_option()
 {
-    Gtk::Box *shape_box;
-    _builder->get_widget("shape_box", shape_box);
-
     UI::Widget::ComboToolItemColumns columns;
 
     Glib::RefPtr<Gtk::ListStore> store = Gtk::ListStore::create(columns);
@@ -224,55 +198,41 @@ void PencilToolbar::add_shape_option()
         UI::Widget::ComboToolItem::create(_("Shape"), _("Shape of new paths drawn by this tool"), "Not Used", store));
     _shape_item->use_group_label(true);
 
-    auto prefs = Inkscape::Preferences::get();
-    int shape = prefs->getInt((_tool_is_pencil ? "/tools/freehand/pencil/shape" : "/tools/freehand/pen/shape"), 0);
+    int shape =
+        Preferences::get()->getInt((_tool_is_pencil ? "/tools/freehand/pencil/shape" : "/tools/freehand/pen/shape"), 0);
     _shape_item->set_active(shape);
 
     _shape_item->signal_changed().connect(sigc::mem_fun(*this, &PencilToolbar::change_shape));
-    shape_box->add(*_shape_item);
+    get_widget<Gtk::Box>(_builder, "shape_box").add(*_shape_item);
 }
 
-void PencilToolbar::setup_derived_spin_button(UI::Widget::SpinButton *btn, Glib::ustring const &name,
-                                              double default_value)
+void PencilToolbar::setup_derived_spin_button(UI::Widget::SpinButton &btn, Glib::ustring const &name,
+                                              double default_value, ValueChangedMemFun const value_changed_mem_fun)
 {
-    auto *prefs = Inkscape::Preferences::get();
+    auto prefs = Inkscape::Preferences::get();
     const Glib::ustring path = "/tools/freehand/pencil/" + name;
     auto val = prefs->getDouble(path, default_value);
 
-    auto adj = btn->get_adjustment();
+    auto adj = btn.get_adjustment();
     adj->set_value(val);
+    adj->signal_value_changed().connect(sigc::mem_fun(*this, value_changed_mem_fun));
 
-    if (name == "minpressure") {
-        adj->signal_value_changed().connect(sigc::mem_fun(*this, &PencilToolbar::minpressure_value_changed));
-    } else if (name == "maxpressure") {
-        adj->signal_value_changed().connect(sigc::mem_fun(*this, &PencilToolbar::maxpressure_value_changed));
-    } else if (name == "tolerance") {
-        adj->signal_value_changed().connect(sigc::mem_fun(*this, &PencilToolbar::tolerance_value_changed));
-    } else if (name == "shapescale") {
-        adj->signal_value_changed().connect(sigc::mem_fun(*this, &PencilToolbar::shapewidth_value_changed));
+    if (name == "shapescale") {
         int shape = prefs->getInt((_tool_is_pencil ? "/tools/freehand/pencil/shape" : "/tools/freehand/pen/shape"), 0);
         update_width_value(shape);
     }
 
-    btn->set_defocus_widget(_desktop->getCanvas());
+    btn.set_defocus_widget(_desktop->getCanvas());
 }
 
 void PencilToolbar::hide_extra_widgets()
 {
-    Gtk::RadioButton *zigzag_btn;
-    Gtk::RadioButton *paraxial_btn;
-    Gtk::Box *pencil_only_box;
-
-    _builder->get_widget("zigzag_btn", zigzag_btn);
-    _builder->get_widget("paraxial_btn", paraxial_btn);
-    _builder->get_widget("pencil_only_box", pencil_only_box);
-
     std::vector<Gtk::Widget *> pen_only_items;
-    pen_only_items.push_back(zigzag_btn);
-    pen_only_items.push_back(paraxial_btn);
+    pen_only_items.push_back(&get_widget<Gtk::RadioButton>(_builder, "zigzag_btn"));
+    pen_only_items.push_back(&get_widget<Gtk::RadioButton>(_builder, "paraxial_btn"));
 
     std::vector<Gtk::Widget *> pencil_only_items;
-    pencil_only_items.push_back(pencil_only_box);
+    pencil_only_items.push_back(&get_widget<Gtk::Box>(_builder, "pencil_only_box"));
 
     // Attach signals to handle the visibility of the widgets.
     for (auto child : pen_only_items) {
@@ -297,14 +257,12 @@ void PencilToolbar::hide_extra_widgets()
             false);
     }
 
-    auto prefs = Inkscape::Preferences::get();
-
     // Elements must be hidden after show_all() is called
-    int freehandMode = prefs->getInt(
+    int freehandMode = Preferences::get()->getInt(
         (_tool_is_pencil ? "/tools/freehand/pencil/freehand-mode" : "/tools/freehand/pen/freehand-mode"), 0);
 
     if (freehandMode != 1 && freehandMode != 2) {
-        _flatten_spiro_bspline_btn->set_visible(false);
+        _flatten_spiro_bspline_btn.set_visible(false);
     }
     if (_tool_is_pencil) {
         use_pencil_pressure();
@@ -327,23 +285,18 @@ PencilToolbar::~PencilToolbar()
 
 void PencilToolbar::mode_changed(int mode)
 {
-    auto prefs = Inkscape::Preferences::get();
-    prefs->setInt(freehand_tool_name() + "/freehand-mode", mode);
+    Preferences::get()->setInt(freehand_tool_name() + "/freehand-mode", mode);
 
     if (mode == 1 || mode == 2) {
-        _flatten_spiro_bspline_btn->set_visible(true);
+        _flatten_spiro_bspline_btn.set_visible(true);
     } else {
-        _flatten_spiro_bspline_btn->set_visible(false);
+        _flatten_spiro_bspline_btn.set_visible(false);
     }
 
     bool visible = (mode != 2);
 
-    if (_simplify_btn) {
-        _simplify_btn->set_visible(visible);
-        if (_flatten_simplify_btn) {
-            _flatten_simplify_btn->set_visible(visible && _simplify_btn->get_active());
-        }
-    }
+    _simplify_btn.set_visible(visible);
+    _flatten_simplify_btn.set_visible(visible && _simplify_btn.get_active());
 
     // Recall, the PencilToolbar is also used as the PenToolbar with minor changes.
     auto *pt = dynamic_cast<Inkscape::UI::Tools::PenTool *>(_desktop->getTool());
@@ -366,8 +319,8 @@ void PencilToolbar::minpressure_value_changed()
         return;
     }
 
-    Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-    prefs->setDouble("/tools/freehand/pencil/minpressure", _minpressure_item->get_adjustment()->get_value());
+    Preferences::get()->setDouble("/tools/freehand/pencil/minpressure",
+                                  _minpressure_item.get_adjustment()->get_value());
 }
 
 void PencilToolbar::maxpressure_value_changed()
@@ -378,8 +331,8 @@ void PencilToolbar::maxpressure_value_changed()
         return;
     }
 
-    Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-    prefs->setDouble("/tools/freehand/pencil/maxpressure", _maxpressure_item->get_adjustment()->get_value());
+    Preferences::get()->setDouble("/tools/freehand/pencil/maxpressure",
+                                  _maxpressure_item.get_adjustment()->get_value());
 }
 
 void PencilToolbar::shapewidth_value_changed()
@@ -389,7 +342,7 @@ void PencilToolbar::shapewidth_value_changed()
         return;
     }
 
-    Inkscape::Preferences *prefs = Inkscape::Preferences::get();
+    auto prefs = Inkscape::Preferences::get();
     Inkscape::Selection *selection = _desktop->getSelection();
     SPItem *item = selection->singleItem();
     SPLPEItem *lpeitem = nullptr;
@@ -397,7 +350,7 @@ void PencilToolbar::shapewidth_value_changed()
         lpeitem = cast<SPLPEItem>(item);
     }
     using namespace Inkscape::LivePathEffect;
-    double width = _shapescale_item->get_adjustment()->get_value();
+    double width = _shapescale_item.get_adjustment()->get_value();
     switch (_shape_item->get_active()) {
         case Inkscape::UI::Tools::TRIANGLE_IN:
         case Inkscape::UI::Tools::TRIANGLE_OUT:
@@ -446,34 +399,34 @@ void PencilToolbar::shapewidth_value_changed()
 void PencilToolbar::use_pencil_pressure()
 {
     assert(_tool_is_pencil);
-    bool pressure = _usepressure_btn->get_active();
+    bool pressure = _usepressure_btn.get_active();
     auto prefs = Inkscape::Preferences::get();
     prefs->setBool("/tools/freehand/pencil/pressure", pressure);
     if (pressure) {
-        _minpressure_box->set_visible(true);
-        _maxpressure_box->set_visible(true);
+        _minpressure_box.set_visible(true);
+        _maxpressure_box.set_visible(true);
         _cap_item->set_visible(true);
         _shape_item->set_visible(false);
-        _shapescale_box->set_visible(false);
-        _simplify_btn->set_visible(false);
-        _flatten_spiro_bspline_btn->set_visible(false);
-        _flatten_simplify_btn->set_visible(false);
+        _shapescale_box.set_visible(false);
+        _simplify_btn.set_visible(false);
+        _flatten_spiro_bspline_btn.set_visible(false);
+        _flatten_simplify_btn.set_visible(false);
         for (auto button : _mode_buttons) {
             button->set_sensitive(false);
         }
     } else {
-        guint freehandMode = prefs->getInt("/tools/freehand/pencil/freehand-mode", 0);
+        int freehandMode = prefs->getInt("/tools/freehand/pencil/freehand-mode", 0);
 
-        _minpressure_box->set_visible(false);
-        _maxpressure_box->set_visible(false);
+        _minpressure_box.set_visible(false);
+        _maxpressure_box.set_visible(false);
         _cap_item->set_visible(false);
         _shape_item->set_visible(true);
-        _shapescale_box->set_visible(true);
+        _shapescale_box.set_visible(true);
         bool simplify_visible = freehandMode != 2;
-        _simplify_btn->set_visible(simplify_visible);
-        _flatten_simplify_btn->set_visible(simplify_visible && _simplify_btn->get_active());
+        _simplify_btn.set_visible(simplify_visible);
+        _flatten_simplify_btn.set_visible(simplify_visible && _simplify_btn.get_active());
         if (freehandMode == 1 || freehandMode == 2) {
-            _flatten_spiro_bspline_btn->set_visible(true);
+            _flatten_spiro_bspline_btn.set_visible(true);
         }
         for (auto button : _mode_buttons) {
             button->set_sensitive(true);
@@ -483,8 +436,7 @@ void PencilToolbar::use_pencil_pressure()
 
 void PencilToolbar::change_shape(int shape)
 {
-    auto prefs = Inkscape::Preferences::get();
-    prefs->setInt(freehand_tool_name() + "/shape", shape);
+    Preferences::get()->setInt(freehand_tool_name() + "/shape", shape);
     update_width_value(shape);
 }
 
@@ -493,7 +445,7 @@ void PencilToolbar::update_width_value(int shape)
     /* Update shape width with correct width */
     auto prefs = Inkscape::Preferences::get();
     double width = 1.0;
-    _shapescale_item->set_sensitive(true);
+    _shapescale_item.set_sensitive(true);
     double powerstrokedefsize = 10 / (0.265 * _desktop->getDocument()->getDocumentScale()[0] * 2.0);
     switch (shape) {
         case Inkscape::UI::Tools::TRIANGLE_IN:
@@ -510,24 +462,22 @@ void PencilToolbar::update_width_value(int shape)
         case Inkscape::UI::Tools::NONE: // Apply width from style?
         case Inkscape::UI::Tools::LAST_APPLIED:
         default:
-            _shapescale_item->set_sensitive(false);
+            _shapescale_item.set_sensitive(false);
             break;
     }
-    _shapescale_item->get_adjustment()->set_value(width);
+    _shapescale_item.get_adjustment()->set_value(width);
 }
 
 void PencilToolbar::change_cap(int cap)
 {
-    auto prefs = Inkscape::Preferences::get();
-    prefs->setInt("/live_effects/powerstroke/powerpencilcap", cap);
+    Preferences::get()->setInt("/live_effects/powerstroke/powerpencilcap", cap);
 }
 
 void PencilToolbar::simplify_lpe()
 {
-    bool simplify = _simplify_btn->get_active();
-    auto prefs = Inkscape::Preferences::get();
-    prefs->setBool(freehand_tool_name() + "/simplify", simplify);
-    _flatten_simplify_btn->set_visible(simplify);
+    bool simplify = _simplify_btn.get_active();
+    Preferences::get()->setBool(freehand_tool_name() + "/simplify", simplify);
+    _flatten_simplify_btn.set_visible(simplify);
 }
 
 void PencilToolbar::simplify_flatten()
@@ -630,7 +580,7 @@ void PencilToolbar::tolerance_value_changed()
     // in turn, prevent listener from responding
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
     _freeze = true;
-    prefs->setDouble("/tools/freehand/pencil/tolerance", _tolerance_item->get_adjustment()->get_value());
+    prefs->setDouble("/tools/freehand/pencil/tolerance", _tolerance_item.get_adjustment()->get_value());
     _freeze = false;
     auto selected = _desktop->getSelection()->items();
     for (auto it(selected.begin()); it != selected.end(); ++it){

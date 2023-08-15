@@ -16,6 +16,7 @@
  *   Tavmjong Bah <tavmjong@free.fr>
  *   Abhishek Sharma
  *   Kris De Gussem <Kris.DeGussem@gmail.com>
+ *   Vaibhav Malik <vaibhavmalik2018@gmail.com>
  *
  * Copyright (C) 2004 David Turner
  * Copyright (C) 2003 MenTaLguY
@@ -28,7 +29,6 @@
 #include "box3d-toolbar.h"
 
 #include <glibmm/i18n.h>
-#include <gtkmm/adjustment.h>
 
 #include "desktop.h"
 #include "document-undo.h"
@@ -51,38 +51,32 @@ namespace Toolbar {
 Box3DToolbar::Box3DToolbar(SPDesktop *desktop)
     : Toolbar(desktop)
     , _builder(initialize_builder("toolbar-box3d.ui"))
+    , _angle_x_item(get_derived_widget<UI::Widget::SpinButton>(_builder, "_angle_x_item"))
+    , _vp_x_state_btn(get_widget<Gtk::ToggleButton>(_builder, "_vp_x_state_btn"))
+    , _angle_y_item(get_derived_widget<UI::Widget::SpinButton>(_builder, "_angle_y_item"))
+    , _vp_y_state_btn(get_widget<Gtk::ToggleButton>(_builder, "_vp_y_state_btn"))
+    , _angle_z_item(get_derived_widget<UI::Widget::SpinButton>(_builder, "_angle_z_item"))
+    , _vp_z_state_btn(get_widget<Gtk::ToggleButton>(_builder, "_vp_z_state_btn"))
 {
     auto prefs = Inkscape::Preferences::get();
 
-    _builder->get_widget("box3d-toolbar", _toolbar);
-    if (!_toolbar) {
-        std::cerr << "InkscapeWindow: Failed to load Box3D toolbar!" << std::endl;
-    }
+    _toolbar = &get_widget<Gtk::Box>(_builder, "box3d-toolbar");
 
-    _builder->get_widget_derived("_angle_x_item", _angle_x_item);
-    _builder->get_widget("_vp_x_state_item", _vp_x_state_item);
-
-    _builder->get_widget_derived("_angle_y_item", _angle_y_item);
-    _builder->get_widget("_vp_y_state_item", _vp_y_state_item);
-
-    _builder->get_widget_derived("_angle_z_item", _angle_z_item);
-    _builder->get_widget("_vp_z_state_item", _vp_z_state_item);
-
-    _vp_x_state_item->signal_toggled().connect(
+    _vp_x_state_btn.signal_toggled().connect(
         sigc::bind(sigc::mem_fun(*this, &Box3DToolbar::vp_state_changed), Proj::X));
-    _vp_x_state_item->set_active(prefs->getBool("/tools/shapes/3dbox/vp_x_state", true));
+    _vp_x_state_btn.set_active(prefs->getBool("/tools/shapes/3dbox/vp_x_state", true));
 
-    _vp_y_state_item->signal_toggled().connect(
+    _vp_y_state_btn.signal_toggled().connect(
         sigc::bind(sigc::mem_fun(*this, &Box3DToolbar::vp_state_changed), Proj::Y));
-    _vp_y_state_item->set_active(prefs->getBool("/tools/shapes/3dbox/vp_y_state", true));
+    _vp_y_state_btn.set_active(prefs->getBool("/tools/shapes/3dbox/vp_y_state", true));
 
-    _vp_z_state_item->signal_toggled().connect(
+    _vp_z_state_btn.signal_toggled().connect(
         sigc::bind(sigc::mem_fun(*this, &Box3DToolbar::vp_state_changed), Proj::Z));
-    _vp_z_state_item->set_active(prefs->getBool("/tools/shapes/3dbox/vp_z_state", true));
+    _vp_z_state_btn.set_active(prefs->getBool("/tools/shapes/3dbox/vp_z_state", true));
 
-    setup_derived_spin_button(_angle_x_item, "box3d_angle_x");
-    setup_derived_spin_button(_angle_y_item, "box3d_angle_y");
-    setup_derived_spin_button(_angle_z_item, "box3d_angle_z");
+    setup_derived_spin_button(_angle_x_item, "box3d_angle_x", Proj::X);
+    setup_derived_spin_button(_angle_y_item, "box3d_angle_y", Proj::Y);
+    setup_derived_spin_button(_angle_z_item, "box3d_angle_z", Proj::Z);
 
     desktop->connectEventContextChanged(sigc::mem_fun(*this, &Box3DToolbar::check_ec));
 
@@ -90,7 +84,8 @@ Box3DToolbar::Box3DToolbar(SPDesktop *desktop)
     show_all();
 }
 
-void Box3DToolbar::setup_derived_spin_button(UI::Widget::SpinButton *btn, Glib::ustring const &name)
+void Box3DToolbar::setup_derived_spin_button(UI::Widget::SpinButton &btn, Glib::ustring const &name,
+                                             Proj::Axis const axis)
 {
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
     auto document = _desktop->getDocument();
@@ -99,27 +94,16 @@ void Box3DToolbar::setup_derived_spin_button(UI::Widget::SpinButton *btn, Glib::
     const Glib::ustring path = "/tools/shapes/3dbox/" + name;
     auto val = prefs->getDouble(path, 30);
 
-    auto adj = btn->get_adjustment();
+    auto adj = btn.get_adjustment();
     adj->set_value(val);
-
-    bool is_sensitive = false;
-    Proj::Axis axis = Proj::X;
-
-    if (name == "box3d_angle_y") {
-        axis = Proj::Y;
-    } else if (name == "box3d_angle_z") {
-        axis = Proj::Z;
-    }
 
     adj->signal_value_changed().connect(
         sigc::bind(sigc::mem_fun(*this, &Box3DToolbar::angle_value_changed), adj, axis));
 
-    if (!persp_impl || !Persp3D::VP_is_finite(persp_impl, axis)) {
-        is_sensitive = true;
-    }
+    bool const is_sensitive = !persp_impl || !Persp3D::VP_is_finite(persp_impl, axis);
 
-    btn->set_sensitive(is_sensitive);
-    btn->set_defocus_widget(_desktop->getCanvas());
+    btn.set_sensitive(is_sensitive);
+    btn.set_defocus_widget(_desktop->getCanvas());
 }
 
 GtkWidget *
@@ -171,23 +155,22 @@ Box3DToolbar::vp_state_changed(Proj::Axis axis)
     }
     Persp3D *persp = sel_persps.front();
 
-    Gtk::ToggleButton *btn = nullptr;
+    bool set_infinite = false;
 
     switch(axis) {
         case Proj::X:
-            btn = _vp_x_state_item;
+            set_infinite = _vp_x_state_btn.get_active();
             break;
         case Proj::Y:
-            btn = _vp_y_state_item;
+            set_infinite = _vp_y_state_btn.get_active();
             break;
         case Proj::Z:
-            btn = _vp_z_state_item;
+            set_infinite = _vp_z_state_btn.get_active();
             break;
         default:
             return;
     }
 
-    bool set_infinite = btn->get_active();
     persp->set_VP_state (axis, set_infinite ? Proj::VP_INFINITE : Proj::VP_FINITE);
 }
 
@@ -278,31 +261,31 @@ Box3DToolbar::resync_toolbar(Inkscape::XML::Node *persp_repr)
         // Hmm, is it an error if this happens?
         return;
     }
-    set_button_and_adjustment(persp, Proj::X, _angle_x_item, _vp_x_state_item);
-    set_button_and_adjustment(persp, Proj::Y, _angle_y_item, _vp_y_state_item);
-    set_button_and_adjustment(persp, Proj::Z, _angle_z_item, _vp_z_state_item);
+    set_button_and_adjustment(persp, Proj::X, _angle_x_item, _vp_x_state_btn);
+    set_button_and_adjustment(persp, Proj::Y, _angle_y_item, _vp_y_state_btn);
+    set_button_and_adjustment(persp, Proj::Z, _angle_z_item, _vp_z_state_btn);
 }
 
-void Box3DToolbar::set_button_and_adjustment(Persp3D *persp, Proj::Axis axis, UI::Widget::SpinButton *spin_btn,
-                                             Gtk::ToggleButton *toggle_btn)
+void Box3DToolbar::set_button_and_adjustment(Persp3D *persp, Proj::Axis axis, UI::Widget::SpinButton &spin_btn,
+                                             Gtk::ToggleButton &toggle_btn)
 {
     // TODO: Take all selected perspectives into account but don't touch the state button if not all of them
     //       have the same state (otherwise a call to box3d_vp_z_state_changed() is triggered and the states
     //       are reset).
     bool is_infinite = !Persp3D::VP_is_finite(persp->perspective_impl.get(), axis);
-    auto adj = spin_btn->get_adjustment();
+    auto adj = spin_btn.get_adjustment();
 
     if (is_infinite) {
-        toggle_btn->set_active(true);
-        spin_btn->set_sensitive(true);
+        toggle_btn.set_active(true);
+        spin_btn.set_sensitive(true);
 
         double angle = persp->get_infinite_angle(axis);
         if (angle != Geom::infinity()) { // FIXME: We should catch this error earlier (don't show the spinbutton at all)
             adj->set_value(normalize_angle(angle));
         }
     } else {
-        toggle_btn->set_active(false);
-        spin_btn->set_sensitive(false);
+        toggle_btn.set_active(false);
+        spin_btn.set_sensitive(false);
     }
 }
 

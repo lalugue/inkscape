@@ -24,6 +24,21 @@
     <property name="can-focus">False</property>
     <property name="icon-name">dialog-warning</property>
   </object>
+  <object class="GtkImage" id="image11">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="icon-name">object-fill</property>
+  </object>
+  <object class="GtkImage" id="image12">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="icon-name">object-stroke</property>
+  </object>
+  <object class="GtkImage" id="image13">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="icon-name">show-node-handles</property>
+  </object>
   <object class="GtkImage" id="image2">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
@@ -308,6 +323,54 @@
       </packing>
     </child>
     <child>
+      <object class="GtkToggleButton" id="_edit_fill_btn">
+        <property name="visible">True</property>
+        <property name="can-focus">True</property>
+        <property name="focus-on-click">False</property>
+        <property name="receives-default">True</property>
+        <property name="tooltip-text" translatable="yes">Edit fill mesh</property>
+        <property name="margin-end">3</property>
+        <property name="image">image11</property>
+        <property name="relief">none</property>
+        <property name="always-show-image">True</property>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="fill">True</property>
+        <property name="position">6</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkToggleButton" id="_edit_stroke_btn">
+        <property name="visible">True</property>
+        <property name="can-focus">True</property>
+        <property name="focus-on-click">False</property>
+        <property name="receives-default">True</property>
+        <property name="tooltip-text" translatable="yes">Edit stroke mesh</property>
+        <property name="margin-end">3</property>
+        <property name="image">image12</property>
+        <property name="relief">none</property>
+        <property name="always-show-image">True</property>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="fill">True</property>
+        <property name="position">7</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkSeparator">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <property name="margin-end">3</property>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="fill">True</property>
+        <property name="position">8</property>
+      </packing>
+    </child>
+    <child>
       <object class="GtkMenuButton" id="menu_btn1">
         <property name="visible">True</property>
         <property name="can-focus">True</property>
@@ -327,7 +390,28 @@
       <packing>
         <property name="expand">False</property>
         <property name="fill">True</property>
-        <property name="position">6</property>
+        <property name="position">9</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkToggleButton" id="show_handles_btn">
+        <property name="visible">True</property>
+        <property name="can-focus">True</property>
+        <property name="focus-on-click">False</property>
+        <property name="receives-default">True</property>
+        <property name="tooltip-text" translatable="yes">Show handles</property>
+        <property name="margin-end">3</property>
+        <property name="image">image13</property>
+        <property name="relief">none</property>
+        <property name="always-show-image">True</property>
+        <style>
+          <class name="tag1"/>
+        </style>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="fill">True</property>
+        <property name="position">10</property>
       </packing>
     </child>
     <child>
@@ -347,7 +431,7 @@
       <packing>
         <property name="expand">False</property>
         <property name="fill">True</property>
-        <property name="position">7</property>
+        <property name="position">11</property>
       </packing>
     </child>
     <child>
@@ -367,7 +451,7 @@
       <packing>
         <property name="expand">False</property>
         <property name="fill">True</property>
-        <property name="position">8</property>
+        <property name="position">12</property>
       </packing>
     </child>
     <child>
@@ -387,7 +471,7 @@
       <packing>
         <property name="expand">False</property>
         <property name="fill">True</property>
-        <property name="position">9</property>
+        <property name="position">13</property>
       </packing>
     </child>
     <child>
@@ -407,7 +491,7 @@
       <packing>
         <property name="expand">False</property>
         <property name="fill">True</property>
-        <property name="position">10</property>
+        <property name="position">14</property>
       </packing>
     </child>
     <child>
@@ -419,7 +503,7 @@
       <packing>
         <property name="expand">False</property>
         <property name="fill">True</property>
-        <property name="position">11</property>
+        <property name="position">15</property>
       </packing>
     </child>
     <child>
@@ -436,7 +520,7 @@
       <packing>
         <property name="expand">False</property>
         <property name="fill">True</property>
-        <property name="position">12</property>
+        <property name="position">16</property>
       </packing>
     </child>
     <child>
@@ -451,7 +535,7 @@
       <packing>
         <property name="expand">False</property>
         <property name="fill">True</property>
-        <property name="position">13</property>
+        <property name="position">17</property>
       </packing>
     </child>
     <style>

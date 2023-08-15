@@ -29,7 +29,6 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include <gtkmm/adjustment.h>
 #include <gtkmm/builder.h>
 
 #include "toolbar.h"
@@ -51,21 +50,25 @@ class SpinButton;
 namespace Toolbar {
 class EraserToolbar : public Toolbar {
 private:
+    using ValueChangedMemFun = void (EraserToolbar::*)();
+
     Glib::RefPtr<Gtk::Builder> _builder;
 
-    UI::Widget::SpinButton *_width_item;
-    UI::Widget::SpinButton *_thinning_item;
-    UI::Widget::SpinButton *_cap_rounding_item;
-    UI::Widget::SpinButton *_tremor_item;
-    UI::Widget::SpinButton *_mass_item;
+    UI::Widget::SpinButton &_width_item;
+    UI::Widget::SpinButton &_thinning_item;
+    UI::Widget::SpinButton &_cap_rounding_item;
+    UI::Widget::SpinButton &_tremor_item;
+    UI::Widget::SpinButton &_mass_item;
 
     Gtk::ToggleButton *_usepressure_btn;
-    Gtk::ToggleButton *_split_btn;
+    Gtk::ToggleButton &_split_btn;
 
     std::unique_ptr<SimplePrefPusher> _pressure_pusher;
 
     bool _freeze;
 
+    void setup_derived_spin_button(UI::Widget::SpinButton &btn, Glib::ustring const &name, double default_value,
+                                   ValueChangedMemFun const value_changed_mem_fun);
     static guint _modeAsInt(Inkscape::UI::Tools::EraserToolMode mode);
     void mode_changed(int mode);
     void set_eraser_mode_visibility(const guint eraser_mode);
@@ -82,8 +85,7 @@ protected:
     EraserToolbar(SPDesktop *desktop);
 
 public:
-    static GtkWidget * create(SPDesktop *desktop);
-    void setup_derived_spin_button(UI::Widget::SpinButton *btn, Glib::ustring const &name, double default_value);
+    static GtkWidget *create(SPDesktop *desktop);
 };
 
 }

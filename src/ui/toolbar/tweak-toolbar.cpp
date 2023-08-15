@@ -32,8 +32,10 @@
 
 #include "desktop.h"
 #include "document-undo.h"
+#include "ui/builder-utils.h"
 #include "ui/icon-names.h"
 #include "ui/tools/tweak-tool.h"
+#include "ui/util.h"
 #include "ui/widget/canvas.h"
 #include "ui/widget/spinbutton.h"
 
@@ -44,81 +46,63 @@ namespace Toolbar {
 TweakToolbar::TweakToolbar(SPDesktop *desktop)
     : Toolbar(desktop)
     , _builder(initialize_builder("toolbar-tweak.ui"))
+    , _width_item(get_derived_widget<UI::Widget::SpinButton>(_builder, "_width_item"))
+    , _force_item(get_derived_widget<UI::Widget::SpinButton>(_builder, "_force_item"))
+    , _fidelity_box(get_widget<Gtk::Box>(_builder, "_fidelity_box"))
+    , _fidelity_item(get_derived_widget<UI::Widget::SpinButton>(_builder, "_fidelity_item"))
+    , _pressure_btn(get_widget<Gtk::ToggleButton>(_builder, "_pressure_btn"))
+    , _channels_box(get_widget<Gtk::Box>(_builder, "_channels_box"))
+    , _doh_btn(get_widget<Gtk::ToggleButton>(_builder, "_doh_btn"))
+    , _dos_btn(get_widget<Gtk::ToggleButton>(_builder, "_dos_btn"))
+    , _dol_btn(get_widget<Gtk::ToggleButton>(_builder, "_dol_btn"))
+    , _doo_btn(get_widget<Gtk::ToggleButton>(_builder, "_doo_btn"))
 {
-    auto *prefs = Inkscape::Preferences::get();
+    _toolbar = &get_widget<Gtk::Box>(_builder, "tweak-toolbar");
 
-    _builder->get_widget("tweak-toolbar", _toolbar);
-    if (!_toolbar) {
-        std::cerr << "InkscapeWindow: Failed to load tweak toolbar!" << std::endl;
-    }
-
-    Gtk::Box *mode_buttons_box;
-
-    _builder->get_widget("mode_buttons_box", mode_buttons_box);
-
-    _builder->get_widget_derived("_width_item", _width_item);
-    _builder->get_widget_derived("_force_item", _force_item);
-
-    _builder->get_widget("_pressure_btn", _pressure_btn);
-
-    _builder->get_widget("_fidelity_box", _fidelity_box);
-    _builder->get_widget_derived("_fidelity_item", _fidelity_item);
-
-    _builder->get_widget("_channels_box", _channels_box);
-    _builder->get_widget("_channels_label", _channels_label);
-    _builder->get_widget("_doh_btn", _doh_btn);
-    _builder->get_widget("_dos_btn", _dos_btn);
-    _builder->get_widget("_dol_btn", _dol_btn);
-    _builder->get_widget("_doo_btn", _doo_btn);
-
-    setup_derived_spin_button(_width_item, "width", 15);
-    setup_derived_spin_button(_force_item, "force", 20);
-    setup_derived_spin_button(_fidelity_item, "fidelity", 50);
+    setup_derived_spin_button(_width_item, "width", 15, &TweakToolbar::width_value_changed);
+    setup_derived_spin_button(_force_item, "force", 20, &TweakToolbar::force_value_changed);
+    setup_derived_spin_button(_fidelity_item, "fidelity", 50, &TweakToolbar::fidelity_value_changed);
 
     // Configure mode buttons
-    int btn_index = 0;
+    for_each_child(get_widget<Gtk::Box>(_builder, "mode_buttons_box"), [=](Gtk::Widget &item) {
+        static int btn_index = 0;
+        auto &btn = dynamic_cast<Gtk::RadioButton &>(item);
+        _mode_buttons.push_back(&btn);
+        btn.signal_clicked().connect(sigc::bind(sigc::mem_fun(*this, &TweakToolbar::mode_changed), btn_index++));
 
-    for (auto child : mode_buttons_box->get_children()) {
-        auto btn = dynamic_cast<Gtk::RadioButton *>(child);
-        _mode_buttons.push_back(btn);
+        return ForEachResult::_continue;
+    });
 
-        btn->signal_clicked().connect(sigc::bind(sigc::mem_fun(*this, &TweakToolbar::mode_changed), btn_index++));
-    }
+    auto prefs = Inkscape::Preferences::get();
 
     // Pressure button.
-    _pressure_btn->signal_toggled().connect(sigc::mem_fun(*this, &TweakToolbar::pressure_state_changed));
-    _pressure_btn->set_active(prefs->getBool("/tools/tweak/usepressure", true));
+    _pressure_btn.signal_toggled().connect(sigc::mem_fun(*this, &TweakToolbar::pressure_state_changed));
+    _pressure_btn.set_active(prefs->getBool("/tools/tweak/usepressure", true));
 
     // Set initial mode.
-    guint mode = prefs->getInt("/tools/tweak/mode", 0);
+    int mode = prefs->getInt("/tools/tweak/mode", 0);
     _mode_buttons[mode]->set_active();
 
     // Configure channel buttons.
     // Translators: H, S, L, and O stands for:
     // Hue, Saturation, Lighting and Opacity respectively.
-    _doh_btn->signal_toggled().connect(sigc::mem_fun(*this, &TweakToolbar::toggle_doh));
-    _doh_btn->set_active(prefs->getBool("/tools/tweak/doh", true));
-    _dos_btn->signal_toggled().connect(sigc::mem_fun(*this, &TweakToolbar::toggle_dos));
-    _dos_btn->set_active(prefs->getBool("/tools/tweak/dos", true));
-    _dol_btn->signal_toggled().connect(sigc::mem_fun(*this, &TweakToolbar::toggle_dol));
-    _dol_btn->set_active(prefs->getBool("/tools/tweak/dol", true));
-    _doo_btn->signal_toggled().connect(sigc::mem_fun(*this, &TweakToolbar::toggle_doo));
-    _doo_btn->set_active(prefs->getBool("/tools/tweak/doo", true));
+    _doh_btn.signal_toggled().connect(sigc::mem_fun(*this, &TweakToolbar::toggle_doh));
+    _doh_btn.set_active(prefs->getBool("/tools/tweak/doh", true));
+    _dos_btn.signal_toggled().connect(sigc::mem_fun(*this, &TweakToolbar::toggle_dos));
+    _dos_btn.set_active(prefs->getBool("/tools/tweak/dos", true));
+    _dol_btn.signal_toggled().connect(sigc::mem_fun(*this, &TweakToolbar::toggle_dol));
+    _dol_btn.set_active(prefs->getBool("/tools/tweak/dol", true));
+    _doo_btn.signal_toggled().connect(sigc::mem_fun(*this, &TweakToolbar::toggle_doo));
+    _doo_btn.set_active(prefs->getBool("/tools/tweak/doo", true));
 
     // Fetch all the ToolbarMenuButtons at once from the UI file
     // Menu Button #1
-    Gtk::Box *popover_box1;
-    _builder->get_widget("popover_box1", popover_box1);
-
-    Inkscape::UI::Widget::ToolbarMenuButton *menu_btn1 = nullptr;
-    _builder->get_widget_derived("menu_btn1", menu_btn1);
+    auto popover_box1 = &get_widget<Gtk::Box>(_builder, "popover_box1");
+    auto menu_btn1 = &get_derived_widget<UI::Widget::ToolbarMenuButton>(_builder, "menu_btn1");
 
     // Menu Button #2
-    Gtk::Box *popover_box2;
-    _builder->get_widget("popover_box2", popover_box2);
-
-    Inkscape::UI::Widget::ToolbarMenuButton *menu_btn2 = nullptr;
-    _builder->get_widget_derived("menu_btn2", menu_btn2);
+    auto popover_box2 = &get_widget<Gtk::Box>(_builder, "popover_box2");
+    auto menu_btn2 = &get_derived_widget<UI::Widget::ToolbarMenuButton>(_builder, "menu_btn2");
 
     // Initialize all the ToolbarMenuButtons only after all the children of the
     // toolbar have been fetched. Otherwise, the children to be moved in the
@@ -137,31 +121,23 @@ TweakToolbar::TweakToolbar(SPDesktop *desktop)
 
     // Elements must be hidden after show_all() is called
     if (mode == Inkscape::UI::Tools::TWEAK_MODE_COLORPAINT || mode == Inkscape::UI::Tools::TWEAK_MODE_COLORJITTER) {
-        _fidelity_box->set_visible(false);
+        _fidelity_box.set_visible(false);
     } else {
-        _channels_box->set_visible(false);
+        _channels_box.set_visible(false);
     }
 }
 
-void TweakToolbar::setup_derived_spin_button(UI::Widget::SpinButton *btn, Glib::ustring const &name,
-                                             double default_value)
+void TweakToolbar::setup_derived_spin_button(UI::Widget::SpinButton &btn, Glib::ustring const &name,
+                                             double default_value, ValueChangedMemFun const value_changed_mem_fun)
 {
-    auto *prefs = Inkscape::Preferences::get();
     const Glib::ustring path = "/tools/tweak/" + name;
-    auto val = prefs->getDouble(path, default_value);
+    auto val = Preferences::get()->getDouble(path, default_value);
 
-    auto adj = btn->get_adjustment();
+    auto adj = btn.get_adjustment();
     adj->set_value(val);
+    adj->signal_value_changed().connect(sigc::mem_fun(*this, value_changed_mem_fun));
 
-    if (name == "width") {
-        adj->signal_value_changed().connect(sigc::mem_fun(*this, &TweakToolbar::width_value_changed));
-    } else if (name == "force") {
-        adj->signal_value_changed().connect(sigc::mem_fun(*this, &TweakToolbar::force_value_changed));
-    } else if (name == "fidelity") {
-        adj->signal_value_changed().connect(sigc::mem_fun(*this, &TweakToolbar::fidelity_value_changed));
-    }
-
-    btn->set_defocus_widget(_desktop->getCanvas());
+    btn.set_defocus_widget(_desktop->getCanvas());
 }
 
 void TweakToolbar::set_mode(int mode)
@@ -177,65 +153,54 @@ GtkWidget *TweakToolbar::create(SPDesktop *desktop)
 
 void TweakToolbar::width_value_changed()
 {
-    auto prefs = Inkscape::Preferences::get();
-    prefs->setDouble("/tools/tweak/width", _width_item->get_adjustment()->get_value() * 0.01);
+    Preferences::get()->setDouble("/tools/tweak/width", _width_item.get_adjustment()->get_value() * 0.01);
 }
 
 void TweakToolbar::force_value_changed()
 {
-    auto prefs = Inkscape::Preferences::get();
-    prefs->setDouble("/tools/tweak/force", _force_item->get_adjustment()->get_value() * 0.01);
+    Preferences::get()->setDouble("/tools/tweak/force", _force_item.get_adjustment()->get_value() * 0.01);
 }
 
 void TweakToolbar::mode_changed(int mode)
 {
-    auto prefs = Inkscape::Preferences::get();
-    prefs->setInt("/tools/tweak/mode", mode);
+    Preferences::get()->setInt("/tools/tweak/mode", mode);
 
     bool flag = ((mode == Inkscape::UI::Tools::TWEAK_MODE_COLORPAINT) ||
                  (mode == Inkscape::UI::Tools::TWEAK_MODE_COLORJITTER));
 
-    _channels_box->set_visible(flag);
+    _channels_box.set_visible(flag);
 
-    if (_fidelity_box) {
-        _fidelity_box->set_visible(!flag);
-    }
+    _fidelity_box.set_visible(!flag);
 }
 
 void TweakToolbar::fidelity_value_changed()
 {
-    auto prefs = Inkscape::Preferences::get();
-    prefs->setDouble("/tools/tweak/fidelity", _fidelity_item->get_adjustment()->get_value() * 0.01);
+    Preferences::get()->setDouble("/tools/tweak/fidelity", _fidelity_item.get_adjustment()->get_value() * 0.01);
 }
 
 void TweakToolbar::pressure_state_changed()
 {
-    auto prefs = Inkscape::Preferences::get();
-    prefs->setBool("/tools/tweak/usepressure", _pressure_btn->get_active());
+    Preferences::get()->setBool("/tools/tweak/usepressure", _pressure_btn.get_active());
 }
 
 void TweakToolbar::toggle_doh()
 {
-    auto prefs = Inkscape::Preferences::get();
-    prefs->setBool("/tools/tweak/doh", _doh_btn->get_active());
+    Preferences::get()->setBool("/tools/tweak/doh", _doh_btn.get_active());
 }
 
 void TweakToolbar::toggle_dos()
 {
-    auto prefs = Inkscape::Preferences::get();
-    prefs->setBool("/tools/tweak/dos", _dos_btn->get_active());
+    Preferences::get()->setBool("/tools/tweak/dos", _dos_btn.get_active());
 }
 
 void TweakToolbar::toggle_dol()
 {
-    auto prefs = Inkscape::Preferences::get();
-    prefs->setBool("/tools/tweak/dol", _dol_btn->get_active());
+    Preferences::get()->setBool("/tools/tweak/dol", _dol_btn.get_active());
 }
 
 void TweakToolbar::toggle_doo()
 {
-    auto prefs = Inkscape::Preferences::get();
-    prefs->setBool("/tools/tweak/doo", _doo_btn->get_active());
+    Preferences::get()->setBool("/tools/tweak/doo", _doo_btn.get_active());
 }
 }
 }

@@ -7,6 +7,7 @@
  *   Johan Engelen <j.b.c.engelen@ewi.utwente.nl>
  *   Abhishek Sharma
  *   Tavmjong Bah <tavjong@free.fr>
+ *   Vaibhav Malik <vaibhavmalik2018@gmail.com>
  *
  * Copyright (C) 2012 Tavmjong Bah
  * Copyright (C) 2007 Johan Engelen
@@ -21,7 +22,6 @@
 #include <gtkmm/comboboxtext.h>
 #include <gtkmm/liststore.h>
 #include <gtkmm/messagedialog.h>
-#include <gtkmm/radiobutton.h>
 
 #include "desktop-style.h"
 #include "desktop.h"
@@ -38,12 +38,13 @@
 #include "object/sp-stop.h"
 
 #include "svg/css-ostringstream.h"
-
+#include "ui/builder-utils.h"
 #include "ui/dialog-run.h"
 #include "ui/icon-names.h"
 #include "ui/simple-pref-pusher.h"
 #include "ui/tools/gradient-tool.h"
 #include "ui/tools/mesh-tool.h"
+#include "ui/util.h"
 #include "ui/widget/canvas.h"
 #include "ui/widget/color-preview.h"
 #include "ui/widget/combo-tool-item.h"
@@ -143,40 +144,18 @@ namespace Inkscape::UI::Toolbar {
 
 MeshToolbar::MeshToolbar(SPDesktop *desktop)
     : Toolbar(desktop)
-    , _edit_fill_pusher(nullptr)
+    // , _edit_fill_pusher(nullptr)
     , _builder(initialize_builder("toolbar-mesh.ui"))
+    , _row_item(get_derived_widget<UI::Widget::SpinButton>(_builder, "_row_item"))
+    , _col_item(get_derived_widget<UI::Widget::SpinButton>(_builder, "_col_item"))
+    , _edit_fill_btn(&get_widget<Gtk::ToggleButton>(_builder, "_edit_fill_btn"))
+    , _edit_stroke_btn(&get_widget<Gtk::ToggleButton>(_builder, "_edit_stroke_btn"))
 {
     auto *prefs = Inkscape::Preferences::get();
 
-    _builder->get_widget("mesh-toolbar", _toolbar);
-    if (!_toolbar) {
-        std::cerr << "InkscapeWindow: Failed to load mesh toolbar!" << std::endl;
-    }
+    _toolbar = &get_widget<Gtk::Box>(_builder, "mesh-toolbar");
 
-    Gtk::Box *new_type_buttons_box;
-    Gtk::Box *new_fillstroke_buttons_box;
-
-    Gtk::Button *toggle_sides_btn;
-    Gtk::Button *make_elliptical_btn;
-    Gtk::Button *pick_colors_btn;
-    Gtk::Button *scale_mesh_btn;
-    Gtk::Button *warning_btn;
-
-    Gtk::Box *select_type_box;
-
-    _builder->get_widget("new_type_buttons_box", new_type_buttons_box);
-    _builder->get_widget("new_fillstroke_buttons_box", new_fillstroke_buttons_box);
-
-    _builder->get_widget_derived("_row_item", _row_item);
-    _builder->get_widget_derived("_col_item", _col_item);
-
-    _builder->get_widget("toggle_sides_btn", toggle_sides_btn);
-    _builder->get_widget("make_elliptical_btn", make_elliptical_btn);
-    _builder->get_widget("pick_colors_btn", pick_colors_btn);
-    _builder->get_widget("scale_mesh_btn", scale_mesh_btn);
-
-    _builder->get_widget("warning_btn", warning_btn);
-    _builder->get_widget("select_type_box", select_type_box);
+    auto show_handles_btn = &get_widget<Gtk::ToggleButton>(_builder, "show_handles_btn");
 
     // Configure the types combo box.
     UI::Widget::ComboToolItemColumns columns;
@@ -199,45 +178,49 @@ MeshToolbar::MeshToolbar(SPDesktop *desktop)
     _select_type_item->set_active(0);
 
     _select_type_item->signal_changed().connect(sigc::mem_fun(*this, &MeshToolbar::type_changed));
-    select_type_box->add(*_select_type_item);
+    get_widget<Gtk::Box>(_builder, "select_type_box").add(*_select_type_item);
 
     // Setup the spin buttons.
-    setup_derived_spin_button(_row_item, "mesh_rows", 1);
-    setup_derived_spin_button(_col_item, "mesh_cols", 1);
+    setup_derived_spin_button(_row_item, "mesh_rows", 1, &MeshToolbar::row_changed);
+    setup_derived_spin_button(_col_item, "mesh_cols", 1, &MeshToolbar::col_changed);
 
     // Configure mode buttons
-    int btn_index = 0;
+    int mode = prefs->getInt("/tools/mesh/mesh_geometry", SP_MESH_GEOMETRY_NORMAL);
 
-    for (auto child : new_type_buttons_box->get_children()) {
-        auto btn = dynamic_cast<Gtk::RadioButton *>(child);
-        _new_type_buttons.push_back(btn);
+    for_each_child(get_widget<Gtk::Box>(_builder, "new_type_buttons_box"), [=](Gtk::Widget &item) {
+        static int btn_index = 0;
+        auto &btn = dynamic_cast<Gtk::RadioButton &>(item);
+        btn.set_active(btn_index == mode);
+        btn.signal_clicked().connect(sigc::bind(sigc::mem_fun(*this, &MeshToolbar::new_geometry_changed), btn_index++));
 
-        btn->signal_clicked().connect(
-            sigc::bind(sigc::mem_fun(*this, &MeshToolbar::new_geometry_changed), btn_index++));
-    }
-
-    gint mode = prefs->getInt("/tools/mesh/mesh_geometry", SP_MESH_GEOMETRY_NORMAL);
-    _new_type_buttons[mode]->set_active();
-
-    btn_index = 0;
-
-    for (auto child : new_fillstroke_buttons_box->get_children()) {
-        auto btn = dynamic_cast<Gtk::RadioButton *>(child);
-        _new_fillstroke_buttons.push_back(btn);
-
-        btn->signal_clicked().connect(
-            sigc::bind(sigc::mem_fun(*this, &MeshToolbar::new_fillstroke_changed), btn_index++));
-    }
+        return ForEachResult::_continue;
+    });
 
     mode = prefs->getInt("/tools/mesh/newfillorstroke");
-    _new_fillstroke_buttons[mode]->set_active();
+
+    for_each_child(get_widget<Gtk::Box>(_builder, "new_fillstroke_buttons_box"), [=](Gtk::Widget &item) {
+        static int btn_index = 0;
+        auto &btn = dynamic_cast<Gtk::RadioButton &>(item);
+        btn.set_active(btn_index == mode);
+        btn.signal_clicked().connect(
+            sigc::bind(sigc::mem_fun(*this, &MeshToolbar::new_fillstroke_changed), btn_index++));
+
+        return ForEachResult::_continue;
+    });
+
+    // Edit fill mesh.
+    _edit_fill_pusher.reset(new UI::SimplePrefPusher(_edit_fill_btn, "/tools/mesh/edit_fill"));
+
+    // Edit stroke mesh.
+    _edit_stroke_pusher.reset(new UI::SimplePrefPusher(_edit_stroke_btn, "/tools/mesh/edit_stroke"));
+
+    // Show/hide side and tensor handles.
+    _show_handles_pusher.reset(new UI::SimplePrefPusher(show_handles_btn, "/tools/mesh/show_handles"));
+
     // Fetch all the ToolbarMenuButtons at once from the UI file
     // Menu Button #1
-    Gtk::Box *popover_box1;
-    _builder->get_widget("popover_box1", popover_box1);
-
-    Inkscape::UI::Widget::ToolbarMenuButton *menu_btn1 = nullptr;
-    _builder->get_widget_derived("menu_btn1", menu_btn1);
+    auto popover_box1 = &get_widget<Gtk::Box>(_builder, "popover_box1");
+    auto menu_btn1 = &get_derived_widget<UI::Widget::ToolbarMenuButton>(_builder, "menu_btn1");
 
     // Initialize all the ToolbarMenuButtons only after all the children of the
     // toolbar have been fetched. Otherwise, the children to be moved in the
@@ -250,43 +233,24 @@ MeshToolbar::MeshToolbar(SPDesktop *desktop)
 
     add(*_toolbar);
 
-    // TODO: These were disabled in the UI file.  Either activate or delete
-#if 0
-    /* Edit fill mesh */
-    {
-        _edit_fill_item = add_toggle_button(_("Edit Fill"),
-                                            _("Edit fill mesh"));
-        _edit_fill_item->set_icon_name(INKSCAPE_ICON("object-fill"));
-        _edit_fill_pusher.reset(new UI::SimplePrefPusher(_edit_fill_item, "/tools/mesh/edit_fill"));
-        _edit_fill_item->signal_toggled().connect(sigc::mem_fun(*this, &MeshToolbar::toggle_fill_stroke));
-    }
-
-    /* Edit stroke mesh */
-    {
-        _edit_stroke_item = add_toggle_button(_("Edit Stroke"),
-                                              _("Edit stroke mesh"));
-        _edit_stroke_item->set_icon_name(INKSCAPE_ICON("object-stroke"));
-        _edit_stroke_pusher.reset(new UI::SimplePrefPusher(_edit_stroke_item, "/tools/mesh/edit_stroke"));
-        _edit_stroke_item->signal_toggled().connect(sigc::mem_fun(*this, &MeshToolbar::toggle_fill_stroke));
-    }
-
-    /* Show/hide side and tensor handles */
-    {
-        auto show_handles_item = add_toggle_button(_("Show Handles"),
-                                                   _("Show handles"));
-        show_handles_item->set_icon_name(INKSCAPE_ICON("show-node-handles"));
-        _show_handles_pusher.reset(new UI::SimplePrefPusher(show_handles_item, "/tools/mesh/show_handles"));
-        show_handles_item->signal_toggled().connect(sigc::mem_fun(*this, &MeshToolbar::toggle_handles));
-    }
-#endif
-
     // Signals.
-    toggle_sides_btn->signal_clicked().connect(sigc::mem_fun(*this, &MeshToolbar::toggle_sides));
-    make_elliptical_btn->signal_clicked().connect(sigc::mem_fun(*this, &MeshToolbar::make_elliptical));
-    pick_colors_btn->signal_clicked().connect(sigc::mem_fun(*this, &MeshToolbar::pick_colors));
-    scale_mesh_btn->signal_clicked().connect(sigc::mem_fun(*this, &MeshToolbar::fit_mesh));
+    _edit_fill_btn->signal_toggled().connect(sigc::mem_fun(*this, &MeshToolbar::toggle_fill_stroke));
+    _edit_stroke_btn->signal_toggled().connect(sigc::mem_fun(*this, &MeshToolbar::toggle_fill_stroke));
+    show_handles_btn->signal_toggled().connect(sigc::mem_fun(*this, &MeshToolbar::toggle_handles));
+    get_widget<Gtk::Button>(_builder, "toggle_sides_btn")
+        .signal_clicked()
+        .connect(sigc::mem_fun(*this, &MeshToolbar::toggle_sides));
+    get_widget<Gtk::Button>(_builder, "make_elliptical_btn")
+        .signal_clicked()
+        .connect(sigc::mem_fun(*this, &MeshToolbar::make_elliptical));
+    get_widget<Gtk::Button>(_builder, "pick_colors_btn")
+        .signal_clicked()
+        .connect(sigc::mem_fun(*this, &MeshToolbar::pick_colors));
+    get_widget<Gtk::Button>(_builder, "scale_mesh_btn")
+        .signal_clicked()
+        .connect(sigc::mem_fun(*this, &MeshToolbar::fit_mesh));
 
-    warning_btn->signal_clicked().connect([this] { warning_popup(); });
+    get_widget<Gtk::Button>(_builder, "warning_btn").signal_clicked().connect([this] { warning_popup(); });
 
     desktop->connectEventContextChanged(sigc::mem_fun(*this, &MeshToolbar::watch_ec));
 
@@ -295,23 +259,17 @@ MeshToolbar::MeshToolbar(SPDesktop *desktop)
 
 MeshToolbar::~MeshToolbar() = default;
 
-void MeshToolbar::setup_derived_spin_button(UI::Widget::SpinButton *btn, Glib::ustring const &name,
-                                            double default_value)
+void MeshToolbar::setup_derived_spin_button(UI::Widget::SpinButton &btn, Glib::ustring const &name,
+                                            double default_value, ValueChangedMemFun const value_changed_mem_fun)
 {
-    auto *prefs = Inkscape::Preferences::get();
     const Glib::ustring path = "/tools/mesh/" + name;
-    auto val = prefs->getDouble(path, default_value);
+    auto val = Preferences::get()->getDouble(path, default_value);
 
-    auto adj = btn->get_adjustment();
+    auto adj = btn.get_adjustment();
     adj->set_value(val);
+    adj->signal_value_changed().connect(sigc::mem_fun(*this, value_changed_mem_fun));
 
-    if (name == "mesh_rows") {
-        adj->signal_value_changed().connect(sigc::mem_fun(*this, &MeshToolbar::row_changed));
-    } else if (name == "mesh_cols") {
-        adj->signal_value_changed().connect(sigc::mem_fun(*this, &MeshToolbar::col_changed));
-    }
-
-    btn->set_defocus_widget(_desktop->getCanvas());
+    btn.set_defocus_widget(_desktop->getCanvas());
 }
 
 /**
@@ -327,14 +285,12 @@ GtkWidget *MeshToolbar::create(SPDesktop *desktop)
 
 void MeshToolbar::new_geometry_changed(int mode)
 {
-    Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-    prefs->setInt("/tools/mesh/mesh_geometry", mode);
+    Preferences::get()->setInt("/tools/mesh/mesh_geometry", mode);
 }
 
 void MeshToolbar::new_fillstroke_changed(int mode)
 {
-    Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-    prefs->setInt("/tools/mesh/newfillorstroke", mode);
+    Preferences::get()->setInt("/tools/mesh/newfillorstroke", mode);
 }
 
 void MeshToolbar::row_changed()
@@ -345,11 +301,9 @@ void MeshToolbar::row_changed()
 
     blocked = TRUE;
 
-    int rows = _row_item->get_adjustment()->get_value();
+    int rows = _row_item.get_adjustment()->get_value();
 
-    Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-
-    prefs->setInt("/tools/mesh/mesh_rows", rows);
+    Preferences::get()->setInt("/tools/mesh/mesh_rows", rows);
 
     blocked = FALSE;
 }
@@ -362,11 +316,9 @@ void MeshToolbar::col_changed()
 
     blocked = TRUE;
 
-    int cols = _col_item->get_adjustment()->get_value();
+    int cols = _col_item.get_adjustment()->get_value();
 
-    Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-
-    prefs->setInt("/tools/mesh/mesh_cols", cols);
+    Preferences::get()->setInt("/tools/mesh/mesh_cols", cols);
 
     blocked = FALSE;
 }
@@ -374,8 +326,8 @@ void MeshToolbar::col_changed()
 void MeshToolbar::toggle_fill_stroke()
 {
     auto prefs = Inkscape::Preferences::get();
-    prefs->setBool("tools/mesh/edit_fill", _edit_fill_item->get_active());
-    prefs->setBool("tools/mesh/edit_stroke", _edit_stroke_item->get_active());
+    prefs->setBool("/tools/mesh/edit_fill", _edit_fill_btn->get_active());
+    prefs->setBool("/tools/mesh/edit_stroke", _edit_stroke_btn->get_active());
 
     MeshTool *mt = get_mesh_tool();
     if (mt) {

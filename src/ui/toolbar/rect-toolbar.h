@@ -19,6 +19,7 @@
  *   Tavmjong Bah <tavmjong@free.fr>
  *   Abhishek Sharma
  *   Kris De Gussem <Kris.DeGussem@gmail.com>
+ *   Vaibhav Malik <vaibhavmalik2018@gmail.com>
  *
  * Copyright (C) 2004 David Turner
  * Copyright (C) 2003 MenTaLguY
@@ -28,7 +29,6 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include <gtkmm/adjustment.h>
 #include <gtkmm/builder.h>
 
 #include "toolbar.h"
@@ -37,10 +37,6 @@
 class SPDesktop;
 class SPItem;
 class SPRect;
-
-namespace Gtk {
-class Toolbutton;
-}
 
 namespace Inkscape {
 class Selection;
@@ -72,17 +68,17 @@ private:
     XML::Node *_repr{nullptr};
     SPItem *_item;
 
-    Gtk::Label *_mode_item;
-    UI::Widget::SpinButton *_width_item;
-    UI::Widget::SpinButton *_height_item;
-    UI::Widget::SpinButton *_rx_item;
-    UI::Widget::SpinButton *_ry_item;
-    Gtk::Button *_not_rounded;
+    Gtk::Label &_mode_item;
+    UI::Widget::SpinButton &_width_item;
+    UI::Widget::SpinButton &_height_item;
+    UI::Widget::SpinButton &_rx_item;
+    UI::Widget::SpinButton &_ry_item;
+    Gtk::Button &_not_rounded;
 
     bool _freeze{false};
     bool _single{true};
 
-    void setup_derived_spin_button(UI::Widget::SpinButton *btn, Glib::ustring const &name);
+    void setup_derived_spin_button(UI::Widget::SpinButton &btn, Glib::ustring const &name);
     void value_changed(Glib::RefPtr<Gtk::Adjustment>&  adj,
                        gchar const                    *value_name,
                        void (SPRect::*setter)(gdouble));
@@ -103,7 +99,7 @@ protected:
     ~RectToolbar() override;
 
 public:
-    static GtkWidget * create(SPDesktop *desktop);
+    static GtkWidget *create(SPDesktop *desktop);
 };
 
 }

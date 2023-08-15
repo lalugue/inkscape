@@ -19,6 +19,7 @@
  *   Tavmjong Bah <tavmjong@free.fr>
  *   Abhishek Sharma
  *   Kris De Gussem <Kris.DeGussem@gmail.com>
+ *   Vaibhav Malik <vaibhavmalik2018@gmail.com>
  *
  * Copyright (C) 2004 David Turner
  * Copyright (C) 2003 MenTaLguY
@@ -28,19 +29,12 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include <gtkmm/adjustment.h>
 #include <gtkmm/builder.h>
 
 #include "toolbar.h"
 #include "xml/node-observer.h"
 
 class SPDesktop;
-
-namespace Gtk {
-class Button;
-class Label;
-class ToggleButton;
-}
 
 namespace Inkscape {
 class Selection;
@@ -64,17 +58,16 @@ class StarToolbar
 	, private XML::NodeObserver
 {
 private:
+    using ValueChangedMemFun = void (StarToolbar::*)();
     Glib::RefPtr<Gtk::Builder> _builder;
-    Gtk::Label *_mode_item;
-    std::vector<Gtk::ToggleButton *> _flat_item_buttons;
-    UI::Widget::SpinButton *_magnitude_item;
-    UI::Widget::SpinButton *_spoke_item;
-    UI::Widget::SpinButton *_roundedness_item;
-    UI::Widget::SpinButton *_randomization_item;
-    Gtk::Button *_reset_item;
 
-    // To set both the label and the spin button invisible.
-    Gtk::Box *_spoke_box;
+    Gtk::Label &_mode_item;
+    std::vector<Gtk::ToggleButton *> _flat_item_buttons;
+    UI::Widget::SpinButton &_magnitude_item;
+    Gtk::Box &_spoke_box;
+    UI::Widget::SpinButton &_spoke_item;
+    UI::Widget::SpinButton &_roundedness_item;
+    UI::Widget::SpinButton &_randomization_item;
 
     XML::Node *_repr{nullptr};
 
@@ -82,7 +75,8 @@ private:
     bool _freeze{false};
     sigc::connection _changed;
 
-    void setup_derived_spin_button(UI::Widget::SpinButton *btn, Glib::ustring const &name, double default_value);
+    void setup_derived_spin_button(UI::Widget::SpinButton &btn, Glib::ustring const &name, double default_value,
+                                   ValueChangedMemFun const value_changed_mem_fun);
     void side_mode_changed(int mode);
     void magnitude_value_changed();
     void proportion_value_changed();
@@ -101,7 +95,7 @@ protected:
     ~StarToolbar() override;
 
 public:
-    static GtkWidget * create(SPDesktop *desktop);
+    static GtkWidget *create(SPDesktop *desktop);
 };
 
 }

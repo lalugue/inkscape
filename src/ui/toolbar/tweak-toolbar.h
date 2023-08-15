@@ -35,12 +35,6 @@
 
 class SPDesktop;
 
-namespace Gtk {
-class Label;
-class RadioButton;
-class ToggleButton;
-}
-
 namespace Inkscape {
 namespace UI {
 namespace Widget {
@@ -50,24 +44,25 @@ class SpinButton;
 namespace Toolbar {
 class TweakToolbar : public Toolbar {
 private:
+    using ValueChangedMemFun = void (TweakToolbar::*)();
     Glib::RefPtr<Gtk::Builder> _builder;
     std::vector<Gtk::RadioButton *> _mode_buttons;
 
-    UI::Widget::SpinButton *_width_item;
-    UI::Widget::SpinButton *_force_item;
-    UI::Widget::SpinButton *_fidelity_item;
+    UI::Widget::SpinButton &_width_item;
+    UI::Widget::SpinButton &_force_item;
+    Gtk::Box &_fidelity_box;
+    UI::Widget::SpinButton &_fidelity_item;
 
-    Gtk::Box *_fidelity_box;
+    Gtk::ToggleButton &_pressure_btn;
 
-    Gtk::ToggleButton *_pressure_btn;
+    Gtk::Box &_channels_box;
+    Gtk::ToggleButton &_doh_btn;
+    Gtk::ToggleButton &_dos_btn;
+    Gtk::ToggleButton &_dol_btn;
+    Gtk::ToggleButton &_doo_btn;
 
-    Gtk::Box *_channels_box;
-    Gtk::Label *_channels_label;
-    Gtk::ToggleButton *_doh_btn;
-    Gtk::ToggleButton *_dos_btn;
-    Gtk::ToggleButton *_dol_btn;
-    Gtk::ToggleButton *_doo_btn;
-
+    void setup_derived_spin_button(UI::Widget::SpinButton &btn, Glib::ustring const &name, double default_value,
+                                   ValueChangedMemFun const value_changed_mem_fun);
     void width_value_changed();
     void force_value_changed();
     void mode_changed(int mode);
@@ -82,10 +77,8 @@ protected:
     TweakToolbar(SPDesktop *desktop);
 
 public:
-    static GtkWidget * create(SPDesktop *desktop);
-
+    static GtkWidget *create(SPDesktop *desktop);
     void set_mode(int mode);
-    void setup_derived_spin_button(UI::Widget::SpinButton *btn, Glib::ustring const &name, double default_value);
 };
 }
 }

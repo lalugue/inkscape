@@ -19,6 +19,7 @@
  *   Tavmjong Bah <tavmjong@free.fr>
  *   Abhishek Sharma
  *   Kris De Gussem <Kris.DeGussem@gmail.com>
+ *   Vaibhav Malik <vaibhavmalik2018@gmail.com>
  *
  * Copyright (C) 2004 David Turner
  * Copyright (C) 2003 MenTaLguY
@@ -28,7 +29,6 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include <gtkmm/adjustment.h>
 #include <gtkmm/builder.h>
 
 #include "toolbar.h"
@@ -36,11 +36,6 @@
 
 class SPDesktop;
 class SPItem;
-
-namespace Gtk {
-class Label;
-class RadioButton;
-}
 
 namespace Inkscape {
 class Selection;
@@ -68,15 +63,15 @@ private:
     Glib::RefPtr<Gtk::Builder> _builder;
     std::unique_ptr<UI::Widget::UnitTracker> _tracker;
 
-    UI::Widget::SpinButton *_rx_item;
-    UI::Widget::SpinButton *_ry_item;
-    UI::Widget::SpinButton *_start_item;
-    UI::Widget::SpinButton *_end_item;
+    UI::Widget::SpinButton &_rx_item;
+    UI::Widget::SpinButton &_ry_item;
+    UI::Widget::SpinButton &_start_item;
+    UI::Widget::SpinButton &_end_item;
 
-    Gtk::Label *_mode_item;
+    Gtk::Label &_mode_item;
 
     std::vector<Gtk::RadioButton *> _type_buttons;
-    Gtk::Button *_make_whole;
+    Gtk::Button &_make_whole;
 
     bool _freeze{false};
     bool _single;
@@ -84,8 +79,8 @@ private:
     XML::Node *_repr{nullptr};
     SPItem *_item;
 
-    void setup_derived_spin_button(UI::Widget::SpinButton *btn, Glib::ustring const &name);
-    void setup_startend_button(UI::Widget::SpinButton *btn, Glib::ustring const &name);
+    void setup_derived_spin_button(UI::Widget::SpinButton &btn, Glib::ustring const &name);
+    void setup_startend_button(UI::Widget::SpinButton &btn, Glib::ustring const &name);
     void value_changed(Glib::RefPtr<Gtk::Adjustment> &adj, Glib::ustring const &value_name);
     void startend_value_changed(Glib::RefPtr<Gtk::Adjustment> &adj, Glib::ustring const &value_name,
                                 Glib::RefPtr<Gtk::Adjustment> &other_adj);
@@ -107,7 +102,7 @@ protected:
     ~ArcToolbar() override;
 
 public:
-    static GtkWidget * create(SPDesktop *desktop);
+    static GtkWidget *create(SPDesktop *desktop);
 };
 
 }

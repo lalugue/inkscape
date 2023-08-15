@@ -319,7 +319,7 @@
     <property name="valign">center</property>
     <property name="spacing">3</property>
     <child>
-      <object class="GtkMenuButton" id="font_collections_btn">
+      <object class="GtkMenuButton">
         <property name="visible">True</property>
         <property name="can-focus">True</property>
         <property name="focus-on-click">False</property>
@@ -1119,7 +1119,7 @@
             <property name="can-focus">True</property>
             <property name="width-chars">5</property>
             <property name="text" translatable="yes">0.00</property>
-            <property name="adjustment">_letter_spacing_adj</property>
+            <property name="adjustment">_word_spacing_adj</property>
             <property name="climb-rate">0.10</property>
             <property name="digits">2</property>
           </object>

@@ -43,7 +43,7 @@ void ToolbarMenuButton::init(int priority, std::string tag, std::string icon_nam
 {
     // std::cout << "ToolbarMenuButton::init()\n";
     _priority = priority;
-    _tag = _tag;
+    _tag = tag;
     _popover_box = popover_box;
 
     // std::cout << "Priority: " << _priority << std::endl;

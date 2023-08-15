@@ -26,53 +26,32 @@ CommandToolbar::CommandToolbar(SPDesktop *desktop)
     : Toolbar(desktop)
     , _builder(initialize_builder("toolbar-commands.ui"))
 {
-    _builder->get_widget("commands-toolbar", _toolbar);
-    if (!_toolbar) {
-        std::cerr << "InkscapeWindow: Failed to load commands toolbar!" << std::endl;
-    }
+    _toolbar = &get_widget<Gtk::Box>(_builder, "commands-toolbar");
 
     // Fetch all the ToolbarMenuButtons at once from the UI file
     // Menu Button #1
-    Gtk::Box *popover_box1;
-    _builder->get_widget("popover_box1", popover_box1);
-
-    Inkscape::UI::Widget::ToolbarMenuButton *menu_btn1 = nullptr;
-    _builder->get_widget_derived("menu_btn1", menu_btn1);
+    auto popover_box1 = &get_widget<Gtk::Box>(_builder, "popover_box1");
+    auto menu_btn1 = &get_derived_widget<UI::Widget::ToolbarMenuButton>(_builder, "menu_btn1");
 
     // Menu Button #2
-    Gtk::Box *popover_box2;
-    _builder->get_widget("popover_box2", popover_box2);
-
-    Inkscape::UI::Widget::ToolbarMenuButton *menu_btn2 = nullptr;
-    _builder->get_widget_derived("menu_btn2", menu_btn2);
+    auto popover_box2 = &get_widget<Gtk::Box>(_builder, "popover_box2");
+    auto menu_btn2 = &get_derived_widget<UI::Widget::ToolbarMenuButton>(_builder, "menu_btn2");
 
     // Menu Button #3
-    Gtk::Box *popover_box3;
-    _builder->get_widget("popover_box3", popover_box3);
-
-    Inkscape::UI::Widget::ToolbarMenuButton *menu_btn3 = nullptr;
-    _builder->get_widget_derived("menu_btn3", menu_btn3);
+    auto popover_box3 = &get_widget<Gtk::Box>(_builder, "popover_box3");
+    auto menu_btn3 = &get_derived_widget<UI::Widget::ToolbarMenuButton>(_builder, "menu_btn3");
 
     // Menu Button #4
-    Gtk::Box *popover_box4;
-    _builder->get_widget("popover_box4", popover_box4);
-
-    Inkscape::UI::Widget::ToolbarMenuButton *menu_btn4 = nullptr;
-    _builder->get_widget_derived("menu_btn4", menu_btn4);
+    auto popover_box4 = &get_widget<Gtk::Box>(_builder, "popover_box4");
+    auto menu_btn4 = &get_derived_widget<UI::Widget::ToolbarMenuButton>(_builder, "menu_btn4");
 
     // Menu Button #5
-    Gtk::Box *popover_box5;
-    _builder->get_widget("popover_box5", popover_box5);
-
-    Inkscape::UI::Widget::ToolbarMenuButton *menu_btn5 = nullptr;
-    _builder->get_widget_derived("menu_btn5", menu_btn5);
+    auto popover_box5 = &get_widget<Gtk::Box>(_builder, "popover_box5");
+    auto menu_btn5 = &get_derived_widget<UI::Widget::ToolbarMenuButton>(_builder, "menu_btn5");
 
     // Menu Button #6
-    Gtk::Box *popover_box6;
-    _builder->get_widget("popover_box6", popover_box6);
-
-    Inkscape::UI::Widget::ToolbarMenuButton *menu_btn6 = nullptr;
-    _builder->get_widget_derived("menu_btn6", menu_btn6);
+    auto popover_box6 = &get_widget<Gtk::Box>(_builder, "popover_box6");
+    auto menu_btn6 = &get_derived_widget<UI::Widget::ToolbarMenuButton>(_builder, "menu_btn6");
 
     // Initialize all the ToolbarMenuButtons only after all the children of the
     // toolbar have been fetched. Otherwise, the children to be moved in the

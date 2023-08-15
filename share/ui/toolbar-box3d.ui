@@ -84,13 +84,14 @@
       </packing>
     </child>
     <child>
-      <object class="GtkToggleButton" id="_vp_x_state_item">
+      <object class="GtkToggleButton" id="_vp_x_state_btn">
         <property name="visible">True</property>
         <property name="can-focus">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Toggle VP in X direction between 'finite' and 'infinite' (=parallel)</property>
         <property name="margin-end">3</property>
         <property name="image">image1</property>
+        <property name="relief">none</property>
         <property name="always-show-image">True</property>
       </object>
       <packing>
@@ -142,12 +143,13 @@
       </packing>
     </child>
     <child>
-      <object class="GtkToggleButton" id="_vp_y_state_item">
+      <object class="GtkToggleButton" id="_vp_y_state_btn">
         <property name="visible">True</property>
         <property name="can-focus">True</property>
         <property name="receives-default">True</property>
         <property name="margin-end">3</property>
         <property name="image">image2</property>
+        <property name="relief">none</property>
         <property name="always-show-image">True</property>
       </object>
       <packing>
@@ -199,11 +201,12 @@
       </packing>
     </child>
     <child>
-      <object class="GtkToggleButton" id="_vp_z_state_item">
+      <object class="GtkToggleButton" id="_vp_z_state_btn">
         <property name="visible">True</property>
         <property name="can-focus">True</property>
         <property name="receives-default">True</property>
         <property name="image">image3</property>
+        <property name="relief">none</property>
         <property name="always-show-image">True</property>
       </object>
       <packing>

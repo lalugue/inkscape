@@ -4,6 +4,7 @@
  *
  * Authors:
  *   Martin Owens
+ *   Vaibhav Malik <vaibhavmalik2018@gmail.com>
  *
  * Copyright (C) 2022 authors
  *
@@ -14,12 +15,11 @@
 #define INKSCAPE_UI_TOOLBAR_BOOLEANS_TOOLBAR_H
 
 #include <glibmm/refptr.h>
-#include <gtkmm/toolbar.h>
 
 namespace Gtk {
 class Adjustment;
 class Builder;
-class ToolButton;
+class Button;
 class Widget;
 } // namespace Gtk
 
@@ -37,18 +37,8 @@ public:
     BooleansToolbar(SPDesktop *desktop);
     ~BooleansToolbar() final;
 
-    void on_parent_changed(Gtk::Widget *) final;
-    void mode_changed(int mode);
-
 private:
     Glib::RefPtr<Gtk::Builder> _builder;
-    Glib::RefPtr<Gtk::Adjustment> _adj_opacity;
-
-    Gtk::ToggleButton *_btn_shape_add;
-    Gtk::ToggleButton *_btn_shape_delete;
-
-    Gtk::Button *_btn_confirm;
-    Gtk::Button *_btn_cancel;
 };
 
 } // namespace Inkscape::UI::Toolbar

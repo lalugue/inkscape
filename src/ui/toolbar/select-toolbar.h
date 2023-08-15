@@ -6,6 +6,7 @@
  * Authors:
  *   Lauris Kaplinski <lauris@kaplinski.com>
  *   bulia byak <bulia@dr.com>
+ *   Vaibhav Malik <vaibhavmalik2018@gmail.com>
  *
  * Copyright (C) 2003 authors
  *
@@ -25,12 +26,6 @@
 
 namespace Gtk {
 class Adjustment;
-class ToggleToolButton;
-class ToolItem;
-} // namespace Gtk
-
-namespace Gtk {
-class Grid;
 class ToggleButton;
 } // namespace Gtk
 
@@ -56,18 +51,18 @@ private:
     Glib::RefPtr<Gtk::Builder> _builder;
     std::unique_ptr<UI::Widget::UnitTracker> _tracker;
 
-    Gtk::ToggleButton *_select_touch_btn;
+    Gtk::ToggleButton &_select_touch_btn;
 
-    Gtk::ToggleButton *_transform_stroke_btn;
-    Gtk::ToggleButton *_transform_corners_btn;
-    Gtk::ToggleButton *_transform_gradient_btn;
-    Gtk::ToggleButton *_transform_pattern_btn;
+    Gtk::ToggleButton &_transform_stroke_btn;
+    Gtk::ToggleButton &_transform_corners_btn;
+    Gtk::ToggleButton &_transform_gradient_btn;
+    Gtk::ToggleButton &_transform_pattern_btn;
 
-    Inkscape::UI::Widget::SpinButton *_x_btn;
-    Inkscape::UI::Widget::SpinButton *_y_btn;
-    Inkscape::UI::Widget::SpinButton *_w_btn;
-    Inkscape::UI::Widget::SpinButton *_h_btn;
-    Gtk::ToggleButton *_lock_btn;
+    Inkscape::UI::Widget::SpinButton &_x_item;
+    Inkscape::UI::Widget::SpinButton &_y_item;
+    Inkscape::UI::Widget::SpinButton &_w_item;
+    Inkscape::UI::Widget::SpinButton &_h_item;
+    Gtk::ToggleButton &_lock_btn;
 
     std::vector<Gtk::Widget *> _context_items;
     std::vector<auto_connection> _connections;
@@ -87,7 +82,7 @@ private:
     void toggle_corners();
     void toggle_gradient();
     void toggle_pattern();
-    void setup_derived_spin_button(Inkscape::UI::Widget::SpinButton *, Glib::ustring const &);
+    void setup_derived_spin_button(Inkscape::UI::Widget::SpinButton &btn, Glib::ustring const &name);
 
 protected:
     SelectToolbar(SPDesktop *desktop);
@@ -95,7 +90,7 @@ protected:
     void on_unrealize() final;
 
 public:
-    static GtkWidget * create(SPDesktop *desktop);
+    static GtkWidget *create(SPDesktop *desktop);
 };
 
 } // namespace Widget
