@@ -329,7 +329,7 @@ public:
 
     // Removed item from display tree.
     void invoke_hide(unsigned int key);
-    void invoke_hide_except(unsigned key, const std::vector<SPItem *> &to_keep);
+    void invoke_hide_except(unsigned key, const std::vector<SPItem const *> &to_keep);
 
     void getSnappoints(std::vector<Inkscape::SnapCandidatePoint> &p, Inkscape::SnapPreferences const *snapprefs=nullptr) const;
     void adjust_pattern(/* Geom::Affine const &premul, */ Geom::Affine const &postmul, bool set = false,
@@ -378,23 +378,22 @@ public:
      * Return the arenaitem corresponding to the given item in the display
      * with the given key
      */
-    Inkscape::DrawingItem *get_arenaitem(unsigned key);
+    Inkscape::DrawingItem *get_arenaitem(unsigned key) const;
 
     /**
      * Returns the accumulated transformation of the item and all its ancestors, including root's viewport.
-     * @pre (item != NULL) and is<SPItem>(item).
      */
     Geom::Affine i2doc_affine() const;
 
     /**
-     * Returns the transformation from item to desktop coords
+     * Returns the transformation from item to desktop coords.
      */
     Geom::Affine i2dt_affine() const;
 
     void set_i2d_affine(Geom::Affine const &transform);
 
     /**
-     * should rather be named "sp_item_d2i_affine" to match "sp_item_i2d_affine" (or vice versa).
+     * Returns the transformation from desktop to item coords.
      */
     Geom::Affine dt2i_affine() const;
 

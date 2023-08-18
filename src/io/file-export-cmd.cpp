@@ -492,7 +492,7 @@ InkFileExportCmd::do_export_png(SPDocument *doc, std::string const &export_filen
     // Export each object in list (or root if empty).  Use ';' so in future it could be possible to selected multiple objects to export together.
     std::vector<Glib::ustring> objects = Glib::Regex::split_simple("\\s*;\\s*", export_id);
 
-    std::vector<SPItem*> items;
+    std::vector<SPItem const *> items;
     std::vector<Glib::ustring> objects_found;
     for (auto const &object_id : objects) {
         // Find export object. (Either root or object with specified id.)
@@ -594,13 +594,11 @@ InkFileExportCmd::do_export_png(SPDocument *doc, std::string const &export_filen
             continue;
         }
 
-        if (filename_from_hint) {
-            //Make relative paths go from the document location, if possible:
-            if (!Glib::path_is_absolute(filename_out) && doc->getDocumentFilename()) {
-                std::string dirname = Glib::path_get_dirname(doc->getDocumentFilename());
-                if (!dirname.empty()) {
-                    filename_out = Glib::build_filename(dirname, filename_out);
-                }
+        //Make relative paths go from the document location, if possible:
+        if (filename_from_hint && !Glib::path_is_absolute(filename_out) && doc->getDocumentFilename()) {
+            std::string dirname = Glib::path_get_dirname(doc->getDocumentFilename());
+            if (!dirname.empty()) {
+                filename_out = Glib::build_filename(dirname, filename_out);
             }
         }
 
@@ -674,7 +672,7 @@ InkFileExportCmd::do_export_png(SPDocument *doc, std::string const &export_filen
 }
 
 void
-InkFileExportCmd::do_export_png_now(SPDocument *doc, std::string const &filename_out, Geom::Rect area, double dpi_in, const std::vector<SPItem *> &items)
+InkFileExportCmd::do_export_png_now(SPDocument *doc, std::string const &filename_out, Geom::Rect area, double dpi_in, const std::vector<SPItem const *> &items)
 {
     // -------------------------- DPI -------------------------------
 
@@ -798,7 +796,7 @@ InkFileExportCmd::do_export_png_now(SPDocument *doc, std::string const &filename
         }
 
         if( sp_export_png_file(doc, filename_out.c_str(), area, width, height, xdpi, ydpi,
-                               bgcolor, nullptr, nullptr, true, export_id_only ? items : std::vector<SPItem*>(),
+                               bgcolor, nullptr, nullptr, true, export_id_only ? items : std::vector<SPItem const *>(),
                                false, color_type, bit_depth, export_png_compression, export_png_antialias) == 1 ) {
         } else {
             std::cerr << "InkFileExport::do_export_png: Failed to export to " << filename_out << std::endl;

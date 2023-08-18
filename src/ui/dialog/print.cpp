@@ -189,7 +189,7 @@ void Print::draw_page(const Glib::RefPtr<Gtk::PrintContext>& context, int page_n
             sp_export_png_file(_workaround._doc, tmp_png.c_str(), rect,
                 (unsigned long)(Inkscape::Util::Quantity::convert(rect.width(), "px", "in") * dpi),
                 (unsigned long)(Inkscape::Util::Quantity::convert(rect.height(), "px", "in") * dpi),
-                dpi, dpi, bgcolor, nullptr, nullptr, true, std::vector<SPItem*>());
+                               dpi, dpi, bgcolor, nullptr, nullptr, true, {});
 
             // This doesn't seem to work:
             //context->set_cairo_context ( Cairo::Context::create (Cairo::ImageSurface::create_from_png (tmp_png) ), dpi, dpi );

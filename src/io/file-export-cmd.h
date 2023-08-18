@@ -52,8 +52,7 @@ private:
                          Inkscape::Extension::Output &extension);
     int do_export_extension(SPDocument *doc, std::string const &filename_in, Inkscape::Extension::Output *extension);
     Glib::ustring export_type_current;
-
-    void do_export_png_now(SPDocument *doc, std::string const &filename_out, Geom::Rect area, double dpi_in, const std::vector<SPItem *> &items);
+    void do_export_png_now(SPDocument *doc, std::string const &filename_out, Geom::Rect area, double dpi_in, const std::vector<SPItem const *> &items);
 
 public:
     // Should be private, but this is just temporary code (I hope!).

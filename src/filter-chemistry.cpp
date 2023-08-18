@@ -402,7 +402,7 @@ void remove_hidder_filter (SPObject *item)
     }
 }
 
-bool has_hidder_filter(SPObject *item)
+bool has_hidder_filter(SPObject const *item)
 {
     SPFilter *filt = item->style->getFilter();
     if (filt && filt->getId()) {

@@ -197,7 +197,7 @@ bool Export::exportRaster(
         Geom::Rect const &area, unsigned long int const &width, unsigned long int const &height,
         float const &dpi, guint32 bg_color, Glib::ustring const &filename, bool overwrite,
         unsigned (*callback)(float, void *), void *data,
-        Inkscape::Extension::Output *extension, std::vector<SPItem *> *items)
+        Inkscape::Extension::Output *extension, std::vector<SPItem const *> *items)
 {
     SPDesktop *desktop = SP_ACTIVE_DESKTOP;
     if (!desktop)
@@ -248,7 +248,7 @@ bool Export::exportRaster(
     }
 
     // Export Start Here
-    std::vector<SPItem *> selected;
+    std::vector<SPItem const *> selected;
     if (items && items->size() > 0) {
         selected = *items;
     }
@@ -291,9 +291,9 @@ bool Export::exportRaster(
 bool Export::exportVector(
         Inkscape::Extension::Output *extension, SPDocument *doc,
         Glib::ustring const &filename,
-        bool overwrite, const std::vector<SPItem *> &items, SPPage *page)
+        bool overwrite, const std::vector<SPItem const *> &items, SPPage const *page)
 {
-    std::vector<SPPage *> pages;
+    std::vector<SPPage const *> pages;
     if (page)
         pages.push_back(page);
     return exportVector(extension, doc, filename, overwrite, items, pages);
@@ -302,7 +302,7 @@ bool Export::exportVector(
 bool Export::exportVector(
         Inkscape::Extension::Output *extension, SPDocument *copy_doc,
         Glib::ustring const &filename,
-        bool overwrite, const std::vector<SPItem *> &items, const std::vector<SPPage *> &pages)
+        bool overwrite, const std::vector<SPItem const *> &items, const std::vector<SPPage const *> &pages)
 {
     SPDesktop *desktop = SP_ACTIVE_DESKTOP;
     if (!desktop)
@@ -329,7 +329,7 @@ bool Export::exportVector(
     }
     copy_doc->ensureUpToDate();
 
-    std::vector<SPItem *> objects = items;
+    std::vector<SPItem const *> objects = items;
     std::set<std::string> obj_ids;
     std::set<std::string> page_ids;
     for (auto page : pages) {

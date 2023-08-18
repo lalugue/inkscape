@@ -51,14 +51,14 @@ public:
     /** Initializes the CairoRenderContext according to the specified
     SPDocument. A set*Target function can only be called on the context
     before setupDocument. */
-    bool setupDocument(CairoRenderContext *ctx, SPDocument *doc, SPItem *base = nullptr);
+    bool setupDocument(CairoRenderContext *ctx, SPDocument *doc, SPItem const *base = nullptr);
 
 
     /** Traverses the object tree and invokes the render methods. */
-    void renderItem(CairoRenderContext *ctx, SPItem *item, SPItem *clone = nullptr, SPPage *page = nullptr);
+    void renderItem(CairoRenderContext *ctx, SPItem const *item, SPItem const *origin = nullptr, SPPage const *page = nullptr);
     void renderHatchPath(CairoRenderContext *ctx, SPHatchPath const &hatchPath, unsigned key);
     bool renderPages(CairoRenderContext *ctx, SPDocument *doc, bool stretch_to_fit);
-    bool renderPage(CairoRenderContext *ctx, SPDocument *doc, SPPage *page, bool stretch_to_fit);
+    bool renderPage(CairoRenderContext *ctx, SPDocument *doc, SPPage const *page, bool stretch_to_fit);
 
 private:
     /** Extract metadata from doc and set it on ctx. */
@@ -68,8 +68,8 @@ private:
     static bool _shouldRasterize(CairoRenderContext *ctx, SPItem const *item);
 
     /** Render a single item in a fully set up context. */
-    static void _doRender(SPItem *item, CairoRenderContext *ctx, SPItem *origin = nullptr,
-                          SPPage *page = nullptr);
+    static void _doRender(SPItem const *item, CairoRenderContext *ctx, SPItem const *origin = nullptr,
+                          SPPage const *page = nullptr);
 
 };
 

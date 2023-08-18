@@ -137,24 +137,24 @@ Here comes the rendering part which could be put into the 'render' methods of SP
 */
 
 /* The below functions are copy&pasted plus slightly modified from *_invoke_print functions. */
-static void sp_item_invoke_render(SPItem *item, CairoRenderContext *ctx, SPItem *origin = nullptr, SPPage *page = nullptr);
-static void sp_group_render(SPGroup *group, CairoRenderContext *ctx, SPItem *origin = nullptr, SPPage *page = nullptr);
-static void sp_anchor_render(SPAnchor *a, CairoRenderContext *ctx);
-static void sp_use_render(SPUse *use, CairoRenderContext *ctx, SPPage *page = nullptr);
-static void sp_shape_render(SPShape *shape, CairoRenderContext *ctx, SPItem *origin = nullptr);
-static void sp_text_render(SPText *text, CairoRenderContext *ctx);
-static void sp_flowtext_render(SPFlowtext *flowtext, CairoRenderContext *ctx);
-static void sp_image_render(SPImage *image, CairoRenderContext *ctx);
-static void sp_symbol_render(SPSymbol *symbol, CairoRenderContext *ctx, SPItem *origin, SPPage *page);
-static void sp_asbitmap_render(SPItem *item, CairoRenderContext *ctx, SPPage *page = nullptr);
+static void sp_item_invoke_render(SPItem const *item, CairoRenderContext *ctx, SPItem const *origin = nullptr, SPPage const *page = nullptr);
+static void sp_group_render(SPGroup const *group, CairoRenderContext *ctx, SPItem const *origin = nullptr, SPPage const *page = nullptr);
+static void sp_anchor_render(SPAnchor const *a, CairoRenderContext *ctx);
+static void sp_use_render(SPUse const *use, CairoRenderContext *ctx, SPPage const *page = nullptr);
+static void sp_shape_render(SPShape const *shape, CairoRenderContext *ctx, SPItem const *origin = nullptr);
+static void sp_text_render(SPText const *text, CairoRenderContext *ctx);
+static void sp_flowtext_render(SPFlowtext const *flowtext, CairoRenderContext *ctx);
+static void sp_image_render(SPImage const *image, CairoRenderContext *ctx);
+static void sp_symbol_render(SPSymbol const *symbol, CairoRenderContext *ctx, SPItem const *origin, SPPage const *page);
+static void sp_asbitmap_render(SPItem const *item, CairoRenderContext *ctx, SPPage const *page = nullptr);
 
-static void sp_shape_render_invoke_marker_rendering(SPMarker* marker, Geom::Affine tr, CairoRenderContext *ctx, SPItem *origin)
+static void sp_shape_render_invoke_marker_rendering(SPMarker *marker, Geom::Affine tr, CairoRenderContext *ctx, SPItem const *origin)
 {
     if (auto marker_item = sp_item_first_item_child(marker)) {
         tr = marker_item->transform * marker->c2p * tr;
         Geom::Affine old_tr = marker_item->transform;
         marker_item->transform = tr;
-        ctx->getRenderer()->renderItem (ctx, marker_item, origin);
+        ctx->getRenderer()->renderItem(ctx, marker_item, origin);
         marker_item->transform = old_tr;
     }
 }
@@ -166,7 +166,7 @@ static void sp_shape_render_invoke_marker_rendering(SPMarker* marker, Geom::Affi
 class ContextPaintManager
 {
 public:
-    ContextPaintManager(SPStyle *target_style, SPItem *style_origin)
+    ContextPaintManager(SPStyle *target_style, SPItem const *style_origin)
         : _managed_style{target_style}
         , _origin{style_origin}
     {
@@ -236,14 +236,14 @@ private:
     }
 
     SPStyle *_managed_style;
-    SPItem *_origin;
+    SPItem const *_origin;
     decltype(_managed_style->fill) _old_fill;
     decltype(_managed_style->stroke) _old_stroke;
     bool _rewrote_fill = false;
     bool _rewrote_stroke = false;
 };
 
-static void sp_shape_render(SPShape *shape, CairoRenderContext *ctx, SPItem *origin)
+static void sp_shape_render(SPShape const *shape, CairoRenderContext *ctx, SPItem const *origin)
 {
     if (!shape->curve()) {
         return;
@@ -370,17 +370,17 @@ static void sp_shape_render(SPShape *shape, CairoRenderContext *ctx, SPItem *ori
     }
 }
 
-static void sp_group_render(SPGroup *group, CairoRenderContext *ctx, SPItem *origin, SPPage *page)
+static void sp_group_render(SPGroup const *group, CairoRenderContext *ctx, SPItem const *origin, SPPage const *page)
 {
     CairoRenderer *renderer = ctx->getRenderer();
-    for (auto obj : group->childList(false)) {
-        if (auto item = cast<SPItem>(obj)) {
+    for (auto &obj : group->children) {
+        if (auto item = cast<SPItem>(&obj)) {
             renderer->renderItem(ctx, item, origin, page);
         }
     }
 }
 
-static void sp_use_render(SPUse *use, CairoRenderContext *ctx, SPPage *page)
+static void sp_use_render(SPUse const *use, CairoRenderContext *ctx, SPPage const *page)
 {
     bool translated = false;
     CairoRenderer *renderer = ctx->getRenderer();
@@ -405,17 +405,17 @@ static void sp_use_render(SPUse *use, CairoRenderContext *ctx, SPPage *page)
     }
 }
 
-static void sp_text_render(SPText *text, CairoRenderContext *ctx)
+static void sp_text_render(SPText const *text, CairoRenderContext *ctx)
 {
     text->layout.showGlyphs(ctx);
 }
 
-static void sp_flowtext_render(SPFlowtext *flowtext, CairoRenderContext *ctx)
+static void sp_flowtext_render(SPFlowtext const *flowtext, CairoRenderContext *ctx)
 {
     flowtext->layout.showGlyphs(ctx);
 }
 
-static void sp_image_render(SPImage *image, CairoRenderContext *ctx)
+static void sp_image_render(SPImage const *image, CairoRenderContext *ctx)
 {
     if (!image->pixbuf) {
         return;
@@ -448,11 +448,8 @@ static void sp_image_render(SPImage *image, CairoRenderContext *ctx)
     ctx->renderImage(image->pixbuf.get(), t, image->style);
 }
 
-static void sp_anchor_render(SPAnchor *a, CairoRenderContext *ctx)
+static void sp_anchor_render(SPAnchor const *a, CairoRenderContext *ctx)
 {
-    CairoRenderer *renderer = ctx->getRenderer();
-
-    std::vector<SPObject*> l(a->childList(false));
     if (a->href) {
         // Raw linking, whatever the user said they wanted
         char* link = g_strdup_printf("uri='%s'", a->href);
@@ -469,9 +466,9 @@ static void sp_anchor_render(SPAnchor *a, CairoRenderContext *ctx)
         g_free(link);
     }
 
-    for(auto x : l){
-        auto item = cast<SPItem>(x);
-        if (item) {
+    CairoRenderer *renderer = ctx->getRenderer();
+    for (auto const &object : a->children) {
+        if (auto item = cast<SPItem>(&object)) {
             renderer->renderItem(ctx, item);
         }
     }
@@ -479,7 +476,7 @@ static void sp_anchor_render(SPAnchor *a, CairoRenderContext *ctx)
         ctx->tagEnd();
 }
 
-static void sp_symbol_render(SPSymbol *symbol, CairoRenderContext *ctx, SPItem *origin, SPPage *page)
+static void sp_symbol_render(SPSymbol const *symbol, CairoRenderContext *ctx, SPItem const *origin, SPPage const *page)
 {
     if (!symbol->cloned) {
         return;
@@ -519,7 +516,7 @@ static void sp_symbol_render(SPSymbol *symbol, CairoRenderContext *ctx, SPItem *
     ctx->popState();
 }
 
-static void sp_root_render(SPRoot *root, CairoRenderContext *ctx)
+static void sp_root_render(SPRoot const *root, CairoRenderContext *ctx)
 {
     CairoRenderer *renderer = ctx->getRenderer();
 
@@ -537,7 +534,7 @@ static void sp_root_render(SPRoot *root, CairoRenderContext *ctx)
     This function converts the item to a raster image and includes the image into the cairo renderer.
     It is only used for filters and then only when rendering filters as bitmaps is requested.
 */
-static void sp_asbitmap_render(SPItem *item, CairoRenderContext *ctx, SPPage *page)
+static void sp_asbitmap_render(SPItem const *item, CairoRenderContext *ctx, SPPage const *page)
 {
 
     // The code was adapted from sp_selection_create_bitmap_copy in selection-chemistry.cpp
@@ -593,22 +590,15 @@ static void sp_asbitmap_render(SPItem *item, CairoRenderContext *ctx, SPPage *pa
     Geom::Affine t = t_on_document * t_item.inverse();
 
     // Do the export
-    SPDocument *document = item->document;
-
-    std::vector<SPItem*> items;
-    items.push_back(item);
-
-    std::unique_ptr<Inkscape::Pixbuf> pb(sp_generate_internal_bitmap(document, *bbox, res, items, true));
+    std::unique_ptr<Inkscape::Pixbuf> pb(sp_generate_internal_bitmap(item->document, *bbox, res, {item}, true));
 
     if (pb) {
         //TEST(gdk_pixbuf_save( pb, "bitmap.png", "png", NULL, NULL ));
-
         ctx->renderImage(pb.get(), t, item->style);
     }
 }
 
-
-static void sp_item_invoke_render(SPItem *item, CairoRenderContext *ctx, SPItem *origin, SPPage *page)
+static void sp_item_invoke_render(SPItem const *item, CairoRenderContext *ctx, SPItem const *origin, SPPage const *page)
 {
     std::vector<SPObject *> links;
     item->getLinked(links, true);
@@ -693,7 +683,7 @@ bool CairoRenderer::_shouldRasterize(CairoRenderContext *ctx, SPItem const *item
     return false;
 }
 
-void CairoRenderer::_doRender(SPItem *item, CairoRenderContext *ctx, SPItem *origin, SPPage *page)
+void CairoRenderer::_doRender(SPItem const *item, CairoRenderContext *ctx, SPItem const *origin, SPPage const *page)
 {
     // Check item's visibility
     if (item->isHidden() || has_hidder_filter(item)) {
@@ -707,8 +697,7 @@ void CairoRenderer::_doRender(SPItem *item, CairoRenderContext *ctx, SPItem *ori
     }
 }
 
-// TODO change this to accept a const SPItem:
-void CairoRenderer::renderItem(CairoRenderContext *ctx, SPItem *item, SPItem *origin, SPPage *page)
+void CairoRenderer::renderItem(CairoRenderContext *ctx, SPItem const *item, SPItem const *origin, SPPage const *page)
 {
     ctx->pushState();
     setStateForItem(ctx, item);
@@ -801,7 +790,7 @@ void CairoRenderer::setMetadata(CairoRenderContext *ctx, SPDocument *doc) {
 }
 
 bool
-CairoRenderer::setupDocument(CairoRenderContext *ctx, SPDocument *doc, SPItem *base)
+CairoRenderer::setupDocument(CairoRenderContext *ctx, SPDocument *doc, SPItem const *base)
 {
 // PLEASE note when making changes to the boundingbox and transform calculation, corresponding changes should be made to LaTeXTextRenderer::setupDocument !!!
 
@@ -860,7 +849,7 @@ CairoRenderer::renderPages(CairoRenderContext *ctx, SPDocument *doc, bool stretc
 }
 
 bool
-CairoRenderer::renderPage(CairoRenderContext *ctx, SPDocument *doc, SPPage *page, bool stretch_to_fit)
+CairoRenderer::renderPage(CairoRenderContext *ctx, SPDocument *doc, SPPage const *page, bool stretch_to_fit)
 {
     // Calculate exact page rectangle in PostScript points:
     auto scale = doc->getDocumentScale();
@@ -946,8 +935,7 @@ CairoRenderer::applyClipPath(CairoRenderContext *ctx, SPClipPath const *cp)
             ctx->pushState();
             ctx->transform(tempmat);
             setStateForItem(ctx, item);
-            // TODO fix this call to accept const items
-            _doRender(const_cast<SPItem *>(item), ctx);
+            _doRender(item, ctx);
             ctx->popState();
         }
     }

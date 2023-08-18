@@ -1692,10 +1692,9 @@ void ClipboardManagerImpl::_onGet(Gtk::SelectionData &sel, guint /*info*/)
                 double opacity = nv->getAttributeDouble("inkscape:pageopacity", 1.0);
                 bgcolor |= SP_COLOR_F_TO_U(opacity);
             }
-            std::vector<SPItem*> x;
             gchar *raster_file = g_build_filename( g_get_user_cache_dir(), "inkscape-clipboard-export-raster", nullptr );
             sp_export_png_file(_clipboardSPDoc.get(), raster_file, area, width, height, dpi, dpi, bgcolor, nullptr,
-                               nullptr, true, x);
+                               nullptr, true, {});
             (*out)->export_raster(_clipboardSPDoc.get(), raster_file, filename, true);
             unlink(raster_file);
             g_free(raster_file);

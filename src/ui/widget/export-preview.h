@@ -43,8 +43,8 @@ public:
     PreviewDrawing(SPDocument *document);
     ~PreviewDrawing();
 
-    bool render(ExportPreview *widget, std::uint32_t bg, SPItem *item, unsigned size, Geom::OptRect const &dboxIn);
-    void set_shown_items(std::vector<SPItem*> &&list = {});
+    bool render(ExportPreview *widget, std::uint32_t bg, SPItem const *item, unsigned size, Geom::OptRect const &dboxIn);
+    void set_shown_items(std::vector<SPItem const *> &&list = {});
 
 private:
     void destruct();
@@ -55,7 +55,7 @@ private:
     unsigned _visionkey = 0;
     bool _to_destruct = false;
 
-    std::vector<SPItem*> _shown_items;
+    std::vector<SPItem const *> _shown_items;
     Inkscape::auto_connection _construct_idle;
 };
 
@@ -68,7 +68,7 @@ public:
     ~ExportPreview() override;
 
     void setDrawing(std::shared_ptr<PreviewDrawing> drawing);
-    void setItem(SPItem *item);
+    void setItem(SPItem const *item);
     void setBox(Geom::Rect const &bbox);
     void queueRefresh();
     void resetPixels(bool new_size = false);
@@ -82,7 +82,7 @@ private:
     int size = 128; // size of preview image
     sigc::connection refresh_conn;
 
-    SPItem *_item = nullptr;
+    SPItem const *_item = nullptr;
     Geom::OptRect _dbox;
 
     std::shared_ptr<PreviewDrawing> _drawing;

@@ -75,7 +75,7 @@ void PreviewDrawing::construct()
 /**
   * Render the drawing into a cairo image surface.
   */
-bool PreviewDrawing::render(ExportPreview *widget, uint32_t bg, SPItem *item, unsigned size, Geom::OptRect const &dbox)
+bool PreviewDrawing::render(ExportPreview *widget, uint32_t bg, SPItem const *item, unsigned size, Geom::OptRect const &dbox)
 {
     if (!_drawing || _to_destruct) {
         if (!_construct_idle.connected()) {
@@ -111,7 +111,7 @@ bool PreviewDrawing::render(ExportPreview *widget, uint32_t bg, SPItem *item, un
  *
  * You must call refresh after this for the change to take effect.
  */
-void PreviewDrawing::set_shown_items(std::vector<SPItem*> &&list)
+void PreviewDrawing::set_shown_items(std::vector<SPItem const *> &&list)
 {
     _shown_items = std::move(list);
     _to_destruct = true;
@@ -145,7 +145,7 @@ ExportPreview::~ExportPreview()
     refresh_conn.disconnect();
 }
 
-void ExportPreview::setItem(SPItem *item)
+void ExportPreview::setItem(SPItem const *item)
 {
     _item = item;
     _dbox = {};

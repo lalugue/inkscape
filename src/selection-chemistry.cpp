@@ -3658,7 +3658,7 @@ void ObjectSet::createBitmapCopy()
     }
 
     // List of the items to show; all others will be hidden
-    std::vector<SPItem*> items_(items().begin(), items().end());
+    std::vector<SPItem const *> items_{items().begin(), items().end()};
 
     // Sort items so that the topmost comes last
     sort(items_.begin(), items_.end(), sp_item_repr_compare_position_bool);

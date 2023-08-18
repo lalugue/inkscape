@@ -197,7 +197,7 @@ private:
     void onPagesSelected(SPPage *page);
     void setPagesMode(bool multi);
     void selectPage(SPPage *page);
-    std::vector<SPPage *> getSelectedPages();
+    std::vector<SPPage const *> getSelectedPages() const;
 
     bool interrupted;
 

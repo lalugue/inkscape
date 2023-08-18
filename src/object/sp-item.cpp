@@ -15,6 +15,7 @@
 
 #include "sp-item.h"
 
+#include <algorithm>
 #include <glibmm/i18n.h>
 
 #include "bad-uri-exception.h"
@@ -1277,7 +1278,7 @@ void SPItem::invoke_hide(unsigned key)
 /**
  * Invoke hide on all non-group items, except for the list of items to keep.
  */
-void SPItem::invoke_hide_except(unsigned key, const std::vector<SPItem *> &to_keep)
+void SPItem::invoke_hide_except(unsigned key, const std::vector<SPItem const *> &to_keep)
 {
     // If item is not in the list of items to keep.
     if (to_keep.end() == find(to_keep.begin(), to_keep.end(), this)) {
@@ -1745,16 +1746,13 @@ Geom::Affine SPItem::dt2i_affine() const
     return i2dt_affine().inverse();
 }
 
-/* Item views */
-
-Inkscape::DrawingItem *SPItem::get_arenaitem(unsigned key)
+// Item views
+Inkscape::DrawingItem *SPItem::get_arenaitem(unsigned key) const
 {
-    for (auto &v : views) {
-        if (v.key == key) {
-            return v.drawingitem.get();
-        }
-    }
-    return nullptr;
+    auto const view_it = std::find_if(views.begin(), views.end(), [key](SPItemView const &v) {
+        return v.key == key;
+    });
+    return view_it == views.end() ? nullptr : view_it->drawingitem.get();
 }
 
 int sp_item_repr_compare_position(SPItem const *first, SPItem const *second)

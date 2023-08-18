@@ -374,7 +374,7 @@ ExportResult sp_export_png_file(SPDocument *doc, gchar const *filename,
                                 unsigned long bgcolor,
                                 unsigned int (*status) (float, void *),
                                 void *data, bool force_overwrite,
-                                const std::vector<SPItem*> &items_only, bool interlace, int color_type, int bit_depth, int zlib, int antialiasing)
+                                const std::vector<SPItem const *> &items_only, bool interlace, int color_type, int bit_depth, int zlib, int antialiasing)
 {
     return sp_export_png_file(doc, filename, Geom::Rect(Geom::Point(x0,y0),Geom::Point(x1,y1)),
                               width, height, xdpi, ydpi, bgcolor, status, data, force_overwrite, items_only, interlace, color_type, bit_depth, zlib, antialiasing);
@@ -391,7 +391,7 @@ ExportResult sp_export_png_file(SPDocument *doc, gchar const *filename,
                                 unsigned long bgcolor,
                                 unsigned (*status)(float, void *),
                                 void *data, bool force_overwrite,
-                                const std::vector<SPItem*> &items_only, bool interlace, int color_type, int bit_depth, int zlib, int antialiasing)
+                                const std::vector<SPItem const *> &items_only, bool interlace, int color_type, int bit_depth, int zlib, int antialiasing)
 {
     g_return_val_if_fail(doc != nullptr, EXPORT_ERROR);
     g_return_val_if_fail(filename != nullptr, EXPORT_ERROR);

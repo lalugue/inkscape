@@ -490,7 +490,7 @@ void BatchExport::refreshPreview()
     preview_container.set_orientation(preview ? Gtk::ORIENTATION_HORIZONTAL : Gtk::ORIENTATION_VERTICAL);
 
     if (preview) {
-        std::vector<SPItem *> selected;
+        std::vector<SPItem const *> selected;
         for (auto &[key, val] : current_items) {
             if (hide) {
                 // Assumption: This will never alternate between these branches in the same
@@ -499,7 +499,7 @@ void BatchExport::refreshPreview()
                     selected.push_back(item);
                 } else if (val->getPage()) {
                     auto sels = _desktop->getSelection()->items();
-                    selected = std::vector<SPItem *>(sels.begin(), sels.end());
+                    selected = {sels.begin(), sels.end()};
                     break;
                 }
             }
@@ -593,7 +593,7 @@ void BatchExport::onExport()
 
     bool hide = hide_all.get_active();
     auto sels = _desktop->getSelection()->items();
-    std::vector<SPItem *> selected_items(sels.begin(), sels.end());
+    std::vector<SPItem const *> selected_items(sels.begin(), sels.end());
 
     // Start Exporting Each Item
     for (int j = 0; j < num_rows && !interrupted; j++) {
@@ -618,7 +618,7 @@ void BatchExport::onExport()
             SPItem *item = batchItem->getItem();
             SPPage *page = batchItem->getPage();
 
-            std::vector<SPItem *> show_only;
+            std::vector<SPItem const *> show_only;
             Geom::Rect area;
             if (item) {
                 if (auto bounds = item->documentVisualBounds()) {

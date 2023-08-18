@@ -67,9 +67,9 @@ public:
     BatchItem(SPPage *page, std::shared_ptr<PreviewDrawing> drawing);
     ~BatchItem() final;
 
-    Glib::ustring getLabel() { return _label_str; }
-    SPItem *getItem() { return _item; }
-    SPPage *getPage() { return _page; }
+    Glib::ustring getLabel() const { return _label_str; }
+    SPItem *getItem() const { return _item; }
+    SPPage *getPage() const { return _page; }
     void refresh(bool hide, guint32 bg_color);
     void setDrawing(std::shared_ptr<PreviewDrawing> drawing);
 

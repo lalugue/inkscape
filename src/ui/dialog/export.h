@@ -94,15 +94,14 @@ public:
         Geom::Rect const &area, unsigned long int const &width, unsigned long int const &height,
         float const &dpi, guint32 bg_color, Glib::ustring const &filename, bool overwrite,
         unsigned (*callback)(float, void *), void *data,
-        Inkscape::Extension::Output *extension, std::vector<SPItem *> *items = nullptr);
+        Inkscape::Extension::Output *extension, std::vector<SPItem const *> *items = nullptr);
   
     static bool exportVector(
         Inkscape::Extension::Output *extension, SPDocument *doc, Glib::ustring const &filename,
-        bool overwrite, const std::vector<SPItem *> &items, SPPage *page);
-
+        bool overwrite, const std::vector<SPItem const *> &items, SPPage const *page);
     static bool exportVector(
         Inkscape::Extension::Output *extension, SPDocument *doc, Glib::ustring const &filename,
-        bool overwrite, const std::vector<SPItem *> &items, const std::vector<SPPage *> &pages);
+        bool overwrite, const std::vector<SPItem const *> &items, const std::vector<SPPage const *> &pages);
 };
 
 } // namespace UI::Dialog

@@ -347,9 +347,9 @@ void SingleExport::selectPage(SPPage *page)
     });
 }
 
-std::vector<SPPage *> SingleExport::getSelectedPages()
+std::vector<SPPage const *> SingleExport::getSelectedPages() const
 {
-    std::vector<SPPage *> pages;
+    std::vector<SPPage const *> pages;
     pages_list.selected_foreach([&pages](Gtk::FlowBox *box, Gtk::FlowBoxChild *child) {
         if (auto item = dynamic_cast<BatchItem *>(child))
             pages.push_back(item->getPage());
@@ -637,7 +637,7 @@ void SingleExport::onExport()
 
         setExporting(true, Glib::ustring::compose(_("Exporting %1 (%2 x %3)"), filename, width, height));
 
-        std::vector<SPItem *> selected(selection->items().begin(), selection->items().end());
+        std::vector<SPItem const *> selected(selection->items().begin(), selection->items().end());
 
         exportSuccessful = Export::exportRaster(
             area, width, height, dpi, _bgnd_color_picker->get_current_color(),
@@ -649,13 +649,10 @@ void SingleExport::onExport()
 
         auto copy_doc = _document->copy();
 
-        std::vector<SPItem *> items;
+        std::vector<SPItem const *> items;
         if (selected_only) {
             auto itemlist = selection->items();
-            for (auto i = itemlist.begin(); i != itemlist.end(); ++i) {
-                SPItem *item = *i;
-                items.push_back(item);
-            }
+            items.insert(items.end(), itemlist.begin(), itemlist.end());
         }
 
         if (current_key == SELECTION_PAGE && page_manager.hasPages()) {
@@ -668,7 +665,7 @@ void SingleExport::onExport()
         } else {
             // To get the right kind of export, we're going to make a page
             // This allows all the same raster options to work for vectors
-            auto page = copy_doc->getPageManager().newDocumentPage(area);
+            auto const page = copy_doc->getPageManager().newDocumentPage(area);
             exportSuccessful = Export::exportVector(omod, copy_doc.get(), filename, false, items, page);
         }
     }
@@ -982,11 +979,11 @@ void SingleExport::refreshPreview()
         return;
     }
 
-    std::vector<SPItem *> selected;
+    std::vector<SPItem const *> selected;
     if (si_hide_all.get_active()) {
         // This is because selection items is not a std::vector yet. FIXME.
-        selected =
-            std::vector<SPItem *>(_desktop->getSelection()->items().begin(), _desktop->getSelection()->items().end());
+        auto sel_range = _desktop->getSelection()->items();
+        selected = {sel_range.begin(), sel_range.end()};
     }
     _preview_drawing->set_shown_items(std::move(selected));
 
