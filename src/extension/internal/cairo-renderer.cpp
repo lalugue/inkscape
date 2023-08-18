@@ -66,6 +66,7 @@
 #include "object/sp-item-group.h"
 #include "object/sp-item.h"
 #include "object/sp-marker.h"
+#include "object/sp-marker-loc.h"
 #include "object/sp-mask.h"
 #include "object/sp-page.h"
 #include "object/sp-radial-gradient.h"
@@ -280,18 +281,19 @@ static void sp_shape_render(SPShape const *shape, CairoRenderContext *ctx, SPIte
 
     // TODO: Factor marker rendering out into a separate function; reduce code duplication.
     // START marker
-    for (int i = 0; i < 2; i++) {  // SP_MARKER_LOC and SP_MARKER_LOC_START
-        if ( shape->_marker[i] ) {
-            SPMarker* marker = shape->_marker[i];
+    for (int marker_type : {SP_MARKER_LOC, SP_MARKER_LOC_START}) {
+        if (SPMarker *marker = shape->_marker[marker_type]) {
             Geom::Affine tr(sp_shape_marker_get_transform_at_start(pathv.begin()->front()));
             tr = marker->get_marker_transform(tr, style->stroke_width.computed, true);
             sp_shape_render_invoke_marker_rendering(marker, tr, ctx, origin ? origin : shape);
         }
     }
     // MID marker
-    for (int i = 0; i < 3; i += 2) {  // SP_MARKER_LOC and SP_MARKER_LOC_MID
-        if ( !shape->_marker[i] ) continue;
-        SPMarker* marker = shape->_marker[i];
+    for (int marker_type : {SP_MARKER_LOC, SP_MARKER_LOC_MID}) {
+        SPMarker *marker = shape->_marker[marker_type];
+        if (!marker) {
+            continue;
+        }
         for(Geom::PathVector::const_iterator path_it = pathv.begin(); path_it != pathv.end(); ++path_it) {
             // START position
             if ( path_it != pathv.begin()
@@ -328,10 +330,8 @@ static void sp_shape_render(SPShape const *shape, CairoRenderContext *ctx, SPIte
         }
     }
     // END marker
-    for (int i = 0; i < 4; i += 3) {  // SP_MARKER_LOC and SP_MARKER_LOC_END
-        if ( shape->_marker[i] ) {
-            SPMarker* marker = shape->_marker[i];
-
+    for (int marker_type : {SP_MARKER_LOC, SP_MARKER_LOC_END}) {
+        if (SPMarker *marker = shape->_marker[marker_type]) {
             /* Get reference to last curve in the path.
              * For moveto-only path, this returns the "closing line segment". */
             Geom::Path const &path_last = pathv.back();
