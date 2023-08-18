@@ -585,7 +585,7 @@ CairoRenderContext::popLayer(cairo_operator_t composite)
         CairoRenderContext *clip_ctx = nullptr;
         cairo_surface_t *clip_mask = nullptr;
 
-        // Apply any clip path first
+        // Apply any clip path first (before masking)
         if (clip_path) {
             TRACE(("  Applying clip\n"));
             if (_render_mode == RENDER_MODE_CLIP)
@@ -600,9 +600,6 @@ CairoRenderContext::popLayer(cairo_operator_t composite)
                         cairo_paint(_cr);
                     else
                         cairo_paint_with_alpha(_cr, opacity);
-
-                } else {
-                    // the clipPath will be applied before masking
                 }
             } else {
 
@@ -626,10 +623,7 @@ CairoRenderContext::popLayer(cairo_operator_t composite)
                 cairo_restore(clip_ctx->_cr);
 
                 // If a mask won't be applied set opacity too. (The clip is represented by a solid Cairo mask.)
-                if (!mask)
-                    cairo_set_source_rgba(clip_ctx->_cr, 1.0, 1.0, 1.0, opacity);
-                else
-                    cairo_set_source_rgba(clip_ctx->_cr, 1.0, 1.0, 1.0, 1.0);
+                cairo_set_source_rgba(clip_ctx->_cr, 1.0, 1.0, 1.0, mask ? 1.0 : opacity);
 
                 // copy over the correct CTM
                 // It must be stored in item_transform of current state after pushState.
@@ -1040,10 +1034,7 @@ CairoRenderContext::finish(bool finish_surface)
         _stream = nullptr;
     }
 
-    if (status == CAIRO_STATUS_SUCCESS)
-        return true;
-    else
-        return false;
+    return status == CAIRO_STATUS_SUCCESS;
 }
 
 void
@@ -1120,14 +1111,10 @@ void CairoRenderContext::popState()
     _state = _state_stack.back();
 }
 
-static bool pattern_hasItemChildren(SPPattern *pat)
+static bool pattern_hasItemChildren(SPPattern const *pat)
 {
-    for (auto& child: pat->children) {
-        if (is<SPItem>(&child)) {
-            return true;
-        }
-    }
-    return false;
+    return std::any_of(pat->children.begin(), pat->children.end(),
+                       [](SPObject const &child) -> bool { return is<SPItem>(&child); });
 }
 
 cairo_pattern_t*
@@ -1466,7 +1453,7 @@ CairoRenderContext::_setFillStyle(SPStyle const *const style, Geom::OptRect cons
 
         g_assert(is<SPGradient>(SP_STYLE_FILL_SERVER(style))
                  || is<SPPattern>(SP_STYLE_FILL_SERVER(style))
-                 || cast<SPHatch>(SP_STYLE_FILL_SERVER(style)));
+                 || is<SPHatch>(SP_STYLE_FILL_SERVER(style)));
 
         cairo_pattern_t *pattern = _createPatternForPaintServer(paint_server, pbox, alpha);
         if (pattern) {
@@ -1515,13 +1502,15 @@ CairoRenderContext::_setStrokeStyle(SPStyle const *style, Geom::OptRect const &p
 
     if (!style->stroke_dasharray.values.empty() && style->stroke_dasharray.is_valid())
     {
-        size_t ndashes = style->stroke_dasharray.values.size();
-        double* dashes =(double*)malloc(ndashes*sizeof(double));
-        for( unsigned i = 0; i < ndashes; ++i ) {
-            dashes[i] = style->stroke_dasharray.values[i].value;
-        }
-        cairo_set_dash(_cr, dashes, ndashes, style->stroke_dashoffset.value);
-        free(dashes);
+        auto const &dash_values = style->stroke_dasharray.values;
+        size_t num_dashes = dash_values.size();
+        std::vector<double> dashes;
+
+        dashes.reserve(num_dashes);
+        std::transform(dash_values.begin(), dash_values.end(), std::back_inserter(dashes),
+                       [](SPILength const &dash_length) -> double { return dash_length.value; });
+
+        cairo_set_dash(_cr, dashes.data(), num_dashes, style->stroke_dashoffset.value);
     } else {
         cairo_set_dash(_cr, nullptr, 0, 0.0);  // disable dashing
     }
@@ -1952,15 +1941,6 @@ CairoRenderContext::addPathVector(Geom::PathVector const &pv)
 }
 
 void
-CairoRenderContext::_concatTransform(cairo_t *cr, double xx, double yx, double xy, double yy, double x0, double y0)
-{
-    cairo_matrix_t matrix;
-
-    cairo_matrix_init(&matrix, xx, yx, xy, yy, x0, y0);
-    cairo_transform(cr, &matrix);
-}
-
-void
 CairoRenderContext::_initCairoMatrix(cairo_matrix_t *matrix, Geom::Affine const &transform)
 {
     matrix->xx = transform[0];
@@ -1971,26 +1951,10 @@ CairoRenderContext::_initCairoMatrix(cairo_matrix_t *matrix, Geom::Affine const 
     matrix->y0 = transform[5];
 }
 
-void
-CairoRenderContext::_concatTransform(cairo_t *cr, Geom::Affine const &transform)
+static cairo_status_t _write_callback(void *closure, const unsigned char *data, unsigned int length)
 {
-    _concatTransform(cr, transform[0], transform[1],
-                         transform[2], transform[3],
-                         transform[4], transform[5]);
-}
-
-static cairo_status_t
-_write_callback(void *closure, const unsigned char *data, unsigned int length)
-{
-    size_t written;
-    FILE *file = (FILE*)closure;
-
-    written = fwrite (data, 1, length, file);
-
-    if (written == length)
-    return CAIRO_STATUS_SUCCESS;
-    else
-    return CAIRO_STATUS_WRITE_ERROR;
+    size_t const written = fwrite(data, 1, length, (FILE*)closure);
+    return (written == length) ? CAIRO_STATUS_SUCCESS : CAIRO_STATUS_WRITE_ERROR;
 }
 
 #include "clear-n_.h"

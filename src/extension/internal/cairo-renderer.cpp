@@ -52,30 +52,22 @@
 #include "style-internal.h"
 #include "display/cairo-utils.h"
 #include "display/curve.h"
-#include "extension/system.h"
 #include "filter-chemistry.h"
 #include "helper/pixbuf-ops.h"
 #include "helper/png-write.h"
-
-#include "io/sys.h"
-
 #include "include/source_date_epoch.h"
-
 #include "libnrtype/Layout-TNG.h"
 
 #include "object/sp-anchor.h"
 #include "object/sp-clippath.h"
-#include "object/sp-defs.h"
 #include "object/sp-flowtext.h"
 #include "object/sp-hatch-path.h"
 #include "object/sp-image.h"
 #include "object/sp-item-group.h"
 #include "object/sp-item.h"
-#include "object/sp-linear-gradient.h"
 #include "object/sp-marker.h"
 #include "object/sp-mask.h"
 #include "object/sp-page.h"
-#include "object/sp-pattern.h"
 #include "object/sp-radial-gradient.h"
 #include "object/sp-root.h"
 #include "object/sp-shape.h"
@@ -226,10 +218,9 @@ private:
         } else if constexpr (std::is_same<PainT, decltype(_old_stroke)>::value) {
             _rewrote_stroke = true;
             _old_stroke = *destination;
-        } else {
-            static_assert("ContextPaintManager::_copyPaint() instantiated with neither fill nor stroke type.");
         }
-
+        static_assert(std::is_same_v<PainT, decltype(_old_fill)> || std::is_same_v<PainT, decltype(_old_stroke)>,
+                      "ContextPaintManager::_copyPaint() instantiated with neither fill nor stroke type.");
         PainT new_value;
         new_value.upcast()->operator=(paint);
         *destination = new_value;
@@ -420,50 +411,44 @@ static void sp_image_render(SPImage const *image, CairoRenderContext *ctx)
     if (!image->pixbuf) {
         return;
     }
-    if ((image->width.computed <= 0.0) || (image->height.computed <= 0.0)) {
+
+    double width = image->width.computed;
+    double height = image->height.computed;
+    if (width <= 0.0 || height <= 0.0) {
         return;
     }
 
-    int w = image->pixbuf->width();
-    int h = image->pixbuf->height();
-
+    double const w = static_cast<double>(image->pixbuf->width());
+    double const h = static_cast<double>(image->pixbuf->height());
     double x = image->x.computed;
     double y = image->y.computed;
-    double width = image->width.computed;
-    double height = image->height.computed;
 
     if (image->aspect_align != SP_ASPECT_NONE) {
-        calculatePreserveAspectRatio (image->aspect_align, image->aspect_clip, (double)w, (double)h,
-                                                     &x, &y, &width, &height);
+        calculatePreserveAspectRatio(image->aspect_align, image->aspect_clip, w, h, &x, &y, &width, &height);
     }
 
     if (image->aspect_clip == SP_ASPECT_SLICE && !ctx->getCurrentState()->has_overflow) {
         ctx->addClippingRect(image->x.computed, image->y.computed, image->width.computed, image->height.computed);
     }
 
-    Geom::Translate tp(x, y);
-    Geom::Scale s(width / (double)w, height / (double)h);
-    Geom::Affine t(s * tp);
-
-    ctx->renderImage(image->pixbuf.get(), t, image->style);
+    Geom::Affine const transform = Geom::Scale(width / w, height / h) * Geom::Translate(x, y);
+    ctx->renderImage(image->pixbuf.get(), transform, image->style);
 }
 
 static void sp_anchor_render(SPAnchor const *a, CairoRenderContext *ctx)
 {
     if (a->href) {
         // Raw linking, whatever the user said they wanted
-        char* link = g_strdup_printf("uri='%s'", a->href);
+        auto link = Glib::ustring::compose("uri='%1'", a->href);
         if (a->local_link) {
             if (auto obj = a->local_link->getObject()) {
-                g_free(link);
                 // We wanted to use the syntax page=%d here to link to pages, but
                 // cairo has an odd bug that only allows linking to previous pages
                 // So we link everything with a dest link instead.
-                link = g_strdup_printf("dest='%s'", obj->getId());
+                link = Glib::ustring::compose("dest='%1'", obj->getId());
             }
         }
-        ctx->tagBegin(link);
-        g_free(link);
+        ctx->tagBegin(link.c_str());
     }
 
     CairoRenderer *renderer = ctx->getRenderer();
@@ -540,11 +525,10 @@ static void sp_asbitmap_render(SPItem const *item, CairoRenderContext *ctx, SPPa
     // The code was adapted from sp_selection_create_bitmap_copy in selection-chemistry.cpp
 
     // Calculate resolution
-    double res;
     /** @TODO reimplement the resolution stuff   (WHY?)
     */
-    res = ctx->getBitmapResolution();
-    if(res == 0) {
+    double res = ctx->getBitmapResolution();
+    if (res == 0) {
         res = Inkscape::Util::Quantity::convert(1, "in", "px");
     }
     TRACE(("sp_asbitmap_render: resolution: %f\n", res ));
@@ -582,8 +566,7 @@ static void sp_asbitmap_render(SPItem const *item, CairoRenderContext *ctx, SPPa
     // Calculate the matrix that will be applied to the image so that it exactly overlaps the source objects
 
     // Matrix to put bitmap in correct place on document
-    Geom::Affine t_on_document = (Geom::Affine)(Geom::Scale (scale_x, scale_y)) *
-                                 (Geom::Affine)(Geom::Translate (shift_x, shift_y));
+    Geom::Affine t_on_document = Geom::Scale(scale_x, scale_y) * Geom::Translate(shift_x, shift_y);
 
     // ctx matrix already includes item transformation. We must substract.
     Geom::Affine t_item =  item->i2doc_affine();
@@ -654,7 +637,7 @@ CairoRenderer::setStateForItem(CairoRenderContext *ctx, SPItem const *item)
     CairoRenderState *state = ctx->getCurrentState();
     state->clip_path = item->getClipObject();
     state->mask = item->getMaskObject();
-    state->item_transform = Geom::Affine (item->transform);
+    state->item_transform = item->transform;
 
     // If parent_has_userspace is true the parent state's transform
     // has to be used for the mask's/clippath's context.
@@ -980,12 +963,9 @@ CairoRenderer::applyMask(CairoRenderContext *ctx, SPMask const *mask)
     ctx->pushState();
 
     TRACE(("BEGIN mask\n"));
-    SPObject const *co = mask;
-    for (auto& child: co->children) {
-        SPItem const *item = cast<SPItem>(&child);
-        if (item) {
-            // TODO fix const correctness:
-            renderItem(ctx, const_cast<SPItem*>(item));
+    for (auto const &child : mask->children) {
+        if (auto item = cast<SPItem>(&child)) {
+            renderItem(ctx, item);
         }
     }
     TRACE(("END mask\n"));
