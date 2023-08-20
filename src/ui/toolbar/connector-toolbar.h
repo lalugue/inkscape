@@ -46,9 +46,9 @@ class Node;
 
 namespace UI {
 namespace Toolbar {
-class ConnectorToolbar
-	: public Toolbar
-	, private XML::NodeObserver
+class ConnectorToolbar final
+    : public Toolbar
+    , private XML::NodeObserver
 {
 private:
     using ValueChangedMemFun = void (ConnectorToolbar::*)();

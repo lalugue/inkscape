@@ -55,9 +55,9 @@ class UnitTracker;
 }
 
 namespace Toolbar {
-class ArcToolbar
-	: public Toolbar
-	, private XML::NodeObserver
+class ArcToolbar final
+    : public Toolbar
+    , private XML::NodeObserver
 {
 private:
     Glib::RefPtr<Gtk::Builder> _builder;

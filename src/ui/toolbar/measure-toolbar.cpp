@@ -105,8 +105,8 @@ MeasureToolbar::MeasureToolbar(SPDesktop *desktop)
     // cause segfault.
     auto children = _toolbar->get_children();
 
-    menu_btn1->init(1, "tag1", "some-icon", popover_box1, children);
-    menu_btn2->init(2, "tag2", "some-icon", popover_box2, children);
+    menu_btn1->init(1, "tag1", popover_box1, children);
+    menu_btn2->init(2, "tag2", popover_box2, children);
     _expanded_menu_btns.push(menu_btn1);
     _expanded_menu_btns.push(menu_btn2);
 
@@ -157,7 +157,7 @@ void MeasureToolbar::setup_derived_spin_button(UI::Widget::SpinButton &btn, Glib
 {
     auto adj = btn.get_adjustment();
     const Glib::ustring path = "/tools/measure/" + name;
-    auto val = Preferences::get()->getDouble(path, default_value);
+    auto const val = Preferences::get()->getDouble(path, default_value);
     adj->set_value(val);
     adj->signal_value_changed().connect(sigc::mem_fun(*this, value_changed_mem_fun));
 

@@ -28,6 +28,7 @@
 #include "object/sp-namedview.h"
 #include "page-manager.h"
 #include "selection-chemistry.h"
+#include "selection.h"
 #include "ui/builder-utils.h"
 #include "ui/icon-names.h"
 #include "ui/widget/canvas.h" // Focus widget
@@ -89,9 +90,9 @@ SelectToolbar::SelectToolbar(SPDesktop *desktop)
     // cause segfault.
     auto children = _toolbar->get_children();
 
-    menu_btn1->init(1, "tag1", "some-icon", popover_box1, children);
+    menu_btn1->init(1, "tag1", popover_box1, children);
     _expanded_menu_btns.push(menu_btn1);
-    menu_btn2->init(2, "tag2", "some-icon", popover_box2, children);
+    menu_btn2->init(2, "tag2", popover_box2, children);
     _expanded_menu_btns.push(menu_btn2);
 
     add(*_toolbar);
@@ -163,7 +164,7 @@ GtkWidget *SelectToolbar::create(SPDesktop *desktop)
 void SelectToolbar::setup_derived_spin_button(Inkscape::UI::Widget::SpinButton &btn, Glib::ustring const &name)
 {
     const Glib::ustring path = "/tools/select/" + name;
-    auto val = Preferences::get()->getDouble(path, 0.0);
+    auto const val = Preferences::get()->getDouble(path, 0.0);
     auto adj = btn.get_adjustment();
     adj->set_value(val);
     adj->signal_value_changed().connect(sigc::bind(sigc::mem_fun(*this, &SelectToolbar::any_value_changed), adj));

@@ -49,9 +49,9 @@ class SpinButton;
 }
 
 namespace Toolbar {
-class SpiralToolbar
-	: public Toolbar
-	, private XML::NodeObserver
+class SpiralToolbar final
+    : public Toolbar
+    , private XML::NodeObserver
 {
 private:
     Glib::RefPtr<Gtk::Builder> _builder;

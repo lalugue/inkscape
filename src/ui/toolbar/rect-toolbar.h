@@ -57,9 +57,9 @@ class UnitTracker;
 }
 
 namespace Toolbar {
-class RectToolbar
-	: public Toolbar
-	, private Inkscape::XML::NodeObserver
+class RectToolbar final
+    : public Toolbar
+    , private Inkscape::XML::NodeObserver
 {
 private:
     Glib::RefPtr<Gtk::Builder> _builder;
@@ -78,9 +78,9 @@ private:
     bool _freeze{false};
     bool _single{true};
 
-    void setup_derived_spin_button(UI::Widget::SpinButton &btn, Glib::ustring const &name);
-    void value_changed(Glib::RefPtr<Gtk::Adjustment>&  adj,
-                       gchar const                    *value_name,
+    void setup_derived_spin_button(UI::Widget::SpinButton &btn, Glib::ustring const &name,
+                                   void (SPRect::*setter_fun)(gdouble));
+    void value_changed(Glib::RefPtr<Gtk::Adjustment> &adj, Glib::ustring const &value_name,
                        void (SPRect::*setter)(gdouble));
 
     void sensitivize();
@@ -101,7 +101,6 @@ protected:
 public:
     static GtkWidget *create(SPDesktop *desktop);
 };
-
 }
 }
 }

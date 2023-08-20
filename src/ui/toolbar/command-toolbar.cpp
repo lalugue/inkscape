@@ -53,29 +53,36 @@ CommandToolbar::CommandToolbar(SPDesktop *desktop)
     auto popover_box6 = &get_widget<Gtk::Box>(_builder, "popover_box6");
     auto menu_btn6 = &get_derived_widget<UI::Widget::ToolbarMenuButton>(_builder, "menu_btn6");
 
+    // Menu Button #7
+    auto popover_box7 = &get_widget<Gtk::Box>(_builder, "popover_box7");
+    auto menu_btn7 = &get_derived_widget<UI::Widget::ToolbarMenuButton>(_builder, "menu_btn7");
+
     // Initialize all the ToolbarMenuButtons only after all the children of the
     // toolbar have been fetched. Otherwise, the children to be moved in the
     // popover will get mapped to a different position and it will probably
     // cause segfault.
     auto children = _toolbar->get_children();
 
-    menu_btn1->init(1, "tag1", "some-icon", popover_box1, children);
+    menu_btn1->init(1, "tag1", popover_box1, children);
     _expanded_menu_btns.push(menu_btn1);
 
-    menu_btn2->init(2, "tag2", "some-icon", popover_box2, children);
+    menu_btn2->init(2, "tag2", popover_box2, children);
     _expanded_menu_btns.push(menu_btn2);
 
-    menu_btn3->init(3, "tag3", "some-icon", popover_box3, children);
+    menu_btn3->init(3, "tag3", popover_box3, children);
     _expanded_menu_btns.push(menu_btn3);
 
-    menu_btn4->init(4, "tag4", "some-icon", popover_box4, children);
+    menu_btn4->init(4, "tag4", popover_box4, children);
     _expanded_menu_btns.push(menu_btn4);
 
-    menu_btn5->init(5, "tag5", "some-icon", popover_box5, children);
+    menu_btn5->init(5, "tag5", popover_box5, children);
     _expanded_menu_btns.push(menu_btn5);
 
-    menu_btn6->init(6, "tag6", "some-icon", popover_box6, children);
+    menu_btn6->init(6, "tag6", popover_box6, children);
     _expanded_menu_btns.push(menu_btn6);
+
+    menu_btn7->init(6, "tag7", popover_box7, children);
+    _expanded_menu_btns.push(menu_btn7);
 
     add(*_toolbar);
 

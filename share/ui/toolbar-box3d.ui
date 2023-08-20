@@ -22,43 +22,31 @@
   </object>
   <object class="GtkImage" id="image1">
     <property name="visible">True</property>
-    <property name="can-focus">False</property>
     <property name="icon-name">perspective-parallel</property>
   </object>
   <object class="GtkImage" id="image2">
     <property name="visible">True</property>
-    <property name="can-focus">False</property>
     <property name="icon-name">perspective-parallel</property>
   </object>
   <object class="GtkImage" id="image3">
     <property name="visible">True</property>
-    <property name="can-focus">False</property>
     <property name="icon-name">perspective-parallel</property>
   </object>
   <object class="GtkBox" id="box3d-toolbar">
     <property name="visible">True</property>
-    <property name="can-focus">False</property>
+    <property name="halign">start</property>
     <property name="valign">center</property>
     <property name="spacing">3</property>
     <child>
       <object class="GtkBox" id="angle_x_box">
         <property name="visible">True</property>
-        <property name="can-focus">False</property>
         <property name="tooltip-text" translatable="yes">Angle of PLs in X direction</property>
         <property name="margin-start">3</property>
-        <property name="margin-end">3</property>
         <child>
           <object class="GtkLabel">
             <property name="visible">True</property>
-            <property name="can-focus">False</property>
-            <property name="margin-end">3</property>
             <property name="label" translatable="yes">Angle X:</property>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">0</property>
-          </packing>
         </child>
         <child>
           <object class="GtkSpinButton" id="_angle_x_item">
@@ -71,17 +59,10 @@
             <property name="digits">3</property>
           </object>
           <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
             <property name="position">1</property>
           </packing>
         </child>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">0</property>
-      </packing>
     </child>
     <child>
       <object class="GtkToggleButton" id="_vp_x_state_btn">
@@ -89,35 +70,23 @@
         <property name="can-focus">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Toggle VP in X direction between 'finite' and 'infinite' (=parallel)</property>
-        <property name="margin-end">3</property>
         <property name="image">image1</property>
         <property name="relief">none</property>
         <property name="always-show-image">True</property>
       </object>
       <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
         <property name="position">1</property>
       </packing>
     </child>
     <child>
       <object class="GtkBox" id="angle_y_box">
         <property name="visible">True</property>
-        <property name="can-focus">False</property>
         <property name="tooltip-text" translatable="yes">Angle of PLs in Y direction</property>
-        <property name="margin-end">3</property>
         <child>
           <object class="GtkLabel">
             <property name="visible">True</property>
-            <property name="can-focus">False</property>
-            <property name="margin-end">3</property>
             <property name="label" translatable="yes">Angle X:</property>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">0</property>
-          </packing>
         </child>
         <child>
           <object class="GtkSpinButton" id="_angle_y_item">
@@ -130,15 +99,11 @@
             <property name="digits">3</property>
           </object>
           <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
             <property name="position">1</property>
           </packing>
         </child>
       </object>
       <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
         <property name="position">2</property>
       </packing>
     </child>
@@ -147,35 +112,23 @@
         <property name="visible">True</property>
         <property name="can-focus">True</property>
         <property name="receives-default">True</property>
-        <property name="margin-end">3</property>
         <property name="image">image2</property>
         <property name="relief">none</property>
         <property name="always-show-image">True</property>
       </object>
       <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
         <property name="position">3</property>
       </packing>
     </child>
     <child>
       <object class="GtkBox" id="angle_z_box">
         <property name="visible">True</property>
-        <property name="can-focus">False</property>
         <property name="tooltip-text" translatable="yes">Angle of PLs in Z direction</property>
-        <property name="margin-end">3</property>
         <child>
           <object class="GtkLabel">
             <property name="visible">True</property>
-            <property name="can-focus">False</property>
-            <property name="margin-end">3</property>
             <property name="label" translatable="yes">Angle X:</property>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">0</property>
-          </packing>
         </child>
         <child>
           <object class="GtkSpinButton" id="_angle_z_item">
@@ -188,15 +141,11 @@
             <property name="digits">3</property>
           </object>
           <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
             <property name="position">1</property>
           </packing>
         </child>
       </object>
       <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
         <property name="position">4</property>
       </packing>
     </child>
@@ -210,8 +159,6 @@
         <property name="always-show-image">True</property>
       </object>
       <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
         <property name="position">5</property>
       </packing>
     </child>

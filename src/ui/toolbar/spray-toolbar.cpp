@@ -199,21 +199,21 @@ SprayToolbar::SprayToolbar(SPDesktop *desktop)
     // cause segfault.
     auto children = _toolbar->get_children();
 
-    menu_btn1->init(1, "tag1", "some-icon", popover_box1, children);
+    menu_btn1->init(1, "tag1", popover_box1, children);
     _expanded_menu_btns.push(menu_btn1);
 
-    menu_btn2->init(2, "tag2", "some-icon", popover_box2, children);
+    menu_btn2->init(2, "tag2", popover_box2, children);
     _expanded_menu_btns.push(menu_btn2);
 
-    menu_btn3->init(3, "tag3", "some-icon", popover_box3, children);
+    menu_btn3->init(3, "tag3", popover_box3, children);
     _expanded_menu_btns.push(menu_btn3);
 
-    menu_btn4->init(4, "tag4", "some-icon", popover_box4, children);
+    menu_btn4->init(4, "tag4", popover_box4, children);
     _expanded_menu_btns.push(menu_btn4);
 
     add(*_toolbar);
 
-    gint mode = prefs->getInt("/tools/spray/mode", 1);
+    int mode = prefs->getIntLimited("/tools/spray/mode", 1, 0, _mode_buttons.size() - 1);
     _mode_buttons[mode]->set_active();
     show_all();
     init();
@@ -223,7 +223,7 @@ void SprayToolbar::setup_derived_spin_button(UI::Widget::SpinButton &btn, Glib::
                                              double default_value, ValueChangedMemFun const value_changed_mem_fun)
 {
     const Glib::ustring path = "/tools/spray/" + name;
-    auto val = Preferences::get()->getDouble(path, default_value);
+    auto const val = Preferences::get()->getDouble(path, default_value);
 
     auto adj = btn.get_adjustment();
     adj->set_value(val);

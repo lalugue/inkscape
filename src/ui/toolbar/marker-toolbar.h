@@ -20,13 +20,15 @@ namespace Inkscape {
 namespace UI {
 namespace Toolbar {
 
-class MarkerToolbar : public Toolbar {
+class MarkerToolbar final : public Toolbar
+{
 protected:
     MarkerToolbar(SPDesktop *desktop);
 
 public:
     static GtkWidget *create(SPDesktop *desktop);
 };
-
-}}}
+} // namespace Toolbar
+} // namespace UI
+} // namespace Inkscape
 #endif

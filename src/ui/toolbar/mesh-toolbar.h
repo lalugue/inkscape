@@ -45,10 +45,11 @@ class ToolBase;
 namespace Widget {
 class ComboToolItem;
 class SpinButton;
-}
+} // namespace Widget
 
 namespace Toolbar {
-class MeshToolbar : public Toolbar {
+class MeshToolbar final : public Toolbar
+{
 private:
     using ValueChangedMemFun = void (MeshToolbar::*)();
 
@@ -101,7 +102,6 @@ private:
 public:
     static GtkWidget *create(SPDesktop *desktop);
 };
-
 } // namespace Toolbar
 } // namespace UI
 } // namespace Inkscape

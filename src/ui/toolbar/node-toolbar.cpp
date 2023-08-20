@@ -78,7 +78,6 @@ namespace Inkscape::UI::Toolbar {
 NodeToolbar::NodeToolbar(SPDesktop *desktop)
     : Toolbar(desktop)
     , _tracker{std::make_unique<UnitTracker>(Inkscape::Util::UNIT_TYPE_LINEAR)}
-    ,
     , _freeze(false)
     , _builder(initialize_builder("toolbar-node.ui"))
     , _nodes_lpeedit_btn(get_widget<Gtk::Button>(_builder, "_nodes_lpeedit_btn"))
@@ -117,9 +116,9 @@ NodeToolbar::NodeToolbar(SPDesktop *desktop)
     // cause segfault.
     auto children = _toolbar->get_children();
 
-    menu_btn1->init(1, "tag1", "some-icon", popover_box1, children);
+    menu_btn1->init(1, "tag1", popover_box1, children);
     _expanded_menu_btns.push(menu_btn1);
-    menu_btn2->init(2, "tag2", "some-icon", popover_box2, children);
+    menu_btn2->init(2, "tag2", popover_box2, children);
     _expanded_menu_btns.push(menu_btn2);
 
     add(*_toolbar);
@@ -199,14 +198,14 @@ NodeToolbar::NodeToolbar(SPDesktop *desktop)
 void NodeToolbar::setup_derived_spin_button(Inkscape::UI::Widget::SpinButton &btn, Glib::ustring const &name)
 {
     const Glib::ustring path = "/tools/nodes/" + name;
-    auto val = Preferences::get()->getDouble(path, 0);
+    auto const val = Preferences::get()->getDouble(path, 0);
     auto adj = btn.get_adjustment();
     adj->set_value(val);
     adj->signal_value_changed().connect(sigc::bind(sigc::mem_fun(*this, &NodeToolbar::value_changed), Geom::X));
 
     _tracker->addAdjustment(adj->gobj());
     btn.addUnitTracker(_tracker.get());
-    btn.set_defocus_widget(_desktop->canvas);
+    btn.set_defocus_widget(_desktop->getCanvas());
 
     // TODO: Handle this in the toolbar class.
     btn.set_sensitive(false);

@@ -44,7 +44,8 @@ class SpinButton;
 
 namespace Toolbar {
 
-class SelectToolbar final : public Toolbar {
+class SelectToolbar final : public Toolbar
+{
     using parent_type = Toolbar;
 
 private:

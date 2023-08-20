@@ -40,7 +40,8 @@ namespace Toolbar {
 /**
  * \brief A toolbar for controlling the dropper tool
  */
-class DropperToolbar : public Toolbar {
+class DropperToolbar final : public Toolbar
+{
 private:
     Glib::RefPtr<Gtk::Builder> _builder;
 

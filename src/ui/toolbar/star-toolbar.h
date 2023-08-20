@@ -53,9 +53,9 @@ class SpinButton;
 }
 
 namespace Toolbar {
-class StarToolbar
-	: public Toolbar
-	, private XML::NodeObserver
+class StarToolbar final
+    : public Toolbar
+    , private XML::NodeObserver
 {
 private:
     using ValueChangedMemFun = void (StarToolbar::*)();
@@ -97,7 +97,6 @@ protected:
 public:
     static GtkWidget *create(SPDesktop *desktop);
 };
-
 }
 }
 }

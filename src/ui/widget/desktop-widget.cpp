@@ -116,9 +116,6 @@ SPDesktopWidget::SPDesktopWidget(InkscapeWindow *inkscape_window, SPDocument *do
     Inkscape::UI::pack_end(*this, *_top_toolbars, false, true);
 
     /* Toolboxes */
-    command_toolbar = Gtk::make_managed<Inkscape::UI::Toolbar::CommandToolbar>(_desktop.get());
-    _top_toolbars->attach(*command_toolbar, 0, 0);
-
     tool_toolbars = Gtk::make_managed<Inkscape::UI::Toolbar::Toolbars>();
     _top_toolbars->attach(*tool_toolbars, 0, 1);
 
@@ -202,6 +199,10 @@ SPDesktopWidget::SPDesktopWidget(InkscapeWindow *inkscape_window, SPDocument *do
     _canvas->set_desktop(_desktop.get());
     INKSCAPE.add_desktop(_desktop.get());
 
+    // Initialize the command toolbar only after contructing the desktop. Else, it'll crash.
+    command_toolbar = Gtk::make_managed<Inkscape::UI::Toolbar::CommandToolbar>(_desktop.get());
+    _top_toolbars->attach(*command_toolbar, 0, 0);
+
     // Add the shape geometry to libavoid for autorouting connectors.
     // This needs desktop set for its spacing preferences.
     init_avoided_shape_geometry(_desktop.get());
@@ -228,8 +229,10 @@ void SPDesktopWidget::apply_ctrlbar_settings() {
     int max = Inkscape::UI::Toolbar::max_pixel_size;
     int size = prefs->getIntLimited(Inkscape::UI::Toolbar::ctrlbars_icon_size, min, min, max);
     Inkscape::UI::set_icon_sizes(snap_toolbar, size);
-    Inkscape::UI::set_icon_sizes(command_toolbar, size);
-    Inkscape::UI::set_icon_sizes(tool_toolbars, size);
+    // Causes uncertain crashes.
+    // TODO: Fix it.
+    // Inkscape::UI::set_icon_sizes(command_toolbar, size);
+    // Inkscape::UI::set_icon_sizes(tool_toolbars, size);
 }
 
 void

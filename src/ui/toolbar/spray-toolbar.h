@@ -44,7 +44,8 @@ class SpinButton;
 }
 
 namespace Toolbar {
-class SprayToolbar : public Toolbar {
+class SprayToolbar final : public Toolbar
+{
 private:
     using ValueChangedMemFun = void (SprayToolbar::*)();
 

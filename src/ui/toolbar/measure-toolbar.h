@@ -43,7 +43,8 @@ class UnitTracker;
 }
 
 namespace Toolbar {
-class MeasureToolbar : public Toolbar {
+class MeasureToolbar final : public Toolbar
+{
 private:
     using ValueChangedMemFun = void (MeasureToolbar::*)();
 
@@ -85,7 +86,6 @@ protected:
 public:
     static GtkWidget *create(SPDesktop *desktop);
 };
-
 }
 }
 }

@@ -54,7 +54,8 @@ class UnitTracker;
 }
 
 namespace Toolbar {
-class LPEToolbar : public Toolbar {
+class LPEToolbar final : public Toolbar
+{
 private:
     Glib::RefPtr<Gtk::Builder> _builder;
     std::unique_ptr<UI::Widget::UnitTracker> _tracker;
@@ -94,7 +95,6 @@ public:
     static GtkWidget *create(SPDesktop *desktop);
     void set_mode(int mode);
 };
-
 }
 }
 }

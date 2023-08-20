@@ -15,13 +15,13 @@
 #ifndef SEEN_PAGE_TOOLBAR_H
 #define SEEN_PAGE_TOOLBAR_H
 
-#include <string>
 #include <glibmm/refptr.h>
 #include <gtkmm/toolbar.h>
+#include <string>
 
+#include "helper/auto-connection.h"
 #include "toolbar.h"
 #include "ui/widget/spinbutton.h"
-#include "helper/auto-connection.h"
 
 namespace Gtk {
 class ComboBoxText;
@@ -49,7 +49,7 @@ class ToolBase;
 
 namespace Toolbar {
 
-class PageToolbar : public Toolbar
+class PageToolbar final : public Toolbar
 {
 public:
     PageToolbar(SPDesktop *desktop);

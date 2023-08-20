@@ -55,9 +55,9 @@ class ToolBase;
 }
 
 namespace Toolbar {
-class Box3DToolbar
-	: public Toolbar
-	, private XML::NodeObserver
+class Box3DToolbar final
+    : public Toolbar
+    , private XML::NodeObserver
 {
 private:
     Glib::RefPtr<Gtk::Builder> _builder;

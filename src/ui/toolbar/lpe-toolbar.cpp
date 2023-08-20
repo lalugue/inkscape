@@ -30,9 +30,8 @@
 
 #include <gtkmm/radiobutton.h>
 
-#include "selection.h"
-
 #include "live_effects/lpe-line_segment.h"
+#include "selection.h"
 #include "ui/builder-utils.h"
 #include "ui/dialog/dialog-container.h"
 #include "ui/icon-names.h"
@@ -139,7 +138,7 @@ LPEToolbar::LPEToolbar(SPDesktop *desktop)
     // cause segfault.
     auto children = _toolbar->get_children();
 
-    menu_btn1->init(1, "tag1", "some-icon", popover_box1, children);
+    menu_btn1->init(1, "tag1", popover_box1, children);
     _expanded_menu_btns.push(menu_btn1);
 
     // Signals.

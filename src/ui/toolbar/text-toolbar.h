@@ -56,7 +56,8 @@ class UnitTracker;
 }
 
 namespace Toolbar {
-class TextToolbar : public Toolbar {
+class TextToolbar final : public Toolbar
+{
 private:
     using ValueChangedMemFun = void (TextToolbar::*)();
     using ModeChangedMemFun = void (TextToolbar::*)(int);

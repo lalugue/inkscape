@@ -14,6 +14,7 @@
 #include <gtkmm/builder.h>
 #include <stack>
 
+// #include "helper/auto-connection.h"
 #include "ui/widget/toolbar-menu-button.h"
 
 namespace Glib {
@@ -44,6 +45,7 @@ public:
     Gtk::Box *_toolbar;
     std::stack<Inkscape::UI::Widget::ToolbarMenuButton *> _expanded_menu_btns;
     std::stack<Inkscape::UI::Widget::ToolbarMenuButton *> _collapsed_menu_btns;
+    GtkWidget *create(SPDesktop *desktop);
 
 protected:
     SPDesktop *_desktop;
@@ -56,6 +58,7 @@ protected:
 
     Glib::RefPtr<Gtk::Builder> initialize_builder(Glib::ustring const &file_name);
     void resize_handler(Gtk::Allocation &allocation);
+    void _resize_handler(Gtk::Allocation &allocation, bool freeze_idle);
     void move_children(Gtk::Box *src, Gtk::Box *dest, std::vector<std::pair<int, Gtk::Widget *>> children,
                        bool is_expanding = false);
 };

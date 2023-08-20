@@ -129,7 +129,7 @@ void ConnectorToolbar::setup_derived_spin_button(UI::Widget::SpinButton &btn, Gl
 {
     auto adj = btn.get_adjustment();
     const Glib::ustring path = "/tools/connector/" + name;
-    auto val = Preferences::get()->getDouble(path, default_value);
+    auto const val = Preferences::get()->getDouble(path, default_value);
     adj->set_value(val);
     adj->signal_value_changed().connect(sigc::mem_fun(*this, value_changed_mem_fun));
 

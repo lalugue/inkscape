@@ -25,18 +25,16 @@
 
 #include "desktop-style.h"
 #include "desktop.h"
-#include "document.h"
 #include "document-undo.h"
+#include "document.h"
 #include "gradient-chemistry.h"
 #include "gradient-drag.h"
 #include "inkscape.h"
-#include "selection.h"
-#include "style.h"
-
 #include "object/sp-defs.h"
 #include "object/sp-mesh-gradient.h"
 #include "object/sp-stop.h"
-
+#include "selection.h"
+#include "style.h"
 #include "svg/css-ostringstream.h"
 #include "ui/builder-utils.h"
 #include "ui/dialog-run.h"
@@ -228,7 +226,7 @@ MeshToolbar::MeshToolbar(SPDesktop *desktop)
     // cause segfault.
     auto children = _toolbar->get_children();
 
-    menu_btn1->init(1, "tag1", "some-icon", popover_box1, children);
+    menu_btn1->init(1, "tag1", popover_box1, children);
     _expanded_menu_btns.push(menu_btn1);
 
     add(*_toolbar);
@@ -263,7 +261,7 @@ void MeshToolbar::setup_derived_spin_button(UI::Widget::SpinButton &btn, Glib::u
                                             double default_value, ValueChangedMemFun const value_changed_mem_fun)
 {
     const Glib::ustring path = "/tools/mesh/" + name;
-    auto val = Preferences::get()->getDouble(path, default_value);
+    auto const val = Preferences::get()->getDouble(path, default_value);
 
     auto adj = btn.get_adjustment();
     adj->set_value(val);

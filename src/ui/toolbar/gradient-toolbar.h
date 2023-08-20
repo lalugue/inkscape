@@ -37,7 +37,8 @@ class SpinButton;
 }
 
 namespace Toolbar {
-class GradientToolbar : public Toolbar {
+class GradientToolbar final : public Toolbar
+{
 private:
     Glib::RefPtr<Gtk::Builder> _builder;
 
@@ -94,7 +95,6 @@ protected:
 public:
     static GtkWidget *create(SPDesktop *desktop);
 };
-
 }
 }
 }

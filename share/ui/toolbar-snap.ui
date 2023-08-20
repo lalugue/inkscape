@@ -1,17 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk+" version="3.22"/>
-
   <object class="GtkPopover" id="advanced">
-    <property name="can-focus">False</property>
     <child>
       <object class="GtkGrid">
         <property name="visible">True</property>
-        <property name="can-focus">False</property>
         <property name="halign">start</property>
         <property name="valign">start</property>
         <property name="margin-start">8</property>
-        <property name="margin-end">16</property>
         <property name="margin-top">8</property>
         <property name="margin-bottom">8</property>
         <child>
@@ -19,7 +15,6 @@
             <property name="label" translatable="yes">Enable snapping</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
-            <property name="receives-default">False</property>
             <property name="halign">start</property>
             <property name="action-name">win.snap-global-toggle</property>
             <property name="draw-indicator">True</property>
@@ -35,7 +30,6 @@
             <property name="label" translatable="yes">Bounding boxes</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
-            <property name="receives-default">False</property>
             <property name="halign">start</property>
             <property name="action-name">win.snap-bbox</property>
             <property name="draw-indicator">True</property>
@@ -51,7 +45,6 @@
             <property name="label" translatable="yes">Edges</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
-            <property name="receives-default">False</property>
             <property name="halign">start</property>
             <property name="action-name">win.snap-bbox-edge</property>
             <property name="draw-indicator">True</property>
@@ -66,7 +59,6 @@
             <property name="label" translatable="yes">Corners</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
-            <property name="receives-default">False</property>
             <property name="halign">start</property>
             <property name="action-name">win.snap-bbox-corner</property>
             <property name="draw-indicator">True</property>
@@ -81,7 +73,6 @@
             <property name="label" translatable="yes">Edge midpoints</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
-            <property name="receives-default">False</property>
             <property name="halign">start</property>
             <property name="action-name">win.snap-bbox-edge-midpoint</property>
             <property name="draw-indicator">True</property>
@@ -96,7 +87,6 @@
             <property name="label" translatable="yes">Centers</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
-            <property name="receives-default">False</property>
             <property name="halign">start</property>
             <property name="action-name">win.snap-bbox-center</property>
             <property name="draw-indicator">True</property>
@@ -111,7 +101,6 @@
             <property name="label" translatable="yes">Nodes</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
-            <property name="receives-default">False</property>
             <property name="halign">start</property>
             <property name="action-name">win.snap-node-category</property>
             <property name="draw-indicator">True</property>
@@ -127,7 +116,6 @@
             <property name="label" translatable="yes">Paths</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
-            <property name="receives-default">False</property>
             <property name="halign">start</property>
             <property name="action-name">win.snap-path</property>
             <property name="draw-indicator">True</property>
@@ -142,7 +130,6 @@
             <property name="label" translatable="yes">Path intersections</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
-            <property name="receives-default">False</property>
             <property name="halign">start</property>
             <property name="action-name">win.snap-path-intersection</property>
             <property name="draw-indicator">True</property>
@@ -157,7 +144,6 @@
             <property name="label" translatable="yes">Cusp nodes</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
-            <property name="receives-default">False</property>
             <property name="halign">start</property>
             <property name="action-name">win.snap-node-cusp</property>
             <property name="draw-indicator">True</property>
@@ -172,7 +158,6 @@
             <property name="label" translatable="yes">Smooth nodes</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
-            <property name="receives-default">False</property>
             <property name="halign">start</property>
             <property name="action-name">win.snap-node-smooth</property>
             <property name="draw-indicator">True</property>
@@ -187,7 +172,6 @@
             <property name="label" translatable="yes">Line midpoints</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
-            <property name="receives-default">False</property>
             <property name="halign">start</property>
             <property name="action-name">win.snap-line-midpoint</property>
             <property name="draw-indicator">True</property>
@@ -202,7 +186,6 @@
             <property name="label" translatable="yes">Object midpoints</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
-            <property name="receives-default">False</property>
             <property name="halign">start</property>
             <property name="action-name">win.snap-object-midpoint</property>
             <property name="draw-indicator">True</property>
@@ -217,7 +200,6 @@
             <property name="label" translatable="yes">Other points</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
-            <property name="receives-default">False</property>
             <property name="halign">start</property>
             <property name="action-name">win.snap-others</property>
             <property name="draw-indicator">True</property>
@@ -233,7 +215,6 @@
             <property name="label" translatable="yes">Object rotation centers</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
-            <property name="receives-default">False</property>
             <property name="halign">start</property>
             <property name="action-name">win.snap-rotation-center</property>
             <property name="draw-indicator">True</property>
@@ -248,7 +229,6 @@
             <property name="label" translatable="yes">Text baselines and anchors</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
-            <property name="receives-default">False</property>
             <property name="halign">start</property>
             <property name="action-name">win.snap-text-baseline</property>
             <property name="draw-indicator">True</property>
@@ -263,7 +243,6 @@
             <property name="label" translatable="yes">Grids</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
-            <property name="receives-default">False</property>
             <property name="halign">start</property>
             <property name="action-name">win.snap-grid</property>
             <property name="draw-indicator">True</property>
@@ -279,7 +258,6 @@
             <property name="label" translatable="yes">Guide lines</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
-            <property name="receives-default">False</property>
             <property name="halign">start</property>
             <property name="action-name">win.snap-guide</property>
             <property name="draw-indicator">True</property>
@@ -295,7 +273,6 @@
             <property name="label" translatable="yes">Page borders</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
-            <property name="receives-default">False</property>
             <property name="halign">start</property>
             <property name="action-name">win.snap-page-border</property>
             <property name="draw-indicator">True</property>
@@ -311,7 +288,6 @@
             <property name="label" translatable="yes">Alignment</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
-            <property name="receives-default">False</property>
             <property name="halign">start</property>
             <property name="action-name">win.snap-alignment</property>
             <property name="draw-indicator">True</property>
@@ -327,7 +303,6 @@
             <property name="label" translatable="yes">Nodes in same path</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
-            <property name="receives-default">False</property>
             <property name="halign">start</property>
             <property name="action-name">win.snap-alignment-self</property>
             <property name="draw-indicator">True</property>
@@ -355,7 +330,6 @@
         <child>
           <object class="GtkImage">
             <property name="visible">True</property>
-            <property name="can-focus">False</property>
             <property name="halign">start</property>
             <property name="valign">center</property>
             <property name="icon-name">snap-bounding-box-edges</property>
@@ -368,7 +342,6 @@
         <child>
           <object class="GtkImage">
             <property name="visible">True</property>
-            <property name="can-focus">False</property>
             <property name="halign">start</property>
             <property name="valign">center</property>
             <property name="icon-name">snap-bounding-box-corners</property>
@@ -381,7 +354,6 @@
         <child>
           <object class="GtkImage">
             <property name="visible">True</property>
-            <property name="can-focus">False</property>
             <property name="halign">start</property>
             <property name="valign">center</property>
             <property name="icon-name">snap-bounding-box-midpoints</property>
@@ -394,7 +366,6 @@
         <child>
           <object class="GtkImage">
             <property name="visible">True</property>
-            <property name="can-focus">False</property>
             <property name="halign">start</property>
             <property name="valign">center</property>
             <property name="icon-name">snap-bounding-box-center</property>
@@ -407,7 +378,6 @@
         <child>
           <object class="GtkImage">
             <property name="visible">True</property>
-            <property name="can-focus">False</property>
             <property name="halign">start</property>
             <property name="valign">center</property>
             <property name="icon-name">snap-nodes-path</property>
@@ -420,7 +390,6 @@
         <child>
           <object class="GtkImage">
             <property name="visible">True</property>
-            <property name="can-focus">False</property>
             <property name="halign">start</property>
             <property name="valign">center</property>
             <property name="icon-name">snap-nodes-intersection</property>
@@ -433,7 +402,6 @@
         <child>
           <object class="GtkImage">
             <property name="visible">True</property>
-            <property name="can-focus">False</property>
             <property name="halign">start</property>
             <property name="valign">center</property>
             <property name="icon-name">snap-nodes-cusp</property>
@@ -446,7 +414,6 @@
         <child>
           <object class="GtkImage">
             <property name="visible">True</property>
-            <property name="can-focus">False</property>
             <property name="halign">start</property>
             <property name="valign">center</property>
             <property name="icon-name">snap-nodes-smooth</property>
@@ -459,7 +426,6 @@
         <child>
           <object class="GtkImage">
             <property name="visible">True</property>
-            <property name="can-focus">False</property>
             <property name="halign">start</property>
             <property name="valign">center</property>
             <property name="icon-name">snap-nodes-midpoint</property>
@@ -472,7 +438,6 @@
         <child>
           <object class="GtkImage">
             <property name="visible">True</property>
-            <property name="can-focus">False</property>
             <property name="halign">start</property>
             <property name="valign">center</property>
             <property name="icon-name">snap-nodes-center</property>
@@ -485,7 +450,6 @@
         <child>
           <object class="GtkImage">
             <property name="visible">True</property>
-            <property name="can-focus">False</property>
             <property name="halign">start</property>
             <property name="valign">center</property>
             <property name="icon-name">snap-nodes-rotation-center</property>
@@ -498,7 +462,6 @@
         <child>
           <object class="GtkImage">
             <property name="visible">True</property>
-            <property name="can-focus">False</property>
             <property name="halign">start</property>
             <property name="valign">center</property>
             <property name="icon-name">snap-text-baseline</property>
@@ -511,7 +474,6 @@
         <child>
           <object class="GtkImage">
             <property name="visible">True</property>
-            <property name="can-focus">False</property>
             <property name="halign">start</property>
             <property name="valign">center</property>
             <property name="icon-name">grid-rectangular</property>
@@ -524,7 +486,6 @@
         <child>
           <object class="GtkImage">
             <property name="visible">True</property>
-            <property name="can-focus">False</property>
             <property name="halign">start</property>
             <property name="valign">center</property>
             <property name="icon-name">guides</property>
@@ -537,7 +498,6 @@
         <child>
           <object class="GtkImage">
             <property name="visible">True</property>
-            <property name="can-focus">False</property>
             <property name="halign">start</property>
             <property name="valign">center</property>
             <property name="icon-name">snap-page</property>
@@ -552,7 +512,6 @@
             <property name="label" translatable="yes">Masks</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
-            <property name="receives-default">False</property>
             <property name="halign">start</property>
             <property name="action-name">win.snap-path-mask</property>
             <property name="draw-indicator">True</property>
@@ -567,7 +526,6 @@
             <property name="label" translatable="yes">Clips</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
-            <property name="receives-default">False</property>
             <property name="halign">start</property>
             <property name="action-name">win.snap-path-clip</property>
             <property name="draw-indicator">True</property>
@@ -580,7 +538,6 @@
         <child>
           <object class="GtkImage">
             <property name="visible">True</property>
-            <property name="can-focus">False</property>
             <property name="halign">start</property>
             <property name="valign">center</property>
             <property name="icon-name">path-mask-edit</property>
@@ -593,7 +550,6 @@
         <child>
           <object class="GtkImage">
             <property name="visible">True</property>
-            <property name="can-focus">False</property>
             <property name="halign">start</property>
             <property name="valign">center</property>
             <property name="icon-name">path-clip-edit</property>
@@ -608,7 +564,6 @@
             <property name="label" translatable="yes">Same distances</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
-            <property name="receives-default">False</property>
             <property name="halign">start</property>
             <property name="action-name">win.snap-distribution</property>
             <property name="draw-indicator">True</property>
@@ -621,7 +576,6 @@
         <child>
           <object class="GtkImage">
             <property name="visible">True</property>
-            <property name="can-focus">False</property>
             <property name="icon-name">snap-alignment</property>
           </object>
           <packing>
@@ -632,7 +586,6 @@
         <child>
           <object class="GtkImage">
             <property name="visible">True</property>
-            <property name="can-focus">False</property>
             <property name="icon-name">snap-alignment-self</property>
           </object>
           <packing>
@@ -643,7 +596,6 @@
         <child>
           <object class="GtkImage">
             <property name="visible">True</property>
-            <property name="can-focus">False</property>
             <property name="icon-name">snap-distribution</property>
           </object>
           <packing>
@@ -656,7 +608,6 @@
             <property name="label" translatable="yes">Perpendicular lines</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
-            <property name="receives-default">False</property>
             <property name="halign">start</property>
             <property name="action-name">win.snap-line-perpendicular</property>
             <property name="draw-indicator">True</property>
@@ -671,7 +622,6 @@
             <property name="label" translatable="yes">Tangential lines</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
-            <property name="receives-default">False</property>
             <property name="halign">start</property>
             <property name="action-name">win.snap-line-tangential</property>
             <property name="draw-indicator">True</property>
@@ -684,7 +634,6 @@
         <child>
           <object class="GtkImage">
             <property name="visible">True</property>
-            <property name="can-focus">False</property>
             <property name="icon-name">snap-lines-perpendicular</property>
           </object>
           <packing>
@@ -695,7 +644,6 @@
         <child>
           <object class="GtkImage">
             <property name="visible">True</property>
-            <property name="can-focus">False</property>
             <property name="icon-name">snap-lines-tangential</property>
           </object>
           <packing>
@@ -706,10 +654,8 @@
         <child>
           <object class="GtkSeparator" id="indent-space">
             <property name="visible">True</property>
-            <property name="can-focus">False</property>
             <property name="opacity">0</property>
             <property name="margin-start">5</property>
-            <property name="margin-end">5</property>
           </object>
           <packing>
             <property name="left-attach">0</property>
@@ -718,7 +664,6 @@
         </child>
         <child>
           <object class="GtkSeparator">
-            <property name="can-focus">False</property>
             <property name="opacity">0</property>
           </object>
           <packing>
@@ -729,7 +674,6 @@
         <child>
           <object class="GtkSeparator">
             <property name="visible">True</property>
-            <property name="can-focus">False</property>
             <property name="opacity">0</property>
           </object>
           <packing>
@@ -740,7 +684,6 @@
         <child>
           <object class="GtkSeparator">
             <property name="visible">True</property>
-            <property name="can-focus">False</property>
             <property name="opacity">0</property>
           </object>
           <packing>
@@ -751,7 +694,6 @@
         <child>
           <object class="GtkSeparator">
             <property name="visible">True</property>
-            <property name="can-focus">False</property>
             <property name="opacity">0</property>
           </object>
           <packing>
@@ -762,7 +704,6 @@
         <child>
           <object class="GtkSeparator">
             <property name="visible">True</property>
-            <property name="can-focus">False</property>
             <property name="opacity">0</property>
           </object>
           <packing>
@@ -773,7 +714,6 @@
         <child>
           <object class="GtkSeparator">
             <property name="visible">True</property>
-            <property name="can-focus">False</property>
             <property name="opacity">0</property>
           </object>
           <packing>
@@ -786,7 +726,6 @@
             <property name="label" translatable="yes">Page margins</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
-            <property name="receives-default">False</property>
             <property name="halign">start</property>
             <property name="action-name">win.snap-page-margin</property>
             <property name="draw-indicator">True</property>
@@ -800,7 +739,6 @@
         <child>
           <object class="GtkImage">
             <property name="visible">True</property>
-            <property name="can-focus">False</property>
             <property name="halign">start</property>
             <property name="valign">center</property>
             <property name="icon-name">snap-page</property>
@@ -813,33 +751,25 @@
       </object>
     </child>
   </object>
-
   <object class="GtkImage" id="image1">
     <property name="visible">True</property>
-    <property name="can-focus">False</property>
     <property name="icon-name">snap-bounding-box-center</property>
   </object>
   <object class="GtkImage" id="image2">
     <property name="visible">True</property>
-    <property name="can-focus">False</property>
     <property name="icon-name">snap-nodes-cusp</property>
   </object>
   <object class="GtkImage" id="image3">
     <property name="visible">True</property>
-    <property name="can-focus">False</property>
     <property name="icon-name">align-horizontal-left-to-anchor-symbolic</property>
   </object>
-
   <object class="GtkPopover" id="simple">
-    <property name="can-focus">False</property>
     <child>
       <object class="GtkGrid">
         <property name="visible">True</property>
-        <property name="can-focus">False</property>
         <property name="halign">start</property>
         <property name="valign">start</property>
         <property name="margin-start">8</property>
-        <property name="margin-end">8</property>
         <property name="margin-top">8</property>
         <property name="margin-bottom">8</property>
         <property name="row-spacing">4</property>
@@ -849,7 +779,6 @@
             <property name="label" translatable="yes">Enable snapping</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
-            <property name="receives-default">False</property>
             <property name="halign">start</property>
             <property name="action-name">win.snap-global-toggle</property>
             <property name="draw-indicator">True</property>
@@ -863,7 +792,6 @@
         <child>
           <object class="GtkToggleButton" id="simple-snap-bbox">
             <property name="visible">True</property>
-            <property name="can-focus">False</property>
             <property name="focus-on-click">False</property>
             <property name="receives-default">True</property>
             <property name="action-name">win.simple-snap-bbox</property>
@@ -877,7 +805,6 @@
         <child>
           <object class="GtkLabel">
             <property name="visible">True</property>
-            <property name="can-focus">False</property>
             <property name="halign">start</property>
             <property name="label" translatable="yes">Bounding boxes</property>
           </object>
@@ -889,7 +816,6 @@
         <child>
           <object class="GtkToggleButton" id="simple-snap-nodes">
             <property name="visible">True</property>
-            <property name="can-focus">False</property>
             <property name="focus-on-click">False</property>
             <property name="receives-default">True</property>
             <property name="action-name">win.simple-snap-nodes</property>
@@ -903,7 +829,6 @@
         <child>
           <object class="GtkLabel">
             <property name="visible">True</property>
-            <property name="can-focus">False</property>
             <property name="halign">start</property>
             <property name="label" translatable="yes">Nodes</property>
           </object>
@@ -915,7 +840,6 @@
         <child>
           <object class="GtkToggleButton" id="align-snap">
             <property name="visible">True</property>
-            <property name="can-focus">False</property>
             <property name="focus-on-click">False</property>
             <property name="receives-default">True</property>
             <property name="action-name">win.simple-snap-alignment</property>
@@ -929,7 +853,6 @@
         <child>
           <object class="GtkLabel" id="simple-align-snap">
             <property name="visible">True</property>
-            <property name="can-focus">False</property>
             <property name="halign">start</property>
             <property name="label" translatable="yes">Alignment</property>
           </object>
@@ -941,7 +864,6 @@
         <child>
           <object class="GtkLabel">
             <property name="visible">True</property>
-            <property name="can-focus">False</property>
             <property name="label"> </property>
             <attributes>
               <attribute name="scale" value="0.5"/>
@@ -969,7 +891,6 @@
         <child>
           <object class="GtkLabel">
             <property name="visible">True</property>
-            <property name="can-focus">False</property>
             <property name="label"> </property>
           </object>
           <packing>
@@ -980,41 +901,31 @@
       </object>
     </child>
   </object>
-
   <!-- The main box! -->
   <object class="GtkBox" id="snap-toolbar">
     <property name="visible">True</property>
-    <property name="can-focus">False</property>
+    <property name="halign">start</property>
     <child>
       <object class="GtkToggleButton">
         <property name="visible">True</property>
-        <property name="can-focus">False</property>
         <property name="action-name">win.snap-global-toggle</property>
         <property name="relief">none</property>
         <child>
           <object class="GtkImage">
             <property name="visible">True</property>
-            <property name="can-focus">False</property>
             <property name="icon-name">snap</property>
           </object>
         </child>
       </object>
-      <packing>
-        <property name="expand">False</property>
-      </packing>
     </child>
     <child>
       <object class="GtkMenuButton" id="btn-advanced">
-        <property name="visible">False</property>
         <property name="can-focus">True</property>
         <property name="focus-on-click">False</property>
         <property name="receives-default">True</property>
         <property name="direction">left</property>
         <property name="popover">advanced</property>
       </object>
-      <packing>
-        <property name="expand">False</property>
-      </packing>
     </child>
     <child>
       <object class="GtkMenuButton" id="btn-simple">
@@ -1025,556 +936,402 @@
         <property name="direction">left</property>
         <property name="popover">simple</property>
       </object>
-      <packing>
-        <property name="expand">False</property>
-      </packing>
     </child>
-
     <!-- "Permanent" vertical snap bar -->
     <child>
       <object class="GtkScrolledWindow" id="scroll-permanent">
         <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <property name="shadow_type">none</property>
-        <property name="hexpand">False</property>
         <property name="vexpand">True</property>
         <property name="hscrollbar-policy">never</property>
         <property name="vscrollbar-policy">external</property>
         <property name="propagate-natural-height">True</property>
         <child>
           <object class="GtkBox" id="box-permanent">
-            <property name="visible">False</property>
-            <property name="can-focus">False</property>
             <property name="orientation">vertical</property>
             <child>
               <object class="GtkSeparator">
                 <property name="visible">True</property>
-                <property name="can-focus">False</property>
                 <property name="margin-bottom">3</property>
                 <property name="margin-top">3</property>
               </object>
-              <packing>
-                <property name="expand">False</property>
-              </packing>
             </child>
             <child>
               <object class="GtkToggleButton">
                 <property name="visible">True</property>
-                <property name="can-focus">False</property>
                 <property name="no-show-all">True</property>
                 <property name="action-name">win.snap-bbox</property>
                 <property name="relief">none</property>
                 <child>
                   <object class="GtkImage">
                     <property name="visible">True</property>
-                    <property name="can-focus">False</property>
                     <property name="icon-name">snap-bounding-box</property>
                   </object>
                 </child>
               </object>
-              <packing>
-                <property name="expand">False</property>
-              </packing>
             </child>
             <child>
               <object class="GtkToggleButton">
                 <property name="visible">True</property>
-                <property name="can-focus">False</property>
                 <property name="no-show-all">True</property>
                 <property name="action-name">win.snap-bbox-edge</property>
                 <property name="relief">none</property>
                 <child>
                   <object class="GtkImage">
                     <property name="visible">True</property>
-                    <property name="can-focus">False</property>
                     <property name="icon-name">snap-bounding-box-edges</property>
                   </object>
                 </child>
               </object>
-              <packing>
-                <property name="expand">False</property>
-              </packing>
             </child>
             <child>
               <object class="GtkToggleButton">
                 <property name="visible">True</property>
-                <property name="can-focus">False</property>
                 <property name="no-show-all">True</property>
                 <property name="action-name">win.snap-bbox-corner</property>
                 <property name="relief">none</property>
                 <child>
                   <object class="GtkImage">
                     <property name="visible">True</property>
-                    <property name="can-focus">False</property>
                     <property name="icon-name">snap-bounding-box-corners</property>
                   </object>
                 </child>
               </object>
-              <packing>
-                <property name="expand">False</property>
-              </packing>
             </child>
             <child>
               <object class="GtkToggleButton">
                 <property name="visible">True</property>
-                <property name="can-focus">False</property>
                 <property name="no-show-all">True</property>
                 <property name="action-name">win.snap-bbox-edge-midpoint</property>
                 <property name="relief">none</property>
                 <child>
                   <object class="GtkImage">
                     <property name="visible">True</property>
-                    <property name="can-focus">False</property>
                     <property name="icon-name">snap-bounding-box-midpoints</property>
                   </object>
                 </child>
               </object>
-              <packing>
-                <property name="expand">False</property>
-              </packing>
             </child>
             <child>
               <object class="GtkToggleButton">
                 <property name="visible">True</property>
-                <property name="can-focus">False</property>
                 <property name="no-show-all">True</property>
                 <property name="action-name">win.snap-bbox-center</property>
                 <property name="relief">none</property>
                 <child>
                   <object class="GtkImage">
                     <property name="visible">True</property>
-                    <property name="can-focus">False</property>
                     <property name="icon-name">snap-bounding-box-center</property>
                   </object>
                 </child>
               </object>
-              <packing>
-                <property name="expand">False</property>
-              </packing>
             </child>
             <child>
               <object class="GtkSeparator">
                 <property name="visible">True</property>
-                <property name="can-focus">False</property>
                 <property name="margin-bottom">3</property>
                 <property name="margin-top">3</property>
               </object>
-              <packing>
-                <property name="expand">False</property>
-              </packing>
             </child>
             <child>
               <object class="GtkToggleButton">
                 <property name="visible">True</property>
-                <property name="can-focus">False</property>
                 <property name="no-show-all">True</property>
                 <property name="action-name">win.snap-node-category</property>
                 <property name="relief">none</property>
                 <child>
                   <object class="GtkImage">
                     <property name="visible">True</property>
-                    <property name="can-focus">False</property>
                     <property name="icon-name">snap-nodes</property>
                   </object>
                 </child>
               </object>
-              <packing>
-                <property name="expand">False</property>
-              </packing>
             </child>
             <child>
               <object class="GtkToggleButton">
                 <property name="visible">True</property>
-                <property name="can-focus">False</property>
                 <property name="no-show-all">True</property>
                 <property name="action-name">win.snap-path</property>
                 <property name="relief">none</property>
                 <child>
                   <object class="GtkImage">
                     <property name="visible">True</property>
-                    <property name="can-focus">False</property>
                     <property name="icon-name">snap-nodes-path</property>
                   </object>
                 </child>
               </object>
-              <packing>
-                <property name="expand">False</property>
-              </packing>
             </child>
             <child>
               <object class="GtkToggleButton">
                 <property name="visible">True</property>
-                <property name="can-focus">False</property>
                 <property name="no-show-all">True</property>
                 <property name="action-name">win.snap-path-intersection</property>
                 <property name="relief">none</property>
                 <child>
                   <object class="GtkImage">
                     <property name="visible">True</property>
-                    <property name="can-focus">False</property>
                     <property name="icon-name">snap-nodes-intersection</property>
                   </object>
                 </child>
               </object>
-              <packing>
-                <property name="expand">False</property>
-              </packing>
             </child>
             <child>
               <object class="GtkToggleButton">
                 <property name="visible">True</property>
-                <property name="can-focus">False</property>
                 <property name="no-show-all">True</property>
                 <property name="action-name">win.snap-node-cusp</property>
                 <property name="relief">none</property>
                 <child>
                   <object class="GtkImage">
                     <property name="visible">True</property>
-                    <property name="can-focus">False</property>
                     <property name="icon-name">snap-nodes-cusp</property>
                   </object>
                 </child>
               </object>
-              <packing>
-                <property name="expand">False</property>
-              </packing>
             </child>
             <child>
               <object class="GtkToggleButton">
                 <property name="visible">True</property>
-                <property name="can-focus">False</property>
                 <property name="no-show-all">True</property>
                 <property name="action-name">win.snap-node-smooth</property>
                 <property name="relief">none</property>
                 <child>
                   <object class="GtkImage">
                     <property name="visible">True</property>
-                    <property name="can-focus">False</property>
                     <property name="icon-name">snap-nodes-smooth</property>
                   </object>
                 </child>
               </object>
-              <packing>
-                <property name="expand">False</property>
-              </packing>
             </child>
             <child>
               <object class="GtkToggleButton">
                 <property name="visible">True</property>
-                <property name="can-focus">False</property>
                 <property name="no-show-all">True</property>
                 <property name="action-name">win.snap-line-midpoint</property>
                 <property name="relief">none</property>
                 <child>
                   <object class="GtkImage">
                     <property name="visible">True</property>
-                    <property name="can-focus">False</property>
                     <property name="icon-name">snap-nodes-midpoint</property>
                   </object>
                 </child>
               </object>
-              <packing>
-                <property name="expand">False</property>
-              </packing>
             </child>
             <child>
               <object class="GtkToggleButton">
                 <property name="visible">True</property>
-                <property name="can-focus">False</property>
                 <property name="no-show-all">True</property>
                 <property name="action-name">win.snap-line-perpendicular</property>
                 <property name="relief">none</property>
                 <child>
                   <object class="GtkImage">
                     <property name="visible">True</property>
-                    <property name="can-focus">False</property>
                     <property name="icon-name">snap-lines-perpendicular</property>
                   </object>
                 </child>
               </object>
-              <packing>
-                <property name="expand">False</property>
-              </packing>
             </child>
             <child>
               <object class="GtkToggleButton">
                 <property name="visible">True</property>
-                <property name="can-focus">False</property>
                 <property name="no-show-all">True</property>
                 <property name="action-name">win.snap-line-tangential</property>
                 <property name="relief">none</property>
                 <child>
                   <object class="GtkImage">
                     <property name="visible">True</property>
-                    <property name="can-focus">False</property>
                     <property name="icon-name">snap-lines-tangential</property>
                   </object>
                 </child>
               </object>
-              <packing>
-                <property name="expand">False</property>
-              </packing>
             </child>
             <child>
               <object class="GtkSeparator">
                 <property name="visible">True</property>
-                <property name="can-focus">False</property>
                 <property name="margin-bottom">3</property>
                 <property name="margin-top">3</property>
               </object>
-              <packing>
-                <property name="expand">False</property>
-              </packing>
             </child>
             <child>
               <object class="GtkToggleButton">
                 <property name="visible">True</property>
-                <property name="can-focus">False</property>
                 <property name="no-show-all">True</property>
                 <property name="action-name">win.snap-others</property>
                 <property name="relief">none</property>
                 <child>
                   <object class="GtkImage">
                     <property name="visible">True</property>
-                    <property name="can-focus">False</property>
                     <property name="icon-name">snap-others</property>
                   </object>
                 </child>
               </object>
-              <packing>
-                <property name="expand">False</property>
-              </packing>
             </child>
             <child>
               <object class="GtkToggleButton">
                 <property name="visible">True</property>
-                <property name="can-focus">False</property>
                 <property name="no-show-all">True</property>
                 <property name="action-name">win.snap-object-midpoint</property>
                 <property name="relief">none</property>
                 <child>
                   <object class="GtkImage">
                     <property name="visible">True</property>
-                    <property name="can-focus">False</property>
                     <property name="icon-name">snap-nodes-center</property>
                   </object>
                 </child>
               </object>
-              <packing>
-                <property name="expand">False</property>
-              </packing>
             </child>
             <child>
               <object class="GtkToggleButton">
                 <property name="visible">True</property>
-                <property name="can-focus">False</property>
                 <property name="no-show-all">True</property>
                 <property name="action-name">win.snap-rotation-center</property>
                 <property name="relief">none</property>
                 <child>
                   <object class="GtkImage">
                     <property name="visible">True</property>
-                    <property name="can-focus">False</property>
                     <property name="icon-name">snap-nodes-rotation-center</property>
                   </object>
                 </child>
               </object>
-              <packing>
-                <property name="expand">False</property>
-              </packing>
             </child>
             <child>
               <object class="GtkToggleButton">
                 <property name="visible">True</property>
-                <property name="can-focus">False</property>
                 <property name="no-show-all">True</property>
                 <property name="action-name">win.snap-text-baseline</property>
                 <property name="relief">none</property>
                 <child>
                   <object class="GtkImage">
                     <property name="visible">True</property>
-                    <property name="can-focus">False</property>
                     <property name="icon-name">snap-text-baseline</property>
                   </object>
                 </child>
               </object>
-              <packing>
-                <property name="expand">False</property>
-              </packing>
             </child>
             <child>
               <object class="GtkToggleButton">
                 <property name="visible">True</property>
-                <property name="can-focus">False</property>
                 <property name="no-show-all">True</property>
                 <property name="action-name">win.snap-path-mask</property>
                 <property name="relief">none</property>
                 <child>
                   <object class="GtkImage">
                     <property name="visible">True</property>
-                    <property name="can-focus">False</property>
                     <property name="icon-name">path-mask-edit</property>
                   </object>
                 </child>
               </object>
-              <packing>
-                <property name="expand">False</property>
-              </packing>
             </child>
             <child>
               <object class="GtkToggleButton">
                 <property name="visible">True</property>
-                <property name="can-focus">False</property>
                 <property name="no-show-all">True</property>
                 <property name="action-name">win.snap-path-clip</property>
                 <property name="relief">none</property>
                 <child>
                   <object class="GtkImage">
                     <property name="visible">True</property>
-                    <property name="can-focus">False</property>
                     <property name="icon-name">path-clip-edit</property>
                   </object>
                 </child>
               </object>
-              <packing>
-                <property name="expand">False</property>
-              </packing>
             </child>
             <child>
               <object class="GtkSeparator">
                 <property name="visible">True</property>
-                <property name="can-focus">False</property>
                 <property name="margin-bottom">3</property>
                 <property name="margin-top">3</property>
               </object>
-              <packing>
-                <property name="expand">False</property>
-              </packing>
             </child>
             <child>
               <object class="GtkToggleButton">
                 <property name="visible">True</property>
-                <property name="can-focus">False</property>
                 <property name="no-show-all">True</property>
                 <property name="action-name">win.snap-alignment</property>
                 <property name="relief">none</property>
                 <child>
                   <object class="GtkImage">
                     <property name="visible">True</property>
-                    <property name="can-focus">False</property>
                     <property name="icon-name">snap-alignment</property>
                   </object>
                 </child>
               </object>
-              <packing>
-                <property name="expand">False</property>
-              </packing>
             </child>
             <child>
               <object class="GtkToggleButton">
                 <property name="visible">True</property>
-                <property name="can-focus">False</property>
                 <property name="no-show-all">True</property>
                 <property name="action-name">win.snap-alignment-self</property>
                 <property name="relief">none</property>
                 <child>
                   <object class="GtkImage">
                     <property name="visible">True</property>
-                    <property name="can-focus">False</property>
                     <property name="icon-name">snap-alignment-self</property>
                   </object>
                 </child>
               </object>
-              <packing>
-                <property name="expand">False</property>
-              </packing>
             </child>
             <child>
               <object class="GtkToggleButton">
                 <property name="visible">True</property>
-                <property name="can-focus">False</property>
                 <property name="no-show-all">True</property>
                 <property name="action-name">win.snap-distribution</property>
                 <property name="relief">none</property>
                 <child>
                   <object class="GtkImage">
                     <property name="visible">True</property>
-                    <property name="can-focus">False</property>
                     <property name="icon-name">snap-distribution</property>
                   </object>
                 </child>
               </object>
-              <packing>
-                <property name="expand">False</property>
-              </packing>
             </child>
             <child>
               <object class="GtkSeparator">
                 <property name="visible">True</property>
-                <property name="can-focus">False</property>
                 <property name="margin-bottom">3</property>
                 <property name="margin-top">3</property>
               </object>
-              <packing>
-                <property name="expand">False</property>
-              </packing>
             </child>
             <child>
               <object class="GtkToggleButton">
                 <property name="visible">True</property>
-                <property name="can-focus">False</property>
                 <property name="no-show-all">True</property>
                 <property name="action-name">win.snap-grid</property>
                 <property name="relief">none</property>
                 <child>
                   <object class="GtkImage">
                     <property name="visible">True</property>
-                    <property name="can-focus">False</property>
                     <property name="icon-name">grid-rectangular</property>
                   </object>
                 </child>
               </object>
-              <packing>
-                <property name="expand">False</property>
-              </packing>
             </child>
             <child>
               <object class="GtkToggleButton">
                 <property name="visible">True</property>
-                <property name="can-focus">False</property>
                 <property name="no-show-all">True</property>
                 <property name="action-name">win.snap-guide</property>
                 <property name="relief">none</property>
                 <child>
                   <object class="GtkImage">
                     <property name="visible">True</property>
-                    <property name="can-focus">False</property>
                     <property name="icon-name">guides</property>
                   </object>
                 </child>
               </object>
-              <packing>
-                <property name="expand">False</property>
-              </packing>
             </child>
             <child>
               <object class="GtkToggleButton">
                 <property name="visible">True</property>
-                <property name="can-focus">False</property>
                 <property name="no-show-all">True</property>
                 <property name="action-name">win.snap-page-border</property>
                 <property name="relief">none</property>
                 <child>
                   <object class="GtkImage">
                     <property name="visible">True</property>
-                    <property name="can-focus">False</property>
                     <property name="icon-name">snap-page</property>
                   </object>
                 </child>
               </object>
-              <packing>
-                <property name="expand">False</property>
-              </packing>
             </child>
           </object>
         </child>

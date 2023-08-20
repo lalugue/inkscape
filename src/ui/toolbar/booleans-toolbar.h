@@ -29,7 +29,7 @@ class SPDesktop;
 
 namespace Inkscape::UI::Toolbar {
 
-class BooleansToolbar : public Toolbar
+class BooleansToolbar final : public Toolbar
 {
 public:
     static GtkWidget *create(SPDesktop *desktop);

@@ -50,8 +50,8 @@ class SpinButton;
 } // namespace Widget
 
 namespace Toolbar {
-
-class PaintbucketToolbar final : public Toolbar {
+class PaintbucketToolbar final : public Toolbar
+{
 private:
     using ValueChangedMemFun = void (PaintbucketToolbar::*)();
 

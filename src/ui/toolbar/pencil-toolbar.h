@@ -47,7 +47,8 @@ class ComboToolItem;
 }
 
 namespace Toolbar {
-class PencilToolbar : public Toolbar {
+class PencilToolbar final : public Toolbar
+{
 private:
     using ValueChangedMemFun = void (PencilToolbar::*)();
 

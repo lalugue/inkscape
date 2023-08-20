@@ -57,7 +57,8 @@ class UnitTracker;
 
 namespace Toolbar {
 
-class NodeToolbar : public Toolbar {
+class NodeToolbar final : public Toolbar
+{
 private:
     Glib::RefPtr<Gtk::Builder> _builder;
     std::unique_ptr<UI::Widget::UnitTracker> _tracker;

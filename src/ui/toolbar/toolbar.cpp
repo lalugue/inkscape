@@ -39,6 +39,11 @@ Glib::RefPtr<Gtk::Builder> Toolbar::initialize_builder(Glib::ustring const &file
 
 void Toolbar::resize_handler(Gtk::Allocation &allocation)
 {
+    _resize_handler(allocation, false);
+}
+
+void Toolbar::_resize_handler(Gtk::Allocation &allocation, bool freeze_idle)
+{
     // Return if called in freeze state.
     if (_freeze_resize) {
         return;
@@ -56,7 +61,9 @@ void Toolbar::resize_handler(Gtk::Allocation &allocation)
     get_preferred_width(min_w, nat_w);
 
     // Check if the toolbar needs to be resized.
-    if (allocation.get_width() <= std::max(min_w, nat_w)) {
+    // Added an offset of 7 pixels to allow toolbars to shrink
+    // on MacOS.
+    if (allocation.get_width() <= (std::max(min_w, nat_w) + 7)) {
         // Now, check if there are any expanded ToolbarMenuButtons.
         // If there are none, then the toolbar size can not be reduced further.
         if (_expanded_menu_btns.empty()) {
@@ -79,8 +86,12 @@ void Toolbar::resize_handler(Gtk::Allocation &allocation)
         // call this handler again.
         get_preferred_width(min_w, nat_w);
 
-        if (allocation.get_width() <= std::max(min_w, nat_w)) {
-            resize_handler(allocation);
+        // Added an offset of 7 pixels to allow toolbars to shrink
+        // on MacOS.
+        if (allocation.get_width() <= (std::max(min_w, nat_w) + 7)) {
+            _resize_handler(allocation, false);
+        } else if (!freeze_idle) {
+            // TODO: Add the right idle calls.
         }
     } else {
         // Once the allocated width of the toolbar is greater than its
@@ -107,15 +118,22 @@ void Toolbar::resize_handler(Gtk::Allocation &allocation)
         _toolbar->get_preferred_width(min_w, nat_w);
         int req_width = std::max(min_w, nat_w) + menu_btn->get_required_width();
 
-        if (allocation.get_width() > req_width) {
+        // Added an offset of 7 pixels to allow toolbars to shrink
+        // on MacOS.
+        if (allocation.get_width() > (req_width + 7)) {
             // Move a group of widgets back into the toolbar.
             move_children(menu_btn->get_popover_box(), _toolbar, menu_btn->get_children(), true);
             menu_btn->set_visible(false);
 
             _collapsed_menu_btns.pop();
             _expanded_menu_btns.push(menu_btn);
+        } else if (!freeze_idle) {
+            // TODO: Add the right idle calls.
         }
     }
+
+    // This call will take care of widgets placement and overlapping issues.
+    Gtk::Box::on_size_allocate(allocation);
 
     _freeze_resize = false;
 }

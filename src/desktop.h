@@ -48,6 +48,7 @@
 #include "preferences.h"
 
 namespace Gtk {
+class Box;
 class Toolbar;
 class Widget;
 class Window;

@@ -48,7 +48,8 @@ class SpinButton;
 } // namespace Widget
 
 namespace Toolbar {
-class EraserToolbar : public Toolbar {
+class EraserToolbar final : public Toolbar
+{
 private:
     using ValueChangedMemFun = void (EraserToolbar::*)();
 
@@ -87,7 +88,6 @@ protected:
 public:
     static GtkWidget *create(SPDesktop *desktop);
 };
-
 }
 }
 }

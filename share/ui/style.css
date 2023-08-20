@@ -720,12 +720,28 @@ button.square-button image {
     margin-bottom: 4px;
 }
 
-.toolbar-separator {
-    margin: 7px 3px;
+.toolbar > * {
+    margin-right: 2px;
 }
 
-.toolbar-menu-button-popover-box {
-    margin: 3px;
+.toolbar > * > * {
+    margin-right: 2px;
+}
+
+.toolbar > * > *:last-child {
+    margin-right: 0;
+}
+
+popover > box {
+    margin: 4px 3px;
+}
+
+popover > box > * {
+    margin-right: 3px;
+}
+
+popover > box > *:last-child {
+    margin-right: 0;
 }
 
 /* for dialogs with "Apply" button (or equivalent) - larger hit target */

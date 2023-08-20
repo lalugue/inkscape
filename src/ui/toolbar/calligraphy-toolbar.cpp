@@ -145,16 +145,16 @@ CalligraphyToolbar::CalligraphyToolbar(SPDesktop *desktop)
     // cause segfault.
     auto children = _toolbar->get_children();
 
-    menu_btn1->init(1, "tag1", "some-icon", popover_box1, children);
+    menu_btn1->init(1, "tag1", popover_box1, children);
     _expanded_menu_btns.push(menu_btn1);
 
-    menu_btn2->init(2, "tag2", "some-icon", popover_box2, children);
+    menu_btn2->init(2, "tag2", popover_box2, children);
     _expanded_menu_btns.push(menu_btn2);
 
-    menu_btn3->init(3, "tag3", "some-icon", popover_box3, children);
+    menu_btn3->init(3, "tag3", popover_box3, children);
     _expanded_menu_btns.push(menu_btn3);
 
-    menu_btn4->init(4, "tag4", "some-icon", popover_box4, children);
+    menu_btn4->init(4, "tag4", popover_box4, children);
     _expanded_menu_btns.push(menu_btn4);
 
     add(*_toolbar);
@@ -170,21 +170,18 @@ CalligraphyToolbar::CalligraphyToolbar(SPDesktop *desktop)
 void CalligraphyToolbar::setup_derived_spin_button(UI::Widget::SpinButton &btn, Glib::ustring const &name,
                                                    double default_value, ValueChangedMemFun const value_changed_mem_fun)
 {
+    auto prefs = Preferences::get();
     const Glib::ustring path = "/tools/calligraphic/" + name;
-    auto val = Preferences::get()->getDouble(path, default_value);
-
-    // TODO:
-    /*
-        if (name == "width") {
-        Unit const *unit = unit_table.getUnit(prefs->getString("/tools/calligraphic/unit"));
-        auto width_adj = Gtk::Adjustment::create(Quantity::convert(val, "px", unit), 0.001, 100, 1.0, 10.0);
-        btn->set_adjustment(width_adj);
-        adj = btn->get_adjustment();
-        }
-    */
-
+    auto const val = prefs->getDouble(path, default_value);
     auto adj = btn.get_adjustment();
-    adj->set_value(val);
+
+    if (name == "width") {
+        Unit const *unit = unit_table.getUnit(prefs->getString("/tools/calligraphic/unit"));
+        adj = Gtk::Adjustment::create(Quantity::convert(val, "px", unit), 0.001, 100, 1.0, 10.0);
+        btn.set_adjustment(adj);
+    } else {
+        adj->set_value(val);
+    }
 
     adj->signal_value_changed().connect(sigc::mem_fun(*this, value_changed_mem_fun));
 
@@ -288,11 +285,11 @@ void CalligraphyToolbar::update_presets_list()
                         match = false;
                         break;
                     }
-                } else if (GTK_IS_TOGGLE_TOOL_BUTTON(widget)) {
+                } else if (GTK_IS_TOGGLE_BUTTON(widget)) {
                     bool v = j.getBool();
-                    auto toggle = GTK_TOGGLE_TOOL_BUTTON(widget);
+                    auto toggle = GTK_TOGGLE_BUTTON(widget);
                     //std::cout << "compared toggle " << attr_name << gtk_toggle_action_get_active(toggle) << " to " << v << "\n";
-                    if ( static_cast<bool>(gtk_toggle_tool_button_get_active(toggle)) != v ) {
+                    if (static_cast<bool>(gtk_toggle_button_get_active(toggle)) != v) {
                         match = false;
                         break;
                     }
@@ -375,9 +372,9 @@ void CalligraphyToolbar::change_profile()
                     GtkAdjustment* adj = static_cast<GtkAdjustment *>(widget);
                     gtk_adjustment_set_value(adj, i.getDouble());
                     //std::cout << "set adj " << attr_name << " to " << v << "\n";
-                } else if (GTK_IS_TOGGLE_TOOL_BUTTON(widget)) {
-                    auto toggle = GTK_TOGGLE_TOOL_BUTTON(widget);
-                    gtk_toggle_tool_button_set_active(toggle, i.getBool());
+                } else if (GTK_IS_TOGGLE_BUTTON(widget)) {
+                    auto toggle = GTK_TOGGLE_BUTTON(widget);
+                    gtk_toggle_button_set_active(toggle, i.getBool());
                     //std::cout << "set toggle " << attr_name << " to " << v << "\n";
                 } else {
                     g_warning("Unknown widget type for preset: %s\n", entry_name.data());
@@ -478,9 +475,9 @@ void CalligraphyToolbar::save_profile(GtkWidget * /*widget*/)
                 GtkAdjustment* adj = GTK_ADJUSTMENT(widget);
                 prefs->setDouble(save_path + "/" + widget_name, gtk_adjustment_get_value(adj));
                 //std::cout << "wrote adj " << widget_name << ": " << v << "\n";
-            } else if (GTK_IS_TOGGLE_TOOL_BUTTON(widget)) {
-                auto toggle = GTK_TOGGLE_TOOL_BUTTON(widget);
-                prefs->setBool(save_path + "/" + widget_name, gtk_toggle_tool_button_get_active(toggle));
+            } else if (GTK_IS_TOGGLE_BUTTON(widget)) {
+                auto toggle = GTK_TOGGLE_BUTTON(widget);
+                prefs->setBool(save_path + "/" + widget_name, gtk_toggle_button_get_active(toggle));
                 //std::cout << "wrote tog " << widget_name << ": " << v << "\n";
             } else {
                 g_warning("Unknown widget type for preset: %s\n", widget_name.c_str());

@@ -51,7 +51,6 @@
 #include "object/sp-string.h"
 #include "object/sp-text.h"
 #include "object/sp-tspan.h"
-#include "selection-chemistry.h"
 #include "svg/css-ostringstream.h"
 #include "ui/builder-utils.h"
 #include "ui/dialog/dialog-container.h"
@@ -59,7 +58,7 @@
 #include "ui/tools/select-tool.h"
 #include "ui/tools/text-tool.h"
 #include "ui/util.h"
-#include "ui/widget/canvas.h"  // Focus
+#include "ui/widget/canvas.h" // Focus
 #include "ui/widget/combo-box-entry-tool-item.h"
 #include "ui/widget/combo-tool-item.h"
 #include "ui/widget/spinbutton.h"
@@ -409,22 +408,22 @@ TextToolbar::TextToolbar(SPDesktop *desktop)
     // cause segfault.
     auto children = _toolbar->get_children();
 
-    menu_btn1->init(1, "tag1", "some-icon", popover_box1, children);
+    menu_btn1->init(1, "tag1", popover_box1, children);
     _expanded_menu_btns.push(menu_btn1);
 
-    menu_btn2->init(2, "tag2", "some-icon", popover_box2, children);
+    menu_btn2->init(2, "tag2", popover_box2, children);
     _expanded_menu_btns.push(menu_btn2);
 
-    menu_btn3->init(3, "tag3", "some-icon", popover_box3, children);
+    menu_btn3->init(3, "tag3", popover_box3, children);
     _expanded_menu_btns.push(menu_btn3);
 
-    menu_btn4->init(4, "tag4", "some-icon", popover_box4, children);
+    menu_btn4->init(4, "tag4", popover_box4, children);
     _expanded_menu_btns.push(menu_btn4);
 
-    menu_btn5->init(5, "tag5", "some-icon", popover_box5, children);
+    menu_btn5->init(5, "tag5", popover_box5, children);
     _expanded_menu_btns.push(menu_btn5);
 
-    menu_btn6->init(6, "tag6", "some-icon", popover_box6, children);
+    menu_btn6->init(6, "tag6", popover_box6, children);
     _expanded_menu_btns.push(menu_btn6);
 
     add(*_toolbar);
@@ -462,7 +461,7 @@ void TextToolbar::setup_derived_spin_button(UI::Widget::SpinButton &btn, Glib::u
                                             double default_value, ValueChangedMemFun const value_changed_mem_fun)
 {
     const Glib::ustring path = "/tools/text/" + name;
-    auto val = Preferences::get()->getDouble(path, default_value);
+    auto const val = Preferences::get()->getDouble(path, default_value);
     auto adj = btn.get_adjustment();
     adj->set_value(val);
     adj->signal_value_changed().connect(sigc::mem_fun(*this, value_changed_mem_fun));
@@ -479,8 +478,9 @@ void TextToolbar::setup_derived_spin_button(UI::Widget::SpinButton &btn, Glib::u
 void TextToolbar::configure_mode_buttons(std::vector<Gtk::RadioButton *> &buttons, Gtk::Box &box,
                                          Glib::ustring const &name, ModeChangedMemFun const mode_changed_mem_fun)
 {
-    for_each_child(box, [=, &buttons](Gtk::Widget &item) {
-        static int btn_index = 0;
+    int btn_index = 0;
+
+    for_each_child(box, [=, &btn_index, &buttons](Gtk::Widget &item) {
         auto &btn = dynamic_cast<Gtk::RadioButton &>(item);
         buttons.push_back(&btn);
         btn.signal_clicked().connect(sigc::bind(sigc::mem_fun(*this, mode_changed_mem_fun), btn_index++));

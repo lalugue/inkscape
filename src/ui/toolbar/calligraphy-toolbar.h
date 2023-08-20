@@ -54,8 +54,8 @@ class UnitTracker;
 } // namespace Widget
 
 namespace Toolbar {
-
-class CalligraphyToolbar final : public Toolbar {
+class CalligraphyToolbar final : public Toolbar
+{
 private:
     using ValueChangedMemFun = void (CalligraphyToolbar::*)();
 

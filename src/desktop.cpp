@@ -1208,7 +1208,7 @@ SPDesktop::onWindowStateChanged(GdkWindowState const changed, GdkWindowState con
     window_state = new_window_state;
 
     // Layout may differ depending on full-screen mode or not
-    if (changed & (GDK_WINDOW_STATE_FULLSCREEN|GDK_WINDOW_STATE_MAXIMIZED)) {
+    if (changed & (GDK_WINDOW_STATE_FULLSCREEN | GDK_WINDOW_STATE_MAXIMIZED)) {
         layoutWidget();
         view_set_gui(getInkscapeWindow()); // Updates View menu
     }

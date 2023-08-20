@@ -24,65 +24,40 @@
   </object>
   <object class="GtkImage" id="image2">
     <property name="visible">True</property>
-    <property name="can-focus">False</property>
     <property name="icon-name">rectangle-make-corners-sharp</property>
   </object>
   <object class="GtkPopover" id="popover1">
-    <property name="can-focus">False</property>
-    <property name="modal">False</property>
+    <property name="modal">True</property>
     <child>
       <object class="GtkBox" id="popover_box1">
         <property name="visible">True</property>
-        <property name="can-focus">False</property>
         <property name="valign">center</property>
         <property name="spacing">3</property>
-        <child>
-          <placeholder/>
-        </child>
-        <style>
-          <class name="toolbar-menu-button-popover-box"/>
-        </style>
       </object>
     </child>
   </object>
   <object class="GtkBox" id="rect-toolbar">
     <property name="visible">True</property>
-    <property name="can-focus">False</property>
+    <property name="halign">start</property>
     <property name="valign">center</property>
     <property name="spacing">3</property>
     <child>
       <object class="GtkLabel" id="_mode_item">
         <property name="visible">True</property>
-        <property name="can-focus">False</property>
         <property name="margin-start">3</property>
-        <property name="margin-end">3</property>
         <property name="label" translatable="yes">&lt;b&gt;New:&lt;/b&gt;</property>
         <property name="use-markup">True</property>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">0</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="width_box">
         <property name="visible">True</property>
-        <property name="can-focus">False</property>
         <property name="tooltip-text" translatable="yes">Width of rectangle</property>
-        <property name="margin-end">3</property>
         <child>
           <object class="GtkLabel">
             <property name="visible">True</property>
-            <property name="can-focus">False</property>
-            <property name="margin-end">3</property>
             <property name="label" translatable="yes">W:</property>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">0</property>
-          </packing>
         </child>
         <child>
           <object class="GtkSpinButton" id="_width_item">
@@ -95,36 +70,23 @@
             <property name="digits">3</property>
           </object>
           <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
             <property name="position">1</property>
           </packing>
         </child>
       </object>
       <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
         <property name="position">1</property>
       </packing>
     </child>
     <child>
       <object class="GtkBox" id="height_box">
         <property name="visible">True</property>
-        <property name="can-focus">False</property>
         <property name="tooltip-text" translatable="yes">Height of rectangle</property>
-        <property name="margin-end">3</property>
         <child>
           <object class="GtkLabel">
             <property name="visible">True</property>
-            <property name="can-focus">False</property>
-            <property name="margin-end">3</property>
             <property name="label" translatable="yes">H:</property>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">0</property>
-          </packing>
         </child>
         <child>
           <object class="GtkSpinButton" id="_height_item">
@@ -137,15 +99,11 @@
             <property name="digits">3</property>
           </object>
           <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
             <property name="position">1</property>
           </packing>
         </child>
       </object>
       <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
         <property name="position">2</property>
       </packing>
     </child>
@@ -155,41 +113,28 @@
         <property name="can-focus">True</property>
         <property name="focus-on-click">False</property>
         <property name="receives-default">True</property>
-        <property name="margin-end">3</property>
         <property name="relief">none</property>
         <property name="popover">popover1</property>
         <child>
           <object class="GtkImage" id="image18">
             <property name="visible">True</property>
-            <property name="can-focus">False</property>
-            <property name="icon-name">icon1</property>
+            <property name="icon-name">go-down</property>
           </object>
         </child>
       </object>
       <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
         <property name="position">4</property>
       </packing>
     </child>
     <child>
       <object class="GtkBox" id="rx_box">
         <property name="visible">True</property>
-        <property name="can-focus">False</property>
         <property name="tooltip-text" translatable="yes">Horizontal radius of rounded corners</property>
-        <property name="margin-end">3</property>
         <child>
           <object class="GtkLabel">
             <property name="visible">True</property>
-            <property name="can-focus">False</property>
-            <property name="margin-end">3</property>
             <property name="label" translatable="yes">Rx:</property>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">0</property>
-          </packing>
         </child>
         <child>
           <object class="GtkSpinButton" id="_rx_item">
@@ -201,8 +146,6 @@
             <property name="digits">3</property>
           </object>
           <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
             <property name="position">1</property>
           </packing>
         </child>
@@ -211,29 +154,18 @@
         </style>
       </object>
       <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
         <property name="position">5</property>
       </packing>
     </child>
     <child>
       <object class="GtkBox" id="ry_box">
         <property name="visible">True</property>
-        <property name="can-focus">False</property>
         <property name="tooltip-text" translatable="yes">Vertical radius of rounded corners</property>
-        <property name="margin-end">3</property>
         <child>
           <object class="GtkLabel">
             <property name="visible">True</property>
-            <property name="can-focus">False</property>
-            <property name="margin-end">3</property>
             <property name="label" translatable="yes">Ry:</property>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">0</property>
-          </packing>
         </child>
         <child>
           <object class="GtkSpinButton" id="_ry_item">
@@ -246,8 +178,6 @@
             <property name="digits">3</property>
           </object>
           <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
             <property name="position">1</property>
           </packing>
         </child>
@@ -256,38 +186,25 @@
         </style>
       </object>
       <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
         <property name="position">6</property>
       </packing>
     </child>
     <child>
       <object class="GtkBox" id="unit_menu_box">
         <property name="visible">True</property>
-        <property name="can-focus">False</property>
-        <property name="margin-end">3</property>
-        <child>
-          <placeholder/>
-        </child>
         <style>
           <class name="tag2"/>
         </style>
       </object>
       <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
         <property name="position">7</property>
       </packing>
     </child>
     <child>
       <object class="GtkSeparator">
         <property name="visible">True</property>
-        <property name="can-focus">False</property>
-        <property name="margin-end">3</property>
       </object>
       <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
         <property name="position">8</property>
       </packing>
     </child>
@@ -302,8 +219,6 @@
         <property name="always-show-image">True</property>
       </object>
       <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
         <property name="position">9</property>
       </packing>
     </child>

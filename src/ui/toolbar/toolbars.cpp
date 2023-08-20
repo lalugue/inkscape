@@ -188,7 +188,7 @@ void Toolbars::create_toolbars(SPDesktop* desktop) {
     set_visible(true);
 }
 
-void Toolbars::change_toolbar(SPDesktop* /* desktop */, Inkscape::UI::Tools::ToolBase *eventcontext)
+void Toolbars::change_toolbar(SPDesktop * /* desktop */, Inkscape::UI::Tools::ToolBase *eventcontext)
 {
     if (eventcontext == nullptr) {
         std::cerr << "Toolbars::change_toolbar: eventcontext is null!" << std::endl;

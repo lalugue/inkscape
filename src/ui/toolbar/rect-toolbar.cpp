@@ -76,10 +76,10 @@ RectToolbar::RectToolbar(SPDesktop *desktop)
     auto init_units = desktop->getNamedView()->display_units;
     _tracker->setActiveUnit(init_units);
 
-    setup_derived_spin_button(_width_item, "width");
-    setup_derived_spin_button(_height_item, "height");
-    setup_derived_spin_button(_rx_item, "rx");
-    setup_derived_spin_button(_ry_item, "ry");
+    setup_derived_spin_button(_width_item, "width", &SPRect::setVisibleWidth);
+    setup_derived_spin_button(_height_item, "height", &SPRect::setVisibleHeight);
+    setup_derived_spin_button(_rx_item, "rx", &SPRect::setVisibleRx);
+    setup_derived_spin_button(_ry_item, "ry", &SPRect::setVisibleRy);
 
     // Fetch all the ToolbarMenuButtons at once from the UI file
     // Menu Button #1
@@ -92,7 +92,7 @@ RectToolbar::RectToolbar(SPDesktop *desktop)
     // cause segfault.
     auto children = _toolbar->get_children();
 
-    menu_btn1->init(1, "tag1", "some-icon", popover_box1, children);
+    menu_btn1->init(1, "tag1", popover_box1, children);
     _expanded_menu_btns.push(menu_btn1);
 
     _not_rounded.signal_clicked().connect(sigc::mem_fun(*this, &RectToolbar::defaults));
@@ -104,7 +104,8 @@ RectToolbar::RectToolbar(SPDesktop *desktop)
     show_all();
 }
 
-void RectToolbar::setup_derived_spin_button(UI::Widget::SpinButton &btn, Glib::ustring const &name)
+void RectToolbar::setup_derived_spin_button(UI::Widget::SpinButton &btn, Glib::ustring const &name,
+                                            void (SPRect::*setter_fun)(gdouble))
 {
     auto init_units = _desktop->getNamedView()->display_units;
     auto adj = btn.get_adjustment();
@@ -112,20 +113,8 @@ void RectToolbar::setup_derived_spin_button(UI::Widget::SpinButton &btn, Glib::u
     auto val = Preferences::get()->getDouble(path, 0);
     val = Quantity::convert(val, "px", init_units);
     adj->set_value(val);
-
-    if (name == "width") {
-        adj->signal_value_changed().connect(
-            sigc::bind(sigc::mem_fun(*this, &RectToolbar::value_changed), adj, "width", &SPRect::setVisibleWidth));
-    } else if (name == "height") {
-        adj->signal_value_changed().connect(
-            sigc::bind(sigc::mem_fun(*this, &RectToolbar::value_changed), adj, "height", &SPRect::setVisibleHeight));
-    } else if (name == "rx") {
-        adj->signal_value_changed().connect(
-            sigc::bind(sigc::mem_fun(*this, &RectToolbar::value_changed), adj, "rx", &SPRect::setVisibleRx));
-    } else if (name == "ry") {
-        adj->signal_value_changed().connect(
-            sigc::bind(sigc::mem_fun(*this, &RectToolbar::value_changed), adj, "ry", &SPRect::setVisibleRy));
-    }
+    adj->signal_value_changed().connect(
+        sigc::bind(sigc::mem_fun(*this, &RectToolbar::value_changed), adj, name, setter_fun));
 
     _tracker->addAdjustment(adj->gobj());
 
@@ -149,15 +138,15 @@ GtkWidget *RectToolbar::create(SPDesktop *desktop)
     return toolbar->Gtk::Widget::gobj();
 }
 
-void RectToolbar::value_changed(Glib::RefPtr<Gtk::Adjustment> &adj, gchar const *value_name,
+void RectToolbar::value_changed(Glib::RefPtr<Gtk::Adjustment> &adj, Glib::ustring const &value_name,
                                 void (SPRect::*setter)(gdouble))
 {
     Unit const *unit = _tracker->getActiveUnit();
     g_return_if_fail(unit != nullptr);
 
     if (DocumentUndo::getUndoSensitive(_desktop->getDocument())) {
-        Preferences::get()->setDouble(Glib::ustring("/tools/shapes/rect/") + value_name,
-                                      Quantity::convert(adj->get_value(), unit, "px"));
+        const Glib::ustring path = "/tools/shapes/rect/" + value_name;
+        Preferences::get()->setDouble(path, Quantity::convert(adj->get_value(), unit, "px"));
     }
 
     // quit if run by the attr_changed listener
@@ -176,7 +165,7 @@ void RectToolbar::value_changed(Glib::RefPtr<Gtk::Adjustment> &adj, gchar const 
             if (adj->get_value() != 0) {
                 (cast<SPRect>(*i)->*setter)(Quantity::convert(adj->get_value(), unit, "px"));
             } else {
-                (*i)->removeAttribute(value_name);
+                (*i)->removeAttribute(value_name.c_str());
             }
             modmade = true;
         }

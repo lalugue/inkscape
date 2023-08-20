@@ -38,8 +38,7 @@ ToolbarMenuButton::ToolbarMenuButton()
     // std::cout << "ToolbarMenuButton::Constructor()\n";
 }
 
-void ToolbarMenuButton::init(int priority, std::string tag, std::string icon_name, Gtk::Box *popover_box,
-                             std::vector<Gtk::Widget *> &children)
+void ToolbarMenuButton::init(int priority, std::string tag, Gtk::Box *popover_box, std::vector<Gtk::Widget *> &children)
 {
     // std::cout << "ToolbarMenuButton::init()\n";
     _priority = priority;
@@ -48,7 +47,6 @@ void ToolbarMenuButton::init(int priority, std::string tag, std::string icon_nam
 
     // std::cout << "Priority: " << _priority << std::endl;
     // std::cout << "Tag: " << _tag << std::endl;
-    // std::cout << "Icon Name: " << icon_name << std::endl;
 
     // Automatically fetch all the children having "tag" as their style class.
     // This approach will allow even non-programmers to group the children into

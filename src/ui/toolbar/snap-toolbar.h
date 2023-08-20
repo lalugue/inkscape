@@ -27,7 +27,8 @@ class SPDesktop;
 
 namespace Inkscape::UI::Toolbar {
 
-class SnapToolbar final : public Gtk::Box {
+class SnapToolbar final : public Gtk::Box
+{
 public:
     SnapToolbar();
 
@@ -54,7 +55,6 @@ private:
     Gtk::ScrolledWindow &scroll_permanent;
     Gtk::Box    &box_permanent;
 };
-
 } // namespace Inkscape::UI::Toolbar
 
 

@@ -42,7 +42,8 @@ class SpinButton;
 }
 
 namespace Toolbar {
-class TweakToolbar : public Toolbar {
+class TweakToolbar final : public Toolbar
+{
 private:
     using ValueChangedMemFun = void (TweakToolbar::*)();
     Glib::RefPtr<Gtk::Builder> _builder;

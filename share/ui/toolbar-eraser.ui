@@ -30,85 +30,61 @@
   </object>
   <object class="GtkImage" id="image1">
     <property name="visible">True</property>
-    <property name="can-focus">False</property>
     <property name="icon-name">draw-eraser-delete-objects</property>
   </object>
   <object class="GtkImage" id="image2">
     <property name="visible">True</property>
-    <property name="can-focus">False</property>
     <property name="icon-name">path-difference</property>
   </object>
   <object class="GtkImage" id="image3">
     <property name="visible">True</property>
-    <property name="can-focus">False</property>
     <property name="icon-name">path-intersection</property>
   </object>
   <object class="GtkImage" id="image4">
     <property name="visible">True</property>
-    <property name="can-focus">False</property>
     <property name="icon-name">draw-use-pressure</property>
   </object>
   <object class="GtkImage" id="image6">
     <property name="visible">True</property>
-    <property name="can-focus">False</property>
     <property name="icon-name">distribute-randomize</property>
   </object>
   <object class="GtkRadioButton" id="mode_buttons_group">
     <property name="visible">True</property>
     <property name="can-focus">True</property>
-    <property name="receives-default">False</property>
     <property name="always-show-image">True</property>
     <property name="active">True</property>
     <property name="draw-indicator">False</property>
   </object>
   <object class="GtkPopover" id="popover1">
-    <property name="can-focus">False</property>
-    <property name="modal">False</property>
+    <property name="modal">True</property>
     <child>
       <object class="GtkBox" id="popover_box1">
         <property name="visible">True</property>
-        <property name="can-focus">False</property>
         <property name="valign">center</property>
         <property name="spacing">3</property>
-        <child>
-          <placeholder/>
-        </child>
-        <style>
-          <class name="toolbar-menu-button-popover-box"/>
-        </style>
       </object>
     </child>
   </object>
   <object class="GtkBox" id="eraser-toolbar">
     <property name="visible">True</property>
-    <property name="can-focus">False</property>
+    <property name="halign">start</property>
     <property name="valign">center</property>
     <property name="spacing">3</property>
     <child>
       <object class="GtkLabel">
         <property name="visible">True</property>
-        <property name="can-focus">False</property>
         <property name="margin-start">3</property>
-        <property name="margin-end">3</property>
         <property name="label" translatable="yes">Mode:</property>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">0</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="mode_buttons_box">
         <property name="visible">True</property>
-        <property name="can-focus">False</property>
-        <property name="margin-end">3</property>
         <property name="spacing">3</property>
         <child>
           <object class="GtkRadioButton">
             <property name="visible">True</property>
             <property name="can-focus">True</property>
-            <property name="receives-default">False</property>
             <property name="tooltip-text" translatable="yes">Delete objects touched by eraser</property>
             <property name="image">image1</property>
             <property name="relief">none</property>
@@ -117,8 +93,6 @@
             <property name="group">mode_buttons_group</property>
           </object>
           <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
             <property name="position">3</property>
           </packing>
         </child>
@@ -126,7 +100,6 @@
           <object class="GtkRadioButton">
             <property name="visible">True</property>
             <property name="can-focus">True</property>
-            <property name="receives-default">False</property>
             <property name="tooltip-text" translatable="yes">Cut out from paths and shapes</property>
             <property name="image">image2</property>
             <property name="relief">none</property>
@@ -135,8 +108,6 @@
             <property name="group">mode_buttons_group</property>
           </object>
           <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
             <property name="position">4</property>
           </packing>
         </child>
@@ -144,7 +115,6 @@
           <object class="GtkRadioButton">
             <property name="visible">True</property>
             <property name="can-focus">True</property>
-            <property name="receives-default">False</property>
             <property name="tooltip-text" translatable="yes">Clip from objects</property>
             <property name="image">image3</property>
             <property name="relief">none</property>
@@ -153,48 +123,31 @@
             <property name="group">mode_buttons_group</property>
           </object>
           <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
             <property name="position">5</property>
           </packing>
         </child>
       </object>
       <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
         <property name="position">1</property>
       </packing>
     </child>
     <child>
       <object class="GtkSeparator" id="sep1">
         <property name="visible">True</property>
-        <property name="can-focus">False</property>
-        <property name="margin-end">3</property>
       </object>
       <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
         <property name="position">2</property>
       </packing>
     </child>
     <child>
       <object class="GtkBox" id="width_box">
         <property name="visible">True</property>
-        <property name="can-focus">False</property>
         <property name="tooltip-text" translatable="yes">The width of the eraser pen (relative to the visible canvas area)</property>
-        <property name="margin-end">3</property>
         <child>
           <object class="GtkLabel">
             <property name="visible">True</property>
-            <property name="can-focus">False</property>
-            <property name="margin-end">3</property>
             <property name="label" translatable="yes">Width:</property>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">0</property>
-          </packing>
         </child>
         <child>
           <object class="GtkSpinButton" id="_width_item">
@@ -206,15 +159,11 @@
             <property name="climb-rate">1</property>
           </object>
           <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
             <property name="position">1</property>
           </packing>
         </child>
       </object>
       <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
         <property name="position">3</property>
       </packing>
     </child>
@@ -224,35 +173,23 @@
         <property name="can-focus">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Use the pressure of the input device to alter the width of the pen</property>
-        <property name="margin-end">3</property>
         <property name="image">image4</property>
         <property name="relief">none</property>
         <property name="always-show-image">True</property>
       </object>
       <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
         <property name="position">4</property>
       </packing>
     </child>
     <child>
       <object class="GtkBox" id="thinning_box">
         <property name="visible">True</property>
-        <property name="can-focus">False</property>
         <property name="tooltip-text" translatable="yes">How much velocity thins the stroke (&gt; 0 makes fast strokes thinner, &lt; 0 makes them broader, 0 makes width independent of velocity)</property>
-        <property name="margin-end">3</property>
         <child>
           <object class="GtkLabel">
             <property name="visible">True</property>
-            <property name="can-focus">False</property>
-            <property name="margin-end">3</property>
             <property name="label" translatable="yes">Thinning:</property>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">0</property>
-          </packing>
         </child>
         <child>
           <object class="GtkSpinButton" id="_thinning_item">
@@ -264,15 +201,11 @@
             <property name="climb-rate">0.10</property>
           </object>
           <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
             <property name="position">1</property>
           </packing>
         </child>
       </object>
       <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
         <property name="position">5</property>
       </packing>
     </child>
@@ -282,41 +215,28 @@
         <property name="can-focus">True</property>
         <property name="focus-on-click">False</property>
         <property name="receives-default">True</property>
-        <property name="margin-end">3</property>
         <property name="relief">none</property>
         <property name="popover">popover1</property>
         <child>
           <object class="GtkImage" id="image5">
             <property name="visible">True</property>
-            <property name="can-focus">False</property>
-            <property name="icon-name">some-icon</property>
+            <property name="icon-name">go-down</property>
           </object>
         </child>
       </object>
       <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
         <property name="position">6</property>
       </packing>
     </child>
     <child>
       <object class="GtkBox" id="cap_rounding_box">
         <property name="visible">True</property>
-        <property name="can-focus">False</property>
         <property name="tooltip-text" translatable="yes">Increase to make caps at the ends of strokes protrude more (0 = no caps, 1 = round caps)</property>
-        <property name="margin-end">3</property>
         <child>
           <object class="GtkLabel">
             <property name="visible">True</property>
-            <property name="can-focus">False</property>
-            <property name="margin-end">3</property>
             <property name="label" translatable="yes">Caps:</property>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">0</property>
-          </packing>
         </child>
         <child>
           <object class="GtkSpinButton" id="_cap_rounding_item">
@@ -328,8 +248,6 @@
             <property name="digits">2</property>
           </object>
           <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
             <property name="position">1</property>
           </packing>
         </child>
@@ -338,29 +256,18 @@
         </style>
       </object>
       <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
         <property name="position">7</property>
       </packing>
     </child>
     <child>
       <object class="GtkBox" id="tremor_box">
         <property name="visible">True</property>
-        <property name="can-focus">False</property>
         <property name="tooltip-text" translatable="yes">Increase to make strokes rugged and trembling</property>
-        <property name="margin-end">3</property>
         <child>
           <object class="GtkLabel">
             <property name="visible">True</property>
-            <property name="can-focus">False</property>
-            <property name="margin-end">3</property>
             <property name="label" translatable="yes">Tremor:</property>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">0</property>
-          </packing>
         </child>
         <child>
           <object class="GtkSpinButton" id="_tremor_item">
@@ -372,8 +279,6 @@
             <property name="climb-rate">1</property>
           </object>
           <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
             <property name="position">1</property>
           </packing>
         </child>
@@ -382,29 +287,18 @@
         </style>
       </object>
       <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
         <property name="position">8</property>
       </packing>
     </child>
     <child>
       <object class="GtkBox" id="mass_box">
         <property name="visible">True</property>
-        <property name="can-focus">False</property>
         <property name="tooltip-text" translatable="yes">Increase to make strokes rugged and trembling</property>
-        <property name="margin-end">3</property>
         <child>
           <object class="GtkLabel">
             <property name="visible">True</property>
-            <property name="can-focus">False</property>
-            <property name="margin-end">3</property>
             <property name="label" translatable="yes">Mass:</property>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">0</property>
-          </packing>
         </child>
         <child>
           <object class="GtkSpinButton" id="_mass_item">
@@ -416,8 +310,6 @@
             <property name="climb-rate">1</property>
           </object>
           <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
             <property name="position">1</property>
           </packing>
         </child>
@@ -426,20 +318,14 @@
         </style>
       </object>
       <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
         <property name="position">9</property>
       </packing>
     </child>
     <child>
       <object class="GtkSeparator" id="sep2">
         <property name="visible">True</property>
-        <property name="can-focus">False</property>
-        <property name="margin-end">3</property>
       </object>
       <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
         <property name="position">10</property>
       </packing>
     </child>
@@ -449,14 +335,11 @@
         <property name="can-focus">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Break apart cut items</property>
-        <property name="margin-end">3</property>
         <property name="image">image6</property>
         <property name="relief">none</property>
         <property name="always-show-image">True</property>
       </object>
       <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
         <property name="position">11</property>
       </packing>
     </child>

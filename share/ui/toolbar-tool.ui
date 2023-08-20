@@ -100,6 +100,7 @@
   </object>
   <object class="GtkScrolledWindow" id="tool-toolbar">
     <property name="visible">True</property>
+    <property name="halign">start</property>
     <property name="vexpand">True</property>
     <property name="hscrollbar-policy">never</property>
     <property name="vscrollbar-policy">external</property>

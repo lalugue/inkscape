@@ -485,7 +485,7 @@ GradientToolbar::GradientToolbar(SPDesktop *desktop)
     // cause segfault.
     auto children = _toolbar->get_children();
 
-    menu_btn1->init(1, "tag1", "some-icon", popover_box1, children);
+    menu_btn1->init(1, "tag1", popover_box1, children);
     _expanded_menu_btns.push(menu_btn1);
 
     add(*_toolbar);
@@ -501,7 +501,7 @@ void GradientToolbar::setup_derived_spin_button(UI::Widget::SpinButton &btn, Gli
 {
     auto *prefs = Inkscape::Preferences::get();
     const Glib::ustring path = "/tools/gradient/" + name;
-    auto val = prefs->getDouble(path, default_value);
+    auto const val = prefs->getDouble(path, default_value);
 
     auto adj = btn.get_adjustment();
     adj->set_value(val);

@@ -80,7 +80,7 @@ TweakToolbar::TweakToolbar(SPDesktop *desktop)
     _pressure_btn.set_active(prefs->getBool("/tools/tweak/usepressure", true));
 
     // Set initial mode.
-    int mode = prefs->getInt("/tools/tweak/mode", 0);
+    int mode = prefs->getIntLimited("/tools/tweak/mode", 0, 0, _mode_buttons.size() - 1);
     _mode_buttons[mode]->set_active();
 
     // Configure channel buttons.
@@ -110,9 +110,9 @@ TweakToolbar::TweakToolbar(SPDesktop *desktop)
     // cause segfault.
     auto children = _toolbar->get_children();
 
-    menu_btn1->init(1, "tag1", "some-icon", popover_box1, children);
+    menu_btn1->init(1, "tag1", popover_box1, children);
     _expanded_menu_btns.push(menu_btn1);
-    menu_btn2->init(2, "tag2", "some-icon", popover_box2, children);
+    menu_btn2->init(2, "tag2", popover_box2, children);
     _expanded_menu_btns.push(menu_btn2);
 
     add(*_toolbar);
@@ -131,7 +131,7 @@ void TweakToolbar::setup_derived_spin_button(UI::Widget::SpinButton &btn, Glib::
                                              double default_value, ValueChangedMemFun const value_changed_mem_fun)
 {
     const Glib::ustring path = "/tools/tweak/" + name;
-    auto val = Preferences::get()->getDouble(path, default_value);
+    auto const val = Preferences::get()->getDouble(path, default_value);
 
     auto adj = btn.get_adjustment();
     adj->set_value(val);

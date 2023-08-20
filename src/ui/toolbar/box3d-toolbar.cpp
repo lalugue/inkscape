@@ -92,7 +92,7 @@ void Box3DToolbar::setup_derived_spin_button(UI::Widget::SpinButton &btn, Glib::
     auto persp_impl = document->getCurrentPersp3DImpl();
 
     const Glib::ustring path = "/tools/shapes/3dbox/" + name;
-    auto val = prefs->getDouble(path, 30);
+    auto const val = prefs->getDouble(path, 30);
 
     auto adj = btn.get_adjustment();
     adj->set_value(val);

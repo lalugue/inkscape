@@ -38,8 +38,7 @@ public:
 
     ToolbarMenuButton(BaseObjectType *cobject, const Glib::RefPtr<Gtk::Builder> &refGlade);
 
-    void init(int priority, std::string tag, std::string icon_name, Gtk::Box *popover_box,
-              std::vector<Gtk::Widget *> &children);
+    void init(int priority, std::string tag, Gtk::Box *popover_box, std::vector<Gtk::Widget *> &children);
 
     int get_priority();
     std::string get_tag();
