@@ -8,7 +8,7 @@
 namespace Inkscape::Util {
 
 // Round up x to the next multiple of m.
-static std::byte *roundup(std::byte *x, std::size_t m)
+static std::byte *round_up(std::byte *x, std::size_t m)
 {
     auto y = reinterpret_cast<uintptr_t>(x);
     y = ((y - 1) / m + 1) * m;
@@ -17,7 +17,7 @@ static std::byte *roundup(std::byte *x, std::size_t m)
 
 std::byte *Pool::allocate(std::size_t size, std::size_t alignment)
 {
-    auto a = roundup(cur, alignment);
+    auto a = round_up(cur, alignment);
     auto b = a + size;
 
     if (b <= end) {
@@ -33,7 +33,7 @@ std::byte *Pool::allocate(std::size_t size, std::size_t alignment)
     resetblock();
     nextsize = cursize * 3 / 2;
 
-    a = roundup(cur, alignment);
+    a = round_up(cur, alignment);
     b = a + size;
 
     assert(b <= end);

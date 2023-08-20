@@ -79,16 +79,16 @@ T constexpr safemod(T a, T b)
 
 /// Returns \a a rounded down to the nearest multiple of \a b, assuming b >= 1.
 template <typename T, typename std::enable_if<std::is_integral<T>::value, bool>::type = true>
-T constexpr rounddown(T a, T b)
+T constexpr round_down(T a, T b)
 {
     return a - safemod(a, b);
 }
 
 /// Returns \a a rounded up to the nearest multiple of \a b, assuming b >= 1.
 template <typename T, typename std::enable_if<std::is_integral<T>::value, bool>::type = true>
-T constexpr roundup(T a, T b)
+T constexpr round_up(T a, T b)
 {
-    return rounddown(a - 1, b) + b;
+    return round_down(a - 1, b) + b;
 }
 
 /**

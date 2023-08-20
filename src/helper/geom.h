@@ -54,10 +54,10 @@ inline Geom::Coord triangle_area(Geom::Point const &p1, Geom::Point const &p2, G
     return p1[X] * p2[Y] + p1[Y] * p3[X] + p2[X] * p3[Y] - p2[Y] * p3[X] - p1[Y] * p2[X] - p1[X] * p3[Y];
 }
 
-inline auto rounddown(Geom::IntPoint const &a, Geom::IntPoint const &b)
+inline auto round_down(Geom::IntPoint const &a, Geom::IntPoint const &b)
 {
     using namespace Inkscape::Util;
-    return Geom::IntPoint(rounddown(a.x(), b.x()), rounddown(a.y(), b.y()));
+    return Geom::IntPoint(round_down(a.x(), b.x()), round_down(a.y(), b.y()));
 }
 
 inline auto expandedBy(Geom::IntRect rect, int amount)
