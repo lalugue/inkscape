@@ -72,6 +72,29 @@ TEST(XmlTest, nodeiter)
     ASSERT_EQ(testdoc->root()->findChildPath(path), nullptr);
 }
 
+TEST(XmlQuoteTest, nodeiter)
+{
+    auto testdoc = std::shared_ptr<Inkscape::XML::Document>(sp_repr_read_buf("<svg attr='&lt;foo&#10;bar\n&quot;amp&amp;&gt;'>\nTEXT\n&#10;NODE\n<g><![CDATA[TEST&#10;CDATA]]></g></svg>", SP_SVG_NS_URI));
+    ASSERT_STREQ(testdoc->root()->attribute("attr"), "<foo\nbar \"amp&>");
+
+    for (auto &child : *testdoc->root()) {
+        ASSERT_STREQ(child.content(), "\nTEXT\n\nNODE\n");
+        break;
+    }
+
+    auto content = sp_repr_save_buf(testdoc.get());
+    ASSERT_STREQ(content.c_str(), R"""(<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg:svg
+   attr="&lt;foo&#10;bar &quot;amp&amp;&gt;"
+   xmlns:svg="http://www.w3.org/2000/svg">
+TEXT
+
+NODE
+<svg:g><![CDATA[TEST&#10;CDATA]]></svg:g>
+</svg:svg>
+)""");
+}
+
 /*
   Local Variables:
   mode:c++
