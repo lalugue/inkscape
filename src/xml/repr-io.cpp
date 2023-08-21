@@ -728,7 +728,7 @@ bool sp_repr_save_file(Document *doc, gchar const *const filename, gchar const *
 
 
 /* (No doubt this function already exists elsewhere.) */
-static void repr_quote_write (Writer &out, const gchar * val)
+static void repr_quote_write (Writer &out, const gchar * val, bool attr)
 {
     if (val) {
         for (; *val != '\0'; val++) {
@@ -737,7 +737,7 @@ static void repr_quote_write (Writer &out, const gchar * val)
                 case '&': out.writeString( "&amp;" ); break;
                 case '<': out.writeString( "&lt;" ); break;
                 case '>': out.writeString( "&gt;" ); break;
-                case '\n': out.writeString( "&#10;" ); break;
+                case '\n': out.writeString( attr ? "&#10;" : "\n" ); break;
                 default: out.writeChar( *val ); break;
             }
         }
@@ -901,7 +901,7 @@ void sp_repr_write_stream( Node *repr, Writer &out, gint indent_level,
                 // Preserve CDATA sections, not converting '&' to &amp;, etc.
                 out.printf( "<![CDATA[%s]]>", repr->content() );
             } else {
-                repr_quote_write( out, repr->content() );
+                repr_quote_write( out, repr->content(), false );
             }
             break;
         }
@@ -995,7 +995,7 @@ void sp_repr_write_stream_element( Node * repr, Writer & out,
             }
         }
         out.printf(" %s=\"", g_quark_to_string(iter.key));
-        repr_quote_write(out, iter.value);
+        repr_quote_write(out, iter.value, true);
         out.writeChar('"');
     }
 
