@@ -690,7 +690,7 @@ void get_cubic_data(Geom::CubicBezier const& bez, double time, double& len, doub
     // curvature radius here. Less code duplication, but slower
 
     if (Geom::are_near(l, 0, 1e-4)) {
-        l = Geom::L2(der2);
+        l = Geom::L2(der2) / 2;
         Geom::Point der3 = derivs.at(3); // try second time
         if (Geom::are_near(l, 0, 1e-4)) {
             l = Geom::L2(der3);
@@ -725,21 +725,25 @@ double _offset_cubic_stable_sub(
 
     double start_off = 1, end_off = 1;
     // correction of the lengths of the tangent to the offset
-    if (!Geom::are_near(start_rad, 0))
-        start_off += (width + width_correction) / start_rad;
-    if (!Geom::are_near(end_rad, 0))
-        end_off += (width + width_correction) / end_rad;
+    // start_off / end_off can also be negative. This is intended and
+    // is the case when *_radius is negative and its absolute value smaller then width.
+    if (!Geom::are_near(start_rad, 0)) {
+        start_off += width / start_rad;
+    }
+    if (!Geom::are_near(end_rad, 0)) {
+        end_off += width / end_rad;
+    }
 
-    // We don't change the direction of the control points
-    if (start_off < 0) {
-        start_off = 0;
+    // the correction factor should not change the sign of the factors
+    // as it is only a scaling heuristic to make the approximation better.
+    const auto correction_factor = 1 + width_correction / width;
+    if (correction_factor > 0) {
+        start_off *= correction_factor;
+        end_off *= correction_factor;
     }
-    if (end_off < 0) {
-        end_off = 0;
-    }
+
     start_off *= start_len;
     end_off *= end_len;
-    // --------
 
     Geom::Point mid1_new = start_normal.ccw()*start_off;
     mid1_new = Geom::Point(start_new[X] + mid1_new[X]/3., start_new[Y] + mid1_new[Y]/3.);
@@ -750,16 +754,22 @@ double _offset_cubic_stable_sub(
     c = Geom::CubicBezier(start_new, mid1_new, mid2_new, end_new);
 
     // check the tolerance for our estimate to be a parallel curve
-
+    // both directions have to be checked, as we are computing a hausdorff distance with offset
     double worst_residual = 0;
-    for (size_t ii = 3; ii <= 7; ii+=2) {
-        const double t = static_cast<double>(ii) / 10;
-        const Geom::Point req = bez.pointAt(t);
-        const Geom::Point chk = c.pointAt(c.nearestTime(req));
-        const double current_residual = (chk-req).length() - std::abs(width);
+    const auto min_offset_difference = [width, &worst_residual](Geom::CubicBezier const &bez1,
+                                                                Geom::CubicBezier const &bez2, const double time) {
+        const Geom::Point requested_point = bez1.pointAt(time);
+        const Geom::Point closest_point = bez2.pointAt(bez2.nearestTime(requested_point));
+        const double current_residual = (requested_point - closest_point).length() - std::abs(width);
         if (std::abs(current_residual) > std::abs(worst_residual)) {
             worst_residual = current_residual;
         }
+    };
+    for (size_t ii = 3; ii <= 7; ii += 2) {
+        const double t = static_cast<double>(ii) / 10;
+
+        min_offset_difference(bez, c, t);
+        min_offset_difference(c, bez, t);
     }
     return worst_residual;
 }
@@ -857,24 +867,27 @@ void offset_cubic(Geom::Path& p, Geom::CubicBezier const& bez, double width, dou
         return;
     }
 
-    // We find the point on our new curve (c) for which the distance between
+    // We find the point on (bez) for which the distance between
     // (c) and (bez) differs the most from the desired distance (width).
+    // both directions have to be checked, as we are computing a hausdorff distance with offset
     double worst_err = std::abs(best_residual);
     double worst_time = .5;
+    const auto min_offset_difference = [width, &worst_err, &worst_time](Geom::CubicBezier const &bez1,
+                                                                        Geom::CubicBezier const &bez2,
+                                                                        const double time) {
+        const Geom::Point requested_point = bez1.pointAt(time);
+        const Geom::Point closest_point = bez2.pointAt(bez2.nearestTime(requested_point));
+        const double current_residual = std::abs((requested_point - closest_point).length() - std::abs(width));
+        if (current_residual > worst_err) {
+            worst_err = current_residual;
+            worst_time = time;
+        }
+    };
     for (size_t ii = 1; ii <= 9; ++ii) {
         const double t = static_cast<double>(ii) / 10;
-        const Geom::Point req = bez.pointAt(t);
-        // We use the exact solution with nearestTime because it is numerically
-        // much more stable than simply assuming that the point on (c) closest
-        // to bez.pointAt(t) is given by c.pointAt(t)
-        const Geom::Point chk = c.pointAt(c.nearestTime(req));
 
-        Geom::Point const diff = req - chk;
-        const double err = std::abs(diff.length() - std::abs(width));
-        if (err > worst_err) {
-            worst_err = err;
-            worst_time = t;
-        }
+        min_offset_difference(bez, c, t);
+        min_offset_difference(c, bez, t);
     }
 
     if (worst_err < tol) {
@@ -1038,7 +1051,7 @@ Geom::Path half_outline(
 {
     if (tolerance <= 0) {
         if (std::abs(width) > 0) {
-            tolerance = 5.0 * (std::abs(width)/100);
+            tolerance = std::abs(width) / 100;
         }
         else {
             tolerance = 1e-4;

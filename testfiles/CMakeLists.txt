@@ -89,6 +89,7 @@ set(TEST_SOURCES
     sp-gradient-test
     svg-path-geom-test
     visual-bounds-test
+    geom-pathstroke-test
     object-test
     sp-glyph-kerning-test
     cairo-utils-test
