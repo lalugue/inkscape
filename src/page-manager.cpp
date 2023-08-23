@@ -563,7 +563,7 @@ void PageManager::fitToSelection(ObjectSet *selection, bool add_margins)
                 fitToSelection(&contents, add_margins);
             }
         }
-    } else if (auto rect = selection->documentBounds(SPItem::VISUAL_BBOX)) {
+    } else if (auto rect = selection->documentPreferredBounds()) {
         fitToRect(rect, _selected_page, add_margins);
     }
 }
