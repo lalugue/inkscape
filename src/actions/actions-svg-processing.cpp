@@ -650,9 +650,10 @@ void insert_bounding_boxes(SPItem *item)
             insert_bounding_boxes(child_item);
         }
     }
-    auto vbox = SVGBox(item->visualBounds(item->i2doc_affine()));
+    auto const scale = item->document->getDocumentScale().inverse();
+    auto const vbox = SVGBox(item->visualBounds(item->i2doc_affine() * scale));
+    auto const gbox = SVGBox(item->geometricBounds(item->i2doc_affine() * scale));
     item->setAttributeOrRemoveIfEmpty("inkscape:visualbox", vbox.write());
-    auto gbox = SVGBox(item->geometricBounds(item->i2doc_affine()));
     if (gbox != vbox) {
         item->setAttributeOrRemoveIfEmpty("inkscape:geometricbox", vbox.write());
     }
