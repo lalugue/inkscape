@@ -59,9 +59,6 @@
 using Inkscape::Util::unit_table;
 using Inkscape::DocumentUndo;
 
-const guint32 MT_KNOT_COLOR_NORMAL = 0xffffff00;
-const guint32 MT_KNOT_COLOR_MOUSEOVER = 0xff000000;
-
 namespace Inkscape::UI::Tools {
 namespace {
 
@@ -285,20 +282,12 @@ MeasureTool::MeasureTool(SPDesktop *desktop)
     // create the knots
     this->knot_start = new SPKnot(desktop, _("Measure start, <b>Shift+Click</b> for position dialog"),
                                   Inkscape::CANVAS_ITEM_CTRL_TYPE_SHAPER, "CanvasItemCtrl:MeasureTool");
-    this->knot_start->setMode(Inkscape::CANVAS_ITEM_CTRL_MODE_XOR);
-    // this->knot_start->setFill(MT_KNOT_COLOR_NORMAL, MT_KNOT_COLOR_MOUSEOVER, MT_KNOT_COLOR_MOUSEOVER, MT_KNOT_COLOR_MOUSEOVER);
-    // this->knot_start->setStroke(0x0000007f, 0x0000007f, 0x0000007f, 0x0000007f);
-    // this->knot_start->setShape(Inkscape::CANVAS_ITEM_CTRL_SHAPE_CIRCLE);
     this->knot_start->updateCtrl();
     this->knot_start->moveto(start_p);
     this->knot_start->show();
 
     this->knot_end = new SPKnot(desktop, _("Measure end, <b>Shift+Click</b> for position dialog"),
                                 Inkscape::CANVAS_ITEM_CTRL_TYPE_SHAPER, "CanvasItemCtrl:MeasureTool");
-    this->knot_end->setMode(Inkscape::CANVAS_ITEM_CTRL_MODE_XOR);
-    // this->knot_end->setFill(MT_KNOT_COLOR_NORMAL, MT_KNOT_COLOR_MOUSEOVER, MT_KNOT_COLOR_MOUSEOVER, MT_KNOT_COLOR_MOUSEOVER);
-    // this->knot_end->setStroke(0x0000007f, 0x0000007f, 0x0000007f, 0x0000007f);
-    // this->knot_end->setShape(Inkscape::CANVAS_ITEM_CTRL_SHAPE_CIRCLE);
     this->knot_end->updateCtrl();
     this->knot_end->moveto(end_p);
     this->knot_end->show();

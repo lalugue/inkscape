@@ -83,22 +83,14 @@ private:
     bool liveupdate;
     KnotHolderEntity *_knot_entity = nullptr;
     Inkscape::CanvasItemCtrlShape knot_shape = Inkscape::CANVAS_ITEM_CTRL_SHAPE_DIAMOND;
-    Inkscape::CanvasItemCtrlMode knot_mode = Inkscape::CANVAS_ITEM_CTRL_MODE_XOR;
-    std::uint32_t knot_color = 0xffffff00;
-    std::optional<Glib::ustring> handle_tip;
+    Inkscape::CanvasItemCtrlMode knot_mode = Inkscape::CANVAS_ITEM_CTRL_MODE_NORMAL;
+    guint32 knot_color = 0xffffff00;
+    gchar *handle_tip;
 };
 
-} // namespace Inkscape::LivePathEffect
 
-#endif // INKSCAPE_LIVEPATHEFFECT_PARAMETER_POINT_H
+} //namespace LivePathEffect
 
-/*
-  Local Variables:
-  mode:c++
-  c-file-style:"stroustrup"
-  c-file-offsets:((innamespace . 0)(inline-open . 0)(case-label . +))
-  indent-tabs-mode:nil
-  fill-column:99
-  End:
-*/
-// vim: filetype=cpp:expandtab:shiftwidth=4:tabstop=8:softtabstop=4 :
+} //namespace Inkscape
+
+#endif
