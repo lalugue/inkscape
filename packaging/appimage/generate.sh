@@ -10,9 +10,13 @@ export DEBIAN_FRONTEND=noninteractive
 # Build pixman 0.40 (needed for dithering)
 ########################################################################
 
-git clone https://gitlab.freedesktop.org/pixman/pixman.git
+# git clone https://gitlab.freedesktop.org/pixman/pixman.git
+# cd pixman
+# git checkout pixman-0.40.0
+# While gitlab.freedesktop.org is down, use a mirror
+git clone https://github.com/ImageMagick/pixman
 cd pixman
-git checkout pixman-0.40.0
+git checkout f6c587d54159c3e32b37bc89ba409d507963789b # 0.40.0
 ./autogen.sh --prefix /usr --libdir /usr/lib/x86_64-linux-gnu
 make install -j$(nproc)
 cd ..
