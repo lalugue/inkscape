@@ -507,7 +507,7 @@ void PdfParser::execOp(Object *cmd, Object args[], int numArgs) {
 
   // find operator
   name = cmd->getCmd();
-  if (!(op = findOp(name))) {
+    if (!(op = findOp(name))) {
     if (ignoreUndef == 0)
       error(errSyntaxError, getPos(), "Unknown operator '{0:s}'", name);
     return;
@@ -618,6 +618,8 @@ void PdfParser::opConcat(Object args[], int /*numArgs*/)
 // TODO not good that numArgs is ignored but args[] is used:
 void PdfParser::opSetDash(Object args[], int /*numArgs*/)
 {
+  builder->beforeStateChange(state);
+
   double *dash = nullptr;
 
   Array *a = args[0].getArray();
@@ -647,6 +649,7 @@ void PdfParser::opSetFlat(Object args[], int /*numArgs*/)
 // TODO not good that numArgs is ignored but args[] is used:
 void PdfParser::opSetLineJoin(Object args[], int /*numArgs*/)
 {
+  builder->beforeStateChange(state);
   state->setLineJoin(args[0].getInt());
   builder->updateStyle(state);
 }
@@ -654,6 +657,7 @@ void PdfParser::opSetLineJoin(Object args[], int /*numArgs*/)
 // TODO not good that numArgs is ignored but args[] is used:
 void PdfParser::opSetLineCap(Object args[], int /*numArgs*/)
 {
+  builder->beforeStateChange(state);
   state->setLineCap(args[0].getInt());
   builder->updateStyle(state);
 }
@@ -661,6 +665,7 @@ void PdfParser::opSetLineCap(Object args[], int /*numArgs*/)
 // TODO not good that numArgs is ignored but args[] is used:
 void PdfParser::opSetMiterLimit(Object args[], int /*numArgs*/)
 {
+  builder->beforeStateChange(state);
   state->setMiterLimit(args[0].getNum());
   builder->updateStyle(state);
 }
@@ -668,6 +673,7 @@ void PdfParser::opSetMiterLimit(Object args[], int /*numArgs*/)
 // TODO not good that numArgs is ignored but args[] is used:
 void PdfParser::opSetLineWidth(Object args[], int /*numArgs*/)
 {
+  builder->beforeStateChange(state);
   state->setLineWidth(args[0].getNum());
   builder->updateStyle(state);
 }
@@ -977,7 +983,7 @@ GfxPattern *PdfParser::lookupPattern(Object *obj, GfxState *state)
 void PdfParser::opSetFillGray(Object args[], int /*numArgs*/)
 {
   GfxColor color;
-
+  builder->beforeStateChange(state);
   state->setFillPattern(nullptr);
   state->setFillColorSpace(new GfxDeviceGrayColorSpace());
   color.c[0] = dblToCol(args[0].getNum());
@@ -989,7 +995,7 @@ void PdfParser::opSetFillGray(Object args[], int /*numArgs*/)
 void PdfParser::opSetStrokeGray(Object args[], int /*numArgs*/)
 {
   GfxColor color;
-
+  builder->beforeStateChange(state);
   state->setStrokePattern(nullptr);
   state->setStrokeColorSpace(new GfxDeviceGrayColorSpace());
   color.c[0] = dblToCol(args[0].getNum());
@@ -1002,7 +1008,7 @@ void PdfParser::opSetFillCMYKColor(Object args[], int /*numArgs*/)
 {
   GfxColor color;
   int i;
-
+  builder->beforeStateChange(state);
   state->setFillPattern(nullptr);
   state->setFillColorSpace(new GfxDeviceCMYKColorSpace());
   for (i = 0; i < 4; ++i) {
@@ -1016,7 +1022,7 @@ void PdfParser::opSetFillCMYKColor(Object args[], int /*numArgs*/)
 void PdfParser::opSetStrokeCMYKColor(Object args[], int /*numArgs*/)
 {
   GfxColor color;
-
+  builder->beforeStateChange(state);
   state->setStrokePattern(nullptr);
   state->setStrokeColorSpace(new GfxDeviceCMYKColorSpace());
   for (int i = 0; i < 4; ++i) {
@@ -1030,7 +1036,7 @@ void PdfParser::opSetStrokeCMYKColor(Object args[], int /*numArgs*/)
 void PdfParser::opSetFillRGBColor(Object args[], int /*numArgs*/)
 {
   GfxColor color;
-
+  builder->beforeStateChange(state);
   state->setFillPattern(nullptr);
   state->setFillColorSpace(new GfxDeviceRGBColorSpace());
   for (int i = 0; i < 3; ++i) {
@@ -1043,7 +1049,7 @@ void PdfParser::opSetFillRGBColor(Object args[], int /*numArgs*/)
 // TODO not good that numArgs is ignored but args[] is used:
 void PdfParser::opSetStrokeRGBColor(Object args[], int /*numArgs*/) {
   GfxColor color;
-
+  builder->beforeStateChange(state);
   state->setStrokePattern(nullptr);
   state->setStrokeColorSpace(new GfxDeviceRGBColorSpace());
   for (int i = 0; i < 3; ++i) {
@@ -1058,11 +1064,11 @@ void PdfParser::opSetFillColorSpace(Object args[], int numArgs)
 {
   assert(numArgs >= 1);
   GfxColorSpace *colorSpace = lookupColorSpaceCopy(args[0]);
-
+  builder->beforeStateChange(state);
   state->setFillPattern(nullptr);
 
   if (colorSpace) {
-  GfxColor color;
+    GfxColor color;
     state->setFillColorSpace(colorSpace);
     colorSpace->getDefaultColor(&color);
     state->setFillColor(&color);
@@ -1076,6 +1082,8 @@ void PdfParser::opSetFillColorSpace(Object args[], int numArgs)
 void PdfParser::opSetStrokeColorSpace(Object args[], int numArgs)
 {
   assert(numArgs >= 1);
+  builder->beforeStateChange(state);
+
   GfxColorSpace *colorSpace = lookupColorSpaceCopy(args[0]);
 
   state->setStrokePattern(nullptr);
@@ -1099,6 +1107,7 @@ void PdfParser::opSetFillColor(Object args[], int numArgs) {
     error(errSyntaxError, getPos(), "Incorrect number of arguments in 'sc' command");
     return;
   }
+  builder->beforeStateChange(state);
   state->setFillPattern(nullptr);
   for (i = 0; i < numArgs; ++i) {
     color.c[i] = dblToCol(args[i].getNum());
@@ -1115,6 +1124,7 @@ void PdfParser::opSetStrokeColor(Object args[], int numArgs) {
     error(errSyntaxError, getPos(), "Incorrect number of arguments in 'SC' command");
     return;
   }
+  builder->beforeStateChange(state);
   state->setStrokePattern(nullptr);
   for (i = 0; i < numArgs; ++i) {
     color.c[i] = dblToCol(args[i].getNum());
@@ -1126,7 +1136,7 @@ void PdfParser::opSetStrokeColor(Object args[], int numArgs) {
 void PdfParser::opSetFillColorN(Object args[], int numArgs) {
   GfxColor color;
   int i;
-
+  builder->beforeStateChange(state);
   if (state->getFillColorSpace()->getMode() == csPattern) {
     if (numArgs > 1) {
       if (!((GfxPatternColorSpace *)state->getFillColorSpace())->getUnder() ||
@@ -1167,6 +1177,7 @@ void PdfParser::opSetFillColorN(Object args[], int numArgs) {
 void PdfParser::opSetStrokeColorN(Object args[], int numArgs) {
   GfxColor color;
   int i;
+  builder->beforeStateChange(state);
 
   if (state->getStrokeColorSpace()->getMode() == csPattern) {
     if (numArgs > 1) {
@@ -1989,6 +2000,7 @@ void PdfParser::opEOClip(Object /*args*/[], int /*numArgs*/)
 
 void PdfParser::opBeginText(Object /*args*/[], int /*numArgs*/)
 {
+  std::cout << "begin text object\n";
   state->setTextMat(1, 0, 0, 1, 0, 0);
   state->textMoveTo(0, 0);
   builder->updateTextPosition(0.0, 0.0);
@@ -2051,6 +2063,7 @@ void PdfParser::opSetTextLeading(Object args[], int /*numArgs*/)
 // TODO not good that numArgs is ignored but args[] is used:
 void PdfParser::opSetTextRender(Object args[], int /*numArgs*/)
 {
+  builder->beforeStateChange(state);
   state->setRender(args[0].getInt());
   builder->updateStyle(state);
 }
@@ -2255,6 +2268,8 @@ void PdfParser::doShowText(GooString *s) {
 #else
     char *p;
 #endif
+    std::cout << "[pdfparser] doshowspacetext\n";
+
     int len, n, uLen;
 
     auto font = state->getFont();
