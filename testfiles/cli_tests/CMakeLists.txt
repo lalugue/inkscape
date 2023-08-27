@@ -907,24 +907,25 @@ add_cli_test(actions-sequential-export-id-only_svg
 ### pdf input support   ###
 ###########################
 
-function(add_pdfinput_test name pages)
+function(add_pdfinput_test name pages font_strategy)
 
     add_cli_test(pdfinput-${name}
         INPUT_FILENAME pdfinput/${name}.pdf
-        PARAMETERS --pages=${pages} --pdf-font-strategy=draw-all --actions=export-filename:${name}.svg$<SEMICOLON>export-do
+        PARAMETERS --pages=${pages} --pdf-font-strategy=${font_strategy} --actions=export-filename:${name}.svg$<SEMICOLON>export-do
         TEST_SCRIPT compare.sh ${name}.svg "${CMAKE_CURRENT_SOURCE_DIR}/testcases/pdfinput/${name}_expected.svg")
 
 endfunction(add_pdfinput_test)
 
 # CMS testing disabled because CI builder doesn't support LCMS yet.
 # add_pdfinput_test(cms 1)
-add_pdfinput_test(font-spacing 1)
-add_pdfinput_test(font-style 1)
-add_pdfinput_test(gradients 1)
-add_pdfinput_test(latex 1)
-add_pdfinput_test(transparency-groups 1)
-add_pdfinput_test(rotated-gradients 1)
-add_pdfinput_test(multi-page-sample all)
+add_pdfinput_test(font-spacing 1 draw-all)
+add_pdfinput_test(font-style 1 draw-all)
+add_pdfinput_test(gradients 1 draw-all)
+add_pdfinput_test(latex 1 draw-all)
+add_pdfinput_test(transparency-groups 1 draw-all)
+add_pdfinput_test(rotated-gradients 1 draw-all)
+add_pdfinput_test(multi-page-sample all draw-all)
+add_pdfinput_test(multiple-style-same-text-block 1 keep)
 
 ###########################
 ### file format support ###
