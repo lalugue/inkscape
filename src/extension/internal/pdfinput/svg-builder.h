@@ -160,6 +160,7 @@ public:
     void updateTextPosition(double tx, double ty);
     void updateTextShift(GfxState *state, double shift);
     void updateTextMatrix(GfxState *state, bool flip);
+    void beforeStateChange(GfxState *old_state);
 
     // Clipping
     void setClip(GfxState *state, GfxClipType clip, bool is_bbox = false);

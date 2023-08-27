@@ -16,7 +16,7 @@
 # include "config.h"  // only include where actually required!
 #endif
 
-#include <string> 
+#include <string>
 #include <locale>
 #include <codecvt>
 
@@ -69,7 +69,7 @@ namespace Internal {
 
 /**
  * \class SvgBuilder
- * 
+ *
  */
 
 SvgBuilder::SvgBuilder(SPDocument *document, gchar *docname, XRef *xref)
@@ -580,7 +580,7 @@ void SvgBuilder::_setFillStyle(SPCSSAttr *css, GfxState *state, bool even_odd) {
     Inkscape::CSSOStringStream os_opacity;
     os_opacity << state->getFillOpacity();
     sp_repr_css_set_property(css, "fill-opacity", os_opacity.str().c_str());
-    
+
     // Fill rule
     sp_repr_css_set_property(css, "fill-rule", even_odd ? "evenodd" : "nonzero");
 }
@@ -618,7 +618,7 @@ SPCSSAttr *SvgBuilder::_setStyle(GfxState *state, bool fill, bool stroke, bool e
     } else {
         sp_repr_css_set_property(css, "fill", "none");
     }
-    
+
     if (stroke) {
         _setStrokeStyle(css, state);
     } else {
@@ -1325,6 +1325,17 @@ void SvgBuilder::updateTextMatrix(GfxState *state, bool flip) {
 }
 
 /**
+ * \brief Notifies the svg builder the state will change
+ *
+ * Used to flushText if we are in text object
+*/
+void SvgBuilder::beforeStateChange(GfxState *old_state) {
+    if (_in_text_object) {
+        _flushText(old_state);
+    }
+}
+
+/**
  * \brief Writes the buffered characters to the SVG document
  *
  * This is a dual path function that can produce either a text element
@@ -1442,7 +1453,7 @@ void SvgBuilder::_flushText(GfxState *state)
                 break;
             } else {
                 tspan_node = _xml_doc->createElement("svg:tspan");
-                
+
                 // Set style and unref SPCSSAttr if it won't be needed anymore
                 // assume all <tspan> nodes in a <text> node share the same style
                 double text_size = text_scale * glyph.text_size;
