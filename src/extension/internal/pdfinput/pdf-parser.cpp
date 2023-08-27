@@ -2004,7 +2004,6 @@ void PdfParser::opEOClip(Object /*args*/[], int /*numArgs*/)
 
 void PdfParser::opBeginText(Object /*args*/[], int /*numArgs*/)
 {
-  std::cout << "begin text object\n";
   state->setTextMat(1, 0, 0, 1, 0, 0);
   state->textMoveTo(0, 0);
   builder->updateTextPosition(0.0, 0.0);
@@ -2272,7 +2271,6 @@ void PdfParser::doShowText(GooString *s) {
 #else
     char *p;
 #endif
-    std::cout << "[pdfparser] doshowspacetext\n";
 
     int len, n, uLen;
 
