@@ -151,10 +151,6 @@ InkFileExportCmd::do_export(SPDocument* doc, std::string filename_in)
             export_type_list.emplace_back("svg"); // fall-back to SVG by default
         }
     }
-    // Export filename should be used when specified as the output file
-    if (export_filename.empty()) {
-        export_filename = filename_in;
-    }
     // check if multiple export files are requested, but --export_extension was supplied
     if (!export_extension.empty() && export_type_list.size() != 1) {
         std::cerr
@@ -163,6 +159,9 @@ InkFileExportCmd::do_export(SPDocument* doc, std::string filename_in)
     }
     Inkscape::Extension::DB::OutputList extension_list;
     Inkscape::Extension::db.get_output_list(extension_list);
+
+    // Export filename should be used when specified as the output file
+    auto const filename_out = !export_filename.empty() ? export_filename : filename_in;
 
     for (auto const &Type : export_type_list) {
         // use lowercase type for following comparisons
@@ -181,7 +180,7 @@ InkFileExportCmd::do_export(SPDocument* doc, std::string filename_in)
         // For PNG export, there is no extension, so the method below can not be used.
         if (type == "png") {
             if (!export_extension_forced) {
-                do_export_png(doc, export_filename);
+                do_export_png(doc, filename_out);
             } else {
                 std::cerr << "InkFileExportCmd::do_export: "
                           << "The parameter --export-extension is invalid for PNG export" << std::endl;
@@ -192,7 +191,7 @@ InkFileExportCmd::do_export(SPDocument* doc, std::string filename_in)
         // an extension ID was explicitly given. This makes handling of --export-plain-svg easier (which
         // should also work when multiple file types are given, unlike --export-extension)
         if (type == "svg" && !export_extension_forced) {
-            do_export_svg(doc, export_filename);
+            do_export_svg(doc, filename_out);
             continue;
         }
 
@@ -214,15 +213,15 @@ InkFileExportCmd::do_export(SPDocument* doc, std::string filename_in)
                 if (!export_extension_forced ||
                     (export_extension == Glib::ustring(oext->get_id()).lowercase())) {
                     if (type == "svg") {
-                        do_export_vector(doc, export_filename, *oext);
+                        do_export_vector(doc, filename_out, *oext);
                     } else if (type == "ps") {
-                        do_export_ps_pdf(doc, export_filename, "image/x-postscript", *oext);
+                        do_export_ps_pdf(doc, filename_out, "image/x-postscript", *oext);
                     } else if (type == "eps") {
-                        do_export_ps_pdf(doc, export_filename, "image/x-e-postscript", *oext);
+                        do_export_ps_pdf(doc, filename_out, "image/x-e-postscript", *oext);
                     } else if (type == "pdf") {
-                        do_export_ps_pdf(doc, export_filename, "application/pdf", *oext);
+                        do_export_ps_pdf(doc, filename_out, "application/pdf", *oext);
                     } else {
-                        do_export_extension(doc, export_filename, oext);
+                        do_export_extension(doc, filename_out, oext);
                     }
                     exported = true;
                     break;
