@@ -17,6 +17,7 @@
 #include <gtkmm/spinbutton.h>
 
 #include "desktop.h"
+#include "layer-manager.h"
 
 #include "document.h"
 #include "selection.h"
@@ -96,7 +97,7 @@ Grid::effect (Inkscape::Extension::Effect *module, SPDesktop *desktop, Inkscape:
     Geom::Rect bounding_area = Geom::Rect(Geom::Point(0,0), Geom::Point(100,100));
     if (selection->isEmpty()) {
         /* get page size */
-        SPDocument * doc = document->doc();
+        SPDocument * doc = desktop->doc();
         bounding_area = *(doc->preferredBounds());
     } else {
         Geom::OptRect bounds = selection->visualBounds();
@@ -104,14 +105,14 @@ Grid::effect (Inkscape::Extension::Effect *module, SPDesktop *desktop, Inkscape:
             bounding_area = *bounds;
         }
 
-        gdouble doc_height  =  (document->doc())->getHeight().value("px");
+        gdouble doc_height  =  (desktop->doc())->getHeight().value("px");
         Geom::Rect temprec = Geom::Rect(Geom::Point(bounding_area.min()[Geom::X], doc_height - bounding_area.min()[Geom::Y]),
                                     Geom::Point(bounding_area.max()[Geom::X], doc_height - bounding_area.max()[Geom::Y]));
 
         bounding_area = temprec;
     }
 
-    double scale = document->doc()->getDocumentScale().inverse()[Geom::X];
+    double scale = desktop->doc()->getDocumentScale().inverse()[Geom::X];
 
     bounding_area *= Geom::Scale(scale);
     Geom::Point spacings( scale * module->get_param_float("xspacing"),
@@ -123,10 +124,10 @@ Grid::effect (Inkscape::Extension::Effect *module, SPDesktop *desktop, Inkscape:
     Glib::ustring path_data("");
 
     path_data = build_lines(bounding_area, offsets, spacings);
-    Inkscape::XML::Document * xml_doc = document->doc()->getReprDoc();
+    Inkscape::XML::Document * xml_doc = desktop->doc()->getReprDoc();
 
     //XML Tree being used directly here while it shouldn't be.
-    Inkscape::XML::Node * current_layer = static_cast<SPDesktop *>(document)->currentLayer()->getRepr();
+    Inkscape::XML::Node * current_layer = desktop->layerManager().currentLayer()->getRepr();
     Inkscape::XML::Node * path = xml_doc->createElement("svg:path");
 
     path->setAttribute("d", path_data);
