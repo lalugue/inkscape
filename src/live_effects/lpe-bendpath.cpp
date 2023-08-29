@@ -46,9 +46,11 @@ class KnotHolderEntityWidthBendPath : public LPEKnotHolderEntity {
         KnotHolderEntityWidthBendPath(LPEBendPath * effect) : LPEKnotHolderEntity(effect) {}
         ~KnotHolderEntityWidthBendPath() override
         {
-            LPEBendPath *lpe = dynamic_cast<LPEBendPath *> (_effect);
-            lpe->_knot_entity = nullptr;
+            if (auto const lpe = dynamic_cast<LPEBendPath *> (_effect)) {
+                lpe->_knot_entity = nullptr;
+            }
         }
+        void unset_effect() { _effect = nullptr; }
         void knot_set(Geom::Point const &p, Geom::Point const &origin, guint state) override;
         Geom::Point knot_get() const override;
     };
@@ -78,7 +80,15 @@ LPEBendPath::LPEBendPath(LivePathEffectObject *lpeobject) :
     concatenate_before_pwd2 = true;
 }
 
-LPEBendPath::~LPEBendPath() = default;
+LPEBendPath::~LPEBendPath()
+{
+    if (auto const entity = dynamic_cast<BeP::KnotHolderEntityWidthBendPath *> (_knot_entity)) {
+        // This effect is dying before the knot holder.
+        entity->unset_effect();
+        // We don't delete knot entities, the lpe knot holder does.
+        _knot_entity = nullptr;
+    }
+}
 
 
 bool 
@@ -231,6 +241,8 @@ void
 KnotHolderEntityWidthBendPath::knot_set(Geom::Point const &p, Geom::Point const& /*origin*/, guint state)
 {
     LPEBendPath *lpe = dynamic_cast<LPEBendPath *> (_effect);
+    if (!lpe)
+        return;
 
     Geom::Point const s = snap_knot_position(p, state);
     Geom::Path path_in = lpe->bend_path.get_pathvector().pathAt(Geom::PathVectorTime(0, 0, 0.0));
@@ -263,6 +275,9 @@ Geom::Point
 KnotHolderEntityWidthBendPath::knot_get() const
 {
     LPEBendPath *lpe = dynamic_cast<LPEBendPath *> (_effect);
+    if (!lpe)
+        return Geom::Point(0, 0);
+
     Geom::Path path_in = lpe->bend_path.get_pathvector().pathAt(Geom::PathVectorTime(0, 0, 0.0));
     Geom::Point ptA = path_in.pointAt(Geom::PathTime(0, 0.0));
     Geom::Point B = path_in.pointAt(Geom::PathTime(1, 0.0));

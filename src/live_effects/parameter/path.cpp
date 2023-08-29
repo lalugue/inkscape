@@ -80,32 +80,6 @@ PathParam::PathParam( const Glib::ustring& label, const Glib::ustring& tip,
 PathParam::~PathParam() {
     unlink();
     quit_listening();
-//TODO: Removed to fix a bug https://bugs.launchpad.net/inkscape/+bug/1716926
-//      Maybe we need to resurrect, not know when this code is added, but seems also not working now in a few test I do.
-//      in the future and do a deeper fix in multi-path-manipulator
-//    using namespace Inkscape::UI;
-//    SPDesktop *desktop = SP_ACTIVE_DESKTOP;
-//    if (desktop) {
-//        Inkscape::UI::Tools::NodeTool *nt = dynamic_cast<Inkscape::UI::Tools::NodeTool*>(desktop->event_context);
-//        if (nt) {
-//            SPItem * item = SP_ACTIVE_DESKTOP->getSelection()->singleItem();
-//            if (item) {
-//                std::set<ShapeRecord> shapes;
-//                ShapeRecord r;
-//                r.item = item;
-//                shapes.insert(r);
-//                nt->_multipath->setItems(shapes);
-//            }
-//        }
-//    }
-    SPDesktop *desktop = SP_ACTIVE_DESKTOP;
-    if (desktop) {
-        if (dynamic_cast<Inkscape::UI::Tools::NodeTool* >(desktop->event_context)) {
-            // Why is this switching tools twice? Probably to reinitialize Node Tool.
-            set_active_tool(desktop, "Select");
-            set_active_tool(desktop, "Node");
-        }
-    }
     g_free(defvalue);
 }
 
