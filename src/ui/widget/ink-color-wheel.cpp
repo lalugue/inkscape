@@ -480,6 +480,7 @@ bool ColorWheelHSL::on_drawing_area_draw(::Cairo::RefPtr<::Cairo::Context> const
 
     // Draw focus
     if (drawing_area_has_focus()) {
+        // The focus_dash width & alpha(foreground_color) are from GTK3 Adwaita.
         cr->set_dash(focus_dash, 0);
         cr->set_line_width(0.5);
 
