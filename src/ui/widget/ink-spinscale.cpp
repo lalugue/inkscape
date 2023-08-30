@@ -20,6 +20,7 @@
 #include <sigc++/functors/mem_fun.h>
 #include <gdkmm/general.h>
 #include <gdkmm/cursor.h>
+#include <gtkmm/gesturemultipress.h>
 #include <gtkmm/spinbutton.h>
 
 #include "ink-spinscale.h"

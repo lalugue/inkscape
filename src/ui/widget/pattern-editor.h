@@ -1,25 +1,21 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
+/**
+ * Pattern editor widget for "Fill and Stroke" dialog
+ *
+ * Copyright (C) 2022 Michael Kowalski
+ *
+ * Released under GNU GPL v2+, read the file 'COPYING' for more information.
+ */
+
 #ifndef SEEN_PATTERN_EDITOR_H
 #define SEEN_PATTERN_EDITOR_H
 
+#include <optional>
 #include <unordered_map>
 #include <vector>
+#include <glibmm/refptr.h>
 #include <gtkmm/box.h>
-#include <gtkmm/combobox.h>
-#include <gtkmm/entry.h>
-#include <gtkmm/flowbox.h>
-#include <gtkmm/grid.h>
-#include <gtkmm/button.h>
-#include <gtkmm/togglebutton.h>
-#include <gtkmm/scale.h>
-#include <gtkmm/searchentry.h>
-#include <gtkmm/spinbutton.h>
-#include <gtkmm/image.h>
-#include <gtkmm/label.h>
-#include <gtkmm/liststore.h>
-#include <gtkmm/paned.h>
-#include <gtkmm/builder.h>
-#include <optional>
+
 #include <2geom/point.h>
 #include <2geom/transforms.h>
 #include "color.h"
@@ -30,12 +26,28 @@
 #include "ui/widget/color-picker.h"
 #include "ui/widget/pattern-store.h"
 
+namespace Gtk {
+class Builder;
+class Button;
+class CheckButton;
+class ComboBoxText;
+class Entry;
+class FlowBox;
+class Grid;
+class Image;
+class Label;
+class Paned;
+class Scale;
+class SearchEntry;
+class SpinButton;
+class TreeModel;
+class Viewport;
+} // namespace Gtk
+
 class SPDocument;
 class ColorPicker;
 
-namespace Inkscape {
-namespace UI {
-namespace Widget {
+namespace Inkscape::UI::Widget {
 
 class PatternEditor : public Gtk::Box {
 public:
@@ -127,9 +139,17 @@ private:
     struct { Glib::ustring id; Glib::ustring link_id; Geom::Point offset; } _current_pattern;
 };
 
+} // namespace Inkscape::UI::Widget
 
-} // namespace Widget
-} // namespace UI
-} // namespace Inkscape
+#endif // SEEN_PATTERN_EDITOR_H
 
-#endif
+/*
+  Local Variables:
+  mode:c++
+  c-file-style:"stroustrup"
+  c-file-offsets:((innamespace . 0)(inline-open . 0)(case-label . +))
+  indent-tabs-mode:nil
+  fill-column:99
+  End:
+*/
+// vim:filetype=cpp:expandtab:shiftwidth=4:tabstop=8:softtabstop=4:fileencoding=utf-8:textwidth=99:

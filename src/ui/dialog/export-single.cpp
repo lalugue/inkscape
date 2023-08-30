@@ -16,7 +16,16 @@
 #include <glibmm/convert.h>
 #include <glibmm/i18n.h>
 #include <glibmm/miscutils.h>
-#include <gtkmm.h>
+#include <gtkmm/builder.h>
+#include <gtkmm/button.h>
+#include <gtkmm/checkbutton.h>
+#include <gtkmm/flowbox.h>
+#include <gtkmm/grid.h>
+#include <gtkmm/label.h>
+#include <gtkmm/progressbar.h>
+#include <gtkmm/radiobutton.h>
+#include <gtkmm/spinbutton.h>
+#include <sigc++/functors/mem_fun.h>
 #include <png.h>
 
 #include "desktop.h"
@@ -50,16 +59,10 @@
 #include "ui/dialog/export-batch.h"
 #include "ui/widget/scrollprotected.h"
 #include "ui/widget/unit-menu.h"
-#ifdef _WIN32
-
-#endif
 
 using Inkscape::Util::unit_table;
 
-namespace Inkscape {
-namespace UI {
-namespace Dialog {
-
+namespace Inkscape::UI::Dialog {
 
 SingleExport::SingleExport(BaseObjectType *cobject, const Glib::RefPtr<Gtk::Builder>& builder)
         : Gtk::Box(cobject) {
@@ -365,9 +368,11 @@ std::vector<SPPage *> SingleExport::getSelectedPages()
 void SingleExport::clearPagePreviews()
 {
     _pages_list_changed.block();
+
     while (auto widget = pages_list->get_child_at_index(0)) {
         pages_list->remove(*widget);
     }
+
     _pages_list_changed.unblock();
 }
 
@@ -376,7 +381,9 @@ void SingleExport::onPagesChanged()
     clearPagePreviews();
     if (!_document)
         return;
+
     _pages_list_changed.block();
+
     auto &pm = _document->getPageManager();
     if (pm.getPageCount() > 1) {
         for (auto page : pm.getPages()) {
@@ -388,6 +395,7 @@ void SingleExport::onPagesChanged()
     if (auto ext = si_extension_cb->getExtension()) {
         setPagesMode(!ext->is_raster());
     }
+
     _pages_list_changed.unblock();
 }
 
@@ -569,6 +577,7 @@ void SingleExport::onDpiChange(sb_type type)
 void SingleExport::onFilenameModified()
 {
     extensionConn.block();
+
     Glib::ustring filename = si_filename_entry->get_text();
 
     if (original_name == filename) {
@@ -713,8 +722,11 @@ void SingleExport::onBrowse(Gtk::EntryIconPosition pos, const GdkEventButton *ev
     if (!_app || !_app->get_active_window() || !_document) {
         return;
     }
+
     Gtk::Window *window = _app->get_active_window();
+
     browseConn.block();
+
     Glib::ustring filename = Glib::filename_from_utf8(si_filename_entry->get_text());
 
     if (filename.empty()) {
@@ -748,6 +760,7 @@ void SingleExport::onBrowse(Gtk::EntryIconPosition pos, const GdkEventButton *ev
     } else {
         delete dialog;
     }
+
     browseConn.unblock();
 }
 
@@ -755,12 +768,8 @@ void SingleExport::onBrowse(Gtk::EntryIconPosition pos, const GdkEventButton *ev
 
 void SingleExport::blockSpinConns(bool status = true)
 {
-    for (auto signal : spinButtonConns) {
-        if (status) {
-            signal.block();
-        } else {
-            signal.unblock();
-        }
+    for (auto &signal : spinButtonConns) {
+        signal.block(status);
     }
 }
 
@@ -1028,8 +1037,11 @@ void SingleExport::setDocument(SPDocument *document)
         return;
 
     _document = document;
-    _page_changed_connection.disconnect();
+
     _page_selected_connection.disconnect();
+    _page_modified_connection.disconnect();
+    _page_changed_connection.disconnect();
+
     if (document) {
         auto &pm = document->getPageManager();
         _page_selected_connection = pm.connectPageSelected(sigc::mem_fun(*this, &SingleExport::onPagesSelected));
@@ -1050,11 +1062,9 @@ void SingleExport::setDocument(SPDocument *document)
     }
 }
 
-SingleExport::~SingleExport() { _page_selected_connection.disconnect(); }
+SingleExport::~SingleExport() = default;
 
-} // namespace Dialog
-} // namespace UI
-} // namespace Inkscape
+} // namespace Inkscape::UI::Dialog
 
 /*
   Local Variables:

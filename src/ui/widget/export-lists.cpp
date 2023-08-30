@@ -12,7 +12,11 @@
 #include <glibmm/convert.h>
 #include <glibmm/i18n.h>
 #include <glibmm/miscutils.h>
-#include <gtkmm.h>
+#include <gtkmm/builder.h>
+#include <gtkmm/menubutton.h>
+#include <gtkmm/popover.h>
+#include <gtkmm/spinbutton.h>
+#include <gtkmm/viewport.h>
 #include <png.h>
 
 #include "desktop.h"
@@ -45,9 +49,7 @@
 
 using Inkscape::Util::unit_table;
 
-namespace Inkscape {
-namespace UI {
-namespace Dialog {
+namespace Inkscape::UI::Dialog {
 
 ExtensionList::ExtensionList()
 {
@@ -60,10 +62,7 @@ ExtensionList::ExtensionList(BaseObjectType *cobject, const Glib::RefPtr<Gtk::Bu
     init();
 }
 
-ExtensionList::~ExtensionList()
-{
-    _popover_signal.disconnect();
-}
+ExtensionList::~ExtensionList() = default;
 
 void ExtensionList::init()
 {
@@ -305,11 +304,7 @@ double ExportList::get_dpi(int row)
     return dpi;
 }
 
-
-
-} // namespace Dialog
-} // namespace UI
-} // namespace Inkscape
+} // namespace Inkscape::UI::Dialog
 
 /*
   Local Variables:

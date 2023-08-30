@@ -11,32 +11,33 @@
 #ifndef INKSCAPE_UI_WIDGET_UNIT_H
 #define INKSCAPE_UI_WIDGET_UNIT_H
 
+#include <glibmm/refptr.h>
 #include <gtkmm/comboboxtext.h>
-#include <gtkmm.h>
+
+#include "ui/widget/scrollprotected.h"
 #include "util/units.h"
+
+namespace Gtk {
+class Builder;
+} // namespace Gtk
 
 using namespace Inkscape::Util;
 
-namespace Inkscape {
-namespace UI {
-namespace Widget {
+namespace Inkscape::UI::Widget {
 
 /**
  * A drop down menu for choosing unit types.
  */
-class UnitMenu : public Gtk::ComboBoxText
+class UnitMenu : public ScrollProtected<Gtk::ComboBoxText>
 {
 public:
-
     /**
      *    Construct a UnitMenu
      */
     UnitMenu();
 
     /* GtkBuilder constructor */
-    UnitMenu(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade):Gtk::ComboBoxText(cobject){
-        UnitMenu();
-    };
+    UnitMenu(BaseObjectType *cobject, Glib::RefPtr<Gtk::Builder> const & /*builder*/);
 
     ~UnitMenu() override;
 
@@ -126,19 +127,12 @@ public:
      */
     bool          isRadial() const;
 
-protected:
+private:
     UnitType          _type;
-    /**
-     * block scroll from widget if is inside a scrolled window.
-     */
-    bool on_scroll_event(GdkEventScroll *event) override;
-
     Gtk::ComboBoxText* _combo;
 };
 
-} // namespace Widget
-} // namespace UI
-} // namespace Inkscape
+} // namespace Inkscape::UI::Widget
 
 #endif // INKSCAPE_UI_WIDGET_UNIT_H
 

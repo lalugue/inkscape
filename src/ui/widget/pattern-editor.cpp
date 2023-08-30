@@ -9,18 +9,24 @@
 
 #include "pattern-editor.h"
 
-#include <gtkmm/widget.h>
-#include <optional>
-#include <gtkmm/builder.h>
-#include <gtkmm/grid.h>
-#include <gtkmm/togglebutton.h>
-#include <gtkmm/button.h>
-#include <gtkmm/menubutton.h>
-#include <gtkmm/treeview.h>
-#include <gtkmm/treemodelcolumn.h>
-#include <glibmm/i18n.h>
-#include <cairo.h>
 #include <iomanip>
+#include <cairo.h>
+#include <glibmm/i18n.h>
+#include <gtkmm/builder.h>
+#include <gtkmm/button.h>
+#include <gtkmm/checkbutton.h>
+#include <gtkmm/comboboxtext.h>
+#include <gtkmm/entry.h>
+#include <gtkmm/flowbox.h>
+#include <gtkmm/grid.h>
+#include <gtkmm/image.h>
+#include <gtkmm/label.h>
+#include <gtkmm/paned.h>
+#include <gtkmm/scale.h>
+#include <gtkmm/searchentry.h>
+#include <gtkmm/spinbutton.h>
+#include <gtkmm/treemodel.h>
+#include <gtkmm/viewport.h>
 
 #include "object/sp-defs.h"
 #include "object/sp-root.h"
@@ -35,14 +41,12 @@
 #include "ui/util.h"
 #include "util/units.h"
 
-namespace Inkscape {
-namespace UI {
-namespace Widget {
+namespace Inkscape::UI::Widget {
 
 using namespace Inkscape::IO;
 
 // default size of pattern image in a list
-static const int ITEM_WIDTH = 45;
+static constexpr int ITEM_WIDTH = 45;
 
 // get slider position 'index' (linear) and transform that into gap percentage (non-linear)
 static double slider_to_gap(double index, double upper) {
@@ -675,6 +679,15 @@ void PatternEditor::update_pattern_tiles() {
     regenerate_tile_images(_manager, _stock_pattern_store, _tile_size, device_scale, nullptr);
 }
 
-} // namespace Widget
-} // namespace UI
-} // namespace Inkscape
+} // namespace Inkscape::UI::Widget
+
+/*
+  Local Variables:
+  mode:c++
+  c-file-style:"stroustrup"
+  c-file-offsets:((innamespace . 0)(inline-open . 0)(case-label . +))
+  indent-tabs-mode:nil
+  fill-column:99
+  End:
+*/
+// vim:filetype=cpp:expandtab:shiftwidth=4:tabstop=8:softtabstop=4:fileencoding=utf-8:textwidth=99:

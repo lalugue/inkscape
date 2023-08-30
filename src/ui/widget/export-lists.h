@@ -10,26 +10,43 @@
 #ifndef SP_EXPORT_HELPER_H
 #define SP_EXPORT_HELPER_H
 
-#include "2geom/rect.h"
+#include <map>
+#include <string>
+#include <2geom/rect.h>
+#include <glibmm/refptr.h>
+#include <gtkmm/comboboxtext.h>
+#include <gtkmm/grid.h>
+
+#include "helper/auto-connection.h"
 #include "preferences.h"
 #include "ui/widget/scrollprotected.h"
+
+namespace Gtk {
+class Builder;
+class MenuButton;
+class Popover;
+class SpinButton;
+class Viewport;
+} // namespace Gtk
 
 class SPDocument;
 class SPItem;
 class SPPage;
 
 namespace Inkscape {
-    namespace Util {
-        class Unit;
-    }
-    namespace Extension {
-        class Output;
-    }
-namespace UI {
-namespace Dialog {
 
-#define EXPORT_COORD_PRECISION 3
-#define SP_EXPORT_MIN_SIZE 1.0
+namespace Util {
+class Unit;
+} // namespace Util
+
+namespace Extension {
+class Output;
+} // namespace Extension
+
+namespace UI::Dialog {
+
+inline constexpr auto EXPORT_COORD_PRECISION = 3;
+inline constexpr auto SP_EXPORT_MIN_SIZE = 1.0;
 #define DPI_BASE Inkscape::Util::Quantity::convert(1, "in", "px")
 
 // Class for storing and manipulating extensions
@@ -55,7 +72,7 @@ private:
     PrefObserver _watch_pref;
     std::map<std::string, Inkscape::Extension::Output *> ext_to_mod;
 
-    sigc::connection _popover_signal;
+    auto_connection _popover_signal;
     Glib::RefPtr<Gtk::Builder> _builder;
     Gtk::MenuButton *_pref_button = nullptr;
     Gtk::Popover *_pref_popover = nullptr;
@@ -97,10 +114,11 @@ private:
     int _delete_col = 4;
 };
 
-} // namespace Dialog
-} // namespace UI
+} // namespace UI::Dialog
+
 } // namespace Inkscape
-#endif
+
+#endif // SP_EXPORT_HELPER_H
 
 /*
   Local Variables:

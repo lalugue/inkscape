@@ -14,7 +14,27 @@
 #ifndef SP_EXPORT_SINGLE_H
 #define SP_EXPORT_SINGLE_H
 
+#include <map>
+#include <memory>
+#include <vector>
+#include <glibmm/refptr.h>
+#include <gtkmm/box.h>
+#include <gtkmm/entry.h>
+
+#include "helper/auto-connection.h"
 #include "ui/widget/scrollprotected.h"
+
+namespace Gtk {
+class Builder;
+class Button;
+class CheckButton;
+class FlowBox;
+class Grid;
+class Label;
+class ProgressBar;
+class RadioButton;
+class SpinButton;
+} // namespace Gtk
 
 class InkscapeApplication;
 class SPDesktop;
@@ -23,21 +43,26 @@ class SPObject;
 class SPPage;
 
 namespace Inkscape {
-    class Selection;
-    class Preferences;
+
+class Selection;
+class Preferences;
 
 namespace Util {
-    class Unit;
-}
+class Unit;
+} // namespace Util
+
 namespace UI {
-    namespace Widget {
-        class UnitMenu;
-        class ColorPicker;
-    }
+
+namespace Widget {
+class UnitMenu;
+class ColorPicker;
+} // namespace Widget
+
 namespace Dialog {
-    class PreviewDrawing;
-    class ExportPreview;
-    class ExtensionList;
+
+class PreviewDrawing;
+class ExportPreview;
+class ExtensionList;
 
 class SingleExport : public Gtk::Box
 {
@@ -179,25 +204,26 @@ private:
     bool interrupted;
 
     // Gtk Signals
-    std::vector<sigc::connection> spinButtonConns;
-    sigc::connection filenameConn;
-    sigc::connection extensionConn;
-    sigc::connection exportConn;
-    sigc::connection cancelConn;
-    sigc::connection browseConn;
-    sigc::connection prefsConn;
-    sigc::connection _pages_list_changed;
+    std::vector<auto_connection> spinButtonConns;
+    auto_connection filenameConn;
+    auto_connection extensionConn;
+    auto_connection exportConn;
+    auto_connection cancelConn;
+    auto_connection browseConn;
+    auto_connection _pages_list_changed;
     // Document Signals
-    sigc::connection _page_selected_connection;
-    sigc::connection _page_modified_connection;
-    sigc::connection _page_changed_connection;
+    auto_connection _page_selected_connection;
+    auto_connection _page_modified_connection;
+    auto_connection _page_changed_connection;
 
     std::unique_ptr<Inkscape::UI::Widget::ColorPicker> _bgnd_color_picker;
 };
+
 } // namespace Dialog
 } // namespace UI
 } // namespace Inkscape
-#endif
+
+#endif // SP_EXPORT_SINGLE_H
 
 /*
   Local Variables:

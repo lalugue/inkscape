@@ -14,15 +14,17 @@
 
 using Inkscape::Util::unit_table;
 
-namespace Inkscape {
-namespace UI {
-namespace Widget {
+namespace Inkscape::UI::Widget {
 
 UnitMenu::UnitMenu() : _type(UNIT_TYPE_NONE)
 {
     set_active(0);
-    add_events(Gdk::SCROLL_MASK | Gdk::SMOOTH_SCROLL_MASK);
-    signal_scroll_event().connect([](GdkEventScroll*){ return false; });
+}
+
+UnitMenu::UnitMenu(BaseObjectType * const cobject, Glib::RefPtr<Gtk::Builder> const &builder)
+    : ScrollProtected{cobject, builder}
+{
+    // We assume the UI file sets the active item & thus we do not do that here.
 }
 
 UnitMenu::~UnitMenu() = default;
@@ -97,8 +99,8 @@ int UnitMenu::getDefaultDigits() const
 
 double UnitMenu::getDefaultStep() const
 { 
-    int factor_digits = -1*int(log10(getUnit()->factor));
-    return pow(10.0, factor_digits);
+    int factor_digits = -1 * static_cast<int>(std::log10(getUnit()->factor));
+    return std::pow(10.0, factor_digits);
 }
 
 double UnitMenu::getDefaultPage() const
@@ -134,11 +136,7 @@ bool UnitMenu::isRadial() const
     return getUnitType() == UNIT_TYPE_RADIAL;
 }
 
-bool UnitMenu::on_scroll_event(GdkEventScroll *event) { return false; }
-
-} // namespace Widget
-} // namespace UI
-} // namespace Inkscape
+} // namespace Inkscape::UI::Widget
 
 /*
   Local Variables:

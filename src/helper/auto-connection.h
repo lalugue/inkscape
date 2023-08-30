@@ -39,6 +39,7 @@ public:
     {}
     auto_connection &operator=(auto_connection &&that)
     {
+        if (this == &that) return *this;
         _connection.disconnect();
         _connection = std::exchange(that._connection, sigc::connection{});
         return *this;
