@@ -1256,9 +1256,9 @@ sp_style_set_ipaint_to_uri(SPStyle *style, SPIPaint *paint, const Inkscape::URI 
         if (style->object) {
             // Should not happen as href should have been created in SPIPaint. (TODO: Removed code duplication.)
             paint->value.href = std::make_shared<SPPaintServerReference>(style->object);
-        } else if (document) {
+        } else if (document || style->document) {
             // Used by desktop style (no object to attach to!).
-            paint->value.href = std::make_shared<SPPaintServerReference>(document);
+            paint->value.href = std::make_shared<SPPaintServerReference>(document ? document : style->document);
         } else {
             std::cerr << "sp_style_set_ipaint_to_uri: No valid object or document!" << std::endl;
             return;

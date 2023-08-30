@@ -569,7 +569,7 @@ sp_selected_item_to_curved_repr(SPItem *item, guint32 /*text_grouping_policy*/)
             return nullptr;
 
         Inkscape::XML::Node *result = curves.size() > 1 ? xml_doc->createElement("svg:g") : nullptr;
-        SPStyle *result_style = new SPStyle();
+        SPStyle *result_style = new SPStyle(item->document);
 
         for (auto &[pathv, style] : curves) {
             Glib::ustring glyph_style = style->writeIfDiff(item->style);
