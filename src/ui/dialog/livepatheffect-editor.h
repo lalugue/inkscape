@@ -64,6 +64,7 @@ private:
     void onAddGallery();
     void expanded_notify(Gtk::Expander *expander);
     void onAdd(Inkscape::LivePathEffect::EffectType etype);
+    bool showWarning(std::string const &msg);
     void toggleVisible(Inkscape::LivePathEffect::Effect *lpe, Gtk::Button *visbutton);
     bool is_appliable(LivePathEffect::EffectType etypen, Glib::ustring item_type, bool has_clip, bool has_mask);
     void removeEffect(Gtk::Expander * expander);

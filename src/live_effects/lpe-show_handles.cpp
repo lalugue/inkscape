@@ -15,7 +15,6 @@
 #include "desktop-style.h"
 #include "display/curve.h"
 #include "svg/svg.h"
-#include "ui/dialog-run.h"
 
 #include "object/sp-shape.h"
 #include "style.h"
@@ -47,8 +46,6 @@ LPEShowHandles::LPEShowHandles(LivePathEffectObject *lpeobject)
     stroke_width = 1.0;
 }
 
-bool LPEShowHandles::alerts_off = false;
-
 /**
  * Sets default styles to element
  * this permanently remove.some styles of the element
@@ -56,17 +53,6 @@ bool LPEShowHandles::alerts_off = false;
 
 void LPEShowHandles::doOnApply(SPLPEItem const* lpeitem)
 {
-    if(!alerts_off) {
-        char *msg = _("The \"show handles\" path effect will remove any custom style on the object you are applying it to. If this is not what you want, click Cancel.");
-        Gtk::MessageDialog dialog(msg, false, Gtk::MESSAGE_QUESTION, Gtk::BUTTONS_OK_CANCEL, true);
-        auto response = Inkscape::UI::dialog_run(dialog);
-        alerts_off = true;
-        if(response == GTK_RESPONSE_CANCEL) {
-            SPLPEItem* item = const_cast<SPLPEItem*>(lpeitem);
-            item->removeCurrentPathEffect(false);
-            return;
-        }
-    }
     SPLPEItem* item = const_cast<SPLPEItem*>(lpeitem);
     SPCSSAttr *css = sp_repr_css_attr_new ();
     sp_repr_css_set_property (css, "stroke", "black");
