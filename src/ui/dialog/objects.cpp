@@ -895,16 +895,17 @@ ObjectsPanel::ObjectsPanel()
 
     //Set up tree signals
     Controller::add_click(_tree,
-        sigc::bind(sigc::mem_fun(*this, &ObjectsPanel::on_click), ButtonEventType::pressed ),
-        sigc::bind(sigc::mem_fun(*this, &ObjectsPanel::on_click), ButtonEventType::released),
+        sigc::bind(sigc::mem_fun(*this, &ObjectsPanel::on_click), EventType::pressed ),
+        sigc::bind(sigc::mem_fun(*this, &ObjectsPanel::on_click), EventType::released),
         Controller::Button::any, Gtk::PHASE_TARGET);
-    Controller::add_key<&ObjectsPanel::on_key_pressed, nullptr,
-                        &ObjectsPanel::on_key_modifiers>
-                       (_tree, *this);
+    Controller::add_key<&ObjectsPanel::on_tree_key_pressed>(_tree, *this);
     Controller::add_motion<&ObjectsPanel::on_motion_enter ,
                            &ObjectsPanel::on_motion_motion,
                            &ObjectsPanel::on_motion_leave >
                        (_tree, *this, Gtk::PHASE_TARGET);
+    // Track Alt key on parent window so we donʼt need to have key focus to work
+    Controller::add_key_on_window<&ObjectsPanel::on_window_key_pressed ,
+                                  &ObjectsPanel::on_window_key_released>(_tree, *this);
 
     // Before expanding a row, replace the dummy child with the actual children
     _tree.signal_test_expand_row().connect([this](const Gtk::TreeModel::iterator &iter, const Gtk::TreeModel::Path &) {
@@ -1288,12 +1289,12 @@ bool ObjectsPanel::toggleLocked(unsigned int state, Gtk::TreeModel::Row row)
 }
 
 /**
- * Handles keyboard events
+ * Handles keyboard events on the TreeView
  * @return Whether the event should be eaten (om nom nom)
  */
-bool ObjectsPanel::on_key_pressed(GtkEventControllerKey const * const controller,
-                                  unsigned const keyval, unsigned const keycode,
-                                  GdkModifierType const state)
+bool ObjectsPanel::on_tree_key_pressed(GtkEventControllerKey const * const controller,
+                                       unsigned const keyval, unsigned const keycode,
+                                       GdkModifierType const state)
 {
     auto desktop = getDesktop();
     if (!desktop)
@@ -1370,15 +1371,37 @@ bool ObjectsPanel::on_key_pressed(GtkEventControllerKey const * const controller
     return false;
 }
 
-bool ObjectsPanel::on_key_modifiers(GtkEventControllerKey const * /*controller*/,
-                                    GdkModifierType const state)
+bool ObjectsPanel::on_window_key_pressed(GtkEventControllerKey const * const controller,
+                                         unsigned const keyval, unsigned const keycode,
+                                         GdkModifierType const state)
+{
+    return on_window_key(controller, keyval, keycode, state, EventType::pressed);
+}
+
+bool ObjectsPanel::on_window_key_released(GtkEventControllerKey const * const controller,
+                                          unsigned const keyval, unsigned const keycode,
+                                          GdkModifierType const state)
+{
+    return on_window_key(controller, keyval, keycode, state, EventType::released);
+}
+
+bool ObjectsPanel::on_window_key(GtkEventControllerKey const * const controller,
+                                 unsigned const keyval, unsigned const keycode,
+                                 GdkModifierType const state,
+                                 EventType const event_type)
 {
     auto desktop = getDesktop();
     if (!desktop)
         return false;
 
-    _alt_pressed = Controller::has_flag(state, GDK_MOD1_MASK);
-    _handleTransparentHover(_alt_pressed);
+    auto const shortcut = Inkscape::Shortcuts::get_from(controller, keyval, keycode, state);
+    switch (shortcut.get_key()) {
+        case GDK_KEY_Alt_L:
+        case GDK_KEY_Alt_R:
+            _handleTransparentHover(event_type == EventType::pressed);
+            return false;
+    }
+
     return false;
 }
 
@@ -1460,7 +1483,8 @@ void ObjectsPanel::on_motion_motion(GtkEventControllerMotion const * const contr
         }
     }
 
-    _handleTransparentHover(_alt_pressed);
+    auto const state = Controller::get_device_state(GTK_EVENT_CONTROLLER(controller));
+    _handleTransparentHover(Controller::has_flag(state, Gdk::MOD1_MASK));
 }
 
 void ObjectsPanel::_handleTransparentHover(bool enabled)
@@ -1537,13 +1561,13 @@ void ObjectsPanel::_generateTranslucentItems(SPItem *parent)
  */
 Gtk::EventSequenceState ObjectsPanel::on_click(Gtk::GestureMultiPress const &gesture,
                                                int const n_press, double const ex, double const ey,
-                                               ButtonEventType const type)
+                                               EventType const event_type)
 {
     auto selection = getSelection();
     if (!selection)
         return Gtk::EVENT_SEQUENCE_NONE;
 
-    if (type == ButtonEventType::released) {
+    if (event_type == EventType::released) {
         _drag_column = nullptr;
     }
 
@@ -1555,7 +1579,7 @@ Gtk::EventSequenceState ObjectsPanel::on_click(Gtk::GestureMultiPress const &ges
     }
 
     if (auto row = *_store->get_iter(path)) {
-        if (type == ButtonEventType::pressed) {
+        if (event_type == EventType::pressed) {
             auto const state = Controller::get_current_event_state(gesture);
             // Remember column for dragging feature
             _drag_column = col;
@@ -1584,7 +1608,7 @@ Gtk::EventSequenceState ObjectsPanel::on_click(Gtk::GestureMultiPress const &ges
         return Gtk::EVENT_SEQUENCE_CLAIMED;
     }
 
-    _is_editing &= type == ButtonEventType::released;
+    _is_editing &= event_type == EventType::released;
 
     auto row = *_store->get_iter(path);
     if (!row) return Gtk::EVENT_SEQUENCE_NONE;
@@ -1606,11 +1630,11 @@ Gtk::EventSequenceState ObjectsPanel::on_click(Gtk::GestureMultiPress const &ges
 
     // Load the right click menu
     auto const button = gesture.get_current_button();
-    auto const context_menu = type == ButtonEventType::pressed && button == 3;
+    auto const context_menu = event_type == EventType::pressed && button == 3;
 
     // Select items on button release to not confuse drag (unless it's a right-click)
     // Right-click selects too to set up the stage for context menu which frequently relies on current selection!
-    if (!_is_editing && (type == ButtonEventType::released || context_menu)) {
+    if (!_is_editing && (event_type == EventType::released || context_menu)) {
         if (context_menu) {
             // if right-clicking on a layer, make it current for context menu actions to work correctly
             if (layer && !selection->includes(layer)) {

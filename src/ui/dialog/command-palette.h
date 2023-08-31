@@ -36,6 +36,7 @@ class ListBox;
 class ListBoxRow;
 class ScrolledWindow;
 class SearchEntry;
+class Widget;
 } // namespace Gtk
 
 namespace Inkscape::UI::Dialog {
@@ -149,10 +150,10 @@ private:
     bool on_filter_full_action_name(Gtk::ListBoxRow *child);
     bool on_filter_recent_file(Gtk::ListBoxRow *child, bool const is_import);
 
-    void on_map();
-    void on_unmap();
     bool on_window_key_pressed(GtkEventControllerKey const *controller,
                                unsigned keyval, unsigned keycode, GdkModifierType state);
+    void on_window_focus(Gtk::Widget const *focus);
+
     void on_activate_cpfilter();
     bool on_focus_cpfilter(Gtk::DirectionType direction);
 
@@ -229,10 +230,6 @@ private:
 
     /// Stores the search connection to deactivate when not needed
     sigc::connection _cpfilter_search_connection;
-    // Stores key-press connection on Gtk::Window to deactivate when not needed
-    GtkEventController *_window_key_controller = nullptr;
-    // Stores ::set-focus connection on Gtk::Window to deactivate when not needed
-    sigc::connection _window_focus_connection;
 
     /// Stores the most recent ask_action_name for when Entry::activate fires & we are in INPUT mode
     std::optional<ActionPtrName> _ask_action_ptr_name;

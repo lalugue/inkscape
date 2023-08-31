@@ -10,13 +10,15 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#include "controller.h"
+
 #include <cassert>
 #include <sigc++/adaptors/bind.h>
 #include <gdk/gdk.h>
 #include <gtkmm/gesturedrag.h>
 #include <gtkmm/gesturemultipress.h>
 
-#include "controller.h"
+#include "helper/auto-connection.h"
 
 namespace Inkscape::UI::Controller {
 
@@ -177,6 +179,19 @@ Gtk::GestureDrag &add_drag(Gtk::Widget &widget,
         &Gtk::GestureDrag::signal_drag_update, use_state(std::move(on_update)),
         &Gtk::GestureDrag::signal_drag_end   , use_state(std::move(on_end   )),
         phase, when);
+}
+
+// TODO: GTK4: EventControllerFocus.property_contains_focus() should make this slightly nicer?
+void add_focus_on_window(Gtk::Widget &widget, WindowFocusSlot slot)
+{
+    static auto connections = std::unordered_map<Gtk::Widget *, std::vector<auto_connection>>{};
+    widget.signal_map().connect([&widget, slot = std::move(slot)]
+    {
+        auto &window = dynamic_cast<Gtk::Window &>(*widget.get_toplevel());
+        auto connection = auto_connection{window.signal_set_focus().connect(slot)};
+        connections[&widget].push_back(std::move(connection));
+    });
+    widget.signal_unmap().connect([&widget]{ connections.erase(&widget); });
 }
 
 } // namespace Inkscape::UI::Controller

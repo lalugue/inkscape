@@ -16,7 +16,9 @@
 #include <cstddef>
 #include <functional>
 #include <type_traits>
+#include <unordered_map>
 #include <utility>
+#include <vector>
 #include <sigc++/slot.h>
 #include <glibmm/refptr.h>
 #include <gdkmm/types.h>
@@ -24,6 +26,7 @@
 #include <gtkmm/eventcontroller.h>
 #include <gtkmm/gesture.h> // Gtk::EventSequenceState
 #include <gtkmm/widget.h>
+#include <gtkmm/window.h>
 
 #include "ui/manage.h"
 #include "util/callback-converter.h"
@@ -167,12 +170,14 @@ auto constexpr is_key_handler = Detail::callable_or_null<Function, bool,
 
 /// Whether Function is suitable to handle EventControllerKey::modifiers.
 /// The arguments are the controller & modifier state.
+/// Note that this signal seems buggy, i.e. gives wrong state, in GTK3. Beware!!
 template <typename Function, typename Listener>
 auto constexpr is_key_mod_handler = Detail::callable_or_null<Function, bool,
     Listener *, GtkEventControllerKey *, GdkModifierType>;
 
 /// Whether Function is suitable to handle EventControllerKey::focus-(in|out).
 /// The argument is the controller.
+/// Note these signals seem buggy, i.e. not (always?) emitted, in GTK3. Beware!!
 template <typename Function, typename Listener>
 auto constexpr is_key_focus_handler = Detail::callable_or_null<Function, void,
     Listener *, GtkEventControllerKey *>;
@@ -202,16 +207,17 @@ auto constexpr is_scroll_xy_handler = Detail::callable_or_null<Function, void,
     Listener *, GtkEventControllerScroll *, double, double>;
 
 /// Create a key event controller for & manage()d by widget.
+/// Note that ::modifiers seems buggy, i.e. gives wrong state, in GTK3. Beware!!
+/// Note that ::focus* seem buggy, i.e. not (always?) emitted, in GTK3. Beware!!
 // As gtkmm 3 lacks EventControllerKey, this must go via C API, so to make it
 // easier I reuse Util::make_g_callback(), which needs methods as template args.
 // Once on gtkmm4, we can do as Click etc, & accept anything convertible to slot
 template <auto on_pressed, auto on_released = nullptr, auto on_modifiers = nullptr,
           auto on_focus_in = nullptr, auto on_focus_out = nullptr,
-          typename Listener>
-Gtk::EventController &add_key(Gtk::Widget &widget  ,
-                              Listener    &listener,
-                              Gtk::PropagationPhase const phase = Gtk::PHASE_BUBBLE,
-                              When const when = When::after)
+          bool managed = true, typename Listener>
+decltype(auto) add_key(Gtk::Widget &widget, Listener &listener,
+                       Gtk::PropagationPhase const phase = Gtk::PHASE_BUBBLE,
+                       When const when = When::after)
 {
     // NB make_g_callback<> must type-erase methods, so we must check arg compat
     // TODO: C++20: Use concepts instead.
@@ -229,7 +235,12 @@ Gtk::EventController &add_key(Gtk::Widget &widget  ,
     // N.B. Iʼm not convinced that Key::focus-in works in GTK3, but try it… —djb
     Detail::connect<on_focus_in >(gcontroller, "focus-in"    , listener, when);
     Detail::connect<on_focus_out>(gcontroller, "focus-out"   , listener, when);
-    return Detail::managed(Glib::wrap(gcontroller), widget);
+
+    if constexpr (managed) {
+        return Detail::managed(Glib::wrap(gcontroller), widget);
+    } else {
+        return Glib::wrap(gcontroller);
+    }
 }
 
 /// Create a motion event controller for & manage()d by widget.
@@ -283,6 +294,45 @@ Gtk::EventController &add_scroll(Gtk::Widget &widget  ,
     Detail::connect<on_decelerate>(gcontroller, "decelerate"  , listener, when);
     return Detail::managed(Glib::wrap(gcontroller), widget);
 }
+
+/*
+* * helpers to track events on root/toplevel Windows
+ */
+
+namespace Detail {
+// We keep the controller alive while the widget is mapped by saving a reference to it here.
+inline auto controllers = std::unordered_map<Gtk::Widget *,
+                                             std::vector<Glib::RefPtr<Gtk::EventController>>>{};
+} // namespace Detail
+
+/// Wait for widget to be mapped in a window, add a key controller to the window
+/// & retain a reference to said controller until the widget is (next) unmapped.
+// See comments for add_key().
+// TODO: GTK4: may not be needed once our Windows donʼt intercept/forward/whatever w/ ::key-events?
+template <auto on_pressed, auto on_released = nullptr, auto on_modifiers = nullptr,
+          auto on_focus_in = nullptr, auto on_focus_out = nullptr,
+          typename Listener>
+void add_key_on_window(Gtk::Widget &widget, Listener &listener,
+                       Gtk::PropagationPhase const phase = Gtk::PHASE_BUBBLE,
+                       When const when = When::after)
+{
+    widget.signal_map().connect([=, &widget, &listener]
+    {
+        auto &window = dynamic_cast<Gtk::Window &>(*widget.get_toplevel());
+        auto controller = add_key<on_pressed, on_released, on_modifiers, on_focus_in, on_focus_out,
+                                  false, Listener>(window, listener, phase, when);
+        Detail::controllers[&widget].push_back(std::move(controller));
+    });
+    widget.signal_unmap().connect([&widget]{ Detail::controllers.erase(&widget); });
+}
+
+/// Type of slot connected to Gtk::Window::set-focus by add_focus_on_window().
+/// The argument is the new focused widget of the window.
+using WindowFocusSlot = sigc::slot<void (Gtk::Widget *)>;
+
+/// Wait for widget to be mapped in a window, add a slot handling ::set-focus on
+/// that window, & keep said slot connected until the widget is (next) unmapped.
+void add_focus_on_window(Gtk::Widget &widget, WindowFocusSlot slot);
 
 } // namespace Inkscape::UI::Controller
 

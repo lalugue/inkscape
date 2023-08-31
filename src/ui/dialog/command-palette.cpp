@@ -41,6 +41,7 @@
 #include "io/resource.h"
 #include "message-stack.h"
 #include "selection.h"
+#include "ui/controller.h"
 #include "ui/util.h"
 #include "util/callback-converter.h"
 
@@ -75,8 +76,17 @@ CommandPalette::CommandPalette()
     _CPBase->set_halign(Gtk::ALIGN_CENTER);
     _CPBase->set_valign(Gtk::ALIGN_START);
 
-    _CPBase  ->signal_map     ().connect(sigc::mem_fun(*this, &CommandPalette::on_map              ));
-    _CPBase  ->signal_unmap   ().connect(sigc::mem_fun(*this, &CommandPalette::on_unmap            ));
+    // Close the CommandPalette when the toplevel Window receives an Escape key press.
+    // & also when the focused widget of said window is no longer a descendent of the Palette.
+    /* Iʼve done it like so because changing ::key-*-events to GtkEventControllerKey
+     * resulted in a LOT of weird stuff happening, and essential presses being lost.
+     * and even before changing to a controller, itʼs nice to have 1 handler, not 3!
+     * Itʼd probably make sense to move this to the main window when thereʼs time */
+    // TODO: GTK4: can maybe move this back to self once Windows donʼt intercept/forward/etc key events
+    Controller::add_key_on_window<&CommandPalette::on_window_key_pressed>(*_CPBase, *this,
+                                                                          Gtk::PHASE_CAPTURE);
+    Controller::add_focus_on_window(*_CPBase, sigc::mem_fun(*this, &CommandPalette::on_window_focus));
+
     _CPFilter->signal_activate().connect(sigc::mem_fun(*this, &CommandPalette::on_activate_cpfilter));
     _CPFilter->signal_focus   ().connect(sigc::mem_fun(*this, &CommandPalette::on_focus_cpfilter   ));
 
@@ -394,41 +404,6 @@ bool CommandPalette::on_filter_recent_file(Gtk::ListBoxRow *child, bool const is
     return false;
 }
 
-/* Iʼve done it like so because changing ::key-*-events to GtkEventControllerKey
- * resulted in a LOT of weird stuff happening, and essential presses being lost.
- * and even before changing to a controller, itʼs nice to have 1 handler, not 3!
- * Itʼd probably make sense to move this to the main window when thereʼs time */
-// TODO: GTK4: can maybe move this back to self once Windows donʼt intercept/forward/etc key events
-void CommandPalette::on_map()
-{
-    auto &window = dynamic_cast<Gtk::Window &>(*_CPBase->get_toplevel());
-
-    // Close the CommandPalette when the toplevel Window receives an Escape key press.
-    _window_key_controller = gtk_event_controller_key_new(window.Gtk::Widget::gobj());
-    gtk_event_controller_set_propagation_phase(_window_key_controller, GTK_PHASE_CAPTURE);
-    g_signal_connect_after(_window_key_controller, "key-pressed",
-                           Inkscape::Util::make_g_callback<&CommandPalette::on_window_key_pressed>,
-                           this);
-
-    // & also when the focused widget of said window is no longer a descendent of the Palette.
-    // TODO: GTK4: EventControllerFocus.property_contains_focus() should make this slightly nicer!
-    _window_focus_connection = window.signal_set_focus().connect([&](auto const * const focus)
-    {
-        if (!focus || !is_descendant_of(*focus, *_CPBase)) {
-            close();
-        }
-    });
-}
-
-void CommandPalette::on_unmap()
-{
-    if (_window_key_controller != nullptr) {
-        g_clear_object(&_window_key_controller);
-    }
-
-    _window_focus_connection.disconnect();
-}
-
 bool CommandPalette::on_window_key_pressed(GtkEventControllerKey const * /*controller*/,
                                            unsigned const keyval, unsigned /*keycode*/,
                                            GdkModifierType /*state*/)
@@ -441,6 +416,14 @@ bool CommandPalette::on_window_key_pressed(GtkEventControllerKey const * /*contr
     }
 
     return false; // Pass the key event which are not used
+}
+
+void CommandPalette::on_window_focus(Gtk::Widget const * const focus)
+{
+    // TODO: GTK4: EventControllerFocus.property_contains_focus() should make this slightly nicer?
+    if (!focus || !is_descendant_of(*focus, *_CPBase)) {
+        close();
+    }
 }
 
 void CommandPalette::on_activate_cpfilter()
