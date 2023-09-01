@@ -280,7 +280,9 @@ bool GradientWithStops::on_focus(Gtk::DirectionType const direction)
     } else {
         // didnʼt have focus: grab on 1st or last stop, relevant to direction
         _drawing_area->grab_focus();
-        set_focused_stop(backward ? n_stops - 1 : 0);
+        if (n_stops > 0) { // …unless we have no stop, then just focus widget
+            set_focused_stop(backward ? n_stops - 1 : 0);
+        }
     }
 
     return true;
