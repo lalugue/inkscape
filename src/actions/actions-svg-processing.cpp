@@ -689,7 +689,7 @@ void normalize_all_paths(Inkscape::XML::Node *node)
     }
 }
 
-std::vector<std::vector<Glib::ustring>> doc_processing_actions =
+std::vector<std::vector<Glib::ustring>> doc_svg_processing_actions =
 {
     // clang-format off
     {"doc.set-svg-version-1",            N_("Set SVG Version to 1.1"),       "Processing", N_("Sets the Document's SVG version to 1.1") },
@@ -759,11 +759,10 @@ void add_actions_processing(SPDocument* doc)
 
     // Note: This will only work for the first ux to load, possible problem.
     auto app = InkscapeApplication::instance();
-    if (!app) {
-        show_output("add_actions_processing: no app!");
+    if (!app) { // i.e. Inkview
         return;
     }
-    app->get_action_extra_data().add_data(doc_processing_actions);
+    app->get_action_extra_data().add_data(doc_svg_processing_actions);
 }
 
 /*

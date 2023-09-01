@@ -115,9 +115,8 @@ add_actions_edit_document(SPDocument* document)
 
     // Check if there is already an application instance (GUI or non-GUI).
     auto app = InkscapeApplication::instance();
-    if (!app) {
-        show_output("add_actions_edit_document: no app!");
-        return;
+    if (!app) { // i.e. Inkview
+      return;
     }
     app->get_action_extra_data().add_data(raw_data_edit_document);
 }

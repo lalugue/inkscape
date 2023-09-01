@@ -216,7 +216,7 @@ static std::string window_markup = R"(
         <child>
           <object class="GtkButton" id="show-first">
             <property name="visible">True</property>
-            <property name="can_focus">True</property>
+            <property name="action-name">viewer.show_first</property>
             <child>
               <object class="GtkImage">
                 <property name="visible">True</property>
@@ -228,7 +228,7 @@ static std::string window_markup = R"(
         <child>
           <object class="GtkButton" id="show-prev">
             <property name="visible">True</property>
-            <property name="can_focus">True</property>
+            <property name="action-name">viewer.show_prev</property>
             <child>
               <object class="GtkImage">
                 <property name="visible">True</property>
@@ -240,7 +240,7 @@ static std::string window_markup = R"(
         <child>
           <object class="GtkButton" id="show-next">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="action-name">viewer.show_next</property>
             <child>
               <object class="GtkImage">
                 <property name="visible">True</property>
@@ -252,7 +252,7 @@ static std::string window_markup = R"(
         <child>
           <object class="GtkButton" id="show-last">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="action-name">viewer.show_last</property>
             <child>
               <object class="GtkImage">
                 <property name="visible">True</property>
@@ -295,18 +295,6 @@ InkviewWindow::show_control()
         if (viewer) {
             _controlwindow->insert_action_group("viewer", viewer);
         }
-
-        // Gtk::Button not derived from Gtk::Actionable due to ABI issues. Must use Gtk.
-        // Fixed in Gtk4. In Gtk4 this can be replaced by setting the action in the interface.
-        Gtk::Button* button;
-        builder->get_widget("show-first", button);
-        gtk_actionable_set_action_name( GTK_ACTIONABLE(button->gobj()), "viewer.show_first");
-        builder->get_widget("show-prev", button);
-        gtk_actionable_set_action_name( GTK_ACTIONABLE(button->gobj()), "viewer.show_prev");
-        builder->get_widget("show-next", button);
-        gtk_actionable_set_action_name( GTK_ACTIONABLE(button->gobj()), "viewer.show_next");
-        builder->get_widget("show-last", button);
-        gtk_actionable_set_action_name( GTK_ACTIONABLE(button->gobj()), "viewer.show_last");
 
         _controlwindow->set_resizable(false);
         _controlwindow->set_transient_for(*this);

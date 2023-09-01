@@ -112,8 +112,7 @@ void add_actions_pages(SPDocument* doc)
 
     // Note: This will only work for the first ux to load, possible problem.
     auto app = InkscapeApplication::instance();
-    if (!app) {
-        show_output("add_actions_pages: no app!");
+    if (!app) { // i.e. Inkview
         return;
     }
     app->get_action_extra_data().add_data(doc_page_actions);

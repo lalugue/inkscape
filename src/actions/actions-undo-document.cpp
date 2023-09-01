@@ -108,8 +108,7 @@ add_actions_undo_document(SPDocument* document)
     // clang-format on
 
     auto app = InkscapeApplication::instance();
-    if (!app) {
-        show_output("add_actions_undo: no app!");
+    if (!app) { // i.e. Inkview
         return;
     }
     app->get_action_extra_data().add_data(raw_data_undo_document);
