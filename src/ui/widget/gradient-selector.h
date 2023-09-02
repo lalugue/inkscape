@@ -1,7 +1,4 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-#ifndef SEEN_GRADIENT_SELECTOR_H
-#define SEEN_GRADIENT_SELECTOR_H
-
 /*
  * Gradient vector and position widget
  *
@@ -16,14 +13,18 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include <gtkmm/box.h>
-#include <gtkmm/liststore.h>
-#include <gtkmm/scrolledwindow.h>
+#ifndef SEEN_GRADIENT_SELECTOR_H
+#define SEEN_GRADIENT_SELECTOR_H
 
+#include <vector>
+#include <glibmm/refptr.h>
+#include <gtkmm/box.h>
+#include <gtkmm/treemodel.h>
+#include <sigc++/signal.h>
+
+#include "gradient-selector-interface.h"
 #include "object/sp-gradient-spread.h"
 #include "object/sp-gradient-units.h"
-#include <vector>
-#include "gradient-selector-interface.h"
 
 class SPDocument;
 class SPGradient;
@@ -32,22 +33,22 @@ namespace Gtk {
 class Button;
 class CellRendererPixbuf;
 class CellRendererText;
+class ListStore;
 class ScrolledWindow;
 class TreeView;
 } // namespace Gtk
 
+namespace Inkscape::UI::Widget {
 
-namespace Inkscape {
-namespace UI {
-namespace Widget {
 class GradientVectorSelector;
 
-class GradientSelector : public Gtk::Box, public GradientSelectorInterface {
-  public:
-   //  enum SelectorMode { MODE_LINEAR, MODE_RADIAL, MODE_SWATCH };
-
-    class ModelColumns : public Gtk::TreeModel::ColumnRecord {
-      public:
+class GradientSelector final
+    : public Gtk::Box
+    , public GradientSelectorInterface
+{
+public:
+    class ModelColumns final : public Gtk::TreeModel::ColumnRecord {
+    public:
         ModelColumns()
         {
             add(name);
@@ -65,8 +66,7 @@ class GradientSelector : public Gtk::Box, public GradientSelectorInterface {
         Gtk::TreeModelColumn<Glib::RefPtr<Gdk::Pixbuf>> pixbuf;
     };
 
-
-  private:
+private:
     sigc::signal<void ()> _signal_grabbed;
     sigc::signal<void ()> _signal_dragged;
     sigc::signal<void ()> _signal_released;
@@ -81,7 +81,8 @@ class GradientSelector : public Gtk::Box, public GradientSelectorInterface {
 
     /* Tree */
     bool _checkForSelected(const Gtk::TreePath &path, const Gtk::TreeIter &iter, SPGradient *vector);
-    bool onKeyPressEvent(GdkEventKey *event);
+    bool onKeyPressed(GtkEventControllerKey const * controller,
+                      unsigned keyval, unsigned keycode, GdkModifierType state);
     void onTreeSelection();
     void onGradientRename(const Glib::ustring &path_string, const Glib::ustring &new_text);
     void onTreeNameColClick();
@@ -119,8 +120,9 @@ class GradientSelector : public Gtk::Box, public GradientSelectorInterface {
     void delete_vector_clicked_2();
     void vector_set(SPGradient *gr);
 
-  public:
+public:
     GradientSelector();
+    ~GradientSelector() final;
 
     void show_edit_button(bool show);
     void set_name_col_size(int min_width);
@@ -141,12 +143,9 @@ class GradientSelector : public Gtk::Box, public GradientSelectorInterface {
     SPGradientSpread getSpread() override;
 };
 
-} // namespace Widget
-} // namespace UI
-} // namespace Inkscape
+} // namespace Inkscape::UI::Widget
 
 #endif // SEEN_GRADIENT_SELECTOR_H
-
 
 /*
   Local Variables:

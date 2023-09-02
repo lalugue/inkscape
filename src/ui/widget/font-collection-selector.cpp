@@ -1,4 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
+/** @file
+ * This file contains the definition of the FontCollectionSelector class. This widget
+ * defines a treeview to provide the interface to create, read, update and delete font
+ * collections and their respective fonts. This class contains all the code related to
+ * population of collections and their fonts in the TreeStore.
+ */
 /*
  * Author:
  *   Vaibhav Malik <vaibhavmalik2018@gmail.com>
@@ -6,21 +12,17 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include <glibmm/i18n.h>
-#include <glibmm/markup.h>
-
 #include "font-collection-selector.h"
 
-#include "libnrtype/font-lister.h"
+#include <glibmm/i18n.h>
+#include <glibmm/markup.h>
+#include <sigc++/functors/mem_fun.h>
 
+#include "libnrtype/font-lister.h"
+#include "ui/controller.h"
 #include "ui/dialog-run.h"
 
-// For updating from selection
-#include "util/document-fonts.h"
-
-namespace Inkscape {
-namespace UI {
-namespace Widget {
+namespace Inkscape::UI::Widget {
 
 FontCollectionSelector::FontCollectionSelector()
 {
@@ -44,8 +46,8 @@ FontCollectionSelector::FontCollectionSelector()
 // Setup the treeview of the widget.
 void FontCollectionSelector::setup_tree_view(Gtk::TreeView *tv)
 {
-    cell_text = new Gtk::CellRendererText();
-    del_icon_renderer = manage(new Inkscape::UI::Widget::IconRenderer());
+    cell_text = Gtk::make_managed<Gtk::CellRendererText>();
+    del_icon_renderer = Gtk::make_managed<IconRenderer>();
     del_icon_renderer->add_icon("edit-delete");
 
     text_column.pack_start (*cell_text, true);
@@ -96,7 +98,7 @@ void FontCollectionSelector::setup_signals()
 {
     cell_text->signal_edited().connect(sigc::mem_fun(*this, &FontCollectionSelector::on_rename_collection));
     del_icon_renderer->signal_activated().connect(sigc::mem_fun(*this, &FontCollectionSelector::on_delete_icon_clicked));
-    treeview->signal_key_press_event().connect([=](GdkEventKey *ev){ return on_key_pressed(ev); });
+    Controller::add_key<&FontCollectionSelector::on_key_pressed>(*treeview, *this);
     treeview->set_row_separator_func(sigc::mem_fun(*this, &FontCollectionSelector::row_separator_func));
     treeview->get_column(ICON_COLUMN)->set_cell_data_func(*del_icon_renderer, sigc::mem_fun(*this, &FontCollectionSelector::icon_cell_data_func));
 
@@ -480,20 +482,16 @@ void FontCollectionSelector::deletion_warning_message_dialog(Glib::ustring const
     dialog_show_modal_and_selfdestruct(std::move(dialog), get_toplevel());
 }
 
-bool FontCollectionSelector::on_key_pressed(GdkEventKey *event)
+bool FontCollectionSelector::on_key_pressed(GtkEventControllerKey const * const controller,
+                                            unsigned const keyval, unsigned const keycode,
+                                            GdkModifierType state)
 {
-    if (event->type == GDK_KEY_PRESS && frame.get_label() == "Collections")
-    {
-        // std::cout << "Key pressed" << std::endl;
-        switch (Inkscape::UI::Tools::get_latin_keyval (event)) {
-            case GDK_KEY_Delete:
-                on_delete_button_pressed();
-                break;
-        }
-        // We handled this event.
-        return true;
+    switch (Inkscape::UI::Tools::get_latin_keyval(controller, keyval, keycode, state)) {
+        case GDK_KEY_Delete:
+            on_delete_button_pressed();
+            return true;
     }
-    // We did not handle this event.
+
     return false;
 }
 
@@ -633,42 +631,42 @@ void FontCollectionSelector::on_drag_end(const Glib::RefPtr<Gdk::DragContext> &c
 void FontCollectionSelector::on_selection_changed()
 {
     Glib::RefPtr <Gtk::TreeSelection> selection = treeview->get_selection();
-    if(selection) {
-        FontCollections *font_collections = Inkscape::FontCollections::get();
-        Gtk::TreeModel::iterator iter = selection->get_selected();
-        auto parent = iter->parent();
+    if (!selection) return;
 
-        // We use 3 states to adjust the sensitivity of the edit and
-        // delete buttons in the font collections manager dialog.
-        int state = 0;
+    FontCollections *font_collections = Inkscape::FontCollections::get();
+    Gtk::TreeModel::iterator iter = selection->get_selected();
+    if (!iter) return;
 
-        // State -1: Selection is a system collection or a system
-        // collection font.(Neither edit nor delete)
+    auto parent = iter->parent();
 
-        // State 0: It's not a system collection or it's font. But it is
-        // a user collection.(Both edit and delete).
+    // We use 3 states to adjust the sensitivity of the edit and
+    // delete buttons in the font collections manager dialog.
+    int state = 0;
 
-        // State 1: It is a font that belongs to a user collection.
-        // (Only delete)
+    // State -1: Selection is a system collection or a system
+    // collection font.(Neither edit nor delete)
 
-        if(parent) {
-            // It is a font, and thus it is not editable.
-            // Now check if it's parent is a system collection.
-            bool is_system = font_collections->find_collection((*parent)[FontCollection.name], true);
-            state = (is_system) ? SYSTEM_COLLECTION: USER_COLLECTION_FONT;
-        } else {
-            // Check if it is a system collection.
-            bool is_system = font_collections->find_collection((*iter)[FontCollection.name], true);
-            state = (is_system) ? SYSTEM_COLLECTION: USER_COLLECTION;
-        }
+    // State 0: It's not a system collection or it's font. But it is
+    // a user collection.(Both edit and delete).
 
-        signal_changed.emit(state);
+    // State 1: It is a font that belongs to a user collection.
+    // (Only delete)
+
+    if(parent) {
+        // It is a font, and thus it is not editable.
+        // Now check if it's parent is a system collection.
+        bool is_system = font_collections->find_collection((*parent)[FontCollection.name], true);
+        state = (is_system) ? SYSTEM_COLLECTION: USER_COLLECTION_FONT;
+    } else {
+        // Check if it is a system collection.
+        bool is_system = font_collections->find_collection((*iter)[FontCollection.name], true);
+        state = (is_system) ? SYSTEM_COLLECTION: USER_COLLECTION;
     }
+
+    signal_changed.emit(state);
 }
 
-} // namespace Widget
-} // namespace UI
-} // namespace Inkscape
+} // namespace Inkscape::UI::Widget
 
 /*
   Local Variables:

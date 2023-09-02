@@ -14,28 +14,28 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#include <string>
 #include <glibmm/i18n.h>
+#include <gtkmm/liststore.h>
+#include <gtkmm/scrolledwindow.h>
 #include <gtkmm/treeview.h>
-#include <vector>
+#include <sigc++/adaptors/bind.h>
+#include <sigc++/functors/mem_fun.h>
 
-#include "document-undo.h"
+#include "actions/actions-tools.h" // Invoke gradient tool
 #include "document.h"
+#include "document-undo.h"
 #include "gradient-chemistry.h"
 #include "id-clash.h"
 #include "inkscape.h"
-#include "preferences.h"
-
 #include "object/sp-defs.h"
-#include "style.h"
-
-#include "actions/actions-tools.h" // Invoke gradient tool
+#include "preferences.h"
+#include "ui/controller.h"
 #include "ui/icon-loader.h"
 #include "ui/icon-names.h"
 #include "ui/widget/gradient-vector-selector.h"
 
-namespace Inkscape {
-namespace UI {
-namespace Widget {
+namespace Inkscape::UI::Widget {
 
 void GradientSelector::style_button(Gtk::Button *btn, char const *iconName)
 {
@@ -85,7 +85,7 @@ GradientSelector::GradientSelector()
     count_column->set_clickable(true);
     count_column->set_resizable(true);
 
-    _treeview->signal_key_press_event().connect(sigc::mem_fun(*this, &GradientSelector::onKeyPressEvent), false);
+    Controller::add_key<&GradientSelector::onKeyPressed>(*_treeview, *this);
 
     _treeview->set_visible(true);
 
@@ -157,6 +157,8 @@ GradientSelector::GradientSelector()
 
     hb->show_all();
 }
+
+GradientSelector::~GradientSelector() = default;
 
 void GradientSelector::setSpread(SPGradientSpread spread)
 {
@@ -269,57 +271,48 @@ void GradientSelector::moveSelection(int amount, bool down, bool toEnd)
     _treeview->scroll_to_row(_store->get_path(iter), 0.5);
 }
 
-bool GradientSelector::onKeyPressEvent(GdkEventKey *event)
+bool GradientSelector::onKeyPressed(GtkEventControllerKey const * controller,
+                                    unsigned /*keyval*/, unsigned const keycode,
+                                    GdkModifierType const state)
 {
-    bool consume = false;
     auto display = Gdk::Display::get_default();
     auto keymap = display->get_keymap();
-    guint key = 0;
-    gdk_keymap_translate_keyboard_state(keymap, event->hardware_keycode, static_cast<GdkModifierType>(event->state), 0,
+    auto key = 0u;
+    gdk_keymap_translate_keyboard_state(keymap, keycode, state, 0,
                                         &key, 0, 0, 0);
-
     switch (key) {
         case GDK_KEY_Up:
-        case GDK_KEY_KP_Up: {
+        case GDK_KEY_KP_Up:
             moveSelection(-1);
-            consume = true;
-            break;
-        }
+            return true;
+
         case GDK_KEY_Down:
-        case GDK_KEY_KP_Down: {
+        case GDK_KEY_KP_Down:
             moveSelection(1);
-            consume = true;
-            break;
-        }
+            return true;
+
         case GDK_KEY_Page_Up:
-        case GDK_KEY_KP_Page_Up: {
+        case GDK_KEY_KP_Page_Up:
             moveSelection(-5);
-            consume = true;
-            break;
-        }
+            return true;
 
         case GDK_KEY_Page_Down:
-        case GDK_KEY_KP_Page_Down: {
+        case GDK_KEY_KP_Page_Down:
             moveSelection(5);
-            consume = true;
-            break;
-        }
+            return true;
 
         case GDK_KEY_End:
-        case GDK_KEY_KP_End: {
+        case GDK_KEY_KP_End:
             moveSelection(0, true, true);
-            consume = true;
-            break;
-        }
+            return true;
 
         case GDK_KEY_Home:
-        case GDK_KEY_KP_Home: {
+        case GDK_KEY_KP_Home:
             moveSelection(0, false, true);
-            consume = true;
-            break;
-        }
+            return true;
     }
-    return consume;
+
+    return false;
 }
 
 void GradientSelector::onTreeSelection()
@@ -594,9 +587,7 @@ void GradientSelector::set_gradient_size(int width, int height) {
     _vectors->set_pixmap_size(width, height);
 }
 
-} // namespace Widget
-} // namespace UI
-} // namespace Inkscape
+} // namespace Inkscape::UI::Widget
 
 /*
   Local Variables:

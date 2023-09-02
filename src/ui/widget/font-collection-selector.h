@@ -1,26 +1,29 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-/*
+/** @file
  * This file contains the definition of the FontCollectionSelector class. This widget
  * defines a treeview to provide the interface to create, read, update and delete font
  * collections and their respective fonts. This class contains all the code related to
  * population of collections and their fonts in the TreeStore.
- *
+ */
+/*
  * Author:
  *   Vaibhav Malik <vaibhavmalik2018@gmail.com> 
  *
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
- *
  */
 
 #ifndef INKSCAPE_UI_WIDGET_FONT_COLLECTION_SELECTOR_H
 #define INKSCAPE_UI_WIDGET_FONT_COLLECTION_SELECTOR_H
 
-#include <gtkmm/grid.h>
-#include <gtkmm/frame.h>
-#include <gtkmm/scrolledwindow.h>
-#include <gtkmm/treeview.h>
-#include <gtkmm/label.h>
+#include <vector>
+#include <glibmm/ustring.h>
 #include <gtkmm/comboboxtext.h>
+#include <gtkmm/frame.h>
+#include <gtkmm/grid.h>
+#include <gtkmm/scrolledwindow.h>
+#include <gtkmm/treemodel.h>
+#include <gtkmm/treeview.h>
+#include <sigc++/signal.h>
 
 #include "ui/tools/tool-base.h"
 #include "ui/widget/iconrenderer.h"
@@ -29,9 +32,7 @@
 #include "util/document-fonts.h"
 #include "util/recently-used-fonts.h"
 
-namespace Inkscape {
-namespace UI {
-namespace Widget {
+namespace Inkscape::UI::Widget {
 
 /**
  * A container of widgets for selecting font faces.
@@ -75,7 +76,8 @@ public:
     void on_edit_button_pressed();
 
     void deletion_warning_message_dialog(Glib::ustring const &collection_name, sigc::slot<void(int)> onresponse);
-    bool on_key_pressed(GdkEventKey*);
+    bool on_key_pressed(GtkEventControllerKey const * controller,
+                        unsigned keyval, unsigned keycode, GdkModifierType state);
 
     bool on_drag_motion(const Glib::RefPtr<Gdk::DragContext> &, int, int, guint) override;
     void on_drag_data_received(const Glib::RefPtr<Gdk::DragContext>, int, int, const Gtk::SelectionData&, guint, guint);
@@ -121,9 +123,7 @@ protected:
     sigc::signal <void (int)> signal_changed;
 };
 
-} // namespace Widget
-} // namespace UI
-} // namespace Inkscape
+} // namespace Inkscape::UI::Widget
 
 #endif // INKSCAPE_UI_WIDGET_FONT_COLLECTION_SELECTOR_H
 

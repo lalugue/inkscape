@@ -11,21 +11,20 @@
 #ifndef INKSCAPE_UI_WIDGET_FONT_VARIANT_H
 #define INKSCAPE_UI_WIDGET_FONT_VARIANT_H
 
-#include <gtkmm/expander.h>
+#include <map>
+#include <gtkmm/box.h>
 #include <gtkmm/checkbutton.h>
-#include <gtkmm/radiobutton.h>
 #include <gtkmm/entry.h>
+#include <gtkmm/expander.h>
 #include <gtkmm/grid.h>
-#include <gtkmm/hvbox.h>
+#include <gtkmm/radiobutton.h>
 
 class SPDesktop;
 class SPObject;
 class SPStyle;
 class SPCSSAttr;
 
-namespace Inkscape {
-namespace UI {
-namespace Widget {
+namespace Inkscape::UI::Widget {
 
 class Feature;
 
@@ -34,9 +33,7 @@ class Feature;
  */
 class FontVariants : public Gtk::Box
 {
-
 public:
-
     /**
      * Constructor
      */
@@ -204,10 +201,7 @@ public:
     }
 };
 
- 
-} // namespace Widget
-} // namespace UI
-} // namespace Inkscape
+} // namespace Inkscape::UI::Widget
 
 #endif // INKSCAPE_UI_WIDGET_FONT_VARIANT_H
 

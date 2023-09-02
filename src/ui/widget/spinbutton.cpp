@@ -10,15 +10,16 @@
 
 #include "spinbutton.h"
 
+#include <sigc++/functors/mem_fun.h>
+
 #include "scroll-utils.h"
+#include "ui/controller.h"
+#include "ui/tools/tool-base.h"
 #include "unit-menu.h"
 #include "unit-tracker.h"
 #include "util/expression-evaluator.h"
-#include "ui/tools/tool-base.h"
 
-namespace Inkscape {
-namespace UI {
-namespace Widget {
+namespace Inkscape::UI::Widget {
 
 MathSpinButton::MathSpinButton(BaseObjectType *cobject, const Glib::RefPtr<Gtk::Builder> &refGlade)
     : Gtk::SpinButton(cobject)
@@ -32,11 +33,19 @@ int MathSpinButton::on_input(double *newvalue)
         auto eval = Inkscape::Util::ExpressionEvaluator(get_text().c_str(), nullptr);
         auto result = eval.evaluate();
         *newvalue = result.value;
-    } catch (Inkscape::Util::EvaluatorException &e) {
+    } catch (Inkscape::Util::EvaluatorException const &e) {
         g_message ("%s", e.what());
         return false;
     }
     return true;
+}
+
+void SpinButton::construct()
+{
+    Controller::add_key<&SpinButton::on_key_pressed>(*this, *this);
+
+    property_has_focus().signal_changed().connect(
+        sigc::mem_fun(*this, &SpinButton::on_has_focus_changed));
 }
 
 int SpinButton::on_input(double* newvalue)
@@ -63,51 +72,56 @@ int SpinButton::on_input(double* newvalue)
             result = eval.evaluate();
         }
         *newvalue = result.value;
-    }
-    catch(Inkscape::Util::EvaluatorException &e) {
+    } catch (Inkscape::Util::EvaluatorException const &e) {
         g_message ("%s", e.what());
-
         return false;
     }
 
     return true;
 }
 
-bool SpinButton::on_focus_in_event(GdkEventFocus *event)
+void SpinButton::on_has_focus_changed()
 {
-    _on_focus_in_value = get_value();
-    return parent_type::on_focus_in_event(event);
+    if (has_focus()) {
+        _on_focus_in_value = get_value();
+    }
 }
 
-bool SpinButton::on_key_press_event(GdkEventKey* event)
+bool SpinButton::on_key_pressed(GtkEventControllerKey const * const controller,
+                                unsigned const keyval, unsigned const keycode,
+                                GdkModifierType const state)
 {
-    switch (Inkscape::UI::Tools::get_latin_keyval (event)) {
-    case GDK_KEY_Escape: // defocus
-        undo();
-        defocus();
-        break;
-    case GDK_KEY_Return: // defocus
-    case GDK_KEY_KP_Enter:
-        defocus();
-        break;
-    case GDK_KEY_Tab:
-    case GDK_KEY_ISO_Left_Tab:
-        // set the flag meaning "do not leave toolbar when changing value"
-        _stay = true;
-        break;
-    case GDK_KEY_z:
-    case GDK_KEY_Z:
-        _stay = true;
-        if (event->state & GDK_CONTROL_MASK) {
+    switch (Inkscape::UI::Tools::get_latin_keyval(controller, keyval, keycode, state)) {
+        case GDK_KEY_Escape: // defocus
             undo();
-            return true; // I consumed the event
-        }
-        break;
-    default:
-        break;
+            defocus();
+            break;
+
+        case GDK_KEY_Return: // defocus
+        case GDK_KEY_KP_Enter:
+            defocus();
+            break;
+
+        case GDK_KEY_Tab:
+        case GDK_KEY_ISO_Left_Tab:
+            // set the flag meaning "do not leave toolbar when changing value"
+            _stay = true;
+            break;
+
+        case GDK_KEY_z:
+        case GDK_KEY_Z:
+            if (Controller::has_flag(state, GDK_CONTROL_MASK)) {
+                _stay = true;
+                undo();
+                return true; // I consumed the event
+            }
+            break;
+
+        default:
+            break;
     }
 
-    return parent_type::on_key_press_event(event);
+    return false;
 }
 
 void SpinButton::undo()
@@ -128,9 +142,7 @@ void SpinButton::defocus()
     }
 }
 
-} // namespace Widget
-} // namespace UI
-} // namespace Inkscape
+} // namespace Inkscape::UI::Widget
 
 /*
   Local Variables:
