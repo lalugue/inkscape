@@ -72,7 +72,6 @@
 #include "ui/icon-names.h"
 #include "ui/interface.h"
 #include "ui/tools/tool-base.h"
-#include "widgets/desktop-widget.h"
 
 #include "svg/svg.h" // for sp_svg_transform_write, used in sp_import_document
 #include "xml/rebase-hrefs.h"

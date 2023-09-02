@@ -41,8 +41,8 @@
 #include "ui/interface.h"
 #include "ui/tools/tool-base.h"
 #include "ui/widget/canvas.h"  // Target, canvas to world transform.
+#include "ui/widget/desktop-widget.h"
 
-#include "widgets/desktop-widget.h"
 #include "widgets/paintdef.h"
 
 using Inkscape::DocumentUndo;

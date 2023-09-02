@@ -41,8 +41,6 @@
 #include "ui/dialog/layer-properties.h"
 #include "ui/interface.h"
 
-#include "widgets/desktop-widget.h"
-
 static void sp_ui_import_one_file(char const *filename);
 static void sp_ui_import_one_file_with_check(gpointer filename, gpointer unused);
 

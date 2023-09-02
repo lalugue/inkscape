@@ -27,10 +27,10 @@
 #include "ui/builder-utils.h"
 #include "ui/menuize.h"
 #include "ui/widget/canvas.h"
+#include "ui/widget/desktop-widget.h"
 #include "ui/widget/layer-selector.h"
 #include "ui/widget/page-selector.h"
 #include "ui/widget/selected-style.h"
-#include "widgets/desktop-widget.h"
 
 namespace Inkscape::UI::Widget {
 

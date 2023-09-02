@@ -117,7 +117,7 @@
 // With GUI
 #include "actions/actions-tutorial.h"               // Actions
 
-#include "widgets/desktop-widget.h" // Access dialog container.
+#include "ui/widget/desktop-widget.h" // Access dialog container.
 
 #ifdef ENABLE_NLS
 // Native Language Support - shouldn't this always be used?

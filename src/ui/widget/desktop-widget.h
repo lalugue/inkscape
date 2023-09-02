@@ -1,6 +1,18 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 /** \file
- * Desktop widget implementation
+ * A class to hold:
+ *   - Top toolbars
+ *     - Command Toolbar (in horizontal mode)
+ *     - Tool Toolbars (one at a time)
+ *     - Snap Toolbar (in simple or advanced modes)
+ *   - DesktopHBox
+ *     - ToolboxCanvasPaned
+ *       - Tool Toolbar (Tool selection)
+ *       - Dialog Container
+ *     - Snap Toolbar (in permanent mode)
+ *     - Command Toolbar (in vertical mode)
+ *   - Swatches
+ *   - StatusBar.
  */
 /* Authors:
  *   Lauris Kaplinski <lauris@kaplinski.com>
@@ -84,9 +96,9 @@ class StatusBar;
 } // namespace Inkscape::UI
 
 /// A GtkEventBox on an SPDesktop.
-class SPDesktopWidget : public Gtk::EventBox
+class SPDesktopWidget : public Gtk::Box
 {
-    using parent_type = Gtk::EventBox;
+    using parent_type = Gtk::Box;
 
 public:
     SPDesktopWidget(InkscapeWindow *inkscape_window, SPDocument *document);
@@ -106,9 +118,6 @@ public:
     InkscapeWindow *window = nullptr;
 
 private:
-    // The root vbox of the window layout.
-    Gtk::Box *_vbox;
-
     Gtk::Paned *_tbbox = nullptr;
     Gtk::Box *_hbox = nullptr;
     Inkscape::UI::Dialog::DialogContainer *_container = nullptr;

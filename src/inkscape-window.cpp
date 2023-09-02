@@ -52,7 +52,7 @@
 #include "ui/shortcuts.h"
 #include "ui/util.h"
 #include "ui/widget/canvas.h"
-#include "widgets/desktop-widget.h"
+#include "ui/widget/desktop-widget.h"
 
 using Inkscape::UI::Dialog::DialogManager;
 using Inkscape::UI::Dialog::DialogContainer;

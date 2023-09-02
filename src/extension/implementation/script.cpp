@@ -48,7 +48,6 @@
 #include "ui/tool/path-manipulator.h"
 #include "ui/tools/node-tool.h"
 #include "ui/util.h"
-#include "widgets/desktop-widget.h"
 #include "xml/attribute-record.h"
 #include "xml/rebase-hrefs.h"
 

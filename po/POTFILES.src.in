@@ -402,6 +402,7 @@ ${_build_dir}/share/templates/templates.h
 ../src/ui/widget/color-scales.cpp
 ../src/ui/widget/combo-enums.h
 ../src/ui/widget/dash-selector.cpp
+../src/ui/widget/desktop-widget.cpp
 ../src/ui/widget/entity-entry.cpp
 ../src/ui/widget/export-lists.cpp
 ../src/ui/widget/fill-style.cpp
@@ -436,6 +437,5 @@ ${_build_dir}/share/templates/templates.h
 ../src/util/font-collections.h
 ../src/util/paper.cpp
 ../src/vanishing-point.cpp
-../src/widgets/desktop-widget.cpp
 ../src/widgets/paintdef.cpp
 ../src/widgets/sp-attribute-widget.cpp

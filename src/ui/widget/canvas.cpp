@@ -50,7 +50,7 @@
 #include "ui/controller.h"
 #include "ui/tools/tool-base.h"      // Default cursor
 #include "ui/util.h"
-#include "widgets/desktop-widget.h"
+#include "ui/widget/desktop-widget.h"
 
 #include "canvas/updaters.h"         // Update strategies
 #include "canvas/framecheck.h"       // For frame profiling

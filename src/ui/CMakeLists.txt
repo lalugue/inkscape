@@ -207,6 +207,7 @@ set(ui_SRC
 	widget/css-name-class-init.cpp
 	widget/custom-tooltip.cpp
 	widget/dash-selector.cpp
+        widget/desktop-widget.cpp
 	widget/entity-entry.cpp
 	widget/entry.cpp
 	widget/export-lists.cpp
@@ -495,6 +496,7 @@ set(ui_SRC
 	widget/css-name-class-init.h
 	widget/custom-tooltip.h
 	widget/dash-selector.h
+        widget/desktop-widget.h
 	widget/entity-entry.h
 	widget/entry.h
 	widget/events/canvas-event.h

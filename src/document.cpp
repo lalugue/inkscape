@@ -83,7 +83,7 @@
 #include "object/sp-symbol.h"
 #include "object/sp-page.h"
 
-#include "widgets/desktop-widget.h"
+#include "ui/widget/desktop-widget.h"
 
 #include "xml/croco-node-iface.h"
 #include "xml/rebase-hrefs.h"

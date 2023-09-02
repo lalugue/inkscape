@@ -47,8 +47,8 @@
 #include "ui/monitor.h"
 #include "ui/widget/canvas.h"
 #include "ui/widget/canvas-grid.h"
+#include "ui/widget/desktop-widget.h"
 #include "util/units.h"
-#include "widgets/desktop-widget.h"
 #include "xml/repr.h"
 
 using Inkscape::DocumentUndo;

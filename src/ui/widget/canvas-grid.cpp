@@ -37,12 +37,11 @@
 #include "ui/dialog/command-palette.h"
 #include "ui/tools/tool-base.h"
 #include "ui/widget/canvas.h"
+#include "ui/widget/desktop-widget.h"  // Hopefully temp.
 #include "ui/widget/events/canvas-event.h"
 #include "ui/widget/canvas-notice.h"
 #include "ui/widget/ink-ruler.h"
 #include "io/resource.h"
-
-#include "widgets/desktop-widget.h"  // Hopefully temp.
 
 namespace Inkscape {
 namespace UI {

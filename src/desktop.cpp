@@ -62,9 +62,9 @@
 #include "ui/tools/box3d-tool.h"
 #include "ui/widget/canvas-grid.h"
 #include "ui/widget/canvas.h"
+#include "ui/widget/desktop-widget.h"
 #include "ui/widget/events/canvas-event.h"
 
-#include "widgets/desktop-widget.h"
 
 // TODO those includes are only for node tool quick zoom. Remove them after fixing it.
 #include "ui/tools/node-tool.h"

@@ -26,7 +26,7 @@
 #include "ui/monitor.h"   // Monitor aspect ratio
 #include "ui/widget/canvas.h"
 
-#include "widgets/desktop-widget.h"
+#include "ui/widget/desktop-widget.h"
 
 // Helper function to set state.
 void

@@ -78,11 +78,11 @@
 #include "ui/util.h"
 #include "ui/widget/canvas.h"
 #include "ui/widget/color-scales.h"
+#include "ui/widget/desktop-widget.h"
 #include "ui/widget/preferences-widget.h"
 #include "ui/widget/style-swatch.h"
 #include "util/recently-used-fonts.h"
 #include "util/trim.h"
-#include "widgets/desktop-widget.h"
 #include "widgets/spw-utilities.h"
 
 #if WITH_GSPELL

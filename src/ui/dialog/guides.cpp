@@ -35,8 +35,6 @@
 #include "ui/tools/tool-base.h"
 #include "ui/widget/spinbutton.h"
 
-#include "widgets/desktop-widget.h"
-
 namespace Inkscape {
 namespace UI {
 namespace Dialogs {

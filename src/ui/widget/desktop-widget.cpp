@@ -67,8 +67,7 @@
 #include "ui/widget/unit-tracker.h"
 #include "ui/themes.h"
 #include "util/units.h"
-// We're in the "widgets" directory, so no need to explicitly prefix these:
-#include "widget-sizes.h"
+#include "widgets/widget-sizes.h"
 
 using Inkscape::DocumentUndo;
 using Inkscape::UI::Dialog::DialogContainer;
@@ -81,7 +80,8 @@ using Inkscape::Util::unit_table;
 /* SPDesktopWidget */
 
 SPDesktopWidget::SPDesktopWidget(InkscapeWindow *inkscape_window, SPDocument *document)
-    : window (inkscape_window)
+    : Gtk::Box(Gtk::ORIENTATION_VERTICAL)
+    , window (inkscape_window)
 {
     set_name("SPDesktopWidget");
 
@@ -89,19 +89,14 @@ SPDesktopWidget::SPDesktopWidget(InkscapeWindow *inkscape_window, SPDocument *do
 
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
 
-    /* Main table */
-    dtw->_vbox = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_VERTICAL);
-    dtw->_vbox->set_name("DesktopMainTable");
-    dtw->add(*dtw->_vbox);
-
     /* Status bar */
     dtw->_statusbar = Gtk::make_managed<Inkscape::UI::Widget::StatusBar>();
-    dtw->_vbox->pack_end(*dtw->_statusbar, false, true);
+    dtw->pack_end(*dtw->_statusbar, false, true);
 
     /* Swatch Bar */
     dtw->_panels = Gtk::make_managed<Inkscape::UI::Dialog::SwatchesPanel>(true, "/embedded/swatches");
     dtw->_panels->set_vexpand(false);
-    dtw->_vbox->pack_end(*dtw->_panels, false, true);
+    dtw->pack_end(*dtw->_panels, false, true);
 
     /* DesktopHBox (Vertical toolboxes, canvas) */
     dtw->_hbox = Gtk::make_managed<Gtk::Box>();
@@ -111,11 +106,11 @@ SPDesktopWidget::SPDesktopWidget(InkscapeWindow *inkscape_window, SPDocument *do
     dtw->_tbbox->set_name("ToolboxCanvasPaned");
     dtw->_hbox->pack_start(*dtw->_tbbox, true, true);
 
-    dtw->_vbox->pack_end(*dtw->_hbox, true, true);
+    dtw->pack_end(*dtw->_hbox, true, true);
 
     dtw->_top_toolbars = Gtk::make_managed<Gtk::Grid>();
     dtw->_top_toolbars->set_name("TopToolbars");
-    dtw->_vbox->pack_end(*dtw->_top_toolbars, false, true);
+    dtw->pack_end(*dtw->_top_toolbars, false, true);
 
     /* Toolboxes */
     dtw->command_toolbar = Gtk::make_managed<Inkscape::UI::Toolbar::CommandToolbar>();
@@ -187,7 +182,7 @@ SPDesktopWidget::SPDesktopWidget(InkscapeWindow *inkscape_window, SPDocument *do
     _columns->append(_canvas_grid);
 
     // ------------------ Finish Up -------------------- //
-    dtw->_vbox->show_all();
+    dtw->show_all();
     dtw->_canvas_grid->ShowCommandPalette(false);
 
     dtw->_canvas->grab_focus();
