@@ -85,8 +85,7 @@ static void draw_vertical_padding(ColorPoint p0, ColorPoint p1, int padding, boo
 /* Base Color Wheel */
 
 ColorWheel::ColorWheel()
-    : _adjusting(false)
-    , _drawing_area{Gtk::make_managed<Gtk::DrawingArea>()}
+    : _drawing_area{Gtk::make_managed<Gtk::DrawingArea>()}
 {
     set_name("ColorWheel");
     set(0.5, 0.5, 1.0, false);

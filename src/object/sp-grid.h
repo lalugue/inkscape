@@ -153,7 +153,7 @@ private:
 
     std::unique_ptr<Inkscape::Snapper> _snapper;
 
-    Inkscape::Util::Unit const *_display_unit;
+    Inkscape::Util::Unit const *_display_unit = nullptr;
 
     sigc::connection _page_selected_connection;
     sigc::connection _page_modified_connection;

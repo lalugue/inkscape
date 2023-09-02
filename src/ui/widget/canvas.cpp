@@ -2350,7 +2350,7 @@ void CanvasPrivate::paint_rect(Geom::IntRect const &rect)
     Tile tile;
     tile.fragment.affine = rd.store.affine;
     tile.fragment.rect = rect;
-    tile.surface = paint(background_in_stores_required(), false);
+    tile.surface = paint(rd.background_in_stores_required, false);
     if (outlines_enabled) {
         tile.outline_surface = paint(false, true);
     }

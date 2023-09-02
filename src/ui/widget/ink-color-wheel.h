@@ -99,8 +99,8 @@ public:
     sigc::connection connect_color_changed(sigc::slot<void ()>);
 
 protected:
-    std::array<double, 3> _values;
-    bool _adjusting;
+    std::array<double, 3> _values = {};
+    bool _adjusting = false;
 
     /// Call when color has changed! Emits signal_color_changed & calls _drawing_area->queue_draw()
     void color_changed();
