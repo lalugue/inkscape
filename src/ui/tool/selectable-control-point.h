@@ -38,11 +38,6 @@ protected:
                            ControlPointSelection &sel,
                            Inkscape::CanvasItemGroup *group = nullptr);
 
-    SelectableControlPoint(SPDesktop *d, Geom::Point const &initial_pos, SPAnchorType anchor,
-                           Glib::RefPtr<Gdk::Pixbuf> pixbuf,
-                           ControlPointSelection &sel,
-                           Inkscape::CanvasItemGroup *group = nullptr);
-
     void _setState(State state) override;
 
     void dragged(Geom::Point &new_pos, MotionEvent const &event) override;
@@ -54,8 +49,6 @@ protected:
 
 private:
     void _takeSelection();
-
-    static ColorSet _default_scp_color_set;
 };
 
 } // namespace Inkscape::UI

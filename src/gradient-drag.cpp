@@ -52,45 +52,38 @@
 
 using Inkscape::DocumentUndo;
 using Inkscape::allPaintTargets;
-
-guint32 const GR_KNOT_COLOR_NORMAL     = 0xffffff00;
-guint32 const GR_KNOT_COLOR_MOUSEOVER  = 0xff000000;
-guint32 const GR_KNOT_COLOR_SELECTED   = 0x0000ff00;
-guint32 const GR_KNOT_COLOR_HIGHLIGHT  = 0xffffff00;
-guint32 const GR_KNOT_COLOR_MESHCORNER = 0xbfbfbf00;
-
 // absolute distance between gradient points for them to become a single dragger when the drag is created:
 #define MERGE_DIST 0.1
 
 // knot shapes corresponding to GrPointType enum (in sp-gradient.h)
 std::unordered_map<GrPointType, Inkscape::CanvasItemCtrlType> const gr_knot_types = {
-    {POINT_LG_BEGIN,Inkscape::CANVAS_ITEM_CTRL_TYPE_SIZER},
-    {POINT_LG_END,Inkscape::CANVAS_ITEM_CTRL_TYPE_ROTATE},
-    {POINT_LG_MID,Inkscape::CANVAS_ITEM_CTRL_TYPE_SHAPER},
-    {POINT_RG_CENTER,Inkscape::CANVAS_ITEM_CTRL_TYPE_SIZER},
-    {POINT_RG_R1,Inkscape::CANVAS_ITEM_CTRL_TYPE_ROTATE},
-    {POINT_RG_R2,Inkscape::CANVAS_ITEM_CTRL_TYPE_ROTATE},
-    {POINT_RG_FOCUS,Inkscape::CANVAS_ITEM_CTRL_TYPE_POINT},
-    {POINT_RG_MID1,Inkscape::CANVAS_ITEM_CTRL_TYPE_SHAPER},
-    {POINT_RG_MID2,Inkscape::CANVAS_ITEM_CTRL_TYPE_SHAPER},
-    {POINT_MG_CORNER,Inkscape::CANVAS_ITEM_CTRL_TYPE_SHAPER},
-    {POINT_MG_HANDLE,Inkscape::CANVAS_ITEM_CTRL_TYPE_MESH},
-    {POINT_MG_TENSOR,Inkscape::CANVAS_ITEM_CTRL_TYPE_SIZER}
+    {POINT_LG_BEGIN, Inkscape::CANVAS_ITEM_CTRL_TYPE_SIZER},
+    {POINT_LG_END, Inkscape::CANVAS_ITEM_CTRL_TYPE_ROTATE},
+    {POINT_LG_MID, Inkscape::CANVAS_ITEM_CTRL_TYPE_SHAPER},
+    {POINT_RG_CENTER, Inkscape::CANVAS_ITEM_CTRL_TYPE_SIZER},
+    {POINT_RG_R1, Inkscape::CANVAS_ITEM_CTRL_TYPE_ROTATE},
+    {POINT_RG_R2, Inkscape::CANVAS_ITEM_CTRL_TYPE_ROTATE},
+    {POINT_RG_FOCUS, Inkscape::CANVAS_ITEM_CTRL_TYPE_MARKER},
+    {POINT_RG_MID1, Inkscape::CANVAS_ITEM_CTRL_TYPE_SHAPER},
+    {POINT_RG_MID2, Inkscape::CANVAS_ITEM_CTRL_TYPE_SHAPER},
+    {POINT_MG_CORNER, Inkscape::CANVAS_ITEM_CTRL_TYPE_SHAPER},
+    {POINT_MG_HANDLE, Inkscape::CANVAS_ITEM_CTRL_TYPE_MESH},
+    {POINT_MG_TENSOR, Inkscape::CANVAS_ITEM_CTRL_TYPE_SIZER}
 };
 
 std::unordered_map<GrPointType, char const *> const gr_knot_descr = {
-    {POINT_LG_BEGIN,N_("Linear gradient <b>start</b>")},
-    {POINT_LG_END,N_("Linear gradient <b>end</b>")},
-    {POINT_LG_MID,N_("Linear gradient <b>mid stop</b>")},
-    {POINT_RG_CENTER,N_("Radial gradient <b>center</b>")},
-    {POINT_RG_R1,N_("Radial gradient <b>radius</b>")},
-    {POINT_RG_R2,N_("Radial gradient <b>radius</b>")},
-    {POINT_RG_FOCUS,N_("Radial gradient <b>focus</b>")},
-    {POINT_RG_MID1,N_("Radial gradient <b>mid stop</b>")},
-    {POINT_RG_MID2,N_("Radial gradient <b>mid stop</b>")},
-    {POINT_MG_CORNER,N_("Mesh gradient <b>corner</b>")},
-    {POINT_MG_HANDLE,N_("Mesh gradient <b>handle</b>")},
-    {POINT_MG_TENSOR,N_("Mesh gradient <b>tensor</b>")}
+    {POINT_LG_BEGIN, N_("Linear gradient <b>start</b>")},
+    {POINT_LG_END, N_("Linear gradient <b>end</b>")},
+    {POINT_LG_MID, N_("Linear gradient <b>mid stop</b>")},
+    {POINT_RG_CENTER, N_("Radial gradient <b>center</b>")},
+    {POINT_RG_R1, N_("Radial gradient <b>radius</b>")},
+    {POINT_RG_R2, N_("Radial gradient <b>radius</b>")},
+    {POINT_RG_FOCUS, N_("Radial gradient <b>focus</b>")},
+    {POINT_RG_MID1, N_("Radial gradient <b>mid stop</b>")},
+    {POINT_RG_MID2, N_("Radial gradient <b>mid stop</b>")},
+    {POINT_MG_CORNER, N_("Mesh gradient <b>corner</b>")},
+    {POINT_MG_HANDLE, N_("Mesh gradient <b>handle</b>")},
+    {POINT_MG_TENSOR, N_("Mesh gradient <b>tensor</b>")}
 };
 
 static void
@@ -1460,18 +1453,7 @@ void GrDragger::updateKnotShape()
         return;
     GrDraggable *last = draggables.back();
 
-    // this->knot->ctrl->set_shape(gr_knot_shapes[last->point_type]);
     this->knot->ctrl->set_type(gr_knot_types.at(last->point_type));
-
-    // For highlighting mesh handles corresponding to selected corner
-    // if (this->knot->shape == Inkscape::CANVAS_ITEM_CTRL_SHAPE_TRIANGLE) {
-    //     // this->knot->setFill(GR_KNOT_COLOR_HIGHLIGHT, GR_KNOT_COLOR_MOUSEOVER, GR_KNOT_COLOR_MOUSEOVER, GR_KNOT_COLOR_MOUSEOVER);
-    //     if (gr_knot_types.at(last->point_type) == Inkscape::CANVAS_ITEM_CTRL_SHAPE_CIRCLE) {
-    //         // this->knot->ctrl->set_shape(Inkscape::CANVAS_ITEM_CTRL_SHAPE_TRIANGLE);
-    //         // this->knot->ctrl->set_selected();
-    //         this->knot->selectKnot(true);
-    //     }
-    // }
 }
 
 /**
@@ -1605,15 +1587,9 @@ GrDragger::GrDragger(GrDrag *parent, Geom::Point p, GrDraggable *draggable)
 
     this->parent = parent;
 
-    guint32 fill_color = GR_KNOT_COLOR_NORMAL;
-    if (draggable && draggable->point_type == POINT_MG_CORNER) {
-        fill_color = GR_KNOT_COLOR_MESHCORNER;
-    }
 
     // create the knot
     this->knot = new SPKnot(parent->desktop, "", Inkscape::CANVAS_ITEM_CTRL_TYPE_SIZER, "CanvasItemCtrl::GrDragger");
-    // this->knot->setFill(fill_color, GR_KNOT_COLOR_MOUSEOVER, GR_KNOT_COLOR_MOUSEOVER, GR_KNOT_COLOR_MOUSEOVER);
-    // this->knot->setStroke(0x0000007f, 0x0000007f, 0x0000007f, 0x0000007f);
     this->updateControlSizesOverload(this->knot);
     this->knot->updateCtrl();
 
@@ -1788,22 +1764,7 @@ void GrDragger::highlightNode(SPMeshNode *node, bool highlight, Geom::Point corn
         }
         double angl = ray.angle();
 
-        // if (highlight && knot->fill[SP_KNOT_VISIBLE] == GR_KNOT_COLOR_HIGHLIGHT && abs(angl - knot->angle) > Geom::rad_from_deg(10.0)){
-        //     return;
-        // }
-
         SPKnot *knot = d->knot;
-        // if (highlight) {
-        //     knot->ctrl->set_selected(1);
-        // } else {
-        //     knot->ctrl->set_selected(0);
-        // } 
-        // if (highlight) {
-        //     // knot->setFill(GR_KNOT_COLOR_HIGHLIGHT, GR_KNOT_COLOR_MOUSEOVER, GR_KNOT_COLOR_MOUSEOVER, GR_KNOT_COLOR_MOUSEOVER);
-        // } else {
-        //     // knot->setFill(GR_KNOT_COLOR_NORMAL, GR_KNOT_COLOR_MOUSEOVER, GR_KNOT_COLOR_MOUSEOVER, GR_KNOT_COLOR_MOUSEOVER);
-        // }
-
         if (type == POINT_MG_HANDLE) {
             if (highlight) {
                 knot->selectKnot(true);
@@ -1885,9 +1846,6 @@ void  GrDragger::highlightCorner(bool highlight)
  */
 void GrDragger::select()
 {
-    // this->knot->fill [SP_KNOT_STATE_NORMAL] = GR_KNOT_COLOR_SELECTED;
-    // this->knot->ctrl->set_fill(GR_KNOT_COLOR_SELECTED);
-    // this->knot->ctrl->set_selected(1);
     this->knot->selectKnot(true);
     highlightCorner(true);
 }
@@ -1898,10 +1856,6 @@ void GrDragger::select()
 void GrDragger::deselect()
 {
     this->knot->selectKnot(false);
-    // this->knot->ctrl->set_selected(0);
-    // guint32 fill_color = isA(POINT_MG_CORNER) ? GR_KNOT_COLOR_MESHCORNER : GR_KNOT_COLOR_NORMAL;
-    // this->knot->fill [SP_KNOT_STATE_NORMAL] = fill_color;
-    // this->knot->ctrl->set_fill(fill_color);
     highlightCorner(false);
 }
 

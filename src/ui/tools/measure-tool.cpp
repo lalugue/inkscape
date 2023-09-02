@@ -281,13 +281,13 @@ MeasureTool::MeasureTool(SPDesktop *desktop)
 
     // create the knots
     this->knot_start = new SPKnot(desktop, _("Measure start, <b>Shift+Click</b> for position dialog"),
-                                  Inkscape::CANVAS_ITEM_CTRL_TYPE_SHAPER, "CanvasItemCtrl:MeasureTool");
+                                  Inkscape::CANVAS_ITEM_CTRL_TYPE_POINT, "CanvasItemCtrl:MeasureTool");
     this->knot_start->updateCtrl();
     this->knot_start->moveto(start_p);
     this->knot_start->show();
 
     this->knot_end = new SPKnot(desktop, _("Measure end, <b>Shift+Click</b> for position dialog"),
-                                Inkscape::CANVAS_ITEM_CTRL_TYPE_SHAPER, "CanvasItemCtrl:MeasureTool");
+                                Inkscape::CANVAS_ITEM_CTRL_TYPE_POINT, "CanvasItemCtrl:MeasureTool");
     this->knot_end->updateCtrl();
     this->knot_end->moveto(end_p);
     this->knot_end->show();
@@ -945,7 +945,7 @@ void MeasureTool::setMeasureCanvasItem(Geom::Point position, bool to_item, bool 
         color = 0x888888ff;
     }
 
-    auto canvas_item = new Inkscape::CanvasItemCtrl(_desktop->getCanvasTemp(), Inkscape::CANVAS_ITEM_CTRL_TYPE_POINT, position);
+    auto canvas_item = new Inkscape::CanvasItemCtrl(_desktop->getCanvasTemp(), Inkscape::CANVAS_ITEM_CTRL_TYPE_MARKER, position);
     canvas_item->lower_to_bottom();
     canvas_item->set_pickable(false);
     canvas_item->set_visible(true);

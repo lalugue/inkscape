@@ -230,9 +230,6 @@ void NodeSatelliteArrayParam::addKnotHolderEntities(KnotHolder *knotholder, SPIt
                 e->create(nullptr, item, knotholder, Inkscape::CANVAS_ITEM_CTRL_TYPE_LPE, "LPE:Chamfer",
                           tip, _knot_color);
                 knotholder->add(e);
-                // e->knot->setMode(CANVAS_ITEM_CTRL_MODE_COLOR);
-                // e->knot->setFill(0xffffffff, 0x44ff44ff, 0x44ff44ff, 0xffffffff);
-                // e->knot->setStroke(0x555555ff, 0x555555ff, 0x555555ff, 0x555555ff);
             }
             index++;
         }
@@ -331,7 +328,7 @@ void FilletChamferKnotHolderEntity::knot_set(Geom::Point const &p,
         if (nodesatellite.is_time) {
             amount = timeAtArcLength(amount, pathv[satelite_index][subsatelite_index]);
         }
-        if (knot->shape == CANVAS_ITEM_CTRL_SHAPE_CIRCLE && time_start < 0.1001) {
+        if (_set_circle && time_start < 0.1001) {
             return;
         }
         nodesatellite.amount = amount;
@@ -473,13 +470,14 @@ Geom::Point FilletChamferKnotHolderEntity::knot_get() const
     
     knot->setAngle(angle + Geom::rad_from_deg(90));
     knot->setSize(33);
-    // knot->setShape(CANVAS_ITEM_CTRL_SHAPE_TRIANGLE_ANGLED);
+    knot->ctrl->set_shape(CANVAS_ITEM_CTRL_SHAPE_TRIANGLE_ANGLED);
     if (nodesatellite.amount == 0) {
         if (is_mirror) {
             knot->hide();
         } else {
             tmp_point = contracted;
-            // knot->setShape(CANVAS_ITEM_CTRL_SHAPE_CIRCLE);
+            _set_circle = true;
+            knot->ctrl->set_shape(CANVAS_ITEM_CTRL_SHAPE_CIRCLE);
             knot->setSize(11);
         }
     }

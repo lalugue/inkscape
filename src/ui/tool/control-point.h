@@ -222,19 +222,6 @@ protected:
                  Inkscape::CanvasItemCtrlType type,
                  Inkscape::CanvasItemGroup *group = nullptr);
 
-    /**
-     * Create a control point with a pixbuf-based visual representation.
-     *
-     * @param d Desktop for this control
-     * @param initial_pos Initial position of the control point in desktop coordinates
-     * @param anchor Where is the control point rendered relative to its desktop coordinates
-     * @param pixbuf Pixbuf to be used as the visual representation
-     * @param group The canvas group the point's canvas item should be created in
-     */
-    ControlPoint(SPDesktop *d, Geom::Point const &initial_pos, SPAnchorType anchor,
-                 Glib::RefPtr<Gdk::Pixbuf> pixbuf,
-                 Inkscape::CanvasItemGroup *group = nullptr);
-
     /// @name Handle control point events in subclasses
     /// @{
     /**
@@ -293,7 +280,6 @@ protected:
 
     void _handleControlStyling();
 
-    void _setColors(ColorEntry c);
     void _setSize(unsigned int size);
     void _setControlType(Inkscape::CanvasItemCtrlType type);
     void _setAnchor(SPAnchorType anchor);

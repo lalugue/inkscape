@@ -43,12 +43,6 @@ namespace Box3D {
 // absolute distance between gradient points for them to become a single dragger when the drag is created:
 #define MERGE_DIST 0.1
 
-// knot shapes corresponding to GrPointType enum
-Inkscape::CanvasItemCtrlShape vp_knot_shapes[] = {
-    Inkscape::CANVAS_ITEM_CTRL_SHAPE_SQUARE, // VP_FINITE
-    Inkscape::CANVAS_ITEM_CTRL_SHAPE_CIRCLE  // VP_INFINITE
-};
-
 static void vp_drag_sel_changed(Inkscape::Selection * /*selection*/, gpointer data)
 {
     VPDrag *drag = (VPDrag *)data;

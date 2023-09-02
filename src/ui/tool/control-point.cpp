@@ -44,21 +44,6 @@ bool ControlPoint::_drag_initiated = false;
 bool ControlPoint::_event_grab = false;
 
 ControlPoint::ControlPoint(SPDesktop *d, Geom::Point const &initial_pos, SPAnchorType anchor,
-                           Glib::RefPtr<Gdk::Pixbuf> pixbuf,
-                           Inkscape::CanvasItemGroup *group)
-    : _desktop(d)
-    , _position(initial_pos)
-{
-    _canvas_item_ctrl = make_canvasitem<Inkscape::CanvasItemCtrl>(group ? group : _desktop->getCanvasControls(),
-                                                Inkscape::CANVAS_ITEM_CTRL_SHAPE_BITMAP);
-    _canvas_item_ctrl->set_name("CanvasItemCtrl:ControlPoint");
-    _canvas_item_ctrl->set_pixbuf(std::move(pixbuf));
-    _canvas_item_ctrl->set_anchor(anchor);
-
-    _commonInit();
-}
-
-ControlPoint::ControlPoint(SPDesktop *d, Geom::Point const &initial_pos, SPAnchorType anchor,
                            Inkscape::CanvasItemCtrlType type,
                            Inkscape::CanvasItemGroup *group)
     : _desktop(d)
@@ -144,11 +129,6 @@ void ControlPoint::_setSize(unsigned int size)
 void ControlPoint::_setControlType(Inkscape::CanvasItemCtrlType type)
 {
     _canvas_item_ctrl->set_type(type);
-}
-
-void ControlPoint::_setAnchor(SPAnchorType anchor)
-{
-//     g_object_set(_canvas_item_ctrl, "anchor", anchor, nullptr);
 }
 
 // main event callback, which emits all other callbacks.
@@ -450,12 +430,6 @@ void ControlPoint::_setState(State state)
 void ControlPoint::_handleControlStyling()
 {
     _canvas_item_ctrl->set_size_default();
-}
-
-void ControlPoint::_setColors(ColorEntry colors)
-{
-    // _canvas_item_ctrl->set_fill(colors.fill);
-    // _canvas_item_ctrl->set_stroke(colors.stroke);
 }
 
 bool ControlPoint::_is_drag_cancelled(MotionEvent const &event)

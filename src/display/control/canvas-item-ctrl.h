@@ -21,7 +21,6 @@
 #include <mutex>
 #include <memory>
 #include <2geom/point.h>
-#include <gdk-pixbuf/gdk-pixbuf.h>
 #include <boost/functional/hash.hpp>
 
 #include "canvas-item.h"
@@ -38,12 +37,12 @@ namespace Inkscape {
  */
 struct Handle {
     CanvasItemCtrlType _type;
-    // 0b00....0<click-bit><hover-bit><selected-bit>
-    uint32_t _state = 0;
+    bool _selected = false;
+    bool _click = false;
+    bool _hover = false;
 
-    Handle() : _type(CANVAS_ITEM_CTRL_TYPE_DEFAULT), _state(0) {}
-    Handle(CanvasItemCtrlType type) : _type(type), _state(0) {}
-    Handle(CanvasItemCtrlType type, uint32_t state) : _type(type), _state(state) {}
+    Handle() : _type(CANVAS_ITEM_CTRL_TYPE_DEFAULT) {}
+    Handle(CanvasItemCtrlType type) : _type(type) {}
     Handle(CanvasItemCtrlType type, bool selected, bool hover, bool click) : _type(type)
     {
         setState(selected, hover, click);
@@ -59,40 +58,34 @@ struct Handle {
         setHover(hover);
         setClick(click);
     }
-    void setState(uint32_t state)
-    {
-        _state |= state;
-    }
     void setSelected(bool selected = true)
     {
-        _state &= ~(1);
-        _state |= (selected);
+        _selected = selected;
     }
     bool isSelected() const
     {
-        return _state & 1;
+        return _selected;
     }
     void setHover(bool hover = true)
     {
-        _state &= ~(1 << 1);
-        _state |= (hover << 1);
+        _hover = hover;
     }
     bool isHover() const
     {
-        return _state & (1 << 1);
+        return _hover;
     }
     void setClick(bool click = true)
     {
-        _state &= ~(1 << 2);
-        _state |= (click << 2);
+        _click = click;
     }
     bool isClick() const
     {
-        return _state & (1 << 2);
+        return _click;
     }
     bool operator==(const Handle &other) const
     {
-        return (_type == other._type && _state == other._state);
+        return (_type == other._type && _selected == other._selected &&
+                _hover == other._hover && _click == other._click);
     }
     bool operator!=(const Handle &other) const
     {
@@ -100,11 +93,82 @@ struct Handle {
     }
     static bool fits(const Handle &selector, const Handle &handle)
     {
-        if (selector._type == CANVAS_ITEM_CTRL_TYPE_DEFAULT) {
-            return ((selector._state & handle._state) == selector._state);
+        // type must match for non-default selectors
+        if(selector._type != CANVAS_ITEM_CTRL_TYPE_DEFAULT && selector._type != handle._type) {
+            return false;
         }
-        return (selector._type == handle._type) && ((selector._state & handle._state) == selector._state);
+        // any state set in selector must be set in handle
+        return !((selector.isSelected() && !handle.isSelected()) ||
+                 (selector.isHover() && !handle.isHover()) ||
+                 (selector.isClick() && !handle.isClick()));
     }
+};
+
+class CanvasItemCtrl : public CanvasItem {
+public:
+    CanvasItemCtrl(CanvasItemGroup *group);
+    CanvasItemCtrl(CanvasItemGroup *group, CanvasItemCtrlType type);
+    CanvasItemCtrl(CanvasItemGroup *group, CanvasItemCtrlType type, Geom::Point const &p);
+
+    // Geometry
+    void set_position(Geom::Point const &position);
+
+    double closest_distance_to(Geom::Point const &p) const;
+
+    // Selection
+    bool contains(Geom::Point const &p, double tolerance = 0) override;
+
+    // Properties
+    void set_mode(CanvasItemCtrlMode mode);
+    void set_size(int size, bool manual = true);
+    void set_fill(uint32_t rgba) override;
+    void set_stroke(uint32_t rgba) override;
+    void set_shape(CanvasItemCtrlShape shape);
+    virtual void set_size_via_index(int size_index);
+    void set_size_default(); // Use preference and type to set size.
+    void set_size_extra(int extra); // Used to temporary increase size of ctrl.
+    void set_anchor(SPAnchorType anchor);
+    void set_angle(double angle);
+    void set_type(CanvasItemCtrlType type);
+    void set_selected(bool selected = true);
+    void set_click(bool click = true);
+    void set_hover(bool hover = true);
+    void set_normal(bool selected = false);
+    static void draw_shape(std::shared_ptr<uint32_t[]> cache,
+        CanvasItemCtrlShape shape, uint32_t fill, uint32_t stroke, uint32_t outline,
+        int stroke_width, int outline_width,
+        int width, double angle, int device_scale);
+
+protected:
+    ~CanvasItemCtrl() override = default;
+
+    void _update(bool propagate) override;
+    void _render(Inkscape::CanvasItemBuffer &buf) const override;
+
+    void build_cache(int device_scale) const;
+    void parse_handle_styles() const;
+
+    // Geometry
+    Geom::Point _position;
+
+    // Display
+    InitLock _built;
+    mutable std::shared_ptr<uint32_t[]> _cache;
+
+    // Properties
+    Handle _handle = Handle();
+    CanvasItemCtrlMode  _mode  = CANVAS_ITEM_CTRL_MODE_NORMAL;
+    CanvasItemCtrlShape _shape = CANVAS_ITEM_CTRL_SHAPE_SQUARE;
+    uint32_t _fill = 0x000000ff;
+    uint32_t _stroke = 0xffffffff;
+    bool _shape_set = false;
+    bool _fill_set = false;
+    bool _stroke_set = false;
+    bool _size_set = false;
+    int _width  = 5;
+    int _extra  = 0; // Used to temporarily increase size.
+    double _angle = 0; // Used for triangles, could be used for arrows.
+    SPAnchorType _anchor = SP_ANCHOR_CENTER;
 };
 
 /**
@@ -112,13 +176,18 @@ struct Handle {
  */
 template <typename T>
 struct Property {
+private:
     T value;
-    uint32_t specificity = 0;
+    int specificity = 0;
+
+public:
+    Property(T val) : value(val) {}
+    Property(T val, int spec) : value(val), specificity(spec) {}
 
     /*
      * Set value of property based on specificity.
      */
-    void setProperty(T newValue, uint32_t newSpecificity)
+    void setProperty(T newValue, int newSpecificity)
     {
         if (newSpecificity >= specificity) {
             value = newValue;
@@ -127,9 +196,9 @@ struct Property {
     }
 
     /*
-     * Equivalent to calling .value
+     * Interface to get the value.
      */
-    T &operator()()
+    const T& operator()()
     {
         return value;
     }
@@ -140,12 +209,15 @@ struct Property {
  */
 struct HandleStyle {
     Property<CanvasItemCtrlShape> shape{CANVAS_ITEM_CTRL_SHAPE_SQUARE};
-    Property<uint32_t> fill{0xffffffff};
-    Property<uint32_t> stroke{0xffffffff};
+    Property<uint32_t> fill{0xffffff};
+    Property<uint32_t> stroke{0xffffff};
+    Property<uint32_t> outline{0xffffff};
     Property<float> fill_opacity{1.0};
     Property<float> stroke_opacity{1.0};
+    Property<float> outline_opacity{1.0};
     Property<float> opacity{1.0};
     Property<int> stroke_width{1};
+    Property<int> outline_width{0};
 
     uint32_t getFill()
     {
@@ -172,73 +244,14 @@ struct HandleStyle {
         ASSEMBLE_ARGB32(blend, (int(opacity()*result_af * 255)), result_r, result_g, result_b)
         return rgba_from_argb32(blend);
     }
-};
 
-class CanvasItemCtrl : public CanvasItem {
-public:
-    CanvasItemCtrl(CanvasItemGroup *group);
-    CanvasItemCtrl(CanvasItemGroup *group, CanvasItemCtrlType type);
-    CanvasItemCtrl(CanvasItemGroup *group, CanvasItemCtrlType type, Geom::Point const &p);
-    CanvasItemCtrl(CanvasItemGroup *group, CanvasItemCtrlShape shape);
-    CanvasItemCtrl(CanvasItemGroup *group, CanvasItemCtrlShape shape, Geom::Point const &p);
-
-    // Geometry
-    void set_position(Geom::Point const &position);
-
-    double closest_distance_to(Geom::Point const &p) const;
-
-    // Selection
-    bool contains(Geom::Point const &p, double tolerance = 0) override;
-
-    // Properties
-    void set_fill(uint32_t rgba) override;
-    void set_stroke(uint32_t rgba) override;
-    void set_shape(CanvasItemCtrlShape shape);
-    // void set_shape_default(); // Use type to determine shape.
-    void set_mode(CanvasItemCtrlMode mode);
-    void set_size(int size, bool manual = 1);
-    virtual void set_size_via_index(int size_index);
-    void set_size_default(); // Use preference and type to set size.
-    void set_size_extra(int extra); // Used to temporary increase size of ctrl.
-    void set_anchor(SPAnchorType anchor);
-    void set_angle(double angle);
-    void set_type(CanvasItemCtrlType type);
-    void set_pixbuf(Glib::RefPtr<Gdk::Pixbuf> pixbuf);
-    void set_selected(bool selected = 1);
-    void set_click(bool click = 1);
-    void set_hover(bool hover = 1);
-    void set_normal(bool selected = 0);
-    static void build_shape(std::shared_ptr<uint32_t[]> cache,
-                            CanvasItemCtrlShape shape, uint32_t fill, uint32_t stroke, int stroke_width,
-                            int height, int width, double angle, Glib::RefPtr<Gdk::Pixbuf> pixbuf,
-                            int device_scale);//TODO: add more style properties
-
-protected:
-    ~CanvasItemCtrl() override = default;
-
-    void _update(bool propagate) override;
-    void _render(Inkscape::CanvasItemBuffer &buf) const override;
-
-    void build_cache(int device_scale) const;
-    void parse_handle_styles() const;
-    // Geometry
-    Geom::Point _position;
-
-    // Display
-    InitLock _built;
-    mutable std::shared_ptr<uint32_t[]> _cache;
-
-    // Properties
-    Handle _handle = Handle();
-    CanvasItemCtrlShape _shape = CANVAS_ITEM_CTRL_SHAPE_SQUARE;
-    CanvasItemCtrlMode  _mode  = CANVAS_ITEM_CTRL_MODE_NORMAL;
-    bool _size_set = false;
-    int _width  = 5; // Nominally width == height == size... unless we use a pixmap.
-    int _height = 5;
-    int _extra  = 0; // Used to temporarily increase size.
-    double _angle = 0; // Used for triangles, could be used for arrows.
-    SPAnchorType _anchor = SP_ANCHOR_CENTER;
-    Glib::RefPtr<Gdk::Pixbuf> _pixbuf;
+    uint32_t getOutline()
+    {
+        EXTRACT_ARGB32((outline()), a, r, g, b)
+        a = int(outline_opacity() * opacity() * 255);
+        ASSEMBLE_ARGB32(outline_color, a, r, g, b)
+        return rgba_from_argb32(outline_color);
+    }
 };
 
 } // namespace Inkscape

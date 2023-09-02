@@ -390,7 +390,7 @@ void KnotHolder::add_pattern_knotholder()
         auto entity_xy = new PatternKnotHolderEntityXY(false);
         auto entity_angle = new PatternKnotHolderEntityAngle(false);
         auto entity_scale = new PatternKnotHolderEntityScale(false);
-        entity_xy->create(desktop, item, this, Inkscape::CANVAS_ITEM_CTRL_TYPE_POINT, "Pattern:Stroke:xy",
+        entity_xy->create(desktop, item, this, Inkscape::CANVAS_ITEM_CTRL_TYPE_MARKER, "Pattern:Stroke:xy",
                           // TRANSLATORS: This refers to the pattern that's inside the object
                           _("<b>Move</b> the stroke's pattern inside the object"));
 
@@ -415,7 +415,7 @@ void KnotHolder::add_hatch_knotholder()
         HatchKnotHolderEntityXY *entity_xy = new HatchKnotHolderEntityXY(true);
         HatchKnotHolderEntityAngle *entity_angle = new HatchKnotHolderEntityAngle(true);
         HatchKnotHolderEntityScale *entity_scale = new HatchKnotHolderEntityScale(true);
-        entity_xy->create(desktop, item, this, Inkscape::CANVAS_ITEM_CTRL_TYPE_POINT, "Hatch:Fill:xy",
+        entity_xy->create(desktop, item, this, Inkscape::CANVAS_ITEM_CTRL_TYPE_MARKER, "Hatch:Fill:xy",
                           // TRANSLATORS: This refers to the hatch that's inside the object
                           _("<b>Move</b> the hatch fill inside the object"));
 
@@ -434,7 +434,7 @@ void KnotHolder::add_hatch_knotholder()
         HatchKnotHolderEntityXY *entity_xy = new HatchKnotHolderEntityXY(false);
         HatchKnotHolderEntityAngle *entity_angle = new HatchKnotHolderEntityAngle(false);
         HatchKnotHolderEntityScale *entity_scale = new HatchKnotHolderEntityScale(false);
-        entity_xy->create(desktop, item, this, Inkscape::CANVAS_ITEM_CTRL_TYPE_POINT, "Hatch:Stroke:xy",
+        entity_xy->create(desktop, item, this, Inkscape::CANVAS_ITEM_CTRL_TYPE_MARKER, "Hatch:Stroke:xy",
                           // TRANSLATORS: This refers to the pattern that's inside the object
                           _("<b>Move</b> the hatch stroke inside the object"));
 
@@ -455,9 +455,9 @@ void KnotHolder::add_filter_knotholder() {
         if (!filter->auto_region) {
             auto entity_tl = new FilterKnotHolderEntity(true);
             auto entity_br = new FilterKnotHolderEntity(false);
-            entity_tl->create(desktop, item, this, Inkscape::CANVAS_ITEM_CTRL_TYPE_POINT, "Filter:TopLeft",
+            entity_tl->create(desktop, item, this, Inkscape::CANVAS_ITEM_CTRL_TYPE_MARKER, "Filter:TopLeft",
                               _("<b>Resize</b> the filter effect region"));
-            entity_br->create(desktop, item, this, Inkscape::CANVAS_ITEM_CTRL_TYPE_POINT, "Filter:BottomRight",
+            entity_br->create(desktop, item, this, Inkscape::CANVAS_ITEM_CTRL_TYPE_MARKER, "Filter:BottomRight",
                               _("<b>Resize</b> the filter effect region"));
             entity.push_back(entity_tl);
             entity.push_back(entity_br);

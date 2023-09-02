@@ -588,7 +588,7 @@ RectKnotHolder::RectKnotHolder(SPDesktop *desktop, SPItem *item, SPKnotHolderRel
                       _("Adjust the <b>width and height</b> of the rectangle; with <b>Ctrl</b> "
                         "to lock ratio or stretch in one dimension only"));
 
-    entity_center->create(desktop, item, this, Inkscape::CANVAS_ITEM_CTRL_TYPE_POINT, "Rect:center",
+    entity_center->create(desktop, item, this, Inkscape::CANVAS_ITEM_CTRL_TYPE_MARKER, "Rect:center",
                           _("Drag to move the rectangle"));
 
     entity.push_back(entity_rx);
@@ -876,7 +876,7 @@ Box3DKnotHolder::Box3DKnotHolder(SPDesktop *desktop, SPItem *item, SPKnotHolderR
                      _("Resize box along the Z axis; with <b>Shift</b> in X/Y direction; "
                        "with <b>Ctrl</b> to constrain to the directions of edges or diagonals"));
 
-    entity_center->create(desktop, item, this, Inkscape::CANVAS_ITEM_CTRL_TYPE_POINT, "Box3D:center",
+    entity_center->create(desktop, item, this, Inkscape::CANVAS_ITEM_CTRL_TYPE_MARKER, "Box3D:center",
                           _("Move the box in perspective"));
 
     entity.push_back(entity_corner0);
@@ -1661,7 +1661,7 @@ ArcKnotHolder::ArcKnotHolder(SPDesktop *desktop, SPItem *item, SPKnotHolderRelea
                          "with <b>start point</b>; with <b>Ctrl</b> to snap angle; drag <b>inside</b> the "
                          "ellipse for arc, <b>outside</b> for segment"));
 
-    entity_center->create(desktop, item, this, Inkscape::CANVAS_ITEM_CTRL_TYPE_POINT, "Arc:center",
+    entity_center->create(desktop, item, this, Inkscape::CANVAS_ITEM_CTRL_TYPE_MARKER, "Arc:center",
                           _("Drag to move the ellipse"));
 
     entity.push_back(entity_rx);
@@ -1853,7 +1853,7 @@ StarKnotHolder::StarKnotHolder(SPDesktop *desktop, SPItem *item, SPKnotHolderRel
     }
 
     StarKnotHolderEntityCenter *entity_center = new StarKnotHolderEntityCenter();
-    entity_center->create(desktop, item, this, Inkscape::CANVAS_ITEM_CTRL_TYPE_POINT, "Star:center",
+    entity_center->create(desktop, item, this, Inkscape::CANVAS_ITEM_CTRL_TYPE_MARKER, "Star:center",
                           _("Drag to move the star"));
     entity.push_back(entity_center);
 
@@ -2095,7 +2095,7 @@ SpiralKnotHolder::SpiralKnotHolder(SPDesktop *desktop, SPItem *item, SPKnotHolde
     //
     // So, create entity_inner AFTER entity_center; this ensures that
     // entity_inner gets rendered ON TOP.
-    entity_center->create(desktop, item, this, Inkscape::CANVAS_ITEM_CTRL_TYPE_POINT, "Spiral:center",
+    entity_center->create(desktop, item, this, Inkscape::CANVAS_ITEM_CTRL_TYPE_MARKER, "Spiral:center",
                           _("Drag to move the spiral"));
 
     entity_inner->create(desktop, item, this, Inkscape::CANVAS_ITEM_CTRL_TYPE_SHAPER, "Spiral:inner",

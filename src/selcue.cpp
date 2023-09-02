@@ -138,8 +138,6 @@ void SelCue::_newItemBboxes()
             if (mode == MARK) {
                 auto ctrl = make_canvasitem<CanvasItemCtrl>(_desktop->getCanvasControls(), CANVAS_ITEM_CTRL_TYPE_SHAPER,
                                                             Geom::Point(bbox->min().x(), bbox->max().y()));
-                // ctrl->set_fill(0x000000ff);
-                // ctrl->set_stroke(0x0000000ff);
                 canvas_item = std::move(ctrl);
             } else if (mode == BBOX) {
                 auto rect = make_canvasitem<CanvasItemRect>(_desktop->getCanvasControls(), *bbox);
@@ -200,10 +198,8 @@ void SelCue::_newTextBaselines()
             pt = flow->getBaselinePoint();
         }
         if (pt) {
-            auto canvas_item = make_canvasitem<CanvasItemCtrl>(_desktop->getCanvasControls(), CANVAS_ITEM_CTRL_SHAPE_SQUARE, (*pt) * item->i2dt_affine());
+            auto canvas_item = make_canvasitem<CanvasItemCtrl>(_desktop->getCanvasControls(), CANVAS_ITEM_CTRL_TYPE_SIZER, (*pt) * item->i2dt_affine());
             canvas_item->set_size(5);
-            // canvas_item->set_stroke(0x000000ff);
-            // canvas_item->set_fill(0x00000000);
             canvas_item->lower_to_bottom();
             canvas_item->set_visible(true);
             _text_baselines.emplace_back(std::move(canvas_item));

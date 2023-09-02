@@ -105,6 +105,7 @@ private:
     NodeSatelliteArrayParam *_pparam;
     size_t _index;
     bool _updating = false;
+    mutable bool _set_circle = false;
 };
 
 } //namespace LivePathEffect

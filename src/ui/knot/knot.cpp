@@ -58,16 +58,6 @@ SPKnot::SPKnot(SPDesktop *desktop, char const *tip, Inkscape::CanvasItemCtrlType
         _tip = tip;
     }
 
-    // fill[SP_KNOT_STATE_NORMAL]    = 0xffffff00;
-    // fill[SP_KNOT_STATE_MOUSEOVER] = 0xff0000ff;
-    // fill[SP_KNOT_STATE_DRAGGING]  = 0xff0000ff;
-    // fill[SP_KNOT_STATE_SELECTED]  = 0x0000ffff;
-
-    // stroke[SP_KNOT_STATE_NORMAL]    = 0x01000000;
-    // stroke[SP_KNOT_STATE_MOUSEOVER] = 0x01000000;
-    // stroke[SP_KNOT_STATE_DRAGGING]  = 0x01000000;
-    // stroke[SP_KNOT_STATE_SELECTED]  = 0x01000000;
-
     image[SP_KNOT_STATE_NORMAL] = nullptr;
     image[SP_KNOT_STATE_MOUSEOVER] = nullptr;
     image[SP_KNOT_STATE_DRAGGING] = nullptr;
@@ -75,11 +65,6 @@ SPKnot::SPKnot(SPDesktop *desktop, char const *tip, Inkscape::CanvasItemCtrlType
 
     ctrl = make_canvasitem<Inkscape::CanvasItemCtrl>(desktop->getCanvasControls(), type); // Shape, mode set
     ctrl->set_name("CanvasItemCtrl:Knot:" + name);
-
-    // Are these needed? 
-    // - No possibly
-    // ctrl->set_fill(0xffffff00);
-    // ctrl->set_stroke(0x01000000);
 
     _event_connection = ctrl->connect_event(sigc::mem_fun(*this, &SPKnot::eventHandler));
 
@@ -404,13 +389,10 @@ void SPKnot::setFlag(guint flag, bool set) {
 void SPKnot::updateCtrl() {
 
     if (ctrl) {
-        // if (shape_set) {
-        //     ctrl->set_shape(shape);
-        // }
-        ctrl->set_mode(mode);
         if (size_set) {
             ctrl->set_size(size);
         }
+        ctrl->set_mode(mode);
         ctrl->set_angle(angle);
         ctrl->set_anchor(anchor);
     }
@@ -434,11 +416,6 @@ void SPKnot::setSize(guint i) {
     size_set = true;
 }
 
-// void SPKnot::setShape(Inkscape::CanvasItemCtrlShape s) {
-//     shape = s;
-//     shape_set = true;
-// }
-
 void SPKnot::setAnchor(guint i) {
     anchor = (SPAnchorType) i;
 }
@@ -450,20 +427,6 @@ void SPKnot::setMode(Inkscape::CanvasItemCtrlMode m) {
 void SPKnot::setAngle(double i) {
     angle = i;
 }
-
-// void SPKnot::setFill(guint32 normal, guint32 mouseover, guint32 dragging, guint32 selected) {
-//     fill[SP_KNOT_STATE_NORMAL] = normal;
-//     fill[SP_KNOT_STATE_MOUSEOVER] = mouseover;
-//     fill[SP_KNOT_STATE_DRAGGING] = dragging;
-//     fill[SP_KNOT_STATE_SELECTED] = selected;
-// }
-
-// void SPKnot::setStroke(guint32 normal, guint32 mouseover, guint32 dragging, guint32 selected) {
-//     stroke[SP_KNOT_STATE_NORMAL] = normal;
-//     stroke[SP_KNOT_STATE_MOUSEOVER] = mouseover;
-//     stroke[SP_KNOT_STATE_DRAGGING] = dragging;
-//     stroke[SP_KNOT_STATE_SELECTED] = selected;
-// }
 
 void SPKnot::setImage(guchar* normal, guchar* mouseover, guchar* dragging, guchar* selected) {
     image[SP_KNOT_STATE_NORMAL] = normal;

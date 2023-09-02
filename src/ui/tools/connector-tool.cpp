@@ -323,21 +323,17 @@ bool ConnectorTool::_ptHandleTest(Geom::Point& p, gchar **href, gchar **subhref)
 
 static void cc_select_handle(SPKnot* knot)
 {
-    // knot->setShape(Inkscape::CANVAS_ITEM_CTRL_SHAPE_SQUARE);
-    knot->ctrl->set_selected(1);
+    knot->ctrl->set_selected(true);
     knot->setSize(11); // Should be odd.
     knot->setAnchor(SP_ANCHOR_CENTER);
-    // knot->setFill(0x0000ffff, 0x0000ffff, 0x0000ffff, 0x0000ffff);
     knot->updateCtrl();
 }
 
 static void cc_deselect_handle(SPKnot* knot)
 {
-    // knot->setShape(Inkscape::CANVAS_ITEM_CTRL_SHAPE_SQUARE);
-    knot->ctrl->set_selected(0);
+    knot->ctrl->set_selected(false);
     knot->setSize(9); // Should be odd.
     knot->setAnchor(SP_ANCHOR_CENTER);
-    // knot->setFill(0xffffff00, 0xff0000ff, 0xff0000ff, 0xff0000ff);
     knot->updateCtrl();
 }
 
@@ -996,19 +992,14 @@ void ConnectorTool::_activeShapeAddKnot(SPItem* item, SPItem* subitem)
         auto use = cast<SPUse>(item);
         g_assert(use != nullptr);
         knot->sub_owner = subitem;
-        // knot->setShape(Inkscape::CANVAS_ITEM_CTRL_SHAPE_SQUARE);
         knot->setSize(11); // Must be odd
         knot->setAnchor(SP_ANCHOR_CENTER);
-        // knot->setFill(0xffffff00, 0xff0000ff, 0xff0000ff, 0xff0000ff);
 
         // Set the point to the middle of the sub item
         knot->setPosition(subitem->getAvoidRef().getConnectionPointPos() * _desktop->doc2dt(), 0);
     } else {
-        // knot->setShape(Inkscape::CANVAS_ITEM_CTRL_SHAPE_SQUARE);
         knot->setSize(9); // Must be odd
         knot->setAnchor(SP_ANCHOR_CENTER);
-        // knot->setFill(0xffffff00, 0xff0000ff, 0xff0000ff, 0xff0000ff);
-
         // Set the point to the middle of the object
         knot->setPosition(item->getAvoidRef().getConnectionPointPos() * _desktop->doc2dt(), 0);
     }
@@ -1129,11 +1120,8 @@ void ConnectorTool::cc_set_active_conn(SPItem *item)
                                       _("<b>Connector endpoint</b>: drag to reroute or connect to new shapes"),
                                       Inkscape::CANVAS_ITEM_CTRL_TYPE_SHAPER, "CanvasItemCtrl:ConnectorTool:Endpoint");
 
-            // knot->setShape(Inkscape::CANVAS_ITEM_CTRL_SHAPE_SQUARE);
             knot->setSize(7);
             knot->setAnchor(SP_ANCHOR_CENTER);
-            // knot->setFill(0xffffff00, 0xff0000ff, 0xff0000ff, 0xff0000ff);
-            // knot->setStroke(0x000000ff, 0x000000ff, 0x000000ff, 0x000000ff);
             knot->updateCtrl();
 
             // We don't want to use the standard knot handler,
