@@ -35,9 +35,7 @@
 #include "ui/tools/tool-base.h"
 #include "ui/widget/spinbutton.h"
 
-namespace Inkscape {
-namespace UI {
-namespace Dialogs {
+namespace Inkscape::UI::Dialog {
 
 GuidelinePropertiesDialog::GuidelinePropertiesDialog(SPGuide *guide, SPDesktop *desktop)
 : _desktop(desktop), _guide(guide),
@@ -370,9 +368,8 @@ GuidelinePropertiesDialog::on_sb_activate()
 {
     activate_default();
 }
-}
-}
-}
+
+} // namespace Inkscape::UI::Dialog
 
 /*
   Local Variables:

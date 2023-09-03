@@ -26,9 +26,7 @@
 #include "ui/knot/knot.h"
 #include "util/units.h"
 
-namespace Inkscape {
-namespace UI {
-namespace Dialogs {
+namespace Inkscape::UI::Dialog {
 
 KnotPropertiesDialog::KnotPropertiesDialog()
     : _knotpoint(nullptr),
@@ -95,9 +93,6 @@ KnotPropertiesDialog::KnotPropertiesDialog()
     set_focus(_knot_y_entry);
 }
 
-KnotPropertiesDialog::~KnotPropertiesDialog() {
-}
-
 void KnotPropertiesDialog::showDialog(SPDesktop *desktop, const SPKnot *pt, Glib::ustring const unit_name)
 {
     KnotPropertiesDialog *dialog = new KnotPropertiesDialog();
@@ -151,10 +146,7 @@ void KnotPropertiesDialog::_setPt(const SPKnot *pt)
 	_knotpoint = const_cast<SPKnot *>(pt);
 }
 
-} // namespace
-} // namespace
-} // namespace
-
+} // namespace Inkscape::UI::Dialog
 
 /*
   Local Variables:

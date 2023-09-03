@@ -16,6 +16,9 @@
 #ifndef SEEN_ICON_PREVIEW_H
 #define SEEN_ICON_PREVIEW_H
 
+#include <memory>
+#include <vector>
+#include <glibmm/ustring.h>
 #include <gtkmm/box.h>
 #include <gtkmm/button.h>
 #include <gtkmm/image.h>
@@ -24,27 +27,30 @@
 #include <gtkmm/togglebutton.h>
 #include <gtkmm/toggletoolbutton.h>
 
+#include "helper/auto-connection.h"
 #include "ui/dialog/dialog-base.h"
 
 class SPObject;
+
 namespace Glib {
 class Timer;
-}
+} // namespace Glib
 
 namespace Inkscape {
+
 class Drawing;
-namespace UI {
-namespace Dialog {
+
+namespace UI::Dialog {
 
 
 /**
  * A panel that displays an icon preview
  */
-class IconPreviewPanel : public DialogBase
+class IconPreviewPanel final : public DialogBase
 {
 public:
     IconPreviewPanel();
-    ~IconPreviewPanel() override;
+    ~IconPreviewPanel() final;
 
     void selectionModified(Selection *selection, guint flags) override;
     void documentReplaced() override;
@@ -53,11 +59,11 @@ public:
     void modeToggled();
 
 private:
-    Drawing *drawing;
+    std::unique_ptr<Drawing> drawing;
     SPDocument *drawing_doc;
     unsigned int visionkey;
-    Glib::Timer *timer;
-    Glib::Timer *renderTimer;
+    std::unique_ptr<Glib::Timer> timer;
+    std::unique_ptr<Glib::Timer> renderTimer;
     bool pending;
     gdouble minDelay;
 
@@ -65,20 +71,19 @@ private:
     Gtk::Paned      splitter;
     Glib::ustring targetId;
     int hot;
-    int numEntries;
-    int* sizes;
+    std::vector<int> sizes;
 
     Gtk::Image      magnified;
     Gtk::Label      magLabel;
 
     Gtk::ToggleButton     *selectionButton;
 
-    guchar** pixMem;
-    Gtk::Image** images;
-    Glib::ustring** labels;
-    Gtk::ToggleToolButton** buttons;
-    sigc::connection docModConn;
-    sigc::connection docDesConn;
+    std::vector<std::vector<unsigned char>> pixMem;
+    std::vector<Gtk::Image *> images;
+    std::vector<Glib::ustring> labels;
+    std::vector<Gtk::ToggleToolButton *> buttons;
+    auto_connection docModConn;
+    auto_connection docDesConn;
 
     void setDocument( SPDocument *document );
     void removeDrawing();
@@ -89,11 +94,9 @@ private:
     bool refreshCB();
 };
 
-} //namespace Dialogs
-} //namespace UI
-} //namespace Inkscape
+} // namespace UI::Dialog
 
-
+} // namespace Inkscape
 
 #endif // SEEN_ICON_PREVIEW_H
 

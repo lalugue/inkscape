@@ -318,11 +318,6 @@ MeasureTool::~MeasureTool()
     enableGrDrag(false);
     ungrabCanvasEvents();
 
-    _knot_start_moved_connection.disconnect();
-    _knot_start_ungrabbed_connection.disconnect();
-    _knot_end_moved_connection.disconnect();
-    _knot_end_ungrabbed_connection.disconnect();
-
     // unref should call destroy
     SPKnot::unref(knot_start);
     SPKnot::unref(knot_end);
@@ -364,7 +359,7 @@ void MeasureTool::knotClickHandler(SPKnot *knot, guint state)
         auto prefs = Preferences::get();
         auto const unit_name =  prefs->getString("/tools/measure/unit", "px");
         explicit_base = explicit_base_tmp;
-        Dialogs::KnotPropertiesDialog::showDialog(_desktop, knot, unit_name);
+        Dialog::KnotPropertiesDialog::showDialog(_desktop, knot, unit_name);
     }
 }
 

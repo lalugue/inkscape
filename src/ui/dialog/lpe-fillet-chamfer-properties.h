@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 /**
- *
  * From the code of Liam P.White from his Power Stroke Knot dialog
  *
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
@@ -16,14 +15,14 @@
 
 class SPDesktop;
 
-namespace Inkscape {
-namespace UI {
-namespace Dialogs {
+namespace Inkscape::UI::Dialog {
 
-class FilletChamferPropertiesDialog : public Gtk::Dialog {
+class FilletChamferPropertiesDialog final : public Gtk::Dialog {
 public:
     FilletChamferPropertiesDialog();
-    ~FilletChamferPropertiesDialog() override;
+
+    FilletChamferPropertiesDialog(FilletChamferPropertiesDialog const &) = delete;
+    FilletChamferPropertiesDialog &operator=(FilletChamferPropertiesDialog const &) = delete;
 
     Glib::ustring getName() const
     {
@@ -35,7 +34,6 @@ public:
                            bool _aprox_radius, NodeSatellite _nodesatellite);
 
 protected:
-
     Inkscape::LivePathEffect::FilletChamferKnotHolderEntity *
     _knotpoint;
 
@@ -54,8 +52,6 @@ protected:
 
     Gtk::Button _close_button;
     Gtk::Button _apply_button;
-
-    sigc::connection _destroy_connection;
 
     static FilletChamferPropertiesDialog &_instance()
     {
@@ -84,17 +80,9 @@ protected:
 
     friend class Inkscape::LivePathEffect::
         FilletChamferKnotHolderEntity;
-
-private:
-    FilletChamferPropertiesDialog(
-        FilletChamferPropertiesDialog const &); // no copy
-    FilletChamferPropertiesDialog &operator=(
-        FilletChamferPropertiesDialog const &); // no assign
 };
 
-} // namespace
-} // namespace
-} // namespace
+} // namespace Inkscape::UI::Dialog
 
 #endif //INKSCAPE_DIALOG_LAYER_PROPERTIES_H
 

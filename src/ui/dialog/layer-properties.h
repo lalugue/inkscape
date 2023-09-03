@@ -35,9 +35,7 @@ class GestureMultiPress;
 
 class SPDesktop;
 
-namespace Inkscape {
-namespace UI {
-namespace Dialogs {
+namespace Inkscape::UI::Dialog {
 
 /* FIXME: split the LayerPropertiesDialog class into three separate dialogs */
 enum class LayerPropertiesDialogType
@@ -48,10 +46,11 @@ enum class LayerPropertiesDialogType
     RENAME
 };
 
-class LayerPropertiesDialog : public Gtk::Dialog {
+class LayerPropertiesDialog final : public Gtk::Dialog {
 public:
     LayerPropertiesDialog(LayerPropertiesDialogType type);
-    ~LayerPropertiesDialog() override;
+    ~LayerPropertiesDialog() final;
+
     LayerPropertiesDialog(LayerPropertiesDialog const &) = delete; // no copy
     LayerPropertiesDialog &operator=(LayerPropertiesDialog const &) = delete; // no assign
 
@@ -120,8 +119,6 @@ private:
     Gtk::Button _close_button;
     Gtk::Button _apply_button;
 
-    sigc::connection _destroy_connection;
-
     void _setDesktop(SPDesktop *desktop) { _desktop = desktop; };
     void _setLayer(SPObject *layer);
 
@@ -148,9 +145,7 @@ private:
     void _setup();
 };
 
-} // namespace Dialogs
-} // namespace UI
-} // namespace Inkscape
+} // namespace Inkscape::UI::Dialog
 
 #endif //INKSCAPE_DIALOG_LAYER_PROPERTIES_H
 

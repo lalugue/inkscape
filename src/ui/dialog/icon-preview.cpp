@@ -18,25 +18,21 @@
 #include <glibmm/i18n.h>
 #include <glibmm/timer.h>
 #include <glibmm/main.h>
-
-#include <gtkmm/box.h>
 #include <gtkmm/checkbutton.h>
 #include <gtkmm/frame.h>
+#include <sigc++/adaptors/bind.h>
+#include <sigc++/functors/mem_fun.h>
 
 #include "desktop.h"
 #include "document.h"
 #include "inkscape.h"
 #include "page-manager.h"
-
 #include "display/cairo-utils.h"
 #include "display/drawing.h"
 #include "display/drawing-context.h"
-
 #include "object/sp-namedview.h"
 #include "object/sp-root.h"
-
 #include "icon-preview.h"
-
 #include "ui/widget/frame.h"
 
 extern "C" {
@@ -44,13 +40,11 @@ extern "C" {
 guchar *
 sp_icon_doc_icon( SPDocument *doc, Inkscape::Drawing &drawing,
                   const gchar *name, unsigned int psize, unsigned &stride);
-}
+} // extern "C"
 
 #define noICON_VERBOSE 1
 
-namespace Inkscape {
-namespace UI {
-namespace Dialog {
+namespace Inkscape::UI::Dialog {
 
 //#########################################################################
 //## E V E N T S
@@ -66,9 +60,6 @@ void IconPreviewPanel::on_button_clicked(int which)
         queue_draw();
     }
 }
-
-
-
 
 //#########################################################################
 //## C O N S T R U C T O R    /    D E S T R U C T O R
@@ -92,35 +83,22 @@ IconPreviewPanel::IconPreviewPanel()
     , iconBox(Gtk::ORIENTATION_VERTICAL)
 {
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-    numEntries = 0;
 
     bool pack = prefs->getBool("/iconpreview/pack", true);
 
     std::vector<Glib::ustring> pref_sizes = prefs->getAllDirs("/iconpreview/sizes/default");
-    std::vector<int> rawSizes;
 
     for (auto & pref_size : pref_sizes) {
         if (prefs->getBool(pref_size + "/show", true)) {
             int sizeVal = prefs->getInt(pref_size + "/value", -1);
             if (sizeVal > 0) {
-                rawSizes.push_back(sizeVal);
+                sizes.push_back(sizeVal);
             }
         }
     }
 
-    if ( !rawSizes.empty() ) {
-        numEntries = rawSizes.size();
-        sizes = new int[numEntries];
-        int i = 0;
-        for ( std::vector<int>::iterator it = rawSizes.begin(); it != rawSizes.end(); ++it, ++i ) {
-            sizes[i] = *it;
-        }
-    }
-
-    if ( numEntries < 1 )
-    {
-        numEntries = 5;
-        sizes = new int[numEntries];
+    if (sizes.empty()) {
+        sizes.resize(5);
         sizes[0] = 16;
         sizes[1] = 24;
         sizes[2] = 32;
@@ -128,24 +106,18 @@ IconPreviewPanel::IconPreviewPanel()
         sizes[4] = 128;
     }
 
-    pixMem = new guchar*[numEntries];
-    images = new Gtk::Image*[numEntries];
-    labels = new Glib::ustring*[numEntries];
-    buttons = new Gtk::ToggleToolButton*[numEntries];
+    pixMem .resize(sizes.size());
+    images .resize(sizes.size());
+    labels .resize(sizes.size());
+    buttons.resize(sizes.size());
 
-
-    for ( int i = 0; i < numEntries; i++ ) {
-        char *label = g_strdup_printf(_("%d x %d"), sizes[i], sizes[i]);
-        labels[i] = new Glib::ustring(label);
-        g_free(label);
-        pixMem[i] = nullptr;
-        images[i] = nullptr;
+    for (std::size_t i = 0; i < sizes.size(); ++i) {
+        labels[i] = Glib::ustring::compose("%1 x %1", sizes[i]);
     }
 
+    magLabel.set_label(labels[hot]);
 
-    magLabel.set_label( *labels[hot] );
-
-    Gtk::Box* magBox = new Gtk::Box(Gtk::ORIENTATION_VERTICAL);
+    auto const magBox = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_VERTICAL);
 
     auto const magFrame = Gtk::make_managed<UI::Widget::Frame>(_("Magnified:"));
     magFrame->add( magnified );
@@ -153,21 +125,22 @@ IconPreviewPanel::IconPreviewPanel()
     magBox->pack_start( *magFrame, Gtk::PACK_EXPAND_WIDGET );
     magBox->pack_start( magLabel, Gtk::PACK_SHRINK );
 
-
-    Gtk::Box *verts = new Gtk::Box(Gtk::ORIENTATION_VERTICAL);
+    auto const verts = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_VERTICAL);
     Gtk::Box *horiz = nullptr;
     int previous = 0;
     int avail = 0;
-    for ( int i = numEntries - 1; i >= 0; --i ) {
+    for (auto i = sizes.size(); i-- > 0;) {
         int stride = cairo_format_stride_for_width(CAIRO_FORMAT_ARGB32, sizes[i]);
-        pixMem[i] = new guchar[sizes[i] * stride];
-        memset( pixMem[i], 0x00, sizes[i] * stride );
-
-        auto pb = Gdk::Pixbuf::create_from_data(pixMem[i], Gdk::COLORSPACE_RGB, true, 8, sizes[i], sizes[i], stride);
+        pixMem[i].resize(sizes[i] * stride);
+        auto const pb = Gdk::Pixbuf::create_from_data(pixMem[i].data(),
+            Gdk::COLORSPACE_RGB, true, 8, sizes[i], sizes[i], stride);
         images[i] = Gtk::make_managed<Gtk::Image>(pb);
-        Glib::ustring label(*labels[i]);
-        buttons[i] = new Gtk::ToggleToolButton(label);
+
+        auto const &label = labels[i];
+
+        buttons[i] = Gtk::make_managed<Gtk::ToggleToolButton>(label);
         buttons[i]->set_active( i == hot );
+
         if ( prefs->getBool("/iconpreview/showFrames", true) ) {
             auto const frame = Gtk::make_managed<Gtk::Frame>();
             frame->set_shadow_type(Gtk::SHADOW_ETCHED_IN);
@@ -178,9 +151,8 @@ IconPreviewPanel::IconPreviewPanel()
         }
 
         buttons[i]->set_tooltip_text(label);
-
-        buttons[i]->signal_clicked().connect( sigc::bind( sigc::mem_fun(*this, &IconPreviewPanel::on_button_clicked), i) );
-
+        buttons[i]->signal_clicked().connect(
+            sigc::bind(sigc::mem_fun(*this, &IconPreviewPanel::on_button_clicked), i));
         buttons[i]->set_halign(Gtk::ALIGN_CENTER);
         buttons[i]->set_valign(Gtk::ALIGN_CENTER);
 
@@ -189,19 +161,23 @@ IconPreviewPanel::IconPreviewPanel()
             previous = sizes[i];
             avail = sizes[i];
         } else {
-            int pad = 12;
+            static constexpr int pad = 12;
+
             if ((avail < pad) || ((sizes[i] > avail) && (sizes[i] < previous))) {
                 horiz = nullptr;
             }
+
             if ((horiz == nullptr) && (sizes[i] <= previous)) {
                 avail = previous;
             }
+
             if (sizes[i] <= avail) {
                 if (!horiz) {
                     horiz = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL);
                     avail = previous;
                     verts->pack_end(*horiz, Gtk::PACK_SHRINK);
                 }
+
                 horiz->pack_start(*(buttons[i]), Gtk::PACK_EXPAND_WIDGET);
                 avail -= sizes[i];
                 avail -= pad; // a little extra for padding
@@ -219,8 +195,7 @@ IconPreviewPanel::IconPreviewPanel()
     actuals->add(*verts);
     splitter.pack2( *actuals, false, false );
 
-
-    selectionButton = new Gtk::CheckButton(C_("Icon preview window", "Sele_ction"), true);//selectionButton = (Gtk::ToggleButton*) gtk_check_button_new_with_mnemonic(_("_Selection")); // , GTK_RESPONSE_APPLY
+    selectionButton = Gtk::make_managed<Gtk::CheckButton>(C_("Icon preview window", "Sele_ction"), true);
     magBox->pack_start( *selectionButton, Gtk::PACK_SHRINK );
     selectionButton->set_tooltip_text(_("Selection only or whole document"));
     selectionButton->signal_clicked().connect( sigc::mem_fun(*this, &IconPreviewPanel::modeToggled) );
@@ -238,24 +213,21 @@ IconPreviewPanel::IconPreviewPanel()
 IconPreviewPanel::~IconPreviewPanel()
 {
     removeDrawing();
+
     if (timer) {
         timer->stop();
-        delete timer;
-        timer = nullptr;
-    }
-    if ( renderTimer ) {
-        renderTimer->stop();
-        delete renderTimer;
-        renderTimer = nullptr;
+        timer.reset(); // Reset the unique_ptr, not the Timer!
     }
 
-    docModConn.disconnect();
+    if ( renderTimer ) {
+        renderTimer->stop();
+        renderTimer.reset(); // Reset the unique_ptr, not the Timer!
+    }
 }
 
 //#########################################################################
 //## M E T H O D S
 //#########################################################################
-
 
 #if ICON_VERBOSE
 static Glib::ustring getTimestr()
@@ -282,9 +254,11 @@ void IconPreviewPanel::selectionModified(Selection *selection, guint flags)
 void IconPreviewPanel::documentReplaced()
 {
     removeDrawing();
+
     drawing_doc = getDocument();
+
     if (drawing_doc) {
-        drawing = new Inkscape::Drawing();
+        drawing = std::make_unique<Inkscape::Drawing>();
         visionkey = SPItem::display_key_new(1);
         drawing->setRoot(drawing_doc->getRoot()->invoke_show(*drawing, visionkey, SP_ITEM_SHOW_DISPLAY));
         docDesConn = drawing_doc->connectDestroy([=]() { removeDrawing(); });
@@ -296,12 +270,14 @@ void IconPreviewPanel::documentReplaced()
 void IconPreviewPanel::removeDrawing()
 {
     docDesConn.disconnect();
+
     if (!drawing) {
         return;
     }
+
     drawing_doc->getRoot()->invoke_hide(visionkey);
-    delete drawing;
-    drawing = nullptr;
+    drawing.reset();
+
     drawing_doc = nullptr;
 }
 
@@ -309,7 +285,7 @@ void IconPreviewPanel::refreshPreview()
 {
     auto document = getDocument();
     if (!timer) {
-        timer = new Glib::Timer();
+        timer = std::make_unique<Glib::Timer>();
     }
     if (timer->elapsed() < minDelay) {
 #if ICON_VERBOSE
@@ -354,7 +330,7 @@ bool IconPreviewPanel::refreshCB()
 {
     bool callAgain = true;
     if (!timer) {
-        timer = new Glib::Timer();
+        timer = std::make_unique<Glib::Timer>();
     }
     if ( timer->elapsed() > minDelay ) {
 #if ICON_VERBOSE
@@ -378,7 +354,7 @@ void IconPreviewPanel::queueRefresh()
         g_message( "%s queueRefresh() Setting pending true", getTimestr().c_str() );
 #endif // ICON_VERBOSE
         if (!timer) {
-            timer = new Glib::Timer();
+            timer = std::make_unique<Glib::Timer>();
         }
         Glib::signal_idle().connect( sigc::mem_fun(*this, &IconPreviewPanel::refreshCB), Glib::PRIORITY_DEFAULT_IDLE );
     }
@@ -574,34 +550,30 @@ sp_icon_doc_icon( SPDocument *doc, Inkscape::Drawing &drawing,
     return px;
 } // end of sp_icon_doc_icon()
 
-
 void IconPreviewPanel::renderPreview( SPObject* obj )
 {
     SPDocument * doc = obj->document;
     gchar const * id = obj->getId();
     if ( !renderTimer ) {
-        renderTimer = new Glib::Timer();
+        renderTimer = std::make_unique<Glib::Timer>();
     }
-    renderTimer->reset();
+    renderTimer->reset(); // Reset the Timer, not the unique_ptr!
 
 #if ICON_VERBOSE
     g_message("%s setting up to render '%s' as the icon", getTimestr().c_str(), id );
 #endif // ICON_VERBOSE
 
-    for ( int i = 0; i < numEntries; i++ ) {
+    for (std::size_t i = 0; i < sizes.size(); ++i) {
         unsigned unused;
         int stride = cairo_format_stride_for_width(CAIRO_FORMAT_ARGB32, sizes[i]);
         guchar *px = sp_icon_doc_icon(doc, *drawing, id, sizes[i], unused);
-//         g_message( " size %d %s", sizes[i], (px ? "worked" : "failed") );
         if ( px ) {
-            memcpy( pixMem[i], px, sizes[i] * stride );
+            memcpy( pixMem[i].data(), px, sizes[i] * stride );
             g_free( px );
-            px = nullptr;
         } else {
-            memset( pixMem[i], 0, sizes[i] * stride );
+            memset( pixMem[i].data(), 0, sizes[i] * stride );
         }
         images[i]->set(images[i]->get_pixbuf());
-        // images[i]->queue_draw();
     }
     updateMagnify();
 
@@ -615,15 +587,11 @@ void IconPreviewPanel::renderPreview( SPObject* obj )
 void IconPreviewPanel::updateMagnify()
 {
     Glib::RefPtr<Gdk::Pixbuf> buf = images[hot]->get_pixbuf()->scale_simple( 128, 128, Gdk::INTERP_NEAREST );
-    magLabel.set_label( *labels[hot] );
+    magLabel.set_label(labels[hot]);
     magnified.set( buf );
-    // magnified.queue_draw();
-    // magnified.get_parent()->queue_draw();
 }
 
-} //namespace Dialogs
-} //namespace UI
-} //namespace Inkscape
+} // namespace Inkscape::UI::Dialog
 
 /*
   Local Variables:

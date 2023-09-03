@@ -42,15 +42,13 @@ class CheckButton;
 class IconView;
 class Label;
 class MenuButton;
-}
+} // namespace Gtk
 
 class SPObject;
 class SPSymbol;
 class SPUse;
 
-namespace Inkscape {
-namespace UI {
-namespace Dialog {
+namespace Inkscape::UI::Dialog {
 
 /**
  * A dialog that displays selectable symbols and allows users to drag or paste
@@ -71,11 +69,11 @@ namespace Dialog {
  * new symbols documents to be constructed and if saved in the prefs folder will
  * make those symbols available for all future documents.
  */
-class SymbolsDialog : public DialogBase
+class SymbolsDialog final : public DialogBase
 {
 public:
     SymbolsDialog(char const *prefsPath = "/dialogs/symbols");
-    ~SymbolsDialog() override;
+    ~SymbolsDialog() final;
 
 private:
     void documentReplaced() override;
@@ -172,9 +170,7 @@ private:
     boost::compute::detail::lru_cache<std::string, Cairo::RefPtr<Cairo::Surface>> _image_cache;
 };
 
-} //namespace Dialogs
-} //namespace UI
-} //namespace Inkscape
+} // namespace Inkscape::UI::Dialog
 
 #endif // INKSCAPE_UI_DIALOG_SYMBOLS_H
 

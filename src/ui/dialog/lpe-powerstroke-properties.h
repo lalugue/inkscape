@@ -19,21 +19,20 @@
 
 class SPDesktop;
 
-namespace Inkscape {
-namespace UI {
-namespace Dialogs {
+namespace Inkscape::UI::Dialog {
 
 class PowerstrokePropertiesDialog : public Gtk::Dialog {
- public:
-	PowerstrokePropertiesDialog();
-    ~PowerstrokePropertiesDialog() override;
+public:
+    PowerstrokePropertiesDialog();
+
+    PowerstrokePropertiesDialog(PowerstrokePropertiesDialog const &) = delete;
+    PowerstrokePropertiesDialog &operator=(PowerstrokePropertiesDialog const &) = delete;
 
     Glib::ustring     getName() const { return "LayerPropertiesDialog"; }
 
     static void showDialog(SPDesktop *desktop, Geom::Point knotpoint, const Inkscape::LivePathEffect::PowerStrokePointArrayParamKnotHolderEntity *pt);
 
 protected:
-
     Inkscape::LivePathEffect::PowerStrokePointArrayParamKnotHolderEntity *_knotpoint;
 
     Gtk::Label        _powerstroke_position_label;
@@ -45,8 +44,6 @@ protected:
 
     Gtk::Button       _close_button;
     Gtk::Button       _apply_button;
-
-    sigc::connection    _destroy_connection;
 
     static PowerstrokePropertiesDialog &_instance() {
         static PowerstrokePropertiesDialog instance;
@@ -65,16 +62,9 @@ protected:
     void _handleButtonEvent(GdkEventButton* event);
 
     friend class Inkscape::LivePathEffect::PowerStrokePointArrayParamKnotHolderEntity;
-
-private:
-    PowerstrokePropertiesDialog(PowerstrokePropertiesDialog const &); // no copy
-    PowerstrokePropertiesDialog &operator=(PowerstrokePropertiesDialog const &); // no assign
 };
 
-} // namespace
-} // namespace
-} // namespace
-
+} // namespace Inkscape::UI::Dialog
 
 #endif //INKSCAPE_DIALOG_LAYER_PROPERTIES_H
 

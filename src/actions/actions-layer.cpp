@@ -42,7 +42,7 @@ layer_new(InkscapeWindow* win)
     SPDesktop* dt = win->get_desktop();
 
     // New Layer
-    Inkscape::UI::Dialogs::LayerPropertiesDialog::showCreate(dt, dt->layerManager().currentLayer());
+    Inkscape::UI::Dialog::LayerPropertiesDialog::showCreate(dt, dt->layerManager().currentLayer());
 }
 
 void
@@ -119,7 +119,7 @@ layer_rename (InkscapeWindow* win)
     SPDesktop* dt = win->get_desktop();
 
     // Rename Layer
-    Inkscape::UI::Dialogs::LayerPropertiesDialog::showRename(dt, dt->layerManager().currentLayer());
+    Inkscape::UI::Dialog::LayerPropertiesDialog::showRename(dt, dt->layerManager().currentLayer());
 }
 
 void
@@ -262,7 +262,7 @@ selection_move_to_layer (InkscapeWindow* win)
     SPDesktop* dt = win->get_desktop();
 
     // Selection move to layer
-    Inkscape::UI::Dialogs::LayerPropertiesDialog::showMove(dt, dt->layerManager().currentLayer());
+    Inkscape::UI::Dialog::LayerPropertiesDialog::showMove(dt, dt->layerManager().currentLayer());
 }
 
 void

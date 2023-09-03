@@ -33,9 +33,7 @@
 #include "ui/tools/tool-base.h"
 #include "ui/widget/imagetoggler.h"
 
-namespace Inkscape {
-namespace UI {
-namespace Dialogs {
+namespace Inkscape::UI::Dialog {
 
 LayerPropertiesDialog::LayerPropertiesDialog(LayerPropertiesDialogType type)
     : _type{type}
@@ -427,9 +425,7 @@ void LayerPropertiesDialog::_setLayer(SPObject *layer) {
     _layer = layer;
 }
 
-} // namespace Dialogs
-} // namespace UI
-} // namespace Inkscape
+} // namespace Inkscape::UI::Dialog
 
 /*
   Local Variables:

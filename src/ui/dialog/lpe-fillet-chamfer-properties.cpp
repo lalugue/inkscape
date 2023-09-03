@@ -17,11 +17,7 @@
 
 #include "selection-chemistry.h"
 
-//#include "event-context.h"
-
-namespace Inkscape {
-namespace UI {
-namespace Dialogs {
+namespace Inkscape::UI::Dialog {
 
 FilletChamferPropertiesDialog::FilletChamferPropertiesDialog()
     : _knotpoint(nullptr),
@@ -95,10 +91,6 @@ FilletChamferPropertiesDialog::FilletChamferPropertiesDialog()
     show_all_children();
 
     set_focus(_fillet_chamfer_position_numeric);
-}
-
-FilletChamferPropertiesDialog::~FilletChamferPropertiesDialog()
-{
 }
 
 void FilletChamferPropertiesDialog::showDialog(SPDesktop *desktop, double _amount,
@@ -239,9 +231,7 @@ void FilletChamferPropertiesDialog::_setAprox(bool _aprox_radius)
     _aprox = _aprox_radius;
 }
 
-} // namespace
-} // namespace
-} // namespace
+} // namespace Inkscape::UI::Dialog
 
 /*
   Local Variables:

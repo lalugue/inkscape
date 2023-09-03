@@ -14,10 +14,7 @@
 #ifndef SEEN_UI_DIALOGS_DEBUGDIALOG_H
 #define SEEN_UI_DIALOGS_DEBUGDIALOG_H
 
-namespace Inkscape {
-namespace UI {
-namespace Dialog {
-
+namespace Inkscape::UI::Dialog {
 
 /**
  * @brief A very simple dialog for displaying Inkscape messages.
@@ -28,16 +25,12 @@ namespace Dialog {
 class DebugDialog
 {
 public:
-    DebugDialog() = default;;
+    DebugDialog() = default;
+
     /**
      * Factory method
      */
     static DebugDialog *create();
-
-    /**
-     * Destructor
-     */
-    virtual ~DebugDialog() = default;;
 
 
     /**
@@ -83,11 +76,9 @@ public:
     static void showInstance();
 };
 
-} //namespace Dialogs
-} //namespace UI
-} //namespace Inkscape
+} // namespace Inkscape::UI::Dialog
 
-#endif /* __DEBUGDIALOG_H__ */
+#endif // SEEN_UI_DIALOGS_DEBUGDIALOG_H
 
 /*
   Local Variables:

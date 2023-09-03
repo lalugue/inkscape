@@ -85,10 +85,7 @@
 #endif
 
 
-namespace Inkscape {
-namespace UI {
-
-namespace Dialog {
+namespace Inkscape::UI::Dialog {
 
 constexpr int SIZES = 51;
 int SYMBOL_ICON_SIZES[SIZES];
@@ -1322,9 +1319,7 @@ void SymbolsDialog::get_cell_data_func(Gtk::CellRenderer* cell_renderer, Gtk::Tr
     cell_renderer->set_property("surface", surface);
 }
 
-} //namespace Dialogs
-} //namespace UI
-} //namespace Inkscape
+} // namespace Inkscape::UI::Dialog
 
 /*
   Local Variables:

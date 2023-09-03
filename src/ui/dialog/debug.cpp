@@ -20,18 +20,15 @@
 
 #include "debug.h"
 
-namespace Inkscape {
-namespace UI {
-namespace Dialog {
+namespace Inkscape::UI::Dialog {
 
 /**
  * A very simple dialog for displaying Inkscape messages - implementation.
  */
-class DebugDialogImpl : public DebugDialog, public Gtk::Dialog
+class DebugDialogImpl final : public DebugDialog, public Gtk::Dialog
 {
 public:
     DebugDialogImpl();
-    ~DebugDialogImpl() override;
 
     void show() override;
     void hide() override;
@@ -113,9 +110,6 @@ DebugDialog *DebugDialog::create()
     DebugDialog *dialog = new DebugDialogImpl();
     return dialog;
 }
-
-DebugDialogImpl::~DebugDialogImpl()
-= default;
 
 void DebugDialogImpl::show()
 {
@@ -243,9 +237,7 @@ void DebugDialogImpl::releaseLogMessages()
 
 
 
-} //namespace Dialogs
-} //namespace UI
-} //namespace Inkscape
+} // namespace Inkscape::UI::Dialog
 
 /*
   Local Variables:

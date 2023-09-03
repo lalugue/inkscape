@@ -148,19 +148,17 @@ PowerStrokePointArrayParam::reverse_controlpoints(bool write)
 
 float PowerStrokePointArrayParam::median_width()
 {
-	size_t size = _vector.size();
-	if (size > 0)
-	{
-		if (size % 2 == 0)
-		{
-			return (_vector[size / 2 - 1].y() + _vector[size / 2].y()) / 2;
-		}
-		else
-		{
-			return _vector[size / 2].y();
-		}
-	}
-	return 1;
+    auto const size = _vector.size();
+
+    if (size == 0) {
+        return 1;
+    }
+
+    if (size % 2 == 0) {
+        return (_vector[size / 2 - 1].y() + _vector[size / 2].y()) / 2;
+    }
+
+    return _vector[size / 2].y();
 }
 
 void
@@ -307,7 +305,7 @@ PowerStrokePointArrayParamKnotHolderEntity::knot_ungrabbed(Geom::Point const &p,
 void PowerStrokePointArrayParamKnotHolderEntity::knot_set_offset(Geom::Point offset)
 {
     _pparam->_vector.at(_index) = Geom::Point(offset.x(), offset.y() / 2);
-	this->parent_holder->knot_ungrabbed_handler(this->knot, 0);
+    this->parent_holder->knot_ungrabbed_handler(this->knot, 0);
 }
 
 void
@@ -356,11 +354,9 @@ PowerStrokePointArrayParamKnotHolderEntity::knot_click(guint state)
                       _pparam->knot_color);
             parent_holder->add(e);
         }
-    }
-    else if ((state & GDK_MOD1_MASK) || (state & GDK_SHIFT_MASK))
-    {
-    	Geom::Point offset = Geom::Point(_pparam->_vector.at(_index).x(), _pparam->_vector.at(_index).y() * 2);
-    	Inkscape::UI::Dialogs::PowerstrokePropertiesDialog::showDialog(this->desktop, offset, this);
+    } else if ((state & GDK_MOD1_MASK) || (state & GDK_SHIFT_MASK)) {
+        Geom::Point offset = Geom::Point(_pparam->_vector.at(_index).x(), _pparam->_vector.at(_index).y() * 2);
+        Inkscape::UI::Dialog::PowerstrokePropertiesDialog::showDialog(this->desktop, offset, this);
     } 
 }
 

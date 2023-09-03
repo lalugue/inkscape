@@ -339,6 +339,11 @@ void DialogContainer::new_dialog(const Glib::ustring& dialog_type, DialogNoteboo
     }
 }
 
+[[nodiscard]] static auto get_key(std::size_t const notebook_idx)
+{
+    return Glib::ustring::compose("Notebook%1Dialogs", notebook_idx);
+}
+
 // recreate dialogs hosted (docked) in a floating DialogWindow; window will be created
 bool DialogContainer::recreate_dialogs_from_state(InkscapeWindow* inkscape_window, const Glib::KeyFile* keyfile)
 {
@@ -422,7 +427,7 @@ bool DialogContainer::recreate_dialogs_from_state(InkscapeWindow* inkscape_windo
 
             // Step 3.2.2: for each noteboook, load its dialogs
             for (int notebook_idx = 0; notebook_idx < notebook_count; ++notebook_idx) {
-                Glib::ustring key = "Notebook" + std::to_string(notebook_idx) + "Dialogs";
+                auto const key = get_key(notebook_idx);
 
                 // Step 3.2.2.0 read the list of dialogs in the current notebook
                 std::vector<Glib::ustring> dialogs;
@@ -749,7 +754,7 @@ void DialogContainer::load_container_state(Glib::KeyFile *keyfile, bool include_
 
             // Step 3.2.2: for each noteboook, load its dialogs
             for (int notebook_idx = 0; notebook_idx < notebook_count; ++notebook_idx) {
-                Glib::ustring key = "Notebook" + std::to_string(notebook_idx) + "Dialogs";
+                auto const key = get_key(notebook_idx);
 
                 // Step 3.2.2.0 read the list of dialogs in the current notebook
                 std::vector<Glib::ustring> dialogs;
@@ -865,7 +870,7 @@ std::shared_ptr<Glib::KeyFile> DialogContainer::get_container_state(const window
                 }
 
                 // save the dialogs type
-                Glib::ustring key = "Notebook" + std::to_string(notebook_count) + "Dialogs";
+                auto const key = get_key(notebook_count);
                 keyfile->set_string_list(group_name, key, dialogs);
 
                 // increase the notebook count
@@ -987,7 +992,7 @@ std::unique_ptr<Glib::KeyFile> DialogContainer::save_container_state()
                     }
 
                     // save the dialogs type
-                    Glib::ustring key = "Notebook" + std::to_string(notebook_count) + "Dialogs";
+                    auto const key = get_key(notebook_count);
                     keyfile->set_string_list(group_name, key, dialogs);
                     // save height; useful when there are multiple "rows" of docked dialogs
                     Glib::ustring row = "Notebook" + std::to_string(notebook_count) + "Height";

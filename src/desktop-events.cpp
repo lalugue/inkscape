@@ -180,7 +180,7 @@ bool sp_dt_guide_event(Inkscape::CanvasEvent const &event, Inkscape::CanvasItemG
                     drag_type = SP_DRAG_NONE;
                     desktop->event_context->discard_delayed_snap_event();
                     guide_item->ungrab();
-                    Inkscape::UI::Dialogs::GuidelinePropertiesDialog::showDialog(guide, desktop);
+                    Inkscape::UI::Dialog::GuidelinePropertiesDialog::showDialog(guide, desktop);
                     ret = true;
                 }
             } else if (event.num_press == 1) {

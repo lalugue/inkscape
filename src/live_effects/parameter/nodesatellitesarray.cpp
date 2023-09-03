@@ -571,7 +571,7 @@ void FilletChamferKnotHolderEntity::knot_click(guint state)
                 !_pparam->_use_distance
                 ? true
                 : false;
-        Inkscape::UI::Dialogs::FilletChamferPropertiesDialog::showDialog(
+        Inkscape::UI::Dialog::FilletChamferPropertiesDialog::showDialog(
             this->desktop, amount, this, _pparam->_use_distance, aprox,
             _pparam->_vector[satelite_index][subsatelite_index]);
     }

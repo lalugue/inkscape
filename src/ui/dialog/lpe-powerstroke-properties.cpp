@@ -23,11 +23,8 @@
 #include "layer-manager.h"
 
 #include "selection-chemistry.h"
-//#include "event-context.h"
 
-namespace Inkscape {
-namespace UI {
-namespace Dialogs {
+namespace Inkscape::UI::Dialog {
 
 PowerstrokePropertiesDialog::PowerstrokePropertiesDialog()
     : _knotpoint(nullptr),
@@ -93,9 +90,6 @@ PowerstrokePropertiesDialog::PowerstrokePropertiesDialog()
     set_focus(_powerstroke_width_entry);
 }
 
-PowerstrokePropertiesDialog::~PowerstrokePropertiesDialog() {
-}
-
 void PowerstrokePropertiesDialog::showDialog(SPDesktop *desktop, Geom::Point knotpoint, const Inkscape::LivePathEffect::PowerStrokePointArrayParamKnotHolderEntity *pt)
 {
     PowerstrokePropertiesDialog *dialog = new PowerstrokePropertiesDialog();
@@ -158,19 +152,16 @@ void PowerstrokePropertiesDialog::_handleButtonEvent(GdkEventButton* event)
 
 void PowerstrokePropertiesDialog::_setKnotPoint(Geom::Point knotpoint)
 {
-	_powerstroke_position_entry.set_value(knotpoint.x());
-	_powerstroke_width_entry.set_value(knotpoint.y());
+    _powerstroke_position_entry.set_value(knotpoint.x());
+    _powerstroke_width_entry.set_value(knotpoint.y());
 }
 
 void PowerstrokePropertiesDialog::_setPt(const Inkscape::LivePathEffect::PowerStrokePointArrayParamKnotHolderEntity *pt)
 {
-	_knotpoint = const_cast<Inkscape::LivePathEffect::PowerStrokePointArrayParamKnotHolderEntity *>(pt);
+    _knotpoint = const_cast<Inkscape::LivePathEffect::PowerStrokePointArrayParamKnotHolderEntity *>(pt);
 }
 
-} // namespace
-} // namespace
-} // namespace
-
+} // namespace Inkscape::UI::Dialog
 
 /*
   Local Variables:

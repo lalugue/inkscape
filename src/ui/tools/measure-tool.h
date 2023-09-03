@@ -1,7 +1,4 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-#ifndef INKSCAPE_UI_TOOLS_MEASURE_TOOL_H
-#define INKSCAPE_UI_TOOLS_MEASURE_TOOL_H
-
 /*
  * Our fine measuring tool
  *
@@ -13,18 +10,18 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#ifndef INKSCAPE_UI_TOOLS_MEASURE_TOOL_H
+#define INKSCAPE_UI_TOOLS_MEASURE_TOOL_H
+
 #include <cstddef>
 #include <optional>
-
-#include <sigc++/sigc++.h>
-
 #include <2geom/point.h>
-
-#include "ui/tools/tool-base.h"
 
 #include "display/control/canvas-temporary-item.h"
 #include "display/control/canvas-item-enums.h"
 #include "display/control/canvas-item-ptr.h"
+#include "helper/auto-connection.h"
+#include "ui/tools/tool-base.h"
 
 class SPKnot;
 namespace Inkscape { class CanvasItemCurve; }
@@ -97,12 +94,12 @@ private:
     double item_y;
     double item_length;
     SPItem *over;
-    sigc::connection _knot_start_moved_connection;
-    sigc::connection _knot_start_ungrabbed_connection;
-    sigc::connection _knot_start_click_connection;
-    sigc::connection _knot_end_moved_connection;
-    sigc::connection _knot_end_click_connection;
-    sigc::connection _knot_end_ungrabbed_connection;
+    auto_connection _knot_start_moved_connection;
+    auto_connection _knot_start_ungrabbed_connection;
+    auto_connection _knot_start_click_connection;
+    auto_connection _knot_end_moved_connection;
+    auto_connection _knot_end_click_connection;
+    auto_connection _knot_end_ungrabbed_connection;
 };
 
 } // namespace Inkscape::UI::Tools

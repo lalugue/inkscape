@@ -5,11 +5,14 @@
  * Copyright (C) 2010 Jon A. Cruz
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
+
 #ifndef SEEN_DIALOGS_GLYPHS_H
 #define SEEN_DIALOGS_GLYPHS_H
 
+#include <vector>
 #include <gtkmm/treemodel.h>
 
+#include "helper/auto-connection.h"
 #include "ui/dialog/dialog-base.h"
 
 namespace Gtk {
@@ -18,14 +21,13 @@ class Entry;
 class IconView;
 class Label;
 class ListStore;
-}
+} // namespace Gtk
 
-namespace Inkscape {
-namespace UI {
+namespace Inkscape::UI {
 
 namespace Widget {
 class FontSelector;
-}
+} // namespace Widget
 
 namespace Dialog {
 
@@ -34,11 +36,11 @@ class GlyphColumns;
 /**
  * A panel that displays character glyphs.
  */
-class GlyphsPanel : public DialogBase
+class GlyphsPanel final : public DialogBase
 {
 public:
     GlyphsPanel();
-    ~GlyphsPanel() override;
+    ~GlyphsPanel() final;
 
     void selectionChanged(Selection *selection) override;
     void selectionModified(Selection *selection, guint flags) override;
@@ -55,23 +57,23 @@ private:
     void insertText();
 
     Glib::RefPtr<Gtk::ListStore> store;
-    Gtk::IconView *iconView;
-    std::shared_ptr<Gtk::Entry> entry;
-    std::shared_ptr<Gtk::Label> label;
-    std::shared_ptr<Gtk::Button> insertBtn;
-    Gtk::ComboBoxText *scriptCombo;
-    Gtk::ComboBoxText *rangeCombo;
-    Inkscape::UI::Widget::FontSelector *fontSelector;
+    Gtk::IconView                      *iconView     = nullptr;
+    Gtk::Entry                         *entry        = nullptr;
+    Gtk::Label                         *label        = nullptr;
+    Gtk::Button                        *insertBtn    = nullptr;
+    Gtk::ComboBoxText                  *scriptCombo  = nullptr;
+    Gtk::ComboBoxText                  *rangeCombo   = nullptr;
+    Inkscape::UI::Widget::FontSelector *fontSelector = nullptr;
 
-    std::vector<sigc::connection> instanceConns;
+    std::vector<auto_connection> instanceConns;
 };
 
+} // namespace Dialog
 
-} // namespace Dialogs
-} // namespace UI
-} // namespace Inkscape
+} // namespace Inkscape::UI
 
 #endif // SEEN_DIALOGS_GLYPHS_H
+
 /*
   Local Variables:
   mode:c++
