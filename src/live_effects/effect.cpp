@@ -1811,12 +1811,6 @@ Effect::newWidget()
     return vbox;
 }
 
-bool sp_enter_tooltip(GdkEventCrossing *evt, Gtk::Widget *widg)
-{
-    widg->trigger_tooltip_query();
-    return true;
-}
-
 /**
  * Set this LPE defaults
  */

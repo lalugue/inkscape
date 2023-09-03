@@ -41,9 +41,6 @@ struct _PopplerDocument;
 typedef struct _PopplerDocument            PopplerDocument;
 #endif
 
-struct _GdkEventExpose;
-typedef _GdkEventExpose GdkEventExpose;
-
 class Page;
 class PDFDoc;
 

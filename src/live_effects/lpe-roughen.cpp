@@ -20,6 +20,7 @@
 
 #include <glibmm/i18n.h>
 #include <gtkmm/box.h>
+#include <gtkmm/label.h>
 #include <gtkmm/separator.h>
 
 #include "display/curve.h"

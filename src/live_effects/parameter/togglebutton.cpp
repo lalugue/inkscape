@@ -10,6 +10,7 @@
 
 #include <utility>
 #include <glibmm/i18n.h>
+#include <gtkmm/label.h>
 
 #include "inkscape.h"
 #include "live_effects/effect.h"

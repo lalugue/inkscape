@@ -368,7 +368,7 @@ std::string CMSSystem::get_path_for_profile(Glib::ustring const &name) const
     std::string result;
 
     for (auto const &profile_info : system_profile_infos) {
-        if (name == profile_info.get_name()) {
+        if (name.raw() == profile_info.get_name()) {
             result = profile_info.get_path();
             break;
         }

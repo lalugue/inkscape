@@ -176,7 +176,7 @@ InkFileExportCmd::do_export(SPDocument* doc, std::string filename_in)
         export_type_current = type;
 
         // Check for consistency between extension of --export-filename and --export-type if both are given
-        if (!export_type_filename.empty() && (type != export_type_filename)) {
+        if (!export_type_filename.empty() && type.raw() != export_type_filename) {
             std::cerr << "InkFileExportCmd::do_export: "
                       << "Ignoring extension of export filename (" << export_type_filename << ") "
                       << "as it does not match the current export type (" << type.raw() << ")." << std::endl;
@@ -269,7 +269,7 @@ InkFileExportCmd::get_filename_out(std::string filename_in, std::string object_i
     if (!export_filename.empty()) {
         auto ext = Inkscape::IO::get_file_extension(export_filename);
         auto cmp = "." + export_type_current_native;
-        return export_filename + (ext == cmp ? "" : cmp);
+        return export_filename + (ext.raw() == cmp ? "" : cmp);
     }
 
     // Check for pipe

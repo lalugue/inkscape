@@ -23,8 +23,6 @@ class SPGlyph;
 class SPMissingGlyph;
 class SPObject;
 
-extern "C" { typedef struct _GdkEventExpose GdkEventExpose; }
-
 namespace Gtk {
 class Widget;
 }
@@ -56,7 +54,6 @@ private:
     sigc::connection glyph_modified_connection;
 
     double units_per_em();
-    //bool drawing_expose_cb (Gtk::Widget *widget, GdkEventExpose *event, void* data);
 };
 
 #endif //#ifndef NR_SVGFONTS_H_SEEN

@@ -69,9 +69,6 @@ protected:
     void _setKnotPoint(Geom::Point knotpoint);
     void _prepareLabelRenderer(Gtk::TreeModel::const_iterator const &row);
 
-    bool _handleKeyEvent(GdkEventKey *event);
-    void _handleButtonEvent(GdkEventButton* event);
-
     friend class Inkscape::LivePathEffect::PowerStrokePointArrayParamKnotHolderEntity;
 };
 

@@ -157,24 +157,7 @@ void FilletChamferPropertiesDialog::_apply()
 void FilletChamferPropertiesDialog::_close()
 {
     destroy_();
-    Glib::signal_idle().connect(
-        sigc::bind_return(
-            sigc::bind(sigc::ptr_fun<void*, void>(&::operator delete), this),
-            false
-        )
-    );
-}
-
-bool FilletChamferPropertiesDialog::_handleKeyEvent(GdkEventKey * /*event*/)
-{
-    return false;
-}
-
-void FilletChamferPropertiesDialog::_handleButtonEvent(GdkEventButton *event)
-{
-    if ((event->type == GDK_2BUTTON_PRESS) && (event->button == 1)) {
-        _apply();
-    }
+    Glib::signal_idle().connect([this] { delete this; return false; });
 }
 
 void FilletChamferPropertiesDialog::_setNodeSatellite(NodeSatellite nodesatellite)

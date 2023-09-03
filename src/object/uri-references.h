@@ -19,6 +19,7 @@
 #include <vector>
 #include <set>
 #include <sigc++/connection.h>
+#include <sigc++/signal.h>
 #include <sigc++/trackable.h>
 
 class SPObject;

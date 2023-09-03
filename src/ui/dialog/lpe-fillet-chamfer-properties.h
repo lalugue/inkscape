@@ -73,9 +73,6 @@ protected:
     void _setNodeSatellite(NodeSatellite nodesatellite);
     void _prepareLabelRenderer(Gtk::TreeModel::const_iterator const &row);
 
-    bool _handleKeyEvent(GdkEventKey *event);
-    void _handleButtonEvent(GdkEventButton *event);
-
     void _apply();
     void _close();
     bool _flexible;

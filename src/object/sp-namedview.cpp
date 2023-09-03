@@ -621,8 +621,8 @@ void sp_namedview_window_from_document(SPDesktop *desktop)
             Gdk::Rectangle monitor_geometry = Inkscape::UI::get_monitor_geometry_at_window(win->get_window());
             int monitor_width =  monitor_geometry.get_width();
             int monitor_height = monitor_geometry.get_height();
-            int window_width, window_height;
-            win->get_size(window_width, window_height);
+            int window_width = win->get_width();
+            int window_height = win->get_height();
             if (window_width > monitor_width || window_height > monitor_height) {
                 w = std::min(monitor_width, window_width);
                 h = std::min(monitor_height, window_height);
