@@ -28,7 +28,7 @@ options:
         --user-data-directory
 
     -p, --pipe
-        --pdf-page=PAGE
+    -n, --pages=PAGE[,PAGE]
         --pdf-poppler
         --convert-dpi-method=METHOD
         --no-convert-text-baseline-spacing
@@ -47,6 +47,7 @@ options:
     -h, --export-height=HEIGHT
         --export-margin=MARGIN
 
+        --export-page=all|n[,a-b]
     -i, --export-id=OBJECT-ID[;OBJECT-ID]*
     -j, --export-id-only
     -l, --export-plain-svg
@@ -164,9 +165,11 @@ environment variable.
 
 Reads input file from standard input (stdin).
 
-=item B<--pdf-page>=I<PAGE>
+=item B<--pages>=I<PAGE>
 
-Imports the given page of a pdf file. Numbering starts with 1.
+Imports the given comma separated list of pages from a PDF, or multi page SVG file.
+
+This replaces the I<--pdf-page> from previous Inkscape versions.
 
 =item B<--pdf-poppler>
 
@@ -284,6 +287,15 @@ L<--export-dpi> setting (or the DPI hint if used with L<--export-use-hints>).
 Adds a margin around the exported area. The size of the margin is
 specified in units of page size (for SVG) or millimeters (for PS/PDF).
 The option currently has no effect for other export formats.
+
+=item B<-i> I<ID>, B<--export-page>=I<all|n[,a-b]*>
+
+Exports the selected pages only. If more than one page is specified then the
+resulting document may contain multiple pages if the format supports it.
+
+Value can be a comma separated list of page numbers, or page ranges of two
+numbers separated by a dash. The keyword 'all' can be used to indicate all pages
+would be exported.
 
 =item B<-i> I<ID>, B<--export-id>=I<OBJECT-ID[;OBJECT-ID]*>
 
