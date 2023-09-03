@@ -63,7 +63,8 @@ public:
     void popup_at_center(Gtk::Widget &relative_to);
 
     /// Get the list of menu items (children of our grid)
-    [[nodiscard]] std::vector<Gtk::Widget *> get_items();
+    /// Take copy, not reference, if you iterate & change items!
+    [[nodiscard]] std::vector<Gtk::Widget *> const &get_items();
 
     /// This would give not the items, rather an internal Grid. Use get_items().
     void get_children() const = delete;
@@ -72,6 +73,7 @@ public:
 
 private:
     PopoverMenuGrid &_grid;
+    std::vector<Gtk::Widget *> _items;
 
     // Let PopoverMenuItem call this without making it public API
     friend class PopoverMenuItem;

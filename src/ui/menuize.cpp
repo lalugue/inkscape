@@ -60,6 +60,8 @@ static void on_leave_unset_state(GtkEventControllerMotion * const motion, double
 void menuize(Gtk::Widget &widget)
 {
     // If hovered naturally or below, key-focus self & clear focus+hover on rest
+    // GTK3 does not emit these events unless we explicitly request them
+    widget.add_events(Gdk::ENTER_NOTIFY_MASK | Gdk::POINTER_MOTION_MASK | Gdk::LEAVE_NOTIFY_MASK);
     auto const motion = gtk_event_controller_motion_new(widget.gobj());
     gtk_event_controller_set_propagation_phase(motion, GTK_PHASE_TARGET);
     g_signal_connect(motion, "enter" , G_CALLBACK(on_motion_grab_focus), NULL);

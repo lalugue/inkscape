@@ -1639,7 +1639,7 @@ FilterEffectsDialog::FilterModifier::filter_list_click_released(Gtk::GestureMult
                                                                 double const x, double const y)
 {
     const bool sensitive = get_selected_filter() != nullptr;
-    auto const items = _menu->get_items();
+    auto const &items = _menu->get_items();
     items.at(0)->set_sensitive(sensitive);
     items.at(1)->set_sensitive(sensitive);
     items.at(3)->set_sensitive(sensitive);

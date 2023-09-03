@@ -20,10 +20,10 @@ class SearchEntry;
 
 namespace Inkscape::UI::Widget {
 
-class CompletionPopup : public Gtk::Box {
+class CompletionPopup final : public Gtk::Box {
 public:
     CompletionPopup();
-    ~CompletionPopup();
+    ~CompletionPopup() final;
 
     PopoverMenu& get_menu();
     Gtk::SearchEntry& get_entry();

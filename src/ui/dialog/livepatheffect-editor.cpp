@@ -319,7 +319,8 @@ void LivePathEffectEditor::add_lpes(Inkscape::UI::Widget::CompletionPopup& popup
     // Due to when we rebuild, itʼs not so easy to only populate when the MenuButton is clicked, so
     // we remove existing children. We also want to free them, BUT theyʼre Gtk::managed()d, so… h4x
     // TODO: GTK4: Use MenuButton.set_create_popup_func() to create new menu every time, on demand?
-    for (auto const item: menu.get_items()) {
+    auto const items = menu.get_items(); // Removing items will update _items, so copy, not const&!
+    for (auto const item : items) {
         menu.remove(*item);
         g_assert(item->is_managed_()); // "Private API", but sanity check for us
         delete item; // This is not ideal, but gtkmm/object.cc says should be OK

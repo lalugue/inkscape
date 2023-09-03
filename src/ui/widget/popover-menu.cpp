@@ -21,7 +21,6 @@
 
 #include "ui/menuize.h"
 #include "ui/popup-menu.h"
-#include "ui/util.h"
 #include "ui/widget/css-name-class-init.h"
 #include "ui/widget/popover-menu-item.h"
 
@@ -57,7 +56,7 @@ PopoverMenu::PopoverMenu(Gtk::PositionType const position)
 
     signal_show().connect([this]
     {
-        // Check no one (accidentally?) removes child
+        // Check no one (accidentally?) removes Grid.
         g_return_if_fail(_grid.get_parent() == this);
 
         // FIXME: Initially focused item is sometimes wrong on first popup. GTK bug?
@@ -71,31 +70,43 @@ PopoverMenu::PopoverMenu(Gtk::PositionType const position)
     UI::autohide_tooltip(*this);
 }
 
-void PopoverMenu::attach(Gtk::Widget &child,
+void PopoverMenu::attach(Gtk::Widget &item,
                          int const left_attach, int const right_attach,
                          int const top_attach, int const bottom_attach)
 {
-    // Check no one (accidentally?) removes child
+    // Check no one (accidentally?) removes Grid.
     g_return_if_fail(_grid.get_parent() == this);
 
     auto const width = right_attach - left_attach;
     auto const height = bottom_attach - top_attach;
-    _grid.attach(child, left_attach, top_attach, width, height);
+    _grid.attach(item, left_attach, top_attach, width, height);
+    _items.push_back(&item);
 }
 
-void PopoverMenu::append(Gtk::Widget &child)
+void PopoverMenu::append(Gtk::Widget &item)
 {
-    _grid.attach_next_to(child, Gtk::POS_BOTTOM);
+    g_return_if_fail(_grid.get_parent() == this);
+
+    _grid.attach_next_to(item, Gtk::POS_BOTTOM);
+    _items.push_back(&item);
 }
 
-void PopoverMenu::prepend(Gtk::Widget &child)
+void PopoverMenu::prepend(Gtk::Widget &item)
 {
-    _grid.attach_next_to(child, Gtk::POS_TOP);
+    g_return_if_fail(_grid.get_parent() == this);
+
+    _grid.attach_next_to(item, Gtk::POS_TOP);
+    _items.push_back(&item);
 }
 
-void PopoverMenu::remove(Gtk::Widget &child)
+void PopoverMenu::remove(Gtk::Widget &item)
 {
-    _grid.remove(child);
+    // Check was added with one of our methods, is not Grid, etc.
+    auto const it = std::find(_items.begin(), _items.end(), &item);
+    g_return_if_fail(it != _items.end());
+
+    _grid.remove(item);
+    _items.erase(it);
 }
 
 void PopoverMenu::append_section_label(Glib::ustring const &markup)
@@ -124,20 +135,18 @@ void PopoverMenu::popup_at_center(Gtk::Widget &relative_to)
     ::Inkscape::UI::popup_at_center(*this, relative_to);
 }
 
-std::vector<Gtk::Widget *> PopoverMenu::get_items()
+std::vector<Gtk::Widget *> const &PopoverMenu::get_items()
 {
-    return _grid.get_children();
+    return _items;
 }
 
 void PopoverMenu::unset_items_focus_hover(Gtk::Widget * const except_active)
 {
-    for_each_child(_grid, [=](Gtk::Widget &item)
-    {
-        if (&item != except_active) {
-            item.unset_state_flags(Gtk::STATE_FLAG_FOCUSED | Gtk::STATE_FLAG_PRELIGHT);
+    for (auto const item : _items) {
+        if (item != except_active) {
+            item->unset_state_flags(Gtk::STATE_FLAG_FOCUSED | Gtk::STATE_FLAG_PRELIGHT);
         }
-        return ForEachResult::_continue;
-    });
+    }
 }
 
 } // namespace Inkscape::UI::Widget
