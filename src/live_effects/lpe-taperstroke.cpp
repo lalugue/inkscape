@@ -118,7 +118,21 @@ LPETaperStroke::LPETaperStroke(LivePathEffectObject *lpeobject) :
 {
     show_orig_path = true;
     _provides_knotholder_entities = true;
-
+    //backward compat
+    auto ss = this->getRepr()->attribute("start_shape");
+    auto se = this->getRepr()->attribute("end_shape");
+    if (!ss || !g_strcmp0(ss,"")){
+        this->getRepr()->setAttribute("start_shape", "center");
+        if (ss) {
+            g_warning("Your taper stroke is not set correctly in LPE id: %s, defaulting to center mode", this->getRepr()->attribute("id"));
+        }
+    };
+    if (!se || !g_strcmp0(se,"")){
+        this->getRepr()->setAttribute("end_shape", "center");
+        if (se) {
+            g_warning("Your taper stroke is not set correctly in LPE id: %s, defaulting to center mode", this->getRepr()->attribute("id"));
+        }
+    };
     attach_start.param_set_digits(3);
     attach_end.param_set_digits(3);
     subpath.param_set_range(1, 1);
