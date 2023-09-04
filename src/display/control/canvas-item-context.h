@@ -2,6 +2,7 @@
 /** @file
  * The context in which a single CanvasItem tree exists. Holds the root node and common state.
  */
+
 #ifndef SEEN_CANVAS_ITEM_CONTEXT_H
 #define SEEN_CANVAS_ITEM_CONTEXT_H
 
@@ -11,9 +12,10 @@
 namespace Inkscape {
 
 namespace UI::Widget { class Canvas; }
+
 class CanvasItemGroup;
 
-class CanvasItemContext
+class CanvasItemContext final
 {
 public:
     CanvasItemContext(UI::Widget::Canvas *canvas);

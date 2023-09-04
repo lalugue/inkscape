@@ -1,6 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
+/** @file
+ * The context in which a single CanvasItem tree exists. Holds the root node and common state.
+ */
 
 #include "canvas-item-context.h"
+
 #include "canvas-item-group.h"
 
 namespace Inkscape {

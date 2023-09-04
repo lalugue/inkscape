@@ -36,13 +36,12 @@
 #ifndef SEEN_SP_DESKTOP_WIDGET_H
 #define SEEN_SP_DESKTOP_WIDGET_H
 
-#include <vector>
+#include <memory>
 #include <2geom/point.h>
-#include <sigc++/connection.h>
-#include <glibmm/refptr.h>
 #include <gtkmm/box.h>
 #include <gtkmm/eventbox.h>
 
+#include "helper/auto-connection.h"
 #include "message.h"
 #include "preferences.h"
 
@@ -55,7 +54,6 @@ class ActionMap;
 } // namespace Gio
 
 namespace Gtk {
-class Adjustment;
 class Grid;
 class Label;
 class Paned;
@@ -86,9 +84,6 @@ namespace Widget {
 class Button;
 class Canvas;
 class CanvasGrid;
-class LayerSelector;
-class PageSelector;
-class SelectedStyle;
 class SpinButton;
 class StatusBar;
 } // namespace Widget
@@ -96,55 +91,54 @@ class StatusBar;
 } // namespace Inkscape::UI
 
 /// A GtkEventBox on an SPDesktop.
-class SPDesktopWidget : public Gtk::Box
+class SPDesktopWidget final : public Gtk::Box
 {
     using parent_type = Gtk::Box;
 
 public:
     SPDesktopWidget(InkscapeWindow *inkscape_window, SPDocument *document);
-    ~SPDesktopWidget() override;
+    ~SPDesktopWidget() final;
 
-    Inkscape::UI::Widget::CanvasGrid *get_canvas_grid() { return _canvas_grid; }  // Temp, I hope!
+    Inkscape::UI::Widget::CanvasGrid *get_canvas_grid() { return _canvas_grid.get(); }  // Temp, I hope!
     Inkscape::UI::Widget::Canvas     *get_canvas()      { return _canvas; }
+    SPDesktop                        *get_desktop()     { return _desktop.get(); }
+    InkscapeWindow                   *get_window()      { return _window; }
+    double                            get_dt2r() const  { return _dt2r; }
+
+    /// Set the desktop of the desktop widget. N.B.: takes ownership of desktop!
+    void set_desktop(SPDesktop      * const desktop) { _desktop.reset(desktop); }
+
+    void set_window (InkscapeWindow * const window)  { _window = window; }
 
     Gio::ActionMap* get_action_map();
 
     void on_realize() override;
     void on_unrealize() override;
 
-    sigc::connection modified_connection;
-
-    SPDesktop *desktop = nullptr;
-    InkscapeWindow *window = nullptr;
-
 private:
+    Inkscape::auto_connection modified_connection;
+
+    std::unique_ptr<SPDesktop> _desktop;
+    InkscapeWindow *_window = nullptr;
+
+    // The root vbox of the window layout.
+    Gtk::Box *_vbox;
+
     Gtk::Paned *_tbbox = nullptr;
     Gtk::Box *_hbox = nullptr;
-    Inkscape::UI::Dialog::DialogContainer *_container = nullptr;
+    std::unique_ptr<Inkscape::UI::Dialog::DialogContainer> _container;
     Inkscape::UI::Dialog::DialogMultipaned *_columns = nullptr;
     Gtk::Grid* _top_toolbars = nullptr;
 
     Inkscape::UI::Widget::StatusBar    *_statusbar = nullptr;
     Inkscape::UI::Dialog::SwatchesPanel *_panels;
 
-    Glib::RefPtr<Gtk::Adjustment> _hadj;
-    Glib::RefPtr<Gtk::Adjustment> _vadj;
-
-    Inkscape::UI::Widget::SelectedStyle *_selected_style;
-
     /** A grid to display the canvas, rulers, and scrollbars. */
-    Inkscape::UI::Widget::CanvasGrid *_canvas_grid;
+    std::unique_ptr<Inkscape::UI::Widget::CanvasGrid> _canvas_grid;
 
     unsigned int _interaction_disabled_counter = 0;
-
-public:
     double _dt2r;
-
-private:
     Inkscape::UI::Widget::Canvas *_canvas = nullptr;
-    std::vector<sigc::connection> _connections;
-    Inkscape::UI::Widget::LayerSelector* _layer_selector;
-    Inkscape::UI::Widget::PageSelector* _page_selector;
 
 public:
     void setMessage(Inkscape::MessageType type, gchar const *message);
@@ -156,7 +150,7 @@ public:
     void setWindowSize (gint w, gint h);
     void setWindowTransient (void *p, int transient_policy);
     void presentWindow();
-    bool showInfoDialog( Glib::ustring const &message );
+    void showInfoDialog(Glib::ustring const &message);
     bool warnDialog (Glib::ustring const &text);
     Gtk::Toolbar* get_toolbar_by_name(const Glib::ustring& name);
     void setToolboxFocusTo (gchar const *);

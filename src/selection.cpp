@@ -289,7 +289,7 @@ Selection::setBackup ()
     SPDesktop *desktop = this->desktop();
     Inkscape::UI::Tools::NodeTool *tool = nullptr;
     if (desktop) {
-        if (auto nt = dynamic_cast<Inkscape::UI::Tools::NodeTool*>(desktop->event_context)) {
+        if (auto nt = dynamic_cast<Inkscape::UI::Tools::NodeTool*>(desktop->getTool())) {
             tool = nt;
         }
     }
@@ -354,7 +354,7 @@ Selection::restoreBackup()
     SPDocument *document = SP_ACTIVE_DOCUMENT;
     Inkscape::UI::Tools::NodeTool *tool = nullptr;
     if (desktop) {
-        if (auto nt = dynamic_cast<Inkscape::UI::Tools::NodeTool*>(desktop->event_context)) {
+        if (auto nt = dynamic_cast<Inkscape::UI::Tools::NodeTool*>(desktop->getTool())) {
             tool = nt;
         }
     }

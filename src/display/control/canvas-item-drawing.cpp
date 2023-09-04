@@ -35,11 +35,11 @@ namespace Inkscape {
  */
 CanvasItemDrawing::CanvasItemDrawing(CanvasItemGroup *group)
     : CanvasItem(group)
+    , _drawing{std::make_unique<Drawing>(this)}
 {
     _name = "CanvasItemDrawing";
     _pickable = true;
 
-    _drawing = std::make_unique<Drawing>(this);
     auto root = new DrawingGroup(*_drawing);
     root->setPickChildren(true);
     _drawing->setRoot(root);

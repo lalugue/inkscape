@@ -439,7 +439,7 @@ void Inkscape::ObjectSnapper::_snapPaths(IntermSnapResults &isr,
     bool snap_perp = _snapmanager->snapprefs.isTargetSnappable(Inkscape::SNAPTARGET_PATH_PERPENDICULAR);
     bool snap_tang = _snapmanager->snapprefs.isTargetSnappable(Inkscape::SNAPTARGET_PATH_TANGENTIAL);
 
-    //dt->snapindicator->remove_debugging_points();
+    //dt->getSnapIndicator()->remove_debugging_points();
     for (const auto & it_p : *_paths_to_snap_to) {
         if (_allowSourceToSnapToTarget(p.getSourceType(), it_p.target_type, strict_snapping)) {
             bool const being_edited = node_tool_active && it_p.currently_being_edited;
@@ -457,7 +457,7 @@ void Inkscape::ObjectSnapper::_snapPaths(IntermSnapResults &isr,
                 for (; np != anp.end(); ++np, index++) {
                     Geom::Curve const *curve = &it_pv.at(index);
                     Geom::Point const sp_doc = curve->pointAt(*np);
-                    //dt->snapindicator->set_new_debugging_point(sp_doc*dt->doc2dt());
+                    //dt->getSnapIndicator()->set_new_debugging_point(sp_doc*dt->doc2dt());
                     bool c1 = true;
                     bool c2 = true;
                     if (being_edited) {

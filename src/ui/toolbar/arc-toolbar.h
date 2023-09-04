@@ -95,7 +95,7 @@ private:
     void type_changed( int type );
     void defaults();
     void sensitivize( double v1, double v2 );
-    void check_ec(SPDesktop* desktop, Inkscape::UI::Tools::ToolBase* ec);
+    void check_ec(SPDesktop* desktop, Inkscape::UI::Tools::ToolBase* tool);
     void selection_changed(Inkscape::Selection *selection);
 
     sigc::connection _changed;

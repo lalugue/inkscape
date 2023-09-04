@@ -55,13 +55,13 @@ enum {
 static void
 canvas_zoom_helper(SPDesktop* dt, const Geom::Point& midpoint, double zoom_factor)
 {
-    if (dynamic_cast<Inkscape::UI::Tools::PencilTool *>(dt->event_context) ||
-        dynamic_cast<Inkscape::UI::Tools::PenTool    *>(dt->event_context)  ) {
-
+    if (auto const * const tool = dt->getTool();
+        tool && (dynamic_cast<Inkscape::UI::Tools::PencilTool const *>(tool) ||
+                 dynamic_cast<Inkscape::UI::Tools::PenTool    const *>(tool)))
+    {
         // Zoom around end of unfinished path.
-        std::optional<Geom::Point> zoom_to =
-            dynamic_cast<Inkscape::UI::Tools::FreehandBase*>(dt->event_context)->red_curve_get_last_point();
-        if (zoom_to) {
+        auto const &freehand_base = dynamic_cast<Inkscape::UI::Tools::FreehandBase const &>(*tool);
+        if (auto const zoom_to = freehand_base.red_curve_get_last_point()) {
             dt->zoom_relative(*zoom_to, zoom_factor);
             return;
         }
@@ -263,7 +263,6 @@ canvas_rotate_lock(InkscapeWindow *win)
     dt->set_rotation_lock(state);
 }
 
-
 std::vector<std::vector<Glib::ustring>> raw_data_canvas_transform =
 {
     // clang-format off
@@ -356,7 +355,6 @@ add_actions_canvas_transform(InkscapeWindow* win)
     }
     app->get_action_extra_data().add_data(raw_data_canvas_transform);
 }
-
 
 /*
   Local Variables:

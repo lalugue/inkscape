@@ -151,7 +151,7 @@ bool Box3dTool::root_handler(CanvasEvent const &event)
 
             dragging = true;
 
-            auto &m = _desktop->namedview->snap_manager;
+            auto &m = _desktop->getNamedView()->snap_manager;
             m.setup(_desktop, true, box3d.get());
             m.freeSnapReturnByRef(button_dt, Inkscape::SNAPSOURCE_NODE_HANDLE);
             m.unSetup();
@@ -193,7 +193,7 @@ bool Box3dTool::root_handler(CanvasEvent const &event)
             auto const motion_w = event.pos;
             auto motion_dt = _desktop->w2d(motion_w);
 
-            auto &m = _desktop->namedview->snap_manager;
+            auto &m = _desktop->getNamedView()->snap_manager;
             m.setup(_desktop, true, box3d.get());
             m.freeSnapReturnByRef(motion_dt, Inkscape::SNAPSOURCE_NODE_HANDLE);
             ctrl_dragged  = event.modifiers & GDK_CONTROL_MASK;
@@ -237,7 +237,7 @@ bool Box3dTool::root_handler(CanvasEvent const &event)
 
             ret = true;
         } else if (!sp_event_context_knot_mouseover()) {
-            auto &m = _desktop->namedview->snap_manager;
+            auto &m = _desktop->getNamedView()->snap_manager;
             m.setup(_desktop);
 
             auto const motion_w = event.pos;

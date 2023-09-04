@@ -78,7 +78,7 @@ static std::vector<Gtk::TargetEntry> completeDropTargets;
 inline Geom::Point world2desktop(SPDesktop *desktop, int x, int y)
 {
     g_assert(desktop);
-    return (Geom::Point(x, y) + desktop->canvas->get_area_world().min()) * desktop->w2d();
+    return (Geom::Point(x, y) + desktop->getCanvas()->get_area_world().min()) * desktop->w2d();
 }
 
 // Drag and Drop
@@ -91,7 +91,7 @@ static void ink_drag_data_received(GtkWidget *widget,
                          gpointer user_data)
 {
     auto dtw = static_cast<SPDesktopWidget *>(user_data);
-    SPDesktop *desktop = dtw->desktop;
+    auto const desktop = dtw->get_desktop();
     SPDocument *doc = desktop->doc();
 
     switch (info) {
@@ -100,7 +100,7 @@ static void ink_drag_data_received(GtkWidget *widget,
             int destX = 0;
             int destY = 0;
             auto canvas = dtw->get_canvas();
-            gtk_widget_translate_coordinates( widget, GTK_WIDGET(canvas->gobj()), x, y, &destX, &destY );
+            gtk_widget_translate_coordinates( widget, canvas->Gtk::Widget::gobj(), x, y, &destX, &destY );
             Geom::Point where( canvas->canvas_to_world(Geom::Point(destX, destY)));
             Geom::Point const button_dt(desktop->w2d(where));
             Geom::Point const button_doc(desktop->dt2doc(button_dt));
@@ -121,11 +121,11 @@ static void ink_drag_data_received(GtkWidget *widget,
                 SPItem *item = desktop->getItemAtPoint( where, true );
 
                 bool consumed = false;
-                if (desktop->event_context && desktop->event_context->get_drag()) {
-                    consumed = desktop->event_context->get_drag()->dropColor(item, colorspec, button_dt);
+                if (desktop->getTool() && desktop->getTool()->get_drag()) {
+                    consumed = desktop->getTool()->get_drag()->dropColor(item, colorspec, button_dt);
                     if (consumed) {
                         DocumentUndo::done( doc , _("Drop color on gradient"), "" );
-                        desktop->event_context->get_drag()->updateDraggers();
+                        desktop->getTool()->get_drag()->updateDraggers();
                     }
                 }
 
@@ -217,7 +217,7 @@ static void ink_drag_data_received(GtkWidget *widget,
                 int destX = 0;
                 int destY = 0;
                 auto canvas = dtw->get_canvas();
-                gtk_widget_translate_coordinates( widget, GTK_WIDGET(canvas->gobj()), x, y, &destX, &destY );
+                gtk_widget_translate_coordinates( widget, canvas->Gtk::Widget::gobj(), x, y, &destX, &destY );
                 Geom::Point where( canvas->canvas_to_world(Geom::Point(destX, destY)));
                 Geom::Point const button_dt(desktop->w2d(where));
                 Geom::Point const button_doc(desktop->dt2doc(button_dt));
@@ -225,11 +225,11 @@ static void ink_drag_data_received(GtkWidget *widget,
                 SPItem *item = desktop->getItemAtPoint( where, true );
 
                 bool consumed = false;
-                if (desktop->event_context && desktop->event_context->get_drag()) {
-                    consumed = desktop->event_context->get_drag()->dropColor(item, colorspec.c_str(), button_dt);
+                if (desktop->getTool() && desktop->getTool()->get_drag()) {
+                    consumed = desktop->getTool()->get_drag()->dropColor(item, colorspec.c_str(), button_dt);
                     if (consumed) {
                         DocumentUndo::done( doc, _("Drop color on gradient"), "" );
-                        desktop->event_context->get_drag()->updateDraggers();
+                        desktop->getTool()->get_drag()->updateDraggers();
                     }
                 }
 

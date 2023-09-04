@@ -98,7 +98,7 @@ SPKnot::~SPKnot()
     }
 
     // FIXME: cannot snap to destroyed knot (lp:1309050)
-    // this->desktop->event_context->discard_delayed_snap_event();
+    // this->desktop->getTool()->discard_delayed_snap_event();
     knot_deleted_callback(this);
 }
 
@@ -150,7 +150,7 @@ bool SPKnot::eventHandler(Inkscape::CanvasEvent const &event)
             grabbed = false;
             moved = false;
             consumed = true;
-        } else if (event.num_press == 1 && desktop && desktop->event_context && !desktop->event_context->is_space_panning()) {
+        } else if (event.num_press == 1 && desktop && desktop->getTool() && !desktop->getTool()->is_space_panning()) {
             auto const p = desktop->w2d(event.pos);
             startDragging(p, event.pos.floor(), event.time);
             mousedown_signal.emit(this, event.modifiers);
@@ -161,11 +161,11 @@ bool SPKnot::eventHandler(Inkscape::CanvasEvent const &event)
     [&] (Inkscape::ButtonReleaseEvent const &event) {
         if (event.button == 1      &&
             desktop                &&
-            desktop->event_context &&
-            !desktop->event_context->is_space_panning())
+            desktop->getTool() &&
+            !desktop->getTool()->is_space_panning())
         {
             // If we have any pending snap event, then invoke it now
-            desktop->event_context->process_delayed_snap_event();
+            desktop->getTool()->process_delayed_snap_event();
             pressure = 0;
 
             if (transform_escaped) {
@@ -219,8 +219,8 @@ bool SPKnot::eventHandler(Inkscape::CanvasEvent const &event)
                 consumed = true;
                 Inkscape::UI::Tools::sp_update_helperpath(desktop);
             }
-        } else if (grabbed && desktop && desktop->event_context &&
-                   !desktop->event_context->is_space_panning())
+        } else if (grabbed && desktop && desktop->getTool() &&
+                   !desktop->getTool()->is_space_panning())
         {
             consumed = true;
 
@@ -244,7 +244,7 @@ bool SPKnot::eventHandler(Inkscape::CanvasEvent const &event)
                 grabbed_signal.emit(this, event.modifiers);
             }
 
-            desktop->event_context->snap_delay_handler(nullptr, this, event, Inkscape::UI::Tools::DelayedSnapEvent::KNOT_HANDLER);
+            desktop->getTool()->snap_delay_handler(nullptr, this, event, Inkscape::UI::Tools::DelayedSnapEvent::KNOT_HANDLER);
             handler_request_position(event);
             moved = true;
         }
@@ -254,10 +254,10 @@ bool SPKnot::eventHandler(Inkscape::CanvasEvent const &event)
         setFlag(SP_KNOT_MOUSEOVER, true);
         setFlag(SP_KNOT_GRABBED, false);
 
-        if (tip && desktop && desktop->event_context) {
-            desktop->event_context->defaultMessageContext()->set(Inkscape::NORMAL_MESSAGE, tip);
+        if (tip && desktop && desktop->getTool()) {
+            desktop->getTool()->defaultMessageContext()->set(Inkscape::NORMAL_MESSAGE, tip);
         }
-        desktop->event_context->use_cursor(_cursors[SP_KNOT_STATE_MOUSEOVER]);
+        desktop->getTool()->use_cursor(_cursors[SP_KNOT_STATE_MOUSEOVER]);
 
         grabbed = false;
         moved = false;
@@ -268,10 +268,10 @@ bool SPKnot::eventHandler(Inkscape::CanvasEvent const &event)
         setFlag(SP_KNOT_MOUSEOVER, false);
         setFlag(SP_KNOT_GRABBED, false);
 
-        if (tip && desktop && desktop->event_context) {
-            desktop->event_context->defaultMessageContext()->clear();
+        if (tip && desktop && desktop->getTool()) {
+            desktop->getTool()->defaultMessageContext()->clear();
         }
-        desktop->event_context->use_cursor(_cursors[SP_KNOT_STATE_NORMAL]);
+        desktop->getTool()->use_cursor(_cursors[SP_KNOT_STATE_NORMAL]);
 
         grabbed = false;
         moved = false;
@@ -302,7 +302,7 @@ bool SPKnot::eventHandler(Inkscape::CanvasEvent const &event)
                 grabbed = false;
                 moved = false;
 
-                desktop->event_context->discard_delayed_snap_event();
+                desktop->getTool()->discard_delayed_snap_event();
                 break;
             default:
                 consumed = false;

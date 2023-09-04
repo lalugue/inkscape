@@ -1824,7 +1824,7 @@ void sp_gradient_invert_selected_gradients(SPDesktop *desktop, Inkscape::PaintTa
 void sp_gradient_reverse_selected_gradients(SPDesktop *desktop)
 {
     Inkscape::Selection *selection = desktop->getSelection();
-    Inkscape::UI::Tools::ToolBase *ev = desktop->getEventContext();
+    Inkscape::UI::Tools::ToolBase *ev = desktop->getTool();
 
     if (!ev) {
         return;

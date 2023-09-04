@@ -1221,7 +1221,7 @@ bool CanvasPrivate::process_event(CanvasEvent &event)
             pre_scroll_grabbed_item = nullptr;
             // This is needed to remove alignment or distribution snap indicators.
             if (q->_desktop) {
-                q->_desktop->snapindicator->remove_snaptarget();
+                q->_desktop->getSnapIndicator()->remove_snaptarget();
             }
             return repick();
 
@@ -1788,7 +1788,7 @@ void Canvas::set_cursor()
 
     switch (_hover_direction) {
         case Inkscape::SplitDirection::NONE:
-            _desktop->event_context->use_tool_cursor();
+            _desktop->getTool()->use_tool_cursor();
             break;
 
         case Inkscape::SplitDirection::NORTH:

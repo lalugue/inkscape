@@ -234,8 +234,8 @@ void GuidelinePropertiesDialog::_setup() {
     /* fixme: We should allow percents here too, as percents of the canvas size */
     _unit_menu.setUnitType(UNIT_TYPE_LINEAR);
     _unit_menu.setUnit("px");
-    if (_desktop->namedview->display_units) {
-        _unit_menu.setUnit( _desktop->namedview->display_units->abbr );
+    if (_desktop->getNamedView()->display_units) {
+        _unit_menu.setUnit( _desktop->getNamedView()->display_units->abbr );
     }
     _spin_angle.setUnit(_angle_unit_status);
 
@@ -296,7 +296,7 @@ void GuidelinePropertiesDialog::_setup() {
     _relative_toggle.signal_toggled().connect(sigc::mem_fun(*this, &GuidelinePropertiesDialog::_modeChanged));
     _relative_toggle.set_active(_relative_toggle_status);
 
-    bool global_guides_lock = _desktop->namedview->getLockGuides();
+    bool global_guides_lock = _desktop->getNamedView()->getLockGuides();
     if(global_guides_lock){
         _locked_toggle.set_sensitive(false);
     }

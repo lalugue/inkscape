@@ -203,7 +203,7 @@ void PagesTool::resizeKnotMoved(SPKnot *knot, Geom::Point const &ppointer, guint
 Geom::Point PagesTool::getSnappedResizePoint(Geom::Point point, guint state, Geom::Point origin, SPObject *target)
 {
     if (!(state & GDK_SHIFT_MASK)) {
-        SnapManager &snap_manager = _desktop->namedview->snap_manager;
+        SnapManager &snap_manager = _desktop->getNamedView()->snap_manager;
         snap_manager.setup(_desktop, true, target);
         Inkscape::SnapCandidatePoint scp(point, Inkscape::SNAPSOURCE_PAGE_CORNER);
         scp.addOrigin(origin);
@@ -380,7 +380,7 @@ bool PagesTool::root_handler(CanvasEvent const &event)
             ret = true;
 
             // Clear snap indication on mouse up.
-            _desktop->snapindicator->remove_snaptarget();
+            _desktop->getSnapIndicator()->remove_snaptarget();
         },
         [&] (KeyPressEvent const &event) {
             if (event.keyval == GDK_KEY_Escape) {
@@ -457,7 +457,7 @@ Geom::Affine PagesTool::moveTo(Geom::Point xy, bool snap)
     Geom::Point dxy = xy - drag_origin_dt;
 
     if (snap) {
-        SnapManager &snap_manager = _desktop->namedview->snap_manager;
+        SnapManager &snap_manager = _desktop->getNamedView()->snap_manager;
         snap_manager.setup(_desktop, true, dragging_item);
         snap_manager.snapprefs.clearTargetMask(0); // Disable all snapping targets
         snap_manager.snapprefs.setTargetMask(SNAPTARGET_ALIGNMENT_CATEGORY, -1);
@@ -474,7 +474,7 @@ Geom::Affine PagesTool::moveTo(Geom::Point xy, bool snap)
 
         if (bb->best_snapped_point.getSnapped()) {
             dxy = bb->getTranslationSnapped();
-            _desktop->snapindicator->set_new_snaptarget(bb->best_snapped_point);
+            _desktop->getSnapIndicator()->set_new_snaptarget(bb->best_snapped_point);
         }
 
         snap_manager.snapprefs.clearTargetMask(-1); // Reset preferences

@@ -10,15 +10,18 @@
  * Jamison; none of whom bothered to add their names to the copyright of main.cc.
  *
  * The contents of this file may be used under the GNU General Public License Version 2 or later.
- *
  */
 
 #include "file-export-cmd.h"
 
-#include <boost/algorithm/string.hpp>
 #include <iostream>
-#include <png.h> // PNG export
 #include <string>
+#include <boost/algorithm/string.hpp>
+#include <giomm/file.h>
+#include <glibmm/fileutils.h>
+#include <glibmm/miscutils.h>
+#include <glibmm/regex.h>
+#include <png.h> // PNG export
 
 #include "document.h"
 #include "extension/db.h"

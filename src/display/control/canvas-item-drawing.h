@@ -1,11 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-#ifndef SEEN_CANVAS_ITEM_DRAWING_H
-#define SEEN_CANVAS_ITEM_DRAWING_H
-
 /**
  * A class to render the SVG drawing.
  */
-
 /*
  * Author:
  *   Tavmjong Bah
@@ -17,8 +13,11 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include <sigc++/sigc++.h>
+#ifndef SEEN_CANVAS_ITEM_DRAWING_H
+#define SEEN_CANVAS_ITEM_DRAWING_H
 
+#include <memory>
+#include <sigc++/signal.h>
 
 #include "canvas-item.h"
 

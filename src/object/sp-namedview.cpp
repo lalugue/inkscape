@@ -563,7 +563,7 @@ void SPNamedView::show(SPDesktop *desktop)
  */
 void sp_namedview_window_from_document(SPDesktop *desktop)
 {
-    SPNamedView *nv = desktop->namedview;
+    SPNamedView *nv = desktop->getNamedView();
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
     int window_geometry = prefs->getInt("/options/savewindowgeometry/value", PREFS_WINDOW_GEOMETRY_NONE);
     int default_size = prefs->getInt("/options/defaultwindowsize/value", PREFS_WINDOW_SIZE_NATURAL);
@@ -645,7 +645,7 @@ void sp_namedview_window_from_document(SPDesktop *desktop)
  */
 void sp_namedview_zoom_and_view_from_document(SPDesktop *desktop)
 {
-    SPNamedView *nv = desktop->namedview;
+    SPNamedView *nv = desktop->getNamedView();
     if (nv->zoom != 0 && nv->zoom != HUGE_VAL && !std::isnan(nv->zoom)
         && nv->cx != HUGE_VAL && !std::isnan(nv->cx)
         && nv->cy != HUGE_VAL && !std::isnan(nv->cy)) {
@@ -669,7 +669,7 @@ void sp_namedview_update_layers_from_document (SPDesktop *desktop)
 {
     SPObject *layer = nullptr;
     SPDocument *document = desktop->doc();
-    SPNamedView *nv = desktop->namedview;
+    SPNamedView *nv = desktop->getNamedView();
     if ( nv->default_layer_id != 0 ) {
         layer = document->getObjectById(g_quark_to_string(nv->default_layer_id));
     }
@@ -699,7 +699,7 @@ void sp_namedview_document_from_window(SPDesktop *desktop)
     int window_geometry = prefs->getInt("/options/savewindowgeometry/value", PREFS_WINDOW_GEOMETRY_NONE);
     bool save_geometry_in_file = window_geometry == PREFS_WINDOW_GEOMETRY_FILE;
     bool save_viewport_in_file = prefs->getBool("/options/savedocviewport/value", true);
-    Inkscape::XML::Node *view = desktop->namedview->getRepr();
+    Inkscape::XML::Node *view = desktop->getNamedView()->getRepr();
 
     // saving window geometry is not undoable
     DocumentUndo::ScopedInsensitive _no_undo(desktop->getDocument());

@@ -64,7 +64,7 @@ public:
     // Red - Last segment as it's drawn.
     CanvasItemPtr<CanvasItemBpath> red_bpath;
     SPCurve red_curve;
-    std::optional<Geom::Point> red_curve_get_last_point();
+    std::optional<Geom::Point> red_curve_get_last_point() const;
 
     // Blue - New path after LPE as it's drawn.
     CanvasItemPtr<CanvasItemBpath> blue_bpath;

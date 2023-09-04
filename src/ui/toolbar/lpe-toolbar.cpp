@@ -192,7 +192,7 @@ GtkWidget *
 LPEToolbar::create(SPDesktop *desktop)
 {
     auto toolbar = new LPEToolbar(desktop);
-    return GTK_WIDGET(toolbar->gobj());
+    return toolbar->Gtk::Widget::gobj();
 }
 
 // this is called when the mode is changed via the toolbar (i.e., one of the subtool buttons is pressed)
@@ -201,8 +201,8 @@ LPEToolbar::mode_changed(int mode)
 {
     using namespace Inkscape::LivePathEffect;
 
-    ToolBase *ec = _desktop->event_context;
-    if (!SP_LPETOOL_CONTEXT(ec)) {
+    auto const tool = _desktop->getTool();
+    if (!SP_LPETOOL_CONTEXT(tool)) {
         return;
     }
 
@@ -213,7 +213,7 @@ LPEToolbar::mode_changed(int mode)
 
         EffectType type = lpesubtools[mode].type;
 
-        LpeTool *lc = SP_LPETOOL_CONTEXT(_desktop->event_context);
+        auto const lc = SP_LPETOOL_CONTEXT(_desktop->getTool());
         bool success = UI::Tools::lpetool_try_construction(lc->getDesktop(), type);
         if (success) {
             // since the construction was already performed, we set the state back to inactive
@@ -221,7 +221,7 @@ LPEToolbar::mode_changed(int mode)
             mode = 0;
         } else {
             // switch to the chosen subtool
-            SP_LPETOOL_CONTEXT(_desktop->event_context)->mode = type;
+            SP_LPETOOL_CONTEXT(_desktop->getTool())->mode = type;
         }
 
         if (DocumentUndo::getUndoSensitive(_desktop->getDocument())) {
@@ -240,7 +240,7 @@ LPEToolbar::toggle_show_bbox() {
     bool show = _show_bbox_item->get_active();
     prefs->setBool("/tools/lpetool/show_bbox",  show);
 
-    if (auto lc = dynamic_cast<LpeTool *>(_desktop->event_context)) {
+    if (auto const lc = dynamic_cast<LpeTool *>(_desktop->getTool())) {
         lc->reset_limiting_bbox();
     }
 }
@@ -266,7 +266,7 @@ LPEToolbar::toggle_set_bbox()
         prefs->setDouble("/tools/lpetool/bbox_lowerrightx", B[Geom::X]);
         prefs->setDouble("/tools/lpetool/bbox_lowerrighty", B[Geom::Y]);
 
-        SP_LPETOOL_CONTEXT(_desktop->event_context)->reset_limiting_bbox();
+        SP_LPETOOL_CONTEXT(_desktop->getTool())->reset_limiting_bbox();
     }
 
     _bbox_from_selection_item->set_active(false);
@@ -297,7 +297,7 @@ LPEToolbar::change_line_segment_type(int mode)
 void
 LPEToolbar::toggle_show_measuring_info()
 {
-    LpeTool *lc = dynamic_cast<LpeTool *>(_desktop->event_context);
+    auto const lc = dynamic_cast<LpeTool *>(_desktop->getTool());
     if (!lc) {
         return;
     }
@@ -320,7 +320,7 @@ LPEToolbar::unit_changed(int /* NotUsed */)
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
     prefs->setString("/tools/lpetool/unit", unit->abbr);
 
-    if (auto lc = SP_LPETOOL_CONTEXT(_desktop->event_context)) {
+    if (auto const lc = SP_LPETOOL_CONTEXT(_desktop->getTool())) {
         lc->delete_measuring_items();
         lc->create_measuring_items();
     }
@@ -329,7 +329,7 @@ LPEToolbar::unit_changed(int /* NotUsed */)
 void
 LPEToolbar::open_lpe_dialog()
 {
-    if (dynamic_cast<LpeTool *>(_desktop->event_context)) {
+    if (dynamic_cast<LpeTool *>(_desktop->getTool())) {
         _desktop->getContainer()->new_dialog("LivePathEffect");
     } else {
         std::cerr << "LPEToolbar::open_lpe_dialog: LPEToolbar active but current tool is not LPE tool!" << std::endl;
@@ -338,9 +338,9 @@ LPEToolbar::open_lpe_dialog()
 }
 
 void
-LPEToolbar::watch_ec(SPDesktop* desktop, Inkscape::UI::Tools::ToolBase* ec)
+LPEToolbar::watch_ec(SPDesktop* desktop, Inkscape::UI::Tools::ToolBase* tool)
 {
-    if (SP_LPETOOL_CONTEXT(ec)) {
+    if (SP_LPETOOL_CONTEXT(tool)) {
         // Watch selection
         c_selection_modified = desktop->getSelection()->connectModified(sigc::mem_fun(*this, &LPEToolbar::sel_modified));
         c_selection_changed = desktop->getSelection()->connectChanged(sigc::mem_fun(*this, &LPEToolbar::sel_changed));
@@ -356,8 +356,8 @@ LPEToolbar::watch_ec(SPDesktop* desktop, Inkscape::UI::Tools::ToolBase* ec)
 void
 LPEToolbar::sel_modified(Inkscape::Selection *selection, guint /*flags*/)
 {
-    ToolBase *ec = selection->desktop()->event_context;
-    if (auto lc = SP_LPETOOL_CONTEXT(ec)) {
+    auto const tool = selection->desktop()->getTool();
+    if (auto const lc = SP_LPETOOL_CONTEXT(tool)) {
         lc->update_measuring_items();
     }
 }
@@ -366,8 +366,8 @@ void
 LPEToolbar::sel_changed(Inkscape::Selection *selection)
 {
     using namespace Inkscape::LivePathEffect;
-    ToolBase *ec = selection->desktop()->event_context;
-    LpeTool *lc = SP_LPETOOL_CONTEXT(ec);
+    auto const tool = selection->desktop()->getTool();
+    auto const lc = SP_LPETOOL_CONTEXT(tool);
     if (!lc) {
         return;
     }

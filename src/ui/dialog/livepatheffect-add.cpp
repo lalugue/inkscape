@@ -75,7 +75,7 @@ void sp_add_top_window_classes_callback(Gtk::Widget *widg)
 {
     SPDesktop *desktop = SP_ACTIVE_DESKTOP;
     if (desktop) {
-        Gtk::Widget *canvas = desktop->canvas;
+        Gtk::Widget *canvas = desktop->getCanvas();
         Gtk::Window *toplevel_window = dynamic_cast<Gtk::Window *>(canvas->get_toplevel());
         if (toplevel_window) {
             Gtk::Window *current_window = dynamic_cast<Gtk::Window *>(widg);
@@ -182,9 +182,9 @@ LivePathEffectAdd::LivePathEffectAdd()
         LPESelectorEffectEventExpander->signal_button_press_event().connect(
             sigc::bind(sigc::mem_fun(*this, &LivePathEffectAdd::expand), builder_effect));
         LPESelectorEffectEventExpander->signal_enter_notify_event().connect(sigc::bind(
-            sigc::mem_fun(*this, &LivePathEffectAdd::mouseover), GTK_WIDGET(LPESelectorEffect->gobj())));
+            sigc::mem_fun(*this, &LivePathEffectAdd::mouseover), LPESelectorEffect->Gtk::Widget::gobj()));
         LPESelectorEffectEventExpander->signal_leave_notify_event().connect(sigc::bind(
-            sigc::mem_fun(*this, &LivePathEffectAdd::mouseout), GTK_WIDGET(LPESelectorEffect->gobj())));
+            sigc::mem_fun(*this, &LivePathEffectAdd::mouseout), LPESelectorEffect->Gtk::Widget::gobj()));
         Gtk::Label *LPEName;
         builder_effect->get_widget("LPEName", LPEName);
         Gtk::Label *LPEUntranslatedName;
@@ -238,19 +238,19 @@ LivePathEffectAdd::LivePathEffectAdd()
             sigc::bind(
                 sigc::mem_fun(*this, &LivePathEffectAdd::apply), builder_effect, &converter.data(i)));
         LPESelectorEffectEventApply->signal_enter_notify_event().connect(sigc::bind(
-            sigc::mem_fun(*this, &LivePathEffectAdd::mouseover), GTK_WIDGET(LPESelectorEffectEventApply->gobj())));
+            sigc::mem_fun(*this, &LivePathEffectAdd::mouseover), LPESelectorEffectEventApply->Gtk::Widget::gobj()));
         LPESelectorEffectEventApply->signal_leave_notify_event().connect(sigc::bind(
-            sigc::mem_fun(*this, &LivePathEffectAdd::mouseout), GTK_WIDGET(LPESelectorEffectEventApply->gobj())));
+            sigc::mem_fun(*this, &LivePathEffectAdd::mouseout), LPESelectorEffectEventApply->Gtk::Widget::gobj()));
         Gtk::Box *LPESelectorButtonBox;
         builder_effect->get_widget("LPESelectorButtonBox", LPESelectorButtonBox);
         LPESelectorButtonBox->signal_enter_notify_event().connect(sigc::bind(
-            sigc::mem_fun(*this, &LivePathEffectAdd::mouseover), GTK_WIDGET(LPESelectorEffect->gobj())));
+            sigc::mem_fun(*this, &LivePathEffectAdd::mouseover), LPESelectorEffect->Gtk::Widget::gobj()));
         LPESelectorButtonBox->signal_leave_notify_event().connect(sigc::bind(
-            sigc::mem_fun(*this, &LivePathEffectAdd::mouseout), GTK_WIDGET(LPESelectorEffect->gobj())));
+            sigc::mem_fun(*this, &LivePathEffectAdd::mouseout), LPESelectorEffect->Gtk::Widget::gobj()));
         LPESelectorEffect->signal_enter_notify_event().connect(sigc::bind(
-            sigc::mem_fun(*this, &LivePathEffectAdd::mouseover), GTK_WIDGET(LPESelectorEffect->gobj())));
+            sigc::mem_fun(*this, &LivePathEffectAdd::mouseover), LPESelectorEffect->Gtk::Widget::gobj()));
         LPESelectorEffect->signal_leave_notify_event().connect(sigc::bind(
-            sigc::mem_fun(*this, &LivePathEffectAdd::mouseout), GTK_WIDGET(LPESelectorEffect->gobj())));
+            sigc::mem_fun(*this, &LivePathEffectAdd::mouseout), LPESelectorEffect->Gtk::Widget::gobj()));
         _LPESelectorFlowBox->insert(*LPESelectorEffect, i);
         LPESelectorEffect->get_parent()->signal_key_press_event().connect(
             sigc::bind(
@@ -268,17 +268,17 @@ LivePathEffectAdd::LivePathEffectAdd()
     _LPESelectorEffectRadioList->signal_clicked().connect(
         sigc::bind(sigc::mem_fun(*this, &LivePathEffectAdd::viewChanged), 2));
     _LPESelectorEffectEventFavShow->signal_enter_notify_event().connect(sigc::bind(
-        sigc::mem_fun(*this, &LivePathEffectAdd::mouseover), GTK_WIDGET(_LPESelectorEffectEventFavShow->gobj())));
+        sigc::mem_fun(*this, &LivePathEffectAdd::mouseover), _LPESelectorEffectEventFavShow->Gtk::Widget::gobj()));
     _LPESelectorEffectEventFavShow->signal_leave_notify_event().connect(sigc::bind(
-        sigc::mem_fun(*this, &LivePathEffectAdd::mouseout), GTK_WIDGET(_LPESelectorEffectEventFavShow->gobj())));
+        sigc::mem_fun(*this, &LivePathEffectAdd::mouseout), _LPESelectorEffectEventFavShow->Gtk::Widget::gobj()));
     _LPESelectorEffectEventFavShow->signal_button_press_event().connect(
         sigc::mem_fun(*this, &LivePathEffectAdd::show_fav_toggler));
     _LPESelectorEffectInfoEventBox->signal_leave_notify_event().connect(
         sigc::mem_fun(*this, &LivePathEffectAdd::hide_pop_description));
     _LPESelectorEffectInfoEventBox->signal_enter_notify_event().connect(sigc::bind(
-        sigc::mem_fun(*this, &LivePathEffectAdd::mouseover), GTK_WIDGET(_LPESelectorEffectInfoEventBox->gobj())));
+        sigc::mem_fun(*this, &LivePathEffectAdd::mouseover), _LPESelectorEffectInfoEventBox->Gtk::Widget::gobj()));
     _LPESelectorEffectInfoEventBox->signal_leave_notify_event().connect(sigc::bind(
-        sigc::mem_fun(*this, &LivePathEffectAdd::mouseout), GTK_WIDGET(_LPESelectorEffectInfoEventBox->gobj())));
+        sigc::mem_fun(*this, &LivePathEffectAdd::mouseout), _LPESelectorEffectInfoEventBox->Gtk::Widget::gobj()));
     _LPEExperimental->property_active().signal_changed().connect(
         sigc::mem_fun(*this, &LivePathEffectAdd::reload_effect_list));
     Gtk::Window *window = SP_ACTIVE_DESKTOP->getToplevel();

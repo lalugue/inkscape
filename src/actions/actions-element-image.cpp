@@ -138,7 +138,7 @@ void image_crop(InkscapeApplication *app)
     auto win = app->get_active_window();
     auto doc = app->get_active_document();
     auto msg = win->get_desktop()->messageStack();
-    auto tool = win->get_desktop()->getEventContext();
+    auto const tool = win->get_desktop()->getTool();
     int done = 0;
     int bytes = 0;
 

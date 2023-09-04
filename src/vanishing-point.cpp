@@ -181,7 +181,7 @@ static void vp_knot_moved_handler(SPKnot *knot, Geom::Point const &ppointer, gui
     // shift key
     // has a different purpose in this context (see above)
     SPDesktop *desktop = SP_ACTIVE_DESKTOP;
-    SnapManager &m = desktop->namedview->snap_manager;
+    auto &m = desktop->getNamedView()->snap_manager;
     m.setup(desktop);
     Inkscape::SnappedPoint s = m.freeSnap(Inkscape::SnapCandidatePoint(p, Inkscape::SNAPSOURCE_OTHER_HANDLE));
     m.unSetup();
@@ -603,10 +603,10 @@ void VPDrag::updateBoxHandles()
         return;
     }
 
-    Inkscape::UI::Tools::ToolBase *ec = SP_ACTIVE_DESKTOP->getEventContext();
-    g_assert(ec != nullptr);
-    if (ec->shape_editor != nullptr) {
-        ec->shape_editor->update_knotholder();
+    auto const tool = SP_ACTIVE_DESKTOP->getTool();
+    g_assert(tool != nullptr);
+    if (tool->shape_editor != nullptr) {
+        tool->shape_editor->update_knotholder();
     }
 }
 

@@ -153,7 +153,7 @@ PageToolbar::PageToolbar(BaseObjectType *cobject, const Glib::RefPtr<Gtk::Builde
     _ec_connection = _desktop->connectEventContextChanged(sigc::mem_fun(*this, &PageToolbar::toolChanged));
     _doc_connection = _desktop->connectDocumentReplaced([=](SPDesktop *desktop, SPDocument *doc) {
         if (doc) {
-            toolChanged(desktop, desktop->getEventContext());
+            toolChanged(desktop, desktop->getTool());
         }
     });
 
@@ -211,7 +211,7 @@ PageToolbar::~PageToolbar()
     toolChanged(nullptr, nullptr);
 }
 
-void PageToolbar::toolChanged(SPDesktop *desktop, Inkscape::UI::Tools::ToolBase *ec)
+void PageToolbar::toolChanged(SPDesktop *desktop, Inkscape::UI::Tools::ToolBase *tool)
 {
     // Disconnect previous page changed signal
     _page_selected.disconnect();
@@ -219,7 +219,7 @@ void PageToolbar::toolChanged(SPDesktop *desktop, Inkscape::UI::Tools::ToolBase 
     _page_modified.disconnect();
     _document = nullptr;
 
-    if (dynamic_cast<Inkscape::UI::Tools::PagesTool *>(ec)) {
+    if (dynamic_cast<Inkscape::UI::Tools::PagesTool *>(tool)) {
         // Save the document and page_manager for future use.
         if ((_document = desktop->getDocument())) {
             auto &page_manager = _document->getPageManager();
@@ -510,7 +510,7 @@ GtkWidget *PageToolbar::create(SPDesktop *desktop)
         return nullptr;
     }
     // This widget will be auto-freed by the builder unless you have called reference();
-    return GTK_WIDGET(toolbar->gobj());
+    return toolbar->Gtk::Widget::gobj();
 }
 
 

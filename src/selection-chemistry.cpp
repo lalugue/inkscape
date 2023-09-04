@@ -138,7 +138,7 @@ namespace Inkscape {
 
 void SelectionHelper::selectAll(SPDesktop *dt)
 {
-    NodeTool *nt = dynamic_cast<NodeTool*>(dt->event_context);
+    NodeTool *nt = dynamic_cast<NodeTool*>(dt->getTool());
     if (nt) {
         if (!nt->_multipath->empty()) {
             nt->_multipath->selectSubpaths();
@@ -150,7 +150,7 @@ void SelectionHelper::selectAll(SPDesktop *dt)
 
 void SelectionHelper::selectAllInAll(SPDesktop *dt)
 {
-    NodeTool *nt = dynamic_cast<NodeTool*>(dt->event_context);
+    NodeTool *nt = dynamic_cast<NodeTool*>(dt->getTool());
     if (nt) {
         nt->_selected_nodes->selectAll();
     } else {
@@ -160,7 +160,7 @@ void SelectionHelper::selectAllInAll(SPDesktop *dt)
 
 void SelectionHelper::selectNone(SPDesktop *dt)
 {
-    NodeTool *nt = dynamic_cast<NodeTool*>(dt->event_context);
+    NodeTool *nt = dynamic_cast<NodeTool*>(dt->getTool());
     if (nt && !nt->_selected_nodes->empty()) {
         nt->_selected_nodes->clear();
     } else if (!dt->getSelection()->isEmpty()) {
@@ -198,7 +198,7 @@ void SelectionHelper::selectSameObjectType(SPDesktop *dt)
 
 void SelectionHelper::invert(SPDesktop *dt)
 {
-    NodeTool *nt = dynamic_cast<NodeTool*>(dt->event_context);
+    NodeTool *nt = dynamic_cast<NodeTool*>(dt->getTool());
     if (nt) {
         nt->_multipath->invertSelectionInSubpaths();
     } else {
@@ -208,7 +208,7 @@ void SelectionHelper::invert(SPDesktop *dt)
 
 void SelectionHelper::invertAllInAll(SPDesktop *dt)
 {
-    NodeTool *nt = dynamic_cast<NodeTool*>(dt->event_context);
+    NodeTool *nt = dynamic_cast<NodeTool*>(dt->getTool());
     if (nt) {
         nt->_selected_nodes->invertSelection();
     } else {
@@ -219,7 +219,7 @@ void SelectionHelper::invertAllInAll(SPDesktop *dt)
 void SelectionHelper::reverse(SPDesktop *dt)
 {
     // TODO make this a virtual method of event context!
-    NodeTool *nt = dynamic_cast<NodeTool*>(dt->event_context);
+    NodeTool *nt = dynamic_cast<NodeTool*>(dt->getTool());
     if (nt) {
         nt->_multipath->reverseSubpaths();
     } else {
@@ -371,7 +371,7 @@ void ObjectSet::deleteItems(bool skip_undo)
          * associated selection context.  For example: deleting an object
          * while moving it around the canvas.
          */
-        dt->setEventContext(std::string(dt->getEventContext()->getPrefsPath()));
+        dt->setEventContext(std::string(dt->getTool()->getPrefsPath()));
     }
 
     if(document()) {
@@ -1251,14 +1251,14 @@ void ObjectSet::cut()
     copy();
 
     // Text and Node tools have their own CUT responses instead of deleteItems
-    if (auto text_tool = dynamic_cast<TextTool*>(_desktop->event_context)) {
+    if (auto text_tool = dynamic_cast<TextTool*>(_desktop->getTool())) {
         if (text_tool->deleteSelection()) {
             DocumentUndo::done(desktop()->getDocument(), _("Cut text"), INKSCAPE_ICON("draw-text"));
             return;
         }
     }
 
-    auto node_tool = dynamic_cast<Inkscape::UI::Tools::NodeTool *>(desktop()->event_context);
+    auto node_tool = dynamic_cast<Inkscape::UI::Tools::NodeTool *>(desktop()->getTool());
     if (node_tool && node_tool->_selected_nodes) {
         auto prefs = Preferences::get();
         // This takes care of undo internally

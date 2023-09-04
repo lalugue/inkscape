@@ -68,7 +68,7 @@ public:
 
     DelayedSnapEvent(ToolBase *tool, gpointer item, gpointer item2, MotionEvent const &event, DelayedSnapEvent::Origin origin);
 
-    ToolBase *getEventContext() const { return _tool; }
+    ToolBase *getTool() const { return _tool; }
     gpointer getItem() const { return _item; }
     gpointer getItem2() const { return _item2; }
     MotionEvent const &getEvent() const { return *_event; }
@@ -219,7 +219,7 @@ private:
     bool _dse_callback_in_process = false;
 };
 
-void sp_event_context_read(ToolBase *ec, char const *key);
+void sp_event_context_read(ToolBase *tool, char const *key);
 
 // Todo: These functions are destined for removal, since events cannot be gobbled in GTK4.
 gint gobble_key_events(guint keyval, guint mask);

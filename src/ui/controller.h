@@ -162,6 +162,12 @@ auto constexpr callable_or_null = std::is_same_v       <Function, std::nullptr_t
 
 } // namespace Detail
 
+/// Whether Function is suitable to handle Gesture::begin|end.
+/// The arguments are the gesture & triggering event sequence.
+template <typename Function, typename Listener>
+auto constexpr is_gesture_handler = Detail::callable_or_null<Function, void,
+    Listener *, GtkGesture *, GdkEventSequence *>;
+
 /// Whether Function is suitable to handle EventControllerKey::pressed|released.
 /// The arguments are the controller, keyval, hardware keycode & modifier state.
 template <typename Function, typename Listener>
@@ -205,6 +211,12 @@ auto constexpr is_scroll_handler = Detail::callable_or_null<Function, void,
 template <typename Function, typename Listener>
 auto constexpr is_scroll_xy_handler = Detail::callable_or_null<Function, void,
     Listener *, GtkEventControllerScroll *, double, double>;
+
+/// Whether Function is suitable for GestureZoom::scale-changed.
+/// The arguments are gesture & scale delta (initial state as 1)
+template <typename Function, typename Listener>
+auto constexpr is_zoom_scale_handler = Detail::callable_or_null<Function, void,
+    Listener *, GtkGestureZoom *, double>;
 
 /// Create a key event controller for & manage()d by widget.
 /// Note that ::modifiers seems buggy, i.e. gives wrong state, in GTK3. Beware!!
@@ -292,6 +304,27 @@ Gtk::EventController &add_scroll(Gtk::Widget &widget  ,
     Detail::connect<on_scroll    >(gcontroller, "scroll"      , listener, when);
     Detail::connect<on_end       >(gcontroller, "scroll-end"  , listener, when);
     Detail::connect<on_decelerate>(gcontroller, "decelerate"  , listener, when);
+    return Detail::managed(Glib::wrap(gcontroller), widget);
+}
+
+/// Create a zoom gesture for & manage()d by widget.
+template <auto on_begin, auto on_scale_changed, auto on_end,
+          typename Listener>
+decltype(auto) add_zoom(Gtk::Widget &widget  ,
+                        Listener    &listener,
+                        Gtk::PropagationPhase const phase = Gtk::PHASE_BUBBLE,
+                        When const when = When::after)
+{
+    // NB make_g_callback<> must type-erase methods, so we must check arg compat
+    static_assert(is_gesture_handler   <decltype(on_begin        ), Listener>);
+    static_assert(is_zoom_scale_handler<decltype(on_scale_changed), Listener>);
+    static_assert(is_gesture_handler   <decltype(on_end          ), Listener>);
+
+    auto const gcontroller = GTK_EVENT_CONTROLLER(gtk_gesture_zoom_new(widget.gobj()));
+    gtk_event_controller_set_propagation_phase(gcontroller, static_cast<GtkPropagationPhase>(phase));
+    Detail::connect<on_begin        >(gcontroller, "begin"        , listener, when);
+    Detail::connect<on_scale_changed>(gcontroller, "scale-changed", listener, when);
+    Detail::connect<on_end          >(gcontroller, "end"          , listener, when);
     return Detail::managed(Glib::wrap(gcontroller), widget);
 }
 

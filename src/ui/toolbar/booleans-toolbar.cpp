@@ -27,21 +27,21 @@ BooleansToolbar::BooleansToolbar(BaseObjectType *cobject, const Glib::RefPtr<Gtk
     , _btn_cancel(get_widget<Gtk::ToolButton>(builder, "cancel"))
 {
     _btn_confirm.signal_clicked().connect([=]{
-        auto ec = dynamic_cast<Tools::InteractiveBooleansTool *>(desktop->event_context);
-        ec->shape_commit();
+        auto const tool = dynamic_cast<Tools::InteractiveBooleansTool *>(desktop->getTool());
+        tool->shape_commit();
     });
     _btn_cancel.signal_clicked().connect([=]{
-        auto ec = dynamic_cast<Tools::InteractiveBooleansTool *>(desktop->event_context);
-        ec->shape_cancel();
+        auto const tool = dynamic_cast<Tools::InteractiveBooleansTool *>(desktop->getTool());
+        tool->shape_cancel();
     });
 
     auto prefs = Inkscape::Preferences::get();
     _adj_opacity->set_value(prefs->getDouble("/tools/booleans/opacity", 0.5) * 100);
     _adj_opacity->signal_value_changed().connect([=](){
-        auto ec = dynamic_cast<Tools::InteractiveBooleansTool *>(desktop->event_context);
+        auto const tool = dynamic_cast<Tools::InteractiveBooleansTool *>(desktop->getTool());
         double value = (double)_adj_opacity->get_value() / 100;
         prefs->setDouble("/tools/booleans/opacity", value);
-        ec->set_opacity(value);
+        tool->set_opacity(value);
     });
 }
 
@@ -55,7 +55,7 @@ BooleansToolbar::create(SPDesktop *desktop)
     BooleansToolbar *toolbar;
     auto builder = Inkscape::UI::create_builder("toolbar-booleans.ui");
     builder->get_widget_derived("booleans-toolbar", toolbar, desktop);
-    return GTK_WIDGET(toolbar->gobj());
+    return toolbar->Gtk::Widget::gobj();
 }
 
 } // namespace Toolbar

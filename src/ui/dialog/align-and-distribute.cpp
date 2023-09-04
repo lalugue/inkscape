@@ -220,7 +220,7 @@ AlignAndDistribute::tool_changed(SPDesktop* desktop)
 }
 
 void
-AlignAndDistribute::tool_changed_callback(SPDesktop* desktop, Inkscape::UI::Tools::ToolBase* ec)
+AlignAndDistribute::tool_changed_callback(SPDesktop* desktop, Inkscape::UI::Tools::ToolBase* tool)
 {
     tool_changed(desktop);
 }

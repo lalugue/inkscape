@@ -74,7 +74,7 @@ DialogWindow::DialogWindow(InkscapeWindow *inkscape_window, Gtk::Widget *page)
     auto win_action_group = dynamic_cast<Gio::ActionGroup *>(inkscape_window);
     if (win_action_group) {
         // Must use C API as C++ API takes a RefPtr which we can't get (easily).
-        gtk_widget_insert_action_group(GTK_WIDGET(this->gobj()), "win", win_action_group->gobj());
+        gtk_widget_insert_action_group(Gtk::Widget::gobj(), "win", win_action_group->gobj());
     } else {
         std::cerr << "DialogWindow::DialogWindow: Can't find InkscapeWindow Gio:ActionGroup!" << std::endl;
     }

@@ -36,7 +36,7 @@ undo(SPDocument* document)
     // Undo can be used in headless mode.
     if (win) {
         auto desktop = win->get_desktop();
-        auto tool = desktop->getEventContext();
+        auto const tool = desktop->getTool();
 
         // No undo while dragging, or if the tool handled this undo.
         if (desktop->getCanvas()->is_dragging() || (tool && tool->catch_undo())) {
@@ -56,7 +56,7 @@ redo(SPDocument* document)
     // Redo can be used in headless mode.
     if (win) {
         auto desktop = win->get_desktop();
-        auto tool = desktop->getEventContext();
+        auto const tool = desktop->getTool();
 
         // No redo while dragging, or if the tool handled this redo
         if (desktop->getCanvas()->is_dragging() || (tool && tool->catch_undo(true))) {

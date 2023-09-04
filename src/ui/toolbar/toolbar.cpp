@@ -68,7 +68,7 @@ GtkWidget *
 Toolbar::create(SPDesktop *desktop)
 {
     auto toolbar = Gtk::manage(new Toolbar(desktop));
-    return GTK_WIDGET(toolbar->gobj());
+    return toolbar->Gtk::Widget::gobj();
 }
 }
 }

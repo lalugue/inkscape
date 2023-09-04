@@ -717,7 +717,7 @@ static void gr_knot_moved_handler(SPKnot *knot, Geom::Point const &ppointer, gui
 
     // Set-up snapping
     SPDesktop *desktop = dragger->parent->desktop;
-    SnapManager &m = desktop->namedview->snap_manager;
+    auto &m = desktop->getNamedView()->snap_manager;
     double snap_dist = m.snapprefs.getObjectTolerance() / dragger->parent->desktop->current_zoom();
 
     Geom::Point p = ppointer;
@@ -763,7 +763,7 @@ static void gr_knot_moved_handler(SPKnot *knot, Geom::Point const &ppointer, gui
                 delete dragger;
 
                 // throw out delayed snap context
-                desktop->event_context->discard_delayed_snap_event();
+                desktop->getTool()->discard_delayed_snap_event();
 
                 // update the new merged dragger
                 d_new->fireDraggables(true, false, true);
@@ -1002,7 +1002,7 @@ static void gr_knot_moved_midpoint_handler(SPKnot */*knot*/, Geom::Point const &
         if (!(state & GDK_SHIFT_MASK)) {
             Inkscape::Snapper::SnapConstraint cl(low_lim, high_lim - low_lim);
             SPDesktop *desktop = dragger->parent->desktop;
-            SnapManager &m = desktop->namedview->snap_manager;
+            auto &m = desktop->getNamedView()->snap_manager;
             m.setup(desktop);
             m.constrainedSnapReturnByRef(p, Inkscape::SNAPSOURCE_OTHER_HANDLE, cl);
             m.unSetup();

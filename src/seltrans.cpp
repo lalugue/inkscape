@@ -76,7 +76,7 @@ static bool sp_sel_trans_handle_event(SPKnot *knot, Inkscape::CanvasEvent const 
                     return;
                 }
                 auto desktop = knot->desktop;
-                auto seltrans = SP_SELECT_CONTEXT(desktop->event_context)->_seltrans;
+                auto seltrans = SP_SELECT_CONTEXT(desktop->getTool())->_seltrans;
                 // This stamp can't produce clones without requiring extra support of "undoing"
                 // the cascaded transform from this knot's changes.
                 seltrans->stamp();
@@ -287,7 +287,7 @@ void Inkscape::SelTrans::grab(Geom::Point const &p, gdouble x, gdouble y, bool s
     }
 
     // Next, get all points to consider for snapping
-    SnapManager const &m = _desktop->namedview->snap_manager;
+    SnapManager const &m = _desktop->getNamedView()->snap_manager;
     _snap_points.clear();
     if (m.someSnapperMightSnap(false)) { // Only search for snap sources when really needed, to avoid unnecessary delays
         _snap_points = selection->getSnapPoints(&m.snapprefs); // This might take some time!
@@ -426,7 +426,7 @@ void Inkscape::SelTrans::ungrab()
     _grabbed = false;
     _show_handles = true;
 
-    _desktop->snapindicator->remove_snapsource();
+    _desktop->getSnapIndicator()->remove_snapsource();
 
     Inkscape::Selection *selection = _desktop->getSelection();
     _updateVolatileState();
@@ -519,7 +519,7 @@ void Inkscape::SelTrans::ungrab()
         _updateHandles();
     }
 
-    _desktop->snapindicator->remove_snaptarget();
+    _desktop->getSnapIndicator()->remove_snaptarget();
 }
 
 /* fixme: This is really bad, as we compare positions for each stamp (Lauris) */
@@ -842,35 +842,35 @@ void Inkscape::SelTrans::_makeHandles()
 
 static void sp_sel_trans_handle_grab(SPKnot *knot, guint state, SPSelTransHandle const* data)
 {
-    SP_SELECT_CONTEXT(knot->desktop->event_context)->_seltrans->handleGrab(
+    SP_SELECT_CONTEXT(knot->desktop->getTool())->_seltrans->handleGrab(
         knot, state, *(SPSelTransHandle const *) data
         );
 }
 
 static void sp_sel_trans_handle_ungrab(SPKnot *knot, guint /*state*/, SPSelTransHandle const* /*data*/)
 {
-    SP_SELECT_CONTEXT(knot->desktop->event_context)->_seltrans->ungrab();
+    SP_SELECT_CONTEXT(knot->desktop->getTool())->_seltrans->ungrab();
 }
 
 static void sp_sel_trans_handle_new_event(SPKnot *knot, Geom::Point const& position, guint state, SPSelTransHandle const *data)
 {
     Geom::Point pos = position;
 
-    SP_SELECT_CONTEXT(knot->desktop->event_context)->_seltrans->handleNewEvent(
+    SP_SELECT_CONTEXT(knot->desktop->getTool())->_seltrans->handleNewEvent(
         knot, &pos, state, *(SPSelTransHandle const *) data
         );
 }
 
 static gboolean sp_sel_trans_handle_request(SPKnot *knot, Geom::Point *position, guint state, SPSelTransHandle const *data)
 {
-    return SP_SELECT_CONTEXT(knot->desktop->event_context)->_seltrans->handleRequest(
+    return SP_SELECT_CONTEXT(knot->desktop->getTool())->_seltrans->handleRequest(
         knot, position, state, *(SPSelTransHandle const *) data
         );
 }
 
 static void sp_sel_trans_handle_click(SPKnot *knot, guint state, SPSelTransHandle const* data)
 {
-    SP_SELECT_CONTEXT(knot->desktop->event_context)->_seltrans->handleClick(
+    SP_SELECT_CONTEXT(knot->desktop->getTool())->_seltrans->handleClick(
         knot, state, *(SPSelTransHandle const *) data
         );
 }
@@ -1122,7 +1122,7 @@ gboolean Inkscape::SelTrans::scaleRequest(Geom::Point &pt, guint state)
             bb = new Inkscape::PureScale(default_scale, _origin_for_bboxpoints, false);
             sn = new Inkscape::PureScale(geom_scale, _origin_for_specpoints, false);
         }
-        SnapManager &m = _desktop->namedview->snap_manager;
+        SnapManager &m = _desktop->getNamedView()->snap_manager;
         m.setup(_desktop, false, _objects_const);
         m.snapTransformed(_bbox_points, _point, (*bb));
         m.snapTransformed(_snap_points, _point, (*sn));
@@ -1133,12 +1133,12 @@ gboolean Inkscape::SelTrans::scaleRequest(Geom::Point &pt, guint state)
         if (bb->best_snapped_point.getSnapped() || sn->best_snapped_point.getSnapped()) {
             if (bb->best_snapped_point.getSnapped() && !bb->best_snapped_point.isOtherSnapBetter(sn->best_snapped_point, false)) {
                 // We snapped the bbox (which is either visual or geometric)
-                _desktop->snapindicator->set_new_snaptarget(bb->best_snapped_point);
+                _desktop->getSnapIndicator()->set_new_snaptarget(bb->best_snapped_point);
                 default_scale = bb->getScaleSnapped();
                 // Calculate the new transformation and update the handle position
                 pt = _calcAbsAffineDefault(default_scale);
             } else if (sn->best_snapped_point.getSnapped()) {
-                _desktop->snapindicator->set_new_snaptarget(sn->best_snapped_point);
+                _desktop->getSnapIndicator()->set_new_snaptarget(sn->best_snapped_point);
                 // We snapped the special points (e.g. nodes), which are not at the visual bbox
                 // The handle location however (pt) might however be at the visual bbox, so we
                 // will have to calculate pt taking the stroke width into account
@@ -1148,7 +1148,7 @@ gboolean Inkscape::SelTrans::scaleRequest(Geom::Point &pt, guint state)
         } else {
             // We didn't snap at all! Don't update the handle position, just calculate the new transformation
             _calcAbsAffineDefault(default_scale);
-            _desktop->snapindicator->remove_snaptarget();
+            _desktop->getSnapIndicator()->remove_snaptarget();
         }
 
         delete bb;
@@ -1208,7 +1208,7 @@ gboolean Inkscape::SelTrans::stretchRequest(SPSelTransHandle const &handle, Geom
     } else {
         // In all other cases we should try to snap now
 
-        SnapManager &m = _desktop->namedview->snap_manager;
+        SnapManager &m = _desktop->getNamedView()->snap_manager;
         m.setup(_desktop, false, _objects_const);
 
         auto confine = Modifiers::Modifier::get(Modifiers::Type::TRANS_CONFINE)->active(state);
@@ -1239,12 +1239,12 @@ gboolean Inkscape::SelTrans::stretchRequest(SPSelTransHandle const &handle, Geom
         if (bb.best_snapped_point.getSnapped() || sn.best_snapped_point.getSnapped()) {
             if (bb.best_snapped_point.getSnapped() && !bb.best_snapped_point.isOtherSnapBetter(sn.best_snapped_point, false)) {
                 // We snapped the bbox (which is either visual or geometric)
-                _desktop->snapindicator->set_new_snaptarget(bb.best_snapped_point);
+                _desktop->getSnapIndicator()->set_new_snaptarget(bb.best_snapped_point);
                 default_scale = bb.getStretchSnapped();
                 // Calculate the new transformation and update the handle position
                 pt = _calcAbsAffineDefault(default_scale);
             } else if (sn.best_snapped_point.getSnapped()) {
-                _desktop->snapindicator->set_new_snaptarget(sn.best_snapped_point);
+                _desktop->getSnapIndicator()->set_new_snaptarget(sn.best_snapped_point);
                 // We snapped the special points (e.g. nodes), which are not at the visual bbox
                 // The handle location however (pt) might however be at the visual bbox, so we
                 // will have to calculate pt taking the stroke width into account
@@ -1254,7 +1254,7 @@ gboolean Inkscape::SelTrans::stretchRequest(SPSelTransHandle const &handle, Geom
         } else {
             // We didn't snap at all! Don't update the handle position, just calculate the new transformation
             _calcAbsAffineDefault(default_scale);
-            _desktop->snapindicator->remove_snaptarget();
+            _desktop->getSnapIndicator()->remove_snaptarget();
         }
     }
 
@@ -1365,7 +1365,7 @@ gboolean Inkscape::SelTrans::skewRequest(SPSelTransHandle const &handle, Geom::P
     } else {
         // Snap to objects, grids, guides
 
-        SnapManager &m = _desktop->namedview->snap_manager;
+        SnapManager &m = _desktop->getNamedView()->snap_manager;
         m.setup(_desktop, false, _objects_const);
 
         // When skewing, we cannot snap the corners of the bounding box, see the comment in PureSkewConstrained for details
@@ -1375,9 +1375,9 @@ gboolean Inkscape::SelTrans::skewRequest(SPSelTransHandle const &handle, Geom::P
         if (sn.best_snapped_point.getSnapped()) {
             // We snapped something, so change the skew to reflect it
             skew[dim_a] = sn.getSkewSnapped();
-             _desktop->snapindicator->set_new_snaptarget(sn.best_snapped_point);
+             _desktop->getSnapIndicator()->set_new_snaptarget(sn.best_snapped_point);
         } else {
-            _desktop->snapindicator->remove_snaptarget();
+            _desktop->getSnapIndicator()->remove_snaptarget();
         }
 
         m.unSetup();
@@ -1454,7 +1454,7 @@ gboolean Inkscape::SelTrans::rotateRequest(Geom::Point &pt, guint state)
         r1 = Geom::Rotate(0); //q1 = Geom::Point(1, 0);
         r2 = Geom::Rotate(radians); //q2 = Geom::Point(cos(radians), sin(radians));
     } else {
-        SnapManager &m = _desktop->namedview->snap_manager;
+        SnapManager &m = _desktop->getNamedView()->snap_manager;
         m.setup(_desktop, false, _objects_const);
         // When rotating, we cannot snap the corners of the bounding box, see the comment in "constrainedSnapRotate" for details
         Inkscape::PureRotateConstrained sn = Inkscape::PureRotateConstrained(radians, _origin);
@@ -1462,13 +1462,13 @@ gboolean Inkscape::SelTrans::rotateRequest(Geom::Point &pt, guint state)
         m.unSetup();
 
         if (sn.best_snapped_point.getSnapped()) {
-            _desktop->snapindicator->set_new_snaptarget(sn.best_snapped_point);
+            _desktop->getSnapIndicator()->set_new_snaptarget(sn.best_snapped_point);
             // We snapped something, so change the rotation to reflect it
             radians = sn.getAngleSnapped();
             r1 = Geom::Rotate(0);
             r2 = Geom::Rotate(radians);
         } else {
-            _desktop->snapindicator->remove_snaptarget();
+            _desktop->getSnapIndicator()->remove_snaptarget();
         }
 
     }
@@ -1499,7 +1499,7 @@ gboolean Inkscape::SelTrans::centerRequest(Geom::Point &pt, guint state)
     // centers of any of the selected objects. Therefore we will have to pass the list of selected items
     // to the snapper, to avoid self-snapping of the rotation center
     std::vector<SPItem *> items(_selection->items().begin(), _selection->items().end());
-    SnapManager &m = _desktop->namedview->snap_manager;
+    SnapManager &m = _desktop->getNamedView()->snap_manager;
     m.setup(_desktop);
     m.setRotationCenterSource(items);
 
@@ -1521,8 +1521,8 @@ gboolean Inkscape::SelTrans::centerRequest(Geom::Point &pt, guint state)
     // status text
     Inkscape::Util::Quantity x_q = Inkscape::Util::Quantity(pt[Geom::X], "px");
     Inkscape::Util::Quantity y_q = Inkscape::Util::Quantity(pt[Geom::Y], "px");
-    Glib::ustring xs(x_q.string(_desktop->namedview->display_units));
-    Glib::ustring ys(y_q.string(_desktop->namedview->display_units));
+    Glib::ustring xs(x_q.string(_desktop->getNamedView()->display_units));
+    Glib::ustring ys(y_q.string(_desktop->getNamedView()->display_units));
     _message_context.setF(Inkscape::NORMAL_MESSAGE, _("Move <b>center</b> to %s, %s"),
             xs.c_str(), ys.c_str());
     return TRUE;
@@ -1571,7 +1571,7 @@ void Inkscape::SelTrans::rotate(Geom::Point &/*pt*/, guint /*state*/)
 
 void Inkscape::SelTrans::moveTo(Geom::Point const &xy, guint state)
 {
-    SnapManager &m = _desktop->namedview->snap_manager;
+    SnapManager &m = _desktop->getNamedView()->snap_manager;
 
     /* The amount that we've moved by during this drag */
     Geom::Point dxy = xy - _point;
@@ -1655,10 +1655,10 @@ void Inkscape::SelTrans::moveTo(Geom::Point const &xy, guint state)
         }
 
         if (best_snapped_point.getSnapped()) {
-            _desktop->snapindicator->set_new_snaptarget(best_snapped_point);
+            _desktop->getSnapIndicator()->set_new_snaptarget(best_snapped_point);
         } else {
             // We didn't snap, so remove any previous snap indicator
-            _desktop->snapindicator->remove_snaptarget();
+            _desktop->getSnapIndicator()->remove_snaptarget();
             if (confine) {
                 // If we didn't snap, then we should still constrain horizontally or vertically
                 // (When we did snap, then this constraint has already been enforced by
@@ -1683,8 +1683,8 @@ void Inkscape::SelTrans::moveTo(Geom::Point const &xy, guint state)
     auto no_snap_mod = Modifiers::Modifier::get(Modifiers::Type::MOVE_SNAPPING)->get_label();
     Inkscape::Util::Quantity x_q = Inkscape::Util::Quantity(dxy[Geom::X], "px");
     Inkscape::Util::Quantity y_q = Inkscape::Util::Quantity(dxy[Geom::Y], "px");
-    Glib::ustring xs(x_q.string(_desktop->namedview->display_units));
-    Glib::ustring ys(y_q.string(_desktop->namedview->display_units));
+    Glib::ustring xs(x_q.string(_desktop->getNamedView()->display_units));
+    Glib::ustring ys(y_q.string(_desktop->getNamedView()->display_units));
     _message_context.setF(Inkscape::NORMAL_MESSAGE,
             _("<b>Move</b> by %s, %s; with <b>%s</b> to restrict to horizontal/vertical; with <b>%s</b> to disable snapping"),
             xs.c_str(), ys.c_str(), confine_mod.c_str(), no_snap_mod.c_str());
@@ -1797,7 +1797,7 @@ Geom::Point Inkscape::SelTrans::_calcAbsAffineGeom(Geom::Scale const geom_scale)
 
 void Inkscape::SelTrans::_keepClosestPointOnly(Geom::Point const &p)
 {
-    SnapManager const &m = _desktop->namedview->snap_manager;
+    SnapManager const &m = _desktop->getNamedView()->snap_manager;
 
     // If we're not going to snap nodes, then we might just as well get rid of their snappoints right away
     if (!(m.snapprefs.isTargetSnappable(SNAPTARGET_NODE_CATEGORY, SNAPTARGET_OTHERS_CATEGORY) || m.snapprefs.isAnyDatumSnappable())) {
@@ -1861,7 +1861,7 @@ void Inkscape::SelTrans::getNextClosestPoint(bool reverse)
             }
 
             // Show the updated snap source now; otherwise it won't be shown until the selection is being moved again
-            SnapManager &m = _desktop->namedview->snap_manager;
+            SnapManager &m = _desktop->getNamedView()->snap_manager;
             m.setup(_desktop);
             m.displaySnapsource(*_all_snap_sources_iter);
             m.unSetup();

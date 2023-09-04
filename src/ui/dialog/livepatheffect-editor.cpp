@@ -867,7 +867,7 @@ LivePathEffectEditor::effect_list_reload(SPLPEItem *lpeitem)
                     cairo_surface_set_device_scale(surface, device_scale, device_scale);
                     cr = cairo_create (surface);
                     LPEEffect->get_style_context()->add_class("drag-icon");
-                    gtk_widget_draw (GTK_WIDGET(LPEEffect->gobj()), cr);
+                    gtk_widget_draw (LPEEffect->Gtk::Widget::gobj(), cr);
                     LPEEffect->get_style_context()->remove_class("drag-icon");
                     LPEDrag->translate_coordinates(*LPEEffect, dndx, dndy, x, y);
                     #ifndef __APPLE__

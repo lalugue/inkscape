@@ -99,12 +99,12 @@ Geom::Point KnotHolderEntity::snap_knot_position(Geom::Point const &p, unsigned 
     if (!desktop) {
         std::cerr << "No desktop" << std::endl;
         return {};
-    } else if (!desktop->namedview) {
+    } else if (!desktop->getNamedView()) {
         std::cerr << "No named view" << std::endl;
         return {};
     }
 
-    SnapManager &m = desktop->namedview->snap_manager;
+    auto &m = desktop->getNamedView()->snap_manager;
     m.setup(desktop, true, item);
     m.freeSnapReturnByRef(s, Inkscape::SNAPSOURCE_NODE_HANDLE);
     m.unSetup();
@@ -121,7 +121,7 @@ Geom::Point KnotHolderEntity::snap_knot_position_constrained(Geom::Point const &
     auto const i2d = parent_holder->getEditTransform() * item->i2dt_affine();
     Geom::Point s = p * i2d;
 
-    SnapManager &m = desktop->namedview->snap_manager;
+    auto &m = desktop->getNamedView()->snap_manager;
     m.setup(desktop, true, item);
 
     // constrainedSnap() will first project the point p onto the constraint line and then try to snap along that line.

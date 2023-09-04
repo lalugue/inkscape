@@ -1,43 +1,58 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-#ifndef SEEN_SP_DESKTOP_H
-#define SEEN_SP_DESKTOP_H
-
+/** @file
+ * Editable view implementation
+ */
 /*
- * Author:
+ * Authors:
  *   Lauris Kaplinski <lauris@kaplinski.com>
  *   Frank Felfe <innerspace@iname.com>
+ *   MenTaLguY <mental@rydia.net>
  *   bulia byak <buliabyak@users.sf.net>
  *   Ralf Stephan <ralf@ark.in-berlin.de>
  *   John Bintz <jcoswell@coswellproductions.org>
  *   Johan Engelen <j.b.c.engelen@ewi.utwente.nl>
- *   Jon A. Cruz <jon@joncruz.org>get
+ *   Jon A. Cruz <jon@joncruz.org>
  *   Abhishek Sharma
  *
- * Copyright (C) 2007 Johan Engelen
+ * Copyright (C) 2007 Jon A. Cruz
+ * Copyright (C) 2006-2008 Johan Engelen
  * Copyright (C) 2006 John Bintz
- * Copyright (C) 1999-2005 authors
+ * Copyright (C) 2004 MenTaLguY
+ * Copyright (C) 1999-2002 Lauris Kaplinski
  * Copyright (C) 2000-2001 Ximian, Inc.
  *
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
- *
  */
 
-#include <cstddef>
-#include <sigc++/sigc++.h>
-#include <glibmm/ustring.h>
-#include <gtkmm.h> // Many downstream includes
+#ifndef SEEN_SP_DESKTOP_H
+#define SEEN_SP_DESKTOP_H
 
+#include <cstddef>
+#include <list>
+#include <memory>
+#include <string>
+#include <vector>
+#include <optional>
+#include <glibmm/refptr.h>
+#include <glibmm/ustring.h>
+#include <gtk/gtk.h> // EventController et al.
+#include <gtkmm.h> // Many downstream includes – FIXME.
+#include <sigc++/signal.h>
 #include <2geom/affine.h>
 #include <2geom/transforms.h>
 #include <2geom/parallelogram.h>
 
+#include "display/rendermode.h"
+#include "helper/auto-connection.h"
 #include "message-stack.h"
-
+#include "object/sp-gradient.h" // TODO refactor enums out to their own .h file
 #include "preferences.h"
 
-#include "display/rendermode.h"
-
-#include "object/sp-gradient.h" // TODO refactor enums out to their own .h file
+namespace Gtk {
+class Toolbar;
+class Widget;
+class Window;
+} // namespace Gtk
 
 /**
  * Iterates until true or returns false.
@@ -69,12 +84,6 @@ struct StopOnNonZero {
   }
 };
 
-namespace Gtk
-{
-    class Toolbar;
-    class Window;
-}
-
 // ------- Inkscape --------
 class SPCSSAttr;
 class SPDesktopWidget;
@@ -94,45 +103,49 @@ typedef struct _GdkEventWindowState GdkEventWindowState;
 struct InkscapeApplication;
 
 namespace Inkscape {
-    class LayerManager;
-    class PageManager;
-    class MessageContext;
-    class MessageStack;
-    class Selection;
 
-    class CanvasItem;
-    class CanvasItemCatchall;
-    class CanvasItemDrawing;
-    class CanvasItemGroup;
-    class CanvasItemRotate;
+class LayerManager;
+class PageManager;
+class MessageContext;
+class MessageStack;
+class Selection;
 
-    namespace UI {
-        class ControlPointSelection;
+class CanvasItem;
+class CanvasItemCatchall;
+class CanvasItemDrawing;
+class CanvasItemGroup;
+class CanvasItemRotate;
 
-        namespace Dialog {
-            class DialogContainer;
-        }
+namespace UI {
 
-        namespace Tools {
-            class ToolBase;
-            class TextTool;
-        }
+class ControlPointSelection;
 
-        namespace Widget {
-            class Canvas;
-            class Dock;
-        }
-    }
+namespace Dialog {
+class DialogContainer;
+} // namespace Dialog
 
-    namespace Display {
-        class TemporaryItemList;
-        class TemporaryItem;
-        class SnapIndicator;
-    }
-}
+namespace Tools {
+class ToolBase;
+class TextTool;
+} // namespace Tools
 
-#define SP_DESKTOP_ZOOM_MAX 256.0
-#define SP_DESKTOP_ZOOM_MIN 0.01
+namespace Widget {
+class Canvas;
+class Dock;
+} // namespace Widget
+
+} // namespace UI
+
+namespace Display {
+class TemporaryItemList;
+class TemporaryItem;
+class SnapIndicator;
+} // namespace Display
+
+} // namespace Inkscape
+
+inline constexpr double SP_DESKTOP_ZOOM_MAX = 256.00;
+inline constexpr double SP_DESKTOP_ZOOM_MIN =   0.01;
 
 /**
  * To do: update description of desktop. Define separation of desktop-widget, desktop, window, canvas, etc.
@@ -140,7 +153,6 @@ namespace Inkscape {
 class SPDesktop
 {
 public:
-
     SPDesktop();
     ~SPDesktop();
 
@@ -163,56 +175,54 @@ private:
     std::shared_ptr<Inkscape::MessageStack> _message_stack;
     std::unique_ptr<Inkscape::MessageContext> _tips_message_context;
 
-    sigc::connection _message_changed_connection;
-    sigc::connection _document_uri_set_connection;
+    Inkscape::auto_connection _message_changed_connection;
+    Inkscape::auto_connection _document_uri_set_connection;
     // End Formerly in View::View ^^^^^^^^^^^^^^^^^^
 
+    std::unique_ptr<Inkscape::UI::Tools::ToolBase       > _tool      ;
+    std::unique_ptr<Inkscape::Display::TemporaryItemList> _temporary_item_list;
+    std::unique_ptr<Inkscape::Display::SnapIndicator    > _snapindicator      ;
+
+    SPNamedView                  *namedview;
+    Inkscape::UI::Widget::Canvas *canvas   ;
+
 public:
-    SPNamedView               *namedview;
-    Inkscape::UI::Tools::ToolBase *event_context = nullptr;
-    Inkscape::Display::TemporaryItemList *temporary_item_list;
-    Inkscape::Display::SnapIndicator *snapindicator;
-
-    Inkscape::UI::Tools::ToolBase* getEventContext() const { return event_context; }
-    Inkscape::Selection* getSelection() const { return _selection.get(); }
-    SPDocument* getDocument() const { return document; }
-    Inkscape::UI::Widget::Canvas* getCanvas() const { return canvas; }
-    Inkscape::MessageStack* getMessageStack() const { return messageStack().get(); }
-    SPNamedView* getNamedView() const { return namedview; }
-    SPDesktopWidget *getDesktopWidget() const { return _widget; }
-
-    // ------- Canvas Items -------
-    Inkscape::UI::Widget::Canvas *canvas;
+    Inkscape::UI::Tools::ToolBase    *getTool         () const { return _tool.get()         ; }
+    Inkscape::Selection              *getSelection    () const { return _selection.get()    ; }
+    SPDocument                       *getDocument     () const { return document            ; }
+    Inkscape::UI::Widget::Canvas     *getCanvas       () const { return canvas              ; }
+    Inkscape::MessageStack           *getMessageStack () const { return messageStack().get(); }
+    SPNamedView                      *getNamedView    () const { return namedview           ; }
+    SPDesktopWidget                  *getDesktopWidget() const { return _widget             ; }
+    Inkscape::Display::SnapIndicator *getSnapIndicator() const { return _snapindicator.get(); }
 
      // Move these into UI::Widget::Canvas:
-    Inkscape::CanvasItemGroup    *getCanvasControls() const { return canvas_group_controls; }
-    Inkscape::CanvasItemGroup    *getCanvasPagesBg()  const { return canvas_group_pages_bg; }
-    Inkscape::CanvasItemGroup    *getCanvasPagesFg()  const { return canvas_group_pages_fg; }
-    Inkscape::CanvasItemGroup    *getCanvasGrids()    const { return canvas_group_grids; }
-    Inkscape::CanvasItemGroup    *getCanvasGuides()   const { return canvas_group_guides; }
-    Inkscape::CanvasItemGroup    *getCanvasSketch()   const { return canvas_group_sketch; }
-    Inkscape::CanvasItemGroup    *getCanvasTemp()     const { return canvas_group_temp; }
-
-    Inkscape::CanvasItemCatchall *getCanvasCatchall() const { return canvas_catchall; }
-    Inkscape::CanvasItemDrawing  *getCanvasDrawing()  const { return canvas_drawing; }
+    Inkscape::CanvasItemGroup    *getCanvasControls() const { return _canvas_group_controls; }
+    Inkscape::CanvasItemGroup    *getCanvasPagesBg()  const { return _canvas_group_pages_bg; }
+    Inkscape::CanvasItemGroup    *getCanvasPagesFg()  const { return _canvas_group_pages_fg; }
+    Inkscape::CanvasItemGroup    *getCanvasGrids()    const { return _canvas_group_grids   ; }
+    Inkscape::CanvasItemGroup    *getCanvasGuides()   const { return _canvas_group_guides  ; }
+    Inkscape::CanvasItemGroup    *getCanvasSketch()   const { return _canvas_group_sketch  ; }
+    Inkscape::CanvasItemGroup    *getCanvasTemp()     const { return _canvas_group_temp    ; }
+    Inkscape::CanvasItemCatchall *getCanvasCatchall() const { return _canvas_catchall      ; }
+    Inkscape::CanvasItemDrawing  *getCanvasDrawing()  const { return _canvas_drawing       ; }
 
 private:
     /// current selection; will never generally be NULL
     std::unique_ptr<Inkscape::Selection> _selection;
 
     // Groups
-    Inkscape::CanvasItemGroup    *canvas_group_controls  = nullptr; ///< Handles, knots, nodes, etc.
-    Inkscape::CanvasItemGroup    *canvas_group_drawing   = nullptr; ///< SVG Drawing
-    Inkscape::CanvasItemGroup    *canvas_group_grids     = nullptr; ///< Grids.
-    Inkscape::CanvasItemGroup    *canvas_group_guides    = nullptr; ///< Guide lines.
-    Inkscape::CanvasItemGroup    *canvas_group_sketch    = nullptr; ///< Temporary items before becoming permanent.
-    Inkscape::CanvasItemGroup    *canvas_group_temp      = nullptr; ///< Temporary items that self-destruct.
-    Inkscape::CanvasItemGroup    *canvas_group_pages_bg  = nullptr; ///< Page background
-    Inkscape::CanvasItemGroup    *canvas_group_pages_fg  = nullptr; ///< Page border + shadow.
-
+    Inkscape::CanvasItemGroup    *_canvas_group_controls = nullptr; ///< Handles, knots, nodes, etc.
+    Inkscape::CanvasItemGroup    *_canvas_group_drawing  = nullptr; ///< SVG Drawing
+    Inkscape::CanvasItemGroup    *_canvas_group_grids    = nullptr; ///< Grids.
+    Inkscape::CanvasItemGroup    *_canvas_group_guides   = nullptr; ///< Guide lines.
+    Inkscape::CanvasItemGroup    *_canvas_group_sketch   = nullptr; ///< Temporary items before becoming permanent.
+    Inkscape::CanvasItemGroup    *_canvas_group_temp     = nullptr; ///< Temporary items that self-destruct.
+    Inkscape::CanvasItemGroup    *_canvas_group_pages_bg = nullptr; ///< Page background
+    Inkscape::CanvasItemGroup    *_canvas_group_pages_fg = nullptr; ///< Page border + shadow.
     // Individual items
-    Inkscape::CanvasItemCatchall *canvas_catchall        = nullptr; ///< The bottom item for unclaimed events.
-    Inkscape::CanvasItemDrawing  *canvas_drawing         = nullptr; ///< The actual SVG drawing (a.k.a. arena).
+    Inkscape::CanvasItemCatchall *_canvas_catchall       = nullptr; ///< The bottom item for unclaimed events.
+    Inkscape::CanvasItemDrawing  *_canvas_drawing        = nullptr; ///< The actual SVG drawing (a.k.a. arena).
 
 public:
     SPCSSAttr     *current;     ///< current style
@@ -257,6 +267,7 @@ public:
     {
         return _event_context_changed_signal.connect (slot);
     }
+
     sigc::connection connectSetStyle (const sigc::slot<bool (const SPCSSAttr *)> & slot)
     {
         return _set_style_signal.connect([=](const SPCSSAttr* css, bool) { return slot(css); });
@@ -269,6 +280,7 @@ public:
     {
         return _query_style_signal.connect (slot);
     }
+
      // subselection is some sort of selection which is specific to the tool, such as a handle in gradient tool, or a text selection
     sigc::connection connectToolSubselectionChanged(const sigc::slot<void (gpointer)> & slot);
     sigc::connection connectToolSubselectionChangedEx(const sigc::slot<void (gpointer, SPObject*)>& slot);
@@ -378,10 +390,10 @@ public:
     void setWindowPosition (Geom::Point p);
     void setWindowSize (gint w, gint h);
     void setWindowTransient (void* p, int transient_policy=1);
-    Gtk::Window* getToplevel();  // To be removed in favor of getInkscapeWindow
+    Gtk::Window *getToplevel();  // To be removed in favor of getInkscapeWindow
     InkscapeWindow* getInkscapeWindow();
     void presentWindow();
-    bool showInfoDialog( Glib::ustring const &message );
+    void showInfoDialog(Glib::ustring const &message);
     bool warnDialog (Glib::ustring const &text);
     void toggleCommandPalette();
     void toggleRulers();
@@ -439,8 +451,6 @@ public:
     void applyCurrentOrToolStyle(SPObject *obj, Glib::ustring const &tool_path, bool with_text);
 
 private:
-    GtkGesture *zoomgesture = nullptr;
-
     SPDesktopWidget       *_widget;
     std::unique_ptr<Inkscape::MessageContext> _guides_message_context;
     bool _active;
@@ -549,17 +559,25 @@ private:
 
     std::unique_ptr<Inkscape::LayerManager> _layer_manager;
 
-    sigc::signal<void (SPDesktop*)> _destroy_signal;
-    sigc::signal<void (SPDesktop*,SPDocument*)>     _document_replaced_signal;
-    sigc::signal<void (SPDesktop*,Inkscape::UI::Tools::ToolBase*)> _event_context_changed_signal;
-    sigc::signal<void (gpointer, SPObject*)> _tool_subselection_changed;
-    sigc::signal<void (void*, SPStop*)> _gradient_stop_selected;
-    sigc::signal<void (void*, Inkscape::UI::ControlPointSelection*)> _control_point_selected;
-    sigc::signal<void (void*, Inkscape::UI::Tools::TextTool*)> _text_cursor_moved;
+    sigc::signal<void (SPDesktop *)> _destroy_signal;
+    sigc::signal<void (SPDesktop *, SPDocument *)>     _document_replaced_signal;
+    sigc::signal<void (SPDesktop *, Inkscape::UI::Tools::ToolBase *)> _event_context_changed_signal;
+    sigc::signal<void (gpointer, SPObject *)> _tool_subselection_changed;
+    sigc::signal<void (void *, SPStop *)> _gradient_stop_selected;
+    sigc::signal<void (void *, Inkscape::UI::ControlPointSelection *)> _control_point_selected;
+    sigc::signal<void (void *, Inkscape::UI::Tools::TextTool *)> _text_cursor_moved;
 
-    sigc::connection _reconstruction_start_connection;
-    sigc::connection _reconstruction_finish_connection;
-    sigc::connection _schedule_zoom_from_document_connection;
+    Inkscape::auto_connection _reconstruction_start_connection;
+    Inkscape::auto_connection _reconstruction_finish_connection;
+    Inkscape::auto_connection _schedule_zoom_from_document_connection;
+
+    // pinch zoom
+    std::optional<double> _motion_x, _motion_y, _begin_zoom;
+    void on_motion(GtkEventControllerMotion const *motion, double x, double y);
+    void on_leave (GtkEventControllerMotion const *motion);
+    void on_zoom_begin(GtkGesture     const *zoom, GdkEventSequence const *sequence);
+    void on_zoom_scale(GtkGestureZoom const *zoom, double                  scale   );
+    void on_zoom_end  (GtkGesture     const *zoom, GdkEventSequence const *sequence);
 
     void onStatusMessage (Inkscape::MessageType type, gchar const *message);
     void onDocumentFilenameSet(gchar const* filename);

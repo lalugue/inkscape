@@ -67,23 +67,20 @@ using Inkscape::UI::Tools::NodeTool;
  * Will go away during tool refactoring. */
 static NodeTool *get_node_tool()
 {
-    NodeTool *tool = nullptr;
+    NodeTool *node_tool = nullptr;
     if (SP_ACTIVE_DESKTOP ) {
-        Inkscape::UI::Tools::ToolBase *ec = SP_ACTIVE_DESKTOP->event_context;
-        if (INK_IS_NODE_TOOL(ec)) {
-            tool = static_cast<NodeTool*>(ec);
+        if (auto const tool = SP_ACTIVE_DESKTOP->getTool(); INK_IS_NODE_TOOL(tool)) {
+            node_tool = static_cast<NodeTool *>(tool);
         }
     }
-    return tool;
+    return node_tool;
 }
 
-namespace Inkscape {
-namespace UI {
-namespace Toolbar {
+namespace Inkscape::UI::Toolbar {
 
 NodeToolbar::NodeToolbar(SPDesktop *desktop)
     : Toolbar(desktop),
-    _tracker(new UnitTracker(Inkscape::Util::UNIT_TYPE_LINEAR)),
+    _tracker{std::make_unique<UnitTracker>(Inkscape::Util::UNIT_TYPE_LINEAR)},
     _freeze(false)
 {
     auto prefs = Inkscape::Preferences::get();
@@ -282,7 +279,7 @@ NodeToolbar::NodeToolbar(SPDesktop *desktop)
         _nodes_x_item->set_custom_numeric_menu_data(values);
         _tracker->addAdjustment(_nodes_x_adj->gobj());
         _nodes_x_item->get_spin_button()->addUnitTracker(_tracker.get());
-        _nodes_x_item->set_focus_widget(desktop->canvas);
+        _nodes_x_item->set_focus_widget(desktop->getCanvas());
         _nodes_x_adj->signal_value_changed().connect(sigc::bind(sigc::mem_fun(*this, &NodeToolbar::value_changed), Geom::X));
         _nodes_x_item->set_sensitive(false);
         add(*_nodes_x_item);
@@ -298,7 +295,7 @@ NodeToolbar::NodeToolbar(SPDesktop *desktop)
         _nodes_y_item->set_custom_numeric_menu_data(values);
         _tracker->addAdjustment(_nodes_y_adj->gobj());
         _nodes_y_item->get_spin_button()->addUnitTracker(_tracker.get());
-        _nodes_y_item->set_focus_widget(desktop->canvas);
+        _nodes_y_item->set_focus_widget(desktop->getCanvas());
         _nodes_y_adj->signal_value_changed().connect(sigc::bind(sigc::mem_fun(*this, &NodeToolbar::value_changed), Geom::Y));
         _nodes_y_item->set_sensitive(false);
         add(*_nodes_y_item);
@@ -316,7 +313,7 @@ NodeToolbar::NodeToolbar(SPDesktop *desktop)
         _object_edit_clip_path_item = add_toggle_button(_("Edit clipping paths"),
                                                         _("Show clipping path(s) of selected object(s)"));
         _object_edit_clip_path_item->set_icon_name(INKSCAPE_ICON("path-clip-edit"));
-        _pusher_edit_clipping_paths.reset(new SimplePrefPusher(_object_edit_clip_path_item, "/tools/nodes/edit_clipping_paths"));
+        _pusher_edit_clipping_paths = std::make_unique<SimplePrefPusher>(_object_edit_clip_path_item, "/tools/nodes/edit_clipping_paths");
         _object_edit_clip_path_item->signal_toggled().connect(sigc::bind(sigc::mem_fun(*this, &NodeToolbar::on_pref_toggled),
                                                                          _object_edit_clip_path_item,
                                                                          "/tools/nodes/edit_clipping_paths"));
@@ -326,7 +323,7 @@ NodeToolbar::NodeToolbar(SPDesktop *desktop)
         _object_edit_mask_path_item = add_toggle_button(_("Edit masks"),
                                                         _("Show mask(s) of selected object(s)"));
         _object_edit_mask_path_item->set_icon_name(INKSCAPE_ICON("path-mask-edit"));
-        _pusher_edit_masks.reset(new SimplePrefPusher(_object_edit_mask_path_item, "/tools/nodes/edit_masks"));
+        _pusher_edit_masks = std::make_unique<SimplePrefPusher>(_object_edit_mask_path_item, "/tools/nodes/edit_masks");
         _object_edit_mask_path_item->signal_toggled().connect(sigc::bind(sigc::mem_fun(*this, &NodeToolbar::on_pref_toggled),
                                                                          _object_edit_mask_path_item,
                                                                          "/tools/nodes/edit_masks"));
@@ -347,7 +344,7 @@ NodeToolbar::NodeToolbar(SPDesktop *desktop)
         _show_transform_handles_item = add_toggle_button(_("Show Transform Handles"),
                                                          _("Show transformation handles for selected nodes"));
         _show_transform_handles_item->set_icon_name(INKSCAPE_ICON("node-transform"));
-        _pusher_show_transform_handles.reset(new UI::SimplePrefPusher(_show_transform_handles_item, "/tools/nodes/show_transform_handles"));
+        _pusher_show_transform_handles = std::make_unique<UI::SimplePrefPusher>(_show_transform_handles_item, "/tools/nodes/show_transform_handles");
         _show_transform_handles_item->signal_toggled().connect(sigc::bind(sigc::mem_fun(*this, &NodeToolbar::on_pref_toggled),
                                                                           _show_transform_handles_item,
                                                                           "/tools/nodes/show_transform_handles"));
@@ -357,7 +354,7 @@ NodeToolbar::NodeToolbar(SPDesktop *desktop)
         _show_handles_item = add_toggle_button(_("Show Handles"),
                                                _("Show Bezier handles of selected nodes"));
         _show_handles_item->set_icon_name(INKSCAPE_ICON("show-node-handles"));
-        _pusher_show_handles.reset(new UI::SimplePrefPusher(_show_handles_item, "/tools/nodes/show_handles"));
+        _pusher_show_handles = std::make_unique<UI::SimplePrefPusher>(_show_handles_item, "/tools/nodes/show_handles");
         _show_handles_item->signal_toggled().connect(sigc::bind(sigc::mem_fun(*this, &NodeToolbar::on_pref_toggled),
                                                                 _show_handles_item,
                                                                 "/tools/nodes/show_handles"));
@@ -367,7 +364,7 @@ NodeToolbar::NodeToolbar(SPDesktop *desktop)
         _show_helper_path_item = add_toggle_button(_("Show Outline"),
                                                    _("Show path outline (without path effects)"));
         _show_helper_path_item->set_icon_name(INKSCAPE_ICON("show-path-outline"));
-        _pusher_show_outline.reset(new UI::SimplePrefPusher(_show_helper_path_item, "/tools/nodes/show_outline"));
+        _pusher_show_outline = std::make_unique<UI::SimplePrefPusher>(_show_helper_path_item, "/tools/nodes/show_outline");
         _show_helper_path_item->signal_toggled().connect(sigc::bind(sigc::mem_fun(*this, &NodeToolbar::on_pref_toggled),
                                                                 _show_helper_path_item,
                                                                 "/tools/nodes/show_outline"));
@@ -383,7 +380,7 @@ GtkWidget *
 NodeToolbar::create(SPDesktop *desktop)
 {
     auto holder = new NodeToolbar(desktop);
-    return GTK_WIDGET(holder->gobj());
+    return holder->Gtk::Widget::gobj();
 } // NodeToolbar::prep()
 
 void
@@ -448,9 +445,9 @@ NodeToolbar::sel_changed(Inkscape::Selection *selection)
 }
 
 void
-NodeToolbar::watch_ec(SPDesktop* desktop, Inkscape::UI::Tools::ToolBase* ec)
+NodeToolbar::watch_ec(SPDesktop* desktop, Inkscape::UI::Tools::ToolBase* tool)
 {
-    if (INK_IS_NODE_TOOL(ec)) {
+    if (INK_IS_NODE_TOOL(tool)) {
         // watch selection
         c_selection_changed = desktop->getSelection()->connectChanged(sigc::mem_fun(*this, &NodeToolbar::sel_changed));
         c_selection_modified = desktop->getSelection()->connectModified(sigc::mem_fun(*this, &NodeToolbar::sel_modified));
@@ -675,9 +672,7 @@ NodeToolbar::on_pref_toggled(Gtk::ToggleToolButton *item,
     prefs->setBool(path, item->get_active());
 }
 
-}
-}
-}
+} // namespace Inkscape::UI::Toolbar
 
 /*
   Local Variables:

@@ -92,7 +92,7 @@ private:
 
     void sensitivize();
     void defaults();
-    void watch_ec(SPDesktop* desktop, Inkscape::UI::Tools::ToolBase* ec);
+    void watch_ec(SPDesktop* desktop, Inkscape::UI::Tools::ToolBase* tool);
     void selection_changed(Inkscape::Selection *selection);
 
     sigc::connection _changed;

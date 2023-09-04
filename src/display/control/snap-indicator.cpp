@@ -227,7 +227,7 @@ SnapIndicator::set_new_snaptarget(Inkscape::SnappedPoint const &p, bool pre_snap
 
             if (!tooltip_str.empty()) {
                 Geom::Point tooltip_pos = p.getPoint();
-                if (dynamic_cast<Inkscape::UI::Tools::MeasureTool *>(_desktop->event_context)) {
+                if (dynamic_cast<Inkscape::UI::Tools::MeasureTool *>(_desktop->getTool())) {
                     // Make sure that the snap tooltips do not overlap the ones from the measure tool
                     tooltip_pos += _desktop->w2d(Geom::Point(0, -3*fontsize));
                 } else {

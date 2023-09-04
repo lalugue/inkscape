@@ -96,7 +96,7 @@ LPECloneOriginal::syncOriginal()
         refresh_widgets = true;
         SPDesktop *desktop = SP_ACTIVE_DESKTOP;
         sp_lpe_item_update_patheffect (sp_lpe_item, false, true);
-        if (desktop && dynamic_cast<Inkscape::UI::Tools::NodeTool *>(desktop->event_context)) {
+        if (desktop && dynamic_cast<Inkscape::UI::Tools::NodeTool *>(desktop->getTool())) {
             // Why is this switching tools twice? Probably to reinitialize Node Tool.
             set_active_tool(desktop, "Select");
             set_active_tool(desktop, "Node");

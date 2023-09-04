@@ -80,7 +80,7 @@ RectToolbar::RectToolbar(SPDesktop *desktop)
         _width_adj = Gtk::Adjustment::create(width_val, 0, 1e6, SPIN_STEP, SPIN_PAGE_STEP);
         _width_item = Gtk::make_managed<UI::Widget::SpinButtonToolItem>("rect-width", _("W:"), _width_adj);
         _width_item->get_spin_button()->addUnitTracker(_tracker);
-        _width_item->set_focus_widget(_desktop->canvas);
+        _width_item->set_focus_widget(_desktop->getCanvas());
         _width_item->set_all_tooltip_text(_("Width of rectangle"));
     
         _width_adj->signal_value_changed().connect(sigc::bind(sigc::mem_fun(*this, &RectToolbar::value_changed),
@@ -111,7 +111,7 @@ RectToolbar::RectToolbar(SPDesktop *desktop)
         _height_item->get_spin_button()->addUnitTracker(_tracker);
         _height_item->set_custom_numeric_menu_data(values);
         _height_item->set_all_tooltip_text(_("Height of rectangle"));
-        _height_item->set_focus_widget(_desktop->canvas);
+        _height_item->set_focus_widget(_desktop->getCanvas());
         _height_item->set_sensitive(false);
     }
 
@@ -131,7 +131,7 @@ RectToolbar::RectToolbar(SPDesktop *desktop)
         _rx_item = Gtk::make_managed<UI::Widget::SpinButtonToolItem>("rect-rx", _("Rx:"), _rx_adj);
         _rx_item->get_spin_button()->addUnitTracker(_tracker);
         _rx_item->set_all_tooltip_text(_("Horizontal radius of rounded corners"));
-        _rx_item->set_focus_widget(_desktop->canvas);
+        _rx_item->set_focus_widget(_desktop->getCanvas());
         _rx_item->set_custom_numeric_menu_data(values, labels);
     }
 
@@ -151,7 +151,7 @@ RectToolbar::RectToolbar(SPDesktop *desktop)
         _ry_item = Gtk::make_managed<UI::Widget::SpinButtonToolItem>("rect-ry", _("Ry:"), _ry_adj);
         _ry_item->get_spin_button()->addUnitTracker(_tracker);
         _ry_item->set_all_tooltip_text(_("Vertical radius of rounded corners"));
-        _ry_item->set_focus_widget(_desktop->canvas);
+        _ry_item->set_focus_widget(_desktop->getCanvas());
         _ry_item->set_custom_numeric_menu_data(values, labels);
     }
 
@@ -196,7 +196,7 @@ GtkWidget *
 RectToolbar::create(SPDesktop *desktop)
 {
     auto toolbar = new RectToolbar(desktop);
-    return GTK_WIDGET(toolbar->gobj());
+    return toolbar->Gtk::Widget::gobj();
 }
 
 void
@@ -264,11 +264,11 @@ RectToolbar::defaults()
 }
 
 void
-RectToolbar::watch_ec(SPDesktop* desktop, Inkscape::UI::Tools::ToolBase* ec)
+RectToolbar::watch_ec(SPDesktop* desktop, Inkscape::UI::Tools::ToolBase* tool)
 {
     // use of dynamic_cast<> seems wrong here -- we just need to check the current tool
 
-    if (dynamic_cast<Inkscape::UI::Tools::RectTool *>(ec)) {
+    if (dynamic_cast<Inkscape::UI::Tools::RectTool *>(tool)) {
         Inkscape::Selection *sel = desktop->getSelection();
 
         _changed = sel->connectChanged(sigc::mem_fun(*this, &RectToolbar::selection_changed));

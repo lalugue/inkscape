@@ -1309,8 +1309,8 @@ bool ObjectsPanel::on_tree_key_pressed(GtkEventControllerKey const * const contr
     auto const shortcut = Inkscape::Shortcuts::get_from(controller, keyval, keycode, state);
     switch (shortcut.get_key()) {
         case GDK_KEY_Escape:
-            if (desktop->canvas) {
-                desktop->canvas->grab_focus();
+            if (desktop->getCanvas()) {
+                desktop->getCanvas()->grab_focus();
                 return true;
             }
             break;

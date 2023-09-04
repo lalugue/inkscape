@@ -1,9 +1,11 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-/*
+/** @file
  * Editable view implementation
- *
+ */
+/*
  * Authors:
  *   Lauris Kaplinski <lauris@kaplinski.com>
+ *   Frank Felfe <innerspace@iname.com>
  *   MenTaLguY <mental@rydia.net>
  *   bulia byak <buliabyak@users.sf.net>
  *   Ralf Stephan <ralf@ark.in-berlin.de>
@@ -25,10 +27,9 @@
 #include <glibmm/i18n.h>
 #include <2geom/transforms.h>
 #include <2geom/rect.h>
-#include <memory>
+#include <sigc++/adaptors/bind.h>
 
 #include "desktop.h"
-
 #include "color.h"
 #include "desktop-events.h"
 #include "desktop-style.h"
@@ -38,23 +39,18 @@
 #include "layer-manager.h"
 #include "message-context.h"
 #include "message-stack.h"
-
 #include "actions/actions-view-mode.h" // To update View menu
 #include "actions/actions-tools.h" // To change tools
-
 #include "display/drawing.h"
 #include "display/control/canvas-temporary-item-list.h"
 #include "display/control/snap-indicator.h"
-
 #include "display/control/canvas-item-catchall.h"
 #include "display/control/canvas-item-drawing.h"
 #include "display/control/canvas-item-group.h"
-
 #include "io/fix-broken-links.h"
-
 #include "object/sp-namedview.h"
 #include "object/sp-root.h"
-
+#include "ui/controller.h"
 #include "ui/dialog/dialog-container.h"
 #include "ui/interface.h" // Only for getLayoutPrefPath
 #include "ui/tool-factory.h"
@@ -64,8 +60,6 @@
 #include "ui/widget/canvas.h"
 #include "ui/widget/desktop-widget.h"
 #include "ui/widget/events/canvas-event.h"
-
-
 // TODO those includes are only for node tool quick zoom. Remove them after fixing it.
 #include "ui/tools/node-tool.h"
 #include "ui/tool/control-point-selection.h"
@@ -77,30 +71,9 @@ static bool _drawing_handler(Inkscape::CanvasEvent const &event, Inkscape::Drawi
 static void _reconstruction_start(SPDesktop * desktop);
 static void _reconstruction_finish(SPDesktop * desktop);
 
-static gdouble _pinch_begin_zoom = 1.;
-
-static void _pinch_begin_handler(GtkGesture *gesture, GdkEventSequence *sequence, SPDesktop *desktop)
-{
-    _pinch_begin_zoom = desktop->current_zoom();
-}
-
-static void _pinch_scale_changed_handler(GtkGesture *gesture, gdouble delta, SPDesktop *desktop)
-{
-    GdkEventSequence *sequence = gtk_gesture_get_last_updated_sequence(gesture);
-    const GdkEvent *event = gtk_gesture_get_last_event(gesture, sequence);
-
-    Geom::Point button_window(event->button.x, event->button.y);
-    Geom::Point button_world = desktop->getCanvas()->canvas_to_world(button_window);
-    Geom::Point button_dt(desktop->w2d(button_world));
-
-    desktop->zoom_absolute(button_dt, _pinch_begin_zoom * delta);
-}
-
 SPDesktop::SPDesktop()
     : namedview(nullptr)
     , canvas(nullptr)
-    , temporary_item_list(nullptr)
-    , snapindicator(nullptr)
     , current(nullptr)  // current style
     , _focusMode(false)
     , dkey(0)
@@ -137,16 +110,9 @@ SPDesktop::SPDesktop()
 SPDesktop::~SPDesktop()
 {
     // Formerly in View::View VVVVVVVVVVVVVVVVVVV
-    _message_changed_connection.disconnect();
-
-    _tips_message_context = nullptr;
-
-    _message_stack = nullptr;
 
     if (document) {
-        _document_uri_set_connection.disconnect();
         INKSCAPE.remove_document(document);
-        document = nullptr;
     }
 }
 
@@ -200,7 +166,7 @@ SPDesktop::init (SPNamedView *nv, Inkscape::UI::Widget::Canvas *acanvas, SPDeskt
      * It would probably make sense to move most of this code to the Canvas.
      */
 
-    Inkscape::CanvasItemGroup *canvas_item_root = canvas->get_canvas_item_root();
+    auto const canvas_item_root = canvas->get_canvas_item_root();
 
     // The order in which these canvas items are added determines the z-order. It's therefore
     // important to add the tempgroup (which will contain the snapindicator) before adding the
@@ -210,47 +176,48 @@ SPDesktop::init (SPNamedView *nv, Inkscape::UI::Widget::Canvas *acanvas, SPDeskt
     // being selected? or does it intercept some of the events that should have gone to the
     // node handler? see bug https://bugs.launchpad.net/inkscape/+bug/414142)
 
-    canvas_catchall       = new Inkscape::CanvasItemCatchall(canvas_item_root); // Lowest item!
-    canvas_group_pages_bg = new Inkscape::CanvasItemGroup(canvas_item_root);
-    canvas_group_drawing  = new Inkscape::CanvasItemGroup(canvas_item_root);
-    canvas_group_pages_fg = new Inkscape::CanvasItemGroup(canvas_item_root);
-    canvas_group_grids    = new Inkscape::CanvasItemGroup(canvas_item_root);
-    canvas_group_guides   = new Inkscape::CanvasItemGroup(canvas_item_root);
-    canvas_group_sketch   = new Inkscape::CanvasItemGroup(canvas_item_root);
-    canvas_group_temp     = new Inkscape::CanvasItemGroup(canvas_item_root);
-    canvas_group_controls = new Inkscape::CanvasItemGroup(canvas_item_root);
+    _canvas_catchall       = new Inkscape::CanvasItemCatchall{canvas_item_root}; // Lowest item!
+    _canvas_group_pages_bg = new Inkscape::CanvasItemGroup   {canvas_item_root};
+    _canvas_group_drawing  = new Inkscape::CanvasItemGroup   {canvas_item_root};
+    _canvas_group_pages_fg = new Inkscape::CanvasItemGroup   {canvas_item_root};
+    _canvas_group_grids    = new Inkscape::CanvasItemGroup   {canvas_item_root};
+    _canvas_group_guides   = new Inkscape::CanvasItemGroup   {canvas_item_root};
+    _canvas_group_sketch   = new Inkscape::CanvasItemGroup   {canvas_item_root};
+    _canvas_group_temp     = new Inkscape::CanvasItemGroup   {canvas_item_root};
+    _canvas_group_controls = new Inkscape::CanvasItemGroup   {canvas_item_root};
 
-    canvas_group_pages_bg->set_name("CanvasItemGroup:PagesBg");  // Page backgrounds
-    canvas_group_drawing->set_name("CanvasItemGroup:Drawing");   // The actual SVG drawing.
-    canvas_group_pages_fg->set_name("CanvasItemGroup:PagesFg");  // Page borders, when on top.
-    canvas_group_grids->set_name("CanvasItemGroup:Grids");       // Grids.
-    canvas_group_guides->set_name("CanvasItemGroup:Guides");     // Guides.
-    canvas_group_sketch->set_name("CanvasItemGroup:Sketch");     // Temporary items before becoming permanent.
-    canvas_group_temp->set_name("CanvasItemGroup:Temp");         // Temporary items that disappear by themselves.
-    canvas_group_controls->set_name("CanvasItemGroup:Controls"); // Controls (handles, knots, rectangles, etc.).
+    _canvas_group_pages_bg->set_name("CanvasItemGroup:PagesBg" ); // Page backgrounds
+    _canvas_group_drawing ->set_name("CanvasItemGroup:Drawing" ); // The actual SVG drawing.
+    _canvas_group_pages_fg->set_name("CanvasItemGroup:PagesFg" ); // Page borders, when on top.
+    _canvas_group_grids   ->set_name("CanvasItemGroup:Grids"   ); // Grids.
+    _canvas_group_guides  ->set_name("CanvasItemGroup:Guides"  ); // Guides.
+    _canvas_group_sketch  ->set_name("CanvasItemGroup:Sketch"  ); // Temporary items before becoming permanent.
+    _canvas_group_temp    ->set_name("CanvasItemGroup:Temp"    ); // Temporary items that disappear by themselves.
+    _canvas_group_controls->set_name("CanvasItemGroup:Controls"); // Controls (handles, knots, rectangles, etc.).
 
-    canvas_group_sketch->set_pickable(false);  // Temporary items are not pickable!
-    canvas_group_temp->set_pickable(false);    // Temporary items are not pickable!
+    _canvas_group_sketch->set_pickable(false); // Temporary items are not pickable!
+    _canvas_group_temp  ->set_pickable(false); // Temporary items are not pickable!
 
     // The root should never emit events. The "catchall" should get it!
     // But somehow there are still exceptions, e.g. Ctrl+scroll to zoom.
-    canvas_item_root->connect_event(sigc::bind(sigc::ptr_fun(sp_desktop_root_handler), this));
-    canvas_catchall->connect_event(sigc::bind(sigc::ptr_fun(sp_desktop_root_handler), this));
+    canvas_item_root->connect_event(sigc::bind(&sp_desktop_root_handler, this));
+    _canvas_catchall->connect_event(sigc::bind(&sp_desktop_root_handler, this));
 
-    canvas_drawing = new Inkscape::CanvasItemDrawing(canvas_group_drawing);
-    canvas_drawing->connect_drawing_event(sigc::bind(sigc::ptr_fun(_drawing_handler), this));
-    canvas->set_drawing(canvas_drawing->get_drawing()); // Canvas needs access.
+    _canvas_drawing = new Inkscape::CanvasItemDrawing{_canvas_group_drawing};
+    _canvas_drawing->connect_drawing_event(sigc::bind(&_drawing_handler, this));
 
-    Inkscape::DrawingItem *drawing_item = document->getRoot()->invoke_show(
-        *canvas_drawing->get_drawing(),
-        dkey,
-        SP_ITEM_SHOW_DISPLAY);
-    if (drawing_item) {
-        canvas_drawing->get_drawing()->root()->prependChild(drawing_item);
+    auto const drawing = _canvas_drawing->get_drawing();
+    g_assert(drawing);
+    canvas->set_drawing(drawing); // Canvas needs access.
+
+    auto const root = document->getRoot();
+    g_assert(root);
+    if (auto const drawing_item = root->invoke_show(*drawing, dkey, SP_ITEM_SHOW_DISPLAY)) {
+        drawing->root()->prependChild(drawing_item);
     }
 
-    temporary_item_list = new Inkscape::Display::TemporaryItemList();
-    snapindicator = new Inkscape::Display::SnapIndicator ( this );
+    _temporary_item_list = std::make_unique<Inkscape::Display::TemporaryItemList>();
+    _snapindicator = std::make_unique<Inkscape::Display::SnapIndicator>(this);
 
     /* --------- End Canvas Items ----------- */
 
@@ -264,17 +231,17 @@ SPDesktop::init (SPNamedView *nv, Inkscape::UI::Widget::Canvas *acanvas, SPDeskt
     // display rect and zoom are now handled in sp_desktop_widget_realize()
 
     // pinch zoom
-    zoomgesture = gtk_gesture_zoom_new(GTK_WIDGET(canvas->gobj()));
-    gtk_event_controller_set_propagation_phase (GTK_EVENT_CONTROLLER (zoomgesture), GTK_PHASE_CAPTURE);
-    g_signal_connect(zoomgesture, "begin", G_CALLBACK(_pinch_begin_handler), this);
-    g_signal_connect(zoomgesture, "scale-changed", G_CALLBACK(_pinch_scale_changed_handler), this);
+    Inkscape::UI::Controller::add_motion<&SPDesktop::on_motion, &SPDesktop::on_motion, &SPDesktop::on_leave>
+                                        (*canvas, *this);
+    Inkscape::UI::Controller::add_zoom<&SPDesktop::on_zoom_begin, &SPDesktop::on_zoom_scale, &SPDesktop::on_zoom_end>
+                                      (*canvas, *this, Gtk::PHASE_CAPTURE);
 
-/* Set up notification of rebuilding the document, this allows
+    /* Set up notification of rebuilding the document, this allows
        for saving object related settings in the document. */
     _reconstruction_start_connection =
-        document->connectReconstructionStart(sigc::bind(sigc::ptr_fun(_reconstruction_start), this));
+        document->connectReconstructionStart(sigc::bind(&_reconstruction_start, this));
     _reconstruction_finish_connection =
-        document->connectReconstructionFinish(sigc::bind(sigc::ptr_fun(_reconstruction_finish), this));
+        document->connectReconstructionFinish(sigc::bind(&_reconstruction_finish, this));
     _reconstruction_old_layer_id.clear();
 }
 
@@ -285,21 +252,9 @@ void SPDesktop::destroy()
     canvas->set_drawing(nullptr); // Ensures deactivation
     canvas->set_desktop(nullptr); // Todo: Remove desktop dependency.
 
-    if (event_context) {
-        delete event_context;
-        event_context = nullptr;
-    }
-
-    if (snapindicator) {
-        delete snapindicator;
-        snapindicator = nullptr;
-    }
-
-    if (temporary_item_list) {
-        delete temporary_item_list;
-        temporary_item_list = nullptr;
-    }
-
+    _tool.reset();
+    _snapindicator.reset();
+    _temporary_item_list.reset();
     _selection.reset();
 
     namedview->hide(this);
@@ -308,22 +263,15 @@ void SPDesktop::destroy()
     _reconstruction_finish_connection.disconnect();
     _schedule_zoom_from_document_connection.disconnect();
 
-    if (zoomgesture) {
-        g_signal_handlers_disconnect_by_data(zoomgesture, this);
-        g_clear_object(&zoomgesture);
-    }
-
-    if (canvas_drawing) {
+    if (_canvas_drawing) {
         doc()->getRoot()->invoke_hide(dkey);
     }
 
     _guides_message_context = nullptr;
 }
 
-
 //--------------------------------------------------------------------
 /* Public methods */
-
 
 /* These methods help for temporarily showing things on-canvas.
  * The *only* valid use of the TemporaryItem* that you get from add_temporary_canvasitem
@@ -345,7 +293,7 @@ SPDesktop::add_temporary_canvasitem (Inkscape::CanvasItem *item, guint lifetime,
         item->lower_to_bottom();
     }
 
-    return temporary_item_list->add_item(item, lifetime);
+    return _temporary_item_list->add_item(item, lifetime);
 }
 
 /** It is perfectly safe to call this function while the object has already been deleted due to a timeout.
@@ -356,8 +304,8 @@ void
 SPDesktop::remove_temporary_canvasitem (Inkscape::Display::TemporaryItem * tempitem)
 {
     // check for non-null temporary_item_list, because during destruction of desktop, some destructor might try to access this list!
-    if (tempitem && temporary_item_list) {
-        temporary_item_list->delete_item(tempitem);
+    if (tempitem && _temporary_item_list) {
+        _temporary_item_list->delete_item(tempitem);
     }
 }
 
@@ -402,7 +350,7 @@ SPDesktop::change_document (SPDocument *theDocument)
     _selection->clear();
 
     // Reset any tool actions currently in progress.
-    setEventContext(std::string(event_context->getPrefsPath()));
+    setEventContext(_tool->getPrefsPath());
 
     setDocument (theDocument);
 
@@ -413,7 +361,7 @@ SPDesktop::change_document (SPDocument *theDocument)
     parent->change_document(theDocument);
     SPDesktopWidget *dtw = parent->get_desktop_widget();
     if (dtw) {
-        dtw->desktop = this;
+        dtw->set_desktop(this); // takes ownership
         dtw->updateNamedview();
     } else {
         std::cerr << "SPDesktop::change_document: failed to get desktop widget!" << std::endl;
@@ -428,22 +376,21 @@ SPDesktop::change_document (SPDocument *theDocument)
 void SPDesktop::setEventContext(const std::string& toolName)
 {
     // Tool should be able to be replaced with itself. See commit 29df5ca05d
-    if (event_context) {
-        event_context->switching_away(toolName);
-        delete event_context;
-        event_context = nullptr;
+    if (_tool) {
+        _tool->switching_away(toolName);
+        _tool.reset();
     }
 
     if (!toolName.empty()) {
-        event_context = ToolFactory::createObject(this, toolName);
+        _tool.reset(ToolFactory::createObject(this, toolName));
         // Switch back, though we don't know what the tool was
-        if (!event_context->is_ready()) {
+        if (!_tool->is_ready()) {
             set_active_tool(this, "Select");
             return;
         }
     }
 
-    _event_context_changed_signal.emit(this, event_context);
+    _event_context_changed_signal.emit(this, _tool.get());
 }
 
 /**
@@ -525,7 +472,6 @@ SPDesktop::prev_transform()
     set_display_area (false);
 }
 
-
 /**
  * Set transform to next in list.
  */
@@ -547,7 +493,6 @@ void SPDesktop::next_transform()
     transforms_past.push_front( _current_affine );
 }
 
-
 /**
  * Clear transform lists.
  */
@@ -557,7 +502,6 @@ SPDesktop::clear_transform_history()
     transforms_past.clear();
     transforms_future.clear();
 }
-
 
 /**
  * Does all the dirty work in setting the display area.
@@ -581,7 +525,7 @@ SPDesktop::set_display_area (bool log)
 
     /* Update perspective lines if we are in the 3D box tool (so that infinite ones are shown
      * correctly) */
-    if (auto boxtool = dynamic_cast<Inkscape::UI::Tools::Box3dTool*>(event_context)) {
+    if (auto const boxtool = dynamic_cast<Inkscape::UI::Tools::Box3dTool*>(_tool.get())) {
         boxtool->_vpdrag->updateLines();
     }
 
@@ -606,7 +550,6 @@ SPDesktop::set_display_area (Geom::Point const &c, Geom::Point const &w, bool lo
     _current_affine.addOffset( offset );
     set_display_area( log );
 }
-
 
 /**
  * Map the center of rectangle 'r' (which specifies a non-rotated region of the
@@ -639,7 +582,6 @@ SPDesktop::set_display_area( Geom::Rect const &r, double border, bool log)
 
     set_display_area( r.midpoint(), w.midpoint(), log );
 }
-
 
 /**
  * Return canvas viewbox in desktop coordinates
@@ -700,7 +642,6 @@ SPDesktop::zoom_realworld(Geom::Point const &center, double ratio)
     this->zoom_absolute(center, ratio * correction, false);
 }
 
-
 /**
  * Set display area in only the width dimension.
  */
@@ -744,7 +685,6 @@ SPDesktop::zoom_drawing()
 
     set_display_area(*d, 10);
 }
-
 
 /**
  * Zoom to selection.
@@ -803,7 +743,7 @@ void SPDesktop::zoom_quick(bool enable)
         // TODO This needs to migrate into the node tool, but currently the design
         // of this method is sufficiently wrong to prevent this.
         if (!zoomed) {
-            if (auto nt = dynamic_cast<Inkscape::UI::Tools::NodeTool*>(event_context)) {
+            if (auto const nt = dynamic_cast<Inkscape::UI::Tools::NodeTool*>(_tool.get())) {
                 if (!nt->_selected_nodes->empty()) {
                     Geom::Rect nodes = *nt->_selected_nodes->bounds();
                     double area = nodes.area();
@@ -839,7 +779,6 @@ void SPDesktop::zoom_quick(bool enable)
     return;
 }
 
-
 /**
  * Tell widget to let zoom widget grab keyboard focus.
  */
@@ -849,7 +788,6 @@ SPDesktop::zoom_grab_focus()
     _widget->letZoomGrabFocus();
 }
 
-
 /**
  * Tell widget to let rotate widget grab keyboard focus.
  */
@@ -858,7 +796,6 @@ SPDesktop::rotate_grab_focus()
 {
     _widget->letRotateGrabFocus();
 }
-
 
 /**
  * Set new rotation, keeping the point 'c' fixed in the desktop window.
@@ -874,7 +811,6 @@ SPDesktop::rotate_absolute_keep_point (Geom::Point const &c, double rotate)
     set_display_area( c, w );
 }
 
-
 /**
  * Rotate keeping the point 'c' fixed in the desktop window.
  *
@@ -889,7 +825,6 @@ SPDesktop::rotate_relative_keep_point (Geom::Point const &c, double rotate)
     set_display_area( c, w );
 }
 
-
 /**
  * Set new rotation, aligning the point 'c' to the center of desktop window.
  *
@@ -903,7 +838,6 @@ SPDesktop::rotate_absolute_center_point (Geom::Point const &c, double rotate)
     Geom::Rect viewbox = canvas->get_area_world();
     set_display_area(c, viewbox.midpoint());
 }
-
 
 /**
  * Rotate aligning the point 'c' to the center of desktop window.
@@ -933,7 +867,6 @@ SPDesktop::flip_absolute_keep_point (Geom::Point const &c, CanvasFlip flip)
     set_display_area(c, w);
 }
 
-
 /**
  * Flip direction, keeping the point 'c' fixed in the desktop window.
  *
@@ -948,7 +881,6 @@ SPDesktop::flip_relative_keep_point (Geom::Point const &c, CanvasFlip flip)
     set_display_area(c, w);
 }
 
-
 /**
  * Set new flip direction, aligning the point 'c' to the center of desktop window.
  *
@@ -962,7 +894,6 @@ SPDesktop::flip_absolute_center_point (Geom::Point const &c, CanvasFlip flip)
     Geom::Rect viewbox = canvas->get_area_world();
     set_display_area(c, viewbox.midpoint());
 }
-
 
 /**
  * Flip direction, aligning the point 'c' to the center of desktop window.
@@ -984,7 +915,6 @@ SPDesktop::is_flipped (CanvasFlip flip)
     return _current_affine.isFlipped(flip);
 }
 
-
 /**
  * Scroll canvas by to a particular point (window coordinates).
  */
@@ -995,7 +925,7 @@ SPDesktop::scroll_absolute (Geom::Point const &point)
     _current_affine.setOffset( point );
 
     /*  update perspective lines if we are in the 3D box tool (so that infinite ones are shown correctly) */
-    if (auto boxtool = dynamic_cast<Inkscape::UI::Tools::Box3dTool*>(event_context)) {
+    if (auto const boxtool = dynamic_cast<Inkscape::UI::Tools::Box3dTool*>(_tool.get())) {
         boxtool->_vpdrag->updateLines();
     }
 
@@ -1012,7 +942,6 @@ SPDesktop::scroll_relative (Geom::Point const &delta)
     Geom::Rect const viewbox = canvas->get_area_world();
     scroll_absolute( viewbox.min() - delta );
 }
-
 
 /**
  * Scroll canvas by specific coordinate amount in svg coordinates.
@@ -1148,13 +1077,13 @@ SPDesktop::setWindowTransient (void *p, int transient_policy)
 Gtk::Window*
 SPDesktop::getToplevel( )
 {
-    return _widget->window;
+    return _widget->get_window();
 }
 
 InkscapeWindow*
 SPDesktop::getInkscapeWindow( )
 {
-    return dynamic_cast<InkscapeWindow*>(_widget->window);
+    return _widget->get_window();
 }
 
 void
@@ -1163,9 +1092,9 @@ SPDesktop::presentWindow()
     _widget->presentWindow();
 }
 
-bool SPDesktop::showInfoDialog( Glib::ustring const & message )
+void SPDesktop::showInfoDialog(Glib::ustring const &message)
 {
-    return _widget->showInfoDialog( message );
+    _widget->showInfoDialog(message);
 }
 
 bool
@@ -1202,8 +1131,8 @@ void SPDesktop::setTempHideOverlays(bool hide)
     }
 
     if (hide) {
-        canvas_group_controls->set_visible(false);
-        canvas_group_grids->set_visible(false);
+        _canvas_group_controls->set_visible(false);
+        _canvas_group_grids->set_visible(false);
         _saved_guides_visible = namedview->getShowGuides();
         if (_saved_guides_visible) {
             namedview->temporarily_show_guides(false);
@@ -1213,11 +1142,11 @@ void SPDesktop::setTempHideOverlays(bool hide)
         }
         _overlays_visible = false;
     } else {
-        canvas_group_controls->set_visible(true);
+        _canvas_group_controls->set_visible(true);
         if (_saved_guides_visible) {
             namedview->temporarily_show_guides(true);
         }
-        canvas_group_grids->set_visible(true);
+        _canvas_group_grids->set_visible(true);
         _overlays_visible = true;
     }
 }
@@ -1270,7 +1199,6 @@ SPDesktop::onWindowStateEvent (GdkEventWindowState* event)
     return false;
 }
 
-
 /**
   * Apply the desktop's current style or the tool style to the object.
   */
@@ -1290,7 +1218,6 @@ void SPDesktop::applyCurrentOrToolStyle(SPObject *obj, Glib::ustring const &tool
         sp_repr_css_attr_unref(css_current);
     }
 }
-
 
 void
 SPDesktop::setToolboxFocusTo (gchar const *label)
@@ -1370,8 +1297,8 @@ void SPDesktop::setWaitingCursor()
 }
 
 void SPDesktop::clearWaitingCursor() {
-  if (waiting_cursor && this->event_context) {
-      this->event_context->use_tool_cursor();
+  if (waiting_cursor && _tool) {
+      _tool->use_tool_cursor();
   }
 }
 
@@ -1402,21 +1329,21 @@ SPDesktop::setDocument (SPDocument *doc)
     /// inside is NOT called on initialization, only on replacement. But there
     /// are surely more safe methods to accomplish this.
     // TODO since the comment had reversed logic, check the intent of this block of code:
-    if (canvas_drawing) {
-
+    if (_canvas_drawing) {
+        g_assert(doc);
         namedview = doc->getNamedView();
         namedview->viewcount++;
 
-        Inkscape::DrawingItem *drawing_item = doc->getRoot()->invoke_show(
-            *(canvas_drawing->get_drawing()),
-            dkey,
-            SP_ITEM_SHOW_DISPLAY);
-        if (drawing_item) {
-            canvas_drawing->get_drawing()->root()->prependChild(drawing_item);
+        auto const drawing = _canvas_drawing->get_drawing();
+        g_assert(drawing);
+
+        auto const root = doc->getRoot();
+        g_assert(root);
+        if (auto const drawing_item = root->invoke_show(*drawing, dkey, SP_ITEM_SHOW_DISPLAY)) {
+            drawing->root()->prependChild(drawing_item);
         }
 
         namedview->show(this);
-
         namedview->setShowGrids(namedview->getShowGrids());
 
         /* Ugly hack */
@@ -1470,22 +1397,21 @@ SPDesktop::onDocumentFilenameSet (gchar const* filename)
  */
 static bool _drawing_handler(Inkscape::CanvasEvent const &event, Inkscape::DrawingItem *drawing_item, SPDesktop *desktop)
 {
+    auto const tool = desktop->getTool();
+    if (!tool) return false;
+
     if (event.type() == Inkscape::EventType::KEY_PRESS &&
         Inkscape::UI::Tools::get_latin_keyval(static_cast<Inkscape::KeyPressEvent const &>(event)) == GDK_KEY_space &&
-        desktop->event_context->is_space_panning())
+        tool->is_space_panning())
     {
         return true;
     }
 
-    if (auto ec = desktop->event_context) {
-        if (drawing_item) {
-            return ec->start_item_handler(drawing_item->getItem(), event);
-        } else {
-            return ec->start_root_handler(event);
-        }
+    if (drawing_item) {
+        return tool->start_item_handler(drawing_item->getItem(), event);
     }
 
-    return false;
+    return tool->start_root_handler(event);
 }
 
 /// Called when document is starting to be rebuilt.
@@ -1502,9 +1428,10 @@ static void _reconstruction_start(SPDesktop * desktop)
 static void _reconstruction_finish(SPDesktop * desktop)
 {
     g_debug("Desktop, finishing reconstruction\n");
-    if ( !desktop->_reconstruction_old_layer_id.empty() ) {
-        SPObject * newLayer = desktop->namedview->document->getObjectById(desktop->_reconstruction_old_layer_id);
-        if (newLayer != nullptr) {
+    if (!desktop->_reconstruction_old_layer_id.empty()) {
+        if (auto const newLayer = desktop->getNamedView()->document
+                                  ->getObjectById(desktop->_reconstruction_old_layer_id))
+        {
             desktop->layerManager().setCurrentLayer(newLayer);
         }
 
@@ -1575,37 +1502,38 @@ void SPDesktop::emit_text_cursor_moved(void* sender, Inkscape::UI::Tools::TextTo
 }
 
 /*
- * Pop event context from desktop's context stack. Never used.
+* * pinch zoom
  */
-// void
-// SPDesktop::pop_event_context (unsigned int key)
-// {
-//    ToolBase *ec = NULL;
-//
-//    if (event_context && event_context->key == key) {
-//        g_return_if_fail (event_context);
-//        g_return_if_fail (event_context->next);
-//        ec = event_context;
-//        sp_event_context_deactivate (ec);
-//        event_context = ec->next;
-//        sp_event_context_activate (event_context);
-//        _event_context_changed_signal.emit (this, ec);
-//    }
-//
-//    ToolBase *ref = event_context;
-//    while (ref && ref->next && ref->next->key != key)
-//        ref = ref->next;
-//
-//    if (ref && ref->next) {
-//        ec = ref->next;
-//        ref->next = ec->next;
-//    }
-//
-//    if (ec) {
-//        sp_event_context_finish (ec);
-//        g_object_unref (G_OBJECT (ec));
-//    }
-// }
+
+void SPDesktop::on_motion(GtkEventControllerMotion const * /*motion*/,
+                          double const x, double const y)
+{
+    _motion_x = x;
+    _motion_y = y;
+}
+
+void SPDesktop::on_leave(GtkEventControllerMotion const * /*motion*/)
+{
+    _motion_x.reset();
+    _motion_y.reset();
+}
+
+void SPDesktop::on_zoom_begin(GtkGesture const * /*zoom*/, GdkEventSequence const * /*sequence*/)
+{
+    _begin_zoom = current_zoom();
+}
+
+void SPDesktop::on_zoom_scale(GtkGestureZoom const * /*zoom*/, double const scale)
+{
+    Geom::Point const widget_point{_motion_x.value(), _motion_y.value()};
+    auto const world_point = getCanvas()->canvas_to_world(widget_point);
+    zoom_absolute(w2d(world_point), _begin_zoom.value() * scale);
+}
+
+void SPDesktop::on_zoom_end(GtkGesture const * /*zoom*/, GdkEventSequence const * /*sequence*/)
+{
+    _begin_zoom.reset();
+}
 
 /*
   Local Variables:

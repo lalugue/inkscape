@@ -76,7 +76,7 @@ private:
     void remove_stop();
     void reverse();
     void linked_changed();
-    void check_ec(SPDesktop* desktop, Inkscape::UI::Tools::ToolBase* ec);
+    void check_ec(SPDesktop* desktop, Inkscape::UI::Tools::ToolBase* tool);
     void selection_changed(Inkscape::Selection *selection);
     int update_stop_list( SPGradient *gradient, SPStop *new_stop, bool gr_multi);
     int select_stop_in_list(SPGradient *gradient, SPStop *new_stop);

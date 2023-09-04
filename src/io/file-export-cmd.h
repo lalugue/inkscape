@@ -1,28 +1,29 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 /*
- * File export from the command line. This code use to be in main.cpp. It should be
- * replaced by shared code (Gio::Actions?) for export from the file dialog.
+ * File export from the command line. This code, greatly modified, use to be in main.cpp. It should
+ * be replaced by code shared with the file dialog (Gio::Actions?).
  *
  * Copyright (C) 2018 Tavmjong Bah
  *
- * The contents of this file may be used under the GNU General Public License Version 2 or later.
+ * Git blame shows that bulia byak is the main author of the original export code from
+ * main.cpp. Other authors of note include Nicolas Dufour, Vinicius dos Santos Oliveira, and Bob
+ * Jamison; none of whom bothered to add their names to the copyright of main.cc.
  *
+ * The contents of this file may be used under the GNU General Public License Version 2 or later.
  */
 
 #ifndef INK_FILE_EXPORT_CMD_H
 #define INK_FILE_EXPORT_CMD_H
 
-#include <iostream>
-#include <glibmm.h>
-#include "2geom/rect.h"
+#include <string>
+#include <2geom/rect.h>
+#include <glibmm/ustring.h>
 
 class SPDocument;
 class SPItem;
-namespace Inkscape {
-namespace Extension {
+namespace Inkscape::Extension {
 class Output;
-}
-} // namespace Inkscape
+} // namespace Inkscape::Extension
 
 enum class ExportAreaType
 {
@@ -33,7 +34,6 @@ enum class ExportAreaType
 };
 
 class InkFileExportCmd {
-
 public:
     InkFileExportCmd();
 
@@ -54,6 +54,7 @@ private:
     Glib::ustring export_type_current;
 
     void do_export_png_now(SPDocument *doc, std::string const &filename_out, Geom::Rect area, double dpi_in, const std::vector<SPItem *> &items);
+
 public:
     // Should be private, but this is just temporary code (I hope!).
 

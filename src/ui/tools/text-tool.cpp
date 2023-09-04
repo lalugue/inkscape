@@ -387,7 +387,7 @@ bool TextTool::root_handler(CanvasEvent const &event)
 
             auto button_dt = _desktop->w2d(event.pos);
 
-            auto &m = _desktop->namedview->snap_manager;
+            auto &m = _desktop->getNamedView()->snap_manager;
             m.setup(_desktop);
             m.freeSnapReturnByRef(button_dt, SNAPSOURCE_NODE_HANDLE);
             m.unSetup();
@@ -409,7 +409,7 @@ bool TextTool::root_handler(CanvasEvent const &event)
 
                 auto p = _desktop->w2d(event.pos);
 
-                auto &m = _desktop->namedview->snap_manager;
+                auto &m = _desktop->getNamedView()->snap_manager;
                 m.setup(_desktop);
                 m.freeSnapReturnByRef(p, SNAPSOURCE_NODE_HANDLE);
                 m.unSetup();
@@ -421,11 +421,11 @@ bool TextTool::root_handler(CanvasEvent const &event)
                 auto const diff = p - p0;
                 auto const x_q = Util::Quantity(std::abs(diff.x()), "px");
                 auto const y_q = Util::Quantity(std::abs(diff.y()), "px");
-                auto const xs = x_q.string(_desktop->namedview->display_units);
-                auto const ys = y_q.string(_desktop->namedview->display_units);
+                auto const xs = x_q.string(_desktop->getNamedView()->display_units);
+                auto const ys = y_q.string(_desktop->getNamedView()->display_units);
                 message_context->setF(IMMEDIATE_MESSAGE, _("<b>Flowed text frame</b>: %s &#215; %s"), xs.c_str(), ys.c_str());
             } else if (!sp_event_context_knot_mouseover()) {
-                auto &m = _desktop->namedview->snap_manager;
+                auto &m = _desktop->getNamedView()->snap_manager;
                 m.setup(_desktop);
 
                 auto const motion_dt = _desktop->w2d(event.pos);
@@ -487,11 +487,11 @@ bool TextTool::root_handler(CanvasEvent const &event)
                 set_cursor("text-insert.svg");
                 _updateTextSelection();
                 if (is<SPText>(item_ungrouped)) {
-                    _desktop->event_context->defaultMessageContext()->set(
+                    _desktop->getTool()->defaultMessageContext()->set(
                         NORMAL_MESSAGE,
                         _("<b>Click</b> to edit the text, <b>drag</b> to select part of the text."));
                 } else {
-                    _desktop->event_context->defaultMessageContext()->set(
+                    _desktop->getTool()->defaultMessageContext()->set(
                         NORMAL_MESSAGE,
                         _("<b>Click</b> to edit the flowed text, <b>drag</b> to select part of the text."));
                 }
@@ -499,7 +499,7 @@ bool TextTool::root_handler(CanvasEvent const &event)
             } else {
                 // update cursor and statusbar: we are not over a text object now
                 set_cursor("text.svg");
-                _desktop->event_context->defaultMessageContext()->clear();
+                _desktop->getTool()->defaultMessageContext()->clear();
                 over_text = false;
             }
         },
@@ -513,7 +513,7 @@ bool TextTool::root_handler(CanvasEvent const &event)
 
             auto p1 = _desktop->w2d(event.pos);
 
-            auto &m = _desktop->namedview->snap_manager;
+            auto &m = _desktop->getNamedView()->snap_manager;
             m.setup(_desktop);
             m.freeSnapReturnByRef(p1, SNAPSOURCE_NODE_HANDLE);
             m.unSetup();

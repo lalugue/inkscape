@@ -127,7 +127,7 @@ bool FreehandBase::root_handler(CanvasEvent const &event)
     return ret || ToolBase::root_handler(event);
 }
 
-std::optional<Geom::Point> FreehandBase::red_curve_get_last_point()
+std::optional<Geom::Point> FreehandBase::red_curve_get_last_point() const
 {
     if (!red_curve.is_empty()) {
         return red_curve.last_point();
@@ -587,7 +587,7 @@ void spdc_endpoint_snap_rotation(ToolBase *tool, Geom::Point &p, Geom::Point con
     auto prefs = Preferences::get();
     unsigned const snaps = abs(prefs->getInt("/options/rotationsnapsperpi/value", 12));
 
-    SnapManager &m = tool->getDesktop()->namedview->snap_manager;
+    SnapManager &m = tool->getDesktop()->getNamedView()->snap_manager;
     m.setup(tool->getDesktop());
 
     bool snap_enabled = m.snapprefs.getSnapEnabledGlobally();
@@ -612,7 +612,7 @@ void spdc_endpoint_snap_rotation(ToolBase *tool, Geom::Point &p, Geom::Point con
 void spdc_endpoint_snap_free(ToolBase *tool, Geom::Point &p, std::optional<Geom::Point> &start_of_line)
 {
     const SPDesktop *dt = tool->getDesktop();
-    SnapManager &m = dt->namedview->snap_manager;
+    SnapManager &m = dt->getNamedView()->snap_manager;
     Inkscape::Selection *selection = dt->getSelection();
 
     // selection->singleItem() is the item that is currently being drawn. This item will not be snapped to (to avoid self-snapping)

@@ -20,11 +20,10 @@ can help:
    * Write an article advocating Inkscape.
    * Author a HOWTO describing a trick or technique you've figured out.
 
-
-GIT Access
+Git Access
 ----------
 
-Inkscape is currently developed on git, with the code hosted on GitLab.
+Inkscape is currently developed on Git, with the code hosted on GitLab.
 
  * https://gitlab.com/inkscape/inkscape
 
@@ -32,13 +31,12 @@ We give write access out to people with proven interest in helping develop
 the codebase. Proving your interest is straightforward:  Make two
 contributions and request access.
 
-Compiling the development version
+Compiling the Development Version
 ---------------------------------
 
 See http://wiki.inkscape.org/wiki/index.php/CompilingInkscape for general
 remarks about compiling, including how to find some of the needed packages for
 your distribution, and suggestions for developers.
-
 
 Patch Decisions
 ---------------
@@ -46,10 +44,14 @@ Patch Decisions
 Our motto for changes to the codebase is "Patch first, ask questions
 later". When someone has an idea, rather than endlessly debating it, we
 encourage folks to go ahead and code something up (even prototypish).
-This is then incorporated into the development branch of the code for
+You would make this change in your own fork of Inkscape (see GitLab docs about
+how to fork the repository), in a development branch of the code, which can be
+submitted to GitLab as a merge request. Once in an MR it is convenient for other
 folks to try out, poke and prod, and tinker with. We figure, the best
 way to see if an idea fits is to try it on for size.
-
+So if you have an idea, go ahead and fork Inkscape and submit a merge request!
+That will also take care of running build tests on the branch, although we would
+encourage you to check if everything builds and tests pass on your system first.
 
 Coding Style
 ------------
@@ -60,14 +62,12 @@ on the style to use for code. If reading style guidelines doesn't interest
 you, just follow the general style of the surrounding code, so that it is at
 least consistent.
 
-
 Documentation
 -------------
 
 Code needs to be documented. Future Inkscape developers will really
 appreciate this. New files should have one or two lines describing the
 purpose of the code inside the file.
-
 
 Building (In Linux distribution)
 --------------------------------

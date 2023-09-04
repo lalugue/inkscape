@@ -431,7 +431,7 @@ bool ConnectorTool::_handleButtonPress(ButtonPressEvent const &bevent)
 
         Geom::Point const event_dt = _desktop->w2d(event_w);
 
-        SnapManager &m = _desktop->namedview->snap_manager;
+        SnapManager &m = _desktop->getNamedView()->snap_manager;
 
         switch (this->state) {
         case SP_CONNECTOR_CONTEXT_STOP:
@@ -530,7 +530,7 @@ bool ConnectorTool::_handleMotionNotify(MotionEvent const &mevent)
     // Find desktop coordinates.
     Geom::Point p = _desktop->w2d(event_w);
 
-    SnapManager &m = _desktop->namedview->snap_manager;
+    SnapManager &m = _desktop->getNamedView()->snap_manager;
 
     switch (this->state) {
     case SP_CONNECTOR_CONTEXT_DRAGGING:
@@ -598,7 +598,7 @@ bool ConnectorTool::_handleButtonRelease(ButtonReleaseEvent const &revent)
 
     if (revent.button == 1) {
         SPDocument *doc = _desktop->getDocument();
-        SnapManager &m = _desktop->namedview->snap_manager;
+        SnapManager &m = _desktop->getNamedView()->snap_manager;
 
         auto const event_w = revent.pos;
 
@@ -907,7 +907,7 @@ static bool cc_generic_knot_handler(CanvasEvent const &event, SPKnot *knot)
 
     SPKnot::ref(knot);
 
-    auto cc = SP_CONNECTOR_CONTEXT(knot->desktop->event_context);
+    auto cc = SP_CONNECTOR_CONTEXT(knot->desktop->getTool());
 
     bool consumed = false;
 
@@ -916,7 +916,7 @@ static bool cc_generic_knot_handler(CanvasEvent const &event, SPKnot *knot)
         knot->setFlag(SP_KNOT_MOUSEOVER, true);
 
         cc->active_handle = knot;
-        knot->desktop->event_context->defaultMessageContext()->set(Inkscape::NORMAL_MESSAGE, _("Click to join at this point"));
+        knot->desktop->getTool()->defaultMessageContext()->set(Inkscape::NORMAL_MESSAGE, _("Click to join at this point"));
 
         consumed = true;
     },
@@ -930,7 +930,7 @@ static bool cc_generic_knot_handler(CanvasEvent const &event, SPKnot *knot)
             cc->active_handle = nullptr;
         }
 
-        knot->desktop->event_context->defaultMessageContext()->clear();
+        knot->desktop->getTool()->defaultMessageContext()->clear();
 
         consumed = true;
     },

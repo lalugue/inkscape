@@ -546,7 +546,7 @@ bool MeshTool::root_handler(CanvasEvent const &event)
                     }
 
                     if (!selection->isEmpty()) {
-                        SnapManager &m = _desktop->namedview->snap_manager;
+                        SnapManager &m = _desktop->getNamedView()->snap_manager;
                         m.setup(_desktop);
                         m.freeSnapReturnByRef(button_dt, Inkscape::SNAPSOURCE_NODE_HANDLE);
                         m.unSetup();
@@ -588,7 +588,7 @@ bool MeshTool::root_handler(CanvasEvent const &event)
 
                 // Do snapping
                 if (!_grdrag->mouseOver() && !selection->isEmpty()) {
-                    auto &m = _desktop->namedview->snap_manager;
+                    auto &m = _desktop->getNamedView()->snap_manager;
                     m.setup(_desktop);
 
                     auto const motion_dt = _desktop->w2d(event.pos);

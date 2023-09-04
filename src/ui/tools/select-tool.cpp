@@ -476,7 +476,7 @@ bool SelectTool::root_handler(CanvasEvent const &event)
         },
         [&] (MotionEvent const &event) {
             if (grabbed && event.modifiers & (GDK_SHIFT_MASK | GDK_MOD1_MASK)) {
-                _desktop->snapindicator->remove_snaptarget();
+                _desktop->getSnapIndicator()->remove_snaptarget();
             }
 
             tolerance = prefs->getIntLimited("/options/dragtolerance/value", 0, 0, 100);
@@ -775,7 +775,7 @@ bool SelectTool::root_handler(CanvasEvent const &event)
             ret = true;
 
             // TODO Simplify this (or remove it, if canvas exists, window must exist).
-            GtkWindow *w = GTK_WINDOW(gtk_widget_get_toplevel(GTK_WIDGET(_desktop->getCanvas()->gobj())));
+            GtkWindow *w = GTK_WINDOW(gtk_widget_get_toplevel(_desktop->getCanvas()->Gtk::Widget::gobj()));
             if (w) {
                 gtk_window_present(w);
                 _desktop->getCanvas()->grab_focus();

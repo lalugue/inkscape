@@ -1165,7 +1165,7 @@ RotateableSwatch::do_motion(double by, guint modifier) {
     if (modifier == 3) { // alpha
         DocumentUndo::maybeDone(parent->getDesktop()->getDocument(), undokey, (_("Adjust alpha")), INKSCAPE_ICON("dialog-fill-and-stroke"));
         double ch = hsla[3];
-        parent->getDesktop()->event_context->message_context->setF(
+        parent->getDesktop()->getTool()->message_context->setF(
             Inkscape::IMMEDIATE_MESSAGE,
             _("Adjusting <b>alpha</b>: was %.3g, now <b>%.3g</b> (diff %.3g); with <b>Ctrl</b> to adjust lightness, with <b>Shift</b> to adjust saturation, without modifiers to adjust hue"),
             ch - diff, ch, diff);
@@ -1173,7 +1173,7 @@ RotateableSwatch::do_motion(double by, guint modifier) {
     } else if (modifier == 2) { // saturation
         DocumentUndo::maybeDone(parent->getDesktop()->getDocument(), undokey, (_("Adjust saturation")), INKSCAPE_ICON("dialog-fill-and-stroke"));
         double ch = hsla[1];
-        parent->getDesktop()->event_context->message_context->setF(
+        parent->getDesktop()->getTool()->message_context->setF(
             Inkscape::IMMEDIATE_MESSAGE,
             _("Adjusting <b>saturation</b>: was %.3g, now <b>%.3g</b> (diff %.3g); with <b>Ctrl</b> to adjust lightness, with <b>Alt</b> to adjust alpha, without modifiers to adjust hue"),
             ch - diff, ch, diff);
@@ -1181,7 +1181,7 @@ RotateableSwatch::do_motion(double by, guint modifier) {
     } else if (modifier == 1) { // lightness
         DocumentUndo::maybeDone(parent->getDesktop()->getDocument(), undokey, (_("Adjust lightness")), INKSCAPE_ICON("dialog-fill-and-stroke"));
         double ch = hsla[2];
-        parent->getDesktop()->event_context->message_context->setF(
+        parent->getDesktop()->getTool()->message_context->setF(
             Inkscape::IMMEDIATE_MESSAGE,
             _("Adjusting <b>lightness</b>: was %.3g, now <b>%.3g</b> (diff %.3g); with <b>Shift</b> to adjust saturation, with <b>Alt</b> to adjust alpha, without modifiers to adjust hue"),
             ch - diff, ch, diff);
@@ -1189,7 +1189,7 @@ RotateableSwatch::do_motion(double by, guint modifier) {
     } else { // hue
         DocumentUndo::maybeDone(parent->getDesktop()->getDocument(), undokey, (_("Adjust hue")), INKSCAPE_ICON("dialog-fill-and-stroke"));
         double ch = hsla[0];
-        parent->getDesktop()->event_context->message_context->setF(
+        parent->getDesktop()->getTool()->message_context->setF(
             Inkscape::IMMEDIATE_MESSAGE,
             _("Adjusting <b>hue</b>: was %.3g, now <b>%.3g</b> (diff %.3g); with <b>Shift</b> to adjust saturation, with <b>Alt</b> to adjust alpha, with <b>Ctrl</b> to adjust lightness"),
             ch - diff, ch, diff);
@@ -1235,7 +1235,7 @@ RotateableSwatch::do_release(double by, guint modifier) {
         undokey = "ssrot1";
     }
 
-    parent->getDesktop()->event_context->message_context->clear();
+    parent->getDesktop()->getTool()->message_context->clear();
     startcolor_set = false;
 }
 
@@ -1293,7 +1293,7 @@ RotateableStrokeWidth::do_motion(double by, guint modifier) {
     } else {
         double diff = value_adjust(startvalue, by, modifier, false);
         DocumentUndo::maybeDone(parent->getDesktop()->getDocument(), undokey, (_("Adjust stroke width")), INKSCAPE_ICON("dialog-fill-and-stroke"));
-        parent->getDesktop()->event_context->message_context->setF(Inkscape::IMMEDIATE_MESSAGE, _("Adjusting <b>stroke width</b>: was %.3g, now <b>%.3g</b> (diff %.3g)"), startvalue, startvalue + diff, diff);
+        parent->getDesktop()->getTool()->message_context->setF(Inkscape::IMMEDIATE_MESSAGE, _("Adjusting <b>stroke width</b>: was %.3g, now <b>%.3g</b> (diff %.3g)"), startvalue, startvalue + diff, diff);
     }
 }
 
@@ -1313,7 +1313,7 @@ RotateableStrokeWidth::do_release(double by, guint modifier) {
     } else {
         undokey = "swrot1";
     }
-    parent->getDesktop()->event_context->message_context->clear();
+    parent->getDesktop()->getTool()->message_context->clear();
 }
 
 void

@@ -137,13 +137,12 @@ std::vector<SPItem *> SPAvoidRef::getAttachedShapes(const unsigned int type)
     GQuark shapeId = g_quark_from_string(item->getId());
     item->document->getRouter()->attachedShapes(shapes, shapeId, type);
 
-    Avoid::IntList::iterator finish = shapes.end();
-    for (Avoid::IntList::iterator i = shapes.begin(); i != finish; ++i) {
-        const gchar *connId = g_quark_to_string(*i);
+    for (auto const shape: shapes) {
+        auto const connId = g_quark_to_string(shape);
         SPObject *obj = item->document->getObjectById(connId);
         if (obj == nullptr) {
             g_warning("getAttachedShapes: Object with id=\"%s\" is not "
-                    "found. Skipping.", connId);
+                      "found. Skipping.", connId);
             continue;
         }
         auto shapeItem = cast<SPItem>(obj);
@@ -161,13 +160,12 @@ std::vector<SPItem *> SPAvoidRef::getAttachedConnectors(const unsigned int type)
     GQuark shapeId = g_quark_from_string(item->getId());
     item->document->getRouter()->attachedConns(conns, shapeId, type);
 
-    Avoid::IntList::iterator finish = conns.end();
-    for (Avoid::IntList::iterator i = conns.begin(); i != finish; ++i) {
-        const gchar *connId = g_quark_to_string(*i);
+    for (auto const conn: conns) {
+        auto const connId = g_quark_to_string(conn);
         SPObject *obj = item->document->getObjectById(connId);
         if (obj == nullptr) {
             g_warning("getAttachedConnectors: Object with id=\"%s\" is not "
-                    "found. Skipping.", connId);
+                      "found. Skipping.", connId);
             continue;
         }
         auto connItem = cast<SPItem>(obj);
@@ -271,7 +269,7 @@ static Avoid::Polygon avoid_item_poly(SPItem const *item)
 {
     SPDesktop *desktop = SP_ACTIVE_DESKTOP;
     g_assert(desktop != nullptr);
-    double spacing = desktop->namedview->connector_spacing;
+    auto const spacing = desktop->getNamedView()->connector_spacing;
 
     Geom::Affine itd_mat = item->i2doc_affine();
     std::vector<Geom::Point> hull_points;
@@ -289,39 +287,38 @@ static Avoid::Polygon avoid_item_poly(SPItem const *item)
 
     Geom::Line hull_edge(hull.back(), hull.front());
     Geom::Line prev_parallel_hull_edge;
-    prev_parallel_hull_edge.setOrigin(hull_edge.origin()+hull_edge.versor().ccw()*spacing);
+    prev_parallel_hull_edge.setOrigin(hull_edge.origin() + hull_edge.versor().ccw() * spacing);
     prev_parallel_hull_edge.setVector(hull_edge.versor());
-    int hull_size = hull.size();
-    for (int i = 0; i < hull_size; ++i)
+
+    std::size_t const hull_size = hull.size();
+    for (std::size_t i = 0; i < hull_size; ++i)
     {
         if (i + 1 == hull_size) {
             hull_edge.setPoints(hull.back(), hull.front());
         } else {
             hull_edge.setPoints(hull[i], hull[i + 1]);
         }
+
         Geom::Line parallel_hull_edge;
-        parallel_hull_edge.setOrigin(hull_edge.origin()+hull_edge.versor().ccw()*spacing);
+        parallel_hull_edge.setOrigin(hull_edge.origin() + hull_edge.versor().ccw() * spacing);
         parallel_hull_edge.setVector(hull_edge.versor());
 
         // determine the intersection point
         try {
             Geom::OptCrossing int_pt = Geom::intersection(parallel_hull_edge, prev_parallel_hull_edge);
-            if (int_pt)
-            {
+            if (int_pt) {
                 Avoid::Point avoid_pt((parallel_hull_edge.origin()+parallel_hull_edge.versor()*int_pt->ta)[Geom::X],
                                         (parallel_hull_edge.origin()+parallel_hull_edge.versor()*int_pt->ta)[Geom::Y]);
                 poly.ps.push_back(avoid_pt);
-            }
-            else
-            {
+            } else {
                 // something went wrong...
                 std::cerr<<"conn-avoid-ref.cpp: avoid_item_poly: Geom:intersection failed."<<std::endl;
             }
-        }
-        catch (Geom::InfiniteSolutions const &e) {
+        } catch (Geom::InfiniteSolutions const &e) {
             // the parallel_hull_edge and prev_parallel_hull_edge lie on top of each other, hence infinite crossings
             g_message("conn-avoid-ref.cpp: trying to get crossings of identical lines");
         }
+
         prev_parallel_hull_edge = parallel_hull_edge;
     }
 
@@ -339,7 +336,7 @@ std::vector<SPItem *> get_avoided_items(SPObject *from, SPDesktop *desktop, bool
 
 static inline void get_avoided_items_rec(std::vector<SPItem *> &list, SPObject *from, SPDesktop *desktop, bool initialised)
 {
-    for (auto& child: from->children) {
+    for (auto &child: from->children) {
         if (is<SPItem>(&child) &&
             !desktop->layerManager().isLayer(cast<SPItem>(&child)) &&
             !cast_unsafe<SPItem>(&child)->isLocked() &&

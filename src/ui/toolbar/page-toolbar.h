@@ -60,7 +60,7 @@ private:
     SPDesktop *_desktop;
     SPDocument *_document;
 
-    void toolChanged(SPDesktop *desktop, Inkscape::UI::Tools::ToolBase *ec);
+    void toolChanged(SPDesktop *desktop, Inkscape::UI::Tools::ToolBase *tool);
     void pagesChanged();
     void selectionChanged(SPPage *page);
     void on_parent_changed(Gtk::Widget *prev) override;

@@ -81,7 +81,7 @@ void CurveDragPoint::dragged(Geom::Point &new_pos, MotionEvent const &event)
     }
 
     if (_drag_initiated && !(event.modifiers & GDK_SHIFT_MASK)) {
-        SnapManager &m = _desktop->namedview->snap_manager;
+        auto &m = _desktop->getNamedView()->snap_manager;
         SPItem *path = static_cast<SPItem *>(_pm._path);
         m.setup(_desktop, true, path); // We will not try to snap to "path" itself
         Inkscape::SnapCandidatePoint scp(new_pos, Inkscape::SNAPSOURCE_OTHER_HANDLE);

@@ -38,7 +38,7 @@ using Inkscape::UI::AlignTargetNode;
 void
 node_align(const Glib::VariantBase& value, InkscapeWindow* win, Geom::Dim2 direction)
 {
-    auto tool = win->get_desktop()->getEventContext();
+    auto const tool = win->get_desktop()->getTool();
     auto node_tool = dynamic_cast<Inkscape::UI::Tools::NodeTool*>(tool);
     if (node_tool) {
     } else {
@@ -74,7 +74,7 @@ node_align(const Glib::VariantBase& value, InkscapeWindow* win, Geom::Dim2 direc
 void
 node_distribute(InkscapeWindow* win, Geom::Dim2 direction)
 {
-    auto tool = win->get_desktop()->getEventContext();
+    auto const tool = win->get_desktop()->getTool();
     auto node_tool = dynamic_cast<Inkscape::UI::Tools::NodeTool*>(tool);
     if (node_tool) {
     } else {

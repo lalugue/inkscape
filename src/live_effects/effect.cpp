@@ -1817,7 +1817,7 @@ void
 Effect::update_helperpath() {
     SPDesktop *desktop = SP_ACTIVE_DESKTOP;
     if (desktop) {
-        Inkscape::UI::Tools::NodeTool *nt = dynamic_cast<Inkscape::UI::Tools::NodeTool*>(desktop->event_context);
+        auto const nt = dynamic_cast<Inkscape::UI::Tools::NodeTool *>(desktop->getTool());
         if (nt) {
             Inkscape::UI::Tools::sp_update_helperpath(desktop);
         }
@@ -1825,7 +1825,7 @@ Effect::update_helperpath() {
 }
 
 /**
- * This *creates* a new widget, management of deletion should be done by the caller
+ * This *creates* a managed widget. Deletion should be done by the eventual parent, or otherwise the caller.
  */
 Gtk::Widget *
 Effect::newWidget()

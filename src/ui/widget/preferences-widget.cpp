@@ -107,7 +107,7 @@ void DialogPage::add_line(bool                 indent,
         GValue width = G_VALUE_INIT;
         g_value_init(&width, G_TYPE_INT);
         g_value_set_int(&width, 2);
-        gtk_container_child_set_property(GTK_CONTAINER(gobj()), GTK_WIDGET(hb->gobj()), "width", &width);
+        gtk_container_child_set_property(GTK_CONTAINER(gobj()), hb->Gtk::Widget::gobj(), "width", &width);
     }
 
     // Add a label on the right of the widget if desired
@@ -137,7 +137,7 @@ void DialogPage::add_group_header(Glib::ustring name, int columns)
             GValue width = G_VALUE_INIT;
             g_value_init(&width, G_TYPE_INT);
             g_value_set_int(&width, columns);
-            gtk_container_child_set_property(GTK_CONTAINER(gobj()), GTK_WIDGET(label_widget->gobj()), "width", &width);
+            gtk_container_child_set_property(GTK_CONTAINER(gobj()), label_widget->Gtk::Widget::gobj(), "width", &width);
         }
     }
 }
@@ -157,7 +157,7 @@ void DialogPage::add_group_note(Glib::ustring name)
         GValue width = G_VALUE_INIT;
         g_value_init(&width, G_TYPE_INT);
         g_value_set_int(&width, 2);
-        gtk_container_child_set_property(GTK_CONTAINER(gobj()), GTK_WIDGET(label_widget->gobj()), "width", &width);
+        gtk_container_child_set_property(GTK_CONTAINER(gobj()), label_widget->Gtk::Widget::gobj(), "width", &width);
     }
 }
 

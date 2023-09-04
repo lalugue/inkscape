@@ -92,7 +92,7 @@ ConnectorToolbar::ConnectorToolbar(SPDesktop *desktop)
     _curvature_adj = Gtk::Adjustment::create(curvature_val, 0, 100, 1.0, 10.0);
     auto const curvature_item = Gtk::make_managed<UI::Widget::SpinButtonToolItem>("inkscape:connector-curvature", _("Curvature:"), _curvature_adj, 1, 0);
     curvature_item->set_tooltip_text(_("The amount of connectors curvature"));
-    curvature_item->set_focus_widget(desktop->canvas);
+    curvature_item->set_focus_widget(desktop->getCanvas());
     _curvature_adj->signal_value_changed().connect(sigc::mem_fun(*this, &ConnectorToolbar::curvature_changed));
     add(*curvature_item);
 
@@ -101,7 +101,7 @@ ConnectorToolbar::ConnectorToolbar(SPDesktop *desktop)
     _spacing_adj = Gtk::Adjustment::create(spacing_val, 0, 100, 1.0, 10.0);
     auto const spacing_item = Gtk::make_managed<UI::Widget::SpinButtonToolItem>("inkscape:connector-spacing", _("Spacing:"), _spacing_adj, 1, 0);
     spacing_item->set_tooltip_text(_("The amount of space left around objects by auto-routing connectors"));
-    spacing_item->set_focus_widget(desktop->canvas);
+    spacing_item->set_focus_widget(desktop->getCanvas());
     _spacing_adj->signal_value_changed().connect(sigc::mem_fun(*this, &ConnectorToolbar::spacing_changed));
     add(*spacing_item);
 
@@ -119,7 +119,7 @@ ConnectorToolbar::ConnectorToolbar(SPDesktop *desktop)
     _length_adj = Gtk::Adjustment::create(length_val, 10, 1000, 10.0, 100.0);
     auto const length_item = Gtk::make_managed<UI::Widget::SpinButtonToolItem>("inkscape:connector-length", _("Length:"), _length_adj, 1, 0);
     length_item->set_tooltip_text(_("Ideal length for connectors when layout is applied"));
-    length_item->set_focus_widget(desktop->canvas);
+    length_item->set_focus_widget(desktop->getCanvas());
     _length_adj->signal_value_changed().connect(sigc::mem_fun(*this, &ConnectorToolbar::length_changed));
     add(*length_item);
 
@@ -150,7 +150,7 @@ ConnectorToolbar::ConnectorToolbar(SPDesktop *desktop)
 
     // Code to watch for changes to the connector-spacing attribute in
     // the XML.
-    Inkscape::XML::Node *repr = desktop->namedview->getRepr();
+    Inkscape::XML::Node *repr = desktop->getNamedView()->getRepr();
     g_assert(repr != nullptr);
 
     if(_repr) {
@@ -173,7 +173,7 @@ GtkWidget *
 ConnectorToolbar::create( SPDesktop *desktop)
 {
     auto toolbar = new ConnectorToolbar(desktop);
-    return GTK_WIDGET(toolbar->gobj());
+    return toolbar->Gtk::Widget::gobj();
 } // end of ConnectorToolbar::prep()
 
 void
@@ -287,7 +287,7 @@ ConnectorToolbar::spacing_changed()
         return;
     }
 
-    Inkscape::XML::Node *repr = _desktop->namedview->getRepr();
+    Inkscape::XML::Node *repr = _desktop->getNamedView()->getRepr();
 
     if ( !repr->attribute("inkscape:connector-spacing") &&
             ( _spacing_adj->get_value() == defaultConnSpacing )) {
@@ -306,7 +306,7 @@ ConnectorToolbar::spacing_changed()
     _freeze = true;
 
     repr->setAttributeCssDouble("inkscape:connector-spacing", _spacing_adj->get_value());
-    _desktop->namedview->updateRepr();
+    _desktop->getNamedView()->updateRepr();
     bool modmade = false;
 
     auto items = get_avoided_items(_desktop->layerManager().currentRoot(), _desktop);
@@ -390,8 +390,8 @@ void ConnectorToolbar::notifyAttributeChanged(Inkscape::XML::Node &repr, GQuark 
 
         _spacing_adj->set_value(spacing);
 
-        if (_desktop->canvas) {
-            _desktop->canvas->grab_focus();
+        if (_desktop->getCanvas()) {
+            _desktop->getCanvas()->grab_focus();
         }
     }
 }

@@ -52,7 +52,7 @@ void show(std::vector<SPItem*> const &list, Glib::ustring const &out)
    warning.set_resizable(true);
    warning.set_title(_("Font substitution"));
 
-   sp_transientize(GTK_WIDGET(warning.gobj()));
+   sp_transientize(warning.Gtk::Widget::gobj());
 
    Gtk::TextView textview;
    textview.set_editable(false);

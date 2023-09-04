@@ -19,10 +19,12 @@
 
 #include <glibmm/i18n.h>
 
+#include <glibmm/refptr.h>
 #include <gtkmm/comboboxtext.h>
 #include <gtkmm/messagedialog.h>
 #include <gtkmm/radiotoolbutton.h>
 #include <gtkmm/separatortoolitem.h>
+#include <gtkmm/toggletoolbutton.h>
 
 #include "desktop-style.h"
 #include "desktop.h"
@@ -92,7 +94,6 @@ std::vector<SPMeshGradient *>  ms_get_dt_selected_gradients(Inkscape::Selection 
     return ms_selected;
 }
 
-
 /*
  * Get the current selection status from the desktop
  */
@@ -127,28 +128,23 @@ void ms_read_selection( Inkscape::Selection *selection,
     }
 }
 
-
 /*
  * Callback functions for user actions
  */
-
-
 /** Temporary hack: Returns the mesh tool in the active desktop.
  * Will go away during tool refactoring. */
 static MeshTool *get_mesh_tool()
 {
-    MeshTool *tool = nullptr;
+    MeshTool *mesh_tool = nullptr;
     if (SP_ACTIVE_DESKTOP ) {
-        Inkscape::UI::Tools::ToolBase *ec = SP_ACTIVE_DESKTOP->event_context;
-        tool = dynamic_cast<MeshTool*>(ec);
+        auto const tool = SP_ACTIVE_DESKTOP->getTool();
+        mesh_tool = dynamic_cast<MeshTool *>(tool);
     }
-    return tool;
+    return mesh_tool;
 }
 
+namespace Inkscape::UI::Toolbar {
 
-namespace Inkscape {
-namespace UI {
-namespace Toolbar {
 MeshToolbar::MeshToolbar(SPDesktop *desktop)
     : Toolbar(desktop),
     _edit_fill_pusher(nullptr)
@@ -215,7 +211,7 @@ MeshToolbar::MeshToolbar(SPDesktop *desktop)
         auto const row_item = Gtk::make_managed<UI::Widget::SpinButtonToolItem>("mesh-row", _("Rows:"), _row_adj, 1.0, 0);
         row_item->set_tooltip_text(_("Number of rows in new mesh"));
         row_item->set_custom_numeric_menu_data(values);
-        row_item->set_focus_widget(desktop->canvas);
+        row_item->set_focus_widget(desktop->getCanvas());
         _row_adj->signal_value_changed().connect(sigc::mem_fun(*this, &MeshToolbar::row_changed));
         add(*row_item);
         row_item->set_sensitive(true);
@@ -229,7 +225,7 @@ MeshToolbar::MeshToolbar(SPDesktop *desktop)
         auto const col_item = Gtk::make_managed<UI::Widget::SpinButtonToolItem>("mesh-col", _("Columns:"), _col_adj, 1.0, 0);
         col_item->set_tooltip_text(_("Number of columns in new mesh"));
         col_item->set_custom_numeric_menu_data(values);
-        col_item->set_focus_widget(desktop->canvas);
+        col_item->set_focus_widget(desktop->getCanvas());
         _col_adj->signal_value_changed().connect(sigc::mem_fun(*this, &MeshToolbar::col_changed));
         add(*col_item);
         col_item->set_sensitive(true);
@@ -293,7 +289,6 @@ MeshToolbar::MeshToolbar(SPDesktop *desktop)
         add(*btn);
     }
 
-
     {
         auto const btn = Gtk::make_managed<Gtk::ToolButton>(_("Scale mesh to bounding box:"));
         btn->set_tooltip_text(_("Scale mesh to fit inside bounding box."));
@@ -343,6 +338,8 @@ MeshToolbar::MeshToolbar(SPDesktop *desktop)
     show_all();
 }
 
+MeshToolbar::~MeshToolbar() = default;
+
 /**
  * Mesh auxiliary toolbar construction and setup.
  * Don't forget to add to XML in widgets/toolbox.cpp!
@@ -352,7 +349,7 @@ GtkWidget *
 MeshToolbar::create(SPDesktop * desktop)
 {
     auto toolbar = new MeshToolbar(desktop);
-    return GTK_WIDGET(toolbar->gobj());
+    return toolbar->Gtk::Widget::gobj();
 }
 
 void
@@ -433,9 +430,9 @@ MeshToolbar::toggle_handles()
 }
 
 void
-MeshToolbar::watch_ec(SPDesktop* desktop, Inkscape::UI::Tools::ToolBase* ec)
+MeshToolbar::watch_ec(SPDesktop* desktop, Inkscape::UI::Tools::ToolBase* tool)
 {
-    if (dynamic_cast<MeshTool*>(ec)) {
+    if (dynamic_cast<MeshTool*>(tool)) {
         // connect to selection modified and changed signals
         Inkscape::Selection *selection = desktop->getSelection();
         SPDocument *document = desktop->getDocument();
@@ -593,10 +590,7 @@ MeshToolbar::fit_mesh()
     }
 }
 
-
-}
-}
-}
+} // namespace Inkscape::UI::Toolbar
 
 /*
   Local Variables:

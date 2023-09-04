@@ -43,7 +43,7 @@ Gdk::ModifierType get_device_state(GtkEventController const * const controller)
 GdkEvent const *get_last_event(Gtk::GestureSingle const &gesture)
 {
     auto const sequence = gesture.get_current_sequence();
-    return gesture.get_last_event(const_cast<GdkEventSequence*>(sequence));
+    return gesture.get_last_event(const_cast<GdkEventSequence *>(sequence));
 }
 
 // TODO: GTK4: We can replace w/ just EventController.get_current_event_state().

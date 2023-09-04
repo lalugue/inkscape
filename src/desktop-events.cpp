@@ -78,8 +78,8 @@ bool sp_desktop_root_handler(Inkscape::CanvasEvent const &event, SPDesktop *desk
         snoop_extended(event, desktop);
     }
 
-    if (auto ec = desktop->event_context) {
-        return ec->start_root_handler(event);
+    if (auto const tool = desktop->getTool()) {
+        return tool->start_root_handler(event);
     }
 
     return false;
@@ -104,8 +104,8 @@ bool sp_dt_guide_event(Inkscape::CanvasEvent const &event, Inkscape::CanvasItemG
     }
 
     // Limit to select/node tools only.
-    if (!dynamic_cast<Inkscape::UI::Tools::SelectTool *>(desktop->event_context) &&
-        !dynamic_cast<Inkscape::UI::Tools::NodeTool *>(desktop->event_context))
+    if (!dynamic_cast<Inkscape::UI::Tools::SelectTool *>(desktop->getTool()) &&
+        !dynamic_cast<Inkscape::UI::Tools::NodeTool *>(desktop->getTool()))
     {
         return false;
     }
@@ -113,7 +113,7 @@ bool sp_dt_guide_event(Inkscape::CanvasEvent const &event, Inkscape::CanvasItemG
     auto apply_snap = [desktop, guide] (Geom::Point &event_dt, unsigned modifiers) {
         // This is for snapping while dragging existing guidelines. New guidelines,
         // which are dragged off the ruler, are being snapped in sp_dt_ruler_event
-        auto &m = desktop->namedview->snap_manager;
+        auto &m = desktop->getNamedView()->snap_manager;
         m.setup(desktop, true, guide, nullptr);
         if (drag_type == SP_DRAG_MOVE_ORIGIN) {
             // If we snap in guideConstrainedSnap() below, then motion_dt will
@@ -178,7 +178,7 @@ bool sp_dt_guide_event(Inkscape::CanvasEvent const &event, Inkscape::CanvasItemG
             if (event.num_press == 2) {
                 if (event.button == 1) {
                     drag_type = SP_DRAG_NONE;
-                    desktop->event_context->discard_delayed_snap_event();
+                    desktop->getTool()->discard_delayed_snap_event();
                     guide_item->ungrab();
                     Inkscape::UI::Dialog::GuidelinePropertiesDialog::showDialog(guide, desktop);
                     ret = true;
@@ -218,8 +218,8 @@ bool sp_dt_guide_event(Inkscape::CanvasEvent const &event, Inkscape::CanvasItemG
                 return;
             }
 
-            desktop->event_context->snap_delay_handler(guide_item, guide, event,
-                                                       Inkscape::UI::Tools::DelayedSnapEvent::GUIDE_HANDLER);
+            desktop->getTool()->snap_delay_handler(guide_item, guide, event,
+                                                           Inkscape::UI::Tools::DelayedSnapEvent::GUIDE_HANDLER);
 
             auto event_dt = desktop->w2d(event.pos);
             apply_snap(event_dt, event.modifiers);
@@ -237,7 +237,7 @@ bool sp_dt_guide_event(Inkscape::CanvasEvent const &event, Inkscape::CanvasItemG
                 return;
             }
 
-            desktop->event_context->discard_delayed_snap_event();
+            desktop->getTool()->discard_delayed_snap_event();
 
             if (guide_moved) {
                 auto event_dt = desktop->w2d(event.pos);
@@ -252,7 +252,7 @@ bool sp_dt_guide_event(Inkscape::CanvasEvent const &event, Inkscape::CanvasItemG
                     guide->set_normal(guide->getNormal(), false);
                     guide->remove();
                     guide_item = nullptr;
-                    desktop->event_context->use_tool_cursor();
+                    desktop->getTool()->use_tool_cursor();
 
                     DocumentUndo::done(desktop->getDocument(), _("Delete guide"), "");
                 }
@@ -299,7 +299,7 @@ bool sp_dt_guide_event(Inkscape::CanvasEvent const &event, Inkscape::CanvasItemG
             guide_item->set_stroke(guide->getColor());
 
             // restore event context's cursor
-            desktop->event_context->use_tool_cursor();
+            desktop->getTool()->use_tool_cursor();
 
             desktop->guidesMessageContext()->clear();
         },
@@ -315,8 +315,8 @@ bool sp_dt_guide_event(Inkscape::CanvasEvent const &event, Inkscape::CanvasItemG
                         guide_item = nullptr;
                         DocumentUndo::done(doc, _("Delete guide"), "");
                         ret = true;
-                        desktop->event_context->discard_delayed_snap_event();
-                        desktop->event_context->use_tool_cursor();
+                        desktop->getTool()->discard_delayed_snap_event();
+                        desktop->getTool()->use_tool_cursor();
                     }
                     break;
                 case GDK_KEY_Shift_L:

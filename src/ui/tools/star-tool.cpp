@@ -141,7 +141,7 @@ bool StarTool::root_handler(CanvasEvent const &event)
                 center = _desktop->w2d(event.pos);
 
                 // Snap center.
-                auto &m = _desktop->namedview->snap_manager;
+                auto &m = _desktop->getNamedView()->snap_manager;
                 m.setup(_desktop);
                 m.freeSnapReturnByRef(center, SNAPSOURCE_NODE_HANDLE);
 
@@ -164,7 +164,7 @@ bool StarTool::root_handler(CanvasEvent const &event)
 
                 ret = true;
             } else if (!sp_event_context_knot_mouseover()) {
-                auto &m = _desktop->namedview->snap_manager;
+                auto &m = _desktop->getNamedView()->snap_manager;
                 m.setup(_desktop);
 
                 auto const motion_dt = _desktop->w2d(event.pos);
@@ -307,7 +307,7 @@ void StarTool::drag(Geom::Point p, unsigned state)
     }
 
     /* Snap corner point with no constraints */
-    SnapManager &m = _desktop->namedview->snap_manager;
+    SnapManager &m = _desktop->getNamedView()->snap_manager;
 
     m.setup(_desktop, true, star.get());
     Geom::Point pt2g = p;
@@ -333,7 +333,7 @@ void StarTool::drag(Geom::Point p, unsigned state)
 
     /* status text */
     Inkscape::Util::Quantity q = Inkscape::Util::Quantity(r1, "px");
-    Glib::ustring rads = q.string(_desktop->namedview->display_units);
+    Glib::ustring rads = q.string(_desktop->getNamedView()->display_units);
     this->message_context->setF(Inkscape::IMMEDIATE_MESSAGE,
                                ( this->isflatsided?
                                  _("<b>Polygon</b>: radius %s, angle %.2f&#176;; with <b>Ctrl</b> to snap angle") :

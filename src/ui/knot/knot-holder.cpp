@@ -219,7 +219,7 @@ KnotHolder::transform_selected(Geom::Affine transform){
 
 void
 KnotHolder::unselect_knots(){
-    Inkscape::UI::Tools::NodeTool *nt = dynamic_cast<Inkscape::UI::Tools::NodeTool*>(desktop->event_context);
+    Inkscape::UI::Tools::NodeTool *nt = dynamic_cast<Inkscape::UI::Tools::NodeTool*>(desktop->getTool());
     if (nt) {
         for (auto &_shape_editor : nt->_shape_editors) {
             Inkscape::UI::ShapeEditor *shape_editor = _shape_editor.second.get();
@@ -282,7 +282,7 @@ void
 KnotHolder::knot_ungrabbed_handler(SPKnot *knot, guint state)
 {
     this->dragging = false;
-    desktop->snapindicator->remove_snaptarget();
+    desktop->getSnapIndicator()->remove_snaptarget();
 
     if (this->released) {
         this->released(this->item);

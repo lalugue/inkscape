@@ -506,7 +506,7 @@ void StrokeStyle::enterEditMarkerMode(SPMarkerLoc _editMarkerMode)
 
     if (desktop) {
         set_active_tool(desktop, "Marker");
-        Inkscape::UI::Tools::MarkerTool *mt = dynamic_cast<Inkscape::UI::Tools::MarkerTool*>(desktop->event_context);
+        Inkscape::UI::Tools::MarkerTool *mt = dynamic_cast<Inkscape::UI::Tools::MarkerTool*>(desktop->getTool());
 
         if(mt) {
             mt->editMarkerMode = _editMarkerMode;
@@ -564,7 +564,7 @@ void StrokeStyle::markerSelectCB(MarkerComboBox *marker_combo, SPMarkerLoc const
     }
 
     // edit marker mode - update
-    if (auto mt = dynamic_cast<Inkscape::UI::Tools::MarkerTool*>(desktop->event_context)) {
+    if (auto mt = dynamic_cast<Inkscape::UI::Tools::MarkerTool*>(desktop->getTool())) {
         mt->editMarkerMode = which;
         mt->selection_changed(desktop->getSelection());
     }

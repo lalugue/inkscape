@@ -453,7 +453,7 @@ void Handle::dragged(Geom::Point &new_pos, MotionEvent const &event)
 {
     Geom::Point parent_pos = _parent->position();
     Geom::Point origin = _last_drag_origin();
-    SnapManager &sm = _desktop->namedview->snap_manager;
+    SnapManager &sm = _desktop->getNamedView()->snap_manager;
     bool snap = held_shift(event) ? false : sm.someSnapperMightSnap();
     std::optional<Inkscape::Snapper::SnapConstraint> ctrl_constraint;
 
@@ -746,9 +746,9 @@ Glib::ustring Handle::_getDragTip(MotionEvent const &/*event*/) const
     Inkscape::Util::Quantity x_q = Inkscape::Util::Quantity(dist[Geom::X], "px");
     Inkscape::Util::Quantity y_q = Inkscape::Util::Quantity(dist[Geom::Y], "px");
     Inkscape::Util::Quantity len_q = Inkscape::Util::Quantity(length(), "px");
-    Glib::ustring x = x_q.string(_desktop->namedview->display_units);
-    Glib::ustring y = y_q.string(_desktop->namedview->display_units);
-    Glib::ustring len = len_q.string(_desktop->namedview->display_units);
+    Glib::ustring x = x_q.string(_desktop->getNamedView()->display_units);
+    Glib::ustring y = y_q.string(_desktop->getNamedView()->display_units);
+    Glib::ustring len = len_q.string(_desktop->getNamedView()->display_units);
     Glib::ustring ret = format_tip(C_("Status line hint",
         "Move handle by %s, %s; angle %.2f°, length %s"), x.c_str(), y.c_str(), angle, len.c_str());
     return ret;
@@ -1376,7 +1376,7 @@ bool Node::grabbed(MotionEvent const &event)
 void Node::dragged(Geom::Point &new_pos, MotionEvent const &event)
 {
     // For a note on how snapping is implemented in Inkscape, see snap.h.
-    auto &sm = _desktop->namedview->snap_manager;
+    auto &sm = _desktop->getNamedView()->snap_manager;
     // even if we won't really snap, we might still call the one of the
     // constrainedSnap() methods to enforce the constraints, so we need
     // to setup the snapmanager anyway; this is also required for someSnapperMightSnap()
@@ -1675,8 +1675,8 @@ Glib::ustring Node::_getDragTip(MotionEvent const &/*event*/) const
     
     Inkscape::Util::Quantity x_q = Inkscape::Util::Quantity(dist[Geom::X], "px");
     Inkscape::Util::Quantity y_q = Inkscape::Util::Quantity(dist[Geom::Y], "px");
-    Glib::ustring x = x_q.string(_desktop->namedview->display_units);
-    Glib::ustring y = y_q.string(_desktop->namedview->display_units);
+    Glib::ustring x = x_q.string(_desktop->getNamedView()->display_units);
+    Glib::ustring y = y_q.string(_desktop->getNamedView()->display_units);
     Glib::ustring ret = format_tip(C_("Path node tip", "Move node by %s, %s"), x.c_str(), y.c_str());
     return ret;
 }

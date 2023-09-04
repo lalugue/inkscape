@@ -73,7 +73,7 @@ GtkWidget *_scrollprotected_combo_box_new_with_model(GtkTreeModel *model)
 {
     auto const combobox = Gtk::make_managed<Inkscape::UI::Widget::ScrollProtected<Gtk::ComboBox>>();
     gtk_combo_box_set_model(combobox->gobj(), model);
-    return GTK_WIDGET(combobox->gobj());
+    return combobox->Gtk::Widget::gobj();
 }
 
 size_t maxColorspaceComponentCount = 0;
@@ -423,7 +423,7 @@ void ColorICCSelector::init(bool no_alpha)
         attachToGridOrTable(t, _impl->_compUI[i]._slider->Gtk::Widget::gobj(), 1, row, 1, 1, true);
 
         auto const spinbutton = Gtk::make_managed<ScrollProtected<Gtk::SpinButton>>(_impl->_compUI[i]._adj, step, digits);
-        _impl->_compUI[i]._btn = GTK_WIDGET(spinbutton->gobj());
+        _impl->_compUI[i]._btn = spinbutton->Gtk::Widget::gobj();
         gtk_widget_set_tooltip_text(_impl->_compUI[i]._btn, (i < things.size()) ? things[i].tip.c_str() : "");
         sp_dialog_defocus_on_enter(_impl->_compUI[i]._btn);
         gtk_label_set_mnemonic_widget(GTK_LABEL(_impl->_compUI[i]._label), _impl->_compUI[i]._btn);
@@ -472,7 +472,7 @@ void ColorICCSelector::init(bool no_alpha)
 
     // Spinbutton
     auto const spinbuttonalpha = Gtk::make_managed<ScrollProtected<Gtk::SpinButton>>(_impl->_adj, 1.0);
-    _impl->_sbtn = GTK_WIDGET(spinbuttonalpha->gobj());
+    _impl->_sbtn = spinbuttonalpha->Gtk::Widget::gobj();
     gtk_widget_set_tooltip_text(_impl->_sbtn, _("Alpha (opacity)"));
     sp_dialog_defocus_on_enter(_impl->_sbtn);
     gtk_label_set_mnemonic_widget(GTK_LABEL(_impl->_label), _impl->_sbtn);

@@ -350,7 +350,7 @@ bool PenTool::_handleButtonPress(ButtonPressEvent const &event) {
                             if ((event.modifiers & GDK_CONTROL_MASK) && (polylines_only || polylines_paraxial)) {
                                 p = event_dt;
                                 if (!(event.modifiers & GDK_SHIFT_MASK)) {
-                                    SnapManager &m = _desktop->namedview->snap_manager;
+                                    auto &m = _desktop->getNamedView()->snap_manager;
                                     m.setup(_desktop);
                                     m.freeSnapReturnByRef(p, Inkscape::SNAPSOURCE_NODE_HANDLE);
                                     m.unSetup();
@@ -528,7 +528,7 @@ bool PenTool::_handleMotionNotify(MotionEvent const &event) {
                         _setSubsequentPoint(p, true);
                         ret = true;
                     } else if (!sp_event_context_knot_mouseover()) {
-                        SnapManager &m = _desktop->namedview->snap_manager;
+                        SnapManager &m = _desktop->getNamedView()->snap_manager;
                         m.setup(_desktop);
                         m.preSnap(Inkscape::SnapCandidatePoint(p, Inkscape::SNAPSOURCE_NODE_HANDLE));
                         m.unSetup();
@@ -543,7 +543,7 @@ bool PenTool::_handleMotionNotify(MotionEvent const &event) {
                     break;
                 case PenTool::STOP:
                     if (!sp_event_context_knot_mouseover()) {
-                        SnapManager &m = _desktop->namedview->snap_manager;
+                        SnapManager &m = _desktop->getNamedView()->snap_manager;
                         m.setup(_desktop);
                         m.preSnap(Inkscape::SnapCandidatePoint(p, Inkscape::SNAPSOURCE_NODE_HANDLE));
                         m.unSetup();
@@ -593,7 +593,7 @@ bool PenTool::_handleMotionNotify(MotionEvent const &event) {
 
                         }
                         if (!sp_event_context_knot_mouseover()) {
-                            SnapManager &m = _desktop->namedview->snap_manager;
+                            SnapManager &m = _desktop->getNamedView()->snap_manager;
                             m.setup(_desktop);
                             m.preSnap(Inkscape::SnapCandidatePoint(p, Inkscape::SNAPSOURCE_NODE_HANDLE));
                             m.unSetup();
@@ -621,7 +621,7 @@ bool PenTool::_handleMotionNotify(MotionEvent const &event) {
                     // Don't break; fall through to default to do preSnapping
                 default:
                     if (!sp_event_context_knot_mouseover()) {
-                        SnapManager &m = _desktop->namedview->snap_manager;
+                        SnapManager &m = _desktop->getNamedView()->snap_manager;
                         m.setup(_desktop);
                         m.preSnap(Inkscape::SnapCandidatePoint(p, Inkscape::SNAPSOURCE_NODE_HANDLE));
                         m.unSetup();
@@ -1212,7 +1212,7 @@ void PenTool::_setAngleDistanceStatusMessage(Geom::Point const p, int pc_point_t
 
     Geom::Point rel = p - p_array[pc_point_to_compare];
     Inkscape::Util::Quantity q = Inkscape::Util::Quantity(Geom::L2(rel), "px");
-    Glib::ustring dist = q.string(_desktop->namedview->display_units);
+    Glib::ustring dist = q.string(_desktop->getNamedView()->display_units);
     double angle = atan2(rel[Geom::Y], rel[Geom::X]) * 180 / M_PI;
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
     if (prefs->getBool("/options/compassangledisplay/value", false) != 0) {
@@ -2017,7 +2017,7 @@ void PenTool::_setToNearestHorizVert(Geom::Point &pt, guint const state) const {
     Inkscape::Snapper::SnapConstraint cl(origin, target);
 
     // Snap along the constraint line; if we didn't snap then still the constraint will be applied
-    SnapManager &m = _desktop->namedview->snap_manager;
+    SnapManager &m = _desktop->getNamedView()->snap_manager;
 
     Inkscape::Selection *selection = _desktop->getSelection();
     // selection->singleItem() is the item that is currently being drawn. This item will not be snapped to (to avoid self-snapping)

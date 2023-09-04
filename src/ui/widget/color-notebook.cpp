@@ -248,7 +248,7 @@ void ColorNotebook::_onPickerClicked(GtkWidget * /*widget*/, ColorNotebook *colo
     }
     else {
         Inkscape::UI::Tools::sp_toggle_dropper(SP_ACTIVE_DESKTOP);
-        auto tool = dynamic_cast<Inkscape::UI::Tools::DropperTool *>(SP_ACTIVE_DESKTOP->event_context);
+        auto tool = dynamic_cast<Inkscape::UI::Tools::DropperTool *>(SP_ACTIVE_DESKTOP->getTool());
         if (tool) {
             colorbook->_onetimepick = tool->onetimepick_signal.connect(sigc::mem_fun(*colorbook, &ColorNotebook::_pickColor));
         }

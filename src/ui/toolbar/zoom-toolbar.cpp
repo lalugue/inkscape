@@ -49,7 +49,7 @@ ZoomToolbar::create(SPDesktop *desktop)
                           // it to a container yet. This probably causes a memory leak but we'll
                           // fix it when all toolbars are converted to use Gio::Actions.
 
-    return GTK_WIDGET(toolbar->gobj());
+    return toolbar->Gtk::Widget::gobj();
 }
 }
 }

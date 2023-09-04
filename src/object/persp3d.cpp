@@ -180,8 +180,8 @@ void Persp3D::set(SPAttr key, gchar const *value) {
         return;
     }
 
-    auto ec = Inkscape::Application::instance().active_desktop()->getEventContext();
-    if (auto bc = dynamic_cast<Inkscape::UI::Tools::Box3dTool*>(ec)) {
+    auto const tool = Inkscape::Application::instance().active_desktop()->getTool();
+    if (auto bc = dynamic_cast<Inkscape::UI::Tools::Box3dTool*>(tool)) {
         bc->_vpdrag->updateDraggers();
         bc->_vpdrag->updateLines();
         bc->_vpdrag->updateBoxHandles();

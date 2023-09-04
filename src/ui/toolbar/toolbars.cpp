@@ -184,7 +184,7 @@ void Toolbars::create_toolbars(SPDesktop* desktop) {
     desktop->connectEventContextChanged(sigc::mem_fun(*this, &Toolbars::change_toolbar));
 
     // Show initial toolbar, hide others.
-    change_toolbar(desktop, desktop->event_context);
+    change_toolbar(desktop, desktop->getTool());
 
     // Show this widget (not necessary in Gtk4).
     set_visible(true);

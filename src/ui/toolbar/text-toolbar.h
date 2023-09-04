@@ -137,7 +137,7 @@ private:
     void selection_modified(Inkscape::Selection *selection, guint flags);
     void selection_modified_select_tool(Inkscape::Selection *selection, guint flags);
     void subselection_changed(Inkscape::UI::Tools::TextTool* texttool);
-    void watch_ec(SPDesktop* desktop, Inkscape::UI::Tools::ToolBase* ec);
+    void watch_ec(SPDesktop* desktop, Inkscape::UI::Tools::ToolBase* tool);
     void set_sizes(int unit);
     void display_font_collections();
     void on_fcm_button_pressed();

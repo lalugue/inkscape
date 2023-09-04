@@ -61,7 +61,7 @@ ColorPicker::~ColorPicker()
 
 void ColorPicker::setupDialog(const Glib::ustring &title)
 {
-    GtkWidget *dlg = GTK_WIDGET(_colorSelectorDialog.gobj());
+    GtkWidget *dlg = _colorSelectorDialog.Gtk::Widget::gobj();
     sp_transientize(dlg);
 
     _colorSelectorDialog.set_visible(false);

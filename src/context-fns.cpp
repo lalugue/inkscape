@@ -91,13 +91,13 @@ bool Inkscape::have_viable_layer(SPDesktop *desktop, MessageStack *message)
 Geom::Rect Inkscape::snap_rectangular_box(SPDesktop const *desktop, SPItem *item,
                                         Geom::Point const &pt, Geom::Point const &center, int state)
 {
-    desktop->snapindicator->remove_snaptarget();
+    desktop->getSnapIndicator()->remove_snaptarget();
     Geom::Point p[2];
 
     auto confine = Modifiers::Modifier::get(Modifiers::Type::TRANS_CONFINE)->active(state);
     auto off_center = Modifiers::Modifier::get(Modifiers::Type::TRANS_OFF_CENTER)->active(state);
 
-    SnapManager &m = desktop->namedview->snap_manager;
+    auto &m = desktop->getNamedView()->snap_manager;
     m.setup(desktop, false, item);
     Inkscape::SnappedPoint snappoint;
 
@@ -212,7 +212,7 @@ Geom::Rect Inkscape::snap_rectangular_box(SPDesktop const *desktop, SPItem *item
     }
 
     if (snappoint.getSnapped()) {
-        desktop->snapindicator->set_new_snaptarget(snappoint);
+        desktop->getSnapIndicator()->set_new_snaptarget(snappoint);
     }
 
     p[0] *= desktop->dt2doc();

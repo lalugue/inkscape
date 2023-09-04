@@ -442,7 +442,7 @@ bool GradientTool::root_handler(CanvasEvent const &event)
                 }
 
                 if (!selection->isEmpty()) {
-                    auto &m = _desktop->namedview->snap_manager;
+                    auto &m = _desktop->getNamedView()->snap_manager;
                     m.setup(_desktop);
                     m.freeSnapReturnByRef(button_dt, SNAPSOURCE_NODE_HANDLE);
                     m.unSetup();
@@ -474,7 +474,7 @@ bool GradientTool::root_handler(CanvasEvent const &event)
             ret = true;
         } else {
             if (!_grdrag->mouseOver() && !selection->isEmpty()) {
-                auto &m = _desktop->namedview->snap_manager;
+                auto &m = _desktop->getNamedView()->snap_manager;
                 m.setup(_desktop);
 
                 auto const motion_dt = _desktop->w2d(event.pos);

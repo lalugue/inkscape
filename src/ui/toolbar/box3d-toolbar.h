@@ -80,7 +80,7 @@ private:
     void angle_value_changed(Glib::RefPtr<Gtk::Adjustment> &adj,
                              Proj::Axis                     axis);
     void vp_state_changed(Proj::Axis axis);
-    void check_ec(SPDesktop* desktop, Inkscape::UI::Tools::ToolBase* ec);
+    void check_ec(SPDesktop* desktop, Inkscape::UI::Tools::ToolBase* tool);
     void selection_changed(Inkscape::Selection *selection);
     void resync_toolbar(Inkscape::XML::Node *persp_repr);
     void set_button_and_adjustment(Persp3D                        *persp,

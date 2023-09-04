@@ -1,7 +1,4 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-#ifndef SEEN_MESH_TOOLBAR_H
-#define SEEN_MESH_TOOLBAR_H
-
 /*
  * Mesh aux toolbar
  *
@@ -15,35 +12,43 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include "toolbar.h"
+#ifndef SEEN_MESH_TOOLBAR_H
+#define SEEN_MESH_TOOLBAR_H
 
-#include <gtkmm/adjustment.h>
+#include <vector>
+#include <glibmm/refptr.h>
+
+#include "toolbar.h"
 
 class SPDesktop;
 class SPObject;
 
 namespace Gtk {
+class Adjustment;
 class RadioToolButton;
-}
+class ToggleToolButton;
+} // namespace Gtk
 
 namespace Inkscape {
+
 class Selection;
 
 namespace UI {
+
 class SimplePrefPusher;
 
 namespace Tools {
 class ToolBase;
-}
+} // namespace Tools
 
 namespace Widget {
 class ComboToolItem;
 class SpinButtonToolItem;
-}
+} // namespace Widget
 
 namespace Toolbar {
-class MeshToolbar : public Toolbar {
-private:
+
+class MeshToolbar final : public Toolbar {
     std::vector<Gtk::RadioToolButton *> _new_type_buttons;
     std::vector<Gtk::RadioToolButton *> _new_fillstroke_buttons;
     UI::Widget::ComboToolItem *_select_type_item;
@@ -71,7 +76,7 @@ private:
     void toggle_fill_stroke();
     void selection_changed(Inkscape::Selection *selection);
     void toggle_handles();
-    void watch_ec(SPDesktop* desktop, Inkscape::UI::Tools::ToolBase* ec);
+    void watch_ec(SPDesktop* desktop, Inkscape::UI::Tools::ToolBase* tool);
     void selection_modified(Inkscape::Selection *selection, guint flags);
     void drag_selection_changed(gpointer dragger);
     void defs_release(SPObject *defs);
@@ -83,15 +88,26 @@ private:
     void pick_colors();
     void fit_mesh();
 
-protected:
     MeshToolbar(SPDesktop *desktop);
+    ~MeshToolbar() final;
 
 public:
     static GtkWidget * create(SPDesktop *desktop);
 };
 
-}
-}
-}
+} // namespace Toolbar
+} // namespace UI
+} // namespace Inkscape
 
 #endif /* !SEEN_MESH_TOOLBAR_H */
+
+/*
+  Local Variables:
+  mode:c++
+  c-file-style:"stroustrup"
+  c-file-offsets:((innamespace . 0)(inline-open . 0)(case-label . +))
+  indent-tabs-mode:nil
+  fill-column:99
+  End:
+*/
+// vim: filetype=cpp:expandtab:shiftwidth=4:tabstop=8:softtabstop=4 :

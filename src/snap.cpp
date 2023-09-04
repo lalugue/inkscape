@@ -173,9 +173,9 @@ void SnapManager::preSnap(Inkscape::SnapCandidatePoint const &p, bool to_paths_o
         Inkscape::SnappedPoint s = freeSnap(p, Geom::OptRect(), to_paths_only);
         g_assert(_desktop != nullptr);
         if (s.getSnapped()) {
-            _desktop->snapindicator->set_new_snaptarget(s, true);
+            _desktop->getSnapIndicator()->set_new_snaptarget(s, true);
         } else {
-            _desktop->snapindicator->remove_snaptarget(true);
+            _desktop->getSnapIndicator()->remove_snaptarget(true);
         }
         _snapindicator = true; // restore the original value
     }
@@ -228,7 +228,7 @@ Geom::Point SnapManager::multipleOfGridPitch(Geom::Point const &t, Geom::Point c
 
         if (success) {
             bestSnappedPoint.setPoint(origin + nearest_multiple);
-            _desktop->snapindicator->set_new_snaptarget(bestSnappedPoint);
+            _desktop->getSnapIndicator()->set_new_snaptarget(bestSnappedPoint);
             return nearest_multiple;
         }
     }
@@ -271,7 +271,7 @@ Inkscape::SnappedPoint SnapManager::constrainedSnap(Inkscape::SnapCandidatePoint
         if (result.getSnapped()) {
             // only change the snap indicator if we really snapped to something
             if (_snapindicator && _desktop) {
-                _desktop->snapindicator->set_new_snaptarget(result);
+                _desktop->getSnapIndicator()->set_new_snaptarget(result);
             }
             // Apply the constraint
             result.setPoint(constraint.projection(result.getPoint()));
@@ -292,7 +292,7 @@ Inkscape::SnappedPoint SnapManager::constrainedSnap(Inkscape::SnapCandidatePoint
     if (result.getSnapped()) {
         // only change the snap indicator if we really snapped to something
         if (_snapindicator && _desktop) {
-            _desktop->snapindicator->set_new_snaptarget(result);
+            _desktop->getSnapIndicator()->set_new_snaptarget(result);
         }
         return result;
     }
@@ -497,9 +497,9 @@ void SnapManager::snapTransformed(
 
     if (_snapindicator) {
         if (transform.best_snapped_point.getSnapped()) {
-            _desktop->snapindicator->set_new_snaptarget(transform.best_snapped_point);
+            _desktop->getSnapIndicator()->set_new_snaptarget(transform.best_snapped_point);
         } else {
-            _desktop->snapindicator->remove_snaptarget();
+            _desktop->getSnapIndicator()->remove_snaptarget();
         }
     }
 
@@ -526,18 +526,18 @@ Inkscape::SnappedPoint SnapManager::findBestSnap(Inkscape::SnapCandidatePoint co
 
     /*
     // Display all snap candidates on the canvas
-    _desktop->snapindicator->remove_debugging_points();
+    _desktop->getSnapIndicator()->remove_debugging_points();
     for (std::list<Inkscape::SnappedPoint>::const_iterator i = isr.points.begin(); i != isr.points.end(); i++) {
-        _desktop->snapindicator->set_new_debugging_point((*i).getPoint());
+        _desktop->getSnapIndicator()->set_new_debugging_point((*i).getPoint());
     }
     for (std::list<Inkscape::SnappedCurve>::const_iterator i = isr.curves.begin(); i != isr.curves.end(); i++) {
-        _desktop->snapindicator->set_new_debugging_point((*i).getPoint());
+        _desktop->getSnapIndicator()->set_new_debugging_point((*i).getPoint());
     }
     for (std::list<Inkscape::SnappedLine>::const_iterator i = isr.grid_lines.begin(); i != isr.grid_lines.end(); i++) {
-        _desktop->snapindicator->set_new_debugging_point((*i).getPoint());
+        _desktop->getSnapIndicator()->set_new_debugging_point((*i).getPoint());
     }
     for (std::list<Inkscape::SnappedLine>::const_iterator i = isr.guide_lines.begin(); i != isr.guide_lines.end(); i++) {
-        _desktop->snapindicator->set_new_debugging_point((*i).getPoint());
+        _desktop->getSnapIndicator()->set_new_debugging_point((*i).getPoint());
     }
     */
 
@@ -668,9 +668,9 @@ Inkscape::SnappedPoint SnapManager::findBestSnap(Inkscape::SnapCandidatePoint co
     // Update the snap indicator, if requested
     if (_snapindicator) {
         if (bestSnappedPoint.getSnapped()) {
-            _desktop->snapindicator->set_new_snaptarget(bestSnappedPoint);
+            _desktop->getSnapIndicator()->set_new_snaptarget(bestSnappedPoint);
         } else {
-            _desktop->snapindicator->remove_snaptarget();
+            _desktop->getSnapIndicator()->remove_snaptarget();
         }
     }
 
@@ -806,9 +806,9 @@ void SnapManager::displaySnapsource(Inkscape::SnapCandidatePoint const &p) const
 
         g_assert(_desktop != nullptr);
         if (snapprefs.getSnapEnabledGlobally() && (p_is_other || (p_is_a_node && snapprefs.isTargetSnappable(Inkscape::SNAPTARGET_NODE_CATEGORY)) || (p_is_a_bbox && snapprefs.isTargetSnappable(Inkscape::SNAPTARGET_BBOX_CATEGORY)))) {
-            _desktop->snapindicator->set_new_snapsource(p);
+            _desktop->getSnapIndicator()->set_new_snapsource(p);
         } else {
-            _desktop->snapindicator->remove_snapsource();
+            _desktop->getSnapIndicator()->remove_snapsource();
         }
     }
 }

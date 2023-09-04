@@ -107,7 +107,7 @@ CalligraphyToolbar::CalligraphyToolbar(SPDesktop *desktop)
             Gtk::make_managed<UI::Widget::SpinButtonToolItem>("calligraphy-width", _("Width:"), _width_adj, 0.001, 3);
         width_item->set_tooltip_text(_("The width of the calligraphic pen (relative to the visible canvas area)"));
         width_item->set_custom_numeric_menu_data(values, labels);
-        width_item->set_focus_widget(desktop->canvas);
+        width_item->set_focus_widget(desktop->getCanvas());
         _width_adj->signal_value_changed().connect(sigc::mem_fun(*this, &CalligraphyToolbar::width_value_changed));
         _widget_map["width"] = G_OBJECT(_width_adj->gobj());
         add(*width_item);
@@ -155,7 +155,7 @@ CalligraphyToolbar::CalligraphyToolbar(SPDesktop *desktop)
         auto const thinning_item = Gtk::make_managed<UI::Widget::SpinButtonToolItem>("calligraphy-thinning", _("Thinning:"), _thinning_adj, 1, 0);
         thinning_item->set_tooltip_text(("How much velocity thins the stroke (> 0 makes fast strokes thinner, < 0 makes them broader, 0 makes width independent of velocity)"));
         thinning_item->set_custom_numeric_menu_data(values, labels);
-        thinning_item->set_focus_widget(desktop->canvas);
+        thinning_item->set_focus_widget(desktop->getCanvas());
         _thinning_adj->signal_value_changed().connect(sigc::mem_fun(*this, &CalligraphyToolbar::velthin_value_changed));
         _widget_map["thinning"] = G_OBJECT(_thinning_adj->gobj());
         add(*thinning_item);
@@ -171,7 +171,7 @@ CalligraphyToolbar::CalligraphyToolbar(SPDesktop *desktop)
         auto const mass_item = Gtk::make_managed<UI::Widget::SpinButtonToolItem>("calligraphy-mass", _("Mass:"), _mass_adj, 1, 0);
         mass_item->set_tooltip_text(_("Increase to make the pen drag behind, as if slowed by inertia"));
         mass_item->set_custom_numeric_menu_data(values, labels);
-        mass_item->set_focus_widget(desktop->canvas);
+        mass_item->set_focus_widget(desktop->getCanvas());
         _mass_adj->signal_value_changed().connect(sigc::mem_fun(*this, &CalligraphyToolbar::mass_value_changed));
         _widget_map["mass"] = G_OBJECT(_mass_adj->gobj());
         add(*mass_item);
@@ -189,7 +189,7 @@ CalligraphyToolbar::CalligraphyToolbar(SPDesktop *desktop)
         _angle_item = Gtk::make_managed<UI::Widget::SpinButtonToolItem>("calligraphy-angle", _("Angle:"), _angle_adj, 1, 0);
         _angle_item->set_tooltip_text(_("The angle of the pen's nib (in degrees; 0 = horizontal; has no effect if fixation = 0)"));
         _angle_item->set_custom_numeric_menu_data(values, labels);
-        _angle_item->set_focus_widget(desktop->canvas);
+        _angle_item->set_focus_widget(desktop->getCanvas());
         _angle_adj->signal_value_changed().connect(sigc::mem_fun(*this, &CalligraphyToolbar::angle_value_changed));
         _widget_map["angle"] = G_OBJECT(_angle_adj->gobj());
         add(*_angle_item);
@@ -217,7 +217,7 @@ CalligraphyToolbar::CalligraphyToolbar(SPDesktop *desktop)
         auto const flatness_item = Gtk::make_managed<UI::Widget::SpinButtonToolItem>("calligraphy-fixation", _("Fixation:"), _fixation_adj, 1, 0);
         flatness_item->set_tooltip_text(_("Angle behavior (0 = nib always perpendicular to stroke direction, 100 = fixed angle, -100 = fixed angle in opposite direction)"));
         flatness_item->set_custom_numeric_menu_data(values, labels);
-        flatness_item->set_focus_widget(desktop->canvas);
+        flatness_item->set_focus_widget(desktop->getCanvas());
         _fixation_adj->signal_value_changed().connect(sigc::mem_fun(*this, &CalligraphyToolbar::flatness_value_changed));
         _widget_map["flatness"] = G_OBJECT(_fixation_adj->gobj());
         add(*flatness_item);
@@ -237,7 +237,7 @@ CalligraphyToolbar::CalligraphyToolbar(SPDesktop *desktop)
         // TRANSLATORS: "cap" means "end" (both start and finish) here
         cap_rounding_item->set_tooltip_text(_("Increase to make caps at the ends of strokes protrude more (0 = no caps, 1 = round caps)"));
         cap_rounding_item->set_custom_numeric_menu_data(values, labels);
-        cap_rounding_item->set_focus_widget(desktop->canvas);
+        cap_rounding_item->set_focus_widget(desktop->getCanvas());
         _cap_rounding_adj->signal_value_changed().connect(sigc::mem_fun(*this, &CalligraphyToolbar::cap_rounding_value_changed));
         _widget_map["cap_rounding"] = G_OBJECT(_cap_rounding_adj->gobj());
         add(*cap_rounding_item);
@@ -255,7 +255,7 @@ CalligraphyToolbar::CalligraphyToolbar(SPDesktop *desktop)
         auto const tremor_item = Gtk::make_managed<UI::Widget::SpinButtonToolItem>("calligraphy-tremor", _("Tremor:"), _tremor_adj, 1, 0);
         tremor_item->set_tooltip_text(_("Increase to make strokes rugged and trembling"));
         tremor_item->set_custom_numeric_menu_data(values, labels);
-        tremor_item->set_focus_widget(desktop->canvas);
+        tremor_item->set_focus_widget(desktop->getCanvas());
         _tremor_adj->signal_value_changed().connect(sigc::mem_fun(*this, &CalligraphyToolbar::tremor_value_changed));
         _widget_map["tremor"] = G_OBJECT(_tremor_adj->gobj());
         add(*tremor_item);
@@ -271,7 +271,7 @@ CalligraphyToolbar::CalligraphyToolbar(SPDesktop *desktop)
         auto const wiggle_item = Gtk::make_managed<UI::Widget::SpinButtonToolItem>("calligraphy-wiggle", _("Wiggle:"), _wiggle_adj, 1, 0);
         wiggle_item->set_tooltip_text(_("Increase to make the pen waver and wiggle"));
         wiggle_item->set_custom_numeric_menu_data(values, labels);
-        wiggle_item->set_focus_widget(desktop->canvas);
+        wiggle_item->set_focus_widget(desktop->getCanvas());
         _wiggle_adj->signal_value_changed().connect(sigc::mem_fun(*this, &CalligraphyToolbar::wiggle_value_changed));
         _widget_map["wiggle"] = G_OBJECT(_wiggle_adj->gobj());
         add(*wiggle_item);
@@ -285,7 +285,7 @@ GtkWidget *
 CalligraphyToolbar::create(SPDesktop *desktop)
 {
     auto toolbar = new CalligraphyToolbar(desktop);
-    return GTK_WIDGET(toolbar->gobj());
+    return toolbar->Gtk::Widget::gobj();
 }
 
 void

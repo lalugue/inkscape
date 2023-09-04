@@ -1,7 +1,4 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-#ifndef SEEN_CONN_AVOID_REF
-#define SEEN_CONN_AVOID_REF
-
 /** \file
  * A class for handling shape interaction with libavoid.
  */
@@ -13,6 +10,9 @@
  *
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
+
+#ifndef SEEN_CONN_AVOID_REF
+#define SEEN_CONN_AVOID_REF
 
 #include <2geom/point.h>
 #include <cstddef>

@@ -129,7 +129,7 @@ bool SpiralTool::root_handler(CanvasEvent const &event)
                 center = _desktop->w2d(event.pos);
 
                 // Snap center
-                auto &m = _desktop->namedview->snap_manager;
+                auto &m = _desktop->getNamedView()->snap_manager;
                 m.setup(_desktop);
                 m.freeSnapReturnByRef(center, SNAPSOURCE_NODE_HANDLE);
                 m.unSetup();
@@ -146,7 +146,7 @@ bool SpiralTool::root_handler(CanvasEvent const &event)
 
                 auto motion_dt = _desktop->w2d(event.pos);
 
-                auto &m = _desktop->namedview->snap_manager;
+                auto &m = _desktop->getNamedView()->snap_manager;
                 m.setup(_desktop, true, spiral.get());
                 m.freeSnapReturnByRef(motion_dt, Inkscape::SNAPSOURCE_NODE_HANDLE);
                 m.unSetup();
@@ -157,7 +157,7 @@ bool SpiralTool::root_handler(CanvasEvent const &event)
 
                 ret = true;
             } else if (!sp_event_context_knot_mouseover()) {
-                auto &m = _desktop->namedview->snap_manager;
+                auto &m = _desktop->getNamedView()->snap_manager;
                 m.setup(_desktop);
 
                 auto const motion_dt = _desktop->w2d(event.pos);
@@ -295,7 +295,7 @@ void SpiralTool::drag(Geom::Point const &p, guint state) {
         this->spiral->updateRepr();
     }
 
-    SnapManager &m = _desktop->namedview->snap_manager;
+    SnapManager &m = _desktop->getNamedView()->snap_manager;
     m.setup(_desktop, true, spiral.get());
     Geom::Point pt2g = p;
     m.freeSnapReturnByRef(pt2g, Inkscape::SNAPSOURCE_NODE_HANDLE);
@@ -324,7 +324,7 @@ void SpiralTool::drag(Geom::Point const &p, guint state) {
 
     /* status text */
     Inkscape::Util::Quantity q = Inkscape::Util::Quantity(rad, "px");
-    Glib::ustring rads = q.string(_desktop->namedview->display_units);
+    Glib::ustring rads = q.string(_desktop->getNamedView()->display_units);
     this->message_context->setF(Inkscape::IMMEDIATE_MESSAGE,
                                _("<b>Spiral</b>: radius %s, angle %.2f&#176;; with <b>Ctrl</b> to snap angle"),
                                 rads.c_str(), arg * 180/M_PI + 360*spiral->revo);

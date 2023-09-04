@@ -89,7 +89,7 @@ GtkWidget *_scrollprotected_combo_box_new_with_model(GtkTreeModel *model)
 {
     auto const combobox = Gtk::make_managed<Inkscape::UI::Widget::ScrollProtected<Gtk::ComboBox>>();
     gtk_combo_box_set_model(combobox->gobj(), model);
-    return GTK_WIDGET(combobox->gobj());
+    return combobox->Gtk::Widget::gobj();
 }
 } // namespace
 

@@ -110,7 +110,7 @@ void PencilTool::_endpointSnap(Geom::Point &p, guint const state) {
             std::optional<Geom::Point> origin = this->_npoints > 0 ? p_array[0] : std::optional<Geom::Point>();
             spdc_endpoint_snap_free(this, p, origin);
         } else {
-            _desktop->snapindicator->remove_snaptarget();
+            _desktop->getSnapIndicator()->remove_snaptarget();
         }
     }
 }
@@ -179,7 +179,7 @@ bool PencilTool::_handleButtonPress(ButtonPressEvent const &event)
                 break;
             default:
                 /* Set first point of sequence */
-                SnapManager &m = _desktop->namedview->snap_manager;
+                auto &m = _desktop->getNamedView()->snap_manager;
                 if (event.modifiers & GDK_CONTROL_MASK) {
                     m.setup(_desktop, true);
                     if (!(event.modifiers & GDK_SHIFT_MASK)) {
@@ -352,7 +352,7 @@ bool PencilTool::_handleMotionNotify(MotionEvent const &event) {
             // a) press the mousebutton to start a freehand drawing, or
             // b) release the mousebutton to finish a freehand drawing
             if (!tablet_enabled && !sp_event_context_knot_mouseover()) {
-                SnapManager &m = _desktop->namedview->snap_manager;
+                SnapManager &m = _desktop->getNamedView()->snap_manager;
                 m.setup(_desktop, true);
                 m.preSnap(Inkscape::SnapCandidatePoint(p, Inkscape::SNAPSOURCE_NODE_HANDLE));
                 m.unSetup();

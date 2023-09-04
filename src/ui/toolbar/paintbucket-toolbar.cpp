@@ -81,7 +81,7 @@ PaintbucketToolbar::PaintbucketToolbar(SPDesktop *desktop)
         _threshold_adj = Gtk::Adjustment::create(threshold_val, 0, 100.0, 1.0, 10.0);
         auto const threshold_item = Gtk::make_managed<UI::Widget::SpinButtonToolItem>("inkscape:paintbucket-threshold", _("Threshold:"), _threshold_adj, 1, 0);
         threshold_item->set_tooltip_text(_("The maximum allowed difference between the clicked pixel and the neighboring pixels to be counted in the fill"));
-        threshold_item->set_focus_widget(desktop->canvas);
+        threshold_item->set_focus_widget(desktop->getCanvas());
         _threshold_adj->signal_value_changed().connect(sigc::mem_fun(*this, &PaintbucketToolbar::threshold_changed));
         add(*threshold_item);
     }
@@ -103,7 +103,7 @@ PaintbucketToolbar::PaintbucketToolbar(SPDesktop *desktop)
         offset_item->set_tooltip_text(_("The amount to grow (positive) or shrink (negative) the created fill path"));
         _tracker->addAdjustment(_offset_adj->gobj());
         offset_item->get_spin_button()->addUnitTracker(_tracker);
-        offset_item->set_focus_widget(desktop->canvas);
+        offset_item->set_focus_widget(desktop->getCanvas());
         _offset_adj->signal_value_changed().connect(sigc::mem_fun(*this, &PaintbucketToolbar::offset_changed));
         add(*offset_item);
     }
@@ -156,7 +156,7 @@ GtkWidget *
 PaintbucketToolbar::create(SPDesktop *desktop)
 {
     auto toolbar = new PaintbucketToolbar(desktop);
-    return GTK_WIDGET(toolbar->gobj());
+    return toolbar->Gtk::Widget::gobj();
 }
 
 void

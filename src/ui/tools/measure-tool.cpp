@@ -369,7 +369,7 @@ void MeasureTool::knotStartMovedHandler(SPKnot */*knot*/, Geom::Point const &ppo
     if (state & GDK_CONTROL_MASK) {
         spdc_endpoint_snap_rotation(this, point, end_p, state);
     } else if (!(state & GDK_SHIFT_MASK)) {
-        SnapManager &snap_manager = _desktop->namedview->snap_manager;
+        SnapManager &snap_manager = _desktop->getNamedView()->snap_manager;
         snap_manager.setup(_desktop);
         Inkscape::SnapCandidatePoint scp(point, Inkscape::SNAPSOURCE_OTHER_HANDLE);
         scp.addOrigin(this->knot_end->position());
@@ -390,7 +390,7 @@ void MeasureTool::knotEndMovedHandler(SPKnot */*knot*/, Geom::Point const &ppoin
     if (state & GDK_CONTROL_MASK) {
         spdc_endpoint_snap_rotation(this, point, start_p, state);
     } else if (!(state & GDK_SHIFT_MASK)) {
-        SnapManager &snap_manager = _desktop->namedview->snap_manager;
+        SnapManager &snap_manager = _desktop->getNamedView()->snap_manager;
         snap_manager.setup(_desktop);
         Inkscape::SnapCandidatePoint scp(point, Inkscape::SNAPSOURCE_OTHER_HANDLE);
         scp.addOrigin(this->knot_start->position());
@@ -456,7 +456,7 @@ bool MeasureTool::root_handler(CanvasEvent const &event)
         saveDragOrigin(event.pos);
         start_p = _desktop->w2d(event.pos);
 
-        auto &snap_manager = _desktop->namedview->snap_manager;
+        auto &snap_manager = _desktop->getNamedView()->snap_manager;
         snap_manager.setup(_desktop);
         snap_manager.freeSnapReturnByRef(start_p, SNAPSOURCE_OTHER_HANDLE);
         snap_manager.unSetup();
@@ -485,7 +485,7 @@ bool MeasureTool::root_handler(CanvasEvent const &event)
             if (!(event.modifiers & GDK_SHIFT_MASK)) {
                 auto const motion_dt = _desktop->w2d(event.pos);
 
-                auto &snap_manager = _desktop->namedview->snap_manager;
+                auto &snap_manager = _desktop->getNamedView()->snap_manager;
                 snap_manager.setup(_desktop);
 
                 auto scp = SnapCandidatePoint(motion_dt, SNAPSOURCE_OTHER_HANDLE);
@@ -513,7 +513,7 @@ bool MeasureTool::root_handler(CanvasEvent const &event)
                 if (event.modifiers & GDK_CONTROL_MASK) {
                     spdc_endpoint_snap_rotation(this, end_p, start_p, event.modifiers);
                 } else if (!(event.modifiers & GDK_SHIFT_MASK)) {
-                    auto &snap_manager = _desktop->namedview->snap_manager;
+                    auto &snap_manager = _desktop->getNamedView()->snap_manager;
                     snap_manager.setup(_desktop);
                     auto scp = SnapCandidatePoint(end_p, SNAPSOURCE_OTHER_HANDLE);
                     scp.addOrigin(start_p);
@@ -540,7 +540,7 @@ bool MeasureTool::root_handler(CanvasEvent const &event)
             if (event.modifiers & GDK_CONTROL_MASK) {
                 spdc_endpoint_snap_rotation(this, end_p, start_p, event.modifiers);
             } else if (!(event.modifiers & GDK_SHIFT_MASK)) {
-                auto &snap_manager = _desktop->namedview->snap_manager;
+                auto &snap_manager = _desktop->getNamedView()->snap_manager;
                 snap_manager.setup(_desktop);
                 auto scp = SnapCandidatePoint(end_p, SNAPSOURCE_OTHER_HANDLE);
                 scp.addOrigin(start_p);
@@ -618,7 +618,7 @@ void MeasureTool::toGuides()
     Geom::Point start = _desktop->doc2dt(start_p) * _desktop->doc2dt();
     Geom::Point end = _desktop->doc2dt(end_p) * _desktop->doc2dt();
     Geom::Ray ray(start,end);
-    SPNamedView *namedview = _desktop->namedview;
+    SPNamedView *namedview = _desktop->getNamedView();
     if(!namedview) {
         return;
     }
@@ -726,7 +726,7 @@ void MeasureTool::setGuide(Geom::Point origin, double angle, const char *label)
     if(root) {
         affine *= root->c2p.inverse();
     }
-    SPNamedView *namedview = _desktop->namedview;
+    SPNamedView *namedview = _desktop->getNamedView();
     if(!namedview) {
         return;
     }

@@ -244,11 +244,11 @@ void gobble_motion_events(guint mask) {
  */
 static void sp_toggle_selector(SPDesktop *dt) {
 
-    if (!dt->event_context) {
+    if (!dt->getTool()) {
         return;
     }
 
-    if (dynamic_cast<Inkscape::UI::Tools::SelectTool *>(dt->event_context)) {
+    if (dynamic_cast<Inkscape::UI::Tools::SelectTool *>(dt->getTool())) {
         if (selector_toggled) {
             set_active_tool(dt, switch_selector_to);
             selector_toggled = false;
@@ -266,11 +266,11 @@ static void sp_toggle_selector(SPDesktop *dt) {
  */
 void sp_toggle_dropper(SPDesktop *dt)
 {
-    if (!dt->event_context) {
+    if (!dt->getTool()) {
         return;
     }
 
-    if (dynamic_cast<Inkscape::UI::Tools::DropperTool *>(dt->event_context)) {
+    if (dynamic_cast<Inkscape::UI::Tools::DropperTool *>(dt->getTool())) {
         if (dropper_toggled) {
             set_active_tool(dt, switch_dropper_to);
             dropper_toggled = FALSE;
@@ -338,7 +338,7 @@ bool ToolBase::_keyboardMove(KeyEvent const &event, Geom::Point const &dir)
             moved = true;
         }
     } else {
-        auto nt = dynamic_cast<Inkscape::UI::Tools::NodeTool *>(_desktop->event_context);
+        auto nt = dynamic_cast<Inkscape::UI::Tools::NodeTool *>(_desktop->getTool());
         if (nt) {
             for (auto &_shape_editor : nt->_shape_editors) {
                 ShapeEditor *shape_editor = _shape_editor.second.get();
@@ -377,8 +377,8 @@ bool ToolBase::root_handler(CanvasEvent const &event)
     auto compute_angle = [&] (Geom::Point const &pt) {
         // Hack: Undo coordinate transformation applied by canvas to get events back to window coordinates.
         // Real solution: Move all this functionality out of this file to somewhere higher up in the chain.
-        auto cursor = pt * _desktop->canvas->get_geom_affine().inverse() * _desktop->canvas->get_affine() - _desktop->canvas->get_pos();
-        return Geom::deg_from_rad(Geom::atan2(cursor - Geom::Point(_desktop->canvas->get_dimensions()) / 2.0));
+        auto cursor = pt * _desktop->getCanvas()->get_geom_affine().inverse() * _desktop->getCanvas()->get_affine() - _desktop->getCanvas()->get_pos();
+        return Geom::deg_from_rad(Geom::atan2(cursor - Geom::Point(_desktop->getCanvas()->get_dimensions()) / 2.0));
     };
 
     inspect_event(event,
@@ -561,7 +561,7 @@ bool ToolBase::root_handler(CanvasEvent const &event)
             }
             angle = start_angle + delta_angle;
 
-            _desktop->rotate_relative_keep_point(_desktop->w2d(Geom::Rect(_desktop->canvas->get_area_world()).midpoint()),
+            _desktop->rotate_relative_keep_point(_desktop->w2d(Geom::Rect(_desktop->getCanvas()->get_area_world()).midpoint()),
                                                  Geom::rad_from_deg(angle - current_angle));
             current_angle = angle;
             ret = true;
@@ -1155,7 +1155,7 @@ void ToolBase::grabCanvasEvents(EventMask mask)
  */
 void ToolBase::ungrabCanvasEvents()
 {
-    _desktop->snapindicator->remove_snaptarget();
+    _desktop->getSnapIndicator()->remove_snaptarget();
     _desktop->getCanvasCatchall()->ungrab();
 }
 
@@ -1208,12 +1208,12 @@ bool ToolBase::checkDragMoved(Geom::Point const &pos)
 /**
  * Calls virtual set() function of ToolBase.
  */
-void sp_event_context_read(ToolBase *ec, char const *key)
+void sp_event_context_read(ToolBase *tool, char const *key)
 {
-    if (!ec || !key) return;
+    if (!tool || !key) return;
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-    Inkscape::Preferences::Entry val = prefs->getEntry(ec->getPrefsPath() + '/' + key);
-    ec->set(val);
+    Inkscape::Preferences::Entry val = prefs->getEntry(tool->getPrefsPath() + '/' + key);
+    tool->set(val);
 }
 
 /**
@@ -1232,7 +1232,7 @@ void ToolBase::_filterEventForSnapping(SPItem *item, CanvasEvent const &event, D
         [&] (ButtonPressEvent const &event) {
             // Snapping will be on hold if we're moving the mouse at high speeds. When starting
             // drawing a new shape we really should snap though.
-            _desktop->namedview->snap_manager.snapprefs.setSnapPostponedGlobally(false);
+            _desktop->getNamedView()->snap_manager.snapprefs.setSnapPostponedGlobally(false);
         },
         [&] (CanvasEvent const &event) {}
     );
@@ -1528,9 +1528,9 @@ SPItem *sp_event_context_over_item(SPDesktop *desktop, SPItem *item, Geom::Point
     return item_at_point;
 }
 
-ShapeEditor *sp_event_context_get_shape_editor(ToolBase *ec)
+ShapeEditor *sp_event_context_get_shape_editor(ToolBase *tool)
 {
-    return ec->shape_editor;
+    return tool->shape_editor;
 }
 
 /**
@@ -1567,11 +1567,11 @@ void ToolBase::snap_delay_handler(gpointer item, gpointer item2, MotionEvent con
         // that we're not going to snap any way (e.g. while scrolling with middle mouse button)
         // Any motion event might affect the state of the context, leading to unexpected behavior
         discard_delayed_snap_event();
-    } else if (getDesktop() && getDesktop()->namedview->snap_manager.snapprefs.getSnapEnabledGlobally()) {
+    } else if (getDesktop() && getDesktop()->getNamedView()->snap_manager.snapprefs.getSnapEnabledGlobally()) {
         // Snap when speed drops below e.g. 0.02 px/msec, or when no motion events have occurred for some period.
         // i.e. snap when we're at stand still. A speed threshold enforces snapping for tablets, which might never
         // be fully at stand still and might keep spitting out motion events.
-        getDesktop()->namedview->snap_manager.snapprefs.setSnapPostponedGlobally(true); // put snapping on hold
+        getDesktop()->getNamedView()->snap_manager.snapprefs.setSnapPostponedGlobally(true); // put snapping on hold
 
         auto event_pos = event.pos;
         uint32_t event_t = event.time;
@@ -1638,7 +1638,7 @@ void ToolBase::process_delayed_snap_event()
     }
 
     _dse_callback_in_process = true;
-    dt->namedview->snap_manager.snapprefs.setSnapPostponedGlobally(false);
+    dt->getNamedView()->snap_manager.snapprefs.setSnapPostponedGlobally(false);
 
     // Depending on where the delayed snap event originated from, we will inject it back at its origin.
     // The switch below takes care of that and prepares the relevant parameters.
@@ -1709,7 +1709,7 @@ void ToolBase::process_delayed_snap_event()
  */
 void ToolBase::discard_delayed_snap_event()
 {
-    _desktop->namedview->snap_manager.snapprefs.setSnapPostponedGlobally(false);
+    _desktop->getNamedView()->snap_manager.snapprefs.setSnapPostponedGlobally(false);
     _dse.reset();
 }
 

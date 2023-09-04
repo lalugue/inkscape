@@ -446,7 +446,7 @@ void ControlPointSelection::_pointDragged(Geom::Point &new_pos, MotionEvent cons
 
 void ControlPointSelection::_pointUngrabbed()
 {
-    _desktop->snapindicator->remove_snaptarget();
+    _desktop->getSnapIndicator()->remove_snaptarget();
     _original_positions.clear();
     _last_trans.clear();
     _dragging = false;

@@ -51,6 +51,7 @@ public:
                                          bool expanded   = false         ) const;
 
 private:
+    // TODO: Once we require new enough glibmm, #include <glibmm/ustring_hash.h> & make key ustring
     std::unordered_map<std::string, InkActionExtraDatum> data;
 };
 

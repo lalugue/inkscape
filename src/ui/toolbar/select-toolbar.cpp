@@ -332,7 +332,7 @@ GtkWidget *
 SelectToolbar::create(SPDesktop *desktop)
 {
     auto toolbar = new SelectToolbar(desktop);
-    return GTK_WIDGET(toolbar->gobj());
+    return toolbar->Gtk::Widget::gobj();
 }
 
 void

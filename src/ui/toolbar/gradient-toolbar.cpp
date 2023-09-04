@@ -503,7 +503,7 @@ GradientToolbar::GradientToolbar(SPDesktop *desktop)
         _offset_adj = Gtk::Adjustment::create(offset_val, 0.0, 1.0, 0.01, 0.1);
         _offset_item = Gtk::make_managed<UI::Widget::SpinButtonToolItem>("gradient-stopoffset", C_("Gradient", "Offset:"), _offset_adj, 0.01, 2);
         _offset_item->set_tooltip_text(_("Offset of selected stop"));
-        _offset_item->set_focus_widget(desktop->canvas);
+        _offset_item->set_focus_widget(desktop->getCanvas());
         _offset_adj->signal_value_changed().connect(sigc::mem_fun(*this, &GradientToolbar::stop_offset_adjustment_changed));
         add(*_offset_item);
         _offset_item->set_sensitive(false);
@@ -542,7 +542,7 @@ GtkWidget *
 GradientToolbar::create(SPDesktop * desktop)
 {
     auto toolbar = new GradientToolbar(desktop);
-    return GTK_WIDGET(toolbar->gobj());
+    return toolbar->Gtk::Widget::gobj();
 }
 
 void
@@ -583,7 +583,7 @@ GradientToolbar::gradient_changed(int active)
         gr = sp_gradient_ensure_vector_normalized(gr);
 
         Inkscape::Selection *selection = _desktop->getSelection();
-        ToolBase *ev = _desktop->getEventContext();
+        ToolBase *ev = _desktop->getTool();
 
         gr_apply_gradient(selection, ev ? ev->get_drag() : nullptr, gr);
 
@@ -651,7 +651,7 @@ GradientToolbar::stop_changed(int active)
 
     blocked = true;
 
-    ToolBase *ev = _desktop->getEventContext();
+    ToolBase *ev = _desktop->getTool();
     SPGradient *gr = get_selected_gradient();
 
     select_dragger_by_stop(gr, ev);
@@ -781,7 +781,7 @@ GradientToolbar::add_stop()
         return;
     }
 
-    if (auto gt = dynamic_cast<Tools::GradientTool*>(_desktop->getEventContext())) {
+    if (auto gt = dynamic_cast<Tools::GradientTool*>(_desktop->getTool())) {
         gt->add_stops_between_selected_stops();
     }
 }
@@ -801,7 +801,7 @@ GradientToolbar::remove_stop()
         return;
     }
 
-    auto ev = _desktop->getEventContext();
+    auto ev = _desktop->getTool();
     GrDrag *drag = nullptr;
     if (ev) {
         drag = ev->get_drag();
@@ -900,7 +900,7 @@ GradientToolbar::selection_changed(Inkscape::Selection * /*selection*/)
     Inkscape::Selection *selection = _desktop->getSelection(); // take from desktop, not from args
     if (selection) {
 
-        ToolBase *ev = _desktop->getEventContext();
+        ToolBase *ev = _desktop->getTool();
         GrDrag *drag = nullptr;
         if (ev) {
             drag = ev->get_drag();

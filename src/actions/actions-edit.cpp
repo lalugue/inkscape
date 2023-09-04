@@ -222,11 +222,11 @@ edit_delete(InkscapeApplication *app)
 
     // For text and node too special handling.
     if (auto desktop = selection->desktop()) {
-        if (auto text_tool = dynamic_cast<Inkscape::UI::Tools::TextTool*>(desktop->event_context)) {
+        if (auto const text_tool = dynamic_cast<Inkscape::UI::Tools::TextTool *>(desktop->getTool())) {
             text_tool->deleteSelected();
             return;
         }
-        if (auto node_tool = dynamic_cast<Inkscape::UI::Tools::NodeTool *>(desktop->event_context)) {
+        if (auto const node_tool = dynamic_cast<Inkscape::UI::Tools::NodeTool *>(desktop->getTool())) {
             // This means we delete items is no nodes are selected.
             if (node_tool->_selected_nodes) {
                 node_tool->deleteSelected();

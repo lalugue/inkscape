@@ -664,7 +664,7 @@ void Script::showPopupError (const Glib::ustring &data,
 {
     Gtk::MessageDialog warning(message, false, type, Gtk::BUTTONS_OK, true);
     warning.set_resizable(true);
-    GtkWidget *dlg = GTK_WIDGET(warning.gobj());
+    GtkWidget *dlg = warning.Gtk::Widget::gobj();
     if (parent_window) {
         warning.set_transient_for(*parent_window);
     } else {

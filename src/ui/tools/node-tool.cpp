@@ -232,7 +232,7 @@ void sp_update_helperpath(SPDesktop *desktop)
         return;
     }
 
-    auto nt = dynamic_cast<Tools::NodeTool*>(desktop->event_context);
+    auto nt = dynamic_cast<Tools::NodeTool*>(desktop->getTool());
     if (!nt) {
         // We remove this warning and just stop execution
         // because we are updating helper paths also from LPE dialog so we not unsure the tool used
@@ -446,7 +446,7 @@ bool NodeTool::root_handler(CanvasEvent const &event)
             rband->stop();
         }
 
-        auto &m = _desktop->namedview->snap_manager;
+        auto &m = _desktop->getNamedView()->snap_manager;
 
         // We will show a pre-snap indication for when the user adds a node through double-clicking
         // Adding a node will only work when a path has been selected; if that's not the case then snapping is useless
@@ -580,7 +580,7 @@ bool NodeTool::root_handler(CanvasEvent const &event)
             // CurveDragPoint; we will insert nodes into the path anyway but only if we can snap
             // to the path. Otherwise the position would not be very well defined.
             if (!(event.modifiers & GDK_SHIFT_MASK)) {
-                auto &m = _desktop->namedview->snap_manager;
+                auto &m = _desktop->getNamedView()->snap_manager;
                 m.setup(_desktop);
                 auto scp = Inkscape::SnapCandidatePoint(desktop_pt, Inkscape::SNAPSOURCE_OTHER_HANDLE);
                 auto sp = m.freeSnap(scp, Geom::OptRect(), true);

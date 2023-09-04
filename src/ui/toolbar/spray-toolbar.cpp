@@ -116,7 +116,7 @@ SprayToolbar::SprayToolbar(SPDesktop *desktop) :
         auto const width_item = Gtk::make_managed<UI::Widget::SpinButtonToolItem>("spray-width", _("Width:"), _width_adj, 1, 0);
         width_item->set_tooltip_text(_("The width of the spray area (relative to the visible canvas area)"));
         width_item->set_custom_numeric_menu_data(values, labels);
-        width_item->set_focus_widget(desktop->canvas);
+        width_item->set_focus_widget(desktop->getCanvas());
         _width_adj->signal_value_changed().connect(sigc::mem_fun(*this, &SprayToolbar::width_value_changed));
         add(*width_item);
         width_item->set_sensitive(true);
@@ -141,7 +141,7 @@ SprayToolbar::SprayToolbar(SPDesktop *desktop) :
         _spray_population = Gtk::make_managed<UI::Widget::SpinButtonToolItem>("spray-population", _("Amount:"), _population_adj, 1, 0);
         _spray_population->set_tooltip_text(_("Adjusts the number of items sprayed per click"));
         _spray_population->set_custom_numeric_menu_data(values, labels);
-        _spray_population->set_focus_widget(desktop->canvas);
+        _spray_population->set_focus_widget(desktop->getCanvas());
         _population_adj->signal_value_changed().connect(sigc::mem_fun(*this, &SprayToolbar::population_value_changed));
         add(*_spray_population);
         _spray_population->set_sensitive(true);
@@ -169,7 +169,7 @@ SprayToolbar::SprayToolbar(SPDesktop *desktop) :
         // xgettext:no-c-format
         _spray_rotation->set_tooltip_text(_("Variation of the rotation of the sprayed objects; 0% for the same rotation than the original object"));
         _spray_rotation->set_custom_numeric_menu_data(values, labels);
-        _spray_rotation->set_focus_widget(desktop->canvas);
+        _spray_rotation->set_focus_widget(desktop->getCanvas());
         _rotation_adj->signal_value_changed().connect(sigc::mem_fun(*this, &SprayToolbar::rotation_value_changed));
         add(*_spray_rotation);
         _spray_rotation->set_sensitive();
@@ -184,7 +184,7 @@ SprayToolbar::SprayToolbar(SPDesktop *desktop) :
         // xgettext:no-c-format
         _spray_scale->set_tooltip_text(_("Variation in the scale of the sprayed objects; 0% for the same scale than the original object"));
         _spray_scale->set_custom_numeric_menu_data(values, labels);
-        _spray_scale->set_focus_widget(desktop->canvas);
+        _spray_scale->set_focus_widget(desktop->getCanvas());
         _scale_adj->signal_value_changed().connect(sigc::mem_fun(*this, &SprayToolbar::scale_value_changed));
         add(*_spray_scale);
         _spray_scale->set_sensitive(true);
@@ -210,7 +210,7 @@ SprayToolbar::SprayToolbar(SPDesktop *desktop) :
         auto const sd_item = Gtk::make_managed<UI::Widget::SpinButtonToolItem>("spray-standard-deviation", C_("Spray tool", "Scatter:"), _sd_adj, 1, 0);
         sd_item->set_tooltip_text(_("Increase to scatter sprayed objects"));
         sd_item->set_custom_numeric_menu_data(values, labels);
-        sd_item->set_focus_widget(desktop->canvas);
+        sd_item->set_focus_widget(desktop->getCanvas());
         _sd_adj->signal_value_changed().connect(sigc::mem_fun(*this, &SprayToolbar::standard_deviation_value_changed));
         add(*sd_item);
         sd_item->set_sensitive(true);
@@ -225,7 +225,7 @@ SprayToolbar::SprayToolbar(SPDesktop *desktop) :
         auto const mean_item = Gtk::make_managed<UI::Widget::SpinButtonToolItem>("spray-mean", _("Focus:"), _mean_adj, 1, 0);
         mean_item->set_tooltip_text(_("0 to spray a spot; increase to enlarge the ring radius"));
         mean_item->set_custom_numeric_menu_data(values, labels);
-        mean_item->set_focus_widget(desktop->canvas);
+        mean_item->set_focus_widget(desktop->getCanvas());
         _mean_adj->signal_value_changed().connect(sigc::mem_fun(*this, &SprayToolbar::mean_value_changed));
         add(*mean_item);
         mean_item->set_sensitive(true);
@@ -284,7 +284,7 @@ SprayToolbar::SprayToolbar(SPDesktop *desktop) :
         _offset = Gtk::make_managed<UI::Widget::SpinButtonToolItem>("spray-offset", _("Offset %:"), _offset_adj, 0, 0);
         _offset->set_tooltip_text(_("Increase to segregate objects more (value in percent)"));
         _offset->set_custom_numeric_menu_data(values, labels);
-        _offset->set_focus_widget(desktop->canvas);
+        _offset->set_focus_widget(desktop->getCanvas());
         _offset_adj->signal_value_changed().connect(sigc::mem_fun(*this, &SprayToolbar::offset_value_changed));
         add(*_offset);
     }
@@ -354,7 +354,7 @@ GtkWidget *
 SprayToolbar::create(SPDesktop *desktop)
 {
    auto toolbar = new SprayToolbar(desktop);
-   return GTK_WIDGET(toolbar->gobj());
+   return toolbar->Gtk::Widget::gobj();
 }
 
 void

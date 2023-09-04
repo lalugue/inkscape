@@ -197,7 +197,7 @@ set_active_tool(InkscapeWindow *win, SPItem *item, Geom::Point const p)
             show_output("set_active_tool: no desktop!");
             return;
         }
-        SP_TEXT_CONTEXT(dt->event_context)->placeCursorAt(item, p);
+        SP_TEXT_CONTEXT(dt->getTool())->placeCursorAt(item, p);
     } else if (is<SPOffset>(item))  {
         tool_switch("Node", win);
     }

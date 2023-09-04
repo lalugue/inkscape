@@ -28,28 +28,33 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#include <memory>
+#include <2geom/coord.h>
+
 #include "toolbar.h"
-#include "2geom/coord.h"
 
 class SPDesktop;
 
 namespace Inkscape {
+
 class Selection;
 
 namespace UI {
+
 class SimplePrefPusher;
 class ControlPointSelection;
 
 namespace Tools {
 class ToolBase;
-}
+} // namespace Tools
 
 namespace Widget {
 class SpinButtonToolItem;
 class UnitTracker;
-}
+} // namespace Widget
 
 namespace Toolbar {
+
 class NodeToolbar : public Toolbar {
 private:
     std::unique_ptr<UI::Widget::UnitTracker> _tracker;
@@ -84,7 +89,7 @@ private:
     void sel_changed(Inkscape::Selection *selection);
     void sel_modified(Inkscape::Selection *selection, guint /*flags*/);
     void coord_changed(Inkscape::UI::ControlPointSelection* selected_nodes);
-    void watch_ec(SPDesktop* desktop, Inkscape::UI::Tools::ToolBase* ec);
+    void watch_ec(SPDesktop* desktop, Inkscape::UI::Tools::ToolBase* tool);
     void edit_add();
     void edit_add_min_x();
     void edit_add_max_x();
@@ -110,7 +115,20 @@ protected:
 public:
     static GtkWidget * create(SPDesktop *desktop);
 };
-}
-}
-}
+
+} // namespace Toolbar
+} // namespace UI
+} // namespace Inkscape
+
 #endif /* !SEEN_SELECT_TOOLBAR_H */
+
+/*
+  Local Variables:
+  mode:c++
+  c-file-style:"stroustrup"
+  c-file-offsets:((innamespace . 0)(inline-open . 0)(case-label . +))
+  indent-tabs-mode:nil
+  fill-column:99
+  End:
+*/
+// vim: filetype=cpp:expandtab:shiftwidth=4:tabstop=8:softtabstop=4:fileencoding=utf-8:textwidth=99 :

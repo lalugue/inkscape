@@ -27,7 +27,6 @@
 #include <string>
 #include <glibmm/i18n.h>
 #include <glibmm/ustring.h>
-#include <gtkmm/adjustment.h>
 #include <gtkmm/grid.h>
 #include <gtkmm/label.h>
 #include <gtkmm/paned.h>
@@ -59,9 +58,6 @@
 #include "ui/widget/canvas-grid.h"
 #include "ui/widget/combo-tool-item.h"
 #include "ui/widget/ink-ruler.h"
-#include "ui/widget/layer-selector.h"
-#include "ui/widget/page-selector.h"
-#include "ui/widget/selected-style.h"
 #include "ui/widget/spin-button-tool-item.h"
 #include "ui/widget/status-bar.h"
 #include "ui/widget/unit-tracker.h"
@@ -81,7 +77,7 @@ using Inkscape::Util::unit_table;
 
 SPDesktopWidget::SPDesktopWidget(InkscapeWindow *inkscape_window, SPDocument *document)
     : Gtk::Box(Gtk::ORIENTATION_VERTICAL)
-    , window (inkscape_window)
+    , _window{inkscape_window}
 {
     set_name("SPDesktopWidget");
 
@@ -163,7 +159,7 @@ SPDesktopWidget::SPDesktopWidget(InkscapeWindow *inkscape_window, SPDocument *do
 
     /* Canvas Grid (canvas, rulers, scrollbars, etc.) */
     // desktop widgets owns it
-    _canvas_grid = new Inkscape::UI::Widget::CanvasGrid(this);
+    _canvas_grid = std::make_unique<Inkscape::UI::Widget::CanvasGrid>(this);
 
     /* Canvas */
     dtw->_canvas = _canvas_grid->GetCanvas();
@@ -172,14 +168,14 @@ SPDesktopWidget::SPDesktopWidget(InkscapeWindow *inkscape_window, SPDocument *do
     sticky_zoom_updated();
 
     /* Dialog Container */
-    _container = Gtk::make_managed<DialogContainer>(inkscape_window);
+    _container = std::make_unique<DialogContainer>(inkscape_window);
     _columns = _container->get_columns();
     _columns->set_dropzone_sizes(2, -1);
     dtw->_tbbox->pack2(*_container, true, true);
 
     _canvas_grid->set_hexpand(true);
     _canvas_grid->set_vexpand(true);
-    _columns->append(_canvas_grid);
+    _columns->append(_canvas_grid.get());
 
     // ------------------ Finish Up -------------------- //
     dtw->show_all();
@@ -194,16 +190,16 @@ SPDesktopWidget::SPDesktopWidget(InkscapeWindow *inkscape_window, SPDocument *do
 
     // ---------- Desktop Dependent Setup -------------- //
     // This section seems backwards!
-    dtw->desktop = new SPDesktop(); // An SPDesktop is a View::View
-    dtw->desktop->init (namedview, dtw->_canvas, this);
-    dtw->_canvas->set_desktop(desktop);
-    INKSCAPE.add_desktop (dtw->desktop);
+    _desktop = std::make_unique<SPDesktop>();
+    _desktop->init(namedview, _canvas, this);
+    _canvas->set_desktop(_desktop.get());
+    INKSCAPE.add_desktop(_desktop.get());
 
     // Add the shape geometry to libavoid for autorouting connectors.
     // This needs desktop set for its spacing preferences.
-    init_avoided_shape_geometry(dtw->desktop);
+    init_avoided_shape_geometry(_desktop.get());
 
-    dtw->_statusbar->set_desktop(dtw->desktop);
+    _statusbar->set_desktop(_desktop.get());
 
     /* Once desktop is set, we can update rulers */
     dtw->_canvas_grid->updateRulers();
@@ -212,11 +208,11 @@ SPDesktopWidget::SPDesktopWidget(InkscapeWindow *inkscape_window, SPDocument *do
     dtw->modified_connection = namedview->connectModified(sigc::mem_fun(*dtw, &SPDesktopWidget::namedviewModified));
 
     // tool_toolbars is an empty Gtk::Box at this point, fill it.
-    dtw->tool_toolbars->create_toolbars(dtw->desktop);
+    tool_toolbars->create_toolbars(_desktop.get());
 
     dtw->layoutWidgets();
 
-    dtw->_panels->setDesktop(dtw->desktop);
+    _panels->setDesktop(_desktop.get());
 }
 
 void SPDesktopWidget::apply_ctrlbar_settings() {
@@ -248,32 +244,25 @@ SPDesktopWidget::on_unrealize()
         Inkscape::Preferences::get()->setInt("/toolbox/tools/width", _tbbox->get_position());
     }
 
-    if (dtw->desktop) {
-        for (auto &conn : dtw->_connections) {
-            conn.disconnect();
-        }
-
+    if (_desktop) {
         // Canvas
         dtw->_canvas->set_drawing(nullptr); // Ensures deactivation
         dtw->_canvas->set_desktop(nullptr); // Todo: Remove desktop dependency.
 
         dtw->_panels->setDesktop(nullptr);
 
-        delete _container; // will unrealize dtw->_canvas
+        _container.reset(); // will unrealize dtw->_canvas
 
-        INKSCAPE.remove_desktop(dtw->desktop); // clears selection and event_context
+        INKSCAPE.remove_desktop(_desktop.get()); // clears selection and event_context
         dtw->modified_connection.disconnect();
-        dtw->desktop->destroy();
-        delete dtw->desktop;
-        dtw->desktop = nullptr;
+        _desktop->destroy();
+        _desktop.reset();
     }
 
     parent_type::on_unrealize();
 }
 
-SPDesktopWidget::~SPDesktopWidget() {
-    delete _canvas_grid;
-}
+SPDesktopWidget::~SPDesktopWidget() = default;
 
 /**
  * Set the title in the desktop-window (if desktop has an own window).
@@ -284,9 +273,8 @@ SPDesktopWidget::~SPDesktopWidget() {
 void
 SPDesktopWidget::updateTitle(gchar const* uri)
 {
-    if (window) {
-
-        SPDocument *doc = this->desktop->doc();
+    if (_window) {
+        auto const doc = _desktop->doc();
         auto namedview = doc->getNamedView();
 
         std::string Name;
@@ -302,8 +290,9 @@ SPDesktopWidget::updateTitle(gchar const* uri)
         }
         Name += " (";
 
-        auto render_mode = desktop->getCanvas()->get_render_mode();
-        auto color_mode  = desktop->getCanvas()->get_color_mode();
+        auto const canvas = _desktop->getCanvas();
+        auto const render_mode = canvas->get_render_mode();
+        auto const color_mode  = canvas->get_color_mode();
 
         if (render_mode == Inkscape::RenderMode::OUTLINE) {
             Name += N_("outline");
@@ -317,7 +306,7 @@ SPDesktopWidget::updateTitle(gchar const* uri)
 
         if (color_mode != Inkscape::ColorMode::NORMAL &&
             render_mode != Inkscape::RenderMode::NORMAL) {
-                Name += ", ";
+            Name += ", ";
         }
 
         if (color_mode == Inkscape::ColorMode::GRAYSCALE) {
@@ -338,13 +327,13 @@ SPDesktopWidget::updateTitle(gchar const* uri)
         // Name += Inkscape::version_string;
         // Name += ")";
 
-        window->set_title (Name);
+        _window->set_title(Name);
     }
 }
 
 DialogContainer *SPDesktopWidget::getDialogContainer()
 {
-    return _container;
+    return _container.get();
 }
 
 void SPDesktopWidget::showNotice(Glib::ustring const &msg, unsigned timeout)
@@ -362,13 +351,13 @@ void SPDesktopWidget::on_realize()
 
     parent_type::on_realize();
 
-    Geom::Rect d = Geom::Rect::from_xywh(Geom::Point(0,0), (dtw->desktop->doc())->getDimensions());
-
+    auto const d = Geom::Rect::from_xywh(Geom::Point{0, 0}, _desktop->doc()->getDimensions());
     if (d.width() < 1.0 || d.height() < 1.0) return;
 
-    dtw->desktop->set_display_area (d, 10);
+    _desktop->set_display_area(d, 10);
 
     dtw->updateNamedview();
+
     auto const window = dynamic_cast<Gtk::Window *>(get_toplevel());
     if (window) {
         auto const dark = INKSCAPE.themecontext->isCurrentThemeDark(window);
@@ -385,19 +374,19 @@ void SPDesktopWidget::updateNamedview()
     // Listen on namedview modification
     // originally (prior to the sigc++ conversion) the signal was simply
     // connected twice rather than disconnecting the first connection
-    modified_connection.disconnect();
 
-    modified_connection = desktop->namedview->connectModified(sigc::mem_fun(*this, &SPDesktopWidget::namedviewModified));
-    namedviewModified(desktop->namedview, SP_OBJECT_MODIFIED_FLAG);
+    modified_connection = _desktop->getNamedView()->connectModified(sigc::mem_fun(*this, &SPDesktopWidget::namedviewModified));
 
-    updateTitle( desktop->doc()->getDocumentName() );
+    namedviewModified(_desktop->getNamedView(), SP_OBJECT_MODIFIED_FLAG);
+
+    updateTitle(_desktop->doc()->getDocumentName());
 }
 
 void
 SPDesktopWidget::update_guides_lock()
 {
     bool down = _canvas_grid->GetGuideLock()->get_active();
-    auto nv   = desktop->getNamedView();
+    auto const nv = _desktop->getNamedView();
     bool lock = nv->getLockGuides();
 
     if (down != lock) {
@@ -449,12 +438,12 @@ SPDesktopWidget::letZoomGrabFocus()
 void
 SPDesktopWidget::getWindowGeometry (gint &x, gint &y, gint &w, gint &h)
 {
-    if (window) {
-        window->get_size (w, h);
-        window->get_position (x, y);
+    if (_window) {
+        _window->get_size(w, h);
+        _window->get_position(x, y);
         // The get_positon is very unreliable (see Gtk docs) and will often return zero.
         if (!x && !y) {
-            if (Glib::RefPtr<Gdk::Window> w = window->get_window()) {
+            if (auto const &w = _window->get_window()) {
                 Gdk::Rectangle rect;
                 w->get_frame_extents(rect);
                 x = rect.get_x();
@@ -467,19 +456,17 @@ SPDesktopWidget::getWindowGeometry (gint &x, gint &y, gint &w, gint &h)
 void
 SPDesktopWidget::setWindowPosition (Geom::Point p)
 {
-    if (window)
-    {
-        window->move (gint(round(p[Geom::X])), gint(round(p[Geom::Y])));
+    if (_window) {
+        _window->move(gint(round(p[Geom::X])), gint(round(p[Geom::Y])));
     }
 }
 
 void
 SPDesktopWidget::setWindowSize (gint w, gint h)
 {
-    if (window)
-    {
-        window->set_default_size (w, h);
-        window->resize (w, h);
+    if (_window) {
+        _window->set_default_size(w, h);
+        _window->resize(w, h);
     }
 }
 
@@ -492,9 +479,8 @@ SPDesktopWidget::setWindowSize (gint w, gint h)
 void
 SPDesktopWidget::setWindowTransient (void *p, int transient_policy)
 {
-    if (window)
-    {
-        GtkWindow *w = GTK_WINDOW(window->gobj());
+    if (_window) {
+        auto const w = GTK_WINDOW(_window->gobj());
         gtk_window_set_transient_for (GTK_WINDOW(p), w);
 
         /*
@@ -513,37 +499,35 @@ SPDesktopWidget::setWindowTransient (void *p, int transient_policy)
 void
 SPDesktopWidget::presentWindow()
 {
-    if (window)
-        window->present();
+    if (_window) {
+        _window->present();
+    }
 }
 
-bool SPDesktopWidget::showInfoDialog( Glib::ustring const &message )
+void SPDesktopWidget::showInfoDialog(Glib::ustring const &message)
 {
-    bool result = false;
-    if (window)
-    {
-        Gtk::MessageDialog dialog(*window, message, false, Gtk::MESSAGE_INFO, Gtk::BUTTONS_OK);
-        dialog.property_destroy_with_parent() = true;
-        dialog.set_name("InfoDialog");
-        dialog.set_title(_("Note:")); // probably want to take this as a parameter.
-        Inkscape::UI::dialog_run(dialog);
-    }
-    return result;
+    if (!_window) return;
+
+    Gtk::MessageDialog dialog{*_window, message, false, Gtk::MESSAGE_INFO, Gtk::BUTTONS_OK};
+    dialog.property_destroy_with_parent() = true;
+    dialog.set_name("InfoDialog");
+    dialog.set_title(_("Note:")); // probably want to take this as a parameter.
+    Inkscape::UI::dialog_run(dialog);
 }
 
 bool SPDesktopWidget::warnDialog (Glib::ustring const &text)
 {
-    Gtk::MessageDialog dialog (*window, text, false, Gtk::MESSAGE_WARNING, Gtk::BUTTONS_OK_CANCEL);
-    gint response = Inkscape::UI::dialog_run(dialog);
+    Gtk::MessageDialog dialog{*_window, text, false, Gtk::MESSAGE_WARNING, Gtk::BUTTONS_OK_CANCEL};
+    auto const response = Inkscape::UI::dialog_run(dialog);
     return response == Gtk::RESPONSE_OK;
 }
 
 void
 SPDesktopWidget::iconify()
 {
-    GtkWindow *topw = GTK_WINDOW(gtk_widget_get_toplevel(GTK_WIDGET(_canvas->gobj())));
+    GtkWindow *topw = GTK_WINDOW(gtk_widget_get_toplevel(_canvas->Gtk::Widget::gobj()));
     if (GTK_IS_WINDOW(topw)) {
-        if (desktop->is_iconified()) {
+        if (_desktop->is_iconified()) {
             gtk_window_deiconify(topw);
         } else {
             gtk_window_iconify(topw);
@@ -554,9 +538,9 @@ SPDesktopWidget::iconify()
 void
 SPDesktopWidget::maximize()
 {
-    GtkWindow *topw = GTK_WINDOW(gtk_widget_get_toplevel(GTK_WIDGET(_canvas->gobj())));
+    GtkWindow *topw = GTK_WINDOW(gtk_widget_get_toplevel(_canvas->Gtk::Widget::gobj()));
     if (GTK_IS_WINDOW(topw)) {
-        if (desktop->is_maximized()) {
+        if (_desktop->is_maximized()) {
             gtk_window_unmaximize(topw);
         } else {
             gtk_window_maximize(topw);
@@ -567,9 +551,9 @@ SPDesktopWidget::maximize()
 void
 SPDesktopWidget::fullscreen()
 {
-    GtkWindow *topw = GTK_WINDOW(gtk_widget_get_toplevel(GTK_WIDGET(_canvas->gobj())));
+    GtkWindow *topw = GTK_WINDOW(gtk_widget_get_toplevel(_canvas->Gtk::Widget::gobj()));
     if (GTK_IS_WINDOW(topw)) {
-        if (desktop->is_fullscreen()) {
+        if (_desktop->is_fullscreen()) {
             gtk_window_unfullscreen(topw);
             // widget layout is triggered by the resulting window_state_event
         } else {
@@ -589,9 +573,9 @@ void SPDesktopWidget::layoutWidgets()
     Glib::ustring pref_root;
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
 
-    if (desktop && desktop->is_focusMode()) {
+    if (_desktop && _desktop->is_focusMode()) {
         pref_root = "/focus/";
-    } else if (desktop && desktop->is_fullscreen()) {
+    } else if (_desktop && _desktop->is_fullscreen()) {
         pref_root = "/fullscreen/";
     } else {
         pref_root = "/window/";
@@ -841,14 +825,14 @@ void SPDesktopWidget::onFocus(bool const has_toplevel_focus)
 
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
     if (prefs->getBool("/options/bitmapautoreload/value", true)) {
-        std::vector<SPObject *> imageList = (desktop->doc())->getResourceList("image");
+        auto const &imageList = _desktop->doc()->getResourceList("image");
         for (auto it : imageList) {
             auto image = cast<SPImage>(it);
             image->refresh_if_outdated();
         }
     }
 
-    INKSCAPE.activate_desktop (desktop);
+    INKSCAPE.activate_desktop(_desktop.get());
 }
 
 // ------------------------ Zoom ------------------------
@@ -904,7 +888,7 @@ SPDesktopWidget::toggle_scrollbars()
 }
 
 Gio::ActionMap* SPDesktopWidget::get_action_map() {
-    return window;
+    return _window;
 }
 
 /*

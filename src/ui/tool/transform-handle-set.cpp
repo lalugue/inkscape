@@ -116,7 +116,7 @@ void TransformHandle::getNextClosestPoint(bool reverse)
             _snap_points.push_back(*_all_snap_sources_iter);
 
             // Show the updated snap source now; otherwise it won't be shown until the selection is being moved again
-            SnapManager &m = _desktop->namedview->snap_manager;
+            SnapManager &m = _desktop->getNamedView()->snap_manager;
             m.setup(_desktop);
             m.displaySnapsource(*_all_snap_sources_iter);
             m.unSetup();
@@ -135,7 +135,7 @@ bool TransformHandle::grabbed(MotionEvent const &)
     _setState(_state);
 
     // Collect the snap-candidates, one for each selected node. These will be stored in the _snap_points vector.
-    auto nt = dynamic_cast<Tools::NodeTool*>(_th._desktop->event_context);
+    auto nt = dynamic_cast<Tools::NodeTool*>(_th._desktop->getTool());
     auto selection = nt->_selected_nodes;
 
     selection->setOriginalPoints();
@@ -187,7 +187,7 @@ void TransformHandle::ungrabbed(ButtonReleaseEvent const *)
     _th.signal_commit.emit(getCommitEvent());
 
     //updates the positions of the nodes
-    auto nt = dynamic_cast<Tools::NodeTool*>(_th._desktop->event_context);
+    auto nt = dynamic_cast<Tools::NodeTool*>(_th._desktop->getTool());
     auto selection = nt->_selected_nodes;
     selection->setOriginalPoints();
 }
@@ -273,7 +273,7 @@ protected:
                 }
             }
         } else {
-            SnapManager &m = _th._desktop->namedview->snap_manager;
+            SnapManager &m = _th._desktop->getNamedView()->snap_manager;
             m.setupIgnoreSelection(_th._desktop, true, &_unselected_points);
 
             Inkscape::PureScale *ptr;
@@ -353,7 +353,7 @@ protected:
             }
             vs[d2] = 1.0;
         } else {
-            auto &m = _th._desktop->namedview->snap_manager;
+            auto &m = _th._desktop->getNamedView()->snap_manager;
             m.setupIgnoreSelection(_th._desktop, true, &_unselected_points);
 
             bool uniform = held_ctrl(event);
@@ -419,7 +419,7 @@ protected:
         if (held_ctrl(event)) {
             angle = snap_angle(angle);
         } else {
-            auto &m = _th._desktop->namedview->snap_manager;
+            auto &m = _th._desktop->getNamedView()->snap_manager;
             m.setupIgnoreSelection(_th._desktop, true, &_unselected_points);
             Inkscape::PureRotateConstrained prc = Inkscape::PureRotateConstrained(angle, rotc);
             m.snapTransformed(_snap_points, _origin, prc);
@@ -527,7 +527,7 @@ protected:
             angle = snap_angle(angle);
             skew[d1] = tan(angle) * scale[d1];
         } else {
-            SnapManager &m = _th._desktop->namedview->snap_manager;
+            SnapManager &m = _th._desktop->getNamedView()->snap_manager;
             m.setupIgnoreSelection(_th._desktop, true, &_unselected_points);
 
             Inkscape::PureSkewConstrained psc = Inkscape::PureSkewConstrained(skew[d1], scale[d1], scc, d2);
@@ -630,7 +630,7 @@ public:
 protected:
     void dragged(Geom::Point &new_pos, MotionEvent const &event) override
     {
-        auto &sm = _th._desktop->namedview->snap_manager;
+        auto &sm = _th._desktop->getNamedView()->snap_manager;
         sm.setup(_th._desktop);
         bool snap = !held_shift(event) && sm.someSnapperMightSnap();
         if (held_ctrl(event)) {

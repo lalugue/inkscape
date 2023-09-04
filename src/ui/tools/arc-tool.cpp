@@ -131,7 +131,7 @@ bool ArcTool::root_handler(CanvasEvent const &event)
                 center = _desktop->w2d(event.pos);
 
                 // Snap center.
-                auto &m = _desktop->namedview->snap_manager;
+                auto &m = _desktop->getNamedView()->snap_manager;
                 m.setup(_desktop);
                 m.freeSnapReturnByRef(center, SNAPSOURCE_NODE_HANDLE);
 
@@ -154,7 +154,7 @@ bool ArcTool::root_handler(CanvasEvent const &event)
 
                 ret = true;
             } else if (!sp_event_context_knot_mouseover()) {
-                auto &m = _desktop->namedview->snap_manager;
+                auto &m = _desktop->getNamedView()->snap_manager;
                 m.setup(_desktop);
 
                 auto const motion_dt = _desktop->w2d(event.pos);
@@ -333,8 +333,8 @@ void ArcTool::drag(Geom::Point const &pt, unsigned state)
 
     Inkscape::Util::Quantity rdimx_q = Inkscape::Util::Quantity(rdimx, "px");
     Inkscape::Util::Quantity rdimy_q = Inkscape::Util::Quantity(rdimy, "px");
-    Glib::ustring xs = rdimx_q.string(_desktop->namedview->display_units);
-    Glib::ustring ys = rdimy_q.string(_desktop->namedview->display_units);
+    Glib::ustring xs = rdimx_q.string(_desktop->getNamedView()->display_units);
+    Glib::ustring ys = rdimy_q.string(_desktop->getNamedView()->display_units);
 
     if (state & GDK_CONTROL_MASK) {
         int ratio_x, ratio_y;

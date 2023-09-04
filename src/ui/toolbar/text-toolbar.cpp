@@ -323,7 +323,7 @@ TextToolbar::TextToolbar(SPDesktop *desktop)
                                                                  50,                // Extra list width
                                                                  (gpointer)font_lister_cell_data_func2, // Cell layout
                                                                  (gpointer)font_lister_separator_func2,
-                                                                 GTK_WIDGET(desktop->getCanvas()->gobj())); // Focus widget
+                                                                 desktop->getCanvas()->Gtk::Widget::gobj()); // Focus widget
         _font_family_item->popup_enable(); // Enable entry completion
         gchar *const info = _("Select all text with this font-family");
         _font_family_item->set_info( info ); // Show selection icon
@@ -367,7 +367,7 @@ TextToolbar::TextToolbar(SPDesktop *desktop)
                                                                  0,      // Extra list width
                                                                  nullptr,   // Cell layout
                                                                  nullptr,   // Separator
-                                                                 GTK_WIDGET(desktop->getCanvas()->gobj())); // Focus widget
+                                                                 desktop->getCanvas()->Gtk::Widget::gobj()); // Focus widget
 
         _font_style_item->signal_changed().connect([=](){ fontstyle_value_changed(); });
         _font_style_item->focus_on_click(false);
@@ -397,7 +397,7 @@ TextToolbar::TextToolbar(SPDesktop *desktop)
                                                                  0,      // Extra list width
                                                                  nullptr,   // Cell layout
                                                                  nullptr,   // Separator
-                                                                 GTK_WIDGET(desktop->getCanvas()->gobj())); // Focus widget
+                                                                 desktop->getCanvas()->Gtk::Widget::gobj()); // Focus widget
 
         _font_size_item->signal_changed().connect([=](){ fontsize_value_changed(); });
         _font_size_item->focus_on_click(false);
@@ -843,7 +843,7 @@ GtkWidget *
 TextToolbar::create(SPDesktop *desktop)
 {
     auto tb = Gtk::manage(new TextToolbar(desktop));
-    return GTK_WIDGET(tb->gobj());
+    return tb->Gtk::Widget::gobj();
 }
 
 void
@@ -1227,7 +1227,7 @@ TextToolbar::orientation_changed(int mode)
         DocumentUndo::done(_desktop->getDocument(), _("Text: Change orientation"), INKSCAPE_ICON("draw-text"));
     }
     sp_repr_css_attr_unref (css);
-    _desktop->canvas->grab_focus();
+    _desktop->getCanvas()->grab_focus();
 
     _freeze = false;
 }
@@ -1271,7 +1271,7 @@ void
 TextToolbar::lineheight_value_changed()
 {
     // quit if run by the _changed callbacks or is not text tool
-    if (_freeze || !SP_TEXT_CONTEXT(_desktop->event_context)) {
+    if (_freeze || !SP_TEXT_CONTEXT(_desktop->getTool())) {
         return;
     }
         
@@ -1394,7 +1394,7 @@ void
 TextToolbar::lineheight_unit_changed(int /* Not Used */)
 {
     // quit if run by the _changed callbacks or is not text tool
-    if (_freeze || !SP_TEXT_CONTEXT(_desktop->event_context)) {
+    if (_freeze || !SP_TEXT_CONTEXT(_desktop->getTool())) {
         return;
     }
     _freeze = true;
@@ -1680,7 +1680,7 @@ TextToolbar::dx_value_changed()
     gdouble new_dx = _dx_adj->get_value();
     bool modmade = false;
 
-    if (auto tc = SP_TEXT_CONTEXT(_desktop->event_context)) {
+    if (auto tc = SP_TEXT_CONTEXT(_desktop->getTool())) {
         unsigned char_index = -1;
         if (auto attributes = text_tag_attributes_at_position(tc->textItem(), std::min(tc->text_sel_start, tc->text_sel_end), &char_index)) {
             double old_dx = attributes->getDx(char_index);
@@ -1709,7 +1709,7 @@ TextToolbar::dy_value_changed()
     gdouble new_dy = _dy_adj->get_value();
     bool modmade = false;
 
-    if (auto tc = SP_TEXT_CONTEXT(_desktop->event_context)) {
+    if (auto tc = SP_TEXT_CONTEXT(_desktop->getTool())) {
         unsigned char_index = -1;
         if (auto attributes = text_tag_attributes_at_position(tc->textItem(), std::min(tc->text_sel_start, tc->text_sel_end), &char_index)) {
             double old_dy = attributes->getDy(char_index);
@@ -1739,7 +1739,7 @@ TextToolbar::rotation_value_changed()
     gdouble new_degrees = _rotation_adj->get_value();
 
     bool modmade = false;
-    if (auto tc = SP_TEXT_CONTEXT(_desktop->event_context)) {
+    if (auto tc = SP_TEXT_CONTEXT(_desktop->getTool())) {
         unsigned char_index = -1;
         if (auto attributes = text_tag_attributes_at_position(tc->textItem(), std::min(tc->text_sel_start, tc->text_sel_end), &char_index)) {
             double old_degrees = attributes->getRotate(char_index);
@@ -1810,7 +1810,7 @@ void TextToolbar::selection_changed(Inkscape::Selection *selection) // don't bot
         const gchar* id = i->getId();
         std::cout << "    " << id << std::endl;
     }
-    Glib::ustring selected_text = sp_text_get_selected_text(_desktop->event_context);
+    Glib::ustring selected_text = sp_text_get_selected_text(_desktop->getTool());
     std::cout << "  Selected text: |" << selected_text << "|" << std::endl;
 #endif
 
@@ -2132,7 +2132,7 @@ void TextToolbar::selection_changed(Inkscape::Selection *selection) // don't bot
 #endif
 
     // Kerning (xshift), yshift, rotation.  NB: These are not CSS attributes.
-    if (auto tc = SP_TEXT_CONTEXT(_desktop->event_context)) {
+    if (auto tc = SP_TEXT_CONTEXT(_desktop->getTool())) {
         unsigned char_index = -1;
         if (auto attributes = text_tag_attributes_at_position(tc->textItem(), std::min(tc->text_sel_start, tc->text_sel_end), &char_index)) {
             // Dx
@@ -2174,9 +2174,9 @@ void TextToolbar::selection_changed(Inkscape::Selection *selection) // don't bot
 }
 
 void
-TextToolbar::watch_ec(SPDesktop* desktop, Inkscape::UI::Tools::ToolBase* ec) {
-    bool is_text_toolbar = dynamic_cast<const Inkscape::UI::Tools::TextTool*>(ec);
-    bool is_select_toolbar = !is_text_toolbar && dynamic_cast<const Inkscape::UI::Tools::SelectTool*>(ec);
+TextToolbar::watch_ec(SPDesktop* desktop, Inkscape::UI::Tools::ToolBase* tool) {
+    bool is_text_toolbar = dynamic_cast<const Inkscape::UI::Tools::TextTool*>(tool);
+    bool is_select_toolbar = !is_text_toolbar && dynamic_cast<const Inkscape::UI::Tools::SelectTool*>(tool);
     if (is_text_toolbar) {
         // Watch selection
         // Ensure FontLister is updated here first..................
@@ -2216,7 +2216,7 @@ TextToolbar::selection_modified(Inkscape::Selection *selection, guint /*flags*/)
 
 void TextToolbar::subselection_wrap_toggle(bool start)
 {
-    if (auto tc = SP_TEXT_CONTEXT(_desktop->event_context)) {
+    if (auto tc = SP_TEXT_CONTEXT(_desktop->getTool())) {
         _updating = true;
         if (te_get_layout(tc->textItem())) {
             std::swap(tc->text_sel_start, wrap_start);
@@ -2242,7 +2242,7 @@ void TextToolbar::subselection_wrap_toggle(bool start)
 */  
 void TextToolbar::prepare_inner()
 {
-    Inkscape::UI::Tools::TextTool *const tc = SP_TEXT_CONTEXT(_desktop->event_context);
+    Inkscape::UI::Tools::TextTool *const tc = SP_TEXT_CONTEXT(_desktop->getTool());
     if (!tc) {
         return;
     }

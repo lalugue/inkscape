@@ -79,7 +79,7 @@ private:
     void sel_modified(Inkscape::Selection *selection, guint flags);
     void sel_changed(Inkscape::Selection *selection);
     void change_line_segment_type(int mode);
-    void watch_ec(SPDesktop* desktop, UI::Tools::ToolBase* ec);
+    void watch_ec(SPDesktop* desktop, UI::Tools::ToolBase* tool);
 
     void toggle_show_bbox();
     void toggle_set_bbox();

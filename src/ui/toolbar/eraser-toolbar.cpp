@@ -99,7 +99,7 @@ EraserToolbar::EraserToolbar(SPDesktop *desktop)
         _width_adj = Gtk::Adjustment::create(width_val, 0, 100, 1.0, 10.0);
         _width = Gtk::make_managed<UI::Widget::SpinButtonToolItem>("eraser-width", _("Width:"), _width_adj, 1, 0);
         _width->set_tooltip_text(_("The width of the eraser pen (relative to the visible canvas area)"));
-        _width->set_focus_widget(desktop->canvas);
+        _width->set_focus_widget(desktop->getCanvas());
         _width->set_custom_numeric_menu_data(values, labels);
         _width_adj->signal_value_changed().connect(sigc::mem_fun(*this, &EraserToolbar::width_value_changed));
         // TODO: Allow SpinButtonToolItem to display as a slider
@@ -128,7 +128,7 @@ EraserToolbar::EraserToolbar(SPDesktop *desktop)
         _thinning = Gtk::make_managed<UI::Widget::SpinButtonToolItem>("eraser-thinning", _("Thinning:"), _thinning_adj, 1, 0);
         _thinning->set_tooltip_text(_("How much velocity thins the stroke (> 0 makes fast strokes thinner, < 0 makes them broader, 0 makes width independent of velocity)"));
         _thinning->set_custom_numeric_menu_data(values, labels);
-        _thinning->set_focus_widget(desktop->canvas);
+        _thinning->set_focus_widget(desktop->getCanvas());
         _thinning_adj->signal_value_changed().connect(sigc::mem_fun(*this, &EraserToolbar::velthin_value_changed));
         add(*_thinning);
         _thinning->set_sensitive(true);
@@ -147,7 +147,7 @@ EraserToolbar::EraserToolbar(SPDesktop *desktop)
         _cap_rounding = Gtk::make_managed<UI::Widget::SpinButtonToolItem>("eraser-cap-rounding", _("Caps:"), _cap_rounding_adj, 0.01, 2);
         _cap_rounding->set_tooltip_text(_("Increase to make caps at the ends of strokes protrude more (0 = no caps, 1 = round caps)"));
         _cap_rounding->set_custom_numeric_menu_data(values, labels);
-        _cap_rounding->set_focus_widget(desktop->canvas);
+        _cap_rounding->set_focus_widget(desktop->getCanvas());
         _cap_rounding_adj->signal_value_changed().connect(sigc::mem_fun(*this, &EraserToolbar::cap_rounding_value_changed));
         add(*_cap_rounding);
         _cap_rounding->set_sensitive(true);
@@ -165,7 +165,7 @@ EraserToolbar::EraserToolbar(SPDesktop *desktop)
         _tremor = Gtk::make_managed<UI::Widget::SpinButtonToolItem>("eraser-tremor", _("Tremor:"), _tremor_adj, 1, 0);
         _tremor->set_tooltip_text(_("Increase to make strokes rugged and trembling"));
         _tremor->set_custom_numeric_menu_data(values, labels);
-        _tremor->set_focus_widget(desktop->canvas);
+        _tremor->set_focus_widget(desktop->getCanvas());
         _tremor_adj->signal_value_changed().connect(sigc::mem_fun(*this, &EraserToolbar::tremor_value_changed));
 
         // TODO: Allow slider appearance
@@ -185,7 +185,7 @@ EraserToolbar::EraserToolbar(SPDesktop *desktop)
         _mass = Gtk::make_managed<UI::Widget::SpinButtonToolItem>("eraser-mass", _("Mass:"), _mass_adj, 1, 0);
         _mass->set_tooltip_text(_("Increase to make the eraser drag behind, as if slowed by inertia"));
         _mass->set_custom_numeric_menu_data(values, labels);
-        _mass->set_focus_widget(desktop->canvas);
+        _mass->set_focus_widget(desktop->getCanvas());
         _mass_adj->signal_value_changed().connect(sigc::mem_fun(*this, &EraserToolbar::mass_value_changed));
         // TODO: Allow slider appearance
         add(*_mass);
@@ -213,7 +213,7 @@ GtkWidget *
 EraserToolbar::create(SPDesktop *desktop)
 {
     auto toolbar = new EraserToolbar(desktop);
-    return GTK_WIDGET(toolbar->gobj());
+    return toolbar->Gtk::Widget::gobj();
 }
 
 /**

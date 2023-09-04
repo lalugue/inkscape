@@ -116,7 +116,7 @@ void graphlayout(std::vector<SPItem*> const & items) {
     // so that connectors can always be routed between shapes
     SPDesktop * desktop = SP_ACTIVE_DESKTOP;
     double spacing = 0;
-    if (desktop) spacing = desktop->namedview->connector_spacing + 0.1;
+    if (desktop) spacing = desktop->getNamedView()->connector_spacing + 0.1;
 
     std::map<std::string, unsigned> nodelookup;
     Rectangles rs;

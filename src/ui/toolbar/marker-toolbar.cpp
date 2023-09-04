@@ -28,7 +28,7 @@ MarkerToolbar::MarkerToolbar(SPDesktop *desktop)
 GtkWidget* MarkerToolbar::create(SPDesktop *desktop)
 {
     auto toolbar = Gtk::manage(new MarkerToolbar(desktop));
-    return GTK_WIDGET(toolbar->gobj());
+    return toolbar->Gtk::Widget::gobj();
 }
 
 }}}

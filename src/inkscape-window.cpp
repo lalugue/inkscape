@@ -87,10 +87,10 @@ InkscapeWindow::InkscapeWindow(SPDocument* document)
     add(*_mainbox);
 
     // Desktop widget (=> MultiPaned)
-    _desktop_widget = new SPDesktopWidget(this, _document);
-    _desktop_widget->window = this;
+    _desktop_widget = Gtk::make_managed<SPDesktopWidget>(this, _document);
+    _desktop_widget->set_window(this);
     _desktop_widget->set_visible(true);
-    _desktop = _desktop_widget->desktop;
+    _desktop = _desktop_widget->get_desktop();
 
     // =================== Actions ===================
 
@@ -128,7 +128,7 @@ InkscapeWindow::InkscapeWindow(SPDocument* document)
     ink_drag_setup(_desktop_widget);
 
     // The main section
-    _mainbox->pack_start(*Gtk::manage(_desktop_widget), true, true);
+    _mainbox->pack_start(*_desktop_widget, true, true);
 
     // ================== Callbacks ==================
     signal_window_state_event().connect(sigc::mem_fun(*_desktop, &SPDesktop::onWindowStateEvent));
@@ -210,7 +210,7 @@ InkscapeWindow::setup_view()
     _desktop->schedule_zoom_from_document();
     sp_namedview_update_layers_from_document(_desktop);
 
-    SPNamedView *nv = _desktop->namedview;
+    SPNamedView *nv = _desktop->getNamedView();
     if (nv && nv->lockguides) {
         nv->setLockGuides(true);
     }

@@ -492,7 +492,7 @@ SpellCheck::nextWord()
                                   // in that case skip drawing the rect
             Geom::Point tl, br;
             tl = br = points.front();
-            for (auto & point : points) {
+            for (auto const &point : points) {
                 if (point[Geom::X] < tl[Geom::X])
                     tl[Geom::X] = point[Geom::X];
                 if (point[Geom::Y] < tl[Geom::Y])
@@ -536,7 +536,7 @@ SpellCheck::nextWord()
             desktop->getSelection()->set (_text);
         }
 
-        if (auto text_tool = dynamic_cast<Tools::TextTool*>(desktop->event_context)) {
+        if (auto const text_tool = dynamic_cast<Tools::TextTool *>(desktop->getTool())) {
             auto cursor = get_cursor_position(*text_tool, _text);
             if (!cursor) { // some other text is selected there
                 desktop->getSelection()->set(_text);
@@ -546,7 +546,6 @@ SpellCheck::nextWord()
         }
 
 #if WITH_GSPELL
-
         // get suggestions
         model = Gtk::ListStore::create(tree_columns);
         tree_view.set_model(model);
@@ -565,7 +564,7 @@ SpellCheck::nextWord()
             g_slist_free_full(list, g_free);
 
             Gtk::TreeModel::iterator iter;
-            for (std::string sugg : suggs) {
+            for (auto const &sugg : suggs) {
                 iter = model->append();
                 Gtk::TreeModel::Row row = *iter;
                 row[tree_columns.suggestions] = sugg;
@@ -582,8 +581,8 @@ SpellCheck::nextWord()
 #endif  /* WITH_GSPELL */
 
         return true;
-
     }
+
     return false;
 }
 

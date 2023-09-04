@@ -126,7 +126,7 @@ void ControlPoint::_commonInit()
         if (!_desktop) {
             return false;
         }
-        return _eventHandler(_desktop->event_context, event);
+        return _eventHandler(_desktop->getTool(), event);
     });
 }
 
@@ -254,7 +254,7 @@ bool ControlPoint::_eventHandler(Tools::ToolBase *tool, CanvasEvent const &event
 
     [&] (MotionEvent const &event) {
         if (_event_grab && !tool->is_space_panning()) {
-            _desktop->snapindicator->remove_snaptarget(); 
+            _desktop->getSnapIndicator()->remove_snaptarget(); 
             bool transferred = false;
             if (!_drag_initiated) {
                 if (Geom::LInfty(event.pos - _drag_event_origin) <= drag_tolerance) {
@@ -292,7 +292,7 @@ bool ControlPoint::_eventHandler(Tools::ToolBase *tool, CanvasEvent const &event
             // if the mouse speed was too high. This is inherent to the snap-delay mechanism.
             // We must snap at some point in time though, and this is our last chance)
             // PS: For other contexts this is handled already in start_item_handler or start_root_handler
-            // if (_desktop && _desktop->event_context && _desktop->event_context->_delayed_snap_event) {
+            // if (_desktop && _desktop->getTool() && _desktop->getTool()->_delayed_snap_event) {
             tool->process_delayed_snap_event();
 
             _canvas_item_ctrl->ungrab();
@@ -336,7 +336,7 @@ bool ControlPoint::_eventHandler(Tools::ToolBase *tool, CanvasEvent const &event
 
             // temporarily disable snapping - we might snap to a different place than we were initially
             tool->discard_delayed_snap_event();
-            auto &snapprefs = _desktop->namedview->snap_manager.snapprefs;
+            auto &snapprefs = _desktop->getNamedView()->snap_manager.snapprefs;
             bool snap_save = snapprefs.getSnapEnabledGlobally();
             snapprefs.setSnapEnabledGlobally(false);
 
@@ -418,11 +418,11 @@ bool ControlPoint::_updateTip(unsigned state)
 {
     Glib::ustring tip = _getTip(state);
     if (!tip.empty()) {
-        _desktop->event_context->defaultMessageContext()->set(Inkscape::NORMAL_MESSAGE,
+        _desktop->getTool()->defaultMessageContext()->set(Inkscape::NORMAL_MESSAGE,
             tip.data());
         return true;
     } else {
-        _desktop->event_context->defaultMessageContext()->clear();
+        _desktop->getTool()->defaultMessageContext()->clear();
         return false;
     }
 }
@@ -434,11 +434,11 @@ bool ControlPoint::_updateDragTip(MotionEvent const &event)
     }
     Glib::ustring tip = _getDragTip(event);
     if (!tip.empty()) {
-        _desktop->event_context->defaultMessageContext()->set(Inkscape::NORMAL_MESSAGE,
+        _desktop->getTool()->defaultMessageContext()->set(Inkscape::NORMAL_MESSAGE,
             tip.data());
         return true;
     } else {
-        _desktop->event_context->defaultMessageContext()->clear();
+        _desktop->getTool()->defaultMessageContext()->clear();
         return false;
     }
 }
@@ -446,7 +446,7 @@ bool ControlPoint::_updateDragTip(MotionEvent const &event)
 void ControlPoint::_clearMouseover()
 {
     if (mouseovered_point) {
-        mouseovered_point->_desktop->event_context->defaultMessageContext()->clear();
+        mouseovered_point->_desktop->getTool()->defaultMessageContext()->clear();
         mouseovered_point->_setState(STATE_NORMAL);
         mouseovered_point = nullptr;
         signal_mouseover_change.emit(mouseovered_point);

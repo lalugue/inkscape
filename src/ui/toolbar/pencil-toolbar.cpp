@@ -81,7 +81,7 @@ PencilToolbar::PencilToolbar(SPDesktop *desktop,
             _minpressure =
                 Gtk::make_managed<UI::Widget::SpinButtonToolItem>("pencil-minpressure", _("Min:"), _minpressure_adj, 0, 0);
             _minpressure->set_tooltip_text(_("Min percent of pressure"));
-            _minpressure->set_focus_widget(desktop->canvas);
+            _minpressure->set_focus_widget(desktop->getCanvas());
             _minpressure_adj->signal_value_changed().connect(
                 sigc::mem_fun(*this, &PencilToolbar::minpressure_value_changed));
             add(*_minpressure);
@@ -93,7 +93,7 @@ PencilToolbar::PencilToolbar(SPDesktop *desktop,
             _maxpressure =
                 Gtk::make_managed<UI::Widget::SpinButtonToolItem>("pencil-maxpressure", _("Max:"), _maxpressure_adj, 0, 0);
             _maxpressure->set_tooltip_text(_("Max percent of pressure"));
-            _maxpressure->set_focus_widget(desktop->canvas);
+            _maxpressure->set_focus_widget(desktop->getCanvas());
             _maxpressure_adj->signal_value_changed().connect(
                 sigc::mem_fun(*this, &PencilToolbar::maxpressure_value_changed));
             add(*_maxpressure);
@@ -115,7 +115,7 @@ PencilToolbar::PencilToolbar(SPDesktop *desktop,
                 Gtk::make_managed<UI::Widget::SpinButtonToolItem>("pencil-tolerance", _("Smoothing:"), _tolerance_adj, 1, 2);
             tolerance_item->set_tooltip_text(_("How much smoothing (simplifying) is applied to the line"));
             tolerance_item->set_custom_numeric_menu_data(values, labels);
-            tolerance_item->set_focus_widget(desktop->canvas);
+            tolerance_item->set_focus_widget(desktop->getCanvas());
             _tolerance_adj->signal_value_changed().connect(sigc::mem_fun(*this, &PencilToolbar::tolerance_value_changed));
             add(*tolerance_item);
         }
@@ -161,7 +161,7 @@ GtkWidget *
 PencilToolbar::create_pencil(SPDesktop *desktop)
 {
     auto toolbar = new PencilToolbar(desktop, true);
-    return GTK_WIDGET(toolbar->gobj());
+    return toolbar->Gtk::Widget::gobj();
 }
 
 PencilToolbar::~PencilToolbar()
@@ -194,7 +194,7 @@ PencilToolbar::mode_changed(int mode)
     }
 
     // Recall, the PencilToolbar is also used as the PenToolbar with minor changes.
-    auto *pt = dynamic_cast<Inkscape::UI::Tools::PenTool *>(_desktop->event_context);
+    auto *pt = dynamic_cast<Inkscape::UI::Tools::PenTool *>(_desktop->getTool());
     if (pt) {
         pt->setPolylineMode();
     }
@@ -436,7 +436,7 @@ PencilToolbar::add_advanced_shape_options()
         _shapescale =
             Gtk::make_managed<UI::Widget::SpinButtonToolItem>("pencil-maxpressure", _("Scale:"), _shapescale_adj, 1, 2);
         _shapescale->set_tooltip_text(_("Scale of the width of the power stroke shape."));
-        _shapescale->set_focus_widget(_desktop->canvas);
+        _shapescale->set_focus_widget(_desktop->getCanvas());
         _shapescale_adj->signal_value_changed().connect(sigc::mem_fun(*this, &PencilToolbar::shapewidth_value_changed));
         update_width_value(shape);
         add(*_shapescale);
@@ -610,7 +610,7 @@ GtkWidget *
 PencilToolbar::create_pen(SPDesktop *desktop)
 {
     auto toolbar = new PencilToolbar(desktop, false);
-    return GTK_WIDGET(toolbar->gobj());
+    return toolbar->Gtk::Widget::gobj();
 }
 
 void
