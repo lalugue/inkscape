@@ -25,27 +25,24 @@
 #pragma interface
 #endif
 
-namespace Inkscape {
-    namespace Extension {
-        namespace Internal {
-                class SvgBuilder;
-        }
-    }
-}
-
-// TODO clean up and remove using:
-using Inkscape::Extension::Internal::SvgBuilder;
-
 #include "glib/poppler-features.h"
 #include "Object.h"
 
 #include <map>
 #include <memory>
 #include <string>
+#include <2geom/affine.h>
 
 #define Operator Operator_Gfx
 #include <Gfx.h>
 #undef Operator
+
+namespace Inkscape::Extension::Internal {
+class SvgBuilder;
+} // namespace Inkscape::Extension::Internal
+
+// TODO clean up and remove using:
+using Inkscape::Extension::Internal::SvgBuilder;
 
 class PDFDoc;
 class Page;
@@ -150,6 +147,7 @@ public:
     GfxPattern *lookupPattern(Object *obj, GfxState *state);
 
     std::shared_ptr<CairoFontEngine> getFontEngine();
+
 private:
     std::shared_ptr<PDFDoc> _pdf_doc;
     std::shared_ptr<CairoFontEngine> _font_engine;
@@ -333,3 +331,14 @@ private:
 #endif /* HAVE_POPPLER */
 
 #endif /* PDF_PARSER_H */
+
+/*
+  Local Variables:
+  mode:c++
+  c-file-style:"stroustrup"
+  c-file-offsets:((innamespace . 0)(inline-open . 0)(case-label . +))
+  indent-tabs-mode:nil
+  fill-column:99
+  End:
+*/
+// vim:filetype=cpp:expandtab:shiftwidth=4:tabstop=8:softtabstop=4:fileencoding=utf-8:textwidth=99:

@@ -16,6 +16,8 @@
 
 #ifdef HAVE_POPPLER
 
+#include "pdf-parser.h"
+
 #ifdef USE_GCC_PRAGMAS
 #pragma implementation
 #endif
@@ -25,8 +27,11 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <mutex> // std::call_once()
+#include <utility>
+#include <vector>
+#include <2geom/transforms.h>
 
-#include "2geom/transforms.h"
 #include "Annot.h"
 #include "Array.h"
 #include "CharTypes.h"
@@ -46,7 +51,6 @@
 #include "glib/poppler-features.h"
 #include "goo/GooString.h"
 #include "goo/gmem.h"
-#include "pdf-parser.h"
 #include "pdf-utils.h"
 #include "poppler-cairo-font-engine.h"
 #include "poppler-transition-api.h"
@@ -941,8 +945,8 @@ GfxColorSpace *PdfParser::lookupColorSpaceCopy(Object &arg)
     GfxColorSpace *colorSpace = nullptr;
 
     if (char const *name = arg.isName() ? arg.getName() : nullptr) {
-        auto cache_name = std::to_string(formDepth) + "-" + std::string(name);
-        if (colorSpace = colorSpacesCache[cache_name].get()) {
+        auto const cache_name = std::to_string(formDepth) + "-" += name;
+        if ((colorSpace = colorSpacesCache[cache_name].get())) {
             return colorSpace->copy();
         }
 
@@ -3128,3 +3132,14 @@ void PdfParser::loadColorProfile()
 }
 
 #endif /* HAVE_POPPLER */
+
+/*
+  Local Variables:
+  mode:c++
+  c-file-style:"stroustrup"
+  c-file-offsets:((innamespace . 0)(inline-open . 0)(case-label . +))
+  indent-tabs-mode:nil
+  fill-column:99
+  End:
+*/
+// vim:filetype=cpp:expandtab:shiftwidth=4:tabstop=8:softtabstop=4:fileencoding=utf-8:textwidth=99:
