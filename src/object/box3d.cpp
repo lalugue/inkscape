@@ -884,7 +884,7 @@ box3d_swap_sides(int z_orders[6], Box3D::Axis axis) {
     int pos2 = -1;
 
     for (int i = 0; i < 6; ++i) {
-        if (!(Box3D::int_to_face(z_orders[i]) & axis)) {
+        if (!(Box3D::int_to_face(z_orders[i]).first == axis)) {
             if (pos1 == -1) {
                 pos1 = i;
             } else {

@@ -433,14 +433,13 @@ void Box3dTool::drag()
         // TODO: Incorporate this in box3d-side.cpp!
         for (int i = 0; i < 6; ++i) {
             auto side = Box3DSide::createBox3DSide(newbox3d);
-            
-            unsigned desc = Box3D::int_to_face(i);
 
-            auto plane = static_cast<Box3D::Axis>(desc & 0x7);
+            auto [plane, front_or_rear] = Box3D::int_to_face(i);
+
             plane = Box3D::is_plane(plane) ? plane : Box3D::orth_plane_or_axis(plane);
             side->dir1 = Box3D::extract_first_axis_direction(plane);
             side->dir2 = Box3D::extract_second_axis_direction(plane);
-            side->front_or_rear = static_cast<Box3D::FrontOrRear>(desc & 0x8);
+            side->front_or_rear = front_or_rear;
 
             // Set style
             auto prefs = Preferences::get();

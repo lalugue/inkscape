@@ -166,16 +166,16 @@ inline int face_to_int (unsigned int face_id) {
     }
 }
 
-inline int int_to_face (unsigned id) {
+inline std::pair<Box3D::Axis, Box3D::FrontOrRear> int_to_face (unsigned id) {
     switch (id) {
-    case 0: return Box3D::YZ ^ Box3D::FRONT;
-    case 1: return Box3D::XZ ^ Box3D::FRONT;
-    case 2: return Box3D::XY ^ Box3D::FRONT;
-    case 3: return Box3D::YZ ^ Box3D::REAR;
-    case 4: return Box3D::XZ ^ Box3D::REAR;
-    case 5: return Box3D::XY ^ Box3D::REAR;
+    case 0: return (std::make_pair(Box3D::YZ, Box3D::FRONT));
+    case 1: return (std::make_pair(Box3D::XZ, Box3D::FRONT));
+    case 2: return (std::make_pair(Box3D::XY, Box3D::FRONT));
+    case 3: return (std::make_pair(Box3D::YZ, Box3D::REAR));
+    case 4: return (std::make_pair(Box3D::XZ, Box3D::REAR));
+    case 5: return (std::make_pair(Box3D::XY, Box3D::REAR));
     }
-    return Box3D::NONE; // should not be reached
+    return std::make_pair(Box3D::NONE, Box3D::FRONT); // should not be reached
 }
 
 inline bool is_face_id (unsigned int face_id) {
