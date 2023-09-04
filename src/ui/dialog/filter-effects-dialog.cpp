@@ -194,9 +194,9 @@ template <typename T> class ComboWithTooltip
     : public ComboBoxEnum<T>
 {
 public:
-    ComboWithTooltip<T>(T default_value, const Util::EnumDataConverter<T>& c,
-                        const SPAttr a = SPAttr::INVALID,
-                        Glib::ustring const& tip_text = {})
+    ComboWithTooltip(T const default_value, Util::EnumDataConverter<T> const &c,
+                     SPAttr const a = SPAttr::INVALID,
+                     Glib::ustring const &tip_text = {})
         : ComboBoxEnum<T>(default_value, c, a, false)
     {
         this->set_tooltip_text(tip_text);
