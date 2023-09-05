@@ -21,15 +21,15 @@
 #include "ui/dialog-events.h"
 #include "ui/widget/color-notebook.h"
 
-
 static bool _in_use = false;
 
-namespace Inkscape {
-namespace UI {
-namespace Widget {
+namespace Inkscape::UI::Widget {
 
-ColorPicker::ColorPicker (const Glib::ustring& title, const Glib::ustring& tip,
-                          guint32 rgba, bool undo, Gtk::Button* external_button)
+ColorPicker::ColorPicker(Glib::ustring const &title,
+                         Glib::ustring const &tip,
+                         std::uint32_t const rgba,
+                         bool const undo,
+                         Gtk::Button * const external_button)
     : _preview(Gtk::make_managed<ColorPreview>(rgba))
     , _title(title)
     , _rgba(rgba)
@@ -71,12 +71,13 @@ void ColorPicker::setupDialog(const Glib::ustring &title)
 
 void ColorPicker::setSensitive(bool sensitive) { set_sensitive(sensitive); }
 
-void ColorPicker::setRgba32 (guint32 rgba)
+void ColorPicker::setRgba32(std::uint32_t const rgba)
 {
     if (_in_use) return;
 
     set_preview(rgba);
     _rgba = rgba;
+
     if (_color_selector)
     {
         _updating = true;
@@ -115,7 +116,7 @@ void ColorPicker::on_clicked()
     }
 }
 
-void ColorPicker::on_changed (guint32)
+void ColorPicker::on_changed(std::uint32_t)
 {
 }
 
@@ -130,7 +131,7 @@ void ColorPicker::_onSelectedColorChanged() {
         _in_use = true;
     }
 
-    guint32 rgba = _selected_color.value();
+    auto const rgba = _selected_color.value();
     set_preview(rgba);
 
     if (_undo && SP_ACTIVE_DESKTOP) {
@@ -143,7 +144,8 @@ void ColorPicker::_onSelectedColorChanged() {
     _changed_signal.emit(rgba);
 }
 
-void ColorPicker::set_preview(guint32 rgba) {
+void ColorPicker::set_preview(std::uint32_t const rgba)
+{
     _preview->setRgba32(_ignore_transparency ? rgba | 0xff : rgba);
 }
 
@@ -152,14 +154,12 @@ void ColorPicker::use_transparency(bool enable) {
     set_preview(_rgba);
 }
 
-guint32 ColorPicker::get_current_color() const {
+std::uint32_t ColorPicker::get_current_color() const
+{
     return _rgba;
 }
 
-}//namespace Widget
-}//namespace UI
-}//namespace Inkscape
-
+} // namespace Inkscape::UI::Widget
 
 /*
   Local Variables:

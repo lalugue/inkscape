@@ -11,11 +11,9 @@
 #ifndef SEEN_INKSCAPE_UI_WIDGET_ENTRY_H
 #define SEEN_INKSCAPE_UI_WIDGET_ENTRY_H
 
-#include "labelled.h"
+#include <gtkmm/entry.h>
 
-namespace Gtk {
-class Entry;
-} // namespace Gtk
+#include "labelled.h"
 
 namespace Inkscape::UI::Widget {
 
@@ -25,14 +23,13 @@ namespace Inkscape::UI::Widget {
 class Entry : public Labelled
 {
 public:
-    Entry( Glib::ustring const &label,
-           Glib::ustring const &tooltip,
-           Glib::ustring const &icon = {},
-           bool mnemonic = true);
+    Entry(Glib::ustring const &label,
+          Glib::ustring const &tooltip,
+          Glib::ustring const &icon = {},
+          bool mnemonic = true);
 
-    // TO DO: add methods to access Gtk::Entry widget
-    
-    Gtk::Entry*  getEntry() {return (Gtk::Entry*)(_widget);};    
+    Gtk::Entry const * getEntry() const { return static_cast<Gtk::Entry const *>(getWidget()); }
+    Gtk::Entry       * getEntry()       { return static_cast<Gtk::Entry       *>(getWidget()); }
 };
 
 } // namespace Inkscape::UI::Widget

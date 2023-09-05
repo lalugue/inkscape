@@ -6,6 +6,7 @@
 
 #include "font-button.h"
 
+#include <utility>
 #include <gtkmm/fontbutton.h>
 
 namespace Inkscape::UI::Widget {
@@ -18,20 +19,29 @@ FontButton::FontButton(Glib::ustring const &label, Glib::ustring const &tooltip,
 
 Glib::ustring FontButton::getValue() const
 {
-    g_assert(_widget);
-    return dynamic_cast<Gtk::FontButton const &>(*_widget).get_font_name();
+    return getFontButton().get_font_name();
 }
 
 void FontButton::setValue(Glib::ustring const &fontspec)
 {
-    g_assert(_widget);
-    dynamic_cast<Gtk::FontButton &>(*_widget).set_font_name(fontspec);
+    getFontButton().set_font_name(fontspec);
 }
 
 Glib::SignalProxy<void> FontButton::signal_font_value_changed()
 {
-    g_assert(_widget);
-    return dynamic_cast<Gtk::FontButton &>(*_widget).signal_font_set();
+    return getFontButton().signal_font_set();
+}
+
+Gtk::FontButton const &FontButton::getFontButton() const
+{
+    auto const fontButton = dynamic_cast<Gtk::FontButton const *>(getWidget());
+    g_assert(fontButton);
+    return *fontButton;
+}
+
+Gtk::FontButton &FontButton::getFontButton()
+{
+    return const_cast<Gtk::FontButton &>(std::as_const(*this).getFontButton());
 }
 
 } // namespace Inkscape::UI::Widget

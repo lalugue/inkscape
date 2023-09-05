@@ -166,17 +166,19 @@ void Scalar::hide_label() {
         label->set_no_show_all();
         label->set_hexpand(true);
     }
-    if (_widget) {
-        remove(*_widget);
-        _widget->set_hexpand();
-        this->pack_end(*_widget);
+
+    if (auto const widget = getWidget()) {
+        remove(*widget);
+        widget->set_hexpand();
+        pack_end(*widget);
     }
 }
 
 SpinButton const &Scalar::get_spin_button() const
 {
-    g_assert(_widget);
-    return dynamic_cast<SpinButton const &>(*_widget);
+    auto const spinButton = dynamic_cast<SpinButton const *>(getWidget());
+    g_assert(spinButton);
+    return *spinButton;
 }
 
 SpinButton &Scalar::get_spin_button()

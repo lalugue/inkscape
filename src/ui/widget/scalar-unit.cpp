@@ -35,10 +35,11 @@ ScalarUnit::ScalarUnit(Glib::ustring const &label, Glib::ustring const &tooltip,
         _unit_menu = Gtk::make_managed<UnitMenu>();
         _unit_menu->setUnitType(unit_type);
 
-        g_assert(_widget);
-        remove(*_widget);
+        auto const widget = getWidget();
+        g_assert(widget);
+        remove(*widget);
         auto const widget_holder = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL, 6);
-        widget_holder->pack_start(*_widget, Gtk::PACK_SHRINK);
+        widget_holder->pack_start(*widget, Gtk::PACK_SHRINK);
         widget_holder->pack_start(*_unit_menu, Gtk::PACK_SHRINK);
         pack_start(*widget_holder, Gtk::PACK_SHRINK);
     }
@@ -48,7 +49,7 @@ ScalarUnit::ScalarUnit(Glib::ustring const &label, Glib::ustring const &tooltip,
     _unit_menu->signal_changed()
             .connect_notify(sigc::mem_fun(*this, &ScalarUnit::on_unit_changed));
 
-    dynamic_cast<SpinButton &>(*_widget).setUnitMenu(_unit_menu);
+    get_spin_button().setUnitMenu(_unit_menu);
 
     lastUnits = _unit_menu->getUnitAbbr();
 }
@@ -136,14 +137,15 @@ double ScalarUnit::getValue(Glib::ustring const &unit_name) const
 
 void ScalarUnit::grabFocusAndSelectEntry()
 {
-    _widget->grab_focus();
-    dynamic_cast<SpinButton &>(*_widget).select_region(0, 20);
+    auto &spinButton = get_spin_button();
+    spinButton.grab_focus();
+    spinButton.select_region(0, 20);
 }
 
 void ScalarUnit::setAlignment(double xalign)
 {
     xalign = std::clamp(xalign,0.0,1.0);
-    dynamic_cast<Gtk::Entry &>(*_widget).set_alignment(xalign);
+    get_spin_button().set_alignment(xalign);
 }
 
 void ScalarUnit::setHundredPercent(double number)

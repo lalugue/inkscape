@@ -182,7 +182,7 @@ public:
     // permanently hide label part
     void hide_label();
 
-private:
+protected:
     SpinButton const &get_spin_button() const;
     SpinButton       &get_spin_button()      ;
 };

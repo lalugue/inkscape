@@ -25,21 +25,30 @@ Text::Text(Glib::ustring const &label, Glib::ustring const &tooltip,
 
 Glib::ustring const Text::getText() const
 {
-    g_assert(_widget);
-    return dynamic_cast<Gtk::Entry const &>(*_widget).get_text();
+    return getEntry().get_text();
 }
 
 void Text::setText(Glib::ustring const text)
 {
-    g_assert(_widget);
     setProgrammatically = true; // callback is supposed to reset back, if it cares
-    dynamic_cast<Gtk::Entry &>(*_widget).set_text(text); // FIXME: set correctly
+    getEntry().set_text(text); // FIXME: set correctly
 }
 
 Glib::SignalProxy<void> Text::signal_activate()
 {
-    g_assert(_widget);
-    return dynamic_cast<Gtk::Entry &>(*_widget).signal_activate();
+    return getEntry().signal_activate();
+}
+
+Gtk::Entry const &Text::getEntry() const
+{
+    auto const entry = dynamic_cast<Gtk::Entry const *>(getWidget());
+    g_assert(entry);
+    return *entry;
+}
+
+Gtk::Entry &Text::getEntry()
+{
+    return const_cast<Gtk::Entry &>(std::as_const(*this).getEntry());
 }
 
 } // namespace Inkscape::UI::Widget

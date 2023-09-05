@@ -10,13 +10,11 @@
 
 #include "entry.h"
 
-#include <gtkmm/entry.h>
-
 namespace Inkscape::UI::Widget {
 
-Entry::Entry(  Glib::ustring const &label, Glib::ustring const &tooltip,
-               Glib::ustring const &icon,
-               bool mnemonic)
+Entry::Entry(Glib::ustring const &label, Glib::ustring const &tooltip,
+             Glib::ustring const &icon,
+             bool const mnemonic)
     : Labelled{label, tooltip, new Gtk::Entry{}, icon, mnemonic}
 {    
 }

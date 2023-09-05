@@ -42,10 +42,10 @@ public:
      *                  indicates the next character should be used for the
      *                  mnemonic accelerator key (defaults to false).
      */
-    Point( Glib::ustring const &label,
-           Glib::ustring const &tooltip,
-           Glib::ustring const &icon = {},
-           bool mnemonic = true);
+    Point(Glib::ustring const &label,
+          Glib::ustring const &tooltip,
+          Glib::ustring const &icon = {},
+          bool mnemonic = true);
 
     /**
      * Construct a Point Widget.
@@ -58,11 +58,11 @@ public:
      *                  indicates the next character should be used for the
      *                  mnemonic accelerator key (defaults to false).
      */
-    Point( Glib::ustring const &label,
-           Glib::ustring const &tooltip,
-           unsigned digits,
-           Glib::ustring const &icon = {},
-           bool mnemonic = true);
+    Point(Glib::ustring const &label,
+          Glib::ustring const &tooltip,
+          unsigned digits,
+          Glib::ustring const &icon = {},
+          bool mnemonic = true);
 
     /**
      * Construct a Point Widget.
@@ -76,12 +76,12 @@ public:
      *                  indicates the next character should be used for the
      *                  mnemonic accelerator key (defaults to true).
      */
-    Point( Glib::ustring const &label,
-           Glib::ustring const &tooltip,
-	   Glib::RefPtr<Gtk::Adjustment> &adjust,
-           unsigned digits = 0,
-           Glib::ustring const &icon = {},
-           bool mnemonic = true);
+    Point(Glib::ustring const &label,
+          Glib::ustring const &tooltip,
+	  Glib::RefPtr<Gtk::Adjustment> const &adjust,
+          unsigned digits = 0,
+          Glib::ustring const &icon = {},
+          bool mnemonic = true);
 
     /**
      * Fetches the precision of the spin button.

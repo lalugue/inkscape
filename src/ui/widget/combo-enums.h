@@ -12,77 +12,94 @@
 #ifndef INKSCAPE_UI_WIDGET_COMBO_ENUMS_H
 #define INKSCAPE_UI_WIDGET_COMBO_ENUMS_H
 
-#include "ui/widget/labelled.h"
+#include <glibmm/i18n.h>
+#include <glibmm/refptr.h>
+#include <glibmm/ustring.h>
 #include <gtkmm/combobox.h>
 #include <gtkmm/liststore.h>
+#include <gtkmm/treeiter.h>
+#include <gtkmm/treemodel.h>
+#include <sigc++/functors/mem_fun.h>
+
 #include "attr-widget.h"
+#include "ui/widget/labelled.h"
+#include "ui/widget/scrollprotected.h"
 #include "util/enums.h"
-#include <glibmm/i18n.h>
 
 namespace Inkscape::UI::Widget {
 
 /**
  * Simplified management of enumerations in the UI as combobox.
  */
-template<typename E> class ComboBoxEnum : public Gtk::ComboBox, public AttrWidget
+template <typename E> class ComboBoxEnum
+    : public ScrollProtected<Gtk::ComboBox>
+    , public AttrWidget
 {
 public:
-    ComboBoxEnum(E default_value, const Util::EnumDataConverter<E>& c, const SPAttr a = SPAttr::INVALID, bool sort = true, const char* translation_context = nullptr) :
-        ComboBoxEnum(c, a, sort, translation_context, static_cast<unsigned int>(default_value))
+    [[nodiscard]] ComboBoxEnum(E const default_value, const Util::EnumDataConverter<E>& c,
+                               SPAttr const a = SPAttr::INVALID, bool const sort = true,
+                               const char* translation_context = nullptr)
+        : ComboBoxEnum{c, a, sort, translation_context, static_cast<unsigned>(default_value)}
     {
         set_active_by_id(default_value);
         sort_items();
     }
 
-    ComboBoxEnum(const Util::EnumDataConverter<E>& c, const SPAttr a = SPAttr::INVALID, bool sort = true, const char* translation_context = nullptr) :
-        ComboBoxEnum(c, a, sort, translation_context, 0)
+    [[nodiscard]] ComboBoxEnum(Util::EnumDataConverter<E> const &c,
+                               SPAttr const a = SPAttr::INVALID, bool const sort = true,
+                               const char * const translation_context = nullptr)
+        : ComboBoxEnum{c, a, sort, translation_context, 0u}
     {
         set_active(0);
         sort_items();
     }
 
 private:
-    int on_sort_compare(const Gtk::TreeModel::iterator& a, const Gtk::TreeModel::iterator& b) {
-        Glib::ustring an=(*a)[_columns.label];
-        Glib::ustring bn=(*b)[_columns.label];
+    [[nodiscard]] int on_sort_compare(Gtk::TreeModel::iterator const &a,
+                                      Gtk::TreeModel::iterator const &b) const
+    {
+        auto const &an = a->get_value(_columns.label);
+        auto const &bn = b->get_value(_columns.label);
         return an.compare(bn);
     }
 
-    bool _sort;
+    bool _sort = true;
 
-    ComboBoxEnum(const Util::EnumDataConverter<E>& c, const SPAttr a, bool sort, const char* translation_context, unsigned int default_value)
+    [[nodiscard]] ComboBoxEnum(Util::EnumDataConverter<E> const &c,
+                               SPAttr const a, bool const sort,
+                               const char * const translation_context,
+                               unsigned const default_value)
         : AttrWidget(a, default_value)
         , setProgrammatically(false)
         , _converter(c)
+        ,_sort{sort}
     {
-        _sort = sort;
-
         signal_changed().connect(signal_attr_changed().make_slot());
-        gtk_widget_add_events(GTK_WIDGET(gobj()), GDK_SCROLL_MASK | GDK_SMOOTH_SCROLL_MASK);
-        signal_scroll_event().connect(sigc::mem_fun(*this, &ComboBoxEnum<E>::on_scroll_event));
 
         _model = Gtk::ListStore::create(_columns);
         set_model(_model);
 
         pack_start(_columns.label);
 
-        // Initialize list
-        for(int i = 0; i < static_cast<int>(_converter._length); ++i) {
-            Gtk::TreeModel::Row row = *_model->append();
-            const Util::EnumData<E>* data = &_converter.data(i);
-            row[_columns.data] = data;
-            auto label = _converter.get_label(data->id);
-            auto trans = translation_context ?
+        for (int i = 0; i < static_cast<int>(_converter._length); ++i) {
+            auto row = *_model->append();
+
+            auto const data = &_converter.data(i);
+            row.set_value(_columns.data, data);
+
+            auto const &label = _converter.get_label(data->id);
+            Glib::ustring translated = translation_context ?
                 g_dpgettext2(nullptr, translation_context, label.c_str()) :
                 gettext(label.c_str());
-            row[_columns.label] = trans;
-            row[_columns.is_separator] = _converter.get_key(data->id) == "-";
+            row.set_value(_columns.label, std::move(translated));
+
+            row.set_value(_columns.is_separator, _converter.get_key(data->id) == "-");
         }
+
         set_row_separator_func(sigc::mem_fun(*this, &ComboBoxEnum<E>::combo_separator_func));
     }
 
     void sort_items() {
-        // Sort the list
         if (_sort) {
             _model->set_default_sort_func(sigc::mem_fun(*this, &ComboBoxEnum<E>::on_sort_compare));
             _model->set_sort_column(_columns.label, Gtk::SORT_ASCENDING);
@@ -90,48 +107,46 @@ private:
     }
 
 public:
-    Glib::ustring get_as_attribute() const override
+    [[nodiscard]] Glib::ustring get_as_attribute() const final
     {
         return get_active_data()->key;
     }
 
-    void set_from_attribute(SPObject* o) override
+    void set_from_attribute(SPObject * const o) final
     {
         setProgrammatically = true;
-        const gchar* val = attribute_value(o);
-        if(val)
+
+        if (auto const val = attribute_value(o)) {
             set_active_by_id(_converter.get_id_from_key(val));
-        else
+        } else {
             set_active(get_default()->as_uint());
+        }
     }
     
-    const Util::EnumData<E>* get_active_data() const
+    [[nodiscard]] Util::EnumData<E> const *get_active_data() const
     {
-        Gtk::TreeModel::iterator i = this->get_active();
-        if(i)
-            return (*i)[_columns.data];
+        if (auto const i = this->get_active()) {
+            return i->get_value(_columns.data);
+        }
         return nullptr;
     }
 
     void add_row(const Glib::ustring& s)
     {
-        Gtk::TreeModel::Row row = *_model->append();
-        row[_columns.data] = 0;
-        row[_columns.label] = s;
+        auto row = *_model->append();
+        row.set_value(_columns.data, 0);
+        row.set_value(_columns.label, s);
     }
 
     void remove_row(E id) {
-        Gtk::TreeModel::iterator i;
-        
-        for(i = _model->children().begin(); i != _model->children().end(); ++i) {
-            const Util::EnumData<E>* data = (*i)[_columns.data];
-
-            if(data->id == id)
-                break;
+        auto const &children = _model->children();
+        auto const e = children.end();
+        for (auto i = children.begin(); i != e; ++i) {
+            if (auto const data = i->get_value(_columns.data); data->id == id) {
+                _model->erase(i);
+                return;
+            }
         }
-
-        if(i != _model->children().end())
-            _model->erase(i);
     }
 
     void set_active_by_id(E id) {
@@ -142,26 +157,25 @@ public:
         }
     };
 
-    bool on_scroll_event(GdkEventScroll *event) override { return false; }
-
     void set_active_by_key(const Glib::ustring& key) {
         setProgrammatically = true;
         set_active_by_id( _converter.get_id_from_key(key) );
     };
 
-    bool combo_separator_func(const Glib::RefPtr<Gtk::TreeModel>& model,
-                              const Gtk::TreeModel::iterator& iter) {
-        return (*iter)[_columns.is_separator];
+    bool combo_separator_func(Glib::RefPtr<Gtk::TreeModel> const &model,
+                              Gtk::TreeModel::iterator const &iter) const
+    {
+        return iter->get_value(_columns.is_separator);
     };
 
-    bool setProgrammatically;
+    bool setProgrammatically = false;
 
 private:
-    int get_active_by_id(E id) const {
+    [[nodiscard]] int get_active_by_id(E const id) const
+    {
         int index = 0;
-        for (auto&& child : _model->children()) {
-            const Util::EnumData<E>* data = child[_columns.data];
-            if (data->id == id) {
+        for (auto const &child : _model->children()) {
+            if (auto const data = child.get_value(_columns.data); data->id == id) {
                 return index;
             }
             ++index;
@@ -169,7 +183,7 @@ private:
         return -1;
     };
 
-    class Columns : public Gtk::TreeModel::ColumnRecord
+    class Columns final : public Gtk::TreeModel::ColumnRecord
     {
     public:
         Columns()
@@ -191,23 +205,27 @@ private:
 
 
 /**
- * Simplified management of enumerations in the UI as combobox.
+ * Simplified management of enumerations in the UI as combobox, plus the functionality of Labelled.
  */
-template<typename E> class LabelledComboBoxEnum : public Labelled
+template <typename E> class LabelledComboBoxEnum
+    : public Labelled
 {
 public:
-    LabelledComboBoxEnum( Glib::ustring const &label,
-                          Glib::ustring const &tooltip,
-                          const Util::EnumDataConverter<E>& c,
-                          Glib::ustring const &icon = {},
-                          bool mnemonic = true,
-                          bool sorted = true)
-        : Labelled{label, tooltip, new ComboBoxEnum<E>{c, SPAttr::INVALID, sorted}, icon, mnemonic}
+    [[nodiscard]] LabelledComboBoxEnum(Glib::ustring const &label,
+                                       Glib::ustring const &tooltip,
+                                       Util::EnumDataConverter<E> const &c,
+                                       Glib::ustring const &icon = {},
+                                       bool const mnemonic = true,
+                                       bool const sort = true)
+        : Labelled{label, tooltip,
+                   Gtk::make_managed<ComboBoxEnum<E>>(c, SPAttr::INVALID, sort),
+                   icon, mnemonic}
     { 
     }
 
-    ComboBoxEnum<E>* getCombobox() {
-        return static_cast< ComboBoxEnum<E>* > (_widget);
+    [[nodiscard]] ComboBoxEnum<E> *getCombobox()
+    {
+        return static_cast<ComboBoxEnum<E> *>(getWidget());
     }
 };
 

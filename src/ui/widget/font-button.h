@@ -11,6 +11,10 @@
 
 #include "labelled.h"
 
+namespace Gtk {
+class FontButton;
+} // namespace Gtk
+
 namespace Inkscape::UI::Widget {
 
 /**
@@ -41,6 +45,10 @@ public:
     * Signal raised when the font button's value changes.
     */
     Glib::SignalProxy<void> signal_font_value_changed();
+
+private:
+    [[nodiscard]] Gtk::FontButton const &getFontButton() const;
+    [[nodiscard]] Gtk::FontButton       &getFontButton()      ;
 };
 
 } // namespace Inkscape::UI::Widget

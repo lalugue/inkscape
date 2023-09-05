@@ -32,8 +32,8 @@ Labelled::Labelled(Glib::ustring const &label, Glib::ustring const &tooltip,
     _widget->drag_dest_unset();
 
     if (!icon.empty()) {
-        _icon = Gtk::manage(sp_get_icon_image(icon, Gtk::ICON_SIZE_LARGE_TOOLBAR));
-        pack_start(*_icon, Gtk::PACK_SHRINK);
+        auto const image = sp_get_icon_image(icon, Gtk::ICON_SIZE_LARGE_TOOLBAR);
+        pack_start(*Gtk::manage(image), Gtk::PACK_SHRINK);
     }
 
     pack_start(*_label, Gtk::PACK_SHRINK);

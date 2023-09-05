@@ -19,7 +19,6 @@ class ustring;
 } // namespace Glib
 
 namespace Gtk {
-class Image;
 class Label;
 } // namespace Gtk
 
@@ -30,11 +29,6 @@ namespace Inkscape::UI::Widget {
  */
 class Labelled : public Gtk::Box
 {
-protected:
-    Gtk::Widget  *_widget;
-    Gtk::Label   *_label;
-    Gtk::Image   *_icon;
-
 public:
     /** Construct a Labelled Widget.
      * @param label     Label text.
@@ -58,6 +52,9 @@ public:
     inline Gtk::Label        *getLabel ()       { return _label ; }
 
 private:
+    Gtk::Widget *_widget = nullptr;
+    Gtk::Label  *_label  = nullptr;
+
     bool on_mnemonic_activate(bool group_cycling) final;
 };
 

@@ -14,6 +14,9 @@
 
 #include "labelled.h"
 
+namespace Gtk {
+class Entry;
+} // namespace Gtk
 
 namespace Inkscape::UI::Widget {
 
@@ -58,6 +61,10 @@ public:
 
     bool setProgrammatically; // true if the value was set by setValue, not changed by the user;
                               // if a callback checks it, it must reset it back to false
+
+private:
+    Gtk::Entry const &getEntry() const;
+    Gtk::Entry       &getEntry()      ;
 };
 
 } // namespace Inkscape::UI::Widget
