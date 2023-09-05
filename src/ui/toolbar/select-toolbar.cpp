@@ -15,12 +15,11 @@
 
 #include "select-toolbar.h"
 
+#include <2geom/rect.h>
 #include <glibmm/i18n.h>
-
 #include <gtkmm/adjustment.h>
 #include <gtkmm/separatortoolitem.h>
-
-#include <2geom/rect.h>
+#include <gtkmm/togglebutton.h>
 
 #include "desktop.h"
 #include "document-undo.h"
@@ -28,19 +27,15 @@
 #include "selection.h"
 #include "message-stack.h"
 #include "selection-chemistry.h"
-
 #include "object/sp-item-transform.h"
 #include "object/sp-namedview.h"
-
 #include "page-manager.h"
-
 #include "ui/icon-names.h"
 #include "ui/widget/canvas.h" // Focus widget
 #include "ui/widget/combo-tool-item.h"
 #include "ui/widget/spin-button-tool-item.h"
 #include "ui/widget/spinbutton.h"
 #include "ui/widget/unit-tracker.h"
-
 #include "widgets/widget-sizes.h"
 
 using Inkscape::UI::Widget::UnitTracker;
@@ -49,13 +44,11 @@ using Inkscape::Util::Quantity;
 using Inkscape::DocumentUndo;
 using Inkscape::Util::unit_table;
 
-namespace Inkscape {
-namespace UI {
-namespace Toolbar {
+namespace Inkscape::UI::Toolbar {
 
 SelectToolbar::SelectToolbar(SPDesktop *desktop) :
     Toolbar(desktop),
-    _tracker(new UnitTracker(Inkscape::Util::UNIT_TYPE_LINEAR)),
+    _tracker{std::make_unique<UnitTracker>(Inkscape::Util::UNIT_TYPE_LINEAR)},
     _lock_btn(Gtk::make_managed<Gtk::ToggleToolButton>()),
     _select_touch_btn(Gtk::make_managed<Gtk::ToggleToolButton>()),
     _transform_stroke_btn(Gtk::make_managed<Gtk::ToggleToolButton>()),
@@ -321,9 +314,7 @@ SelectToolbar::SelectToolbar(SPDesktop *desktop) :
 
 void SelectToolbar::on_unrealize()
 {
-    for (auto &conn : _connections) {
-        conn.disconnect();
-    }
+    _connections.clear();
 
     parent_type::on_unrealize();
 }
@@ -638,9 +629,7 @@ SelectToolbar::toggle_pattern()
     }
 }
 
-}
-}
-}
+} // namespace Inkscape::UI::Toolbar
 
 /*
   Local Variables:

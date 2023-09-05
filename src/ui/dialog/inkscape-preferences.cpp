@@ -27,18 +27,25 @@
 #include <gtk/gtk.h>
 #include <glibmm/i18n.h>
 #include <glibmm/main.h>
+#include <glibmm/markup.h>
+#include <glibmm/miscutils.h>
 #include <glibmm/ustring.h>
 #include <gtkmm/accelgroup.h>
+#include <gtkmm/box.h>
+#include <gtkmm/cssprovider.h>
 #include <gtkmm/dialog.h>
 #include <gtkmm/entry.h>
+#include <gtkmm/enums.h>
 #include <gtkmm/fontbutton.h>
 #include <gtkmm/fontchooserdialog.h>
-#include <gtkmm/widget.h>
-#include <gtkmm/box.h>
-#include <gtkmm/enums.h>
+#include <gtkmm/icontheme.h>
 #include <gtkmm/image.h>
 #include <gtkmm/label.h>
-#include <gtkmm/object.h>
+#include <gtkmm/messagedialog.h>
+#include <gtkmm/recentmanager.h>
+#include <gtkmm/revealer.h>
+#include <gtkmm/scale.h>
+#include <gtkmm/settings.h>
 #include <gtkmm/togglebutton.h>
 
 #if WITH_GSOURCEVIEW
@@ -187,7 +194,6 @@ public:
         add(shortcutkey);
         add(user_set);
     }
-    ~ModelColumns() override = default;
 
     Gtk::TreeModelColumn<Glib::ustring> name;
     Gtk::TreeModelColumn<Glib::ustring> id;
@@ -396,8 +402,7 @@ InkscapePreferences::InkscapePreferences()
     });
 }
 
-InkscapePreferences::~InkscapePreferences()
-= default;
+InkscapePreferences::~InkscapePreferences() = default;
 
 /**
  * Get child Labels that match a key in a widget grid

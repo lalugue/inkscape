@@ -21,18 +21,19 @@
 #ifndef INK_COLLECTIONS_H
 #define INK_COLLECTIONS_H
 
-#include <map>
 #include <set>
+#include <string>
+#include <vector>
 
 #include <glib/gi18n.h>
-#include <giomm.h>
-#include <gtkmm.h>
-#include <sigc++/sigc++.h>
+#include <glibmm/ustring.h>
+#include <sigc++/connection.h>
+#include <sigc++/signal.h>
 
 namespace Inkscape {
 
-    inline const std::string RECENTLY_USED_FONTS = _("Recently Used Fonts");
-    inline const std::string DOCUMENT_FONTS = _("Document Fonts");
+inline const std::string RECENTLY_USED_FONTS = _("Recently Used Fonts");
+inline const std::string DOCUMENT_FONTS = _("Document Fonts");
 
 struct FontCollection {
     Glib::ustring name;
@@ -54,7 +55,6 @@ struct FontCollection {
 
 // The FontCollections class is a singleton class.
 class FontCollections {
-
 public:
     enum What {
         All,

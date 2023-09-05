@@ -20,6 +20,7 @@
 #include <sigc++/adaptors/bind.h>
 #include <sigc++/functors/mem_fun.h>
 #include <giomm/application.h>
+#include <gtkmm/builder.h>
 #include <gtkmm/button.h>
 #include <gtkmm/combobox.h>
 #include <gtkmm/spinbutton.h>

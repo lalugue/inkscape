@@ -21,9 +21,8 @@
 #include <regex>
 #include <string>
 #include <utility>
-#include <sigc++/adaptors/bind.h>
-#include <sigc++/functors/mem_fun.h>
 #include <glibmm/i18n.h>
+#include <glibmm/regex.h>
 #include <gdk/gdkkeysyms.h>
 #include <gtkmm/adjustment.h>
 #include <gtkmm/box.h>
@@ -32,9 +31,12 @@
 #include <gtkmm/dialog.h>
 #include <gtkmm/entry.h>
 #include <gtkmm/label.h>
+#include <gtkmm/liststore.h>
 #include <gtkmm/treestore.h>
 #include <gtkmm/treeviewcolumn.h>
 #include <gtkmm/treeview.h>
+#include <sigc++/adaptors/bind.h>
+#include <sigc++/functors/mem_fun.h>
 
 #include "attribute-rel-svg.h"
 #include "attributes.h"
@@ -1007,13 +1009,18 @@ StyleDialog::AttrProp StyleDialog::parseStyle(Glib::ustring style_string)
     Util::trim(style_string); // We'd use const, but we need to trip spaces
 
     AttrProp ret;
+
+    static auto const r_props = Glib::Regex::create("\\s*;\\s*");
     std::vector<Glib::ustring> props = r_props->split(style_string);
+
     for (auto &&token : props) {
         Util::trim(token);
         if (token.empty())
             break;
 
+        static auto const r_pair = Glib::Regex::create("\\s*:\\s*");
         std::vector<Glib::ustring> pair = r_pair->split(token);
+
         if (pair.size() > 1) {
             ret[std::move(pair[0])] = std::move(pair[1]);
         }

@@ -13,24 +13,36 @@
 #define LIVEPATHEFFECTEDITOR_H
 
 #include <memory>
-#include <gtkmm/builder.h>
+#include <utility>
+#include <vector>
+#include <glibmm/refptr.h>
 
 #include "live_effects/effect-enum.h"
 #include "preferences.h"
 #include "ui/dialog/dialog-base.h"
 #include "ui/widget/completion-popup.h"
 
+namespace Gtk {
+class Box;
+class Builder;
+class Button;
+class Expander;
+class Label;
+class ListBox;
+class ListStore;
+class Widget;
+} // namespace Gtk
+
 namespace Inkscape::UI::Dialog {
 
 /*
  * @brief The LivePathEffectEditor class
  */
-class LivePathEffectEditor : public DialogBase
+class LivePathEffectEditor final : public DialogBase
 {
 public:
-    // No default constructor, noncopyable, nonassignable
     LivePathEffectEditor();
-    ~LivePathEffectEditor() override;
+    ~LivePathEffectEditor() final;
 
     LivePathEffectEditor(LivePathEffectEditor const &d) = delete;
     LivePathEffectEditor operator=(LivePathEffectEditor const &d) = delete;
@@ -58,8 +70,8 @@ public:
 private:
     void add_lpes(Inkscape::UI::Widget::CompletionPopup& popup, bool symbolic);
     void clear_lpe_list();
-    void selectionChanged(Inkscape::Selection *selection) override;
-    void selectionModified(Inkscape::Selection *selection, guint flags) override;
+    void selectionChanged (Inkscape::Selection *selection                ) final;
+    void selectionModified(Inkscape::Selection *selection, unsigned flags) final;
     void onSelectionChanged(Inkscape::Selection *selection);
     void onAddGallery();
     void expanded_notify(Gtk::Expander *expander);

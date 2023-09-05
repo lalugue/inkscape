@@ -24,6 +24,9 @@
 
 namespace Gtk {
 class Builder;
+class CellEditable;
+class CellRendererText;
+class Entry;
 class ListStore;
 class Popover;
 class ScrolledWindow;

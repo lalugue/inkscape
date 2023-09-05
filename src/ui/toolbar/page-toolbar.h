@@ -1,7 +1,4 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-#ifndef SEEN_PAGE_TOOLBAR_H
-#define SEEN_PAGE_TOOLBAR_H
-
 /**
  * @file
  * Page toolbar
@@ -14,31 +11,50 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include <gtkmm.h>
-#include <gtkmm/spinbutton.h>
+#ifndef SEEN_PAGE_TOOLBAR_H
+#define SEEN_PAGE_TOOLBAR_H
+
+#include <string>
+#include <glibmm/refptr.h>
+#include <gtkmm/toolbar.h>
 
 #include "toolbar.h"
 
 #include "ui/widget/spinbutton.h"
 #include "helper/auto-connection.h"
 
+namespace Gtk {
+class ComboBoxText;
+class Entry;
+class EntryCompletion;
+class Label;
+class ListStore;
+class Popover;
+class SeparatorToolItem;
+class ToolButton;
+} // namespace Gtk
+
 class SPDesktop;
 class SPDocument;
 class SPPage;
 
 namespace Inkscape {
+
 class PaperSize;
+
 namespace UI {
+
 namespace Tools {
 class ToolBase;
-}
+} // namespace Tools
+
 namespace Toolbar {
 
-class PageToolbar : public Gtk::Toolbar
+class PageToolbar final : public Gtk::Toolbar
 {
 public:
     PageToolbar(BaseObjectType *cobject, const Glib::RefPtr<Gtk::Builder> &builder, SPDesktop *desktop);
-    ~PageToolbar() override;
+    ~PageToolbar() final;
 
     static GtkWidget *create(SPDesktop *desktop);
 
@@ -63,7 +79,7 @@ private:
     void toolChanged(SPDesktop *desktop, Inkscape::UI::Tools::ToolBase *tool);
     void pagesChanged();
     void selectionChanged(SPPage *page);
-    void on_parent_changed(Gtk::Widget *prev) override;
+    void on_parent_changed(Gtk::Widget *prev) final;
     void populate_sizes();
 
     Inkscape::auto_connection _ec_connection;
@@ -100,7 +116,7 @@ private:
     Inkscape::UI::Widget::MathSpinButton *margin_bottom;
     Inkscape::UI::Widget::MathSpinButton *margin_left;
 
-    double _unit_to_size(std::string number, std::string unit_str, std::string backup);
+    double _unit_to_size(std::string number, std::string unit_str, std::string const &backup);
 };
 
 } // namespace Toolbar

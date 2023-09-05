@@ -1,24 +1,36 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-#ifndef SEEN_DESKTOP_MENUBAR_H
-#define SEEN_DESKTOP_MENUBAR_H
-
 /**
  * @file
  * Desktop main menu bar code.
  */
 /*
  * Authors:
- *   Tavmjong Bah
- *   Sushant A.A.
+ *   Tavmjong Bah       <tavmjong@free.fr>
+ *   Alex Valavanis     <valavanisalex@gmail.com>
+ *   Patrick Storz      <eduard.braun2@gmx.de>
+ *   Krzysztof Kosiński <tweenk.pl@gmail.com>
+ *   Kris De Gussem     <Kris.DeGussem@gmail.com>
+ *   Sushant A.A.       <sushant.co19@gmail.com>
  *
  * Copyright (C) 2018 Authors
  *
  * The contents of this file may be used under the GNU General Public License Version 2 or later.
  * Read the file 'COPYING' for more information.
- *
  */
 
-#include <gtkmm.h> // GTK_CHECK_VERSION
+#ifndef SEEN_DESKTOP_MENUBAR_H
+#define SEEN_DESKTOP_MENUBAR_H
+
+#include <glibmm/refptr.h>
+
+namespace Glib {
+class Quark;
+} // namespace Glib
+
+namespace Gio {
+class MenuModel;
+class Menu;
+} // namespace Gio;
 
 void build_menu();
 
@@ -29,11 +41,8 @@ enum class UseIcons {
 };
 
 // Rebuild menu with icons enabled or disabled. Recursive.
-#if GTK_CHECK_VERSION(4, 0, 0)
-void rebuild_menu (std::shared_ptr<Gio::MenuModel> menu, std::shared_ptr<Gio::Menu> menu_copy, UseIcons useIcons, Glib::Quark quark, Glib::RefPtr<Gio::Menu>& recent_files);
-#else
-void rebuild_menu (Glib::RefPtr<Gio::MenuModel>    menu, Glib::RefPtr<Gio::Menu>    menu_copy, UseIcons useIcons, Glib::Quark quark, Glib::RefPtr<Gio::Menu>& recent_files);
-#endif
+void rebuild_menu(Glib::RefPtr<Gio::MenuModel> const &menu, Glib::RefPtr<Gio::Menu> const &menu_copy,
+                  UseIcons useIcons, Glib::Quark const &quark, Glib::RefPtr<Gio::Menu>& recent_files);
 
 #endif // SEEN_DESKTOP_MENUBAR_H
 

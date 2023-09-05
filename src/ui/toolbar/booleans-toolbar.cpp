@@ -10,14 +10,17 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#include "ui/toolbar/booleans-toolbar.h"
+
+#include <gtkmm/adjustment.h>
+#include <gtkmm/builder.h>
+#include <gtkmm/toolbutton.h>
+
 #include "desktop.h"
 #include "ui/builder-utils.h"
-#include "ui/toolbar/booleans-toolbar.h"
 #include "ui/tools/booleans-tool.h"
 
-namespace Inkscape {
-namespace UI {
-namespace Toolbar {
+namespace Inkscape::UI::Toolbar {
 
 BooleansToolbar::BooleansToolbar(BaseObjectType *cobject, const Glib::RefPtr<Gtk::Builder> &builder, SPDesktop *desktop)
     : Gtk::Toolbar(cobject)
@@ -45,6 +48,8 @@ BooleansToolbar::BooleansToolbar(BaseObjectType *cobject, const Glib::RefPtr<Gtk
     });
 }
 
+BooleansToolbar::~BooleansToolbar() = default;
+
 void BooleansToolbar::on_parent_changed(Gtk::Widget *) {
     _builder.reset();
 }
@@ -58,6 +63,15 @@ BooleansToolbar::create(SPDesktop *desktop)
     return toolbar->Gtk::Widget::gobj();
 }
 
-} // namespace Toolbar
-} // namespace UI
-} // namespace Inkscape
+} // namespace Inkscape::UI::Toolbar
+
+/*
+  Local Variables:
+  mode:c++
+  c-file-style:"stroustrup"
+  c-file-offsets:((innamespace . 0)(inline-open . 0)(case-label . +))
+  indent-tabs-mode:nil
+  fill-column:99
+  End:
+*/
+// vim:filetype=cpp:expandtab:shiftwidth=4:tabstop=8:softtabstop=4:fileencoding=utf-8:textwidth=99:

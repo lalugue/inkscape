@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-/*
+/** @file
  * TextTool
- *
+ */
+/*
  * Authors:
  *   Lauris Kaplinski <lauris@kaplinski.com>
  *   bulia byak <buliabyak@users.sf.net>
@@ -14,13 +15,19 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#include "text-tool.h"
+
+#include <algorithm>
 #include <cmath>
+#include <iomanip>
+#include <memory>
+#include <sstream>
+#include <glibmm/i18n.h>
+#include <glibmm/main.h>
+#include <glibmm/regex.h>
 #include <gdk/gdkkeysyms.h>
 #include <gtkmm/clipboard.h>
-#include <glibmm/i18n.h>
-#include <glibmm/regex.h>
-
-#include "text-tool.h"
+#include <gtkmm/settings.h>
 
 #include "context-fns.h"
 #include "desktop-style.h"
@@ -34,22 +41,18 @@
 #include "selection.h"
 #include "style.h"
 #include "text-editing.h"
-
 #include "display/control/canvas-item-curve.h"
 #include "display/control/canvas-item-quad.h"
 #include "display/control/canvas-item-rect.h"
 #include "display/control/canvas-item-bpath.h"
 #include "display/curve.h"
-
 #include "livarot/Path.h"
 #include "livarot/Shape.h"
-
 #include "object/sp-flowtext.h"
 #include "object/sp-namedview.h"
 #include "object/sp-text.h"
 #include "object/sp-textpath.h"
 #include "object/sp-shape.h"
-
 #include "ui/knot/knot-holder.h"
 #include "ui/icon-names.h"
 #include "ui/shape-editor.h"
@@ -57,7 +60,6 @@
 #include "ui/widget/events/canvas-event.h"
 #include "ui/widget/events/debug.h"
 #include "util/callback-converter.h"
-
 #include "xml/sp-css-attr.h"
 
 using Inkscape::DocumentUndo;

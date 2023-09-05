@@ -17,6 +17,7 @@
 #include <glibmm/ustring.h>
 #include <gtkmm/cellrendererpixbuf.h>
 #include <boost/compute/detail/lru_cache.hpp>
+
 #include "helper/auto-connection.h"
 #include "ui/dialog/dialog-base.h"
 
@@ -68,6 +69,17 @@ private:
     void get_cell_data_func(Gtk::CellRenderer *cell_renderer, Gtk::TreeRow row, bool visible);
 };
 
-} // namespace
+} // namespace Inkscape::UI::Dialog
 
 #endif // INKSCAPE_UI_DIALOG_EXTENSIONS_H
+
+/*
+  Local Variables:
+  mode:c++
+  c-file-style:"stroustrup"
+  c-file-offsets:((innamespace . 0)(inline-open . 0)(case-label . +))
+  indent-tabs-mode:nil
+  fill-column:99
+  End:
+*/
+// vim:filetype=cpp:expandtab:shiftwidth=4:tabstop=8:softtabstop=4:fileencoding=utf-8:textwidth=99:

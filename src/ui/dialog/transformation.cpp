@@ -19,6 +19,7 @@
 #include <gtkmm/button.h>
 #include <gtkmm/dialog.h>
 #include <gtkmm/entry.h>
+#include <gtkmm/grid.h>
 #include <gtkmm/label.h>
 #include <2geom/transforms.h>
 

@@ -8,53 +8,63 @@
 #ifndef SEEN_DOC_RESOURCES_H
 #define SEEN_DOC_RESOURCES_H
 
+#include <cstddef>
+#include <memory>
+#include <string>
+#include <glibmm/refptr.h>
+#include <gtkmm/cellrendererpixbuf.h>
+#include <gtkmm/treemodel.h>
+#include <boost/ptr_container/ptr_vector.hpp>
+
 #include "document.h"
 #include "helper/auto-connection.h"
 #include "ui/dialog/dialog-base.h"
 #include "ui/widget/entity-entry.h"
 #include "ui/widget/registry.h"
-#include <cstddef>
-#include <glibmm/refptr.h>
-#include <glibmm/ustring.h>
-#include <gtkmm/builder.h>
-#include <gtkmm/button.h>
-#include <gtkmm/cellrendererpixbuf.h>
-#include <gtkmm/cellrenderertext.h>
-#include <gtkmm/iconview.h>
-#include <gtkmm/liststore.h>
-#include <gtkmm/searchentry.h>
-#include <gtkmm/treeview.h>
-#include <memory>
-#include <string>
-#include <boost/ptr_container/ptr_vector.hpp>
 
-namespace Inkscape {
-namespace UI {
-namespace Dialog {
+namespace Glib {
+class ustring;
+} // namespace Glib
+
+namespace Gtk {
+class Builder;
+class Button;
+class CellEditable;
+class CellRendererText;
+class IconView;
+class ListStore;
+class SearchEntry;
+class TreeSelection;
+class TreeView;
+} // namespace Gtk
+
+namespace Inkscape::UI::Dialog {
 
 namespace details {
-    struct Statistics {
-        size_t nodes = 0;
-        size_t groups = 0;
-        size_t layers = 0;
-        size_t paths = 0;
-        size_t images = 0;
-        size_t patterns = 0;
-        size_t symbols = 0;
-        size_t markers = 0;
-        size_t fonts = 0;
-        size_t filters = 0;
-        size_t svg_fonts = 0;
-        size_t colors = 0;
-        size_t gradients = 0;
-        size_t swatches = 0;
-        size_t metadata = 0;
-        size_t styles = 0;
-        size_t meshgradients = 0;
-        size_t colorprofiles = 0;
-        size_t external_uris = 0;
-    };
-}
+
+struct Statistics {
+    std::size_t nodes = 0;
+    std::size_t groups = 0;
+    std::size_t layers = 0;
+    std::size_t paths = 0;
+    std::size_t images = 0;
+    std::size_t patterns = 0;
+    std::size_t symbols = 0;
+    std::size_t markers = 0;
+    std::size_t fonts = 0;
+    std::size_t filters = 0;
+    std::size_t svg_fonts = 0;
+    std::size_t colors = 0;
+    std::size_t gradients = 0;
+    std::size_t swatches = 0;
+    std::size_t metadata = 0;
+    std::size_t styles = 0;
+    std::size_t meshgradients = 0;
+    std::size_t colorprofiles = 0;
+    std::size_t external_uris = 0;
+};
+
+} // namespace details
 
 class DocumentResources : public DialogBase {
 public:
@@ -100,6 +110,17 @@ private:
     auto_connection _idle_refresh;
 };
 
-} } } // namespaces
+} // namespace Inkscape::UI::Dialog
 
 #endif // SEEN_DOC_RESOURCES_H
+
+/*
+  Local Variables:
+  mode:c++
+  c-file-style:"stroustrup"
+  c-file-offsets:((innamespace . 0)(inline-open . 0)(case-label . +))
+  indent-tabs-mode:nil
+  fill-column:99
+  End:
+*/
+// vim:filetype=cpp:expandtab:shiftwidth=4:tabstop=8:softtabstop=4:fileencoding=utf-8:textwidth=99:

@@ -27,7 +27,6 @@
 #include <gtkmm/icontheme.h>
 #include <gtkmm/imagemenuitem.h>
 #include <gtkmm/modelbutton.h>
-#include <gtkmm/object.h>
 #include <gtkmm/popover.h>
 #include <gtkmm/scale.h>
 #include <gtkmm/searchentry.h>
@@ -95,7 +94,7 @@ class ObjectWatcher : public Inkscape::XML::NodeObserver
 public:
     ObjectWatcher() = delete;
     ObjectWatcher(ObjectsPanel *panel, SPItem *, Gtk::TreeRow *row, bool is_filtered);
-    ~ObjectWatcher() override;
+    ~ObjectWatcher() final;
 
     void initRowInfo();
     void updateRowInfo();
@@ -117,10 +116,10 @@ public:
     Gtk::TreeNodeChildren getChildren() const;
     Gtk::TreeIter getChildIter(Node *) const;
 
-    void notifyChildAdded(Node &, Node &, Node *) override;
-    void notifyChildRemoved(Node &, Node &, Node *) override;
-    void notifyChildOrderChanged(Node &, Node &child, Node *, Node *) override;
-    void notifyAttributeChanged(Node &, GQuark, Util::ptr_shared, Util::ptr_shared) override;
+    void notifyChildRemoved(Node &, Node &, Node *) final;
+    void notifyChildOrderChanged(Node &, Node &child, Node *, Node *) final;
+    void notifyChildAdded(Node &, Node &, Node *) final;
+    void notifyAttributeChanged(Node &, GQuark, Util::ptr_shared, Util::ptr_shared) final;
 
     /// Associate this watcher with a tree row
     void setRow(const Gtk::TreeModel::Path &path)
@@ -175,7 +174,7 @@ private:
     bool is_filtered;
 };
 
-class ObjectsPanel::ModelColumns : public Gtk::TreeModel::ColumnRecord
+class ObjectsPanel::ModelColumns final : public Gtk::TreeModel::ColumnRecord
 {
 public:
     ModelColumns()
@@ -197,7 +196,7 @@ public:
         add(_colItemState);
         add(_colHoverColor);
     }
-    ~ModelColumns() override = default;
+
     Gtk::TreeModelColumn<Node*> _colNode;
     Gtk::TreeModelColumn<Glib::ustring> _colLabel;
     Gtk::TreeModelColumn<Glib::ustring> _colType;
@@ -250,6 +249,7 @@ ObjectWatcher::ObjectWatcher(ObjectsPanel* panel, SPItem* obj, Gtk::TreeRow *row
     // the tree is really large, but not in layers mode.
     addChildren(obj, (bool)row && !obj->isExpanded());
 }
+
 ObjectWatcher::~ObjectWatcher()
 {
     node->removeObserver(*this);
@@ -264,7 +264,7 @@ ObjectWatcher::~ObjectWatcher()
 
 void ObjectWatcher::initRowInfo()
 {
-    auto _model = panel->_model;
+    auto const _model = panel->_model.get();
     auto row = *panel->_store->get_iter(row_ref.get_path());
     row[_model->_colHover] = false;
 }
@@ -278,7 +278,7 @@ void ObjectWatcher::updateRowInfo()
         assert(row_ref);
         assert(row_ref.get_path());
 
-        auto _model = panel->_model;
+        auto const _model = panel->_model.get();
         auto row = *panel->_store->get_iter(row_ref.get_path());
         row[_model->_colNode] = node;
 
@@ -338,7 +338,7 @@ void ObjectWatcher::updateRowHighlight() {
  * Propagate a change in visibility or locked state to all children
  */
 void ObjectWatcher::updateRowAncestorState(bool invisible, bool locked) {
-    auto _model = panel->_model;
+    auto const _model = panel->_model.get();
     auto row = *panel->_store->get_iter(row_ref.get_path());
     row[_model->_colAncestorInvisible] = invisible;
     row[_model->_colAncestorLocked] = locked;
@@ -463,7 +463,7 @@ bool ObjectWatcher::addChild(SPItem *child, bool dummy)
     Gtk::TreeModel::Row row = *(panel->_store->prepend(children));
 
     // Ancestor states are handled inside the list store (so we don't have to re-ask every update)
-    auto _model = panel->_model;
+    auto const _model = panel->_model.get();
     if (row_ref) {
         auto parent_row = *panel->_store->get_iter(row_ref.get_path());
         row[_model->_colAncestorInvisible] = parent_row[_model->_colAncestorInvisible] || parent_row[_model->_colInvisible];
@@ -645,13 +645,17 @@ SPObject *ObjectsPanel::getObject(Node *node) {
 ObjectWatcher* ObjectsPanel::getWatcher(Node *node)
 {
     assert(node);
+
     if (root_watcher->getRepr() == node) {
-        return root_watcher;
-    } else if (node->parent()) {
+        return root_watcher.get();
+    }
+
+    if (node->parent()) {
         if (auto parent_watcher = getWatcher(node->parent())) {
             return parent_watcher->findChild(node);
         }
     }
+
     return nullptr;
 }
 
@@ -660,8 +664,7 @@ ObjectWatcher* ObjectsPanel::getWatcher(Node *node)
  */
 ObjectsPanel::ObjectsPanel()
     : DialogBase("/dialogs/objects", "Objects")
-    , root_watcher(nullptr)
-    , _model(new ModelColumns())
+    , _model{std::make_unique<ModelColumns>()}
     , _layer(nullptr)
     , _is_editing(false)
     , _page(Gtk::ORIENTATION_VERTICAL)
@@ -968,6 +971,7 @@ ObjectsPanel::ObjectsPanel()
             }
         }
     });
+
     // Clear and update entire tree (do not use this in changed/modified signals)
     auto prefs = Inkscape::Preferences::get();
     _watch_object_mode = prefs->createObserver("/dialogs/objects/layers_only", [=]() { setRootWatcher(); });
@@ -976,21 +980,7 @@ ObjectsPanel::ObjectsPanel()
     show_all_children();
 }
 
-/**
- * Destructor
- */
-ObjectsPanel::~ObjectsPanel()
-{
-    if (root_watcher) {
-        delete root_watcher;
-    }
-    root_watcher = nullptr;
-
-    if (_model) {
-        delete _model;
-        _model = nullptr;
-    }
-}
+ObjectsPanel::~ObjectsPanel() = default;
 
 void ObjectsPanel::desktopReplaced()
 {
@@ -1008,23 +998,20 @@ void ObjectsPanel::documentReplaced()
 
 void ObjectsPanel::setRootWatcher()
 {
-    Inkscape::Preferences *prefs = Inkscape::Preferences::get();
+    root_watcher.reset();
 
-    if (root_watcher) {
-        delete root_watcher;
-    }
-    root_watcher = nullptr;
+    auto const document = getDocument();
+    if (!document) return;
 
-    if (auto document = getDocument()) {
-        bool filtered = prefs->getBool("/dialogs/objects/layers_only", false) || _searchBox.get_text_length();
+    auto const prefs = Inkscape::Preferences::get();
+    bool const filtered = prefs->getBool("/dialogs/objects/layers_only", false) || _searchBox.get_text_length();
 
-        // A filtered object watcher behaves differently to an unfiltered one.
-        // Filtering disables creating dummy children and instead processes entire trees.
-        root_watcher = new ObjectWatcher(this, document->getRoot(), nullptr, filtered);
-        root_watcher->rememberExtendedItems();
-        layerChanged(getDesktop()->layerManager().currentLayer());
-        _selectionChanged();
-    }
+    // A filtered object watcher behaves differently to an unfiltered one.
+    // Filtering disables creating dummy children and instead processes entire trees.
+    root_watcher = std::make_unique<ObjectWatcher>(this, document->getRoot(), nullptr, filtered);
+    root_watcher->rememberExtendedItems();
+    layerChanged(getDesktop()->layerManager().currentLayer());
+    _selectionChanged();
 }
 
 /**
@@ -1079,17 +1066,19 @@ bool ObjectsPanel::showChildInTree(SPItem *item) {
 ObjectWatcher *ObjectsPanel::unpackToObject(SPObject *item)
 {
     ObjectWatcher *watcher = nullptr;
+
     for (auto &parent : item->ancestorList(true)) {
         if (parent->getRepr() == root_watcher->getRepr()) {
-            watcher = root_watcher;
-        } else if (watcher) {
-            if ((watcher = watcher->findChild(parent->getRepr()))) {
-                if (auto row = watcher->getRow()) {
-                    cleanDummyChildren(*row);
-                }
+            watcher = root_watcher.get();
+        } else if (watcher &&
+                   (watcher = watcher->findChild(parent->getRepr())))
+        {
+            if (auto const row = watcher->getRow()) {
+                cleanDummyChildren(*row);
             }
         }
     }
+
     return watcher;
 }
 
@@ -1149,11 +1138,13 @@ void ObjectsPanel::layerChanged(SPObject *layer)
     root_watcher->setSelectedBitRecursive(LAYER_FOCUS_CHILD | LAYER_FOCUSED, false);
 
     if (!layer || !layer->getRepr()) return;
-    auto watcher = getWatcher(layer->getRepr());
-    if (watcher && watcher != root_watcher) {
+
+    auto const watcher = getWatcher(layer->getRepr());
+    if (watcher && watcher != root_watcher.get()) {
         watcher->setSelectedBitChildren(LAYER_FOCUS_CHILD, true);
         watcher->setSelectedBit(LAYER_FOCUSED, true);
     }
+
     _layer = layer;
 }
 

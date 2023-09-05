@@ -21,16 +21,20 @@
 #include <utility>
 #include <glibmm/fileutils.h>
 #include <glibmm/i18n.h>
+#include <glibmm/main.h>
 #include <gtkmm/builder.h>
 #include <gtkmm/button.h>
 #include <gtkmm/checkbutton.h>
+#include <gtkmm/container.h>
 #include <gtkmm/flowbox.h>
+#include <gtkmm/grid.h>
 #include <gtkmm/icontheme.h>
 #include <gtkmm/image.h>
 #include <gtkmm/label.h>
 #include <gtkmm/menubutton.h>
 #include <gtkmm/radiobutton.h>
 #include <gtkmm/spinbutton.h>
+#include <gtkmm/window.h>
 
 #include "desktop-style.h"
 #include "helper/stock-items.h"
@@ -58,8 +62,8 @@ using Inkscape::UI::get_widget;
 using Inkscape::UI::create_builder;
 
 // size of marker image in a list
-static const int ITEM_WIDTH = 40;
-static const int ITEM_HEIGHT = 32;
+static constexpr int ITEM_WIDTH  = 40;
+static constexpr int ITEM_HEIGHT = 32;
 
 namespace Inkscape::UI::Widget {
 

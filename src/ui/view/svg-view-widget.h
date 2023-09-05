@@ -17,7 +17,7 @@
 #ifndef INKSCAPE_UI_VIEW_SVG_VIEW_WIDGET_H
 #define INKSCAPE_UI_VIEW_SVG_VIEW_WIDGET_H
 
-#include <gtkmm.h>
+#include <gtkmm/box.h>
 
 class SPDocument;
 
@@ -37,18 +37,20 @@ namespace View {
 /**
  * A light-weight widget containing an Inkscape canvas for rendering an SVG.
  */
-class SVGViewWidget : public Gtk::Bin
+class SVGViewWidget final : public Gtk::Box
 {
 public:
     SVGViewWidget(SPDocument *document);
-    ~SVGViewWidget() override;
+    ~SVGViewWidget() final;
+
     void setDocument(SPDocument *document);
     void setResize(int width, int height);
-    void on_size_allocate(Gtk::Allocation &allocation) override;
 
 private:
-    UI::Widget::Canvas *_canvas;
+    UI::Widget::Canvas *_canvas = nullptr;
     bool _clicking = false;
+
+    void on_size_allocate(Gtk::Allocation &allocation) final;
 
     bool event(CanvasEvent const &event, DrawingItem *drawing_item);
 

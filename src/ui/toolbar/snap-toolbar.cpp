@@ -15,10 +15,15 @@
 
 #include "snap-toolbar.h"
 
+#include <iostream>
 #include <glibmm/i18n.h>
+#include <gtkmm/box.h>
+#include <gtkmm/button.h>
+#include <gtkmm/linkbutton.h>
+#include <gtkmm/menubutton.h>
+#include <gtkmm/scrolledwindow.h>
 
 #include "actions/actions-canvas-snapping.h"  // transition_to_xxx
-
 #include "ui/builder-utils.h"
 
 namespace Inkscape::UI::Toolbar {
@@ -52,31 +57,30 @@ SnapToolbar::SnapToolbar()
     builder->get_widget("link-advanced",    link_advanced);
     builder->get_widget("box-permanent",    box_permanent);
     builder->get_widget("scroll-permanent", scroll_permanent);
-    if (btn_simple  && btn_advanced  && link_simple && link_advanced && scroll_permanent && box_permanent) {
 
-        // Watch snap bar preferences;
-        Inkscape::Preferences* prefs = Inkscape::Preferences::get();
-        _observer = prefs->createObserver(snap_bar_simple_path, [=](const Preferences::Entry& entry) {
-            mode_update();
-        });
-
-        // switch to simple mode
-        link_simple->signal_activate_link().connect([=](){
-            g_timeout_add(250, &SnapToolbar::show_popover, btn_simple);
-            Inkscape::Preferences::get()->setInt(snap_bar_simple_path, SIMPLE);
-            return true;
-        }, false);
-
-        // switch to advanced mode
-        link_advanced->signal_activate_link().connect([=](){
-            g_timeout_add(250, &SnapToolbar::show_popover, btn_advanced);
-            Inkscape::Preferences::get()->setInt(snap_bar_simple_path, ADVANCED);
-            return true;
-        }, false);
-
-    } else {
+    if (!(btn_simple && btn_advanced && link_simple && link_advanced && scroll_permanent && box_permanent)) {
         std::cerr << "SnapToolbar::SnapToolbar: Failed to load widgets from .ui file!" << std::endl;
+        return;
     }
+
+    // Watch snap bar preferences;
+    _observer = prefs->createObserver(snap_bar_simple_path, [=](const Preferences::Entry& entry) {
+        mode_update();
+    });
+
+    // switch to simple mode
+    link_simple->signal_activate_link().connect([=](){
+        g_timeout_add(250, &SnapToolbar::show_popover, btn_simple);
+        Inkscape::Preferences::get()->setInt(snap_bar_simple_path, SIMPLE);
+        return true;
+    }, false);
+
+    // switch to advanced mode
+    link_advanced->signal_activate_link().connect([=](){
+        g_timeout_add(250, &SnapToolbar::show_popover, btn_advanced);
+        Inkscape::Preferences::get()->setInt(snap_bar_simple_path, ADVANCED);
+        return true;
+    }, false);
 
     // SnapToolbar::mode_update will be called at end of Desktop widget setup. Don't call now!
 }
@@ -121,7 +125,7 @@ int SnapToolbar::show_popover(void* button) {
     return false;
 }
 
-} // namespace Inkscape::UI
+} // namespace Inkscape::UI::Toolbar
 
 /*
   Local Variables:

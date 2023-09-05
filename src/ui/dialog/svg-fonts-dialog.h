@@ -13,15 +13,23 @@
 #define INKSCAPE_UI_DIALOG_SVG_FONTS_H
 
 #include <2geom/pathvector.h>
+#include <glibmm/property.h>
+#include <glibmm/propertyproxy.h>
+#include <glibmm/refptr.h>
 #include <gtkmm/box.h>
-#include <gtkmm/grid.h>
+#include <gtkmm/button.h>
+#include <gtkmm/cellrenderer.h>
 #include <gtkmm/comboboxtext.h>
 #include <gtkmm/drawingarea.h>
 #include <gtkmm/entry.h>
+#include <gtkmm/grid.h>
 #include <gtkmm/iconview.h>
-#include <gtkmm/liststore.h>
+#include <gtkmm/label.h>
+#include <gtkmm/menu.h>
 #include <gtkmm/scrolledwindow.h>
+#include <gtkmm/treemodel.h>
 #include <gtkmm/treeview.h>
+#include <sigc++/signal.h>
 
 #include "attributes.h"
 #include "helper/auto-connection.h"
@@ -31,6 +39,7 @@
 #include "xml/helper-observer.h"
 
 namespace Gtk {
+class ListStore;
 class Scale;
 } // namespace Gtk
 
@@ -38,9 +47,10 @@ class SPGlyph;
 class SPGlyphKerning;
 class SvgFont;
 
-class SvgFontDrawingArea : public Gtk::DrawingArea {
+class SvgFontDrawingArea final : public Gtk::DrawingArea {
 public:
     SvgFontDrawingArea();
+
     void set_text(Glib::ustring);
     void set_svgfont(SvgFont*);
     void set_size(int x, int y);
@@ -50,24 +60,23 @@ private:
     int _x,_y;
     SvgFont* _svgfont;
     Glib::ustring _text;
-    bool on_draw(const Cairo::RefPtr<Cairo::Context> &cr) override;
+    bool on_draw(const Cairo::RefPtr<Cairo::Context> &cr) final;
 };
 
 class SPFont;
 
-namespace Inkscape {
-namespace UI {
-namespace Dialog {
+namespace Inkscape::UI::Dialog {
 
-class GlyphComboBox : public Gtk::ComboBoxText {
+class GlyphComboBox final : public Gtk::ComboBoxText {
 public:
     GlyphComboBox();
+
     void update(SPFont*);
 };
 
 // cell text renderer for SVG font glyps (relying on Cairo "user font");
 // it can accept mouse clicks and report them via signal_clicked()
-class SvgGlyphRenderer : public Gtk::CellRenderer {
+class SvgGlyphRenderer final : public Gtk::CellRenderer {
 public:
     SvgGlyphRenderer() :
         Glib::ObjectBase(typeid(CellRenderer)),
@@ -78,8 +87,6 @@ public:
 
         property_mode() = Gtk::CELL_RENDERER_MODE_ACTIVATABLE;
     }
-
-    ~SvgGlyphRenderer() override = default;
 
     Glib::PropertyProxy<Glib::ustring> property_glyph() { return _property_glyph.get_proxy(); }
     Glib::PropertyProxy<bool> property_active() { return _property_active.get_proxy(); }
@@ -110,15 +117,25 @@ public:
         return _width;
     }
 
-    void render_vfunc(const Cairo::RefPtr<Cairo::Context>& cr, Gtk::Widget& widget, const Gdk::Rectangle& background_area, const Gdk::Rectangle& cell_area, Gtk::CellRendererState flags) override;
+    void render_vfunc(Cairo::RefPtr<Cairo::Context> const& cr,
+                      Gtk::Widget &widget,
+                      Gdk::Rectangle const &background_area,
+                      Gdk::Rectangle const &cell_area,
+                      Gtk::CellRendererState flags) final;
 
-    bool activate_vfunc(GdkEvent* event, Gtk::Widget& widget, const Glib::ustring& path, const Gdk::Rectangle& background_area, const Gdk::Rectangle& cell_area, Gtk::CellRendererState flags) override;
+    bool activate_vfunc(GdkEvent *event, Gtk::Widget &widget,
+                        Glib::ustring  const &path,
+                        Gdk::Rectangle const &background_area,
+                        Gdk::Rectangle const &cell_area,
+                        Gtk::CellRendererState flags) final;
 
-    void get_preferred_width_vfunc(Gtk::Widget& widget, int& min_w, int& nat_w) const override {
+    void get_preferred_width_vfunc(Gtk::Widget& widget, int& min_w, int& nat_w) const final
+    {
         min_w = nat_w = _width;
     }
 
-    void get_preferred_height_vfunc(Gtk::Widget& widget, int& min_h, int& nat_h) const override {
+    void get_preferred_height_vfunc(Gtk::Widget& widget, int& min_h, int& nat_h) const final
+    {
         min_h = nat_h = _height;
     }
 
@@ -135,13 +152,13 @@ private:
 };
 
 
-class SvgFontsDialog : public DialogBase
+class SvgFontsDialog final : public DialogBase
 {
 public:
     SvgFontsDialog();
-    ~SvgFontsDialog() override = default;
+    ~SvgFontsDialog() final;
 
-    void documentReplaced() override;
+    void documentReplaced() final;
 
 private:
     void update_fonts(bool document_replaced);
@@ -363,11 +380,9 @@ private:
     EntryWidget _font_family, _font_variant;
 };
 
-} // namespace Dialog
-} // namespace UI
-} // namespace Inkscape
+} // namespace Inkscape::UI::Dialog
 
-#endif //#ifndef INKSCAPE_UI_DIALOG_SVG_FONTS_H
+#endif // INKSCAPE_UI_DIALOG_SVG_FONTS_H
 
 /*
   Local Variables:

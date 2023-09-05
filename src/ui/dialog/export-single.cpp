@@ -22,9 +22,12 @@
 #include <gtkmm/flowbox.h>
 #include <gtkmm/grid.h>
 #include <gtkmm/label.h>
+#include <gtkmm/menubutton.h>
 #include <gtkmm/progressbar.h>
 #include <gtkmm/radiobutton.h>
+#include <gtkmm/recentmanager.h>
 #include <gtkmm/spinbutton.h>
+#include <sigc++/adaptors/bind.h>
 #include <sigc++/functors/mem_fun.h>
 #include <png.h>
 

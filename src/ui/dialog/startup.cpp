@@ -13,14 +13,21 @@
 #include <limits>
 #include <string>
 #include <glibmm/i18n.h>
+#include <glibmm/fileutils.h>
 #include <gtkmm/builder.h>
 #include <gtkmm/button.h>
 #include <gtkmm/combobox.h>
+#include <gtkmm/cssprovider.h>
+#include <gtkmm/infobar.h>
+#include <gtkmm/liststore.h>
 #include <gtkmm/notebook.h>
 #include <gtkmm/overlay.h>
+#include <gtkmm/recentmanager.h>
+#include <gtkmm/settings.h>
 #include <gtkmm/stack.h>
+#include <gtkmm/switch.h>
+#include <gtkmm/togglebutton.h>
 #include <gtkmm/treeview.h>
-#include <gtkmm/widget.h>
 #include <gtkmm/window.h>
 
 #include "color-rgba.h"

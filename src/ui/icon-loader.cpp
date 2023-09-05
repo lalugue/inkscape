@@ -1,15 +1,14 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-/*
+/** @file
  * Icon Loader
- *
- * Icon Loader management code
- *
+ *//*
  * Authors:
- *  Jabiertxo Arraiza <jabier.arraiza@marker.es>
+ * see git history
+ * Jabiertxo Arraiza <jabier.arraiza@marker.es>
  *
+ * Copyright (C) 2018 Authors
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
-
 
 #include "icon-loader.h"
 #include "inkscape.h"
@@ -20,8 +19,10 @@
 #include <gdkmm/screen.h>
 #include <gtkmm/iconinfo.h>
 #include <gtkmm/icontheme.h>
+#include <gtkmm/image.h>
+#include <gtkmm/window.h>
 
-Gtk::Image *sp_get_icon_image(Glib::ustring icon_name, gint size)
+Gtk::Image *sp_get_icon_image(Glib::ustring const &icon_name, int size)
 {
     Gtk::Image *icon = new Gtk::Image();
     icon->set_from_icon_name(icon_name, Gtk::IconSize(Gtk::ICON_SIZE_BUTTON));
@@ -29,26 +30,26 @@ Gtk::Image *sp_get_icon_image(Glib::ustring icon_name, gint size)
     return icon;
 }
 
-Gtk::Image *sp_get_icon_image(Glib::ustring icon_name, Gtk::IconSize icon_size)
+Gtk::Image *sp_get_icon_image(Glib::ustring const &icon_name, Gtk::IconSize icon_size)
 {
     Gtk::Image *icon = new Gtk::Image();
     icon->set_from_icon_name(icon_name, icon_size);
     return icon;
 }
 
-Gtk::Image *sp_get_icon_image(Glib::ustring icon_name, Gtk::BuiltinIconSize icon_size)
+Gtk::Image *sp_get_icon_image(Glib::ustring const &icon_name, Gtk::BuiltinIconSize icon_size)
 {
     Gtk::Image *icon = new Gtk::Image();
     icon->set_from_icon_name(icon_name, icon_size);
     return icon;
 }
 
-GtkWidget *sp_get_icon_image(Glib::ustring icon_name, GtkIconSize icon_size)
+GtkWidget *sp_get_icon_image(Glib::ustring const &icon_name, GtkIconSize icon_size)
 {
     return gtk_image_new_from_icon_name(icon_name.c_str(), icon_size);
 }
 
-Glib::RefPtr<Gdk::Pixbuf> sp_get_icon_pixbuf(Glib::ustring icon_name, gint size)
+Glib::RefPtr<Gdk::Pixbuf> sp_get_icon_pixbuf(Glib::ustring icon_name, int size)
 {
     // SP_ACTIVE_DESKTOP is not always available when we want icons (see start screen)
     auto window = SP_ACTIVE_DESKTOP ? SP_ACTIVE_DESKTOP->getToplevel() : nullptr;
@@ -77,23 +78,23 @@ Glib::RefPtr<Gdk::Pixbuf> sp_get_icon_pixbuf(Glib::ustring icon_name, gint size)
     return _icon_pixbuf;
 }
 
-Glib::RefPtr<Gdk::Pixbuf> sp_get_icon_pixbuf(Glib::ustring icon_name, Gtk::IconSize icon_size)
+Glib::RefPtr<Gdk::Pixbuf> sp_get_icon_pixbuf(Glib::ustring const &icon_name, Gtk::IconSize icon_size)
 {
     int width, height;
     Gtk::IconSize::lookup(icon_size, width, height);
     return sp_get_icon_pixbuf(icon_name, width);
 }
 
-Glib::RefPtr<Gdk::Pixbuf> sp_get_icon_pixbuf(Glib::ustring icon_name, Gtk::BuiltinIconSize icon_size, int scale)
+Glib::RefPtr<Gdk::Pixbuf> sp_get_icon_pixbuf(Glib::ustring const &icon_name, Gtk::BuiltinIconSize icon_size, int scale)
 {
     int width, height;
     Gtk::IconSize::lookup(Gtk::IconSize(icon_size), width, height);
     return sp_get_icon_pixbuf(icon_name, width * scale);
 }
 
-Glib::RefPtr<Gdk::Pixbuf> sp_get_icon_pixbuf(Glib::ustring icon_name, GtkIconSize icon_size, int scale)
+Glib::RefPtr<Gdk::Pixbuf> sp_get_icon_pixbuf(Glib::ustring const &icon_name, GtkIconSize icon_size, int scale)
 {
-    gint width, height;
+    int width, height;
     gtk_icon_size_lookup(icon_size, &width, &height);
     return sp_get_icon_pixbuf(icon_name, width * scale);
 }
@@ -107,7 +108,8 @@ Glib::RefPtr<Gdk::Pixbuf> sp_get_icon_pixbuf(Glib::ustring icon_name, GtkIconSiz
  * @param color - The fg color of the shape icon
  * @param size - The icon size to generate
  */
-Glib::RefPtr<Gdk::Pixbuf> sp_get_shape_icon(Glib::ustring shape_type, Gdk::RGBA color, gint size, int scale)
+Glib::RefPtr<Gdk::Pixbuf> sp_get_shape_icon(Glib::ustring const &shape_type,
+                                            Gdk::RGBA const &color, int size, int scale)
 {
     Glib::RefPtr<Gdk::Display> display = Gdk::Display::get_default();
     Glib::RefPtr<Gdk::Screen>  screen = display->get_default_screen();
@@ -129,7 +131,6 @@ Glib::RefPtr<Gdk::Pixbuf> sp_get_shape_icon(Glib::ustring shape_type, Gdk::RGBA 
     bool was_symbolic = false;
     return iconinfo.load_symbolic(color, other, other, other, was_symbolic);
 }
-
 
 /*
   Local Variables:

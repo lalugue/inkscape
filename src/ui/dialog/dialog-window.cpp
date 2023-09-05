@@ -32,20 +32,15 @@
 #include "ui/util.h"
 
 // Sizing constants
-const int MINIMUM_WINDOW_WIDTH = 210;
-const int MINIMUM_WINDOW_HEIGHT = 320;
-const int INITIAL_WINDOW_WIDTH = 360;
-const int INITIAL_WINDOW_HEIGHT = 520;
-const int WINDOW_DROPZONE_SIZE = 10;
-const int WINDOW_DROPZONE_SIZE_LARGE = 16;
-const int NOTEBOOK_TAB_HEIGHT = 36;
+static constexpr int MINIMUM_WINDOW_WIDTH       = 210;
+static constexpr int MINIMUM_WINDOW_HEIGHT      = 320;
+static constexpr int INITIAL_WINDOW_WIDTH       = 360;
+static constexpr int INITIAL_WINDOW_HEIGHT      = 520;
+static constexpr int WINDOW_DROPZONE_SIZE       =  10;
+static constexpr int WINDOW_DROPZONE_SIZE_LARGE =  16;
+static constexpr int NOTEBOOK_TAB_HEIGHT        =  36;
 
 namespace Inkscape::UI::Dialog {
-
-class DialogNotebook;
-class DialogContainer;
-
-DialogWindow::~DialogWindow() {}
 
 // Create a dialog window and move page from old notebook.
 DialogWindow::DialogWindow(InkscapeWindow *inkscape_window, Gtk::Widget *page)
@@ -168,11 +163,11 @@ void DialogWindow::update_dialogs()
     _container->update_dialogs(); // Updating dialogs is not using the _app reference here.
 
     // Set window title.
-    const std::multimap<Glib::ustring, DialogBase *> *dialogs = _container->get_dialogs();
-    if (dialogs->size() > 1) {
+    auto const &dialogs = _container->get_dialogs();
+    if (dialogs.size() > 1) {
         _title = "Multiple dialogs";
-    } else if (dialogs->size() == 1) {
-        _title = dialogs->begin()->second->get_name();
+    } else if (dialogs.size() == 1) {
+        _title = dialogs.begin()->second->get_name();
     } else {
         // Should not happen... but does on closing a window!
         // std::cerr << "DialogWindow::update_dialogs(): No dialogs!" << std::endl;
@@ -197,19 +192,19 @@ void DialogWindow::update_window_size_to_fit_children()
     int width = 0, height = 0;
     int overhead = 0, baseline;
     Gtk::Allocation allocation;
-    Gtk::Requisition minimum_size, natural_size;
 
     // Read needed data
     get_position(pos_x, pos_y);
     get_allocated_size(allocation, baseline);
-    const std::multimap<Glib::ustring, DialogBase *> *dialogs = _container->get_dialogs();
+    auto const &dialogs = _container->get_dialogs();
 
     // Get largest sizes for dialogs
-    for (auto dialog : *dialogs) {
-        dialog.second->get_preferred_size(minimum_size, natural_size);
+    for (auto const &[name, dialog] : dialogs) {
+        Gtk::Requisition minimum_size, natural_size;
+        dialog->get_preferred_size(minimum_size, natural_size);
         width = std::max(natural_size.width, width);
         height = std::max(natural_size.height, height);
-        overhead = std::max(overhead, dialog.second->property_margin().get_value());
+        overhead = std::max(overhead, dialog->property_margin().get_value());
     }
 
     // Compute sizes including overhead

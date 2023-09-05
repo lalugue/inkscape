@@ -10,12 +10,14 @@
 #define SEEN_DIALOGS_GLYPHS_H
 
 #include <vector>
+#include <glibmm/refptr.h>
 #include <gtkmm/treemodel.h>
 
 #include "helper/auto-connection.h"
 #include "ui/dialog/dialog-base.h"
 
 namespace Gtk {
+class Button;
 class ComboBoxText;
 class Entry;
 class IconView;
@@ -42,15 +44,15 @@ public:
     GlyphsPanel();
     ~GlyphsPanel() final;
 
-    void selectionChanged(Selection *selection) override;
-    void selectionModified(Selection *selection, guint flags) override;
+    void selectionChanged (Selection *selection                ) final;
+    void selectionModified(Selection *selection, unsigned flags) final;
 
 private:
     static GlyphColumns *getColumns();
 
     void rebuild();
 
-    void glyphActivated(Gtk::TreeModel::Path const & path);
+    void glyphActivated(Gtk::TreeModel::Path const &path);
     void glyphSelectionChanged();
     void readSelection( bool updateStyle, bool updateContent );
     void calcCanInsert();

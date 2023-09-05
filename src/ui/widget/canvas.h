@@ -17,10 +17,11 @@
 
 #include <memory>
 #include <optional>
+#include <2geom/int-rect.h>
+#include <2geom/rect.h>
+#include <glibmm/refptr.h>
 #include <gtk/gtk.h> // GtkEventController*
 #include <gtkmm/gesture.h> // Gtk::EventSequenceState
-#include <2geom/rect.h>
-#include <2geom/int-rect.h>
 
 #include "display/rendermode.h"
 #include "events/enums.h"

@@ -34,9 +34,6 @@ class Feature;
 class FontVariants : public Gtk::Box
 {
 public:
-    /**
-     * Constructor
-     */
     FontVariants();
 
 protected:

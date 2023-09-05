@@ -14,6 +14,10 @@
 #include <string>
 #include <vector>
 #include <glibmm/i18n.h>
+#include <glibmm/markup.h>
+#include <glibmm/regex.h>
+#include <gtkmm/flowbox.h>
+#include <gtkmm/scrolledwindow.h>
 #include <libnrtype/font-factory.h>
 #include <libnrtype/font-instance.h>
 #include <sigc++/functors/mem_fun.h>

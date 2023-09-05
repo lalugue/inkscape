@@ -14,14 +14,19 @@
 
 #include "svg-fonts-dialog.h"
 
-#include <sstream>
+#include <algorithm>
+#include <exception>
 #include <iomanip>
-
-#include <gtkmm/scale.h>
-#include <gtkmm/notebook.h>
-#include <gtkmm/expander.h>
-#include <glibmm/stringutils.h>
+#include <sstream>
+#include <vector>
 #include <glibmm/i18n.h>
+#include <glibmm/markup.h>
+#include <glibmm/stringutils.h>
+#include <gtkmm/expander.h>
+#include <gtkmm/liststore.h>
+#include <gtkmm/notebook.h>
+#include <gtkmm/radiobutton.h>
+#include <gtkmm/scale.h>
 
 #include "desktop.h"
 #include "document.h"
@@ -29,7 +34,6 @@
 #include "layer-manager.h"
 #include "message-stack.h"
 #include "selection.h"
-
 #include "display/nr-svgfonts.h"
 #include "object/sp-defs.h"
 #include "object/sp-font-face.h"
@@ -82,18 +86,14 @@ bool SvgFontDrawingArea::on_draw(const Cairo::RefPtr<Cairo::Context> &cr) {
     // crash on macos: https://gitlab.com/inkscape/inkscape/-/issues/266
     try {
         cr->show_text(_text.c_str());
-    }
-    catch (std::exception& ex) {
+    } catch (std::exception const &ex) {
         g_warning("Error drawing custom SVG font text: %s", ex.what());
     }
   }
   return true;
 }
 
-namespace Inkscape {
-namespace UI {
-namespace Dialog {
-
+namespace Inkscape::UI::Dialog {
 
 void SvgGlyphRenderer::render_vfunc(
         const Cairo::RefPtr<Cairo::Context>& cr, Gtk::Widget& widget,
@@ -116,8 +116,7 @@ void SvgGlyphRenderer::render_vfunc(
     // crash on macos: https://gitlab.com/inkscape/inkscape/-/issues/266
     try {
         cr->show_text(glyph);
-    }
-    catch (std::exception& ex) {
+    } catch (std::exception const &ex) {
         g_warning("Error drawing custom SVG font glyphs: %s", ex.what());
     }
 }
@@ -1702,6 +1701,8 @@ SvgFontsDialog::SvgFontsDialog()
     show_all();
 }
 
+SvgFontsDialog::~SvgFontsDialog() = default;
+
 void SvgFontsDialog::documentReplaced()
 {
     _defs_observer_connection.disconnect();
@@ -1712,9 +1713,7 @@ void SvgFontsDialog::documentReplaced()
     update_fonts(true);
 }
 
-} // namespace Dialog
-} // namespace UI
-} // namespace Inkscape
+} // namespace Inkscape::UI::Dialog
 
 /*
   Local Variables:

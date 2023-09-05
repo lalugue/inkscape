@@ -15,6 +15,7 @@
 
 #include <string>
 #include <gdkmm/cursor.h>
+#include <gdkmm/general.h>
 #include <gtkmm/drawingarea.h>
 #include <sigc++/functors/mem_fun.h>
 

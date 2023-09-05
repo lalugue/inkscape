@@ -19,25 +19,21 @@
  *
  */
 
-#include <iostream>
-
 #include "svg-view-widget.h"
 
+#include <iostream>
+#include <2geom/transforms.h>
+#include <gtkmm/window.h>
+
 #include "document.h"
-
-#include "2geom/transforms.h"
-
 #include "display/drawing.h"
 #include "display/control/canvas-item-drawing.h"
 #include "display/control/canvas-item-group.h"
-
 #include "object/sp-item.h"
 #include "object/sp-root.h"
 #include "object/sp-anchor.h"
-
 #include "ui/widget/canvas.h"
 #include "ui/widget/events/canvas-event.h"
-
 #include "util/units.h"
 
 namespace Inkscape::UI::View {
@@ -117,7 +113,7 @@ void SVGViewWidget::on_size_allocate(Gtk::Allocation &allocation)
 
         if (width < 0.0 || height < 0.0) {
             std::cerr << "SVGViewWidget::size_allocate: negative dimensions!" << std::endl;
-            Gtk::Bin::on_size_allocate(allocation);
+            Gtk::Box::on_size_allocate(allocation);
             return;
         }
 
@@ -129,7 +125,7 @@ void SVGViewWidget::on_size_allocate(Gtk::Allocation &allocation)
         doRescale();
     }
 
-    Gtk::Bin::on_size_allocate(allocation);
+    Gtk::Box::on_size_allocate(allocation);
 }
 
 /**

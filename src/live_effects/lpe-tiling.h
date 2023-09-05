@@ -1,11 +1,20 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
+/** \file
+ * LPE <tiling> implementation
+ */
+/*
+ * Authors:
+ *   Jabiertxo Arraiza Cenoz <jabier.arraiza@marker.es>
+ *   Adam Belis <>
+ * Copyright (C) Authors 2022-2022
+ *
+ * Released under GNU GPL v2+, read the file 'COPYING' for more information.
+ */
+
 #ifndef INKSCAPE_LPE_TILING_H
 #define INKSCAPE_LPE_TILING_H
 
-/** \file
- * LPE <tiling> implementation, see lpe-tiling.cpp.
- * Released under GNU GPL v2+, read the file 'COPYING' for more information.
- */
+#include <vector>
 
 #include "live_effects/effect.h"
 #include "live_effects/lpegroupbbox.h"
@@ -19,31 +28,36 @@
 // this is only to fillrule
 #include "livarot/Shape.h"
 
-namespace Inkscape {
-namespace LivePathEffect {
+namespace Gtk {
+class Box;
+class RadioButtonGroup;
+class Widget;
+} // namespace Gtk
+
+namespace Inkscape::LivePathEffect {
 
 namespace CoS {
 // we need a separate namespace to avoid clashes with other LPEs
 class KnotHolderEntityCopyGapX;
 class KnotHolderEntityCopyGapY;
-}
+} // namespace CoS
 
 typedef FillRule FillRuleBool;
 
-class LPETiling : public Effect, GroupBBoxEffect {
+class LPETiling final : public Effect, GroupBBoxEffect {
 public:
     LPETiling(LivePathEffectObject *lpeobject);
-    ~LPETiling() override;
-    void doOnApply (SPLPEItem const* lpeitem) override;
-    Geom::PathVector doEffect_path (Geom::PathVector const & path_in) override;
-    void doBeforeEffect (SPLPEItem const* lpeitem) override;
-    void doAfterEffect (SPLPEItem const* lpeitem, SPCurve *curve) override;
+
+    void doOnApply (SPLPEItem const* lpeitem) final;
+    Geom::PathVector doEffect_path (Geom::PathVector const & path_in) final;
+    void doBeforeEffect (SPLPEItem const* lpeitem) final;
+    void doAfterEffect (SPLPEItem const* lpeitem, SPCurve *curve) final;
     void split(Geom::PathVector &path_in, Geom::Path const &divider);
-    void resetDefaults(SPItem const* item) override;
-    void doOnRemove(SPLPEItem const* /*lpeitem*/) override;
-    bool doOnOpen(SPLPEItem const * /*lpeitem*/) override;
-    void doOnVisibilityToggled(SPLPEItem const* /*lpeitem*/) override;
-    Gtk::Widget * newWidget() override;
+    void resetDefaults(SPItem const* item) final;
+    void doOnRemove(SPLPEItem const* /*lpeitem*/) final;
+    bool doOnOpen(SPLPEItem const * /*lpeitem*/) final;
+    void doOnVisibilityToggled(SPLPEItem const* /*lpeitem*/) final;
+    Gtk::Widget * newWidget() final;
     void cloneStyle(SPObject *orig, SPObject *dest);
     Geom::PathVector doEffect_path_post (Geom::PathVector const & path_in, FillRuleBool fillrule);
     SPItem * toItem(size_t i, bool reset, bool &write);
@@ -51,13 +65,15 @@ public:
     Inkscape::XML::Node * createPathBase(SPObject *elemref);
     friend class CoS::KnotHolderEntityCopyGapX;
     friend class CoS::KnotHolderEntityCopyGapY;
-    void addKnotHolderEntities(KnotHolder * knotholder, SPItem * item) override;
+    void addKnotHolderEntities(KnotHolder * knotholder, SPItem * item) final;
+
 protected:
-    void addCanvasIndicators(SPLPEItem const *lpeitem, std::vector<Geom::PathVector> &hp_vec) override;
+    void addCanvasIndicators(SPLPEItem const *lpeitem, std::vector<Geom::PathVector> &hp_vec) final;
     KnotHolder *_knotholder;
     double gapx_unit = 0;
     double gapy_unit = 0;
     double offset_unit = 0;
+
 private:
     void setOffsetCols();
     void setOffsetRows();
@@ -67,12 +83,12 @@ private:
     void setRotateRandom();
     void setGapXMode(bool random);
     void setGapYMode(bool random);
-    bool getActiveMirror(gint index);
+    bool getActiveMirror(int index);
     double end_scale(double scale_fix, bool tomax) const;
     bool _updating = false;
-    void setMirroring(gint index);
-    Glib::ustring getMirrorMap(gint index);
-    void generate_buttons(Gtk::Box *container, Gtk::RadioButton::Group &group, gint pos);
+    void setMirroring(int index);
+    Glib::ustring getMirrorMap(int index);
+    void generate_buttons(Gtk::Box *container, Gtk::RadioButtonGroup &group, int pos);
     UnitParam unit;
     SatelliteArrayParam lpesatellites;
     ScalarParam gapx;
@@ -124,10 +140,9 @@ private:
     LPETiling& operator=(const LPETiling&) = delete;
 };
 
-} //namespace LivePathEffect
-} //namespace Inkscape
+} // namespace Inkscape::LivePathEffect
 
-#endif
+#endif // INKSCAPE_LPE_TILING_H
 
 /*
   Local Variables:

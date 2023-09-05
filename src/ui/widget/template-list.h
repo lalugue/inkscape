@@ -10,21 +10,33 @@
 #ifndef WIDGET_TEMPLATE_LIST_H
 #define WIDGET_TEMPLATE_LIST_H
 
-#include <gtkmm.h>
+#include <memory>
+#include <string>
+#include <glibmm/refptr.h>
+#include <gtkmm/notebook.h>
+#include <sigc++/signal.h>
+
 #include "extension/template.h"
+
+namespace Gdk {
+class Pixbuf;
+} // namespace Gdk
+
+namespace Gtk {
+class Builder;
+class IconView;
+class ListStore;
+} // namespace Gtk
 
 class SPDocument;
 
-namespace Inkscape {
-namespace UI {
-namespace Widget {
+namespace Inkscape::UI::Widget {
 
-class TemplateList : public Gtk::Notebook
+class TemplateList final : public Gtk::Notebook
 {
 public:
-    TemplateList();
+    TemplateList() = default;
     TemplateList(BaseObjectType *cobject, const Glib::RefPtr<Gtk::Builder> &refGlade);
-    ~TemplateList() override{};
 
     void init(Extension::TemplateShow mode);
     void reset_selection();
@@ -36,19 +48,17 @@ public:
     sigc::connection connectItemActivated(const sigc::slot<void ()> &slot) { return _item_activated_signal.connect(slot); }
 
 private:
-    Glib::RefPtr<Gtk::ListStore> generate_category(std::string label);
-    Glib::RefPtr<Gdk::Pixbuf> icon_to_pixbuf(std::string name);
+    Glib::RefPtr<Gtk::ListStore> generate_category(std::string const &label);
+    Glib::RefPtr<Gdk::Pixbuf> icon_to_pixbuf(std::string const &name);
     Gtk::IconView *get_iconview(Gtk::Widget *widget);
-    std::shared_ptr<Extension::TemplatePreset> get_preset(std::string key);
 
     sigc::signal<void ()> _item_selected_signal;
     sigc::signal<void ()> _item_activated_signal;
 };
 
-} // namespace Widget
-} // namespace UI
-} // namespace Inkscape
-#endif
+} // namespace Inkscape::UI::Widget
+
+#endif // WIDGET_TEMPLATE_LIST_H
 
 /*
   Local Variables:

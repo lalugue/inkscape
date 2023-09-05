@@ -9,31 +9,37 @@
  * Copyright (C) 2022 Authors
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
+
 #ifndef UI_DIALOG_SWATCHES_H
 #define UI_DIALOG_SWATCHES_H
 
 #include <array>
-#include <glibmm/refptr.h>
-#include <gtkmm/button.h>
-#include <gtkmm/comboboxtext.h>
-#include <gtkmm/togglebutton.h>
-#include <optional>
 #include <variant>
 #include <vector>
 #include <boost/unordered_map.hpp>
+#include <glibmm/refptr.h>
 #include <glibmm/ustring.h>
+#include <gtkmm/widget.h>
 
 #include "ui/dialog/dialog-base.h"
 #include "ui/dialog/global-palettes.h"
 
-namespace Inkscape {
-namespace UI {
+namespace Gtk {
+class Builder;
+class Button;
+class ComboBoxText;
+class ListStore;
+class RadioButton;
+} // namespace Gtk
+
+namespace Inkscape::UI {
 
 namespace Widget {
 class ColorPalette;
-}
+} // namespace Widget
 
 namespace Dialog {
+
 class ColorItem;
 
 /**
@@ -44,19 +50,19 @@ class ColorItem;
  * the "/embedded/swatches" is the horizontal color palette at the bottom
  * of the window.
  */
-class SwatchesPanel : public DialogBase
+class SwatchesPanel final : public DialogBase
 {
 public:
     SwatchesPanel(bool compact, char const *prefsPath = "/dialogs/swatches");
-    ~SwatchesPanel() override;
+    ~SwatchesPanel() final;
 
 protected:
-    void documentReplaced() override;
-    void desktopReplaced() override;
-    void selectionChanged(Selection *selection) override;
-    void selectionModified(Selection *selection, guint flags) override;
+    void documentReplaced() final;
+    void desktopReplaced() final;
+    void selectionChanged(Selection *selection) final;
+    void selectionModified(Selection *selection, guint flags) final;
 
-    void on_size_allocate(Gtk::Allocation&) override;
+    void on_size_allocate(Gtk::Allocation &) final;
 
 private:
     void update_palettes(bool compact);
@@ -111,8 +117,8 @@ private:
 };
 
 } // namespace Dialog
-} // namespace UI
-} // namespace Inkscape
+
+} // namespace Inkscape::UI
 
 #endif // UI_DIALOG_SWATCHES_H
 

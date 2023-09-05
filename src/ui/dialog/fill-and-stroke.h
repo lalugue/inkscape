@@ -22,24 +22,27 @@
 #include "ui/widget/object-composite-settings.h"
 #include "ui/widget/style-subject.h"
 
-namespace Inkscape {
-namespace UI {
+namespace Gtk {
+class Box;
+} // namespace Gtk
+
+namespace Inkscape::UI {
 
 namespace Widget {
 class FillNStroke;
 class NotebookPage;
 class StrokeStyle;
-}
+} // namespace Widget
 
 namespace Dialog {
 
-class FillAndStroke : public DialogBase
+class FillAndStroke final : public DialogBase
 {
 public:
     FillAndStroke();
-    ~FillAndStroke() override;
+    ~FillAndStroke() final;
 
-    void desktopReplaced() override;
+    void desktopReplaced() final;
 
     void showPageFill();
     void showPageStrokePaint();
@@ -48,9 +51,9 @@ public:
 protected:
     Gtk::Notebook   _notebook;
 
-    UI::Widget::NotebookPage    *_page_fill;
-    UI::Widget::NotebookPage    *_page_stroke_paint;
-    UI::Widget::NotebookPage    *_page_stroke_style;
+    UI::Widget::NotebookPage    *_page_fill         = nullptr;
+    UI::Widget::NotebookPage    *_page_stroke_paint = nullptr;
+    UI::Widget::NotebookPage    *_page_stroke_style = nullptr;
 
     UI::Widget::StyleSubject::Selection _subject;
     UI::Widget::ObjectCompositeSettings _composite_settings;
@@ -65,17 +68,17 @@ protected:
     void _onSwitchPage(Gtk::Widget *page, guint pagenum);
 
 private:
-    void selectionChanged(Selection *selection) override;
-    void selectionModified(Selection *selection, guint flags) override;
+    void selectionChanged (Selection *selection                ) final;
+    void selectionModified(Selection *selection, unsigned flags) final;
 
-    UI::Widget::FillNStroke *fillWdgt;
-    UI::Widget::FillNStroke *strokeWdgt;
-    UI::Widget::StrokeStyle *strokeStyleWdgt;
+    UI::Widget::FillNStroke *fillWdgt        = nullptr;
+    UI::Widget::FillNStroke *strokeWdgt      = nullptr;
+    UI::Widget::StrokeStyle *strokeStyleWdgt = nullptr;
 };
 
 } // namespace Dialog
-} // namespace UI
-} // namespace Inkscape
+
+} // namespace Inkscape::UI
 
 
 #endif // INKSCAPE_UI_DIALOG_FILL_AND_STROKE_H

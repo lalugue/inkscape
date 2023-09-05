@@ -14,11 +14,16 @@
  *
  */
 
-
 #ifndef INKVIEW_APPLICATION_H
 #define INKVIEW_APPLICATION_H
 
-#include <gtkmm.h>
+#include <glibmm/refptr.h>
+#include <gtkmm/application.h>
+
+namespace Glib {
+class ustring;
+class VariantDict;
+} // namespace Glib
 
 class InkviewWindow;
 

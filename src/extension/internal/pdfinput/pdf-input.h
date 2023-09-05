@@ -1,7 +1,4 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-#ifndef SEEN_EXTENSION_INTERNAL_PDFINPUT_H
-#define SEEN_EXTENSION_INTERNAL_PDFINPUT_H
-
 /*
  * Authors:
  *   miklos erdelyi
@@ -11,18 +8,33 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#ifndef SEEN_EXTENSION_INTERNAL_PDFINPUT_H
+#define SEEN_EXTENSION_INTERNAL_PDFINPUT_H
+
 #ifdef HAVE_CONFIG_H
 # include "config.h"  // only include where actually required!
 #endif
 
 #ifdef HAVE_POPPLER
-#include <gtkmm.h>
+
+#include <glibmm/refptr.h>
 #include <gtkmm/dialog.h>
 
 #include "../../implementation/implementation.h"
 #include "poppler-transition-api.h"
 #include "poppler-utils.h"
 #include "svg-builder.h"
+
+namespace Gtk {
+class Builder;
+class Button;
+class CheckButton;
+class DrawingArea;
+class Entry;
+class Label;
+class ListStore;
+class Scale;
+} // namespace Gtk
 
 #ifdef HAVE_POPPLER_CAIRO
 struct _PopplerDocument;
@@ -36,26 +48,24 @@ class Page;
 class PDFDoc;
 
 namespace Gtk {
-  class Button;
-  class CheckButton;
-  class ComboBoxText;
-  class DrawingArea;
-  class Frame;
-  class Scale;
-  class RadioButton;
-  class Box;
-  class Label;
-  class Entry;
-}
+class Button;
+class CheckButton;
+class ComboBoxText;
+class DrawingArea;
+class Frame;
+class Scale;
+class RadioButton;
+class Box;
+class Label;
+class Entry;
+} // namespace Gtk
 
 namespace Inkscape {
 
-namespace UI {
-namespace Widget {
-  class SpinButton;
-  class Frame;
-}
-}
+namespace UI::Widget {
+class SpinButton;
+class Frame;
+} // namespace UI::Widget
 
 enum class PdfImportType : unsigned char
 {
@@ -63,19 +73,18 @@ enum class PdfImportType : unsigned char
     PDF_IMPORT_CAIRO,
 };
 
-namespace Extension {
-namespace Internal {
+namespace Extension::Internal {
 
 class FontModelColumns;
 
 /**
  * PDF import using libpoppler.
  */
-class PdfImportDialog : public Gtk::Dialog
+class PdfImportDialog final : public Gtk::Dialog
 {
 public:
     PdfImportDialog(std::shared_ptr<PDFDoc> doc, const gchar *uri);
-    ~PdfImportDialog() override;
+    ~PdfImportDialog() final;
 
     bool showDialog();
     std::string getSelectedPages();
@@ -125,11 +134,12 @@ private:
 };
 
     
-class PdfInput: public Inkscape::Extension::Implementation::Implementation {
-    PdfInput () = default;;
+class PdfInput final: public Inkscape::Extension::Implementation::Implementation {
+    PdfInput() = default;
+
 public:
-    SPDocument *open( Inkscape::Extension::Input *mod,
-                                const gchar *uri ) override;
+    SPDocument *open(Inkscape::Extension::Input *mod,
+                     const gchar *uri) final;
     static void         init( );
 private:
     void add_builder_page(
@@ -138,8 +148,8 @@ private:
         int page_num);
 };
 
-} // namespace Implementation
-} // namespace Extension
+} // namespace Inkscape::Extension::Internal
+
 } // namespace Inkscape
 
 #endif // HAVE_POPPLER

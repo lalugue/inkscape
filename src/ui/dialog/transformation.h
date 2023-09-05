@@ -99,9 +99,9 @@ public:
         PAGE_MOVE, PAGE_SCALE, PAGE_ROTATE, PAGE_SKEW, PAGE_TRANSFORM, PAGE_QTY
     };
 
-    void desktopReplaced() override;
-    void selectionChanged(Inkscape::Selection *selection) override;
-    void selectionModified(Inkscape::Selection *selection, guint flags) override;
+    void desktopReplaced() final;
+    void selectionChanged (Inkscape::Selection *selection                ) final;
+    void selectionModified(Inkscape::Selection *selection, unsigned flags) final;
     void updateSelection(PageType page, Inkscape::Selection *selection);
 
 protected:

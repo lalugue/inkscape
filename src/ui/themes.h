@@ -22,6 +22,7 @@
 #include <glibmm/refptr.h>
 #include <glibmm/ustring.h>
 #include <pangomm/fontdescription.h>
+
 #include "preferences.h"
 
 namespace Gtk {
@@ -31,11 +32,11 @@ class Window;
 
 namespace Inkscape::UI {
 
-class ThemeContext
+class ThemeContext final
 {
 public:
-    ThemeContext() = default;
-    ~ThemeContext() = default;
+    ThemeContext();
+    ~ThemeContext();
 
     // Name of theme -> has dark theme
     typedef std::map<Glib::ustring, bool> gtkThemeList;
@@ -45,19 +46,25 @@ public:
     void add_gtk_css(bool only_providers, bool cached = false);
     void add_icon_theme();
     Glib::ustring get_symbolic_colors();
-    Glib::RefPtr<Gtk::CssProvider> getColorizeProvider() { return _colorizeprovider;}
-    Glib::RefPtr<Gtk::CssProvider> getContrastThemeProvider() { return _contrastthemeprovider;}
-    Glib::RefPtr<Gtk::CssProvider> getThemeProvider() { return _themeprovider;}
-    Glib::RefPtr<Gtk::CssProvider> getStyleProvider() { return _styleprovider;}
-    Glib::RefPtr<Gtk::CssProvider> getUserProvider() { return _userprovider;}
+
+    Glib::RefPtr<Gtk::CssProvider> const &getColorizeProvider     () const { return _colorizeprovider     ; }
+    Glib::RefPtr<Gtk::CssProvider> const &getContrastThemeProvider() const { return _contrastthemeprovider; }
+    Glib::RefPtr<Gtk::CssProvider> const &getThemeProvider        () const { return _themeprovider        ; }
+    Glib::RefPtr<Gtk::CssProvider> const &getStyleProvider        () const { return _styleprovider        ; }
+    Glib::RefPtr<Gtk::CssProvider> const &getUserProvider         () const { return _userprovider         ; }
+
     sigc::signal<void ()> getChangeThemeSignal() { return _signal_change_theme;}
     void themechangecallback();
+
     /// Set application-wide font size adjustment by a factor, where 1 is 100% (no change)
     void adjustGlobalFontScale(double factor);
+
     /// Get current font scaling factor (50 - 150, percent of "normal" size)
     double getFontScale() const;
+
     /// Save font scaling factor in preferences
     void saveFontScale(double scale);
+
     static Glib::ustring get_font_scale_pref_path() { return "/theme/fontscale"; }
 
     /// User-selected monospaced font used by XML dialog and attribute editor
@@ -87,7 +94,7 @@ private:
     Glib::RefPtr<Gtk::CssProvider> _macstyleprovider;
 #endif
     std::unique_ptr<Preferences::Observer> _spinbutton_observer;
-    Glib::RefPtr<Gtk::CssProvider> _fontsizeprovider = Gtk::CssProvider::create();
+    Glib::RefPtr<Gtk::CssProvider> _fontsizeprovider;
 };
 
 } // namespace Inkscape::UI

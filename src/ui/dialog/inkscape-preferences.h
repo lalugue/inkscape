@@ -42,6 +42,7 @@
 #include <gtkmm/treemodel.h>
 #include <gtkmm/treemodelfilter.h>
 #include <gtkmm/treemodelsort.h>
+#include <gtkmm/treepath.h>
 #include <gtkmm/treerowreference.h>
 #include <gtkmm/treestore.h>
 #include <gtkmm/treeview.h>
@@ -113,17 +114,15 @@ enum
 
 namespace Gtk {
 class Scale;
-}
+} // namespace Gtk
 
-namespace Inkscape {
-namespace UI {
-namespace Dialog {
+namespace Inkscape::UI::Dialog {
 
-class InkscapePreferences : public DialogBase
+class InkscapePreferences final : public DialogBase
 {
 public:
     InkscapePreferences();
-    ~InkscapePreferences() override;
+    ~InkscapePreferences() final;
 
     void showPage(); // Show page indicated by "/dialogs/preferences/page".
 
@@ -585,7 +584,7 @@ protected:
     /*
      * Keyboard modifiers interface
      */
-    class ModifierColumns: public Gtk::TreeModel::ColumnRecord {
+    class ModifierColumns final : public Gtk::TreeModel::ColumnRecord {
     public:
         ModifierColumns() {
             add(name);
@@ -594,7 +593,7 @@ protected:
             add(and_modifiers);
             add(user_set);
         }
-        ~ModifierColumns() override = default;
+        ~ModifierColumns() final = default;
 
         Gtk::TreeModelColumn<Glib::ustring> name;
         Gtk::TreeModelColumn<Glib::ustring> id;
@@ -618,19 +617,19 @@ protected:
     int _natural_width;
     int _natural_height;
     bool GetSizeRequest(const Gtk::TreeModel::iterator& iter);
-    void get_preferred_width_vfunc (int& minimum_width, int& natural_width) const override {
+    void get_preferred_width_vfunc (int& minimum_width, int& natural_width) const final {
         minimum_width = _minimum_width;
         natural_width = _natural_width;
     }
-    void get_preferred_width_for_height_vfunc (int height, int& minimum_width, int& natural_width) const override {
+    void get_preferred_width_for_height_vfunc (int height, int& minimum_width, int& natural_width) const final {
         minimum_width = _minimum_width;
         natural_width = _natural_width;
     }
-    void get_preferred_height_vfunc (int& minimum_height, int& natural_height) const override {
+    void get_preferred_height_vfunc (int& minimum_height, int& natural_height) const final {
         minimum_height = _minimum_height;
         natural_height = _natural_height;
     }
-    void get_preferred_height_for_width_vfunc (int width, int& minimum_height, int& natural_height) const override {
+    void get_preferred_height_for_width_vfunc (int width, int& minimum_height, int& natural_height) const final {
         minimum_height = _minimum_height;
         natural_height = _natural_height;
     }
@@ -722,9 +721,7 @@ private:
   Inkscape::PrefObserver _theme_oberver;
 };
 
-} // namespace Dialog
-} // namespace UI
-} // namespace Inkscape
+} // namespace Inkscape::UI::Dialog
 
 #endif //INKSCAPE_UI_DIALOG_INKSCAPE_PREFERENCES_H
 

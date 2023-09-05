@@ -16,27 +16,25 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#include "fill-and-stroke.h"
+
+#include <gtkmm/box.h>
+#include <gtkmm/grid.h>
+#include <gtkmm/label.h>
 
 #include "desktop-style.h"
 #include "document.h"
-#include "fill-and-stroke.h"
 #include "filter-chemistry.h"
 #include "inkscape.h"
 #include "preferences.h"
-
 #include "svg/css-ostringstream.h"
-
 #include "ui/icon-loader.h"
 #include "ui/icon-names.h"
-
 #include "ui/widget/fill-style.h"
 #include "ui/widget/stroke-style.h"
 #include "ui/widget/notebook-page.h"
 
-
-namespace Inkscape {
-namespace UI {
-namespace Dialog {
+namespace Inkscape::UI::Dialog {
 
 FillAndStroke::FillAndStroke()
     : DialogBase("/dialogs/fillstroke", "FillStroke")
@@ -95,6 +93,7 @@ void FillAndStroke::selectionChanged(Selection *selection)
         strokeStyleWdgt->selectionChangedCB();
     }
 }
+
 void FillAndStroke::selectionModified(Selection *selection, guint flags)
 {
     if (fillWdgt) {
@@ -199,9 +198,7 @@ FillAndStroke::_createPageTabLabel(const Glib::ustring& label, const char *label
     return *_tab_label_box;
 }
 
-} // namespace Dialog
-} // namespace UI
-} // namespace Inkscape
+} // namespace Inkscape::UI::Dialog
 
 /*
   Local Variables:

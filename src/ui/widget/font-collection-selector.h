@@ -22,6 +22,7 @@
 #include <gtkmm/grid.h>
 #include <gtkmm/scrolledwindow.h>
 #include <gtkmm/treemodel.h>
+#include <gtkmm/treestore.h>
 #include <gtkmm/treeview.h>
 #include <sigc++/signal.h>
 
@@ -37,14 +38,14 @@ namespace Inkscape::UI::Widget {
 /**
  * A container of widgets for selecting font faces.
  */
-class FontCollectionSelector : public Gtk::Grid
+class FontCollectionSelector final : public Gtk::Grid
 {
 public:
-
     enum {TEXT_COLUMN, ICON_COLUMN, N_COLUMNS};
     enum SelectionStates {SYSTEM_COLLECTION = -1, USER_COLLECTION, USER_COLLECTION_FONT};
 
     FontCollectionSelector();
+    ~FontCollectionSelector() final;
 
     // Basic setup.
     void setup_tree_view(Gtk::TreeView*);
@@ -93,7 +94,6 @@ public:
     }
 
 protected:
-
     class FontCollectionClass : public Gtk::TreeModelColumnRecord
     {
     public:

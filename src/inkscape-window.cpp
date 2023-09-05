@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 /**
  * @file
- * Inkscape - An SVG editor.
+ * Inkview - An SVG file viewer.
  */
 /*
  * Authors:
@@ -11,11 +11,10 @@
  *
  * The contents of this file may be used under the GNU General Public License Version 2 or later.
  * Read the file 'COPYING' for more information.
- *
  */
 
 #include <iostream>
-#include <vector>
+#include <giomm/file.h>
 #include <gtkmm/box.h>
 #include <gtkmm/menubar.h>
 

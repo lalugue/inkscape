@@ -1,12 +1,18 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 
 #include "document-resources.h"
+
+#include <cassert>
+#include <map>
+#include <optional>
+#include <sstream>
+#include <typeindex>
+#include <unordered_map>
+#include <vector>
 #include <cairo.h>
 #include <cairomm/enums.h>
 #include <cairomm/refptr.h>
 #include <cairomm/surface.h>
-#include <cassert>
-#include <cstddef>
 #include <gdkmm/pixbuf.h>
 #include <gdkmm/rgba.h>
 #include <glib/gi18n.h>
@@ -15,38 +21,30 @@
 #include <glibmm/main.h>
 #include <glibmm/markup.h>
 #include <glibmm/miscutils.h>
-#include <glibmm/refptr.h>
+#include <glibmm/uriutils.h>
 #include <glibmm/ustring.h>
+#include <gtkmm/builder.h>
 #include <gtkmm/button.h>
+#include <gtkmm/celleditable.h>
 #include <gtkmm/cellrendererpixbuf.h>
 #include <gtkmm/cellrenderertext.h>
 #include <gtkmm/dialog.h>
 #include <gtkmm/drawingarea.h>
 #include <gtkmm/enums.h>
-#include <gtkmm/filechooser.h>
-#include <gtkmm/filechooserdialog.h>
-#include <gtkmm/filefilter.h>
 #include <gtkmm/grid.h>
 #include <gtkmm/iconview.h>
 #include <gtkmm/liststore.h>
-#include <gtkmm/object.h>
 #include <gtkmm/paned.h>
 #include <gtkmm/searchentry.h>
 #include <gtkmm/stack.h>
 #include <gtkmm/treemodelfilter.h>
 #include <gtkmm/treemodelsort.h>
+#include <gtkmm/treeselection.h>
 #include <gtkmm/treeview.h>
 #include <gtkmm/window.h>
-#include <memory>
-#include <optional>
-#include <sstream>
-#include <string>
-#include <typeindex>
-#include <unordered_map>
-#include <vector>
+
 #include "color.h"
 #include "display/cairo-utils.h"
-#include "document.h"
 #include "extension/system.h"
 #include "helper/choose-file.h"
 #include "helper/save-image.h"
@@ -83,11 +81,9 @@
 #include "util/trim.h"
 #include "xml/href-attribute-helper.h"
 
-namespace Inkscape {
-namespace UI {
-namespace Dialog {
+namespace Inkscape::UI::Dialog {
 
-struct ItemColumns : public Gtk::TreeModel::ColumnRecord {
+struct ItemColumns final : public Gtk::TreeModel::ColumnRecord {
     Gtk::TreeModelColumn<Glib::ustring> id;
     Gtk::TreeModelColumn<Glib::ustring> label;
     Gtk::TreeModelColumn<Cairo::RefPtr<Cairo::Surface>> image;
@@ -105,7 +101,7 @@ struct ItemColumns : public Gtk::TreeModel::ColumnRecord {
     }
 } g_item_columns;
 
-struct InfoColumns : public Gtk::TreeModel::ColumnRecord {
+struct InfoColumns final : public Gtk::TreeModel::ColumnRecord {
     Gtk::TreeModelColumn<Glib::ustring> item;
     Gtk::TreeModelColumn<Glib::ustring> value;
     Gtk::TreeModelColumn<uint32_t> count;
@@ -141,7 +137,8 @@ const std::unordered_map<std::string, Resources> g_id_to_resource = {
     // other resources
 };
 
-size_t get_resource_count(const details::Statistics& stats, Resources rsrc) {
+std::size_t get_resource_count(details::Statistics const &stats, Resources const rsrc)
+{
     switch (rsrc) {
         case Colors:    return stats.colors;
         case Swatches:  return stats.swatches;
@@ -171,14 +168,16 @@ Resources id_to_resource(const std::string& id) {
     return it->second;
 }
 
-size_t get_resource_count(const std::string& id, const details::Statistics& stats) {
+std::size_t get_resource_count(std::string const &id, details::Statistics const &stats)
+{
     auto it = g_id_to_resource.find(id);
     if (it == end(g_id_to_resource)) return 0;
 
     return get_resource_count(stats, it->second);
 }
 
-bool is_resource_present(const std::string& id, const details::Statistics& stats) {
+bool is_resource_present(std::string const &id, details::Statistics const &stats)
+{
     return get_resource_count(id, stats) > 0;
 }
 
@@ -243,26 +242,28 @@ void delete_object(SPObject* object, Inkscape::Selection* selection) {
 }
 
 namespace details {
-    // editing "inkscape:label"
-    Glib::ustring get_inkscape_label(const SPObject& object) {
-        auto label = object.getAttribute("inkscape:label");
-        return Glib::ustring(label ? label : "");
-    }
-    void set_inkscape_label(SPObject& object, const Glib::ustring& label) {
-        object.setAttribute("inkscape:label", label.c_str());
-    }
 
-    // editing title element
-    Glib::ustring get_title(const SPObject& object) {
-        auto title = object.title();
-        Glib::ustring str(title ? title : "");
-        g_free(title);
-        return str;
-    }
-    void set_title(SPObject& object, const Glib::ustring& title) {
-        object.setTitle(title.c_str());
-    }
+// editing "inkscape:label"
+Glib::ustring get_inkscape_label(const SPObject& object) {
+    auto label = object.getAttribute("inkscape:label");
+    return Glib::ustring(label ? label : "");
 }
+void set_inkscape_label(SPObject& object, const Glib::ustring& label) {
+    object.setAttribute("inkscape:label", label.c_str());
+}
+
+// editing title element
+Glib::ustring get_title(const SPObject& object) {
+    auto title = object.title();
+    Glib::ustring str(title ? title : "");
+    g_free(title);
+    return str;
+}
+void set_title(SPObject& object, const Glib::ustring& title) {
+    object.setTitle(title.c_str());
+}
+
+} // namespace details
 
 // label editing: get/set functions for various object types;
 // by default "inkscape:label" will be used (expressed as SPObject);
@@ -723,8 +724,8 @@ details::Statistics collect_statistics(SPObject* root) {
     return stats;
 }
 
-details::Statistics DocumentResources::collect_statistics() {
-
+details::Statistics DocumentResources::collect_statistics()
+{
     auto root = _document ? _document->getRoot() : nullptr;
     auto stats = ::Inkscape::UI::Dialog::collect_statistics(root);
 
@@ -1030,8 +1031,8 @@ void DocumentResources::refresh_page(const Glib::ustring& id) {
         {
             auto opt = object_renderer::options();
             if (auto const window = dynamic_cast<Gtk::Window *>(get_toplevel());
-	        INKSCAPE.themecontext->isCurrentThemeDark(window))
-	    {
+                INKSCAPE.themecontext->isCurrentThemeDark(window))
+            {
                 // white background for typically black symbols, so they don't disappear in a dark theme
                 opt.solid_background(0xf0f0f0ff, 3, 3);
             }
@@ -1168,4 +1169,15 @@ void DocumentResources::end_editing(const Glib::ustring& path, const Glib::ustri
     }
 }
 
-} } } // namespaces
+} // namespace Inkscape::UI::Dialog
+
+/*
+  Local Variables:
+  mode:c++
+  c-file-style:"stroustrup"
+  c-file-offsets:((innamespace . 0)(inline-open . 0)(case-label . +))
+  indent-tabs-mode:nil
+  fill-column:99
+  End:
+*/
+// vim:filetype=cpp:expandtab:shiftwidth=4:tabstop=8:softtabstop=4:fileencoding=utf-8:textwidth=99:

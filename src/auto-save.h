@@ -17,7 +17,7 @@ class InkscapeApplication;
 
 namespace Inkscape {
 
-class AutoSave {
+class AutoSave final {
 private:
     AutoSave() = default;
 

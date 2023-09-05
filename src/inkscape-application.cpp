@@ -35,6 +35,10 @@
  *       InkscapeApplication::destroy_window
  */
 
+#ifdef HAVE_CONFIG_H
+# include "config.h"      // Defines ENABLE_NLS
+#endif
+
 #include <iostream>
 #include <fstream>
 #include <iomanip>
@@ -52,72 +56,59 @@
 #include <cairo.h>
 #endif
 
+#include <giomm/file.h>
 #include <glibmm/i18n.h>  // Internationalization
-
-#ifdef HAVE_CONFIG_H
-# include "config.h"      // Defines ENABLE_NLS
-#endif
+#include <gtkmm/application.h>
+#include <gtkmm/recentmanager.h>
 
 #include "inkscape-application.h"
 #include "inkscape-version-info.h"
 #include "inkscape-window.h"
-
 #include "auto-save.h"              // Auto-save
 #include "desktop.h"                // Access to window
 #include "file.h"                   // sp_file_convert_dpi
 #include "inkscape.h"               // Inkscape::Application
 #include "path-prefix.h"            // Data directory
-
 #include "include/glibmm_version.h"
-
 #include "inkgc/gc-core.h"          // Garbage Collecting init
 #include "debug/logger.h"           // INKSCAPE_DEBUG_LOG support
-
 #include "extension/init.h"
 #include "extension/db.h"
 #include "extension/effect.h"
-
 #include "io/file.h"                // File open (command line).
 #include "io/resource.h"            // TEMPLATE
 #include "io/fix-broken-links.h"    // Fix up references.
-
 #include "object/sp-root.h"         // Inkscape version.
-
 #include "ui/interface.h"                 // sp_ui_error_dialog
 #include "ui/desktop/document-check.h"    // Check for data loss on closing document window.
 #include "ui/desktop/menubar.h"
 #include "ui/dialog/dialog-manager.h"     // Save state
 #include "ui/dialog/font-substitution.h"  // Warn user about font substitution.
 #include "ui/dialog/startup.h"
-#include "ui/shortcuts.h"           // Shortcuts... init
 #include "ui/dialog-run.h"
-
+#include "ui/widget/desktop-widget.h"
+#include "ui/shortcuts.h"           // Shortcuts... init
 #include "util/units.h"           // Redimension window
 #include "util/statics.h"
 #include "util/scope_exit.h"
-
-#include "actions/actions-base.h"                   // Actions
-#include "actions/actions-dialogs.h"                // Actions
-#include "actions/actions-edit.h"                   // Actions
-#include "actions/actions-effect.h"                 // Actions
-#include "actions/actions-element-a.h"              // Actions
-#include "actions/actions-element-image.h"          // Actions
-#include "actions/actions-file.h"                   // Actions
-#include "actions/actions-hide-lock.h"              // Actions
-#include "actions/actions-object.h"                 // Actions
-#include "actions/actions-object-align.h"           // Actions
-#include "actions/actions-output.h"                 // Actions
-#include "actions/actions-paths.h"                  // Actions
-#include "actions/actions-selection-object.h"       // Actions
-#include "actions/actions-selection.h"              // Actions
-#include "actions/actions-transform.h"              // Actions
-#include "actions/actions-text.h"                   // Actions
-#include "actions/actions-window.h"                 // Actions
-
-// With GUI
-#include "actions/actions-tutorial.h"               // Actions
-
-#include "ui/widget/desktop-widget.h" // Access dialog container.
+#include "actions/actions-base.h"
+#include "actions/actions-dialogs.h"
+#include "actions/actions-edit.h"
+#include "actions/actions-effect.h"
+#include "actions/actions-element-a.h"
+#include "actions/actions-element-image.h"
+#include "actions/actions-file.h"
+#include "actions/actions-hide-lock.h"
+#include "actions/actions-object.h"
+#include "actions/actions-object-align.h"
+#include "actions/actions-output.h"
+#include "actions/actions-paths.h"
+#include "actions/actions-selection-object.h"
+#include "actions/actions-selection.h"
+#include "actions/actions-text.h"
+#include "actions/actions-transform.h"
+#include "actions/actions-tutorial.h"
+#include "actions/actions-window.h"
 
 #ifdef ENABLE_NLS
 // Native Language Support - shouldn't this always be used?
@@ -128,7 +119,6 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 #endif
-
 
 using Inkscape::IO::Resource::UIS;
 

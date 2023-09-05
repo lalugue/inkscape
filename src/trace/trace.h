@@ -7,20 +7,26 @@
  *
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
+
 #ifndef INKSCAPE_TRACE_H
 #define INKSCAPE_TRACE_H
 
-#include <vector>
+#include <memory>
+#include <functional>
+#include <string>
 #include <utility>
-#include <cstring>
+#include <vector>
 #include <2geom/pathvector.h>
 #include <gdkmm/pixbuf.h>
+
 #include "async/channel.h"
 #include "object/weakptr.h"
 #include "object/sp-image.h"
 
 namespace Inkscape {
+
 namespace Async { template <typename... T> class Progress; }
+
 namespace Trace {
 
 struct TraceResultItem
@@ -101,3 +107,14 @@ TraceFuture preview(std::unique_ptr<TracingEngine> engine,
 } // namespace Inkscape
 
 #endif // INKSCAPE_TRACE_H
+
+/*
+  Local Variables:
+  mode:c++
+  c-file-style:"stroustrup"
+  c-file-offsets:((innamespace . 0)(inline-open . 0)(case-label . +))
+  indent-tabs-mode:nil
+  fill-column:99
+  End:
+*/
+// vim: filetype=cpp:expandtab:shiftwidth=4:tabstop=8:softtabstop=4 :

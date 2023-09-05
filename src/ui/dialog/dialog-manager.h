@@ -4,16 +4,22 @@
 #define INKSCAPE_UI_DIALOG_MANAGER_H
 
 #include <glibmm/keyfile.h>
-#include <gtkmm/window.h>
 #include <map>
 #include <set>
 #include <memory>
 #include <optional>
 #include <vector>
 
-namespace Inkscape {
-namespace UI {
-namespace Dialog {
+namespace Glib {
+class Keyfile;
+class ustring;
+} // namespace Glib
+
+namespace Gtk {
+class Window;
+} // namespace Gtk
+
+namespace Inkscape::UI::Dialog {
 
 class DialogWindow;
 class DialogBase;
@@ -30,7 +36,7 @@ std::optional<window_position_t> dm_get_window_position(Gtk::Window &window);
 // restore window's geometry
 void dm_restore_window_position(Gtk::Window &window, const window_position_t &position);
 
-class DialogManager
+class DialogManager final
 {
 public:
     static DialogManager &singleton();
@@ -67,7 +73,7 @@ public:
 
 private:
     DialogManager() = default;
-    ~DialogManager() = default;
+    ~DialogManager();
 
     std::vector<Glib::ustring> count_dialogs(const Glib::KeyFile *state) const;
     void load_transient_state(Glib::KeyFile *keyfile);
@@ -75,15 +81,14 @@ private:
 
     // transient dialog state for floating windows user closes
     std::map<std::string, std::shared_ptr<Glib::KeyFile>> _floating_dialogs;
+
     // temp set used when dialogs are hidden (F12 toggle)
     std::set<DialogWindow*> _hidden_dlg_windows;
 };
 
-} // namespace Dialog
-} // namespace UI
-} // namespace Inkscape
+} // namespace Inkscape::UI::Dialog
 
-#endif
+#endif // INKSCAPE_UI_DIALOG_MANAGER_H
 
 /*
   Local Variables:

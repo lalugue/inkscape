@@ -1,7 +1,4 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-#ifndef SEEN_TOOLBAR_SNAP_H
-#define SEEN_TOOLBAR_SNAP_H
-
 /*
  * Authors:
  *   Tavmjong Bah
@@ -11,19 +8,28 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include <gtkmm.h>
+#ifndef SEEN_TOOLBAR_SNAP_H
+#define SEEN_TOOLBAR_SNAP_H
+
+#include <gtkmm/box.h>
 
 #include "preferences.h"
+
+namespace Gtk {
+class Box;
+class Button;
+class ScrolledWindow;
+} // namespace Gtk
 
 class InkscapeWindow;
 class SPDesktop;
 
 namespace Inkscape::UI::Toolbar {
 
-class SnapToolbar : public Gtk::Box {
+class SnapToolbar final : public Gtk::Box {
 public:
     SnapToolbar();
-    ~SnapToolbar() override = default;
+
     void mode_update();
 
 private:

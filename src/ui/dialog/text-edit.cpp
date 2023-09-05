@@ -33,7 +33,12 @@
 #include <gtkmm/builder.h>
 #include <gtkmm/button.h>
 #include <gtkmm/label.h>
+#include <gtkmm/listbox.h>
+#include <gtkmm/listboxrow.h>
+#include <gtkmm/menubutton.h>
 #include <gtkmm/notebook.h>
+#include <gtkmm/searchentry.h>
+#include <gtkmm/separator.h>
 #include <gtkmm/textbuffer.h>
 #include <gtkmm/textview.h>
 #ifdef WITH_GSPELL

@@ -15,17 +15,17 @@
 #ifdef _WIN32
 
 #include "filedialogimpl-win32.h"
-// General includes
-#include <cairomm/win32_surface.h>
-#include <gdk/gdkwin32.h>
-#include <gdkmm/general.h>
-#include <glibmm/fileutils.h>
-#include <glibmm/i18n.h>
+
 #include <list>
 #include <thread>
 #include <vector>
+#include <glibmm/fileutils.h>
+#include <glibmm/i18n.h>
+#include <cairomm/win32_surface.h>
+#include <gdk/gdkwin32.h>
+#include <gdkmm/general.h>
+#include <gtkmm/window.h>
 
-//Inkscape includes
 #include "display/cairo-utils.h"
 #include "document.h"
 #include "extension/db.h"
@@ -36,27 +36,20 @@
 #include "preferences.h"
 #include "util/units.h"
 
-
 using namespace Glib;
 using namespace Cairo;
 using namespace Gdk::Cairo;
 
-namespace Inkscape
-{
-namespace UI
-{
-namespace Dialog
-{
+namespace Inkscape::UI::Dialog {
 
-const int PREVIEW_WIDENING = 150;
-const int WINDOW_WIDTH_MINIMUM = 32;
-const int WINDOW_WIDTH_FALLBACK = 450;
-const int WINDOW_HEIGHT_MINIMUM = 32;
-const int WINDOW_HEIGHT_FALLBACK = 360;
-const char PreviewWindowClassName[] = "PreviewWnd";
-const unsigned long MaxPreviewFileSize = 10240; // kB
-
-#define IDC_SHOW_PREVIEW    1000
+static constexpr int PREVIEW_WIDENING = 150;
+static constexpr int WINDOW_WIDTH_MINIMUM = 32;
+static constexpr int WINDOW_WIDTH_FALLBACK = 450;
+static constexpr int WINDOW_HEIGHT_MINIMUM = 32;
+static constexpr int WINDOW_HEIGHT_FALLBACK = 360;
+static constexpr char PreviewWindowClassName[] = "PreviewWnd";
+static constexpr unsigned long MaxPreviewFileSize = 10240; // kB
+static constexpr int IDC_SHOW_PREVIEW = 1000;
 
 struct Filter
 {
@@ -136,9 +129,9 @@ bool FileOpenDialogImplWin32::_show_preview = true;
  * Constructor.  Not called directly.  Use the factory.
  */
 FileOpenDialogImplWin32::FileOpenDialogImplWin32(Gtk::Window &parent,
-                                       const Glib::ustring &dir,
-                                       FileDialogType fileTypes,
-                                       const gchar *title) :
+                                                 const Glib::ustring &dir,
+                                                 FileDialogType fileTypes,
+                                                 const gchar *title) :
     FileDialogBaseWin32(parent, dir, title, fileTypes, "dialogs.open")
 {
     // Initialize to Autodetect
@@ -1907,7 +1900,7 @@ UINT_PTR CALLBACK FileSaveDialogImplWin32::GetSaveFileName_hookproc(
     return 0;
 }
 
-} } } // namespace Dialog, UI, Inkscape
+} // namespace Inkscape::UI::Dialog
 
 #endif // ifdef _WIN32
 

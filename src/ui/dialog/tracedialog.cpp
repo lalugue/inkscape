@@ -4,8 +4,10 @@
  * Bitmap tracing settings dialog - second implementation.
  */
 /* Authors:
+ *   Bob Jamison
  *   Marc Jeanmougin <marc.jeanmougin@telecom-paristech.fr>
  *   PBS <pbs3141@gmail.com>
+ *   Others - see git history.
  *
  * Copyright (C) 2019-2022 Authors
  *
@@ -14,8 +16,18 @@
 
 #include "tracedialog.h"
 
+#include <algorithm>
+#include <map>
+#include <string>
+#include <utility>
 #include <glibmm/i18n.h>
+#include <gdkmm/general.h>
+#include <gtkmm/adjustment.h>
+#include <gtkmm/builder.h>
 #include <gtkmm/comboboxtext.h>
+#include <gtkmm/drawingarea.h>
+#include <gtkmm/frame.h>
+#include <gtkmm/grid.h>
 #include <gtkmm/notebook.h>
 #include <gtkmm/radiobutton.h>
 #include <gtkmm/spinbutton.h>
@@ -44,9 +56,7 @@ static const std::map<std::string, Inkscape::Trace::Potrace::TraceType> trace_ty
     {"MS_AT", Inkscape::Trace::Potrace::TraceType::AUTOTRACE_MULTI},
 };
 
-namespace Inkscape {
-namespace UI {
-namespace Dialog {
+namespace Inkscape::UI::Dialog {
 
 enum class EngineType
 {
@@ -61,16 +71,16 @@ struct TraceData
     bool sioxEnabled;
 };
 
-class TraceDialogImpl
+class TraceDialogImpl final
     : public TraceDialog
 {
 public:
     TraceDialogImpl();
-    ~TraceDialogImpl() override;
+    ~TraceDialogImpl() final;
 
 protected:
-    void selectionModified(Selection *selection, unsigned flags) override;
-    void selectionChanged(Selection *selection) override;
+    void selectionModified(Selection *selection, unsigned flags) final;
+    void selectionChanged(Selection *selection) final;
 
 private:
     TraceData getTraceData() const;
@@ -548,6 +558,15 @@ std::unique_ptr<TraceDialog> TraceDialog::create()
     return std::make_unique<TraceDialogImpl>();
 }
 
-} // namespace Dialog
-} // namespace UI
-} // namespace Inkscape
+} // namespace Inkscape::UI::Dialog
+
+/*
+  Local Variables:
+  mode:c++
+  c-file-style:"stroustrup"
+  c-file-offsets:((innamespace . 0)(inline-open . 0)(case-label . +))
+  indent-tabs-mode:nil
+  fill-column:99
+  End:
+*/
+// vim: filetype=cpp:expandtab:shiftwidth=4:tabstop=8:softtabstop=4:fileencoding=utf-8:textwidth=99 :

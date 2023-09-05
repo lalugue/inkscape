@@ -5,16 +5,21 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include <gtkmm.h>
 #include "lpe-fillet-chamfer-properties.h"
+
+#include <string>
 #include <boost/lexical_cast.hpp>
 #include <glibmm/i18n.h>
+#include <glibmm/main.h>
+#include <sigc++/adaptors/bind.h>
+#include <sigc++/adaptors/hide.h>
+#include <sigc++/functors/mem_fun.h>
+
 #include "inkscape.h"
 #include "desktop.h"
 #include "document-undo.h"
 #include "layer-manager.h"
 #include "message-stack.h"
-
 #include "selection-chemistry.h"
 
 namespace Inkscape::UI::Dialog {
@@ -60,7 +65,6 @@ FilletChamferPropertiesDialog::FilletChamferPropertiesDialog()
     _fillet_chamfer_type_chamfer.set_group(_fillet_chamfer_type_group);
     _fillet_chamfer_type_inverse_chamfer.set_label(_("Inverse chamfer"));
     _fillet_chamfer_type_inverse_chamfer.set_group(_fillet_chamfer_type_group);
-
 
     mainVBox->pack_start(_layout_table, true, true, 4);
     mainVBox->pack_start(_fillet_chamfer_type_fillet, true, true, 4);
@@ -173,13 +177,15 @@ void FilletChamferPropertiesDialog::_handleButtonEvent(GdkEventButton *event)
 void FilletChamferPropertiesDialog::_setNodeSatellite(NodeSatellite nodesatellite)
 {
     double position;
-    std::string distance_or_radius = std::string(_("Radius"));
+
+    std::string distance_or_radius = _("Radius");
     if (_aprox) {
-        distance_or_radius = std::string(_("Radius approximated"));
+        distance_or_radius = _("Radius approximated");
     }
     if (_use_distance) {
-        distance_or_radius = std::string(_("Knot distance"));
+        distance_or_radius = _("Knot distance");
     }
+
     if (nodesatellite.is_time) {
         position = _amount * 100;
         _flexible = true;
@@ -190,8 +196,10 @@ void FilletChamferPropertiesDialog::_setNodeSatellite(NodeSatellite nodesatellit
         _fillet_chamfer_position_label.set_label(_(posConcat.c_str()));
         position = _amount;
     }
+
     _fillet_chamfer_position_numeric.set_value(position);
     _fillet_chamfer_chamfer_subdivisions.set_value(nodesatellite.steps);
+
     if (nodesatellite.nodesatellite_type == FILLET) {
         _fillet_chamfer_type_fillet.set_active(true);
     } else if (nodesatellite.nodesatellite_type == INVERSE_FILLET) {
@@ -213,13 +221,10 @@ void FilletChamferPropertiesDialog::_setPt(
                      pt);
 }
 
-
 void FilletChamferPropertiesDialog::_setAmount(double amount)
 {
     _amount = amount;
 }
-
-
 
 void FilletChamferPropertiesDialog::_setUseDistance(bool use_knot_distance)
 {

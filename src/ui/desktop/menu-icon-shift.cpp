@@ -19,7 +19,9 @@
 #include "menu-icon-shift.h"
 
 #include <string>
+#include <gtkmm/box.h>
 #include <gtkmm/cssprovider.h>
+#include <gtkmm/menu.h>
 #include <gtkmm/menushell.h>
 
 #include "inkscape-application.h"  // Action extra data

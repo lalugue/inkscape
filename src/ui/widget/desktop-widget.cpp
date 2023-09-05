@@ -27,8 +27,10 @@
 #include <string>
 #include <glibmm/i18n.h>
 #include <glibmm/ustring.h>
+#include <gtkmm/adjustment.h>
 #include <gtkmm/grid.h>
 #include <gtkmm/label.h>
+#include <gtkmm/messagedialog.h>
 #include <gtkmm/paned.h>
 #include <gtkmm/toolbar.h>
 #include <2geom/rect.h>

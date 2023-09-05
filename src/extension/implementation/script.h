@@ -14,30 +14,44 @@
 #ifndef INKSCAPE_EXTENSION_IMPEMENTATION_SCRIPT_H_SEEN
 #define INKSCAPE_EXTENSION_IMPEMENTATION_SCRIPT_H_SEEN
 
+#include <list>
+#include <map>
+#include <string>
+#include <vector>
+#include <glibmm/iochannel.h>
+#include <glibmm/refptr.h>
+#include <glibmm/spawn.h>
+#include <glibmm/ustring.h>
+#include <gtkmm/enums.h>
+
+#include "helper/auto-connection.h"
 #include "implementation.h"
 #include "xml/node.h"
-#include <gtkmm/enums.h>
-#include <gtkmm/window.h>
-#include <glibmm/main.h>
-#include <glibmm/spawn.h>
-#include <glibmm/fileutils.h>
+
+namespace Glib {
+class MainLoop;
+} // namespace Glib
+
+namespace Gtk {
+class Window;
+} // namespace Gtk
 
 namespace Inkscape {
+
 namespace XML {
 class Node;
 } // namespace XML
 
-namespace Extension {
-namespace Implementation {
+namespace Extension::Implementation {
 
 /**
  * Utility class used for loading and launching script extensions
  */
 class Script : public Implementation {
 public:
-
     Script();
     ~Script() override;
+
     bool load(Inkscape::Extension::Extension *module) override;
     void unload(Inkscape::Extension::Extension *module) override;
     bool check(Inkscape::Extension::Extension *module) override;
@@ -84,16 +98,13 @@ private:
 
     class file_listener {
         Glib::ustring _string;
-        sigc::connection _conn;
+        auto_connection _conn;
         Glib::RefPtr<Glib::IOChannel> _channel;
         Glib::RefPtr<Glib::MainLoop> _main_loop;
-        bool _dead;
+        bool _dead = false;
 
     public:
-        file_listener () : _dead(false) { };
-        virtual ~file_listener () {
-            _conn.disconnect();
-        };
+        virtual ~file_listener();
 
         bool isDead () { return _dead; }
         void init(int fd, Glib::RefPtr<Glib::MainLoop> main);
@@ -121,10 +132,11 @@ private:
 
     std::string resolveInterpreterExecutable(const Glib::ustring &interpNameArg);
 
-}; // class Script
-}  // namespace Implementation
-}  // namespace Extension
-}  // namespace Inkscape
+};
+
+} // namespace Extension::Implementation
+
+} // namespace Inkscape
 
 #endif // INKSCAPE_EXTENSION_IMPEMENTATION_SCRIPT_H_SEEN
 

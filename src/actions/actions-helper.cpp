@@ -9,10 +9,17 @@
  * TODO: REMOVE THIS FILE It's really not necessary.
  */
 
+#include "actions-helper.h"
+
+#include <cstdio>
+#include <glibmm/convert.h>
+#include <glibmm/fileutils.h>
+#include <glibmm/miscutils.h>
+#include <glibmm/ustring.h>
+
 #include "inkscape-application.h"
 #include "inkscape.h"
 #include "selection.h"
-#include <cstdio>
 #include "xml/simple-document.h"
 #include "xml/node.h"
 #include "xml/node-iterators.h"
@@ -46,12 +53,14 @@ active_window_end_helper() {
 }
 
 void 
-show_output(Glib::ustring data, bool is_cerr = true) {
+show_output(Glib::ustring const &data, bool const is_cerr)
+{
     if (is_cerr) {
         std::cerr << data << std::endl;
     } else {
         std::cout << data << std::endl;
     }
+
     if (use_active_window) {
         if (auto root = active_window_data->root()) {
             Inkscape::XML::Node * node = nullptr;

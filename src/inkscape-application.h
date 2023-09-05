@@ -7,30 +7,28 @@
  * The contents of this file may be used under the GNU General Public License Version 2 or later.
  *
  */
-
 #ifndef INKSCAPE_APPLICATION_H
 #define INKSCAPE_APPLICATION_H
 
-/*
- * The main Inkscape application.
- *
- * Copyright (C) 2018 Tavmjong Bah
- *
- * The contents of this file may be used under the GNU General Public License Version 2 or later.
- *
- */
-
-#include <gtkmm.h>
+#include <map>
+#include <string>
+#include <utility>
 #include <vector>
+#include <glibmm/refptr.h>
+#include <glibmm/ustring.h>
+#include <gtkmm/application.h>
 
 #include "document.h"
 #include "selection.h"
-
 #include "actions/actions-effect-data.h"
 #include "actions/actions-extra-data.h"
 #include "actions/actions-hint-data.h"
 #include "io/file-export-cmd.h"   // File export (non-verb)
 #include "extension/internal/pdfinput/enums.h"
+
+namespace Gio {
+class File;
+} // namespace Gio
 
 typedef std::vector<std::pair<std::string, Glib::VariantBase> > action_vector_t;
 
@@ -38,7 +36,7 @@ class InkscapeWindow;
 class SPDocument;
 class SPDesktop;
 
-class InkscapeApplication
+class InkscapeApplication final
 {
     Glib::RefPtr<Gio::Application> _gio_application;
 

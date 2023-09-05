@@ -14,26 +14,39 @@
 #ifndef SP_EXPORT_H
 #define SP_EXPORT_H
 
-#include <gtkmm.h>
+#include <map>
+#include <string>
+#include <vector>
+#include <glibmm/refptr.h>
 
+#include "helper/auto-connection.h"
 #include "ui/dialog/dialog-base.h"
 #include "ui/widget/scrollprotected.h"
+
+namespace Gtk {
+class Box;
+class Builder;
+class Notebook;
+} // namespace Gtk
 
 class SPPage;
 
 namespace Inkscape {
-    class Preferences;
-    namespace Util {
-        class Unit;
-    }
-    namespace Extension {
-        class Output;
-    }
 
-namespace UI {
-namespace Dialog {
-    class SingleExport;
-    class BatchExport;
+class Preferences;
+
+namespace Util {
+class Unit;
+} // namexpace Util
+
+namespace Extension {
+class Output;
+} // namespace Extension
+
+namespace UI::Dialog {
+
+class SingleExport;
+class BatchExport;
 
 enum notebook_page
 {
@@ -44,11 +57,11 @@ enum notebook_page
 void set_export_bg_color(SPObject* object, guint32 color);
 guint32 get_export_bg_color(SPObject* object, guint32 default_color);
 
-class Export : public DialogBase
+class Export final : public DialogBase
 {
 public:
     Export();
-    ~Export() override = default;
+    ~Export() final;
 
 private:
     Glib::RefPtr<Gtk::Builder> builder;
@@ -64,7 +77,7 @@ private:
     void setDefaultNotebookPage();
     std::map<notebook_page, int> pages;
 
-    sigc::connection notebook_signal;
+    auto_connection notebook_signal;
 
     // signals callback
     void onNotebookPageSwitch(Widget *page, guint page_number);
@@ -90,16 +103,17 @@ public:
     static bool exportVector(
         Inkscape::Extension::Output *extension, SPDocument *doc, Glib::ustring const &filename,
         bool overwrite, const std::vector<SPItem *> &items, SPPage *page);
+
     static bool exportVector(
         Inkscape::Extension::Output *extension, SPDocument *doc, Glib::ustring const &filename,
         bool overwrite, const std::vector<SPItem *> &items, const std::vector<SPPage *> &pages);
-
 };
 
-} // namespace Dialog
-} // namespace UI
+} // namespace UI::Dialog
+
 } // namespace Inkscape
-#endif
+
+#endif // SP_EXPORT_H
 
 /*
   Local Variables:

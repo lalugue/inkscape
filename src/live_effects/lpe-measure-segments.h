@@ -1,16 +1,21 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-#ifndef INKSCAPE_LPE_MEASURE_SEGMENTS_H
-#define INKSCAPE_LPE_MEASURE_SEGMENTS_H
-
 /*
  * Author(s):
  *     Jabiertxo Arraiza Cenoz <jabier.arraiza@marker.es>
+ * Some code and ideas migrated from dimensioning.py by
+ * Johannes B. Rutzmoser, johannes.rutzmoser (at) googlemail (dot) com
+ * https://github.com/Rutzmoser/inkscape_dimensioning
  *
  * Copyright (C) 2014 Author(s)
  *
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
-#include <gtkmm.h>
+
+#ifndef INKSCAPE_LPE_MEASURE_SEGMENTS_H
+#define INKSCAPE_LPE_MEASURE_SEGMENTS_H
+
+#include <vector>
+#include <glibmm/ustring.h>
 
 #include "live_effects/effect.h"
 #include "live_effects/parameter/bool.h"
@@ -22,8 +27,11 @@
 #include "live_effects/parameter/text.h"
 #include "live_effects/parameter/unit.h"
 
-namespace Inkscape {
-namespace LivePathEffect {
+namespace Gtk {
+class Widget;
+} // namespace Gtk
+
+namespace Inkscape::LivePathEffect {
 
 enum OrientationMethod {
     OM_HORIZONTAL,
@@ -32,10 +40,10 @@ enum OrientationMethod {
     OM_END
 };
 
-class LPEMeasureSegments : public Effect {
+class LPEMeasureSegments final : public Effect {
 public:
     LPEMeasureSegments(LivePathEffectObject *lpeobject);
-    ~LPEMeasureSegments() override;
+
     void doOnApply(SPLPEItem const* lpeitem) override;
     void doBeforeEffect (SPLPEItem const* lpeitem) override;
     void doOnRemove(SPLPEItem const* /*lpeitem*/) override;
@@ -101,10 +109,9 @@ private:
 
 };
 
-} //namespace LivePathEffect
-} //namespace Inkscape
+} // namespace Inkscape::LivePathEffect
 
-#endif
+#endif // INKSCAPE_LPE_MEASURE_SEGMENTS_H
 
 /*
   Local Variables:

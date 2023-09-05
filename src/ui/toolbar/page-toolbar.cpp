@@ -13,9 +13,17 @@
 
 #include "page-toolbar.h"
 
-#include <glibmm/i18n.h>
-#include <gtkmm.h>
 #include <regex>
+#include <glibmm/i18n.h>
+#include <gtkmm/comboboxtext.h>
+#include <gtkmm/entry.h>
+#include <gtkmm/entrycompletion.h>
+#include <gtkmm/label.h>
+#include <gtkmm/liststore.h>
+#include <gtkmm/popover.h>
+#include <gtkmm/separatortoolitem.h>
+#include <gtkmm/toolbutton.h>
+#include <sigc++/functors/mem_fun.h>
 
 #include "desktop.h"
 #include "document-undo.h"
@@ -34,11 +42,9 @@
 
 using Inkscape::IO::Resource::UIS;
 
-namespace Inkscape {
-namespace UI {
-namespace Toolbar {
+namespace Inkscape::UI::Toolbar {
 
-class SearchCols : public Gtk::TreeModel::ColumnRecord
+class SearchCols final : public Gtk::TreeModel::ColumnRecord
 {
 public:
     // These types must match those for the model in the ui file
@@ -328,7 +334,8 @@ void PageToolbar::sizeChoose(const std::string &preset_key)
 /**
  * Convert the parsed sections of a text input into a desktop pixel value.
  */
-double PageToolbar::_unit_to_size(std::string number, std::string unit_str, std::string backup)
+double PageToolbar::_unit_to_size(std::string number, std::string unit_str,
+                                  std::string const &backup)
 {
     // We always support comma, even if not in that particular locale.
     std::replace(number.begin(), number.end(), ',', '.');
@@ -406,7 +413,7 @@ void PageToolbar::setSizeText(SPPage *page, bool display_only)
 
     // Orientation button
     auto box = page ? page->getDesktopRect() : *_document->preferredBounds();
-    std::string icon = box.width() > box.height() ? "page-landscape" : "page-portrait";
+    auto const icon = box.width() > box.height() ? "page-landscape" : "page-portrait";
     if (box.width() == box.height()) {
         entry_page_sizes->unset_icon(Gtk::ENTRY_ICON_SECONDARY);
     } else {
@@ -513,10 +520,7 @@ GtkWidget *PageToolbar::create(SPDesktop *desktop)
     return toolbar->Gtk::Widget::gobj();
 }
 
-
-} // namespace Toolbar
-} // namespace UI
-} // namespace Inkscape
+} // namespace Inkscape::UI::Toolbar
 
 /*
   Local Variables:

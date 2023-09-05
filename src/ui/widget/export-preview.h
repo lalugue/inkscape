@@ -11,30 +11,39 @@
 #define INKSCAPE_UI_WIDGET_EXPORT_PREVIEW_H
 
 #include <cstdint>
+#include <memory>
+#include <vector>
 #include <2geom/rect.h>
-#include <gtkmm.h>
+#include <glibmm/refptr.h>
+#include <gtkmm/image.h>
+
+#include "async/channel.h"
 #include "display/drawing.h"
 #include "helper/auto-connection.h"
-#include "async/channel.h"
+
+namespace Gtk {
+class Builder;
+} // namespace Gtk
 
 class SPDocument;
 class SPObject;
 class SPItem;
 
 namespace Inkscape {
+
 class Drawing;
 
-namespace UI {
-namespace Dialog {
+namespace UI::Dialog {
+
 class ExportPreview;
 
-class PreviewDrawing
+class PreviewDrawing final
 {
 public:
     PreviewDrawing(SPDocument *document);
     ~PreviewDrawing();
 
-    bool render(ExportPreview *widget, uint32_t bg, SPItem *item, unsigned size, Geom::OptRect const &dboxIn);
+    bool render(ExportPreview *widget, std::uint32_t bg, SPItem *item, unsigned size, Geom::OptRect const &dboxIn);
     void set_shown_items(std::vector<SPItem*> &&list = {});
 
 private:
@@ -55,6 +64,7 @@ class ExportPreview final : public Gtk::Image
 public:
     ExportPreview() = default;
     ExportPreview(BaseObjectType *cobj, Glib::RefPtr<Gtk::Builder> const &) : Gtk::Image(cobj) {}
+
     ~ExportPreview() override;
 
     void setDrawing(std::shared_ptr<PreviewDrawing> drawing);
@@ -64,7 +74,7 @@ public:
     void resetPixels(bool new_size = false);
     void setSize(int newSize);
     void setPreview(Cairo::RefPtr<Cairo::ImageSurface>);
-    void setBackgroundColor(uint32_t bg_color);
+    void setBackgroundColor(std::uint32_t bg_color);
 
     static std::shared_ptr<Inkscape::Drawing> makeDrawing(SPDocument *doc);
 
@@ -76,13 +86,13 @@ private:
     Geom::OptRect _dbox;
 
     std::shared_ptr<PreviewDrawing> _drawing;
-    uint32_t _bg_color = 0;
+    std::uint32_t _bg_color = 0;
 
     Inkscape::auto_connection _render_idle;
 };
 
-} // namespace Dialog
-} // namespace UI
+} // namespace UI::Dialog
+
 } // namespace Inkscape
 
 #endif // INKSCAPE_UI_WIDGET_EXPORT_PREVIEW_H

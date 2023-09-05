@@ -6,6 +6,8 @@
  * Authors:
  *   Lauris Kaplinski <lauris@kaplinski.com>
  *   bulia byak <buliabyak@users.sf.net>
+ *   Jon A. Cruz <jon@joncruz.org>
+ *   Abhishek Sharma
  *
  * Copyright (C) 1999-2005 authors
  * Copyright (C) 2001 Ximian, Inc.
@@ -17,12 +19,13 @@
 #define INKSCAPE_UI_TOOLS_TEXT_TOOL_H
 
 #include <string>
-#include <sigc++/connection.h>
+#include <vector>
 #include <2geom/point.h>
 
-#include "ui/tools/tool-base.h"
-#include "libnrtype/Layout-TNG.h"
 #include "display/control/canvas-item-ptr.h"
+#include "helper/auto-connection.h"
+#include "libnrtype/Layout-TNG.h"
+#include "ui/tools/tool-base.h"
 
 using GtkIMContext = struct _GtkIMContext;
 

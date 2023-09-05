@@ -14,12 +14,30 @@
 #ifndef SP_EXPORT_BATCH_H
 #define SP_EXPORT_BATCH_H
 
-#include <gtkmm.h>
+#include <map>
+#include <memory>
+#include <string>
+#include <glibmm/refptr.h>
+#include <glibmm/ustring.h>
+#include <gtkmm/box.h>
+#include <gtkmm/checkbutton.h>
+#include <gtkmm/entry.h>
+#include <gtkmm/enums.h>
+#include <gtkmm/flowboxchild.h>
+#include <gtkmm/grid.h>
+#include <gtkmm/label.h>
+#include <gtkmm/radiobutton.h>
 
 #include "helper/auto-connection.h"
 #include "ui/widget/export-preview.h"
-#include "ui/widget/scrollprotected.h"
 
+namespace Gtk {
+class Builder;
+class Button;
+class FlowBox;
+class ProgressBar;
+class Widget;
+} // namespace Gtk
 
 class ExportProgressDialog;
 class InkscapeApplication;
@@ -29,6 +47,7 @@ class SPItem;
 class SPPage;
 
 namespace Inkscape {
+
 class Preferences;
 class Selection;
 
@@ -41,22 +60,23 @@ class ColorPicker;
 namespace Dialog {
 
 class ExportList;
+class PreviewDrawing;
 
-class BatchItem : public Gtk::FlowBoxChild
+class BatchItem final : public Gtk::FlowBoxChild
 {
 public:
     BatchItem(SPItem *item, std::shared_ptr<PreviewDrawing> drawing);
     BatchItem(SPPage *page, std::shared_ptr<PreviewDrawing> drawing);
-    ~BatchItem() override = default;
+    ~BatchItem() final;
 
     Glib::ustring getLabel() { return _label_str; }
     SPItem *getItem() { return _item; }
     SPPage *getPage() { return _page; }
     void refresh(bool hide, guint32 bg_color);
-    void setDrawing(std::shared_ptr<PreviewDrawing> drawing) { _preview.setDrawing(drawing); }
+    void setDrawing(std::shared_ptr<PreviewDrawing> drawing);
 
     auto get_radio_group() { return _option.get_group(); }
-    void on_parent_changed(Gtk::Widget *) override;
+    void on_parent_changed(Gtk::Widget *) final;
     void on_mode_changed(Gtk::SelectionMode mode);
     void set_selected(bool selected);
     void update_selected();
@@ -79,11 +99,11 @@ private:
     auto_connection _object_modified_conn;
 };
 
-class BatchExport : public Gtk::Box
+class BatchExport final : public Gtk::Box
 {
 public:
     BatchExport(BaseObjectType *cobject, const Glib::RefPtr<Gtk::Builder>& builder);
-    ~BatchExport() override = default;
+    ~BatchExport() final;
 
     void setApp(InkscapeApplication *app) { _app = app; }
     void setDocument(SPDocument *document);
@@ -101,8 +121,6 @@ private:
         SELECTION_SELECTION,
         SELECTION_PAGE,
     };
-
-    typedef Inkscape::UI::Widget::ScrollProtected<Gtk::SpinButton> SpinButton;
 
     InkscapeApplication *_app;
     SPDesktop *_desktop = nullptr;
@@ -165,10 +183,12 @@ private:
 
     std::unique_ptr<Inkscape::UI::Widget::ColorPicker> _bgnd_color_picker;
 };
+
 } // namespace Dialog
 } // namespace UI
 } // namespace Inkscape
-#endif
+
+#endif // SP_EXPORT_BATCH_H
 
 /*
   Local Variables:

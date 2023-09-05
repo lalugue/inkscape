@@ -18,6 +18,7 @@
 #include <sigc++/functors/mem_fun.h>
 #include <glibmm/ustring.h>
 #include <gtkmm/adjustment.h>
+#include <gtkmm/gesturemultipress.h>
 #include <gtkmm/radiobutton.h>
 #include <gtkmm/radiobuttongroup.h>
 #include <gtkmm/separatormenuitem.h>

@@ -7,21 +7,26 @@
  * Copyright (C) 2018 Authors
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
+
 #ifndef SEEN_TOOLBAR_H
 #define SEEN_TOOLBAR_H
 
 #include <gtkmm/toolbar.h>
 
-class SPDesktop;
+namespace Glib {
+class ustring;
+} // namespace Glib
 
 namespace Gtk {
-    class Label;
-    class ToggleToolButton;
-}
+class Label;
+class ToggleToolButton;
+class ToolItem;
+} // namespace Gtk;
 
-namespace Inkscape {
-namespace UI {
-namespace Toolbar {
+class SPDesktop;
+
+namespace Inkscape::UI::Toolbar {
+
 /**
  * \brief An abstract definition for a toolbar within Inkscape
  *
@@ -49,11 +54,11 @@ protected:
 protected:
     static GtkWidget * create(SPDesktop *desktop);
 };
-}
-}
-}
 
-#endif
+} // namespace Inkscape::UI::Toolbar
+
+#endif // SEEN_TOOLBAR_H
+
 /*
   Local Variables:
   mode:c++

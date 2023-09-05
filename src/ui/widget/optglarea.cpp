@@ -1,16 +1,20 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-#include <cassert>
+
 #include "optglarea.h"
 
-namespace Inkscape {
-namespace UI {
-namespace Widget {
+#include <cassert>
+#include <cairomm/context.h>
+#include <gdkmm/glcontext.h>
+
+namespace Inkscape::UI::Widget {
 
 OptGLArea::OptGLArea()
 {
     set_app_paintable(true); // No problem for GTK4 port since this whole widget will be deleted.
     opengl_enabled = false;
 }
+
+OptGLArea::~OptGLArea() = default;
 
 void OptGLArea::on_realize()
 {
@@ -122,6 +126,15 @@ void OptGLArea::resize_framebuffer() const
     glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, w, h);
 }
 
-} // namespace Widget
-} // namespace UI
-} // namespace Inkscape
+} // namespace Inkscape::UI::Widget
+
+/*
+  Local Variables:
+  mode:c++
+  c-file-style:"stroustrup"
+  c-file-offsets:((innamespace . 0)(inline-open . 0)(case-label . +))
+  indent-tabs-mode:nil
+  fill-column:99
+  End:
+*/
+// vim:filetype=cpp:expandtab:shiftwidth=4:tabstop=8:softtabstop=4:fileencoding=utf-8:textwidth=99:

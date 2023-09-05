@@ -18,6 +18,7 @@
 #include <string>
 #include <boost/algorithm/string.hpp>
 #include <giomm/file.h>
+#include <glibmm/convert.h>
 #include <glibmm/fileutils.h>
 #include <glibmm/miscutils.h>
 #include <glibmm/regex.h>

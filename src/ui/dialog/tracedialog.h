@@ -1,12 +1,16 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-/** @file
- * @brief Bitmap tracing settings dialog
+/**
+ * @file
+ * Bitmap tracing settings dialog - second implementation.
  */
 /* Authors:
  *   Bob Jamison
+ *   Marc Jeanmougin <marc.jeanmougin@telecom-paristech.fr>
+ *   PBS <pbs3141@gmail.com>
  *   Others - see git history.
  *
- * Copyright (C) 2004-2022 Authors
+ * Copyright (C) 2019-2022 Authors
+ *
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
@@ -16,9 +20,7 @@
 #include <memory>
 #include "ui/dialog/dialog-base.h"
 
-namespace Inkscape {
-namespace UI {
-namespace Dialog {
+namespace Inkscape::UI::Dialog  {
 
 class TraceDialog : public DialogBase
 {
@@ -29,9 +31,7 @@ protected:
     TraceDialog() : DialogBase("/dialogs/trace", "Trace") {}
 };
 
-} //namespace Dialog
-} //namespace UI
-} //namespace Inkscape
+} // namespace Inkscape::UI::Dialog
 
 #endif // INKSCAPE_UI_DIALOG_TRACE_H
 

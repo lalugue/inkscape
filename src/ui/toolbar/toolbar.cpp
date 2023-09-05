@@ -16,9 +16,7 @@
 
 #include "desktop.h"
 
-namespace Inkscape {
-namespace UI {
-namespace Toolbar {
+namespace Inkscape::UI::Toolbar {
 
 Gtk::ToolItem *
 Toolbar::add_label(const Glib::ustring &label_text)
@@ -70,9 +68,8 @@ Toolbar::create(SPDesktop *desktop)
     auto toolbar = Gtk::manage(new Toolbar(desktop));
     return toolbar->Gtk::Widget::gobj();
 }
-}
-}
-}
+
+} // namespace Inkscape::UI::Toolbar
 
 /*
   Local Variables:

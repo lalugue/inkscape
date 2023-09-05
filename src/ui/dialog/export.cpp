@@ -18,10 +18,14 @@
 // This has to be included prior to anything that includes setjmp.h, it croaks otherwise
 #include "export.h"
 
+#include <set>
 #include <glibmm/convert.h>
 #include <glibmm/i18n.h>
+#include <glibmm/fileutils.h>
 #include <glibmm/miscutils.h>
-#include <gtkmm.h>
+#include <gtkmm/box.h>
+#include <gtkmm/builder.h>
+#include <gtkmm/notebook.h>
 #include <png.h>
 
 #include "desktop.h"
@@ -54,14 +58,9 @@
 #include "ui/widget/scrollprotected.h"
 #include "ui/widget/unit-menu.h"
 
-#ifdef _WIN32
-
-#endif
-
 using Inkscape::Util::unit_table;
-namespace Inkscape {
-namespace UI {
-namespace Dialog {
+
+namespace Inkscape::UI::Dialog {
 
 Export::Export()
     : DialogBase("/dialogs/export/", "Export")
@@ -97,6 +96,8 @@ Export::Export()
         notebook_signal.disconnect();
     });
 }
+
+Export::~Export() = default;
 
 // Set current page based on preference/last visited page
 void Export::setDefaultNotebookPage()
@@ -504,10 +505,7 @@ guint32 get_export_bg_color(SPObject* object, guint32 default_color) {
     return default_color;
 }
 
-
-} // namespace Dialog
-} // namespace UI
-} // namespace Inkscape
+} // namespace Inkscape::UI::Dialog
 
 /*
   Local Variables:
@@ -518,5 +516,4 @@ guint32 get_export_bg_color(SPObject* object, guint32 default_color) {
   fill-column:99
   End:
 */
-// vim: filetype=cpp:expandtab:shiftwidth=4:tabstop=8:softtabstop=4:fileencoding=utf-8:textwidth=99 :
 // vim: filetype=cpp:expandtab:shiftwidth=4:tabstop=8:softtabstop=4:fileencoding=utf-8:textwidth=99 :

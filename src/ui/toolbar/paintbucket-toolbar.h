@@ -28,21 +28,28 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#include <memory>
+#include <glibmm/refptr.h>
+#include <gtk/gtk.h>
+
 #include "toolbar.h"
 
-#include <gtkmm/adjustment.h>
+namespace Gtk {
+class Adjustment;
+} // namespace Gtk
 
 class SPDesktop;
 
-namespace Inkscape {
-namespace UI {
+namespace Inkscape::UI {
+
 namespace Widget {
-class UnitTracker;
 class ComboToolItem;
-}
+class UnitTracker;
+} // namespace Widget
 
 namespace Toolbar {
-class PaintbucketToolbar : public Toolbar {
+
+class PaintbucketToolbar final : public Toolbar {
 private:
     UI::Widget::ComboToolItem *_channels_item;
     UI::Widget::ComboToolItem *_autogap_item;
@@ -50,7 +57,7 @@ private:
     Glib::RefPtr<Gtk::Adjustment> _threshold_adj;
     Glib::RefPtr<Gtk::Adjustment> _offset_adj;
 
-    UI::Widget::UnitTracker *_tracker;
+    std::unique_ptr<UI::Widget::UnitTracker> _tracker;
 
     void channels_changed(int channels);
     void threshold_changed();
@@ -65,8 +72,19 @@ public:
     static GtkWidget * create(SPDesktop *desktop);
 };
 
-}
-}
-}
+} // namespace Toolbar
+
+} // namespace Inkscape::UI
 
 #endif /* !SEEN_PAINTBUCKET_TOOLBAR_H */
+
+/*
+  Local Variables:
+  mode:c++
+  c-file-style:"stroustrup"
+  c-file-offsets:((innamespace . 0)(inline-open . 0)(case-label . +))
+  indent-tabs-mode:nil
+  fill-column:99
+  End:
+*/
+// vim: filetype=cpp:expandtab:shiftwidth=4:tabstop=8:softtabstop=4:fileencoding=utf-8:textwidth=99 :

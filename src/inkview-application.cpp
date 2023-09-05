@@ -19,20 +19,17 @@
 #endif
 
 #include <iostream>
-
 #include <glibmm/i18n.h>  // Internationalization
-
+#include <glibmm/variantdict.h>
 #include <gtkmm/filechooserdialog.h>
 
 #include "inkview-application.h"
-
 #include "inkscape.h"             // Inkscape::Application
 #include "inkscape-version.h"     // Inkscape version
 #include "include/glibmm_version.h"
 #include "inkgc/gc-core.h"        // Garbage Collecting init
 #include "inkview-window.h"
 #include "util/statics.h"
-
 #include "ui/dialog-run.h"
 
 #ifdef ENABLE_NLS

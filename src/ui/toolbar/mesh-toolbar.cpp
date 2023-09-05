@@ -21,6 +21,7 @@
 
 #include <glibmm/refptr.h>
 #include <gtkmm/comboboxtext.h>
+#include <gtkmm/liststore.h>
 #include <gtkmm/messagedialog.h>
 #include <gtkmm/radiotoolbutton.h>
 #include <gtkmm/separatortoolitem.h>

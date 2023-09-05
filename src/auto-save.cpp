@@ -10,19 +10,24 @@
  *
  */
 
+#include <algorithm>
 #include <ctime>
 #include <iomanip>
 #include <iostream>
+#include <string>
 #include <sstream>
-
+#include <vector>
+#include <glibmm/fileutils.h>
 #include <glibmm/i18n.h> // Internationalization
+#include <glibmm/main.h>
+#include <glibmm/miscutils.h>
 
 #include "auto-save.h"
 #include "document.h"
 #include "inkscape-application.h"
 #include "preferences.h"
-
 #include "extension/output.h"
+#include "helper/auto-connection.h"
 #include "io/sys.h"
 #include "xml/repr.h"
 
@@ -45,7 +50,7 @@ void
 AutoSave::start()
 {
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-    static sigc::connection autosave_connection;
+    static auto_connection autosave_connection;
 
     // Turn off any previous timeout.
     autosave_connection.disconnect();
@@ -104,7 +109,6 @@ AutoSave::save()
         ++docnum; // Give each document a unique number.
 
         if (document->isModifiedSinceAutoSave()) {
-
             std::string base_name = "automatic-save-" + std::to_string(uid);
 
             // The following we do for each document (rather wasteful...) so that

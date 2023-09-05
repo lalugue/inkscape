@@ -15,7 +15,7 @@
 
 #include <glibmm/refptr.h>
 #include <glibmm/ustring.h>
-#include <gtkmm/applicationwindow.h>
+#include <gtkmm/window.h>
 #include "inkscape-application.h"
 
 class InkscapeWindow;
@@ -23,33 +23,36 @@ class InkscapeWindow;
 namespace Inkscape::UI::Dialog {
 
 class DialogContainer;
-class DialogMultipaned;
 
 /**
  * DialogWindow holds DialogContainer instances for undocked dialogs.
  *
  * It watches the last active InkscapeWindow and updates its inner dialogs, if any.
  */
-class DialogWindow : public Gtk::Window
+class DialogWindow final : public Gtk::Window
 {
 public:
     DialogWindow(InkscapeWindow* window, Gtk::Widget *page = nullptr);
-    ~DialogWindow() override;
 
     void set_inkscape_window(InkscapeWindow *window);
     InkscapeWindow* get_inkscape_window() { return _inkscape_window; }
+
     void update_dialogs();
     void update_window_size_to_fit_children();
 
-    // Getters
     DialogContainer *get_container() { return _container; }
 
 private:
-    bool on_key_press_event(GdkEventKey* key_event) override;
+    bool on_key_press_event(GdkEventKey *key_event) final;
 
     InkscapeApplication *_app = nullptr;
-    InkscapeWindow *_inkscape_window = nullptr; // The Inkscape window that dialog window is attached to, changes when mouse moves into new Inkscape window.
+
+    /// The Inkscape window that dialog window is attached to.
+    /// Changes when mouse moves into new Inkscape window.
+    InkscapeWindow *_inkscape_window = nullptr;
+
     DialogContainer *_container = nullptr;
+
     Glib::ustring _title;
 };
 

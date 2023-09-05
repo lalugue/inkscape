@@ -19,9 +19,14 @@
 #include "ui/widget/font-selector.h"
 #include "ui/widget/font-collection-selector.h"
 
-namespace Inkscape {
-namespace UI {
-namespace Dialog {
+namespace Gtk {
+class Box;
+class Label;
+class Paned;
+class SearchEntry;
+} // namespace Gtk
+
+namespace Inkscape::UI::Dialog {
 
 /**
  * The font collections manager dialog allows the user to:
@@ -34,7 +39,7 @@ namespace Dialog {
  * User can add new fonts in font collections by dragging the fonts from the
  * font list and dropping them a user font collection.
  */
-class FontCollectionsManager : public DialogBase
+class FontCollectionsManager final : public DialogBase
 {
 public:
     enum SelectionStates {SYSTEM_COLLECTION = -1, USER_COLLECTION, USER_COLLECTION_FONT};
@@ -72,9 +77,7 @@ private:
     auto_connection _font_count_changed_connection;
 };
 
-} // namespace Dialog
-} // namespace UI
-} // namespace Inkscape
+} // namespace Inkscape::UI::Dialog
 
 #endif // INKSCAPE_UI_DIALOG_FONT_COLLECTIONS_MANAGER_H
 

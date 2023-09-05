@@ -74,7 +74,7 @@ public:
     void set_active( gint active );
     void set_icon_size( Gtk::BuiltinIconSize size ) { _icon_size = size; }
 
-    Glib::RefPtr<Gtk::ListStore> get_store() { return _store; }
+    Glib::RefPtr<Gtk::ListStore> const &get_store() { return _store; }
 
     sigc::signal<void (int)> signal_changed() { return _changed; }
     sigc::signal<void (int)> signal_changed_after() { return _changed_after; }

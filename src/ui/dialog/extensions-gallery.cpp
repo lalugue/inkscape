@@ -22,9 +22,11 @@
 #include <gtkmm/label.h>
 #include <gtkmm/liststore.h>
 #include <gtkmm/paned.h>
+#include <gtkmm/scale.h>
 #include <gtkmm/searchentry.h>
 #include <gtkmm/togglebutton.h>
 #include <gtkmm/treemodelfilter.h>
+#include <gtkmm/treemodelsort.h>
 #include <gtkmm/treeview.h>
 #include <libintl.h>
 

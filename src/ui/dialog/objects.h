@@ -15,10 +15,17 @@
 #ifndef SEEN_OBJECTS_PANEL_H
 #define SEEN_OBJECTS_PANEL_H
 
+#include <optional>
+#include <map>
+#include <memory>
+#include <string>
+#include <vector>
 #include <glibmm/refptr.h>
 #include <gtk/gtk.h> // GtkEventControllerKey
 #include <gtkmm/box.h>
 #include <gtkmm/gesture.h> // Gtk::EventSequenceState
+#include <gtkmm/treemodel.h>
+#include <gtkmm/treerowreference.h>
 
 #include "color-rgba.h"
 #include "helper/auto-connection.h"
@@ -35,6 +42,8 @@ class GestureMultiPress;
 class ModelButton;
 class Popover;
 class Scale;
+class SearchEntry;
+class TreeStore;
 } // namespace Gtk
 
 class SPItem;
@@ -62,25 +71,25 @@ enum SelectionStates : SelectionState {
 /**
  * A panel that displays objects.
  */
-class ObjectsPanel : public DialogBase
+class ObjectsPanel final : public DialogBase
 {
 public:
     ObjectsPanel();
-    ~ObjectsPanel() override;
+    ~ObjectsPanel() final;
 
     class ModelColumns;
 
 protected:
-    void desktopReplaced() override;
-    void documentReplaced() override;
+    void desktopReplaced() final;
+    void documentReplaced() final;
     void layerChanged(SPObject *obj);
-    void selectionChanged(Selection *selected) override;
+    void selectionChanged(Selection *selected) final;
     ObjectWatcher *unpackToObject(SPObject *item);
 
     // Accessed by ObjectWatcher directly (friend class)
     SPObject* getObject(Inkscape::XML::Node *node);
     ObjectWatcher* getWatcher(Inkscape::XML::Node *node);
-    ObjectWatcher *getRootWatcher() const { return root_watcher; };
+    ObjectWatcher *getRootWatcher() const { return root_watcher.get(); };
     bool showChildInTree(SPItem *item);
 
     Inkscape::XML::Node *getRepr(Gtk::TreeModel::Row const &row) const;
@@ -93,14 +102,14 @@ protected:
     bool cleanDummyChildren(Gtk::TreeModel::Row const &row);
 
     Glib::RefPtr<Gtk::TreeStore> _store;
-    ModelColumns* _model;
+    std::unique_ptr<ModelColumns> _model;
 
     void setRootWatcher();
 
 private:
     Glib::RefPtr<Gtk::Builder> _builder;
     Inkscape::PrefObserver _watch_object_mode;
-    ObjectWatcher* root_watcher;
+    std::unique_ptr<ObjectWatcher> root_watcher;
     SPItem *current_item = nullptr;
 
     Inkscape::auto_connection layer_changed;
@@ -169,10 +178,10 @@ private:
 
     bool select_row( Glib::RefPtr<Gtk::TreeModel> const & model, Gtk::TreeModel::Path const & path, bool b );
 
-    bool on_drag_motion(const Glib::RefPtr<Gdk::DragContext> &, int, int, guint) override;
-    bool on_drag_drop(const Glib::RefPtr<Gdk::DragContext> &, int, int, guint) override;
+    bool on_drag_motion(const Glib::RefPtr<Gdk::DragContext> &, int, int, guint) final;
+    bool on_drag_drop(const Glib::RefPtr<Gdk::DragContext> &, int, int, guint) final;
     void on_drag_start(const Glib::RefPtr<Gdk::DragContext> &);
-    void on_drag_end(const Glib::RefPtr<Gdk::DragContext> &) override;
+    void on_drag_end(const Glib::RefPtr<Gdk::DragContext> &) final;
 
     bool selectCursorItem(unsigned int state);
     SPItem *_getCursorItem(Gtk::TreeViewColumn *column);
@@ -180,7 +189,7 @@ private:
     friend class ObjectWatcher;
 
     SPItem *_solid_item;
-    std::list<SPItem *> _translucent_items;
+    std::vector<SPItem *> _translucent_items;
     int _msg_id;
     Gtk::Popover& _settings_menu;
     Gtk::Popover& _object_menu;

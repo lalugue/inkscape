@@ -10,24 +10,15 @@
 #ifndef ABOUTDIALOG_H
 #define ABOUTDIALOG_H
 
-#include <gtkmm.h>
-#include <gtkmm/builder.h>
+namespace Inkscape::UI::Dialog {
 
-namespace Inkscape {
-namespace UI {
-namespace Dialog {
-
+// TODO: This should not be a class, given it only contains one static function.
 class AboutDialog {
-
-  public:
+public:
     static void show_about();
-
-  private:
 };
 
-} // namespace Dialog
-} // namespace UI
-} // namespace Inkscape
+} // namespace Inkscape::UI::Dialog
 
 #endif // ABOUTDIALOG_H
 

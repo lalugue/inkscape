@@ -7,23 +7,30 @@
  * Copyright (C) 2019 Tavmjong Bah
  *
  * The contents of this file may be used under the GNU General Public License Version 2 or later.
- *
  */
 
 #ifndef INK_ACTIONS_CANVAS_SNAPPING_H
 #define INK_ACTIONS_CANVAS_SNAPPING_H
 
+#include <vector>
+
+namespace Glib {
+class ustring;
+} // namespace Glib
+
+namespace Gio {
+class ActionMap;
+} // namespace Gio
+
 class SPDocument;
+
 namespace Inkscape {
-    class SnapPreferences;
-}
+class SnapPreferences;
+} // namespace Inkscape
 
 void add_actions_canvas_snapping(Gio::ActionMap* map);
-
 std::vector<std::vector<Glib::ustring>> get_extra_data_canvas_snapping();
-
 Inkscape::SnapPreferences& get_snapping_preferences();
-
 void transition_to_simple_snapping();
 
 #endif // INK_ACTIONS_CANVAS_SNAPPING_H

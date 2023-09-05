@@ -1,15 +1,29 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
+
 #ifndef SEEN_SVG_RENDERER_H
 #define SEEN_SVG_RENDERER_H
 
 #include <cstdint>
 #include <memory>
 #include <optional>
-#include <gtkmm.h>
-#include <gdkmm/rgba.h>
+#include <cairomm/refptr.h>
+#include <glibmm/refptr.h>
 
 #include "document.h"
 #include "color.h"
+
+namespace Cairo {
+class Surface;
+} // namespace Cairo
+
+namespace Glib {
+class ustring;
+} // namespace Glib
+
+namespace Gdk {
+class Pixbuf;
+class RGBA;
+} // namespace Gdk
 
 namespace Inkscape {
 
@@ -19,6 +33,7 @@ Glib::ustring rgba_to_css_color(const Gdk::RGBA& color);
 Glib::ustring rgba_to_css_color(const SPColor& color);
 // double to low precision string
 Glib::ustring double_to_css_value(double value);
+
 class Pixbuf;
 
 class svg_renderer
@@ -37,7 +52,7 @@ public:
     Cairo::RefPtr<Cairo::Surface> render_surface(double scale);
 
     // if set, draw checkerboard pattern before image
-    void set_checkerboard_color(uint32_t rgba);
+    void set_checkerboard_color(std::uint32_t rgba);
 
     // set requested scale, by default it is 1.0
     void set_scale(double scale);
@@ -50,10 +65,21 @@ private:
     Pixbuf* do_render(double device_scale);
     std::shared_ptr<SPDocument> _document;
     SPRoot* _root = nullptr;
-    std::optional<uint32_t> _checkerboard;
+    std::optional<std::uint32_t> _checkerboard;
     double _scale = 1.0;
 };
 
-}
+} // namespace Inkscape
 
-#endif
+#endif // SEEN_SVG_RENDERER_H
+
+/*
+  Local Variables:
+  mode:c++
+  c-file-style:"stroustrup"
+  c-file-offsets:((innamespace . 0)(inline-open . 0)(case-label . +))
+  indent-tabs-mode:nil
+  fill-column:99
+  End:
+*/
+// vim:filetype=cpp:expandtab:shiftwidth=4:tabstop=8:softtabstop=4:fileencoding=utf-8:textwidth=99:

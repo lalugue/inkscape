@@ -8,26 +8,34 @@
  *
  */
 
-#include <iomanip>
-#include <sstream>
-#include <unordered_map>
-#include <boost/functional/hash.hpp>
-
 #include "cursor-utils.h"
+
+#include <algorithm>
+#include <cmath>
+#include <cstddef>
+#include <iomanip>
+#include <memory>
+#include <sstream>
+#include <tuple>
+#include <unordered_map>
+#include <utility>
+#include <boost/functional/hash.hpp>
+#include <glibmm/miscutils.h>
+#include <giomm/file.h>
+#include <gdkmm/cursor.h>
+#include <gdkmm/display.h>
+#include <gdkmm/window.h>
+#include <gtkmm/icontheme.h>
+#include <gtkmm/settings.h>
 
 #include "document.h"
 #include "preferences.h"
-
 #include "display/cairo-utils.h"
-
 #include "helper/pixbuf-ops.h"
-
 #include "io/file.h"
 #include "io/resource.h"
-
 #include "object/sp-object.h"
 #include "object/sp-root.h"
-
 #include "util/units.h"
 
 using Inkscape::IO::Resource::SYSTEM;
@@ -48,8 +56,8 @@ struct KeyHasher {
  * Returns pointer to cursor (or null cursor if we could not load a cursor).
  */
 Glib::RefPtr<Gdk::Cursor>
-load_svg_cursor(Glib::RefPtr<Gdk::Display> display,
-                Glib::RefPtr<Gdk::Window> window,
+load_svg_cursor(Glib::RefPtr<Gdk::Display> const &display,
+                Glib::RefPtr<Gdk::Window > const &window ,
                 std::string const &file_name,
                 guint32 fill,
                 guint32 stroke,
@@ -71,12 +79,12 @@ load_svg_cursor(Glib::RefPtr<Gdk::Display> display,
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
     Glib::ustring theme_name = prefs->getString("/theme/iconTheme", prefs->getString("/theme/defaultIconTheme", ""));
     if (!theme_name.empty()) {
-        theme_names.push_back(theme_name);
+        theme_names.push_back(std::move(theme_name));
     }
 
     // System
     theme_name = Gtk::Settings::get_default()->property_gtk_icon_theme_name();
-    theme_names.push_back(theme_name);
+    theme_names.push_back(std::move(theme_name));
 
     // Our default
     theme_names.emplace_back("hicolor");
@@ -101,9 +109,11 @@ load_svg_cursor(Glib::RefPtr<Gdk::Display> display,
     const auto cache_enabled = prefs->getBool("/options/cache_svg_cursors", true);
     if (cache_enabled) {
         // construct a key
-        cursor_key = std::make_tuple(std::string(theme_names[0]), std::string(theme_names[1]), file_name, fill, stroke, fill_opacity, stroke_opacity, enable_drop_shadow, scale);
-        if (auto cursor = cursor_cache[cursor_key]) {
-            return cursor;
+        cursor_key = std::tuple{theme_names[0], theme_names[1], file_name,
+                                fill, stroke, fill_opacity, stroke_opacity,
+                                enable_drop_shadow, scale};
+        if (auto const it = cursor_cache.find(cursor_key); it != cursor_cache.end()) {
+            return it->second;
         }
     }
 
@@ -115,14 +125,16 @@ load_svg_cursor(Glib::RefPtr<Gdk::Display> display,
     // Loop over theme names and paths, looking for file.
     Glib::RefPtr<Gio::File> file;
     std::string full_file_path;
+    bool file_exists = false;
     for (auto const &theme_name : theme_names) {
         for (auto const &theme_path : theme_paths) {
             full_file_path = Glib::build_filename(theme_path, theme_name, "cursors", file_name);
             // std::cout << "Checking: " << full_file_path << std::endl;
             file = Gio::File::create_for_path(full_file_path);
-            if (file->query_exists()) break;
+            file_exists = file->query_exists();
+            if (file_exists) break;
         }
-        if (file->query_exists()) break;
+        if (file_exists) break;
     }
 
     if (!file->query_exists()) {
@@ -224,7 +236,7 @@ load_svg_cursor(Glib::RefPtr<Gdk::Display> display,
     document.reset();
 
     if (cache_enabled) {
-        cursor_cache[cursor_key] = cursor;
+        cursor_cache[std::move(cursor_key)] = cursor;
     }
 
     return cursor;

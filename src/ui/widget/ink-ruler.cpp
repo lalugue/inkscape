@@ -16,6 +16,7 @@
 #include <sigc++/functors/mem_fun.h>
 #include <cairomm/context.h>
 #include <glibmm/ustring.h>
+#include <gdkmm/general.h>
 #include <gtkmm/drawingarea.h>
 #include <gtkmm/popover.h>
 #include <gtkmm/stylecontext.h>

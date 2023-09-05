@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-#ifndef SEEN_TOOLBAR_COMMAND_H
-#define SEEN_TOOLBAR_COMMAND_H
-
+/**
+ * @file
+ * Toolbar for Commands.
+ */
 /*
  * Authors:
  *   Tavmjong Bah
@@ -11,26 +12,19 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include <gtkmm.h>
+#ifndef SEEN_TOOLBAR_COMMAND_H
+#define SEEN_TOOLBAR_COMMAND_H
 
-#include "preferences.h"
-
-class InkscapeWindow;
-class SPDesktop;
+#include <gtkmm/box.h>
 
 namespace Inkscape::UI::Toolbar {
 
-class CommandToolbar : public Gtk::Box {
+class CommandToolbar final : public Gtk::Box {
 public:
     CommandToolbar();
-    ~CommandToolbar() override = default;
-
-private:
-
 };
 
 } // namespace Inkscape::UI::Toolbar
-
 
 #endif /* SEEN_TOOLBAR_COMMAND_H */
 

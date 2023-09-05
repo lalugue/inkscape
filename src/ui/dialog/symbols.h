@@ -17,13 +17,14 @@
 #define INKSCAPE_UI_DIALOG_SYMBOLS_H
 
 #include <cstddef>
+#include <optional>
 #include <string>
 #include <vector>
 #include <glibmm/refptr.h>
 #include <glibmm/ustring.h>
-#include <gtkmm.h>
 #include <gtkmm/builder.h>
 #include <gtkmm/cellrendererpixbuf.h>
+#include <gtkmm/enums.h>
 #include <gtkmm/treeiter.h>
 #include <gtkmm/treemodel.h>
 #include <gtkmm/treemodelcolumn.h>
@@ -38,10 +39,18 @@
 #include "ui/operation-blocker.h"
 
 namespace Gtk {
+class Box;
+class Button;
 class CheckButton;
 class IconView;
+class Image;
 class Label;
+class ListStore;
 class MenuButton;
+class Overlay;
+class Scale;
+class ScrolledWindow;
+class SearchEntry;
 } // namespace Gtk
 
 class SPObject;

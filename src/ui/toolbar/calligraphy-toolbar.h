@@ -28,28 +28,35 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include "toolbar.h"
+#include <map>
+#include <memory>
+#include <glibmm/refptr.h>
 #include <gtkmm/adjustment.h>
+
+#include "toolbar.h"
 
 class SPDesktop;
 
 namespace Gtk {
+class Adjustment;
 class ComboBoxText;
-}
+class ToggleToolButton;
+} // namespace Gtk
 
-namespace Inkscape {
-namespace UI {
+namespace Inkscape::UI {
+
 class SimplePrefPusher;
 
 namespace Widget {
 class SpinButtonToolItem;
 class UnitTracker;
-}
+} // namespace Widget
 
 namespace Toolbar {
-class CalligraphyToolbar : public Toolbar {
+
+class CalligraphyToolbar final : public Toolbar {
 private:
-    UI::Widget::UnitTracker *_tracker;
+    std::unique_ptr<UI::Widget::UnitTracker> _tracker;
     bool _presets_blocked;
 
     UI::Widget::SpinButtonToolItem *_angle_item;
@@ -98,8 +105,19 @@ public:
     static GtkWidget * create(SPDesktop *desktop);
 };
 
-}
-}
-}
+} // namespace Inkscape::UI
+
+} // namespace Toolbar
 
 #endif /* !SEEN_CALLIGRAPHY_TOOLBAR_H */
+
+/*
+  Local Variables:
+  mode:c++
+  c-file-style:"stroustrup"
+  c-file-offsets:((innamespace . 0)(inline-open . 0)(case-label . +))
+  indent-tabs-mode:nil
+  fill-column:99
+  End:
+*/
+// vim: filetype=cpp:expandtab:shiftwidth=4:tabstop=8:softtabstop=4:fileencoding=utf-8:textwidth=99 :

@@ -27,9 +27,15 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include <glibmm/i18n.h>
-
 #include "text-toolbar.h"
+
+#include <glibmm/i18n.h>
+#include <gtkmm/button.h>
+#include <gtkmm/checkbutton.h>
+#include <gtkmm/frame.h>
+#include <gtkmm/grid.h>
+#include <gtkmm/menubutton.h>
+#include <gtkmm/separator.h>
 
 #include "desktop-style.h"
 #include "desktop.h"
@@ -37,16 +43,13 @@
 #include "document.h"
 #include "inkscape.h"
 #include "selection-chemistry.h"
-
 #include "libnrtype/font-lister.h"
-
 #include "object/sp-flowdiv.h"
 #include "object/sp-flowtext.h"
 #include "object/sp-root.h"
 #include "object/sp-text.h"
 #include "object/sp-tspan.h"
 #include "object/sp-string.h"
-
 #include "svg/css-ostringstream.h"
 #include "ui/dialog/dialog-container.h"
 #include "ui/icon-names.h"
@@ -59,7 +62,6 @@
 #include "ui/widget/unit-tracker.h"
 #include "util/units.h"
 #include "util/font-collections.h"
-
 #include "widgets/style-utils.h"
 
 using Inkscape::DocumentUndo;

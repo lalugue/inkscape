@@ -25,9 +25,11 @@
 #include <giomm/action.h>
 #include <gtkmm/box.h>
 #include <gtkmm/builder.h>
+#include <gtkmm/button.h>
 #include <gtkmm/label.h>
 #include <gtkmm/listbox.h>
 #include <gtkmm/listboxrow.h>
+#include <gtkmm/recentmanager.h>
 #include <gtkmm/scrolledwindow.h>
 #include <gtkmm/searchbar.h>
 #include <gtkmm/searchentry.h>

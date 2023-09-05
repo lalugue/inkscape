@@ -25,8 +25,9 @@
 #include <glibmm/i18n.h>
 #include <glibmm/miscutils.h>
 #include <glibmm/regex.h>
+#include <glibmm/stringutils.h>
 #include <gtkmm/expander.h>
-#include <iostream>
+#include <gtkmm/liststore.h>
 
 #include "document.h"
 #include "extension/db.h"
@@ -45,7 +46,6 @@
 
 // Routines from file.cpp
 #undef INK_DUMP_FILENAME_CONV
-
 #ifdef INK_DUMP_FILENAME_CONV
 void dump_str(const gchar *str, const gchar *prefix);
 void dump_ustr(const Glib::ustring &ustr);
@@ -54,7 +54,7 @@ void dump_ustr(const Glib::ustring &ustr);
 /**
  * Information stored about all save and open filters applied to the dialog.
  */
-struct FilterListClass : public Gtk::TreeModelColumnRecord
+struct FilterListClass final : public Gtk::TreeModelColumnRecord
 {
     Gtk::TreeModelColumn<Glib::ustring> label;
     Gtk::TreeModelColumn<Inkscape::Extension::Extension *> extension;
@@ -67,17 +67,22 @@ struct FilterListClass : public Gtk::TreeModelColumnRecord
         add(enabled);
     }
 };
-FilterListClass FilterList;
 
-namespace Inkscape {
-namespace UI {
-namespace Dialog {
+static FilterListClass FilterList;
+
+namespace Inkscape::UI::Dialog {
 
 /*#########################################################################
 ### F I L E     D I A L O G    B A S E    C L A S S
 #########################################################################*/
 
-void FileDialogBaseGtk::internalSetup()
+FileDialogBaseGtk::FileDialogBaseGtk(Gtk::Window &parentWindow, Glib::ustring const &title,
+                                     Gtk::FileChooserAction const dialogType,
+                                     FileDialogType const type,
+                                     char const * const preferenceBase)
+    : Gtk::FileChooserDialog{parentWindow, title, dialogType}
+    , _preferenceBase{preferenceBase ? preferenceBase : "unknown"}
+    , _dialogType(type)
 {
     filterComboBox = dynamic_cast<Gtk::ComboBoxText *>(find_widget_by_name(*this, "GtkComboBoxText"));
     g_assert(filterComboBox);
@@ -86,17 +91,15 @@ void FileDialogBaseGtk::internalSetup()
     filterComboBox->set_model(filterStore);
     filterComboBox->signal_changed().connect(sigc::mem_fun(*this, &FileDialogBaseGtk::filterChangedCallback));
 
-    auto cell_renderer = filterComboBox->get_first_cell();
-    if (cell_renderer) {
-        // Add enabled column to cell_renderer property
+    if (auto const cell_renderer = filterComboBox->get_first_cell()) {
         filterComboBox->add_attribute(cell_renderer->property_sensitive(), FilterList.enabled);
     }
 
     // Open executable file dialogs don't need the preview panel
     if (_dialogType != EXE_TYPES) {
         Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-        bool enablePreview   = prefs->getBool(preferenceBase + "/enable_preview", true);
-        bool enableSVGExport = prefs->getBool(preferenceBase + "/enable_svgexport", false);
+        bool enablePreview   = prefs->getBool(_preferenceBase + "/enable_preview", true);
+        bool enableSVGExport = prefs->getBool(_preferenceBase + "/enable_svgexport", false);
 
         previewCheckbox.set_label(Glib::ustring(_("Enable preview")));
         previewCheckbox.set_active(enablePreview);
@@ -118,13 +121,14 @@ void FileDialogBaseGtk::internalSetup()
     }
 }
 
+FileDialogBaseGtk::~FileDialogBaseGtk() = default;
 
 void FileDialogBaseGtk::cleanup(bool showConfirmed)
 {
     if (_dialogType != EXE_TYPES) {
         Inkscape::Preferences *prefs = Inkscape::Preferences::get();
         if (showConfirmed) {
-            prefs->setBool(preferenceBase + "/enable_preview", previewCheckbox.get_active());
+            prefs->setBool(_preferenceBase + "/enable_preview", previewCheckbox.get_active());
         }
     }
 }
@@ -133,7 +137,7 @@ void FileDialogBaseGtk::_svgexportEnabledCB()
 {
     bool enabled = svgexportCheckbox.get_active();
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-    prefs->setBool(preferenceBase + "/enable_svgexport", enabled);
+    prefs->setBool(_preferenceBase + "/enable_svgexport", enabled);
 }
 
 /**
@@ -211,8 +215,6 @@ FileOpenDialogImplGtk::FileOpenDialogImplGtk(Gtk::Window &parentWindow, const Gl
                                              FileDialogType fileTypes, const Glib::ustring &title)
     : FileDialogBaseGtk(parentWindow, title, Gtk::FILE_CHOOSER_ACTION_OPEN, fileTypes, "/dialogs/open")
 {
-
-
     if (_dialogType == EXE_TYPES) {
         /* One file at a time */
         set_select_multiple(false);
@@ -338,7 +340,6 @@ bool FileOpenDialogImplGtk::show()
     }
 }
 
-
 /**
  * To Get Multiple filenames selected at-once.
  */
@@ -363,8 +364,6 @@ Glib::ustring FileOpenDialogImplGtk::getCurrentDirectory()
 {
     return get_current_folder();
 }
-
-
 
 //########################################################################
 //# F I L E    S A V E
@@ -490,8 +489,6 @@ void FileSaveDialogImplGtk::fileNameEntryChangedCallback()
     }
 }
 
-
-
 /**
  * Callback for fileNameEntry widget
  */
@@ -603,7 +600,6 @@ Glib::ustring FileSaveDialogImplGtk::getCurrentDirectory()
     return get_current_folder();
 }
 
-
 /**
   * Change the default save path location.
   */
@@ -660,10 +656,7 @@ void FileSaveDialogImplGtk::updateNameAndExtension()
     }
 }
 
-
-} // namespace Dialog
-} // namespace UI
-} // namespace Inkscape
+} // namespace Inkscape::UI::Dialog
 
 /*
   Local Variables:

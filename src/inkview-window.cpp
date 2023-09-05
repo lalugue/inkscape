@@ -18,12 +18,14 @@
 #include "inkview-window.h"
 
 #include <iostream>
+#include <glibmm/main.h>
+#include <gtkmm/builder.h>
+#include <gtkmm/window.h>
+#include <sigc++/functors/mem_fun.h>
 
 #include "document.h"
-
 #include "ui/monitor.h"
 #include "ui/view/svg-view-widget.h"
-
 #include "util/units.h"
 
 InkviewWindow::InkviewWindow(const Gio::Application::type_vec_files files,

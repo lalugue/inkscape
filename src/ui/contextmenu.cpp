@@ -27,6 +27,7 @@
 #include "contextmenu.h"
 
 #include <glibmm/i18n.h>
+#include <gtkmm/window.h>
 
 #include "desktop.h"
 #include "document.h"

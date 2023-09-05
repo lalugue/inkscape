@@ -11,11 +11,23 @@
 #define INK_SHORTCUTS_H
 
 #include <map>
-#include <set>
+#include <utility>
+#include <vector>
+#include <glibmm/refptr.h>
+#include <glibmm/ustring.h>
+#include <gtk/gtk.h> // GtkEventControllerKey
+#include <gtkmm/accelkey.h>
+#include <sigc++/connection.h>
+#include <sigc++/signal.h>
 
-#include <giomm.h>
-#include <gtkmm.h>
-#include <sigc++/sigc++.h>
+namespace Gio {
+class File;
+} // namespace Gio;
+
+namespace Gtk {
+class Application;
+class Widget;
+} // namespace Gtk
 
 namespace Inkscape {
 
@@ -25,9 +37,9 @@ namespace UI::View { class View; }
 namespace XML {
 class Document;
 class Node;
-}
+} // namespace XML
 
-struct accel_key_less
+struct accel_key_less final
 {
     bool operator()(const Gtk::AccelKey& key1, const Gtk::AccelKey& key2) const
     {
@@ -37,7 +49,7 @@ struct accel_key_less
     }
 };
 
-class Shortcuts {
+class Shortcuts final {
 public:
     enum What {
         All,
@@ -58,7 +70,7 @@ public:
   
 private:
     Shortcuts();
-    ~Shortcuts() = default;
+    ~Shortcuts();
 
 public:
     Shortcuts(Shortcuts const&)      = delete;
@@ -71,16 +83,16 @@ public:
     bool write(Glib::RefPtr<Gio::File> file, What what = User);
     bool write_user();
 
-    bool is_user_set(Glib::ustring& action);
+    bool is_user_set(Glib::ustring const &action);
 
     // Add/remove shortcuts
-    bool add_shortcut(Glib::ustring name, const Gtk::AccelKey& shortcut, bool user);
-    bool remove_shortcut(Glib::ustring name);
+    bool add_shortcut(Glib::ustring const &name, Gtk::AccelKey const &shortcut, bool user);
+    bool remove_shortcut(Glib::ustring const &name);
     Glib::ustring remove_shortcut(const Gtk::AccelKey& shortcut);
 
     // User shortcuts
-    bool add_user_shortcut(Glib::ustring name, const Gtk::AccelKey& shortcut);
-    bool remove_user_shortcut(Glib::ustring name);
+    bool add_user_shortcut(Glib::ustring const &name, Gtk::AccelKey const &shortcut);
+    bool remove_user_shortcut(Glib::ustring const &name);
     bool clear_user_shortcuts();
 
     // Invoke action corresponding to key
@@ -116,7 +128,6 @@ public:
     void dump_all_recursive(Gtk::Widget* widget);
 
 private:
-
     // Gio::Actions
     Glib::RefPtr<Gtk::Application> app;
     std::map<Glib::ustring, bool> action_user_set;

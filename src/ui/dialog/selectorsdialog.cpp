@@ -24,6 +24,7 @@
 #include <gtkmm/dialog.h>
 #include <gtkmm/radiobutton.h>
 #include <gtkmm/selectiondata.h>
+#include <gtkmm/treemodelfilter.h>
 
 #include "attribute-rel-svg.h"
 #include "document-undo.h"

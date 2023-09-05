@@ -9,7 +9,14 @@
 #define INKSCAPE_DIALOG_FILLET_CHAMFER_PROPERTIES_H
 
 #include <2geom/point.h>
-#include <gtkmm.h>
+#include <glibmm/ustring.h>
+#include <gtkmm/button.h>
+#include <gtkmm/dialog.h>
+#include <gtkmm/grid.h>
+#include <gtkmm/label.h>
+#include <gtkmm/radiobutton.h>
+#include <gtkmm/spinbutton.h>
+#include <gtkmm/treemodel.h>
 
 #include "live_effects/parameter/nodesatellitesarray.h"
 
@@ -34,8 +41,7 @@ public:
                            bool _aprox_radius, NodeSatellite _nodesatellite);
 
 protected:
-    Inkscape::LivePathEffect::FilletChamferKnotHolderEntity *
-    _knotpoint;
+    Inkscape::LivePathEffect::FilletChamferKnotHolderEntity *_knotpoint = nullptr;
 
     Gtk::Label _fillet_chamfer_position_label;
     Gtk::SpinButton _fillet_chamfer_position_numeric;

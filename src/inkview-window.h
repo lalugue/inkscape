@@ -11,27 +11,28 @@
  *
  * The contents of this file may be used under the GNU General Public License Version 2 or later.
  * Read the file 'COPYING' for more information.
- *
  */
 
 #ifndef INKVIEW_WINDOW_H
 #define INKVIEW_WINDOW_H
 
-#include <gtkmm.h>
+#include <exception>
+#include <vector>
+#include <glibmm/refptr.h>
+#include <giomm/application.h>
+#include <gtkmm/applicationwindow.h>
+
+namespace Gio {
+class File;
+} // namespace Gio
 
 class SPDocument;
 
-namespace Inkscape {
-namespace UI {
-namespace View {
-  class SVGViewWidget;
-}
-}
-}
-
+namespace Inkscape::UI::View {
+class SVGViewWidget;
+} // namespace Inkscape::UI::View
 
 class InkviewWindow : public Gtk::ApplicationWindow {
-
 public:
     InkviewWindow(const Gio::Application::type_vec_files files,
                   bool fullscreen, bool recursive, int timer, double scale, bool preload);

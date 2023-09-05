@@ -5,8 +5,9 @@
  * Some code and ideas migrated from dimensioning.py by
  * Johannes B. Rutzmoser, johannes.rutzmoser (at) googlemail (dot) com
  * https://github.com/Rutzmoser/inkscape_dimensioning
+ *
  * Copyright (C) 2014 Author(s)
-
+ *
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
@@ -14,6 +15,8 @@
 
 #include <cmath>
 #include <iomanip>
+#include <gtkmm/box.h>
+#include <gtkmm/notebook.h>
 #include <libnrtype/font-lister.h>
 #include <pangomm/fontdescription.h>
 
@@ -207,8 +210,6 @@ LPEMeasureSegments::LPEMeasureSegments(LivePathEffectObject *lpeobject) :
                     "this allows for labels and measurements with different orientations or additional projections.\n"
                     "<b><i>Set Defaults:</i></b> For every LPE, default values can be set at the bottom."));
 }
-
-LPEMeasureSegments::~LPEMeasureSegments() = default;
 
 Gtk::Widget *
 LPEMeasureSegments::newWidget()

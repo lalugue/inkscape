@@ -9,6 +9,11 @@
 
 #include "export-preview.h"
 
+#include <utility>
+#include <glibmm/convert.h>
+#include <glibmm/main.h>
+#include <gdkmm/pixbuf.h>
+
 #include "document.h"
 #include "display/cairo-utils.h"
 #include "object/sp-item.h"
@@ -16,9 +21,7 @@
 #include "util/preview.h"
 #include "io/resource.h"
 
-namespace Inkscape {
-namespace UI {
-namespace Dialog {
+namespace Inkscape::UI::Dialog {
 
 /**
  * A preview drawing object is responsible for constructing a drawing and showing it's contents
@@ -27,14 +30,13 @@ namespace Dialog {
  * you need to change the document object being used for the preview.
  */
 PreviewDrawing::PreviewDrawing(SPDocument *doc)
+    : _document{doc}
 {
-    _document = doc;
 }
 
 PreviewDrawing::~PreviewDrawing()
 {
     destruct();
-    _document = nullptr;
 }
 
 void PreviewDrawing::destruct()
@@ -66,7 +68,8 @@ void PreviewDrawing::construct()
     if (!_shown_items.empty()) {
         _document->getRoot()->invoke_hide_except(_visionkey, _shown_items);
     }
-    _drawing = drawing;
+
+    _drawing = std::move(drawing);
 }
 
 /**
@@ -159,7 +162,7 @@ void ExportPreview::setBox(Geom::Rect const &bbox)
 
 void ExportPreview::setDrawing(std::shared_ptr<PreviewDrawing> drawing)
 {
-    _drawing = drawing;
+    _drawing = std::move(drawing);
 }
 
 /*
@@ -194,9 +197,7 @@ void ExportPreview::setBackgroundColor(uint32_t bg_color)
     _bg_color = bg_color;
 }
 
-} // namespace Dialog
-} // namespace UI
-} // namespace Inkscape
+} // namespace Inkscape::UI::Dialog
 
 /*
   Local Variables:

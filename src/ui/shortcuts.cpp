@@ -21,27 +21,31 @@
 
 #include "shortcuts.h"
 
+#include <memory>
 #include <iostream>
 #include <iomanip>
-
-#include <glibmm.h>
+#include <glibmm/convert.h>
 #include <glibmm/i18n.h>
-#include <gtkmm.h>
+#include <glibmm/miscutils.h>
+#include <glibmm/regex.h>
+#include <giomm/file.h>
+#include <giomm/simpleaction.h>
+#include <gtkmm/accelgroup.h>
+#include <gtkmm/application.h>
+#include <gtkmm/container.h>
+#include <gtkmm/window.h>
 
 #include "preferences.h"
 #include "inkscape-application.h"
 #include "inkscape-window.h"
-
 #include "io/dir-util.h"
 #include "io/resource.h"
 #include "io/sys.h"
-
 #include "ui/controller.h" // get_group(GtkEventControllerKey constt *)
 #include "ui/modifiers.h"
 #include "ui/tools/tool-base.h"    // For latin keyval
 #include "ui/dialog/filedialog.h"  // Importing/exporting files.
 #include "ui/widget/events/canvas-event.h"
-
 #include "xml/simple-document.h"
 #include "xml/node.h"
 #include "xml/node-iterators.h"
@@ -60,10 +64,10 @@ Shortcuts::Shortcuts()
     }
 }
 
+Shortcuts::~Shortcuts() = default;
 
 void
 Shortcuts::init() {
-
     initialized = true;
 
     // Clear arrays (we may be re-reading).
@@ -152,7 +156,7 @@ Shortcuts::invoke_action(Gtk::AccelKey const &shortcut)
     Glib::ustring accel = Gtk::AccelGroup::name(shortcut.get_key(), shortcut.get_mod());
     std::vector<Glib::ustring> actions = app->get_actions_for_accel(accel);
     if (!actions.empty()) {
-        Glib::ustring action = actions[0];
+        Glib::ustring const &action = actions[0];
         Glib::ustring action_name;
         Glib::VariantBase value;
         Gio::SimpleAction::parse_detailed_name_variant(action.substr(4), action_name, value);
@@ -195,12 +199,10 @@ Shortcuts::invoke_action(GtkEventControllerKey const * const controller,
 }
 
 Gdk::ModifierType
-parse_modifier_string(gchar const *modifiers_string)
+parse_modifier_string(char const * const modifiers_string)
 {
     Gdk::ModifierType modifiers(Gdk::ModifierType(0));
     if (modifiers_string) {
-  
-        Glib::ustring str(modifiers_string);
         std::vector<Glib::ustring> mod_vector = Glib::Regex::split_simple("\\s*,\\s*", modifiers_string);
   
         for (auto mod : mod_vector) {
@@ -217,7 +219,6 @@ parse_modifier_string(gchar const *modifiers_string)
             } else if (mod == "Meta") {
                 modifiers |= Gdk::META_MASK;
             } else if (mod == "Primary") {
-  
                 // System dependent key to invoke menus. (Needed for OSX in particular.)
                 // We only read "Primary" and never write it.
                 auto display = Gdk::Display::get_default();
@@ -244,7 +245,6 @@ parse_modifier_string(gchar const *modifiers_string)
     }
     return modifiers;
 }
-
 
 // Read a shortcut file.
 bool
@@ -293,7 +293,7 @@ Shortcuts::_read(XML::Node const &keysnode, bool user_set)
 
         if (strcmp(iter->name(), "modifier") == 0) {
 
-            gchar const *mod_name = iter->attribute("action");
+            char const * const mod_name = iter->attribute("action");
             if (!mod_name) {
                 std::cerr << "Shortcuts::read: Missing modifier for action!" << std::endl;;
                 continue;
@@ -308,19 +308,19 @@ Shortcuts::_read(XML::Node const &keysnode, bool user_set)
             // If mods isn't specified then it should use default, if it's an empty string
             // then the modifier is None (i.e. happens all the time without a modifier)
             KeyMask and_modifier = NOT_SET;
-            gchar const *mod_attr = iter->attribute("modifiers");
+            char const * const mod_attr = iter->attribute("modifiers");
             if (mod_attr) {
                 and_modifier = (KeyMask) parse_modifier_string(mod_attr);
             }
 
             // Parse not (cold key) modifier
             KeyMask not_modifier = NOT_SET;
-            gchar const *not_attr = iter->attribute("not_modifiers");
+            char const * const not_attr = iter->attribute("not_modifiers");
             if (not_attr) {
                 not_modifier = (KeyMask) parse_modifier_string(not_attr);
             }
 
-            gchar const *disabled_attr = iter->attribute("disabled");
+            char const * const disabled_attr = iter->attribute("disabled");
             if (disabled_attr && strcmp(disabled_attr, "true") == 0) {
                 and_modifier = NEVER;
             }
@@ -342,8 +342,8 @@ Shortcuts::_read(XML::Node const &keysnode, bool user_set)
         }
 
         // Gio::Action's
-        gchar const *gaction = iter->attribute("gaction");
-        gchar const *keys    = iter->attribute("keys");
+        char const * const gaction = iter->attribute("gaction");
+        char const * const keys    = iter->attribute("keys");
         if (gaction && keys) {
 
             // Trim leading spaces
@@ -450,11 +450,11 @@ Shortcuts::write(Glib::RefPtr<Gio::File> file, What what) {
 
 // Return if user set shortcut for Gio::Action.
 bool
-Shortcuts::is_user_set(Glib::ustring& action)
+Shortcuts::is_user_set(Glib::ustring const &action)
 {
     auto it = action_user_set.find(action);
     if (it != action_user_set.end()) {
-        return action_user_set[action];
+        return it->second;
     } else {
         return false;
     }
@@ -509,13 +509,12 @@ Shortcuts::list_all_actions()
     return all_actions;
 }
 
-
 // Add a shortcut, removing any previous use of shortcut.
 bool
-Shortcuts::add_shortcut(Glib::ustring name, const Gtk::AccelKey& shortcut, bool user)
+Shortcuts::add_shortcut(Glib::ustring const &name, const Gtk::AccelKey& shortcut, bool const user)
 {
     // Remove previous use of shortcut (already removed if new user shortcut).
-    if (Glib::ustring old_name = remove_shortcut(shortcut); old_name != "") {
+    if (auto const &old_name = remove_shortcut(shortcut); !old_name.empty()) {
         // std::cerr << "Shortcut::add_shortcut: duplicate shortcut found for: " << shortcut.get_abbrev().raw()
                 //   << "  Old: " << old_name.raw() << "  New: " << name.raw() << " !" << std::endl;
     }
@@ -554,10 +553,9 @@ Shortcuts::add_shortcut(Glib::ustring name, const Gtk::AccelKey& shortcut, bool 
     return false;
 }
 
-
 // Add a user shortcut, updating user's shortcut file if successful.
 bool
-Shortcuts::add_user_shortcut(Glib::ustring name, const Gtk::AccelKey& shortcut)
+Shortcuts::add_user_shortcut(Glib::ustring const &name, const Gtk::AccelKey& shortcut)
 {
     // Remove previous shortcut(s) for action.
     remove_shortcut(name);
@@ -574,7 +572,6 @@ Shortcuts::add_user_shortcut(Glib::ustring name, const Gtk::AccelKey& shortcut)
     std::cerr << "Shortcut::add_user_shortcut: Failed to add: " << name.raw() << " with shortcut " << shortcut.get_abbrev().raw() << std::endl;
     return false;
 };
-
 
 // Remove a shortcut via key. Return name of removed action.
 Glib::ustring
@@ -601,10 +598,9 @@ Shortcuts::remove_shortcut(const Gtk::AccelKey& shortcut)
     return action_name;
 }
 
-
 // Remove a shortcut via action name.
 bool
-Shortcuts::remove_shortcut(Glib::ustring name)
+Shortcuts::remove_shortcut(Glib::ustring const &name)
 {
     for (auto const &action : list_all_detailed_action_names()) {
         if (action == name) {
@@ -621,7 +617,7 @@ Shortcuts::remove_shortcut(Glib::ustring name)
 
 // Remove a user shortcut, updating user's shortcut file.
 bool
-Shortcuts::remove_user_shortcut(Glib::ustring name)
+Shortcuts::remove_user_shortcut(Glib::ustring const &name)
 {
     // Check if really user shortcut.
     bool user_shortcut = is_user_set(name);
@@ -643,7 +639,6 @@ Shortcuts::remove_user_shortcut(Glib::ustring name)
     std::cerr << "Shortcuts::remove_user_shortcut: Failed to remove shortcut for: " << name.raw() << std::endl;
     return false;
 }
-
 
 // Remove all user's shortcuts (simply overwrites existing file).
 bool
@@ -792,7 +787,7 @@ Shortcuts::get_file_names()
         XML::NodeConstSiblingIterator iter = document->firstChild();
         for ( ; iter ; ++iter ) { // We iterate in case of comments.
             if (strcmp(iter->name(), "keys") == 0) {
-                gchar const *name = iter->attribute("name");
+                char const * const name = iter->attribute("name");
                 if (name) {
                     label = Glib::ustring(name) + " (" + label + ")";
                 }
@@ -847,7 +842,7 @@ Shortcuts::update_gui_text_recursive(Gtk::Widget* widget)
     bool is_actionable = GTK_IS_ACTIONABLE(gwidget);
 
     if (is_actionable) {
-        const gchar* gaction = gtk_actionable_get_action_name(GTK_ACTIONABLE(gwidget));
+        char const * const gaction = gtk_actionable_get_action_name(GTK_ACTIONABLE(gwidget));
         if (gaction) {
             Glib::ustring action = gaction;
 
@@ -876,7 +871,6 @@ Shortcuts::update_gui_text_recursive(Gtk::Widget* widget)
 
             // Add new primary accelerator.
             if (accels.size() > 0) {
-
                 // Add space between tooltip and accel if there is a tooltip
                 if (!tooltip.empty()) {
                     tooltip += " ";
@@ -909,28 +903,27 @@ Shortcuts::update_gui_text_recursive(Gtk::Widget* widget)
 // Import user shortcuts from a file.
 bool
 Shortcuts::import_shortcuts() {
-
     // Users key directory.
-    Glib::ustring directory = get_path_string(USER, KEYS, "");
+    auto const &directory = get_path_string(USER, KEYS, {});
 
     // Create and show the dialog
     Gtk::Window* window = app->get_active_window();
     if (!window) {
         return false;
     }
-    Inkscape::UI::Dialog::FileOpenDialog *importFileDialog =
-        Inkscape::UI::Dialog::FileOpenDialog::create(*window, directory, Inkscape::UI::Dialog::CUSTOM_TYPE, _("Select a file to import"));
+
+    auto const importFileDialog = std::unique_ptr<UI::Dialog::FileOpenDialog>{
+        UI::Dialog::FileOpenDialog::create(*window, directory, Inkscape::UI::Dialog::CUSTOM_TYPE,
+                                           _("Select a file to import"))};
     importFileDialog->addFilterMenu(_("Inkscape shortcuts (*.xml)"), "*.xml");
     bool const success = importFileDialog->show();
 
     if (!success) {
-        delete importFileDialog;
         return false;
     }
 
     // Get file name and read.
     Glib::ustring path = importFileDialog->getFilename(); // It's a full path, not just a filename!
-    delete importFileDialog;
 
     Glib::RefPtr<Gio::File> file_read = Gio::File::create_for_path(path);
     if (!read(file_read, true)) {
@@ -944,18 +937,19 @@ Shortcuts::import_shortcuts() {
 
 bool
 Shortcuts::export_shortcuts() {
-
     // Users key directory.
-    Glib::ustring directory = get_path_string(USER, KEYS, "");
+    auto const &directory = get_path_string(USER, KEYS, {});
 
     // Create and show the dialog
     Gtk::Window* window = app->get_active_window();
     if (!window) {
         return false;
     }
-    Inkscape::UI::Dialog::FileSaveDialog *saveFileDialog =
-        Inkscape::UI::Dialog::FileSaveDialog::create(*window, directory, Inkscape::UI::Dialog::CUSTOM_TYPE, _("Select a filename for export"),
-                                                     "", "", Inkscape::Extension::FILE_SAVE_METHOD_SAVE_AS);
+
+    auto const saveFileDialog = std::unique_ptr<UI::Dialog::FileSaveDialog>{
+        UI::Dialog::FileSaveDialog::create(*window, directory, Inkscape::UI::Dialog::CUSTOM_TYPE,
+                                           _("Select a filename for export"),
+                                           {}, {}, Inkscape::Extension::FILE_SAVE_METHOD_SAVE_AS)};
     saveFileDialog->addFilterMenu(_("Inkscape shortcuts (*.xml)"), "*.xml");
     saveFileDialog->setFilename("shortcuts.xml");
     bool success = saveFileDialog->show();
@@ -976,8 +970,6 @@ Shortcuts::export_shortcuts() {
         }
     }
 
-    delete saveFileDialog;
-
     return success;
 };
 
@@ -990,9 +982,8 @@ sigc::connection Shortcuts::connect_changed(sigc::slot<void ()> const &slot)
 // For debugging.
 void
 Shortcuts::dump() {
-
     // What shortcuts are being used?
-    std::vector<Gdk::ModifierType> modifiers {
+    static std::vector<Gdk::ModifierType> const modifiers{
         Gdk::ModifierType(0),
         Gdk::SHIFT_MASK,
         Gdk::CONTROL_MASK,
@@ -1003,8 +994,7 @@ Shortcuts::dump() {
         Gdk::SHIFT_MASK   |  Gdk::CONTROL_MASK   | Gdk::MOD1_MASK
     };
     for (auto mod : modifiers) {
-        for (gchar key = '!'; key <= '~'; ++key) {
-
+        for (char key = '!'; key <= '~'; ++key) {
             Glib::ustring action;
             Glib::ustring accel = Gtk::AccelGroup::name(key, mod);
             std::vector<Glib::ustring> actions = app->get_actions_for_accel(accel);
@@ -1058,8 +1048,7 @@ Shortcuts::dump_all_recursive(Gtk::Widget* widget)
     --indent;
 }
 
-
-} // Namespace
+} // namespace Inkscape
 
 /*
   Local Variables:

@@ -35,6 +35,7 @@ class Adjustment;
 class Dialog;
 class RadioButton;
 class SelectionData;
+class TreeModelFilter;
 } // namespace Gtk
 
 namespace Inkscape {
@@ -54,16 +55,16 @@ class StyleDialog;
  *   1. The text node of the style element.
  *   2. The Gtk::TreeModel.
  */
-class SelectorsDialog : public DialogBase
+class SelectorsDialog final : public DialogBase
 {
 public:
     SelectorsDialog();
-    ~SelectorsDialog() override;
+    ~SelectorsDialog() final;
 
-    void update() override;
-    void desktopReplaced() override;
-    void documentReplaced() override;
-    void selectionChanged(Selection *selection) override;
+    void update() final;
+    void desktopReplaced() final;
+    void documentReplaced() final;
+    void selectionChanged(Selection *selection) final;
 
   private:
     // Monitor <style> element for changes.
@@ -106,13 +107,13 @@ public:
     // TreeStore implements simple drag and drop (DND) but there appears no way to know when a DND
     // has been completed (other than doing the whole DND ourselves). As a hack, we use
     // on_row_deleted to trigger write of style element.
-    class TreeStore : public Gtk::TreeStore {
+    class TreeStore final : public Gtk::TreeStore {
     protected:
         TreeStore();
-        bool row_draggable_vfunc(const Gtk::TreeModel::Path& path) const override;
+        bool row_draggable_vfunc(const Gtk::TreeModel::Path& path) const final;
         bool row_drop_possible_vfunc(const Gtk::TreeModel::Path& path,
-                                     const Gtk::SelectionData& selection_data) const override;
-        void on_row_deleted(const TreeModel::Path& path) override;
+                                     const Gtk::SelectionData& selection_data) const final;
+        void on_row_deleted(const TreeModel::Path& path) final;
 
     public:
       static Glib::RefPtr<SelectorsDialog::TreeStore> create(SelectorsDialog *styledialog);

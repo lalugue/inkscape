@@ -24,20 +24,18 @@
 
 namespace Cairo {
 class Context;
-}
+} // namespace Cairo
 
 namespace Gdk {
 class DragContext;
-}
+} // namespace Gdk
 
 namespace Gtk {
 class GestureDrag;
 class GestureMultiPress;
-}
+} // namespace Gtk
 
-namespace Inkscape {
-namespace UI {
-namespace Dialog {
+namespace Inkscape::UI::Dialog {
 
 /** A widget with multiple panes */
 
@@ -210,9 +208,7 @@ private:
     int _natural_width = 0;
 };
 
-} // namespace Dialog
-} // namespace UI
-} // namespace Inkscape
+} // namespace Inkscape::UI::Dialog
 
 #endif // INKSCAPE_UI_DIALOG_MULTIPANED_H
 

@@ -17,18 +17,18 @@
 
 #include "clonetiler.h"
 
+#include <memory>
+#include <2geom/transforms.h>
 #include <glibmm/i18n.h>
-
 #include <gtkmm/adjustment.h>
 #include <gtkmm/checkbutton.h>
 #include <gtkmm/combobox.h>
+#include <gtkmm/frame.h>
 #include <gtkmm/grid.h>
 #include <gtkmm/liststore.h>
 #include <gtkmm/notebook.h>
 #include <gtkmm/radiobutton.h>
 #include <gtkmm/sizegroup.h>
-
-#include <2geom/transforms.h>
 
 #include "desktop.h"
 #include "document-undo.h"
@@ -36,40 +36,34 @@
 #include "filter-chemistry.h"
 #include "inkscape.h"
 #include "message-stack.h"
-
 #include "display/cairo-utils.h"
 #include "display/drawing-context.h"
 #include "display/drawing.h"
-
 #include "ui/icon-loader.h"
-
 #include "object/algorithms/unclump.h"
-
 #include "object/sp-item.h"
 #include "object/sp-namedview.h"
 #include "object/sp-root.h"
 #include "object/sp-use.h"
-
+#include "svg/svg-color.h"
+#include "svg/svg.h"
 #include "ui/icon-names.h"
 #include "ui/widget/spinbutton.h"
 #include "ui/widget/unit-menu.h"
-
-#include "svg/svg-color.h"
-#include "svg/svg.h"
 #include "xml/href-attribute-helper.h"
 
 using Inkscape::DocumentUndo;
 using Inkscape::Util::unit_table;
 
-namespace Inkscape {
-namespace UI {
+namespace Inkscape::UI {
 
 namespace Widget {
+
 /**
  * Simple extension of Gtk::CheckButton, which adds a flag
  * to indicate whether the box should be unticked when reset
  */
-class CheckButtonInternal : public Gtk::CheckButton {
+class CheckButtonInternal final : public Gtk::CheckButton {
   private:
     bool _uncheckable = false;
   public:
@@ -82,16 +76,17 @@ class CheckButtonInternal : public Gtk::CheckButton {
     void set_uncheckable(const bool val = true) { _uncheckable = val; }
     bool get_uncheckable() const { return _uncheckable; }
 };
-}
+
+} // namespace Widget
 
 namespace Dialog {
 
-#define SB_MARGIN 1
-#define VB_MARGIN 4
+static constexpr int SB_MARGIN = 1;
+static constexpr int VB_MARGIN = 4;
 
 static Glib::ustring const prefs_path = "/dialogs/clonetiler/";
 
-static Inkscape::Drawing *trace_drawing = nullptr;
+static std::unique_ptr<Inkscape::Drawing> trace_drawing;
 static unsigned trace_visionkey;
 static gdouble trace_zoom;
 static SPDocument *trace_doc = nullptr;
@@ -675,7 +670,9 @@ CloneTiler::CloneTiler()
                 hb->pack_start(*l, false, false, 0);
 
                 guint32 rgba = 0x000000ff | sp_svg_read_color (prefs->getString(prefs_path + "initial_color").data(), 0x000000ff);
-                color_picker = new Inkscape::UI::Widget::ColorPicker (*new Glib::ustring(_("Initial color of tiled clones")), *new Glib::ustring(_("Initial color for clones (works only if the original has unset fill or stroke or on spray tool in copy mode)")), rgba, false);
+                color_picker = Gtk::make_managed<UI::Widget::ColorPicker>(_("Initial color of tiled clones"),
+                        _("Initial color for clones (works only if the original has unset fill or stroke or on spray tool in copy mode)"),
+                        rgba, false);
                 color_changed_connection = color_picker->connectChanged(sigc::mem_fun(*this, &CloneTiler::on_picker_color_changed));
 
                 hb->pack_start(*color_picker, false, false, 0);
@@ -1000,7 +997,7 @@ CloneTiler::CloneTiler()
                     int value = prefs->getInt(prefs_path + "jmax", 2);
                     a->set_value (value);
 
-                    auto sb = new Inkscape::UI::Widget::SpinButton(a, 1.0, 0);
+                    auto const sb = Gtk::make_managed<UI::Widget::SpinButton>(a, 1.0, 0);
                     sb->set_tooltip_text (_("How many rows in the tiling"));
                     sb->set_width_chars (7);
                     sb->set_name("row");
@@ -1022,7 +1019,7 @@ CloneTiler::CloneTiler()
                     int value = prefs->getInt(prefs_path + "imax", 2);
                     a->set_value (value);
 
-                    auto sb = new Inkscape::UI::Widget::SpinButton(a, 1.0, 0);
+                    auto const sb = Gtk::make_managed<UI::Widget::SpinButton>(a, 1.0, 0);
                     sb->set_tooltip_text (_("How many columns in the tiling"));
                     sb->set_width_chars (7);
                     table_attach(table, sb, 0.0f, 1, 4);
@@ -1034,7 +1031,7 @@ CloneTiler::CloneTiler()
 
             {
                 // unitmenu
-                unit_menu = new Inkscape::UI::Widget::UnitMenu();
+                unit_menu = Gtk::make_managed<UI::Widget::UnitMenu>();
                 unit_menu->setUnitType(Inkscape::Util::UNIT_TYPE_LINEAR);
                 unit_menu->setUnit(SP_ACTIVE_DESKTOP->getNamedView()->display_units->abbr);
                 unitChangedConn = unit_menu->signal_changed().connect(sigc::mem_fun(*this, &CloneTiler::unit_changed));
@@ -1048,7 +1045,7 @@ CloneTiler::CloneTiler()
                     gdouble const units = Inkscape::Util::Quantity::convert(value, "px", unit);
                     fill_width->set_value (units);
 
-                    auto e = new Inkscape::UI::Widget::SpinButton(fill_width, 1.0, 2);
+                    auto const e = Gtk::make_managed<UI::Widget::SpinButton>(fill_width, 1.0, 2);
                     e->set_tooltip_text (_("Width of the rectangle to be filled"));
                     e->set_width_chars (7);
                     e->set_digits (4);
@@ -1072,7 +1069,7 @@ CloneTiler::CloneTiler()
                     gdouble const units = Inkscape::Util::Quantity::convert(value, "px", unit);
                     fill_height->set_value (units);
 
-                    auto e = new Inkscape::UI::Widget::SpinButton(fill_height, 1.0, 2);
+                    auto const e = Gtk::make_managed<UI::Widget::SpinButton>(fill_height, 1.0, 2);
                     e->set_tooltip_text (_("Height of the rectangle to be filled"));
                     e->set_width_chars (7);
                     e->set_digits (4);
@@ -1900,7 +1897,8 @@ void CloneTiler::trace_hide_tiled_clones_recursively(SPObject *from)
 
 void CloneTiler::trace_setup(SPDocument *doc, gdouble zoom, SPItem *original)
 {
-    trace_drawing = new Inkscape::Drawing();
+    trace_drawing = std::make_unique<Inkscape::Drawing>();
+
     /* Create ArenaItem and set transform */
     trace_visionkey = SPItem::display_key_new(1);
     trace_doc = doc;
@@ -1944,9 +1942,8 @@ void CloneTiler::trace_finish()
 {
     if (trace_doc) {
         trace_doc->getRoot()->invoke_hide(trace_visionkey);
-        delete trace_drawing;
         trace_doc = nullptr;
-        trace_drawing = nullptr;
+        trace_drawing.reset();
     }
 }
 
@@ -2531,8 +2528,8 @@ Gtk::Widget * CloneTiler::checkbox(const char          *tip,
     return hb;
 }
 
-void CloneTiler::value_changed(Glib::RefPtr<Gtk::Adjustment> &adj,
-                               Glib::ustring const           &pref)
+void CloneTiler::value_changed(Glib::RefPtr<Gtk::Adjustment> const &adj ,
+                               Glib::ustring                 const &pref)
 {
     auto prefs = Inkscape::Preferences::get();
     prefs->setDouble(prefs_path + pref, adj->get_value());
@@ -2562,7 +2559,7 @@ Gtk::Widget * CloneTiler::spinbox(const char          *tip,
         auto const climb_rate = (exponent ? 0.01 : 0.1);
         auto const digits = (exponent ? 2 : 1);
 
-        auto sb = new Inkscape::UI::Widget::SpinButton(a, climb_rate, digits);
+        auto sb = Gtk::make_managed<UI::Widget::SpinButton>(a, climb_rate, digits);
 
         sb->set_tooltip_text (tip);
         sb->set_width_chars (5);
@@ -2597,7 +2594,8 @@ void CloneTiler::symgroup_changed(Gtk::ComboBox *cb)
     prefs->setInt(prefs_path + "symmetrygroup", group_new);
 }
 
-void CloneTiler::xy_changed(Glib::RefPtr<Gtk::Adjustment> &adj, Glib::ustring const &pref)
+void CloneTiler::xy_changed(Glib::RefPtr<Gtk::Adjustment> const &adj ,
+                            Glib::ustring                 const &pref)
 {
     auto prefs = Inkscape::Preferences::get();
     prefs->setInt(prefs_path + pref, (int) floor(adj->get_value() + 0.5));
@@ -2791,10 +2789,9 @@ void CloneTiler::show_page_trace()
 }
 
 
-}
-}
-}
+} // namespace Dialog
 
+} // namespace Inkscape::UI
 
 /*
   Local Variables:

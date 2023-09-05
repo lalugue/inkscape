@@ -11,17 +11,20 @@
 #ifndef INK_ACTIONS_HELPER_H
 #define INK_ACTIONS_HELPER_H
 
-#include <glibmm/ustring.h>
+namespace Glib {
+class ustring;
+} // namespace Glib
 
 class InkscapeApplication;
 class SPDocument;
+
 namespace Inkscape {
-  class Selection;
-}
+class Selection;
+} // namespace Inkscape
 
 void active_window_start_helper();
 void active_window_end_helper();
-void show_output(Glib::ustring data, bool is_cerr = true);
+void show_output(Glib::ustring const &data, bool is_cerr = true);
 bool get_document_and_selection(InkscapeApplication* app, SPDocument** document, Inkscape::Selection** selection);
 
 

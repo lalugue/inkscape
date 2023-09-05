@@ -18,27 +18,38 @@
 #ifndef SEEN_FILE_DIALOG_IMPL_GTKMM_H
 #define SEEN_FILE_DIALOG_IMPL_GTKMM_H
 
-//Gtk includes
-#include <gtkmm/filechooserdialog.h>
+#include <vector>
 #include <glib/gstdio.h>
+#include <glibmm/refptr.h>
+#include <glibmm/ustring.h>
+#include <gtkmm/box.h>
+#include <gtkmm/checkbutton.h>
+#include <gtkmm/comboboxtext.h>
+#include <gtkmm/enums.h>
+#include <gtkmm/filechooserdialog.h>
 
 #include "filedialog.h"
 #include "svg-preview.h"
 
 namespace Gtk {
-class CheckButton;
-class ComboBoxText;
+class Container;
+class Entry;
 class Expander;
-}
+class Expander;
+class FileFilter;
+class ListStore;
+class Window;
+} // namespace Gtk
 
 namespace Inkscape {
-  class URI;
+
+class URI;
 
 namespace UI {
 
 namespace View {
-  class SVGViewWidget;
-}
+class SVGViewWidget;
+} // namespace View
 
 namespace Dialog {
 
@@ -65,26 +76,10 @@ findExpanderWidgets(Gtk::Container *parent,
 class FileDialogBaseGtk : public Gtk::FileChooserDialog
 {
 public:
-
-    FileDialogBaseGtk(Gtk::Window& parentWindow, const Glib::ustring &title,
-    		Gtk::FileChooserAction dialogType, FileDialogType type, gchar const* preferenceBase) :
-        Gtk::FileChooserDialog(parentWindow, title, dialogType),
-        preferenceBase(preferenceBase ? preferenceBase : "unknown"),
-        _dialogType(type)
-    {
-        internalSetup();
-    }
-
-    FileDialogBaseGtk(Gtk::Window& parentWindow, const char *title,
-                   Gtk::FileChooserAction dialogType, FileDialogType type, gchar const* preferenceBase) :
-        Gtk::FileChooserDialog(parentWindow, title, dialogType),
-        preferenceBase(preferenceBase ? preferenceBase : "unknown"),
-        _dialogType(type)
-    {
-        internalSetup();
-    }
-
-    ~FileDialogBaseGtk() override = default;
+    FileDialogBaseGtk(Gtk::Window &parentWindow, Glib::ustring const &title,
+    		      Gtk::FileChooserAction dialogType, FileDialogType type,
+                      char const *preferenceBase);
+    ~FileDialogBaseGtk() override;
 
     /**
      * Add a Gtk filter to our specially controlled filter dropdown.
@@ -99,7 +94,8 @@ public:
 protected:
     void cleanup( bool showConfirmed );
 
-    Glib::ustring const preferenceBase;
+    Glib::ustring const _preferenceBase;
+
     /**
      * What type of 'open' are we? (open, import, place, etc)
      */
@@ -122,8 +118,6 @@ protected:
     Gtk::ComboBoxText *filterComboBox;
 
 private:
-    void internalSetup();
-
     /**
      * Callback for seeing if the preview needs to be drawn
      */
@@ -140,9 +134,6 @@ private:
     Glib::RefPtr<Gtk::ListStore> filterStore;
 };
 
-
-
-
 /*#########################################################################
 ### F I L E    O P E N
 #########################################################################*/
@@ -150,40 +141,36 @@ private:
 /**
  * Our implementation class for the FileOpenDialog interface..
  */
-class FileOpenDialogImplGtk : public FileOpenDialog, public FileDialogBaseGtk
+class FileOpenDialogImplGtk final
+    : public FileOpenDialog
+      , public FileDialogBaseGtk
 {
 public:
-
     FileOpenDialogImplGtk(Gtk::Window& parentWindow,
     		       const Glib::ustring &dir,
                        FileDialogType fileTypes,
                        const Glib::ustring &title);
 
-    ~FileOpenDialogImplGtk() override = default;
-
-    bool show() override;
+    bool show() final;
 
     Glib::ustring getFilename();
 
-    std::vector<Glib::ustring> getFilenames() override;
+    std::vector<Glib::ustring> getFilenames() final;
 
-    Glib::ustring getCurrentDirectory() override;
+    Glib::ustring getCurrentDirectory() final;
 
     void addFilterMenu(const Glib::ustring &name, Glib::ustring pattern = "",
-                       Inkscape::Extension::Extension *mod = nullptr) override
+                       Inkscape::Extension::Extension *mod = nullptr) final
     {
         addFilter(name, pattern, mod);
     }
 
 private:
-
     /**
      *  Create a filter menu for this type of dialog
      */
     void createFilterMenu();
 };
-
-
 
 //########################################################################
 //# F I L E    S A V E
@@ -192,9 +179,10 @@ private:
 /**
  * Our implementation of the FileSaveDialog interface.
  */
-class FileSaveDialogImplGtk : public FileSaveDialog, public FileDialogBaseGtk
+class FileSaveDialogImplGtk final
+    : public FileSaveDialog
+    , public FileDialogBaseGtk
 {
-
 public:
     FileSaveDialogImplGtk(Gtk::Window &parentWindow,
                           const Glib::ustring &dir,
@@ -204,22 +192,17 @@ public:
                           const gchar* docTitle,
                           const Inkscape::Extension::FileSaveMethod save_method);
 
-    ~FileSaveDialogImplGtk() override = default;
+    bool show() final;
+    Glib::ustring getCurrentDirectory() final;
+    void setExtension(Inkscape::Extension::Extension *key) final;
 
-    bool show() override;
-
-    Glib::ustring getCurrentDirectory() override;
-
-    void setExtension(Inkscape::Extension::Extension *key) override;
-
-    void addFilterMenu(const Glib::ustring &name, Glib::ustring pattern = "",
-                       Inkscape::Extension::Extension *mod = nullptr) override
+    void addFilterMenu(const Glib::ustring &name, Glib::ustring pattern = {},
+                       Inkscape::Extension::Extension *mod = nullptr) final
     {
         addFilter(name, pattern, mod);
     }
 
 private:
-    //void change_title(const Glib::ustring& title);
     void change_path(const Glib::ustring& path);
     void updateNameAndExtension();
 
@@ -240,7 +223,7 @@ private:
     /**
      * Callback for user input into fileNameEntry
      */
-    void filterChangedCallback() override;
+    void filterChangedCallback() final;
 
     /**
      *  Create a filter menu for this type of dialog
@@ -254,7 +237,6 @@ private:
     void fileNameChanged();
     bool fromCB;
 };
-
 
 } // namespace Dialog
 } // namespace UI

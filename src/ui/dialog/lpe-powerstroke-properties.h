@@ -1,11 +1,15 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-/** @file
- * @brief  Dialog for renaming layers
+/**
+ * @file
+ * Dialog for editing power strokes.
  */
 /* Author:
  *   Bryce W. Harrington <bryce@bryceharrington.com>
+ *   Andrius R. <knutux@gmail.com>
+ *   Abhishek Sharma
  *
  * Copyright (C) 2004 Bryce Harrington
+ * Copyright (C) 2006 Andrius R.
  *
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
@@ -14,7 +18,14 @@
 #define INKSCAPE_DIALOG_POWERSTROKE_PROPERTIES_H
 
 #include <2geom/point.h>
-#include <gtkmm.h>
+#include <gtkmm/button.h>
+#include <gtkmm/dialog.h>
+#include <gtkmm/grid.h>
+#include <gtkmm/label.h>
+#include <gtkmm/radiobutton.h>
+#include <gtkmm/spinbutton.h>
+#include <gtkmm/treemodel.h>
+
 #include "live_effects/parameter/powerstrokepointarray.h"
 
 class SPDesktop;

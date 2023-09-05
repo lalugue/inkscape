@@ -25,6 +25,7 @@
 #include <gtkmm/box.h>
 #include <gtkmm/scrolledwindow.h>
 #include <gtkmm/treemodel.h>
+#include <gtkmm/treepath.h>
 
 #include "style-enums.h"
 #include "ui/dialog/dialog-base.h"
@@ -63,14 +64,14 @@ XML::Node *get_first_style_text_node(XML::Node *root, bool create_if_missing);
  *   1. The text node of the style element.
  *   2. The Gtk::TreeModel.
  */
-class StyleDialog : public DialogBase
+class StyleDialog final : public DialogBase
 {
 public:
     StyleDialog();
-    ~StyleDialog() override;
+    ~StyleDialog() final;
 
-    void documentReplaced() override;
-    void selectionChanged(Selection *selection) override;
+    void documentReplaced() final;
+    void selectionChanged(Selection *selection) final;
 
     void setCurrentSelector(Glib::ustring current_selector);
     Gtk::TreeView *_current_css_tree;
@@ -87,8 +88,6 @@ public:
     class NodeObserver;
     // Monitor all objects for addition/removal/attribute change
     class NodeWatcher;
-    Glib::RefPtr<Glib::Regex> r_props = Glib::Regex::create("\\s*;\\s*");
-    Glib::RefPtr<Glib::Regex> r_pair = Glib::Regex::create("\\s*:\\s*");
     void _nodeAdded(Inkscape::XML::Node &repr);
     void _nodeRemoved(Inkscape::XML::Node &repr);
     void _nodeChanged(Inkscape::XML::Node &repr);

@@ -18,10 +18,12 @@
 #include <string>
 #include <utility>
 #include <gio/gio.h>
+#include <glibmm/regex.h>
 #include <glibmm/ustring.h>
 #include <gtk/gtk.h>
 #include <gtkmm/cssprovider.h>
 #include <gtkmm/csssection.h>
+#include <gtkmm/settings.h>
 #include <gtkmm/stylecontext.h>
 #include <gtkmm/window.h>
 #include <pangomm/font.h>
@@ -43,6 +45,13 @@
 #endif
 
 namespace Inkscape::UI {
+
+ThemeContext::ThemeContext()
+    : _fontsizeprovider{Gtk::CssProvider::create()}
+{
+}
+
+ThemeContext::~ThemeContext() = default;
 
 /**
  * Inkscape fill gtk, taken from glib/gtk code with our own checks.

@@ -26,6 +26,10 @@
 #include <vector>
 #include <boost/asio/thread_pool.hpp>
 #include <boost/asio/post.hpp>
+#include <gdkmm/frameclock.h>
+#include <gdkmm/glcontext.h>
+#include <gtkmm/applicationwindow.h>
+#include <gtkmm/gesturemultipress.h>
 #include <sigc++/functors/mem_fun.h>
 
 #include "canvas/fragment.h"

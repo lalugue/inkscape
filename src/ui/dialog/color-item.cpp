@@ -24,6 +24,7 @@
 #include <giomm/simpleactiongroup.h>
 #include <gdkmm/general.h>
 #include <gtkmm/gesturemultipress.h>
+#include <gtkmm/popover.h>
 
 #include "helper/sigc-track-obj.h"
 #include "inkscape-preferences.h"

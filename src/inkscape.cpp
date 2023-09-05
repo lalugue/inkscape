@@ -17,18 +17,18 @@
 
 #include <unistd.h>
 
-#include <boost/stacktrace.hpp>
-
+#include <fstream>
 #include <map>
-
+#include <boost/stacktrace.hpp>
 #include <glibmm/regex.h>
-
-#include <gtkmm/icontheme.h>
-#include <gtkmm/messagedialog.h>
-
 #include <glibmm/i18n.h>
 #include <glibmm/miscutils.h>
 #include <glibmm/convert.h>
+#include <gtkmm/icontheme.h>
+#include <gtkmm/label.h>
+#include <gtkmm/messagedialog.h>
+#include <gtkmm/recentmanager.h>
+#include <gtkmm/textbuffer.h>
 
 #include "desktop.h"
 #include "document.h"
@@ -38,20 +38,14 @@
 #include "inkscape-window.h"
 #include "message-stack.h"
 #include "path-prefix.h"
-
 #include "color/cms-system.h"
-
 #include "debug/simple-event.h"
 #include "debug/event-tracker.h"
-
 #include "io/resource.h"
 #include "io/sys.h"
-
 #include "libnrtype/font-factory.h"
-
 #include "object/sp-item-group.h"
 #include "object/sp-root.h"
-
 #include "io/resource.h"
 #include "ui/builder-utils.h"
 #include "ui/themes.h"
@@ -62,10 +56,7 @@
 #include "ui/dialog/dialog-window.h"
 #include "ui/tools/tool-base.h"
 #include "ui/util.h"
-
 #include "util/units.h"
-
-#include <fstream>
 
 // Inkscape::Application static members
 Inkscape::Application * Inkscape::Application::_S_inst = nullptr;
@@ -81,7 +72,7 @@ static void (* ill_handler)  (int) = SIG_DFL;
 static void (* bus_handler)  (int) = SIG_DFL;
 #endif
 
-#define SP_INDENT 8
+static constexpr int SP_INDENT = 8;
 
 /**  C++ification TODO list
  * - _S_inst should NOT need to be assigned inside the constructor, but if it isn't the Filters+Extensions menus break.

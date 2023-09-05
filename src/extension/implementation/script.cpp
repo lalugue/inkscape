@@ -16,7 +16,15 @@
 #include "script.h"
 
 #include <glib/gstdio.h>
-#include <glibmm.h>
+#include <glibmm/convert.h>
+#include <glibmm/fileutils.h>
+#include <glibmm/miscutils.h>
+#include <glibmm/main.h>
+#include <gtkmm/enums.h>
+#include <gtkmm/messagedialog.h>
+#include <gtkmm/scrolledwindow.h>
+#include <gtkmm/textview.h>
+#include <gtkmm/window.h>
 
 #include "desktop.h"
 #include "extension/db.h"
@@ -51,10 +59,7 @@
 #include "xml/attribute-record.h"
 #include "xml/rebase-hrefs.h"
 
-/* Namespaces */
-namespace Inkscape {
-namespace Extension {
-namespace Implementation {
+namespace Inkscape::Extension::Implementation {
 
 /** \brief  Make GTK+ events continue to come through a little bit
 
@@ -659,43 +664,34 @@ void Script::_change_extension(Inkscape::Extension::Extension *module, SPDocumen
      \param  filename  Filename of the stderr file
 */
 void Script::showPopupError (const Glib::ustring &data,
-                           Gtk::MessageType type,
-                     const Glib::ustring &message)
+                             Gtk::MessageType type,
+                             const Glib::ustring &message)
 {
     Gtk::MessageDialog warning(message, false, type, Gtk::BUTTONS_OK, true);
     warning.set_resizable(true);
-    GtkWidget *dlg = warning.Gtk::Widget::gobj();
     if (parent_window) {
         warning.set_transient_for(*parent_window);
     } else {
+        auto const dlg = warning.Gtk::Widget::gobj();
         sp_transientize(dlg);
     }
 
-    auto vbox = warning.get_content_area();
-
-    /* Gtk::TextView * textview = new Gtk::TextView(Gtk::TextBuffer::create()); */
-    Gtk::TextView * textview = new Gtk::TextView();
+    auto const textview = Gtk::make_managed<Gtk::TextView>();
     textview->set_editable(false);
     textview->set_wrap_mode(Gtk::WRAP_WORD);
     textview->set_visible(true);
+    textview->get_buffer()->set_text(data);
 
-    textview->get_buffer()->set_text(data.c_str());
-
-    Gtk::ScrolledWindow * scrollwindow = new Gtk::ScrolledWindow();
+    auto const scrollwindow = Gtk::make_managed<Gtk::ScrolledWindow>();
     scrollwindow->add(*textview);
     scrollwindow->set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
     scrollwindow->set_shadow_type(Gtk::SHADOW_IN);
     scrollwindow->set_visible(true);
     scrollwindow->set_size_request(0, 60);
 
+    auto const vbox = warning.get_content_area();
     vbox->pack_start(*scrollwindow, true, true, 5 /* fix these */);
-
     Inkscape::UI::dialog_run(warning);
-
-    delete textview;
-    delete scrollwindow;
-
-    return;
 }
 
 bool Script::cancelProcessing () {
@@ -840,6 +836,7 @@ int Script::execute (const std::list<std::string> &in_command,
     return stdout_data.length();
 }
 
+Script::file_listener::~file_listener() = default;
 
 void Script::file_listener::init(int fd, Glib::RefPtr<Glib::MainLoop> main) {
     _channel = Glib::IOChannel::create_from_fd(fd);
@@ -886,9 +883,7 @@ bool Script::file_listener::toFile(const std::string &name) {
     return true;
 }
 
-}  // namespace Implementation
-}  // namespace Extension
-}  // namespace Inkscape
+} // namespace Inkscape::Extension::Implementation
 
 /*
   Local Variables:

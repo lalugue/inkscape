@@ -18,15 +18,18 @@
 #include "tile.h"
 
 #include <glibmm/i18n.h>
+#include <gtkmm/box.h>
+#include <gtkmm/button.h>
+#include <gtkmm/image.h>
+#include <gtkmm/label.h>
+#include <gtkmm/notebook.h>
 
 #include "ui/dialog/grid-arrange-tab.h"
 #include "ui/dialog/polar-arrange-tab.h"
 #include "ui/dialog/align-and-distribute.h"
 #include "ui/icon-names.h"
 
-namespace Inkscape {
-namespace UI {
-namespace Dialog {
+namespace Inkscape::UI::Dialog {
 
 Gtk::Box& create_tab_label(const char* label_text, const char* icon_name) {
     auto const box = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL, 4);
@@ -71,13 +74,11 @@ ArrangeDialog::ArrangeDialog()
     _arrangeButton->get_style_context()->add_class("wide-apply-button");
     _arrangeButton->set_no_show_all();
 
-    auto const button_box = Gtk::make_managed<Gtk::ButtonBox>();
-    button_box->set_layout(Gtk::BUTTONBOX_CENTER);
+    auto const button_box = Gtk::make_managed<Gtk::Box>();
+    button_box->set_halign(Gtk::ALIGN_CENTER);
     button_box->set_spacing(6);
     button_box->property_margin().set_value(4);
-    button_box->set_valign(Gtk::ALIGN_FILL);
-
-    button_box->pack_end(*_arrangeButton);
+    button_box->add(*_arrangeButton);
     pack_start(*button_box);
 
     set_visible(true);
@@ -94,9 +95,6 @@ void ArrangeDialog::update_arrange_btn() {
         _arrangeButton->set_visible(true);
     }
 }
-
-ArrangeDialog::~ArrangeDialog()
-{ }
 
 void ArrangeDialog::_apply()
 {
@@ -120,9 +118,7 @@ void ArrangeDialog::desktopReplaced()
     _align_tab->desktop_changed(getDesktop());
 }
 
-} //namespace Dialog
-} //namespace UI
-} //namespace Inkscape
+} // namespace Inkscape::UI::Dialog
 
 /*
   Local Variables:

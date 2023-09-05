@@ -33,7 +33,6 @@
  * the 'modified' signal, as well.
  */
 
-
 #define noSP_DOCUMENT_DEBUG_IDLE
 #define noSP_DOCUMENT_DEBUG_UNDO
 
@@ -41,9 +40,10 @@
 #include <string>
 #include <cstring>
 
-#include <boost/range/adaptor/reversed.hpp>
-
 #include <2geom/transforms.h>
+#include <boost/range/adaptor/reversed.hpp>
+#include <glibmm/main.h>
+#include <glibmm/miscutils.h>
 
 #include "desktop.h"
 #include "document-undo.h"
@@ -54,23 +54,17 @@
 #include "inkscape-window.h"
 #include "profile-manager.h"
 #include "rdf.h"
-
 #include "live_effects/effect.h"
-
 #include "actions/actions-edit-document.h"
 #include "actions/actions-undo-document.h"
 #include "actions/actions-pages.h"
 #include "actions/actions-svg-processing.h"
-
 #include "display/drawing.h"
 #include "display/control/canvas-item-drawing.h"
 #include "ui/widget/canvas.h"
-
 #include "3rdparty/adaptagrams/libavoid/router.h"
-
 #include "3rdparty/libcroco/src/cr-sel-eng.h"
 #include "3rdparty/libcroco/src/cr-selector.h"
-
 #include "io/dir-util.h"
 #include "layer-manager.h"
 #include "page-manager.h"
@@ -82,9 +76,7 @@
 #include "object/sp-root.h"
 #include "object/sp-symbol.h"
 #include "object/sp-page.h"
-
 #include "ui/widget/desktop-widget.h"
-
 #include "xml/croco-node-iface.h"
 #include "xml/rebase-hrefs.h"
 #include "xml/simple-document.h"
@@ -498,7 +490,6 @@ SPDocument *SPDocument::createDoc(Inkscape::XML::Document *rdoc,
         sp_file_fix_feComposite(document->getRoot());
     }
 
-
     /** Fix dpi (pre-92 files). With GUI fixed in Inkscape::Application::fix_document. **/
     if ( !(INKSCAPE.use_gui()) && sp_version_inside_range( document->root->version.inkscape, 0, 1, 0, 92 ) ) {
         sp_file_convert_dpi(document);
@@ -905,7 +896,6 @@ void SPDocument::setWidth(const Inkscape::Util::Quantity &width, bool changeSize
     root->updateRepr();
 }
 
-
 Inkscape::Util::Quantity SPDocument::getHeight() const
 {
     g_return_val_if_fail(this->root != nullptr, Inkscape::Util::Quantity(0.0, unit_table.getUnit("")));
@@ -1105,7 +1095,6 @@ void SPDocument::do_change_filename(gchar const *const filename, bool const reba
         if (strncmp(new_document_name, "ink_ext_XXXXXX", 14))	// do not use temporary filenames
             repr->setAttribute("sodipodi:docname", new_document_name);
     }
-
 
     g_free(this->document_name);
     g_free(this->document_base);
@@ -1449,7 +1438,6 @@ SPDocument::_updateDocument(int update_flags)
 
     return !(this->root->uflags || this->root->mflags);
 }
-
 
 /**
  * Repeatedly works on getting the document updated, since sometimes
@@ -1999,7 +1987,6 @@ void SPDocument::setModifiedSinceSave(bool modified) {
         }
     }
 }
-
 
 /**
  * Paste SVG defs from the document retrieved from the clipboard or imported document into the active document.

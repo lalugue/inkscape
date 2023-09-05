@@ -14,10 +14,11 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#include "unit-tracker.h"
+
 #include <algorithm>
 #include <iostream>
-
-#include "unit-tracker.h"
+#include <gtkmm/liststore.h>
 
 #include "combo-tool-item.h"
 
@@ -26,9 +27,7 @@
 using Inkscape::Util::UnitTable;
 using Inkscape::Util::unit_table;
 
-namespace Inkscape {
-namespace UI {
-namespace Widget {
+namespace Inkscape::UI::Widget {
 
 UnitTracker::UnitTracker(UnitType unit_type) :
     _active(0),
@@ -178,7 +177,7 @@ void UnitTracker::prependUnit(Inkscape::Util::Unit const *u)
 
 }
 
-void UnitTracker::setFullVal(GtkAdjustment *adj, gdouble val)
+void UnitTracker::setFullVal(GtkAdjustment * const adj, double const val)
 {
     _priorValues[adj] = val;
 }
@@ -276,8 +275,8 @@ void UnitTracker::_fixupAdjustments(Inkscape::Util::Unit const *oldUnit, Inkscap
 {
     _isUpdating = true;
     for ( auto adj : _adjList ) {
-        gdouble oldVal = gtk_adjustment_get_value(adj);
-        gdouble val = oldVal;
+        auto const oldVal = gtk_adjustment_get_value(adj);
+        auto val = oldVal;
 
         if ( (oldUnit->type != Inkscape::Util::UNIT_TYPE_DIMENSIONLESS)
             && (newUnit->type == Inkscape::Util::UNIT_TYPE_DIMENSIONLESS) )
@@ -299,9 +298,7 @@ void UnitTracker::_fixupAdjustments(Inkscape::Util::Unit const *oldUnit, Inkscap
     _isUpdating = false;
 }
 
-} // namespace Widget
-} // namespace UI
-} // namespace Inkscape
+} // namespace Inkscape::UI::Widget
 
 /*
   Local Variables:

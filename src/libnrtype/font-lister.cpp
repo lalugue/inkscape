@@ -8,24 +8,21 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#include "font-lister.h"
+
 #include <glibmm/markup.h>
 #include <glibmm/regex.h>
-
 #include <gtkmm/cellrenderertext.h>
-
+#include <gtkmm/settings.h>
 #include <libnrtype/font-instance.h>
 
-#include "font-lister.h"
 #include "font-factory.h"
-
 #include "desktop.h"
 #include "desktop-style.h"
 #include "document.h"
 #include "inkscape.h"
 #include "preferences.h"
-
 #include "object/sp-object.h"
-
 // Following are needed to limit the source of updating font data to text and containers.
 #include "object/sp-root.h"
 #include "object/sp-object-group.h"
@@ -40,7 +37,6 @@
 #include "util/recently-used-fonts.h"
 #include "util/document-fonts.h"
 #include "xml/repr.h"
-
 
 //#define DEBUG_FONT
 

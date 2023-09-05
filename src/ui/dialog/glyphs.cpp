@@ -15,6 +15,7 @@
 #include <glibmm/i18n.h>
 #include <glibmm/markup.h>
 #include <glibmm/ustring.h>
+#include <gtkmm/button.h>
 #include <gtkmm/comboboxtext.h>
 #include <gtkmm/grid.h>
 #include <gtkmm/iconview.h>

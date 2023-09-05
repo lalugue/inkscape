@@ -14,20 +14,21 @@
 
 #include "swatches.h"
 
-#include <algorithm>
+#include <optional>
+#include <utility>
 #include <giomm/file.h>
 #include <giomm/inputstream.h>
 #include <glibmm/i18n.h>
 #include <glibmm/ustring.h>
 #include <glibmm/utility.h>
+#include <gtkmm/builder.h>
 #include <gtkmm/button.h>
 #include <gtkmm/cellrenderertext.h>
 #include <gtkmm/comboboxtext.h>
 #include <gtkmm/liststore.h>
 #include <gtkmm/menubutton.h>
-#include <gtkmm/object.h>
+#include <gtkmm/radiobutton.h>
 #include <gtkmm/searchentry.h>
-#include <gtkmm/togglebutton.h>
 #include <pangomm/layout.h>
 #include <string>
 #include <vector>

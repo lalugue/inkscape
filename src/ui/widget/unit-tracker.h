@@ -18,8 +18,7 @@
 
 #include <map>
 #include <vector>
-
-#include <gtkmm/liststore.h>
+#include <glibmm/refptr.h>
 
 #include "util/units.h"
 
@@ -30,9 +29,12 @@ typedef struct _GObject       GObject;
 typedef struct _GtkAdjustment GtkAdjustment;
 typedef struct _GtkListStore  GtkListStore;
 
-namespace Inkscape {
-namespace UI {
-namespace Widget {
+namespace Gtk {
+class ListStore;
+} // namespace Gtk
+
+namespace Inkscape::UI::Widget {
+
 class ComboToolItem;
 
 class UnitTracker {
@@ -50,7 +52,7 @@ public:
     void addUnit(Inkscape::Util::Unit const *u);
     void addAdjustment(GtkAdjustment *adj);
     void prependUnit(Inkscape::Util::Unit const *u);
-    void setFullVal(GtkAdjustment *adj, gdouble val);
+    void setFullVal(GtkAdjustment *adj, double val);
     Glib::ustring getCurrentLabel();
     void changeLabel(Glib::ustring new_label, gint pos, bool onlylabel = false);
 
@@ -79,11 +81,20 @@ private:
     Glib::RefPtr<Gtk::ListStore> _store;
     std::vector<ComboToolItem *> _combo_list;
     std::vector<GtkAdjustment*> _adjList;
-    std::map <GtkAdjustment *, gdouble> _priorValues;
+    std::map <GtkAdjustment *, double> _priorValues;
 };
 
-} // namespace Widget
-} // namespace UI
-} // namespace Inkscape
+} // namespace Inkscape::UI::Widget
 
 #endif // INKSCAPE_UI_WIDGET_UNIT_TRACKER_H
+
+/*
+  Local Variables:
+  mode:c++
+  c-file-style:"stroustrup"
+  c-file-offsets:((innamespace . 0)(inline-open . 0)(case-label . +))
+  indent-tabs-mode:nil
+  fill-column:99
+  End:
+*/
+// vim: filetype=cpp:expandtab:shiftwidth=4:tabstop=8:softtabstop=4:fileencoding=utf-8:textwidth=99 :

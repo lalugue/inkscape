@@ -16,25 +16,23 @@
 #include <glibmm/i18n.h>
 #include <glibmm/main.h>
 #include <glibmm/refptr.h>
+#include <gtkmm/adjustment.h>
 #include <gtkmm/cssprovider.h>
 #include <gtkmm/notebook.h>
 #include <gtkmm/scrolledwindow.h>
-#include <iostream>
+#include <gtkmm/window.h>
 
 #include "inkscape.h"
 #include "desktop.h"
 #include "ui/dialog/dialog-data.h"
 #include "ui/dialog/dialog-notebook.h"
 #include "ui/dialog-events.h"
-// get_latin_keyval
-#include "ui/tools/tool-base.h"
+#include "ui/tools/tool-base.h" // get_latin_keyval
 #include "widgets/spw-utilities.h"
 #include "ui/widget/canvas.h"
 #include "ui/util.h"
 
-namespace Inkscape {
-namespace UI {
-namespace Dialog {
+namespace Inkscape::UI::Dialog {
 
 /**
  * DialogBase constructor.
@@ -301,9 +299,7 @@ void DialogBase::setDocument(SPDocument *new_document)
     }
 }
 
-} // namespace Dialog
-} // namespace UI
-} // namespace Inkscape
+} // namespace Inkscape::UI::Dialog
 
 /*
   Local Variables:

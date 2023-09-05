@@ -28,11 +28,13 @@
 #include "paintbucket-toolbar.h"
 
 #include <glibmm/i18n.h>
-
+#include <gtkmm/adjustment.h>
+#include <gtkmm/liststore.h>
 #include <gtkmm/separatortoolitem.h>
+#include <gtkmm/treemodel.h>
 
 #include "desktop.h"
-
+#include "preferences.h"
 #include "ui/icon-names.h"
 #include "ui/tools/flood-tool.h"
 #include "ui/widget/canvas.h"
@@ -41,15 +43,13 @@
 #include "ui/widget/spin-button-tool-item.h"
 #include "ui/widget/unit-tracker.h"
 
-using Inkscape::UI::Widget::UnitTracker;
 using Inkscape::Util::unit_table;
 
-namespace Inkscape {
-namespace UI {
-namespace Toolbar {
+namespace Inkscape::UI::Toolbar {
+
 PaintbucketToolbar::PaintbucketToolbar(SPDesktop *desktop)
     : Toolbar(desktop),
-      _tracker(new UnitTracker(Inkscape::Util::UNIT_TYPE_LINEAR))
+      _tracker{std::make_unique<UI::Widget::UnitTracker>(Inkscape::Util::UNIT_TYPE_LINEAR)}
 {
     auto prefs = Inkscape::Preferences::get();
 
@@ -102,7 +102,7 @@ PaintbucketToolbar::PaintbucketToolbar(SPDesktop *desktop)
         auto const offset_item = Gtk::make_managed<UI::Widget::SpinButtonToolItem>("inkscape:paintbucket-offset", _("Grow/shrink by:"), _offset_adj, 1, 2);
         offset_item->set_tooltip_text(_("The amount to grow (positive) or shrink (negative) the created fill path"));
         _tracker->addAdjustment(_offset_adj->gobj());
-        offset_item->get_spin_button()->addUnitTracker(_tracker);
+        offset_item->get_spin_button()->addUnitTracker(_tracker.get());
         offset_item->set_focus_widget(desktop->getCanvas());
         _offset_adj->signal_value_changed().connect(sigc::mem_fun(*this, &PaintbucketToolbar::offset_changed));
         add(*offset_item);
@@ -204,9 +204,7 @@ PaintbucketToolbar::defaults()
     _autogap_item->set_active(0);
 }
 
-}
-}
-}
+} // namespace Inkscape::UI::Toolbar
 
 /*
   Local Variables:

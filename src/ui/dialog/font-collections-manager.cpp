@@ -16,11 +16,14 @@
 
 #include <gdk/gdkkeysyms.h>
 #include <glibmm/i18n.h>
+#include <gtkmm/box.h>
+#include <gtkmm/builder.h>
+#include <gtkmm/label.h>
+#include <gtkmm/paned.h>
+#include <gtkmm/searchentry.h>
 #include "libnrtype/font-lister.h"
 
-namespace Inkscape {
-namespace UI {
-namespace Dialog {
+namespace Inkscape::UI::Dialog {
 
 FontCollectionsManager::FontCollectionsManager()
     : DialogBase("/dialogs/fontcollections", "FontCollections")
@@ -156,9 +159,7 @@ void FontCollectionsManager::on_selection_changed(int state)
     _delete_button->set_sensitive(del);
 }
 
-} // namespace Dialog
-} // namespace UI
-} // namespace Inkscape
+} // namespace Inkscape::UI::Dialog
 
 /*
   Local Variables:

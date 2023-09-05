@@ -13,6 +13,14 @@
 #include <cstddef>
 #include <tuple>
 #include <glibmm/i18n.h>
+#include <gtkmm/box.h>
+#include <gtkmm/builder.h>
+#include <gtkmm/button.h>
+#include <gtkmm/expander.h>
+#include <gtkmm/label.h>
+#include <gtkmm/listbox.h>
+#include <gtkmm/liststore.h>
+#include <gtkmm/spinbutton.h>
 
 #include "livepatheffect-editor.h"
 #include "livepatheffect-add.h"

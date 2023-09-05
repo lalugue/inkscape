@@ -13,22 +13,30 @@
 #ifndef INKSCAPE_UI_TOOLBAR_BOOLEANS_TOOLBAR_H
 #define INKSCAPE_UI_TOOLBAR_BOOLEANS_TOOLBAR_H
 
-#include <gtkmm.h>
+#include <glibmm/refptr.h>
+#include <gtkmm/toolbar.h>
+
+namespace Gtk {
+class Adjustment;
+class Builder;
+class ToolButton;
+class Widget;
+} // namespace Gtk
 
 class SPDesktop;
 
-namespace Inkscape {
-namespace UI {
-namespace Toolbar {
+namespace Inkscape::UI::Toolbar {
 
-class BooleansToolbar : public Gtk::Toolbar
+class BooleansToolbar final : public Gtk::Toolbar
 {
 public:
     static GtkWidget *create(SPDesktop *desktop);
 
     BooleansToolbar(BaseObjectType *cobject, const Glib::RefPtr<Gtk::Builder> &builder, SPDesktop *desktop);
+    ~BooleansToolbar() final;
 
-    void on_parent_changed(Gtk::Widget *) override;
+    void on_parent_changed(Gtk::Widget *) final;
+
 private:
     Glib::RefPtr<Gtk::Builder> _builder;
     Glib::RefPtr<Gtk::Adjustment> _adj_opacity;
@@ -37,8 +45,17 @@ private:
     Gtk::ToolButton &_btn_cancel;
 };
 
-} // namespace Toolbar
-} // namespace UI
-} // namespace Inkscape
+} // namespace Inkscape::UI::Toolbar
 
 #endif // INKSCAPE_UI_TOOLBAR_BOOLEANS_TOOLBAR_H
+
+/*
+  Local Variables:
+  mode:c++
+  c-file-style:"stroustrup"
+  c-file-offsets:((innamespace . 0)(inline-open . 0)(case-label . +))
+  indent-tabs-mode:nil
+  fill-column:99
+  End:
+*/
+// vim:filetype=cpp:expandtab:shiftwidth=4:tabstop=8:softtabstop=4:fileencoding=utf-8:textwidth=99:

@@ -2,8 +2,14 @@
 
 #include "dialog-manager.h"
 
-#include <gdkmm/monitor.h>
 #include <limits>
+#include <glibmm/keyfile.h>
+#include <glibmm/fileutils.h>
+#include <glibmm/miscutils.h>
+#include <glibmm/ustring.h>
+#include <gdkmm/monitor.h>
+#include <gtkmm/window.h>
+
 #ifdef G_OS_WIN32
 #include <filesystem>
 namespace filesystem = std::filesystem;
@@ -11,7 +17,7 @@ namespace filesystem = std::filesystem;
 // Waiting for compiler on MacOS to catch up to C++x17
 #include <boost/filesystem.hpp>
 namespace filesystem = boost::filesystem;
-#endif
+#endif // G_OS_WIN32
 
 #include "io/resource.h"
 #include "inkscape-application.h"
@@ -21,9 +27,7 @@ namespace filesystem = boost::filesystem;
 #include "enums.h"
 #include "preferences.h"
 
-namespace Inkscape {
-namespace UI {
-namespace Dialog {
+namespace Inkscape::UI::Dialog {
 
 std::optional<window_position_t> dm_get_window_position(Gtk::Window &window)
 {
@@ -57,6 +61,8 @@ void dm_restore_window_position(Gtk::Window &window, const window_position_t &po
     window.resize(position.width, position.height);
 }
 
+DialogManager::~DialogManager() = default;
+
 DialogManager &DialogManager::singleton()
 {
     static DialogManager dm;
@@ -66,21 +72,16 @@ DialogManager &DialogManager::singleton()
 // store complete dialog window state (including its container state)
 void DialogManager::store_state(DialogWindow &wnd)
 {
-    // get window's size and position
     if (auto pos = dm_get_window_position(wnd)) {
         if (auto container = wnd.get_container()) {
-            // get container's state
             auto state = container->get_container_state(&*pos);
-
-            // find dialogs hosted in this window
-            for (auto dlg : *container->get_dialogs()) {
-                _floating_dialogs[dlg.first] = state;
+            for (auto const &[name, dialog] : container->get_dialogs()) {
+                _floating_dialogs[name] = state;
             }
         }
     }
 }
 
-//
 bool DialogManager::should_open_floating(const Glib::ustring& dialog_type)
 {
     return _floating_dialogs.count(dialog_type) > 0;
@@ -209,7 +210,7 @@ void DialogManager::save_dialogs_state(DialogContainer *docking_container)
     std::string filename = Glib::build_filename(Inkscape::IO::Resource::profile_path(), dialogs_state);
     try {
         keyfile->save_to_file(filename);
-    } catch (Glib::FileError &error) {
+    } catch (Glib::FileError const &error) {
         std::cerr << G_STRFUNC << ": " << error.what().raw() << std::endl;
     }
 }
@@ -265,7 +266,7 @@ void DialogManager::restore_dialogs_state(DialogContainer *docking_container, bo
             if (include_floating) {
                 try {
                     load_transient_state(keyfile.get());
-                } catch (Glib::Error &error) {
+                } catch (Glib::Error const &error) {
                     std::cerr << G_STRFUNC << ": transient state not loaded - " << error.what().raw() << std::endl;
                 }
             }
@@ -274,7 +275,7 @@ void DialogManager::restore_dialogs_state(DialogContainer *docking_container, bo
             // state not available or not valid; prepare defaults
             dialog_defaults(docking_container);
         }
-    } catch (Glib::Error &error) {
+    } catch (Glib::Error const &error) {
         std::cerr << G_STRFUNC << ": dialogs state not loaded - " << error.what().raw() << std::endl;
     }
 }
@@ -307,9 +308,7 @@ void DialogManager::dialog_defaults(DialogContainer* docking_container) {
     }
 }
 
-} // namespace Dialog
-} // namespace UI
-} // namespace Inkscape
+} // namespace Inkscape::UI::Dialog
 
 /*
   Local Variables:

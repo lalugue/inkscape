@@ -12,15 +12,15 @@
  */
 
 #include <algorithm>
-#include <map>
-
+#include <stdexcept>
 #include <giomm/listmodel.h>
+#include <glibmm/i18n.h>
 #include <glibmm/regex.h>
-#include <gtkmm/drawingarea.h>
+#include <gtkmm/builder.h>
+#include <gtkmm/comboboxtext.h>
+#include <gtkmm/grid.h>
 #include <gtkmm/iconview.h>
-#include <gtkmm/liststore.h>
-#include <gtkmm/stockid.h>
-#include <gtkmm/switch.h>
+#include <gtkmm/radiobutton.h>
 
 #include "document.h"
 #include "inkscape.h"
@@ -37,9 +37,7 @@
 #include "ui/widget/scrollprotected.h"
 #include "xml/href-attribute-helper.h"
 
-namespace Inkscape {
-namespace UI {
-namespace Dialog {
+namespace Inkscape::UI::Dialog {
 
 static Glib::ustring const wrapper = R"=====(
 <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100">
@@ -77,12 +75,7 @@ PaintServersDialog::PaintServersDialog()
     _loadStockPaints();
 }
 
-
-PaintServersDialog::~PaintServersDialog()
-{
-    _defs_changed.disconnect();
-    _document_closed.disconnect();
-}
+PaintServersDialog::~PaintServersDialog() = default;
 
 /** Handles the replacement of the document that we edit */
 void PaintServersDialog::documentReplaced()
@@ -243,7 +236,7 @@ void PaintServersDialog::_loadStockPaints()
             }
             _loadPaintsFromDocument(doc.get(), paints);
             _stock_documents.push_back(std::move(doc)); // Ensures eventual destruction in our dtor
-        } catch (std::exception &e) {
+        } catch (std::exception const &e) {
             auto message = Glib::ustring{"Cannot open paint server resource file '"} + path + "'!";
             g_warn_message("Inkscape", __FILE__, __LINE__, __func__, message.c_str());
             continue;
@@ -318,7 +311,7 @@ PaintDescription PaintServersDialog::_descriptionFromIterator(Gtk::ListStore::it
     SPDocument *doc_ptr;
     try {
         doc_ptr = document_map.at(doc_title);
-    } catch (std::out_of_range &exception) {
+    } catch (std::out_of_range const &exception) {
         doc_ptr = nullptr;
     }
     Glib::ustring paint_url = (*iter)[columns.paint];
@@ -640,9 +633,7 @@ void PaintDescription::write_to_iterator(Gtk::ListStore::iterator &it, PaintServ
     (*it)[cols->document] = doc_title;
 }
 
-} // namespace Dialog
-} // namespace UI
-} // namespace Inkscape
+} // namespace Inkscape::UI::Dialog
 
 /*
   Local Variables:

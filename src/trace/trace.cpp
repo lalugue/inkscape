@@ -13,16 +13,19 @@
  *
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
-#include <limits>
-#include <mutex>
-#include <algorithm>
-#include <cassert>
-#include <2geom/transforms.h>
-#include <glibmm/i18n.h>
 
 #include "trace.h"
-#include "siox.h"
 
+#include <algorithm>
+#include <cassert>
+#include <mutex>
+#include <optional>
+#include <2geom/transforms.h>
+#include <glibmm/i18n.h>
+#include <glibmm/ustring.h>
+#include <gtkmm/messagedialog.h>
+
+#include "siox.h"
 #include "desktop.h"
 #include "document.h"
 #include "document-undo.h"
@@ -31,27 +34,22 @@
 #include "message-stack.h"
 #include "selection.h"
 #include "svg/svg.h"
-
 #include "async/async.h"
 #include "async/progress-splitter.h"
 #include "async/background-progress.h"
-
 #include "display/cairo-utils.h"
 #include "display/drawing.h"
 #include "display/drawing-context.h"
-
 #include "object/sp-item.h"
 #include "object/sp-image.h"
 #include "object/weakptr.h"
-
 #include "ui/icon-names.h"
 #include "ui/dialog-run.h"
-
 #include "xml/repr.h"
 #include "xml/attribute-record.h"
 
-namespace Inkscape {
-namespace Trace {
+namespace Inkscape::Trace {
+
 namespace {
 
 /**
@@ -528,12 +526,21 @@ void TraceTask::do_final_work(std::unique_ptr<TraceTask> self)
     // Inform the document, so we can undo.
     DocumentUndo::done(doc, _("Trace bitmap"), INKSCAPE_ICON("bitmap-trace"));
 
-    char *msg = g_strdup_printf(_("Trace: Done. %ld nodes created"), totalNodeCount);
-    msgStack->flash(Inkscape::NORMAL_MESSAGE, msg);
-    g_free(msg);
+    auto const msg = Glib::ustring::compose(_("Trace: Done. %1 node(s) created"), totalNodeCount);
+    msgStack->flash(Inkscape::NORMAL_MESSAGE, msg.c_str());
 
     onfinished_trace();
 }
 
-} // namespace Trace
-} // namespace Inkscape
+} // namespace Inkscape::Trace
+
+/*
+  Local Variables:
+  mode:c++
+  c-file-style:"stroustrup"
+  c-file-offsets:((innamespace . 0)(inline-open . 0)(case-label . +))
+  indent-tabs-mode:nil
+  fill-column:99
+  End:
+*/
+// vim: filetype=cpp:expandtab:shiftwidth=4:tabstop=8:softtabstop=4 :

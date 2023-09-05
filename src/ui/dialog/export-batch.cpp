@@ -11,12 +11,18 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#include <regex>
+#include <utility>
 #include <glibmm/convert.h>
 #include <glibmm/i18n.h>
+#include <glibmm/main.h>
 #include <glibmm/miscutils.h>
-#include <gtkmm.h>
+#include <gtkmm/builder.h>
+#include <gtkmm/button.h>
+#include <gtkmm/flowbox.h>
+#include <gtkmm/progressbar.h>
+#include <gtkmm/widget.h>
 #include <png.h>
-#include <regex>
 
 #include "desktop.h"
 #include "document-undo.h"
@@ -51,14 +57,12 @@
 #include "ui/widget/scrollprotected.h"
 #include "ui/widget/unit-menu.h"
 
-namespace Inkscape {
-namespace UI {
-namespace Dialog {
+namespace Inkscape::UI::Dialog {
 
 BatchItem::BatchItem(SPItem *item, std::shared_ptr<PreviewDrawing> drawing)
+    : _item{item}
 {
-    _item = item;
-    init(drawing);
+    init(std::move(drawing));
     _object_modified_conn = _item->connectModified([=](SPObject *obj, unsigned int flags) {
         update_label();
     });
@@ -66,14 +70,16 @@ BatchItem::BatchItem(SPItem *item, std::shared_ptr<PreviewDrawing> drawing)
 }
 
 BatchItem::BatchItem(SPPage *page, std::shared_ptr<PreviewDrawing> drawing)
+    : _page{page}
 {
-    _page = page;
-    init(drawing);
+    init(std::move(drawing));
     _object_modified_conn = _page->connectModified([=](SPObject *obj, unsigned int flags) {
         update_label();
     });
     update_label();
 }
+
+BatchItem::~BatchItem() = default;
 
 void BatchItem::update_label()
 {
@@ -99,8 +105,6 @@ void BatchItem::update_label()
 }
 
 void BatchItem::init(std::shared_ptr<PreviewDrawing> drawing) {
-
-
     _grid.set_row_spacing(5);
     _grid.set_column_spacing(5);
     _grid.set_valign(Gtk::Align::ALIGN_CENTER);
@@ -119,7 +123,7 @@ void BatchItem::init(std::shared_ptr<PreviewDrawing> drawing) {
 
     _preview.set_name("export_preview_batch");
     _preview.setItem(_item);
-    _preview.setDrawing(drawing);
+    _preview.setDrawing(std::move(drawing));
     _preview.setSize(64);
     _preview.set_halign(Gtk::ALIGN_CENTER);
     _preview.set_valign(Gtk::ALIGN_CENTER);
@@ -248,9 +252,14 @@ void BatchItem::refresh(bool hide, guint32 bg_color)
     }
 }
 
+void BatchItem::setDrawing(std::shared_ptr<PreviewDrawing> drawing)
+{
+    _preview.setDrawing(std::move(drawing));
+}
 
-BatchExport::BatchExport(BaseObjectType *cobject, const Glib::RefPtr<Gtk::Builder>& builder)
-    : Gtk::Box(cobject) {
+BatchExport::BatchExport(BaseObjectType * const cobject, Glib::RefPtr<Gtk::Builder> const &builder)
+    : Gtk::Box{cobject}
+{
     prefs = Inkscape::Preferences::get();
 
     builder->get_widget("b_s_selection", selection_buttons[SELECTION_SELECTION]);
@@ -280,6 +289,8 @@ BatchExport::BatchExport(BaseObjectType *cobject, const Glib::RefPtr<Gtk::Builde
         _("Background color"), _("Color used to fill the image background"), 0xffffff00, true, button);
     setup();
 }
+
+BatchExport::~BatchExport() = default;
 
 void BatchExport::selectionModified(Inkscape::Selection *selection, guint flags)
 {
@@ -829,9 +840,7 @@ void BatchExport::queueRefresh(bool rename_file)
     }, Glib::PRIORITY_HIGH);
 }
 
-} // namespace Dialog
-} // namespace UI
-} // namespace Inkscape
+} // namespace Inkscape::UI::Dialog
 
 /*
   Local Variables:

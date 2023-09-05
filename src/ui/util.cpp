@@ -18,6 +18,8 @@
 #include <pangomm/context.h>
 #include <pangomm/fontdescription.h>
 #include <pangomm/layout.h>
+#include <gtkmm/image.h>
+#include <gtkmm/messagedialog.h>
 #include <gtkmm/revealer.h>
 #include <gtkmm/widget.h>
 

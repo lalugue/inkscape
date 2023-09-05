@@ -4,32 +4,34 @@
  */
 /* Authors:
  *   Joel Holdsworth
- *   Inkscape Authors
+ *   The Inkscape Organization
+ *   Abhishek Sharma
  *
- * Copyright (C) 2004-2008 Inkscape Authors
+ * Copyright (C) 2004-2008 The Inkscape Organization
  *
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include <glibmm.h>
+#ifndef SEEN_INKSCAPE_UI_DIALOG_FILEDIALOGBASEWIN32
+#define SEEN_INKSCAPE_UI_DIALOG_FILEDIALOGBASEWIN32
 
 #ifdef _WIN32
-
-#include "filedialogimpl-gtkmm.h"
- 
-#include "inkgc/gc-core.h"
 
 #include <memory>
 #include <mutex>
 #include <windows.h>
+#include <glibmm/refptr.h>
+#include <glibmm/ustring.h>
+#include <gdkmm/pixbuf.h>
 
+#include "filedialogimpl-gtkmm.h"
+#include "inkgc/gc-core.h"
 
-namespace Inkscape
-{
-namespace UI
-{
-namespace Dialog
-{
+namespace Gtk {
+class Window;
+} // namespace Gtk
+
+namespace Inkscape::UI::Dialog {
 
 /*#########################################################################
 ### F I L E     D I A L O G    B A S E    C L A S S
@@ -352,12 +354,11 @@ private:
 
 };
 
+} // namespace Inkscape::UI::Dialog
 
-}
-}
-}
+#endif // WIN32
 
-#endif
+#endif // SEEN_INKSCAPE_UI_DIALOG_FILEDIALOGBASEWIN32
 
 /*
   Local Variables:

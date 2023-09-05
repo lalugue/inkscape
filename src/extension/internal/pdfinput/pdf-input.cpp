@@ -35,17 +35,23 @@
 #include <poppler/glib/poppler-page.h>
 #endif
 
+#include <utility>
 #include <gdkmm/general.h>
 #include <glibmm/convert.h>
 #include <glibmm/i18n.h>
 #include <glibmm/miscutils.h>
-#include <gtk/gtk.h>
+#include <gtkmm/builder.h>
+#include <gtkmm/button.h>
+#include <gtkmm/cellrenderercombo.h>
 #include <gtkmm/checkbutton.h>
 #include <gtkmm/comboboxtext.h>
 #include <gtkmm/drawingarea.h>
+#include <gtkmm/entry.h>
 #include <gtkmm/frame.h>
+#include <gtkmm/label.h>
+#include <gtkmm/liststore.h>
+#include <gtkmm/notebook.h>
 #include <gtkmm/scale.h>
-#include <utility>
 
 #include "document-undo.h"
 #include "extension/input.h"

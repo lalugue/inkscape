@@ -15,6 +15,15 @@
 #include <regex>
 #include <streambuf>
 #include <string>
+#include <glibmm/main.h>
+#include <gtkmm/aspectframe.h>
+#include <gtkmm/builder.h>
+#include <gtkmm/button.h>
+#include <gtkmm/clipboard.h>
+#include <gtkmm/label.h>
+#include <gtkmm/notebook.h>
+#include <gtkmm/textview.h>
+#include <gtkmm/window.h>
 
 #include "document.h"
 #include "inkscape-version-info.h"
@@ -24,11 +33,8 @@
 #include "util/units.h"
 
 using namespace Inkscape::IO;
-using namespace Inkscape::UI::View;
 
-namespace Inkscape {
-namespace UI {
-namespace Dialog {
+namespace Inkscape::UI::Dialog {
 
 static Gtk::Window *window = nullptr;
 static Gtk::Notebook *tabs = nullptr;
@@ -116,9 +122,6 @@ void AboutDialog::show_about() {
 
         // Bind glade's container to our SVGViewWidget class
         if(doc) {
-            //SVGViewWidget *viewer;
-            //builder->get_widget_derived("image-container", viewer, doc);
-            //Gtk::manage(viewer);
             auto const viewer = Gtk::make_managed<Inkscape::UI::View::SVGViewWidget>(doc);
             double width = doc->getWidth().value("px");
             double height = doc->getHeight().value("px");
@@ -190,9 +193,7 @@ void AboutDialog::show_about() {
     }
 }
 
-} // namespace Dialog
-} // namespace UI
-} // namespace Inkscape
+} // namespace Inkscape::UI::Dialog
 
 /*
   Local Variables:

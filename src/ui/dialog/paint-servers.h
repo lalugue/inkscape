@@ -14,20 +14,29 @@
 #ifndef INKSCAPE_UI_DIALOG_PAINT_SERVERS_H
 #define INKSCAPE_UI_DIALOG_PAINT_SERVERS_H
 
-#include <glibmm/i18n.h>
-#include <gtkmm.h>
-#include <sigc++/sigc++.h>
+#include <map>
+#include <memory>
+#include <optional>
+#include <tuple>
+#include <vector>
+#include <glibmm/ustring.h>
+#include <gtkmm/liststore.h>
+#include <gtkmm/treemodel.h>
 
 #include "display/drawing.h"
+#include "helper/auto-connection.h"
 #include "ui/dialog/dialog-base.h"
+
+namespace Gtk {
+class ComboBoxText;
+class IconView;
+} // namespace Gtk
 
 class SPObject;
 
-namespace Inkscape {
-namespace UI {
-namespace Dialog {
+namespace Inkscape::UI::Dialog {
 
-class PaintServersColumns : public Gtk::TreeModel::ColumnRecord
+class PaintServersColumns final : public Gtk::TreeModel::ColumnRecord
 {
 public:
     Gtk::TreeModelColumn<Glib::ustring> id;
@@ -44,7 +53,7 @@ public:
     }
 };
 
-struct PaintDescription
+struct PaintDescription final
 {
     /** Pointer to the document from which the paint originates */
     SPDocument *source_document = nullptr;
@@ -79,15 +88,15 @@ struct PaintDescription
  * Patterns and hatches are loaded from the preferences paths and displayed
  * for each document, for all documents and for the current document.
  */
-class PaintServersDialog : public DialogBase
+class PaintServersDialog final : public DialogBase
 {
     using MaybeString = std::optional<Glib::ustring>;
 
 public:
     PaintServersDialog();
-    ~PaintServersDialog() override;
+    ~PaintServersDialog() final;
 
-    void documentReplaced() override;
+    void documentReplaced() final;
 
 private:
     void _addToStore(PaintDescription &paint);
@@ -120,14 +129,12 @@ private:
     Gtk::ComboBoxText *dropdown = nullptr;
     Gtk::IconView *icon_view = nullptr;
     PaintServersColumns const columns;
-    sigc::connection _defs_changed, _document_closed;
+    auto_connection _defs_changed, _document_closed;
     MaybeString _common_stroke, _common_fill; ///< Common fill/stroke to all selected elements
-    sigc::connection _item_activated;
+    auto_connection _item_activated;
 };
 
-} // namespace Dialog
-} // namespace UI
-} // namespace Inkscape
+} // namespace Inkscape::UI::Dialog
 
 #endif // SEEN INKSCAPE_UI_DIALOG_PAINT_SERVERS_H
 

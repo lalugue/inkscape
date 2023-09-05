@@ -13,12 +13,17 @@
 
 #include "live_effects/lpe-tiling.h"
 
+#include <algorithm>
+#include <limits>
 #include <2geom/intersection-graph.h>
 #include <2geom/path-intersection.h>
 #include <2geom/sbasis-to-bezier.h>
 #include <gdk/gdk.h>
 #include <glibmm/ustring.h>
-#include <gtkmm.h>
+#include <gtkmm/box.h>
+#include <gtkmm/frame.h>
+#include <gtkmm/radiobutton.h>
+#include <gtkmm/spinbutton.h>
 
 #include "display/curve.h"
 #include "helper/geom.h"
@@ -38,38 +43,39 @@
 #include "ui/knot/knot-holder-entity.h"
 #include "ui/icon-loader.h"
 #include "ui/icon-names.h"
+
 // TODO due to internal breakage in glibmm headers, this must be last:
 #include <glibmm/i18n.h>
-#include <gtkmm/enums.h>
-#include <gtkmm/object.h>
-#include <gtkmm/radiobutton.h>
-#include <gtkmm/radiobuttongroup.h>
-#include <gtkmm/widget.h>
-#include <vector>
 
-namespace Inkscape {
-namespace LivePathEffect {
+namespace Inkscape::LivePathEffect {
 
 namespace CoS {
-    class KnotHolderEntityCopyGapX : public LPEKnotHolderEntity {
-    public:
-        KnotHolderEntityCopyGapX(LPETiling * effect) : LPEKnotHolderEntity(effect) {};
-        ~KnotHolderEntityCopyGapX() override;
-        void knot_set(Geom::Point const &p, Geom::Point const &origin, guint state) override;
-        void knot_click(guint state) override;
-        Geom::Point knot_get() const override;
-        double startpos = dynamic_cast<LPETiling const*> (_effect)->gapx_unit;
-    };
-    class KnotHolderEntityCopyGapY : public LPEKnotHolderEntity {
-    public:
-        KnotHolderEntityCopyGapY(LPETiling * effect) : LPEKnotHolderEntity(effect) {};
-        ~KnotHolderEntityCopyGapY() override;
-        void knot_set(Geom::Point const &p, Geom::Point const &origin, guint state) override;
-        void knot_click(guint state) override;
-        Geom::Point knot_get() const override;
-        double startpos = dynamic_cast<LPETiling const*> (_effect)->gapy_unit;
-    };
-} // CoS
+
+class KnotHolderEntityCopyGapX final : public LPEKnotHolderEntity {
+public:
+    KnotHolderEntityCopyGapX(LPETiling * effect) : LPEKnotHolderEntity(effect) {};
+    ~KnotHolderEntityCopyGapX() final;
+
+    void knot_set(Geom::Point const &p, Geom::Point const &origin, guint state) final;
+    void knot_click(guint state) final;
+    Geom::Point knot_get() const final;
+
+    double startpos = dynamic_cast<LPETiling const*> (_effect)->gapx_unit;
+};
+
+class KnotHolderEntityCopyGapY final : public LPEKnotHolderEntity {
+public:
+    KnotHolderEntityCopyGapY(LPETiling * effect) : LPEKnotHolderEntity(effect) {};
+    ~KnotHolderEntityCopyGapY() final;
+
+    void knot_set(Geom::Point const &p, Geom::Point const &origin, guint state) final;
+    void knot_click(guint state) final;
+    Geom::Point knot_get() const final;
+
+    double startpos = dynamic_cast<LPETiling const*> (_effect)->gapy_unit;
+};
+
+} // namespace CoS
 
 LPETiling::LPETiling(LivePathEffectObject *lpeobject) :
     Effect(lpeobject),
@@ -105,6 +111,7 @@ LPETiling::LPETiling(LivePathEffectObject *lpeobject) :
 {
     show_orig_path = true;
     _provides_knotholder_entities = true;
+
     // register all your parameters here, so Inkscape knows which parameters this effect has:
     // please intense work on this widget and is important reorder parameters very carefully
     registerParameter(&unit);
@@ -162,7 +169,6 @@ LPETiling::LPETiling(LivePathEffectObject *lpeobject) :
     reset = link_styles;
 }
 
-LPETiling::~LPETiling() = default;
 bool LPETiling::doOnOpen(SPLPEItem const *lpeitem)
 {
     bool fixed = false;
@@ -476,8 +482,7 @@ void LPETiling::cloneStyle(SPObject *orig, SPObject *dest)
         if (iter->style_src != SPStyleSrc::UNSET) {
             auto key = iter->id();
             if (key != SPAttr::FONT && key != SPAttr::D && key != SPAttr::MARKER) {
-                const gchar *attr = orig->getAttribute(iter->name().c_str());
-                if (attr) {
+                if (auto const attr = orig->getAttribute(iter->name().c_str())) {
                     dest->setAttribute(iter->name(), attr);
                 }
             }
@@ -998,14 +1003,12 @@ Gtk::Widget * LPETiling::newWidget()
 }
 
 void
-LPETiling::generate_buttons(Gtk::Box *container, Gtk::RadioButton::Group &group, gint pos)
+LPETiling::generate_buttons(Gtk::Box * const container, Gtk::RadioButton::Group &group, int const pos)
 {
     for (int i = 0; i < 4; i++) {
-        gint position = (pos * 4) + i;
-        Glib::ustring result = getMirrorMap(position);
-        Glib::ustring iconname = "mirroring";
-        iconname += "-";
-        iconname += result;
+        int const position = (pos * 4) + i;
+        auto const &result = getMirrorMap(position);
+        auto const iconname = Glib::ustring::compose("mirroring-%1", result);
         auto button = create_radio_button(group, Glib::ustring(), iconname);
         if (getActiveMirror(position)) {
             _updating = true;
@@ -1013,7 +1016,7 @@ LPETiling::generate_buttons(Gtk::Box *container, Gtk::RadioButton::Group &group,
             _updating = false;
         }
         button->signal_clicked().connect(sigc::bind(sigc::mem_fun(*this, &LPETiling::setMirroring),position));
-        gint zero = Glib::ustring("0")[0];
+        static constexpr int zero = static_cast<gunichar>('0');
         Glib::ustring tooltip = result[0] == zero ? "" : "rx+";
         tooltip += result[1] == zero ? "" : "ry+";
         tooltip += result[2] == zero ? "" : "cx+";
@@ -1028,7 +1031,7 @@ LPETiling::generate_buttons(Gtk::Box *container, Gtk::RadioButton::Group &group,
 }
 
 Glib::ustring 
-LPETiling::getMirrorMap(gint index)
+LPETiling::getMirrorMap(int const index)
 {
     Glib::ustring result = "0000";
     if (index == 1) {
@@ -1066,9 +1069,9 @@ LPETiling::getMirrorMap(gint index)
 }
 
 bool
-LPETiling::getActiveMirror(gint index)
+LPETiling::getActiveMirror(int const index)
 {
-    Glib::ustring result = getMirrorMap(index);
+    auto const &result = getMirrorMap(index);
     return result[0] == Glib::ustring::format(mirrorrowsx)[0] && 
            result[1] == Glib::ustring::format(mirrorrowsy)[0] && 
            result[2] == Glib::ustring::format(mirrorcolsx)[0] && 
@@ -1076,14 +1079,14 @@ LPETiling::getActiveMirror(gint index)
 }
 
 void 
-LPETiling::setMirroring(gint index)
+LPETiling::setMirroring(int const index)
 {
     if (_updating) {
         return;
     }
     _updating = true;
-    Glib::ustring result = getMirrorMap(index);
-    gint zero = Glib::ustring("0")[0];
+    auto const &result = getMirrorMap(index);
+    static constexpr int zero = static_cast<gunichar>('0');
     mirrorrowsx.param_setValue(result[0] == zero ? false : true);
     mirrorrowsy.param_setValue(result[1] == zero ? false : true);
     mirrorcolsx.param_setValue(result[2] == zero ? false : true);
@@ -1695,8 +1698,8 @@ Geom::Point KnotHolderEntityCopyGapY::knot_get() const
 }
 
 } // namespace CoS
-} // namespace LivePathEffect
-} // namespace Inkscape
+
+} // namespace Inkscape::LivePathEffect
 
 /*
   Local Variables:

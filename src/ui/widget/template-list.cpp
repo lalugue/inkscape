@@ -9,7 +9,13 @@
 
 #include "template-list.h"
 
+#include <map>
 #include <glib/gi18n.h>
+#include <gdkmm/pixbuf.h>
+#include <gtkmm/builder.h>
+#include <gtkmm/iconview.h>
+#include <gtkmm/liststore.h>
+#include <gtkmm/treemodel.h>
 
 #include "extension/db.h"
 #include "extension/template.h"
@@ -22,9 +28,7 @@
 using namespace Inkscape::IO::Resource;
 using Inkscape::Extension::TemplatePreset;
 
-namespace Inkscape {
-namespace UI {
-namespace Widget {
+namespace Inkscape::UI::Widget {
 
 class TemplateCols : public Gtk::TreeModel::ColumnRecord
 {
@@ -43,12 +47,9 @@ public:
     Gtk::TreeModelColumn<Glib::ustring> key;
 };
 
-TemplateList::TemplateList() {}
-
 TemplateList::TemplateList(BaseObjectType *cobject, const Glib::RefPtr<Gtk::Builder> &refGlade)
     : Gtk::Notebook(cobject)
 {
-    TemplateList();
 }
 
 /**
@@ -57,23 +58,27 @@ TemplateList::TemplateList(BaseObjectType *cobject, const Glib::RefPtr<Gtk::Buil
 void TemplateList::init(Inkscape::Extension::TemplateShow mode)
 {
     TemplateCols cols;
-    std::map<std::string, Glib::RefPtr<Gtk::ListStore>> _stores;
+    std::map<std::string, Glib::RefPtr<Gtk::ListStore>> stores;
 
     Inkscape::Extension::DB::TemplateList extensions;
     Inkscape::Extension::db.get_template_list(extensions);
 
     for (auto tmod : extensions) {
-        std::string cat = tmod->get_category();
-        if (!_stores.count(cat)) {
+        auto const &cat = tmod->get_category();
+
+        if (auto it = stores.lower_bound(cat);
+            it == stores.end() || it->first != cat)
+        {
             try {
-                _stores[cat] = this->generate_category(cat);
-                _stores[cat]->clear();
-            } catch (UIBuilderError &e) {
+                it = stores.emplace_hint(it, cat, generate_category(cat));
+                it->second->clear();
+            } catch (UIBuilderError const & /*error*/) {
                 return;
             }
         }
+
         for (auto preset : tmod->get_presets(mode)) {
-            Gtk::TreeModel::Row row = *(_stores[cat]->append());
+            Gtk::TreeModel::Row row = *stores[cat]->append();
             row[cols.name] = _(preset->get_name().c_str());
             row[cols.icon] = icon_to_pixbuf(preset->get_icon_path());
             auto label = preset->get_label();
@@ -88,7 +93,7 @@ void TemplateList::init(Inkscape::Extension::TemplateShow mode)
 /**
  * Turn the requested template icon name into a pixbuf
  */
-Glib::RefPtr<Gdk::Pixbuf> TemplateList::icon_to_pixbuf(std::string path)
+Glib::RefPtr<Gdk::Pixbuf> TemplateList::icon_to_pixbuf(std::string const &path)
 {
     // TODO: Add some caching here.
     if (!path.empty()) {
@@ -102,7 +107,7 @@ Glib::RefPtr<Gdk::Pixbuf> TemplateList::icon_to_pixbuf(std::string path)
 /**
  * Generate a new category with the given label and return it's list store.
  */
-Glib::RefPtr<Gtk::ListStore> TemplateList::generate_category(std::string label)
+Glib::RefPtr<Gtk::ListStore> TemplateList::generate_category(std::string const &label)
 {
     static Glib::ustring uifile = get_filename(UIS, "widget-new-from-template.ui");
 
@@ -207,9 +212,7 @@ Gtk::IconView *TemplateList::get_iconview(Gtk::Widget *widget)
     return dynamic_cast<Gtk::IconView *>(widget);
 }
 
-} // namespace Widget
-} // namespace UI
-} // namespace Inkscape
+} // namespace Inkscape::UI::Widget
 
 /*
   Local Variables:

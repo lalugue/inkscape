@@ -16,6 +16,7 @@
 
 #include <glibmm/i18n.h>
 #include <glibmm/markup.h>
+#include <gtkmm/messagedialog.h>
 #include <sigc++/functors/mem_fun.h>
 
 #include "libnrtype/font-lister.h"
@@ -42,6 +43,8 @@ FontCollectionSelector::FontCollectionSelector()
 
     show_all_children();
 }
+
+FontCollectionSelector::~FontCollectionSelector() = default;
 
 // Setup the treeview of the widget.
 void FontCollectionSelector::setup_tree_view(Gtk::TreeView *tv)

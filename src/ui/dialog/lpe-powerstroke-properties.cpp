@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 /**
  * @file
- * Dialog for renaming layers.
+ * Dialog for editing power strokes.
  */
 /* Author:
  *   Bryce W. Harrington <bryce@bryceharrington.com>
@@ -15,13 +15,18 @@
  */
 
 #include "lpe-powerstroke-properties.h"
+
 #include <boost/lexical_cast.hpp>
 #include <glibmm/i18n.h>
+#include <glibmm/main.h>
+#include <sigc++/adaptors/bind.h>
+#include <sigc++/adaptors/hide.h>
+#include <sigc++/functors/mem_fun.h>
+
 #include "inkscape.h"
 #include "desktop.h"
 #include "document-undo.h"
 #include "layer-manager.h"
-
 #include "selection-chemistry.h"
 
 namespace Inkscape::UI::Dialog {
@@ -131,15 +136,6 @@ PowerstrokePropertiesDialog::_close()
 
 bool PowerstrokePropertiesDialog::_handleKeyEvent(GdkEventKey * /*event*/)
 {
-
-    /*switch (get_latin_keyval(event)) {
-        case GDK_KEY_Return:
-        case GDK_KEY_KP_Enter: {
-            _apply();
-            return true;
-        }
-        break;
-    }*/
     return false;
 }
 

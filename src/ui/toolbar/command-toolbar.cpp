@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-
 /**
  * @file
  * Toolbar for Commands.
@@ -14,6 +13,9 @@
 
 #include "command-toolbar.h"
 
+#include <gtkmm/toolbar.h>
+
+#include "preferences.h"
 #include "ui/builder-utils.h"
 
 namespace Inkscape::UI::Toolbar {

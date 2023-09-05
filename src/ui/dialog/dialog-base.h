@@ -21,9 +21,7 @@
 
 class SPDesktop;
 
-namespace Inkscape {
-namespace UI {
-namespace Dialog {
+namespace Inkscape::UI::Dialog {
 
 /**
  * DialogBase is the base class for the dialog system.
@@ -121,9 +119,7 @@ private:
     Selection *selection;
 };
 
-} // namespace Dialog
-} // namespace UI
-} // namespace Inkscape
+} // namespace Inkscape::UI::Dialog
 
 #endif // INK_DIALOG_BASE_H
 

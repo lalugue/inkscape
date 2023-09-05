@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-
 /** @file
  * @brief A widget that manages DialogNotebook's and other widgets inside a horizontal DialogMultipaned.
  *
@@ -13,17 +12,20 @@
 
 #include "dialog-container.h"
 
+#include <iostream>
 #include <glibmm/i18n.h>
 #include <giomm/file.h>
 #include <glibmm/keyfile.h>
-#include <gtkmm/box.h>
+#include <gdkmm/dragcontext.h>
 #include <gtkmm/eventbox.h>
 #include <gtkmm/image.h>
+#include <gtkmm/viewport.h>
+#include <sigc++/adaptors/bind.h>
+#include <sigc++/functors/mem_fun.h>
 
 #include "enums.h"
 #include "inkscape-application.h"
 #include "inkscape-window.h"
-// #include "ui/dialog/align-and-distribute.h"
 #include "ui/dialog/clonetiler.h"
 #include "ui/dialog/dialog-data.h"
 #include "ui/dialog/dialog-multipaned.h"
@@ -64,14 +66,12 @@
 #include "ui/themes.h"
 #include "ui/widget/canvas-grid.h"
 
-namespace Inkscape {
-namespace UI {
-namespace Dialog {
+namespace Inkscape::UI::Dialog {
 
-DialogContainer::~DialogContainer() {
-    // delete columns; desktop widget deletes dialog container before it get "unrealized",
-    // so it doesn't get a chance to remove them
-    delete columns;
+// Clear dialogs a bit early, to not do ~MultiPaned → ~Notebook → our unlink_dialog()→erase()→crash
+DialogContainer::~DialogContainer()
+{
+    dialogs.clear();
 }
 
 DialogContainer::DialogContainer(InkscapeWindow* inkscape_window)
@@ -82,19 +82,19 @@ DialogContainer::DialogContainer(InkscapeWindow* inkscape_window)
     get_style_context()->add_class("DialogContainer");
 
     // Setup main column
-    columns = Gtk::make_managed<DialogMultipaned>(Gtk::ORIENTATION_HORIZONTAL);
+    columns = std::make_unique<DialogMultipaned>(Gtk::ORIENTATION_HORIZONTAL);
 
     connections.emplace_back(columns->signal_prepend_drag_data().connect(
-        sigc::bind(sigc::mem_fun(*this, &DialogContainer::prepend_drop), columns)));
+        sigc::bind(sigc::mem_fun(*this, &DialogContainer::prepend_drop), columns.get())));
 
     connections.emplace_back(columns->signal_append_drag_data().connect(
-        sigc::bind(sigc::mem_fun(*this, &DialogContainer::append_drop), columns)));
+        sigc::bind(sigc::mem_fun(*this, &DialogContainer::append_drop), columns.get())));
 
     // Setup drop targets.
     target_entries.emplace_back(Gtk::TargetEntry("GTK_NOTEBOOK_TAB"));
     columns->set_target_entries(target_entries);
 
-    add(*columns);
+    add(*columns.get());
 
     // Should probably be moved to window.
     //  connections.emplace_back(signal_unmap().connect(sigc::mem_fun(*this, &DialogContainer::cb_on_unmap)));
@@ -371,7 +371,7 @@ bool DialogContainer::recreate_dialogs_from_state(InkscapeWindow* inkscape_windo
         if (keyfile->has_group("Windows") && keyfile->has_key("Windows", "Count")) {
             windows_count = keyfile->get_integer("Windows", "Count");
         }
-    } catch (Glib::Error &error) {
+    } catch (Glib::Error const &error) {
         std::cerr << G_STRFUNC << ": " << error.what().raw() << std::endl;
     }
 
@@ -391,7 +391,7 @@ bool DialogContainer::recreate_dialogs_from_state(InkscapeWindow* inkscape_windo
         int column_count = 0;
         try {
             column_count = keyfile->get_integer(group_name, "ColumnCount");
-        } catch (Glib::Error &error) {
+        } catch (Glib::Error const &error) {
             std::cerr << G_STRFUNC << ": " << error.what().raw() << std::endl;
         }
 
@@ -416,7 +416,7 @@ bool DialogContainer::recreate_dialogs_from_state(InkscapeWindow* inkscape_windo
                 if (keyfile->has_key(column_group_name, "BeforeCanvas")) {
                     before_canvas = keyfile->get_boolean(column_group_name, "BeforeCanvas");
                 }
-            } catch (Glib::Error &error) {
+            } catch (Glib::Error const &error) {
                 std::cerr << G_STRFUNC << ": " << error.what().raw() << std::endl;
             }
 
@@ -433,7 +433,7 @@ bool DialogContainer::recreate_dialogs_from_state(InkscapeWindow* inkscape_windo
                 std::vector<Glib::ustring> dialogs;
                 try {
                     dialogs = keyfile->get_string_list(column_group_name, key);
-                } catch (Glib::Error &error) {
+                } catch (Glib::Error const &error) {
                     std::cerr << G_STRFUNC << ": " << error.what().raw() << std::endl;
                 }
 
@@ -696,7 +696,7 @@ void DialogContainer::load_container_state(Glib::KeyFile *keyfile, bool include_
                 pos.height = keyfile->get_integer(group_name, "height");
                 has_position = true;
             }
-        } catch (Glib::Error &error) {
+        } catch (Glib::Error const &error) {
             std::cerr << "DialogContainer::load_container_state: " << error.what().raw() << std::endl;
         }
 
@@ -714,7 +714,7 @@ void DialogContainer::load_container_state(Glib::KeyFile *keyfile, bool include_
                 }
             } else {
                 active_container = this;
-                active_columns = columns;
+                active_columns = columns.get();
             }
 
             if (!active_container || !active_columns) {
@@ -732,7 +732,7 @@ void DialogContainer::load_container_state(Glib::KeyFile *keyfile, bool include_
             try {
                 notebook_count = keyfile->get_integer(column_group_name, "NotebookCount");
                 before_canvas = keyfile->get_boolean(column_group_name, "BeforeCanvas");
-            } catch (Glib::Error &error) {
+            } catch (Glib::Error const &error) {
                 std::cerr << "DialogContainer::load_container_state: " << error.what().raw() << std::endl;
             }
 
@@ -760,7 +760,7 @@ void DialogContainer::load_container_state(Glib::KeyFile *keyfile, bool include_
                 std::vector<Glib::ustring> dialogs;
                 try {
                     dialogs = keyfile->get_string_list(column_group_name, key);
-                } catch (Glib::Error &error) {
+                } catch (Glib::Error const &error) {
                     std::cerr << "DialogContainer::load_container_state: " << error.what().raw() << std::endl;
                 }
 
@@ -835,10 +835,9 @@ void save_wnd_position(Glib::KeyFile *keyfile, const Glib::ustring &group_name, 
 // get *this* container's state only; store window 'position' in the state if given
 std::shared_ptr<Glib::KeyFile> DialogContainer::get_container_state(const window_position_t *position) const
 {
-    std::shared_ptr<Glib::KeyFile> keyfile = std::make_shared<Glib::KeyFile>();
+    static constexpr int window_idx = 0;
 
-    DialogMultipaned *window = columns;
-    const int window_idx = 0;
+    auto const keyfile = std::make_shared<Glib::KeyFile>();
 
     // Step 2: save the number of windows
     keyfile->set_integer("Windows", "Count", 1);
@@ -846,7 +845,7 @@ std::shared_ptr<Glib::KeyFile> DialogContainer::get_container_state(const window
     // Step 3.0: get all the multipanes of the window
     std::vector<DialogMultipaned *> multipanes;
 
-    for (auto const &column : window->get_children()) {
+    for (auto const &column : columns->get_children()) {
         if (auto paned = dynamic_cast<DialogMultipaned *>(column)) {
             multipanes.push_back(paned);
         }
@@ -926,7 +925,7 @@ std::unique_ptr<Glib::KeyFile> DialogContainer::save_container_state()
     auto app = InkscapeApplication::instance();
 
     // Step 1: get all the container columns (in order, from the current container and all DialogWindow containers)
-    std::vector<DialogMultipaned *> windows(1, columns);
+    std::vector<DialogMultipaned *> windows(1, columns.get());
     std::vector<DialogWindow *> dialog_windows(1, nullptr);
 
     for (auto const &window : app->gtk_app()->get_windows()) {
@@ -1042,10 +1041,9 @@ std::unique_ptr<Glib::KeyFile> DialogContainer::save_container_state()
  */
 void DialogContainer::on_unrealize() {
     // Disconnect all signals
-    for_each(connections.begin(), connections.end(), [&](auto c) { c.disconnect(); });
+    connections.clear();
 
-    delete columns;
-    columns = nullptr;
+    columns.reset();
 
     parent_type::on_unrealize();
 }
@@ -1056,7 +1054,7 @@ Gtk::Widget* DialogContainer::page_move = 0;
 #endif
 
 // Create a new notebook and move page.
-DialogNotebook *DialogContainer::prepare_drop(const Glib::RefPtr<Gdk::DragContext> context)
+DialogNotebook *DialogContainer::prepare_drop(Glib::RefPtr<Gdk::DragContext> const &context)
 {
     Gtk::Widget *source = Gtk::Widget::drag_get_source_widget(context);
 
@@ -1091,7 +1089,8 @@ DialogNotebook *DialogContainer::prepare_drop(const Glib::RefPtr<Gdk::DragContex
 }
 
 // Notebook page dropped on prepend target. Call function to create new notebook and then insert.
-void DialogContainer::prepend_drop(const Glib::RefPtr<Gdk::DragContext> context, DialogMultipaned *multipane)
+void DialogContainer::prepend_drop(Glib::RefPtr<Gdk::DragContext> const &context,
+                                   DialogMultipaned * const multipane)
 {
     DialogNotebook *new_notebook = prepare_drop(context); // Creates notebook, moves page.
     if (!new_notebook) {
@@ -1114,7 +1113,8 @@ void DialogContainer::prepend_drop(const Glib::RefPtr<Gdk::DragContext> context,
 }
 
 // Notebook page dropped on append target. Call function to create new notebook and then insert.
-void DialogContainer::append_drop(const Glib::RefPtr<Gdk::DragContext> context, DialogMultipaned *multipane)
+void DialogContainer::append_drop(Glib::RefPtr<Gdk::DragContext> const &context,
+                                  DialogMultipaned * const multipane)
 {
     DialogNotebook *new_notebook = prepare_drop(context); // Creates notebook, moves page.
     if (!new_notebook) {
@@ -1156,9 +1156,7 @@ void DialogContainer::column_empty(DialogMultipaned *column)
     }
 }
 
-} // namespace Dialog
-} // namespace UI
-} // namespace Inkscape
+} // namespace Inkscape::UI::Dialog
 
 /*
   Local Variables:

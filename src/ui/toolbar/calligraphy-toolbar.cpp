@@ -28,11 +28,12 @@
 #include "calligraphy-toolbar.h"
 
 #include <glibmm/i18n.h>
+#include <gtkmm/adjustment.h>
 #include <gtkmm/comboboxtext.h>
 #include <gtkmm/separatortoolitem.h>
+#include <gtkmm/toggletoolbutton.h>
 
 #include "desktop.h"
-
 #include "ui/dialog/calligraphic-profile-rename.h"
 #include "ui/icon-names.h"
 #include "ui/simple-pref-pusher.h"
@@ -47,21 +48,16 @@ using Inkscape::Util::Unit;
 using Inkscape::Util::unit_table;
 
 std::vector<Glib::ustring> get_presets_list() {
-
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-
     std::vector<Glib::ustring> presets = prefs->getAllDirs("/tools/calligraphic/preset");
-
     return presets;
 }
 
-namespace Inkscape {
-namespace UI {
-namespace Toolbar {
+namespace Inkscape::UI::Toolbar {
 
 CalligraphyToolbar::CalligraphyToolbar(SPDesktop *desktop)
     : Toolbar(desktop)
-    , _tracker(new UnitTracker(Inkscape::Util::UNIT_TYPE_LINEAR))
+    , _tracker{std::make_unique<UnitTracker>(Inkscape::Util::UNIT_TYPE_LINEAR)}
     , _presets_blocked(false)
 {
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
@@ -608,10 +604,7 @@ void CalligraphyToolbar::save_profile(GtkWidget * /*widget*/)
     build_presets_list();
 }
 
-}
-}
-}
-
+} // namespace Inkscape::UI::Toolbar
 
 /*
   Local Variables:

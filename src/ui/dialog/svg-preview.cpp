@@ -18,19 +18,23 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#include "svg-preview.h"
+
 #include <iostream>
 #include <fstream>
+#include <string>
 
-#include <glibmm/i18n.h>
 #include <glib/gstdio.h>  // GStatBuf
-
-#include "svg-preview.h"
+#include <glibmm/convert.h>
+#include <glibmm/i18n.h>
+#include <glibmm/fileutils.h>
+#include <glibmm/regex.h>
+#include <glibmm/uriutils.h>
+#include <glibmm/ustring.h>
 
 #include "ui/view/svg-view-widget.h"
 
-namespace Inkscape {
-namespace UI {
-namespace Dialog {
+namespace Inkscape::UI::Dialog {
 
 bool SVGPreview::setDocument(SPDocument *doc)
 {
@@ -424,16 +428,9 @@ SVGPreview::SVGPreview()
     set_size_request(200, 300);
 }
 
-SVGPreview::~SVGPreview()
-{
-    // Ensure correct destruction order: viewer before document.
-    viewer.reset();
-    document.reset();
-}
+SVGPreview::~SVGPreview() = default;
 
-} // namespace Dialog
-} // namespace UI
-} // namespace Inkscape
+} // namespace Inkscape::UI::Dialog
 
 /*
   Local Variables:

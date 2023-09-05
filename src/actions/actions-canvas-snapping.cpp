@@ -2,21 +2,21 @@
 /*
  * Gio::Actions for toggling snapping preferences. Not tied to a particular document.
  *
+ * As preferences are stored per document, changes should be propagated to any window with same document.
+ *
  * Copyright (C) 2019 Tavmjong Bah
  *
  * The contents of this file may be used under the GNU General Public License Version 2 or later.
- *
  */
 
-#include <iostream>
-#include <unordered_map>
-#include <vector>
+#include "actions-canvas-snapping.h"
 
-#include <giomm.h>  // Not <gtkmm.h>! To eventually allow a headless version!
+#include <unordered_map>
+#include <giomm/actionmap.h>
 #include <glibmm/i18n.h>
+#include <glibmm/ustring.h>
 
 #include "actions-helper.h"
-#include "actions-canvas-snapping.h"
 #include "actions/actions-extra-data.h"
 #include "inkscape-application.h"
 #include "inkscape.h"
@@ -401,7 +401,6 @@ void transition_to_simple_snapping() {
         }
     }
 }
-
 
 /*
   Local Variables:

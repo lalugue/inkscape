@@ -11,6 +11,15 @@
  */
 
 #include "svg-renderer.h"
+
+#include <stdexcept>
+#include <utility>
+#include <cairomm/surface.h>
+#include <glibmm/ustring.h>
+#include <giomm/file.h>
+#include <gdkmm/pixbuf.h>
+#include <gdkmm/rgba.h>
+
 #include "io/file.h"
 #include "util/safe-printf.h"
 #include "xml/repr.h"
@@ -53,12 +62,15 @@ std::shared_ptr<SPDocument> load_document(const char* svg_file_path) {
     return std::shared_ptr<SPDocument>(ink_file_open(file, nullptr));
 }
 
-svg_renderer::svg_renderer(const char* svg_file_path): svg_renderer(load_document(svg_file_path)) {
+svg_renderer::svg_renderer(const char * const svg_file_path)
+: svg_renderer(load_document(svg_file_path))
+{
 }
 
-svg_renderer::svg_renderer(std::shared_ptr<SPDocument> document) {
-    _document = document;
-    if (document) {
+svg_renderer::svg_renderer(std::shared_ptr<SPDocument> document)
+    : _document{std::move(document)}
+{
+    if (_document) {
         _root = _document->getRoot();
     }
 
@@ -125,4 +137,15 @@ void svg_renderer::set_scale(double scale) {
     }
 }
 
-} // namespace
+} // namespace Inkscape
+
+/*
+  Local Variables:
+  mode:c++
+  c-file-style:"stroustrup"
+  c-file-offsets:((innamespace . 0)(inline-open . 0)(case-label . +))
+  indent-tabs-mode:nil
+  fill-column:99
+  End:
+*/
+// vim:filetype=cpp:expandtab:shiftwidth=4:tabstop=8:softtabstop=4:fileencoding=utf-8:textwidth=99:

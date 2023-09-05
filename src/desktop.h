@@ -36,7 +36,6 @@
 #include <glibmm/refptr.h>
 #include <glibmm/ustring.h>
 #include <gtk/gtk.h> // EventController et al.
-#include <gtkmm.h> // Many downstream includes – FIXME.
 #include <sigc++/signal.h>
 #include <2geom/affine.h>
 #include <2geom/transforms.h>

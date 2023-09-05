@@ -18,29 +18,29 @@
 #ifndef SEEN_SVG_PREVIEW_H
 #define SEEN_SVG_PREVIEW_H
 
-//Gtk includes
-#include <gtkmm.h>
-
-//General includes
+#include <cerrno>
+#include <memory>
 #include <unistd.h>
 #include <sys/stat.h>
-#include <cerrno>
+
+#include <gtkmm/box.h>
 
 #include "filedialog.h"
 #include "document.h"
 
-namespace Gtk {
-class Expander;
-}
+namespace Glib {
+class ustring;
+} // namespace Glib
 
 namespace Inkscape {
-  class URI;
+
+class URI;
 
 namespace UI {
 
 namespace View {
-  class SVGViewWidget;
-}
+class SVGViewWidget;
+} // namespace View
 
 namespace Dialog {
 
@@ -53,22 +53,16 @@ namespace Dialog {
  * Currently, this is just a wrapper of the sp_svg_view Gtk widget.
  * Hopefully we will eventually replace with a pure Gtkmm widget.
  */
-class SVGPreview : public Gtk::Box
+class SVGPreview final : public Gtk::Box
 {
 public:
-
     SVGPreview();
-
-    ~SVGPreview() override;
+    ~SVGPreview() final;
 
     bool setDocument(SPDocument *doc);
-
     bool setFileName(Glib::ustring const &fileName);
-
     bool setFromMem(char const *xmlBuffer);
-
     bool set(Glib::ustring const &fileName, int dialogType);
-
     bool setURI(URI &uri);
 
     /**
@@ -87,6 +81,9 @@ public:
     void showTooLarge(long fileLength);
 
 private:
+    // Ensure correct destruction order: viewer before document.
+    // So, declaring viewer after document means we ensure that.
+
     /**
      * The svg document we are currently showing
      */
@@ -101,9 +98,7 @@ private:
      * are we currently showing the "no preview" image?
      */
     bool showingNoPreview;
-
 };
-
 
 } // namespace Dialog
 } // namespace UI
