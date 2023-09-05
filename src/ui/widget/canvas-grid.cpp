@@ -229,10 +229,16 @@ void CanvasGrid::updateRulers()
     // called in all situations when documents are loaded and replaced.
     if (document != _document) {
         _document = document;
-        _page_selected_connection = pm.connectPageSelected([=](SPPage *) { updateRulers(); });
-        _page_modified_connection = pm.connectPageModified([=](SPPage *) { updateRulers(); });
-        _sel_modified_connection = sel->connectModified([=](Inkscape::Selection *, int) { updateRulers(); });
-        _sel_changed_connection = sel->connectChanged([=](Inkscape::Selection *) { updateRulers(); });
+
+        _page_selected_connection = pm.connectPageSelected([this](SPPage const *) { updateRulers(); });
+        _page_modified_connection = pm.connectPageModified([this](SPPage const *) { updateRulers(); });
+
+        _sel_modified_connection.disconnect();
+        _sel_changed_connection .disconnect();
+        if (sel) {
+            _sel_modified_connection = sel->connectModified([this](Inkscape::Selection const *, int) { updateRulers(); });
+            _sel_changed_connection  = sel->connectChanged ([this](Inkscape::Selection const *     ) { updateRulers(); });
+        }
     }
 
     Geom::Rect viewbox = desktop->get_display_area().bounds();
@@ -260,8 +266,11 @@ void CanvasGrid::updateRulers()
     _vruler->set_page(pagebox.top(), pagebox.bottom());
 
     Geom::Rect selbox = Geom::IntRect(0, 0, 0, 0);
-    if (auto bbox = sel->preferredBounds())
-        selbox = (*bbox * d2c).roundOutwards();
+    if (sel) {
+        if (auto const bbox = sel->preferredBounds()) {
+            selbox = (*bbox * d2c).roundOutwards();
+        }
+    }
     _hruler->set_selection(selbox.left(), selbox.right());
     _vruler->set_selection(selbox.top(), selbox.bottom());
 }
