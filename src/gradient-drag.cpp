@@ -1406,27 +1406,27 @@ void GrDragger::updateTip()
             case POINT_LG_MID:
             case POINT_RG_MID1:
             case POINT_RG_MID2:
-                this->knot->tip = g_strdup_printf (_("%s %d for: %s%s; drag with <b>Ctrl</b> to snap offset; click with <b>Ctrl+Alt</b> to delete stop"),
-                                                   _(gr_knot_descr.at(draggable->point_type)),
-                                                   draggable->point_i,
-                                                   item_desc,
-                                                   (draggable->fill_or_stroke == Inkscape::FOR_STROKE) ? _(" (stroke)") : "");
+                tip = g_strdup_printf (_("%s %d for: %s%s; drag with <b>Ctrl</b> to snap offset; click with <b>Ctrl+Alt</b> to delete stop"),
+                                       _(gr_knot_descr.at(draggable->point_type)),
+                                       draggable->point_i,
+                                       item_desc,
+                                       (draggable->fill_or_stroke == Inkscape::FOR_STROKE) ? _(" (stroke)") : "");
                 break;
 
             case POINT_MG_CORNER:
             case POINT_MG_HANDLE:
             case POINT_MG_TENSOR:
-                this->knot->tip = g_strdup_printf (_("%s for: %s%s"),
-                                                   _(gr_knot_descr.at(draggable->point_type)),
-                                                   item_desc,
-                                                   (draggable->fill_or_stroke == Inkscape::FOR_STROKE) ? _(" (stroke)") : "");
+                tip = g_strdup_printf (_("%s for: %s%s"),
+                                       _(gr_knot_descr.at(draggable->point_type)),
+                                       item_desc,
+                                       (draggable->fill_or_stroke == Inkscape::FOR_STROKE) ? _(" (stroke)") : "");
                 break;
 
             default:
-                this->knot->tip = g_strdup_printf (_("%s for: %s%s; drag with <b>Ctrl</b> to snap angle, with <b>Ctrl+Alt</b> to preserve angle, with <b>Ctrl+Shift</b> to scale around center"),
-                                                   _(gr_knot_descr[draggable->point_type]),
-                                                   item_desc,
-                                                   (draggable->fill_or_stroke == Inkscape::FOR_STROKE) ? _(" (stroke)") : "");
+                tip = g_strdup_printf (_("%s for: %s%s; drag with <b>Ctrl</b> to snap angle, with <b>Ctrl+Alt</b> to preserve angle, with <b>Ctrl+Shift</b> to scale around center"),
+                                       _(gr_knot_descr.at(draggable->point_type)),
+                                       item_desc,
+                                       (draggable->fill_or_stroke == Inkscape::FOR_STROKE) ? _(" (stroke)") : "");
                 break;
         }
         g_free(item_desc);
@@ -1768,10 +1768,8 @@ void GrDragger::highlightNode(SPMeshNode *node, bool highlight, Geom::Point corn
         if (type == POINT_MG_HANDLE) {
             if (highlight) {
                 knot->selectKnot(true);
-                // knot->setShape(Inkscape::CANVAS_ITEM_CTRL_SHAPE_TRIANGLE);
             } else {
                 knot->selectKnot(false);
-                // knot->setShape(Inkscape::CANVAS_ITEM_CTRL_SHAPE_CIRCLE);
             }
         } else {
             //Code for tensors

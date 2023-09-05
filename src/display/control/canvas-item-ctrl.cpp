@@ -868,14 +868,23 @@ void CanvasItemCtrl::_render(CanvasItemBuffer &buf) const
     int stride = work->get_stride() / 4; // divided by 4 to covert from bytes to 1 pixel (32 bits)
     auto row_ptr = reinterpret_cast<uint32_t *>(work->get_data());
 
-    // this code allow background become isolated from rendering so we can do things like outline overlay
-    uint32_t canvas_color = get_canvas()->get_effective_background();
+    // Turn pixel position back into desktop coords for page or desk color
+    auto px2dt = Geom::Scale(buf.device_scale).inverse()
+               * Geom::Translate(_bounds->min())
+               * affine().inverse();
+    bool use_bg = !get_canvas()->background_in_stores() || buf.outline_pass;
+
     uint32_t *handle_ptr = _cache.get();
     for (int i = 0; i < width; ++i) {
         for (int j = 0; j < width; ++j) {
             uint32_t base = row_ptr[j];
             uint32_t handle_px = *handle_ptr++;
             uint32_t handle_op = handle_px & 0xff;
+            uint32_t canvas_color = 0x00;
+            if (use_bg) {
+                // this code allow background become isolated from rendering so we can do things like outline overlay
+                canvas_color = get_canvas()->get_effective_background(Geom::Point(j, i) * px2dt);
+            }
             if(_mode != CANVAS_ITEM_CTRL_MODE_NORMAL) {
                 if (base == 0 && handle_px != 0) {
                     base = canvas_color;

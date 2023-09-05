@@ -79,15 +79,16 @@ PenTool::PenTool(SPDesktop *desktop, std::string &&prefs_path, std::string &&cur
 
     // Pen indicators (temporary handles shown when adding a new node).
     auto canvas = desktop->getCanvasControls();
-    for (int i = 0; i < 4; i++) {
-        ctrl[i] = make_canvasitem<CanvasItemCtrl>(canvas, ctrl_types[i]);
-        ctrl[i]->set_visible(false);
-    }
-
+    
     cl0 = make_canvasitem<CanvasItemCurve>(canvas);
     cl1 = make_canvasitem<CanvasItemCurve>(canvas);
     cl0->set_visible(false);
     cl1->set_visible(false);
+
+    for (int i = 0; i < 4; i++) {
+        ctrl[i] = make_canvasitem<CanvasItemCtrl>(canvas, ctrl_types[i]);
+        ctrl[i]->set_visible(false);
+    }
 
     sp_event_context_read(this, "mode");
 
