@@ -1,6 +1,4 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-#ifndef SEEN_INKSCAPE_SELECTION_H
-#define SEEN_INKSCAPE_SELECTION_H
 /*
  * Authors:
  *   Lauris Kaplinski <lauris@kaplinski.com>
@@ -16,22 +14,25 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include <vector>
-#include <list>
-#include <map>
-#include <cstddef>
-#include <sigc++/sigc++.h>
+#ifndef SEEN_INKSCAPE_SELECTION_H
+#define SEEN_INKSCAPE_SELECTION_H
 
+#include <cstddef>
+#include <list>
+#include <unordered_map>
+#include <utility>
+#include <vector>
+#include <sigc++/signal.h>
+#include <sigc++/slot.h>
+
+#include "helper/auto-connection.h"
 #include "object/object-set.h"
 
-
 namespace Inkscape {
+
 namespace XML {
 class Node;
-}
-}
-
-namespace Inkscape {
+} // namespace XML
 
 /**
  * The set of selected SPObjects for a given document and layer model.
@@ -52,7 +53,8 @@ namespace Inkscape {
  */
 class Selection : public ObjectSet
 {
-friend class ObjectSet;
+    friend class ObjectSet;
+
 public:
     /**
      * Constructs an selection object, bound to a particular
@@ -156,8 +158,8 @@ public:
      *
      * @return the resulting connection
      */
-    sigc::connection connectChanged(sigc::slot<void (Selection *)> const &slot);
-    sigc::connection connectChangedFirst(sigc::slot<void (Selection *)> const &slot);
+    sigc::connection connectChanged     (sigc::slot<void (Selection *)> slot);
+    sigc::connection connectChangedFirst(sigc::slot<void (Selection *)> slot);
 
     /**
      * Set the anchor point of the selection, used for telling it how transforms
@@ -183,8 +185,8 @@ public:
      * @return the resulting connection
      *
      */
-    sigc::connection connectModified(sigc::slot<void (Selection *, unsigned)> const &slot);
-    sigc::connection connectModifiedFirst(sigc::slot<void (Selection *, unsigned)> const &slot);
+    sigc::connection connectModified     (sigc::slot<void (Selection *, unsigned)> slot);
+    sigc::connection connectModifiedFirst(sigc::slot<void (Selection *, unsigned)> slot);
 
     /**
      * Set a backup of current selection and store it also to be command line readable by extension system
@@ -235,16 +237,17 @@ private:
     bool _change_page = true;
     std::vector<std::pair<std::string, std::pair<int, int> > > _seldata;
     std::vector<std::string> _selected_ids;
-    std::map<SPObject *, sigc::connection> _modified_connections;
-    sigc::connection _context_release_connection;
+    std::unordered_map<SPObject *, auto_connection> _modified_connections;
+    auto_connection _context_release_connection;
 
     std::list<sigc::signal<void (Selection *)>> _changed_signals;
     std::list<sigc::signal<void (Selection *, unsigned int)>> _modified_signals;
 };
 
-}
+} // namespace Inkscape
 
-#endif
+#endif // SEEN_INKSCAPE_SELECTION_H
+
 /*
   Local Variables:
   mode:c++

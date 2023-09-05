@@ -75,7 +75,9 @@ public:
     void writeXML();
     void update(bool alert_LPE = false); // update display, but don't commit
     void clear(); // remove all nodes from manipulator
-    SPObject *item() { return _path; }
+
+    SPObject const *item() const { return _path; }
+    SPObject       *item()       { return _path; }
 
     void selectSubpaths();
     void invertSelectionInSubpaths();

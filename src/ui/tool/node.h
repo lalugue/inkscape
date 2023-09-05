@@ -152,7 +152,6 @@ public:
 
     void updateHandles();
 
-
     /**
      * Pick the best type for this node, based on the position of its handles.
      * This is what assigns types to nodes created using the pen tool.
@@ -416,7 +415,9 @@ public:
 
     // HACK remove this subpath from its path. This will be removed later.
     void kill();
-    SubpathList &subpathList() { return _list; }
+
+    SubpathList const &subpathList() const { return _list; }
+    SubpathList       &subpathList()       { return _list; }
 
     static iterator get_iterator(Node *n) { return iterator(n); }
     static const_iterator get_iterator(Node const *n) { return const_iterator(n); }
@@ -443,7 +444,9 @@ public:
     using list_type = std::list<std::shared_ptr<NodeList>>;
 
     SubpathList(PathManipulator &pm) : _path_manipulator(pm) {}
-    PathManipulator &pm() { return _path_manipulator; }
+
+    PathManipulator const &pm() const { return _path_manipulator; }
+    PathManipulator       &pm()       { return _path_manipulator; }
 
 private:
     list_type _nodelists;

@@ -41,7 +41,7 @@
 #include "object/sp-shape.h"
 #include "xml/repr.h"
 
-#define SP_SELECTION_UPDATE_PRIORITY (G_PRIORITY_HIGH_IDLE + 1)
+static constexpr auto SP_SELECTION_UPDATE_PRIORITY = G_PRIORITY_HIGH_IDLE + 1;
 
 namespace Inkscape {
 
@@ -69,10 +69,6 @@ Selection::~Selection() {
     if (_idle) {
         g_source_remove(_idle);
         _idle = 0;
-    }
-
-    for (auto &c : _modified_connections) {
-        c.second.disconnect();
     }
 }
 
@@ -104,8 +100,12 @@ gboolean Selection::_emit_modified(Selection *selection)
 void Selection::_emitModified(guint flags)
 {
     for (auto it = _modified_signals.begin(); it != _modified_signals.end(); ) {
-        it->emit(this, flags);
-        if (it->empty()) it = _modified_signals.erase(it); else ++it;
+        if (it->empty()) {
+            it = _modified_signals.erase(it);
+        } else {
+            it->emit(this, flags);
+            ++it;
+        }
     }
 
     if (!_desktop || isEmpty()) {
@@ -160,8 +160,12 @@ void Selection::_emitChanged(bool persist_selection_context/* = false */) {
     }
 
     for (auto it = _changed_signals.begin(); it != _changed_signals.end(); ) {
-        it->emit(this);
-        if (it->empty()) it = _changed_signals.erase(it); else ++it;
+        if (it->empty()) {
+            it = _changed_signals.erase(it);
+        } else {
+            it->emit(this);
+            ++it;
+        }
     }
 }
 
@@ -204,16 +208,15 @@ std::vector<Inkscape::SnapCandidatePoint> Selection::getSnapPoints(SnapPreferenc
     return p;
 }
 
-sigc::connection Selection::connectChanged(sigc::slot<void (Selection *)> const &slot)
+sigc::connection Selection::connectChanged(sigc::slot<void (Selection *)> slot)
 {
     if (_changed_signals.empty()) _changed_signals.emplace_back();
-    return _changed_signals.back().connect(slot);
+    return _changed_signals.back().connect(std::move(slot));
 }
 
-sigc::connection Selection::connectChangedFirst(sigc::slot<void (Selection *)> const &slot)
+sigc::connection Selection::connectChangedFirst(sigc::slot<void (Selection *)> slot)
 {
-    _changed_signals.emplace_front();
-    return _changed_signals.front().connect(slot);
+    return _changed_signals.emplace_front().connect(std::move(slot));
 }
 
 void Selection::setAnchor(double x, double y, bool set)
@@ -227,16 +230,15 @@ void Selection::setAnchor(double x, double y, bool set)
     }
 }
 
-sigc::connection Selection::connectModified(sigc::slot<void (Selection *, unsigned)> const &slot)
+sigc::connection Selection::connectModified(sigc::slot<void (Selection *, unsigned)> slot)
 {
     if (_modified_signals.empty()) _modified_signals.emplace_back();
-    return _modified_signals.back().connect(slot);
+    return _modified_signals.back().connect(std::move(slot));
 }
 
-sigc::connection Selection::connectModifiedFirst(sigc::slot<void (Selection *, unsigned)> const &slot)
+sigc::connection Selection::connectModifiedFirst(sigc::slot<void (Selection *, unsigned)> slot)
 {
-    _modified_signals.emplace_front();
-    return _modified_signals.front().connect(slot);
+    return _modified_signals.emplace_front().connect(std::move(slot));
 }
 
 SPObject *Selection::_objectForXMLNode(Inkscape::XML::Node *repr) const {
@@ -272,7 +274,6 @@ void Selection::_connectSignals(SPObject *object) {
 }
 
 void Selection::_releaseSignals(SPObject *object) {
-    _modified_connections[object].disconnect();
     _modified_connections.erase(object);
 }
 
@@ -293,58 +294,57 @@ Selection::setBackup ()
             tool = nt;
         }
     }
-    _selected_ids.clear();
-    _seldata.clear();
-    params.clear();
-    auto items = const_cast<Selection *>(this)->items();
-    for (auto iter = items.begin(); iter != items.end(); ++iter) {
-        SPItem *item = *iter;
-        if(!item->getId()) {
-            continue;
-        }
+
+    emptyBackup();
+
+    for (auto const * const item : items()) {
+        auto id = item->getId();
+        if (!id) continue;
+
         std::string selected_id;
         selected_id += "--id=";
-        selected_id += item->getId();
-        params.push_back(selected_id);
-        _selected_ids.emplace_back(item->getId());
+        selected_id += id;
+        params.push_back(std::move(selected_id));
+
+        _selected_ids.emplace_back(std::move(id));
     }
-    if(tool){
-        Inkscape::UI::ControlPointSelection *cps = tool->_selected_nodes;
-        std::list<Inkscape::UI::SelectableControlPoint *> points_list = cps->_points_list;
-        for (auto & i : points_list) {
-            Inkscape::UI::Node *node = dynamic_cast<Inkscape::UI::Node*>(i);
-            if (node) {
-                std::string id = node->nodeList().subpathList().pm().item()->getId();
 
-                int sp = 0;
-                bool found_sp = false;
-                for(Inkscape::UI::SubpathList::iterator i = node->nodeList().subpathList().begin(); i != node->nodeList().subpathList().end(); ++i,++sp){
-                    if(&**i == &(node->nodeList())){
-                        found_sp = true;
-                        break;
-                    }
-                }
-                int nl=0;
-                bool found_nl = false;
-                for (Inkscape::UI::NodeList::iterator j = node->nodeList().begin(); j != node->nodeList().end(); ++j, ++nl){
-                    if(&*j==node){
-                        found_nl = true;
-                        break;
-                    }
-                }
-                std::ostringstream ss;
-                ss<< "--selected-nodes=" << id << ":" << sp << ":" << nl;
-                Glib::ustring selected_nodes = ss.str();
+    if (!tool) return;
 
-                if(found_nl && found_sp) {
-                    _seldata.emplace_back(id,std::make_pair(sp,nl));
-                    params.push_back(selected_nodes);
-                } else {
-                    g_warning("Something went wrong while trying to pass selected nodes to extension. Please report a bug.");
-                }
+    for (auto const point : tool->_selected_nodes->_points_list) {
+        auto const node = dynamic_cast<Inkscape::UI::Node const *>(point);
+        if (!node) continue;
+
+        auto const &nodeList = node->nodeList();
+        auto const &subpathList = nodeList.subpathList();
+
+        int sp = 0;
+        bool found_sp = false;
+        for (auto i = subpathList.begin(), e = subpathList.end(); i != e; ++i, ++sp) {
+            if (&**i == &nodeList) {
+                found_sp = true;
+                break;
             }
         }
-    }//end add selected nodes
+
+        int nl = 0;
+        bool found_nl = false;
+        for (auto j = nodeList.begin(), e = nodeList.end(); j != e; ++j, ++nl) {
+            if (&*j == node){
+                found_nl = true;
+                break;
+            }
+        }
+
+        if (!(found_nl && found_sp)) {
+            g_warning("Something went wrong while trying to pass selected nodes to extension. Please report a bug.");
+            return;
+        }
+
+        auto id = subpathList.pm().item()->getId();
+        params.push_back(Glib::ustring::compose("--selected-nodes=%1:%2:%3", id, sp, nl));
+        _seldata.emplace_back(std::move(id), std::make_pair(sp, nl));
+    }
 }
 
 void
@@ -352,6 +352,7 @@ Selection::restoreBackup()
 {
     SPDesktop *desktop = this->desktop();
     SPDocument *document = SP_ACTIVE_DOCUMENT;
+    SPDefs * defs = document->getDefs();
     Inkscape::UI::Tools::NodeTool *tool = nullptr;
     if (desktop) {
         if (auto nt = dynamic_cast<Inkscape::UI::Tools::NodeTool*>(desktop->getTool())) {
@@ -360,48 +361,47 @@ Selection::restoreBackup()
     }
 
     // update selection
-    std::vector<std::string>::iterator it = _selected_ids.begin();
-    std::vector<SPItem*> new_selection;
-    for (; it!= _selected_ids.end(); ++it){
-        auto item = cast<SPItem>(document->getObjectById(it->c_str()));
-        SPDefs * defs = document->getDefs();
+    std::vector<SPItem *> new_selection;
+    for (auto const &selected_id : _selected_ids) {
+        auto const item = cast<SPItem>(document->getObjectById(selected_id.c_str()));
         if (item && !defs->isAncestorOf(item)) {
             new_selection.push_back(item);
         }
     }
     clear();
     add(new_selection.begin(), new_selection.end());
+    new_selection.clear();
 
-    if (tool) {
-        Inkscape::UI::ControlPointSelection *cps = tool->_selected_nodes;
-        cps->selectAll();
-        std::list<Inkscape::UI::SelectableControlPoint *> points_list = cps->_points_list;
-        cps->clear();
-        Inkscape::UI::Node * node = dynamic_cast<Inkscape::UI::Node*>(*points_list.begin());
-        if (node) {
-            Inkscape::UI::SubpathList sp = node->nodeList().subpathList();
-            for (auto & l : _seldata) {
-                gint sp_count = 0;
-                for (Inkscape::UI::SubpathList::iterator j = sp.begin(); j != sp.end(); ++j, ++sp_count) {
-                    if(sp_count == l.second.first) {
-                        gint nt_count = 0;
-                        for (Inkscape::UI::NodeList::iterator k = (*j)->begin(); k != (*j)->end(); ++k, ++nt_count) {
-                            if(nt_count == l.second.second) {
-                                cps->insert(k.ptr());
-                                break;
-                            }
-                        }
-                        break;
-                    }
+    if (!tool) return;
+
+    auto const cps = tool->_selected_nodes;
+    cps->selectAll();
+    auto const point = !cps->_points_list.empty() ? cps->_points_list.front() : nullptr;
+    cps->clear();
+    if (!point) return;
+
+    auto const node = dynamic_cast<Inkscape::UI::Node const *>(point);
+    if (!node) return;
+
+    auto const &sp = node->nodeList().subpathList();
+    for (auto & l : _seldata) {
+        int sp_count = 0;
+        for (auto j = sp.begin(); j != sp.end(); ++j, ++sp_count) {
+            if (sp_count != l.second.first) continue;
+
+            int nt_count = 0;
+            for (auto k = (*j)->begin(); k != (*j)->end(); ++k, ++nt_count) {
+                if (nt_count == l.second.second) {
+                    cps->insert(k.ptr());
+                    break;
                 }
             }
+            break;
         }
-        points_list.clear();
     }
 }
 
-
-}
+} // namespace Inkscape
 
 /*
   Local Variables:

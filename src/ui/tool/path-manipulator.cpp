@@ -43,10 +43,10 @@
 #include "path/splinefit/bezier-fit.h"
 #include "xml/node-observer.h"
 
-namespace Inkscape {
-namespace UI {
+namespace Inkscape::UI {
 
 namespace {
+
 /// Types of path changes that we must react to.
 enum PathChange {
     PATH_CHANGE_D,
@@ -54,9 +54,9 @@ enum PathChange {
 };
 
 } // anonymous namespace
-const double NO_POWER = 0.0;
-const double DEFAULT_START_POWER = 1.0/3.0;
 
+static constexpr double NO_POWER = 0.0;
+static constexpr double DEFAULT_START_POWER = 1.0/3.0;
 
 /**
  * Notifies the path manipulator when something changes the path being edited
@@ -291,7 +291,6 @@ void PathManipulator::insertNode(NodeList::iterator first, double t, bool take_s
     _commit(_("Add node"));
 }
 
-
 static void
 add_or_replace_if_extremum(std::vector< std::pair<NodeList::iterator, double> > &vec,
                            double & extrvalue, double testvalue, NodeList::iterator const& node, double t)
@@ -351,7 +350,6 @@ void PathManipulator::insertNodeAtExtremum(ExtremumType extremum)
         }
     }
 }
-
 
 /** Insert new nodes exactly at the positions of selected nodes while preserving shape.
  * This is equivalent to breaking, except that it doesn't split into subpaths. */
@@ -1831,8 +1829,7 @@ double PathManipulator::_getStrokeTolerance()
     return ret;
 }
 
-} // namespace UI
-} // namespace Inkscape
+} // namespace Inkscape::UI
 
 /*
   Local Variables:
