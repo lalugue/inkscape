@@ -306,7 +306,6 @@ ${_build_dir}/share/templates/templates.h
 ../src/ui/dialog/inkscape-preferences.cpp
 ../src/ui/dialog/knot-properties.cpp
 ../src/ui/dialog/layer-properties.cpp
-../src/ui/dialog/livepatheffect-add.cpp
 ../src/ui/dialog/livepatheffect-editor.cpp
 ../src/ui/dialog/lpe-fillet-chamfer-properties.cpp
 ../src/ui/dialog/lpe-powerstroke-properties.cpp

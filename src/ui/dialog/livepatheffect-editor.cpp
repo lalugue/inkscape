@@ -16,14 +16,15 @@
 #include <gtkmm/box.h>
 #include <gtkmm/builder.h>
 #include <gtkmm/button.h>
+#include <gtkmm/eventbox.h>
 #include <gtkmm/expander.h>
 #include <gtkmm/label.h>
 #include <gtkmm/listbox.h>
 #include <gtkmm/liststore.h>
+#include <gtkmm/searchentry.h>
 #include <gtkmm/spinbutton.h>
 
 #include "livepatheffect-editor.h"
-#include "livepatheffect-add.h"
 #include "live_effects/effect.h"
 #include "live_effects/effect-enum.h"
 #include "live_effects/lpeobject.h"
@@ -133,14 +134,8 @@ LivePathEffectEditor::LivePathEffectEditor()
     _LPEParentBox(get_widget<Gtk::ListBox>(_builder, "LPEParentBox")),
     _LPECurrentItem(get_widget<Gtk::Box>(_builder, "LPECurrentItem")),
     _LPESelectionInfo(get_widget<Gtk::Label>(_builder, "LPESelectionInfo")),
-    _LPEGallery(get_widget<Gtk::Button>(_builder, "LPEGallery")),
-    _showgallery_observer(Preferences::PreferencesObserver::create(
-        "/dialogs/livepatheffect/showgallery", sigc::mem_fun(*this, &LivePathEffectEditor::on_showgallery_notify))),
     converter(Inkscape::LivePathEffect::LPETypeConverter)
 {
-    _LPEGallery.signal_clicked().connect(sigc::mem_fun(*this, &LivePathEffectEditor::onAddGallery));
-    _showgallery_observer->call(); // Set initial visibility per Preference (widget is :no-show-all)
-
     _LPEContainer.signal_map().connect(sigc::mem_fun(*this, &LivePathEffectEditor::map_handler) );
 
     Controller::add_click(_LPEContainer, [this](Gtk::GestureMultiPress const &, int, double, double)
@@ -1100,90 +1095,58 @@ LivePathEffectEditor::clear_lpe_list()
 SPLPEItem * LivePathEffectEditor::clonetolpeitem()
 {
     auto selection = getSelection();
-    if (selection && !selection->isEmpty() ) {
-        auto use = cast<SPUse>(selection->singleItem());
-        if ( use ) {
-            DocumentUndo::ScopedInsensitive tmp(getDocument());
-            // item is a clone. do not show effectlist dialog.
-            // convert to path, apply CLONE_ORIGINAL LPE, link it to the cloned path
+    if (!(selection && !selection->isEmpty())) {
+        return nullptr;
+    }
 
-            // test whether linked object is supported by the CLONE_ORIGINAL LPE
-            SPItem *orig = use->get_original();
-            if ( is<SPShape>(orig) || is<SPGroup>(orig) || is<SPText>(orig) ) {
-                // select original
-                selection->set(orig);
+    auto use = cast<SPUse>(selection->singleItem());
+    if (!use) {
+        return nullptr;
+    }
 
-                // delete clone but remember its id and transform
-                auto id_copy = Util::to_opt(use->getAttribute("id"));
-                auto transform_copy = Util::to_opt(use->getAttribute("transform"));
-                use->deleteObject(false);
-                use = nullptr;
+    DocumentUndo::ScopedInsensitive tmp(getDocument());
+    // item is a clone. do not show effectlist dialog.
+    // convert to path, apply CLONE_ORIGINAL LPE, link it to the cloned path
 
-                // run sp_selection_clone_original_path_lpe
-                selection->cloneOriginalPathLPE(true, true, true);
+    // test whether linked object is supported by the CLONE_ORIGINAL LPE
+    SPItem *orig = use->get_original();
+    if (!(is<SPShape>(orig) || is<SPGroup>(orig) || is<SPText>(orig))) {
+        return nullptr;
+    }
 
-                SPItem *new_item = selection->singleItem();
-                // Check that the cloning was successful. We don't want to change the ID of the original referenced path!
-                if (new_item && (new_item != orig)) {
-                    new_item->setAttribute("id", Util::to_cstr(id_copy));
-                    if (Util::to_cstr(transform_copy)) {
-                        Geom::Affine item_t(Geom::identity());
-                        sp_svg_transform_read(Util::to_cstr(transform_copy), &item_t);
-                        new_item->transform *= item_t;
-                        new_item->doWriteTransform(new_item->transform);
-                        new_item->requestDisplayUpdate(SP_OBJECT_MODIFIED_FLAG);
-                    }
-                    new_item->setAttribute("class", "fromclone");
-                }
-                
-                auto *lpeitem = cast<SPLPEItem>(new_item);
-                if (lpeitem) {
-                    sp_lpe_item_update_patheffect(lpeitem, true, true);
-                    return lpeitem;
-                }
-            }
+    // select original
+    selection->set(orig);
+
+    // delete clone but remember its id and transform
+    auto id_copy = Util::to_opt(use->getAttribute("id"));
+    auto transform_copy = Util::to_opt(use->getAttribute("transform"));
+    use->deleteObject(false);
+    use = nullptr;
+
+    // run sp_selection_clone_original_path_lpe
+    selection->cloneOriginalPathLPE(true, true, true);
+
+    SPItem *new_item = selection->singleItem();
+    // Check that the cloning was successful. We don't want to change the ID of the original referenced path!
+    if (new_item && (new_item != orig)) {
+        new_item->setAttribute("id", Util::to_cstr(id_copy));
+        if (Util::to_cstr(transform_copy)) {
+            Geom::Affine item_t(Geom::identity());
+            sp_svg_transform_read(Util::to_cstr(transform_copy), &item_t);
+            new_item->transform *= item_t;
+            new_item->doWriteTransform(new_item->transform);
+            new_item->requestDisplayUpdate(SP_OBJECT_MODIFIED_FLAG);
         }
+        new_item->setAttribute("class", "fromclone");
     }
-    return nullptr;
-}
-
-void LivePathEffectEditor::onAddGallery()
-{
-    // show effectlist dialog
-    using Inkscape::UI::Dialog::LivePathEffectAdd;
-    LivePathEffectAdd::show(getDesktop());
-    clearMenu();
-    if ( !LivePathEffectAdd::isApplied()) {
-        return;
+    
+    auto *lpeitem = cast<SPLPEItem>(new_item);
+    if (!lpeitem) {
+        return nullptr;
     }
 
-    const LivePathEffect::EnumEffectData<LivePathEffect::EffectType> *data = LivePathEffectAdd::getActiveData();;
-    if (!data) {
-        return;
-    }
-    selection_changed_lock = true;
-    SPLPEItem *fromclone = clonetolpeitem();
-    if (fromclone) {
-        current_lpeitem = fromclone;
-        if (data->key == "clone_original") {
-            current_lpeitem->getCurrentLPE()->refresh_widgets = true;
-            selection_changed_lock = false;
-            DocumentUndo::done(getDocument(), _("Create and apply path effect"), INKSCAPE_ICON("dialog-path-effects"));
-            return;
-        }
-
-    }
-    selection_changed_lock = false;
-    if (current_lpeitem) {
-        LivePathEffect::Effect::createAndApply(data->key.c_str(), getDocument(), current_lpeitem);
-        current_lpeitem->getCurrentLPE()->refresh_widgets = true;
-        DocumentUndo::done(getDocument(), _("Create and apply path effect"), INKSCAPE_ICON("dialog-path-effects"));
-    }
-}
-
-void LivePathEffectEditor::on_showgallery_notify(Preferences::Entry const &new_val)
-{
-    _LPEGallery.set_visible(new_val.getBool());
+    sp_lpe_item_update_patheffect(lpeitem, true, true);
+    return lpeitem;
 }
 
 } // namespace Inkscape::UI::Dialog

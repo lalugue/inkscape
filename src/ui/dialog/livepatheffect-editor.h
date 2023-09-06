@@ -13,6 +13,7 @@
 #define LIVEPATHEFFECTEDITOR_H
 
 #include <memory>
+#include <string>
 #include <utility>
 #include <vector>
 #include <glibmm/refptr.h>
@@ -108,9 +109,6 @@ private:
     Glib::ustring _item_type;
     bool _has_clip;
     bool _has_mask;
-    bool _frezee = false;
-    Gtk::Button &_LPEGallery;
-    std::unique_ptr<Preferences::PreferencesObserver> const _showgallery_observer;
 };
 
 } // namespace Inkscape::UI::Dialog

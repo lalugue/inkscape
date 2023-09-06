@@ -10,10 +10,8 @@
 ../share/ui/dialog-extensions.glade
 ../share/ui/dialog-filter-editor.glade
 ../share/ui/dialog-font-collections.glade
-../share/ui/dialog-livepatheffect-add.glade
 ../share/ui/dialog-livepatheffect-effect.glade
 ../share/ui/dialog-livepatheffect-item.glade
-../share/ui/dialog-livepatheffect.glade
 ../share/ui/dialog-objects.glade
 ../share/ui/dialog-paint-servers.glade
 ../share/ui/dialog-save-template.glade

@@ -11,54 +11,14 @@
     <property name="orientation">vertical</property>
     <property name="baseline-position">top</property>
     <child>
-      <object class="GtkBox">
+      <object class="GtkBox" id="LPEAddContainer">
+        <property name="name">LPEAddContainer</property>
         <property name="visible">True</property>
-        <property name="orientation">vertical</property>
-        <property name="baseline-position">top</property>
-        <child>
-          <object class="GtkBox">
-            <property name="visible">True</property>
-            <property name="margin-left">5</property>
-            <property name="margin-right">5</property>
-            <property name="margin-start">5</property>
-            <property name="margin-end">5</property>
-            <property name="margin-bottom">5</property>
-            <child>
-              <object class="GtkBox" id="LPEAddContainer">
-                <property name="name">LPEAddContainer</property>
-                <property name="visible">True</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkButton" id="LPEGallery">
-                <property name="name">LPESelectorEffectEventFavShow</property>
-                <property name="no-show-all">True</property>
-                <property name="tooltip-text" translatable="yes">Open LPE Gallery</property>
-                <property name="halign">start</property>
-                <property name="valign">center</property>
-                <property name="margin-left">5</property>
-                <property name="margin-right">5</property>
-                <property name="margin-start">5</property>
-                <property name="margin-end">5</property>
-                <child>
-                  <object class="GtkImage">
-                    <property name="name">LPESelectorEffectFavShowImage</property>
-                    <property name="visible">True</property>
-                    <property name="halign">center</property>
-                    <property name="valign">center</property>
-                    <property name="icon-name">arrange-grid</property>
-                    <style>
-                      <class name="fab"/>
-                    </style>
-                  </object>
-                </child>
-              </object>
-              <packing>
-                <property name="position">3</property>
-              </packing>
-            </child>
-          </object>
-        </child>
+        <property name="margin-left">5</property>
+        <property name="margin-right">5</property>
+        <property name="margin-start">5</property>
+        <property name="margin-end">5</property>
+        <property name="margin-bottom">5</property>
       </object>
     </child>
     <child>

@@ -146,7 +146,6 @@ set(ui_SRC
 	dialog/inkscape-preferences.cpp
 	dialog/knot-properties.cpp
 	dialog/layer-properties.cpp
-	dialog/livepatheffect-add.cpp
 	dialog/livepatheffect-editor.cpp
 	dialog/lpe-fillet-chamfer-properties.cpp
 	dialog/lpe-powerstroke-properties.cpp
@@ -349,7 +348,6 @@ set(ui_SRC
 	dialog/inkscape-preferences.h
 	dialog/knot-properties.h
 	dialog/layer-properties.h
-	dialog/livepatheffect-add.h
 	dialog/livepatheffect-editor.h
 	dialog/lpe-fillet-chamfer-properties.h
 	dialog/lpe-powerstroke-properties.h

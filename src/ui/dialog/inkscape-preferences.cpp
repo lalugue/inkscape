@@ -2798,9 +2798,6 @@ void InkscapePreferences::initPageBehavior()
     _lpe_show_experimental.init ( _("Show experimental effects"), "/dialogs/livepatheffect/showexperimental", false); // text label
     _page_lpe.add_line( true, "", _lpe_show_experimental, "",
                             _("Show experimental effects")); // tooltip
-    _lpe_show_gallery.init ( _("Show deprecated LPE gallery"), "/dialogs/livepatheffect/showgallery", false); // text label
-    _page_lpe.add_line( true, "", _lpe_show_gallery, "",
-                            _("Adds a button to the LPE dialog that opens the old-style LPE selection dialog")); // tooltip
     _page_lpe.add_group_header( _("Tiling"));
     _lpe_copy_mirroricons.init ( _("Add advanced tiling options"), "/live_effects/copy/mirroricons", true); // text label
     _page_lpe.add_line( true, "", _lpe_copy_mirroricons, "",
