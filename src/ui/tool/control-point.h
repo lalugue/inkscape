@@ -12,24 +12,26 @@
 #define INKSCAPE_UI_TOOL_CONTROL_POINT_H
 
 #include <cstddef>
-#include <boost/utility.hpp>
+#include <boost/noncopyable.hpp>
+#include <gdkmm/pixbuf.h>
 #include <sigc++/signal.h>
 #include <sigc++/trackable.h>
-#include <gdkmm/pixbuf.h>
 
 #include <2geom/point.h>
 
 #include "display/control/canvas-item-ctrl.h"
 #include "display/control/canvas-item-enums.h"
 #include "display/control/canvas-item-ptr.h"
-
 #include "enums.h" // TEMP TEMP
+#include "helper/auto-connection.h"
 
 class SPDesktop;
+
 namespace Inkscape { struct MotionEvent; struct ButtonReleaseEvent; }
-namespace Inkscape::UI::Tools { class ToolBase; }
 
 namespace Inkscape::UI {
+
+namespace Tools { class ToolBase; }
 
 /**
  * Draggable point, the workhorse of on-canvas editing.
@@ -92,7 +94,10 @@ public:
     };
 
     virtual ~ControlPoint();
-    
+
+    ControlPoint  (ControlPoint const &other) = delete;
+    void operator=(ControlPoint const &other) = delete;
+
     /// @name Adjust the position of the control point
     /// @{
     /** Current position of the control point. */
@@ -299,11 +304,8 @@ protected:
     void _handleControlStyling();
 
     void _setColors(ColorEntry c);
-
     void _setSize(unsigned int size);
-
     void _setControlType(Inkscape::CanvasItemCtrlType type);
-
     void _setAnchor(SPAnchorType anchor);
 
     /**
@@ -323,11 +325,8 @@ protected:
     /// @}
 
     virtual Glib::ustring _getTip(unsigned /*state*/) const { return ""; }
-
     virtual Glib::ustring _getDragTip(MotionEvent const &event) const { return ""; }
-
     virtual bool _hasDragTips() const { return false; }
-
 
     CanvasItemPtr<Inkscape::CanvasItemCtrl> _canvas_item_ctrl; ///< Visual representation of the control point.
 
@@ -336,7 +335,6 @@ protected:
     State _state = STATE_NORMAL;
 
     static Geom::Point const &_last_click_event_point() { return _drag_event_origin; }
-
     static Geom::Point const &_last_drag_origin() { return _drag_origin; }
 
     static bool _is_drag_cancelled(MotionEvent const &event);
@@ -344,16 +342,10 @@ protected:
     static bool _drag_initiated;
 
 private:
-    ControlPoint(ControlPoint const &other);
-
-    void operator=(ControlPoint const &other);
-
     static void _setMouseover(ControlPoint *, unsigned state);
-
     static void _clearMouseover();
 
     bool _updateTip(unsigned state);
-
     bool _updateDragTip(MotionEvent const &event);
 
     void _setDefaultColors();
@@ -361,19 +353,14 @@ private:
     void _commonInit();
 
     Geom::Point _position; ///< Current position in desktop coordinates
-
-    sigc::connection _event_handler_connection;
-
+    auto_connection _event_handler_connection;
     bool _lurking = false;
 
     static ColorSet _default_color_set;
-
     /** Stores the window point over which the cursor was during the last mouse button press. */
     static Geom::Point _drag_event_origin;
-
     /** Stores the desktop point from which the last drag was initiated. */
     static Geom::Point _drag_origin;
-
     static bool _event_grab;
 
     bool _double_clicked = false;

@@ -8,29 +8,21 @@
  */
 
 #include <iostream>
-
-#include <gdk/gdkkeysyms.h>
-#include <gdkmm.h>
-
 #include <2geom/point.h>
+#include <gdk/gdkkeysyms.h>
 
 #include "desktop.h"
 #include "message-context.h"
-
 #include "display/control/canvas-item-enums.h"
 #include "display/control/snap-indicator.h"
-
 #include "object/sp-namedview.h"
-
 #include "ui/tools/tool-base.h"
 #include "ui/tool/control-point.h"
 #include "ui/tool/transform-handle-set.h"
 #include "ui/widget/canvas.h" // autoscroll
 #include "ui/widget/events/canvas-event.h"
 
-namespace Inkscape {
-namespace UI {
-
+namespace Inkscape::UI {
 
 // Default colors for control points
 ControlPoint::ColorSet ControlPoint::_default_color_set = {
@@ -114,7 +106,6 @@ ControlPoint::~ControlPoint()
         _clearMouseover();
     }
 
-    _event_handler_connection.disconnect();
     _canvas_item_ctrl->set_visible(false);
 }
 
@@ -541,8 +532,7 @@ bool ControlPoint::doubleclicked(ButtonReleaseEvent const &/*event*/)
     return false;
 }
 
-} // namespace UI
-} // namespace Inkscape
+} // namespace Inkscape::UI
 
 /*
   Local Variables:
