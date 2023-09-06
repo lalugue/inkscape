@@ -7,36 +7,31 @@
 
 #include "point.h"
 
-#include "inkscape.h"
+#include <utility>
+#include <glibmm/i18n.h>
+#include <sigc++/functors/mem_fun.h>
 
+#include "inkscape.h"
 #include "live_effects/effect.h"
 #include "svg/stringstream.h"
 #include "svg/svg.h"
+#include "ui/controller.h"
 #include "ui/icon-names.h"
 #include "ui/knot/knot-holder.h"
 #include "ui/knot/knot-holder-entity.h"
 #include "ui/widget/point.h"
 
-#include <glibmm/i18n.h>
+namespace Inkscape::LivePathEffect {
 
-namespace Inkscape {
-
-namespace LivePathEffect {
-
-PointParam::PointParam( const Glib::ustring& label, const Glib::ustring& tip,
-                        const Glib::ustring& key, Inkscape::UI::Widget::Registry* wr,
-                        Effect* effect, const gchar *htip, Geom::Point default_value,
-                        bool live_update )
+PointParam::PointParam(const Glib::ustring& label, const Glib::ustring& tip,
+                       const Glib::ustring& key, Inkscape::UI::Widget::Registry* wr,
+                       Effect * const effect, std::optional<Glib::ustring> htip, Geom::Point default_value,
+                       bool live_update )
     : Parameter(label, tip, key, wr, effect)
-    , defvalue(default_value)
+    , defvalue{std::move(default_value)}
     , liveupdate(live_update)
+    , handle_tip{std::move(htip)}
 {
-    handle_tip = g_strdup(htip);
-}
-
-PointParam::~PointParam() {
-    if (handle_tip)
-        g_free(handle_tip);
 }
 
 void
@@ -63,7 +58,7 @@ PointParam::param_update_default(Geom::Point default_point)
 }
 
 void
-PointParam::param_update_default(const gchar * default_point)
+PointParam::param_update_default(char const * const default_point)
 {
     gchar ** strarray = g_strsplit(default_point, ",", 2);
     double newx, newy;
@@ -109,7 +104,7 @@ PointParam::param_setValue(Geom::Point newpoint, bool write)
 }
 
 bool
-PointParam::param_readSVGValue(const gchar * strvalue)
+PointParam::param_readSVGValue(char const * const strvalue)
 {
     gchar ** strarray = g_strsplit(strvalue, ",", 2);
     double newx, newy;
@@ -159,7 +154,8 @@ PointParam::param_newWidget()
     pointwdg->setValue( *this );
     pointwdg->clearProgrammatically();
     pointwdg->set_undo_parameters(_("Change point parameter"), INKSCAPE_ICON("dialog-path-effects"));
-    pointwdg->signal_button_release_event().connect(sigc::mem_fun (*this, &PointParam::on_button_release));
+    pointwdg->signal_x_value_changed().connect(sigc::mem_fun(*this, &PointParam::on_value_changed));
+    pointwdg->signal_y_value_changed().connect(sigc::mem_fun(*this, &PointParam::on_value_changed));
 
     auto const hbox = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL);
     hbox->pack_start(*pointwdg, true, true);
@@ -167,37 +163,38 @@ PointParam::param_newWidget()
     return hbox;
 }
 
-bool PointParam::on_button_release(GdkEventButton* button_event) {
+void PointParam::on_value_changed()
+{
     param_effect->refresh_widgets = true;
-    return false;
 }
 
 void
 PointParam::set_oncanvas_looks(Inkscape::CanvasItemCtrlShape shape,
                                Inkscape::CanvasItemCtrlMode mode,
-                               guint32 color)
+                               std::uint32_t const color)
 {
     knot_shape = shape;
     knot_mode  = mode;
     knot_color = color;
 }
 
-class PointParamKnotHolderEntity : public KnotHolderEntity {
+class PointParamKnotHolderEntity final : public KnotHolderEntity {
 public:
-    PointParamKnotHolderEntity(PointParam *p) { this->pparam = p; }
-    ~PointParamKnotHolderEntity() override { this->pparam->_knot_entity = nullptr;}
+    PointParamKnotHolderEntity(PointParam * const p) : pparam{p} {}
+    ~PointParamKnotHolderEntity() final { this->pparam->_knot_entity = nullptr;}
 
-    void knot_set(Geom::Point const &p, Geom::Point const &origin, guint state) override;
-    Geom::Point knot_get() const override;
-    void knot_ungrabbed(Geom::Point const &p, Geom::Point const &origin, guint state) override;
-    void knot_click(guint state) override;
+    void knot_set(Geom::Point const &p, Geom::Point const &origin, unsigned state) final;
+    Geom::Point knot_get() const final;
+    void knot_ungrabbed(Geom::Point const &p, Geom::Point const &origin, unsigned state) final;
+    void knot_click(unsigned state) final;
 
 private:
-    PointParam *pparam;
+    PointParam *pparam = nullptr;
 };
 
 void
-PointParamKnotHolderEntity::knot_set(Geom::Point const &p, Geom::Point const &origin, guint state)
+PointParamKnotHolderEntity::knot_set(Geom::Point const &p, Geom::Point const &origin,
+                                     unsigned const state)
 {
     Geom::Point s = snap_knot_position(p, state);
     if (state & GDK_CONTROL_MASK) {
@@ -219,7 +216,8 @@ PointParamKnotHolderEntity::knot_set(Geom::Point const &p, Geom::Point const &or
 }
 
 void
-PointParamKnotHolderEntity::knot_ungrabbed(Geom::Point const &p, Geom::Point const &origin, guint state)
+PointParamKnotHolderEntity::knot_ungrabbed(Geom::Point const &p, Geom::Point const &origin,
+                                           unsigned const state)
 {
     pparam->param_effect->refresh_widgets = true;
     pparam->param_effect->makeUndoDone(_("Move handle"));
@@ -232,7 +230,7 @@ PointParamKnotHolderEntity::knot_get() const
 }
 
 void
-PointParamKnotHolderEntity::knot_click(guint state)
+PointParamKnotHolderEntity::knot_click(unsigned const state)
 {
     if (state & GDK_CONTROL_MASK) {
         if (state & GDK_MOD1_MASK) {
@@ -252,9 +250,7 @@ PointParam::addKnotHolderEntities(KnotHolder *knotholder, SPItem *item)
     knotholder->add(_knot_entity);
 }
 
-} /* namespace LivePathEffect */
-
-} /* namespace Inkscape */
+} // namespace Inkscape::LivePathEffect
 
 /*
   Local Variables:

@@ -43,13 +43,13 @@ static bool on_key_pressed(GtkEventControllerKey const * /*controller*/,
 }
 
 static Gtk::EventSequenceState on_click_pressed(Gtk::GestureMultiPress const &click,
-                                                int const n_press, double const dx, double const dy,
+                                                int const n_press, double const x, double const y,
                                                 PopupMenuSlot const * const slot)
 {
     g_return_val_if_fail(slot != nullptr, Gtk::EVENT_SEQUENCE_NONE);
 
     if (gdk_event_triggers_context_menu(Controller::get_last_event(click))) {
-        auto const click = PopupMenuClick{n_press, dx, dy};
+        auto const click = PopupMenuClick{n_press, x, y};
         if ((*slot)(click)) return Gtk::EVENT_SEQUENCE_CLAIMED;
     }
 

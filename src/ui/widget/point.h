@@ -11,6 +11,7 @@
  *
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
+
 #ifndef INKSCAPE_UI_WIDGET_POINT_H
 #define INKSCAPE_UI_WIDGET_POINT_H
 
@@ -20,11 +21,9 @@
 
 namespace Gtk {
 class Adjustment;
-}
+} // namespace Gtk
 
-namespace Inkscape {
-namespace UI {
-namespace Widget {
+namespace Inkscape::UI::Widget {
 
 /**
  * A labelled text box, with spin buttons and optional icon, for
@@ -33,8 +32,6 @@ namespace Widget {
 class Point : public Labelled
 {
 public:
-
-
     /**
      * Construct a Point Widget.
      *
@@ -158,7 +155,6 @@ public:
      * Signal raised when the spin button's value changes.
      */
     Glib::SignalProxy<void> signal_x_value_changed();
-
     Glib::SignalProxy<void> signal_y_value_changed();
 
     /**
@@ -167,7 +163,6 @@ public:
      * if a callback checks it, it must reset it back to false.
      */
     bool setProgrammatically();
-
     void clearProgrammatically();
 
 protected:
@@ -175,9 +170,7 @@ protected:
     Scalar ywidget;
 };
 
-} // namespace Widget
-} // namespace UI
-} // namespace Inkscape
+} // namespace Inkscape::UI::Widget
 
 #endif // INKSCAPE_UI_WIDGET_POINT_H
 

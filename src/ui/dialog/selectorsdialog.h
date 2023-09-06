@@ -21,6 +21,7 @@
 #include <glibmm/refptr.h>
 #include <gtkmm/box.h>
 #include <gtkmm/button.h>
+#include <gtkmm/gesture.h> // Gtk::EventSequenceState
 #include <gtkmm/paned.h>
 #include <gtkmm/scrolledwindow.h>
 #include <gtkmm/treemodel.h>
@@ -33,6 +34,7 @@
 namespace Gtk {
 class Adjustment;
 class Dialog;
+class GestureMultiPress;
 class RadioButton;
 class SelectionData;
 class TreeModelFilter;
@@ -176,8 +178,8 @@ public:
     void _addSelector();
     void _delSelector();
     static Glib::ustring _getSelectorClasses(Glib::ustring selector);
-    bool _handleButtonEvent(GdkEventButton *event);
-    void _buttonEventsSelectObjs(GdkEventButton *event);
+    Gtk::EventSequenceState onTreeViewClickReleased(Gtk::GestureMultiPress const &click,
+                                                    int n_press, double x, double y);
     void _selectRow(); // Select row in tree when selection changed.
     void _vscroll();
 

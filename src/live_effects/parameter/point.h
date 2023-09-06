@@ -1,7 +1,4 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-#ifndef INKSCAPE_LIVEPATHEFFECT_PARAMETER_POINT_H
-#define INKSCAPE_LIVEPATHEFFECT_PARAMETER_POINT_H
-
 /*
  * Inkscape::LivePathEffectParameters
  *
@@ -10,75 +7,98 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include <glib.h>
+#ifndef INKSCAPE_LIVEPATHEFFECT_PARAMETER_POINT_H
+#define INKSCAPE_LIVEPATHEFFECT_PARAMETER_POINT_H
 
+#include <cstdint>
+#include <optional>
 #include <2geom/point.h>
+#include <glibmm/ustring.h>
 
 #include "display/control/canvas-item-enums.h"
 #include "live_effects/parameter/parameter.h"
 #include "ui/widget/registered-widget.h"
 
+namespace Gtk {
+class GestureMultiPress;
+class Widget;
+} // namespace Gtk
+
 class KnotHolder;
 class KnotHolderEntity;
 
-namespace Inkscape {
-
-namespace LivePathEffect {
+namespace Inkscape::LivePathEffect {
 
 class PointParamKnotHolderEntity;
 
-class PointParam : public Geom::Point, public Parameter {
+class PointParam final : public Geom::Point, public Parameter {
 public:
     PointParam( const Glib::ustring& label,
                 const Glib::ustring& tip,
                 const Glib::ustring& key,
                 Inkscape::UI::Widget::Registry* wr,
                 Effect* effect,
-                const gchar *handle_tip = nullptr,// tip for automatically associated on-canvas handle
+                std::optional<Glib::ustring> handle_tip = {}, ///< tip for automatically associated on-canvas handle
                 Geom::Point default_value = Geom::Point(0,0), 
                 bool live_update = true );
-    ~PointParam() override;
 
-    Gtk::Widget * param_newWidget() override;
+    PointParam(const PointParam&) = delete;
+    PointParam& operator=(const PointParam&) = delete;
 
-    bool param_readSVGValue(const gchar * strvalue) override;
-    Glib::ustring param_getSVGValue() const override;
-    Glib::ustring param_getDefaultSVGValue() const override;
-    inline const gchar *handleTip() const { return handle_tip ? handle_tip : param_tooltip.c_str(); }
+    Gtk::Widget * param_newWidget() final;
+
+    bool param_readSVGValue(char const *strvalue) final;
+    Glib::ustring param_getSVGValue() const final;
+    Glib::ustring param_getDefaultSVGValue() const final;
+
+    inline char const *handleTip() const { return handle_tip ? handle_tip->c_str() : param_tooltip.c_str(); }
+
     void param_setValue(Geom::Point newpoint, bool write = false);
-    void param_set_default() override;
+    void param_set_default() final;
     void param_hide_knot(bool hide);
-    Geom::Point param_get_default() const;
-    void param_set_liveupdate(bool live_update);
-    void param_update_default(Geom::Point default_point);
 
-    void param_update_default(const gchar * default_point) override;
-    void param_transform_multiply(Geom::Affine const & /*postmul*/, bool set) override;
+    Geom::Point param_get_default() const;
+
+    void param_set_liveupdate(bool live_update);
+
+    void param_update_default(Geom::Point default_point);
+    void param_update_default(char const *default_point) final;
+
+    void param_transform_multiply(Geom::Affine const & /*postmul*/, bool set) final;
 
     void set_oncanvas_looks(Inkscape::CanvasItemCtrlShape shape,
                             Inkscape::CanvasItemCtrlMode mode,
-                            guint32 color);
+                            std::uint32_t color);
 
-    bool providesKnotHolderEntities() const override { return true; }
-    void addKnotHolderEntities(KnotHolder *knotholder, SPItem *item) override;
-    ParamType paramType() const override { return ParamType::POINT; };
+    bool providesKnotHolderEntities() const final { return true; }
+    void addKnotHolderEntities(KnotHolder *knotholder, SPItem *item) final;
+    ParamType paramType() const final { return ParamType::POINT; };
+
     friend class PointParamKnotHolderEntity;
+
 private:
-    PointParam(const PointParam&) = delete;
-    PointParam& operator=(const PointParam&) = delete;
-    bool on_button_release(GdkEventButton* button_event);
+    void on_value_changed();
+
     Geom::Point defvalue;
     bool liveupdate;
     KnotHolderEntity * _knot_entity = nullptr;
     Inkscape::CanvasItemCtrlShape knot_shape = Inkscape::CANVAS_ITEM_CTRL_SHAPE_DIAMOND;
     Inkscape::CanvasItemCtrlMode knot_mode = Inkscape::CANVAS_ITEM_CTRL_MODE_XOR;
-    guint32 knot_color = 0xffffff00;
-    gchar *handle_tip;
+    std::uint32_t knot_color = 0xffffff00;
+    std::optional<Glib::ustring> handle_tip;
 };
 
+} // namespace Inkscape::LivePathEffect
 
-} //namespace LivePathEffect
+#endif // INKSCAPE_LIVEPATHEFFECT_PARAMETER_POINT_H
 
-} //namespace Inkscape
-
-#endif
+/*
+  Local Variables:
+  mode:c++
+  c-file-style:"stroustrup"
+  c-file-offsets:((innamespace . 0)(inline-open . 0)(case-label . +))
+  indent-tabs-mode:nil
+  fill-column:99
+  End:
+*/
+// vim: filetype=cpp:expandtab:shiftwidth=4:tabstop=8:softtabstop=4 :

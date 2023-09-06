@@ -22,6 +22,7 @@
 #include <glibmm/regex.h>
 #include <gtkmm/adjustment.h>
 #include <gtkmm/dialog.h>
+#include <gtkmm/gesturemultipress.h>
 #include <gtkmm/radiobutton.h>
 #include <gtkmm/selectiondata.h>
 #include <gtkmm/treemodelfilter.h>
@@ -31,6 +32,7 @@
 #include "inkscape.h"
 #include "selection.h"
 #include "style.h"
+#include "ui/controller.h"
 #include "ui/dialog-run.h"
 #include "ui/dialog/styledialog.h"
 #include "ui/icon-loader.h"
@@ -175,7 +177,6 @@ bool SelectorsDialog::TreeStore::row_drop_possible_vfunc(const Gtk::TreeModel::P
     return dest_parent.empty();
 }
 
-
 // This is only here to handle updating style element after a drag and drop.
 void SelectorsDialog::TreeStore::on_row_deleted(const TreeModel::Path &path)
 {
@@ -186,7 +187,6 @@ void SelectorsDialog::TreeStore::on_row_deleted(const TreeModel::Path &path)
     _selectorsdialog->_writeStyleElement();
     _selectorsdialog->_readStyleElement();
 }
-
 
 Glib::RefPtr<SelectorsDialog::TreeStore> SelectorsDialog::TreeStore::create(SelectorsDialog *selectorsdialog)
 {
@@ -242,23 +242,15 @@ SelectorsDialog::SelectorsDialog()
     }
     _treeView.set_expander_column(*(_treeView.get_column(1)));
 
-
-    // Signal handlers
-    _treeView.signal_button_release_event().connect( // Needs to be release, not press.
-        sigc::mem_fun(*this, &SelectorsDialog::_handleButtonEvent), false);
-
-    _treeView.signal_button_release_event().connect_notify(
-        sigc::mem_fun(*this, &SelectorsDialog::_buttonEventsSelectObjs), false);
-
+    Controller::add_click(_treeView, {}, // Needs to be release, not press.
+                          sigc::mem_fun(*this, &SelectorsDialog::onTreeViewClickReleased),
+                          Controller::Button::left);
     _treeView.signal_row_expanded().connect(sigc::mem_fun(*this, &SelectorsDialog::_rowExpand));
-
     _treeView.signal_row_collapsed().connect(sigc::mem_fun(*this, &SelectorsDialog::_rowCollapse));
 
     _showWidgets();
-
     show_all();
 }
-
 
 void SelectorsDialog::_vscroll()
 {
@@ -436,7 +428,6 @@ void SelectorsDialog::_readStyleElement()
     _store->clear();
     bool rewrite = false;
 
-
     for (unsigned i = 0; i < tokens.size()-1; i += 2) {
         Glib::ustring selector = tokens[i];
         Util::trim(selector, ","); // Remove leading/trailing spaces and commas
@@ -507,7 +498,6 @@ void SelectorsDialog::_readStyleElement()
             childrow[_mColumns._colSelected] = 400;
         }
     }
-
 
     _updating = false;
     if (rewrite) {
@@ -766,7 +756,6 @@ void SelectorsDialog::_removeFromSelector(Gtk::TreeModel::Row row)
     }
 }
 
-
 /**
  * @param sel
  * @return This function returns a comma separated list of ids for objects in input vector.
@@ -803,7 +792,6 @@ std::vector<SPObject *> SelectorsDialog::_getObjVec(Glib::ustring selector)
 
     return getDesktop()->getDocument()->getObjectsBySelector(selector);
 }
-
 
 /**
  * @param objs: list of objects to insert class
@@ -898,7 +886,6 @@ void SelectorsDialog::_removeClass(SPObject *obj, const Glib::ustring &className
     }
 }
 
-
 /**
  * @param eventX
  * @param eventY
@@ -992,7 +979,6 @@ void SelectorsDialog::_addSelector()
     textEditPtr->set_visible(true);
     textLabelPtr->set_visible(false);
     textDialogPtr->set_visible(true);
-
 
     // ==== Get response ====
     int result = -1;
@@ -1095,57 +1081,68 @@ void SelectorsDialog::_delSelector()
     _scrollock = true;
     Glib::RefPtr<Gtk::TreeSelection> refTreeSelection = _treeView.get_selection();
     Gtk::TreeModel::iterator iter = refTreeSelection->get_selected();
-    if (iter) {
-        _vscroll();
-        Gtk::TreeModel::Row row = *iter;
-        if (row.children().size() > 2) {
-            return;
-        }
-        _updating = true;
-        _store->erase(iter);
-        _updating = false;
-        _writeStyleElement();
-        _del.set_visible(false);
-        _scrollock = false;
-        _vadj->set_value(std::min(_scrollpos, _vadj->get_upper()));
+    if (!iter) return;
+
+    _vscroll();
+
+    Gtk::TreeModel::Row row = *iter;
+    if (row.children().size() > 2) {
+        return;
     }
+
+    _updating = true;
+    _store->erase(iter);
+    _updating = false;
+    _writeStyleElement();
+    _del.set_visible(false);
+    _scrollock = false;
+    _vadj->set_value(std::min(_scrollpos, _vadj->get_upper()));
 }
 
 /**
- * @param event
- * @return
  * Handles the event when '+' button in front of a selector name is clicked or when a '-' button in
  * front of a child object is clicked. In the first case, the selected objects on the desktop (if
  * any) are added as children of the selector in the treeview. In the latter case, the object
  * corresponding to the row is removed from the selector.
+ *
+ * This function also detects single or double click on a selector in any row. Clicking
+ * on a selector selects the matching objects on the desktop. A double click will
+ * in addition open the CSS dialog.
  */
-bool SelectorsDialog::_handleButtonEvent(GdkEventButton *event)
+Gtk::EventSequenceState SelectorsDialog::onTreeViewClickReleased(Gtk::GestureMultiPress const &click,
+                                                                 int /*n_press*/,
+                                                                 double const x, double const y)
 {
-    g_debug("SelectorsDialog::_handleButtonEvent: Entrance");
-    if (event->type == GDK_BUTTON_RELEASE && event->button == 1) {
-        _scrollock = true;
-        Gtk::TreeViewColumn *col = nullptr;
-        Gtk::TreeModel::Path path;
-        int x = static_cast<int>(event->x);
-        int y = static_cast<int>(event->y);
-        int x2 = 0;
-        int y2 = 0;
+    g_debug("SelectorsDialog::onTreeViewClickReleased: Entrance");
 
-        if (_treeView.get_path_at_pos(x, y, path, col, x2, y2)) {
-            if (col == _treeView.get_column(0)) {
-                _vscroll();
-                Gtk::TreeModel::iterator iter = _store->get_iter(path);
-                Gtk::TreeModel::Row row = *iter;
-                if (!row.parent()) {
-                    _addToSelector(row);
-                } else {
-                    _removeFromSelector(row);
-                }
-                _vadj->set_value(std::min(_scrollpos, _vadj->get_upper()));
-            }
+    // was separate function _handleButtonEvent()
+    _scrollock = true;
+    Gtk::TreeViewColumn *col = nullptr;
+    Gtk::TreeModel::Path path;
+    int x2 = 0;
+    int y2 = 0;
+    if (_treeView.get_path_at_pos(x, y, path, col, x2, y2) &&
+        col == _treeView.get_column(0))
+    {
+        _vscroll();
+        Gtk::TreeModel::iterator iter = _store->get_iter(path);
+        Gtk::TreeModel::Row row = *iter;
+        if (!row.parent()) {
+            _addToSelector(row);
+        } else {
+            _removeFromSelector(row);
         }
+        _vadj->set_value(std::min(_scrollpos, _vadj->get_upper()));
     }
-    return false;
+
+    // was separate function _buttonEventsSelectObjs()
+    _updating = true;
+    _del.set_visible(true);
+    _selectObjects(x, y);
+    _updating = false;
+    _selectRow();
+
+    return Gtk::EVENT_SEQUENCE_NONE;
 }
 
 // -------------------------------------------------------------------
@@ -1214,27 +1211,6 @@ void SelectorsDialog::selectionChanged(Selection *selection)
     _readStyleElement();
     _selectRow();
 }
-
-/**
- * @param event
- * This function detects single or double click on a selector in any row. Clicking
- * on a selector selects the matching objects on the desktop. A double click will
- * in addition open the CSS dialog.
- */
-void SelectorsDialog::_buttonEventsSelectObjs(GdkEventButton *event)
-{
-    g_debug("SelectorsDialog::_buttonEventsSelectObjs");
-    if (event->type == GDK_BUTTON_RELEASE && event->button == 1) {
-        _updating = true;
-        _del.set_visible(true);
-        int x = static_cast<int>(event->x);
-        int y = static_cast<int>(event->y);
-        _selectObjects(x, y);
-        _updating = false;
-        _selectRow();
-    }
-}
-
 
 /**
  * This function selects the row in treeview corresponding to an object selected

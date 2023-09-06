@@ -14,9 +14,7 @@
 
 #include "ui/widget/point.h"
 
-namespace Inkscape {
-namespace UI {
-namespace Widget {
+namespace Inkscape::UI::Widget {
 
 Point::Point(Glib::ustring const &label, Glib::ustring const &tooltip,
                Glib::ustring const &icon,
@@ -113,7 +111,6 @@ int Point::getYValueAsInt() const
     return ywidget.getValueAsInt();
 }
 
-
 void Point::setDigits(unsigned digits)
 {
     xwidget.setDigits(digits);
@@ -155,7 +152,6 @@ void Point::clearProgrammatically()
     ywidget.setProgrammatically = false;
 }
 
-
 Glib::SignalProxy<void> Point::signal_x_value_changed()
 {
     return xwidget.signal_value_changed();
@@ -166,10 +162,7 @@ Glib::SignalProxy<void> Point::signal_y_value_changed()
     return ywidget.signal_value_changed();
 }
 
-
-} // namespace Widget
-} // namespace UI
-} // namespace Inkscape
+} // namespace Inkscape::UI::Widget
 
 /*
   Local Variables:
