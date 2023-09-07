@@ -106,15 +106,12 @@ public:
     InkscapeWindow                   *get_window()       { return _window; }
     double                            get_dt2r()   const { return _dt2r; }
 
-    /// Set the desktop of the desktop widget. N.B.: takes ownership of desktop!
-    void set_desktop(SPDesktop      * const desktop) { _desktop.reset(desktop); }
+    void set_window(InkscapeWindow * const window) { _window = window; }
 
-    void set_window (InkscapeWindow * const window)  { _window = window; }
+    Gio::ActionMap *get_action_map();
 
-    Gio::ActionMap* get_action_map();
-
-    void on_realize() override;
-    void on_unrealize() override;
+    void on_realize() final;
+    void on_unrealize() final;
 
 private:
     Inkscape::auto_connection modified_connection;

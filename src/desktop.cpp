@@ -361,7 +361,6 @@ SPDesktop::change_document (SPDocument *theDocument)
     parent->change_document(theDocument);
     SPDesktopWidget *dtw = parent->get_desktop_widget();
     if (dtw) {
-        dtw->set_desktop(this); // takes ownership
         dtw->updateNamedview();
     } else {
         std::cerr << "SPDesktop::change_document: failed to get desktop widget!" << std::endl;
