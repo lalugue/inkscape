@@ -99,11 +99,12 @@ public:
     SPDesktopWidget(InkscapeWindow *inkscape_window, SPDocument *document);
     ~SPDesktopWidget() final;
 
-    Inkscape::UI::Widget::CanvasGrid *get_canvas_grid() { return _canvas_grid.get(); }  // Temp, I hope!
-    Inkscape::UI::Widget::Canvas     *get_canvas()      { return _canvas; }
-    SPDesktop                        *get_desktop()     { return _desktop.get(); }
-    InkscapeWindow                   *get_window()      { return _window; }
-    double                            get_dt2r() const  { return _dt2r; }
+    Inkscape::UI::Widget::CanvasGrid *get_canvas_grid()  { return _canvas_grid.get(); }  // Temp, I hope!
+    Inkscape::UI::Widget::Canvas     *get_canvas()       { return _canvas; }
+    SPDesktop                        *get_desktop()      { return _desktop.get(); }
+    InkscapeWindow             const *get_window() const { return _window; }
+    InkscapeWindow                   *get_window()       { return _window; }
+    double                            get_dt2r()   const { return _dt2r; }
 
     /// Set the desktop of the desktop widget. N.B.: takes ownership of desktop!
     void set_desktop(SPDesktop      * const desktop) { _desktop.reset(desktop); }
@@ -141,7 +142,7 @@ private:
     Inkscape::UI::Widget::Canvas *_canvas = nullptr;
 
 public:
-    void setMessage(Inkscape::MessageType type, gchar const *message);
+    void setMessage(Inkscape::MessageType type, char const *message);
     void viewSetPosition (Geom::Point p);
     void letRotateGrabFocus();
     void letZoomGrabFocus();
@@ -153,14 +154,14 @@ public:
     void showInfoDialog(Glib::ustring const &message);
     bool warnDialog (Glib::ustring const &text);
     Gtk::Toolbar* get_toolbar_by_name(const Glib::ustring& name);
-    void setToolboxFocusTo (gchar const *);
-    void setToolboxAdjustmentValue (gchar const * id, double value);
-    bool isToolboxButtonActive (gchar const *id);
+    void setToolboxFocusTo(char const *);
+    void setToolboxAdjustmentValue(char const *id, double value);
+    bool isToolboxButtonActive(char const *id) const;
     void setCoordinateStatus(Geom::Point p);
     void enableInteraction();
     void disableInteraction();
-    void updateTitle(gchar const *uri);
-    void onFocus(bool has_toplevel_focus);
+    void updateTitle(char const *uri);
+    void onFocus(bool has_focus);
     Inkscape::UI::Dialog::DialogContainer *getDialogContainer();
     void showNotice(Glib::ustring const &msg, unsigned timeout = 0);
 

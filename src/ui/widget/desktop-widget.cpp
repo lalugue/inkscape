@@ -707,28 +707,26 @@ SPDesktopWidget::setToolboxAdjustmentValue (gchar const *id, double value)
 }
 
 bool
-SPDesktopWidget::isToolboxButtonActive (const gchar* id)
+SPDesktopWidget::isToolboxButtonActive(char const * const id) const
 {
-    bool isActive = false;
-    auto thing = Inkscape::UI::find_widget_by_name(*tool_toolbars, id);
+    auto const widget = const_cast<Gtk::Widget const *>(
+        Inkscape::UI::find_widget_by_name(*tool_toolbars, id));
 
-    // The toolbutton could be a few different types so try casting to
-    // each of them.
-    // TODO: This will be simpler in Gtk+ 4 when ToolItems have gone
-    auto toggle_button      = dynamic_cast<Gtk::ToggleButton *>(thing);
-    auto toggle_tool_button = dynamic_cast<Gtk::ToggleToolButton *>(thing);
-
-    if ( !thing ) {
+    if (!widget) {
         //g_message( "Unable to locate item for {%s}", id );
-    } else if (toggle_button) {
-        isActive = toggle_button->get_active();
-    } else if (toggle_tool_button) {
-        isActive = toggle_tool_button->get_active();
-    } else {
-        //g_message( "Item for {%s} is of an unsupported type", id );
+        return false;
     }
 
-    return isActive;
+    if (auto const button = dynamic_cast<Gtk::ToggleButton const *>(widget)) {
+        return button->get_active();
+    }
+
+    if (auto const button = dynamic_cast<Gtk::ToggleToolButton const *>(widget)) {
+        return button->get_active();
+    }
+
+    //g_message( "Item for {%s} is of an unsupported type", id );
+    return false;
 }
 
 /**
@@ -821,9 +819,9 @@ void SPDesktopWidget::namedviewModified(SPObject *obj, guint flags)
 }
 
 // We make the desktop window with focus active. Signal is connected in inkscape-window.cpp
-void SPDesktopWidget::onFocus(bool const has_toplevel_focus)
+void SPDesktopWidget::onFocus(bool const has_focus)
 {
-    if (!has_toplevel_focus) return;
+    if (!has_focus) return;
 
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
     if (prefs->getBool("/options/bitmapautoreload/value", true)) {

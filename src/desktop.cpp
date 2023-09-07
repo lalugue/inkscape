@@ -101,7 +101,7 @@ SPDesktop::SPDesktop()
     _message_stack = std::make_shared<Inkscape::MessageStack>();
     _tips_message_context = std::make_unique<Inkscape::MessageContext>(_message_stack);
 
-    _message_changed_connection = _message_stack->connectChanged([this] (Inkscape::MessageType type, const gchar *message) {
+    _message_changed_connection = _message_stack->connectChanged([this](auto const type, auto const message) {
         onStatusMessage(type, message);
     });
 
@@ -125,7 +125,7 @@ SPDesktop::init (SPNamedView *nv, Inkscape::UI::Widget::Canvas *acanvas, SPDeskt
 
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
 
-    _guides_message_context = std::unique_ptr<Inkscape::MessageContext>(new Inkscape::MessageContext(messageStack()));
+    _guides_message_context = std::make_unique<Inkscape::MessageContext>(messageStack());
 
     current = prefs->getStyle("/desktop/style");
 
@@ -980,7 +980,7 @@ bool SPDesktop::scroll_to_point(Geom::Point const &p, double)
 }
 
 bool
-SPDesktop::is_iconified()
+SPDesktop::is_iconified() const
 {
     return 0!=(window_state & GDK_WINDOW_STATE_ICONIFIED);
 }
@@ -991,10 +991,10 @@ SPDesktop::iconify()
     _widget->iconify();
 }
 
-bool SPDesktop::is_darktheme() { return getToplevel()->get_style_context()->has_class("dark"); }
+bool SPDesktop::is_darktheme() const { return getToplevel()->get_style_context()->has_class("dark"); }
 
 bool
-SPDesktop::is_maximized()
+SPDesktop::is_maximized() const
 {
     return 0!=(window_state & GDK_WINDOW_STATE_MAXIMIZED);
 }
@@ -1006,7 +1006,7 @@ SPDesktop::maximize()
 }
 
 bool
-SPDesktop::is_fullscreen()
+SPDesktop::is_fullscreen() const
 {
     return 0!=(window_state & GDK_WINDOW_STATE_FULLSCREEN);
 }
@@ -1022,7 +1022,7 @@ SPDesktop::fullscreen()
  *
  * @return  the value of \c _focusMode.
  */
-bool SPDesktop::is_focusMode()
+bool SPDesktop::is_focusMode() const
 {
     return _focusMode;
 }
@@ -1074,14 +1074,22 @@ SPDesktop::setWindowTransient (void *p, int transient_policy)
     _widget->setWindowTransient (p, transient_policy);
 }
 
-Gtk::Window*
-SPDesktop::getToplevel( )
+Gtk::Window const *SPDesktop::getToplevel() const
 {
     return _widget->get_window();
 }
 
-InkscapeWindow*
-SPDesktop::getInkscapeWindow( )
+Gtk::Window *SPDesktop::getToplevel()
+{
+    return _widget->get_window();
+}
+
+InkscapeWindow const *SPDesktop::getInkscapeWindow() const
+{
+    return _widget->get_window();
+}
+
+InkscapeWindow *SPDesktop::getInkscapeWindow()
 {
     return _widget->get_window();
 }
@@ -1159,7 +1167,7 @@ void SPDesktop::quick_preview(bool activate) {
     }
 }
 
-void SPDesktop::toggleToolbar(gchar const *toolbar_name)
+void SPDesktop::toggleToolbar(char const * const toolbar_name)
 {
     Glib::ustring pref_path = getLayoutPrefPath(this) + toolbar_name + "/state";
 
@@ -1177,26 +1185,23 @@ SPDesktop::layoutWidget()
 }
 
 /**
- *  onWindowStateEvent
+ *  onWindowStateChanged
  *
  *  Called when the window changes its maximize/fullscreen/iconify/pinned state.
  *  Since GTK doesn't have a way to query this state information directly, we
  *  record it for the desktop here, and also possibly trigger a layout.
  */
-bool
-SPDesktop::onWindowStateEvent (GdkEventWindowState* event)
+void
+SPDesktop::onWindowStateChanged(GdkWindowState const changed, GdkWindowState const new_window_state)
 {
     // Record the desktop window's state
-    window_state = event->new_window_state;
+    window_state = new_window_state;
 
     // Layout may differ depending on full-screen mode or not
-    GdkWindowState changed = event->changed_mask;
     if (changed & (GDK_WINDOW_STATE_FULLSCREEN|GDK_WINDOW_STATE_MAXIMIZED)) {
         layoutWidget();
         view_set_gui(getInkscapeWindow()); // Updates View menu
     }
-
-    return false;
 }
 
 /**
@@ -1220,13 +1225,13 @@ void SPDesktop::applyCurrentOrToolStyle(SPObject *obj, Glib::ustring const &tool
 }
 
 void
-SPDesktop::setToolboxFocusTo (gchar const *label)
+SPDesktop::setToolboxFocusTo(char const * const label)
 {
     _widget->setToolboxFocusTo (label);
 }
 
 void
-SPDesktop::setToolboxAdjustmentValue (gchar const* id, double val)
+SPDesktop::setToolboxAdjustmentValue(char const * const id, double const val)
 {
     _widget->setToolboxAdjustmentValue (id, val);
 }
@@ -1243,9 +1248,9 @@ Gtk::Widget *SPDesktop::get_toolbox() const
 }
 
 bool
-SPDesktop::isToolboxButtonActive (gchar const *id)
+SPDesktop::isToolboxButtonActive(char const * const id) const
 {
-    return _widget->isToolboxButtonActive (id);
+    return _widget->isToolboxButtonActive(id);
 }
 
 void
@@ -1360,10 +1365,9 @@ SPDesktop::setDocument (SPDocument *doc)
     INKSCAPE.add_document(doc);
     document = doc;
 
-    _document_uri_set_connection = document->connectFilenameSet([this] (const gchar *filename) {
+    _document_uri_set_connection = document->connectFilenameSet([this](auto const filename) {
         onDocumentFilenameSet(filename);
     });
-    _document_filename_set_signal.emit(document->getDocumentFilename());
     // End Fomerly in View::View ^^^^^^^^^^^^^^^
 
     sp_namedview_update_layers_from_document(this);
@@ -1379,7 +1383,7 @@ SPDesktop::showNotice(Glib::ustring const &msg, unsigned timeout)
 
 void
 SPDesktop::onStatusMessage
-(Inkscape::MessageType type, gchar const *message)
+(Inkscape::MessageType const type, char const * const message)
 {
     if (_widget) {
         _widget->setMessage(type, message);
@@ -1387,7 +1391,7 @@ SPDesktop::onStatusMessage
 }
 
 void
-SPDesktop::onDocumentFilenameSet (gchar const* filename)
+SPDesktop::onDocumentFilenameSet(char const * const filename)
 {
     _widget->updateTitle(filename);
 }

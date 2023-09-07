@@ -63,7 +63,6 @@ static gboolean _resize_children(Gtk::Window *win)
     return false;
 }
 
-
 InkscapeWindow::InkscapeWindow(SPDocument* document)
     : _document(document)
 {
@@ -130,8 +129,8 @@ InkscapeWindow::InkscapeWindow(SPDocument* document)
     _mainbox->pack_start(*_desktop_widget, true, true);
 
     // ================== Callbacks ==================
-    signal_window_state_event().connect(sigc::mem_fun(*_desktop, &SPDesktop::onWindowStateEvent));
-    property_has_toplevel_focus().signal_changed().connect([=]{ _desktop_widget->onFocus(has_toplevel_focus()); });
+    signal_window_state_event()          .connect(sigc::mem_fun(*this, &InkscapeWindow::on_window_state_changed));
+    property_is_active().signal_changed().connect(sigc::mem_fun(*this, &InkscapeWindow::on_is_active_changed   ));
 
     // ================ Window Options ===============
     setup_view();
@@ -284,22 +283,35 @@ static void retransientize_dialogs(Gtk::Window &parent)
     }
 }
 
+// TODO: GTK4: Just change over to GdkTopLevel::notify:state & GdkToplevelState.
 bool
-InkscapeWindow::on_focus_in_event(GdkEventFocus* event)
+InkscapeWindow::on_window_state_changed(GdkEventWindowState const * const event)
 {
-    if (_app) {
-        _app->set_active_window(this);
-        _app->set_active_document(_document);
-        _app->set_active_desktop(_desktop);
-        _app->set_active_selection(_desktop->getSelection());
-        _app->windows_update(_document);
-        update_dialogs();
-        retransientize_dialogs(*this);
-    } else {
-        std::cerr << "Inkscapewindow::on_focus_in_event: app is nullptr!" << std::endl;
+   _desktop->onWindowStateChanged(event->changed_mask, event->new_window_state);
+   return false;
+}
+
+void
+InkscapeWindow::on_is_active_changed()
+{
+    _desktop_widget->onFocus(is_active());
+
+    if (!is_active()) {
+        return;
     }
 
-    return Gtk::ApplicationWindow::on_focus_in_event(event);
+    if (!_app) {
+        std::cerr << "Inkscapewindow::on_focus_in_event: app is nullptr!" << std::endl;
+        return;
+    }
+
+    _app->set_active_window(this);
+    _app->set_active_document(_document);
+    _app->set_active_desktop(_desktop);
+    _app->set_active_selection(_desktop->getSelection());
+    _app->windows_update(_document);
+    update_dialogs();
+    retransientize_dialogs(*this);
 }
 
 // Called when a window is closed via the 'X' in the window bar.

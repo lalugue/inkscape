@@ -2,9 +2,6 @@
 /** \file
  * LPE "Ellipse through 5 points" implementation.
  */
-#ifndef SEEN_LPE_ELLIPSE_5PTS_H
-#define SEEN_LPE_ELLIPSE_5PTS_H
-
 /*
  * Authors:
  *   Theodore Janeczko
@@ -14,28 +11,33 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#include <optional>
+#include <2geom/pathvector.h>
+
 #include "live_effects/effect.h"
 #include "message.h"
 
+#ifndef SEEN_LPE_ELLIPSE_5PTS_H
+#define SEEN_LPE_ELLIPSE_5PTS_H
+
 namespace Inkscape::LivePathEffect {
 
-class LPEEllipse5Pts : public Effect
+class LPEEllipse5Pts final : public Effect
 {
 public:
     LPEEllipse5Pts(LivePathEffectObject *lpeobject);
-    ~LPEEllipse5Pts() override { _clearWarning(); }
+    ~LPEEllipse5Pts() final { _clearWarning(); }
 
-    Geom::PathVector doEffect_path(Geom::PathVector const &path_in) override;
-
-private:
     LPEEllipse5Pts(LPEEllipse5Pts const &) = delete;
     LPEEllipse5Pts& operator=(LPEEllipse5Pts const &) = delete;
 
+    Geom::PathVector doEffect_path(Geom::PathVector const &path_in) final;
+
+private:
     void _flashWarning(char const *message);
     void _clearWarning();
 
-    inline static MessageId const INVALID = 0x00'DEADBEEF'00;
-    MessageId _error = INVALID;
+    std::optional<MessageId> _error = std::nullopt;
     Geom::PathVector const _unit_circle;
 };
 

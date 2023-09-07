@@ -13,6 +13,8 @@
 #ifndef SEEN_INKSCAPE_MESSAGE_H
 #define SEEN_INKSCAPE_MESSAGE_H
 
+#include <cstdint>
+
 namespace Inkscape {
 
 /**
@@ -34,11 +36,12 @@ enum MessageType {
  *
  * @see Inkscape::MessageStack
  */
-typedef unsigned long MessageId;
+using MessageId = std::uint_least32_t;
 
-}
+} // namespace Inkscape
 
-#endif
+#endif // SEEN_INKSCAPE_MESSAGE_H
+
 /*
   Local Variables:
   mode:c++

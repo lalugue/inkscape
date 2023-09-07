@@ -93,12 +93,6 @@ class SPStyle;
 class SPStop;
 
 class InkscapeWindow;
-
-struct _GdkEventAny;
-typedef struct _GdkEventAny GdkEventAny;
-struct _GdkEventWindowState;
-typedef struct _GdkEventWindowState GdkEventWindowState;
-
 struct InkscapeApplication;
 
 namespace Inkscape {
@@ -164,10 +158,8 @@ public:
 
     // Formerly in View::View VVVVVVVVVVVVVVVVVVVVV
     SPDocument *doc() const { return document; }
-    std::shared_ptr<Inkscape::MessageStack> messageStack() const { return _message_stack; }      // CHECK IF USED
-    Inkscape::MessageContext *tipsMessageContext() const { return _tips_message_context.get(); } // CHECK IF USED
-
-    sigc::signal<void (gchar const*)>    _document_filename_set_signal; // CHECK IF USED
+    std::shared_ptr<Inkscape::MessageStack> messageStack() const { return _message_stack; }
+    Inkscape::MessageContext *tipsMessageContext() const { return _tips_message_context.get(); }
 
 private:
     SPDocument *document = nullptr;
@@ -389,21 +381,29 @@ public:
     void setWindowPosition (Geom::Point p);
     void setWindowSize (gint w, gint h);
     void setWindowTransient (void* p, int transient_policy=1);
-    Gtk::Window *getToplevel();  // To be removed in favor of getInkscapeWindow
-    InkscapeWindow* getInkscapeWindow();
+    // TODO: getToplevel() to be removed, in favor of getInkscapeWindow()?
+    Gtk::Window    const *getToplevel      () const;
+    Gtk::Window          *getToplevel      ()      ;
+    InkscapeWindow const *getInkscapeWindow() const;
+    InkscapeWindow       *getInkscapeWindow()      ;
     void presentWindow();
+
     void showInfoDialog(Glib::ustring const &message);
     bool warnDialog (Glib::ustring const &text);
+
     void toggleCommandPalette();
     void toggleRulers();
     void toggleScrollbars();
+
     void setTempHideOverlays(bool hide);
     void layoutWidget();
-    void setToolboxFocusTo (gchar const* label);
+    void setToolboxFocusTo(char const *label);
+
     Gtk::Toolbar *get_toolbar_by_name(const Glib::ustring& name);
     Gtk::Widget *get_toolbox() const;
-    void setToolboxAdjustmentValue (gchar const* id, double val);
-    bool isToolboxButtonActive (gchar const *id);
+
+    void setToolboxAdjustmentValue(char const *id, double val);
+    bool isToolboxButtonActive(char const *id) const;
     void updateDialogs();
     void showNotice(Glib::ustring const &msg, unsigned timeout = 0);
 
@@ -415,14 +415,13 @@ public:
     bool isWaitingCursor() const { return waiting_cursor; };
 
     void toggleLockGuides();
+    void toggleToolbar(char const *toolbar_name);
 
-    void toggleToolbar(gchar const *toolbar_name);
-
-    bool is_iconified();
-    bool is_darktheme();
-    bool is_maximized();
-    bool is_fullscreen();
-    bool is_focusMode();
+    bool is_iconified () const;
+    bool is_darktheme () const;
+    bool is_maximized () const;
+    bool is_fullscreen() const;
+    bool is_focusMode () const;
 
     void iconify();
     void maximize();
@@ -445,7 +444,7 @@ public:
 
     void setDocument (SPDocument* doc);
 
-    virtual bool onWindowStateEvent (GdkEventWindowState* event);
+    void onWindowStateChanged(GdkWindowState changed, GdkWindowState new_window_state);
 
     void applyCurrentOrToolStyle(SPObject *obj, Glib::ustring const &tool_path, bool with_text);
 
@@ -459,7 +458,7 @@ private:
     // With offset, this describes fully how to map the drawing to the window.
     // Future: merge offset as a translation in w2d.
     class DesktopAffine {
-      public:
+    public:
         Geom::Affine w2d() const { return _w2d; };
         Geom::Affine d2w() const { return _d2w; };
 
@@ -532,7 +531,7 @@ private:
             return _offset;
         }
 
-      private:
+    private:
         void _update() {
             _d2w = _scale * _rotate * _flip;
             _w2d = _d2w.inverse();
@@ -578,8 +577,8 @@ private:
     void on_zoom_scale(GtkGestureZoom const *zoom, double                  scale   );
     void on_zoom_end  (GtkGesture     const *zoom, GdkEventSequence const *sequence);
 
-    void onStatusMessage (Inkscape::MessageType type, gchar const *message);
-    void onDocumentFilenameSet(gchar const* filename);
+    void onStatusMessage(Inkscape::MessageType type, char const *message);
+    void onDocumentFilenameSet(char const *filename);
 };
 
 #endif // SEEN_SP_DESKTOP_H

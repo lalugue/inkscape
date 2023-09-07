@@ -11,6 +11,9 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#include "live_effects/lpe-ellipse_5pts.h"
+
+#include <vector>
 #include <2geom/ellipse.h>
 #include <2geom/path-sink.h>
 #include <glibmm/i18n.h>
@@ -19,21 +22,21 @@
 #include "inkscape.h"
 #include "message-stack.h"
 
-#include "live_effects/lpe-ellipse_5pts.h"
-
 namespace Inkscape::LivePathEffect {
+
+[[nodiscard]] static auto buildUnitCircle()
+{
+    Geom::PathBuilder builder;
+    builder.moveTo({1, 0});
+    builder.arcTo(1, 1, 0, true, true, {-1, 0});
+    builder.arcTo(1, 1, 0, true, true, { 1, 0});
+    builder.closePath();
+    return builder.peek();
+}
 
 LPEEllipse5Pts::LPEEllipse5Pts(LivePathEffectObject *lpeobject)
     : Effect(lpeobject)
-    , _unit_circle{ // Run an IIFE to build the unit circle.
-        []() {
-            Geom::PathBuilder builder;
-            builder.moveTo({1, 0});
-            builder.arcTo(1, 1, 0, true, true, {-1, 0});
-            builder.arcTo(1, 1, 0, true, true, { 1, 0});
-            builder.closePath();
-            return builder.peek();
-        }()}
+    , _unit_circle{buildUnitCircle()}
 {}
 
 /** Flash a warning message on the status bar. */
@@ -49,13 +52,14 @@ void LPEEllipse5Pts::_flashWarning(char const *message)
 /** Clear our warning from the status bar. */
 void LPEEllipse5Pts::_clearWarning()
 {
-    if (_error == INVALID) {
+    if (!_error) {
         return;
     }
+
     auto &app = Inkscape::Application::instance();
     if (auto desktop = app.active_desktop()) {
-        desktop->messageStack()->cancel(_error);
-        _error = INVALID;
+        desktop->messageStack()->cancel(*_error);
+        _error = std::nullopt;
     }
 }
 
@@ -91,7 +95,7 @@ Geom::PathVector LPEEllipse5Pts::doEffect_path(Geom::PathVector const &path_in)
     return _unit_circle * ellipse.unitCircleTransform();
 }
 
-} //namespace Inkscape::LivePathEffect
+} // namespace Inkscape::LivePathEffect
 
 /*
   Local Variables:

@@ -26,10 +26,10 @@ class SPDocument;
 class SPDesktop;
 class SPDesktopWidget;
 
-class InkscapeWindow : public Gtk::ApplicationWindow {
+class InkscapeWindow final : public Gtk::ApplicationWindow {
 public:
     InkscapeWindow(SPDocument* document);
-    ~InkscapeWindow() override;
+    ~InkscapeWindow() final;
 
     SPDocument*      get_document()       { return _document; }
     SPDesktop*       get_desktop()        { return _desktop; }
@@ -48,12 +48,13 @@ private:
 
 public:
     // TODO: Can we avoid it being public? Probably yes in GTK4.
-    bool on_key_press_event(GdkEventKey* event) override;
+    bool on_key_press_event(GdkEventKey* event) final;
 
 private:
-    bool on_focus_in_event(GdkEventFocus* event) override;
-    bool on_delete_event(GdkEventAny* event) override;
-    bool on_configure_event(GdkEventConfigure *event) override;
+    bool on_window_state_changed(GdkEventWindowState const *event);
+    void on_is_active_changed();
+    bool on_delete_event(GdkEventAny* event) final;
+    bool on_configure_event(GdkEventConfigure *event) final;
 
     void update_dialogs();
 };
