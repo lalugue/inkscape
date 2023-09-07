@@ -59,7 +59,8 @@ LPERuler::LPERuler(LivePathEffectObject *lpeobject) :
     major_mark_steps.param_make_integer();
     major_mark_steps.param_set_range(1, 1000);
     shift.param_make_integer();
-
+    mark_distance.param_set_range(0.01, std::numeric_limits<double>::max());
+    mark_distance.param_set_digits(2);
     mark_length.param_set_increments(1.0, 10.0);
     minor_mark_length.param_set_increments(1.0, 10.0);
     offset.param_set_increments(1.0, 10.0);
