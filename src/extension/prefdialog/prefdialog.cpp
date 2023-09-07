@@ -136,6 +136,9 @@ PrefDialog::~PrefDialog ( )
 
 void
 PrefDialog::preview_toggle () {
+    // This wrap prevent crashes on fast click
+    // We are on 2 mains process so can triger a crash if you check too fast
+    _button_preview->set_sensitive(false);
     SPDocument *document = SP_ACTIVE_DOCUMENT;
     bool modified = document->isModifiedSinceSave();
     if(_param_preview->get_bool()) {
@@ -157,6 +160,7 @@ PrefDialog::preview_toggle () {
         }
     }
     document->setModifiedSinceSave(modified);
+    _button_preview->set_sensitive(true);
 }
 
 void
