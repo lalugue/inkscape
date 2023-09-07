@@ -311,7 +311,7 @@ public:
     void activate_guides (bool activate);
     void change_document (SPDocument *document);
 
-    void setEventContext(const std::string& toolName);
+    void setTool(std::string const &toolName);
 
     void set_coordinate_status (Geom::Point p);
     SPItem *getItemFromListAtPointBottom(const std::vector<SPItem*> &list, Geom::Point const &p) const;

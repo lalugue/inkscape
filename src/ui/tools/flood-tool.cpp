@@ -1093,7 +1093,7 @@ bool FloodTool::root_handler(CanvasEvent const &event)
                 current_desktop->clearWaitingCursor();
                 r->stop();
 
-                // We check whether our object was deleted by SPDesktop::setEventContext()
+                // We check whether our object was deleted by SPDesktop::setTool()
                 // TODO: fix SPDesktop so that it doesn't kill us before we're done
                 ToolBase *current_context = current_desktop->getTool();
 

@@ -365,13 +365,14 @@ void ObjectSet::deleteItems(bool skip_undo)
     if (SPDesktop *dt = desktop()) {
         dt->layerManager().currentLayer()->requestDisplayUpdate(SP_OBJECT_MODIFIED_FLAG);
 
-        /* A tool may have set up private information in it's selection context
+        /* A tool may have set up private information in its selection context
          * that depends on desktop items.  I think the only sane way to deal with
-         * this currently is to reset the event context which will reset it's
+         * this currently is to reset the tool which will reset its
          * associated selection context.  For example: deleting an object
          * while moving it around the canvas.
+         * We copy the string so we donʼt pass reference to member of the tool that is being reset.
          */
-        dt->setEventContext(std::string(dt->getTool()->getPrefsPath()));
+        dt->setTool(std::string{dt->getTool()->getPrefsPath()});
     }
 
     if(document()) {

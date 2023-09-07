@@ -226,7 +226,7 @@ SPDesktop::init (SPNamedView *nv, Inkscape::UI::Widget::Canvas *acanvas, SPDeskt
     activate_guides (true);
 
     // Set the select tool as the active tool.
-    setEventContext("/tools/select");
+    setTool("/tools/select");
 
     // display rect and zoom are now handled in sp_desktop_widget_realize()
 
@@ -350,7 +350,7 @@ SPDesktop::change_document (SPDocument *theDocument)
     _selection->clear();
 
     // Reset any tool actions currently in progress.
-    setEventContext(_tool->getPrefsPath());
+    setTool(std::string{_tool->getPrefsPath()}); // Copy so not passing ref to member of reset tool
 
     setDocument (theDocument);
 
@@ -372,8 +372,11 @@ SPDesktop::change_document (SPDocument *theDocument)
 /**
  * Replaces the currently active tool with a new one. Pass the empty string to
  * unset and free the current tool.
+ * @param toolName The preferences path for the new tool. Note that if you are calling this to
+ * reset the currently active tool, you must copy the string from _tool->getPrefsPath(), so we
+ * do not keep a ref to string in reset tool. e.g. setTool(std::string{_tool->getPrefsPath()})
  */
-void SPDesktop::setEventContext(const std::string& toolName)
+void SPDesktop::setTool(std::string const &toolName)
 {
     // Tool should be able to be replaced with itself. See commit 29df5ca05d
     if (_tool) {
