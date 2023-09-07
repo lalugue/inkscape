@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 /**
  * @file
- * Base widget for user input of object properties.
+ * Widget that listens and modifies repr attributes.
  */
 /* Authors:
  *  Lauris Kaplinski <lauris@ximian.com>
@@ -9,15 +9,16 @@
  *  Kris De Gussem <Kris.DeGussem@gmail.com>
  *
  * Copyright (C) 2001 Ximian, Inc.
- * Copyright (C) 2012, authors
+ * Copyright (C) 2002,2011-2012 authors
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
+
+#include "sp-attribute-widget.h"
 
 #include <glibmm/i18n.h>
 #include <gtkmm/entry.h>
 #include <gtkmm/grid.h>
-
-#include "sp-attribute-widget.h"
+#include <sigc++/adaptors/bind.h>
 
 #include "document.h"
 #include "document-undo.h"
@@ -48,7 +49,7 @@ static void sp_attribute_table_entry_changed (Gtk::Entry *editable, SPAttributeT
  * @param flags gives the applied modifications
  * @param spat pointer to the SPAttributeTable instance.
  */
-static void sp_attribute_table_object_modified (SPObject *object, guint flags, SPAttributeTable *spaw);
+static void sp_attribute_table_object_modified(SPObject *object, unsigned flags, SPAttributeTable *spaw);
 /**
  * Callback for the deletion of the selected object.
  *
@@ -57,137 +58,92 @@ static void sp_attribute_table_object_modified (SPObject *object, guint flags, S
  */
 static void sp_attribute_table_object_release (SPObject */*object*/, SPAttributeTable *spat);
 
-#define XPAD 4
-#define YPAD 2
+static constexpr int XPAD = 4;
+static constexpr int YPAD = 2;
 
-
-SPAttributeTable::SPAttributeTable () : 
-    _object(nullptr),
-    blocked(false),
-    table(nullptr),
-    _attributes(),
-    _entries(),
-    modified_connection(),
-    release_connection()
-{
-}
-
-SPAttributeTable::SPAttributeTable (SPObject *object, std::vector<Glib::ustring> &labels, std::vector<Glib::ustring> &attributes, GtkWidget* parent) : 
-    _object(nullptr),
-    blocked(false),
-    table(nullptr),
-    _attributes(),
-    _entries(),
-    modified_connection(),
-    release_connection()
+SPAttributeTable::SPAttributeTable(SPObject * const object,
+                                   std::vector<Glib::ustring> const &labels,
+                                   std::vector<Glib::ustring> const &attributes,
+                                   GtkWidget * const parent)
 {
     set_object(object, labels, attributes, parent);
-}
-
-SPAttributeTable::~SPAttributeTable ()
-{
-    clear();
 }
 
 void SPAttributeTable::clear()
 {
     if (table)
     {
-        std::vector<Gtk::Widget*> ch = table->get_children();
-        for (int i = (ch.size())-1; i >=0 ; i--)
-        {
-            Gtk::Widget *w = ch[i];
-            ch.pop_back();
-            if (w != nullptr)
-            {
-                try
-                {
-                    #define sp_signal_disconnect_by_data(o,d) g_signal_handlers_disconnect_matched(o, G_SIGNAL_MATCH_DATA, 0, 0, 0, 0, d)
-                    sp_signal_disconnect_by_data (w->gobj(), this);
-                    delete w;
-                }
-                catch(...)
-                {
-                }
-            }
-        }
-        ch.clear();
+        table.reset();
+
         _attributes.clear();
         _entries.clear();
-        
-        delete table;
-        table = nullptr;
     }
 
-    if (_object)
-    {
-        modified_connection.disconnect();
-        release_connection.disconnect();
-        _object = nullptr;
-    }
+    change_object(nullptr);
 }
 
-void SPAttributeTable::set_object(SPObject *object,
-                            std::vector<Glib::ustring> &labels,
-                            std::vector<Glib::ustring> &attributes,
-                            GtkWidget* parent)
+void SPAttributeTable::set_object(SPObject * const object,
+                                  std::vector<Glib::ustring> const &labels,
+                                  std::vector<Glib::ustring> const &attributes,
+                                  GtkWidget * const parent)
 {
     g_return_if_fail (!object || !labels.empty() || !attributes.empty());
     g_return_if_fail (labels.size() == attributes.size());
 
     clear();
+
     _object = object;
 
-    if (object) {
-        blocked = true;
+    if (!object) return;
 
-        // Set up object
-        modified_connection = object->connectModified(sigc::bind<2>(sigc::ptr_fun(&sp_attribute_table_object_modified), this));
-        release_connection  = object->connectRelease (sigc::bind<1>(sigc::ptr_fun(&sp_attribute_table_object_release), this));
+    blocked = true;
 
-        // Create table
-        table = new Gtk::Grid();
+    modified_connection = object->connectModified(sigc::bind<2>(&sp_attribute_table_object_modified, this));
+    release_connection  = object->connectRelease (sigc::bind<1>(&sp_attribute_table_object_release , this));
 
-        if (!(parent == nullptr))
-            gtk_container_add(GTK_CONTAINER(parent), (GtkWidget*)table->gobj());
-        
-        // Fill rows
-        _attributes = attributes;
-        for (guint i = 0; i < (attributes.size()); i++) {
-            Gtk::Label *ll = new Gtk::Label (_(labels[i].c_str()));
-            ll->set_visible(true);
-            ll->set_halign(Gtk::ALIGN_START);
-            ll->set_valign(Gtk::ALIGN_CENTER);
-            ll->set_vexpand(false);
-            ll->set_margin_end(XPAD);
-            ll->set_margin_top(YPAD);
-            ll->set_margin_bottom(YPAD);
-            table->attach(*ll, 0, i, 1, 1);
+    table = std::make_unique<Gtk::Grid>();
 
-            Gtk::Entry *ee = new Gtk::Entry();
-            ee->set_visible(true);
-            const gchar *val = object->getRepr()->attribute(attributes[i].c_str());
-            ee->set_text (val ? val : (const gchar *) "");
-            ee->set_hexpand();
-            ee->set_vexpand(false);
-            ee->set_margin_start(XPAD);
-            ee->set_margin_top(YPAD);
-            ee->set_margin_bottom(YPAD);
-            table->attach(*ee, 1, i, 1, 1);
-
-            _entries.push_back(ee);
-            g_signal_connect ( ee->gobj(), "changed",
-                               G_CALLBACK (sp_attribute_table_entry_changed),
-                               this );
-        }
-        /* Show table */
-        table->show ();
-        blocked = false;
+    if (parent) {
+        gtk_container_add(GTK_CONTAINER(parent), table->Gtk::Widget::gobj());
     }
+    
+    // Fill rows
+    _attributes = attributes;
+    for (std::size_t i = 0; i < attributes.size(); ++i) {
+        auto const ll = Gtk::make_managed<Gtk::Label>(_(labels[i].c_str()));
+        ll->set_halign(Gtk::ALIGN_START);
+        ll->set_valign(Gtk::ALIGN_CENTER);
+        ll->set_vexpand(false);
+        ll->set_margin_end(XPAD);
+        ll->set_margin_top(YPAD);
+        ll->set_margin_bottom(YPAD);
+        table->attach(*ll, 0, i, 1, 1);
+
+        auto const ee = Gtk::make_managed<Gtk::Entry>();
+        auto const val = object->getRepr()->attribute(attributes[i].c_str());
+        ee->set_text(val ? val : "");
+        ee->set_hexpand();
+        ee->set_vexpand(false);
+        ee->set_margin_start(XPAD);
+        ee->set_margin_top(YPAD);
+        ee->set_margin_bottom(YPAD);
+        table->attach(*ee, 1, i, 1, 1);
+
+        _entries.push_back(ee);
+        g_signal_connect ( ee->gobj(), "changed",
+                           G_CALLBACK (sp_attribute_table_entry_changed),
+                           this );
+    }
+
+    table->show_all();
+
+    blocked = false;
 }
 
 void SPAttributeTable::change_object(SPObject *object)
 {
+    if (_object == object) return;
+
     if (_object)
     {
         modified_connection.disconnect();
@@ -196,83 +152,76 @@ void SPAttributeTable::change_object(SPObject *object)
     }
 
     _object = object;
-    if (_object) {
-        blocked = true;
 
-        // Set up object
-        modified_connection = _object->connectModified(sigc::bind<2>(sigc::ptr_fun(&sp_attribute_table_object_modified), this));
-        release_connection  = _object->connectRelease (sigc::bind<1>(sigc::ptr_fun(&sp_attribute_table_object_release), this));
-        for (guint i = 0; i < (_attributes.size()); i++) {
-            const gchar *val = _object->getRepr()->attribute(_attributes[i].c_str());
-            _entries[i]->set_text(val ? val : "");
-        }
-        
-        blocked = false;
+    if (!_object) return;
+
+    blocked = true;
+
+    // Set up object
+    modified_connection = _object->connectModified(sigc::bind<2>(&sp_attribute_table_object_modified, this));
+    release_connection  = _object->connectRelease (sigc::bind<1>(&sp_attribute_table_object_release , this));
+    for (std::size_t i = 0; i < _attributes.size(); ++i) {
+        auto const val = _object->getRepr()->attribute(_attributes[i].c_str());
+        _entries[i]->set_text(val ? val : "");
     }
-
+    
+    blocked = false;
 }
 
 void SPAttributeTable::reread_properties()
 {
     blocked = true;
-	for (guint i = 0; i < (_attributes.size()); i++)
-    {
-        const gchar *val = _object->getRepr()->attribute(_attributes[i].c_str());
+    for (std::size_t i = 0; i < _attributes.size(); ++i) {
+        auto const val = _object->getRepr()->attribute(_attributes[i].c_str());
         _entries[i]->set_text(val ? val : "");
     }
-	blocked = false;
+    blocked = false;
 }
 
-static void sp_attribute_table_object_modified ( SPObject */*object*/,
-                                     guint flags,
-                                     SPAttributeTable *spat )
+static void sp_attribute_table_object_modified(SPObject */*object*/,
+                                               unsigned const flags,
+                                               SPAttributeTable *const spat)
 {
-    if (flags & SP_OBJECT_MODIFIED_FLAG)
-    {
-        std::vector<Glib::ustring> attributes = spat->get_attributes();
-        std::vector<Gtk::Entry *> entries = spat->get_entries();
-        Glib::ustring text="";
-        for (guint i = 0; i < (attributes.size()); i++) {
-            Gtk::Entry* e = entries[i];
-            const gchar *val = spat->_object->getRepr()->attribute(attributes[i].c_str());
-            text = e->get_text ();
-            if (val || !text.empty()) {
-                if (text != val) {
-                    // We are different
-                    spat->blocked = true;
-                    e->set_text (val ? val : (const gchar *) "");
-                    spat->blocked = false;
-                }
+    if (!(flags & SP_OBJECT_MODIFIED_FLAG)) return;
+
+    auto const &attributes = spat->get_attributes();
+    auto const &entries = spat->get_entries();
+    for (std::size_t i = 0; i < attributes.size(); ++i) {
+        auto const e = entries[i];
+        auto const val = spat->_object->getRepr()->attribute(attributes[i].c_str());
+        auto const new_text = Glib::ustring{val ? val : ""};
+        if (e->get_text() != new_text) {
+            // We are different
+            spat->blocked = true;
+            e->set_text(new_text);
+            spat->blocked = false;
+        }
+    }
+}
+
+static void sp_attribute_table_entry_changed(Gtk::Entry * const editable,
+                                             SPAttributeTable * const spat)
+{
+    if (spat->blocked) return;
+
+    auto const &attributes = spat->get_attributes();
+    auto const &entries = spat->get_entries();
+    for (std::size_t i = 0; i < attributes.size(); ++i) {
+        auto const e = entries[i];
+        if (editable->Gtk::Widget::gobj() == e->Gtk::Widget::gobj()) {
+            spat->blocked = true;
+            if (spat->_object) {
+                auto const &text = e->get_text ();
+                spat->_object->getRepr()->setAttribute(attributes[i], text);
+                DocumentUndo::done(spat->_object->document, _("Set attribute"), "");
             }
+            spat->blocked = false;
+            return;
         }
     }
 
-} // end of sp_attribute_table_object_modified()
-
-static void sp_attribute_table_entry_changed ( Gtk::Entry *editable,
-                                   SPAttributeTable *spat )
-{
-    if (!spat->blocked)
-    {
-        std::vector<Glib::ustring> attributes = spat->get_attributes();
-        std::vector<Gtk::Entry *> entries = spat->get_entries();
-        for (guint i = 0; i < (attributes.size()); i++) {
-            Gtk::Entry *e = entries[i];
-            if ((GtkWidget*)editable == (GtkWidget*)e->gobj()) {
-                spat->blocked = true;
-                Glib::ustring text = e->get_text ();
-                if (spat->_object) {
-                    spat->_object->getRepr()->setAttribute(attributes[i], text);
-                    DocumentUndo::done(spat->_object->document, _("Set attribute"), "");
-                }
-                spat->blocked = false;
-                return;
-            }
-        }
-        g_warning ("file %s: line %d: Entry signalled change, but there is no such entry", __FILE__, __LINE__);
-    }
-
-} // end of sp_attribute_table_entry_changed()
+    g_warning ("file %s: line %d: Entry signalled change, but there is no such entry", __FILE__, __LINE__);
+}
 
 static void sp_attribute_table_object_release (SPObject */*object*/, SPAttributeTable *spat)
 {

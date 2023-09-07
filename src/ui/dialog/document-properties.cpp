@@ -1724,12 +1724,12 @@ GridWidget::GridWidget(SPGrid *grid)
             "visible", _wr, false, repr, doc);
 
     _grid_as_alignment = Gtk::make_managed<Inkscape::UI::Widget::AlignmentSelector>();
-    _grid_as_alignment->on_alignmentClicked().connect([this, grid](int align) {
-                Geom::Point dimensions = grid->document->getDimensions();
-                dimensions[Geom::X] *= align % 3 * 0.5;
-                dimensions[Geom::Y] *= align / 3 * 0.5;
-                dimensions *= grid->document->doc2dt();
-                grid->setOrigin(dimensions);
+    _grid_as_alignment->connectAlignmentClicked([this, grid](int const align) {
+        auto dimensions = grid->document->getDimensions();
+        dimensions[Geom::X] *= align % 3 * 0.5;
+        dimensions[Geom::Y] *= align / 3 * 0.5;
+        dimensions *= grid->document->doc2dt();
+        grid->setOrigin(dimensions);
     });
 
     auto const left = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_VERTICAL, 4);

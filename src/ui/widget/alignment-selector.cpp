@@ -6,14 +6,16 @@
  */
 
 #include "ui/widget/alignment-selector.h"
+
+#include <utility>
+#include <gtkmm/image.h>
+#include <sigc++/adaptors/bind.h>
+#include <sigc++/functors/mem_fun.h>
+
 #include "ui/icon-loader.h"
 #include "ui/icon-names.h"
 
-#include <gtkmm/image.h>
-
-namespace Inkscape {
-namespace UI {
-namespace Widget {
+namespace Inkscape::UI::Widget {
 
 void AlignmentSelector::setupButton(const Glib::ustring& icon, Gtk::Button& button) {
     auto const buttonIcon = Gtk::manage(sp_get_icon_image(icon, Gtk::ICON_SIZE_SMALL_TOOLBAR));
@@ -26,7 +28,6 @@ void AlignmentSelector::setupButton(const Glib::ustring& icon, Gtk::Button& butt
 }
 
 AlignmentSelector::AlignmentSelector()
-    : _container()
 {
     set_halign(Gtk::ALIGN_CENTER);
     // clang-format off
@@ -44,19 +45,19 @@ AlignmentSelector::AlignmentSelector()
     _container.set_row_homogeneous();
     _container.set_column_homogeneous(true);
 
-    for(int i = 0; i < 9; ++i) {
+    for (std::size_t i = 0; i < _buttons.size(); ++i) {
         _buttons[i].signal_clicked().connect(
             sigc::bind(sigc::mem_fun(*this, &AlignmentSelector::btn_activated), i));
 
         _container.attach(_buttons[i], i % 3, i / 3, 1, 1);
     }
 
-    this->add(_container);
+    add(_container);
 }
 
-AlignmentSelector::~AlignmentSelector()
+sigc::connection AlignmentSelector::connectAlignmentClicked(sigc::slot<void (int)> slot)
 {
-    // TODO Auto-generated destructor stub
+    return _alignmentClicked.connect(std::move(slot));
 }
 
 void AlignmentSelector::btn_activated(int index)
@@ -64,9 +65,7 @@ void AlignmentSelector::btn_activated(int index)
     _alignmentClicked.emit(index);
 }
 
-} // namespace Widget
-} // namespace UI
-} // namespace Inkscape
+} // namespace Inkscape::UI::Widget
 
 /*
   Local Variables:

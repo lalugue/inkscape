@@ -23,7 +23,7 @@
 #include <glibmm/refptr.h>
 #include <glibmm/ustring.h>
 #include <giomm/liststore.h>
-#include <gtkmm/bin.h>
+#include <gtkmm/box.h>
 #include <gtkmm/cellrendererpixbuf.h>
 #include <gtkmm/treemodel.h>
 #include <sigc++/signal.h>
@@ -54,16 +54,13 @@ namespace Inkscape::UI::Widget {
 /**
  * ComboBox-like class for selecting stroke markers.
  */
-class MarkerComboBox : public Gtk::Bin {
-    using parent_type = Gtk::Bin;
+class MarkerComboBox final : public Gtk::Box {
+    using parent_type = Gtk::Box;
 
 public:
     MarkerComboBox(Glib::ustring id, int loc);
 
     void setDocument(SPDocument *);
-
-    sigc::signal<void ()> changed_signal;
-    sigc::signal<void ()> edit_signal;
 
     void set_current(SPObject *marker);
     std::string get_active_marker_uri();
@@ -71,7 +68,8 @@ public:
     const char* get_id() { return _combo_id.c_str(); };
     int get_loc() { return _loc; };
 
-    sigc::signal<void()> signal_changed() { return _signal_changed; }
+    sigc::connection connect_changed(sigc::slot<void ()> slot);
+    sigc::connection connect_edit   (sigc::slot<void ()> slot);
 
 private:
     struct MarkerItem : Glib::Object {
@@ -90,8 +88,10 @@ private:
 
     SPMarker* get_current() const;
     Glib::ustring _current_marker_id;
-    // SPMarker* _current_marker = nullptr;
-    sigc::signal<void()> _signal_changed;
+
+    sigc::signal<void ()> _signal_changed;
+    sigc::signal<void ()> _signal_edit   ;
+
     Glib::RefPtr<Gtk::Builder> _builder;
     Gtk::FlowBox& _marker_list;
     Gtk::Label& _marker_name;

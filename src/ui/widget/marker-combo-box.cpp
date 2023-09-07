@@ -259,7 +259,7 @@ MarkerComboBox::MarkerComboBox(Glib::ustring id, int l) :
     _offset_y.signal_value_changed().connect([=]() { set_offset(); });
 
     // request to edit marker on canvas; close popup to get it out of the way and call marker edit tool
-    _edit_marker.signal_clicked().connect([=]() { _menu_btn.get_popover()->popdown(); edit_signal(); });
+    _edit_marker.signal_clicked().connect([this]{ _menu_btn.get_popover()->popdown(); _signal_edit(); });
 
     // before showing popover refresh marker attributes
     _menu_btn.get_popover()->signal_show().connect([=](){ update_ui(get_current(), false); }, false);
@@ -800,6 +800,16 @@ void MarkerComboBox::on_style_updated() {
         // theme changed?
         init_combo();
     }
+}
+
+sigc::connection MarkerComboBox::connect_changed(sigc::slot<void ()> slot)
+{
+    return _signal_changed.connect(std::move(slot));
+}
+
+sigc::connection MarkerComboBox::connect_edit(sigc::slot<void ()> slot)
+{
+    return _signal_edit.connect(std::move(slot));
 }
 
 } // namespace Inkscape::UI::Widget

@@ -22,10 +22,11 @@
 #include <iterator>
 #include <numeric>
 #include <vector>
+#include <2geom/transforms.h>
 #include <glibmm/i18n.h>
 #include <gtkmm/grid.h>
 #include <gtkmm/sizegroup.h>
-#include <2geom/transforms.h>
+#include <sigc++/functors/mem_fun.h>
 
 #include "preferences.h"
 #include "inkscape.h"
@@ -558,7 +559,7 @@ GridArrangeTab::GridArrangeTab(ArrangeDialog *parent)
     AlignmentSelector.set_margin_start(16);
     AlignmentSelector.set_halign(Gtk::ALIGN_START);
     AlignmentSelector.setAlignment(HorizAlign, VertAlign);
-    AlignmentSelector.on_selectionChanged().connect(sigc::mem_fun(*this, &GridArrangeTab::Align_changed));
+    AlignmentSelector.connectSelectionChanged(sigc::mem_fun(*this, &GridArrangeTab::Align_changed));
     TileBox.pack_start(AlignLabel, false, false, MARGIN);
     TileBox.pack_start(AlignmentSelector, false, false);
 

@@ -18,6 +18,8 @@
 #include <pangomm/context.h>
 #include <pangomm/fontdescription.h>
 #include <pangomm/layout.h>
+#include <gtkmm/bin.h>
+#include <gtkmm/container.h>
 #include <gtkmm/image.h>
 #include <gtkmm/messagedialog.h>
 #include <gtkmm/revealer.h>
@@ -125,6 +127,24 @@ void resize_widget_children(Gtk::Widget *widget) {
         widget->get_allocated_size(allocation, baseline);
         widget->size_allocate(allocation, baseline);
     }
+}
+
+Gtk::Widget *get_bin_child(Gtk::Widget &widget)
+{
+    auto const bin = dynamic_cast<Gtk::Bin *>(&widget);
+    return bin ? bin->get_child() : nullptr;
+}
+
+std::vector<Gtk::Widget *> get_container_children(Gtk::Widget &widget)
+{
+    auto const container = dynamic_cast<Gtk::Container *>(&widget);
+    if (container) return container->get_children();
+    return {};
+}
+
+Gtk::Widget *get_parent(Gtk::Widget &widget)
+{
+    return static_cast<Gtk::Widget *>(widget.get_parent());
 }
 
 /**

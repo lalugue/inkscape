@@ -5,41 +5,41 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#ifndef ANCHOR_SELECTOR_H_
-#define ANCHOR_SELECTOR_H_
+#ifndef ANCHOR_SELECTOR_H
+#define ANCHOR_SELECTOR_H
 
-#include <gtkmm/bin.h>
+#include <array>
+#include <gtkmm/box.h>
 #include <gtkmm/button.h>
 #include <gtkmm/grid.h>
+#include <sigc++/signal.h>
 
-namespace Inkscape {
-namespace UI {
-namespace Widget {
+namespace Glib {
+class ustring;
+} // namespace Glib
 
-class AlignmentSelector : public Gtk::Bin
+namespace Inkscape::UI::Widget {
+
+class AlignmentSelector final : public Gtk::Box
 {
+public:
+    AlignmentSelector();
+
+    sigc::connection connectAlignmentClicked(sigc::slot<void (int)>);
+
 private:
-    Gtk::Button _buttons[9];
+    std::array<Gtk::Button, 9> _buttons;
     Gtk::Grid   _container;
 
     sigc::signal<void (int)> _alignmentClicked;
 
     void setupButton(const Glib::ustring &icon, Gtk::Button &button);
     void btn_activated(int index);
-
-public:
-
-    sigc::signal<void (int)> &on_alignmentClicked() { return _alignmentClicked; }
-
-    AlignmentSelector();
-    ~AlignmentSelector() override;
 };
 
-} // namespace Widget
-} // namespace UI
-} // namespace Inkscape
+} // namespace Inkscape::UI::Widget
 
-#endif /* ANCHOR_SELECTOR_H_ */
+#endif // ANCHOR_SELECTOR_H
 
 /*
   Local Variables:

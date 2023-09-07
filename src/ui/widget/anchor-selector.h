@@ -8,47 +8,47 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#ifndef ANCHOR_SELECTOR_H_
-#define ANCHOR_SELECTOR_H_
+#ifndef ANCHOR_SELECTOR_H
+#define ANCHOR_SELECTOR_H
 
-#include <gtkmm/bin.h>
+#include <array>
+#include <gtkmm/box.h>
 #include <gtkmm/togglebutton.h>
 #include <gtkmm/grid.h>
+#include <sigc++/signal.h>
 
-namespace Inkscape {
-namespace UI {
-namespace Widget {
+namespace Glib {
+class ustring;
+} // namespace Glib
 
-class AnchorSelector : public Gtk::Bin
+namespace Inkscape::UI::Widget {
+
+class AnchorSelector final : public Gtk::Box
 {
-private:
-	Gtk::ToggleButton  _buttons[9];
-	int                _selection;
-	Gtk::Grid          _container;
-
-	sigc::signal<void ()> _selectionChanged;
-
-	void setupButton(const Glib::ustring &icon, Gtk::ToggleButton &button);
-	void btn_activated(int index);
-
 public:
+    AnchorSelector();
 
-	int getHorizontalAlignment() { return _selection % 3; }
-	int getVerticalAlignment() { return _selection / 3; }
+    int getHorizontalAlignment() const { return _selection % 3; }
+    int getVerticalAlignment  () const { return _selection / 3; }
 
-	sigc::signal<void ()> &on_selectionChanged() { return _selectionChanged; }
+    sigc::connection connectSelectionChanged(sigc::slot<void ()>);
 
-	void setAlignment(int horizontal, int vertical);
+    void setAlignment(int horizontal, int vertical);
 
-	AnchorSelector();
-	~AnchorSelector() override;
+private:
+    std::array<Gtk::ToggleButton, 9> _buttons;
+    int                _selection;
+    Gtk::Grid          _container;
+
+    sigc::signal<void ()> _selectionChanged;
+
+    void setupButton(const Glib::ustring &icon, Gtk::ToggleButton &button);
+    void btn_activated(int index);
 };
 
-} // namespace Widget
-} // namespace UI
-} // namespace Inkscape
+} // namespace Inkscape::UI::Widget
 
-#endif /* ANCHOR_SELECTOR_H_ */
+#endif // ANCHOR_SELECTOR_H
 
 /*
   Local Variables:

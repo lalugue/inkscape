@@ -291,24 +291,24 @@ StrokeStyle::StrokeStyle() :
 
     startMarkerCombo = Gtk::make_managed<MarkerComboBox>("marker-start", SP_MARKER_LOC_START);
     startMarkerCombo->set_tooltip_text(_("Start Markers are drawn on the first node of a path or shape"));
-    startMarkerConn = startMarkerCombo->signal_changed().connect([=]() { markerSelectCB(startMarkerCombo, SP_MARKER_LOC_START); });
-    startMarkerCombo->edit_signal.connect([=] { enterEditMarkerMode(SP_MARKER_LOC_START); });
+    startMarkerConn = startMarkerCombo->connect_changed([=]{ markerSelectCB(startMarkerCombo, SP_MARKER_LOC_START); });
+    startMarkerCombo->connect_edit([=]{ enterEditMarkerMode(SP_MARKER_LOC_START); });
     startMarkerCombo->set_visible(true);
 
     hb->pack_start(*startMarkerCombo, true, true, 0);
 
     midMarkerCombo = Gtk::make_managed<MarkerComboBox>("marker-mid", SP_MARKER_LOC_MID);
     midMarkerCombo->set_tooltip_text(_("Mid Markers are drawn on every node of a path or shape except the first and last nodes"));
-    midMarkerConn = midMarkerCombo->signal_changed().connect([=]() { markerSelectCB(midMarkerCombo, SP_MARKER_LOC_MID); });
-    midMarkerCombo->edit_signal.connect([=] { enterEditMarkerMode(SP_MARKER_LOC_MID); });
+    midMarkerConn = midMarkerCombo->connect_changed([=]{ markerSelectCB(midMarkerCombo, SP_MARKER_LOC_MID); });
+    midMarkerCombo->connect_edit([=]{ enterEditMarkerMode(SP_MARKER_LOC_MID); });
     midMarkerCombo->set_visible(true);
 
     hb->pack_start(*midMarkerCombo, true, true, 0);
 
     endMarkerCombo = Gtk::make_managed<MarkerComboBox>("marker-end", SP_MARKER_LOC_END);
     endMarkerCombo->set_tooltip_text(_("End Markers are drawn on the last node of a path or shape"));
-    endMarkerConn = endMarkerCombo->signal_changed().connect([=]() { markerSelectCB(endMarkerCombo, SP_MARKER_LOC_END); });
-    endMarkerCombo->edit_signal.connect([=] { enterEditMarkerMode(SP_MARKER_LOC_END); });
+    endMarkerConn = endMarkerCombo->connect_changed([=]{ markerSelectCB(endMarkerCombo, SP_MARKER_LOC_END); });
+    endMarkerCombo->connect_edit([=]{ enterEditMarkerMode(SP_MARKER_LOC_END); });
     endMarkerCombo->set_visible(true);
 
     hb->pack_start(*endMarkerCombo, true, true, 0);
