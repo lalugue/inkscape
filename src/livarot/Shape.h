@@ -19,7 +19,6 @@
 #include <2geom/point.h>
 
 #include "livarot/LivarotDefs.h"
-#include "object/object-set.h"   // For BooleanOp
 
 class Path;
 class FloatLigne;
@@ -1013,12 +1012,9 @@ private:
      * Basically, given the winding numbers to the left and right of the current edge, and the orientation of the next edge
      * with this one, we can calculate the winding number of the next edge and then repeat this process.
      *
-     * @param a Useless.
-     * @param b Useless.
-     * @param mod Useless.
      * @param brutal Should the algorithm use winding number seeds left by the sweepline or brutually compute the seeds?
      */
-    void GetWindings(Shape *a, Shape *b = nullptr, BooleanOp mod = bool_op_union, bool brutal = false);
+    void GetWindings(bool brutal = false);
 
     void Validate();
 

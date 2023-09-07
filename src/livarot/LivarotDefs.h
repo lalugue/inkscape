@@ -71,6 +71,17 @@ enum FillRule
   fill_justDont = 3
 };
 
+// boolean operation
+enum BooleanOp
+{
+  bool_op_union,		// A OR B
+  bool_op_inters,		// A AND B
+  bool_op_diff,			// A \ B
+  bool_op_symdiff,              // A XOR B
+  bool_op_cut,                  // coupure (pleines)
+  bool_op_slice                 // coupure (contour)
+};
+
 enum Side {
     LEFT = 0,
     RIGHT = 1

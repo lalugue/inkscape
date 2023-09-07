@@ -11,8 +11,7 @@
 #define PATH_BOOLOP_H
 
 #include <2geom/forward.h>
-#include "livarot/LivarotDefs.h" // FillRule
-#include "object/object-set.h" // BooleanOp
+#include "livarot/LivarotDefs.h" // FillRule, BooleanOp
 
 /// Flatten a pathvector according to the given fill rule.
 Geom::PathVector flattened(Geom::PathVector const &pathv, FillRule fill_rule);

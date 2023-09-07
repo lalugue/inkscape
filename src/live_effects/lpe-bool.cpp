@@ -19,23 +19,25 @@
 #include "2geom/path-sink.h"
 #include "2geom/path.h"
 #include "2geom/svg-path-parser.h"
-#include "display/curve.h"
-#include "helper/geom.h"
+
 #include "inkscape.h"
 #include "selection-chemistry.h"
+#include "snap.h"
+#include "style.h"
+
+#include "display/curve.h"
+#include "helper/geom.h"
 #include "livarot/Path.h"
 #include "livarot/Shape.h"
 #include "livarot/path-description.h"
 #include "live_effects/lpeobject.h"
 #include "object/sp-clippath.h"
 #include "object/sp-defs.h"
+#include "object/sp-root.h"
 #include "object/sp-shape.h"
 #include "object/sp-text.h"
-#include "object/sp-root.h"
 #include "path/path-boolop.h"
 #include "path/path-util.h"
-#include "snap.h"
-#include "style.h"
 #include "svg/svg.h"
 #include "ui/tools/tool-base.h"
 
@@ -715,14 +717,14 @@ void LPEBool::doEffect(SPCurve *curve)
                 path_out = sp_pathvector_boolop(path_a, path_b, to_bool_op(bool_op_ex_diff), fill_a, fill_b, legacytest_livarotonly);
             } else {
                 helperLineSatellites = true;
-                path_out = sp_pathvector_boolop(path_a, path_b, (bool_op) bool_op_diff, fill_a, fill_b, legacytest_livarotonly);
-                auto tmp = sp_pathvector_boolop(path_a, path_b, (bool_op) bool_op_inters, fill_a, fill_b, legacytest_livarotonly);
+                path_out = sp_pathvector_boolop(path_a, path_b, bool_op_diff,   fill_a, fill_b, legacytest_livarotonly);
+                auto tmp = sp_pathvector_boolop(path_a, path_b, bool_op_inters, fill_a, fill_b, legacytest_livarotonly);
                 path_out.insert(path_out.end(),tmp.begin(),tmp.end());
                 /* auto tmp2 = sp_pathvector_boolop(path_a, path_b, (bool_op) bool_op_diff, fill_a, fill_b);
                 path_out.insert(path_out.end(),tmp2.begin(),tmp2.end()); */
             }
         } else {
-            path_out = sp_pathvector_boolop(path_a, path_b, (bool_op) op, fill_a, fill_b, legacytest_livarotonly);
+            path_out = sp_pathvector_boolop(path_a, path_b, (BooleanOp) op, fill_a, fill_b, legacytest_livarotonly);
         }
         curve->set_pathvector(path_out * current_affine.inverse());
     }
@@ -801,7 +803,7 @@ void LPEBool::fractureit(SPObject * operandit, Geom::PathVector unionpv)
         if (auto c = operandit_shape->curve()) {
             auto curve = *c;
             curve.transform(i2anc_affine(operandit_shape, sp_lpe_item->parent));
-            auto intesect = sp_pathvector_boolop(unionpv, curve.get_pathvector(), (bool_op) bool_op_inters, fill_a, fill_b);
+            auto intesect = sp_pathvector_boolop(unionpv, curve.get_pathvector(), bool_op_inters, fill_a, fill_b);
             Inkscape::XML::Node *dest = dupleNode(operandit_shape, "svg:path");
             dest->setAttribute("d", sp_svg_write_path(intesect));
             dest->setAttribute("transform", nullptr);
@@ -814,7 +816,7 @@ void LPEBool::fractureit(SPObject * operandit, Geom::PathVector unionpv)
                 division_other->reorder(divisionitem, divisionit);
                 division_other_id = Glib::ustring(dest->attribute("id"));
             }
-            auto operandit_pathv = sp_pathvector_boolop(unionpv, curve.get_pathvector(), (bool_op) bool_op_diff, fill_a, fill_b);
+            auto operandit_pathv = sp_pathvector_boolop(unionpv, curve.get_pathvector(), bool_op_diff, fill_a, fill_b);
             Inkscape::XML::Node *dest2 = dupleNode(operandit_shape, "svg:path");
             dest2->setAttribute("transform", nullptr);
             dest2->setAttribute("d", sp_svg_write_path(operandit_pathv));
@@ -863,7 +865,7 @@ void LPEBool::divisionit(SPObject * operand_a, SPObject * operand_b, Geom::PathV
         if (auto c = operand_b_shape->curveForEdit()) {
             auto curve = *c;
             curve.transform(i2anc_affine(operand_b_shape, sp_lpe_item->parent));
-            auto intesect = sp_pathvector_boolop(unionpv, curve.get_pathvector(), (bool_op) bool_op_inters, fill_a, fill_b);
+            auto intesect = sp_pathvector_boolop(unionpv, curve.get_pathvector(), bool_op_inters, fill_a, fill_b);
             Inkscape::XML::Node *dest = dupleNode(operand_b_shape, "svg:path");
             dest->setAttribute("d", sp_svg_write_path(intesect));
             dest->setAttribute("transform", nullptr);

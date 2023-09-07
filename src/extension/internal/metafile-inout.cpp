@@ -25,6 +25,7 @@
 #include "inkscape.h"
 #include "preferences.h"
 
+#include "livarot/LivarotDefs.h"
 #include "object/sp-root.h"
 #include "object/sp-namedview.h"
 #include "svg/stringstream.h"

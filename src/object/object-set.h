@@ -38,6 +38,7 @@
 #include "sp-item-group.h"
 #include "desktop.h"
 #include "document.h"
+#include "path/path-boolop.h" // Access to bool_op enum (via LivarotDefs).
 
 enum BoolOpErrors {
     DONE,
@@ -48,18 +49,6 @@ enum BoolOpErrors {
     ERR_NO_PATHS,
     ERR_Z_ORDER
 };
-
-// boolean operation
-enum bool_op
-{
-  bool_op_union,		// A OR B
-  bool_op_inters,		// A AND B
-  bool_op_diff,			// A \ B
-  bool_op_symdiff,  // A XOR B
-  bool_op_cut,      // coupure (pleines)
-  bool_op_slice     // coupure (contour)
-};
-typedef enum bool_op BooleanOp;
 
 /**
  * SiblingState enums are used to associate the current state
@@ -557,7 +546,8 @@ protected:
     std::unordered_map<SPObject*, sigc::connection> _releaseConnections;
 
 private:
-    BoolOpErrors pathBoolOp(bool_op bop, const bool skip_undo, const bool checked = false,
+    // Member function to access desktop and document.
+    BoolOpErrors pathBoolOp(BooleanOp bop, const bool skip_undo, const bool checked = false,
                             const Glib::ustring icon_name = nullptr, const Glib::ustring description = "",
                             bool silent = false);
     void _disconnect(SPObject* object);

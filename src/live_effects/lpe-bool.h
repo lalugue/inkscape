@@ -54,11 +54,11 @@ public:
         bool_op_ex_count
     };
 
-    inline friend bool_op to_bool_op(bool_op_ex val)
+    inline friend BooleanOp to_bool_op(bool_op_ex val)
     {
         //assert(val <= bool_op_ex_slice);
         assert(val <= bool_op_ex_cut);
-        return (bool_op) val;
+        return (BooleanOp) val;
     }
 
 private:

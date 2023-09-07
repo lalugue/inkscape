@@ -20,6 +20,7 @@
 
 #include "path-boolop.h"
 #include "path-util.h"
+#include "object/object-set.h"  // This file defines some member functions of ObjectSet.
 
 #include "message-stack.h"
 #include "path-chemistry.h"     // copy_object_properties()
@@ -44,7 +45,6 @@ using Inkscape::DocumentUndo;
 /*
  * ObjectSet functions
  */
-
 bool Inkscape::ObjectSet::pathUnion(bool skip_undo, bool silent)
 {
     return pathBoolOp(bool_op_union, skip_undo, false, INKSCAPE_ICON("path-union"), _("Union"), silent) == DONE;
@@ -365,7 +365,7 @@ static void boolop_display_error_message(SPDesktop *desktop, Glib::ustring const
 
 // boolean operations on the desktop
 // take the source paths from the file, do the operation, delete the originals and add the results
-BoolOpErrors Inkscape::ObjectSet::pathBoolOp(bool_op bop, const bool skip_undo, const bool checked,
+BoolOpErrors Inkscape::ObjectSet::pathBoolOp(BooleanOp bop, const bool skip_undo, const bool checked,
                                              const Glib::ustring icon_name, const Glib::ustring description,
                                              bool const silent)
 {

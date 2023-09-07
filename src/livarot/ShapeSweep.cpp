@@ -123,7 +123,7 @@ Shape::Reoriente (Shape * a)
   SortPointsRounded ();
 
   _need_edges_sorting = true;
-  GetWindings (this, nullptr, bool_op_union, true);
+  GetWindings (true);
 
 //      Plot(341,56,8,400,400,true,true,false,true);
   for (int i = 0; i < numberOfEdges(); i++)
@@ -748,7 +748,7 @@ Shape::ConvertToShape (Shape * a, FillRule directed, bool invert)
   if ( directed == fill_justDont ) {
     SortEdges(); // sorting edges
   } else {
-    GetWindings (a); // getting winding numbers of the edges
+    GetWindings (); // getting winding numbers of the edges
   }
   //  Plot (98.0, 112.0, 8.0, 400.0, 400.0, true, true, true, true);
   //   if ( doDebug ) {
@@ -1582,7 +1582,7 @@ Shape::Booleen (Shape * a, Shape * b, BooleanOp mod,int cutPathID)
   _need_edges_sorting = true;
   if ( mod == bool_op_slice ) {
   } else {
-    GetWindings (a, b, mod, false);
+    GetWindings (false);
   }
 //      Plot(190,70,6,400,400,true,true,true,true);
 
@@ -2523,7 +2523,7 @@ Shape::AssembleAretes (FillRule directed)
     }
   }
 void
-Shape::GetWindings (Shape * /*a*/, Shape * /*b*/, BooleanOp /*mod*/, bool brutal)
+Shape::GetWindings (bool brutal)
 {
   // preparation du parcours
   for (int i = 0; i < numberOfEdges(); i++)

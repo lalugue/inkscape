@@ -755,7 +755,7 @@ void Emf::add_clips(PEMF_CALLBACK_DATA d, const char *clippath, unsigned int log
         unsigned int real_idx = d->dc[d->level].clip_id - 1;
         Geom::PathVector old_vect = sp_svg_read_pathv(d->clips.strings[real_idx]);
         Geom::PathVector new_vect = sp_svg_read_pathv(clippath);
-        combined_vect = sp_pathvector_boolop(new_vect, old_vect, (bool_op) op , (FillRule) fill_oddEven, (FillRule) fill_oddEven);
+        combined_vect = sp_pathvector_boolop(new_vect, old_vect, (BooleanOp) op , (FillRule) fill_oddEven, (FillRule) fill_oddEven);
         combined = sp_svg_write_path(combined_vect);
     }
     else {
