@@ -138,7 +138,6 @@ Geom::Point KnotHolderEntity::snap_knot_position_constrained(Geom::Point const &
 void LPEKnotHolderEntity::knot_ungrabbed(Geom::Point const &p, Geom::Point const &origin, unsigned state)
 {
     if (_effect) {
-        _effect->refresh_widgets = true;
         _effect->makeUndoDone(_("Move handle"));
     }
 }

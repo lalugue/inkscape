@@ -219,7 +219,6 @@ void
 PointParamKnotHolderEntity::knot_ungrabbed(Geom::Point const &p, Geom::Point const &origin,
                                            unsigned const state)
 {
-    pparam->param_effect->refresh_widgets = true;
     pparam->param_effect->makeUndoDone(_("Move handle"));
 }
 

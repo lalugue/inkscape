@@ -1576,8 +1576,7 @@ Effect::makeUndoDone(Glib::ustring message) {
     if (lpeitems.size() == 1) {
         refresh_widgets = true;
         sp_lpe_item = lpeitems[0];
-        writeParamsToSVG();
-        sp_lpe_item_update_patheffect(sp_lpe_item, true, true);
+        writeParamsToSVG(); // if the value change the LPEs become updated
         DocumentUndo::done(getSPDoc(), message.c_str(), INKSCAPE_ICON(LPETypeConverter.get_icon(effectType()).c_str()));
     }
     setReady();

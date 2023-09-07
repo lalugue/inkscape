@@ -192,14 +192,12 @@ LPEMirrorSymmetry::newWidget()
 void
 LPEMirrorSymmetry::centerVert(){
     center_vert = true;
-    refresh_widgets = true;
     makeUndoDone(_("Center Vertical"));
 }
 
 void
 LPEMirrorSymmetry::centerHoriz(){
     center_horiz = true;
-    refresh_widgets = true;
     makeUndoDone(_("Center Horizontal"));
 }
 
