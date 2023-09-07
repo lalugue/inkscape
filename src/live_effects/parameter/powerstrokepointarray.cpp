@@ -300,7 +300,6 @@ PowerStrokePointArrayParamKnotHolderEntity::knot_ungrabbed(Geom::Point const &p,
         _pparam->current_path = Glib::ustring::npos;
     }
     dynamic_cast<LPEPowerStroke *>(_pparam->param_effect)->knotdragging = false;
-    _pparam->param_effect->refresh_widgets = true;
     _pparam->param_effect->makeUndoDone(_("Move handle"));
 }
 

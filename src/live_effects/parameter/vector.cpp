@@ -180,7 +180,6 @@ public:
     };
     void knot_ungrabbed(Geom::Point const &p, Geom::Point const &origin, guint state) override
     {
-        param->param_effect->refresh_widgets = true;
         param->param_effect->makeUndoDone(_("Move handle"));
     };
     void knot_click(guint /*state*/) override{
@@ -208,7 +207,6 @@ public:
     };
     void knot_ungrabbed(Geom::Point const &p, Geom::Point const &origin, guint state) override
     {
-        param->param_effect->refresh_widgets = true;
         param->param_effect->makeUndoDone(_("Move handle"));
     }
     void knot_click(guint /*state*/) override{
