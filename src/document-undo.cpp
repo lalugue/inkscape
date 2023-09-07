@@ -198,8 +198,11 @@ void Inkscape::DocumentUndo::cancel(SPDocument *doc)
     g_assert (doc != nullptr);
     g_assert (doc->sensitive);
     done(doc, "undozone", "");
-    undo(doc);
-    clearRedo(doc);
+    // ensure tere is something to undo (extension crach can do nothing)
+    if (doc->undo.back()->description == "undozone") { 
+        undo(doc);
+        clearRedo(doc);
+    }
 }
 
 // Member function for friend access to SPDocument privates.
