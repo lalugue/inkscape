@@ -149,7 +149,6 @@ void
 LPEKnotHolderEntity::knot_ungrabbed(Geom::Point const &p, Geom::Point const &origin, guint state)
 {
     if (_effect) {
-        _effect->refresh_widgets = true;
         _effect->makeUndoDone(_("Move handle"));
     }
 }

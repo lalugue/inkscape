@@ -359,7 +359,6 @@ FilletChamferKnotHolderEntity::knot_ungrabbed(Geom::Point const &p, Geom::Point 
     }
     Inkscape::LivePathEffect::LPEFilletChamfer *filletchamfer = dynamic_cast<Inkscape::LivePathEffect::LPEFilletChamfer *>(_pparam->param_effect);
     if (filletchamfer) {
-        filletchamfer->refresh_widgets = true;
         filletchamfer->helperpath = false;
         filletchamfer->makeUndoDone(_("Move handle"));
     }
