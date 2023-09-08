@@ -73,6 +73,7 @@ Recommends:
  python3-numpy,
  python3-lxml,
  python3-scour,
+ python3-cachecontrol,
  python3-cssselect,
  python3-packaging,
  python3-gi,
