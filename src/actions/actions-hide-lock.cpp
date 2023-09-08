@@ -19,7 +19,9 @@
 #include <glibmm/i18n.h>
 
 #include "inkscape-application.h"
+#include "document.h"
 #include "document-undo.h"
+#include "selection.h"
 
 #include "object/sp-root.h"
 

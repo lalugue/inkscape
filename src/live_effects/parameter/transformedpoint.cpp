@@ -10,7 +10,9 @@
 #include <glibmm/i18n.h>
 
 #include "desktop.h"
+
 #include "live_effects/effect.h"
+#include "object/sp-lpe-item.h"
 #include "svg/stringstream.h"
 #include "svg/svg.h"
 #include "ui/icon-names.h"

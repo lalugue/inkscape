@@ -53,12 +53,13 @@
 #include <gtkmm/notebook.h>
 #include <gtkmm/scale.h>
 
+#include "document.h"
 #include "document-undo.h"
 #include "extension/input.h"
 #include "extension/system.h"
 #include "inkscape.h"
-#include "object/sp-root.h"
 #include "pdf-parser.h"
+#include "object/sp-root.h"
 #include "ui/builder-utils.h"
 #include "ui/dialog-events.h"
 #include "ui/dialog-run.h"

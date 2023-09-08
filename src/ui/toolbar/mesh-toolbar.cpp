@@ -29,18 +29,21 @@
 
 #include "desktop-style.h"
 #include "desktop.h"
+#include "document.h"
 #include "document-undo.h"
 #include "gradient-chemistry.h"
 #include "gradient-drag.h"
 #include "inkscape.h"
+#include "selection.h"
+#include "style.h"
 
 #include "object/sp-defs.h"
 #include "object/sp-mesh-gradient.h"
 #include "object/sp-stop.h"
-#include "style.h"
 
 #include "svg/css-ostringstream.h"
 
+#include "ui/dialog-run.h"
 #include "ui/icon-names.h"
 #include "ui/simple-pref-pusher.h"
 #include "ui/tools/gradient-tool.h"
@@ -50,7 +53,6 @@
 #include "ui/widget/combo-tool-item.h"
 #include "ui/widget/gradient-image.h"
 #include "ui/widget/spin-button-tool-item.h"
-#include "ui/dialog-run.h"
 
 using Inkscape::DocumentUndo;
 using Inkscape::UI::Tools::MeshTool;

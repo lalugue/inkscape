@@ -14,12 +14,14 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include "selection.h"
+#include <map>
+#include <string>
+#include <vector>
+
+#include <gdk/gdk.h>  // GDK_MOD1_MASK
 #include <glib-object.h>
 #include <glib.h>
-#include <map>
 #include <sigc++/signal.h>
-#include <vector>
 
 class SPDesktop;
 class SPDocument;
@@ -28,6 +30,8 @@ struct SPColor;
 namespace Inkscape {
 
 class Application;
+class Selection;
+
 namespace UI {
 class ThemeContext;
 namespace Tools {

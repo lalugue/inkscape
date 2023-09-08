@@ -14,10 +14,12 @@
 
 #include <glibmm/i18n.h>
 
+#include "attribute-rel-util.h"
+#include "desktop.h"
+#include "document.h"
 #include "document-undo.h"
 #include "message-stack.h"
-
-#include "attribute-rel-util.h"
+#include "preferences.h"
 
 #include "object/object-set.h"
 #include "path/path-outline.h"

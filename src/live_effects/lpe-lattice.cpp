@@ -15,14 +15,16 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include "live_effects/lpe-lattice.h"
+#include "lpe-lattice.h"
 
-#include "display/curve.h"
+#include <glibmm/i18n.h>
 
 #include <2geom/sbasis-2d.h>
 #include <2geom/bezier-to-sbasis.h>
-// TODO due to internal breakage in glibmm headers, this must be last:
-#include <glibmm/i18n.h>
+
+#include "display/curve.h"
+#include "object/sp-lpe-item.h"
+
 using namespace Geom;
 
 namespace Inkscape {

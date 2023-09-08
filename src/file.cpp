@@ -48,6 +48,7 @@
 #include "page-manager.h"
 #include "path-prefix.h"
 #include "print.h"
+#include "selection.h"
 #include "rdf.h"
 
 #include "extension/db.h"

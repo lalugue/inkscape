@@ -37,11 +37,12 @@
 #include "desktop.h"
 #include "document-undo.h"
 #include "inkscape.h"
+#include "page-manager.h"
+#include "selection.h"
 #include "selection-chemistry.h"
 
+#include "object/sp-lpe-item.h"
 #include "object/sp-namedview.h"
-
-#include "page-manager.h"
 
 #include "ui/icon-names.h"
 #include "ui/simple-pref-pusher.h"

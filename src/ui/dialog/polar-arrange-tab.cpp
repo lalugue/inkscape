@@ -8,18 +8,21 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include <2geom/transforms.h>
+#include "polar-arrange-tab.h"
+
 #include <glibmm/i18n.h>
 #include <gtkmm/messagedialog.h>
+
+#include <2geom/transforms.h>
 
 #include "desktop.h"
 #include "document-undo.h"
 #include "document.h"
 #include "inkscape.h"
 #include "preferences.h"
+#include "selection.h"
 #include "object/sp-ellipse.h"
 #include "object/sp-item-transform.h"
-#include "ui/dialog/polar-arrange-tab.h"
 #include "ui/dialog/tile.h"
 #include "ui/pack.h"
 #include "ui/icon-names.h"

@@ -27,6 +27,11 @@
 #include <sigc++/functors/mem_fun.h>
 
 #include "desktop.h"
+#include "document.h"
+#include "inkscape.h"
+#include "page-manager.h"
+#include "selection.h"
+
 #include "display/cairo-utils.h"
 #include "display/drawing-context.h"
 #include "display/drawing.h"
@@ -35,7 +40,6 @@
 #include "inkscape.h"
 #include "object/sp-namedview.h"
 #include "object/sp-root.h"
-#include "page-manager.h"
 #include "ui/pack.h"
 #include "ui/widget/frame.h"
 

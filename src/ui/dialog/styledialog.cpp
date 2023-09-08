@@ -21,6 +21,7 @@
 #include <regex>
 #include <string>
 #include <utility>
+
 #include <glibmm/i18n.h>
 #include <glibmm/regex.h>
 #include <gdk/gdkkeysyms.h>
@@ -40,12 +41,15 @@
 
 #include "attribute-rel-svg.h"
 #include "attributes.h"
+#include "document.h"
 #include "document-undo.h"
 #include "inkscape.h"
-#include "io/resource.h"
 #include "selection.h"
 #include "style.h"
 #include "style-internal.h"
+
+#include "io/resource.h"
+#include "object/sp-object.h"
 #include "svg/svg-color.h"
 #include "ui/builder-utils.h"
 #include "ui/controller.h"

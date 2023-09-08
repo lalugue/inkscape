@@ -14,14 +14,14 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include <cairo/cairo.h>
-
 #include "canvas-item-rect.h"
 
-#include "display/cairo-utils.h"
+#include <cairo/cairo.h>
+
 #include "color.h"    // SP_RGBA_x_F
+#include "desktop.h"
+#include "display/cairo-utils.h"
 #include "helper/geom.h"
-#include "inkscape.h"
 #include "ui/util.h"
 #include "ui/widget/canvas.h"
 

@@ -8,29 +8,31 @@
  *
  */
 
+#include "actions-svg-processing.h"
+
 #include <iostream>
 
 #include <giomm.h>
 #include <glibmm/i18n.h>
 
-#include "actions-svg-processing.h"
 #include "actions-helper.h"
 
-#include "xml/attribute-record.h"
-#include "xml/node.h"
 
-#include "inkscape-application.h"
 #include "document.h"
+#include "inkscape-application.h"
+#include "style.h"
+
+#include "object/object-set.h"
 #include "object/sp-defs.h"
 #include "object/sp-image.h"
 #include "object/sp-root.h"
 #include "object/sp-text.h"
-
-#include "style.h"
 #include "path-chemistry.h"
 #include "path/path-outline.h"
 #include "svg/svg-box.h"
 #include "svg/svg.h"
+#include "xml/attribute-record.h"
+#include "xml/node.h"
 
 /*
  * Removes all sodipodi and inkscape elements and attributes from an xml tree.

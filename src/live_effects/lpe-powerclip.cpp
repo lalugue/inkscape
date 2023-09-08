@@ -2,7 +2,17 @@
 /*
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
-#include "live_effects/lpe-powerclip.h"
+
+#include "lpe-powerclip.h"
+
+#include <glibmm/i18n.h>
+
+#include <2geom/intersection-graph.h>
+#include <2geom/path-intersection.h>
+
+#include "selection.h"
+#include "style.h"
+
 #include "display/curve.h"
 #include "live_effects/lpeobject-reference.h"
 #include "live_effects/lpeobject.h"
@@ -13,13 +23,7 @@
 #include "object/sp-path.h"
 #include "object/sp-shape.h"
 #include "object/sp-use.h"
-#include "style.h"
 #include "svg/svg.h"
-
-#include <2geom/intersection-graph.h>
-#include <2geom/path-intersection.h>
-// TODO due to internal breakage in glibmm headers, this must be last:
-#include <glibmm/i18n.h>
 
 namespace Inkscape {
 namespace LivePathEffect {

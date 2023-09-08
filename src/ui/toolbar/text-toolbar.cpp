@@ -42,6 +42,8 @@
 #include "document-undo.h"
 #include "document.h"
 #include "inkscape.h"
+#include "selection.h"
+
 #include "selection-chemistry.h"
 #include "libnrtype/font-lister.h"
 #include "object/sp-flowdiv.h"

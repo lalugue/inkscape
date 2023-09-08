@@ -17,6 +17,7 @@
 #include <map>
 #include <string>
 #include <vector>
+
 #include <glibmm/refptr.h>
 
 #include "helper/auto-connection.h"
@@ -29,6 +30,7 @@ class Builder;
 class Notebook;
 } // namespace Gtk
 
+class SPObject;
 class SPPage;
 
 namespace Inkscape {

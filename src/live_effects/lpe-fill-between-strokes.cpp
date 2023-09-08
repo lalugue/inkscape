@@ -4,14 +4,14 @@
  *
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
-#include "live_effects/lpe-fill-between-strokes.h"
+#include "lpe-fill-between-strokes.h"
 
-#include "display/curve.h"
-#include "svg/svg.h"
-
-#include "object/sp-root.h"
-// TODO due to internal breakage in glibmm headers, this must be last:
 #include <glibmm/i18n.h>
+
+#include "selection.h"
+#include "display/curve.h"
+#include "object/sp-root.h"
+#include "svg/svg.h"
 
 namespace Inkscape {
 namespace LivePathEffect {

@@ -19,12 +19,19 @@
 
 #include "spellcheck.h"
 
+#ifdef _WIN32
+#include <windows.h>
+#endif
+
+#include <glibmm/i18n.h>
+
 #include "desktop.h"
 #include "document-undo.h"
 #include "document.h"
 #include "inkscape.h"
 #include "message-stack.h"
 #include "layer-manager.h"
+#include "selection.h"
 #include "selection-chemistry.h"
 #include "text-editing.h"
 #include "display/control/canvas-item-rect.h"
@@ -41,11 +48,6 @@
 #include "ui/pack.h"
 #include "ui/tools/text-tool.h"
 
-#include <glibmm/i18n.h>
-
-#ifdef _WIN32
-#include <windows.h>
-#endif
 
 namespace Inkscape {
 namespace UI {

@@ -21,7 +21,18 @@
 #include "persp3d.h"
 #include "preferences.h"
 
+#include "desktop.h"
+#include "document.h"
+
 namespace Inkscape {
+
+ObjectSet::ObjectSet(SPDesktop *desktop)
+    : _desktop(desktop)
+{
+    if (desktop) {
+        _document = desktop->getDocument();
+    }
+}
 
 bool ObjectSet::add(SPObject* object, bool nosignal) {
     g_return_val_if_fail(object != nullptr, false);

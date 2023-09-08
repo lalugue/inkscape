@@ -19,6 +19,7 @@
 #include <gtkmm/scrolledwindow.h>
 #include <gtkmm/entry.h>
 
+#include "desktop.h"
 #include "document-undo.h"
 #include "inkscape.h"
 #include "preferences.h"

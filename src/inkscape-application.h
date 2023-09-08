@@ -18,8 +18,6 @@
 #include <glibmm/ustring.h>
 #include <gtkmm/application.h>
 
-#include "document.h"
-#include "selection.h"
 #include "actions/actions-effect-data.h"
 #include "actions/actions-extra-data.h"
 #include "actions/actions-hint-data.h"
@@ -35,6 +33,10 @@ typedef std::vector<std::pair<std::string, Glib::VariantBase> > action_vector_t;
 class InkscapeWindow;
 class SPDocument;
 class SPDesktop;
+
+namespace Inkscape {
+class Selection;
+} // namespace Inkscape
 
 class InkscapeApplication final
 {

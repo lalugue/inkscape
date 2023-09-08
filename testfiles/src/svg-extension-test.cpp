@@ -11,16 +11,17 @@
 
 #include <gtest/gtest.h>
 
-#include <src/extension/db.h>
-#include <src/extension/input.h>
-#include <src/extension/internal/svg.h>
-#include <src/inkscape.h>
-#include <src/object/sp-text.h>
-#include <src/object/sp-tspan.h>
-
-#include <src/actions/actions-svg-processing.h>
-
 #include <glib/gstdio.h>
+
+#include "document.h"
+#include "inkscape.h"
+
+#include "actions/actions-svg-processing.h"
+#include "extension/db.h"
+#include "extension/input.h"
+#include "extension/internal/svg.h"
+#include "object/sp-text.h"
+#include "object/sp-tspan.h"
 
 using namespace Inkscape;
 using namespace Inkscape::Extension;

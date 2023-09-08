@@ -17,16 +17,18 @@
 #include <gtkmm.h>  // OK, we lied. We pop-up an message dialog if external editor not found and if we have a GUI.
 #include <glibmm/i18n.h>
 
+#include "desktop.h"
+#include "document.h"
 #include "inkscape-application.h"
 #include "inkscape-window.h"
 #include "message-stack.h"
 #include "preferences.h"
-#include "ui/dialog-run.h"
-
 #include "selection.h"            // Selection
+
 #include "object/sp-image.h"
 #include "object/sp-clippath.h"
 #include "object/sp-rect.h"
+#include "ui/dialog-run.h"
 #include "ui/tools/select-tool.h"
 #include "util/format_size.h"
 #include "xml/href-attribute-helper.h"

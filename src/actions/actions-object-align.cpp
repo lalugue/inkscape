@@ -29,6 +29,7 @@
 #include "filter-chemistry.h"     // LPE bool
 #include "inkscape-application.h"
 #include "inkscape.h"             // Inkscape::Application - preferences
+#include "selection.h"
 #include "text-editing.h"
 
 #include "object/sp-text.h"

@@ -11,6 +11,8 @@
 # include "config.h"  // only include where actually required!
 #endif
 
+#include "color-icc-selector.h"
+
 #include <set>
 #include <utility>
 
@@ -20,6 +22,7 @@
 #include <glibmm/i18n.h>
 
 #include "colorspace.h"
+#include "document.h"
 #include "inkscape.h"
 #include "profile-manager.h"
 
@@ -27,7 +30,6 @@
 
 #include "ui/dialog-events.h"
 #include "ui/util.h"
-#include "ui/widget/color-icc-selector.h"
 #include "ui/widget/color-scales.h"
 #include "ui/widget/color-slider.h"
 #include "ui/widget/scrollprotected.h"

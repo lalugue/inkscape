@@ -20,17 +20,14 @@
 #include <string>
 
 #include "attributes.h"
-#include "box3d.h"
-#include "display/curve.h"
-#include "display/drawing-group.h"
 #include "document-undo.h"
 #include "document.h"
-#include "live_effects/effect.h"
-#include "live_effects/lpe-clone-original.h"
-#include "live_effects/lpeobject-reference.h"
-#include "live_effects/lpeobject.h"
 #include "persp3d.h"
 #include "selection-chemistry.h"
+#include "style.h"
+
+#include "box3d.h"
+#include "object-set.h"
 #include "sp-clippath.h"
 #include "sp-defs.h"
 #include "sp-desc.h"
@@ -45,7 +42,13 @@
 #include "sp-textpath.h"
 #include "sp-title.h"
 #include "sp-use.h"
-#include "style.h"
+
+#include "display/curve.h"
+#include "display/drawing-group.h"
+#include "live_effects/effect.h"
+#include "live_effects/lpe-clone-original.h"
+#include "live_effects/lpeobject-reference.h"
+#include "live_effects/lpeobject.h"
 #include "svg/css-ostringstream.h"
 #include "svg/svg.h"
 #include "xml/repr.h"
@@ -1084,6 +1087,7 @@ sp_group_perform_patheffect(SPGroup *group, SPGroup *top_group, Inkscape::LivePa
     }
 }
 
+// This is really a UI feature and doesn't belong here.
 
 // A list of default highlight colours to use when one isn't set.
 std::vector<guint32> default_highlights;

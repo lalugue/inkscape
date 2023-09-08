@@ -15,10 +15,10 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-// This has to be included prior to anything that includes setjmp.h, it croaks otherwise
 #include "export.h"
 
 #include <set>
+
 #include <glibmm/convert.h>
 #include <glibmm/i18n.h>
 #include <glibmm/fileutils.h>
@@ -31,27 +31,28 @@
 #include "desktop.h"
 #include "document-undo.h"
 #include "document.h"
+#include "file.h"
+#include "inkscape-window.h"
+#include "inkscape.h"
+#include "preferences.h"
+#include "message-stack.h"
+#include "selection-chemistry.h"
+
 #include "color/color-conv.h"
 #include "extension/db.h"
 #include "extension/output.h"
-#include "file.h"
 #include "helper/png-write.h"
-#include "inkscape-window.h"
-#include "inkscape.h"
 #include "io/resource.h"
 #include "io/sys.h"
-#include "message-stack.h"
 #include "object/object-set.h"
 #include "object/sp-namedview.h"
-#include "object/sp-root.h"
 #include "object/sp-page.h"
+#include "object/sp-root.h"
 #include "object/weakptr.h"
-#include "preferences.h"
-#include "selection-chemistry.h"
 #include "ui/dialog-events.h"
-#include "ui/dialog/export-single.h"
-#include "ui/dialog/export-batch.h"
 #include "ui/dialog/dialog-notebook.h"
+#include "ui/dialog/export-batch.h"
+#include "ui/dialog/export-single.h"
 #include "ui/dialog/filedialog.h"
 #include "ui/interface.h"
 #include "ui/widget/color-picker.h"

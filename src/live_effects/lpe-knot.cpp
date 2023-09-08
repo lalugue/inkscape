@@ -13,14 +13,14 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#include "lpe-knot.h"
+
 #include <gdk/gdk.h>
 #include <optional>
 
 #include <2geom/sbasis-to-bezier.h>
 #include <2geom/bezier-to-sbasis.h>
 #include <2geom/basic-intersection.h>
-
-#include "lpe-knot.h"
 
 // for change crossing undo
 #include "document.h"
@@ -32,6 +32,7 @@
 
 #include "helper/geom.h"
 
+#include "object/sp-item-group.h"
 #include "object/sp-path.h"
 #include "object/sp-shape.h"
 

@@ -8,6 +8,8 @@
  *
  */
 
+#include "actions-canvas-mode.h"
+
 #include <iostream>
 
 #include <giomm.h>  // Not <gtkmm.h>! To eventually allow a headless version!
@@ -15,9 +17,9 @@
 
 #include "ui/interface.h"
 
-#include "actions-canvas-mode.h"
 #include "actions-helper.h"
 
+#include "desktop.h"
 #include "inkscape-application.h"
 #include "inkscape-window.h"
 

@@ -21,6 +21,7 @@
 #include "2geom/svg-path-parser.h"
 
 #include "inkscape.h"
+#include "selection.h"
 #include "selection-chemistry.h"
 #include "snap.h"
 #include "style.h"

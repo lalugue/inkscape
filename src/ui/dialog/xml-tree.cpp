@@ -21,6 +21,7 @@
 #include "xml-tree.h"
 
 #include <memory>
+
 #include <glibmm/i18n.h>
 #include <glibmm/ustring.h>
 #include <gtkmm/button.h>
@@ -39,9 +40,11 @@
 #include "layer-manager.h"
 #include "message-context.h"
 #include "message-stack.h"
+#include "selection.h"
+#include "preferences.h"
+
 #include "object/sp-root.h"
 #include "object/sp-string.h"
-#include "preferences.h"
 #include "ui/builder-utils.h"
 #include "ui/dialog-events.h"
 #include "ui/icon-loader.h"

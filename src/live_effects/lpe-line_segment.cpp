@@ -12,10 +12,12 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include "live_effects/lpe-line_segment.h"
-#include "ui/tools/lpe-tool.h"
-// TODO due to internal breakage in glibmm headers, this must be last:
+#include "lpe-line_segment.h"
+
 #include <glibmm/i18n.h>
+
+#include "object/sp-lpe-item.h"
+#include "ui/tools/lpe-tool.h"
 
 namespace Inkscape {
 namespace LivePathEffect {

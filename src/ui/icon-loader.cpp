@@ -11,9 +11,6 @@
  */
 
 #include "icon-loader.h"
-#include "inkscape.h"
-#include "io/resource.h"
-#include "svg/svg-color.h"
 
 #include <gdkmm/display.h>
 #include <gdkmm/screen.h>
@@ -21,6 +18,12 @@
 #include <gtkmm/icontheme.h>
 #include <gtkmm/image.h>
 #include <gtkmm/window.h>
+
+#include "desktop.h"
+#include "inkscape.h"
+#include "io/resource.h"
+#include "svg/svg-color.h"
+
 
 Gtk::Image *sp_get_icon_image(Glib::ustring const &icon_name, int size)
 {

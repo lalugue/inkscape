@@ -7,14 +7,15 @@
  * Release under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include "live_effects/lpeobject-reference.h"
-#include "live_effects/effect.h"
+#include "lpeobject-reference.h"
 
 #include <cstring>
 
 #include "bad-uri-exception.h"
+#include "live_effects/effect.h"
 #include "live_effects/lpeobject.h"
 #include "object/uri.h"
+#include "object/sp-lpe-item.h"  // sp_lpe_item_update_patheffect
 
 namespace Inkscape {
 

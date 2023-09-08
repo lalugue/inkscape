@@ -38,6 +38,8 @@
 #include "inkscape-window.h"
 #include "message-stack.h"
 #include "path-prefix.h"
+#include "selection.h"
+
 #include "color/cms-system.h"
 #include "debug/simple-event.h"
 #include "debug/event-tracker.h"

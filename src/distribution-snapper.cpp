@@ -10,16 +10,23 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#include "distribution-snapper.h"
+
+#include <memory>
+
 #include <2geom/circle.h>
 #include <2geom/line.h>
 #include <2geom/path-intersection.h>
 #include <2geom/path-sink.h>
-#include <memory>
 
 #include "desktop.h"
 #include "display/curve.h"
 #include "document.h"
 #include "inkscape.h"
+#include "preferences.h"
+#include "selection.h"
+#include "style.h"
+
 #include "live_effects/effect-enum.h"
 #include "object/sp-clippath.h"
 #include "object/sp-flowtext.h"
@@ -33,8 +40,6 @@
 #include "object/sp-text.h"
 #include "object/sp-use.h"
 #include "path/path-util.h" // curve_for_item
-#include "preferences.h"
-#include "style.h"
 #include "svg/svg.h"
 
 #define DISTRIBUTION_SNAPPING_EPSILON 0.5e-4f

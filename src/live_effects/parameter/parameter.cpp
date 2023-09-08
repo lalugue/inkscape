@@ -7,13 +7,17 @@
 
 #include "parameter.h"
 
-#include <glibmm/i18n.h>
 #include <utility>
+
+#include <glibmm/i18n.h>
+
+#include "selection.h"
 
 #include "display/control/canvas-item-bpath.h"
 #include "display/curve.h"
 #include "live_effects/effect.h"
 #include "live_effects/effect-enum.h"
+#include "object/sp-lpe-item.h"
 #include "svg/stringstream.h"
 #include "svg/svg.h"
 #include "ui/icon-names.h"

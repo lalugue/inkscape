@@ -19,29 +19,31 @@
 
 #define noSP_FS_VERBOSE
 
+#include "fill-style.h"
+
 #include <glibmm/i18n.h>
 
 #include "desktop-style.h"
 #include "desktop.h"
 #include "document-undo.h"
-#include "fill-style.h"
+#include "document.h"
 #include "gradient-chemistry.h"
 #include "inkscape.h"
+#include "pattern-manipulation.h"
 #include "selection.h"
+#include "style.h"
 
 #include "actions/actions-tools.h"
 #include "object/sp-defs.h"
 #include "object/sp-linear-gradient.h"
 #include "object/sp-mesh-gradient.h"
+#include "object/sp-object.h"
 #include "object/sp-pattern.h"
 #include "object/sp-radial-gradient.h"
-#include "object/sp-text.h"
 #include "object/sp-stop.h"
-#include "object/sp-object.h"
-#include "ui/dialog/dialog-base.h"
-#include "style.h"
+#include "object/sp-text.h"
 #include "object/sp-use.h"
-#include "pattern-manipulation.h"
+#include "ui/dialog/dialog-base.h"
 #include "ui/icon-names.h"
 
 // These can be deleted once we sort out the libart dependence.

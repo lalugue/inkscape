@@ -27,12 +27,14 @@
 #include "helper/geom-pathstroke.h"
 #include "helper/geom.h"
 #include "live_effects/parameter/enum.h"
+#include "object/sp-item-group.h"
+#include "object/sp-lpe-item.h"
 #include "object/sp-shape.h"
 #include "path/path-boolop.h"
 #include "path/path-util.h"
 #include "svg/svg.h"
-#include "ui/knot/knot-holder.h"
 #include "ui/knot/knot-holder-entity.h"
+#include "ui/knot/knot-holder.h"
 #include "util/units.h"
 
 // TODO due to internal breakage in glibmm headers, this must be last:

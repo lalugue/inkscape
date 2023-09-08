@@ -24,6 +24,7 @@
 #include <memory>
 #include <iostream>
 #include <iomanip>
+
 #include <glibmm/convert.h>
 #include <glibmm/i18n.h>
 #include <glibmm/miscutils.h>
@@ -35,9 +36,11 @@
 #include <gtkmm/container.h>
 #include <gtkmm/window.h>
 
-#include "preferences.h"
+#include "document.h"
 #include "inkscape-application.h"
 #include "inkscape-window.h"
+#include "preferences.h"
+
 #include "io/dir-util.h"
 #include "io/resource.h"
 #include "io/sys.h"

@@ -33,6 +33,8 @@
 #include "display/cairo-utils.h"
 #include "extension/db.h"
 #include "extension/effect.h"
+#include "preferences.h"
+
 #include "io/file.h"
 #include "io/resource.h"
 #include "io/sys.h"

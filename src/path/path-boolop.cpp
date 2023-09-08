@@ -11,33 +11,31 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#include "path-boolop.h"
+
 #include <vector>
 
 #include <glibmm/i18n.h>
+
 #include <2geom/intersection-graph.h>
 #include <2geom/svg-path-parser.h> // to get from SVG on boolean to Geom::Path
 #include <2geom/utils.h>
 
-#include "path-boolop.h"
-#include "path-util.h"
-#include "object/object-set.h"  // This file defines some member functions of ObjectSet.
-
+#include "document-undo.h"
+#include "document.h"
 #include "message-stack.h"
 #include "path-chemistry.h"     // copy_object_properties()
+#include "path-util.h"
 
+#include "display/curve.h"
 #include "helper/geom.h"        // pathv_to_linear_and_cubic_beziers()
-
 #include "livarot/Path.h"
 #include "livarot/Shape.h"
-
+#include "object/object-set.h"  // This file defines some member functions of ObjectSet.
 #include "object/sp-flowtext.h"
 #include "object/sp-shape.h"
 #include "object/sp-text.h"
-
-#include "display/curve.h"
-
 #include "ui/icon-names.h"
-
 #include "xml/repr-sorting.h"
 
 using Inkscape::DocumentUndo;

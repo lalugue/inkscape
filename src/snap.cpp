@@ -16,6 +16,8 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#include "snap.h"
+
 #include <memory>
 #include <utility>
 #include <vector>
@@ -24,31 +26,27 @@
 
 #include <2geom/transforms.h>
 
-#include "snap.h"
-#include "snap-enums.h"
-#include "preferences.h"
-#include "object/sp-use.h"
-#include "object/sp-mask.h"
-#include "live_effects/effect-enum.h"
-#include "object/sp-filter.h"
-#include "object/sp-object.h"
-#include "object/sp-page.h"
-#include "object/sp-clippath.h"
-#include "object/sp-root.h"
-#include "style.h"
-
 #include "desktop.h"
 #include "inkscape.h"
+#include "preferences.h"
 #include "pure-transform.h"
+#include "selection.h"
+#include "snap-enums.h"
+#include "style.h"
 
 #include "display/control/snap-indicator.h"
-
 #include "helper/mathfns.h"
-
-#include "object/sp-namedview.h"
-#include "object/sp-guide.h"
+#include "live_effects/effect-enum.h"
+#include "object/sp-clippath.h"
+#include "object/sp-filter.h"
 #include "object/sp-grid.h"
-
+#include "object/sp-guide.h"
+#include "object/sp-mask.h"
+#include "object/sp-namedview.h"
+#include "object/sp-object.h"
+#include "object/sp-page.h"
+#include "object/sp-root.h"
+#include "object/sp-use.h"
 #include "ui/tools/tool-base.h"
 
 using Inkscape::Util::round_to_upper_multiple_plus;

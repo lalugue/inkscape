@@ -8,24 +8,27 @@
  *
  */
 
+#include "actions-base.h"
+
 #include <iostream>
 
 #include <giomm.h>  // Not <gtkmm.h>! To eventually allow a headless version!
 #include <glibmm/i18n.h>
 
-#include "actions-base.h"
 #include "actions-helper.h"
 
-#include "actions/actions-extra-data.h"
 #include "inkscape-application.h"
 
-#include "inkscape.h"             // Inkscape::Application
+#include "document.h"             // SPDocument
+#include "file.h"                 // dpi convert method
 #include "inkscape-version-info.h"// Inkscape version
+#include "inkscape.h"             // Inkscape::Application
 #include "path-prefix.h"          // Extension directory
 #include "selection.h"            // Selection
-#include "object/sp-root.h"       // query_all()
-#include "file.h"                 // dpi convert method
+
+#include "actions/actions-extra-data.h"
 #include "io/resource.h"
+#include "object/sp-root.h"       // query_all()
 
 void
 print_inkscape_version()

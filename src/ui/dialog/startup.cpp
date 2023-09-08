@@ -30,6 +30,7 @@
 #include <gtkmm/treeview.h>
 #include <gtkmm/window.h>
 
+#include "color.h"
 #include "color-rgba.h"
 #include "file.h"
 #include "inkscape-application.h"

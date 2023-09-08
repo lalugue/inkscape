@@ -8,16 +8,18 @@
  *
  */
 
+#include "actions-window.h"
+
 #include <iostream>
 
 #include <giomm.h>  // Not <gtkmm.h>! To eventually allow a headless version!
 #include <glibmm/i18n.h>
 
-#include "actions-window.h"
 #include "actions-helper.h"
+#include "desktop.h"
+#include "document.h"
 #include "inkscape-application.h"
 #include "inkscape-window.h"
-
 #include "inkscape.h"             // Inkscape::Application
 
 // Actions for window handling (should be integrated with file dialog).

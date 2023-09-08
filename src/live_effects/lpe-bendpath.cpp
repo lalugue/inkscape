@@ -6,10 +6,13 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#include "live_effects/lpe-bendpath.h"
+
 #include <vector>
 
+#include "selection.h"
 #include "display/curve.h"
-#include "live_effects/lpe-bendpath.h"
+#include "object/sp-lpe-item.h"
 #include "ui/knot/knot-holder.h"
 #include "ui/knot/knot-holder-entity.h"
 

@@ -9,6 +9,7 @@
 #include <typeindex>
 #include <unordered_map>
 #include <vector>
+
 #include <cairo.h>
 #include <cairomm/enums.h>
 #include <cairomm/refptr.h>
@@ -52,6 +53,7 @@
 #include <gtkmm/window.h>
 
 #include "color.h"
+#include "desktop.h"
 #include "display/cairo-utils.h"
 #include "extension/system.h"
 #include "helper/choose-file.h"

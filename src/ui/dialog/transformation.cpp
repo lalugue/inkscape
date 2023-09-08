@@ -29,7 +29,9 @@
 #include "document.h"
 #include "inkscape.h"
 #include "message-stack.h"
+#include "selection.h"
 #include "selection-chemistry.h"
+
 #include "object/algorithms/bboxsort.h"
 #include "object/sp-item-transform.h"
 #include "object/sp-namedview.h"

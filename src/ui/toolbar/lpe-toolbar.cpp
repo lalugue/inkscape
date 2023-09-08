@@ -30,6 +30,8 @@
 #include <gtkmm/radiotoolbutton.h>
 #include <gtkmm/separatortoolitem.h>
 
+#include "selection.h"
+
 #include "live_effects/lpe-line_segment.h"
 
 #include "ui/dialog/dialog-container.h"

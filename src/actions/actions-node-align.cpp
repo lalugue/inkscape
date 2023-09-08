@@ -27,6 +27,7 @@
 
 #include <2geom/coord.h>
 
+#include "desktop.h"
 #include "inkscape-application.h"
 #include "inkscape-window.h"
 #include "ui/tool/node-types.h"

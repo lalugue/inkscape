@@ -3,22 +3,22 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include "live_effects/lpe-simplify.h"
+#include "lpe-simplify.h"
 
-#include <2geom/svg-path-parser.h>
+#include <glibmm/i18n.h>
 #include <gtkmm/box.h>
 #include <gtkmm/entry.h>
 
+#include <2geom/svg-path-parser.h>
+
 #include "display/curve.h"
 #include "helper/geom.h"
+#include "object/sp-lpe-item.h"
 #include "path/path-util.h"
 #include "svg/svg.h"
 #include "ui/icon-names.h"
 #include "ui/pack.h"
 #include "ui/tools/node-tool.h"
-
-// TODO due to internal breakage in glibmm headers, this must be last:
-#include <glibmm/i18n.h>
 
 namespace Inkscape {
 namespace LivePathEffect {

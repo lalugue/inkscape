@@ -8,21 +8,23 @@
 
 #include "filter.h"
 
-#include "io/sys.h"
-#include "io/resource.h"
-#include "io/stream/inkscapestream.h"
+/* System includes */
+#include <glibmm/i18n.h>
+#include <glibmm/fileutils.h>
 
 /* Directory includes */
 #include "path-prefix.h"
 #include "inkscape.h"
 
+#include "io/sys.h"
+#include "io/resource.h"
+#include "io/stream/inkscapestream.h"
+#include "xml/repr.h"  // sp_repr_read_file
+
 /* Extension */
 #include "extension/extension.h"
 #include "extension/system.h"
 
-/* System includes */
-#include <glibmm/i18n.h>
-#include <glibmm/fileutils.h>
 
 using namespace Inkscape::IO::Resource;
 

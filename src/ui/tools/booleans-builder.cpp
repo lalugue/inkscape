@@ -12,6 +12,9 @@
 
 #include "booleans-builder.h"
 
+#include "desktop.h"
+#include "style.h"
+
 #include "actions/actions-undo-document.h"
 #include "display/control/canvas-item-group.h"
 #include "display/control/canvas-item-bpath.h"
@@ -25,7 +28,6 @@
 #include "object/sp-namedview.h"
 #include "object/sp-defs.h"
 #include "object/sp-root.h"
-#include "style.h"
 #include "ui/widget/canvas.h"
 #include "svg/svg.h"
 

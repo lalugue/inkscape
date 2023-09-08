@@ -18,8 +18,10 @@
 #include <vector>
 #include <glibmm/refptr.h>
 
-#include "live_effects/effect-enum.h"
 #include "preferences.h"
+
+#include "live_effects/effect-enum.h"
+#include "object/sp-lpe-item.h"       // PathEffectList
 #include "ui/dialog/dialog-base.h"
 #include "ui/widget/completion-popup.h"
 
@@ -33,6 +35,17 @@ class ListBox;
 class ListStore;
 class Widget;
 } // namespace Gtk
+
+namespace Inkscape {
+class Selection;
+} // namespace Inkscape
+
+namespace Inkscape::LivePathEffect {
+class Effect;
+class LPEObjectReference;
+} // namespace Inkscape::LivePathEffect
+
+class SPLPEItem;
 
 namespace Inkscape::UI::Dialog {
 

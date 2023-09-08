@@ -20,6 +20,7 @@
 #include "desktop-style.h"
 #include "id-clash.h"
 #include "message-stack.h"
+#include "selection.h"
 #include "selection-chemistry.h"
 #include "style.h"
 

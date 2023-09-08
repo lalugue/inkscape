@@ -16,20 +16,21 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include "live_effects/lpe-lattice2.h"
+#include "lpe-lattice2.h"
 
-#include <2geom/bezier-to-sbasis.h>
-#include <2geom/sbasis-2d.h>
+#include <glibmm/i18n.h>
 #include <gtkmm/box.h>
 #include <gtkmm/button.h>
 #include <gtkmm/expander.h>
+#include <gtkmm/widget.h>
+
+#include <2geom/sbasis-2d.h>
+#include <2geom/bezier-to-sbasis.h>
 
 #include "display/curve.h"
 #include "helper/geom.h"
+#include "object/sp-lpe-item.h"
 #include "ui/pack.h"
-
-// TODO due to internal breakage in glibmm headers, this must be last:
-#include <glibmm/i18n.h>
 
 using namespace Geom;
 

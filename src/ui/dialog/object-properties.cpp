@@ -35,6 +35,7 @@
 #include "document-undo.h"
 #include "document.h"
 #include "inkscape.h"
+#include "selection.h"
 #include "style.h"
 #include "style-enums.h"
 #include "object/sp-image.h"

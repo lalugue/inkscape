@@ -10,10 +10,12 @@
  */
 
 #include <gtest/gtest.h>
-#include <src/document.h>
-#include <src/inkscape.h>
-#include <src/live_effects/effect.h>
-#include <src/object/sp-lpe-item.h>
+
+#include "document.h"
+#include "inkscape.h"
+#include "live_effects/effect.h"
+#include "object/sp-item-group.h"
+#include "object/sp-lpe-item.h"
 
 using namespace Inkscape;
 using namespace Inkscape::LivePathEffect;

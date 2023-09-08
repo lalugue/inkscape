@@ -24,6 +24,7 @@
 #include "desktop.h"
 #include "document.h"
 #include "inkscape.h"
+#include "selection.h"
 #include "selection-chemistry.h"
 #include "text-editing.h"
 #include "object/sp-item.h"

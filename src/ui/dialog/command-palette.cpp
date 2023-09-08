@@ -18,6 +18,7 @@
 #include <string_view>
 #include <sigc++/adaptors/bind.h>
 #include <sigc++/functors/mem_fun.h>
+
 #include <glibmm/error.h>
 #include <glibmm/i18n.h>
 #include <glibmm/main.h>
@@ -35,14 +36,18 @@
 #include <gtkmm/searchentry.h>
 #include <gtkmm/window.h>
 
+#include "desktop.h"
+#include "document.h"
 #include "file.h"
-#include "include/glibmm_version.h"
 #include "inkscape.h"
+#include "message-stack.h"
+#include "preferences.h"
+#include "selection.h"
+
+#include "include/glibmm_version.h"
 #include "inkscape-application.h"
 #include "inkscape-window.h"
 #include "io/resource.h"
-#include "message-stack.h"
-#include "selection.h"
 #include "ui/controller.h"
 #include "ui/util.h"
 #include "util/callback-converter.h"

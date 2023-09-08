@@ -5,10 +5,16 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#include "lpe-attach-path.h"
+
 #include <cmath>
-#include "live_effects/lpe-attach-path.h"
-#include "display/curve.h"
+
 #include "2geom/path-sink.h"
+
+#include "object/sp-lpe-item.h"
+#include "display/curve.h"
+
+
 // TODO due to internal breakage in glibmm headers, this must be last:
 #include <glibmm/i18n.h>
 

@@ -26,6 +26,10 @@
 class SPBox3D;
 class Persp3D;
 
+namespace Inkscape {
+class ObjectSet;
+}
+
 class Persp3DNodeObserver : public Inkscape::XML::NodeObserver
 {
     friend class Persp3D;

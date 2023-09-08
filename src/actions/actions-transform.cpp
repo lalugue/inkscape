@@ -18,6 +18,7 @@
 #include "document-undo.h"
 #include "inkscape-application.h"
 #include "inkscape.h"  // Inkscape::Application
+#include "preferences.h"
 #include "selection.h" // Selection
 #include "page-manager.h"
 #include "ui/icon-names.h"

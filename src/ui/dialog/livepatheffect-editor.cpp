@@ -9,9 +9,12 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#include "livepatheffect-editor.h"
+
 #include <algorithm>
 #include <cstddef>
 #include <tuple>
+
 #include <glibmm/i18n.h>
 #include <gtkmm/box.h>
 #include <gtkmm/builder.h>
@@ -24,7 +27,8 @@
 #include <gtkmm/searchentry.h>
 #include <gtkmm/spinbutton.h>
 
-#include "livepatheffect-editor.h"
+#include "selection.h"
+
 #include "live_effects/effect.h"
 #include "live_effects/effect-enum.h"
 #include "live_effects/lpeobject.h"

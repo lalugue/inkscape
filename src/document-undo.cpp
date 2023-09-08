@@ -50,6 +50,7 @@
 #include <cstddef>
 #include <string>
 
+#include "document.h"
 #include "event.h"
 #include "inkscape.h"
 

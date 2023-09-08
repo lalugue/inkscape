@@ -36,46 +36,51 @@
 #define noSP_DOCUMENT_DEBUG_IDLE
 #define noSP_DOCUMENT_DEBUG_UNDO
 
+#include "document.h"
+
 #include <vector>
 #include <string>
 #include <cstring>
 
-#include <2geom/transforms.h>
 #include <boost/range/adaptor/reversed.hpp>
 #include <glibmm/main.h>
 #include <glibmm/miscutils.h>
+
+#include <2geom/transforms.h>
 
 #include "desktop.h"
 #include "document-undo.h"
 #include "event-log.h"
 #include "file.h"
 #include "id-clash.h"
-#include "inkscape.h"
 #include "inkscape-window.h"
+#include "inkscape.h"
+#include "layer-manager.h"
+#include "page-manager.h"
 #include "profile-manager.h"
 #include "rdf.h"
-#include "live_effects/effect.h"
-#include "actions/actions-edit-document.h"
-#include "actions/actions-undo-document.h"
-#include "actions/actions-pages.h"
-#include "actions/actions-svg-processing.h"
-#include "display/drawing.h"
-#include "display/control/canvas-item-drawing.h"
-#include "ui/widget/canvas.h"
+#include "selection.h"
+
 #include "3rdparty/adaptagrams/libavoid/router.h"
 #include "3rdparty/libcroco/src/cr-sel-eng.h"
 #include "3rdparty/libcroco/src/cr-selector.h"
+#include "actions/actions-edit-document.h"
+#include "actions/actions-pages.h"
+#include "actions/actions-svg-processing.h"
+#include "actions/actions-undo-document.h"
+#include "display/control/canvas-item-drawing.h"
+#include "display/drawing.h"
 #include "io/dir-util.h"
-#include "layer-manager.h"
-#include "page-manager.h"
+#include "live_effects/effect.h"
 #include "live_effects/lpeobject.h"
 #include "object/persp3d.h"
 #include "object/sp-defs.h"
 #include "object/sp-factory.h"
 #include "object/sp-namedview.h"
+#include "object/sp-page.h"
 #include "object/sp-root.h"
 #include "object/sp-symbol.h"
-#include "object/sp-page.h"
+#include "ui/widget/canvas.h"
 #include "ui/widget/desktop-widget.h"
 #include "xml/croco-node-iface.h"
 #include "xml/rebase-hrefs.h"

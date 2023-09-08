@@ -11,8 +11,11 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#include "paint-servers.h"
+
 #include <algorithm>
 #include <stdexcept>
+
 #include <giomm/listmodel.h>
 #include <glibmm/i18n.h>
 #include <glibmm/regex.h>
@@ -24,8 +27,8 @@
 
 #include "document.h"
 #include "inkscape.h"
-#include "paint-servers.h"
 #include "path-prefix.h"
+#include "selection.h"
 #include "style.h"
 
 #include "io/resource.h"

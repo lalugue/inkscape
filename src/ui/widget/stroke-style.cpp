@@ -18,15 +18,18 @@
 
 #include "stroke-style.h"
 
+#include <glibmm/i18n.h>
 #include <gtkmm/adjustment.h>
 #include <gtkmm/entry.h>
 #include <gtkmm/grid.h>
 #include <gtkmm/label.h>
 #include <gtkmm/togglebutton.h>
 
-#include "actions/actions-tools.h"
 #include "fill-or-stroke.h"
 #include "inkscape.h"
+#include "selection.h"
+
+#include "actions/actions-tools.h"
 #include "object/sp-marker.h"
 #include "object/sp-namedview.h"
 #include "object/sp-rect.h"
@@ -44,8 +47,6 @@
 #include "ui/dialog-events.h"
 #include "ui/dialog/dialog-base.h"
 #include "widgets/style-utils.h"
-
-#include <glibmm/i18n.h>
 
 using Inkscape::DocumentUndo;
 using Inkscape::Util::unit_table;

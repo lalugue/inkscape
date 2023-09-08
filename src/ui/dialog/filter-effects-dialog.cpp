@@ -15,6 +15,8 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#include "filter-effects-dialog.h"
+
 #include <cmath>
 #include <map>
 #include <set>
@@ -22,7 +24,7 @@
 #include <sstream>
 #include <utility>
 #include <vector>
-#include <sigc++/functors/mem_fun.h>
+
 #include <glibmm/convert.h>
 #include <glibmm/i18n.h>
 #include <glibmm/main.h>
@@ -49,18 +51,21 @@
 #include <gtkmm/treeview.h>
 #include <gtkmm/widget.h>
 #include <pangomm/layout.h>
+#include <sigc++/functors/mem_fun.h>
 
-#include "filter-effects-dialog.h"
 #include "desktop.h"
-#include "display/nr-filter-types.h"
-#include "document.h"
 #include "document-undo.h"
+#include "document.h"
 #include "filter-chemistry.h"
 #include "filter-enums.h"
-#include "include/gtkmm_version.h"
 #include "inkscape.h"
-#include "io/sys.h"
 #include "layer-manager.h"
+#include "selection.h"
+#include "style.h"
+
+#include "display/nr-filter-types.h"
+#include "include/gtkmm_version.h"
+#include "io/sys.h"
 #include "object/filters/blend.h"
 #include "object/filters/colormatrix.h"
 #include "object/filters/componenttransfer-funcnode.h"
@@ -72,7 +77,6 @@
 #include "object/filters/pointlight.h"
 #include "object/filters/spotlight.h"
 #include "selection-chemistry.h"
-#include "style.h"
 #include "svg/svg-color.h"
 #include "ui/builder-utils.h"
 #include "ui/column-menu-builder.h"
@@ -85,10 +89,10 @@
 #include "ui/widget/completion-popup.h"
 #include "ui/widget/custom-tooltip.h"
 #include "ui/widget/filter-effect-chooser.h"
-#include "ui/widget/popover-menu.h"
 #include "ui/widget/popover-menu-item.h"
-#include "ui/widget/spinbutton.h"
+#include "ui/widget/popover-menu.h"
 #include "ui/widget/spin-scale.h"
+#include "ui/widget/spinbutton.h"
 
 using namespace Inkscape::Filters;
 

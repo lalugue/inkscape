@@ -18,7 +18,7 @@
 #include "clonetiler.h"
 
 #include <memory>
-#include <2geom/transforms.h>
+
 #include <glibmm/i18n.h>
 #include <gtkmm/adjustment.h>
 #include <gtkmm/checkbutton.h>
@@ -30,15 +30,19 @@
 #include <gtkmm/radiobutton.h>
 #include <gtkmm/sizegroup.h>
 
+#include <2geom/transforms.h>
+
 #include "desktop.h"
-#include "display/cairo-utils.h"
-#include "display/drawing-context.h"
-#include "display/drawing.h"
-#include "document.h"
 #include "document-undo.h"
+#include "document.h"
 #include "filter-chemistry.h"
 #include "inkscape.h"
 #include "message-stack.h"
+#include "selection.h"
+
+#include "display/cairo-utils.h"
+#include "display/drawing-context.h"
+#include "display/drawing.h"
 #include "object/algorithms/unclump.h"
 #include "object/sp-item.h"
 #include "object/sp-namedview.h"

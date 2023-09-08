@@ -8,17 +8,20 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#include "filter.h"
+
 #include "desktop.h"
+#include "document.h"
 #include "selection.h"
+
 #include "extension/extension.h"
 #include "extension/effect.h"
 #include "extension/system.h"
+#include "object/sp-defs.h"
 #include "xml/repr.h"
 #include "xml/simple-node.h"
 #include "xml/attribute-record.h"
-#include "object/sp-defs.h"
 
-#include "filter.h"
 
 namespace Inkscape {
 namespace Extension {

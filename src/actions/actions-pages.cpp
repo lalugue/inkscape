@@ -13,13 +13,14 @@
 #include <giomm.h>
 #include <glibmm/i18n.h>
 
-#include "actions-pages.h"
 #include "actions-helper.h"
+#include "actions-pages.h"
+#include "desktop.h"
+#include "document-undo.h"
 #include "inkscape-application.h"
 #include "inkscape-window.h"
-#include "document-undo.h"
-
 #include "page-manager.h"
+
 #include "object/sp-page.h"
 #include "ui/icon-names.h"
 

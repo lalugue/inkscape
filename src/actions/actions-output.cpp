@@ -8,16 +8,17 @@
  *
  */
 
+#include "actions-output.h"
+
 #include <iostream>
 
 #include <giomm.h>  // Not <gtkmm.h>! To eventually allow a headless version!
 #include <glibmm/i18n.h>
 
-#include "actions-output.h"
 #include "actions-helper.h"
-#include "inkscape-application.h"
-
+#include "document.h"
 #include "inkscape.h"             // Inkscape::Application
+#include "inkscape-application.h"
 
 // Actions for command line output (should be integrated with file dialog).
 

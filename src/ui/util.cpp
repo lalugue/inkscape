@@ -14,16 +14,18 @@
 
 #include <cstdint>
 #include <stdexcept>
+
 #include <cairomm/pattern.h>
-#include <pangomm/context.h>
-#include <pangomm/fontdescription.h>
-#include <pangomm/layout.h>
+#include <glibmm/i18n.h>
 #include <gtkmm/bin.h>
 #include <gtkmm/container.h>
 #include <gtkmm/image.h>
 #include <gtkmm/messagedialog.h>
 #include <gtkmm/revealer.h>
 #include <gtkmm/widget.h>
+#include <pangomm/context.h>
+#include <pangomm/fontdescription.h>
+#include <pangomm/layout.h>
 
 #if (defined (_WIN32) || defined (_WIN64))
 #include <gdk/gdkwin32.h>
@@ -38,12 +40,12 @@
 #endif
 #endif
 
+#include "desktop.h"
 #include "inkscape.h"
+
 #include "ui/dialog-run.h"
 #include "ui/util.h" // for_each_child()
 
-// TODO due to internal breakage in glibmm headers, this must be last:
-#include <glibmm/i18n.h>
 
 /*
  * Ellipse text if longer than maxlen, "50% start text + ... + ~50% end text"

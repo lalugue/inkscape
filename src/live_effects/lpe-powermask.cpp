@@ -2,31 +2,33 @@
 /*
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
-#include "live_effects/lpe-powermask.h"
-#include "live_effects/lpeobject.h"
-#include "live_effects/lpeobject-reference.h"   
-#include <2geom/path-intersection.h>
-#include <2geom/intersection-graph.h>
-#include "display/curve.h"
-#include "helper/geom.h"
-#include "svg/svg.h"
-#include "svg/svg-color.h"
-#include "svg/stringstream.h"
-#include "path-chemistry.h"
-#include "extract-uri.h"
+#include "lpe-powermask.h"
+
+#include <glibmm/i18n.h>
+
 #include <bad-uri-exception.h>
 
+#include <2geom/path-intersection.h>
+#include <2geom/intersection-graph.h>
+
+#include "extract-uri.h"
+#include "path-chemistry.h"
+#include "selection.h"
+
+#include "display/curve.h"
+#include "helper/geom.h"
+#include "live_effects/lpeobject-reference.h"
+#include "live_effects/lpeobject.h"
+#include "object/sp-defs.h"
+#include "object/sp-item-group.h"
 #include "object/sp-mask.h"
 #include "object/sp-path.h"
 #include "object/sp-shape.h"
-#include "object/sp-defs.h"
-#include "object/sp-item-group.h"
 #include "object/uri.h"
+#include "svg/stringstream.h"
+#include "svg/svg-color.h"
+#include "svg/svg.h"
 #include "util/safe-printf.h"
-
-
-// TODO due to internal breakage in glibmm headers, this must be last:
-#include <glibmm/i18n.h>
 
 namespace Inkscape {
 namespace LivePathEffect {

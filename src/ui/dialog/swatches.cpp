@@ -16,6 +16,9 @@
 
 #include <optional>
 #include <utility>
+#include <string>
+#include <vector>
+
 #include <giomm/file.h>
 #include <giomm/inputstream.h>
 #include <glibmm/i18n.h>
@@ -30,16 +33,18 @@
 #include <gtkmm/radiobutton.h>
 #include <gtkmm/searchentry.h>
 #include <pangomm/layout.h>
-#include <string>
-#include <vector>
 
+#include "desktop.h"
 #include "desktop-style.h"
 #include "document.h"
-#include "helper/choose-file.h"
 #include "inkscape-preferences.h"
-#include "object/sp-defs.h"
-#include "object/sp-gradient-reference.h"
+#include "preferences.h"
 #include "style.h"
+
+#include "helper/choose-file.h"
+#include "object/sp-defs.h"
+#include "object/sp-gradient.h"
+#include "object/sp-gradient-reference.h"
 #include "ui/builder-utils.h"
 #include "ui/dialog/color-item.h"
 #include "ui/dialog/global-palettes.h"

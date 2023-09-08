@@ -15,25 +15,25 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#include "stock-items.h"
+
 #include <cstring>
 #include <glibmm/fileutils.h>
 
-#include "libnrtype/font-factory.h"
-#include "path-prefix.h"
-
-#include <xml/repr.h>
+#include "document.h"
 #include "inkscape.h"
-
+#include "path-prefix.h"
+#include "pattern-manipulation.h"
 #include "io/sys.h"
 #include "io/resource.h"
-#include "pattern-manipulation.h"
-#include "stock-items.h"
+#include "libnrtype/font-factory.h"
 #include "manipulation/copy-resource.h"
 #include "object/sp-gradient.h"
 #include "object/sp-pattern.h"
 #include "object/sp-marker.h"
 #include "object/sp-defs.h"
 #include "util/statics.h"
+#include "xml/repr.h"
 
 // Stock objects kept in documents with controlled life time
 struct Documents {

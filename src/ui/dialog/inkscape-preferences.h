@@ -47,6 +47,7 @@
 #include <gtkmm/treestore.h>
 #include <gtkmm/treeview.h>
 
+#include "preferences.h"
 #include "ui/dialog/dialog-base.h"
 #include "ui/widget/preferences-widget.h"
 

@@ -23,6 +23,7 @@
 #include "document.h"
 #include "inkscape.h"
 #include "message-stack.h"
+#include "selection.h"
 #include "text-chemistry.h"
 #include "text-editing.h"
 

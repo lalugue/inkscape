@@ -9,21 +9,26 @@
 
 #include "nodesatellitesarray.h"
 
-#include "helper/geom.h"
+#include <glibmm/i18n.h>
+
+#include <2geom/path-intersection.h>
+
 #include "inkscape.h"
+#include "preferences.h"
+
+#include "display/control/canvas-item-ctrl.h"
+#include "helper/geom.h"
 #include "live_effects/effect.h"
 #include "live_effects/lpe-fillet-chamfer.h"
-#include "preferences.h"
+#include "object/sp-lpe-item.h"
 #include "ui/dialog/lpe-fillet-chamfer-properties.h"
 #include "ui/knot/knot-holder.h"
 #include "ui/shape-editor.h"
 #include "ui/tools/node-tool.h"
-#include "display/control/canvas-item-ctrl.h"
-#include <2geom/path-intersection.h>
+
 
 // TODO due to internal breakage in glibmm headers,
 // this has to be included last.
-#include <glibmm/i18n.h>
 
 namespace Inkscape {
 

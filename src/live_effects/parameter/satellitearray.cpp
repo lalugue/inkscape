@@ -5,17 +5,20 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include "live_effects/parameter/satellitearray.h"
+#include "satellitearray.h"
+
+#include <glibmm/i18n.h>
 
 #include "inkscape.h"
+#include "selection.h"
+
 #include "live_effects/effect.h"
 #include "live_effects/lpeobject.h"
+#include "object/sp-lpe-item.h"
 #include "ui/clipboard.h"
 #include "ui/icon-loader.h"
 #include "ui/icon-names.h"
 #include "ui/pack.h"
-
-#include <glibmm/i18n.h>
 
 namespace Inkscape {
 namespace LivePathEffect {

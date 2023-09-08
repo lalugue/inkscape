@@ -12,11 +12,14 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#include "themes.h"
+
 #include <cstddef>
 #include <cstring>
 #include <regex>
 #include <string>
 #include <utility>
+
 #include <gio/gio.h>
 #include <glibmm/regex.h>
 #include <glibmm/ustring.h>
@@ -30,12 +33,14 @@
 #include <pangomm/fontdescription.h>
 
 #include "config.h"
+#include "desktop.h"
 #include "inkscape.h"
-#include "io/resource.h"
 #include "preferences.h"
+
+#include "io/resource.h"
+#include "object/sp-item-group.h"  // set_default_highlight_colors
 #include "svg/css-ostringstream.h"
 #include "svg/svg-color.h"
-#include "themes.h"
 #include "ui/dialog/dialog-manager.h"
 #include "ui/dialog/dialog-window.h"
 #include "ui/util.h"

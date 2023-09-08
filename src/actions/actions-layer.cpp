@@ -13,18 +13,20 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#include "actions-layer.h"
+
 #include <giomm.h>
 #include <glibmm/i18n.h>
 
-#include "actions-layer.h"
 #include "actions-helper.h"
+#include "desktop.h"
+#include "document-undo.h"
 #include "inkscape-application.h"
 #include "inkscape-window.h"
-#include "desktop.h"
-#include "ui/dialog/layer-properties.h"
 #include "message-stack.h"
+#include "selection.h"
 #include "ui/icon-names.h"
-#include "document-undo.h"
+#include "ui/dialog/layer-properties.h"
 
 /*
  * A layer is a group <g> element with a special Inkscape attribute (Inkscape:groupMode) set to

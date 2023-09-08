@@ -29,6 +29,7 @@
 
 #include "color-rgba.h"
 #include "helper/auto-connection.h"
+#include "preferences.h"
 #include "selection.h"
 #include "style-enums.h"
 #include "ui/dialog/dialog-base.h"

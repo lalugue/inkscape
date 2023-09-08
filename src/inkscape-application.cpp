@@ -35,6 +35,8 @@
  *       InkscapeApplication::destroy_window
  */
 
+#include "inkscape-application.h"
+
 #ifdef HAVE_CONFIG_H
 # include "config.h"      // Defines ENABLE_NLS
 #endif
@@ -61,36 +63,16 @@
 #include <gtkmm/application.h>
 #include <gtkmm/recentmanager.h>
 
-#include "inkscape-application.h"
 #include "inkscape-version-info.h"
 #include "inkscape-window.h"
 #include "auto-save.h"              // Auto-save
 #include "desktop.h"                // Access to window
+#include "document.h"
 #include "file.h"                   // sp_file_convert_dpi
 #include "inkscape.h"               // Inkscape::Application
+#include "selection.h"
 #include "path-prefix.h"            // Data directory
-#include "include/glibmm_version.h"
-#include "inkgc/gc-core.h"          // Garbage Collecting init
-#include "debug/logger.h"           // INKSCAPE_DEBUG_LOG support
-#include "extension/init.h"
-#include "extension/db.h"
-#include "extension/effect.h"
-#include "io/file.h"                // File open (command line).
-#include "io/resource.h"            // TEMPLATE
-#include "io/fix-broken-links.h"    // Fix up references.
-#include "object/sp-root.h"         // Inkscape version.
-#include "ui/interface.h"                 // sp_ui_error_dialog
-#include "ui/desktop/document-check.h"    // Check for data loss on closing document window.
-#include "ui/desktop/menubar.h"
-#include "ui/dialog/dialog-manager.h"     // Save state
-#include "ui/dialog/font-substitution.h"  // Warn user about font substitution.
-#include "ui/dialog/startup.h"
-#include "ui/dialog-run.h"
-#include "ui/widget/desktop-widget.h"
-#include "ui/shortcuts.h"           // Shortcuts... init
-#include "util/units.h"           // Redimension window
-#include "util/statics.h"
-#include "util/scope_exit.h"
+
 #include "actions/actions-base.h"
 #include "actions/actions-dialogs.h"
 #include "actions/actions-edit.h"
@@ -99,8 +81,8 @@
 #include "actions/actions-element-image.h"
 #include "actions/actions-file.h"
 #include "actions/actions-hide-lock.h"
-#include "actions/actions-object.h"
 #include "actions/actions-object-align.h"
+#include "actions/actions-object.h"
 #include "actions/actions-output.h"
 #include "actions/actions-paths.h"
 #include "actions/actions-selection-object.h"
@@ -109,6 +91,28 @@
 #include "actions/actions-transform.h"
 #include "actions/actions-tutorial.h"
 #include "actions/actions-window.h"
+#include "debug/logger.h"           // INKSCAPE_DEBUG_LOG support
+#include "extension/db.h"
+#include "extension/effect.h"
+#include "extension/init.h"
+#include "include/glibmm_version.h"
+#include "inkgc/gc-core.h"          // Garbage Collecting init
+#include "io/file.h"                // File open (command line).
+#include "io/fix-broken-links.h"    // Fix up references.
+#include "io/resource.h"            // TEMPLATE
+#include "object/sp-root.h"         // Inkscape version.
+#include "ui/desktop/document-check.h"    // Check for data loss on closing document window.
+#include "ui/desktop/menubar.h"
+#include "ui/dialog-run.h"
+#include "ui/dialog/dialog-manager.h"     // Save state
+#include "ui/dialog/font-substitution.h"  // Warn user about font substitution.
+#include "ui/dialog/startup.h"
+#include "ui/interface.h"                 // sp_ui_error_dialog
+#include "ui/shortcuts.h"           // Shortcuts... init
+#include "ui/widget/desktop-widget.h"
+#include "util/scope_exit.h"
+#include "util/statics.h"
+#include "util/units.h"           // Redimension window
 
 #ifdef ENABLE_NLS
 // Native Language Support - shouldn't this always be used?

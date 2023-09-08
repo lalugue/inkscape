@@ -28,10 +28,14 @@
 #include <gtkmm/treemodelfilter.h>
 
 #include "attribute-rel-svg.h"
+#include "desktop.h"
+#include "document.h"
 #include "document-undo.h"
 #include "inkscape.h"
+#include "preferences.h"
 #include "selection.h"
 #include "style.h"
+
 #include "ui/controller.h"
 #include "ui/dialog-run.h"
 #include "ui/dialog/styledialog.h"

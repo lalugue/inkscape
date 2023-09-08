@@ -8,13 +8,15 @@
  *
  */
 
+#include "actions-paths.h"
+
 #include <iostream>
 
 #include <giomm.h>  // Not <gtkmm.h>! To eventually allow a headless version!
 #include <glibmm/i18n.h>
 
-#include "actions-paths.h"
 #include "actions-tools.h"
+#include "desktop.h"
 #include "document-undo.h"
 #include "inkscape-application.h"
 #include "inkscape-window.h"

@@ -26,6 +26,7 @@
 #include "inkscape.h"
 #include "layer-manager.h"
 #include "message-stack.h"
+#include "selection.h"
 #include "selection-chemistry.h"
 #include "text-editing.h"
 #include "object/sp-defs.h"

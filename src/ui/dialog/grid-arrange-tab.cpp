@@ -17,23 +17,27 @@
 
 //#define DEBUG_GRID_ARRANGE 1
 
-#include "ui/dialog/grid-arrange-tab.h"
+#include "grid-arrange-tab.h"
 
 #include <algorithm>
 #include <iterator>
 #include <numeric>
 #include <vector>
-#include <2geom/transforms.h>
+
 #include <glibmm/i18n.h>
 #include <gtkmm/grid.h>
 #include <gtkmm/sizegroup.h>
 #include <sigc++/functors/mem_fun.h>
 
-#include "preferences.h"
-#include "inkscape.h"
-#include "document.h"
-#include "document-undo.h"
+#include <2geom/transforms.h>
+
 #include "desktop.h"
+#include "document-undo.h"
+#include "document.h"
+#include "inkscape.h"
+#include "preferences.h"
+#include "selection.h"
+#include "object/object-set.h"
 #include "ui/icon-names.h"
 #include "ui/pack.h"
 #include "ui/dialog/tile.h" // for Inkscape::UI::Dialog::ArrangeDialog

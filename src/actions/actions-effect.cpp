@@ -11,13 +11,14 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#include "actions-effect.h"
+
 #include <giomm.h>
 #include <glibmm/i18n.h>
 
-#include "actions-effect.h"
 #include "actions-helper.h"
 #include "inkscape-application.h"
-
+#include "selection.h"
 #include "extension/effect.h"
 
 void

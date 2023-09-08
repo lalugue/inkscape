@@ -24,13 +24,15 @@
 
 #include "inkscape.h"
 #include "desktop.h"
+#include "selection.h"
+
+#include "ui/dialog-events.h"
 #include "ui/dialog/dialog-data.h"
 #include "ui/dialog/dialog-notebook.h"
-#include "ui/dialog-events.h"
 #include "ui/tools/tool-base.h" // get_latin_keyval
-#include "widgets/spw-utilities.h"
-#include "ui/widget/canvas.h"
 #include "ui/util.h"
+#include "ui/widget/canvas.h"
+#include "widgets/spw-utilities.h"
 
 namespace Inkscape::UI::Dialog {
 

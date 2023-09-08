@@ -16,10 +16,9 @@
 #include <algorithm>
 #include <limits>
 #include <vector>
-#include <2geom/intersection-graph.h>
-#include <2geom/path-intersection.h>
-#include <2geom/sbasis-to-bezier.h>
+
 #include <gdk/gdk.h>
+#include <glibmm/i18n.h>
 #include <glibmm/ustring.h>
 #include <gtkmm/box.h>
 #include <gtkmm/combobox.h>
@@ -30,17 +29,23 @@
 #include <gtkmm/radiobuttongroup.h>
 #include <gtkmm/spinbutton.h>
 
+#include <2geom/intersection-graph.h>
+#include <2geom/path-intersection.h>
+#include <2geom/sbasis-to-bezier.h>
+
+#include "style.h"
+
 #include "display/curve.h"
 #include "helper/geom.h"
 #include "live_effects/lpeobject.h"
 #include "live_effects/parameter/satellite-reference.h"
+#include "object/sp-item-group.h"
 #include "object/sp-object.h"
 #include "object/sp-path.h"
 #include "object/sp-shape.h"
 #include "object/sp-text.h"
 #include "path-chemistry.h"
 #include "path/path-boolop.h"
-#include "style.h"
 #include "svg/path-string.h"
 #include "svg/svg.h"
 #include "ui/icon-loader.h"
@@ -49,9 +54,6 @@
 #include "ui/knot/knot-holder.h"
 #include "ui/pack.h"
 #include "xml/sp-css-attr.h"
-
-// TODO due to internal breakage in glibmm headers, this must be last:
-#include <glibmm/i18n.h>
 
 namespace Inkscape::LivePathEffect {
 

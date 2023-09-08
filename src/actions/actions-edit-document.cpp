@@ -11,18 +11,21 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#include "actions-edit-document.h"
+
 #include <giomm.h>
 #include <glibmm/i18n.h>
 
-#include "actions-edit-document.h"
-#include "actions/actions-extra-data.h"
 #include "actions-helper.h"
-#include "inkscape-application.h"
+#include "actions/actions-extra-data.h"
 #include "document.h"
+#include "inkscape-application.h"
 #include "inkscape.h"
 #include "selection-chemistry.h"
+
 #include "object/sp-guide.h"
 #include "object/sp-namedview.h"
+#include "xml/repr.h"
 
 void
 create_guides_around_page(SPDocument* document)

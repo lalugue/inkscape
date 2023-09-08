@@ -10,14 +10,16 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include "ui/dialog/dialog-window.h"
+#include "dialog-window.h"
+
+#include <iostream>
 
 #include <glibmm/i18n.h>
 #include <gtkmm/application.h>
 #include <gtkmm/box.h>
 #include <gtkmm/label.h>
-#include <iostream>
 
+#include "document.h"
 #include "enums.h"
 #include "inkscape-application.h"
 #include "inkscape-window.h"

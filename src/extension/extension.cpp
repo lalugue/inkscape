@@ -30,6 +30,7 @@
 
 #include "db.h"
 #include "dependency.h"
+#include "document.h"
 #include "processing-action.h"
 #include "implementation/implementation.h"
 #include "implementation/script.h"

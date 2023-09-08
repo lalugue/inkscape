@@ -31,6 +31,10 @@
 #include <sigc++/adaptors/bind.h>
 #include <sigc++/functors/mem_fun.h>
 
+#include "rdf.h"
+#include "selection.h"
+#include "style.h"
+
 #include "actions/actions-tools.h"
 #include "color/cms-system.h"
 #include "helper/auto-connection.h"
@@ -41,8 +45,6 @@
 #include "object/sp-root.h"
 #include "object/sp-script.h"
 #include "page-manager.h"
-#include "rdf.h"
-#include "style.h"
 #include "svg/svg-color.h"
 #include "ui/dialog/filedialog.h"
 #include "ui/icon-loader.h"

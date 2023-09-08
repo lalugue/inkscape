@@ -23,6 +23,7 @@
 #include <gtkmm/notebook.h>
 #include <gtkmm/radiobutton.h>
 
+#include "desktop.h"
 #include "document.h"
 #include "inkscape.h"
 #include "preferences.h"

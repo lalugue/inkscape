@@ -15,6 +15,7 @@
 #include <utility>
 #include <vector>
 #include <sigc++/functors/mem_fun.h>
+
 #include <cairomm/cairomm.h>
 #include <glibmm/convert.h>
 #include <glibmm/i18n.h>
@@ -26,18 +27,23 @@
 #include <gtkmm/gesturemultipress.h>
 #include <gtkmm/popover.h>
 
-#include "helper/sigc-track-obj.h"
+#include "desktop-style.h"
+#include "document.h"
+#include "document-undo.h"
+#include "hsluv.h"
 #include "inkscape-preferences.h"
+#include "message-context.h"
+#include "preferences.h"
+#include "selection.h"
+
+#include "actions/actions-tools.h"
+#include "display/cairo-utils.h"
+#include "helper/sigc-track-obj.h"
 #include "io/resource.h"
 #include "io/sys.h"
 #include "object/sp-gradient.h"
 #include "object/tags.h"
 #include "svg/svg-color.h"
-#include "hsluv.h"
-#include "display/cairo-utils.h"
-#include "desktop-style.h"
-#include "actions/actions-tools.h"
-#include "message-context.h"
 #include "ui/controller.h"
 #include "ui/dialog/dialog-base.h"
 #include "ui/dialog/dialog-container.h"

@@ -15,9 +15,10 @@
 
 #include "actions-selection.h"
 #include "actions-helper.h"
-#include "inkscape-application.h"
 
+#include "document.h"
 #include "inkscape.h"             // Inkscape::Application
+#include "inkscape-application.h"
 #include "selection.h"            // Selection
 
 #include "object/sp-root.h"       // select_all: document->getRoot();

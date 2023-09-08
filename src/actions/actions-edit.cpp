@@ -17,9 +17,13 @@
 #include <glibmm/i18n.h>
 
 #include "actions-helper.h"
+#include "desktop.h"
 #include "inkscape-application.h"
-#include "object/sp-guide.h"
+#include "document-undo.h"
+#include "selection.h"
 #include "selection-chemistry.h"
+
+#include "object/sp-guide.h"
 #include "ui/icon-names.h"
 #include "ui/tools/node-tool.h"
 #include "ui/tools/text-tool.h"

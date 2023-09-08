@@ -36,8 +36,6 @@
 #include "sp-object.h"
 #include "sp-item.h"
 #include "sp-item-group.h"
-#include "desktop.h"
-#include "document.h"
 #include "path/path-boolop.h" // Access to bool_op enum (via LivarotDefs).
 
 enum BoolOpErrors {
@@ -64,6 +62,9 @@ enum class SiblingState {
     SIBLING_TEXT_FLOW_FRAME,	// moving both a flowtext and its frame
     SIBLING_TEXT_SHAPE_INSIDE,	// moving object containing sub object
 };
+
+class SPDocument;
+class SPDesktop;
 
 class SPBox3D;
 class Persp3D;
@@ -134,10 +135,7 @@ public:
     typedef decltype(MultiIndexContainer().get<random_access>() | boost::adaptors::filtered(is_group()) | boost::adaptors::transformed(object_to_group())) SPGroupRange;
     typedef decltype(MultiIndexContainer().get<random_access>() | boost::adaptors::filtered(is_item()) | boost::adaptors::transformed(object_to_node())) XMLNodeRange;
 
-    ObjectSet(SPDesktop* desktop): _desktop(desktop) {
-        if (desktop)
-            _document = desktop->getDocument(); 
-    };
+    ObjectSet(SPDesktop* desktop);
     ObjectSet(SPDocument* doc): _desktop(nullptr), _document(doc) {};
     ObjectSet(): _desktop(nullptr), _document(nullptr) {}; // Used in spray-tool.h.
     virtual ~ObjectSet();

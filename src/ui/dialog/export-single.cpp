@@ -13,6 +13,8 @@
 
 #include "export-single.h"
 
+#include <png.h>
+
 #include <glibmm/convert.h>
 #include <glibmm/i18n.h>
 #include <glibmm/miscutils.h>
@@ -29,7 +31,6 @@
 #include <gtkmm/spinbutton.h>
 #include <sigc++/adaptors/bind.h>
 #include <sigc++/functors/mem_fun.h>
-#include <png.h>
 
 #include "desktop.h"
 #include "document-undo.h"
@@ -37,21 +38,24 @@
 #include "extension/db.h"
 #include "extension/output.h"
 #include "file.h"
-#include "helper/png-write.h"
 #include "inkscape-window.h"
 #include "inkscape.h"
-#include "io/resource.h"
-#include "io/sys.h"
 #include "message-stack.h"
-#include "object/object-set.h"
-#include "object/sp-namedview.h"
-#include "object/sp-root.h"
-#include "object/sp-page.h"
 #include "page-manager.h"
 #include "preferences.h"
+#include "selection.h"
+
+#include "helper/png-write.h"
+#include "io/resource.h"
+#include "io/sys.h"
+#include "object/object-set.h"
+#include "object/sp-namedview.h"
+#include "object/sp-page.h"
+#include "object/sp-root.h"
 #include "selection-chemistry.h"
 #include "ui/dialog-events.h"
 #include "ui/dialog/dialog-notebook.h"
+#include "ui/dialog/export-batch.h"
 #include "ui/dialog/export.h"
 #include "ui/dialog/filedialog.h"
 #include "ui/icon-names.h"
@@ -59,7 +63,6 @@
 #include "ui/widget/color-picker.h"
 #include "ui/widget/export-lists.h"
 #include "ui/widget/export-preview.h"
-#include "ui/dialog/export-batch.h"
 #include "ui/widget/scrollprotected.h"
 #include "ui/widget/unit-menu.h"
 

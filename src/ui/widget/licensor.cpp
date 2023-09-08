@@ -24,6 +24,7 @@
 #include <gtkmm/entry.h>
 #include <gtkmm/radiobutton.h>
 
+#include "desktop.h"
 #include "document-undo.h"
 #include "inkscape.h"
 #include "rdf.h"

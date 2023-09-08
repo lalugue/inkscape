@@ -20,6 +20,7 @@
 
 #include <vector>
 
+#include "document.h"
 #include "path-chemistry.h" // Should be moved to path directory
 #include "message-stack.h"  // Should be removed.
 #include "selection.h"

@@ -17,28 +17,29 @@
 
 #include "live_effects/lpe-mirror_symmetry.h"
 
-#include <2geom/affine.h>
-#include <2geom/path-intersection.h>
+#include <glibmm/i18n.h>
 #include <gtkmm/box.h>
 #include <gtkmm/button.h>
+
+#include "path-chemistry.h"
+#include "style.h"
+
+#include "2geom/affine.h"
+#include "2geom/path-intersection.h"
 
 #include "display/curve.h"
 #include "helper/geom.h"
 #include "live_effects/parameter/satellite-reference.h"
 #include "object/sp-defs.h"
+#include "object/sp-item-group.h"
 #include "object/sp-lpe-item.h"
 #include "object/sp-path.h"
 #include "object/sp-text.h"
-#include "path-chemistry.h"
 #include "path/path-boolop.h"
-#include "style.h"
 #include "svg/path-string.h"
 #include "svg/svg.h"
 #include "ui/pack.h"
 #include "xml/sp-css-attr.h"
-
-// TODO due to internal breakage in glibmm headers, this must be last:
-#include <glibmm/i18n.h>
 
 typedef FillRule FillRuleFlatten;
 

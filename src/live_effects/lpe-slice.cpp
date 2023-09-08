@@ -15,34 +15,36 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include "live_effects/lpe-slice.h"
+#include "lpe-slice.h"
+
+#include <glibmm/i18n.h>
+#include <gtkmm/box.h>
+#include <gtkmm/button.h>
 
 #include <2geom/affine.h>
 #include <2geom/path-intersection.h>
-#include <gtkmm/box.h>
-#include <gtkmm/button.h>
-// this is only to flatten nonzero fillrule
-#include <livarot/Path.h>
-#include <livarot/Shape.h>
+
+#include "style.h"
 
 #include "display/curve.h"
 #include "helper/geom.h"
 #include "live_effects/parameter/satellite-reference.h"
 #include "object/sp-defs.h"
+#include "object/sp-item-group.h"
 #include "object/sp-lpe-item.h"
 #include "object/sp-path.h"
 #include "object/sp-text.h"
 #include "path-chemistry.h"
 #include "path/path-boolop.h"
-#include "style.h"
 #include "svg/path-string.h"
 #include "svg/svg.h"
 #include "ui/icon-names.h"
 #include "ui/pack.h"
 #include "xml/sp-css-attr.h"
 
-// TODO due to internal breakage in glibmm headers, this must be last:
-#include <glibmm/i18n.h>
+// this is only to flatten nonzero fillrule
+#include "livarot/Path.h"
+#include "livarot/Shape.h"
 
 typedef FillRule FillRuleFlatten;
 

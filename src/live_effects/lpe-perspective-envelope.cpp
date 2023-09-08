@@ -14,20 +14,24 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include "live_effects/lpe-perspective-envelope.h"
+#include "lpe-perspective-envelope.h"
 
-#include <gsl/gsl_linalg.h>
+#include <glibmm/i18n.h>
 #include <gtkmm/box.h>
+#include <gtkmm/button.h>
 #include <gtkmm/label.h>
 #include <gtkmm/separator.h>
-#include <gtkmm/button.h>
+#include <gtkmm/widget.h>
+
+#include <gsl/gsl_linalg.h>
 
 #include "display/curve.h"
 #include "helper/geom.h"
 #include "ui/pack.h"
 
-// TODO due to internal breakage in glibmm headers, this must be last:
-#include <glibmm/i18n.h>
+#include "helper/geom.h"
+#include "display/curve.h"
+#include "object/sp-lpe-item.h"
 
 using namespace Geom;
 

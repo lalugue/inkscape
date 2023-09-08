@@ -10,25 +10,27 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-
 #include "effect.h"
-#include <glibmm/fileutils.h>
-#include <glibmm/miscutils.h>
+
 #include <iostream>
 #include <string>
 
-#include "actions/actions-effect-data.h"
+#include <glibmm/fileutils.h>
+#include <glibmm/miscutils.h>
+
 #include "execution-env.h"
+#include "inkscape-application.h"
 #include "inkscape.h"
 #include "streq.h"
 #include "timer.h"
 
-#include "implementation/implementation.h"
-#include "io/sys.h"
-#include "internal/filter/filter.h"
-#include "prefdialog/prefdialog.h"
-#include "inkscape-application.h"
+#include "actions/actions-effect-data.h"
 #include "actions/actions-effect.h"
+#include "implementation/implementation.h"
+#include "internal/filter/filter.h"
+#include "io/sys.h"
+#include "prefdialog/prefdialog.h"
+#include "xml/repr.h"
 
 /* Inkscape::Extension::Effect */
 

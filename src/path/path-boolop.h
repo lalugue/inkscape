@@ -10,7 +10,10 @@
 #ifndef PATH_BOOLOP_H
 #define PATH_BOOLOP_H
 
+#include <vector>
+
 #include <2geom/forward.h>
+
 #include "livarot/LivarotDefs.h" // FillRule, BooleanOp
 
 /// Flatten a pathvector according to the given fill rule.

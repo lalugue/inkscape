@@ -15,15 +15,17 @@
  * contains lots of stitched pieces of path-chemistry.c
  */
 
+#include "path-offset.h"
+
 #include <vector>
 
 #include <glibmm/i18n.h>
 
-#include "path-offset.h"
-#include "path-util.h"
-
+#include "document.h"
+#include "document-undo.h"
 #include "message-stack.h"
 #include "path-chemistry.h"     // copy_object_properties()
+#include "path-util.h"
 #include "selection.h"
 
 #include "display/curve.h"

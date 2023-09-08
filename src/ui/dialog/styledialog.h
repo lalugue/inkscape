@@ -19,6 +19,7 @@
 #include <map>
 #include <memory>
 #include <vector>
+
 #include <glibmm/refptr.h>
 #include <glibmm/ustring.h>
 #include <gtk/gtk.h> // GtkEventControllerKey
@@ -40,6 +41,8 @@ class TreeStore;
 class TreeView;
 class TreeViewColumn;
 } // namespace Gtk
+
+class SPObject;
 
 namespace Inkscape {
 

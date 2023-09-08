@@ -16,7 +16,7 @@
 #include <optional>
 #include <string>
 #include <tuple>
-#include <2geom/rect.h>
+
 #include <glibmm/i18n.h>
 #include <glibmm/markup.h>
 #include <glibmm/ustring.h>
@@ -28,13 +28,18 @@
 #include <gtkmm/spinbutton.h>
 #include <gtkmm/widget.h>
 
-#include "actions/actions-tools.h"
+#include <2geom/rect.h>
+
 #include "desktop.h"
+#include "mod360.h"
+#include "selection.h"
+#include "streq.h"
+
+#include "actions/actions-tools.h"
 #include "live_effects/effect-enum.h"
 #include "live_effects/effect.h"
-#include "live_effects/lpeobject.h"
 #include "live_effects/lpeobject-reference.h"
-#include "mod360.h"
+#include "live_effects/lpeobject.h"
 #include "object/sp-anchor.h"
 #include "object/sp-ellipse.h"
 #include "object/sp-image.h"
@@ -45,7 +50,6 @@
 #include "object/sp-rect.h"
 #include "object/sp-star.h"
 #include "object/tags.h"
-#include "streq.h"
 #include "ui/builder-utils.h"
 #include "ui/dialog/object-attributes.h"
 #include "ui/icon-names.h"

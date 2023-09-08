@@ -12,25 +12,27 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include "live_effects/lpe-copy_rotate.h"
+#include "lpe-copy_rotate.h"
+
+#include <gdk/gdk.h>
+#include <gtkmm/widget.h>
+#include <gtkmm/box.h>
 
 #include <2geom/intersection-graph.h>
 #include <2geom/path-intersection.h>
 #include <2geom/sbasis-to-bezier.h>
-#include <gdk/gdk.h>
-#include <gtkmm/box.h>
 
+#include "style.h"
 #include "display/curve.h"
 #include "helper/geom.h"
 #include "live_effects/lpeobject.h"
 #include "live_effects/parameter/satellite-reference.h"
+#include "object/sp-item-group.h"
 #include "object/sp-object.h"
 #include "object/sp-path.h"
 #include "object/sp-shape.h"
 #include "object/sp-text.h"
-#include "path-chemistry.h"
 #include "path/path-boolop.h"
-#include "style.h"
 #include "svg/path-string.h"
 #include "svg/svg.h"
 #include "ui/pack.h"

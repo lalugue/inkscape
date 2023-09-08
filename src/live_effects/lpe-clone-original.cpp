@@ -7,14 +7,22 @@
 
 #include "lpe-clone-original.h"
 
-#include "actions/actions-tools.h"
-#include "display/curve.h"
-#include "live_effects/parameter/satellite-reference.h"
+#include <cstddef>
+
+#include <glibmm/i18n.h>
+
 #include "lpe-bspline.h"
 #include "lpeobject.h"
 #include "lpeobject-reference.h"
 #include "lpe-spiro.h"
+
+#include "selection.h"
+
+#include "actions/actions-tools.h"
+#include "display/curve.h"
+#include "live_effects/parameter/satellite-reference.h"
 #include "object/sp-clippath.h"
+#include "object/sp-item-group.h"
 #include "object/sp-mask.h"
 #include "object/sp-path.h"
 #include "object/sp-shape.h"
@@ -26,11 +34,6 @@
 #include "ui/tools/node-tool.h"
 #include "util/optstr.h"
 #include "xml/sp-css-attr.h"
-
-#include <cstddef>
-
-// TODO due to internal breakage in glibmm headers, this must be last:
-#include <glibmm/i18n.h>
 
 namespace Inkscape {
 namespace LivePathEffect {

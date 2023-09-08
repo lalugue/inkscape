@@ -17,10 +17,12 @@
 #include <variant>
 #include <vector>
 #include <boost/unordered_map.hpp>
+
 #include <glibmm/refptr.h>
 #include <glibmm/ustring.h>
 #include <gtkmm/widget.h>
 
+#include "preferences.h"  // PrefObserver
 #include "ui/dialog/dialog-base.h"
 #include "ui/dialog/global-palettes.h"
 
@@ -31,6 +33,8 @@ class ComboBoxText;
 class ListStore;
 class RadioButton;
 } // namespace Gtk
+
+class SPGradient;
 
 namespace Inkscape::UI {
 

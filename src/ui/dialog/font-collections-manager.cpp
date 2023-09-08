@@ -17,9 +17,10 @@
 #include <gtkmm/label.h>
 #include <gtkmm/paned.h>
 #include <gtkmm/searchentry.h>
-#include <libnrtype/font-lister.h>
 
+#include "desktop.h"
 #include "io/resource.h"
+#include "libnrtype/font-lister.h"
 #include "ui/icon-names.h"
 #include "ui/pack.h"
 #include "util/font-collections.h"

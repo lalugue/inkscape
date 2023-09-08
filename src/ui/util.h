@@ -18,14 +18,15 @@
 #include <type_traits>
 #include <vector>
 
-#include <2geom/affine.h>
-#include <2geom/point.h>
-#include <2geom/rect.h>
 #include <gdkmm/rgba.h>
 #include <gtkmm/cellrenderer.h>
 #include <gtkmm/enums.h>
 #include <gtkmm/stylecontext.h>
 #include <gtkmm/widget.h>
+
+#include <2geom/affine.h>
+#include <2geom/point.h>
+#include <2geom/rect.h>
 
 /*
  * Use these errors when building from glade files for graceful

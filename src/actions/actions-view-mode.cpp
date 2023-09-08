@@ -18,6 +18,7 @@
 #include "actions-view-mode.h"
 #include "actions-helper.h"
 
+#include "desktop.h"
 #include "inkscape-application.h"
 #include "inkscape-window.h"
 

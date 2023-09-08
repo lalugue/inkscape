@@ -27,6 +27,7 @@
 #include "message-stack.h"
 #include "object/sp-root.h"
 #include "preferences.h"
+#include "selection.h"
 #include "selection-chemistry.h"
 #include "ui/controller.h"
 #include "ui/icon-names.h"

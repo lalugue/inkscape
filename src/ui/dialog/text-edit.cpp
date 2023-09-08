@@ -26,6 +26,7 @@
 #include <algorithm>
 #include <initializer_list>
 #include <string>
+
 #include <glibmm/i18n.h>
 #include <glibmm/markup.h>
 #include <glibmm/ustring.h>
@@ -44,24 +45,26 @@
 #ifdef WITH_GSPELL
 # include <gspell/gspell.h>
 #endif
-#include <libnrtype/font-factory.h>
-#include <libnrtype/font-instance.h>
-#include <libnrtype/font-lister.h>
 #include <sigc++/functors/mem_fun.h>
 
-#include "desktop.h"
 #include "desktop-style.h"
+#include "desktop.h"
 #include "dialog-container.h"
 #include "dialog-notebook.h"
-#include "document.h"
 #include "document-undo.h"
+#include "document.h"
 #include "inkscape.h"
+#include "selection.h"
+#include "style.h"
+#include "text-editing.h"
+
 #include "io/resource.h"
+#include "libnrtype/font-factory.h"
+#include "libnrtype/font-instance.h"
+#include "libnrtype/font-lister.h"
 #include "object/sp-flowtext.h"
 #include "object/sp-text.h"
-#include "style.h"
 #include "svg/css-ostringstream.h"
-#include "text-editing.h"
 #include "ui/controller.h"
 #include "ui/icon-names.h"
 #include "ui/pack.h"

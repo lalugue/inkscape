@@ -9,16 +9,19 @@
  * Released under GNU GPL version 2 or later, read the file 'COPYING' for more information
  */
 
-#include <2geom/pathvector.h>
 #include <gtest/gtest.h>
-#include <src/file.h>
-#include <src/inkscape.h>
-#include <src/object/sp-root.h>
-#include <src/svg/svg.h>
 
-#include "src/extension/init.h"
+#include <2geom/pathvector.h>
+
+#include "document.h"
+#include "file.h"
+#include "inkscape.h"
 #include "inkscape-application.h"
-#include "src/util/numeric/converters.h"
+
+#include "extension/init.h"
+#include "object/sp-root.h"
+#include "svg/svg.h"
+#include "util/numeric/converters.h"
 
 using namespace Inkscape;
 
