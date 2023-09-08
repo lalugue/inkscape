@@ -190,7 +190,7 @@ void ObjectProperties::_init()
     /* Create the text view box for the object description */
     _ft_description.set_sensitive(false);
     frame_desc->add(_ft_description);
-    _ft_description.property_margin().set_value(0);
+    _ft_description.set_margin(0);
 
     _tv_description.set_wrap_mode(Gtk::WrapMode::WORD);
     _tv_description.get_buffer()->set_text("");
@@ -222,7 +222,7 @@ void ObjectProperties::_init()
     grid_cb->set_column_homogeneous(true);
     grid_cb->set_row_spacing(spacing);
     grid_cb->set_column_spacing(spacing);
-    grid_cb->property_margin().set_value(0);
+    grid_cb->set_margin(0);
     UI::pack_start(*hb_checkboxes, *grid_cb, true, true);
 
     /* Hide */
