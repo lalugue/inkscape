@@ -85,6 +85,7 @@ Recommends:
  perlmagick,
  python3-lxml,
  python3-bs4,
+ python3-cachecontrol,
  python3-numpy,
  python3-scour,
  python3-cssselect,
