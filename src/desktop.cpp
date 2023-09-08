@@ -71,6 +71,15 @@ static bool _drawing_handler(Inkscape::CanvasEvent const &event, Inkscape::Drawi
 static void _reconstruction_start(SPDesktop * desktop);
 static void _reconstruction_finish(SPDesktop * desktop);
 
+template <typename T>
+static void delete_then_null(std::unique_ptr<T> &uptr)
+{
+    // reset() would null the ptr before calling delete. But a Tool dtor may call getTool(), so
+    // do it this way so that until dtor is done, our getTool() will still return the valid ptr
+    delete uptr.get();
+    uptr.release();
+}
+
 SPDesktop::SPDesktop()
     : namedview(nullptr)
     , canvas(nullptr)
@@ -251,7 +260,7 @@ void SPDesktop::destroy()
     canvas->set_drawing(nullptr); // Ensures deactivation
     canvas->set_desktop(nullptr); // Todo: Remove desktop dependency.
 
-    _tool.reset();
+    delete_then_null(_tool);
     _snapindicator.reset();
     _temporary_item_list.reset();
     _selection.reset();
@@ -379,7 +388,7 @@ void SPDesktop::setTool(std::string const &toolName)
     // Tool should be able to be replaced with itself. See commit 29df5ca05d
     if (_tool) {
         _tool->switching_away(toolName);
-        _tool.reset();
+        delete_then_null(_tool);
     }
 
     if (!toolName.empty()) {
