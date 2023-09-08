@@ -15,6 +15,7 @@
 #include <regex>
 #include <streambuf>
 #include <string>
+#include <utility>
 #include <glibmm/main.h>
 #include <gtkmm/aspectframe.h>
 #include <gtkmm/builder.h>
@@ -24,6 +25,7 @@
 #include <gtkmm/notebook.h>
 #include <gtkmm/textview.h>
 #include <gtkmm/window.h>
+#include <sigc++/adaptors/bind.h>
 
 #include "document.h"
 #include "inkscape-version-info.h"
@@ -39,37 +41,41 @@ namespace Inkscape::UI::Dialog {
 static Gtk::Window *window = nullptr;
 static Gtk::Notebook *tabs = nullptr;
 
-void close_about_screen() {
-    window->set_visible(false);
-}
-bool show_copy_button(Gtk::Button *button, Gtk::Label *label) {
+static bool show_copy_button(Gtk::Button * const button, Gtk::Label * const label)
+{
     reveal_widget(button, true);
     reveal_widget(label, false);
     return false;
 }
-void copy_version(Gtk::Button *button, Gtk::Label *label) {
+
+static void copy(Gtk::Button * const button, Gtk::Label * const label, Glib::ustring const &text)
+{
     auto clipboard = Gtk::Clipboard::get();
-    clipboard->set_text(Inkscape::inkscape_version());
+    clipboard->set_text(text);
     if (label) {
         reveal_widget(button, false);
         reveal_widget(label, true);
         Glib::signal_timeout().connect_seconds(
-            sigc::bind(sigc::ptr_fun(&show_copy_button), button, label), 2);
-    }
-}
-void copy_debug_info(Gtk::Button *button, Gtk::Label *label) {
-    auto clipboard = Gtk::Clipboard::get();
-    clipboard->set_text(Inkscape::debug_info());
-    if (label) {
-        reveal_widget(button, false);
-        reveal_widget(label, true);
-        Glib::signal_timeout().connect_seconds(
-            sigc::bind(sigc::ptr_fun(&show_copy_button), button, label), 2);
+            sigc::bind(&show_copy_button, button, label), 2);
     }
 }
 
-void AboutDialog::show_about() {
+template <class Random>
+[[nodiscard]] static auto get_shuffled_lines(std::string const &filename, Random &&random)
+{
+    std::ifstream fn{Resource::get_filename(Resource::DOCS, filename.c_str())};
+    std::vector<std::string> lines;
+    std::size_t capacity = 0;
+    for (std::string line; getline(fn, line);) {
+        capacity += line.size() + 1;
+        lines.push_back(std::move(line));
+    }
+    std::shuffle(lines.begin(), lines.end(), random);
+    return std::pair{std::move(lines), capacity};
+}
 
+void show_about()
+{
     if(!window) {
         // Load glade file here
         Glib::ustring gladefile = Resource::get_filename(Resource::UIS, "inkscape-about.glade");
@@ -95,9 +101,10 @@ void AboutDialog::show_about() {
         builder->get_widget("version", version);
         builder->get_widget("version-copied", label);
         if(version) {
-            version->set_label(Inkscape::inkscape_version());
+            auto text = Inkscape::inkscape_version();
+            version->set_label(text);
             version->signal_clicked().connect(
-                    sigc::bind(sigc::ptr_fun(&copy_version), version, label));
+                sigc::bind(&copy, version, label, std::move(text)));
         }
 
         Gtk::Button *debug_info;
@@ -106,7 +113,7 @@ void AboutDialog::show_about() {
         builder->get_widget("debug-info-copied", label2);
         if (debug_info) {
             debug_info->signal_clicked().connect(
-                    sigc::bind(sigc::ptr_fun(&copy_debug_info), version, label2));
+                sigc::bind(&copy, version, label2, Inkscape::debug_info()));
         }
 
         Gtk::Label *copyright;
@@ -144,16 +151,11 @@ void AboutDialog::show_about() {
         std::mt19937 g(rd());
 
         if(authors) {
-            std::ifstream fn(Resource::get_filename(Resource::DOCS, "AUTHORS"));
-            std::vector<std::string> authors_data;
-            std::string line;
-            while (getline(fn, line)) {
-                authors_data.push_back(line);
-            }
-            std::shuffle(std::begin(authors_data), std::end(authors_data), g);
-            std::string str = "";
-            for (auto author : authors_data) {
-                str += author + "\n";
+            auto const [authors_data, capacity] = get_shuffled_lines("AUTHORS", g);
+            std::string str;
+            str.reserve(capacity);
+            for (auto const &author : authors_data) {
+                str.append(author).append(1, '\n');
             }
             authors->get_buffer()->set_text(str.c_str());
         }
@@ -161,17 +163,12 @@ void AboutDialog::show_about() {
         Gtk::TextView *translators;
         builder->get_widget("credits-translators", translators);
         if(translators) {
-            std::ifstream fn(Resource::get_filename(Resource::DOCS, "TRANSLATORS"));
-            std::vector<std::string> translators_data;
-            std::string line;
-            while (getline(fn, line)) {
-                translators_data.push_back(line);
-            }
-            std::string str = "";
+            auto const [translators_data, capacity] = get_shuffled_lines("TRANSLATORS", g);
+            std::string str;
+            str.reserve(capacity);
             std::regex e("(.*?)(<.*|)");
-            std::shuffle(std::begin(translators_data), std::end(translators_data), g);
-            for (auto translator : translators_data) {
-                str += std::regex_replace(translator, e, "$1") + "\n";
+            for (auto const &translator : translators_data) {
+                str.append(std::regex_replace(translator, e, "$1")).append(1, '\n');
             }
             translators->get_buffer()->set_text(str.c_str());
         }

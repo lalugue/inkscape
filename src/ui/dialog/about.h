@@ -12,11 +12,7 @@
 
 namespace Inkscape::UI::Dialog {
 
-// TODO: This should not be a class, given it only contains one static function.
-class AboutDialog {
-public:
-    static void show_about();
-};
+void show_about();
 
 } // namespace Inkscape::UI::Dialog
 

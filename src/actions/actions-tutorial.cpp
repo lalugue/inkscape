@@ -11,8 +11,8 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include <giomm.h>
 #include <glibmm/i18n.h>
+#include <sigc++/adaptors/bind.h>
 
 #include "actions-tutorial.h"
 #include "actions/actions-extra-data.h"
@@ -27,10 +27,10 @@ using Inkscape::IO::Resource::UIS;
 
 void help_about()
 {
-    Inkscape::UI::Dialog::AboutDialog::show_about();
+    Inkscape::UI::Dialog::show_about();
 }
 
-void help_open_tutorial(Glib::ustring name)
+void help_open_tutorial(Glib::ustring const &name)
 {
     Glib::ustring filename = name + ".svg";
 
@@ -46,12 +46,6 @@ void help_open_tutorial(Glib::ustring name)
                              "'inkscape-tutorials'; for Windows, please re-run the setup and select 'Tutorials'.\nThe "
                              "tutorials can also be found online at https://inkscape.org/en/learn/tutorials/"));
     }
-}
-
-void
-help_about_inkscape()
-{
-    help_about();
 }
 
 std::vector<std::vector<Glib::ustring>> raw_data_tutorial =
@@ -80,16 +74,16 @@ add_actions_tutorial(InkscapeApplication* app)
     auto *gapp = app->gio_app();
 
     // clang-format off
-    gapp->add_action( "tutorial-basic",                  sigc::bind(sigc::ptr_fun(&help_open_tutorial), "tutorial-basic"));
-    gapp->add_action( "tutorial-shapes",                 sigc::bind(sigc::ptr_fun(&help_open_tutorial), "tutorial-shapes"));
-    gapp->add_action( "tutorial-advanced",               sigc::bind(sigc::ptr_fun(&help_open_tutorial), "tutorial-advanced"));
-    gapp->add_action( "tutorial-tracing",                sigc::bind(sigc::ptr_fun(&help_open_tutorial), "tutorial-tracing"));
-    gapp->add_action( "tutorial-tracing-pixelart",       sigc::bind(sigc::ptr_fun(&help_open_tutorial), "tutorial-tracing-pixelart"));
-    gapp->add_action( "tutorial-calligraphy",            sigc::bind(sigc::ptr_fun(&help_open_tutorial), "tutorial-calligraphy"));
-    gapp->add_action( "tutorial-interpolate",            sigc::bind(sigc::ptr_fun(&help_open_tutorial), "tutorial-interpolate"));
-    gapp->add_action( "tutorial-design",                 sigc::bind(sigc::ptr_fun(&help_open_tutorial), "tutorial-elements"));
-    gapp->add_action( "tutorial-tips",                   sigc::bind(sigc::ptr_fun(&help_open_tutorial), "tutorial-tips"));
-    gapp->add_action( "about",                           sigc::ptr_fun(&help_about_inkscape));
+    gapp->add_action( "tutorial-basic",                  sigc::bind(&help_open_tutorial, "tutorial-basic"));
+    gapp->add_action( "tutorial-shapes",                 sigc::bind(&help_open_tutorial, "tutorial-shapes"));
+    gapp->add_action( "tutorial-advanced",               sigc::bind(&help_open_tutorial, "tutorial-advanced"));
+    gapp->add_action( "tutorial-tracing",                sigc::bind(&help_open_tutorial, "tutorial-tracing"));
+    gapp->add_action( "tutorial-tracing-pixelart",       sigc::bind(&help_open_tutorial, "tutorial-tracing-pixelart"));
+    gapp->add_action( "tutorial-calligraphy",            sigc::bind(&help_open_tutorial, "tutorial-calligraphy"));
+    gapp->add_action( "tutorial-interpolate",            sigc::bind(&help_open_tutorial, "tutorial-interpolate"));
+    gapp->add_action( "tutorial-design",                 sigc::bind(&help_open_tutorial, "tutorial-elements"));
+    gapp->add_action( "tutorial-tips",                   sigc::bind(&help_open_tutorial, "tutorial-tips"));
+    gapp->add_action( "about",                           &help_about);
     // clang-format on
 
     app->get_action_extra_data().add_data(raw_data_tutorial);

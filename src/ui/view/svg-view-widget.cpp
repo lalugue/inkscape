@@ -41,6 +41,8 @@ namespace Inkscape::UI::View {
 SVGViewWidget::SVGViewWidget(SPDocument* document)
 {
     _canvas = Gtk::make_managed<Inkscape::UI::Widget::Canvas>();
+    _canvas->property_expand().set_value(true);
+    property_expand().set_value(false);
     add(*_canvas);
 
     _parent = new Inkscape::CanvasItemGroup(_canvas->get_canvas_item_root());
