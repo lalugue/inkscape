@@ -17,6 +17,8 @@
 #include <gtkmm/adjustment.h>
 #include <gtkmm/box.h>
 
+#include "ui/pack.h"
+
 namespace Inkscape::UI::Widget {
 
 Point::Point(Glib::ustring const &label, Glib::ustring const &tooltip,
@@ -47,8 +49,8 @@ Point::Point(Glib::ustring const &label, Glib::ustring const &tooltip,
     ywidget.drag_dest_unset();
 
     auto &box = dynamic_cast<Gtk::Box &>(*getWidget());
-    box.pack_start(xwidget, true, true);
-    box.pack_start(ywidget, true, true);
+    UI::pack_start(box, xwidget, true, true);
+    UI::pack_start(box, ywidget, true, true);
     box.show_all_children();
 }
 

@@ -9,15 +9,16 @@
 
 #include "parameter-string.h"
 
+#include <glibmm/regex.h>
 #include <gtkmm/box.h>
 #include <gtkmm/entry.h>
 #include <gtkmm/scrolledwindow.h>
 #include <gtkmm/textview.h>
-#include <glibmm/regex.h>
 
-#include "xml/node.h"
 #include "extension/extension.h"
 #include "preferences.h"
+#include "ui/pack.h"
+#include "xml/node.h"
 
 namespace Inkscape {
 namespace Extension {
@@ -199,7 +200,7 @@ Gtk::Widget *ParamString::get_widget(sigc::signal<void ()> *changeSignal)
 
     auto const label = Gtk::make_managed<Gtk::Label>(_text, Gtk::ALIGN_START);
     label->set_visible(true);
-    box->pack_start(*label, false, false);
+    UI::pack_start(*box, *label, false, false);
 
     if (_mode == MULTILINE) {
         box->set_orientation(Gtk::ORIENTATION_VERTICAL);
@@ -214,12 +215,12 @@ Gtk::Widget *ParamString::get_widget(sigc::signal<void ()> *changeSignal)
         textarea->add(*entry);
         textarea->set_visible(true);
 
-        box->pack_start(*textarea, true, true);
+        UI::pack_start(*box, *textarea, true, true);
     } else {
         Gtk::Widget *entry = Gtk::make_managed<ParamStringEntry>(this, changeSignal);
         entry->set_visible(true);
 
-        box->pack_start(*entry, true, true);
+        UI::pack_start(*box, *entry, true, true);
     }
 
     box->set_visible(true);

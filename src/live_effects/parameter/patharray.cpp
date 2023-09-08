@@ -14,17 +14,16 @@
 #include <gtkmm/imagemenuitem.h>
 #include <gtkmm/scrolledwindow.h>
 #include <gtkmm/separatormenuitem.h>
-#include <gtkmm/widget.h>
 
 #include "display/curve.h"
-#include "document-undo.h"
 #include "document.h"
+#include "document-undo.h"
 #include "inkscape.h"
 #include "live_effects/effect.h"
 #include "live_effects/lpe-bspline.h"
-#include "live_effects/lpe-spiro.h"
-#include "live_effects/lpeobject-reference.h"
 #include "live_effects/lpeobject.h"
+#include "live_effects/lpeobject-reference.h"
+#include "live_effects/lpe-spiro.h"
 #include "live_effects/parameter/patharray.h"
 #include "object/sp-shape.h"
 #include "object/sp-text.h"
@@ -35,9 +34,9 @@
 #include "ui/clipboard.h"
 #include "ui/icon-loader.h"
 #include "ui/icon-names.h"
+#include "ui/pack.h"
 
 namespace Inkscape {
-
 namespace LivePathEffect {
 
 class PathArrayParam::ModelColumns : public Gtk::TreeModel::ColumnRecord
@@ -164,7 +163,7 @@ Gtk::Widget *PathArrayParam::param_newWidget()
     _model = nullptr;
     _scroller = nullptr;
     initui();
-    vbox->pack_start(*_scroller, Gtk::PACK_EXPAND_WIDGET);
+    UI::pack_start(*vbox, *_scroller, UI::PackOptions::expand_widget);
     
     
     { // Paste path to link button
@@ -175,7 +174,7 @@ Gtk::Widget *PathArrayParam::param_newWidget()
         pButton->add(*pIcon);
         pButton->set_visible(true);
         pButton->signal_clicked().connect(sigc::mem_fun(*this, &PathArrayParam::on_link_button_click));
-        hbox->pack_start(*pButton, Gtk::PACK_SHRINK);
+        UI::pack_start(*hbox, *pButton, UI::PackOptions::shrink);
         pButton->set_tooltip_text(_("Link to path in clipboard"));
     }
     
@@ -187,7 +186,7 @@ Gtk::Widget *PathArrayParam::param_newWidget()
         pButton->add(*pIcon);
         pButton->set_visible(true);
         pButton->signal_clicked().connect(sigc::mem_fun(*this, &PathArrayParam::on_remove_button_click));
-        hbox->pack_start(*pButton, Gtk::PACK_SHRINK);
+        UI::pack_start(*hbox, *pButton, UI::PackOptions::shrink);
         pButton->set_tooltip_text(_("Remove Path"));
     }
     
@@ -199,7 +198,7 @@ Gtk::Widget *PathArrayParam::param_newWidget()
         pButton->add(*pIcon);
         pButton->set_visible(true);
         pButton->signal_clicked().connect(sigc::mem_fun(*this, &PathArrayParam::on_down_button_click));
-        hbox->pack_end(*pButton, Gtk::PACK_SHRINK);
+        UI::pack_end(*hbox, *pButton, UI::PackOptions::shrink);
         pButton->set_tooltip_text(_("Move Down"));
     }
     
@@ -211,11 +210,11 @@ Gtk::Widget *PathArrayParam::param_newWidget()
         pButton->add(*pIcon);
         pButton->set_visible(true);
         pButton->signal_clicked().connect(sigc::mem_fun(*this, &PathArrayParam::on_up_button_click));
-        hbox->pack_end(*pButton, Gtk::PACK_SHRINK);
+        UI::pack_end(*hbox, *pButton, UI::PackOptions::shrink);
         pButton->set_tooltip_text(_("Move Up"));
     }
     
-    vbox->pack_end(*hbox, Gtk::PACK_SHRINK);
+    UI::pack_end(*vbox, *hbox, UI::PackOptions::shrink);
     
     vbox->show_all_children(true);
     
@@ -570,7 +569,6 @@ void PathArrayParam::update()
 }
 
 } /* namespace LivePathEffect */
-
 } /* namespace Inkscape */
 
 /*

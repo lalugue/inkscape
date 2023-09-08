@@ -78,6 +78,7 @@
 #include "ui/dialog-run.h"
 #include "ui/interface.h"
 #include "ui/modifiers.h"
+#include "ui/pack.h"
 #include "ui/shortcuts.h"
 #include "ui/themes.h"
 #include "ui/toolbar/toolbar-constants.h"
@@ -273,9 +274,9 @@ InkscapePreferences::InkscapePreferences()
     auto const list_box = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::ORIENTATION_VERTICAL, 3);
     auto const scrolled_window = Gtk::make_managed<Gtk::ScrolledWindow>();
     _search.set_valign(Gtk::Align::ALIGN_START);
-    list_box->pack_start(_search, false, true, 0);
-    list_box->pack_start(*scrolled_window, false, true, 0);
-    hbox_list_page->pack_start(*list_box, false, true, 0);
+    UI::pack_start(*list_box, _search, false, true);
+    UI::pack_start(*list_box, *scrolled_window, false, true);
+    UI::pack_start(*hbox_list_page, *list_box, false, true);
     _page_list.set_headers_visible(false);
     scrolled_window->set_policy(Gtk::POLICY_NEVER, Gtk::POLICY_AUTOMATIC);
     scrolled_window->set_valign(Gtk::Align::ALIGN_FILL);
@@ -370,11 +371,11 @@ InkscapePreferences::InkscapePreferences()
     pageScroller->set_propagate_natural_width();
     pageScroller->set_propagate_natural_height();
     pageScroller->add(*vbox_page);
-    hbox_list_page->pack_start(*pageScroller, true, true, 0);
+    UI::pack_start(*hbox_list_page, *pageScroller, true, true);
 
     title_frame->add(_page_title);
-    vbox_page->pack_start(*title_frame, false, false, 0);
-    vbox_page->pack_start(_page_frame, true, true, 0);
+    UI::pack_start(*vbox_page, *title_frame, false, false);
+    UI::pack_start(*vbox_page, _page_frame, true, true);
     _page_frame.set_shadow_type(Gtk::SHADOW_NONE);
     title_frame->set_shadow_type(Gtk::SHADOW_NONE);
 
@@ -1804,13 +1805,13 @@ void InkscapePreferences::initPageUI()
     _symbolic_success_color.connectChanged(changeIconsColor);
     _symbolic_error_color.connectChanged  (changeIconsColor);
     auto const icon_buttons = Gtk::make_managed<Gtk::Box>();
-    icon_buttons->pack_start(_symbolic_base_color, true, true, 4);
+    UI::pack_start(*icon_buttons, _symbolic_base_color, true, true, 4);
     _page_theme.add_line(false, "", *icon_buttons, _("Icon color base"),
                          _("Base color for icons"), false);
     auto const icon_buttons_hight = Gtk::make_managed<Gtk::Box>();
-    icon_buttons_hight->pack_start(_symbolic_success_color, true, true, 4);
-    icon_buttons_hight->pack_start(_symbolic_warning_color, true, true, 4);
-    icon_buttons_hight->pack_start(_symbolic_error_color, true, true, 4);
+    UI::pack_start(*icon_buttons_hight, _symbolic_success_color, true, true, 4);
+    UI::pack_start(*icon_buttons_hight, _symbolic_warning_color, true, true, 4);
+    UI::pack_start(*icon_buttons_hight, _symbolic_error_color, true, true, 4);
     _page_theme.add_line(false, "", *icon_buttons_hight, _("Icon color highlights"),
                          _("Highlight colors supported by some symbolic icon themes"),
                          false);
@@ -2059,8 +2060,8 @@ void InkscapePreferences::initPageUI()
             auto const box = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL);
             auto const label = Gtk::make_managed<Gtk::Label>(picker.label);
             label->set_valign(Gtk::ALIGN_CENTER);
-            box->pack_start(*label);
-            box->pack_start(*Gtk::make_managed<Gtk::Image>(picker.icon, Gtk::ICON_SIZE_BUTTON));
+            UI::pack_start(*box, *label);
+            UI::pack_start(*box, *Gtk::make_managed<Gtk::Image>(picker.icon, Gtk::ICON_SIZE_BUTTON));
             box->set_spacing(3);
             auto path = picker.visibility_path;
             btn->set_active(prefs->getBool(path));
@@ -2073,7 +2074,7 @@ void InkscapePreferences::initPageUI()
                     static_cast<Gtk::ToggleButton*>(buttons.front())->set_active();
                 }
             });
-            container->pack_start(*btn);
+            UI::pack_start(*container, *btn);
         }
         container->show_all();
         container->set_spacing(5);
@@ -2908,7 +2909,7 @@ void InkscapePreferences::initPageRendering()
         auto const hb = Gtk::make_managed<Gtk::Box>();
         hb->set_spacing(12);
         hb->set_hexpand(true);
-        hb->pack_start(widget, false, false);
+        UI::pack_start(*hb, widget, false, false);
         hb->set_valign(Gtk::ALIGN_CENTER);
 
         auto const label_widget = Gtk::make_managed<Gtk::Label>(label, Gtk::ALIGN_START, Gtk::ALIGN_CENTER, true);
@@ -2923,7 +2924,7 @@ void InkscapePreferences::initPageRendering()
         if (!suffix.empty()) {
             auto const suffix_widget = Gtk::make_managed<Gtk::Label>(suffix, Gtk::ALIGN_START, Gtk::ALIGN_CENTER, true);
             suffix_widget->set_markup(suffix_widget->get_text());
-            hb->pack_start(*suffix_widget, false, false);
+            UI::pack_start(*hb, *suffix_widget, false, false);
         }
     };
 
@@ -3194,17 +3195,17 @@ void InkscapePreferences::initKeyboardShortcuts(Gtk::TreeModel::iterator iter_ui
     auto const kb_reset = Gtk::make_managed<Gtk::Button>(_("Reset"));
     kb_reset->set_use_underline();
     kb_reset->set_tooltip_text(_("Remove all your customized keyboard shortcuts, and revert to the shortcuts in the shortcut file listed above"));
-    box_buttons->pack_start(*kb_reset, false, true, 6);
+    UI::pack_start(*box_buttons, *kb_reset, false, true, 6);
 
     auto const kb_export = Gtk::make_managed<Gtk::Button>(_("Export ..."));
     kb_export->set_use_underline();
     kb_export->set_tooltip_text(_("Export custom keyboard shortcuts to a file"));
-    box_buttons->pack_end(*kb_export, false, true, 6);
+    UI::pack_end(*box_buttons, *kb_export, false, true, 6);
 
     auto const kb_import = Gtk::make_managed<Gtk::Button>(_("Import ..."));
     kb_import->set_use_underline();
     kb_import->set_tooltip_text(_("Import custom keyboard shortcuts from a file"));
-    box_buttons->pack_end(*kb_import, false, true, 6);
+    UI::pack_end(*box_buttons, *kb_import, false, true, 6);
 
     kb_reset->signal_clicked().connect( sigc::mem_fun(*this, &InkscapePreferences::onKBReset) );
     kb_import->signal_clicked().connect( sigc::mem_fun(*this, &InkscapePreferences::onKBImport) );
@@ -3647,7 +3648,7 @@ void InkscapePreferences::initPageSystem()
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
     _sys_shared_path.init("/options/resources/sharedpath", true);
     auto box = new Gtk::Box();
-    box->pack_start(_sys_shared_path);
+    UI::pack_start(*box, _sys_shared_path);
     box->set_size_request(300, -1);
     _page_system.add_line( false, _("Shared default resources folder:"), *box, "",
                             _("A folder structured like a user's Inkscape preferences directory. This makes it possible to share a set of resources, such as extensions, fonts, icon sets, keyboard shortcuts, patterns/hatches, palettes, symbols, templates, themes and user interface definition files, between multiple users who have access to that folder (on the same computer or in the network). Requires a restart of Inkscape to work when changed."), false, reset_icon());

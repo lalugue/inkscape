@@ -45,6 +45,7 @@
 #include "ui/icon-loader.h"
 #include "ui/icon-names.h"
 #include "ui/manage.h"
+#include "ui/pack.h"
 #include "ui/tools/node-tool.h"
 #include "ui/widget/custom-tooltip.h"
 #include "util/optstr.h"
@@ -152,7 +153,7 @@ LivePathEffectEditor::LivePathEffectEditor()
     _lpes_popup.on_match_selected().connect([=](int id){ onAdd((LivePathEffect::EffectType)id); });
     _lpes_popup.on_button_press().connect([=](){ setMenu(); });
     _lpes_popup.on_focus().connect([=](){ setMenu(); return true; });
-    _LPEAddContainer.pack_start(_lpes_popup);
+    UI::pack_start(_LPEAddContainer, _lpes_popup);
 
     show_all();
 }
@@ -467,8 +468,8 @@ LivePathEffectEditor::selection_info()
             std::string shape_type = "group";
             std::string highlight = SPColor(selected->highlight_color()).toString();
             auto const type = Gtk::make_managed<Gtk::Image>(sp_get_shape_icon(shape_type, Gdk::RGBA(highlight), 20, 1));
-            boxc->pack_start(*type, false, false);
-            boxc->pack_start(*lbl, false, false);
+            UI::pack_start(*boxc, *type, false, false);
+            UI::pack_start(*boxc, *lbl, false, false);
             type->set_margin_start(4);
             type->set_margin_end(4);
             selectbutton->add(*boxc);
@@ -483,8 +484,8 @@ LivePathEffectEditor::selection_info()
             std::string shape_type2 = "clone";
             std::string highlight2 = SPColor(selected->highlight_color()).toString();
             auto const type2 = Gtk::make_managed<Gtk::Image>(sp_get_shape_icon(shape_type2, Gdk::RGBA(highlight2), 20, 1));
-            boxc2->pack_start(*type2, false, false);
-            boxc2->pack_start(*lbl2, false, false);
+            UI::pack_start(*boxc2, *type2, false, false);
+            UI::pack_start(*boxc2, *lbl2, false, false);
             type2->set_margin_start(4);
             type2->set_margin_end(4);
             selectbutton2->add(*boxc2);
@@ -505,8 +506,8 @@ LivePathEffectEditor::selection_info()
                 std::string shape_type = selected->typeName();
                 std::string highlight = SPColor(selected->highlight_color()).toString();
                 auto const type = Gtk::make_managed<Gtk::Image>(sp_get_shape_icon(shape_type, Gdk::RGBA(highlight), 20, 1));
-                boxc->pack_start(*type, false, false);
-                boxc->pack_start(*lbl, false, false);
+                UI::pack_start(*boxc, *type, false, false);
+                UI::pack_start(*boxc, *lbl, false, false);
                 _LPECurrentItem.add(*boxc);
                 _LPECurrentItem.get_children()[0]->set_halign(Gtk::ALIGN_CENTER);
                 _LPESelectionInfo.set_visible(false);
@@ -530,8 +531,8 @@ LivePathEffectEditor::selection_info()
                         std::string shape_type = selected->typeName();
                         std::string highlight = SPColor(selected->highlight_color()).toString();
                         auto const type = Gtk::make_managed<Gtk::Image>(sp_get_shape_icon(shape_type, Gdk::RGBA(highlight), 20, 1));
-                        boxc->pack_start(*type, false, false);
-                        boxc->pack_start(*lbl, false, false);
+                        UI::pack_start(*boxc, *type, false, false);
+                        UI::pack_start(*boxc, *lbl, false, false);
                         type->set_margin_start(4);
                         type->set_margin_end(4);
                         selectbutton->add(*boxc);

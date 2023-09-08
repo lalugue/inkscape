@@ -13,19 +13,20 @@
  */
 
 #include "live_effects/lpe-sketch.h"
-#include <gtkmm.h>
 
-// You might need to include other 2geom files. You can add them here:
 #include <2geom/sbasis-math.h>
 #include <2geom/bezier-to-sbasis.h>
 #include <2geom/path-intersection.h>
+#include <gtkmm/box.h>
+#include <gtkmm/separator.h>
+
+#include "ui/pack.h"
 
 // TODO due to internal breakage in glibmm headers, this must be last:
 #include <glibmm/i18n.h>
 
 namespace Inkscape {
 namespace LivePathEffect {
-
 
 LPESketch::LPESketch(LivePathEffectObject *lpeobject) :
     Effect(lpeobject),
@@ -144,69 +145,30 @@ Gtk::Widget *LPESketch::newWidget()
 {
     auto const vbox = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_VERTICAL);
 
-    std::vector<Parameter *>::iterator it = param_vector.begin();
-    while (it != param_vector.end()) {
-        if ((*it)->widget_is_visible) {
-            Parameter *param = *it;
-            auto const widg = param->param_newWidget();
-            if (param->param_key == "strokelength") {
-                vbox->pack_start(*Gtk::make_managed<Gtk::Separator>(Gtk::ORIENTATION_HORIZONTAL),
-                                 Gtk::PACK_EXPAND_WIDGET);
-            }
-            if (param->param_key == "tremble_size") {
-                vbox->pack_start(*Gtk::make_managed<Gtk::Separator>(Gtk::ORIENTATION_HORIZONTAL),
-                                 Gtk::PACK_EXPAND_WIDGET);
-            }
-            if (param->param_key == "nbtangents") {
-                vbox->pack_start(*Gtk::make_managed<Gtk::Separator>(Gtk::ORIENTATION_HORIZONTAL),
-                                 Gtk::PACK_EXPAND_WIDGET);
-            }
-            Glib::ustring *tip = param->param_getTooltip();
-            if (widg) {
-                vbox->pack_start(*widg, true, true, 2);
-                if (tip) {
-                    widg->set_tooltip_markup(*tip);
-                } else {
-                    widg->set_tooltip_text("");
-                    widg->set_has_tooltip(false);
-                }
+    for (auto const param: param_vector) {
+        if (!param->widget_is_visible) continue;
+
+        if (param->param_key == "strokelength" ||
+            param->param_key == "tremble_size" ||
+            param->param_key == "nbtangents")
+        {
+            UI::pack_start(*vbox, *Gtk::make_managed<Gtk::Separator>(Gtk::ORIENTATION_HORIZONTAL),
+                           UI::PackOptions::expand_widget);
+        }
+
+        if (auto const widg = param->param_newWidget()) {
+            UI::pack_start(*vbox, *widg, true, true, 2);
+
+            if (auto const tip = param->param_getTooltip()) {
+                widg->set_tooltip_markup(*tip);
+            } else {
+                widg->set_tooltip_text("");
             }
         }
-        ++it;
     }
+
     return vbox;
 }
-/*
-Geom::Piecewise<Geom::D2<Geom::SBasis> >
-addLinearEnds (Geom::Piecewise<Geom::D2<Geom::SBasis> > & m){
-    using namespace Geom;
-    Piecewise<D2<SBasis> > output;
-    Piecewise<D2<SBasis> > start;
-    Piecewise<D2<SBasis> > end;
-    double x,y,vx,vy;
-
-    x  = m.segs.front()[0].at0();
-    y  = m.segs.front()[1].at0();
-    vx = m.segs.front()[0][1][0]+Tri(m.segs.front()[0][0]);
-    vy = m.segs.front()[1][1][0]+Tri(m.segs.front()[1][0]);
-    start = Piecewise<D2<SBasis> >(D2<SBasis>(Linear (x-vx,x),Linear (y-vy,y)));
-    start.offsetDomain(m.cuts.front()-1.);
-
-    x  = m.segs.back()[0].at1();
-    y  = m.segs.back()[1].at1();
-    vx = -m.segs.back()[0][1][1]+Tri(m.segs.back()[0][0]);;
-    vy = -m.segs.back()[1][1][1]+Tri(m.segs.back()[1][0]);;
-    end = Piecewise<D2<SBasis> >(D2<SBasis>(Linear (x,x+vx),Linear (y,y+vy)));
-    //end.offsetDomain(m.cuts.back());
-
-    output = start;
-    output.concat(m);
-    output.concat(end);
-    return output;
-}
-*/
-
-
 
 //This returns a random perturbation. Notice the domain is [s0,s0+first multiple of period>s1]...
 Geom::Piecewise<Geom::D2<Geom::SBasis> >
@@ -218,15 +180,15 @@ LPESketch::computePerturbation (double s0, double s1){
     double offsetX = 2*parallel_offset-parallel_offset.get_value();
     double offsetY = 2*parallel_offset-parallel_offset.get_value();
     Point A,dA,B,dB,offset = Point(offsetX,offsetY);
+
     //start point A
     for (unsigned dim=0; dim<2; dim++){
         A[dim]  = offset[dim] + 2*tremble_size-tremble_size.get_value();
         dA[dim] = 2*tremble_size-tremble_size.get_value();
     }
-    //compute howmany deg 3 sbasis to concat according to frequency.
 
+    //compute howmany deg 3 sbasis to concat according to frequency.
     unsigned count = unsigned((s1-s0)/strokelength*tremble_frequency)+1; 
-    //unsigned count = unsigned((s1-s0)/tremble_frequency)+1; 
 
     for (unsigned i=0; i<count; i++){
         D2<SBasis> perturb = D2<SBasis>(SBasis(2, Linear()), SBasis(2, Linear()));
@@ -247,10 +209,8 @@ LPESketch::computePerturbation (double s0, double s1){
         res.concat(Piecewise<D2<SBasis> >(perturb));
     }
     res.setDomain(Interval(s0,s0+count*strokelength/tremble_frequency));
-    //res.setDomain(Interval(s0,s0+count*tremble_frequency));
     return res;
 }
-
 
 // Main effect body...
 Geom::Piecewise<Geom::D2<Geom::SBasis> >

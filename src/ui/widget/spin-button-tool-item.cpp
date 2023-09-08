@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <cmath>
 #include <sstream>
+#include <utility>
 #include <2geom/math-utils.h>
 #include <sigc++/adaptors/bind.h>
 #include <sigc++/functors/mem_fun.h>
@@ -18,6 +19,7 @@
 #include "spinbutton.h"
 #include "ui/controller.h"
 #include "ui/icon-loader.h"
+#include "ui/pack.h"
 #include "ui/widget/popover-menu.h"
 #include "ui/widget/popover-menu-item.h"
 
@@ -311,6 +313,7 @@ SpinButtonToolItem::SpinButtonToolItem(const Glib::ustring            name,
     _hbox = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL, 3);
     _hbox->add(*_label);
     _hbox->add(*_btn);
+
     add(*_hbox);
     show_all();
 }
@@ -322,7 +325,7 @@ SpinButtonToolItem::set_icon(const Glib::ustring& icon_name)
     _icon = Gtk::manage(sp_get_icon_image(icon_name, Gtk::ICON_SIZE_SMALL_TOOLBAR));
 
     if(_icon) {
-        _hbox->pack_start(*_icon);
+        UI::pack_start(*_hbox, *_icon);
         _hbox->reorder_child(*_icon, 0);
     }
 

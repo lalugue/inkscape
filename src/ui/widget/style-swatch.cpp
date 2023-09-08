@@ -12,14 +12,14 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#include "style-swatch.h"
+
 #include <functional>
 #include <utility>
 #include <sigc++/adaptors/bind.h>
 #include <sigc++/functors/mem_fun.h>
 #include <glibmm/i18n.h>
 #include <gtkmm/grid.h>
-
-#include "style-swatch.h"
 
 #include "actions/actions-tools.h"  // Open tool preferences.
 #include "inkscape.h"
@@ -28,6 +28,7 @@
 #include "object/sp-radial-gradient.h"
 #include "style.h"
 #include "ui/controller.h"
+#include "ui/pack.h"
 #include "ui/widget/color-preview.h"
 #include "util/units.h"
 #include "widgets/spw-utilities.h"
@@ -120,9 +121,13 @@ StyleSwatch::StyleSwatch(SPCSSAttr *css, gchar const *main_tip, Gtk::Orientation
     _table->set_column_spacing(2);
     _table->set_row_spacing(0);
 
-    _stroke.pack_start(_place[SS_STROKE]);
+    // We let pack()ed children expand but donʼt propagate expand upwards.
+    set_hexpand(false);
+    _stroke.set_hexpand(false);
+
+    UI::pack_start(_stroke, _place[SS_STROKE]);
     _stroke_width_place.add(_stroke_width);
-    _stroke.pack_start(_stroke_width_place, Gtk::PACK_SHRINK);
+    UI::pack_start(_stroke, _stroke_width_place, UI::PackOptions::shrink);
     
     _opacity_place.add(_opacity_value);
 
@@ -134,7 +139,7 @@ StyleSwatch::StyleSwatch(SPCSSAttr *css, gchar const *main_tip, Gtk::Orientation
         _table->attach(_empty_space,      2, 0, 1, 2);
         _table->attach(_opacity_place,    2, 0, 1, 2);
         _swatch.add(*_table);
-        pack_start(_swatch, true, true, 0);
+        UI::pack_start(*this, _swatch, true, true);
 
         set_size_request (STYLE_SWATCH_WIDTH, -1);
     }
@@ -148,7 +153,7 @@ StyleSwatch::StyleSwatch(SPCSSAttr *css, gchar const *main_tip, Gtk::Orientation
         _opacity_place.set_margin_start(6);
         _table->attach(_opacity_place,    4, 0, 1, 1);
         _swatch.add(*_table);
-        pack_start(_swatch, true, true, 0);
+        UI::pack_start(*this, _swatch, true, true);
 
         int patch_w = 6 * 6;
         _place[SS_FILL].set_size_request(patch_w, -1);

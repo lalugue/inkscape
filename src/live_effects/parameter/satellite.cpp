@@ -8,6 +8,12 @@
 
 #include "live_effects/parameter/satellite.h"
 
+#include <glibmm/i18n.h>
+#include <gtkmm/box.h>
+#include <gtkmm/button.h>
+#include <gtkmm/label.h>
+
+#include "bad-uri-exception.h"
 #include "bad-uri-exception.h"
 #include "desktop.h"
 #include "enums.h"
@@ -15,23 +21,18 @@
 #include "live_effects/effect.h"
 #include "live_effects/lpeobject.h"
 #include "message-stack.h"
-#include "selection-chemistry.h"
-#include "svg/svg.h"
-#include "ui/icon-loader.h"
-#include "ui/widget/point.h"
-#include "xml/repr.h"
-// clipboard support
-#include "ui/clipboard.h"
-// required for linking to other paths
-#include <glibmm/i18n.h>
-
-#include "bad-uri-exception.h"
 #include "object/sp-item.h"
 #include "object/uri.h"
+#include "selection-chemistry.h"
+#include "svg/svg.h"
+#include "ui/clipboard.h"
+#include "ui/icon-loader.h"
 #include "ui/icon-names.h"
+#include "ui/pack.h"
+#include "ui/widget/point.h"
+#include "xml/repr.h"
 
 namespace Inkscape {
-
 namespace LivePathEffect {
 
 SatelliteParam::SatelliteParam(const Glib::ustring &label, const Glib::ustring &tip, const Glib::ustring &key,
@@ -273,14 +274,14 @@ Gtk::Widget *SatelliteParam::param_newWidget()
     Gtk::Image *pIcon = Gtk::manage(sp_get_icon_image("edit-clone", Gtk::ICON_SIZE_BUTTON));
     auto const pButton = Gtk::make_managed<Gtk::Button>();
     auto const pLabel = Gtk::make_managed<Gtk::Label>(param_label);
-    _widget->pack_start(*pLabel, true, true);
+    UI::pack_start(*_widget, *pLabel, true, true);
     pLabel->set_tooltip_text(param_tooltip);
     pButton->set_relief(Gtk::RELIEF_NONE);
     pIcon->set_visible(true);
     pButton->add(*pIcon);
     pButton->set_visible(true);
     pButton->signal_clicked().connect(sigc::mem_fun(*this, &SatelliteParam::on_link_button_click));
-    _widget->pack_start(*pButton, true, true);
+    UI::pack_start(*_widget, *pButton, true, true);
     pButton->set_tooltip_text(_("Link to item on clipboard"));
 
     _widget->show_all_children();
@@ -289,7 +290,6 @@ Gtk::Widget *SatelliteParam::param_newWidget()
 }
 
 } /* namespace LivePathEffect */
-
 } /* namespace Inkscape */
 
 /*

@@ -13,8 +13,8 @@
 #include "page-selector.h"
 
 #include <cstring>
-#include <glibmm/i18n.h>
 #include <string>
+#include <glibmm/i18n.h>
 
 #include "desktop.h"
 #include "document.h"
@@ -23,6 +23,7 @@
 #include "page-manager.h"
 #include "ui/icon-loader.h"
 #include "ui/icon-names.h"
+#include "ui/pack.h"
 
 namespace Inkscape {
 namespace UI {
@@ -54,9 +55,9 @@ PageSelector::PageSelector(SPDesktop *desktop)
     _selector_changed_connection =
         _selector.signal_changed().connect(sigc::mem_fun(*this, &PageSelector::setSelectedPage));
 
-    pack_start(_prev_button, Gtk::PACK_EXPAND_PADDING);
-    pack_start(_selector, Gtk::PACK_EXPAND_WIDGET);
-    pack_start(_next_button, Gtk::PACK_EXPAND_PADDING);
+    UI::pack_start(*this, _prev_button, UI::PackOptions::expand_padding);
+    UI::pack_start(*this, _selector, UI::PackOptions::expand_widget);
+    UI::pack_start(*this, _next_button, UI::PackOptions::expand_padding);
 
     _doc_replaced_connection =
         _desktop->connectDocumentReplaced(sigc::hide<0>(sigc::mem_fun(*this, &PageSelector::setDocument)));

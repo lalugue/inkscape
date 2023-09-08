@@ -17,6 +17,7 @@
 
 #include "preferences.h"
 #include "ui/builder-utils.h"
+#include "ui/pack.h"
 
 namespace Inkscape::UI::Toolbar {
 
@@ -40,7 +41,7 @@ CommandToolbar::CommandToolbar()
         command_toolbar->set_toolbar_style( Gtk::TOOLBAR_ICONS );
     }
 
-    pack_start(*command_toolbar, false, false);
+    UI::pack_start(*this, *command_toolbar, false, false);
 }
 
 } // namespace Inkscape::UI::Toolbar

@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-
 /**
  * @file
  * Toolbar for Snapping options.
@@ -25,6 +24,7 @@
 
 #include "actions/actions-canvas-snapping.h"  // transition_to_xxx
 #include "ui/builder-utils.h"
+#include "ui/pack.h"
 
 namespace Inkscape::UI::Toolbar {
 
@@ -42,7 +42,7 @@ SnapToolbar::SnapToolbar()
         return;
     }
 
-    pack_start(*snap_toolbar, false, false);
+    UI::pack_start(*this, *snap_toolbar, false, false);
 
     static constexpr const char* snap_bar_simple_path = "/toolbox/simplesnap";
 

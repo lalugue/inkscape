@@ -17,6 +17,7 @@
 #include <gtkmm/image.h>
 
 #include "ui/icon-loader.h"
+#include "ui/pack.h"
 
 namespace Inkscape::UI::Widget {
 
@@ -71,7 +72,7 @@ void Random::addReseedButton()
     pButton->signal_clicked().connect(sigc::mem_fun(*this, &Random::onReseedButtonClick));
     pButton->set_tooltip_text(_("Reseed the random number generator; this creates a different sequence of random numbers."));
 
-    pack_start(*pButton, Gtk::PACK_SHRINK, 0);
+    UI::pack_start(*this, *pButton, UI::PackOptions::shrink);
 }
 
 void

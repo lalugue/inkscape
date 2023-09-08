@@ -42,6 +42,7 @@
 #include "prefdialog/widget.h"
 #include "timer.h"
 #include "ui/dialog-run.h"
+#include "ui/pack.h"
 #include "xml/repr.h"
 
 namespace Inkscape {
@@ -1005,8 +1006,8 @@ public:
     void addWidget(Gtk::Widget *widg, gchar const *tooltip, int indent) {
         if (widg) {
             widg->set_margin_start(indent * InxParameter::GUI_INDENTATION);
-            this->pack_start(*widg, false, true, 0); // fill=true does not have an effect here, but allows the
-                                                     // child to choose to expand by setting hexpand/vexpand
+            UI::pack_start(*this, *widg, widg->get_vexpand(), true);
+
             if (tooltip) {
                 widg->set_tooltip_text(tooltip);
             } else {
@@ -1062,7 +1063,7 @@ Extension::get_info_widget()
     retval->property_margin().set_value(4);
 
     auto const info = Gtk::make_managed<Gtk::Frame>("General Extension Information");
-    retval->pack_start(*info, true, true, 4);
+    UI::pack_start(*retval, *info, true, true, 4);
 
     auto const table = Gtk::make_managed<Gtk::Grid>();
     table->property_margin().set_value(4);
@@ -1096,7 +1097,7 @@ Extension::get_params_widget()
 {
     auto const retval = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_VERTICAL);
     Gtk::Widget * content = Gtk::make_managed<Gtk::Label>("Params");
-    retval->pack_start(*content, true, true, 4);
+    UI::pack_start(*retval, *content, true, true, 4);
     content->set_visible(true);
     retval->set_visible(true);
     return retval;

@@ -1,16 +1,19 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
+
 #include "custom-tooltip.h"
-#include "gtkmm/box.h"
-#include "gtkmm/label.h"
-#include "gtkmm/image.h"
+
 #include <ctime>
 #include <chrono>
 #include <gdk/gdk.h>
+#include <gtkmm/box.h>
+#include <gtkmm/label.h>
+#include <gtkmm/image.h>
+
+#include "ui/pack.h"
 
 static gint timeoutid = -1;
 
-static 
-gboolean
+static gboolean
 delaytooltip (gpointer data)
 {
     GdkDisplay *display = reinterpret_cast<GdkDisplay *>(data); 
@@ -44,9 +47,9 @@ sp_query_custom_tooltip(int x, int y, bool keyboard_tooltip, const Glib::RefPtr<
     label->set_markup(tooltip);
     label->set_max_width_chars(40);
     if (icon != "") {
-        box->pack_start(*Gtk::make_managed<Gtk::Image>(icon, iconsize), true, true, 2);
+	    Inkscape::UI::pack_start(*box, *Gtk::make_managed<Gtk::Image>(icon, iconsize), true, true, 2);
     }
-    box->pack_start(*label, true, true, 2);
+    Inkscape::UI::pack_start(*box, *label, true, true, 2);
     tooltipw->set_custom(*box);
     box->get_style_context()->add_class("symbolic");
     box->show_all_children();

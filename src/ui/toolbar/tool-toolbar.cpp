@@ -33,6 +33,7 @@
 #include "inkscape-window.h"
 #include "ui/builder-utils.h"
 #include "ui/controller.h"
+#include "ui/pack.h"
 #include "ui/util.h"
 #include "ui/widget/popover-menu.h"
 #include "ui/widget/popover-menu-item.h"
@@ -57,7 +58,7 @@ ToolToolbar::ToolToolbar(InkscapeWindow *window)
 
     attachHandlers(builder, window);
 
-    pack_start(*tool_toolbar, true, true);
+    UI::pack_start(*this, *tool_toolbar, true, true);
 
     // Hide/show buttons based on preferences.
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();

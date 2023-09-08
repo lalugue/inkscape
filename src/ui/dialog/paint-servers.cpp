@@ -34,6 +34,7 @@
 #include "object/sp-pattern.h"
 #include "object/sp-root.h"
 #include "ui/cache/svg_preview_cache.h"
+#include "ui/pack.h"
 #include "ui/widget/scrollprotected.h"
 #include "xml/href-attribute-helper.h"
 
@@ -119,7 +120,7 @@ void PaintServersDialog::_buildDialogWindow(char const *const glade_file)
     Gtk::Grid *container = nullptr;
     builder->get_widget("PaintServersContainerGrid", container);
     if (container) {
-        pack_start(*container, Gtk::PACK_EXPAND_WIDGET);
+        UI::pack_start(*this, *container, UI::PackOptions::expand_widget);
     } else {
         return;
     }

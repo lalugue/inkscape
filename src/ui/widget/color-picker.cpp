@@ -17,8 +17,8 @@
 #include "desktop.h"
 #include "document.h"
 #include "document-undo.h"
-
 #include "ui/dialog-events.h"
+#include "ui/pack.h"
 #include "ui/widget/color-notebook.h"
 
 static bool _in_use = false;
@@ -101,7 +101,7 @@ void ColorPicker::on_clicked()
         auto const selector = Gtk::make_managed<ColorNotebook>(_selected_color, _ignore_transparency);
         selector->set_label(_title);
         _color_selector = selector;
-        _colorSelectorDialog.get_content_area()->pack_start(*_color_selector, true, true, 0);
+        UI::pack_start(*_colorSelectorDialog.get_content_area(), *_color_selector, true, true);
         _color_selector->set_visible(true);
     }
 

@@ -13,6 +13,14 @@
 #include <cairomm/enums.h>
 #include <cairomm/refptr.h>
 #include <cairomm/surface.h>
+#include <cassert>
+#include <cstddef>
+#include <memory>
+#include <optional>
+#include <sstream>
+#include <typeindex>
+#include <unordered_map>
+#include <vector>
 #include <gdkmm/pixbuf.h>
 #include <gdkmm/rgba.h>
 #include <glib/gi18n.h>
@@ -74,6 +82,7 @@
 #include "ui/builder-utils.h"
 #include "ui/dialog/filedialog.h"
 #include "ui/icon-names.h"
+#include "ui/pack.h"
 #include "ui/themes.h"
 #include "ui/util.h"
 #include "ui/widget/shapeicon.h"

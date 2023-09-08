@@ -10,10 +10,6 @@
 
 #include "font-collections-manager.h"
 
-#include "io/resource.h"
-#include "ui/icon-names.h"
-#include "util/font-collections.h"
-
 #include <gdk/gdkkeysyms.h>
 #include <glibmm/i18n.h>
 #include <gtkmm/box.h>
@@ -21,7 +17,12 @@
 #include <gtkmm/label.h>
 #include <gtkmm/paned.h>
 #include <gtkmm/searchentry.h>
-#include "libnrtype/font-lister.h"
+#include <libnrtype/font-lister.h>
+
+#include "io/resource.h"
+#include "ui/icon-names.h"
+#include "ui/pack.h"
+#include "util/font-collections.h"
 
 namespace Inkscape::UI::Dialog {
 
@@ -50,10 +51,10 @@ FontCollectionsManager::FontCollectionsManager()
     builder->get_widget("edit_button", _edit_button);
     builder->get_widget("delete_button", _delete_button);
 
-    _font_list_box->pack_start(_font_selector, true, true);
+    UI::pack_start(*_font_list_box, _font_selector, true, true);
     _font_list_box->reorder_child(_font_selector, 1);
 
-    _collections_box->pack_start(_user_font_collections, true, true);
+    UI::pack_start(*_collections_box, _user_font_collections, true, true);
     _collections_box->reorder_child(_user_font_collections, 0);
 
     _user_font_collections.populate_system_collections();

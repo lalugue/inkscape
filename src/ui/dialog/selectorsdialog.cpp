@@ -37,6 +37,7 @@
 #include "ui/dialog/styledialog.h"
 #include "ui/icon-loader.h"
 #include "ui/icon-names.h"
+#include "ui/pack.h"
 #include "ui/widget/iconrenderer.h"
 #include "util/trim.h"
 #include "xml/attribute-record.h"
@@ -277,7 +278,7 @@ void SelectorsDialog::_showWidgets()
     _scrolled_window_selectors.set_overlay_scrolling(false);
     _vadj = _scrolled_window_selectors.get_vadjustment();
     _vadj->signal_value_changed().connect(sigc::mem_fun(*this, &SelectorsDialog::_vscroll));
-    _selectors_box.pack_start(_scrolled_window_selectors, Gtk::PACK_EXPAND_WIDGET);
+    UI::pack_start(_selectors_box, _scrolled_window_selectors, UI::PackOptions::expand_widget);
     /* auto const dirtogglerlabel = Gtk::make_managed<Gtk::Label>(_("Paned vertical"));
     dirtogglerlabel->get_style_context()->add_class("inksmall");
     _direction.property_active() = dir;
@@ -286,8 +287,8 @@ void SelectorsDialog::_showWidgets()
     _styleButton(_create, "list-add", "Add a new CSS Selector");
     _create.signal_clicked().connect(sigc::mem_fun(*this, &SelectorsDialog::_addSelector));
     _styleButton(_del, "list-remove", "Remove a CSS Selector");
-    _button_box.pack_start(_create, Gtk::PACK_SHRINK);
-    _button_box.pack_start(_del, Gtk::PACK_SHRINK);
+    UI::pack_start(_button_box, _create, UI::PackOptions::shrink);
+    UI::pack_start(_button_box, _del, UI::PackOptions::shrink);
     Gtk::RadioButton::Group group;
     auto const _horizontal = Gtk::make_managed<Gtk::RadioButton>();
     auto const _vertical = Gtk::make_managed<Gtk::RadioButton>();
@@ -300,8 +301,8 @@ void SelectorsDialog::_showWidgets()
         sigc::bind(sigc::mem_fun(*this, &SelectorsDialog::_toggleDirection), _vertical));
     _horizontal->property_draw_indicator() = false;
     _vertical->property_draw_indicator() = false;
-    _button_box.pack_end(*_horizontal, false, false, 0);
-    _button_box.pack_end(*_vertical, false, false, 0);
+    UI::pack_end(_button_box, *_horizontal, false, false);
+    UI::pack_end(_button_box, *_vertical, false, false);
     _del.signal_clicked().connect(sigc::mem_fun(*this, &SelectorsDialog::_delSelector));
     _del.set_visible(false);
     _style_dialog = Gtk::make_managed<StyleDialog>();
@@ -310,11 +311,11 @@ void SelectorsDialog::_showWidgets()
     _paned.pack2(_selectors_box, true, true);
     _paned.set_wide_handle(true);
     auto const contents = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_VERTICAL);
-    contents->pack_start(_paned, Gtk::PACK_EXPAND_WIDGET);
-    contents->pack_start(_button_box, false, false, 0);
+    UI::pack_start(*contents, _paned, UI::PackOptions::expand_widget);
+    UI::pack_start(*contents, _button_box, false, false);
     contents->set_valign(Gtk::ALIGN_FILL);
     contents->child_property_fill(_paned);
-    pack_start(*contents, Gtk::PACK_EXPAND_WIDGET);
+    UI::pack_start(*this, *contents, UI::PackOptions::expand_widget);
     show_all();
     _updating = true;
     _paned.property_position() = 200;
@@ -950,13 +951,13 @@ void SelectorsDialog::_addSelector()
     textDialogPtr->add_button(_("Cancel"), Gtk::RESPONSE_CANCEL);
     textDialogPtr->add_button(_("Add"),    Gtk::RESPONSE_OK);
 
-    Gtk::Entry *textEditPtr = manage ( new Gtk::Entry() );
+    auto const textEditPtr = Gtk::make_managed<Gtk::Entry>();
     textEditPtr->signal_activate().connect(
         sigc::bind(sigc::mem_fun(*this, &SelectorsDialog::_closeDialog), textDialogPtr));
-    textDialogPtr->get_content_area()->pack_start(*textEditPtr, Gtk::PACK_SHRINK);
+    UI::pack_start(*textDialogPtr->get_content_area(), *textEditPtr, UI::PackOptions::shrink);
 
-    Gtk::Label *textLabelPtr = manage(new Gtk::Label(_("Invalid CSS selector.")));
-    textDialogPtr->get_content_area()->pack_start(*textLabelPtr, Gtk::PACK_SHRINK);
+    auto const textLabelPtr = Gtk::make_managed<Gtk::Label>(_("Invalid CSS selector."));
+    UI::pack_start(*textDialogPtr->get_content_area(), *textLabelPtr, UI::PackOptions::shrink);
 
     /**
      * By default, the entrybox contains 'Class1' as text. However, if object(s)

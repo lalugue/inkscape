@@ -15,10 +15,9 @@
 #include "document-undo.h"
 #include "document.h"
 #include "gradient-chemistry.h"
-
 #include "object/sp-stop.h"
-
 #include "ui/icon-names.h"
+#include "ui/pack.h"
 #include "ui/widget/color-notebook.h"
 #include "ui/widget/gradient-selector.h"
 
@@ -29,19 +28,15 @@ namespace Widget {
 SwatchSelector::SwatchSelector()
     : Gtk::Box(Gtk::ORIENTATION_VERTICAL)
 {
-    using Inkscape::UI::Widget::ColorNotebook;
-
     _gsel = Gtk::make_managed<GradientSelector>();
     _gsel->setMode(GradientSelector::MODE_SWATCH);
-
     _gsel->set_visible(true);
-
-    pack_start(*_gsel);
+    UI::pack_start(*this, *_gsel);
 
     auto const color_selector = Gtk::make_managed<ColorNotebook>(_selected_color);
     color_selector->set_label(_("Swatch color"));
     color_selector->set_visible(true);
-    pack_start(*color_selector);
+    UI::pack_start(*this, *color_selector);
 
     _selected_color.signal_dragged.connect(sigc::mem_fun(*this, &SwatchSelector::_changedCb));
     _selected_color.signal_released.connect(sigc::mem_fun(*this, &SwatchSelector::_changedCb));

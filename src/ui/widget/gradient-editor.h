@@ -35,10 +35,10 @@ namespace Inkscape::UI::Widget {
 
 class GradientSelector;
 
-class GradientEditor : public Gtk::Box, public GradientSelectorInterface {
+class GradientEditor final : public Gtk::Box, public GradientSelectorInterface {
 public:
     GradientEditor(const char* prefs);
-    ~GradientEditor() noexcept override;
+    ~GradientEditor() noexcept final;
 
 private:
     sigc::signal<void ()> _signal_grabbed;
@@ -52,15 +52,15 @@ public:
     decltype(_signal_dragged) signal_dragged() const { return _signal_dragged; }
     decltype(_signal_released) signal_released() const { return _signal_released; }
 
-    void setGradient(SPGradient* gradient) override;
-    SPGradient* getVector() override;
-    void setVector(SPDocument* doc, SPGradient* vector) override;
-    void setMode(SelectorMode mode) override;
-    void setUnits(SPGradientUnits units) override;
-    SPGradientUnits getUnits() override;
-    void setSpread(SPGradientSpread spread) override;
-    SPGradientSpread getSpread() override;
-    void selectStop(SPStop* selected) override;
+    void setGradient(SPGradient *gradient) final;
+    SPGradient *getVector() final;
+    void setVector(SPDocument *doc, SPGradient *vector) final;
+    void setMode(SelectorMode mode) final;
+    void setUnits(SPGradientUnits units) final;
+    SPGradientUnits getUnits() final;
+    void setSpread(SPGradientSpread spread) final;
+    SPGradientSpread getSpread() final;
+    void selectStop(SPStop *selected) final;
 
 private:
     void set_gradient(SPGradient* gradient);
@@ -119,3 +119,14 @@ private:
 } // namespace Inkscape::UI::Widget
 
 #endif // SEEN_GRADIENT_EDITOR_H
+
+/*
+  Local Variables:
+  mode:c++
+  c-file-style:"stroustrup"
+  c-file-offsets:((innamespace . 0)(inline-open . 0)(case-label . +))
+  indent-tabs-mode:nil
+  fill-column:99
+  End:
+*/
+// vim:filetype=cpp:expandtab:shiftwidth=4:tabstop=8:softtabstop=4:fileencoding=utf-8:textwidth=99:

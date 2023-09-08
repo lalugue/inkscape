@@ -203,14 +203,13 @@ GradientEditor::GradientEditor(const char* prefs) :
     _gradient_image.signal_delete_stop().connect([=](size_t index) {
         delete_stop(index);
     });
-
-    gradBox.pack_start(_gradient_image, true, true, 0);
+    gradBox.add(_gradient_image);
 
     // add color selector
     auto const color_selector = Gtk::make_managed<ColorNotebook>(_selected_color);
     color_selector->set_label(_("Stop color"));
     color_selector->set_visible(true);
-    _colors_box.pack_start(*color_selector, true, true, 0);
+    _colors_box.add(*color_selector);
 
     // gradient library in a popup
     _popover.add(*_selector);
@@ -281,12 +280,12 @@ GradientEditor::GradientEditor(const char* prefs) :
         item.signal_activate().connect([=](){ set_repeat_mode(mode); });
         // pack icon and text into MenuItem, since MenuImageItem is deprecated
         auto text = item.get_label();
-        auto const hbox = Gtk::make_managed<Gtk::Box>();
+        auto const hbox = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL, 8);
         Gtk::Image* img = sp_get_icon_image(get_repeat_icon(mode), Gtk::ICON_SIZE_BUTTON);
-        hbox->pack_start(*img, false, true, 8);
+        hbox->add(*img);
         auto const label = Gtk::make_managed<Gtk::Label>();
         label->set_label(text);
-        hbox->pack_start(*label, false, true, 8);
+        hbox->add(*label);
         hbox->show_all();
         item.remove();
         item.add(*hbox);
@@ -309,7 +308,7 @@ GradientEditor::GradientEditor(const char* prefs) :
         }
     });
 
-    pack_start(_main_grid);
+    add(_main_grid);
 
     // restore visibility of the stop list view
     _stops_list_visible = Inkscape::Preferences::get()->getBool(_prefs + "/stoplist", true);
@@ -687,3 +686,14 @@ void GradientEditor::fire_stop_selected(SPStop* stop) {
 }
 
 } // namespace Inkscape::UI::Widget
+
+/*
+  Local Variables:
+  mode:c++
+  c-file-style:"stroustrup"
+  c-file-offsets:((innamespace . 0)(inline-open . 0)(case-label . +))
+  indent-tabs-mode:nil
+  fill-column:99
+  End:
+*/
+// vim:filetype=cpp:expandtab:shiftwidth=4:tabstop=8:softtabstop=4:fileencoding=utf-8:textwidth=99:

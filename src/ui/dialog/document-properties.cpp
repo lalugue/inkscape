@@ -47,6 +47,7 @@
 #include "ui/dialog/filedialog.h"
 #include "ui/icon-loader.h"
 #include "ui/icon-names.h"
+#include "ui/pack.h"
 #include "ui/popup-menu.h"
 #include "ui/shape-editor.h"
 #include "ui/widget/alignment-selector.h"
@@ -184,7 +185,7 @@ DocumentProperties::DocumentProperties()
     , _namedview_connection(this)
     , _root_connection(this)
 {
-    pack_start(_notebook, true, true);
+    UI::pack_start(*this, _notebook, true, true);
 
     _notebook.append_page(*_page_page,      _("Display"));
     _notebook.append_page(*_page_guides,    _("Guides"));
@@ -1066,9 +1067,9 @@ void DocumentProperties::build_metadata()
     button_load->set_tooltip_text(_("Use the previously saved default metadata here"));
 
     auto const box_buttons = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL, 4);
-    box_buttons->pack_end(*button_save, true, true, 6);
-    box_buttons->pack_end(*button_load, true, true, 6);
-    _page_metadata1->pack_end(*box_buttons, false, false, 0);
+    UI::pack_end(*box_buttons, *button_save, true, true, 6);
+    UI::pack_end(*box_buttons, *button_load, true, true, 6);
+    UI::pack_end(*_page_metadata1, *box_buttons, false, false);
 
     button_save->signal_clicked().connect(sigc::mem_fun(*this, &DocumentProperties::save_default_metadata));
     button_load->signal_clicked().connect(sigc::mem_fun(*this, &DocumentProperties::load_default_metadata));
@@ -1419,7 +1420,7 @@ void DocumentProperties::build_gridspage()
     _grids_label_def.set_markup(_("<b>Defined grids</b>"));
     _grids_label_def.get_style_context()->add_class("heading");
     _grids_hbox_crea.set_spacing(5);
-    _grids_hbox_crea.pack_start(*Gtk::make_managed<Gtk::Label>("Add grid:"), false, true);
+    UI::pack_start(_grids_hbox_crea, *Gtk::make_managed<Gtk::Label>("Add grid:"), false, true);
     auto btn_size = Gtk::SizeGroup::create(Gtk::SizeGroupMode::SIZE_GROUP_HORIZONTAL);
     for (auto [label, type, icon]: (std::tuple<const char*, GridType, const char*>[]) {
         {C_("Grid", "Rectangular"), GridType::RECTANGULAR, "grid-rectangular"},
@@ -1430,7 +1431,7 @@ void DocumentProperties::build_gridspage()
         btn->set_image_from_icon_name(icon, Gtk::ICON_SIZE_MENU);
         btn->set_always_show_image();
         btn_size->add_widget(*btn);
-        _grids_hbox_crea.pack_start(*btn, false, true);
+        UI::pack_start(_grids_hbox_crea, *btn, false, true);
         GridType grid_type = type;
         btn->signal_clicked().connect([=](){ onNewGrid(grid_type); });
     }
@@ -1438,12 +1439,12 @@ void DocumentProperties::build_gridspage()
     _grids_vbox.set_name("NotebookPage");
     _grids_vbox.property_margin().set_value(4);
     _grids_vbox.set_spacing(4);
-    _grids_vbox.pack_start(_grids_label_crea, false, false);
-    _grids_vbox.pack_start(_grids_hbox_crea, false, false);
-    _grids_vbox.pack_start(_grids_label_def, false, false);
-    _grids_vbox.pack_start(_grids_notebook, false, false);
+    UI::pack_start(_grids_vbox, _grids_label_crea, false, false);
+    UI::pack_start(_grids_vbox, _grids_hbox_crea, false, false);
+    UI::pack_start(_grids_vbox, _grids_label_def, false, false);
+    UI::pack_start(_grids_vbox, _grids_notebook, false, false);
     _grids_notebook.set_scrollable();
-    _grids_vbox.pack_start(_grids_button_remove, false, false);
+    UI::pack_start(_grids_vbox, _grids_button_remove, false, false);
 }
 
 void DocumentProperties::update_viewbox(SPDesktop* desktop) {
@@ -1698,14 +1699,14 @@ GridWidget::GridWidget(SPGrid *grid)
     _tab = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL, 4);
     _tab_img = Gtk::make_managed<Gtk::Image>();
     _tab_lbl = Gtk::make_managed<Gtk::Label>("-", true);
-    _tab->pack_start(*_tab_img);
-    _tab->pack_start(*_tab_lbl);
+    UI::pack_start(*_tab, *_tab_img);
+    UI::pack_start(*_tab, *_tab_lbl);
     _tab->show_all();
 
     _name_label = Gtk::make_managed<Gtk::Label>("", Gtk::ALIGN_CENTER);
     _name_label->set_margin_bottom(4);
     _name_label->get_style_context()->add_class("heading");
-    pack_start(*_name_label, false, false);
+    UI::pack_start(*this, *_name_label, false, false);
 
     _wr.setUpdating(true);
     _grid_rcb_enabled = Gtk::make_managed<Inkscape::UI::Widget::RegisteredCheckButton>(
@@ -1733,9 +1734,9 @@ GridWidget::GridWidget(SPGrid *grid)
     });
 
     auto const left = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_VERTICAL, 4);
-    left->pack_start(*_grid_rcb_enabled, false, false);
-    left->pack_start(*_grid_rcb_visible, false, false);
-    left->pack_start(*_grid_rcb_snap_visible_only, false, false);
+    UI::pack_start(*left, *_grid_rcb_enabled, false, false);
+    UI::pack_start(*left, *_grid_rcb_visible, false, false);
+    UI::pack_start(*left, *_grid_rcb_snap_visible_only, false, false);
     if (auto label = dynamic_cast<Gtk::Label*>(_grid_rcb_snap_visible_only->get_child())) {
         label->set_line_wrap();
     }
@@ -1743,10 +1744,10 @@ GridWidget::GridWidget(SPGrid *grid)
     _grid_rcb_dotted = Gtk::make_managed<Inkscape::UI::Widget::RegisteredCheckButton>(
             _("_Show dots instead of lines"), _("If set, displays dots at gridpoints instead of gridlines"),
             "dotted", _wr, false, repr, doc );
-    left->pack_start(*_grid_rcb_dotted, false, false);
+    UI::pack_start(*left, *_grid_rcb_dotted, false, false);
 
-    left->pack_start(*Gtk::make_managed<Gtk::Label>(_("Align to page:")), false, false);
-    left->pack_start(*_grid_as_alignment, false, false);
+    UI::pack_start(*left, *Gtk::make_managed<Gtk::Label>(_("Align to page:")), false, false);
+    UI::pack_start(*left, *_grid_as_alignment, false, false);
 
     _rumg = Gtk::make_managed<RegisteredUnitMenu>(
                 _("Grid _units:"), "units", _wr, repr, doc);
@@ -1803,21 +1804,21 @@ GridWidget::GridWidget(SPGrid *grid)
     _rsu_oy->setProgrammatically = false;
 
     auto const column = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_VERTICAL, 4);
-    column->pack_start(*_rumg, true, false);
+    UI::pack_start(*column, *_rumg, true, false);
 
     for (auto rs : {_rsu_ox, _rsu_oy, _rsu_sx, _rsu_sy, _rsu_gx, _rsu_gy, _rsu_mx, _rsu_my}) {
         rs->setDigits(5);
         rs->setIncrements(0.1, 1.0);
         rs->set_hexpand();
         rs->setWidthChars(12);
-        column->pack_start(*rs, true, false);
+        UI::pack_start(*column, *rs, true, false);
     }
 
-    column->pack_start(*_rsu_ax, true, false);
-    column->pack_start(*_rsu_az, true, false);
-    column->pack_start(*_rcp_gcol, true, false);
-    column->pack_start(*_rcp_gmcol, true, false);
-    column->pack_start(*_rsi, true, false);    
+    UI::pack_start(*column, *_rsu_ax, true, false);
+    UI::pack_start(*column, *_rsu_az, true, false);
+    UI::pack_start(*column, *_rcp_gcol, true, false);
+    UI::pack_start(*column, *_rcp_gmcol, true, false);
+    UI::pack_start(*column, *_rsi, true, false);    
 
     _modified_signal = grid->connectModified([this, grid](SPObject *obj, guint flags) {
         update();
@@ -1827,10 +1828,10 @@ GridWidget::GridWidget(SPGrid *grid)
     column->set_hexpand(false);
 
     auto const inner = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL, 4);
-    inner->pack_start(*left, true, true);
-    inner->pack_start(*column, false, false);
+    UI::pack_start(*inner, *left, true, true);
+    UI::pack_start(*inner, *column, false, false);
     inner->show_all();
-    pack_start(*inner, false, false);
+    UI::pack_start(*this, *inner, false, false);
     property_margin().set_value(4);
 
     auto widgets = left->get_children();

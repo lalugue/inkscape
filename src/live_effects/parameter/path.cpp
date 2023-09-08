@@ -8,51 +8,44 @@
 
 #include "path.h"
 
+#include <2geom/d2.h>
+#include <2geom/pathvector.h>
+#include <2geom/sbasis-to-bezier.h>
+#include <2geom/svg-path-parser.h>
 #include <glibmm/i18n.h>
 #include <glibmm/utility.h>
-
 #include <gtkmm/button.h>
 #include <gtkmm/label.h>
 
-
-#include <2geom/svg-path-parser.h>
-#include <2geom/sbasis-to-bezier.h>
-#include <2geom/pathvector.h>
-#include <2geom/d2.h>
-
-#include "bad-uri-exception.h"
-
-#include "desktop.h"
-#include "document-undo.h"
-#include "document.h"
-#include "inkscape.h"
-#include "message-stack.h"
-#include "selection.h"
-#include "selection-chemistry.h"
-
 #include "actions/actions-tools.h"
+#include "bad-uri-exception.h"
+#include "desktop.h"
 #include "display/curve.h"
+#include "document.h"
+#include "document-undo.h"
+#include "inkscape.h"
 #include "live_effects/effect.h"
 #include "live_effects/lpeobject.h"
-#include "object/uri.h"
-#include "object/sp-shape.h"
+#include "message-stack.h"
 #include "object/sp-item.h"
+#include "object/sp-shape.h"
 #include "object/sp-text.h"
+#include "object/uri.h"
+#include "selection-chemistry.h"
+#include "selection.h"
 #include "svg/svg.h"
-
 #include "ui/clipboard.h" // clipboard support
 #include "ui/icon-loader.h"
 #include "ui/icon-names.h"
+#include "ui/pack.h"
 #include "ui/shape-editor.h" // needed for on-canvas editing:
-#include "ui/tools/node-tool.h"
 #include "ui/tool/multi-path-manipulator.h"
 #include "ui/tool/shape-record.h"
+#include "ui/tools/node-tool.h"
 #include "ui/widget/point.h"
-
 #include "xml/repr.h"
 
 namespace Inkscape {
-
 namespace LivePathEffect {
 
 PathParam::PathParam( const Glib::ustring& label, const Glib::ustring& tip,
@@ -234,7 +227,7 @@ PathParam::param_newWidget()
     auto const _widget = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL);
 
     auto const pLabel = Gtk::make_managed<Gtk::Label>(param_label);
-    _widget->pack_start(*pLabel, true, true);
+    UI::pack_start(*_widget, *pLabel, true, true);
     pLabel->set_tooltip_text(param_tooltip);
     Gtk::Image * pIcon = nullptr;
     Gtk::Button * pButton = nullptr;
@@ -246,7 +239,7 @@ PathParam::param_newWidget()
         pButton->add(*pIcon);
         pButton->set_visible(true);
         pButton->signal_clicked().connect(sigc::mem_fun(*this, &PathParam::on_edit_button_click));
-        _widget->pack_start(*pButton, true, true);
+        UI::pack_start(*_widget, *pButton, true, true);
         pButton->set_tooltip_text(_("Edit on-canvas"));
     }
 
@@ -258,7 +251,7 @@ PathParam::param_newWidget()
         pButton->add(*pIcon);
         pButton->set_visible(true);
         pButton->signal_clicked().connect(sigc::mem_fun(*this, &PathParam::on_copy_button_click));
-        _widget->pack_start(*pButton, true, true);
+        UI::pack_start(*_widget, *pButton, true, true);
         pButton->set_tooltip_text(_("Copy path"));
     }
 
@@ -270,7 +263,7 @@ PathParam::param_newWidget()
         pButton->add(*pIcon);
         pButton->set_visible(true);
         pButton->signal_clicked().connect(sigc::mem_fun(*this, &PathParam::on_paste_button_click));
-        _widget->pack_start(*pButton, true, true);
+        UI::pack_start(*_widget, *pButton, true, true);
         pButton->set_tooltip_text(_("Paste path"));
     }
     if (_link_button) {
@@ -281,7 +274,7 @@ PathParam::param_newWidget()
         pButton->add(*pIcon);
         pButton->set_visible(true);
         pButton->signal_clicked().connect(sigc::mem_fun(*this, &PathParam::on_link_button_click));
-        _widget->pack_start(*pButton, true, true);
+        UI::pack_start(*_widget, *pButton, true, true);
         pButton->set_tooltip_text(_("Link to path in clipboard"));
     }
 
@@ -621,7 +614,6 @@ PathParam::on_link_button_click()
 }
 
 } /* namespace LivePathEffect */
-
 } /* namespace Inkscape */
 
 /*

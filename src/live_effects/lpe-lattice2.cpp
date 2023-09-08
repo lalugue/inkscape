@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 /** \file
  * LPE <lattice2> implementation
-
  */
 /*
  * Authors:
@@ -17,12 +16,17 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include <gtkmm.h>
 #include "live_effects/lpe-lattice2.h"
+
+#include <2geom/bezier-to-sbasis.h>
+#include <2geom/sbasis-2d.h>
+#include <gtkmm/box.h>
+#include <gtkmm/button.h>
+#include <gtkmm/expander.h>
+
 #include "display/curve.h"
 #include "helper/geom.h"
-#include <2geom/sbasis-2d.h>
-#include <2geom/bezier-to-sbasis.h>
+#include "ui/pack.h"
 
 // TODO due to internal breakage in glibmm headers, this must be last:
 #include <glibmm/i18n.h>
@@ -232,8 +236,8 @@ LPELattice2::newWidget()
     reset_button->signal_clicked().connect(sigc::mem_fun (*this,&LPELattice2::resetGrid));
     reset_button->set_size_request(140,30);
 
-    vbox->pack_start(*hbox, true,true,2);
-    hbox->pack_start(*reset_button, false, false,2);
+    UI::pack_start(*vbox, *hbox, true ,true, 2);
+    UI::pack_start(*hbox, *reset_button, false, false, 2);
 
     std::vector<Parameter *>::iterator it = param_vector.begin();
     while (it != param_vector.end()) {
@@ -250,9 +254,9 @@ LPELattice2::newWidget()
                     param->param_key == "live_update" ||
                     param->param_key == "perimetral") 
                 {
-                    vbox->pack_start(*widg, true, true, 2);
+                    UI::pack_start(*vbox, *widg, true, true, 2);
                 } else {
-                    vbox_expander->pack_start(*widg, true, true, 2);
+                    UI::pack_start(*vbox_expander, *widg, true, true, 2);
                 }
                 if (tip) {
                     widg->set_tooltip_markup(*tip);
@@ -269,7 +273,7 @@ LPELattice2::newWidget()
     expander = Gtk::make_managed<Gtk::Expander>(Glib::ustring(_("Show Points")));
     expander->add(*vbox_expander);
     expander->set_expanded(expanded);
-    vbox->pack_start(*expander, true, true, 2);
+    UI::pack_start(*vbox, *expander, true, true, 2);
     expander->property_expanded().signal_changed().connect(sigc::mem_fun(*this, &LPELattice2::onExpanderChanged) );
     return vbox;
 }

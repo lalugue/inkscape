@@ -15,23 +15,23 @@
 
 #include <cmath>
 #include <iomanip>
+#include <2geom/affine.h>
+#include <2geom/angle.h>
+#include <2geom/point.h>
+#include <2geom/ray.h>
 #include <gtkmm/box.h>
 #include <gtkmm/notebook.h>
 #include <libnrtype/font-lister.h>
 #include <pangomm/fontdescription.h>
 
-#include "2geom/affine.h"
-#include "2geom/angle.h"
-#include "2geom/point.h"
-#include "2geom/ray.h"
 #include "display/curve.h"
-#include "document-undo.h"
 #include "document.h"
+#include "document-undo.h"
 #include "helper/geom.h"
 #include "inkscape.h"
 #include "libnrtype/Layout-TNG.h"
-#include "live_effects/lpeobject-reference.h"
 #include "live_effects/lpeobject.h"
+#include "live_effects/lpeobject-reference.h"
 #include "live_effects/parameter/satellite-reference.h"
 #include "object/sp-defs.h"
 #include "object/sp-flowtext.h"
@@ -46,9 +46,10 @@
 #include "style.h"
 #include "svg/stringstream.h"
 #include "svg/svg-color.h"
-#include "svg/svg-length.h"
 #include "svg/svg.h"
+#include "svg/svg-length.h"
 #include "text-editing.h"
+#include "ui/pack.h"
 #include "util/safe-printf.h"
 #include "util/units.h"
 #include "xml/node.h"
@@ -238,7 +239,7 @@ LPEMeasureSegments::newWidget()
             Glib::ustring * tip = param->param_getTooltip();
             if (widg) {
                 if (       param->param_key == "linked_items") {
-                    vbox1->pack_start(*widg, true, true, 2);
+                    UI::pack_start(*vbox1, *widg, true, true, 2);
                 } else if (param->param_key == "active_projection"   ||
                            param->param_key == "distance_projection" ||
                            param->param_key == "angle_projection"    ||
@@ -247,7 +248,7 @@ LPEMeasureSegments::newWidget()
                            param->param_key == "bboxonly"            ||
                            param->param_key == "onbbox"                )
                 {
-                    vbox1->pack_start(*widg, false, true, 2);
+                    UI::pack_start(*vbox1, *widg, false, true, 2);
                 } else if (param->param_key == "precision"     ||
                            param->param_key == "coloropacity"  ||
                            param->param_key == "font"          ||
@@ -258,11 +259,11 @@ LPEMeasureSegments::newWidget()
                            param->param_key == "local_locale"  ||
                            param->param_key == "hide_arrows"     )
                 {
-                    vbox2->pack_start(*widg, false, true, 2);
+                    UI::pack_start(*vbox2, *widg, false, true, 2);
                 } else if (param->param_key == "helpdata") {
-                    vbox3->pack_start(*widg, false, true, 2);
+                    UI::pack_start(*vbox3, *widg, false, true, 2);
                 } else {
-                    vbox0->pack_start(*widg, false, true, 2);
+                    UI::pack_start(*vbox0, *widg, false, true, 2);
                 }
 
                 if (tip) {
@@ -286,7 +287,7 @@ LPEMeasureSegments::newWidget()
     vbox1->show_all();
     vbox2->show_all();
     vbox3->show_all();
-    vbox->pack_start(*notebook, true, true, 2);
+    UI::pack_start(*vbox, *notebook, true, true, 2);
     notebook->set_current_page(pagenumber);
     notebook->signal_switch_page().connect(sigc::mem_fun(*this, &LPEMeasureSegments::on_my_switch_page));
     return vbox;

@@ -11,23 +11,20 @@
 #include "prefdialog.h"
 
 #include <cassert>
+#include <glibmm/i18n.h>
 #include <gtkmm/checkbutton.h>
 #include <gtkmm/separator.h>
-#include <glibmm/i18n.h>
 
-#include "ui/dialog-events.h"
-#include "xml/repr.h"
-
-// Used to get SP_ACTIVE_DESKTOP
-#include "inkscape.h"
 #include "document.h"
 #include "document-undo.h"
-
 #include "extension/effect.h"
 #include "extension/execution-env.h"
 #include "extension/implementation/implementation.h"
-
+#include "inkscape.h" // Used to get SP_ACTIVE_DESKTOP
 #include "parameter.h"
+#include "ui/dialog-events.h"
+#include "ui/pack.h"
+#include "xml/repr.h"
 
 namespace Inkscape::Extension {
 
@@ -59,10 +56,10 @@ PrefDialog::PrefDialog (Glib::ustring name, Gtk::Widget * controls, Effect * eff
         _signal_param_change.connect(sigc::mem_fun(*this, &PrefDialog::param_change));
     }
 
-    hbox->pack_start(*controls, true, true, 0);
+    UI::pack_start(*hbox, *controls, true, true);
     hbox->set_visible(true);
 
-    this->get_content_area()->pack_start(*hbox, true, true, 0);
+    UI::pack_start(*this->get_content_area(), *hbox, true, true);
 
     _button_cancel = add_button(_effect == nullptr ? _("_Cancel") : _("_Close"), Gtk::RESPONSE_CANCEL);
     _button_ok     = add_button(_effect == nullptr ? _("_OK")     : _("_Apply"), Gtk::RESPONSE_OK);
@@ -82,16 +79,16 @@ PrefDialog::PrefDialog (Glib::ustring name, Gtk::Widget * controls, Effect * eff
 
         auto const sep = Gtk::make_managed<Gtk::Separator>();
         sep->set_visible(true);
-        this->get_content_area()->pack_start(*sep, false, false, InxWidget::GUI_BOX_SPACING);
+        UI::pack_start(*this->get_content_area(), *sep, false, false, InxWidget::GUI_BOX_SPACING);
 
         hbox = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL);
         hbox->property_margin().set_value(InxWidget::GUI_BOX_MARGIN);
         _button_preview = _param_preview->get_widget(&_signal_preview);
         _button_preview->set_visible(true);
-        hbox->pack_start(*_button_preview, true, true, 0);
+        UI::pack_start(*hbox, *_button_preview, true, true);
         hbox->set_visible(true);
 
-        this->get_content_area()->pack_start(*hbox, false, false, 0);
+        UI::pack_start(*this->get_content_area(), *hbox, false, false);
 
         if (auto const preview_box =  dynamic_cast<Gtk::Box *>(_button_preview)) {
             _checkbox_preview = dynamic_cast<Gtk::CheckButton *>(preview_box->get_children().at(0));

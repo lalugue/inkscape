@@ -12,7 +12,9 @@
 
 #include "notebook-page.h"
 
-# include <gtkmm/grid.h>
+#include <gtkmm/grid.h>
+
+#include "ui/pack.h"
 
 namespace Inkscape {
 namespace UI {
@@ -29,7 +31,7 @@ NotebookPage::NotebookPage(int n_rows, int n_columns, bool expand, bool fill, gu
     _table->set_row_spacing(4);
     _table->set_column_spacing(4);
 
-    pack_start(*_table, expand, fill, padding);
+    UI::pack_start(*this, *_table, expand, fill, padding);
 }
 
 } // namespace Widget

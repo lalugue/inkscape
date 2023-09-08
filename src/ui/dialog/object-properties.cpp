@@ -30,7 +30,6 @@
 #include "object-properties.h"
 
 #include <glibmm/i18n.h>
-
 #include <gtkmm/grid.h>
 
 #include "document-undo.h"
@@ -38,9 +37,9 @@
 #include "inkscape.h"
 #include "style.h"
 #include "style-enums.h"
-
 #include "object/sp-image.h"
 #include "ui/icon-names.h"
+#include "ui/pack.h"
 #include "widgets/sp-attribute-widget.h"
 
 namespace Inkscape {
@@ -97,7 +96,7 @@ void ObjectProperties::_init()
     grid_top->set_column_spacing(0);
     grid_top->property_margin().set_value(4);
 
-    pack_start(*grid_top, false, false, 0);
+    UI::pack_start(*this, *grid_top, false, false);
 
 
     /* Create the label for the object id */
@@ -162,7 +161,7 @@ void ObjectProperties::_init()
     auto const frame_desc = Gtk::make_managed<UI::Widget::Frame>("", FALSE);
     frame_desc->set_label_widget(*label_desc);
     frame_desc->set_padding (0,0,0,0);
-    pack_start(*frame_desc, true, true, 0);
+    UI::pack_start(*this, *frame_desc, true, true);
 
     /* Create the text view box for the object description */
     _ft_description.property_margin().set_value(4);
@@ -231,14 +230,14 @@ void ObjectProperties::_init()
 
     /* Check boxes */
     auto const hb_checkboxes = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL);
-    pack_start(*hb_checkboxes, Gtk::PACK_SHRINK, 0);
+    UI::pack_start(*this, *hb_checkboxes, UI::PackOptions::shrink);
 
     auto const grid_cb = Gtk::make_managed<Gtk::Grid>();
     grid_cb->set_row_homogeneous();
     grid_cb->set_column_homogeneous(true);
 
     grid_cb->property_margin().set_value(4);
-    hb_checkboxes->pack_start(*grid_cb, true, true, 0);
+    UI::pack_start(*hb_checkboxes, *grid_cb, true, true);
 
     /* Hide */
     _cb_hide.set_tooltip_text (_("Check to make the object invisible"));
@@ -276,7 +275,7 @@ void ObjectProperties::_init()
 
     /* Interactivity options */
     _exp_interactivity.set_vexpand(false);
-    pack_start(_exp_interactivity, Gtk::PACK_SHRINK);
+    UI::pack_start(*this, _exp_interactivity, UI::PackOptions::shrink);
     show_all();
 }
 

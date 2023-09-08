@@ -5,25 +5,20 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include <cmath>
 #include <algorithm>
+#include <cmath>
 #include <vector>
-
 #include <2geom/bezier-to-sbasis.h>
 
 #include "live_effects/lpe-patternalongpath.h"
 #include "live_effects/lpeobject.h"
-
 #include "display/curve.h"
-
 #include "object/sp-shape.h"
-
 #include "ui/knot/knot-holder.h"
 #include "ui/knot/knot-holder-entity.h"
 
 // TODO due to internal breakage in glibmm headers, this must be last:
 #include <glibmm/i18n.h>
-
 
 /* Theory in e-mail from J.F. Barraud
 Let B be the skeleton path, and P the pattern (the path to be deformed).
@@ -113,7 +108,6 @@ LPEPatternAlongPath::LPEPatternAlongPath(LivePathEffectObject *lpeobject) :
     prop_scale.param_set_increments(0.01, 0.10);
     _knot_entity = nullptr;
     _provides_knotholder_entities = true;
-
 }
 
 LPEPatternAlongPath::~LPEPatternAlongPath() = default;

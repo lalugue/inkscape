@@ -30,6 +30,7 @@
 #include "svg/css-ostringstream.h"
 #include "ui/icon-loader.h"
 #include "ui/icon-names.h"
+#include "ui/pack.h"
 #include "ui/widget/fill-style.h"
 #include "ui/widget/stroke-style.h"
 #include "ui/widget/notebook-page.h"
@@ -51,7 +52,7 @@ FillAndStroke::FillAndStroke()
     , strokeWdgt(nullptr)
 {
     set_spacing(2);
-    pack_start(_notebook, true, true);
+    UI::pack_start(*this, _notebook, true, true);
 
     _notebook.append_page(*_page_fill, _createPageTabLabel(_("_Fill"), INKSCAPE_ICON("object-fill")));
     _notebook.append_page(*_page_stroke_paint, _createPageTabLabel(_("Stroke _paint"), INKSCAPE_ICON("object-stroke")));
@@ -64,7 +65,7 @@ FillAndStroke::FillAndStroke()
     _layoutPageStrokePaint();
     _layoutPageStrokeStyle();
 
-    pack_end(_composite_settings, Gtk::PACK_SHRINK);
+    UI::pack_end(*this, _composite_settings, UI::PackOptions::shrink);
 
     show_all_children();
 
@@ -189,12 +190,12 @@ FillAndStroke::_createPageTabLabel(const Glib::ustring& label, const char *label
     auto const _tab_label_box = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL, 4);
 
     auto img = Gtk::manage(sp_get_icon_image(label_image, Gtk::ICON_SIZE_MENU));
-    _tab_label_box->pack_start(*img);
+    _tab_label_box->add(*img);
 
     auto const _tab_label = Gtk::make_managed<Gtk::Label>(label, true);
-    _tab_label_box->pack_start(*_tab_label);
-    _tab_label_box->show_all();
+    _tab_label_box->add(*_tab_label);
 
+    _tab_label_box->show_all();
     return *_tab_label_box;
 }
 

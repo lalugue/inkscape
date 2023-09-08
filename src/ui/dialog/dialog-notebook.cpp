@@ -11,7 +11,6 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-
 #include <algorithm>
 #include <iostream>
 #include <optional>
@@ -38,6 +37,7 @@
 #include "ui/dialog/dialog-multipaned.h"
 #include "ui/dialog/dialog-window.h"
 #include "ui/icon-loader.h"
+#include "ui/pack.h"
 #include "ui/util.h"
 #include "ui/widget/popover-menu-item.h"
 
@@ -279,38 +279,27 @@ void DialogNotebook::add_page(Gtk::Widget &page, Gtk::Widget &tab, Glib::ustring
     _reload_context = true;
     page.set_vexpand();
 
-    auto container = dynamic_cast<Gtk::Box *>(&page);
-    if (container) {
+    // TODO: It is not exactly great to replace the passed pageʼs children from under it like this.
+    //       But stopping it requires to ensure all references to page elsewhere are right/updated.
+    if (auto const box = dynamic_cast<Gtk::Box *>(&page)) {
         auto const wrapper = Gtk::make_managed<Gtk::ScrolledWindow>();
         wrapper->set_vexpand(true);
         wrapper->set_propagate_natural_height(true);
-        wrapper->set_valign(Gtk::ALIGN_FILL);
         wrapper->set_overlay_scrolling(false);
-        wrapper->set_can_focus(false);
         wrapper->get_style_context()->add_class("noborder");
 
         auto const wrapperbox = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_VERTICAL,0);
-        wrapperbox->set_valign(Gtk::ALIGN_FILL);
         wrapperbox->set_vexpand(true);
 
-        for_each_child(*container, [=](Gtk::Widget &child){
-            auto const pack_type = container->child_property_pack_type(child).get_value();
-            auto const expand = container->child_property_expand(child).get_value();
-            auto const fill = container->child_property_fill(child).get_value();
-            auto const padding = container->child_property_padding(child).get_value();
-            container->remove(child);
-
-            if (pack_type == Gtk::PACK_START) {
-                wrapperbox->pack_start(child, expand, fill, padding);
-            } else {
-                wrapperbox->pack_end  (child, expand, fill, padding);
-            }
-
+        // This used to transfer pack-type and child properties, but now those are set on children.
+        for_each_child(*box, [=](Gtk::Widget &child) {
+            box       ->remove(child);
+            wrapperbox->add   (child);
             return ForEachResult::_continue;
         });
 
         wrapper->add(*wrapperbox);
-        container->add(*wrapper);
+        box    ->add(*wrapper);
 
         if (provide_scroll(page)) {
             wrapper->set_policy(Gtk::POLICY_NEVER, Gtk::POLICY_EXTERNAL);

@@ -15,6 +15,7 @@
 #include <gtkmm/label.h>
 
 #include "ui/icon-loader.h"
+#include "ui/pack.h"
 
 namespace Inkscape::UI::Widget {
 
@@ -33,11 +34,12 @@ Labelled::Labelled(Glib::ustring const &label, Glib::ustring const &tooltip,
 
     if (!icon.empty()) {
         auto const image = sp_get_icon_image(icon, Gtk::ICON_SIZE_LARGE_TOOLBAR);
-        pack_start(*Gtk::manage(image), Gtk::PACK_SHRINK);
+        UI::pack_start(*this, *image, UI::PackOptions::shrink);
     }
 
-    pack_start(*_label, Gtk::PACK_SHRINK);
-    pack_start(*Gtk::manage(_widget), Gtk::PACK_SHRINK);
+    UI::pack_start(*this, *_label, UI::PackOptions::shrink);
+    UI::pack_start(*this, *Gtk::manage(_widget), UI::PackOptions::shrink);
+
     if (mnemonic) {
         _label->set_mnemonic_widget(*_widget);
     }

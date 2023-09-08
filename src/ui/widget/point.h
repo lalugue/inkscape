@@ -15,8 +15,9 @@
 #ifndef INKSCAPE_UI_WIDGET_POINT_H
 #define INKSCAPE_UI_WIDGET_POINT_H
 
-#include "ui/widget/labelled.h"
 #include <2geom/point.h>
+
+#include "ui/widget/labelled.h"
 #include "ui/widget/scalar.h"
 
 namespace Gtk {
@@ -168,6 +169,9 @@ public:
 protected:
     Scalar xwidget;
     Scalar ywidget;
+
+private:
+    void construct_impl();
 };
 
 } // namespace Inkscape::UI::Widget

@@ -18,12 +18,12 @@
 #include "knot-properties.h"
 
 #include <boost/lexical_cast.hpp>
-
 #include <glibmm/i18n.h>
 #include <glibmm/main.h>
 
 #include "desktop.h"
 #include "ui/knot/knot.h"
+#include "ui/pack.h"
 #include "util/units.h"
 
 namespace Inkscape::UI::Dialog {
@@ -64,7 +64,7 @@ KnotPropertiesDialog::KnotPropertiesDialog()
     _layout_table.attach(_knot_y_label, 0, 1, 1, 1);
     _layout_table.attach(_knot_y_entry, 1, 1, 1, 1);
 
-    mainVBox->pack_start(_layout_table, true, true, 4);
+    UI::pack_start(*mainVBox, _layout_table, true, true, 4);
 
     // Buttons
     _close_button.set_can_default();

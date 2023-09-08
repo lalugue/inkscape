@@ -15,24 +15,28 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#include "icon-preview.h"
+
 #include <glibmm/i18n.h>
 #include <glibmm/timer.h>
 #include <glibmm/main.h>
+#include <gtkmm/box.h>
 #include <gtkmm/checkbutton.h>
 #include <gtkmm/frame.h>
 #include <sigc++/adaptors/bind.h>
 #include <sigc++/functors/mem_fun.h>
 
 #include "desktop.h"
-#include "document.h"
-#include "inkscape.h"
-#include "page-manager.h"
 #include "display/cairo-utils.h"
-#include "display/drawing.h"
 #include "display/drawing-context.h"
+#include "display/drawing.h"
+#include "document.h"
+#include "icon-preview.h"
+#include "inkscape.h"
 #include "object/sp-namedview.h"
 #include "object/sp-root.h"
-#include "icon-preview.h"
+#include "page-manager.h"
+#include "ui/pack.h"
 #include "ui/widget/frame.h"
 
 extern "C" {
@@ -64,9 +68,7 @@ void IconPreviewPanel::on_button_clicked(int which)
 //#########################################################################
 //## C O N S T R U C T O R    /    D E S T R U C T O R
 //#########################################################################
-/**
- * Constructor
- */
+
 IconPreviewPanel::IconPreviewPanel()
     : DialogBase("/dialogs/iconpreview", "IconPreview")
     , drawing(nullptr)
@@ -122,10 +124,11 @@ IconPreviewPanel::IconPreviewPanel()
     auto const magFrame = Gtk::make_managed<UI::Widget::Frame>(_("Magnified:"));
     magFrame->add( magnified );
 
-    magBox->pack_start( *magFrame, Gtk::PACK_EXPAND_WIDGET );
-    magBox->pack_start( magLabel, Gtk::PACK_SHRINK );
+    UI::pack_start(*magBox, *magFrame, UI::PackOptions::expand_widget);
+    UI::pack_start(*magBox,  magLabel, UI::PackOptions::shrink       );
 
     auto const verts = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_VERTICAL);
+
     Gtk::Box *horiz = nullptr;
     int previous = 0;
     int avail = 0;
@@ -157,7 +160,7 @@ IconPreviewPanel::IconPreviewPanel()
         buttons[i]->set_valign(Gtk::ALIGN_CENTER);
 
         if ( !pack || ( (avail == 0) && (previous == 0) ) ) {
-            verts->pack_end(*(buttons[i]), Gtk::PACK_SHRINK);
+            UI::pack_end(*verts, *(buttons[i]), UI::PackOptions::shrink);
             previous = sizes[i];
             avail = sizes[i];
         } else {
@@ -175,20 +178,21 @@ IconPreviewPanel::IconPreviewPanel()
                 if (!horiz) {
                     horiz = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL);
                     avail = previous;
-                    verts->pack_end(*horiz, Gtk::PACK_SHRINK);
+                    UI::pack_end(*verts, *horiz, UI::PackOptions::shrink);
                 }
 
-                horiz->pack_start(*(buttons[i]), Gtk::PACK_EXPAND_WIDGET);
+                UI::pack_start(*horiz, *buttons[i], UI::PackOptions::expand_widget);
+
                 avail -= sizes[i];
                 avail -= pad; // a little extra for padding
             } else {
                 horiz = nullptr;
-                verts->pack_end(*(buttons[i]), Gtk::PACK_SHRINK);
+                UI::pack_end(*verts, *(buttons[i]), UI::PackOptions::shrink);
             }
         }
     }
 
-    iconBox.pack_start(splitter);
+    UI::pack_start(iconBox, splitter);
     splitter.pack1( *magBox, true, false );
     auto const actuals = Gtk::make_managed<UI::Widget::Frame>(_("Actual Size:"));
     actuals->property_margin().set_value(4);
@@ -196,14 +200,14 @@ IconPreviewPanel::IconPreviewPanel()
     splitter.pack2( *actuals, false, false );
 
     selectionButton = Gtk::make_managed<Gtk::CheckButton>(C_("Icon preview window", "Sele_ction"), true);
-    magBox->pack_start( *selectionButton, Gtk::PACK_SHRINK );
+    UI::pack_start(*magBox,  *selectionButton, UI::PackOptions::shrink );
     selectionButton->set_tooltip_text(_("Selection only or whole document"));
     selectionButton->signal_clicked().connect( sigc::mem_fun(*this, &IconPreviewPanel::modeToggled) );
 
-    gint val = prefs->getBool("/iconpreview/selectionOnly");
+    int const val = prefs->getBool("/iconpreview/selectionOnly");
     selectionButton->set_active( val != 0 );
 
-    pack_start(iconBox, Gtk::PACK_SHRINK);
+    UI::pack_start(*this, iconBox, UI::PackOptions::shrink);
 
     show_all_children();
 

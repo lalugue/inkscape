@@ -9,25 +9,20 @@
 #include "togglebutton.h"
 
 #include <utility>
-
 #include <glibmm/i18n.h>
 
 #include "inkscape.h"
-#include "selection.h"
-
 #include "live_effects/effect.h"
-
+#include "selection.h"
 #include "svg/stringstream.h"
 #include "svg/svg.h"
-
-#include "ui/icon-names.h"
 #include "ui/icon-loader.h"
+#include "ui/icon-names.h"
+#include "ui/pack.h"
 #include "ui/widget/registered-widget.h"
-
 #include "util/numeric/converters.h"
 
 namespace Inkscape {
-
 namespace LivePathEffect {
 
 ToggleButtonParam::ToggleButtonParam(const Glib::ustring &label, const Glib::ustring &tip, const Glib::ustring &key,
@@ -126,12 +121,12 @@ ToggleButtonParam::param_newWidget()
            icon_button = sp_get_icon_image(_icon_active, _icon_size);
        }
        icon_button->set_visible(true);
-       box_button->pack_start(*icon_button, false, false, 1);
+       UI::pack_start(*box_button, *icon_button, false, false, 1);
        if (!param_label.empty()) {
-           box_button->pack_start(*label, false, false, 1);
+           UI::pack_start(*box_button, *label, false, false, 1);
        }
    } else {
-       box_button->pack_start(*label, false, false, 1);
+       UI::pack_start(*box_button, *label, false, false, 1);
    }
 
    checkwdg->add(*box_button);
@@ -198,7 +193,6 @@ ToggleButtonParam::toggled() {
 }
 
 } /* namespace LivePathEffect */
-
 } /* namespace Inkscape */
 
 /*

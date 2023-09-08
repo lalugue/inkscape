@@ -28,6 +28,7 @@
 #include "ui/dialog/dialog-manager.h"
 #include "ui/dialog/dialog-multipaned.h"
 #include "ui/dialog/dialog-notebook.h"
+#include "ui/pack.h"
 #include "ui/shortcuts.h"
 #include "ui/util.h"
 
@@ -94,7 +95,7 @@ DialogWindow::DialogWindow(InkscapeWindow *inkscape_window, Gtk::Widget *page)
     DialogMultipaned *columns = _container->get_columns();
     auto drop_size = Inkscape::Preferences::get()->getBool("/options/dockingzone/value", true) ? WINDOW_DROPZONE_SIZE / 2 : WINDOW_DROPZONE_SIZE;
     columns->set_dropzone_sizes(drop_size, drop_size);
-    box_outer->pack_end(*_container);
+    UI::pack_end(*box_outer, *_container);
 
     // If there is no page, create an empty Dialogwindow to be populated later
     if (page) {

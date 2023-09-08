@@ -10,9 +10,13 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include <2geom/rect.h>
 #include <cmath>
 #include <cstddef>
+#include <memory>
+#include <optional>
+#include <string>
+#include <tuple>
+#include <2geom/rect.h>
 #include <glibmm/i18n.h>
 #include <glibmm/markup.h>
 #include <glibmm/ustring.h>
@@ -23,13 +27,13 @@
 #include <gtkmm/radiobutton.h>
 #include <gtkmm/spinbutton.h>
 #include <gtkmm/widget.h>
-#include <memory>
-#include <optional>
-#include <string>
-#include <tuple>
+
 #include "actions/actions-tools.h"
 #include "desktop.h"
 #include "live_effects/effect-enum.h"
+#include "live_effects/effect.h"
+#include "live_effects/lpeobject.h"
+#include "live_effects/lpeobject-reference.h"
 #include "mod360.h"
 #include "object/sp-anchor.h"
 #include "object/sp-ellipse.h"
@@ -45,15 +49,13 @@
 #include "ui/builder-utils.h"
 #include "ui/dialog/object-attributes.h"
 #include "ui/icon-names.h"
+#include "ui/pack.h"
 #include "ui/tools/node-tool.h"
 #include "ui/widget/image-properties.h"
 #include "ui/widget/spinbutton.h"
 #include "ui/widget/style-swatch.h"
 #include "widgets/sp-attribute-widget.h"
 #include "xml/href-attribute-helper.h"
-#include "live_effects/lpeobject-reference.h"
-#include "live_effects/lpeobject.h"
-#include "live_effects/effect.h"
 
 namespace Inkscape {
 namespace UI {
@@ -95,7 +97,7 @@ ObjectAttributes::ObjectAttributes()
     _obj_title.set_text("");
     _style_swatch.set_hexpand(false);
     _style_swatch.set_valign(Gtk::ALIGN_CENTER);
-    get_widget<Gtk::Box>(_builder, "main-header").pack_end(_style_swatch, false, true);
+    UI::pack_end(get_widget<Gtk::Box>(_builder, "main-header"), _style_swatch, false, true);
     add(main);
     create_panels();
     _style_swatch.set_visible(false);
@@ -137,7 +139,7 @@ void ObjectAttributes::widget_setup() {
         return;
     }
 
-    _main_panel.pack_start(panel->widget(), true, true);
+    UI::pack_start(_main_panel, panel->widget(), true, true);
     bool show_style = false;
     if (panel->supports_fill_stroke()) {
         if (auto style = item ? item->style : nullptr) {

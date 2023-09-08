@@ -27,6 +27,7 @@
 #include "document-undo.h"
 #include "inkscape.h"
 #include "rdf.h"
+#include "ui/pack.h"
 #include "ui/widget/entity-entry.h"
 #include "ui/widget/registry.h"
 
@@ -104,9 +105,9 @@ void Licensor::init (Registry& wr)
     wr.setUpdating (false);
 
     auto const box = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL);
-    pack_start (*box, true, true, 0);
-    box->pack_start (_eentry->_label, false, false, 5);
-    box->pack_start (*_eentry->_packable, true, true, 0);
+    UI::pack_start(*this, *box, true, true, 0);
+    UI::pack_start(*box, _eentry->_label, false, false, 5);
+    UI::pack_start(*box, *_eentry->_packable, true, true, 0);
     show_all_children();
 }
 

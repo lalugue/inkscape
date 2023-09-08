@@ -12,9 +12,10 @@
 #include <gtkmm/box.h>
 #include <gtkmm/checkbutton.h>
 
-#include "xml/node.h"
 #include "extension/extension.h"
 #include "preferences.h"
+#include "ui/pack.h"
+#include "xml/node.h"
 
 namespace Inkscape {
 namespace Extension {
@@ -119,7 +120,7 @@ Gtk::Widget *ParamBool::get_widget(sigc::signal<void ()> *changeSignal)
 
     auto const checkbox = Gtk::make_managed<ParamBoolCheckButton>(this, _text, changeSignal);
     checkbox->set_visible(true);
-    hbox->pack_start(*checkbox, false, false);
+    UI::pack_start(*hbox, *checkbox, false, false);
 
     hbox->set_visible(true);
     return hbox;

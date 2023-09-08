@@ -32,6 +32,7 @@
 #include <glibmm/uriutils.h>
 #include <glibmm/ustring.h>
 
+#include "ui/pack.h"
 #include "ui/view/svg-view-widget.h"
 
 namespace Inkscape::UI::Dialog {
@@ -42,7 +43,7 @@ bool SVGPreview::setDocument(SPDocument *doc)
         viewer->setDocument(doc);
     } else {
         viewer = std::make_unique<Inkscape::UI::View::SVGViewWidget>(doc);
-        pack_start(*viewer, true, true);
+        UI::pack_start(*this, *viewer, true, true);
     }
 
     document.reset(doc);

@@ -5,28 +5,26 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include <gtkmm/box.h>
 #include "live_effects/parameter/originalpath.h"
 
 #include <glibmm/i18n.h>
+#include <gtkmm/box.h>
 #include <gtkmm/button.h>
 #include <gtkmm/label.h>
 
+#include "desktop.h"
 #include "display/curve.h"
+#include "inkscape.h"
 #include "live_effects/effect.h"
 #include "live_effects/lpeobject.h"
-
-#include "object/uri.h"
 #include "object/sp-shape.h"
 #include "object/sp-text.h"
-
-#include "inkscape.h"
-#include "desktop.h"
+#include "object/uri.h"
 #include "selection.h"
 #include "ui/icon-names.h"
+#include "ui/pack.h"
 
 namespace Inkscape {
-
 namespace LivePathEffect {
 
 OriginalPathParam::OriginalPathParam( const Glib::ustring& label, const Glib::ustring& tip,
@@ -45,7 +43,7 @@ OriginalPathParam::param_newWidget()
 
     { // Label
         auto const pLabel = Gtk::make_managed<Gtk::Label>(param_label);
-        _widget->pack_start(*pLabel, true, true);
+        UI::pack_start(*_widget, *pLabel, true, true);
         pLabel->set_tooltip_text(param_tooltip);
     }
 
@@ -58,7 +56,7 @@ OriginalPathParam::param_newWidget()
         pButton->add(*pIcon);
         pButton->set_visible(true);
         pButton->signal_clicked().connect(sigc::mem_fun(*this, &OriginalPathParam::on_link_button_click));
-        _widget->pack_start(*pButton, true, true);
+        UI::pack_start(*_widget, *pButton, true, true);
         pButton->set_tooltip_text(_("Link to path in clipboard"));
     }
 
@@ -71,7 +69,7 @@ OriginalPathParam::param_newWidget()
         pButton->add(*pIcon);
         pButton->set_visible(true);
         pButton->signal_clicked().connect(sigc::mem_fun(*this, &OriginalPathParam::on_select_original_button_click));
-        _widget->pack_start(*pButton, true, true);
+        UI::pack_start(*_widget, *pButton, true, true);
         pButton->set_tooltip_text(_("Select original"));
     }
 
@@ -95,7 +93,6 @@ OriginalPathParam::on_select_original_button_click()
 }
 
 } /* namespace LivePathEffect */
-
 } /* namespace Inkscape */
 
 /*

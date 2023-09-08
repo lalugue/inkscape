@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-/*
- * Gradient vector widget
- *
- * Authors:
+/** \file
+ * Gradient vector and position widget
+ */
+/* Authors:
  *   Lauris Kaplinski <lauris@kaplinski.com>
  *   bulia byak <buliabyak@users.sf.net>
  *   Jon A. Cruz <jon@joncruz.org>
@@ -33,6 +33,7 @@
 #include "ui/controller.h"
 #include "ui/icon-loader.h"
 #include "ui/icon-names.h"
+#include "ui/pack.h"
 #include "ui/widget/gradient-vector-selector.h"
 
 namespace Inkscape::UI::Widget {
@@ -105,18 +106,18 @@ GradientSelector::GradientSelector()
     _scrolled_window->set_hexpand();
     _scrolled_window->set_visible(true);
 
-    pack_start(*_scrolled_window, true, true, 4);
+    UI::pack_start(*this, *_scrolled_window, true, true, 4);
 
 
     /* Create box for buttons */
     auto const hb = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL, 0);
-    pack_start(*hb, false, false, 0);
+    UI::pack_start(*this, *hb, false, false);
 
     _add = Gtk::make_managed<Gtk::Button>();
     style_button(_add, INKSCAPE_ICON("list-add"));
 
     _nonsolid.push_back(_add);
-    hb->pack_start(*_add, false, false, 0);
+    UI::pack_start(*hb, *_add, false, false);
 
     _add->signal_clicked().connect(sigc::mem_fun(*this, &GradientSelector::add_vector_clicked));
     _add->set_sensitive(false);
@@ -127,7 +128,7 @@ GradientSelector::GradientSelector()
     style_button(_del2, INKSCAPE_ICON("list-remove"));
 
     _nonsolid.push_back(_del2);
-    hb->pack_start(*_del2, false, false, 0);
+    UI::pack_start(*hb, *_del2, false, false);
     _del2->signal_clicked().connect(sigc::mem_fun(*this, &GradientSelector::delete_vector_clicked_2));
     _del2->set_sensitive(false);
     _del2->set_relief(Gtk::RELIEF_NONE);
@@ -138,7 +139,7 @@ GradientSelector::GradientSelector()
     style_button(_edit, INKSCAPE_ICON("edit"));
 
     _nonsolid.push_back(_edit);
-    hb->pack_start(*_edit, false, false, 0);
+    UI::pack_start(*hb, *_edit, false, false);
     _edit->signal_clicked().connect(sigc::mem_fun(*this, &GradientSelector::edit_vector_clicked));
     _edit->set_sensitive(false);
     _edit->set_relief(Gtk::RELIEF_NONE);
@@ -149,7 +150,7 @@ GradientSelector::GradientSelector()
     style_button(_del, INKSCAPE_ICON("list-remove"));
 
     _swatch_widgets.push_back(_del);
-    hb->pack_start(*_del, false, false, 0);
+    UI::pack_start(*hb, *_del, false, false);
     _del->signal_clicked().connect(sigc::mem_fun(*this, &GradientSelector::delete_vector_clicked));
     _del->set_sensitive(false);
     _del->set_relief(Gtk::RELIEF_NONE);

@@ -25,6 +25,7 @@
 // For updating from selection
 #include "desktop.h"
 #include "object/sp-text.h"
+#include "ui/pack.h"
 
 namespace Inkscape::UI::Widget {
 
@@ -272,7 +273,7 @@ FontVariants::FontVariants () :
   _ligatures_grid.set_margin_end(15);
 
   _ligatures_frame.add( _ligatures_grid );
-  pack_start( _ligatures_frame, Gtk::PACK_SHRINK );
+  UI::pack_start(*this, _ligatures_frame, UI::PackOptions::shrink);
 
   ligatures_init();
   
@@ -302,7 +303,7 @@ FontVariants::FontVariants () :
   _position_grid.set_margin_end(15);
 
   _position_frame.add( _position_grid );
-  pack_start( _position_frame, Gtk::PACK_SHRINK );
+  UI::pack_start(*this, _position_frame, UI::PackOptions::shrink);
 
   position_init();
 
@@ -348,7 +349,7 @@ FontVariants::FontVariants () :
   _caps_grid.set_margin_end(15);
 
   _caps_frame.add( _caps_grid );
-  pack_start( _caps_frame, Gtk::PACK_SHRINK );
+  UI::pack_start(*this, _caps_frame, UI::PackOptions::shrink);
 
   caps_init();
 
@@ -422,7 +423,7 @@ FontVariants::FontVariants () :
   _numeric_grid.set_margin_end(15);
 
   _numeric_frame.add( _numeric_grid );
-  pack_start( _numeric_frame, Gtk::PACK_SHRINK );
+  UI::pack_start(*this, _numeric_frame, UI::PackOptions::shrink);
   
   // East Asian
 
@@ -469,7 +470,7 @@ FontVariants::FontVariants () :
   _asian_grid.set_margin_end(15);
 
   _asian_frame.add( _asian_grid );
-  pack_start( _asian_frame, Gtk::PACK_SHRINK );
+  UI::pack_start(*this, _asian_frame, UI::PackOptions::shrink);
 
   // Group Buttons
   Gtk::RadioButton::Group asian_variant_group = _asian_default_variant.get_group();
@@ -497,17 +498,17 @@ FontVariants::FontVariants () :
   _feature_list.set_line_wrap( true );
 
   // Add to frame
-  _feature_vbox.pack_start( _feature_grid,          Gtk::PACK_SHRINK );
-  _feature_vbox.pack_start( _feature_entry,         Gtk::PACK_SHRINK );
-  _feature_vbox.pack_start( _feature_label,         Gtk::PACK_SHRINK );
-  _feature_vbox.pack_start( _feature_substitutions, Gtk::PACK_SHRINK );
-  _feature_vbox.pack_start( _feature_list,          Gtk::PACK_SHRINK );
+  UI::pack_start(_feature_vbox, _feature_grid,          UI::PackOptions::shrink);
+  UI::pack_start(_feature_vbox, _feature_entry,         UI::PackOptions::shrink);
+  UI::pack_start(_feature_vbox, _feature_label,         UI::PackOptions::shrink);
+  UI::pack_start(_feature_vbox, _feature_substitutions, UI::PackOptions::shrink);
+  UI::pack_start(_feature_vbox, _feature_list,          UI::PackOptions::shrink);
 
   _feature_vbox.set_margin_start(15);
   _feature_vbox.set_margin_end(15);
 
   _feature_frame.add( _feature_vbox );
-  pack_start( _feature_frame, Gtk::PACK_SHRINK );
+  UI::pack_start(*this, _feature_frame, UI::PackOptions::shrink);
 
   // Add signals
   _feature_entry.signal_changed().connect( sigc::mem_fun(*this, &FontVariants::feature_callback) );

@@ -40,6 +40,7 @@
 #include "ui/controller.h"
 #include "ui/dialog-events.h"
 #include "ui/dialog-run.h"
+#include "ui/pack.h"
 #include "ui/view/svg-view-widget.h"
 #include "util/units.h"
 
@@ -106,7 +107,7 @@ CdrImportDialog::CdrImportDialog(const std::vector<RVNGString> &vec)
     // Preview area
     vbox1 = Gtk::make_managed<class Gtk::Box>(Gtk::ORIENTATION_VERTICAL, 4);
     vbox1->property_margin().set_value(4);
-    this->get_content_area()->pack_start(*vbox1);
+    UI::pack_start(*this->get_content_area(), *vbox1);
 
     // CONTROLS
     _page_selector_box = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL, 4);
@@ -117,7 +118,7 @@ CdrImportDialog::CdrImportDialog(const std::vector<RVNGString> &vec)
     _labelSelect->set_line_wrap(false);
     _labelSelect->set_use_markup(false);
     _labelSelect->set_selectable(false);
-    _page_selector_box->pack_start(*_labelSelect, Gtk::PACK_SHRINK);
+    UI::pack_start(*_page_selector_box, *_labelSelect, UI::PackOptions::shrink);
 
     // Adjustment + spinner
     auto pageNumberSpin_adj = Gtk::Adjustment::create(1, 1, _vec.size(), 1, 10, 0);
@@ -126,7 +127,7 @@ CdrImportDialog::CdrImportDialog(const std::vector<RVNGString> &vec)
     _pageNumberSpin->set_update_policy(Gtk::UPDATE_ALWAYS);
     _pageNumberSpin->set_numeric(true);
     _pageNumberSpin->set_wrap(false);
-    _page_selector_box->pack_start(*_pageNumberSpin, Gtk::PACK_SHRINK);
+    UI::pack_start(*_page_selector_box, *_pageNumberSpin, UI::PackOptions::shrink);
 
     _labelTotalPages->set_line_wrap(false);
     _labelTotalPages->set_use_markup(false);
@@ -134,9 +135,9 @@ CdrImportDialog::CdrImportDialog(const std::vector<RVNGString> &vec)
     gchar *label_text = g_strdup_printf(_("out of %i"), num_pages);
     _labelTotalPages->set_label(label_text);
     g_free(label_text);
-    _page_selector_box->pack_start(*_labelTotalPages, Gtk::PACK_SHRINK);
+    UI::pack_start(*_page_selector_box, *_labelTotalPages, UI::PackOptions::shrink);
 
-    vbox1->pack_end(*_page_selector_box, Gtk::PACK_SHRINK);
+    UI::pack_end(*vbox1, *_page_selector_box, UI::PackOptions::shrink);
 
     // Buttons
     cancelbutton = Gtk::make_managed<Gtk::Button>(_("_Cancel"), true);
@@ -230,7 +231,7 @@ void CdrImportDialog::_setPreviewPage()
        _previewArea->setDocument(doc);
     } else {
        _previewArea = Gtk::make_managed<Inkscape::UI::View::SVGViewWidget>(doc);
-       vbox1->pack_start(*_previewArea, Gtk::PACK_EXPAND_WIDGET, 0);
+       UI::pack_start(*vbox1, *_previewArea, UI::PackOptions::expand_widget, 0);
     }
 
     _previewArea->setResize(400, 400);

@@ -23,6 +23,7 @@
 #include <gtkmm/radiomenuitem.h>
 
 #include "preferences.h"
+#include "ui/pack.h"
 
 namespace Inkscape::UI::Widget {
 
@@ -76,7 +77,7 @@ ComboToolItem::ComboToolItem(Glib::ustring group_label,
 
     _combobox->signal_changed().connect(
             sigc::mem_fun(*this, &ComboToolItem::on_changed_combobox));
-    _container->pack_start(*_combobox);
+    UI::pack_start(*_container, *_combobox);
 
     show_all();
 }
@@ -119,8 +120,8 @@ ComboToolItem::use_group_label(bool use_group_label)
     if (use_group_label) {
         _container->remove(*_combobox);
         _group_label_widget = std::make_unique<Gtk::Label>(_group_label + ": ");
-        _container->pack_start(*_group_label_widget);
-        _container->pack_start(*_combobox);
+        UI::pack_start(*_container, *_group_label_widget);
+        UI::pack_start(*_container, *_combobox);
     } else {
         _container->remove(*_group_label_widget);
         _group_label_widget.reset();

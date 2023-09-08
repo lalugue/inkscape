@@ -17,10 +17,14 @@
 
 #include "live_effects/lpe-slice.h"
 
-#include <gtkmm.h>
+#include <2geom/affine.h>
+#include <2geom/path-intersection.h>
+#include <gtkmm/box.h>
+#include <gtkmm/button.h>
+// this is only to flatten nonzero fillrule
+#include <livarot/Path.h>
+#include <livarot/Shape.h>
 
-#include "2geom/affine.h"
-#include "2geom/path-intersection.h"
 #include "display/curve.h"
 #include "helper/geom.h"
 #include "live_effects/parameter/satellite-reference.h"
@@ -34,11 +38,8 @@
 #include "svg/path-string.h"
 #include "svg/svg.h"
 #include "ui/icon-names.h"
+#include "ui/pack.h"
 #include "xml/sp-css-attr.h"
-
-// this is only to flatten nonzero fillrule
-#include "livarot/Path.h"
-#include "livarot/Shape.h"
 
 // TODO due to internal breakage in glibmm headers, this must be last:
 #include <glibmm/i18n.h>
@@ -116,10 +117,10 @@ LPESlice::newWidget()
     reset_button->signal_clicked().connect(sigc::mem_fun(*this, &LPESlice::resetStyles));
     reset_button->set_size_request(110, 20);
 
-    vbox->pack_start(*hbox, true, true, 2);
-    hbox->pack_start(*reset_button, false, false, 2);
-    hbox->pack_start(*center_vert_button, false, false, 2);
-    hbox->pack_start(*center_horiz_button, false, false, 2);
+    UI::pack_start(*vbox, *hbox, true, true, 2);
+    UI::pack_start(*hbox, *reset_button, false, false, 2);
+    UI::pack_start(*hbox, *center_vert_button, false, false, 2);
+    UI::pack_start(*hbox, *center_horiz_button, false, false, 2);
 
     std::vector<Parameter *>::iterator it = param_vector.begin();
     while (it != param_vector.end()) {
@@ -128,7 +129,7 @@ LPESlice::newWidget()
             auto const widg = param->param_newWidget();
             Glib::ustring *tip = param->param_getTooltip();
             if (widg) {
-                vbox->pack_start(*widg, true, true, 2);
+                UI::pack_start(*vbox, *widg, true, true, 2);
                 if (tip) {
                     widg->set_tooltip_markup(*tip);
                 } else {

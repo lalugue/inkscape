@@ -18,7 +18,7 @@
 #include <2geom/path-intersection.h>
 #include <2geom/sbasis-to-bezier.h>
 #include <gdk/gdk.h>
-#include <gtkmm.h>
+#include <gtkmm/box.h>
 
 #include "display/curve.h"
 #include "helper/geom.h"
@@ -33,6 +33,7 @@
 #include "style.h"
 #include "svg/path-string.h"
 #include "svg/svg.h"
+#include "ui/pack.h"
 #include "xml/sp-css-attr.h"
 
 // TODO due to internal breakage in glibmm headers, this must be last:
@@ -404,7 +405,7 @@ Gtk::Widget * LPECopyRotate::newWidget()
             auto const widg = param->param_newWidget();
             Glib::ustring *tip = param->param_getTooltip();
             if (widg) {
-                vbox->pack_start(*widg, true, true, 2);
+                UI::pack_start(*vbox, *widg, true, true, 2);
                 if (tip) {
                     widg->set_tooltip_markup(*tip);
                 } else {
@@ -483,6 +484,7 @@ LPECopyRotate::doBeforeEffect (SPLPEItem const* lpeitem)
         if (lpeitem->document->isSensitive()) {
             starting_angle.param_set_value(deg_from_rad(-angle_between(dir, starting_point - origin)));
         }
+        // FIXME: This will always be true! Did we mean to check if some state contains Shift flag?
         if (GDK_SHIFT_MASK) {
             dist_angle_handle = L2(B - A);
         } else {

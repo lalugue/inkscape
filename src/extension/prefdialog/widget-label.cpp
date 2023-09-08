@@ -19,12 +19,12 @@
 #include <glibmm/markup.h>
 #include <glibmm/regex.h>
 
-#include "xml/node.h"
 #include "extension/extension.h"
+#include "ui/pack.h"
+#include "xml/node.h"
 
 namespace Inkscape {
 namespace Extension {
-
 
 WidgetLabel::WidgetLabel(Inkscape::XML::Node *xml, Inkscape::Extension::Extension *ext)
     : InxWidget(xml, ext)
@@ -111,7 +111,7 @@ Gtk::Widget *WidgetLabel::get_widget(sigc::signal<void ()> * /*changeSignal*/)
     label->set_visible(true);
 
     auto const hbox = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL);
-    hbox->pack_start(*label, true, true);
+    UI::pack_start(*hbox, *label, true, true);
     hbox->set_visible(true);
 
     return hbox;

@@ -1,7 +1,4 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-#ifndef SEEN_SP_KNOTHOLDER_H
-#define SEEN_SP_KNOTHOLDER_H
-
 /*
  * KnotHolder - Hold SPKnot list and manage signals
  *
@@ -24,19 +21,26 @@
 #include <sigc++/connection.h>
 #include "helper/auto-connection.h"
 
+#ifndef SEEN_SP_KNOTHOLDER_H
+#define SEEN_SP_KNOTHOLDER_H
+
 namespace Inkscape {
+
 namespace UI {
 class ShapeEditor;
-}
+} // namespace UI
+
 namespace XML {
 class Node;
-}
+} // namespace XML
+
 namespace LivePathEffect {
 class PowerStrokePointArrayParamKnotHolderEntity;
 class NodeSatelliteArrayParam;
 class FilletChamferKnotHolderEntity;
-}
-}
+} // namespace LivePathEffect
+
+} // namespace Inkscape
 
 class KnotHolderEntity;
 class SPItem;
@@ -102,12 +106,6 @@ protected:
     Inkscape::auto_connection _watch_fill;
     Inkscape::auto_connection _watch_stroke;
 };
-
-/**
-void knot_clicked_handler(SPKnot *knot, guint state, gpointer data);
-void knot_moved_handler(SPKnot *knot, Geom::Point const *p, guint state, gpointer data);
-void knot_ungrabbed_handler(SPKnot *knot, unsigned int state, KnotHolder *kh);
-**/
 
 #endif // SEEN_SP_KNOTHOLDER_H
 

@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-/*
+/** \file
  * Filter effect selection selection widget
- *
+ */
+/*
  * Author:
  *   Nicholas Bishop <nicholasbishop@gmail.com>
  *   Tavmjong Bah
@@ -14,6 +15,7 @@
 #include "filter-effect-chooser.h"
 
 #include "document.h"
+#include "ui/pack.h"
 
 namespace Inkscape {
 
@@ -84,8 +86,8 @@ SimpleFilterModifier::SimpleFilterModifier(int flags)
         _hb_blend.set_margin_bottom(1);
         _hb_blend.set_margin_end(2);
         _lb_blend.set_mnemonic_widget(_blend);
-        _hb_blend.pack_start(_lb_blend, false, false, 0);
-        _hb_blend.pack_start(_blend, false, false, 0);
+        UI::pack_start(_hb_blend, _lb_blend, false, false);
+        UI::pack_start(_hb_blend, _blend, false, false);
         /*
         * For best fit inkscape-browsers with no GUI to isolation we need all groups,
         * clones, and symbols with isolation == isolate to not show to the Inkscape
@@ -96,8 +98,8 @@ SimpleFilterModifier::SimpleFilterModifier(int flags)
         */
         /* if (flags & ISOLATION) {
             _isolation.property_active() = false;
-            _hb_blend.pack_start(_isolation, false, false, 5);
-            _hb_blend.pack_start(_lb_isolation, false, false, 5);
+            UI::pack_start(_hb_blend, _isolation, false, false, 5);
+            UI::pack_start(_hb_blend, _lb_isolation, false, false, 5);
             _isolation.set_tooltip_text("Don't blend childrens with objects behind");
             _lb_isolation.set_tooltip_text("Don't blend childrens with objects behind");
         } */

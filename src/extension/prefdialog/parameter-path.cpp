@@ -14,21 +14,20 @@
 
 #include <boost/algorithm/string/case_conv.hpp>
 #include <boost/algorithm/string/join.hpp>
-
-#include <glibmm/i18n.h>
 #include <glibmm/fileutils.h>
+#include <glibmm/i18n.h>
 #include <glibmm/miscutils.h>
 #include <glibmm/regex.h>
-
 #include <gtkmm/box.h>
 #include <gtkmm/button.h>
 #include <gtkmm/dialog.h>
 #include <gtkmm/entry.h>
 #include <gtkmm/filechoosernative.h>
 
-#include "xml/node.h"
 #include "extension/extension.h"
 #include "preferences.h"
+#include "ui/pack.h"
+#include "xml/node.h"
 
 namespace Inkscape {
 namespace Extension {
@@ -162,16 +161,16 @@ Gtk::Widget *ParamPath::get_widget(sigc::signal<void ()> *changeSignal)
     auto const hbox = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL, GUI_PARAM_WIDGETS_SPACING);
     auto const label = Gtk::make_managed<Gtk::Label>(_text, Gtk::ALIGN_START);
     label->set_visible(true);
-    hbox->pack_start(*label, false, false);
+    UI::pack_start(*hbox, *label, false, false);
 
     auto const textbox = Gtk::make_managed<ParamPathEntry>(this, changeSignal);
     textbox->set_visible(true);
-    hbox->pack_start(*textbox, true, true);
+    UI::pack_start(*hbox, *textbox, true, true);
     _entry = textbox;
 
     auto const button = Gtk::make_managed<Gtk::Button>("…");
 	button->set_visible(true);
-    hbox->pack_end(*button, false, false);
+    UI::pack_end(*hbox, *button, false, false);
     button->signal_clicked().connect(sigc::mem_fun(*this, &ParamPath::on_button_clicked));
 
     hbox->set_visible(true);

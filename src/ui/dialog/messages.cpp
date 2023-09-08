@@ -14,10 +14,11 @@
 
 #include "messages.h"
 
+#include "ui/pack.h"
+
 namespace Inkscape {
 namespace UI {
 namespace Dialog {
-
 
 //#########################################################################
 //## E V E N T S
@@ -45,29 +46,15 @@ Messages::Messages()
     , checkCapture(_("Capture log messages"), _("Capture log messages"))
     , buttonBox(Gtk::ORIENTATION_HORIZONTAL)
 {
-    /*
-     * Menu replaced with buttons
-     *
-    menuBar.items().push_back( Gtk::Menu_Helpers::MenuElem(_("_File"), fileMenu) );
-    fileMenu.items().push_back( Gtk::Menu_Helpers::MenuElem(_("_Clear"),
-           sigc::mem_fun(*this, &Messages::clear) ) );
-    fileMenu.items().push_back( Gtk::Menu_Helpers::MenuElem(_("Capture log messages"),
-           sigc::mem_fun(*this, &Messages::captureLogMessages) ) );
-    fileMenu.items().push_back( Gtk::Menu_Helpers::MenuElem(_("Release log messages"),
-           sigc::mem_fun(*this, &Messages::releaseLogMessages) ) );
-    contents->pack_start(menuBar, Gtk::PACK_SHRINK);
-    */
-
-    //### Set up the text widget
     messageText.set_editable(false);
     textScroll.add(messageText);
     textScroll.set_policy(Gtk::POLICY_ALWAYS, Gtk::POLICY_ALWAYS);
-    pack_start(textScroll);
+    UI::pack_start(*this, textScroll);
 
     buttonBox.set_spacing(6);
-    buttonBox.pack_start(checkCapture, true, true, 6);
-    buttonBox.pack_end(buttonClear, false, false, 10);
-    pack_start(buttonBox, Gtk::PACK_SHRINK);
+    UI::pack_start(buttonBox, checkCapture, true, true, 6);
+    UI::pack_end(buttonBox, buttonClear, false, false, 10);
+    UI::pack_start(*this, buttonBox, UI::PackOptions::shrink);
 
     // sick of this thing shrinking too much
     set_size_request(400, -1);

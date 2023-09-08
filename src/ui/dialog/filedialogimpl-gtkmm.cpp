@@ -418,11 +418,10 @@ FileSaveDialogImplGtk::FileSaveDialogImplGtk(Gtk::Window &parentWindow, const Gl
     if (_dialogType != CUSTOM_TYPE)
         createFilterMenu();
 
-    childBox.pack_start(checksBox);
-    checksBox.pack_start(fileTypeCheckbox);
-    checksBox.pack_start(previewCheckbox);
-    checksBox.pack_start(svgexportCheckbox);
-
+    childBox.add(checksBox);
+    checksBox.add(fileTypeCheckbox);
+    checksBox.add(previewCheckbox);
+    checksBox.add(svgexportCheckbox);
     set_extra_widget(childBox);
 
     // Let's do some customization

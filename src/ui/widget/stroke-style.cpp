@@ -36,6 +36,7 @@
 #include "svg/svg-color.h"
 #include "ui/icon-loader.h"
 #include "ui/icon-names.h"
+#include "ui/pack.h"
 #include "ui/widget/dash-selector.h"
 #include "ui/widget/marker-combo-box.h"
 #include "ui/widget/unit-menu.h"
@@ -221,7 +222,7 @@ StrokeStyle::StrokeStyle() :
 
     sp_dialog_defocus_on_enter_cpp(widthSpin);
 
-    hb->pack_start(*widthSpin, false, false, 0);
+    UI::pack_start(*hb, *widthSpin, false, false);
     unitSelector = Gtk::make_managed<UnitMenu>();
     unitSelector->setUnitType(Inkscape::Util::UNIT_TYPE_LINEAR);
     SPDesktop *desktop = SP_ACTIVE_DESKTOP;
@@ -237,7 +238,7 @@ StrokeStyle::StrokeStyle() :
     unitSelector->signal_changed().connect(sigc::mem_fun(*this, &StrokeStyle::unitChangedCB));
     unitSelector->set_visible(true);
 
-    hb->pack_start(*unitSelector, FALSE, FALSE, 0);
+    UI::pack_start(*hb, *unitSelector, FALSE, FALSE);
     widthAdj->signal_value_changed().connect(sigc::mem_fun(*this, &StrokeStyle::setStrokeWidth));
 
     i++;
@@ -295,7 +296,7 @@ StrokeStyle::StrokeStyle() :
     startMarkerCombo->connect_edit([=]{ enterEditMarkerMode(SP_MARKER_LOC_START); });
     startMarkerCombo->set_visible(true);
 
-    hb->pack_start(*startMarkerCombo, true, true, 0);
+    UI::pack_start(*hb, *startMarkerCombo, true, true);
 
     midMarkerCombo = Gtk::make_managed<MarkerComboBox>("marker-mid", SP_MARKER_LOC_MID);
     midMarkerCombo->set_tooltip_text(_("Mid Markers are drawn on every node of a path or shape except the first and last nodes"));
@@ -303,7 +304,7 @@ StrokeStyle::StrokeStyle() :
     midMarkerCombo->connect_edit([=]{ enterEditMarkerMode(SP_MARKER_LOC_MID); });
     midMarkerCombo->set_visible(true);
 
-    hb->pack_start(*midMarkerCombo, true, true, 0);
+    UI::pack_start(*hb, *midMarkerCombo, true, true);
 
     endMarkerCombo = Gtk::make_managed<MarkerComboBox>("marker-end", SP_MARKER_LOC_END);
     endMarkerCombo->set_tooltip_text(_("End Markers are drawn on the last node of a path or shape"));
@@ -311,7 +312,7 @@ StrokeStyle::StrokeStyle() :
     endMarkerCombo->connect_edit([=]{ enterEditMarkerMode(SP_MARKER_LOC_END); });
     endMarkerCombo->set_visible(true);
 
-    hb->pack_start(*endMarkerCombo, true, true, 0);
+    UI::pack_start(*hb, *endMarkerCombo, true, true);
     i++;
 
     /* Join type */
@@ -362,8 +363,9 @@ StrokeStyle::StrokeStyle() :
     miterLimitSpin->set_visible(true);
     sp_dialog_defocus_on_enter_cpp(miterLimitSpin);
 
-    hb->pack_start(*miterLimitSpin, false, false, 0);
+    UI::pack_start(*hb, *miterLimitSpin, false, false);
     miterLimitAdj->signal_value_changed().connect(sigc::mem_fun(*this, &StrokeStyle::setStrokeMiter));
+
     i++;
 
     /* Cap type */
@@ -494,7 +496,7 @@ StrokeStyle::makeRadioButton(Gtk::RadioButtonGroup &grp,
     g_assert(hb  != nullptr);
 
     auto const tb = Gtk::make_managed<StrokeStyleButton>(grp, icon, button_type, stroke_style);
-    hb->pack_start(*tb, false, false, 0);
+    UI::pack_start(*hb, *tb, false, false);
     tb->signal_toggled().connect(sigc::bind(
                                      sigc::ptr_fun(&StrokeStyle::buttonToggledCB), tb, this));
     return tb;

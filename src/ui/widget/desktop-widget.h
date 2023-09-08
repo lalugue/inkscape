@@ -38,8 +38,9 @@
 
 #include <memory>
 #include <2geom/point.h>
+#include <glibmm/refptr.h>
 #include <gtkmm/box.h>
-#include <gtkmm/eventbox.h>
+#include <sigc++/connection.h>
 
 #include "helper/auto-connection.h"
 #include "message.h"
@@ -55,11 +56,10 @@ class ActionMap;
 
 namespace Gtk {
 class Grid;
-class Label;
 class Paned;
 class Toolbar;
 class Widget;
-} // namespace Gtk;
+} // namespace Gtk
 
 class InkscapeWindow;
 class SPDocument;
@@ -90,7 +90,7 @@ class StatusBar;
 
 } // namespace Inkscape::UI
 
-/// A GtkEventBox on an SPDesktop.
+/// A GtkBox on an SPDesktop.
 class SPDesktopWidget final : public Gtk::Box
 {
     using parent_type = Gtk::Box;
@@ -202,12 +202,12 @@ private:
 #endif /* !SEEN_SP_DESKTOP_WIDGET_H */
 
 /*
-   Local Variables:
-mode:c++
-c-file-style:"stroustrup"
-c-file-offsets:((innamespace . 0)(inline-open . 0)(case-label . +))
-indent-tabs-mode:nil
-fill-column:99
-End:
+  Local Variables:
+  mode:c++
+  c-file-style:"stroustrup"
+  c-file-offsets:((innamespace . 0)(inline-open . 0)(case-label . +))
+  indent-tabs-mode:nil
+  fill-column:99
+  End:
 */
 // vim: filetype=cpp:expandtab:shiftwidth=4:tabstop=8:softtabstop=4 :

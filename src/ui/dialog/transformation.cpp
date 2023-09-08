@@ -22,6 +22,7 @@
 #include <gtkmm/grid.h>
 #include <gtkmm/label.h>
 #include <2geom/transforms.h>
+#include <gtkmm/dialog.h>
 
 #include "desktop.h"
 #include "document-undo.h"
@@ -34,6 +35,7 @@
 #include "object/sp-namedview.h"
 #include "ui/icon-loader.h"
 #include "ui/icon-names.h"
+#include "ui/pack.h"
 
 namespace Inkscape::UI::Dialog {
 
@@ -95,7 +97,7 @@ Transformation::Transformation()
     _check_replace_matrix.set_tooltip_text(_("Edit the current transform= matrix; otherwise, post-multiply transform= by this matrix"));
 
     // Notebook for individual transformations
-    pack_start(_notebook, false, false);
+    UI::pack_start(*this, _notebook, false, false);
 
     _page_move.set_halign(Gtk::ALIGN_START);
     _notebook.append_page(_page_move, _("_Move"), true);
@@ -120,7 +122,7 @@ Transformation::Transformation()
     _tabSwitchConn = _notebook.signal_switch_page().connect(sigc::mem_fun(*this, &Transformation::onSwitchPage));
 
     // Apply separately
-    pack_start(_check_apply_separately, false, false);
+    UI::pack_start(*this, _check_apply_separately, false, false);
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
     _check_apply_separately.set_active(prefs->getBool("/dialogs/transformation/applyseparately"));
     _check_apply_separately.signal_toggled().connect(sigc::mem_fun(*this, &Transformation::onApplySeparatelyToggled));
@@ -158,9 +160,9 @@ Transformation::Transformation()
     button_box->set_margin_top(4);
     button_box->set_spacing(8);
     button_box->set_halign(Gtk::ALIGN_CENTER);
-    button_box->pack_start(*applyButton);
-    button_box->pack_start(*resetButton);
-    pack_start(*button_box, Gtk::PACK_SHRINK, 0);
+    UI::pack_start(*button_box, *applyButton);
+    UI::pack_start(*button_box, *resetButton);
+    UI::pack_start(*this, *button_box, UI::PackOptions::shrink);
 
     show_all_children();
 }
@@ -298,8 +300,8 @@ void Transformation::layoutPageRotate()
     auto const box = Gtk::make_managed<Gtk::Box>();
     _counterclockwise_rotate.set_halign(Gtk::ALIGN_START);
     _clockwise_rotate.set_halign(Gtk::ALIGN_START);
-    box->pack_start(_counterclockwise_rotate);
-    box->pack_start(_clockwise_rotate);
+    UI::pack_start(*box, _counterclockwise_rotate);
+    UI::pack_start(*box, _clockwise_rotate);
 
     _page_rotate.table().attach(_scalar_rotate, 0, 0, 1, 1);
     _page_rotate.table().attach(_units_rotate,  1, 0, 1, 1);

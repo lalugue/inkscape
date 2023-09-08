@@ -11,28 +11,27 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include <cstring>
-#include <string>
+#include "layer-selector.h"
 
 #include <boost/range/adaptor/filtered.hpp>
 #include <boost/range/adaptor/reversed.hpp>
-
+#include <cstring>
+#include <string>
 #include <glibmm/i18n.h>
 
 #include "desktop.h"
 #include "document-undo.h"
 #include "document.h"
 #include "layer-manager.h"
-
+#include "object/sp-root.h"
+#include "object/sp-item-group.h"
 #include "ui/widget/layer-selector.h"
 #include "ui/dialog/dialog-container.h"
 #include "ui/dialog/objects.h"
 #include "ui/icon-loader.h"
 #include "ui/icon-names.h"
+#include "ui/pack.h"
 #include "ui/util.h"
-
-#include "object/sp-root.h"
-#include "object/sp-item-group.h"
 
 namespace Inkscape {
 namespace UI {
@@ -86,7 +85,7 @@ LayerSelector::LayerSelector(SPDesktop *desktop)
     _layer_name.signal_clicked().connect(sigc::mem_fun(*this, &LayerSelector::_layerChoose));
     _layer_name.set_relief(Gtk::RELIEF_NONE);
     _layer_name.set_tooltip_text(_("Current layer"));
-    pack_start(_layer_name, Gtk::PACK_EXPAND_WIDGET);
+    UI::pack_start(*this, _layer_name, UI::PackOptions::expand_widget);
 
     _eye_label = Gtk::make_managed<AlternateIcons>(Gtk::ICON_SIZE_MENU,
         INKSCAPE_ICON("object-visible"), INKSCAPE_ICON("object-hidden"));
@@ -95,7 +94,7 @@ LayerSelector::LayerSelector(SPDesktop *desktop)
 
     _eye_toggle.set_relief(Gtk::RELIEF_NONE);
     _eye_toggle.set_tooltip_text(_("Toggle current layer visibility"));
-    pack_start(_eye_toggle, Gtk::PACK_EXPAND_PADDING);
+    UI::pack_start(*this, _eye_toggle, UI::PackOptions::expand_padding);
 
     _lock_label = Gtk::make_managed<AlternateIcons>(Gtk::ICON_SIZE_MENU,
         INKSCAPE_ICON("object-unlocked"), INKSCAPE_ICON("object-locked"));
@@ -104,7 +103,7 @@ LayerSelector::LayerSelector(SPDesktop *desktop)
 
     _lock_toggle.set_relief(Gtk::RELIEF_NONE);
     _lock_toggle.set_tooltip_text(_("Lock or unlock current layer"));
-    pack_start(_lock_toggle, Gtk::PACK_EXPAND_PADDING);
+    UI::pack_start(*this, _lock_toggle, UI::PackOptions::expand_padding);
 
     _layer_name.add(_layer_label);
     _layer_label.set_max_width_chars(16);

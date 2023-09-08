@@ -49,6 +49,11 @@
 #include "xml/helper-observer.h"
 #include "xml/node-observer.h"
 
+
+namespace Glib {
+class ustring;
+} // namespace Glib
+
 namespace Gtk {
 class ListStore;
 } // namespace gtk

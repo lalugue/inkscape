@@ -21,9 +21,9 @@
 #include "selection.h"
 #include "ui/icon-loader.h"
 #include "ui/icon-names.h"
+#include "ui/pack.h"
 
 namespace Inkscape {
-
 namespace LivePathEffect {
 
 OriginalSatelliteParam::OriginalSatelliteParam(const Glib::ustring &label, const Glib::ustring &tip,
@@ -39,7 +39,7 @@ Gtk::Widget *OriginalSatelliteParam::param_newWidget()
 
     { // Label
         auto const pLabel = Gtk::make_managed<Gtk::Label>(param_label);
-        _widget->pack_start(*pLabel, true, true);
+        UI::pack_start(*_widget, *pLabel, true, true);
         pLabel->set_tooltip_text(param_tooltip);
     }
 
@@ -51,7 +51,7 @@ Gtk::Widget *OriginalSatelliteParam::param_newWidget()
         pButton->add(*pIcon);
         pButton->set_visible(true);
         pButton->signal_clicked().connect(sigc::mem_fun(*this, &OriginalSatelliteParam::on_link_button_click));
-        _widget->pack_start(*pButton, true, true);
+        UI::pack_start(*_widget, *pButton, true, true);
         pButton->set_tooltip_text(_("Link to item"));
     }
 
@@ -64,7 +64,7 @@ Gtk::Widget *OriginalSatelliteParam::param_newWidget()
         pButton->set_visible(true);
         pButton->signal_clicked().connect(
             sigc::mem_fun(*this, &OriginalSatelliteParam::on_select_original_button_click));
-        _widget->pack_start(*pButton, true, true);
+        UI::pack_start(*_widget, *pButton, true, true);
         pButton->set_tooltip_text(_("Select original"));
     }
 
@@ -86,7 +86,6 @@ void OriginalSatelliteParam::on_select_original_button_click()
 }
 
 } /* namespace LivePathEffect */
-
 } /* namespace Inkscape */
 
 /*

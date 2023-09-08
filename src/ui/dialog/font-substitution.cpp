@@ -9,15 +9,15 @@
 
 #include <set>
 #include <vector>
-
 #include <glibmm/i18n.h>
 #include <glibmm/regex.h>
 #include <glibmm/ustring.h>
-
-#include <gtkmm/messagedialog.h>
 #include <gtkmm/checkbutton.h>
+#include <gtkmm/messagedialog.h>
 #include <gtkmm/scrolledwindow.h>
 #include <gtkmm/textview.h>
+#include <libnrtype/font-factory.h>
+#include <libnrtype/font-instance.h>
 
 #include "font-substitution.h"
 
@@ -26,23 +26,20 @@
 #include "inkscape.h"
 #include "selection-chemistry.h"
 #include "text-editing.h"
-
 #include "object/sp-item.h"
 #include "object/sp-root.h"
 #include "object/sp-text.h"
 #include "object/sp-textpath.h"
 #include "object/sp-flowdiv.h"
 #include "object/sp-tspan.h"
-
-#include "libnrtype/font-factory.h"
-#include "libnrtype/font-instance.h"
-
 #include "ui/dialog-events.h"
 #include "ui/dialog-run.h"
+#include "ui/pack.h"
 
 namespace Inkscape {
 namespace UI {
 namespace Dialog {
+
 namespace {
 
 void show(std::vector<SPItem*> const &list, Glib::ustring const &out)
@@ -79,9 +76,9 @@ void show(std::vector<SPItem*> const &list, Glib::ustring const &out)
    auto box = warning.get_content_area();
    box->property_margin().set_value(5);
    box->set_spacing(2);
-   box->pack_start(scrollwindow, true, true, 4);
-   box->pack_start(cbSelect, false, false, 0);
-   box->pack_start(cbWarning, false, false, 0);
+   UI::pack_start(*box, scrollwindow, true, true, 4);
+   UI::pack_start(*box, cbSelect, false, false);
+   UI::pack_start(*box, cbWarning, false, false);
 
    Inkscape::UI::dialog_run(warning);
 

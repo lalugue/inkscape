@@ -12,15 +12,15 @@
 #include "lpe-fillet-chamfer.h"
 
 #include <2geom/elliptical-arc.h>
-#include <boost/optional.hpp>
 
 #include "display/curve.h"
 #include "helper/geom-curves.h"
-#include "helper/geom-nodesatellite.h"
 #include "helper/geom.h"
-#include "object/sp-shape.h"
+#include "helper/geom-nodesatellite.h"
 #include "object/sp-rect.h"
+#include "object/sp-shape.h"
 #include "ui/knot/knot-holder.h"
+#include "ui/pack.h"
 #include "ui/tools/tool-base.h"
 
 // TODO due to internal breakage in glibmm headers, this must be last:
@@ -237,7 +237,7 @@ Gtk::Widget *LPEFilletChamfer::newWidget()
             }
             Glib::ustring *tip = param->param_getTooltip();
             if (widg) {
-                vbox->pack_start(*widg, true, true, 2);
+                UI::pack_start(*vbox, *widg, true, true, 2);
                 if (tip) {
                     widg->set_tooltip_markup(*tip);
                 } else {
@@ -256,25 +256,25 @@ Gtk::Widget *LPEFilletChamfer::newWidget()
     fillet->signal_clicked().connect(
         sigc::bind(sigc::mem_fun(*this, &LPEFilletChamfer::updateNodeSatelliteType), FILLET));
 
-    fillet_container->pack_start(*fillet, true, true, 2);
+    UI::pack_start(*fillet_container, *fillet, true, true, 2);
     auto const inverse_fillet = Gtk::make_managed<Gtk::Button>(Glib::ustring(_("Inverse fillet")));
     inverse_fillet->signal_clicked().connect(sigc::bind(
         sigc::mem_fun(*this, &LPEFilletChamfer::updateNodeSatelliteType), INVERSE_FILLET));
-    fillet_container->pack_start(*inverse_fillet, true, true, 2);
+    UI::pack_start(*fillet_container, *inverse_fillet, true, true, 2);
 
     auto const chamfer_container = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL, 0);
     auto const chamfer = Gtk::make_managed<Gtk::Button>(Glib::ustring(_("Chamfer")));
     chamfer->signal_clicked().connect(
         sigc::bind(sigc::mem_fun(*this, &LPEFilletChamfer::updateNodeSatelliteType), CHAMFER));
 
-    chamfer_container->pack_start(*chamfer, true, true, 2);
+    UI::pack_start(*chamfer_container, *chamfer, true, true, 2);
     auto const inverse_chamfer = Gtk::make_managed<Gtk::Button>(Glib::ustring(_("Inverse chamfer")));
     inverse_chamfer->signal_clicked().connect(sigc::bind(
         sigc::mem_fun(*this, &LPEFilletChamfer::updateNodeSatelliteType), INVERSE_CHAMFER));
-    chamfer_container->pack_start(*inverse_chamfer, true, true, 2);
+    UI::pack_start(*chamfer_container, *inverse_chamfer, true, true, 2);
 
-    vbox->pack_start(*fillet_container, true, true, 2);
-    vbox->pack_start(*chamfer_container, true, true, 2);
+    UI::pack_start(*vbox, *fillet_container, true, true, 2);
+    UI::pack_start(*vbox, *chamfer_container, true, true, 2);
     return vbox;
 }
 

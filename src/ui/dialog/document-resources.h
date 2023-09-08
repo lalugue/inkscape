@@ -11,10 +11,11 @@
 #include <cstddef>
 #include <memory>
 #include <string>
+#include <boost/ptr_container/ptr_vector.hpp>
 #include <glibmm/refptr.h>
+#include <glibmm/ustring.h>
 #include <gtkmm/cellrendererpixbuf.h>
 #include <gtkmm/treemodel.h>
-#include <boost/ptr_container/ptr_vector.hpp>
 
 #include "document.h"
 #include "helper/auto-connection.h"
@@ -66,7 +67,7 @@ struct Statistics {
 
 } // namespace details
 
-class DocumentResources : public DialogBase {
+class DocumentResources final : public DialogBase {
 public:
     DocumentResources();
 

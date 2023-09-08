@@ -60,6 +60,7 @@
 #include "ui/dialog-events.h"
 #include "ui/icon-loader.h"
 #include "ui/icon-names.h"
+#include "ui/pack.h"
 #include "ui/selected-color.h"
 #include "ui/shortcuts.h"
 #include "ui/tools/node-tool.h"
@@ -953,9 +954,9 @@ ObjectsPanel::ObjectsPanel()
         _scroller.set_size_request(sreq.width, minHeight);
     }
 
-    _page.pack_start(header, false, true);
-    _page.pack_end(_scroller, Gtk::PACK_EXPAND_WIDGET);
-    pack_start(_page, Gtk::PACK_EXPAND_WIDGET);
+    UI::pack_start(_page, header, false, true);
+    UI::pack_end(_page, _scroller, UI::PackOptions::expand_widget);
+    UI::pack_start(*this, _page, UI::PackOptions::expand_widget);
 
     auto const set_selection_color = [&]
         { selection_color = get_color_with_class(_tree.get_style_context(), "theme_selected_bg_color"); };

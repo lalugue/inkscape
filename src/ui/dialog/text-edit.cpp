@@ -64,6 +64,7 @@
 #include "text-editing.h"
 #include "ui/controller.h"
 #include "ui/icon-names.h"
+#include "ui/pack.h"
 #include "util/units.h"
 
 namespace Inkscape::UI::Dialog {
@@ -124,9 +125,9 @@ TextEdit::TextEdit()
 
     text_buffer = Glib::RefPtr<Gtk::TextBuffer>::cast_static(builder->get_object("text_buffer"));
 
-    font_box->pack_start(font_selector, true, true);
+    UI::pack_start(*font_box, font_selector, true, true);
     font_box->reorder_child(font_selector, 2);
-    feat_box->pack_start(font_features, true, true);
+    UI::pack_start(*feat_box, font_features, true, true);
     feat_box->reorder_child(font_features, 1);
 
     // filter_popover->set_modal(false); // Stay open until button clicked again.

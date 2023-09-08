@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 /** \file
  * LPE <perspective-envelope> implementation
-
  */
 /*
  * Authors:
@@ -15,11 +14,17 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include <gtkmm.h>
 #include "live_effects/lpe-perspective-envelope.h"
-#include "helper/geom.h"
-#include "display/curve.h"
+
 #include <gsl/gsl_linalg.h>
+#include <gtkmm/box.h>
+#include <gtkmm/label.h>
+#include <gtkmm/separator.h>
+#include <gtkmm/button.h>
+
+#include "display/curve.h"
+#include "helper/geom.h"
+#include "ui/pack.h"
 
 // TODO due to internal breakage in glibmm headers, this must be last:
 #include <glibmm/i18n.h>
@@ -284,16 +289,16 @@ LPEPerspectiveEnvelope::newWidget()
                 if (widg) {
                     if(param->param_key == "up_left_point") {
                         auto const handles = Gtk::make_managed<Gtk::Label>(Glib::ustring(_("Handles:")),Gtk::ALIGN_START);
-                        vbox->pack_start(*handles, false, false, 2);
-                        hbox_up_handles->pack_start(*widg, true, true, 2);
-                        hbox_up_handles->pack_start(*Gtk::make_managed<Gtk::Separator>(Gtk::ORIENTATION_VERTICAL), Gtk::PACK_EXPAND_WIDGET);
+                        UI::pack_start(*vbox, *handles, false, false, 2);
+                        UI::pack_start(*hbox_up_handles, *widg, true, true, 2);
+                        UI::pack_start(*hbox_up_handles, *Gtk::make_managed<Gtk::Separator>(Gtk::ORIENTATION_VERTICAL), UI::PackOptions::expand_widget);
                     } else if(param->param_key == "up_right_point") {
-                        hbox_up_handles->pack_start(*widg, true, true, 2);
+                        UI::pack_start(*hbox_up_handles, *widg, true, true, 2);
                     } else if(param->param_key == "down_left_point") {
-                        hbox_down_handles->pack_start(*widg, true, true, 2);
-                        hbox_down_handles->pack_start(*Gtk::make_managed<Gtk::Separator>(Gtk::ORIENTATION_VERTICAL), Gtk::PACK_EXPAND_WIDGET);
+                        UI::pack_start(*hbox_down_handles, *widg, true, true, 2);
+                        UI::pack_start(*hbox_down_handles, *Gtk::make_managed<Gtk::Separator>(Gtk::ORIENTATION_VERTICAL), UI::PackOptions::expand_widget);
                     } else {
-                        hbox_down_handles->pack_start(*widg, true, true, 2);
+                        UI::pack_start(*hbox_down_handles, *widg, true, true, 2);
                     }
                     if (tip) {
                         widg->set_tooltip_markup(*tip);
@@ -305,7 +310,7 @@ LPEPerspectiveEnvelope::newWidget()
             } else {
                 Glib::ustring * tip = param->param_getTooltip();
                 if (widg) {
-                    vbox->pack_start(*widg, true, true, 2);
+                    UI::pack_start(*vbox, *widg, true, true, 2);
                     if (tip) {
                         widg->set_tooltip_markup(*tip);
                     } else {
@@ -318,19 +323,19 @@ LPEPerspectiveEnvelope::newWidget()
 
         ++it;
     }
-    vbox->pack_start(*hbox_up_handles,true, true, 2);
+    UI::pack_start(*vbox, *hbox_up_handles,true, true, 2);
     auto const hbox_middle = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL,2);
-    hbox_middle->pack_start(*Gtk::make_managed<Gtk::Separator>(Gtk::ORIENTATION_HORIZONTAL), Gtk::PACK_EXPAND_WIDGET);
-    hbox_middle->pack_start(*Gtk::make_managed<Gtk::Separator>(Gtk::ORIENTATION_HORIZONTAL), Gtk::PACK_EXPAND_WIDGET);
-    vbox->pack_start(*hbox_middle, false, true, 2);
-    vbox->pack_start(*hbox_down_handles, true, true, 2);
+    UI::pack_start(*hbox_middle, *Gtk::make_managed<Gtk::Separator>(Gtk::ORIENTATION_HORIZONTAL), UI::PackOptions::expand_widget);
+    UI::pack_start(*hbox_middle, *Gtk::make_managed<Gtk::Separator>(Gtk::ORIENTATION_HORIZONTAL), UI::PackOptions::expand_widget);
+    UI::pack_start(*vbox, *hbox_middle, false, true, 2);
+    UI::pack_start(*vbox, *hbox_down_handles, true, true, 2);
     auto const hbox = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL,0);
     auto const reset_button = Gtk::make_managed<Gtk::Button>(_("_Clear"), true);
     reset_button->set_image_from_icon_name("edit-clear");
     reset_button->signal_clicked().connect(sigc::mem_fun (*this,&LPEPerspectiveEnvelope::resetGrid));
     reset_button->set_size_request(140,30);
-    vbox->pack_start(*hbox, true,true,2);
-    hbox->pack_start(*reset_button, false, false,2);
+    UI::pack_start(*vbox, *hbox, true,true,2);
+    UI::pack_start(*hbox, *reset_button, false, false,2);
     return vbox;
 }
 

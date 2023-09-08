@@ -1,9 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-/*
+/** \file
  * Gradient vector and position widget
- *
- * Authors:
+ */
+/* Authors:
  *   Lauris Kaplinski <lauris@kaplinski.com>
+ *   bulia byak <buliabyak@users.sf.net>
  *   Jon A. Cruz <jon@joncruz.org>
  *
  * Copyright (C) 2001-2002 Lauris Kaplinski

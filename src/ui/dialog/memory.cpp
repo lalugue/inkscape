@@ -22,9 +22,10 @@
 #include <gtkmm/treemodelcolumn.h>
 #include <gtkmm/treeview.h>
 
-#include "ui/dialog/memory.h"
 #include "debug/heap.h"
 #include "inkgc/gc-core.h"
+#include "ui/dialog/memory.h"
+#include "ui/pack.h"
 #include "util/format_size.h"
 
 using Inkscape::Util::format_size;
@@ -163,7 +164,7 @@ Memory::Memory()
     : DialogBase("/dialogs/memory", "Memory")
     , _private(std::make_unique<Private>())
 {
-    pack_start(_private->view);
+    UI::pack_start(*this, _private->view);
 
     _private->update();
 
@@ -177,8 +178,8 @@ Memory::Memory()
     button_box->set_halign(Gtk::ALIGN_END);
     button_box->set_spacing(6);
     button_box->property_margin().set_value(4);
-    button_box->pack_end(*button);
-    pack_end(*button_box, Gtk::PACK_SHRINK, 0);
+    UI::pack_end(*button_box, *button);
+    UI::pack_end(*this, *button_box, UI::PackOptions::shrink);
 
     _private->start_update_task();
 

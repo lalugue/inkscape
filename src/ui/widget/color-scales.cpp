@@ -27,6 +27,7 @@
 #include "preferences.h"
 #include "ui/dialog-events.h"
 #include "ui/icon-loader.h"
+#include "ui/pack.h"
 #include "ui/selected-color.h"
 #include "ui/widget/color-icc-selector.h"
 #include "ui/widget/color-slider.h"
@@ -216,8 +217,8 @@ void ColorScales<MODE>::_initUI(bool no_alpha)
         // Content
         auto const expander_box = Gtk::make_managed<Gtk::Box>();
         expander_box->set_visible(true);
-        expander_box->pack_start(*expander_icon);
-        expander_box->pack_start(*expander_label);
+        UI::pack_start(*expander_box, *expander_icon);
+        UI::pack_start(*expander_box, *expander_label);
         expander_box->set_orientation(Gtk::ORIENTATION_HORIZONTAL);
         // Expander
         wheel_frame = Gtk::make_managed<Gtk::Expander>();

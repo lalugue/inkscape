@@ -14,6 +14,7 @@
  *
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
+
 //#define DEBUG_GRID_ARRANGE 1
 
 #include "ui/dialog/grid-arrange-tab.h"
@@ -34,6 +35,7 @@
 #include "document-undo.h"
 #include "desktop.h"
 #include "ui/icon-names.h"
+#include "ui/pack.h"
 #include "ui/dialog/tile.h" // for Inkscape::UI::Dialog::ArrangeDialog
 
 /**
@@ -483,14 +485,14 @@ GridArrangeTab::GridArrangeTab(ArrangeDialog *parent)
     NoOfRowsLabel.set_text_with_mnemonic(_("_Rows:"));
     NoOfRowsLabel.set_mnemonic_widget(NoOfRowsSpinner);
     NoOfRowsBox.set_orientation(Gtk::ORIENTATION_VERTICAL);
-    NoOfRowsBox.pack_start(NoOfRowsLabel, false, false, MARGIN);
+    UI::pack_start(NoOfRowsBox, NoOfRowsLabel, false, false, MARGIN);
 
     NoOfRowsSpinner.set_digits(0);
     NoOfRowsSpinner.set_increments(1, 0);
     NoOfRowsSpinner.set_range(1.0, 10000.0);
     NoOfRowsSpinner.signal_changed().connect(sigc::mem_fun(*this, &GridArrangeTab::on_col_spinbutton_changed));
     NoOfRowsSpinner.set_tooltip_text(_("Number of rows"));
-    NoOfRowsBox.pack_start(NoOfRowsSpinner, false, false, MARGIN);
+    UI::pack_start(NoOfRowsBox, NoOfRowsSpinner, false, false, MARGIN);
     _col1->add_widget(NoOfRowsBox);
 
     RowHeightButton.set_label(_("Equal _height"));
@@ -502,17 +504,17 @@ GridArrangeTab::GridArrangeTab(ArrangeDialog *parent)
          AutoRowSize=false;
     RowHeightButton.set_active(AutoRowSize);
 
-    NoOfRowsBox.pack_start(RowHeightButton, false, false, MARGIN);
+    UI::pack_start(NoOfRowsBox, RowHeightButton, false, false, MARGIN);
 
     RowHeightButton.set_tooltip_text(_("If not set, each row has the height of the tallest object in it"));
     RowHeightButton.signal_toggled().connect(sigc::mem_fun(*this, &GridArrangeTab::on_RowSize_checkbutton_changed));
 
-    SpinsHBox.pack_start(NoOfRowsBox, false, false, MARGIN);
+    UI::pack_start(SpinsHBox, NoOfRowsBox, false, false, MARGIN);
 
     /*#### Label for X ####*/
     XByYLabel.set_markup("<span size='larger'> &#215; </span>");
     XByYLabel.set_valign(Gtk::ALIGN_CENTER);
-    SpinsHBox.pack_start(XByYLabel, false, false, MARGIN);
+    UI::pack_start(SpinsHBox, XByYLabel, false, false, MARGIN);
     _col2->add_widget(XByYLabel);
 
     /*#### Number of columns ####*/
@@ -520,14 +522,14 @@ GridArrangeTab::GridArrangeTab(ArrangeDialog *parent)
     NoOfColsLabel.set_text_with_mnemonic(_("_Columns:"));
     NoOfColsLabel.set_mnemonic_widget(NoOfColsSpinner);
     NoOfColsBox.set_orientation(Gtk::ORIENTATION_VERTICAL);
-    NoOfColsBox.pack_start(NoOfColsLabel, false, false, MARGIN);
+    UI::pack_start(NoOfColsBox, NoOfColsLabel, false, false, MARGIN);
 
     NoOfColsSpinner.set_digits(0);
     NoOfColsSpinner.set_increments(1, 0);
     NoOfColsSpinner.set_range(1.0, 10000.0);
     NoOfColsSpinner.signal_changed().connect(sigc::mem_fun(*this, &GridArrangeTab::on_row_spinbutton_changed));
     NoOfColsSpinner.set_tooltip_text(_("Number of columns"));
-    NoOfColsBox.pack_start(NoOfColsSpinner, false, false, MARGIN);
+    UI::pack_start(NoOfColsBox, NoOfColsSpinner, false, false, MARGIN);
     _col3->add_widget(NoOfColsBox);
 
     ColumnWidthButton.set_label(_("Equal _width"));
@@ -538,15 +540,15 @@ GridArrangeTab::GridArrangeTab(ArrangeDialog *parent)
     else
          AutoColSize=false;
     ColumnWidthButton.set_active(AutoColSize);
-    NoOfColsBox.pack_start(ColumnWidthButton, false, false, MARGIN);
+    UI::pack_start(NoOfColsBox, ColumnWidthButton, false, false, MARGIN);
 
     ColumnWidthButton.set_tooltip_text(_("If not set, each column has the width of the widest object in it"));
     ColumnWidthButton.signal_toggled().connect(sigc::mem_fun(*this, &GridArrangeTab::on_ColSize_checkbutton_changed));
 
-    SpinsHBox.pack_start(NoOfColsBox, false, false, MARGIN);
+    UI::pack_start(SpinsHBox, NoOfColsBox, false, false, MARGIN);
 
     TileBox.set_orientation(Gtk::ORIENTATION_VERTICAL);
-    TileBox.pack_start(SpinsHBox, false, false, MARGIN);
+    UI::pack_start(TileBox, SpinsHBox, false, false, MARGIN);
 
     VertAlign = prefs->getInt("/dialogs/gridtiler/VertAlign", 1);
     HorizAlign = prefs->getInt("/dialogs/gridtiler/HorizAlign", 1);
@@ -560,8 +562,8 @@ GridArrangeTab::GridArrangeTab(ArrangeDialog *parent)
     AlignmentSelector.set_halign(Gtk::ALIGN_START);
     AlignmentSelector.setAlignment(HorizAlign, VertAlign);
     AlignmentSelector.connectSelectionChanged(sigc::mem_fun(*this, &GridArrangeTab::Align_changed));
-    TileBox.pack_start(AlignLabel, false, false, MARGIN);
-    TileBox.pack_start(AlignmentSelector, false, false);
+    UI::pack_start(TileBox, AlignLabel, false, false, MARGIN);
+    UI::pack_start(TileBox, AlignmentSelector, false, false);
 
     {
         /*#### Radio buttons to control spacing manually or to fit selection bbox ####*/
@@ -570,15 +572,15 @@ GridArrangeTab::GridArrangeTab(ArrangeDialog *parent)
         SpaceByBBoxRadioButton.signal_toggled().connect(sigc::mem_fun(*this, &GridArrangeTab::Spacing_button_changed));
         SpacingGroup = SpaceByBBoxRadioButton.get_group();
 
-        SpacingVBox.pack_start(SpaceByBBoxRadioButton, false, false, MARGIN);
+        UI::pack_start(SpacingVBox, SpaceByBBoxRadioButton, false, false, MARGIN);
 
         SpaceManualRadioButton.set_label(_("_Set spacing:"));
         SpaceManualRadioButton.set_use_underline (true);
         SpaceManualRadioButton.set_group(SpacingGroup);
         SpaceManualRadioButton.signal_toggled().connect(sigc::mem_fun(*this, &GridArrangeTab::Spacing_button_changed));
-        SpacingVBox.pack_start(SpaceManualRadioButton, false, false, MARGIN);
+        UI::pack_start(SpacingVBox, SpaceManualRadioButton, false, false, MARGIN);
 
-        TileBox.pack_start(SpacingVBox, false, false, MARGIN);
+        UI::pack_start(TileBox, SpacingVBox, false, false, MARGIN);
     }
 
     {
@@ -609,10 +611,10 @@ GridArrangeTab::GridArrangeTab(ArrangeDialog *parent)
     PaddingTable->attach(PaddingUnitMenu, 1, 0, 1, 1);
     PaddingTable->attach(YPadding,        0, 1, 1, 1);
 
-    TileBox.pack_start(*PaddingTable, false, false, MARGIN);
+    UI::pack_start(TileBox, *PaddingTable, false, false, MARGIN);
 
     contents->property_margin().set_value(8);
-    contents->pack_start(TileBox);
+    UI::pack_start(*contents, TileBox);
 
     double SpacingType = prefs->getDouble("/dialogs/gridtiler/SpacingType", 15);
     if (SpacingType>0) {

@@ -18,15 +18,14 @@
 #include "parameter-optiongroup.h"
 
 #include <unordered_set>
-
 #include <gtkmm/box.h>
 #include <gtkmm/comboboxtext.h>
 #include <gtkmm/radiobutton.h>
 
-#include "xml/node.h"
 #include "extension/extension.h"
 #include "preferences.h"
-
+#include "ui/pack.h"
+#include "xml/node.h"
 
 namespace Inkscape {
 namespace Extension {
@@ -261,7 +260,7 @@ Gtk::Widget *ParamOptionGroup::get_widget(sigc::signal<void ()> *changeSignal)
     auto const hbox = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL, GUI_PARAM_WIDGETS_SPACING);
 
     auto const label = Gtk::make_managed<Gtk::Label>(_text, Gtk::ALIGN_START);
-    hbox->pack_start(*label, false, false);
+    UI::pack_start(*hbox, *label, false, false);
 
     if (_mode == COMBOBOX) {
         auto const combo = Gtk::make_managed<ComboWidget>(this, changeSignal);
@@ -277,7 +276,7 @@ Gtk::Widget *ParamOptionGroup::get_widget(sigc::signal<void ()> *changeSignal)
             combo->set_active(0);
         }
 
-        hbox->pack_end(*combo, false, false);
+        UI::pack_end(*hbox, *combo, false, false);
     } else if (_mode == RADIOBUTTON) {
         label->set_valign(Gtk::ALIGN_START); // align label and first radio
 
@@ -286,13 +285,13 @@ Gtk::Widget *ParamOptionGroup::get_widget(sigc::signal<void ()> *changeSignal)
 
         for (auto choice : choices) {
             auto const radio = Gtk::make_managed<RadioWidget>(group, choice->_text, this, changeSignal);
-            radios->pack_start(*radio, true, true);
+            UI::pack_start(*radios, *radio, true, true);
             if (choice->_value == _value) {
                 radio->set_active();
             }
         }
 
-        hbox->pack_end(*radios, false, false);
+        UI::pack_end(*hbox, *radios, false, false);
     }
 
     hbox->show_all();

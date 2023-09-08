@@ -13,9 +13,9 @@
 
 #include "find.h"
 
-#include <gtkmm/entry.h>
 #include <glibmm/i18n.h>
 #include <glibmm/regex.h>
+#include <gtkmm/entry.h>
 #include <gtkmm/enums.h>
 #include <gtkmm/label.h>
 #include <gtkmm/sizegroup.h>
@@ -28,7 +28,6 @@
 #include "message-stack.h"
 #include "selection-chemistry.h"
 #include "text-editing.h"
-
 #include "object/sp-defs.h"
 #include "object/sp-ellipse.h"
 #include "object/sp-flowdiv.h"
@@ -46,13 +45,11 @@
 #include "object/sp-tref.h"
 #include "object/sp-tspan.h"
 #include "object/sp-use.h"
-
-#include "ui/icon-names.h"
 #include "ui/dialog-events.h"
-
+#include "ui/icon-names.h"
+#include "ui/pack.h"
 #include "xml/attribute-record.h"
 #include "xml/node-iterators.h"
-
 
 namespace Inkscape {
 namespace UI {
@@ -233,41 +230,41 @@ Find::Find()
 
     Gtk::RadioButtonGroup grp_searchin = check_searchin_text.get_group();
     check_searchin_property.set_group(grp_searchin);
-    vbox_searchin.pack_start(check_searchin_text, Gtk::PACK_SHRINK);
-    vbox_searchin.pack_start(check_searchin_property, Gtk::PACK_SHRINK);
+    UI::pack_start(vbox_searchin, check_searchin_text, UI::PackOptions::shrink);
+    UI::pack_start(vbox_searchin, check_searchin_property, UI::PackOptions::shrink);
     frame_searchin.add(vbox_searchin);
 
     Gtk::RadioButtonGroup grp_scope = check_scope_all.get_group();
     check_scope_layer.set_group(grp_scope);
     check_scope_selection.set_group(grp_scope);
-    vbox_scope.pack_start(check_scope_all, Gtk::PACK_SHRINK);
-    vbox_scope.pack_start(check_scope_layer, Gtk::PACK_SHRINK);
-    vbox_scope.pack_start(check_scope_selection, Gtk::PACK_SHRINK);
+    UI::pack_start(vbox_scope, check_scope_all, UI::PackOptions::shrink);
+    UI::pack_start(vbox_scope, check_scope_layer, UI::PackOptions::shrink);
+    UI::pack_start(vbox_scope, check_scope_selection, UI::PackOptions::shrink);
     hbox_searchin.set_spacing(12);
-    hbox_searchin.pack_start(frame_searchin, Gtk::PACK_SHRINK);
-    hbox_searchin.pack_start(frame_scope, Gtk::PACK_SHRINK);
+    UI::pack_start(hbox_searchin, frame_searchin, UI::PackOptions::shrink);
+    UI::pack_start(hbox_searchin, frame_scope, UI::PackOptions::shrink);
     frame_scope.add(vbox_scope);
 
-    vbox_options1.pack_start(check_case_sensitive, Gtk::PACK_SHRINK);
-    vbox_options1.pack_start(check_include_hidden, Gtk::PACK_SHRINK);
-    vbox_options2.pack_start(check_exact_match, Gtk::PACK_SHRINK);
-    vbox_options2.pack_start(check_include_locked, Gtk::PACK_SHRINK);
+    UI::pack_start(vbox_options1, check_case_sensitive, UI::PackOptions::shrink);
+    UI::pack_start(vbox_options1, check_include_hidden, UI::PackOptions::shrink);
+    UI::pack_start(vbox_options2, check_exact_match, UI::PackOptions::shrink);
+    UI::pack_start(vbox_options2, check_include_locked, UI::PackOptions::shrink);
     _left_size_group->add_widget(check_case_sensitive);
     _left_size_group->add_widget(check_include_hidden);
     _right_size_group->add_widget(check_exact_match);
     _right_size_group->add_widget(check_include_locked);
     hbox_options.set_spacing(4);
-    hbox_options.pack_start(vbox_options1, Gtk::PACK_SHRINK);
-    hbox_options.pack_start(vbox_options2, Gtk::PACK_SHRINK);
+    UI::pack_start(hbox_options, vbox_options1, UI::PackOptions::shrink);
+    UI::pack_start(hbox_options, vbox_options2, UI::PackOptions::shrink);
     frame_options.add(hbox_options);
 
-    vbox_properties1.pack_start(check_ids, Gtk::PACK_SHRINK);
-    vbox_properties1.pack_start(check_style, Gtk::PACK_SHRINK);
-    vbox_properties1.pack_start(check_font, Gtk::PACK_SHRINK);
-    vbox_properties1.pack_start(check_desc, Gtk::PACK_SHRINK);
-    vbox_properties1.pack_start(check_title, Gtk::PACK_SHRINK);
-    vbox_properties2.pack_start(check_attributevalue, Gtk::PACK_SHRINK);
-    vbox_properties2.pack_start(check_attributename, Gtk::PACK_SHRINK);
+    UI::pack_start(vbox_properties1, check_ids, UI::PackOptions::shrink);
+    UI::pack_start(vbox_properties1, check_style, UI::PackOptions::shrink);
+    UI::pack_start(vbox_properties1, check_font, UI::PackOptions::shrink);
+    UI::pack_start(vbox_properties1, check_desc, UI::PackOptions::shrink);
+    UI::pack_start(vbox_properties1, check_title, UI::PackOptions::shrink);
+    UI::pack_start(vbox_properties2, check_attributevalue, UI::PackOptions::shrink);
+    UI::pack_start(vbox_properties2, check_attributename, UI::PackOptions::shrink);
     vbox_properties2.set_valign(Gtk::ALIGN_START);
     _left_size_group->add_widget(check_ids);
     _left_size_group->add_widget(check_style);
@@ -277,21 +274,21 @@ Find::Find()
     _right_size_group->add_widget(check_attributevalue);
     _right_size_group->add_widget(check_attributename);
     hbox_properties.set_spacing(4);
-    hbox_properties.pack_start(vbox_properties1, Gtk::PACK_SHRINK);
-    hbox_properties.pack_start(vbox_properties2, Gtk::PACK_SHRINK);
+    UI::pack_start(hbox_properties, vbox_properties1, UI::PackOptions::shrink);
+    UI::pack_start(hbox_properties, vbox_properties2, UI::PackOptions::shrink);
     frame_properties.add(hbox_properties);
 
-    vbox_types1.pack_start(check_alltypes, Gtk::PACK_SHRINK);
-    vbox_types1.pack_start(check_paths, Gtk::PACK_SHRINK);
-    vbox_types1.pack_start(check_texts, Gtk::PACK_SHRINK);
-    vbox_types1.pack_start(check_groups, Gtk::PACK_SHRINK);
-    vbox_types1.pack_start(check_clones, Gtk::PACK_SHRINK);
-    vbox_types1.pack_start(check_images, Gtk::PACK_SHRINK);
-    vbox_types2.pack_start(check_offsets, Gtk::PACK_SHRINK);
-    vbox_types2.pack_start(check_rects, Gtk::PACK_SHRINK);
-    vbox_types2.pack_start(check_ellipses, Gtk::PACK_SHRINK);
-    vbox_types2.pack_start(check_stars, Gtk::PACK_SHRINK);
-    vbox_types2.pack_start(check_spirals, Gtk::PACK_SHRINK);
+    UI::pack_start(vbox_types1, check_alltypes, UI::PackOptions::shrink);
+    UI::pack_start(vbox_types1, check_paths, UI::PackOptions::shrink);
+    UI::pack_start(vbox_types1, check_texts, UI::PackOptions::shrink);
+    UI::pack_start(vbox_types1, check_groups, UI::PackOptions::shrink);
+    UI::pack_start(vbox_types1, check_clones, UI::PackOptions::shrink);
+    UI::pack_start(vbox_types1, check_images, UI::PackOptions::shrink);
+    UI::pack_start(vbox_types2, check_offsets, UI::PackOptions::shrink);
+    UI::pack_start(vbox_types2, check_rects, UI::PackOptions::shrink);
+    UI::pack_start(vbox_types2, check_ellipses, UI::PackOptions::shrink);
+    UI::pack_start(vbox_types2, check_stars, UI::PackOptions::shrink);
+    UI::pack_start(vbox_types2, check_spirals, UI::PackOptions::shrink);
     vbox_types2.set_valign(Gtk::ALIGN_END);
     _left_size_group->add_widget(check_alltypes);
     _left_size_group->add_widget(check_paths);
@@ -305,32 +302,32 @@ Find::Find()
     _right_size_group->add_widget(check_stars);
     _right_size_group->add_widget(check_spirals);
     hbox_types.set_spacing(4);
-    hbox_types.pack_start(vbox_types1, Gtk::PACK_SHRINK);
-    hbox_types.pack_start(vbox_types2, Gtk::PACK_SHRINK);
+    UI::pack_start(hbox_types, vbox_types1, UI::PackOptions::shrink);
+    UI::pack_start(hbox_types, vbox_types2, UI::PackOptions::shrink);
     frame_types.add(hbox_types);
 
     vbox_expander.set_spacing(4);
-    vbox_expander.pack_start(frame_options, true, true);
-    vbox_expander.pack_start(frame_properties, true, true);
-    vbox_expander.pack_start(frame_types, true, true);
+    UI::pack_start(vbox_expander, frame_options, true, true);
+    UI::pack_start(vbox_expander, frame_properties, true, true);
+    UI::pack_start(vbox_expander, frame_types, true, true);
 
     expander_options.set_use_underline();
     expander_options.add(vbox_expander);
 
     box_buttons.set_spacing(6);
     box_buttons.set_homogeneous(true);
-    box_buttons.pack_end(button_replace, false, true);
-    box_buttons.pack_end(button_find, false, true);
+    UI::pack_end(box_buttons, button_replace, false, true);
+    UI::pack_end(box_buttons, button_find, false, true);
     hboxbutton_row.set_spacing(6);
-    hboxbutton_row.pack_start(status, true, true);
-    hboxbutton_row.pack_end(box_buttons, false, true);
+    UI::pack_start(hboxbutton_row, status, true, true);
+    UI::pack_end(hboxbutton_row, box_buttons, false, true);
 
     set_spacing(6);
-    pack_start(entry_find, false, false);
-    pack_start(entry_replace, false, false);
-    pack_start(hbox_searchin, false, false);
-    pack_start(expander_options, false, false);
-    pack_end(hboxbutton_row, false, false);
+    UI::pack_start(*this, entry_find, false, false);
+    UI::pack_start(*this, entry_replace, false, false);
+    UI::pack_start(*this, hbox_searchin, false, false);
+    UI::pack_start(*this, expander_options, false, false);
+    UI::pack_end(*this, hboxbutton_row, false, false);
 
     checkProperties.push_back(&check_ids);
     checkProperties.push_back(&check_style);

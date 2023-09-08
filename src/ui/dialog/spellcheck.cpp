@@ -27,9 +27,7 @@
 #include "layer-manager.h"
 #include "selection-chemistry.h"
 #include "text-editing.h"
-
 #include "display/control/canvas-item-rect.h"
-
 #include "object/sp-defs.h"
 #include "object/sp-flowtext.h"
 #include "object/sp-object.h"
@@ -37,10 +35,10 @@
 #include "object/sp-string.h"
 #include "object/sp-text.h"
 #include "object/sp-tref.h"
-
 #include "ui/dialog/dialog-container.h"
 #include "ui/dialog/inkscape-preferences.h" // for PREFS_PAGE_SPELLCHECK
 #include "ui/icon-names.h"
+#include "ui/pack.h"
 #include "ui/tools/text-tool.h"
 
 #include <glibmm/i18n.h>
@@ -140,15 +138,15 @@ SpellCheck::SpellCheck()
     pref_button.set_tooltip_text(_("Preferences"));
     pref_button.set_image_from_icon_name("preferences-system");
 
-    dictionary_hbox.pack_start(dictionary_label, false, false, 6);
-    dictionary_hbox.pack_start(dictionary_combo, true, true, 0);
-    dictionary_hbox.pack_start(pref_button, false, false, 0);
+    UI::pack_start(dictionary_hbox, dictionary_label, false, false, 6);
+    UI::pack_start(dictionary_hbox, dictionary_combo, true, true);
+    UI::pack_start(dictionary_hbox, pref_button, false, false);
 
     changebutton_vbox.set_spacing(4);
-    changebutton_vbox.pack_start(accept_button, false, false, 0);
-    changebutton_vbox.pack_start(ignoreonce_button, false, false, 0);
-    changebutton_vbox.pack_start(ignore_button, false, false, 0);
-    changebutton_vbox.pack_start(add_button, false, false, 0);
+    UI::pack_start(changebutton_vbox, accept_button, false, false);
+    UI::pack_start(changebutton_vbox, ignoreonce_button, false, false);
+    UI::pack_start(changebutton_vbox, ignore_button, false, false);
+    UI::pack_start(changebutton_vbox, add_button, false, false);
 
     suggestion_hbox.pack_start (scrolled_window, true, true, 4);
     suggestion_hbox.pack_end (changebutton_vbox, false, false, 0);
@@ -166,11 +164,11 @@ SpellCheck::SpellCheck()
      * Main dialog
      */
     set_spacing(6);
-    pack_start (banner_hbox, false, false, 0);
-    pack_start (suggestion_hbox, true, true, 0);
-    pack_start (dictionary_hbox, false, false, 0);
-    pack_start (action_sep, false, false, 6);
-    pack_start (actionbutton_hbox, false, false, 0);
+    UI::pack_start(*this, banner_hbox, false, false);
+    UI::pack_start(*this, suggestion_hbox, true, true);
+    UI::pack_start(*this, dictionary_hbox, false, false);
+    UI::pack_start(*this, action_sep, false, false, 6);
+    UI::pack_start(*this, actionbutton_hbox, false, false);
 
     /*
      * Signal handlers

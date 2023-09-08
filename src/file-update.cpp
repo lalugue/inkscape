@@ -17,6 +17,7 @@
  * Marc Jeanmougin
  * su_v
  */
+
 #include <clocale>
 #include <gtkmm.h>
 #include <string>
@@ -24,8 +25,8 @@
 
 #include "desktop.h"
 #include "display/control/canvas-item-grid.h"
-#include "document-undo.h"
 #include "document.h"
+#include "document-undo.h"
 #include "extension/db.h"
 #include "extension/effect.h"
 #include "extension/input.h"
@@ -37,8 +38,8 @@
 #include "io/sys.h"
 #include "live_effects/effect.h"
 #include "live_effects/lpeobject.h"
-#include "message-stack.h"
 #include "message.h"
+#include "message-stack.h"
 #include "object/filters/composite.h"
 #include "object/persp3d.h"
 #include "object/sp-defs.h"
@@ -58,8 +59,9 @@
 #include "selection-chemistry.h"
 #include "style.h"
 #include "text-editing.h"
-#include "ui/shape-editor.h"
 #include "ui/dialog-run.h"
+#include "ui/pack.h"
+#include "ui/shape-editor.h"
 
 using Inkscape::DocumentUndo;
 
@@ -356,8 +358,8 @@ int gui_request_dpi_fix_method(SPDocument *doc)
     moreinfo_text.set_margin_end(15);
 
     Gtk::Box b;
-    b.pack_start(choice2_1, false, false, 4);
-    b.pack_start(choice2_2, false, false, 4);
+    Inkscape::UI::pack_start(b, choice2_1, false, false, 4);
+    Inkscape::UI::pack_start(b, choice2_2, false, false, 4);
     choice2_1.set_visible(true);
     choice2_2.set_visible(true);
 
@@ -372,12 +374,12 @@ int gui_request_dpi_fix_method(SPDocument *doc)
     bool backup = prefs->getBool("/options/dpifixbackup", true);
     backup_button.set_active(backup);
     // clang-format off
-    content->pack_start(explanation,   false, false, 5);
-    content->pack_start(choice1,       false, false, 5);
-    content->pack_start(choice2,       false, false, 5);
-    content->pack_start(b,             false, false, 5);
-    content->pack_start(backup_button, false, false, 5);
-    content->pack_start(moreinfo,      false, false, 5);
+    Inkscape::UI::pack_start(*content, explanation,   false, false, 5);
+    Inkscape::UI::pack_start(*content, choice1,       false, false, 5);
+    Inkscape::UI::pack_start(*content, choice2,       false, false, 5);
+    Inkscape::UI::pack_start(*content, b,             false, false, 5);
+    Inkscape::UI::pack_start(*content, backup_button, false, false, 5);
+    Inkscape::UI::pack_start(*content, moreinfo,      false, false, 5);
     // clang-format on
     moreinfo.add(moreinfo_text);
     scale_dialog.show_all_children();

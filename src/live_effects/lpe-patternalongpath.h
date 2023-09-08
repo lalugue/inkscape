@@ -1,7 +1,4 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-#ifndef INKSCAPE_LPE_PATTERN_ALONG_PATH_H
-#define INKSCAPE_LPE_PATTERN_ALONG_PATH_H
-
 /*
  * Inkscape::LPEPatternAlongPath
  *
@@ -10,6 +7,9 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#ifndef INKSCAPE_LPE_PATTERN_ALONG_PATH_H
+#define INKSCAPE_LPE_PATTERN_ALONG_PATH_H
+
 #include "live_effects/parameter/enum.h"
 #include "live_effects/effect.h"
 #include "live_effects/parameter/path.h"
@@ -17,11 +17,11 @@
 #include "live_effects/parameter/point.h"
 
 namespace Inkscape {
-namespace UI {
-namespace Toolbar {
+
+namespace UI::Toolbar {
 class PencilToolbar;
-}
-} // namespace UI
+} // namespace UI::Toolbar
+
 namespace LivePathEffect {
 
 namespace WPAP {
@@ -55,6 +55,7 @@ public:
 protected:
     double original_height;
     ScalarParam prop_scale;
+
 private:
     EnumParam<PAPCopyType> copytype;
     BoolParam scale_y_rel;
@@ -76,7 +77,7 @@ private:
 }; //namespace LivePathEffect
 }; //namespace Inkscape
 
-#endif
+#endif // INKSCAPE_LPE_PATTERN_ALONG_PATH_H
 
 /*
   Local Variables:

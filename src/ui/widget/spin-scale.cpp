@@ -1,4 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
+/** \file
+ * Derived from and replaces SpinSlider
+ */
 /*
  * Author:
  *
@@ -18,6 +21,8 @@
 #include <glibmm/i18n.h>
 #include <glibmm/stringutils.h>
 #include <gtkmm/enums.h>
+
+#include "ui/pack.h"
 
 namespace Inkscape {
 namespace UI {
@@ -40,7 +45,7 @@ SpinScale::SpinScale(const Glib::ustring label, double value,
 
     signal_value_changed().connect(signal_attr_changed().make_slot());
 
-    pack_start(_inkspinscale);
+    UI::pack_start(*this, _inkspinscale);
 
     show_all_children();
 }
@@ -61,7 +66,7 @@ SpinScale::SpinScale(const Glib::ustring label,
 
     signal_value_changed().connect(signal_attr_changed().make_slot());
 
-    pack_start(_inkspinscale);
+    UI::pack_start(*this, _inkspinscale);
 
     show_all_children();
 }
@@ -143,8 +148,8 @@ DualSpinScale::DualSpinScale(const Glib::ustring label1, const Glib::ustring lab
     vb->add(_s1);
     _s1.set_margin_bottom(3);
     vb->add(_s2);
-    pack_start(*vb);
-    pack_start(_link, false, false);
+    UI::pack_start(*this, *vb);
+    UI::pack_start(*this, _link, false, false);
     set_link_active(true);
     _s2.set_sensitive(false);
 

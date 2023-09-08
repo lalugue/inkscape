@@ -48,6 +48,7 @@
 #include "ui/drag-and-drop.h"  // Move to canvas?
 #include "ui/interface.h" // main menu, sp_ui_close_view()
 #include "ui/monitor.h" // get_monitor_geometry_at_point()
+#include "ui/pack.h"
 #include "ui/shortcuts.h"
 #include "ui/util.h"
 #include "ui/widget/canvas.h"
@@ -126,7 +127,7 @@ InkscapeWindow::InkscapeWindow(SPDocument* document)
     ink_drag_setup(_desktop_widget);
 
     // The main section
-    _mainbox->pack_start(*_desktop_widget, true, true);
+    Inkscape::UI::pack_start(*_mainbox, *_desktop_widget, true, true);
 
     // ================== Callbacks ==================
     signal_window_state_event()          .connect(sigc::mem_fun(*this, &InkscapeWindow::on_window_state_changed));

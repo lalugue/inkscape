@@ -15,10 +15,14 @@
  */
 
 #include "live_effects/lpe-roughen.h"
+
+#include <boost/functional/hash.hpp>
+#include <gtkmm/box.h>
+#include <gtkmm/separator.h>
+
 #include "display/curve.h"
 #include "helper/geom.h"
-#include <boost/functional/hash.hpp>
-#include <gtkmm.h>
+#include "ui/pack.h"
 
 // TODO due to internal breakage in glibmm headers, this must be last:
 #include <glibmm/i18n.h>
@@ -149,21 +153,21 @@ Gtk::Widget *LPERoughen::newWidget()
                 auto const method_label = Gtk::make_managed<Gtk::Label>(
                     Glib::ustring(_("<b>Resolution</b>")), Gtk::ALIGN_START);
                 method_label->set_use_markup(true);
-                vbox->pack_start(*method_label, false, false, 2);
-                vbox->pack_start(*Gtk::make_managed<Gtk::Separator>(Gtk::ORIENTATION_HORIZONTAL),
-                                 Gtk::PACK_EXPAND_WIDGET);
+                UI::pack_start(*vbox, *method_label, false, false, 2);
+                UI::pack_start(*vbox, *Gtk::make_managed<Gtk::Separator>(Gtk::ORIENTATION_HORIZONTAL),
+                               UI::PackOptions::expand_widget);
             }
             if (param->param_key == "handles") {
                 auto const options = Gtk::make_managed<Gtk::Label>(
                     Glib::ustring(_("<b>Options</b>")), Gtk::ALIGN_START);
                 options->set_use_markup(true);
-                vbox->pack_start(*options, false, false, 2);
-                vbox->pack_start(*Gtk::make_managed<Gtk::Separator>(Gtk::ORIENTATION_HORIZONTAL),
-                                 Gtk::PACK_EXPAND_WIDGET);
+                UI::pack_start(*vbox, *options, false, false, 2);
+                UI::pack_start(*vbox, *Gtk::make_managed<Gtk::Separator>(Gtk::ORIENTATION_HORIZONTAL),
+                               UI::PackOptions::expand_widget);
             }
             Glib::ustring *tip = param->param_getTooltip();
             if (widg) {
-                vbox->pack_start(*widg, true, true, 2);
+                UI::pack_start(*vbox, *widg, true, true, 2);
                 if (tip) {
                     widg->set_tooltip_markup(*tip);
                 } else {

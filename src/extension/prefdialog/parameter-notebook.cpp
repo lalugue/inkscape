@@ -2,7 +2,6 @@
 /** \file
  * Notebook and NotebookPage parameters for extensions.
  */
-
 /*
  * Authors:
  *   Johan Engelen <johan@shouraizou.nl>
@@ -16,19 +15,16 @@
 #include "parameter-notebook.h"
 
 #include <unordered_set>
-
 #include <gtkmm/box.h>
 #include <gtkmm/notebook.h>
 
-#include "preferences.h"
-
 #include "extension/extension.h"
-
+#include "preferences.h"
+#include "ui/pack.h"
 #include "xml/node.h"
 
 namespace Inkscape {
 namespace Extension {
-
 
 ParamNotebook::ParamNotebookPage::ParamNotebookPage(Inkscape::XML::Node *xml, Inkscape::Extension::Extension *ext)
     : InxParameter(xml, ext)
@@ -84,8 +80,7 @@ Gtk::Widget *ParamNotebook::ParamNotebookPage::get_widget(sigc::signal<void ()> 
         if (child_widget) {
             int indent = child->get_indent();
             child_widget->set_margin_start(indent *GUI_INDENTATION);
-            vbox->pack_start(*child_widget, false, true, 0); // fill=true does not have an effect here, but allows the
-                                                             // child to choose to expand by setting hexpand/vexpand
+            UI::pack_start(*vbox, *child_widget, child_widget->get_vexpand(), true);
 
             const char *tooltip = child->get_tooltip();
             if (tooltip) {

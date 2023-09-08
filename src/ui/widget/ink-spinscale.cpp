@@ -25,6 +25,7 @@
 
 #include "ink-spinscale.h"
 #include "ui/controller.h"
+#include "ui/pack.h"
 #include "ui/util.h"
 
 namespace Controller = Inkscape::UI::Controller;
@@ -209,45 +210,34 @@ InkScale::set_adjustment_value(double x, bool constrained) {
 InkSpinScale::InkSpinScale(double value, double lower,
                            double upper, double step_increment,
                            double page_increment, double page_size)
+    : InkSpinScale{Gtk::Adjustment::create(value,
+                                           lower,
+                                           upper,
+                                           step_increment,
+                                           page_increment,
+                                           page_size)}
 {
-    set_name("InkSpinScale");
-
-    g_assert (upper - lower > 0);
-
-    _adjustment = Gtk::Adjustment::create(value,
-                                          lower,
-                                          upper,
-                                          step_increment,
-                                          page_increment,
-                                          page_size);
-
-    _spinbutton = Gtk::make_managed<Inkscape::UI::Widget::ScrollProtected<Gtk::SpinButton>>(_adjustment);
+    // TODO: Why does the ctor from doubles do this stuff but the other doesnʼt?
     _spinbutton->set_valign(Gtk::ALIGN_CENTER);
-    _spinbutton->set_numeric();
     _spinbutton->signal_key_release_event().connect(sigc::mem_fun(*this,&InkSpinScale::on_key_release_event),false);
-
-    _scale = Gtk::make_managed<InkScale>(_adjustment, _spinbutton);
-    _scale->set_draw_value(false);
-
-    pack_end(*_spinbutton, Gtk::PACK_SHRINK);
-    pack_end(*_scale,      Gtk::PACK_EXPAND_WIDGET);
 }
 
 InkSpinScale::InkSpinScale(Glib::RefPtr<Gtk::Adjustment> adjustment)
     : _adjustment(std::move(adjustment))
+    , _spinbutton{Gtk::make_managed<Inkscape::UI::Widget::ScrollProtected<Gtk::SpinButton>>(_adjustment)}
+    , _scale{Gtk::make_managed<InkScale>(_adjustment, _spinbutton)}
 {
-    set_name("InkSpinScale");
-
     g_assert (_adjustment->get_upper() - _adjustment->get_lower() > 0);
 
-    _spinbutton = Gtk::make_managed<Inkscape::UI::Widget::ScrollProtected<Gtk::SpinButton>>(_adjustment);
+    set_name("InkSpinScale");
+
     _spinbutton->set_numeric();
 
-    _scale = Gtk::make_managed<InkScale>(_adjustment, _spinbutton);
+    // TODO: GTK4: :draw-value defaults to FALSE, so remove this when migrating.
     _scale->set_draw_value(false);
 
-    pack_end(*_spinbutton, Gtk::PACK_SHRINK);
-    pack_end(*_scale,      Gtk::PACK_EXPAND_WIDGET);
+    Inkscape::UI::pack_end(*this, *_spinbutton, Inkscape::UI::PackOptions::shrink       );
+    Inkscape::UI::pack_end(*this, *_scale,      Inkscape::UI::PackOptions::expand_widget);
 }
 
 void

@@ -30,6 +30,7 @@
 #include "selection-chemistry.h"
 #include "ui/controller.h"
 #include "ui/icon-names.h"
+#include "ui/pack.h"
 #include "ui/tools/tool-base.h"
 #include "ui/widget/imagetoggler.h"
 
@@ -56,7 +57,7 @@ LayerPropertiesDialog::LayerPropertiesDialog(LayerPropertiesDialogType type)
     _layer_name_entry.set_hexpand();
     _layout_table.attach(_layer_name_entry, 1, 0, 1, 1);
 
-    mainVBox->pack_start(_layout_table, true, true, 4);
+    UI::pack_start(*mainVBox, _layout_table, true, true, 4);
 
     // Buttons
     _close_button.set_can_default();

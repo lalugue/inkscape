@@ -9,6 +9,7 @@
 
 #include <utility>
 #include <glibmm/i18n.h>
+#include <gtkmm/box.h>
 #include <sigc++/functors/mem_fun.h>
 
 #include "inkscape.h"
@@ -17,8 +18,9 @@
 #include "svg/svg.h"
 #include "ui/controller.h"
 #include "ui/icon-names.h"
-#include "ui/knot/knot-holder.h"
 #include "ui/knot/knot-holder-entity.h"
+#include "ui/knot/knot-holder.h"
+#include "ui/pack.h"
 #include "ui/widget/point.h"
 
 namespace Inkscape::LivePathEffect {
@@ -158,7 +160,7 @@ PointParam::param_newWidget()
     pointwdg->signal_y_value_changed().connect(sigc::mem_fun(*this, &PointParam::on_value_changed));
 
     auto const hbox = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL);
-    hbox->pack_start(*pointwdg, true, true);
+    UI::pack_start(*hbox, *pointwdg, true, true);
     hbox->show_all_children();
     return hbox;
 }

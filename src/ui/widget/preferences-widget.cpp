@@ -32,6 +32,7 @@
 #include "io/sys.h"
 #include "ui/dialog/filedialog.h"
 #include "ui/icon-loader.h"
+#include "ui/pack.h"
 #include "ui/util.h"
 #include "ui/widget/preferences-widget.h"
 
@@ -75,7 +76,7 @@ void DialogPage::add_line(bool                 indent,
     auto const hb = Gtk::make_managed<Gtk::Box>();
     hb->set_spacing(12);
     hb->set_hexpand(true);
-    hb->pack_start(widget, expand_widget, expand_widget);
+    UI::pack_start(*hb, widget, expand_widget, expand_widget);
     hb->set_valign(Gtk::ALIGN_CENTER);
     
     // Add a label in the first column if provided
@@ -115,12 +116,12 @@ void DialogPage::add_line(bool                 indent,
     {
         auto const suffix_widget = Gtk::make_managed<Gtk::Label>(suffix, Gtk::ALIGN_START, Gtk::ALIGN_CENTER, true);
         suffix_widget->set_markup(suffix_widget->get_text());
-        hb->pack_start(*suffix_widget,false,false);
+        UI::pack_start(*hb, *suffix_widget,false,false);
     }
 
     // Pack an additional widget into a box with the widget if desired
     if (other_widget)
-        hb->pack_start(*other_widget, expand_widget, expand_widget);
+        UI::pack_start(*hb, *other_widget, expand_widget, expand_widget);
 }
 
 void DialogPage::add_group_header(Glib::ustring name, int columns)
@@ -560,7 +561,7 @@ ZoomCorrRulerSlider::init(int ruler_width, int ruler_height, double lower, doubl
     table->attach(_ruler,   0, 1, 1, 1);
     table->attach(_unit,    1, 1, 1, 1);
 
-    pack_start(*table, Gtk::PACK_SHRINK);
+    UI::pack_start(*this, *table, UI::PackOptions::shrink);
 }
 
 void
@@ -630,7 +631,7 @@ PrefSlider::init(Glib::ustring const &prefs_path,
     table->attach(*_slider, 0, 0, 1, 1);
     if (_sb) table->attach(*_sb, 1, 0, 1, 1);
 
-    this->pack_start(*table, Gtk::PACK_EXPAND_WIDGET);
+    UI::pack_start(*this, *table, UI::PackOptions::expand_widget);
 }
 
 void PrefCombo::init(Glib::ustring const &prefs_path,
@@ -775,8 +776,8 @@ void PrefEntryButtonHBox::init(Glib::ustring const &prefs_path,
     relatedEntry->set_invisible_char('*');
     relatedEntry->set_visibility(visibility);
     relatedEntry->set_text(prefs->getString(_prefs_path));
-    this->pack_start(*relatedEntry);
-    this->pack_start(*relatedButton);
+    UI::pack_start(*this, *relatedEntry);
+    UI::pack_start(*this, *relatedButton);
     relatedButton->signal_clicked().connect(
             sigc::mem_fun(*this, &PrefEntryButtonHBox::onRelatedButtonClickedCallback));
     relatedEntry->signal_changed().connect(
@@ -821,14 +822,14 @@ void PrefEntryFileButtonHBox::init(Glib::ustring const &prefs_path,
     relatedButton = new Gtk::Button();
     Gtk::Box* pixlabel = new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL, 3);
     Gtk::Image *im = sp_get_icon_image("applications-graphics", Gtk::ICON_SIZE_BUTTON);
-    pixlabel->pack_start(*im);
+    UI::pack_start(*pixlabel, *im);
     Gtk::Label *l = new Gtk::Label();
     l->set_markup_with_mnemonic(_("_Browse..."));
-    pixlabel->pack_start(*l);
+    UI::pack_start(*pixlabel, *l);
     relatedButton->add(*pixlabel); 
 
-    this->pack_end(*relatedButton, false, false, 4);
-    this->pack_start(*relatedEntry, true, true, 0);
+    UI::pack_end(*this, *relatedButton, false, false, 4);
+    UI::pack_start(*this, *relatedEntry, true, true);
 
     relatedButton->signal_clicked().connect(
             sigc::mem_fun(*this, &PrefEntryFileButtonHBox::onRelatedButtonClickedCallback));
@@ -948,16 +949,16 @@ void PrefOpenFolder::init(Glib::ustring const &entry_string, Glib::ustring const
     relatedButton = new Gtk::Button();
     Gtk::Box *pixlabel = new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL, 3);
     Gtk::Image *im = sp_get_icon_image("document-open", Gtk::ICON_SIZE_BUTTON);
-    pixlabel->pack_start(*im);
+    UI::pack_start(*pixlabel, *im);
     Gtk::Label *l = new Gtk::Label();
     l->set_markup_with_mnemonic(_("Open"));
-    pixlabel->pack_start(*l);
+    UI::pack_start(*pixlabel, *l);
     relatedButton->add(*pixlabel);
     relatedButton->set_tooltip_text(tooltip);
     relatedEntry->set_text(entry_string);
     relatedEntry->set_sensitive(false);
-    this->pack_end(*relatedButton, false, false, 4);
-    this->pack_start(*relatedEntry, true, true, 0);
+    UI::pack_end(*this, *relatedButton, false, false, 4);
+    UI::pack_start(*this, *relatedEntry, true, true);
     relatedButton->signal_clicked().connect(sigc::mem_fun(*this, &PrefOpenFolder::onRelatedButtonClickedCallback));
 }
 

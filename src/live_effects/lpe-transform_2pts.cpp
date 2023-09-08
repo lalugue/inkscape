@@ -2,7 +2,6 @@
 /** \file
  * LPE "Transform through 2 points" implementation
  */
-
 /*
  * Authors:
  *   Jabier Arraiza Cenoz<jabier.arraiza@marker.es>
@@ -13,17 +12,18 @@
 
 #include "lpe-transform_2pts.h"
 
-#include <gtkmm.h>
+#include <gtkmm/box.h>
+#include <gtkmm/entry.h>
 
 #include "display/curve.h"
 #include "helper/geom.h"
 #include "object/sp-path.h"
 #include "svg/svg.h"
 #include "ui/icon-names.h"
+#include "ui/pack.h"
 
 // TODO due to internal breakage in glibmm headers, this must be last:
 #include <glibmm/i18n.h>
-
 
 namespace Inkscape {
 namespace LivePathEffect {
@@ -313,7 +313,7 @@ Gtk::Widget *LPETransform2Pts::newWidget()
                     std::vector<Gtk::Widget *> child_list = hbox_scalar->get_children();
                     Gtk::Entry *entry_widget = dynamic_cast<Gtk::Entry *>(child_list[1]);
                     entry_widget->set_width_chars(3);
-                    vbox->pack_start(*widg, true, true, 2);
+                    UI::pack_start(*vbox, *widg, true, true, 2);
                     if (tip) {
                         widg->set_tooltip_markup(*tip);
                     } else {
@@ -324,7 +324,7 @@ Gtk::Widget *LPETransform2Pts::newWidget()
             } else if (param->param_key == "from_original_width" || param->param_key == "elastic") {
                 Glib::ustring * tip = param->param_getTooltip();
                 if (widg) {
-                    button1->pack_start(*widg, true, true, 2);
+                    UI::pack_start(*button1, *widg, true, true, 2);
                     if (tip) {
                         widg->set_tooltip_markup(*tip);
                     } else {
@@ -335,7 +335,7 @@ Gtk::Widget *LPETransform2Pts::newWidget()
             } else if (param->param_key == "flip_horizontal" || param->param_key == "flip_vertical") {
                 Glib::ustring * tip = param->param_getTooltip();
                 if (widg) {
-                    button2->pack_start(*widg, true, true, 2);
+                    UI::pack_start(*button2, *widg, true, true, 2);
                     if (tip) {
                         widg->set_tooltip_markup(*tip);
                     } else {
@@ -346,7 +346,7 @@ Gtk::Widget *LPETransform2Pts::newWidget()
             } else if (param->param_key == "lock_angle" || param->param_key == "lock_length") {
                 Glib::ustring * tip = param->param_getTooltip();
                 if (widg) {
-                    button3->pack_start(*widg, true, true, 2);
+                    UI::pack_start(*button3, *widg, true, true, 2);
                     if (tip) {
                         widg->set_tooltip_markup(*tip);
                     } else {
@@ -355,7 +355,7 @@ Gtk::Widget *LPETransform2Pts::newWidget()
                     }
                 }
             } else if (widg) {
-                vbox->pack_start(*widg, true, true, 2);
+                UI::pack_start(*vbox, *widg, true, true, 2);
                 if (tip) {
                     widg->set_tooltip_markup(*tip);
                 } else {
@@ -370,12 +370,12 @@ Gtk::Widget *LPETransform2Pts::newWidget()
 
     auto const reset = Gtk::make_managed<Gtk::Button>(Glib::ustring(_("Reset")));
     reset->signal_clicked().connect(sigc::mem_fun(*this, &LPETransform2Pts::reset));
-    button4->pack_start(*reset, true, true, 2);
+    UI::pack_start(*button4, *reset, true, true, 2);
 
-    vbox->pack_start(*button1, true, true, 2);
-    vbox->pack_start(*button2, true, true, 2);
-    vbox->pack_start(*button3, true, true, 2);
-    vbox->pack_start(*button4, true, true, 2);
+    UI::pack_start(*vbox, *button1, true, true, 2);
+    UI::pack_start(*vbox, *button2, true, true, 2);
+    UI::pack_start(*vbox, *button3, true, true, 2);
+    UI::pack_start(*vbox, *button4, true, true, 2);
     return vbox;
 }
 

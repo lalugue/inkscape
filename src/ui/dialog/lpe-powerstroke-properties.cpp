@@ -23,11 +23,12 @@
 #include <sigc++/adaptors/hide.h>
 #include <sigc++/functors/mem_fun.h>
 
-#include "inkscape.h"
 #include "desktop.h"
 #include "document-undo.h"
+#include "inkscape.h"
 #include "layer-manager.h"
 #include "selection-chemistry.h"
+#include "ui/pack.h"
 
 namespace Inkscape::UI::Dialog {
 
@@ -65,7 +66,7 @@ PowerstrokePropertiesDialog::PowerstrokePropertiesDialog()
     _layout_table.attach(_powerstroke_width_label,   0,1,1,1);
     _layout_table.attach(_powerstroke_width_entry,   1,1,1,1);
 
-    mainVBox->pack_start(_layout_table, true, true, 4);
+    UI::pack_start(*mainVBox, _layout_table, true, true, 4);
 
     // Buttons
     _close_button.set_can_default();

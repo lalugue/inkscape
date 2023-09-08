@@ -24,9 +24,9 @@
 #include "filter-chemistry.h"
 #include "inkscape.h"
 #include "style.h"
-
 #include "object/filters/blend.h"
 #include "svg/css-ostringstream.h"
+#include "ui/pack.h"
 #include "ui/widget/style-subject.h"
 
 constexpr double BLUR_MULTIPLIER = 4.0;
@@ -48,7 +48,7 @@ ObjectCompositeSettings::ObjectCompositeSettings(Glib::ustring icon_name, char c
     set_name( "ObjectCompositeSettings");
 
     // Filter Effects
-    pack_start(_filter_modifier, false, false, 2);
+    UI::pack_start(*this, _filter_modifier, false, false, 2);
 
     _filter_modifier.signal_blend_changed().connect(sigc::mem_fun(*this, &ObjectCompositeSettings::_blendBlurValueChanged));
     _filter_modifier.signal_blur_changed().connect(sigc::mem_fun(*this, &ObjectCompositeSettings::_blendBlurValueChanged));

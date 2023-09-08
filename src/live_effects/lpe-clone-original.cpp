@@ -11,9 +11,9 @@
 #include "display/curve.h"
 #include "live_effects/parameter/satellite-reference.h"
 #include "lpe-bspline.h"
-#include "lpe-spiro.h"
-#include "lpeobject-reference.h"
 #include "lpeobject.h"
+#include "lpeobject-reference.h"
+#include "lpe-spiro.h"
 #include "object/sp-clippath.h"
 #include "object/sp-mask.h"
 #include "object/sp-path.h"
@@ -22,11 +22,13 @@
 #include "object/sp-use.h"
 #include "svg/path-string.h"
 #include "svg/svg.h"
+#include "ui/pack.h"
 #include "ui/tools/node-tool.h"
+#include "util/optstr.h"
 #include "xml/sp-css-attr.h"
 
-#include "util/optstr.h"
 #include <cstddef>
+
 // TODO due to internal breakage in glibmm headers, this must be last:
 #include <glibmm/i18n.h>
 
@@ -118,7 +120,7 @@ LPECloneOriginal::newWidget()
             auto const widg = param->param_newWidget();
             Glib::ustring * tip = param->param_getTooltip();
             if (widg) {
-                vbox->pack_start(*widg, true, true, 2);
+                UI::pack_start(*vbox, *widg, true, true, 2);
                 if (tip) {
                     widg->set_tooltip_markup(*tip);
                 } else {
@@ -131,7 +133,7 @@ LPECloneOriginal::newWidget()
     }
     auto const sync_button = Gtk::make_managed<Gtk::Button>(Glib::ustring(_("No Shape Sync to Current")));
     sync_button->signal_clicked().connect(sigc::mem_fun (*this,&LPECloneOriginal::syncOriginal));
-    vbox->pack_start(*sync_button, true, true, 2);
+    UI::pack_start(*vbox, *sync_button, true, true, 2);
     return vbox;
 }
 

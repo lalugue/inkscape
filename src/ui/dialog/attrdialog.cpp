@@ -14,6 +14,7 @@
 
 #include <algorithm>
 #include <cstddef>
+#include <memory>
 #include <string>
 #include <gdk/gdkkeysyms.h>
 #include <glibmm/i18n.h>
@@ -34,6 +35,7 @@
 #include <gtkmm/targetlist.h>
 #include <gtkmm/textview.h>
 #include <gtkmm/treeview.h>
+#include <gtkmm/widget.h>
 #include <sigc++/adaptors/bind.h>
 #include <sigc++/functors/mem_fun.h>
 
@@ -54,6 +56,7 @@
 #include "ui/dialog/inkscape-preferences.h"
 #include "ui/icon-loader.h"
 #include "ui/icon-names.h"
+#include "ui/pack.h"
 #include "ui/syntax.h"
 #include "ui/widget/shapeicon.h"
 #include "util/numeric/converters.h"
@@ -239,7 +242,7 @@ AttrDialog::AttrDialog()
     }
 
     attr_reset_context(0);
-    pack_start(get_widget<Gtk::Box>(_builder, "main-box"), Gtk::PACK_EXPAND_WIDGET);
+    UI::pack_start(*this, get_widget<Gtk::Box>(_builder, "main-box"), UI::PackOptions::expand_widget);
     _updating = false;
 }
 

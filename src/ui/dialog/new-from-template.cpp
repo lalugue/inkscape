@@ -19,12 +19,12 @@
 #include "inkscape-window.h"
 #include "inkscape.h"
 #include "object/sp-namedview.h"
-#include "ui/widget/template-list.h"
 #include "ui/dialog-run.h"
+#include "ui/pack.h"
+#include "ui/widget/template-list.h"
 
 namespace Inkscape {
 namespace UI {
-
 
 NewFromTemplate::NewFromTemplate()
     : _create_template_button(_("Create from template"))
@@ -33,14 +33,14 @@ NewFromTemplate::NewFromTemplate()
     resize(750, 500);
 
     templates = Gtk::make_managed<Inkscape::UI::Widget::TemplateList>();
-    get_content_area()->pack_start(*templates);
+    UI::pack_start(*get_content_area(), *templates);
     templates->init(Inkscape::Extension::TEMPLATE_NEW_FROM);
 
     _create_template_button.set_halign(Gtk::ALIGN_END);
     _create_template_button.set_valign(Gtk::ALIGN_END);
     _create_template_button.set_margin_end(15);
 
-    get_content_area()->pack_end(_create_template_button, Gtk::PACK_SHRINK);
+    UI::pack_end(*get_content_area(), _create_template_button, UI::PackOptions::shrink);
     
     _create_template_button.signal_clicked().connect(
     sigc::mem_fun(*this, &NewFromTemplate::_createFromTemplate));

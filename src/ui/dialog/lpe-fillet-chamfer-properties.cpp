@@ -11,6 +11,7 @@
 #include <boost/lexical_cast.hpp>
 #include <glibmm/i18n.h>
 #include <glibmm/main.h>
+#include <gtkmm/box.h>
 #include <sigc++/adaptors/bind.h>
 #include <sigc++/adaptors/hide.h>
 #include <sigc++/functors/mem_fun.h>
@@ -21,6 +22,7 @@
 #include "layer-manager.h"
 #include "message-stack.h"
 #include "selection-chemistry.h"
+#include "ui/pack.h"
 
 namespace Inkscape::UI::Dialog {
 
@@ -66,22 +68,23 @@ FilletChamferPropertiesDialog::FilletChamferPropertiesDialog()
     _fillet_chamfer_type_inverse_chamfer.set_label(_("Inverse chamfer"));
     _fillet_chamfer_type_inverse_chamfer.set_group(_fillet_chamfer_type_group);
 
-    mainVBox->pack_start(_layout_table, true, true, 4);
-    mainVBox->pack_start(_fillet_chamfer_type_fillet, true, true, 4);
-    mainVBox->pack_start(_fillet_chamfer_type_inverse_fillet, true, true, 4);
-    mainVBox->pack_start(_fillet_chamfer_type_chamfer, true, true, 4);
-    mainVBox->pack_start(_fillet_chamfer_type_inverse_chamfer, true, true, 4);
+    UI::pack_start(*mainVBox, _layout_table, true, true, 4);
+    UI::pack_start(*mainVBox, _fillet_chamfer_type_fillet, true, true, 4);
+    UI::pack_start(*mainVBox, _fillet_chamfer_type_inverse_fillet, true, true, 4);
+    UI::pack_start(*mainVBox, _fillet_chamfer_type_chamfer, true, true, 4);
+    UI::pack_start(*mainVBox, _fillet_chamfer_type_inverse_chamfer, true, true, 4);
 
-    // Buttons
+
     _close_button.set_can_default();
 
     _apply_button.set_use_underline(true);
     _apply_button.set_can_default();
 
     _close_button.signal_clicked()
-    .connect(sigc::mem_fun(*this, &FilletChamferPropertiesDialog::_close));
+        .connect(sigc::mem_fun(*this, &FilletChamferPropertiesDialog::_close));
+
     _apply_button.signal_clicked()
-    .connect(sigc::mem_fun(*this, &FilletChamferPropertiesDialog::_apply));
+        .connect(sigc::mem_fun(*this, &FilletChamferPropertiesDialog::_apply));
 
     signal_delete_event().connect(sigc::bind_return(
                                       sigc::hide(sigc::mem_fun(*this, &FilletChamferPropertiesDialog::_close)),

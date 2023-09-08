@@ -6,16 +6,18 @@
  */
 
 #include "live_effects/parameter/satellitearray.h"
+
+#include "inkscape.h"
 #include "live_effects/effect.h"
 #include "live_effects/lpeobject.h"
-#include "inkscape.h"
 #include "ui/clipboard.h"
 #include "ui/icon-loader.h"
 #include "ui/icon-names.h"
+#include "ui/pack.h"
+
 #include <glibmm/i18n.h>
 
 namespace Inkscape {
-
 namespace LivePathEffect {
 
 class SatelliteArrayParam::ModelColumns : public Gtk::TreeModel::ColumnRecord
@@ -336,7 +338,7 @@ Gtk::Widget *SatelliteArrayParam::param_newWidget()
     _scroller = nullptr;
     _model = nullptr;
     initui();
-    vbox->pack_start(*_scroller, Gtk::PACK_EXPAND_WIDGET);
+    UI::pack_start(*vbox, *_scroller, UI::PackOptions::expand_widget);
 
     { // Paste item to link button
         Gtk::Image *pIcon = Gtk::manage(sp_get_icon_image("edit-clone", Gtk::ICON_SIZE_BUTTON));
@@ -346,7 +348,7 @@ Gtk::Widget *SatelliteArrayParam::param_newWidget()
         pButton->add(*pIcon);
         pButton->set_visible(true);
         pButton->signal_clicked().connect(sigc::mem_fun(*this, &SatelliteArrayParam::on_link_button_click));
-        hbox->pack_start(*pButton, Gtk::PACK_SHRINK);
+        UI::pack_start(*hbox, *pButton, UI::PackOptions::shrink);
         pButton->set_tooltip_text(_("Link to item"));
     }
 
@@ -358,7 +360,7 @@ Gtk::Widget *SatelliteArrayParam::param_newWidget()
         pButton->add(*pIcon);
         pButton->set_visible(true);
         pButton->signal_clicked().connect(sigc::mem_fun(*this, &SatelliteArrayParam::on_remove_button_click));
-        hbox->pack_start(*pButton, Gtk::PACK_SHRINK);
+        UI::pack_start(*hbox, *pButton, UI::PackOptions::shrink);
         pButton->set_tooltip_text(_("Remove Item"));
     }
 
@@ -370,7 +372,7 @@ Gtk::Widget *SatelliteArrayParam::param_newWidget()
         pButton->add(*pIcon);
         pButton->set_visible(true);
         pButton->signal_clicked().connect(sigc::mem_fun(*this, &SatelliteArrayParam::on_down_button_click));
-        hbox->pack_end(*pButton, Gtk::PACK_SHRINK);
+        UI::pack_end(*hbox, *pButton, UI::PackOptions::shrink);
         pButton->set_tooltip_text(_("Move Down"));
     }
 
@@ -382,11 +384,11 @@ Gtk::Widget *SatelliteArrayParam::param_newWidget()
         pButton->add(*pIcon);
         pButton->set_visible(true);
         pButton->signal_clicked().connect(sigc::mem_fun(*this, &SatelliteArrayParam::on_up_button_click));
-        hbox->pack_end(*pButton, Gtk::PACK_SHRINK);
+        UI::pack_end(*hbox, *pButton, UI::PackOptions::shrink);
         pButton->set_tooltip_text(_("Move Up"));
     }
 
-    vbox->pack_end(*hbox, Gtk::PACK_SHRINK);
+    UI::pack_end(*vbox, *hbox, UI::PackOptions::shrink);
 
     vbox->show_all_children(true);
 
@@ -483,7 +485,6 @@ void SatelliteArrayParam::clear()
 }
 
 } /* namespace LivePathEffect */
-
 } /* namespace Inkscape */
 
 /*

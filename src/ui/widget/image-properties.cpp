@@ -32,6 +32,7 @@
 #include "object/sp-image.h"
 #include "ui/builder-utils.h"
 #include "ui/icon-names.h"
+#include "ui/pack.h"
 #include "ui/util.h"
 #include "util/format_size.h"
 #include "util/object-renderer.h"
@@ -116,7 +117,7 @@ ImageProperties::ImageProperties() :
 {
 
     auto& main = get_widget<Gtk::Grid>(_builder, "main");
-    pack_start(main, true, true);
+    UI::pack_start(*this, main, true, true);
 
     // arbitrarily selected max preview size for image content:
     _preview_max_width = 120;

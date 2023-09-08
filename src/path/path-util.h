@@ -7,6 +7,7 @@
  * Copyright (C) 2018 Authors
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
+
 #ifndef PATH_UTIL_H
 #define PATH_UTIL_H
 
@@ -138,7 +139,7 @@ std::optional<Path::cut_position> get_nearest_position_on_Path(Path *path, Geom:
  * @param t The time on the path description. Should be between 0 and 1.
  *
  * @return The cut position. This structure has both the piece index and the time for the nearest
- * point. This cut position object is wrapped in boost::optional.
+ * point.
  */
 Geom::Point get_point_on_Path(Path *path, int piece, double t);
 

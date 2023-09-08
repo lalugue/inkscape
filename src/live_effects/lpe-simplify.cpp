@@ -3,18 +3,19 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include <gtkmm.h>
-
 #include "live_effects/lpe-simplify.h"
+
+#include <2geom/svg-path-parser.h>
+#include <gtkmm/box.h>
+#include <gtkmm/entry.h>
 
 #include "display/curve.h"
 #include "helper/geom.h"
 #include "path/path-util.h"
 #include "svg/svg.h"
 #include "ui/icon-names.h"
+#include "ui/pack.h"
 #include "ui/tools/node-tool.h"
-
-#include <2geom/svg-path-parser.h>
 
 // TODO due to internal breakage in glibmm headers, this must be last:
 #include <glibmm/i18n.h>
@@ -123,7 +124,7 @@ LPESimplify::newWidget()
             } else if (param->param_key == "simplify_individual_paths") {
                 Glib::ustring * tip = param->param_getTooltip();
                 if (widg) {
-                    buttons->pack_start(*widg, true, true, 2);
+                    UI::pack_start(*buttons, *widg, true, true, 2);
                     if (tip) {
                         widg->set_tooltip_markup(*tip);
                     } else {
@@ -138,7 +139,7 @@ LPESimplify::newWidget()
                     std::vector< Gtk::Widget* > child_list = horizontal_box->get_children();
                     Gtk::Entry* entry_widg = dynamic_cast<Gtk::Entry *>(child_list[1]);
                     entry_widg->set_width_chars(8);
-                    vbox->pack_start(*widg, true, true, 2);
+                    UI::pack_start(*vbox, *widg, true, true, 2);
                     if (tip) {
                         widg->set_tooltip_markup(*tip);
                     } else {
@@ -152,7 +153,7 @@ LPESimplify::newWidget()
         ++it;
     }
 
-    vbox->pack_start(*buttons,true, true, 2);
+    UI::pack_start(*vbox, *buttons,true, true, 2);
     return vbox;
 }
 

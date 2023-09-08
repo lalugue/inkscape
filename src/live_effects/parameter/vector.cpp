@@ -13,13 +13,12 @@
 #include "svg/svg.h"
 #include "svg/stringstream.h"
 #include "ui/icon-names.h"
+#include "ui/pack.h"
 #include "ui/knot/knot-holder.h"
 #include "ui/knot/knot-holder-entity.h"
 #include "ui/widget/registered-widget.h"
 
-
 namespace Inkscape {
-
 namespace LivePathEffect {
 
 VectorParam::VectorParam( const Glib::ustring& label, const Glib::ustring& tip,
@@ -116,7 +115,7 @@ VectorParam::param_newWidget()
     pointwdg->set_undo_parameters(_("Change vector parameter"), INKSCAPE_ICON("dialog-path-effects"));
 
     auto const hbox = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL);
-    hbox->pack_start(*pointwdg, true, true);
+    UI::pack_start(*hbox, *pointwdg, true, true);
     hbox->show_all_children();
 
     return hbox;
@@ -231,7 +230,6 @@ VectorParam::addKnotHolderEntities(KnotHolder *knotholder, SPItem *item)
 }
 
 } /* namespace LivePathEffect */
-
 } /* namespace Inkscape */
 
 /*

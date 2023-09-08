@@ -20,6 +20,7 @@
 
 #include "xml-tree.h"
 
+#include <memory>
 #include <glibmm/i18n.h>
 #include <glibmm/ustring.h>
 #include <gtkmm/button.h>
@@ -30,31 +31,29 @@
 #include <gtkmm/paned.h>
 #include <gtkmm/radiomenuitem.h>
 #include <gtkmm/scrolledwindow.h>
-#include <memory>
 
 #include "desktop.h"
-#include "document-undo.h"
 #include "document.h"
+#include "document-undo.h"
 #include "inkscape.h"
 #include "layer-manager.h"
 #include "message-context.h"
 #include "message-stack.h"
-
 #include "object/sp-root.h"
 #include "object/sp-string.h"
-
 #include "preferences.h"
 #include "ui/builder-utils.h"
 #include "ui/dialog-events.h"
 #include "ui/icon-loader.h"
 #include "ui/icon-names.h"
-#include "ui/tools/tool-base.h"
+#include "ui/pack.h"
 #include "ui/syntax.h"
-
+#include "ui/tools/tool-base.h"
 #include "util/trim.h"
 #include "widgets/sp-xmlview-tree.h"
 
 namespace {
+
 /**
  * Set the orientation of `paned` to vertical or horizontal, and make the first child resizable
  * if vertical, and the second child resizable if horizontal.
@@ -73,6 +72,7 @@ void paned_set_vertical(Gtk::Paned &paned, bool vertical)
     assert(paned.child_property_resize(second));
     paned.set_orientation(vertical ? Gtk::ORIENTATION_VERTICAL : Gtk::ORIENTATION_HORIZONTAL);
 }
+
 } // namespace
 
 namespace Inkscape::UI::Dialog {
@@ -147,7 +147,7 @@ XmlTree::XmlTree()
     _paned.property_position() = panedpos;
     _paned.property_position().signal_changed().connect(sigc::mem_fun(*this, &XmlTree::_resized));
 
-    pack_start(get_widget<Gtk::Box>(_builder, "main"), true, true);
+    UI::pack_start(*this, get_widget<Gtk::Box>(_builder, "main"), true, true);
 
     int min_width = 0, dummy;
     get_preferred_width(min_width, dummy);

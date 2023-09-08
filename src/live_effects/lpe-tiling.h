@@ -34,6 +34,8 @@ class RadioButtonGroup;
 class Widget;
 } // namespace Gtk
 
+class KnotHolder;
+
 namespace Inkscape::LivePathEffect {
 
 namespace CoS {

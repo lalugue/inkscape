@@ -19,6 +19,7 @@
 #include <glibmm/i18n.h>
 
 #include "debug.h"
+#include "ui/pack.h"
 
 namespace Inkscape::UI::Dialog {
 
@@ -81,14 +82,14 @@ DebugDialogImpl::DebugDialogImpl()
     item->signal_activate().connect(sigc::mem_fun(*this, &DebugDialogImpl::releaseLogMessages));
     fileMenu.append(*item);
 
-    mainVBox->pack_start(menuBar, Gtk::PACK_SHRINK);
+    UI::pack_start(*mainVBox, menuBar, UI::PackOptions::shrink);
     
 
     //### Set up the text widget
     messageText.set_editable(false);
     textScroll.add(messageText);
     textScroll.set_policy(Gtk::POLICY_ALWAYS, Gtk::POLICY_ALWAYS);
-    mainVBox->pack_start(textScroll);
+    UI::pack_start(*mainVBox, textScroll);
 
     show_all_children();
 

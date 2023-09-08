@@ -79,6 +79,7 @@
 #include "ui/controller.h"
 #include "ui/dialog/filedialog.h"
 #include "ui/icon-names.h"
+#include "ui/pack.h"
 #include "ui/util.h"
 #include "ui/widget/color-picker.h"
 #include "ui/widget/completion-popup.h"
@@ -221,7 +222,7 @@ public:
             unsigned index = attrs.size() - 1 - i;
             _spins.push_back(Gtk::make_managed<SpinButtonAttr>(lower, upper, step_inc, climb_rate, digits,
                                                                attrs[index], default_values[index], tip_text[index]));
-            pack_end(*_spins.back(), true, true);
+            UI::pack_end(*this, *_spins.back(), true, true);
             _spins.back()->set_width_chars(3); // allow spin buttons to shrink to save space
         }
     }
@@ -260,8 +261,8 @@ public:
         _s2.signal_value_changed().connect(signal_attr_changed().make_slot());
 
         set_spacing(4);
-        pack_end(_s2, true, true);
-        pack_end(_s1, true, true);
+        UI::pack_end(*this, _s2, true, true);
+        UI::pack_end(*this, _s1, true, true);
     }
 
     Inkscape::UI::Widget::SpinButton& get_spinbutton1()
@@ -647,9 +648,9 @@ public:
         , Gtk::Box(Gtk::ORIENTATION_HORIZONTAL)
     {
         set_spacing(3);
-        pack_start(_entry, true, true);
-        pack_start(_fromFile, false, false);
-        pack_start(_fromSVGElement, false, false);
+        UI::pack_start(*this, _entry, true, true);
+        UI::pack_start(*this, _fromFile, false, false);
+        UI::pack_start(*this, _fromSVGElement, false, false);
 
         _fromFile.set_image_from_icon_name("document-open");
         _fromFile.set_tooltip_text(_("Choose image file"));
@@ -772,7 +773,7 @@ public:
         for(int i = 0; i < _max_types; ++i) {
             _groups[i] = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_VERTICAL, 3);
             b.set_spacing(4);
-            b.pack_start(*_groups[i], Gtk::PACK_SHRINK);
+            UI::pack_start(b, *_groups[i], UI::PackOptions::shrink);
         }
         //_current_type = 0;  If set to 0 then update_and_show() fails to update properly.
     }
@@ -1021,12 +1022,12 @@ private:
         if (label != "") {
             auto const lbl = Gtk::make_managed<Gtk::Label>(label);
             lbl->set_xalign(0.0);
-            hb->pack_start(*lbl, Gtk::PACK_SHRINK);
+            UI::pack_start(*hb, *lbl, UI::PackOptions::shrink);
             _size_group->add_widget(*lbl);
         }
 
-        hb->pack_start(*w, Gtk::PACK_EXPAND_WIDGET);
-        _groups[_current_type]->pack_start(*hb, Gtk::PACK_EXPAND_WIDGET);
+        UI::pack_start(*hb, *w, UI::PackOptions::expand_widget);
+        UI::pack_start(*_groups[_current_type], *hb, UI::PackOptions::expand_widget);
         hb->show_all();
     }
 
@@ -1203,8 +1204,8 @@ public:
     {
         _light_label.set_xalign(0.0);
         _settings._size_group->add_widget(_light_label);
-        _light_box.pack_start(_light_label, Gtk::PACK_SHRINK);
-        _light_box.pack_start(_light_source, Gtk::PACK_EXPAND_WIDGET);
+        UI::pack_start(_light_box, _light_label, UI::PackOptions::shrink);
+        UI::pack_start(_light_box, _light_source, UI::PackOptions::expand_widget);
         _light_box.show_all();
         _light_box.set_spacing(6);
 
@@ -2806,12 +2807,12 @@ FilterEffectsDialog::FilterEffectsDialog()
     add_effects(_effects_popup, symbolic);
     _effects_popup.get_entry().set_placeholder_text(_("Add effect"));
     _effects_popup.on_match_selected().connect([=](int id){ add_filter_primitive(static_cast<FilterPrimitiveType>(id)); });
-    _search_box.pack_start(_effects_popup);
+    UI::pack_start(_search_box, _effects_popup);
 
     _filter_modifier.show_all();
 
     _settings_effect.show_all();
-    _params_box.pack_end(_settings_effect);
+    UI::pack_end(_params_box, _settings_effect);
 
     _settings_filter.show_all();
     get_widget<Gtk::Popover>(_builder, "gen-settings").add(_settings_filter);
@@ -2884,7 +2885,7 @@ FilterEffectsDialog::FilterEffectsDialog()
                              sigc::mem_fun(_primitive_list, &PrimitiveList::remove_selected));
 
     get_widget<Gtk::Button>(_builder, "new-filter").signal_clicked().connect([=](){ _filter_modifier.add_filter(); });
-    pack_start(_main_grid);
+    UI::pack_start(*this, _main_grid);
 
     get_widget<Gtk::Button>(_builder, "dup-btn").signal_clicked().connect([=](){ duplicate_primitive(); });
     get_widget<Gtk::Button>(_builder, "del-btn").signal_clicked().connect([=](){ _primitive_list.remove_selected(); });
@@ -2941,7 +2942,7 @@ FilterEffectsDialog::FilterEffectsDialog()
                 _main_grid.remove(_filter_wnd);
                 _search_wide_box.remove(_effects_popup);
                 _paned.add1(_filter_wnd);
-                _search_box.pack_start(_effects_popup);
+                UI::pack_start(_search_box, _effects_popup);
                 _paned.set_size_request();
                 get_widget<Gtk::Box>(_builder, "connect-box-wide").remove(*show_sources);
                 get_widget<Gtk::Box>(_builder, "connect-box").add(*show_sources);
@@ -2955,7 +2956,7 @@ FilterEffectsDialog::FilterEffectsDialog()
                 _paned.remove(_filter_wnd);
                 _search_box.remove(_effects_popup);
                 _main_grid.attach(_filter_wnd, 2, 1, 1, 2);
-                _search_wide_box.pack_start(_effects_popup);
+                UI::pack_start(_search_wide_box, _effects_popup);
                 _paned.set_size_request(min_width);
                 get_widget<Gtk::Box>(_builder, "connect-box").remove(*show_sources);
                 get_widget<Gtk::Box>(_builder, "connect-box-wide").add(*show_sources);
@@ -3015,10 +3016,10 @@ void FilterEffectsDialog::init_settings_widgets()
     //       most of the current values are complete guesses!
 
     _empty_settings.set_sensitive(false);
-    _settings_effect.pack_start(_empty_settings);
+    UI::pack_start(_settings_effect, _empty_settings);
 
     _no_filter_selected.set_sensitive(false);
-    _settings_filter.pack_start(_no_filter_selected);
+    UI::pack_start(_settings_filter, _no_filter_selected);
     _settings_initialized = true;
 
     _filter_general_settings->type(0);

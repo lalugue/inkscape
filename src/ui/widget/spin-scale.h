@@ -1,4 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
+/** \file
+ * Derived from and replaces SpinSlider
+ */
 /*
  * Author:
  *
@@ -6,10 +9,6 @@
  *               2017 Tavmjong Bah
  *
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
- */
-
-/*
- * Derived from and replaces SpinSlider
  */
 
 #ifndef INKSCAPE_UI_WIDGET_SPIN_SCALE_H

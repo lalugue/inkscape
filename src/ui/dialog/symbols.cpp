@@ -70,6 +70,7 @@
 #include "ui/dialog/messages.h"
 #include "ui/icon-loader.h"
 #include "ui/icon-names.h"
+#include "ui/pack.h"
 #include "ui/widget/scrollprotected.h"
 #include "xml/href-attribute-helper.h"
 
@@ -244,7 +245,7 @@ SymbolsDialog::SymbolsDialog(const char* prefsPath)
     renderDrawing.setRoot(preview_document->getRoot()->invoke_show(renderDrawing, key, SP_ITEM_SHOW_DISPLAY));
 
     auto& main = get_widget<Gtk::Box>(_builder, "main-box");
-    pack_start(main, Gtk::PACK_EXPAND_WIDGET);
+    UI::pack_start(*this, main, UI::PackOptions::expand_widget);
 
     _builder->get_widget("tools", tools);
 

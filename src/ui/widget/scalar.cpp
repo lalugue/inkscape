@@ -17,6 +17,7 @@
 #include <gtkmm/scale.h>
 
 #include "spinbutton.h"
+#include "ui/pack.h"
 
 namespace Inkscape::UI::Widget {
 
@@ -152,7 +153,7 @@ void Scalar::addSlider()
 {
     auto const scale = Gtk::make_managed<Gtk::Scale>(get_spin_button().get_adjustment());
     scale->set_draw_value(false);
-    pack_start(*scale);
+    UI::pack_start(*this, *scale);
 }
 
 Glib::SignalProxy<void> Scalar::signal_value_changed()
@@ -170,7 +171,7 @@ void Scalar::hide_label() {
     if (auto const widget = getWidget()) {
         remove(*widget);
         widget->set_hexpand();
-        pack_end(*widget);
+        UI::pack_end(*this, *widget);
     }
 }
 

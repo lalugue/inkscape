@@ -28,16 +28,17 @@
 #include <gtkmm/treemodel.h>
 #include <gtkmm/viewport.h>
 
-#include "object/sp-defs.h"
-#include "object/sp-root.h"
-#include "style.h"
-#include "ui/builder-utils.h"
-#include "ui/svg-renderer.h"
 #include "io/resource.h"
 #include "manipulation/copy-resource.h"
+#include "object/sp-defs.h"
+#include "object/sp-root.h"
 #include "pattern-manager.h"
 #include "pattern-manipulation.h"
 #include "preferences.h"
+#include "style.h"
+#include "ui/builder-utils.h"
+#include "ui/pack.h"
+#include "ui/svg-renderer.h"
 #include "ui/util.h"
 #include "util/units.h"
 
@@ -274,7 +275,7 @@ PatternEditor::PatternEditor(const char* prefs, Inkscape::PatternManager& manage
     _combo_set.set_active(Inkscape::Preferences::get()->getIntLimited(_prefs + "/currentSet", 0, 0, std::max(cat_count - 1, 0)));
 
     update_scale_link();
-    pack_start(_main_grid);
+    UI::pack_start(*this, _main_grid);
 }
 
 void PatternEditor::bind_store(Gtk::FlowBox& list, PatternStore& pat) {
@@ -291,7 +292,7 @@ void PatternEditor::bind_store(Gtk::FlowBox& list, PatternStore& pat) {
     list.bind_list_store(pat.store.get_store(), [=, &pat](const Glib::RefPtr<PatternItem>& item){
         auto const box = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_VERTICAL);
         auto const image = Gtk::make_managed<Gtk::Image>(item->pix);
-        box->pack_start(*image);
+        UI::pack_start(*box, *image);
         auto name = Glib::ustring(item->label.c_str());
         if (_show_names.get_active()) {
             auto const label = Gtk::make_managed<Gtk::Label>(name);
@@ -300,7 +301,7 @@ void PatternEditor::bind_store(Gtk::FlowBox& list, PatternStore& pat) {
             label->set_ellipsize(Pango::EllipsizeMode::ELLIPSIZE_END);
             label->set_max_width_chars(0);
             label->set_size_request(_tile_size);
-            box->pack_end(*label);
+            UI::pack_end(*box, *label);
         }
         image->set_tooltip_text(name);
         box->show_all();

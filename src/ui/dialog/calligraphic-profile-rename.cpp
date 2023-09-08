@@ -15,11 +15,13 @@
  */
 
 #include "calligraphic-profile-rename.h"
+
 #include <glibmm/i18n.h>
 #include <gtkmm/grid.h>
 
 #include "desktop.h"
 #include "ui/dialog-run.h"
+#include "ui/pack.h"
 
 namespace Inkscape {
 namespace UI {
@@ -46,7 +48,7 @@ CalligraphicProfileRename::CalligraphicProfileRename() :
     _profile_name_entry.set_hexpand();
     _layout_table->attach(_profile_name_entry, 1, 0, 1, 1);
 
-    mainVBox->pack_start(*_layout_table, false, false, 4);
+    UI::pack_start(*mainVBox, *_layout_table, false, false, 4);
     // Buttons
     _close_button.set_use_underline();
     _close_button.set_label(_("_Cancel"));

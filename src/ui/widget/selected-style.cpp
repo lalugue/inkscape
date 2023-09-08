@@ -185,7 +185,7 @@ SelectedStyle::SelectedStyle(bool /*layout*/)
         drop[i]->item = i;
 
         g_signal_connect(swatch[i]->gobj(),
-                         "drag_data_received",
+                         "drag-data-received",
                          G_CALLBACK(dragDataReceived),
                          drop[i].get());
         // swatch[i]->signal_drag_data_received().connect(sigc::bind(sigc::mem_fun(*this, &SelectedStyle::dragDataReceived), drop[i].get());

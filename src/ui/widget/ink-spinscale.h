@@ -84,9 +84,9 @@ public:
     Glib::RefPtr<Gtk::Adjustment const> get_adjustment() const { return _adjustment; };
 
 private:
-    InkScale*                      _scale;
-    Gtk::SpinButton*               _spinbutton;
     Glib::RefPtr<Gtk::Adjustment>  _adjustment;
+    Gtk::SpinButton*               _spinbutton;
+    InkScale*                      _scale;
     GtkWidget*                     _focus_widget = nullptr;
 
     bool on_key_release_event(GdkEventKey* key_event) override;

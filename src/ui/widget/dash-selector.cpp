@@ -16,14 +16,15 @@
 #include "dash-selector.h"
 
 #include <cstring>
-#include <glibmm/i18n.h>
-#include <2geom/coord.h>
 #include <numeric>
+#include <2geom/coord.h>
+#include <glibmm/i18n.h>
 
 #include "preferences.h"
 #include "display/cairo-utils.h"
 #include "style.h"
 #include "ui/dialog-events.h"
+#include "ui/pack.h"
 #include "ui/util.h"
 
 namespace Inkscape {
@@ -53,7 +54,7 @@ DashSelector::DashSelector()
     // show dashes in two columns to eliminate or minimize scrolling
     _dash_combo.set_wrap_width(2);
 
-    this->pack_start(_dash_combo, true, true, 0);
+    UI::pack_start(*this, _dash_combo, true, true);
 
     _offset = Gtk::Adjustment::create(0.0, 0.0, 1000.0, 0.1, 1.0, 0.0);
     _offset->signal_value_changed().connect(sigc::mem_fun(*this, &DashSelector::offset_value_changed));
@@ -63,7 +64,7 @@ DashSelector::DashSelector()
     _sb->set_width_chars(4);
     _sb->set_visible(true);
 
-    this->pack_start(*_sb, false, false, 0);
+    UI::pack_start(*this, *_sb, false, false);
 
     for (std::size_t i = 0; i < s_dashes.size(); ++i) {
         Gtk::TreeModel::Row row = *(_dash_store->append());

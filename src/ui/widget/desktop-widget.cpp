@@ -25,6 +25,7 @@
 
 #include <algorithm>
 #include <string>
+#include <2geom/rect.h>
 #include <glibmm/i18n.h>
 #include <glibmm/ustring.h>
 #include <gtkmm/adjustment.h>
@@ -33,37 +34,43 @@
 #include <gtkmm/messagedialog.h>
 #include <gtkmm/paned.h>
 #include <gtkmm/toolbar.h>
-#include <2geom/rect.h>
+#include <gtkmm/widget.h>
 
 #include "conn-avoid-ref.h"
 #include "desktop.h"
+#include "display/control/canvas-item-drawing.h"
 #include "document-undo.h"
 #include "enums.h"
-#include "inkscape-window.h"
 #include "inkscape.h"
-#include "display/control/canvas-item-drawing.h"
+#include "inkscape-window.h"
 #include "object/sp-image.h"
 #include "object/sp-namedview.h"
-#include "ui/dialog/swatches.h"
-#include "ui/dialog-run.h"
-#include "ui/monitor.h"   // Monitor aspect ratio
+#include "ui/builder-utils.h"
 #include "ui/dialog/dialog-container.h"
 #include "ui/dialog/dialog-multipaned.h"
 #include "ui/dialog/dialog-window.h"
-#include "ui/toolbar/toolbar-constants.h"
+#include "ui/dialog-run.h"
+#include "ui/dialog/swatches.h"
+#include "ui/icon-loader.h"
+#include "ui/icon-names.h"
+#include "ui/monitor.h"   // Monitor aspect ratio
+#include "ui/pack.h"
+#include "ui/shortcuts.h"
+#include "ui/themes.h"
 #include "ui/toolbar/command-toolbar.h"
 #include "ui/toolbar/snap-toolbar.h"
-#include "ui/toolbar/tool-toolbar.h"
+#include "ui/toolbar/toolbar-constants.h"
 #include "ui/toolbar/toolbars.h"
+#include "ui/toolbar/tool-toolbar.h"
 #include "ui/util.h"
-#include "ui/widget/canvas.h"
 #include "ui/widget/canvas-grid.h"
+#include "ui/widget/canvas.h"
+#include "ui/widget/color-palette.h"
 #include "ui/widget/combo-tool-item.h"
 #include "ui/widget/ink-ruler.h"
 #include "ui/widget/spin-button-tool-item.h"
 #include "ui/widget/status-bar.h"
 #include "ui/widget/unit-tracker.h"
-#include "ui/themes.h"
 #include "util/units.h"
 #include "widgets/widget-sizes.h"
 
@@ -83,57 +90,55 @@ SPDesktopWidget::SPDesktopWidget(InkscapeWindow *inkscape_window, SPDocument *do
 {
     set_name("SPDesktopWidget");
 
-    auto *const dtw = this;
-
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
 
     /* Status bar */
-    dtw->_statusbar = Gtk::make_managed<Inkscape::UI::Widget::StatusBar>();
-    dtw->pack_end(*dtw->_statusbar, false, true);
+    _statusbar = Gtk::make_managed<Inkscape::UI::Widget::StatusBar>();
+    Inkscape::UI::pack_end(*this, *_statusbar, false, true);
 
     /* Swatch Bar */
-    dtw->_panels = Gtk::make_managed<Inkscape::UI::Dialog::SwatchesPanel>(true, "/embedded/swatches");
-    dtw->_panels->set_vexpand(false);
-    dtw->pack_end(*dtw->_panels, false, true);
+    _panels = Gtk::make_managed<Inkscape::UI::Dialog::SwatchesPanel>(true, "/embedded/swatches");
+    _panels->set_vexpand(false);
+    Inkscape::UI::pack_end(*this, *_panels, false, true);
 
     /* DesktopHBox (Vertical toolboxes, canvas) */
-    dtw->_hbox = Gtk::make_managed<Gtk::Box>();
-    dtw->_hbox->set_name("DesktopHbox");
+    _hbox = Gtk::make_managed<Gtk::Box>();
+    _hbox->set_name("DesktopHbox");
 
-    dtw->_tbbox = Gtk::make_managed<Gtk::Paned>(Gtk::ORIENTATION_HORIZONTAL);
-    dtw->_tbbox->set_name("ToolboxCanvasPaned");
-    dtw->_hbox->pack_start(*dtw->_tbbox, true, true);
+    _tbbox = Gtk::make_managed<Gtk::Paned>(Gtk::ORIENTATION_HORIZONTAL);
+    _tbbox->set_name("ToolboxCanvasPaned");
+    Inkscape::UI::pack_start(*_hbox, *_tbbox, true, true);
 
-    dtw->pack_end(*dtw->_hbox, true, true);
+    Inkscape::UI::pack_end(*this, *_hbox, true, true);
 
-    dtw->_top_toolbars = Gtk::make_managed<Gtk::Grid>();
-    dtw->_top_toolbars->set_name("TopToolbars");
-    dtw->pack_end(*dtw->_top_toolbars, false, true);
+    _top_toolbars = Gtk::make_managed<Gtk::Grid>();
+    _top_toolbars->set_name("TopToolbars");
+    Inkscape::UI::pack_end(*this, *_top_toolbars, false, true);
 
     /* Toolboxes */
-    dtw->command_toolbar = Gtk::make_managed<Inkscape::UI::Toolbar::CommandToolbar>();
-    dtw->_top_toolbars->attach(*command_toolbar, 0, 0);
+    command_toolbar = Gtk::make_managed<Inkscape::UI::Toolbar::CommandToolbar>();
+    _top_toolbars->attach(*command_toolbar, 0, 0);
 
-    dtw->tool_toolbars = Gtk::make_managed<Inkscape::UI::Toolbar::Toolbars>();
-    dtw->_top_toolbars->attach(*dtw->tool_toolbars, 0, 1);
+    tool_toolbars = Gtk::make_managed<Inkscape::UI::Toolbar::Toolbars>();
+    _top_toolbars->attach(*tool_toolbars, 0, 1);
 
-    dtw->tool_toolbox = Gtk::make_managed<Inkscape::UI::Toolbar::ToolToolbar>(inkscape_window);
-    dtw->_tbbox->pack1(*dtw->tool_toolbox, false, false);
+    tool_toolbox = Gtk::make_managed<Inkscape::UI::Toolbar::ToolToolbar>(inkscape_window);
+    _tbbox->pack1(*tool_toolbox, false, false);
     auto adjust_pos = [=](){
         int minimum_width, natural_width;
-        dtw->tool_toolbox->get_preferred_width(minimum_width, natural_width);
+        tool_toolbox->get_preferred_width(minimum_width, natural_width);
         if (minimum_width > 0) {
-            int pos = dtw->_tbbox->get_position();
+            int pos = _tbbox->get_position();
             int new_pos = pos + minimum_width / 2;
             const auto max = 5; // max buttons in a row
             new_pos = std::min(new_pos - new_pos % minimum_width, max * minimum_width);
-            if (pos != new_pos) dtw->_tbbox->set_position(new_pos);
+            if (pos != new_pos) _tbbox->set_position(new_pos);
         }
     };
-    dtw->_tbbox->property_position().signal_changed().connect([=](){ adjust_pos(); });
+    _tbbox->property_position().signal_changed().connect([=](){ adjust_pos(); });
 
-    dtw->snap_toolbar = Gtk::make_managed<Inkscape::UI::Toolbar::SnapToolbar>();
-    dtw->_hbox->pack_end(*dtw->snap_toolbar, false, true); // May moved later.
+    snap_toolbar = Gtk::make_managed<Inkscape::UI::Toolbar::SnapToolbar>();
+    Inkscape::UI::pack_end(*_hbox, *snap_toolbar, false, true); // May moved later.
 
     _tb_snap_pos = prefs->createObserver("/toolbox/simplesnap", sigc::mem_fun(*this, &SPDesktopWidget::repack_snaptoolbar));
     repack_snaptoolbar();
@@ -164,7 +169,7 @@ SPDesktopWidget::SPDesktopWidget(InkscapeWindow *inkscape_window, SPDocument *do
     _canvas_grid = std::make_unique<Inkscape::UI::Widget::CanvasGrid>(this);
 
     /* Canvas */
-    dtw->_canvas = _canvas_grid->GetCanvas();
+    _canvas = _canvas_grid->GetCanvas();
 
     _ds_sticky_zoom = prefs->createObserver("/options/stickyzoom/value", [=]() { sticky_zoom_updated(); });
     sticky_zoom_updated();
@@ -173,22 +178,22 @@ SPDesktopWidget::SPDesktopWidget(InkscapeWindow *inkscape_window, SPDocument *do
     _container = std::make_unique<DialogContainer>(inkscape_window);
     _columns = _container->get_columns();
     _columns->set_dropzone_sizes(2, -1);
-    dtw->_tbbox->pack2(*_container, true, true);
+    _tbbox->pack2(*_container, true, true);
 
     _canvas_grid->set_hexpand(true);
     _canvas_grid->set_vexpand(true);
     _columns->append(_canvas_grid.get());
 
     // ------------------ Finish Up -------------------- //
-    dtw->show_all();
-    dtw->_canvas_grid->ShowCommandPalette(false);
+    show_all();
+    _canvas_grid->ShowCommandPalette(false);
 
-    dtw->_canvas->grab_focus();
+    _canvas->grab_focus();
 
-    dtw->snap_toolbar->mode_update(); // Hide/show parts.
+    snap_toolbar->mode_update(); // Hide/show parts.
 
     SPNamedView *namedview = document->getNamedView();
-    dtw->_dt2r = 1. / namedview->display_units->factor;
+    _dt2r = 1. / namedview->display_units->factor;
 
     // ---------- Desktop Dependent Setup -------------- //
     // This section seems backwards!
@@ -204,15 +209,15 @@ SPDesktopWidget::SPDesktopWidget(InkscapeWindow *inkscape_window, SPDocument *do
     _statusbar->set_desktop(_desktop.get());
 
     /* Once desktop is set, we can update rulers */
-    dtw->_canvas_grid->updateRulers();
+    _canvas_grid->updateRulers();
 
     /* Listen on namedview modification */
-    dtw->modified_connection = namedview->connectModified(sigc::mem_fun(*dtw, &SPDesktopWidget::namedviewModified));
+    modified_connection = namedview->connectModified(sigc::mem_fun(*this, &SPDesktopWidget::namedviewModified));
 
     // tool_toolbars is an empty Gtk::Box at this point, fill it.
     tool_toolbars->create_toolbars(_desktop.get());
 
-    dtw->layoutWidgets();
+    layoutWidgets();
 
     _panels->setDesktop(_desktop.get());
 }
@@ -240,23 +245,21 @@ SPDesktopWidget::setMessage (Inkscape::MessageType type, const gchar *message)
 void
 SPDesktopWidget::on_unrealize()
 {
-    auto dtw = this;
-
     if (_tbbox) {
         Inkscape::Preferences::get()->setInt("/toolbox/tools/width", _tbbox->get_position());
     }
 
     if (_desktop) {
         // Canvas
-        dtw->_canvas->set_drawing(nullptr); // Ensures deactivation
-        dtw->_canvas->set_desktop(nullptr); // Todo: Remove desktop dependency.
+        _canvas->set_drawing(nullptr); // Ensures deactivation
+        _canvas->set_desktop(nullptr); // Todo: Remove desktop dependency.
 
-        dtw->_panels->setDesktop(nullptr);
+        _panels->setDesktop(nullptr);
 
-        _container.reset(); // will unrealize dtw->_canvas
+        _container.reset(); // will unrealize _canvas
 
         INKSCAPE.remove_desktop(_desktop.get()); // clears selection and event_context
-        dtw->modified_connection.disconnect();
+        modified_connection.disconnect();
         _desktop->destroy();
         _desktop.reset();
     }
@@ -348,7 +351,6 @@ void SPDesktopWidget::showNotice(Glib::ustring const &msg, unsigned timeout)
  */
 void SPDesktopWidget::on_realize()
 {
-    SPDesktopWidget *dtw = this;
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
 
     parent_type::on_realize();
@@ -358,7 +360,7 @@ void SPDesktopWidget::on_realize()
 
     _desktop->set_display_area(d, 10);
 
-    dtw->updateNamedview();
+    updateNamedview();
 
     auto const window = dynamic_cast<Gtk::Window *>(get_toplevel());
     if (window) {
@@ -571,7 +573,6 @@ SPDesktopWidget::fullscreen()
  */
 void SPDesktopWidget::layoutWidgets()
 {
-    SPDesktopWidget *dtw = this;
     Glib::ustring pref_root;
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
 
@@ -584,40 +585,40 @@ void SPDesktopWidget::layoutWidgets()
     }
 
     if (!prefs->getBool(pref_root + "commands/state", true)) {
-        dtw->command_toolbar->set_visible(false);
+        command_toolbar->set_visible(false);
     } else {
-        dtw->command_toolbar->show_all();
+        command_toolbar->show_all();
     }
 
     if (!prefs->getBool(pref_root + "snaptoolbox/state", true)) {
-        dtw->snap_toolbar->set_visible(false);
+        snap_toolbar->set_visible(false);
     } else {
-        dtw->snap_toolbar->set_visible(true); // Not show_all()!
+        snap_toolbar->set_visible(true); // Not show_all()!
     }
 
     if (!prefs->getBool(pref_root + "toppanel/state", true)) {
-        dtw->tool_toolbars->set_visible(false);
+        tool_toolbars->set_visible(false);
     } else {
-        dtw->tool_toolbars->set_visible(true); // Not show_all()!
+        tool_toolbars->set_visible(true); // Not show_all()!
     }
 
     if (!prefs->getBool(pref_root + "toolbox/state", true)) {
-        dtw->tool_toolbox->set_visible(false);
+        tool_toolbox->set_visible(false);
     } else {
-        dtw->tool_toolbox->show_all();
+        tool_toolbox->show_all();
     }
 
     if (!prefs->getBool(pref_root + "statusbar/state", true)) {
-        dtw->_statusbar->set_visible(false);
+        _statusbar->set_visible(false);
     } else {
-        dtw->_statusbar->show_all();
+        _statusbar->show_all();
     }
-    dtw->_statusbar->update_visibility(); // Individual items in bar
+    _statusbar->update_visibility(); // Individual items in bar
 
     if (!prefs->getBool(pref_root + "panels/state", true)) {
-        dtw->_panels->set_visible(false);
+        _panels->set_visible(false);
     } else {
-        dtw->_panels->show_all();
+        _panels->show_all();
     }
 
     _canvas_grid->ShowScrollbars(prefs->getBool(pref_root + "scrollbars/state", true));
@@ -749,7 +750,7 @@ void SPDesktopWidget::repack_snaptoolbar()
     // Only repack if there's no parent widget now.
     if (!snap.get_parent()) {
         if (is_perm) {
-            _hbox->pack_end(snap, false, true);
+            Inkscape::UI::pack_end(*_hbox, snap, false, true);
         } else {
             _top_toolbars->attach(snap, 1, 0, 1, 2);
         }
@@ -764,8 +765,7 @@ void SPDesktopWidget::repack_snaptoolbar()
             _top_toolbars->child_property_width(aux) = 2;
             _top_toolbars->child_property_height(snap) =  1;
             snap.set_valign(Gtk::ALIGN_START);
-        }
-        else {
+        } else {
             _top_toolbars->child_property_width(aux) = 1;
             _top_toolbars->child_property_height(snap) =  2;
             snap.set_valign(Gtk::ALIGN_CENTER);

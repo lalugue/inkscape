@@ -26,6 +26,7 @@
 #include "desktop.h"
 #include "ui/builder-utils.h"
 #include "ui/menuize.h"
+#include "ui/pack.h"
 #include "ui/widget/canvas.h"
 #include "ui/widget/desktop-widget.h"
 #include "ui/widget/layer-selector.h"
@@ -120,16 +121,16 @@ StatusBar::StatusBar()
 
     // Selected Style
     selected_style = Gtk::make_managed<Inkscape::UI::Widget::SelectedStyle>();
-    statusbar.pack_start(*selected_style, false, false);
+    UI::pack_start(statusbar, *selected_style, false, false);
     statusbar.reorder_child(*selected_style, 0);
 
     // Layer Selector
     layer_selector = Gtk::make_managed<Inkscape::UI::Widget::LayerSelector>(nullptr);
-    statusbar.pack_start(*layer_selector, false, false, 1);  // Expand Fill Padding
+    UI::pack_start(statusbar, *layer_selector, false, false, 1);  // Expand Fill Padding
     statusbar.reorder_child(*layer_selector, 1);
 
     // Selector status
-    pack_start(statusbar);
+    UI::pack_start(*this, statusbar);
 
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
     preference_observer = prefs->createObserver("/statusbar/visibility", [=]() {

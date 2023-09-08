@@ -15,6 +15,7 @@
 #include <utility>
 
 #include "spinbutton.h"
+#include "ui/pack.h"
 
 using Inkscape::Util::unit_table;
 
@@ -39,9 +40,9 @@ ScalarUnit::ScalarUnit(Glib::ustring const &label, Glib::ustring const &tooltip,
         g_assert(widget);
         remove(*widget);
         auto const widget_holder = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL, 6);
-        widget_holder->pack_start(*widget, Gtk::PACK_SHRINK);
-        widget_holder->pack_start(*_unit_menu, Gtk::PACK_SHRINK);
-        pack_start(*widget_holder, Gtk::PACK_SHRINK);
+        UI::pack_start(*widget_holder, *getWidget(), UI::PackOptions::shrink);
+        UI::pack_start(*widget_holder, *_unit_menu, UI::PackOptions::shrink);
+        UI::pack_start(*this, *widget_holder, UI::PackOptions::shrink);
     }
 
     g_assert(_unit_menu);

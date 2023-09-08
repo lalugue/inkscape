@@ -23,18 +23,19 @@
 #include <gtkmm/scrolledwindow.h>
 #include <sigc++/adaptors/hide.h>
 #include <sigc++/functors/mem_fun.h>
+#include <libnrtype/font-instance.h>
+#include <libnrtype/font-lister.h>
+#include <libnrtype/font-factory.h>
 
 #include "desktop.h"
 #include "document-undo.h"
 #include "document.h" // for SPDocumentUndo::done()
 #include "selection.h"
 #include "text-editing.h"
-#include "libnrtype/font-instance.h"
-#include "libnrtype/font-lister.h"
-#include "libnrtype/font-factory.h"
 #include "object/sp-flowtext.h"
 #include "object/sp-text.h"
 #include "ui/icon-names.h"
+#include "ui/pack.h"
 #include "ui/widget/font-selector.h"
 #include "ui/widget/scrollprotected.h"
 
@@ -413,7 +414,7 @@ GlyphsPanel::GlyphsPanel()
     auto const table = Gtk::make_managed<Gtk::Grid>();
     table->set_row_spacing(4);
     table->set_column_spacing(4);
-    pack_start(*table, Gtk::PACK_EXPAND_WIDGET);
+    UI::pack_start(*this, *table, UI::PackOptions::expand_widget);
     guint row = 0;
 
 // -------------------------------
@@ -510,16 +511,16 @@ GlyphsPanel::GlyphsPanel()
     instanceConns.emplace_back(
         entry->signal_changed().connect(sigc::mem_fun(*this, &GlyphsPanel::calcCanInsert)));
     entry->set_width_chars(18);
-    box->pack_start(*entry, Gtk::PACK_SHRINK);
+    UI::pack_start(*box, *entry, UI::PackOptions::shrink);
 
     auto pad = Gtk::make_managed<Gtk::Label>("    ");
-    box->pack_start(*pad, Gtk::PACK_SHRINK);
+    UI::pack_start(*box, *pad, UI::PackOptions::shrink);
 
     label = Gtk::make_managed<Gtk::Label>("      ");
-    box->pack_start(*label, Gtk::PACK_SHRINK);
+    UI::pack_start(*box, *label, UI::PackOptions::shrink);
 
     pad = Gtk::make_managed<Gtk::Label>();
-    box->pack_start(*pad, Gtk::PACK_EXPAND_WIDGET);
+    UI::pack_start(*box, *pad, UI::PackOptions::expand_widget);
 
     insertBtn = Gtk::make_managed<Gtk::Button>(_("Append"));
     instanceConns.emplace_back(
@@ -527,7 +528,7 @@ GlyphsPanel::GlyphsPanel()
     insertBtn->set_can_default();
     insertBtn->set_sensitive(false);
 
-    box->pack_end(*insertBtn, Gtk::PACK_SHRINK);
+    UI::pack_end(*box, *insertBtn, UI::PackOptions::shrink);
     box->set_hexpand();
     table->attach(*box, 0, row, 3, 1);
 

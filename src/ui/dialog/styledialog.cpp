@@ -50,6 +50,7 @@
 #include "ui/builder-utils.h"
 #include "ui/controller.h"
 #include "ui/icon-loader.h"
+#include "ui/pack.h"
 #include "ui/widget/iconrenderer.h"
 #include "util/trim.h"
 #include "xml/attribute-record.h"
@@ -230,7 +231,7 @@ StyleDialog::StyleDialog()
 {
     g_debug("StyleDialog::StyleDialog");
 
-    _mainBox.pack_start(_scrolledWindow, Gtk::PACK_EXPAND_WIDGET);
+    UI::pack_start(_mainBox, _scrolledWindow, UI::PackOptions::expand_widget);
     _scrolledWindow.set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
     _styleBox.set_orientation(Gtk::ORIENTATION_VERTICAL);
     _styleBox.set_valign(Gtk::ALIGN_START);
@@ -239,7 +240,7 @@ StyleDialog::StyleDialog()
     _vadj = _scrolledWindow.get_vadjustment();
     _vadj->signal_value_changed().connect(sigc::mem_fun(*this, &StyleDialog::_vscroll));
     _mainBox.set_orientation(Gtk::ORIENTATION_VERTICAL);
-    pack_start(_mainBox, Gtk::PACK_EXPAND_WIDGET);
+    UI::pack_start(*this, _mainBox, UI::PackOptions::expand_widget);
 }
 
 StyleDialog::~StyleDialog()
@@ -585,7 +586,7 @@ void StyleDialog::readStyleElement()
         if (empty) {
             css_tree->set_visible(false);
         }
-        _styleBox.pack_start(*css_selector_container, Gtk::PACK_EXPAND_WIDGET);
+        UI::pack_start(_styleBox, *css_selector_container, UI::PackOptions::expand_widget);
     }
 
     selectorpos++;
@@ -796,7 +797,7 @@ void StyleDialog::readStyleElement()
             css_tree->set_visible(false);
         }
 
-        _styleBox.pack_start(*css_selector_container, Gtk::PACK_EXPAND_WIDGET);
+        UI::pack_start(_styleBox, *css_selector_container, UI::PackOptions::expand_widget);
 
         selectorpos++;
     }
@@ -902,7 +903,7 @@ void StyleDialog::readStyleElement()
                 delete widg;
             }
         }
-        _styleBox.pack_start(*css_selector_container, Gtk::PACK_EXPAND_WIDGET);
+        UI::pack_start(_styleBox, *css_selector_container, UI::PackOptions::expand_widget);
     }
 
     for (auto selector : _styleBox.get_children()) {

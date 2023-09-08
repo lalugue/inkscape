@@ -13,6 +13,7 @@ set(ui_SRC
 	interface.cpp
 	menuize.cpp
 	monitor.cpp
+	pack.cpp
 	popup-menu.cpp
 	selected-color.cpp
 	shape-editor.cpp
@@ -294,6 +295,7 @@ set(ui_SRC
 	manage.h
 	menuize.h
 	monitor.h
+	pack.h
 	popup-menu.h
 	selected-color.h
 	shape-editor.h

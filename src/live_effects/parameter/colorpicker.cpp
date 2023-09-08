@@ -7,28 +7,25 @@
 
 #include "colorpicker.h"
 
-#include <gtkmm.h>
+#include <gtkmm/box.h>
 
 #include "color.h"
-#include "document-undo.h"
 #include "document.h"
+#include "document-undo.h"
 #include "inkscape.h"
-
 #include "live_effects/effect.h"
 #include "live_effects/parameter/colorpicker.h"
-
 #include "svg/stringstream.h"
 #include "svg/svg-color.h"
 #include "svg/svg.h"
-
 #include "ui/icon-names.h"
+#include "ui/pack.h"
 #include "ui/widget/registered-widget.h"
 #include "util/safe-printf.h"
 
 #include <glibmm/i18n.h>
 
 namespace Inkscape {
-
 namespace LivePathEffect {
 
 ColorPickerParam::ColorPickerParam( const Glib::ustring& label, const Glib::ustring& tip,
@@ -38,7 +35,6 @@ ColorPickerParam::ColorPickerParam( const Glib::ustring& label, const Glib::ustr
       value(default_color),
       defvalue(default_color)
 {
-
 }
 
 void
@@ -127,7 +123,7 @@ ColorPickerParam::param_newWidget()
 
     colorpickerwdg->set_undo_parameters(_("Change color button parameter"), INKSCAPE_ICON("dialog-path-effects"));
 
-    hbox->pack_start(*colorpickerwdg, true, true);
+    UI::pack_start(*hbox, *colorpickerwdg, true, true);
     return hbox;
 }
 
@@ -137,9 +133,7 @@ ColorPickerParam::param_setValue(const guint32 newvalue)
     value = newvalue;
 }
 
-
 } /* namespace LivePathEffect */
-
 } /* namespace Inkscape */
 
 /*

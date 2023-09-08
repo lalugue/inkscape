@@ -47,11 +47,12 @@
 #include "live_effects/lpe-interpolate_points.h"
 #include "live_effects/lpe-jointype.h"
 #include "live_effects/lpe-knot.h"
-#include "live_effects/lpe-lattice.h"
 #include "live_effects/lpe-lattice2.h"
+#include "live_effects/lpe-lattice.h"
 #include "live_effects/lpe-line_segment.h"
 #include "live_effects/lpe-measure-segments.h"
 #include "live_effects/lpe-mirror_symmetry.h"
+#include "live_effects/lpeobject.h"
 #include "live_effects/lpe-offset.h"
 #include "live_effects/lpe-parallel.h"
 #include "live_effects/lpe-path_length.h"
@@ -63,8 +64,8 @@
 #include "live_effects/lpe-powerstroke.h"
 #include "live_effects/lpe-pts2ellipse.h"
 #include "live_effects/lpe-recursiveskeleton.h"
-#include "live_effects/lpe-rough-hatches.h"
 #include "live_effects/lpe-roughen.h"
+#include "live_effects/lpe-rough-hatches.h"
 #include "live_effects/lpe-ruler.h"
 #include "live_effects/lpe-show_handles.h"
 #include "live_effects/lpe-simplify.h"
@@ -78,19 +79,18 @@
 #include "live_effects/lpe-tiling.h"
 #include "live_effects/lpe-transform_2pts.h"
 #include "live_effects/lpe-vonkoch.h"
-#include "live_effects/lpeobject.h"
 #include "message-stack.h"
 #include "object/sp-defs.h"
 #include "object/sp-root.h"
 #include "object/sp-shape.h"
 #include "path-chemistry.h"
 #include "ui/icon-loader.h"
+#include "ui/pack.h"
 #include "ui/tools/node-tool.h"
 #include "ui/tools/pen-tool.h"
 #include "xml/sp-css-attr.h"
 
 namespace Inkscape {
-
 namespace LivePathEffect {
 
 const EnumEffectData<EffectType> LPETypeData[] = {
@@ -1846,7 +1846,7 @@ Effect::newWidget()
                 } else {
                     widg->set_sensitive(false);
                 }
-                vbox->pack_start(*widg, true, true, 2);
+                UI::pack_start(*vbox, *widg, true, true, 2);
                 if (tip) {
                     widg->set_tooltip_markup(*tip);
                 } else {
@@ -2084,7 +2084,6 @@ Effect::providesKnotholder() const
 }
 
 } /* namespace LivePathEffect */
-
 } /* namespace Inkscape */
 
 /*

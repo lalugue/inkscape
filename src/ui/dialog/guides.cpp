@@ -21,17 +21,14 @@
 #include "desktop.h"
 #include "document-undo.h"
 #include "document.h"
-#include "message-context.h"
-
 #include "include/gtkmm_version.h"
-
+#include "message-context.h"
 #include "object/sp-guide.h"
 #include "object/sp-namedview.h"
-
 #include "page-manager.h"
-
 #include "ui/dialog-events.h"
 #include "ui/dialog-run.h"
+#include "ui/pack.h"
 #include "ui/tools/tool-base.h"
 #include "ui/widget/spinbutton.h"
 
@@ -201,7 +198,7 @@ void GuidelinePropertiesDialog::_setup() {
     _layout_table.set_column_spacing(4);
     _layout_table.property_margin().set_value(4);
 
-    mainVBox->pack_start(_layout_table, false, false, 0);
+    UI::pack_start(*mainVBox, _layout_table, false, false);
 
     _label_name.set_label("foo0");
     _label_name.set_halign(Gtk::ALIGN_START);

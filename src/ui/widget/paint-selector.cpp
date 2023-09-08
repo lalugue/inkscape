@@ -50,6 +50,7 @@
 #include "svg/css-ostringstream.h"
 #include "ui/icon-loader.h"
 #include "ui/icon-names.h"
+#include "ui/pack.h"
 #include "ui/widget/color-notebook.h"
 #include "ui/widget/gradient-editor.h"
 #include "ui/widget/gradient-selector.h"
@@ -152,7 +153,7 @@ PaintSelector::PaintSelector(FillOrStroke kind)
     _style = Gtk::make_managed<Gtk::Box>();
     _style->set_name("PaintSelector");
     _style->set_visible(true);
-    pack_start(*_style, false, false);
+    UI::pack_start(*this, *_style, false, false);
 
     /* Buttons */
     _none = style_button_add(INKSCAPE_ICON("paint-none"), PaintSelector::MODE_NONE, _("No paint"));
@@ -173,7 +174,7 @@ PaintSelector::PaintSelector(FillOrStroke kind)
     /* Fillrule */
     {
         _fillrulebox = Gtk::make_managed<Gtk::Box>();
-        _style->pack_end(*_fillrulebox, false, false, 0);
+        UI::pack_end(*_style, *_fillrulebox, false, false);
 
         _evenodd = Gtk::make_managed<FillRuleRadioButton>();
         _evenodd->set_relief(Gtk::RELIEF_NONE);
@@ -184,7 +185,7 @@ PaintSelector::PaintSelector(FillOrStroke kind)
         _evenodd->set_fillrule(PaintSelector::FILLRULE_EVENODD);
         auto w = sp_get_icon_image("fill-rule-even-odd", GTK_ICON_SIZE_MENU);
         gtk_container_add(GTK_CONTAINER(_evenodd->gobj()), w);
-        _fillrulebox->pack_start(*_evenodd, false, false, 0);
+        UI::pack_start(*_fillrulebox, *_evenodd, false, false);
         _evenodd->signal_toggled().connect(
             sigc::bind(sigc::mem_fun(*this, &PaintSelector::fillrule_toggled), _evenodd));
 
@@ -197,7 +198,7 @@ PaintSelector::PaintSelector(FillOrStroke kind)
         _nonzero->set_fillrule(PaintSelector::FILLRULE_NONZERO);
         w = sp_get_icon_image("fill-rule-nonzero", GTK_ICON_SIZE_MENU);
         gtk_container_add(GTK_CONTAINER(_nonzero->gobj()), w);
-        _fillrulebox->pack_start(*_nonzero, false, false, 0);
+        UI::pack_start(*_fillrulebox, *_nonzero, false, false);
         _nonzero->signal_toggled().connect(
             sigc::bind(sigc::mem_fun(*this, &PaintSelector::fillrule_toggled), _nonzero));
     }
@@ -206,12 +207,12 @@ PaintSelector::PaintSelector(FillOrStroke kind)
     _label = Gtk::make_managed<Gtk::Label>("");
     auto const lbbox = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL, 0);
     _label->set_visible(true);
-    lbbox->pack_start(*_label, false, false, 4);
-    pack_start(*lbbox, false, false, 4);
+    UI::pack_start(*lbbox, *_label, false, false, 4);
+    UI::pack_start(*this, *lbbox, false, false, 4);
 
     _frame = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_VERTICAL);
     _frame->set_visible(true);
-    pack_start(*_frame, true, true, 0);
+    UI::pack_start(*this, *_frame, true, true);
 
     /* Last used color */
     _selected_color = std::make_unique<SelectedColor>();
@@ -250,7 +251,7 @@ StyleToggleButton *PaintSelector::style_button_add(gchar const *pixmap, PaintSel
     w = sp_get_icon_image(pixmap, GTK_ICON_SIZE_BUTTON);
     gtk_container_add(GTK_CONTAINER(b->gobj()), w);
 
-    _style->pack_start(*b, false, false);
+    UI::pack_start(*_style, *b, false, false);
     b->signal_toggled().connect(sigc::bind(sigc::mem_fun(*this, &PaintSelector::style_button_toggled), b));
 
     return b;
@@ -573,7 +574,7 @@ void PaintSelector::set_mode_color(PaintSelector::Mode /*mode*/)
             /* Color selector */
             auto const color_selector = Gtk::make_managed<ColorNotebook>(*_selected_color);
             color_selector->set_visible(true);
-            _selector_solid_color->pack_start(*color_selector, true, true, 0);
+            UI::pack_start(*_selector_solid_color, *color_selector, true, true);
             /* Pack everything to frame */
             _frame->add(*_selector_solid_color);
             color_selector->set_label(_("<b>Flat color</b>"));
@@ -880,7 +881,7 @@ void PaintSelector::set_mode_mesh(PaintSelector::Mode mode)
             g_object_ref(G_OBJECT(combo));
 
             gtk_container_add(GTK_CONTAINER(hb->gobj()), combo);
-            _selector_mesh->pack_start(*hb, false, false, AUX_BETWEEN_BUTTON_GROUPS);
+            UI::pack_start(*_selector_mesh, *hb, false, false, AUX_BETWEEN_BUTTON_GROUPS);
 
             g_object_unref(G_OBJECT(store));
 
@@ -890,8 +891,8 @@ void PaintSelector::set_mode_mesh(PaintSelector::Mode mode)
             l->set_markup(_("Use the <b>Mesh tool</b> to modify the mesh."));
             l->set_line_wrap(true);
             l->set_size_request(180, -1);
-            hb2->pack_start(*l, true, true, AUX_BETWEEN_BUTTON_GROUPS);
-            _selector_mesh->pack_start(*hb2, false, false, AUX_BETWEEN_BUTTON_GROUPS);
+            UI::pack_start(*hb2, *l, true, true, AUX_BETWEEN_BUTTON_GROUPS);
+            UI::pack_start(*_selector_mesh, *hb2, false, false, AUX_BETWEEN_BUTTON_GROUPS);
             _selector_mesh->show_all();
 
             _frame->add(*_selector_mesh);

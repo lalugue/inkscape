@@ -11,26 +11,21 @@
 
 #include "text.h"
 
-#include <glibmm/i18n.h>
-#include <gtkmm/alignment.h>
-
 #include <2geom/sbasis-geometric.h>
-
-#include "inkscape.h"
+#include <glibmm/i18n.h>
+#include <gtkmm/box.h>
+#include <gtkmm/button.h>
 
 #include "display/control/canvas-item-text.h"
-
+#include "inkscape.h"
 #include "live_effects/effect.h"
-
 #include "svg/stringstream.h"
 #include "svg/svg.h"
-
 #include "ui/icon-names.h"
+#include "ui/pack.h"
 #include "ui/widget/registered-widget.h"
 
-
 namespace Inkscape {
-
 namespace LivePathEffect {
 
 TextParam::TextParam( const Glib::ustring& label, const Glib::ustring& tip,
@@ -141,8 +136,8 @@ TextParam::param_newWidget()
     auto const set =  Gtk::make_managed<Gtk::Button>(Glib::ustring("✔"));
     set->signal_clicked()
     .connect(sigc::bind(sigc::mem_fun(*this, &TextParam::setTextParam),rsu));
-    text_container->pack_start(*rsu, false, false, 2);
-    text_container->pack_start(*set, false, false, 2);
+    UI::pack_start(*text_container, *rsu, false, false, 2);
+    UI::pack_start(*text_container, *set, false, false, 2);
     text_container->set_halign(Gtk::ALIGN_END);
     return text_container;
 }

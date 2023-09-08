@@ -21,6 +21,7 @@
 #include "document.h"
 #include "inkscape.h"
 #include "ui/icon-loader.h"
+#include "ui/pack.h"
 #include "util/signal-blocker.h"
 
 namespace Inkscape {
@@ -88,7 +89,7 @@ UndoHistory::UndoHistory()
 
     set_size_request(-1, -1);
 
-    pack_start(_scrolled_window);
+    UI::pack_start(*this, _scrolled_window);
     _scrolled_window.set_policy(Gtk::POLICY_NEVER, Gtk::POLICY_AUTOMATIC);
 
     _event_list_view.set_enable_search(false);

@@ -4,14 +4,14 @@
  */
 #include <gtkmm.h>
 
-#include "preferences.h"
-
 #include "display/curve.h"
 #include "helper/geom-curves.h"
 #include "live_effects/lpe-bspline.h"
 #include "object/sp-path.h"
+#include "preferences.h"
 #include "svg/svg.h"
 #include "ui/icon-names.h"
+#include "ui/pack.h"
 #include "ui/widget/scalar.h"
 #include "xml/repr.h"
 
@@ -101,13 +101,13 @@ Gtk::Widget *LPEBSpline::newWidget()
                     Gtk::make_managed<Gtk::Button>(Glib::ustring(_("Default weight")));
                 default_weight->signal_clicked()
                 .connect(sigc::mem_fun(*this, &LPEBSpline::toDefaultWeight));
-                buttons->pack_start(*default_weight, true, true, 2);
+                UI::pack_start(*buttons, *default_weight, true, true, 2);
                 Gtk::Button *make_cusp =
                     Gtk::make_managed<Gtk::Button>(Glib::ustring(_("Make cusp")));
                 make_cusp->signal_clicked()
                 .connect(sigc::mem_fun(*this, &LPEBSpline::toMakeCusp));
-                buttons->pack_start(*make_cusp, true, true, 2);
-                vbox->pack_start(*buttons, true, true, 2);
+                UI::pack_start(*buttons, *make_cusp, true, true, 2);
+                UI::pack_start(*vbox, *buttons, true, true, 2);
             }
             if (param->param_key == "weight" || param->param_key == "steps") {
                 auto const widg_registered = Gtk::manage(dynamic_cast<UI::Widget::Scalar *>(widg));
@@ -127,7 +127,7 @@ Gtk::Widget *LPEBSpline::newWidget()
             }
             Glib::ustring *tip = param->param_getTooltip();
             if (widg) {
-                vbox->pack_start(*widg, true, true, 2);
+                UI::pack_start(*vbox, *widg, true, true, 2);
                 if (tip) {
                     widg->set_tooltip_markup(*tip);
                 } else {

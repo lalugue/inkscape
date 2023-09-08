@@ -17,10 +17,11 @@
 
 #include "live_effects/lpe-mirror_symmetry.h"
 
-#include <gtkmm.h>
+#include <2geom/affine.h>
+#include <2geom/path-intersection.h>
+#include <gtkmm/box.h>
+#include <gtkmm/button.h>
 
-#include "2geom/affine.h"
-#include "2geom/path-intersection.h"
 #include "display/curve.h"
 #include "helper/geom.h"
 #include "live_effects/parameter/satellite-reference.h"
@@ -29,11 +30,12 @@
 #include "object/sp-path.h"
 #include "object/sp-text.h"
 #include "path-chemistry.h"
+#include "path/path-boolop.h"
 #include "style.h"
 #include "svg/path-string.h"
 #include "svg/svg.h"
+#include "ui/pack.h"
 #include "xml/sp-css-attr.h"
-#include "path/path-boolop.h"
 
 // TODO due to internal breakage in glibmm headers, this must be last:
 #include <glibmm/i18n.h>
@@ -164,7 +166,7 @@ LPEMirrorSymmetry::newWidget()
             auto const widg = param->param_newWidget();
             Glib::ustring *tip = param->param_getTooltip();
             if (widg && param->param_key != "split_open") {
-                vbox->pack_start(*widg, true, true, 2);
+                UI::pack_start(*vbox, *widg, true, true, 2);
                 if (tip) {
                     widg->set_tooltip_markup(*tip);
                 } else {
@@ -183,9 +185,9 @@ LPEMirrorSymmetry::newWidget()
     auto const center_horiz_button = Gtk::make_managed<Gtk::Button>(Glib::ustring(_("Horizontal center")));
     center_horiz_button->signal_clicked().connect(sigc::mem_fun (*this,&LPEMirrorSymmetry::centerHoriz));
     center_horiz_button->set_size_request(110,20);
-    vbox->pack_start(*hbox, true,true,2);
-    hbox->pack_start(*center_vert_button, false, false,2);
-    hbox->pack_start(*center_horiz_button, false, false,2);
+    UI::pack_start(*vbox, *hbox, true,true,2);
+    UI::pack_start(*hbox, *center_vert_button, false, false,2);
+    UI::pack_start(*hbox, *center_horiz_button, false, false,2);
     return vbox;
 }
 

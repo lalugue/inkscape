@@ -11,36 +11,25 @@
 
 #include "tolerance-slider.h"
 
-#include "registry.h"
-
 #include <gtkmm/adjustment.h>
 #include <gtkmm/box.h>
 #include <gtkmm/label.h>
 #include <gtkmm/radiobutton.h>
 #include <gtkmm/scale.h>
 
-#include "inkscape.h"
+#include "desktop.h"
 #include "document.h"
 #include "document-undo.h"
-#include "desktop.h"
-
+#include "inkscape.h"
 #include "object/sp-namedview.h"
-
+#include "registry.h"
 #include "svg/stringstream.h"
-
+#include "ui/pack.h"
 #include "xml/repr.h"
 
 namespace Inkscape {
 namespace UI {
 namespace Widget {
-
-//===================================================
-
-//---------------------------------------------------
-
-
-
-//====================================================
 
 ToleranceSlider::ToleranceSlider(const Glib::ustring& label1, const Glib::ustring& label2, const Glib::ustring& label3, const Glib::ustring& tip1, const Glib::ustring& tip2, const Glib::ustring& tip3, const Glib::ustring& key, Registry& wr)
 : _vbox(nullptr)
@@ -74,7 +63,7 @@ void ToleranceSlider::init (const Glib::ustring& label1, const Glib::ustring& la
     theLabel1->set_halign(Gtk::ALIGN_START);
     theLabel1->set_valign(Gtk::ALIGN_CENTER);
     // align the label with the checkbox text above by indenting 22 px.
-    _hbox->pack_start(*theLabel1, Gtk::PACK_EXPAND_WIDGET, 22);
+    UI::pack_start(*_hbox, *theLabel1, UI::PackOptions::expand_widget, 22);
 
     _hscale = Gtk::make_managed<Gtk::Scale>(Gtk::ORIENTATION_HORIZONTAL);
     _hscale->set_range(1.0, 51.0);
@@ -109,7 +98,7 @@ void ToleranceSlider::init (const Glib::ustring& label1, const Glib::ustring& la
     _vbox->add (*_button1);
     _vbox->add (*_button2);    
     // Here we need some extra pixels to get the vertical spacing right. Why? 
-    _vbox->pack_end(*_hbox, true, true, 3); // add 3 px.  
+    UI::pack_end(*_vbox, *_hbox, true, true, 3);
     _key = key;
     _scale_changed_connection = _hscale->signal_value_changed().connect (sigc::mem_fun (*this, &ToleranceSlider::on_scale_changed));
     _btn_toggled_connection = _button2->signal_toggled().connect (sigc::mem_fun (*this, &ToleranceSlider::on_toggled));

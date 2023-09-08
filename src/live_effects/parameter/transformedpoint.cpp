@@ -10,18 +10,16 @@
 #include <glibmm/i18n.h>
 
 #include "desktop.h"
-
 #include "live_effects/effect.h"
-#include "svg/svg.h"
 #include "svg/stringstream.h"
+#include "svg/svg.h"
 #include "ui/icon-names.h"
-#include "ui/knot/knot-holder.h"
 #include "ui/knot/knot-holder-entity.h"
+#include "ui/knot/knot-holder.h"
+#include "ui/pack.h"
 #include "ui/widget/registered-widget.h"
 
-
 namespace Inkscape {
-
 namespace LivePathEffect {
 
 TransformedPointParam::TransformedPointParam( const Glib::ustring& label, const Glib::ustring& tip,
@@ -119,7 +117,7 @@ TransformedPointParam::param_newWidget()
     pointwdg->set_undo_parameters(_("Change vector parameter"), INKSCAPE_ICON("dialog-path-effects"));
     
     auto const hbox = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL);
-    hbox->pack_start(*pointwdg, true, true);
+    UI::pack_start(*hbox, *pointwdg, true, true);
     hbox->show_all_children();
     return hbox;
 }
@@ -193,7 +191,6 @@ TransformedPointParam::addKnotHolderEntities(KnotHolder *knotholder, SPDesktop *
 }
 
 } /* namespace LivePathEffect */
-
 } /* namespace Inkscape */
 
 /*

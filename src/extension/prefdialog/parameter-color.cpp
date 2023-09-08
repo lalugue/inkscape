@@ -20,6 +20,7 @@
 #include "color.h"
 #include "extension/extension.h"
 #include "preferences.h"
+#include "ui/pack.h"
 #include "ui/widget/color-notebook.h"
 #include "xml/node.h"
 
@@ -84,7 +85,7 @@ Gtk::Widget *ParamColor::get_widget(sigc::signal<void ()> *changeSignal)
     if (_mode == COLOR_BUTTON) {
         auto const label = Gtk::make_managed<Gtk::Label>(_text, Gtk::ALIGN_START);
         label->set_visible(true);
-        hbox->pack_start(*label, true, true);
+        UI::pack_start(*hbox, *label, true, true);
 
         Gdk::RGBA rgba;
         rgba.set_red_u  (((_color.value() >> 24) & 255) << 8);
@@ -98,12 +99,12 @@ Gtk::Widget *ParamColor::get_widget(sigc::signal<void ()> *changeSignal)
         _color_button->set_title(_text);
         _color_button->set_use_alpha();
         _color_button->set_visible(true);
-        hbox->pack_end(*_color_button, false, false);
+        UI::pack_end(*hbox, *_color_button, false, false);
 
         _color_button->signal_color_set().connect(sigc::mem_fun(*this, &ParamColor::_onColorButtonChanged));
     } else {
         Gtk::Widget *selector = Gtk::make_managed<Inkscape::UI::Widget::ColorNotebook>(_color);
-        hbox->pack_start(*selector, true, true, 0);
+        UI::pack_start(*hbox, *selector, true, true);
         selector->set_visible(true);
     }
 

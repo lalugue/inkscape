@@ -33,19 +33,19 @@
 #include <string>
 #include <vector>
 
+#include "desktop-style.h"
 #include "document.h"
 #include "helper/choose-file.h"
-#include "object/sp-defs.h"
-#include "style.h"
-#include "desktop-style.h"
-#include "object/sp-gradient-reference.h"
-
 #include "inkscape-preferences.h"
+#include "object/sp-defs.h"
+#include "object/sp-gradient-reference.h"
+#include "style.h"
 #include "ui/builder-utils.h"
-#include "widgets/paintdef.h"
-#include "ui/widget/color-palette.h"
-#include "ui/dialog/global-palettes.h"
 #include "ui/dialog/color-item.h"
+#include "ui/dialog/global-palettes.h"
+#include "ui/pack.h"
+#include "ui/widget/color-palette.h"
+#include "widgets/paintdef.h"
 
 namespace Inkscape::UI::Dialog {
 
@@ -87,7 +87,7 @@ SwatchesPanel::SwatchesPanel(bool compact, char const *prefsPath)
     _palette = Gtk::make_managed<Inkscape::UI::Widget::ColorPalette>();
     _palette->set_visible();
     if (compact) {
-        pack_start(*_palette);
+        UI::pack_start(*this, *_palette);
     }
     else {
         get_widget<Gtk::Box>(_builder, "content").pack_start(*_palette);

@@ -51,6 +51,7 @@
 #include "ui/desktop/menubar.h"
 #include "ui/dialog-events.h"
 #include "ui/dialog-run.h"
+#include "ui/pack.h"
 #include "ui/tool/control-point-selection.h"
 #include "ui/tool/multi-path-manipulator.h"
 #include "ui/tool/path-manipulator.h"
@@ -690,7 +691,8 @@ void Script::showPopupError (const Glib::ustring &data,
     scrollwindow->set_size_request(0, 60);
 
     auto const vbox = warning.get_content_area();
-    vbox->pack_start(*scrollwindow, true, true, 5 /* fix these */);
+    UI::pack_start(*vbox, *scrollwindow, true, true, 5 /* fix these */);
+
     Inkscape::UI::dialog_run(warning);
 }
 

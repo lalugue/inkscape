@@ -27,21 +27,17 @@
 #include "inkscape.h"
 #include "preferences.h"
 #include "profile-manager.h"
-
 #include "color/cms-system.h"
-
 #include "object/color-profile.h"
-
 #include "svg/svg-icc-color.h"
-
 #include "ui/dialog-events.h"
 #include "ui/icon-loader.h"
+#include "ui/pack.h"
 #include "ui/tools/dropper-tool.h"
 #include "ui/widget/color-entry.h"
 #include "ui/widget/color-icc-selector.h"
 #include "ui/widget/color-notebook.h"
 #include "ui/widget/color-scales.h"
-
 #include "widgets/spw-utilities.h"
 
 using Inkscape::CMSSystem;
@@ -52,7 +48,6 @@ using Inkscape::CMSSystem;
 namespace Inkscape {
 namespace UI {
 namespace Widget {
-
 
 ColorNotebook::ColorNotebook(SelectedColor &color, bool no_alpha)
     : Gtk::Grid()
@@ -132,8 +127,8 @@ void ColorNotebook::_initUI(bool no_alpha)
 
     _label = Gtk::make_managed<Gtk::Label>();
     _label->set_visible();
-    _buttonbox->pack_start(*_label, false, true);
-    _buttonbox->pack_end(*_combo, false, false);
+    UI::pack_start(*_buttonbox, *_label, false, true);
+    UI::pack_end(*_buttonbox, *_combo, false, false);
     _combo->signal_changed().connect([=](){ _setCurrentPage(_combo->get_active_row_id(), false); });
 
     _buttonbox->set_margin_start(XPAD);

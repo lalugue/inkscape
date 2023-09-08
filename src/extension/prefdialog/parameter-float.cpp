@@ -14,15 +14,12 @@
 #include <gtkmm/adjustment.h>
 #include <gtkmm/box.h>
 
-#include "preferences.h"
-
 #include "extension/extension.h"
-
-#include "ui/widget/spin-scale.h"
+#include "preferences.h"
+#include "ui/pack.h"
 #include "ui/widget/spinbutton.h"
-
+#include "ui/widget/spin-scale.h"
 #include "xml/node.h"
-
 
 namespace Inkscape {
 namespace Extension {
@@ -170,18 +167,18 @@ Gtk::Widget *ParamFloat::get_widget(sigc::signal<void ()> *changeSignal)
         auto const scale = Gtk::make_managed<UI::Widget::SpinScale>(text, fadjust, _precision);
         scale->set_size_request(400, -1);
         scale->set_visible(true);
-        hbox->pack_start(*scale, true, true);
+        UI::pack_start(*hbox, *scale, true, true);
 
     }
     else if (_mode == DEFAULT) {
 
         auto const label = Gtk::make_managed<Gtk::Label>(_text, Gtk::ALIGN_START);
         label->set_visible(true);
-        hbox->pack_start(*label, true, true);
+        UI::pack_start(*hbox, *label, true, true);
 
         auto const spin = Gtk::make_managed<Inkscape::UI::Widget::SpinButton>(fadjust, 0.1, _precision);
         spin->set_visible(true);
-        hbox->pack_start(*spin, false, false);
+        UI::pack_start(*hbox, *spin, false, false);
     }
 
     hbox->set_visible(true);

@@ -14,9 +14,10 @@
 
 #include <iostream>
 #include <glibmm/i18n.h>
-#include <giomm/file.h>
 #include <glibmm/keyfile.h>
+#include <giomm/file.h>
 #include <gdkmm/dragcontext.h>
+#include <gtkmm/box.h>
 #include <gtkmm/eventbox.h>
 #include <gtkmm/image.h>
 #include <gtkmm/targetentry.h>
@@ -181,15 +182,14 @@ Gtk::Widget *DialogContainer::create_notebook_tab(Glib::ustring const &label_str
     image->set_from_icon_name(image_str, Gtk::ICON_SIZE_MENU);
     auto const tab = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL, 4);
     close->set_image_from_icon_name("window-close");
-    close->set_halign(Gtk::ALIGN_END);
     close->set_tooltip_text(_("Close Tab"));
     close->get_style_context()->add_class("close-button");
     Glib::ustring label_str_fix = label_str;
     label_str_fix = Glib::Regex::create("\\W")->replace_literal(label_str_fix, 0, "-", (Glib::RegexMatchFlags)0);
     tab->get_style_context()->add_class(label_str_fix);
-    tab->pack_start(*image);
-    tab->pack_end(*close);
-    tab->pack_end(*label);
+    tab->add(*image);
+    tab->add(*label);
+    tab->add(*close);
     tab->show_all();
 
     // Workaround to the fact that Gtk::Box doesn't receive on_button_press event

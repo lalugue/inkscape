@@ -28,6 +28,7 @@
 #include "ui/dialog/polar-arrange-tab.h"
 #include "ui/dialog/align-and-distribute.h"
 #include "ui/icon-names.h"
+#include "ui/pack.h"
 
 namespace Inkscape::UI::Dialog {
 
@@ -36,8 +37,8 @@ Gtk::Box& create_tab_label(const char* label_text, const char* icon_name) {
     auto const image = Gtk::make_managed<Gtk::Image>();
     image->set_from_icon_name(icon_name, Gtk::ICON_SIZE_MENU);
     auto const label = Gtk::make_managed<Gtk::Label>(label_text, true);
-    box->pack_start(*image, false, true);
-    box->pack_start(*label, false, true);
+    UI::pack_start(*box, *image, false, true);
+    UI::pack_start(*box, *label, false, true);
     box->show_all();
     return *box;
 }
@@ -60,11 +61,11 @@ ArrangeDialog::ArrangeDialog()
     _notebook->append_page(*_gridArrangeTab, create_tab_label(C_("Arrange dialog", "Grid"), INKSCAPE_ICON("arrange-grid")));
     // TRANSLATORS: "Circular" refers to circular/radial arrangement
     _notebook->append_page(*_polarArrangeTab, create_tab_label(C_("Arrange dialog", "Circular"), INKSCAPE_ICON("arrange-circular")));
-    _arrangeBox->pack_start(*_notebook);
+    UI::pack_start(*_arrangeBox, *_notebook);
     _notebook->signal_switch_page().connect([=](Widget*, guint page){
         update_arrange_btn();
     });
-    pack_start(*_arrangeBox);
+    UI::pack_start(*this, *_arrangeBox);
 
     // Add button
     _arrangeButton = Gtk::make_managed<Gtk::Button>(C_("Arrange dialog", "_Arrange"));
@@ -78,8 +79,8 @@ ArrangeDialog::ArrangeDialog()
     button_box->set_halign(Gtk::ALIGN_CENTER);
     button_box->set_spacing(6);
     button_box->property_margin().set_value(4);
-    button_box->add(*_arrangeButton);
-    pack_start(*button_box);
+    UI::pack_end(*button_box, *_arrangeButton);
+    UI::pack_start(*this, *button_box);
 
     set_visible(true);
     show_all_children();

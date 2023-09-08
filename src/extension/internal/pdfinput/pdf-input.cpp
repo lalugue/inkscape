@@ -62,6 +62,7 @@
 #include "ui/builder-utils.h"
 #include "ui/dialog-events.h"
 #include "ui/dialog-run.h"
+#include "ui/pack.h"
 #include "ui/widget/frame.h"
 #include "ui/widget/spinbutton.h"
 #include "util/parse-int-range.h"
@@ -141,8 +142,7 @@ PdfImportDialog::PdfImportDialog(std::shared_ptr<PDFDoc> doc, const gchar * /*ur
 
     get_content_area()->set_homogeneous(false);
     get_content_area()->set_spacing(0);
-
-    get_content_area()->pack_start(UI::get_widget<Gtk::Box>(_builder, "content"));
+    UI::pack_start(*get_content_area(), UI::get_widget<Gtk::Box>(_builder, "content"));
 
     this->set_title(_("PDF Import Settings"));
     this->set_modal(true);
