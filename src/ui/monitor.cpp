@@ -16,8 +16,7 @@
 
 #include "include/gtkmm_version.h"
 
-namespace Inkscape {
-namespace UI {
+namespace Inkscape::UI {
 
 /** get monitor geometry of primary monitor */
 Gdk::Rectangle get_monitor_geometry_primary() {
@@ -52,9 +51,7 @@ Gdk::Rectangle get_monitor_geometry_at_point(int x, int y) {
     return monitor_geometry;
 }
 
-}
-}
-
+} // namespace Inkscape::UI
 
 /*
   Local Variables:

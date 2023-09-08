@@ -1848,16 +1848,6 @@ void Canvas::set_cursor()
     }
 }
 
-void Canvas::get_preferred_width_vfunc(int &minimum_width, int &natural_width) const
-{
-    minimum_width = natural_width = 256;
-}
-
-void Canvas::get_preferred_height_vfunc(int &minimum_height, int &natural_height) const
-{
-    minimum_height = natural_height = 256;
-}
-
 void Canvas::on_size_allocate(Gtk::Allocation &allocation)
 {
     auto const old_dimensions = get_dimensions();

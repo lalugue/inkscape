@@ -51,13 +51,13 @@ class CanvasPrivate;
 /**
  * A widget for Inkscape's canvas.
  */
-class Canvas : public OptGLArea
+class Canvas final : public OptGLArea
 {
     using parent_type = OptGLArea;
 
 public:
     Canvas();
-    ~Canvas() override;
+    ~Canvas() final;
 
     /* Configuration */
 
@@ -141,10 +141,7 @@ public:
 
     void enable_autoscroll();
 
-protected:
-    void get_preferred_width_vfunc (int &minimum_width,  int &natural_width ) const override;
-    void get_preferred_height_vfunc(int &minimum_height, int &natural_height) const override;
-
+private:
     // EventControllerScroll
     bool on_scroll(GtkEventControllerScroll const *controller,
                    double dx, double dy);
@@ -167,14 +164,13 @@ protected:
     bool on_key_released(GtkEventControllerKey const *controller,
                          unsigned keyval, unsigned keycode, GdkModifierType state);
 
-    void on_realize() override;
-    void on_unrealize() override;
-    void on_size_allocate(Gdk::Rectangle &allocation) override;
+    void on_realize() final;
+    void on_unrealize() final;
+    void on_size_allocate(Gdk::Rectangle &allocation) final;
 
-    Glib::RefPtr<Gdk::GLContext> create_context() override;
-    void paint_widget(const Cairo::RefPtr<Cairo::Context>&) override;
+    Glib::RefPtr<Gdk::GLContext> create_context() final;
+    void paint_widget(Cairo::RefPtr<Cairo::Context> const &) final;
 
-private:
     /* Configuration */
 
     // Desktop

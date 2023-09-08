@@ -19,6 +19,7 @@
 #include <gdkmm/dragcontext.h>
 #include <gtkmm/eventbox.h>
 #include <gtkmm/image.h>
+#include <gtkmm/targetentry.h>
 #include <gtkmm/viewport.h>
 #include <sigc++/adaptors/bind.h>
 #include <sigc++/functors/mem_fun.h>

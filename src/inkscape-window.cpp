@@ -344,7 +344,6 @@ bool InkscapeWindow::on_configure_event(GdkEventConfigure *event)
     // It just tells you the current maximized size, which is not
     // as useful as whatever value it had previously.
     if (!_desktop->is_iconified() && !maxed && !full) {
-
         // Get size is more accurate than frame extends for window size.
         int w,h = 0;
         get_size(w, h);

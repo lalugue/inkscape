@@ -1203,3 +1203,9 @@ popover.menu.menuize > stack > box > modelbutton:first-child > * /* Affect child
 #GradientEdit.focus-within {
     border-color: alpha(@theme_fg_color, 0.3)
 }
+
+/* Canvas */
+#InkscapeCanvas {
+    min-width : 256px;
+    min-height: 256px;
+}

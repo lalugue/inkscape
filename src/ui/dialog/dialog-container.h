@@ -22,11 +22,14 @@
 #include <glibmm/keyfile.h>
 #include <gtkmm/accelkey.h>
 #include <gtkmm/box.h>
-#include <gtkmm/targetentry.h>
 
 #include "dialog-manager.h"
 #include "desktop.h"
 #include "helper/auto-connection.h"
+
+namespace Gtk {
+class TargetEntry;
+} // namespace Gtk
 
 namespace Inkscape::UI::Dialog {
 

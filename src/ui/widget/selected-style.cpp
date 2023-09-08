@@ -1133,7 +1133,6 @@ RotateableSwatch::do_motion(double by, guint modifier) {
     }
 
     if (!scrolling && modifier != cursor_state) {
-
         std::string cursor_filename = "adjust_hue.svg";
         if (modifier == 2) {
             cursor_filename = "adjust_saturation.svg";

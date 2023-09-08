@@ -365,27 +365,29 @@ static void init_extended()
 {
     auto display = Gdk::Display::get_default();
     auto seat = display->get_default_seat();
-    auto devices = seat->get_slaves(Gdk::SEAT_CAPABILITY_ALL);
+    auto const devices = seat->get_slaves(Gdk::SEAT_CAPABILITY_ALL);
     
     for (auto const &dev : devices) {
-        auto name = dev->get_name();
+        auto const name = dev->get_name();
         auto src = dev->get_source();
 
-        if (!name.empty() && name != "pad" && src != Gdk::SOURCE_MOUSE) {
-            // Set the initial tool for the device.
-            switch (src) {
-                case Gdk::SOURCE_PEN:
-                    name_to_tool[name] = "Calligraphic";
-                    break;
-                case Gdk::SOURCE_ERASER:
-                    name_to_tool[name] = "Eraser";
-                    break;
-                case Gdk::SOURCE_CURSOR:
-                    name_to_tool[name] = "Select";
-                    break;
-                default:
-                    break;
-            }
+        if (src == Gdk::SOURCE_MOUSE || name.empty() || name == "pad") {
+            continue;
+        }
+
+        // Set the initial tool for the device.
+        switch (src) {
+            case Gdk::SOURCE_PEN:
+                name_to_tool[name] = "Calligraphic";
+                break;
+            case Gdk::SOURCE_ERASER:
+                name_to_tool[name] = "Eraser";
+                break;
+            case Gdk::SOURCE_CURSOR:
+                name_to_tool[name] = "Select";
+                break;
+            default:
+                break;
         }
     }
 }

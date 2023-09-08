@@ -16,13 +16,13 @@
 #include <gdkmm/rectangle.h>
 #include <gdkmm/window.h>
 
-namespace Inkscape {
-namespace UI {
-    Gdk::Rectangle get_monitor_geometry_primary();
-    Gdk::Rectangle get_monitor_geometry_at_window(const Glib::RefPtr<Gdk::Window>& window);
-    Gdk::Rectangle get_monitor_geometry_at_point(int x, int y);
-}
-}
+namespace Inkscape::UI {
+
+Gdk::Rectangle get_monitor_geometry_primary();
+Gdk::Rectangle get_monitor_geometry_at_window(Glib::RefPtr<Gdk::Window> const &window);
+Gdk::Rectangle get_monitor_geometry_at_point(int x, int y);
+
+} // namespace Inkscape::UI
 
 #endif // SEEN_MONITOR_H
 

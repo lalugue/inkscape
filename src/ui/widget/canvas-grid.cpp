@@ -16,6 +16,7 @@
 // how to add the buttons easily via a .ui file (which would allow the user to put any
 // buttons they want in their place).
 
+#include <utility>
 #include <glibmm/i18n.h>
 #include <gtkmm/adjustment.h>
 #include <gtkmm/builder.h>

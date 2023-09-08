@@ -44,7 +44,7 @@ using Inkscape::IO::Resource::ICONS;
 namespace Inkscape {
 
 // SVG cursor unique ID/key
-typedef std::tuple<std::string, std::string, std::string, guint32, guint32, double, double, bool, int> Key;
+typedef std::tuple<std::string, std::string, std::string, std::uint32_t, std::uint32_t, double, double, bool, int> Key;
 
 struct KeyHasher {
     std::size_t operator () (const Key& k) const { return boost::hash_value(k); }
@@ -59,8 +59,8 @@ Glib::RefPtr<Gdk::Cursor>
 load_svg_cursor(Glib::RefPtr<Gdk::Display> const &display,
                 Glib::RefPtr<Gdk::Window > const &window ,
                 std::string const &file_name,
-                guint32 fill,
-                guint32 stroke,
+                std::uint32_t const fill,
+                std::uint32_t const stroke,
                 double fill_opacity,
                 double stroke_opacity)
 {
@@ -242,7 +242,7 @@ load_svg_cursor(Glib::RefPtr<Gdk::Display> const &display,
     return cursor;
 }
 
-} // Namespace
+} // namespace Inkscape
 
 /*
   Local Variables:

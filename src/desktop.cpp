@@ -77,7 +77,6 @@ SPDesktop::SPDesktop()
     , current(nullptr)  // current style
     , _focusMode(false)
     , dkey(0)
-    , window_state(0)
     , interaction_disabled_counter(0)
     , waiting_cursor(false)
     , showing_dialogs(false)

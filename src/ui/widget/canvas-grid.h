@@ -98,8 +98,8 @@ public:
 
 private:
     // Signal callbacks
-    void on_size_allocate(Gtk::Allocation& allocation) override;
-    void on_realize() override;
+    void on_size_allocate(Gtk::Allocation &allocation) final;
+    void on_realize() final;
 
     // The widgets
     std::unique_ptr<Inkscape::UI::Widget::Canvas> _canvas;

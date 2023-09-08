@@ -220,7 +220,7 @@ public:
     bool           _focusMode;  ///< Whether we're focused working or general working
 
     unsigned int dkey;
-    guint window_state;
+    unsigned window_state{};
     unsigned int interaction_disabled_counter;
     bool waiting_cursor;
     bool showing_dialogs;

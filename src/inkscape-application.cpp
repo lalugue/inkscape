@@ -917,7 +917,6 @@ InkscapeApplication::destroy_window(InkscapeWindow* window, bool keep_alive)
     // Remove document if no window with document is left.
     auto it = _documents.find(document);
     if (it != _documents.end()) {
-
         // If only one window for document:
         if (it->second.size() == 1) {
             // Check if document needs saving.

@@ -1,7 +1,4 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-#ifndef INKSCAPE_DESKTOP_EVENTS_H
-#define INKSCAPE_DESKTOP_EVENTS_H
-
 /*
  * Entry points for event distribution
  *
@@ -14,6 +11,9 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#ifndef INKSCAPE_DESKTOP_EVENTS_H
+#define INKSCAPE_DESKTOP_EVENTS_H
+
 class SPDesktop;
 class SPGuide;
 
@@ -21,8 +21,6 @@ namespace Inkscape {
 class CanvasItemGuideLine;
 struct CanvasEvent;
 }
-
-typedef union _GdkEvent GdkEvent;
 
 /* Item handlers */
 
