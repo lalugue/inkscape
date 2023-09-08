@@ -1,7 +1,4 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-#ifndef INKSCAPE_LIVEPATHEFFECT_PARAMETER_ARRAY_H
-#define INKSCAPE_LIVEPATHEFFECT_PARAMETER_ARRAY_H
-
 /*
  * Inkscape::LivePathEffectParameters
  *
@@ -9,6 +6,9 @@
  *
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
+
+#ifndef INKSCAPE_LIVEPATHEFFECT_PARAMETER_ARRAY_H
+#define INKSCAPE_LIVEPATHEFFECT_PARAMETER_ARRAY_H
 
 #include <glib.h>
 #include <vector>
@@ -21,15 +21,13 @@
 #include "svg/stringstream.h"
 #include "svg/svg.h"
 
-namespace Inkscape {
-
-namespace LivePathEffect {
+namespace Inkscape::LivePathEffect {
 
 namespace TpS {
 // we need a separate namespace to avoid clashes with other LPEs
 class KnotHolderEntityAttachBegin;
 class KnotHolderEntityAttachEnd;
-}
+} // namespace TpS
 
 template <typename StorageType>
 class ArrayParam : public Parameter {
@@ -42,10 +40,10 @@ public:
                 size_t n = 0 )
         : Parameter(label, tip, key, wr, effect), _vector(n), _default_size(n)
     {
-
     }
 
-    ~ArrayParam() override = default;;
+    ArrayParam(const ArrayParam&);
+    ArrayParam& operator=(const ArrayParam&);
 
     std::vector<StorageType> const & data() const {
         return _vector;
@@ -70,7 +68,9 @@ public:
         g_strfreev (strarray);
         return true;
     }
+
     void param_update_default(const gchar * default_value) override{};
+
     Glib::ustring param_getSVGValue() const override {
         Inkscape::SVGOStringStream os;
         writesvg(os, _vector);
@@ -167,18 +167,11 @@ protected:
     }
 
     StorageType readsvg(const gchar * str);
-
-private:
-    ArrayParam(const ArrayParam&);
-    ArrayParam& operator=(const ArrayParam&);
 };
 
+} // namespace Inkscape::LivePathEffect
 
-} //namespace LivePathEffect
-
-} //namespace Inkscape
-
-#endif
+#endif // INKSCAPE_LIVEPATHEFFECT_PARAMETER_ARRAY_H
 
 /*
   Local Variables:

@@ -4,17 +4,17 @@
  *
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
+
 #include "live_effects/parameter/array.h"
 
+#include <utility>
 #include <2geom/coord.h>
 #include <2geom/point.h>
 
 #include "live_effects/effect.h"
 #include "live_effects/lpeobject.h"
 
-namespace Inkscape {
-
-namespace LivePathEffect {
+namespace Inkscape::LivePathEffect {
 
 template <>
 double
@@ -97,22 +97,22 @@ std::vector<NodeSatellite> ArrayParam<std::vector<NodeSatellite>>::readsvg(const
     while (*iter != nullptr) {
         gchar ** strsubarray = g_strsplit(*iter, ",", 8);
         if (*strsubarray[7]) {//steps always > 0
-            NodeSatellite *nodesatellite = new NodeSatellite();
-            nodesatellite->setNodeSatellitesType(g_strstrip(strsubarray[0]));
-            nodesatellite->is_time = strncmp(strsubarray[1], "1", 1) == 0;
-            nodesatellite->selected = strncmp(strsubarray[2], "1", 1) == 0;
-            nodesatellite->has_mirror = strncmp(strsubarray[3], "1", 1) == 0;
-            nodesatellite->hidden = strncmp(strsubarray[4], "1", 1) == 0;
+            NodeSatellite nodesatellite{};
+            nodesatellite.setNodeSatellitesType(g_strstrip(strsubarray[0]));
+            nodesatellite.is_time = strncmp(strsubarray[1], "1", 1) == 0;
+            nodesatellite.selected = strncmp(strsubarray[2], "1", 1) == 0;
+            nodesatellite.has_mirror = strncmp(strsubarray[3], "1", 1) == 0;
+            nodesatellite.hidden = strncmp(strsubarray[4], "1", 1) == 0;
             double amount,angle;
             float stepsTmp;
             sp_svg_number_read_d(strsubarray[5], &amount);
             sp_svg_number_read_d(strsubarray[6], &angle);
             sp_svg_number_read_f(g_strstrip(strsubarray[7]), &stepsTmp);
             unsigned int steps = (unsigned int)stepsTmp;
-            nodesatellite->amount = amount;
-            nodesatellite->angle = angle;
-            nodesatellite->steps = steps;
-            subpath_nodesatellites.push_back(*nodesatellite);
+            nodesatellite.amount = amount;
+            nodesatellite.angle = angle;
+            nodesatellite.steps = steps;
+            subpath_nodesatellites.push_back(std::move(nodesatellite));
         }
         g_strfreev (strsubarray);
         iter++;
@@ -121,9 +121,7 @@ std::vector<NodeSatellite> ArrayParam<std::vector<NodeSatellite>>::readsvg(const
     return subpath_nodesatellites;
 }
 
-} /* namespace LivePathEffect */
-
-} /* namespace Inkscape */
+} // namespace Inkscape::LivePathEffect
 
 /*
   Local Variables:

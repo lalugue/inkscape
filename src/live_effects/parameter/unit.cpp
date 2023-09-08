@@ -16,21 +16,21 @@
 
 using Inkscape::Util::unit_table;
 
-namespace Inkscape {
+namespace Inkscape::LivePathEffect {
 
-namespace LivePathEffect {
-
-
-UnitParam::UnitParam( const Glib::ustring& label, const Glib::ustring& tip,
-                              const Glib::ustring& key, Inkscape::UI::Widget::Registry* wr,
-                              Effect* effect, Glib::ustring default_unit)
+UnitParam::UnitParam(const Glib::ustring& label, const Glib::ustring& tip,
+                     const Glib::ustring& key, Inkscape::UI::Widget::Registry* wr,
+                     Effect* effect, Glib::ustring default_unit)
     : Parameter(label, tip, key, wr, effect)
+    , defunit{unit_table.getUnit(default_unit)}
+    , unit{defunit}
 {
-    defunit = unit_table.getUnit(default_unit);
-    unit = defunit;
 }
 
-UnitParam::~UnitParam() = default;
+UnitParam::~UnitParam()
+{
+    free_unit();
+}
 
 bool
 UnitParam::param_readSVGValue(const gchar * strvalue)
@@ -70,6 +70,7 @@ void
 UnitParam::param_set_value(Inkscape::Util::Unit const &val)
 {
     param_effect->refresh_widgets = true;
+    free_unit();
     unit = new Inkscape::Util::Unit(val);
 }
 
@@ -93,8 +94,16 @@ UnitParam::param_newWidget()
     return unit_menu;
 }
 
-} /* namespace LivePathEffect */
-} /* namespace Inkscape */
+void
+UnitParam::free_unit()
+{
+    // Exception: If we just refer to unit_table.getUnit(default_unit), leave it
+    if (unit && unit != defunit) {
+        delete unit;
+    }
+}
+
+} // Inkscape::LivePathEffect
 
 /*
   Local Variables:
