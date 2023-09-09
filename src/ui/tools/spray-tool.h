@@ -79,6 +79,8 @@ public:
     bool has_dilated = false;
     Geom::Point last_push;
     CanvasItemPtr<CanvasItemBpath> dilate_area;
+    CanvasItemPtr<CanvasItemBpath> shapes_area;
+    std::vector<SPItem*> items;
     bool no_overlap = false;
     bool picker = false;
     bool pick_center = false;
@@ -95,11 +97,16 @@ public:
     bool pick_to_presence = false;
     bool pick_to_color = false;
     bool pick_to_opacity = false;
+    bool single_click = false;
+    double single_scale = 0;
+    double single_angle = 0;
+    double last_pressure = 0;
     bool invert_picked = false;
     double gamma_picked = 0.0;
     double rand_picked = 0.0;
+    Geom::PathVector shapes;
 
-    sigc::connection style_set_connection;
+    Inkscape::auto_connection release_connection;
 
     void set(Preferences::Entry const &val) override;
     virtual void setCloneTilerPrefs();
