@@ -91,19 +91,17 @@ Gtk::Box *ToolbarMenuButton::get_popover_box()
     return _popover_box;
 }
 
-int ToolbarMenuButton::get_required_width()
+static int minw(Gtk::Widget const *widget)
 {
-    // std::cout << "ToolbarMenuButton::get_required_width()\n";
+    int min = 0;
+    int nat = 0;
+    widget->get_preferred_width(min, nat);
+    return min;
+};
 
-    int req_w = 0;
-    int min_w = 0;
-    int nat_w = 0;
-
-    _popover_box->get_preferred_width(min_w, nat_w);
-    req_w = std::max(min_w, nat_w);
-    this->get_preferred_width(min_w, nat_w);
-
-    return req_w - std::min(min_w, nat_w);
+int ToolbarMenuButton::get_required_width() const
+{
+    return minw(_popover_box) - minw(this);
 }
 
 } // namespace Widget

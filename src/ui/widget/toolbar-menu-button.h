@@ -44,7 +44,7 @@ public:
     std::string get_tag();
     std::vector<std::pair<int, Gtk::Widget *>> get_children();
     Gtk::Box *get_popover_box();
-    int get_required_width();
+    int get_required_width() const;
 };
 
 } // namespace Widget

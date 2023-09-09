@@ -10,128 +10,89 @@
 
 #include "toolbar.h"
 
-#include "desktop.h"
-#include "io/resource.h"
-
 namespace Inkscape::UI::Toolbar {
 
-/**
- * \brief A default constructor that just assigns the desktop
- */
 Toolbar::Toolbar(SPDesktop *desktop)
     : _desktop(desktop)
+{}
+
+void Toolbar::get_preferred_width_vfunc(int &min_w, int &nat_w) const
 {
-    signal_size_allocate().connect(sigc::mem_fun(*this, &Toolbar::resize_handler));
+    Gtk::Box::get_preferred_width_vfunc(min_w, nat_w);
+
+    // HACK: Return too-small value to allow shrinking.
+    min_w = 0;
 }
 
-void Toolbar::resize_handler(Gtk::Allocation &allocation)
+void Toolbar::on_size_allocate(Gtk::Allocation &allocation)
 {
-    _resize_handler(allocation, false);
+    _resize_handler(allocation);
+    Gtk::Box::on_size_allocate(allocation);
 }
 
-void Toolbar::_resize_handler(Gtk::Allocation &allocation, bool freeze_idle)
+static int minw(Gtk::Widget const *widget)
 {
-    // Return if called in freeze state.
-    if (_freeze_resize) {
+    int min = 0;
+    int nat = 0;
+    widget->get_preferred_width(min, nat);
+    return min;
+};
+
+void Toolbar::_resize_handler(Gtk::Allocation &allocation)
+{
+    if (!_toolbar) {
         return;
     }
 
-    if (_toolbar == nullptr) {
-        return;
-    }
+    int min_w = minw(_toolbar);
 
-    _freeze_resize = true;
+    if (allocation.get_width() < min_w) {
+        // Shrinkage required.
 
-    int min_w = 0;
-    int nat_w = 0;
+        // While there are still expanded buttons to collapse...
+        while (allocation.get_width() < min_w && !_expanded_menu_btns.empty()) {
+            // Collapse the topmost expanded button.
+            auto menu_btn = _expanded_menu_btns.top();
+            _move_children(_toolbar, menu_btn->get_popover_box(), menu_btn->get_children());
+            menu_btn->set_visible(true);
 
-    get_preferred_width(min_w, nat_w);
+            _expanded_menu_btns.pop();
+            _collapsed_menu_btns.push(menu_btn);
 
-    // Check if the toolbar needs to be resized.
-    // Added an offset of 7 pixels to allow toolbars to shrink
-    // on MacOS.
-    if (allocation.get_width() <= (std::max(min_w, nat_w) + 7)) {
-        // Now, check if there are any expanded ToolbarMenuButtons.
-        // If there are none, then the toolbar size can not be reduced further.
-        if (_expanded_menu_btns.empty()) {
-            _freeze_resize = false;
-            return;
+            min_w = minw(_toolbar);
         }
 
-        // If there still are some widgets which can be collapsed
-        // Move the top most item from _expanded_menu_buttons.
-        auto menu_btn = _expanded_menu_btns.top();
-        move_children(_toolbar, menu_btn->get_popover_box(), menu_btn->get_children());
-        menu_btn->set_visible(true);
-
-        _expanded_menu_btns.pop();
-        _collapsed_menu_btns.push(menu_btn);
-
-        _freeze_resize = false;
-
-        // Check if the toolbar has become small enough otherwise recursively
-        // call this handler again.
-        get_preferred_width(min_w, nat_w);
-
-        // Added an offset of 7 pixels to allow toolbars to shrink
-        // on MacOS.
-        if (allocation.get_width() <= (std::max(min_w, nat_w) + 7)) {
-            _resize_handler(allocation, false);
-        } else if (!freeze_idle) {
-            // TODO: Add the right idle calls.
-        }
-    } else {
+    } else if (allocation.get_width() > min_w) {
         // Once the allocated width of the toolbar is greater than its
-        // minimum width, try to re-insert the a group of elements back
+        // minimum width, try to re-insert a group of elements back
         // into the toolbar.
-        // First check if "_moved_children" is empty.
-        if (_collapsed_menu_btns.empty()) {
-            // No ToolbarMenuButton is there to be expanded.
-            _freeze_resize = false;
-            return;
-        }
 
-        // Two cases are possible:
-        // 1. Toolbar width has decreased -> Do nothing
-        // TODO: Find a way to detect this case.
-        if (false) {
-            return;
-        }
+        // While there are collapsed buttons to expand...
+        while (!_collapsed_menu_btns.empty()) {
+            // See if we have enough width to expand the topmost collapsed button.
+            auto menu_btn = _collapsed_menu_btns.top();
+            int req_width = min_w + menu_btn->get_required_width();
 
-        // 2. Toolbar width has increased -> Take action
-        // Find the required width of the toolbar required to expand the top
-        // most child of _collapsed_menu_btn stack.
-        auto menu_btn = _collapsed_menu_btns.top();
-        _toolbar->get_preferred_width(min_w, nat_w);
-        int req_width = std::max(min_w, nat_w) + menu_btn->get_required_width();
+            if (req_width > allocation.get_width()) {
+                // Not enough width - stop.
+                break;
+            }
 
-        // Added an offset of 7 pixels to allow toolbars to shrink
-        // on MacOS.
-        if (allocation.get_width() > (req_width + 7)) {
             // Move a group of widgets back into the toolbar.
-            move_children(menu_btn->get_popover_box(), _toolbar, menu_btn->get_children(), true);
+            _move_children(menu_btn->get_popover_box(), _toolbar, menu_btn->get_children(), true);
             menu_btn->set_visible(false);
 
             _collapsed_menu_btns.pop();
             _expanded_menu_btns.push(menu_btn);
-        } else if (!freeze_idle) {
-            // TODO: Add the right idle calls.
+
+            min_w = minw(_toolbar);
         }
     }
-
-    // This call will take care of widgets placement and overlapping issues.
-    Gtk::Box::on_size_allocate(allocation);
-
-    _freeze_resize = false;
 }
 
-void Toolbar::move_children(Gtk::Box *src, Gtk::Box *dest, std::vector<std::pair<int, Gtk::Widget *>> children,
-                            bool is_expanding)
+void Toolbar::_move_children(Gtk::Box *src, Gtk::Box *dest, std::vector<std::pair<int, Gtk::Widget *>> children, bool is_expanding)
 {
-    for (auto child_pos_pair : children) {
-        auto pos = child_pos_pair.first;
-        auto child = child_pos_pair.second;
-
+    for (auto [pos, child] : children) {
         src->remove(*child);
         dest->add(*child);
 
@@ -142,12 +103,6 @@ void Toolbar::move_children(Gtk::Box *src, Gtk::Box *dest, std::vector<std::pair
             dest->reorder_child(*child, pos);
         }
     }
-}
-
-GtkWidget *Toolbar::create(SPDesktop *desktop)
-{
-    auto toolbar = Gtk::manage(new Toolbar(desktop));
-    return toolbar->Gtk::Widget::gobj();
 }
 
 } // namespace Inkscape::UI::Toolbar
