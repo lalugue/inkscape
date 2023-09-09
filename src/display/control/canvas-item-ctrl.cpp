@@ -303,7 +303,7 @@ void CanvasItemCtrl::_render(CanvasItemBuffer &buf) const
     auto px2dt = Geom::Scale(buf.device_scale).inverse()
                * Geom::Translate(_bounds->min())
                * affine().inverse();
-    bool use_bg = !get_canvas()->background_in_stores();
+    bool use_bg = !get_canvas()->background_in_stores() || buf.outline_pass;
 
     uint32_t *p = _cache.get();
     for (int i = 0; i < height; ++i) {
