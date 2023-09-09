@@ -3,7 +3,12 @@
 #ifndef INKSCAPE_UI_DIALOG_RUN_H
 #define INKSCAPE_UI_DIALOG_RUN_H
 
-#include <gtkmm/dialog.h>
+#include <memory>
+
+namespace Gtk {
+class Dialog;
+class Container;
+} // namespace Gtk
 
 namespace Inkscape::UI {
 

@@ -87,7 +87,6 @@ private:
     void selectionChanged (Inkscape::Selection *selection                ) final;
     void selectionModified(Inkscape::Selection *selection, unsigned flags) final;
     void onSelectionChanged(Inkscape::Selection *selection);
-    void onAddGallery();
     void expanded_notify(Gtk::Expander *expander);
     void onAdd(Inkscape::LivePathEffect::EffectType etype);
     bool showWarning(std::string const &msg);
@@ -100,7 +99,6 @@ private:
     void clearMenu();
     void setMenu();
     bool lpeFlatten(std::shared_ptr<Inkscape::LivePathEffect::LPEObjectReference> lperef);
-    void on_showgallery_notify(Preferences::Entry const &new_val);
 
     SPLPEItem * clonetolpeitem();
     Inkscape::UI::Widget::CompletionPopup _lpes_popup;

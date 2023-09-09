@@ -2,6 +2,7 @@
 #include <optional>
 
 #include <glibmm/main.h>
+#include <gtkmm/dialog.h>
 
 #include "dialog-run.h"
 
