@@ -58,7 +58,7 @@ CalligraphyToolbar::CalligraphyToolbar(SPDesktop *desktop)
     : Toolbar(desktop)
     , _tracker{std::make_unique<UnitTracker>(Inkscape::Util::UNIT_TYPE_LINEAR)}
     , _presets_blocked(false)
-    , _builder(initialize_builder("toolbar-calligraphy.ui"))
+    , _builder(create_builder("toolbar-calligraphy.ui"))
     , _profile_selector_combo(get_widget<Gtk::ComboBoxText>(_builder, "_profile_selector_combo"))
     , _width_item(get_derived_widget<UI::Widget::SpinButton>(_builder, "_width_item"))
     , _thinning_item(get_derived_widget<UI::Widget::SpinButton>(_builder, "_thinning_item"))

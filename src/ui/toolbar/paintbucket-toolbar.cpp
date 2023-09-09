@@ -50,7 +50,7 @@ namespace Inkscape::UI::Toolbar {
 PaintbucketToolbar::PaintbucketToolbar(SPDesktop *desktop)
     : Toolbar(desktop)
     , _tracker{std::make_unique<UI::Widget::UnitTracker>(Inkscape::Util::UNIT_TYPE_LINEAR)}
-    , _builder(initialize_builder("toolbar-paintbucket.ui"))
+    , _builder(create_builder("toolbar-paintbucket.ui"))
     , _threshold_item(get_derived_widget<UI::Widget::SpinButton>(_builder, "_threshold_item"))
     , _offset_item(get_derived_widget<UI::Widget::SpinButton>(_builder, "_offset_item"))
 {

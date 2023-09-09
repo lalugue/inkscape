@@ -24,19 +24,6 @@ Toolbar::Toolbar(SPDesktop *desktop)
     signal_size_allocate().connect(sigc::mem_fun(*this, &Toolbar::resize_handler));
 }
 
-Glib::RefPtr<Gtk::Builder> Toolbar::initialize_builder(Glib::ustring const &file_name)
-{
-    Glib::ustring toolbar_builder_file = get_filename(Inkscape::IO::Resource::UIS, file_name.c_str());
-    auto builder = Gtk::Builder::create();
-    try {
-        builder->add_from_file(toolbar_builder_file);
-    } catch (Glib::Error const &ex) {
-        std::cerr << "Failed to initialize the builder for: " << file_name << ex.what().raw() << std::endl;
-    }
-
-    return builder;
-}
-
 void Toolbar::resize_handler(Gtk::Allocation &allocation)
 {
     _resize_handler(allocation, false);

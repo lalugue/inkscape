@@ -53,7 +53,7 @@ namespace Toolbar {
 
 ConnectorToolbar::ConnectorToolbar(SPDesktop *desktop)
     : Toolbar(desktop)
-    , _builder(initialize_builder("toolbar-connector.ui"))
+    , _builder(create_builder("toolbar-connector.ui"))
 
     , _orthogonal_btn(get_widget<Gtk::ToggleButton>(_builder, "_orthogonal_btn"))
     , _curvature_item(get_derived_widget<UI::Widget::SpinButton>(_builder, "_curvature_item"))

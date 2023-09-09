@@ -326,7 +326,7 @@ namespace Inkscape::UI::Toolbar {
 
 GradientToolbar::GradientToolbar(SPDesktop *desktop)
     : Toolbar(desktop)
-    , _builder(initialize_builder("toolbar-gradient.ui"))
+    , _builder(create_builder("toolbar-gradient.ui"))
     , _linked_btn(get_widget<Gtk::ToggleButton>(_builder, "_linked_btn"))
     , _stops_reverse_btn(get_widget<Gtk::Button>(_builder, "_stops_reverse_btn"))
     , _offset_item(get_derived_widget<UI::Widget::SpinButton>(_builder, "_offset_item"))

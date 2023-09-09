@@ -65,7 +65,7 @@ void DropperToolbar::on_set_alpha_button_toggled()
  */
 DropperToolbar::DropperToolbar(SPDesktop *desktop)
     : Toolbar(desktop)
-    , _builder(initialize_builder("toolbar-dropper.ui"))
+    , _builder(create_builder("toolbar-dropper.ui"))
     , _pick_alpha_btn(get_widget<Gtk::ToggleButton>(_builder, "_pick_alpha_btn"))
     , _set_alpha_btn(get_widget<Gtk::ToggleButton>(_builder, "_set_alpha_btn"))
 {

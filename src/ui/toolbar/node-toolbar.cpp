@@ -79,7 +79,7 @@ NodeToolbar::NodeToolbar(SPDesktop *desktop)
     : Toolbar(desktop)
     , _tracker{std::make_unique<UnitTracker>(Inkscape::Util::UNIT_TYPE_LINEAR)}
     , _freeze(false)
-    , _builder(initialize_builder("toolbar-node.ui"))
+    , _builder(create_builder("toolbar-node.ui"))
     , _nodes_lpeedit_btn(get_widget<Gtk::Button>(_builder, "_nodes_lpeedit_btn"))
     , _show_helper_path_btn(&get_widget<Gtk::ToggleButton>(_builder, "_show_helper_path_btn"))
     , _show_handles_btn(&get_widget<Gtk::ToggleButton>(_builder, "_show_handles_btn"))

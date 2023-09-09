@@ -59,7 +59,7 @@ namespace Toolbar {
 PencilToolbar::PencilToolbar(SPDesktop *desktop, bool pencil_mode)
     : Toolbar(desktop)
     , _tool_is_pencil(pencil_mode)
-    , _builder(initialize_builder("toolbar-pencil.ui"))
+    , _builder(create_builder("toolbar-pencil.ui"))
     , _flatten_spiro_bspline_btn(get_widget<Gtk::Button>(_builder, "_flatten_spiro_bspline_btn"))
     , _usepressure_btn(get_widget<Gtk::ToggleButton>(_builder, "_usepressure_btn"))
     , _minpressure_box(get_widget<Gtk::Box>(_builder, "_minpressure_box"))

@@ -62,7 +62,7 @@ public:
 
 PageToolbar::PageToolbar(SPDesktop *desktop)
     : Toolbar(desktop)
-    , _builder(initialize_builder("toolbar-page.ui"))
+    , _builder(create_builder("toolbar-page.ui"))
     , _combo_page_sizes(get_widget<Gtk::ComboBoxText>(_builder, "_combo_page_sizes"))
     , _text_page_margins(get_widget<Gtk::Entry>(_builder, "_text_page_margins"))
     , _text_page_bleeds(get_widget<Gtk::Entry>(_builder, "_text_page_bleeds"))

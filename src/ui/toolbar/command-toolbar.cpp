@@ -24,7 +24,7 @@ namespace Inkscape::UI::Toolbar {
 
 CommandToolbar::CommandToolbar(SPDesktop *desktop)
     : Toolbar(desktop)
-    , _builder(initialize_builder("toolbar-commands.ui"))
+    , _builder(create_builder("toolbar-commands.ui"))
 {
     _toolbar = &get_widget<Gtk::Box>(_builder, "commands-toolbar");
 

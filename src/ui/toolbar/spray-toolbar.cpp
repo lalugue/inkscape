@@ -65,7 +65,7 @@ namespace Toolbar {
 
 SprayToolbar::SprayToolbar(SPDesktop *desktop)
     : Toolbar(desktop)
-    , _builder(initialize_builder("toolbar-spray.ui"))
+    , _builder(create_builder("toolbar-spray.ui"))
     , _width_item(get_derived_widget<UI::Widget::SpinButton>(_builder, "_width_item"))
     , _population_item(get_derived_widget<UI::Widget::SpinButton>(_builder, "_population_item"))
     , _rotation_box(get_widget<Gtk::Box>(_builder, "_rotation_box"))

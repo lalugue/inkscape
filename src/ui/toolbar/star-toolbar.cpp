@@ -48,7 +48,7 @@ namespace Toolbar {
 
 StarToolbar::StarToolbar(SPDesktop *desktop)
     : Toolbar(desktop)
-    , _builder(initialize_builder("toolbar-star.ui"))
+    , _builder(create_builder("toolbar-star.ui"))
     , _mode_item(get_widget<Gtk::Label>(_builder, "_mode_item"))
     , _magnitude_item(get_derived_widget<UI::Widget::SpinButton>(_builder, "_magnitude_item"))
     , _spoke_box(get_widget<Gtk::Box>(_builder, "_spoke_box"))

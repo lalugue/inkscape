@@ -56,7 +56,6 @@ protected:
      */
     Toolbar(SPDesktop *desktop);
 
-    Glib::RefPtr<Gtk::Builder> initialize_builder(Glib::ustring const &file_name);
     void resize_handler(Gtk::Allocation &allocation);
     void _resize_handler(Gtk::Allocation &allocation, bool freeze_idle);
     void move_children(Gtk::Box *src, Gtk::Box *dest, std::vector<std::pair<int, Gtk::Widget *>> children,

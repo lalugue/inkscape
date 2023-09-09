@@ -64,7 +64,7 @@ namespace Toolbar {
 MeasureToolbar::MeasureToolbar(SPDesktop *desktop)
     : Toolbar(desktop)
     , _tracker(new UnitTracker(Inkscape::Util::UNIT_TYPE_LINEAR))
-    , _builder(initialize_builder("toolbar-measure.ui"))
+    , _builder(create_builder("toolbar-measure.ui"))
     , _font_size_item(get_derived_widget<UI::Widget::SpinButton>(_builder, "_font_size_item"))
     , _precision_item(get_derived_widget<UI::Widget::SpinButton>(_builder, "_precision_item"))
     , _scale_item(get_derived_widget<UI::Widget::SpinButton>(_builder, "_scale_item"))

@@ -45,7 +45,7 @@ namespace Toolbar {
 
 TweakToolbar::TweakToolbar(SPDesktop *desktop)
     : Toolbar(desktop)
-    , _builder(initialize_builder("toolbar-tweak.ui"))
+    , _builder(create_builder("toolbar-tweak.ui"))
     , _width_item(get_derived_widget<UI::Widget::SpinButton>(_builder, "_width_item"))
     , _force_item(get_derived_widget<UI::Widget::SpinButton>(_builder, "_force_item"))
     , _fidelity_box(get_widget<Gtk::Box>(_builder, "_fidelity_box"))

@@ -53,7 +53,7 @@ namespace Toolbar {
 
 LPEToolbar::LPEToolbar(SPDesktop *desktop)
     : Toolbar(desktop)
-    , _builder(initialize_builder("toolbar-lpe.ui"))
+    , _builder(create_builder("toolbar-lpe.ui"))
     , _show_bbox_btn(get_widget<Gtk::ToggleButton>(_builder, "_show_bbox_btn"))
     , _bbox_from_selection_btn(get_widget<Gtk::ToggleButton>(_builder, "_bbox_from_selection_btn"))
     , _measuring_btn(get_widget<Gtk::ToggleButton>(_builder, "_measuring_btn"))

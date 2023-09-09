@@ -56,7 +56,7 @@ namespace Toolbar {
 ArcToolbar::ArcToolbar(SPDesktop *desktop)
     : Toolbar(desktop)
     , _tracker(new UnitTracker(Inkscape::Util::UNIT_TYPE_LINEAR))
-    , _builder(initialize_builder("toolbar-arc.ui"))
+    , _builder(create_builder("toolbar-arc.ui"))
     , _mode_item(get_widget<Gtk::Label>(_builder, "_mode_item"))
     , _rx_item(get_derived_widget<UI::Widget::SpinButton>(_builder, "_rx_item"))
     , _ry_item(get_derived_widget<UI::Widget::SpinButton>(_builder, "_ry_item"))

@@ -49,7 +49,7 @@ namespace Toolbar {
 EraserToolbar::EraserToolbar(SPDesktop *desktop)
     : Toolbar(desktop)
     , _freeze(false)
-    , _builder(initialize_builder("toolbar-eraser.ui"))
+    , _builder(create_builder("toolbar-eraser.ui"))
     , _width_item(get_derived_widget<UI::Widget::SpinButton>(_builder, "_width_item"))
     , _thinning_item(get_derived_widget<UI::Widget::SpinButton>(_builder, "_thinning_item"))
     , _cap_rounding_item(get_derived_widget<UI::Widget::SpinButton>(_builder, "_cap_rounding_item"))

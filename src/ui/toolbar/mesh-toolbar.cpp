@@ -143,7 +143,7 @@ namespace Inkscape::UI::Toolbar {
 MeshToolbar::MeshToolbar(SPDesktop *desktop)
     : Toolbar(desktop)
     // , _edit_fill_pusher(nullptr)
-    , _builder(initialize_builder("toolbar-mesh.ui"))
+    , _builder(create_builder("toolbar-mesh.ui"))
     , _row_item(get_derived_widget<UI::Widget::SpinButton>(_builder, "_row_item"))
     , _col_item(get_derived_widget<UI::Widget::SpinButton>(_builder, "_col_item"))
     , _edit_fill_btn(&get_widget<Gtk::ToggleButton>(_builder, "_edit_fill_btn"))

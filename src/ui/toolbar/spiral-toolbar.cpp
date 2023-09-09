@@ -50,7 +50,7 @@ namespace Toolbar {
 
 SpiralToolbar::SpiralToolbar(SPDesktop *desktop)
     : Toolbar(desktop)
-    , _builder(initialize_builder("toolbar-spiral.ui"))
+    , _builder(create_builder("toolbar-spiral.ui"))
     , _mode_item(get_widget<Gtk::Label>(_builder, "_mode_item"))
     , _revolution_item(get_derived_widget<UI::Widget::SpinButton>(_builder, "_revolution_item"))
     , _expansion_item(get_derived_widget<UI::Widget::SpinButton>(_builder, "_expansion_item"))

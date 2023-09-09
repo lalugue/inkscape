@@ -50,7 +50,7 @@ namespace Toolbar {
 
 Box3DToolbar::Box3DToolbar(SPDesktop *desktop)
     : Toolbar(desktop)
-    , _builder(initialize_builder("toolbar-box3d.ui"))
+    , _builder(create_builder("toolbar-box3d.ui"))
     , _angle_x_item(get_derived_widget<UI::Widget::SpinButton>(_builder, "_angle_x_item"))
     , _vp_x_state_btn(get_widget<Gtk::ToggleButton>(_builder, "_vp_x_state_btn"))
     , _angle_y_item(get_derived_widget<UI::Widget::SpinButton>(_builder, "_angle_y_item"))

@@ -23,7 +23,7 @@ namespace Toolbar {
 
 ZoomToolbar::ZoomToolbar(SPDesktop *desktop)
     : Toolbar(desktop)
-    , _builder(initialize_builder("toolbar-zoom.ui"))
+    , _builder(create_builder("toolbar-zoom.ui"))
 {
     _toolbar = &get_widget<Gtk::Box>(_builder, "zoom-toolbar");
 
