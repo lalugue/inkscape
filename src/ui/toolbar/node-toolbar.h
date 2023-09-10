@@ -59,6 +59,10 @@ namespace Toolbar {
 
 class NodeToolbar final : public Toolbar
 {
+public:
+    NodeToolbar(SPDesktop *desktop);
+    ~NodeToolbar() override;
+
 private:
     Glib::RefPtr<Gtk::Builder> _builder;
     std::unique_ptr<UI::Widget::UnitTracker> _tracker;
@@ -109,12 +113,7 @@ private:
     void edit_tocurve();
     void on_pref_toggled(Gtk::ToggleButton *item, const Glib::ustring &path);
 
-protected:
-    NodeToolbar(SPDesktop *desktop);
     void setup_derived_spin_button(Inkscape::UI::Widget::SpinButton &btn, Glib::ustring const &name);
-
-public:
-    static GtkWidget *create(SPDesktop *desktop);
 };
 
 } // namespace Toolbar

@@ -55,10 +55,15 @@ class UnitTracker;
 }
 
 namespace Toolbar {
+
 class ArcToolbar final
     : public Toolbar
     , private XML::NodeObserver
 {
+public:
+    ArcToolbar(SPDesktop *desktop);
+    ~ArcToolbar() override;
+
 private:
     Glib::RefPtr<Gtk::Builder> _builder;
     std::unique_ptr<UI::Widget::UnitTracker> _tracker;
@@ -95,14 +100,6 @@ private:
 	void notifyAttributeChanged(Inkscape::XML::Node &node, GQuark name,
 								Inkscape::Util::ptr_shared old_value,
 								Inkscape::Util::ptr_shared new_value) final;
-
-
-protected:
-    ArcToolbar(SPDesktop *desktop);
-    ~ArcToolbar() override;
-
-public:
-    static GtkWidget *create(SPDesktop *desktop);
 };
 
 }

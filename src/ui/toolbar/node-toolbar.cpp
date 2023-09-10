@@ -195,6 +195,8 @@ NodeToolbar::NodeToolbar(SPDesktop *desktop)
     show_all();
 }
 
+NodeToolbar::~NodeToolbar() = default;
+
 void NodeToolbar::setup_derived_spin_button(Inkscape::UI::Widget::SpinButton &btn, Glib::ustring const &name)
 {
     const Glib::ustring path = "/tools/nodes/" + name;
@@ -210,12 +212,6 @@ void NodeToolbar::setup_derived_spin_button(Inkscape::UI::Widget::SpinButton &bt
     // TODO: Handle this in the toolbar class.
     btn.set_sensitive(false);
 }
-
-GtkWidget *NodeToolbar::create(SPDesktop *desktop)
-{
-    auto holder = new NodeToolbar(desktop);
-    return holder->Gtk::Widget::gobj();
-} // NodeToolbar::prep()
 
 void NodeToolbar::value_changed(Geom::Dim2 d)
 {

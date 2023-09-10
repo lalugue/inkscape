@@ -49,10 +49,15 @@ class SpinButton;
 }
 
 namespace Toolbar {
+
 class SpiralToolbar final
     : public Toolbar
     , private XML::NodeObserver
 {
+public:
+    SpiralToolbar(SPDesktop *desktop);
+    ~SpiralToolbar() override;
+
 private:
     Glib::RefPtr<Gtk::Builder> _builder;
     Gtk::Label &_mode_item;
@@ -75,12 +80,6 @@ private:
 
 	void notifyAttributeChanged(Inkscape::XML::Node &node, GQuark key, Inkscape::Util::ptr_shared oldval, Inkscape::Util::ptr_shared newval) final;
 
-protected:
-    SpiralToolbar(SPDesktop *desktop);
-    ~SpiralToolbar() override;
-
-public:
-    static GtkWidget *create(SPDesktop *desktop);
     void setup_derived_spin_button(UI::Widget::SpinButton &btn, Glib::ustring const &name, double default_value);
 };
 }

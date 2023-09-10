@@ -42,14 +42,11 @@ namespace Toolbar {
  */
 class ZoomToolbar : public Toolbar
 {
-private:
-    Glib::RefPtr<Gtk::Builder> _builder;
-
-protected:
+public:
     ZoomToolbar(SPDesktop *desktop);
 
-public:
-    static GtkWidget *create(SPDesktop *desktop);
+private:
+    Glib::RefPtr<Gtk::Builder> _builder;
 };
 }
 }

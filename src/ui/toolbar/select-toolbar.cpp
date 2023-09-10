@@ -148,17 +148,13 @@ SelectToolbar::SelectToolbar(SPDesktop *desktop)
     show_all();
 }
 
+SelectToolbar::~SelectToolbar() = default;
+
 void SelectToolbar::on_unrealize()
 {
     _connections.clear();
 
     parent_type::on_unrealize();
-}
-
-GtkWidget *SelectToolbar::create(SPDesktop *desktop)
-{
-    auto toolbar = new SelectToolbar(desktop);
-    return toolbar->Gtk::Widget::gobj();
 }
 
 void SelectToolbar::setup_derived_spin_button(Inkscape::UI::Widget::SpinButton &btn, Glib::ustring const &name)

@@ -57,10 +57,15 @@ class UnitTracker;
 }
 
 namespace Toolbar {
+
 class RectToolbar final
     : public Toolbar
     , private Inkscape::XML::NodeObserver
 {
+public:
+    RectToolbar(SPDesktop *desktop);
+    ~RectToolbar() override;
+
 private:
     Glib::RefPtr<Gtk::Builder> _builder;
     std::unique_ptr<UI::Widget::UnitTracker> _tracker;
@@ -93,14 +98,8 @@ private:
 	void notifyAttributeChanged(Inkscape::XML::Node &node, GQuark name,
 								Inkscape::Util::ptr_shared old_value,
 								Inkscape::Util::ptr_shared new_value) final;
-
-protected:
-    RectToolbar(SPDesktop *desktop);
-    ~RectToolbar() override;
-
-public:
-    static GtkWidget *create(SPDesktop *desktop);
 };
+
 }
 }
 }

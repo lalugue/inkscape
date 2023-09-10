@@ -101,12 +101,6 @@ SpiralToolbar::~SpiralToolbar()
     }
 }
 
-GtkWidget *SpiralToolbar::create(SPDesktop *desktop)
-{
-    auto toolbar = new SpiralToolbar(desktop);
-    return toolbar->Gtk::Widget::gobj();
-}
-
 void SpiralToolbar::value_changed(Glib::RefPtr<Gtk::Adjustment> &adj, Glib::ustring const &value_name)
 {
     if (DocumentUndo::getUndoSensitive(_desktop->getDocument())) {

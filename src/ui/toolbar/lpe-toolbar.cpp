@@ -154,15 +154,11 @@ LPEToolbar::LPEToolbar(SPDesktop *desktop)
     show_all();
 }
 
+LPEToolbar::~LPEToolbar() = default;
+
 void LPEToolbar::set_mode(int mode)
 {
     _mode_buttons[mode]->set_active();
-}
-
-GtkWidget *LPEToolbar::create(SPDesktop *desktop)
-{
-    auto toolbar = new LPEToolbar(desktop);
-    return toolbar->Gtk::Widget::gobj();
 }
 
 // this is called when the mode is changed via the toolbar (i.e., one of the subtool buttons is pressed)

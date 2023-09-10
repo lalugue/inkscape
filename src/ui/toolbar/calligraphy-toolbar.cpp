@@ -167,6 +167,8 @@ CalligraphyToolbar::CalligraphyToolbar(SPDesktop *desktop)
     show_all();
 }
 
+CalligraphyToolbar::~CalligraphyToolbar() = default;
+
 void CalligraphyToolbar::setup_derived_spin_button(UI::Widget::SpinButton &btn, Glib::ustring const &name,
                                                    double default_value, ValueChangedMemFun const value_changed_mem_fun)
 {
@@ -189,12 +191,6 @@ void CalligraphyToolbar::setup_derived_spin_button(UI::Widget::SpinButton &btn, 
     _tracker->addAdjustment(adj->gobj());
 
     btn.set_defocus_widget(_desktop->getCanvas());
-}
-
-GtkWidget *CalligraphyToolbar::create(SPDesktop *desktop)
-{
-    auto toolbar = new CalligraphyToolbar(desktop);
-    return toolbar->Gtk::Widget::gobj();
 }
 
 void CalligraphyToolbar::width_value_changed()

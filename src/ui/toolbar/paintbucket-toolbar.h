@@ -50,8 +50,13 @@ class SpinButton;
 } // namespace Widget
 
 namespace Toolbar {
+
 class PaintbucketToolbar final : public Toolbar
 {
+public:
+    PaintbucketToolbar(SPDesktop *desktop);
+    ~PaintbucketToolbar() override;
+
 private:
     using ValueChangedMemFun = void (PaintbucketToolbar::*)();
 
@@ -72,12 +77,6 @@ private:
     void offset_changed();
     void autogap_changed(int autogap);
     void defaults();
-
-protected:
-    PaintbucketToolbar(SPDesktop *desktop);
-
-public:
-    static GtkWidget *create(SPDesktop *desktop);
 };
 
 } // namespace Toolbar

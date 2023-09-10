@@ -140,6 +140,8 @@ PaintbucketToolbar::PaintbucketToolbar(SPDesktop *desktop)
     show_all();
 }
 
+PaintbucketToolbar::~PaintbucketToolbar() = default;
+
 void PaintbucketToolbar::setup_derived_spin_button(UI::Widget::SpinButton &btn, Glib::ustring const &name,
                                                    double default_value, ValueChangedMemFun const value_changed_mem_fun)
 {
@@ -156,12 +158,6 @@ void PaintbucketToolbar::setup_derived_spin_button(UI::Widget::SpinButton &btn, 
     }
 
     btn.set_defocus_widget(_desktop->getCanvas());
-}
-
-GtkWidget *PaintbucketToolbar::create(SPDesktop *desktop)
-{
-    auto toolbar = new PaintbucketToolbar(desktop);
-    return toolbar->Gtk::Widget::gobj();
 }
 
 void PaintbucketToolbar::channels_changed(int channels)

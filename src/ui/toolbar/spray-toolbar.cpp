@@ -219,6 +219,8 @@ SprayToolbar::SprayToolbar(SPDesktop *desktop)
     init();
 }
 
+SprayToolbar::~SprayToolbar() = default;
+
 void SprayToolbar::setup_derived_spin_button(UI::Widget::SpinButton &btn, Glib::ustring const &name,
                                              double default_value, ValueChangedMemFun const value_changed_mem_fun)
 {
@@ -230,12 +232,6 @@ void SprayToolbar::setup_derived_spin_button(UI::Widget::SpinButton &btn, Glib::
     adj->signal_value_changed().connect(sigc::mem_fun(*this, value_changed_mem_fun));
 
     btn.set_defocus_widget(_desktop->getCanvas());
-}
-
-GtkWidget *SprayToolbar::create(SPDesktop *desktop)
-{
-   auto toolbar = new SprayToolbar(desktop);
-   return toolbar->Gtk::Widget::gobj();
 }
 
 void SprayToolbar::width_value_changed()

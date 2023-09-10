@@ -42,8 +42,14 @@ class SpinButton;
 }
 
 namespace Toolbar {
+
 class TweakToolbar final : public Toolbar
 {
+public:
+    TweakToolbar(SPDesktop *desktop);
+
+    void set_mode(int mode);
+
 private:
     using ValueChangedMemFun = void (TweakToolbar::*)();
     Glib::RefPtr<Gtk::Builder> _builder;
@@ -73,13 +79,6 @@ private:
     void toggle_dos();
     void toggle_dol();
     void toggle_doo();
-
-protected:
-    TweakToolbar(SPDesktop *desktop);
-
-public:
-    static GtkWidget *create(SPDesktop *desktop);
-    void set_mode(int mode);
 };
 }
 }

@@ -270,17 +270,6 @@ void MeshToolbar::setup_derived_spin_button(UI::Widget::SpinButton &btn, Glib::u
     btn.set_defocus_widget(_desktop->getCanvas());
 }
 
-/**
- * Mesh auxiliary toolbar construction and setup.
- * Don't forget to add to XML in widgets/toolbox.cpp!
- *
- */
-GtkWidget *MeshToolbar::create(SPDesktop *desktop)
-{
-    auto toolbar = new MeshToolbar(desktop);
-    return toolbar->Gtk::Widget::gobj();
-}
-
 void MeshToolbar::new_geometry_changed(int mode)
 {
     Preferences::get()->setInt("/tools/mesh/mesh_geometry", mode);

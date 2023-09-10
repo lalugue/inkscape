@@ -95,7 +95,8 @@ void Toolbar::_resize_handler(Gtk::Allocation &allocation)
     }
 }
 
-void Toolbar::_move_children(Gtk::Box *src, Gtk::Box *dest, std::vector<std::pair<int, Gtk::Widget *>> children, bool is_expanding)
+void Toolbar::_move_children(Gtk::Box *src, Gtk::Box *dest, std::vector<std::pair<int, Gtk::Widget *>> children,
+                             bool is_expanding)
 {
     for (auto [pos, child] : children) {
         src->remove(*child);

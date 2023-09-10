@@ -24,7 +24,7 @@
 #include <gtkmm/toolbar.h>
 #include <gtkmm/toolbutton.h>
 
-// Access create() functions
+// For creating toolbars
 #include "ui/toolbar/arc-toolbar.h"
 #include "ui/toolbar/box3d-toolbar.h"
 #include "ui/toolbar/calligraphy-toolbar.h"
@@ -53,45 +53,54 @@
 #include "ui/widget/style-swatch.h"
 #include "ui/util.h"
 
+namespace Inkscape::UI::Toolbar {
+namespace {
+
 // Data for building and tracking toolbars.
-static struct {
-    char const * const type_name; // Used by preferences
+struct ToolBoxData
+{
+    char const *type_name; // Used by preferences
     Glib::ustring const tool_name;
-    GtkWidget *(*create_func)(SPDesktop *desktop);
-    char const * const swatch_tip;
-} const aux_toolboxes[] = {
+    std::unique_ptr<Toolbar> (*create)(SPDesktop *desktop);
+    char const *swatch_tip;
+};
+
+template <typename T, auto... args>
+auto create = [](SPDesktop *desktop) -> std::unique_ptr<Toolbar> { return std::make_unique<T>(desktop, args...); };
+
+ToolBoxData const aux_toolboxes[] = {
     // If you change the tool_name for Measure or Text here, change it also in desktop-widget.cpp.
     // clang-format off
-    { "/tools/select",          "Select",       Inkscape::UI::Toolbar::SelectToolbar::create,        nullptr},
-    { "/tools/nodes",           "Node",         Inkscape::UI::Toolbar::NodeToolbar::create,          nullptr},
-    { "/tools/booleans",        "Booleans",     Inkscape::UI::Toolbar::BooleansToolbar::create,      nullptr},
-    { "/tools/marker",          "Marker",       Inkscape::UI::Toolbar::MarkerToolbar::create,        nullptr},
-    { "/tools/shapes/rect",     "Rect",         Inkscape::UI::Toolbar::RectToolbar::create,          N_("Style of new rectangles")},
-    { "/tools/shapes/arc",      "Arc",          Inkscape::UI::Toolbar::ArcToolbar::create,           N_("Style of new ellipses")},
-    { "/tools/shapes/star",     "Star",         Inkscape::UI::Toolbar::StarToolbar::create,          N_("Style of new stars")},
-    { "/tools/shapes/3dbox",    "3DBox",        Inkscape::UI::Toolbar::Box3DToolbar::create,         N_("Style of new 3D boxes")},
-    { "/tools/shapes/spiral",   "Spiral",       Inkscape::UI::Toolbar::SpiralToolbar::create,        N_("Style of new spirals")},
-    { "/tools/freehand/pencil", "Pencil",       Inkscape::UI::Toolbar::PencilToolbar::create_pencil, N_("Style of new paths created by Pencil")},
-    { "/tools/freehand/pen",    "Pen",          Inkscape::UI::Toolbar::PencilToolbar::create_pen,    N_("Style of new paths created by Pen")},
-    { "/tools/calligraphic",    "Calligraphic", Inkscape::UI::Toolbar::CalligraphyToolbar::create,   N_("Style of new calligraphic strokes")},
-    { "/tools/text",            "Text",         Inkscape::UI::Toolbar::TextToolbar::create,          nullptr},
-    { "/tools/gradient",        "Gradient",     Inkscape::UI::Toolbar::GradientToolbar::create,      nullptr},
-    { "/tools/mesh",            "Mesh",         Inkscape::UI::Toolbar::MeshToolbar::create,          nullptr},
-    { "/tools/zoom",            "Zoom",         Inkscape::UI::Toolbar::ZoomToolbar::create,          nullptr},
-    { "/tools/measure",         "Measure",      Inkscape::UI::Toolbar::MeasureToolbar::create,       nullptr},
-    { "/tools/dropper",         "Dropper",      Inkscape::UI::Toolbar::DropperToolbar::create,       nullptr},
-    { "/tools/tweak",           "Tweak",        Inkscape::UI::Toolbar::TweakToolbar::create,         N_("Color/opacity used for color tweaking")},
-    { "/tools/spray",           "Spray",        Inkscape::UI::Toolbar::SprayToolbar::create,         nullptr},
-    { "/tools/connector",       "Connector",    Inkscape::UI::Toolbar::ConnectorToolbar::create,     nullptr},
-    { "/tools/pages",           "Pages",        Inkscape::UI::Toolbar::PageToolbar::create,          nullptr},
-    { "/tools/paintbucket",     "Paintbucket",  Inkscape::UI::Toolbar::PaintbucketToolbar::create,   N_("Style of Paint Bucket fill objects")},
-    { "/tools/eraser",          "Eraser",       Inkscape::UI::Toolbar::EraserToolbar::create,        _("TBD")},
-    { "/tools/lpetool",         "LPETool",      Inkscape::UI::Toolbar::LPEToolbar::create,           _("TBD")},
-    { nullptr,                  "",             nullptr,                                             nullptr }
+    { "/tools/select",          "Select",       create<SelectToolbar>,        nullptr},
+    { "/tools/nodes",           "Node",         create<NodeToolbar>,          nullptr},
+    { "/tools/booleans",        "Booleans",     create<BooleansToolbar>,      nullptr},
+    { "/tools/marker",          "Marker",       create<MarkerToolbar>,        nullptr},
+    { "/tools/shapes/rect",     "Rect",         create<RectToolbar>,          N_("Style of new rectangles")},
+    { "/tools/shapes/arc",      "Arc",          create<ArcToolbar>,           N_("Style of new ellipses")},
+    { "/tools/shapes/star",     "Star",         create<StarToolbar>,          N_("Style of new stars")},
+    { "/tools/shapes/3dbox",    "3DBox",        create<Box3DToolbar>,         N_("Style of new 3D boxes")},
+    { "/tools/shapes/spiral",   "Spiral",       create<SpiralToolbar>,        N_("Style of new spirals")},
+    { "/tools/freehand/pencil", "Pencil",       create<PencilToolbar, true>,  N_("Style of new paths created by Pencil")},
+    { "/tools/freehand/pen",    "Pen",          create<PencilToolbar, false>, N_("Style of new paths created by Pen")},
+    { "/tools/calligraphic",    "Calligraphic", create<CalligraphyToolbar>,   N_("Style of new calligraphic strokes")},
+    { "/tools/text",            "Text",         create<TextToolbar>,          nullptr},
+    { "/tools/gradient",        "Gradient",     create<GradientToolbar>,      nullptr},
+    { "/tools/mesh",            "Mesh",         create<MeshToolbar>,          nullptr},
+    { "/tools/zoom",            "Zoom",         create<ZoomToolbar>,          nullptr},
+    { "/tools/measure",         "Measure",      create<MeasureToolbar>,       nullptr},
+    { "/tools/dropper",         "Dropper",      create<DropperToolbar>,       nullptr},
+    { "/tools/tweak",           "Tweak",        create<TweakToolbar>,         N_("Color/opacity used for color tweaking")},
+    { "/tools/spray",           "Spray",        create<SprayToolbar>,         nullptr},
+    { "/tools/connector",       "Connector",    create<ConnectorToolbar>,     nullptr},
+    { "/tools/pages",           "Pages",        create<PageToolbar>,          nullptr},
+    { "/tools/paintbucket",     "Paintbucket",  create<PaintbucketToolbar>,   N_("Style of Paint Bucket fill objects")},
+    { "/tools/eraser",          "Eraser",       create<EraserToolbar>,        _("TBD")},
+    { "/tools/lpetool",         "LPETool",      create<LPEToolbar>,           _("TBD")},
+    { nullptr,                  "",             nullptr,                      nullptr}
     // clang-format on
 };
 
-namespace Inkscape::UI::Toolbar {
+} // namespace
 
 // We only create an empty box, it is filled later after the desktop is created.
 Toolbars::Toolbars()
@@ -108,10 +117,9 @@ void Toolbars::create_toolbars(SPDesktop* desktop) {
 
     // Create the toolbars using their "create" methods.
     for (int i = 0 ; aux_toolboxes[i].type_name ; i++ ) {
-        if (aux_toolboxes[i].create_func) {
+        if (aux_toolboxes[i].create) {
             // Change create_func to return Gtk::Box!
-            GtkWidget *sub_toolbox_c = aux_toolboxes[i].create_func(desktop);
-            Gtk::Box *sub_toolbox = Glib::wrap(GTK_BOX(sub_toolbox_c));
+            auto const sub_toolbox = Gtk::manage(aux_toolboxes[i].create(desktop).release());
             sub_toolbox->set_name("SubToolBox");
 
             //               ===== Styling =====
@@ -188,15 +196,15 @@ void Toolbars::create_toolbars(SPDesktop* desktop) {
     set_visible(true);
 }
 
-void Toolbars::change_toolbar(SPDesktop * /* desktop */, Inkscape::UI::Tools::ToolBase *eventcontext)
+void Toolbars::change_toolbar(SPDesktop */*desktop*/, Tools::ToolBase *tool)
 {
-    if (eventcontext == nullptr) {
-        std::cerr << "Toolbars::change_toolbar: eventcontext is null!" << std::endl;
+    if (!tool) {
+        std::cerr << "Toolbars::change_toolbar: tool is null!" << std::endl;
         return;
     }
 
     for (int i = 0; aux_toolboxes[i].type_name; i++) {
-        if (eventcontext->getPrefsPath() == aux_toolboxes[i].type_name) {
+        if (tool->getPrefsPath() == aux_toolboxes[i].type_name) {
             toolbar_map[aux_toolboxes[i].tool_name]->show_now();
         } else {
             toolbar_map[aux_toolboxes[i].tool_name]->set_visible(false);
@@ -204,7 +212,7 @@ void Toolbars::change_toolbar(SPDesktop * /* desktop */, Inkscape::UI::Tools::To
     }
 }
 
-} // namespace
+} // namespace Inkscape::UI::Toolbar
 
 /*
   Local Variables:

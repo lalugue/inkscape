@@ -22,13 +22,12 @@ namespace Toolbar {
 
 class MarkerToolbar final : public Toolbar
 {
-protected:
-    MarkerToolbar(SPDesktop *desktop);
-
 public:
-    static GtkWidget *create(SPDesktop *desktop);
+    MarkerToolbar(SPDesktop *desktop);
 };
+
 } // namespace Toolbar
 } // namespace UI
 } // namespace Inkscape
+
 #endif

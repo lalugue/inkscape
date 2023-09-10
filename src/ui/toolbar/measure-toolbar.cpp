@@ -164,12 +164,6 @@ void MeasureToolbar::setup_derived_spin_button(UI::Widget::SpinButton &btn, Glib
     btn.set_defocus_widget(_desktop->getCanvas());
 }
 
-GtkWidget *MeasureToolbar::create(SPDesktop *desktop)
-{
-    auto toolbar = new MeasureToolbar(desktop);
-    return toolbar->Gtk::Widget::gobj();
-} // MeasureToolbar::prep()
-
 void MeasureToolbar::fontsize_value_changed()
 {
     if (DocumentUndo::getUndoSensitive(_desktop->getDocument())) {

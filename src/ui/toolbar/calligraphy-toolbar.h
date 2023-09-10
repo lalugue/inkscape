@@ -56,6 +56,10 @@ class UnitTracker;
 namespace Toolbar {
 class CalligraphyToolbar final : public Toolbar
 {
+public:
+    CalligraphyToolbar(SPDesktop *desktop);
+    ~CalligraphyToolbar() override;
+
 private:
     using ValueChangedMemFun = void (CalligraphyToolbar::*)();
 
@@ -105,12 +109,6 @@ private:
     void tilt_state_changed();
     void unit_changed(int not_used);
     void on_pref_toggled(Gtk::ToggleButton *item, Glib::ustring const &path);
-
-protected:
-    CalligraphyToolbar(SPDesktop *desktop);
-
-public:
-    static GtkWidget *create(SPDesktop *desktop);
 };
 
 } // namespace Inkscape::UI

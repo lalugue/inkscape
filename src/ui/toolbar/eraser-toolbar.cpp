@@ -110,6 +110,8 @@ EraserToolbar::EraserToolbar(SPDesktop *desktop)
     set_eraser_mode_visibility(eraser_mode);
 }
 
+EraserToolbar::~EraserToolbar() = default;
+
 void EraserToolbar::setup_derived_spin_button(UI::Widget::SpinButton &btn, Glib::ustring const &name,
                                               double default_value, ValueChangedMemFun const value_changed_mem_fun)
 {
@@ -121,12 +123,6 @@ void EraserToolbar::setup_derived_spin_button(UI::Widget::SpinButton &btn, Glib:
     adj->signal_value_changed().connect(sigc::mem_fun(*this, value_changed_mem_fun));
 
     btn.set_defocus_widget(_desktop->getCanvas());
-}
-
-GtkWidget *EraserToolbar::create(SPDesktop *desktop)
-{
-    auto toolbar = new EraserToolbar(desktop);
-    return toolbar->Gtk::Widget::gobj();
 }
 
 /**

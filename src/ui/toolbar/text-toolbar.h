@@ -56,8 +56,12 @@ class UnitTracker;
 }
 
 namespace Toolbar {
+
 class TextToolbar final : public Toolbar
 {
+public:
+    TextToolbar(SPDesktop *desktop);
+
 private:
     using ValueChangedMemFun = void (TextToolbar::*)();
     using ModeChangedMemFun = void (TextToolbar::*)(int);
@@ -145,12 +149,6 @@ private:
     bool mergeDefaultStyle(SPCSSAttr *css);
 
     Inkscape::auto_connection _fonts_updated_signal;
-
-  protected:
-    TextToolbar(SPDesktop *desktop);
-
-public:
-    static GtkWidget *create(SPDesktop *desktop);
 };
 }
 }

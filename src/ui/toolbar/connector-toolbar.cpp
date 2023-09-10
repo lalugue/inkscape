@@ -136,12 +136,6 @@ void ConnectorToolbar::setup_derived_spin_button(UI::Widget::SpinButton &btn, Gl
     btn.set_defocus_widget(_desktop->getCanvas());
 }
 
-GtkWidget *ConnectorToolbar::create(SPDesktop *desktop)
-{
-    auto toolbar = new ConnectorToolbar(desktop);
-    return toolbar->Gtk::Widget::gobj();
-}
-
 void ConnectorToolbar::path_set_avoid()
 {
     Inkscape::UI::Tools::cc_selection_set_avoid(_desktop, true);

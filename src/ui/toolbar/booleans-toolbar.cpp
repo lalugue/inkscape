@@ -56,12 +56,6 @@ BooleansToolbar::BooleansToolbar(SPDesktop *desktop)
 
 BooleansToolbar::~BooleansToolbar() = default;
 
-GtkWidget *BooleansToolbar::create(SPDesktop *desktop)
-{
-    auto toolbar = new BooleansToolbar(desktop);
-    return toolbar->Gtk::Widget::gobj();
-}
-
 } // namespace Inkscape::UI::Toolbar
 
 /*

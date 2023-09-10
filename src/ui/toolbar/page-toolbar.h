@@ -55,8 +55,6 @@ public:
     PageToolbar(SPDesktop *desktop);
     ~PageToolbar() final;
 
-    static GtkWidget *create(SPDesktop *desktop);
-
 protected:
     void labelEdited();
     void bleedsEdited();

@@ -595,13 +595,6 @@ TextToolbar::fontfamily_value_changed()
 #endif
 }
 
-GtkWidget *
-TextToolbar::create(SPDesktop *desktop)
-{
-    auto tb = Gtk::manage(new TextToolbar(desktop));
-    return tb->Gtk::Widget::gobj();
-}
-
 void
 TextToolbar::fontsize_value_changed()
 {

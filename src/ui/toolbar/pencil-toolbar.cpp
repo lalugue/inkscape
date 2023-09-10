@@ -269,12 +269,6 @@ void PencilToolbar::hide_extra_widgets()
     }
 }
 
-GtkWidget *PencilToolbar::create_pencil(SPDesktop *desktop)
-{
-    auto toolbar = new PencilToolbar(desktop, true);
-    return toolbar->Gtk::Widget::gobj();
-}
-
 PencilToolbar::~PencilToolbar()
 {
     if(_repr) {
@@ -561,12 +555,6 @@ void PencilToolbar::flatten_spiro_bspline()
         _desktop->getSelection()->add(lpeitem->getRepr());
         sp_lpe_item_update_patheffect(lpeitem, false, false);
     }
-}
-
-GtkWidget *PencilToolbar::create_pen(SPDesktop *desktop)
-{
-    auto toolbar = new PencilToolbar(desktop, false);
-    return toolbar->Gtk::Widget::gobj();
 }
 
 void PencilToolbar::tolerance_value_changed()

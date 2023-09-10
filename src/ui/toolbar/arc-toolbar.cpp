@@ -166,12 +166,6 @@ ArcToolbar::~ArcToolbar()
     }
 }
 
-GtkWidget *ArcToolbar::create(SPDesktop *desktop)
-{
-    auto toolbar = new ArcToolbar(desktop);
-    return toolbar->Gtk::Widget::gobj();
-}
-
 void ArcToolbar::value_changed(Glib::RefPtr<Gtk::Adjustment> &adj, Glib::ustring const &value_name)
 {
     // Per SVG spec "a [radius] value of zero disables rendering of the element".

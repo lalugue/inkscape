@@ -47,8 +47,13 @@ class ComboToolItem;
 }
 
 namespace Toolbar {
+
 class PencilToolbar final : public Toolbar
 {
+public:
+    PencilToolbar(SPDesktop *desktop, bool pencil_mode);
+    ~PencilToolbar() override;
+
 private:
     using ValueChangedMemFun = void (PencilToolbar::*)();
 
@@ -93,14 +98,6 @@ private:
     void simplify_lpe();
     void simplify_flatten();
     void flatten_spiro_bspline();
-
-protected:
-  PencilToolbar(SPDesktop *desktop, bool pencil_mode);
-  ~PencilToolbar() override;
-
-public:
-    static GtkWidget *create_pencil(SPDesktop *desktop);
-    static GtkWidget *create_pen(SPDesktop *desktop);
 };
 }
 }

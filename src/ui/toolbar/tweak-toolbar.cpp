@@ -145,12 +145,6 @@ void TweakToolbar::set_mode(int mode)
     _mode_buttons[mode]->set_active();
 }
 
-GtkWidget *TweakToolbar::create(SPDesktop *desktop)
-{
-    auto toolbar = new TweakToolbar(desktop);
-    return toolbar->Gtk::Widget::gobj();
-}
-
 void TweakToolbar::width_value_changed()
 {
     Preferences::get()->setDouble("/tools/tweak/width", _width_item.get_adjustment()->get_value() * 0.01);

@@ -4,7 +4,7 @@
 
 /**
  * @file
- * Erasor aux toolbar
+ * Eraser toolbar
  */
 /* Authors:
  *   MenTaLguY <mental@rydia.net>
@@ -48,8 +48,13 @@ class SpinButton;
 } // namespace Widget
 
 namespace Toolbar {
+
 class EraserToolbar final : public Toolbar
 {
+public:
+    EraserToolbar(SPDesktop *desktop);
+    ~EraserToolbar() override;
+
 private:
     using ValueChangedMemFun = void (EraserToolbar::*)();
 
@@ -81,12 +86,6 @@ private:
     static void update_presets_list(gpointer data);
     void toggle_break_apart();
     void usepressure_toggled();
-
-protected:
-    EraserToolbar(SPDesktop *desktop);
-
-public:
-    static GtkWidget *create(SPDesktop *desktop);
 };
 }
 }

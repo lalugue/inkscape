@@ -132,12 +132,6 @@ RectToolbar::~RectToolbar()
     _changed.disconnect();
 }
 
-GtkWidget *RectToolbar::create(SPDesktop *desktop)
-{
-    auto toolbar = new RectToolbar(desktop);
-    return toolbar->Gtk::Widget::gobj();
-}
-
 void RectToolbar::value_changed(Glib::RefPtr<Gtk::Adjustment> &adj, Glib::ustring const &value_name,
                                 void (SPRect::*setter)(gdouble))
 {

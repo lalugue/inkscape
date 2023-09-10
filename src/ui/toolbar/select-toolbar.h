@@ -46,7 +46,11 @@ namespace Toolbar {
 
 class SelectToolbar final : public Toolbar
 {
+public:
     using parent_type = Toolbar;
+
+    SelectToolbar(SPDesktop *desktop);
+    ~SelectToolbar() override;
 
 private:
     Glib::RefPtr<Gtk::Builder> _builder;
@@ -85,13 +89,7 @@ private:
     void toggle_pattern();
     void setup_derived_spin_button(Inkscape::UI::Widget::SpinButton &btn, Glib::ustring const &name);
 
-protected:
-    SelectToolbar(SPDesktop *desktop);
-
     void on_unrealize() final;
-
-public:
-    static GtkWidget *create(SPDesktop *desktop);
 };
 
 } // namespace Widget

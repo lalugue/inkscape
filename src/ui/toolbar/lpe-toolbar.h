@@ -54,8 +54,15 @@ class UnitTracker;
 }
 
 namespace Toolbar {
+
 class LPEToolbar final : public Toolbar
 {
+public:
+    LPEToolbar(SPDesktop *desktop);
+    ~LPEToolbar() override;
+
+    void set_mode(int mode);
+
 private:
     Glib::RefPtr<Gtk::Builder> _builder;
     std::unique_ptr<UI::Widget::UnitTracker> _tracker;
@@ -87,13 +94,6 @@ private:
     void toggle_set_bbox();
     void toggle_show_measuring_info();
     void open_lpe_dialog();
-
-protected:
-    LPEToolbar(SPDesktop *desktop);
-
-public:
-    static GtkWidget *create(SPDesktop *desktop);
-    void set_mode(int mode);
 };
 }
 }

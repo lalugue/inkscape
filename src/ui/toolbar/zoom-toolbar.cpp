@@ -31,12 +31,6 @@ ZoomToolbar::ZoomToolbar(SPDesktop *desktop)
 
     show_all();
 }
-
-GtkWidget *ZoomToolbar::create(SPDesktop *desktop)
-{
-    auto toolbar = new ZoomToolbar(desktop);
-    return toolbar->Gtk::Widget::gobj();
-}
 }
 }
 }

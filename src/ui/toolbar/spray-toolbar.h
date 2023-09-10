@@ -44,8 +44,15 @@ class SpinButton;
 }
 
 namespace Toolbar {
+
 class SprayToolbar final : public Toolbar
 {
+public:
+    SprayToolbar(SPDesktop *desktop);
+    ~SprayToolbar() override;
+
+    void set_mode(int mode);
+
 private:
     using ValueChangedMemFun = void (SprayToolbar::*)();
 
@@ -97,14 +104,6 @@ private:
     void toggle_picker();
     void setup_derived_spin_button(UI::Widget::SpinButton &btn, Glib::ustring const &name, double default_value,
                                    ValueChangedMemFun const value_changed_mem_fun);
-
-protected:
-    SprayToolbar(SPDesktop *desktop);
-
-public:
-    static GtkWidget *create(SPDesktop *desktop);
-
-    void set_mode(int mode);
 };
 }
 }

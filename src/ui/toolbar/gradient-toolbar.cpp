@@ -512,16 +512,6 @@ void GradientToolbar::setup_derived_spin_button(UI::Widget::SpinButton &btn, Gli
     btn.set_sensitive(false);
 }
 
-/**
- * Gradient auxiliary toolbar construction and setup.
- *
- */
-GtkWidget *GradientToolbar::create(SPDesktop *desktop)
-{
-    auto toolbar = new GradientToolbar(desktop);
-    return toolbar->Gtk::Widget::gobj();
-}
-
 void GradientToolbar::new_type_changed(int mode)
 {
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();

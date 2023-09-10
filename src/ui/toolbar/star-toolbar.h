@@ -53,10 +53,15 @@ class SpinButton;
 }
 
 namespace Toolbar {
+
 class StarToolbar final
     : public Toolbar
     , private XML::NodeObserver
 {
+public:
+    StarToolbar(SPDesktop *desktop);
+    ~StarToolbar() override;
+
 private:
     using ValueChangedMemFun = void (StarToolbar::*)();
     Glib::RefPtr<Gtk::Builder> _builder;
@@ -89,14 +94,8 @@ private:
 	void notifyAttributeChanged(Inkscape::XML::Node &node, GQuark name,
 								Inkscape::Util::ptr_shared old_value,
 								Inkscape::Util::ptr_shared new_value) final;
-
-protected:
-    StarToolbar(SPDesktop *desktop);
-    ~StarToolbar() override;
-
-public:
-    static GtkWidget *create(SPDesktop *desktop);
 };
+
 }
 }
 }

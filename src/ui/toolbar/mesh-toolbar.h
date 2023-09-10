@@ -48,8 +48,13 @@ class SpinButton;
 } // namespace Widget
 
 namespace Toolbar {
+
 class MeshToolbar final : public Toolbar
 {
+public:
+    MeshToolbar(SPDesktop *desktop);
+    ~MeshToolbar() final;
+
 private:
     using ValueChangedMemFun = void (MeshToolbar::*)();
 
@@ -95,13 +100,8 @@ private:
     void make_elliptical();
     void pick_colors();
     void fit_mesh();
-
-    MeshToolbar(SPDesktop *desktop);
-    ~MeshToolbar() final;
-
-public:
-    static GtkWidget *create(SPDesktop *desktop);
 };
+
 } // namespace Toolbar
 } // namespace UI
 } // namespace Inkscape

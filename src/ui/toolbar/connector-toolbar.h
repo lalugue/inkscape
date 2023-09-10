@@ -46,10 +46,14 @@ class Node;
 
 namespace UI {
 namespace Toolbar {
+
 class ConnectorToolbar final
     : public Toolbar
     , private XML::NodeObserver
 {
+public:
+    ConnectorToolbar(SPDesktop *desktop);
+
 private:
     using ValueChangedMemFun = void (ConnectorToolbar::*)();
 
@@ -84,12 +88,7 @@ private:
 								Inkscape::Util::ptr_shared old_value,
 								Inkscape::Util::ptr_shared new_value) final;
 
-protected:
-    ConnectorToolbar(SPDesktop *desktop);
-
 public:
-    static GtkWidget *create(SPDesktop *desktop);
-
     static void event_attr_changed(Inkscape::XML::Node *repr,
                                    gchar const         *name,
                                    gchar const         * /*old_value*/,

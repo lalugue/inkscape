@@ -55,10 +55,15 @@ class ToolBase;
 }
 
 namespace Toolbar {
+
 class Box3DToolbar final
     : public Toolbar
     , private XML::NodeObserver
 {
+public:
+    Box3DToolbar(SPDesktop *desktop);
+    ~Box3DToolbar() override;
+
 private:
     Glib::RefPtr<Gtk::Builder> _builder;
 
@@ -89,12 +94,6 @@ private:
 								Inkscape::Util::ptr_shared old_value,
 								Inkscape::Util::ptr_shared new_value) final;
 
-protected:
-    Box3DToolbar(SPDesktop *desktop);
-    ~Box3DToolbar() override;
-
-public:
-    static GtkWidget *create(SPDesktop *desktop);
     void setup_derived_spin_button(UI::Widget::SpinButton &btn, Glib::ustring const &name, Proj::Axis const axis);
 };
 

@@ -106,13 +106,6 @@ void Box3DToolbar::setup_derived_spin_button(UI::Widget::SpinButton &btn, Glib::
     btn.set_defocus_widget(_desktop->getCanvas());
 }
 
-GtkWidget *
-Box3DToolbar::create(SPDesktop *desktop)
-{
-    auto toolbar = new Box3DToolbar(desktop);
-    return toolbar->Gtk::Widget::gobj();
-}
-
 void
 Box3DToolbar::angle_value_changed(Glib::RefPtr<Gtk::Adjustment> &adj,
                                   Proj::Axis                     axis)

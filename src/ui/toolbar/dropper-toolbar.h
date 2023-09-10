@@ -42,6 +42,9 @@ namespace Toolbar {
  */
 class DropperToolbar final : public Toolbar
 {
+public:
+    DropperToolbar(SPDesktop *desktop);
+
 private:
     Glib::RefPtr<Gtk::Builder> _builder;
 
@@ -54,16 +57,11 @@ private:
     // Event handlers
     void on_pick_alpha_button_toggled();
     void on_set_alpha_button_toggled();
-
-protected:
-    DropperToolbar(SPDesktop *desktop);
-
-public:
-    static GtkWidget *create(SPDesktop *desktop);
 };
 }
 }
 }
+
 #endif /* !SEEN_DROPPER_TOOLBAR_H */
 
 /*

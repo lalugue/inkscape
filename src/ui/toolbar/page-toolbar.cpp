@@ -512,14 +512,6 @@ void PageToolbar::selectionChanged(SPPage *page)
     _label_edited.unblock();
 }
 
-GtkWidget *PageToolbar::create(SPDesktop *desktop)
-{
-    auto toolbar = new PageToolbar(desktop);
-
-    // This widget will be auto-freed by the builder unless you have called reference();
-    return toolbar->Gtk::Widget::gobj();
-}
-
 } // namespace Inkscape::UI::Toolbar
 
 /*

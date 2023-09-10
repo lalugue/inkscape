@@ -32,8 +32,6 @@ namespace Inkscape::UI::Toolbar {
 class BooleansToolbar final : public Toolbar
 {
 public:
-    static GtkWidget *create(SPDesktop *desktop);
-
     BooleansToolbar(SPDesktop *desktop);
     ~BooleansToolbar() final;
 

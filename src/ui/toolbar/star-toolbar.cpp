@@ -127,12 +127,6 @@ StarToolbar::~StarToolbar()
     }
 }
 
-GtkWidget *StarToolbar::create(SPDesktop *desktop)
-{
-    auto toolbar = new StarToolbar(desktop);
-    return toolbar->Gtk::Widget::gobj();
-}
-
 void StarToolbar::side_mode_changed(int mode)
 {
     bool const flat = mode == 0;

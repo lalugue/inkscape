@@ -43,8 +43,12 @@ class UnitTracker;
 }
 
 namespace Toolbar {
+
 class MeasureToolbar final : public Toolbar
 {
+public:
+    MeasureToolbar(SPDesktop *desktop);
+
 private:
     using ValueChangedMemFun = void (MeasureToolbar::*)();
 
@@ -79,12 +83,6 @@ private:
     void to_guides();
     void to_item();
     void to_mark_dimension();
-
-protected:
-    MeasureToolbar(SPDesktop *desktop);
-
-public:
-    static GtkWidget *create(SPDesktop *desktop);
 };
 }
 }
