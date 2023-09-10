@@ -117,9 +117,9 @@ NodeToolbar::NodeToolbar(SPDesktop *desktop)
     auto children = _toolbar->get_children();
 
     menu_btn1->init(1, "tag1", popover_box1, children);
-    _expanded_menu_btns.push(menu_btn1);
+    addCollapsibleButton(menu_btn1);
     menu_btn2->init(2, "tag2", popover_box2, children);
-    _expanded_menu_btns.push(menu_btn2);
+    addCollapsibleButton(menu_btn2);
 
     add(*_toolbar);
 

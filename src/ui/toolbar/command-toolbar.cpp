@@ -64,25 +64,25 @@ CommandToolbar::CommandToolbar(SPDesktop *desktop)
     auto children = _toolbar->get_children();
 
     menu_btn1->init(1, "tag1", popover_box1, children);
-    _expanded_menu_btns.push(menu_btn1);
+    addCollapsibleButton(menu_btn1);
 
     menu_btn2->init(2, "tag2", popover_box2, children);
-    _expanded_menu_btns.push(menu_btn2);
+    addCollapsibleButton(menu_btn2);
 
     menu_btn3->init(3, "tag3", popover_box3, children);
-    _expanded_menu_btns.push(menu_btn3);
+    addCollapsibleButton(menu_btn3);
 
     menu_btn4->init(4, "tag4", popover_box4, children);
-    _expanded_menu_btns.push(menu_btn4);
+    addCollapsibleButton(menu_btn4);
 
     menu_btn5->init(5, "tag5", popover_box5, children);
-    _expanded_menu_btns.push(menu_btn5);
+    addCollapsibleButton(menu_btn5);
 
     menu_btn6->init(6, "tag6", popover_box6, children);
-    _expanded_menu_btns.push(menu_btn6);
+    addCollapsibleButton(menu_btn6);
 
     menu_btn7->init(6, "tag7", popover_box7, children);
-    _expanded_menu_btns.push(menu_btn7);
+    addCollapsibleButton(menu_btn7);
 
     add(*_toolbar);
 

@@ -16,6 +16,11 @@ Toolbar::Toolbar(SPDesktop *desktop)
     : _desktop(desktop)
 {}
 
+void Toolbar::addCollapsibleButton(UI::Widget::ToolbarMenuButton *button)
+{
+    _expanded_menu_btns.emplace(button);
+}
+
 void Toolbar::get_preferred_width_vfunc(int &min_w, int &nat_w) const
 {
     Gtk::Box::get_preferred_width_vfunc(min_w, nat_w);

@@ -39,16 +39,18 @@ class Toolbar : public Gtk::Box
 protected:
     Toolbar(SPDesktop *desktop);
 
-    SPDesktop *_desktop;
-
+    SPDesktop *const _desktop;
     Gtk::Box *_toolbar = nullptr;
-    std::stack<UI::Widget::ToolbarMenuButton *> _expanded_menu_btns;
-    std::stack<UI::Widget::ToolbarMenuButton *> _collapsed_menu_btns;
+
+    void addCollapsibleButton(UI::Widget::ToolbarMenuButton *button);
 
     void get_preferred_width_vfunc(int &minimum_width, int &natural_width) const override;
     void on_size_allocate(Gtk::Allocation &allocation) override;
 
 private:
+    std::stack<UI::Widget::ToolbarMenuButton *> _expanded_menu_btns;
+    std::stack<UI::Widget::ToolbarMenuButton *> _collapsed_menu_btns;
+
     void _resize_handler(Gtk::Allocation &allocation);
     void _move_children(Gtk::Box *src, Gtk::Box *dest, std::vector<std::pair<int, Gtk::Widget *>> children, bool is_expanding = false);
 };

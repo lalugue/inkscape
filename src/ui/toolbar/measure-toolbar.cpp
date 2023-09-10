@@ -107,8 +107,8 @@ MeasureToolbar::MeasureToolbar(SPDesktop *desktop)
 
     menu_btn1->init(1, "tag1", popover_box1, children);
     menu_btn2->init(2, "tag2", popover_box2, children);
-    _expanded_menu_btns.push(menu_btn1);
-    _expanded_menu_btns.push(menu_btn2);
+    addCollapsibleButton(menu_btn1);
+    addCollapsibleButton(menu_btn2);
 
     // Signals.
     _only_selected_btn.set_active(prefs->getBool("/tools/measure/only_selected", false));
