@@ -91,31 +91,25 @@ void LPERoughen::doOnApply(SPLPEItem const *lpeitem)
 {
     Geom::OptRect bbox = lpeitem->bounds(SPItem::GEOMETRIC_BBOX);
     if (bbox) {
-        
-        std::vector<Parameter *>::iterator it = param_vector.begin();
         Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-        while (it != param_vector.end()) {
-            Parameter *param = *it;
-            const gchar *key = param->param_key.c_str();
-            Glib::ustring pref_path = (Glib::ustring) "/live_effects/" +
-                                      (Glib::ustring)LPETypeConverter.get_key(effectType()).c_str() +
-                                      (Glib::ustring) "/" + (Glib::ustring)key;
 
+        for (auto const param: param_vector) {
+            auto const pref_path = Glib::ustring::compose("/live_effects/%1/%2",
+                                                          LPETypeConverter.get_key(effectType()),
+                                                          param->param_key);
+            if (prefs->getEntry(pref_path).isValid()) continue;
 
-            bool valid = prefs->getEntry(pref_path).isValid();
-            Glib::ustring displace_x_str = Glib::ustring::format((*bbox).width() / 150.0);
-            Glib::ustring displace_y_str = Glib::ustring::format((*bbox).height() / 150.0);
-            Glib::ustring max_segment_size_str = Glib::ustring::format(std::min((*bbox).height(), (*bbox).width()) / 50.0);
-            if (!valid) {
-                if (strcmp(key, "max_segment_size") == 0) {
-                    param->param_readSVGValue(max_segment_size_str.c_str());
-                } else if (strcmp(key, "displace_x") == 0) {
-                    param->param_readSVGValue(displace_x_str.c_str());
-                } else if (strcmp(key, "displace_y") == 0) {
-                    param->param_readSVGValue(displace_y_str.c_str());
-                }
+            if (param->param_key == "max_segment_size") {
+                auto const minor = std::min(bbox->width(), bbox->height());
+                auto const max_segment_size_str = Glib::ustring::format(minor / 50.0);
+                param->param_readSVGValue(max_segment_size_str.c_str());
+            } else if (param->param_key == "displace_x") {
+                auto const displace_x_str = Glib::ustring::format(bbox->width() / 150.0);
+                param->param_readSVGValue(displace_x_str.c_str());
+            } else if (param->param_key == "displace_y") {
+                auto const displace_y_str = Glib::ustring::format(bbox->height() / 150.0);
+                param->param_readSVGValue(displace_y_str.c_str());
             }
-            ++it;
         }
     }
     lpeversion.param_setValue("1.2", true);
