@@ -22,32 +22,27 @@
 #include <gtkmm/comboboxtext.h>
 #include <gtkmm/liststore.h>
 #include <gtkmm/messagedialog.h>
+#include <gtkmm/radiobutton.h>
 
-#include "desktop-style.h"
 #include "desktop.h"
 #include "document-undo.h"
 #include "document.h"
-#include "gradient-chemistry.h"
 #include "gradient-drag.h"
 #include "inkscape.h"
 #include "object/sp-defs.h"
 #include "object/sp-mesh-gradient.h"
-#include "object/sp-stop.h"
 #include "selection.h"
 #include "style.h"
-#include "svg/css-ostringstream.h"
 #include "ui/builder-utils.h"
 #include "ui/dialog-run.h"
 #include "ui/icon-names.h"
 #include "ui/simple-pref-pusher.h"
-#include "ui/tools/gradient-tool.h"
 #include "ui/tools/mesh-tool.h"
 #include "ui/util.h"
 #include "ui/widget/canvas.h"
-#include "ui/widget/color-preview.h"
 #include "ui/widget/combo-tool-item.h"
-#include "ui/widget/gradient-image.h"
 #include "ui/widget/spinbutton.h"
+#include "ui/widget/toolbar-menu-button.h"
 
 using Inkscape::DocumentUndo;
 using Inkscape::UI::Tools::MeshTool;

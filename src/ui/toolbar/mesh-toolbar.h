@@ -25,7 +25,7 @@ class SPDesktop;
 class SPObject;
 
 namespace Gtk {
-class Adjustment;
+class Builder;
 class RadioButton;
 class ToggleButton;
 } // namespace Gtk

@@ -14,12 +14,9 @@
 
 #include "zoom-toolbar.h"
 
-#include "desktop.h"
 #include "ui/builder-utils.h"
 
-namespace Inkscape {
-namespace UI {
-namespace Toolbar {
+namespace Inkscape::UI::Toolbar {
 
 ZoomToolbar::ZoomToolbar(SPDesktop *desktop)
     : Toolbar(desktop)
@@ -31,9 +28,10 @@ ZoomToolbar::ZoomToolbar(SPDesktop *desktop)
 
     show_all();
 }
-}
-}
-}
+
+ZoomToolbar::~ZoomToolbar() = default;
+
+} // namespace Inkscape::UI::Toolbar
 
 /*
   Local Variables:

@@ -34,7 +34,9 @@
 #include <gtkmm/checkbutton.h>
 #include <gtkmm/frame.h>
 #include <gtkmm/grid.h>
+#include <gtkmm/listbox.h>
 #include <gtkmm/menubutton.h>
+#include <gtkmm/radiobutton.h>
 #include <gtkmm/separator.h>
 
 #include "desktop-style.h"
@@ -62,6 +64,7 @@
 #include "ui/widget/combo-box-entry-tool-item.h"
 #include "ui/widget/combo-tool-item.h"
 #include "ui/widget/spinbutton.h"
+#include "ui/widget/toolbar-menu-button.h"
 #include "ui/widget/unit-tracker.h"
 #include "util/font-collections.h"
 #include "widgets/style-utils.h"
@@ -456,6 +459,8 @@ TextToolbar::TextToolbar(SPDesktop *desktop)
 
     show_all();
 }
+
+TextToolbar::~TextToolbar() = default;
 
 void TextToolbar::setup_derived_spin_button(UI::Widget::SpinButton &btn, Glib::ustring const &name,
                                             double default_value, ValueChangedMemFun const value_changed_mem_fun)

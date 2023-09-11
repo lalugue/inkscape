@@ -29,11 +29,14 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include <gtkmm/builder.h>
-
 #include "toolbar.h"
 #include "ui/widget/spinbutton.h"
 #include "xml/node-observer.h"
+
+namespace Gtk {
+class Builder;
+class ToggleButton;
+} // namespace Gtk
 
 class SPDesktop;
 
@@ -53,6 +56,7 @@ class ConnectorToolbar final
 {
 public:
     ConnectorToolbar(SPDesktop *desktop);
+    ~ConnectorToolbar() override;
 
 private:
     using ValueChangedMemFun = void (ConnectorToolbar::*)();

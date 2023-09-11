@@ -22,7 +22,6 @@
 #include <gtkmm/grid.h>
 #include <gtkmm/spinbutton.h>
 #include <gtkmm/toolbar.h>
-#include <gtkmm/toolbutton.h>
 
 // For creating toolbars
 #include "ui/toolbar/arc-toolbar.h"

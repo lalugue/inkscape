@@ -10,6 +10,8 @@
 
 #include "toolbar.h"
 
+#include "ui/widget/toolbar-menu-button.h"
+
 namespace Inkscape::UI::Toolbar {
 
 Toolbar::Toolbar(SPDesktop *desktop)
@@ -95,7 +97,7 @@ void Toolbar::_resize_handler(Gtk::Allocation &allocation)
     }
 }
 
-void Toolbar::_move_children(Gtk::Box *src, Gtk::Box *dest, std::vector<std::pair<int, Gtk::Widget *>> children,
+void Toolbar::_move_children(Gtk::Box *src, Gtk::Box *dest, std::vector<std::pair<int, Gtk::Widget *>> const &children,
                              bool is_expanding)
 {
     for (auto [pos, child] : children) {

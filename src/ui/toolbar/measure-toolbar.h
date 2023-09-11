@@ -29,14 +29,18 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include <gtkmm/builder.h>
-
 #include "toolbar.h"
+
+namespace Gtk {
+class Builder;
+class ToggleButton;
+} // namespace Gtk
 
 class SPDesktop;
 
 namespace Inkscape {
 namespace UI {
+
 namespace Widget {
 class SpinButton;
 class UnitTracker;
@@ -48,6 +52,7 @@ class MeasureToolbar final : public Toolbar
 {
 public:
     MeasureToolbar(SPDesktop *desktop);
+    ~MeasureToolbar() override;
 
 private:
     using ValueChangedMemFun = void (MeasureToolbar::*)();

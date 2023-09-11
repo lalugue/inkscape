@@ -16,14 +16,9 @@
 
 #include <glibmm/refptr.h>
 
-namespace Gtk {
-class Adjustment;
-class Builder;
-class Button;
-class Widget;
-} // namespace Gtk
-
 #include "toolbar.h"
+
+namespace Gtk { class Builder; }
 
 class SPDesktop;
 

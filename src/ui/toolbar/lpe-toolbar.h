@@ -29,9 +29,13 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include <gtkmm/builder.h>
-
 #include "toolbar.h"
+
+namespace Gtk {
+class Builder;
+class RadioButton;
+class ToggleButton;
+} // namespace Gtk
 
 class SPDesktop;
 class SPLPEItem;

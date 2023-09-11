@@ -29,19 +29,17 @@
 #include "tweak-toolbar.h"
 
 #include <glibmm/i18n.h>
+#include <gtkmm/radiobutton.h>
 
 #include "desktop.h"
-#include "document-undo.h"
 #include "ui/builder-utils.h"
-#include "ui/icon-names.h"
 #include "ui/tools/tweak-tool.h"
 #include "ui/util.h"
 #include "ui/widget/canvas.h"
 #include "ui/widget/spinbutton.h"
+#include "ui/widget/toolbar-menu-button.h"
 
-namespace Inkscape {
-namespace UI {
-namespace Toolbar {
+namespace Inkscape::UI::Toolbar {
 
 TweakToolbar::TweakToolbar(SPDesktop *desktop)
     : Toolbar(desktop)
@@ -127,6 +125,8 @@ TweakToolbar::TweakToolbar(SPDesktop *desktop)
     }
 }
 
+TweakToolbar::~TweakToolbar() = default;
+
 void TweakToolbar::setup_derived_spin_button(UI::Widget::SpinButton &btn, Glib::ustring const &name,
                                              double default_value, ValueChangedMemFun const value_changed_mem_fun)
 {
@@ -196,9 +196,8 @@ void TweakToolbar::toggle_doo()
 {
     Preferences::get()->setBool("/tools/tweak/doo", _doo_btn.get_active());
 }
-}
-}
-}
+
+} // namespace Inkscape::UI::Toolbar
 
 /*
   Local Variables:

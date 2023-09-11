@@ -32,14 +32,13 @@
 #include <map>
 #include <memory>
 #include <glibmm/refptr.h>
-#include <gtkmm/adjustment.h>
 
 #include "toolbar.h"
 
 class SPDesktop;
 
 namespace Gtk {
-class Adjustment;
+class Builder;
 class ComboBoxText;
 class ToggleButton;
 } // namespace Gtk
@@ -54,6 +53,7 @@ class UnitTracker;
 } // namespace Widget
 
 namespace Toolbar {
+
 class CalligraphyToolbar final : public Toolbar
 {
 public:

@@ -29,6 +29,7 @@
 #include "star-toolbar.h"
 
 #include <glibmm/i18n.h>
+#include <gtkmm/togglebutton.h>
 
 #include "desktop.h"
 #include "document-undo.h"
@@ -39,12 +40,11 @@
 #include "ui/tools/star-tool.h"
 #include "ui/widget/canvas.h"
 #include "ui/widget/spinbutton.h"
+#include "ui/widget/toolbar-menu-button.h"
 
 using Inkscape::DocumentUndo;
 
-namespace Inkscape {
-namespace UI {
-namespace Toolbar {
+namespace Inkscape::UI::Toolbar {
 
 StarToolbar::StarToolbar(SPDesktop *desktop)
     : Toolbar(desktop)
@@ -438,9 +438,7 @@ void StarToolbar::notifyAttributeChanged(Inkscape::XML::Node &repr, GQuark name_
     _freeze = false;
 }
 
-}
-}
-}
+} // namespace Inkscape::UI::Toolbar
 
 /*
   Local Variables:

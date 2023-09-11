@@ -29,10 +29,14 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include <gtkmm/builder.h>
-
 #include "toolbar.h"
 #include "xml/node-observer.h"
+
+namespace Gtk {
+class Builder;
+class Label;
+class Adjustment;
+} // namespace Gtk
 
 class SPDesktop;
 
@@ -82,8 +86,9 @@ private:
 
     void setup_derived_spin_button(UI::Widget::SpinButton &btn, Glib::ustring const &name, double default_value);
 };
-}
-}
-}
+
+} // namespace Toolbar
+} // namespace UI
+} // namespace Inkscape
 
 #endif /* !SEEN_SPIRAL_TOOLBAR_H */

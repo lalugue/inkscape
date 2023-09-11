@@ -14,9 +14,14 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include <gtkmm/builder.h>
-
 #include "toolbar.h"
+
+namespace Gtk {
+class Builder;
+class RadioButton;
+class Button;
+class ToggleButton;
+} // namespace Gtk
 
 class SPDesktop;
 class SPGradient;
@@ -42,6 +47,7 @@ class GradientToolbar final : public Toolbar
 {
 public:
     GradientToolbar(SPDesktop *desktop);
+    ~GradientToolbar() override;
 
 private:
     Glib::RefPtr<Gtk::Builder> _builder;
@@ -93,6 +99,7 @@ private:
     sigc::connection _connection_defs_release;
     sigc::connection _connection_defs_modified;
 };
+
 }
 }
 }

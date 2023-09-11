@@ -13,13 +13,11 @@
 
 #include "marker-toolbar.h"
 
-namespace Inkscape {
-namespace UI {
-namespace Toolbar {
+namespace Inkscape::UI::Toolbar {
 
 MarkerToolbar::MarkerToolbar(SPDesktop *desktop)
     : Toolbar(desktop)
 {
 }
 
-}}}
+} // namespace Inkscape::UI::Toolbar

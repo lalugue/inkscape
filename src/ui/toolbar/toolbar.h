@@ -12,28 +12,20 @@
 #define SEEN_TOOLBAR_H
 
 #include <stack>
+#include <utility>
+#include <vector>
 
-#include "ui/widget/toolbar-menu-button.h"
-
-namespace Glib { class ustring; }
-
-namespace Gtk {
-class Builder;
-class Label;
-class ToggleButton;
-} // namespace Gtk
+#include <gtkmm/box.h>
 
 class SPDesktop;
+
+namespace Inkscape::UI::Widget { class ToolbarMenuButton; }
 
 namespace Inkscape::UI::Toolbar {
 
 /**
- * \brief An abstract definition for a toolbar within Inkscape
- *
- * \detail This is basically the same as a Gtk::Toolbar but contains a
- *         few convenience functions.
+ * \brief Base class for all toolbars.
  */
-
 class Toolbar : public Gtk::Box
 {
 protected:
@@ -44,7 +36,7 @@ protected:
 
     void addCollapsibleButton(UI::Widget::ToolbarMenuButton *button);
 
-    void get_preferred_width_vfunc(int &minimum_width, int &natural_width) const override;
+    void get_preferred_width_vfunc(int &min_w, int &nat_w) const override;
     void on_size_allocate(Gtk::Allocation &allocation) override;
 
 private:
@@ -52,7 +44,7 @@ private:
     std::stack<UI::Widget::ToolbarMenuButton *> _collapsed_menu_btns;
 
     void _resize_handler(Gtk::Allocation &allocation);
-    void _move_children(Gtk::Box *src, Gtk::Box *dest, std::vector<std::pair<int, Gtk::Widget *>> children, bool is_expanding = false);
+    void _move_children(Gtk::Box *src, Gtk::Box *dest, std::vector<std::pair<int, Gtk::Widget *>> const &children, bool is_expanding = false);
 };
 
 } // namespace Inkscape::UI::Toolbar

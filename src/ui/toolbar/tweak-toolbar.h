@@ -29,9 +29,13 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include <gtkmm/builder.h>
-
 #include "toolbar.h"
+
+namespace Gtk {
+class Builder;
+class RadioButton;
+class ToggleButton;
+} // namespace Gtk
 
 class SPDesktop;
 
@@ -47,6 +51,7 @@ class TweakToolbar final : public Toolbar
 {
 public:
     TweakToolbar(SPDesktop *desktop);
+    ~TweakToolbar() override;
 
     void set_mode(int mode);
 
@@ -80,7 +85,8 @@ private:
     void toggle_dol();
     void toggle_doo();
 };
-}
+
+} // namespace Toolbar
 }
 }
 

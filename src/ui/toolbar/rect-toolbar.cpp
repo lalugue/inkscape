@@ -29,8 +29,6 @@
 #include "rect-toolbar.h"
 
 #include <glibmm/i18n.h>
-#include <gtkmm/separatortoolitem.h>
-#include <gtkmm/toolbutton.h>
 
 #include "desktop.h"
 #include "document-undo.h"
@@ -43,6 +41,7 @@
 #include "ui/widget/canvas.h"
 #include "ui/widget/combo-tool-item.h"
 #include "ui/widget/spinbutton.h"
+#include "ui/widget/toolbar-menu-button.h"
 #include "ui/widget/unit-tracker.h"
 #include "widgets/widget-sizes.h"
 

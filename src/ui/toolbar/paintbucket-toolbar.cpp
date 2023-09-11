@@ -36,11 +36,11 @@
 #include "desktop.h"
 #include "preferences.h"
 #include "ui/builder-utils.h"
-#include "ui/icon-names.h"
 #include "ui/tools/flood-tool.h"
 #include "ui/widget/canvas.h"
 #include "ui/widget/combo-tool-item.h"
 #include "ui/widget/spinbutton.h"
+#include "ui/widget/toolbar-menu-button.h"
 #include "ui/widget/unit-tracker.h"
 
 using Inkscape::Util::unit_table;

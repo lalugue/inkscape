@@ -29,6 +29,7 @@
 #include "box3d-toolbar.h"
 
 #include <glibmm/i18n.h>
+#include <gtkmm/togglebutton.h>
 
 #include "desktop.h"
 #include "document-undo.h"
@@ -44,9 +45,13 @@
 
 using Inkscape::DocumentUndo;
 
-namespace Inkscape {
-namespace UI {
-namespace Toolbar {
+namespace Inkscape::UI::Toolbar {
+
+/// Normalize angle so that it lies in the interval [0, 360).
+static double normalize_angle(double a)
+{
+    return a - std::floor(a / 360.0) * 360.0;
+}
 
 Box3DToolbar::Box3DToolbar(SPDesktop *desktop)
     : Toolbar(desktop)
@@ -306,24 +311,7 @@ void Box3DToolbar::notifyAttributeChanged(Inkscape::XML::Node &repr, GQuark, Ink
     _freeze = false;
 }
 
-/**
- * \brief normalize angle so that it lies in the interval [0,360]
- *
- * TODO: Isn't there something in 2Geom or cmath that does this?
- */
-double
-Box3DToolbar::normalize_angle(double a) {
-    double angle = a + ((int) (a/360.0))*360;
-    if (angle < 0) {
-        angle += 360.0;
-    }
-    return angle;
-}
-
-}
-}
-}
-
+} // namespace Inkscape::UI::Toolbar
 
 /*
   Local Variables:

@@ -37,6 +37,13 @@
 #include "text-editing.h"
 #include "toolbar.h"
 
+namespace Gtk {
+class Builder;
+class ListBox;
+class RadioButton;
+class ToggleButton;
+} // namespace Gtk
+
 class SPDesktop;
 
 namespace Inkscape {
@@ -61,6 +68,7 @@ class TextToolbar final : public Toolbar
 {
 public:
     TextToolbar(SPDesktop *desktop);
+    ~TextToolbar() override;
 
 private:
     using ValueChangedMemFun = void (TextToolbar::*)();

@@ -29,13 +29,13 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include <gtkmm/builder.h>
-
 #include "toolbar.h"
 
-namespace Inkscape {
-namespace UI {
-namespace Toolbar {
+namespace Gtk {
+class Builder;
+}
+
+namespace Inkscape::UI::Toolbar {
 
 /**
  * \brief A toolbar for controlling the zoom
@@ -44,13 +44,13 @@ class ZoomToolbar : public Toolbar
 {
 public:
     ZoomToolbar(SPDesktop *desktop);
+    ~ZoomToolbar() override;
 
 private:
     Glib::RefPtr<Gtk::Builder> _builder;
 };
-}
-}
-}
+
+} // namespace Inkscape::UI::Toolbar
 
 #endif /* !SEEN_ZOOM_TOOLBAR_H */
 

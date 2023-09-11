@@ -29,22 +29,21 @@
 #include "eraser-toolbar.h"
 
 #include <glibmm/i18n.h>
+#include <gtkmm/radiobutton.h>
 
 #include "desktop.h"
 #include "document-undo.h"
 #include "ui/builder-utils.h"
-#include "ui/icon-names.h"
 #include "ui/simple-pref-pusher.h"
 #include "ui/tools/eraser-tool.h"
 #include "ui/util.h"
 #include "ui/widget/canvas.h"  // Focus widget
 #include "ui/widget/spinbutton.h"
+#include "ui/widget/toolbar-menu-button.h"
 
 using Inkscape::DocumentUndo;
 
-namespace Inkscape {
-namespace UI {
-namespace Toolbar {
+namespace Inkscape::UI::Toolbar {
 
 EraserToolbar::EraserToolbar(SPDesktop *desktop)
     : Toolbar(desktop)
@@ -226,9 +225,8 @@ void EraserToolbar::usepressure_toggled()
 {
     Preferences::get()->setBool("/tools/eraser/usepressure", _usepressure_btn->get_active());
 }
-}
-}
-}
+
+} // namespace Inkscape::UI::Toolbar
 
 /*
   Local Variables:

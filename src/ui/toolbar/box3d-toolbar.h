@@ -29,11 +29,14 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include <gtkmm/builder.h>
-
 #include "axis-manip.h"
 #include "toolbar.h"
 #include "xml/node-observer.h"
+
+namespace Gtk {
+class Builder;
+class ToggleButton;
+} // namespace Gtk
 
 class Persp3D;
 class SPDesktop;
@@ -86,7 +89,6 @@ private:
     void resync_toolbar(Inkscape::XML::Node *persp_repr);
     void set_button_and_adjustment(Persp3D *persp, Proj::Axis axis, UI::Widget::SpinButton &spin_btn,
                                    Gtk::ToggleButton &toggle_btn);
-    double normalize_angle(double a);
 
     sigc::connection _changed;
 
@@ -100,4 +102,5 @@ private:
 }
 }
 }
+
 #endif /* !SEEN_BOX3D_TOOLBAR_H */

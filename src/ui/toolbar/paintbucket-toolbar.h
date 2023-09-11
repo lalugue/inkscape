@@ -30,13 +30,11 @@
  */
 
 #include <memory>
-#include <glibmm/refptr.h>
-#include <gtk/gtk.h>
 
 #include "toolbar.h"
 
 namespace Gtk {
-class Adjustment;
+class Builder;
 } // namespace Gtk
 
 class SPDesktop;

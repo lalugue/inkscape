@@ -38,16 +38,17 @@ namespace Toolbar {
  * \detail A container for tool toolbars that display one toolbar at a time.
  *         The container tracks which toolbar is shown.
  */
-class Toolbars final : public Gtk::Box {
+class Toolbars final : public Gtk::Box
+{
 public:
     Toolbars();
 
-    void create_toolbars(SPDesktop* desktop);
-    void change_toolbar(SPDesktop* desktop, Inkscape::UI::Tools::ToolBase* eventcontext);
+    void create_toolbars(SPDesktop *desktop);
+    void change_toolbar(SPDesktop *desktop, Tools::ToolBase *tool);
 
 private:
     std::map<Glib::ustring, Gtk::Grid*> toolbar_map;
-    GtkWidget* current_toolbar = nullptr;
+    GtkWidget *current_toolbar = nullptr;
 };
 
 } // namespace Toolbar

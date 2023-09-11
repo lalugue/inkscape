@@ -29,10 +29,15 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include <gtkmm/builder.h>
-
 #include "toolbar.h"
 #include "xml/node-observer.h"
+
+namespace Gtk {
+class Builder;
+class Button;
+class Label;
+class Adjustment;
+} // namespace Gtk
 
 class SPDesktop;
 class SPItem;
@@ -95,9 +100,8 @@ private:
 
     sigc::connection _changed;
 
-	void notifyAttributeChanged(Inkscape::XML::Node &node, GQuark name,
-								Inkscape::Util::ptr_shared old_value,
-								Inkscape::Util::ptr_shared new_value) final;
+    void notifyAttributeChanged(Inkscape::XML::Node &node, GQuark name, Inkscape::Util::ptr_shared old_value,
+                                Inkscape::Util::ptr_shared new_value) final;
 };
 
 }

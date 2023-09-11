@@ -55,8 +55,8 @@ private:
     Gtk::ScrolledWindow &scroll_permanent;
     Gtk::Box    &box_permanent;
 };
-} // namespace Inkscape::UI::Toolbar
 
+} // namespace Inkscape::UI::Toolbar
 
 #endif /* SEEN_TOOLBAR_SNAP_H */
 

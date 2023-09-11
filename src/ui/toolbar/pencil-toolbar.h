@@ -29,9 +29,14 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include <gtkmm/builder.h>
-
 #include "toolbar.h"
+
+namespace Gtk {
+class Builder;
+class Button;
+class ToggleButton;
+class RadioButton;
+} // namespace Gtk
 
 class SPDesktop;
 
@@ -99,7 +104,8 @@ private:
     void simplify_flatten();
     void flatten_spiro_bspline();
 };
-}
+
+} // namespace Toolbar
 }
 }
 

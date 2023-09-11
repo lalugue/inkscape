@@ -42,8 +42,7 @@
 namespace Inkscape::UI::Toolbar {
 
 ToolToolbar::ToolToolbar(InkscapeWindow *window)
-    : Gtk::Box()
-    , _context_menu{makeContextMenu(window)}
+    : _context_menu{makeContextMenu(window)}
 {
     set_name("ToolToolbar");
 

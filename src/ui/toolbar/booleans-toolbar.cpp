@@ -15,7 +15,7 @@
 
 #include <gtkmm/adjustment.h>
 #include <gtkmm/builder.h>
-#include <gtkmm/toolbutton.h>
+#include <gtkmm/button.h>
 
 #include "desktop.h"
 #include "ui/builder-utils.h"

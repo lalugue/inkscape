@@ -16,9 +16,7 @@
 
 #include "toolbar.h"
 
-namespace Inkscape {
-namespace UI {
-namespace Toolbar {
+namespace Inkscape::UI::Toolbar {
 
 class MarkerToolbar final : public Toolbar
 {
@@ -26,8 +24,6 @@ public:
     MarkerToolbar(SPDesktop *desktop);
 };
 
-} // namespace Toolbar
-} // namespace UI
-} // namespace Inkscape
+} // namespace Inkscape::UI::Toolbar
 
 #endif

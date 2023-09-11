@@ -37,11 +37,11 @@
 #include "ui/dialog/clonetiler.h"
 #include "ui/dialog/dialog-base.h"
 #include "ui/dialog/dialog-container.h"
-#include "ui/icon-names.h"
 #include "ui/simple-pref-pusher.h"
 #include "ui/util.h"
 #include "ui/widget/canvas.h"
 #include "ui/widget/spinbutton.h"
+#include "ui/widget/toolbar-menu-button.h"
 
 // Disabled in 0.91 because of Bug #1274831 (crash, spraying an object
 // with the mode: spray object in single path)
@@ -59,9 +59,7 @@ Inkscape::UI::Dialog::CloneTiler *get_clone_tiler_panel(SPDesktop *desktop)
     return dynamic_cast<Inkscape::UI::Dialog::CloneTiler *>(dialog);
 }
 
-namespace Inkscape {
-namespace UI {
-namespace Toolbar {
+namespace Inkscape::UI::Toolbar {
 
 SprayToolbar::SprayToolbar(SPDesktop *desktop)
     : Toolbar(desktop)
@@ -369,9 +367,7 @@ void SprayToolbar::set_mode(int mode)
     _mode_buttons[mode]->set_active();
 }
 
-} // namespace Toolbar
-}
-}
+} // namespace Inkscape::UI::Toolbar
 
 /*
   Local Variables:

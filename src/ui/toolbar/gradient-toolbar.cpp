@@ -16,9 +16,12 @@
 
 #include "gradient-toolbar.h"
 
-#include <glibmm/i18n.h>
-#include <gtkmm/comboboxtext.h>
 #include <map>
+
+#include <glibmm/i18n.h>
+#include <gtkmm/button.h>
+#include <gtkmm/comboboxtext.h>
+#include <gtkmm/radiobutton.h>
 
 #include "desktop.h"
 #include "document-undo.h"
@@ -36,11 +39,11 @@
 #include "ui/tools/gradient-tool.h"
 #include "ui/util.h"
 #include "ui/widget/canvas.h"
-#include "ui/widget/color-preview.h"
 #include "ui/widget/combo-tool-item.h"
 #include "ui/widget/gradient-image.h"
 #include "ui/widget/gradient-vector-selector.h"
 #include "ui/widget/spinbutton.h"
+#include "ui/widget/toolbar-menu-button.h"
 
 using Inkscape::DocumentUndo;
 using Inkscape::UI::Tools::ToolBase;
@@ -495,6 +498,8 @@ GradientToolbar::GradientToolbar(SPDesktop *desktop)
 
     show_all();
 }
+
+GradientToolbar::~GradientToolbar() = default;
 
 void GradientToolbar::setup_derived_spin_button(UI::Widget::SpinButton &btn, Glib::ustring const &name,
                                                 double default_value)

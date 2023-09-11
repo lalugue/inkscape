@@ -29,6 +29,7 @@
 #include "arc-toolbar.h"
 
 #include <glibmm/i18n.h>
+#include <gtkmm/radiobutton.h>
 
 #include "desktop.h"
 #include "document-undo.h"
@@ -42,6 +43,7 @@
 #include "ui/widget/canvas.h"
 #include "ui/widget/combo-tool-item.h"
 #include "ui/widget/spinbutton.h"
+#include "ui/widget/toolbar-menu-button.h"
 #include "ui/widget/unit-tracker.h"
 #include "widgets/widget-sizes.h"
 
@@ -50,9 +52,8 @@ using Inkscape::DocumentUndo;
 using Inkscape::Util::Quantity;
 using Inkscape::Util::unit_table;
 
-namespace Inkscape {
-namespace UI {
-namespace Toolbar {
+namespace Inkscape::UI::Toolbar {
+
 ArcToolbar::ArcToolbar(SPDesktop *desktop)
     : Toolbar(desktop)
     , _tracker(new UnitTracker(Inkscape::Util::UNIT_TYPE_LINEAR))
@@ -159,7 +160,7 @@ void ArcToolbar::setup_startend_button(UI::Widget::SpinButton &btn, Glib::ustrin
 
 ArcToolbar::~ArcToolbar()
 {
-    if(_repr) {
+    if (_repr) {
         _repr->removeObserver(*this);
         GC::release(_repr);
         _repr = nullptr;
@@ -458,10 +459,7 @@ void ArcToolbar::notifyAttributeChanged(Inkscape::XML::Node &repr, GQuark,
     _freeze = false;
 }
 
-}
-}
-}
-
+} // namespace Inkscape::UI::Toolbar
 
 /*
   Local Variables:

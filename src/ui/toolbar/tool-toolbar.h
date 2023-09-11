@@ -34,7 +34,8 @@ class PopoverMenu;
 
 namespace Toolbar {
 
-class ToolToolbar : public Gtk::Box {
+class ToolToolbar : public Gtk::Box
+{
 public:
     ToolToolbar(InkscapeWindow *window);
     ~ToolToolbar() override;

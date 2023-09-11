@@ -29,11 +29,16 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include <2geom/coord.h>
-#include <gtkmm/builder.h>
 #include <memory>
+#include <2geom/coord.h>
 
 #include "toolbar.h"
+
+namespace Gtk {
+class Builder;
+class Button;
+class ToggleButton;
+} // namespace Gtk
 
 class SPDesktop;
 

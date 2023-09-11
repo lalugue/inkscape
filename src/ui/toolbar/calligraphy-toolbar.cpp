@@ -31,15 +31,16 @@
 #include <glibmm/i18n.h>
 #include <gtkmm/adjustment.h>
 #include <gtkmm/comboboxtext.h>
+#include <gtkmm/togglebutton.h>
 
 #include "desktop.h"
 #include "ui/builder-utils.h"
 #include "ui/dialog/calligraphic-profile-rename.h"
-#include "ui/icon-names.h"
 #include "ui/simple-pref-pusher.h"
 #include "ui/widget/canvas.h"
 #include "ui/widget/combo-tool-item.h"
 #include "ui/widget/spinbutton.h"
+#include "ui/widget/toolbar-menu-button.h"
 #include "ui/widget/unit-tracker.h"
 
 using Inkscape::UI::Widget::UnitTracker;

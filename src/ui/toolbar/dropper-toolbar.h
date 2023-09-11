@@ -29,13 +29,14 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include <gtkmm/builder.h>
-
 #include "toolbar.h"
 
-namespace Inkscape {
-namespace UI {
-namespace Toolbar {
+namespace Gtk {
+class Builder;
+class ToggleButton;
+} // namespace Gtk
+
+namespace Inkscape::UI::Toolbar {
 
 /**
  * \brief A toolbar for controlling the dropper tool
@@ -44,6 +45,7 @@ class DropperToolbar final : public Toolbar
 {
 public:
     DropperToolbar(SPDesktop *desktop);
+    ~DropperToolbar() override;
 
 private:
     Glib::RefPtr<Gtk::Builder> _builder;
@@ -58,9 +60,8 @@ private:
     void on_pick_alpha_button_toggled();
     void on_set_alpha_button_toggled();
 };
-}
-}
-}
+
+} // namespace Inkscape::UI::Toolbar
 
 #endif /* !SEEN_DROPPER_TOOLBAR_H */
 

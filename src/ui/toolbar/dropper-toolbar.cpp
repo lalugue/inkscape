@@ -29,16 +29,14 @@
 #include "dropper-toolbar.h"
 
 #include <glibmm/i18n.h>
+#include <gtkmm/togglebutton.h>
 
 #include "desktop.h"
-#include "document-undo.h"
 #include "preferences.h"
 #include "ui/builder-utils.h"
 #include "ui/widget/canvas.h" // Grab focus
 
-namespace Inkscape {
-namespace UI {
-namespace Toolbar {
+namespace Inkscape::UI::Toolbar {
 
 void DropperToolbar::on_pick_alpha_button_toggled()
 {
@@ -95,9 +93,9 @@ DropperToolbar::DropperToolbar(SPDesktop *desktop)
     show_all();
 }
 
-}
-}
-}
+DropperToolbar::~DropperToolbar() = default;
+
+} // namespace Inkscape::UI::Toolbar
 
 /*
   Local Variables:

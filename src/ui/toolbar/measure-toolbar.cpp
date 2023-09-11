@@ -29,17 +29,18 @@
 #include "measure-toolbar.h"
 
 #include <glibmm/i18n.h>
+#include <gtkmm/togglebutton.h>
 
 #include "desktop.h"
 #include "document-undo.h"
 #include "message-stack.h"
 #include "object/sp-namedview.h"
 #include "ui/builder-utils.h"
-#include "ui/icon-names.h"
 #include "ui/tools/measure-tool.h"
 #include "ui/widget/canvas.h"
 #include "ui/widget/combo-tool-item.h"
 #include "ui/widget/spinbutton.h"
+#include "ui/widget/toolbar-menu-button.h"
 #include "ui/widget/unit-tracker.h"
 
 using Inkscape::UI::Widget::UnitTracker;
@@ -55,11 +56,7 @@ static MeasureTool *get_measure_tool(SPDesktop *desktop)
     return nullptr;
 }
 
-
-
-namespace Inkscape {
-namespace UI {
-namespace Toolbar {
+namespace Inkscape::UI::Toolbar {
 
 MeasureToolbar::MeasureToolbar(SPDesktop *desktop)
     : Toolbar(desktop)
@@ -151,6 +148,8 @@ MeasureToolbar::MeasureToolbar(SPDesktop *desktop)
 
     show_all();
 }
+
+MeasureToolbar::~MeasureToolbar() = default;
 
 void MeasureToolbar::setup_derived_spin_button(UI::Widget::SpinButton &btn, Glib::ustring const &name,
                                                double default_value, ValueChangedMemFun const value_changed_mem_fun)
@@ -336,10 +335,7 @@ void MeasureToolbar::to_mark_dimension()
     }
 }
 
-}
-}
-}
-
+} // namespace Inkscape::UI::Toolbar
 
 /*
   Local Variables:

@@ -16,7 +16,6 @@
 #define SEEN_PAGE_TOOLBAR_H
 
 #include <glibmm/refptr.h>
-#include <gtkmm/toolbar.h>
 #include <string>
 
 #include "helper/auto-connection.h"
@@ -31,6 +30,8 @@ class Label;
 class ListStore;
 class Popover;
 class Button;
+class Builder;
+class Separator;
 } // namespace Gtk
 
 class SPDesktop;

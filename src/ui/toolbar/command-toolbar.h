@@ -16,11 +16,9 @@
 #ifndef SEEN_TOOLBAR_COMMAND_H
 #define SEEN_TOOLBAR_COMMAND_H
 
-#include "preferences.h"
 #include "toolbar.h"
 
-class InkscapeWindow;
-class SPDesktop;
+namespace Gtk { class Builder; }
 
 namespace Inkscape::UI::Toolbar {
 
@@ -28,7 +26,7 @@ class CommandToolbar final : public Toolbar
 {
 public:
     CommandToolbar(SPDesktop *desktop);
-    ~CommandToolbar() final = default;
+    ~CommandToolbar() override;
 
 private:
     Glib::RefPtr<Gtk::Builder> _builder;

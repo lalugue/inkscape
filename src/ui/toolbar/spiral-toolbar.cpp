@@ -44,9 +44,7 @@
 
 using Inkscape::DocumentUndo;
 
-namespace Inkscape {
-namespace UI {
-namespace Toolbar {
+namespace Inkscape::UI::Toolbar {
 
 SpiralToolbar::SpiralToolbar(SPDesktop *desktop)
     : Toolbar(desktop)
@@ -213,9 +211,7 @@ void SpiralToolbar::notifyAttributeChanged(Inkscape::XML::Node &repr, GQuark, In
     _freeze = false;
 }
 
-}
-}
-}
+} // namespace Inkscape::UI::Toolbar
 
 /*
   Local Variables:

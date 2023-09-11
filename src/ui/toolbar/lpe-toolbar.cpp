@@ -34,10 +34,10 @@
 #include "selection.h"
 #include "ui/builder-utils.h"
 #include "ui/dialog/dialog-container.h"
-#include "ui/icon-names.h"
 #include "ui/tools/lpe-tool.h"
 #include "ui/util.h"
 #include "ui/widget/combo-tool-item.h"
+#include "ui/widget/toolbar-menu-button.h"
 #include "ui/widget/unit-tracker.h"
 
 using Inkscape::UI::Widget::UnitTracker;
@@ -47,9 +47,7 @@ using Inkscape::DocumentUndo;
 using Inkscape::UI::Tools::ToolBase;
 using Inkscape::UI::Tools::LpeTool;
 
-namespace Inkscape {
-namespace UI {
-namespace Toolbar {
+namespace Inkscape::UI::Toolbar {
 
 LPEToolbar::LPEToolbar(SPDesktop *desktop)
     : Toolbar(desktop)
@@ -356,9 +354,8 @@ void LPEToolbar::sel_changed(Inkscape::Selection *selection)
         _line_segment_combo->set_sensitive(false);
     }
 }
-}
-}
-}
+
+} // namespace Inkscape::UI::Toolbar
 
 /*
   Local Variables:

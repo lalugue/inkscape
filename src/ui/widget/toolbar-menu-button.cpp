@@ -3,50 +3,34 @@
  * Author:
  *   Vaibhav Malik <vaibhavmalik2018@gmail.com>
  *
- * Copyright (C) 2011 Author
+ * Copyright (C) 2023 Authors
  *
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
 #include "toolbar-menu-button.h"
 
-#include <iostream>
+#include <gtkmm/box.h>
 
-namespace Inkscape {
-namespace UI {
-namespace Widget {
+namespace Inkscape::UI::Widget {
 
-ToolbarMenuButton::ToolbarMenuButton(BaseObjectType *cobject, const Glib::RefPtr<Gtk::Builder> &refGlade)
+ToolbarMenuButton::ToolbarMenuButton(BaseObjectType *cobject, Glib::RefPtr<Gtk::Builder> const &)
     : Gtk::MenuButton(cobject)
 {
-    // std::cout << "ToolbarMenuButton::BuilderConstructor()\n";
-    // Workaround to hide the widget by default and when there are no
-    // children in the popover.
+    // Workaround to hide the widget by default and when there are no children in the popover.
     set_visible(false);
-    signal_show().connect(
-        [=]() {
-            if (_popover_box->get_children().empty()) {
-                set_visible(false);
-            }
-        },
-        false);
-}
-
-ToolbarMenuButton::ToolbarMenuButton()
-    : Gtk::MenuButton()
-{
-    // std::cout << "ToolbarMenuButton::Constructor()\n";
+    signal_show().connect([=] {
+        if (_popover_box->get_children().empty()) {
+            set_visible(false);
+        }
+    }, false);
 }
 
 void ToolbarMenuButton::init(int priority, std::string tag, Gtk::Box *popover_box, std::vector<Gtk::Widget *> &children)
 {
-    // std::cout << "ToolbarMenuButton::init()\n";
     _priority = priority;
     _tag = tag;
     _popover_box = popover_box;
-
-    // std::cout << "Priority: " << _priority << std::endl;
-    // std::cout << "Tag: " << _tag << std::endl;
 
     // Automatically fetch all the children having "tag" as their style class.
     // This approach will allow even non-programmers to group the children into
@@ -60,35 +44,11 @@ void ToolbarMenuButton::init(int priority, std::string tag, Gtk::Box *popover_bo
         bool is_child = style_context->has_class(tag);
 
         if (is_child) {
-            _children.emplace_back(std::make_pair(pos, child));
+            _children.emplace_back(pos, child);
         }
 
         pos++;
     }
-}
-
-int ToolbarMenuButton::get_priority()
-{
-    // std::cout << "ToolbarMenuButton::get_priority()\n";
-
-    return _priority;
-}
-
-std::string ToolbarMenuButton::get_tag()
-{
-    // std::cout << "ToolbarMenuButton::get_tag()\n";
-
-    return _tag;
-}
-
-std::vector<std::pair<int, Gtk::Widget *>> ToolbarMenuButton::get_children()
-{
-    return _children;
-}
-
-Gtk::Box *ToolbarMenuButton::get_popover_box()
-{
-    return _popover_box;
 }
 
 static int minw(Gtk::Widget const *widget)
@@ -104,9 +64,7 @@ int ToolbarMenuButton::get_required_width() const
     return minw(_popover_box) - minw(this);
 }
 
-} // namespace Widget
-} // namespace UI
-} // namespace Inkscape
+} // namespace Inkscape::UI::Widget
 
 /*
   Local Variables:

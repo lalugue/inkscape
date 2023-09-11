@@ -3,7 +3,7 @@
  * Author:
  *   Vaibhav Malik <vaibhavmalik2018@gmail.com>
  *
- * Copyright (C) 2011 Author
+ * Copyright (C) 2023 Authors
  *
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
@@ -11,15 +11,17 @@
 #ifndef INKSCAPE_UI_WIDGET_TOOLBAR_MENU_BUTTON_H
 #define INKSCAPE_UI_WIDGET_TOOLBAR_MENU_BUTTON_H
 
-#include <gtkmm.h>
-#include <gtkmm/box.h>
-#include <gtkmm/builder.h>
-#include <gtkmm/menubutton.h>
+#include <string>
 #include <vector>
 
-namespace Inkscape {
-namespace UI {
-namespace Widget {
+#include <gtkmm/menubutton.h>
+
+namespace Gtk {
+class Box;
+class Builder;
+} // namespace Gtk
+
+namespace Inkscape::UI::Widget {
 
 /**
  * TODO: Add description
@@ -27,29 +29,27 @@ namespace Widget {
  */
 class ToolbarMenuButton : public Gtk::MenuButton
 {
-    int _priority;
-    std::string _tag;
-    std::vector<std::pair<int, Gtk::Widget *>> _children;
-    Gtk::Box *_popover_box;
-
 public:
-    ToolbarMenuButton();
-    ~ToolbarMenuButton() override{};
-
-    ToolbarMenuButton(BaseObjectType *cobject, const Glib::RefPtr<Gtk::Builder> &refGlade);
+    ToolbarMenuButton() = default;
+    ToolbarMenuButton(BaseObjectType *cobject, Glib::RefPtr<Gtk::Builder> const &);
 
     void init(int priority, std::string tag, Gtk::Box *popover_box, std::vector<Gtk::Widget *> &children);
 
-    int get_priority();
-    std::string get_tag();
-    std::vector<std::pair<int, Gtk::Widget *>> get_children();
-    Gtk::Box *get_popover_box();
     int get_required_width() const;
+
+    int get_priority() const { return _priority; }
+    std::string const &get_tag() const { return _tag; }
+    auto const &get_children() const { return _children; }
+    Gtk::Box *get_popover_box() { return _popover_box; }
+
+private:
+    int _priority{};
+    std::string _tag;
+    std::vector<std::pair<int, Gtk::Widget *>> _children;
+    Gtk::Box *_popover_box{};
 };
 
-} // namespace Widget
-} // namespace UI
-} // namespace Inkscape
+} // namespace Inkscape::UI::Widget
 
 #endif // INKSCAPE_UI_WIDGET_TOOLBAR_MENU_BUTTON_H
 

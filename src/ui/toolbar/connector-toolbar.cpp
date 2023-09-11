@@ -29,6 +29,8 @@
 #include "connector-toolbar.h"
 
 #include <glibmm/i18n.h>
+#include <gtkmm/builder.h>
+#include <gtkmm/togglebutton.h>
 
 #include "conn-avoid-ref.h"
 #include "desktop.h"
@@ -47,9 +49,7 @@
 
 using Inkscape::DocumentUndo;
 
-namespace Inkscape {
-namespace UI {
-namespace Toolbar {
+namespace Inkscape::UI::Toolbar {
 
 ConnectorToolbar::ConnectorToolbar(SPDesktop *desktop)
     : Toolbar(desktop)
@@ -123,6 +123,8 @@ ConnectorToolbar::ConnectorToolbar(SPDesktop *desktop)
 
     show_all();
 }
+
+ConnectorToolbar::~ConnectorToolbar() = default;
 
 void ConnectorToolbar::setup_derived_spin_button(UI::Widget::SpinButton &btn, Glib::ustring const &name,
                                                  double default_value, ValueChangedMemFun const value_changed_mem_fun)
@@ -340,9 +342,7 @@ void ConnectorToolbar::notifyAttributeChanged(Inkscape::XML::Node &repr, GQuark 
     }
 }
 
-}
-}
-}
+} // namespace Inkscape::UI::Toolbar
 
 /*
   Local Variables:

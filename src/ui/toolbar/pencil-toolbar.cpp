@@ -29,6 +29,7 @@
 #include "pencil-toolbar.h"
 
 #include <glibmm/i18n.h>
+#include <gtkmm/radiobutton.h>
 
 #include "desktop.h"
 #include "display/curve.h"
@@ -43,14 +44,13 @@
 #include "object/sp-shape.h"
 #include "selection.h"
 #include "ui/builder-utils.h"
-#include "ui/icon-names.h"
 #include "ui/tools/freehand-base.h"
 #include "ui/tools/pen-tool.h"
-#include "ui/tools/pencil-tool.h"
 #include "ui/util.h"
 #include "ui/widget/canvas.h"
 #include "ui/widget/combo-tool-item.h"
 #include "ui/widget/spinbutton.h"
+#include "ui/widget/toolbar-menu-button.h"
 
 namespace Inkscape {
 namespace UI {

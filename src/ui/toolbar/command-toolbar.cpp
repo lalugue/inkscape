@@ -16,9 +16,8 @@
 
 #include <gtkmm/toolbar.h>
 
-#include "preferences.h"
 #include "ui/builder-utils.h"
-#include "ui/pack.h"
+#include "ui/widget/toolbar-menu-button.h"
 
 namespace Inkscape::UI::Toolbar {
 
@@ -88,6 +87,8 @@ CommandToolbar::CommandToolbar(SPDesktop *desktop)
 
     show_all();
 }
+
+CommandToolbar::~CommandToolbar() = default;
 
 } // namespace Inkscape::UI::Toolbar
 

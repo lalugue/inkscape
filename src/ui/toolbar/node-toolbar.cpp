@@ -30,19 +30,14 @@
 
 #include <glibmm/i18n.h>
 #include <gtkmm/image.h>
-#include <gtkmm/menutoolbutton.h>
-#include <gtkmm/separatortoolitem.h>
 
 #include "desktop.h"
 #include "document-undo.h"
 #include "inkscape.h"
-#include "object/sp-lpe-item.h"
 #include "object/sp-namedview.h"
 #include "page-manager.h"
-#include "selection-chemistry.h"
 #include "selection.h"
 #include "ui/builder-utils.h"
-#include "ui/icon-names.h"
 #include "ui/simple-pref-pusher.h"
 #include "ui/tool/control-point-selection.h"
 #include "ui/tool/multi-path-manipulator.h"
@@ -50,6 +45,7 @@
 #include "ui/widget/canvas.h"
 #include "ui/widget/combo-tool-item.h"
 #include "ui/widget/spinbutton.h"
+#include "ui/widget/toolbar-menu-button.h"
 #include "ui/widget/unit-tracker.h"
 #include "widgets/widget-sizes.h"
 
@@ -64,13 +60,10 @@ using Inkscape::UI::Tools::NodeTool;
  * Will go away during tool refactoring. */
 static NodeTool *get_node_tool()
 {
-    NodeTool *node_tool = nullptr;
-    if (SP_ACTIVE_DESKTOP ) {
-        if (auto const tool = SP_ACTIVE_DESKTOP->getTool(); INK_IS_NODE_TOOL(tool)) {
-            node_tool = static_cast<NodeTool *>(tool);
-        }
+    if (SP_ACTIVE_DESKTOP) {
+        return dynamic_cast<NodeTool *>(SP_ACTIVE_DESKTOP->getTool());
     }
-    return node_tool;
+    return nullptr;
 }
 
 namespace Inkscape::UI::Toolbar {
@@ -262,11 +255,11 @@ void NodeToolbar::sel_changed(Inkscape::Selection *selection)
 {
     SPItem *item = selection->singleItem();
     if (item && is<SPLPEItem>(item)) {
-       if (cast_unsafe<SPLPEItem>(item)->hasPathEffect()) {
-           _nodes_lpeedit_btn.set_sensitive(true);
-       } else {
-           _nodes_lpeedit_btn.set_sensitive(false);
-       }
+        if (cast_unsafe<SPLPEItem>(item)->hasPathEffect()) {
+            _nodes_lpeedit_btn.set_sensitive(true);
+        } else {
+            _nodes_lpeedit_btn.set_sensitive(false);
+        }
     } else {
         _nodes_lpeedit_btn.set_sensitive(false);
     }

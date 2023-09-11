@@ -27,6 +27,7 @@
 namespace Gtk {
 class Adjustment;
 class ToggleButton;
+class Builder;
 } // namespace Gtk
 
 class SPDesktop;
