@@ -153,7 +153,8 @@ LPESimplify::newWidget()
         ++it;
     }
 
-    UI::pack_start(*vbox, *buttons,true, true, 2);
+    buttons->set_halign(Gtk::ALIGN_START);
+    UI::pack_start(*vbox, *buttons, true, true, 2);
     return vbox;
 }
 
