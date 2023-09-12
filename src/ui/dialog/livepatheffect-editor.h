@@ -17,9 +17,9 @@
 #include <utility>
 #include <vector>
 #include <glibmm/refptr.h>
+#include <glibmm/ustring.h>
 
 #include "preferences.h"
-
 #include "live_effects/effect-enum.h"
 #include "object/sp-lpe-item.h"       // PathEffectList
 #include "ui/dialog/dialog-base.h"
@@ -62,27 +62,27 @@ public:
     LivePathEffectEditor operator=(LivePathEffectEditor const &d) = delete;
 
     static LivePathEffectEditor &getInstance() { return *new LivePathEffectEditor(); }
-    void move_list(gint origin, gint dest);
+    void move_list(int origin, int dest);
 
-    std::vector<std::pair<Gtk::Expander *, std::shared_ptr<Inkscape::LivePathEffect::LPEObjectReference> > > _LPEExpanders;
-    void showParams(std::pair<Gtk::Expander *, std::shared_ptr<Inkscape::LivePathEffect::LPEObjectReference> > expanderdata, bool changed);
+    using LPEExpander = std::pair<Gtk::Expander *, std::shared_ptr<LivePathEffect::LPEObjectReference>>;
+    void showParams(LPEExpander const &expanderdata, bool changed);
+
+private:
+    std::vector<LPEExpander> _LPEExpanders;
     bool updating = false;
     SPLPEItem *current_lpeitem = nullptr;
-    std::pair<Gtk::Expander *, std::shared_ptr<Inkscape::LivePathEffect::LPEObjectReference> > current_lperef = std::make_pair(nullptr, nullptr);
-    static const LivePathEffect::EnumEffectData<LivePathEffect::EffectType> *getActiveData();
+    LPEExpander current_lperef = {nullptr, nullptr};
     bool selection_changed_lock = false;
     bool dnd = false;
-
-private:
     Glib::RefPtr<Gtk::Builder> _builder;
-
-public:
     Gtk::ListBox& LPEListBox;
-    gint dndx = 0;
-    gint dndy = 0;
+    int dndx = 0;
+    int dndy = 0;
 
-private:
-    void add_lpes(Inkscape::UI::Widget::CompletionPopup& popup, bool symbolic);
+    struct LPEMetadata;
+    void add_lpes(UI::Widget::CompletionPopup &, bool symbolic, std::vector<LPEMetadata> const &);
+    Glib::ustring get_tooltip(LivePathEffect::EffectType, Glib::ustring const &untranslated_label);
+
     void clear_lpe_list();
     void selectionChanged (Inkscape::Selection *selection                ) final;
     void selectionModified(Inkscape::Selection *selection, unsigned flags) final;
@@ -91,7 +91,7 @@ private:
     void onAdd(Inkscape::LivePathEffect::EffectType etype);
     bool showWarning(std::string const &msg);
     void toggleVisible(Inkscape::LivePathEffect::Effect *lpe, Gtk::Button *visbutton);
-    bool is_appliable(LivePathEffect::EffectType etypen, Glib::ustring item_type, bool has_clip, bool has_mask);
+    bool can_apply(LivePathEffect::EffectType, Glib::ustring const &item_type, bool has_clip, bool has_mask);
     void removeEffect(Gtk::Expander * expander);
     void effect_list_reload(SPLPEItem *lpeitem);
     void selection_info();
@@ -99,8 +99,8 @@ private:
     void clearMenu();
     void setMenu();
     bool lpeFlatten(std::shared_ptr<Inkscape::LivePathEffect::LPEObjectReference> lperef);
-
     SPLPEItem * clonetolpeitem();
+
     Inkscape::UI::Widget::CompletionPopup _lpes_popup;
     Gtk::Box& _LPEContainer;
     Gtk::Box& _LPEAddContainer;
@@ -115,7 +115,7 @@ private:
     Gtk::Widget *popupwidg = nullptr;
     GtkWidget *currentdrag = nullptr;
     bool _reload_menu = false;
-    gint _buttons_width = 0;
+    int _buttons_width = 0;
     bool _freezeexpander = false;
     Glib::ustring _item_type;
     bool _has_clip;
