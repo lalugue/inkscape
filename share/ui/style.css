@@ -370,10 +370,6 @@ SPCanvas {
     background-color: white;
 }
 
-#TextFontFamilyAction_combobox {
-    -GtkComboBox-appears-as-list: true;
-}
-
 /* Those are three buttons in canvas corners; their size dictates how large scrollbars are */
 #QuickActions, #LockGuides, #CMS_Adjust {
     padding: 0;
