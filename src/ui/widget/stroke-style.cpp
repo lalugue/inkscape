@@ -454,6 +454,7 @@ void StrokeStyle::setDesktop(SPDesktop *desktop)
         this->desktop = desktop;
 
         if (!desktop) {
+            _handleDocumentReplaced(nullptr, nullptr);
             return;
         }
 
