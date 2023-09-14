@@ -59,9 +59,8 @@
     <property name="pixel-size">20</property>
     <property name="icon-name">page-landscape-symbolic</property>
   </object>
-  <object class="GtkMenu" id="page-templates-menu">
-    <property name="visible">True</property>
-    <property name="reserve-toggle-size">False</property>
+  <object class="GtkPopover" id="templates-popover">
+    <property name="position">bottom</property>
   </object>
   <!-- n-columns=3 n-rows=2 -->
   <object class="GtkGrid" id="main-grid">
@@ -415,7 +414,7 @@ SVG element positions are expressed in user units.</property>
         </child>
         <child>
           <object class="GtkMenuButton" id="page-menu-btn">
-            <property name="width-request">80</property>
+            <property name="width-request">100</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="focus-on-click">False</property>
@@ -423,14 +422,12 @@ SVG element positions are expressed in user units.</property>
             <property name="tooltip-text" translatable="yes">Predefined paper sizes to choose from</property>
             <property name="margin-end">2</property>
             <property name="hexpand">True</property>
-            <property name="draw-indicator">True</property>
-            <property name="popup">page-templates-menu</property>
-            <property name="use-popover">False</property>
+            <property name="direction">none</property>
+            <property name="popover">templates-popover</property>
             <child>
               <object class="GtkLabel" id="page-template-name">
                 <property name="visible">True</property>
                 <property name="halign">start</property>
-                <property name="label" translatable="yes">A4</property>
                 <property name="ellipsize">end</property>
                 <property name="single-line-mode">True</property>
                 <property name="max-width-chars">8</property>

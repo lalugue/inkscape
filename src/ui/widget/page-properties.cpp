@@ -1,8 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 /**
  * @file
- *
- * Document properties widget: viewbox, document size, colors
+ * Page properties widget
  */
 /*
  * Authors:
@@ -15,9 +14,17 @@
 
 #include "page-properties.h"
 
+#include <algorithm>
+#include <cstdint>
+#include <memory>
+#include <stdexcept>
+#include <tuple>
 #include <type_traits>
+#include <utility>
 #include <glibmm/i18n.h>
-#include <gtkmm/box.h>
+#include <giomm/menu.h>
+#include <giomm/simpleaction.h>
+#include <giomm/simpleactiongroup.h>
 #include <gtkmm/builder.h>
 #include <gtkmm/button.h>
 #include <gtkmm/checkbutton.h>
@@ -25,8 +32,8 @@
 #include <gtkmm/expander.h>
 #include <gtkmm/grid.h>
 #include <gtkmm/label.h>
-#include <gtkmm/menu.h>
 #include <gtkmm/menubutton.h>
+#include <gtkmm/popover.h>
 #include <gtkmm/radiobutton.h>
 #include <gtkmm/spinbutton.h>
 #include <gtkmm/togglebutton.h>
@@ -49,13 +56,73 @@ namespace Inkscape::UI::Widget {
 const char* g_linked = "entries-linked-symbolic";
 const char* g_unlinked = "entries-unlinked-symbolic";
 
-#define GET(prop, id) prop(get_widget<std::remove_reference_t<decltype(prop)>>(_builder, id))
-#define GETD(prop, id) prop(get_derived_widget<std::remove_reference_t<decltype(prop)>>(_builder, id))
+static std::tuple<int, Glib::ustring, std::string> get_sorter(PaperSize const &page)
+{
+    // Millimeters has so many items that, to avoid the Popover going off screen, we split them up.
+    // For the rest, a heuristic to sort US sizes first, then ISO A–E, then everything else: Others
+
+    std::string const &abbr = page.unit->abbr, &name = page.name;
+
+    // Translators: "US" is an abbreviation for United States.
+    if (static auto const us = _("US"); abbr == "in" && name.find(us) != name.npos) {
+        return {0, us, abbr};
+    }
+
+    if (abbr == "mm" && name.size() >= 2 && name[0] >= 'A' && name[0] <= 'E' &&
+                                            name[1] >= '0' && name[1] <= '9')
+    {
+        // Translators: %1 is a paper size class, e.g. 'A' or 'B' – as in "A4".
+        static auto const format = _("ISO %1");
+        return {1, Glib::ustring::compose(format, name[0]), abbr};
+    }
+
+    static auto const others = _("Others");
+    return {2, others, abbr};
+}
 
 class PagePropertiesBox final : public PageProperties {
+    void create_template_menu()
+    {
+        static auto const group_name = "page-properties", action_name = "template";
+        static auto const get_detailed_action = [](int const index)
+            { return Glib::ustring::compose("%1(%2)", action_name, index); };
+
+        _page_sizes = PaperSize::getPageSizes();
+        std::stable_sort(_page_sizes.begin(), _page_sizes.end(), [](auto const &l, auto const &r)
+                         { return get_sorter(l) < get_sorter(r); });
+
+        auto group = Gio::SimpleActionGroup::create();
+        _template_action = group->add_action_radio_integer(action_name, 0);
+        _template_action->property_state().signal_changed().connect(
+            [this, &menu_button = get_widget<Gtk::MenuButton>(_builder, "page-menu-btn")]
+        {
+            menu_button.set_active(false);
+            int index; _template_action->get_state(index); set_page_template(index);
+        });
+        insert_action_group(group_name, std::move(group));
+
+        Glib::RefPtr<Gio::Menu> menu = Gio::Menu::create(), submenu = {};
+        Glib::ustring prev_submenu_label;
+        for (std::size_t i = 0; i < _page_sizes.size(); ++i) {
+            auto const &page = _page_sizes[i];
+            if (auto const [order, label, abbr] = get_sorter(page);
+                prev_submenu_label != label)
+            {
+                submenu = Gio::Menu::create();
+                menu->append_submenu(label, submenu);
+                prev_submenu_label = label;
+            }
+            submenu->append(page.getDescription(false), get_detailed_action(i));
+        }
+        menu->append(_("Custom"), get_detailed_action(_page_sizes.size())); // sentinel
+        _templates_popover.bind_model(std::move(menu), group_name);
+    }
+
 public:
     PagePropertiesBox() :
         _builder(create_builder("page-properties.glade")),
+#define GET(prop, id) prop(get_widget<std::remove_reference_t<decltype(prop)>>(_builder, id))
+#define GETD(prop, id) prop(get_derived_widget<std::remove_reference_t<decltype(prop)>>(_builder, id))
         GET(_main_grid, "main-grid"),
         GET(_left_grid, "left-grid"),
         GETD(_page_width, "page-width"),
@@ -70,7 +137,7 @@ public:
         GETD(_viewbox_y, "viewbox-y"),
         GETD(_viewbox_width, "viewbox-width"),
         GETD(_viewbox_height, "viewbox-height"),
-        GET(_page_templates_menu, "page-templates-menu"),
+        GET(_templates_popover, "templates-popover"),
         GET(_template_name, "page-template-name"),
         GET(_preview_box, "preview-box"),
         GET(_checkerboard, "checkerboard"),
@@ -102,7 +169,7 @@ public:
         _desk_color_picker->use_transparency(false);
 
         for (auto element : {Color::Background, Color::Border, Color::Desk}) {
-            get_color_picker(element).connectChanged([=](guint rgba) {
+            get_color_picker(element).connectChanged([=](unsigned const rgba) {
                 update_preview_color(element, rgba);
                 if (_update.pending()) return;
                 _signal_color_changed.emit(rgba, element);
@@ -118,15 +185,9 @@ public:
         _current_page_unit = _page_units->getUnit();
         _page_units->signal_changed().connect([=](){ set_page_unit(); });
 
-        for (auto&& page : PaperSize::getPageSizes()) {
-            auto const item = Gtk::make_managed<Gtk::MenuItem>(page.getDescription(false));
-            item->set_visible(true);
-            _page_templates_menu.append(*item);
-            item->signal_activate().connect([=](){ set_page_template(page); });
-        }
+        create_template_menu();
 
-        _preview->set_hexpand();
-        _preview->set_vexpand();
+        _preview->property_expand().set_value(true);
         _preview_box.add(*_preview);
 
         for (auto check : {Check::Border, Check::Shadow, Check::Checkerboard, Check::BorderOnTop, Check::AntiAlias, Check::ClipToPage, Check::PageLabelStyle}) {
@@ -137,7 +198,6 @@ public:
             _preview->draw_border(_border.get_active());
         });
         _shadow.signal_toggled().connect([=](){
-            //
             _preview->enable_drop_shadow(_shadow.get_active());
         });
         _checkerboard.signal_toggled().connect([=](){
@@ -202,7 +262,7 @@ private:
         }
     }
 
-    void update_preview_color(Color element, guint rgba) {
+    void update_preview_color(Color const element, unsigned const rgba) {
         switch (element) {
             case Color::Desk: _preview->set_desk_color(rgba); break;
             case Color::Border: _preview->set_border_color(rgba); break;
@@ -210,11 +270,14 @@ private:
         }
     }
 
-    void set_page_template(const PaperSize& page) {
+    void set_page_template(std::int32_t const index) {
         if (_update.pending()) return;
 
-        {
+        g_assert(index >= 0 && index <= _page_sizes.size());
+
+        if (index != _page_sizes.size()) { // sentinel for Custom
             auto scoped(_update.block());
+            auto const &page = _page_sizes.at(index);
             auto width = page.width;
             auto height = page.height;
             if (_landscape.get_active() != (width > height)) {
@@ -257,7 +320,7 @@ private:
 
         auto width  = _viewbox_width.get_value();
         auto height = _viewbox_height.get_value();
-        _signal_dimmension_changed.emit(width, height, nullptr, Dimension::ViewboxSize);
+        _signal_dimension_changed.emit(width, height, nullptr, Dimension::ViewboxSize);
     }
 
     void set_page_size_linked(bool width_changing) {
@@ -283,8 +346,7 @@ private:
             (width > height ? _landscape : _portrait).set_active();
             _portrait.set_sensitive();
             _landscape.set_sensitive();
-        }
-        else {
+        } else {
             _portrait.set_sensitive(false);
             _landscape.set_sensitive(false);
         }
@@ -293,10 +355,14 @@ private:
         }
 
         auto templ = find_page_template(width, height, *unit);
-        _template_name.set_label(templ && !templ->name.empty() ? _(templ->name.c_str()) : _("Custom"));
+        auto const index = std::distance(_page_sizes.cbegin(), templ);
+        _template_action->set_state(Glib::Variant<std::int32_t>::create(index));
+        _template_name.set_label(templ != _page_sizes.cend() && !templ->name.empty()
+                                 ? _(templ->name.c_str()) : _("Custom"));
 
         if (!pending) {
-            _signal_dimmension_changed.emit(width, height, unit, template_selected ? Dimension::PageTemplate : Dimension::PageSize);
+            _signal_dimension_changed.emit(width, height, unit,
+                template_selected ? Dimension::PageTemplate : Dimension::PageSize);
         }
     }
 
@@ -410,7 +476,7 @@ private:
 
     void fire_value_changed(Gtk::SpinButton& b1, Gtk::SpinButton& b2, const Util::Unit* unit, Dimension dim) {
         if (!_update.pending()) {
-            _signal_dimmension_changed.emit(b1.get_value(), b2.get_value(), unit, dim);
+            _signal_dimension_changed.emit(b1.get_value(), b2.get_value(), unit, dim);
         }
     }
 
@@ -420,21 +486,22 @@ private:
         }
     }
 
-    const PaperSize* find_page_template(double width, double height, const Unit& unit) {
+    std::vector<PaperSize>::const_iterator
+    find_page_template(double const width, double const height, Unit const &unit)
+    {
         Quantity w(std::min(width, height), &unit);
         Quantity h(std::max(width, height), &unit);
 
-        const double eps = 1e-6;
-        for (auto&& page : PaperSize::getPageSizes()) {
+        static constexpr double eps = 1e-6;
+        return std::find_if(_page_sizes.cbegin(), _page_sizes.cend(), [&](auto const &page)
+        {
             Quantity pw(std::min(page.width, page.height), page.unit);
             Quantity ph(std::max(page.width, page.height), page.unit);
-
             if (are_near(w, pw, eps) && are_near(h, ph, eps)) {
-                return &page;
+                return true;
             }
-        }
-
-        return nullptr;
+            return false;
+        });
     }
 
     Gtk::CheckButton& get_checkbutton(Check check) {
@@ -484,7 +551,9 @@ private:
     std::unique_ptr<ColorPicker> _backgnd_color_picker;
     std::unique_ptr<ColorPicker> _border_color_picker;
     std::unique_ptr<ColorPicker> _desk_color_picker;
-    Gtk::Menu& _page_templates_menu;
+    std::vector<PaperSize> _page_sizes;
+    Glib::RefPtr<Gio::SimpleAction> _template_action;
+    Gtk::Popover &_templates_popover;
     Gtk::Label& _template_name;
     Gtk::Box& _preview_box;
     std::unique_ptr<PageSizePreview> _preview = std::make_unique<PageSizePreview>();

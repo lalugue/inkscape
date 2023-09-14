@@ -455,7 +455,10 @@ void DocumentProperties::build_page()
         _wr.setUpdating(false);
     });
 
-    _page->signal_dimmension_changed().connect([=](double x, double y, const Inkscape::Util::Unit* unit, PageProperties::Dimension element){
+    _page->signal_dimension_changed().connect([this](double const x, double const y,
+                                                     auto const unit,
+                                                     PageProperties::Dimension const element)
+    {
         if (_wr.isUpdating() || !_wr.desktop()) return;
 
         _wr.setUpdating(true);
