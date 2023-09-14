@@ -352,7 +352,7 @@ text_flow_into_shape()
 
             // Set 'shape-inside' property.
             text->style->shape_inside.read(shapes.c_str());
-            text->style->white_space.read("pre"); // Respect new lines.
+            text->style->white_space.read("pre-wrap"); // Respect new lines.
             text->updateRepr();
 
             DocumentUndo::done(doc, _("Flow text into shape"), INKSCAPE_ICON("draw-text"));
