@@ -34,36 +34,26 @@
     <property name="visible">True</property>
     <property name="icon-name">go-down</property>
   </object>
-  <object class="GtkMenu" id="menu-popup">
-    <property name="visible">True</property>
-    <!-- Ensure item order here matches the loop in ui/dialog/xml-tree.cpp -->
-    <child>
-      <object class="GtkRadioMenuItem" id="auto-layout">
-        <property name="visible">True</property>
-        <property name="label" translatable="yes">Automatic layout</property>
-        <property name="use-underline">True</property>
-        <property name="draw-as-radio">True</property>
-      </object>
-    </child>
-    <child>
-      <object class="GtkRadioMenuItem" id="horz-layout">
-        <property name="visible">True</property>
-        <property name="label" translatable="yes">Horizontal layout</property>
-        <property name="use-underline">True</property>
-        <property name="draw-as-radio">True</property>
-        <property name="group">auto-layout</property>
-      </object>
-    </child>
-    <child>
-      <object class="GtkRadioMenuItem" id="vert-layout">
-        <property name="visible">True</property>
-        <property name="label" translatable="yes">Vertical layout</property>
-        <property name="use-underline">True</property>
-        <property name="draw-as-radio">True</property>
-        <property name="group">auto-layout</property>
-      </object>
-    </child>
-  </object>
+  <menu id="menu-popup">
+    <section>
+      <!-- Keep these synced w/ enum DialogLayout in dialog/xml-tree.h et al -->
+      <item>
+        <attribute name="label" translatable="yes">Automatic Layout</attribute>
+        <attribute name="action">xml-tree.layout</attribute>
+        <attribute name="target" type="i">0</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Horizontal Layout</attribute>
+        <attribute name="action">xml-tree.layout</attribute>
+        <attribute name="target" type="i">1</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Vertical Layout</attribute>
+        <attribute name="action">xml-tree.layout</attribute>
+        <attribute name="target" type="i">2</attribute>
+      </item>
+    </section>
+  </menu>
   <object class="GtkBox" id="main">
     <property name="visible">True</property>
     <property name="orientation">vertical</property>
@@ -168,8 +158,7 @@
             <property name="receives-default">True</property>
             <property name="no-show-all">True</property>
             <property name="relief">none</property>
-            <property name="popup">menu-popup</property>
-            <property name="use-popover">False</property>
+            <property name="menu-model">menu-popup</property>
             <child>
               <object class="GtkBox">
                 <property name="visible">True</property>
@@ -184,9 +173,6 @@
                     <property name="visible">True</property>
                     <property name="icon-name">pan-down-symbolic</property>
                   </object>
-                  <packing>
-                    <property name="position">1</property>
-                  </packing>
                 </child>
               </object>
             </child>

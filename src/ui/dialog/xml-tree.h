@@ -175,8 +175,10 @@ private:
     Gtk::Button& raise_node_button;
     Gtk::Button& lower_node_button;
 
+    // Keep these options in sync with menu/actions @ share/ui/dialog-xml.glade!
     enum DialogLayout: int { Auto = 0, Horizontal, Vertical };
     DialogLayout _layout = Auto;
+
     Pref<Glib::ustring> _syntax_theme;
     Pref<bool> _mono_font;
     Inkscape::XML::Node* _dummy = nullptr;
