@@ -19,6 +19,8 @@
 #include <numeric>
 #include <2geom/coord.h>
 #include <glibmm/i18n.h>
+#include <gtkmm/adjustment.h>
+#include <gtkmm/liststore.h>
 
 #include "preferences.h"
 #include "display/cairo-utils.h"
@@ -26,10 +28,9 @@
 #include "ui/dialog-events.h"
 #include "ui/pack.h"
 #include "ui/util.h"
+#include "ui/widget/spinbutton.h"
 
-namespace Inkscape {
-namespace UI {
-namespace Widget {
+namespace Inkscape::UI::Widget {
 
 gchar const *const DashSelector::_prefs_path = "/palette/dashes";
 
@@ -58,7 +59,7 @@ DashSelector::DashSelector()
 
     _offset = Gtk::Adjustment::create(0.0, 0.0, 1000.0, 0.1, 1.0, 0.0);
     _offset->signal_value_changed().connect(sigc::mem_fun(*this, &DashSelector::offset_value_changed));
-    _sb = new Inkscape::UI::Widget::SpinButton(_offset, 0.1, 2);
+    _sb = Gtk::make_managed<UI::Widget::SpinButton>(_offset, 0.1, 2);
     _sb->set_tooltip_text(_("Pattern offset"));
     sp_dialog_defocus_on_enter_cpp(_sb);
     _sb->set_width_chars(4);
@@ -73,6 +74,8 @@ DashSelector::DashSelector()
 
     _pattern = &s_dashes.front();
 }
+
+DashSelector::~DashSelector() = default;
 
 void DashSelector::prepareImageRenderer( Gtk::TreeModel::const_iterator const &row ) {
     // dashes are rendered on the fly to adapt to current theme colors
@@ -179,7 +182,8 @@ Cairo::RefPtr<Cairo::Surface> DashSelector::sp_dash_to_pixbuf(const std::vector<
 
     auto height = _preview_height * device_scale;
     auto width = _preview_width * device_scale;
-    cairo_surface_t *s = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, width, height);
+    auto surface = Cairo::ImageSurface::create(Cairo::FORMAT_ARGB32, width, height);
+    auto const s = surface->cobj();
     cairo_t *ct = cairo_create(s);
 
     auto const fg = get_foreground_color(get_style_context());
@@ -196,7 +200,7 @@ Cairo::RefPtr<Cairo::Surface> DashSelector::sp_dash_to_pixbuf(const std::vector<
     cairo_surface_flush(s);
 
     cairo_surface_set_device_scale(s, device_scale, device_scale);
-    return Cairo::RefPtr<Cairo::Surface>(new Cairo::Surface(s));
+    return surface;
 }
 
 /**
@@ -204,7 +208,9 @@ Cairo::RefPtr<Cairo::Surface> DashSelector::sp_dash_to_pixbuf(const std::vector<
  */
 Cairo::RefPtr<Cairo::Surface> DashSelector::sp_text_to_pixbuf(const char* text) {
     auto device_scale = get_scale_factor();
-    cairo_surface_t *s = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, _preview_width * device_scale, _preview_height * device_scale);
+    auto surface = Cairo::ImageSurface::create(Cairo::FORMAT_ARGB32, _preview_width  * device_scale,
+                                                                     _preview_height * device_scale);
+    auto const s = surface->cobj();
     cairo_t *ct = cairo_create(s);
 
     cairo_select_font_face (ct, "Sans", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
@@ -219,7 +225,7 @@ Cairo::RefPtr<Cairo::Surface> DashSelector::sp_text_to_pixbuf(const char* text) 
     cairo_surface_flush(s);
 
     cairo_surface_set_device_scale(s, device_scale, device_scale);
-    return Cairo::RefPtr<Cairo::Surface>(new Cairo::Surface(s));
+    return surface;
 }
 
 void DashSelector::on_selection()
@@ -238,9 +244,7 @@ void DashSelector::offset_value_changed()
     changed_signal.emit();
 }
 
-} // namespace Widget
-} // namespace UI
-} // namespace Inkscape
+} // namespace Inkscape::UI::Widget
 
 /*
   Local Variables:

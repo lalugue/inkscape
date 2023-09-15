@@ -309,28 +309,25 @@ Updates the statusbar tip of the dragger knot, based on its draggables
  */
 void VPDragger::updateTip()
 {
-    if (this->knot && this->knot->tip) {
-        g_free(this->knot->tip);
-        this->knot->tip = nullptr;
-    }
+    char *tip = nullptr;
 
     guint num = this->numberOfBoxes();
     if (this->vps.size() == 1) {
         if (this->vps.front().is_finite()) {
-            this->knot->tip = g_strdup_printf(ngettext("<b>Finite</b> vanishing point shared by <b>%d</b> box",
-                                                       "<b>Finite</b> vanishing point shared by <b>%d</b> boxes; drag "
-                                                       "with <b>Shift</b> to separate selected box(es)",
-                                                       num),
-                                              num);
+            tip = g_strdup_printf(ngettext("<b>Finite</b> vanishing point shared by the box",
+                                           "<b>Finite</b> vanishing point shared by <b>%d</b> boxes; drag "
+                                           "with <b>Shift</b> to separate selected box(es)",
+                                           num),
+                                  num);
         }
         else {
             // This won't make sense any more when infinite VPs are not shown on the canvas,
             // but currently we update the status message anyway
-            this->knot->tip = g_strdup_printf(ngettext("<b>Infinite</b> vanishing point shared by the box",
-                                                       "<b>Infinite</b> vanishing point shared by <b>%d</b> boxes; "
-                                                       "drag with <b>Shift</b> to separate selected box(es)",
-                                                       num),
-                                              num);
+            tip = g_strdup_printf(ngettext("<b>Infinite</b> vanishing point shared by the box",
+                                           "<b>Infinite</b> vanishing point shared by <b>%d</b> boxes; "
+                                           "drag with <b>Shift</b> to separate selected box(es)",
+                                           num),
+                                  num);
         }
     }
     else {
@@ -340,8 +337,11 @@ void VPDragger::updateTip()
                                     "Collection of <b>%d</b> vanishing points shared by <b>%d</b> boxes; "
                                     "drag with <b>Shift</b> to separate",
                                     num);
-        this->knot->tip = g_strdup_printf(tmpl, length, num);
+        tip = g_strdup_printf(tmpl, length, num);
     }
+
+    knot->setTip(tip);
+    g_free(tip);
 }
 
 /**

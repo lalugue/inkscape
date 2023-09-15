@@ -1,7 +1,4 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-#ifndef SEEN_SP_KNOT_H
-#define SEEN_SP_KNOT_H
-
 /** \file
  * Declarations for SPKnot: Desktop-bound visual control object.
  */
@@ -14,6 +11,9 @@
  *
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
+
+#ifndef SEEN_SP_KNOT_H
+#define SEEN_SP_KNOT_H
 
 #include <cstdint>
 #include <2geom/point.h>
@@ -34,7 +34,7 @@ namespace Inkscape {
 class CanvasItemCtrl;
 struct CanvasEvent;
 struct MotionEvent;
-}
+} // namespace Inkscape
 
 /**
  * Desktop-bound visual control object.
@@ -85,8 +85,6 @@ public:
     unsigned char *image[SP_KNOT_VISIBLE_STATES];
     Glib::RefPtr<Gdk::Cursor> _cursors[SP_KNOT_VISIBLE_STATES];
 
-    char *tip               = nullptr;
-
     sigc::connection _event_connection;
 
     double pressure         = 0.0;    /**< The tablet pen pressure when the knot is being dragged. */
@@ -115,6 +113,7 @@ public:
     void setImage(unsigned char* normal, unsigned char* mouseover, unsigned char* dragging, unsigned char* selected);
 
     void setCursor(SPKnotStateType type, Glib::RefPtr<Gdk::Cursor> cursor);
+    void setTip(Glib::ustring &&tip);
 
     /**
      * Show knot on its canvas.
@@ -182,6 +181,8 @@ public:
     static void unref(SPKnot *knot);
 
 private:
+    Glib::ustring _tip;
+
     int ref_count = 1;
 
     /**

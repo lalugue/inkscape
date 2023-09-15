@@ -1403,12 +1403,9 @@ GrDragger::moveMeshHandles ( Geom::Point pc_old,  MeshNodeOperation op )
 void GrDragger::updateTip()
 {
     g_return_if_fail(this->knot != nullptr);
-    
-    if (this->knot && this->knot->tip) {
-        g_free (this->knot->tip);
-        this->knot->tip = nullptr;
-    }
 
+    char *tip = nullptr;
+    
     if (this->draggables.size() == 1) {
         GrDraggable *draggable = this->draggables[0];
         char *item_desc = draggable->item->detailedDescription();
@@ -1416,39 +1413,42 @@ void GrDragger::updateTip()
             case POINT_LG_MID:
             case POINT_RG_MID1:
             case POINT_RG_MID2:
-                this->knot->tip = g_strdup_printf (_("%s %d for: %s%s; drag with <b>Ctrl</b> to snap offset; click with <b>Ctrl+Alt</b> to delete stop"),
-                                                   _(gr_knot_descr[draggable->point_type]),
-                                                   draggable->point_i,
-                                                   item_desc,
-                                                   (draggable->fill_or_stroke == Inkscape::FOR_STROKE) ? _(" (stroke)") : "");
+                tip = g_strdup_printf (_("%s %d for: %s%s; drag with <b>Ctrl</b> to snap offset; click with <b>Ctrl+Alt</b> to delete stop"),
+                                       _(gr_knot_descr[draggable->point_type]),
+                                       draggable->point_i,
+                                       item_desc,
+                                       (draggable->fill_or_stroke == Inkscape::FOR_STROKE) ? _(" (stroke)") : "");
                 break;
 
             case POINT_MG_CORNER:
             case POINT_MG_HANDLE:
             case POINT_MG_TENSOR:
-                this->knot->tip = g_strdup_printf (_("%s for: %s%s"),
-                                                   _(gr_knot_descr[draggable->point_type]),
-                                                   item_desc,
-                                                   (draggable->fill_or_stroke == Inkscape::FOR_STROKE) ? _(" (stroke)") : "");
+                tip = g_strdup_printf (_("%s for: %s%s"),
+                                       _(gr_knot_descr[draggable->point_type]),
+                                       item_desc,
+                                       (draggable->fill_or_stroke == Inkscape::FOR_STROKE) ? _(" (stroke)") : "");
                 break;
 
             default:
-                this->knot->tip = g_strdup_printf (_("%s for: %s%s; drag with <b>Ctrl</b> to snap angle, with <b>Ctrl+Alt</b> to preserve angle, with <b>Ctrl+Shift</b> to scale around center"),
-                                                   _(gr_knot_descr[draggable->point_type]),
-                                                   item_desc,
-                                                   (draggable->fill_or_stroke == Inkscape::FOR_STROKE) ? _(" (stroke)") : "");
+                tip = g_strdup_printf (_("%s for: %s%s; drag with <b>Ctrl</b> to snap angle, with <b>Ctrl+Alt</b> to preserve angle, with <b>Ctrl+Shift</b> to scale around center"),
+                                       _(gr_knot_descr[draggable->point_type]),
+                                       item_desc,
+                                       (draggable->fill_or_stroke == Inkscape::FOR_STROKE) ? _(" (stroke)") : "");
                 break;
         }
         g_free(item_desc);
     } else if (draggables.size() == 2 && isA (POINT_RG_CENTER) && isA (POINT_RG_FOCUS)) {
-        this->knot->tip = g_strdup_printf ("%s", _("Radial gradient <b>center</b> and <b>focus</b>; drag with <b>Shift</b> to separate focus"));
+        tip = g_strdup_printf ("%s", _("Radial gradient <b>center</b> and <b>focus</b>; drag with <b>Shift</b> to separate focus"));
     } else {
         int length = this->draggables.size();
-        this->knot->tip = g_strdup_printf (ngettext("Gradient point shared by <b>%d</b> gradient; drag with <b>Shift</b> to separate",
-                                                    "Gradient point shared by <b>%d</b> gradients; drag with <b>Shift</b> to separate",
-                                                    length),
-                                           length);
+        tip = g_strdup_printf (ngettext("Gradient point shared by <b>%d</b> gradient; drag with <b>Shift</b> to separate",
+                                        "Gradient point shared by <b>%d</b> gradients; drag with <b>Shift</b> to separate",
+                                        length),
+                               length);
     }
+
+    knot->setTip(tip);
+    g_free(tip);
 }
 
 /**

@@ -10,57 +10,54 @@
 #ifndef SEEN_SP_COLOR_ICC_SELECTOR_H
 #define SEEN_SP_COLOR_ICC_SELECTOR_H
 
-#include <gtkmm/widget.h>
+#include <memory>
+#include <glibmm/ustring.h>
 #include <gtkmm/grid.h>
-
 #include "ui/selected-color.h"
 
 namespace Inkscape {
 
 class ColorProfile;
 
-namespace UI {
-namespace Widget {
+namespace UI::Widget {
 
 class ColorICCSelectorImpl;
 
-class ColorICCSelector
+class ColorICCSelector final
     : public Gtk::Grid
-      {
-  public:
-    static const gchar *MODE_NAME;
-
+  {
+public:
     ColorICCSelector(SelectedColor &color, bool no_alpha);
-    ~ColorICCSelector() override;
+    ~ColorICCSelector() final;
+
+    ColorICCSelector(const ColorICCSelector &obj) = delete;
+    ColorICCSelector &operator=(const ColorICCSelector &obj) = delete;
 
     void init(bool no_alpha);
 
-  protected:
-    void on_show() override;
+protected:
+    void on_show() final;
 
     virtual void _colorChanged();
 
-    void _recalcColor(gboolean changing);
+    void _recalcColor(bool changing);
 
-  private:
+private:
     friend class ColorICCSelectorImpl;
-
-    // By default, disallow copy constructor and assignment operator
-    ColorICCSelector(const ColorICCSelector &obj);
-    ColorICCSelector &operator=(const ColorICCSelector &obj);
-
-    ColorICCSelectorImpl *_impl;
+    std::unique_ptr<ColorICCSelectorImpl> _impl;
 };
 
 
-class ColorICCSelectorFactory : public ColorSelectorFactory {
-  public:
-    Gtk::Widget *createWidget(SelectedColor &color, bool no_alpha) const override;
-    Glib::ustring modeName() const override;
+class ColorICCSelectorFactory final : public ColorSelectorFactory {
+public:
+    Gtk::Widget *createWidget(SelectedColor &color, bool no_alpha) const final;
+    Glib::ustring modeName() const final;
 };
-}
-}
-}
+
+} // namespace UI::Widget
+
+} // namespace Inkscape
+
 #endif // SEEN_SP_COLOR_ICC_SELECTOR_H
 
 /*

@@ -1,7 +1,4 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-#ifndef SEEN_SP_DASH_SELECTOR_NEW_H
-#define SEEN_SP_DASH_SELECTOR_NEW_H
-
 /* Authors:
  *   Lauris Kaplinski <lauris@kaplinski.com>
  *   Maximilian Albert <maximilian.albert> (gtkmm-ification)
@@ -11,31 +8,40 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include "ui/widget/spinbutton.h"
-#include <gtkmm/box.h>
-#include <gtkmm/combobox.h>
-#include <gtkmm/liststore.h>
+#ifndef SEEN_SP_DASH_SELECTOR_NEW_H
+#define SEEN_SP_DASH_SELECTOR_NEW_H
 
+#include <cstddef>
+#include <vector>
+#include <glibmm/refptr.h>
+#include <gtkmm/box.h>
+#include <gtkmm/cellrendererpixbuf.h>
+#include <gtkmm/combobox.h>
 #include <sigc++/signal.h>
 
 #include "scrollprotected.h"
 
-namespace Inkscape {
-namespace UI {
-namespace Widget {
+namespace Gtk {
+class Adjustment;
+class ListStore;
+} // namespace Gtk
+
+namespace Inkscape::UI::Widget {
+
+class SpinButton;
 
 /**
  * Class that wraps a combobox and spinbutton for selecting dash patterns.
  */
-class DashSelector : public Gtk::Box {
+class DashSelector final : public Gtk::Box {
 public:
     DashSelector();
+    ~DashSelector() final;
 
     /**
      * Get and set methods for dashes
      */
     void set_dash(const std::vector<double>& dash, double offset);
-
     const std::vector<double>& get_dash(double* offset) const;
 
     sigc::signal<void ()> changed_signal;
@@ -43,7 +49,6 @@ public:
     double get_offset();
 
 private:
-
     /**
      * Initialize dashes list from preferences
      */
@@ -97,9 +102,7 @@ private:
     std::vector<double>* _pattern = nullptr;
 };
 
-} // namespace Widget
-} // namespace UI
-} // namespace Inkscape
+} // namespace Inkscape::UI::Widget
 
 #endif // SEEN_SP_DASH_SELECTOR_NEW_H
 

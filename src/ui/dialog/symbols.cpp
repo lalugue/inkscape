@@ -307,14 +307,14 @@ SymbolsDialog::SymbolsDialog(const char* prefsPath)
   overlay_icon->set_margin_top(90);
   overlay_icon->set_no_show_all(true);
 
-  overlay_title = new Gtk::Label();
+  overlay_title = Gtk::make_managed<Gtk::Label>();
   overlay_title->set_halign(Gtk::ALIGN_CENTER );
   overlay_title->set_valign(Gtk::ALIGN_START );
   overlay_title->set_justify(Gtk::JUSTIFY_CENTER);
   overlay_title->set_margin_top(135);
   overlay_title->set_no_show_all(true);
 
-  overlay_desc = new Gtk::Label();
+  overlay_desc = Gtk::make_managed<Gtk::Label>();
   overlay_desc->set_halign(Gtk::ALIGN_CENTER);
   overlay_desc->set_valign(Gtk::ALIGN_START);
   overlay_desc->set_margin_top(160);

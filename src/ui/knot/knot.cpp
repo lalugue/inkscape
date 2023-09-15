@@ -13,18 +13,17 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#include <utility>
 #include <gdk/gdkkeysyms.h>
 #include <glibmm/i18n.h>
 
 #include "desktop.h"
-
 #include "knot.h"
 #include "knot-ptr.h"
 #include "document.h"
 #include "document-undo.h"
 #include "message-stack.h"
 #include "message-context.h"
-
 #include "display/control/canvas-item-ctrl.h"
 #include "ui/tools/tool-base.h"
 #include "ui/tools/node-tool.h"
@@ -55,7 +54,7 @@ SPKnot::SPKnot(SPDesktop *desktop, char const *tip, Inkscape::CanvasItemCtrlType
     : desktop(desktop)
 {
     if (tip) {
-        tip = g_strdup(tip);
+        _tip = tip;
     }
 
     fill[SP_KNOT_STATE_NORMAL]    = 0xffffff00;
@@ -91,11 +90,6 @@ SPKnot::~SPKnot()
     // issues like https://gitlab.com/inkscape/inkscape/-/issues/4239
     ctrl->ungrab();
     ctrl.reset();
-
-    if (tip) {
-        g_free(tip);
-        tip = nullptr;
-    }
 
     // FIXME: cannot snap to destroyed knot (lp:1309050)
     // this->desktop->getTool()->discard_delayed_snap_event();
@@ -254,8 +248,8 @@ bool SPKnot::eventHandler(Inkscape::CanvasEvent const &event)
         setFlag(SP_KNOT_MOUSEOVER, true);
         setFlag(SP_KNOT_GRABBED, false);
 
-        if (tip && desktop && desktop->getTool()) {
-            desktop->getTool()->defaultMessageContext()->set(Inkscape::NORMAL_MESSAGE, tip);
+        if (!_tip.empty() && desktop && desktop->getTool()) {
+            desktop->getTool()->defaultMessageContext()->set(Inkscape::NORMAL_MESSAGE, _tip.c_str());
         }
         desktop->getTool()->use_cursor(_cursors[SP_KNOT_STATE_MOUSEOVER]);
 
@@ -268,7 +262,7 @@ bool SPKnot::eventHandler(Inkscape::CanvasEvent const &event)
         setFlag(SP_KNOT_MOUSEOVER, false);
         setFlag(SP_KNOT_GRABBED, false);
 
-        if (tip && desktop && desktop->getTool()) {
+        if (!_tip.empty() && desktop && desktop->getTool()) {
             desktop->getTool()->defaultMessageContext()->clear();
         }
         desktop->getTool()->use_cursor(_cursors[SP_KNOT_STATE_NORMAL]);
@@ -483,7 +477,12 @@ void SPKnot::setImage(guchar* normal, guchar* mouseover, guchar* dragging, gucha
 
 void SPKnot::setCursor(SPKnotStateType type, Glib::RefPtr<Gdk::Cursor> cursor)
 {
-    _cursors[type] = cursor;
+    _cursors[type] = std::move(cursor);
+}
+
+void SPKnot::setTip(Glib::ustring &&tip)
+{
+    _tip = std::move(tip);
 }
 
 /*

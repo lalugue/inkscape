@@ -13,21 +13,22 @@
 
 #include "color-icc-selector.h"
 
+#include <array>
+#include <map>
 #include <set>
 #include <utility>
-
+#include <vector>
+#include <glibmm/i18n.h>
+#include <glibmm/refptr.h>
 #include <gtkmm/adjustment.h>
 #include <gtkmm/combobox.h>
 #include <gtkmm/spinbutton.h>
-#include <glibmm/i18n.h>
 
 #include "colorspace.h"
 #include "document.h"
 #include "inkscape.h"
 #include "profile-manager.h"
-
 #include "svg/svg-icc-color.h"
-
 #include "ui/dialog-events.h"
 #include "ui/util.h"
 #include "ui/widget/color-scales.h"
@@ -65,9 +66,8 @@ extern guint update_in_progress;
     }
 #endif // DEBUG_LCMS
 
-
-#define XPAD 4
-#define YPAD 1
+static constexpr int XPAD = 4;
+static constexpr int YPAD = 1;
 
 namespace {
 
@@ -79,7 +79,6 @@ GtkWidget *_scrollprotected_combo_box_new_with_model(GtkTreeModel *model)
 }
 
 size_t maxColorspaceComponentCount = 0;
-
 
 /**
  * Internal variable to track all known colorspaces.
@@ -120,7 +119,6 @@ icSigCmyData
 #define SPACE_ID_CMY 1
 #define SPACE_ID_CMYK 2
 
-
 colorspace::Component::Component()
     : name()
     , tip()
@@ -138,9 +136,8 @@ colorspace::Component::Component(std::string name, std::string tip, guint scale)
 static cmsUInt16Number *getScratch()
 {
     // bytes per pixel * input channels * width
-    static cmsUInt16Number *scritch = static_cast<cmsUInt16Number *>(g_new(cmsUInt16Number, 4 * 1024));
-
-    return scritch;
+    static std::array<cmsUInt16Number, 4 * 1024> scritch;
+    return scritch.data();
 }
 
 std::vector<colorspace::Component> colorspace::getColorSpaceInfo(uint32_t space)
@@ -202,38 +199,25 @@ std::vector<colorspace::Component> colorspace::getColorSpaceInfo(uint32_t space)
     return target;
 }
 
-
 std::vector<colorspace::Component> colorspace::getColorSpaceInfo(Inkscape::ColorProfile *prof)
 {
     return getColorSpaceInfo(asICColorSpaceSig(prof->getColorSpace()));
 }
 
-namespace Inkscape {
-namespace UI {
-namespace Widget {
+namespace Inkscape::UI::Widget {
 
 /**
  * Class containing the parts for a single color component's UI presence.
  */
-class ComponentUI {
-  public:
-    ComponentUI()
-        : _component()
-        , _adj(nullptr)
-        , _slider(nullptr)
-        , _btn(nullptr)
-        , _label(nullptr)
-        , _map(nullptr)
-    {
-    }
-
-    ComponentUI(colorspace::Component component)
+class ComponentUI final {
+public:
+    explicit ComponentUI(colorspace::Component component = {})
         : _component(std::move(component))
         , _adj(nullptr)
         , _slider(nullptr)
         , _btn(nullptr)
         , _label(nullptr)
-        , _map(nullptr)
+        , _map(4 * 1024, 0xFF)
     {
     }
 
@@ -242,19 +226,17 @@ class ComponentUI {
     Inkscape::UI::Widget::ColorSlider *_slider;
     GtkWidget *_btn;   // spinbutton
     GtkWidget *_label; // Label
-    guchar *_map;
+    std::vector<unsigned char> _map;
 };
 
 /**
  * Class that implements the internals of the selector.
  */
-class ColorICCSelectorImpl {
-  public:
+class ColorICCSelectorImpl final {
+public:
     ColorICCSelectorImpl(ColorICCSelector *owner, SelectedColor &color);
 
-    ~ColorICCSelectorImpl();
-
-    void _adjustmentChanged(Glib::RefPtr<Gtk::Adjustment> &adjustment);
+    void _adjustmentChanged(Glib::RefPtr<Gtk::Adjustment> const &adjustment);
 
     void _sliderGrabbed();
     void _sliderReleased();
@@ -292,28 +274,15 @@ class ColorICCSelectorImpl {
     gulong _profChangedID;
 };
 
-
-
-const gchar *ColorICCSelector::MODE_NAME = N_("CMS");
-
 ColorICCSelector::ColorICCSelector(SelectedColor &color, bool no_alpha)
-    : _impl(nullptr)
+    : _impl{std::make_unique<ColorICCSelectorImpl>(this, color)}
 {
-    _impl = new ColorICCSelectorImpl(this, color);
     init(no_alpha);
     color.signal_changed.connect(sigc::mem_fun(*this, &ColorICCSelector::_colorChanged));
     color.signal_icc_changed.connect(sigc::mem_fun(*this, &ColorICCSelector::_colorChanged));
 }
 
-ColorICCSelector::~ColorICCSelector()
-{
-    if (_impl) {
-        delete _impl;
-        _impl = nullptr;
-    }
-}
-
-
+ColorICCSelector::~ColorICCSelector() = default;
 
 ColorICCSelectorImpl::ColorICCSelectorImpl(ColorICCSelector *owner, SelectedColor &color)
     : _owner(owner)
@@ -335,12 +304,6 @@ ColorICCSelectorImpl::ColorICCSelectorImpl(ColorICCSelector *owner, SelectedColo
 {
 }
 
-ColorICCSelectorImpl::~ColorICCSelectorImpl()
-{
-    _sbtn = nullptr;
-    _label = nullptr;
-}
-
 void ColorICCSelector::init(bool no_alpha)
 {
     gint row = 0;
@@ -355,10 +318,9 @@ void ColorICCSelector::init(bool no_alpha)
     // Create components
     row = 0;
 
-
     _impl->_fixupBtn = gtk_button_new_with_label(_("Fix"));
     g_signal_connect(G_OBJECT(_impl->_fixupBtn), "clicked", G_CALLBACK(ColorICCSelectorImpl::_fixupHit),
-                     (gpointer)_impl);
+                     _impl.get());
     gtk_widget_set_sensitive(_impl->_fixupBtn, FALSE);
     gtk_widget_set_tooltip_text(_impl->_fixupBtn, _("Fix RGB fallback to match icc-color() value."));
     gtk_widget_set_visible(_impl->_fixupBtn, true);
@@ -383,11 +345,11 @@ void ColorICCSelector::init(bool no_alpha)
     attachToGridOrTable(t, _impl->_profileSel, 1, row, 1, 1);
 
     _impl->_profChangedID = g_signal_connect(G_OBJECT(_impl->_profileSel), "changed",
-                                             G_CALLBACK(ColorICCSelectorImpl::_profileSelected), (gpointer)_impl);
+                                             G_CALLBACK(ColorICCSelectorImpl::_profileSelected), _impl.get());
 
     row++;
 
-// populate the data for colorspaces and channels:
+    // populate the data for colorspaces and channels:
     std::vector<colorspace::Component> things = colorspace::getColorSpaceInfo(cmsSigRgbData);
 
     for (size_t i = 0; i < maxColorspaceComponentCount; i++) {
@@ -398,9 +360,8 @@ void ColorICCSelector::init(bool no_alpha)
             _impl->_compUI.emplace_back();
         }
 
-        std::string labelStr = (i < things.size()) ? things[i].name.c_str() : "";
-        
-        _impl->_compUI[i]._label = gtk_label_new_with_mnemonic(labelStr.c_str());
+        auto const labelStr = i < things.size() ? things[i].name.c_str() : "";
+        _impl->_compUI[i]._label = gtk_label_new_with_mnemonic(labelStr);
 
         gtk_widget_set_halign(_impl->_compUI[i]._label, GTK_ALIGN_END);
         gtk_widget_set_visible(_impl->_compUI[i]._label, true);
@@ -434,10 +395,6 @@ void ColorICCSelector::init(bool no_alpha)
 
         attachToGridOrTable(t, _impl->_compUI[i]._btn, 2, row, 1, 1, false, true);
 
-        _impl->_compUI[i]._map = g_new(guchar, 4 * 1024);
-        memset(_impl->_compUI[i]._map, 0x0ff, 1024 * 4);
-
-
         // Signals
         _impl->_compUI[i]._adj->signal_value_changed().connect(sigc::bind(sigc::mem_fun(*_impl, &ColorICCSelectorImpl::_adjustmentChanged), _impl->_compUI[i]._adj));
 
@@ -470,7 +427,6 @@ void ColorICCSelector::init(bool no_alpha)
 
     _impl->_slider->setColors(SP_RGBA32_F_COMPOSE(1.0, 1.0, 1.0, 0.0), SP_RGBA32_F_COMPOSE(1.0, 1.0, 1.0, 0.5),
                               SP_RGBA32_F_COMPOSE(1.0, 1.0, 1.0, 1.0));
-
 
     // Spinbutton
     auto const spinbuttonalpha = Gtk::make_managed<ScrollProtected<Gtk::SpinButton>>(_impl->_adj, 1.0);
@@ -734,7 +690,6 @@ void ColorICCSelector::_colorChanged()
     }
     _impl->_updateSliders(-1);
 
-
     _impl->_updating = FALSE;
 #ifdef DEBUG_LCMS
     g_message("\\_________  %p::_colorChanged()", this);
@@ -853,10 +808,9 @@ void ColorICCSelectorImpl::_updateSliders(gint ignore)
 
                         cmsHTRANSFORM trans = _prof->getTransfToSRGB8();
                         if (trans) {
-                            cmsDoTransform(trans, scratch, _compUI[i]._map, 1024);
-                            if (_compUI[i]._slider)
-                            {
-                                _compUI[i]._slider->setMap(_compUI[i]._map);
+                            cmsDoTransform(trans, scratch, _compUI[i]._map.data(), 1024);
+                            if (_compUI[i]._slider) {
+                                _compUI[i]._slider->setMap(_compUI[i]._map.data());
                             }
                         }
                     }
@@ -872,8 +826,7 @@ void ColorICCSelectorImpl::_updateSliders(gint ignore)
     _slider->setColors(start, mid, end);
 }
 
-
-void ColorICCSelectorImpl::_adjustmentChanged(Glib::RefPtr<Gtk::Adjustment> &adjustment)
+void ColorICCSelectorImpl::_adjustmentChanged(Glib::RefPtr<Gtk::Adjustment> const &adjustment)
 {
 #ifdef DEBUG_LCMS
     g_message("/^^^^^^^^^  %p::_adjustmentChanged()", this);
@@ -907,7 +860,6 @@ void ColorICCSelectorImpl::_adjustmentChanged(Glib::RefPtr<Gtk::Adjustment> &adj
             g_message(" channel %d", match);
 #endif // DEBUG_LCMS
         }
-
 
         cmsUInt16Number tmp[4];
         for (guint i = 0; i < 4; i++) {
@@ -969,14 +921,16 @@ void ColorICCSelectorImpl::_sliderChanged()
 
 Gtk::Widget *ColorICCSelectorFactory::createWidget(Inkscape::UI::SelectedColor &color, bool no_alpha) const
 {
-    Gtk::Widget *w = Gtk::make_managed<ColorICCSelector>(color, no_alpha);
-    return w;
+    return Gtk::make_managed<ColorICCSelector>(color, no_alpha);
 }
 
-Glib::ustring ColorICCSelectorFactory::modeName() const { return gettext(ColorICCSelector::MODE_NAME); }
+Glib::ustring ColorICCSelectorFactory::modeName() const
+{
+    return _("CMS");
 }
-}
-}
+
+} // namespace Inkscape::UI::widget
+
 /*
   Local Variables:
   mode:c++

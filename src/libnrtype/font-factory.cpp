@@ -418,6 +418,7 @@ std::map <std::string, PangoFontFamily*> FontFactory::GetUIFamilies()
         out.insert({displayName, families[currentFamily]});
     }
 
+    g_free(families);
     return out;
 }
 

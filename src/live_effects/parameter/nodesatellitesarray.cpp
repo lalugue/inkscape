@@ -228,7 +228,7 @@ void NodeSatelliteArrayParam::addKnotHolderEntities(KnotHolder *knotholder, SPIt
                 }
                 FilletChamferKnotHolderEntity *e = new FilletChamferKnotHolderEntity(this, index);
                 e->create(nullptr, item, knotholder, Inkscape::CANVAS_ITEM_CTRL_TYPE_LPE, "LPE:Chamfer",
-                          _(tip), _knot_color);
+                          tip, _knot_color);
                 knotholder->add(e);
                 e->knot->setMode(CANVAS_ITEM_CTRL_MODE_COLOR);
                 e->knot->setFill(0xffffffff, 0x44ff44ff, 0x44ff44ff, 0xffffffff);
@@ -550,7 +550,7 @@ void FilletChamferKnotHolderEntity::knot_click(guint state)
                         "<b>Shift+Click</b> open dialog, "
                         "<b>Ctrl+Alt+Click</b> resets");
             }
-            this->knot->tip = g_strdup(tip);
+            this->knot->setTip(tip);
             this->knot->show();
         }
     } else if (state & GDK_SHIFT_MASK) {

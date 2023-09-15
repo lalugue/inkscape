@@ -11,6 +11,8 @@
 #include "template.h"
 
 #include <glibmm/i18n.h>
+#include <glibmm/fileutils.h>
+#include <glibmm/miscutils.h>
 #include <glibmm/regex.h>
 
 #include "document.h"
@@ -82,18 +84,18 @@ Glib::ustring TemplatePreset::_get_icon_path(const std::string &name) const
 {
     auto filename = name + ".svg";
 
-    auto filepath = g_build_filename("icons", filename.c_str(), nullptr);
-    Glib::ustring fullpath = get_filename(TEMPLATES, filepath, false, true);
+    auto const filepath = Glib::build_filename("icons", filename);
+    Glib::ustring fullpath = get_filename(TEMPLATES, filepath.c_str(), false, true);
     if (!fullpath.empty()) return fullpath;
 
     auto base = _mod->get_base_directory();
     if (!base.empty()) {
-        auto base_icon = g_build_filename(base.c_str(), "icons", filename.c_str(), nullptr);
-        if (base_icon && g_file_test(base_icon, G_FILE_TEST_EXISTS)) {
+        auto base_icon = Glib::build_filename(base, "icons", filename);
+        if (Glib::file_test(base_icon, Glib::FILE_TEST_EXISTS)) {
             return base_icon;
         }
     }
-    return "";
+    return {};
 }
 
 /**
