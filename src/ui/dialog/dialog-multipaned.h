@@ -14,17 +14,13 @@
 #ifndef INKSCAPE_UI_DIALOG_MULTIPANED_H
 #define INKSCAPE_UI_DIALOG_MULTIPANED_H
 
+#include <vector>
 #include <glibmm/refptr.h>
-#include <gtk/gtk.h> // GtkEventControllerMotion
-#include <gtkmm/enums.h>
-#include <gtkmm/eventbox.h>
+#include <gtkmm/container.h>
 #include <gtkmm/gesture.h> // Gtk::EventSequenceState
 #include <gtkmm/orientable.h>
-#include <gtkmm/widget.h>
 
-namespace Cairo {
-class Context;
-} // namespace Cairo
+#include "helper/auto-connection.h"
 
 namespace Gdk {
 class DragContext;
@@ -32,109 +28,32 @@ class DragContext;
 
 namespace Gtk {
 class GestureDrag;
-class GestureMultiPress;
+class TargetEntry;
 } // namespace Gtk
 
 namespace Inkscape::UI::Dialog {
-
-/** A widget with multiple panes */
-
-class MyDropZone;
-class MyHandle;
-class DialogMultipaned;
-
-/* ============ DROPZONE  ============ */
-
-/**
- * Dropzones are eventboxes at the ends of a DialogMultipaned where you can drop dialogs.
- */
-class MyDropZone
-    : public Gtk::Orientable
-    , public Gtk::EventBox
-{
-public:
-    MyDropZone(Gtk::Orientation orientation);
-    ~MyDropZone() override;
-
-    static void add_highlight_instances();
-    static void remove_highlight_instances();
-
-private:
-    void set_size(int size);
-    bool _active = false;
-    void add_highlight();
-    void remove_highlight();
-
-    static std::list<MyDropZone *> _instances_list;
-};
-
-/* ============  HANDLE   ============ */
-
-/**
- * Handles are event boxes that help with resizing DialogMultipaned' children.
- */
-class MyHandle
-    : public Gtk::Orientable
-    , public Gtk::EventBox
-{
-public:
-    MyHandle(Gtk::Orientation orientation, int size);
-    ~MyHandle() override = default;
-
-    void set_dragging    (bool dragging);
-    void set_drag_updated(bool updated );
-
-private:
-    void on_motion_enter (GtkEventControllerMotion const *motion,
-                          double x, double y);
-    void on_motion_motion(GtkEventControllerMotion const *motion,
-                          double x, double y);
-    void on_motion_leave (GtkEventControllerMotion const *motion);
-
-    Gtk::EventSequenceState on_click_pressed (Gtk::GestureMultiPress const &gesture,
-                                              int n_press, double x, double y);
-    Gtk::EventSequenceState on_click_released(Gtk::GestureMultiPress &gesture,
-                                              int n_press, double x, double y);
-
-    void toggle_multipaned();
-    void update_click_indicator(double x, double y);
-    void show_click_indicator(bool show);
-    bool on_draw(const Cairo::RefPtr<Cairo::Context>& cr) override;
-    Cairo::Rectangle get_active_click_zone();
-
-    int _cross_size;
-    Gtk::Widget *_child;
-    void resize_handler(Gtk::Allocation &allocation);
-    bool is_click_resize_active() const;
-    bool _click = false;
-    bool _click_indicator = false;
-
-    bool _dragging = false;
-    bool _drag_updated = false;
-};
-
-/* ============ MULTIPANE ============ */
 
 /*
  * A widget with multiple panes. Agnostic to type what kind of widgets panes contain.
  * Handles allow a user to resize children widgets. Drop zones allow adding widgets
  * at either end.
  */
-class DialogMultipaned
+class DialogMultipaned final
     : public Gtk::Orientable
     , public Gtk::Container
 {
 public:
     DialogMultipaned(Gtk::Orientation orientation = Gtk::ORIENTATION_HORIZONTAL);
-    ~DialogMultipaned() override;
+    ~DialogMultipaned() final;
 
     void prepend(Gtk::Widget *new_widget);
     void append(Gtk::Widget *new_widget);
 
     // Getters and setters
     Gtk::Widget *get_first_widget();
-    Gtk::Widget *get_last_widget();
-    std::vector<Gtk::Widget *> get_children() { return children; }
+    Gtk::Widget *get_last_widget ();
+    void get_children() = delete; ///< We manage our own child list. Call get_multipaned_children()
+    std::vector<Gtk::Widget *> const &get_multipaned_children() const { return children; }
     void set_target_entries(const std::vector<Gtk::TargetEntry> &target_entries);
     bool has_empty_widget() { return (bool)_empty_widget; }
 
@@ -149,6 +68,9 @@ public:
     void children_toggled();
     void ensure_multipaned_children();
     void set_restored_width(int width);
+
+    static void    add_drop_zone_highlight_instances();
+    static void remove_drop_zone_highlight_instances();
 
 protected:
     // Overrides
@@ -204,7 +126,7 @@ private:
     Gtk::Widget *_empty_widget; // placeholder in an empty container
     void add_empty_widget();
     void remove_empty_widget();
-    std::vector<sigc::connection> _connections;
+    std::vector<auto_connection> _connections;
     int _natural_width = 0;
 };
 

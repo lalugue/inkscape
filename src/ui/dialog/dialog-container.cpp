@@ -553,13 +553,12 @@ void DialogContainer::toggle_dialogs()
     // we use this info to decide what it means to toggle visibility
     int visible = 0;
     int hidden = 0;
-    for (auto child : columns->get_children()) {
+    for (auto const child : columns->get_multipaned_children()) {
         // only examine panels, skip drop zones and handles
         if (auto panel = dynamic_cast<DialogMultipaned*>(child)) {
             if (panel->is_visible()) {
                 ++visible;
-            }
-            else {
+            } else {
                 ++hidden;
             }
         }
@@ -844,9 +843,9 @@ std::shared_ptr<Glib::KeyFile> DialogContainer::get_container_state(const window
     keyfile->set_integer("Windows", "Count", 1);
 
     // Step 3.0: get all the multipanes of the window
-    std::vector<DialogMultipaned *> multipanes;
+    std::vector<DialogMultipaned const *> multipanes;
 
-    for (auto const &column : columns->get_children()) {
+    for (auto const column : columns->get_multipaned_children()) {
         if (auto paned = dynamic_cast<DialogMultipaned *>(column)) {
             multipanes.push_back(paned);
         }
@@ -859,7 +858,7 @@ std::shared_ptr<Glib::KeyFile> DialogContainer::get_container_state(const window
         int notebook_count = 0; // non-empty notebooks count
 
         // Step 3.1.0: for each notebook, get its dialogs
-        for (auto const &columns_widget : multipanes[column_idx]->get_children()) {
+        for (auto const columns_widget : multipanes[column_idx]->get_multipaned_children()) {
             if (auto dialog_notebook = dynamic_cast<DialogNotebook *>(columns_widget)) {
                 std::vector<Glib::ustring> dialogs;
 
@@ -926,8 +925,8 @@ std::unique_ptr<Glib::KeyFile> DialogContainer::save_container_state()
     auto app = InkscapeApplication::instance();
 
     // Step 1: get all the container columns (in order, from the current container and all DialogWindow containers)
-    std::vector<DialogMultipaned *> windows(1, columns.get());
-    std::vector<DialogWindow *> dialog_windows(1, nullptr);
+    std::vector<DialogMultipaned const *> windows       (1, columns.get());
+    std::vector<DialogWindow           *> dialog_windows(1, nullptr      );
 
     for (auto const &window : app->gtk_app()->get_windows()) {
         DialogWindow *dialog_window = dynamic_cast<DialogWindow *>(window);
@@ -943,14 +942,14 @@ std::unique_ptr<Glib::KeyFile> DialogContainer::save_container_state()
     // Step 3: for each window, save its data. Only the first window is not floating (the others are DialogWindow)
     for (int window_idx = 0; window_idx < (int)windows.size(); ++window_idx) {
         // Step 3.0: get all the multipanes of the window
-        std::vector<DialogMultipaned *> multipanes;
+        std::vector<DialogMultipaned const *> multipanes;
 
         // used to check if the column is before or after canvas
-        std::vector<DialogMultipaned *>::iterator multipanes_it = multipanes.begin();
+        auto multipanes_it = multipanes.begin();
         bool canvas_seen = window_idx != 0; // no floating windows (window_idx > 0) have a canvas
         int before_canvas_columns_count = 0;
 
-        for (auto const &column : windows[window_idx]->get_children()) {
+        for (auto const column : windows[window_idx]->get_multipaned_children()) {
             if (!canvas_seen) {
                 UI::Widget::CanvasGrid *canvas = dynamic_cast<UI::Widget::CanvasGrid *>(column);
                 if (canvas) {
@@ -978,7 +977,7 @@ std::unique_ptr<Glib::KeyFile> DialogContainer::save_container_state()
             int width = multipanes[column_idx]->get_allocated_width();
 
             // Step 3.1.0: for each notebook, get its dialogs' types
-            for (auto const &columns_widget : multipanes[column_idx]->get_children()) {
+            for (auto const columns_widget : multipanes[column_idx]->get_multipaned_children()) {
                 DialogNotebook *dialog_notebook = dynamic_cast<DialogNotebook *>(columns_widget);
 
                 if (dialog_notebook) {
@@ -1024,7 +1023,7 @@ std::unique_ptr<Glib::KeyFile> DialogContainer::save_container_state()
         keyfile->set_integer(group_name, "ColumnCount", column_count);
         keyfile->set_boolean(group_name, "Floating", window_idx != 0);
         if (window_idx != 0) { // floating?
-            if (auto wnd = dynamic_cast<DialogWindow *>(dialog_windows.at(window_idx))) {
+            if (auto const wnd = dynamic_cast<DialogWindow *>(dialog_windows.at(window_idx))) {
                 // store window position
                 auto pos = dm_get_window_position(*wnd);
                 save_wnd_position(keyfile.get(), group_name, pos ? &*pos : nullptr);
@@ -1149,7 +1148,7 @@ void DialogContainer::column_empty(DialogMultipaned *column)
 
     DialogWindow *window = dynamic_cast<DialogWindow *>(get_toplevel());
     if (window && parent) {
-        auto children = parent->get_children();
+        auto const &children = parent->get_multipaned_children();
         // Close the DialogWindow if you're in an empty one
         if (children.size() == 3 && parent->has_empty_widget()) {
             window->close();

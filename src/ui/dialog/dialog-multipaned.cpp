@@ -11,16 +11,16 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#include <cassert>
+#include <iostream>
+#include <numeric>
 #include <glibmm/i18n.h>
-#include <glibmm/objectbase.h>
-#include <gtkmm/container.h>
+#include <gtkmm/eventbox.h>
 #include <gtkmm/gesturedrag.h>
 #include <gtkmm/gesturemultipress.h>
 #include <gtkmm/image.h>
 #include <gtkmm/label.h>
 #include <sigc++/functors/mem_fun.h>
-#include <iostream>
-#include <numeric>
 
 #include "dialog-multipaned.h"
 #include "dialog-window.h"
@@ -29,14 +29,12 @@
 #include "ui/util.h"
 #include "ui/widget/canvas-grid.h"
 
-#define DROPZONE_SIZE 5
-#define DROPZONE_EXPANSION 15
-#define HANDLE_SIZE 12
-#define HANDLE_CROSS_SIZE 25
+static constexpr int DROPZONE_SIZE      =  5;
+static constexpr int DROPZONE_EXPANSION = 15;
+static constexpr int HANDLE_SIZE        = 12;
+static constexpr int HANDLE_CROSS_SIZE  = 25;
 
-namespace Inkscape {
-namespace UI {
-namespace Dialog {
+namespace Inkscape::UI::Dialog {
 
 /*
  * References:
@@ -60,7 +58,31 @@ int get_handle_size() {
 
 /* ============ MyDropZone ============ */
 
-std::list<MyDropZone *> MyDropZone::_instances_list;
+/**
+ * Dropzones are eventboxes at the ends of a DialogMultipaned where you can drop dialogs.
+ */
+class MyDropZone final
+    : public Gtk::Orientable
+    , public Gtk::EventBox
+{
+public:
+    MyDropZone(Gtk::Orientation orientation);
+    ~MyDropZone() final;
+
+    static void add_highlight_instances();
+    static void remove_highlight_instances();
+
+private:
+    void set_size(int size);
+    bool _active = false;
+    void add_highlight();
+    void remove_highlight();
+
+    static std::vector<MyDropZone *> _instances_list;
+    friend class DialogMultipaned;
+};
+
+std::vector<MyDropZone *> MyDropZone::_instances_list;
 
 MyDropZone::MyDropZone(Gtk::Orientation orientation)
     : Glib::ObjectBase("MultipanedDropZone")
@@ -94,7 +116,9 @@ MyDropZone::MyDropZone(Gtk::Orientation orientation)
 
 MyDropZone::~MyDropZone()
 {
-    _instances_list.remove(this);
+    auto const it = std::find(_instances_list.cbegin(), _instances_list.cend(), this);
+    assert(it != _instances_list.cend());
+    _instances_list.erase(it);
 }
 
 void MyDropZone::add_highlight_instances()
@@ -108,7 +132,6 @@ void MyDropZone::remove_highlight_instances()
 {
     for (auto *instance : _instances_list) {
         instance->remove_highlight();
-        // instance->set_size(DROPZONE_SIZE);
     }
 }
 
@@ -136,6 +159,49 @@ void MyDropZone::set_size(int size)
 }
 
 /* ============  MyHandle  ============ */
+
+/**
+ * Handles are event boxes that help with resizing DialogMultipaned' children.
+ */
+class MyHandle final
+    : public Gtk::Orientable
+    , public Gtk::EventBox
+{
+public:
+    MyHandle(Gtk::Orientation orientation, int size);
+    ~MyHandle() final = default;
+
+    void set_dragging    (bool dragging);
+    void set_drag_updated(bool updated );
+
+private:
+    void on_motion_enter (GtkEventControllerMotion const *motion,
+                          double x, double y);
+    void on_motion_motion(GtkEventControllerMotion const *motion,
+                          double x, double y);
+    void on_motion_leave (GtkEventControllerMotion const *motion);
+
+    Gtk::EventSequenceState on_click_pressed (Gtk::GestureMultiPress const &gesture,
+                                              int n_press, double x, double y);
+    Gtk::EventSequenceState on_click_released(Gtk::GestureMultiPress &gesture,
+                                              int n_press, double x, double y);
+
+    void toggle_multipaned();
+    void update_click_indicator(double x, double y);
+    void show_click_indicator(bool show);
+    bool on_draw(const Cairo::RefPtr<Cairo::Context>& cr) final;
+    Cairo::Rectangle get_active_click_zone();
+
+    int _cross_size;
+    Gtk::Widget *_child;
+    void resize_handler(Gtk::Allocation &allocation);
+    bool is_click_resize_active() const;
+    bool _click = false;
+    bool _click_indicator = false;
+
+    bool _dragging = false;
+    bool _drag_updated = false;
+};
 
 MyHandle::MyHandle(Gtk::Orientation orientation, int size = get_handle_size())
     : Glib::ObjectBase("MultipanedHandle")
@@ -309,7 +375,7 @@ void MyHandle::toggle_multipaned() {
     auto panel = dynamic_cast<DialogMultipaned*>(get_parent());
     if (!panel) return;
 
-    auto children = panel->get_children();
+    auto const &children = panel->get_multipaned_children();
     Gtk::Widget* multi = nullptr; // multipaned widget to toggle
     bool left_side = true; // panels to the left of canvas
     size_t i = 0;
@@ -394,10 +460,8 @@ DialogMultipaned::DialogMultipaned(Gtk::Orientation orientation)
     // ============= Add dropzones ==============
     auto const dropzone_s = Gtk::make_managed<MyDropZone>(orientation);
     auto const dropzone_e = Gtk::make_managed<MyDropZone>(orientation);
-
     dropzone_s->set_parent(*this);
     dropzone_e->set_parent(*this);
-
     children.push_back(dropzone_s);
     children.push_back(dropzone_e);
 
@@ -407,7 +471,6 @@ DialogMultipaned::DialogMultipaned(Gtk::Orientation orientation)
         sigc::mem_fun(*this, &DialogMultipaned::on_drag_update),
         sigc::mem_fun(*this, &DialogMultipaned::on_drag_end   ),
         Gtk::PHASE_CAPTURE);
-
     _connections.emplace_back(
         signal_drag_data_received().connect(sigc::mem_fun(*this, &DialogMultipaned::on_drag_data)));
     _connections.emplace_back(
@@ -423,18 +486,6 @@ DialogMultipaned::DialogMultipaned(Gtk::Orientation orientation)
 
 DialogMultipaned::~DialogMultipaned()
 {
-    // Disconnect all signals
-    for_each(_connections.begin(), _connections.end(), [&](auto c) { c.disconnect(); });
-    /*
-        for (std::vector<Gtk::Widget *>::iterator it = children.begin(); it != children.end();) {
-            if (dynamic_cast<DialogMultipaned *>(*it) || dynamic_cast<DialogNotebook *>(*it)) {
-                delete *it;
-            } else {
-                it++;
-            }
-        }
-    */
-
     for (;;) {
         auto it = std::find_if(children.begin(), children.end(), [](auto w) {
             return dynamic_cast<DialogMultipaned *>(w) || dynamic_cast<DialogNotebook *>(w);
@@ -456,8 +507,6 @@ DialogMultipaned::~DialogMultipaned()
             remove(*child);
         }
     }
-
-    children.clear();
 }
 
 void DialogMultipaned::prepend(Gtk::Widget *child)
@@ -746,7 +795,6 @@ void DialogMultipaned::get_preferred_height_for_width_vfunc(int width, int &mini
         }
     }
 }
-
 
 void DialogMultipaned::children_toggled() {
     _handle = -1;
@@ -1329,9 +1377,17 @@ void DialogMultipaned::set_restored_width(int width) {
     _natural_width = width;
 }
 
-} // namespace Dialog
-} // namespace UI
-} // namespace Inkscape
+void DialogMultipaned::add_drop_zone_highlight_instances()
+{
+    MyDropZone::add_highlight_instances();
+}
+
+void DialogMultipaned::remove_drop_zone_highlight_instances()
+{
+    MyDropZone::remove_highlight_instances();
+}
+
+} // namespace Inkscape::UI::Dialog
 
 /*
   Local Variables:

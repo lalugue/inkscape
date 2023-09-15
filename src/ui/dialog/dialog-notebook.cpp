@@ -456,7 +456,7 @@ Gtk::Widget* drag_source= 0;
 void DialogNotebook::on_drag_end(const Glib::RefPtr<Gdk::DragContext> &context)
 {
     // Remove dropzone highlights
-    MyDropZone::remove_highlight_instances();
+    DialogMultipaned::remove_drop_zone_highlight_instances();
     for (auto instance : _instances) {
         instance->remove_highlight_header();
     }
@@ -526,7 +526,8 @@ void DialogNotebook::on_drag_begin(const Glib::RefPtr<Gdk::DragContext> &context
     DialogContainer::page_move = 0;
     DialogContainer::new_nb = 0;
 #endif
-    MyDropZone::add_highlight_instances();
+
+    DialogMultipaned::add_drop_zone_highlight_instances();
     for (auto instance : _instances) {
         instance->add_highlight_header();
     }
