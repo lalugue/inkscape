@@ -86,6 +86,8 @@ public:
     Glib::ustring export_png_color_mode;
     bool          export_plain_svg;
     bool          export_png_use_dithering;
+    int           export_png_compression;
+    int           export_png_antialias;
     void set_export_area(const Glib::ustring &area);
     void set_export_area_type(ExportAreaType type);
 };

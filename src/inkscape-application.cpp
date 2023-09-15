@@ -770,6 +770,10 @@ InkscapeApplication::InkscapeApplication()
     gapp->add_main_option_entry(T::OPTION_TYPE_STRING,   "export-background-opacity", 'y', N_("Background opacity for exported bitmaps (0.0 to 1.0, or 1 to 255)"), N_("VALUE")); // Bxx
     gapp->add_main_option_entry(T::OPTION_TYPE_STRING,   "export-png-color-mode", '\0', N_("Color mode (bit depth and color type) for exported bitmaps (Gray_1/Gray_2/Gray_4/Gray_8/Gray_16/RGB_8/RGB_16/GrayAlpha_8/GrayAlpha_16/RGBA_8/RGBA_16)"), N_("COLOR-MODE")); // Bxx
     gapp->add_main_option_entry(T::OPTION_TYPE_STRING,      "export-png-use-dithering", '\0', N_("Force dithering or disables it"), "false|true"); // Bxx
+    // FIXME: Compression should really be an INT, but an upstream bug means 0 is detected as NULL
+    gapp->add_main_option_entry(T::OPTION_TYPE_STRING,   "export-png-compression", '\0', N_("Compression level for PNG export (0 to 9); default is 6"), N_("LEVEL"));
+    // FIXME: Antialias should really be an INT, but an upstream bug means 0 is detected as NULL
+    gapp->add_main_option_entry(T::OPTION_TYPE_STRING,   "export-png-antialias",   '\0', N_("Antialias level for PNG export (0 to 3); default is 2"),   N_("LEVEL"));
 
     // Query - Geometry
     _start_main_option_section(_("Query object/document geometry"));
@@ -1552,6 +1556,10 @@ InkscapeApplication::on_handle_local_options(const Glib::RefPtr<Glib::VariantDic
         options->contains("export-background")     ||
         options->contains("export-background-opacity") ||
         options->contains("export-text-to_path")   ||
+        options->contains("export-png-color-mode") ||
+        options->contains("export-png-use-dithering") ||
+        options->contains("export-png-compression") ||
+        options->contains("export-png-antialias") ||
 
         options->contains("query-id")              ||
         options->contains("query-x")               ||
@@ -1801,6 +1809,46 @@ InkscapeApplication::on_handle_local_options(const Glib::RefPtr<Glib::VariantDic
         else if (val == "false") _file_export.export_png_use_dithering = false;
         else std::cerr << "invalid value for export-png-use-dithering. Ignoring." << std::endl;
     } else _file_export.export_png_use_dithering = prefs->getBool("/options/dithering/value", true);
+
+    // FIXME: Upstream bug means INT is ignored if set to 0 so doesn't exist in options
+    if (options->contains("export-png-compression")) {
+        Glib::ustring compression;
+        options->lookup_value("export-png-compression", compression);
+        const char *begin = compression.raw().c_str();
+        char *end;
+        long ival = strtol(begin, &end, 10);
+        if (end == begin || *end != '\0' || errno == ERANGE) {
+            std::cerr << "Cannot parse integer value "
+                      << compression
+                      << " for --export-png-compression; the default value "
+                      <<  _file_export.export_png_compression
+                      << " will be used"
+                      << std::endl;
+        }
+        else {
+            _file_export.export_png_compression = (int) ival;
+        }
+    }
+
+    // FIXME: Upstream bug means INT is ignored if set to 0 so doesn't exist in options
+    if (options->contains("export-png-antialias")) {
+        Glib::ustring antialias;
+        options->lookup_value("export-png-antialias", antialias);
+        const char *begin = antialias.raw().c_str();
+        char *end;
+        long ival = strtol(begin, &end, 10);
+        if (end == begin || *end != '\0' || errno == ERANGE) {
+            std::cerr << "Cannot parse integer value "
+                      << antialias
+                      << " for --export-png-antialias; the default value "
+                      <<  _file_export.export_png_antialias
+                      << " will be used"
+                      << std::endl;
+        }
+        else {
+            _file_export.export_png_antialias = (int) ival;
+        }
+    }
     
     if (use_active_window) {
         _gio_application->register_application();

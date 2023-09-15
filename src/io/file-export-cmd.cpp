@@ -75,6 +75,8 @@ InkFileExportCmd::InkFileExportCmd()
     , export_id_only(false)
     , export_background_opacity(-1) // default is unset != actively set to 0
     , export_plain_svg(false)
+    ,export_png_compression(6)
+    ,export_png_antialias(2)
 {
 }
 
@@ -777,9 +779,27 @@ InkFileExportCmd::do_export_png_now(SPDocument *doc, std::string const &filename
                   << width << " x " << height << " pixels (" << dpi << " dpi)" << std::endl;
 #endif
 
+        // -------------------------- Compression level ---------------------------
+
+        if (export_png_compression < 0 || export_png_compression > 9) {
+            std::cerr << "InkFileExport::do_export_png: "
+                      << "Compression level " << export_png_compression
+                      << " out of range [0 - 9]. Skipping.";
+            return;
+        }
+
+        // ---------------------------- Antialias level ---------------------------
+
+        if (export_png_antialias < 0 || export_png_antialias > 3) {
+            std::cerr << "InkFileExport::do_export_png: "
+                      << "Antialias level " << export_png_antialias
+                      << " out of range [0 - 3]. Skipping.";
+            return;
+        }
+
         if( sp_export_png_file(doc, filename_out.c_str(), area, width, height, xdpi, ydpi,
                                bgcolor, nullptr, nullptr, true, export_id_only ? items : std::vector<SPItem*>(),
-                               false, color_type, bit_depth) == 1 ) {
+                               false, color_type, bit_depth, export_png_compression, export_png_antialias) == 1 ) {
         } else {
             std::cerr << "InkFileExport::do_export_png: Failed to export to " << filename_out << std::endl;
         }

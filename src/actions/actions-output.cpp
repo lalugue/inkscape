@@ -219,6 +219,20 @@ export_png_use_dithering(const Glib::VariantBase&  value, InkscapeApplication *a
 }
 
 void
+export_png_compression(const Glib::VariantBase&  value, InkscapeApplication *app)
+{
+    Glib::Variant<int> i = Glib::VariantBase::cast_dynamic<Glib::Variant<int> >(value);
+    app->file_export()->export_png_compression = i.get();
+}
+
+void
+export_png_antialias(const Glib::VariantBase&  value, InkscapeApplication *app)
+{
+    Glib::Variant<int> i = Glib::VariantBase::cast_dynamic<Glib::Variant<int> >(value);
+    app->file_export()->export_png_antialias = i.get();
+}
+
+void
 export_do(InkscapeApplication *app)
 {
     SPDocument* document = app->get_active_document();
@@ -263,6 +277,8 @@ std::vector<std::vector<Glib::ustring>> raw_data_output =
     {"app.export-background-opacity", N_("Export Background Opacity"), "Export",     N_("Include background opacity in exported file")        },
     {"app.export-png-color-mode",     N_("Export PNG Color Mode"),     "Export",     N_("Set color mode for PNG export")                      },
     {"app.export-png-use-dithering",  N_("Export PNG Dithering"),      "Export",     N_("Set dithering for PNG export")                       },
+    {"app.export-png-compression",    N_("Export PNG compression"),    "Export",     N_("Set compression level for PNG export")               },
+    {"app.export-png-antialias",      N_("Export PNG antialias"),      "Export",     N_("Set antialias level for PNG export")                 },
 
     {"app.export-do",                 N_("Do Export"),                 "Export",     N_("Do export")                                          }
     // clang-format on
@@ -297,7 +313,9 @@ std::vector<std::vector<Glib::ustring>> hint_data_output =
     {"app.export-background",         N_("Enter string for background color, e.g. #ff007f or rgb(255, 0, 128)")                 },
     {"app.export-background-opacity", N_("Enter number for background opacity, either between 0.0 and 1.0, or 1 up to 255")     },
     {"app.export-png-color-mode",     N_("Enter string for PNG Color Mode, one of Gray_1/Gray_2/Gray_4/Gray_8/Gray_16/RGB_8/RGB_16/GrayAlpha_8/GrayAlpha_16/RGBA_8/RGBA_16")},
-    {"app.export-png-use-dithering",  N_("Enter 1/0 for Yes/No to use dithering")          }
+    {"app.export-png-use-dithering",  N_("Enter 1/0 for Yes/No to use dithering")          },
+    {"app.export-png-compression",    N_("Enter integer for PNG compression level (0 to 9)")},
+    {"app.export-png-antialias",      N_("Enter integer for PNG antialias level (0 to 3)")}
     // clang-format on
 };
 
@@ -344,6 +362,8 @@ add_actions_output(InkscapeApplication* app)
     gapp->add_action_with_parameter( "export-background-opacity",Double, sigc::bind(sigc::ptr_fun(&export_background_opacity), app));
     gapp->add_action_with_parameter( "export-png-color-mode",    String, sigc::bind(sigc::ptr_fun(&export_png_color_mode), app));
     gapp->add_action_with_parameter( "export-png-use-dithering", Bool,   sigc::bind(sigc::ptr_fun(&export_png_use_dithering), app));
+    gapp->add_action_with_parameter( "export-png-compression",   Int,    sigc::bind(sigc::ptr_fun(&export_png_compression),   app));
+    gapp->add_action_with_parameter( "export-png-antialias",     Int,    sigc::bind(sigc::ptr_fun(&export_png_antialias),     app));
 
     // Extra
     gapp->add_action(                "export-do",                        sigc::bind(sigc::ptr_fun(&export_do),           app));
