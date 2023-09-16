@@ -15,20 +15,21 @@
 #include <algorithm>
 #include <cstddef>
 #include <memory>
-#include <string>
 #include <gdk/gdkkeysyms.h>
 #include <glibmm/i18n.h>
 #include <glibmm/main.h>
 #include <glibmm/regex.h>
 #include <glibmm/timer.h>
 #include <glibmm/ustring.h>
+#include <glibmm/varianttype.h>
+#include <giomm/simpleactiongroup.h>
 #include <gtkmm/box.h>
 #include <gtkmm/builder.h>
 #include <gtkmm/button.h>
 #include <gtkmm/enums.h>
 #include <gtkmm/label.h>
 #include <gtkmm/liststore.h>
-#include <gtkmm/menuitem.h>
+#include <gtkmm/menubutton.h>
 #include <gtkmm/object.h>
 #include <gtkmm/popover.h>
 #include <gtkmm/scrolledwindow.h>
@@ -220,26 +221,17 @@ AttrDialog::AttrDialog()
 
     _popover->signal_closed().connect([=]() { popClosed(); });
     Controller::add_key<&AttrDialog::onPopoverKeyPressed>(*_popover, *this, Gtk::PHASE_CAPTURE);
-    _popover->set_visible(false);
 
     get_widget<Gtk::Button>(_builder, "btn-truncate").signal_clicked().connect([=](){ truncateDigits(); });
 
     const int N = 5;
     _rounding_precision = Inkscape::Preferences::get()->getIntLimited("/dialogs/attrib/precision", 2, 0, N);
-    for (int n = 0; n <= N; ++n) {
-        auto id = '_' + std::to_string(n);
-        auto item = &get_widget<Gtk::MenuItem>(_builder, id.c_str());
-        auto action = [=](){
-            _rounding_precision = n;
-            get_widget<Gtk::Label>(_builder, "precision").set_label(' ' + item->get_label());
-            Inkscape::Preferences::get()->setInt("/dialogs/attrib/precision", n);
-        };
-        item->signal_activate().connect(action);
-
-        if (n == _rounding_precision) {
-            action();
-        }
-    }
+    setPrecision(_rounding_precision);
+    auto group = Gio::SimpleActionGroup::create();
+    auto action = group->add_action_radio_integer("precision", _rounding_precision);
+    action->property_state().signal_changed().connect([=]{ int n; action->get_state(n);
+                                                          setPrecision(n); });
+    insert_action_group("attrdialog", std::move(group));
 
     attr_reset_context(0);
     UI::pack_start(*this, get_widget<Gtk::Box>(_builder, "main-box"), UI::PackOptions::expand_widget);
@@ -839,6 +831,18 @@ void AttrDialog::valueEdited (const Glib::ustring& path, const Glib::ustring& va
         }
         setUndo(_("Change attribute value"));
     }
+}
+
+void AttrDialog::setPrecision(int const n)
+{
+    _rounding_precision = n;
+    auto const menu = get_widget<Gtk::MenuButton>(_builder, "btn-menu").get_menu_model();
+    auto const section = menu->get_item_link(0, Gio::MENU_LINK_SECTION);
+    auto const type = Glib::VariantType{g_variant_type_new("s")};
+    auto const variant = section->get_item_attribute(n, Gio::MENU_ATTRIBUTE_LABEL, type);
+    auto const label = ' ' + static_cast<Glib::Variant<Glib::ustring> const &>(variant).get();
+    get_widget<Gtk::Label>(_builder, "precision").set_label(label);
+    Inkscape::Preferences::get()->setInt("/dialogs/attrib/precision", n);
 }
 
 } // namespace Inkscape::UI::Dialog

@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.40.0 -->
 <interface>
   <requires lib="gtk+" version="3.24"/>
   <!-- interface-css-provider-path style.css -->
@@ -74,52 +73,40 @@
       </packing>
     </child>
   </object>
-  <object class="GtkMenu" id="menu1">
-    <property name="visible">True</property>
-    <property name="reserve-toggle-size">False</property>
-    <child>
-      <object class="GtkMenuItem" id="_0">
-        <property name="visible">True</property>
-        <property name="label" context="Precision" comments="This symbolizes precision of 0 digits after the decimal separator." translatable="yes">N</property>
-        <property name="use-underline">True</property>
-      </object>
-    </child>
-    <child>
-      <object class="GtkMenuItem" id="_1">
-        <property name="visible">True</property>
-        <property name="label" context="Precision" comments="This symbolizes precision of 1 digit after the decimal separator. Please adjust to your language's number format (e.g. N,N)." translatable="yes">N.N</property>
-        <property name="use-underline">True</property>
-      </object>
-    </child>
-    <child>
-      <object class="GtkMenuItem" id="_2">
-        <property name="visible">True</property>
-        <property name="label" context="Precision" comments="This symbolizes precision of 2 digits after the decimal separator. Please adjust to your language's number format (e.g. N,NN)." translatable="yes">N.NN</property>
-        <property name="use-underline">True</property>
-      </object>
-    </child>
-    <child>
-      <object class="GtkMenuItem" id="_3">
-        <property name="visible">True</property>
-        <property name="label" context="Precision" comments="This symbolizes precision of 3 digits after the decimal separator. Please adjust to your language's number format (e.g. N,NNN)." translatable="yes">N.NNN</property>
-        <property name="use-underline">True</property>
-      </object>
-    </child>
-    <child>
-      <object class="GtkMenuItem" id="_4">
-        <property name="visible">True</property>
-        <property name="label" context="Precision" comments="This symbolizes precision of 4 digits after the decimal separator. Please adjust to your language's number format (e.g. N,NNNN)." translatable="yes">N.NNNN</property>
-        <property name="use-underline">True</property>
-      </object>
-    </child>
-    <child>
-      <object class="GtkMenuItem" id="_5">
-        <property name="visible">True</property>
-        <property name="label" context="Precision" comments="This symbolizes precision of 5 digits after the decimal separator. Please adjust to your language's number format (e.g. N,NNNNN)." translatable="yes">N.NNNNN</property>
-        <property name="use-underline">True</property>
-      </object>
-    </child>
-  </object>
+  <menu id="menu1">
+    <section>
+      <item>
+        <attribute name="label" translatable="yes" context="Precision" comments="This symbolizes precision of 0 digits after the decimal separator.">N</attribute>
+        <attribute name="action">attrdialog.precision</attribute>
+        <attribute name="target" type="i">0</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes" context="Precision" comments="This symbolizes precision of 1 digit after the decimal separator. Please adjust to your language's number format (e.g. N,N).">N.N</attribute>
+        <attribute name="action">attrdialog.precision</attribute>
+        <attribute name="target" type="i">1</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes" context="Precision" comments="This symbolizes precision of 2 digits after the decimal separator. Please adjust to your language's number format (e.g. N,NN).">N.NN</attribute>
+        <attribute name="action">attrdialog.precision</attribute>
+        <attribute name="target" type="i">2</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes" context="Precision" comments="This symbolizes precision of 3 digits after the decimal separator. Please adjust to your language's number format (e.g. N,NNN).">N.NNN</attribute>
+        <attribute name="action">attrdialog.precision</attribute>
+        <attribute name="target" type="i">3</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes" context="Precision" comments="This symbolizes precision of 4 digits after the decimal separator. Please adjust to your language's number format (e.g. N,NNNN).">N.NNNN</attribute>
+        <attribute name="action">attrdialog.precision</attribute>
+        <attribute name="target" type="i">4</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes" context="Precision" comments="This symbolizes precision of 5 digits after the decimal separator. Please adjust to your language's number format (e.g. N,NNNNN).">N.NNNNN</attribute>
+        <attribute name="action">attrdialog.precision</attribute>
+        <attribute name="target" type="i">5</attribute>
+      </item>
+    </section>
+  </menu>
   <object class="GtkPopover" id="popup">
     <property name="relative-to">tree-view</property>
     <property name="position">bottom</property>
@@ -171,14 +158,16 @@
                     <property name="receives-default">True</property>
                     <property name="margin-start">2</property>
                     <property name="relief">none</property>
-                    <property name="popup">menu1</property>
+                    <property name="menu-model">menu1</property>
                     <child>
                       <object class="GtkBox">
                         <property name="visible">True</property>
+                        <property name="margin-start">2</property>
+                        <property name="margin-end">2</property>
                         <child>
                           <object class="GtkLabel" id="precision">
                             <property name="visible">True</property>
-                            <property name="label" translatable="yes" context="Precision" comments="This symbolizes precision of 5 digits after the decimal separator. Please adjust to your language's number format (e.g. N,NNNNN).">N.NNNNN</property>
+                            <property name="width-chars">8</property>
                           </object>
                         </child>
                         <child>
@@ -186,9 +175,6 @@
                             <property name="visible">True</property>
                             <property name="icon-name">pan-down-symbolic</property>
                           </object>
-                          <packing>
-                            <property name="position">1</property>
-                          </packing>
                         </child>
                       </object>
                     </child>

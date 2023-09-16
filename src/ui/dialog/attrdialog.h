@@ -155,6 +155,7 @@ private:
 
     bool onPopoverKeyPressed(GtkEventControllerKey const *controller,
                              unsigned keyval, unsigned keycode, GdkModifierType state);
+    void setPrecision(int const n);
 
     void notifyAttributeChanged(XML::Node &repr, GQuark name, Util::ptr_shared old_value, Util::ptr_shared new_value) final;
     void notifyContentChanged(XML::Node &node, Util::ptr_shared old_content, Util::ptr_shared new_content) final;
