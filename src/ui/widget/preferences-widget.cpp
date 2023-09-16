@@ -979,21 +979,6 @@ void PrefOpenFolder::onRelatedButtonClickedCallback()
 #endif
 }
 
-void PrefFileButton::init(Glib::ustring const &prefs_path)
-{
-    _prefs_path = prefs_path;
-    Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-    select_filename(Glib::filename_from_utf8(prefs->getString(_prefs_path)));
-
-    signal_selection_changed().connect(sigc::mem_fun(*this, &PrefFileButton::onFileChanged));
-}
-
-void PrefFileButton::onFileChanged()
-{
-    Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-    prefs->setString(_prefs_path, Glib::filename_to_utf8(get_filename()));
-}
-
 void PrefEntry::init(Glib::ustring const &prefs_path, bool visibility)
 {
     _prefs_path = prefs_path;

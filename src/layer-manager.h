@@ -22,7 +22,8 @@ class SPDesktop;
 class SPDocument;
 
 namespace Inkscape {
-    class ObjectHierarchy;
+
+class ObjectHierarchy;
 
 class LayerManager : public DocumentSubset
 {
@@ -88,9 +89,10 @@ SPObject *create_layer(SPObject *root, SPObject *layer, LayerRelativePosition po
 SPObject *next_layer(SPObject *root, SPObject *layer);
 SPObject *previous_layer(SPObject *root, SPObject *layer);
 
-}
+} // namespace Inkscape
 
-#endif
+#endif // SEEN_INKSCAPE_LAYER_MANAGER_H
+
 /*
   Local Variables:
   mode:c++

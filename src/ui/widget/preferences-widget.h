@@ -23,7 +23,6 @@
 #include <gtkmm/checkbutton.h>
 #include <gtkmm/comboboxtext.h>
 #include <gtkmm/drawingarea.h>
-#include <gtkmm/filechooserbutton.h>
 #include <gtkmm/grid.h>
 #include <gtkmm/radiobutton.h>
 #include <gtkmm/scrolledwindow.h>
@@ -288,16 +287,6 @@ class PrefOpenFolder : public Gtk::Box {
     Gtk::Button *relatedButton;
     Gtk::Entry *relatedEntry;
     void onRelatedButtonClickedCallback();
-};
-
-class PrefFileButton : public Gtk::FileChooserButton
-{
-public:
-    void init(Glib::ustring const &prefs_path);
-
-protected:
-    Glib::ustring _prefs_path;
-    void onFileChanged();
 };
 
 class PrefColorPicker : public ColorPicker

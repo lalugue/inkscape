@@ -664,7 +664,9 @@ button.square-button image {
 #LayerSelector label
 {
     padding-left: 6px;
-    border-left: 3px solid white;
+    border-left-style: solid;
+    border-left-width: 3px  ;
+    /* Color is set in src/ui/widget/layer-selector.cpp */
 }
 
 #DialogNotebook #Swatches box label {

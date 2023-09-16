@@ -13,48 +13,55 @@
 #ifndef SEEN_INKSCAPE_WIDGETS_LAYER_SELECTOR
 #define SEEN_INKSCAPE_WIDGETS_LAYER_SELECTOR
 
+#include <memory>
+#include <glibmm/refptr.h>
 #include <gtkmm/box.h>
-#include <gtkmm/combobox.h>
+#include <gtkmm/button.h>
+#include <gtkmm/label.h>
 #include <gtkmm/togglebutton.h>
-#include <gtkmm/cellrenderertext.h>
-#include <gtkmm/treemodel.h>
-#include <gtkmm/liststore.h>
-#include <gtkmm/cssprovider.h>
-#include <sigc++/slot.h>
 
+#include "helper/auto-connection.h"
 #include "xml/helper-observer.h"
+
+namespace Glib {
+class ustring;
+} // namespace Glib
+
+namespace Gtk {
+class CssProvider;
+} // namespace Gtk
 
 class SPDesktop;
 class SPDocument;
 class SPGroup;
 
-namespace Inkscape {
-namespace UI {
-namespace Widget {
+namespace Inkscape::UI::Widget {
 
 class AlternateIcons;
 
-class LayerSelector : public Gtk::Box {
+class LayerSelector final : public Gtk::Box {
 public:
     LayerSelector(SPDesktop *desktop = nullptr);
-    ~LayerSelector() override;
+    ~LayerSelector() final;
 
     void setDesktop(SPDesktop *desktop);
+
 private:
-    SPDesktop *_desktop;
-    SPGroup *_layer;
+    SPDesktop *_desktop = nullptr;
+    SPGroup   *_layer   = nullptr;
 
     Gtk::ToggleButton _eye_toggle;
     Gtk::ToggleButton _lock_toggle;
     Gtk::Button _layer_name;
     Gtk::Label _layer_label;
     Glib::RefPtr<Gtk::CssProvider> _label_style;
-    AlternateIcons * _eye_label;
-    AlternateIcons * _lock_label;
 
-    sigc::connection _layer_changed;
-    sigc::connection _hide_layer_connection;
-    sigc::connection _lock_layer_connection;
+    AlternateIcons *_eye_label  = nullptr;
+    AlternateIcons *_lock_label = nullptr;
+
+    auto_connection _layer_changed;
+    auto_connection _hide_layer_connection;
+    auto_connection _lock_layer_connection;
     std::unique_ptr<Inkscape::XML::SignalObserver> _observer;
 
     void _layerChanged(SPGroup *layer);
@@ -63,13 +70,13 @@ private:
     void _hideLayer();
     void _lockLayer();
     void _layerChoose();
+    Glib::ustring getThisCssClass() const;
 };
 
-} // namespace Widget
-} // namespace UI
-} // namespace Inkscape
+} // namespace Inkscape::UI::Widget
 
-#endif
+#endif // SEEN_INKSCAPE_WIDGETS_LAYER_SELECTOR
+
 /*
   Local Variables:
   mode:c++

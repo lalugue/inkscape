@@ -13,54 +13,52 @@
 
 #include "layer-selector.h"
 
-#include <boost/range/adaptor/filtered.hpp>
-#include <boost/range/adaptor/reversed.hpp>
-#include <cstring>
 #include <string>
 #include <glibmm/i18n.h>
+#include <glibmm/ustring.h>
+#include <gtkmm/cssprovider.h>
+#include <gtkmm/image.h>
+#include <gtkmm/stylecontext.h>
+#include <sigc++/functors/mem_fun.h>
 
 #include "desktop.h"
 #include "document-undo.h"
-#include "document.h"
 #include "layer-manager.h"
-#include "object/sp-root.h"
 #include "object/sp-item-group.h"
-#include "ui/widget/layer-selector.h"
 #include "ui/dialog/dialog-container.h"
-#include "ui/dialog/objects.h"
 #include "ui/icon-loader.h"
 #include "ui/icon-names.h"
 #include "ui/pack.h"
 #include "ui/util.h"
 
-namespace Inkscape {
-namespace UI {
-namespace Widget {
+namespace Inkscape::UI::Widget {
 
-class AlternateIcons : public Gtk::Box {
+class AlternateIcons final : public Gtk::Box {
 public:
     AlternateIcons(Gtk::BuiltinIconSize size, Glib::ustring const &a, Glib::ustring const &b)
     : Gtk::Box(Gtk::ORIENTATION_HORIZONTAL)
-    , _a(nullptr)
-    , _b(nullptr)
     {
         set_name("AlternateIcons");
+
         if (!a.empty()) {
             _a = Gtk::manage(sp_get_icon_image(a, size));
             _a->set_no_show_all(true);
             add(*_a);
         }
+
         if (!b.empty()) {
             _b = Gtk::manage(sp_get_icon_image(b, size));
             _b->set_no_show_all(true);
             add(*_b);
         }
+
         setState(false);
     }
 
     bool state() const { return _state; }
     void setState(bool state) {
         _state = state;
+
         if (_state) {
             if (_a) _a->set_visible(false);
             if (_b) _b->set_visible(true);
@@ -69,18 +67,22 @@ public:
             if (_b) _b->set_visible(false);
         }
     }
+
 private:
-    Gtk::Image *_a;
-    Gtk::Image *_b;
-    bool _state;
+    Gtk::Image *_a = nullptr;
+    Gtk::Image *_b = nullptr;
+    bool _state    = false  ;
 };
+
+static constexpr auto cssName = "LayerSelector";
 
 LayerSelector::LayerSelector(SPDesktop *desktop)
     : Gtk::Box(Gtk::ORIENTATION_HORIZONTAL)
-    , _desktop(nullptr)
-    , _observer(new Inkscape::XML::SignalObserver)
+    , _label_style{Gtk::CssProvider::create()}
+    , _observer{std::make_unique<Inkscape::XML::SignalObserver>()}
 {
-    set_name("LayerSelector");
+    set_name(cssName);
+    get_style_context()->add_class(getThisCssClass());
 
     _layer_name.signal_clicked().connect(sigc::mem_fun(*this, &LayerSelector::_layerChoose));
     _layer_name.set_relief(Gtk::RELIEF_NONE);
@@ -110,6 +112,8 @@ LayerSelector::LayerSelector(SPDesktop *desktop)
     _layer_label.set_ellipsize(Pango::ELLIPSIZE_END);
     _layer_label.set_markup("<i>Unset</i>");
     _layer_label.set_valign(Gtk::ALIGN_CENTER);
+    Gtk::StyleContext::add_provider_for_screen(_layer_label.get_screen(), _label_style,
+                                               GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 
     _observer->signal_changed().connect(sigc::mem_fun(*this, &LayerSelector::_layerModified));
     setDesktop(desktop);
@@ -150,9 +154,6 @@ void LayerSelector::_layerModified()
     auto root = _desktop->layerManager().currentRoot();
     bool active = _layer && _layer != root;
 
-    if (_label_style) {
-        _layer_label.get_style_context()->remove_provider(_label_style);
-    }
     auto color_str = std::string("white");
 
     if (active) {
@@ -162,10 +163,9 @@ void LayerSelector::_layerModified()
         _layer_label.set_markup(_layer ? "<i>[root]</i>" : "<i>nothing</i>");
     }
 
-    Glib::RefPtr<Gtk::StyleContext> style_context = _layer_label.get_style_context();
-    _label_style = Gtk::CssProvider::create();
-    _label_style->load_from_data("#LayerSelector label {border-color:" + color_str + ";}");
-    _layer_label.get_style_context()->add_provider(_label_style, GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+    // Other border properties are set in share/ui/style.css
+    _label_style->load_from_data(Glib::ustring::compose("#%1.%2 label { border-color: %3; }",
+                                                        cssName, getThisCssClass(), color_str));
 
     _hide_layer_connection.block();
     _lock_layer_connection.block();
@@ -202,9 +202,12 @@ void LayerSelector::_layerChoose()
     _desktop->getContainer()->new_dialog("Objects");
 }
 
-} // namespace Widget
-} // namespace UI
-} // namespace Inkscape
+Glib::ustring LayerSelector::getThisCssClass() const
+{
+    return "this" + Glib::ustring::format(this);
+}
+
+} // namespace Inkscape::UI::Widget
 
 /*
   Local Variables:
