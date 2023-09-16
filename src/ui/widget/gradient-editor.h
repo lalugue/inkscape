@@ -1,12 +1,23 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
+/**
+ * Gradient editor widget for "Fill and Stroke" dialog
+ *
+ * Author:
+ *   Michael Kowalski
+ *
+ * Copyright (C) 2020-2021 Michael Kowalski
+ *
+ * Released under GNU GPL v2+, read the file 'COPYING' for more information.
+ */
 
 #ifndef SEEN_GRADIENT_EDITOR_H
 #define SEEN_GRADIENT_EDITOR_H
 
+#include <memory>
+#include <optional>
 #include <glibmm/refptr.h>
 #include <gtkmm/box.h>
 #include <gtkmm/treemodelcolumn.h>
-#include <optional>
 
 #include "object/sp-gradient.h"
 #include "object/sp-stop.h"
@@ -24,7 +35,6 @@ class Expander;
 class Grid;
 class Image;
 class ListStore;
-class Popover;
 class SpinButton;
 class ToggleButton;
 class TreeRow;
@@ -34,6 +44,7 @@ class TreeView;
 namespace Inkscape::UI::Widget {
 
 class GradientSelector;
+class PopoverMenu;
 
 class GradientEditor final : public Gtk::Box, public GradientSelectorInterface {
 public:
@@ -87,7 +98,7 @@ private:
     Glib::RefPtr<Gtk::Builder> _builder;
     GradientSelector* _selector;
     Inkscape::UI::SelectedColor _selected_color;
-    Gtk::Popover& _popover;
+    std::unique_ptr<UI::Widget::PopoverMenu> _repeat_popover;
     Gtk::Image& _repeat_icon;
     GradientWithStops _gradient_image;
     Glib::RefPtr<Gtk::ListStore> _stop_list_store;

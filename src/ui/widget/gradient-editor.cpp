@@ -12,6 +12,8 @@
 
 #include "gradient-editor.h"
 
+#include <initializer_list>
+#include <utility>
 #include <2geom/point.h>
 #include <2geom/line.h>
 #include <2geom/transforms.h>
@@ -26,10 +28,11 @@
 #include <gtkmm/image.h>
 #include <gtkmm/liststore.h>
 #include <gtkmm/menubutton.h>
-#include <gtkmm/popover.h>
 #include <gtkmm/spinbutton.h>
 #include <gtkmm/togglebutton.h>
 #include <gtkmm/treeview.h>
+#include <sigc++/adaptors/bind.h>
+#include <sigc++/functors/mem_fun.h>
 
 #include "document-undo.h"
 #include "gradient-chemistry.h"
@@ -45,6 +48,8 @@
 #include "ui/icon-names.h"
 #include "ui/widget/color-notebook.h"
 #include "ui/widget/color-preview.h"
+#include "ui/widget/popover-menu.h"
+#include "ui/widget/popover-menu-item.h"
 
 namespace Inkscape::UI::Widget {
 
@@ -154,8 +159,8 @@ Glib::ustring get_repeat_icon(SPGradientSpread mode) {
 GradientEditor::GradientEditor(const char* prefs) :
     _builder(Inkscape::UI::create_builder("gradient-edit.glade")),
     _selector(Gtk::make_managed<GradientSelector>()),
+    _repeat_popover{std::make_unique<UI::Widget::PopoverMenu>(Gtk::POS_BOTTOM)},
     _repeat_icon(get_widget<Gtk::Image>(_builder, "repeatIco")),
-    _popover(get_widget<Gtk::Popover>(_builder, "libraryPopover")),
     _stop_tree(get_widget<Gtk::TreeView>(_builder, "stopList")),
     _offset_btn(get_widget<Gtk::SpinButton>(_builder, "offsetSpin")),
     _show_stops_list(get_widget<Gtk::Expander>(_builder, "stopsBtn")),
@@ -212,7 +217,7 @@ GradientEditor::GradientEditor(const char* prefs) :
     _colors_box.add(*color_selector);
 
     // gradient library in a popup
-    _popover.add(*_selector);
+    get_widget<Gtk::Popover>(_builder, "libraryPopover").add(*_selector);
     const int h = 5;
     const int v = 3;
     _selector->set_margin_start(h);
@@ -269,28 +274,20 @@ GradientEditor::GradientEditor(const char* prefs) :
     });
 
     // connect gradient repeat modes menu
-    std::tuple<const char*, SPGradientSpread> repeats[3] = {
-        {"repeatNone", SP_GRADIENT_SPREAD_PAD},
-        {"repeatDirect", SP_GRADIENT_SPREAD_REPEAT},
-        {"repeatReflected", SP_GRADIENT_SPREAD_REFLECT}
+    static auto const repeats = {std::pair
+        {SP_GRADIENT_SPREAD_PAD    , _("None"     )},
+        {SP_GRADIENT_SPREAD_REPEAT , _("Direct"   )},
+        {SP_GRADIENT_SPREAD_REFLECT, _("Reflected")}
     };
-    for (auto& el : repeats) {
-        auto& item = get_widget<Gtk::MenuItem>(_builder, std::get<0>(el));
-        auto mode = std::get<1>(el);
-        item.signal_activate().connect([=](){ set_repeat_mode(mode); });
-        // pack icon and text into MenuItem, since MenuImageItem is deprecated
-        auto text = item.get_label();
-        auto const hbox = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL, 8);
-        Gtk::Image* img = sp_get_icon_image(get_repeat_icon(mode), Gtk::ICON_SIZE_BUTTON);
-        hbox->add(*img);
-        auto const label = Gtk::make_managed<Gtk::Label>();
-        label->set_label(text);
-        hbox->add(*label);
-        hbox->show_all();
-        item.remove();
-        item.add(*hbox);
+    for (auto const &[mode, text] : repeats) {
+        auto const icon = get_repeat_icon(mode);
+        auto const item = Gtk::make_managed<UI::Widget::PopoverMenuItem>(text, false, icon);
+        item->signal_activate().connect(sigc::bind(sigc::mem_fun(
+                                            *this, &GradientEditor::set_repeat_mode), mode));
+        _repeat_popover->append(*item);
     }
-
+    _repeat_popover->show_all_children();
+    get_widget<Gtk::MenuButton>(_builder, "repeatMode").set_popover(*_repeat_popover);
     set_repeat_icon(SP_GRADIENT_SPREAD_PAD);
     
     _selected_color.signal_changed.connect([=]() {

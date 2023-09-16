@@ -19,31 +19,6 @@
     <property name="step-increment">0.01</property>
     <property name="page-increment">0.10</property>
   </object>
-  <object class="GtkMenu" id="repeatMenu">
-    <property name="visible">True</property>
-    <property name="reserve-toggle-size">False</property>
-    <child>
-      <object class="GtkMenuItem" id="repeatNone">
-        <property name="visible">True</property>
-        <property name="label" translatable="yes">None</property>
-        <property name="use-underline">True</property>
-      </object>
-    </child>
-    <child>
-      <object class="GtkMenuItem" id="repeatDirect">
-        <property name="visible">True</property>
-        <property name="label" translatable="yes">Direct</property>
-        <property name="use-underline">True</property>
-      </object>
-    </child>
-    <child>
-      <object class="GtkMenuItem" id="repeatReflected">
-        <property name="visible">True</property>
-        <property name="label" translatable="yes">Reflected</property>
-        <property name="use-underline">True</property>
-      </object>
-    </child>
-  </object>
   <!-- n-columns=4 n-rows=5 -->
   <object class="GtkGrid" id="mainGrid">
     <property name="name">mainGrid</property>
@@ -337,7 +312,6 @@
         <property name="halign">start</property>
         <property name="valign">center</property>
         <property name="relief">none</property>
-        <property name="popup">repeatMenu</property>
         <child>
           <object class="GtkBox">
             <property name="visible">True</property>
@@ -345,7 +319,6 @@
               <object class="GtkImage" id="repeatIco">
                 <property name="visible">True</property>
                 <property name="margin-end">8</property>
-                <property name="stock">gtk-missing-image</property>
               </object>
             </child>
             <child>
@@ -353,9 +326,6 @@
                 <property name="visible">True</property>
                 <property name="icon-name">pan-down-symbolic</property>
               </object>
-              <packing>
-                <property name="position">1</property>
-              </packing>
             </child>
           </object>
         </child>
