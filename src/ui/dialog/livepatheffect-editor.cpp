@@ -13,10 +13,11 @@
 
 #include <algorithm>
 #include <cstddef>
+#include <functional>
 #include <map>
 #include <tuple>
-
 #include <glibmm/i18n.h>
+#include <giomm/simpleactiongroup.h>
 #include <gtkmm/box.h>
 #include <gtkmm/builder.h>
 #include <gtkmm/button.h>
@@ -28,6 +29,7 @@
 #include <gtkmm/searchentry.h>
 #include <gtkmm/spinbutton.h>
 #include <sigc++/adaptors/bind.h>
+#include <sigc++/adaptors/hide.h>
 #include <sigc++/functors/mem_fun.h>
 
 #include "live_effects/effect.h"
@@ -59,56 +61,47 @@
 
 namespace Inkscape::UI::Dialog {
 
+/*
+* * favourites
+ */
+
+static constexpr auto favs_path = "/dialogs/livepatheffect/favs";
+
+static bool sp_has_fav(Glib::ustring const &effect)
+{
+    Inkscape::Preferences *prefs = Inkscape::Preferences::get();
+    Glib::ustring favlist = prefs->getString(favs_path);
+    return favlist.find(effect) != favlist.npos;
+}
+
+static void sp_add_fav(Glib::ustring const &effect)
+{
+    if (sp_has_fav(effect)) return;
+
+    Inkscape::Preferences *prefs = Inkscape::Preferences::get();
+    Glib::ustring favlist = prefs->getString(favs_path);
+    favlist.append(effect).append(";");
+    prefs->setString(favs_path, favlist);
+}
+
+static void sp_remove_fav(Glib::ustring effect)
+{
+    if (!sp_has_fav(effect)) return;
+
+    Inkscape::Preferences *prefs = Inkscape::Preferences::get();
+    Glib::ustring favlist = prefs->getString(favs_path);
+    effect += ";";
+    auto const pos = favlist.find(effect);
+    if (pos == favlist.npos) return;
+
+    favlist.erase(pos, effect.length());
+    prefs->setString(favs_path, favlist);
+}
+
+
 /*####################
  * Callback functions
  */
-
-bool sp_has_fav(Glib::ustring effect)
-{
-    Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-    Glib::ustring favlist = prefs->getString("/dialogs/livepatheffect/favs");
-    size_t pos = favlist.find(effect);
-    if (pos != Glib::ustring::npos) {
-        return true;
-    }
-    return false;
-}
-
-void sp_add_fav(Glib::ustring effect)
-{
-    Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-    Glib::ustring favlist = prefs->getString("/dialogs/livepatheffect/favs");
-    if (!sp_has_fav(effect)) {
-        prefs->setString("/dialogs/livepatheffect/favs", favlist + effect + ";");
-    }
-}
-
-void sp_remove_fav(Glib::ustring effect)
-{
-    if (sp_has_fav(effect)) {
-        Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-        Glib::ustring favlist = prefs->getString("/dialogs/livepatheffect/favs");
-        effect += ";";
-        size_t pos = favlist.find(effect);
-        if (pos != Glib::ustring::npos) {
-            favlist.erase(pos, effect.length());
-            prefs->setString("/dialogs/livepatheffect/favs", favlist);
-        }
-    }
-}
-
-void sp_toggle_fav(Glib::ustring effect, Gtk::MenuItem *LPEtoggleFavorite)
-{
-    Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-    Glib::ustring favlist = prefs->getString("/dialogs/livepatheffect/favs");
-    if (sp_has_fav(effect)) {
-        sp_remove_fav(effect);
-        LPEtoggleFavorite->set_label(_("Set Favorite"));
-    } else {
-        sp_add_fav(effect);
-        LPEtoggleFavorite->set_label(_("Unset Favorite"));
-    }
-}
 
 void LivePathEffectEditor::selectionChanged(Inkscape::Selection * selection)
 {
@@ -723,8 +716,6 @@ LivePathEffectEditor::effect_list_reload(SPLPEItem *lpeitem)
         }, true);
     }
 
-    Gtk::MenuItem *LPEMoveUpExtrem = nullptr;
-    Gtk::MenuItem *LPEMoveDownExtrem = nullptr;
     Gtk::Button *LPEDrag = nullptr;
 
     for (auto const &lperef: effectlist) {
@@ -740,7 +731,7 @@ LivePathEffectEditor::effect_list_reload(SPLPEItem *lpeitem)
         try {
             builder = Gtk::Builder::create_from_file(gladefile);
         } catch (const Glib::Error &ex) {
-            g_warning("Glade file loading failed for path effect dialog");
+            g_warning("Glade file loading failed for path effect dialog item: `%s`", ex.what().c_str());
             return;
         }
 
@@ -752,19 +743,8 @@ LivePathEffectEditor::effect_list_reload(SPLPEItem *lpeitem)
         Gtk::Image *LPEIconImage;
         Gtk::Button *LPEErase;
         Gtk::Button *LPEHide;
-        Gtk::MenuItem *LPEtoggleFavorite;
         Gtk::Label *LPENameLabel;
-        Gtk::Menu *LPEEffectMenu;
-        Gtk::MenuItem *LPEMoveUp;
-        Gtk::MenuItem *LPEMoveDown;
-        Gtk::MenuItem *LPEResetDefault;
-        Gtk::MenuItem *LPESetDefault;            
-        builder->get_widget("LPEMoveUp", LPEMoveUp);
-        builder->get_widget("LPEMoveDown", LPEMoveDown);
-        builder->get_widget("LPEResetDefault", LPEResetDefault);
-        builder->get_widget("LPESetDefault", LPESetDefault);
         builder->get_widget("LPENameLabel", LPENameLabel);
-        builder->get_widget("LPEEffectMenu", LPEEffectMenu);
         builder->get_widget("LPEHide", LPEHide);
         builder->get_widget("LPEIconImage", LPEIconImage);
         builder->get_widget("LPEExpanderBox", LPEExpanderBox);
@@ -774,7 +754,6 @@ LivePathEffectEditor::effect_list_reload(SPLPEItem *lpeitem)
         builder->get_widget("LPEErase", LPEErase);
         builder->get_widget("LPEDrag", LPEDrag);
         builder->get_widget("LPEActionButtons", LPEActionButtons);
-        builder->get_widget("LPEtoggleFavorite", LPEtoggleFavorite);
 
         LPEExpander->drag_dest_unset();
         LPEActionButtons->drag_dest_unset();
@@ -782,11 +761,6 @@ LivePathEffectEditor::effect_list_reload(SPLPEItem *lpeitem)
         if (current) {
             LPEExpanderCurrent = LPEExpander;
         }
-
-        if (counter == 0) {
-            LPEMoveUpExtrem = LPEMoveUp;
-        }
-        LPEMoveDownExtrem = LPEMoveDown;
 
         auto const effectype = lpe->effectType();
         int const id = static_cast<int>(effectype);
@@ -806,9 +780,7 @@ LivePathEffectEditor::effect_list_reload(SPLPEItem *lpeitem)
         _LPEExpanders.emplace_back(LPEExpander, lperef);
         LPEListBox.add(*LPEEffect);
         
-        Glib::ustring name = "drag_";
-        name += Glib::ustring::format(counter);
-        LPEDrag->set_name(name);
+        LPEDrag->set_name(Glib::ustring::compose("drag_%1", counter));
         if (total > 1) {
             LPEDrag->drag_source_set(entries, Gdk::BUTTON1_MASK, Gdk::ACTION_MOVE);
         }
@@ -818,50 +790,9 @@ LivePathEffectEditor::effect_list_reload(SPLPEItem *lpeitem)
             return sp_query_custom_tooltip(x, y, kbd, tooltipw, id, tooltip, icon);
         });
 
-        size_t pos = 0;
-        for (auto const w : UI::get_children(*LPEEffectMenu)) {
-            auto * mitem = dynamic_cast<Gtk::MenuItem *>(w);
-            if (mitem) {
-                mitem->signal_activate().connect([=](){
-                    if (pos == 0) {
-                        current_lpeitem->setCurrentPathEffect(lperef);
-                        current_lpeitem->duplicateCurrentPathEffect();
-                        effect_list_reload(current_lpeitem);
-                        DocumentUndo::done(getDocument(), _("Duplicate path effect"), INKSCAPE_ICON("dialog-path-effects"));
-                    } else if (pos == 1) {
-                        current_lpeitem->setCurrentPathEffect(lperef);
-                        current_lpeitem->upCurrentPathEffect();
-                        effect_list_reload(current_lpeitem);
-                        DocumentUndo::done(getDocument(), _("Move path effect up"), INKSCAPE_ICON("dialog-path-effects"));
-                    } else if (pos == 2) {
-                        current_lpeitem->setCurrentPathEffect(lperef);
-                        current_lpeitem->downCurrentPathEffect();
-                        effect_list_reload(current_lpeitem);
-                        DocumentUndo::done(getDocument(), _("Move path effect down"), INKSCAPE_ICON("dialog-path-effects"));
-                    } else if (pos == 3) {
-                        lpeFlatten(lperef);
-                    } else if (pos == 4) {
-                        lpe->setDefaultParameters();
-                        effect_list_reload(current_lpeitem);
-                    } else if (pos == 5) {
-                        lpe->resetDefaultParameters();
-                        effect_list_reload(current_lpeitem);
-                    } else if (pos == 6) {
-                        sp_toggle_fav(untranslated_label, LPEtoggleFavorite);
-                        _reload_menu = true;
-                        _item_type = ""; // here we force reload even with the same tipe item selected
-                    }
-                });
-                if (pos == 6) {
-                    if (sp_has_fav(untranslated_label)) {
-                        LPEtoggleFavorite->set_label(_("Unset Favorite"));
-                    } else {
-                        LPEtoggleFavorite->set_label(_("Set Favorite"));
-                    }
-                }
-            }
-            pos ++;
-        }
+        add_item_actions(lperef, untranslated_label, *LPEEffect,
+                         counter == 0, counter == total - 1);
+
         if (total > 1) {
             LPEDrag->signal_drag_begin().connect([=](const Glib::RefPtr<Gdk::DragContext> context){
                 cairo_surface_t *surface;
@@ -975,24 +906,11 @@ LivePathEffectEditor::effect_list_reload(SPLPEItem *lpeitem)
             g_signal_connect_swapped(motion, "leave", G_CALLBACK(+[](Gtk::Widget * const widget){ set_cursor(*widget, "default"); }), LPEDrag);
             manage(Glib::wrap(motion), *LPEDrag);
         }
-
-        if (lpe->hasDefaultParameters()) {
-            LPEResetDefault->set_visible(true);
-            LPESetDefault->set_visible(false);
-        } else {
-            LPEResetDefault->set_visible(false);
-            LPESetDefault->set_visible(true);
-        }
     }
 
     if (counter == 0 && LPEDrag) {
         LPEDrag->set_visible(false);
         LPEDrag->set_tooltip_text("");
-    }
-
-    if (LPEMoveUpExtrem) {
-        LPEMoveUpExtrem->set_visible(false);
-        LPEMoveDownExtrem->set_visible(false);
     }
 
     if (LPEExpanderCurrent) {
@@ -1058,7 +976,7 @@ void LivePathEffectEditor::expanded_notify(Gtk::Expander *expander) {
 }
 
 bool 
-LivePathEffectEditor::lpeFlatten(std::shared_ptr<Inkscape::LivePathEffect::LPEObjectReference> lperef)
+LivePathEffectEditor::lpeFlatten(PathEffectSharedPtr const &lperef)
 {
     current_lpeitem->setCurrentPathEffect(lperef);
     current_lpeitem = current_lpeitem->flattenCurrentPathEffect();
@@ -1153,6 +1071,95 @@ SPLPEItem * LivePathEffectEditor::clonetolpeitem()
 
     sp_lpe_item_update_patheffect(lpeitem, true, true);
     return lpeitem;
+}
+
+/*
+* * Actions
+ */
+
+static constexpr auto item_action_group_name = "lpe-item";
+
+template <typename Method, typename ...Args>
+static void add_action(Glib::RefPtr<Gio::SimpleActionGroup> const &group,
+                       Glib::ustring const &name, bool const enable,
+                       LivePathEffectEditor &self, Method const method, Args ...args)
+{
+    auto slot = sigc::hide_return(sigc::bind(sigc::mem_fun(self, method), std::move(args)...));
+    auto const action = group->add_action(name, std::move(slot));
+    action->set_enabled(enable);
+}
+
+void LivePathEffectEditor::add_item_actions(PathEffectSharedPtr const &lperef,
+                                            Glib::ustring const &untranslated_label,
+                                            Gtk::Widget &item,
+                                            bool const is_first, bool const is_last)
+{
+    using Self = LivePathEffectEditor;
+    auto const has_defs = lperef->lpeobject->get_lpe()->hasDefaultParameters();
+    auto const has_fav = sp_has_fav(untranslated_label);
+    auto group = Gio::SimpleActionGroup::create();
+    add_action(group, "duplicate" ,  true    , *this , &Self::do_item_action_undoable, lperef,
+               &SPLPEItem::duplicateCurrentPathEffect, _("Duplicate path effect")            );
+    add_action(group, "move-up"   , !is_first, *this , &Self::do_item_action_undoable, lperef,
+               &SPLPEItem::upCurrentPathEffect       , _("Move path effect up")              );
+    add_action(group, "move-down" , !is_last , *this , &Self::do_item_action_undoable, lperef,
+               &SPLPEItem::downCurrentPathEffect     , _("Move path effect down")            );
+    add_action(group, "flatten"   ,  true    , *this , &Self::lpeFlatten             , lperef);
+    add_action(group, "set-def"   , !has_defs, *this , &Self::do_item_action_defaults, lperef,
+               &LivePathEffect::Effect::setDefaultParameters                                 );
+    add_action(group, "forget-def",  has_defs, *this , &Self::do_item_action_defaults, lperef,
+               &LivePathEffect::Effect::resetDefaultParameters                               );
+    add_action(group, "set-fav"   , !has_fav , *this , &Self::do_item_action_favorite, lperef,
+               untranslated_label , std::ref(item)   , true                                  );
+    add_action(group, "unset-fav" ,  has_fav , *this , &Self::do_item_action_favorite, lperef,
+               untranslated_label , std::ref(item)   , false                                 );
+    item.insert_action_group(item_action_group_name, std::move(group));
+}
+
+void LivePathEffectEditor::enable_item_action(Gtk::Widget &item,
+                                              Glib::ustring const &action_name, bool const enabled)
+{
+    auto const group = item.get_action_group(item_action_group_name);
+    auto const simple_group = Glib::RefPtr<Gio::SimpleActionGroup>::cast_dynamic(group);
+    auto const action = simple_group->lookup_action(action_name);
+    auto const simple_action = Glib::RefPtr<Gio::SimpleAction>::cast_dynamic(action);
+    simple_action->set_enabled(enabled);
+}
+
+void LivePathEffectEditor::enable_fav_actions(Gtk::Widget &item, bool const has_fav)
+{
+    enable_item_action(item, "set-fav"  , !has_fav);
+    enable_item_action(item, "unset-fav",  has_fav);
+}
+
+void LivePathEffectEditor::do_item_action_undoable(PathEffectSharedPtr const &lperef,
+                                                   void (SPLPEItem::* const method)(),
+                                                   Glib::ustring const &description)
+{
+    current_lpeitem->setCurrentPathEffect(lperef);
+    (current_lpeitem->*method)();
+    effect_list_reload(current_lpeitem);
+    DocumentUndo::done(getDocument(), description, INKSCAPE_ICON("dialog-path-effects"));
+}
+
+void LivePathEffectEditor::do_item_action_defaults(PathEffectSharedPtr const &lperef,
+                                                   void (LivePathEffect::Effect::* const method)())
+{
+    (lperef->lpeobject->get_lpe()->*method)();
+    effect_list_reload(current_lpeitem);
+}
+
+void LivePathEffectEditor::do_item_action_favorite(PathEffectSharedPtr const &,
+                                                   Glib::ustring const &untranslated_label,
+                                                   Gtk::Widget &item, bool const has_fav)
+{
+    if (has_fav) sp_add_fav(untranslated_label);
+    else      sp_remove_fav(untranslated_label);
+
+    enable_fav_actions(item, has_fav);
+
+    _reload_menu = true;
+    _item_type = ""; // here we force reload even with the same tipe item selected
 }
 
 } // namespace Inkscape::UI::Dialog

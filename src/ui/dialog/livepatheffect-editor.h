@@ -64,7 +64,7 @@ public:
     static LivePathEffectEditor &getInstance() { return *new LivePathEffectEditor(); }
     void move_list(int origin, int dest);
 
-    using LPEExpander = std::pair<Gtk::Expander *, std::shared_ptr<LivePathEffect::LPEObjectReference>>;
+    using LPEExpander = std::pair<Gtk::Expander *, PathEffectSharedPtr>;
     void showParams(LPEExpander const &expanderdata, bool changed);
 
 private:
@@ -98,8 +98,22 @@ private:
     void map_handler();
     void clearMenu();
     void setMenu();
-    bool lpeFlatten(std::shared_ptr<Inkscape::LivePathEffect::LPEObjectReference> lperef);
+    bool lpeFlatten(PathEffectSharedPtr const &lperef);
     SPLPEItem * clonetolpeitem();
+
+    void add_item_actions(PathEffectSharedPtr const &lperef,
+                          Glib::ustring const &, Gtk::Widget &item,
+                          bool is_first, bool is_last);
+    void enable_item_action(Gtk::Widget &item, Glib::ustring const &name, bool enabled);
+    void enable_fav_actions(Gtk::Widget &item, bool has_fav);
+    void do_item_action_undoable(PathEffectSharedPtr const &lperef,
+                                 void (SPLPEItem::* const method)(),
+                                 Glib::ustring const &description);
+    void do_item_action_defaults(PathEffectSharedPtr const &lpreref,
+                                 void (LivePathEffect::Effect::* const method)());
+    void do_item_action_favorite(PathEffectSharedPtr const &lpreref,
+                                 Glib::ustring const &untranslated_label, Gtk::Widget &item,
+                                 bool has_fav);
 
     Inkscape::UI::Widget::CompletionPopup _lpes_popup;
     Gtk::Box& _LPEContainer;
@@ -118,8 +132,8 @@ private:
     int _buttons_width = 0;
     bool _freezeexpander = false;
     Glib::ustring _item_type;
-    bool _has_clip;
-    bool _has_mask;
+    bool _has_clip = false;
+    bool _has_mask = false;
 };
 
 } // namespace Inkscape::UI::Dialog

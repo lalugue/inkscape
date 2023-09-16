@@ -2,61 +2,48 @@
 <!-- Generated with glade 3.40.0 -->
 <interface>
   <requires lib="gtk+" version="3.20"/>
-  <object class="GtkMenu" id="LPEEffectMenu">
-    <property name="visible">True</property>
-    <child>
-      <object class="GtkMenuItem">
-        <property name="visible">True</property>
-        <property name="label" translatable="yes">Duplicate</property>
-        <property name="use-underline">True</property>
-      </object>
-    </child>
-    <child>
-      <object class="GtkMenuItem" id="LPEMoveUp">
-        <property name="visible">True</property>
-        <property name="label" translatable="yes">Move up</property>
-        <property name="use-underline">True</property>
-      </object>
-    </child>
-    <child>
-      <object class="GtkMenuItem" id="LPEMoveDown">
-        <property name="visible">True</property>
-        <property name="label" translatable="yes">Move down</property>
-        <property name="use-underline">True</property>
-      </object>
-    </child>
-    <child>
-      <object class="GtkMenuItem">
-        <property name="visible">True</property>
-        <property name="tooltip-text" translatable="yes">Apply this effect, and all effects above this one, to the path. This removes those effects from the stack.</property>
-        <property name="label" translatable="yes">Flatten</property>
-        <property name="use-underline">True</property>
-      </object>
-    </child>
-    <child>
-      <object class="GtkMenuItem" id="LPESetDefault">
-        <property name="visible">True</property>
-        <property name="tooltip-text" translatable="yes">Use the current values as custom defaults for this LPE</property>
-        <property name="label" translatable="yes">Set custom defaults</property>
-        <property name="use-underline">True</property>
-      </object>
-    </child>
-    <child>
-      <object class="GtkMenuItem" id="LPEResetDefault">
-        <property name="visible">True</property>
-        <property name="tooltip-text" translatable="yes">Reset default settings of this LPE to Inkscape's default values</property>
-        <property name="label" translatable="yes">Forget custom defaults</property>
-        <property name="use-underline">True</property>
-      </object>
-    </child>
-    <child>
-      <object class="GtkMenuItem" id="LPEtoggleFavorite">
-        <property name="visible">True</property>
-        <property name="label" translatable="yes">Set Favorite</property>
-        <property name="use-underline">True</property>
-      </object>
-    </child>
-  </object>
+  <menu id="LPEEffectMenu">
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">Duplicate</attribute>
+        <attribute name="action">lpe-item.duplicate</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Move Up</attribute>
+        <attribute name="action">lpe-item.move-up</attribute>
+        <attribute name="hidden-when">action-disabled</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Move Down</attribute>
+        <attribute name="action">lpe-item.move-down</attribute>
+        <attribute name="hidden-when">action-disabled</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Flatten</attribute>
+        <attribute name="action">lpe-item.flatten</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Set Custom Defaults</attribute>
+        <attribute name="action">lpe-item.set-def</attribute>
+        <attribute name="hidden-when">action-disabled</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Forget Custom Defaults</attribute>
+        <attribute name="action">lpe-item.forget-def</attribute>
+        <attribute name="hidden-when">action-disabled</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Set Favorite</attribute>
+        <attribute name="action">lpe-item.set-fav</attribute>
+        <attribute name="hidden-when">action-disabled</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Unset Favorite</attribute>
+        <attribute name="action">lpe-item.unset-fav</attribute>
+        <attribute name="hidden-when">action-disabled</attribute>
+      </item>
+    </section>
+  </menu>
   <object class="GtkImage" id="dndImage">
     <property name="visible">True</property>
     <property name="halign">center</property>
@@ -152,7 +139,6 @@
               <object class="GtkBox">
                 <property name="height-request">30</property>
                 <property name="visible">True</property>
-                <property name="events">GDK_EXPOSURE_MASK</property>
                 <property name="valign">start</property>
                 <child>
                   <object class="GtkEventBox" id="LPEOpenExpander">
@@ -197,9 +183,6 @@
                           <class name="minbutton"/>
                         </style>
                       </object>
-                      <packing>
-                        <property name="position">1</property>
-                      </packing>
                     </child>
                     <child>
                       <object class="GtkButton" id="LPEErase">
@@ -213,9 +196,6 @@
                           <class name="minbutton"/>
                         </style>
                       </object>
-                      <packing>
-                        <property name="position">2</property>
-                      </packing>
                     </child>
                     <child>
                       <object class="GtkMenuButton" id="LPEEffectMenuButton">
@@ -223,8 +203,7 @@
                         <property name="width-request">30</property>
                         <property name="visible">True</property>
                         <property name="focus-on-click">False</property>
-                        <property name="popup">LPEEffectMenu</property>
-                        <property name="use-popover">False</property>
+                        <property name="menu-model">LPEEffectMenu</property>
                         <property name="tooltip-text" translatable="yes">Menu with options related to this Live Path Effect</property>
                         <child>
                           <object class="GtkImage">
@@ -233,9 +212,6 @@
                           </object>
                         </child>
                       </object>
-                      <packing>
-                        <property name="position">3</property>
-                      </packing>
                     </child>
                     <style>
                       <class name="linked"/>
