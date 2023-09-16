@@ -139,7 +139,6 @@ private:
     Gtk::Box _buttonsSecondary;
     Gtk::SearchEntry& _searchBox;
     Gtk::ScrolledWindow _scroller;
-    Gtk::Menu _popupMenu;
     Gtk::Box _page;
     Inkscape::auto_connection _tree_style;
     Inkscape::UI::Widget::ColorPicker _color_picker;

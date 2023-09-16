@@ -16,9 +16,7 @@
 
 #include "ui/pack.h"
 
-namespace Inkscape {
-namespace UI {
-namespace Dialog {
+namespace Inkscape::UI::Dialog {
 
 //#########################################################################
 //## E V E N T S
@@ -32,7 +30,6 @@ void Messages::clear()
     Glib::RefPtr<Gtk::TextBuffer> buffer = messageText.get_buffer();
     buffer->erase(buffer->begin(), buffer->end());
 }
-
 
 //#########################################################################
 //## C O N S T R U C T O R    /    D E S T R U C T O R
@@ -73,25 +70,13 @@ Messages::Messages()
      *
      * message(_("Enable log display by setting dialogs.debug 'redirect' attribute to 1 in preferences.xml"));
     */
-
-    handlerDefault = 0;
-    handlerGlibmm  = 0;
-    handlerAtkmm   = 0;
-    handlerPangomm = 0;
-    handlerGdkmm   = 0;
-    handlerGtkmm   = 0;
-
 }
-
-Messages::~Messages()
-= default;
-
 
 //#########################################################################
 //## M E T H O D S
 //#########################################################################
 
-void Messages::message(char *msg)
+void Messages::message(char const * const msg)
 {
     Glib::RefPtr<Gtk::TextBuffer> buffer = messageText.get_buffer();
     Glib::ustring uMsg = msg;
@@ -101,13 +86,13 @@ void Messages::message(char *msg)
 }
 
 // dialogLoggingCallback is already used in debug.cpp
-static void dialogLoggingCallback(const gchar */*log_domain*/,
-                           GLogLevelFlags /*log_level*/,
-                           const gchar *messageText,
-                           gpointer user_data)
+static void dialogLoggingCallback(char const */*log_domain*/,
+                                  GLogLevelFlags /*log_level*/,
+                                  char const * const messageText,
+                                  gpointer user_data)
 {
     Messages *dlg = static_cast<Messages *>(user_data);
-    dlg->message(const_cast<char*>(messageText));
+    dlg->message(messageText);
 
 }
 
@@ -185,9 +170,7 @@ void Messages::releaseLogMessages()
     message(_("Log capture stopped."));
 }
 
-} //namespace Dialog
-} //namespace UI
-} //namespace Inkscape
+} // namespace Inkscape::UI::Dialog
 
 /*
   Local Variables:

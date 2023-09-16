@@ -21,22 +21,17 @@
 #include <gtkmm/box.h>
 #include <gtkmm/button.h>
 #include <gtkmm/checkbutton.h>
-#include <gtkmm/menu.h>
-#include <gtkmm/menubar.h>
 #include <gtkmm/scrolledwindow.h>
 #include <gtkmm/textview.h>
 
 #include "ui/dialog/dialog-base.h"
 
-namespace Inkscape {
-namespace UI {
-namespace Dialog {
+namespace Inkscape::UI::Dialog {
 
-class Messages : public DialogBase
+class Messages final : public DialogBase
 {
 public:
     Messages();
-    ~Messages() override;
 
     /**
      * Clear all information from the dialog
@@ -46,7 +41,7 @@ public:
     /**
      * Display a message
      */
-    void message(char *msg);
+    void message(char const *msg);
 
     /**
      * Redirect g_log() messages to this widget
@@ -60,9 +55,7 @@ public:
 
     void toggleCapture();
 
-protected:
-    //Gtk::MenuBar        menuBar;
-    //Gtk::Menu           fileMenu;
+private:
     Gtk::ScrolledWindow textScroll;
     Gtk::TextView       messageText;
     Gtk::Box            buttonBox;
@@ -70,17 +63,15 @@ protected:
     Gtk::CheckButton    checkCapture;
 
     //Handler ID's
-    guint handlerDefault;
-    guint handlerGlibmm;
-    guint handlerAtkmm;
-    guint handlerPangomm;
-    guint handlerGdkmm;
-    guint handlerGtkmm;
+    unsigned handlerDefault = 0;
+    unsigned handlerGlibmm  = 0;
+    unsigned handlerAtkmm   = 0;
+    unsigned handlerPangomm = 0;
+    unsigned handlerGdkmm   = 0;
+    unsigned handlerGtkmm   = 0;
 };
 
-} //namespace Dialog
-} //namespace UI
-} //namespace Inkscape
+} // namespace Inkscape::UI::Dialog
 
 #endif // INKSCAPE_UI_DIALOG_MESSAGES_H
 

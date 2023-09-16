@@ -25,7 +25,6 @@
 #include <gtkmm/grid.h>
 #include <gtkmm/iconview.h>
 #include <gtkmm/label.h>
-#include <gtkmm/menu.h>
 #include <gtkmm/scrolledwindow.h>
 #include <gtkmm/treemodel.h>
 #include <gtkmm/treeview.h>
@@ -351,10 +350,6 @@ private:
     Gtk::Entry _preview_entry;
     bool _show_glyph_list = true;
     void set_glyphs_view_mode(bool list);
-
-    Gtk::Menu _FontsContextMenu;
-    Gtk::Menu _GlyphsContextMenu;
-    Gtk::Menu _KerningPairsContextMenu;
 
     SvgFontDrawingArea _font_da, kerning_preview;
     GlyphComboBox first_glyph, second_glyph;
