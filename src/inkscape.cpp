@@ -52,7 +52,6 @@
 #include "ui/builder-utils.h"
 #include "ui/themes.h"
 #include "ui/dialog-events.h"
-#include "ui/dialog/debug.h"
 #include "ui/dialog-run.h"
 #include "ui/dialog/dialog-manager.h"
 #include "ui/dialog/dialog-window.h"
@@ -256,20 +255,6 @@ Application::Application(bool use_gui) :
         // and :gl_locale_name_from_win32_LANGID:gettext-runtime/gnulib-lib/localename.c
         setenv("LANG", ui_language, true);
 #endif
-    }
-
-    /* DebugDialog redirection.  On Linux, default to OFF, on Win32, default to ON.
-     * Use only if use_gui is enabled
-     */
-#ifdef _WIN32
-#define DEFAULT_LOG_REDIRECT true
-#else
-#define DEFAULT_LOG_REDIRECT false
-#endif
-
-    if (use_gui && prefs->getBool("/dialogs/debug/redirect", DEFAULT_LOG_REDIRECT))
-    {
-        Inkscape::UI::Dialog::DebugDialog::getInstance()->captureLogMessages();
     }
 
     if (use_gui)

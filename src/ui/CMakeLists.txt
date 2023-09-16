@@ -117,7 +117,6 @@ set(ui_SRC
 	dialog/color-item.cpp
 	dialog/command-palette.cpp
 	dialog/attrdialog.cpp
-	dialog/debug.cpp
 	dialog/dialog-base.cpp
 	dialog/dialog-container.cpp
 	dialog/dialog-data.cpp
@@ -321,7 +320,6 @@ set(ui_SRC
 	dialog/color-item.h
 	dialog/command-palette.h
 	dialog/attrdialog.h
-	dialog/debug.h
 	dialog/dialog-base.h
 	dialog/dialog-container.h
 	dialog/dialog-data.h

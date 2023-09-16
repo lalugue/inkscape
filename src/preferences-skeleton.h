@@ -238,7 +238,6 @@ static char const preferences_skeleton[] =
     <group id="save_copy" default="" append_extension="1" enable_preview="1" path=""/>
     <group id="open" enable_preview="1" path=""/>
     <group id="import" enable_preview="1" path="" ask="1" ask_svg="1" link="link" scale="optimizeSpeed"/>
-    <group id="debug" redirect="0"/>
     <group id="clonetiler" dotrace="0" />
     <group id="gridtiler" />
     <group id="extension-error" show-on-startup="0"/>

@@ -62,14 +62,6 @@ Messages::Messages()
 
     buttonClear.signal_clicked().connect(sigc::mem_fun(*this, &Messages::clear));
     checkCapture.signal_clicked().connect(sigc::mem_fun(*this, &Messages::toggleCapture));
-
-    /*
-     * TODO - Setting this preference doesn't capture messages that the user can see.
-     * Inkscape creates an instance of a dialog on startup and sends messages there, but when the user
-     * opens the dialog View > Messages the DialogManager creates a new instance of this class that is not capturing messages.
-     *
-     * message(_("Enable log display by setting dialogs.debug 'redirect' attribute to 1 in preferences.xml"));
-    */
 }
 
 //#########################################################################
