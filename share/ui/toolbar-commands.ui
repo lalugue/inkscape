@@ -1034,5 +1034,9 @@
         <property name="position">42</property>
       </packing>
     </child>
+    <style>
+      <class name="toolbar"/>
+    </style>
+
   </object>
 </interface>

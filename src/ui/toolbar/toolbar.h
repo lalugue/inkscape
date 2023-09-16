@@ -37,6 +37,7 @@ protected:
     void addCollapsibleButton(UI::Widget::ToolbarMenuButton *button);
 
     void get_preferred_width_vfunc(int &min_w, int &nat_w) const override;
+    void get_preferred_height_vfunc(int &min_h, int &nat_h) const override;
     void on_size_allocate(Gtk::Allocation &allocation) override;
 
 private:
