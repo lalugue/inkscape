@@ -16,7 +16,9 @@
 #include <algorithm>
 #include <limits>
 #include <vector>
-
+#include <2geom/intersection-graph.h>
+#include <2geom/path-intersection.h>
+#include <2geom/sbasis-to-bezier.h>
 #include <gdk/gdk.h>
 #include <glibmm/i18n.h>
 #include <glibmm/ustring.h>
@@ -29,12 +31,6 @@
 #include <gtkmm/radiobuttongroup.h>
 #include <gtkmm/spinbutton.h>
 
-#include <2geom/intersection-graph.h>
-#include <2geom/path-intersection.h>
-#include <2geom/sbasis-to-bezier.h>
-
-#include "style.h"
-
 #include "display/curve.h"
 #include "helper/geom.h"
 #include "live_effects/lpeobject.h"
@@ -46,6 +42,7 @@
 #include "object/sp-text.h"
 #include "path-chemistry.h"
 #include "path/path-boolop.h"
+#include "style.h"
 #include "svg/path-string.h"
 #include "svg/svg.h"
 #include "ui/icon-loader.h"
@@ -53,6 +50,7 @@
 #include "ui/knot/knot-holder-entity.h"
 #include "ui/knot/knot-holder.h"
 #include "ui/pack.h"
+#include "ui/util.h"
 #include "xml/sp-css-attr.h"
 
 namespace Inkscape::LivePathEffect {
@@ -648,14 +646,15 @@ void align_widgets(const std::vector<Gtk::Widget*>& widgets, int spinbutton_char
     // traverse container, locate n-th child in each row
     auto for_child_n = [=](int child_index, const std::function<void (Gtk::Widget*)>& action) {
         for (auto child : widgets) {
-            auto container = dynamic_cast<Gtk::Box*>(child);
+            auto container = dynamic_cast<Gtk::Box *>(child);
             if (!container) continue;
-            if (auto inner = dynamic_cast<Gtk::Box*>(container)) {
+
+            if (auto const inner = dynamic_cast<Gtk::Box *>(container)) {
                 container = inner;
             }
 
-            const auto& children = container->get_children();
-            if (children.size() > child_index) {
+            auto const children = UI::get_children(*container);
+            if (child_index < children.size()) {
                 action(children[child_index]);
             }
         }
@@ -717,296 +716,292 @@ Gtk::Widget * LPETiling::newWidget()
     bool usemirroricons = prefs->getBool("/live_effects/copy/mirroricons",true);
     std::vector<Gtk::Widget*> scalars;
 
-    std::vector<Parameter *>::iterator it = param_vector.begin();
-    while (it != param_vector.end()) {
-        if ((*it)->widget_is_visible) {
-            Parameter *param = *it;
-            auto widg = param->param_newWidget();
-            Glib::ustring *tip = param->param_getTooltip();
-            if (widg) {
-                if (param->param_key == "unit") {
-                    prev_unit = unit.get_abbreviation();
+    for (auto const param: param_vector) {
+        if (!param->widget_is_visible) continue;
 
-                    auto widgcombo = dynamic_cast<Inkscape::UI::Widget::RegisteredUnitMenu*>(widg);
+        auto const widg = param->param_newWidget();
+        if (!widg) continue;
 
-                    auto const destroy_child = widgcombo->get_children()[0];
-                    widgcombo->remove(*destroy_child);
-                    delete destroy_child;
+        if (param->param_key == "unit") {
+            prev_unit = unit.get_abbreviation();
 
-                    combo = widgcombo;
+            auto const widgcombo = dynamic_cast<UI::Widget::RegisteredUnitMenu *>(widg);
 
-                    if (usemirroricons) {
-                        Gtk::RadioButton::Group group;
-                        auto const frame  = Gtk::make_managed<Gtk::Frame>(_("Mirroring mode"));
-                        frame->set_halign(Gtk::ALIGN_START);
-                        auto const cbox  = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL,0);
-                        auto const vbox1 = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_VERTICAL,0);
-                        auto const hbox1 = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL,0);
-                        auto const hbox2 = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL,0);
-                        auto const vbox2 = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_VERTICAL,0);
-                        auto const hbox3 = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL,0);
-                        auto const hbox4 = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL,0);
-                        vbox2->set_margin_start(5);
-                        vbox1->set_margin_bottom(3);
-                        UI::pack_start(*cbox, *vbox1, false, false);
-                        UI::pack_start(*cbox, *vbox2, false, false);
-                        cbox->set_margin_start(6);
-                        cbox->set_margin_end(6);
-                        cbox->set_margin_bottom(3);
-                        cbox->set_halign(Gtk::ALIGN_START);
-                        hbox1->set_margin_bottom(3);
-                        hbox3->set_margin_bottom(3);
-                        frame->add(*cbox);
-                        UI::pack_start(*vbox, *frame, false, false, 1);
-                        UI::pack_start(*vbox1, *hbox1, false, false);
-                        UI::pack_start(*vbox1, *hbox2, false, false);
-                        UI::pack_start(*vbox2, *hbox3, false, false);
-                        UI::pack_start(*vbox2, *hbox4, false, false);
-                        generate_buttons(hbox1, group, 0);
-                        generate_buttons(hbox2, group, 1);
-                        generate_buttons(hbox3, group, 2);
-                        generate_buttons(hbox4, group, 3);
-                    }
-                    ++it;
-                    continue;
-                } else if (param->param_key == "seed"){
-                    auto widgrand = dynamic_cast<Inkscape::UI::Widget::RegisteredRandom*>(widg);
+            // TODO: GTK4: Use Widget.get_first_child().
+            auto const destroy_child = UI::get_children(*widgcombo).at(0);
+            widgcombo->remove(*destroy_child);
+            delete destroy_child;
 
-                    auto const destroy_child = widgrand->get_children()[0];
-                    widgrand->remove(*destroy_child);
-                    delete destroy_child;
+            combo = widgcombo;
 
-                    widgrand->get_children()[0]->set_visible(false);
-                    widgrand->get_children()[0]->set_no_show_all(true);
+            if (!usemirroricons) continue;
 
-                    auto button = dynamic_cast<Gtk::Button*>(widgrand->get_children()[1]);
-                    button->set_always_show_image(true);
-                    button->set_label(_("Randomize"));
-                    button->set_tooltip_markup(_("Randomization seed for random mode for scaling, rotation and gaps"));
-                    button->set_relief(Gtk::RELIEF_NORMAL);
-                    button->set_image_from_icon_name(INKSCAPE_ICON("randomize"), Gtk::IconSize(Gtk::ICON_SIZE_BUTTON));
+            Gtk::RadioButton::Group group;
+            auto const frame  = Gtk::make_managed<Gtk::Frame>(_("Mirroring mode"));
+            frame->set_halign(Gtk::ALIGN_START);
+            auto const cbox  = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL,0);
+            auto const vbox1 = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_VERTICAL,0);
+            auto const hbox1 = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL,0);
+            auto const hbox2 = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL,0);
+            auto const vbox2 = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_VERTICAL,0);
+            auto const hbox3 = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL,0);
+            auto const hbox4 = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL,0);
+            vbox2->set_margin_start(5);
+            vbox1->set_margin_bottom(3);
+            UI::pack_start(*cbox, *vbox1, false, false);
+            UI::pack_start(*cbox, *vbox2, false, false);
+            cbox->set_margin_start(6);
+            cbox->set_margin_end(6);
+            cbox->set_margin_bottom(3);
+            cbox->set_halign(Gtk::ALIGN_START);
+            hbox1->set_margin_bottom(3);
+            hbox3->set_margin_bottom(3);
+            frame->add(*cbox);
+            UI::pack_start(*vbox, *frame, false, false, 1);
+            UI::pack_start(*vbox1, *hbox1, false, false);
+            UI::pack_start(*vbox1, *hbox2, false, false);
+            UI::pack_start(*vbox2, *hbox3, false, false);
+            UI::pack_start(*vbox2, *hbox4, false, false);
+            generate_buttons(hbox1, group, 0);
+            generate_buttons(hbox2, group, 1);
+            generate_buttons(hbox3, group, 2);
+            generate_buttons(hbox4, group, 3);
 
-                    widgrand->set_vexpand(false);
-                    widgrand->set_hexpand(false);
-                    widgrand->set_valign(Gtk::ALIGN_START);
-                    widgrand->set_halign(Gtk::ALIGN_START);
-                    randbutton = Gtk::manage(widgrand);
-                    ++it;
-                    continue;
-                } else if (param->param_key == "offset_type" || 
-                    param->param_key == "mirrorrowsx" && usemirroricons ||
-                    param->param_key == "mirrorrowsy" && usemirroricons ||
-                    param->param_key == "mirrorcolsx" && usemirroricons ||
-                    param->param_key == "mirrorcolsy" && usemirroricons ||
-                    param->param_key == "interpolate_rotatex" ||
-                    param->param_key == "interpolate_rotatey" ||
-                    param->param_key == "interpolate_scalex" ||
-                    param->param_key == "interpolate_scaley" ||
-                    param->param_key == "random_scale" ||
-                    param->param_key == "random_rotate" ||
-                    param->param_key == "random_gap_x" ||
-                    param->param_key == "random_gap_y")
-                {
-                    ++it;
-                    continue;
-                } else if (param->param_key == "offset") {
-                    UI::pack_start(*movestart, *widg, false, false, 2);
-                    /* widg->set_halign(Gtk::ALIGN_END); */
-                    /* widg->set_hexpand(true); */
-                    /* auto widgscalar = dynamic_cast<Inkscape::UI::Widget::RegisteredScalar *>(widg);
-                    widgscalar->get_children()[0]->set_halign(Gtk::ALIGN_START); */
-                    auto const container = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL,0);
-                    Gtk::RadioButton::Group group;
-                    auto rows = create_radio_button(group, _("Offset rows"), INKSCAPE_ICON("rows"));
-                    auto cols = create_radio_button(group, _("Offset columns"), INKSCAPE_ICON("cols"));
-                    rows->set_tooltip_markup(_("Offset alternate rows"));
-                    cols->set_tooltip_markup(_("Offset alternate cols"));
-                    if (offset_type) {
-                        cols->set_active();
-                    } else {
-                        rows->set_active();
-                    }
-                    UI::pack_start(*container, *rows, false, false, 1);
-                    UI::pack_start(*container, *cols, false, false, 1);
-                    cols->signal_clicked().connect(sigc::mem_fun (*this, &LPETiling::setOffsetCols));
-                    rows->signal_clicked().connect(sigc::mem_fun (*this, &LPETiling::setOffsetRows));
-                    UI::pack_start(*moveend, *container, false, false, 2);
-                } else if (param->param_key == "scale") {
-                    auto const container = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL,0);
-                    Gtk::RadioButton::Group group;
-                    auto cols = create_radio_button(group, _("Interpolate X"), INKSCAPE_ICON("interpolate-scale-x"));
-                    auto rows = create_radio_button(group, _("Interpolate Y"), INKSCAPE_ICON("interpolate-scale-y"));
-                    auto both = create_radio_button(group, _("Interpolate both"), INKSCAPE_ICON("interpolate-scale-both"));
-                    auto none = create_radio_button(group, _("No interpolation"), INKSCAPE_ICON("interpolate-scale-none"));
-                    auto rand = create_radio_button(group, _("Interpolate random"), INKSCAPE_ICON("scale-random"));
-                    if (interpolate_scalex && interpolate_scaley) {
-                        both->set_active();
-                    } else if (interpolate_scalex) {
-                        cols->set_active();
-                    } else if (interpolate_scaley) {
-                        rows->set_active();
-                    } else if (random_scale) {
-                        rand->set_active();
-                    } else {
-                        none->set_active();
-                    }
-                    cols->set_tooltip_markup(_("Blend scale from <b>left to right</b> (left column uses original scale, right column uses new scale)"));
-                    rows->set_tooltip_markup(_("Blend scale from <b>top to bottom</b> (top row uses original scale, bottom row uses new scale)"));
-                    both->set_tooltip_markup(_("Blend scale <b>diagonally</b> (top left tile uses original scale, bottom right tile uses new scale)"));
-                    none->set_tooltip_markup(_("Uniform scale"));
-                    rand->set_tooltip_markup(_("Random scale (hit <b>Randomize</b> button to shuffle)"));
-                    UI::pack_start(*container, *rows, false, false, 1);
-                    UI::pack_start(*container, *cols, false, false, 1);
-                    UI::pack_start(*container, *both, false, false, 1);
-                    UI::pack_start(*container, *none, false, false, 1);
-                    UI::pack_start(*container, *rand, false, false, 1);
-                    rand->signal_clicked().connect(sigc::mem_fun(*this, &LPETiling::setScaleRandom));
-                    none->signal_clicked().connect(sigc::bind(sigc::mem_fun(*this, &LPETiling::setScaleInterpolate), false, false));
-                    cols->signal_clicked().connect(sigc::bind(sigc::mem_fun(*this, &LPETiling::setScaleInterpolate), true, false));
-                    rows->signal_clicked().connect(sigc::bind(sigc::mem_fun(*this, &LPETiling::setScaleInterpolate), false, true));
-                    both->signal_clicked().connect(sigc::bind(sigc::mem_fun(*this, &LPETiling::setScaleInterpolate), true, true));
-                    UI::pack_start(*movestart, *widg, false, false, 2);
-                    UI::pack_start(*moveend, *container, false, false, 2);
-                } else if (param->param_key == "rotate") {
-                    UI::pack_start(*movestart, *widg, false, false, 2);
-                    auto const container = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL,0);
-                    Gtk::RadioButton::Group group;
-                    auto cols = create_radio_button(group, _("Interpolate X"), INKSCAPE_ICON("interpolate-rotate-x"));
-                    auto rows = create_radio_button(group, _("Interpolate Y"), INKSCAPE_ICON("interpolate-rotate-y"));
-                    auto both = create_radio_button(group, _("Interpolate both"), INKSCAPE_ICON("interpolate-rotate-both"));
-                    auto none = create_radio_button(group, _("No interpolation"), INKSCAPE_ICON("interpolate-rotate-none"));
-                    auto rand = create_radio_button(group, _("Interpolate random"), INKSCAPE_ICON("rotate-random"));
-                    if (interpolate_rotatex && interpolate_rotatey) {
-                        both->set_active();
-                    } else if (interpolate_rotatex) {
-                        cols->set_active();
-                    } else if (interpolate_rotatey) {
-                        rows->set_active();
-                    } else if (random_rotate) {
-                        rand->set_active();
-                    } else {
-                        none->set_active();
-                    }
-                    cols->set_tooltip_markup(_("Blend rotation from <b>left to right</b> (left column uses original rotation, right column uses new rotation)"));
-                    rows->set_tooltip_markup(_("Blend rotation from <b>top to bottom</b> (top row uses original rotation, bottom row uses new rotation)"));
-                    both->set_tooltip_markup(_("Blend rotation <b>diagonally</b> (top left tile uses original rotation, bottom right tile uses new rotation)"));
-                    none->set_tooltip_markup(_("Uniform rotation"));
-                    rand->set_tooltip_markup(_("Random rotation (hit <b>Randomize</b> button to shuffle)"));
-                    UI::pack_start(*container, *rows, false, false, 1);
-                    UI::pack_start(*container, *cols, false, false, 1);
-                    UI::pack_start(*container, *both, false, false, 1);
-                    UI::pack_start(*container, *none, false, false, 1);
-                    UI::pack_start(*container, *rand, false, false, 1);
-                    rand->signal_clicked().connect(sigc::mem_fun(*this, &LPETiling::setRotateRandom));
-                    none->signal_clicked().connect(sigc::bind(sigc::mem_fun(*this, &LPETiling::setRotateInterpolate), false, false));
-                    cols->signal_clicked().connect(sigc::bind(sigc::mem_fun(*this, &LPETiling::setRotateInterpolate), true, false));
-                    rows->signal_clicked().connect(sigc::bind(sigc::mem_fun(*this, &LPETiling::setRotateInterpolate), false, true));
-                    both->signal_clicked().connect(sigc::bind(sigc::mem_fun(*this, &LPETiling::setRotateInterpolate), true, true));
-                    UI::pack_start(*moveend, *container, false, false, 2);
-                 } else if (param->param_key == "gapx") {
-                    auto const wrapper = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL,0);
-                    movestart = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_VERTICAL,0);
-                    moveend = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_VERTICAL,0);
-                    moveend->set_homogeneous();
-                    moveend->set_valign(Gtk::ALIGN_FILL);
-                    auto const container = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL,0);
-                    Gtk::RadioButton::Group group;
-                    auto normal = create_radio_button(group, _("Normal"), INKSCAPE_ICON("interpolate-scale-none"));
-                    auto randx = create_radio_button(group, _("Random"), INKSCAPE_ICON("gap-random-x"));
-                    if (random_gap_x) {
-                        randx->set_active();
-                    } else {
-                        normal->set_active();
-                    }
-                    normal->set_tooltip_markup(_("All horizontal gaps have the same width"));
-                    randx->set_tooltip_markup(_("Random horizontal gaps (hit <b>Randomize</b> button to shuffle)"));
-                    normal->signal_clicked().connect(sigc::bind(sigc::mem_fun(*this, &LPETiling::setGapXMode), false));
-                    randx->signal_clicked().connect(sigc::bind(sigc::mem_fun(*this, &LPETiling::setGapXMode), true));
-                    UI::pack_start(*container, *normal, false, false, 1);
-                    UI::pack_start(*container, *randx, false, false, 1);
-                    combo->set_margin_end(0);
-                    UI::pack_end(*container, *combo, false, false, 1);
-                    UI::pack_start(*movestart, *widg, false, false, 2);
-                    UI::pack_start(*moveend, *container, false, false, 2);
-                    UI::pack_start(*wrapper, *movestart, false, false);
-                    UI::pack_start(*wrapper, *moveend, false, false);
-                    //bwidg->set_hexpand(true);
-                    combo->set_halign(Gtk::ALIGN_END);
-                    widg->set_halign(Gtk::ALIGN_START);
-                    UI::pack_start(*vbox, *wrapper, true, true);
-                } else if (param->param_key == "gapy") {
-                    UI::pack_start(*movestart, *widg, true, true, 2);
-                    auto const container = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL,0);
-                    Gtk::RadioButton::Group group;
-                    auto normal = create_radio_button(group, _("Normal"), INKSCAPE_ICON("interpolate-scale-none"));
-                    auto randy = create_radio_button(group, _("Random"), INKSCAPE_ICON("gap-random-y"));
-                    if (random_gap_y) {
-                        randy->set_active();
-                    } else {
-                        normal->set_active();
-                    }
-                    normal->set_tooltip_markup(_("All vertical gaps have the same height"));
-                    randy->set_tooltip_markup(_("Random vertical gaps (hit <b>Randomize</b> button to shuffle)"));
-                    normal->signal_clicked().connect(sigc::bind(sigc::mem_fun(*this, &LPETiling::setGapYMode), false));
-                    randy->signal_clicked().connect(sigc::bind(sigc::mem_fun(*this, &LPETiling::setGapYMode), true));
-                    UI::pack_start(*container, *normal, false, false, 1);
-                    UI::pack_start(*container, *randy, false, false, 1);
-                    widg->set_halign(Gtk::ALIGN_START);
-                    UI::pack_start(*moveend, *container, false, false, 2);
-                } else if (param->param_key == "mirrortrans"){
-                    auto const container = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_VERTICAL,0);
-                    auto const containerwraper = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL,0);
-                    containerend = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_VERTICAL,0);
-                    containerstart = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_VERTICAL,0);
-                    UI::pack_start(*container, *containerwraper, false, true);
-                    UI::pack_start(*containerwraper, *containerstart, false, true);
-                    UI::pack_start(*containerwraper, *containerend, true, true);
-                    UI::pack_end(*containerend, *randbutton, true, true, 2);
-                    containerend->set_margin_start(8);
-                    UI::pack_start(*containerstart, *widg, false, true, 2);
-                    container->set_hexpand(false);
-                    containerwraper->set_hexpand(false);
-                    containerend->set_hexpand(false);
-                    containerstart->set_hexpand(false);
-                    UI::pack_start(*vbox, *container, false, true, 1);
-                } else if (
-                    param->param_key == "split_items" ||
-                    param->param_key == "link_styles" ||
-                    param->param_key == "shrink_interp")
-                { 
-                    UI::pack_start(*containerstart, *widg, true, true, 2);
-                    widg->set_vexpand(false);
-                    widg->set_hexpand(false);
-                    widg->set_valign(Gtk::ALIGN_START);
-                    widg->set_halign(Gtk::ALIGN_START);
-                } else if (param->param_key == "num_rows") { 
-                    rowcols = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL,0);
-                    UI::pack_start(*rowcols, *widg, false, false);
-                    UI::pack_start(*vbox, *rowcols, false, true, 2);
-                } else if (param->param_key == "num_cols") { 
-                    UI::pack_start(*rowcols, *widg, false, false);
-                } else {
-                    UI::pack_start(*vbox, *widg, false, true, 2);
-                }
-                if (tip) {
-                    widg->set_tooltip_markup(*tip);
-                } else {
-                    widg->set_tooltip_markup("");
-                    widg->set_has_tooltip(false);
-                }                
-            
-                if (dynamic_cast<ScalarParam*>(param)) {
-                    scalars.push_back(widg);
-                }
+            continue;
+        } else if (param->param_key == "seed"){
+            auto const widgrand = dynamic_cast<UI::Widget::RegisteredRandom *>(widg);
+            auto children = UI::get_children(*widgrand);
+
+            // TODO: GTK4: Use Widget.get_first_child().
+            auto const destroy_child = children.at(0);
+            widgrand->remove(*destroy_child);
+            delete destroy_child;
+            children.erase(children.begin());
+
+            auto const first = children.at(0);
+            first->set_visible(false);
+            first->set_no_show_all(true);
+
+            auto const button = dynamic_cast<Gtk::Button *>(children.at(1));
+            button->set_always_show_image(true);
+            button->set_label(_("Randomize"));
+            button->set_tooltip_markup(_("Randomization seed for random mode for scaling, rotation and gaps"));
+            button->set_relief(Gtk::RELIEF_NORMAL);
+            button->set_image_from_icon_name(INKSCAPE_ICON("randomize"), Gtk::IconSize(Gtk::ICON_SIZE_BUTTON));
+
+            widgrand->set_vexpand(false);
+            widgrand->set_hexpand(false);
+            widgrand->set_valign(Gtk::ALIGN_START);
+            widgrand->set_halign(Gtk::ALIGN_START);
+            randbutton = Gtk::manage(widgrand);
+
+            continue;
+        } else if (param->param_key == "offset_type" || 
+            param->param_key == "mirrorrowsx" && usemirroricons ||
+            param->param_key == "mirrorrowsy" && usemirroricons ||
+            param->param_key == "mirrorcolsx" && usemirroricons ||
+            param->param_key == "mirrorcolsy" && usemirroricons ||
+            param->param_key == "interpolate_rotatex" ||
+            param->param_key == "interpolate_rotatey" ||
+            param->param_key == "interpolate_scalex" ||
+            param->param_key == "interpolate_scaley" ||
+            param->param_key == "random_scale" ||
+            param->param_key == "random_rotate" ||
+            param->param_key == "random_gap_x" ||
+            param->param_key == "random_gap_y")
+        {
+            continue;
+        } else if (param->param_key == "offset") {
+            UI::pack_start(*movestart, *widg, false, false, 2);
+            auto const container = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL,0);
+            Gtk::RadioButton::Group group;
+            auto rows = create_radio_button(group, _("Offset rows"), INKSCAPE_ICON("rows"));
+            auto cols = create_radio_button(group, _("Offset columns"), INKSCAPE_ICON("cols"));
+            rows->set_tooltip_markup(_("Offset alternate rows"));
+            cols->set_tooltip_markup(_("Offset alternate cols"));
+            if (offset_type) {
+                cols->set_active();
+            } else {
+                rows->set_active();
             }
+            UI::pack_start(*container, *rows, false, false, 1);
+            UI::pack_start(*container, *cols, false, false, 1);
+            cols->signal_clicked().connect(sigc::mem_fun (*this, &LPETiling::setOffsetCols));
+            rows->signal_clicked().connect(sigc::mem_fun (*this, &LPETiling::setOffsetRows));
+            UI::pack_start(*moveend, *container, false, false, 2);
+        } else if (param->param_key == "scale") {
+            auto const container = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL,0);
+            Gtk::RadioButton::Group group;
+            auto cols = create_radio_button(group, _("Interpolate X"), INKSCAPE_ICON("interpolate-scale-x"));
+            auto rows = create_radio_button(group, _("Interpolate Y"), INKSCAPE_ICON("interpolate-scale-y"));
+            auto both = create_radio_button(group, _("Interpolate both"), INKSCAPE_ICON("interpolate-scale-both"));
+            auto none = create_radio_button(group, _("No interpolation"), INKSCAPE_ICON("interpolate-scale-none"));
+            auto rand = create_radio_button(group, _("Interpolate random"), INKSCAPE_ICON("scale-random"));
+            if (interpolate_scalex && interpolate_scaley) {
+                both->set_active();
+            } else if (interpolate_scalex) {
+                cols->set_active();
+            } else if (interpolate_scaley) {
+                rows->set_active();
+            } else if (random_scale) {
+                rand->set_active();
+            } else {
+                none->set_active();
+            }
+            cols->set_tooltip_markup(_("Blend scale from <b>left to right</b> (left column uses original scale, right column uses new scale)"));
+            rows->set_tooltip_markup(_("Blend scale from <b>top to bottom</b> (top row uses original scale, bottom row uses new scale)"));
+            both->set_tooltip_markup(_("Blend scale <b>diagonally</b> (top left tile uses original scale, bottom right tile uses new scale)"));
+            none->set_tooltip_markup(_("Uniform scale"));
+            rand->set_tooltip_markup(_("Random scale (hit <b>Randomize</b> button to shuffle)"));
+            UI::pack_start(*container, *rows, false, false, 1);
+            UI::pack_start(*container, *cols, false, false, 1);
+            UI::pack_start(*container, *both, false, false, 1);
+            UI::pack_start(*container, *none, false, false, 1);
+            UI::pack_start(*container, *rand, false, false, 1);
+            rand->signal_clicked().connect(sigc::mem_fun(*this, &LPETiling::setScaleRandom));
+            none->signal_clicked().connect(sigc::bind(sigc::mem_fun(*this, &LPETiling::setScaleInterpolate), false, false));
+            cols->signal_clicked().connect(sigc::bind(sigc::mem_fun(*this, &LPETiling::setScaleInterpolate), true, false));
+            rows->signal_clicked().connect(sigc::bind(sigc::mem_fun(*this, &LPETiling::setScaleInterpolate), false, true));
+            both->signal_clicked().connect(sigc::bind(sigc::mem_fun(*this, &LPETiling::setScaleInterpolate), true, true));
+            UI::pack_start(*movestart, *widg, false, false, 2);
+            UI::pack_start(*moveend, *container, false, false, 2);
+        } else if (param->param_key == "rotate") {
+            UI::pack_start(*movestart, *widg, false, false, 2);
+            auto const container = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL,0);
+            Gtk::RadioButton::Group group;
+            auto cols = create_radio_button(group, _("Interpolate X"), INKSCAPE_ICON("interpolate-rotate-x"));
+            auto rows = create_radio_button(group, _("Interpolate Y"), INKSCAPE_ICON("interpolate-rotate-y"));
+            auto both = create_radio_button(group, _("Interpolate both"), INKSCAPE_ICON("interpolate-rotate-both"));
+            auto none = create_radio_button(group, _("No interpolation"), INKSCAPE_ICON("interpolate-rotate-none"));
+            auto rand = create_radio_button(group, _("Interpolate random"), INKSCAPE_ICON("rotate-random"));
+            if (interpolate_rotatex && interpolate_rotatey) {
+                both->set_active();
+            } else if (interpolate_rotatex) {
+                cols->set_active();
+            } else if (interpolate_rotatey) {
+                rows->set_active();
+            } else if (random_rotate) {
+                rand->set_active();
+            } else {
+                none->set_active();
+            }
+            cols->set_tooltip_markup(_("Blend rotation from <b>left to right</b> (left column uses original rotation, right column uses new rotation)"));
+            rows->set_tooltip_markup(_("Blend rotation from <b>top to bottom</b> (top row uses original rotation, bottom row uses new rotation)"));
+            both->set_tooltip_markup(_("Blend rotation <b>diagonally</b> (top left tile uses original rotation, bottom right tile uses new rotation)"));
+            none->set_tooltip_markup(_("Uniform rotation"));
+            rand->set_tooltip_markup(_("Random rotation (hit <b>Randomize</b> button to shuffle)"));
+            UI::pack_start(*container, *rows, false, false, 1);
+            UI::pack_start(*container, *cols, false, false, 1);
+            UI::pack_start(*container, *both, false, false, 1);
+            UI::pack_start(*container, *none, false, false, 1);
+            UI::pack_start(*container, *rand, false, false, 1);
+            rand->signal_clicked().connect(sigc::mem_fun(*this, &LPETiling::setRotateRandom));
+            none->signal_clicked().connect(sigc::bind(sigc::mem_fun(*this, &LPETiling::setRotateInterpolate), false, false));
+            cols->signal_clicked().connect(sigc::bind(sigc::mem_fun(*this, &LPETiling::setRotateInterpolate), true, false));
+            rows->signal_clicked().connect(sigc::bind(sigc::mem_fun(*this, &LPETiling::setRotateInterpolate), false, true));
+            both->signal_clicked().connect(sigc::bind(sigc::mem_fun(*this, &LPETiling::setRotateInterpolate), true, true));
+            UI::pack_start(*moveend, *container, false, false, 2);
+         } else if (param->param_key == "gapx") {
+            auto const wrapper = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL,0);
+            movestart = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_VERTICAL,0);
+            moveend = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_VERTICAL,0);
+            moveend->set_homogeneous();
+            moveend->set_valign(Gtk::ALIGN_FILL);
+            auto const container = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL,0);
+            Gtk::RadioButton::Group group;
+            auto normal = create_radio_button(group, _("Normal"), INKSCAPE_ICON("interpolate-scale-none"));
+            auto randx = create_radio_button(group, _("Random"), INKSCAPE_ICON("gap-random-x"));
+            if (random_gap_x) {
+                randx->set_active();
+            } else {
+                normal->set_active();
+            }
+            normal->set_tooltip_markup(_("All horizontal gaps have the same width"));
+            randx->set_tooltip_markup(_("Random horizontal gaps (hit <b>Randomize</b> button to shuffle)"));
+            normal->signal_clicked().connect(sigc::bind(sigc::mem_fun(*this, &LPETiling::setGapXMode), false));
+            randx->signal_clicked().connect(sigc::bind(sigc::mem_fun(*this, &LPETiling::setGapXMode), true));
+            UI::pack_start(*container, *normal, false, false, 1);
+            UI::pack_start(*container, *randx, false, false, 1);
+            combo->set_margin_end(0);
+            UI::pack_end(*container, *combo, false, false, 1);
+            UI::pack_start(*movestart, *widg, false, false, 2);
+            UI::pack_start(*moveend, *container, false, false, 2);
+            UI::pack_start(*wrapper, *movestart, false, false);
+            UI::pack_start(*wrapper, *moveend, false, false);
+            //bwidg->set_hexpand(true);
+            combo->set_halign(Gtk::ALIGN_END);
+            widg->set_halign(Gtk::ALIGN_START);
+            UI::pack_start(*vbox, *wrapper, true, true);
+        } else if (param->param_key == "gapy") {
+            UI::pack_start(*movestart, *widg, true, true, 2);
+            auto const container = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL,0);
+            Gtk::RadioButton::Group group;
+            auto normal = create_radio_button(group, _("Normal"), INKSCAPE_ICON("interpolate-scale-none"));
+            auto randy = create_radio_button(group, _("Random"), INKSCAPE_ICON("gap-random-y"));
+            if (random_gap_y) {
+                randy->set_active();
+            } else {
+                normal->set_active();
+            }
+            normal->set_tooltip_markup(_("All vertical gaps have the same height"));
+            randy->set_tooltip_markup(_("Random vertical gaps (hit <b>Randomize</b> button to shuffle)"));
+            normal->signal_clicked().connect(sigc::bind(sigc::mem_fun(*this, &LPETiling::setGapYMode), false));
+            randy->signal_clicked().connect(sigc::bind(sigc::mem_fun(*this, &LPETiling::setGapYMode), true));
+            UI::pack_start(*container, *normal, false, false, 1);
+            UI::pack_start(*container, *randy, false, false, 1);
+            widg->set_halign(Gtk::ALIGN_START);
+            UI::pack_start(*moveend, *container, false, false, 2);
+        } else if (param->param_key == "mirrortrans"){
+            auto const container = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_VERTICAL,0);
+            auto const containerwraper = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL,0);
+            containerend = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_VERTICAL,0);
+            containerstart = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_VERTICAL,0);
+            UI::pack_start(*container, *containerwraper, false, true);
+            UI::pack_start(*containerwraper, *containerstart, false, true);
+            UI::pack_start(*containerwraper, *containerend, true, true);
+            UI::pack_end(*containerend, *randbutton, true, true, 2);
+            containerend->set_margin_start(8);
+            UI::pack_start(*containerstart, *widg, false, true, 2);
+            container->set_hexpand(false);
+            containerwraper->set_hexpand(false);
+            containerend->set_hexpand(false);
+            containerstart->set_hexpand(false);
+            UI::pack_start(*vbox, *container, false, true, 1);
+        } else if (
+            param->param_key == "split_items" ||
+            param->param_key == "link_styles" ||
+            param->param_key == "shrink_interp")
+        { 
+            UI::pack_start(*containerstart, *widg, true, true, 2);
+            widg->set_vexpand(false);
+            widg->set_hexpand(false);
+            widg->set_valign(Gtk::ALIGN_START);
+            widg->set_halign(Gtk::ALIGN_START);
+        } else if (param->param_key == "num_rows") { 
+            rowcols = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL,0);
+            UI::pack_start(*rowcols, *widg, false, false);
+            UI::pack_start(*vbox, *rowcols, false, true, 2);
+        } else if (param->param_key == "num_cols") { 
+            UI::pack_start(*rowcols, *widg, false, false);
+        } else {
+            UI::pack_start(*vbox, *widg, false, true, 2);
         }
 
-        ++it;
+        if (auto const tip = param->param_getTooltip()) {
+            widg->set_tooltip_markup(*tip);
+        } else {
+            widg->set_tooltip_markup({});
+            widg->set_has_tooltip(false);
+        }                
+    
+        if (dynamic_cast<ScalarParam *>(param)) {
+            scalars.push_back(widg);
+        }
     }
 
-    vbox->show_all();
     align_widgets(scalars, 5);
 
+    vbox->show_all();
     return vbox;
 }
 

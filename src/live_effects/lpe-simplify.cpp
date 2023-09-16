@@ -5,11 +5,10 @@
 
 #include "lpe-simplify.h"
 
+#include <2geom/svg-path-parser.h>
 #include <glibmm/i18n.h>
 #include <gtkmm/box.h>
 #include <gtkmm/entry.h>
-
-#include <2geom/svg-path-parser.h>
 
 #include "display/curve.h"
 #include "helper/geom.h"
@@ -19,9 +18,9 @@
 #include "ui/icon-names.h"
 #include "ui/pack.h"
 #include "ui/tools/node-tool.h"
+#include "ui/util.h"
 
-namespace Inkscape {
-namespace LivePathEffect {
+namespace Inkscape::LivePathEffect {
 
 LPESimplify::LPESimplify(LivePathEffectObject *lpeobject)
     : Effect(lpeobject)
@@ -35,8 +34,6 @@ LPESimplify::LPESimplify(LivePathEffectObject *lpeobject)
     , simplify_just_coalesce(_("Just coalesce"), _("Simplify just coalesce"), "simplify_just_coalesce", &wr, this,
                              false, "", INKSCAPE_ICON("on-outline"), INKSCAPE_ICON("off-outline"))
 {
-
-
     registerParameter(&threshold);
     registerParameter(&steps);
     registerParameter(&smooth_angles);
@@ -113,44 +110,33 @@ LPESimplify::newWidget()
 
     auto const buttons = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL,0);
 
-    std::vector<Parameter *>::iterator it = param_vector.begin();
-    while (it != param_vector.end()) {
-        if ((*it)->widget_is_visible) {
-            Parameter * param = *it;
-            auto const widg = param->param_newWidget();
-            if (param->param_key == "simplify_just_coalesce") {
-                ++it;
-                continue;
-            } else if (param->param_key == "simplify_individual_paths") {
-                Glib::ustring * tip = param->param_getTooltip();
-                if (widg) {
-                    UI::pack_start(*buttons, *widg, true, true, 2);
-                    if (tip) {
-                        widg->set_tooltip_markup(*tip);
-                    } else {
-                        widg->set_tooltip_text("");
-                        widg->set_has_tooltip(false);
-                    }
-                }
-            } else {
-                Glib::ustring * tip = param->param_getTooltip();
-                if (widg) {
-                    Gtk::Box * horizontal_box = dynamic_cast<Gtk::Box *>(widg);
-                    std::vector< Gtk::Widget* > child_list = horizontal_box->get_children();
-                    Gtk::Entry* entry_widg = dynamic_cast<Gtk::Entry *>(child_list[1]);
-                    entry_widg->set_width_chars(8);
-                    UI::pack_start(*vbox, *widg, true, true, 2);
-                    if (tip) {
-                        widg->set_tooltip_markup(*tip);
-                    } else {
-                        widg->set_tooltip_text("");
-                        widg->set_has_tooltip(false);
-                    }
-                }
-            }
+    for (auto const param: param_vector) {
+        if (!param->widget_is_visible) continue;
+
+        auto const widg = param->param_newWidget();
+        if (!widg) continue;
+
+        if (param->param_key == "simplify_just_coalesce") {
+            continue;
         }
 
-        ++it;
+        if (param->param_key == "simplify_individual_paths") {
+            UI::pack_start(*buttons, *widg, true, true, 2);
+        } else {
+            auto &horizontal_box = dynamic_cast<Gtk::Box &>(*widg);
+            auto const child_list = UI::get_children(horizontal_box);
+            auto &entry = dynamic_cast<Gtk::Entry &>(*child_list.at(1));
+            entry.set_width_chars(8);
+
+            UI::pack_start(*vbox, *widg, true, true, 2);
+        }
+
+        if (auto const tip = param->param_getTooltip()) {
+            widg->set_tooltip_markup(*tip);
+        } else {
+            widg->set_tooltip_text({});
+            widg->set_has_tooltip(false);
+        }
     }
 
     buttons->set_halign(Gtk::ALIGN_START);
@@ -162,25 +148,26 @@ void
 LPESimplify::doEffect(SPCurve *curve)
 {
     Geom::PathVector const original_pathv = pathv_to_linear_and_cubic_beziers(curve->get_pathvector());
-    gdouble size  = Geom::L2(bbox->dimensions());
     auto pathliv = Path_for_pathvector(original_pathv);
-    if(simplify_individual_paths) {
+
+    double size = Geom::L2(bbox->dimensions());
+    if (simplify_individual_paths) {
         size = Geom::L2(Geom::bounds_fast(original_pathv)->dimensions());
     }
     size /= sp_lpe_item->i2doc_affine().descrim();
-    Glib::ustring version = lpeversion.param_getSVGValue();
-    gint factor = 10000;
-    if (version < "1.3") {
-        factor = 1;
-    }
-    for (int unsigned i = 0; i < steps; i++) {
-        if ( simplify_just_coalesce ) {
+
+    auto const &version = lpeversion.param_getSVGValue();
+    int const factor = version < "1.3" ? 1 : 10000;
+
+    for (auto i = 0u; i < steps; ++i) {
+        if (simplify_just_coalesce) {
             pathliv->Coalesce((threshold / factor) * size);
         } else {
             pathliv->ConvertEvenLines((threshold / factor) * size);
             pathliv->Simplify((threshold / factor) * size);
         }
     }
+
     auto result = pathliv->MakePathVector();
     generateHelperPathAndSmooth(result);
     curve->set_pathvector(result);
@@ -313,7 +300,6 @@ LPESimplify::drawHandle(Geom::Point p)
     hp.push_back(pathv[0]);
 }
 
-
 void
 LPESimplify::drawHandleLine(Geom::Point p,Geom::Point p2)
 {
@@ -334,9 +320,7 @@ LPESimplify::addCanvasIndicators(SPLPEItem const */*lpeitem*/, std::vector<Geom:
     hp_vec.push_back(hp);
 }
 
-
-}; //namespace LivePathEffect
-}; /* namespace Inkscape */
+} // namespace Inkscape::LivePathEffect
 
 /*
   Local Variables:

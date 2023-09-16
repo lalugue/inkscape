@@ -17,6 +17,7 @@
 #include <giomm/file.h>
 #include <gtkmm/box.h>
 #include <gtkmm/menubar.h>
+#include <sigc++/functors/mem_fun.h>
 
 #include "inkscape-window.h"
 #include "actions/actions-canvas-mode.h"
@@ -150,9 +151,8 @@ InkscapeWindow::InkscapeWindow(SPDocument* document)
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
     if (prefs->getInt("/theme/shiftIcons", true)) {
         bool shifted = false;
-        for (auto child : get_children()) {
-            auto menubar = dynamic_cast<Gtk::MenuBar *>(child);
-            if (menubar) {
+        for (auto const child : Inkscape::UI::get_children(*this)) {
+            if (auto const menubar = dynamic_cast<Gtk::MenuBar *>(child)) {
                 menubar->get_style_context()->add_class("shifticonmenu");
                 if (!shifted) {
                     shifted = shift_icons(menubar);

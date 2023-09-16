@@ -25,6 +25,7 @@
 #include <gtkmm/menushell.h>
 
 #include "inkscape-application.h"  // Action extra data
+#include "ui/util.h"
 
 // Could be used to update status bar.
 // bool on_enter_notify(GdkEventCrossing* crossing_event, Gtk::MenuItem* menuitem)
@@ -48,7 +49,7 @@ shift_icons(Gtk::MenuShell* menu)
     static auto app = InkscapeApplication::instance();
     auto &label_to_tooltip_map = app->get_menu_label_to_tooltip_map();
 
-    for (auto child : menu->get_children()) {
+    for (auto const child : Inkscape::UI::get_children(*menu)) {
         if (shifted) {
             break;
         }
@@ -69,17 +70,18 @@ shift_icons(Gtk::MenuShell* menu)
                     continue;
                 }  
 
-                std::vector<Gtk::Widget *> children = box->get_children();
-                if (children.size() == 2) {
+                if (auto const children = Inkscape::UI::get_children(*box); children.size() == 2) {
                     auto label_widget = dynamic_cast<Gtk::Label *>(children[1]);
                     if (!label_widget) {
                         label_widget = dynamic_cast<Gtk::Label *>(children[0]);
                     }
+
                     if (label_widget) {
                         label = label_widget->get_label();
                     }
                 }
             }
+
             if (label.empty()) {
                 continue;
             } 

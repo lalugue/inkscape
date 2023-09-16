@@ -159,10 +159,11 @@ Gtk::Widget *LPERoughen::newWidget()
                 UI::pack_start(*vbox, *Gtk::make_managed<Gtk::Separator>(Gtk::ORIENTATION_HORIZONTAL),
                                UI::PackOptions::expand_widget);
             }
-            Glib::ustring *tip = param->param_getTooltip();
+
             if (widg) {
                 UI::pack_start(*vbox, *widg, true, true, 2);
-                if (tip) {
+
+                if (auto const tip = param->param_getTooltip()) {
                     widg->set_tooltip_markup(*tip);
                 } else {
                     widg->set_tooltip_text("");

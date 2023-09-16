@@ -68,6 +68,7 @@
 #include "ui/controller.h"
 #include "ui/icon-names.h"
 #include "ui/pack.h"
+#include "ui/util.h"
 #include "util/units.h"
 
 namespace Inkscape::UI::Dialog {
@@ -503,13 +504,7 @@ void TextEdit::onApply()
 
 void TextEdit::display_font_collections()
 {
-    // std::cout << "TextEdit::display_font_collections()" << std::endl;
-
-    for (auto row : collections_list->get_children()) {
-        if (row) {
-            collections_list->remove(*row);
-        }
-    }
+    UI::delete_all_children(*collections_list);
 
     FontCollections *font_collections = Inkscape::FontCollections::get();
 

@@ -43,7 +43,6 @@
 #include "message-stack.h"
 #include "preferences.h"
 #include "selection.h"
-
 #include "include/glibmm_version.h"
 #include "inkscape-application.h"
 #include "inkscape-window.h"
@@ -510,7 +509,7 @@ bool CommandPalette::operate_recent_file(Glib::ustring const &uri, bool const im
     bool write_to_history = true;
 
     // if the last element in CPHistory is already this, don't update history file
-    if (not _CPHistory->get_children().empty()) {
+    if (not UI::get_children(*_CPHistory).empty()) {
         if (const auto last_operation = _history_xml.get_last_operation(); last_operation.has_value()) {
             if (uri == last_operation->data) {
                 bool last_operation_was_import = last_operation->history_type == HistoryType::IMPORT_FILE;
@@ -1179,8 +1178,9 @@ void CommandPalette::set_mode(CPMode mode)
 
             break;
 
-        case CPMode::HISTORY:
-            if (_CPHistory->get_children().empty()) {
+        case CPMode::HISTORY: {
+            auto const children = UI::get_children(*_CPHistory);
+            if (children.empty()) {
                 return;
             }
 
@@ -1202,7 +1202,7 @@ void CommandPalette::set_mode(CPMode mode)
 
             {
                 // select last row
-                const auto last_row = _CPHistory->get_row_at_index(_CPHistory->get_children().size() - 1);
+                auto const last_row = _CPHistory->get_row_at_index(children.size() - 1);
                 _CPHistory->select_row(*last_row);
                 last_row->grab_focus();
             }
@@ -1212,6 +1212,7 @@ void CommandPalette::set_mode(CPMode mode)
                 const auto adjustment = _CPHistoryScroll->get_vadjustment();
                 adjustment->set_value(adjustment->get_upper());
             });
+        }
     }
 
     _mode = mode;
@@ -1360,10 +1361,10 @@ std::pair<Gtk::Label *, Gtk::Label *> CommandPalette::get_name_desc(Gtk::ListBox
     if (box && (box->get_name() == "CPOperation")) {
         // NOTE: These variables have same name as in the glade file command-palette-operation.glade
         // FIXME: When structure of Gladefile of CPOperation changes, refactor this
-        auto box_children = box->get_children();
+        auto const box_children = UI::get_children(*box);
         auto CPNameBox = dynamic_cast<Gtk::Box *>(box_children.at(0));
         if (CPNameBox) {
-            auto name_children = CPNameBox->get_children();
+            auto const name_children = UI::get_children(*CPNameBox);
             auto CPName = dynamic_cast<Gtk::Label *>(name_children.at(0));
             auto CPDescription = dynamic_cast<Gtk::Label *>(name_children.at(1));
             return std::pair(CPName, CPDescription);
@@ -1376,18 +1377,17 @@ Gtk::Label *CommandPalette::get_full_action_name(Gtk::ListBoxRow *child)
 {
     auto box = dynamic_cast<Gtk::Box *>(child->get_child());
     if (box && (box->get_name() == "CPOperation")) {
-        auto box_children = box->get_children();
+        auto const box_children = UI::get_children(*box);
         auto CPActionFullButton = dynamic_cast<Gtk::Button *>(box_children.at(1));
         if (CPActionFullButton) {
-            auto synapse_button = CPActionFullButton->get_children();
+            auto const synapse_button = UI::get_children(*CPActionFullButton);
             auto CPSynapseButtonBox = dynamic_cast<Gtk::Box *>(synapse_button.at(0));
             if (CPSynapseButtonBox) {
-                auto synapse_button_content = CPSynapseButtonBox->get_children();
+                auto const synapse_button_content = UI::get_children(*CPSynapseButtonBox);
                 return dynamic_cast<Gtk::Label *>(synapse_button_content.at(1));
             }
         }
     }
-
     return nullptr;
 }
 

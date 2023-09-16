@@ -24,7 +24,6 @@
 #include <memory>
 #include <iostream>
 #include <iomanip>
-
 #include <glibmm/convert.h>
 #include <glibmm/i18n.h>
 #include <glibmm/miscutils.h>
@@ -40,7 +39,6 @@
 #include "inkscape-application.h"
 #include "inkscape-window.h"
 #include "preferences.h"
-
 #include "io/dir-util.h"
 #include "io/resource.h"
 #include "io/sys.h"
@@ -48,6 +46,7 @@
 #include "ui/modifiers.h"
 #include "ui/tools/tool-base.h"    // For latin keyval
 #include "ui/dialog/filedialog.h"  // Importing/exporting files.
+#include "ui/util.h"
 #include "ui/widget/events/canvas-event.h"
 #include "xml/simple-document.h"
 #include "xml/node.h"
@@ -893,8 +892,7 @@ Shortcuts::update_gui_text_recursive(Gtk::Widget* widget)
 
     auto container = dynamic_cast<Gtk::Container *>(widget);
     if (container) {
-        auto children = container->get_children();
-        for (auto child : children) {
+        for (auto const child : UI::get_children(*container)) {
             update_gui_text_recursive(child);
         }
     }
@@ -1043,8 +1041,7 @@ Shortcuts::dump_all_recursive(Gtk::Widget* widget)
               << std::endl;
     auto container = dynamic_cast<Gtk::Container *>(widget);
     if (container) {
-        auto children = container->get_children();
-        for (auto child : children) {
+        for (auto const child : UI::get_children(*container)) {
             dump_all_recursive(child);
         }
     }

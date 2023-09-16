@@ -60,6 +60,7 @@
 #include "ui/dialog/filedialog.h"
 #include "ui/icon-names.h"
 #include "ui/interface.h"
+#include "ui/util.h"
 #include "ui/widget/color-picker.h"
 #include "ui/widget/export-lists.h"
 #include "ui/widget/export-preview.h"
@@ -1006,7 +1007,7 @@ void SingleExport::refreshPreview()
     bool show = si_show_preview->get_active();
     if (!show || current_key == SELECTION_PAGE) {
         bool have_pages = false;
-        for (auto child : pages_list->get_children()) {
+        for (auto const child : UI::get_children(*pages_list)) {
             if (auto bi = dynamic_cast<BatchItem *>(child)) {
                 bi->refresh(!show, _bgnd_color_picker->get_current_color());
                 have_pages = true;

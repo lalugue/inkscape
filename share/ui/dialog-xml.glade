@@ -36,6 +36,7 @@
   </object>
   <object class="GtkMenu" id="menu-popup">
     <property name="visible">True</property>
+    <!-- Ensure item order here matches the loop in ui/dialog/xml-tree.cpp -->
     <child>
       <object class="GtkRadioMenuItem" id="auto-layout">
         <property name="visible">True</property>

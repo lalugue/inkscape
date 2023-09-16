@@ -32,6 +32,7 @@
 #include "color-palette.h"
 #include "ui/builder-utils.h"
 #include "ui/dialog/color-item.h"
+#include "ui/util.h"
 #include "ui/widget/popover-menu.h"
 #include "ui/widget/popover-menu-item.h"
 
@@ -416,11 +417,11 @@ void ColorPalette::_enable_scrollbar(bool show) {
 }
 
 void ColorPalette::set_up_scrolling() {
-    auto& box = get_widget<Gtk::Box>(_builder, "palette-box");
-    auto& btn_menu = get_widget<Gtk::MenuButton>(_builder, "btn-menu");
-    const auto& colors = _normal_box.get_children();
+    auto &box = get_widget<Gtk::Box>(_builder, "palette-box");
+    auto &btn_menu = get_widget<Gtk::MenuButton>(_builder, "btn-menu");
+    auto const colors = UI::get_children(_normal_box);
     auto normal_count = std::max(1, static_cast<int>(colors.size()));
-    auto pinned_count = std::max(1, static_cast<int>(_pinned_box.get_children().size()));
+    auto pinned_count = std::max(1, static_cast<int>(UI::get_children(_pinned_box).size()));
 
     _normal_box.set_max_children_per_line(normal_count);
     _normal_box.set_min_children_per_line(1);
@@ -589,14 +590,6 @@ void ColorPalette::resize() {
     }
 }
 
-void free_colors(Gtk::FlowBox& flowbox) {
-    for (auto widget : flowbox.get_children()) {
-        if (widget) {
-            flowbox.remove(*widget);
-        }
-    }
-}
-
 void ColorPalette::set_colors(std::vector<Dialog::ColorItem*> const &swatches)
 {
     _normal_items.clear();
@@ -642,8 +635,8 @@ void ColorPalette::rebuild_widgets()
     _pinned_box.freeze_notify();
     _pinned_box.freeze_child_notify();
 
-    free_colors(_normal_box);
-    free_colors(_pinned_box);
+    UI::delete_all_children(_normal_box);
+    UI::delete_all_children(_pinned_box);
 
     for (auto item : _normal_items) {
         // in a tile mode (no labels) groups headers are hidden:
@@ -786,7 +779,7 @@ void ColorPalette::set_filter(std::function<bool (const Dialog::ColorItem&)> fil
     _normal_box.set_filter_func([=](Gtk::FlowBoxChild* c){
         auto child = c->get_child();
         if (auto box = dynamic_cast<Gtk::Box*>(child)) {
-            child = box->get_children().at(0);
+            child = UI::get_children(*box).at(0);
         }
         if (auto color = dynamic_cast<Dialog::ColorItem*>(child)) {
             return filter(*color);

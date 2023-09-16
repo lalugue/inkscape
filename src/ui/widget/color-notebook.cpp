@@ -35,6 +35,7 @@
 #include "ui/icon-loader.h"
 #include "ui/pack.h"
 #include "ui/tools/dropper-tool.h"
+#include "ui/util.h"
 #include "ui/widget/color-entry.h"
 #include "ui/widget/color-icc-selector.h"
 #include "ui/widget/color-notebook.h"
@@ -43,12 +44,10 @@
 
 using Inkscape::CMSSystem;
 
-#define XPAD 2
-#define YPAD 1
+static constexpr int XPAD = 2;
+static constexpr int YPAD = 1;
 
-namespace Inkscape {
-namespace UI {
-namespace Widget {
+namespace Inkscape::UI::Widget {
 
 ColorNotebook::ColorNotebook(SelectedColor &color, bool no_alpha)
     : Gtk::Grid()
@@ -319,8 +318,9 @@ int ColorNotebook::getPageIndex(const Glib::ustring &name)
 
 int ColorNotebook::getPageIndex(Gtk::Widget *widget)
 {
-    const auto pages = _book->get_children();
-    for (int i = 0; i < pages.size(); i++) {
+    auto const pages = UI::get_children(*_book);
+    auto const n_pages = static_cast<int>(pages.size());
+    for (int i = 0; i < n_pages; ++i) {
         if (pages[i] == widget) {
             return i;
         }
@@ -330,15 +330,15 @@ int ColorNotebook::getPageIndex(Gtk::Widget *widget)
 
 void ColorNotebook::_setCurrentPage(int i, bool sync_combo)
 {
-    const auto pages = _book->get_children();
-
-    if (i >= pages.size()) {
+    auto const pages = UI::get_children(*_book);
+    auto const n_pages = static_cast<int>(pages.size());
+    if (i >= n_pages) {
         // page index could be outside the valid range if we manipulate visible color pickers;
         // default to the first page, so we show something
         i = 0;
     }
 
-    if (i >= 0 && i < pages.size()) {
+    if (i >= 0 && i < n_pages) {
         _book->set_visible_child(*pages[i]);
         if (sync_combo) {
             _combo->set_active_by_id(i);
@@ -351,8 +351,9 @@ void ColorNotebook::_addPage(Page &page, bool no_alpha, const Glib::ustring vpat
     if (auto selector_widget = page.selector_factory->createWidget(_selected_color, no_alpha)) {
         Glib::ustring mode_name = page.selector_factory->modeName();
         _book->add(*selector_widget, mode_name, mode_name);
-        int page_num = _book->get_children().size() - 1;
 
+        auto const n_pages = static_cast<int>(UI::get_children(*_book).size());
+        auto const page_num = n_pages - 1;
         _combo->add_row(page.icon_name, mode_name, page_num);
 
         auto prefs = Inkscape::Preferences::get();
@@ -365,9 +366,7 @@ void ColorNotebook::_addPage(Page &page, bool no_alpha, const Glib::ustring vpat
     }
 }
 
-}
-}
-}
+} // namespace Inkscape::UI::Widget
 
 /*
   Local Variables:

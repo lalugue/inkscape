@@ -53,6 +53,7 @@
 #include "ui/manage.h"
 #include "ui/pack.h"
 #include "ui/tools/node-tool.h"
+#include "ui/util.h"
 #include "ui/widget/custom-tooltip.h"
 #include "util/optstr.h"
 
@@ -209,12 +210,13 @@ void align(Gtk::Widget *top, int const spinbutton_width_chars)
 
     // traverse container, locate n-th child in each row
     auto for_child_n = [=](int child_index, const std::function<void (Gtk::Widget*)>& action) {
-        for (auto child : box->get_children()) {
-            auto container = dynamic_cast<Gtk::Box*>(child);
+        for (auto const child : UI::get_children(*box)) {
+            auto const container = dynamic_cast<Gtk::Box *>(child);
             if (!container) continue;
+
             container->set_spacing(2);
-            const auto& children = container->get_children();
-            if (children.size() > child_index) {
+            auto const children = UI::get_children(*container);
+            if (child_index < children.size()) {
                 action(children[child_index]);
             }
         }
@@ -507,7 +509,7 @@ LivePathEffectEditor::selection_info()
                 UI::pack_start(*boxc, *type, false, false);
                 UI::pack_start(*boxc, *lbl, false, false);
                 _LPECurrentItem.add(*boxc);
-                _LPECurrentItem.get_children()[0]->set_halign(Gtk::ALIGN_CENTER);
+                UI::get_children(_LPECurrentItem).at(0)->set_halign(Gtk::ALIGN_CENTER);
                 _LPESelectionInfo.set_visible(false);
             }
             std::vector<std::pair <Glib::ustring, Glib::ustring> > newrootsatellites;
@@ -609,23 +611,28 @@ LivePathEffectEditor::showParams(LPEExpander const &expanderdata, bool const cha
             if (effectwidget && !lpe->refresh_widgets && expanderdata == current_lperef && !changed) {
                 return;
             }
+
             if (effectwidget) {
                 effectwidget->get_parent()->remove(*effectwidget);
                 delete effectwidget;
                 effectwidget = nullptr;
             }
+
             effectwidget = lpe->newWidget();
-            if (!dynamic_cast<Gtk::Container *>(effectwidget)->get_children().size()) {
-                auto * label = new Gtk::Label("", Gtk::ALIGN_START, Gtk::ALIGN_CENTER);
+
+            if (UI::get_children(*effectwidget).empty()) {
+                auto const label = Gtk::make_managed<Gtk::Label>("", Gtk::ALIGN_START, Gtk::ALIGN_CENTER);
                 label->set_markup(_("<small>Without parameters</small>"));
                 label->set_margin_top(5);
                 label->set_margin_bottom(5);
                 label->set_margin_start(5);
                 effectwidget = label;
             }
+
             expanderdata.first->add(*effectwidget);
             expanderdata.first->show_all_children();
             align(effectwidget, lpe->spinbutton_width_chars);
+
             // fixme: add resizing of dialog
             lpe->refresh_widgets = false;
             ensure_size();
@@ -673,7 +680,7 @@ LivePathEffectEditor::effect_list_reload(SPLPEItem *lpeitem)
             if (!dnd) return;
 
             int const pos_source = std::atoi(reinterpret_cast<char const *>(selection_data.get_data()));
-            int pos_target = y < 90 ? 0 : LPEListBox.get_children().size() - 1;
+            int pos_target = y < 90 ? 0 : UI::get_children(LPEListBox).size() - 1;
 
             if (pos_target == pos_source) {
                 gtk_drag_finish(context->gobj(), FALSE, FALSE, time);
@@ -812,7 +819,7 @@ LivePathEffectEditor::effect_list_reload(SPLPEItem *lpeitem)
         });
 
         size_t pos = 0;
-        for (auto w : LPEEffectMenu->get_children()) {
+        for (auto const w : UI::get_children(*LPEEffectMenu)) {
             auto * mitem = dynamic_cast<Gtk::MenuItem *>(w);
             if (mitem) {
                 mitem->signal_activate().connect([=](){
@@ -1086,15 +1093,9 @@ LivePathEffectEditor::removeEffect(Gtk::Expander * expander) {
 void
 LivePathEffectEditor::clear_lpe_list()
 {
-    for (auto &w : LPEListBox.get_children()) {
-        LPEListBox.remove(*w);
-    }
-    for (auto &w : _LPEParentBox.get_children()) {
-        _LPEParentBox.remove(*w);
-    }
-    for (auto &w : _LPECurrentItem.get_children()) {
-        _LPECurrentItem.remove(*w);
-    }
+    UI::remove_all_children( LPEListBox    );
+    UI::remove_all_children(_LPEParentBox  );
+    UI::remove_all_children(_LPECurrentItem);
 }
 
 SPLPEItem * LivePathEffectEditor::clonetolpeitem()

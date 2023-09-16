@@ -10,24 +10,27 @@
  *
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
+
 #ifndef SEEN_TOOLBARS_H
 #define SEEN_TOOLBARS_H
 
 #include <map>
-
+#include <glibmm/ustring.h>
 #include <gtkmm/box.h>
 
 class SPDesktop;
 
 namespace Gtk {
-  class Grid;
-}
+class Grid;
+} // namespace Gtk
 
-namespace Inkscape::UI::Tools {
+namespace Inkscape::UI {
+
+namespace Tools {
   class ToolBase;
-}
+} // namespace Tools
 
-namespace Inkscape::UI::Toolbar {
+namespace Toolbar {
 
 /**
  * \brief A container for tool toolbars.
@@ -35,11 +38,9 @@ namespace Inkscape::UI::Toolbar {
  * \detail A container for tool toolbars that display one toolbar at a time.
  *         The container tracks which toolbar is shown.
  */
-class Toolbars : public Gtk::Box {
-
+class Toolbars final : public Gtk::Box {
 public:
     Toolbars();
-    ~Toolbars() override = default;
 
     void create_toolbars(SPDesktop* desktop);
     void change_toolbar(SPDesktop* desktop, Inkscape::UI::Tools::ToolBase* eventcontext);
@@ -49,9 +50,11 @@ private:
     GtkWidget* current_toolbar = nullptr;
 };
 
-} // Namespace
+} // namespace Toolbar
+} // namespace Inkscape::UI
 
-#endif
+#endif // SEEN_TOOLBARS_H
+
 /*
   Local Variables:
   mode:c++

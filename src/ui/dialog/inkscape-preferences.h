@@ -23,17 +23,14 @@
 #include <cairo.h>
 #endif
 
-#include <iostream>
-#include <iterator>
+#include <map>
 #include <vector>
-#include <cstddef>
 
-#include <glibmm/regex.h>
+#include <glibmm/refptr.h>
 #include <gtk/gtk.h> // GtkEventControllerKey
 #include <gtkmm/colorbutton.h>
 #include <gtkmm/comboboxtext.h>
 #include <gtkmm/frame.h>
-#include <gtkmm/liststore.h>
 #include <gtkmm/notebook.h>
 #include <gtkmm/scrolledwindow.h>
 #include <gtkmm/searchentry.h>
@@ -112,6 +109,10 @@ enum
     PREFS_PAGE_SPELLCHECK,
     PREFS_PAGE_NOTFOUND
 };
+
+namespace Glib {
+class Regex;
+} // namespace Glib
 
 namespace Gtk {
 class Scale;

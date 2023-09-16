@@ -759,63 +759,59 @@ void SPDesktopWidget::repack_snaptoolbar()
     // Always reset the various constraints, even if not repacked.
     if (is_perm) {
         snap.set_valign(Gtk::ALIGN_START);
+        return;
+    }
+
+    // This ensures that the Snap toolbox is on the top and only takes the needed space.
+    if (Inkscape::UI::get_children(*_top_toolbars).size() == 3 && command_toolbar->get_visible()) {
+        _top_toolbars->child_property_width(aux) = 2;
+        _top_toolbars->child_property_height(snap) =  1;
+        snap.set_valign(Gtk::ALIGN_START);
     } else {
-        // This ensures that the Snap toolbox is on the top and only takes the needed space.
-        if (_top_toolbars->get_children().size() == 3 && command_toolbar->get_visible()) {
-            _top_toolbars->child_property_width(aux) = 2;
-            _top_toolbars->child_property_height(snap) =  1;
-            snap.set_valign(Gtk::ALIGN_START);
-        } else {
-            _top_toolbars->child_property_width(aux) = 1;
-            _top_toolbars->child_property_height(snap) =  2;
-            snap.set_valign(Gtk::ALIGN_CENTER);
-        }
+        _top_toolbars->child_property_width(aux) = 1;
+        _top_toolbars->child_property_height(snap) =  2;
+        snap.set_valign(Gtk::ALIGN_CENTER);
     }
 }
 
 void SPDesktopWidget::namedviewModified(SPObject *obj, guint flags)
 {
+    if (!(flags & SP_OBJECT_MODIFIED_FLAG)) return;
+
     auto nv = cast<SPNamedView>(obj);
+    _dt2r = 1. / nv->display_units->factor;
 
-    if (flags & SP_OBJECT_MODIFIED_FLAG) {
-        _dt2r = 1. / nv->display_units->factor;
+    _canvas_grid->GetVRuler()->set_unit(nv->getDisplayUnit());
+    _canvas_grid->GetHRuler()->set_unit(nv->getDisplayUnit());
+    _canvas_grid->GetVRuler()->set_tooltip_text(gettext(nv->display_units->name_plural.c_str()));
+    _canvas_grid->GetHRuler()->set_tooltip_text(gettext(nv->display_units->name_plural.c_str()));
+    _canvas_grid->updateRulers();
 
-        _canvas_grid->GetVRuler()->set_unit(nv->getDisplayUnit());
-        _canvas_grid->GetHRuler()->set_unit(nv->getDisplayUnit());
-        _canvas_grid->GetVRuler()->set_tooltip_text(gettext(nv->display_units->name_plural.c_str()));
-        _canvas_grid->GetHRuler()->set_tooltip_text(gettext(nv->display_units->name_plural.c_str()));
-        _canvas_grid->updateRulers();
+    /* This loops through all the grandchildren of tool toolbars,
+     * and for each that it finds, it performs an Inkscape::UI::find_widget_by_name(*),
+     * looking for widgets named "unit-tracker" (this is used by
+     * all toolboxes to refer to the unit selector). The default document units
+     * is then selected within these unit selectors.
+     *
+     * This should solve: https://bugs.launchpad.net/inkscape/+bug/362995
+     */
+    for (auto const i : Inkscape::UI::get_children(*tool_toolbars)) {
+        for (auto const j : Inkscape::UI::get_children(*i)) {
+            // Don't apply to text toolbar. We want to be able to
+            // use different units for text. (Bug 1562217)
+            const Glib::ustring name = j->get_name();
+            if ( name == "TextToolbar" || name == "MeasureToolbar" || name == "CalligraphicToolbar" )
+                continue;
 
-        /* This loops through all the grandchildren of tool toolbars,
-         * and for each that it finds, it performs an Inkscape::UI::find_widget_by_name(*),
-         * looking for widgets named "unit-tracker" (this is used by
-         * all toolboxes to refer to the unit selector). The default document units
-         * is then selected within these unit selectors.
-         *
-         * This should solve: https://bugs.launchpad.net/inkscape/+bug/362995
-         */
-        std::vector<Gtk::Widget*> ch = tool_toolbars->get_children();
-        for (auto i:ch) {
-            if (auto container = dynamic_cast<Gtk::Container *>(i)) {
-                std::vector<Gtk::Widget*> grch = container->get_children();
-                for (auto j:grch) {
-                    // Don't apply to text toolbar. We want to be able to
-                    // use different units for text. (Bug 1562217)
-                    const Glib::ustring name = j->get_name();
-                    if ( name == "TextToolbar" || name == "MeasureToolbar" || name == "CalligraphicToolbar" )
-                        continue;
-
-                    auto const tracker = dynamic_cast<Inkscape::UI::Widget::ComboToolItem*>
-                                                     (Inkscape::UI::find_widget_by_name(*j, "unit-tracker"));
-                    if (tracker) { // it's null when inkscape is first opened
-                        if (auto ptr = static_cast<UnitTracker*>(tracker->get_data(Glib::Quark("unit-tracker")))) {
-                            ptr->setActiveUnit(nv->display_units);
-                        }
-                    }
-                } // grandchildren
-            } // if child is a container
-        } // children
-    }
+            auto const tracker = dynamic_cast<Inkscape::UI::Widget::ComboToolItem*>
+                                             (Inkscape::UI::find_widget_by_name(*j, "unit-tracker"));
+            if (tracker) { // it's null when inkscape is first opened
+                if (auto ptr = static_cast<UnitTracker*>(tracker->get_data(Glib::Quark("unit-tracker")))) {
+                    ptr->setActiveUnit(nv->display_units);
+                }
+            }
+        } // grandchildren
+    } // children
 }
 
 // We make the desktop window with focus active. Signal is connected in inkscape-window.cpp

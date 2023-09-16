@@ -165,10 +165,11 @@ LPEMirrorSymmetry::newWidget()
         if ((*it)->widget_is_visible) {
             Parameter *param = *it;
             auto const widg = param->param_newWidget();
-            Glib::ustring *tip = param->param_getTooltip();
+
             if (widg && param->param_key != "split_open") {
                 UI::pack_start(*vbox, *widg, true, true, 2);
-                if (tip) {
+
+                if (auto const tip = param->param_getTooltip()) {
                     widg->set_tooltip_markup(*tip);
                 } else {
                     widg->set_tooltip_text("");

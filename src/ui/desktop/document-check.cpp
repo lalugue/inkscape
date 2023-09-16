@@ -18,15 +18,39 @@
 #include "document-check.h"
 
 #include <glibmm/i18n.h>  // Internationalization
-#include <gtkmm.h>
+#include <gtkmm/messagedialog.h>
 
+#include "extension/system.h" // Inkscape::Extension::FILE...
+#include "file.h"
 #include "inkscape-window.h"
 #include "object/sp-namedview.h"
 #include "ui/dialog-run.h"
+#include "ui/util.h"
 #include "xml/node.h"
 
-#include "file.h"
-#include "extension/system.h" // Inkscape::Extension::FILE...
+static int run_dialog(Gtk::Window &window, char const * const save_text,
+                      char const * const format, char const * const document_name)
+{
+    auto const message = g_markup_printf_escaped(format, document_name);
+    auto dialog = Gtk::MessageDialog{window, message, true, Gtk::MESSAGE_WARNING,
+                                     Gtk::BUTTONS_NONE};
+    g_free(message);
+
+    dialog.property_destroy_with_parent() = true;
+
+    // Don't allow text to be selected (via tabbing).
+    auto const ma = dialog.get_message_area();
+    g_assert(ma);
+    auto const ma_labels = Inkscape::UI::get_children(*ma);
+    ma_labels.at(0)->set_can_focus(false);
+
+    dialog.add_button(_("Close _without saving"), Gtk::RESPONSE_NO);
+    dialog.add_button(_("_Cancel"),               Gtk::RESPONSE_CANCEL);
+    dialog.add_button(_(save_text),               Gtk::RESPONSE_YES);
+    dialog.set_default_response(Gtk::RESPONSE_YES);
+
+    return Inkscape::UI::dialog_run(dialog);
+}
 
 /** Check if closing document associated with window will cause data loss, and if so opens a dialog
  *  that gives user options to save or ignore.
@@ -36,31 +60,16 @@
 bool
 document_check_for_data_loss(InkscapeWindow* window)
 {
+    g_assert(window);
     auto document = window->get_document();
 
     if (document->isModifiedSinceSave()) {
         // Document has been modified!
 
-        Glib::ustring message = g_markup_printf_escaped(
+        int const response = run_dialog(*window, _("_Save"),
             _("<span weight=\"bold\" size=\"larger\">Save changes to document \"%s\" before closing?</span>\n\n"
               "If you close without saving, your changes will be discarded."),
             document->getDocumentName());
-
-        Gtk::MessageDialog dialog =
-            Gtk::MessageDialog(*window, message, true, Gtk::MESSAGE_WARNING, Gtk::BUTTONS_NONE);
-        dialog.property_destroy_with_parent() = true;
-
-        // Don't allow text to be selected (via tabbing).
-        Gtk::Container *ma = dialog.get_message_area();
-        std::vector<Gtk::Widget*> ma_labels = ma->get_children();
-        ma_labels[0]->set_can_focus(false);
-
-        dialog.add_button(_("Close _without saving"), Gtk::RESPONSE_NO);
-        dialog.add_button(_("_Cancel"),               Gtk::RESPONSE_CANCEL);
-        dialog.add_button(_("_Save"),                 Gtk::RESPONSE_YES);
-        dialog.set_default_response(Gtk::RESPONSE_YES);
-
-        int response = Inkscape::UI::dialog_run(dialog);
 
         switch (response) {
             case GTK_RESPONSE_YES:
@@ -86,26 +95,10 @@ document_check_for_data_loss(InkscapeWindow* window)
     while (document->getReprRoot()->attribute("inkscape:dataloss") != nullptr && allow_data_loss == false) {
         // This loop catches if the user saves to a lossy format when in the loop. 
 
-        Glib::ustring message = g_markup_printf_escaped(
+        int const response = run_dialog(*window, _("_Save as Inkscape SVG"),
             _("<span weight=\"bold\" size=\"larger\">The file \"%s\" was saved with a format that may cause data loss!</span>\n\n"
               "Do you want to save this file as Inkscape SVG?"),
             document->getDocumentName() ? document->getDocumentName() : "Unnamed");
-
-        Gtk::MessageDialog dialog =
-            Gtk::MessageDialog(*window, message, true, Gtk::MESSAGE_WARNING, Gtk::BUTTONS_NONE);
-        dialog.property_destroy_with_parent() = true;
-
-        // Don't allow text to be selected (via tabbing).
-        Gtk::Container *ma = dialog.get_message_area();
-        std::vector<Gtk::Widget*> ma_labels = ma->get_children();
-        ma_labels[0]->set_can_focus(false);
-
-        dialog.add_button(_("Close _without saving"), Gtk::RESPONSE_NO);
-        dialog.add_button(_("_Cancel"),               Gtk::RESPONSE_CANCEL);
-        dialog.add_button(_("_Save as Inkscape SVG"), Gtk::RESPONSE_YES);
-        dialog.set_default_response(Gtk::RESPONSE_YES);
-
-        int response = Inkscape::UI::dialog_run(dialog);
 
         switch (response) {
             case GTK_RESPONSE_YES:

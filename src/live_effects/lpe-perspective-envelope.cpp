@@ -22,21 +22,17 @@
 #include <gtkmm/label.h>
 #include <gtkmm/separator.h>
 #include <gtkmm/widget.h>
-
 #include <gsl/gsl_linalg.h>
 
 #include "display/curve.h"
 #include "helper/geom.h"
-#include "ui/pack.h"
-
-#include "helper/geom.h"
-#include "display/curve.h"
 #include "object/sp-lpe-item.h"
+#include "ui/pack.h"
+#include "ui/util.h"
 
 using namespace Geom;
 
-namespace Inkscape {
-namespace LivePathEffect {
+namespace Inkscape::LivePathEffect {
 
 enum DeformationType {
     DEFORMATION_PERSPECTIVE,
@@ -264,7 +260,6 @@ LPEPerspectiveEnvelope::pointAtRatio(Geom::Coord ratio,Geom::Point A, Geom::Poin
     return Point(x, y);
 }
 
-
 Gtk::Widget *
 LPEPerspectiveEnvelope::newWidget()
 {
@@ -275,59 +270,46 @@ LPEPerspectiveEnvelope::newWidget()
     auto const hbox_up_handles = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL,0);
     auto const hbox_down_handles = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL,0);
 
-    std::vector<Parameter *>::iterator it = param_vector.begin();
-    while (it != param_vector.end()) {
-        if ((*it)->widget_is_visible) {
-            Parameter * param = *it;
-            auto const widg = param->param_newWidget();
-            if (param->param_key == "up_left_point" ||
-                    param->param_key == "up_right_point" ||
-                    param->param_key == "down_left_point" ||
-                    param->param_key == "down_right_point") {
-                Gtk::Box * point_hbox = dynamic_cast<Gtk::Box *>(widg);
-                std::vector< Gtk::Widget* > child_list = point_hbox->get_children();
-                Gtk::Box * point_hboxHBox = dynamic_cast<Gtk::Box *>(child_list[0]);
-                std::vector< Gtk::Widget* > child_list2 = point_hboxHBox->get_children();
-                point_hboxHBox->remove(child_list2[0][0]);
-                Glib::ustring * tip = param->param_getTooltip();
-                if (widg) {
-                    if(param->param_key == "up_left_point") {
-                        auto const handles = Gtk::make_managed<Gtk::Label>(Glib::ustring(_("Handles:")),Gtk::ALIGN_START);
-                        UI::pack_start(*vbox, *handles, false, false, 2);
-                        UI::pack_start(*hbox_up_handles, *widg, true, true, 2);
-                        UI::pack_start(*hbox_up_handles, *Gtk::make_managed<Gtk::Separator>(Gtk::ORIENTATION_VERTICAL),
-                                        UI::PackOptions::expand_padding);
-                    } else if(param->param_key == "up_right_point") {
-                        UI::pack_start(*hbox_up_handles, *widg, true, true, 2);
-                    } else if(param->param_key == "down_left_point") {
-                        UI::pack_start(*hbox_down_handles, *widg, true, true, 2);
-                        UI::pack_start(*hbox_down_handles, *Gtk::make_managed<Gtk::Separator>(Gtk::ORIENTATION_VERTICAL),
-                                       UI::PackOptions::expand_padding);
-                    } else {
-                        UI::pack_start(*hbox_down_handles, *widg, true, true, 2);
-                    }
-                    if (tip) {
-                        widg->set_tooltip_markup(*tip);
-                    } else {
-                        widg->set_tooltip_text("");
-                        widg->set_has_tooltip(false);
-                    }
-                }
+    for (auto const param: param_vector) {
+        if (!param->widget_is_visible) continue;
+
+        auto const widg = param->param_newWidget();
+        if (!widg) continue;
+
+        if (param->param_key == "up_left_point" ||
+            param->param_key == "up_right_point" ||
+            param->param_key == "down_left_point" ||
+            param->param_key == "down_right_point")
+        {
+            auto &point_hbox = dynamic_cast<Gtk::Box &>(*widg);
+            auto const child_list = UI::get_children(point_hbox);
+            auto &point_hboxHBox = dynamic_cast<Gtk::Box &>(*child_list.at(0));
+            auto const child_list2 = UI::get_children(point_hboxHBox);
+            point_hboxHBox.remove(*child_list2.at(0));
+
+            if (param->param_key == "up_left_point") {
+                auto const handles = Gtk::make_managed<Gtk::Label>(Glib::ustring(_("Handles:")),Gtk::ALIGN_START);
+                UI::pack_start(*vbox, *handles, false, false, 2);
+                UI::pack_start(*hbox_up_handles, *widg, true, true, 2);
+                UI::pack_start(*hbox_up_handles, *Gtk::make_managed<Gtk::Separator>(Gtk::ORIENTATION_VERTICAL),
+                               UI::PackOptions::expand_padding);
+            } else if (param->param_key == "up_right_point") {
+                UI::pack_start(*hbox_up_handles, *widg, true, true, 2);
+            } else if (param->param_key == "down_left_point") {
+                UI::pack_start(*hbox_down_handles, *widg, true, true, 2);
+                UI::pack_start(*hbox_down_handles, *Gtk::make_managed<Gtk::Separator>(Gtk::ORIENTATION_VERTICAL),
+                               UI::PackOptions::expand_padding);
             } else {
-                Glib::ustring * tip = param->param_getTooltip();
-                if (widg) {
-                    UI::pack_start(*vbox, *widg, true, true, 2);
-                    if (tip) {
-                        widg->set_tooltip_markup(*tip);
-                    } else {
-                        widg->set_tooltip_text("");
-                        widg->set_has_tooltip(false);
-                    }
-                }
+                UI::pack_start(*hbox_down_handles, *widg, true, true, 2);
+            }
+
+            if (auto const tip = param->param_getTooltip()) {
+                widg->set_tooltip_markup(*tip);
+            } else {
+                widg->set_tooltip_text({});
+                widg->set_has_tooltip(false);
             }
         }
-
-        ++it;
     }
 
     UI::pack_start(*vbox, *hbox_up_handles,true, true, 2);
@@ -578,14 +560,7 @@ LPEPerspectiveEnvelope::addCanvasIndicators(SPLPEItem const */*lpeitem*/, std::v
     hp_vec.push_back(c.get_pathvector());
 }
 
-
-/* ######################## */
-
-} //namespace LivePathEffect
-} /* namespace Inkscape */
-
-
-
+} // namespace Inkscape::LivePathEffect
 
 /*
   Local Variables:

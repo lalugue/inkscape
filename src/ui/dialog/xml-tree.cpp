@@ -20,7 +20,7 @@
 
 #include "xml-tree.h"
 
-#include <memory>
+#include <initializer_list>
 
 #include <glibmm/i18n.h>
 #include <glibmm/ustring.h>
@@ -52,6 +52,7 @@
 #include "ui/pack.h"
 #include "ui/syntax.h"
 #include "ui/tools/tool-base.h"
+#include "ui/util.h"
 #include "util/trim.h"
 #include "widgets/sp-xmlview-tree.h"
 
@@ -212,18 +213,17 @@ XmlTree::XmlTree()
         _layout = layout;
     };
 
-    auto menu_items = get_widget<Gtk::Menu>(_builder, "menu-popup").get_children();
+    auto const menu_items = UI::get_children(get_widget<Gtk::Menu>(_builder, "menu-popup"));
 
-    DialogLayout layouts[] = {Auto, Horizontal, Vertical};
-    int index = 0;
-    for (auto item : menu_items) {
-        g_assert(index < 3);
-        auto layout = layouts[index++];
-        static_cast<Gtk::RadioMenuItem*>(item)->signal_activate().connect([=](){ set_layout(layout); });
+    // Ensure item order here matches the children in share/ui/dialog-xml.glade
+    std::size_t index = 0;
+    for (auto const layout: {Auto, Horizontal, Vertical}) {
+        auto &item = dynamic_cast<Gtk::RadioMenuItem &>(*menu_items.at(index++));
+        item.signal_activate().connect([=]{ set_layout(layout); });
     }
 
     _layout = static_cast<DialogLayout>(prefs->getIntLimited("/dialogs/xml/layout", Auto, Auto, Vertical));
-    static_cast<Gtk::RadioMenuItem*>(menu_items.at(_layout))->set_active();
+    dynamic_cast<Gtk::RadioMenuItem &>(*menu_items.at(_layout)).set_active(true);
     set_layout(_layout);
     // establish initial layout to prevent unwanted panels resize in auto layout mode
     paned_set_vertical(_paned, true);

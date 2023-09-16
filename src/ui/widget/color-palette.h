@@ -39,7 +39,7 @@ namespace Widget {
 class ColorPaletteMenuItem;
 class PopoverMenu;
 
-class ColorPalette : public Gtk::Box {
+class ColorPalette final : public Gtk::Box {
 public:
     ColorPalette();
     ~ColorPalette() override;
@@ -93,7 +93,6 @@ public:
 private:
     void resize();
     void set_up_scrolling();
-    void free(Gtk::FlowBox& box);
     void scroll(int dx, int dy, double snap, bool smooth);
     void do_scroll(int dx, int dy);
     static gboolean scroll_cb(gpointer self);

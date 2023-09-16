@@ -21,12 +21,12 @@
 #include "svg/svg.h"
 #include "ui/icon-names.h"
 #include "ui/pack.h"
+#include "ui/util.h"
 
 // TODO due to internal breakage in glibmm headers, this must be last:
 #include <glibmm/i18n.h>
 
-namespace Inkscape {
-namespace LivePathEffect {
+namespace Inkscape::LivePathEffect {
 
 LPETransform2Pts::LPETransform2Pts(LivePathEffectObject *lpeobject) :
     Effect(lpeobject),
@@ -52,7 +52,6 @@ LPETransform2Pts::LPETransform2Pts(LivePathEffectObject *lpeobject) :
     previous_start(Geom::Point()),
     previous_length(-1)
 {
-
     registerParameter(&first_knot);
     registerParameter(&last_knot);
     registerParameter(&helper_size);
@@ -256,7 +255,6 @@ LPETransform2Pts::pathAtNodeIndex(Geom::PathVector pathvector, size_t index) con
     return Geom::Path();
 }
 
-
 void
 LPETransform2Pts::reset()
 {
@@ -298,74 +296,39 @@ Gtk::Widget *LPETransform2Pts::newWidget()
     auto const button3 = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL,0);
     auto const button4 = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL,0);
 
-    std::vector<Parameter *>::iterator it = param_vector.begin();
-    while (it != param_vector.end()) {
-        if ((*it)->widget_is_visible) {
-            Parameter *param = *it;
-            auto widg = param->param_newWidget();
-            Glib::ustring *tip = param->param_getTooltip();
-            if (param->param_key == "first_knot" || param->param_key == "last_knot") {
-                auto const registered_widget = Gtk::manage(dynamic_cast<Inkscape::UI::Widget::Scalar *>(widg));
-                registered_widget->signal_value_changed().connect(sigc::mem_fun(*this, &LPETransform2Pts::updateIndex));
-                widg = registered_widget;
-                if (widg) {
-                    Gtk::Box *hbox_scalar = dynamic_cast<Gtk::Box *>(widg);
-                    std::vector<Gtk::Widget *> child_list = hbox_scalar->get_children();
-                    Gtk::Entry *entry_widget = dynamic_cast<Gtk::Entry *>(child_list[1]);
-                    entry_widget->set_width_chars(3);
-                    UI::pack_start(*vbox, *widg, true, true, 2);
-                    if (tip) {
-                        widg->set_tooltip_markup(*tip);
-                    } else {
-                        widg->set_tooltip_text("");
-                        widg->set_has_tooltip(false);
-                    }
-                }
-            } else if (param->param_key == "from_original_width" || param->param_key == "elastic") {
-                Glib::ustring * tip = param->param_getTooltip();
-                if (widg) {
-                    UI::pack_start(*button1, *widg, true, true, 2);
-                    if (tip) {
-                        widg->set_tooltip_markup(*tip);
-                    } else {
-                        widg->set_tooltip_text("");
-                        widg->set_has_tooltip(false);
-                    }
-                }
-            } else if (param->param_key == "flip_horizontal" || param->param_key == "flip_vertical") {
-                Glib::ustring * tip = param->param_getTooltip();
-                if (widg) {
-                    UI::pack_start(*button2, *widg, true, true, 2);
-                    if (tip) {
-                        widg->set_tooltip_markup(*tip);
-                    } else {
-                        widg->set_tooltip_text("");
-                        widg->set_has_tooltip(false);
-                    }
-                }
-            } else if (param->param_key == "lock_angle" || param->param_key == "lock_length") {
-                Glib::ustring * tip = param->param_getTooltip();
-                if (widg) {
-                    UI::pack_start(*button3, *widg, true, true, 2);
-                    if (tip) {
-                        widg->set_tooltip_markup(*tip);
-                    } else {
-                        widg->set_tooltip_text("");
-                        widg->set_has_tooltip(false);
-                    }
-                }
-            } else if (widg) {
-                UI::pack_start(*vbox, *widg, true, true, 2);
-                if (tip) {
-                    widg->set_tooltip_markup(*tip);
-                } else {
-                    widg->set_tooltip_text("");
-                    widg->set_has_tooltip(false);
-                }
-            }
+    for (auto const param: param_vector) {
+        if (!param->widget_is_visible) continue;
+
+        auto const widg = param->param_newWidget();
+        if (!widg) continue;
+
+        auto parent = vbox;
+
+        if (param->param_key == "first_knot" || param->param_key == "last_knot") {
+            auto &scalar = dynamic_cast<UI::Widget::Scalar &>(*widg);
+            Gtk::manage(&scalar);
+            scalar.signal_value_changed().connect(sigc::mem_fun(*this, &LPETransform2Pts::updateIndex));
+
+            auto const child_list = UI::get_children(scalar);
+            auto &entry = dynamic_cast<Gtk::Entry &>(*child_list.at(1));
+            entry.set_width_chars(3);
+        } else if (param->param_key == "from_original_width" || param->param_key == "elastic") {
+            parent = button1;
+        } else if (param->param_key == "flip_horizontal" || param->param_key == "flip_vertical") {
+            parent = button2;
+        } else if (param->param_key == "lock_angle" || param->param_key == "lock_length") {
+            parent = button3;
         }
 
-        ++it;
+        g_assert(parent);
+        UI::pack_start(*parent, *widg, true, true, 2);
+
+        if (auto const tip = param->param_getTooltip()) {
+            widg->set_tooltip_markup(*tip);
+        } else {
+            widg->set_tooltip_text({});
+            widg->set_has_tooltip(false);
+        }
     }
 
     auto const reset = Gtk::make_managed<Gtk::Button>(Glib::ustring(_("Reset")));
@@ -466,11 +429,7 @@ LPETransform2Pts::addCanvasIndicators(SPLPEItem const */*lpeitem*/, std::vector<
     hp_vec.push_back(pathv);
 }
 
-
-/* ######################## */
-
-} //namespace LivePathEffect
-} /* namespace Inkscape */
+} // namespace Inkscape::LivePathEffect
 
 /*
   Local Variables:

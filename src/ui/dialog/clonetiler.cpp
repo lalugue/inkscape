@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-
 /**
  * @file
  * Clone tiling dialog
@@ -18,7 +17,7 @@
 #include "clonetiler.h"
 
 #include <memory>
-
+#include <2geom/transforms.h>
 #include <glibmm/i18n.h>
 #include <gtkmm/adjustment.h>
 #include <gtkmm/checkbutton.h>
@@ -30,8 +29,6 @@
 #include <gtkmm/radiobutton.h>
 #include <gtkmm/sizegroup.h>
 
-#include <2geom/transforms.h>
-
 #include "desktop.h"
 #include "document-undo.h"
 #include "document.h"
@@ -39,7 +36,6 @@
 #include "inkscape.h"
 #include "message-stack.h"
 #include "selection.h"
-
 #include "display/cairo-utils.h"
 #include "display/drawing-context.h"
 #include "display/drawing.h"
@@ -53,6 +49,7 @@
 #include "ui/icon-loader.h"
 #include "ui/icon-names.h"
 #include "ui/pack.h"
+#include "ui/util.h"
 #include "ui/widget/spinbutton.h"
 #include "ui/widget/unit-menu.h"
 #include "xml/href-attribute-helper.h"
@@ -69,9 +66,10 @@ namespace Widget {
  * to indicate whether the box should be unticked when reset
  */
 class CheckButtonInternal final : public Gtk::CheckButton {
-  private:
+
     bool _uncheckable = false;
-  public:
+
+public:
     CheckButtonInternal() = default;
 
     CheckButtonInternal(const Glib::ustring &label)
@@ -2650,11 +2648,8 @@ void CloneTiler::reset_recursive(Gtk::Widget *w)
         }
     }
 
-    auto container = dynamic_cast<Gtk::Container *>(w);
-
-    if (container) {
-        auto c = container->get_children();
-        for (auto i : c) {
+    if (auto const container = dynamic_cast<Gtk::Container *>(w)) {
+        for (auto const i : UI::get_children(*container)) {
             reset_recursive(i);
         }
     }

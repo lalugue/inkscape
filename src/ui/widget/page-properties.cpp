@@ -13,6 +13,9 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#include "page-properties.h"
+
+#include <type_traits>
 #include <glibmm/i18n.h>
 #include <gtkmm/box.h>
 #include <gtkmm/builder.h>
@@ -28,33 +31,20 @@
 #include <gtkmm/spinbutton.h>
 #include <gtkmm/togglebutton.h>
 
-#include <type_traits>
-
-#include "page-properties.h"
 #include "page-size-preview.h"
-#include "ui/widget/spinbutton.h"
-#include "util/paper.h"
-#include "ui/widget/registry.h"
-#include "ui/widget/color-picker.h"
-#include "ui/widget/unit-menu.h"
 #include "ui/builder-utils.h"
 #include "ui/operation-blocker.h"
+#include "ui/util.h"
+#include "ui/widget/color-picker.h"
+#include "ui/widget/registry.h"
+#include "ui/widget/spinbutton.h"
+#include "ui/widget/unit-menu.h"
+#include "util/paper.h"
 
 using Inkscape::UI::create_builder;
 using Inkscape::UI::get_widget;
 
-namespace Inkscape {    
-namespace UI {
-namespace Widget {
-
-void show_widget(Gtk::Widget& widget, bool show) {
-    if (show) {
-        widget.set_visible(true);
-    }
-    else {
-        widget.set_visible(false);
-    }
-};
+namespace Inkscape::UI::Widget {
 
 const char* g_linked = "entries-linked-symbolic";
 const char* g_unlinked = "entries-unlinked-symbolic";
@@ -62,7 +52,7 @@ const char* g_unlinked = "entries-unlinked-symbolic";
 #define GET(prop, id) prop(get_widget<std::remove_reference_t<decltype(prop)>>(_builder, id))
 #define GETD(prop, id) prop(get_derived_widget<std::remove_reference_t<decltype(prop)>>(_builder, id))
 
-class PagePropertiesBox : public PageProperties {
+class PagePropertiesBox final : public PageProperties {
 public:
     PagePropertiesBox() :
         _builder(create_builder("page-properties.glade")),
@@ -202,11 +192,10 @@ public:
     }
 
 private:
-
     void show_viewbox(bool show_widgets) {
-        auto show = [=](Gtk::Widget* w) { show_widget(*w, show_widgets); };
+        auto const show = [=](Gtk::Widget * const w){ w->set_visible(show_widgets); };
 
-        for (auto&& widget : _left_grid.get_children()) {
+        for (auto const widget : UI::get_children(_left_grid)) {
             if (widget->get_style_context()->has_class("viewbox")) {
                 show(widget);
             }
@@ -240,6 +229,7 @@ private:
                 _size_ratio = width / height;
             }
         }
+
         set_page_size(true);
     }
 
@@ -362,7 +352,7 @@ private:
         auto scoped(_update.block());
 
         if (element == Check::NonuniformScale) {
-            show_widget(_nonuniform_scale, checked);
+            _nonuniform_scale.set_visible(checked);
             _scale_is_uniform = !checked;
             _scale_x.set_sensitive(_scale_is_uniform);
             _linked_viewbox_scale.set_from_icon_name(_scale_is_uniform ? g_linked : g_unlinked, Gtk::ICON_SIZE_LARGE_TOOLBAR);
@@ -371,7 +361,7 @@ private:
             _scale_x.set_sensitive(!checked);
         }
         else if (element == Check::UnsupportedSize) {
-            show_widget(_unsupported_size, checked);
+            _unsupported_size.set_visible(checked);
         }
         else {
             get_checkbutton(element).set_active(checked);
@@ -521,5 +511,15 @@ PageProperties* PageProperties::create() {
     return new PagePropertiesBox();
 }
 
+} // namespace Inkscape::UI::Widget
 
-} } } // namespace Inkscape/Widget/UI
+/*
+  Local Variables:
+  mode:c++
+  c-file-style:"stroustrup"
+  c-file-offsets:((innamespace . 0)(inline-open . 0)(case-label . +))
+  indent-tabs-mode:nil
+  fill-column:99
+  End:
+*/
+// vim: filetype=cpp:expandtab:shiftwidth=4:tabstop=8:softtabstop=4:fileencoding=utf-8 :

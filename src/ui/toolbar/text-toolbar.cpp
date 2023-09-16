@@ -57,6 +57,7 @@
 #include "ui/icon-names.h"
 #include "ui/tools/select-tool.h"
 #include "ui/tools/text-tool.h"
+#include "ui/util.h"
 #include "ui/widget/canvas.h"  // Focus
 #include "ui/widget/combo-box-entry-tool-item.h"
 #include "ui/widget/combo-tool-item.h"
@@ -2440,11 +2441,7 @@ Inkscape::XML::Node *TextToolbar::unindent_node(Inkscape::XML::Node *repr, Inksc
 
 void TextToolbar::display_font_collections()
 {
-    for (auto row : font_collections_list->get_children()) {
-        if (row) {
-            font_collections_list->remove(*row);
-        }
-    }
+    UI::delete_all_children(*font_collections_list);
 
     FontCollections *font_collections = Inkscape::FontCollections::get();
 

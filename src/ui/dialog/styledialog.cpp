@@ -55,6 +55,7 @@
 #include "ui/controller.h"
 #include "ui/icon-loader.h"
 #include "ui/pack.h"
+#include "ui/util.h"
 #include "ui/widget/iconrenderer.h"
 #include "util/trim.h"
 #include "xml/attribute-record.h"
@@ -334,21 +335,21 @@ Glib::RefPtr<Gtk::TreeModel> StyleDialog::_selectTree(Glib::ustring const &selec
     g_debug("StyleDialog::_selectTree");
 
     Gtk::Label *selectorlabel;
-    Glib::RefPtr<Gtk::TreeModel> model;
-    for (auto fullstyle : _styleBox.get_children()) {
-        Gtk::Box *style = dynamic_cast<Gtk::Box *>(fullstyle);
-        for (auto stylepart : style->get_children()) {
-            switch (style->child_property_position(*stylepart)) {
+    for (auto const fullstyle : UI::get_children(_styleBox)) {
+        auto &style = dynamic_cast<Gtk::Box &>(*fullstyle);
+        for (auto const stylepart : UI::get_children(style)) {
+            switch (style.child_property_position(*stylepart)) {
                 case 0: {
-                    Gtk::Box *selectorbox = dynamic_cast<Gtk::Box *>(stylepart);
-                    for (auto styleheader : selectorbox->get_children()) {
-                        if (!selectorbox->child_property_position(*styleheader)) {
+                    auto &selectorbox = dynamic_cast<Gtk::Box &>(*stylepart);
+                    for (auto const styleheader : UI::get_children(selectorbox)) {
+                        if (selectorbox.child_property_position(*styleheader) == 0) {
                             selectorlabel = dynamic_cast<Gtk::Label *>(styleheader);
                         }
                     }
                     break;
                 }
                 case 1: {
+                    g_assert(selectorlabel);
                     Glib::ustring wdg_selector = selectorlabel->get_text();
                     if (wdg_selector == selector) {
                         Gtk::TreeView *treeview = dynamic_cast<Gtk::TreeView *>(stylepart);
@@ -363,7 +364,7 @@ Glib::RefPtr<Gtk::TreeModel> StyleDialog::_selectTree(Glib::ustring const &selec
             }
         }
     }
-    return model;
+    return {};
 }
 
 void StyleDialog::setCurrentSelector(Glib::ustring current_selector)
@@ -453,10 +454,8 @@ void StyleDialog::readStyleElement()
     _owner_style.clear();
     // If text node is empty, return (avoids problem with negative below).
 
-    for (auto child : _styleBox.get_children()) {
-        _styleBox.remove(*child);
-        delete child;
-    }
+    UI::delete_all_children(_styleBox);
+
     Inkscape::Selection *selection = getSelection();
     SPObject *obj = nullptr;
     if (selection->objects().size() == 1) {
@@ -903,21 +902,18 @@ void StyleDialog::readStyleElement()
         }
 
         if (!hasattributes) {
-            for (auto widg : css_selector_container->get_children()) {
-                delete widg;
-            }
+            UI::delete_all_children(*css_selector_container);
         }
+
         UI::pack_start(_styleBox, *css_selector_container, UI::PackOptions::expand_widget);
     }
 
-    for (auto selector : _styleBox.get_children()) {
-        if (auto const box = dynamic_cast<Gtk::Box *>(&selector[0])) {
-            auto const childs = box->get_children();
+    for (auto const selector : UI::get_children(_styleBox)) {
+        if (auto const box = dynamic_cast<Gtk::Box *>(selector)) {
+            auto const childs = UI::get_children(*box);
             if (childs.size() > 1) {
-                Gtk::TreeView *css_tree = dynamic_cast<Gtk::TreeView *>(childs[1]);
-                if (css_tree) {
-                    Glib::RefPtr<Gtk::TreeModel> model = css_tree->get_model();
-                    if (model) {
+                if (auto const css_tree = dynamic_cast<Gtk::TreeView *>(childs[1])) {
+                    if (auto const &model = css_tree->get_model()) {
                         model->foreach_iter(sigc::mem_fun(*this, &StyleDialog::_on_foreach_iter));
                     }
                 }

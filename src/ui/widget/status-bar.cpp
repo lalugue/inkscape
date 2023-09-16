@@ -27,6 +27,7 @@
 #include "ui/builder-utils.h"
 #include "ui/menuize.h"
 #include "ui/pack.h"
+#include "ui/util.h"
 #include "ui/widget/canvas.h"
 #include "ui/widget/desktop-widget.h"
 #include "ui/widget/layer-selector.h"
@@ -158,12 +159,10 @@ StatusBar::set_desktop(SPDesktop* desktop_in)
     rotate_value->set_defocus_widget(desktop_widget->get_canvas());
 
     // We add page widget here as it requires desktop for constructor.
-    auto page_selector = Gtk::make_managed<Inkscape::UI::Widget::PageSelector>(desktop);
-    auto box = dynamic_cast<Gtk::Box*>(get_children()[0]);
-    if (box) {
-        box->pack_start(*page_selector, false, false);
-        box->reorder_child(*page_selector, 5);
-    }
+    auto &box = dynamic_cast<Gtk::Box &>(*UI::get_children(*this).at(0));
+    auto const page_selector = Gtk::make_managed<PageSelector>(desktop);
+    UI::pack_start(box, *page_selector, false, false);
+    box.reorder_child(*page_selector, 5);
 }
 
 void
@@ -183,11 +182,11 @@ StatusBar::set_message(const Inkscape::MessageType type, const char* message)
 void
 StatusBar::set_coordinate(const Geom::Point& p)
 {
-    gchar* str_x = g_strdup_printf("%7.2f", p[Geom::X]);
+    char * const str_x = g_strdup_printf("%7.2f", p[Geom::X]);
     coordinate_x->set_markup(str_x);
     g_free(str_x);
 
-    gchar* str_y = g_strdup_printf("%7.2f", p[Geom::Y]);
+    char * const str_y = g_strdup_printf("%7.2f", p[Geom::Y]);
     coordinate_y->set_markup(str_y);
     g_free(str_y);
 }
@@ -210,7 +209,7 @@ int
 StatusBar::zoom_input(double *new_value)
 {
     double value = g_strtod(zoom_value->get_text().c_str(), nullptr);
-    *new_value = log (value / 100.0) / log (2);
+    *new_value = log(value / 100.0) / log(2);
     return true;
 }
 
@@ -219,11 +218,11 @@ StatusBar::zoom_output()
 {
     double value = floor (10 * (pow (2, zoom_value->get_value()) * 100.0 + 0.05)) / 10;
 
-    gchar b[64];
-    if ( value < 10) {
-        g_snprintf (b, 64, "%4.1f%%", value);
+    char b[64];
+    if (value < 10) {
+        g_snprintf(b, 64, "%4.1f%%", value);
     } else {
-        g_snprintf (b, 64, "%4.0f%%", value);
+        g_snprintf(b, 64, "%4.0f%%", value);
     }
     zoom_value->set_text(b);
        
@@ -275,8 +274,8 @@ StatusBar::rotate_output()
     if (val < -180) val += 360;
     if (val >  180) val -= 360;
 
-    gchar b[64];
-    g_snprintf (b, 64, "%7.2f°", val);
+    char b[64];
+    g_snprintf(b, 64, "%7.2f°", val);
     rotate_value->set_text(b);
        
     return true;

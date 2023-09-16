@@ -66,6 +66,7 @@
 #include "ui/dialog/xml-tree.h"
 #include "ui/icon-names.h"
 #include "ui/themes.h"
+#include "ui/util.h"
 #include "ui/widget/canvas-grid.h"
 
 namespace Inkscape::UI::Dialog {
@@ -832,6 +833,19 @@ void save_wnd_position(Glib::KeyFile *keyfile, const Glib::ustring &group_name, 
     }
 }
 
+[[nodiscard]] static auto get_notebook_dialogs(DialogNotebook &dialog_notebook)
+{
+    auto const notebook = dialog_notebook.get_notebook();
+    g_assert(notebook);
+    std::vector<Glib::ustring> dialogs;
+    for (auto const child : UI::get_children(*notebook)) {
+        if (auto const dialog = dynamic_cast<DialogBase *>(child)) {
+            dialogs.push_back(dialog->get_type());
+        }
+    }
+    return dialogs;
+}
+
 // get *this* container's state only; store window 'position' in the state if given
 std::shared_ptr<Glib::KeyFile> DialogContainer::get_container_state(const window_position_t *position) const
 {
@@ -859,18 +873,10 @@ std::shared_ptr<Glib::KeyFile> DialogContainer::get_container_state(const window
 
         // Step 3.1.0: for each notebook, get its dialogs
         for (auto const columns_widget : multipanes[column_idx]->get_multipaned_children()) {
-            if (auto dialog_notebook = dynamic_cast<DialogNotebook *>(columns_widget)) {
-                std::vector<Glib::ustring> dialogs;
-
-                for (auto const &widget : dialog_notebook->get_notebook()->get_children()) {
-                    if (DialogBase *dialog = dynamic_cast<DialogBase *>(widget)) {
-                        dialogs.push_back(dialog->get_type());
-                    }
-                }
-
+            if (auto const dialog_notebook = dynamic_cast<DialogNotebook *>(columns_widget)) {
                 // save the dialogs type
                 auto const key = get_key(notebook_count);
-                keyfile->set_string_list(group_name, key, dialogs);
+                keyfile->set_string_list(group_name, key, get_notebook_dialogs(*dialog_notebook));
 
                 // increase the notebook count
                 notebook_count++;
@@ -978,21 +984,11 @@ std::unique_ptr<Glib::KeyFile> DialogContainer::save_container_state()
 
             // Step 3.1.0: for each notebook, get its dialogs' types
             for (auto const columns_widget : multipanes[column_idx]->get_multipaned_children()) {
-                DialogNotebook *dialog_notebook = dynamic_cast<DialogNotebook *>(columns_widget);
-
-                if (dialog_notebook) {
-                    std::vector<Glib::ustring> dialogs;
-
-                    for (auto const &widget : dialog_notebook->get_notebook()->get_children()) {
-                        DialogBase *dialog = dynamic_cast<DialogBase *>(widget);
-                        if (dialog) {
-                            dialogs.push_back(dialog->get_type());
-                        }
-                    }
-
+                if (auto const dialog_notebook = dynamic_cast<DialogNotebook *>(columns_widget)) {
                     // save the dialogs type
                     auto const key = get_key(notebook_count);
-                    keyfile->set_string_list(group_name, key, dialogs);
+                    keyfile->set_string_list(group_name, key, get_notebook_dialogs(*dialog_notebook));
+
                     // save height; useful when there are multiple "rows" of docked dialogs
                     Glib::ustring row = "Notebook" + std::to_string(notebook_count) + "Height";
                     keyfile->set_integer(group_name, row, dialog_notebook->get_allocated_height());

@@ -17,9 +17,12 @@
 #include "toolbars.h"
 
 #include <iostream>
-
 #include <glibmm/i18n.h>
-#include <gtkmm.h>
+#include <gtkmm/button.h>
+#include <gtkmm/grid.h>
+#include <gtkmm/spinbutton.h>
+#include <gtkmm/toolbar.h>
+#include <gtkmm/toolbutton.h>
 
 // Access create() functions
 #include "ui/toolbar/arc-toolbar.h"
@@ -46,18 +49,16 @@
 #include "ui/toolbar/tweak-toolbar.h"
 #include "ui/toolbar/text-toolbar.h"
 #include "ui/toolbar/zoom-toolbar.h"
-
 #include "ui/tools/tool-base.h"
 #include "ui/widget/style-swatch.h"
-
-#include "ui/util.h"  // Icon sizes
+#include "ui/util.h"
 
 // Data for building and tracking toolbars.
 static struct {
-    gchar const *type_name; // Used by preferences
+    char const * const type_name; // Used by preferences
     Glib::ustring const tool_name;
     GtkWidget *(*create_func)(SPDesktop *desktop);
-    gchar const *swatch_tip;
+    char const * const swatch_tip;
 } const aux_toolboxes[] = {
     // If you change the tool_name for Measure or Text here, change it also in desktop-widget.cpp.
     // clang-format off
@@ -107,9 +108,7 @@ void Toolbars::create_toolbars(SPDesktop* desktop) {
 
     // Create the toolbars using their "create" methods.
     for (int i = 0 ; aux_toolboxes[i].type_name ; i++ ) {
-
         if (aux_toolboxes[i].create_func) {
-
             // Change create_func to return Gtk::Box!
             GtkWidget* sub_toolbox_c = aux_toolboxes[i].create_func(desktop);
             Gtk::Toolbar* sub_toolbox = Glib::wrap(GTK_TOOLBAR(sub_toolbox_c));
@@ -119,7 +118,7 @@ void Toolbars::create_toolbars(SPDesktop* desktop) {
 
             // Center buttons to prevent stretching; all buttons will look
             // uniform across toolbars if their original size is preserved.
-            for (auto&& button : sub_toolbox->get_children()) {
+            for (auto const button : UI::get_children(*sub_toolbox)) {
                 if (dynamic_cast<Gtk::Button*>(button) ||
                     dynamic_cast<Gtk::SpinButton*>(button) ||
                     dynamic_cast<Gtk::ToolButton*>(button)) {  // FIXME FOR GTK4
@@ -174,7 +173,6 @@ void Toolbars::create_toolbars(SPDesktop* desktop) {
             add(*grid);
 
         } else if (aux_toolboxes[i].swatch_tip) {
-
             std::cerr << "Toolbars::create_toolbars: Coould not create: "
                       << aux_toolboxes[i].tool_name
                       << std::endl;

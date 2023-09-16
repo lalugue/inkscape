@@ -1839,15 +1839,17 @@ Effect::newWidget()
         if ((*it)->widget_is_visible) {
             Parameter * param = *it;
             Gtk::Widget * widg = param->param_newWidget();
-            Glib::ustring * tip = param->param_getTooltip();
+
             if (widg) {
                 if (param->widget_is_enabled) {
                     widg->set_sensitive(true);
                 } else {
                     widg->set_sensitive(false);
                 }
+
                 UI::pack_start(*vbox, *widg, true, true, 2);
-                if (tip) {
+
+                if (auto const tip = param->param_getTooltip()) {
                     widg->set_tooltip_markup(*tip);
                 } else {
                     widg->set_tooltip_text("");

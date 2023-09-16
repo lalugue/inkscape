@@ -1,8 +1,4 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-
-#ifndef INK_DIALOG_BASE_H
-#define INK_DIALOG_BASE_H
-
 /** @file
  * @brief A base class for all dialogs.
  *
@@ -13,6 +9,9 @@
  *
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
+
+#ifndef INK_DIALOG_BASE_H
+#define INK_DIALOG_BASE_H
 
 #include <glibmm/ustring.h>
 #include <gtkmm/box.h>
@@ -38,7 +37,7 @@ class DialogBase : public Gtk::Box
     using parent_type = Gtk::Box;
 
 public:
-    DialogBase(char const *prefs_path = nullptr, Glib::ustring dialog_type = "");
+    DialogBase(char const *prefs_path = nullptr, Glib::ustring dialog_type = {});
     DialogBase(DialogBase const &) = delete;
     DialogBase &operator=(DialogBase const &) = delete;
     ~DialogBase() override;
@@ -63,10 +62,9 @@ public:
      */
     void ensure_size();
 
-    // Getters and setters
-    Glib::ustring get_name() { return _name; };
-    const Glib::ustring& getPrefsPath() const { return _prefs_path; }
-    Glib::ustring const &get_type() const { return _dialog_type; }
+    Glib::ustring const &get_name    () const { return _name       ; }
+    Glib::ustring const &getPrefsPath() const { return _prefs_path ; }
+    Glib::ustring const &get_type    () const { return _dialog_type; }
 
     void blink();
     // find focusable widget to grab focus
@@ -78,6 +76,7 @@ public:
     void fix_inner_scroll(Gtk::Widget *child);
     // Too many dialogs have unprotected calls to ask for this data
     SPDesktop *getDesktop() const { return desktop; }
+
 protected:
     InkscapeApplication *getApp() const { return _app; }
     SPDocument *getDocument() const { return document; }
@@ -87,6 +86,7 @@ protected:
     Glib::ustring _name;             // Gtk widget name (must be set!)
     Glib::ustring const _prefs_path; // Stores characteristic path for loading/saving the dialog position.
     Glib::ustring const _dialog_type; // Type of dialog (we could just use _pref_path?).
+                                      //
 private:
     bool blink_off(); // timer callback
     bool on_key_press_event(GdkEventKey* key_event) override;
@@ -114,9 +114,9 @@ private:
     bool _changed_while_hidden = false;
 
     InkscapeApplication *_app; // Used for state management
-    SPDesktop *desktop;
-    SPDocument *document;
-    Selection *selection;
+    SPDesktop  *desktop   = nullptr;
+    SPDocument *document  = nullptr;
+    Selection  *selection = nullptr;
 };
 
 } // namespace Inkscape::UI::Dialog

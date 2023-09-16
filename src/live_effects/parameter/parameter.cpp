@@ -73,8 +73,7 @@ EffectType Parameter::effectType() const
  */
 void Parameter::read_from_SVG()
 {
-    const gchar *val = param_effect->getRepr()->attribute(param_key.c_str());
-    if (val) {
+    if (auto const val = param_effect->getRepr()->attribute(param_key.c_str())) {
         param_readSVGValue(val);
     }
 }
@@ -201,7 +200,8 @@ std::vector<SPObject *> Parameter::param_get_satellites()
  *   REAL PARAM
  */
 ScalarParam::ScalarParam(const Glib::ustring &label, const Glib::ustring &tip, const Glib::ustring &key,
-                         Inkscape::UI::Widget::Registry *wr, Effect *effect, gdouble default_value)
+                         Inkscape::UI::Widget::Registry * const wr, Effect * const effect,
+                         double const default_value)
     : Parameter(label, tip, key, wr, effect)
     , value(default_value)
     , min(-SCALARPARAM_G_MAXDOUBLE)
@@ -218,7 +218,7 @@ ScalarParam::ScalarParam(const Glib::ustring &label, const Glib::ustring &tip, c
 {
 }
 
-bool ScalarParam::param_readSVGValue(const gchar *strvalue)
+bool ScalarParam::param_readSVGValue(char const * const strvalue)
 {
     double newval;
     unsigned int success = sp_svg_number_read_d(strvalue, &newval);
@@ -245,9 +245,9 @@ Glib::ustring ScalarParam::param_getDefaultSVGValue() const
 
 void ScalarParam::param_set_default() { param_set_value(defvalue); }
 
-void ScalarParam::param_update_default(gdouble default_value) { defvalue = default_value; }
+void ScalarParam::param_update_default(double const default_value) { defvalue = default_value; }
 
-void ScalarParam::param_update_default(const gchar *default_value)
+void ScalarParam::param_update_default(char const * const default_value)
 {
     double newval;
     unsigned int success = sp_svg_number_read_d(default_value, &newval);
@@ -267,7 +267,7 @@ void ScalarParam::param_transform_multiply(Geom::Affine const &postmul, bool set
     }
 }
 
-void ScalarParam::param_set_value(gdouble val)
+void ScalarParam::param_set_value(double const val)
 {
     value = val;
     if (integer)
@@ -278,7 +278,7 @@ void ScalarParam::param_set_value(gdouble val)
         value = min;
 }
 
-void ScalarParam::param_set_range(gdouble min, gdouble max)
+void ScalarParam::param_set_range(double const min, double const max)
 {
     // if you look at client code, you'll see that many effects
     // has a tendency to set an upper range of Geom::infinity().

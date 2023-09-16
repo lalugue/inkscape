@@ -26,6 +26,7 @@
 #include <optional>
 #include <set>
 #include <string>
+#include <tuple>
 #include <gtkmm/image.h>
 #include <gtkmm/liststore.h>
 #include <sigc++/adaptors/bind.h>
@@ -34,7 +35,6 @@
 #include "rdf.h"
 #include "selection.h"
 #include "style.h"
-
 #include "actions/actions-tools.h"
 #include "color/cms-system.h"
 #include "helper/auto-connection.h"
@@ -52,6 +52,7 @@
 #include "ui/pack.h"
 #include "ui/popup-menu.h"
 #include "ui/shape-editor.h"
+#include "ui/util.h"
 #include "ui/widget/alignment-selector.h"
 #include "ui/widget/entity-entry.h"
 #include "ui/widget/notebook-page.h"
@@ -63,7 +64,7 @@ namespace Inkscape::UI {
 
 namespace Widget {
 
-class GridWidget : public Gtk::Box
+class GridWidget final : public Gtk::Box
 {
 public:
     GridWidget(SPGrid *obj);
@@ -579,7 +580,7 @@ void DocumentProperties::populate_available_profiles(){
     bool home = true; // initial value doesn't matter, it's just to avoid a compiler warning
     bool first = true;
     auto cms_system = Inkscape::CMSSystem::get();
-    for (auto &info: cms_system->get_system_profile_infos()) {
+    for (auto const &info: cms_system->get_system_profile_infos()) {
         Gtk::TreeModel::Row row;
 
         // add a separator between profiles from the user's home directory and system profiles
@@ -620,7 +621,7 @@ void sanitizeName(std::string& str) {
     if ((val < 'A' || val > 'Z') && (val < 'a' || val > 'z') && val != '_' && val != ':') {
         str.insert(0, "_");
     }
-    for (int i = 1; i < str.size(); i++) {
+    for (std::size_t i = 1; i < str.size(); i++) {
         auto val = str.at(i);
         if ((val < 'A' || val > 'Z') && (val < 'a' || val > 'z') && (val < '0' || val > '9') &&
             val != '_' && val != ':' && val != '-' && val != '.') {
@@ -717,10 +718,9 @@ void DocumentProperties::populate_linked_profiles_box()
                        std::inserter(_current, _current.begin()),
                        static_caster<SPObject, Inkscape::ColorProfile>());
 
-        for (auto &profile: _current) {
+        for (auto const &profile: _current) {
             Gtk::TreeModel::Row row = *(_LinkedProfilesListStore->append());
             row[_LinkedProfilesListColumns.nameColumn] = profile->name;
-    //        row[_LinkedProfilesListColumns.previewColumn] = "Color Preview";
         }
     }
 }
@@ -1045,10 +1045,9 @@ void DocumentProperties::build_metadata()
     _page_metadata1->table().attach (*label, 0,0,2,1);
 
      /* add generic metadata entry areas */
-    struct rdf_work_entity_t * entity;
     int row = 1;
-    for (entity = rdf_work_entities; entity && entity->name; entity++, row++) {
-        if ( entity->editable == RDF_EDIT_GENERIC ) {
+    for (auto entity = rdf_work_entities; entity && entity->name; ++entity, ++row) {
+        if (entity->editable == RDF_EDIT_GENERIC) {
             auto w = std::unique_ptr<EntityEntry>{EntityEntry::create(entity, _wr)};
 
             w->_label.set_halign(Gtk::ALIGN_START);
@@ -1325,7 +1324,7 @@ void DocumentProperties::editEmbeddedScript(){
             if (repr){
                 auto tmp = obj->children | boost::adaptors::transformed([](SPObject& o) { return &o; });
                 std::vector<SPObject*> vec(tmp.begin(), tmp.end());
-                for (auto &child: vec) {
+                for (auto const child: vec) {
                     child->deleteObject();
                 }
                 obj->appendChildRepr(document->getReprDoc()->createTextNode(_EmbeddedContent.get_buffer()->get_text().c_str()));
@@ -1398,7 +1397,7 @@ void DocumentProperties::add_grid_widget(SPGrid *grid, bool select)
 void DocumentProperties::remove_grid_widget(XML::Node &node)
 {
     // The SPObject is already gone, so we're working from the xml node directly.
-    for (auto &child : _grids_notebook.get_children()) {
+    for (auto const child : UI::get_children(_grids_notebook)) {
         if (auto widget = dynamic_cast<Inkscape::UI::Widget::GridWidget *>(child)) {
             if (&node == widget->getGridRepr()) {
                 _grids_notebook.remove_page(*child);
@@ -1406,6 +1405,7 @@ void DocumentProperties::remove_grid_widget(XML::Node &node)
             }
         }
     }
+
     _grids_button_remove.set_sensitive(_grids_notebook.get_n_pages() > 0);
 }
 
@@ -1424,7 +1424,7 @@ void DocumentProperties::build_gridspage()
     _grids_hbox_crea.set_spacing(5);
     UI::pack_start(_grids_hbox_crea, *Gtk::make_managed<Gtk::Label>("Add grid:"), false, true);
     auto btn_size = Gtk::SizeGroup::create(Gtk::SizeGroupMode::SIZE_GROUP_HORIZONTAL);
-    for (auto [label, type, icon]: (std::tuple<const char*, GridType, const char*>[]) {
+    for (auto const &[label, type, icon]: {std::tuple
         {C_("Grid", "Rectangular"), GridType::RECTANGULAR, "grid-rectangular"},
         {C_("Grid", "Axonometric"), GridType::AXONOMETRIC, "grid-axonometric"},
         {C_("Grid", "Modular"), GridType::MODULAR, "grid-modular"}
@@ -1836,7 +1836,7 @@ GridWidget::GridWidget(SPGrid *grid)
     UI::pack_start(*this, *inner, false, false);
     property_margin().set_value(4);
 
-    auto widgets = left->get_children();
+    auto widgets = UI::get_children(*left);
     widgets.erase(std::remove(widgets.begin(), widgets.end(), _grid_rcb_enabled), widgets.end());
     widgets.push_back(column);
     _grid_rcb_enabled->setSubordinateWidgets(std::move(widgets));

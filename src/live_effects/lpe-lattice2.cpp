@@ -248,7 +248,6 @@ LPELattice2::newWidget()
             if(param->param_key == "grid") {
                 widg = nullptr;
             }
-            Glib::ustring * tip = param->param_getTooltip();
             if (widg) {
                 if (param->param_key == "horizontal_mirror" || 
                     param->param_key == "vertical_mirror" || 
@@ -259,7 +258,8 @@ LPELattice2::newWidget()
                 } else {
                     UI::pack_start(*vbox_expander, *widg, true, true, 2);
                 }
-                if (tip) {
+
+                if (auto const tip = param->param_getTooltip()) {
                     widg->set_tooltip_markup(*tip);
                 } else {
                     widg->set_tooltip_text("");

@@ -12,17 +12,17 @@
 #define INKSCAPE_UI_WIDGET_PAGE_PROPERTIES_H
 
 #include <gtkmm/box.h>
+#include <sigc++/signal.h>
 
 namespace Inkscape {
-    namespace Util { class Unit; }
-namespace UI {
-namespace Widget {
+
+namespace Util { class Unit; }
+
+namespace UI::Widget {
 
 class PageProperties : public Gtk::Box {
 public:
     static PageProperties* create();
-
-    ~PageProperties() override = default;
 
     enum class Color { Background, Desk, Border };
     virtual void set_color(Color element, unsigned int rgba) = 0;
@@ -54,6 +54,19 @@ protected:
     sigc::signal<void ()> _signal_resize_to_fit;
 };
 
-} } } // namespace Inkscape/Widget/UI
+} // namespace UI::Widget
+
+} // namespace Inkscape
 
 #endif // INKSCAPE_UI_WIDGET_PAGE_PROPERTIES_H
+
+/*
+  Local Variables:
+  mode:c++
+  c-file-style:"stroustrup"
+  c-file-offsets:((innamespace . 0)(inline-open . 0)(case-label . +))
+  indent-tabs-mode:nil
+  fill-column:99
+  End:
+*/
+// vim: filetype=cpp:expandtab:shiftwidth=4:tabstop=8:softtabstop=4:fileencoding=utf-8 :

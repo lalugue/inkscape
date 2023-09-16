@@ -19,11 +19,11 @@
 #include "ui/icon-loader.h"
 #include "ui/icon-names.h"
 #include "ui/pack.h"
+#include "ui/util.h"
 #include "ui/widget/registered-widget.h"
 #include "util/numeric/converters.h"
 
-namespace Inkscape {
-namespace LivePathEffect {
+namespace Inkscape::LivePathEffect {
 
 ToggleButtonParam::ToggleButtonParam(const Glib::ustring &label, const Glib::ustring &tip, const Glib::ustring &key,
                                      Inkscape::UI::Widget::Registry *wr, Effect *effect, bool default_value,
@@ -145,31 +145,36 @@ ToggleButtonParam::refresh_button()
         return;
     }
 
-    if(!checkwdg){
+    if (!checkwdg){
         return;
     }
-    Gtk::Container *box_button = dynamic_cast<Gtk::Container *>(checkwdg->get_child());
-    if(!box_button){
+
+    auto const box_button = dynamic_cast<Gtk::Box *>(checkwdg->get_child());
+    if (!box_button){
         return;
     }
-    std::vector<Gtk::Widget *> children = box_button->get_children();
+
+    auto const children = UI::get_children(*box_button);
+    g_assert(!children.empty());
+
     if (!param_label.empty()) {
-        Gtk::Label *lab = dynamic_cast<Gtk::Label*>(children[children.size()-1]);
+        auto const lab = dynamic_cast<Gtk::Label *>(children.back());
         if (!lab) return;
-        if(value || inactive_label.empty()){
+
+        if (value || inactive_label.empty()) {
             lab->set_text(param_label.c_str());
-        }else{
+        } else {
             lab->set_text(inactive_label.c_str());
         }
     }
+
     if ( _icon_active ) {
-        Gtk::Widget *im = dynamic_cast<Gtk::Image *>(children[0]);
+        auto const im = dynamic_cast<Gtk::Image *>(children.front());
         if (!im) return;
-        if (!value) {
-            im = sp_get_icon_image(_icon_inactive, _icon_size);
-        } else {
-            im = sp_get_icon_image(_icon_active, _icon_size);
-        }
+
+        gtk_image_set_from_icon_name(im->gobj(), value ? _icon_active : _icon_inactive,
+                                     GTK_ICON_SIZE_BUTTON);
+        gtk_image_set_pixel_size(im->gobj(), _icon_size);
     }
 }
 
@@ -192,8 +197,7 @@ ToggleButtonParam::toggled() {
     _signal_toggled.emit();
 }
 
-} /* namespace LivePathEffect */
-} /* namespace Inkscape */
+} // namespace Inkscape::LivePathEffect
 
 /*
   Local Variables:
@@ -204,4 +208,4 @@ ToggleButtonParam::toggled() {
   fill-column:99
   End:
 */
-// vim: filetype=cpp:expandtab:shiftwidth=4:tabstop=8:softtabstop=4 :
+ // vim: filetype=cpp:expandtab:shiftwidth=4:tabstop=8:softtabstop=4 :

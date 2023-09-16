@@ -55,7 +55,7 @@ namespace LivePathEffect {
 class Effect;
 
 class Parameter {
-  public:
+public:
     Parameter(Glib::ustring label, Glib::ustring tip, Glib::ustring key, Inkscape::UI::Widget::Registry *wr,
               Effect *effect);
     virtual ~Parameter();
@@ -63,7 +63,7 @@ class Parameter {
     Parameter(const Parameter &) = delete;
     Parameter &operator=(const Parameter &) = delete;
 
-    virtual bool param_readSVGValue(const gchar *strvalue) = 0; // returns true if new value is valid / accepted.
+    virtual bool param_readSVGValue(char const *strvalue) = 0; // returns true if new value is valid / accepted.
     virtual Glib::ustring param_getSVGValue() const = 0;
     virtual Glib::ustring param_getDefaultSVGValue() const = 0;
     virtual void param_widget_is_visible(bool is_visible) { widget_is_visible = is_visible; }
@@ -73,10 +73,12 @@ class Parameter {
     void setUpdating(bool updating) { _updating = updating; }
     bool getUpdating() const { return _updating; }
     virtual void param_set_default() = 0;
-    virtual void param_update_default(const gchar *default_value) = 0;
-    // This creates a new widget (newed with Gtk::make_managed<...);>()
+    virtual void param_update_default(char const *default_value) = 0;
+    // This creates a new, Gtk::manage()d widget
     virtual Gtk::Widget *param_newWidget() = 0;
-    virtual Glib::ustring *param_getTooltip() { return &param_tooltip; };
+
+    // FIXME: Should return a const reference, then callers need not check for nullptr.
+    Glib::ustring const *param_getTooltip() const { return &param_tooltip; };
 
     // overload these for your particular parameter to make it provide knotholder handles or canvas helperpaths
     virtual bool providesKnotHolderEntities() const { return false; }
@@ -104,7 +106,7 @@ class Parameter {
     bool widget_is_enabled;
     void connect_selection_changed();
 
-  protected:
+protected:
     bool _updating = false;
     Inkscape::Display::TemporaryItem *ownerlocator = nullptr;
     Effect *param_effect;
@@ -115,47 +117,47 @@ class Parameter {
 class ScalarParam : public Parameter {
   public:
     ScalarParam(const Glib::ustring &label, const Glib::ustring &tip, const Glib::ustring &key,
-                Inkscape::UI::Widget::Registry *wr, Effect *effect, gdouble default_value = 1.0);
+                Inkscape::UI::Widget::Registry *wr, Effect *effect, double default_value = 1.0);
 
     ScalarParam(const ScalarParam &) = delete;
     ScalarParam &operator=(const ScalarParam &) = delete;
 
-    bool param_readSVGValue(const gchar *strvalue) override;
+    bool param_readSVGValue(char const *strvalue) override;
     Glib::ustring param_getSVGValue() const override;
     Glib::ustring param_getDefaultSVGValue() const override;
     void param_transform_multiply(Geom::Affine const &postmul, bool set) override;
 
     void param_set_default() override;
-    void param_update_default(gdouble default_value);
-    void param_update_default(const gchar *default_value) override;
-    void param_set_value(gdouble val);
+    void param_update_default(double default_value);
+    void param_update_default(char const *default_value) override;
+    void param_set_value(double val);
     void param_make_integer(bool yes = true);
-    void param_set_range(gdouble min, gdouble max);
+    void param_set_range(double min, double max);
     void param_set_digits(unsigned digits);
     void param_set_increments(double step, double page);
     void param_set_no_leading_zeros();
-    void param_set_width_chars(gint width_chars);
+    void param_set_width_chars(int width_chars);
     void addSlider(bool add_slider_widget) { add_slider = add_slider_widget; };
     double param_get_max() { return max; };
     double param_get_min() { return min; };
     void param_set_undo(bool set_undo);
     Gtk::Widget *param_newWidget() override;
     ParamType paramType() const override { return ParamType::SCALAR; };
-    inline operator gdouble() const { return value; };
+    inline operator double() const { return value; };
 
-  protected:
-    gdouble value;
-    gdouble min;
-    gdouble max;
+protected:
+    double value;
+    double min;
+    double max;
     bool integer;
-    gdouble defvalue;
+    double defvalue;
     unsigned digits;
     double inc_step;
     double inc_page;
     bool add_slider;
     bool _set_undo;
     bool _no_leading_zeros;
-    gint _width_chars;
+    int _width_chars;
 };
 
 } // namespace LivePathEffect

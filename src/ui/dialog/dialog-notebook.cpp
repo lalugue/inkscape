@@ -71,9 +71,10 @@ DialogNotebook::DialogNotebook(DialogContainer *container)
     if (prefs == nullptr) {
         return;
     }
-    gint labelstautus = prefs->getInt("/options/notebooklabels/value", PREFS_NOTEBOOK_LABELS_AUTO);
-    _labels_auto = labelstautus == PREFS_NOTEBOOK_LABELS_AUTO;
-    _labels_off = labelstautus == PREFS_NOTEBOOK_LABELS_OFF;
+
+    auto const label_status = prefs->getInt("/options/notebooklabels/value", PREFS_NOTEBOOK_LABELS_AUTO);
+    _labels_auto = label_status == PREFS_NOTEBOOK_LABELS_AUTO;
+    _labels_off  = label_status == PREFS_NOTEBOOK_LABELS_OFF ;
 
     // ============= Notebook menu ==============
     _notebook.set_name("DockedDialogNotebook");
@@ -242,12 +243,9 @@ DialogNotebook::provide_scroll(Gtk::Widget &page) {
 Gtk::ScrolledWindow *
 DialogNotebook::get_scrolledwindow(Gtk::Widget &page)
 {
-    auto container = dynamic_cast<Gtk::Container *>(&page);
-    if (container) {
-        std::vector<Gtk::Widget *> widgs = container->get_children();
-        if (widgs.size()) {
-            auto scrolledwindow = dynamic_cast<Gtk::ScrolledWindow *>(widgs[0]);
-            if (scrolledwindow) {
+    if (auto const container = dynamic_cast<Gtk::Container *>(&page)) {
+        if (auto const children = UI::get_children(*container); !children.empty()) {
+            if (auto const scrolledwindow = dynamic_cast<Gtk::ScrolledWindow *>(children[0])) {
                 return scrolledwindow;
             }
         }
@@ -259,10 +257,10 @@ DialogNotebook::get_scrolledwindow(Gtk::Widget &page)
  * Set provide scroll
  */
 Gtk::ScrolledWindow *
-DialogNotebook::get_current_scrolledwindow(bool skip_scroll_provider) {
-    gint pagenum = _notebook.get_current_page();
-    Gtk::Widget *page = _notebook.get_nth_page(pagenum);
-    if (page) {
+DialogNotebook::get_current_scrolledwindow(bool const skip_scroll_provider)
+{
+    auto const pagenum = _notebook.get_current_page();
+    if (auto const page = _notebook.get_nth_page(pagenum)) {
         if (skip_scroll_provider && provide_scroll(*page)) {
             return nullptr;
         }
@@ -767,7 +765,7 @@ get_cover_box_children(Gtk::Widget * const tab_label)
         return std::nullopt;
     }
 
-    auto const children = box->get_children();
+    auto const children = UI::get_children(*box);
     if (children.size() < 2) {
         return std::nullopt;
     }
@@ -898,10 +896,8 @@ void DialogNotebook::on_page_switch(Gtk::Widget *curr_page, guint)
     }
 
     for_each_child(_notebook, [=](Gtk::Widget &page){
-        auto const dialogbase = dynamic_cast<DialogBase*>(&page);
-        if (dialogbase) {
-            std::vector<Gtk::Widget *> widgs = dialogbase->get_children();
-            if (widgs.size()) {
+        if (auto const dialogbase = dynamic_cast<DialogBase *>(&page)) {
+            if (auto const widgs = UI::get_children(*dialogbase); !widgs.empty()) {
                 if (curr_page == &page) {
                     widgs[0]->show_now();
                 } else {

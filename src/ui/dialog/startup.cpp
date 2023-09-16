@@ -329,7 +329,7 @@ void
 StartScreen::notebook_switch(Gtk::Widget *tab, guint page_num)
 {
     auto &stack = get_widget<Gtk::Stack>(builder, "banner-stack");
-    auto const pages = stack.get_children();
+    auto const pages = UI::get_children(stack);
     auto &page = *pages.at(page_num);
     stack.set_visible_child(page);
 }

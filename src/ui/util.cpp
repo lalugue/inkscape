@@ -137,11 +137,28 @@ Gtk::Widget *get_bin_child(Gtk::Widget &widget)
     return bin ? bin->get_child() : nullptr;
 }
 
-std::vector<Gtk::Widget *> get_container_children(Gtk::Widget &widget)
+std::vector<Gtk::Widget *> get_children(Gtk::Widget &widget)
 {
     auto const container = dynamic_cast<Gtk::Container *>(&widget);
     if (container) return container->get_children();
     return {};
+}
+
+void remove_all_children(Gtk::Widget &widget)
+{
+    auto &container = dynamic_cast<Gtk::Container &>(widget);
+    for (auto const child: get_children(container)) {
+        container.remove(*child);
+    }
+}
+
+void delete_all_children(Gtk::Widget &widget)
+{
+    auto &container = dynamic_cast<Gtk::Container &>(widget);
+    for (auto const child: get_children(container)) {
+        container.remove(*child);
+        delete child;
+    }
 }
 
 Gtk::Widget *get_parent(Gtk::Widget &widget)

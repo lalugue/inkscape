@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-
 /** @file
  * @brief A base class for all dialogs.
  *
@@ -13,6 +12,7 @@
 
 #include "dialog-base.h"
 
+#include <utility>
 #include <glibmm/i18n.h>
 #include <glibmm/main.h>
 #include <glibmm/refptr.h>
@@ -20,12 +20,12 @@
 #include <gtkmm/cssprovider.h>
 #include <gtkmm/notebook.h>
 #include <gtkmm/scrolledwindow.h>
+#include <gtkmm/viewport.h>
 #include <gtkmm/window.h>
 
 #include "inkscape.h"
 #include "desktop.h"
 #include "selection.h"
-
 #include "ui/dialog-events.h"
 #include "ui/dialog/dialog-data.h"
 #include "ui/dialog/dialog-notebook.h"
@@ -36,43 +36,34 @@
 
 namespace Inkscape::UI::Dialog {
 
+static void remove_first(Glib::ustring &name, Glib::ustring const &pattern)
+{
+    if (auto const pos = name.find(pattern); pos != name.npos) {
+        name.erase(pos, pattern.size());
+    }
+}
+
 /**
  * DialogBase constructor.
  *
  * @param prefs_path characteristic path to load/save dialog position.
  * @param dialog_type is the "type" string for the dialog.
  */
-DialogBase::DialogBase(gchar const *prefs_path, Glib::ustring dialog_type)
+DialogBase::DialogBase(char const * const prefs_path, Glib::ustring dialog_type)
     : Gtk::Box(Gtk::ORIENTATION_VERTICAL)
-    , desktop(nullptr)
-    , document(nullptr)
-    , selection(nullptr)
     , _name("DialogBase")
     , _prefs_path(prefs_path)
-    , _dialog_type(dialog_type)
+    , _dialog_type{std::move(dialog_type)}
     , _app(InkscapeApplication::instance())
 {
     auto const &dialog_data = get_dialog_data();
-
     // Derive a pretty display name for the dialog.
-    auto it = dialog_data.find(dialog_type);
-    if (it != dialog_data.end()) {
-
+    if (auto const it = dialog_data.find(_dialog_type); it != dialog_data.end()) {
         _name = it->second.label; // Already translated
-
         // remove ellipsis and mnemonics
-        int pos = _name.find("...", 0);
-        if (pos >= 0 && pos < _name.length() - 2) {
-            _name.erase(pos, 3);
-        }
-        pos = _name.find("…", 0);
-        if (pos >= 0 && pos < _name.length()) {
-            _name.erase(pos, 1);
-        }
-        pos = _name.find("_", 0);
-        if (pos >= 0 && pos < _name.length()) {
-            _name.erase(pos, 1);
-        }
+        remove_first(_name, "...");
+        remove_first(_name, "…"  );
+        remove_first(_name, "_"  );
     }
 
     set_name(_dialog_type); // Essential for dialog functionality
@@ -216,39 +207,36 @@ void DialogBase::setDesktop(SPDesktop *new_desktop)
     desktopReplaced();
 }
 
-//
-void DialogBase::fix_inner_scroll(Gtk::Widget *scrollwindow)
+void DialogBase::fix_inner_scroll(Gtk::Widget * const widget)
 {
-    auto scrollwin = dynamic_cast<Gtk::ScrolledWindow *>(scrollwindow);
-    auto viewport = dynamic_cast<Gtk::ScrolledWindow *>(scrollwin->get_child());
+    auto const scrollwin = dynamic_cast<Gtk::ScrolledWindow *>(widget);
+    if (!scrollwin) return;
+
     Gtk::Widget *child = nullptr;
-    if (viewport) { //some widgets has viewportother not
+    if (auto const viewport = dynamic_cast<Gtk::Viewport *>(scrollwin->get_child())) {
         child = viewport->get_child();
     } else {
         child = scrollwin->get_child();
     }
-    if (child && scrollwin) {
-        Glib::RefPtr<Gtk::Adjustment> adjustment = scrollwin->get_vadjustment();
-        child->signal_scroll_event().connect([=](GdkEventScroll* event) { 
-            auto container = dynamic_cast<Gtk::Container *>(this);
-            if (container) {
-                std::vector<Gtk::Widget*> widgets = container->get_children();
-                if (widgets.size()) {
-                    auto parentscroll = dynamic_cast<Gtk::ScrolledWindow *>(widgets[0]);
-                    if (parentscroll) {
-                        if (event->delta_y > 0 && (adjustment->get_value() + adjustment->get_page_size()) == adjustment->get_upper()) {
-                            parentscroll->event((GdkEvent*)event);
-                            return true;
-                        } else if (event->delta_y < 0 && adjustment->get_value() == adjustment->get_lower()) {
-                            parentscroll->event((GdkEvent*)event);
-                            return true;
-                        }
-                    }
-                }
-            }
-            return false;
-        });
-    }
+    if (!child) return;
+
+    child->signal_scroll_event().connect([this, adj = scrollwin->get_vadjustment()]
+                                         (GdkEventScroll * const event)
+    {
+        auto const children = UI::get_children(*this);
+        if (children.empty()) return false;
+
+        auto const parentscroll = dynamic_cast<Gtk::ScrolledWindow *>(children.at(0));
+        if (!parentscroll) return false;
+
+        if (event->delta_y > 0 && adj->get_value() + adj->get_page_size() == adj->get_upper() ||
+            event->delta_y < 0 && adj->get_value() == adj->get_lower())
+        {
+            parentscroll->event(reinterpret_cast<GdkEvent *>(event));
+            return true;
+        }
+        return false;
+    });
 }
 
 /**

@@ -13,11 +13,9 @@
 #ifndef INKSCAPE_UI_DIALOG_XML_TREE_H
 #define INKSCAPE_UI_DIALOG_XML_TREE_H
 
-#include <glibmm/ustring.h>
-#include <gtkmm/treeview.h>
-#include <gtkmm/widget.h>
 #include <memory>
 #include <glibmm/refptr.h>
+#include <glibmm/ustring.h>
 #include <gtkmm/builder.h>
 #include <gtkmm/button.h>
 #include <gtkmm/entry.h>
@@ -28,6 +26,8 @@
 #include <gtkmm/switch.h>
 #include <gtkmm/textview.h>
 #include <gtkmm/toolbar.h>
+#include <gtkmm/treeview.h>
+#include <gtkmm/widget.h>
 
 #include "message.h"
 #include "attrdialog.h"
@@ -41,30 +41,31 @@ struct SPXMLViewContent;
 struct SPXMLViewTree;
 
 namespace Inkscape {
+
 class MessageStack;
 class MessageContext;
+
 namespace XML { class Node; }
 
-namespace UI {
-namespace Dialog {
+namespace UI::Dialog {
 
 /**
  * A dialog widget to view and edit the document xml
  */
 
-class XmlTree : public DialogBase
+class XmlTree final : public DialogBase
 {
 public:
     XmlTree();
-    ~XmlTree() override;
+    ~XmlTree() final;
 
     void setSyntaxStyle(Inkscape::UI::Syntax::XMLStyles const &new_style);
 
 private:
     void unsetDocument();
-    void documentReplaced() override;
-    void selectionChanged(Selection *selection) override;
-    void desktopReplaced() override;
+    void documentReplaced() final;
+    void selectionChanged(Selection *selection) final;
+    void desktopReplaced() final;
 
     /**
      * Select a node in the xml tree
@@ -182,8 +183,8 @@ private:
     Inkscape::XML::Node* _node_parent = nullptr;
 };
 
-} // namespace Dialog
-} // namespace UI
+} // namespace UI::Dialog
+
 } // namespace Inkscape
 
 #endif // INKSCAPE_UI_DIALOG_XML_TREE_H

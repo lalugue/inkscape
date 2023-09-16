@@ -26,6 +26,7 @@
 #include "desktop.h"
 #include "object/sp-text.h"
 #include "ui/pack.h"
+#include "ui/util.h"
 
 namespace Inkscape::UI::Widget {
 
@@ -63,7 +64,6 @@ public:
 
         Gtk::RadioButton::Group group;
         for (int i = 0; i < options; ++i) {
-
             // Create radio button and create or add to button group.
             auto const button = Gtk::make_managed<Gtk::RadioButton>();
             if (i == 0) {
@@ -724,23 +724,20 @@ FontVariants::update( SPStyle const *query, bool different_features, Glib::ustri
     std::string setting;
 
     // Set feature radiobutton (if it exists) or add to _feature_entry string.
-    char const *val = query->font_feature_settings.value();
-    if (val) {
-
-        std::vector<Glib::ustring> tokens =
-            Glib::Regex::split_simple("\\s*,\\s*", val);
-
-        for (auto token: tokens) {
+    if (auto const &val = query->font_feature_settings.value()) {
+        for (auto const &token: Glib::Regex::split_simple("\\s*,\\s*", val)) {
             regex->match(token, matchInfo);
             if (matchInfo.matches()) {
                 Glib::ustring table = matchInfo.fetch(1);
-                Glib::ustring value = matchInfo.fetch(2);
 
                 if (_features.find(table) != _features.end()) {
+                    Glib::ustring value = matchInfo.fetch(2);
+
                     int v = 0;
                     if (value == "0" || value == "off") v = 0;
                     else if (value == "1" || value == "on" || value.empty() ) v = 1;
                     else v = std::stoi(value);
+
                     _features[table]->set_active(v);
                 } else {
                     setting += token + ", ";
@@ -961,7 +958,6 @@ FontVariants::update_opentype (Glib::ustring& font_spec) {
         Glib::ustring markup_calt;
 
         for (auto &table : tab) {
-
             if (table.first == "liga" ||
                 table.first == "clig" ||
                 table.first == "dlig" ||
@@ -999,7 +995,6 @@ FontVariants::update_opentype (Glib::ustring& font_spec) {
         Glib::ustring markup_zero;
 
         for (auto &table : res->get_opentype_tables()) {
-
             Glib::ustring markup;
             markup += "<span font_family='";
             markup += sp_font_description_get_family(res->get_descr());
@@ -1103,10 +1098,7 @@ FontVariants::update_opentype (Glib::ustring& font_spec) {
         if( (it = table_copy.find("vatu")) != table_copy.end() ) table_copy.erase( it );
 
         // Clear out old features
-        auto children = _feature_grid.get_children();
-        for (auto child: children) {
-            _feature_grid.remove (*child);
-        }
+        UI::delete_all_children(_feature_grid);
         _features.clear();
 
         std::string markup;
@@ -1346,7 +1338,7 @@ FontVariants::fill_css( SPCSSAttr *css ) {
 
     // Feature settings
     Glib::ustring feature_string;
-    for (auto i: _features) {
+    for (auto const &i: _features) {
         feature_string += i.second->get_css();
     }
 
@@ -1436,7 +1428,7 @@ FontVariants::get_markup() {
 
     // Feature settings
     Glib::ustring feature_string;
-    for (auto i: _features) {
+    for (auto const &i: _features) {
         feature_string += i.second->get_css();
     }
 

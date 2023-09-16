@@ -24,7 +24,6 @@
 #include <sstream>
 #include <utility>
 #include <vector>
-
 #include <glibmm/convert.h>
 #include <glibmm/i18n.h>
 #include <glibmm/main.h>
@@ -62,7 +61,6 @@
 #include "layer-manager.h"
 #include "selection.h"
 #include "style.h"
-
 #include "display/nr-filter-types.h"
 #include "include/gtkmm_version.h"
 #include "io/sys.h"
@@ -3258,10 +3256,8 @@ void FilterEffectsDialog::update_filter_general_settings_view()
         if(filter) {
             _filter_general_settings->show_and_update(0, filter);
             _no_filter_selected.set_visible(false);
-        }
-        else {
-            std::vector<Gtk::Widget*> vect = _settings_filter.get_children();
-            vect[0]->set_visible(false);
+        } else {
+            UI::get_children(_settings_filter).at(0)->set_visible(false);
             _no_filter_selected.set_visible(true);
         }
 
@@ -3278,7 +3274,7 @@ void FilterEffectsDialog::update_settings_view()
 
     // selected effect parameters
 
-    for (auto& i : _settings_effect.get_children()) {
+    for (auto const i : UI::get_children(_settings_effect)) {
         i->set_visible(false);
     }
 
@@ -3312,8 +3308,7 @@ void FilterEffectsDialog::update_settings_view()
 
     // current filter parameters (area size)
 
-    std::vector<Gtk::Widget*> vect2 = _settings_filter.get_children();
-    vect2[0]->set_visible(false);
+    UI::get_children(_settings_filter).at(0)->set_visible(false);
     _no_filter_selected.set_visible(true);
 
     if (filter) {

@@ -12,6 +12,7 @@
 #define INKSCAPE_UI_WIDGET_FONT_VARIANT_H
 
 #include <map>
+#include <string>
 #include <gtkmm/box.h>
 #include <gtkmm/checkbutton.h>
 #include <gtkmm/entry.h>
@@ -31,12 +32,12 @@ class Feature;
 /**
  * A container for selecting font variants (OpenType Features).
  */
-class FontVariants : public Gtk::Box
+class FontVariants final : public Gtk::Box
 {
 public:
     FontVariants();
 
-protected:
+private:
     // Ligatures: To start, use four check buttons.
     Gtk::Expander       _ligatures_frame;
     Gtk::Grid           _ligatures_grid;
@@ -122,7 +123,6 @@ protected:
     Gtk::Label          _feature_list;
     Gtk::Label          _feature_substitutions;
 
-private:
     void ligatures_init();
     void ligatures_callback();
 

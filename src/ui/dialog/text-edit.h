@@ -60,15 +60,15 @@ namespace Inkscape::UI::Dialog {
  * and shows a preview of the result. The dialogs layout settings include
  * horizontal and vertical alignment and inter line distance.
  */
-class TextEdit : public DialogBase
+class TextEdit final : public DialogBase
 {
 public:
     TextEdit();
-    ~TextEdit() override;
+    ~TextEdit() final;
 
-    void documentReplaced() override;
-    void selectionChanged(Selection *selection) override;
-    void selectionModified(Selection *selection, guint flags) override;
+    void documentReplaced() final;
+    void selectionChanged(Selection *selection) final;
+    void selectionModified(Selection *selection, guint flags) final;
 
 protected:
     /**

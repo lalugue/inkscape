@@ -18,17 +18,16 @@
 # include "config.h"  // only include where actually required!
 #endif
 
-#include <strings.h>
 #include <algorithm>
 #include <fstream>
 #include <iomanip>
-#include <sstream>
+#include <string>
 #include <gio/gio.h>
-#include <gtk/gtk.h>
 #include <glibmm/i18n.h>
 #include <glibmm/main.h>
 #include <glibmm/markup.h>
 #include <glibmm/miscutils.h>
+#include <glibmm/regex.h>
 #include <glibmm/ustring.h>
 #include <gtkmm/accelgroup.h>
 #include <gtkmm/box.h>
@@ -100,9 +99,7 @@
 # endif
 #endif
 
-namespace Inkscape {
-namespace UI {
-namespace Dialog {
+namespace Inkscape::UI::Dialog {
 
 using Inkscape::UI::Widget::DialogPage;
 using Inkscape::UI::Widget::PrefCheckButton;
@@ -115,13 +112,14 @@ using Inkscape::CMSSystem;
 using Inkscape::IO::Resource::get_filename;
 using Inkscape::IO::Resource::UIS;
 
-std::function<Gtk::Image*()> reset_icon = []() {
+[[nodiscard]] static auto reset_icon()
+{
     auto const image = Gtk::make_managed<Gtk::Image>();
     image->set_from_icon_name("reset", Gtk::ICON_SIZE_BUTTON);
     image->set_opacity(0.6);
     image->set_tooltip_text(_("Requires restart to take effect"));
     return image;
-};
+}
 
 /**
  * Case-insensitive and unicode normalized search of `pattern` in `string`.
@@ -133,10 +131,10 @@ std::function<Gtk::Image*()> reset_icon = []() {
  */
 static bool fuzzy_search(Glib::ustring const &pattern, Glib::ustring const &string, float &score)
 {
-    Glib::ustring norm_patt = pattern.lowercase().normalize();
-    Glib::ustring norm_str = string.lowercase().normalize();
-    bool found = (norm_str.find(norm_patt) != Glib::ustring::npos);
-    score = found ? (float)pattern.size() / (float)string.size() : 0;
+    auto const norm_patt = pattern.lowercase().normalize();
+    auto const norm_str  = string .lowercase().normalize();
+    bool const found = norm_str.find(norm_patt) != norm_str.npos;
+    score = found ? static_cast<float>(pattern.size()) / string.size() : 0;
     return score > 0.0 ? true : false;
 }
 
@@ -149,8 +147,17 @@ static bool fuzzy_search(Glib::ustring const &pattern, Glib::ustring const &stri
  */
 static bool fuzzy_search(Glib::ustring const &pattern, Glib::ustring const &string)
 {
-    float score;
+    float score{};
     return fuzzy_search(pattern, string, score);
+}
+
+[[nodiscard]] static auto get_children_or_mnemonic_labels(Gtk::Widget &widget)
+{
+    auto children = UI::get_children(widget);
+    if (children.empty()) {
+        children = widget.list_mnemonic_labels();
+    }
+    return children;
 }
 
 /**
@@ -162,30 +169,26 @@ static bool fuzzy_search(Glib::ustring const &pattern, Glib::ustring const &stri
  */
 static int get_num_matches(Glib::ustring const &key, Gtk::Widget *widget)
 {
+    g_assert(widget);
+
     int matches = 0;
-    if (auto label = dynamic_cast<Gtk::Label *>(widget)) {
+
+    if (auto const label = dynamic_cast<Gtk::Label *>(widget)) {
         if (fuzzy_search(key, label->get_text().lowercase())) {
-            // set score
             ++matches;
         }
     }
-    std::vector<Gtk::Widget *> children;
-    if (auto container = dynamic_cast<Gtk::Container *>(widget)) {
-        children = container->get_children();
-    } else {
-        children = widget->list_mnemonic_labels();
+
+    for (auto const child : get_children_or_mnemonic_labels(*widget)) {
+        matches += get_num_matches(key, child);
     }
-    for (auto *child : children) {
-        if (int child_matches = get_num_matches(key, child)) {
-            matches += child_matches;
-        }
-    }
+
     return matches;
 }
 
 // Shortcuts model =============
 
-class ModelColumns: public Gtk::TreeModel::ColumnRecord {
+class ModelColumns final : public Gtk::TreeModel::ColumnRecord {
 public:
     ModelColumns() {
         add(name);
@@ -414,18 +417,15 @@ InkscapePreferences::~InkscapePreferences() = default;
  */
 void InkscapePreferences::get_widgets_in_grid(Glib::ustring const &key, Gtk::Widget *widget)
 {
-    if (auto label = dynamic_cast<Gtk::Label *>(widget)) {
+    g_assert(widget);
+
+    if (auto const label = dynamic_cast<Gtk::Label *>(widget)) {
         if (fuzzy_search(key, label->get_text())) {
             _search_results.push_back(widget);
         }
     }
-    std::vector<Gtk::Widget *> children;
-    if (auto container = dynamic_cast<Gtk::Container *>(widget)) {
-        children = container->get_children();
-    } else {
-        children = widget->list_mnemonic_labels();
-    }
-    for (auto *child : children) {
+
+    for (auto const child : get_children_or_mnemonic_labels(*widget)) {
         get_widgets_in_grid(key, child);
     }
 }
@@ -440,23 +440,20 @@ void InkscapePreferences::get_widgets_in_grid(Glib::ustring const &key, Gtk::Wid
  */
 int InkscapePreferences::num_widgets_in_grid(Glib::ustring const &key, Gtk::Widget *widget)
 {
+    g_assert(widget);
+
     int results = 0;
-    if (auto label = dynamic_cast<Gtk::Label *>(widget)) {
-        float score;
-        if (fuzzy_search(key, label->get_text(), score)) {
+
+    if (auto const label = dynamic_cast<Gtk::Label *>(widget)) {
+        if (fuzzy_search(key, label->get_text())) {
             ++results;
         }
     }
-    std::vector<Gtk::Widget *> children;
-    if (auto container = dynamic_cast<Gtk::Container *>(widget)) {
-        children = container->get_children();
-    } else {
-        children = widget->list_mnemonic_labels();
+
+    for (auto const child : get_children_or_mnemonic_labels(*widget)) {
+        results += num_widgets_in_grid(key, child);
     }
-    for (auto *child : children) {
-        int num_child = num_widgets_in_grid(key, child);
-        results += num_child;
-    }
+
     return results;
 }
 
@@ -2066,16 +2063,22 @@ void InkscapePreferences::initPageUI()
             auto path = picker.visibility_path;
             btn->set_active(prefs->getBool(path));
             btn->add(*box);
-            btn->signal_toggled().connect([=]() {
+
+            btn->signal_toggled().connect([=, path = std::move(path)]() {
                 prefs->setBool(path, btn->get_active());
-                auto buttons = container->get_children();
-                if (std::find_if(begin(buttons), end(buttons), [](Gtk::Widget* b) { return static_cast<Gtk::ToggleButton*>(b)->get_active(); }) == end(buttons)) {
+
+                auto const buttons = UI::get_children(*container);
+                auto const is_active = [](Gtk::Widget const * const child)
+                    { return dynamic_cast<Gtk::ToggleButton const &>(*child).get_active(); };
+                if (!buttons.empty() && std::none_of(buttons.begin(), buttons.end(), is_active)) {
                     // all pickers hidden; not a good combination; select first one
-                    static_cast<Gtk::ToggleButton*>(buttons.front())->set_active();
+                    dynamic_cast<Gtk::ToggleButton &>(*buttons.front()).set_active(true);
                 }
             });
+
             UI::pack_start(*container, *btn);
         }
+
         container->show_all();
         container->set_spacing(5);
         _page_color_pickers.add_line(true, "", *container, "", _("Select color pickers"), false);
@@ -3880,9 +3883,7 @@ void InkscapePreferences::showPage()
     _page_list.get_model()->foreach_iter(sigc::mem_fun(*this, &InkscapePreferences::matchPage));
 }
 
-} // namespace Dialog
-} // namespace UI
-} // namespace Inkscape
+} // namespace Inkscape::UI::Dialog
 
 /*
   Local Variables:

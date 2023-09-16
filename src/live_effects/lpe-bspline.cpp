@@ -12,18 +12,19 @@
 #include "svg/svg.h"
 #include "ui/icon-names.h"
 #include "ui/pack.h"
+#include "ui/util.h"
 #include "ui/widget/scalar.h"
 #include "xml/repr.h"
 
 // TODO due to internal breakage in glibmm headers, this must be last:
 #include <glibmm/i18n.h>
 
-namespace Inkscape {
-namespace LivePathEffect {
+namespace Inkscape::LivePathEffect {
 
-const double NO_POWER = 0.0;
-const double DEFAULT_START_POWER = 1.0/3.0;
-const double DEFAULT_END_POWER = 2.0/3.0;
+static constexpr double NO_POWER = 0.0;
+static constexpr double DEFAULT_START_POWER = 1.0 / 3.0;
+static constexpr double DEFAULT_END_POWER = 2.0 / 3.0;
+
 Geom::Path sp_bspline_drawHandle(Geom::Point p, double helper_size);
 
 LPEBSpline::LPEBSpline(LivePathEffectObject *lpeobject)
@@ -66,7 +67,6 @@ void LPEBSpline::doBeforeEffect (SPLPEItem const* /*lpeitem*/)
     }
 }
 
-
 void LPEBSpline::doOnApply(SPLPEItem const* lpeitem)
 {
     if (!is<SPShape>(lpeitem)) {
@@ -90,54 +90,43 @@ Gtk::Widget *LPEBSpline::newWidget()
     auto const vbox = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_VERTICAL);
     vbox->property_margin().set_value(5);
 
-    std::vector<Parameter *>::iterator it = param_vector.begin();
-    while (it != param_vector.end()) {
-        if ((*it)->widget_is_visible) {
-            Parameter *param = *it;
-            auto widg = param->param_newWidget();
-            if (param->param_key == "weight") {
-                auto const buttons = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL,0);
-                Gtk::Button *default_weight =
-                    Gtk::make_managed<Gtk::Button>(Glib::ustring(_("Default weight")));
-                default_weight->signal_clicked()
+    for (auto const param: param_vector) {
+        if (!param->widget_is_visible) continue;
+
+        auto const widg = param->param_newWidget();
+        if (!widg) continue;
+
+        if (param->param_key == "weight") {
+            auto const buttons = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL,0);
+
+            auto const default_weight = Gtk::make_managed<Gtk::Button>(_("Default weight"));
+            default_weight->signal_clicked()
                 .connect(sigc::mem_fun(*this, &LPEBSpline::toDefaultWeight));
-                UI::pack_start(*buttons, *default_weight, true, true, 2);
-                Gtk::Button *make_cusp =
-                    Gtk::make_managed<Gtk::Button>(Glib::ustring(_("Make cusp")));
-                make_cusp->signal_clicked()
+            UI::pack_start(*buttons, *default_weight, true, true, 2);
+
+            auto const make_cusp = Gtk::make_managed<Gtk::Button>(_("Make cusp"));
+            make_cusp->signal_clicked()
                 .connect(sigc::mem_fun(*this, &LPEBSpline::toMakeCusp));
-                UI::pack_start(*buttons, *make_cusp, true, true, 2);
-                UI::pack_start(*vbox, *buttons, true, true, 2);
-            }
-            if (param->param_key == "weight" || param->param_key == "steps") {
-                auto const widg_registered = Gtk::manage(dynamic_cast<UI::Widget::Scalar *>(widg));
-                widg_registered->signal_value_changed()
-                .connect(sigc::mem_fun(*this, &LPEBSpline::toWeight));
-                widg = widg_registered;
-                if (widg) {
-                    Gtk::Box * hbox_weight_steps = dynamic_cast<Gtk::Box *>(widg);
-                    std::vector< Gtk::Widget* > childList = hbox_weight_steps->get_children();
-                    Gtk::Entry* entry_widget = dynamic_cast<Gtk::Entry *>(childList[1]);
-                    entry_widget->set_width_chars(9);
-                }
-            }
-            if (param->param_key == "only_selected" || param->param_key == "apply_no_weight" || param->param_key == "apply_with_weight") {
-                auto const widg_registered = Gtk::manage(dynamic_cast<Gtk::CheckButton *>(widg));
-                widg = widg_registered;
-            }
-            Glib::ustring *tip = param->param_getTooltip();
-            if (widg) {
-                UI::pack_start(*vbox, *widg, true, true, 2);
-                if (tip) {
-                    widg->set_tooltip_markup(*tip);
-                } else {
-                    widg->set_tooltip_text("");
-                    widg->set_has_tooltip(false);
-                }
-            }
+            UI::pack_start(*buttons, *make_cusp, true, true, 2);
+
+            UI::pack_start(*vbox, *buttons, true, true, 2);
+        } else if (param->param_key == "weight" || param->param_key == "steps") {
+            auto &scalar = dynamic_cast<UI::Widget::Scalar &>(*widg);
+            scalar.signal_value_changed().connect(sigc::mem_fun(*this, &LPEBSpline::toWeight));
+
+            auto const childList = UI::get_children(scalar);
+            auto &entry = dynamic_cast<Gtk::Entry &>(*childList.at(1));
+            entry.set_width_chars(9);
         }
 
-        ++it;
+        UI::pack_start(*vbox, *widg, true, true, 2);
+
+        if (auto const tip = param->param_getTooltip()) {
+            widg->set_tooltip_markup(*tip);
+        } else {
+            widg->set_tooltip_text({});
+            widg->set_has_tooltip(false);
+        }
     }
 
     return vbox;
@@ -487,8 +476,7 @@ void LPEBSpline::doBSplineFromWidget(SPCurve *curve, double weight_ammount)
     }
 }
 
-}; //namespace LivePathEffect
-}; /* namespace Inkscape */
+} // namespace Inkscape::LivePathEffect
 
 /*
   Local Variables:

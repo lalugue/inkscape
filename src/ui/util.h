@@ -71,7 +71,12 @@ enum class ForEachResult {_continue, _break};
 /// If widget is a Gtk::Bin, returns its get_child(), otherwise returns nullptr.
 Gtk::Widget *get_bin_child(Gtk::Widget &widget);
 /// If widget is Gtk::Container, returns its children(), otherwise empty vector.
-std::vector<Gtk::Widget *> get_container_children(Gtk::Widget &widget);
+/// Accessing children changes between GTK3 & GTK4, so best consolidate it here.
+std::vector<Gtk::Widget *> get_children(Gtk::Widget &widget);
+/// For each child in get_children(widget), call widget.remove(*child). May not cause delete child!
+void remove_all_children(Gtk::Widget &widget);
+/// For each child in get_children(widget), call widget.remove(*child) then also do `delete child`.
+void delete_all_children(Gtk::Widget &widget);
 /// Gets widgetʼs parent cast from Container.
 Gtk::Widget *get_parent(Gtk::Widget &widget);
 
@@ -97,7 +102,7 @@ Gtk::Widget *for_each_child(Gtk::Widget &widget, Func &&func,
         if (descendant) return descendant;
     }
 
-    for (auto const child: get_container_children(widget)) {
+    for (auto const child: get_children(widget)) {
         auto const descendant = for_each_child(*child, func, true, recurse, level + 1);
         if (descendant) return descendant;
     }

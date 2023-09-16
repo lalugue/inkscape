@@ -30,7 +30,7 @@ using Inkscape::Extension::TemplatePreset;
 
 namespace Inkscape::UI::Widget {
 
-class TemplateCols : public Gtk::TreeModel::ColumnRecord
+class TemplateCols final : public Gtk::TreeModel::ColumnRecord
 {
 public:
     // These types must match those for the model in the .glade file
@@ -41,6 +41,7 @@ public:
         this->add(this->icon);
         this->add(this->key);
     }
+
     Gtk::TreeModelColumn<Glib::ustring> name;
     Gtk::TreeModelColumn<Glib::ustring> label;
     Gtk::TreeModelColumn<Glib::RefPtr<Gdk::Pixbuf>> icon;
@@ -190,7 +191,7 @@ SPDocument *TemplateList::new_document()
 void TemplateList::reset_selection()
 {
     // TODO: Add memory here for the new document default (see new_document).
-    for (auto widget : get_children()) {
+    for (auto const widget : UI::get_children(*this)) {
         if (auto iconview = get_iconview(widget)) {
             iconview->unselect_all();
         }
@@ -202,13 +203,14 @@ void TemplateList::reset_selection()
  */
 Gtk::IconView *TemplateList::get_iconview(Gtk::Widget *widget)
 {
-    if (auto container = dynamic_cast<Gtk::Container *>(widget)) {
-        for (auto child : container->get_children()) {
-            if (auto iconview = get_iconview(child)) {
-                return iconview;
-            }
+    if (!widget) return nullptr;
+
+    for (auto const child : UI::get_children(*widget)) {
+        if (auto iconview = get_iconview(child)) {
+            return iconview;
         }
     }
+
     return dynamic_cast<Gtk::IconView *>(widget);
 }
 

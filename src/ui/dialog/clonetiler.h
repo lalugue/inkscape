@@ -1,11 +1,16 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-/** @file
- * @brief Clone tiling dialog
+/**
+ * @file
+ * Clone tiling dialog
  */
 /* Authors:
  *   bulia byak <buliabyak@users.sf.net>
+ *   Johan Engelen <goejendaagh@zonnet.nl>
+ *   Jon A. Cruz <jon@joncruz.org>
+ *   Abhishek Sharma
+ *   Romain de Bossoreille
  *
- * Copyright (C) 2004 Authors
+ * Copyright (C) 2004-2011 Authors
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
