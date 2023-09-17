@@ -43,7 +43,8 @@ class Toolbars final : public Gtk::Box
 public:
     Toolbars();
 
-    void create_toolbars(SPDesktop *desktop);
+    void setup_initial_toolbar(SPDesktop *desktop);
+    void create_toolbar(SPDesktop *desktop, int i);
     void change_toolbar(SPDesktop *desktop, Tools::ToolBase *tool);
 
 private:

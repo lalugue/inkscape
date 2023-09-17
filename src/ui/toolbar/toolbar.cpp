@@ -25,7 +25,7 @@ void Toolbar::addCollapsibleButton(UI::Widget::ToolbarMenuButton *button)
 
 void Toolbar::get_preferred_width_vfunc(int &min_w, int &nat_w) const
 {
-    Gtk::Box::get_preferred_width_vfunc(min_w, nat_w);
+    _toolbar->get_preferred_width(min_w, nat_w);
 
     if (_toolbar->get_orientation() == Gtk::ORIENTATION_HORIZONTAL && !_expanded_menu_btns.empty()) {
         // HACK: Return too-small value to allow shrinking.
@@ -35,7 +35,7 @@ void Toolbar::get_preferred_width_vfunc(int &min_w, int &nat_w) const
 
 void Toolbar::get_preferred_height_vfunc(int &min_h, int &nat_h) const
 {
-    Gtk::Box::get_preferred_height_vfunc(min_h, nat_h);
+    _toolbar->get_preferred_height(min_h, nat_h);
 
     if (_toolbar->get_orientation() == Gtk::ORIENTATION_VERTICAL && !_expanded_menu_btns.empty()) {
         // HACK: Return too-small value to allow shrinking.

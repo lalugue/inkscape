@@ -216,7 +216,7 @@ SPDesktopWidget::SPDesktopWidget(InkscapeWindow *inkscape_window, SPDocument *do
     modified_connection = namedview->connectModified(sigc::mem_fun(*this, &SPDesktopWidget::namedviewModified));
 
     // tool_toolbars is an empty Gtk::Box at this point, fill it.
-    tool_toolbars->create_toolbars(_desktop.get());
+    tool_toolbars->setup_initial_toolbar(_desktop.get());
 
     layoutWidgets();
 
