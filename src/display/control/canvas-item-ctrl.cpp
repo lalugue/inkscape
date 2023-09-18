@@ -1110,8 +1110,15 @@ void set_selectors_base(CRDocHandler *a_handler, CRSelector *a_selector)
  */
 void set_properties(CRDocHandler *a_handler, CRString *a_name, CRTerm *a_value, gboolean a_important)
 {
-    const std::string value = (char *)cr_term_to_string(a_value);
-    const std::string property = cr_string_peek_raw_str(a_name);
+    auto gvalue = cr_term_to_string(a_value);
+    auto gproperty = cr_string_peek_raw_str(a_name);
+    if (!gvalue || !gproperty) {
+        std::cerr << "Empty or improper value or property, skipped." << std::endl;
+        return;
+    }
+    const std::string value = (char *)gvalue;
+    const std::string property = gproperty;
+    g_free(gvalue);
     if (property == "shape") {
         if (ctrl_shape_map.find(value) != ctrl_shape_map.end()) {
             for (auto& [handle, specificity] : selected_handles) {
