@@ -37,11 +37,9 @@
 #include "desktop.h"
 #include "desktop-style.h"
 #include "document.h"
-#include "inkscape-preferences.h"
 #include "preferences.h"
 #include "style.h"
 
-#include "helper/choose-file.h"
 #include "object/sp-defs.h"
 #include "object/sp-gradient.h"
 #include "object/sp-gradient-reference.h"
@@ -53,6 +51,7 @@
 #include "widgets/paintdef.h"
 
 namespace Inkscape::UI::Dialog {
+namespace {
 
 struct PaletteSetColumns : public Gtk::TreeModel::ColumnRecord {
     Gtk::TreeModelColumn<Glib::ustring> translated_title;
@@ -66,9 +65,13 @@ struct PaletteSetColumns : public Gtk::TreeModel::ColumnRecord {
         add(loaded);
         add(set_image);
     }
-} const g_set_columns;
+};
 
-constexpr const char auto_id[] = "Auto";
+PaletteSetColumns const g_set_columns;
+
+constexpr char auto_id[] = "Auto";
+
+} // namespace
 
 /*
  * Lifecycle
@@ -116,6 +119,11 @@ SwatchesPanel::SwatchesPanel(bool compact, char const *prefsPath)
 
     auto prefs = Inkscape::Preferences::get();
     _current_palette_id = prefs->getString(_prefs_path + "/palette");
+    if (auto p = get_palette(_current_palette_id)) {
+        _current_palette_id = p->id; // Canonicalise to id, in case name lookup was used.
+    } else {
+        _current_palette_id = auto_id; // Fall back to auto palette.
+    }
     auto path = prefs->getString(_prefs_path + "/palette-path");
     auto loaded = load_swatches(path);
 
@@ -130,7 +138,6 @@ SwatchesPanel::SwatchesPanel(bool compact, char const *prefsPath)
         cr->property_ellipsize() = Pango::ELLIPSIZE_MIDDLE;
         _selector.set_model(_palette_store);
         _selector.set_id_column(g_set_columns.id.index());
-        if (!get_palette(_current_palette_id)) _current_palette_id = auto_id;
         _selector.set_active_id(_current_palette_id);
         _selector.signal_changed().connect([=](){
             auto it = _selector.get_active();
@@ -531,7 +538,7 @@ void SwatchesPanel::rebuild()
     } else if (_current_palette_id == auto_id && getDocument()) {
         auto grads = getDocument()->getResourceList("gradient");
         for (auto obj : grads) {
-            auto grad = static_cast<SPGradient*>(obj);
+            auto grad = cast_unsafe<SPGradient>(obj);
             if (grad->isSwatch()) {
                 auto const w = Gtk::make_managed<ColorItem>(grad, this);
                 palette.emplace_back(w);
@@ -623,7 +630,7 @@ bool SwatchesPanel::filter_callback(const Dialog::ColorItem& color) const {
     return text.find(_color_filter_text) != Glib::ustring::npos;
 }
 
-} // namespace
+} // namespace Inkscape::UI::Dialog
 
 /*
   Local Variables:

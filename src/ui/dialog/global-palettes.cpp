@@ -463,13 +463,21 @@ GlobalPalettes::GlobalPalettes()
         }
     }
 
+    // Sort by name.
     std::sort(_palettes.begin(), _palettes.end(), [] (auto& a, auto& b) {
-        // Sort by name.
         return a.name.compare(b.name) < 0;
     });
 
+    // First priority for lookup: by id.
     for (auto& pal : _palettes) {
-         _access[pal.id.raw()] = &pal;
+        _access.emplace(pal.id.raw(), &pal);
+    }
+
+    // Second priority for lookup: by name.
+    for (auto& pal : _palettes) {
+        if (!pal.name.empty()) {
+            _access.emplace(pal.name.raw(), &pal);
+        }
     }
 }
 
