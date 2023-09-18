@@ -111,6 +111,7 @@ void LPERoughen::doOnApply(SPLPEItem const *lpeitem)
                 param->param_readSVGValue(displace_y_str.c_str());
             }
         }
+        writeParamsToSVG();
     }
     lpeversion.param_setValue("1.2", true);
 }
