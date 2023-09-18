@@ -515,7 +515,7 @@ public:
     inline bool isWhitespace(iterator const &it) const;
 
     /** Returns character pointed to by \a it. If \a it == end() the result is undefined. */
-    inline gchar characterAt(iterator const &it) const;
+    inline gunichar characterAt(iterator const &it) const;
 
     /** Returns true if the text at \a it is hidden (i.e. overflowed). */
     bool isHidden(iterator const &it) const;
@@ -828,7 +828,7 @@ private:
         unsigned in_span;
         float x;      /// relative to the start of the *span* (so we can do block-progression)
         PangoLogAttr char_attributes;
-        gchar the_char = '#';
+        gunichar the_char = '#';
         int in_glyph;   /// will be -1 if this character has no visual representation
         inline Span      const & span     (Layout const *l) const {return                                     l->_spans[in_span];}
         inline Chunk     const & chunk    (Layout const *l) const {return                          l->_chunks[l->_spans[in_span].in_chunk];}
@@ -1130,7 +1130,7 @@ inline unsigned Layout::shapeIndex(iterator const &it) const
 inline bool Layout::isWhitespace(iterator const &it) const
     {return it._char_index == _characters.size() || _characters[it._char_index].char_attributes.is_white;}
 
-inline gchar Layout::characterAt(iterator const &it) const
+inline gunichar Layout::characterAt(iterator const &it) const
 {
     return _characters[it._char_index].the_char;
 }

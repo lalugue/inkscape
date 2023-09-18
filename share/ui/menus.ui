@@ -1156,6 +1156,10 @@
           <attribute name="action">app.text-unkern</attribute>
           <attribute name="icon">text-unkern</attribute>
         </item>
+        <item>
+          <attribute name="label" translatable="yes">Text to Glyphs</attribute>
+          <attribute name="action">app.text-convert-to-glyphs</attribute>
+        </item>
       </section>
       <section>
         <item>

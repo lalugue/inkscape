@@ -568,6 +568,83 @@ text_unflow ()
 }
 
 void
+text_to_glyphs()
+{
+    auto desktop = SP_ACTIVE_DESKTOP;
+    auto selection = desktop->getSelection();
+    std::vector<SPText*> results;
+    std::vector<SPText*> to_delete;
+
+    auto doc = desktop->getDocument();
+    auto xml_doc = doc->getReprDoc();
+
+    for(auto item : selection->items()) {
+        auto text = cast<SPText>(item);
+        if (!text)
+            continue;
+
+        auto parent = text->parent->getRepr();
+        auto sibling = text->getRepr();
+
+        auto const &layout = text->layout;
+        auto iter = layout.end();
+        while (true) {
+            iter.prevCharacter();
+
+            auto str = Glib::ustring(1, layout.characterAt(iter));
+            auto point = layout.characterAnchorPoint(iter);
+
+            SPObject *tspan = nullptr;
+            layout.getSourceOfCharacter(iter, &tspan);
+            if (!tspan)
+                break;
+
+            // Create new text object to hold the single glyph
+            Inkscape::XML::Node *new_node = xml_doc->createElement("svg:text");
+
+            // Write the effective style and transform back into the new text node
+            SPStyle *result_style = new SPStyle(doc);
+            for (auto sp = tspan->parent; sp && sp != text; sp = sp->parent) {
+                result_style->merge(sp->style);
+            }
+            result_style->merge(text->style);
+            result_style->text_anchor.read("start");
+            Glib::ustring glyph_style = result_style->writeIfDiff(text->parent->style);
+            delete result_style;
+
+            new_node->setAttributeOrRemoveIfEmpty("style", glyph_style);
+            new_node->setAttributeOrRemoveIfEmpty("transform", text->getAttribute("transform"));
+            new_node->setAttributeSvgDouble("x", point[Geom::X]);
+            new_node->setAttributeSvgDouble("y", point[Geom::Y]);
+            new_node->appendChild(xml_doc->createTextNode(str.c_str()));
+
+            // Store the new object for the selection and prepare for the next glyph
+            parent->addChild(new_node, sibling);
+            auto new_text = cast<SPText>(doc->getObjectByRepr(new_node));
+            results.push_back(new_text);
+            Inkscape::GC::release(new_node);
+
+            if (iter == layout.begin())
+                break;
+        }
+        to_delete.push_back(text);
+    }
+
+    selection->clear();
+    for (auto item : to_delete) {
+        item->deleteObject();
+    }
+
+    if (results.empty()) {
+        desktop->getMessageStack()->flash(Inkscape::WARNING_MESSAGE,
+                                          _("Select <b>text(s)</b> to convert to glyphs."));
+    } else {
+        DocumentUndo::done(doc, _("Convert text to glyphs"), INKSCAPE_ICON("text-convert-to-regular"));
+        selection->setList(results);
+    }
+}
+
+void
 flowtext_to_text()
 {
     SPDesktop *desktop = SP_ACTIVE_DESKTOP;
