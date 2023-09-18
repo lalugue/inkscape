@@ -13,14 +13,15 @@
 
 #include "combo-tool-item.h"
 
-#include <string>
 #include <utility>
+#include <vector>
 #include <sigc++/functors/mem_fun.h>
+#include <gdkmm/pixbuf.h>
+#include <gtkmm/cellrendererpixbuf.h>
 #include <gtkmm/box.h>
 #include <gtkmm/combobox.h>
 #include <gtkmm/label.h>
 #include <gtkmm/liststore.h>
-#include <gtkmm/radiomenuitem.h>
 
 #include "preferences.h"
 #include "ui/pack.h"
@@ -59,8 +60,7 @@ ComboToolItem::ComboToolItem(Glib::ustring group_label,
     _use_pixbuf (true),
     _icon_size ( Gtk::ICON_SIZE_LARGE_TOOLBAR ),
     _combobox (nullptr),
-    _container(Gtk::make_managed<Gtk::Box>()),
-    _menuitem (nullptr)
+    _container(Gtk::make_managed<Gtk::Box>())
 {
     add(*_container);
     _container->set_spacing(3);
@@ -81,6 +81,8 @@ ComboToolItem::ComboToolItem(Glib::ustring group_label,
 
     show_all();
 }
+
+ComboToolItem::~ComboToolItem() = default;
 
 void
 ComboToolItem::focus_on_click( bool focus_on_click )
@@ -173,17 +175,13 @@ ComboToolItem::populate_combobox()
 }
 
 void
-ComboToolItem::set_active (gint active) {
+ComboToolItem::set_active(int active) {
     if (_active == active) return;
 
     _active = active;
 
     if (_combobox) {
         _combobox->set_active (active);
-    }
-
-    if (active < _radiomenuitems.size()) {
-        _radiomenuitems[ active ]->set_active();
     }
 }
 
@@ -200,17 +198,6 @@ ComboToolItem::on_changed_combobox() {
     set_active( row );
     _changed.emit (_active);
     _changed_after.emit (_active);
-}
-
-void
-ComboToolItem::on_toggled_radiomenu(int n) {
-    // toggled emitted twice, first for button toggled off, second for button toggled on.
-    // We want to react only to the button turned on.
-    if ( n < _radiomenuitems.size() &&_radiomenuitems[ n ]->get_active()) {
-        set_active ( n );
-        _changed.emit (_active);
-        _changed_after.emit (_active);
-    }
 }
 
 } // namespace Inkscape::UI::Widget

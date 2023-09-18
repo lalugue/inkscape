@@ -15,12 +15,16 @@
 #define SEEN_COMBO_TOOL_ITEM
 
 #include <memory>
-#include <vector>
 #include <glibmm/refptr.h>
+#include <glibmm/ustring.h>
 #include <gtkmm/enums.h>
 #include <gtkmm/toolitem.h>
 #include <gtkmm/treemodel.h>
 #include <sigc++/signal.h>
+
+namespace Gdk {
+class Pixbuf;
+} // namespace Gdk
 
 namespace Gtk {
 class Box;
@@ -28,12 +32,11 @@ class ComboBox;
 class Label;
 class ListStore;
 class MenuItem;
-class RadioMenuItem;
 } // namespace Gtk
 
 namespace Inkscape::UI::Widget {
 
-class ComboToolItemColumns : public Gtk::TreeModel::ColumnRecord {
+class ComboToolItemColumns final : public Gtk::TreeModel::ColumnRecord {
 public:
     ComboToolItemColumns() {
         add (col_label);
@@ -53,8 +56,7 @@ public:
     Gtk::TreeModelColumn<bool>          col_sensitive;
 };
 
-
-class ComboToolItem : public Gtk::ToolItem {
+class ComboToolItem final : public Gtk::ToolItem {
 public:
     static ComboToolItem* create(const Glib::ustring &label,
                                  const Glib::ustring &tooltip,
@@ -69,9 +71,9 @@ public:
     void use_pixbuf( bool use_pixbuf );
     void use_group_label( bool use_group_label ); // Applies to tool item only
   
-    gint get_active() { return _active; }
+    int get_active() const { return _active; }
     Glib::ustring get_active_text();
-    void set_active( gint active );
+    void set_active(int active);
     void set_icon_size( Gtk::BuiltinIconSize size ) { _icon_size = size; }
 
     Glib::RefPtr<Gtk::ListStore> const &get_store() { return _store; }
@@ -87,13 +89,12 @@ protected:
     sigc::signal<void (int)> _changed_after;  // Needed for unit tracker which eats _changed.
 
 private:
-
     Glib::ustring _group_label;
     Glib::ustring _tooltip;
     Glib::ustring _stock_id;
     Glib::RefPtr<Gtk::ListStore> _store;
 
-    gint _active;  /* Active menu item/button */
+    int _active; // Active menu item/button
 
     /* Style */
     bool _use_label;
@@ -106,18 +107,15 @@ private:
     std::unique_ptr<Gtk::Label> _group_label_widget;
     Gtk::Box* _container;
 
-    Gtk::MenuItem* _menuitem;
-    std::vector<Gtk::RadioMenuItem*> _radiomenuitems;
-
     /* Internal Callbacks */
     void on_changed_combobox();
-    void on_toggled_radiomenu(int n);
 
     ComboToolItem(Glib::ustring group_label,
                   Glib::ustring tooltip,
                   Glib::ustring stock_id,
                   Glib::RefPtr<Gtk::ListStore> store,
                   bool          has_entry = false);
+    ~ComboToolItem() final;
 };
 
 } // namespace Inkscape::UI::Widget
