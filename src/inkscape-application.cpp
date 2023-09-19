@@ -73,6 +73,8 @@
 #include "actions/actions-element-a.h"
 #include "actions/actions-element-image.h"
 #include "actions/actions-file.h"
+#include "actions/actions-helper.h"
+#include "actions/actions-helper-gui.h"
 #include "actions/actions-hide-lock.h"
 #include "actions/actions-object-align.h"
 #include "actions/actions-object.h"
@@ -1002,12 +1004,7 @@ InkscapeApplication::process_document(SPDocument* document, std::string output_p
     document->ensureUpToDate(); // Or queries don't work!
 
     // process_file
-    for (auto action: _command_line_actions) {
-        if (!_gio_application->has_action(action.first)) {
-            std::cerr << "ConcreteInkscapeApplication<T>::process_document: Unknown action name: " <<  action.first << std::endl;
-        }
-        _gio_application->activate_action( action.first, action.second );
-    }
+    activate_any_actions(_command_line_actions, _gio_application, _active_window, _active_document);
 
     if (_use_shell) {
         shell();
@@ -1363,9 +1360,7 @@ InkscapeApplication::shell(bool active_window)
             input = "active-window-start;" + input + ";active-window-end";
         }
         parse_actions(input, action_vector);
-        for (auto action: action_vector) {
-            _gio_application->activate_action( action.first, action.second );
-        }
+        activate_any_actions(action_vector, _gio_application, _active_window, _active_document);
         if (active_window) {
             redirect_output();
         } else {
@@ -1852,9 +1847,7 @@ InkscapeApplication::on_handle_local_options(const Glib::RefPtr<Glib::VariantDic
             _command_line_actions.emplace(_command_line_actions.begin(), "active-window-start", base);
             _command_line_actions_input = _command_line_actions_input + ";active-window-end";
             parse_actions(_command_line_actions_input, _command_line_actions);
-            for (auto const &[name, param] : _command_line_actions) {
-                _gio_application->activate_action(name, param);
-            }
+            activate_any_actions(_command_line_actions, _gio_application, _active_window, _active_document);
             redirect_output();
         }
         return EXIT_SUCCESS;

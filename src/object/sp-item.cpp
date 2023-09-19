@@ -1378,6 +1378,20 @@ void SPItem::adjust_gradient( Geom::Affine const &postmul, bool set )
     }
 }
 
+void SPItem::adjust_clip(Geom::Affine const &postmul, bool set)
+{
+    if (auto clip_group = getClipObject()) {
+        clip_group->transform_multiply(postmul, set);
+    }
+}
+
+void SPItem::remove_clip_transforms()
+{
+    if (auto clip_group = getClipObject()) {
+        clip_group->removeTransformsRecursively(clip_group->parent);
+    }
+}
+
 void SPItem::adjust_stroke( gdouble ex )
 {
     if (freeze_stroke_width) {
@@ -1529,6 +1543,13 @@ bool SPItem::collidesWith(SPItem const &other) const
 Geom::Affine SPItem::set_transform(Geom::Affine const &transform) {
 //	throw;
     return transform;
+}
+
+void SPItem::removeTransformsRecursively(SPObject const *root) {
+    // The default action is to remove the transform from it's parents
+    // but retain it in the given shape. Other item types may remove the
+    // transform entirely.
+    setAttribute("transform", sp_svg_transform_write(i2i_affine(this, root)));
 }
 
 /**

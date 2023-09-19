@@ -1116,6 +1116,14 @@ void set_default_highlight_colors(std::vector<guint32> colors) {
     std::swap(default_highlights, colors);
 }
 
+void SPGroup::removeTransformsRecursively(SPObject const *root)
+{
+    for (auto item : item_list()) {
+        item->removeTransformsRecursively(root);
+    }
+    removeAttribute("transform");
+}
+
 /*
   Local Variables:
   mode:c++

@@ -58,6 +58,7 @@ if(${CMAKE_SIZEOF_VOID_P} EQUAL 8)
 endif()
 
 set(TEST_SOURCES
+    actions-svg-processing
     async_channel-test
     async_funclog-test
     async_progress-test

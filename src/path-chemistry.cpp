@@ -359,6 +359,17 @@ void ObjectSet::toLPEItems()
     addList(selected);
 }
 
+static void collect_object_items(SPObject *object, std::vector<SPItem*> &items)
+{
+    for (auto &child : object->children) {
+        if (auto child_item = cast<SPItem>(&child)) {
+            items.push_back(child_item);
+        } else {
+            collect_object_items(&child, items);
+        }
+    }
+}
+
 bool
 sp_item_list_to_curves(const std::vector<SPItem*> &items, std::vector<SPItem*>& selected, std::vector<Inkscape::XML::Node*> &to_select, bool skip_all_lpeitems)
 {
@@ -425,8 +436,9 @@ sp_item_list_to_curves(const std::vector<SPItem*> &items, std::vector<SPItem*>& 
         }
 
         if (group) {
-            std::vector<SPItem*> item_list = group->item_list();
-            
+            std::vector<SPItem*> item_list;
+            // This convoluted system allows SPItem's in defs to be collected too
+            collect_object_items(group, item_list);
             std::vector<Inkscape::XML::Node*> item_to_select;
             std::vector<SPItem*> item_selected;
             

@@ -24,6 +24,8 @@
 static bool use_active_window = false;
 static Inkscape::XML::Document *active_window_data = nullptr; 
 
+
+
 // this function is called when in command line we call with parameter --active-window | -q
 // is called by a auto add new start and end action that fire first this action
 // and keep on till last inserted action is done

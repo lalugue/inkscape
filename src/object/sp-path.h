@@ -48,6 +48,7 @@ public:
     const char* displayName() const override;
     char* description() const override;
     Geom::Affine set_transform(Geom::Affine const &transform) override;
+    void removeTransformsRecursively(SPObject const *root) override;
     void convert_to_guides() const override;
 private:
     SPStyleSrc d_source;  // Source of 'd' value, saved for output.

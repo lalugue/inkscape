@@ -226,6 +226,8 @@ set(inkscape_SRC
   actions/actions-file.cpp
   actions/actions-helper.h
   actions/actions-helper.cpp
+  actions/actions-helper-gui.h
+  actions/actions-helper-gui.cpp
   actions/actions-help-url.h
   actions/actions-help-url.cpp
   actions/actions-hide-lock.h

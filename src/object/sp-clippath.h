@@ -52,6 +52,8 @@ public:
 
     Geom::OptRect geometricBounds(Geom::Affine const &transform) const;
     Geom::PathVector getPathVector(Geom::Affine const &transform) const;
+    void transform_multiply(Geom::Affine postmul, bool set = true);
+    void removeTransformsRecursively(SPObject const *root);
 
 protected:
     void build(SPDocument *doc, Inkscape::XML::Node *repr) override;

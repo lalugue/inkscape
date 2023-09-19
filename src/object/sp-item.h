@@ -337,6 +337,8 @@ public:
     void adjust_hatch(/* Geom::Affine const &premul, */ Geom::Affine const &postmul, bool set = false,
                       PaintServerTransform = TRANSFORM_BOTH);
     void adjust_gradient(/* Geom::Affine const &premul, */ Geom::Affine const &postmul, bool set = false);
+    void adjust_clip(/* Geom::Affine const &premul, */ Geom::Affine const &postmul, bool set = false);
+    void remove_clip_transforms();
     void adjust_stroke(double ex);
 
     /**
@@ -440,6 +442,7 @@ public:
 	virtual void hide(unsigned int key);
     virtual void snappoints(std::vector<Inkscape::SnapCandidatePoint> &p, Inkscape::SnapPreferences const *snapprefs) const;
     virtual Geom::Affine set_transform(Geom::Affine const &transform);
+    virtual void removeTransformsRecursively(SPObject const *root);
 
     virtual void convert_to_guides() const;
 };

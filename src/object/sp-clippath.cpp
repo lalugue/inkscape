@@ -216,6 +216,28 @@ Geom::OptRect SPClipPath::geometricBounds(Geom::Affine const &transform) const
     return bbox;
 }
 
+void SPClipPath::transform_multiply(Geom::Affine postmul, bool set)
+{
+    for (auto &clip : children) {
+        if (auto item = cast<SPItem>(&clip)) {
+            if (set) {
+                item->doWriteTransform(item->transform * postmul);
+            } else {
+                item->set_item_transform(item->transform * postmul);
+            }
+        }
+    }
+}
+
+void SPClipPath::removeTransformsRecursively(SPObject const *root)
+{
+    for (auto &clip : children) {
+        if (auto item = cast<SPItem>(&clip)) {
+            item->removeTransformsRecursively(root);
+        }
+    }
+}
+
 /**
  * This gets a compiled path vector from all the objects. Sub-groups are not allowed
  * in clipping path objects (SVG spec) so we assume we are non-recursive.

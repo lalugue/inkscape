@@ -11,6 +11,10 @@
 #ifndef INK_ACTIONS_HELPER_H
 #define INK_ACTIONS_HELPER_H
 
+#include <string>
+#include <vector>
+#include <giomm.h>
+
 namespace Glib {
 class ustring;
 } // namespace Glib
@@ -21,6 +25,8 @@ class SPDocument;
 namespace Inkscape {
 class Selection;
 } // namespace Inkscape
+
+using action_vector_t = std::vector<std::pair<std::string, Glib::VariantBase>>;
 
 void active_window_start_helper();
 void active_window_end_helper();

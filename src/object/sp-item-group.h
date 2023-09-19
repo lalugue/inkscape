@@ -93,6 +93,8 @@ public:
 
     guint32 highlight_color() const override;
 
+    void removeTransformsRecursively(SPObject const *root) override;
+
     /**
      * Return the result of recursively ungrouping all groups in \a items.
      */

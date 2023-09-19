@@ -653,11 +653,11 @@ void insert_bounding_boxes(SPItem *item)
         }
     }
     auto const scale = item->document->getDocumentScale().inverse();
-    auto const vbox = SVGBox(item->visualBounds(item->i2doc_affine() * scale));
-    auto const gbox = SVGBox(item->geometricBounds(item->i2doc_affine() * scale));
-    item->setAttributeOrRemoveIfEmpty("inkscape:visualbox", vbox.write());
+    auto const vbox = item->visualBounds(item->i2doc_affine() * scale);
+    auto const gbox = item->geometricBounds(item->i2doc_affine() * scale);
+    item->setAttributeOrRemoveIfEmpty("inkscape:visualbox", SVGBox(vbox).write());
     if (gbox != vbox) {
-        item->setAttributeOrRemoveIfEmpty("inkscape:geometricbox", vbox.write());
+        item->setAttributeOrRemoveIfEmpty("inkscape:geometricbox", SVGBox(gbox).write());
     }
 }
 
@@ -701,6 +701,7 @@ std::vector<std::vector<Glib::ustring>> doc_svg_processing_actions =
     {"doc.prune-proprietary-namespaces", N_("Prune Proprietary Namespaces"), "Processing", N_("Remove any known proprietary svg data") },
 
     {"doc.reverse-auto-start-markers",   N_("Reverse Auto Start Markers"),   "Processing", N_("Remove auto start positions from markers") },
+    {"doc.remove-all-transforms",        N_("Remove all transforms"),        "Processing", N_("Remove all transforms from all shapes") },
     {"doc.remove-marker-context-paint",  N_("Remove Marker Context Paint"),  "Processing", N_("Remove context paints from markers") },
 
     {"doc.insert-text-fallback",         N_("Insert Text Fallback"),         "Processing", N_("Replace SVG2 text with SVG1.1 text") },
@@ -714,6 +715,8 @@ std::vector<std::vector<Glib::ustring>> doc_svg_processing_actions =
 
     {"doc.insert-bounding-boxes",        N_("Insert Bounding Box Info"),     "Processing", N_("Add bounding box information to all shapes") },
     {"doc.insert-path-data",             N_("Insert Shape Path Data"),       "Processing", N_("Add shape path information to all shapes") },
+
+    {"doc.vacuum-defs",                  N_("Clean up Document"),            "Processing", N_("Remove unused definitions (gradients, etc.)") },
     // clang-format on
 };
 
@@ -738,6 +741,10 @@ void add_actions_processing(SPDocument* doc)
         remove_marker_auto_start_reverse(doc->getReprRoot(), doc->getDefs()->getRepr(), "marker-start");
         remove_marker_auto_start_reverse(doc->getReprRoot(), doc->getDefs()->getRepr(), "marker");
     });
+    group->add_action("remove-all-transforms", [doc]() {
+        doc->getRoot()->removeTransformsRecursively(doc->getRoot());
+    });
+
     group->add_action("remove-marker-context-paint",  [doc]() { remove_marker_context_paint(doc->getReprRoot(), doc->getDefs()->getRepr()); });
     group->add_action("insert-text-fallback",         [doc]() { insert_text_fallback(doc->getReprRoot(), doc->getOriginalDocument()); });
     group->add_action("insert-mesh-polyfill",         [doc]() { insert_mesh_polyfill(doc->getReprRoot()); });
@@ -758,6 +765,7 @@ void add_actions_processing(SPDocument* doc)
     group->add_action("normalize-all-paths",       [doc]() { normalize_all_paths(doc->getReprRoot()); });
     group->add_action("insert-bounding-boxes",     [doc]() { insert_bounding_boxes(doc->getRoot()); });
     group->add_action("insert-path-data",          [doc]() { insert_path_data(doc->getRoot()); });
+    group->add_action("vacuum-defs",               [doc]() { doc->vacuumDocument(); });
     // clang-format on
 
     // Note: This will only work for the first ux to load, possible problem.

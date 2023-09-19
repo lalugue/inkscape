@@ -189,17 +189,6 @@ no_convert_baseline()
     sp_no_convert_text_baseline_spacing = true;
 }
 
-void
-vacuum_defs(InkscapeApplication* app)
-{
-    SPDocument* document = nullptr;
-    Inkscape::Selection* selection = nullptr;
-    if (!get_document_and_selection(app, &document, &selection)) {
-        return;
-    }
-    document->vacuumDocument();
-}
-
 std::vector<std::vector<Glib::ustring>> raw_data_base =
 {
     // clang-format off
@@ -210,7 +199,6 @@ std::vector<std::vector<Glib::ustring>> raw_data_base =
     {"app.system-data-directory",     N_("System Directory"),        "Base",       N_("Print system data directory and exit")              },
     {"app.user-data-directory",       N_("User Directory"),          "Base",       N_("Print user data directory and exit")                },
     {"app.action-list",               N_("List Actions"),            "Base",       N_("Print a list of actions and exit")                  },
-    {"app.vacuum-defs",               N_("Clean up Document"),       "Base",       N_("Remove unused definitions (gradients, etc.)")       },
     {"app.quit",                      N_("Quit"),                    "Base",       N_("Quit Inkscape, check for data loss")                },
     {"app.quit-immediate",            N_("Quit Immediately"),        "Base",       N_("Immediately quit Inkscape, no check for data loss") },
 
@@ -239,7 +227,6 @@ add_actions_base(InkscapeApplication* app)
     gapp->add_action(               "system-data-directory",                               sigc::ptr_fun(&print_system_data_directory)            );
     gapp->add_action(               "user-data-directory",                                 sigc::ptr_fun(&print_user_data_directory)              );
     gapp->add_action(               "action-list",        sigc::mem_fun(*app, &InkscapeApplication::print_action_list)                            );
-    gapp->add_action(               "vacuum-defs",        sigc::bind(sigc::ptr_fun(&vacuum_defs),               app)        );
     gapp->add_action(               "quit",               sigc::mem_fun(*app, &InkscapeApplication::on_quit)                                      );
     gapp->add_action(               "quit-immediate",     sigc::mem_fun(*app, &InkscapeApplication::on_quit_immediate)                            );
 

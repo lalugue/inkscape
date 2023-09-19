@@ -314,6 +314,28 @@ Geom::Affine SPPath::set_transform(Geom::Affine const &transform) {
     return Geom::identity();
 }
 
+void SPPath::removeTransformsRecursively(SPObject const *root)
+{
+    if (!_curve)
+        return;
+
+    auto transform = i2i_affine(root, this).inverse();
+
+    if (hasPathEffectRecursive() && pathEffectsEnabled()) {
+        _curve_before_lpe->transform(transform);
+        sp_lpe_item_update_patheffect(this, false, false);
+    } else {
+        setCurve(_curve->transformed(transform));
+    }
+    setAttribute("d", sp_svg_write_path(_curve->get_pathvector()));
+    adjust_stroke(transform.descrim());
+    adjust_pattern(transform);
+    adjust_gradient(transform);
+    adjust_clip(transform, true);
+    removeAttribute("transform");
+    remove_clip_transforms();
+}
+
 /*
   Local Variables:
   mode:c++
