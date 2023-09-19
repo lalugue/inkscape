@@ -836,13 +836,15 @@ void AttrDialog::valueEdited (const Glib::ustring& path, const Glib::ustring& va
 void AttrDialog::setPrecision(int const n)
 {
     _rounding_precision = n;
-    auto const menu = get_widget<Gtk::MenuButton>(_builder, "btn-menu").get_menu_model();
+    auto &menu_button = get_widget<Gtk::MenuButton>(_builder, "btn-menu");
+    auto const menu = menu_button.get_menu_model();
     auto const section = menu->get_item_link(0, Gio::MENU_LINK_SECTION);
     auto const type = Glib::VariantType{g_variant_type_new("s")};
     auto const variant = section->get_item_attribute(n, Gio::MENU_ATTRIBUTE_LABEL, type);
     auto const label = ' ' + static_cast<Glib::Variant<Glib::ustring> const &>(variant).get();
     get_widget<Gtk::Label>(_builder, "precision").set_label(label);
     Inkscape::Preferences::get()->setInt("/dialogs/attrib/precision", n);
+    menu_button.set_active(false);
 }
 
 } // namespace Inkscape::UI::Dialog
