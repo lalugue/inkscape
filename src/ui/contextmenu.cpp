@@ -41,7 +41,7 @@
 #include "object/sp-shape.h"
 #include "object/sp-text.h"
 
-#include "ui/desktop/menu-icon-shift.h"
+#include "ui/desktop/menu-set-tooltips-shift-icons.h"
 #include "ui/util.h"
 
 ContextMenu::ContextMenu(SPDesktop *desktop, SPObject *object, bool hide_layers_and_objects_menu_item)
@@ -285,10 +285,8 @@ ContextMenu::ContextMenu(SPDesktop *desktop, SPObject *object, bool hide_layers_
     // It doesn't work well with context menu either, introducing disturbing visual glitch 
     // where menu shifts upon opening.
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-    if (prefs->getInt("/theme/shiftIcons", true)) {
-        get_style_context()->add_class("shifticonmenu");
-        shift_icons(this);
-    }
+    bool const shift_icons = prefs->getInt("/theme/shiftIcons", true);
+    set_tooltips_and_shift_icons(*this, shift_icons);
     // Set the style and icon theme of the new menu based on the desktop
     if (Gtk::Window *window = desktop->getToplevel()) {
         if (window->get_style_context()->has_class("dark")) {

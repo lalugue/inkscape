@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 /**
  * @file
- * Shift Gtk::MenuItems with icons to align with Toggle and Radio buttons.
+ * Go over a widget representing a menu, & set tooltips on its items from app label-to-tooltip map.
+ * Optionally (per Preference) shift Gtk::MenuItems with icons to align with Toggle & Radio buttons
  */
 /*
  * Authors:
@@ -16,16 +17,16 @@
  *
  */
 
-#ifndef SEEN_DESKTOP_MENU_ITEM_SHIFT_H
-#define SEEN_DESKTOP_MENU_ITEM_SHIFT_H
+#ifndef SEEN_DESKTOP_MENU_SET_TOOLTIPS_SHIFT_ICONS_H
+#define SEEN_DESKTOP_MENU_SET_TOOLTIPS_SHIFT_ICONS_H
 
 namespace Gtk {
-class MenuShell;
+class Widget;
 } // namespace Gtk
 
-bool shift_icons(Gtk::MenuShell *menu);
+bool set_tooltips_and_shift_icons(Gtk::Widget &menu, bool shift_icons);
 
-#endif // SEEN_DESKTOP_MENU_ITEM_SHIFT_H
+#endif // SEEN_DESKTOP_MENU_SET_TOOLTIPS_SHIFT_ICONS_H
 
 /*
   Local Variables:

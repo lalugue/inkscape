@@ -41,7 +41,7 @@
 #include "inkscape.h"   // SP_ACTIVE_DESKTOP
 #include "object/sp-namedview.h"  // TODO Remove need for this!
 #include "ui/desktop/menubar.h"
-#include "ui/desktop/menu-icon-shift.h"
+#include "ui/desktop/menu-set-tooltips-shift-icons.h"
 #include "ui/dialog/dialog-container.h"
 #include "ui/dialog/dialog-manager.h"
 #include "ui/dialog/dialog-window.h"
@@ -149,15 +149,11 @@ InkscapeWindow::InkscapeWindow(SPDocument* document)
     // Note: The menu is defined at the app level but shifting icons requires actual widgets and
     // must be done on the window level.
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-    if (prefs->getInt("/theme/shiftIcons", true)) {
-        bool shifted = false;
-        for (auto const child : Inkscape::UI::get_children(*this)) {
-            if (auto const menubar = dynamic_cast<Gtk::MenuBar *>(child)) {
-                menubar->get_style_context()->add_class("shifticonmenu");
-                if (!shifted) {
-                    shifted = shift_icons(menubar);
-                }
-            }
+    bool shift_icons = prefs->getInt("/theme/shiftIcons", true);
+    for (auto const child : Inkscape::UI::get_children(*this)) {
+        if (auto const menubar = dynamic_cast<Gtk::MenuBar *>(child)) {
+            bool const shifted = set_tooltips_and_shift_icons(*menubar, shift_icons);
+            if (shifted) shift_icons = false;
         }
     }
 
