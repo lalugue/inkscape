@@ -192,7 +192,7 @@ bool StarTool::root_handler(GdkEvent* event) {
     case GDK_BUTTON_RELEASE:
         this->xp = this->yp = 0;
 
-        if (event->button.button == 1) {
+        if (dragging && event->button.button == 1) {
             dragging = false;
 
             this->discard_delayed_snap_event();
