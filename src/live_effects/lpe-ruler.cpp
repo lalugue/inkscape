@@ -13,6 +13,7 @@
  */
 
 #include "live_effects/lpe-ruler.h"
+#include <2geom/sbasis-to-bezier.h>
 // TODO due to internal breakage in glibmm headers, this must be last:
 #include <glibmm/i18n.h>
 
@@ -39,6 +40,7 @@ LPERuler::LPERuler(LivePathEffectObject *lpeobject) :
     mark_distance(_("_Mark distance:"), _("Distance between successive ruler marks"), "mark_distance", &wr, this, 20.0),
     unit(_("Unit:"), _("Unit"), "unit", &wr, this),
     mark_length(_("Ma_jor length:"), _("Length of major ruler marks"), "mark_length", &wr, this, 14.0),
+    mark_angle(_("Rotate mar_k:"), _("Rotate marks by degrees (-180,180)"), "mark_angle", &wr, this, 0.0),
     minor_mark_length(_("Mino_r length:"), _("Length of minor ruler marks"), "minor_mark_length", &wr, this, 7.0),
     major_mark_steps(_("Major steps_:"), _("Draw a major mark every ... steps"), "major_mark_steps", &wr, this, 5),
     shift(_("Shift marks _by:"), _("Shift marks by this many steps"), "shift", &wr, this, 0),
@@ -48,6 +50,7 @@ LPERuler::LPERuler(LivePathEffectObject *lpeobject) :
 {
     registerParameter(&unit);
     registerParameter(&mark_distance);
+    registerParameter(&mark_angle);
     registerParameter(&mark_length);
     registerParameter(&minor_mark_length);
     registerParameter(&major_mark_steps);
@@ -56,6 +59,8 @@ LPERuler::LPERuler(LivePathEffectObject *lpeobject) :
     registerParameter(&mark_dir);
     registerParameter(&border_marks);
 
+    mark_angle.param_make_integer();
+    mark_angle.param_set_range(-180, 180);
     major_mark_steps.param_make_integer();
     major_mark_steps.param_set_range(1, 1000);
     shift.param_make_integer();
@@ -112,6 +117,13 @@ LPERuler::ruler_mark(Geom::Point const &A, Geom::Point const &n, MarkType const 
     }
 
     Piecewise<D2<SBasis> > seg(D2<SBasis>(SBasis(C[X], D[X]), SBasis(C[Y], D[Y])));
+    if (mark_angle) {
+        Geom::PathVector pvec = path_from_piecewise(seg,0.0001);
+        pvec *= Geom::Translate(A).inverse();
+        pvec *= Geom::Rotate(Geom::rad_from_deg(mark_angle));
+        pvec *= Geom::Translate(A);
+        seg = paths_to_pw(pvec);  
+    }
     return seg;
 }
 

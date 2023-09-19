@@ -56,6 +56,7 @@ private:
     ScalarParam mark_length;
     ScalarParam minor_mark_length;
     ScalarParam major_mark_steps;
+    ScalarParam mark_angle;
     ScalarParam shift;
     EnumParam<MarkDirType> mark_dir;
     ScalarParam offset;
