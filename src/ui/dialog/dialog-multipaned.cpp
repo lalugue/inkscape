@@ -15,11 +15,12 @@
 #include <iostream>
 #include <numeric>
 #include <glibmm/i18n.h>
+#include <gtkmm/drawingarea.h>
 #include <gtkmm/eventbox.h>
-#include <gtkmm/gesturedrag.h>
 #include <gtkmm/gesturemultipress.h>
 #include <gtkmm/image.h>
 #include <gtkmm/label.h>
+#include <gtkmm/overlay.h>
 #include <sigc++/functors/mem_fun.h>
 
 #include "dialog-multipaned.h"
@@ -95,7 +96,7 @@ MyDropZone::MyDropZone(Gtk::Orientation orientation)
 
     get_style_context()->add_class("backgnd-passive");
 
-    signal_drag_motion().connect([=](const Glib::RefPtr<Gdk::DragContext>& ctx, int x, int y, guint time) {
+    signal_drag_motion().connect([=](Glib::RefPtr<Gdk::DragContext> const &/*ctx*/, int x, int y, guint time) {
         if (!_active) {
             _active = true;
             add_highlight();
@@ -104,7 +105,7 @@ MyDropZone::MyDropZone(Gtk::Orientation orientation)
         return true;
     });
 
-    signal_drag_leave().connect([=](const Glib::RefPtr<Gdk::DragContext>&, guint time) {
+    signal_drag_leave().connect([=](Glib::RefPtr<Gdk::DragContext> const &/*ctx*/, guint time) {
         if (_active) {
             _active = false;
             set_size(DROPZONE_SIZE);
@@ -165,7 +166,7 @@ void MyDropZone::set_size(int size)
  */
 class MyHandle final
     : public Gtk::Orientable
-    , public Gtk::EventBox
+    , public Gtk::Overlay
 {
 public:
     MyHandle(Gtk::Orientation orientation, int size);
@@ -183,15 +184,16 @@ private:
 
     Gtk::EventSequenceState on_click_pressed (Gtk::GestureMultiPress const &gesture,
                                               int n_press, double x, double y);
-    Gtk::EventSequenceState on_click_released(Gtk::GestureMultiPress &gesture,
+    Gtk::EventSequenceState on_click_released(Gtk::GestureMultiPress const &gesture,
                                               int n_press, double x, double y);
 
     void toggle_multipaned();
     void update_click_indicator(double x, double y);
     void show_click_indicator(bool show);
-    bool on_draw(const Cairo::RefPtr<Cairo::Context>& cr) final;
+    bool on_drawing_area_draw(Cairo::RefPtr<Cairo::Context> const &cr);
     Cairo::Rectangle get_active_click_zone();
 
+    Gtk::DrawingArea * const _drawing_area;
     int _cross_size;
     Gtk::Widget *_child;
     void resize_handler(Gtk::Allocation &allocation);
@@ -206,7 +208,8 @@ private:
 MyHandle::MyHandle(Gtk::Orientation orientation, int size = get_handle_size())
     : Glib::ObjectBase("MultipanedHandle")
     , Gtk::Orientable()
-    , Gtk::EventBox()
+    , Gtk::Overlay{}
+    , _drawing_area{Gtk::make_managed<Gtk::DrawingArea>()}
     , _cross_size(0)
     , _child(nullptr)
 {
@@ -224,15 +227,17 @@ MyHandle::MyHandle(Gtk::Orientation orientation, int size = get_handle_size())
     image->set_pixel_size(size);
     add(*image);
 
-    // Signal
+    _drawing_area->signal_draw().connect(sigc::mem_fun(*this, &MyHandle::on_drawing_area_draw));
+    add_overlay(*_drawing_area);
+
     signal_size_allocate().connect(sigc::mem_fun(*this, &MyHandle::resize_handler));
 
     Controller::add_motion<&MyHandle::on_motion_enter ,
                            &MyHandle::on_motion_motion,
                            &MyHandle::on_motion_leave >
-                          (*this, *this, Gtk::PHASE_TARGET);
+                          (*_drawing_area, *this, Gtk::PHASE_TARGET);
 
-    Controller::add_click(*this,
+    Controller::add_click(*_drawing_area,
                           sigc::mem_fun(*this, &MyHandle::on_click_pressed ),
                           sigc::mem_fun(*this, &MyHandle::on_click_released),
                           Controller::Button::any, Gtk::PHASE_TARGET);
@@ -256,18 +261,15 @@ Cairo::Rectangle MyHandle::get_active_click_zone() {
     double width = allocation.get_width();
     double height = allocation.get_height();
     double h = height / 5;
-
     Cairo::Rectangle rect = { .x = 0, .y = (height - h) / 2, .width = width, .height = h };
     return rect;
 }
 
-bool MyHandle::on_draw(const Cairo::RefPtr<Cairo::Context>& cr) {
-    bool ret = EventBox::on_draw(cr);
-
+bool MyHandle::on_drawing_area_draw(Cairo::RefPtr<Cairo::Context> const &cr)
+{
     // show click indicator/highlight?
     if (_click_indicator && is_click_resize_active() && !_dragging) {
         auto rect = get_active_click_zone();
-
         if (rect.width > 4 && rect.height > 0) {
             auto const fg = get_foreground_color(get_style_context());
             rounded_rectangle(cr, rect.x + 2, rect.y, rect.width - 4, rect.height, 3);
@@ -275,15 +277,14 @@ bool MyHandle::on_draw(const Cairo::RefPtr<Cairo::Context>& cr) {
             cr->fill();
         }
     }
-
-    return ret;
+    return true;
 }
 
 void MyHandle::set_dragging(bool dragging) {
     if (_dragging != dragging) {
         _dragging = dragging;
         if (_click_indicator) {
-            queue_draw();
+            _drawing_area->queue_draw();
         }
     }
 }
@@ -314,6 +315,7 @@ void MyHandle::on_motion_enter(GtkEventControllerMotion const * /*motion*/,
 
 void MyHandle::on_motion_leave(GtkEventControllerMotion const * /*motion*/)
 {
+    get_window()->set_cursor({});
     show_click_indicator(false);
 }
 
@@ -322,7 +324,7 @@ void MyHandle::show_click_indicator(bool show) {
 
     if (show != _click_indicator) {
         _click_indicator = show;
-        this->queue_draw();
+        _drawing_area->queue_draw();
     }
 }
 
@@ -350,7 +352,7 @@ Gtk::EventSequenceState MyHandle::on_click_pressed(Gtk::GestureMultiPress const 
     return Gtk::EVENT_SEQUENCE_NONE;
 }
 
-Gtk::EventSequenceState MyHandle::on_click_released(Gtk::GestureMultiPress &gesture,
+Gtk::EventSequenceState MyHandle::on_click_released(Gtk::GestureMultiPress const &gesture,
                                                     int /*n_press*/, double /*x*/, double /*y*/)
 {
     // single-click on active zone?
@@ -1335,32 +1337,32 @@ void DialogMultipaned::set_target_entries(const std::vector<Gtk::TargetEntry> &t
         ->drag_dest_set(target_entries, Gtk::DEST_DEFAULT_ALL, Gdk::ACTION_MOVE);
 }
 
-void DialogMultipaned::on_drag_data(const Glib::RefPtr<Gdk::DragContext> context, int x, int y,
+void DialogMultipaned::on_drag_data(Glib::RefPtr<Gdk::DragContext> const &context, int x, int y,
                                     const Gtk::SelectionData &selection_data, guint info, guint time)
 {
     _signal_prepend_drag_data.emit(context);
 }
 
-void DialogMultipaned::on_prepend_drag_data(const Glib::RefPtr<Gdk::DragContext> context, int x, int y,
+void DialogMultipaned::on_prepend_drag_data(Glib::RefPtr<Gdk::DragContext> const &context, int x, int y,
                                             const Gtk::SelectionData &selection_data, guint info, guint time)
 {
     _signal_prepend_drag_data.emit(context);
 }
 
-void DialogMultipaned::on_append_drag_data(const Glib::RefPtr<Gdk::DragContext> context, int x, int y,
+void DialogMultipaned::on_append_drag_data(Glib::RefPtr<Gdk::DragContext> const &context, int x, int y,
                                            const Gtk::SelectionData &selection_data, guint info, guint time)
 {
     _signal_append_drag_data.emit(context);
 }
 
 // Signals
-sigc::signal<void (const Glib::RefPtr<Gdk::DragContext>)> DialogMultipaned::signal_prepend_drag_data()
+sigc::signal<void (Glib::RefPtr<Gdk::DragContext> const &)> DialogMultipaned::signal_prepend_drag_data()
 {
     resize_widget_children(this);
     return _signal_prepend_drag_data;
 }
 
-sigc::signal<void (const Glib::RefPtr<Gdk::DragContext>)> DialogMultipaned::signal_append_drag_data()
+sigc::signal<void (Glib::RefPtr<Gdk::DragContext> const &)> DialogMultipaned::signal_append_drag_data()
 {
     resize_widget_children(this);
     return _signal_append_drag_data;

@@ -58,8 +58,8 @@ public:
     bool has_empty_widget() { return (bool)_empty_widget; }
 
     // Signals
-    sigc::signal<void (const Glib::RefPtr<Gdk::DragContext>)> signal_prepend_drag_data();
-    sigc::signal<void (const Glib::RefPtr<Gdk::DragContext>)> signal_append_drag_data();
+    sigc::signal<void (Glib::RefPtr<Gdk::DragContext> const &)> signal_prepend_drag_data();
+    sigc::signal<void (Glib::RefPtr<Gdk::DragContext> const &)> signal_append_drag_data();
     sigc::signal<void ()> signal_now_empty();
 
     // UI functions
@@ -88,8 +88,8 @@ protected:
     void on_remove(Gtk::Widget *child) override;
 
     // Signals
-    sigc::signal<void (const Glib::RefPtr<Gdk::DragContext>)> _signal_prepend_drag_data;
-    sigc::signal<void (const Glib::RefPtr<Gdk::DragContext>)> _signal_append_drag_data;
+    sigc::signal<void (Glib::RefPtr<Gdk::DragContext> const &)> _signal_prepend_drag_data;
+    sigc::signal<void (Glib::RefPtr<Gdk::DragContext> const &)> _signal_append_drag_data;
     sigc::signal<void ()> _signal_now_empty;
 
 private:
@@ -115,11 +115,11 @@ private:
     Gtk::EventSequenceState on_drag_end   (Gtk::GestureDrag const &gesture, double offset_x, double offset_y);
     Gtk::EventSequenceState on_drag_update(Gtk::GestureDrag const &gesture, double offset_x, double offset_y);
     // drag+drop data
-    void on_drag_data(const Glib::RefPtr<Gdk::DragContext> context, int x, int y,
+    void on_drag_data(Glib::RefPtr<Gdk::DragContext> const &context, int x, int y,
                       const Gtk::SelectionData &selection_data, guint info, guint time);
-    void on_prepend_drag_data(const Glib::RefPtr<Gdk::DragContext> context, int x, int y,
+    void on_prepend_drag_data(Glib::RefPtr<Gdk::DragContext> const &context, int x, int y,
                               const Gtk::SelectionData &selection_data, guint info, guint time);
-    void on_append_drag_data(const Glib::RefPtr<Gdk::DragContext> context, int x, int y,
+    void on_append_drag_data(Glib::RefPtr<Gdk::DragContext> const &context, int x, int y,
                              const Gtk::SelectionData &selection_data, guint info, guint time);
 
     // Others
