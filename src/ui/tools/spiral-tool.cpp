@@ -167,7 +167,7 @@ bool SpiralTool::root_handler(CanvasEvent const &event)
         },
         [&] (ButtonReleaseEvent const &event) {
             xyp = {};
-            if (event.button == 1) {
+            if (dragging && event.button == 1) {
                 dragging = false;
                 discard_delayed_snap_event();
 
