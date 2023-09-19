@@ -1,7 +1,4 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-#ifndef SEEN_CONTEXTMENU_H
-#define SEEN_CONTEXTMENU_H
-
 /*
  * Context menu
  *
@@ -13,10 +10,16 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include <vector>
+#ifndef SEEN_CONTEXTMENU_H
+#define SEEN_CONTEXTMENU_H
 
-#include <gtkmm/menu.h>
-#include <giomm.h>
+#include <vector>
+#include <glibmm/refptr.h>
+#include <gtkmm/popover.h>
+
+namespace Gio {
+class SimpleActionGroup;
+} // namespace Gio
 
 class SPDesktop;
 class SPDocument;
@@ -26,16 +29,12 @@ class SPItem;
 /**
  * Implements the Inkscape context menu.
  */
-class ContextMenu : public Gtk::Menu
+class ContextMenu final : public Gtk::Popover
 {
 public:
     ContextMenu(SPDesktop *desktop, SPObject *object, bool hide_layers_and_objects_menu_item = false);
-    ~ContextMenu() override = default;
 
 private:
-    static void AppendItemFromAction(Glib::RefPtr<Gio::Menu> gmenu, Glib::ustring action,
-                                     Glib::ustring label, Glib::ustring icon = "");
-    static Glib::RefPtr<Gio::Menu> create_clipboard_actions(bool paste_only = false);
     // Used for unlock and unhide actions
     Glib::RefPtr<Gio::SimpleActionGroup> action_group;
     std::vector<SPItem *> items_under_cursor;

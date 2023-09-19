@@ -15,11 +15,12 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#include "ui/tools/tool-base.h"
+
+#include <set>
 #include <gdk/gdkkeysyms.h>
 #include <gdkmm/display.h>
 #include <glibmm/i18n.h>
-
-#include <set>
 
 #include "desktop-events.h"
 #include "desktop-style.h"
@@ -31,7 +32,6 @@
 #include "selcue.h"
 #include "selection-chemistry.h"
 #include "selection.h"
-
 #include "actions/actions-tools.h"
 #include "display/control/canvas-item-catchall.h" // Grab/Ungrab
 #include "display/control/snap-indicator.h"
@@ -45,6 +45,7 @@
 #include "ui/knot/knot-holder.h"
 #include "ui/knot/knot-ptr.h"
 #include "ui/modifiers.h"
+#include "ui/popup-menu.h"
 #include "ui/shape-editor.h"
 #include "ui/shortcuts.h"
 #include "ui/tool/control-point.h"
@@ -52,7 +53,6 @@
 #include "ui/tools/dropper-tool.h"
 #include "ui/tools/node-tool.h"
 #include "ui/tools/select-tool.h"
-#include "ui/tools/tool-base.h"
 #include "ui/widget/canvas.h"
 #include "ui/widget/canvas-grid.h"
 #include "ui/widget/events/canvas-event.h"
@@ -1347,16 +1347,19 @@ void ToolBase::menu_popup(CanvasEvent const &event, SPObject *obj)
         }
     }
 
-    auto menu = new ContextMenu(_desktop, obj);
-    menu->attach_to_widget(*_desktop->getCanvas()); // So actions work!
-    menu->set_visible(true);
+    auto const popup = [&](auto const &event)
+    {
+        auto menu = std::make_shared<ContextMenu>(_desktop, obj);
+        UI::popup_at(*menu, *_desktop->getCanvas(), event.orig_pos);
+        UI::on_hide_reset(std::move(menu));
+    };
 
     inspect_event(event,
         [&] (ButtonPressEvent const &event) {
-            menu->popup_at_pointer(event.original.get());
+            popup(event);
         },
         [&] (KeyPressEvent const &event) {
-            menu->popup_at_pointer(event.original.get());
+            popup(event);
         },
         [&] (CanvasEvent const &event) {}
     );

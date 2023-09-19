@@ -338,9 +338,9 @@ SpinButtonToolItem::set_icon(const Glib::ustring& icon_name)
 bool
 SpinButtonToolItem::on_popup_menu(PopupMenuOptionalClick)
 {
-    auto const numeric_menu = create_numeric_menu();
+    auto numeric_menu = create_numeric_menu();
     numeric_menu->popup_at_center(*_hbox);
-    UI::on_hide_reset(numeric_menu);
+    UI::on_hide_reset(std::move(numeric_menu));
     return true;
 }
 

@@ -20,12 +20,18 @@
 #include <sigc++/connection.h>
 #include <sigc++/slot.h>
 
+namespace Geom {
+class Point;
+} // namespace Geom
+
 namespace Gtk {
 class Popover;
 class Widget;
 } // namespace Gtk
 
-namespace Inkscape::UI {
+namespace Inkscape {
+
+namespace UI {
 
 /// Information from a GestureMultiPress if a popup menu was opened by click
 struct PopupMenuClick final { int const n_press{}; double const x{}, y{}; };
@@ -44,17 +50,22 @@ sigc::connection on_popup_menu(Gtk::Widget &widget, PopupMenuSlot slot);
 
 /// Connects ::hide of widget to reset() the shared_ptr i.e. to ‘self-destruct’.
 /// @returns A connection that can be used to disconnect & prevent self-destruct
-sigc::connection on_hide_reset(std::shared_ptr<Gtk::Widget> const &widget);
+sigc::connection on_hide_reset(std::shared_ptr<Gtk::Widget> widget);
 
 /// Replace Gtk::Menu::popup_at_pointer. If x or y
 /// offsets != 0, :pointing-to is set to {x,y,1,1}
 void popup_at(Gtk::Popover &popover, Gtk::Widget &relative_to,
               int x_offset = 0, int y_offset = 0);
+/// @copydoc popup_at()
+void popup_at(Gtk::Popover &popover, Gtk::Widget &relative_to,
+              std::optional<Geom::Point> const &offset);
 
 /// As popup_at() but point to center of widget
 void popup_at_center(Gtk::Popover &popover, Gtk::Widget &relative_to);
 
-} // namespace Inkscape::UI
+} // namespace UI
+
+} // namespace Inkscape
 
 #endif // SEEN_UI_POPUP_MENU_H
 

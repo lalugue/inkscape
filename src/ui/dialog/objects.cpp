@@ -61,6 +61,7 @@
 #include "ui/icon-loader.h"
 #include "ui/icon-names.h"
 #include "ui/pack.h"
+#include "ui/popup-menu.h"
 #include "ui/selected-color.h"
 #include "ui/shortcuts.h"
 #include "ui/tools/node-tool.h"
@@ -1632,10 +1633,11 @@ Gtk::EventSequenceState ObjectsPanel::on_click(Gtk::GestureMultiPress const &ges
             if (layer && !selection->includes(layer)) {
                 getDesktop()->layerManager().setCurrentLayer(item, true);
             }
-            ContextMenu *menu = new ContextMenu(getDesktop(), item, true); // true == hide menu item for opening this dialog!
-            menu->attach_to_widget(*this); // So actions work!
-            menu->show();
-            menu->popup_at_pointer(nullptr);
+
+            // true == hide menu item for opening this dialog!
+            auto menu = std::make_shared<ContextMenu>(getDesktop(), item, true);
+            UI::popup_at(*menu, *this, ex, ey);
+            UI::on_hide_reset(std::move(menu));
         } else if (should_set_current_layer()) {
             getDesktop()->layerManager().setCurrentLayer(item, true);
         } else {

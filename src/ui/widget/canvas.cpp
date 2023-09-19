@@ -929,7 +929,6 @@ Gtk::EventSequenceState Canvas::on_button_pressed(Gtk::GestureMultiPress const &
     event.time = gdkevent->button.time;
     event.num_press = 1;
     event.extinput = extinput_from_gdkevent(gdkevent.get());
-    event.original = std::move(gdkevent);
 
     bool result = d->process_event(event);
 
@@ -1050,6 +1049,7 @@ bool Canvas::on_key_pressed(GtkEventControllerKey const * /*controller*/,
     event.group = gdkevent->key.group;
     event.time = gdkevent->key.time;
     event.original = std::move(gdkevent);
+    event.pos = d->last_mouse;
 
     return d->process_event(event);
 }
@@ -1069,6 +1069,7 @@ bool Canvas::on_key_released(GtkEventControllerKey const * /*controller*/,
     event.group = gdkevent->key.group;
     event.time = gdkevent->key.time;
     event.original = std::move(gdkevent);
+    event.pos = d->last_mouse;
 
     return d->process_event(event);
 }
@@ -1380,7 +1381,12 @@ bool CanvasPrivate::emit_event(CanvasEvent &event)
     }
 
     // Convert to world coordinates.
-    auto conv = [&, this] (Geom::Point &p) {
+    auto conv = [&, this](Geom::Point &p, Geom::Point *orig_pos = nullptr) {
+        // Store orig point in case anyone needs it for widget-relative positioning.
+        if (orig_pos) {
+            *orig_pos = p;
+        }
+
         p += q->_pos;
         if (stores.mode() == Stores::Mode::Decoupled) {
             p = p * q->_affine.inverse() * canvasitem_ctx->affine();
@@ -1390,7 +1396,13 @@ bool CanvasPrivate::emit_event(CanvasEvent &event)
     inspect_event(event,
         [&] (EnterEvent &event) { conv(event.pos); },
         [&] (MotionEvent &event) { conv(event.pos); },
-        [&] (ButtonEvent &event) { conv(event.pos); },
+        [&] (ButtonEvent &event) { conv(event.pos, &event.orig_pos); },
+        [&] (KeyEvent &event) {
+            if (event.pos) {
+                event.orig_pos.emplace();
+                conv(*event.pos, &*event.orig_pos);
+            }
+        },
         [&] (CanvasEvent &event) {}
     );
 

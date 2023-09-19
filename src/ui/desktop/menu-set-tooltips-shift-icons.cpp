@@ -76,45 +76,50 @@ set_tooltips_and_shift_icons(Gtk::Widget &menu, bool const shift_icons)
 
     Inkscape::UI::for_each_child(menu, [&](Gtk::Widget &child)
     {
-        auto const menuitem = dynamic_cast<Gtk::MenuItem *>(&child);
-        if (!menuitem) {
-            return Inkscape::UI::ForEachResult::_continue;
-        }
-
-        auto submenu = menuitem->get_submenu();
-        if (submenu) {
-            shifted = set_tooltips_and_shift_icons(*submenu, shift_icons);
-        }
-
+        Gtk::Widget *widget = nullptr;
         Gtk::Box *box = nullptr;
+        Glib::ustring label;
 
-        auto label = menuitem->get_label();
-        if (label.empty()) {
-            box = dynamic_cast<Gtk::Box *>(menuitem->get_child());
-            if (!box) {
-                return Inkscape::UI::ForEachResult::_continue;
+        if (auto const menuitem = dynamic_cast<Gtk::MenuItem *>(&child)) {
+            widget = menuitem;
+
+            auto submenu = menuitem->get_submenu();
+            if (submenu) {
+                shifted = set_tooltips_and_shift_icons(*submenu, shift_icons);
             }
 
-            label = find_label(*box);
+            label = menuitem->get_label();
+            if (label.empty()) {
+                box = dynamic_cast<Gtk::Box *>(menuitem->get_child());
+                if (box) {
+                    label = find_label(*box);
+                }
+            }
+        } else if (child.get_name() == "modelbutton") {
+            widget = &child;
+            box = dynamic_cast<Gtk::Box *>(Inkscape::UI::get_first_child(*widget));
+            if (box) {
+                label = find_label(*box);
+            }
         }
 
-        if (label.empty()) {
+        if (!widget || label.empty()) {
             return Inkscape::UI::ForEachResult::_continue;
         }
 
         auto it = label_to_tooltip_map.find(label);
         if (it != label_to_tooltip_map.end()) {
-            menuitem->set_tooltip_text(it->second);
+            widget->set_tooltip_text(it->second);
         }
 
         if (!shift_icons || shifted || !box) {
             return Inkscape::UI::ForEachResult::_continue;
         }
 
-
         width += box->get_spacing();
-        auto const margin_side = menuitem->get_direction() == Gtk::TEXT_DIR_RTL ? "right" : "left";
-        auto const css_str = Glib::ustring::compose(".shifticonmenu box { margin-%1: -%2px; }",
+        auto const margin_side = widget->get_direction() == Gtk::TEXT_DIR_RTL ? "right" : "left";
+        auto const css_str = Glib::ustring::compose(".shifticonmenu menuitem box { margin-%1: -%2px; }"
+                                                    ".shifticonmenu modelbutton box > label:only-child { margin-%1: %2px; }",
                                                     margin_side, width);
         Glib::RefPtr<Gtk::CssProvider> provider = Gtk::CssProvider::create();
         provider->load_from_data(css_str);

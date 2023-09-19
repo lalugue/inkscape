@@ -36,6 +36,9 @@ void menuize(Gtk::Widget &widget);
 /// Temporarily disable :relative-to widget tooltip @ ::show; restore @ ::closed
 void autohide_tooltip(Gtk::Popover &popover);
 
+/// menuize() all ModelButtons in @a Popover
+void menuize_popover(Gtk::Popover &popover);
+
 /// Create Popover bound to model, attached to the relative_to widget, with menuize()d ModelButtons
 [[nodiscard]] std::unique_ptr<Gtk::Popover>
     make_menuized_popover(Glib::RefPtr<Gio::MenuModel> model, Gtk::Widget &relative_to);

@@ -27,6 +27,11 @@
 #include "contextmenu.h"
 
 #include <glibmm/i18n.h>
+#include <giomm/icon.h>
+#include <giomm/menu.h>
+#include <giomm/menuitem.h>
+#include <giomm/simpleactiongroup.h>
+#include <gtkmm/image.h>
 #include <gtkmm/window.h>
 
 #include "desktop.h"
@@ -34,15 +39,65 @@
 #include "layer-manager.h"
 #include "page-manager.h"
 #include "selection.h"
-
 #include "object/sp-anchor.h"
 #include "object/sp-image.h"
 #include "object/sp-page.h"
 #include "object/sp-shape.h"
 #include "object/sp-text.h"
-
 #include "ui/desktop/menu-set-tooltips-shift-icons.h"
+#include "ui/menuize.h"
 #include "ui/util.h"
+
+static void
+AppendItemFromAction(Glib::RefPtr<Gio::Menu> const &gmenu,
+                     Glib::ustring const &action,
+                     Glib::ustring const &label,
+                     Glib::ustring const &icon = {})
+{
+    Inkscape::Preferences *prefs = Inkscape::Preferences::get();
+    bool show_icons = prefs->getInt("/theme/menuIcons", true);
+
+    auto menu_item = Gio::MenuItem::create(label, action);
+    if (icon != "" && show_icons) {
+        auto _icon = Gio::Icon::create(icon);
+        menu_item->set_icon(_icon);
+    }
+    gmenu->append_item(menu_item);
+}
+
+/** @brief Create a menu section containing the standard editing actions:
+ *         Cut, Copy, Paste.
+ *
+ *  @param paste_only If true, only the Paste action will be included.
+ *  @return A new menu containing the requested actions.
+ */
+static Glib::RefPtr<Gio::Menu> create_clipboard_actions(bool const paste_only = false)
+{
+    auto result = Gio::Menu::create();
+    if (!paste_only) {
+        AppendItemFromAction(result, "app.cut",  _("Cu_t"),  "edit-cut");
+        AppendItemFromAction(result, "app.copy", _("_Copy"), "edit-copy");
+    }
+    AppendItemFromAction(result, "win.paste", _("_Paste"), "edit-paste");
+    return result;
+}
+
+/// Recursively force all Image descendants with :storage-type other than EMPTY to :visible = TRUE.
+/// We have to do this this if using Gio::Menu with icons as GTK, in its vast genius, doesnʼt think
+/// those should ever actually be visible in the majority of cases. So, we just have to fight it 🤷
+/// We donʼt show images if :storage-type == EMPTY so that shift_icons() can select on :only-child.
+void show_all_images(Gtk::Widget &parent)
+{
+    Inkscape::UI::for_each_descendant(parent, [=](Gtk::Widget &child)
+    {
+        if (auto const image = dynamic_cast<Gtk::Image *>(&child);
+            image && image->get_storage_type() != Gtk::IMAGE_EMPTY)
+        {
+            image->set_visible(true);
+        }
+        return Inkscape::UI::ForEachResult::_continue;
+    });
+}
 
 ContextMenu::ContextMenu(SPDesktop *desktop, SPObject *object, bool hide_layers_and_objects_menu_item)
 {
@@ -185,11 +240,11 @@ ContextMenu::ContextMenu(SPDesktop *desktop, SPObject *object, bool hide_layers_
                 // Groups and Layers
                 gmenu_section = Gio::Menu::create();
                 AppendItemFromAction(     gmenu_section, "win.selection-move-to-layer",         _("_Move to Layer..."),     ""                                );
-                AppendItemFromAction(     gmenu_section, "app.selection-link",                  _("Create anchor (hyperlink)"),   ""                          );
+                AppendItemFromAction(     gmenu_section, "app.selection-link",                  _("Create Anchor (Hyperlink)"),   ""                          );
                 AppendItemFromAction(     gmenu_section, "app.selection-group",                 _("_Group"),                ""                                );
                 if (is<SPGroup>(item)) {
                     AppendItemFromAction( gmenu_section, "app.selection-ungroup",               _("_Ungroup"),              ""                                );
-                    Glib::ustring label = Glib::ustring::compose(_("Enter group %1"), item->defaultLabel());
+                    Glib::ustring label = Glib::ustring::compose(_("Enter Group %1"), item->defaultLabel());
                     AppendItemFromAction( gmenu_section, "win.selection-group-enter",           label,                      ""                                );
                     if (!layer && (item->getParentGroup()->isLayer() || item->getParentGroup() == root)) {
                         // A layer should be a child of root or another layer.
@@ -198,8 +253,8 @@ ContextMenu::ContextMenu(SPDesktop *desktop, SPObject *object, bool hide_layers_
                 }
                 auto group = cast<SPGroup>(item->parent);
                 if (group && !group->isLayer()) {
-                    AppendItemFromAction( gmenu_section, "win.selection-group-exit",            _("Exit group"),            ""                                );
-                    AppendItemFromAction( gmenu_section, "app.selection-ungroup-pop",           _("_Pop selection out of group"), ""                          );
+                    AppendItemFromAction( gmenu_section, "win.selection-group-exit",            _("Exit Group"),            ""                                );
+                    AppendItemFromAction( gmenu_section, "app.selection-ungroup-pop",           _("_Pop Selection out of Group"), ""                          );
                 }
                 gmenu->append_section(gmenu_section);
 
@@ -231,7 +286,7 @@ ContextMenu::ContextMenu(SPDesktop *desktop, SPObject *object, bool hide_layers_
                 // Anchor menu
                 gmenu_section = Gio::Menu::create();
                 AppendItemFromAction(     gmenu_section, "win.dialog-open('ObjectAttributes')", _("Link _Properties..."),   ""                                );
-                AppendItemFromAction(     gmenu_section, "app.element-a-open-link",             _("_Open link in browser"), ""                                );
+                AppendItemFromAction(     gmenu_section, "app.element-a-open-link",             _("_Open Link in Browser"), ""                                );
                 AppendItemFromAction(     gmenu_section, "app.selection-ungroup",               _("_Remove Link"),          ""                                );
                 AppendItemFromAction(     gmenu_section, "win.selection-group-enter",           _("Enter Group"),           ""                                );
                 gmenu->append_section(gmenu_section);
@@ -247,7 +302,6 @@ ContextMenu::ContextMenu(SPDesktop *desktop, SPObject *object, bool hide_layers_
             AppendItemFromAction( gmenu_section, "ctx.unlock-objects-below-cursor",     _("Unlock Objects Below Cursor"),  ""                         );
         }
         gmenu->append_section(gmenu_section);
-
     } else {
         // Layers: Only used in "Layers and Objects" dialog.
 
@@ -265,21 +319,24 @@ ContextMenu::ContextMenu(SPDesktop *desktop, SPObject *object, bool hide_layers_
         gmenu->append_section(gmenu_section);
 
         gmenu_section = Gio::Menu::create();
-        AppendItemFromAction(gmenu_section,     "win.layer-hide-toggle-others", _("_Hide/show other layers"),    "");
-        AppendItemFromAction(gmenu_section,     "win.layer-hide-all",           _("_Hide all layers"),           "");
-        AppendItemFromAction(gmenu_section,     "win.layer-unhide-all",         _("_Show all layers"),           "");
+        AppendItemFromAction(gmenu_section,     "win.layer-hide-toggle-others", _("_Hide/Show Other Layers"),    "");
+        AppendItemFromAction(gmenu_section,     "win.layer-hide-all",           _("_Hide All Layers"),           "");
+        AppendItemFromAction(gmenu_section,     "win.layer-unhide-all",         _("_Show All Layers"),           "");
         gmenu->append_section(gmenu_section);
 
         gmenu_section = Gio::Menu::create();
-        AppendItemFromAction(gmenu_section,     "win.layer-lock-toggle-others", _("_Lock/unlock other layers"),  "");
-        AppendItemFromAction(gmenu_section,     "win.layer-lock-all",           _("_Lock all layers"),           "");
-        AppendItemFromAction(gmenu_section,     "win.layer-unlock-all",         _("_Unlock all layers"),         "");
+        AppendItemFromAction(gmenu_section,     "win.layer-lock-toggle-others", _("_Lock/Unlock Other Layers"),  "");
+        AppendItemFromAction(gmenu_section,     "win.layer-lock-all",           _("_Lock All Layers"),           "");
+        AppendItemFromAction(gmenu_section,     "win.layer-unlock-all",         _("_Unlock All Layers"),         "");
         gmenu->append_section(gmenu_section);
 
     }
     // clang-tidy on
 
-    bind_model(gmenu, true);
+    bind_model(gmenu);
+    set_position(Gtk::POS_BOTTOM);
+    show_all_images(*this);
+    Inkscape::UI::menuize_popover(*this);
 
     // Do not install this CSS provider; it messes up menus with icons (like popup menu with all dialogs).
     // It doesn't work well with context menu either, introducing disturbing visual glitch 
@@ -300,37 +357,6 @@ ContextMenu::ContextMenu(SPDesktop *desktop, SPObject *object, bool hide_layers_
             get_style_context()->add_class("regular");
         }
     }
-}
-
-/** @brief Create a menu section containing the standard editing actions:
- *         Cut, Copy, Paste.
- *
- *  @param paste_only If true, only the Paste action will be included.
- *  @return A new menu containing the requested actions.
- */
-Glib::RefPtr<Gio::Menu> ContextMenu::create_clipboard_actions(bool paste_only)
-{
-    auto result = Gio::Menu::create();
-    if (!paste_only) {
-        AppendItemFromAction(result, "app.cut",  _("Cu_t"),  "edit-cut");
-        AppendItemFromAction(result, "app.copy", _("_Copy"), "edit-copy");
-    }
-    AppendItemFromAction(result, "win.paste", _("_Paste"), "edit-paste");
-    return result;
-}
-
-void
-ContextMenu::AppendItemFromAction(Glib::RefPtr<Gio::Menu> gmenu, Glib::ustring action, Glib::ustring label, Glib::ustring icon)
-{
-    Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-    bool show_icons = prefs->getInt("/theme/menuIcons", true);
-
-    auto menu_item = Gio::MenuItem::create(label, action);
-    if (icon != "" && show_icons) {
-        auto _icon = Gio::Icon::create(icon);
-        menu_item->set_icon(_icon);
-    }
-    gmenu->append_item(menu_item);
 }
 
 void

@@ -73,6 +73,9 @@ Gtk::Widget *get_bin_child(Gtk::Widget &widget);
 /// If widget is Gtk::Container, returns its children(), otherwise empty vector.
 /// Accessing children changes between GTK3 & GTK4, so best consolidate it here.
 std::vector<Gtk::Widget *> get_children(Gtk::Widget &widget);
+/// If widget is Gtk::Container return its 1st child, otherwise returns nullptr.
+/// Accessing children changes between GTK3 & GTK4, so best consolidate it here.
+Gtk::Widget *get_first_child(Gtk::Widget &widget);
 /// For each child in get_children(widget), call widget.remove(*child). May not cause delete child!
 void remove_all_children(Gtk::Widget &widget);
 /// For each child in get_children(widget), call widget.remove(*child) then also do `delete child`.

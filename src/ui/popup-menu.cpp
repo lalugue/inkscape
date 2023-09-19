@@ -15,6 +15,7 @@
 #include "popup-menu.h"
 
 #include <utility>
+#include <2geom/point.h>
 #include <gtkmm/gesturemultipress.h>
 #include <gtkmm/popover.h>
 #include <gtkmm/widget.h>
@@ -66,9 +67,9 @@ sigc::connection on_popup_menu(Gtk::Widget &widget, PopupMenuSlot slot)
     return sigc::connection{managed_slot};
 }
 
-sigc::connection on_hide_reset(std::shared_ptr<Gtk::Widget> const &widget)
+sigc::connection on_hide_reset(std::shared_ptr<Gtk::Widget> widget)
 {
-    return widget->signal_hide().connect( [widget = widget]() mutable { widget.reset(); });
+    return widget->signal_hide().connect( [widget = std::move(widget)]() mutable { widget.reset(); });
 }
 
 void popup_at(Gtk::Popover &popover, Gtk::Widget &relative_to,
@@ -84,6 +85,14 @@ void popup_at(Gtk::Popover &popover, Gtk::Widget &relative_to,
 
     popover.show_all_children();
     popover.popup();
+}
+
+void popup_at(Gtk::Popover &popover, Gtk::Widget &relative_to,
+              std::optional<Geom::Point> const &offset)
+{
+    auto const x_offset = offset ? offset->x() : 0;
+    auto const y_offset = offset ? offset->y() : 0;
+    popup_at(popover, relative_to, x_offset, y_offset);
 }
 
 void popup_at_center(Gtk::Popover &popover, Gtk::Widget &relative_to)

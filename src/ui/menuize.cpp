@@ -16,7 +16,6 @@
 #include <utility>
 #include <gtk/gtk.h> // GtkEventControllerMotion
 #include <giomm/menumodel.h>
-#include <gtkmm/container.h>
 #include <gtkmm/eventcontroller.h>
 #include <gtkmm/modelbutton.h>
 #include <gtkmm/popovermenu.h>
@@ -81,9 +80,9 @@ void menuize(Gtk::Widget &widget)
 }
 
 template <typename Type>
-static void menuize_all(Gtk::Container &container)
+static void menuize_all(Gtk::Widget &parent)
 {
-    for_each_descendant(container, [=](Gtk::Widget &child)
+    for_each_descendant(parent, [=](Gtk::Widget &child)
     {
         if (auto const typed = dynamic_cast<Type *>(&child)) {
             menuize(*typed);
@@ -108,17 +107,22 @@ void autohide_tooltip(Gtk::Popover &popover)
     });
 }
 
+void menuize_popover(Gtk::Popover &popover)
+{
+    popover.get_style_context()->add_class("menuize");
+    menuize_all<Gtk::ModelButton>(popover);
+    autohide_tooltip(popover);
+    // TODO: GTK4.14: Be more GtkMenu-like by using PopoverMenu::Flags::NESTED
+}
+
 std::unique_ptr<Gtk::Popover>
 make_menuized_popover(Glib::RefPtr<Gio::MenuModel> model, Gtk::Widget &relative_to)
 {
     // TODO: GTK4: Be more GtkMenu-like by using PopoverMenu::Flags::NESTED
     auto popover = std::make_unique<Gtk::PopoverMenu>();
-    popover->get_style_context()->add_class("menuize");
     popover->bind_model(std::move(model));
     popover->set_relative_to(relative_to);
-    menuize_all<Gtk::ModelButton>(*popover);
-    autohide_tooltip(*popover);
-    popover->show_all_children();
+    menuize_popover(*popover);
     return popover;
 }
 

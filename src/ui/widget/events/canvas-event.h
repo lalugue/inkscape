@@ -101,8 +101,10 @@ struct ButtonEvent : CanvasEvent
         }
     }
 
-    /// Location of the cursor.
+    /// Location of the cursor, in world coordinates.
     Geom::Point pos;
+    /// Location of the cursor, in GDK event / canvas widget coordinates.
+    Geom::Point orig_pos;
 
     /// The button that was pressed/released. (Matches GDK_BUTTON_*.)
     unsigned button = 0;
@@ -124,9 +126,6 @@ struct ButtonPressEvent final : ButtonEvent
 
     /// Extended input data for graphics tablet input. Fields may be empty.
     ExtendedInput extinput;
-
-    // Todo: (GTK4) Remove me! Currently only used by tool-base.cpp (context menu).
-    GdkEventUniqPtr original;
 };
 
 /**
@@ -175,8 +174,13 @@ struct KeyEvent : CanvasEvent
     /// Timestamp of the event in milliseconds.
     uint32_t time = 0;
 
-    // Todo: (GTK4) Remove me! Currently only used by tool-base.cpp (context menu) and text-tool.cpp (input method).
+    // Todo: (GTK4) Remove me! Currently only used by text-tool.cpp (input method).
     GdkEventUniqPtr original;
+
+    /// Location of the cursor, in world coordinates.
+    std::optional<Geom::Point> pos;
+    /// Location of the cursor, in GDK event / canvas widget coordinates.
+    std::optional<Geom::Point> orig_pos;
 };
 
 /**
