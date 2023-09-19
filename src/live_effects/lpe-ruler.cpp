@@ -40,9 +40,11 @@ LPERuler::LPERuler(LivePathEffectObject *lpeobject) :
     mark_distance(_("_Mark distance:"), _("Distance between successive ruler marks"), "mark_distance", &wr, this, 20.0),
     unit(_("Unit:"), _("Unit"), "unit", &wr, this),
     mark_length(_("Ma_jor length:"), _("Length of major ruler marks"), "mark_length", &wr, this, 14.0),
-    mark_angle(_("Rotate mar_k:"), _("Rotate marks by degrees (-180,180)"), "mark_angle", &wr, this, 0.0),
     minor_mark_length(_("Mino_r length:"), _("Length of minor ruler marks"), "minor_mark_length", &wr, this, 7.0),
+    minor_mark_gap(_("Minor _gap mark:"), _("Percentage space between path and minor ruler mark"), "minor_mark_gap", &wr, this, 0.0),
+    major_mark_gap(_("Major gap mar_k:"), _("Percentage space between path and major ruler mark"), "major_mark_gap", &wr, this, 0.0),
     major_mark_steps(_("Major steps_:"), _("Draw a major mark every ... steps"), "major_mark_steps", &wr, this, 5),
+    mark_angle(_("Rotate m_ark:"), _("Rotate marks degrees (-180,180)"), "mark_angle", &wr, this, 0.0),
     shift(_("Shift marks _by:"), _("Shift marks by this many steps"), "shift", &wr, this, 0),
     mark_dir(_("Mark direction:"), _("Direction of marks (when viewing along the path from start to end)"), "mark_dir", MarkDirTypeConverter, &wr, this, MARKDIR_LEFT),
     offset(_("_Offset:"), _("Offset of first mark"), "offset", &wr, this, 0.0),
@@ -53,6 +55,8 @@ LPERuler::LPERuler(LivePathEffectObject *lpeobject) :
     registerParameter(&mark_angle);
     registerParameter(&mark_length);
     registerParameter(&minor_mark_length);
+    registerParameter(&minor_mark_gap);
+    registerParameter(&major_mark_gap);
     registerParameter(&major_mark_steps);
     registerParameter(&shift);
     registerParameter(&offset);
@@ -66,6 +70,10 @@ LPERuler::LPERuler(LivePathEffectObject *lpeobject) :
     shift.param_make_integer();
     mark_distance.param_set_range(0.01, std::numeric_limits<double>::max());
     mark_distance.param_set_digits(2);
+    minor_mark_gap.param_make_integer();
+    minor_mark_gap.param_set_range(0, 100);
+    major_mark_gap.param_make_integer();
+    major_mark_gap.param_set_range(0, 100);
     mark_length.param_set_increments(1.0, 10.0);
     minor_mark_length.param_set_increments(1.0, 10.0);
     offset.param_set_increments(1.0, 10.0);
@@ -98,14 +106,24 @@ LPERuler::ruler_mark(Geom::Point const &A, Geom::Point const &n, MarkType const 
     }
 
     Point C, D;
+    double factor = 1.0;
+    double mark_gap = 0;
     switch (marktype) {
         case MARK_MAJOR:
+            mark_gap = major_mark_gap;
             C = A;
             D = A + n_major;
+            if (real_mark_length && real_minor_mark_length && real_mark_length < real_minor_mark_length) {
+                factor = real_mark_length/real_minor_mark_length;
+            }
             if (mark_dir == MARKDIR_BOTH)
                 C -= n_major;
             break;
         case MARK_MINOR:
+            mark_gap = minor_mark_gap;
+            if (real_mark_length && real_minor_mark_length && real_mark_length > real_minor_mark_length) {
+                factor = real_minor_mark_length / real_mark_length;
+            }
             C = A;
             D = A + n_minor;
             if (mark_dir == MARKDIR_BOTH)
@@ -117,12 +135,24 @@ LPERuler::ruler_mark(Geom::Point const &A, Geom::Point const &n, MarkType const 
     }
 
     Piecewise<D2<SBasis> > seg(D2<SBasis>(SBasis(C[X], D[X]), SBasis(C[Y], D[Y])));
-    if (mark_angle) {
+    if (mark_angle || mark_gap) {
         Geom::PathVector pvec = path_from_piecewise(seg,0.0001);
-        pvec *= Geom::Translate(A).inverse();
-        pvec *= Geom::Rotate(Geom::rad_from_deg(mark_angle));
-        pvec *= Geom::Translate(A);
-        seg = paths_to_pw(pvec);  
+        if (mark_angle) {
+            pvec *= Geom::Translate(A).inverse();
+            pvec *= Geom::Rotate(Geom::rad_from_deg(mark_angle));
+            pvec *= Geom::Translate(A);
+            seg = paths_to_pw(pvec);  
+        }
+        if (mark_gap) {
+            Geom::PathVector pv;
+            if (mark_dir == MARKDIR_BOTH) {
+                pv.push_back(pvec[0].portion(0, 0.5 - ((mark_gap * 0.5 * (1 + (1 - factor)))/100.0)));  
+                pv.push_back(pvec[0].portion(0.5 + ((mark_gap * 0.5 * (1 + (1 - factor)))/100.0), 1));  
+            } else {
+                pv.push_back(pvec[0].portion((mark_gap * (1 + (1 - factor)))/100.0,1));  
+            }
+            seg = paths_to_pw(pv);  
+        }
     }
     return seg;
 }

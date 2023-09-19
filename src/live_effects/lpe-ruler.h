@@ -55,6 +55,8 @@ private:
     UnitParam unit;
     ScalarParam mark_length;
     ScalarParam minor_mark_length;
+    ScalarParam minor_mark_gap;
+    ScalarParam major_mark_gap;
     ScalarParam major_mark_steps;
     ScalarParam mark_angle;
     ScalarParam shift;
