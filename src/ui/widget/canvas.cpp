@@ -225,7 +225,7 @@ public:
     bool redraw_active = false;
     bool redraw_requested = false;
     sigc::connection schedule_redraw_conn;
-    void schedule_redraw();
+    void schedule_redraw(int priority = Glib::PRIORITY_DEFAULT);
     void launch_redraw();
     void after_redraw();
     void commit_tiles();
@@ -234,7 +234,7 @@ public:
     bool process_event(const GdkEvent*);
     bool pick_current_item(const GdkEvent*);
     bool emit_event(const GdkEvent*);
-    Inkscape::CanvasItem *pre_scroll_grabbed_item;
+    CanvasItem *pre_scroll_grabbed_item;
 
     // Various state affecting what is drawn.
     uint32_t desk   = 0xffffffff; // The background colour, with the alpha channel used to control checkerboard.
@@ -248,8 +248,11 @@ public:
 
     int scale_factor = 1; // The device scale the stores are drawn at.
 
+    RenderMode render_mode = RenderMode::NORMAL;
+    SplitMode  split_mode  = SplitMode::NORMAL;
+
     bool outlines_enabled = false; // Whether to enable the outline layer.
-    bool outlines_required() const { return q->_split_mode != Inkscape::SplitMode::NORMAL || q->_render_mode == Inkscape::RenderMode::OUTLINE_OVERLAY; }
+    bool outlines_required() const { return split_mode != SplitMode::NORMAL || render_mode == RenderMode::OUTLINE_OVERLAY; }
 
     bool background_in_stores_enabled = false; // Whether the page and desk should be drawn into the stores/tiles; if not then transparency is used instead.
     bool background_in_stores_required() const { return !q->get_opengl_enabled() && SP_RGBA32_A_U(page) == 255 && SP_RGBA32_A_U(desk) == 255; } // Enable solid colour optimisation if both page and desk are solid (as opposed to checkerboard).
@@ -357,7 +360,7 @@ Canvas::Canvas()
     d->canvasitem_ctx.emplace(this);
 
     // Split view.
-    _split_direction = Inkscape::SplitDirection::EAST;
+    _split_direction = SplitDirection::EAST;
     _split_frac = {0.5, 0.5};
 
     // Recreate stores on HiDPI change.
@@ -432,7 +435,8 @@ void CanvasPrivate::activate()
 
     active = true;
 
-    schedule_redraw();
+    // Run the first redraw at high priority so it happens before the first call to paint_widget().
+    schedule_redraw(Glib::PRIORITY_HIGH);
 }
 
 void CanvasPrivate::deactivate()
@@ -510,7 +514,7 @@ void Canvas::on_unrealize()
  */
 
 // Schedule another redraw iteration to take place, waiting for the current one to finish if necessary.
-void CanvasPrivate::schedule_redraw()
+void CanvasPrivate::schedule_redraw(int priority)
 {
     if (!active) {
         // We can safely discard calls until active, because we will run an iteration on activation later in initialisation.
@@ -535,13 +539,28 @@ void CanvasPrivate::schedule_redraw()
         if (prefs.debug_logging) std::cout << "Redraw start" << std::endl;
         launch_redraw();
         return false;
-    }); // Default priority; any higher results in competition with other idle callbacks => flickering snap indicators.
+    }, priority); // Usually default priority; any higher results in competition with other idle callbacks => flickering snap indicators.
 }
 
 // Update state and launch redraw process in background. Requires a current OpenGL context.
 void CanvasPrivate::launch_redraw()
 {
     assert(redraw_active);
+
+    if (q->_render_mode != render_mode) {
+        if ((render_mode == RenderMode::OUTLINE_OVERLAY) != (q->_render_mode == RenderMode::OUTLINE_OVERLAY) && !q->get_opengl_enabled()) {
+            q->queue_draw(); // Clear the whitewash effect, an artifact of cairo mode.
+        }
+        render_mode = q->_render_mode;
+        q->_drawing->setRenderMode(render_mode == RenderMode::OUTLINE_OVERLAY ? RenderMode::NORMAL : render_mode);
+        q->_drawing->setOutlineOverlay(outlines_required());
+    }
+
+    if (q->_split_mode != split_mode) {
+        q->queue_draw(); // Clear the splitter overlay.
+        split_mode = q->_split_mode;
+        q->_drawing->setOutlineOverlay(outlines_required());
+    }
 
     // Determine whether the rendering parameters have changed, and trigger full store recreation if so.
     if ((outlines_required() && !outlines_enabled) || scale_factor != q->get_scale_factor()) {
@@ -912,11 +931,11 @@ bool Canvas::on_button_event(GdkEventButton *button_event)
     }
 
     // Drag the split view controller.
-    if (_split_mode == Inkscape::SplitMode::SPLIT) {
+    if (_split_mode == SplitMode::SPLIT) {
         auto cursor_position = Geom::IntPoint(button_event->x, button_event->y);
         switch (button_event->type) {
             case GDK_BUTTON_PRESS:
-                if (_hover_direction != Inkscape::SplitDirection::NONE) {
+                if (_hover_direction != SplitDirection::NONE) {
                     _split_dragging = true;
                     _split_drag_start = cursor_position;
                     return true;
@@ -941,9 +960,8 @@ bool Canvas::on_button_event(GdkEventButton *button_event)
                     cursor_position.y() > get_allocation().get_height() - 5)
                 {
                     // Reset everything.
-                    _split_frac = {0.5, 0.5};
                     set_cursor();
-                    set_split_mode(Inkscape::SplitMode::NORMAL);
+                    set_split_mode(SplitMode::NORMAL);
 
                     // Update action (turn into utility function?).
                     auto window = dynamic_cast<Gtk::ApplicationWindow*>(get_toplevel());
@@ -964,7 +982,7 @@ bool Canvas::on_button_event(GdkEventButton *button_event)
                         return true;
                     }
 
-                    saction->change_state(static_cast<int>(Inkscape::SplitMode::NORMAL));
+                    saction->change_state(static_cast<int>(SplitMode::NORMAL));
                 }
 
                 break;
@@ -1016,17 +1034,17 @@ bool Canvas::on_motion_notify_event(GdkEventMotion *motion_event)
     d->last_mouse = Geom::IntPoint(motion_event->x, motion_event->y);
 
     // Handle interactions with the split view controller.
-    if (_split_mode == Inkscape::SplitMode::XRAY) {
+    if (_split_mode == SplitMode::XRAY) {
         queue_draw();
-    } else if (_split_mode == Inkscape::SplitMode::SPLIT) {
+    } else if (_split_mode == SplitMode::SPLIT) {
         auto cursor_position = Geom::IntPoint(motion_event->x, motion_event->y);
 
         // Move controller.
         if (_split_dragging) {
             auto delta = cursor_position - _split_drag_start;
-            if (_hover_direction == Inkscape::SplitDirection::HORIZONTAL) {
+            if (_hover_direction == SplitDirection::HORIZONTAL) {
                 delta.x() = 0;
-            } else if (_hover_direction == Inkscape::SplitDirection::VERTICAL) {
+            } else if (_hover_direction == SplitDirection::VERTICAL) {
                 delta.y() = 0;
             }
             _split_frac += Geom::Point(delta) / get_dimensions();
@@ -1037,33 +1055,33 @@ bool Canvas::on_motion_notify_event(GdkEventMotion *motion_event)
 
         auto split_position = (_split_frac * get_dimensions()).round();
         auto diff = cursor_position - split_position;
-        auto hover_direction = Inkscape::SplitDirection::NONE;
+        auto hover_direction = SplitDirection::NONE;
         if (Geom::Point(diff).length() < 20.0) {
             // We're hovering over circle, figure out which direction we are in.
             if (diff.y() - diff.x() > 0) {
                 if (diff.y() + diff.x() > 0) {
-                    hover_direction = Inkscape::SplitDirection::SOUTH;
+                    hover_direction = SplitDirection::SOUTH;
                 } else {
-                    hover_direction = Inkscape::SplitDirection::WEST;
+                    hover_direction = SplitDirection::WEST;
                 }
             } else {
                 if (diff.y() + diff.x() > 0) {
-                    hover_direction = Inkscape::SplitDirection::EAST;
+                    hover_direction = SplitDirection::EAST;
                 } else {
-                    hover_direction = Inkscape::SplitDirection::NORTH;
+                    hover_direction = SplitDirection::NORTH;
                 }
             }
-        } else if (_split_direction == Inkscape::SplitDirection::NORTH ||
-                   _split_direction == Inkscape::SplitDirection::SOUTH)
+        } else if (_split_direction == SplitDirection::NORTH ||
+                   _split_direction == SplitDirection::SOUTH)
         {
             if (std::abs(diff.y()) < 3) {
                 // We're hovering over the horizontal line.
-                hover_direction = Inkscape::SplitDirection::HORIZONTAL;
+                hover_direction = SplitDirection::HORIZONTAL;
             }
         } else {
             if (std::abs(diff.x()) < 3) {
                 // We're hovering over the vertical line.
-                hover_direction = Inkscape::SplitDirection::VERTICAL;
+                hover_direction = SplitDirection::VERTICAL;
             }
         }
 
@@ -1073,7 +1091,7 @@ bool Canvas::on_motion_notify_event(GdkEventMotion *motion_event)
             queue_draw();
         }
 
-        if (_hover_direction != Inkscape::SplitDirection::NONE) {
+        if (_hover_direction != SplitDirection::NONE) {
             // We're hovering, don't pick or emit event.
             return true;
         }
@@ -1705,22 +1723,17 @@ bool Canvas::background_in_stores() const
     return d->rd.background_in_stores_required;
 }
 
-void Canvas::set_render_mode(Inkscape::RenderMode mode)
+void Canvas::set_render_mode(RenderMode mode)
 {
-    if ((_render_mode == RenderMode::OUTLINE_OVERLAY) != (mode == RenderMode::OUTLINE_OVERLAY) && !get_opengl_enabled()) {
-        queue_draw();
-    }
+    if (mode == _render_mode) return;
     _render_mode = mode;
-    if (_drawing) {
-        _drawing->setRenderMode(_render_mode == RenderMode::OUTLINE_OVERLAY ? RenderMode::NORMAL : _render_mode);
-        _drawing->setOutlineOverlay(d->outlines_required());
-    }
+    d->schedule_redraw();
     if (_desktop) {
         _desktop->setWindowTitle(); // Mode is listed in title.
     }
 }
 
-void Canvas::set_color_mode(Inkscape::ColorMode mode)
+void Canvas::set_color_mode(ColorMode mode)
 {
     _color_mode = mode;
     if (_drawing) {
@@ -1731,17 +1744,14 @@ void Canvas::set_color_mode(Inkscape::ColorMode mode)
     }
 }
 
-void Canvas::set_split_mode(Inkscape::SplitMode mode)
+void Canvas::set_split_mode(SplitMode mode)
 {
-    if (_split_mode != mode) {
-        _split_mode = mode;
-        if (_split_mode == Inkscape::SplitMode::SPLIT) {
-            _hover_direction = Inkscape::SplitDirection::NONE;
-        }
-        if (_drawing) {
-            _drawing->setOutlineOverlay(d->outlines_required());
-        }
-        redraw_all();
+    if (mode == _split_mode) return;
+    _split_mode = mode;
+    d->schedule_redraw();
+    if (_split_mode == SplitMode::SPLIT) {
+        _hover_direction = SplitDirection::NONE;
+        _split_frac = {0.5, 0.5};
     }
 }
 
@@ -1763,7 +1773,7 @@ void Canvas::set_cms_key(std::string key)
 /**
  * Clear current and grabbed items.
  */
-void Canvas::canvas_item_destructed(Inkscape::CanvasItem *item)
+void Canvas::canvas_item_destructed(CanvasItem *item)
 {
     if (!d->active) {
         return;
@@ -1822,28 +1832,28 @@ void Canvas::set_cursor()
     auto display = Gdk::Display::get_default();
 
     switch (_hover_direction) {
-        case Inkscape::SplitDirection::NONE:
+        case SplitDirection::NONE:
             _desktop->event_context->use_tool_cursor();
             break;
 
-        case Inkscape::SplitDirection::NORTH:
-        case Inkscape::SplitDirection::EAST:
-        case Inkscape::SplitDirection::SOUTH:
-        case Inkscape::SplitDirection::WEST:
+        case SplitDirection::NORTH:
+        case SplitDirection::EAST:
+        case SplitDirection::SOUTH:
+        case SplitDirection::WEST:
         {
             auto cursor = Gdk::Cursor::create(display, "pointer");
             get_window()->set_cursor(cursor);
             break;
         }
 
-        case Inkscape::SplitDirection::HORIZONTAL:
+        case SplitDirection::HORIZONTAL:
         {
             auto cursor = Gdk::Cursor::create(display, "ns-resize");
             get_window()->set_cursor(cursor);
             break;
         }
 
-        case Inkscape::SplitDirection::VERTICAL:
+        case SplitDirection::VERTICAL:
         {
             auto cursor = Gdk::Cursor::create(display, "ew-resize");
             get_window()->set_cursor(cursor);
@@ -1931,12 +1941,12 @@ void Canvas::paint_widget(Cairo::RefPtr<Cairo::Context> const &cr)
 
     if constexpr (false) d->canvasitem_ctx->root()->canvas_item_print_tree();
 
-    // If launch_redraw() has been scheduled but not yet called, make sure this call happens
-    // before proceeding in order to perform vital initialisation (needed not to crash).
-    if (d->schedule_redraw_conn.connected()) {
-        if (d->prefs.debug_logging) std::cout << "Redraw start" << std::endl;
-        d->launch_redraw();
-        d->schedule_redraw_conn.disconnect();
+    // On activation, launch_redraw() is scheduled at a priority much higher than draw, so it
+    // should have been called at least one before this point to perform vital initialisation
+    // (needed not to crash). However, we don't want to rely on that, hence the following check.
+    if (d->stores.mode() == Stores::Mode::None) {
+        std::cerr << "Canvas::paint_widget: Called while active but uninitialised!" << std::endl;
+        return;
     }
 
     // Commit pending tiles in case GTK called on_draw even though after_redraw() is scheduled at higher priority.
@@ -1950,8 +1960,8 @@ void Canvas::paint_widget(Cairo::RefPtr<Cairo::Context> const &cr)
 
     Graphics::PaintArgs args;
     args.mouse = d->last_mouse;
-    args.render_mode = _render_mode;
-    args.splitmode = _split_mode;
+    args.render_mode = d->render_mode;
+    args.splitmode = d->split_mode;
     args.splitfrac = _split_frac;
     args.splitdir = _split_direction;
     args.hoverdir = _hover_direction;
@@ -2416,7 +2426,7 @@ void CanvasPrivate::paint_single_buffer(Cairo::RefPtr<Cairo::ImageSurface> const
     cr->restore();
 
     // Render drawing on top of background.
-    auto buf = Inkscape::CanvasItemBuffer{ rect, scale_factor, cr, outline_pass };
+    auto buf = CanvasItemBuffer{ rect, scale_factor, cr, outline_pass };
     canvasitem_ctx->root()->render(buf);
 
     // Paint over newly drawn content with a translucent random colour.
