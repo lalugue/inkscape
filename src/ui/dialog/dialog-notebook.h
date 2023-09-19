@@ -19,7 +19,6 @@
 #include <gdkmm/dragcontext.h>
 #include <gtkmm/gesture.h> // Gtk::EventSequenceState
 #include <gtkmm/notebook.h>
-#include <gtkmm/radiomenuitem.h>
 #include <gtkmm/scrolledwindow.h>
 #include <gtkmm/widget.h>
 #include "helper/auto-connection.h"

@@ -32,7 +32,6 @@
 #include <gtkmm/menubutton.h>
 #include <gtkmm/object.h>
 #include <gtkmm/paned.h>
-#include <gtkmm/radiomenuitem.h>
 #include <gtkmm/scrolledwindow.h>
 
 #include "desktop.h"

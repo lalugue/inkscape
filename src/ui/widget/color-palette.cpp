@@ -22,7 +22,6 @@
 #include <gtkmm/menubutton.h>
 #include <gtkmm/popover.h>
 #include <gtkmm/radiobutton.h>
-#include <gtkmm/radiomenuitem.h>
 #include <gtkmm/scale.h>
 #include <gtkmm/scrollbar.h>
 #include <gtkmm/scrolledwindow.h>
@@ -734,7 +733,7 @@ void ColorPalette::set_palettes(const std::vector<ColorPalette::palette_t>& pale
     _palette_menu_items.clear();
     _palette_menu_items.reserve(palettes.size());
 
-    Gtk::RadioMenuItem::Group group;
+    Gtk::RadioButton::Group group;
     // We prepend in reverse so we add the palettes above the constant separator & Configure items.
     for (auto it = palettes.crbegin(); it != palettes.crend(); ++it) {
         auto& name = it->name;

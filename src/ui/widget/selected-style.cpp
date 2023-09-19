@@ -21,7 +21,6 @@
 #include <gtkmm/gesturemultipress.h>
 #include <gtkmm/radiobutton.h>
 #include <gtkmm/radiobuttongroup.h>
-#include <gtkmm/separatormenuitem.h>
 
 #include "selected-style.h"
 

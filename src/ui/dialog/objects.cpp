@@ -25,12 +25,10 @@
 #include <gtkmm/checkbutton.h>
 #include <gtkmm/enums.h>
 #include <gtkmm/icontheme.h>
-#include <gtkmm/imagemenuitem.h>
 #include <gtkmm/modelbutton.h>
 #include <gtkmm/popover.h>
 #include <gtkmm/scale.h>
 #include <gtkmm/searchentry.h>
-#include <gtkmm/separatormenuitem.h>
 
 #include "objects.h"
 #include "actions/actions-tools.h"

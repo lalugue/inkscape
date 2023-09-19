@@ -31,7 +31,6 @@ class Box;
 class ComboBox;
 class Label;
 class ListStore;
-class MenuItem;
 } // namespace Gtk
 
 namespace Inkscape::UI::Widget {

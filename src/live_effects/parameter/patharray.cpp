@@ -11,9 +11,7 @@
 #include <2geom/point.h>
 #include <glibmm/i18n.h>
 #include <gtkmm/icontheme.h>
-#include <gtkmm/imagemenuitem.h>
 #include <gtkmm/scrolledwindow.h>
-#include <gtkmm/separatormenuitem.h>
 
 #include "display/curve.h"
 #include "document.h"
