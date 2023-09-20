@@ -954,13 +954,20 @@ Path::OutlineJoin (Path * dest, Geom::Point pos, Geom::Point stNor, Geom::Point 
                 if ( fabs(l) > miter) {
                     dest->LineTo (pos + width*enNor);
                 } else {
-                    if (dest->descr_cmd[dest->descr_cmd.size() - 1]->getType() == descr_lineto) {
-                        PathDescrLineTo* nLine = dynamic_cast<PathDescrLineTo*>(dest->descr_cmd[dest->descr_cmd.size() - 1]);
-                        nLine->p = pos+l*biss; // relocate to bisector
+                    auto prev = dest->descr_cmd[dest->descr_cmd.size() - 1];
+                    if (prev->getType() == descr_lineto) {
+                        // Relocate the previous line end point to bisector position
+                        PathDescrLineTo* nLine = dynamic_cast<PathDescrLineTo*>(prev);
+                        nLine->p = pos+l*biss;
+                        if (nType == descr_close) {
+                            // Relocate the first move command to the bisector position
+                            PathDescrMoveTo* mLine = dynamic_cast<PathDescrMoveTo*>(dest->descr_cmd[0]);
+                            mLine->p = pos+l*biss;
+                        }
                     } else {
                         dest->LineTo (pos+l*biss);
                     }
-                    if (nType != descr_lineto)
+                    if (nType != descr_lineto && nType != descr_close)
                         dest->LineTo (pos+width*enNor);
                 }
             } else { // Bevel join
