@@ -463,6 +463,7 @@ std::string FontData::getSpecification() const
 void _getFontsRecursive(std::shared_ptr<PDFDoc> pdf_doc, Dict *resources, const FontList &fontsList,
                         std::set<int> &visitedObjects, int page)
 {
+    assert(resources);
     auto xref = pdf_doc->getXRef();
 
     InkFontDict *fontDict = nullptr;
@@ -525,7 +526,10 @@ FontList getPdfFonts(std::shared_ptr<PDFDoc> pdf_doc)
     for (auto page_num = 1; page_num <= count; page_num++) {
         auto page = pdf_doc->getCatalog()->getPage(page_num);
         auto resources = page->getResourceDict();
-        _getFontsRecursive(pdf_doc, resources, fontsList, visitedObjects, page_num);
+
+        if (resources) {
+            _getFontsRecursive(pdf_doc, resources, fontsList, visitedObjects, page_num);
+        }
     }
     return fontsList;
 }
