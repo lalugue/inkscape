@@ -3085,6 +3085,9 @@ void PdfParser::setApproximationPrecision(int shadingType, double colorDelta,
  */
 void PdfParser::loadOptionalContentLayers(Dict *resources)
 {
+    if (!resources) 
+        return;
+
     auto props = resources->lookup("Properties");
     if (!props.isDict())
         return;
