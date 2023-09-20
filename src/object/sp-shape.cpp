@@ -852,10 +852,7 @@ void SPShape::update_patheffect(bool write)
         /* if a path has an lpeitem applied, then reset the curve to the _curve_before_lpe.
          * This is very important for LPEs to work properly! (the bbox might be recalculated depending on the curve in shape)*/
         setCurveInsync(&c_lpe);
-        SPRoot *root = document->getRoot();
-        if (!sp_version_inside_range(root->version.inkscape, 0, 1, 0, 92)) {
-            resetClipPathAndMaskLPE();
-        }
+       
 
         bool success = false;
         // avoid update lpe in each selection
@@ -864,6 +861,9 @@ void SPShape::update_patheffect(bool write)
         if (hasPathEffect() && pathEffectsEnabled()) {
             success = this->performPathEffect(&c_lpe, this);
             if (success) {
+                if (!sp_version_inside_range(document->getRoot()->version.inkscape, 0, 1, 0, 92)) {
+                    resetClipPathAndMaskLPE();
+                }
                 setCurveInsync(&c_lpe);
                 applyToClipPath(this);
                 applyToMask(this);

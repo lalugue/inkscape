@@ -1006,11 +1006,13 @@ void SPGroup::update_patheffect(bool write) {
         }
     }
 
-    this->resetClipPathAndMaskLPE();
     // avoid update lpe in each selection
     // must be set also to non effect items (satellites or parents)
     lpe_initialized = true;
     if (hasPathEffect() && pathEffectsEnabled()) {
+        if (!sp_version_inside_range(document->getRoot()->version.inkscape, 0, 1, 0, 92)) {
+            resetClipPathAndMaskLPE();
+        }
         PathEffectList path_effect_list(*this->path_effect_list);
         for (auto &lperef : path_effect_list) {
             LivePathEffectObject *lpeobj = lperef->lpeobject;
