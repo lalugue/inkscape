@@ -323,11 +323,6 @@ bool SPLPEItem::performOnePathEffect(SPCurve *curve, SPShape *current, Inkscape:
                 }
                 lpe->doAfterEffect_impl(this, curve);
             }
-            // we need this on slice LPE to calculate effects correctly
-            if (dynamic_cast<Inkscape::LivePathEffect::LPESlice*>(lpe)) { // we are on 1 or up
-                current->bbox_vis_cache_is_valid = false;
-                current->bbox_geom_cache_is_valid = false;
-            }
         }
     }
     return true;
@@ -441,7 +436,7 @@ sp_lpe_item_update_patheffect (SPLPEItem *lpeitem, bool wholetree, bool write, b
     }
     top->update_patheffect(write);
     if (with_satellites) {
-        top->update_satellites();
+        lpeitem->update_satellites();
     }
 }
 
