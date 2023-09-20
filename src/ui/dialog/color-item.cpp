@@ -14,9 +14,9 @@
 #include <cstdint>
 #include <utility>
 #include <vector>
-#include <sigc++/functors/mem_fun.h>
-
-#include <cairomm/cairomm.h>
+#include <cairomm/context.h>
+#include <cairomm/pattern.h>
+#include <cairomm/surface.h>
 #include <glibmm/convert.h>
 #include <glibmm/i18n.h>
 #include <giomm/menu.h>
@@ -26,6 +26,7 @@
 #include <gdkmm/general.h>
 #include <gtkmm/gesturemultipress.h>
 #include <gtkmm/popover.h>
+#include <sigc++/functors/mem_fun.h>
 
 #include "desktop-style.h"
 #include "document.h"
@@ -35,7 +36,6 @@
 #include "message-context.h"
 #include "preferences.h"
 #include "selection.h"
-
 #include "actions/actions-tools.h"
 #include "display/cairo-utils.h"
 #include "helper/sigc-track-obj.h"
@@ -155,6 +155,8 @@ ColorItem::ColorItem(Glib::ustring name) : description(std::move(name)) {
     auto ctx = get_style_context();
     ctx->add_class(group ? "group" : "filler");
 }
+
+ColorItem::~ColorItem() = default;
 
 bool ColorItem::is_group() const {
     return !dialog && color_id == "-" && !description.empty();

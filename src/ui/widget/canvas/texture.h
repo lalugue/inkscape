@@ -1,14 +1,12 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
+
 #ifndef INKSCAPE_UI_WIDGET_CANVAS_TEXTURE_H
 #define INKSCAPE_UI_WIDGET_CANVAS_TEXTURE_H
 
-#include <boost/noncopyable.hpp>
 #include <2geom/point.h>
 #include <epoxy/gl.h>
 
-namespace Inkscape {
-namespace UI {
-namespace Widget {
+namespace Inkscape::UI::Widget {
 
 class Texture
 {
@@ -44,9 +42,7 @@ private:
     void _movefrom(Texture &other) noexcept { _id = other._id; _size = other._size; other._id = 0; }
 };
 
-} // namespace Widget
-} // namespace UI
-} // namespace Inkscape
+} // namespace Inkscape::UI::Widget
 
 #endif // INKSCAPE_UI_WIDGET_CANVAS_TEXTURE_H
 

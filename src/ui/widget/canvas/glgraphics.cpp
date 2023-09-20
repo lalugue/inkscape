@@ -1,17 +1,18 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
+
+#include "glgraphics.h"
+
 #include <2geom/transforms.h>
 #include <2geom/rect.h>
+
 #include "ui/util.h"
 #include "helper/geom.h"
-#include "glgraphics.h"
 #include "stores.h"
 #include "prefs.h"
 #include "pixelstreamer.h"
 #include "util.h"
 
-namespace Inkscape {
-namespace UI {
-namespace Widget {
+namespace Inkscape::UI::Widget {
 
 namespace {
 
@@ -845,9 +846,7 @@ void GLGraphics::paint_widget(Fragment const &view, PaintArgs const &a, Cairo::R
 
         // Return the texture back to the texture cache.
         texturecache->finish(std::move(texture));
-
     } else { // if (_split_mode == Inkscape::SplitMode::XRAY && a.mouse)
-
         // Draw the backing store over the whole view.
         auto const &shader = a.render_mode == Inkscape::RenderMode::OUTLINE_OVERLAY ? outlineoverlayxray : xray;
         glUseProgram(shader.id);
@@ -857,9 +856,7 @@ void GLGraphics::paint_widget(Fragment const &view, PaintArgs const &a, Cairo::R
     }
 }
 
-} // namespace Widget
-} // namespace UI
-} // namespace Inkscape
+} // namespace Inkscape::UI::Widget
 
 /*
   Local Variables:

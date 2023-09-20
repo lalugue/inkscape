@@ -13,11 +13,13 @@
 #ifndef INKSCAPE_UI_TOOL_NODE_H
 #define INKSCAPE_UI_TOOL_NODE_H
 
-#include <iterator>
-#include <iosfwd>
-#include <stdexcept>
 #include <cstddef>
-#include <functional>
+#include <iosfwd>
+#include <list>
+#include <memory>
+#include <optional>
+#include <2geom/point.h>
+#include <boost/noncopyable.hpp>
 
 #include "snap-candidate.h"
 #include "ui/tool/selectable-control-point.h"

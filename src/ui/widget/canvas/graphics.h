@@ -8,17 +8,24 @@
 #ifndef INKSCAPE_UI_WIDGET_CANVAS_GRAPHICS_H
 #define INKSCAPE_UI_WIDGET_CANVAS_GRAPHICS_H
 
-#include <memory>
 #include <cstdint>
-#include <boost/noncopyable.hpp>
+#include <memory>
+#include <optional>
+#include <utility>
+#include <vector>
+
 #include <2geom/rect.h>
-#include <cairomm/cairomm.h>
+#include <cairomm/refptr.h>
 #include "display/rendermode.h"
 #include "fragment.h"
 
-namespace Inkscape {
-namespace UI {
-namespace Widget {
+namespace Cairo {
+class Context;
+class ImageSurface;
+} // namespace Cairo
+
+namespace Inkscape::UI::Widget {
+
 class Stores;
 class Prefs;
 
@@ -39,7 +46,9 @@ public:
     virtual void set_scale_factor(int) = 0; ///< Set the HiDPI scale factor.
     virtual void set_outlines_enabled(bool) = 0; ///< Whether to maintain a second layer of outline content.
     virtual void set_background_in_stores(bool) = 0; ///< Whether to assume the first layer is drawn on top of background or transparency.
-    virtual void set_colours(uint32_t page, uint32_t desk, uint32_t border) = 0; ///< Set colours for background/page shadow drawing.
+
+    /// Set colours for background/page shadow drawing.
+    virtual void set_colours(std::uint32_t page, std::uint32_t desk, std::uint32_t border) = 0;
 
     // Store manipulation.
     virtual void recreate_store(Geom::IntPoint const &dims) = 0; ///< Set the store to a surface of the given size, of unspecified contents.
@@ -68,12 +77,12 @@ public:
     struct PaintArgs
     {
         std::optional<Geom::IntPoint> mouse;
-        RenderMode render_mode;
-        SplitMode splitmode;
+        RenderMode render_mode{};
+        SplitMode splitmode{};
         Geom::Point splitfrac;
-        SplitDirection splitdir;
-        SplitDirection hoverdir;
-        double yaxisdir;
+        SplitDirection splitdir{};
+        SplitDirection hoverdir{};
+        double yaxisdir{};
     };
     virtual void paint_widget(Fragment const &view, PaintArgs const &args, Cairo::RefPtr<Cairo::Context> const &cr) = 0;
 
@@ -81,11 +90,22 @@ public:
     static bool check_single_page(Fragment const &view, PageInfo const &pi);
     static std::pair<Geom::IntRect, Geom::IntRect> calc_splitview_cliprects(Geom::IntPoint const &size, Geom::Point const &splitfrac, SplitDirection splitdir);
     static void paint_splitview_controller(Geom::IntPoint const &size, Geom::Point const &splitfrac, SplitDirection splitdir, SplitDirection hoverdir, Cairo::RefPtr<Cairo::Context> const &cr);
-    static void paint_background(Fragment const &fragment, PageInfo const &pi, uint32_t page, uint32_t desk, Cairo::RefPtr<Cairo::Context> const &cr);
+    static void paint_background(Fragment const &fragment, PageInfo const &pi,
+                                 std::uint32_t page, std::uint32_t desk,
+                                 Cairo::RefPtr<Cairo::Context> const &cr);
 };
 
-} // namespace Widget
-} // namespace UI
-} // namespace Inkscape
+} // namespace Inkscape::UI::Widget
 
 #endif // INKSCAPE_UI_WIDGET_CANVAS_GRAPHICS_H
+
+/*
+  Local Variables:
+  mode:c++
+  c-file-style:"stroustrup"
+  c-file-offsets:((innamespace . 0)(inline-open . 0)(case-label . +))
+  indent-tabs-mode:nil
+  fill-column:99
+  End:
+*/
+// vim: filetype=cpp:expandtab:shiftwidth=4:tabstop=8:softtabstop=4 :

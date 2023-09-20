@@ -1,50 +1,55 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-#include <2geom/parallelogram.h>
-#include "ui/util.h"
-#include "helper/geom.h"
+
 #include "graphics.h"
+
+#include <2geom/parallelogram.h>
+#include <cairomm/context.h>
+#include <cairomm/surface.h>
+
+#include "helper/geom.h"
+#include "ui/util.h"
 #include "util.h"
 
-namespace Inkscape {
-namespace UI {
-namespace Widget {
+namespace Inkscape::UI::Widget {
 
 namespace {
 
 // Convert an rgba into a pattern, turning transparency into checkerboard-ness.
-Cairo::RefPtr<Cairo::Pattern> rgba_to_pattern(uint32_t rgba)
+Cairo::RefPtr<Cairo::Pattern> rgba_to_pattern(std::uint32_t const rgba)
 {
     if (SP_RGBA32_A_U(rgba) == 255) {
         return Cairo::SolidPattern::create_rgb(SP_RGBA32_R_F(rgba), SP_RGBA32_G_F(rgba), SP_RGBA32_B_F(rgba));
-    } else {
-        int constexpr w = 6;
-        int constexpr h = 6;
-
-        auto dark = checkerboard_darken(rgba);
-
-        auto surface = Cairo::ImageSurface::create(Cairo::FORMAT_ARGB32, 2 * w, 2 * h);
-
-        auto cr = Cairo::Context::create(surface);
-        cr->set_operator(Cairo::OPERATOR_SOURCE);
-        cr->set_source_rgb(SP_RGBA32_R_F(rgba), SP_RGBA32_G_F(rgba), SP_RGBA32_B_F(rgba));
-        cr->paint();
-        cr->set_source_rgb(dark[0], dark[1], dark[2]);
-        cr->rectangle(0, 0, w, h);
-        cr->rectangle(w, h, w, h);
-        cr->fill();
-
-        auto pattern = Cairo::SurfacePattern::create(surface);
-        pattern->set_extend(Cairo::EXTEND_REPEAT);
-        pattern->set_filter(Cairo::FILTER_NEAREST);
-
-        return pattern;
     }
+
+    int constexpr w = 6;
+    int constexpr h = 6;
+
+    auto dark = checkerboard_darken(rgba);
+
+    auto surface = Cairo::ImageSurface::create(Cairo::FORMAT_ARGB32, 2 * w, 2 * h);
+
+    auto cr = Cairo::Context::create(surface);
+    cr->set_operator(Cairo::OPERATOR_SOURCE);
+    cr->set_source_rgb(SP_RGBA32_R_F(rgba), SP_RGBA32_G_F(rgba), SP_RGBA32_B_F(rgba));
+    cr->paint();
+    cr->set_source_rgb(dark[0], dark[1], dark[2]);
+    cr->rectangle(0, 0, w, h);
+    cr->rectangle(w, h, w, h);
+    cr->fill();
+
+    auto pattern = Cairo::SurfacePattern::create(surface);
+    pattern->set_extend(Cairo::EXTEND_REPEAT);
+    pattern->set_filter(Cairo::FILTER_NEAREST);
+
+    return pattern;
 }
 
 } // namespace
 
 // Paint the background and pages using Cairo into the given fragment.
-void Graphics::paint_background(Fragment const &fragment, PageInfo const &pi, uint32_t page, uint32_t desk, Cairo::RefPtr<Cairo::Context> const &cr)
+void Graphics::paint_background(Fragment const &fragment, PageInfo const &pi,
+                                std::uint32_t const page, std::uint32_t const desk,
+                                Cairo::RefPtr<Cairo::Context> const &cr)
 {
     cr->save();
     cr->set_operator(Cairo::OPERATOR_SOURCE);
@@ -161,6 +166,4 @@ bool Graphics::check_single_page(Fragment const &view, PageInfo const &pi)
     });
 }
 
-} // namespace Widget
-} // namespace UI
-} // namespace Inkscape
+} // namespace Inkscape::UI::Widget

@@ -1,9 +1,8 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
+
 #include "texture.h"
 
-namespace Inkscape {
-namespace UI {
-namespace Widget {
+namespace Inkscape::UI::Widget {
 
 static bool have_gltexstorage()
 {
@@ -50,9 +49,7 @@ void Texture::invalidate()
     }
 }
 
-} // namespace Widget
-} // namespace UI
-} // namespace Inkscape
+} // namespace Inkscape::UI::Widget
 
 /*
   Local Variables:

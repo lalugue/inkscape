@@ -18,26 +18,25 @@
 
 #include "spin-scale.h"
 
+#include <utility>
 #include <glibmm/i18n.h>
 #include <glibmm/stringutils.h>
 #include <gtkmm/enums.h>
 
 #include "ui/pack.h"
 
-namespace Inkscape {
-namespace UI {
-namespace Widget {
+namespace Inkscape::UI::Widget {
 
-SpinScale::SpinScale(const Glib::ustring label, double value,
+SpinScale::SpinScale(Glib::ustring label, double value,
                      double lower, double upper,
                      double step_increment, double page_increment, int digits,
-                     const SPAttr a, const Glib::ustring tip_text)
+                     SPAttr const a, Glib::ustring const &tip_text)
     : AttrWidget(a, value)
     , _inkspinscale(value, lower, upper, step_increment, page_increment, 0)
 {
     set_name("SpinScale");
     _inkspinscale.drag_dest_unset();
-    _inkspinscale.set_label (label);
+    _inkspinscale.set_label(std::move(label));
     _inkspinscale.set_digits (digits);
     _inkspinscale.set_tooltip_text (tip_text);
 
@@ -50,19 +49,18 @@ SpinScale::SpinScale(const Glib::ustring label, double value,
     show_all_children();
 }
 
-SpinScale::SpinScale(const Glib::ustring label,
+SpinScale::SpinScale(Glib::ustring label,
                      Glib::RefPtr<Gtk::Adjustment> adjustment, int digits,
-                     const SPAttr a, const Glib::ustring tip_text)
+                     SPAttr const a, Glib::ustring const &tip_text)
     : AttrWidget(a, 0.0)
-    , _inkspinscale(adjustment)
+    , _adjustment{std::move(adjustment)}
+    , _inkspinscale{_adjustment}
 {
     set_name("SpinScale");
 
-    _inkspinscale.set_label (label);
+    _inkspinscale.set_label(std::move(label));
     _inkspinscale.set_digits (digits);
     _inkspinscale.set_tooltip_text (tip_text);
-
-    _adjustment = _inkspinscale.get_adjustment();
 
     signal_value_changed().connect(signal_attr_changed().make_slot());
 
@@ -110,25 +108,19 @@ void SpinScale::set_focuswidget(GtkWidget *widget)
     _inkspinscale.set_focus_widget(widget);
 }
 
-const decltype(SpinScale::_adjustment) SpinScale::get_adjustment() const
+decltype(SpinScale::_adjustment) const &SpinScale::get_adjustment()
 {
     return _adjustment;
 }
 
-decltype(SpinScale::_adjustment) SpinScale::get_adjustment()
-{
-    return _adjustment;
-}
-
-
-DualSpinScale::DualSpinScale(const Glib::ustring label1, const Glib::ustring label2,
+DualSpinScale::DualSpinScale(Glib::ustring label1, Glib::ustring label2,
                              double value, double lower, double upper,
                              double step_increment, double page_increment, int digits,
                              const SPAttr a,
-                             const Glib::ustring tip_text1, const Glib::ustring tip_text2)
+                             Glib::ustring const &tip_text1, Glib::ustring const &tip_text2)
     : AttrWidget(a),
-      _s1(label1, value, lower, upper, step_increment, page_increment, digits, SPAttr::INVALID, tip_text1),
-      _s2(label2, value, lower, upper, step_increment, page_increment, digits, SPAttr::INVALID, tip_text2)
+      _s1{std::move(label1), value, lower, upper, step_increment, page_increment, digits, SPAttr::INVALID, tip_text1},
+      _s2{std::move(label2), value, lower, upper, step_increment, page_increment, digits, SPAttr::INVALID, tip_text2}
 {
     set_name("DualSpinScale");
     signal_value_changed().connect(signal_attr_changed().make_slot());
@@ -235,10 +227,7 @@ void DualSpinScale::update_linked()
     }
 }
 
-
-} // namespace Widget
-} // namespace UI
-} // namespace Inkscape
+} // namespace Inkscape::UI::Widget
 
 /*
   Local Variables:

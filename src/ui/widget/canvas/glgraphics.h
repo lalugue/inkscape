@@ -8,14 +8,16 @@
 #ifndef INKSCAPE_UI_WIDGET_CANVAS_GLGRAPHICS_H
 #define INKSCAPE_UI_WIDGET_CANVAS_GLGRAPHICS_H
 
+#include <memory>
 #include <mutex>
+#include <boost/noncopyable.hpp>
 #include <epoxy/gl.h>
+
 #include "graphics.h"
 #include "texturecache.h"
 
-namespace Inkscape {
-namespace UI {
-namespace Widget {
+namespace Inkscape::UI::Widget {
+
 class Stores;
 class Prefs;
 class PixelStreamer;
@@ -23,7 +25,7 @@ class PixelStreamer;
 template <GLuint type>
 struct Shader : boost::noncopyable
 {
-    GLuint id;
+    GLuint id{};
     Shader(char const *src) { id = glCreateShader(type); glShaderSource(id, 1, &src, nullptr); glCompileShader(id); }
     ~Shader() { glDeleteShader(id); }
 };
@@ -44,7 +46,7 @@ class VAO
 {
 public:
     GLuint vao = 0;
-    GLuint vbuf;
+    GLuint vbuf{};
 
     VAO() = default;
     VAO(GLuint vao, GLuint vbuf) : vao(vao), vbuf(vbuf) {}
@@ -72,7 +74,7 @@ public:
     void set_scale_factor(int scale) override { scale_factor = scale; }
     void set_outlines_enabled(bool) override;
     void set_background_in_stores(bool enabled) override { background_in_stores = enabled; }
-    void set_colours(uint32_t p, uint32_t d, uint32_t b) override { page = p; desk = d; border = b; }
+    void set_colours(std::uint32_t const p, std::uint32_t const d, std::uint32_t const b) override { page = p; desk = d; border = b; }
 
     void recreate_store(Geom::IntPoint const &dimensions) override;
     void shift_store(Fragment const &dest) override;
@@ -87,7 +89,6 @@ public:
     Cairo::RefPtr<Cairo::ImageSurface> request_tile_surface(Geom::IntRect const &rect, bool nogl) override;
     void draw_tile(Fragment const &fragment, Cairo::RefPtr<Cairo::ImageSurface> surface, Cairo::RefPtr<Cairo::ImageSurface> outline_surface) override;
     void junk_tile_surface(Cairo::RefPtr<Cairo::ImageSurface> surface) override;
-
     void paint_widget(Fragment const &view, PaintArgs const &args, Cairo::RefPtr<Cairo::Context> const &cr) override;
 
 private:
@@ -97,7 +98,7 @@ private:
     // OpenGL objects.
     VAO rect; // Rectangle vertex data.
     Program checker, shadow, texcopy, texcopydouble, outlineoverlay, xray, outlineoverlayxray; // Shaders
-    GLuint fbo; // Framebuffer object for rendering to stores.
+    GLuint fbo{}; // Framebuffer object for rendering to stores.
 
     // Pixel streamer and texture cache for uploading pixel data to GPU.
     std::unique_ptr<PixelStreamer> pixelstreamer;
@@ -106,13 +107,13 @@ private:
 
     // For preventing unnecessary pipeline recreation.
     enum class State { None, Widget, Stores, Tiles };
-    State state;
+    State state = State::None;
     void setup_stores_pipeline();
     void setup_tiles_pipeline();
     void setup_widget_pipeline(Fragment const &view);
 
     // For caching frequently-used uniforms.
-    GLuint mat_loc, trans_loc, subrect_loc, tex_loc, texoutline_loc;
+    GLuint mat_loc{}, trans_loc{}, subrect_loc{}, tex_loc{}, texoutline_loc{};
 
     // Dependency objects in canvas.
     Prefs const &prefs;
@@ -123,12 +124,10 @@ private:
     int scale_factor = 1;
     bool outlines_enabled = false;
     bool background_in_stores = false;
-    uint32_t page, desk, border;
+    std::uint32_t page{}, desk{}, border{};
 };
 
-} // namespace Widget
-} // namespace UI
-} // namespace Inkscape
+} // namespace Inkscape::UI::Widget
 
 #endif // INKSCAPE_UI_WIDGET_CANVAS_GLGRAPHICS_H
 

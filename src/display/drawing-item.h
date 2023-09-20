@@ -13,15 +13,15 @@
 #ifndef INKSCAPE_DISPLAY_DRAWING_ITEM_H
 #define INKSCAPE_DISPLAY_DRAWING_ITEM_H
 
+#include <cstdint>
+#include <exception>
 #include <memory>
 #include <list>
-#include <exception>
 #include <optional>
-
+#include <type_traits>
+#include <utility>
 #include <boost/operators.hpp>
-#include <boost/utility.hpp>
 #include <boost/intrusive/list.hpp>
-
 #include <2geom/rect.h>
 #include <2geom/affine.h>
 
@@ -29,6 +29,7 @@
 #include "tags.h"
 
 namespace Glib { class ustring; }
+
 class SPStyle;
 class SPItem;
 
@@ -39,6 +40,7 @@ class DrawingCache;
 class DrawingItem;
 class DrawingPattern;
 class DrawingContext;
+
 namespace Filters { class Filter; }
 
 enum class Antialiasing : unsigned char
@@ -48,7 +50,7 @@ enum class Antialiasing : unsigned char
 
 struct RenderContext
 {
-    uint32_t outline_color;
+    std::uint32_t outline_color;
     std::optional<Antialiasing> antialiasing_override;
 };
 

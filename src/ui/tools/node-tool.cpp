@@ -12,9 +12,10 @@
  */
 
 #include <iomanip>
-
-#include <glibmm/ustring.h>
+#include <set>
+#include <utility>
 #include <glib/gi18n.h>
+#include <glibmm/ustring.h>
 #include <gdk/gdkkeysyms.h>
 
 #include "desktop.h"
@@ -24,19 +25,15 @@
 #include "selection-chemistry.h"
 #include "selection.h"
 #include "snap.h"
-
 #include "display/curve.h"
 #include "display/control/canvas-item-bpath.h"
 #include "display/control/canvas-item-group.h"
-
 #include "live_effects/effect.h"
-
 #include "object/sp-clippath.h"
 #include "object/sp-item-group.h"
 #include "object/sp-mask.h"
 #include "object/sp-namedview.h"
 #include "object/sp-shape.h"
-
 #include "ui/knot/knot-holder.h"
 #include "ui/modifiers.h"
 #include "ui/shape-editor.h" // temporary!
@@ -693,12 +690,10 @@ void NodeTool::update_tip()
     unsigned total = _selected_nodes->allPoints().size();
 
     if (sz != 0) {
-        // TODO: Use Glib::ustring::compose and remove the useless copy after string freeze
-        char *nodestring_temp = g_strdup_printf(
-            ngettext("<b>%u of %u</b> node selected.", "<b>%u of %u</b> nodes selected.", total),
+        // TRANSLATORS: %1 is the number of nodes selected. %2 is the total number of nodes.
+        auto nodestring = Glib::ustring::compose(
+            ngettext("<b>%1 of %2</b> node selected.", "<b>%1 of %2</b> nodes selected.", total),
             sz, total);
-        Glib::ustring nodestring(nodestring_temp);
-        g_free(nodestring_temp);
 
         if (sz == 2) {
             // if there are only two nodes selected, display the angle
@@ -714,23 +709,23 @@ void NodeTool::update_tip()
             g_assert(positions.size() == 2);
             const double angle = Geom::deg_from_rad(Geom::Line(positions[0], positions[1]).angle());
             nodestring += " ";
+            // TRANSLATORS: %1 is an angle in degrees, formatted with two decimal places.
             nodestring += Glib::ustring::compose(_("Angle: %1°."),
                                                  Glib::ustring::format(std::fixed, std::setprecision(2), angle));
         }
 
         if (this->_last_over) {
-            // TRANSLATORS: The %s below is where the "%u of %u nodes selected" sentence gets put
-            char *dyntip = g_strdup_printf(C_("Node tool tip",
-                                              "%s Drag to select nodes, click to edit only this object (more: Shift)"),
-                                           nodestring.c_str());
-            this->message_context->set(Inkscape::NORMAL_MESSAGE, dyntip);
-            g_free(dyntip);
+            // TRANSLATORS: The %1 below is where the previous "%1 of %2 nodes selected" sentence gets put.
+            auto const dyntip = Glib::ustring::compose(C_("Node tool tip",
+                                                          "%1 Drag to select nodes, click to edit only this object (more: Shift)"),
+                                                       nodestring);
+            this->message_context->set(Inkscape::NORMAL_MESSAGE, dyntip.c_str());
         } else {
-            char *dyntip = g_strdup_printf(C_("Node tool tip",
-                                              "%s Drag to select nodes, click clear the selection"),
-                                           nodestring.c_str());
-            this->message_context->set(Inkscape::NORMAL_MESSAGE, dyntip);
-            g_free(dyntip);
+            // TRANSLATORS: The %1 below is where the previous "%1 of %2 nodes selected" sentence gets put.
+            auto const dyntip = Glib::ustring::compose(C_("Node tool tip",
+                                                          "%1 Drag to select nodes, click to clear the selection"),
+                                                       nodestring);
+            this->message_context->set(Inkscape::NORMAL_MESSAGE, dyntip.c_str());
         }
     } else if (!this->_multipath->empty()) {
         if (this->_last_over) {

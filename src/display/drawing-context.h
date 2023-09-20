@@ -15,8 +15,9 @@
 
 #include <2geom/rect.h>
 #include <2geom/transforms.h>
-#include <boost/utility.hpp>
+#include <boost/noncopyable.hpp>
 #include <cairo.h>
+
 typedef unsigned int guint32;
 
 namespace Inkscape {

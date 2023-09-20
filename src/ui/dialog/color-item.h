@@ -10,18 +10,22 @@
 #ifndef INKSCAPE_UI_DIALOG_COLOR_ITEM_H
 #define INKSCAPE_UI_DIALOG_COLOR_ITEM_H
 
-#include <glibmm/ustring.h>
+#include <array>
+#include <string>
 #include <variant>
-#include <boost/noncopyable.hpp>
-#include <cairomm/cairomm.h>
+#include <cairomm/refptr.h>
 #include <glibmm/refptr.h>
 #include <glibmm/ustring.h>
 #include <gtk/gtk.h> // GtkEventControllerMotion
 #include <gtkmm/drawingarea.h>
 #include <gtkmm/gesture.h> // Gtk::EventSequenceState
 
-#include "inkscape-preferences.h"
 #include "widgets/paintdef.h"
+
+namespace Cairo {
+class Context;
+class ImageSurface;
+} // namespace Cairo
 
 namespace Gtk {
 class GestureMultiPress;
@@ -38,13 +42,14 @@ class DialogBase;
  *
  * Note: This widget must be outlived by its parent dialog, passed in the constructor.
  */
-class ColorItem final : public Gtk::DrawingArea, boost::noncopyable
+class ColorItem final : public Gtk::DrawingArea
 {
 public:
     /// Create a static color from a paintdef.
     ColorItem(PaintDef const&, DialogBase*);
     /// Add new group or filler element.
     ColorItem(Glib::ustring name);
+    ~ColorItem() final;
 
     // Returns true if this is group heading rather than a color
     bool is_group() const;

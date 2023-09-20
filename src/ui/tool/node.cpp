@@ -9,21 +9,16 @@
 
 #include <atomic>
 #include <iostream>
-#include <stdexcept>
-#include <boost/utility.hpp>
-
+#include <vector>
+#include <2geom/bezier-utils.h>
 #include <glib/gi18n.h>
 #include <gdk/gdkkeysyms.h>
-
-#include <2geom/bezier-utils.h>
 
 #include "desktop.h"
 #include "object/sp-namedview.h"
 #include "snap.h"
-
 #include "display/control/canvas-item-group.h"
 #include "display/control/canvas-item-curve.h"
-
 #include "ui/tool/control-point-selection.h"
 #include "ui/tool/path-manipulator.h"
 #include "ui/tools/node-tool.h"
