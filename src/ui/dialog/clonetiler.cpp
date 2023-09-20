@@ -2648,10 +2648,8 @@ void CloneTiler::reset_recursive(Gtk::Widget *w)
         }
     }
 
-    if (auto const container = dynamic_cast<Gtk::Container *>(w)) {
-        for (auto const i : UI::get_children(*container)) {
-            reset_recursive(i);
-        }
+    for (auto const i : UI::get_children(*w)) {
+        reset_recursive(i);
     }
 }
 

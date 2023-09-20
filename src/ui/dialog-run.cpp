@@ -1,8 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
+
 #include <optional>
 
 #include <glibmm/main.h>
 #include <gtkmm/dialog.h>
+#include <gtkmm/window.h>
 
 #include "dialog-run.h"
 
@@ -36,7 +38,7 @@ int dialog_run(Gtk::Dialog &dialog)
     return *result;
 }
 
-void dialog_show_modal_and_selfdestruct(std::unique_ptr<Gtk::Dialog> dialog, Gtk::Container *toplevel)
+void dialog_show_modal_and_selfdestruct(std::unique_ptr<Gtk::Dialog> dialog, Gtk::Widget * const toplevel)
 {
     if (auto window = dynamic_cast<Gtk::Window*>(toplevel)) {
         dialog->set_transient_for(*window);

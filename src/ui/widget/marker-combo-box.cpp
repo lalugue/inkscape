@@ -25,7 +25,6 @@
 #include <gtkmm/builder.h>
 #include <gtkmm/button.h>
 #include <gtkmm/checkbutton.h>
-#include <gtkmm/container.h>
 #include <gtkmm/flowbox.h>
 #include <gtkmm/grid.h>
 #include <gtkmm/icontheme.h>

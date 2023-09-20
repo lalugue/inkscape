@@ -243,11 +243,9 @@ DialogNotebook::provide_scroll(Gtk::Widget &page) {
 Gtk::ScrolledWindow *
 DialogNotebook::get_scrolledwindow(Gtk::Widget &page)
 {
-    if (auto const container = dynamic_cast<Gtk::Container *>(&page)) {
-        if (auto const children = UI::get_children(*container); !children.empty()) {
-            if (auto const scrolledwindow = dynamic_cast<Gtk::ScrolledWindow *>(children[0])) {
-                return scrolledwindow;
-            }
+    if (auto const children = UI::get_children(page); !children.empty()) {
+        if (auto const scrolledwindow = dynamic_cast<Gtk::ScrolledWindow *>(children[0])) {
+            return scrolledwindow;
         }
     }
     return nullptr;
@@ -891,9 +889,8 @@ void DialogNotebook::toggle_tab_labels_callback(bool show)
 
 void DialogNotebook::on_page_switch(Gtk::Widget *curr_page, guint)
 {
-    if (auto container = dynamic_cast<Gtk::Container *>(curr_page)) {
-        container->show_all_children();
-    }
+    // Replaces Container.show_all_children(). TODO: GTK4: not needed: remove.
+    for_each_child(*curr_page, [](Gtk::Widget &child){ child.set_visible(true); return ForEachResult::_continue; });
 
     for_each_child(_notebook, [=](Gtk::Widget &page){
         if (auto const dialogbase = dynamic_cast<DialogBase *>(&page)) {

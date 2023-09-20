@@ -32,9 +32,7 @@
 #include "svg-preview.h"
 
 namespace Gtk {
-class Container;
 class Entry;
-class Expander;
 class Expander;
 class FileFilter;
 class ListStore;
@@ -52,18 +50,6 @@ class SVGViewWidget;
 } // namespace View
 
 namespace Dialog {
-
-/*#########################################################################
-### Utility
-#########################################################################*/
-
-void
-findEntryWidgets(Gtk::Container *parent,
-                 std::vector<Gtk::Entry *> &result);
-
-void
-findExpanderWidgets(Gtk::Container *parent,
-                    std::vector<Gtk::Expander *> &result);
 
 /*#########################################################################
 ### F I L E     D I A L O G    B A S E    C L A S S

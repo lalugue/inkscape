@@ -32,7 +32,6 @@
 #include <giomm/simpleaction.h>
 #include <gtkmm/accelgroup.h>
 #include <gtkmm/application.h>
-#include <gtkmm/container.h>
 #include <gtkmm/window.h>
 
 #include "document.h"
@@ -890,13 +889,9 @@ Shortcuts::update_gui_text_recursive(Gtk::Widget* widget)
         }
     }
 
-    auto container = dynamic_cast<Gtk::Container *>(widget);
-    if (container) {
-        for (auto const child : UI::get_children(*container)) {
-            update_gui_text_recursive(child);
-        }
+    for (auto const child : UI::get_children(*widget)) {
+        update_gui_text_recursive(child);
     }
-
 }
 
 // Dialogs
@@ -1039,12 +1034,11 @@ Shortcuts::dump_all_recursive(Gtk::Widget* widget)
               << ":   " << widget->get_tooltip_text()
               << ":   " << action
               << std::endl;
-    auto container = dynamic_cast<Gtk::Container *>(widget);
-    if (container) {
-        for (auto const child : UI::get_children(*container)) {
-            dump_all_recursive(child);
-        }
+
+    for (auto const child : UI::get_children(*widget)) {
+        dump_all_recursive(child);
     }
+
     --indent;
 }
 
