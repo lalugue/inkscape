@@ -15,6 +15,7 @@
 #include <functional>
 #include <2geom/path.h>
 #include <2geom/pathvector.h>
+#include "path/path-boolop.h"
 
 namespace Inkscape {
 
@@ -112,6 +113,29 @@ bool is_path_empty(const Geom::Path &path);
  * Two paths are viewed as connected if they overlap.
  */
 std::vector<Geom::PathVector> split_non_intersecting_paths(Geom::PathVector &&paths, bool remove_empty = false);
+
+/**
+ * Create a user spected offset from a pathvector
+ */
+Geom::PathVector 
+do_offset(Geom::PathVector const & path_in
+        , double to_offset
+        , double tolerance
+        , double miter_limit
+        , FillRule fillrule
+        , Inkscape::LineJoinType join
+        , Geom::Point point // knot on LPE
+        , Geom::PathVector &helper_path
+        , Geom::PathVector &mix_pathv_all);
+
+Geom::PathVector 
+do_offset(Geom::PathVector const & path_in
+        , double to_offset
+        , double tolerance
+        , double miter_limit
+        , FillRule fillrule
+        , Inkscape::LineJoinType join);
+
 
 } // namespace Inkscape
 

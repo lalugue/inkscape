@@ -41,7 +41,6 @@
 #include "ui/pack.h"
 #include "xml/sp-css-attr.h"
 
-typedef FillRule FillRuleFlatten;
 
 namespace Inkscape {
 namespace LivePathEffect {

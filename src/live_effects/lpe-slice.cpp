@@ -46,8 +46,6 @@
 #include "livarot/Path.h"
 #include "livarot/Shape.h"
 
-typedef FillRule FillRuleFlatten;
-
 namespace Inkscape {
 namespace LivePathEffect {
 LPESlice::LPESlice(LivePathEffectObject *lpeobject) :

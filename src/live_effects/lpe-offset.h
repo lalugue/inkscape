@@ -34,8 +34,6 @@ namespace OfS {
 class KnotHolderEntityOffsetPoint;
 }
 
-typedef FillRule FillRuleFlatten;
-
 class LPEOffset : public Effect, GroupBBoxEffect {
 public:
     LPEOffset(LivePathEffectObject *lpeobject);
@@ -51,7 +49,7 @@ public:
     void calculateOffset (Geom::PathVector const & path_in);
     Geom::Path cleanupPathSelfIntersects(Geom::Path path, size_t originpos, double tolerance);
     Geom::Point get_default_point(Geom::PathVector pathv);
-    double sp_get_offset(Geom::Point origin);
+    double sp_get_offset();
     friend class OfS::KnotHolderEntityOffsetPoint;
 
 private:
@@ -63,15 +61,15 @@ private:
 
     BoolParam update_on_knot_move;
     Geom::Point offset_pt;
+    bool sign = true;
     Glib::ustring prev_unit;
     double scale = 1; //take document scale and additional parent transformations into account
     KnotHolderEntity * _knot_entity;
     Geom::PathVector mix_pathv_all;
     Geom::PathVector helper_path;
     Inkscape::UI::Widget::Scalar *offset_widget;
-    FillRuleFlatten fillrule;
+    FillRule fillrule;
     bool liveknot;
-    bool legacytest_livarotonly = false;
     void modified(SPObject */*obj*/, guint flags);
     sigc::connection modified_connection;
     LPEOffset(const LPEOffset&);

@@ -1224,6 +1224,136 @@ std::vector<Geom::PathVector> split_non_intersecting_paths(Geom::PathVector &&pa
     return result;
 }
 
+Geom::PathVector 
+do_offset(Geom::PathVector const & path_in
+        , double to_offset
+        , double tolerance
+        , double miter_limit
+        , FillRule fillrule
+        , Inkscape::LineJoinType join
+        , Geom::Point point // knot on LPE
+        , Geom::PathVector &helper_path
+        , Geom::PathVector &mix_pathv_all)
+{
+    Geom::PathVector ret_closed;
+    Geom::PathVector ret_open;
+    if (Geom::are_near(to_offset,0.0)) {
+        // this is to keep reference to multiple pathvectors like in a group. Used by knot position in LPE Offset
+        mix_pathv_all.insert(mix_pathv_all.end(), path_in.begin(), path_in.end());
+        return path_in;
+    }
+    Geom::PathVector open_pathv;
+    Geom::PathVector closed_pathv;
+    Geom::PathVector orig_pathv = pathv_to_linear_and_cubic_beziers(path_in);
+    Geom::PathVector outline; // return path
+    helper_path.insert(helper_path.end(), orig_pathv.begin(), orig_pathv.end());
+    // Store separated open/closed paths
+    for (auto &i : orig_pathv) {
+        // this improve offset in near closed paths
+        if (Geom::are_near(i.initialPoint(), i.finalPoint())) {
+            i.close(true);
+        }
+        if (i.closed()) {
+            closed_pathv.push_back(i);
+        } else {
+            open_pathv.push_back(i);
+        }
+    }
+    // flatten order the direcions and remove self intersections
+    // we use user fill rule to match original view
+    // after flatten all elements has the same direction in his widding
+    sp_flatten(closed_pathv, fillrule);
+    if (to_offset < 0) {
+        Geom::OptRect bbox = closed_pathv.boundsFast();
+        if (bbox) {
+            (*bbox).expandBy(to_offset / 2.0);
+            if ((*bbox).hasZeroArea()) {
+                closed_pathv.clear();
+            }
+        }
+    }
+    // this is to keep reference to multiple pathvectors like in a group. Used by knot position in LPE Offset
+    mix_pathv_all.insert(mix_pathv_all.end(), closed_pathv.begin(), closed_pathv.end());
+    Geom::PathVector outline_tmp; // full outline to operate
+    double gap = to_offset > 0 ? 0 : 0.01;
+    for (auto &input : closed_pathv) {
+        // input dir is 1 on fill and 0 in holes. garanteed by flatten
+        bool dir = Geom::path_direction(input);
+        Geom::Path with_dir = half_outline(input, std::abs(to_offset) + gap, miter_limit, join, tolerance);
+        if (to_offset > 0) {
+            //we remove artifacts in a manual way not the best way but there is no other way without a clean offset line
+            if (!dir) {
+                auto bbox = input.boundsFast();
+                if (bbox) {
+                    double sizei = std::min((*bbox).width(),(*bbox).height());
+                    if (sizei > to_offset * 2) {
+                        outline_tmp.push_back(with_dir);
+                    }
+                }
+            } else {
+                auto with_dir_pv = Geom::PathVector(with_dir);
+                sp_flatten(with_dir_pv, fill_positive);
+                for (auto path : with_dir_pv) {
+                    auto bbox = path.boundsFast();
+                    if (bbox) {
+                        double sizei = std::min((*bbox).width(),(*bbox).height());
+                        if (sizei > to_offset * 2) {
+                            outline_tmp.push_back(path);
+                        }
+                    }
+                }
+            }
+        } else {
+            Geom::Path against_dir = half_outline(input.reversed(), std::abs(to_offset) + gap, miter_limit, join, tolerance);
+            outline_tmp.push_back(with_dir);
+            outline_tmp.push_back(against_dir);
+            outline.push_back(input);
+        }
+    }
+    if (!closed_pathv.empty()) {
+        if (to_offset > 0) {
+            outline.insert(outline.end(), outline_tmp.begin(), outline_tmp.end());
+            // this make a union propely without calling boolops
+            sp_flatten(outline, fill_positive);
+        } else {
+            // this flatten in a fill_positive way that allow us erase it from the otiginal outline alwais (smaller)
+            sp_flatten(outline_tmp, fill_positive);
+            // this can produce small satellites that become removed after new offset impletation work in 1.4
+            outline = sp_pathvector_boolop(outline_tmp, outline, bool_op_diff, fill_nonZero, fill_nonZero, false);
+        }      
+    }
+    // this is to keep reference to multiple pathvectors like in a group. Used by knot position in LPE Offset
+    mix_pathv_all.insert(mix_pathv_all.end(), open_pathv.begin(), open_pathv.end());
+    for (auto &i : open_pathv) {
+        Geom::Path tmp_a = half_outline(i, to_offset,  miter_limit, join, tolerance);
+        if (point != Geom::Point(Geom::infinity(), Geom::infinity())) {
+            Geom::Path tmp_b = half_outline(i.reversed(), to_offset,  miter_limit, join, tolerance);
+            double distance_b = Geom::distance(point, tmp_a.pointAt(tmp_a.nearestTime(point)));
+            double distance_a = Geom::distance(point, tmp_b.pointAt(tmp_b.nearestTime(point)));
+            if (distance_b < distance_a) {
+                outline.push_back(tmp_a);
+            } else {
+                outline.push_back(tmp_b);
+            }
+        } else {
+            outline.push_back(tmp_a);
+        }
+    }
+    return outline;
+}
+
+Geom::PathVector 
+do_offset(Geom::PathVector const & path_in
+        , double to_offset
+        , double tolerance
+        , double miter_limit
+        , FillRule fillrule
+        , Inkscape::LineJoinType join)
+{
+    Geom::PathVector not_used;
+    return do_offset(path_in, to_offset, tolerance, miter_limit, fillrule, join, Geom::Point(Geom::infinity(), Geom::infinity()), not_used, not_used);
+}
+
 } // namespace Inkscape
 
 /*
