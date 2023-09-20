@@ -61,7 +61,7 @@ void DocumentFonts::update_document_fonts(const std::map<Glib::ustring, std::set
 }
 
 // Returns the fonts used in the document.
-const std::set <Glib::ustring> DocumentFonts::get_fonts()
+std::set<Glib::ustring> const &DocumentFonts::get_fonts() const
 {
     return _document_fonts;
 }

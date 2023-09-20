@@ -92,12 +92,12 @@ public:
     std::string& trim_left_and_right(std::string& s, const char* t = " \t\n\r\f\v");
     int get_user_collection_location(const Glib::ustring& collection_name);
     std::string generate_filename_from_collection(const Glib::ustring &collection_name, bool is_system);
-    int get_collections_count(bool is_system = false);
-    bool find_collection(const Glib::ustring& collection_name, bool is_system = false);
+    int get_collections_count(bool is_system = false) const;
+    bool find_collection(Glib::ustring const &collection_name, bool is_system = false) const;
 
-    std::vector <Glib::ustring> get_collections(bool is_system = false);
-    std::vector <Glib::ustring> get_all_collections();
-    std::set <Glib::ustring> get_fonts(const Glib::ustring& name, bool is_system = false);
+    std::vector<Glib::ustring> get_collections(bool is_system = false) const;
+    std::vector<Glib::ustring> get_all_collections() const;
+    std::set<Glib::ustring> const &get_fonts(Glib::ustring const &name, bool is_system = false) const;
 
     // This signal will be emitted whenever there's a change in the font collections
     // This includes: Creating/deleting collection, and adding/deleting fonts.

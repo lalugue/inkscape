@@ -38,7 +38,7 @@ public:
     void clear();
     // void print_document_fonts();
     void update_document_fonts(const std::map<Glib::ustring, std::set<Glib::ustring>>& font_data);
-    const std::set <Glib::ustring> get_fonts();
+    std::set<Glib::ustring> const &get_fonts() const;
 
     // Signals
     sigc::connection connectUpdate(sigc::slot <void ()> slot) {

@@ -18,14 +18,15 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#ifndef SEEN_INK_COMBOBOXENTRY_ACTION
-#define SEEN_INK_COMBOBOXENTRY_ACTION
+#ifndef SEEN_INK_COMBOBOXENTRYTOOLITEM
+#define SEEN_INK_COMBOBOXENTRYTOOLITEM
 
+#include <glibmm/ustring.h>
+#include <gtk/gtk.h>
 #include <gtkmm/toolitem.h>
+#include <sigc++/signal.h>
 
-namespace Inkscape {
-namespace UI {
-namespace Widget {
+namespace Inkscape::UI::Widget {
 
 /**
  * Creates a Gtk::ToolItem subclass that wraps a Gtk::ComboBox object.
@@ -36,7 +37,7 @@ private:
     Glib::ustring       _label;
     GtkTreeModel       *_model; ///< Tree Model
     GtkComboBox        *_combobox;
-    GtkEntry           *_entry;
+    GtkEntry           *_entry = nullptr;
     gint                _entry_width;// Width of GtkEntry in characters.
     gint                _extra_width;// Extra Width of GtkComboBox.. to widen drop-down list in list mode.
     gpointer            _cell_data_func; // drop-down menu format
@@ -136,10 +137,9 @@ public:
     void set_active        (decltype(_active)         active)         {_active         = active;}
 };
 
-}
-}
-}
-#endif /* SEEN_INK_COMBOBOXENTRY_ACTION */
+} // namespace Inkscape::UI::Widget
+
+#endif // SEEN_INK_COMBOBOXENTRYTOOLITEM
 
 /*
   Local Variables:

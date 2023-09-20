@@ -25,32 +25,28 @@
  */
 
 #include "combo-box-entry-tool-item.h"
-#include "libnrtype/font-lister.h"
 
 #include <cassert>
-#include <iostream>
 #include <cstring>
-#include <glibmm/ustring.h>
-
-#include <gtk/gtk.h>
+#include <utility>
 #include <gdk/gdkkeysyms.h>
 #include <gdkmm/display.h>
 
+#include "libnrtype/font-lister.h"
 #include "ui/icon-names.h"
+#include "ui/util.h"
 
-namespace Inkscape {
-namespace UI {
-namespace Widget {
+namespace Inkscape::UI::Widget {
 
 ComboBoxEntryToolItem::ComboBoxEntryToolItem(Glib::ustring name,
-                                     Glib::ustring label,
-                                     Glib::ustring tooltip,
-                                     GtkTreeModel  *model,
-                                     gint           entry_width,
-                                     gint           extra_width,
-                                     void          *cell_data_func,
-                                     void          *separator_func,
-                                     GtkWidget     *focusWidget)
+                                             Glib::ustring label,
+                                             Glib::ustring tooltip,
+                                             GtkTreeModel  *model,
+                                             gint           entry_width,
+                                             gint           extra_width,
+                                             void          *cell_data_func,
+                                             void          *separator_func,
+                                             GtkWidget     *focusWidget)
     : _label(std::move(label)),
       _tooltip(std::move(tooltip)),
       _model(model),
@@ -143,19 +139,19 @@ ComboBoxEntryToolItem::ComboBoxEntryToolItem(Glib::ustring name,
     }
 
     // Get reference to GtkEntry and fiddle a bit with it.
-    GtkWidget *child = gtk_bin_get_child( GTK_BIN(comboBoxEntry) );
+    auto const child = UI::get_first_child(*Glib::wrap(comboBoxEntry));
+    g_assert(child);
 
     // Name it so we can muck with it using an RC file
-    gtk_widget_set_name( child, entry_name );
+    child->set_name(entry_name);
     g_free( entry_name );
 
-    if( child && GTK_IS_ENTRY( child ) ) {
-
-        _entry = GTK_ENTRY(child);
+    if (GTK_IS_ENTRY(child->gobj())) {
+        _entry = GTK_ENTRY(child->gobj());
 
         // Change width
         if( _entry_width > 0 ) {
-            gtk_entry_set_width_chars (GTK_ENTRY (child), _entry_width );
+            gtk_entry_set_width_chars(_entry, _entry_width);
         }
 
         // Add pop-up entry completion if required
@@ -164,8 +160,8 @@ ComboBoxEntryToolItem::ComboBoxEntryToolItem(Glib::ustring name,
         }
 
         // Add signal for GtkEntry to check if finished typing.
-        g_signal_connect( G_OBJECT(child), "activate", G_CALLBACK(entry_activate_cb), this );
-        g_signal_connect( G_OBJECT(child), "key-press-event", G_CALLBACK(keypress_cb), this );
+        g_signal_connect(_entry, "activate"       , G_CALLBACK(entry_activate_cb), this);
+        g_signal_connect(_entry, "key-press-event", G_CALLBACK(keypress_cb      ), this);
     }
 
     set_tooltip(_tooltip.c_str());
@@ -574,14 +570,14 @@ ComboBoxEntryToolItem::combo_box_changed_cb( GtkComboBox* widget, gpointer data 
 static gboolean add_more_font_families_idle(gpointer user_data)
 {
     FontLister* fl = FontLister::get_instance();
-    static int q = 1;
+    static unsigned q = 1;
     static unsigned recurse_times = fl->get_font_families_size() / FONT_FAMILIES_GROUP_SIZE;
 
     fl->init_font_families(q, FONT_FAMILIES_GROUP_SIZE);
     if (q < recurse_times)
         gdk_threads_add_idle (add_more_font_families_idle, NULL);
     q++;
-    return false;
+    return G_SOURCE_REMOVE;
 }
 
 gboolean ComboBoxEntryToolItem::combo_box_popup_cb(ComboBoxEntryToolItem *widget, gpointer data)
@@ -596,9 +592,8 @@ gboolean ComboBoxEntryToolItem::set_cell_markup(gpointer data)
     ComboBoxEntryToolItem *self = static_cast<ComboBoxEntryToolItem *>(data);
     gtk_cell_layout_set_cell_data_func (GTK_CELL_LAYOUT( self->_combobox ), self->_cell,
               GtkCellLayoutDataFunc (self->_cell_data_func), self, nullptr );
-    return false;
+    return G_SOURCE_REMOVE;
 }
-
 
 void
 ComboBoxEntryToolItem::entry_activate_cb( GtkEntry *widget,
@@ -674,44 +669,30 @@ ComboBoxEntryToolItem::keypress_cb( GtkWidget *entry, GdkEventKey *event, gpoint
     gdk_keymap_translate_keyboard_state( Gdk::Display::get_default()->get_keymap(),
                                          event->hardware_keycode, (GdkModifierType)event->state,
                                          0, &key, nullptr, nullptr, nullptr );
-
     switch ( key ) {
-
         case GDK_KEY_Escape:
-        {
-            //gtk_spin_button_set_value( GTK_SPIN_BUTTON(widget), action->private_data->lastVal );
             action->defocus();
             wasConsumed = TRUE;
-        }
-        break;
+            break;
 
         case GDK_KEY_Tab:
-        {
             // Fire activation similar to how Return does, but also return focus to text object
             // itself
             entry_activate_cb( GTK_ENTRY (entry), data );
             action->defocus();
             wasConsumed = TRUE;
-        }
-        break;
+            break;
 
         case GDK_KEY_Return:
         case GDK_KEY_KP_Enter:
-        {
             action->defocus();
-            //wasConsumed = TRUE;
-        }
-        break;
-
-
+            break;
     }
 
     return wasConsumed;
 }
 
-}
-}
-}
+} // namespace Inkscape::UI::Widget
 
 /*
   Local Variables:

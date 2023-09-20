@@ -478,7 +478,7 @@ std::string FontCollections::generate_filename_from_collection(const Glib::ustri
     return collection_file;
 }
 
-int FontCollections::get_collections_count(bool is_system)
+int FontCollections::get_collections_count(bool is_system) const
 {
     if(is_system) {
         return _system_collections.size();
@@ -487,7 +487,7 @@ int FontCollections::get_collections_count(bool is_system)
     return _user_collections.size();
 }
 
-bool FontCollections::find_collection(const Glib::ustring& collection_name, bool is_system)
+bool FontCollections::find_collection(Glib::ustring const &collection_name, bool is_system) const
 {
     FontCollection temp_collection(collection_name, is_system);
 
@@ -509,7 +509,7 @@ bool FontCollections::find_collection(const Glib::ustring& collection_name, bool
 }
 
 // Get a set of the collections.
-std::vector <Glib::ustring> FontCollections::get_collections(bool is_system)
+std::vector<Glib::ustring> FontCollections::get_collections(bool is_system) const
 {
     std::vector <Glib::ustring> collections;
     if(is_system) {
@@ -526,7 +526,7 @@ std::vector <Glib::ustring> FontCollections::get_collections(bool is_system)
 }
 
 // Get all of the collections.
-std::vector <Glib::ustring> FontCollections::get_all_collections()
+std::vector<Glib::ustring> FontCollections::get_all_collections() const
 {
     std::vector <Glib::ustring> collections(_system_collections.size() + _user_collections.size());
 
@@ -546,19 +546,18 @@ std::vector <Glib::ustring> FontCollections::get_all_collections()
 }
 
 // Get the set of fonts stored in a particular collection.
-std::set <Glib::ustring> FontCollections::get_fonts(const Glib::ustring& collection_name, bool is_system)
+std::set<Glib::ustring> const &FontCollections::get_fonts(const Glib::ustring& collection_name, bool is_system) const
 {
     // Check if the collection exists.
     FontCollection temp_col(collection_name, is_system);
     auto it = _user_collections.find(temp_col);
-
     if(it != _user_collections.end()) {
         // The collection exists.
         return (*it).fonts;
     }
 
-    std::set <Glib::ustring> temp_set;
-    return temp_set;
+    static std::set<Glib::ustring> empty_set;
+    return empty_set;
 }
 
 } // Namespace

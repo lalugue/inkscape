@@ -21,10 +21,10 @@
 #include "io/resource.h"
 
 namespace Inkscape {
+
 inline const char *RECENTFONTS_FILENAME = "recently_used_fonts.log";
 
 class RecentlyUsedFonts {
-
 public:
     enum What {
         All,
@@ -48,9 +48,8 @@ public:
     void change_max_list_size(const int& max_size);
     void prepend_to_list(const Glib::ustring& font_name);
 
-    // bool is_empty();
-    const std::list<Glib::ustring> get_fonts();
-    int get_count();
+    std::list<Glib::ustring> const &get_fonts() const;
+    int get_count() const;
 
     sigc::connection connectUpdate(sigc::slot <void ()> slot) {
         return update_signal.connect(slot);
@@ -65,7 +64,7 @@ private:
     // Defines the maximum size the recently_used_font_list can have.
     // TODO: Add an option in the preferences to change the maximum size of
     // the recently used font list.
-    int _max_size;
+    int _max_size{};
 
     sigc::signal <void ()> update_signal;
 };

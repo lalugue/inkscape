@@ -43,7 +43,6 @@
 #include "document.h"
 #include "inkscape.h"
 #include "selection.h"
-
 #include "selection-chemistry.h"
 #include "libnrtype/font-lister.h"
 #include "object/sp-flowdiv.h"
@@ -329,32 +328,21 @@ TextToolbar::TextToolbar(SPDesktop *desktop)
                                                                  (gpointer)font_lister_cell_data_func2, // Cell layout
                                                                  (gpointer)font_lister_separator_func2,
                                                                  desktop->getCanvas()->Gtk::Widget::gobj()); // Focus widget
+
         _font_family_item->popup_enable(); // Enable entry completion
-        gchar *const info = _("Select all text with this font-family");
+
+        char const * const info = _("Select all text with this font-family");
         _font_family_item->set_info( info ); // Show selection icon
         _font_family_item->set_info_cb( (gpointer)sp_text_toolbox_select_cb );
 
-        gchar *const warning = _("Font not found on system");
+        char const * const warning = _("Font not found on system");
         _font_family_item->set_warning( warning ); // Show icon w/ tooltip if font missing
         _font_family_item->set_warning_cb( (gpointer)sp_text_toolbox_select_cb );
 
-        //ink_comboboxentry_action_set_warning_callback( act, sp_text_fontfamily_select_all );
         _font_family_item->signal_changed().connect([=](){ fontfamily_value_changed(); });
         add(*_font_family_item);
 
-        // Change style of drop-down from menu to list
-        auto css_provider = gtk_css_provider_new();
-        gtk_css_provider_load_from_data(css_provider,
-                                        "#TextFontFamilyAction_combobox {\n"
-                                        "  -GtkComboBox-appears-as-list: true;\n"
-                                        "}\n",
-                                        -1, nullptr);
-
-        auto screen = gdk_screen_get_default();
         _font_family_item->focus_on_click(false);
-        gtk_style_context_add_provider_for_screen(screen,
-                                                  GTK_STYLE_PROVIDER(css_provider),
-                                                  GTK_STYLE_PROVIDER_PRIORITY_USER);
     }
 
     /* Font styles */

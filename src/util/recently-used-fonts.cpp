@@ -210,13 +210,13 @@ bool RecentlyUsedFonts::is_empty()
 }
 */
 
-int RecentlyUsedFonts::get_count()
+int RecentlyUsedFonts::get_count() const
 {
     return _recent_list.size();
 }
 
 // Returns the recently used fonts.
-const std::list <Glib::ustring> RecentlyUsedFonts::get_fonts()
+std::list<Glib::ustring> const &RecentlyUsedFonts::get_fonts() const
 {
     return _recent_list;
 }

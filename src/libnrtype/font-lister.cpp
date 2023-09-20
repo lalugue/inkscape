@@ -246,21 +246,17 @@ void FontLister::apply_collections(std::set <Glib::ustring>& selected_collection
     for (auto const &col : selected_collections) {
         if (col == Inkscape::DOCUMENT_FONTS) {
             DocumentFonts* document_fonts = Inkscape::DocumentFonts::get();
-
-            for (auto font : document_fonts->get_fonts()) {
+            for (auto const &font : document_fonts->get_fonts()) {
                 fonts.insert(font);
             }
         } else if (col == Inkscape::RECENTLY_USED_FONTS) {
             RecentlyUsedFonts *recently_used = Inkscape::RecentlyUsedFonts::get();
-
-            for (auto font : recently_used->get_fonts()) {
+            for (auto const &font : recently_used->get_fonts()) {
                 fonts.insert(font);
             }
         } else {
-            std::set <Glib::ustring> temp_set = font_collections->get_fonts(col);
-
-            for (auto const &font : temp_set) {
-                fonts.insert(font);
+            for (auto const &font : font_collections->get_fonts(col)) {
+                fonts.insert(std::move(font));
             }
         }
     }
@@ -1354,8 +1350,7 @@ void font_lister_cell_data_func2(GtkCellLayout * /*cell_layout*/,
 
         /* See if font-family on system */
         std::vector<Glib::ustring> tokens = Glib::Regex::split_simple("\\s*,\\s*", family);
-        for (auto token : tokens) {
-
+        for (auto const &token : tokens) {
             bool found = Inkscape::FontLister::get_instance()->font_installed_on_system(token);
 
             if (found) {
@@ -1384,7 +1379,6 @@ void font_lister_cell_data_func2(GtkCellLayout * /*cell_layout*/,
 
     int show_sample = prefs->getInt("/tools/text/show_sample_in_list", 1);
     if (show_sample) {
-
         Glib::ustring sample = prefs->getString("/tools/text/font_sample");
         gchar* sample_escaped = g_markup_escape_text(sample.data(), -1);
         if (data) {
