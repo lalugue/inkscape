@@ -15,6 +15,7 @@ inkscape_devel_source.tar.bz2
 *~
 *.rej
 .vscode
+.nvim.lua
 *.kdev4
 .uuid
 .clangd/

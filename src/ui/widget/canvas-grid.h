@@ -136,6 +136,7 @@ private:
     auto_connection _page_modified_connection;
     auto_connection _sel_changed_connection;
     auto_connection _sel_modified_connection;
+    auto_connection _blink_lock_button_timeout;
 
     // Ruler event handling.
     bool _ruler_clicked = false; ///< True if the ruler has been clicked
@@ -144,6 +145,7 @@ private:
     Geom::IntPoint _ruler_drag_origin; ///< Position of start of drag
     Geom::Point _normal; ///< Normal to the guide currently being handled during ruler event
     CanvasItemPtr<CanvasItemGuideLine> _active_guide; ///< The guide being handled during a ruler event
+
     Geom::IntPoint _rulerToCanvas(bool horiz) const;
     void _createGuideItem(Geom::Point const &pos, bool horiz);
     void _createGuide(Geom::Point origin, Geom::Point normal);
@@ -152,6 +154,7 @@ private:
     Gtk::EventSequenceState _rulerButtonRelease(Gtk::GestureMultiPress const &gesture,
                                                 int n_press, double x, double y, bool horiz);
     void _rulerMotion(GtkEventControllerMotion const *controller, double x, double y, bool horiz);
+    void _blinkLockButton();
 
     // Temporarily required due to use of C callbacks.
     template <bool horiz>

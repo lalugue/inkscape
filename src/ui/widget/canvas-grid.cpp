@@ -18,6 +18,7 @@
 
 #include <utility>
 #include <glibmm/i18n.h>
+#include <glibmm/main.h>
 #include <gtkmm/adjustment.h>
 #include <gtkmm/builder.h>
 #include <gtkmm/checkbutton.h>
@@ -399,6 +400,9 @@ void CanvasGrid::_createGuideItem(Geom::Point const &pos, bool horiz)
 {
     auto const desktop = _dtw->get_desktop();
 
+    // Ensure new guide is visible
+    desktop->getNamedView()->setShowGuides(true);
+
     // Calculate the normal of the guidelines when dragged from the edges of rulers.
     auto const y_dir = desktop->yaxisdir();
     auto normal_bl_to_tr = Geom::Point( 1, y_dir).normalized(); // Bottom-left to top-right
@@ -457,8 +461,9 @@ void CanvasGrid::_rulerMotion(GtkEventControllerMotion const *controller, double
         if (Geom::LInfty(Geom::Point(x, y).floor() - _ruler_drag_origin) < tolerance) {
             return;
         }
-        // Once the drag has started, create a guide.
+
         _createGuideItem(pos, horiz);
+
         _ruler_dragged = true;
     }
 
@@ -521,27 +526,25 @@ void CanvasGrid::rulerMotion(MotionEvent const &event, bool horiz)
 
     auto const origin = horiz ? Tools::DelayedSnapEvent::GUIDE_HRULER
                               : Tools::DelayedSnapEvent::GUIDE_VRULER;
+
     desktop->getTool()->snap_delay_handler(this, nullptr, event, origin);
-
-    // Explicitly show guidelines; if I draw a guide, I want them on.
-    if (event.pos[horiz ? Geom::Y : Geom::X] >= 0) {
-        desktop->getNamedView()->setShowGuides(true);
-    }
-
-    // Get the snapped position and normal.
     auto const event_w = _canvas->canvas_to_world(event.pos);
     auto event_dt = _dtw->get_desktop()->w2d(event_w);
-    auto normal = _normal;
-    if (!(event.modifiers & GDK_SHIFT_MASK)) {
-        ruler_snap_new_guide(desktop, event_dt, normal);
-    }
-
-    // Apply the position and normal to the guide.
-    _active_guide->set_normal(normal);
-    _active_guide->set_origin(event_dt);
 
     // Update the displayed coordinates.
     desktop->set_coordinate_status(event_dt);
+
+    if (_active_guide) {
+        // Get the snapped position and normal.
+        auto normal = _normal;
+        if (!(event.modifiers & GDK_SHIFT_MASK)) {
+            ruler_snap_new_guide(desktop, event_dt, normal);
+        }
+
+        // Apply the position and normal to the guide.
+        _active_guide->set_normal(normal);
+        _active_guide->set_origin(event_dt);
+    }
 }
 
 void CanvasGrid::_createGuide(Geom::Point origin, Geom::Point normal)
@@ -549,6 +552,12 @@ void CanvasGrid::_createGuide(Geom::Point origin, Geom::Point normal)
     auto const desktop = _dtw->get_desktop();
     auto const xml_doc = desktop->doc()->getReprDoc();
     auto const repr = xml_doc->createElement("sodipodi:guide");
+
+    if (desktop->getNamedView()->getLockGuides()) {
+        // This condition occurs when guides are locked
+        _blinkLockButton();
+        desktop->getNamedView()->setLockGuides(false);
+    }
 
     // <sodipodi:guide> stores inverted y-axis coordinates
     if (desktop->is_yaxisdown()) {
@@ -580,7 +589,7 @@ Gtk::EventSequenceState CanvasGrid::_rulerButtonRelease(Gtk::GestureMultiPress c
 
     auto const desktop = _dtw->get_desktop();
 
-    if (_ruler_dragged) {
+    if (_active_guide) {
         desktop->getTool()->discard_delayed_snap_event();
 
         auto const pos = Geom::Point(x, y) + _rulerToCanvas(horiz);
@@ -615,6 +624,15 @@ Gtk::EventSequenceState CanvasGrid::_rulerButtonRelease(Gtk::GestureMultiPress c
     _ruler_dragged = false;
 
     return Gtk::EVENT_SEQUENCE_CLAIMED;
+}
+
+void CanvasGrid::_blinkLockButton()
+{
+   _guide_lock.get_style_context()->add_class("blink");
+   _blink_lock_button_timeout = Glib::signal_timeout().connect([this] {
+       _guide_lock.get_style_context()->remove_class("blink");
+       return false;
+   }, 500);
 }
 
 static void set_adjustment(Gtk::Adjustment *adj, double l, double u, double ps, double si, double pi)

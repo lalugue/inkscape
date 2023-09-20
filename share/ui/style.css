@@ -140,7 +140,15 @@
   90%   { background-color: @theme_selected_bg_color; }
   100%   { background-color: @theme_bg_color;  }
 }
+@keyframes blink_background_img {
+  0%   { background-image: image(@theme_bg_color); }
+  90%  { background-image: image(@theme_selected_bg_color); }
+  100% { background-image: image(@theme_bg_color); }
+}
 
+button.blink {
+    animation: 0.5s blink_background_img 0.1s ease 1;
+}
 
 notebook.blink {
   animation: 0.5s blink_border 0.1s ease 1;
