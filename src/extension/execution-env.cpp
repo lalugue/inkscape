@@ -30,7 +30,7 @@ namespace Extension {
 /** \brief  Create an execution environment that will allow the effect
             to execute independently.
     \param effect  The effect that we should execute
-    \param desktop   The desktop containing the document to execute on
+    \param desktop     The Desktop with the document to work on
     \param docCache  The cache created for that document
     \param show_working  Show the working dialog
     \param show_error    Show the error dialog (not working)
@@ -38,29 +38,26 @@ namespace Extension {
     Grabs the selection of the current document so that it can get
     restored.  Will generate a document cache if one isn't provided.
 */
-ExecutionEnv::ExecutionEnv (Effect * effect, SPDesktop * desktop, Implementation::ImplementationDocumentCache * docCache, bool show_working, bool show_errors) :
+ExecutionEnv::ExecutionEnv (Effect * effect, SPDesktop *desktop, Implementation::ImplementationDocumentCache * docCache, bool show_working, bool show_errors) :
     _state(ExecutionEnv::INIT),
-    _visibleDialog(nullptr),
-    _mainloop(nullptr),
     _desktop(desktop),
     _docCache(docCache),
     _effect(effect),
     _show_working(show_working)
 {
-    SPDocument *document = desktop->doc();
-    if (document && desktop) {
+    if (_desktop) {
+        _document = desktop->doc();
+    }
+    if (_document) {
         // Temporarily prevent undo in this scope
-        Inkscape::DocumentUndo::ScopedInsensitive pauseUndo(document);
+        Inkscape::DocumentUndo::ScopedInsensitive pauseUndo(_document);
         Inkscape::Selection *selection = desktop->getSelection();
         if (selection) {
             // Make sure all selected objects have an ID attribute
             selection->enforceIds();
         }
+        genDocCache();
     }
-
-    genDocCache();
-
-    return;
 }
 
 /** \brief  Destroy an execution environment
@@ -84,7 +81,7 @@ ExecutionEnv::~ExecutionEnv () {
 */
 void
 ExecutionEnv::genDocCache () {
-    if (_docCache == nullptr) {
+    if (_docCache == nullptr && _desktop) {
         // printf("Gen Doc Cache\n");
         _docCache = _effect->get_imp()->newDocCache(_effect, _desktop);
     }
@@ -112,6 +109,9 @@ ExecutionEnv::killDocCache () {
 */
 void
 ExecutionEnv::createWorkingDialog () {
+    if (!_desktop)
+        return;
+
     if (_visibleDialog != nullptr) {
         _visibleDialog->set_visible(false);
         delete _visibleDialog;
@@ -163,13 +163,13 @@ ExecutionEnv::cancel () {
 
 void
 ExecutionEnv::undo () {
-    DocumentUndo::cancel(_desktop->doc());
+    DocumentUndo::cancel(_document);
     return;
 }
 
 void
 ExecutionEnv::commit () {
-    DocumentUndo::done(_desktop->doc(), _effect->get_name(), "");
+    DocumentUndo::done(_document, _effect->get_name(), "");
     Effect::set_last_effect(_effect);
     _effect->get_imp()->commitDocument();
     killDocCache();
@@ -178,9 +178,8 @@ ExecutionEnv::commit () {
 
 void
 ExecutionEnv::reselect () {
-    SPDesktop *desktop = SP_ACTIVE_DESKTOP; // Why not use _desktop?
-    if (desktop) {
-        Inkscape::Selection *selection = desktop->getSelection();
+    if(_desktop) {
+        Inkscape::Selection *selection = _desktop->getSelection();
         if (selection) {
             selection->restoreBackup();
         }
@@ -191,16 +190,24 @@ ExecutionEnv::reselect () {
 void
 ExecutionEnv::run () {
     _state = ExecutionEnv::RUNNING;
-    if (_show_working) {
-        createWorkingDialog();
+    Inkscape::Selection *selection = nullptr;
+
+    if (_desktop) {
+        if (_show_working) {
+            createWorkingDialog();
+        }
+        selection = _desktop->getSelection();
+        selection->setBackup();
+        _desktop->setWaitingCursor();
+
+        _effect->get_imp()->effect(_effect, _desktop, _docCache);
+
+        _desktop->clearWaitingCursor();
+        selection->restoreBackup();
+    } else {
+        _effect->get_imp()->effect(_effect, _document);
     }
-    Inkscape::Selection *selection = _desktop->getSelection();
-    selection->setBackup();
-    _desktop->setWaitingCursor();
-    _effect->get_imp()->effect(_effect, _desktop, _docCache);
-    _desktop->clearWaitingCursor();
     _state = ExecutionEnv::COMPLETE;
-    selection->restoreBackup();
     // _runComplete.signal();
     return;
 }

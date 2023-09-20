@@ -54,8 +54,8 @@ public:
     Effect(Inkscape::XML::Node *in_repr, ImplementationHolder implementation, std::string *base_directory, std::string* file_name);
     ~Effect() override;
 
-    bool         prefs   (SPDesktop * desktop);
-    void         effect  (SPDesktop * desktop);
+    bool prefs(SPDesktop * desktop);
+    void effect(SPDesktop *desktop, SPDocument *document = nullptr);
 
     /** \brief  Whether a working dialog should be shown */
     bool _workingDialog = true;

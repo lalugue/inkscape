@@ -17,6 +17,7 @@
 #include <gtkmm/dialog.h>
 
 class SPDesktop;
+class SPDocument;
 
 namespace Inkscape {
 namespace Extension {
@@ -40,14 +41,15 @@ private:
 
     /** \brief If there is a working dialog it'll be referenced
                right here. */
-    Gtk::Dialog * _visibleDialog;
+    Gtk::Dialog * _visibleDialog = nullptr;
     /** \brief Signal that the run is complete. */
     sigc::signal<void ()> _runComplete;
     /** \brief  In some cases we need a mainLoop, when we do, this is
                 a pointer to it. */
     Glib::RefPtr<Glib::MainLoop> _mainloop;
     /** \brief  The desktop containing the document that we're working on. */
-    SPDesktop * _desktop;
+    SPDesktop * _desktop = nullptr;
+    SPDocument *_document = nullptr;
     /** \brief  A document cache if we were passed one. */
     Implementation::ImplementationDocumentCache * _docCache;
 
@@ -74,6 +76,8 @@ public:
                   bool show_working = true,
                   bool show_errors = true);
     virtual ~ExecutionEnv ();
+
+    void set_document(SPDocument *document) { _document = document; }
 
     /** \brief Starts the execution of the effect
         \return Returns whether the effect was executed to completion */

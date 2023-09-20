@@ -102,11 +102,12 @@ Effect::Effect(Inkscape::XML::Node *in_repr, ImplementationHolder implementation
     _filter_effect = dynamic_cast<Internal::Filter::Filter *>(imp.get()) != nullptr;
 }
 
-/** Sanitizes the passed id in place. If an invalid character is found in the ID, a warning
+/** Sanitizes the id and returns. If an invalid character is found in the ID, a warning
  *  is printed to stderr. All invalid characters are replaced with an 'X'.
  */
-void Effect::_sanitizeId(std::string &id)
+std::string Effect::get_sanitized_id() const
 {
+    std::string id = get_id();
     auto allowed = [] (char ch) {
         // Note: std::isalnum() is locale-dependent
         if ('A' <= ch && ch <= 'Z') return true;
@@ -131,6 +132,7 @@ void Effect::_sanitizeId(std::string &id)
             ch = 'X';
         }
     }
+    return id;
 }
 
 
@@ -222,8 +224,7 @@ Effect::prefs (SPDesktop * desktop)
     executes a \c SPDocumentUndo::done to commit the changes to the undo
     stack.
 */
-void
-Effect::effect (SPDesktop * desktop)
+void Effect::effect(SPDesktop *desktop, SPDocument *document)
 {
     //printf("Execute effect\n");
     if (!loaded())
@@ -231,6 +232,8 @@ Effect::effect (SPDesktop * desktop)
     if (!loaded()) return;
     ExecutionEnv executionEnv(this, desktop, nullptr, _workingDialog, true);
     execution_env = &executionEnv;
+    if (document)
+        execution_env->set_document(document);
     timer->lock();
     executionEnv.run();
     if (executionEnv.wait()) {
@@ -349,12 +352,6 @@ bool Effect::is_filter_effect() const {
 
 const Glib::ustring& Effect::get_menu_tip() const {
     return _menu_tip;
-}
-
-std::string Effect::get_sanitized_id() const {
-    std::string id = get_id();
-    _sanitizeId(id);
-    return id;
 }
 
 std::list<Glib::ustring> Effect::get_menu_list() const {

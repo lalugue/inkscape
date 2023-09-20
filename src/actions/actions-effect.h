@@ -16,6 +16,7 @@ class InkscapeApplication;
 class SPDocument;
 
 void add_actions_effect(InkscapeApplication* app);
+void add_document_actions_effect(SPDocument *doc);
 
 void enable_effect_actions(InkscapeApplication* app, bool enabled);
 

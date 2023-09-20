@@ -45,6 +45,13 @@ Gtk::Widget *Implementation::prefs_effect(Inkscape::Extension::Effect *module, S
 
 } // Implementation::prefs_effect
 
+void Implementation::effect(Inkscape::Extension::Effect *mod,
+                            SPDesktop *desktop,
+                            ImplementationDocumentCache * /*docCache*/)
+{
+    effect(mod, desktop->getDocument());
+}
+
 }  /* namespace Implementation */
 }  /* namespace Extension */
 }  /* namespace Inkscape */

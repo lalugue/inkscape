@@ -16,13 +16,14 @@
 #include <giomm.h>
 #include <glibmm/i18n.h>
 
+#include "document.h"
 #include "actions-helper.h"
 #include "inkscape-application.h"
 #include "selection.h"
 #include "extension/effect.h"
+#include "extension/db.h"
 
-void
-edit_remove_filter(InkscapeApplication *app)
+void edit_remove_filter(InkscapeApplication *app)
 {
     auto selection = app->get_active_selection();
 
@@ -30,8 +31,7 @@ edit_remove_filter(InkscapeApplication *app)
     selection->removeFilter();
 }
 
-void
-last_effect(InkscapeApplication *app)
+void last_effect(InkscapeApplication *app)
 {
     Inkscape::Extension::Effect *effect = Inkscape::Extension::Effect::get_last_effect();
 
@@ -43,8 +43,7 @@ last_effect(InkscapeApplication *app)
     effect->effect(InkscapeApplication::instance()->get_active_desktop());
 }
 
-void
-last_effect_pref(InkscapeApplication *app)
+void last_effect_pref(InkscapeApplication *app)
 {
     Inkscape::Extension::Effect *effect = Inkscape::Extension::Effect::get_last_effect();
 
@@ -56,8 +55,7 @@ last_effect_pref(InkscapeApplication *app)
     effect->prefs(InkscapeApplication::instance()->get_active_desktop());
 }
 
-void
-enable_effect_actions(InkscapeApplication* app, bool enabled)
+void enable_effect_actions(InkscapeApplication* app, bool enabled)
 {
     auto gapp = app->gio_app();
     auto le_action = gapp->lookup_action("last-effect");
@@ -85,8 +83,7 @@ std::vector<std::vector<Glib::ustring>> raw_data_effect =
     // clang-format on
 };
 
-void
-add_actions_effect(InkscapeApplication* app)
+void add_actions_effect(InkscapeApplication* app)
 {
     auto *gapp = app->gio_app();
 
@@ -101,4 +98,15 @@ add_actions_effect(InkscapeApplication* app)
         return;
     }
     app->get_action_extra_data().add_data(raw_data_effect);
+}
+
+void add_document_actions_effect(SPDocument *doc)
+{
+    auto group = doc->getActionGroup();
+
+    for (auto mod : Inkscape::Extension::db.get_effect_list()) {
+        group->add_action( mod->get_sanitized_id(), [=]() { mod->effect(nullptr, doc); });
+    }
+
+    // No extra information required to be added to the app
 }

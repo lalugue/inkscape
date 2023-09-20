@@ -64,6 +64,7 @@
 #include "3rdparty/adaptagrams/libavoid/router.h"
 #include "3rdparty/libcroco/src/cr-sel-eng.h"
 #include "3rdparty/libcroco/src/cr-selector.h"
+#include "actions/actions-effect.h"
 #include "actions/actions-edit-document.h"
 #include "actions/actions-pages.h"
 #include "actions/actions-svg-processing.h"
@@ -167,6 +168,7 @@ SPDocument::SPDocument() :
     add_actions_pages(this);
     add_actions_processing(this);
     add_actions_undo_document(this);
+    add_document_actions_effect(this);
 
     _page_manager = std::make_unique<Inkscape::PageManager>(this);
 }

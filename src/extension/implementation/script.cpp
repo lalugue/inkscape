@@ -507,6 +507,7 @@ void Script::export_raster(Inkscape::Extension::Output *module,
     \return    none
     \brief     This function uses an extension as an effect on a document.
     \param     module   Extension to effect with.
+    \param     desktop  Desktop this extensions run on.
     \param     doc      Document to run through the effect.
 
     This function is a little bit trickier than the previous two.  It
@@ -577,38 +578,14 @@ void Script::effect(Inkscape::Extension::Effect *module,
     _change_extension(module, desktop->getDocument(), params, module->ignore_stderr);
 }
 
-//uncomment if issues on ref extensions links
-/* void sp_change_hrefs(Inkscape::XML::Node *repr, gchar const *const oldfilename, gchar const *const filename)
+/**
+ * Pure document version for calling an extension from the command line
+ */
+void Script::effect(Inkscape::Extension::Effect *mod, SPDocument *document)
 {
-    gchar *new_document_base = nullptr;
-    gchar *new_document_filename = nullptr;
-    gchar *old_document_base = nullptr;
-    gchar *old_document_filename = nullptr;
-    if (filename) {
-
-#ifndef _WIN32
-        new_document_filename = prepend_current_dir_if_relative(filename);
-        old_document_filename = prepend_current_dir_if_relative(oldfilename);
-#else
-        // FIXME: it may be that prepend_current_dir_if_relative works OK on windows too, test!
-        new_document_filename = g_strdup(filename);
-        old_document_filename = g_strdup(oldfilename);
-#endif
-
-        new_document_base = g_path_get_dirname(new_document_filename);
-        old_document_base = g_path_get_dirname(old_document_filename);
-    } else {
-        new_document_base = nullptr;
-        old_document_base = nullptr;
-    }
-    Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-    bool use_sodipodi_absref = prefs->getBool("/options/svgoutput/usesodipodiabsref", false);
-    Inkscape::XML::rebase_hrefs(repr, old_document_base, new_document_base, use_sodipodi_absref);
-    g_free(new_document_base);
-    g_free(old_document_base);
-    g_free(new_document_filename);
-    g_free(old_document_filename);
-} */
+    std::list<std::string> params;
+    _change_extension(mod, document, params, mod->ignore_stderr);
+}
 
 /**
  * Internally, any modification of an existing document, used by effect and resize_page extensions.
