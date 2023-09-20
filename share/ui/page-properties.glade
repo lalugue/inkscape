@@ -406,6 +406,7 @@ SVG element positions are expressed in user units.</property>
             <property name="valign">center</property>
             <property name="margin-end">2</property>
             <property name="label" translatable="yes">Format:</property>
+            <property name="tooltip-text" translatable="yes">Predefined paper sizes to choose from</property>
           </object>
           <packing>
             <property name="left-attach">0</property>
@@ -414,23 +415,36 @@ SVG element positions are expressed in user units.</property>
         </child>
         <child>
           <object class="GtkMenuButton" id="page-menu-btn">
-            <property name="width-request">100</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="focus-on-click">False</property>
             <property name="receives-default">True</property>
-            <property name="tooltip-text" translatable="yes">Predefined paper sizes to choose from</property>
             <property name="margin-end">2</property>
             <property name="hexpand">True</property>
             <property name="direction">none</property>
             <property name="popover">templates-popover</property>
             <child>
-              <object class="GtkLabel" id="page-template-name">
+              <object class="GtkBox">
                 <property name="visible">True</property>
-                <property name="halign">start</property>
-                <property name="ellipsize">end</property>
-                <property name="single-line-mode">True</property>
-                <property name="max-width-chars">8</property>
+                <property name="orientation">horizontal</property>
+                <property name="spacing">2</property>
+                <child>
+                  <object class="GtkLabel" id="page-template-name">
+                    <property name="visible">True</property>
+                    <property name="xalign">0.0</property>
+                    <property name="hexpand">True</property>
+                    <property name="ellipsize">end</property>
+                    <property name="single-line-mode">True</property>
+                    <property name="width-chars">10</property>
+                    <property name="max-width-chars">10</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkImage">
+                    <property name="visible">True</property>
+                    <property name="icon-name">pan-down-symbolic</property>
+                  </object>
+                </child>
               </object>
             </child>
           </object>

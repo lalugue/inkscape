@@ -93,10 +93,9 @@ class PagePropertiesBox final : public PageProperties {
 
         auto group = Gio::SimpleActionGroup::create();
         _template_action = group->add_action_radio_integer(action_name, 0);
-        _template_action->property_state().signal_changed().connect(
-            [this, &menu_button = get_widget<Gtk::MenuButton>(_builder, "page-menu-btn")]
+        _template_action->property_state().signal_changed().connect([this]
         {
-            menu_button.set_active(false);
+            _templates_menu_button.set_active(false);
             int index; _template_action->get_state(index); set_page_template(index);
         });
         insert_action_group(group_name, std::move(group));
@@ -137,6 +136,7 @@ public:
         GETD(_viewbox_y, "viewbox-y"),
         GETD(_viewbox_width, "viewbox-width"),
         GETD(_viewbox_height, "viewbox-height"),
+        GET(_templates_menu_button, "page-menu-btn"),
         GET(_templates_popover, "templates-popover"),
         GET(_template_name, "page-template-name"),
         GET(_preview_box, "preview-box"),
@@ -357,8 +357,11 @@ private:
         auto templ = find_page_template(width, height, *unit);
         auto const index = std::distance(_page_sizes.cbegin(), templ);
         _template_action->set_state(Glib::Variant<std::int32_t>::create(index));
-        _template_name.set_label(templ != _page_sizes.cend() && !templ->name.empty()
-                                 ? _(templ->name.c_str()) : _("Custom"));
+
+        Glib::ustring const label = templ != _page_sizes.cend() && !templ->name.empty()
+                                    ? _(templ->name.c_str()) : _("Custom");
+        _template_name.set_label(label);
+        _templates_menu_button.set_tooltip_text(label);
 
         if (!pending) {
             _signal_dimension_changed.emit(width, height, unit,
@@ -553,6 +556,7 @@ private:
     std::unique_ptr<ColorPicker> _desk_color_picker;
     std::vector<PaperSize> _page_sizes;
     Glib::RefPtr<Gio::SimpleAction> _template_action;
+    Gtk::MenuButton &_templates_menu_button;
     Gtk::Popover &_templates_popover;
     Gtk::Label& _template_name;
     Gtk::Box& _preview_box;
