@@ -1278,7 +1278,9 @@ Effect::isNodePointSelected(Geom::Point const &nodePoint) const
 // stack
 void Effect::doOnBeforeCommit()
 {
-    if (_lpe_action == LPE_NONE) {
+    SPDocument *document = getSPDoc();
+    if (!document || getLPEObj()->hrefList.empty() || _lpe_action == LPE_NONE) {
+        _lpe_action = LPE_NONE;
         return;
     }
     if (!sp_lpe_item || !sp_lpe_item->document) {
@@ -1312,10 +1314,7 @@ void Effect::doOnBeforeCommit()
     if (!lpesatellites && !lpesatellite) {
         return;
     }
-    SPDocument *document = getSPDoc();
-    if (!document) {
-        return;
-    }
+    
     if (sp_lpe_item) {
         sp_lpe_item_enable_path_effects(sp_lpe_item, false);
     }
@@ -1331,11 +1330,15 @@ void Effect::doOnBeforeCommit()
         SPObject *elemref;
         if (iter && iter->isAttached() && (elemref = iter->getObject())) {
             if (auto *item = cast<SPItem>(elemref)) {
+                auto lpeitem = cast<SPLPEItem>(item);
                 Inkscape::XML::Node *elemnode = elemref->getRepr();
                 SPCSSAttr *css;
                 Glib::ustring css_str;
                 switch (lpe_action) {
                     case LPE_TO_OBJECTS:
+                        if (lpeitem && item->isHidden()) {
+                            lpeitem->removeAllPathEffects(false);
+                        }
                         if (item->isHidden()) {
                             // We set updating because item signal fire a deletion that reset whole parameter satellites
                             if (lpesatellites) {
@@ -1357,6 +1360,9 @@ void Effect::doOnBeforeCommit()
                         break;
 
                     case LPE_ERASE:
+                        if (lpeitem) {
+                            lpeitem->removeAllPathEffects(false);
+                        }
                         // We set updating because item signal fire a deletion that reset whole parameter satellites
                         if (lpesatellites) {
                             lpesatellites->setUpdating(true);
@@ -1416,66 +1422,8 @@ void Effect::doOnBeforeCommit()
 }
 
 // we delay till current operation is done to aboid deleted items crashes
-void Effect::processObjects(LPEAction lpe_action)
-{
-    if (lpe_action == LPE_UPDATE && _lpe_action == LPE_NONE) {
-        _lpe_action = lpe_action;
-        return;
-    }
+void Effect::processObjects(LPEAction lpe_action) {
     _lpe_action = lpe_action;
-    Inkscape::LivePathEffect::SatelliteArrayParam *lpesatellites = nullptr;
-    Inkscape::LivePathEffect::OriginalSatelliteParam *lpesatellite = nullptr;
-    std::vector<Inkscape::LivePathEffect::Parameter *>::iterator p;
-    for (auto &p : param_vector) {
-        lpesatellites = dynamic_cast<SatelliteArrayParam *>(p);
-        lpesatellite = dynamic_cast<OriginalSatelliteParam *>(p);
-        if (lpesatellites || lpesatellite) {
-            break;
-        }
-    }
-    if (!lpesatellites && !lpesatellite) {
-        return;
-    }
-    SPDocument *document = getSPDoc();
-    if (!document) {
-        return;
-    }
-    if (!sp_lpe_item || !sp_lpe_item->document) {
-        sp_lpe_item = cast<SPLPEItem>(*getLPEObj()->hrefList.begin());
-        if (!sp_lpe_item) {
-            return;
-        }
-    }
-    std::vector<std::shared_ptr<SatelliteReference> > satelltelist;
-    if (lpesatellites) {
-        lpesatellites->read_from_SVG();
-        satelltelist = lpesatellites->data();
-    } else {
-        lpesatellite->read_from_SVG();
-        satelltelist.push_back(lpesatellite->lperef);
-    }
-    for (auto &iter : satelltelist) {
-        SPObject *elemref;
-        if (iter && iter->isAttached() && (elemref = iter->getObject())) {
-            if (auto *item = cast<SPItem>(elemref)) {
-                auto lpeitem = cast<SPLPEItem>(item);
-                switch (lpe_action) {
-                    case LPE_TO_OBJECTS:
-                        if (lpeitem && item->isHidden()) {
-                            lpeitem->removeAllPathEffects(false);
-                        }
-                        break;
-                    case LPE_ERASE:
-                        if (lpeitem) {
-                            lpeitem->removeAllPathEffects(false);
-                        }
-                        break;
-                    default:
-                        break;
-                }
-            }
-        }
-    }
 }
 
 /**
