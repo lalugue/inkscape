@@ -57,6 +57,7 @@
 #include "ui/dialog/inkscape-preferences.h"
 #include "ui/icon-loader.h"
 #include "ui/icon-names.h"
+#include "ui/menuize.h"
 #include "ui/pack.h"
 #include "ui/syntax.h"
 #include "ui/widget/shapeicon.h"
@@ -232,6 +233,7 @@ AttrDialog::AttrDialog()
     action->property_state().signal_changed().connect([=]{ int n; action->get_state(n);
                                                           setPrecision(n); });
     insert_action_group("attrdialog", std::move(group));
+    UI::menuize_popover(*get_widget<Gtk::MenuButton>(_builder, "btn-menu").get_popover());
 
     attr_reset_context(0);
     UI::pack_start(*this, get_widget<Gtk::Box>(_builder, "main-box"), UI::PackOptions::expand_widget);

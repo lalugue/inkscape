@@ -49,6 +49,7 @@
 #include "ui/dialog-events.h"
 #include "ui/icon-loader.h"
 #include "ui/icon-names.h"
+#include "ui/menuize.h"
 #include "ui/pack.h"
 #include "ui/syntax.h"
 #include "ui/tools/tool-base.h"
@@ -199,6 +200,7 @@ XmlTree::XmlTree()
         tooltip->set_text(tip);
         return true;
     });
+    UI::menuize_popover(*popup.get_popover());
 
     auto set_layout = [=](DialogLayout layout){
         Glib::ustring icon = "layout-auto";
@@ -216,8 +218,11 @@ XmlTree::XmlTree()
     _layout = static_cast<DialogLayout>(prefs->getIntLimited("/dialogs/xml/layout", Auto, Auto, Vertical));
     auto action_group = Gio::SimpleActionGroup::create();
     auto action = action_group->add_action_radio_integer("layout", _layout);
-    action->property_state().signal_changed().connect([=]
-        { int target; action->get_state(target); set_layout(static_cast<DialogLayout>(target)); });
+    action->property_state().signal_changed().connect([=, &popup]
+    {
+        popup.set_active(false);
+        int target; action->get_state(target); set_layout(static_cast<DialogLayout>(target));
+    });
     insert_action_group("xml-tree", std::move(action_group));
     set_layout(_layout);
 

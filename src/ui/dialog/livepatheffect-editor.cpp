@@ -26,6 +26,7 @@
 #include <gtkmm/label.h>
 #include <gtkmm/listbox.h>
 #include <gtkmm/liststore.h>
+#include <gtkmm/menubutton.h>
 #include <gtkmm/searchentry.h>
 #include <gtkmm/spinbutton.h>
 #include <sigc++/adaptors/bind.h>
@@ -53,6 +54,7 @@
 #include "ui/icon-loader.h"
 #include "ui/icon-names.h"
 #include "ui/manage.h"
+#include "ui/menuize.h"
 #include "ui/pack.h"
 #include "ui/tools/node-tool.h"
 #include "ui/util.h"
@@ -790,8 +792,11 @@ LivePathEffectEditor::effect_list_reload(SPLPEItem *lpeitem)
             return sp_query_custom_tooltip(x, y, kbd, tooltipw, id, tooltip, icon);
         });
 
+        // Add actions used by LPEEffectMenuButton
         add_item_actions(lperef, untranslated_label, *LPEEffect,
                          counter == 0, counter == total - 1);
+        // & make it act more like ye olde GtkMenu
+        UI::menuize_popover(*get_widget<Gtk::MenuButton>(builder, "LPEEffectMenuButton").get_popover());
 
         if (total > 1) {
             LPEDrag->signal_drag_begin().connect([=](const Glib::RefPtr<Gdk::DragContext> context){
