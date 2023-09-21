@@ -285,7 +285,7 @@ FontData::FontData(FontPtr font)
             break;
     }
 
-    name = getNameWithoutSubsetTag(font);
+    name = validateString(getNameWithoutSubsetTag(font));
     // Use this when min-poppler version is newer:
     // name = font->getNameWithoutSubsetTag();
 
@@ -294,7 +294,7 @@ FontData::FontData(FontPtr font)
     if (!desc && font->getFamily()) {
         // Level two parsing, we break off the font description part of the name
         // which often contains font data and use it as a pango font description.
-        std::string pdf_family = font->getFamily()->c_str();
+        std::string pdf_family = validateString(font->getFamily()->c_str());
         std::string desc_str = pdf_family;
         auto pos = name.find("-");
         if (pos != std::string::npos) {
@@ -534,6 +534,15 @@ FontList getPdfFonts(std::shared_ptr<PDFDoc> pdf_doc)
     return fontsList;
 }
 
+
+std::string validateString(std::string const &in)
+{
+    if (g_utf8_validate(in.c_str(), -1, nullptr)) {
+        return in;
+    }
+    g_warning("Couldn't parse strings in the PDF, there may be errors.");
+    return "";
+}
 
 /**
  * Get a string from a dictionary. If the string doesn't exist, return empty string.
