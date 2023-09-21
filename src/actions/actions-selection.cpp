@@ -182,6 +182,39 @@ select_all(Glib::ustring condition, InkscapeApplication* app)
     selection->setList(objects);
 }
 
+void 
+select_invert(Glib::ustring condition, InkscapeApplication* app)
+{
+    if (condition != "" && condition != "layers" && condition != "no-layers" &&
+        condition != "groups" && condition != "no-groups" && condition != "all") {
+        show_output( "select_all: allowed options are '', 'all', 'layers', 'no-layers', 'groups', and 'no-groups'" );
+        return;
+    }
+
+    SPDocument* document = nullptr;
+    Inkscape::Selection* selection = nullptr;
+    if (!get_document_and_selection(app, &document, &selection)) {
+        return;
+    }
+
+    // Find all objects that match condition.
+    std::vector<SPObject *> objects;
+    get_all_items_recursive(objects, document->getRoot(), condition);
+
+    // Get current selection.
+    std::vector<SPObject *> current(selection->items().begin(), selection->items().end());
+
+    // Remove current selection from object vector (using "erase remove_if idiom").
+    objects.erase(
+        std::remove_if(std::begin(objects), std::end(objects), [&current](const SPObject *x)
+            {
+                return (std::find(current.begin(), current.end(), x) != current.end());
+            }), objects.end());
+
+    // Set selection to object vector.
+    selection->setList(objects);
+}
+
 // Debug... print selected items
 void
 select_list(InkscapeApplication* app)
@@ -270,6 +303,7 @@ add_actions_selection(InkscapeApplication* app)
     gapp->add_action_radio_string(  "select-by-element",            sigc::bind(sigc::ptr_fun(&select_by_element),        app), "null");
     gapp->add_action_radio_string(  "select-by-selector",           sigc::bind(sigc::ptr_fun(&select_by_selector),       app), "null");
     gapp->add_action_radio_string(  "select-all",                   sigc::bind(sigc::ptr_fun(&select_all),               app), "null");
+    gapp->add_action_radio_string(  "select-invert",                sigc::bind(sigc::ptr_fun(&select_invert),            app), "null");
     gapp->add_action(               "select-list",                  sigc::bind(sigc::ptr_fun(&select_list),              app)        );
     gapp->add_action(               "selection-set-backup",         sigc::bind(sigc::ptr_fun(&selection_set_backup),     app)        );
     gapp->add_action(               "selection-restore-backup",     sigc::bind(sigc::ptr_fun(&selection_restore_backup), app)        );
