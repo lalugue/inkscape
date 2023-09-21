@@ -371,6 +371,15 @@ LPETaperStroke::doBeforeEffect (SPLPEItem const* lpeitem)
         end_shape.param_set_default();
         write = true;
     }
+    // Some SVGs have been made with bad smoothing vectors, correct them
+    for (int i = start_smoothing._vector.size(); i < (int)sicepv; i++) {
+        start_smoothing._vector.push_back(0.5);
+        write = true;
+    }
+    for (int i = end_smoothing._vector.size(); i < (int)sicepv; i++) {
+        end_smoothing._vector.push_back(0.5);
+        write = true;
+    }
     if (prev_subpath != subpath) {
         attach_start.param_setActive(subpath - 1);
         attach_end.param_setActive(subpath - 1);
@@ -490,7 +499,7 @@ LPETaperStroke::doBeforeEffect (SPLPEItem const* lpeitem)
         Piecewise<D2<SBasis> > pwd2;
         Geom::Path throwaway_path;
 
-        if (!zeroStart && start_shape.valid_index(index)) {
+        if (!zeroStart && start_shape.valid_index(index) && start_smoothingv.size() > index) {
             // Construct the pattern
             std::stringstream pat_str;
             pat_str.imbue(std::locale::classic());
@@ -528,7 +537,7 @@ LPETaperStroke::doBeforeEffect (SPLPEItem const* lpeitem)
             real_path.append(throwaway_path);
         }
 
-        if (!zeroEnd && end_shape.valid_index(index)) {
+        if (!zeroEnd && end_shape.valid_index(index) && end_smoothingv.size() > index) {
             // append the ending taper
             std::stringstream pat_str_1;
             pat_str_1.imbue(std::locale::classic());
