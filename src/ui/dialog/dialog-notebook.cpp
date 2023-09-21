@@ -889,8 +889,9 @@ void DialogNotebook::toggle_tab_labels_callback(bool show)
 
 void DialogNotebook::on_page_switch(Gtk::Widget *curr_page, guint)
 {
-    // Replaces Container.show_all_children(). TODO: GTK4: not needed: remove.
-    for_each_descendant(*curr_page, [](Gtk::Widget &child){ child.set_visible(true); return ForEachResult::_continue; });
+    if (auto container = dynamic_cast<Gtk::Container *>(curr_page)) {
+        container->show_all_children();
+    }
 
     for_each_child(_notebook, [=](Gtk::Widget &page){
         if (auto const dialogbase = dynamic_cast<DialogBase *>(&page)) {
