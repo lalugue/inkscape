@@ -20,6 +20,7 @@
 #include <sigc++/functors/mem_fun.h>
 #include <gdkmm/general.h>
 #include <gdkmm/cursor.h>
+#include <gtkmm/adjustment.h>
 #include <gtkmm/gesturemultipress.h>
 #include <gtkmm/spinbutton.h>
 
@@ -58,19 +59,25 @@ bool
 InkScale::on_draw(const::Cairo::RefPtr<::Cairo::Context>& cr) {
     Gtk::Range::on_draw(cr);
 
+    if (_label.empty()) {
+        return true;
+    }
+
+    auto const alloc = get_allocation();
+
     // Get SpinButton style info...
-    auto const text_color = get_foreground_color(_spinbutton->get_style_context());
+    auto const style_context = _spinbutton->get_style_context();
+    auto const text_color = get_foreground_color(style_context);
 
     // Create Pango layout.
     auto layout_label = create_pango_layout(_label);
     layout_label->set_ellipsize( Pango::ELLIPSIZE_END );
-    layout_label->set_width(PANGO_SCALE * get_width());
+    layout_label->set_width(PANGO_SCALE * alloc.get_width());
 
     // Get y location of SpinButton text (to match vertical position of SpinButton text).
     int x, y;
     _spinbutton->get_layout_offsets(x, y);
     auto btn_alloc = _spinbutton->get_allocation();
-    auto alloc = get_allocation();
     y += btn_alloc.get_y() - alloc.get_y();
 
     // Fill widget proportional to value.
@@ -78,21 +85,26 @@ InkScale::on_draw(const::Cairo::RefPtr<::Cairo::Context>& cr) {
 
     // Get through rectangle and clipping point for text.
     Gdk::Rectangle slider_area = get_range_rect();
-    double clip_text_x = slider_area.get_x() + slider_area.get_width() * fraction;
+    // If we are not sensitive/editable, we render in normal color, no clipping
+    auto const clip_text_x = (style_context->get_state() & Gtk::STATE_FLAG_INSENSITIVE) ? 0.0
+                             : slider_area.get_x() + slider_area.get_width() * fraction;
 
     // Render text in normal text color.
     cr->save();
-    cr->rectangle(clip_text_x, 0, get_width(), get_height());
+    cr->rectangle(clip_text_x, 0, alloc.get_width() - clip_text_x, alloc.get_height());
     cr->clip();
     Gdk::Cairo::set_source_rgba(cr, text_color);
-    //cr->set_source_rgba(0, 0, 0, 1);
     cr->move_to(5, y );
     layout_label->show_in_cairo_context(cr);
     cr->restore();
 
+    if (clip_text_x == 0.0) {
+        return true;
+    }
+
     // Render text, clipped, in white over bar (TODO: use same color as SpinButton progress bar).
     cr->save();
-    cr->rectangle(0, 0, clip_text_x, get_height());
+    cr->rectangle(0, 0, clip_text_x, alloc.get_height());
     cr->clip();
     cr->set_source_rgba(1, 1, 1, 1);
     cr->move_to(5, y);

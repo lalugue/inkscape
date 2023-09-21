@@ -27,9 +27,9 @@
 #include "scrollprotected.h"
 
 namespace Gtk {
-    class Adjustment;
-    class GestureMultiPress;
-    class SpinButton;
+class Adjustment;
+class GestureMultiPress;
+class SpinButton;
 } // namespace Gtk
 
 class InkScale final : public Inkscape::UI::Widget::ScrollProtected<Gtk::Scale>
@@ -85,9 +85,9 @@ public:
 
 private:
     Glib::RefPtr<Gtk::Adjustment>  _adjustment;
-    Gtk::SpinButton*               _spinbutton;
-    InkScale*                      _scale;
-    GtkWidget*                     _focus_widget = nullptr;
+    Gtk::SpinButton               *_spinbutton   = nullptr;
+    InkScale                      *_scale        = nullptr;
+    GtkWidget                     *_focus_widget = nullptr;
 
     bool on_key_release_event(GdkEventKey* key_event) override;
 };
