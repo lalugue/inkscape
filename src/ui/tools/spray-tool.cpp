@@ -881,10 +881,9 @@ static bool sp_spray_recursive(SPDesktop *desktop,
     random_position( dr, dp, mean, standard_deviation, _distrib );
     dr=dr*radius;
 
-    if (mode == SPRAY_MODE_COPY || mode == SPRAY_MODE_ERASER) {
-        Geom::OptRect a = item->documentVisualBounds();
-        if (a) {
-            if(_fid <= population)
+    if (mode != SPRAY_MODE_SINGLE_PATH) {
+        if (auto bbox = item->documentVisualBounds()) {
+            if(_fid <= population || no_overlap)
             {
                 SPDocument *doc = item->document;
                 gchar const * spray_origin;
@@ -894,45 +893,59 @@ static bool sp_spray_recursive(SPDesktop *desktop,
                     spray_origin = item->getAttribute("inkscape:spray-origin");
                 }
                 Geom::Point center = item->getCenter();
-                Geom::Point move = (Geom::Point(cos(tilt)*cos(dp)*dr/(1-ratio)+sin(tilt)*sin(dp)*dr/(1+ratio), -sin(tilt)*cos(dp)*dr/(1-ratio)+cos(tilt)*sin(dp)*dr/(1+ratio)))+(p-a->midpoint());
+                Geom::Point move = (Geom::Point(cos(tilt)*cos(dp)*dr/(1-ratio)+sin(tilt)*sin(dp)*dr/(1+ratio), -sin(tilt)*cos(dp)*dr/(1-ratio)+cos(tilt)*sin(dp)*dr/(1+ratio)))+(p-bbox->midpoint());
                 if (single_click) {
-                    move = p-a->midpoint();
+                    move = p-bbox->midpoint();
                 }
                 SPCSSAttr *css = sp_repr_css_attr_new();
+                bool stop = false;
+                
                 if (mode == SPRAY_MODE_ERASER ||
-                   pick_no_overlap || no_overlap || picker ||
-                   !over_transparent || !over_no_transparent) {
-                    if(!fit_item(desktop
-                                 , item
-                                 , a
-                                 , move
-                                 , center
-                                 , mode
-                                 , angle
-                                 , _scale
-                                 , scale
-                                 , picker
-                                 , pick_center
-                                 , pick_inverse_value
-                                 , pick_fill
-                                 , pick_stroke
-                                 , pick_no_overlap
-                                 , over_no_transparent
-                                 , over_transparent
-                                 , no_overlap
-                                 , offset
-                                 , css
-                                 , false
-                                 , pick
-                                 , do_trace
-                                 , single_click
-                                 , pick_to_size
-                                 , pick_to_presence
-                                 , pick_to_color
-                                 , pick_to_opacity
-                                 , invert_picked
-                                 , gamma_picked
-                                 , rand_picked)){
+                    pick_no_overlap || no_overlap || picker ||
+                    !over_transparent || !over_no_transparent) 
+                {
+                    for (auto i : {0,1}) {
+                        if (!fit_item(desktop
+                                    , item
+                                    , bbox
+                                    , move
+                                    , center
+                                    , mode
+                                    , angle
+                                    , _scale
+                                    , scale
+                                    , picker
+                                    , pick_center
+                                    , pick_inverse_value
+                                    , pick_fill
+                                    , pick_stroke
+                                    , pick_no_overlap
+                                    , over_no_transparent
+                                    , over_transparent
+                                    , no_overlap
+                                    , offset
+                                    , css
+                                    , false
+                                    , pick
+                                    , do_trace
+                                    , single_click
+                                    , pick_to_size
+                                    , pick_to_presence
+                                    , pick_to_color
+                                    , pick_to_opacity
+                                    , invert_picked
+                                    , gamma_picked
+                                    , rand_picked)) {
+                            if (no_overlap && i == 0) {
+                                move = p-bbox->midpoint() * desktop->doc2dt().withoutTranslation();
+                                continue;
+                            } else {                     
+                                stop = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (stop) {
                         return false;
                     }
                 }
@@ -941,22 +954,42 @@ static bool sp_spray_recursive(SPDesktop *desktop,
                 Inkscape::XML::Document* xml_doc = doc->getReprDoc();
                 Inkscape::XML::Node *old_repr = item->getRepr();
                 Inkscape::XML::Node *parent = old_repr->parent();
-                Inkscape::XML::Node *copy = old_repr->duplicate(xml_doc);
-                if(!copy->attribute("inkscape:spray-origin")){
-                    copy->setAttribute("inkscape:spray-origin", spray_origin);
+                Inkscape::XML::Node *clone = nullptr;
+                if (mode == SPRAY_MODE_CLONE) {
+                    // Creation of the clone
+                    clone = xml_doc->createElement("svg:use");
+                    // Ad the clone to the list of the parent's children
+                    parent->appendChild(clone);
+                    // Generates the link between parent and child attributes
+                    if(!clone->attribute("inkscape:spray-origin")){
+                        clone->setAttribute("inkscape:spray-origin", spray_origin);
+                    }
+                    gchar *href_str = g_strdup_printf("#%s", old_repr->attribute("id"));
+                    clone->setAttribute("xlink:href", href_str);
+                    g_free(href_str);
+
+                    SPObject *clone_object = doc->getObjectByRepr(clone);
+                    item_copied = cast<SPItem>(clone_object);
+                } else {
+                    Inkscape::XML::Node *copy = old_repr->duplicate(xml_doc);
+                    if(!copy->attribute("inkscape:spray-origin")){
+                        copy->setAttribute("inkscape:spray-origin", spray_origin);
+                    }
+                    parent->appendChild(copy);
+                    SPObject *new_obj = doc->getObjectByRepr(copy);
+                    item_copied = cast<SPItem>(new_obj);   // Conversion object->item
                 }
-                parent->appendChild(copy);
-                SPObject *new_obj = doc->getObjectByRepr(copy);
-                item_copied = cast<SPItem>(new_obj);   // Conversion object->item
+                // Conversion object->item
+                
                 Geom::Point tcenter = center;
                 if (single_click && item->isCenterSet()) {
                     item_copied->unsetCenter();
                     item_copied->updateRepr();
-                    center = a->midpoint();
+                    center = bbox->midpoint();
                 }
                 sp_spray_scale_rel(center, tcenter, desktop, item_copied, Geom::Scale(_scale));
                 sp_spray_scale_rel(center, tcenter, desktop, item_copied, Geom::Scale(scale));
-                sp_spray_rotate_rel(center, tcenter, desktop,item_copied, Geom::Rotate(angle));
+                sp_spray_rotate_rel(center,tcenter, desktop,item_copied, Geom::Rotate(angle));
                 // Move the cursor p
                 auto translate = Geom::Translate(move * desktop->doc2dt().withoutTranslation());
                 item_copied->move_rel(translate);
@@ -964,23 +997,25 @@ static bool sp_spray_recursive(SPDesktop *desktop,
                     item_copied->setCenter(tcenter * translate);
                     item_copied->updateRepr();
                 }
-                Inkscape::GC::release(copy);
                 if(picker){
                     sp_desktop_apply_css_recursive(item_copied, css, true);
+                }
+                if (mode == SPRAY_MODE_CLONE) {
+                    Inkscape::GC::release(clone);
                 }
                 did = true;
             }
         }
+    }
 #ifdef ENABLE_SPRAY_MODE_SINGLE_PATH
-    } else if (mode == SPRAY_MODE_SINGLE_PATH) {
+    else if (mode == SPRAY_MODE_SINGLE_PATH) {
         if (item) {
             SPDocument *doc = item->document;
             Inkscape::XML::Document* xml_doc = doc->getReprDoc();
             Inkscape::XML::Node *old_repr = item->getRepr();
             Inkscape::XML::Node *parent = old_repr->parent();
 
-            Geom::OptRect a = item->documentVisualBounds();
-            if (a) {
+            if (auto bbox = item->documentVisualBounds()) {
                 if (_fid <= population) { // Rules the population of objects sprayed
                     // Duplicates the parent item
                     Inkscape::XML::Node *copy = old_repr->duplicate(xml_doc);
@@ -995,7 +1030,7 @@ static bool sp_spray_recursive(SPDesktop *desktop,
                     auto item_copied = cast<SPItem>(new_obj);
 
                     // Move around the cursor
-                    Geom::Point move = (Geom::Point(cos(tilt)*cos(dp)*dr/(1-ratio)+sin(tilt)*sin(dp)*dr/(1+ratio), -sin(tilt)*cos(dp)*dr/(1-ratio)+cos(tilt)*sin(dp)*dr/(1+ratio)))+(p-a->midpoint());
+                    Geom::Point move = (Geom::Point(cos(tilt)*cos(dp)*dr/(1-ratio)+sin(tilt)*sin(dp)*dr/(1+ratio), -sin(tilt)*cos(dp)*dr/(1-ratio)+cos(tilt)*sin(dp)*dr/(1+ratio)))+(p-bbox->midpoint());
 
                     Geom::Point center = item->getCenter();
                     Geom::Point tcenter = center; // dont use
@@ -1028,107 +1063,8 @@ static bool sp_spray_recursive(SPDesktop *desktop,
                 }
             }
         }
-#endif
-    } else if (mode == SPRAY_MODE_CLONE) {
-        Geom::OptRect a = item->documentVisualBounds();
-        if (a) {
-            if(_fid <= population) {
-                SPDocument *doc = item->document;
-                gchar const * spray_origin;
-                if(!item->getAttribute("inkscape:spray-origin")){
-                    spray_origin = g_strdup_printf("#%s", item->getId());
-                } else {
-                    spray_origin = item->getAttribute("inkscape:spray-origin");
-                }
-                Geom::Point center=item->getCenter();
-                Geom::Point move = (Geom::Point(cos(tilt)*cos(dp)*dr/(1-ratio)+sin(tilt)*sin(dp)*dr/(1+ratio), -sin(tilt)*cos(dp)*dr/(1-ratio)+cos(tilt)*sin(dp)*dr/(1+ratio)))+(p-a->midpoint());
-                if (single_click) {
-                    move = p-a->midpoint();
-                }
-                SPCSSAttr *css = sp_repr_css_attr_new();
-                if (mode == SPRAY_MODE_ERASER ||
-                   pick_no_overlap || no_overlap || picker ||
-                   !over_transparent || !over_no_transparent) {
-                    if(!fit_item(desktop
-                                 , item
-                                 , a
-                                 , move
-                                 , center
-                                 , mode
-                                 , angle
-                                 , _scale
-                                 , scale
-                                 , picker
-                                 , pick_center
-                                 , pick_inverse_value
-                                 , pick_fill
-                                 , pick_stroke
-                                 , pick_no_overlap
-                                 , over_no_transparent
-                                 , over_transparent
-                                 , no_overlap
-                                 , offset
-                                 , css
-                                 , true
-                                 , pick
-                                 , do_trace
-                                 , single_click
-                                 , pick_to_size
-                                 , pick_to_presence
-                                 , pick_to_color
-                                 , pick_to_opacity
-                                 , invert_picked
-                                 , gamma_picked
-                                 , rand_picked))
-                    {
-                        return false;
-                    }
-                }
-                SPItem *item_copied;
-                Inkscape::XML::Document* xml_doc = doc->getReprDoc();
-                Inkscape::XML::Node *old_repr = item->getRepr();
-                Inkscape::XML::Node *parent = old_repr->parent();
-
-                // Creation of the clone
-                Inkscape::XML::Node *clone = xml_doc->createElement("svg:use");
-                // Ad the clone to the list of the parent's children
-                parent->appendChild(clone);
-                // Generates the link between parent and child attributes
-                if(!clone->attribute("inkscape:spray-origin")){
-                    clone->setAttribute("inkscape:spray-origin", spray_origin);
-                }
-                gchar *href_str = g_strdup_printf("#%s", old_repr->attribute("id"));
-                clone->setAttribute("xlink:href", href_str);
-                g_free(href_str);
-
-                SPObject *clone_object = doc->getObjectByRepr(clone);
-                // Conversion object->item
-                item_copied = cast<SPItem>(clone_object);
-                Geom::Point tcenter = center;
-                if (single_click && item->isCenterSet()) {
-                    item_copied->unsetCenter();
-                    item_copied->updateRepr();
-                    center = a->midpoint();
-                }
-                sp_spray_scale_rel(center, tcenter, desktop, item_copied, Geom::Scale(_scale));
-                sp_spray_scale_rel(center, tcenter, desktop, item_copied, Geom::Scale(scale));
-                sp_spray_rotate_rel(center,tcenter, desktop,item_copied, Geom::Rotate(angle));
-                // Move the cursor p
-                auto translate = Geom::Translate(move * desktop->doc2dt().withoutTranslation());
-                item_copied->move_rel(translate);
-                if (single_click && item->isCenterSet()) {
-                    item_copied->setCenter(tcenter * translate);
-                    item_copied->updateRepr();
-                }
-                if(picker){
-                    sp_desktop_apply_css_recursive(item_copied, css, true);
-                }
-                Inkscape::GC::release(clone);
-                did = true;
-            }
-        }
     }
-
+#endif
     return did;
 }
 
