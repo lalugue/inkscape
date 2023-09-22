@@ -57,7 +57,7 @@ InkScale::set_label(Glib::ustring label) {
 
 bool
 InkScale::on_draw(const::Cairo::RefPtr<::Cairo::Context>& cr) {
-    Gtk::Range::on_draw(cr);
+    parent_type::on_draw(cr);
 
     if (_label.empty()) {
         return true;
@@ -66,8 +66,7 @@ InkScale::on_draw(const::Cairo::RefPtr<::Cairo::Context>& cr) {
     auto const alloc = get_allocation();
 
     // Get SpinButton style info...
-    auto const style_context = _spinbutton->get_style_context();
-    auto const text_color = get_foreground_color(style_context);
+    auto const text_color = get_foreground_color(_spinbutton->get_style_context());
 
     // Create Pango layout.
     auto layout_label = create_pango_layout(_label);
@@ -86,7 +85,7 @@ InkScale::on_draw(const::Cairo::RefPtr<::Cairo::Context>& cr) {
     // Get through rectangle and clipping point for text.
     Gdk::Rectangle slider_area = get_range_rect();
     // If we are not sensitive/editable, we render in normal color, no clipping
-    auto const clip_text_x = (style_context->get_state() & Gtk::STATE_FLAG_INSENSITIVE) ? 0.0
+    auto const clip_text_x = !_spinbutton->is_sensitive() ? 0.0
                              : slider_area.get_x() + slider_area.get_width() * fraction;
 
     // Render text in normal text color.
