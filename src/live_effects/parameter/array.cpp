@@ -18,7 +18,7 @@ namespace Inkscape::LivePathEffect {
 
 template <>
 double
-ArrayParam<double>::readsvg(const gchar * str)
+ArrayParam<double>::readsvg(char const * const str)
 {
     double newx = Geom::infinity();
     sp_svg_number_read_d(str, &newx);
@@ -27,7 +27,7 @@ ArrayParam<double>::readsvg(const gchar * str)
 
 template <>
 float
-ArrayParam<float>::readsvg(const gchar * str)
+ArrayParam<float>::readsvg(char const * const str)
 {
     float newx = Geom::infinity();
     sp_svg_number_read_f(str, &newx);
@@ -36,7 +36,7 @@ ArrayParam<float>::readsvg(const gchar * str)
 
 template <>
 Glib::ustring
-ArrayParam<Glib::ustring>::readsvg(const gchar * str)
+ArrayParam<Glib::ustring>::readsvg(char const * const str)
 {
     if (str) {
         return Glib::ustring(str);
@@ -46,9 +46,9 @@ ArrayParam<Glib::ustring>::readsvg(const gchar * str)
 
 template <>
 Geom::Point
-ArrayParam<Geom::Point>::readsvg(const gchar * str)
+ArrayParam<Geom::Point>::readsvg(char const * const str)
 {
-    gchar ** strarray = g_strsplit(str, ",", 2);
+    auto const strarray = g_strsplit(str, ",", 2);
     double newx, newy;
     unsigned int success = sp_svg_number_read_d(strarray[0], &newx);
     success += sp_svg_number_read_d(strarray[1], &newy);
@@ -60,14 +60,15 @@ ArrayParam<Geom::Point>::readsvg(const gchar * str)
 }
 
 template <>
-std::shared_ptr<SatelliteReference> ArrayParam<std::shared_ptr<SatelliteReference>>::readsvg(const gchar *str)
+std::shared_ptr<SatelliteReference>
+ArrayParam<std::shared_ptr<SatelliteReference>>::readsvg(char const * const str)
 {
     std::shared_ptr<SatelliteReference> satellitereference = nullptr;
     if (!str) {
         return satellitereference;
     }
 
-    gchar **strarray = g_strsplit(str, ",", 2);
+    auto const strarray = g_strsplit(str, ",", 2);
     if (strarray[0] != nullptr && g_strstrip(strarray[0])[0] == '#') {
         try {
             bool active = strarray[1] != nullptr;
@@ -86,16 +87,16 @@ std::shared_ptr<SatelliteReference> ArrayParam<std::shared_ptr<SatelliteReferenc
 }
 
 template <>
-std::vector<NodeSatellite> ArrayParam<std::vector<NodeSatellite>>::readsvg(const gchar *str)
+std::vector<NodeSatellite> ArrayParam<std::vector<NodeSatellite>>::readsvg(char const * const str)
 {
     std::vector<NodeSatellite> subpath_nodesatellites;
     if (!str) {
         return subpath_nodesatellites;
     }
-    gchar ** strarray = g_strsplit(str, "@", 0);
-    gchar ** iter = strarray;
+    auto const strarray = g_strsplit(str, "@", 0);
+    auto iter = strarray;
     while (*iter != nullptr) {
-        gchar ** strsubarray = g_strsplit(*iter, ",", 8);
+        auto const strsubarray = g_strsplit(*iter, ",", 8);
         if (*strsubarray[7]) {//steps always > 0
             NodeSatellite nodesatellite{};
             nodesatellite.setNodeSatellitesType(g_strstrip(strsubarray[0]));

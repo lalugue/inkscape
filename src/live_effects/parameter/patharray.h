@@ -1,7 +1,4 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-#ifndef INKSCAPE_LIVEPATHEFFECT_PARAMETER_ORIGINALPATHARRAY_H
-#define INKSCAPE_LIVEPATHEFFECT_PARAMETER_ORIGINALPATHARRAY_H
-
 /*
  * Inkscape::LivePathEffectParameters
  *
@@ -10,42 +7,44 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include <vector>
+#ifndef INKSCAPE_LIVEPATHEFFECT_PARAMETER_ORIGINALPATHARRAY_H
+#define INKSCAPE_LIVEPATHEFFECT_PARAMETER_ORIGINALPATHARRAY_H
 
-#include <gtkmm/box.h>
-#include <gtkmm/treeview.h>
-#include <gtkmm/treestore.h>
-#include <gtkmm/scrolledwindow.h>
+#include <memory>
+#include <vector>
+#include <2geom/pathvector.h>
+#include <glibmm/refptr.h>
+#include <glibmm/ustring.h>
 
 #include "live_effects/parameter/parameter.h"
 #include "live_effects/parameter/path-reference.h"
-
 #include "svg/svg.h"
 #include "svg/stringstream.h"
 #include "path-reference.h"
 
+namespace Gtk {
+class TreeIter;
+class TreeStore;
+class TreeView;
+class ScrolledWindow;
+} // namespace Gtk
+
 class SPObject;
 
-namespace Inkscape {
-
-namespace LivePathEffect {
+namespace Inkscape::LivePathEffect {
 
 class PathAndDirectionAndVisible {
 public:
     PathAndDirectionAndVisible(SPObject *owner)
-    : href(nullptr),
-    ref(owner),
-    _pathvector(Geom::PathVector()),
-    reversed(false),
-    visibled(true)
+        : ref(owner)
     {
-        
     }
-    gchar *href;
+
+    Glib::ustring href;
     URIReference ref;
-    Geom::PathVector _pathvector;
-    bool reversed;
-    bool visibled;
+    Geom::PathVector _pathvector = {};
+    bool reversed = false;
+    bool visibled = true;
     
     sigc::connection linked_changed_connection;
     sigc::connection linked_release_connection;
@@ -59,16 +58,18 @@ public:
 
     PathArrayParam(const Glib::ustring &label, const Glib::ustring &tip, const Glib::ustring &key,
                    Inkscape::UI::Widget::Registry *wr, Effect *effect);
-
     ~PathArrayParam() override;
+
+    PathArrayParam(const PathArrayParam &) = delete;
+    PathArrayParam &operator=(const PathArrayParam &) = delete;
 
     Gtk::Widget * param_newWidget() override;
     std::vector<SPObject *> param_get_satellites() override;
-    bool param_readSVGValue(const gchar * strvalue) override;
+    bool param_readSVGValue(char const * strvalue) override;
     Glib::ustring param_getSVGValue() const override;
     Glib::ustring param_getDefaultSVGValue() const override;
     void param_set_default() override;
-    void param_update_default(const gchar * default_value) override{};
+    void param_update_default(char const * default_value) override{};
     /** Disable the canvas indicators of parent class by overriding this method */
     void param_editOncanvas(SPItem * /*item*/, SPDesktop * /*dt*/) override {};
     /** Disable the canvas indicators of parent class by overriding this method */
@@ -77,8 +78,10 @@ public:
     void allowOnlyBsplineSpiro(bool allow_only_bspline_spiro){ _allow_only_bspline_spiro = allow_only_bspline_spiro; update();};
     std::vector<PathAndDirectionAndVisible*> _vector;
     ParamType paramType() const override { return ParamType::PATH_ARRAY; };
-protected:
+
+private:
     friend class LPEFillBetweenMany;
+
     bool _updateLink(const Gtk::TreeIter& iter, PathAndDirectionAndVisible* pd);
     bool _selectIndex(const Gtk::TreeIter& iter, int* i);
     void unlink(PathAndDirectionAndVisible* to);
@@ -89,10 +92,10 @@ protected:
     void linked_modified(SPObject *linked_obj, guint flags, PathAndDirectionAndVisible* to);
     void linked_release(SPObject *release, PathAndDirectionAndVisible* to);
     
-    ModelColumns *_model;
+    std::unique_ptr<ModelColumns> _model;
     Glib::RefPtr<Gtk::TreeStore> _store;
-    Gtk::TreeView *_tree;
-    Gtk::ScrolledWindow *_scroller;
+    std::unique_ptr<Gtk::TreeView> _tree;
+    std::unique_ptr<Gtk::ScrolledWindow> _scroller;
     
     void on_link_button_click();
     void on_remove_button_click();
@@ -101,20 +104,16 @@ protected:
     void on_reverse_toggled(const Glib::ustring& path);
     void on_visible_toggled(const Glib::ustring& path);
     
-private:
-    bool _from_original_d;
-    bool _allow_only_bspline_spiro;
+    bool _from_original_d = false;
+    bool _allow_only_bspline_spiro = false;
+
     void update();
     void initui();
-    PathArrayParam(const PathArrayParam &) = delete;
-    PathArrayParam &operator=(const PathArrayParam &) = delete;
 };
 
-} //namespace LivePathEffect
+} // namespace Inkscape::LivePathEffect
 
-} //namespace Inkscape
-
-#endif
+#endif // INKSCAPE_LIVEPATHEFFECT_PARAMETER_ORIGINALPATHARRAY_H
 
 /*
   Local Variables:
