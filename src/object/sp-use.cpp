@@ -777,7 +777,6 @@ SPItem *SPUse::unlink() {
         if (newLPEObj) {
             // force always fork
             newLPEObj->forkPathEffectsIfNecessary(1, true, true);
-            sp_lpe_item_update_patheffect(newLPEObj, false, true, true);
         }
         origtrue->fixTmpSuccessors();
         origtrue->unsetTmpSuccessor();
@@ -821,7 +820,6 @@ SPItem *SPUse::unlink() {
         // Advertise ourselves as not moving.
         item->doWriteTransform(t, &nomove);
     }
-    document->fix_lpe_data();
 
     return item;
 }
