@@ -424,9 +424,9 @@ void SelectToolbar::toggle_lock()
 
     auto size = image->get_pixel_size();
     if (_lock_btn.get_active()) {
-        image->set_from_icon_name("object-locked", Gtk::ICON_SIZE_BUTTON);
+        image->set_from_icon_name("object-locked");
     } else {
-        image->set_from_icon_name("object-unlocked", Gtk::ICON_SIZE_BUTTON);
+        image->set_from_icon_name("object-unlocked");
     }
     image->set_pixel_size(size);
 }
