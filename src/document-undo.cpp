@@ -275,13 +275,10 @@ gboolean Inkscape::DocumentUndo::undo(SPDocument *doc)
     }
 
     sp_repr_begin_transaction (doc->rdoc);
+    doc->update_lpobjs();
     doc->sensitive = TRUE;
     doc->seeking = false;
     if (ret) INKSCAPE.external_change();
-    if (doc->undo.empty()) {
-        sp_lpe_item_update_patheffect(doc->getRoot(), false, true);
-    }
-    doc->fix_lpe_data();
     return ret;
 }
 
@@ -316,14 +313,13 @@ gboolean Inkscape::DocumentUndo::redo(SPDocument *doc)
 	}
 
 	sp_repr_begin_transaction (doc->rdoc);
-
+    doc->update_lpobjs();
 	doc->sensitive = TRUE;
     doc->seeking = false;
 	if (ret) {
 		INKSCAPE.external_change();
         doc->emitReconstructionFinish();
     }
-    doc->fix_lpe_data();
 	return ret;
 }
 

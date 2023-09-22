@@ -651,9 +651,7 @@ void Inkscape::SelTrans::stamp(bool clone)
             if (newLPEObj && !clone) {
                 sp_lpe_item_enable_path_effects(newLPEObj,true);
                 newLPEObj->forkPathEffectsIfNecessary(1, true, true);
-                if (!newLPEObj->hasPathEffectOfType(Inkscape::LivePathEffect::SLICE)) {
-                    sp_lpe_item_update_patheffect(newLPEObj,false, true, true);
-                }
+                sp_lpe_item_update_patheffect(newLPEObj, false, true, true);
             }
         }
         for(auto original_item : l) {
@@ -664,8 +662,6 @@ void Inkscape::SelTrans::stamp(bool clone)
                 original_item->unsetTmpSuccessor();
             }
         }
-        // we update clip and mask LPE
-        _desktop->getDocument()->fix_lpe_data();
         DocumentUndo::done(_desktop->getDocument(), _("Stamp"), INKSCAPE_ICON("tool-pointer"));
     }
 

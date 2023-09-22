@@ -501,7 +501,7 @@ bool ClipboardManagerImpl::paste(SPDesktop *desktop, bool in_place, bool on_page
             }
         }
         if (doc) {
-            doc->fix_lpe_data();
+            doc->update_lpobjs();
         }
     }
 

@@ -173,15 +173,6 @@ void SPLPEItem::modified(unsigned int flags) {
     //if (is<SPGroup>(this) && (flags & SP_OBJECT_MODIFIED_FLAG) && (flags & SP_OBJECT_USER_MODIFIED_FLAG_B)) {
     //  sp_lpe_item_update_patheffect(this, true, false);
     //}
-    if (document->isSeeking()) {
-        auto lpes = this->getPathEffects();
-        if (!lpes.empty()) {
-            lpes[0]->on_undo = true;
-            for (auto lpe :lpes) {
-                lpe->setLPEAction(Inkscape::LivePathEffect::LPE_UPDATE);
-            }
-        }
-    }
 }
 
 Inkscape::XML::Node* SPLPEItem::write(Inkscape::XML::Document *xml_doc, Inkscape::XML::Node *repr, guint flags) {
@@ -438,9 +429,9 @@ lpeobject_ref_modified(SPObject */*href*/, guint flags, SPLPEItem *lpeitem)
 #ifdef SHAPE_VERBOSE
     g_message("lpeobject_ref_modified");
 #endif
-    if (flags != 29 && flags != 253 && !(flags & SP_OBJECT_STYLESHEET_MODIFIED_FLAG))
+    if (!lpeitem->document->isSeeking() && flags != 29 && flags != 253 && !(flags & SP_OBJECT_STYLESHEET_MODIFIED_FLAG))
     {
-        sp_lpe_item_update_patheffect(lpeitem, true, true);
+        sp_lpe_item_update_patheffect(lpeitem, false, true, true);
     }
 }
 
@@ -1470,8 +1461,10 @@ PathEffectSharedPtr SPLPEItem::getCurrentLPEReference()
     if (!this->current_path_effect && !this->path_effect_list->empty()) {
         setCurrentPathEffect(this->path_effect_list->back());
     }
-
-    return this->current_path_effect;
+    if (this->path_effect_list->empty()) {
+        current_path_effect = nullptr;
+    }
+    return current_path_effect;
 }
 
 Inkscape::LivePathEffect::Effect* SPLPEItem::getCurrentLPE()

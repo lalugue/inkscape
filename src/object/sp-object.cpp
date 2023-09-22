@@ -1145,11 +1145,6 @@ void SPObject::notifyAttributeChanged(Inkscape::XML::Node &, GQuark key_, Util::
 {
     auto const key = g_quark_to_string(key_);
     readAttr(key);
-
-    auto lpeitem = cast<SPLPEItem>(this);
-    if (lpeitem && lpeitem->document->isSeeking()) {
-        lpeitem->modified(SP_OBJECT_MODIFIED_FLAG);
-    }
 }
 
 void SPObject::notifyContentChanged(Inkscape::XML::Node &, Util::ptr_shared, Util::ptr_shared)

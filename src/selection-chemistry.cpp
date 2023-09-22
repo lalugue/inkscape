@@ -578,6 +578,7 @@ void ObjectSet::duplicate(bool suppressDone, bool duplicateLayer)
             if (newLPEObj) {
                 // force always fork
                 newLPEObj->forkPathEffectsIfNecessary(1, true, true);
+                sp_lpe_item_update_patheffect(newLPEObj, false, true, true);
             }
         }
     }
@@ -591,8 +592,6 @@ void ObjectSet::duplicate(bool suppressDone, bool duplicateLayer)
     
     if (!duplicateLayer) {
         setReprList(newsel);
-        // we update clip and mask LPE
-        document()->fix_lpe_data();
         if ( !suppressDone ) {
             DocumentUndo::done(document(), _("Duplicate"), INKSCAPE_ICON("edit-duplicate"));
         }
