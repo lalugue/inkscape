@@ -16,7 +16,6 @@
 #include <optional>
 #include <string>
 #include <tuple>
-
 #include <glibmm/i18n.h>
 #include <glibmm/markup.h>
 #include <glibmm/ustring.h>
@@ -26,15 +25,13 @@
 #include <gtkmm/label.h>
 #include <gtkmm/radiobutton.h>
 #include <gtkmm/spinbutton.h>
-#include <gtkmm/widget.h>
-
+#include <gtkmm/treemodel.h>
 #include <2geom/rect.h>
 
 #include "desktop.h"
 #include "mod360.h"
 #include "selection.h"
 #include "streq.h"
-
 #include "actions/actions-tools.h"
 #include "live_effects/effect-enum.h"
 #include "live_effects/effect.h"
@@ -63,9 +60,7 @@
 
 namespace Inkscape {
 namespace UI {
-
 namespace Dialog {
-
 
 struct SPAttrDesc {
     gchar const *label;

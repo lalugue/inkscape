@@ -114,7 +114,7 @@ public:
     bool isFiltered() const { return is_filtered; }
 
     Gtk::TreeNodeChildren getChildren() const;
-    Gtk::TreeIter getChildIter(Node *) const;
+    Gtk::TreeModel::iterator getChildIter(Node *) const;
 
     void notifyChildRemoved(Node &, Node &, Node *) final;
     void notifyChildOrderChanged(Node &, Node &child, Node *, Node *) final;
@@ -545,7 +545,7 @@ Gtk::TreeNodeChildren ObjectWatcher::getChildren() const
  * @param child - The child object to find in this branch
  * @returns Gtk TreeRow for the child, or end() if not found
  */
-Gtk::TreeIter ObjectWatcher::getChildIter(Node *node) const
+Gtk::TreeModel::iterator ObjectWatcher::getChildIter(Node *node) const
 {
     auto childrows = getChildren();
 

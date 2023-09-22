@@ -80,7 +80,7 @@ private:
     details::Statistics collect_statistics();
     void start_editing(Gtk::CellEditable* cell, const Glib::ustring& path);
     void end_editing(const Glib::ustring& path, const Glib::ustring& new_text);
-    void selectionModified(Inkscape::Selection *selection, guint flags) override;
+    void selectionModified(Inkscape::Selection *selection, unsigned flags) override;
     void update_buttons();
     Gtk::TreeModel::Row selected_item();
     void clear_stores();

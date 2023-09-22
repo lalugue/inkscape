@@ -16,6 +16,7 @@
 #include <cairomm/surface.h>
 #include <cassert>
 #include <cstddef>
+#include <cstdint>
 #include <memory>
 #include <optional>
 #include <sstream>
@@ -343,7 +344,9 @@ DocumentResources::DocumentResources()
     _treeview.set_model(filtered_info);
 
     auto treestore = get_object<Gtk::ListStore>(_builder, "liststore");
-    _selector.set_row_separator_func([=](const Glib::RefPtr<Gtk::TreeModel>&, const Gtk::TreeModel::iterator& it){
+    _selector.set_row_separator_func([=](Glib::RefPtr<Gtk::TreeModel> const &/*model*/,
+                                         Gtk::TreeModel::const_iterator const &it)
+    {
         Glib::ustring id;
         it->get_value(COL_ID, id);
         return id == "-";
@@ -362,8 +365,10 @@ DocumentResources::DocumentResources()
     auto const count_renderer = Gtk::make_managed<Gtk::CellRendererText>();
     auto count_column = _selector.get_column(_selector.append_column("", *count_renderer) - 1);
     count_column->add_attribute(*count_renderer, "text", COL_COUNT);
-    count_column->set_cell_data_func(*count_renderer, [=](Gtk::CellRenderer* r, const Gtk::TreeModel::iterator& it){
-        uint64_t count;
+    count_column->set_cell_data_func(*count_renderer, [=](Gtk::CellRenderer * const r,
+                                                          Gtk::TreeModel::const_iterator const &it)
+    {
+        std::uint64_t count;
         it->get_value(COL_COUNT, count);
         count_renderer->property_text().set_value(count > 0 ? std::to_string(count) : "");
     });
@@ -475,7 +480,8 @@ DocumentResources::DocumentResources()
             // export colors into a GIMP palette
             if (_document) {
                 std::vector<int> colors;
-                _item_store->foreach_iter([&](const Gtk::TreeModel::iterator& it){
+                _item_store->foreach_iter([&](Gtk::TreeModel::const_iterator const &it)
+                {
                     int c;
                     it->get_value(g_item_columns.color.index(), c);
                     colors.push_back(c);
@@ -797,7 +803,9 @@ void DocumentResources::refresh_current_page() {
     }
     auto model = _selector.get_model();
 
-    model->foreach([=](const Gtk::TreeModel::Path& path, const Gtk::TreeModel::iterator& it) {
+    model->foreach([=](Gtk::TreeModel::Path const &path,
+                       Gtk::TreeModel::const_iterator const &it)
+    {
         Glib::ustring id;
         it->get_value(COL_ID, id);
 
@@ -810,7 +818,8 @@ void DocumentResources::refresh_current_page() {
     });
 }
 
-void DocumentResources::selectionModified(Inkscape::Selection* selection, guint flags) {
+void DocumentResources::selectionModified(Inkscape::Selection* selection, unsigned flags)
+{
     // no op so far
 }
 

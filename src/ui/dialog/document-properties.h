@@ -169,7 +169,8 @@ protected:
     AvailableProfilesColumns _AvailableProfilesListColumns;
     Glib::RefPtr<Gtk::ListStore> _AvailableProfilesListStore;
     Gtk::ComboBox _AvailableProfilesList;
-    bool _AvailableProfilesList_separator(const Glib::RefPtr<Gtk::TreeModel>& model, const Gtk::TreeModel::iterator& iter);
+    bool _AvailableProfilesList_separator(Glib::RefPtr<Gtk::TreeModel> const &model,
+                                          Gtk::TreeModel::const_iterator const &iter);
     class LinkedProfilesColumns : public Gtk::TreeModel::ColumnRecord
         {
         public:

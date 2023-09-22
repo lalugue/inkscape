@@ -52,13 +52,17 @@ public:
     void change_frame_name(const Glib::ustring&);
     void setup_signals();
 
-    Glib::ustring get_text_cell_markup(Gtk::TreeIter const &iter);
+    Glib::ustring get_text_cell_markup(Gtk::TreeModel::iterator const &iter);
 
     // Custom renderers.
-    void text_cell_data_func(Gtk::CellRenderer*, Gtk::TreeIter const&);
-    void icon_cell_data_func(Gtk::CellRenderer*, Gtk::TreeIter const&);
-    void check_button_cell_data_func(Gtk::CellRenderer*, Gtk::TreeIter const&);
-    bool row_separator_func(const Glib::RefPtr<Gtk::TreeModel>&, const Gtk::TreeModel::iterator&);
+    void text_cell_data_func        (Gtk::CellRenderer *renderer,
+                                     Gtk::TreeModel::const_iterator const &iter);
+    void icon_cell_data_func        (Gtk::CellRenderer *renderer,
+                                     Gtk::TreeModel::const_iterator const &iter);
+    void check_button_cell_data_func(Gtk::CellRenderer *renderer,
+                                     Gtk::TreeModel::const_iterator const &iter);
+    bool row_separator_func(Glib::RefPtr<Gtk::TreeModel> const &model,
+                            Gtk::TreeModel::const_iterator const &iter);
 
     void populate_collections();
 

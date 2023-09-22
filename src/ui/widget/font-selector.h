@@ -32,6 +32,7 @@
 #include <gtkmm/grid.h>
 #include <gtkmm/frame.h>
 #include <gtkmm/scrolledwindow.h>
+#include <gtkmm/treemodel.h>
 #include <gtkmm/treeview.h>
 #include <gtkmm/label.h>
 #include <gtkmm/comboboxtext.h>
@@ -100,7 +101,7 @@ private:
     void set_fontsize_tooltip();
 
     // Use font style when listing style names.
-    void style_cell_data_func (Gtk::CellRenderer *renderer, Gtk::TreeIter const &iter);
+    void style_cell_data_func (Gtk::CellRenderer *renderer, Gtk::TreeModel::iterator const &iter);
 
     // Signal handlers
     void on_family_changed();

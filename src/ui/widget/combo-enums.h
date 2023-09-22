@@ -17,7 +17,6 @@
 #include <glibmm/ustring.h>
 #include <gtkmm/combobox.h>
 #include <gtkmm/liststore.h>
-#include <gtkmm/treeiter.h>
 #include <gtkmm/treemodel.h>
 #include <sigc++/functors/mem_fun.h>
 
@@ -55,8 +54,8 @@ public:
     }
 
 private:
-    [[nodiscard]] int on_sort_compare(Gtk::TreeModel::iterator const &a,
-                                      Gtk::TreeModel::iterator const &b) const
+    [[nodiscard]] int on_sort_compare(Gtk::TreeModel::const_iterator const &a,
+                                      Gtk::TreeModel::const_iterator const &b) const
     {
         auto const &an = a->get_value(_columns.label);
         auto const &bn = b->get_value(_columns.label);
@@ -163,7 +162,7 @@ public:
     };
 
     bool combo_separator_func(Glib::RefPtr<Gtk::TreeModel> const &model,
-                              Gtk::TreeModel::iterator const &iter) const
+                              Gtk::TreeModel::const_iterator const &iter) const
     {
         return iter->get_value(_columns.is_separator);
     };

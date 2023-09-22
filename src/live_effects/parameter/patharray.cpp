@@ -220,7 +220,7 @@ Gtk::Widget *PathArrayParam::param_newWidget()
     return vbox;
 }
 
-bool PathArrayParam::_selectIndex(const Gtk::TreeIter &iter, int *i)
+bool PathArrayParam::_selectIndex(const Gtk::TreeModel::iterator &iter, int *i)
 {
     if ((*i)-- <= 0) {
         _tree->get_selection()->select(iter);
@@ -371,7 +371,7 @@ void PathArrayParam::linked_release(SPObject * /*release*/, PathAndDirectionAndV
     }
 }
 
-bool PathArrayParam::_updateLink(const Gtk::TreeIter &iter, PathAndDirectionAndVisible *pd)
+bool PathArrayParam::_updateLink(const Gtk::TreeModel::iterator &iter, PathAndDirectionAndVisible *pd)
 {
     Gtk::TreeModel::Row row = *iter;
     if (row[_model->_colObject] == pd) {

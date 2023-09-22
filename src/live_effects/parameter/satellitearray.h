@@ -14,6 +14,7 @@
 #include <vector>
 #include <glibmm/refptr.h>
 #include <glibmm/ustring.h>
+#include <gtkmm/treemodel.h>
 
 #include "helper/auto-connection.h"
 #include "live_effects/lpeobject.h"
@@ -22,7 +23,6 @@
 #include "live_effects/parameter/satellite-reference.h"
 
 namespace Gtk {
-class TreeIter;
 class TreeStore;
 class TreeView;
 class ScrolledWindow;
@@ -59,7 +59,7 @@ public:
 
 private:
     void linked_modified(SPObject *linked_obj, guint flags);
-    bool _selectIndex(const Gtk::TreeIter &iter, int *i);
+    bool _selectIndex(const Gtk::TreeModel::iterator &iter, int *i);
     void updatesignal();
 
     std::unique_ptr<ModelColumns> _model;

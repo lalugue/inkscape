@@ -304,7 +304,9 @@ ExtensionsGallery::ExtensionsGallery(ExtensionsGallery::Type type) :
     show_categories_list(show_list);
 
     _categories = get_object<Gtk::ListStore>(_builder, "categories-store");
-    _selector.set_row_separator_func([=](const Glib::RefPtr<Gtk::TreeModel>&, const Gtk::TreeModel::iterator& it){
+    _selector.set_row_separator_func([=](Glib::RefPtr<Gtk::TreeModel> const &,
+                                         Gtk::TreeModel::const_iterator const &it)
+    {
         Glib::ustring id;
         it->get_value(g_categories_columns.id.index(), id);
         return id == "-";
@@ -397,7 +399,9 @@ ExtensionsGallery::ExtensionsGallery(ExtensionsGallery::Type type) :
         update_name();
     });
 
-    _categories->foreach([=](const Gtk::TreeModel::Path& path, const Gtk::TreeModel::iterator& it) {
+    _categories->foreach([=](Gtk::TreeModel::Path const &path,
+                             Gtk::TreeModel::const_iterator const &it)
+    {
         Glib::ustring id;
         it->get_value(g_categories_columns.id.index(), id);
 
@@ -546,5 +550,15 @@ void ExtensionsGallery::get_cell_data_func(Gtk::CellRenderer* cell_renderer, Gtk
     cell_renderer->set_property("surface", surface);
 }
 
+} // namespace Inkscape::UI::Dialog
 
-} // namespaces
+/*
+  Local Variables:
+  mode:c++
+  c-file-style:"stroustrup"
+  c-file-offsets:((innamespace . 0)(inline-open . 0)(case-label . +))
+  indent-tabs-mode:nil
+  fill-column:99
+  End:
+*/
+// vim:filetype=cpp:expandtab:shiftwidth=4:tabstop=8:softtabstop=4:fileencoding=utf-8:textwidth=99:

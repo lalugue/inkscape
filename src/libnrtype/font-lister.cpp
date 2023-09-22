@@ -304,7 +304,7 @@ void FontLister::ensureRowStyles(Glib::RefPtr<Gtk::TreeModel> model, Gtk::TreeMo
     }
 }
 
-Glib::ustring FontLister::get_font_family_markup(Gtk::TreeIter const &iter)
+Glib::ustring FontLister::get_font_family_markup(Gtk::TreeModel::iterator const &iter)
 {
     Gtk::TreeModel::Row row = *iter;
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
@@ -1268,8 +1268,9 @@ const Glib::RefPtr<Gtk::ListStore> FontLister::get_style_list() const
 // Helper functions
 
 // Separator function (if true, a separator will be drawn)
-bool font_lister_separator_func(const Glib::RefPtr<Gtk::TreeModel>& model,
-                                const Gtk::TreeModel::iterator& iter) {
+bool font_lister_separator_func(Glib::RefPtr<Gtk::TreeModel> const &/*model*/,
+                                Gtk::TreeModel::const_iterator const &iter)
+{
 
     // Of what use is 'model', can we avoid using font_lister?
     Inkscape::FontLister* font_lister = Inkscape::FontLister::get_instance();
@@ -1289,13 +1290,14 @@ gboolean font_lister_separator_func2(GtkTreeModel *model, GtkTreeIter *iter, gpo
 }
 
 // do nothing on load initialy
-void font_lister_cell_data_func (Gtk::CellRenderer *renderer, Gtk::TreeIter const &iter)
+void font_lister_cell_data_func(Gtk::CellRenderer * /*renderer*/,
+                                Gtk::TreeModel::const_iterator const & /*iter*/)
 {
 }
 
 // Draw system fonts in dark blue, missing fonts with red strikeout.
 // Used by both FontSelector and Text toolbar.
-void font_lister_cell_data_func_markup (Gtk::CellRenderer *renderer, Gtk::TreeIter const &iter)
+void font_lister_cell_data_func_markup (Gtk::CellRenderer *renderer, Gtk::TreeModel::iterator const &iter)
 {
     Inkscape::FontLister* font_lister = Inkscape::FontLister::get_instance();
     Glib::ustring markup = font_lister->get_font_family_markup(iter);
@@ -1304,10 +1306,10 @@ void font_lister_cell_data_func_markup (Gtk::CellRenderer *renderer, Gtk::TreeIt
 
 // Needed until Text toolbar updated
 void font_lister_cell_data_func2(GtkCellLayout * /*cell_layout*/,
-                                GtkCellRenderer *cell,
-                                GtkTreeModel *model,
-                                GtkTreeIter *iter,
-                                gpointer data)
+                                 GtkCellRenderer *cell,
+                                 GtkTreeModel *model,
+                                 GtkTreeIter *iter,
+                                 gpointer data)
 {
     gchar *family;
     gboolean onSystem = false;
@@ -1376,7 +1378,8 @@ void font_lister_cell_data_func2(GtkCellLayout * /*cell_layout*/,
 }
 
 // Draw Face name with face style.
-void font_lister_style_cell_data_func (Gtk::CellRenderer *renderer, Gtk::TreeIter const &iter)
+void font_lister_style_cell_data_func(Gtk::CellRenderer *const renderer,
+                                     Gtk::TreeModel::const_iterator const &iter)
 {
     Inkscape::FontLister* font_lister = Inkscape::FontLister::get_instance();
     Gtk::TreeModel::Row row = *iter;

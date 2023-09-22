@@ -41,7 +41,6 @@
 #include <gtkmm/popover.h>
 #include <gtkmm/scale.h>
 #include <gtkmm/searchentry.h>
-#include <gtkmm/treeiter.h>
 #include <gtkmm/treemodelfilter.h>
 #include <gtkmm/treemodel.h>
 #include <gtkmm/treemodelsort.h>
@@ -466,7 +465,7 @@ std::map<std::string, SymbolSet> get_all_symbols(Glib::RefPtr<Gtk::ListStore>& s
     return map;
 }
 
-void SymbolsDialog::rebuild(Gtk::TreeIter current) {
+void SymbolsDialog::rebuild(Gtk::TreeModel::iterator current) {
     if (!sensitive || !current) {
         return;
     }
@@ -733,7 +732,7 @@ Glib::ustring SymbolsDialog::get_current_set_id() const {
     return {};
 }
 
-std::optional<Gtk::TreeIter> SymbolsDialog::get_current_set() const {
+std::optional<Gtk::TreeModel::iterator> SymbolsDialog::get_current_set() const {
     auto selected = _symbol_sets_view.get_selected_items();
     if (selected.empty()) {
         return std::nullopt;
@@ -741,7 +740,7 @@ std::optional<Gtk::TreeIter> SymbolsDialog::get_current_set() const {
     return _sets.path_to_child_iter(selected.front());
 }
 
-SPDocument* SymbolsDialog::get_symbol_document(const std::optional<Gtk::TreeIter>& it) const {
+SPDocument* SymbolsDialog::get_symbol_document(const std::optional<Gtk::TreeModel::iterator>& it) const {
     if (!it) {
         return nullptr;
     }
@@ -759,7 +758,7 @@ std::optional<Gtk::TreeModel::Path> SymbolsDialog::get_selected_symbol_path() co
     return selected.front();
 }
 
-std::optional<Gtk::TreeIter> SymbolsDialog::get_selected_symbol() const {
+std::optional<Gtk::TreeModel::iterator> SymbolsDialog::get_selected_symbol() const {
     auto selected = get_selected_symbol_path();
     if (!selected) {
         return std::nullopt;
@@ -768,7 +767,7 @@ std::optional<Gtk::TreeIter> SymbolsDialog::get_selected_symbol() const {
 }
 
 /** Return the dimensions of the symbol at the given path, in document units. */
-Geom::Point SymbolsDialog::getSymbolDimensions(const std::optional<Gtk::TreeIter>& it) const
+Geom::Point SymbolsDialog::getSymbolDimensions(const std::optional<Gtk::TreeModel::iterator>& it) const
 {
     if (!it) {
         return Geom::Point();
@@ -777,7 +776,7 @@ Geom::Point SymbolsDialog::getSymbolDimensions(const std::optional<Gtk::TreeIter
 }
 
 /** Return the ID of the symbol at the given path, with empty string fallback. */
-Glib::ustring SymbolsDialog::getSymbolId(const std::optional<Gtk::TreeIter>& it) const
+Glib::ustring SymbolsDialog::getSymbolId(const std::optional<Gtk::TreeModel::iterator>& it) const
 {
     if (!it) {
         return "";
@@ -790,7 +789,7 @@ Glib::ustring SymbolsDialog::getSymbolId(const std::optional<Gtk::TreeIter>& it)
  * @param symbol_path The path to the symbol in the tree model.
  * @param bbox The bounding box to set on the clipboard document's clipnode.
  */
-void SymbolsDialog::sendToClipboard(const Gtk::TreeIter& symbol_iter, Geom::Rect const &bbox)
+void SymbolsDialog::sendToClipboard(const Gtk::TreeModel::iterator& symbol_iter, Geom::Rect const &bbox)
 {
     auto symbol_id = getSymbolId(symbol_iter);
     if (symbol_id.empty()) return;

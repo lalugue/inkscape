@@ -334,7 +334,7 @@ InkscapePreferences::InkscapePreferences()
 
     _search.signal_next_match().connect([=]() {
         if (_search_results.size() > 0) {
-            Gtk::TreeIter curr = _page_list.get_selection()->get_selected();
+            Gtk::TreeModel::iterator curr = _page_list.get_selection()->get_selected();
             auto _page_list_selection = _page_list.get_selection();
             auto next = get_next_result(curr);
             if (next) {
@@ -347,7 +347,7 @@ InkscapePreferences::InkscapePreferences()
 
     _search.signal_previous_match().connect([=]() {
         if (_search_results.size() > 0) {
-            Gtk::TreeIter curr = _page_list.get_selection()->get_selected();
+            Gtk::TreeModel::iterator curr = _page_list.get_selection()->get_selected();
             auto _page_list_selection = _page_list.get_selection();
             auto prev = get_prev_result(curr);
             if (prev) {
@@ -501,7 +501,7 @@ void InkscapePreferences::goto_first_result()
 {
     auto key = _search.get_text();
     if (_num_results > 0) {
-        Gtk::TreeIter curr = _page_list.get_model()->children().begin();
+        Gtk::TreeModel::iterator curr = _page_list.get_model()->children().begin();
         if (fuzzy_search(key, curr->get_value(_page_list_columns._col_name)) ||
             get_num_matches(key, curr->get_value(_page_list_columns._col_page)) > 0) {
             _page_list.scroll_to_cell(Gtk::TreePath(curr), *_page_list.get_column(0));
@@ -524,7 +524,7 @@ void InkscapePreferences::goto_first_result()
  * contain search result
  * @return Immediate next row than contains a search result
  */
-Gtk::TreePath InkscapePreferences::get_next_result(Gtk::TreeIter &iter, bool check_children)
+Gtk::TreePath InkscapePreferences::get_next_result(Gtk::TreeModel::iterator &iter, bool check_children)
 {
     auto key = _search.get_text();
     Gtk::TreePath path = Gtk::TreePath(iter);
@@ -580,7 +580,7 @@ Gtk::TreePath InkscapePreferences::get_next_result(Gtk::TreeIter &iter, bool che
  * contain search result
  * @return Immediate previous row than contains a search result
  */
-Gtk::TreePath InkscapePreferences::get_prev_result(Gtk::TreeIter &iter, bool iterate)
+Gtk::TreePath InkscapePreferences::get_prev_result(Gtk::TreeModel::iterator &iter, bool iterate)
 {
     auto key = _search.get_text();
     Gtk::TreePath path = Gtk::TreePath(iter);
@@ -637,7 +637,7 @@ bool InkscapePreferences::on_navigate_key_pressed(GtkEventControllerKey const * 
 
     GdkModifierType modmask = gtk_accelerator_get_default_mod_mask();
     if ((state & modmask) == Gdk::SHIFT_MASK) {
-        Gtk::TreeIter curr = _page_list.get_selection()->get_selected();
+        Gtk::TreeModel::iterator curr = _page_list.get_selection()->get_selected();
         auto _page_list_selection = _page_list.get_selection();
         auto prev = get_prev_result(curr);
         if (prev) {
@@ -645,7 +645,7 @@ bool InkscapePreferences::on_navigate_key_pressed(GtkEventControllerKey const * 
             _page_list.set_cursor(prev);
         }
     } else {
-        Gtk::TreeIter curr = _page_list.get_selection()->get_selected();
+        Gtk::TreeModel::iterator curr = _page_list.get_selection()->get_selected();
         auto _page_list_selection = _page_list.get_selection();
         auto next = get_next_result(curr);
         if (next) {
@@ -3377,7 +3377,7 @@ void InkscapePreferences::onKBRealize()
     }
 }
 
-void InkscapePreferences::onKBShortcutRenderer(Gtk::CellRenderer *renderer, Gtk::TreeIter const &iter) {
+void InkscapePreferences::onKBShortcutRenderer(Gtk::CellRenderer *renderer, Gtk::TreeModel::iterator const &iter) {
 
     Glib::ustring shortcut = (*iter)[onKBGetCols().shortcut];
     shortcut = Glib::Markup::escape_text(shortcut);

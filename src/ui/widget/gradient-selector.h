@@ -81,7 +81,7 @@ private:
     GradientVectorSelector *_vectors;
 
     /* Tree */
-    bool _checkForSelected(const Gtk::TreePath &path, const Gtk::TreeIter &iter, SPGradient *vector);
+    bool _checkForSelected(const Gtk::TreePath &path, const Gtk::TreeModel::iterator &iter, SPGradient *vector);
     bool onKeyPressed(GtkEventControllerKey const * controller,
                       unsigned keyval, unsigned keycode, GdkModifierType state);
     void onTreeSelection();

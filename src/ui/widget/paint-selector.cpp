@@ -1048,7 +1048,6 @@ void PaintSelector::set_mode_hatch(PaintSelector::Mode mode)
 
 gboolean PaintSelector::isSeparator(GtkTreeModel *model, GtkTreeIter *iter, gpointer /*data*/)
 {
-
     gboolean sep = FALSE;
     gtk_tree_model_get(model, iter, COMBO_COL_SEP, &sep, -1);
     return sep;

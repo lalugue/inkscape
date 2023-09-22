@@ -15,6 +15,7 @@
 #include <2geom/pathvector.h>
 #include <glibmm/refptr.h>
 #include <glibmm/ustring.h>
+#include <gtkmm/treemodel.h>
 
 #include "live_effects/parameter/parameter.h"
 #include "live_effects/parameter/path-reference.h"
@@ -23,7 +24,6 @@
 #include "path-reference.h"
 
 namespace Gtk {
-class TreeIter;
 class TreeStore;
 class TreeView;
 class ScrolledWindow;
@@ -82,8 +82,8 @@ public:
 private:
     friend class LPEFillBetweenMany;
 
-    bool _updateLink(const Gtk::TreeIter& iter, PathAndDirectionAndVisible* pd);
-    bool _selectIndex(const Gtk::TreeIter& iter, int* i);
+    bool _updateLink(const Gtk::TreeModel::iterator& iter, PathAndDirectionAndVisible* pd);
+    bool _selectIndex(const Gtk::TreeModel::iterator& iter, int* i);
     void unlink(PathAndDirectionAndVisible* to);
     void start_listening();
     void setPathVector(SPObject *linked_obj, guint flags, PathAndDirectionAndVisible* to);

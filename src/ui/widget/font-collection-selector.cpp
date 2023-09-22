@@ -117,7 +117,7 @@ void FontCollectionSelector::setup_signals()
 }
 
 // To distinguish the collection name and the font name.
-Glib::ustring FontCollectionSelector::get_text_cell_markup(Gtk::TreeIter const &iter)
+Glib::ustring FontCollectionSelector::get_text_cell_markup(Gtk::TreeModel::iterator const &iter)
 {
     Glib::ustring markup;
     auto parent = (*iter)->parent();
@@ -139,7 +139,8 @@ Glib::ustring FontCollectionSelector::get_text_cell_markup(Gtk::TreeIter const &
 }
 
 // This function will TURN OFF the visibility of the delete icon for system collections.
-void FontCollectionSelector::text_cell_data_func(Gtk::CellRenderer *renderer, Gtk::TreeIter const &iter)
+void FontCollectionSelector::text_cell_data_func(Gtk::CellRenderer * const renderer,
+                                                 Gtk::TreeModel::const_iterator const &iter)
 {
     // Add the delete icon only if the collection is editable(user-collection).
     Glib::ustring markup = get_text_cell_markup(iter);
@@ -147,7 +148,8 @@ void FontCollectionSelector::text_cell_data_func(Gtk::CellRenderer *renderer, Gt
 }
 
 // This function will TURN OFF the visibility of the delete icon for system collections.
-void FontCollectionSelector::icon_cell_data_func(Gtk::CellRenderer *renderer, Gtk::TreeIter const &iter)
+void FontCollectionSelector::icon_cell_data_func(Gtk::CellRenderer * const renderer,
+                                                 Gtk::TreeModel::const_iterator const &iter)
 {
     // Add the delete icon only if the collection is editable(user-collection).
     Gtk::TreeModel::Row row = *iter;
@@ -170,7 +172,8 @@ void FontCollectionSelector::icon_cell_data_func(Gtk::CellRenderer *renderer, Gt
 }
 
 // This function will TURN OFF the visibility of checkbuttons for children in the TreeStore.
-void FontCollectionSelector::check_button_cell_data_func(Gtk::CellRenderer *renderer, Gtk::TreeIter const &iter)
+void FontCollectionSelector::check_button_cell_data_func(Gtk::CellRenderer * const renderer,
+                                                         Gtk::TreeModel::const_iterator const &iter)
 {
     renderer->set_visible(false);
     /*
@@ -187,7 +190,8 @@ void FontCollectionSelector::check_button_cell_data_func(Gtk::CellRenderer *rend
     */
 }
 
-bool FontCollectionSelector::row_separator_func(const Glib::RefPtr<Gtk::TreeModel>& model, const Gtk::TreeModel::iterator& iter)
+bool FontCollectionSelector::row_separator_func(Glib::RefPtr<Gtk::TreeModel> const &/*model*/,
+                                                Gtk::TreeModel::const_iterator const &iter)
 {
     return (*iter)[FontCollection.name] == "#";
 }

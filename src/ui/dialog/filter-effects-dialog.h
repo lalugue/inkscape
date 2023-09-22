@@ -31,7 +31,7 @@
 #include <gtkmm/cellrenderertoggle.h>
 #include <gtkmm/gesture.h> // Gtk::EventSequenceState
 #include <gtkmm/liststore.h>
-#include <gtkmm/treeiter.h>
+#include <gtkmm/treemodel.h>
 #include <gtkmm/treemodelcolumn.h>
 #include <gtkmm/treeview.h>
 
@@ -137,7 +137,7 @@ private:
         void on_name_edited(const Glib::ustring&, const Glib::ustring&);
         bool on_filter_move(const Glib::RefPtr<Gdk::DragContext>& /*context*/, int x, int y, guint /*time*/);
         void on_selection_toggled(const Glib::ustring&);
-        void selection_toggled(Gtk::TreeIter iter, bool toggle);
+        void selection_toggled(Gtk::TreeModel::iterator iter, bool toggle);
 
         void update_counts();
         Gtk::EventSequenceState filter_list_click_released(Gtk::GestureMultiPress const &click,
@@ -245,16 +245,16 @@ private:
 
         void init_text();
 
-        bool do_connection_node(const Gtk::TreeIter& row, const int input, std::vector<Gdk::Point>& points,
+        bool do_connection_node(const Gtk::TreeModel::iterator& row, const int input, std::vector<Gdk::Point>& points,
                                 const int ix, const int iy);
 
-        const Gtk::TreeIter find_result(const Gtk::TreeIter& start, const SPAttr attr, int& src_id, const int pos);
-        int find_index(const Gtk::TreeIter& target);
+        const Gtk::TreeModel::iterator find_result(const Gtk::TreeModel::iterator& start, const SPAttr attr, int& src_id, const int pos);
+        int find_index(const Gtk::TreeModel::iterator& target);
         void draw_connection(const Cairo::RefPtr<Cairo::Context>& cr,
-                             const Gtk::TreeIter&, const SPAttr attr, const int text_start_x,
+                             const Gtk::TreeModel::iterator&, const SPAttr attr, const int text_start_x,
                              const int x1, const int y1, const int row_count, const int pos,
                              const Gdk::RGBA fg_color, const Gdk::RGBA mid_color);
-        void sanitize_connections(const Gtk::TreeIter& prim_iter);
+        void sanitize_connections(const Gtk::TreeModel::iterator& prim_iter);
         void on_primitive_selection_changed();
         bool on_scroll_timeout();
 

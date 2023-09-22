@@ -1506,11 +1506,11 @@ bool FilterEffectsDialog::FilterModifier::on_filter_move(const Glib::RefPtr<Gdk:
 
 void FilterEffectsDialog::FilterModifier::on_selection_toggled(const Glib::ustring& path)
 {
-    Gtk::TreeIter iter = _filters_model->get_iter(path);
+    Gtk::TreeModel::iterator iter = _filters_model->get_iter(path);
     selection_toggled(iter, false);
 }
 
-void FilterEffectsDialog::FilterModifier::selection_toggled(Gtk::TreeIter iter, bool toggle) {
+void FilterEffectsDialog::FilterModifier::selection_toggled(Gtk::TreeModel::iterator iter, bool toggle) {
     if (!iter) return;
 
     SPDesktop *desktop = _dialog.getDesktop();
@@ -2005,7 +2005,7 @@ bool FilterEffectsDialog::PrimitiveList::on_draw_signal(const Cairo::RefPtr<Cair
 
     int fwidth = CellRendererConnection::size_w;
     Gdk::Rectangle rct, vis;
-    Gtk::TreeIter row = get_model()->children().begin();
+    Gtk::TreeModel::iterator row = get_model()->children().begin();
     int text_start_x = 0;
     if(row) {
         get_cell_area(get_model()->get_path(row), *get_column(1), rct);
@@ -2142,7 +2142,7 @@ bool FilterEffectsDialog::PrimitiveList::on_draw_signal(const Cairo::RefPtr<Cair
 }
 
 void FilterEffectsDialog::PrimitiveList::draw_connection(const Cairo::RefPtr<Cairo::Context>& cr,
-                                                         const Gtk::TreeIter& input, const SPAttr attr,
+                                                         const Gtk::TreeModel::iterator& input, const SPAttr attr,
                                                          const int text_start_x, const int x1, const int y1,
                                                          const int row_count, const int pos,
                                                          const Gdk::RGBA fg_color, const Gdk::RGBA mid_color)
@@ -2150,7 +2150,7 @@ void FilterEffectsDialog::PrimitiveList::draw_connection(const Cairo::RefPtr<Cai
     cr->save();
 
     int src_id = 0;
-    Gtk::TreeIter res = find_result(input, attr, src_id, pos);
+    Gtk::TreeModel::iterator res = find_result(input, attr, src_id, pos);
 
     const bool is_first = input == get_model()->children().begin();
     const bool is_merge = is<SPFeMerge>((SPFilterPrimitive*)(*input)[_columns.primitive]);
@@ -2231,7 +2231,7 @@ void draw_connection_node(const Cairo::RefPtr<Cairo::Context>& cr,
 }
 
 // Creates a triangle outline of the connection node and returns true if (x,y) is inside the node
-bool FilterEffectsDialog::PrimitiveList::do_connection_node(const Gtk::TreeIter& row, const int input,
+bool FilterEffectsDialog::PrimitiveList::do_connection_node(const Gtk::TreeModel::iterator& row, const int input,
                                                             std::vector<Gdk::Point>& points,
                                                             const int ix, const int iy)
 {
@@ -2258,12 +2258,12 @@ bool FilterEffectsDialog::PrimitiveList::do_connection_node(const Gtk::TreeIter&
     return ix >= x - h && iy >= con_y && ix <= x && iy <= points[1].get_y();
 }
 
-const Gtk::TreeIter FilterEffectsDialog::PrimitiveList::find_result(const Gtk::TreeIter& start,
+const Gtk::TreeModel::iterator FilterEffectsDialog::PrimitiveList::find_result(const Gtk::TreeModel::iterator& start,
                                                                     const SPAttr attr, int& src_id,
                                                                     const int pos)
 {
     SPFilterPrimitive* prim = (*start)[_columns.primitive];
-    Gtk::TreeIter target = _model->children().end();
+    Gtk::TreeModel::iterator target = _model->children().end();
     int image = 0;
 
     if(is<SPFeMerge>(prim)) {
@@ -2297,7 +2297,7 @@ const Gtk::TreeIter FilterEffectsDialog::PrimitiveList::find_result(const Gtk::T
     }
 
     if(image >= 0) {
-        for(Gtk::TreeIter i = _model->children().begin();
+        for(Gtk::TreeModel::iterator i = _model->children().begin();
             i != start; ++i) {
             if(((SPFilterPrimitive*)(*i)[_columns.primitive])->get_out() == image)
                 target = i;
@@ -2312,10 +2312,10 @@ const Gtk::TreeIter FilterEffectsDialog::PrimitiveList::find_result(const Gtk::T
     return target;
 }
 
-int FilterEffectsDialog::PrimitiveList::find_index(const Gtk::TreeIter& target)
+int FilterEffectsDialog::PrimitiveList::find_index(const Gtk::TreeModel::iterator& target)
 {
     int i = 0;
-    for (Gtk::TreeIter iter = _model->children().begin();
+    for (Gtk::TreeModel::iterator iter = _model->children().begin();
         iter != target; ++iter, ++i){};
     return i;
 }
@@ -2340,7 +2340,7 @@ FilterEffectsDialog::PrimitiveList::on_click_pressed(Gtk::GestureMultiPress cons
     _drag_prim = nullptr;
 
     if(get_path_at_pos(x, y, path, col, cx, cy)) {
-        Gtk::TreeIter iter = _model->get_iter(path);
+        Gtk::TreeModel::iterator iter = _model->get_iter(path);
         std::vector<Gdk::Point> points;
 
         _drag_prim = (*iter)[_columns.primitive];
@@ -2431,7 +2431,7 @@ FilterEffectsDialog::PrimitiveList::on_click_released(Gtk::GestureMultiPress con
         if (get_path_at_pos(x, y, path, col, cx, cy)) {
             const gchar *in_val = nullptr;
             Glib::ustring result;
-            Gtk::TreeIter target_iter = _model->get_iter(path);
+            Gtk::TreeModel::iterator target_iter = _model->get_iter(path);
             target = (*target_iter)[_columns.primitive];
             col = get_column(1);
 
@@ -2451,7 +2451,7 @@ FilterEffectsDialog::PrimitiveList::on_click_released(Gtk::GestureMultiPress con
             }
             else {
                 // Ensure that the target comes before the selected primitive
-                for(Gtk::TreeIter iter = _model->children().begin();
+                for(Gtk::TreeModel::iterator iter = _model->children().begin();
                     iter != get_selection()->get_selected(); ++iter) {
                     if(iter == target_iter) {
                         Inkscape::XML::Node *repr = target->getRepr();
@@ -2552,12 +2552,12 @@ static void check_single_connection(SPFilterPrimitive* prim, const int result)
 }
 
 // Remove any connections going to/from prim_iter that forward-reference other primitives
-void FilterEffectsDialog::PrimitiveList::sanitize_connections(const Gtk::TreeIter& prim_iter)
+void FilterEffectsDialog::PrimitiveList::sanitize_connections(const Gtk::TreeModel::iterator& prim_iter)
 {
     SPFilterPrimitive *prim = (*prim_iter)[_columns.primitive];
     bool before = true;
 
-    for(Gtk::TreeIter iter = _model->children().begin();
+    for(Gtk::TreeModel::iterator iter = _model->children().begin();
         iter != _model->children().end(); ++iter) {
         if(iter == prim_iter)
             before = false;

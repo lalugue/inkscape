@@ -166,14 +166,6 @@ LivePathEffectEditor::~LivePathEffectEditor()
     sp_clear_custom_tooltip();
 }
 
-bool separator_func(const Glib::RefPtr<Gtk::TreeModel>& model,
-                    const Gtk::TreeModel::iterator& iter) {
-    Gtk::TreeModel::Row row = *iter;
-    bool *separator;
-    row->get_value(3, separator);
-    return separator;
-}
-
 bool
 LivePathEffectEditor::can_apply(LivePathEffect::EffectType etype, Glib::ustring const &item_type,
                                 bool const has_clip, bool const has_mask)

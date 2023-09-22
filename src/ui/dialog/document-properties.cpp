@@ -763,7 +763,8 @@ void DocumentProperties::removeSelectedProfile(){
     onColorProfileSelectRow();
 }
 
-bool DocumentProperties::_AvailableProfilesList_separator(const Glib::RefPtr<Gtk::TreeModel>& model, const Gtk::TreeModel::iterator& iter)
+bool DocumentProperties::_AvailableProfilesList_separator(Glib::RefPtr<Gtk::TreeModel> const &model,
+                                                          Gtk::TreeModel::const_iterator const &iter)
 {
     bool separator = (*iter)[_AvailableProfilesListColumns.separatorColumn];
     return separator;

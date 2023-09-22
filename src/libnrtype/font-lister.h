@@ -1,7 +1,4 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-#ifndef FONT_LISTER_H
-#define FONT_LISTER_H
-
 /*
  * Font selection widgets
  *
@@ -16,6 +13,8 @@
  *
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
+#ifndef FONT_LISTER_H
+#define FONT_LISTER_H
 
 #include <map>
 #include <set>
@@ -24,6 +23,7 @@
 #include <glibmm/stringutils.h> // For strescape()
 
 #include <gtkmm/liststore.h>
+#include <gtkmm/treemodel.h>
 #include <gtkmm/treemodelcolumn.h>
 #include <gtkmm/treepath.h>
 
@@ -308,7 +308,7 @@ public:
     /**
      * Get markup for font-family.
      */
-    Glib::ustring get_font_family_markup(Gtk::TreeIter const &iter);
+    Glib::ustring get_font_family_markup(Gtk::TreeModel::iterator const &iter);
 
     /**
      * Let users of FontLister know to update GUI.
@@ -365,16 +365,17 @@ private:
 } // namespace Inkscape
 
 // Helper functions
-bool font_lister_separator_func (const Glib::RefPtr<Gtk::TreeModel>& model,
-                                 const Gtk::TreeModel::iterator& iter);
+bool font_lister_separator_func(Glib::RefPtr<Gtk::TreeModel> const &model,
+                                Gtk::TreeModel::const_iterator const &iter);
 
 gboolean font_lister_separator_func2(GtkTreeModel *model,
-                                    GtkTreeIter *iter,
-                                    gpointer /*data*/);
+                                     GtkTreeIter *iter,
+                                     gpointer /*data*/);
 
-void font_lister_cell_data_func (Gtk::CellRenderer *renderer, Gtk::TreeIter const &iter);
+void font_lister_cell_data_func(Gtk::CellRenderer *renderer,
+                                Gtk::TreeModel::const_iterator const &iter);
 
-void font_lister_cell_data_func_markup (Gtk::CellRenderer *renderer, Gtk::TreeIter const &iter);
+void font_lister_cell_data_func_markup (Gtk::CellRenderer *renderer, Gtk::TreeModel::iterator const &iter);
 
 void font_lister_cell_data_func2(GtkCellLayout * /*cell_layout*/,
                                 GtkCellRenderer *cell,
@@ -382,7 +383,8 @@ void font_lister_cell_data_func2(GtkCellLayout * /*cell_layout*/,
                                 GtkTreeIter *iter,
                                 gpointer /*data*/);
 
-void font_lister_style_cell_data_func (Gtk::CellRenderer *renderer, Gtk::TreeIter const &iter);
+void font_lister_style_cell_data_func(Gtk::CellRenderer *renderer,
+                                      Gtk::TreeModel::const_iterator const &iter);
 
 #endif
 

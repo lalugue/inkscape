@@ -34,6 +34,7 @@
 #include <gtkmm/entry.h>
 #include <gtkmm/label.h>
 #include <gtkmm/liststore.h>
+#include <gtkmm/treemodel.h>
 #include <gtkmm/treestore.h>
 #include <gtkmm/treeviewcolumn.h>
 #include <gtkmm/treeview.h>
@@ -739,7 +740,7 @@ void StyleDialog::readStyleElement()
         for (auto const &[name, pair] : result_props) {
             auto const &[value, active] = pair;
 
-            Gtk::TreeIter iterstore = obj ? store->append() : store->prepend();
+            Gtk::TreeModel::iterator iterstore = obj ? store->append() : store->prepend();
             Gtk::TreeModel::Row row = *(iterstore);
             row[_mColumns._colSelector] = selector_orig;
             row[_mColumns._colSelectorPos] = selectorpos;
@@ -854,7 +855,7 @@ void StyleDialog::readStyleElement()
                         }
 
                         empty = false;
-                        Gtk::TreeIter iterstore = store->prepend();
+                        Gtk::TreeModel::iterator iterstore = store->prepend();
                         Gtk::TreeModel::Path path = (Gtk::TreeModel::Path)iterstore;
                         Gtk::TreeModel::Row row = *(iterstore);
                         row[_mColumns._colSelector] = "attributes";
@@ -1134,7 +1135,7 @@ void StyleDialog::_addRow(Glib::RefPtr<Gtk::TreeStore> const &store, Gtk::TreeVi
 {
     g_debug("StyleDialog::_addRow");
 
-    Gtk::TreeIter iter = store->prepend();
+    Gtk::TreeModel::iterator iter = store->prepend();
     Gtk::TreeModel::Path path = (Gtk::TreeModel::Path)iter;
     Gtk::TreeModel::Row row = *(iter);
     row[_mColumns._colSelector] = selector;
@@ -1285,7 +1286,7 @@ gboolean sp_styledialog_store_move_to_next(gpointer data)
 {
     StyleDialog *styledialog = reinterpret_cast<StyleDialog *>(data);
     auto selection = styledialog->_current_css_tree->get_selection();
-    Gtk::TreeIter iter = *(selection->get_selected());
+    Gtk::TreeModel::iterator iter = *(selection->get_selected());
     if (!iter) {
         return false;
     }

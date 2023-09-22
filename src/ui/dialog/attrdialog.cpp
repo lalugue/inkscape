@@ -35,8 +35,8 @@
 #include <gtkmm/scrolledwindow.h>
 #include <gtkmm/targetlist.h>
 #include <gtkmm/textview.h>
+#include <gtkmm/treemodel.h>
 #include <gtkmm/treeview.h>
-#include <gtkmm/widget.h>
 #include <sigc++/adaptors/bind.h>
 #include <sigc++/functors/mem_fun.h>
 
@@ -421,7 +421,7 @@ Gtk::TextView &AttrDialog::_activeTextView() const
 void AttrDialog::startValueEdit(Gtk::CellEditable *cell, const Glib::ustring &path)
 {
     _value_path = path;
-    Gtk::TreeIter iter = *_store->get_iter(path);
+    Gtk::TreeModel::iterator iter = *_store->get_iter(path);
     Gtk::TreeModel::Row row = *iter;
     if (!row || !_repr || !cell) {
         return;
@@ -753,7 +753,7 @@ void AttrDialog::storeMoveToNext(Gtk::TreeModel::Path modelpath)
  */
 void AttrDialog::nameEdited (const Glib::ustring& path, const Glib::ustring& name)
 {
-    Gtk::TreeIter iter = *_store->get_iter(path);
+    Gtk::TreeModel::iterator iter = *_store->get_iter(path);
     auto modelpath = static_cast<Gtk::TreeModel::Path>(iter);
     Gtk::TreeModel::Row row = *iter;
     if(row && this->_repr) {

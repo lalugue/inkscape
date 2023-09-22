@@ -224,7 +224,7 @@ bool SatelliteArrayParam::param_readSVGValue(char const * const strvalue)
     return false;
 }
 
-bool SatelliteArrayParam::_selectIndex(const Gtk::TreeIter &iter, int *i)
+bool SatelliteArrayParam::_selectIndex(const Gtk::TreeModel::iterator &iter, int *i)
 {
     if ((*i)-- <= 0) {
         _tree->get_selection()->select(iter);

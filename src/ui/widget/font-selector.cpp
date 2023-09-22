@@ -381,7 +381,7 @@ FontSelector::get_fontspec(bool use_variations) {
 }
 
 void
-FontSelector::style_cell_data_func (Gtk::CellRenderer *renderer, Gtk::TreeIter const &iter)
+FontSelector::style_cell_data_func (Gtk::CellRenderer *renderer, Gtk::TreeModel::iterator const &iter)
 {
     Glib::ustring family = "Sans";  // Default...family list may not have been constructed.
     Gtk::TreeModel::iterator iter_family = family_treeview.get_selection()->get_selected(); 

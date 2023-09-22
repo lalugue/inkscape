@@ -639,8 +639,8 @@ protected:
 
     Gtk::TreeModel::iterator AddPage(UI::Widget::DialogPage& p, Glib::ustring title, int id);
     Gtk::TreeModel::iterator AddPage(UI::Widget::DialogPage& p, Glib::ustring title, Gtk::TreeModel::iterator parent, int id);
-    Gtk::TreePath get_next_result(Gtk::TreeIter& iter, bool check_children = true);
-    Gtk::TreePath get_prev_result(Gtk::TreeIter& iter, bool iterate = true);
+    Gtk::TreePath get_next_result(Gtk::TreeModel::iterator& iter, bool check_children = true);
+    Gtk::TreePath get_prev_result(Gtk::TreeModel::iterator& iter, bool iterate = true);
     bool matchPage(const Gtk::TreeModel::iterator& iter);
 
     static void AddSelcueCheckbox(UI::Widget::DialogPage& p, Glib::ustring const &prefs_path, bool def_value);
@@ -698,7 +698,7 @@ protected:
     bool onKBSearchKeyReleased(GtkEventControllerKey const *controller,
                                unsigned keyval, unsigned keycode, GdkModifierType state);
     bool onKBSearchFilter(const Gtk::TreeModel::const_iterator& iter);
-    static void onKBShortcutRenderer(Gtk::CellRenderer *rndr, Gtk::TreeIter const &iter);
+    static void onKBShortcutRenderer(Gtk::CellRenderer *rndr, Gtk::TreeModel::iterator const &iter);
     void on_modifier_selection_changed();
     void on_modifier_enabled();
     void on_modifier_edited();

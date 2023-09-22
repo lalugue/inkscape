@@ -372,7 +372,7 @@ void GradientSelector::check_del_button() {
     }
 }
 
-bool GradientSelector::_checkForSelected(const Gtk::TreePath &path, const Gtk::TreeIter &iter, SPGradient *vector)
+bool GradientSelector::_checkForSelected(const Gtk::TreePath &path, const Gtk::TreeModel::iterator &iter, SPGradient *vector)
 {
     bool found = false;
 

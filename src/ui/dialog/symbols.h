@@ -25,7 +25,6 @@
 #include <gtkmm/builder.h>
 #include <gtkmm/cellrendererpixbuf.h>
 #include <gtkmm/enums.h>
-#include <gtkmm/treeiter.h>
 #include <gtkmm/treemodel.h>
 #include <gtkmm/treemodelcolumn.h>
 #include <boost/compute/detail/lru_cache.hpp>
@@ -88,14 +87,14 @@ private:
     void documentReplaced() override;
     void selectionChanged(Inkscape::Selection *selection) override;
     void rebuild();
-    void rebuild(Gtk::TreeIter current);
+    void rebuild(Gtk::TreeModel::iterator current);
     void insertSymbol();
     void revertSymbol();
     void iconChanged();
-    void sendToClipboard(const Gtk::TreeIter& symbol_iter, Geom::Rect const &bbox);
-    Glib::ustring getSymbolId(const std::optional<Gtk::TreeIter>& it) const;
-    Geom::Point getSymbolDimensions(const std::optional<Gtk::TreeIter>& it) const;
-    SPDocument* get_symbol_document(const std::optional<Gtk::TreeIter>& it) const;
+    void sendToClipboard(const Gtk::TreeModel::iterator& symbol_iter, Geom::Rect const &bbox);
+    Glib::ustring getSymbolId(const std::optional<Gtk::TreeModel::iterator>& it) const;
+    Geom::Point getSymbolDimensions(const std::optional<Gtk::TreeModel::iterator>& it) const;
+    SPDocument* get_symbol_document(const std::optional<Gtk::TreeModel::iterator>& it) const;
     void iconDragDataGet(const Glib::RefPtr<Gdk::DragContext>& context, Gtk::SelectionData& selection_data, guint info, guint time);
     void onDragStart();
     void addSymbol(SPSymbol* symbol, Glib::ustring doc_title, SPDocument* document);
@@ -111,10 +110,10 @@ private:
     Glib::RefPtr<Gdk::Pixbuf> getOverlay(gint width, gint height);
     void set_info();
     void set_info(const Glib::ustring& text);
-    std::optional<Gtk::TreeIter> get_current_set() const;
+    std::optional<Gtk::TreeModel::iterator> get_current_set() const;
     Glib::ustring get_current_set_id() const;
     std::optional<Gtk::TreeModel::Path> get_selected_symbol_path() const;
-    std::optional<Gtk::TreeIter> get_selected_symbol() const;
+    std::optional<Gtk::TreeModel::iterator> get_selected_symbol() const;
     void load_all_symbols();
     void update_tool_buttons();
     size_t total_symbols() const;
@@ -160,7 +159,7 @@ private:
         Glib::RefPtr<Gtk::TreeModelFilter> _filtered;
         Glib::RefPtr<Gtk::TreeModelSort> _sorted;
 
-        Gtk::TreeIter path_to_child_iter(Gtk::TreeModel::Path path) const {
+        Gtk::TreeModel::iterator path_to_child_iter(Gtk::TreeModel::Path path) const {
             if (_sorted) path = _sorted->convert_path_to_child_path(path);
             if (_filtered) path = _filtered->convert_path_to_child_path(path);
             return _store->get_iter(path);
