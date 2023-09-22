@@ -190,8 +190,7 @@ bool SatelliteArrayParam::param_readSVGValue(const gchar *strvalue)
                 }
                 pos ++;
             }
-            auto full = param_getSVGValue();
-            param_write_to_repr(full.c_str());
+            param_write_to_repr(param_getSVGValue().c_str());
             update_satellites();
         }
         if (_store.get()) {

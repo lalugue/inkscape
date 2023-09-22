@@ -99,9 +99,7 @@ PointParam::param_setValue(Geom::Point newpoint, bool write)
     if(write){
         Inkscape::SVGOStringStream os;
         os << newpoint;
-        gchar * str = g_strdup(os.str().c_str());
-        param_write_to_repr(str);
-        g_free(str);
+        param_write_to_repr(os.str().c_str());
     }
     if(_knot_entity && liveupdate){
         _knot_entity->update_knot();

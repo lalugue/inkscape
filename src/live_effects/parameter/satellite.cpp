@@ -103,8 +103,7 @@ bool SatelliteParam::param_readSVGValue(const gchar *strvalue)
             param_write_to_repr("");
         }
         if (write) {
-            auto full = param_getSVGValue();
-            param_write_to_repr(full.c_str());
+            param_write_to_repr(param_getSVGValue().c_str());
         }
         return true;
     }
