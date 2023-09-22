@@ -144,7 +144,6 @@ public:
     bool apply_to_clippath_and_mask;
     bool keep_paths; // set this to false allow retain extra generated objects, see measure line LPE
     bool is_load;
-    bool on_undo = false; // is first LPE and on undo
     bool is_applied;
     bool on_remove_all;
     bool refresh_widgets;

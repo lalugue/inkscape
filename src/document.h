@@ -342,7 +342,7 @@ public:
      * perspective in the defs. If no perspective exists, returns NULL.
      */
     Persp3D * getCurrentPersp3D();
-    void fix_lpe_data();
+    void update_lpobjs();
     void setCurrentPersp3DImpl(Persp3DImpl * const persp_impl) { current_persp3d_impl = persp_impl; }
     Persp3DImpl * getCurrentPersp3DImpl() { return current_persp3d_impl; }
 
