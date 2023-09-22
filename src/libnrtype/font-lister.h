@@ -163,7 +163,7 @@ public:
      * Inserts a font family or font-fallback list (for use when not
      *  already in document or on system).
      */
-    void insert_font_family(Glib::ustring new_family);
+    void insert_font_family(Glib::ustring const &new_family);
 
     int add_document_fonts_at_top(SPDocument *document);
 
@@ -188,18 +188,18 @@ public:
     void apply_collections(std::set <Glib::ustring>& selected_collections);
     void set_dragging_family(const Glib::ustring &new_family);
 
-    Glib::ustring canonize_fontspec(Glib::ustring fontspec);
+    Glib::ustring canonize_fontspec(Glib::ustring const &fontspec);
 
     /**
      * Find closest system font to given font.
      */
-    Glib::ustring system_fontspec(Glib::ustring fontspec);
+    Glib::ustring system_fontspec(Glib::ustring const &fontspec);
 
     /**
      * Gets font-family and style from fontspec.
      *  font-family and style returned.
      */
-    std::pair<Glib::ustring, Glib::ustring> ui_from_fontspec(Glib::ustring fontspec);
+    std::pair<Glib::ustring, Glib::ustring> ui_from_fontspec(Glib::ustring const &fontspec);
 
     /**
      * Sets font-family and style after a selection change.
@@ -212,7 +212,7 @@ public:
      *  try to find best style match (assumes style in fontspec
      *  valid for given font-family).
      */
-    void set_fontspec(Glib::ustring fontspec, bool check = true);
+    void set_fontspec(Glib::ustring const &fontspec, bool check = true);
 
     Glib::ustring get_fontspec() { return (canonize_fontspec(current_family + ", " + current_style)); }
 
@@ -224,7 +224,7 @@ public:
      *  (For potential use in font-selector which doesn't update until
      *  "Apply" button clicked.)
      */
-    std::pair<Glib::ustring, Glib::ustring> new_font_family(Glib::ustring family, bool check_style = true);
+    std::pair<Glib::ustring, Glib::ustring> new_font_family(Glib::ustring const &family, bool check_style = true);
 
     /** 
      * Sets font-family, updating style list and attempting
@@ -234,7 +234,7 @@ public:
      *  Calls new_font_family().
      *  (For use in text-toolbar where update is immediate.)
      */
-    std::pair<Glib::ustring, Glib::ustring> set_font_family(Glib::ustring family, bool check_style = true,
+    std::pair<Glib::ustring, Glib::ustring> set_font_family(Glib::ustring const &family, bool check_style = true,
                                                             bool emit = true);
 
     /**
@@ -247,17 +247,17 @@ public:
      */
     std::pair<Glib::ustring, Glib::ustring> set_font_family(int row, bool check_style = true, bool emit = true);
 
-    Glib::ustring get_font_family()
+    Glib::ustring const &get_font_family() const
     {
         return current_family;
     }
 
-    Glib::ustring get_dragging_family()
+    Glib::ustring const &get_dragging_family() const
     {
         return dragging_family;
     }
 
-    int get_font_family_row()
+    int get_font_family_row() const
     {
         return current_family_row;
     }
@@ -267,7 +267,7 @@ public:
      */
     void set_font_style(Glib::ustring style, bool emit = true);
 
-    Glib::ustring get_font_style()
+    Glib::ustring const &get_font_style() const
     {
         return current_style;
     }
@@ -277,28 +277,28 @@ public:
     /**
      * Fill css using given fontspec (doesn't need to be member function).
      */
-    void fill_css(SPCSSAttr *css, Glib::ustring fontspec = "");
+    void fill_css(SPCSSAttr *css, Glib::ustring fontspec = {});
 
     Gtk::TreeModel::Row get_row_for_font() { return get_row_for_font (current_family); }
 
-    Gtk::TreeModel::Row get_row_for_font(Glib::ustring family);
+    Gtk::TreeModel::Row get_row_for_font(Glib::ustring const &family);
 
-    Gtk::TreePath get_path_for_font(Glib::ustring family);
+    Gtk::TreePath get_path_for_font(Glib::ustring const &family);
 
     bool is_path_for_font(Gtk::TreePath path, Glib::ustring family);
 
     Gtk::TreeModel::Row get_row_for_style() { return get_row_for_style (current_style); }
 
-    Gtk::TreeModel::Row get_row_for_style(Glib::ustring style);
+    Gtk::TreeModel::Row get_row_for_style(Glib::ustring const &style);
 
-    Gtk::TreePath get_path_for_style(Glib::ustring style);
+    Gtk::TreePath get_path_for_style(Glib::ustring const &style);
 
-    std::pair<Gtk::TreePath, Gtk::TreePath> get_paths(Glib::ustring family, Glib::ustring style);
+    std::pair<Gtk::TreePath, Gtk::TreePath> get_paths(Glib::ustring const &family, Glib::ustring const &style);
 
     /**
      * Return best style match for new font given style for old font.
      */
-    Glib::ustring get_best_style_match(Glib::ustring family, Glib::ustring style);
+    Glib::ustring get_best_style_match(Glib::ustring const &family, Glib::ustring const &style);
 
     /**
      * Ensures the style list for a particular family has been created.
