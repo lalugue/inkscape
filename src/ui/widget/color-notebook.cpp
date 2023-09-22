@@ -19,9 +19,10 @@
 #define noDUMP_CHANGE_INFO
 
 #include <glibmm/i18n.h>
+#include <gtkmm/box.h>
 #include <gtkmm/label.h>
-#include <gtkmm/notebook.h>
-#include <gtkmm/radiobutton.h>
+#include <gtkmm/stack.h>
+#include <gtkmm/stackswitcher.h>
 
 #include "desktop.h"
 #include "document.h"
@@ -40,6 +41,7 @@
 #include "ui/widget/color-icc-selector.h"
 #include "ui/widget/color-notebook.h"
 #include "ui/widget/color-scales.h"
+#include "ui/widget/icon-combobox.h"
 #include "widgets/spw-utilities.h"
 
 using Inkscape::CMSSystem;

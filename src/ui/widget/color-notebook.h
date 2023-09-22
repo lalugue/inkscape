@@ -13,26 +13,30 @@
 #ifndef SEEN_SP_COLOR_NOTEBOOK_H
 #define SEEN_SP_COLOR_NOTEBOOK_H
 
-#include <memory>
 #ifdef HAVE_CONFIG_H
 # include "config.h"  // only include where actually required!
 #endif
 
-#include <boost/ptr_container/ptr_vector.hpp>
+#include <memory>
+#include <vector>
 #include <gtkmm/grid.h>
-#include <gtkmm/stack.h>
-#include <gtkmm/stackswitcher.h>
-#include <glib.h>
+#include <sigc++/connection.h>
 
 #include "color.h"
 #include "color-rgba.h"
 #include "preferences.h"
 #include "ui/selected-color.h"
-#include "ui/widget/icon-combobox.h"
 
-namespace Inkscape {
-namespace UI {
-namespace Widget {
+namespace Gtk {
+class Box;
+class Label;
+class Stack;
+class StackSwitcher;
+} // namespace Gtk
+
+namespace Inkscape::UI::Widget {
+
+class IconComboBox;
 
 class ColorNotebook
     : public Gtk::Grid
@@ -65,35 +69,31 @@ protected:
     void _setCurrentPage(int i, bool sync_combo);
 
     Inkscape::UI::SelectedColor &_selected_color;
-    gulong _entryId;
-    Gtk::Stack* _book;
-    Gtk::StackSwitcher* _switcher;
-    Gtk::Box* _buttonbox;
-    Gtk::Label* _label;
-    GtkWidget *_rgbal; /* RGBA entry */
-    GtkWidget *_box_outofgamut, *_box_colormanaged, *_box_toomuchink;
-    GtkWidget *_btn_picker;
-    GtkWidget *_p; /* Color preview */
+    unsigned long _entryId = 0;
+    Gtk::Stack* _book = nullptr;
+    Gtk::StackSwitcher* _switcher = nullptr;
+    Gtk::Box* _buttonbox = nullptr;
+    Gtk::Label* _label = nullptr;
+    GtkWidget *_rgbal = nullptr; /* RGBA entry */
+    GtkWidget *_box_outofgamut = nullptr;
+    GtkWidget *_box_colormanaged = nullptr;
+    GtkWidget *_box_toomuchink = nullptr;
+    GtkWidget *_btn_picker = nullptr;
+    GtkWidget *_p = nullptr; /* Color preview */
     sigc::connection _onetimepick;
     IconComboBox* _combo = nullptr;
 
-public:
-    // By default, disallow copy constructor and assignment operator
-    ColorNotebook(const ColorNotebook &obj) = delete;
-    ColorNotebook &operator=(const ColorNotebook &obj) = delete;
-
+private:
     PrefObserver _observer;
     std::vector<PrefObserver> _visibility_observers;
 
     SPDocument *_document = nullptr;
     sigc::connection _doc_replaced_connection;
-    sigc::connection _selection_connection;
     sigc::connection _icc_changed_connection;
 };
 
-}
-}
-}
+} // namespace Inkscape::UI::Widget
+
 #endif // SEEN_SP_COLOR_NOTEBOOK_H
 /*
   Local Variables:
