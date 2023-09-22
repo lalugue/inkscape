@@ -63,7 +63,7 @@ private:
     BoolParam scale_y_rel;
     BoolParam vertical_pattern;
     BoolParam hide_knot;
-    KnotHolderEntity * _knot_entity;
+    KnotHolder * _knotholder;
     Geom::PathVector helper_path;
     Geom::Piecewise<Geom::D2<Geom::SBasis> > uskeleton;
     Geom::Piecewise<Geom::D2<Geom::SBasis> > n;

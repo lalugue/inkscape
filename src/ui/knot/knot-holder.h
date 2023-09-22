@@ -70,6 +70,7 @@ public:
     void add_pattern_knotholder();
     void add_hatch_knotholder();
     void add_filter_knotholder();
+    void clear();
 
     void setEditTransform(Geom::Affine edit_transform);
     Geom::Affine getEditTransform() const { return _edit_transform; }

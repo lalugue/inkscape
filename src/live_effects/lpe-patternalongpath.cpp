@@ -51,7 +51,7 @@ namespace WPAP {
         ~KnotHolderEntityWidthPatternAlongPath() override
         {
             LPEPatternAlongPath *lpe = dynamic_cast<LPEPatternAlongPath *> (_effect);
-            lpe->_knot_entity = nullptr;
+            lpe->_knotholder = nullptr;
         }
         void knot_set(Geom::Point const &p, Geom::Point const &origin, guint state) override;
         Geom::Point knot_get() const override;
@@ -106,11 +106,16 @@ LPEPatternAlongPath::LPEPatternAlongPath(LivePathEffectObject *lpeobject) :
     registerParameter(&fuse_tolerance);
     prop_scale.param_set_digits(3);
     prop_scale.param_set_increments(0.01, 0.10);
-    _knot_entity = nullptr;
+    _knotholder = nullptr;
     _provides_knotholder_entities = true;
 }
 
-LPEPatternAlongPath::~LPEPatternAlongPath() = default;
+LPEPatternAlongPath::~LPEPatternAlongPath() {
+    if (_knotholder) {
+        _knotholder->clear();
+        _knotholder =  nullptr;
+    }
+}
 
 bool 
 LPEPatternAlongPath::doOnOpen(SPLPEItem const *lpeitem)
@@ -140,14 +145,14 @@ LPEPatternAlongPath::doBeforeEffect (SPLPEItem const* lpeitem)
     if (is_load) {
         pattern.reload();
     }
-    if (_knot_entity) {
+    if (_knotholder && !_knotholder->entity.empty()) {
         if (hide_knot) {
             helper_path.clear();
-            _knot_entity->knot->hide();
+            _knotholder->entity.front()->knot->hide();
         } else {
-            _knot_entity->knot->show();
+            _knotholder->entity.front()->knot->show();
         }
-        _knot_entity->update_knot();
+        _knotholder->update_knots();
     }
 }
 
@@ -293,13 +298,14 @@ LPEPatternAlongPath::addCanvasIndicators(SPLPEItem const */*lpeitem*/, std::vect
 void 
 LPEPatternAlongPath::addKnotHolderEntities(KnotHolder *knotholder, SPItem *item)
 {
-    _knot_entity = new WPAP::KnotHolderEntityWidthPatternAlongPath(this);
-    _knot_entity->create(nullptr, item, knotholder, Inkscape::CANVAS_ITEM_CTRL_TYPE_LPE, "LPE:PatternAlongPath",
+    _knotholder = knotholder;
+    KnotHolderEntity * knot_entity = new WPAP::KnotHolderEntityWidthPatternAlongPath(this);
+    knot_entity->create(nullptr, item, knotholder, Inkscape::CANVAS_ITEM_CTRL_TYPE_LPE, "LPE:PatternAlongPath",
                          _("Change the width"));
-    knotholder->add(_knot_entity);
+    _knotholder->add(knot_entity);
     if (hide_knot) {
-        _knot_entity->knot->hide();
-        _knot_entity->update_knot();
+        knot_entity->knot->hide();
+        knot_entity->update_knot();
     }
 }
 

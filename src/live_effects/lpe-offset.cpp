@@ -51,7 +51,7 @@ namespace OfS {
         {
             LPEOffset *lpe = dynamic_cast<LPEOffset *>(_effect);
             if (lpe) {
-                lpe->_knot_entity = nullptr;
+                lpe->_knotholder = nullptr;
             }
         }
         void knot_set(Geom::Point const &p, Geom::Point const &origin, guint state) override;
@@ -97,7 +97,7 @@ LPEOffset::LPEOffset(LivePathEffectObject *lpeobject) :
     offset.param_set_increments(0.1, 0.1);
     offset.param_set_digits(6);
     offset_pt = Geom::Point(Geom::infinity(), Geom::infinity());
-    _knot_entity = nullptr;
+    _knotholder = nullptr;
     _provides_knotholder_entities = true;
     apply_to_clippath_and_mask = true;
     prev_unit = unit.get_abbreviation();
@@ -107,6 +107,10 @@ LPEOffset::LPEOffset(LivePathEffectObject *lpeobject) :
 
 LPEOffset::~LPEOffset() {
     modified_connection.disconnect();
+    if (_knotholder) {
+        _knotholder->clear();
+        _knotholder = nullptr;
+    }
 };
 
 bool LPEOffset::doOnOpen(SPLPEItem const *lpeitem)
@@ -251,21 +255,21 @@ LPEOffset::doBeforeEffect (SPLPEItem const* lpeitem)
 void LPEOffset::doAfterEffect(SPLPEItem const * /*lpeitem*/, SPCurve *curve)
 {
     if (offset_pt == Geom::Point(Geom::infinity(), Geom::infinity())) {
-        if (_knot_entity) {
-            _knot_entity->knot_get();
+        if (_knotholder && !_knotholder->entity.empty()) {
+            _knotholder->entity.front()->knot_get();
         }
     }
     if (is_load) {
         offset_pt = Geom::Point(Geom::infinity(), Geom::infinity());
     }
-    if (_knot_entity && sp_lpe_item && !liveknot) {
+    if (_knotholder && !_knotholder->entity.empty() && sp_lpe_item && !liveknot) {
         Geom::PathVector out;
         // we don do this on groups, editing is joining ito so no need to update knot
         auto shape = cast<SPShape>(sp_lpe_item);
         if (shape) {
             out = cast<SPShape>(sp_lpe_item)->curve()->get_pathvector();
             offset_pt = get_nearest_point(out, offset_pt);
-            _knot_entity->knot_get();
+            _knotholder->entity.front()->knot_get();
         }
     }
 }
@@ -283,8 +287,8 @@ LPEOffset::doEffect_path(Geom::PathVector const & path_in)
         mix_pathv_all.insert(mix_pathv_all.end(), path_in.begin(), path_in.end());
         if (is_load && offset_pt == Geom::Point(Geom::infinity(), Geom::infinity())) {
             offset_pt = get_default_point(path_in);
-            if (_knot_entity) {
-                _knot_entity->knot_get();
+            if (_knotholder && !_knotholder->entity.empty()) {
+                _knotholder->entity.front()->knot_get();
             }
         }
         return path_in;
@@ -329,16 +333,17 @@ LPEOffset::doEffect_path(Geom::PathVector const & path_in)
 
 void LPEOffset::addKnotHolderEntities(KnotHolder *knotholder, SPItem *item)
 {
-    _knot_entity = new OfS::KnotHolderEntityOffsetPoint(this);
-    _knot_entity->create(nullptr, item, knotholder, Inkscape::CANVAS_ITEM_CTRL_TYPE_LPE,
+    _knotholder = knotholder;
+    KnotHolderEntity * knot_entity = new OfS::KnotHolderEntityOffsetPoint(this);
+    knot_entity->create(nullptr, item, knotholder, Inkscape::CANVAS_ITEM_CTRL_TYPE_LPE,
                          "LPEOffset", _("Offset point"));
-    _knot_entity->knot->setMode(Inkscape::CANVAS_ITEM_CTRL_MODE_COLOR);
-    _knot_entity->knot->setShape(Inkscape::CANVAS_ITEM_CTRL_SHAPE_CIRCLE);
-    _knot_entity->knot->setFill(0xFF6600FF, 0x4BA1C7FF, 0xCF1410FF, 0xFF6600FF);
-    _knot_entity->knot->setStroke(0x000000FF, 0x000000FF, 0x000000FF, 0x000000FF);
-    _knot_entity->knot->updateCtrl();
+    knot_entity->knot->setMode(Inkscape::CANVAS_ITEM_CTRL_MODE_COLOR);
+    knot_entity->knot->setShape(Inkscape::CANVAS_ITEM_CTRL_SHAPE_CIRCLE);
+    knot_entity->knot->setFill(0xFF6600FF, 0x4BA1C7FF, 0xCF1410FF, 0xFF6600FF);
+    knot_entity->knot->setStroke(0x000000FF, 0x000000FF, 0x000000FF, 0x000000FF);
+    knot_entity->knot->updateCtrl();
     offset_pt = Geom::Point(Geom::infinity(), Geom::infinity());
-    knotholder->add(_knot_entity);
+    _knotholder->add(knot_entity);
 }
 
 namespace OfS {

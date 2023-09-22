@@ -64,7 +64,7 @@ private:
     bool sign = true;
     Glib::ustring prev_unit;
     double scale = 1; //take document scale and additional parent transformations into account
-    KnotHolderEntity * _knot_entity;
+    KnotHolder * _knotholder;
     Geom::PathVector mix_pathv_all;
     Geom::PathVector helper_path;
     Inkscape::UI::Widget::Scalar *offset_widget;

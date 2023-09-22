@@ -66,7 +66,7 @@ private:
     BoolParam    vertical_pattern;
     BoolParam    hide_knot;
     ScalarParam  fuse_tolerance;
-    KnotHolderEntity * _knot_entity;
+    KnotHolder * _knotholder;
     Geom::PathVector helper_path;
     void on_pattern_pasted();
 

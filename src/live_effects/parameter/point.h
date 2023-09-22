@@ -41,7 +41,7 @@ public:
                 std::optional<Glib::ustring> handle_tip = {}, ///< tip for automatically associated on-canvas handle
                 Geom::Point default_value = Geom::Point(0,0), 
                 bool live_update = true );
-
+    ~PointParam() override;
     PointParam(const PointParam&) = delete;
     PointParam& operator=(const PointParam&) = delete;
 
@@ -81,7 +81,7 @@ private:
 
     Geom::Point defvalue;
     bool liveupdate;
-    KnotHolderEntity * _knot_entity = nullptr;
+    KnotHolder * _knotholder = nullptr;
     Inkscape::CanvasItemCtrlShape knot_shape = Inkscape::CANVAS_ITEM_CTRL_SHAPE_DIAMOND;
     Inkscape::CanvasItemCtrlMode knot_mode = Inkscape::CANVAS_ITEM_CTRL_MODE_XOR;
     std::uint32_t knot_color = 0xffffff00;

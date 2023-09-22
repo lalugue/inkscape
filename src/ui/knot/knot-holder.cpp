@@ -75,7 +75,13 @@ KnotHolder::KnotHolder(SPDesktop *desktop, SPItem *item, SPKnotHolderReleasedFun
 
 KnotHolder::~KnotHolder() {
     sp_object_unref(item);
+    clear();
+}
 
+// this allow clear knothoolder before a destruction
+void
+KnotHolder::clear()
+{
     for (auto & i : entity) {
         delete i;
     }

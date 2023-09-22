@@ -38,6 +38,7 @@ public:
     NodeSatelliteArrayParam(const Glib::ustring &label, const Glib::ustring &tip, const Glib::ustring &key,
                             Inkscape::UI::Widget::Registry *wr, Effect *effect);
 
+    ~NodeSatelliteArrayParam() override;
     Gtk::Widget *param_newWidget() override
     {
         return nullptr;
@@ -69,7 +70,7 @@ public:
     friend class LPEFilletChamfer;
     ParamType paramType() const override { return ParamType::NODE_SATELLITE_ARRAY; };
 protected:
-    KnotHolder *_knoth;
+    KnotHolder * _knotholder;
 
 private:
     NodeSatelliteArrayParam(const NodeSatelliteArrayParam &) = delete;
@@ -91,7 +92,7 @@ public:
     FilletChamferKnotHolderEntity(NodeSatelliteArrayParam *p, size_t index);
     ~FilletChamferKnotHolderEntity() override
     {
-        _pparam->_knoth = nullptr;
+        _pparam->_knotholder = nullptr;
     }
     void knot_set(Geom::Point const &p, Geom::Point const &origin,
                           guint state) override;

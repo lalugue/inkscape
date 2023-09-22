@@ -175,6 +175,14 @@ LPETiling::LPETiling(LivePathEffectObject *lpeobject) :
     reset = link_styles;
 }
 
+LPETiling::~LPETiling()
+{
+    if (_knotholder) {
+        _knotholder->clear();
+        _knotholder = nullptr;
+    }
+}
+
 bool LPETiling::doOnOpen(SPLPEItem const *lpeitem)
 {
     bool fixed = false;

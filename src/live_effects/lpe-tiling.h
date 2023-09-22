@@ -49,7 +49,7 @@ typedef FillRule FillRuleBool;
 class LPETiling final : public Effect, GroupBBoxEffect {
 public:
     LPETiling(LivePathEffectObject *lpeobject);
-
+    ~LPETiling() final;
     void doOnApply (SPLPEItem const* lpeitem) final;
     Geom::PathVector doEffect_path (Geom::PathVector const & path_in) final;
     void doBeforeEffect (SPLPEItem const* lpeitem) final;

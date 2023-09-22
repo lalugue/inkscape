@@ -36,6 +36,13 @@ PointParam::PointParam(const Glib::ustring& label, const Glib::ustring& tip,
 {
 }
 
+PointParam::~PointParam() {
+    if (_knotholder) {
+        _knotholder->clear();
+        _knotholder = nullptr;
+    }
+}
+
 void
 PointParam::param_set_default()
 {
@@ -74,17 +81,17 @@ PointParam::param_update_default(char const * const default_point)
 
 void 
 PointParam::param_hide_knot(bool hide) {
-    if (_knot_entity) {
+    if (_knotholder && !_knotholder->entity.empty()) {
         bool update = false;
-        if (hide && _knot_entity->knot->flags & SP_KNOT_VISIBLE) {
+        if (hide && _knotholder->entity.front()->knot->flags & SP_KNOT_VISIBLE) {
             update = true;
-            _knot_entity->knot->hide();
-        } else if(!hide && !(_knot_entity->knot->flags & SP_KNOT_VISIBLE)) {
+            _knotholder->entity.front()->knot->hide();
+        } else if(!hide && !(_knotholder->entity.front()->knot->flags & SP_KNOT_VISIBLE)) {
             update = true;
-            _knot_entity->knot->show();
+            _knotholder->entity.front()->knot->show();
         }
         if (update) {
-            _knot_entity->update_knot();
+            _knotholder->entity.front()->update_knot();
         }
     }
 }
@@ -100,8 +107,8 @@ PointParam::param_setValue(Geom::Point newpoint, bool write)
         param_write_to_repr(str);
         g_free(str);
     }
-    if(_knot_entity && liveupdate){
-        _knot_entity->update_knot();
+    if(_knotholder && liveupdate){
+        _knotholder->entity.front()->update_knot();
     }
 }
 
@@ -183,7 +190,7 @@ PointParam::set_oncanvas_looks(Inkscape::CanvasItemCtrlShape shape,
 class PointParamKnotHolderEntity final : public KnotHolderEntity {
 public:
     PointParamKnotHolderEntity(PointParam * const p) : pparam{p} {}
-    ~PointParamKnotHolderEntity() final { this->pparam->_knot_entity = nullptr;}
+    ~PointParamKnotHolderEntity() final { this->pparam->_knotholder = nullptr;}
 
     void knot_set(Geom::Point const &p, Geom::Point const &origin, unsigned state) final;
     Geom::Point knot_get() const final;
@@ -244,11 +251,12 @@ PointParamKnotHolderEntity::knot_click(unsigned const state)
 void
 PointParam::addKnotHolderEntities(KnotHolder *knotholder, SPItem *item)
 {
-    _knot_entity = new PointParamKnotHolderEntity(this);
+    _knotholder = knotholder;
+    KnotHolderEntity * knot_entity = new PointParamKnotHolderEntity(this);
     // TODO: can we ditch handleTip() etc. because we have access to handle_tip etc. itself???
-    _knot_entity->create(nullptr, item, knotholder, Inkscape::CANVAS_ITEM_CTRL_TYPE_LPE, "LPE:Point",
+    knot_entity->create(nullptr, item, knotholder, Inkscape::CANVAS_ITEM_CTRL_TYPE_LPE, "LPE:Point",
                          handleTip(), knot_color);
-    knotholder->add(_knot_entity);
+    _knotholder->add(knot_entity);
 }
 
 } // namespace Inkscape::LivePathEffect
