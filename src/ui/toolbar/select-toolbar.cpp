@@ -18,6 +18,7 @@
 
 #include <2geom/rect.h>
 #include <glibmm/i18n.h>
+#include <glibmm/main.h>
 
 #include "desktop.h"
 #include "document-undo.h"
@@ -137,11 +138,18 @@ SelectToolbar::SelectToolbar(SPDesktop *desktop)
     // Update now.
     layout_widget_update(selection);
 
-    for (auto item : _context_items) {
-        if ( item->is_sensitive() ) {
-            item->set_sensitive(false);
-        }
-    }
+    // Set context items insensitive.
+    _connections.emplace_back(Glib::signal_idle().connect(
+        [this] {
+            for (auto item : _context_items) {
+                if (item->is_sensitive()) {
+                    item->set_sensitive(false);
+                }
+            }
+
+            return false;
+        },
+        Glib::PRIORITY_HIGH));
 
     show_all();
 }

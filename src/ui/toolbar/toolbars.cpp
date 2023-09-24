@@ -8,6 +8,7 @@
  *  Tavmjong Bah
  *  Alex Valavanis
  *  Mike Kowalski
+ *  Vaibhav Malik
  *
  * Copyright (C) 2023 Tavmjong Bah
  *

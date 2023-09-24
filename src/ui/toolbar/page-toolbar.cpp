@@ -170,6 +170,7 @@ PageToolbar::PageToolbar(SPDesktop *desktop)
     });
 
     show_all();
+    toolChanged(desktop, desktop->getTool());
 }
 
 /**
@@ -204,15 +205,6 @@ void PageToolbar::populate_sizes()
                 row[cols.key] = preset->get_key();
             }
         }
-    }
-}
-
-void PageToolbar::on_parent_changed(Gtk::Widget *)
-{
-    if (was_referenced) {
-        // Undo the gtkbuilder protection now that we have a parent
-        this->unreference();
-        was_referenced = false;
     }
 }
 

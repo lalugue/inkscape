@@ -76,7 +76,6 @@ private:
     void toolChanged(SPDesktop *desktop, Inkscape::UI::Tools::ToolBase *tool);
     void pagesChanged();
     void selectionChanged(SPPage *page);
-    void on_parent_changed(Gtk::Widget *prev) final;
     void populate_sizes();
 
     Inkscape::auto_connection _ec_connection;
@@ -87,7 +86,6 @@ private:
     Inkscape::auto_connection _label_edited;
     Inkscape::auto_connection _size_edited;
 
-    bool was_referenced;
     Glib::RefPtr<Gtk::Builder> _builder;
     Gtk::ComboBoxText &_combo_page_sizes;
     Gtk::Entry *_entry_page_sizes;
