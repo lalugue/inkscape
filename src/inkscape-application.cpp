@@ -45,13 +45,6 @@
 #include <chrono>
 #include <thread>
 
-// checking if dithering is supported
-#ifdef  WITH_PATCHED_CAIRO
-#include "3rdparty/cairo/src/cairo.h"
-#else
-#include <cairo.h>
-#endif
-
 #include <gdk/gdk.h> // GDK_WINDOWING_X11
 #include <glibmm/i18n.h>  // Internationalization
 #include <gtkmm/settings.h>
@@ -1818,7 +1811,7 @@ InkscapeApplication::on_handle_local_options(const Glib::RefPtr<Glib::VariantDic
         options->lookup_value("export-png-use-dithering", val);
         if (val == "true") {
             _file_export.export_png_use_dithering = true;
-#ifndef CAIRO_HAS_DITHER
+#if CAIRO_VERSION < CAIRO_VERSION_ENCODE(1, 18, 0)
             std::cerr << "Your cairo version does not support dithering! Option will be ignored." << std::endl;
 #endif
         }

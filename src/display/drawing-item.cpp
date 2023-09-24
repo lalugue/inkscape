@@ -939,7 +939,10 @@ unsigned DrawingItem::render(DrawingContext &dc, RenderContext &rc, Geom::IntRec
  */
 unsigned DrawingItem::render(DrawingContext &dc, Geom::IntRect const &area, unsigned flags) const
 {
-    auto rc = RenderContext{ 0xff }; // black outlines
+    auto rc = RenderContext{
+        .outline_color = 0xff,
+        .dithering = _drawing._use_dithering
+    };
     return render(dc, rc, area, flags);
 }
 

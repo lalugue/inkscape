@@ -43,6 +43,7 @@ namespace Filters { class Filter; }
 struct RenderContext
 {
     uint32_t outline_color;
+    bool dithering = false;
 };
 
 struct UpdateContext

@@ -1072,10 +1072,10 @@ ink_cairo_set_hairline(cairo_t *ct)
 #endif
 }
 
-void ink_cairo_set_dither(cairo_surface_t *surface, bool enabled)
+void ink_cairo_pattern_set_dither(cairo_pattern_t *pattern, bool enabled)
 {
-#ifdef CAIRO_HAS_DITHER
-    cairo_image_surface_set_dither(surface, enabled ? CAIRO_DITHER_BEST : CAIRO_DITHER_NONE);
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1, 18, 0)
+    cairo_pattern_set_dither(pattern, enabled ? CAIRO_DITHER_BEST : CAIRO_DITHER_NONE);
 #endif
 }
 

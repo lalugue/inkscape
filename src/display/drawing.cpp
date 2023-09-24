@@ -179,7 +179,7 @@ void Drawing::setDithering(bool use_dithering)
 {
     defer([=] {
         _use_dithering = use_dithering;
-        #ifdef CAIRO_HAS_DITHER
+        #if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1, 18, 0)
         if (_rendermode != RenderMode::OUTLINE) {
             _root->_markForUpdate(DrawingItem::STATE_ALL, true);
             _clearCache();
@@ -234,7 +234,10 @@ void Drawing::render(DrawingContext &dc, Geom::IntRect const &area, unsigned fla
     }
     apply_antialias(dc, antialias);
 
-    auto rc = RenderContext{ 0xff }; // black outlines
+    auto rc = RenderContext{
+        .outline_color = 0xff,
+        .dithering = _use_dithering
+    };
     flags |= rendermode_to_renderflags(_rendermode);
 
     if (_clip) {

@@ -13,6 +13,7 @@
 #include "display/nr-style.h"
 #include "style.h"
 
+#include "display/cairo-utils.h"
 #include "display/drawing-context.h"
 #include "display/drawing-pattern.h"
 #include "display/drawing-surface.h"
@@ -315,6 +316,7 @@ auto NRStyle::preparePaint(Inkscape::DrawingContext &dc, Inkscape::RenderContext
             case NRStyleData::PaintType::SERVER:
                 if (paint.server) {
                     cp.pattern = CairoPatternUniqPtr(paint.server->create_pattern(dc.raw(), paintbox, paint.opacity));
+                    ink_cairo_pattern_set_dither(cp.pattern.get(), rc.dithering && paint.server->ditherable());
                 } else {
                     std::cerr << "Null pattern detected" << std::endl;
                     cp.pattern = CairoPatternUniqPtr(cairo_pattern_create_rgba(0, 0, 0, 0));

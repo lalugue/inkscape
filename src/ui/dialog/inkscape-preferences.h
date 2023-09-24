@@ -18,14 +18,6 @@
 
 // checking if cairo supports dithering
 #include <gtkmm/sizegroup.h>
-#ifdef  WITH_PATCHED_CAIRO
-#include "3rdparty/cairo/src/cairo.h"
-#else
-#include <cairo.h>
-#endif
-
-
-
 #include <gtkmm/treerowreference.h>
 #include <iostream>
 #include <iterator>
@@ -353,7 +345,7 @@ protected:
     UI::Widget::PrefRadioButton _filter_quality_normal;
     UI::Widget::PrefRadioButton _filter_quality_worse;
     UI::Widget::PrefRadioButton _filter_quality_worst;
-#ifdef CAIRO_HAS_DITHER
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1, 18, 0)
     UI::Widget::PrefCheckButton _cairo_dithering;
 #endif
 
