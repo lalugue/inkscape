@@ -32,6 +32,7 @@
 #include <gtkmm/menubutton.h>
 #include <gtkmm/radiobutton.h>
 #include <gtkmm/searchentry.h>
+#include <gtkmm/window.h>
 #include <pangomm/layout.h>
 
 #include "desktop.h"
