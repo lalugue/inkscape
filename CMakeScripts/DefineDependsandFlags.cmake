@@ -443,7 +443,8 @@ if(WITH_X11)
 endif(WITH_X11)
 
 if(WITH_INTERNAL_CAIRO)
-    add_definitions(-DWITH_PATCHED_CAIRO)
+    include_directories(${CMAKE_SOURCE_DIR}/src/3rdparty/cairo/src)
+    link_directories(${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/${CMAKE_LIBRARY_ARCHITECTURE})
 endif()
 
 # end Dependencies

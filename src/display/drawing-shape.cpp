@@ -16,7 +16,6 @@
 #include <2geom/path-sink.h>
 #include <2geom/svg-path-parser.h>
 
-#include "dither-lock.h"
 #include "style.h"
 
 #include "curve.h"
@@ -168,7 +167,6 @@ void DrawingShape::_renderFill(DrawingContext &dc, RenderContext &rc, Geom::IntR
 
     if (has_fill) {
         dc.path(_curve->get_pathvector());
-        auto dl = DitherLock(dc, _nrstyle.data.fill.ditherable() && _drawing.useDithering());
         _nrstyle.applyFill(dc, has_fill);
         dc.fillPreserve();
         dc.newPath(); // clear path
@@ -192,7 +190,6 @@ void DrawingShape::_renderStroke(DrawingContext &dc, RenderContext &rc, Geom::In
             dc.restore();
             dc.save();
         }
-        auto dl = DitherLock(dc, _nrstyle.data.stroke.ditherable() && _drawing.useDithering());
         _nrstyle.applyStroke(dc, has_stroke);
 
         // If the stroke is a hairline, set it to exactly 1px on screen.
@@ -269,7 +266,6 @@ unsigned DrawingShape::_renderItem(DrawingContext &dc, RenderContext &rc, Geom::
                 dc.path(_curve->get_pathvector());
                 // TODO: remove segments outside of bbox when no dashes present
                 if (has_fill) {
-                    auto dl = DitherLock(dc, _nrstyle.data.fill.ditherable() && _drawing.useDithering());
                     _nrstyle.applyFill(dc, has_fill);
                     dc.fillPreserve();
                 }
@@ -278,7 +274,6 @@ unsigned DrawingShape::_renderItem(DrawingContext &dc, RenderContext &rc, Geom::
                     dc.save();
                 }
                 if (has_stroke) {
-                    auto dl = DitherLock(dc, _nrstyle.data.stroke.ditherable() && _drawing.useDithering());
                     _nrstyle.applyStroke(dc, has_stroke);
 
                     // If the draw mode is set to visible hairlines, don't let anything get smaller

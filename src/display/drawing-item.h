@@ -52,6 +52,7 @@ struct RenderContext
 {
     std::uint32_t outline_color;
     std::optional<Antialiasing> antialiasing_override;
+    bool dithering = false;
 };
 
 struct UpdateContext

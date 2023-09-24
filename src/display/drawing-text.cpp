@@ -12,7 +12,6 @@
 
 #include "2geom/pathvector.h"
 
-#include "dither-lock.h"
 #include "style.h"
 
 #include "cairo-utils.h"
@@ -646,7 +645,6 @@ unsigned DrawingText::_renderItem(DrawingContext &dc, RenderContext &rc, Geom::I
             Inkscape::DrawingContext::Save save(dc);
             dc.transform(_ctm);
             if (has_fill && fill_first) {
-                auto dl = DitherLock(dc, _nrstyle.data.fill.ditherable() && _drawing.useDithering());
                 _nrstyle.applyFill(dc, has_fill);
                 dc.fillPreserve();
             }
@@ -657,7 +655,6 @@ unsigned DrawingText::_renderItem(DrawingContext &dc, RenderContext &rc, Geom::I
                 dc.transform(_ctm);
             }
             if (has_stroke) {
-                auto dl = DitherLock(dc, _nrstyle.data.stroke.ditherable() && _drawing.useDithering());
                 _nrstyle.applyStroke(dc, has_stroke);
 
                 // If the stroke is a hairline, set it to exactly 1px on screen.
@@ -678,7 +675,6 @@ unsigned DrawingText::_renderItem(DrawingContext &dc, RenderContext &rc, Geom::I
             Inkscape::DrawingContext::Save save(dc);
             dc.transform(_ctm);
             if (has_fill && !fill_first) {
-                auto dl = DitherLock(dc, _nrstyle.data.fill.ditherable() && _drawing.useDithering());
                 _nrstyle.applyFill(dc, has_fill);
                 dc.fillPreserve();
             }
