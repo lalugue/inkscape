@@ -634,8 +634,8 @@ void ColorPalette::rebuild_widgets()
     _pinned_box.freeze_notify();
     _pinned_box.freeze_child_notify();
 
-    UI::delete_all_children(_normal_box);
-    UI::delete_all_children(_pinned_box);
+    UI::remove_all_children(_normal_box);
+    UI::remove_all_children(_pinned_box);
 
     for (auto item : _normal_items) {
         // in a tile mode (no labels) groups headers are hidden:
