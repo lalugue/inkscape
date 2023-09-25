@@ -14,6 +14,7 @@
 #define INK_DIALOG_BASE_H
 
 #include <glibmm/ustring.h>
+#include <gtk/gtk.h> // GtkEventControllerKey
 #include <gtkmm/box.h>
 
 #include "inkscape-application.h"
@@ -86,10 +87,11 @@ protected:
     Glib::ustring _name;             // Gtk widget name (must be set!)
     Glib::ustring const _prefs_path; // Stores characteristic path for loading/saving the dialog position.
     Glib::ustring const _dialog_type; // Type of dialog (we could just use _pref_path?).
-                                      //
+
 private:
     bool blink_off(); // timer callback
-    bool on_key_press_event(GdkEventKey* key_event) override;
+    bool on_key_pressed(GtkEventControllerKey const *controller,
+                        unsigned keyval, unsigned keycode, GdkModifierType state);
     // return if dialog is on visible tab
     bool _showing = true;
     void unsetDesktop();

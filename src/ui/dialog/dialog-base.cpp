@@ -26,6 +26,7 @@
 #include "inkscape.h"
 #include "desktop.h"
 #include "selection.h"
+#include "ui/controller.h"
 #include "ui/dialog-events.h"
 #include "ui/dialog/dialog-data.h"
 #include "ui/dialog/dialog-notebook.h"
@@ -68,6 +69,8 @@ DialogBase::DialogBase(char const * const prefs_path, Glib::ustring dialog_type)
 
     set_name(_dialog_type); // Essential for dialog functionality
     property_margin().set_value(1); // Essential for dialog UI
+
+    Controller::add_key_on_window<&DialogBase::on_key_pressed>(*this, *this, Gtk::PHASE_CAPTURE);
 }
 
 DialogBase::~DialogBase() {
@@ -97,16 +100,18 @@ void DialogBase::on_map() {
     ensure_size();
 }
 
-bool DialogBase::on_key_press_event(GdkEventKey* key_event) {
-    switch (Inkscape::UI::Tools::get_latin_keyval(key_event)) {
+bool DialogBase::on_key_pressed(GtkEventControllerKey const * const controller,
+                                unsigned const keyval, unsigned const keycode,
+                                GdkModifierType const state)
+{
+    switch (Inkscape::UI::Tools::get_latin_keyval(controller, keyval, keycode, state)) {
         case GDK_KEY_Escape:
             defocus_dialog();
             return true;
     }
 
-    return parent_type::on_key_press_event(key_event);
+    return false;
 }
-
 
 /**
  * Highlight notebook where dialog already exists.
