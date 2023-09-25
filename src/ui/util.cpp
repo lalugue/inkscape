@@ -209,8 +209,8 @@ Gtk::Widget *find_focusable_widget(Gtk::Widget &parent)
 /// @return Whether the widget of interest is a descendant of the given ancestor.
 bool is_descendant_of(Gtk::Widget const &descendant, Gtk::Widget const &ancestor)
 {
-    return nullptr != for_each_descendant(const_cast<Gtk::Widget &>(ancestor), [&](auto const &widget)
-          { return &widget == &descendant ? ForEachResult::_break : ForEachResult::_continue; });
+    return nullptr != for_each_parent(const_cast<Gtk::Widget &>(descendant), [&](auto const &parent)
+          { return &parent == &ancestor ? ForEachResult::_break : ForEachResult::_continue; });
 }
 
 /// Get the relative font size as determined by a widgetʼs style/Pango contexts.

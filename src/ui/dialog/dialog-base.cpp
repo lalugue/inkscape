@@ -70,7 +70,9 @@ DialogBase::DialogBase(char const * const prefs_path, Glib::ustring dialog_type)
     set_name(_dialog_type); // Essential for dialog functionality
     property_margin().set_value(1); // Essential for dialog UI
 
-    Controller::add_key_on_window<&DialogBase::on_key_pressed>(*this, *this, Gtk::PHASE_CAPTURE);
+    // TODO: GTK4: See if we can add the Controller on self — since all widgets receive all events.
+    Controller::add_key_on_window<&DialogBase::on_window_key_pressed>(*this, *this,
+                                                                      Gtk::PHASE_CAPTURE);
 }
 
 DialogBase::~DialogBase() {
@@ -100,10 +102,17 @@ void DialogBase::on_map() {
     ensure_size();
 }
 
-bool DialogBase::on_key_pressed(GtkEventControllerKey const * const controller,
-                                unsigned const keyval, unsigned const keycode,
-                                GdkModifierType const state)
+bool DialogBase::on_window_key_pressed(GtkEventControllerKey const * const controller,
+                                       unsigned const keyval, unsigned const keycode,
+                                       GdkModifierType const state)
 {
+    // We listen for key on window, so must ensure WE have focus, to not break Esc from canvas etc.
+    auto const &window = dynamic_cast<Gtk::Window const &>(*get_toplevel());
+    auto const focus = window.get_focus();
+    if (!focus || !is_descendant_of(*focus, *this)) {
+        return false;
+    }
+
     switch (Inkscape::UI::Tools::get_latin_keyval(controller, keyval, keycode, state)) {
         case GDK_KEY_Escape:
             defocus_dialog();
