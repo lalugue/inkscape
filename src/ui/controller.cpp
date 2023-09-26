@@ -63,7 +63,7 @@ namespace {
 
 /// Helper to create EventController or subclass, for & manage()d by the widget.
 template <typename Controller>
-Controller &create(Gtk::Widget &widget, Gtk::PropagationPhase const phase)
+[[nodiscard]] Controller &create(Gtk::Widget &widget, Gtk::PropagationPhase const phase)
 {
     static_assert(std::is_base_of_v<Gtk::EventController, Controller>);
     auto &controller = Detail::managed(Controller::create(widget), widget);
@@ -80,54 +80,6 @@ void connect(Object &object, Getter const getter, Slot slot, When const when)
                    when == When::after);
 }
 
-/// Create Controller for & manage()d by widget, & connect to one signal on it.
-template <typename Controller,
-          typename Getter, typename Slot>
-Controller &add(Gtk::Widget &widget,
-                Getter const getter, Slot slot,
-                Gtk::PropagationPhase const phase,
-                When const when)
-{
-    auto &controller = create<Controller>(widget, phase);
-    connect(controller, getter, std::move(slot), when);
-    return controller;
-}
-
-/// Create Controller for & manage()d by widget, & connect to two signals on it.
-template <typename Controller,
-          typename Getter1, typename Slot1,
-          typename Getter2, typename Slot2>
-Controller &add(Gtk::Widget &widget,
-                Getter1 const getter1, Slot1 slot1,
-                Getter2 const getter2, Slot2 slot2,
-                Gtk::PropagationPhase const phase,
-                When const when)
-{
-    auto &controller = create<Controller>(widget, phase);
-    connect(controller, getter1, std::move(slot1), when);
-    connect(controller, getter2, std::move(slot2), when);
-    return controller;
-}
-
-/// Create Controller for & manage()d by widget, & connect to 3 signals on it.
-template <typename Controller,
-          typename Getter1, typename Slot1,
-          typename Getter2, typename Slot2,
-          typename Getter3, typename Slot3>
-Controller &add(Gtk::Widget &widget,
-                Getter1 const getter1, Slot1 slot1,
-                Getter2 const getter2, Slot2 slot2,
-                Getter3 const getter3, Slot3 slot3,
-                Gtk::PropagationPhase const phase,
-                When const when)
-{
-    auto &controller = create<Controller>(widget, phase);
-    connect(controller, getter1, std::move(slot1), when);
-    connect(controller, getter2, std::move(slot2), when);
-    connect(controller, getter3, std::move(slot3), when);
-    return controller;
-}
-
 // We add the requirement that slots return an EventSequenceState, which if itʼs
 // not NONE we set on the controller. This makes it easier & less error-prone to
 // migrate code that returned a bool whether GdkEvent is handled, to Controllers
@@ -137,7 +89,7 @@ Controller &add(Gtk::Widget &widget,
 // be enforced by the compiler. So… this wraps a callerʼs slot that returns that
 // state & uses it, with a void-returning wrapper as thatʼs what GTK/mm expects.
 template <typename Slot>
-auto use_state(Slot &&slot)
+[[nodiscard]] auto use_state(Slot &&slot)
 {
     return [slot = std::move(slot)](auto &controller, auto &&...args)
     {
@@ -159,26 +111,25 @@ Gtk::GestureMultiPress &add_click(Gtk::Widget &widget,
                                   Gtk::PropagationPhase const phase,
                                   When const when)
 {
-    auto &click = add<Gtk::GestureMultiPress>(widget,
-        &Gtk::GestureMultiPress::signal_pressed , use_state(std::move(on_pressed )),
-        &Gtk::GestureMultiPress::signal_released, use_state(std::move(on_released)),
-        phase, when);
+    auto &click = create<Gtk::GestureMultiPress>(widget, phase);
+    connect(click, &Gtk::GestureMultiPress::signal_pressed , use_state(std::move(on_pressed )), when);
+    connect(click, &Gtk::GestureMultiPress::signal_released, use_state(std::move(on_released)), when);
     click.set_button(static_cast<int>(button));
     return click;
 }
 
 Gtk::GestureDrag &add_drag(Gtk::Widget &widget,
-                           DragSlot on_begin  ,
-                           DragSlot on_update ,
-                           DragSlot on_end    ,
+                           DragSlot on_drag_begin ,
+                           DragSlot on_drag_update,
+                           DragSlot on_drag_end   ,
                            Gtk::PropagationPhase const phase,
                            When const when)
 {
-    return add<Gtk::GestureDrag>(widget,
-        &Gtk::GestureDrag::signal_drag_begin , use_state(std::move(on_begin )),
-        &Gtk::GestureDrag::signal_drag_update, use_state(std::move(on_update)),
-        &Gtk::GestureDrag::signal_drag_end   , use_state(std::move(on_end   )),
-        phase, when);
+    auto &drag = create<Gtk::GestureDrag>(widget, phase);
+    connect(drag, &Gtk::GestureDrag::signal_drag_begin , use_state(std::move(on_drag_begin )), when);
+    connect(drag, &Gtk::GestureDrag::signal_drag_update, use_state(std::move(on_drag_update)), when);
+    connect(drag, &Gtk::GestureDrag::signal_drag_end   , use_state(std::move(on_drag_end   )), when);
+    return drag;
 }
 
 // TODO: GTK4: EventControllerFocus.property_contains_focus() should make this slightly nicer?

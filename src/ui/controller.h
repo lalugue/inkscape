@@ -97,9 +97,9 @@ using DragSlot = sigc::slot<Gtk::EventSequenceState(Gtk::GestureDrag &, double, 
 
 /// Create a drag gesture for & manage()d by widget.
 Gtk::GestureDrag &add_drag(Gtk::Widget &widget,
-                           DragSlot on_begin  ,
-                           DragSlot on_update ,
-                           DragSlot on_end    ,
+                           DragSlot on_drag_begin ,
+                           DragSlot on_drag_update,
+                           DragSlot on_drag_end   ,
                            Gtk::PropagationPhase phase = Gtk::PHASE_BUBBLE,
                            When when = When::after);
 
@@ -284,7 +284,7 @@ Gtk::EventController &add_motion(Gtk::Widget &widget  ,
 
 /// Create a scroll event controller for & manage()d by widget.
 // See comments for add_key().
-template <auto on_begin, auto on_scroll, auto on_end, auto on_decelerate = nullptr,
+template <auto on_scroll_begin, auto on_scroll, auto on_scroll_end, auto on_decelerate = nullptr,
           typename Listener>
 Gtk::EventController &add_scroll(Gtk::Widget &widget  ,
                                  Listener    &listener,
@@ -293,17 +293,17 @@ Gtk::EventController &add_scroll(Gtk::Widget &widget  ,
                                  When const when = When::after)
 {
     // NB make_g_callback<> must type-erase methods, so we must check arg compat
-    static_assert(is_scroll_handler   <decltype(on_begin     ), Listener>);
-    static_assert(is_scroll_xy_handler<decltype(on_scroll    ), Listener>);
-    static_assert(is_scroll_handler   <decltype(on_end       ), Listener>);
-    static_assert(is_scroll_xy_handler<decltype(on_decelerate), Listener>);
+    static_assert(is_scroll_handler   <decltype(on_scroll_begin), Listener>);
+    static_assert(is_scroll_xy_handler<decltype(on_scroll      ), Listener>);
+    static_assert(is_scroll_handler   <decltype(on_scroll_end  ), Listener>);
+    static_assert(is_scroll_xy_handler<decltype(on_decelerate  ), Listener>);
 
     auto const gcontroller = gtk_event_controller_scroll_new(widget.gobj(), flags);
     gtk_event_controller_set_propagation_phase(gcontroller, static_cast<GtkPropagationPhase>(phase));
-    Detail::connect<on_begin     >(gcontroller, "scroll-begin", listener, when);
-    Detail::connect<on_scroll    >(gcontroller, "scroll"      , listener, when);
-    Detail::connect<on_end       >(gcontroller, "scroll-end"  , listener, when);
-    Detail::connect<on_decelerate>(gcontroller, "decelerate"  , listener, when);
+    Detail::connect<on_scroll_begin>(gcontroller, "scroll-begin", listener, when);
+    Detail::connect<on_scroll      >(gcontroller, "scroll"      , listener, when);
+    Detail::connect<on_scroll_end  >(gcontroller, "scroll-end"  , listener, when);
+    Detail::connect<on_decelerate  >(gcontroller, "decelerate"  , listener, when);
     return Detail::managed(Glib::wrap(gcontroller), widget);
 }
 
