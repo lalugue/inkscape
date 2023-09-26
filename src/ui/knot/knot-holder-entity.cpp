@@ -315,7 +315,7 @@ void PatternKnotHolderEntityScale::knot_set(Geom::Point const &p, Geom::Point co
     double scale_x = std::clamp(new_extent[X] / _cached_diagonal[X], _cached_min_scale, 1e9);
     double scale_y = std::clamp(new_extent[Y] / _cached_diagonal[Y], _cached_min_scale, 1e9);
 
-    Affine new_transform = (state & GDK_CONTROL_MASK) ? Scale(lerp(0.5, scale_x, scale_y))
+    Affine new_transform = (state & GDK_CONTROL_MASK) ? Scale((scale_x + scale_y) * 0.5)
                                                       : Scale(scale_x, scale_y);
 
     // 2. Calculate offset to keep pattern origin aligned
