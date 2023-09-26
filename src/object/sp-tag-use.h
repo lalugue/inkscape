@@ -1,7 +1,4 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-#ifndef SEEN_SP_TAG_USE_H
-#define SEEN_SP_TAG_USE_H
-
 /*
  * SVG <inkscape:tagref> implementation
  *
@@ -13,25 +10,28 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include <glib.h>
-#include <cstddef>
-#include <sigc++/sigc++.h>
-#include "svg/svg-length.h"
+#ifndef SEEN_SP_TAG_USE_H
+#define SEEN_SP_TAG_USE_H
+
+#include <memory>
+#include <string>
+#include <optional>
+
+#include "helper/auto-connection.h"
 #include "sp-object.h"
+#include "svg/svg-length.h"
 
 class SPItem;
-class SPTagUse;
 class SPTagUseReference;
 
 class SPTagUse final : public SPObject {
-
-public:
     int tag() const override { return tag_of<decltype(*this)>; }
 
     // item built from the original's repr (the visible clone)
     // relative to the SPUse itself, it is treated as a child, similar to a grouped item relative to its group
-    SPObject *child;
-    gchar *href;
+    SPObject *child = nullptr;
+    std::optional<std::string> href;
+
 public:
     SPTagUse();
     ~SPTagUse() override;
@@ -48,8 +48,19 @@ public:
     virtual SPItem* root();
 
     // the reference to the original object
-    SPTagUseReference *ref;
-    sigc::connection _changed_connection;
+    std::unique_ptr<SPTagUseReference> ref;
+    Inkscape::auto_connection _changed_connection;
 };
 
-#endif
+#endif // SEEN_SP_TAG_USE_H
+
+/*
+  Local Variables:
+  mode:c++
+  c-file-style:"stroustrup"
+  c-file-offsets:((innamespace . 0)(inline-open . 0)(case-label . +))
+  indent-tabs-mode:nil
+  fill-column:99
+  End:
+*/
+// vim: filetype=cpp:expandtab:shiftwidth=4:tabstop=8:softtabstop=4 :

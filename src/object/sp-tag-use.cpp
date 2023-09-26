@@ -13,10 +13,8 @@
 
 #include "sp-tag-use.h"
 
-#include <cstring>
-#include <string>
-
 #include <glibmm/i18n.h>
+#include <sigc++/functors/mem_fun.h>
 
 #include "bad-uri-exception.h"
 #include "display/drawing-group.h"
@@ -32,27 +30,20 @@
 #include "sp-tag-use-reference.h"
 
 SPTagUse::SPTagUse()
+    : ref{std::make_unique<SPTagUseReference>(this)}
 {
-    href = nullptr;
-    //new (_changed_connection) sigc::connection;
-    ref = new SPTagUseReference(this);
-    
     _changed_connection = ref->changedSignal().connect(sigc::mem_fun(*this, &SPTagUse::href_changed));
 }
 
 SPTagUse::~SPTagUse()
 {
-
     if (child) {
         detach(child);
         child = nullptr;
     }
 
     ref->detach();
-    delete ref;
-    ref = nullptr;
-
-    _changed_connection.~connection(); //FIXME why?
+    ref.reset();
 }
 
 void
@@ -69,7 +60,6 @@ SPTagUse::build(SPDocument *document, Inkscape::XML::Node *repr)
 void
 SPTagUse::release()
 {
-
     if (child) {
         detach(child);
         child = nullptr;
@@ -77,8 +67,7 @@ SPTagUse::release()
 
     _changed_connection.disconnect();
 
-    g_free(href);
-    href = nullptr;
+    href.reset();
 
     ref->detach();
 
@@ -91,19 +80,19 @@ SPTagUse::set(SPAttr key, gchar const *value)
 
     switch (key) {
         case SPAttr::XLINK_HREF: {
-            if ( value && href && ( strcmp(value, href) == 0 ) ) {
+            if (value && href && *href == value) {
                 /* No change, do nothing. */
             } else {
-                g_free(href);
-                href = nullptr;
+                href.reset();
+
                 if (value) {
                     // First, set the href field, because sp_tag_use_href_changed will need it.
-                    href = g_strdup(value);
+                    href = value;
 
                     // Now do the attaching, which emits the changed signal.
                     try {
                         ref->attach(Inkscape::URI(value));
-                    } catch (Inkscape::BadURIException &e) {
+                    } catch (Inkscape::BadURIException const &e) {
                         g_warning("%s", e.what());
                         ref->detach();
                     }
@@ -159,14 +148,13 @@ SPItem * SPTagUse::root()
 }
 
 void
-SPTagUse::href_changed(SPObject */*old_ref*/, SPObject */*ref*/)
+SPTagUse::href_changed(SPObject * /*old_ref*/, SPObject * /*ref*/)
 {
     if (href) {
         SPItem *refobj = ref->getObject();
         if (refobj) {
             Inkscape::XML::Node *childrepr = refobj->getRepr();
             const std::string typeString = NodeTraits::get_type_string(*childrepr);
-            
             SPObject* child_ = SPFactory::createObject(typeString);
             if (child_) {
                 child = child_;
@@ -181,11 +169,10 @@ SPTagUse::href_changed(SPObject */*old_ref*/, SPObject */*ref*/)
 
 SPItem * SPTagUse::get_original()
 {
-    SPItem *ref_ = nullptr;
     if (ref) {
-        ref_ = ref->getObject();
+        return ref->getObject();
     }
-    return ref_;
+    return nullptr;
 }
 
 /*
