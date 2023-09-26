@@ -28,6 +28,7 @@
 #include <gtkmm/progressbar.h>
 #include <gtkmm/radiobutton.h>
 #include <gtkmm/recentmanager.h>
+#include <gtkmm/scrolledwindow.h>
 #include <gtkmm/spinbutton.h>
 #include <sigc++/adaptors/bind.h>
 #include <sigc++/functors/mem_fun.h>
@@ -35,31 +36,21 @@
 #include "desktop.h"
 #include "document-undo.h"
 #include "document.h"
-#include "extension/db.h"
-#include "extension/output.h"
-#include "file.h"
 #include "inkscape-window.h"
-#include "inkscape.h"
 #include "message-stack.h"
 #include "page-manager.h"
 #include "preferences.h"
 #include "selection.h"
 
-#include "helper/png-write.h"
-#include "io/resource.h"
-#include "io/sys.h"
-#include "object/object-set.h"
+#include "extension/output.h"
 #include "object/sp-namedview.h"
 #include "object/sp-page.h"
 #include "object/sp-root.h"
-#include "selection-chemistry.h"
-#include "ui/dialog-events.h"
-#include "ui/dialog/dialog-notebook.h"
+#include "ui/builder-utils.h"
 #include "ui/dialog/export-batch.h"
 #include "ui/dialog/export.h"
 #include "ui/dialog/filedialog.h"
 #include "ui/icon-names.h"
-#include "ui/interface.h"
 #include "ui/util.h"
 #include "ui/widget/color-picker.h"
 #include "ui/widget/export-lists.h"
@@ -68,68 +59,65 @@
 #include "ui/widget/unit-menu.h"
 
 using Inkscape::Util::unit_table;
+using Inkscape::UI::Widget::UnitMenu;
 
 namespace Inkscape::UI::Dialog {
 
 SingleExport::SingleExport(BaseObjectType *cobject, const Glib::RefPtr<Gtk::Builder>& builder)
-        : Gtk::Box(cobject) {
+    : Gtk::Box(cobject)
+    , pages_list        (get_widget<Gtk::FlowBox>         (builder, "si_pages"))
+    , pages_list_box    (get_widget<Gtk::ScrolledWindow>  (builder, "si_pages_box"))
+    , size_box          (get_widget<Gtk::Grid>            (builder, "si_sizes"))
+    , units             (get_derived_widget<UnitMenu>     (builder, "si_units"))
+    , si_units_row      (get_widget<Gtk::Box>             (builder, "si_units_row"))
+    , si_hide_all       (get_widget<Gtk::CheckButton>     (builder, "si_hide_all"))
+    , si_show_preview   (get_widget<Gtk::CheckButton>     (builder, "si_show_preview"))
+    , preview           (get_derived_widget<ExportPreview>(builder, "si_preview"))
+    , preview_box       (get_widget<Gtk::Box>             (builder, "si_preview_box"))
+
+    , si_extension_cb   (get_derived_widget<ExtensionList>(builder, "si_extention"))
+    , si_filename_entry (get_widget<Gtk::Entry>           (builder, "si_filename"))
+    , si_export         (get_widget<Gtk::Button>          (builder, "si_export"))
+
+    , progress_bar      (get_widget<Gtk::ProgressBar>     (builder, "si_progress"))
+    , cancel_button     (get_widget<Gtk::Button>          (builder, "si_cancel"))
+    , progress_box      (get_widget<Gtk::Box>             (builder, "si_inprogress"))
+{
     prefs = Inkscape::Preferences::get();
 
-    builder->get_widget("si_s_document", selection_buttons[SELECTION_DRAWING]);
     selection_names[SELECTION_DRAWING] = "drawing";
-    builder->get_widget("si_s_page", selection_buttons[SELECTION_PAGE]);
     selection_names[SELECTION_PAGE] = "page";
-    builder->get_widget("si_s_selection", selection_buttons[SELECTION_SELECTION]);
     selection_names[SELECTION_SELECTION] = "selection";
-    builder->get_widget("si_s_custom", selection_buttons[SELECTION_CUSTOM]);
     selection_names[SELECTION_CUSTOM] = "custom";
 
-    builder->get_widget_derived("si_left_sb", spin_buttons[SPIN_X0]);
-    builder->get_widget_derived("si_right_sb", spin_buttons[SPIN_X1]);
-    builder->get_widget_derived("si_top_sb", spin_buttons[SPIN_Y0]);
-    builder->get_widget_derived("si_bottom_sb", spin_buttons[SPIN_Y1]);
-    builder->get_widget_derived("si_height_sb", spin_buttons[SPIN_HEIGHT]);
-    builder->get_widget_derived("si_width_sb", spin_buttons[SPIN_WIDTH]);
+    selection_buttons[SELECTION_DRAWING]   = &get_widget<Gtk::RadioButton>(builder, "si_s_document");  
+    selection_buttons[SELECTION_PAGE]      = &get_widget<Gtk::RadioButton>(builder, "si_s_page");      
+    selection_buttons[SELECTION_SELECTION] = &get_widget<Gtk::RadioButton>(builder, "si_s_selection"); 
+    selection_buttons[SELECTION_CUSTOM]    = &get_widget<Gtk::RadioButton>(builder, "si_s_custom");    
 
-    builder->get_widget("si_label_left", spin_labels[SPIN_X0]);
-    builder->get_widget("si_label_right", spin_labels[SPIN_X1]);
-    builder->get_widget("si_label_top", spin_labels[SPIN_Y0]);
-    builder->get_widget("si_label_bottom", spin_labels[SPIN_Y1]);
-    builder->get_widget("si_label_height", spin_labels[SPIN_HEIGHT]);
-    builder->get_widget("si_label_width", spin_labels[SPIN_WIDTH]);
+    spin_buttons[SPIN_X0]       = &get_derived_widget<SpinButton>(builder, "si_left_sb");
+    spin_buttons[SPIN_X1]       = &get_derived_widget<SpinButton>(builder, "si_right_sb");
+    spin_buttons[SPIN_Y0]       = &get_derived_widget<SpinButton>(builder, "si_top_sb");
+    spin_buttons[SPIN_Y1]       = &get_derived_widget<SpinButton>(builder, "si_bottom_sb");
+    spin_buttons[SPIN_HEIGHT]   = &get_derived_widget<SpinButton>(builder, "si_height_sb");
+    spin_buttons[SPIN_WIDTH]    = &get_derived_widget<SpinButton>(builder, "si_width_sb");
+    spin_buttons[SPIN_BMHEIGHT] = &get_derived_widget<SpinButton>(builder, "si_img_height_sb");
+    spin_buttons[SPIN_BMWIDTH]  = &get_derived_widget<SpinButton>(builder, "si_img_width_sb");
+    spin_buttons[SPIN_DPI]      = &get_derived_widget<SpinButton>(builder, "si_dpi_sb");
 
-    builder->get_widget_derived("si_img_height_sb", spin_buttons[SPIN_BMHEIGHT]);
-    builder->get_widget_derived("si_img_width_sb", spin_buttons[SPIN_BMWIDTH]);
-    builder->get_widget_derived("si_dpi_sb", spin_buttons[SPIN_DPI]);
+    spin_labels[SPIN_X0]        = &get_widget<Gtk::Label>(builder, "si_label_left");
+    spin_labels[SPIN_X1]        = &get_widget<Gtk::Label>(builder, "si_label_right");
+    spin_labels[SPIN_Y0]        = &get_widget<Gtk::Label>(builder, "si_label_top");
+    spin_labels[SPIN_Y1]        = &get_widget<Gtk::Label>(builder, "si_label_bottom");
+    spin_labels[SPIN_HEIGHT]    = &get_widget<Gtk::Label>(builder, "si_label_height");
+    spin_labels[SPIN_WIDTH]     = &get_widget<Gtk::Label>(builder, "si_label_width");
 
-    builder->get_widget("si_pages", pages_list);
-    builder->get_widget("si_pages_box", pages_list_box);
-    builder->get_widget("si_sizes", size_box);
+    auto &pref_button_box = get_widget<Gtk::Box>(builder, "si_prefs");
+    pref_button_box.add(*si_extension_cb.getPrefButton());
 
-    builder->get_widget_derived("si_units", units);
-    builder->get_widget("si_units_row", si_units_row);
-
-    builder->get_widget("si_hide_all", si_hide_all);
-    builder->get_widget("si_show_preview", si_show_preview);
-    builder->get_widget_derived("si_preview", preview);
-    builder->get_widget("si_preview_box", preview_box);
-
-    builder->get_widget_derived("si_extention", si_extension_cb);
-    Gtk::Box *pref_button_box = nullptr;
-    builder->get_widget("si_prefs", pref_button_box);
-    pref_button_box->add(*si_extension_cb->getPrefButton());
-
-    builder->get_widget("si_filename", si_filename_entry);
-    builder->get_widget("si_export", si_export);
-
-    builder->get_widget("si_progress", _prog);
-    builder->get_widget("si_cancel", cancel_button);
-    builder->get_widget("si_inprogress", progress_box);
-
-    Gtk::Button* button = nullptr;
-    builder->get_widget("si_backgnd", button); 
+    auto &button = get_widget<Gtk::Button>(builder, "si_backgnd");
     _bgnd_color_picker = std::make_unique<Inkscape::UI::Widget::ColorPicker>(
-        _("Background color"), _("Color used to fill background"), 0xffffff00, true, button);
+        _("Background color"), _("Color used to fill background"), 0xffffff00, true, &button);
 
     setup();
 }
@@ -191,7 +179,7 @@ void SingleExport::setup()
     }
     setupDone = true;
 
-    si_extension_cb->setup();
+    si_extension_cb.setup();
 
     setupUnits();
     setupSpinButtons();
@@ -202,7 +190,7 @@ void SingleExport::setup()
     setExporting(false);
 
     // Refresh the filename when the user selects a different page
-    _pages_list_changed = pages_list->signal_selected_children_changed().connect([=]() {
+    _pages_list_changed = pages_list.signal_selected_children_changed().connect([=]() {
         loadExportHints();
         refreshArea();
     });
@@ -211,15 +199,15 @@ void SingleExport::setup()
     for (auto [key, button] : selection_buttons) {
         button->signal_toggled().connect(sigc::bind(sigc::mem_fun(*this, &SingleExport::onAreaTypeToggle), key));
     }
-    units->signal_changed().connect(sigc::mem_fun(*this, &SingleExport::onUnitChanged));
-    extensionConn = si_extension_cb->signal_changed().connect(sigc::mem_fun(*this, &SingleExport::onExtensionChanged));
-    exportConn = si_export->signal_clicked().connect(sigc::mem_fun(*this, &SingleExport::onExport));
-    filenameConn = si_filename_entry->signal_changed().connect(sigc::mem_fun(*this, &SingleExport::onFilenameModified));
-    browseConn = si_filename_entry->signal_icon_release().connect(sigc::mem_fun(*this, &SingleExport::onBrowse));
-    cancelConn = cancel_button->signal_clicked().connect(sigc::mem_fun(*this, &SingleExport::onCancel));
-    si_filename_entry->signal_activate().connect(sigc::mem_fun(*this, &SingleExport::onExport));
-    si_show_preview->signal_toggled().connect(sigc::mem_fun(*this, &SingleExport::refreshPreview));
-    si_hide_all->signal_toggled().connect(sigc::mem_fun(*this, &SingleExport::refreshPreview));
+    units.signal_changed().connect(sigc::mem_fun(*this, &SingleExport::onUnitChanged));
+    extensionConn = si_extension_cb.signal_changed().connect(sigc::mem_fun(*this, &SingleExport::onExtensionChanged));
+    exportConn = si_export.signal_clicked().connect(sigc::mem_fun(*this, &SingleExport::onExport));
+    filenameConn = si_filename_entry.signal_changed().connect(sigc::mem_fun(*this, &SingleExport::onFilenameModified));
+    browseConn = si_filename_entry.signal_icon_release().connect(sigc::mem_fun(*this, &SingleExport::onBrowse));
+    cancelConn = cancel_button.signal_clicked().connect(sigc::mem_fun(*this, &SingleExport::onCancel));
+    si_filename_entry.signal_activate().connect(sigc::mem_fun(*this, &SingleExport::onExport));
+    si_show_preview.signal_toggled().connect(sigc::mem_fun(*this, &SingleExport::refreshPreview));
+    si_hide_all.signal_toggled().connect(sigc::mem_fun(*this, &SingleExport::refreshPreview));
     _bgnd_color_picker->connectChanged([=](guint32 color){
         if (_desktop) {
             Inkscape::UI::Dialog::set_export_bg_color(_desktop->getNamedView(), color);
@@ -231,9 +219,9 @@ void SingleExport::setup()
 // Setup units combobox
 void SingleExport::setupUnits()
 {
-    units->setUnitType(Inkscape::Util::UNIT_TYPE_LINEAR);
+    units.setUnitType(Inkscape::Util::UNIT_TYPE_LINEAR);
     if (_desktop) {
-        units->setUnit(_desktop->getNamedView()->display_units->abbr);
+        units.setUnit(_desktop->getNamedView()->display_units->abbr);
     }
 }
 
@@ -324,24 +312,24 @@ void SingleExport::refreshPage()
     if (!_document)
         return;
 
-    bool multi = pages_list->get_selection_mode() == Gtk::SELECTION_MULTIPLE;
+    bool multi = pages_list.get_selection_mode() == Gtk::SELECTION_MULTIPLE;
     auto &pm = _document->getPageManager();
     bool has_pages = current_key == SELECTION_PAGE && pm.getPageCount() > 1;
-    pages_list_box->set_visible(has_pages);
-    preview_box->set_visible(!has_pages);
-    size_box->set_visible(!has_pages || !multi);
+    pages_list_box.set_visible(has_pages);
+    preview_box.set_visible(!has_pages);
+    size_box.set_visible(!has_pages || !multi);
 }
 
 void SingleExport::setPagesMode(bool multi)
 {
     // Set set the internal mode to NONE to preserve selections while changing
-    pages_list->foreach([=](Gtk::Widget& widget) {
+    pages_list.foreach([=](Gtk::Widget& widget) {
         if (auto item = dynamic_cast<BatchItem *>(&widget))
             item->on_mode_changed(Gtk::SELECTION_NONE);
     });
-    pages_list->set_selection_mode(multi ? Gtk::SELECTION_MULTIPLE : Gtk::SELECTION_SINGLE);
+    pages_list.set_selection_mode(multi ? Gtk::SELECTION_MULTIPLE : Gtk::SELECTION_SINGLE);
     // A second call it needed in it's own loop because of how updates happen in the FlowBox
-    pages_list->foreach([=](Gtk::Widget& widget) {
+    pages_list.foreach([=](Gtk::Widget& widget) {
         if (auto item = dynamic_cast<BatchItem *>(&widget))
             item->update_selected();
     });
@@ -350,7 +338,7 @@ void SingleExport::setPagesMode(bool multi)
 
 void SingleExport::selectPage(SPPage *page)
 {
-    pages_list->foreach([=](Gtk::Widget& widget) {
+    pages_list.foreach([=](Gtk::Widget& widget) {
         if (auto item = dynamic_cast<BatchItem *>(&widget)) {
             if (item->getPage() == page) {
                 item->set_selected(true);
@@ -362,7 +350,7 @@ void SingleExport::selectPage(SPPage *page)
 std::vector<SPPage *> SingleExport::getSelectedPages()
 {
     std::vector<SPPage *> pages;
-    pages_list->selected_foreach([&pages](Gtk::FlowBox *box, Gtk::FlowBoxChild *child) {
+    pages_list.selected_foreach([&pages](Gtk::FlowBox *box, Gtk::FlowBoxChild *child) {
         if (auto item = dynamic_cast<BatchItem *>(child))
             pages.push_back(item->getPage());
     });
@@ -376,9 +364,7 @@ void SingleExport::clearPagePreviews()
 {
     _pages_list_changed.block();
 
-    while (auto widget = pages_list->get_child_at_index(0)) {
-        pages_list->remove(*widget);
-    }
+    UI::remove_all_children(pages_list);
 
     _pages_list_changed.unblock();
 }
@@ -395,11 +381,11 @@ void SingleExport::onPagesChanged()
     if (pm.getPageCount() > 1) {
         for (auto page : pm.getPages()) {
             auto const item = Gtk::make_managed<BatchItem>(page, _preview_drawing);
-            pages_list->insert(*item, -1);
+            pages_list.insert(*item, -1);
         }
     }
     refreshPage();
-    if (auto ext = si_extension_cb->getExtension()) {
+    if (auto ext = si_extension_cb.getExtension()) {
         setPagesMode(!ext->is_raster());
     }
 
@@ -412,7 +398,7 @@ void SingleExport::onPagesModified(SPPage *page)
 }
 
 void SingleExport::onPagesSelected(SPPage *page) {
-    if (pages_list->get_selection_mode() != Gtk::SELECTION_MULTIPLE) {
+    if (pages_list.get_selection_mode() != Gtk::SELECTION_MULTIPLE) {
         selectPage(page);
     }
     refreshArea();
@@ -422,7 +408,7 @@ void SingleExport::loadExportHints()
 {
     if (filename_modified || !_document || !_desktop) return;
 
-    Glib::ustring old_filename = si_filename_entry->get_text();
+    Glib::ustring old_filename = si_filename_entry.get_text();
     Glib::ustring filename;
     Geom::Point dpi;
     switch (current_key) {
@@ -472,14 +458,14 @@ void SingleExport::loadExportHints()
     if (filename.empty()) {
         filename = Export::defaultFilename(_document, old_filename, ".png");
     }
-    if (auto ext = si_extension_cb->getExtension()) {
-        si_extension_cb->removeExtension(filename);
+    if (auto ext = si_extension_cb.getExtension()) {
+        si_extension_cb.removeExtension(filename);
         ext->add_extension(filename);
     }
 
     original_name = filename;
-    si_filename_entry->set_text(filename);
-    si_filename_entry->set_position(filename.length());
+    si_filename_entry.set_text(filename);
+    si_filename_entry.set_position(filename.length());
 
     if (dpi.x() != 0.0) { // XXX Should this deal with dpi.y() ?
         spin_buttons[SPIN_DPI]->set_value(dpi.x());
@@ -489,7 +475,7 @@ void SingleExport::loadExportHints()
 void SingleExport::saveExportHints(SPObject *target)
 {
     if (target) {
-        target->setExportFilename(si_filename_entry->get_text());
+        target->setExportFilename(si_filename_entry.get_text());
         target->setExportDpi(Geom::Point(
             spin_buttons[SPIN_DPI]->get_value(),
             spin_buttons[SPIN_DPI]->get_value()
@@ -501,7 +487,7 @@ void SingleExport::setArea(double x0, double y0, double x1, double y1)
 {
     blockSpinConns(true);
 
-    Unit const *unit = units->getUnit();
+    Unit const *unit = units.getUnit();
     auto px = unit_table.getUnit("px");
     spin_buttons[SPIN_X0]->get_adjustment()->set_value(px->convert(x0, unit));
     spin_buttons[SPIN_X1]->get_adjustment()->set_value(px->convert(x1, unit));
@@ -555,7 +541,7 @@ void SingleExport::toggleSpinButtonVisibility()
     spin_labels[SPIN_WIDTH]->set_visible(show);
     spin_labels[SPIN_HEIGHT]->set_visible(show);
 
-    si_units_row->set_visible(show);
+    si_units_row.set_visible(show);
 }
 
 void SingleExport::onAreaXChange(sb_type type)
@@ -585,7 +571,7 @@ void SingleExport::onFilenameModified()
 {
     extensionConn.block();
 
-    Glib::ustring filename = si_filename_entry->get_text();
+    Glib::ustring filename = si_filename_entry.get_text();
 
     if (original_name == filename) {
         filename_modified = false;
@@ -593,14 +579,14 @@ void SingleExport::onFilenameModified()
         filename_modified = true;
     }
 
-    si_extension_cb->setExtensionFromFilename(filename);
+    si_extension_cb.setExtensionFromFilename(filename);
 
     extensionConn.unblock();
 }
 
 void SingleExport::onExtensionChanged()
 {
-    if (auto ext = si_extension_cb->getExtension()) {
+    if (auto ext = si_extension_cb.getExtension()) {
         setPagesMode(!ext->is_raster());
         loadExportHints();
     }
@@ -621,14 +607,14 @@ void SingleExport::onExport()
     auto &page_manager = _document->getPageManager();
     auto selection = _desktop->getSelection();
     bool exportSuccessful = false;
-    auto omod = si_extension_cb->getExtension();
+    auto omod = si_extension_cb.getExtension();
     if (!omod) {
         return;
     }
 
-    bool selected_only = si_hide_all->get_active();
-    Unit const *unit = units->getUnit();
-    Glib::ustring filename = si_filename_entry->get_text();
+    bool selected_only = si_hide_all.get_active();
+    Unit const *unit = units.getUnit();
+    Glib::ustring filename = si_filename_entry.get_text();
 
     if (!Export::checkOrCreateDirectory(filename)) {
         return;
@@ -734,7 +720,7 @@ void SingleExport::onBrowse(Gtk::EntryIconPosition pos, const GdkEventButton *ev
 
     browseConn.block();
 
-    Glib::ustring filename = Glib::filename_from_utf8(si_filename_entry->get_text());
+    Glib::ustring filename = Glib::filename_from_utf8(si_filename_entry.get_text());
 
     if (filename.empty()) {
         filename = Export::defaultFilename(_document, filename, ".png");
@@ -745,7 +731,7 @@ void SingleExport::onBrowse(Gtk::EntryIconPosition pos, const GdkEventButton *ev
         Inkscape::Extension::FILE_SAVE_METHOD_EXPORT);
 
     // Tell the browse dialog what extension to start with
-    if (auto omod = si_extension_cb->getExtension()) {
+    if (auto omod = si_extension_cb.getExtension()) {
         dialog->setExtension(omod);
     }
 
@@ -753,13 +739,13 @@ void SingleExport::onBrowse(Gtk::EntryIconPosition pos, const GdkEventButton *ev
         filename = dialog->getFilename();
         // Once complete, we use the extension selected to save the file
         if (auto ext = dialog->getExtension()) {
-            si_extension_cb->set_active_id(ext->get_id());
+            si_extension_cb.set_active_id(ext->get_id());
         } else {
-            si_extension_cb->setExtensionFromFilename(filename);
+            si_extension_cb.setExtensionFromFilename(filename);
         }
 
-        si_filename_entry->set_text(filename);
-        si_filename_entry->set_position(filename.length());
+        si_filename_entry.set_text(filename);
+        si_filename_entry.set_position(filename.length());
 
         // deleting dialog before exporting is important
         delete dialog;
@@ -789,7 +775,7 @@ void SingleExport::areaXChange(sb_type type)
     float x0, x1, dpi, width, bmwidth;
 
     // Get all values in px
-    Unit const *unit = units->getUnit();
+    Unit const *unit = units.getUnit();
     x0 = unit->convert(x0_adj->get_value(), "px");
     x1 = unit->convert(x1_adj->get_value(), "px");
     width = unit->convert(width_adj->get_value(), "px");
@@ -839,7 +825,7 @@ void SingleExport::areaYChange(sb_type type)
     float y0, y1, dpi, height, bmheight;
 
     // Get all values in px
-    Unit const *unit = units->getUnit();
+    Unit const *unit = units.getUnit();
     y0 = unit->convert(y0_adj->get_value(), "px");
     y1 = unit->convert(y1_adj->get_value(), "px");
     height = unit->convert(height_adj->get_value(), "px");
@@ -885,7 +871,7 @@ void SingleExport::dpiChange(sb_type type)
     float dpi, height, width, bmheight, bmwidth;
 
     // Get all values in px
-    Unit const *unit = units->getUnit();
+    Unit const *unit = units.getUnit();
     height = unit->convert(spin_buttons[SPIN_HEIGHT]->get_value(), "px");
     width = unit->convert(spin_buttons[SPIN_WIDTH]->get_value(), "px");
     bmheight = spin_buttons[SPIN_BMHEIGHT]->get_value();
@@ -963,15 +949,15 @@ void SingleExport::setExporting(bool exporting, Glib::ustring const &text)
     if (exporting) {
         set_sensitive(false);
         set_opacity(0.2);
-        progress_box->set_visible(true);
-        _prog->set_text(text);
-        _prog->set_fraction(0.0);
+        progress_box.set_visible(true);
+        progress_bar.set_text(text);
+        progress_bar.set_fraction(0.0);
     } else {
         set_sensitive(true);
         set_opacity(1.0);
-        progress_box->set_visible(false);
-        _prog->set_text("");
-        _prog->set_fraction(0.0);
+        progress_box.set_visible(false);
+        progress_bar.set_text("");
+        progress_bar.set_fraction(0.0);
     }
     auto main_context = Glib::MainContext::get_default();
     main_context->iteration(false);
@@ -981,7 +967,7 @@ void SingleExport::setExporting(bool exporting, Glib::ustring const &text)
 unsigned int SingleExport::onProgressCallback(float value, void *data)
 {
     if (auto si = static_cast<SingleExport *>(data)) {
-        si->_prog->set_fraction(value);
+        si->progress_bar.set_fraction(value);
         auto main_context = Glib::MainContext::get_default();
         main_context->iteration(false);
         return !si->interrupted;
@@ -992,22 +978,22 @@ unsigned int SingleExport::onProgressCallback(float value, void *data)
 void SingleExport::refreshPreview()
 {
     if (!_desktop) {
-        preview->resetPixels();
+        preview.resetPixels();
         return;
     }
 
     std::vector<SPItem *> selected;
-    if (si_hide_all->get_active()) {
+    if (si_hide_all.get_active()) {
         // This is because selection items is not a std::vector yet. FIXME.
         selected =
             std::vector<SPItem *>(_desktop->getSelection()->items().begin(), _desktop->getSelection()->items().end());
     }
     _preview_drawing->set_shown_items(std::move(selected));
 
-    bool show = si_show_preview->get_active();
+    bool show = si_show_preview.get_active();
     if (!show || current_key == SELECTION_PAGE) {
         bool have_pages = false;
-        for (auto const child : UI::get_children(*pages_list)) {
+        for (auto const child : UI::get_children(pages_list)) {
             if (auto bi = dynamic_cast<BatchItem *>(child)) {
                 bi->refresh(!show, _bgnd_color_picker->get_current_color());
                 have_pages = true;
@@ -1015,19 +1001,19 @@ void SingleExport::refreshPreview()
         }
         if (have_pages) {
             // We don't want to update the main preview for pages, it's hidden
-            preview->resetPixels();
+            preview.resetPixels();
             return;
         }
     }
 
-    Unit const *unit = units->getUnit();
+    Unit const *unit = units.getUnit();
     float x0 = unit->convert(spin_buttons[SPIN_X0]->get_value(), "px");
     float x1 = unit->convert(spin_buttons[SPIN_X1]->get_value(), "px");
     float y0 = unit->convert(spin_buttons[SPIN_Y0]->get_value(), "px");
     float y1 = unit->convert(spin_buttons[SPIN_Y1]->get_value(), "px");
-    preview->setBox(Geom::Rect(x0, y0, x1, y1) * _document->dt2doc());
-    preview->setBackgroundColor(_bgnd_color_picker->get_current_color());
-    preview->queueRefresh();
+    preview.setBox(Geom::Rect(x0, y0, x1, y1) * _document->dt2doc());
+    preview.setBackgroundColor(_bgnd_color_picker->get_current_color());
+    preview.queueRefresh();
 }
 
 void SingleExport::setDesktop(SPDesktop *desktop)
@@ -1057,7 +1043,7 @@ void SingleExport::setDocument(SPDocument *document)
         auto bg_color = get_export_bg_color(document->getNamedView(), 0xffffff00);
         _bgnd_color_picker->setRgba32(bg_color);
         _preview_drawing = std::make_shared<PreviewDrawing>(document);
-        preview->setDrawing(_preview_drawing);
+        preview.setDrawing(_preview_drawing);
 
         // Refresh values to sync them with defaults.
         onPagesChanged();

@@ -12,6 +12,7 @@
 #define SEEN_TOOLBAR_SNAP_H
 
 #include <gtkmm/box.h>
+#include <gtkmm/builder.h>
 
 #include "preferences.h"
 
@@ -46,11 +47,12 @@ private:
     Mode mode = Mode::UNDEFINED;
 
     // The widgets to show/hide depending on mode.
-    Gtk::Box*    snap_toolbar = nullptr;
-    Gtk::Button* btn_simple = nullptr;
-    Gtk::Button* btn_advanced = nullptr;
-    Gtk::ScrolledWindow* scroll_permanent = nullptr;
-    Gtk::Box*    box_permanent = nullptr;
+    Glib::RefPtr<Gtk::Builder> builder;
+    Gtk::Box    &snap_toolbar;
+    Gtk::Button &btn_simple;
+    Gtk::Button &btn_advanced;
+    Gtk::ScrolledWindow &scroll_permanent;
+    Gtk::Box    &box_permanent;
 };
 
 } // namespace Inkscape::UI::Toolbar

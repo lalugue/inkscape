@@ -14,6 +14,7 @@
 #include "paint-servers.h"
 
 #include <algorithm>
+#include <cstddef>
 #include <stdexcept>
 
 #include <giomm/listmodel.h>
@@ -26,19 +27,18 @@
 #include <gtkmm/radiobutton.h>
 
 #include "document.h"
-#include "inkscape.h"
-#include "path-prefix.h"
 #include "selection.h"
 #include "style.h"
-
+#include "style-internal.h"
 #include "io/resource.h"
 #include "object/sp-defs.h"
-#include "object/sp-hatch.h"
-#include "object/sp-pattern.h"
+#include "object/sp-item.h"
+#include "object/sp-object.h"
+#include "object/sp-paint-server.h"
 #include "object/sp-root.h"
+#include "ui/builder-utils.h"
 #include "ui/cache/svg_preview_cache.h"
 #include "ui/pack.h"
-#include "ui/widget/scrollprotected.h"
 #include "xml/href-attribute-helper.h"
 
 namespace Inkscape::UI::Dialog {
@@ -108,32 +108,19 @@ void PaintServersDialog::documentReplaced()
 void PaintServersDialog::_buildDialogWindow(char const *const glade_file)
 {
     // Load the dialog from the Glade file
-    auto file_path = get_filename_string(IO::Resource::UIS, glade_file);
-    Glib::RefPtr<Gtk::Builder> builder;
-    try {
-        builder = Gtk::Builder::create_from_file(file_path);
-    } catch (Glib::Error const &e) {
-        Glib::ustring message{"Could not load the Glade file for the Paint Servers dialog: "};
-        message += file_path + "\n" + e.what();
-        g_warn_message("Inkscape", __FILE__, __LINE__, __func__, message.c_str());
-        return;
-    }
+
+    auto builder = create_builder(glade_file);
 
     // Place top-level grid container in the window
-    Gtk::Grid *container = nullptr;
-    builder->get_widget("PaintServersContainerGrid", container);
-    if (container) {
-        UI::pack_start(*this, *container, UI::PackOptions::expand_widget);
-    } else {
-        return;
-    }
+    auto &container = get_widget<Gtk::Grid>(builder, "PaintServersContainerGrid");
+    UI::pack_start(*this, container, UI::PackOptions::expand_widget);
 
-    builder->get_widget("ServersDropdown", dropdown);
+    dropdown = &get_widget<Gtk::ComboBoxText>(builder, "ServersDropdown");
     dropdown->append(ALLDOCS, _(ALLDOCS));
     dropdown->set_active_id(ALLDOCS);
     dropdown->signal_changed().connect([=]() { onPaintSourceDocumentChanged(); });
 
-    builder->get_widget("PaintIcons", icon_view);
+    icon_view = &get_widget<Gtk::IconView>(builder, "PaintIcons");
     icon_view->set_model(static_cast<Glib::RefPtr<Gtk::TreeModel>>(store[current_store]));
     icon_view->set_tooltip_column(columns.id.index());
     icon_view->set_pixbuf_column(columns.pixbuf.index());
@@ -141,8 +128,7 @@ void PaintServersDialog::_buildDialogWindow(char const *const glade_file)
         onPaintClicked(p);
     });
 
-    Gtk::RadioButton *fill_radio = nullptr;
-    builder->get_widget("TargetRadioFill", fill_radio);
+    auto fill_radio = &get_widget<Gtk::RadioButton>(builder, "TargetRadioFill");
     fill_radio->signal_toggled().connect([=]() {
         _targetting_fill = fill_radio->get_active();
         _updateActiveItem();
@@ -643,7 +629,6 @@ void PaintDescription::write_to_iterator(Gtk::ListStore::iterator &it, PaintServ
   Local Variables:
   mode:c++
   c-file-style:"stroustrup"
-  c-basic-offset:2
   c-file-offsets:((innamespace . 0)(inline-open . 0)(case-label . +))
   indent-tabs-mode:nil
   fill-column:99

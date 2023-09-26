@@ -11,10 +11,13 @@
 #ifndef STARTSCREEN_H
 #define STARTSCREEN_H
 
-#include <glibmm/refptr.h>
-#include <gtk/gtk.h> // GtkEventControllerKEy
-#include <gtkmm/dialog.h>
-#include <gtkmm/treemodel.h>
+#include <string>             // for string
+#include <gdk/gdk.h>          // for GdkModifierType
+#include <glibmm/refptr.h>    // for RefPtr
+#include <glibmm/ustring.h>   // for ustring
+#include <gtk/gtk.h>          // for GtkEventControllerKey
+#include <gtkmm/dialog.h>     // for Dialog
+#include <gtkmm/treemodel.h>  // for TreeModel
 
 namespace Gtk {
 class Builder;
@@ -58,7 +61,7 @@ private:
     void enlist_keys();
     void filter_themes();
     void keyboard_changed();
-    void notebook_switch(Gtk::Widget *tab, guint page_num);
+    void notebook_switch(Gtk::Widget *tab, unsigned page_num);
 
     void theme_changed();
     void canvas_changed();
@@ -68,18 +71,18 @@ private:
     void new_document();
     void load_document();
     void on_recent_changed();
-    void on_kind_changed(Gtk::Widget *tab, guint page_num);
+    void on_kind_changed(Gtk::Widget *tab, unsigned page_num);
 
 
 private:
     Glib::RefPtr<Gtk::Builder> builder;
-    Gtk::Window   *window  = nullptr;
-    Gtk::Notebook *tabs    = nullptr;
-    Gtk::Overlay  *banners = nullptr;
-    Gtk::ComboBox *themes  = nullptr;
-    Gtk::TreeView *recent_treeview = nullptr;
-    Gtk::Button   *load_btn = nullptr;
-    Inkscape::UI::Widget::TemplateList *templates = nullptr;
+    Gtk::Window   &window;
+    Gtk::Notebook &tabs;
+    Gtk::Overlay  &banners;
+    Gtk::ComboBox &themes;
+    Gtk::TreeView &recent_treeview;
+    Gtk::Button   &load_btn;
+    Inkscape::UI::Widget::TemplateList &templates;
 
     SPDocument* _document = nullptr;
 };

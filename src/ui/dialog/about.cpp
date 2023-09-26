@@ -10,12 +10,13 @@
 #include "about.h"
 
 #include <algorithm>
+#include <cstddef>
 #include <fstream>
 #include <random>
 #include <regex>
-#include <streambuf>
 #include <string>
 #include <utility>
+#include <vector>
 #include <glibmm/main.h>
 #include <gtkmm/aspectframe.h>
 #include <gtkmm/builder.h>
@@ -30,6 +31,7 @@
 #include "document.h"
 #include "inkscape-version-info.h"
 #include "io/resource.h"
+#include "ui/builder-utils.h"
 #include "ui/util.h"
 #include "ui/view/svg-view-widget.h"
 #include "util/units.h"
@@ -76,113 +78,82 @@ template <class Random>
 
 void show_about()
 {
-    if(!window) {
-        // Load glade file here
-        Glib::ustring gladefile = Resource::get_filename(Resource::UIS, "inkscape-about.glade");
-        Glib::RefPtr<Gtk::Builder> builder;
-        try {
-            builder = Gtk::Builder::create_from_file(gladefile);
-        } catch (const Glib::Error &ex) {
-            g_error("Glade file loading failed for about screen dialog");
-            return;
-        }
-        builder->get_widget("about-screen-window", window);
-        builder->get_widget("tabs", tabs);
-        if(!tabs || !window) {
-            g_error("Window or tabs in glade file are missing or do not have the right ids.");
-            return;
-        }
+    if (!window) {
+
+        // Load builder file here
+        auto builder = create_builder("inkscape-about.glade");
+        window            = &get_widget<Gtk::Window>  (builder, "about-screen-window");
+        tabs              = &get_widget<Gtk::Notebook>(builder, "tabs");
+        auto version      = &get_widget<Gtk::Button>  (builder, "version");
+        auto label        = &get_widget<Gtk::Label>   (builder, "version-copied");
+        auto debug_info   = &get_widget<Gtk::Button>  (builder, "debug_info");
+        auto label2       = &get_widget<Gtk::Label>   (builder, "debug-info-copied");
+        auto copyright    = &get_widget<Gtk::Label>   (builder, "copyright");
+        auto authors      = &get_widget<Gtk::TextView>(builder, "credits-authors");
+        auto translators  = &get_widget<Gtk::TextView>(builder, "credits-translators");
+        auto license      = &get_widget<Gtk::Label>   (builder, "license-text");
+
         // Automatic signal handling (requires -rdynamic compile flag)
         //gtk_builder_connect_signals(builder->gobj(), NULL);
 
-        // When automatic handling fails
-        Gtk::Button *version;
-        Gtk::Label *label;
-        builder->get_widget("version", version);
-        builder->get_widget("version-copied", label);
-        if(version) {
-            auto text = Inkscape::inkscape_version();
-            version->set_label(text);
-            version->signal_clicked().connect(
-                sigc::bind(&copy, version, label, std::move(text)));
-        }
+        auto text = Inkscape::inkscape_version();
+        version->set_label(text);
+        version->signal_clicked().connect(
+            sigc::bind(&copy, version, label, std::move(text)));
 
-        Gtk::Button *debug_info;
-        Gtk::Label *label2;
-        builder->get_widget("debug_info", debug_info);
-        builder->get_widget("debug-info-copied", label2);
-        if (debug_info) {
-            debug_info->signal_clicked().connect(
-                sigc::bind(&copy, version, label2, Inkscape::debug_info()));
-        }
+        debug_info->signal_clicked().connect(
+            sigc::bind(&copy, version, label2, Inkscape::debug_info()));
 
-        Gtk::Label *copyright;
-        builder->get_widget("copyright", copyright);
-        if (copyright) {
-            copyright->set_label(
-                Glib::ustring::compose(copyright->get_label(), Inkscape::inkscape_build_year()));
-        }
+        copyright->set_label(
+            Glib::ustring::compose(copyright->get_label(), Inkscape::inkscape_build_year()));
 
         // Render the about screen image via inkscape SPDocument
         auto filename = Resource::get_filename(Resource::SCREENS, "about.svg", true, false);
-        SPDocument *doc = SPDocument::createNewDoc(filename.c_str(), TRUE);
+        SPDocument *document = SPDocument::createNewDoc(filename.c_str(), true);
 
-        // Bind glade's container to our SVGViewWidget class
-        if(doc) {
-            auto const viewer = Gtk::make_managed<Inkscape::UI::View::SVGViewWidget>(doc);
-            double width = doc->getWidth().value("px");
-            double height = doc->getHeight().value("px");
+        // Bind builder's container to our SVGViewWidget class
+        if (document) {
+            auto const viewer = Gtk::make_managed<Inkscape::UI::View::SVGViewWidget>(document);
+            double width  = document->getWidth().value("px");
+            double height = document->getHeight().value("px");
             viewer->setResize(width, height);
 
-            Gtk::AspectFrame *splash_widget;
-            builder->get_widget("aspect-frame", splash_widget);
+            auto splash_widget = &get_widget<Gtk::AspectFrame>(builder, "aspect-frame");
             splash_widget->unset_label();
             splash_widget->set_shadow_type(Gtk::SHADOW_NONE);
             splash_widget->property_ratio() = width / height;
             splash_widget->add(*viewer);
             splash_widget->show_all();
         } else {
-            g_error("Error loading about screen SVG.");
+            g_error("Error loading about screen SVG: no document!");
         }
 
-        Gtk::TextView *authors;
-        builder->get_widget("credits-authors", authors);
         std::random_device rd;
         std::mt19937 g(rd());
-
-        if(authors) {
-            auto const [authors_data, capacity] = get_shuffled_lines("AUTHORS", g);
-            std::string str;
-            str.reserve(capacity);
-            for (auto const &author : authors_data) {
-                str.append(author).append(1, '\n');
-            }
-            authors->get_buffer()->set_text(str.c_str());
+        auto const [authors_data, capacity] = get_shuffled_lines("AUTHORS", g);
+        std::string str_authors;
+        str_authors.reserve(capacity);
+        for (auto const &author : authors_data) {
+            str_authors.append(author).append(1, '\n');
         }
+        authors->get_buffer()->set_text(str_authors.c_str());
 
-        Gtk::TextView *translators;
-        builder->get_widget("credits-translators", translators);
-        if(translators) {
-            auto const [translators_data, capacity] = get_shuffled_lines("TRANSLATORS", g);
-            std::string str;
-            str.reserve(capacity);
-            std::regex e("(.*?)(<.*|)");
-            for (auto const &translator : translators_data) {
-                str.append(std::regex_replace(translator, e, "$1")).append(1, '\n');
-            }
-            translators->get_buffer()->set_text(str.c_str());
+        auto const [translators_data, capacity2] = get_shuffled_lines("TRANSLATORS", g);
+        std::string str_translators;
+        str_translators.reserve(capacity2);
+        std::regex e("(.*?)(<.*|)");
+        for (auto const &translator : translators_data) {
+            str_translators.append(std::regex_replace(translator, e, "$1")).append(1, '\n');
         }
+        translators->get_buffer()->set_text(str_translators.c_str());
 
-        Gtk::Label *license;
-        builder->get_widget("license-text", license);
-        if(license) {
-            std::ifstream fn(Resource::get_filename(Resource::DOCS, "LICENSE"));
-            std::string str((std::istreambuf_iterator<char>(fn)),
-                             std::istreambuf_iterator<char>());
-            license->set_markup(str.c_str());
-        }
+        std::ifstream fn(Resource::get_filename(Resource::DOCS, "LICENSE"));
+        std::string str((std::istreambuf_iterator<char>(fn)),
+                         std::istreambuf_iterator<char>());
+        license->set_markup(str.c_str());
     }
-    if(window) {
+
+    if (window) {
         window->set_visible(true);
         tabs->set_current_page(0);
     } else {

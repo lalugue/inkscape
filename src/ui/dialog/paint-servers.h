@@ -33,6 +33,11 @@ class IconView;
 } // namespace Gtk
 
 class SPObject;
+class SPDocument;
+
+namespace Inkscape {
+class Selection;
+} // namespace Inkscape
 
 namespace Inkscape::UI::Dialog {
 
@@ -129,8 +134,9 @@ private:
     Gtk::ComboBoxText *dropdown = nullptr;
     Gtk::IconView *icon_view = nullptr;
     PaintServersColumns const columns;
-    auto_connection _defs_changed, _document_closed;
     MaybeString _common_stroke, _common_fill; ///< Common fill/stroke to all selected elements
+
+    auto_connection _defs_changed, _document_closed;
     auto_connection _item_activated;
 };
 
@@ -142,10 +148,9 @@ private:
   Local Variables:
   mode:c++
   c-file-style:"stroustrup"
-  c-basic-offset:2
   c-file-offsets:((innamespace . 0)(inline-open . 0)(case-label . +))
   indent-tabs-mode:nil
   fill-column:99
   End:
 */
-// vim: filetype=cpp:expandtab:shiftwidth=2:tabstop=8:softtabstop=2:fileencoding=utf-8:textwidth=99 :
+// vim: filetype=cpp:expandtab:shiftwidth=4:tabstop=8:softtabstop=4:fileencoding=utf-8:textwidth=99 :

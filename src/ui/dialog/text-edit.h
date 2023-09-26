@@ -19,15 +19,15 @@
 #ifndef INKSCAPE_UI_DIALOG_TEXT_EDIT_H
 #define INKSCAPE_UI_DIALOG_TEXT_EDIT_H
 
-#include <glibmm/refptr.h>
+#include <glibmm/refptr.h>              // for RefPtr
+#include <gtk/gtk.h>                    // for GtkEventControllerKey
 
-#include "helper/auto-connection.h"
-#include "ui/dialog/dialog-base.h"
-#include "ui/widget/font-selector.h"
-#include "ui/widget/font-variants.h"
-#include "ui/widget/frame.h"
-#include "util/action-accel.h"
-#include "util/font-collections.h"
+#include "helper/auto-connection.h"     // for auto_connection
+#include "ui/dialog/dialog-base.h"      // for DialogBase
+#include "ui/widget/font-selector.h"    // for FontSelector
+#include "ui/widget/font-variants.h"    // for FontVariants
+#include "ui/widget/font-variations.h"  // for FontVariations
+#include "util/action-accel.h"          // for ActionAccel
 
 namespace Glib {
 class ustring;
@@ -48,7 +48,6 @@ class Widget;
 } // namespace Gtk
 
 class SPItem;
-class FontInstance;
 class SPCSSAttr;
 
 namespace Inkscape::UI::Dialog {
@@ -94,7 +93,7 @@ protected:
      * @param dostyle Indicates whether the modification of the user includes a style change.
      * @param content Indicates whether the modification of the user includes a style change. Actually refers to the question if we do want to show the content? (Parameter currently not used)
      */
-    void onReadSelection (gboolean style, gboolean content);
+    void onReadSelection (bool style, bool content);
 
     /**
      * This function would disable undo and redo if the text_view widget is in focus
@@ -156,34 +155,36 @@ protected:
     SPCSSAttr *fillTextStyle ();
 
 private:
+    Glib::RefPtr<Gtk::Builder> builder;
+
     // Tab 1: Font ---------------------- //
-    Gtk::Box *settings_and_filters_box;
-    Gtk::MenuButton *filter_menu_button;
-    Gtk::Button *reset_button;
-    Gtk::SearchEntry *search_entry;
-    Gtk::Label *font_count_label;
-    Gtk::Popover *filter_popover;
-    Gtk::Box *popover_box;
-    Gtk::Frame *frame;
-    Gtk::Label *frame_label;
-    Gtk::Button *collection_editor_button;
-    Gtk::ListBox *collections_list;
+    Gtk::Box &settings_and_filters_box;
+    Gtk::MenuButton &filter_menu_button;
+    Gtk::Button &reset_button;
+    Gtk::SearchEntry &search_entry;
+    Gtk::Label &font_count_label;
+    Gtk::Popover &filter_popover;
+    Gtk::Box &popover_box;
+    Gtk::Frame &frame;
+    Gtk::Label &frame_label;
+    Gtk::Button &collection_editor_button;
+    Gtk::ListBox &collections_list;
+    Gtk::Label &preview_label;  // Share with variants tab?
 
     Inkscape::UI::Widget::FontSelector font_selector;
     Inkscape::UI::Widget::FontVariations font_variations;
-    Gtk::Label *preview_label;  // Share with variants tab?
 
     // Tab 2: Text ---------------------- //
-    Gtk::TextView *text_view;
+    Gtk::TextView &text_view;
     Glib::RefPtr<Gtk::TextBuffer> text_buffer;
 
     // Tab 3: Features  ----------------- //
     Inkscape::UI::Widget::FontVariants font_features;
-    Gtk::Label *preview_label2; // Could reparent preview_label but having a second label is probably easier.
+    Gtk::Label &preview_label2; // Could reparent preview_label but having a second label is probably easier.
 
     // Shared ------- ------------------ //
-    Gtk::Button *setasdefault_button;
-    Gtk::Button *apply_button;
+    Gtk::Button &setasdefault_button;
+    Gtk::Button &apply_button;
 
     // Signals
     auto_connection selectChangedConn;
@@ -195,8 +196,8 @@ private:
     auto_connection fontCollectionsUpdate;
 
     // Other
-    double selected_fontsize;
-    bool blocked;
+    double selected_fontsize = 12;
+    bool blocked = false;
 
     // Track undo and redo keyboard shortcuts
     Util::ActionAccel _undo, _redo;

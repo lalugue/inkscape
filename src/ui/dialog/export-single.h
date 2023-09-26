@@ -33,6 +33,7 @@ class Grid;
 class Label;
 class ProgressBar;
 class RadioButton;
+class ScrolledWindow;
 class SpinButton;
 } // namespace Gtk
 
@@ -46,10 +47,6 @@ namespace Inkscape {
 
 class Selection;
 class Preferences;
-
-namespace Util {
-class Unit;
-} // namespace Util
 
 namespace UI {
 
@@ -117,26 +114,27 @@ private:
     std::map<sb_type, Gtk::Label *> spin_labels;
     std::map<selection_mode, Gtk::RadioButton *> selection_buttons;
 
-    Gtk::Box *si_units_row = nullptr;
     Gtk::CheckButton *show_export_area = nullptr;
-    Inkscape::UI::Widget::UnitMenu *units = nullptr;
-    Gtk::FlowBox *pages_list = nullptr;
 
-    Gtk::CheckButton *si_hide_all = nullptr;
-    Gtk::CheckButton *si_show_preview = nullptr;
+    // In order of intialization
+    Gtk::FlowBox &pages_list;
+    Gtk::ScrolledWindow &pages_list_box;
+    Gtk::Grid &size_box;
+    Inkscape::UI::Widget::UnitMenu &units;
+    Gtk::Box &si_units_row;
+    Gtk::CheckButton &si_hide_all;
+    Gtk::CheckButton &si_show_preview;
 
-    ExportPreview *preview = nullptr;
+    ExportPreview &preview;
+    Gtk::Box &preview_box;
 
-    ExtensionList *si_extension_cb = nullptr;
-    Gtk::Entry *si_filename_entry = nullptr;
-    Gtk::Button *si_export = nullptr;
-    Gtk::Box *adv_box = nullptr;
-    Gtk::Grid *size_box = nullptr;
-    Gtk::ProgressBar *_prog = nullptr;
-    Gtk::Widget *pages_list_box = nullptr;
-    Gtk::Widget *preview_box = nullptr;
-    Gtk::Widget *progress_box = nullptr;
-    Gtk::Button *cancel_button = nullptr;
+    ExtensionList &si_extension_cb;
+
+    Gtk::Entry &si_filename_entry;
+    Gtk::Button &si_export;
+    Gtk::ProgressBar &progress_bar;
+    Gtk::Widget &progress_box;
+    Gtk::Button &cancel_button;
 
     bool filename_modified = false;
     Glib::ustring original_name;

@@ -25,11 +25,12 @@
 #include "preferences.h"
 
 namespace Gtk {
-    class Button;
-    class ComboBox;
-    class SpinButton;
-    class ToggleButton;
-}
+class Builder;
+class Button;
+class ComboBox;
+class SpinButton;
+class ToggleButton;
+} // namespace Gtk
 
 class SPDesktop;
 
@@ -56,20 +57,21 @@ public:
 private:
 
     // ********* Widgets ********** //
+    Glib::RefPtr<Gtk::Builder> builder;
 
-    Gtk::Box* align_and_distribute_box    = nullptr;
-    Gtk::Box* align_and_distribute_object = nullptr; // Hidden when node tool active.
-    Gtk::Box* align_and_distribute_node   = nullptr; // Visible when node tool active.
+    Gtk::Box &align_and_distribute_box;
+    Gtk::Box &align_and_distribute_object;  // Hidden when node tool active.
+    Gtk::Box &align_and_distribute_node;    // Visible when node tool active.
 
     // Align
-    Gtk::ToggleButton* align_move_as_group      = nullptr;
-    Gtk::ComboBox*     align_relative_object    = nullptr;
-    Gtk::ComboBox*     align_relative_node      = nullptr;
+    Gtk::ToggleButton &align_move_as_group;
+    Gtk::ComboBox     &align_relative_object;
+    Gtk::ComboBox     &align_relative_node;
 
     // Remove overlap
-    Gtk::Button*       remove_overlap_button  = nullptr;
-    Gtk::SpinButton*   remove_overlap_hgap    = nullptr;
-    Gtk::SpinButton*   remove_overlap_vgap    = nullptr;
+    Gtk::Button       &remove_overlap_button;
+    Gtk::SpinButton   &remove_overlap_hgap;
+    Gtk::SpinButton   &remove_overlap_vgap;
 
 
     // ********* Signal handlers ********** //

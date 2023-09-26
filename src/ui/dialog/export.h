@@ -22,7 +22,6 @@
 
 #include "helper/auto-connection.h"
 #include "ui/dialog/dialog-base.h"
-#include "ui/widget/scrollprotected.h"
 
 namespace Gtk {
 class Box;
@@ -36,10 +35,6 @@ class SPPage;
 namespace Inkscape {
 
 class Preferences;
-
-namespace Util {
-class Unit;
-} // namexpace Util
 
 namespace Extension {
 class Output;
@@ -67,11 +62,10 @@ public:
 
 private:
     Glib::RefPtr<Gtk::Builder> builder;
-    Gtk::Box *container = nullptr;            // Main Container
-    Gtk::Notebook *export_notebook = nullptr; // Notebook Container for single and batch export
-
-    SingleExport *single_image = nullptr;
-    BatchExport *batch_export = nullptr;
+    Gtk::Box      &container;       // Main Container
+    Gtk::Notebook &export_notebook; // Notebook Container for single and batch export
+    SingleExport  &single_image;
+    BatchExport   &batch_export;
 
     Inkscape::Preferences *prefs = nullptr;
 
@@ -82,11 +76,11 @@ private:
     auto_connection notebook_signal;
 
     // signals callback
-    void onNotebookPageSwitch(Widget *page, guint page_number);
+    void onNotebookPageSwitch(Widget *page, unsigned page_number);
     void documentReplaced() override;
     void desktopReplaced() override;
     void selectionChanged(Inkscape::Selection *selection) override;
-    void selectionModified(Inkscape::Selection *selection, guint flags) override;
+    void selectionModified(Inkscape::Selection *selection, unsigned flags) override;
 
 public:
     static std::string absolutizePath(SPDocument *doc, const std::string &filename);

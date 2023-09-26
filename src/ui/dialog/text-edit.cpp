@@ -50,9 +50,7 @@
 #include "desktop-style.h"
 #include "desktop.h"
 #include "dialog-container.h"
-#include "dialog-notebook.h"
 #include "document-undo.h"
-#include "document.h"
 #include "inkscape.h"
 #include "selection.h"
 #include "style.h"
@@ -60,15 +58,16 @@
 
 #include "io/resource.h"
 #include "libnrtype/font-factory.h"
-#include "libnrtype/font-instance.h"
 #include "libnrtype/font-lister.h"
 #include "object/sp-flowtext.h"
 #include "object/sp-text.h"
 #include "svg/css-ostringstream.h"
+#include "ui/builder-utils.h"
 #include "ui/controller.h"
 #include "ui/icon-names.h"
 #include "ui/pack.h"
 #include "ui/util.h"
+#include "util/font-collections.h"
 #include "util/units.h"
 
 namespace Inkscape::UI::Dialog {
@@ -85,48 +84,40 @@ static Glib::ustring const &getSamplePhrase()
 
 TextEdit::TextEdit()
     : DialogBase("/dialogs/textandfont", "Text")
+
+    , builder(create_builder("dialog-text-edit.glade"))
+      // Font
+    , settings_and_filters_box (get_widget<Gtk::Box>        (builder, "settings_and_filters_box"))
+    , filter_menu_button       (get_widget<Gtk::MenuButton> (builder, "filter_menu_button"))
+    , reset_button             (get_widget<Gtk::Button>     (builder, "reset_button"))
+    , search_entry             (get_widget<Gtk::SearchEntry>(builder, "search_entry"))
+    , font_count_label         (get_widget<Gtk::Label>      (builder, "font_count_label"))
+    , filter_popover           (get_widget<Gtk::Popover>    (builder, "filter_popover"))
+    , popover_box              (get_widget<Gtk::Box>        (builder, "popover_box"))
+    , frame                    (get_widget<Gtk::Frame>      (builder, "frame"))
+    , frame_label              (get_widget<Gtk::Label>      (builder, "frame_label"))
+    , collection_editor_button (get_widget<Gtk::Button>     (builder, "collection_editor_button"))
+    , collections_list         (get_widget<Gtk::ListBox>    (builder, "collections_list"))
+    , preview_label            (get_widget<Gtk::Label>      (builder, "preview_label"))
+      // Text
+    , text_view                (get_widget<Gtk::TextView>   (builder, "text_view"))
+      // Features
+    , preview_label2           (get_widget<Gtk::Label>      (builder, "preview_label2"))
+      // Shared
+    , setasdefault_button      (get_widget<Gtk::Button>     (builder, "setasdefault_button"))
+    , apply_button             (get_widget<Gtk::Button>     (builder, "apply_button"))
+
     , blocked(false)
     , _undo{"doc.undo"}
     , _redo{"doc.redo"}
 {
-    std::string gladefile = get_filename_string(Inkscape::IO::Resource::UIS, "dialog-text-edit.glade");
-    Glib::RefPtr<Gtk::Builder> builder;
-    try {
-        builder = Gtk::Builder::create_from_file(gladefile);
-    } catch (const Glib::Error &ex) {
-        g_warning("GtkBuilder file loading failed for save template dialog");
-        return;
-    }
 
     Inkscape::FontCollections *font_collections = Inkscape::FontCollections::get();
 
-    Gtk::Box *contents;
-    Gtk::Notebook *notebook;
-    Gtk::Box *font_box;
-    Gtk::Box *feat_box;
-
-    builder->get_widget("contents", contents);
-    builder->get_widget("notebook", notebook);
-    builder->get_widget("font_box", font_box);
-    builder->get_widget("feat_box", feat_box);
-    builder->get_widget("preview_label", preview_label);
-    builder->get_widget("preview_label2", preview_label2);
-    builder->get_widget("text_view", text_view);
-    builder->get_widget("setasdefault_button", setasdefault_button);
-    builder->get_widget("apply_button", apply_button);
-
-    builder->get_widget("settings_and_filters_box", settings_and_filters_box);
-    builder->get_widget("filter_menu_button", filter_menu_button);
-    builder->get_widget("reset_button", reset_button);
-    builder->get_widget("search_entry", search_entry);
-    builder->get_widget("font_count_label", font_count_label);
-    builder->get_widget("filter_popover", filter_popover);
-    builder->get_widget("popover_box", popover_box);
-    builder->get_widget("frame", frame);
-    builder->get_widget("frame_label", frame_label);
-    builder->get_widget("collection_editor_button", collection_editor_button);
-    builder->get_widget("collections_list", collections_list);
-
+    auto contents = &get_widget<Gtk::Box>     (builder, "contents");
+    auto notebook = &get_widget<Gtk::Notebook>(builder, "notebook");
+    auto font_box = &get_widget<Gtk::Box>     (builder, "font_box");
+    auto feat_box = &get_widget<Gtk::Box>     (builder, "feat_box");
     text_buffer = Glib::RefPtr<Gtk::TextBuffer>::cast_static(builder->get_object("text_buffer"));
 
     UI::pack_start(*font_box, font_selector, true, true);
@@ -135,14 +126,14 @@ TextEdit::TextEdit()
     feat_box->reorder_child(font_features, 1);
 
     // filter_popover->set_modal(false); // Stay open until button clicked again.
-    filter_popover->signal_show().connect([=](){
+    filter_popover.signal_show().connect([=](){
         // update font collections checkboxes
         display_font_collections();
     }, false);
 
-    filter_menu_button->set_image_from_icon_name(INKSCAPE_ICON("font_collections"));
-    filter_menu_button->set_always_show_image(true);
-    filter_menu_button->set_label(_("Collections"));
+    filter_menu_button.set_image_from_icon_name(INKSCAPE_ICON("font_collections"));
+    filter_menu_button.set_always_show_image(true);
+    filter_menu_button.set_label(_("Collections"));
 
 #ifdef WITH_GSPELL
     /*
@@ -151,23 +142,23 @@ TextEdit::TextEdit()
        gtkspell_set_language call in; see advanced.c example in gtkspell docs).
        onReadSelection looks like a suitable place.
     */
-    GspellTextView *gspell_view = gspell_text_view_get_from_gtk_text_view(text_view->gobj());
+    GspellTextView *gspell_view = gspell_text_view_get_from_gtk_text_view(text_view.gobj());
     gspell_text_view_basic_setup(gspell_view);
 #endif
 
     add(*contents);
 
     /* Signal handlers */
-    Controller::add_key<&TextEdit::captureUndo, nullptr>(*text_view, *this);
+    Controller::add_key<&TextEdit::captureUndo, nullptr>(text_view, *this);
     text_buffer->signal_changed().connect([=](){ onChange(); });
-    setasdefault_button->signal_clicked().connect([=](){ onSetDefault(); });
-    apply_button->signal_clicked().connect([=](){ onApply(); });
+    setasdefault_button.signal_clicked().connect([=](){ onSetDefault(); });
+    apply_button.signal_clicked().connect([=](){ onApply(); });
     fontChangedConn = font_selector.connectChanged(sigc::mem_fun(*this, &TextEdit::onFontChange));
     fontFeaturesChangedConn = font_features.connectChanged([=](){ onChange(); });
     notebook->signal_switch_page().connect(sigc::mem_fun(*this, &TextEdit::onFontFeatures));
-    search_entry->signal_search_changed().connect([=](){ on_search_entry_changed(); });
-    reset_button->signal_clicked().connect([=](){ on_reset_button_pressed(); });
-    collection_editor_button->signal_clicked().connect([=](){ on_fcm_button_clicked(); });
+    search_entry.signal_search_changed().connect([=](){ on_search_entry_changed(); });
+    reset_button.signal_clicked().connect([=](){ on_reset_button_pressed(); });
+    collection_editor_button.signal_clicked().connect([=](){ on_fcm_button_clicked(); });
     Inkscape::FontLister::get_instance()->connectUpdate(sigc::mem_fun(*this, &TextEdit::change_font_count_label));
     fontCollectionsUpdate = font_collections->connect_update([=]() { display_font_collections(); });
     fontCollectionsChangedSelection = font_collections->connect_selection_update([=]() { display_font_collections(); });
@@ -198,7 +189,7 @@ bool TextEdit::captureUndo(GtkEventControllerKey const * const controller,
     return false;
 }
 
-void TextEdit::onReadSelection ( gboolean dostyle, gboolean /*docontent*/ )
+void TextEdit::onReadSelection ( bool dostyle, bool /*docontent*/ )
 {
     if (blocked)
         return;
@@ -213,9 +204,9 @@ void TextEdit::onReadSelection ( gboolean dostyle, gboolean /*docontent*/ )
     {
         guint items = getSelectedTextCount ();
         bool has_one_item = items == 1;
-        text_view->set_sensitive(has_one_item);
-        apply_button->set_sensitive(false);
-        setasdefault_button->set_sensitive(true);
+        text_view.set_sensitive(has_one_item);
+        apply_button.set_sensitive(false);
+        setasdefault_button.set_sensitive(true);
 
         Glib::ustring str = sp_te_get_string_multiline(text);
         if (!str.empty()) {
@@ -231,9 +222,9 @@ void TextEdit::onReadSelection ( gboolean dostyle, gboolean /*docontent*/ )
 
         text->getRepr(); // was being called but result ignored. Check this.
     } else {
-        text_view->set_sensitive(false);
-        apply_button->set_sensitive(false);
-        setasdefault_button->set_sensitive(false);
+        text_view.set_sensitive(false);
+        apply_button.set_sensitive(false);
+        setasdefault_button.set_sensitive(false);
     }
 
     if (dostyle && text) {
@@ -287,8 +278,8 @@ void TextEdit::setPreviewText (Glib::ustring const &font_spec, Glib::ustring con
                                Glib::ustring const &phrase)
 {
     if (font_spec.empty()) {
-        preview_label->set_markup("");
-        preview_label2->set_markup("");
+        preview_label.set_markup("");
+        preview_label2.set_markup("");
         return;
     }
 
@@ -330,8 +321,8 @@ void TextEdit::setPreviewText (Glib::ustring const &font_spec, Glib::ustring con
     auto const markup = Glib::ustring::compose("<span font='%1' size='%2' %3>%4</span>",
                                                font_spec_escaped, size, font_features_attr,
                                                phrase_escaped);
-    preview_label->set_markup (markup);
-    preview_label2->set_markup (markup);
+    preview_label.set_markup (markup);
+    preview_label2.set_markup (markup);
 }
 
 SPItem *TextEdit::getSelectedTextItem ()
@@ -441,7 +432,7 @@ void TextEdit::onSetDefault()
 
     sp_repr_css_attr_unref (css);
 
-    setasdefault_button->set_sensitive ( false );
+    setasdefault_button.set_sensitive ( false );
 }
 
 void TextEdit::onApply()
@@ -469,7 +460,7 @@ void TextEdit::onApply()
     if (items == 0) {
         // no text objects; apply style to prefs for new objects
         prefs->mergeStyle("/tools/text/style", css);
-        setasdefault_button->set_sensitive ( false );
+        setasdefault_button.set_sensitive ( false );
 
     } else if (items == 1) {
         // exactly one text object; now set its text, too
@@ -494,7 +485,7 @@ void TextEdit::onApply()
 
     // complete the transaction
     DocumentUndo::done(desktop->getDocument(), _("Set text style"), INKSCAPE_ICON("draw-text"));
-    apply_button->set_sensitive ( false );
+    apply_button.set_sensitive ( false );
 
     sp_repr_css_attr_unref (css);
     Inkscape::FontLister::get_instance()->update_font_list(desktop->getDocument());
@@ -504,7 +495,7 @@ void TextEdit::onApply()
 
 void TextEdit::display_font_collections()
 {
-    UI::delete_all_children(*collections_list);
+    UI::delete_all_children(collections_list);
 
     FontCollections *font_collections = Inkscape::FontCollections::get();
 
@@ -522,7 +513,7 @@ void TextEdit::display_font_collections()
         row->set_can_focus(false);
         row->add(*btn);
         row->show_all();
-        collections_list->append(*row);
+        collections_list.append(*row);
     }
 
     // Insert row separator.
@@ -532,7 +523,7 @@ void TextEdit::display_font_collections()
     sep_row->set_can_focus(false);
     sep_row->add(*sep);
     sep_row->show_all();
-    collections_list->append(*sep_row);
+    collections_list.append(*sep_row);
 
     // Insert user collections.
     for (auto const& col: font_collections->get_collections()) {
@@ -548,7 +539,7 @@ void TextEdit::display_font_collections()
         row->set_can_focus(false);
         row->add(*btn);
         row->show_all();
-        collections_list->append(*row);
+        collections_list.append(*row);
     }
 }
 
@@ -567,7 +558,7 @@ void TextEdit::onFontFeatures(Gtk::Widget * widgt, int pos)
 
 void TextEdit::on_search_entry_changed()
 {
-    auto search_txt = search_entry->get_text();
+    auto search_txt = search_entry.get_text();
     font_selector.unset_model();
     Inkscape::FontLister *font_lister = Inkscape::FontLister::get_instance();
     font_lister->show_results(search_txt);
@@ -577,7 +568,7 @@ void TextEdit::on_search_entry_changed()
 void TextEdit::on_reset_button_pressed()
 {
     FontCollections *font_collections = Inkscape::FontCollections::get();
-    search_entry->set_text("");
+    search_entry.set_text("");
 
     // Un-select all the selected font collections.
     font_collections->clear_selected_collections();
@@ -592,7 +583,7 @@ void TextEdit::on_reset_button_pressed()
 void TextEdit::change_font_count_label()
 {
     auto label = Inkscape::FontLister::get_instance()->get_font_count_label();
-    font_count_label->set_label(label);
+    font_count_label.set_label(label);
 }
 
 void TextEdit::on_fcm_button_clicked()
@@ -622,10 +613,10 @@ void TextEdit::onChange()
 
     SPItem *text = getSelectedTextItem();
     if (text) {
-        apply_button->set_sensitive ( true );
+        apply_button.set_sensitive ( true );
     }
 
-    setasdefault_button->set_sensitive ( true);
+    setasdefault_button.set_sensitive ( true);
 }
 
 void TextEdit::onFontChange(Glib::ustring const & /*fontspec*/)

@@ -136,7 +136,7 @@ ContextMenu::ContextMenu(SPDesktop *desktop, SPObject *object, bool hide_layers_
     //           << "  locked: " << std::boolalpha << has_locked_below_cursor
     //           << std::endl;
 
-    // clang-tidy off
+    // clang-format off
 
     // Undo/redo
     // gmenu_section = Gio::Menu::create();
@@ -331,7 +331,7 @@ ContextMenu::ContextMenu(SPDesktop *desktop, SPObject *object, bool hide_layers_
         gmenu->append_section(gmenu_section);
 
     }
-    // clang-tidy on
+    // clang-format on
 
     bind_model(gmenu);
     set_position(Gtk::POS_BOTTOM);

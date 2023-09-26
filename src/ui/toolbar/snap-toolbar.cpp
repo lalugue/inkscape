@@ -26,58 +26,43 @@
 #include "ui/builder-utils.h"
 #include "ui/pack.h"
 
+
 namespace Inkscape::UI::Toolbar {
 
 SnapToolbar::SnapToolbar()
     : Gtk::Box()
+    , builder(UI::create_builder("toolbar-snap.ui"))
+    , snap_toolbar     (UI::get_widget<Gtk::Box>           (builder, "snap-toolbar"))
+    , btn_simple       (UI::get_widget<Gtk::Button>        (builder, "btn-simple"))
+    , btn_advanced     (UI::get_widget<Gtk::Button>        (builder, "btn-advanced"))
+    , scroll_permanent (UI::get_widget<Gtk::ScrolledWindow>(builder, "scroll-permanent"))
+    , box_permanent    (UI::get_widget<Gtk::Box>           (builder, "box-permanent"))
 {
     set_name("SnapToolbar");
 
-    bool simple_snap = true;
+    Gtk::LinkButton &link_simple  (UI::get_widget<Gtk::LinkButton>(builder, "link-simple"));
+    Gtk::LinkButton &link_advanced(UI::get_widget<Gtk::LinkButton>(builder, "link-advanced"));
 
-    auto builder = Inkscape::UI::create_builder("toolbar-snap.ui");
-    builder->get_widget("snap-toolbar", snap_toolbar);
-    if (!snap_toolbar) {
-        std::cerr << "InkscapeWindow: Failed to load snap toolbar!" << std::endl;
-        return;
-    }
-
-    UI::pack_start(*this, *snap_toolbar, false, false);
+    UI::pack_start(*this, snap_toolbar, false, false);
 
     static constexpr const char* snap_bar_simple_path = "/toolbox/simplesnap";
 
-    Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-    simple_snap = prefs->getBool(snap_bar_simple_path, simple_snap);
-
-    Gtk::LinkButton* link_simple = nullptr;
-    Gtk::LinkButton* link_advanced = nullptr;
-    builder->get_widget("btn-simple",       btn_simple);
-    builder->get_widget("btn-advanced",     btn_advanced);
-    builder->get_widget("link-simple",      link_simple);
-    builder->get_widget("link-advanced",    link_advanced);
-    builder->get_widget("box-permanent",    box_permanent);
-    builder->get_widget("scroll-permanent", scroll_permanent);
-
-    if (!(btn_simple && btn_advanced && link_simple && link_advanced && scroll_permanent && box_permanent)) {
-        std::cerr << "SnapToolbar::SnapToolbar: Failed to load widgets from .ui file!" << std::endl;
-        return;
-    }
-
     // Watch snap bar preferences;
+    Inkscape::Preferences* prefs = Inkscape::Preferences::get();
     _observer = prefs->createObserver(snap_bar_simple_path, [=](const Preferences::Entry& entry) {
         mode_update();
     });
 
     // switch to simple mode
-    link_simple->signal_activate_link().connect([=](){
-        g_timeout_add(250, &SnapToolbar::show_popover, btn_simple);
+    link_simple.signal_activate_link().connect([=](){
+        g_timeout_add(250, &SnapToolbar::show_popover, &btn_simple);
         Inkscape::Preferences::get()->setInt(snap_bar_simple_path, SIMPLE);
         return true;
     }, false);
 
     // switch to advanced mode
-    link_advanced->signal_activate_link().connect([=](){
-        g_timeout_add(250, &SnapToolbar::show_popover, btn_advanced);
+    link_advanced.signal_activate_link().connect([=](){
+        g_timeout_add(250, &SnapToolbar::show_popover, &btn_advanced);
         Inkscape::Preferences::get()->setInt(snap_bar_simple_path, ADVANCED);
         return true;
     }, false);
@@ -92,27 +77,27 @@ void SnapToolbar::mode_update() {
     Inkscape::Preferences* prefs = Inkscape::Preferences::get();
     Mode mode = (Mode)prefs->getInt("/toolbox/simplesnap", 1);
 
-    btn_simple->set_visible(false);
-    btn_advanced->set_visible(false);
-    scroll_permanent->set_visible(false);
+    btn_simple.set_visible(false);
+    btn_advanced.set_visible(false);
+    scroll_permanent.set_visible(false);
 
     // Show/hide
     switch (mode) {
         case SIMPLE:
-            btn_simple->set_visible(true);
+            btn_simple.set_visible(true);
             set_orientation(Gtk::ORIENTATION_HORIZONTAL);
-            snap_toolbar->set_orientation(Gtk::ORIENTATION_HORIZONTAL);
+            snap_toolbar.set_orientation(Gtk::ORIENTATION_HORIZONTAL);
             transition_to_simple_snapping();  // Defined in actions-canvas-snapping.cpp
             break;
         case ADVANCED:
-            btn_advanced->set_visible(true);
+            btn_advanced.set_visible(true);
             set_orientation(Gtk::ORIENTATION_HORIZONTAL);
-            snap_toolbar->set_orientation(Gtk::ORIENTATION_HORIZONTAL);
+            snap_toolbar.set_orientation(Gtk::ORIENTATION_HORIZONTAL);
             break;
         case PERMANENT:
-            scroll_permanent->set_visible(true);
-            box_permanent->set_orientation(Gtk::ORIENTATION_VERTICAL);
-            snap_toolbar->set_orientation(Gtk::ORIENTATION_VERTICAL);
+            scroll_permanent.set_visible(true);
+            box_permanent.set_orientation(Gtk::ORIENTATION_VERTICAL);
+            snap_toolbar.set_orientation(Gtk::ORIENTATION_VERTICAL);
             break;
         default:
             std::cerr << "SnapToolbar::mode_update: unhandled case!" << std::endl;

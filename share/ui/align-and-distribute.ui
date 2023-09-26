@@ -257,12 +257,14 @@
     <property name="use-fallback">True</property>
   </object>
   <object class="GtkBox" id="align-and-distribute-box">
+    <property name="name">align-and-distribute-box</property>
     <property name="visible">True</property>
     <property name="margin">8</property>
     <property name="orientation">vertical</property>
     <property name="spacing">4</property>
     <child>
       <object class="GtkBox" id="align-and-distribute-object">
+        <property name="name">align-and-distribute-object</property>
         <property name="visible">True</property>
         <property name="no-show-all">True</property>
         <property name="orientation">vertical</property>
@@ -953,7 +955,8 @@
     </child>
     <child>
       <object class="GtkBox" id="align-and-distribute-node">
-        <property name="visible">True</property>
+        <property name="name">align-and-distribute-node</property>
+        <property name="visible">False</property>
         <property name="no-show-all">True</property>
         <property name="orientation">vertical</property>
         <property name="spacing">4</property>

@@ -131,7 +131,7 @@ public:
     void close();
     void toggle();
 
-    Gtk::Box *get_base_widget();
+    Gtk::Box &get_base_widget();
 
 private:
     using ActionPtr = Glib::RefPtr<Gio::Action>;
@@ -198,13 +198,13 @@ private:
 
     // Widgets
     Glib::RefPtr<Gtk::Builder> _builder;
-    Gtk::Box *_CPBase;
-    Gtk::Box *_CPListBase;
-    Gtk::SearchEntry *_CPFilter;
-    Gtk::ListBox *_CPSuggestions;
-    Gtk::ListBox *_CPHistory;
-    Gtk::ScrolledWindow *_CPSuggestionsScroll;
-    Gtk::ScrolledWindow *_CPHistoryScroll;
+    Gtk::Box &_CPBase;
+    Gtk::Box &_CPListBase;
+    Gtk::SearchEntry &_CPFilter;
+    Gtk::ListBox &_CPSuggestions;
+    Gtk::ListBox &_CPHistory;
+    Gtk::ScrolledWindow &_CPSuggestionsScroll;
+    Gtk::ScrolledWindow &_CPHistoryScroll;
 
     // Data
     const int _max_height_requestable = 360;

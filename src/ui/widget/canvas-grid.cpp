@@ -66,7 +66,7 @@ CanvasGrid::CanvasGrid(SPDesktopWidget *dtw)
 
     // Canvas overlay
     _canvas_overlay.add(*_canvas);
-    _canvas_overlay.add_overlay(*_command_palette->get_base_widget());
+    _canvas_overlay.add_overlay(_command_palette->get_base_widget());
     _canvas_overlay.add_overlay(*_notice);
 
     // Horizontal Ruler

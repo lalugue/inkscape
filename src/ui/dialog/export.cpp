@@ -26,74 +26,52 @@
 #include <gtkmm/box.h>
 #include <gtkmm/builder.h>
 #include <gtkmm/notebook.h>
-#include <png.h>
 
 #include "desktop.h"
-#include "document-undo.h"
 #include "document.h"
-#include "file.h"
-#include "inkscape-window.h"
 #include "inkscape.h"
 #include "preferences.h"
+#include "message.h"                        // for MessageType
 #include "message-stack.h"
-#include "selection-chemistry.h"
 
 #include "color/color-conv.h"
-#include "extension/db.h"
 #include "extension/output.h"
 #include "helper/png-write.h"
 #include "io/resource.h"
-#include "io/sys.h"
-#include "object/object-set.h"
-#include "object/sp-namedview.h"
-#include "object/sp-page.h"
-#include "object/sp-root.h"
-#include "object/weakptr.h"
-#include "ui/dialog-events.h"
-#include "ui/dialog/dialog-notebook.h"
+#include "io/sys.h"                         // for sanitizeString, file_test
+#include "object/object-set.h"              // for ObjectSet
+#include "object/sp-item.h"                 // for SPItem
+#include "object/sp-object.h"               // for SPObject
+#include "object/sp-page.h"                 // for SPPage
+#include "object/sp-root.h"                 // for SPRoot
+#include "object/weakptr.h"                 // for SPWeakPtr
+#include "ui/builder-utils.h"
 #include "ui/dialog/export-batch.h"
 #include "ui/dialog/export-single.h"
-#include "ui/dialog/filedialog.h"
 #include "ui/interface.h"
-#include "ui/widget/color-picker.h"
-#include "ui/widget/scrollprotected.h"
-#include "ui/widget/unit-menu.h"
-
-using Inkscape::Util::unit_table;
 
 namespace Inkscape::UI::Dialog {
 
 Export::Export()
     : DialogBase("/dialogs/export/", "Export")
+    , builder(create_builder("dialog-export.glade"))
+    , container       (get_widget<Gtk::Box>            (builder, "export-box"))
+    , export_notebook (get_widget<Gtk::Notebook>       (builder, "export-notebook"))
+    // Initialise Single Export and its objects
+    , single_image    (get_derived_widget<SingleExport>(builder, "single-image"))
+    // Initialise Batch Export and its objects
+    , batch_export    (get_derived_widget<BatchExport> (builder, "batch-export"))
 {
-    std::string gladefile = get_filename_string(Inkscape::IO::Resource::UIS, "dialog-export.glade");
-
-    try {
-        builder = Gtk::Builder::create_from_file(gladefile);
-    } catch (const Glib::Error &ex) {
-        g_error("Glade file loading failed for export screen");
-        return;
-    }
-
     prefs = Inkscape::Preferences::get();
 
-    builder->get_widget("export-box", container);
-    add(*container);
+    add(container);
     show_all_children();
 
-    builder->get_widget("export-notebook", export_notebook);
-
-    // Initialise Single Export and its objects
-    builder->get_widget_derived("single-image", single_image);
-
-    // Initialise Batch Export and its objects
-    builder->get_widget_derived("batch-export", batch_export);
-
-    container->signal_realize().connect([=]() {
+    container.signal_realize().connect([=]() {
         setDefaultNotebookPage();
-        notebook_signal = export_notebook->signal_switch_page().connect(sigc::mem_fun(*this, &Export::onNotebookPageSwitch));
+        notebook_signal = export_notebook.signal_switch_page().connect(sigc::mem_fun(*this, &Export::onNotebookPageSwitch));
     });
-    container->signal_unrealize().connect([=]() {
+    container.signal_unrealize().connect([=]() {
         notebook_signal.disconnect();
     });
 }
@@ -103,59 +81,59 @@ Export::~Export() = default;
 // Set current page based on preference/last visited page
 void Export::setDefaultNotebookPage()
 {
-    pages[BATCH_EXPORT] = export_notebook->page_num(*batch_export->get_parent());
-    pages[SINGLE_IMAGE] = export_notebook->page_num(*single_image->get_parent());
-    export_notebook->set_current_page(pages[SINGLE_IMAGE]);
+    pages[BATCH_EXPORT] = export_notebook.page_num(*batch_export.get_parent());
+    pages[SINGLE_IMAGE] = export_notebook.page_num(*single_image.get_parent());
+    export_notebook.set_current_page(pages[SINGLE_IMAGE]);
 }
 
 void Export::documentReplaced()
 {
-    single_image->setDocument(getDocument());
-    batch_export->setDocument(getDocument());
+    single_image.setDocument(getDocument());
+    batch_export.setDocument(getDocument());
 }
 
 void Export::desktopReplaced()
 {
-    single_image->setDesktop(getDesktop());
-    single_image->setApp(getApp());
-    batch_export->setDesktop(getDesktop());
-    batch_export->setApp(getApp());
+    single_image.setDesktop(getDesktop());
+    single_image.setApp(getApp());
+    batch_export.setDesktop(getDesktop());
+    batch_export.setApp(getApp());
     // Called previously, but we need post-desktop call too
     documentReplaced();
 }
 
 void Export::selectionChanged(Inkscape::Selection *selection)
 {
-    auto current_page = export_notebook->get_current_page();
+    auto current_page = export_notebook.get_current_page();
     if (current_page == pages[SINGLE_IMAGE]) {
-        single_image->selectionChanged(selection);
+        single_image.selectionChanged(selection);
     }
     if (current_page == pages[BATCH_EXPORT]) {
-        batch_export->selectionChanged(selection);
+        batch_export.selectionChanged(selection);
     }
 }
-void Export::selectionModified(Inkscape::Selection *selection, guint flags)
+void Export::selectionModified(Inkscape::Selection *selection, unsigned flags)
 {
-    auto current_page = export_notebook->get_current_page();
+    auto current_page = export_notebook.get_current_page();
     if (current_page == pages[SINGLE_IMAGE]) {
-        single_image->selectionModified(selection, flags);
+        single_image.selectionModified(selection, flags);
     }
     if (current_page == pages[BATCH_EXPORT]) {
-        batch_export->selectionModified(selection, flags);
+        batch_export.selectionModified(selection, flags);
     }
 }
 
-void Export::onNotebookPageSwitch(Widget *page, guint page_number)
+void Export::onNotebookPageSwitch(Widget *page, unsigned page_number)
 {
     auto desktop = getDesktop();
     if (desktop) {
         auto selection = desktop->getSelection();
 
         if (page_number == pages[SINGLE_IMAGE]) {
-            single_image->selectionChanged(selection);
+            single_image.selectionChanged(selection);
         }
         if (page_number == pages[BATCH_EXPORT]) {
-            batch_export->selectionChanged(selection);
+            batch_export.selectionChanged(selection);
         }
     }
 }

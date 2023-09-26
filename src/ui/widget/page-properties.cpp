@@ -21,6 +21,7 @@
 #include <tuple>
 #include <type_traits>
 #include <utility>
+
 #include <glibmm/i18n.h>
 #include <giomm/menu.h>
 #include <giomm/simpleaction.h>
@@ -120,42 +121,41 @@ class PagePropertiesBox final : public PageProperties {
     }
 
 public:
-    PagePropertiesBox() :
-        _builder(create_builder("page-properties.glade")),
-#define GET(prop, id) prop(get_widget<std::remove_reference_t<decltype(prop)>>(_builder, id))
-#define GETD(prop, id) prop(get_derived_widget<std::remove_reference_t<decltype(prop)>>(_builder, id))
-        GET(_main_grid, "main-grid"),
-        GET(_left_grid, "left-grid"),
-        GETD(_page_width, "page-width"),
-        GETD(_page_height, "page-height"),
-        GET(_portrait, "page-portrait"),
-        GET(_landscape, "page-landscape"),
-        GETD(_scale_x, "scale-x"),
-        GET(_doc_units, "user-units"),
-        GET(_unsupported_size, "unsupported"),
-        GET(_nonuniform_scale, "nonuniform-scale"),
-        GETD(_viewbox_x, "viewbox-x"),
-        GETD(_viewbox_y, "viewbox-y"),
-        GETD(_viewbox_width, "viewbox-width"),
-        GETD(_viewbox_height, "viewbox-height"),
-        GET(_templates_menu_button, "page-menu-btn"),
-        GET(_templates_popover, "templates-popover"),
-        GET(_template_name, "page-template-name"),
-        GET(_preview_box, "preview-box"),
-        GET(_checkerboard, "checkerboard"),
-        GET(_antialias, "use-antialias"),
-        GET(_clip_to_page, "clip-to-page"),
-        GET(_page_label_style, "page-label-style"),
-        GET(_border, "border"),
-        GET(_border_on_top, "border-top"),
-        GET(_shadow, "shadow"),
-        GET(_link_width_height, "link-width-height"),
-        GET(_viewbox_expander, "viewbox-expander"),
-        GET(_linked_viewbox_scale, "linked-scale-img")
+  PagePropertiesBox()
+      // clang-format-off
+      : _builder(create_builder("page-properties.glade"))
+      , _main_grid            (get_widget<Gtk::Grid>             (_builder, "main-grid"))
+      , _left_grid            (get_widget<Gtk::Grid>             (_builder, "left-grid"))
+      , _page_width           (get_derived_widget<MathSpinButton>(_builder, "page-width"))
+      , _page_height          (get_derived_widget<MathSpinButton>(_builder, "page-height"))
+      , _portrait             (get_widget<Gtk::RadioButton>      (_builder, "page-portrait"))
+      , _landscape            (get_widget<Gtk::RadioButton>      (_builder, "page-landscape"))
+      , _scale_x              (get_derived_widget<MathSpinButton>(_builder, "scale-x"))
+      , _unsupported_size     (get_widget<Gtk::Label>            (_builder, "unsupported"))
+      , _nonuniform_scale     (get_widget<Gtk::Label>            (_builder, "nonuniform-scale"))
+      , _doc_units            (get_widget<Gtk::Label>            (_builder, "user-units"))
+      , _viewbox_x            (get_derived_widget<MathSpinButton>(_builder, "viewbox-x"))
+      , _viewbox_y            (get_derived_widget<MathSpinButton>(_builder, "viewbox-y"))
+      , _viewbox_width        (get_derived_widget<MathSpinButton>(_builder, "viewbox-width"))
+      , _viewbox_height       (get_derived_widget<MathSpinButton>(_builder, "viewbox-height"))
+      , _templates_menu_button(get_widget<Gtk::MenuButton>       (_builder, "page-menu-btn"))
+      , _templates_popover    (get_widget<Gtk::Popover>          (_builder, "templates-popover"))
+      , _template_name        (get_widget<Gtk::Label>            (_builder, "page-template-name"))
+      , _preview_box          (get_widget<Gtk::Box>              (_builder, "preview-box"))
+      , _checkerboard         (get_widget<Gtk::CheckButton>      (_builder, "checkerboard"))
+      , _antialias            (get_widget<Gtk::CheckButton>      (_builder, "use-antialias"))
+      , _clip_to_page         (get_widget<Gtk::CheckButton>      (_builder, "clip-to-page"))
+      , _page_label_style     (get_widget<Gtk::CheckButton>      (_builder, "page-label-style"))
+      , _border               (get_widget<Gtk::CheckButton>      (_builder, "border"))
+      , _border_on_top        (get_widget<Gtk::CheckButton>      (_builder, "border-top"))
+      , _shadow               (get_widget<Gtk::CheckButton>      (_builder, "shadow"))
+      , _link_width_height    (get_widget<Gtk::Button>           (_builder, "link-width-height"))
+      , _viewbox_expander     (get_widget<Gtk::Expander>         (_builder, "viewbox-expander"))
+      , _linked_viewbox_scale (get_widget<Gtk::Image>            (_builder, "linked-scale-img"))
+      , _display_units        (get_derived_widget<UnitMenu>      (_builder, "display-units"))
+      , _page_units           (get_derived_widget<UnitMenu>      (_builder, "page-units"))
+      // clang-format-on
     {
-#undef GET
-#undef GETD
-
         _backgnd_color_picker = std::make_unique<ColorPicker>(
             _("Background color"), "", 0xffffff00, true,
             &get_widget<Gtk::Button>(_builder, "background-color"));
@@ -178,14 +178,12 @@ public:
             });
         }
 
-        _builder->get_widget_derived("display-units", _display_units);
-        _display_units->setUnitType(UNIT_TYPE_LINEAR);
-        _display_units->signal_changed().connect([=](){ set_display_unit(); });
+        _display_units.setUnitType(UNIT_TYPE_LINEAR);
+        _display_units.signal_changed().connect([=](){ set_display_unit(); });
 
-        _builder->get_widget_derived("page-units", _page_units);
-        _page_units->setUnitType(UNIT_TYPE_LINEAR);
-        _current_page_unit = _page_units->getUnit();
-        _page_units->signal_changed().connect([=](){ set_page_unit(); });
+        _page_units.setUnitType(UNIT_TYPE_LINEAR);
+        _current_page_unit = _page_units.getUnit();
+        _page_units.signal_changed().connect([=](){ set_page_unit(); });
 
         create_template_menu();
 
@@ -287,9 +285,9 @@ private:
             }
             _page_width.set_value(width);
             _page_height.set_value(height);
-            _page_units->setUnit(page.unit->abbr);
+            _page_units.setUnit(page.unit->abbr);
             _doc_units.set_text(page.unit->abbr);
-            _current_page_unit = _page_units->getUnit();
+            _current_page_unit = _page_units.getUnit();
             if (width > 0 && height > 0) {
                 _size_ratio = width / height;
             }
@@ -340,7 +338,7 @@ private:
 
         auto scoped(_update.block());
 
-        auto unit = _page_units->getUnit();
+        auto unit = _page_units.getUnit();
         auto width = _page_width.get_value();
         auto height = _page_height.get_value();
         _preview->set_page_size(width, height);
@@ -387,7 +385,7 @@ private:
     void set_display_unit() {
         if (_update.pending()) return;
 
-        const auto unit = _display_units->getUnit();
+        const auto unit = _display_units.getUnit();
         _signal_unit_changed.emit(unit, Units::Display);
     }
 
@@ -395,7 +393,7 @@ private:
         if (_update.pending()) return;
 
         const auto old_unit = _current_page_unit;
-        _current_page_unit = _page_units->getUnit();
+        _current_page_unit = _page_units.getUnit();
         const auto new_unit = _current_page_unit;
 
         {
@@ -458,12 +456,12 @@ private:
         auto scoped(_update.block());
 
         if (unit == Units::Display) {
-            _display_units->setUnit(abbr);
+            _display_units.setUnit(abbr);
         }
         else if (unit == Units::Document) {
             _doc_units.set_text(abbr);
-            _page_units->setUnit(abbr);
-            _current_page_unit = _page_units->getUnit();
+            _page_units.setUnit(abbr);
+            _current_page_unit = _page_units.getUnit();
             set_page_size();
         }
     }
@@ -539,20 +537,20 @@ private:
     }
 
     Glib::RefPtr<Gtk::Builder> _builder;
-    Gtk::Grid& _main_grid;
-    Gtk::Grid& _left_grid;
-    MathSpinButton& _page_width;
-    MathSpinButton& _page_height;
-    Gtk::RadioButton& _portrait;
-    Gtk::RadioButton& _landscape;
-    MathSpinButton& _scale_x;
-    Gtk::Label& _unsupported_size;
-    Gtk::Label& _nonuniform_scale;
-    Gtk::Label& _doc_units;
-    MathSpinButton& _viewbox_x;
-    MathSpinButton& _viewbox_y;
-    MathSpinButton& _viewbox_width;
-    MathSpinButton& _viewbox_height;
+    Gtk::Grid &_main_grid;
+    Gtk::Grid &_left_grid;
+    MathSpinButton &_page_width;
+    MathSpinButton &_page_height;
+    Gtk::RadioButton &_portrait;
+    Gtk::RadioButton &_landscape;
+    MathSpinButton &_scale_x;
+    Gtk::Label &_unsupported_size;
+    Gtk::Label &_nonuniform_scale;
+    Gtk::Label &_doc_units;
+    MathSpinButton &_viewbox_x;
+    MathSpinButton &_viewbox_y;
+    MathSpinButton &_viewbox_width;
+    MathSpinButton &_viewbox_height;
     std::unique_ptr<ColorPicker> _backgnd_color_picker;
     std::unique_ptr<ColorPicker> _border_color_picker;
     std::unique_ptr<ColorPicker> _desk_color_picker;
@@ -560,26 +558,27 @@ private:
     Glib::RefPtr<Gio::SimpleAction> _template_action;
     Gtk::MenuButton &_templates_menu_button;
     Gtk::Popover &_templates_popover;
-    Gtk::Label& _template_name;
-    Gtk::Box& _preview_box;
+    Gtk::Label &_template_name;
+    Gtk::Box &_preview_box;
     std::unique_ptr<PageSizePreview> _preview = std::make_unique<PageSizePreview>();
-    Gtk::CheckButton& _border;
-    Gtk::CheckButton& _border_on_top;
-    Gtk::CheckButton& _shadow;
-    Gtk::CheckButton& _checkerboard;
-    Gtk::CheckButton& _antialias;
-    Gtk::CheckButton& _clip_to_page;
-    Gtk::CheckButton& _page_label_style;
-    Gtk::Button& _link_width_height;
-    UnitMenu *_display_units;
-    UnitMenu *_page_units;
-    const Unit* _current_page_unit = nullptr;
+    Gtk::CheckButton &_border;
+    Gtk::CheckButton &_border_on_top;
+    Gtk::CheckButton &_shadow;
+    Gtk::CheckButton &_checkerboard;
+    Gtk::CheckButton &_antialias;
+    Gtk::CheckButton &_clip_to_page;
+    Gtk::CheckButton &_page_label_style;
+    Gtk::Button &_link_width_height;
+    Gtk::Expander &_viewbox_expander;
+    Gtk::Image &_linked_viewbox_scale;
+
+    UnitMenu &_display_units;
+    UnitMenu &_page_units;
+    const Unit *_current_page_unit = nullptr;
     OperationBlocker _update;
     double _size_ratio = 1; // width to height ratio
     bool _locked_size_ratio = false;
     bool _scale_is_uniform = true;
-    Gtk::Expander& _viewbox_expander;
-    Gtk::Image& _linked_viewbox_scale;
 };
 
 PageProperties* PageProperties::create() {

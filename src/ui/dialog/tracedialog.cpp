@@ -40,6 +40,7 @@
 #include "trace/autotrace/inkscape-autotrace.h"
 #include "trace/depixelize/inkscape-depixelize.h"
 #include "trace/potrace/inkscape-potrace.h"
+#include "ui/builder-utils.h"
 #include "ui/util.h"
 
 // This maps the column ids in the glade file to useful enums
@@ -104,25 +105,25 @@ private:
     Glib::RefPtr<Gdk::Pixbuf> preview_image;
 
     Glib::RefPtr<Gtk::Builder> builder;
-    Glib::RefPtr<Gtk::Adjustment> MS_scans, PA_curves, PA_islands, PA_sparse1, PA_sparse2, SS_AT_ET_T, SS_AT_FI_T, SS_BC_T, SS_CQ_T, SS_ED_T, optimize, smooth, speckles;
-    Gtk::ComboBoxText *CBT_SS, *CBT_MS;
-    Gtk::CheckButton *CB_invert, *CB_MS_smooth, *CB_MS_stack, *CB_MS_rb, *CB_speckles, *CB_smooth, *CB_optimize, *CB_PA_optimize, /* *CB_live,*/ *CB_SIOX;
-    Gtk::CheckButton* CB_SIOX1;
-    Gtk::CheckButton* CB_speckles1;
-    Gtk::CheckButton* CB_smooth1;
-    Gtk::CheckButton* CB_optimize1;
-    Gtk::RadioButton *RB_PA_voronoi;
-    Gtk::Button *B_RESET, *B_STOP, *B_OK, *B_Update;
-    Gtk::Box *mainBox;
-    Gtk::Notebook *choice_tab;
-    Gtk::DrawingArea *previewArea;
-    Gtk::Box* orient_box;
-    Gtk::Frame* _preview_frame;
-    Gtk::Grid* _param_grid;
-    Gtk::CheckButton* _live_preview;
-    Gtk::Stack *stack;
-    Gtk::ProgressBar *progressbar;
-    Gtk::Box *boxchild1, *boxchild2;
+    Glib::RefPtr<Gtk::Adjustment> MS_scans, PA_curves, PA_islands, PA_sparse1, PA_sparse2;
+    Glib::RefPtr<Gtk::Adjustment> SS_AT_ET_T, SS_AT_FI_T, SS_BC_T, SS_CQ_T, SS_ED_T;
+    Glib::RefPtr<Gtk::Adjustment> optimize, smooth, speckles;
+    Gtk::ComboBoxText &CBT_SS, &CBT_MS;
+    Gtk::CheckButton &CB_invert, &CB_MS_smooth, &CB_MS_stack, &CB_MS_rb;
+    Gtk::CheckButton &CB_speckles,  &CB_smooth,  &CB_optimize,  &CB_SIOX;
+    Gtk::CheckButton &CB_speckles1, &CB_smooth1, &CB_optimize1, &CB_SIOX1, &CB_PA_optimize;
+    Gtk::RadioButton &RB_PA_voronoi;
+    Gtk::Button &B_RESET, &B_STOP, &B_OK, &B_Update;
+    Gtk::Box &mainBox;
+    Gtk::Notebook &choice_tab;
+    Gtk::DrawingArea &previewArea;
+    Gtk::Box &orient_box;
+    Gtk::Frame &_preview_frame;
+    Gtk::Grid &_param_grid;
+    Gtk::CheckButton &_live_preview;
+    Gtk::Stack &stack;
+    Gtk::ProgressBar &progressbar;
+    Gtk::Box &boxchild1, &boxchild2;
 };
 
 enum class Page
@@ -134,12 +135,12 @@ enum class Page
 
 TraceData TraceDialogImpl::getTraceData() const
 {
-    auto current_page = static_cast<Page>(choice_tab->get_current_page());
+    auto current_page = static_cast<Page>(choice_tab.get_current_page());
 
-    auto cb_siox = current_page == Page::SingleScan ? CB_SIOX : CB_SIOX1;
-    bool enable_siox = cb_siox->get_active();
+    auto &cb_siox = current_page == Page::SingleScan ? CB_SIOX : CB_SIOX1;
+    bool enable_siox = cb_siox.get_active();
 
-    auto trace_type_str = current_page == Page::SingleScan ? CBT_SS->get_active_id() : CBT_MS->get_active_id();
+    auto trace_type_str = current_page == Page::SingleScan ? CBT_SS.get_active_id() : CBT_MS.get_active_id();
     auto it = trace_types.find(trace_type_str);
     assert(it != trace_types.end());
     auto trace_type = it->second;
@@ -162,20 +163,20 @@ TraceData TraceDialogImpl::getTraceData() const
 
     auto setup_potrace = [&, this] {
         auto eng = std::make_unique<Trace::Potrace::PotraceTracingEngine>(
-            trace_type, CB_invert->get_active(), (int)SS_CQ_T->get_value(), SS_BC_T->get_value(),
+            trace_type, CB_invert.get_active(), (int)SS_CQ_T->get_value(), SS_BC_T->get_value(),
             0, // Brightness floor
-            SS_ED_T->get_value(), (int)MS_scans->get_value(), CB_MS_stack->get_active(), CB_MS_smooth->get_active(),
-            CB_MS_rb->get_active());
+            SS_ED_T->get_value(), (int)MS_scans->get_value(), CB_MS_stack.get_active(), CB_MS_smooth.get_active(),
+            CB_MS_rb.get_active());
 
-        auto cb_optimize = current_page == Page::SingleScan ? CB_optimize : CB_optimize1;
-        eng->setOptiCurve(cb_optimize->get_active());
+        auto &cb_optimize = current_page == Page::SingleScan ? CB_optimize : CB_optimize1;
+        eng->setOptiCurve(cb_optimize.get_active());
         eng->setOptTolerance(optimize->get_value());
 
-        auto cb_smooth = current_page == Page::SingleScan ? CB_smooth : CB_smooth1;
-        eng->setAlphaMax(cb_smooth->get_active() ? smooth->get_value() : 0);
+        auto &cb_smooth = current_page == Page::SingleScan ? CB_smooth : CB_smooth1;
+        eng->setAlphaMax(cb_smooth.get_active() ? smooth->get_value() : 0);
 
-        auto cb_speckles = current_page == Page::SingleScan ? CB_speckles : CB_speckles1;
-        eng->setTurdSize(cb_speckles->get_active() ? (int)speckles->get_value() : 0);
+        auto &cb_speckles = current_page == Page::SingleScan ? CB_speckles : CB_speckles1;
+        eng->setTurdSize(cb_speckles.get_active() ? (int)speckles->get_value() : 0);
 
         return eng;
     };
@@ -208,10 +209,10 @@ TraceData TraceDialogImpl::getTraceData() const
 
     auto setup_depixelize = [this] {
         return std::make_unique<Trace::Depixelize::DepixelizeTracingEngine>(
-            RB_PA_voronoi->get_active() ? Inkscape::Trace::Depixelize::TraceType::VORONOI : Inkscape::Trace::Depixelize::TraceType::BSPLINES,
+            RB_PA_voronoi.get_active() ? Inkscape::Trace::Depixelize::TraceType::VORONOI : Inkscape::Trace::Depixelize::TraceType::BSPLINES,
             PA_curves->get_value(), (int) PA_islands->get_value(),
             (int) PA_sparse1->get_value(), PA_sparse2->get_value(),
-            CB_PA_optimize->get_active());
+            CB_PA_optimize.get_active());
     };
 
     TraceData data;
@@ -231,7 +232,7 @@ bool TraceDialogImpl::paintPreview(Cairo::RefPtr<Cairo::Context> const &cr)
     if (preview_image) {
         int width = preview_image->get_width();
         int height = preview_image->get_height();
-        Gtk::Allocation const &allocation = previewArea->get_allocation();
+        Gtk::Allocation const &allocation = previewArea.get_allocation();
         double scaleFX = (double)allocation.get_width() / width;
         double scaleFY = (double)allocation.get_height() / height;
         double scaleFactor = std::min(scaleFX, scaleFY);
@@ -282,19 +283,19 @@ void TraceDialogImpl::setDefaults()
     optimize->set_value(0.2);
     smooth->set_value(1);
     speckles->set_value(2);
-    CB_invert->set_active(false);
-    CB_MS_smooth->set_active(true);
-    CB_MS_stack->set_active(true);
-    CB_MS_rb->set_active(false);
-    CB_speckles->set_active(true);
-    CB_smooth->set_active(true);
-    CB_optimize->set_active(true);
-    CB_speckles1->set_active(true);
-    CB_smooth1->set_active(true);
-    CB_optimize1->set_active(true);
-    CB_PA_optimize->set_active(false);
-    CB_SIOX->set_active(false);
-    CB_SIOX1->set_active(false);
+    CB_invert.set_active(false);
+    CB_MS_smooth.set_active(true);
+    CB_MS_stack.set_active(true);
+    CB_MS_rb.set_active(false);
+    CB_speckles.set_active(true);
+    CB_smooth.set_active(true);
+    CB_optimize.set_active(true);
+    CB_speckles1.set_active(true);
+    CB_smooth1.set_active(true);
+    CB_optimize1.set_active(true);
+    CB_PA_optimize.set_active(false);
+    CB_SIOX.set_active(false);
+    CB_SIOX1.set_active(false);
 }
 
 void TraceDialogImpl::onAbortClicked()
@@ -304,7 +305,7 @@ void TraceDialogImpl::onAbortClicked()
         return;
     }
 
-    stack->set_visible_child(*boxchild1);
+    stack.set_visible_child(boxchild1);
     if (auto desktop = getDesktop()) desktop->clearWaitingCursor();
     trace_future.cancel();
 }
@@ -321,12 +322,12 @@ void TraceDialogImpl::onTraceClicked()
     trace_future = Trace::trace(std::move(data.engine), data.sioxEnabled,
         // On progress:
         [this] (double progress) {
-            progressbar->set_fraction(progress);
+            progressbar.set_fraction(progress);
         },
         // On completion without cancelling:
         [this] {
-            progressbar->set_fraction(1.0);
-            stack->set_visible_child(*boxchild1);
+            progressbar.set_fraction(1.0);
+            stack.set_visible_child(boxchild1);
             if (auto desktop = getDesktop()) desktop->clearWaitingCursor();
             trace_future.cancel();
         }
@@ -335,97 +336,78 @@ void TraceDialogImpl::onTraceClicked()
     if (trace_future) {
         // Put the UI into the tracing state.
         if (auto desktop = getDesktop()) desktop->setWaitingCursor();
-        stack->set_visible_child(*boxchild2);
-        progressbar->set_fraction(0.0);
+        stack.set_visible_child(boxchild2);
+        progressbar.set_fraction(0.0);
     }
 }
 
+using Inkscape::UI::create_builder;
+using Inkscape::UI::get_widget;
+
 TraceDialogImpl::TraceDialogImpl()
+  : builder(create_builder("dialog-trace.glade"))
+    // Adjustment
+  , MS_scans       (get_object<Gtk::Adjustment>(builder,              "MS_scans"))
+  , PA_curves      (get_object<Gtk::Adjustment>(builder,             "PA_curves"))
+  , PA_islands     (get_object<Gtk::Adjustment>(builder,            "PA_islands"))
+  , PA_sparse1     (get_object<Gtk::Adjustment>(builder,            "PA_sparse1"))
+  , PA_sparse2     (get_object<Gtk::Adjustment>(builder,            "PA_sparse2"))
+  , SS_AT_FI_T     (get_object<Gtk::Adjustment>(builder,            "SS_AT_FI_T"))
+  , SS_AT_ET_T     (get_object<Gtk::Adjustment>(builder,            "SS_AT_ET_T"))
+  , SS_BC_T        (get_object<Gtk::Adjustment>(builder,               "SS_BC_T"))
+  , SS_CQ_T        (get_object<Gtk::Adjustment>(builder,               "SS_CQ_T"))
+  , SS_ED_T        (get_object<Gtk::Adjustment>(builder,               "SS_ED_T"))
+  , optimize       (get_object<Gtk::Adjustment>(builder,              "optimize"))
+  , smooth         (get_object<Gtk::Adjustment>(builder,                "smooth"))
+  , speckles       (get_object<Gtk::Adjustment>(builder,              "speckles"))
+    // ComboBoxText
+  , CBT_SS         (get_widget<Gtk::ComboBoxText>(builder,              "CBT_SS"))
+  , CBT_MS         (get_widget<Gtk::ComboBoxText>(builder,              "CBT_MS"))
+    // CheckButton
+  , CB_invert      (get_widget<Gtk::CheckButton> (builder,           "CB_invert"))
+  , CB_MS_smooth   (get_widget<Gtk::CheckButton> (builder,        "CB_MS_smooth"))
+  , CB_MS_stack    (get_widget<Gtk::CheckButton> (builder,         "CB_MS_stack"))
+  , CB_MS_rb       (get_widget<Gtk::CheckButton> (builder,            "CB_MS_rb"))
+  , CB_speckles    (get_widget<Gtk::CheckButton> (builder,         "CB_speckles"))
+  , CB_smooth      (get_widget<Gtk::CheckButton> (builder,           "CB_smooth"))
+  , CB_optimize    (get_widget<Gtk::CheckButton> (builder,         "CB_optimize"))
+  , CB_SIOX        (get_widget<Gtk::CheckButton> (builder,             "CB_SIOX"))
+  , CB_speckles1   (get_widget<Gtk::CheckButton> (builder,        "CB_speckles1"))
+  , CB_smooth1     (get_widget<Gtk::CheckButton> (builder,          "CB_smooth1"))
+  , CB_optimize1   (get_widget<Gtk::CheckButton> (builder,        "CB_optimize1"))
+  , CB_SIOX1       (get_widget<Gtk::CheckButton> (builder,            "CB_SIOX1"))
+  , CB_PA_optimize (get_widget<Gtk::CheckButton> (builder,      "CB_PA_optimize"))
+    // RadioButton
+  , RB_PA_voronoi  (get_widget<Gtk::RadioButton> (builder,       "RB_PA_voronoi"))
+    // Button
+  , B_RESET        (get_widget<Gtk::Button>      (builder,             "B_RESET"))
+  , B_STOP         (get_widget<Gtk::Button>      (builder,              "B_STOP"))
+  , B_OK           (get_widget<Gtk::Button>      (builder,                "B_OK"))
+  , B_Update       (get_widget<Gtk::Button>      (builder,            "B_Update"))
+    // Box
+  , mainBox        (get_widget<Gtk::Box>         (builder,             "mainBox"))
+  , choice_tab     (get_widget<Gtk::Notebook>    (builder,          "choice_tab"))
+  , previewArea    (get_widget<Gtk::DrawingArea> (builder,         "previewArea"))
+  , orient_box     (get_widget<Gtk::Box>         (builder,          "orient_box"))
+  , _preview_frame (get_widget<Gtk::Frame>       (builder,      "_preview_frame"))
+  , _param_grid    (get_widget<Gtk::Grid>        (builder,         "_param_grid"))
+  , _live_preview  (get_widget<Gtk::CheckButton> (builder,       "_live_preview"))
+  , stack          (get_widget<Gtk::Stack>       (builder,               "stack"))
+  , progressbar    (get_widget<Gtk::ProgressBar> (builder,         "progressbar"))
+  , boxchild1      (get_widget<Gtk::Box>         (builder,           "boxchild1"))
+  , boxchild2      (get_widget<Gtk::Box>         (builder,           "boxchild2"))
 {
-    Glib::ustring const req_widgets[] = { "MS_scans",    "PA_curves", "PA_islands",  "PA_sparse1", "PA_sparse2",
-                                        "SS_AT_FI_T", "SS_AT_ET_T",     "SS_BC_T",   "SS_CQ_T",     "SS_ED_T",
-                                        "optimize",    "smooth",    "speckles",    "CB_invert",  "CB_MS_smooth",
-                                        "CB_MS_stack", "CB_MS_rb",  "CB_speckles", "CB_smooth",  "CB_optimize",
-                                        "CB_speckles1", "CB_smooth1",  "CB_optimize1", "CB_SIOX1",
-                                        "CB_PA_optimize", /*"CB_live",*/ "CB_SIOX", "CBT_SS",    "CBT_MS",
-                                        "B_RESET",     "B_STOP",    "B_OK",         "mainBox",   "choice_tab",
-                                        /*"choice_scan",*/ "previewArea", "_live_preview",
-                                        "stack", "progressbar", "boxchild1", "boxchild2" };
-    auto gladefile = get_filename_string(Inkscape::IO::Resource::UIS, "dialog-trace.glade");
-    try {
-        builder = Gtk::Builder::create_from_file(gladefile);
-    } catch (Glib::Error const &) {
-        g_warning("Trace dialog: Glade file loading failed");
-        return;
-    }
-
-    for (auto &w : req_widgets) {
-        auto test = builder->get_object(w);
-        if (!test) {
-            g_warning("Trace dialog: Required widget %s does not exist", w.c_str());
-            return;
-        }
-    }
-
-#define GET_O(name) name = Glib::RefPtr<Gtk::Adjustment>::cast_dynamic(builder->get_object(#name));
-    GET_O(MS_scans)
-    GET_O(PA_curves)
-    GET_O(PA_islands)
-    GET_O(PA_sparse1)
-    GET_O(PA_sparse2)
-    GET_O(SS_AT_FI_T)
-    GET_O(SS_AT_ET_T)
-    GET_O(SS_BC_T)
-    GET_O(SS_CQ_T)
-    GET_O(SS_ED_T)
-    GET_O(optimize)
-    GET_O(smooth)
-    GET_O(speckles)
-#undef GET_O
-#define GET_W(name) builder->get_widget(#name, name);
-    GET_W(CB_invert)
-    GET_W(CB_MS_smooth)
-    GET_W(CB_MS_stack)
-    GET_W(CB_MS_rb)
-    GET_W(CB_speckles)
-    GET_W(CB_smooth)
-    GET_W(CB_optimize)
-    GET_W(CB_speckles1)
-    GET_W(CB_smooth1)
-    GET_W(CB_optimize1)
-    GET_W(CB_PA_optimize)
-    GET_W(CB_SIOX)
-    GET_W(CB_SIOX1)
-    GET_W(RB_PA_voronoi)
-    GET_W(CBT_SS)
-    GET_W(CBT_MS)
-    GET_W(B_RESET)
-    GET_W(B_STOP)
-    GET_W(B_OK)
-    GET_W(B_Update)
-    GET_W(mainBox)
-    GET_W(choice_tab)
-    GET_W(previewArea)
-    GET_W(orient_box)
-    GET_W(_preview_frame)
-    GET_W(_param_grid)
-    GET_W(_live_preview)
-    GET_W(stack)
-    GET_W(progressbar)
-    GET_W(boxchild1)
-    GET_W(boxchild2)
-#undef GET_W
-    add(*mainBox);
+    add(mainBox);
 
     Inkscape::Preferences* prefs = Inkscape::Preferences::get();
 
-    _live_preview->set_active(prefs->getBool(getPrefsPath() + "liveUpdate", true));
+    _live_preview.set_active(prefs->getBool(getPrefsPath() + "liveUpdate", true));
 
-    B_Update->signal_clicked().connect([=] { updatePreview(true); });
-    B_OK->signal_clicked().connect(sigc::mem_fun(*this, &TraceDialogImpl::onTraceClicked));
-    B_STOP->signal_clicked().connect(sigc::mem_fun(*this, &TraceDialogImpl::onAbortClicked));
-    B_RESET->signal_clicked().connect(sigc::mem_fun(*this, &TraceDialogImpl::setDefaults));
-    previewArea->signal_draw().connect(sigc::mem_fun(*this, &TraceDialogImpl::paintPreview));
+    B_Update.signal_clicked().connect([=] { updatePreview(true); });
+    B_OK.signal_clicked().connect(sigc::mem_fun(*this, &TraceDialogImpl::onTraceClicked));
+    B_STOP.signal_clicked().connect(sigc::mem_fun(*this, &TraceDialogImpl::onAbortClicked));
+    B_RESET.signal_clicked().connect(sigc::mem_fun(*this, &TraceDialogImpl::setDefaults));
+    previewArea.signal_draw().connect(sigc::mem_fun(*this, &TraceDialogImpl::paintPreview));
 
     // attempt at making UI responsive: relocate preview to the right or bottom of dialog depending on dialog size
     signal_size_allocate().connect([=] (Gtk::Allocation const &alloc) {
@@ -437,30 +419,30 @@ TraceDialogImpl::TraceDialogImpl()
         double constexpr hysteresis = 0.01;
         if (ratio < 1 - hysteresis) {
             // narrow/tall
-            choice_tab->set_valign(Gtk::ALIGN_START);
-            orient_box->set_orientation(Gtk::ORIENTATION_VERTICAL);
+            choice_tab.set_valign(Gtk::ALIGN_START);
+            orient_box.set_orientation(Gtk::ORIENTATION_VERTICAL);
         }
         else if (ratio > 1 + hysteresis) {
             // wide/short
-            orient_box->set_orientation(Gtk::ORIENTATION_HORIZONTAL);
-            choice_tab->set_valign(Gtk::ALIGN_FILL);
+            orient_box.set_orientation(Gtk::ORIENTATION_HORIZONTAL);
+            choice_tab.set_valign(Gtk::ALIGN_FILL);
         }
     });
 
-    CBT_SS->signal_changed().connect([=] { adjustParamsVisible(); });
+    CBT_SS.signal_changed().connect([=] { adjustParamsVisible(); });
     adjustParamsVisible();
 
     // watch for changes, but only in params that can impact preview bitmap
     for (auto adj : {SS_BC_T, SS_ED_T, SS_CQ_T, SS_AT_FI_T, SS_AT_ET_T, /* optimize, smooth, speckles,*/ MS_scans, PA_curves, PA_islands, PA_sparse1, PA_sparse2 }) {
         adj->signal_value_changed().connect([=] { updatePreview(); });
     }
-    for (auto checkbtn : {CB_invert, CB_MS_rb, /* CB_MS_smooth, CB_MS_stack, CB_optimize1, CB_optimize, */ CB_PA_optimize, CB_SIOX1, CB_SIOX, /* CB_smooth1, CB_smooth, CB_speckles1, CB_speckles, */ _live_preview}) {
+    for (auto checkbtn : {&CB_invert, &CB_MS_rb, /* CB_MS_smooth, CB_MS_stack, CB_optimize1, CB_optimize, */ &CB_PA_optimize, &CB_SIOX1, &CB_SIOX, /* CB_smooth1, CB_smooth, CB_speckles1, CB_speckles, */ &_live_preview}) {
         checkbtn->signal_toggled().connect([=] { updatePreview(); });
     }
-    for (auto combo : {CBT_SS, CBT_MS}) {
+    for (auto combo : {&CBT_SS, &CBT_MS}) {
         combo->signal_changed().connect([=] { updatePreview(); });
     }
-    choice_tab->signal_switch_page().connect([=] (Gtk::Widget*, unsigned) { updatePreview(); });
+    choice_tab.signal_switch_page().connect([=] (Gtk::Widget*, unsigned) { updatePreview(); });
 
     signal_set_focus_child().connect([=] (Gtk::Widget *w) {
         if (w) updatePreview();
@@ -470,13 +452,13 @@ TraceDialogImpl::TraceDialogImpl()
 TraceDialogImpl::~TraceDialogImpl()
 {
     Inkscape::Preferences* prefs = Inkscape::Preferences::get();
-    prefs->setBool(getPrefsPath() + "liveUpdate", _live_preview->get_active());
+    prefs->setBool(getPrefsPath() + "liveUpdate", _live_preview.get_active());
     preview_timeout_conn.disconnect();
 }
 
 bool TraceDialogImpl::previewsEnabled() const
 {
-    return _live_preview->get_active() && is_widget_effectively_visible(this);
+    return _live_preview.get_active() && is_widget_effectively_visible(this);
 }
 
 void TraceDialogImpl::schedulePreviewUpdate(int msecs, bool force)
@@ -514,7 +496,7 @@ void TraceDialogImpl::updatePreview(bool force)
         // On completion:
         [this] (Glib::RefPtr<Gdk::Pixbuf> result) {
             preview_image = std::move(result);
-            previewArea->queue_draw();
+            previewArea.queue_draw();
             preview_future.cancel();
 
             // Recompute if invalidated during computation.
@@ -527,14 +509,14 @@ void TraceDialogImpl::updatePreview(bool force)
     if (!preview_future) {
         // On instant failure:
         preview_image.reset();
-        previewArea->queue_draw();
+        previewArea.queue_draw();
     }
 }
 
 void TraceDialogImpl::adjustParamsVisible()
 {
     int constexpr start_row = 2;
-    int option = CBT_SS->get_active_row_number();
+    int option = CBT_SS.get_active_row_number();
     if (option >= 3) option = 3;
     int show1 = start_row + option;
     int show2 = show1;
@@ -542,7 +524,7 @@ void TraceDialogImpl::adjustParamsVisible()
 
     for (int row = start_row; row < start_row + 5; ++row) {
         for (int col = 0; col < 4; ++col) {
-            if (auto widget = _param_grid->get_child_at(col, row)) {
+            if (auto widget = _param_grid.get_child_at(col, row)) {
                 if (row == show1 || row == show2) {
                     widget->set_visible(true);
                 } else {

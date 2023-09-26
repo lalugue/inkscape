@@ -47,40 +47,32 @@
 #include "inkscape-application.h"
 #include "inkscape-window.h"
 #include "io/resource.h"
+#include "ui/builder-utils.h"
 #include "ui/controller.h"
 #include "ui/util.h"
 #include "util/callback-converter.h"
 
+using Inkscape::UI::create_builder;
+using Inkscape::UI::get_widget;
+
 namespace Inkscape::UI::Dialog {
 
 CommandPalette::CommandPalette()
+    : _builder(create_builder("command-palette-main.glade"))
+    , _CPBase              (get_widget<Gtk::Box>(_builder, "CPBase"))
+    , _CPListBase          (get_widget<Gtk::Box>(_builder, "CPListBase"))
+    , _CPFilter            (get_widget<Gtk::SearchEntry>(_builder, "CPFilter"))
+    , _CPSuggestions       (get_widget<Gtk::ListBox>(_builder, "CPSuggestions"))
+    , _CPHistory           (get_widget<Gtk::ListBox>(_builder, "CPHistory"))
+    , _CPSuggestionsScroll (get_widget<Gtk::ScrolledWindow>(_builder, "CPSuggestionsScroll"))
+    , _CPHistoryScroll     (get_widget<Gtk::ScrolledWindow>(_builder, "CPHistoryScroll"))
 {
     // TODO: Move to a test program.
     test_sort();
 
-    // setup _builder
-    {
-        auto gladefile = get_filename_string(Inkscape::IO::Resource::UIS, "command-palette-main.glade");
-        try {
-            _builder = Gtk::Builder::create_from_file(gladefile);
-        } catch (const Glib::Error &ex) {
-            g_warning("Glade file loading failed for command palette dialog: `%s`", ex.what().c_str());
-            return;
-        }
-    }
-
-    // Setup Base UI Components
-    _builder->get_widget("CPBase", _CPBase);
-    _builder->get_widget("CPListBase", _CPListBase);
-    _builder->get_widget("CPFilter", _CPFilter);
-    _builder->get_widget("CPSuggestions", _CPSuggestions);
-    _builder->get_widget("CPHistory", _CPHistory);
-    _builder->get_widget("CPSuggestionsScroll", _CPSuggestionsScroll);
-    _builder->get_widget("CPHistoryScroll", _CPHistoryScroll);
-
     // TODO: Customise on user language RTL, LTR or better user preference
-    _CPBase->set_halign(Gtk::ALIGN_CENTER);
-    _CPBase->set_valign(Gtk::ALIGN_START);
+    _CPBase.set_halign(Gtk::ALIGN_CENTER);
+    _CPBase.set_valign(Gtk::ALIGN_START);
 
     // Close the CommandPalette when the toplevel Window receives an Escape key press.
     // & also when the focused widget of said window is no longer a descendent of the Palette.
@@ -89,17 +81,17 @@ CommandPalette::CommandPalette()
      * and even before changing to a controller, itʼs nice to have 1 handler, not 3!
      * Itʼd probably make sense to move this to the main window when thereʼs time */
     // TODO: GTK4: can maybe move this back to self once Windows donʼt intercept/forward/etc key events
-    Controller::add_key_on_window<&CommandPalette::on_window_key_pressed>(*_CPBase, *this,
+    Controller::add_key_on_window<&CommandPalette::on_window_key_pressed>(_CPBase, *this,
                                                                           Gtk::PHASE_CAPTURE);
-    Controller::add_focus_on_window(*_CPBase, sigc::mem_fun(*this, &CommandPalette::on_window_focus));
+    Controller::add_focus_on_window(_CPBase, sigc::mem_fun(*this, &CommandPalette::on_window_focus));
 
-    _CPFilter->signal_activate().connect(sigc::mem_fun(*this, &CommandPalette::on_activate_cpfilter));
-    _CPFilter->signal_focus   ().connect(sigc::mem_fun(*this, &CommandPalette::on_focus_cpfilter   ));
+    _CPFilter.signal_activate().connect(sigc::mem_fun(*this, &CommandPalette::on_activate_cpfilter));
+    _CPFilter.signal_focus   ().connect(sigc::mem_fun(*this, &CommandPalette::on_focus_cpfilter   ));
 
     set_mode(CPMode::SEARCH);
 
-    _CPSuggestions->set_activate_on_single_click();
-    _CPSuggestions->set_selection_mode(Gtk::SELECTION_SINGLE);
+    _CPSuggestions.set_activate_on_single_click();
+    _CPSuggestions.set_selection_mode(Gtk::SELECTION_SINGLE);
 
     // Setup operations [actions, extensions]
     {
@@ -160,7 +152,7 @@ CommandPalette::CommandPalette()
         }
     }
     // for `enter to execute` feature
-    _CPSuggestions->signal_row_activated().connect(sigc::mem_fun(*this, &CommandPalette::on_row_activated));
+    _CPSuggestions.signal_row_activated().connect(sigc::mem_fun(*this, &CommandPalette::on_row_activated));
 }
 
 void CommandPalette::open()
@@ -173,19 +165,19 @@ void CommandPalette::open()
         _win_doc_actions_loaded = true;
     }
 
-    _CPBase->show_all();
-    _CPFilter->grab_focus();
+    _CPBase.show_all();
+    _CPFilter.grab_focus();
     _is_open = true;
 
 }
 
 void CommandPalette::close()
 {
-    _CPBase->set_visible(false);
+    _CPBase.set_visible(false);
 
     // Reset filtering - show all suggestions
-    _CPFilter->set_text("");
-    _CPSuggestions->invalidate_filter();
+    _CPFilter.set_text("");
+    _CPSuggestions.invalidate_filter();
 
     set_mode(CPMode::SEARCH);
 
@@ -203,28 +195,14 @@ void CommandPalette::toggle()
 
 void CommandPalette::append_recent_file_operation(const Glib::ustring &path, bool is_suggestion, bool is_import)
 {
-    static const auto gladefile = get_filename_string(Inkscape::IO::Resource::UIS, "command-palette-operation.glade");
-    Glib::RefPtr<Gtk::Builder> operation_builder;
-    try {
-        operation_builder = Gtk::Builder::create_from_file(gladefile);
-    } catch (const Glib::Error &ex) {
-        g_warning("Glade file loading failed for Command Palette operation dialog");
-    }
-
-    Gtk::Box *CPOperation;
-    Gtk::Label  *CPGroup;
-    Gtk::Label  *CPName;
-    Gtk::Label  *CPShortcut;
-    Gtk::Button *CPActionFullButton;
-    Gtk::Label  *CPActionFullLabel;
-    Gtk::Label  *CPDescription;
-    operation_builder->get_widget("CPOperation", CPOperation);
-    operation_builder->get_widget("CPGroup", CPGroup);
-    operation_builder->get_widget("CPName", CPName);
-    operation_builder->get_widget("CPShortcut", CPShortcut);
-    operation_builder->get_widget("CPActionFullButton", CPActionFullButton);
-    operation_builder->get_widget("CPActionFullLabel", CPActionFullLabel);
-    operation_builder->get_widget("CPDescription", CPDescription);
+    auto  operation_builder = create_builder("command-palette-operation.glade");
+    auto &CPOperation        (get_widget<Gtk::Box>   (operation_builder, "CPOperation"));
+    auto &CPGroup            (get_widget<Gtk::Label> (operation_builder, "CPGroup"));
+    auto &CPName             (get_widget<Gtk::Label> (operation_builder, "CPName"));
+    auto &CPShortcut         (get_widget<Gtk::Label> (operation_builder, "CPShortcut"));
+    auto &CPActionFullButton (get_widget<Gtk::Button>(operation_builder, "CPActionFullButton"));
+    auto &CPActionFullLabel  (get_widget<Gtk::Label> (operation_builder, "CPActionFullLabel"));
+    auto &CPDescription      (get_widget<Gtk::Label> (operation_builder, "CPDescription"));
 
     const auto file = Gio::File::create_for_path(path);
     if (file->query_exists()) {
@@ -232,22 +210,22 @@ void CommandPalette::append_recent_file_operation(const Glib::ustring &path, boo
 
         if (is_import) {
             // Used for Activate row signal of listbox and not
-            CPGroup->set_text("import");
-            CPActionFullLabel->set_text("import"); // For filtering only
+            CPGroup.set_text("import");
+            CPActionFullLabel.set_text("import"); // For filtering only
 
         } else {
-            CPGroup->set_text("open");
-            CPActionFullLabel->set_text("open"); // For filtering only
+            CPGroup.set_text("open");
+            CPActionFullLabel.set_text("open"); // For filtering only
         }
 
         // Hide for recent_file, not required
-        CPActionFullButton->set_no_show_all();
-        CPActionFullButton->set_visible(false);
+        CPActionFullButton.set_no_show_all();
+        CPActionFullButton.set_visible(false);
 
-        CPName->set_text((is_import ? _("Import") : _("Open")) + (": " + file_name));
-        CPName->set_tooltip_text((is_import ? ("Import") : ("Open")) + (": " + file_name)); // Tooltip_text are not translatable
-        CPDescription->set_text(path);
-        CPDescription->set_tooltip_text(path);
+        CPName.set_text((is_import ? _("Import") : _("Open")) + (": " + file_name));
+        CPName.set_tooltip_text((is_import ? ("Import") : ("Open")) + (": " + file_name)); // Tooltip_text are not translatable
+        CPDescription.set_text(path);
+        CPDescription.set_tooltip_text(path);
 
         {
             Glib::DateTime mod_time;
@@ -257,13 +235,13 @@ void CommandPalette::append_recent_file_operation(const Glib::ustring &path, boo
 #else
             mod_time.create_now_local(file->query_info()->modification_time());
 #endif
-            CPShortcut->set_text(mod_time.format("%d %b %R"));
+            CPShortcut.set_text(mod_time.format("%d %b %R"));
         }
         // Add to suggestions
         if (is_suggestion) {
-            _CPSuggestions->append(*CPOperation);
+            _CPSuggestions.append(CPOperation);
         } else {
-            _CPHistory->append(*CPOperation);
+            _CPHistory.append(CPOperation);
         }
     }
 }
@@ -275,32 +253,17 @@ bool CommandPalette::generate_action_operation(const ActionPtrName &action_ptr_n
     static const InkActionExtraData &action_data = app->get_action_extra_data();
     static const bool show_full_action_name =
         Inkscape::Preferences::get()->getBool("/options/commandpalette/showfullactionname/value");
-    static const auto gladefile = get_filename_string(Inkscape::IO::Resource::UIS, "command-palette-operation.glade");
 
-    Glib::RefPtr<Gtk::Builder> operation_builder;
-    try {
-        operation_builder = Gtk::Builder::create_from_file(gladefile);
-    } catch (const Glib::Error &ex) {
-        g_warning("Glade file loading failed for Command Palette operation dialog");
-        return false;
-    }
+    auto  operation_builder  = create_builder("command-palette-operation.glade");
+    auto &CPOperation        (get_widget<Gtk::Box>   (operation_builder, "CPOperation"));
+    auto &CPGroup            (get_widget<Gtk::Label> (operation_builder, "CPGroup"));
+    auto &CPName             (get_widget<Gtk::Label> (operation_builder, "CPName"));
+    auto &CPShortcut         (get_widget<Gtk::Label> (operation_builder, "CPShortcut"));
+    auto &CPActionFullButton (get_widget<Gtk::Button>(operation_builder, "CPActionFullButton"));
+    auto &CPActionFullLabel  (get_widget<Gtk::Label> (operation_builder, "CPActionFullLabel"));
+    auto &CPDescription      (get_widget<Gtk::Label> (operation_builder, "CPDescription"));
 
-    Gtk::Box *CPOperation;
-    Gtk::Label *CPGroup;
-    Gtk::Label *CPName;
-    Gtk::Label *CPShortcut;
-    Gtk::Label *CPDescription;
-    Gtk::Button *CPActionFullButton;
-    Gtk::Label *CPActionFullLabel;
-    operation_builder->get_widget("CPOperation", CPOperation);
-    operation_builder->get_widget("CPGroup", CPGroup);
-    operation_builder->get_widget("CPName", CPName);
-    operation_builder->get_widget("CPShortcut", CPShortcut);
-    operation_builder->get_widget("CPActionFullButton", CPActionFullButton);
-    operation_builder->get_widget("CPActionFullLabel", CPActionFullLabel);
-    operation_builder->get_widget("CPDescription", CPDescription);
-
-    CPGroup->set_text(action_data.get_section_for_action(action_ptr_name.second));
+    CPGroup.set_text(action_data.get_section_for_action(action_ptr_name.second));
 
     // Setting CPName
     {
@@ -312,17 +275,17 @@ bool CommandPalette::generate_action_operation(const ActionPtrName &action_ptr_n
             untranslated_name = action_ptr_name.second;
         }
 
-        CPName->set_text(name);
-        CPName->set_tooltip_text(untranslated_name);
+        CPName.set_text(name);
+        CPName.set_tooltip_text(untranslated_name);
     }
 
-    CPActionFullLabel->set_text(action_ptr_name.second);
+    CPActionFullLabel.set_text(action_ptr_name.second);
 
     if (not show_full_action_name) {
-        CPActionFullButton->set_no_show_all();
-        CPActionFullButton->set_visible(false);
+        CPActionFullButton.set_no_show_all();
+        CPActionFullButton.set_visible(false);
     } else {
-        CPActionFullButton->signal_clicked().connect(
+        CPActionFullButton.signal_clicked().connect(
             sigc::bind(sigc::mem_fun(*this, &CommandPalette::on_action_fullname_clicked),
                                       action_ptr_name.second),
             false);
@@ -341,21 +304,21 @@ bool CommandPalette::generate_action_operation(const ActionPtrName &action_ptr_n
 
         if (not accel_label.empty()) {
             accel_label.pop_back();
-            CPShortcut->set_text(accel_label);
+            CPShortcut.set_text(accel_label);
         } else {
-            CPShortcut->set_no_show_all();
-            CPShortcut->set_visible(false);
+            CPShortcut.set_no_show_all();
+            CPShortcut.set_visible(false);
         }
     }
 
-    CPDescription->set_text(action_data.get_tooltip_for_action(action_ptr_name.second));
-    CPDescription->set_tooltip_text(action_data.get_tooltip_for_action(action_ptr_name.second, false));
+    CPDescription.set_text(action_data.get_tooltip_for_action(action_ptr_name.second));
+    CPDescription.set_tooltip_text(action_data.get_tooltip_for_action(action_ptr_name.second, false));
 
     // Add to suggestions
     if (is_suggestion) {
-        _CPSuggestions->append(*CPOperation);
+        _CPSuggestions.append(CPOperation);
     } else {
-        _CPHistory->append(*CPOperation);
+        _CPHistory.append(CPOperation);
     }
 
     return true;
@@ -366,18 +329,18 @@ void CommandPalette::on_search()
     // TODO: Why is this done here? It seems very wasteful! But I didnʼt get anything else to work,
     //       for example by setting it elsewhere and then only invalidating it here. Ponder more...
     //       Although in saying that, TODO: GTK4: Consider porting this whole thing to GtkListView.
-    _CPSuggestions->unset_sort_func();
-    _CPSuggestions->set_sort_func(sigc::mem_fun(*this, &CommandPalette::on_sort));
+    _CPSuggestions.unset_sort_func();
+    _CPSuggestions.set_sort_func(sigc::mem_fun(*this, &CommandPalette::on_sort));
 
-    _search_text = _CPFilter->get_text();
+    _search_text = _CPFilter.get_text();
 
-    _CPSuggestions->invalidate_filter(); // Remove old filter constraint and apply new one
+    _CPSuggestions.invalidate_filter(); // Remove old filter constraint and apply new one
 
-    if (auto top_row = _CPSuggestions->get_row_at_y(0); top_row) {
-        _CPSuggestions->select_row(*top_row); // select top row
+    if (auto top_row = _CPSuggestions.get_row_at_y(0); top_row) {
+        _CPSuggestions.select_row(*top_row); // select top row
     }
 
-    _CPSuggestionsScroll->get_vadjustment()->set_value(0);
+    _CPSuggestionsScroll.get_vadjustment()->set_value(0);
 }
 
 bool CommandPalette::on_filter_full_action_name(Gtk::ListBoxRow *child)
@@ -427,7 +390,7 @@ bool CommandPalette::on_window_key_pressed(GtkEventControllerKey const * /*contr
 void CommandPalette::on_window_focus(Gtk::Widget const * const focus)
 {
     // TODO: GTK4: EventControllerFocus.property_contains_focus() should make this slightly nicer?
-    if (!focus || !is_descendant_of(*focus, *_CPBase)) {
+    if (!focus || !is_descendant_of(*focus, _CPBase)) {
         close();
     }
 }
@@ -435,11 +398,11 @@ void CommandPalette::on_window_focus(Gtk::Widget const * const focus)
 void CommandPalette::on_activate_cpfilter()
 {
     if (_mode == CPMode::SEARCH) {
-        if (auto selected_row = _CPSuggestions->get_selected_row(); selected_row) {
+        if (auto selected_row = _CPSuggestions.get_selected_row(); selected_row) {
             selected_row->activate();
         }
     } else if (_mode == CPMode::INPUT) {
-        execute_action(_ask_action_ptr_name.value(), _CPFilter->get_text());
+        execute_action(_ask_action_ptr_name.value(), _CPFilter.get_text());
         _ask_action_ptr_name.reset();
         close();
     }
@@ -456,7 +419,7 @@ bool CommandPalette::on_focus_cpfilter(Gtk::DirectionType const direction)
 
     if (direction == Gtk::DIR_DOWN) {
         // Unselect so we go to 1st row
-        _CPSuggestions->unselect_all();
+        _CPSuggestions.unselect_all();
     }
 
     return false;
@@ -464,14 +427,14 @@ bool CommandPalette::on_focus_cpfilter(Gtk::DirectionType const direction)
 
 void CommandPalette::hide_suggestions()
 {
-    _CPBase->set_size_request(-1, 10);
-    _CPListBase->set_visible(false);
+    _CPBase.set_size_request(-1, 10);
+    _CPListBase.set_visible(false);
 }
 
 void CommandPalette::show_suggestions()
 {
-    _CPBase->set_size_request(-1, _max_height_requestable);
-    _CPListBase->show_all();
+    _CPBase.set_size_request(-1, _max_height_requestable);
+    _CPListBase.show_all();
 }
 
 void CommandPalette::on_action_fullname_clicked(const Glib::ustring &action_fullname)
@@ -498,7 +461,7 @@ void CommandPalette::on_history_selection_changed(Gtk::ListBoxRow *lb)
 {
     // set the search box text to current selection
     if (const auto name_label = get_name_desc(lb).first; name_label) {
-        _CPFilter->set_text(name_label->get_text());
+        _CPFilter.set_text(name_label->get_text());
     }
 }
 
@@ -509,7 +472,7 @@ bool CommandPalette::operate_recent_file(Glib::ustring const &uri, bool const im
     bool write_to_history = true;
 
     // if the last element in CPHistory is already this, don't update history file
-    if (not UI::get_children(*_CPHistory).empty()) {
+    if (not UI::get_children(_CPHistory).empty()) {
         if (const auto last_operation = _history_xml.get_last_operation(); last_operation.has_value()) {
             if (uri == last_operation->data) {
                 bool last_operation_was_import = last_operation->history_type == HistoryType::IMPORT_FILE;
@@ -625,7 +588,7 @@ bool CommandPalette::ask_action_parameter(const ActionPtrName &action_ptr_name)
              *              expected by the action, e.g., “whole number”. */
             action_hint = Glib::ustring::compose(_("Enter a %1..."), type_string);
         }
-        set_hint_texts(*_CPFilter, action_hint);
+        set_hint_texts(_CPFilter, action_hint);
 
         return true;
     }
@@ -1128,30 +1091,30 @@ void CommandPalette::set_mode(CPMode mode)
 
     switch (mode) {
         case CPMode::SEARCH:
-            set_sensitive(*_CPFilter, true);
-            _CPFilter->set_text("");
-            _CPFilter->set_icon_from_icon_name("edit-find-symbolic");
-            set_hint_texts(*_CPFilter, _("Search operation..."));
+            set_sensitive(_CPFilter, true);
+            _CPFilter.set_text("");
+            _CPFilter.set_icon_from_icon_name("edit-find-symbolic");
+            set_hint_texts(_CPFilter, _("Search operation..."));
 
             show_suggestions();
 
             // Show Suggestions instead of history
-            _CPHistoryScroll->set_no_show_all();
-            _CPHistoryScroll->set_visible(false);
+            _CPHistoryScroll.set_no_show_all();
+            _CPHistoryScroll.set_visible(false);
 
-            _CPSuggestionsScroll->set_no_show_all(false);
-            _CPSuggestionsScroll->show_all();
+            _CPSuggestionsScroll.set_no_show_all(false);
+            _CPSuggestionsScroll.show_all();
 
-            _CPSuggestions->unset_filter_func();
-            _CPSuggestions->set_filter_func(sigc::mem_fun(*this, &CommandPalette::on_filter_general));
+            _CPSuggestions.unset_filter_func();
+            _CPSuggestions.set_filter_func(sigc::mem_fun(*this, &CommandPalette::on_filter_general));
 
             _cpfilter_search_connection.disconnect(); // to be sure
 
             _cpfilter_search_connection =
-                _CPFilter->signal_search_changed().connect(sigc::mem_fun(*this, &CommandPalette::on_search));
+                _CPFilter.signal_search_changed().connect(sigc::mem_fun(*this, &CommandPalette::on_search));
 
             _search_text = "";
-            _CPSuggestions->invalidate_filter();
+            _CPSuggestions.invalidate_filter();
 
             break;
 
@@ -1160,56 +1123,56 @@ void CommandPalette::set_mode(CPMode mode)
 
             hide_suggestions();
 
-            set_sensitive(*_CPFilter, true);
-            _CPFilter->set_text("");
-            _CPFilter->grab_focus();
-            _CPFilter->set_icon_from_icon_name("input-keyboard");
-            set_hint_texts(*_CPFilter, _("Enter action argument"));
+            set_sensitive(_CPFilter, true);
+            _CPFilter.set_text("");
+            _CPFilter.grab_focus();
+            _CPFilter.set_icon_from_icon_name("input-keyboard");
+            set_hint_texts(_CPFilter, _("Enter action argument"));
 
             break;
 
         case CPMode::SHELL:
             hide_suggestions();
 
-            set_sensitive(*_CPFilter, true);
-            _CPFilter->set_icon_from_icon_name("gtk-search");
+            set_sensitive(_CPFilter, true);
+            _CPFilter.set_icon_from_icon_name("gtk-search");
 
             _cpfilter_search_connection.disconnect();
 
             break;
 
         case CPMode::HISTORY: {
-            auto const children = UI::get_children(*_CPHistory);
+            auto const children = UI::get_children(_CPHistory);
             if (children.empty()) {
                 return;
             }
 
             // Show history instead of suggestions
-            _CPSuggestionsScroll->set_no_show_all();
-            _CPHistoryScroll->set_no_show_all(false);
-            _CPSuggestionsScroll->set_visible(false);
-            _CPHistoryScroll->show_all();
+            _CPSuggestionsScroll.set_no_show_all();
+            _CPHistoryScroll.set_no_show_all(false);
+            _CPSuggestionsScroll.set_visible(false);
+            _CPHistoryScroll.show_all();
 
-            set_sensitive(*_CPFilter, false);
-            _CPFilter->set_icon_from_icon_name("format-justify-fill");
-            set_hint_texts(*_CPFilter, _("History mode"));
+            set_sensitive(_CPFilter, false);
+            _CPFilter.set_icon_from_icon_name("format-justify-fill");
+            set_hint_texts(_CPFilter, _("History mode"));
 
             _cpfilter_search_connection.disconnect();
 
-            _CPHistory->signal_row_selected().connect(
+            _CPHistory.signal_row_selected().connect(
                 sigc::mem_fun(*this, &CommandPalette::on_history_selection_changed));
-            _CPHistory->signal_row_activated().connect(sigc::mem_fun(*this, &CommandPalette::on_row_activated));
+            _CPHistory.signal_row_activated().connect(sigc::mem_fun(*this, &CommandPalette::on_row_activated));
 
             {
                 // select last row
-                auto const last_row = _CPHistory->get_row_at_index(children.size() - 1);
-                _CPHistory->select_row(*last_row);
+                auto const last_row = _CPHistory.get_row_at_index(children.size() - 1);
+                _CPHistory.select_row(*last_row);
                 last_row->grab_focus();
             }
 
             Glib::signal_idle().connect_once([this]
             {
-                const auto adjustment = _CPHistoryScroll->get_vadjustment();
+                const auto adjustment = _CPHistoryScroll.get_vadjustment();
                 adjustment->set_value(adjustment->get_upper());
             });
         }
@@ -1419,7 +1382,7 @@ void CommandPalette::load_win_doc_actions()
     }
 }
 
-Gtk::Box *CommandPalette::get_base_widget()
+Gtk::Box &CommandPalette::get_base_widget()
 {
     return _CPBase;
 }

@@ -27,6 +27,7 @@
 #include <gdk/gdkkeysyms.h>
 #include <gtkmm/adjustment.h>
 #include <gtkmm/box.h>
+#include <gtkmm/button.h>
 #include <gtkmm/cellrenderertext.h>
 #include <gtkmm/cellrenderertoggle.h>
 #include <gtkmm/dialog.h>
@@ -46,6 +47,7 @@
 #include "inkscape.h"
 #include "selection.h"
 #include "style.h"
+#include "style-enums.h"
 #include "style-internal.h"
 
 #include "io/resource.h"
@@ -238,6 +240,7 @@ StyleDialog::StyleDialog()
 
     UI::pack_start(_mainBox, _scrolledWindow, UI::PackOptions::expand_widget);
     _scrolledWindow.set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
+    _styleBox.set_name("StyleBox");
     _styleBox.set_orientation(Gtk::ORIENTATION_VERTICAL);
     _styleBox.set_valign(Gtk::ALIGN_START);
     _scrolledWindow.add(_styleBox);
@@ -468,33 +471,22 @@ void StyleDialog::readStyleElement()
         }
     }
 
-    auto gladefile = get_filename_string(Inkscape::IO::Resource::UIS, "dialog-css.glade");
-    Glib::RefPtr<Gtk::Builder> _builder;
-    try {
-        _builder = Gtk::Builder::create_from_file(gladefile);
-    } catch (const Glib::Error &ex) {
-        g_warning("Glade file loading failed for style dialog: `%s`", ex.what().c_str());
-        return;
-    }
-
-    gint selectorpos = 0;
-
-    Gtk::Box *css_selector_container;
-    _builder->get_widget("CSSSelectorContainer", css_selector_container);
-
-    Gtk::Label *css_selector;
-    _builder->get_widget("CSSSelector", css_selector);
+    // Currently selected object's properties set via style element.
+    auto builder = create_builder("dialog-css.glade");
+    auto css_selector_container = &get_widget<Gtk::Box>     (builder, "CSSSelectorContainer");
+    auto css_selector           = &get_widget<Gtk::Label>   (builder, "CSSSelector");
+    auto css_tree               = &get_widget<Gtk::TreeView>(builder, "CSSTree");
+    auto css_button             = &get_widget<Gtk::Button>  (builder, "CSSSelectorAddButton");
 
     css_selector->set_text("element");
 
-    Gtk::TreeView *css_tree;
-    _builder->get_widget("CSSTree", css_tree);
     css_tree->get_style_context()->add_class("style_element");
     Glib::RefPtr<Gtk::TreeStore> store = Gtk::TreeStore::create(_mColumns);
     css_tree->set_model(store);
     _addTreeViewHandlers(*css_tree); // TODO: GTK4: Just add one on self as weʼll get events there?
 
-    get_widget<Gtk::Button>(_builder, "CSSSelectorAddButton").signal_clicked().connect(
+    unsigned selectorpos = 0;
+    css_button->signal_clicked().connect(
         sigc::bind(
             sigc::mem_fun(*this, &StyleDialog::_addRow), store, css_tree, "style_properties", selectorpos));
 
@@ -599,6 +591,7 @@ void StyleDialog::readStyleElement()
         return;
     }
 
+    // Loop over selectors.
     for (size_t i = 0; i < tokens.size() - 1; i += 2) {
         auto selector = std::move(tokens[i]);
         Util::trim(selector); // Remove leading/trailing spaces
@@ -657,31 +650,23 @@ void StyleDialog::readStyleElement()
                       << std::endl;
         }
 
-        Glib::RefPtr<Gtk::Builder> _builder;
-        try {
-            _builder = Gtk::Builder::create_from_file(gladefile);
-        } catch (const Glib::Error &ex) {
-            g_warning("Glade file loading failed for style dialog: `%s`", ex.what().c_str());
-            return;
-        }
-
-        Gtk::Box *css_selector_container;
-        _builder->get_widget("CSSSelectorContainer", css_selector_container);
-
-        Gtk::Label *css_selector;
-        _builder->get_widget("CSSSelector", css_selector);
-
-        Gtk::Entry *css_edit_selector;
-        _builder->get_widget("CSSEditSelector", css_edit_selector);
+        // Create new builder each loop.
+        auto builder = create_builder("dialog-css.glade");
+        auto css_selector_container = &get_widget<Gtk::Box>     (builder, "CSSSelectorContainer");
+        auto css_selector           = &get_widget<Gtk::Label>   (builder, "CSSSelector");
+        auto css_tree               = &get_widget<Gtk::TreeView>(builder, "CSSTree");
+        auto css_button             = &get_widget<Gtk::Button>  (builder, "CSSSelectorAddButton");
 
         css_selector->set_text(selector);
 
-        Gtk::TreeView *css_tree;
-        _builder->get_widget("CSSTree", css_tree);
         css_tree->get_style_context()->add_class("style_sheet");
         Glib::RefPtr<Gtk::TreeStore> store = Gtk::TreeStore::create(_mColumns);
         css_tree->set_model(store);
         _addTreeViewHandlers(*css_tree); // TODO: GTK4: Just add one on self as weʼll get events there?
+
+        css_button->signal_clicked().connect(
+            sigc::bind(
+                sigc::mem_fun(*this, &StyleDialog::_addRow), store, css_tree, selector_orig, selectorpos));
 
         auto const addRenderer = Gtk::make_managed<UI::Widget::IconRenderer>();
         addRenderer->add_icon("edit-delete");
@@ -750,9 +735,6 @@ void StyleDialog::readStyleElement()
         move_to_result(parseStyle(std::move(comments  )), false);
         empty = result_props.empty();
 
-        get_widget<Gtk::Button>(_builder, "CSSSelectorAddButton").signal_clicked().connect(
-            sigc::bind(
-                sigc::mem_fun(*this, &StyleDialog::_addRow), store, css_tree, selector_orig, selectorpos));
 
         for (auto const &[name, pair] : result_props) {
             auto const &[value, active] = pair;
@@ -805,25 +787,22 @@ void StyleDialog::readStyleElement()
         selectorpos++;
     }
 
-    try {
-        _builder = Gtk::Builder::create_from_file(gladefile);
-    } catch (const Glib::Error &ex) {
-        g_warning("Glade file loading failed for style dialog: `%s`", ex.what().c_str());
-        return;
-    }
+    // Currently selected object's properties set via attributes.
+    // Create new builder and get a new set of widgets.
+    builder = create_builder("dialog-css.glade");
+    css_selector_container = &get_widget<Gtk::Box>     (builder, "CSSSelectorContainer");
+    css_selector           = &get_widget<Gtk::Label>   (builder, "CSSSelector");
+    css_tree               = &get_widget<Gtk::TreeView>(builder, "CSSTree");
+    css_button             = &get_widget<Gtk::Button>  (builder, "CSSSelectorAddButton");
 
-    _builder->get_widget("CSSSelector", css_selector);
     css_selector->set_text("element.attributes");
 
-    _builder->get_widget("CSSSelectorContainer", css_selector_container);
-
-    store = Gtk::TreeStore::create(_mColumns);
-    _builder->get_widget("CSSTree", css_tree);
     css_tree->get_style_context()->add_class("style_attribute");
+    store = Gtk::TreeStore::create(_mColumns);
     css_tree->set_model(store);
     _addTreeViewHandlers(*css_tree); // TODO: GTK4: Just add one on self as weʼll get events there?
 
-    get_widget<Gtk::Button>(_builder, "CSSSelectorAddButton").signal_clicked().connect(
+    css_button->signal_clicked().connect(
         sigc::bind(
             sigc::mem_fun(*this, &StyleDialog::_addRow), store, css_tree, "attributes", selectorpos));
 
@@ -1053,7 +1032,7 @@ void StyleDialog::_writeStyleElement(Glib::RefPtr<Gtk::TreeStore> const &store,
         return;
     }
     _updating = true;
-    gint selectorpos = 0;
+    int selectorpos = 0;
     std::string styleContent;
     if (selector != "style_properties" && selector != "attributes") {
         if (!new_selector.empty()) {
@@ -1178,7 +1157,7 @@ void StyleDialog::_setAutocompletion(Gtk::Entry *entry, SPStyleEnum const cssenu
     entry_completion->set_text_column (_mCSSData._colCSSData);
     entry_completion->set_minimum_key_length(0);
     entry_completion->set_popup_completion(true);
-    gint counter = 0;
+    int counter = 0;
     const char * key = cssenum[counter].key;
     while (key) {
         Gtk::TreeModel::Row row = *(completionModel->prepend());

@@ -28,7 +28,6 @@
 #include <gtkmm/treemodel.h>
 #include <gtkmm/treepath.h>
 
-#include "style-enums.h"
 #include "ui/dialog/dialog-base.h"
 
 namespace Gtk {
@@ -36,15 +35,18 @@ class Adjustment;
 class CellEditable;
 class Dialog;
 class Entry;
-class Label;
 class TreeStore;
 class TreeView;
 class TreeViewColumn;
 } // namespace Gtk
 
+struct SPStyleEnum;
+
 class SPObject;
 
 namespace Inkscape {
+
+class Selection;
 
 namespace XML {
 class Node;
@@ -116,7 +118,7 @@ public:
         Gtk::TreeModelColumn<Glib::ustring> _colValue;    // Value of the property.
         Gtk::TreeModelColumn<bool> _colStrike;            // Property not used, overloaded
         Gtk::TreeModelColumn<Glib::ustring> _colSelector; // Style or matching object id.
-        Gtk::TreeModelColumn<gint> _colSelectorPos;       // Position of the selector to handle dup selectors
+        Gtk::TreeModelColumn<int> _colSelectorPos;        // Position of the selector to handle dup selectors
         Gtk::TreeModelColumn<Glib::ustring> _colOwner;    // Store the owner of the property for popup
         Gtk::TreeModelColumn<bool> _colLinked;            // Other object linked
         Gtk::TreeModelColumn<SPObject *> _colHref;        // Is going to another object
@@ -130,7 +132,7 @@ public:
     };
     CSSData _mCSSData;
 
-    guint _deleted_pos{0};
+    unsigned _deleted_pos{0};
 
     // Widgets
     Gtk::ScrolledWindow _scrolledWindow;

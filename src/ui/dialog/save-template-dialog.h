@@ -20,9 +20,7 @@ class Entry;
 class Window;
 }
 
-namespace Inkscape {
-namespace UI {
-namespace Dialog {
+namespace Inkscape::UI::Dialog {
 
 class SaveTemplate
 {
@@ -37,20 +35,31 @@ protected:
 
 private:
 
-    Gtk::Dialog *dialog;
+    Glib::RefPtr<Gtk::Builder> builder;
 
-    Gtk::Entry *name;
-    Gtk::Entry *author;
-    Gtk::Entry *description;
-    Gtk::Entry *keywords;
+    Gtk::Dialog &dialog;
 
-    Gtk::CheckButton *set_default_template;
+    Gtk::Entry &name;
+    Gtk::Entry &author;
+    Gtk::Entry &description;
+    Gtk::Entry &keywords;
+
+    Gtk::CheckButton &set_default_template;
 
     SaveTemplate(Gtk::Window &parent);
     void save_template(Gtk::Window &parent);
 
 };
-}
-}
-}
-#endif
+} // namespace Inkscape:UI::Dialog
+#endif // SEEN_TOOLBAR_SNAP_H
+
+/*
+  Local Variables:
+  mode:c++
+  c-file-style:"stroustrup"
+  c-file-offsets:((innamespace . 0)(inline-open . 0)(case-label . +))
+  indent-tabs-mode:nil
+  fill-column:99
+  End:
+*/
+// vim: filetype=cpp:expandtab:shiftwidth=4:tabstop=8:softtabstop=4:fileencoding=utf-8:textwidth=99 :

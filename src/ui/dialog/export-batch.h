@@ -39,7 +39,6 @@ class ProgressBar;
 class Widget;
 } // namespace Gtk
 
-class ExportProgressDialog;
 class InkscapeApplication;
 class SPDesktop;
 class SPDocument;
@@ -60,7 +59,6 @@ class ColorPicker;
 namespace Dialog {
 
 class ExportList;
-class PreviewDrawing;
 
 class BatchItem final : public Gtk::FlowBoxChild
 {
@@ -129,17 +127,17 @@ private:
     bool setupDone = false; // To prevent setup() call add connections again.
 
     std::map<selection_mode, Gtk::RadioButton *> selection_buttons;
-    Gtk::FlowBox *preview_container = nullptr;
-    Gtk::CheckButton *show_preview = nullptr;
-    Gtk::Label *num_elements = nullptr;
-    Gtk::CheckButton *hide_all = nullptr;
-    Gtk::Entry *filename_entry = nullptr;
-    Gtk::Button *export_btn = nullptr;
-    Gtk::Button *cancel_btn = nullptr;
-    Gtk::ProgressBar *_prog = nullptr;
-    Gtk::ProgressBar *_prog_batch = nullptr;
-    ExportList *export_list = nullptr;
-    Gtk::Widget *progress_box = nullptr;
+    Gtk::FlowBox &preview_container;
+    Gtk::CheckButton &show_preview;
+    Gtk::Label &num_elements;
+    Gtk::CheckButton &hide_all;
+    Gtk::Entry &filename_entry;
+    Gtk::Button &export_btn;
+    Gtk::Button &cancel_btn;
+    Gtk::ProgressBar &_prog;
+    Gtk::ProgressBar &_prog_batch;
+    ExportList &export_list;
+    Gtk::Box &progress_box;
 
     // Store all items to be displayed in flowbox
     std::map<std::string, std::unique_ptr<BatchItem>> current_items;

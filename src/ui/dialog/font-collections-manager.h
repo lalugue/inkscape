@@ -58,18 +58,19 @@ private:
     /*
      * All the dialogs widgets
      */
-    Gtk::Box *_contents;
-    Gtk::Paned *_paned;
-    Gtk::Box *_collections_box;
-    Gtk::Box *_buttons_box;
-    Gtk::Box *_font_list_box;
-    Gtk::Label *_font_count_label;
-    Gtk::Box *_font_list_filter_box;
-    Gtk::SearchEntry *_search_entry;
-    Gtk::Button *_reset_button;
-    Gtk::Button *_create_button;
-    Gtk::Button *_edit_button;
-    Gtk::Button *_delete_button;
+    Glib::RefPtr<Gtk::Builder> builder;
+    Gtk::Box &_contents;
+    Gtk::Paned &_paned;
+    Gtk::Box &_collections_box;
+    Gtk::Box &_buttons_box;
+    Gtk::Box &_font_list_box;
+    Gtk::Label &_font_count_label;
+    Gtk::Box &_font_list_filter_box;
+    Gtk::SearchEntry &_search_entry;
+    Gtk::Button &_reset_button;
+    Gtk::Button &_create_button;
+    Gtk::Button &_edit_button;
+    Gtk::Button &_delete_button;
     Inkscape::UI::Widget::FontSelector _font_selector;
     Inkscape::UI::Widget::FontCollectionSelector _user_font_collections;
 
