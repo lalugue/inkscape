@@ -197,7 +197,7 @@ DocumentProperties::DocumentProperties()
     _notebook.append_page(*_page_scripting, _("Scripting"));
     _notebook.append_page(*_page_metadata1, _("Metadata"));
     _notebook.append_page(*_page_metadata2, _("License"));
-    _notebook.signal_switch_page().connect([=](Gtk::Widget*, guint page){
+    _notebook.signal_switch_page().connect([this](Gtk::Widget const *, unsigned const page){
         // we cannot use widget argument, as this notification fires during destruction with all pages passed one by one
         // page no 3 - cms
         if (page == 3) {
@@ -215,7 +215,7 @@ DocumentProperties::DocumentProperties()
     build_metadata();
     _wr.setUpdating (false);
 
-    _grids_button_remove.signal_clicked().connect([=](){ onRemoveGrid(); });
+    _grids_button_remove.signal_clicked().connect([this]{ onRemoveGrid(); });
 
     show_all_children();
 }
@@ -437,7 +437,7 @@ void DocumentProperties::build_page()
     _page_page->table().attach(*_page, 0, 0);
     _page_page->set_visible(true);
 
-    _page->signal_color_changed().connect([=](unsigned int color, PageProperties::Color element){
+    _page->signal_color_changed().connect([this](unsigned const color, PageProperties::Color const element){
         if (_wr.isUpdating() || !_wr.desktop()) return;
 
         _wr.setUpdating(true);
@@ -483,7 +483,7 @@ void DocumentProperties::build_page()
         _wr.setUpdating(false);
     });
 
-    _page->signal_check_toggled().connect([=](bool checked, PageProperties::Check element){
+    _page->signal_check_toggled().connect([this](bool const checked, PageProperties::Check const element){
         if (_wr.isUpdating() || !_wr.desktop()) return;
 
         _wr.setUpdating(true);
@@ -512,7 +512,7 @@ void DocumentProperties::build_page()
         _wr.setUpdating(false);
     });
 
-    _page->signal_unit_changed().connect([=](const Inkscape::Util::Unit* unit, PageProperties::Units element){
+    _page->signal_unit_changed().connect([this](Inkscape::Util::Unit const * const unit, PageProperties::Units const element){
         if (_wr.isUpdating() || !_wr.desktop()) return;
 
         if (element == PageProperties::Units::Display) {
@@ -524,7 +524,7 @@ void DocumentProperties::build_page()
         }
     });
 
-    _page->signal_resize_to_fit().connect([=](){
+    _page->signal_resize_to_fit().connect([this]{
         if (_wr.isUpdating() || !_wr.desktop()) return;
 
         if (auto document = getDocument()) {
@@ -1438,8 +1438,7 @@ void DocumentProperties::build_gridspage()
         btn->set_always_show_image();
         btn_size->add_widget(*btn);
         UI::pack_start(_grids_hbox_crea, *btn, false, true);
-        GridType grid_type = type;
-        btn->signal_clicked().connect([=](){ onNewGrid(grid_type); });
+        btn->signal_clicked().connect([this, type = type]{ onNewGrid(type); });
     }
 
     _grids_vbox.set_name("NotebookPage");
@@ -1826,7 +1825,7 @@ GridWidget::GridWidget(SPGrid *grid)
     UI::pack_start(*column, *_rcp_gmcol, true, false);
     UI::pack_start(*column, *_rsi, true, false);    
 
-    _modified_signal = grid->connectModified([this, grid](SPObject *obj, guint flags) {
+    _modified_signal = grid->connectModified([this, grid](SPObject const * /*obj*/, unsigned /*flags*/) {
         update();
     });
     update();

@@ -268,7 +268,6 @@ set(ui_SRC
 	widget/swatch-selector.cpp
 	widget/template-list.cpp
 	widget/text.cpp
-	widget/tolerance-slider.cpp
 	widget/unit-menu.cpp
 	widget/unit-tracker.cpp
 
@@ -560,7 +559,6 @@ set(ui_SRC
 	widget/swatch-selector.h
 	widget/template-list.h
 	widget/text.h
-	widget/tolerance-slider.h
 	widget/unit-menu.h
 	widget/unit-tracker.h
 
