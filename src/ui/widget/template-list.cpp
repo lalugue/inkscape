@@ -15,12 +15,14 @@
 #include <gtkmm/builder.h>
 #include <gtkmm/iconview.h>
 #include <gtkmm/liststore.h>
+#include <gtkmm/scrolledwindow.h>
 #include <gtkmm/treemodel.h>
 
 #include "extension/db.h"
 #include "extension/template.h"
 #include "inkscape-application.h"
 #include "io/resource.h"
+#include "ui/builder-utils.h"
 #include "ui/util.h"
 #include "ui/icon-loader.h"
 #include "ui/svg-renderer.h"
@@ -110,30 +112,15 @@ Glib::RefPtr<Gdk::Pixbuf> TemplateList::icon_to_pixbuf(std::string const &path)
  */
 Glib::RefPtr<Gtk::ListStore> TemplateList::generate_category(std::string const &label)
 {
-    static Glib::ustring uifile = get_filename(UIS, "widget-new-from-template.ui");
-
-    Glib::RefPtr<Gtk::Builder> builder;
-    try {
-        builder = Gtk::Builder::create_from_file(uifile);
-    } catch (const Glib::Error &ex) {
-        g_error("UI file loading failed for template list widget: %s", ex.what().c_str());
-        throw UIFileUnavailable();
-    }
-
-    Gtk::Widget *container = nullptr;
-    Gtk::IconView *icons = nullptr;
-    builder->get_widget("container", container);
-    builder->get_widget("iconview", icons);
-
-    if (!icons || !container) {
-        throw WidgetUnavailable();
-    }
+    auto builder = create_builder("widget-new-from-template.ui");
+    auto container = &get_widget<Gtk::ScrolledWindow>(builder, "container");
+    auto icons     = &get_widget<Gtk::IconView>      (builder, "iconview");
 
     // This packing keeps the Gtk widget alive, beyond the builder's lifetime
-    this->append_page(*container, g_dpgettext2(nullptr, "TemplateCategory", label.c_str()));
+    append_page(*container, g_dpgettext2(nullptr, "TemplateCategory", label.c_str()));
 
-    icons->signal_selection_changed().connect([=]() { _item_selected_signal.emit(); });
-    icons->signal_item_activated().connect([=](const Gtk::TreeModel::Path) { _item_activated_signal.emit(); });
+    icons->signal_selection_changed().connect([this]() { _item_selected_signal.emit(); });
+    icons->signal_item_activated().connect([this](const Gtk::TreeModel::Path) { _item_activated_signal.emit(); });
 
     return Glib::RefPtr<Gtk::ListStore>::cast_dynamic(icons->get_model());
 }

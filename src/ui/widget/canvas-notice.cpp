@@ -19,7 +19,7 @@ CanvasNotice::CanvasNotice(BaseObjectType *cobject, Glib::RefPtr<Gtk::Builder> b
     , _label(get_widget<Gtk::Label>(_builder, "notice-label"))
 {
     auto &close = get_widget<Gtk::Button>(_builder, "notice-close");
-    close.signal_clicked().connect([=]() {
+    close.signal_clicked().connect([this]() {
         hide();
     });
 }
@@ -29,7 +29,7 @@ void CanvasNotice::show(Glib::ustring const &msg, unsigned timeout)
     _label.set_text(msg);
     set_reveal_child(true);
     if (timeout != 0) {
-        _timeout = Glib::signal_timeout().connect([=]() {
+        _timeout = Glib::signal_timeout().connect([this]() {
             hide();
             return false;
         }, timeout);
@@ -43,9 +43,8 @@ void CanvasNotice::hide()
 
 CanvasNotice *CanvasNotice::create()
 {
-    CanvasNotice *widget = nullptr;
     auto builder = create_builder("canvas-notice.glade");
-    builder->get_widget_derived("canvas-notice", widget);
+    auto widget = &get_derived_widget<CanvasNotice>(builder, "canvas-notice");
     return widget;
 }
 

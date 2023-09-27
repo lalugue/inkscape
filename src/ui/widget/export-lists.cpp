@@ -38,6 +38,7 @@
 #include "page-manager.h"
 #include "preferences.h"
 #include "selection-chemistry.h"
+#include "ui/builder-utils.h"
 #include "ui/dialog-events.h"
 #include "ui/dialog/dialog-notebook.h"
 #include "ui/dialog/filedialog.h"
@@ -45,7 +46,6 @@
 #include "ui/interface.h"
 #include "ui/widget/scrollprotected.h"
 #include "ui/widget/unit-menu.h"
-#include "ui/builder-utils.h"
 
 using Inkscape::Util::unit_table;
 
@@ -67,11 +67,11 @@ ExtensionList::~ExtensionList() = default;
 void ExtensionList::init()
 {
     _builder = create_builder("dialog-export-prefs.glade");
-    _builder->get_widget("pref_button", _pref_button);
-    _builder->get_widget("pref_popover", _pref_popover);
-    _builder->get_widget("pref_holder", _pref_holder);
+    _pref_button  = &get_widget<Gtk::MenuButton>(_builder, "pref_button");
+    _pref_popover = &get_widget<Gtk::Popover>   (_builder, "pref_popover");
+    _pref_holder  = &get_widget<Gtk::Viewport>  (_builder, "pref_holder");
 
-    _popover_signal = _pref_popover->signal_show().connect([=]() {
+    _popover_signal = _pref_popover->signal_show().connect([=, this]() {
         _pref_holder->remove();
         if (auto ext = getExtension()) {
             if (auto gui = ext->autogui(nullptr, nullptr)) {
@@ -82,7 +82,7 @@ void ExtensionList::init()
     });
 
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-    _watch_pref = prefs->createObserver("/dialogs/export/show_all_extensions", [=]() { setup(); });
+    _watch_pref = prefs->createObserver("/dialogs/export/show_all_extensions", [this]() { setup(); });
 }
 
 void ExtensionList::on_changed()

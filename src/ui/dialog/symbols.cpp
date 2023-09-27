@@ -151,12 +151,12 @@ const char *ALL_SETS = N_("All symbol sets");
 SymbolsDialog::SymbolsDialog(const char* prefsPath)
     : DialogBase(prefsPath, "Symbols"),
     _builder(create_builder("dialog-symbols.glade")),
-    _zoom(get_widget<Gtk::Scale>(_builder, "zoom")),
-    _symbols_popup(get_widget<Gtk::MenuButton>(_builder, "symbol-set-popup")),
-    _set_search(get_widget<Gtk::SearchEntry>(_builder, "set-search")),
-    _search(get_widget<Gtk::SearchEntry>(_builder, "search")),
-    _symbol_sets_view(get_widget<Gtk::IconView>(_builder, "symbol-sets")),
-    _cur_set_name(get_widget<Gtk::Label>(_builder, "cur-set")),
+    _zoom(            get_widget<Gtk::Scale>      (_builder, "zoom")),
+    _symbols_popup(   get_widget<Gtk::MenuButton> (_builder, "symbol-set-popup")),
+    _set_search(      get_widget<Gtk::SearchEntry>(_builder, "set-search")),
+    _search(          get_widget<Gtk::SearchEntry>(_builder, "search")),
+    _symbol_sets_view(get_widget<Gtk::IconView>   (_builder, "symbol-sets")),
+    _cur_set_name(   get_widget<Gtk::Label>       (_builder, "cur-set")),
     _store(Gtk::ListStore::create(g_columns)),
     _image_cache(1000) // arbitrary limit for how many rendered symbols to keep around
 {
@@ -170,7 +170,7 @@ SymbolsDialog::SymbolsDialog(const char* prefsPath)
     _symbol_sets = Gtk::ListStore::create(g_set_columns);
     _sets._store = _symbol_sets;
     _sets._filtered = Gtk::TreeModelFilter::create(_symbol_sets);
-    _sets._filtered->set_visible_func([=](const Gtk::TreeModel::const_iterator& it){
+    _sets._filtered->set_visible_func([=, this](const Gtk::TreeModel::const_iterator& it){
         if (_set_search.get_text_length() == 0) return true;
 
         Glib::ustring id = (*it)[g_set_columns.set_id];
@@ -206,12 +206,12 @@ SymbolsDialog::SymbolsDialog(const char* prefsPath)
     (*row)[g_set_columns.set_id] = ALL_SETS_ID;
     (*row)[g_set_columns.translated_title] = _(ALL_SETS);
 
-    _set_search.signal_search_changed().connect([=](){
+    _set_search.signal_search_changed().connect([this](){
         auto scoped(_update.block());
         _sets.refilter();
     });
 
-    auto select_set = [=](const Gtk::TreeModel::Path& set_path) {
+    auto select_set = [=, this](const Gtk::TreeModel::Path& set_path) {
         if (!set_path.empty()) {
             // drive selection
             _symbol_sets_view.select_path(set_path);
@@ -228,7 +228,7 @@ SymbolsDialog::SymbolsDialog(const char* prefsPath)
         return false;
     };
 
-    _symbol_sets_view.signal_selection_changed().connect([=](){
+    _symbol_sets_view.signal_selection_changed().connect([=, this](){
         if (select_set({})) {
             get_widget<Gtk::Popover>(_builder, "set-popover").set_visible(false);
         }
@@ -246,10 +246,10 @@ SymbolsDialog::SymbolsDialog(const char* prefsPath)
     auto& main = get_widget<Gtk::Box>(_builder, "main-box");
     UI::pack_start(*this, main, UI::PackOptions::expand_widget);
 
-    _builder->get_widget("tools", tools);
+    tools = &get_widget<Gtk::Box>(_builder, "tools");
 
     icon_view = &get_widget<Gtk::IconView>(_builder, "icon-view");
-    _symbols._filtered->set_visible_func([=](const Gtk::TreeModel::const_iterator& it){
+    _symbols._filtered->set_visible_func([=, this](const Gtk::TreeModel::const_iterator& it){
         if (_search.get_text_length() == 0) return true;
 
         auto text = _search.get_text().lowercase();
@@ -259,9 +259,9 @@ SymbolsDialog::SymbolsDialog(const char* prefsPath)
     icon_view->set_model(_symbols._filtered);
     icon_view->set_tooltip_column(g_columns.symbol_title.index());
 
-    _search.signal_search_changed().connect([=](){
+    _search.signal_search_changed().connect([this](){
         int delay = _search.get_text_length() == 0 ? 0 : 300;
-        _idle_search = Glib::signal_timeout().connect([=](){
+        _idle_search = Glib::signal_timeout().connect([this](){
             auto scoped(_update.block());
             _symbols.refilter();
             set_info();
@@ -275,7 +275,7 @@ SymbolsDialog::SymbolsDialog(const char* prefsPath)
     if (names) {
         icon_view->set_markup_column(g_columns.symbol_short_title);
     }
-    show_names->signal_toggled().connect([=](){
+    show_names->signal_toggled().connect([=, this](){
         bool show = show_names->get_active();
         icon_view->set_markup_column(show ? g_columns.symbol_short_title.index() : -1);
         prefs->setBool(path + "show-names", show);
@@ -288,46 +288,46 @@ SymbolsDialog::SymbolsDialog(const char* prefsPath)
     icon_view->signal_drag_data_get().connect(sigc::mem_fun(*this, &SymbolsDialog::iconDragDataGet));
     icon_view->signal_selection_changed().connect(sigc::mem_fun(*this, &SymbolsDialog::iconChanged));
 
-    _builder->get_widget("scroller", scroller);
+    scroller = &get_widget<Gtk::ScrolledWindow>(_builder, "scroller");
 
-  // here we fix scoller to allow pass the scroll to parent scroll when reach upper or lower limit
-  // this must be added to al scrolleing window in dialogs. We dont do auto because dialogs can be recreated
-  // in the dialog code so think is safer call inside
-  fix_inner_scroll(scroller);
+    // here we fix scoller to allow pass the scroll to parent scroll when reach upper or lower limit
+    // this must be added to al scrolleing window in dialogs. We dont do auto because dialogs can be recreated
+    // in the dialog code so think is safer call inside
+    fix_inner_scroll(scroller);
 
-  _builder->get_widget("overlay", overlay);
+    _builder->get_widget("overlay", overlay);
 
-  /*************************Overlays******************************/
-  // No results
-  overlay_icon = sp_get_icon_image("searching", Gtk::ICON_SIZE_DIALOG);
-  overlay_icon->set_pixel_size(40);
-  overlay_icon->set_halign(Gtk::ALIGN_CENTER);
-  overlay_icon->set_valign(Gtk::ALIGN_START);
-  overlay_icon->set_margin_top(90);
-  overlay_icon->set_no_show_all(true);
+    /*************************Overlays******************************/
+    // No results
+    overlay_icon = sp_get_icon_image("searching", Gtk::ICON_SIZE_DIALOG);
+    overlay_icon->set_pixel_size(40);
+    overlay_icon->set_halign(Gtk::ALIGN_CENTER);
+    overlay_icon->set_valign(Gtk::ALIGN_START);
+    overlay_icon->set_margin_top(90);
+    overlay_icon->set_no_show_all(true);
 
-  overlay_title = Gtk::make_managed<Gtk::Label>();
-  overlay_title->set_halign(Gtk::ALIGN_CENTER );
-  overlay_title->set_valign(Gtk::ALIGN_START );
-  overlay_title->set_justify(Gtk::JUSTIFY_CENTER);
-  overlay_title->set_margin_top(135);
-  overlay_title->set_no_show_all(true);
+    overlay_title = Gtk::make_managed<Gtk::Label>();
+    overlay_title->set_halign(Gtk::ALIGN_CENTER );
+    overlay_title->set_valign(Gtk::ALIGN_START );
+    overlay_title->set_justify(Gtk::JUSTIFY_CENTER);
+    overlay_title->set_margin_top(135);
+    overlay_title->set_no_show_all(true);
 
-  overlay_desc = Gtk::make_managed<Gtk::Label>();
-  overlay_desc->set_halign(Gtk::ALIGN_CENTER);
-  overlay_desc->set_valign(Gtk::ALIGN_START);
-  overlay_desc->set_margin_top(160);
-  overlay_desc->set_justify(Gtk::JUSTIFY_CENTER);
-  overlay_desc->set_no_show_all(true);
+    overlay_desc = Gtk::make_managed<Gtk::Label>();
+    overlay_desc->set_halign(Gtk::ALIGN_CENTER);
+    overlay_desc->set_valign(Gtk::ALIGN_START);
+    overlay_desc->set_margin_top(160);
+    overlay_desc->set_justify(Gtk::JUSTIFY_CENTER);
+    overlay_desc->set_no_show_all(true);
 
-  overlay->add_overlay(*overlay_icon);
-  overlay->add_overlay(*overlay_title);
-  overlay->add_overlay(*overlay_desc);
+    overlay->add_overlay(*overlay_icon);
+    overlay->add_overlay(*overlay_title);
+    overlay->add_overlay(*overlay_desc);
 
-  previous_height = 0;
-  previous_width = 0;
+    previous_height = 0;
+    previous_width = 0;
 
-  /******************** Tools *******************************/
+    /******************** Tools *******************************/
 
     _builder->get_widget("add-symbol", add_symbol);
     add_symbol->signal_clicked().connect(sigc::mem_fun(*this, &SymbolsDialog::insertSymbol));
@@ -340,7 +340,7 @@ SymbolsDialog::SymbolsDialog(const char* prefsPath)
 
     auto scale = &get_widget<Gtk::Scale>(_builder, "symbol-size");
     scale->set_value(pack_size);
-    scale->signal_value_changed().connect([=](){
+    scale->signal_value_changed().connect([=, this](){
         pack_size = scale->get_value();
         assert(pack_size >= 0 && pack_size < SIZES);
         _image_cache.clear();
@@ -351,7 +351,7 @@ SymbolsDialog::SymbolsDialog(const char* prefsPath)
     scale_factor = prefs->getIntLimited(path + "scale-factor", 0, -10, +10);
 
     _zoom.set_value(scale_factor);
-    _zoom.signal_value_changed().connect([=](){
+    _zoom.signal_value_changed().connect([=, this](){
         scale_factor = _zoom.get_value();
         rebuild();
         prefs->setInt(path + "scale-factor", scale_factor);
@@ -360,7 +360,7 @@ SymbolsDialog::SymbolsDialog(const char* prefsPath)
     icon_view->set_columns(-1);
     icon_view->pack_start(_renderer);
     icon_view->add_attribute(_renderer, "surface", g_columns.symbol_image);
-    icon_view->set_cell_data_func(_renderer, [=](const Gtk::TreeModel::const_iterator& it){
+    icon_view->set_cell_data_func(_renderer, [=, this](const Gtk::TreeModel::const_iterator& it){
         Gdk::Rectangle rect;
         Gtk::TreeModel::Path path(it);
         if (icon_view->get_cell_rect(path, rect)) {
@@ -378,7 +378,7 @@ SymbolsDialog::SymbolsDialog(const char* prefsPath)
     _builder->get_widget("zoom-to-fit", fit_symbol);
     auto fit = prefs->getBool(path + "zoom-to-fit", true);
     fit_symbol->set_active(fit);
-    fit_symbol->signal_clicked().connect([=](){
+    fit_symbol->signal_clicked().connect([=, this](){
         rebuild();
         prefs->setBool(path + "zoom-to-fit", fit_symbol->get_active());
     });
@@ -435,7 +435,7 @@ void collect_symbols(SPObject* object, std::vector<SPSymbol*>& symbols) {
 }
 
 void SymbolsDialog::load_all_symbols() {
-    _sets._store->foreach_iter([=](const Gtk::TreeModel::iterator& it){
+    _sets._store->foreach_iter([this](const Gtk::TreeModel::iterator& it){
         if (!(*it)[g_set_columns.set_document]) {
             std::string path = (*it)[g_set_columns.set_filename];
             if (!path.empty()) {
@@ -687,7 +687,7 @@ void SymbolsDialog::refresh_on_idle(int delay) {
     // if symbols from current document are presented...
     if (get_current_set_id() == CURRENT_DOC_ID) {
         // refresh them on idle; delay here helps to coalesce consecutive requests into one
-        _idle_refresh = Glib::signal_timeout().connect([=](){
+        _idle_refresh = Glib::signal_timeout().connect([this](){
             rebuild(*get_current_set());
             return false; // disconnect
         }, delay, Glib::PRIORITY_DEFAULT_IDLE);
@@ -700,7 +700,7 @@ void SymbolsDialog::documentReplaced()
     _doc_resource_changed.disconnect();
 
     if (auto document = getDocument()) {
-        _defs_modified = document->getDefs()->connectModified([=](SPObject* ob, guint flags) {
+        _defs_modified = document->getDefs()->connectModified([this](SPObject* ob, guint flags) {
             refresh_on_idle();
         });
         _doc_resource_changed = document->connectResourcesChanged("symbol", [this](){

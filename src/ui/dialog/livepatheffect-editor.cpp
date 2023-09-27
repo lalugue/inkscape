@@ -716,7 +716,6 @@ LivePathEffectEditor::effect_list_reload(SPLPEItem *lpeitem)
     clear_lpe_list();
     _LPEExpanders.clear();
 
-    auto gladefile = get_filename_string(Inkscape::IO::Resource::UIS, "dialog-livepatheffect-item.glade");
     int counter = -1;
     Gtk::Expander *LPEExpanderCurrent = nullptr;
     effectlist = lpeitem->getEffectList();
@@ -757,33 +756,17 @@ LivePathEffectEditor::effect_list_reload(SPLPEItem *lpeitem)
 
         if (!lpe) continue; // TODO: Should this be a warning or error?
 
-        Glib::RefPtr<Gtk::Builder> builder;
-        try {
-            builder = Gtk::Builder::create_from_file(gladefile);
-        } catch (const Glib::Error &ex) {
-            g_warning("Glade file loading failed for path effect dialog item: `%s`", ex.what().c_str());
-            return;
-        }
-
-        Gtk::Box *LPEEffect;
-        Gtk::Box *LPEExpanderBox;
-        Gtk::Box *LPEActionButtons;
-        Gtk::EventBox *LPEOpenExpander;
-        Gtk::Expander *LPEExpander;
-        Gtk::Image *LPEIconImage;
-        Gtk::Button *LPEErase;
-        Gtk::Button *LPEHide;
-        Gtk::Label *LPENameLabel;
-        builder->get_widget("LPENameLabel", LPENameLabel);
-        builder->get_widget("LPEHide", LPEHide);
-        builder->get_widget("LPEIconImage", LPEIconImage);
-        builder->get_widget("LPEExpanderBox", LPEExpanderBox);
-        builder->get_widget("LPEEffect", LPEEffect);
-        builder->get_widget("LPEExpander", LPEExpander);
-        builder->get_widget("LPEOpenExpander", LPEOpenExpander);
-        builder->get_widget("LPEErase", LPEErase);
-        builder->get_widget("LPEDrag", LPEDrag);
-        builder->get_widget("LPEActionButtons", LPEActionButtons);
+        auto builder = create_builder("dialog-livepatheffect-item.glade");
+        auto LPENameLabel     = &get_widget<Gtk::Label>   (builder, "LPENameLabel");
+        auto LPEHide          = &get_widget<Gtk::Button>  (builder, "LPEHide");
+        auto LPEIconImage     = &get_widget<Gtk::Image>   (builder, "LPEIconImage");
+        auto LPEExpanderBox   = &get_widget<Gtk::Box>     (builder, "LPEExpanderBox");
+        auto LPEEffect        = &get_widget<Gtk::Box>     (builder, "LPEEffect");
+        auto LPEExpander      = &get_widget<Gtk::Expander>(builder, "LPEExpander");
+        auto LPEActionButtons = &get_widget<Gtk::Box>     (builder, "LPEActionButtons");
+        auto LPEOpenExpander  = &get_widget<Gtk::EventBox>(builder, "LPEOpenExpander");
+        auto LPEErase         = &get_widget<Gtk::Button>  (builder, "LPEErase");
+        LPEDrag               = &get_widget<Gtk::Button>  (builder, "LPEDrag");
 
         LPEExpander->drag_dest_unset();
         LPEActionButtons->drag_dest_unset();
@@ -895,7 +878,7 @@ LivePathEffectEditor::effect_list_reload(SPLPEItem *lpeitem)
         LPEExpander->property_expanded().signal_changed().connect(sigc::bind(
                 sigc::mem_fun(*this, &LivePathEffectEditor::expanded_notify), LPEExpander));
 
-        Controller::add_click(*LPEOpenExpander, [=](Gtk::GestureMultiPress const &, int, double, double)
+        Controller::add_click(*LPEOpenExpander, [=, this](Gtk::GestureMultiPress const &, int, double, double)
         {
            LPEExpander->set_expanded(!LPEExpander->get_expanded());
            return Gtk::EVENT_SEQUENCE_CLAIMED;
