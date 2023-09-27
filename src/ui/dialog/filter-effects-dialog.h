@@ -79,10 +79,8 @@ public:
 
     void set_attrs_locked(const bool);
 
-protected:
-    void show_all_vfunc() override;
-
 private:
+    void show_all_vfunc() override;
     void documentReplaced() override;
     void selectionChanged(Inkscape::Selection *selection) override;
     void selectionModified(Inkscape::Selection *selection, guint flags) override;
@@ -135,7 +133,6 @@ private:
         std::unique_ptr<UI::Widget::PopoverMenu> create_menu();
         void on_filter_selection_changed();
         void on_name_edited(const Glib::ustring&, const Glib::ustring&);
-        bool on_filter_move(const Glib::RefPtr<Gdk::DragContext>& /*context*/, int x, int y, guint /*time*/);
         void on_selection_toggled(const Glib::ustring&);
         void selection_toggled(Gtk::TreeModel::iterator iter, bool toggle);
 
@@ -186,10 +183,10 @@ private:
         CellRendererConnection();
         Glib::PropertyProxy<void*> property_primitive();
 
-        static const int size_w = 16;
-        static const int size_h = 21;
+        static constexpr int size_w = 16;
+        static constexpr int size_h = 21;
 
-    protected:
+    private:
         void get_preferred_width_vfunc(Gtk::Widget& widget,
                                        int& minimum_width,
                                        int& natural_width) const override;
@@ -207,7 +204,7 @@ private:
                                                   int width,
                                                   int& minimum_height,
                                                   int& natural_height) const override;
-    private:
+
         // void* should be SPFilterPrimitive*, some weirdness with properties prevents this
         Glib::Property<void*> _primitive;
     };
@@ -231,11 +228,10 @@ private:
         void set_inputs_count(int count);
         int get_inputs_count() const;
 
-    protected:
+    private:
         bool on_draw_signal(const Cairo::RefPtr<Cairo::Context> &cr);
         void on_drag_end(const Glib::RefPtr<Gdk::DragContext>&) override;
 
-    private:
         Gtk::EventSequenceState on_click_pressed (Gtk::GestureMultiPress const &click,
                                                   int n_press, double x, double y);
         Gtk::EventSequenceState on_click_released(Gtk::GestureMultiPress const &click,
@@ -264,16 +260,16 @@ private:
         CellRendererConnection _connection_cell;
         std::unique_ptr<UI::Widget::PopoverMenu> _primitive_menu;
         Glib::RefPtr<Pango::Layout> _vertical_layout;
-        int _in_drag;
-        SPFilterPrimitive* _drag_prim;
+        int _in_drag = 0;
+        SPFilterPrimitive *_drag_prim = nullptr;
         sigc::signal<void ()> _signal_primitive_changed;
         sigc::connection _scroll_connection;
-        int _autoscroll_y;
-        int _autoscroll_x;
+        int _autoscroll_y{};
+        int _autoscroll_x{};
         std::unique_ptr<Inkscape::XML::SignalObserver> _observer;
-        int _input_type_width;
-        int _input_type_height;
-        int _inputs_count;
+        int _input_type_width {};
+        int _input_type_height{};
+        int _inputs_count     {};
     };
 
     void init_settings_widgets();

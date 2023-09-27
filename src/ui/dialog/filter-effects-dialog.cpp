@@ -229,7 +229,7 @@ public:
         }
     }
 
-    std::vector<SpinButtonAttr*>& get_spinbuttons()
+    std::vector<SpinButtonAttr *> const &get_spinbuttons() const
     {
         return _spins;
     }
@@ -315,7 +315,7 @@ public:
           AttrWidget(a, def)
     {
         use_transparency(false);
-        connectChanged([=](guint rgba){ signal_attr_changed().emit(); });
+        connectChanged([this](unsigned const rgba){ signal_attr_changed().emit(); });
         if (tip_text) {
             set_tooltip_text(tip_text);
         }
@@ -483,15 +483,14 @@ private:
             return;
 
         if(o) {
-            int ndx = 0;
-
             for(int i = 0; i < cols; ++i) {
                 _tree.append_column_numeric_editable("", _columns.cols[i], "%.2f");
-                static_cast<Gtk::CellRendererText*>(
-                    _tree.get_column_cell_renderer(i))->signal_edited().connect(
+                dynamic_cast<Gtk::CellRendererText &>(*_tree.get_column_cell_renderer(i))
+                    .signal_edited().connect(
                         sigc::mem_fun(*this, &MatrixAttr::rebind));
             }
 
+            int ndx = 0;
             for(int r = 0; r < rows; ++r) {
                 Gtk::TreeRow row = *(_model->append());
                 // Default to identity matrix
@@ -698,7 +697,6 @@ private:
     }
 
     void select_file(){
-
         //# Get the current directory for finding files
         Inkscape::Preferences *prefs = Inkscape::Preferences::get();
         Glib::ustring open_path;
@@ -735,23 +733,19 @@ private:
 
         //# User selected something.  Get name and type
         Glib::ustring fileName = selectFeImageFileInstance->getFilename();
+        if (fileName.empty()) return;
 
-        if (fileName.size() > 0) {
-
-            Glib::ustring newFileName = Glib::filename_to_utf8(fileName);
-
-            if ( newFileName.size() > 0)
-                fileName = newFileName;
-            else
-                g_warning( "ERROR CONVERTING OPEN FILENAME TO UTF-8" );
-
-            open_path = fileName;
-            open_path.append(G_DIR_SEPARATOR_S);
-            prefs->setString("/dialogs/open/path", open_path);
-
-            _entry.set_text(fileName);
+        fileName = Glib::filename_to_utf8(fileName);
+        if (fileName.empty()) {
+            g_warning( "ERROR CONVERTING OPEN FILENAME TO UTF-8" );
+            return;
         }
-        return;
+
+        open_path = fileName;
+        open_path.append(G_DIR_SEPARATOR_S);
+        prefs->setString("/dialogs/open/path", open_path);
+
+        _entry.set_text(fileName);
     }
 
     Gtk::Entry _entry;
@@ -925,21 +919,12 @@ public:
                                          const Glib::ustring& label, const double lo, const double hi,
                                          const double step_inc, const double climb, const int digits, char* tip1 = nullptr, char* tip2 = nullptr)
     {
-        std::vector<SPAttr> attrs;
-        attrs.push_back(attr1);
-        attrs.push_back(attr2);
-
-        std::vector<double> default_values;
-        default_values.push_back(def1);
-        default_values.push_back(def2);
-
-        std::vector<char*> tips;
-        tips.push_back(tip1);
-        tips.push_back(tip2);
-
+        auto const attrs          = std::vector{attr1, attr2};
+        auto const default_values = std::vector{ def1,  def2};
+        auto const tips           = std::vector{ tip1,  tip2};
         auto const msb = Gtk::make_managed<MultiSpinButton>(lo, hi, step_inc, climb, digits, attrs, default_values, tips);
         add_widget(msb, label);
-        for(auto & i : msb->get_spinbuttons())
+        for (auto const i : msb->get_spinbuttons())
             add_attr_widget(i);
         return msb;
     }
@@ -948,24 +933,12 @@ public:
                                          const SPAttr attr3, const Glib::ustring& label, const double lo,
                                          const double hi, const double step_inc, const double climb, const int digits, char* tip1 = nullptr, char* tip2 = nullptr, char* tip3 = nullptr)
     {
-        std::vector<SPAttr> attrs;
-        attrs.push_back(attr1);
-        attrs.push_back(attr2);
-        attrs.push_back(attr3);
-
-        std::vector<double> default_values;
-        default_values.push_back(def1);
-        default_values.push_back(def2);
-        default_values.push_back(def3);
-
-        std::vector<char*> tips;
-        tips.push_back(tip1);
-        tips.push_back(tip2);
-        tips.push_back(tip3);
-
+        auto const attrs          = std::vector{attr1, attr2, attr3};
+        auto const default_values = std::vector{ def1,  def2,  def3};
+        auto const tips           = std::vector{ tip1,  tip2,  tip3};
         auto const msb = Gtk::make_managed<MultiSpinButton>(lo, hi, step_inc, climb, digits, attrs, default_values, tips);
         add_widget(msb, label);
-        for(auto & i : msb->get_spinbuttons())
+        for (auto const i : msb->get_spinbuttons())
             add_attr_widget(i);
         return msb;
     }
@@ -1155,10 +1128,10 @@ private:
     {
         SPFilterPrimitive* prim = _dialog._primitive_list.get_selected();
         if(prim) {
-
             _funcNode->setAttributeOrRemoveIfEmpty("type", _type.get_as_attribute());
 
             SPFilter* filter = _dialog._filter_modifier.get_selected_filter();
+            g_assert(filter);
             filter->requestModified(SP_OBJECT_MODIFIED_FLAG);
 
             DocumentUndo::done(prim->document, _("New transfer function type"), INKSCAPE_ICON("dialog-filters"));
@@ -1236,7 +1209,7 @@ public:
         _settings.type(-1); // Force update_and_show() to show/hide windows correctly
     }
 
-protected:
+private:
     Glib::ustring get_as_attribute() const override
     {
         return "";
@@ -1265,7 +1238,6 @@ protected:
         _locked = false;
     }
 
-private:
     void on_source_changed()
     {
         if(_locked)
@@ -1381,7 +1353,7 @@ FilterEffectsDialog::FilterModifier::FilterModifier(FilterEffectsDialog& d, Glib
     if(col)
        col->add_attribute(_cell_toggle.property_active(), _columns.sel);
     _list.append_column_editable(_("_Filter"), _columns.label);
-    static_cast<Gtk::CellRendererText*>(_list.get_column(1)->get_first_cell())->
+    dynamic_cast<Gtk::CellRendererText &>(*_list.get_column(1)->get_first_cell()).
         signal_edited().connect(sigc::mem_fun(*this, &FilterEffectsDialog::FilterModifier::on_name_edited));
 
     _list.append_column(_("Used"), _columns.count);
@@ -1396,12 +1368,14 @@ FilterEffectsDialog::FilterModifier::FilterModifier(FilterEffectsDialog& d, Glib
     _list.set_reorderable(false);
     _list.enable_model_drag_dest(Gdk::ACTION_MOVE);
 
+#if 0 // on_filter_move() was commented-out in GTK3, so itʼs removed for GTK4. FIXME if you can...!
     _list.signal_drag_drop().connect( sigc::mem_fun(*this, &FilterModifier::on_filter_move), false );
+#endif
 
-    _add.signal_clicked().connect([=]() { add_filter(); });
-    _del.signal_clicked().connect([=]() { remove_filter(); });
-    _dup.signal_clicked().connect([=]() { duplicate_filter(); });
-    _select.signal_clicked().connect([=]() { select_filter_elements(); });
+    _add.signal_clicked().connect([this]{ add_filter(); });
+    _del.signal_clicked().connect([this]{ remove_filter(); });
+    _dup.signal_clicked().connect([this]{ duplicate_filter(); });
+    _select.signal_clicked().connect([this]{ select_filter_elements(); });
 
     _cell_toggle.signal_toggled().connect(sigc::mem_fun(*this, &FilterModifier::on_selection_toggled));
 
@@ -1488,6 +1462,7 @@ void FilterEffectsDialog::FilterModifier::on_name_edited(const Glib::ustring& pa
     }
 }
 
+#if 0 // on_filter_move() was commented-out in GTK3, so itʼs removed for GTK4. FIXME if you can...!
 bool FilterEffectsDialog::FilterModifier::on_filter_move(const Glib::RefPtr<Gdk::DragContext>& /*context*/, int /*x*/, int /*y*/, guint /*time*/) {
 
 //const Gtk::TreeModel::Path& /*path*/) {
@@ -1495,7 +1470,7 @@ bool FilterEffectsDialog::FilterModifier::on_filter_move(const Glib::RefPtr<Gdk:
    Writing back the reordered list to XML (reordering XML nodes) should be implemented differently.
    Note that the dialog does also not update its list of filters when the order is manually changed
    using the XML dialog
-  for(Gtk::TreeModel::iterator i = _model->children().begin(); i != _model->children().end(); ++i) {
+  for (auto i = _model->children().begin(); i != _model->children().end(); ++i) {
       SPObject* object = (*i)[_columns.filter];
       if(object && object->getRepr()) ;
         object->getRepr()->setPosition(0);
@@ -1503,6 +1478,7 @@ bool FilterEffectsDialog::FilterModifier::on_filter_move(const Glib::RefPtr<Gdk:
 */
   return false;
 }
+#endif
 
 void FilterEffectsDialog::FilterModifier::on_selection_toggled(const Glib::ustring& path)
 {
@@ -1616,7 +1592,6 @@ SPFilter* FilterEffectsDialog::FilterModifier::get_selected_filter()
 {
     if(_list.get_selection()) {
         Gtk::TreeModel::iterator i = _list.get_selection()->get_selected();
-
         if(i)
             return (*i)[_columns.filter];
     }
@@ -2003,7 +1978,7 @@ bool FilterEffectsDialog::PrimitiveList::on_draw_signal(const Cairo::RefPtr<Cair
     SPFilterPrimitive* prim = get_selected();
     int row_count = get_model()->children().size();
 
-    int fwidth = CellRendererConnection::size_w;
+    static constexpr int fwidth = CellRendererConnection::size_w;
     Gdk::Rectangle rct, vis;
     Gtk::TreeModel::iterator row = get_model()->children().begin();
     int text_start_x = 0;
@@ -2188,8 +2163,8 @@ void FilterEffectsDialog::PrimitiveList::draw_connection(const Cairo::RefPtr<Cai
             Gdk::Rectangle rct;
 
             get_cell_area(get_model()->get_path(_model->children().begin()), *get_column(1), rct);
-            const int fheight = CellRendererConnection::size_h;
-            const int fwidth = CellRendererConnection::size_w;
+            static constexpr int fheight = CellRendererConnection::size_h;
+            static constexpr int fwidth  = CellRendererConnection::size_w;
 
             get_cell_area(get_model()->get_path(res), *get_column(1), rct);
             const int row_index = find_index(res);
@@ -2239,8 +2214,8 @@ bool FilterEffectsDialog::PrimitiveList::do_connection_node(const Gtk::TreeModel
     const int icnt = input_count((*row)[_columns.primitive]);
 
     get_cell_area(get_model()->get_path(_model->children().begin()), *get_column(1), rct);
-    const int fheight = CellRendererConnection::size_h;
-    const int fwidth = CellRendererConnection::size_w;
+    static constexpr int fheight = CellRendererConnection::size_h;
+    static constexpr int fwidth  = CellRendererConnection::size_w;
 
     get_cell_area(_model->get_path(row), *get_column(1), rct);
     const float h = rct.get_height() / icnt;
@@ -2315,8 +2290,7 @@ const Gtk::TreeModel::iterator FilterEffectsDialog::PrimitiveList::find_result(c
 int FilterEffectsDialog::PrimitiveList::find_index(const Gtk::TreeModel::iterator& target)
 {
     int i = 0;
-    for (Gtk::TreeModel::iterator iter = _model->children().begin();
-        iter != target; ++iter, ++i){};
+    for (auto iter = _model->children().begin(); iter != target; ++iter, ++i) {}
     return i;
 }
 
@@ -2418,22 +2392,29 @@ FilterEffectsDialog::PrimitiveList::on_click_released(Gtk::GestureMultiPress con
                                                       int /*n_press*/,
                                                       double const wx, double const wy)
 {
-    auto const [x, y] = widget_to_bin_window(*this, wx, wy);
-    SPFilterPrimitive *prim = get_selected(), *target;
-
     _scroll_connection.disconnect();
 
+    auto const prim = get_selected();
     if(_in_drag && prim) {
+        auto const [x, y] = widget_to_bin_window(*this, wx, wy);
         Gtk::TreePath path;
         Gtk::TreeViewColumn* col;
         int cx, cy;
-
         if (get_path_at_pos(x, y, path, col, cx, cy)) {
-            const gchar *in_val = nullptr;
-            Glib::ustring result;
-            Gtk::TreeModel::iterator target_iter = _model->get_iter(path);
-            target = (*target_iter)[_columns.primitive];
+            auto const selected_iter = get_selection()->get_selected();
+            g_assert(selected_iter);
+
+            auto const target_iter = _model->get_iter(path);
+            g_assert(target_iter);
+
+            auto const target = target_iter->get_value(_columns.primitive);
+            g_assert(target);
+
             col = get_column(1);
+            g_assert(col);
+
+            char const *in_val = nullptr;
+            Glib::ustring result;
 
             Gdk::Rectangle rct;
             get_cell_area(path, *col, rct);
@@ -2448,11 +2429,9 @@ FilterEffectsDialog::PrimitiveList::on_click_released(Gtk::GestureMultiPress con
                 }
                 result = FPInputConverter.get_key((FilterPrimitiveInput)src);
                 in_val = result.c_str();
-            }
-            else {
+            } else {
                 // Ensure that the target comes before the selected primitive
-                for(Gtk::TreeModel::iterator iter = _model->children().begin();
-                    iter != get_selection()->get_selected(); ++iter) {
+                for (auto iter = _model->children().begin(); iter != selected_iter; ++iter) {
                     if(iter == target_iter) {
                         Inkscape::XML::Node *repr = target->getRepr();
                         // Make sure the target has a result
@@ -2476,11 +2455,10 @@ FilterEffectsDialog::PrimitiveList::on_click_released(Gtk::GestureMultiPress con
                     if(c == _in_drag && is<SPFeMergeNode>(&o)) {
                         // If input is null, delete it
                         if(!in_val) {
-
                             //XML Tree being used directly here while it shouldn't be.
                             sp_repr_unparent(o.getRepr());
                             DocumentUndo::done(prim->document, _("Remove merge node"), INKSCAPE_ICON("dialog-filters"));
-                            (*get_selection()->get_selected())[_columns.primitive] = prim;
+                            selected_iter->set_value(_columns.primitive, prim);
                         } else {
                             _dialog.set_attr(&o, SPAttr::IN_, in_val);
                         }
@@ -2489,6 +2467,7 @@ FilterEffectsDialog::PrimitiveList::on_click_released(Gtk::GestureMultiPress con
                     }
                     ++c;
                 }
+
                 // Add new input?
                 if(!handled && c == _in_drag && in_val) {
                     Inkscape::XML::Document *xml_doc = prim->document->getReprDoc();
@@ -2500,7 +2479,7 @@ FilterEffectsDialog::PrimitiveList::on_click_released(Gtk::GestureMultiPress con
                     auto node = cast<SPFeMergeNode>(prim->document->getObjectByRepr(repr));
                     Inkscape::GC::release(repr);
                     _dialog.set_attr(node, SPAttr::IN_, in_val);
-                    (*get_selection()->get_selected())[_columns.primitive] = prim;
+                    selected_iter->set_value(_columns.primitive, prim);
                 }
             }
             else {
@@ -2518,7 +2497,7 @@ FilterEffectsDialog::PrimitiveList::on_click_released(Gtk::GestureMultiPress con
     }
 
     if (click.get_current_button() == 3) {
-        const bool sensitive = get_selected() != nullptr;
+        bool const sensitive = prim != nullptr;
         _primitive_menu->set_sensitive(sensitive);
         _primitive_menu->popup_at(*this, wx + 4, wy);
         return Gtk::EVENT_SEQUENCE_CLAIMED;
@@ -2557,8 +2536,7 @@ void FilterEffectsDialog::PrimitiveList::sanitize_connections(const Gtk::TreeMod
     SPFilterPrimitive *prim = (*prim_iter)[_columns.primitive];
     bool before = true;
 
-    for(Gtk::TreeModel::iterator iter = _model->children().begin();
-        iter != _model->children().end(); ++iter) {
+    for (auto iter = _model->children().begin(); iter != _model->children().end(); ++iter) {
         if(iter == prim_iter)
             before = false;
         else {
@@ -2575,10 +2553,10 @@ void FilterEffectsDialog::PrimitiveList::sanitize_connections(const Gtk::TreeMod
 void FilterEffectsDialog::PrimitiveList::on_drag_end(const Glib::RefPtr<Gdk::DragContext>& /*dc*/)
 {
     SPFilter* filter = _dialog._filter_modifier.get_selected_filter();
-    int ndx = 0;
+    g_assert(filter);
 
-    for (Gtk::TreeModel::iterator iter = _model->children().begin();
-        iter != _model->children().end(); ++iter, ++ndx) {
+    int ndx = 0;
+    for (auto iter = _model->children().begin(); iter != _model->children().end(); ++iter, ++ndx) {
         SPFilterPrimitive* prim = (*iter)[_columns.primitive];
         if (prim && prim == _drag_prim) {
             prim->getRepr()->setPosition(ndx);
@@ -2586,8 +2564,7 @@ void FilterEffectsDialog::PrimitiveList::on_drag_end(const Glib::RefPtr<Gdk::Dra
         }
     }
 
-    for (Gtk::TreeModel::iterator iter = _model->children().begin();
-        iter != _model->children().end(); ++iter, ++ndx) {
+    for (auto iter = _model->children().begin(); iter != _model->children().end(); ++iter) {
         SPFilterPrimitive* prim = (*iter)[_columns.primitive];
         if (prim && prim == _drag_prim) {
             sanitize_connections(iter);
@@ -2597,42 +2574,32 @@ void FilterEffectsDialog::PrimitiveList::on_drag_end(const Glib::RefPtr<Gdk::Dra
     }
 
     filter->requestModified(SP_OBJECT_MODIFIED_FLAG);
-
     DocumentUndo::done(filter->document, _("Reorder filter primitive"), INKSCAPE_ICON("dialog-filters"));
+}
+
+static void autoscroll(Glib::RefPtr<Gtk::Adjustment> const &a, double const delta)
+{
+    auto v = a->get_value() + delta;
+    v = std::clamp(v, 0.0, a->get_upper() - a->get_page_size());
+    a->set_value(v);
 }
 
 // If a connection is dragged towards the top or bottom of the list, the list should scroll to follow.
 bool FilterEffectsDialog::PrimitiveList::on_scroll_timeout()
 {
+    if (!(_autoscroll_y || _autoscroll_x)) return true;
+
+    auto &scrolled_window = dynamic_cast<Gtk::ScrolledWindow &>(*get_parent());
+
     if(_autoscroll_y) {
-        auto a = static_cast<Gtk::ScrolledWindow*>(get_parent())->get_vadjustment();
-        double v = a->get_value() + _autoscroll_y;
-
-        if(v < 0)
-            v = 0;
-        if(v > a->get_upper() - a->get_page_size())
-            v = a->get_upper() - a->get_page_size();
-
-        a->set_value(v);
-
-        queue_draw();
+        autoscroll(scrolled_window.get_vadjustment(), _autoscroll_y);
     }
-
 
     if(_autoscroll_x) {
-        auto a_h = static_cast<Gtk::ScrolledWindow*>(get_parent())->get_hadjustment();
-        double h = a_h->get_value() + _autoscroll_x;
-
-        if(h < 0)
-            h = 0;
-        if(h > a_h->get_upper() - a_h->get_page_size())
-            h = a_h->get_upper() - a_h->get_page_size();
-
-        a_h->set_value(h);
-
-        queue_draw();
+        autoscroll(scrolled_window.get_hadjustment(), _autoscroll_x);
     }
 
+    queue_draw();
     return true;
 }
 
@@ -2643,8 +2610,8 @@ int FilterEffectsDialog::PrimitiveList::primitive_count() const
 
 int FilterEffectsDialog::PrimitiveList::get_input_type_width() const
 {
-       // Maximum font height calculated in initText() and stored in _input_type_width.
-       // Add 2 to font height to account for rectangle around text.
+    // Maximum font height calculated in initText() and stored in _input_type_width.
+    // Add 2 to font height to account for rectangle around text.
     return _input_type_width + 2;
 }
 
@@ -2747,11 +2714,13 @@ void FilterEffectsDialog::add_effects(Inkscape::UI::Widget::CompletionPopup& pop
 
     // 2-column menu
     Inkscape::UI::ColumnMenuBuilder<EffectCategory> builder(menu, 2, Gtk::ICON_SIZE_LARGE_TOOLBAR);
-    for (auto& effect : effects) {
+    for (auto const &effect : effects) {
         // build popup menu
-        auto type = effect.type;
-        auto * menuitem = builder.add_item(effect.label, effect.category, effect.tooltip, effect.icon_name, true, true, [=](){ add_filter_primitive(type); });
-        gint id = (gint)type;
+        auto const &type = effect.type;
+        auto const menuitem = builder.add_item(effect.label, effect.category, effect.tooltip,
+                                               effect.icon_name, true, true,
+                                               [=, this]{ add_filter_primitive(type); });
+        auto const id = static_cast<int>(type);
         menuitem->property_has_tooltip() = true;
         menuitem->signal_query_tooltip().connect([=](int x, int y, bool kbd, const Glib::RefPtr<Gtk::Tooltip>& tooltipw){
             return sp_query_custom_tooltip(x, y, kbd, tooltipw, id, effect.tooltip, effect.icon_name);
@@ -2760,7 +2729,7 @@ void FilterEffectsDialog::add_effects(Inkscape::UI::Widget::CompletionPopup& pop
             builder.set_section(get_category_name(effect.category));
         }
         // build completion list
-        popup.add_to_completion_list(static_cast<int>(effect.type), effect.label, effect.icon_name + (symbolic ? "-symbolic" : ""));
+        popup.add_to_completion_list(id, effect.label, effect.icon_name + (symbolic ? "-symbolic" : ""));
     }
     if (symbolic) {
         menu.get_style_context()->add_class("symbolic");
@@ -2792,12 +2761,12 @@ FilterEffectsDialog::FilterEffectsDialog()
     , _settings_filter(Gtk::ORIENTATION_VERTICAL)
 {
     _settings = std::make_unique<Settings>(*this, _settings_effect,
-                                           [=](auto a){ set_attr_direct(a); },
+                                           [this](auto const a){ set_attr_direct(a); },
                                            NR_FILTER_ENDPRIMITIVETYPE);
     _cur_effect_name = &get_widget<Gtk::Label>(_builder, "cur-effect");
     _settings->_size_group->add_widget(*_cur_effect_name);
     _filter_general_settings = std::make_unique<Settings>(*this, _settings_filter,
-                                                          [=](auto a){ set_filternode_attr(a); }, 1);
+                                                          [this](auto const a){ set_filternode_attr(a); }, 1);
 
     // Initialize widget hierarchy
     _primitive_box = &get_widget<Gtk::ScrolledWindow>(_builder, "filter");
@@ -2808,7 +2777,8 @@ FilterEffectsDialog::FilterEffectsDialog()
     auto symbolic = Inkscape::Preferences::get()->getBool("/theme/symbolicIcons", true);
     add_effects(_effects_popup, symbolic);
     _effects_popup.get_entry().set_placeholder_text(_("Add effect"));
-    _effects_popup.on_match_selected().connect([=](int id){ add_filter_primitive(static_cast<FilterPrimitiveType>(id)); });
+    _effects_popup.on_match_selected().connect(
+        [this](int const id){ add_filter_primitive(static_cast<FilterPrimitiveType>(id)); });
     UI::pack_start(_search_box, _effects_popup);
 
     _filter_modifier.show_all();
@@ -2819,7 +2789,7 @@ FilterEffectsDialog::FilterEffectsDialog()
     _settings_filter.show_all();
     get_widget<Gtk::Popover>(_builder, "gen-settings").add(_settings_filter);
 
-    get_widget<Gtk::Popover>(_builder, "info-popover").signal_show().connect([=](){
+    get_widget<Gtk::Popover>(_builder, "info-popover").signal_show().connect([this]{
         if (auto prim = _primitive_list.get_selected()) {
             if (prim->getRepr()) {
                 auto id = FPConverter.get_id_from_key(prim->getRepr()->name());
@@ -2833,32 +2803,30 @@ FilterEffectsDialog::FilterEffectsDialog()
         }
     });
 
-    _primitive_list.signal_primitive_changed().connect([=](){
-        update_settings_view();
-    });
+    _primitive_list.signal_primitive_changed().connect([this]{ update_settings_view(); });
 
-    _cur_filter_toggle = _cur_filter_btn.signal_toggled().connect([=](){
+    _cur_filter_toggle = _cur_filter_btn.signal_toggled().connect([this]{
         _filter_modifier.toggle_current_filter();
     });
 
-    auto update_checkbox = [=](){
+    auto update_checkbox = [this]{
         auto active = _filter_modifier.is_selected_filter_active();
         _cur_filter_toggle.block();
         _cur_filter_btn.set_active(active);
         _cur_filter_toggle.unblock();
     };
 
-    auto update_widgets = [=](){
+    auto update_widgets = [=, this]{
         auto& opt = get_widget<Gtk::MenuButton>(_builder, "filter-opt");
         _primitive_list.update();
-        Glib::ustring name = "-";
+        Glib::ustring name;
         if (auto filter = _filter_modifier.get_selected_filter()) {
             name = get_filter_name(filter);
             _effects_popup.set_sensitive();
             _cur_filter_btn.set_sensitive(); // ideally this should also be selection-dependent
             opt.set_sensitive();
-        }
-        else {
+        } else {
+            name = "-";
             _effects_popup.set_sensitive(false);
             _cur_filter_btn.set_sensitive(false);
             opt.set_sensitive(false);
@@ -2886,15 +2854,15 @@ FilterEffectsDialog::FilterEffectsDialog()
     _primitive_list.set_menu(sigc::mem_fun(*this, &FilterEffectsDialog::duplicate_primitive),
                              sigc::mem_fun(_primitive_list, &PrimitiveList::remove_selected));
 
-    get_widget<Gtk::Button>(_builder, "new-filter").signal_clicked().connect([=](){ _filter_modifier.add_filter(); });
+    get_widget<Gtk::Button>(_builder, "new-filter").signal_clicked().connect([this]{ _filter_modifier.add_filter(); });
     UI::pack_start(*this, _main_grid);
 
-    get_widget<Gtk::Button>(_builder, "dup-btn").signal_clicked().connect([=](){ duplicate_primitive(); });
-    get_widget<Gtk::Button>(_builder, "del-btn").signal_clicked().connect([=](){ _primitive_list.remove_selected(); });
-    get_widget<Gtk::Button>(_builder, "info-btn").signal_clicked().connect([=](){ /* todo */ });
+    get_widget<Gtk::Button>(_builder, "dup-btn").signal_clicked().connect([this]{ duplicate_primitive(); });
+    get_widget<Gtk::Button>(_builder, "del-btn").signal_clicked().connect([this]{ _primitive_list.remove_selected(); });
+    // get_widget<Gtk::Button>(_builder, "info-btn").signal_clicked().connect([this]{ /* todo */ });
 
     auto* show_sources = &get_widget<Gtk::ToggleButton>(_builder, "btn-connect");
-    auto set_inputs = [=](bool all){
+    auto set_inputs = [this](bool const all){
         int count = all ? FPInputConverter._length : 2;
         _primitive_list.set_inputs_count(count);
         // full rebuild: this is what it takes to make cell renderer new min width into account to adjust scrollbar
@@ -2903,14 +2871,14 @@ FilterEffectsDialog::FilterEffectsDialog()
     auto show_all_sources = Inkscape::Preferences::get()->getBool(_prefs + "/dialogs/filters/showAllSources", false);
     show_sources->set_active(show_all_sources);
     set_inputs(show_all_sources);
-    show_sources->signal_toggled().connect([=](){
+    show_sources->signal_toggled().connect([=, this]{
         bool show_all = show_sources->get_active();
         set_inputs(show_all);
         Inkscape::Preferences::get()->setBool(_prefs + "/dialogs/filters/showAllSources", show_all);
     });
 
     _paned.set_position(Inkscape::Preferences::get()->getIntLimited(_prefs + "/handlePos", 200, 10, 9999));
-    _paned.property_position().signal_changed().connect([=](){
+    _paned.property_position().signal_changed().connect([this]{
         Inkscape::Preferences::get()->setInt(_prefs + "/handlePos", _paned.get_position());
     });
 
@@ -2932,7 +2900,7 @@ FilterEffectsDialog::FilterEffectsDialog()
     // two alternative layout arrangements depending on the dialog size;
     // one is tall and narrow with widgets in one column, while the other
     // is for wide dialogs with filter parameters and effects side by side
-    signal_size_allocate().connect([=] (const Gtk::Allocation& alloc) {
+    signal_size_allocate().connect([=, this](Gtk::Allocation const &alloc){
         if (alloc.get_width() < 10 || alloc.get_height() < 10) return;
 
         double const ratio = alloc.get_width() / static_cast<double>(alloc.get_height());
@@ -2980,9 +2948,9 @@ void FilterEffectsDialog::documentReplaced()
 {
     _resource_changed.disconnect();
     if (auto document = getDocument()) {
-        _resource_changed = document->connectResourcesChanged("filter", [=](){ _filter_modifier.update_filters(); });
-
-        _filter_modifier.update_filters();
+        auto const update_filters = [this]{ _filter_modifier.update_filters(); };
+        _resource_changed = document->connectResourcesChanged("filter", update_filters);
+        update_filters();
     }
 }
 
@@ -2995,9 +2963,9 @@ void FilterEffectsDialog::selectionChanged(Inkscape::Selection *selection)
 
 void FilterEffectsDialog::selectionModified(Inkscape::Selection *selection, guint flags)
 {
-    if (flags & ( SP_OBJECT_MODIFIED_FLAG |
-                   SP_OBJECT_PARENT_MODIFIED_FLAG |
-                   SP_OBJECT_STYLE_MODIFIED_FLAG) ) {
+    if (flags & (SP_OBJECT_MODIFIED_FLAG |
+                 SP_OBJECT_PARENT_MODIFIED_FLAG |
+                 SP_OBJECT_STYLE_MODIFIED_FLAG)) {
         _filter_modifier.update_selection(selection);
     }
 }
