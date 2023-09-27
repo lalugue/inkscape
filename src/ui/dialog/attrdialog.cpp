@@ -33,7 +33,6 @@
 #include <gtkmm/object.h>
 #include <gtkmm/popover.h>
 #include <gtkmm/scrolledwindow.h>
-#include <gtkmm/targetlist.h>
 #include <gtkmm/textview.h>
 #include <gtkmm/treemodel.h>
 #include <gtkmm/treeview.h>
@@ -147,7 +146,7 @@ AttrDialog::AttrDialog()
 
     // For text and comment nodes: update XML on the fly, as users type
     for (auto tv : {&_text_edit->getTextView(), &_style_edit->getTextView()}) {
-        tv->get_buffer()->signal_end_user_action().connect([=]() {
+        tv->get_buffer()->signal_end_user_action().connect([=, this]() {
             if (_repr) {
                 _repr->setContent(tv->get_buffer()->get_text().c_str());
                 setUndo(_("Type text"));
@@ -190,7 +189,7 @@ AttrDialog::AttrDialog()
 
     _message_stack = std::make_shared<Inkscape::MessageStack>();
     _message_context = std::make_unique<Inkscape::MessageContext>(_message_stack);
-    _message_changed_connection = _message_stack->connectChanged([=](MessageType, const char* message) {
+    _message_changed_connection = _message_stack->connectChanged([this](MessageType, const char* message) {
         _status.set_markup(message ? message : "");
     });
 
@@ -210,28 +209,28 @@ AttrDialog::AttrDialog()
     _scrolled_text_view.set_max_content_height(MAX_POPOVER_HEIGHT);
 
     auto& apply = get_widget<Gtk::Button>(_builder, "btn-ok");
-    apply.signal_clicked().connect([=]() { valueEditedPop(); });
+    apply.signal_clicked().connect([this]{ valueEditedPop(); });
 
     auto& cancel = get_widget<Gtk::Button>(_builder, "btn-cancel");
-    cancel.signal_clicked().connect([=](){
+    cancel.signal_clicked().connect([this]{
         if (!_value_editing.empty()) {
             _activeTextView().get_buffer()->set_text(_value_editing);
         }
         _popover->popdown();
     });
 
-    _popover->signal_closed().connect([=]() { popClosed(); });
+    _popover->signal_closed().connect([this]{ popClosed(); });
     Controller::add_key<&AttrDialog::onPopoverKeyPressed>(*_popover, *this, Gtk::PHASE_CAPTURE);
 
-    get_widget<Gtk::Button>(_builder, "btn-truncate").signal_clicked().connect([=](){ truncateDigits(); });
+    get_widget<Gtk::Button>(_builder, "btn-truncate").signal_clicked().connect([this]{ truncateDigits(); });
 
     const int N = 5;
     _rounding_precision = Inkscape::Preferences::get()->getIntLimited("/dialogs/attrib/precision", 2, 0, N);
     setPrecision(_rounding_precision);
     auto group = Gio::SimpleActionGroup::create();
     auto action = group->add_action_radio_integer("precision", _rounding_precision);
-    action->property_state().signal_changed().connect([=]{ int n; action->get_state(n);
-                                                          setPrecision(n); });
+    action->property_state().signal_changed().connect([=, this]{ int n; action->get_state(n);
+                                                                 setPrecision(n); });
     insert_action_group("attrdialog", std::move(group));
     UI::menuize_popover(*get_widget<Gtk::MenuButton>(_builder, "btn-menu").get_popover());
 
@@ -346,10 +345,10 @@ bool AttrDialog::onPopoverKeyPressed(GtkEventControllerKey const * /*controller*
             if (Controller::has_flag(state, GDK_SHIFT_MASK)) {
                 valueEditedPop();
                 return true;
-            } else {
-                // as we type and content grows, resize the popup to accommodate it
-                _adjust_size = Glib::signal_timeout().connect([=](){ adjust_popup_edit_size(); return false; }, 50);
             }
+
+            // as we type and content grows, resize the popup to accommodate it
+            _adjust_size = Glib::signal_timeout().connect([this]{ adjust_popup_edit_size(); return false; }, 50);
     }
 
     return false;
@@ -431,7 +430,7 @@ void AttrDialog::startValueEdit(Gtk::CellEditable *cell, const Glib::ustring &pa
     const int dlg_width = get_allocated_width() - 10;
     _popover->set_size_request(std::min(MAX_POPOVER_WIDTH, dlg_width), -1);
 
-    auto const attribute = row[_attrColumns._attributeName];
+    auto const &attribute = row.get_value(_attrColumns._attributeName);
     bool edit_in_popup =
 #if WITH_GSOURCEVIEW
     true;
@@ -492,7 +491,7 @@ void AttrDialog::startValueEdit(Gtk::CellEditable *cell, const Glib::ustring &pa
             cell->remove_widget();
         }, 0);
         // and show popup edit instead
-        Glib::signal_timeout().connect_once([=](){ _popover->popup(); }, 10);
+        Glib::signal_timeout().connect_once([this]{ _popover->popup(); }, 10);
     } else {
         setEditingEntry(entry, true);
     }
@@ -503,9 +502,12 @@ void AttrDialog::popClosed()
     if (!_current_text_edit) {
         return;
     }
+
     _activeTextView().get_buffer()->set_text("");
+
     // delay this resizing, so it is not visible as popover fades out
-    _close_popup = Glib::signal_timeout().connect([=](){ _scrolled_text_view.set_min_content_height(20); return false; }, 250);
+    _close_popup = Glib::signal_timeout().connect(
+        [this]{ _scrolled_text_view.set_min_content_height(20); return false; }, 250);
 }
 
 /**
@@ -759,7 +761,7 @@ void AttrDialog::nameEdited (const Glib::ustring& path, const Glib::ustring& nam
     if(row && this->_repr) {
         Glib::ustring old_name = row[_attrColumns._attributeName];
         if (old_name == name) {
-            Glib::signal_timeout().connect_once([=](){ storeMoveToNext(modelpath); }, 50);
+            Glib::signal_timeout().connect_once([=, this]{ storeMoveToNext(modelpath); }, 50);
             grab_focus();
             return;
         }
@@ -792,7 +794,7 @@ void AttrDialog::nameEdited (const Glib::ustring& path, const Glib::ustring& nam
         _updating = true;
         _repr->setAttributeOrRemoveIfEmpty(name, value); // use char * overload (allows empty attribute values)
         _updating = false;
-        Glib::signal_timeout().connect_once([=](){ storeMoveToNext(modelpath); }, 50);
+        Glib::signal_timeout().connect_once([=, this]{ storeMoveToNext(modelpath); }, 50);
         setUndo(_("Rename attribute"));
     }
 }
