@@ -1,4 +1,9 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
+/** @file
+ * @brief A simple dialog for previewing document resources
+ *
+ * Copyright (C) 2023 Michael Kowalski
+ */
 
 #include "document-resources.h"
 
@@ -43,6 +48,7 @@
 #include <gtkmm/enums.h>
 #include <gtkmm/grid.h>
 #include <gtkmm/iconview.h>
+#include <gtkmm/label.h>
 #include <gtkmm/liststore.h>
 #include <gtkmm/paned.h>
 #include <gtkmm/searchentry.h>
@@ -331,10 +337,10 @@ DocumentResources::DocumentResources()
     _label_renderer = dynamic_cast<Gtk::CellRendererText*>(_iconview.get_first_cell());
     assert(_label_renderer);
     _label_renderer->property_editable() = true;
-    _label_renderer->signal_editing_started().connect([=](Gtk::CellEditable* cell, const Glib::ustring& path){
+    _label_renderer->signal_editing_started().connect([this](Gtk::CellEditable * const cell, Glib::ustring const &path){
         start_editing(cell, path);
     });
-    _label_renderer->signal_edited().connect([=](const Glib::ustring& path, const Glib::ustring& new_text){
+    _label_renderer->signal_edited().connect([this](Glib::ustring const &path, Glib::ustring const &new_text){
         end_editing(path, new_text);
     });
 
@@ -352,7 +358,7 @@ DocumentResources::DocumentResources()
         return id == "-";
     });
     _categories = Gtk::TreeModelFilter::create(treestore);
-    _categories->set_visible_func([=](const Gtk::TreeModel::const_iterator& it){
+    _categories->set_visible_func([this](Gtk::TreeModel::const_iterator const &it){
         Glib::ustring id;
         it->get_value(COL_ID, id);
         return id == "-" || is_resource_present(id, _stats);
@@ -384,7 +390,7 @@ DocumentResources::DocumentResources()
     }
 
     _page_selection = _selector.get_selection();
-    _selection_change = _page_selection->signal_changed().connect([=](){
+    _selection_change = _page_selection->signal_changed().connect([this]{
         if (auto it = _page_selection->get_selected()) {
             Glib::ustring id;
             it->get_value(COL_ID, id);
@@ -393,27 +399,25 @@ DocumentResources::DocumentResources()
     });
 
     auto paned = &get_widget<Gtk::Paned>(_builder, "paned");
-    auto move = [=](){
+    auto const move = [=, this](){
         auto pos = paned->get_position();
         get_widget<Gtk::Label>(_builder, "spacer").set_size_request(pos);
     };
     paned->property_position().signal_changed().connect([=](){ move(); });
     move();
 
-    _edit.signal_clicked().connect([=](){
+    _edit.signal_clicked().connect([this]{
         auto sel = _iconview.get_selected_items();
         if (sel.size() == 1) {
             // todo: investigate why this doesn't work initially:
             _iconview.set_cursor(sel.front(), true);
         }
-        else {
-            // treeview todo if needed
-        }
+        // treeview todo if needed
     });
 
     // selectable elements can be selected on the canvas;
     // even elements in <defs> can be selected (same as in XML dialog)
-    _select.signal_clicked().connect([=](){
+    _select.signal_clicked().connect([this]{
         auto document = getDocument();
         auto desktop = getDesktop();
         if (!document || !desktop) return;
@@ -441,7 +445,7 @@ DocumentResources::DocumentResources()
     });
 
     // filter gridview
-    filtered_items->set_visible_func([=](const Gtk::TreeModel::const_iterator& it){
+    filtered_items->set_visible_func([this](Gtk::TreeModel::const_iterator const &it){
         if (_search.get_text_length() == 0) return true;
     
         auto str = _search.get_text().lowercase();
@@ -449,7 +453,7 @@ DocumentResources::DocumentResources()
         return label.lowercase().find(str) != Glib::ustring::npos;
     });
     // filter treeview too
-    filtered_info->set_visible_func([=](const Gtk::TreeModel::const_iterator& it){
+    filtered_info->set_visible_func([this](Gtk::TreeModel::const_iterator const &it){
         if (_search.get_text_length() == 0) return true;
     
         auto str = _search.get_text().lowercase();
@@ -457,7 +461,7 @@ DocumentResources::DocumentResources()
         return value.lowercase().find(str) != Glib::ustring::npos;
     });
 
-    _delete.signal_clicked().connect([=](){
+    _delete.signal_clicked().connect([this]{
         // delete selected object
         if (auto row = selected_item()) {
             SPObject* object = row[g_item_columns.object];
@@ -465,7 +469,7 @@ DocumentResources::DocumentResources()
         }
     });
 
-    _extract.signal_clicked().connect([=](){
+    _extract.signal_clicked().connect([this]{
         auto window = dynamic_cast<Gtk::Window*>(get_toplevel());
 
         switch (_showing_resource) {
@@ -496,7 +500,7 @@ DocumentResources::DocumentResources()
         }
     });
 
-    _iconview.signal_selection_changed().connect([=](){
+    _iconview.signal_selection_changed().connect([this]{
         update_buttons();
     });
 
@@ -765,7 +769,7 @@ void DocumentResources::rebuild_stats() {
     }
 
     _categories->refilter();
-    _categories->foreach_iter([=](const Gtk::TreeModel::iterator& it){
+    _categories->foreach_iter([this](Gtk::TreeModel::iterator const &it){
         Glib::ustring id;
         it->get_value(COL_ID, id);
         auto count = get_resource_count(id, _stats);
@@ -779,9 +783,9 @@ void DocumentResources::rebuild_stats() {
 void DocumentResources::documentReplaced() {
     _document = getDocument();
     if (_document) {
-        _document_modified = _document->connectModified([=](unsigned){
+        _document_modified = _document->connectModified([this](unsigned){
             // brute force refresh, but throttled
-            _idle_refresh = Glib::signal_timeout().connect([=](){
+            _idle_refresh = Glib::signal_timeout().connect([this]{
                 rebuild_stats();
                 refresh_current_page();
                 return false;
@@ -803,13 +807,13 @@ void DocumentResources::refresh_current_page() {
     }
     auto model = _selector.get_model();
 
-    model->foreach([=](Gtk::TreeModel::Path const &path,
+    model->foreach([&](Gtk::TreeModel::Path const &path,
                        Gtk::TreeModel::const_iterator const &it)
     {
         Glib::ustring id;
         it->get_value(COL_ID, id);
 
-        if (id == page) {
+        if (id.raw() == page) {
             _page_selection->select(path);
             refresh_page(id);
             return true;
@@ -999,7 +1003,7 @@ void add_refs(Glib::RefPtr<Gtk::ListStore> info_store, const std::vector<SPObjec
 }
 
 void DocumentResources::select_page(const Glib::ustring& id) {
-    if (_cur_page_id == id) return;
+    if (_cur_page_id == id.raw()) return;
 
     _cur_page_id = id;
     refresh_page(id);

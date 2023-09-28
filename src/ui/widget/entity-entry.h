@@ -12,6 +12,7 @@
 #define SEEN_INKSCAPE_UI_WIDGET_ENTITY_ENTRY_H
 
 #include <glibmm/ustring.h>
+#include <gtkmm/label.h>
 #include <gtkmm/textview.h>
 
 struct rdf_work_entity_t;
@@ -21,9 +22,7 @@ namespace Gtk {
 class TextBuffer;
 }
 
-namespace Inkscape {
-namespace UI {
-namespace Widget {
+namespace Inkscape::UI::Widget {
 
 class Registry;
 
@@ -71,9 +70,7 @@ protected:
     Gtk::TextView _v;
 };
 
-} // namespace Widget
-} // namespace UI
-} // namespace Inkscape
+} // Inkscape::UI::Widget
 
 #endif // SEEN_INKSCAPE_UI_WIDGET_ENTITY_ENTRY_H
 
