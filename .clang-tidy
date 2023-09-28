@@ -5,3 +5,6 @@ Checks:          '-*, modernize-deprecated-headers, modernize-loop-convert, mode
 WarningsAsErrors: ''
 HeaderFilterRegex: '.*/src/[^3].*'
 FormatStyle:     'file'
+CheckOptions:
+  - key: modernize-loop-convert.UseCxx20ReverseRanges
+    value: false
