@@ -360,8 +360,6 @@ void SwatchesPanel::on_size_allocate(Gtk::Allocation &alloc)
     DialogBase::on_size_allocate(alloc);
 }
 
-// TODO: The following two functions can made much nicer using C++20 ranges.
-
 void SwatchesPanel::rebuild_isswatch()
 {
     auto grads = getDocument()->getResourceList("gradient");

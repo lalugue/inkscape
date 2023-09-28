@@ -28,14 +28,13 @@
 
 #include "eraser-tool.h"
 
-#include <string>
+#include <cmath>
 #include <cstring>
+#include <string>
 #include <numeric>
-
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 #include <glibmm/i18n.h>
-
 #include <2geom/bezier-utils.h>
 #include <2geom/pathvector.h>
 
@@ -54,10 +53,8 @@
 #include "selection-chemistry.h"
 #include "selection.h"
 #include "style.h"
-
 #include "display/curve.h"
 #include "display/control/canvas-item-bpath.h"
-
 #include "object/sp-clippath.h"
 #include "object/sp-image.h"
 #include "object/sp-item-group.h"
@@ -65,10 +62,8 @@
 #include "object/sp-rect.h"
 #include "object/sp-shape.h"
 #include "object/sp-use.h"
-
 #include "ui/icon-names.h"
 #include "ui/widget/events/canvas-event.h"
-
 #include "svg/svg.h"
 
 using Inkscape::DocumentUndo;
@@ -130,12 +125,6 @@ void EraserTool::_updateMode()
     }
 }
 
-// TODO: After switch to C++20, replace this with std::lerp
-inline double flerp(double const f0, double const f1, double const p)
-{
-    return f0 + (f1 - f0) * p;
-}
-
 inline double square(double const x)
 {
     return x * x;
@@ -190,7 +179,7 @@ bool EraserTool::_apply(Geom::Point const &p)
     }
 
     // Calculate mass
-    double const m = flerp(1.0, 160.0, mass);
+    double const m = std::lerp(1.0, 160.0, mass);
     acc = force / m;
     vel += acc; // Calculate new velocity
     double const speed = Geom::L2(vel);
@@ -239,7 +228,7 @@ bool EraserTool::_apply(Geom::Point const &p)
     // find the flatness-weighted bisector angle, unflip if angle_dynamic was flipped
     // FIXME: when `vel` is oscillating around the fixed angle, the new_ang flips back and forth.
     // How to avoid this?
-    double new_ang = flerp(angle_dynamic, angle_fixed, fabs(flatness)) - (flipped ? M_PI : 0);
+    double new_ang = std::lerp(angle_dynamic, angle_fixed, fabs(flatness)) - (flipped ? M_PI : 0);
 
     // Try to detect a sudden flip when the new angle differs too much from the previous for the
     // current velocity; in that case discard this move
@@ -252,7 +241,7 @@ bool EraserTool::_apply(Geom::Point const &p)
     ang = Geom::Point(cos(new_ang), sin(new_ang));
 
     /* Apply drag */
-    double const d = flerp(0.0, 0.5, square(drag));
+    double const d = std::lerp(0.0, 0.5, square(drag));
     vel *= 1.0 - d;
 
     /* Update position */
@@ -267,7 +256,7 @@ void EraserTool::_brush()
     g_assert(npoints >= 0 && npoints < SAMPLING_SIZE);
 
     // How much velocity thins strokestyle
-    double const vel_thinning = flerp(0, 160, vel_thin);
+    double const vel_thinning = std::lerp(0, 160, vel_thin);
 
     // Influence of pressure on thickness
     double const pressure_thick = (usepressure ? pressure : 1.0);

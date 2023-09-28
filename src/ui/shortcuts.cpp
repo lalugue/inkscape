@@ -228,9 +228,9 @@ parse_modifier_string(char const * const modifiers_string)
                     GdkModifierType type = 
                         gdk_keymap_get_modifier_mask (keymap, GDK_MODIFIER_INTENT_PRIMARY_ACCELERATOR);
                     gdk_keymap_add_virtual_modifiers(keymap, &type);
-                    if (type & Gdk::CONTROL_MASK)
+                    if (type & GDK_CONTROL_MASK)
                         modifiers |= Gdk::CONTROL_MASK;
-                    else if (type & Gdk::META_MASK)
+                    else if (type & GDK_META_MASK)
                         modifiers |= Gdk::META_MASK;
                     else {
                         std::cerr << "Shortcut::read: Unknown primary accelerator!" << std::endl;
@@ -686,7 +686,7 @@ get_from_event_impl(unsigned const event_keyval, unsigned const event_keycode,
 {
     // MOD2 corresponds to the NumLock key. Masking it out allows
     // shortcuts to work regardless of its state.
-    auto const initial_modifiers = static_cast<Gdk::ModifierType>(event_state & ~Gdk::MOD2_MASK);
+    auto const initial_modifiers = static_cast<Gdk::ModifierType>(event_state & ~GDK_MOD2_MASK);
 
     unsigned int consumed_modifiers = 0;
     auto keyval = Inkscape::UI::Tools::get_latin_keyval_impl(

@@ -2,16 +2,17 @@
 /** \file Pool
  * Block allocator optimised for many allocations that are freed all at once.
  */
+
 #ifndef INKSCAPE_UTIL_POOL_H
 #define INKSCAPE_UTIL_POOL_H
 
-#include <memory>
-#include <vector>
-#include <utility>
+#include <algorithm>
 #include <cstddef>
+#include <memory>
+#include <utility>
+#include <vector>
 
-namespace Inkscape {
-namespace Util {
+namespace Inkscape::Util {
 
 /**
  * A Pool is a block allocator with the following characteristics:
@@ -53,7 +54,17 @@ private:
     void resetblock() noexcept;
 };
 
-} // namespace Util
-} // namespace Inkscape
+} // namespace Inkscape::Util
 
 #endif // INKSCAPE_UTIL_POOL_H
+
+/*
+  Local Variables:
+  mode:c++
+  c-file-style:"stroustrup"
+  c-file-offsets:((innamespace . 0)(inline-open . 0)(case-label . +))
+  indent-tabs-mode:nil
+  fill-column:99
+  End:
+*/
+// vim:filetype=cpp:expandtab:shiftwidth=4:tabstop=8:softtabstop=4:fileencoding=utf-8:textwidth=99:

@@ -718,7 +718,8 @@ static void sp_flood_do_flood_fill(SPDesktop *desktop, Geom::Point const &cursor
     auto const height = img_dims.y();
 
     auto const stride = Cairo::ImageSurface::format_stride_for_width(Cairo::FORMAT_ARGB32, width);
-    auto const px = std::make_unique<unsigned char[]>(stride * height); // C++20: make_unique_for_overwrite
+    // TODO: C++20: *once* Apple+AppImage support it: Use std::make_unique_for_overwrite()
+    auto const px = std::make_unique<unsigned char[]>(stride * height);
     uint32_t bgcolor, dtc;
 
     // Draw image into data block px

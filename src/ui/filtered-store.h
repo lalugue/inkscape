@@ -3,9 +3,11 @@
 #ifndef INKSCAPE_PATTERN_EDITOR_H
 #define INKSCAPE_PATTERN_EDITOR_H
 
-#include <giomm/liststore.h>
+#include <algorithm>
 #include <functional>
+#include <iterator>
 #include <vector>
+#include <giomm/liststore.h>
 
 // Simplistic filtered list store implementation
 // It's a GIO ListStore plus custom filter function to control visibility of items
@@ -44,11 +46,10 @@ public:
         // if there's a filter, run it
         std::vector<TPtr> visible;
         if (_filter_callback) {
-            std::copy_if(_items.begin(), _items.end(), std::back_inserter(visible), [=](const TPtr& t){
-                return _filter_callback(t);
-            });
+            std::copy_if(_items.cbegin(), _items.cend(),
+			 std::back_inserter(visible), std::ref(_filter_callback));
         }
-        auto& items = _filter_callback ? visible : _items;
+        auto const &items = _filter_callback ? visible : _items;
 
         if (force_refresh) {
             update_store(items);
@@ -94,6 +95,17 @@ private:
     std::vector<TPtr> _visible;
 };
 
-} // namespace
+} // namespace Inkscape
 
-#endif
+#endif // INKSCAPE_PATTERN_EDITOR_H
+
+/*
+  Local Variables:
+  mode:c++
+  c-file-style:"stroustrup"
+  c-file-offsets:((innamespace . 0)(inline-open . 0)(case-label . +))
+  indent-tabs-mode:nil
+  fill-column:99
+  End:
+*/
+// vim:filetype=cpp:expandtab:shiftwidth=4:tabstop=8:softtabstop=4:fileencoding=utf-8:textwidth=99:
