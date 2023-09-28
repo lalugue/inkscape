@@ -230,7 +230,7 @@ Geom::PathVector LPETaperStroke::doEffect_path(Geom::PathVector const& path_in)
  */
 Geom::PathVector LPETaperStroke::doEffect_simplePath(Geom::Path const & path, size_t index, double start, double end)
 {
-    Geom::Coord endTime = path.size() - end;
+    auto const endTime = std::max(path.size() - end, start);
 
     Geom::Path p1 = path.portion(0., start);
     Geom::Path p2 = path.portion(start, endTime);
