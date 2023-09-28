@@ -711,12 +711,15 @@ void CanvasItemCtrl::_update(bool)
     int dx = 0;
     int dy = 0;
 
+    _parsed.init([ &, this] {
+        parse_handle_styles();
+    });
 
     CanvasItemCtrlShape shape;
-    if(handle_styles.find(_handle) != handle_styles.end()) {
+    if(!_shape_set && handle_styles.find(_handle) != handle_styles.end()) {
         shape = handle_styles[_handle]->shape();
     } else {
-        shape = CANVAS_ITEM_CTRL_SHAPE_SQUARE;
+        shape = _shape;
     }
 
     switch (shape) {
