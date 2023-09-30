@@ -33,6 +33,7 @@ class Expander;
 class Label;
 class ListBox;
 class ListStore;
+class SelectionData;
 class Widget;
 } // namespace Gtk
 
@@ -93,6 +94,8 @@ private:
     void toggleVisible(Inkscape::LivePathEffect::Effect *lpe, Gtk::Button *visbutton);
     bool can_apply(LivePathEffect::EffectType, Glib::ustring const &item_type, bool has_clip, bool has_mask);
     void removeEffect(Gtk::Expander * expander);
+    [[nodiscard]] bool on_drop(Gtk::Widget &widget,
+                               Gtk::SelectionData const &selection_data, int pos_target);
     void effect_list_reload(SPLPEItem *lpeitem);
     void selection_info();
     void map_handler();

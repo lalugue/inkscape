@@ -44,29 +44,6 @@
       </item>
     </section>
   </menu>
-  <object class="GtkImage" id="dndImage">
-    <property name="visible">True</property>
-    <property name="halign">center</property>
-    <property name="margin-left">2</property>
-    <property name="margin-start">2</property>
-    <property name="icon-name">dnd</property>
-    <property name="icon-size">2</property>
-  </object>
-  <object class="GtkImage" id="removeImage">
-    <property name="visible">True</property>
-    <property name="icon-name">edit-delete-symbolic</property>
-    <property name="icon-size">2</property>
-  </object>
-  <object class="GtkImage" id="removeImage1">
-    <property name="visible">True</property>
-    <property name="icon-name">edit-delete-symbolic</property>
-    <property name="icon-size">2</property>
-  </object>
-  <object class="GtkImage" id="visibilityImage">
-    <property name="visible">True</property>
-    <property name="icon-name">object-visible-symbolic</property>
-    <property name="icon-size">2</property>
-  </object>
   <object class="GtkBox" id="LPEEffect">
     <property name="name">LPEEffectItem</property>
     <property name="visible">True</property>
@@ -81,6 +58,7 @@
           <object class="GtkOverlay">
             <property name="visible">True</property>
             <property name="can-focus">True</property>
+            <property name="hexpand">True</property>
             <child>
               <object class="GtkExpander" id="LPEExpander">
                 <property name="visible">True</property>
@@ -112,9 +90,6 @@
                             <property name="single-line-mode">True</property>
                             <property name="xalign">0</property>
                           </object>
-                          <packing>
-                            <property name="position">1</property>
-                          </packing>
                         </child>
                       </object>
                     </child>
@@ -124,16 +99,10 @@
                         <property name="visible">True</property>
                         <property name="halign">start</property>
                       </object>
-                      <packing>
-                        <property name="position">1</property>
-                      </packing>
                     </child>
                   </object>
                 </child>
               </object>
-              <packing>
-                <property name="index">-1</property>
-              </packing>
             </child>
             <child type="overlay">
               <object class="GtkBox">
@@ -143,24 +112,16 @@
                 <child>
                   <object class="GtkEventBox" id="LPEOpenExpander">
                     <property name="visible">True</property>
+                    <property name="hexpand">True</property>
                   </object>
-                  <packing>
-                    <property name="expand">True</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkBox">
                     <property name="width-request">145</property>
                     <property name="visible">True</property>
                   </object>
-                  <packing>
-                    <property name="position">1</property>
-                  </packing>
                 </child>
               </object>
-              <packing>
-                <property name="index">1</property>
-              </packing>
             </child>
             <child type="overlay">
               <object class="GtkBox" id="LPEActionButtons">
@@ -175,10 +136,14 @@
                       <object class="GtkButton" id="LPEHide">
                         <property name="width-request">30</property>
                         <property name="visible">True</property>
-                        <property name="image">visibilityImage</property>
                         <property name="relief">none</property>
-                        <property name="always-show-image">True</property>
                         <property name="tooltip-text" translatable="yes">Show/hide this Live Path Effect</property>
+                        <child>
+                           <object class="GtkImage" id="visibilityImage">
+                             <property name="visible">True</property>
+                             <property name="icon-name">object-visible-symbolic</property>
+                           </object>
+                        </child>
                         <style>
                           <class name="minbutton"/>
                         </style>
@@ -188,10 +153,14 @@
                       <object class="GtkButton" id="LPEErase">
                         <property name="width-request">30</property>
                         <property name="visible">True</property>
-                        <property name="image">removeImage</property>
                         <property name="relief">none</property>
-                        <property name="always-show-image">True</property>
                         <property name="tooltip-text" translatable="yes">Remove this Live Path Effect</property>
+                        <child>
+                          <object class="GtkImage" id="removeImage">
+                            <property name="visible">True</property>
+                            <property name="icon-name">edit-delete-symbolic</property>
+                          </object>
+                        </child>
                         <style>
                           <class name="minbutton"/>
                         </style>
@@ -217,9 +186,6 @@
                       <class name="linked"/>
                     </style>
                   </object>
-                  <packing>
-                    <property name="position">2</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkButton" id="LPEDrag">
@@ -227,39 +193,35 @@
                     <property name="can-focus">True</property>
                     <property name="no-show-all">True</property>
                     <property name="halign">center</property>
-                    <property name="image">dndImage</property>
                     <property name="relief">none</property>
-                    <property name="image-position">right</property>
-                    <property name="always-show-image">True</property>
                     <property name="width-request">35</property>
                     <property name="tooltip-text" translatable="yes">Reorder this Live Path Effect</property>
+                    <property name="hexpand">True</property>
+                    <child>
+                      <object class="GtkImage" id="dndImage">
+                        <property name="visible">True</property>
+                        <property name="halign">center</property>
+                        <property name="margin-left">2</property>
+                        <property name="margin-start">2</property>
+                        <property name="icon-name">dnd</property>
+                      </object>
+                    </child>
                     <style>
                       <class name="LPEDrag"/>
                     </style>
                   </object>
-                  <packing>
-                    <property name="expand">True</property>
-                    <property name="position">4</property>
-                  </packing>
                 </child>
               </object>
               <packing>
                 <property name="pass-through">True</property>
-                <property name="index">2</property>
               </packing>
             </child>
           </object>
-          <packing>
-            <property name="expand">True</property>
-          </packing>
         </child>
         <style>
           <class name="activatable"/>
         </style>
       </object>
-      <packing>
-        <property name="expand">True</property>
-      </packing>
     </child>
     <style>
       <class name="activatable"/>
