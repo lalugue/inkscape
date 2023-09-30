@@ -16,7 +16,8 @@
 #ifndef INKSCAPE_UI_WIDGET_INKSCAPE_PREFERENCES_H
 #define INKSCAPE_UI_WIDGET_INKSCAPE_PREFERENCES_H
 
-#include <utility>
+#include <cstdint>
+#include <span>
 #include <vector>
 #include <sigc++/signal.h>
 #include <glibmm/refptr.h>
@@ -52,7 +53,8 @@ public:
     }
     PrefCheckButton() : Gtk::CheckButton() {};
     sigc::signal<void (bool)> changed_signal;
-protected:
+
+private:
     Glib::ustring _prefs_path;
     void on_toggled() override;
 };
@@ -65,7 +67,8 @@ public:
     void init(Glib::ustring const &label, Glib::ustring const &prefs_path,
               Glib::ustring const &string_value, bool default_value, PrefRadioButton* group_member);
     sigc::signal<void (bool)> changed_signal;
-protected:
+
+private:
     Glib::ustring _prefs_path;
     Glib::ustring _string_value;
     int _value_type;
@@ -83,8 +86,6 @@ struct PrefItem { Glib::ustring label; int int_value; Glib::ustring tooltip; boo
 class PrefRadioButtons : public Gtk::Box {
 public:
     PrefRadioButtons(const std::vector<PrefItem>& buttons, const Glib::ustring& prefs_path);
-
-private:
 };
 
 class PrefSpinButton : public SpinButton
@@ -94,7 +95,8 @@ public:
               double lower, double upper, double step_increment, double page_increment,
               double default_value, bool is_int, bool is_percent);
     sigc::signal<void (double)> changed_signal;
-protected:
+
+private:
     Glib::ustring _prefs_path;
     bool _is_int;
     bool _is_percent;
@@ -110,7 +112,8 @@ public:
               double lower, double upper, double step_increment,
               double default_value,
               UnitType unit_type, Glib::ustring const &default_unit);
-protected:
+
+private:
     Glib::ustring _prefs_path;
     bool _is_percent;
     void on_my_value_changed();
@@ -170,6 +173,7 @@ public:
 
     Gtk::Scale*  getSlider() {return _slider;};
     Inkscape::UI::Widget::SpinButton * getSpinButton() {return _sb;};
+
 private:
     void on_slider_value_changed();
     void on_spinbutton_value_changed();
@@ -187,32 +191,16 @@ class PrefCombo : public Gtk::ComboBoxText
 {
 public:
     void init(Glib::ustring const &prefs_path,
-              Glib::ustring const labels[], int const values[], int num_items, int default_value);
-
-    /**
-     * Initialize a combo box.
-     * second form uses strings as key values.
-     */
-    void init(Glib::ustring const &prefs_path,
-              Glib::ustring labels[], Glib::ustring values[], int num_items, Glib::ustring default_value);
-    /**
-     * Initialize a combo box.
-     * with vectors.
-     */
-    void init(Glib::ustring const &prefs_path, std::vector<Glib::ustring> labels, std::vector<int> values,
+              std::span<Glib::ustring const> labels,
+              std::span<int const> values,
               int default_value);
 
-    void init(Glib::ustring const &prefs_path, std::vector<Glib::ustring> labels, std::vector<Glib::ustring> values,
-              Glib::ustring default_value);
-
-    /**
-     * Initialize a combo box with a vector of Glib::ustring pairs.
-     */
     void init(Glib::ustring const &prefs_path,
-              std::vector<std::pair<Glib::ustring, Glib::ustring>> labels_and_values,
-              Glib::ustring default_value);
+              std::span<Glib::ustring const> labels,
+              std::span<Glib::ustring const> values,
+              Glib::ustring const &default_value);
 
-  protected:
+private:
     Glib::ustring _prefs_path;
     std::vector<int> _values;
     std::vector<Glib::ustring> _ustr_values;    ///< string key values used optionally instead of numeric _values
@@ -223,8 +211,11 @@ class PrefEntry : public Gtk::Entry
 {
 public:
     void init(Glib::ustring const &prefs_path, bool mask);
+
 protected:
     Glib::ustring _prefs_path;
+
+private:
     void on_changed() override;
 };
 
@@ -237,7 +228,8 @@ class PrefMultiEntry : public Gtk::ScrolledWindow
 {
 public:
     void init(Glib::ustring const &prefs_path, int height);
-protected:
+
+private:
     Glib::ustring       _prefs_path;
     Gtk::TextView       _text;
     void on_changed();
@@ -251,7 +243,7 @@ public:
     void init(Glib::ustring const &prefs_path,
             bool mask, Glib::ustring const &default_string);
 
-protected:
+private:
     Glib::ustring _prefs_path;
     Glib::ustring _default_string;
     Gtk::Button *relatedButton;
@@ -267,8 +259,9 @@ public:
     PrefEntryFileButtonHBox() : Gtk::Box(Gtk::ORIENTATION_HORIZONTAL) {}
 
     void init(Glib::ustring const &prefs_path,
-            bool mask);
-protected:
+              bool mask);
+
+private:
     Glib::ustring _prefs_path;
     Gtk::Button *relatedButton;
     Gtk::Entry *relatedEntry;
@@ -283,7 +276,7 @@ class PrefOpenFolder : public Gtk::Box {
 
     void init(Glib::ustring const &entry_string, Glib::ustring const &tooltip);
 
-  protected:
+private:
     Gtk::Button *relatedButton;
     Gtk::Entry *relatedEntry;
     void onRelatedButtonClickedCallback();
@@ -296,18 +289,19 @@ public:
     ~PrefColorPicker() override = default;;
 
     void init(Glib::ustring const &abel, Glib::ustring const &prefs_path,
-              guint32 default_rgba);
+              std::uint32_t default_rgba);
 
-protected:
+private:
     Glib::ustring _prefs_path;
-    void on_changed (guint32 rgba) override;
+    void on_changed(std::uint32_t rgba) override;
 };
 
 class PrefUnit : public UnitMenu
 {
 public:
     void init(Glib::ustring const &prefs_path);
-protected:
+
+private:
     Glib::ustring _prefs_path;
     void on_changed() override;
 };

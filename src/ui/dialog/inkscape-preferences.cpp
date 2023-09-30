@@ -1589,7 +1589,7 @@ void InkscapePreferences::initPageUI()
         }
     }
 
-    _ui_languages.init( "/ui/language", languages, langValues, G_N_ELEMENTS(languages), languages[0]);
+    _ui_languages.init( "/ui/language", languages, langValues, languages[0]);
     _page_ui.add_line( false, _("Language:"), _ui_languages, "",
                               _("Set the language for menus and number formats"), false, reset_icon());
 
@@ -1829,7 +1829,7 @@ void InkscapePreferences::initPageUI()
                          false);
         Glib::ustring menu_icons_labels[] = {_("Yes"), _("No"), _("Theme decides")};
         int menu_icons_values[] = {1, -1, 0};
-        _menu_icons.init("/theme/menuIcons", menu_icons_labels, menu_icons_values, G_N_ELEMENTS(menu_icons_labels), 0);
+        _menu_icons.init("/theme/menuIcons", menu_icons_labels, menu_icons_values, 0);
         _page_theme.add_line(false, _("Show icons in menus:"), _menu_icons, "",
                              _("You can either enable or disable all icons in menus. By default, the setting for the 'use-icon' attribute in the 'menus.ui' file determines whether to display icons in menus."), false, reset_icon());
         _shift_icons.init(_("Shift icons in menus"), "/theme/shiftIcons", true);
@@ -1990,7 +1990,7 @@ void InkscapePreferences::initPageUI()
                                    PREFS_WINDOW_SIZE_LARGE,
                                    PREFS_WINDOW_SIZE_MAXIMIZED};
 
-        _win_default_size.init( "/options/defaultwindowsize/value", defaultSizeLabels, defaultSizeValues, G_N_ELEMENTS(defaultSizeLabels), PREFS_WINDOW_SIZE_NATURAL);
+        _win_default_size.init( "/options/defaultwindowsize/value", defaultSizeLabels, defaultSizeValues, PREFS_WINDOW_SIZE_NATURAL);
         _page_windows.add_line( false, _("Default window size:"),  _win_default_size, "",
                            _("Set the default window size"), false);
     }
@@ -2026,6 +2026,7 @@ void InkscapePreferences::initPageUI()
     };
     _page_windows.add_line(true, _("Dialog on top"), *Gtk::make_managed<PrefRadioButtons>(on_top, "/options/transientpolicy/value"), "", "");
 #endif
+
     std::vector<PrefItem> labels = {
         { _("Automatic"), PREFS_NOTEBOOK_LABELS_AUTO, _("Dialog names will be displayed when there is enough space"), true },
         { _("Active"), PREFS_NOTEBOOK_LABELS_ACTIVE, _("Only show label on active") },
@@ -2305,11 +2306,9 @@ void InkscapePreferences::initPageIO()
 
     _page_svgoutput.add_group_header( _("Path data"));
 
-    int const numPathstringFormat = 3;
-    Glib::ustring pathstringFormatLabels[numPathstringFormat] = {_("Absolute"), _("Relative"), _("Optimized")};
-    int pathstringFormatValues[numPathstringFormat] = {0, 1, 2};
-
-    _svgoutput_pathformat.init("/options/svgoutput/pathstring_format", pathstringFormatLabels, pathstringFormatValues, numPathstringFormat, 2);
+    Glib::ustring const pathstringFormatLabels[] = {_("Absolute"), _("Relative"), _("Optimized")};
+    int const pathstringFormatValues[] = {0, 1, 2};
+    _svgoutput_pathformat.init("/options/svgoutput/pathstring_format", pathstringFormatLabels, pathstringFormatValues, 2);
     _page_svgoutput.add_line( true, _("Path string format:"), _svgoutput_pathformat, "", _("Path data should be written: only with absolute coordinates, only with relative coordinates, or optimized for string length (mixed absolute and relative coordinates)"), false);
 
     _svgoutput_forcerepeatcommands.init( _("Force repeat commands"), "/options/svgoutput/forcerepeatcommands", false);
@@ -2386,10 +2385,10 @@ void InkscapePreferences::initPageIO()
 
     // CMS options
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-    int const numIntents = 4;
     /* TRANSLATORS: see http://www.newsandtech.com/issues/2004/03-04/pt/03-04_rendering.htm */
-    Glib::ustring intentLabels[numIntents] = {_("Perceptual"), _("Relative Colorimetric"), _("Saturation"), _("Absolute Colorimetric")};
-    int intentValues[numIntents] = {0, 1, 2, 3};
+    Glib::ustring const intentLabels[] = {_("Perceptual"), _("Relative Colorimetric"),
+                                          _("Saturation"), _("Absolute Colorimetric")};
+    int const intentValues[] = {0, 1, 2, 3};
 
     _page_cms.add_group_header( _("Display adjustment"));
 
@@ -2409,7 +2408,7 @@ void InkscapePreferences::initPageIO()
     _page_cms.add_line( true, "", _cms_from_user, "",
                         _("Use a user specified ICC profile for monitor color correction. Warning: System wide color correction should be disabled."), false);
 
-    _cms_intent.init("/options/displayprofile/intent", intentLabels, intentValues, numIntents, 0);
+    _cms_intent.init("/options/displayprofile/intent", intentLabels, intentValues, 0);
     _page_cms.add_line( true, _("Display rendering intent:"), _cms_intent, "",
                         _("The rendering intent to use to calibrate display output"), false);
 
@@ -2434,7 +2433,7 @@ void InkscapePreferences::initPageIO()
     _page_cms.add_line( true, _("Device profile:"), _cms_proof_profile, "",
                         _("The ICC profile to use to simulate device output"), false);
 
-    _cms_proof_intent.init("/options/softproof/intent", intentLabels, intentValues, numIntents, 0);
+    _cms_proof_intent.init("/options/softproof/intent", intentLabels, intentValues, 0);
     _page_cms.add_line( true, _("Device rendering intent:"), _cms_proof_intent, "",
                         _("The rendering intent to use to calibrate device output"), false);
 
@@ -2658,33 +2657,43 @@ void InkscapePreferences::initPageBehavior()
     this->AddPage(_page_snapping, _("Snapping"), iter_behavior, PREFS_PAGE_BEHAVIOR_SNAPPING);
 
     // Steps options
-    _steps_arrow.init ( "/options/nudgedistance/value", 0.0, 1000.0, 0.01, 2.0, UNIT_TYPE_LINEAR, "px");
+
     //nudgedistance is limited to 1000 in select-context.cpp: use the same limit here
+    _steps_arrow.init ( "/options/nudgedistance/value", 0.0, 1000.0, 0.01, 2.0, UNIT_TYPE_LINEAR, "px");
     _page_steps.add_line( false, _("_Arrow keys move by:"), _steps_arrow, "",
                           _("Pressing an arrow key moves selected object(s) or node(s) by this distance"), false);
-    _steps_scale.init ( "/options/defaultscale/value", 0.0, 1000.0, 0.01, 2.0, UNIT_TYPE_LINEAR, "px");
+
     //defaultscale is limited to 1000 in select-context.cpp: use the same limit here
+    _steps_scale.init ( "/options/defaultscale/value", 0.0, 1000.0, 0.01, 2.0, UNIT_TYPE_LINEAR, "px");
     _page_steps.add_line( false, _("&gt; and &lt; _scale by:"), _steps_scale, "",
                           _("Pressing > or < scales selection up or down by this increment"), false);
+
     _steps_inset.init ( "/options/defaultoffsetwidth/value", 0.0, 3000.0, 0.01, 2.0, UNIT_TYPE_LINEAR, "px");
     _page_steps.add_line( false, _("_Inset/Outset by:"), _steps_inset, "",
                           _("Inset and Outset commands displace the path by this distance"), false);
+
     _steps_compass.init ( _("Compass-like display of angles"), "/options/compassangledisplay/value", true);
     _page_steps.add_line( false, "", _steps_compass, "",
                             _("When on, angles are displayed with 0 at north, 0 to 360 range, positive clockwise; otherwise with 0 at east, -180 to 180 range, positive counterclockwise"));
-    int const num_items = 18;
-    Glib::ustring labels[num_items] = {"90", "60", "45", "36", "30", "22.5", "18", "15", "12", "10", "7.5", "6", "5", "3", "2", "1", "0.5", C_("Rotation angle", "None")};
-    int values[num_items] = {2, 3, 4, 5, 6, 8, 10, 12, 15, 18, 24, 30, 36, 60, 90, 180, 360, 0};
+
+    {
+        Glib::ustring const labels[] = {"90", "60", "45", "36", "30", "22.5", "18", "15", "12", "10",
+                                        "7.5", "6", "5", "3", "2", "1", "0.5", C_("Rotation angle", "None")};
+        int const values[] = {2, 3, 4, 5, 6, 8, 10, 12, 15, 18, 24, 30, 36, 60, 90, 180, 360, 0};
+        _steps_rot_snap.init("/options/rotationsnapsperpi/value", labels, values, 12);
+    }
     _steps_rot_snap.set_size_request(_sb_width);
-    _steps_rot_snap.init("/options/rotationsnapsperpi/value", labels, values, num_items, 12);
     _page_steps.add_line( false, _("_Rotation snaps every:"), _steps_rot_snap, _("degrees"),
                            _("Rotating with Ctrl pressed snaps every that much degrees; also, pressing [ or ] rotates by this amount"), false);
+
     _steps_rot_relative.init ( _("Relative snapping of guideline angles"), "/options/relativeguiderotationsnap/value", false);
     _page_steps.add_line( false, "", _steps_rot_relative, "",
                             _("When on, the snap angles when rotating a guideline will be relative to the original angle"));
+
     _steps_zoom.init ( "/options/zoomincrement/value", 101.0, 500.0, 1.0, 1.0, M_SQRT2, true, true);
     _page_steps.add_line( false, _("_Zoom in/out by:"), _steps_zoom, _("%"),
                           _("Zoom tool click, +/- keys, and middle click zoom in and out by this multiplier"), false);
+
     _middle_mouse_zoom.init ( _("Zoom with middle mouse click"), "/options/middlemousezoom/value", true);
     _page_steps.add_line( true, "", _middle_mouse_zoom, "",
                             _("When activated, clicking the middle mouse button (usually the mouse wheel) zooms."));
@@ -2694,6 +2703,7 @@ void InkscapePreferences::initPageBehavior()
     _steps_rotate.init ( "/options/rotateincrement/value", 1, 90, 1.0, 5.0, 15, false, false);
     _page_steps.add_line( false, _("_Rotate canvas by:"), _steps_rotate, _("degrees"),
                           _("Rotate canvas clockwise and counter-clockwise by this amount."), false);
+
     _move_rotated.init ( _("Arrow keys move object relative to screen"), "/options/moverotated/value", true);
     _page_steps.add_line( false, "", _move_rotated, "",
                             _("When on, arrow keys move objects relative to screen. If workspace is rotated the translation doesn't follow its coordinate system but the screen one."));
@@ -2840,7 +2850,7 @@ void InkscapePreferences::initPageRendering()
     {
         constexpr int values[] = { 1, 2, 3 };
         Glib::ustring const labels[] = { _("Responsive"), _("Full redraw"), _("Multiscale") };
-        _canvas_update_strategy.init("/options/rendering/update_strategy", labels, values, 3, 3);
+        _canvas_update_strategy.init("/options/rendering/update_strategy", labels, values, 3);
         _page_rendering.add_line(false, _("Update strategy:"), _canvas_update_strategy, "", _("How to update continually changing content when it can't be redrawn fast enough"), false);
     }
 
@@ -2959,7 +2969,7 @@ void InkscapePreferences::initPageRendering()
     {
         constexpr int values[] = { 1, 2, 3, 4 };
         Glib::ustring const labels[] = { _("Auto"), _("Persistent"), _("Asynchronous"), _("Synchronous") };
-        _canvas_pixelstreamer_method.init("/options/rendering/pixelstreamer_method", labels, values, 4, 1);
+        _canvas_pixelstreamer_method.init("/options/rendering/pixelstreamer_method", labels, values, 1);
         add_devmode_line(_("Pixel streaming method"), _canvas_pixelstreamer_method, "", _("Change the method used for streaming pixel data to the GPU. The default is Auto, which picks the best method available at runtime. As for the other options, higher up is better."));
     }
     _canvas_padding.init("/options/rendering/padding", 0.0, 1000.0, 1.0, 0.0, 350.0, true, false);
@@ -3044,21 +3054,21 @@ void InkscapePreferences::initPageBitmaps()
     {
         Glib::ustring labels[] = {_("Embed"), _("Link")};
         Glib::ustring values[] = {"embed", "link"};
-        _bitmap_link.init("/dialogs/import/link", labels, values, G_N_ELEMENTS(values), "link");
+        _bitmap_link.init("/dialogs/import/link", labels, values, "link");
         _page_bitmaps.add_line( false, _("Bitmap import/open mode:"), _bitmap_link, "", "", false);
     }
 
     {
         Glib::ustring labels[] = {_("Include"), _("Pages"), _("Embed"), _("Link"), _("New")};
         Glib::ustring values[] = {"include", "pages", "embed", "link", "new"};
-        _svg_link.init("/dialogs/import/import_mode_svg", labels, values, G_N_ELEMENTS(values), "include");
+        _svg_link.init("/dialogs/import/import_mode_svg", labels, values, "include");
         _page_bitmaps.add_line( false, _("SVG import mode:"), _svg_link, "", "", false);
     }
 
     {
         Glib::ustring labels[] = {_("None (auto)"), _("Smooth (optimizeQuality)"), _("Blocky (optimizeSpeed)") };
         Glib::ustring values[] = {"auto", "optimizeQuality", "optimizeSpeed"};
-        _bitmap_scale.init("/dialogs/import/scale", labels, values, G_N_ELEMENTS(values), "scale");
+        _bitmap_scale.init("/dialogs/import/scale", labels, values, "scale");
         _page_bitmaps.add_line( false, _("Image scale (image-rendering):"), _bitmap_scale, "", "", false);
     }
 
@@ -3078,19 +3088,29 @@ void InkscapePreferences::initPageBitmaps()
     this->AddPage(_page_bitmaps, _("Imported Images"), PREFS_PAGE_BITMAPS);
 }
 
+[[nodiscard]] static auto getShortcutsFileLabelsAndValues()
+{
+    auto pairs = Inkscape::Shortcuts::get_file_names();
+    std::vector<Glib::ustring> labels(pairs.size()), values(pairs.size());
+    std::transform(pairs.begin(), pairs.end(), labels.begin(), [](auto &&pair){ return std::move(pair.first ); });
+    std::transform(pairs.begin(), pairs.end(), values.begin(), [](auto &&pair){ return std::move(pair.second); });
+    return std::pair{std::move(labels), std::move(values)};
+}
+
 void InkscapePreferences::initKeyboardShortcuts(Gtk::TreeModel::iterator iter_ui)
 {
     // ------- Shortcut file --------
-    auto labels_and_names = Inkscape::Shortcuts::get_file_names();
-    _kb_filelist.init( "/options/kbshortcuts/shortcutfile", labels_and_names, labels_and_names[0].second);
+    {
+        auto const &[labels, values] = getShortcutsFileLabelsAndValues();
+        auto const &default_value = values.front();
+        _kb_filelist.init("/options/kbshortcuts/shortcutfile", labels, values, default_value);
 
-    auto tooltip =
-        Glib::ustring::compose(_("Select a file of predefined shortcuts and modifiers to use. Any customizations you "
-                                 "create will be added separately to %1"),
-                               IO::Resource::get_path_string(IO::Resource::USER, IO::Resource::KEYS, "default.xml"));
-
-    _page_keyshortcuts.add_line( false, _("Keyboard file:"), _kb_filelist, "", tooltip.c_str(), false);
-
+        auto tooltip =
+            Glib::ustring::compose(_("Select a file of predefined shortcuts and modifiers to use. Any customizations you "
+                                     "create will be added separately to %1"),
+                                   IO::Resource::get_path_string(IO::Resource::USER, IO::Resource::KEYS, "default.xml"));
+        _page_keyshortcuts.add_line( false, _("Keyboard file:"), _kb_filelist, "", tooltip.c_str(), false);
+    }
 
     // ---------- Tree --------
     _kb_store = Gtk::TreeStore::create( _kb_columns );

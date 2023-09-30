@@ -16,6 +16,7 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <utility>
 #include <glibmm/i18n.h>
 #include <glibmm/convert.h>
 #include <glibmm/regex.h>
@@ -635,55 +636,18 @@ PrefSlider::init(Glib::ustring const &prefs_path,
 }
 
 void PrefCombo::init(Glib::ustring const &prefs_path,
-                     Glib::ustring const labels[], int const values[], int num_items, int default_value)
+                     std::span<Glib::ustring const> labels,
+                     std::span<int const> values,
+                     int const default_value)
 {
-    _prefs_path = prefs_path;
-    Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-    int row = 0;
-    int value = prefs->getInt(_prefs_path, default_value);
-
-    for (int i = 0 ; i < num_items; ++i)
-    {
-        this->append(labels[i]);
-        _values.push_back(values[i]);
-        if (value == values[i])
-            row = i;
-    }
-    this->set_active(row);
-}
-
-void PrefCombo::init(Glib::ustring const &prefs_path,
-                     Glib::ustring labels[], Glib::ustring values[], int num_items, Glib::ustring default_value)
-{
-    _prefs_path = prefs_path;
-    Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-    int row = 0;
-    Glib::ustring value = prefs->getString(_prefs_path);
-    if(value.empty())
-    {
-        value = default_value;
-    }
-
-    for (int i = 0 ; i < num_items; ++i)
-    {
-        this->append(labels[i]);
-        _ustr_values.push_back(values[i]);
-        if (value == values[i])
-            row = i;
-    }
-    this->set_active(row);
-}
-
-void PrefCombo::init(Glib::ustring const &prefs_path, std::vector<Glib::ustring> labels, std::vector<int> values,
-                     int default_value)
-{
-    size_t labels_size = labels.size();
-    size_t values_size = values.size();
+    int const labels_size = labels.size();
+    int const values_size = values.size();
     if (values_size != labels_size) {
         std::cerr << "PrefCombo::"
                   << "Different number of values/labels in " << prefs_path.raw() << std::endl;
         return;
     }
+
     _prefs_path = prefs_path;
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
     int row = 0;
@@ -698,16 +662,19 @@ void PrefCombo::init(Glib::ustring const &prefs_path, std::vector<Glib::ustring>
     this->set_active(row);
 }
 
-void PrefCombo::init(Glib::ustring const &prefs_path, std::vector<Glib::ustring> labels,
-                     std::vector<Glib::ustring> values, Glib::ustring default_value)
+void PrefCombo::init(Glib::ustring const &prefs_path,
+                     std::span<Glib::ustring const> labels,
+                     std::span<Glib::ustring const> values,
+                     Glib::ustring const &default_value)
 {
-    size_t labels_size = labels.size();
-    size_t values_size = values.size();
+    int const labels_size = labels.size();
+    int const values_size = values.size();
     if (values_size != labels_size) {
         std::cerr << "PrefCombo::"
                   << "Different number of values/labels in " << prefs_path.raw() << std::endl;
         return;
     }
+
     _prefs_path = prefs_path;
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
     int row = 0;
@@ -721,30 +688,6 @@ void PrefCombo::init(Glib::ustring const &prefs_path, std::vector<Glib::ustring>
         _ustr_values.push_back(values[i]);
         if (value == values[i])
             row = i;
-    }
-    this->set_active(row);
-}
-
-void PrefCombo::init(Glib::ustring const &prefs_path,
-                     std::vector<std::pair<Glib::ustring, Glib::ustring>> labels_and_values,
-                     Glib::ustring default_value)
-{
-    _prefs_path = prefs_path;
-    Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-    Glib::ustring value = prefs->getString(_prefs_path);
-    if (value.empty()) {
-        value = default_value;
-    }
-
-    int row = 0;
-    int i = 0;
-    for (auto entry : labels_and_values) {
-        this->append(entry.first);
-        _ustr_values.push_back(entry.second);
-        if (value == entry.second) {
-            row = i;
-        }
-        ++i;
     }
     this->set_active(row);
 }
@@ -771,8 +714,8 @@ void PrefEntryButtonHBox::init(Glib::ustring const &prefs_path,
     _prefs_path = prefs_path;
     _default_string = default_string;
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-    relatedEntry = new Gtk::Entry();
-    relatedButton = new Gtk::Button(_("Reset"));
+    relatedEntry = Gtk::make_managed<Gtk::Entry>();
+    relatedButton = Gtk::make_managed<Gtk::Button>(_("Reset"));
     relatedEntry->set_invisible_char('*');
     relatedEntry->set_visibility(visibility);
     relatedEntry->set_text(prefs->getString(_prefs_path));
@@ -814,16 +757,16 @@ void PrefEntryFileButtonHBox::init(Glib::ustring const &prefs_path,
     _prefs_path = prefs_path;
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
     
-    relatedEntry = new Gtk::Entry();
+    relatedEntry = Gtk::make_managed<Gtk::Entry>();
     relatedEntry->set_invisible_char('*');
     relatedEntry->set_visibility(visibility);
     relatedEntry->set_text(prefs->getString(_prefs_path));
     
-    relatedButton = new Gtk::Button();
-    Gtk::Box* pixlabel = new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL, 3);
+    relatedButton = Gtk::make_managed<Gtk::Button>();
+    auto const pixlabel = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL, 3);
     Gtk::Image *im = sp_get_icon_image("applications-graphics", Gtk::ICON_SIZE_BUTTON);
     UI::pack_start(*pixlabel, *im);
-    Gtk::Label *l = new Gtk::Label();
+    auto const l = Gtk::make_managed<Gtk::Label>();
     l->set_markup_with_mnemonic(_("_Browse..."));
     UI::pack_start(*pixlabel, *l);
     relatedButton->add(*pixlabel); 
@@ -882,7 +825,7 @@ void PrefEntryFileButtonHBox::onRelatedButtonClickedCallback()
                     (BYTE*)utf16path, &data_size) == ERROR_SUCCESS)
                 {
                     g_assert(value_type == REG_SZ);
-                    gchar *utf8path = g_utf16_to_utf8(
+                    char * const utf8path = g_utf16_to_utf8(
                         (const gunichar2*)utf16path, -1, NULL, NULL, NULL);
                     if(utf8path)
                     {
@@ -945,12 +888,12 @@ bool PrefEntryFileButtonHBox::on_mnemonic_activate ( bool group_cycling )
 
 void PrefOpenFolder::init(Glib::ustring const &entry_string, Glib::ustring const &tooltip)
 {
-    relatedEntry = new Gtk::Entry();
-    relatedButton = new Gtk::Button();
-    Gtk::Box *pixlabel = new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL, 3);
+    relatedEntry = Gtk::make_managed<Gtk::Entry>();
+    relatedButton = Gtk::make_managed<Gtk::Button>();
+    auto const pixlabel = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL, 3);
     Gtk::Image *im = sp_get_icon_image("document-open", Gtk::ICON_SIZE_BUTTON);
     UI::pack_start(*pixlabel, *im);
-    Gtk::Label *l = new Gtk::Label();
+    auto const l = Gtk::make_managed<Gtk::Label>();
     l->set_markup_with_mnemonic(_("Open"));
     UI::pack_start(*pixlabel, *l);
     relatedButton->add(*pixlabel);
@@ -972,7 +915,7 @@ void PrefOpenFolder::onRelatedButtonClickedCallback()
     std::vector<std::string> argv = { "open", relatedEntry->get_text().raw() };
     Glib::spawn_async("", argv, Glib::SpawnFlags::SPAWN_SEARCH_PATH);
 #else
-    gchar *path = g_filename_to_uri(relatedEntry->get_text().c_str(), NULL, NULL);
+    char * const path = g_filename_to_uri(relatedEntry->get_text().c_str(), NULL, NULL);
     std::vector<std::string> argv = { "xdg-open", path };
     Glib::spawn_async("", argv, Glib::SpawnFlags::SPAWN_SEARCH_PATH);
     g_free(path);
@@ -1036,7 +979,7 @@ void PrefMultiEntry::on_changed()
 }
 
 void PrefColorPicker::init(Glib::ustring const &label, Glib::ustring const &prefs_path,
-                           guint32 default_rgba)
+                           std::uint32_t const default_rgba)
 {
     _prefs_path = prefs_path;
     _title = label;
@@ -1044,12 +987,12 @@ void PrefColorPicker::init(Glib::ustring const &label, Glib::ustring const &pref
     this->setRgba32( prefs->getInt(_prefs_path, (int)default_rgba) );
 }
 
-void PrefColorPicker::on_changed (guint32 rgba)
+void PrefColorPicker::on_changed(std::uint32_t const rgba)
 {
     if (this->get_visible()) //only take action if the user toggled it
     {
         Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-        prefs->setInt(_prefs_path, (int) rgba);
+        prefs->setInt(_prefs_path, static_cast<int>(rgba));
     }
 }
 
