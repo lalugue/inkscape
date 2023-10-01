@@ -75,7 +75,7 @@ bool handle_fits(Handle const &selector, Handle const &handle)
 std::unordered_map<Handle, HandleStyle *> handle_styles;
 std::unordered_map<std::tuple<Handle, int, double>, std::shared_ptr<uint32_t[]>> handle_cache;
 std::mutex cache_mutex;
-InitLock _parsed;
+bool parsed = false;
 
 } // namespace
 
@@ -712,16 +712,17 @@ void CanvasItemCtrl::_update(bool)
     // Width is always odd.
     assert(_width % 2 == 1);
 
-    // Get half width and , rounded down.
+    // Get half width, rounded down.
     int const w_half = _width / 2;
 
     // Set _angle, and compute adjustment for anchor.
     int dx = 0;
     int dy = 0;
 
-    _parsed.init([ &, this] {
+    [[unlikely]] if (!parsed) {
         parse_handle_styles();
-    });
+        parsed = true;
+    }
 
     CanvasItemCtrlShape shape;
     if(!_shape_set && handle_styles.find(_handle) != handle_styles.end()) {
@@ -838,10 +839,6 @@ void CanvasItemCtrl::_update(bool)
  */
 void CanvasItemCtrl::_render(CanvasItemBuffer &buf) const
 {
-    _parsed.init([ &, this] {
-        parse_handle_styles();
-    });
-
     _built.init([ &, this] {
         build_cache(buf.device_scale);
     });
