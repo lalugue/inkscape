@@ -127,10 +127,7 @@ private:
     KeyMask _not_mask_user = NOT_SET;
     unsigned long _weight_user = 0;
 
-protected:
-
 public:
-
     char const * get_id() const { return _id; }
     char const * get_name() const { return _name; }
     char const * get_description() const { return _desc; }
@@ -185,7 +182,6 @@ public:
      * @param id       Goes to \c _id.
      * @param name     Goes to \c _name.
      * @param desc     Goes to \c _desc.
-     * @param default_ Goes to \c _default.
      */
     Modifier(char const * id,
              char const * name,
@@ -228,18 +224,8 @@ public:
      * @param  id  The id string to be translated
      * @return A pointer to a modifier object or a NULL if not found.
      */
-    static Modifier * get(char const * id) {
-        Modifier *modifier = nullptr;
-        Lookup::iterator mod_found = _modifier_lookup.find(id);
-
-        if (mod_found != _modifier_lookup.end()) {
-            modifier = mod_found->second;
-        }
-    
-        return modifier;
-    }
-
-}; // Modifier class
+    static Modifier *get(char const *id);
+};
 
 } // namespace Modifiers
 } // namespace Inkscape

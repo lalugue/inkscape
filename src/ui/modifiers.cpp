@@ -21,8 +21,7 @@
 #include "modifiers.h"
 #include "ui/tools/tool-base.h"
 
-namespace Inkscape {
-namespace Modifiers {
+namespace Inkscape::Modifiers {
 
 namespace {
 using ModifierIdToTypeMap = std::map<std::string, Type>;
@@ -173,7 +172,20 @@ std::vector<Modifier const *> Modifier::getList()
     }
 
     return modifiers;
-};
+}
+
+Modifier *Modifier::get(char const *id)
+{
+    auto const type_it = modifier_type_from_id().find(id);
+    if (type_it == modifier_type_from_id().end()) {
+        return nullptr;
+    }
+    auto const modifier_it = _modifiers().find(type_it->second);
+    if (modifier_it == _modifiers().end()) {
+        return nullptr;
+    }
+    return &(modifier_it->second);
+}
 
 /**
  * Test if this modifier is currently active.
@@ -327,8 +339,7 @@ int add_keyval(int state, int keyval, bool release)
     return state;
 }
 
-} // namespace Modifiers
-} // namespace Inkscape
+} // namespace Inkscape::Modifiers
 
 /*
   Local Variables:
