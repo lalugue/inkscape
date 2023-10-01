@@ -72,7 +72,7 @@ bool handle_fits(Handle const &selector, Handle const &handle)
 /**
  * For Handle Styling (shared between all handles)
  */
-std::unordered_map<Handle, HandleStyle *> handle_styles;
+std::unordered_map<Handle, HandleStyle> handle_styles;
 std::unordered_map<std::tuple<Handle, int, double>, std::shared_ptr<uint32_t[]>> handle_cache;
 std::mutex cache_mutex;
 bool parsed = false;
@@ -724,11 +724,11 @@ void CanvasItemCtrl::_update(bool)
         parsed = true;
     }
 
-    CanvasItemCtrlShape shape;
-    if(!_shape_set && handle_styles.find(_handle) != handle_styles.end()) {
-        shape = handle_styles[_handle]->shape();
-    } else {
-        shape = _shape;
+    CanvasItemCtrlShape shape = _shape;
+    if (!_shape_set) {
+        if (auto it = handle_styles.find(_handle); it != handle_styles.end()) {
+            shape = it->second.shape();
+        }
     }
 
     switch (shape) {
@@ -910,7 +910,7 @@ void CanvasItemCtrl::_render(CanvasItemBuffer &buf) const
 /**
  * Conversion maps for ctrl types (CSS parsing).
  */
-const std::unordered_map<std::string, CanvasItemCtrlType> ctrl_type_map = {
+std::unordered_map<std::string, CanvasItemCtrlType> const ctrl_type_map = {
     {"*", CANVAS_ITEM_CTRL_TYPE_DEFAULT},
     {".inkscape-adj-handle", CANVAS_ITEM_CTRL_TYPE_ADJ_HANDLE},
     {".inkscape-adj-skew", CANVAS_ITEM_CTRL_TYPE_ADJ_SKEW},
@@ -939,7 +939,7 @@ const std::unordered_map<std::string, CanvasItemCtrlType> ctrl_type_map = {
 /**
  * Conversion maps for ctrl shapes (CSS parsing).
  */
-const std::unordered_map<std::string, CanvasItemCtrlShape> ctrl_shape_map = {
+std::unordered_map<std::string, CanvasItemCtrlShape> const ctrl_shape_map = {
     {"\'square\'", CANVAS_ITEM_CTRL_SHAPE_SQUARE},
     {"\'diamond\'", CANVAS_ITEM_CTRL_SHAPE_DIAMOND},
     {"\'circle\'", CANVAS_ITEM_CTRL_SHAPE_CIRCLE},
@@ -965,40 +965,40 @@ std::vector<std::pair<HandleStyle *, int>> selected_handles;
 /**
  * Parses the CSS selector for handles.
  */
-void configure_selector(CRSelector *a_selector, Handle *&selector, int &specificity)
+std::optional<std::pair<Handle, int>> configure_selector(CRSelector *a_selector)
 {
     cr_simple_sel_compute_specificity(a_selector->simple_sel);
-    specificity =  a_selector->simple_sel->specificity;
-    const char *selector_str = reinterpret_cast<const char *>(cr_simple_sel_one_to_string(a_selector->simple_sel));
+    int specificity = a_selector->simple_sel->specificity;
+    auto selector_str = reinterpret_cast<char const *>(cr_simple_sel_one_to_string(a_selector->simple_sel));
     std::vector<std::string> tokens = Glib::Regex::split_simple(":", selector_str);
     CanvasItemCtrlType type;
     int token_iterator = 0;
-    if (ctrl_type_map.find(tokens[token_iterator]) != ctrl_type_map.end()) {
-        type = ctrl_type_map.at(tokens[token_iterator]);
+    if (auto it = ctrl_type_map.find(tokens[token_iterator]); it != ctrl_type_map.end()) {
+        type = it->second;
         token_iterator++;
     } else {
-        std::cerr << "Unrecognized/unhandled selector:" << selector_str << std::endl;
-        selector = nullptr;
-        return;
+        std::cerr << "Unrecognized/unhandled selector: " << selector_str << std::endl;
+        return {};
     }
-    selector = new Handle(type);
+    auto selector = Handle{type};
     for (; token_iterator < tokens.size(); token_iterator++) {
         if (tokens[token_iterator] == "*") {
             continue;
         } else if (tokens[token_iterator] == "selected") {
-            selector->selected = true;
+            selector.selected = true;
         } else if (tokens[token_iterator] == "hover") {
             specificity++;
-            selector->hover = true;
+            selector.hover = true;
         } else if (tokens[token_iterator] == "click") {
             specificity++;
-            selector->click = true;
+            selector. click = true;
         } else {
-            std::cerr << "Unrecognized/unhandled selector:" << selector_str << std::endl;
-            selector = nullptr;
-            return;
+            std::cerr << "Unrecognized/unhandled selector: " << selector_str << std::endl;
+            return {};
         }
     }
+
+    return {{ selector, specificity }};
 }
 
 /**
@@ -1007,18 +1007,15 @@ void configure_selector(CRSelector *a_selector, Handle *&selector, int &specific
 void set_selectors(CRDocHandler *a_handler, CRSelector *a_selector, bool is_users)
 {
     while (a_selector) {
-        Handle *selector;
-        int specificity;
-        configure_selector(a_selector, selector, specificity);
-        if (selector) {
-            for (const auto& [handle, style] : handle_styles) {
-                if (handle_fits(*selector, handle)) {
-                    selected_handles.emplace_back(style, specificity + 10000 * is_users);
+        if (auto const ret = configure_selector(a_selector)) {
+            auto const &[selector, specificity] = *ret;
+            for (auto &[handle, style] : handle_styles) {
+                if (handle_fits(selector, handle)) {
+                    selected_handles.emplace_back(&style, specificity + 10000 * is_users);
                 }
             }
         }
         a_selector = a_selector->next;
-        delete selector;
     }
 }
 
@@ -1053,9 +1050,9 @@ void set_properties(CRDocHandler *a_handler, CRString *a_name, CRTerm *a_value, 
     const std::string property = gproperty;
     g_free(gvalue);
     if (property == "shape") {
-        if (ctrl_shape_map.find(value) != ctrl_shape_map.end()) {
-            for (auto& [handle, specificity] : selected_handles) {
-                handle->shape.setProperty(ctrl_shape_map.at(value), specificity + 100000 * a_important);
+        if (auto it = ctrl_shape_map.find(value); it != ctrl_shape_map.end()) {
+            for (auto &[handle, specificity] : selected_handles) {
+                handle->shape.setProperty(it->second, specificity + 100000 * a_important);
             }
         } else {
             std::cerr << "Unrecognized value for " << property << ": " << value << std::endl;
@@ -1067,12 +1064,12 @@ void set_properties(CRDocHandler *a_handler, CRString *a_name, CRTerm *a_value, 
 
         if (status == CR_OK) {
             ASSEMBLE_ARGB32(color, 255, (uint8_t)rgb->red, (uint8_t)rgb->green, (uint8_t)rgb->blue)
-            for (auto& [handle, specificity] : selected_handles) {
+            for (auto &[handle, specificity] : selected_handles) {
                 if (property == "fill") {
                     handle->fill.setProperty(color, specificity + 100000 * a_important);
-                } else if(property == "stroke") {
+                } else if (property == "stroke") {
                     handle->stroke.setProperty(color, specificity + 100000 * a_important);
-                } else {// outline
+                } else { // outline
                     handle->outline.setProperty(color, specificity + 100000 * a_important);
                 }
             }
@@ -1089,7 +1086,7 @@ void set_properties(CRDocHandler *a_handler, CRString *a_name, CRTerm *a_value, 
 
         double val;
         if (a_value->content.num->type == NUM_PERCENTAGE) {
-            val = (a_value->content.num->val) / 100.0f;
+            val = a_value->content.num->val / 100.0f;
         } else if (a_value->content.num->type == NUM_GENERIC) {
             val = a_value->content.num->val;
         } else {
@@ -1101,7 +1098,7 @@ void set_properties(CRDocHandler *a_handler, CRString *a_name, CRTerm *a_value, 
             std::cerr << "Invalid value for " << property << ": " << value << std::endl;
             return;
         }
-        for (auto& [handle, specificity] : selected_handles) {
+        for (auto &[handle, specificity] : selected_handles) {
             if (property == "opacity") {
                 handle->opacity.setProperty(val, specificity + 100000 * a_important);
             } else if (property == "fill-opacity") {
@@ -1157,8 +1154,7 @@ void CanvasItemCtrl::parse_handle_styles() const
             bool selected = state_bits & (1<<2);
             bool hover = state_bits & (1<<1);
             bool click = state_bits & (1<<0);
-            delete handle_styles[Handle{type, selected, hover, click}];
-            handle_styles[Handle{type, selected, hover, click}] = new HandleStyle();
+            handle_styles[Handle{type, selected, hover, click}] = {};
         }
     }
 
@@ -1197,21 +1193,20 @@ void CanvasItemCtrl::build_cache(int device_scale) const
                     << _name << ":  width: " << _width << std::endl;
     }
 
-    int width  = _width  * device_scale;  // Not unsigned or math errors occur!
-    std::tuple<Handle,int,double> handle_prop = std::make_tuple(_handle, width, _angle);
+    int width = _width * device_scale;  // Not unsigned or math errors occur!
+    auto handle_prop = std::make_tuple(_handle, width, _angle);
 
     if (_shape_set || _fill_set || _stroke_set) {
-        _cache = std::make_unique<uint32_t[]>(width*width); // TODO: (C++20) make_shared
-        if (auto handle_style_find = handle_styles.find(_handle); handle_style_find != handle_styles.end()) {
-            auto handle_style = handle_style_find->second;
-            auto shape = (_shape_set)?_shape:handle_style->shape();
-            auto fill = (_fill_set)?_fill:handle_style->getFill();
-            auto stroke = (_stroke_set)?_stroke:handle_style->getStroke();
-            auto outline = handle_style->getOutline();
-            auto stroke_width = handle_style->stroke_width();
-            auto outline_width = handle_style->outline_width();
-            draw_shape(_cache, shape, fill, stroke, outline, stroke_width, outline_width,
-                        width, _angle, device_scale);
+        _cache = std::make_unique<uint32_t[]>(width * width); // TODO: (C++20) make_shared
+        if (auto it = handle_styles.find(_handle); it != handle_styles.end()) {
+            auto const &handle_style = it->second;
+            auto shape = _shape_set ? _shape : handle_style.shape();
+            auto fill = _fill_set ? _fill : handle_style.getFill();
+            auto stroke = _stroke_set ? _stroke : handle_style.getStroke();
+            auto outline = handle_style.getOutline();
+            auto stroke_width = handle_style.stroke_width();
+            auto outline_width = handle_style.outline_width();
+            draw_shape(_cache, shape, fill, stroke, outline, stroke_width, outline_width, width, _angle, device_scale);
         } else {
             draw_shape(_cache, _shape, _fill, _stroke, 0, 1, 0, width, _angle, device_scale);
         }
@@ -1220,29 +1215,28 @@ void CanvasItemCtrl::build_cache(int device_scale) const
 
     {
         std::lock_guard<std::mutex> lock(cache_mutex);
-        if(auto cached_handle = handle_cache.find(handle_prop); cached_handle != handle_cache.end()) {
-            _cache = cached_handle->second;
+        if (auto it = handle_cache.find(handle_prop); it != handle_cache.end()) {
+            _cache = it->second;
             return;
         }
     }
 
-    _cache = std::make_unique<uint32_t[]>(width*width); // TODO: (C++20) make_shared
-    if (auto handle_style_find = handle_styles.find(_handle); handle_style_find != handle_styles.end()) {
-        auto handle_style = handle_style_find->second;
-        auto shape = handle_style->shape();
-        auto fill = handle_style->getFill();
-        auto stroke = handle_style->getStroke();
-        auto outline = handle_style->getOutline();
-        auto stroke_width = handle_style->stroke_width();
-        auto outline_width = handle_style->outline_width();
-        draw_shape(_cache, shape, fill, stroke, outline, stroke_width, outline_width,
-                    width, _angle, device_scale);
+    _cache = std::make_unique<uint32_t[]>(width * width); // TODO: (C++20) make_shared
+    if (auto it = handle_styles.find(_handle); it != handle_styles.end()) {
+        auto handle_style = it->second;
+        auto shape = handle_style.shape();
+        auto fill = handle_style.getFill();
+        auto stroke = handle_style.getStroke();
+        auto outline = handle_style.getOutline();
+        auto stroke_width = handle_style.stroke_width();
+        auto outline_width = handle_style.outline_width();
+        draw_shape(_cache, shape, fill, stroke, outline, stroke_width, outline_width, width, _angle, device_scale);
         {
             std::lock_guard<std::mutex> lock(cache_mutex);
             handle_cache[handle_prop] = _cache;
         }
     } else {
-        // Shouldn't happen - every ctrl either have a style in handle_styles 
+        // Shouldn't happen - every ctrl either have a style in handle_styles
         // or their style must be set in the code
         std::cerr << "CanvasItemCtrl::build_cache: Unhandled Ctrl - " << _name << std::endl;
     }

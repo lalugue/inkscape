@@ -136,7 +136,7 @@ public:
     /*
      * Interface to get the value.
      */
-    const T& operator()()
+    T const &operator()() const
     {
         return value;
     }
@@ -157,7 +157,7 @@ struct HandleStyle {
     Property<int> stroke_width{1};
     Property<int> outline_width{0};
 
-    uint32_t getFill()
+    uint32_t getFill() const
     {
         EXTRACT_ARGB32((fill()), a, r, g, b)
         a = int(fill_opacity() * opacity() * 255);
@@ -165,7 +165,7 @@ struct HandleStyle {
         return rgba_from_argb32(fill_color);
     }
 
-    uint32_t getStroke()
+    uint32_t getStroke() const
     {
         EXTRACT_ARGB32(stroke(), stroke_a, stroke_r, stroke_g, stroke_b)
         EXTRACT_ARGB32(fill(), fill_a, fill_r, fill_g, fill_b)
@@ -183,7 +183,7 @@ struct HandleStyle {
         return rgba_from_argb32(blend);
     }
 
-    uint32_t getOutline()
+    uint32_t getOutline() const
     {
         EXTRACT_ARGB32((outline()), a, r, g, b)
         a = int(outline_opacity() * opacity() * 255);
