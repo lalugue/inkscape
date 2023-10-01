@@ -66,9 +66,7 @@ public:
 
     void param_transform_multiply(Geom::Affine const & /*postmul*/, bool set) final;
 
-    void set_oncanvas_looks(Inkscape::CanvasItemCtrlShape shape,
-                            Inkscape::CanvasItemCtrlMode mode,
-                            std::uint32_t color);
+    void set_oncanvas_looks(Inkscape::CanvasItemCtrlShape shape, std::uint32_t color);
 
     bool providesKnotHolderEntities() const final { return true; }
     void addKnotHolderEntities(KnotHolder *knotholder, SPItem *item) final;
@@ -83,7 +81,6 @@ private:
     bool liveupdate;
     KnotHolderEntity *_knot_entity = nullptr;
     Inkscape::CanvasItemCtrlShape knot_shape = Inkscape::CANVAS_ITEM_CTRL_SHAPE_DIAMOND;
-    Inkscape::CanvasItemCtrlMode knot_mode = Inkscape::CANVAS_ITEM_CTRL_MODE_NORMAL;
     std::uint32_t knot_color = 0xffffff00;
     std::optional<Glib::ustring> handle_tip;
 };

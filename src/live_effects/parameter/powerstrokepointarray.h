@@ -37,9 +37,7 @@ public:
 
     void param_transform_multiply(Geom::Affine const& postmul, bool /*set*/) override;
 
-    void set_oncanvas_looks(Inkscape::CanvasItemCtrlShape shape,
-                            Inkscape::CanvasItemCtrlMode mode,
-                            guint32 color);
+    void set_oncanvas_looks(CanvasItemCtrlShape shape, uint32_t color);
 
     float median_width();
     Geom::Point knot_get(size_t index);
@@ -63,7 +61,6 @@ public:
     size_t current_path = Glib::ustring::npos;
 private:
     Inkscape::CanvasItemCtrlShape knot_shape = Inkscape::CANVAS_ITEM_CTRL_SHAPE_DIAMOND;
-    Inkscape::CanvasItemCtrlMode knot_mode = Inkscape::CANVAS_ITEM_CTRL_MODE_NORMAL;
     guint32 knot_color;
 
     Geom::Piecewise<Geom::D2<Geom::SBasis> > last_pwd2;

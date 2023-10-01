@@ -176,16 +176,6 @@ void CanvasItemCtrl::set_shape(CanvasItemCtrlShape shape)
     });
 }
 
-void CanvasItemCtrl::set_mode(CanvasItemCtrlMode mode)
-{
-    defer([=, this] {
-        if (_mode == mode) return;
-        _mode = mode;
-        _built.reset();
-        request_update();
-    });
-}
-
 void CanvasItemCtrl::set_size(int size, bool manual)
 {
     defer([=, this] {
@@ -825,12 +815,6 @@ void CanvasItemCtrl::_update(bool)
     request_redraw();
 }
 
-static inline uint32_t compose_xor(uint32_t bg, uint32_t fg, uint32_t a)
-{
-    uint32_t c = bg * (255 - a) + (((bg ^ ~fg) + (bg >> 2) - (bg > 127 ? 63 : 0)) & 255) * a;
-    return (c + 127) / 255;
-}
-
 /**
  * Render ctrl to screen via Cairo.
  */
@@ -871,96 +855,27 @@ void CanvasItemCtrl::_render(CanvasItemBuffer &buf) const
     int stride = work->get_stride() / 4; // divided by 4 to covert from bytes to 1 pixel (32 bits)
     auto row_ptr = reinterpret_cast<uint32_t *>(work->get_data());
 
-    // Turn pixel position back into desktop coords for page or desk color
-    auto px2dt = Geom::Scale(buf.device_scale).inverse()
-               * Geom::Translate(_bounds->min())
-               * affine().inverse();
-    bool use_bg = !get_canvas()->background_in_stores() || buf.outline_pass;
-
     uint32_t *handle_ptr = _cache.get();
     for (int i = 0; i < width; ++i) {
         for (int j = 0; j < width; ++j) {
             uint32_t base = row_ptr[j];
             uint32_t handle_px = *handle_ptr++;
-            uint32_t handle_op = handle_px & 0xff;
-            uint32_t canvas_color = 0x00;
-            if (use_bg) {
-                // this code allow background become isolated from rendering so we can do things like outline overlay
-                canvas_color = get_canvas()->get_effective_background(Geom::Point(j, i) * px2dt);
+
+            EXTRACT_ARGB32(base, base_a, base_r, base_g, base_b)
+            uint32_t handle_argb = (handle_px>>8) | (handle_px<<24);
+            EXTRACT_ARGB32(handle_argb, handle_a, handle_r, handle_g, handle_b)
+            float handle_af = handle_a/255.0f;
+            float base_af = base_a/255.0f;
+            float result_af = handle_af + base_af * (1-handle_af);
+            if(result_af == 0) {
+                row_ptr[j] = 0;
+                continue;
             }
-            if(_mode != CANVAS_ITEM_CTRL_MODE_NORMAL) {
-                if (base == 0 && handle_px != 0) {
-                    base = canvas_color;
-                }
-                if (handle_op == 0 && handle_px != 0) {
-                    row_ptr[j] = argb32_from_rgba(handle_px | 0x000000ff);
-                    continue;
-                } else if (handle_op == 0) {
-                    row_ptr[j] = base;
-                    continue;
-                }
-            }
-            switch(_mode) {
-            case CANVAS_ITEM_CTRL_MODE_NORMAL: {
-                EXTRACT_ARGB32(base, base_a, base_r, base_g, base_b)
-                uint32_t handle_argb = (handle_px>>8) | (handle_px<<24); 
-                EXTRACT_ARGB32(handle_argb, handle_a, handle_r, handle_g, handle_b)
-                float handle_af = handle_a/255.0f;
-                float base_af = base_a/255.0f;
-                float result_af = handle_af + base_af * (1-handle_af);
-                if(result_af == 0) {
-                    row_ptr[j] = 0;
-                    continue;
-                }
-                uint32_t result_r = (handle_r * handle_af + base_r * base_af * (1-handle_af)) / result_af;
-                uint32_t result_g = (handle_g * handle_af + base_g * base_af * (1-handle_af)) / result_af;
-                uint32_t result_b = (handle_b * handle_af + base_b * base_af * (1-handle_af)) / result_af;
-                ASSEMBLE_ARGB32(result, int(result_af*255), result_r, result_g, result_b)
-                row_ptr[j] = result;
-                break;
-            }
-            case CANVAS_ITEM_CTRL_MODE_COLOR:
-                row_ptr[j] = argb32_from_rgba(handle_px | 0x000000ff);
-                break;
-            // TODO: Remove the other methods entirely if normal is accepted
-            // (They are not used anywhere)
-            case CANVAS_ITEM_CTRL_MODE_XOR:
-            case CANVAS_ITEM_CTRL_MODE_GRAYSCALED_XOR:
-            case CANVAS_ITEM_CTRL_MODE_DESATURATED_XOR: {
-                // if color to draw has opacity, we overide base colors flattening base colors
-                EXTRACT_ARGB32(base, base_a, base_r, base_g, base_b)
-                EXTRACT_ARGB32(canvas_color, canvas_a, canvas_r, canvas_g, canvas_b)
-                if (canvas_a != base_a) {
-                base_r = (base_a / 255.0) * base_r + (1 - (base_a / 255.0)) * canvas_r;
-                base_g = (base_a / 255.0) * base_g + (1 - (base_a / 255.0)) * canvas_g;
-                base_b = (base_a / 255.0) * base_b + (1 - (base_a / 255.0)) * canvas_b;
-                base_a = 255;
-                }
-                uint32_t result_r = compose_xor(base_r, (handle_px & 0xff000000) >> 24, handle_op);
-                uint32_t result_g = compose_xor(base_g, (handle_px & 0x00ff0000) >> 16, handle_op);
-                uint32_t result_b = compose_xor(base_b, (handle_px & 0x0000ff00) >>  8, handle_op);
-                switch(_mode) {
-                case CANVAS_ITEM_CTRL_MODE_GRAYSCALED_XOR: {
-                    uint32_t gray = result_r * 0.299 + result_g * 0.587 + result_b * 0.114;
-                    result_r = gray;
-                    result_g = gray;
-                    result_b = gray;
-                    break;
-                }
-                case CANVAS_ITEM_CTRL_MODE_DESATURATED_XOR: {
-                    double f = 0.85; // desaturate by 15%
-                    double p = sqrt(result_r * result_r * 0.299 + result_g * result_g *  0.587 + result_b * result_b * 0.114);
-                    result_r = p + (result_r - p) * f;
-                    result_g = p + (result_g - p) * f;
-                    result_b = p + (result_b - p) * f;
-                    break;
-                }
-                }
-                ASSEMBLE_ARGB32(result, base_a, result_r, result_g, result_b)
-                row_ptr[j] = result;
-                break;
-            }
-            }
+            uint32_t result_r = (handle_r * handle_af + base_r * base_af * (1-handle_af)) / result_af;
+            uint32_t result_g = (handle_g * handle_af + base_g * base_af * (1-handle_af)) / result_af;
+            uint32_t result_b = (handle_b * handle_af + base_b * base_af * (1-handle_af)) / result_af;
+            ASSEMBLE_ARGB32(result, int(result_af*255), result_r, result_g, result_b)
+            row_ptr[j] = result;
         }
         // move the row pointer to the next row
         row_ptr += stride;

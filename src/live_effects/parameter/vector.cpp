@@ -135,29 +135,19 @@ VectorParam::param_transform_multiply(Geom::Affine const& postmul, bool /*set*/)
     set_and_write_new_values( origin * postmul, vector * postmul.withoutTranslation() );
 }
 
-
-void
-VectorParam::set_vector_oncanvas_looks(Inkscape::CanvasItemCtrlShape shape,
-                                       Inkscape::CanvasItemCtrlMode mode,
-                                       guint32 color)
+void VectorParam::set_vector_oncanvas_looks(CanvasItemCtrlShape shape, uint32_t color)
 {
     vec_knot_shape = shape;
-    vec_knot_mode  = mode;
     vec_knot_color = color;
 }
 
-void
-VectorParam::set_origin_oncanvas_looks(Inkscape::CanvasItemCtrlShape shape,
-                                       Inkscape::CanvasItemCtrlMode mode,
-                                       guint32 color)
+void VectorParam::set_origin_oncanvas_looks(CanvasItemCtrlShape shape, uint32_t color)
 {
     ori_knot_shape = shape;
-    ori_knot_mode  = mode;
     ori_knot_color = color;
 }
 
-void
-VectorParam::set_oncanvas_color(guint32 color)
+void VectorParam::set_oncanvas_color(uint32_t color)
 {
     vec_knot_color = color;
     ori_knot_color = color;

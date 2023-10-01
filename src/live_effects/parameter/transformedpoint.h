@@ -50,9 +50,7 @@ public:
 
     void param_transform_multiply(Geom::Affine const &postmul, bool set) override;
 
-    void set_vector_oncanvas_looks(Inkscape::CanvasItemCtrlShape shape,
-                                   Inkscape::CanvasItemCtrlMode mode,
-                                   guint32 color);
+    void set_vector_oncanvas_looks(CanvasItemCtrlShape shape, uint32_t color);
 
     void set_oncanvas_color(guint32 color);
     Geom::Point param_get_default() { return defvalue; }
@@ -74,8 +72,7 @@ private:
     
     /// The looks of the vector and origin knots oncanvas
     Inkscape::CanvasItemCtrlShape vec_knot_shape = Inkscape::CANVAS_ITEM_CTRL_SHAPE_DIAMOND;
-    Inkscape::CanvasItemCtrlMode  vec_knot_mode = Inkscape::CANVAS_ITEM_CTRL_MODE_NORMAL;
-    guint32                       vec_knot_color = 0xffffb500;
+    uint32_t                      vec_knot_color = 0xffffb500;
 
     friend class TransformedPointParamKnotHolderEntity_Vector;
 };

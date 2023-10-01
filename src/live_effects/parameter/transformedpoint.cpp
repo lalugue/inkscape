@@ -139,14 +139,9 @@ TransformedPointParam::param_transform_multiply(Geom::Affine const& postmul, boo
     }
 }
 
-
-void
-TransformedPointParam::set_vector_oncanvas_looks(Inkscape::CanvasItemCtrlShape shape,
-                                                 Inkscape::CanvasItemCtrlMode mode,
-                                                 guint32 color)
+void TransformedPointParam::set_vector_oncanvas_looks(CanvasItemCtrlShape shape, uint32_t color)
 {
     vec_knot_shape = shape;
-    vec_knot_mode  = mode;
     vec_knot_color = color;
 }
 

@@ -119,7 +119,6 @@ public:
     bool contains(Geom::Point const &p, double tolerance = 0) override;
 
     // Properties
-    void set_mode(CanvasItemCtrlMode mode);
     void set_size(int size, bool manual = true);
     void set_fill(uint32_t rgba) override;
     void set_stroke(uint32_t rgba) override;
@@ -157,7 +156,6 @@ protected:
 
     // Properties
     Handle _handle = Handle();
-    CanvasItemCtrlMode  _mode  = CANVAS_ITEM_CTRL_MODE_NORMAL;
     CanvasItemCtrlShape _shape = CANVAS_ITEM_CTRL_SHAPE_SQUARE;
     uint32_t _fill = 0x000000ff;
     uint32_t _stroke = 0xffffffff;

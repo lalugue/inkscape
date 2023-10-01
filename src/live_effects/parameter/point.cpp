@@ -175,13 +175,9 @@ void PointParam::on_value_changed()
     param_effect->refresh_widgets = true;
 }
 
-void
-PointParam::set_oncanvas_looks(Inkscape::CanvasItemCtrlShape shape,
-                               Inkscape::CanvasItemCtrlMode mode,
-                               std::uint32_t const color)
+void PointParam::set_oncanvas_looks(CanvasItemCtrlShape shape, std::uint32_t const color)
 {
     knot_shape = shape;
-    knot_mode  = mode;
     knot_color = color;
 }
 

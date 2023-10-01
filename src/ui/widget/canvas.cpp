@@ -1694,24 +1694,6 @@ void Canvas::set_page(uint32_t rgba)
     queue_draw();
 }
 
-/**
- * Gets the average desk color when desk is a checkerboard
- */
-uint32_t Canvas::get_effective_background(const Geom::Point &point) const
-{
-    auto color = d->is_point_on_page(point) ? d->rd.page : d->rd.desk;
-    auto arr = checkerboard_darken(rgb_to_array(color), 1.0f - 0.5f * SP_RGBA32_A_U(color) / 255.0f);
-    return SP_RGBA32_F_COMPOSE(arr[0], arr[1], arr[2], 1.0);
-}
-
-/**
- * Returns true if this canvas is painted using stores
- */
-bool Canvas::background_in_stores() const
-{
-    return d->rd.background_in_stores_required;
-}
-
 void Canvas::set_render_mode(RenderMode mode)
 {
     if (mode == _render_mode) return;

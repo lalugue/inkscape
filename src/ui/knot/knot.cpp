@@ -392,7 +392,6 @@ void SPKnot::updateCtrl() {
         if (size_set) {
             ctrl->set_size(size);
         }
-        ctrl->set_mode(mode);
         ctrl->set_angle(angle);
         ctrl->set_anchor(anchor);
     }
@@ -418,10 +417,6 @@ void SPKnot::setSize(guint i) {
 
 void SPKnot::setAnchor(guint i) {
     anchor = (SPAnchorType) i;
-}
-
-void SPKnot::setMode(Inkscape::CanvasItemCtrlMode m) {
-    mode = m;
 }
 
 void SPKnot::setAngle(double i) {

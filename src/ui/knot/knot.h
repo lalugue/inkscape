@@ -79,7 +79,6 @@ public:
 
     Inkscape::CanvasItemCtrlShape shape = Inkscape::CANVAS_ITEM_CTRL_SHAPE_SQUARE;   /**< Shape type. */
     bool shape_set      = false;                    /**< Use default shape unless explicitly set. */
-    Inkscape::CanvasItemCtrlMode mode = Inkscape::CANVAS_ITEM_CTRL_MODE_NORMAL;
 
     unsigned char *image[SP_KNOT_VISIBLE_STATES];
     Glib::RefPtr<Gdk::Cursor> _cursors[SP_KNOT_VISIBLE_STATES];
@@ -103,7 +102,6 @@ public:
     // TODO: all the members above should eventually become private, accessible via setters/getters
     void setSize(unsigned int i);
     void setAnchor(unsigned int i);
-    void setMode(Inkscape::CanvasItemCtrlMode m);
     void setAngle(double i);
 
     void setImage(unsigned char* normal, unsigned char* mouseover, unsigned char* dragging, unsigned char* selected);

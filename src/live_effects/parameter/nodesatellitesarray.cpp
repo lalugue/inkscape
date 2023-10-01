@@ -42,11 +42,9 @@ NodeSatelliteArrayParam::NodeSatelliteArrayParam(const Glib::ustring &label, con
     param_widget_is_visible(false);
 }
 
-void NodeSatelliteArrayParam::set_oncanvas_looks(Inkscape::CanvasItemCtrlShape shape, Inkscape::CanvasItemCtrlMode mode,
-                                                 guint32 color)
+void NodeSatelliteArrayParam::set_oncanvas_looks(CanvasItemCtrlShape shape, uint32_t color)
 {
     _knot_shape = shape;
-    _knot_mode = mode;
     _knot_color = color;
 }
 

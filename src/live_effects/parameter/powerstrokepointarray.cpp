@@ -34,7 +34,6 @@ PowerStrokePointArrayParam::PowerStrokePointArrayParam( const Glib::ustring& lab
                         Effect* effect)
     : ArrayParam<Geom::Point>(label, tip, key, wr, effect, 0)
     , knot_shape(Inkscape::CANVAS_ITEM_CTRL_SHAPE_DIAMOND)
-    , knot_mode(Inkscape::CANVAS_ITEM_CTRL_MODE_NORMAL)
     , knot_color(0xff88ff00)
 {
 }
@@ -167,16 +166,12 @@ PowerStrokePointArrayParam::set_pwd2(Geom::Piecewise<Geom::D2<Geom::SBasis> > co
     last_pwd2_normal = pwd2_normal_in;
 }
 
-
-void
-PowerStrokePointArrayParam::set_oncanvas_looks(Inkscape::CanvasItemCtrlShape shape,
-                                               Inkscape::CanvasItemCtrlMode mode,
-                                               guint32 color)
+void PowerStrokePointArrayParam::set_oncanvas_looks(CanvasItemCtrlShape shape, uint32_t color)
 {
     knot_shape = shape;
-    knot_mode  = mode;
     knot_color = color;
 }
+
 /*
 class PowerStrokePointArrayParamKnotHolderEntity : public KnotHolderEntity {
 public:
