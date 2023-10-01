@@ -123,7 +123,7 @@ Modifier::getList () {
  * @param  state - The GDK button state from an event
  * @return a boolean, true if the modifiers for this action are active.
  */
-bool Modifier::active(int state)
+bool Modifier::active(int state) const
 {
     // TODO:
     //  * ALT key is sometimes MOD1, MOD2 etc, if we find other ALT keys, set the ALT bit
@@ -145,7 +145,7 @@ bool Modifier::active(int state)
  *
  * @return a boolean, true if the modifiers for this action are active.
  */
-bool Modifier::active(int state, int keyval, bool release)
+bool Modifier::active(int state, int keyval, bool release) const
 {
     return active(add_keyval(state, keyval, release));
 }

@@ -154,32 +154,32 @@ public:
     bool is_set_user() const { return _and_mask_user != NOT_SET; }
 
     // Get value, either user defined value or default
-    KeyMask get_and_mask() {
+    KeyMask get_and_mask() const {
         if(_and_mask_user != NOT_SET) return _and_mask_user;
         if(_and_mask_keys != NOT_SET) return _and_mask_keys;
         return _and_mask_default;
     }
-    KeyMask get_not_mask() {
+    KeyMask get_not_mask() const {
         // The not mask is enabled by the AND mask being set first.
         if(_and_mask_user != NOT_SET) return _not_mask_user;
         if(_and_mask_keys != NOT_SET) return _not_mask_keys;
         return NOT_SET;
     }
     // Return number of bits set for the keys
-    unsigned long get_weight() {
+    unsigned long get_weight() const {
         if(_and_mask_user != NOT_SET) return _weight_user;
         if(_and_mask_keys != NOT_SET) return _weight_keys;
         return _weight_default;
     }
 
     // Generate labels such as "Shift+Ctrl" for the active modifier
-    std::string get_label() { return generate_label(get_and_mask()); }
-    std::string get_category() { return _category_names[_category]; }
+    std::string get_label() const { return generate_label(get_and_mask()); }
+    std::string get_category() const { return _category_names().at(_category); }
 
     // Configurations for saving the xml file
-    bool get_config_user_disabled() { return (_and_mask_user == NEVER); }
-    std::string get_config_user_and() { return generate_label(_and_mask_user, ","); }
-    std::string get_config_user_not() { return generate_label(_not_mask_keys, ","); }
+    bool get_config_user_disabled() const { return (_and_mask_user == NEVER); }
+    std::string get_config_user_and() const { return generate_label(_and_mask_user, ","); }
+    std::string get_config_user_not() const { return generate_label(_not_mask_keys, ","); }
 
     /**
      * Inititalizes the Modifier with the parameters.
@@ -209,9 +209,9 @@ public:
     ~Modifier() = delete;
 
     static Type which(Trigger trigger, int button_state);
-    static std::vector<Modifier *>getList ();
-    bool active(int button_state);
-    bool active(int button_state, int keyval, bool release = false);
+    static std::vector<Modifier const *> getList();
+    bool active(int button_state) const;
+    bool active(int button_state, int keyval, bool release = false) const;
 
     /**
      * A function to turn an enum index into a modifier object.
