@@ -24,51 +24,112 @@
 namespace Inkscape {
 namespace Modifiers {
 
-Modifier::Lookup Modifier::_modifier_lookup;
+namespace {
+using ModifierIdToTypeMap = std::map<std::string, Type>;
+ModifierIdToTypeMap const &modifier_type_from_id()
+{
+    static ModifierIdToTypeMap const static_id_to_type_map {
+        {"canvas-pan-y", Type::CANVAS_PAN_Y},
+        {"canvas-pan-x", Type::CANVAS_PAN_X},
+        {"canvas-zoom", Type::CANVAS_ZOOM},
+        {"canvas-rotate", Type::CANVAS_ROTATE},
+        {"select-add-to", Type::SELECT_ADD_TO},
+        {"select-in-groups", Type::SELECT_IN_GROUPS},
+        {"select-touch-path", Type::SELECT_TOUCH_PATH},
+        {"select-always-box", Type::SELECT_ALWAYS_BOX},
+        {"select-first-hit", Type::SELECT_FIRST_HIT},
+        {"select-force-drag", Type::SELECT_FORCE_DRAG},
+        {"select-cycle", Type::SELECT_CYCLE},
+        {"move-confine", Type::MOVE_CONFINE},
+        {"move-increment", Type::MOVE_INCREMENT},
+        {"move-snapping", Type::MOVE_SNAPPING},
+        {"trans-confine", Type::TRANS_CONFINE},
+        {"trans-increment", Type::TRANS_INCREMENT},
+        {"trans-off-center", Type::TRANS_OFF_CENTER},
+        {"trans-snapping", Type::TRANS_SNAPPING},
+        {"bool-shift", Type::BOOL_SHIFT},
+        {"node-grow-linear", Type::NODE_GROW_LINEAR},
+        {"node-grow-spatial", Type::NODE_GROW_SPATIAL}
+    };
+    return static_id_to_type_map;
+}
 
-// these must be in the same order as the * enum in "modifiers.h"
-decltype(Modifier::_modifiers) Modifier::_modifiers {
+inline std::pair<Modifiers::Type, Modifier> make_modifier(char const *id,
+                                                          char const *name,
+                                                          char const *desc,
+                                                          KeyMask and_mask,
+                                                          Trigger category,
+                                                          Trigger trigger)
+{
+    return {modifier_type_from_id().at(id), Modifier(id, name, desc, and_mask, category, trigger)};
+}
+
+std::map<int, int> const &key_map()
+{
+    static const std::map<int, int> static_key_map = {
+        {GDK_KEY_Alt_L, GDK_MOD1_MASK},
+        {GDK_KEY_Alt_R, GDK_MOD1_MASK},
+        {GDK_KEY_Control_L, GDK_CONTROL_MASK},
+        {GDK_KEY_Control_R, GDK_CONTROL_MASK},
+        {GDK_KEY_Shift_L, GDK_SHIFT_MASK},
+        {GDK_KEY_Shift_R, GDK_SHIFT_MASK},
+        {GDK_KEY_Meta_L, GDK_META_MASK},
+        {GDK_KEY_Meta_R, GDK_META_MASK},
+    };
+    return static_key_map;
+}
+}  // end anonymous namespace
+
+Modifier::Container &Modifier::_modifiers()
+{
+    // these must be in the same order as the * enum in "modifiers.h"
+    static Modifier::Container static_modifiers {
     // Canvas modifiers
-    {Type::CANVAS_PAN_Y, new Modifier("canvas-pan-y", _("Vertical pan"), _("Pan/Scroll up and down"), ALWAYS, CANVAS, SCROLL)},
-    {Type::CANVAS_PAN_X, new Modifier("canvas-pan-x", _("Horizontal pan"), _("Pan/Scroll left and right"), SHIFT, CANVAS, SCROLL)},
-    {Type::CANVAS_ZOOM, new Modifier("canvas-zoom", _("Canvas zoom"), _("Zoom in and out with scroll wheel"), CTRL, CANVAS, SCROLL)},
-    {Type::CANVAS_ROTATE, new Modifier("canvas-rotate", _("Canvas rotate"), _("Rotate the canvas with scroll wheel"), SHIFT | CTRL, CANVAS, SCROLL)},
+        make_modifier("canvas-pan-y", _("Vertical pan"), _("Pan/Scroll up and down"), ALWAYS, CANVAS, SCROLL),
+        make_modifier("canvas-pan-x", _("Horizontal pan"), _("Pan/Scroll left and right"), SHIFT, CANVAS, SCROLL),
+        make_modifier("canvas-zoom", _("Canvas zoom"), _("Zoom in and out with scroll wheel"), CTRL, CANVAS, SCROLL),
+        make_modifier("canvas-rotate", _("Canvas rotate"), _("Rotate the canvas with scroll wheel"), SHIFT | CTRL, CANVAS, SCROLL),
 
     // Select tool modifiers (minus transforms)
-    {Type::SELECT_ADD_TO, new Modifier("select-add-to", _("Add to selection"), _("Add items to existing selection"), SHIFT, SELECT, CLICK)},
-    {Type::SELECT_IN_GROUPS, new Modifier("select-in-groups", _("Select inside groups"), _("Ignore groups when selecting items"), CTRL, SELECT, CLICK)},
-    {Type::SELECT_TOUCH_PATH, new Modifier("select-touch-path", _("Select with touch-path"), _("Draw a band around items to select them"), ALT, SELECT, DRAG)},
-    {Type::SELECT_ALWAYS_BOX, new Modifier("select-always-box", _("Select with box"), _("Don't drag items, select more with a box"), SHIFT, SELECT, DRAG)},
-    {Type::SELECT_FIRST_HIT, new Modifier("select-first-hit", _("Select the first"), _("Drag the first item the mouse hits"), CTRL, SELECT, DRAG)},
-    {Type::SELECT_FORCE_DRAG, new Modifier("select-force-drag", _("Forced Drag"), _("Drag objects even if the mouse isn't over them"), ALT, SELECT, DRAG)},
-    {Type::SELECT_CYCLE, new Modifier("select-cycle", _("Cycle through objects"), _("Scroll through objects under the cursor"), ALT, SELECT, SCROLL)},
+        make_modifier("select-add-to", _("Add to selection"), _("Add items to existing selection"), SHIFT, SELECT, CLICK),
+        make_modifier("select-in-groups", _("Select inside groups"), _("Ignore groups when selecting items"), CTRL, SELECT, CLICK),
+        make_modifier("select-touch-path", _("Select with touch-path"), _("Draw a band around items to select them"), ALT, SELECT, DRAG),
+        make_modifier("select-always-box", _("Select with box"), _("Don't drag items, select more with a box"), SHIFT, SELECT, DRAG),
+        make_modifier("select-first-hit", _("Select the first"), _("Drag the first item the mouse hits"), CTRL, SELECT, DRAG),
+        make_modifier("select-force-drag", _("Forced Drag"), _("Drag objects even if the mouse isn't over them"), ALT, SELECT, DRAG),
+        make_modifier("select-cycle", _("Cycle through objects"), _("Scroll through objects under the cursor"), ALT, SELECT, SCROLL),
 
     // Transform handle modifiers (applies to multiple tools)
-    {Type::MOVE_CONFINE, new Modifier("move-confine", _("Move one axis only"), _("When dragging items, confine to either x or y axis"), CTRL, MOVE, DRAG)},
-    {Type::MOVE_INCREMENT, new Modifier("move-increment", _("Move in increments"), _("Move the objects by set increments when dragging"), ALT, MOVE, DRAG)},
-    {Type::MOVE_SNAPPING, new Modifier("move-snapping", _("No Move Snapping"), _("Disable snapping when moving objects"), SHIFT, MOVE, DRAG)},
-    {Type::TRANS_CONFINE, new Modifier("trans-confine", _("Keep aspect ratio"), _("When resizing objects, confine the aspect ratio"), CTRL, TRANSFORM, DRAG)},
-    {Type::TRANS_INCREMENT, new Modifier("trans-increment", _("Transform in increments"), _("Scale, rotate or skew by set increments"), ALT, TRANSFORM, DRAG)},
-    {Type::TRANS_OFF_CENTER, new Modifier("trans-off-center", _("Transform around center"), _("When scaling, scale selection symmetrically around its rotation center. When rotating/skewing, transform relative to opposite corner/edge."), SHIFT, TRANSFORM, DRAG)},
-    {Type::TRANS_SNAPPING, new Modifier("trans-snapping", _("No Transform Snapping"), _("Disable snapping when transforming object."), SHIFT, TRANSFORM, DRAG)},
+        make_modifier("move-confine", _("Move one axis only"), _("When dragging items, confine to either x or y axis"), CTRL, MOVE, DRAG),
+        make_modifier("move-increment", _("Move in increments"), _("Move the objects by set increments when dragging"), ALT, MOVE, DRAG),
+        make_modifier("move-snapping", _("No Move Snapping"), _("Disable snapping when moving objects"), SHIFT, MOVE, DRAG),
+        make_modifier("trans-confine", _("Keep aspect ratio"), _("When resizing objects, confine the aspect ratio"), CTRL, TRANSFORM, DRAG),
+        make_modifier("trans-increment", _("Transform in increments"), _("Scale, rotate or skew by set increments"), ALT, TRANSFORM, DRAG),
+        make_modifier("trans-off-center", _("Transform around center"), _("When scaling, scale selection symmetrically around its rotation center. When rotating/skewing, transform relative to opposite corner/edge."), SHIFT, TRANSFORM, DRAG),
+        make_modifier("trans-snapping", _("No Transform Snapping"), _("Disable snapping when transforming object."), SHIFT, TRANSFORM, DRAG),
     // Center handle click: seltrans.cpp:734 SHIFT
     // Align handle click: seltrans.cpp:1365 SHIFT
-    {Type::BOOL_SHIFT, new Modifier("bool-shift", _("Switch mode"), _("Change shape builder mode temporarily by holding a modifier key."), SHIFT, BOOLEANS_TOOL, DRAG)},
+        make_modifier("bool-shift", _("Switch mode"), _("Change shape builder mode temporarily by holding a modifier key."), SHIFT, BOOLEANS_TOOL, DRAG),
 
-    {Type::NODE_GROW_LINEAR, new Modifier("node-grow-linear", _("Linear node selection"), _("Select the next nodes with scroll wheel or keyboard"), CTRL, NODE_TOOL, SCROLL)},
-    {Type::NODE_GROW_SPATIAL, new Modifier("node-grow-spatial", _("Spatial node selection"), _("Select more nodes with scroll wheel or keyboard"), ALWAYS, NODE_TOOL, SCROLL)},
-};
+        make_modifier("node-grow-linear", _("Linear node selection"), _("Select the next nodes with scroll wheel or keyboard"), CTRL, NODE_TOOL, SCROLL),
+        make_modifier("node-grow-spatial", _("Spatial node selection"), _("Select more nodes with scroll wheel or keyboard"), ALWAYS, NODE_TOOL, SCROLL),
+    };
+    return static_modifiers;
+}
 
-decltype(Modifier::_category_names) Modifier::_category_names {
-    {NO_CATEGORY, _("No Category")},
-    {CANVAS, _("Canvas")},
-    {SELECT, _("Selection")},
-    {MOVE, _("Movement")},
-    {TRANSFORM, _("Transformations")},
-    {NODE_TOOL, _("Node Tool")},
-    {BOOLEANS_TOOL, _("Shape Builder")},
-};
-
+Modifier::CategoryNames const &Modifier::_category_names()
+{
+    static Modifier::CategoryNames const static_category_names {
+        {NO_CATEGORY, _("No Category")},
+        {CANVAS, _("Canvas")},
+        {SELECT, _("Selection")},
+        {MOVE, _("Movement")},
+        {TRANSFORM, _("Transformations")},
+        {NODE_TOOL, _("Node Tool")},
+        {BOOLEANS_TOOL, _("Shape Builder")},
+    };
+    return static_category_names;
+}
 
 /**
  * Given a Trigger, find which modifier is active (category lookup)
@@ -81,11 +142,9 @@ Type Modifier::which(Trigger trigger, int button_state)
 {
     // Record each active modifier with it's weight
     std::map<Type, unsigned long> scales;
-    for (auto const& [key, val] : _modifiers) {
-        if (val->get_trigger() == trigger) {
-            if(val->active(button_state)) {
-                scales[key] = val->get_weight();
-            }
+    for (auto const &[key, val] : _modifiers()) {
+        if (val.get_trigger() == trigger && val.active(button_state)) {
+            scales[key] = val.get_weight();
         }
     }
     // Sort the weightings
@@ -105,13 +164,12 @@ Type Modifier::which(Trigger trigger, int button_state)
   *
   * @return a vector of Modifier objects.
   */
-std::vector<Modifier *>
-Modifier::getList () {
-
-    std::vector<Modifier *> modifiers;
+std::vector<Modifier const *> Modifier::getList()
+{
+    std::vector<Modifier const *> modifiers;
     // Go through the dynamic modifier table
-    for( auto const& [key, val] : _modifiers ) {
-        modifiers.push_back(val);
+    for (auto const &[_, val] : _modifiers()) {
+        modifiers.push_back(&val);
     }
 
     return modifiers;
@@ -248,17 +306,6 @@ void responsive_tooltip(MessageContext *message_context, KeyEvent const &event, 
         ctrl_msg.c_str(), shift_msg.c_str(), alt_msg.c_str());
 }
 
-static const std::map<int, int> key_map = {
-    {GDK_KEY_Alt_L, GDK_MOD1_MASK},
-    {GDK_KEY_Alt_R, GDK_MOD1_MASK},
-    {GDK_KEY_Control_L, GDK_CONTROL_MASK},
-    {GDK_KEY_Control_R, GDK_CONTROL_MASK},
-    {GDK_KEY_Shift_L, GDK_SHIFT_MASK},
-    {GDK_KEY_Shift_R, GDK_SHIFT_MASK},
-    {GDK_KEY_Meta_L, GDK_META_MASK},
-    {GDK_KEY_Meta_R, GDK_META_MASK},
-};
-
 /**
  * Add or remove the GDK keyval to the button state if it's one of the
  * keys that define the key mask. Useful for PRESS and RELEASE events.
@@ -271,7 +318,7 @@ static const std::map<int, int> key_map = {
  */
 int add_keyval(int state, int keyval, bool release)
 {
-    if (auto it = key_map.find(keyval); it != key_map.end()) {
+    if (auto it = key_map().find(keyval); it != key_map().end()) {
         if (release)
             state &= ~it->second;
         else

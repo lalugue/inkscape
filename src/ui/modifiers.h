@@ -101,14 +101,12 @@ int add_keyval(int state, int keyval, bool release = false);
 class Modifier {
 private:
     /** An easy to use definition of the table of modifiers by Type and ID. */
-    typedef std::map<Type, Modifier *> Container;
-    typedef std::map<std::string, Modifier *> Lookup;
-    typedef std::map<Trigger, std::string> CategoryNames;
+    using Container = std::map<Type, Modifier>;
+    using CategoryNames = std::map<Trigger, std::string>;
 
     /** A table of all the created modifiers and their ID lookups. */
-    static Container _modifiers;
-    static Lookup _modifier_lookup;
-    static CategoryNames _category_names;
+    static Container &_modifiers();
+    static CategoryNames const &_category_names();
 
     char const * _id;    // A unique id used by keys.xml to identify it
     char const * _name;  // A descriptive name used in preferences UI
@@ -202,11 +200,8 @@ public:
         _category(category),
         _trigger(trigger)
     {
-        _modifier_lookup.emplace(_id, this);
         _weight_default = calculate_weight(and_mask);
     }
-    // Delete the destructor, because we are eternal
-    ~Modifier() = delete;
 
     static Type which(Trigger trigger, int button_state);
     static std::vector<Modifier const *> getList();
@@ -217,10 +212,15 @@ public:
      * A function to turn an enum index into a modifier object.
      *
      * @param  index  The enum index to be translated
-     * @return A pointer to a modifier object or a NULL if not found.
+     * @return A pointer to a modifier object or a null pointer if not found.
      */
-    static Modifier * get(Type index) {
-        return _modifiers[index];
+    static Modifier *get(Type index)
+    {
+        try {
+            return &_modifiers().at(index);
+        } catch (std::out_of_range const &) {
+            return nullptr;
+        }
     }
     /**
      * A function to turn a string id into a modifier object.
