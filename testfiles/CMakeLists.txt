@@ -102,7 +102,7 @@ set(TEST_SOURCES
     ${LPE_TESTS_64bit}
     )
 
-add_library(cpp_test_static_library SHARED unittest.cpp doc-per-case-test.cpp lpespaths-test.h)
+add_library(cpp_test_static_library SHARED unittest.cpp doc-per-case-test.cpp lpespaths-test.h test-with-svg-object-pairs.cpp)
 target_link_libraries(cpp_test_static_library PUBLIC ${GTEST_LIBRARIES} inkscape_base)
 
 add_custom_target(tests)

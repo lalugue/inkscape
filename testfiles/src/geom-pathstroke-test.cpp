@@ -12,99 +12,19 @@
  */
 #include "helper/geom-pathstroke.h"
 
-#include <2geom/rect.h>
-#include <gtest/gtest.h>
-#include <iomanip>
 #include <iostream>
+#include <gtest/gtest.h>
 
-#include "document.h"
-#include "inkscape.h"
-#include "object/sp-item.h"
 #include "object/sp-path.h"
-#include "object/sp-rect.h"
 #include "pathvector.h"
 #include "svg/svg.h"
-#include "util/units.h"
+#include "test-with-svg-object-pairs.h"
 
-class InkscapeInit // Initialize the Inkscape Application singleton.
-{
-public:
-    InkscapeInit()
-    {
-        if (!Inkscape::Application::exists()) {
-            Inkscape::Application::create(false);
-        }
-    }
-};
-
-/**
- * @brief svg file based test fixture
- *
- * the svg file is expected to contain a text node with id num_tests. The content should be contain only the number of
- * test objects in the file. For each test objects, there should be two objects called "test-1" and "comp-1" where 1
- * ranges from 1 to test count as above.
- */
-class GeomPathstrokeTest : public ::testing::Test
+class GeomPathstrokeTest : public Inkscape::TestWithSvgObjectPairs
 {
 protected:
     GeomPathstrokeTest()
-        : _init{}
-        , _document{SPDocument::createNewDoc(INKSCAPE_TESTS_DIR "/data/geom-pathstroke.svg", false)}
-    {
-        _document->ensureUpToDate();
-        _findTestCount();
-    }
-
-public:
-    SPPath *getItemById(char const *const id)
-    {
-        auto obj = _document->getObjectById(id);
-        if (!obj) {
-            return nullptr;
-        }
-        return cast<SPPath>(obj);
-    }
-    size_t testCount() const { return _test_count; }
-
-private:
-    void _findTestCount()
-    {
-        auto const item = _document->getObjectById("num_tests");
-        if (!item) {
-            std::cerr << "Could not get the element with id=\"num_tests\".\n";
-            return;
-        }
-        auto const tspan = item->firstChild();
-        if (!tspan) {
-            std::cerr << "Could not get the first child of element with id=\"num_tests\".\n";
-            return;
-        }
-        auto const content = tspan->firstChild();
-        if (!content) {
-            std::cerr << "Could not get the content of the first child of element with id=\"num_tests\".\n";
-            return;
-        }
-        auto const repr = content->getRepr();
-        if (!repr) {
-            std::cerr << "Could not get the repr of the content of the first child of element with id=\"num_tests\".\n";
-            return;
-        }
-        auto const text = repr->content();
-        if (!text) {
-            std::cerr << "Could not get the text content of the first child of element with id=\"num_tests\".\n";
-            return;
-        }
-        try {
-            _test_count = std::stoul(text);
-        } catch (std::invalid_argument const &e) {
-            std::cerr << "Could not parse an integer from content of first child of element with id=\"num_tests\".\n";
-            return;
-        }
-    }
-
-    InkscapeInit _init;
-    std::unique_ptr<SPDocument> _document;
-    size_t _test_count = 0;
+        : Inkscape::TestWithSvgObjectPairs("data/geom-pathstroke.svg", 8) {}
 };
 
 double approximate_directed_hausdorff_distance(const Geom::Path *path1, const Geom::Path *path2)
@@ -126,24 +46,17 @@ double approximate_directed_hausdorff_distance(const Geom::Path *path1, const Ge
 
 TEST_F(GeomPathstrokeTest, BoundedHausdorffDistance)
 {
-    size_t const id_maxlen = 7 + 1;
-    char test_id[id_maxlen], comp_id[id_maxlen];
     double const tolerance = 0.1;
     // same as 0.1 inch in the document (only works without viewBox and transformations)
     auto const offset_width = -9.6;
 
-    // assure that the num_tests field was found and there is at least one test
-    ASSERT_GT(testCount(), 0);
-
-    for (size_t i = 1; i <= testCount(); i++) {
-        snprintf(test_id, id_maxlen, "test-%lu", i);
-        snprintf(comp_id, id_maxlen, "comp-%lu", i);
-        std::cout << "checking " << test_id << std::endl;
-
-        auto const *test_item = getItemById(test_id);
-        auto const *comp_item = getItemById(comp_id);
+    unsigned case_index = 0;
+    for (auto test_case : getTestCases()) {
+        auto const *test_item = cast<SPPath>(test_case.test_object);
+        auto const *comp_item = cast<SPPath>(test_case.reference_object);
         ASSERT_TRUE(test_item && comp_item);
 
+        // Note that transforms etc are not considered. Therefore the objects shoud have equal transforms.
         auto const test_curve = test_item->curve();
         auto const comp_curve = comp_item->curve();
         ASSERT_TRUE(test_curve && comp_curve);
@@ -157,19 +70,15 @@ TEST_F(GeomPathstrokeTest, BoundedHausdorffDistance)
         auto const &comp_path = comp_pathvector.at(0);
 
         auto const offset_path = Inkscape::half_outline(test_path, offset_width, 0, Inkscape::JOIN_EXTRAPOLATE, 0.);
-        auto const error1 = approximate_directed_hausdorff_distance(&offset_path, &comp_path);
-        auto const error2 = approximate_directed_hausdorff_distance(&comp_path, &offset_path);
+        double const error1 = approximate_directed_hausdorff_distance(&offset_path, &comp_path);
+        double const error2 = approximate_directed_hausdorff_distance(&comp_path, &offset_path);
+        double const error = std::max(error1, error2);
 
-        if (error1 > tolerance || error2 > tolerance) {
-            auto const pv_actual = Geom::PathVector(offset_path);
-            std::cout << "actual d " << sp_svg_write_path(pv_actual, true) << std::endl;
-            auto const pv_expected = Geom::PathVector(comp_path);
-            std::cout << "expected d " << sp_svg_write_path(pv_expected, true) << std::endl;
-            std::cout << "note that transforms etc are not considered. Therefore they shoud have equal transforms."
-                      << std::endl;
-        }
-        ASSERT_LE(error1, tolerance);
-        ASSERT_LE(error2, tolerance);
+        EXPECT_LE(error, tolerance) << "Hausdorff distance above tolerance in test case #" << case_index
+                                    << "\nactual d " << sp_svg_write_path(Geom::PathVector(offset_path), true)
+                                    << "\nexpected d " << sp_svg_write_path(Geom::PathVector(comp_path), true)
+                                    << std::endl;
+        case_index++;
     }
 }
 

@@ -187,96 +187,96 @@
      inkscape:groupmode="layer"
      id="layer1">
     <rect
+       style="fill:#808080;fill-opacity:1;stroke:none;stroke-width:0.705556;stroke-linecap:square;stroke-linejoin:round;stop-color:#000000"
+       id="reference-object-0"
+       width="30.781979"
+       height="19.898741"
+       x="47.224304"
+       y="186.65097" />
+    <rect
        style="fill:#808080;stroke:none;stroke-width:0.705556;stroke-linecap:square;stroke-linejoin:round;stop-color:#000000"
-       id="vbb-1"
+       id="reference-object-1"
        width="43.945137"
        height="19.790783"
        x="12.441032"
        y="31.6727390289306640625" />
     <rect
        style="fill:#808080;stroke:none;stroke-width:0.705556;stroke-linecap:square;stroke-linejoin:round;stop-color:#000000"
-       id="vbb-2"
+       id="reference-object-2"
        width="34.844788"
        height="21.081444"
        x="85.515327"
        y="28.547401" />
     <rect
        style="fill:#808080;stroke:none;stroke-width:0.705555;stroke-linecap:square;stroke-linejoin:round;stop-color:#000000"
-       id="vbb-3"
+       id="reference-object-3"
        width="43.266064"
        height="24.402508"
        x="139.91425"
        y="27.999931" />
     <rect
        style="fill:#808080;stroke:none;stroke-width:0.705554;stroke-linecap:square;stroke-linejoin:round;stop-color:#000000"
-       id="vbb-4"
+       id="reference-object-4"
        width="22.080507"
        height="18.145119"
        x="14"
        y="60.184891" />
     <rect
        style="fill:#808080;stroke:none;stroke-width:0.705555;stroke-linecap:square;stroke-linejoin:round;stop-color:#000000"
-       id="vbb-5"
+       id="reference-object-5"
        width="28.778093"
        height="22.645573"
        x="46.969383"
        y="58.687634" />
     <rect
        style="fill:#808080;stroke:none;stroke-width:0.705555;stroke-linecap:square;stroke-linejoin:round;stop-color:#000000"
-       id="vbb-6"
+       id="reference-object-6"
        width="37.573055"
        height="22.991627"
        x="89.183022"
        y="61.431377" />
     <rect
        style="fill:#808080;stroke:none;stroke-width:0.705555;stroke-linecap:square;stroke-linejoin:round;stop-color:#000000"
-       id="vbb-7"
+       id="reference-object-7"
        width="59.299679"
        height="30.689709"
        x="135.63243"
        y="61.291656" />
     <rect
        style="fill:#808080;fill-opacity:1;stroke-width:0.705556;stroke-linecap:square;stroke-linejoin:round;stop-color:#000000"
-       id="vbb-8"
+       id="reference-object-8"
        width="37.696602"
        height="22.40525"
        x="17.500656"
        y="92.37516" />
     <rect
        style="fill:#808080;fill-opacity:1;stroke-width:0.705556;stroke-linecap:square;stroke-linejoin:round;stop-color:#000000"
-       id="vbb-9"
+       id="reference-object-9"
        width="30.306639"
        height="27.761833"
        x="90.843346"
        y="98.547653" />
     <rect
        style="fill:#808080;stroke:none;stroke-width:0.705555;stroke-linecap:square;stroke-linejoin:round;stop-color:#000000"
-       id="vbb-10"
+       id="reference-object-10"
        width="33.65671137939307300257496535778045654296875"
        height="22.26378825748042800114490091800689697265625"
        x="149.044274859625687668085447512567043304443359375"
        y="108.7287860181860423836042173206806182861328125" />
     <rect
        style="fill:#808080;stroke:none;stroke-width:0.705557;stroke-linecap:square;stroke-linejoin:round;stop-color:#000000"
-       id="vbb-11"
+       id="reference-object-11"
        width="11.19899"
        height="8.9597473"
        x="69.686462"
        y="94.601158" />
     <rect
        style="fill:#808080;stroke-width:0.705556;stroke-linecap:square;stroke-linejoin:round;stop-color:#000000;fill-opacity:1"
-       id="vbb-12"
+       id="reference-object-12"
        width="20"
        height="20"
        x="10"
        y="180" />
-    <rect
-       style="fill:#808080;fill-opacity:1;stroke:none;stroke-width:0.705556;stroke-linecap:square;stroke-linejoin:round;stop-color:#000000"
-       id="vbb-13"
-       width="30.781979"
-       height="19.898741"
-       x="47.224304"
-       y="186.65097" />
     <text
        xml:space="preserve"
        style="font-size:3.52777px;font-family:sans-serif;-inkscape-font-specification:sans-serif;fill:#000000;stroke:none;stroke-width:0.705556;stroke-linecap:square;stroke-linejoin:round;stop-color:#000000;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal"
@@ -288,48 +288,21 @@
          style="stroke-width:0.705556;fill:#000000;stroke:none;-inkscape-font-specification:sans-serif;font-family:sans-serif;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal"
          x="15.296859"
          y="10.760616">For each of the objects and groups below, the gray rectangle represents the expected visual bounds.</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777px;font-family:sans-serif;-inkscape-font-specification:sans-serif;fill:#000000;stroke:none;stroke-width:0.705556;stroke-linecap:square;stroke-linejoin:round;stop-color:#000000"
-       x="15.296859"
-       y="15.787699"
-       id="text398"><tspan
-         sodipodi:role="line"
-         id="tspan396"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:sans-serif;fill:#000000;stroke:none;stroke-width:0.705556"
-         x="15.296859"
-         y="15.787699">Objects participating in the test have IDs &quot;obj-%d&quot; and their visual bounds &quot;vbb-%d&quot; where %d is an</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777px;font-family:sans-serif;-inkscape-font-specification:sans-serif;text-align:end;text-anchor:end;fill:#000000;stroke:none;stroke-width:0.705556;stroke-linecap:square;stroke-linejoin:round;stop-color:#000000"
-       x="77.174995"
-       y="20.658287"
-       id="text452"><tspan
-         sodipodi:role="line"
-         id="tspan450"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:sans-serif;text-align:end;text-anchor:end;fill:#000000;stroke:none;stroke-width:0.705556"
-         x="78.092216"
-         y="20.658287">integer between 1 and (active field): </tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5px;font-family:sans-serif;-inkscape-font-specification:sans-serif;text-align:start;text-anchor:start;fill:#000000;stroke:none;stroke-width:0.705556;stroke-linecap:square;stroke-linejoin:round;stop-color:#000000"
-       x="79.711037"
-       y="22.251373"
-       id="num_tests_container"><tspan
-         sodipodi:role="line"
-         id="num_tests"
-         x="79.711037"
-         y="22.251373">13</tspan></text>
+    <use
+       xlink:href="#symbol1128"
+       id="test-object-0"
+       transform="scale(0.5,1)"
+       style="stroke-width:1.04755" />
     <ellipse
        style="fill:#000000;stroke:none;stroke-width:0.705556;stroke-linecap:square;stroke-linejoin:round;stop-color:#000000"
-       id="obj-1"
+       id="test-object-1"
        cx="34.413601"
        cy="41.56813"
        rx="21.972569"
        ry="9.8953905" />
     <rect
        style="fill:#000000;stroke:none;stroke-width:0.865474;stroke-linecap:square;stroke-linejoin:round;stop-color:#000000"
-       id="obj-2"
+       id="test-object-2"
        width="29.666113"
        height="13.468543"
        x="148.77115"
@@ -338,7 +311,7 @@
     <path
        sodipodi:type="star"
        style="fill:#000000;stroke:none;stroke-width:0.705556;stroke-linecap:square;stroke-linejoin:round;stop-color:#000000"
-       id="obj-3"
+       id="test-object-3"
        inkscape:flatsided="true"
        sodipodi:sides="6"
        sodipodi:cx="147.4837"
@@ -355,17 +328,17 @@
     <path
        style="fill:#000000;stroke-width:0.705556;stroke-linecap:square;stroke-linejoin:round"
        d="m 14,60.184889 h 31.275134 v 18.14512 h -16.29787 v -9.865964 H 14 z"
-       id="obj-4"
+       id="test-object-4"
        clip-path="url(#clipPath3)" />
     <rect
        style="fill:#000000;stroke-width:0.705556;stroke-linecap:square;stroke-linejoin:round;filter:url(#filter5)"
-       id="obj-5"
+       id="test-object-5"
        width="19.173294"
        height="9.6471729"
        x="51.771782"
        y="65.186829" />
     <g
-       id="obj-6">
+       id="test-object-6">
       <rect
          style="fill:#000000;stroke-width:0.705556;stroke-linecap:square;stroke-linejoin:round"
          id="rect7"
@@ -382,7 +355,7 @@
          y="66.675468" />
     </g>
     <g
-       id="obj-7"
+       id="test-object-7"
        transform="matrix(2,1,-0.5,-1,-123,-7.5)">
       <rect
          style="fill:#000000;stroke-width:0.705556;stroke-linecap:square;stroke-linejoin:round"
@@ -400,7 +373,7 @@
          ry="8.9130592" />
     </g>
     <g
-       id="obj-8"
+       id="test-object-8"
        clip-path="url(#clipPath2957)"
        transform="translate(-12,-10)">
       <rect
@@ -419,7 +392,7 @@
          y="111.02054" />
     </g>
     <g
-       id="obj-9">
+       id="test-object-9">
       <g
          id="g3893"
          transform="rotate(-45.599892,103.03447,112.97518)">
@@ -447,7 +420,7 @@
          y="121.11034" />
     </g>
     <g
-       id="obj-10"
+       id="test-object-10"
        style="filter:url(#filter4391)">
       <rect
          style="fill:#000000;fill-opacity:1;stroke-width:0.705556;stroke-linecap:square;stroke-linejoin:round;stop-color:#000000"
@@ -494,7 +467,7 @@
        xlink:href="#sym0"
        width="1"
        height="1"
-       id="obj-12"
+       id="test-object-12"
        transform="matrix(20,0,0,20,10,190)" />
     <text
        xml:space="preserve"
@@ -601,7 +574,7 @@
          y="54.026344"
          id="tspan5286">Transformed rectangle</tspan></text>
     <g
-       id="obj-11"
+       id="test-object-11"
        clip-path="url(#clipPath5352)">
       <rect
          style="fill:#000000;fill-opacity:1;stroke-width:0.705556;stroke-linecap:square;stroke-linejoin:round;stop-color:#000000"
@@ -645,11 +618,6 @@
          x="31.477589"
          y="182.29329"
          id="tspan380">Usage of symbol with viewBox</tspan></text>
-    <use
-       xlink:href="#symbol1128"
-       id="obj-13"
-       transform="scale(0.5,1)"
-       style="stroke-width:1.04755" />
     <text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52777px;font-family:sans-serif;-inkscape-font-specification:sans-serif;fill:#000000;stroke:none;stroke-width:0.705556;stroke-linecap:square;stroke-linejoin:round;stop-color:#000000"

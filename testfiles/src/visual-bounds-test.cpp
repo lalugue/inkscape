@@ -14,94 +14,27 @@
 
 #include <2geom/rect.h>
 #include <iostream>
-#include <iomanip>
-#include "inkscape.h"
-#include "document.h"
+
+#include "test-with-svg-object-pairs.h"
 #include "object/sp-item.h"
 #include "object/sp-rect.h"
 
-class InkscapeInit // Initialize the Inkscape Application singleton.
+class VisualBoundsTest : public Inkscape::TestWithSvgObjectPairs
 {
 public:
-    InkscapeInit()
-    {
-        if (!Inkscape::Application::exists()) {
-            Inkscape::Application::create(false);
-        }
-    }
-};
-
-class VisualBoundsTest : public ::testing::Test
-{
-protected:
-
     VisualBoundsTest()
-        : _init{}
-        , _document{SPDocument::createNewDoc(INKSCAPE_TESTS_DIR "/data/visual-bounds.svg", false)}
-    {
-        _document->ensureUpToDate();
-        _findTestCount();
-    }
-
-public:
-    SPItem *getItemById(char const *const id)
-    {
-        auto obj = _document->getObjectById(id);
-        if (!obj) {
-            return nullptr;
-        }
-        return cast<SPItem>(obj);
-    }
-    size_t testCount() const { return _test_count; }
-private:
-    void _findTestCount()
-    {
-        auto tspan = _document->getObjectById("num_tests");
-        if (!tspan) {
-            std::cerr << "Could not get the element with id=\"num_tests\".\n";
-            return;
-        }
-        auto content = tspan->firstChild();
-        if (!content) {
-            std::cerr << "Could not get the content of the element with id=\"num_tests\".\n";
-            return;
-        }
-        auto repr = content->getRepr();
-        if (!repr) {
-            std::cerr << "Could not get the repr of the content of the element with id=\"num_tests\".\n";
-            return;
-        }
-        auto text = repr->content();
-        if (!text) {
-            std::cerr << "Could not get the text content of the element with id=\"num_tests\".\n";
-            return;
-        }
-        try {
-            _test_count = std::stoul(text);
-        } catch (std::invalid_argument const &e) {
-            std::cerr << "Could not parse an integer from the content of element with id=\"num_tests\".\n";
-            return;
-        }
-    }
-
-    InkscapeInit _init;
-    std::unique_ptr<SPDocument> _document;
-    size_t _test_count = 0;
+        : TestWithSvgObjectPairs("data/visual-bounds.svg", 13) {}
 };
 
 TEST_F(VisualBoundsTest, ShapeBounds)
 {
-    size_t const id_maxlen = 7 + 1;
-    char object_id[id_maxlen], bbox_id[id_maxlen];
-    double const epsilon = 1e-4;
+    double constexpr epsilon = 1e-4;
+    constexpr const char* coordinate_names[] = {"x", "y"};
 
-    for (size_t i = 1; i<= testCount(); i++) {
-        snprintf(object_id, id_maxlen, "obj-%lu", i);
-        snprintf(bbox_id, id_maxlen, "vbb-%lu", i);
-
-        auto const *item = getItemById(object_id);
-        auto const *bbox = getItemById(bbox_id);
-        ASSERT_TRUE(item && bbox);
+    unsigned case_index = 0;
+    for (auto test_case : getTestCases()) {
+        auto const *item = cast<SPItem>(test_case.test_object);
+        auto const *bbox = cast<SPItem>(test_case.reference_object);
 
         Geom::Rect const expected_bbox = cast<SPRect>(bbox)->getRect();
 
@@ -111,12 +44,20 @@ TEST_F(VisualBoundsTest, ShapeBounds)
 
         // Check that the item's visual bounding box is as expected, up to epsilon.
         for (auto const dim : {Geom::X, Geom::Y}) {
-            EXPECT_GE(actual_bbox[dim].min(), expected_bbox[dim].min() - epsilon);
-            EXPECT_LE(actual_bbox[dim].min(), expected_bbox[dim].min() + epsilon);
-
-            EXPECT_GE(actual_bbox[dim].max(), expected_bbox[dim].max() - epsilon);
-            EXPECT_LE(actual_bbox[dim].max(), expected_bbox[dim].max() + epsilon);
+            EXPECT_GE(actual_bbox[dim].min(), expected_bbox[dim].min() - epsilon) << "Lower " << coordinate_names[dim]
+                                                                                  << "-extremum of bounding box #"
+                                                                                  << case_index << " below tolerance";
+            EXPECT_LE(actual_bbox[dim].min(), expected_bbox[dim].min() + epsilon) << "Lower " << coordinate_names[dim]
+                                                                                  << "-extremum of bounding box #"
+                                                                                  << case_index << " above tolerance";
+            EXPECT_GE(actual_bbox[dim].max(), expected_bbox[dim].max() - epsilon) << "Upper " << coordinate_names[dim]
+                                                                                  << "-extremum of bounding box #"
+                                                                                  << case_index << " below tolerance";
+            EXPECT_LE(actual_bbox[dim].max(), expected_bbox[dim].max() + epsilon) << "Upper " << coordinate_names[dim]
+                                                                                  << "-extremum of bounding box #"
+                                                                                  << case_index << " above tolerance";
         }
+        case_index++;
     }
 }
 
