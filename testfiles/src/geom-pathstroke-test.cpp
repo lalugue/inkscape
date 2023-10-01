@@ -115,7 +115,7 @@ double approximate_directed_hausdorff_distance(const Geom::Path *path1, const Ge
         auto const time = time_range.valueAt(static_cast<double>(i) / 25);
         auto const search_point = path1->pointAt(time);
         Geom::Coord dist;
-        auto const nearest_time = path2->nearestTime(search_point, &dist);
+        path2->nearestTime(search_point, &dist);
         if (dist > dist_max) {
             dist_max = dist;
         }
