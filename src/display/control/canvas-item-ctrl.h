@@ -21,7 +21,6 @@
 #include <mutex>
 #include <memory>
 #include <2geom/point.h>
-#include <boost/functional/hash.hpp>
 
 #include "canvas-item.h"
 #include "canvas-item-enums.h"
@@ -35,73 +34,14 @@ namespace Inkscape {
 /**
  * Struct to manage state and type.
  */
-struct Handle {
-    CanvasItemCtrlType _type;
-    bool _selected = false;
-    bool _click = false;
-    bool _hover = false;
+struct Handle
+{
+    CanvasItemCtrlType type = CANVAS_ITEM_CTRL_TYPE_DEFAULT;
+    bool selected = false;
+    bool hover = false;
+    bool click = false;
 
-    Handle() : _type(CANVAS_ITEM_CTRL_TYPE_DEFAULT) {}
-    Handle(CanvasItemCtrlType type) : _type(type) {}
-    Handle(CanvasItemCtrlType type, bool selected, bool hover, bool click) : _type(type)
-    {
-        setState(selected, hover, click);
-    }
-
-    void setType(CanvasItemCtrlType type)
-    {
-        _type = type;
-    }
-    void setState(bool selected, bool hover, bool click)
-    {
-        setSelected(selected);
-        setHover(hover);
-        setClick(click);
-    }
-    void setSelected(bool selected = true)
-    {
-        _selected = selected;
-    }
-    bool isSelected() const
-    {
-        return _selected;
-    }
-    void setHover(bool hover = true)
-    {
-        _hover = hover;
-    }
-    bool isHover() const
-    {
-        return _hover;
-    }
-    void setClick(bool click = true)
-    {
-        _click = click;
-    }
-    bool isClick() const
-    {
-        return _click;
-    }
-    bool operator==(const Handle &other) const
-    {
-        return (_type == other._type && _selected == other._selected &&
-                _hover == other._hover && _click == other._click);
-    }
-    bool operator!=(const Handle &other) const
-    {
-        return !(*this == other);
-    }
-    static bool fits(const Handle &selector, const Handle &handle)
-    {
-        // type must match for non-default selectors
-        if(selector._type != CANVAS_ITEM_CTRL_TYPE_DEFAULT && selector._type != handle._type) {
-            return false;
-        }
-        // any state set in selector must be set in handle
-        return !((selector.isSelected() && !handle.isSelected()) ||
-                 (selector.isHover() && !handle.isHover()) ||
-                 (selector.isClick() && !handle.isClick()));
-    }
+    auto operator<=>(Handle const &) const = default;
 };
 
 class CanvasItemCtrl : public CanvasItem {
@@ -155,7 +95,7 @@ protected:
     mutable std::shared_ptr<uint32_t[]> _cache;
 
     // Properties
-    Handle _handle = Handle();
+    Handle _handle;
     CanvasItemCtrlShape _shape = CANVAS_ITEM_CTRL_SHAPE_SQUARE;
     uint32_t _fill = 0x000000ff;
     uint32_t _stroke = 0xffffffff;

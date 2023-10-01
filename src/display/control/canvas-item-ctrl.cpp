@@ -2,7 +2,6 @@
 /**
  * A class to represent a control node.
  */
-
 /*
  * Authors:
  *   Tavmjong Bah
@@ -10,13 +9,12 @@
  *
  * Copyright (C) 2020 Tavmjong Bah
  *
- * Rewrite of SPCtrl
- *
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include <2geom/transforms.h>
+#include <boost/functional/hash.hpp>
 #include <glibmm/regex.h>
+#include <2geom/transforms.h>
 
 #include "3rdparty/libcroco/src/cr-selector.h"
 #include "3rdparty/libcroco/src/cr-doc-handler.h"
@@ -27,7 +25,6 @@
 #include "3rdparty/libcroco/src/cr-utils.h"
 
 #include "canvas-item-ctrl.h"
-#include "helper/geom.h"
 
 #include "io/resource.h"
 #include "io/sys.h"
@@ -58,14 +55,29 @@ struct hash<std::tuple<Inkscape::Handle, int, double>> {
 } // namespace std
 
 namespace Inkscape {
+namespace {
 
-/** 
+bool handle_fits(Handle const &selector, Handle const &handle)
+{
+    // Type must match for non-default selectors.
+    if (selector.type != CANVAS_ITEM_CTRL_TYPE_DEFAULT && selector.type != handle.type) {
+        return false;
+    }
+    // Any state set in selector must be set in handle.
+    return !((selector.selected && !handle.selected) ||
+             (selector.hover && !handle.hover) ||
+             (selector.click && !handle.click));
+}
+
+/**
  * For Handle Styling (shared between all handles)
  */
 std::unordered_map<Handle, HandleStyle *> handle_styles;
 std::unordered_map<std::tuple<Handle, int, double>, std::shared_ptr<uint32_t[]>> handle_cache;
 std::mutex cache_mutex;
 InitLock _parsed;
+
+} // namespace
 
 /**
  * Create a null control node.
@@ -82,9 +94,9 @@ CanvasItemCtrl::CanvasItemCtrl(CanvasItemGroup *group)
  */
 CanvasItemCtrl::CanvasItemCtrl(CanvasItemGroup *group, CanvasItemCtrlType type)
     : CanvasItem(group)
-    , _handle(type)
+    , _handle{.type = type}
 {
-    _name = "CanvasItemCtrl:Type_" + std::to_string(_handle._type);
+    _name = "CanvasItemCtrl:Type_" + std::to_string(_handle.type);
     _pickable = true; // Everybody gets events from this class!
     set_size_default();
 }
@@ -200,7 +212,7 @@ void CanvasItemCtrl::set_size_via_index(int size_index)
     }
 
     int size = 0;
-    switch (_handle._type) {
+    switch (_handle.type) {
     case CANVAS_ITEM_CTRL_TYPE_ADJ_HANDLE:
     case CANVAS_ITEM_CTRL_TYPE_ADJ_SKEW:
         size = size_index * 2 + 7;
@@ -250,7 +262,7 @@ void CanvasItemCtrl::set_size_via_index(int size_index)
         break;
 
     default:
-        g_warning("set_size_via_index: missing case for handle type: %d", static_cast<int>(_handle._type));
+        g_warning("set_size_via_index: missing case for handle type: %d", static_cast<int>(_handle.type));
         size = size_index * 2 + 1;
         break;
     }
@@ -277,8 +289,8 @@ void CanvasItemCtrl::set_size_extra(int extra)
 void CanvasItemCtrl::set_type(CanvasItemCtrlType type)
 {
     defer([=, this] {
-        if (_handle._type == type) return;
-        _handle.setType(type);
+        if (_handle.type == type) return;
+        _handle.type = type;
         set_size_default();
         _built.reset();
         request_update(); // Possible geometry change
@@ -287,19 +299,24 @@ void CanvasItemCtrl::set_type(CanvasItemCtrlType type)
 
 void CanvasItemCtrl::set_selected(bool selected)
 {
-    _handle.setSelected(selected);
+    // Fixme: Data race?
+    _handle.selected = selected;
     _built.reset();
     request_update();
 }
+
 void CanvasItemCtrl::set_click(bool click)
 {
-    _handle.setClick(click);
+    // Fixme: Data race?
+    _handle.click = click;
     _built.reset();
     request_update();
 }
+
 void CanvasItemCtrl::set_hover(bool hover)
 {
-    _handle.setHover(hover);
+    // Fixme: Data race?
+    _handle.hover = hover;
     _built.reset();
     request_update();
 }
@@ -309,9 +326,10 @@ void CanvasItemCtrl::set_hover(bool hover)
  */
 void CanvasItemCtrl::set_normal(bool selected)
 {
-    _handle.setSelected(selected);
-    _handle.setHover(false);
-    _handle.setClick(false);
+    // Fixme: Data race?
+    _handle.selected = selected;
+    _handle.hover = false;
+    _handle.click = false;
     _built.reset();
     request_update();
 }
@@ -963,7 +981,7 @@ void configure_selector(CRSelector *a_selector, Handle *&selector, int &specific
         token_iterator++;
     } else {
         std::cerr << "Unrecognized/unhandled selector:" << selector_str << std::endl;
-        selector = NULL;
+        selector = nullptr;
         return;
     }
     selector = new Handle(type);
@@ -971,16 +989,16 @@ void configure_selector(CRSelector *a_selector, Handle *&selector, int &specific
         if (tokens[token_iterator] == "*") {
             continue;
         } else if (tokens[token_iterator] == "selected") {
-            selector->setSelected(true);
+            selector->selected = true;
         } else if (tokens[token_iterator] == "hover") {
             specificity++;
-            selector->setHover(true);
+            selector->hover = true;
         } else if (tokens[token_iterator] == "click") {
             specificity++;
-            selector->setClick(true);
+            selector->click = true;
         } else {
             std::cerr << "Unrecognized/unhandled selector:" << selector_str << std::endl;
-            selector = NULL;
+            selector = nullptr;
             return;
         }
     }
@@ -997,7 +1015,7 @@ void set_selectors(CRDocHandler *a_handler, CRSelector *a_selector, bool is_user
         configure_selector(a_selector, selector, specificity);
         if (selector) {
             for (const auto& [handle, style] : handle_styles) {
-                if (Handle::fits(*selector, handle)) {
+                if (handle_fits(*selector, handle)) {
                     selected_handles.emplace_back(style, specificity + 10000 * is_users);
                 }
             }
@@ -1142,8 +1160,8 @@ void CanvasItemCtrl::parse_handle_styles() const
             bool selected = state_bits & (1<<2);
             bool hover = state_bits & (1<<1);
             bool click = state_bits & (1<<0);
-            delete handle_styles[Handle(type, selected, hover, click)];
-            handle_styles[Handle(type, selected, hover, click)] = new HandleStyle();
+            delete handle_styles[Handle{type, selected, hover, click}];
+            handle_styles[Handle{type, selected, hover, click}] = new HandleStyle();
         }
     }
 
