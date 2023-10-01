@@ -41,6 +41,8 @@ set(display_SRC
 
     control/canvas-temporary-item-list.cpp
     control/canvas-temporary-item.cpp
+    control/ctrl-handle-rendering.cpp
+    control/ctrl-handle-styling.cpp
     control/snap-indicator.cpp
 
     control/canvas-item.cpp
@@ -108,6 +110,8 @@ set(display_SRC
 
     control/canvas-temporary-item-list.h
     control/canvas-temporary-item.h
+    control/ctrl-handle-rendering.h
+    control/ctrl-handle-styling.h
     control/snap-indicator.h
 
     control/canvas-item.h
