@@ -88,7 +88,7 @@ CanvasItemCtrl::CanvasItemCtrl(CanvasItemGroup *group, CanvasItemCtrlShape shape
 void CanvasItemCtrl::set_position(Geom::Point const &position)
 {
     // std::cout << "CanvasItemCtrl::set_ctrl: " << _name << ": " << position << std::endl;
-    defer([=] {
+    defer([=, this] {
         if (_position == position) return;
         _position = position;
         request_update();
@@ -158,7 +158,7 @@ void CanvasItemCtrl::_update(bool)
         case CANVAS_ITEM_CTRL_SHAPE_SALIGN:
         case CANVAS_ITEM_CTRL_SHAPE_CALIGN:
         {
-            double angle = _anchor * M_PI_4 + angle_of(affine());
+            double angle = int{_anchor} * M_PI_4 + angle_of(affine());
             double const half = _width / 2.0;
 
             dx = -(half + 2) * cos(angle); // Add a bit to prevent tip from overlapping due to rounding errors.
@@ -383,7 +383,7 @@ void CanvasItemCtrl::_render(CanvasItemBuffer &buf) const
 
 void CanvasItemCtrl::set_fill(uint32_t fill)
 {
-    defer([=] {
+    defer([=, this] {
         if (_fill == fill) return;
         _fill = fill;
         _built.reset();
@@ -393,7 +393,7 @@ void CanvasItemCtrl::set_fill(uint32_t fill)
 
 void CanvasItemCtrl::set_stroke(uint32_t stroke)
 {
-    defer([=] {
+    defer([=, this] {
         if (_stroke == stroke) return;
         _stroke = stroke;
         _built.reset();
@@ -403,7 +403,7 @@ void CanvasItemCtrl::set_stroke(uint32_t stroke)
 
 void CanvasItemCtrl::set_shape(CanvasItemCtrlShape shape)
 {
-    defer([=] {
+    defer([=, this] {
         if (_shape == shape) return;
         _shape = shape;
         _built.reset();
@@ -469,7 +469,7 @@ void CanvasItemCtrl::set_shape_default()
 
 void CanvasItemCtrl::set_mode(CanvasItemCtrlMode mode)
 {
-    defer([=] {
+    defer([=, this] {
         if (_mode == mode) return;
         _mode = mode;
         _built.reset();
@@ -479,8 +479,8 @@ void CanvasItemCtrl::set_mode(CanvasItemCtrlMode mode)
 
 void CanvasItemCtrl::set_pixbuf(Glib::RefPtr<Gdk::Pixbuf> pixbuf)
 {
-    defer([=, pixbuf = std::move(pixbuf)] () mutable {
-        if (_pixbuf != pixbuf) return;
+    defer([=, this, pixbuf = std::move(pixbuf)] () mutable {
+        if (_pixbuf == pixbuf) return;
         _pixbuf = std::move(pixbuf);
         _width = _pixbuf->get_width();
         _height = _pixbuf->get_height();
@@ -492,7 +492,7 @@ void CanvasItemCtrl::set_pixbuf(Glib::RefPtr<Gdk::Pixbuf> pixbuf)
 // Nominally width == height == size except possibly for pixmaps.
 void CanvasItemCtrl::set_size(int size)
 {
-    defer([=] {
+    defer([=, this] {
         if (_pixbuf) {
             // std::cerr << "CanvasItemCtrl::set_size: Attempting to set size on pixbuf control!" << std::endl;
             return;
@@ -578,7 +578,7 @@ void CanvasItemCtrl::set_size_default()
 
 void CanvasItemCtrl::set_size_extra(int extra)
 {
-    defer([=] {
+    defer([=, this] {
         if (_extra == extra || _pixbuf) return; // Don't enlarge pixbuf!
         _width  += extra - _extra;
         _height += extra - _extra;
@@ -590,7 +590,7 @@ void CanvasItemCtrl::set_size_extra(int extra)
 
 void CanvasItemCtrl::set_type(CanvasItemCtrlType type)
 {
-    defer([=] {
+    defer([=, this] {
         if (_type == type) return;
         _type = type;
 
@@ -604,7 +604,7 @@ void CanvasItemCtrl::set_type(CanvasItemCtrlType type)
 
 void CanvasItemCtrl::set_angle(double angle)
 {
-    defer([=] {
+    defer([=, this] {
         if (_angle == angle) return;
         _angle = angle;
         _built.reset();
@@ -614,7 +614,7 @@ void CanvasItemCtrl::set_angle(double angle)
 
 void CanvasItemCtrl::set_anchor(SPAnchorType anchor)
 {
-    defer([=] {
+    defer([=, this] {
         if (_anchor == anchor) return;
         _anchor = anchor;
         request_update(); // Geometry change
