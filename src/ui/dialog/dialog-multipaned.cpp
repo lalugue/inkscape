@@ -1331,10 +1331,12 @@ Gtk::EventSequenceState DialogMultipaned::on_drag_update(Gtk::GestureDrag const 
 
 void DialogMultipaned::set_target_entries(const std::vector<Gtk::TargetEntry> &target_entries)
 {
+    auto &front = dynamic_cast<MyDropZone &>(*children.at(0) );
+    auto &back  = dynamic_cast<MyDropZone &>(*children.back());
+
     drag_dest_set(target_entries);
-    ((MyDropZone *)children[0])->drag_dest_set(target_entries, Gtk::DEST_DEFAULT_ALL, Gdk::ACTION_MOVE);
-    ((MyDropZone *)children[children.size() - 1])
-        ->drag_dest_set(target_entries, Gtk::DEST_DEFAULT_ALL, Gdk::ACTION_MOVE);
+    front.drag_dest_set(target_entries, Gtk::DEST_DEFAULT_ALL, Gdk::ACTION_MOVE);
+    back .drag_dest_set(target_entries, Gtk::DEST_DEFAULT_ALL, Gdk::ACTION_MOVE);
 }
 
 void DialogMultipaned::on_drag_data(Glib::RefPtr<Gdk::DragContext> const &context, int x, int y,
