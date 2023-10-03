@@ -834,16 +834,24 @@ LivePathEffectEditor::effect_list_reload(SPLPEItem *lpeitem)
                 auto device_scale = get_scale_factor();
                 surface = cairo_image_surface_create (CAIRO_FORMAT_ARGB32, alloc.get_width() * device_scale, alloc.get_height() * device_scale);
                 cairo_surface_set_device_scale(surface, device_scale, device_scale);
+
                 cr = cairo_create (surface);
+                cairo_push_group(cr);
                 LPEEffect->get_style_context()->add_class("drag-icon");
                 gtk_widget_draw (LPEEffect->Gtk::Widget::gobj(), cr);
                 LPEEffect->get_style_context()->remove_class("drag-icon");
+                cairo_pop_group_to_source(cr);
+                cairo_paint_with_alpha(cr, 0.5);
+
                 LPEDrag->translate_coordinates(*LPEEffect, dndx, dndy, x, y);
-                #ifndef __APPLE__
+
+#ifndef __APPLE__
                 cairo_surface_get_device_scale (surface, &sx, &sy);
-                #endif
+#endif
+
                 cairo_surface_set_device_offset (surface, -x * sx, -y * sy);
                 gtk_drag_set_icon_surface (context->gobj(), surface);
+
                 cairo_destroy (cr);
                 cairo_surface_destroy (surface);
             });
