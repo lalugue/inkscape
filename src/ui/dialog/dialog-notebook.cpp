@@ -17,6 +17,7 @@
 #include <tuple>
 #include <utility>
 #include <glibmm/i18n.h>
+#include <gdkmm/dragcontext.h>
 #include <gtkmm/button.h>
 #include <gtkmm/eventbox.h>
 #include <gtkmm/menubutton.h>
@@ -28,9 +29,7 @@
 #include "enums.h"
 #include "inkscape.h"
 #include "inkscape-window.h"
-#include "helper/sigc-track-obj.h"
 #include "ui/column-menu-builder.h"
-#include "ui/controller.h"
 #include "ui/dialog/dialog-base.h"
 #include "ui/dialog/dialog-data.h"
 #include "ui/dialog/dialog-container.h"
@@ -102,7 +101,7 @@ DialogNotebook::DialogNotebook(DialogContainer *container)
     // Move to new window
     new_menu_item = Gtk::make_managed<UI::Widget::PopoverMenuItem>(_("Move Tab to New Window"));
     _conn.emplace_back(
-        new_menu_item->signal_activate().connect([=]() { pop_tab_callback(); }));
+        new_menu_item->signal_activate().connect([this]{ pop_tab_callback(); }));
     _menu.attach(*new_menu_item, 0, 2, row, row + 1);
     row++;
 
@@ -369,7 +368,7 @@ void DialogNotebook::close_tab_callback()
     _notebook.remove_page(page_number);
 
     // Delete the signal connection
-    remove_close_tab_callback(_selected_page);
+    remove_tab_connections(_selected_page);
 
     if (_notebook.get_n_pages() == 0) {
         close_notebook_callback();
@@ -488,7 +487,6 @@ void DialogNotebook::on_drag_end(const Glib::RefPtr<Gdk::DragContext> &context)
             Gtk::Widget *page = old_notebook->get_nth_page(old_notebook->get_current_page());
             if (page) {
                 // Move page to notebook in new dialog window
-
                 auto inkscape_window = _container->get_inkscape_window();
                 auto window = new DialogWindow(inkscape_window, page);
 
@@ -503,6 +501,9 @@ void DialogNotebook::on_drag_end(const Glib::RefPtr<Gdk::DragContext> &context)
             }
         }
     }
+
+    // Reload the context menu next time it is shown, to reflect new tabs/order.
+    _reload_context = true;
 
     // Closes the notebook if empty.
     if (_notebook.get_n_pages() == 0) {
@@ -558,8 +559,8 @@ void DialogNotebook::on_page_added(Gtk::Widget *page, int page_num)
         return;
     }
 
-    // add close tab signal
-    add_close_tab_callback(page);
+    // add click & close tab signals
+    add_tab_connections(page);
 
     // Switch tab labels if needed
     if (!_labels_auto) {
@@ -569,6 +570,9 @@ void DialogNotebook::on_page_added(Gtk::Widget *page, int page_num)
     // Update tab labels by comparing the sum of their widths to the allocation
     Gtk::Allocation allocation = get_allocation();
     on_size_allocate_scroll(allocation);
+
+    // Reload the context menu next time it is shown, to reflect new tabs/order.
+    _reload_context = true;
 }
 
 /**
@@ -592,8 +596,11 @@ void DialogNotebook::on_page_removed(Gtk::Widget *page, int page_num)
         _container->unlink_dialog(dialog);
     }
 
-    // remove old close tab signal
-    remove_close_tab_callback(page);
+    // remove old click & close tab signals
+    remove_tab_connections(page);
+
+    // Reload the context menu next time it is shown, to reflect new tabs/order.
+    _reload_context = true;
 }
 
 /**
@@ -607,7 +614,7 @@ void DialogNotebook::on_size_allocate_scroll(Gtk::Allocation &a)
     //  set or unset scrollbars to completely hide a notebook
     // because we have a "blocking" scroll per tab we need to loop to aboid
     // other page stop out scroll
-    for_each_child(_notebook, [=](Gtk::Widget &page){
+    for_each_child(_notebook, [this](Gtk::Widget &page){
         if (!provide_scroll(page)) {
             auto const scrolledwindow = get_scrolledwindow(page);
             if (scrolledwindow) {
@@ -662,7 +669,7 @@ void DialogNotebook::on_size_allocate_notebook(Gtk::Allocation &a)
     int total_width = 0;
     _notebook.get_preferred_width(initial_width, nat_width); // get current notebook allocation
 
-    for_each_child(_notebook, [=](Gtk::Widget &page){
+    for_each_child(_notebook, [this](Gtk::Widget &page){
         auto const cover = dynamic_cast<Gtk::EventBox *>(_notebook.get_tab_label(page));
         if (cover) cover->show_all();
         return ForEachResult::_continue;
@@ -800,7 +807,7 @@ void DialogNotebook::reload_tab_menu()
             symbolic = true;
         }
 
-        for_each_child(_notebook, [=](Gtk::Widget &page){
+        for_each_child(_notebook, [=, this](Gtk::Widget &page){
             auto const children = get_cover_box_children(_notebook.get_tab_label(page));
             if (!children) {
                 return ForEachResult::_continue;
@@ -850,7 +857,7 @@ void DialogNotebook::toggle_tab_labels_callback(bool show)
 {
     _label_visible = show;
 
-    for_each_child(_notebook, [=](Gtk::Widget &page){
+    for_each_child(_notebook, [=, this](Gtk::Widget &page){
         auto const children = get_cover_box_children(_notebook.get_tab_label(page));
         if (!children) {
             return ForEachResult::_continue;
@@ -893,7 +900,7 @@ void DialogNotebook::on_page_switch(Gtk::Widget *curr_page, guint)
         container->show_all_children();
     }
 
-    for_each_child(_notebook, [=](Gtk::Widget &page){
+    for_each_child(_notebook, [=, this](Gtk::Widget &page){
         if (auto const dialogbase = dynamic_cast<DialogBase *>(&page)) {
             if (auto const widgs = UI::get_children(*dialogbase); !widgs.empty()) {
                 if (curr_page == &page) {
@@ -970,9 +977,9 @@ void DialogNotebook::change_page(size_t pagenum)
 }
 
 /**
- * Helper method that adds the close tab signal connection for the page given.
+ * Helper method that adds the click and close tab signal connections for the page given.
  */
-void DialogNotebook::add_close_tab_callback(Gtk::Widget *page)
+void DialogNotebook::add_tab_connections(Gtk::Widget * const page)
 {
     Gtk::Widget *tab = _notebook.get_tab_label(*page);
     auto const children = get_cover_box_children(tab);
@@ -980,18 +987,22 @@ void DialogNotebook::add_close_tab_callback(Gtk::Widget *page)
 
     sigc::connection close_connection = close->signal_clicked().connect(
             sigc::bind(sigc::mem_fun(*this, &DialogNotebook::on_close_button_click_event), page), true);
-
-    Controller::add_click(*tab,
-            // Instead of saving in _tab_connections, disconnect with page; that won't be clicked during destruction
-            SIGC_TRACKING_ADAPTOR(sigc::bind(sigc::mem_fun(*this, &DialogNotebook::on_tab_click_event), page), *page));
-
     _tab_connections.emplace(page, std::move(close_connection));
+
+    auto click = Gtk::GestureMultiPress::create(*tab);
+    click->set_button(0); // all
+    click->signal_pressed().connect([this, page, &click = *click.get()](int const n_press, double const x, double const y)
+    {
+        auto const state = on_tab_click_event(click, n_press, x, y, page);
+        if (state != Gtk::EVENT_SEQUENCE_NONE) click.set_state(state);
+    });
+    _tab_connections.emplace(page, std::move(click));
 }
 
 /**
- * Helper method that removes the close tab signal connection for the page given.
+ * Helper method that removes the click & close tab signal connections for the page given.
  */
-void DialogNotebook::remove_close_tab_callback(Gtk::Widget *page)
+void DialogNotebook::remove_tab_connections(Gtk::Widget *page)
 {
     auto const [first, last] = _tab_connections.equal_range(page);
     _tab_connections.erase(first, last);

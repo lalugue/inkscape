@@ -14,17 +14,25 @@
 #ifndef INKSCAPE_UI_DIALOG_NOTEBOOK_H
 #define INKSCAPE_UI_DIALOG_NOTEBOOK_H
 
+#include <map>
 #include <memory>
+#include <variant>
 #include <vector>
-#include <gdkmm/dragcontext.h>
+#include <glibmm/refptr.h>
 #include <gtkmm/gesture.h> // Gtk::EventSequenceState
 #include <gtkmm/notebook.h>
 #include <gtkmm/scrolledwindow.h>
 #include <gtkmm/widget.h>
+
 #include "helper/auto-connection.h"
 #include "ui/widget/popover-menu.h"
 
+namespace Gdk {
+class DragContext;
+} // namespace Gdk
+
 namespace Gtk {
+class EventController;
 class GestureMultiPress;
 } // namespace Gtk
 
@@ -94,7 +102,8 @@ private:
     Gtk::Widget *_selected_page;
     std::vector<auto_connection> _conn;
     std::vector<auto_connection> _connmenu;
-    std::multimap<Gtk::Widget *, auto_connection> _tab_connections;
+    using TabConnection = std::variant<auto_connection, Glib::RefPtr<Gtk::EventController>>;
+    std::multimap<Gtk::Widget *, TabConnection> _tab_connections;
 
     static std::list<DialogNotebook *> _instances;
     void add_highlight_header();
@@ -118,8 +127,8 @@ private:
     void change_page(size_t pagenum);
     void reload_tab_menu();
     void toggle_tab_labels_callback(bool show);
-    void add_close_tab_callback(Gtk::Widget *page);
-    void remove_close_tab_callback(Gtk::Widget *page);
+    void add_tab_connections(Gtk::Widget *page);
+    void remove_tab_connections(Gtk::Widget *page);
     void get_preferred_height_for_width_vfunc(int width, int& minimum_height, int& natural_height) const override;
     void get_preferred_height_vfunc(int& minimum_height, int& natural_height) const override;
     int _natural_height = 0;
