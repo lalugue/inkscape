@@ -12,6 +12,7 @@
 
 #include "util/action-accel.h"
 
+#include <iterator>
 #include <utility>
 
 #include "inkscape-application.h"
@@ -25,11 +26,6 @@ ActionAccel::ActionAccel(Glib::ustring action_name)
     auto &shortcuts = Shortcuts::getInstance();
     _query();
     _prefs_changed = shortcuts.connect_changed([this]() { _onShortcutsModified(); });
-}
-
-ActionAccel::~ActionAccel()
-{
-    _prefs_changed.disconnect();
 }
 
 void ActionAccel::_onShortcutsModified()
@@ -47,23 +43,23 @@ bool ActionAccel::_query()
                        "Attempt to read keyboard shortcuts while running without an InkscapeApplication!");
         return false;
     }
+
     auto *gtk_app = app->gtk_app();
     if (!gtk_app) {
         g_warn_message("Inkscape", __FILE__, __LINE__, __func__,
                        "Attempt to read keyboard shortcuts while running without a GUI!");
         return false;
     }
-    auto accel_strings = gtk_app->get_accels_for_action(_action);
-    std::set<AcceleratorKey> new_keys;
-    for (auto &&name : accel_strings) {
-        new_keys.emplace(std::move(name));
-    }
 
+    auto accel_strings = gtk_app->get_accels_for_action(_action);
+    std::set<AcceleratorKey> new_keys{std::move_iterator{accel_strings.begin()},
+                                      std::move_iterator{accel_strings.end  ()}};
     if (new_keys != _accels)
     {
         _accels = std::move(new_keys);
         return true;
     }
+
     return false;
 }
 

@@ -23,6 +23,8 @@
 #include <gtkmm/accelkey.h>
 #include <sigc++/signal.h>
 
+#include "helper/auto-connection.h"
+
 namespace Inkscape { struct KeyEvent; }
 
 namespace Inkscape::Util {
@@ -71,10 +73,10 @@ public:
 class ActionAccel
 {
 private:
-    sigc::signal<void ()> _we_changed;   ///< Emitted when the keybindings for the action are changed
-    sigc::connection _prefs_changed;  ///< To listen to changes to the keyboard shortcuts
-    Glib::ustring _action;            ///< Name of the action
-    std::set<AcceleratorKey> _accels; ///< Stores the accelerator keys for the action
+    sigc::signal<void ()> _we_changed; ///< Emitted when the keybindings for the action are changed
+    auto_connection _prefs_changed;    ///< To listen to changes to the keyboard shortcuts
+    Glib::ustring _action;             ///< Name of the action
+    std::set<AcceleratorKey> _accels;  ///< Stores the accelerator keys for the action
 
     /** Queries and updates the stored shortcuts, returning true if they have changed. */
     bool _query();
@@ -88,8 +90,6 @@ public:
      * @param action_name - the name of the action to hold and observe the keybindings of.
      */
     ActionAccel(Glib::ustring action_name);
-
-    ~ActionAccel();
 
     /**
      * @brief Returns all keyboard shortcuts for the action.

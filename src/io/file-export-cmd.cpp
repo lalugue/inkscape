@@ -50,7 +50,6 @@
 // Temporary dependency : once all compilers we want to support have support for
 // C++17 std::filesystem (with #include <filesystem> ) then we drop this dep
 // (Dev meeting, 2020-09-25)
-
 #ifdef G_OS_WIN32
 #include <filesystem>
 namespace filesystem = std::filesystem;
@@ -207,7 +206,7 @@ InkFileExportCmd::do_export(SPDocument* doc, std::string filename_in)
         // so we can use the same loop to construct the list of available formats for the error message
         std::list<std::string> filetypes({".svg", ".png", ".ps", ".eps", ".pdf"});
         std::list<std::string> exts_for_fn;
-        for (auto oext : extension_list) {
+        for (auto const &oext : extension_list) {
             if (oext->deactivated()) {
                 continue;
             }
@@ -396,7 +395,7 @@ int InkFileExportCmd::do_export_vector(SPDocument *doc, std::string const &expor
         objects.emplace_back(); // So we do loop at least once for root.
     }
 
-    for (auto object : objects) {
+    for (auto const &object : objects) {
         auto copy_doc = doc->copy();
 
         std::string filename_out = get_filename_out(export_filename, Glib::filename_from_utf8(object));
@@ -494,7 +493,7 @@ InkFileExportCmd::do_export_png(SPDocument *doc, std::string const &export_filen
 
     std::vector<SPItem*> items;
     std::vector<Glib::ustring> objects_found;
-    for (auto object_id : objects) {
+    for (auto const &object_id : objects) {
         // Find export object. (Either root or object with specified id.)
         auto object = doc->getObjectById(object_id);
 
@@ -541,7 +540,7 @@ InkFileExportCmd::do_export_png(SPDocument *doc, std::string const &export_filen
         objects_found.emplace_back(); // So we do loop at least once for root.
     }
 
-    for (auto object_id : objects_found) {
+    for (auto const &object_id : objects_found) {
         SPObject *object = doc->getRoot();
         if (!object_id.empty()) {
             object = doc->getObjectById(object_id);

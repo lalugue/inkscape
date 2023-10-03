@@ -684,7 +684,7 @@ StartScreen::enlist_keys()
     auto store = Glib::wrap(GTK_LIST_STORE(gtk_combo_box_get_model(keys.gobj())));
     store->clear();
 
-    for(auto item: Inkscape::Shortcuts::get_file_names()){
+    for (auto const &item : Inkscape::Shortcuts::get_file_names()) {
         Gtk::TreeModel::Row row = *(store->append());
         row[cols.col_name] = item.first;
         row[cols.col_id] = item.second;

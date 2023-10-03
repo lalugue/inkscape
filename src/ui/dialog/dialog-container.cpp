@@ -265,6 +265,19 @@ DialogBase* DialogContainer::find_existing_dialog(const Glib::ustring& dialog_ty
     return existing_dialog;
 }
 
+[[nodiscard]] static Glib::ustring get_open_action_name(Glib::ustring const &dialog_type)
+{
+    auto const action_name = "win.dialog-open('" + dialog_type += "')";
+    auto const app = InkscapeApplication::instance();
+    auto const &accels = app->gtk_app()->get_accels_for_action(action_name);
+    if (accels.empty()) return {};
+
+    unsigned key{};
+    Gdk::ModifierType mods{};
+    Gtk::AccelGroup::parse(accels[0], key, mods);
+    return Gtk::AccelGroup::get_label(key, mods);
+}
+
 /**
  * Overloaded new_dialog
  */
@@ -302,17 +315,7 @@ void DialogContainer::new_dialog(const Glib::ustring& dialog_type, DialogNoteboo
         image = it->second.icon_name;
     }
 
-    Glib::ustring label;
-    Glib::ustring action_name = "win.dialog-open('" + dialog_type + "')";
-    auto app = InkscapeApplication::instance();
-    std::vector<Glib::ustring> accels = app->gtk_app()->get_accels_for_action(action_name);
-    if (accels.size() > 0) {
-        guint key = 0;
-        Gdk::ModifierType mods;
-        Gtk::AccelGroup::parse(accels[0], key, mods);
-        label = Gtk::AccelGroup::get_label(key, mods);
-    }
-
+    auto const &label = get_open_action_name(dialog_type);
     Gtk::Widget *tab = create_notebook_tab(dialog->get_name(), image, label);
 
     // If not from notebook menu add at top of last column.
@@ -524,21 +527,9 @@ DialogWindow *DialogContainer::create_new_floating_dialog(const Glib::ustring& d
     dialog = Gtk::manage(dialog);
 
     // Create the notebook tab
-    gchar* image = nullptr;
-
-    Glib::ustring label;
-    Glib::ustring action_name = "win.dialog-open('" + dialog_type + "')";
-    auto app = InkscapeApplication::instance();
-    std::vector<Glib::ustring> accels = app->gtk_app()->get_accels_for_action(action_name);
-    if (accels.size() > 0) {
-        guint key = 0;
-        Gdk::ModifierType mods;
-        Gtk::AccelGroup::parse(accels[0], key, mods);
-        label = Gtk::AccelGroup::get_label(key, mods);
-    }
-
+    auto const &label = get_open_action_name(dialog_type);
     Gtk::Widget *tab =
-        create_notebook_tab(dialog->get_name(), image ? Glib::ustring(image) : INKSCAPE_ICON("inkscape-logo"), label);
+        create_notebook_tab(dialog->get_name(), INKSCAPE_ICON("inkscape-logo"), label);
 
     // New temporary noteboook
     auto const notebook = Gtk::make_managed<DialogNotebook>(this);

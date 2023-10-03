@@ -22,6 +22,7 @@
 #include "shortcuts.h"
 
 #include <memory>
+#include <numeric>
 #include <iostream>
 #include <iomanip>
 #include <glibmm/convert.h>
@@ -99,7 +100,7 @@ Shortcuts::init() {
         // Save relative path to "share/keys" if possible to handle parallel installations of
         // Inskcape gracefully.
         if (success && absolute) {
-            std::string relative_path = sp_relative_path_from_path(path, std::string(get_path(SYSTEM, KEYS)));
+            auto const relative_path = sp_relative_path_from_path(path, get_path_string(SYSTEM, KEYS));
             prefs->setString("/options/kbshortcuts/shortcutfile", relative_path.c_str());
         }
     }
@@ -143,7 +144,7 @@ void
 Shortcuts::clear()
 {
     // Actions: We rely on Gtk for everything except user/system setting.
-    for (auto action_description : app->list_action_descriptions()) {
+    for (auto const &action_description : app->list_action_descriptions()) {
         app->unset_accels_for_action(action_description);
     }
     action_user_set.clear();
@@ -206,7 +207,7 @@ parse_modifier_string(char const * const modifiers_string)
     if (modifiers_string) {
         std::vector<Glib::ustring> mod_vector = Glib::Regex::split_simple("\\s*,\\s*", modifiers_string);
   
-        for (auto mod : mod_vector) {
+        for (auto const &mod : mod_vector) {
             if (mod == "Control" || mod == "Ctrl") {
                 modifiers |= Gdk::CONTROL_MASK;
             } else if (mod == "Shift") {
@@ -291,9 +292,7 @@ Shortcuts::_read(XML::Node const &keysnode, bool user_set)
 {
     XML::NodeConstSiblingIterator iter {keysnode.firstChild()};
     for ( ; iter ; ++iter ) {
-
         if (strcmp(iter->name(), "modifier") == 0) {
-
             char const * const mod_name = iter->attribute("action");
             if (!mod_name) {
                 std::cerr << "Shortcuts::read: Missing modifier for action!" << std::endl;;
@@ -354,7 +353,7 @@ Shortcuts::_read(XML::Node const &keysnode, bool user_set)
 
             std::vector<Glib::ustring> key_vector = Glib::Regex::split_simple("\\s*,\\s*", Keys);
             // Set one shortcut at a time so we can check if it has been previously used.
-            for (auto key : key_vector) {
+            for (auto const &key : key_vector) {
                 add_shortcut(gaction, key, user_set);
             }
 
@@ -362,7 +361,7 @@ Shortcuts::_read(XML::Node const &keysnode, bool user_set)
             // if (!key_vector.empty()) {
             //     std::cout << "Shortcut::read: gaction: "<< gaction
             //               << ", user set: " << std::boolalpha << user_set << ", ";
-            //     for (auto key : key_vector) {
+            //     for (auto const &key : key_vector) {
             //         std::cout << key << ", ";
             //     }
             //     std::cout << std::endl;
@@ -377,6 +376,20 @@ bool
 Shortcuts::write_user() {
     Glib::RefPtr<Gio::File> file = Gio::File::create_for_path(get_path_string(USER, KEYS, "default.xml"));
     return write(file, User);
+}
+
+[[nodiscard]] static Glib::ustring
+join(std::vector<Glib::ustring> const &accels, char const separator)
+{
+    auto const capacity = std::accumulate(accels.begin(), accels.end(), std::size_t{0},
+        [](std::size_t capacity, auto const &accel){ return capacity += accel.size() + 1; });
+    Glib::ustring result;
+    result.reserve(capacity);
+    for (auto const &accel: accels) {
+        if (!result.empty()) result += separator;
+        result += accel;
+    }
+    return result;
 }
 
 // In principle, we only write User shortcuts. But for debugging, we might want to write something else.
@@ -399,24 +412,18 @@ Shortcuts::write(Glib::RefPtr<Gio::File> file, What what) {
     document->appendChild(node);
 
     // Actions: write out all actions with accelerators.
-    for (auto action_name : list_all_detailed_action_names()) {
+    for (auto const &action_name : list_all_detailed_action_names()) {
         if ( what == All                                 ||
             (what == System && !action_user_set[action_name]) ||
             (what == User   &&  action_user_set[action_name]) )
         {
             std::vector<Glib::ustring> accels = app->get_accels_for_action(action_name);
             if (!accels.empty()) {
-
                 XML::Node * node = document->createElement("bind");
 
                 node->setAttribute("gaction", action_name);
 
-                Glib::ustring keys;
-                for (auto accel : accels) {
-                    keys += accel;
-                    keys += ",";
-                }
-                keys.resize(keys.size() - 1);
+                auto const keys = join(accels, ',');
                 node->setAttribute("keys", keys);
 
                 document->root()->appendChild(node);
@@ -478,28 +485,29 @@ Shortcuts::list_all_actions()
 {
     std::vector<Glib::ustring> all_actions;
 
-    std::vector<Glib::ustring> actions = app->list_actions();
+    auto actions = app->list_actions();
     std::sort(actions.begin(), actions.end());
-    for (auto const &action : actions) {
-        all_actions.emplace_back("app." + action);
+    for (auto &&action: std::move(actions)) {
+        all_actions.push_back("app." + std::move(action));
     }
 
     auto gwindow = app->get_active_window();
     auto window = dynamic_cast<InkscapeWindow *>(gwindow);
     if (window) {
-        std::vector<Glib::ustring> actions = window->list_actions();
+        actions = window->list_actions();
         std::sort(actions.begin(), actions.end());
-        for (auto const &action : actions) {
-            all_actions.emplace_back("win." + action);
+        for (auto &&action: std::move(actions)) {
+            all_actions.push_back("win." + std::move(action));
         }
 
         auto document = window->get_document();
         if (document) {
             auto map = document->getActionGroup();
             if (map) {
-                std::vector<Glib::ustring> actions = map->list_actions();
-                for (auto const &action : actions) {
-                    all_actions.emplace_back("doc." + action);
+                actions = map->list_actions();
+                std::sort(actions.begin(), actions.end());
+                for (auto &&action: std::move(actions)) {
+                    all_actions.push_back("doc." + std::move(action));
                 }
             } else {
                 std::cerr << "Shortcuts::list_all_actions: No document map!" << std::endl;
@@ -591,9 +599,9 @@ Shortcuts::remove_shortcut(const Gtk::AccelKey& shortcut)
         if (it != accels.end()) {
             action_name = action;
             accels.erase(it);
+            app->set_accels_for_action(action, accels);
             _changed.emit();
         }
-        app->set_accels_for_action(action, accels);
     }
 
     return action_name;
@@ -757,6 +765,12 @@ Gtk::AccelKey Shortcuts::get_from_event(KeyEvent const &event, bool fix)
                                static_cast<GdkModifierType>(event.modifiers), event.group, fix);
 }
 
+template <typename T>
+static void append(std::vector<T> &target, std::vector<T> &&source)
+{
+    target.insert(target.end(), std::move_iterator{source.begin()}, std::move_iterator{source.end()});
+}
+
 // Get a list of filenames to populate menu
 std::vector<std::pair<Glib::ustring, Glib::ustring>>
 Shortcuts::get_file_names()
@@ -765,19 +779,16 @@ Shortcuts::get_file_names()
     using namespace Inkscape::IO::Resource;
 
     // Make a list of all key files from System and User.  Glib::ustring should be std::string!
-    std::vector<Glib::ustring> filenames = get_filenames(SYSTEM, KEYS, {".xml"});
+    auto filenames = get_filenames(SYSTEM, KEYS, {".xml"});
     // Exclude default.xml as it only contains user modifications.
-    std::vector<Glib::ustring> filenames_shared = get_filenames(SHARED, KEYS, {".xml"}, {"default.xml"});
-    // Exclude default.xml as it only contains user modifications.
-    std::vector<Glib::ustring> filenames_user = get_filenames(USER, KEYS, {".xml"}, {"default.xml"});
-    filenames.insert(filenames.end(), filenames_user.begin(), filenames_user.end());
-    filenames.insert(filenames.end(), filenames_shared.begin(), filenames_shared.end());
+    append(filenames, get_filenames(SHARED, KEYS, {".xml"}, {"default.xml"}));
+    append(filenames, get_filenames(USER  , KEYS, {".xml"}, {"default.xml"}));
 
     // Check file exists and extract out label if it does.
     std::vector<std::pair<Glib::ustring, Glib::ustring>> names_and_paths;
-    for (auto &filename : filenames) {
-        std::string label = Glib::path_get_basename(filename);
-        Glib::ustring filename_relative = sp_relative_path_from_path(filename, std::string(get_path(SYSTEM, KEYS)));
+    for (auto const &filename : filenames) {
+        Glib::ustring label = Glib::path_get_basename(filename);
+        auto filename_relative = sp_relative_path_from_path(filename, get_path_string(SYSTEM, KEYS));
 
         XML::Document *document = sp_repr_read_file(filename.c_str(), nullptr, true);
         if (!document) {
@@ -790,10 +801,9 @@ Shortcuts::get_file_names()
             if (strcmp(iter->name(), "keys") == 0) {
                 char const * const name = iter->attribute("name");
                 if (name) {
-                    label = Glib::ustring(name) + " (" + label + ")";
+                    label = Glib::ustring::compose("%1 (%2)", name, label);
                 }
-                std::pair<Glib::ustring, Glib::ustring> name_and_path = std::make_pair(label, filename_relative);
-                names_and_paths.emplace_back(name_and_path);
+                names_and_paths.emplace_back(std::move(label), std::move(filename_relative));
                 break;
             }
         }
@@ -806,14 +816,13 @@ Shortcuts::get_file_names()
 
     // Sort by name
     std::sort(names_and_paths.begin(), names_and_paths.end(),
-            [](std::pair<Glib::ustring, Glib::ustring> pair1, std::pair<Glib::ustring, Glib::ustring> pair2) {
-                return Glib::path_get_basename(pair1.first).compare(Glib::path_get_basename(pair2.first)) < 0;
+            [](auto const &pair1, auto const &pair2) {
+                return pair1.first < pair2.first;
             });
-
     // But default.xml at top
     auto it_default = std::find_if(names_and_paths.begin(), names_and_paths.end(),
-            [](std::pair<Glib::ustring, Glib::ustring>& pair) {
-                return !Glib::path_get_basename(pair.second).compare("default.xml");
+            [](auto const &pair) {
+                return pair.second == "default.xml";
             });
     if (it_default != names_and_paths.end()) {
         std::rotate(names_and_paths.begin(), it_default, it_default+1);

@@ -1448,9 +1448,7 @@ void InkscapePreferences::symbolicThemeCheck()
     }
     // we always show symbolic in default theme (relays in hicolor theme)
     if (themeiconname != prefs->getString("/theme/defaultIconTheme", "")) {
-
-        auto folders = get_foldernames(ICONS, { "application" });
-        for (auto &folder : folders) {
+        for (auto &&folder : get_foldernames(ICONS, { "application" })) {
             auto path = folder;
             const size_t last_slash_idx = folder.find_last_of("\\/");
             if (std::string::npos != last_slash_idx) {
@@ -1462,11 +1460,8 @@ void InkscapePreferences::symbolicThemeCheck()
 #else
                 path += "/symbolic/actions";
 #endif
-                std::vector<Glib::ustring> symbolic_icons = get_filenames(path, { ".svg" }, {});
-                if (symbolic_icons.size() > 0) {
-                    symbolic = true;
-                    symbolic_icons.clear();
-                }
+
+                symbolic = !get_filenames(path, {".svg"}, {}).empty();
             }
         }
     } else {
@@ -1662,11 +1657,7 @@ void InkscapePreferences::initPageUI()
         dark_themes = INKSCAPE.themecontext->get_available_themes();
         std::vector<Glib::ustring> labels;
         std::vector<Glib::ustring> values;
-        std::map<Glib::ustring, bool>::iterator it = dark_themes.begin();
-        // Iterate over the map using Iterator till end.
-        for (std::pair<std::string, int> element : dark_themes) {
-            Glib::ustring theme = element.first;
-            ++it;
+        for (auto const &[theme, dark] : dark_themes) {
             if (theme == default_theme) {
                 continue;
             }
@@ -1743,11 +1734,10 @@ void InkscapePreferences::initPageUI()
     _page_theme.add_group_header(_("Icons"));
     {
         using namespace Inkscape::IO::Resource;
-        auto folders = get_foldernames(ICONS, { "application" });
         std::vector<Glib::ustring> labels;
         std::vector<Glib::ustring> values;
         Glib::ustring default_icon_theme = prefs->getString("/theme/defaultIconTheme");
-        for (auto &folder : folders) {
+        for (auto &&folder : get_foldernames(ICONS, { "application" })) {
             // from https://stackoverflow.com/questions/8520560/get-a-file-name-from-a-path#8520871
             // Maybe we can link boost path utilities
             // Remove directory if present.
@@ -2393,7 +2383,7 @@ void InkscapePreferences::initPageIO()
     _page_cms.add_group_header( _("Display adjustment"));
 
     Glib::ustring tmpStr;
-    for (auto& path : Inkscape::CMSSystem::get_directory_paths()) {
+    for (auto const &path : Inkscape::CMSSystem::get_directory_paths()) {
         tmpStr += "\n";
         tmpStr += path.first;
     }
@@ -2448,7 +2438,7 @@ void InkscapePreferences::initPageIO()
         gint index = 0;
         _cms_display_profile.append(_("<none>"));
         index++;
-        for (auto & name : names) {
+        for (auto const &name : names) {
             _cms_display_profile.append( name );
             Glib::ustring path = cms_system->get_path_for_profile(name);
             if ( !path.empty() && path == current ) {
@@ -2463,7 +2453,7 @@ void InkscapePreferences::initPageIO()
         names = cms_system->get_softproof_profile_names();
         current = prefs->getString("/options/softproof/uri");
         index = 0;
-        for (auto & name : names) {
+        for (auto const &name : names) {
             _cms_proof_profile.append( name );
             Glib::ustring path = cms_system->get_path_for_profile(name);
             if ( !path.empty() && path == current ) {
@@ -3379,7 +3369,7 @@ static bool is_leaf_visible(const Gtk::TreeModel::const_iterator& iter, const Gl
         return true;
     }
 
-    for (auto& child : iter->children()) {
+    for (auto const &child : iter->children()) {
         if (is_leaf_visible(child, search)) {
             return true;
         }
@@ -3531,8 +3521,7 @@ void InkscapePreferences::onKBListKeyboardShortcuts()
     Gtk::TreeStore::iterator iter_group;
 
     // Fill sections
-    for (auto action : actions) {
-
+    for (auto const &action : actions) {
         Glib::ustring section = action_data.get_section_for_action(action);
         if (section.empty()) section = "Misc";
         if (section != old_section) {
@@ -3549,9 +3538,8 @@ void InkscapePreferences::onKBListKeyboardShortcuts()
         // Find accelerators
         std::vector<Glib::ustring> accels = gapp->get_accels_for_action(action);
         Glib::ustring shortcut_label;
-        for (auto accel : accels) {
+        for (auto const &accel : accels) {
             // Convert to more user friendly notation.
-
             // ::get_label shows key pad and numeric keys identically.
             // TODO: Results in labels like "Numpad Alt+5"
             if (accel.find("KP") != Glib::ustring::npos) {
