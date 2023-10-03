@@ -84,6 +84,11 @@ dialog_open(const Glib::VariantBase& value, InkscapeWindow *win)
     Glib::Variant<Glib::ustring> s = Glib::VariantBase::cast_dynamic<Glib::Variant<Glib::ustring> >(value);
     auto dialog = s.get();
 
+    if (!win) {
+        show_output("dialog_toggle: no inkscape window!");
+        return;
+    }
+
     auto const &dialog_data = get_dialog_data();
     auto dialog_it = dialog_data.find(dialog);
     if (dialog_it == dialog_data.end()) {
@@ -134,10 +139,6 @@ dialog_toggle(InkscapeWindow *win)
 
 void add_actions_dialogs(InkscapeApplication *app)
 {
-    // macOS automatically uses app.preferences in the application menu
-    auto gapp = app->gio_app();
-    gapp->add_action("preferences", [app] { dialog_open(Glib::Variant<Glib::ustring>::create("Preferences"), app->get_active_window()); });
-
     app->get_action_extra_data().add_data(raw_data_dialogs);
 }
 
@@ -149,6 +150,10 @@ void add_actions_dialogs(InkscapeWindow *win)
     win->add_action_with_parameter( "dialog-open",  String, sigc::bind(sigc::ptr_fun(&dialog_open),   win));
     win->add_action(                "dialog-toggle",        sigc::bind(sigc::ptr_fun(&dialog_toggle), win));
     // clang-format on
+
+    // macOS automatically uses app.preferences in the application menu
+    auto gapp = win->get_application();
+    gapp->add_action("preferences", [win] { dialog_open(Glib::Variant<Glib::ustring>::create("Preferences"), win); });
 
     auto app = InkscapeApplication::instance();
     if (!app) {
