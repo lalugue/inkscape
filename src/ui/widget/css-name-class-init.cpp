@@ -20,17 +20,14 @@ namespace Inkscape::UI::Widget {
 
 namespace {
 
-using BaseObjectType = GtkWidget;
-using BaseClassType = GtkWidgetClass;
-
 extern "C"
 {
 static void class_init_function(void * const g_class, void * const class_data)
 {
     g_return_if_fail(GTK_IS_WIDGET_CLASS(g_class));
 
-    const auto klass = static_cast<BaseClassType *>(g_class);
-    const auto css_name = static_cast<Glib::ustring const *>(class_data);
+    auto const klass = static_cast<GtkWidgetClass *>(g_class);
+    auto const css_name = static_cast<Glib::ustring const *>(class_data);
     gtk_widget_class_set_css_name(klass, css_name->c_str());
 }
 

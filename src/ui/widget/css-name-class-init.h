@@ -20,8 +20,9 @@
 namespace Inkscape::UI::Widget {
 
 /// A class that can be inherited to set the CSS name of a Gtk::Widget subclass.
+/// The subclass must also inherit from Gtk::Widget or a subclass thereof.
 class CssNameClassInit : public Glib::ExtraClassInit {
-public:
+protected:
     [[nodiscard]] explicit CssNameClassInit(Glib::ustring const &css_name);
 
 private:
