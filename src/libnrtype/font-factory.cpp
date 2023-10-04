@@ -657,10 +657,10 @@ std::shared_ptr<FontInstance> FontFactory::Face(PangoFontDescription *descr, boo
 # ifdef _WIN32
 void FontFactory::AddFontFilesWin32(char const *directory_path)
 {
-    std::vector<char const *> allowed_ext = {"ttf", "otf"};
+    static std::vector<char const *> const allowed_ext = {"ttf", "otf"};
     std::vector<Glib::ustring> files = {};
-    Inkscape::IO::Resource::get_filenames_from_path(files,directory_path, allowed_ext, {});
-    for (auto file : files) {
+    Inkscape::IO::Resource::get_filenames_from_path(files, directory_path, allowed_ext, {});
+    for (auto const &file : files) {
         int result = AddFontResourceExA(file.c_str(), FR_PRIVATE, 0);
         if (result != 0) {
             g_info("Font File: %s added sucessfully.", file.c_str());
