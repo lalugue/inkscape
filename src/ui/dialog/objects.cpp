@@ -25,8 +25,8 @@
 #include <gtkmm/checkbutton.h>
 #include <gtkmm/enums.h>
 #include <gtkmm/icontheme.h>
-#include <gtkmm/modelbutton.h>
 #include <gtkmm/popover.h>
+#include <gtkmm/radiobutton.h>
 #include <gtkmm/scale.h>
 #include <gtkmm/searchentry.h>
 
@@ -770,7 +770,6 @@ ObjectsPanel::ObjectsPanel()
         return true;
     });
 
-    _object_menu.set_relative_to(_tree);
     _object_menu.signal_closed().connect([=](){ _item_state_toggler->set_active(false); _tree.queue_draw(); });
     auto& modes = get_widget<Gtk::Grid>(_builder, "modes");
     _opacity_slider.signal_format_value().connect([](double val){
@@ -794,6 +793,7 @@ ObjectsPanel::ObjectsPanel()
     });
 
     // object blend mode and opacity popup
+    Gtk::RadioButtonGroup group;
     int top = 0;
     int left = 0;
     int width = 2;
@@ -814,16 +814,13 @@ ObjectsPanel::ObjectsPanel()
             if (left == 1 && top == 9)
                 top++;
 
-            auto const check = Gtk::make_managed<Gtk::ModelButton>();
-            check->set_label(label);
-            check->property_role().set_value(Gtk::BUTTON_ROLE_RADIO);
-            check->property_inverted().set_value(true);
-            check->property_centered().set_value(false);
+            auto const check = Gtk::make_managed<Gtk::RadioButton>(group, label);
             check->set_halign(Gtk::ALIGN_START);
-            check->signal_clicked().connect([=](){
+            check->signal_toggled().connect([=, this]{
+                if (!check->get_active()) return;
                 // set blending mode
                 if (set_blend_mode(current_item, data.id)) {
-                    for (auto btn : _blend_items) {
+                    for (auto const &btn : _blend_items) {
                         btn.second->property_active().set_value(btn.first == data.id);
                     }
                     DocumentUndo::done(getDocument(), "set-blend-mode", _("Change blend mode"));
@@ -1223,25 +1220,27 @@ bool ObjectsPanel::blendModePopup(int const x, int const y, Gtk::TreeModel::Row 
     }
 
     current_item = nullptr;
+
     auto blend = SP_CSS_BLEND_NORMAL;
     if (item->style && item->style->mix_blend_mode.set) {
         blend = item->style->mix_blend_mode.value;
     }
+
     auto opacity = 1.0;
     if (item->style && item->style->opacity.set) {
         opacity = SP_SCALE24_TO_FLOAT(item->style->opacity.value);
     }
-    for (auto btn : _blend_items) {
+
+    for (auto const &btn : _blend_items) {
         btn.second->property_active().set_value(btn.first == blend);
     }
+
     _opacity_slider.set_value(opacity * 100);
     current_item = item;
 
-    Gdk::Rectangle rect(x, y, 1, 1);
-    _object_menu.set_pointing_to(rect);
     _item_state_toggler->set_active();
-    _object_menu.popup();
 
+    UI::popup_at(_object_menu, _tree, x, y);
     return true;
 }
 

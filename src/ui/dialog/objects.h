@@ -40,8 +40,8 @@
 namespace Gtk {
 class Builder;
 class GestureMultiPress;
-class ModelButton;
 class Popover;
+class RadioButton;
 class Scale;
 class SearchEntry;
 class TreeStore;
@@ -194,7 +194,7 @@ private:
     Gtk::Popover& _settings_menu;
     Gtk::Popover& _object_menu;
     Gtk::Scale& _opacity_slider;
-    std::map<SPBlendMode, Gtk::ModelButton*> _blend_items;
+    std::map<SPBlendMode, Gtk::RadioButton *> _blend_items;
     std::map<SPBlendMode, Glib::ustring> _blend_mode_names;
     Inkscape::UI::Widget::ImageToggler* _item_state_toggler;
 
