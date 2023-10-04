@@ -17,6 +17,9 @@
 # include "config.h"  // only include where actually required!
 #endif
 
+#include <algorithm>
+#include <iterator>
+#include <utility>
 #include <glibmm/fileutils.h>
 #include <glibmm/i18n.h>
 #include <glibmm/ustring.h>
@@ -269,27 +272,25 @@ init()
         );
 }
 
+// C++23: Just use std::ranges::contains().
+template <typename Range, typename Value>
+[[nodiscard]] static bool contains(Range &&range, Value const &value)
+{
+    using std::begin, std::end;
+    auto const first = begin(range), last = end(range);
+    return std::find(first, last, value) != last;
+}
+
 void
 load_user_extensions()
 {
     // There's no need to ask for SYSTEM extensions, just ask for user extensions.
-    for(auto &filename: get_filenames(USER, EXTENSIONS, {SP_MODULE_EXTENSION})) {
-        bool exist = false;
-        for(auto &filename2: user_extensions) {
-            if (filename == filename2) {
-                exist = true;
-                break;
-            }
-        }
-        for(auto &filename2: shared_extensions) {
-            if (filename == filename2) {
-                exist = true;
-                break;
-            }
-        }
+    for (auto &&filename: get_filenames(USER, EXTENSIONS, {SP_MODULE_EXTENSION})) {
+        bool const exist = contains(  user_extensions, filename) ||
+                           contains(shared_extensions, filename);
         if (!exist) {
             build_from_file(filename.c_str());
-            user_extensions.push_back(filename);
+            user_extensions.push_back(std::move(filename));
         }
     }
 }
@@ -298,23 +299,12 @@ void
 load_shared_extensions()
 {
     // There's no need to ask for SYSTEM extensions, just ask for user extensions.
-    for(auto &filename: get_filenames(SHARED, EXTENSIONS, {SP_MODULE_EXTENSION})) {
-        bool exist = false;
-        for(auto &filename2: shared_extensions) {
-            if (filename == filename2) {
-                exist = true;
-                break;
-            }
-        }
-        for(auto &filename2: user_extensions) { // do not duple user extension has preference
-            if (filename == filename2) {
-                exist = true;
-                break;
-            }
-        }
+    for (auto &&filename: get_filenames(SHARED, EXTENSIONS, {SP_MODULE_EXTENSION})) {
+        bool const exist = contains(shared_extensions, filename) ||
+                           contains(  user_extensions, filename);
         if (!exist) {
             build_from_file(filename.c_str());
-            shared_extensions.push_back(filename);
+            shared_extensions.push_back(std::move(filename));
         }
     }
 }
