@@ -17,7 +17,6 @@
 #include <gtk/gtk.h> // GtkEventControllerMotion
 #include <giomm/menumodel.h>
 #include <gtkmm/eventcontroller.h>
-#include <gtkmm/modelbutton.h>
 #include <gtkmm/popovermenu.h>
 #include <gtkmm/stylecontext.h>
 #include <gtkmm/widget.h>
@@ -82,10 +81,23 @@ void menuize(Gtk::Widget &widget)
 template <typename Type>
 static void menuize_all(Gtk::Widget &parent)
 {
-    for_each_descendant(parent, [=](Gtk::Widget &child)
+    for_each_descendant(parent, [](Gtk::Widget &child)
     {
-        if (auto const typed = dynamic_cast<Type *>(&child)) {
-            menuize(*typed);
+        if (dynamic_cast<Type *>(&child)) {
+            menuize(child);
+        }
+        return ForEachResult::_continue;
+    });
+}
+
+static void menuize_all(Gtk::Widget &parent, Glib::ustring const &css_name)
+{
+    for_each_descendant(parent, [&](Gtk::Widget &child)
+    {
+        if (auto const klass = GTK_WIDGET_GET_CLASS(child.gobj());
+            gtk_widget_class_get_css_name(klass) == css_name)
+        {
+            menuize(child);
         }
         return ForEachResult::_continue;
     });
@@ -110,7 +122,7 @@ void autohide_tooltip(Gtk::Popover &popover)
 void menuize_popover(Gtk::Popover &popover)
 {
     popover.get_style_context()->add_class("menuize");
-    menuize_all<Gtk::ModelButton>(popover);
+    menuize_all(popover, "modelbutton");
     autohide_tooltip(popover);
     // TODO: GTK4.14: Be more GtkMenu-like by using PopoverMenu::Flags::NESTED
 }
