@@ -25,7 +25,6 @@
 #include <gtkmm/separatortoolitem.h>
 #include <gtkmm/switch.h>
 #include <gtkmm/textview.h>
-#include <gtkmm/toolbar.h>
 #include <gtkmm/treeview.h>
 #include <gtkmm/widget.h>
 

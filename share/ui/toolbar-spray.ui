@@ -293,6 +293,7 @@
         </child>
         <child>
           <object class="GtkSpinButton" id="_width_item">
+            <property name="name">spray-width</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="width-chars">3</property>
@@ -341,6 +342,7 @@
         </child>
         <child>
           <object class="GtkSpinButton" id="_population_item">
+            <property name="name">spray-population</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="width-chars">3</property>

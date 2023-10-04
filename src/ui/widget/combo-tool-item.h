@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 /** \file
     A combobox that can be displayed in a toolbar.
+    To be replaced by a Gtk::DropDown in Gtk4 (and remove container).
 */
 /*
  * Authors:
@@ -17,8 +18,8 @@
 #include <memory>
 #include <glibmm/refptr.h>
 #include <glibmm/ustring.h>
+#include <gtkmm/box.h>
 #include <gtkmm/enums.h>
-#include <gtkmm/toolitem.h>
 #include <gtkmm/treemodel.h>
 #include <sigc++/signal.h>
 
@@ -27,7 +28,6 @@ class Pixbuf;
 } // namespace Gdk
 
 namespace Gtk {
-class Box;
 class ComboBox;
 class Label;
 class ListStore;
@@ -55,7 +55,7 @@ public:
     Gtk::TreeModelColumn<bool>          col_sensitive;
 };
 
-class ComboToolItem final : public Gtk::ToolItem {
+class ComboToolItem final : public Gtk::Box {
 public:
     static ComboToolItem* create(const Glib::ustring &label,
                                  const Glib::ustring &tooltip,

@@ -22,7 +22,6 @@
 #include <gtkmm/button.h>
 #include <gtkmm/grid.h>
 #include <gtkmm/spinbutton.h>
-#include <gtkmm/toolbar.h>
 
 // For creating toolbars
 #include "ui/toolbar/arc-toolbar.h"
@@ -132,8 +131,7 @@ void Toolbars::create_toolbar(SPDesktop *desktop, int i)
     // uniform across toolbars if their original size is preserved.
     for (auto const button : UI::get_children(*sub_toolbox)) {
         if (dynamic_cast<Gtk::Button *>(button) ||
-            dynamic_cast<Gtk::SpinButton *>(button) ||
-            dynamic_cast<Gtk::ToolButton *>(button)) // FIXME FOR GTK4
+            dynamic_cast<Gtk::SpinButton *>(button))
         {
             button->set_valign(Gtk::ALIGN_CENTER);
             button->set_halign(Gtk::ALIGN_CENTER);

@@ -14,8 +14,6 @@
 
 #include "command-toolbar.h"
 
-#include <gtkmm/toolbar.h>
-
 #include "ui/builder-utils.h"
 #include "ui/widget/toolbar-menu-button.h"
 

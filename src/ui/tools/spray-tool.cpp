@@ -1331,7 +1331,7 @@ bool SprayTool::root_handler(CanvasEvent const &event)
                 double temp ;
                 temp = population;
                 population = 1.0;
-                _desktop->setToolboxAdjustmentValue("population", population * 100);
+                _desktop->setToolboxAdjustmentValue("spray-population", population * 100);
                 Geom::Point const scroll_dt = _desktop->point();;
 
                 switch (event.direction) {
@@ -1345,7 +1345,7 @@ bool SprayTool::root_handler(CanvasEvent const &event)
                                 sp_spray_dilate(this, _desktop->dt2doc(scroll_dt), Geom::Point(0, 0), false);
                             }
                             population = temp;
-                            _desktop->setToolboxAdjustmentValue("population", population * 100);
+                            _desktop->setToolboxAdjustmentValue("spray-population", population * 100);
 
                             ret = true;
                         }

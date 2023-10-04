@@ -193,6 +193,7 @@
         </child>
         <child>
           <object class="GtkSpinButton" id="_width_item">
+            <property name="name">calligraphy-width</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="width-chars">6</property>
@@ -379,6 +380,7 @@
         </child>
         <child>
           <object class="GtkSpinButton" id="_angle_item">
+            <property name="name">calligraphy-angle</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="width-chars">5</property>

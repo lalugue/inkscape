@@ -364,6 +364,7 @@
         </child>
         <child>
           <object class="GtkSpinButton" id="_width_item">
+            <property name="name">tweak-width</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="width-chars">5</property>
@@ -392,6 +393,7 @@
         </child>
         <child>
           <object class="GtkSpinButton" id="_force_item">
+            <property name="name">tweak-force</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="width-chars">5</property>

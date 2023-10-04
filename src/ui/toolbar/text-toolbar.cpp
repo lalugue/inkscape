@@ -299,7 +299,7 @@ TextToolbar::TextToolbar(SPDesktop *desktop)
         _font_family_item->set_warning( warning ); // Show icon w/ tooltip if font missing
         _font_family_item->set_warning_cb( (gpointer)sp_text_toolbox_select_cb );
 
-        _font_family_item->signal_changed().connect([=](){ fontfamily_value_changed(); });
+        _font_family_item->signal_changed().connect([this](){ fontfamily_value_changed(); });
         get_widget<Gtk::Box>(_builder, "font_list_box").add(*_font_family_item);
 
         _font_family_item->focus_on_click(false);
@@ -322,7 +322,7 @@ TextToolbar::TextToolbar(SPDesktop *desktop)
                                                                  nullptr,   // Separator
                                                                  desktop->getCanvas()->Gtk::Widget::gobj()); // Focus widget
 
-        _font_style_item->signal_changed().connect([=](){ fontstyle_value_changed(); });
+        _font_style_item->signal_changed().connect([this](){ fontstyle_value_changed(); });
         _font_style_item->focus_on_click(false);
         get_widget<Gtk::Box>(_builder, "styles_list_box").add(*_font_style_item);
     }
@@ -349,7 +349,7 @@ TextToolbar::TextToolbar(SPDesktop *desktop)
                                                                  nullptr,   // Separator
                                                                  desktop->getCanvas()->Gtk::Widget::gobj()); // Focus widget
 
-        _font_size_item->signal_changed().connect([=](){ fontsize_value_changed(); });
+        _font_size_item->signal_changed().connect([this](){ fontsize_value_changed(); });
         _font_size_item->focus_on_click(false);
         get_widget<Gtk::Box>(_builder, "font_size_box").add(*_font_size_item);
     }
@@ -436,21 +436,21 @@ TextToolbar::TextToolbar(SPDesktop *desktop)
 
     get_widget<Gtk::Popover>(_builder, "font_collections_popover")
         .signal_show()
-        .connect([=]() { display_font_collections(); }, false);
+        .connect([this]() { display_font_collections(); }, false);
 
     // This signal will keep both the Text and Font dialog and
     // TextToolbar popovers in sync with each other.
-    fc_changed_selection = font_collections->connect_selection_update([=]() { display_font_collections(); });
+    fc_changed_selection = font_collections->connect_selection_update([this]() { display_font_collections(); });
 
     // This one will keep the text toolbar Font Collections
     // updated in case of any change in the Font Collections.
-    fc_update = font_collections->connect_update([=]() { display_font_collections(); });
+    fc_update = font_collections->connect_update([this]() { display_font_collections(); });
 
-    get_widget<Gtk::Button>(_builder, "fc_dialog_btn").signal_clicked().connect([=]() {
+    get_widget<Gtk::Button>(_builder, "fc_dialog_btn").signal_clicked().connect([this]() {
         TextToolbar::on_fcm_button_pressed();
     });
 
-    get_widget<Gtk::Button>(_builder, "reset_btn").signal_clicked().connect([=]() {
+    get_widget<Gtk::Button>(_builder, "reset_btn").signal_clicked().connect([this]() {
         TextToolbar::on_reset_button_pressed();
     });
 
@@ -485,7 +485,7 @@ void TextToolbar::configure_mode_buttons(std::vector<Gtk::RadioButton *> &button
 {
     int btn_index = 0;
 
-    for_each_child(box, [=, &btn_index, &buttons](Gtk::Widget &item) {
+    for_each_child(box, [this, mode_changed_mem_fun, &btn_index, &buttons](Gtk::Widget &item) {
         auto &btn = dynamic_cast<Gtk::RadioButton &>(item);
         buttons.push_back(&btn);
         btn.signal_clicked().connect(sigc::bind(sigc::mem_fun(*this, mode_changed_mem_fun), btn_index++));
@@ -1925,7 +1925,7 @@ void TextToolbar::watch_ec(SPDesktop *desktop, Inkscape::UI::Tools::ToolBase *to
         c_selection_changed =
             desktop->getSelection()->connectChangedFirst(sigc::mem_fun(*this, &TextToolbar::selection_changed));
         c_selection_modified = desktop->getSelection()->connectModifiedFirst(sigc::mem_fun(*this, &TextToolbar::selection_modified));
-        c_subselection_changed = desktop->connect_text_cursor_moved([=](void* sender, Inkscape::UI::Tools::TextTool* tool){
+        c_subselection_changed = desktop->connect_text_cursor_moved([this](void* sender, Inkscape::UI::Tools::TextTool* tool){
             subselection_changed(tool);
         });
         this->_sub_active_item = nullptr;
@@ -2186,7 +2186,7 @@ void TextToolbar::display_font_collections()
         auto const btn = Gtk::make_managed<Gtk::CheckButton>(col);
         btn->set_margin_bottom(2);
         btn->set_active(font_collections->is_collection_selected(col));
-        btn->signal_toggled().connect([=](){
+        btn->signal_toggled().connect([font_collections, col](){
             // toggle font system collection
             font_collections->update_selected_collections(col);
         });
@@ -2212,7 +2212,7 @@ void TextToolbar::display_font_collections()
         auto const btn = Gtk::make_managed<Gtk::CheckButton>(col);
         btn->set_margin_bottom(2);
         btn->set_active(font_collections->is_collection_selected(col));
-        btn->signal_toggled().connect([=](){
+        btn->signal_toggled().connect([font_collections, col](){
             // toggle font collection
             font_collections->update_selected_collections(col);
         });

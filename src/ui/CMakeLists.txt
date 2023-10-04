@@ -229,7 +229,6 @@ set(ui_SRC
 	widget/ink-color-wheel.cpp
 	widget/ink-ruler.cpp
 	widget/ink-spinscale.cpp
-	widget/label-tool-item.cpp
 	widget/labelled.cpp
 	widget/layer-selector.cpp
 	widget/licensor.cpp
@@ -258,7 +257,6 @@ set(ui_SRC
 	widget/scroll-utils.cpp
 	widget/selected-style.cpp
 	widget/shapeicon.cpp
-	widget/spin-button-tool-item.cpp
 	widget/spin-scale.cpp
 	widget/spinbutton.cpp
         widget/status-bar.cpp
@@ -521,7 +519,6 @@ set(ui_SRC
 	widget/ink-color-wheel.h
 	widget/ink-ruler.h
 	widget/ink-spinscale.h
-	widget/label-tool-item.h
 	widget/labelled.h
 	widget/layer-selector.h
 	widget/licensor.h
@@ -550,7 +547,6 @@ set(ui_SRC
 	widget/scrollprotected.h
 	widget/selected-style.h
 	widget/shapeicon.h
-	widget/spin-button-tool-item.h
 	widget/spin-scale.h
 	widget/spinbutton.h
         widget/status-bar.h

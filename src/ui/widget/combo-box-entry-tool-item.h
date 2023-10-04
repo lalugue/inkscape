@@ -23,15 +23,16 @@
 
 #include <glibmm/ustring.h>
 #include <gtk/gtk.h>
-#include <gtkmm/toolitem.h>
+#include <gtkmm/box.h>
 #include <sigc++/signal.h>
 
 namespace Inkscape::UI::Widget {
 
 /**
- * Creates a Gtk::ToolItem subclass that wraps a Gtk::ComboBox object.
+ * Formerly a Gtk::ToolItem that wraps a Gtk::ComboBox object.
+ * Now a Gtk::Box that wraps the same. To be replaced by a Gtk::DropDown in Gtk4.
  */
-class ComboBoxEntryToolItem : public Gtk::ToolItem {
+class ComboBoxEntryToolItem : public Gtk::Box {
 private:
     Glib::ustring       _tooltip;
     Glib::ustring       _label;

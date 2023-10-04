@@ -33,7 +33,6 @@
 #include <gtkmm/label.h>
 #include <gtkmm/messagedialog.h>
 #include <gtkmm/paned.h>
-#include <gtkmm/toolbar.h>
 #include <gtkmm/widget.h>
 
 #include "conn-avoid-ref.h"
@@ -68,7 +67,7 @@
 #include "ui/widget/color-palette.h"
 #include "ui/widget/combo-tool-item.h"
 #include "ui/widget/ink-ruler.h"
-#include "ui/widget/spin-button-tool-item.h"
+#include "ui/widget/spinbutton.h"
 #include "ui/widget/status-bar.h"
 #include "ui/widget/unit-tracker.h"
 #include "util/units.h"
@@ -121,7 +120,7 @@ SPDesktopWidget::SPDesktopWidget(InkscapeWindow *inkscape_window, SPDocument *do
 
     tool_toolbox = Gtk::make_managed<Inkscape::UI::Toolbar::ToolToolbar>(inkscape_window);
     _tbbox->pack1(*tool_toolbox, false, false);
-    auto adjust_pos = [=](){
+    auto adjust_pos = [=, this](){
         int minimum_width, natural_width;
         tool_toolbox->get_preferred_width(minimum_width, natural_width);
         if (minimum_width > 0) {
@@ -145,7 +144,7 @@ SPDesktopWidget::SPDesktopWidget(InkscapeWindow *inkscape_window, SPDocument *do
         _tbbox->set_position(tbox_width.getIntLimited(32, 8, 500));
     }
 
-    auto set_toolbar_prefs = [=]() {
+    auto set_toolbar_prefs = [=, this]() {
         int min = Inkscape::UI::Toolbar::min_pixel_size;
         int max = Inkscape::UI::Toolbar::max_pixel_size;
         int s = prefs->getIntLimited(Inkscape::UI::Toolbar::tools_icon_size, min, min, max);
@@ -155,7 +154,7 @@ SPDesktopWidget::SPDesktopWidget(InkscapeWindow *inkscape_window, SPDocument *do
 
     // watch for changes
     _tb_icon_sizes1 = prefs->createObserver(Inkscape::UI::Toolbar::tools_icon_size,    [=]() { set_toolbar_prefs(); });
-    _tb_icon_sizes2 = prefs->createObserver(Inkscape::UI::Toolbar::ctrlbars_icon_size, [=]() { apply_ctrlbar_settings(); });
+    _tb_icon_sizes2 = prefs->createObserver(Inkscape::UI::Toolbar::ctrlbars_icon_size, [this]() { apply_ctrlbar_settings(); });
 
     // restore preferences
     set_toolbar_prefs();
@@ -168,7 +167,7 @@ SPDesktopWidget::SPDesktopWidget(InkscapeWindow *inkscape_window, SPDocument *do
     /* Canvas */
     _canvas = _canvas_grid->GetCanvas();
 
-    _ds_sticky_zoom = prefs->createObserver("/options/stickyzoom/value", [=]() { sticky_zoom_updated(); });
+    _ds_sticky_zoom = prefs->createObserver("/options/stickyzoom/value", [this]() { sticky_zoom_updated(); });
     sticky_zoom_updated();
 
     /* Dialog Container */
@@ -653,7 +652,7 @@ void SPDesktopWidget::layoutWidgets()
         command_toolbar->set_hexpand(false);
     }
     // Toolbar is actually child:
-    command_toolbar->foreach ([=](Gtk::Widget &widget) {
+    command_toolbar->foreach ([=, this](Gtk::Widget &widget) {
         if (auto toolbar = dynamic_cast<Gtk::Box *>(&widget)) {
             gtk_orientable_set_orientation(GTK_ORIENTABLE(toolbar->gobj()), orientation_c); // Missing in C++interface!
         }
@@ -700,7 +699,7 @@ SPDesktopWidget::setToolboxAdjustmentValue (gchar const *id, double value)
     // Look for a named widget
     auto hb = Inkscape::UI::find_widget_by_name(*tool_toolbars, id);
     if (hb) {
-        auto sb = dynamic_cast<Inkscape::UI::Widget::SpinButtonToolItem *>(hb);
+        auto sb = dynamic_cast<Inkscape::UI::Widget::SpinButton *>(hb);
         auto a = sb->get_adjustment();
 
         if(a) a->set_value(value);
@@ -721,10 +720,6 @@ SPDesktopWidget::isToolboxButtonActive(char const * const id) const
     }
 
     if (auto const button = dynamic_cast<Gtk::ToggleButton const *>(widget)) {
-        return button->get_active();
-    }
-
-    if (auto const button = dynamic_cast<Gtk::ToggleToolButton const *>(widget)) {
         return button->get_active();
     }
 
