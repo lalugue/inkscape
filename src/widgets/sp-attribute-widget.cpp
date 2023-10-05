@@ -22,6 +22,7 @@
 #include <gtkmm/object.h>
 #include <gtkmm/scrolledwindow.h>
 #include <gtkmm/textview.h>
+#include <gtkmm/label.h>
 #include <sigc++/adaptors/bind.h>
 
 #include "document-undo.h"
