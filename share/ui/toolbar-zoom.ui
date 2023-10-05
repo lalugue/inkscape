@@ -2,54 +2,6 @@
 <!-- Generated with glade 3.40.0 -->
 <interface>
   <requires lib="gtk+" version="3.22"/>
-  <object class="GtkImage" id="image1">
-    <property name="visible">True</property>
-    <property name="icon-name">zoom-in</property>
-  </object>
-  <object class="GtkImage" id="image10">
-    <property name="visible">True</property>
-    <property name="icon-name">zoom-center-page</property>
-  </object>
-  <object class="GtkImage" id="image11">
-    <property name="visible">True</property>
-    <property name="icon-name">zoom-previous</property>
-  </object>
-  <object class="GtkImage" id="image12">
-    <property name="visible">True</property>
-    <property name="icon-name">zoom-next</property>
-  </object>
-  <object class="GtkImage" id="image2">
-    <property name="visible">True</property>
-    <property name="icon-name">zoom-out</property>
-  </object>
-  <object class="GtkImage" id="image3">
-    <property name="visible">True</property>
-    <property name="icon-name">zoom-original</property>
-  </object>
-  <object class="GtkImage" id="image4">
-    <property name="visible">True</property>
-    <property name="icon-name">zoom-half-size</property>
-  </object>
-  <object class="GtkImage" id="image5">
-    <property name="visible">True</property>
-    <property name="icon-name">zoom-double-size</property>
-  </object>
-  <object class="GtkImage" id="image6">
-    <property name="visible">True</property>
-    <property name="icon-name">zoom-fit-selection</property>
-  </object>
-  <object class="GtkImage" id="image7">
-    <property name="visible">True</property>
-    <property name="icon-name">zoom-fit-drawing</property>
-  </object>
-  <object class="GtkImage" id="image8">
-    <property name="visible">True</property>
-    <property name="icon-name">zoom-fit-page</property>
-  </object>
-  <object class="GtkImage" id="image9">
-    <property name="visible">True</property>
-    <property name="icon-name">zoom-fit-width</property>
-  </object>
   <object class="GtkBox" id="zoom-toolbar">
     <property name="visible">True</property>
     <property name="halign">start</property>
@@ -60,9 +12,13 @@
         <property name="visible">True</property>
         <property name="tooltip-text" translatable="yes">Zoom In</property>
         <property name="action-name">win.canvas-zoom-in</property>
-        <property name="image">image1</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
+        <child>
+          <object class="GtkImage" id="image1">
+            <property name="visible">True</property>
+            <property name="icon-name">zoom-in</property>
+          </object>
+        </child>
       </object>
     </child>
     <child>
@@ -70,9 +26,13 @@
         <property name="visible">True</property>
         <property name="tooltip-text" translatable="yes">Zoom Out</property>
         <property name="action-name">win.canvas-zoom-out</property>
-        <property name="image">image2</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
+        <child>
+          <object class="GtkImage" id="image2">
+            <property name="visible">True</property>
+            <property name="icon-name">zoom-out</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="position">1</property>
@@ -91,9 +51,13 @@
         <property name="visible">True</property>
         <property name="tooltip-text" translatable="yes">Zoom 1-1</property>
         <property name="action-name">win.canvas-zoom-1-1</property>
-        <property name="image">image3</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
+        <child>
+          <object class="GtkImage" id="image3">
+            <property name="visible">True</property>
+            <property name="icon-name">zoom-original</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="position">3</property>
@@ -104,9 +68,13 @@
         <property name="visible">True</property>
         <property name="tooltip-text" translatable="yes">Zoom 1-2</property>
         <property name="action-name">win.canvas-zoom-1-2</property>
-        <property name="image">image4</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
+        <child>
+          <object class="GtkImage" id="image4">
+            <property name="visible">True</property>
+            <property name="icon-name">zoom-half-size</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="position">4</property>
@@ -117,9 +85,13 @@
         <property name="visible">True</property>
         <property name="tooltip-text" translatable="yes">Zoom 2-1</property>
         <property name="action-name">win.canvas-zoom-2-1</property>
-        <property name="image">image5</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
+        <child>
+          <object class="GtkImage" id="image5">
+            <property name="visible">True</property>
+            <property name="icon-name">zoom-double-size</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="position">5</property>
@@ -138,9 +110,13 @@
         <property name="visible">True</property>
         <property name="tooltip-text" translatable="yes">Zoom Selection</property>
         <property name="action-name">win.canvas-zoom-selection</property>
-        <property name="image">image6</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
+        <child>
+          <object class="GtkImage" id="image6">
+            <property name="visible">True</property>
+            <property name="icon-name">zoom-fit-selection</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="position">7</property>
@@ -151,9 +127,13 @@
         <property name="visible">True</property>
         <property name="tooltip-text" translatable="yes">Zoom Drawing</property>
         <property name="action-name">win.canvas-zoom-drawing</property>
-        <property name="image">image7</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
+        <child>
+          <object class="GtkImage" id="image7">
+            <property name="visible">True</property>
+            <property name="icon-name">zoom-fit-drawing</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="position">8</property>
@@ -164,9 +144,13 @@
         <property name="visible">True</property>
         <property name="tooltip-text" translatable="yes">Zoom Page</property>
         <property name="action-name">win.canvas-zoom-page</property>
-        <property name="image">image8</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
+        <child>
+          <object class="GtkImage" id="image8">
+            <property name="visible">True</property>
+            <property name="icon-name">zoom-fit-page</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="position">9</property>
@@ -177,9 +161,13 @@
         <property name="visible">True</property>
         <property name="tooltip-text" translatable="yes">Zoom Page Width</property>
         <property name="action-name">win.canvas-zoom-page-width</property>
-        <property name="image">image9</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
+        <child>
+          <object class="GtkImage" id="image9">
+            <property name="visible">True</property>
+            <property name="icon-name">zoom-fit-width</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="position">10</property>
@@ -190,9 +178,13 @@
         <property name="visible">True</property>
         <property name="tooltip-text" translatable="yes">Center Page</property>
         <property name="action-name">win.canvas-zoom-center-page</property>
-        <property name="image">image10</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
+        <child>
+          <object class="GtkImage" id="image10">
+            <property name="visible">True</property>
+            <property name="icon-name">zoom-center-page</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="position">11</property>
@@ -211,9 +203,13 @@
         <property name="visible">True</property>
         <property name="tooltip-text" translatable="yes">Zoom Previous</property>
         <property name="action-name">win.canvas-zoom-prev</property>
-        <property name="image">image11</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
+        <child>
+          <object class="GtkImage" id="image11">
+            <property name="visible">True</property>
+            <property name="icon-name">zoom-previous</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="position">13</property>
@@ -224,9 +220,13 @@
         <property name="visible">True</property>
         <property name="tooltip-text" translatable="yes">Zoom Next</property>
         <property name="action-name">win.canvas-zoom-next</property>
-        <property name="image">image12</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
+        <child>
+          <object class="GtkImage" id="image12">
+            <property name="visible">True</property>
+            <property name="icon-name">zoom-next</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="position">14</property>

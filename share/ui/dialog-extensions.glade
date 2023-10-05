@@ -49,10 +49,6 @@
       <column type="gchararray"/>
     </columns>
   </object>
-  <object class="GtkImage" id="image-run">
-    <property name="visible">True</property>
-    <property name="icon-name">play</property>
-  </object>
   <object class="GtkImage" id="image-toggle">
     <property name="visible">True</property>
     <property name="icon-name">panel-left</property>
@@ -230,14 +226,27 @@
         <property name="spacing">16</property>
         <child type="center">
           <object class="GtkButton" id="run">
-            <property name="label" translatable="yes">_Run</property>
             <property name="width-request">100</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="receives-default">True</property>
-            <property name="image">image-run</property>
             <property name="use-underline">True</property>
-            <property name="always-show-image">True</property>
+            <child>
+              <object class="GtkBox">
+                <child>
+                  <object class="GtkImage" id="image-run">
+                    <property name="visible">True</property>
+                    <property name="icon-name">play</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="label" translatable="yes">_Run</property>
+                    <property name="visible">True</property>
+                  </object>
+                </child>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="position">2</property>

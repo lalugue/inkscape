@@ -29,11 +29,6 @@
     <property name="can-focus">False</property>
     <property name="icon-name">draw-ellipse-segment</property>
   </object>
-  <object class="GtkImage" id="image2">
-    <property name="visible">True</property>
-    <property name="can-focus">False</property>
-    <property name="icon-name">draw-ellipse-whole</property>
-  </object>
   <object class="GtkImage" id="image3">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
@@ -417,9 +412,14 @@
         <property name="can-focus">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Make the shape a whole ellipse, not arc or segment</property>
-        <property name="image">image2</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
+        <child>
+          <object class="GtkImage" id="image2">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="icon-name">draw-ellipse-whole</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="expand">False</property>

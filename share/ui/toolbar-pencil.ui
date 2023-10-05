@@ -40,10 +40,6 @@
     <property name="visible">True</property>
     <property name="icon-name">path-mode-polyline-paraxial</property>
   </object>
-  <object class="GtkImage" id="image6">
-    <property name="visible">True</property>
-    <property name="icon-name">flatten</property>
-  </object>
   <object class="GtkImage" id="image7">
     <property name="visible">True</property>
     <property name="icon-name">draw-use-pressure</property>
@@ -51,10 +47,6 @@
   <object class="GtkImage" id="image8">
     <property name="visible">True</property>
     <property name="icon-name">interactive_simplify</property>
-  </object>
-  <object class="GtkImage" id="image9">
-    <property name="visible">True</property>
-    <property name="icon-name">flatten</property>
   </object>
   <object class="GtkRadioButton" id="mode_buttons_group">
     <property name="visible">True</property>
@@ -212,9 +204,13 @@
         <property name="focus-on-click">False</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Flatten Spiro or BSpline LPE</property>
-        <property name="image">image6</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
+        <child>
+          <object class="GtkImage" id="image6">
+            <property name="visible">True</property>
+            <property name="icon-name">flatten</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="position">4</property>
@@ -366,9 +362,13 @@
             <property name="can-focus">True</property>
             <property name="focus-on-click">False</property>
             <property name="tooltip-text" translatable="yes">LPE simplify flatten</property>
-            <property name="image">image9</property>
             <property name="relief">none</property>
-            <property name="always-show-image">True</property>
+            <child>
+              <object class="GtkImage" id="image9">
+                <property name="visible">True</property>
+                <property name="icon-name">flatten</property>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="position">7</property>

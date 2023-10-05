@@ -46,10 +46,6 @@
     <property name="step-increment">1</property>
     <property name="page-increment">10</property>
   </object>
-  <object class="GtkImage" id="image1">
-    <property name="visible">True</property>
-    <property name="icon-name">document-properties</property>
-  </object>
   <object class="GtkImage" id="image2">
     <property name="visible">True</property>
     <property name="icon-name">draw-use-pressure</property>
@@ -143,12 +139,16 @@
         <property name="can-focus">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Add or edit calligraphic profile</property>
-        <property name="image">image1</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
         <style>
           <class name="tag1"/>
         </style>
+        <child>
+          <object class="GtkImage" id="image1">
+            <property name="visible">True</property>
+            <property name="icon-name">document-properties</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="position">2</property>

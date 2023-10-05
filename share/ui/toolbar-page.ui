@@ -62,22 +62,6 @@
     <property name="step-increment">1</property>
     <property name="page-increment">10</property>
   </object>
-  <object class="GtkImage" id="image1">
-    <property name="visible">True</property>
-    <property name="icon-name">pages-add</property>
-  </object>
-  <object class="GtkImage" id="image2">
-    <property name="visible">True</property>
-    <property name="icon-name">pages-order-backwards</property>
-  </object>
-  <object class="GtkImage" id="image3">
-    <property name="visible">True</property>
-    <property name="icon-name">pages-order-forwards</property>
-  </object>
-  <object class="GtkImage" id="image4">
-    <property name="visible">True</property>
-    <property name="icon-name">pages-remove</property>
-  </object>
   <object class="GtkImage" id="image5">
     <property name="visible">True</property>
     <property name="icon-name">pages-move-toggle</property>
@@ -104,9 +88,13 @@
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Make corners sharp</property>
         <property name="action-name">win.page-new</property>
-        <property name="image">image1</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
+        <child>
+          <object class="GtkImage" id="image1">
+            <property name="visible">True</property>
+            <property name="icon-name">pages-add</property>
+          </object>
+        </child>
       </object>
     </child>
     <child>
@@ -186,12 +174,16 @@
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Make corners sharp</property>
         <property name="action-name">doc.page-move-backward</property>
-        <property name="image">image2</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
         <style>
           <class name="tag1"/>
         </style>
+        <child>
+          <object class="GtkImage" id="image2">
+            <property name="visible">True</property>
+            <property name="icon-name">pages-order-backwards</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="position">5</property>
@@ -216,12 +208,16 @@
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Make corners sharp</property>
         <property name="action-name">doc.page-move-forward</property>
-        <property name="image">image3</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
         <style>
           <class name="tag1"/>
         </style>
+        <child>
+          <object class="GtkImage" id="image3">
+            <property name="visible">True</property>
+            <property name="icon-name">pages-order-forwards</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="position">7</property>
@@ -244,9 +240,13 @@
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Make corners sharp</property>
         <property name="action-name">win.page-delete</property>
-        <property name="image">image4</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
+        <child>
+          <object class="GtkImage" id="image4">
+            <property name="visible">True</property>
+            <property name="icon-name">pages-remove</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="position">9</property>

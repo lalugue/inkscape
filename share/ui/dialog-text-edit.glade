@@ -46,10 +46,6 @@
       </object>
     </child>
   </object>
-  <object class="GtkImage" id="reset_image">
-    <property name="visible">True</property>
-    <property name="icon-name">view-refresh</property>
-  </object>
   <object class="GtkTextBuffer" id="text_buffer"/>
   <object class="GtkBox" id="contents">
     <property name="name">TextEdit Dialog Box</property>
@@ -85,8 +81,12 @@
                     <property name="receives-default">True</property>
                     <property name="tooltip-text" translatable="yes">Reset filters and show all available fonts</property>
                     <property name="margin-start">2</property>
-                    <property name="image">reset_image</property>
-                    <property name="always-show-image">True</property>
+                    <child>
+                      <object class="GtkImage" id="reset_image">
+                        <property name="visible">True</property>
+                        <property name="icon-name">view-refresh</property>
+                      </object>
+                    </child>
                   </object>
                   <packing>
                     <property name="position">1</property>

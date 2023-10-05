@@ -118,10 +118,6 @@
     <property name="visible">True</property>
     <property name="icon-name">text-orientation-upright</property>
   </object>
-  <object class="GtkImage" id="image2">
-    <property name="visible">True</property>
-    <property name="icon-name">view-refresh</property>
-  </object>
   <object class="GtkImage" id="image20">
     <property name="visible">True</property>
     <property name="icon-name">text-orientation-sideways</property>
@@ -256,9 +252,13 @@
         <property name="can-focus">True</property>
         <property name="focus-on-click">False</property>
         <property name="tooltip-text" translatable="yes">Reset the font list (Deselects all the font collections and clears search results)</property>
-        <property name="image">image2</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
+        <child>
+          <object class="GtkImage" id="image2">
+            <property name="visible">True</property>
+            <property name="icon-name">view-refresh</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="position">1</property>

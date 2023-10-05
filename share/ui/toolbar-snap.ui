@@ -864,7 +864,7 @@
         <child>
           <object class="GtkLabel">
             <property name="visible">True</property>
-            <property name="label"> </property>
+            <property name="label"/>
             <attributes>
               <attribute name="scale" value="0.5"/>
             </attributes>
@@ -891,7 +891,7 @@
         <child>
           <object class="GtkLabel">
             <property name="visible">True</property>
-            <property name="label"> </property>
+            <property name="label"/>
           </object>
           <packing>
             <property name="left-attach">0</property>

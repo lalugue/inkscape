@@ -110,10 +110,6 @@
       </object>
     </child>
   </object>
-  <object class="GtkImage" id="image1">
-    <property name="visible">True</property>
-    <property name="icon-name">off-outline-symbolic</property>
-  </object>
   <object class="GtkAdjustment" id="optimize">
     <property name="upper">5</property>
     <property name="value">0.20</property>
@@ -1159,8 +1155,7 @@
                 <property name="tab-fill">False</property>
               </packing>
             </child>
-            <child type="tab">
-            </child>
+            <child type="tab"/>
           </object>
         </child>
         <child>
@@ -1318,7 +1313,12 @@
                     <property name="can-focus">True</property>
                     <property name="receives-default">True</property>
                     <property name="tooltip-text" translatable="yes">Abort trace operation</property>
-                    <property name="image">image1</property>
+                    <child>
+                      <object class="GtkImage" id="image1">
+                        <property name="visible">True</property>
+                        <property name="icon-name">off-outline-symbolic</property>
+                      </object>
+                    </child>
                   </object>
                 </child>
                 <child>

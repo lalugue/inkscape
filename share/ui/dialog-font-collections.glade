@@ -2,10 +2,6 @@
 <!-- Generated with glade 3.38.2 -->
 <interface>
   <requires lib="gtk+" version="3.24"/>
-  <object class="GtkImage" id="refresh_button_image">
-    <property name="visible">True</property>
-    <property name="icon-name">view-refresh</property>
-  </object>
   <object class="GtkBox" id="contents">
     <property name="name">TextEdit Dialog Box</property>
     <property name="width-request">510</property>
@@ -31,8 +27,12 @@
             <property name="receives-default">True</property>
             <property name="tooltip-text" translatable="yes">Reset the font list</property>
             <property name="margin-start">2</property>
-            <property name="image">refresh_button_image</property>
-            <property name="always-show-image">True</property>
+            <child>
+              <object class="GtkImage" id="refresh_button_image">
+                <property name="visible">True</property>
+                <property name="icon-name">view-refresh</property>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="position">1</property>

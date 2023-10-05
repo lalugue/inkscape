@@ -54,10 +54,6 @@
     <property name="visible">True</property>
     <property name="icon-name">orient-angle</property>
   </object>
-  <object class="GtkImage" id="image4">
-    <property name="visible">True</property>
-    <property name="icon-name">object-flip-horizontal-symbolic</property>
-  </object>
   <object class="GtkRadioButton" id="radio-orient">
     <property name="label">radiobutton</property>
     <property name="visible">True</property>
@@ -250,10 +246,15 @@
                     <property name="receives-default">True</property>
                     <property name="tooltip-text" translatable="yes">Flip marker horizontally</property>
                     <property name="margin-start">8</property>
-                    <property name="image">image4</property>
                     <style>
                       <class name="tight-button"/>
                     </style>
+                    <child>
+                      <object class="GtkImage" id="image4">
+                        <property name="visible">True</property>
+                        <property name="icon-name">object-flip-horizontal-symbolic</property>
+                      </object>
+                    </child>
                   </object>
                   <packing>
                     <property name="position">3</property>

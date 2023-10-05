@@ -139,10 +139,10 @@
                         <property name="relief">none</property>
                         <property name="tooltip-text" translatable="yes">Show/hide this Live Path Effect</property>
                         <child>
-                           <object class="GtkImage" id="visibilityImage">
-                             <property name="visible">True</property>
-                             <property name="icon-name">object-visible-symbolic</property>
-                           </object>
+                          <object class="GtkImage" id="visibilityImage">
+                            <property name="visible">True</property>
+                            <property name="icon-name">object-visible-symbolic</property>
+                          </object>
                         </child>
                         <style>
                           <class name="minbutton"/>

@@ -2,26 +2,6 @@
 <!-- Generated with glade 3.40.0 -->
 <interface>
   <requires lib="gtk+" version="3.24"/>
-  <object class="GtkImage" id="image-select">
-    <property name="visible">True</property>
-    <property name="icon-name">object-select</property>
-  </object>
-  <object class="GtkImage" id="image1">
-    <property name="visible">True</property>
-    <property name="icon-name">edit</property>
-  </object>
-  <object class="GtkImage" id="image2">
-    <property name="visible">True</property>
-    <property name="icon-name">document-cleanup</property>
-  </object>
-  <object class="GtkImage" id="image3">
-    <property name="visible">True</property>
-    <property name="icon-name">edit-delete</property>
-  </object>
-  <object class="GtkImage" id="image4">
-    <property name="visible">True</property>
-    <property name="icon-name">document-export</property>
-  </object>
   <object class="GtkListStore" id="liststore">
     <columns>
       <!-- column-name resource -->
@@ -136,7 +116,7 @@
         <child>
           <object class="GtkLabel" id="spacer">
             <property name="visible">True</property>
-            <property name="label"> </property>
+            <property name="label"/>
           </object>
         </child>
         <child>
@@ -145,8 +125,13 @@
             <property name="can-focus">True</property>
             <property name="receives-default">True</property>
             <property name="tooltip-text" translatable="yes">Edit label</property>
-            <property name="image">image1</property>
             <property name="relief">none</property>
+            <child>
+              <object class="GtkImage" id="image1">
+                <property name="visible">True</property>
+                <property name="icon-name">edit</property>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="position">1</property>
@@ -158,8 +143,13 @@
             <property name="can-focus">True</property>
             <property name="receives-default">True</property>
             <property name="tooltip-text" translatable="yes">Select this on canvas (if applicable) or in the XML dialog (e.g. a pattern in the 'defs' section)</property>
-            <property name="image">image-select</property>
             <property name="relief">none</property>
+            <child>
+              <object class="GtkImage" id="image-select">
+                <property name="visible">True</property>
+                <property name="icon-name">object-select</property>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="position">2</property>
@@ -171,8 +161,13 @@
             <property name="can-focus">True</property>
             <property name="receives-default">True</property>
             <property name="tooltip-text" translatable="yes">Delete selected item from the document</property>
-            <property name="image">image3</property>
             <property name="relief">none</property>
+            <child>
+              <object class="GtkImage" id="image3">
+                <property name="visible">True</property>
+                <property name="icon-name">edit-delete</property>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="position">3</property>
@@ -184,8 +179,13 @@
             <property name="can-focus">True</property>
             <property name="receives-default">True</property>
             <property name="tooltip-text" translatable="yes">Export</property>
-            <property name="image">image4</property>
             <property name="relief">none</property>
+            <child>
+              <object class="GtkImage" id="image4">
+                <property name="visible">True</property>
+                <property name="icon-name">document-export</property>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="position">4</property>
@@ -212,8 +212,13 @@
             <property name="receives-default">True</property>
             <property name="tooltip-text" translatable="yes">Remove unused definitions</property>
             <property name="action-name">win.document-cleanup</property>
-            <property name="image">image2</property>
             <property name="relief">none</property>
+            <child>
+              <object class="GtkImage" id="image2">
+                <property name="visible">True</property>
+                <property name="icon-name">document-cleanup</property>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="pack-type">end</property>

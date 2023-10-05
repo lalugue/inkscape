@@ -2,38 +2,6 @@
 <!-- Generated with glade 3.40.0 -->
 <interface>
   <requires lib="gtk+" version="3.24"/>
-  <object class="GtkImage" id="image1">
-    <property name="visible">True</property>
-    <property name="icon-name">xml-element-new</property>
-  </object>
-  <object class="GtkImage" id="image2">
-    <property name="visible">True</property>
-    <property name="icon-name">xml-text-new</property>
-  </object>
-  <object class="GtkImage" id="image3">
-    <property name="visible">True</property>
-    <property name="icon-name">xml-node-duplicate</property>
-  </object>
-  <object class="GtkImage" id="image4">
-    <property name="visible">True</property>
-    <property name="icon-name">xml-node-delete</property>
-  </object>
-  <object class="GtkImage" id="image5">
-    <property name="visible">True</property>
-    <property name="icon-name">format-indent-less</property>
-  </object>
-  <object class="GtkImage" id="image6">
-    <property name="visible">True</property>
-    <property name="icon-name">format-indent-more</property>
-  </object>
-  <object class="GtkImage" id="image7">
-    <property name="visible">True</property>
-    <property name="icon-name">go-up</property>
-  </object>
-  <object class="GtkImage" id="image8">
-    <property name="visible">True</property>
-    <property name="icon-name">go-down</property>
-  </object>
   <menu id="menu-popup">
     <section>
       <!-- Keep these synced w/ enum DialogLayout in dialog/xml-tree.h et al -->
@@ -68,8 +36,13 @@
             <property name="can-focus">True</property>
             <property name="receives-default">True</property>
             <property name="tooltip-text" translatable="yes">New element node</property>
-            <property name="image">image1</property>
             <property name="relief">none</property>
+            <child>
+              <object class="GtkImage" id="image1">
+                <property name="visible">True</property>
+                <property name="icon-name">xml-element-new</property>
+              </object>
+            </child>
           </object>
         </child>
         <child>
@@ -78,8 +51,13 @@
             <property name="can-focus">True</property>
             <property name="receives-default">True</property>
             <property name="tooltip-text" translatable="yes">New text node</property>
-            <property name="image">image2</property>
             <property name="relief">none</property>
+            <child>
+              <object class="GtkImage" id="image2">
+                <property name="visible">True</property>
+                <property name="icon-name">xml-text-new</property>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="position">1</property>
@@ -91,8 +69,13 @@
             <property name="can-focus">True</property>
             <property name="receives-default">True</property>
             <property name="tooltip-text" translatable="yes">Duplicate node</property>
-            <property name="image">image3</property>
             <property name="relief">none</property>
+            <child>
+              <object class="GtkImage" id="image3">
+                <property name="visible">True</property>
+                <property name="icon-name">xml-node-duplicate</property>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="position">2</property>
@@ -104,8 +87,13 @@
             <property name="can-focus">True</property>
             <property name="receives-default">True</property>
             <property name="tooltip-text" translatable="yes">Delete node</property>
-            <property name="image">image4</property>
             <property name="relief">none</property>
+            <child>
+              <object class="GtkImage" id="image4">
+                <property name="visible">True</property>
+                <property name="icon-name">xml-node-delete</property>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="position">3</property>
@@ -117,8 +105,13 @@
             <property name="can-focus">True</property>
             <property name="receives-default">True</property>
             <property name="tooltip-text" translatable="yes">Unindent node</property>
-            <property name="image">image5</property>
             <property name="relief">none</property>
+            <child>
+              <object class="GtkImage" id="image5">
+                <property name="visible">True</property>
+                <property name="icon-name">format-indent-less</property>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="position">4</property>
@@ -130,8 +123,13 @@
             <property name="can-focus">True</property>
             <property name="receives-default">True</property>
             <property name="tooltip-text" translatable="yes">Indent node</property>
-            <property name="image">image6</property>
             <property name="relief">none</property>
+            <child>
+              <object class="GtkImage" id="image6">
+                <property name="visible">True</property>
+                <property name="icon-name">format-indent-more</property>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="position">5</property>
@@ -143,8 +141,13 @@
             <property name="can-focus">True</property>
             <property name="receives-default">True</property>
             <property name="tooltip-text" translatable="yes">Raise node</property>
-            <property name="image">image7</property>
             <property name="relief">none</property>
+            <child>
+              <object class="GtkImage" id="image7">
+                <property name="visible">True</property>
+                <property name="icon-name">go-up</property>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="position">6</property>
@@ -191,8 +194,13 @@
             <property name="can-focus">True</property>
             <property name="receives-default">True</property>
             <property name="tooltip-text" translatable="yes">Lower node</property>
-            <property name="image">image8</property>
             <property name="relief">none</property>
+            <child>
+              <object class="GtkImage" id="image8">
+                <property name="visible">True</property>
+                <property name="icon-name">go-down</property>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="position">8</property>

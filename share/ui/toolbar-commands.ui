@@ -2,146 +2,6 @@
 <!-- Generated with glade 3.40.0 -->
 <interface>
   <requires lib="gtk+" version="3.22"/>
-  <object class="GtkImage" id="image1">
-    <property name="visible">True</property>
-    <property name="can-focus">False</property>
-    <property name="icon-name">document-new</property>
-  </object>
-  <object class="GtkImage" id="image10">
-    <property name="visible">True</property>
-    <property name="can-focus">False</property>
-    <property name="icon-name">edit-cut</property>
-  </object>
-  <object class="GtkImage" id="image11">
-    <property name="visible">True</property>
-    <property name="can-focus">False</property>
-    <property name="icon-name">edit-paste</property>
-  </object>
-  <object class="GtkImage" id="image12">
-    <property name="visible">True</property>
-    <property name="can-focus">False</property>
-    <property name="icon-name">zoom-fit-selection</property>
-  </object>
-  <object class="GtkImage" id="image13">
-    <property name="visible">True</property>
-    <property name="can-focus">False</property>
-    <property name="icon-name">zoom-fit-drawing</property>
-  </object>
-  <object class="GtkImage" id="image14">
-    <property name="visible">True</property>
-    <property name="can-focus">False</property>
-    <property name="icon-name">zoom-fit-page</property>
-  </object>
-  <object class="GtkImage" id="image15">
-    <property name="visible">True</property>
-    <property name="can-focus">False</property>
-    <property name="icon-name">zoom-center-page</property>
-  </object>
-  <object class="GtkImage" id="image16">
-    <property name="visible">True</property>
-    <property name="can-focus">False</property>
-    <property name="icon-name">edit-duplicate</property>
-  </object>
-  <object class="GtkImage" id="image17">
-    <property name="visible">True</property>
-    <property name="can-focus">False</property>
-    <property name="icon-name">edit-clone</property>
-  </object>
-  <object class="GtkImage" id="image18">
-    <property name="visible">True</property>
-    <property name="can-focus">False</property>
-    <property name="icon-name">edit-clone-unlink</property>
-  </object>
-  <object class="GtkImage" id="image19">
-    <property name="visible">True</property>
-    <property name="can-focus">False</property>
-    <property name="icon-name">object-group</property>
-  </object>
-  <object class="GtkImage" id="image2">
-    <property name="visible">True</property>
-    <property name="can-focus">False</property>
-    <property name="icon-name">document-open</property>
-  </object>
-  <object class="GtkImage" id="image20">
-    <property name="visible">True</property>
-    <property name="can-focus">False</property>
-    <property name="icon-name">object-ungroup</property>
-  </object>
-  <object class="GtkImage" id="image21">
-    <property name="visible">True</property>
-    <property name="can-focus">False</property>
-    <property name="icon-name">dialog-fill-and-stroke</property>
-  </object>
-  <object class="GtkImage" id="image22">
-    <property name="visible">True</property>
-    <property name="can-focus">False</property>
-    <property name="icon-name">dialog-text-and-font</property>
-  </object>
-  <object class="GtkImage" id="image23">
-    <property name="visible">True</property>
-    <property name="can-focus">False</property>
-    <property name="icon-name">dialog-objects</property>
-  </object>
-  <object class="GtkImage" id="image24">
-    <property name="visible">True</property>
-    <property name="can-focus">False</property>
-    <property name="icon-name">dialog-xml-editor</property>
-  </object>
-  <object class="GtkImage" id="image25">
-    <property name="visible">True</property>
-    <property name="can-focus">False</property>
-    <property name="icon-name">dialog-selectors</property>
-  </object>
-  <object class="GtkImage" id="image26">
-    <property name="visible">True</property>
-    <property name="can-focus">False</property>
-    <property name="icon-name">dialog-align-and-distribute</property>
-  </object>
-  <object class="GtkImage" id="image27">
-    <property name="visible">True</property>
-    <property name="can-focus">False</property>
-    <property name="icon-name">document-properties</property>
-  </object>
-  <object class="GtkImage" id="image28">
-    <property name="visible">True</property>
-    <property name="can-focus">False</property>
-    <property name="icon-name">preferences-system</property>
-  </object>
-  <object class="GtkImage" id="image3">
-    <property name="visible">True</property>
-    <property name="can-focus">False</property>
-    <property name="icon-name">document-save</property>
-  </object>
-  <object class="GtkImage" id="image4">
-    <property name="visible">True</property>
-    <property name="can-focus">False</property>
-    <property name="icon-name">document-print</property>
-  </object>
-  <object class="GtkImage" id="image5">
-    <property name="visible">True</property>
-    <property name="can-focus">False</property>
-    <property name="icon-name">document-import</property>
-  </object>
-  <object class="GtkImage" id="image6">
-    <property name="visible">True</property>
-    <property name="can-focus">False</property>
-    <property name="icon-name">document-export</property>
-  </object>
-  <object class="GtkImage" id="image7">
-    <property name="visible">True</property>
-    <property name="can-focus">False</property>
-    <property name="icon-name">edit-undo</property>
-  </object>
-  <object class="GtkImage" id="image8">
-    <property name="visible">True</property>
-    <property name="can-focus">False</property>
-    <property name="icon-name">edit-redo</property>
-  </object>
-  <object class="GtkImage" id="image9">
-    <property name="visible">True</property>
-    <property name="can-focus">False</property>
-    <property name="icon-name">edit-copy</property>
-  </object>
   <object class="GtkPopover" id="popover1">
     <property name="can-focus">False</property>
     <property name="modal">True</property>
@@ -249,9 +109,14 @@
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">New</property>
         <property name="action-name">win.document-new</property>
-        <property name="image">image1</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
+        <child>
+          <object class="GtkImage" id="image1">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="icon-name">document-new</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="expand">False</property>
@@ -266,9 +131,14 @@
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Open...</property>
         <property name="action-name">win.document-open</property>
-        <property name="image">image2</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
+        <child>
+          <object class="GtkImage" id="image2">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="icon-name">document-open</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="expand">False</property>
@@ -283,9 +153,14 @@
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Save</property>
         <property name="action-name">win.document-save</property>
-        <property name="image">image3</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
+        <child>
+          <object class="GtkImage" id="image3">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="icon-name">document-save</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="expand">False</property>
@@ -300,9 +175,14 @@
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Print...</property>
         <property name="action-name">win.document-print</property>
-        <property name="image">image4</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
+        <child>
+          <object class="GtkImage" id="image4">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="icon-name">document-print</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="expand">False</property>
@@ -350,12 +230,17 @@
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Import...</property>
         <property name="action-name">win.document-import</property>
-        <property name="image">image5</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
         <style>
           <class name="tag1"/>
         </style>
+        <child>
+          <object class="GtkImage" id="image5">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="icon-name">document-import</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="expand">False</property>
@@ -370,12 +255,17 @@
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Export...</property>
         <property name="action-name">win.document-export</property>
-        <property name="image">image6</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
         <style>
           <class name="tag1"/>
         </style>
+        <child>
+          <object class="GtkImage" id="image6">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="icon-name">document-export</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="expand">False</property>
@@ -423,12 +313,17 @@
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Undo</property>
         <property name="action-name">doc.undo</property>
-        <property name="image">image7</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
         <style>
           <class name="tag2"/>
         </style>
+        <child>
+          <object class="GtkImage" id="image7">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="icon-name">edit-undo</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="expand">False</property>
@@ -443,12 +338,17 @@
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Redo</property>
         <property name="action-name">doc.redo</property>
-        <property name="image">image8</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
         <style>
           <class name="tag2"/>
         </style>
+        <child>
+          <object class="GtkImage" id="image8">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="icon-name">edit-redo</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="expand">False</property>
@@ -496,12 +396,17 @@
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Copy</property>
         <property name="action-name">app.copy</property>
-        <property name="image">image9</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
         <style>
           <class name="tag3"/>
         </style>
+        <child>
+          <object class="GtkImage" id="image9">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="icon-name">edit-copy</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="expand">False</property>
@@ -516,12 +421,17 @@
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Cut</property>
         <property name="action-name">app.cut</property>
-        <property name="image">image10</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
         <style>
           <class name="tag3"/>
         </style>
+        <child>
+          <object class="GtkImage" id="image10">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="icon-name">edit-cut</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="expand">False</property>
@@ -536,12 +446,17 @@
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Paste</property>
         <property name="action-name">win.paste</property>
-        <property name="image">image11</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
         <style>
           <class name="tag3"/>
         </style>
+        <child>
+          <object class="GtkImage" id="image11">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="icon-name">edit-paste</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="expand">False</property>
@@ -589,12 +504,17 @@
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Zoom Selection</property>
         <property name="action-name">win.canvas-zoom-selection</property>
-        <property name="image">image12</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
         <style>
           <class name="tag4"/>
         </style>
+        <child>
+          <object class="GtkImage" id="image12">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="icon-name">zoom-fit-selection</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="expand">False</property>
@@ -609,12 +529,17 @@
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Zoom Drawing</property>
         <property name="action-name">win.canvas-zoom-drawing</property>
-        <property name="image">image13</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
         <style>
           <class name="tag4"/>
         </style>
+        <child>
+          <object class="GtkImage" id="image13">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="icon-name">zoom-fit-drawing</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="expand">False</property>
@@ -629,12 +554,17 @@
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Zoom Page</property>
         <property name="action-name">win.canvas-zoom-page</property>
-        <property name="image">image14</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
         <style>
           <class name="tag4"/>
         </style>
+        <child>
+          <object class="GtkImage" id="image14">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="icon-name">zoom-fit-page</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="expand">False</property>
@@ -649,12 +579,17 @@
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Zoom Center Page</property>
         <property name="action-name">win.canvas-zoom-center-page</property>
-        <property name="image">image15</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
         <style>
           <class name="tag4"/>
         </style>
+        <child>
+          <object class="GtkImage" id="image15">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="icon-name">zoom-center-page</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="expand">False</property>
@@ -702,12 +637,17 @@
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Duplicate</property>
         <property name="action-name">app.duplicate</property>
-        <property name="image">image16</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
         <style>
           <class name="tag5"/>
         </style>
+        <child>
+          <object class="GtkImage" id="image16">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="icon-name">edit-duplicate</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="expand">False</property>
@@ -722,12 +662,17 @@
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Create Clone</property>
         <property name="action-name">app.clone</property>
-        <property name="image">image17</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
         <style>
           <class name="tag5"/>
         </style>
+        <child>
+          <object class="GtkImage" id="image17">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="icon-name">edit-clone</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="expand">False</property>
@@ -742,12 +687,17 @@
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Unlink Clone</property>
         <property name="action-name">app.clone-unlink</property>
-        <property name="image">image18</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
         <style>
           <class name="tag5"/>
         </style>
+        <child>
+          <object class="GtkImage" id="image18">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="icon-name">edit-clone-unlink</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="expand">False</property>
@@ -773,9 +723,14 @@
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Group</property>
         <property name="action-name">app.selection-group</property>
-        <property name="image">image19</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
+        <child>
+          <object class="GtkImage" id="image19">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="icon-name">object-group</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="expand">False</property>
@@ -790,9 +745,14 @@
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Ungroup</property>
         <property name="action-name">app.selection-ungroup</property>
-        <property name="image">image20</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
+        <child>
+          <object class="GtkImage" id="image20">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="icon-name">object-ungroup</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="expand">False</property>
@@ -841,12 +801,17 @@
         <property name="tooltip-text" translatable="yes">Fill and Stroke</property>
         <property name="action-name">win.dialog-open</property>
         <property name="action-target">'FillStroke'</property>
-        <property name="image">image21</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
         <style>
           <class name="tag6"/>
         </style>
+        <child>
+          <object class="GtkImage" id="image21">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="icon-name">dialog-fill-and-stroke</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="expand">False</property>
@@ -862,12 +827,17 @@
         <property name="tooltip-text" translatable="yes">Text and Font</property>
         <property name="action-name">win.dialog-open</property>
         <property name="action-target">'Text'</property>
-        <property name="image">image22</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
         <style>
           <class name="tag6"/>
         </style>
+        <child>
+          <object class="GtkImage" id="image22">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="icon-name">dialog-text-and-font</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="expand">False</property>
@@ -883,12 +853,17 @@
         <property name="tooltip-text" translatable="yes">Layers and Objects</property>
         <property name="action-name">win.dialog-open</property>
         <property name="action-target">'Objects'</property>
-        <property name="image">image23</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
         <style>
           <class name="tag6"/>
         </style>
+        <child>
+          <object class="GtkImage" id="image23">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="icon-name">dialog-objects</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="expand">False</property>
@@ -904,12 +879,17 @@
         <property name="tooltip-text" translatable="yes">XML Editor</property>
         <property name="action-name">win.dialog-open</property>
         <property name="action-target">'XMLEditor'</property>
-        <property name="image">image24</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
         <style>
           <class name="tag6"/>
         </style>
+        <child>
+          <object class="GtkImage" id="image24">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="icon-name">dialog-xml-editor</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="expand">False</property>
@@ -925,12 +905,17 @@
         <property name="tooltip-text" translatable="yes">Selectors and CSS...</property>
         <property name="action-name">win.dialog-open</property>
         <property name="action-target">'Selectors'</property>
-        <property name="image">image25</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
         <style>
           <class name="tag6"/>
         </style>
+        <child>
+          <object class="GtkImage" id="image25">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="icon-name">dialog-selectors</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="expand">False</property>
@@ -946,12 +931,17 @@
         <property name="tooltip-text" translatable="yes">Align and Distribute...</property>
         <property name="action-name">win.dialog-open</property>
         <property name="action-target">'AlignDistribute'</property>
-        <property name="image">image26</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
         <style>
           <class name="tag6"/>
         </style>
+        <child>
+          <object class="GtkImage" id="image26">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="icon-name">dialog-align-and-distribute</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="expand">False</property>
@@ -1000,12 +990,17 @@
         <property name="tooltip-text" translatable="yes">Document Properties...</property>
         <property name="action-name">win.dialog-open</property>
         <property name="action-target">'DocumentProperties'</property>
-        <property name="image">image27</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
         <style>
           <class name="tag7"/>
         </style>
+        <child>
+          <object class="GtkImage" id="image27">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="icon-name">document-properties</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="expand">False</property>
@@ -1021,12 +1016,17 @@
         <property name="tooltip-text" translatable="yes">Preferences...</property>
         <property name="action-name">win.dialog-open</property>
         <property name="action-target">'Preferences'</property>
-        <property name="image">image28</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
         <style>
           <class name="tag7"/>
         </style>
+        <child>
+          <object class="GtkImage" id="image28">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="icon-name">preferences-system</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="expand">False</property>
@@ -1037,6 +1037,5 @@
     <style>
       <class name="toolbar"/>
     </style>
-
   </object>
 </interface>

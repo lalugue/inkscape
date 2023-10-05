@@ -22,10 +22,6 @@
     <property name="step-increment">0.10</property>
     <property name="page-increment">5</property>
   </object>
-  <object class="GtkImage" id="image2">
-    <property name="visible">True</property>
-    <property name="icon-name">rectangle-make-corners-sharp</property>
-  </object>
   <object class="GtkPopover" id="popover1">
     <property name="modal">True</property>
     <child>
@@ -214,9 +210,13 @@
         <property name="can-focus">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Make corners sharp</property>
-        <property name="image">image2</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
+        <child>
+          <object class="GtkImage" id="image2">
+            <property name="visible">True</property>
+            <property name="icon-name">rectangle-make-corners-sharp</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="position">9</property>

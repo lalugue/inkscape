@@ -83,45 +83,13 @@
     <property name="visible">True</property>
     <property name="icon-name">draw-ellipse-chord</property>
   </object>
-  <object class="GtkImage" id="image-clea">
-    <property name="visible">True</property>
-    <property name="icon-name">edit-clear-value</property>
-  </object>
-  <object class="GtkImage" id="image-clear1">
-    <property name="visible">True</property>
-    <property name="icon-name">edit-clear-value</property>
-  </object>
-  <object class="GtkImage" id="image-clear2">
-    <property name="visible">True</property>
-    <property name="icon-name">edit-clear-value</property>
-  </object>
-  <object class="GtkImage" id="image-level">
-    <property name="visible">True</property>
-    <property name="icon-name">object-level</property>
-  </object>
   <object class="GtkImage" id="image-poly">
     <property name="visible">True</property>
     <property name="icon-name">draw-polygon</property>
   </object>
-  <object class="GtkImage" id="image-round">
-    <property name="visible">True</property>
-    <property name="icon-name">rounding</property>
-  </object>
-  <object class="GtkImage" id="image-round-corners">
-    <property name="visible">True</property>
-    <property name="icon-name">rectangle-make-corners-round</property>
-  </object>
-  <object class="GtkImage" id="image-round1">
-    <property name="visible">True</property>
-    <property name="icon-name">rounding</property>
-  </object>
   <object class="GtkImage" id="image-seg">
     <property name="visible">True</property>
     <property name="icon-name">draw-ellipse-segment</property>
-  </object>
-  <object class="GtkImage" id="image-sharp">
-    <property name="visible">True</property>
-    <property name="icon-name">rectangle-make-corners-sharp</property>
   </object>
   <!-- n-columns=5 n-rows=6 -->
   <object class="GtkGrid" id="rect-main">
@@ -269,7 +237,12 @@
             <property name="tooltip-text" translatable="yes">Make corners sharp</property>
             <property name="halign">start</property>
             <property name="valign">start</property>
-            <property name="image">image-sharp</property>
+            <child>
+              <object class="GtkImage" id="image-sharp">
+                <property name="visible">True</property>
+                <property name="icon-name">rectangle-make-corners-sharp</property>
+              </object>
+            </child>
           </object>
         </child>
         <child>
@@ -291,7 +264,12 @@
             <property name="tooltip-text" translatable="yes">Make corners independent (path effect)</property>
             <property name="halign">start</property>
             <property name="valign">start</property>
-            <property name="image">image-round-corners</property>
+            <child>
+              <object class="GtkImage" id="image-round-corners">
+                <property name="visible">True</property>
+                <property name="icon-name">rectangle-make-corners-round</property>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="position">2</property>
@@ -308,11 +286,16 @@
         <property name="visible">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Round numbers to nearest integer</property>
-        <property name="image">image-round</property>
         <property name="relief">none</property>
         <style>
           <class name="small-button"/>
         </style>
+        <child>
+          <object class="GtkImage" id="image-round">
+            <property name="visible">True</property>
+            <property name="icon-name">rounding</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="left-attach">4</property>
@@ -462,7 +445,12 @@
             <property name="can-focus">True</property>
             <property name="receives-default">True</property>
             <property name="tooltip-text" translatable="yes">Level shape</property>
-            <property name="image">image-level</property>
+            <child>
+              <object class="GtkImage" id="image-level">
+                <property name="visible">True</property>
+                <property name="icon-name">object-level</property>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="position">3</property>
@@ -514,11 +502,16 @@
         <property name="visible">True</property>
         <property name="receives-default">True</property>
         <property name="halign">start</property>
-        <property name="image">image-clea</property>
         <property name="relief">none</property>
         <style>
           <class name="small-button"/>
         </style>
+        <child>
+          <object class="GtkImage" id="image-clea">
+            <property name="visible">True</property>
+            <property name="icon-name">edit-clear-value</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="left-attach">2</property>
@@ -530,11 +523,16 @@
         <property name="visible">True</property>
         <property name="receives-default">True</property>
         <property name="halign">start</property>
-        <property name="image">image-clear1</property>
         <property name="relief">none</property>
         <style>
           <class name="small-button"/>
         </style>
+        <child>
+          <object class="GtkImage" id="image-clear1">
+            <property name="visible">True</property>
+            <property name="icon-name">edit-clear-value</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="left-attach">2</property>
@@ -546,11 +544,16 @@
         <property name="visible">True</property>
         <property name="receives-default">True</property>
         <property name="halign">start</property>
-        <property name="image">image-clear2</property>
         <property name="relief">none</property>
         <style>
           <class name="small-button"/>
         </style>
+        <child>
+          <object class="GtkImage" id="image-clear2">
+            <property name="visible">True</property>
+            <property name="icon-name">edit-clear-value</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="left-attach">2</property>
@@ -568,10 +571,6 @@
         <property name="top-attach">0</property>
       </packing>
     </child>
-  </object>
-  <object class="GtkImage" id="image-whole">
-    <property name="visible">True</property>
-    <property name="icon-name">draw-ellipse-whole</property>
   </object>
   <!-- n-columns=5 n-rows=6 -->
   <object class="GtkGrid" id="ellipse-main">
@@ -765,7 +764,12 @@
             <property name="can-focus">True</property>
             <property name="receives-default">True</property>
             <property name="tooltip-text" translatable="yes">Make the shape a whole ellipse, not arc or segment</property>
-            <property name="image">image-whole</property>
+            <child>
+              <object class="GtkImage" id="image-whole">
+                <property name="visible">True</property>
+                <property name="icon-name">draw-ellipse-whole</property>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="position">4</property>
@@ -784,11 +788,16 @@
         <property name="can-focus">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Round numbers to nearest integer</property>
-        <property name="image">image-round1</property>
         <property name="relief">none</property>
         <style>
           <class name="small-button"/>
         </style>
+        <child>
+          <object class="GtkImage" id="image-round1">
+            <property name="visible">True</property>
+            <property name="icon-name">rounding</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="left-attach">4</property>

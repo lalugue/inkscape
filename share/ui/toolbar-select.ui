@@ -26,22 +26,6 @@
     <property name="step-increment">0.10</property>
     <property name="page-increment">5</property>
   </object>
-  <object class="GtkImage" id="image1">
-    <property name="visible">True</property>
-    <property name="icon-name">edit-select-all</property>
-  </object>
-  <object class="GtkImage" id="image10">
-    <property name="visible">True</property>
-    <property name="icon-name">selection-raise</property>
-  </object>
-  <object class="GtkImage" id="image11">
-    <property name="visible">True</property>
-    <property name="icon-name">selection-lower</property>
-  </object>
-  <object class="GtkImage" id="image12">
-    <property name="visible">True</property>
-    <property name="icon-name">selection-bottom</property>
-  </object>
   <object class="GtkImage" id="image13">
     <property name="visible">True</property>
     <property name="icon-name">transform-affect-stroke</property>
@@ -62,37 +46,9 @@
     <property name="visible">True</property>
     <property name="icon-name">object-locked</property>
   </object>
-  <object class="GtkImage" id="image2">
-    <property name="visible">True</property>
-    <property name="icon-name">edit-select-all-layers</property>
-  </object>
-  <object class="GtkImage" id="image3">
-    <property name="visible">True</property>
-    <property name="icon-name">edit-select-none</property>
-  </object>
   <object class="GtkImage" id="image4">
     <property name="visible">True</property>
     <property name="icon-name">selection-touch</property>
-  </object>
-  <object class="GtkImage" id="image5">
-    <property name="visible">True</property>
-    <property name="icon-name">object-rotate-left</property>
-  </object>
-  <object class="GtkImage" id="image6">
-    <property name="visible">True</property>
-    <property name="icon-name">object-rotate-right</property>
-  </object>
-  <object class="GtkImage" id="image7">
-    <property name="visible">True</property>
-    <property name="icon-name">object-flip-horizontal</property>
-  </object>
-  <object class="GtkImage" id="image8">
-    <property name="visible">True</property>
-    <property name="icon-name">object-flip-vertical</property>
-  </object>
-  <object class="GtkImage" id="image9">
-    <property name="visible">True</property>
-    <property name="icon-name">selection-top</property>
   </object>
   <object class="GtkPopover" id="popover1">
     <property name="modal">True</property>
@@ -143,12 +99,16 @@
         <property name="can-default">True</property>
         <property name="tooltip-text" translatable="yes">"Select all objects</property>
         <property name="action-name">win.select-all</property>
-        <property name="image">image1</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
         <style>
           <class name="tag1"/>
         </style>
+        <child>
+          <object class="GtkImage" id="image1">
+            <property name="visible">True</property>
+            <property name="icon-name">edit-select-all</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="position">1</property>
@@ -160,12 +120,16 @@
         <property name="can-focus">True</property>
         <property name="tooltip-text" translatable="yes">Select All in All La_yers</property>
         <property name="action-name">win.select-all-layers</property>
-        <property name="image">image2</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
         <style>
           <class name="tag1"/>
         </style>
+        <child>
+          <object class="GtkImage" id="image2">
+            <property name="visible">True</property>
+            <property name="icon-name">edit-select-all-layers</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="position">2</property>
@@ -177,13 +141,17 @@
         <property name="can-focus">True</property>
         <property name="tooltip-text" translatable="yes">Deselect any selected objects</property>
         <property name="action-name">win.select-none</property>
-        <property name="image">image3</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
         <style>
           <class name="context_item"/>
           <class name="tag1"/>
         </style>
+        <child>
+          <object class="GtkImage" id="image3">
+            <property name="visible">True</property>
+            <property name="icon-name">edit-select-none</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="position">3</property>
@@ -219,12 +187,16 @@
         <property name="can-focus">True</property>
         <property name="tooltip-text" translatable="yes">Rotate selection 90\xc2\xb0 counter-clockwise</property>
         <property name="action-name">app.object-rotate-90-ccw</property>
-        <property name="image">image5</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
         <style>
           <class name="context_item"/>
         </style>
+        <child>
+          <object class="GtkImage" id="image5">
+            <property name="visible">True</property>
+            <property name="icon-name">object-rotate-left</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="position">6</property>
@@ -236,12 +208,16 @@
         <property name="can-focus">True</property>
         <property name="tooltip-text" translatable="yes">Rotate selection 90\xc2\xb0 clockwise</property>
         <property name="action-name">app.object-rotate-90-cw</property>
-        <property name="image">image6</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
         <style>
           <class name="context_item"/>
         </style>
+        <child>
+          <object class="GtkImage" id="image6">
+            <property name="visible">True</property>
+            <property name="icon-name">object-rotate-right</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="position">7</property>
@@ -253,12 +229,16 @@
         <property name="can-focus">True</property>
         <property name="tooltip-text" translatable="yes">Flip selected objects horizontally</property>
         <property name="action-name">app.object-flip-horizontal</property>
-        <property name="image">image7</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
         <style>
           <class name="context_item"/>
         </style>
+        <child>
+          <object class="GtkImage" id="image7">
+            <property name="visible">True</property>
+            <property name="icon-name">object-flip-horizontal</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="position">8</property>
@@ -270,12 +250,16 @@
         <property name="can-focus">True</property>
         <property name="tooltip-text" translatable="yes">Flip selected objects vertically</property>
         <property name="action-name">app.object-flip-vertical</property>
-        <property name="image">image8</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
         <style>
           <class name="context_item"/>
         </style>
+        <child>
+          <object class="GtkImage" id="image8">
+            <property name="visible">True</property>
+            <property name="icon-name">object-flip-vertical</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="position">9</property>
@@ -314,13 +298,17 @@
         <property name="can-focus">True</property>
         <property name="tooltip-text" translatable="yes">Raise selection to top</property>
         <property name="action-name">app.selection-top</property>
-        <property name="image">image9</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
         <style>
           <class name="context_item"/>
           <class name="tag2"/>
         </style>
+        <child>
+          <object class="GtkImage" id="image9">
+            <property name="visible">True</property>
+            <property name="icon-name">selection-top</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="position">12</property>
@@ -332,13 +320,17 @@
         <property name="can-focus">True</property>
         <property name="tooltip-text" translatable="yes">Raise selection one step</property>
         <property name="action-name">app.selection-raise</property>
-        <property name="image">image10</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
         <style>
           <class name="context_item"/>
           <class name="tag2"/>
         </style>
+        <child>
+          <object class="GtkImage" id="image10">
+            <property name="visible">True</property>
+            <property name="icon-name">selection-raise</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="position">13</property>
@@ -350,13 +342,17 @@
         <property name="can-focus">True</property>
         <property name="tooltip-text" translatable="yes">Lower selection one step</property>
         <property name="action-name">app.selection-lower</property>
-        <property name="image">image11</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
         <style>
           <class name="context_item"/>
           <class name="tag2"/>
         </style>
+        <child>
+          <object class="GtkImage" id="image11">
+            <property name="visible">True</property>
+            <property name="icon-name">selection-lower</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="position">14</property>
@@ -368,13 +364,17 @@
         <property name="can-focus">True</property>
         <property name="tooltip-text" translatable="yes">Lower selection to bottom</property>
         <property name="action-name">app.selection-bottom</property>
-        <property name="image">image12</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
         <style>
           <class name="context_item"/>
           <class name="tag2"/>
         </style>
+        <child>
+          <object class="GtkImage" id="image12">
+            <property name="visible">True</property>
+            <property name="icon-name">selection-bottom</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="position">15</property>

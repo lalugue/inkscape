@@ -2,15 +2,6 @@
 <!-- Generated with glade 3.38.2 -->
 <interface>
   <requires lib="gtk+" version="3.20"/>
-  <object class="GtkImage" id="bug_icon">
-    <property name="visible">True</property>
-    <property name="icon-name">bug</property>
-  </object>
-  <object class="GtkImage" id="copy-icon">
-    <property name="visible">True</property>
-    <property name="margin-end">3</property>
-    <property name="icon-name">edit-copy</property>
-  </object>
   <object class="GtkWindow" id="about-screen-window">
     <property name="name">about</property>
     <property name="title" translatable="yes">Inkscape. Draw freely.</property>
@@ -283,13 +274,27 @@
                     <property name="reveal-child">True</property>
                     <child>
                       <object class="GtkButton" id="version">
-                        <property name="label">$version</property>
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
                         <property name="receives-default">True</property>
                         <property name="tooltip-text" translatable="yes">Click to copy the version number to the clipboard</property>
-                        <property name="image">copy-icon</property>
-                        <property name="always-show-image">True</property>
+                        <child>
+                          <object class="GtkBox">
+                            <child>
+                              <object class="GtkImage" id="copy-icon">
+                                <property name="visible">True</property>
+                                <property name="margin-end">3</property>
+                                <property name="icon-name">edit-copy</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="label">$version</property>
+                                <property name="visible">True</property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
                       </object>
                     </child>
                   </object>
@@ -344,8 +349,12 @@
                 <property name="receives-default">True</property>
                 <property name="tooltip-text" translatable="yes">Click to copy debug info to the clipboard</property>
                 <property name="margin-start">4</property>
-                <property name="image">bug_icon</property>
-                <property name="always-show-image">True</property>
+                <child>
+                  <object class="GtkImage" id="bug_icon">
+                    <property name="visible">True</property>
+                    <property name="icon-name">bug</property>
+                  </object>
+                </child>
               </object>
               <packing>
                 <property name="position">3</property>

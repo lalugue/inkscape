@@ -31,10 +31,6 @@
     <property name="active">True</property>
     <property name="draw-indicator">False</property>
   </object>
-  <object class="GtkImage" id="image2">
-    <property name="visible">True</property>
-    <property name="icon-name">edit-clear</property>
-  </object>
   <object class="GtkImage" id="image3">
     <property name="visible">True</property>
     <property name="icon-name">draw-polygon</property>
@@ -267,9 +263,13 @@
         <property name="can-focus">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Make corners sharp</property>
-        <property name="image">image2</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
+        <child>
+          <object class="GtkImage" id="image2">
+            <property name="visible">True</property>
+            <property name="icon-name">edit-clear</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="position">9</property>

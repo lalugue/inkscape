@@ -119,14 +119,6 @@
       </object>
     </child>
   </object>
-  <object class="GtkImage" id="image1">
-    <property name="visible">True</property>
-    <property name="icon-name">list-add</property>
-  </object>
-  <object class="GtkImage" id="image2">
-    <property name="visible">True</property>
-    <property name="icon-name">list-remove</property>
-  </object>
   <object class="GtkPopover" id="set-popover">
     <!-- n-columns=2 n-rows=2 -->
     <child>
@@ -317,8 +309,13 @@
             <property name="visible">True</property>
             <property name="receives-default">True</property>
             <property name="tooltip-text" translatable="yes">Convert selected object(s) to symbol</property>
-            <property name="image">image1</property>
             <property name="relief">none</property>
+            <child>
+              <object class="GtkImage" id="image1">
+                <property name="visible">True</property>
+                <property name="icon-name">list-add</property>
+              </object>
+            </child>
           </object>
         </child>
         <child>
@@ -326,8 +323,13 @@
             <property name="visible">True</property>
             <property name="receives-default">True</property>
             <property name="tooltip-text" translatable="yes">Convert selected symbol to object, and all symbols of this type to clones of this object</property>
-            <property name="image">image2</property>
             <property name="relief">none</property>
+            <child>
+              <object class="GtkImage" id="image2">
+                <property name="visible">True</property>
+                <property name="icon-name">list-remove</property>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="position">1</property>

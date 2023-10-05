@@ -27,18 +27,6 @@
     <property name="visible">True</property>
     <property name="icon-name">object-unlocked</property>
   </object>
-  <object class="GtkImage" id="image6">
-    <property name="visible">True</property>
-    <property name="icon-name">object-flip-horizontal</property>
-  </object>
-  <object class="GtkImage" id="image7">
-    <property name="visible">True</property>
-    <property name="icon-name">node-add</property>
-  </object>
-  <object class="GtkImage" id="image8">
-    <property name="visible">True</property>
-    <property name="icon-name">node-delete</property>
-  </object>
   <object class="GtkRadioButton" id="new_fillstroke_buttons_group">
     <property name="visible">True</property>
     <property name="can-focus">True</property>
@@ -215,12 +203,16 @@
         <property name="can-focus">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Reverse the direction of the gradient</property>
-        <property name="image">image6</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
         <style>
           <class name="tag1"/>
         </style>
+        <child>
+          <object class="GtkImage" id="image6">
+            <property name="visible">True</property>
+            <property name="icon-name">object-flip-horizontal</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="position">7</property>
@@ -289,9 +281,13 @@
         <property name="can-focus">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Insert new stop</property>
-        <property name="image">image7</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
+        <child>
+          <object class="GtkImage" id="image7">
+            <property name="visible">True</property>
+            <property name="icon-name">node-add</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="position">12</property>
@@ -303,9 +299,13 @@
         <property name="can-focus">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Delete stop</property>
-        <property name="image">image8</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
+        <child>
+          <object class="GtkImage" id="image8">
+            <property name="visible">True</property>
+            <property name="icon-name">node-delete</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="position">13</property>

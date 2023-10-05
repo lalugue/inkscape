@@ -7,8 +7,7 @@
     <property name="height-request">200</property>
     <property name="title" translatable="yes">Save Document as Template</property>
     <property name="type-hint">dialog</property>
-    <child type="titlebar">
-    </child>
+    <child type="titlebar"/>
     <child internal-child="vbox">
       <object class="GtkBox">
         <property name="orientation">vertical</property>

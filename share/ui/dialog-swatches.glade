@@ -2,16 +2,6 @@
 <!-- Generated with glade 3.40.0 -->
 <interface>
   <requires lib="gtk+" version="3.24"/>
-  <object class="GtkImage" id="image-del">
-    <property name="visible">True</property>
-    <property name="can-focus">False</property>
-    <property name="icon-name">edit-delete</property>
-  </object>
-  <object class="GtkImage" id="image-eidt">
-    <property name="visible">True</property>
-    <property name="can-focus">False</property>
-    <property name="icon-name">edit</property>
-  </object>
   <object class="GtkImage" id="image-grid">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
@@ -21,16 +11,6 @@
     <property name="visible">True</property>
     <property name="can-focus">False</property>
     <property name="icon-name">glyph-list</property>
-  </object>
-  <object class="GtkImage" id="image-new">
-    <property name="visible">True</property>
-    <property name="can-focus">False</property>
-    <property name="icon-name">list-add</property>
-  </object>
-  <object class="GtkImage" id="image-open">
-    <property name="visible">True</property>
-    <property name="can-focus">False</property>
-    <property name="icon-name">document-open</property>
   </object>
   <object class="GtkRadioButton" id="radiobutton1">
     <property name="label" translatable="yes">radiobutton</property>
@@ -145,8 +125,14 @@
             <property name="can-focus">True</property>
             <property name="receives-default">True</property>
             <property name="tooltip-text" translatable="yes">Load palette of colors or swatches</property>
-            <property name="image">image-open</property>
             <property name="relief">none</property>
+            <child>
+              <object class="GtkImage" id="image-open">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="icon-name">document-open</property>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -160,8 +146,14 @@
             <property name="can-focus">True</property>
             <property name="receives-default">True</property>
             <property name="tooltip-text" translatable="yes">New swatch</property>
-            <property name="image">image-new</property>
             <property name="relief">none</property>
+            <child>
+              <object class="GtkImage" id="image-new">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="icon-name">list-add</property>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -175,8 +167,14 @@
             <property name="can-focus">True</property>
             <property name="receives-default">True</property>
             <property name="tooltip-text" translatable="yes">Edit swatch</property>
-            <property name="image">image-eidt</property>
             <property name="relief">none</property>
+            <child>
+              <object class="GtkImage" id="image-eidt">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="icon-name">edit</property>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -192,8 +190,14 @@
             <property name="tooltip-text" translatable="yes">Delete swatch</property>
             <property name="margin-start">12</property>
             <property name="margin-end">12</property>
-            <property name="image">image-del</property>
             <property name="relief">none</property>
+            <child>
+              <object class="GtkImage" id="image-del">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="icon-name">edit-delete</property>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="expand">False</property>

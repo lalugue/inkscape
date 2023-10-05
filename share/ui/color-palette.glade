@@ -27,22 +27,6 @@
     <property name="step-increment">1</property>
     <property name="page-increment">2</property>
   </object>
-  <object class="GtkImage" id="image1">
-    <property name="visible">True</property>
-    <property name="icon-name">go-up</property>
-  </object>
-  <object class="GtkImage" id="image2">
-    <property name="visible">True</property>
-    <property name="icon-name">go-down</property>
-  </object>
-  <object class="GtkImage" id="image4">
-    <property name="visible">True</property>
-    <property name="icon-name">go-next</property>
-  </object>
-  <object class="GtkImage" id="image5">
-    <property name="visible">True</property>
-    <property name="icon-name">go-previous</property>
-  </object>
   <object class="GtkBox" id="palette-box">
     <property name="visible">True</property>
     <child>
@@ -113,11 +97,16 @@
         <property name="no-show-all">True</property>
         <property name="margin-start">1</property>
         <property name="margin-end">1</property>
-        <property name="image">image5</property>
         <property name="relief">none</property>
         <style>
           <class name="small"/>
         </style>
+        <child>
+          <object class="GtkImage" id="image5">
+            <property name="visible">True</property>
+            <property name="icon-name">go-previous</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="position">2</property>
@@ -132,11 +121,16 @@
         <property name="no-show-all">True</property>
         <property name="margin-start">1</property>
         <property name="margin-end">1</property>
-        <property name="image">image4</property>
         <property name="relief">none</property>
         <style>
           <class name="small"/>
         </style>
+        <child>
+          <object class="GtkImage" id="image4">
+            <property name="visible">True</property>
+            <property name="icon-name">go-next</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="position">3</property>
@@ -164,11 +158,16 @@
                 <property name="receives-default">True</property>
                 <property name="margin-start">1</property>
                 <property name="margin-end">1</property>
-                <property name="image">image1</property>
                 <property name="relief">none</property>
                 <style>
                   <class name="small"/>
                 </style>
+                <child>
+                  <object class="GtkImage" id="image1">
+                    <property name="visible">True</property>
+                    <property name="icon-name">go-up</property>
+                  </object>
+                </child>
               </object>
             </child>
           </object>
@@ -187,11 +186,16 @@
                 <property name="receives-default">True</property>
                 <property name="margin-start">1</property>
                 <property name="margin-end">1</property>
-                <property name="image">image2</property>
                 <property name="relief">none</property>
                 <style>
                   <class name="small"/>
                 </style>
+                <child>
+                  <object class="GtkImage" id="image2">
+                    <property name="visible">True</property>
+                    <property name="icon-name">go-down</property>
+                  </object>
+                </child>
               </object>
             </child>
           </object>

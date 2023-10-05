@@ -45,10 +45,6 @@
     <property name="step-increment">1</property>
     <property name="page-increment">10</property>
   </object>
-  <object class="GtkImage" id="image-resize">
-    <property name="visible">True</property>
-    <property name="icon-name">pages-resize-symbolic</property>
-  </object>
   <object class="GtkImage" id="image1">
     <property name="visible">True</property>
     <property name="pixel-size">20</property>
@@ -215,7 +211,12 @@
             <property name="receives-default">True</property>
             <property name="tooltip-text" translatable="yes">Fit the page to the current selection or the drawing if there's no selection.</property>
             <property name="halign">end</property>
-            <property name="image">image-resize</property>
+            <child>
+              <object class="GtkImage" id="image-resize">
+                <property name="visible">True</property>
+                <property name="icon-name">pages-resize-symbolic</property>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="left-attach">2</property>
@@ -852,7 +853,7 @@ SVG element positions are expressed in user units.</property>
     <child>
       <object class="GtkLabel">
         <property name="visible">True</property>
-        <property name="label">        </property>
+        <property name="label"/>
       </object>
       <packing>
         <property name="left-attach">1</property>

@@ -18,10 +18,6 @@
     <property name="step-increment">0.01</property>
     <property name="page-increment">0.10</property>
   </object>
-  <object class="GtkImage" id="image2">
-    <property name="visible">True</property>
-    <property name="icon-name">edit-clear</property>
-  </object>
   <object class="GtkBox" id="spiral-toolbar">
     <property name="visible">True</property>
     <property name="halign">start</property>
@@ -136,9 +132,13 @@
         <property name="can-focus">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Reset shape parameters to defaults (use Inkscape Preferences &gt; Tools to change defaults)</property>
-        <property name="image">image2</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
+        <child>
+          <object class="GtkImage" id="image2">
+            <property name="visible">True</property>
+            <property name="icon-name">edit-clear</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="position">5</property>

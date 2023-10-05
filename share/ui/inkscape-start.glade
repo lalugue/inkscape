@@ -246,8 +246,8 @@ along with Inkscape Extensions Manager.  If not, see <http://www.gnu.org/license
       <row>
         <col id="0">system</col>
         <col id="1" translatable="yes">System Default</col>
-        <col id="2"></col>
-        <col id="3"></col>
+        <col id="2"/>
+        <col id="3"/>
         <col id="4">0</col>
         <col id="5">0</col>
         <col id="6">0</col>
