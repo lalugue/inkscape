@@ -165,7 +165,7 @@ public:
                                 unsigned keyval, unsigned keycode, GdkModifierType state);
     bool _onTreeViewFocus(Gtk::DirectionType const direction);
 
-    void _onLinkObj(Glib::ustring path, Glib::RefPtr<Gtk::TreeStore> store);
+    void _onLinkObj(Glib::ustring const &path, Glib::RefPtr<Gtk::TreeStore> const &store);
 
     void _valueEdited(const Glib::ustring &path, const Glib::ustring &value, Glib::RefPtr<Gtk::TreeStore> store);
     void _startNameEdit(Gtk::CellEditable *cell, const Glib::ustring &path);

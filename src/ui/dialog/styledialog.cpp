@@ -930,7 +930,7 @@ bool StyleDialog::_on_foreach_iter(const Gtk::TreeModel::iterator &iter)
     return false;
 }
 
-void StyleDialog::_onLinkObj(Glib::ustring path, Glib::RefPtr<Gtk::TreeStore> store)
+void StyleDialog::_onLinkObj(Glib::ustring const &path, Glib::RefPtr<Gtk::TreeStore> const& store)
 {
     g_debug("StyleDialog::_onLinkObj");
 
