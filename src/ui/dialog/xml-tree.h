@@ -16,23 +16,24 @@
 #include <memory>
 #include <glibmm/refptr.h>
 #include <glibmm/ustring.h>
-#include <gtkmm/builder.h>
-#include <gtkmm/button.h>
-#include <gtkmm/entry.h>
-#include <gtkmm/paned.h>
-#include <gtkmm/radiobutton.h>
-#include <gtkmm/scrolledwindow.h>
-#include <gtkmm/separatortoolitem.h>
 #include <gtkmm/switch.h>
-#include <gtkmm/textview.h>
-#include <gtkmm/treeview.h>
 #include <gtkmm/widget.h>
 
-#include "message.h"
 #include "attrdialog.h"
 #include "dialog-base.h"
+#include "message.h"
 #include "preferences.h"
+
 #include "ui/syntax.h"
+
+namespace Gtk {
+class Box;
+class Builder;
+class Button;
+class Entry;
+class Paned;
+class TreeView;
+} // namespace Gtk
 
 class SPObject;
 struct SPXMLViewAttrList;

@@ -27,12 +27,15 @@
 #include <glibmm/variant.h>
 #include <giomm/simpleactiongroup.h>
 #include <gtkmm/button.h>
+#include <gtkmm/box.h>
 #include <gtkmm/enums.h>
+#include <gtkmm/entry.h>
 #include <gtkmm/image.h>
 #include <gtkmm/menubutton.h>
 #include <gtkmm/object.h>
 #include <gtkmm/paned.h>
 #include <gtkmm/scrolledwindow.h>
+#include <gtkmm/treeview.h>
 
 #include "desktop.h"
 #include "document.h"

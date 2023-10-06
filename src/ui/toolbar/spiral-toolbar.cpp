@@ -29,18 +29,21 @@
 #include "spiral-toolbar.h"
 
 #include <glibmm/i18n.h>
+#include <gtkmm/box.h>
 #include <gtkmm/button.h>
 #include <gtkmm/label.h>
-#include <gtkmm/separatortoolitem.h>
 
 #include "desktop.h"
 #include "document-undo.h"
+#include "preferences.h"
+
 #include "object/sp-spiral.h"
 #include "selection.h"
 #include "ui/builder-utils.h"
 #include "ui/icon-names.h"
 #include "ui/widget/canvas.h"
 #include "ui/widget/spinbutton.h"
+#include "xml/node.h"
 
 using Inkscape::DocumentUndo;
 
