@@ -770,7 +770,11 @@ ObjectsPanel::ObjectsPanel()
         return true;
     });
 
-    _object_menu.signal_closed().connect([=](){ _item_state_toggler->set_active(false); _tree.queue_draw(); });
+    _object_menu.signal_closed().connect([this]{
+        _item_state_toggler->set_force_visible(false);
+        _tree.queue_draw();
+    });
+
     auto& modes = get_widget<Gtk::Grid>(_builder, "modes");
     _opacity_slider.signal_format_value().connect([](double val){
         return Util::format_number(val, 1) + "%";
@@ -1238,7 +1242,7 @@ bool ObjectsPanel::blendModePopup(int const x, int const y, Gtk::TreeModel::Row 
     _opacity_slider.set_value(opacity * 100);
     current_item = item;
 
-    _item_state_toggler->set_active();
+    _item_state_toggler->set_force_visible(true);
 
     UI::popup_at(_object_menu, _tree, x, y);
     return true;

@@ -14,9 +14,7 @@
 #include "ui/icon-loader.h"
 #include "ui/icon-names.h"
 
-namespace Inkscape {
-namespace UI {
-namespace Widget {
+namespace Inkscape::UI::Widget {
 
 IconRenderer::IconRenderer() :
     Glib::ObjectBase(typeid(IconRenderer)),
@@ -35,9 +33,9 @@ IconRenderer::type_signal_activated IconRenderer::signal_activated()
     return m_signal_activated;
 }
 
-void IconRenderer::get_preferred_height_vfunc(Gtk::Widget& widget,
-                                              int& min_h,
-                                              int& nat_h) const
+void IconRenderer::get_preferred_height_vfunc(Gtk::Widget &widget,
+                                              int &min_h,
+                                              int &nat_h) const
 {
     Gtk::CellRendererPixbuf::get_preferred_height_vfunc(widget, min_h, nat_h);
 
@@ -50,9 +48,9 @@ void IconRenderer::get_preferred_height_vfunc(Gtk::Widget& widget,
     }
 }
 
-void IconRenderer::get_preferred_width_vfunc(Gtk::Widget& widget,
-                                             int& min_w,
-                                             int& nat_w) const
+void IconRenderer::get_preferred_width_vfunc(Gtk::Widget &widget,
+                                             int &min_w,
+                                             int &nat_w) const
 {
     Gtk::CellRendererPixbuf::get_preferred_width_vfunc(widget, min_w, nat_w);
 
@@ -65,23 +63,23 @@ void IconRenderer::get_preferred_width_vfunc(Gtk::Widget& widget,
     }
 }
 
-void IconRenderer::render_vfunc( const Cairo::RefPtr<Cairo::Context>& cr,
-                                 Gtk::Widget& widget,
-                                 const Gdk::Rectangle& background_area,
-                                 const Gdk::Rectangle& cell_area,
-                                 Gtk::CellRendererState flags )
+void IconRenderer::render_vfunc(const Cairo::RefPtr<Cairo::Context> &cr,
+                                Gtk::Widget &widget,
+                                const Gdk::Rectangle &background_area,
+                                const Gdk::Rectangle &cell_area,
+                                Gtk::CellRendererState flags)
 {
     set_pixbuf();
     
-    Gtk::CellRendererPixbuf::render_vfunc( cr, widget, background_area, cell_area, flags );
+    Gtk::CellRendererPixbuf::render_vfunc(cr, widget, background_area, cell_area, flags);
 }
 
-bool IconRenderer::activate_vfunc(GdkEvent* /*event*/,
-                               Gtk::Widget& /*widget*/,
-                               const Glib::ustring& path,
-                               const Gdk::Rectangle& /*background_area*/,
-                               const Gdk::Rectangle& /*cell_area*/,
-                               Gtk::CellRendererState /*flags*/)
+bool IconRenderer::activate_vfunc(GdkEvent * /*event*/,
+                                  Gtk::Widget &/*widget*/,
+                                  const Glib::ustring &path,
+                                  const Gdk::Rectangle &/*background_area*/,
+                                  const Gdk::Rectangle &/*cell_area*/,
+                                  Gtk::CellRendererState /*flags*/)
 {
     m_signal_activated.emit(path);
     return true;
@@ -102,10 +100,7 @@ void IconRenderer::set_pixbuf()
     }
 }
 
-
-} // namespace Widget
-} // namespace UI
-} // namespace Inkscape
+} // namespace Inkscape::UI::Widget
 
 /*
   Local Variables:
