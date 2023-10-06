@@ -658,7 +658,7 @@ LPEMeasureSegments::doOnApply(SPLPEItem const* lpeitem)
             }
             if (textNode == nullptr) {
                 // Style element found but does not contain text node!
-                std::cerr << "StyleDialog::_getStyleTextNode(): No text node!" << std::endl;
+                std::cerr << "LPEMeasureSegments::doOnApply(): No text node!" << std::endl;
                 textNode = document->getReprDoc()->createTextNode("");
                 styleNode->appendChild(textNode);
                 Inkscape::GC::release(textNode);

@@ -685,8 +685,6 @@ void AttrDialog::notifyContentChanged(XML::Node & /*repr*/, Util::ptr_shared /*o
 bool AttrDialog::onTreeViewKeyPressed(GtkEventControllerKey const * /*controller*/,
                                       unsigned keyval, unsigned /*keycode*/, GdkModifierType state)
 {
-    g_debug("StyleDialog::_onTreeViewKeyPressed");
-
     if (!_repr) {
         return false;
     }
@@ -720,8 +718,6 @@ bool AttrDialog::onTreeViewKeyPressed(GtkEventControllerKey const * /*controller
 bool AttrDialog::onTreeViewKeyReleased(GtkEventControllerKey const * /*controller*/,
                                        unsigned keyval, unsigned /*keycode*/, GdkModifierType state)
 {
-    g_debug("StyleDialog::_onTreeViewKeyReleased");
-
     if (_editingEntry == nullptr) return false;
 
     switch (keyval) {
