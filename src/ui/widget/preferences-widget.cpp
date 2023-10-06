@@ -71,8 +71,8 @@ void DialogPage::add_line(bool                 indent,
                           bool                 expand_widget,
                           Gtk::Widget         *other_widget)
 {
-    if (tip != "")
-        widget.set_tooltip_text (tip);
+    if (!tip.empty())
+        widget.set_tooltip_text(tip);
     
     auto const hb = Gtk::make_managed<Gtk::Box>();
     hb->set_spacing(12);
@@ -81,8 +81,7 @@ void DialogPage::add_line(bool                 indent,
     hb->set_valign(Gtk::ALIGN_CENTER);
     
     // Add a label in the first column if provided
-    if (label != "")
-    {
+    if (!label.empty()) {
         auto const label_widget = Gtk::make_managed<Gtk::Label>(label, Gtk::ALIGN_START,
                                                                 Gtk::ALIGN_CENTER, true);
         label_widget->set_mnemonic_widget(widget);
@@ -93,28 +92,19 @@ void DialogPage::add_line(bool                 indent,
         }
 
         label_widget->set_valign(Gtk::ALIGN_CENTER);
-        add(*label_widget);
-        attach_next_to(*hb, *label_widget, Gtk::POS_RIGHT, 1, 1);
-    }
+        attach_next_to(*label_widget, Gtk::POS_BOTTOM);
 
-    // Now add the widget to the bottom of the dialog
-    if (label == "")
-    {
+        attach_next_to(*hb, *label_widget, Gtk::POS_RIGHT, 1, 1);
+    } else {
         if (indent) {
             hb->set_margin_start(12);
         }
 
-        add(*hb);
-        
-        GValue width = G_VALUE_INIT;
-        g_value_init(&width, G_TYPE_INT);
-        g_value_set_int(&width, 2);
-        gtk_container_child_set_property(GTK_CONTAINER(gobj()), hb->Gtk::Widget::gobj(), "width", &width);
+        attach_next_to(*hb, Gtk::POS_BOTTOM, 2, 1);
     }
 
     // Add a label on the right of the widget if desired
-    if (suffix != "")
-    {
+    if (!suffix.empty()) {
         auto const suffix_widget = Gtk::make_managed<Gtk::Label>(suffix, Gtk::ALIGN_START, Gtk::ALIGN_CENTER, true);
         suffix_widget->set_markup(suffix_widget->get_text());
         UI::pack_start(*hb, *suffix_widget,false,false);
@@ -127,40 +117,27 @@ void DialogPage::add_line(bool                 indent,
 
 void DialogPage::add_group_header(Glib::ustring name, int columns)
 {
-    if (name != "")
-    {
-        auto const label_widget = Gtk::make_managed<Gtk::Label>(Glib::ustring("<b>").append(name).append("</b>"),
-                                                                Gtk::ALIGN_START, Gtk::ALIGN_CENTER, true);
-        
-        label_widget->set_use_markup(true);
-        label_widget->set_valign(Gtk::ALIGN_CENTER);
-        add(*label_widget);
-        if (columns > 1) {
-            GValue width = G_VALUE_INIT;
-            g_value_init(&width, G_TYPE_INT);
-            g_value_set_int(&width, columns);
-            gtk_container_child_set_property(GTK_CONTAINER(gobj()), label_widget->Gtk::Widget::gobj(), "width", &width);
-        }
-    }
+    if (name.empty()) return;
+
+    auto const label_widget = Gtk::make_managed<Gtk::Label>(Glib::ustring("<b>").append(name).append("</b>"),
+                                                            Gtk::ALIGN_START, Gtk::ALIGN_CENTER, true);
+    
+    label_widget->set_use_markup(true);
+    label_widget->set_valign(Gtk::ALIGN_CENTER);
+    attach_next_to(*label_widget, Gtk::POS_BOTTOM, columns, 1);
 }
 
 void DialogPage::add_group_note(Glib::ustring name)
 {
-    if (name != "")
-    {
-         auto const label_widget = Gtk::make_managed<Gtk::Label>(Glib::ustring("<i>").append(name).append("</i>"),
-                                                                 Gtk::ALIGN_START , Gtk::ALIGN_CENTER, true);
-        label_widget->set_use_markup(true);
-        label_widget->set_valign(Gtk::ALIGN_CENTER);
-        label_widget->set_line_wrap(true);
-        label_widget->set_line_wrap_mode(Pango::WRAP_WORD);
+    if (name.empty()) return;
 
-        add(*label_widget);
-        GValue width = G_VALUE_INIT;
-        g_value_init(&width, G_TYPE_INT);
-        g_value_set_int(&width, 2);
-        gtk_container_child_set_property(GTK_CONTAINER(gobj()), label_widget->Gtk::Widget::gobj(), "width", &width);
-    }
+    auto const label_widget = Gtk::make_managed<Gtk::Label>(Glib::ustring("<i>").append(name).append("</i>"),
+                                                            Gtk::ALIGN_START , Gtk::ALIGN_CENTER, true);
+    label_widget->set_use_markup(true);
+    label_widget->set_valign(Gtk::ALIGN_CENTER);
+    label_widget->set_line_wrap(true);
+    label_widget->set_line_wrap_mode(Pango::WRAP_WORD);
+    attach_next_to(*label_widget, Gtk::POS_BOTTOM, 2, 1);
 }
 
 void DialogPage::set_tip(Gtk::Widget& widget, Glib::ustring const &tip)
