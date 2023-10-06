@@ -164,8 +164,6 @@ CanvasGrid::CanvasGrid(SPDesktopWidget *dtw)
                                     sigc::bind(sigc::mem_fun(*this, &CanvasGrid::_rulerButtonRelease), false),
                           Controller::Button::left);
     Controller::add_motion<nullptr, &CanvasGrid::_rulerMotion<false>, nullptr>(*_vruler, *this);
-
-    show_all();
 }
 
 CanvasGrid::~CanvasGrid() = default;
@@ -296,22 +294,12 @@ void
 CanvasGrid::ShowScrollbars(bool state)
 {
     if (_show_scrollbars == state) return;
-    _show_scrollbars = state;
 
-    if (_show_scrollbars) {
-        // Show scrollbars
-        _hscrollbar.set_visible(true);
-        _vscrollbar.set_visible(true);
-        _cms_adjust.set_visible(true);
-        _cms_adjust.show_all_children();
-        _quick_actions.set_visible(true);
-    } else {
-        // Hide scrollbars
-        _hscrollbar.set_visible(false);
-        _vscrollbar.set_visible(false);
-        _cms_adjust.set_visible(false);
-        _quick_actions.set_visible(false);
-    }
+    _show_scrollbars = state;
+    _hscrollbar   .set_visible(_show_scrollbars);
+    _vscrollbar   .set_visible(_show_scrollbars);
+    _cms_adjust   .set_visible(_show_scrollbars);
+    _quick_actions.set_visible(_show_scrollbars);
 }
 
 void

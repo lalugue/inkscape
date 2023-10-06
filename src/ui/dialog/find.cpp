@@ -367,10 +367,9 @@ Find::Find()
     onSearchinText();
     onToggleAlltypes();
 
-    show_all_children();
-
     button_find.set_can_default();
     //button_find.grab_default(); // activatable by Enter
+
     entry_find.getEntry()->grab_focus();
 }
 

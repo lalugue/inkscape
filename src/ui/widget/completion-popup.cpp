@@ -28,7 +28,6 @@ CompletionPopup::CompletionPopup() :
     _popover_menu{*this, Gtk::PositionType::BOTTOM},
     _completion(get_object<Gtk::EntryCompletion>(_builder, "completion"))
 {
-    _popover_menu.show_all_children();
     Controller::add_key<&CompletionPopup::onPopoverKeyPressed>(_popover_menu, *this, Gtk::PropagationPhase::CAPTURE);
     _button.set_popover(_popover_menu);
 

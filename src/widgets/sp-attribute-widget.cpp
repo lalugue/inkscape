@@ -121,8 +121,6 @@ void SPAttributeTable::create(const std::vector<Glib::ustring>& labels, const st
 
         _entries.push_back(std::move(entry));
     }
-
-    show_all();
 }
 
 void SPAttributeTable::change_object(SPObject *object)

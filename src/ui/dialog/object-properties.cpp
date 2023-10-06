@@ -286,7 +286,7 @@ void ObjectProperties::_init()
     UI::pack_start(*this, *sep, false, false);
     UI::pack_start(*this, _exp_interactivity, false, false);
 
-    show_all();
+    set_visible(true);
 }
 
 void ObjectProperties::update_entries()
