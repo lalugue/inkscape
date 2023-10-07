@@ -1319,6 +1319,8 @@ void SPDocument::bindObjectToRepr(Inkscape::XML::Node *repr, SPObject *object)
         g_assert(it != reprdef.end());
         reprdef.erase(it);
     }
+
+    _node_cache_valid = false;
 }
 
 SPObject *SPDocument::getObjectByRepr(Inkscape::XML::Node *repr) const
