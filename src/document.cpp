@@ -160,7 +160,6 @@ SPDocument::SPDocument() :
 
     // XXX only for testing!
     undoStackObservers.add(console_output_undo_observer);
-    _node_cache = std::deque<SPItem*>();
 
     // Actions
     action_group = Gio::SimpleActionGroup::create();
@@ -1791,8 +1790,9 @@ SPItem *SPDocument::getItemAtPoint( unsigned const key, Geom::Point const &p,
                                     bool const into_groups, SPItem *upto) const
 {
     // Build a flattened SVG DOM for find_item_at_point.
-    std::deque<SPItem*> bak(_node_cache);
+    decltype(_node_cache) bak;
     if(!into_groups){
+        bak = std::move(_node_cache);
         _node_cache.clear();
         build_flat_item_list(key, this->root, into_groups);
     }
@@ -1804,7 +1804,7 @@ SPItem *SPDocument::getItemAtPoint( unsigned const key, Geom::Point const &p,
 
     SPItem *res = find_item_at_point(_node_cache, key, p, upto);
     if(!into_groups)
-        _node_cache = bak;
+        _node_cache = std::move(bak);
     return res;
 }
 
