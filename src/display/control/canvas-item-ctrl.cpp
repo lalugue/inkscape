@@ -238,26 +238,29 @@ void CanvasItemCtrl::set_type(CanvasItemCtrlType type)
 
 void CanvasItemCtrl::set_selected(bool selected)
 {
-    // Fixme: Data race?
-    _handle.selected = selected;
-    _built.reset();
-    request_update();
+    defer([=, this] {
+        _handle.selected = selected;
+        _built.reset();
+        request_update();
+    });
 }
 
 void CanvasItemCtrl::set_click(bool click)
 {
-    // Fixme: Data race?
-    _handle.click = click;
-    _built.reset();
-    request_update();
+    defer([=, this] {
+        _handle.click = click;
+        _built.reset();
+        request_update();
+    });
 }
 
 void CanvasItemCtrl::set_hover(bool hover)
 {
-    // Fixme: Data race?
-    _handle.hover = hover;
-    _built.reset();
-    request_update();
+    defer([=, this] {
+        _handle.hover = hover;
+        _built.reset();
+        request_update();
+    });
 }
 
 /**
@@ -265,12 +268,13 @@ void CanvasItemCtrl::set_hover(bool hover)
  */
 void CanvasItemCtrl::set_normal(bool selected)
 {
-    // Fixme: Data race?
-    _handle.selected = selected;
-    _handle.hover = false;
-    _handle.click = false;
-    _built.reset();
-    request_update();
+    defer([=, this] {
+        _handle.selected = selected;
+        _handle.hover = false;
+        _handle.click = false;
+        _built.reset();
+        request_update();
+    });
 }
 
 void CanvasItemCtrl::set_angle(double angle)

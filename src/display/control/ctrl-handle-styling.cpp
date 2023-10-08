@@ -3,6 +3,7 @@
 
 #include <unordered_map>
 #include <boost/functional/hash.hpp>
+#include <glibmm/fileutils.h>
 #include <glibmm/regex.h>
 
 #include "3rdparty/libcroco/src/cr-selector.h"
@@ -16,7 +17,6 @@
 #include "display/cairo-utils.h" // argb32_from_rgba()
 
 #include "io/resource.h"
-#include "io/sys.h"
 
 namespace Inkscape {
 namespace {
@@ -151,20 +151,10 @@ void set_selectors(CRDocHandler *a_handler, CRSelector *a_selector, bool is_user
     }
 }
 
-/**
- * Parse user's style definition css.
- */
-void set_selectors_user(CRDocHandler *a_handler, CRSelector *a_selector)
+template <bool is_users>
+void set_selectors(CRDocHandler *a_handler, CRSelector *a_selector)
 {
-    set_selectors(a_handler, a_selector, true);
-}
-
-/**
- * Parse the default style definition css.
- */
-void set_selectors_base(CRDocHandler *a_handler, CRSelector *a_selector)
-{
-    set_selectors(a_handler, a_selector, false);
+    set_selectors(a_handler, a_selector, is_users);
 }
 
 /**
@@ -178,8 +168,8 @@ void set_properties(CRDocHandler *a_handler, CRString *a_name, CRTerm *a_value, 
         std::cerr << "Empty or improper value or property, skipped." << std::endl;
         return;
     }
-    const std::string value = (char *)gvalue;
-    const std::string property = gproperty;
+    std::string const value = reinterpret_cast<char *>(gvalue);
+    std::string const property = gproperty;
     g_free(gvalue);
     if (property == "shape") {
         if (auto it = ctrl_shape_map.find(value); it != ctrl_shape_map.end()) {
@@ -191,7 +181,7 @@ void set_properties(CRDocHandler *a_handler, CRString *a_name, CRTerm *a_value, 
             return;
         }
     } else if (property == "fill" || property == "stroke" || property == "outline") {
-        CRRgb *rgb = cr_rgb_new();
+        auto rgb = cr_rgb_new();
         CRStatus status = cr_rgb_set_from_term(rgb, a_value);
 
         if (status == CR_OK) {
@@ -207,8 +197,9 @@ void set_properties(CRDocHandler *a_handler, CRString *a_name, CRTerm *a_value, 
             }
         } else {
             std::cerr << "Unrecognized value for " << property << ": " << value << std::endl;
-            return;
         }
+
+        cr_rgb_destroy(rgb);
     } else if (property == "opacity" || property == "fill-opacity" ||
                property == "stroke-opacity" || property == "outline-opacity") {
         if (!a_value->content.num) {
@@ -255,7 +246,7 @@ void set_properties(CRDocHandler *a_handler, CRString *a_name, CRTerm *a_value, 
             return;
         }
 
-        for (auto& [handle, specificity] : selected_handles) {
+        for (auto &[handle, specificity] : selected_handles) {
             if (property == "stroke-width") {
                 handle->stroke_width.setProperty(val, specificity + 100000 * a_important);
             } else {
@@ -290,25 +281,27 @@ void parse_handle_styles()
         }
     }
 
-    CRDocHandler *sac = cr_doc_handler_new();
-    sac->start_selector = set_selectors_base;
+    auto sac = cr_doc_handler_new();
     sac->property = set_properties;
     sac->end_selector = clear_selectors;
 
-    auto base_css_path = IO::Resource::get_path_string(IO::Resource::SYSTEM, IO::Resource::UIS, "node-handles.css");
-    if (IO::file_test(base_css_path.c_str(), G_FILE_TEST_EXISTS)) {
-        CRParser *base_parser = cr_parser_new_from_file(reinterpret_cast<const guchar *>(base_css_path.c_str()), CR_ASCII);
-        cr_parser_set_sac_handler(base_parser, sac);
-        cr_parser_parse(base_parser);
-    }
+    auto parse = [&] (IO::Resource::Domain domain) {
+        auto const css_path = IO::Resource::get_path_string(domain, IO::Resource::UIS, "node-handles.css");
+        if (Glib::file_test(css_path, Glib::FILE_TEST_EXISTS)) {
+            auto parser = cr_parser_new_from_file(reinterpret_cast<unsigned char const *>(css_path.c_str()), CR_ASCII);
+            cr_parser_set_sac_handler(parser, sac);
+            cr_parser_parse(parser);
+            cr_parser_destroy(parser);
+        }
+    };
 
-    auto user_css_path = IO::Resource::get_path_string(IO::Resource::USER, IO::Resource::UIS, "node-handles.css");
-    if (IO::file_test(user_css_path.c_str(), G_FILE_TEST_EXISTS)) {
-        CRParser *user_parser = cr_parser_new_from_file(reinterpret_cast<const guchar *>(user_css_path.c_str()), CR_ASCII);
-        sac->start_selector = set_selectors_user;
-        cr_parser_set_sac_handler(user_parser, sac);
-        cr_parser_parse(user_parser);
-    }
+    sac->start_selector = set_selectors<false>;
+    parse(IO::Resource::SYSTEM);
+
+    sac->start_selector = set_selectors<true>;
+    parse(IO::Resource::USER);
+
+    cr_doc_handler_destroy(sac);
 }
 
 } // namespace
@@ -363,6 +356,7 @@ HandleStyle const *lookup_handle_style(Handle const &handle)
     if (it == handle_styles.end()) {
         return nullptr;
     }
+
     return &it->second;
 }
 
