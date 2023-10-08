@@ -669,9 +669,9 @@ bool ToolBase::root_handler(CanvasEvent const &event)
         case GDK_KEY_W:
         case GDK_KEY_w:
         case GDK_KEY_F4:
-            /* Close view */
+            // Close view
             if (mod_ctrl_only(event)) {
-                sp_ui_close_view(nullptr);
+                sp_ui_close_view();
                 ret = true;
             }
             break;

@@ -25,8 +25,7 @@
 ## U T I L I T Y
 #####################*/
 
-namespace Inkscape {
-namespace IO {
+namespace Inkscape::IO {
 
 void dump_fopen_call( char const *utf8name, char const *id );
 
@@ -50,7 +49,7 @@ gchar* locale_to_utf8_fallback( const gchar *opsysstring,
 				gsize *bytes_written,
 				GError **error );
 
-gchar* sanitizeString( gchar const * str );
+Glib::ustring sanitizeString(char const *str);
 
 void spawn_async_with_pipes (const std::string& working_directory,
                              const std::vector<std::string>& argv,
@@ -63,8 +62,6 @@ void spawn_async_with_pipes (const std::string& working_directory,
 
 Glib::ustring get_file_extension(Glib::ustring path);
 
-}
-}
-
+} // namespace Inkscape::IO
 
 #endif // SEEN_SYS_H

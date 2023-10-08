@@ -309,33 +309,30 @@ Inkscape::IO::spawn_async_with_pipes( const std::string& working_directory,
                                  standard_error);
 }
 
-
-gchar* Inkscape::IO::sanitizeString( gchar const * str )
+Glib::ustring Inkscape::IO::sanitizeString(char const *str)
 {
-    gchar *result = nullptr;
-    if ( str ) {
-        if ( g_utf8_validate(str, -1, nullptr) ) {
-            result = g_strdup(str);
+    if (!str) {
+        return {};
+    }
+
+    if (g_utf8_validate(str, -1, nullptr)) {
+        return str;
+    }
+
+    Glib::ustring result;
+
+    for (auto p = str; *p != '\0'; p++) {
+        if (*p == '\\') {
+            result += "\\\\";
+        } else if (*p >= 0) {
+            result += *p;
         } else {
-            guchar scratch[8];
-            Glib::ustring buf;
-            guchar const *ptr = (guchar const*)str;
-            while ( *ptr )
-            {
-                if ( *ptr == '\\' )
-                {
-                    buf.append("\\\\");
-                } else if ( *ptr < 0x80 ) {
-                    buf += (char)(*ptr);
-                } else {
-                    g_snprintf((gchar*)scratch, sizeof(scratch), "\\x%02x", *ptr);
-                    buf.append((const char*)scratch);
-                }
-                ptr++;
-            }
-            result = g_strdup(buf.c_str());
+            char buf[8];
+            g_snprintf(buf, sizeof(buf), "\\x%02x", unsigned{static_cast<unsigned char>(*p)});
+            result += buf;
         }
     }
+
     return result;
 }
 

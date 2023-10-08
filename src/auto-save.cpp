@@ -154,15 +154,13 @@ AutoSave::save()
                 } catch (Inkscape::Extension::Output::no_extension_found &e) {
                     errortext = g_strdup(_("Autosave failed! Could not find inkscape extension to save document."));
                 } catch (Inkscape::Extension::Output::save_failed &e) {
-                    gchar *safeUri = Inkscape::IO::sanitizeString(path.c_str());
-                    errortext = g_strdup_printf(_("Autosave failed! File %s could not be saved."), safeUri);
-                    g_free(safeUri);
+                    auto const safeUri = Inkscape::IO::sanitizeString(path.c_str());
+                    errortext = g_strdup_printf(_("Autosave failed! File %s could not be saved."), safeUri.c_str());
                 }
                 fclose(file);
             } else {
-                gchar *safeUri = Inkscape::IO::sanitizeString(path.c_str());
-                errortext = g_strdup_printf(_("Autosave failed! File %s could not be saved."), safeUri);
-                g_free(safeUri);
+                auto const safeUri = Inkscape::IO::sanitizeString(path.c_str());
+                errortext = g_strdup_printf(_("Autosave failed! File %s could not be saved."), safeUri.c_str());
             }
 
             if (errortext) {

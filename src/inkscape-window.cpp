@@ -47,7 +47,7 @@
 #include "ui/dialog/dialog-window.h"
 #include "ui/drag-and-drop.h"
 #include "ui/drag-and-drop.h"  // Move to canvas?
-#include "ui/interface.h" // main menu, sp_ui_close_view()
+#include "ui/interface.h" // main menu
 #include "ui/monitor.h" // get_monitor_geometry_at_point()
 #include "ui/pack.h"
 #include "ui/shortcuts.h"

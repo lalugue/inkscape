@@ -211,17 +211,13 @@ save(Extension *key, SPDocument *doc, gchar const *filename, bool check_overwrit
         throw Output::save_cancelled();
     }
 
-    gchar *fileName = g_strdup(filename);
-
-    if (check_overwrite && !sp_ui_overwrite_file(fileName)) {
-        g_free(fileName);
+    if (check_overwrite && !sp_ui_overwrite_file(filename)) {
         throw Output::no_overwrite();
     }
 
     // test if the file exists and is writable
     // the test only checks the file attributes and might pass where ACL does not allow writes
     if (Inkscape::IO::file_test(filename, G_FILE_TEST_EXISTS) && !Inkscape::IO::file_is_writable(filename)) {
-        g_free(fileName);
         throw Output::file_read_only();
     }
 
@@ -237,7 +233,7 @@ save(Extension *key, SPDocument *doc, gchar const *filename, bool check_overwrit
     saved_dataloss = g_strdup(repr->attribute("inkscape:dataloss"));
     if (official) {
         // The document is changing name/uri.
-        doc->changeFilenameAndHrefs(fileName);
+        doc->changeFilenameAndHrefs(filename);
     }
 
     // Update attributes:
@@ -256,7 +252,7 @@ save(Extension *key, SPDocument *doc, gchar const *filename, bool check_overwrit
     }
 
     try {
-        omod->save(doc, fileName);
+        omod->save(doc, filename);
     }
     catch(...) {
         // revert attributes in case of official and overwrite
@@ -274,8 +270,6 @@ save(Extension *key, SPDocument *doc, gchar const *filename, bool check_overwrit
         g_free(saved_dataloss);
         g_free(saved_filename);
 
-        g_free(fileName);
-
         throw;
     }
 
@@ -292,7 +286,6 @@ save(Extension *key, SPDocument *doc, gchar const *filename, bool check_overwrit
         g_free(saved_dataloss);
     }
 
-    g_free(fileName);
     return;
 }
 

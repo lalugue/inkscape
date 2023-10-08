@@ -235,7 +235,7 @@ bool Export::exportRaster(
     std::string path = absolutizePath(doc, Glib::filename_from_utf8(filename));
 
     // Do the over-write protection now, since the png is just a temp file.
-    if (!overwrite && !sp_ui_overwrite_file(path.c_str())) {
+    if (!overwrite && !sp_ui_overwrite_file(path)) {
         return false;
     }
 
@@ -324,7 +324,7 @@ bool Export::exportVector(
     Glib::ustring safeFile = Inkscape::IO::sanitizeString(path.c_str());
 
     // Do the over-write protection now
-    if (!overwrite && !sp_ui_overwrite_file(path.c_str())) {
+    if (!overwrite && !sp_ui_overwrite_file(path)) {
         return false;
     }
     copy_doc->ensureUpToDate();
