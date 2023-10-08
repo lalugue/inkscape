@@ -32,7 +32,7 @@
 #include <gtkmm/aspectframe.h>
 #include <gtkmm/builder.h>
 #include <gtkmm/button.h>
-#include <gtkmm/clipboard.h>
+#include <gdkmm/clipboard.h>
 #include <gtkmm/label.h>
 #include <gtkmm/notebook.h>
 #include <gtkmm/textview.h>
@@ -208,7 +208,7 @@ static bool show_copy_button(Gtk::Button * const button, Gtk::Label * const labe
 
 static void copy(Gtk::Button * const button, Gtk::Label * const label, Glib::ustring const &text)
 {
-    auto clipboard = Gtk::Clipboard::get();
+    auto clipboard = Gdk::Display::get_default()->get_clipboard();
     clipboard->set_text(text);
     if (label) {
         reveal_widget(button, false);
