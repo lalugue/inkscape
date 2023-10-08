@@ -11,9 +11,7 @@
  *
  * The contents of this file may be used under the GNU General Public License Version 2 or later.
  * Read the file 'COPYING' for more information.
- *
  */
-
 
 #include "inkview-window.h"
 
@@ -25,26 +23,23 @@
 
 #include "document.h"
 #include "ui/builder-utils.h"
+#include "ui/controller.h"
 #include "ui/monitor.h"
 #include "ui/view/svg-view-widget.h"
 #include "util/units.h"
 
-InkviewWindow::InkviewWindow(const Gio::Application::type_vec_files files,
+InkviewWindow::InkviewWindow(Gio::Application::type_vec_files files,
                              bool fullscreen,
                              bool recursive,
                              int timer,
                              double scale,
-                             bool preload
-    )
-    : _files(files)
+                             bool preload)
+    : _files(std::move(files))
     , _fullscreen(fullscreen)
     , _recursive(recursive)
     , _timer(timer)
     , _scale(scale)
     , _preload(preload)
-    , _index(-1)
-    , _view(nullptr)
-    , _controlwindow(nullptr)
 {
     _files = create_file_list(_files);
 
@@ -56,20 +51,20 @@ InkviewWindow::InkviewWindow(const Gio::Application::type_vec_files files,
         throw NoValidFilesException();
     }
 
-    _documents.resize( _files.size(), nullptr); // We keep _documents and _files in sync.
+    _documents.resize(_files.size(), nullptr); // We keep _documents and _files in sync.
 
     // Callbacks
-    signal_key_press_event().connect(sigc::mem_fun(*this, &InkviewWindow::key_press), false);
+    Inkscape::UI::Controller::add_key<&InkviewWindow::key_press>(*this, *this);
 
     if (_timer) {
         Glib::signal_timeout().connect_seconds(sigc::mem_fun(*this, &InkviewWindow::on_timer), _timer);
     }
 
     // Actions
-    add_action( "show_first", sigc::mem_fun(*this, &InkviewWindow::show_first) );
-    add_action( "show_prev",  sigc::mem_fun(*this, &InkviewWindow::show_prev)  );
-    add_action( "show_next",  sigc::mem_fun(*this, &InkviewWindow::show_next)  );
-    add_action( "show_last",  sigc::mem_fun(*this, &InkviewWindow::show_last)  );
+    add_action("show_first", sigc::mem_fun(*this, &InkviewWindow::show_first));
+    add_action("show_prev",  sigc::mem_fun(*this, &InkviewWindow::show_prev) );
+    add_action("show_next",  sigc::mem_fun(*this, &InkviewWindow::show_next) );
+    add_action("show_last",  sigc::mem_fun(*this, &InkviewWindow::show_last) );
 
     // ToDo: Add Pause, Resume.
 
@@ -78,17 +73,16 @@ InkviewWindow::InkviewWindow(const Gio::Application::type_vec_files files,
     }
 
     // Show first file
-    activate_action( "show_first" );
+    activate_action("show_first");
 }
 
-std::vector<Glib::RefPtr<Gio::File> >
-InkviewWindow::create_file_list(const std::vector<Glib::RefPtr<Gio::File > >& files)
+std::vector<Glib::RefPtr<Gio::File>> InkviewWindow::create_file_list(std::vector<Glib::RefPtr<Gio::File>> const &files)
 {
-    std::vector<Glib::RefPtr<Gio::File> > valid_files;
+    std::vector<Glib::RefPtr<Gio::File>> valid_files;
 
     static bool first = true;
 
-    for (auto file : files) {
+    for (auto const &file : files) {
         Gio::FileType type = file->query_file_type();
         switch (type) {
             case Gio::FILE_TYPE_NOT_KNOWN:
@@ -96,8 +90,7 @@ InkviewWindow::create_file_list(const std::vector<Glib::RefPtr<Gio::File > >& fi
                           << file->get_basename() << std::endl;
                 break;
 
-            case Gio::FILE_TYPE_REGULAR:
-            {
+            case Gio::FILE_TYPE_REGULAR: {
                 // Only look at SVG and SVGZ files.
                 std::string basename = file->get_basename();
                 std::string extension = basename.substr(basename.find_last_of(".") + 1);
@@ -108,22 +101,21 @@ InkviewWindow::create_file_list(const std::vector<Glib::RefPtr<Gio::File > >& fi
             }
 
             case Gio::FILE_TYPE_DIRECTORY:
-            {
                 if (_recursive || first) {
                     // No easy way to get children of directory!
                     Glib::RefPtr<Gio::FileEnumerator> children = file->enumerate_children();
-                    Glib::RefPtr<Gio::FileInfo> info;
-                    std::vector<Glib::RefPtr<Gio::File> > input;
-                    while ((info = children->next_file())) {
+                    std::vector<Glib::RefPtr<Gio::File>> input;
+                    while (auto info = children->next_file()) {
                         input.push_back(children->get_child(info));
                     }
                     auto new_files = create_file_list(input);
                     valid_files.insert(valid_files.end(), new_files.begin(), new_files.end());
                 }
                 break;
-            }
+
             default:
                 std::cerr << "InkviewWindow: Unknown file type: " << type << std::endl;
+                break;
         }
         first = false;
     }
@@ -131,35 +123,33 @@ InkviewWindow::create_file_list(const std::vector<Glib::RefPtr<Gio::File > >& fi
     return valid_files;
 }
 
-void
-InkviewWindow::update_title()
+void InkviewWindow::update_title()
 {
-    Glib::ustring title(_documents[_index]->getDocumentName());
+    auto title = Glib::ustring{_documents[_index]->getDocumentName()};
 
     if (_documents.size() > 1) {
-        title += Glib::ustring::compose("  (%1/%2)", _index+1, _documents.size());
+        title += Glib::ustring::compose("  (%1/%2)", _index + 1, _documents.size());
     }
 
     set_title(title);
 }
 
 // Returns true if successfully shows document.
-bool
-InkviewWindow::show_document(SPDocument* document)
+bool InkviewWindow::show_document(SPDocument *document)
 {
     document->ensureUpToDate();  // Crashes on some documents if this isn't called!
 
-    // Resize window:  (Might be better to use get_monitor_geometry_at_window(this))
+    // Resize window: (Might be better to use get_monitor_geometry_at_window(this))
     Gdk::Rectangle monitor_geometry = Inkscape::UI::get_monitor_geometry_primary();
-    int width  = MIN((int)document->getWidth().value("px")  * _scale,  monitor_geometry.get_width());
-    int height = MIN((int)document->getHeight().value("px") * _scale,  monitor_geometry.get_height());
-    resize (width, height);
+    int width  = std::min<int>(document->getWidth().value("px")  * _scale, monitor_geometry.get_width());
+    int height = std::min<int>(document->getHeight().value("px") * _scale, monitor_geometry.get_height());
+    resize(width, height);
 
     if (_view) {
         _view->setDocument(document);
     } else {
         _view = Gtk::make_managed<Inkscape::UI::View::SVGViewWidget>(document);
-        add (*_view);
+        add(*_view);
     }
 
     update_title();
@@ -167,16 +157,14 @@ InkviewWindow::show_document(SPDocument* document)
     return true;
 }
 
-
 // Load document, if fail, remove entry from lists.
-SPDocument*
-InkviewWindow::load_document()
+SPDocument *InkviewWindow::load_document()
 {
-    SPDocument* document = _documents[_index];
+    auto document = _documents[_index];
 
     if (!document) {
         // We need to load document. ToDo: Pass Gio::File. Is get_base_name() better?
-        document = SPDocument::createNewDoc (_files[_index]->get_parse_name().c_str(), true, false);
+        document = SPDocument::createNewDoc(_files[_index]->get_parse_name().c_str(), true, false);
         if (document) {
             // We've successfully loaded it!
             _documents[_index] = document;
@@ -186,21 +174,16 @@ InkviewWindow::load_document()
     if (!document) {
         // Failed to load document, remove from vectors.
         _documents.erase(std::next(_documents.begin(), _index));
-        _files.erase(    std::next(    _files.begin(), _index));
+        _files    .erase(std::next(_files    .begin(), _index));
     }
 
     return document;
 }
 
-
-
-void
-InkviewWindow::preload_documents()
+void InkviewWindow::preload_documents()
 {
     for (auto it =_files.begin(); it != _files.end(); ) {
-
-        SPDocument* document =
-            SPDocument::createNewDoc ((*it)->get_parse_name().c_str(), true, false);
+        auto document = SPDocument::createNewDoc((*it)->get_parse_name().c_str(), true, false);
         if (document) {
             _documents.push_back(document);
             ++it;
@@ -210,106 +193,33 @@ InkviewWindow::preload_documents()
     }
 }
 
-static std::string window_markup = R"(
-<interface>
-  <object class="GtkWindow" id="ControlWindow">
-    <child>
-      <object class="GtkBox">
-        <property name="homogeneous">True</property>
-        <child>
-          <object class="GtkButton" id="show-first">
-            <property name="visible">True</property>
-            <property name="action-name">viewer.show_first</property>
-            <child>
-              <object class="GtkImage">
-                <property name="visible">True</property>
-                <property name="icon_name">go-first</property>
-              </object>
-            </child>
-          </object>
-        </child>
-        <child>
-          <object class="GtkButton" id="show-prev">
-            <property name="visible">True</property>
-            <property name="action-name">viewer.show_prev</property>
-            <child>
-              <object class="GtkImage">
-                <property name="visible">True</property>
-                <property name="icon_name">go-previous</property>
-              </object>
-            </child>
-          </object>
-        </child>
-        <child>
-          <object class="GtkButton" id="show-next">
-            <property name="visible">True</property>
-            <property name="action-name">viewer.show_next</property>
-            <child>
-              <object class="GtkImage">
-                <property name="visible">True</property>
-                <property name="icon_name">go-next</property>
-              </object>
-            </child>
-          </object>
-        </child>
-        <child>
-          <object class="GtkButton" id="show-last">
-            <property name="visible">True</property>
-            <property name="action-name">viewer.show_last</property>
-            <child>
-              <object class="GtkImage">
-                <property name="visible">True</property>
-                <property name="icon_name">go-last</property>
-              </object>
-            </child>
-          </object>
-        </child>
-      </object>
-    </child>
-  </object>
-</interface>
-)";
-
-void
-InkviewWindow::show_control()
+void InkviewWindow::show_control()
 {
-    if (!_controlwindow) {
-
-        auto builder = Gtk::Builder::create();
-        try
-        {
-            builder->add_from_string(window_markup);
-        }
-        catch (const Glib::Error& err)
-        {
-            std::cerr << "InkviewWindow::show_control: builder failed: " << err.what().raw() << std::endl;
-            return;
-        }
-
-        _controlwindow = &Inkscape::UI::get_widget<Gtk::Window>(builder, "ControlWindow");
-
-        // Need to give control window access to viewer window's actions.
-        Glib::RefPtr<Gio::ActionGroup> viewer = get_action_group("win");
-        if (viewer) {
-            _controlwindow->insert_action_group("viewer", viewer);
-        }
-
-        _controlwindow->set_resizable(false);
-        _controlwindow->set_transient_for(*this);
-        _controlwindow->show_all();
-
-    } else {
+    if (_controlwindow) {
         _controlwindow->present();
+        return;
     }
+
+    auto builder = Inkscape::UI::create_builder("inkview-controls.ui");
+
+    _controlwindow = &Inkscape::UI::get_widget<Gtk::Window>(builder, "ControlWindow");
+
+    // Need to give control window access to viewer window's actions.
+    auto viewer = get_action_group("win");
+    if (viewer) {
+        _controlwindow->insert_action_group("viewer", viewer);
+    }
+
+    _controlwindow->set_transient_for(*this);
+    _controlwindow->show_all();
 }
 
 // Next document
-void
-InkviewWindow::show_next()
+void InkviewWindow::show_next()
 {
     ++_index;
 
-    SPDocument* document = nullptr;
+    SPDocument *document = nullptr;
 
     while (_index < _documents.size() && !document) {
         document = load_document();
@@ -325,10 +235,9 @@ InkviewWindow::show_next()
 }
 
 // Previous document
-void
-InkviewWindow::show_prev()
+void InkviewWindow::show_prev()
 {
-    SPDocument* document = nullptr;
+    SPDocument *document = nullptr;
     int old_index = _index;
 
     while (_index > 0 && !document) {
@@ -346,25 +255,22 @@ InkviewWindow::show_prev()
 }
 
 // Show first document
-void
-InkviewWindow::show_first()
+void InkviewWindow::show_first()
 {
     _index = -1;
     show_next();
 }
 
 // Show last document
-void
-InkviewWindow::show_last()
+void InkviewWindow::show_last()
 {
     _index = _documents.size();
     show_prev();
 }
 
-bool
-InkviewWindow::key_press(GdkEventKey* event)
+bool InkviewWindow::key_press(GtkEventControllerKey *, unsigned keyval, unsigned, GdkModifierType)
 {
-    switch (event->keyval) {
+    switch (keyval) {
         case GDK_KEY_Up:
         case GDK_KEY_Home:
             show_first();
@@ -415,8 +321,7 @@ InkviewWindow::key_press(GdkEventKey* event)
     return false;
 }
 
-bool
-InkviewWindow::on_timer()
+bool InkviewWindow::on_timer()
 {
     show_next();
 
@@ -424,6 +329,7 @@ InkviewWindow::on_timer()
     if (_index >= _documents.size() - 1) {
         return false;
     }
+
     return true;
 }
 

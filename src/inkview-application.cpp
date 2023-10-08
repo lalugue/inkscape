@@ -132,12 +132,11 @@ InkviewApplication::on_activate()
 }
 
 // Open document window for each file. Either this or on_activate() is called.
-void
-InkviewApplication::on_open(const Gio::Application::type_vec_files& files, const Glib::ustring& hint)
+void InkviewApplication::on_open(Gio::Application::type_vec_files const &files, Glib::ustring const &hint)
 {
     try {
         window = new InkviewWindow(files, fullscreen, recursive, timer, scale, preload);
-    } catch (const InkviewWindow::NoValidFilesException&) {
+    } catch (InkviewWindow::NoValidFilesException const &) {
         std::cerr << _("Error") << ": " << _("No (valid) files to open.") << std::endl;
         return; // Fixme: Exit with code 1 - see https://gitlab.com/inkscape/inkscape/-/issues/270.
     }
@@ -145,7 +144,6 @@ InkviewApplication::on_open(const Gio::Application::type_vec_files& files, const
     window->show_all();
     add_window(*window);
 }
-
 
 // ========================= Callbacks ==========================
 
