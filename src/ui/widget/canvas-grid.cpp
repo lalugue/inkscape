@@ -23,6 +23,7 @@
 #include <gtkmm/builder.h>
 #include <gtkmm/checkbutton.h>
 #include <gtkmm/enums.h>
+#include <gtkmm/eventcontrollermotion.h>
 #include <gtkmm/gestureclick.h>
 #include <gtkmm/image.h>
 #include <gtkmm/label.h>
@@ -45,6 +46,7 @@
 #include "ui/controller.h"
 #include "ui/dialog/command-palette.h"
 #include "ui/tools/tool-base.h"
+#include "ui/util.h"
 #include "ui/widget/canvas.h"
 #include "ui/widget/desktop-widget.h"  // Hopefully temp.
 #include "ui/widget/events/canvas-event.h"
@@ -73,7 +75,7 @@ CanvasGrid::CanvasGrid(SPDesktopWidget *dtw)
     _notice = CanvasNotice::create();
 
     // Canvas overlay
-    _canvas_overlay.add(*_canvas);
+    _canvas_overlay.set_child(*_canvas);
     _canvas_overlay.add_overlay(_command_palette->get_base_widget());
     _canvas_overlay.add_overlay(*_notice);
 
@@ -141,10 +143,11 @@ CanvasGrid::CanvasGrid(SPDesktopWidget *dtw)
 
     // To be replaced by Gio::Action:
     sticky_zoom->signal_toggled().connect([this](){ _dtw->sticky_zoom_toggled(); });
+
     _quick_actions.set_name("QuickActions");
     _quick_actions.set_popover(*popover);
-    _quick_actions.set_image_from_icon_name("display-symbolic");
-    _quick_actions.set_direction(Gtk::ARROW_LEFT);
+    _quick_actions.set_icon_name("display-symbolic");
+    _quick_actions.set_direction(Gtk::ArrowType::LEFT);
     _quick_actions.set_tooltip_text(_("Display options"));
 
     // Main grid
@@ -195,7 +198,7 @@ void CanvasGrid::on_realize() {
                 if (_canvas->get_cms_active()) {
                     id += "-alt";
                 }
-                _quick_actions.set_image_from_icon_name(id + "-symbolic");
+                _quick_actions.set_icon_name(id + "-symbolic");
             }
         };
 
@@ -221,7 +224,7 @@ void CanvasGrid::on_realize() {
 }
 
 // TODO: remove when sticky zoom gets replaced by Gio::Action:
-Gtk::ToggleButton* CanvasGrid::GetStickyZoom() {
+Gtk::ToggleButton *CanvasGrid::GetStickyZoom() {
     return &get_widget<Gtk::ToggleButton>(_builder_display_popup, "zoom-resize");
 }
 
@@ -374,9 +377,9 @@ CanvasGrid::size_allocate_vfunc(int const width, int const height, int const bas
 
 Geom::IntPoint CanvasGrid::_rulerToCanvas(bool horiz) const
 {
-    Geom::IntPoint result;
+    Geom::Point result;
     (horiz ? _hruler : _vruler)->translate_coordinates(*_canvas, 0, 0, result.x(), result.y());
-    return result;
+    return result.round();
 }
 
 // Start guide creation by dragging from ruler.
@@ -391,7 +394,7 @@ Gtk::EventSequenceState CanvasGrid::_rulerButtonPress(Gtk::GestureClick const &g
 
     _ruler_clicked = true;
     _ruler_dragged = false;
-    _ruler_ctrl_clicked = Controller::has_flag(state, Gdk::CONTROL_MASK);
+    _ruler_ctrl_clicked = Controller::has_flag(state, Gdk::ModifierType::CONTROL_MASK);
     _ruler_drag_origin = Geom::Point(x, y).floor();
 
     return Gtk::EventSequenceState::CLAIMED;
@@ -446,7 +449,7 @@ void CanvasGrid::_createGuideItem(Geom::Point const &pos, bool horiz)
     _active_guide->set_stroke(desktop->getNamedView()->guidehicolor);
 }
 
-void CanvasGrid::_rulerMotion(GtkEventControllerMotion const *controller, double x, double y, bool horiz)
+void CanvasGrid::_rulerMotion(GtkEventControllerMotion const *controller_c, double x, double y, bool horiz)
 {
     if (!_ruler_clicked) {
         return;
@@ -469,15 +472,14 @@ void CanvasGrid::_rulerMotion(GtkEventControllerMotion const *controller, double
     }
 
     // Synthesize the CanvasEvent.
-    auto gdkevent = GdkEventUniqPtr(gtk_get_current_event());
-    assert(gdkevent->type == GDK_MOTION_NOTIFY);
+    auto controller = const_wrap(controller_c, true);
 
     auto event = MotionEvent();
-    event.modifiers = gdkevent->motion.state;
-    event.source_device = Util::GObjectPtr(gdk_event_get_source_device(gdkevent.get()), true);
+    event.modifiers = (unsigned)controller->get_current_event_state();
+    event.device = controller->get_current_event_device();
     event.pos = pos;
-    event.time = gdkevent->motion.time;
-    event.extinput = extinput_from_gdkevent(gdkevent.get());
+    event.time = controller->get_current_event_time();
+    event.extinput = extinput_from_gdkevent(*controller->get_current_event());
 
     rulerMotion(event, horiz);
 }
@@ -600,7 +602,7 @@ Gtk::EventSequenceState CanvasGrid::_rulerButtonRelease(Gtk::GestureClick const 
         auto const event_w = _canvas->canvas_to_world(pos);
         auto event_dt = desktop->w2d(event_w);
         auto normal = _normal;
-        if (!(state & GDK_SHIFT_MASK)) {
+        if (!(bool)(state & Gdk::ModifierType::SHIFT_MASK)) {
             ruler_snap_new_guide(desktop, event_dt, normal);
         }
 
