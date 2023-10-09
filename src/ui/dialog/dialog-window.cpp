@@ -32,6 +32,7 @@
 #include "ui/dialog/dialog-notebook.h"
 #include "ui/pack.h"
 #include "ui/shortcuts.h"
+#include "ui/themes.h"
 #include "ui/util.h"
 
 // Sizing constants
@@ -78,9 +79,6 @@ DialogWindow::DialogWindow(InkscapeWindow *inkscape_window, Gtk::Widget *page)
     }
 
     insert_action_group("doc", inkscape_window->get_document()->getActionGroup());
-
-    // ============ Theming: icons ==============
-
 
     // ================ Window ==================
     set_title(_title);
@@ -135,6 +133,11 @@ DialogWindow::DialogWindow(InkscapeWindow *inkscape_window, Gtk::Widget *page)
     if (page) {
         update_dialogs();
     }
+
+    // To get right symbolic/regular class & other theming, apply themechange after adding children
+    auto const themecontext = INKSCAPE.themecontext;
+    g_assert(themecontext);
+    themecontext->themechangecallback();
 
     // window is created hidden; don't show it now, its size needs to be restored
 }
