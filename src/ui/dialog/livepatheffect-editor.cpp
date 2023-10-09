@@ -24,6 +24,7 @@
 #include <gtkmm/button.h>
 #include <gtkmm/eventbox.h>
 #include <gtkmm/expander.h>
+#include <gtkmm/image.h>
 #include <gtkmm/label.h>
 #include <gtkmm/listbox.h>
 #include <gtkmm/liststore.h>
@@ -466,13 +467,12 @@ LivePathEffectEditor::selection_info()
         if (is<SPText>(selected) || is<SPFlowtext>(selected)) {
             _LPESelectionInfo.set_text(_("Text objects do not support Live Path Effects"));
             _LPESelectionInfo.set_visible(true);
+
             Glib::ustring labeltext = _("Convert text to paths");
             auto const selectbutton = Gtk::make_managed<Gtk::Button>();
             auto const boxc = Gtk::make_managed<Gtk::Box>();
             auto const lbl = Gtk::make_managed<Gtk::Label>(labeltext);
-            std::string shape_type = "group";
-            std::string highlight = SPColor(selected->highlight_color()).toString();
-            auto const type = Gtk::make_managed<Gtk::Image>(sp_get_shape_icon(shape_type, Gdk::RGBA(highlight), 20, 1));
+            auto const type = get_shape_image("group", selected->highlight_color());
             UI::pack_start(*boxc, *type, false, false);
             UI::pack_start(*boxc, *lbl, false, false);
             type->set_margin_start(4);
@@ -482,13 +482,12 @@ LivePathEffectEditor::selection_info()
                 selection->toCurves();
             });
             _LPEParentBox.add(*selectbutton);
+
             Glib::ustring labeltext2 = _("Clone");
             auto const selectbutton2 = Gtk::make_managed<Gtk::Button>();
             auto const boxc2 = Gtk::make_managed<Gtk::Box>();
             auto const lbl2 = Gtk::make_managed<Gtk::Label>(labeltext2);
-            std::string shape_type2 = "clone";
-            std::string highlight2 = SPColor(selected->highlight_color()).toString();
-            auto const type2 = Gtk::make_managed<Gtk::Image>(sp_get_shape_icon(shape_type2, Gdk::RGBA(highlight2), 20, 1));
+            auto const type2 = get_shape_image("clone", selected->highlight_color());
             UI::pack_start(*boxc2, *type2, false, false);
             UI::pack_start(*boxc2, *lbl2, false, false);
             type2->set_margin_start(4);
@@ -498,6 +497,7 @@ LivePathEffectEditor::selection_info()
                 selection->clone();;
             });
             _LPEParentBox.add(*selectbutton2);
+
             _LPEParentBox.show_all();
         } else if (!is<SPLPEItem>(selected) && !is<SPUse>(selected)) {
             _LPESelectionInfo.set_text(_("Select a path, shape, clone or group"));
@@ -508,9 +508,7 @@ LivePathEffectEditor::selection_info()
                 auto const boxc = Gtk::make_managed<Gtk::Box>();
                 auto const lbl = Gtk::make_managed<Gtk::Label>(labeltext);
                 lbl->set_ellipsize(Pango::ELLIPSIZE_END);
-                std::string shape_type = selected->typeName();
-                std::string highlight = SPColor(selected->highlight_color()).toString();
-                auto const type = Gtk::make_managed<Gtk::Image>(sp_get_shape_icon(shape_type, Gdk::RGBA(highlight), 20, 1));
+                auto const type = get_shape_image(selected->typeName(), selected->highlight_color());
                 UI::pack_start(*boxc, *type, false, false);
                 UI::pack_start(*boxc, *lbl, false, false);
                 _LPECurrentItem.add(*boxc);
@@ -533,9 +531,7 @@ LivePathEffectEditor::selection_info()
                         auto const selectbutton = Gtk::make_managed<Gtk::Button>();
                         auto const boxc = Gtk::make_managed<Gtk::Box>();
                         auto const lbl = Gtk::make_managed<Gtk::Label>(labeltext);
-                        std::string shape_type = selected->typeName();
-                        std::string highlight = SPColor(selected->highlight_color()).toString();
-                        auto const type = Gtk::make_managed<Gtk::Image>(sp_get_shape_icon(shape_type, Gdk::RGBA(highlight), 20, 1));
+                        auto const type = get_shape_image(selected->typeName(), selected->highlight_color());
                         UI::pack_start(*boxc, *type, false, false);
                         UI::pack_start(*boxc, *lbl, false, false);
                         type->set_margin_start(4);

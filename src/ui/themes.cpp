@@ -181,7 +181,8 @@ ThemeContext::get_symbolic_colors()
     bool overridebasecolor = !prefs->getBool("/theme/symbolicDefaultBaseColors", true);
     if (overridebasecolor) {
         css_str += "#InkRuler:not(.shadow):not(.page):not(.selection),";
-        css_str += ":not(.rawstyle) > image";
+        css_str += ":not(.rawstyle) > image,";
+        css_str += ":not(.rawstyle) treeview.image";
         css_str += "{color:";
         css_str += colornamed;
         css_str += ";}";
@@ -451,6 +452,7 @@ void ThemeContext::add_gtk_css(bool only_providers, bool cached)
         g_critical("CSSProviderError::load_from_data(): failed to load '%s'\n(%s)", css_str.c_str(), ex.what().c_str());
     }
     Gtk::StyleContext::add_provider_for_screen(screen, _colorizeprovider, GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+
 #if __APPLE__
     Glib::ustring macstyle = get_filename(UIS, "mac.css");
     if (!macstyle.empty()) {
@@ -469,6 +471,7 @@ void ThemeContext::add_gtk_css(bool only_providers, bool cached)
         Gtk::StyleContext::add_provider_for_screen(screen, _macstyleprovider, GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
     }
 #endif
+
     style = get_filename(UIS, "user.css");
     if (!style.empty()) {
         if (_userprovider) {

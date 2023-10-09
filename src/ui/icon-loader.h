@@ -13,32 +13,35 @@
 #ifndef SEEN_INK_ICON_LOADER_H
 #define SEEN_INK_ICON_LOADER_H
 
+#include <cstdint>
+#include <utility>
 #include <glibmm/refptr.h>
-#include <gdkmm/pixbuf.h>
+#include <glibmm/ustring.h>
 #include <gtkmm/enums.h>
-
-namespace Glib {
-class ustring;
-} // namespace Glib
-
-namespace Gdk {
-class PixBuf;
-class RGBA;
-} // namespace Gdk
 
 namespace Gtk {
 class Image;
 } // namespace Gtk
 
+// N.B. These return unmanaged widgets, so callers must manage() or delete them!
 Gtk::Image *sp_get_icon_image(Glib::ustring const &icon_name, int size);
 Gtk::Image *sp_get_icon_image(Glib::ustring const &icon_name, Gtk::BuiltinIconSize icon_size);
 Gtk::Image *sp_get_icon_image(Glib::ustring const &icon_name, Gtk::IconSize icon_size);
 GtkWidget  *sp_get_icon_image(Glib::ustring const &icon_name, GtkIconSize icon_size);
-Glib::RefPtr<Gdk::Pixbuf> sp_get_icon_pixbuf(Glib::ustring icon_name, int size);
-Glib::RefPtr<Gdk::Pixbuf> sp_get_icon_pixbuf(Glib::ustring const &icon_name, Gtk::IconSize icon_size, int scale=1);
-Glib::RefPtr<Gdk::Pixbuf> sp_get_icon_pixbuf(Glib::ustring const &icon_name, Gtk::BuiltinIconSize icon_size, int scale=1);
-Glib::RefPtr<Gdk::Pixbuf> sp_get_icon_pixbuf(Glib::ustring const &icon_name, GtkIconSize icon_size, int scale=1);
-Glib::RefPtr<Gdk::Pixbuf> sp_get_shape_icon (Glib::ustring const &shape_type, Gdk::RGBA const &color, int size, int scale=1);
+
+namespace Inkscape::UI {
+
+/// A pair containing an icon name & a CSS class to set an RGBA color
+struct GetShapeIconResult final { Glib::ustring icon_name; Glib::ustring color_class; };
+// Get the icon name and CSS class you need to use to show a specific shape icon
+[[nodiscard]] GetShapeIconResult get_shape_icon(Glib::ustring const &shape_type,
+                                                std::uint32_t rgba_color);
+// Get a managed Gtk::Image with icon_name & CSS class for a specific shape icon
+[[nodiscard]] Gtk::Image *get_shape_image(Glib::ustring const &shape_type,
+                                          std::uint32_t rgba_color,
+                                          Gtk::IconSize icon_size = Gtk::ICON_SIZE_BUTTON);
+
+} // namespace Inkscape::UI
 
 #endif // SEEN_INK_ICON_LOADER_H
 

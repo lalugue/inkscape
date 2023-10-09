@@ -27,31 +27,22 @@
  *
  */
 
-
 /* Our own custom shades... better not to use.
  * Lightest to darkest based on linear rgb.
  */
-
 @define-color bg_color0 #ffffff;
-
 /* White */
-
 @define-color bg_color05 #f8f8f8;
-
 /* Slightly off white */
-
 @define-color bg_color1 #f0f0f0;
 @define-color bg_color2 #e0e0e0;
 @define-color bg_color3 #d0d0d0;
 @define-color bg_color4 #bbbbbb;
-
 /* 50% Gray */
-
 @define-color bg_color5 #a5a5a5;
 @define-color bg_color6 #898989;
 @define-color bg_color7 #636363;
 @define-color bg_color8 #000000;
-
 /* Black */
 
 @import url("highlight-colors.css");
@@ -80,19 +71,34 @@
     font-feature-settings: "tnum=1";
 }
 
+/* Make icons in treeview etc use theme fg_color, not the stronger text_color */
+.view.image {
+    color: @theme_fg_color;
+}
+.view.image:backdrop {
+    color: @theme_unfocused_fg_color;
+}
+.view.image:disabled {
+    color: @insensitive_fg_color;
+}
+
+/* Select on both `image` for GtkImage and `.image` for GtkCellRendererPixbuf */
+*:disabled .image,
 *:disabled image {
     opacity: 0.4;
 }
 
-.symbolic image {
+/* For these neednʼt be more specific, as this property only applies to icons */
+
+.symbolic {
     -gtk-icon-style: symbolic;
 }
 
-.regular image {
+.regular {
     -gtk-icon-style: regular;
 }
 
-.regular .symbolic image {
+.regular .symbolic {
     -gtk-icon-style: symbolic;
 }
 

@@ -11,8 +11,8 @@
 
 #include "ui/widget/iconrenderer.h"
 
-#include "ui/icon-loader.h"
-#include "ui/icon-names.h"
+#include <utility>
+#include <sigc++/functors/mem_fun.h>
 
 namespace Inkscape::UI::Widget {
 
@@ -22,7 +22,10 @@ IconRenderer::IconRenderer() :
     _property_icon(*this, "icon", 0)
 {
     property_mode() = Gtk::CELL_RENDERER_MODE_ACTIVATABLE;
-    set_pixbuf();
+    property_stock_size().set_value(Gtk::ICON_SIZE_BUTTON);
+
+    set_icon_name();
+    property_icon().signal_changed().connect(sigc::mem_fun(*this, &IconRenderer::set_icon_name));
 }
 
 /*
@@ -69,7 +72,7 @@ void IconRenderer::render_vfunc(const Cairo::RefPtr<Cairo::Context> &cr,
                                 const Gdk::Rectangle &cell_area,
                                 Gtk::CellRendererState flags)
 {
-    set_pixbuf();
+    set_icon_name();
     
     Gtk::CellRendererPixbuf::render_vfunc(cr, widget, background_area, cell_area, flags);
 }
@@ -87,16 +90,16 @@ bool IconRenderer::activate_vfunc(GdkEvent * /*event*/,
 
 void IconRenderer::add_icon(Glib::ustring name)
 {
-    _icons.push_back(sp_get_icon_pixbuf(name.c_str(), GTK_ICON_SIZE_BUTTON));
+    _icons.push_back(std::move(name));
 }
 
-void IconRenderer::set_pixbuf()
+void IconRenderer::set_icon_name()
 {
     int icon_index = property_icon().get_value();
     if(icon_index >= 0 && icon_index < _icons.size()) {
-        property_pixbuf() = _icons[icon_index];
+        property_icon_name().set_value(_icons[icon_index]);
     } else {
-        property_pixbuf() = sp_get_icon_pixbuf("image-missing", GTK_ICON_SIZE_BUTTON);
+        property_icon_name().set_value("image-missing");
     }
 }
 

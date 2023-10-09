@@ -15,7 +15,7 @@
 #include <vector>
 #include <glibmm/property.h>
 #include <glibmm/propertyproxy.h>
-#include <glibmm/refptr.h>
+#include <glibmm/ustring.h>
 #include <gtkmm/cellrendererpixbuf.h>
 #include <sigc++/signal.h>
 
@@ -57,8 +57,8 @@ private:
                         Gtk::CellRendererState flags) override;
     
     Glib::Property<int> _property_icon;
-    std::vector<Glib::RefPtr<Gdk::Pixbuf>> _icons;
-    void set_pixbuf();
+    std::vector<Glib::ustring> _icons;
+    void set_icon_name();
 };
 
 } // namespace Inkscape::UI::Widget

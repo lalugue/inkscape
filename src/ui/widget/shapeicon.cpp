@@ -10,119 +10,85 @@
 
 #include "ui/widget/shapeicon.h"
 
+#include <algorithm>
+#include <utility>
+#include <glibmm/ustring.h>
+#include <gdkmm/general.h>
+#include <gtkmm/cssprovider.h>
 #include <gtkmm/enums.h>
+#include <gtkmm/stylecontext.h>
+#include <gtkmm/widget.h>
 
 #include "color.h"
-#include "ui/util.h"
 #include "ui/icon-loader.h"
+#include "ui/util.h"
 
 namespace Inkscape::UI::Widget {
 
-/*
- * This is a type of CellRenderer which you might expect to inherit from the
- * pixbuf CellRenderer, but we actually need to write a Cairo surface directly
- * in order to maintain HiDPI sharpness in icons. Upstream Gtk have made it clear
- * that CellRenderers are going away in Gtk4 so they aren't interested in fixing
- * rendering problems like the one in CellRendererPixbuf.
- *
- * See: https://gitlab.gnome.org/GNOME/gtk/-/issues/613
- */
+void CellRendererItemIcon::set_icon_name()
+{
+    std::string shape_type = _property_shape_type.get_value();
+    if (shape_type == "-") { // "-" is an explicit request not to draw any icon
+        property_icon_name().set_value({});
+        return;
+    }
 
-void CellRendererItemIcon::render_vfunc(const Cairo::RefPtr<Cairo::Context>& cr, 
-                                        Gtk::Widget& widget,
-                                        const Gdk::Rectangle& background_area,
-                                        const Gdk::Rectangle& cell_area,
+    auto color = _property_color.get_value();
+    if (color == 0 && _widget_color) {
+        color = *_widget_color;
+    }
+
+    auto [icon_name, color_class] = get_shape_icon(shape_type, color);
+    property_icon_name().set_value(icon_name);
+    _color_class = std::move(color_class);
+}
+
+void CellRendererItemIcon::render_vfunc(const Cairo::RefPtr<Cairo::Context>& cr,
+                                        Gtk::Widget &widget,
+                                        const Gdk::Rectangle &background_area,
+                                        const Gdk::Rectangle &cell_area,
                                         Gtk::CellRendererState flags)
 {
-    property_mode() = Gtk::CELL_RENDERER_MODE_ACTIVATABLE;
-
-    std::string shape_type = _property_shape_type.get_value();
-    if (shape_type == "-") return; // "-" is an explicit request not to draw any icon
-
-    std::string highlight;
-    auto color = _property_color.get_value();
-    if (color == 0) {
-        auto const fg = get_foreground_color(widget.get_style_context());
-        highlight = fg.to_string();
+    if (property_icon_name().get_value().empty()) {
+        return;
     }
-    else {
-        highlight = SPColor(color).toString();
-    }
-    std::string cache_id = shape_type + "-" + highlight;
 
-    // if the icon isn't cached, render it to a pixbuf
-    int scale = widget.get_scale_factor();
-    if ( !_icon_cache[cache_id] ) { 
-        _icon_cache[cache_id] = sp_get_shape_icon(shape_type, Gdk::RGBA(highlight), _size, scale);
+    auto const style_context = widget.get_style_context();
+    // CSS color might have changed, so refresh if so:
+    if (auto const color = to_guint32(get_foreground_color(style_context));
+        _widget_color != color)
+    {
+        _widget_color = color;
+        set_icon_name();
     }
-    g_return_if_fail(_icon_cache[cache_id]);
-  
-    // Center the icon in the cell area
-    int x = cell_area.get_x() + int((cell_area.get_width() - _size) * 0.5);
-    int y = cell_area.get_y() + int((cell_area.get_height() - _size) * 0.5);
+    // GTK4 will not let us recolor symbolic icons any other way I can find, so…
+    style_context->add_class(_color_class);
+    Gtk::CellRendererPixbuf::render_vfunc(cr, widget, background_area, cell_area, flags);
+    style_context->remove_class(_color_class);
 
-    // Paint the pixbuf to a cairo surface to get HiDPI support
-    paint_icon(cr, widget, _icon_cache[cache_id], x, y);
+    int clipmask = _property_clipmask.get_value();
+    if (clipmask <= 0) return;
 
     // Create an overlay icon
-    int clipmask = _property_clipmask.get_value();
-    if (clipmask > 0) {
-        if (!_clip_overlay) {
-            _clip_overlay = sp_get_icon_pixbuf("overlay-clip", Gtk::ICON_SIZE_MENU, scale);
-        }
-        if (!_mask_overlay) {
-            _mask_overlay = sp_get_icon_pixbuf("overlay-mask", Gtk::ICON_SIZE_MENU, scale);
-        }
-        if (!_both_overlay) {
-            _both_overlay = sp_get_icon_pixbuf("overlay-clipmask", Gtk::ICON_SIZE_MENU, scale);
-        }
-
-        if (clipmask == OVERLAY_CLIP && _clip_overlay) {
-            paint_icon(cr, widget, _clip_overlay, x, y);
-        }
-        if (clipmask == OVERLAY_MASK && _mask_overlay) {
-            paint_icon(cr, widget, _mask_overlay, x, y);
-        }
-        if (clipmask == OVERLAY_BOTH && _both_overlay) {
-            paint_icon(cr, widget, _both_overlay, x, y);
-        }
+    // …somewhat sneakily, by temporarily changing our :icon-name & re-rendering
+    auto icon_name = property_icon_name().get_value();
+    if (clipmask == OVERLAY_CLIP) {
+        property_icon_name().set_value("overlay-clip");
+    } else if (clipmask == OVERLAY_MASK) {
+        property_icon_name().set_value("overlay-mask");
+    } else if (clipmask == OVERLAY_BOTH) {
+        property_icon_name().set_value("overlay-clipmask");
     }
-
+    Gtk::CellRendererPixbuf::render_vfunc(cr, widget, background_area, cell_area, flags);
+    property_icon_name().set_value(std::move(icon_name));
 }
 
-void CellRendererItemIcon::paint_icon(const Cairo::RefPtr<Cairo::Context>& cr,
-                                      Gtk::Widget& widget,
-                                      Glib::RefPtr<Gdk::Pixbuf> pixbuf,
-                                      int x, int y)
-{
-    cairo_surface_t *surface = gdk_cairo_surface_create_from_pixbuf(
-            pixbuf->gobj(), 0, widget.get_window()->gobj());
-    if (!surface) return;
-    cairo_set_source_surface(cr->cobj(), surface, x, y);
-    cr->set_operator(Cairo::OPERATOR_ATOP);
-    cr->rectangle(x, y, _size, _size);
-    cr->fill();
-    cairo_surface_destroy(surface); // free!
-}
-
-void CellRendererItemIcon::get_preferred_height_vfunc(Gtk::Widget& widget, int& min_h, int& nat_h) const
-{
-    min_h = _size;
-    nat_h = _size + 4;
-}   
-
-void CellRendererItemIcon::get_preferred_width_vfunc(Gtk::Widget& widget, int& min_w, int& nat_w) const
-{
-    min_w = _size;
-    nat_w = _size + 4;
-}   
-
-bool CellRendererItemIcon::activate_vfunc(GdkEvent* event,
-                                Gtk::Widget& widget,
-                                const Glib::ustring& path,
-                                const Gdk::Rectangle& background_area,
-                                const Gdk::Rectangle& cell_area,
-                                Gtk::CellRendererState flags) {
+bool CellRendererItemIcon::activate_vfunc(GdkEvent *event,
+                                          Gtk::Widget &widget,
+                                          const Glib::ustring &path,
+                                          const Gdk::Rectangle &background_area,
+                                          const Gdk::Rectangle &cell_area,
+                                          Gtk::CellRendererState flags) {
     _signal_activated.emit(path);
     return true;
 }
@@ -139,5 +105,3 @@ bool CellRendererItemIcon::activate_vfunc(GdkEvent* event,
   End:
 */
 // vim: filetype=cpp:expandtab:shiftwidth=4:tabstop=8:softtabstop=4:fileencoding=utf-8:textwidth=99 :
-
-

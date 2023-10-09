@@ -11,13 +11,15 @@
 #ifndef SEEN_INKSCAPE_UI_DIALOG_SHAPEICON_H
 #define SEEN_INKSCAPE_UI_DIALOG_SHAPEICON_H
 
-#include <map>
+#include <cstdint>
+#include <optional>
 #include <string>
+#include <typeinfo>
 #include <glibmm/property.h>
-#include <glibmm/refptr.h>
-#include <gtkmm/iconinfo.h>
-#include <gtkmm/cellrenderer.h>
-#include <gtkmm/widget.h>
+#include <glibmm/propertyproxy.h>
+#include <gtkmm/cellrendererpixbuf.h>
+#include <gdkmm/rgba.h>
+#include <sigc++/functors/mem_fun.h>
 
 namespace Inkscape::UI::Widget {
 
@@ -31,20 +33,23 @@ enum OverlayStates : OverlayState {
     OVERLAY_BOTH = 3,     // Object has both clip and mask
 };
 
-/* Custom cell renderer for type icon */
-class CellRendererItemIcon : public Gtk::CellRenderer {
+/// Custom cell renderer for shapes of items in Objects dialog, w/ optional clip/mask icon overlaid
+class CellRendererItemIcon : public Gtk::CellRendererPixbuf {
 public:
     CellRendererItemIcon() :
-        Glib::ObjectBase(typeid(CellRenderer)),
-        Gtk::CellRenderer(),
+        Glib::ObjectBase{typeid(*this)},
+        Gtk::CellRendererPixbuf{},
         _property_shape_type(*this, "shape_type", "unknown"),
         _property_color(*this, "color", 0),
-        _property_clipmask(*this, "clipmask", 0),
-        _clip_overlay(nullptr),
-        _mask_overlay(nullptr),
-        _both_overlay(nullptr)
+        _property_clipmask(*this, "clipmask", 0)
     {
-        Gtk::IconSize::lookup(Gtk::ICON_SIZE_MENU, _size, _size);
+        property_mode() = Gtk::CELL_RENDERER_MODE_ACTIVATABLE;
+        property_stock_size().set_value(Gtk::ICON_SIZE_MENU);
+
+        set_icon_name();
+        auto const set = sigc::mem_fun(*this, &CellRendererItemIcon::set_icon_name);
+        property_shape_type().signal_changed().connect(set);
+        property_color     ().signal_changed().connect(set);
     } 
      
     Glib::PropertyProxy<std::string> property_shape_type() {
@@ -64,37 +69,27 @@ public:
     }
 
 private:
+    void set_icon_name();
     void render_vfunc(const Cairo::RefPtr<Cairo::Context>& cr, 
-                      Gtk::Widget& widget,
-                      const Gdk::Rectangle& background_area,
-                      const Gdk::Rectangle& cell_area,
+                      Gtk::Widget &widget,
+                      const Gdk::Rectangle &background_area,
+                      const Gdk::Rectangle &cell_area,
                       Gtk::CellRendererState flags) override;
-    void paint_icon(const Cairo::RefPtr<Cairo::Context>& cr,
-                    Gtk::Widget& widget,
-                    Glib::RefPtr<Gdk::Pixbuf> pixbuf,
-                    int x, int y);
 
-    void get_preferred_width_vfunc(Gtk::Widget& widget, int& min_w, int& nat_w) const override;
-    void get_preferred_height_vfunc(Gtk::Widget& widget, int& min_h, int& nat_h) const override;
-
-    bool activate_vfunc(GdkEvent* event,
-                        Gtk::Widget& widget,
-                        const Glib::ustring& path,
-                        const Gdk::Rectangle& background_area,
-                        const Gdk::Rectangle& cell_area,
+    bool activate_vfunc(GdkEvent *event,
+                        Gtk::Widget &widget,
+                        const Glib::ustring &path,
+                        const Gdk::Rectangle &background_area,
+                        const Gdk::Rectangle &cell_area,
                         Gtk::CellRendererState flags) override;
 
     type_signal_activated _signal_activated;
-    int _size;
     Glib::Property<std::string> _property_shape_type;
     Glib::Property<unsigned int> _property_color;
     Glib::Property<unsigned int> _property_clipmask;
-    std::map<const std::string, Glib::RefPtr<Gdk::Pixbuf> > _icon_cache;
 
-    // Overlay indicators
-    Glib::RefPtr<Gdk::Pixbuf> _mask_overlay;
-    Glib::RefPtr<Gdk::Pixbuf> _clip_overlay;
-    Glib::RefPtr<Gdk::Pixbuf> _both_overlay;
+    Glib::ustring _color_class;
+    std::optional<std::uint32_t> _widget_color;
 };
 
 } // namespace Inkscape::UI::Widget

@@ -12,58 +12,25 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include <memory>
-
 #include "undo-history.h"
+
+#include <sstream>
+#include <gtkmm/cellrendererpixbuf.h>
 
 #include "actions/actions-tools.h"
 #include "document-undo.h"
 #include "document.h"
 #include "inkscape.h"
-#include "ui/icon-loader.h"
 #include "ui/pack.h"
 #include "util/signal-blocker.h"
 
-namespace Inkscape {
-namespace UI {
-namespace Dialog {
+namespace Inkscape::UI::Dialog {
 
 /* Rendering functions for custom cell renderers */
-void CellRendererSPIcon::render_vfunc(const Cairo::RefPtr<Cairo::Context>& cr,
-                                      Gtk::Widget& widget,
-                                      const Gdk::Rectangle& background_area,
-                                      const Gdk::Rectangle& cell_area,
-                                      Gtk::CellRendererState flags)
-{
-    // if there is no icon name.
-    if ( _property_icon_name == "") return;
-
-    // if the icon isn't cached, render it to a pixbuf
-    if ( !_icon_cache[_property_icon_name] ) {
-        auto const icon = std::unique_ptr<Gtk::Image>{sp_get_icon_image(_property_icon_name, Gtk::ICON_SIZE_MENU)};
-
-        if (icon) {
-            // check icon type (inkscape, gtk, none)
-            if ( GTK_IS_IMAGE(icon->gobj()) ) {
-                _property_icon = sp_get_icon_pixbuf(_property_icon_name, 16);
-            } else {
-                return;
-            }
-
-            property_pixbuf() = _icon_cache[_property_icon_name] = _property_icon.get_value();
-        }
-    } else {
-        property_pixbuf() = _icon_cache[_property_icon_name];
-    }
-
-    Gtk::CellRendererPixbuf::render_vfunc(cr, widget, background_area,
-                                          cell_area, flags);
-}
-
 void CellRendererInt::render_vfunc(const Cairo::RefPtr<Cairo::Context>& cr,
-                                   Gtk::Widget& widget,
-                                   const Gdk::Rectangle& background_area,
-                                   const Gdk::Rectangle& cell_area,
+                                   Gtk::Widget &widget,
+                                   const Gdk::Rectangle &background_area,
+                                   const Gdk::Rectangle &cell_area,
                                    Gtk::CellRendererState flags)
 {
     if( _filter(_property_number) ) {
@@ -75,7 +42,7 @@ void CellRendererInt::render_vfunc(const Cairo::RefPtr<Cairo::Context>& cr,
     }
 }
 
-const CellRendererInt::Filter& CellRendererInt::no_filter = CellRendererInt::NoFilter();
+const CellRendererInt::Filter &CellRendererInt::no_filter = CellRendererInt::NoFilter();
 
 UndoHistory::UndoHistory()
     : DialogBase("/dialogs/undo-history", "UndoHistory"),
@@ -95,7 +62,7 @@ UndoHistory::UndoHistory()
     _event_list_view.set_enable_search(false);
     _event_list_view.set_headers_visible(false);
 
-    auto const icon_renderer = Gtk::make_managed<CellRendererSPIcon>();
+    auto const icon_renderer = Gtk::make_managed<Gtk::CellRendererPixbuf>();
     icon_renderer->property_xpad() = 2;
     icon_renderer->property_width() = 24;
     int cols_count = _event_list_view.append_column("Icon", *icon_renderer);
@@ -334,11 +301,9 @@ UndoHistory::_onCollapseEvent(const Gtk::TreeModel::iterator &iter, const Gtk::T
     }
 }
 
-const CellRendererInt::Filter& UndoHistory::greater_than_1 = UndoHistory::GreaterThan(1);
+const CellRendererInt::Filter &UndoHistory::greater_than_1 = UndoHistory::GreaterThan(1);
 
-} // namespace Dialog
-} // namespace UI
-} // namespace Inkscape
+} // namespace Inkscape::UI::Dialog
 
 /*
   Local Variables:

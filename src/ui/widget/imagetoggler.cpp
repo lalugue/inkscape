@@ -11,45 +11,44 @@
 
 #include "ui/widget/imagetoggler.h"
 
-#include <gdkmm/general.h>
-#include <gtkmm/iconinfo.h>
-
-#include "ui/icon-loader.h"
-#include "ui/icon-names.h"
+#include <sigc++/functors/mem_fun.h>
 
 namespace Inkscape::UI::Widget {
 
 ImageToggler::ImageToggler(char const *on, char const *off) :
     Glib::ObjectBase(typeid(ImageToggler)),
-    Gtk::CellRenderer(),
+    Gtk::CellRendererPixbuf{},
     _pixOnName(on),
     _pixOffName(off),
     _property_active(*this, "active", false),
     _property_activatable(*this, "activatable", true),
     _property_gossamer(*this, "gossamer", false),
-    _property_active_icon(*this, "active_icon", ""),
-    _property_pixbuf_on(*this, "pixbuf_on", Glib::RefPtr<Gdk::Pixbuf>(nullptr)),
-    _property_pixbuf_off(*this, "pixbuf_off", Glib::RefPtr<Gdk::Pixbuf>(nullptr))
+    _property_active_icon(*this, "active_icon", "")
 {
     property_mode() = Gtk::CELL_RENDERER_MODE_ACTIVATABLE;
-    Gtk::IconSize::lookup(Gtk::ICON_SIZE_MENU, _size, _size);
-}
+    property_stock_size().set_value(Gtk::ICON_SIZE_MENU);
+    set_padding(6, 3);
 
-void ImageToggler::get_preferred_height_vfunc(Gtk::Widget &widget, int &min_h, int &nat_h) const
-{
-    min_h = _size + 6;
-    nat_h = _size + 8;
-}
-
-void ImageToggler::get_preferred_width_vfunc(Gtk::Widget &widget, int &min_w, int &nat_w) const
-{
-    min_w = _size + 12;
-    nat_w = _size + 16;
+    auto const set_icon = sigc::mem_fun(*this, &ImageToggler::set_icon_name);
+    property_active     ().signal_changed().connect(set_icon);
+    property_active_icon().signal_changed().connect(set_icon);
 }
 
 void ImageToggler::set_force_visible(bool const force_visible)
 {
     _force_visible = force_visible;
+}
+
+void ImageToggler::set_icon_name()
+{
+    Glib::ustring icon_name;
+    if (_property_active.get_value()) {
+        icon_name = _property_active_icon.get_value();
+        if (icon_name.empty()) icon_name = _pixOnName;
+    } else {
+        icon_name = _pixOffName;
+    }
+    property_icon_name().set_value(icon_name);
 }
 
 void ImageToggler::render_vfunc(const Cairo::RefPtr<Cairo::Context> &cr,
@@ -58,22 +57,6 @@ void ImageToggler::render_vfunc(const Cairo::RefPtr<Cairo::Context> &cr,
                                 const Gdk::Rectangle &cell_area,
                                 Gtk::CellRendererState flags)
 {
-    int scale = 0;
-
-    // Lazy/late pixbuf rendering to get access to scale factor from widget.
-    if(!_property_pixbuf_on.get_value()) {
-        scale = widget.get_scale_factor();
-        _property_pixbuf_on = sp_get_icon_pixbuf(_pixOnName, _size * scale);
-        _property_pixbuf_off = sp_get_icon_pixbuf(_pixOffName, _size * scale);
-    }
-
-    std::string icon_name = _property_active_icon.get_value();
-    // if the icon isn't cached, render it to a pixbuf
-    if (!icon_name.empty() && !_icon_cache[icon_name]) { 
-        if (scale == 0) scale = widget.get_scale_factor();
-        _icon_cache[icon_name] = sp_get_icon_pixbuf(icon_name, _size * scale);
-    }
-
     // Hide when not being used.
     double alpha = 1.0;
     bool visible = _property_activatable.get_value()
@@ -83,33 +66,19 @@ void ImageToggler::render_vfunc(const Cairo::RefPtr<Cairo::Context> &cr,
         // XXX There is conflict about this value, some users want 0.2, others want 0.0
         alpha = 0.0;
     }
-    if (_property_gossamer.get_value()) {
+    if (!visible && _property_gossamer.get_value()) {
         alpha += 0.2;
     }
     if (alpha <= 0.0) {
         return;
     }
 
-    Glib::RefPtr<Gdk::Pixbuf> pixbuf;
-    if (_property_active.get_value()) {
-        pixbuf = icon_name.empty() ? _property_pixbuf_on.get_value() : _icon_cache[icon_name];
-    } else {
-        pixbuf = _property_pixbuf_off.get_value();
-    }
-
-    // Center the icon in the cell area
-    int x = cell_area.get_x() + int((cell_area.get_width() - _size) * 0.5);
-    int y = cell_area.get_y() + int((cell_area.get_height() - _size) * 0.5);
-
-    Gdk::Cairo::set_source_pixbuf(cr, pixbuf, x, y);
-    cr->set_operator(Cairo::OPERATOR_ATOP);
-    cr->rectangle(x, y, _size, _size);
-    if (alpha < 1.0) {
-        cr->clip();
-        cr->paint_with_alpha(alpha);
-    } else {
-        cr->fill();
-    }
+    // Apply alpha to output of Gtk::CellRendererPixbuf, plus x offset to replicate prev behaviour.
+    cr->push_group();
+    cr->translate(-0.5 * property_xpad().get_value(), 0.0);
+    Gtk::CellRendererPixbuf::render_vfunc(cr, widget, background_area, cell_area, flags);
+    cr->pop_group_to_source();
+    cr->paint_with_alpha(alpha);
 }
 
 bool
