@@ -138,7 +138,7 @@ if(WIN32)
   INSTALL(FILES ${MINGW_LIBS} DESTINATION bin)
   # There are differences for 64-Bit and 32-Bit build environments.
   if(HAVE_MINGW64)
-    if($ENV{MSYSTEM} STREQUAL "CLANGARM64")
+    if($ENV{MSYSTEM} STREQUAL "CLANGARM64" OR $ENV{MSYSTEM} STREQUAL "CLANG64")
       install(FILES
         ${MINGW_BIN}/libc++.dll
         ${MINGW_BIN}/libunwind.dll
@@ -376,7 +376,7 @@ if(WIN32)
     COMPONENT python)
 
   # gdb
-  if (NOT $ENV{MSYSTEM} STREQUAL "CLANGARM64")
+  if (NOT ($ENV{MSYSTEM} STREQUAL "CLANGARM64" OR $ENV{MSYSTEM} STREQUAL "CLANG64"))
     install(FILES
       ${MINGW_BIN}/gdb.exe
       ${MINGW_BIN}/libxxhash.dll
