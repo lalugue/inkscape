@@ -15,11 +15,13 @@
 
 #include <functional>
 #include <stdexcept>
+
 #include <glibmm/i18n.h>
 #include <glibmm/ustring.h>
 #include <gtkmm/adjustment.h>
 #include <gtkmm/expander.h>
 #include <gtkmm/grid.h>
+#include <gtkmm/image.h>
 #include <gtkmm/label.h>
 #include <gtkmm/spinbutton.h>
 

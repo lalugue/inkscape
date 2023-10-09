@@ -20,6 +20,7 @@
 
 #include "svg-preview.h"
 
+#include <cerrno>
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -31,6 +32,7 @@
 #include <glibmm/regex.h>
 #include <glibmm/uriutils.h>
 #include <glibmm/ustring.h>
+#include <gdkmm/pixbuf.h>
 
 #include "ui/pack.h"
 #include "ui/view/svg-view-widget.h"

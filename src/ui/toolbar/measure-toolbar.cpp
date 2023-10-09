@@ -29,6 +29,7 @@
 #include "measure-toolbar.h"
 
 #include <glibmm/i18n.h>
+#include <gtkmm/adjustment.h>
 #include <gtkmm/togglebutton.h>
 
 #include "desktop.h"

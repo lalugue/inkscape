@@ -16,8 +16,7 @@
 
 #include <gtkmm/box.h>
 #include <gtkmm/checkbutton.h>
-#include <gtkmm/combobox.h>
-#include <gtkmm/separator.h>
+#include <gtkmm/label.h>
 #include <gtkmm/expander.h>
 
 #include "combo-enums.h"

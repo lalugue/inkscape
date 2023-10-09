@@ -18,10 +18,7 @@
 #ifndef SEEN_SVG_PREVIEW_H
 #define SEEN_SVG_PREVIEW_H
 
-#include <cerrno>
 #include <memory>
-#include <unistd.h>
-#include <sys/stat.h>
 
 #include <gtkmm/box.h>
 

@@ -19,7 +19,10 @@
 #include <2geom/rect.h>
 #include <glibmm/i18n.h>
 #include <glibmm/main.h>
+
+#include <gtkmm/adjustment.h>
 #include <gtkmm/box.h>
+#include <gtkmm/enums.h>
 #include <gtkmm/image.h>
 #include <gtkmm/togglebutton.h>
 

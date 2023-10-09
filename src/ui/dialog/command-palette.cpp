@@ -24,6 +24,7 @@
 #include <glibmm/main.h>
 #include <glibmm/variant.h>
 #include <giomm/action.h>
+#include <gtkmm/adjustment.h>
 #include <gtkmm/box.h>
 #include <gtkmm/builder.h>
 #include <gtkmm/button.h>
