@@ -62,6 +62,18 @@ static void copy(Gtk::Button * const button, Gtk::Label * const label, Glib::ust
     }
 }
 
+// Free function to handle key events
+static void on_key_pressed(GtkEventControllerKey const * const controller,
+                           unsigned const keyval, 
+                           unsigned const keycode,
+                           GdkModifierType const state,
+                           void *user_data) {
+    if (keyval == GDK_KEY_Escape) {
+        auto const window = static_cast<Gtk::Window *>(user_data);
+        window->hide();
+    }
+}
+
 template <class Random>
 [[nodiscard]] static auto get_shuffled_lines(std::string const &filename, Random &&random)
 {
@@ -151,7 +163,11 @@ void show_about()
         std::string str((std::istreambuf_iterator<char>(fn)),
                          std::istreambuf_iterator<char>());
         license->set_markup(str.c_str());
-    }
+
+        // Connect the key event to the on_key_pressed function
+        auto const controller = gtk_event_controller_key_new(GTK_WIDGET(window->gobj()));
+        g_signal_connect(controller, "key-pressed", G_CALLBACK(on_key_pressed), window);
+     }
 
     if (window) {
         window->set_visible(true);
