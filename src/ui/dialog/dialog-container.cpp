@@ -16,10 +16,10 @@
 #include <glibmm/i18n.h>
 #include <glibmm/keyfile.h>
 #include <giomm/file.h>
-#include <gdkmm/dragcontext.h>
 #include <gtkmm/box.h>
 #include <gtkmm/eventbox.h>
 #include <gtkmm/image.h>
+#include <gtkmm/selectiondata.h>
 #include <gtkmm/targetentry.h>
 #include <gtkmm/viewport.h>
 #include <sigc++/adaptors/bind.h>
@@ -71,6 +71,12 @@
 
 namespace Inkscape::UI::Dialog {
 
+[[nodiscard]] static auto const &get_target_entries()
+{
+    static auto const target_entries = std::vector{Gtk::TargetEntry{"GTK_NOTEBOOK_TAB"}};
+    return target_entries;
+}
+
 // Clear dialogs a bit early, to not do ~MultiPaned → ~Notebook → our unlink_dialog()→erase()→crash
 DialogContainer::~DialogContainer()
 {
@@ -94,13 +100,9 @@ DialogContainer::DialogContainer(InkscapeWindow* inkscape_window)
         sigc::bind(sigc::mem_fun(*this, &DialogContainer::append_drop), columns.get())));
 
     // Setup drop targets.
-    target_entries.emplace_back(Gtk::TargetEntry("GTK_NOTEBOOK_TAB"));
-    columns->set_target_entries(target_entries);
+    columns->set_target_entries(get_target_entries());
 
     add(*columns.get());
-
-    // Should probably be moved to window.
-    //  connections.emplace_back(signal_unmap().connect(sigc::mem_fun(*this, &DialogContainer::cb_on_unmap)));
 
     show_all_children();
 }
@@ -118,7 +120,7 @@ DialogMultipaned *DialogContainer::create_column()
     connections.emplace_back(column->signal_now_empty().connect(
         sigc::bind(sigc::mem_fun(*this, &DialogContainer::column_empty), column)));
 
-    column->set_target_entries(target_entries);
+    column->set_target_entries(get_target_entries());
 
     return column;
 }
@@ -1035,25 +1037,19 @@ void DialogContainer::on_unrealize() {
     parent_type::on_unrealize();
 }
 
-#ifdef __APPLE__
-DialogNotebook* DialogContainer::new_nb = 0;
-Gtk::Widget* DialogContainer::page_move = 0;
-#endif
-
 // Create a new notebook and move page.
-DialogNotebook *DialogContainer::prepare_drop(Glib::RefPtr<Gdk::DragContext> const &context)
+DialogNotebook *DialogContainer::prepare_drop(Gtk::SelectionData const &selection_data)
 {
-    Gtk::Widget *source = Gtk::Widget::drag_get_source_widget(context);
-
-    // Find source notebook and page
-    Gtk::Notebook *old_notebook = dynamic_cast<Gtk::Notebook *>(source);
-    if (!old_notebook) {
-        std::cerr << "DialogContainer::prepare_drop: notebook not found!" << std::endl;
+    if (selection_data.get_target() != "GTK_NOTEBOOK_TAB") {
+        std::cerr << "DialogContainer::prepare_drop: tab not found!" << std::endl;
         return nullptr;
     }
 
     // Find page
-    Gtk::Widget *page = old_notebook->get_nth_page(old_notebook->get_current_page());
+    auto const cpage = reinterpret_cast<GtkWidget **>(const_cast<unsigned char *>(selection_data.get_data()));
+    g_assert(cpage);
+    g_assert(GTK_IS_WIDGET(*cpage));
+    auto const page = Glib::wrap(*cpage);
     if (!page) {
         std::cerr << "DialogContainer::prepare_drop: page not found!" << std::endl;
         return nullptr;
@@ -1061,13 +1057,7 @@ DialogNotebook *DialogContainer::prepare_drop(Glib::RefPtr<Gdk::DragContext> con
 
     // Create new notebook and move page.
     auto const new_notebook = Gtk::make_managed<DialogNotebook>(this);
-#ifdef __APPLE__
-    // moving current page during d&d is a sure way to crash on macos
-    new_nb = new_notebook;
-    page_move = page;
-#else
     new_notebook->move_page(*page);
-#endif
 
     // move_page() takes care of updating dialog lists.
     INKSCAPE.themecontext->getChangeThemeSignal().emit();
@@ -1076,10 +1066,10 @@ DialogNotebook *DialogContainer::prepare_drop(Glib::RefPtr<Gdk::DragContext> con
 }
 
 // Notebook page dropped on prepend target. Call function to create new notebook and then insert.
-void DialogContainer::prepend_drop(Glib::RefPtr<Gdk::DragContext> const &context,
+void DialogContainer::prepend_drop(Gtk::SelectionData const &selection_data,
                                    DialogMultipaned * const multipane)
 {
-    DialogNotebook *new_notebook = prepare_drop(context); // Creates notebook, moves page.
+    auto const new_notebook = prepare_drop(selection_data); // Creates notebook, moves page.
     if (!new_notebook) {
         std::cerr << "DialogContainer::prepend_drop: no new notebook!" << std::endl;
         return;
@@ -1100,10 +1090,10 @@ void DialogContainer::prepend_drop(Glib::RefPtr<Gdk::DragContext> const &context
 }
 
 // Notebook page dropped on append target. Call function to create new notebook and then insert.
-void DialogContainer::append_drop(Glib::RefPtr<Gdk::DragContext> const &context,
+void DialogContainer::append_drop(Gtk::SelectionData const &selection_data,
                                   DialogMultipaned * const multipane)
 {
-    DialogNotebook *new_notebook = prepare_drop(context); // Creates notebook, moves page.
+    auto const new_notebook = prepare_drop(selection_data); // Creates notebook, moves page.
     if (!new_notebook) {
         std::cerr << "DialogContainer::append_drop: no new notebook!" << std::endl;
         return;

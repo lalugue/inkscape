@@ -434,11 +434,11 @@ DialogWindow* DialogNotebook::pop_tab_callback()
 
 // ========= Signal handlers - notebook =========
 
-#ifdef __APPLE__
-// for some reason d&d source is lost on macos
-// ToDo: revisit in gtk4
-Gtk::Widget* drag_source= 0;
-#endif
+[[nodiscard]] static bool should_set_floating(Glib::RefPtr<Gdk::DragContext> const &context)
+{
+    auto const window = context->get_dest_window();
+    return !window || window->get_window_type() == Gdk::WINDOW_FOREIGN;
+}
 
 /**
  * Signal handler to pop a dragged tab into its own DialogWindow.
@@ -456,49 +456,22 @@ void DialogNotebook::on_drag_end(const Glib::RefPtr<Gdk::DragContext> &context)
         instance->remove_highlight_header();
     }
 
-    bool set_floating = !context->get_dest_window();
-    if (!set_floating && context->get_dest_window()->get_window_type() == Gdk::WINDOW_FOREIGN) {
-        set_floating = true;
-    }
-
-    Gtk::Widget *source = Gtk::Widget::drag_get_source_widget(context);
-
-#ifdef __APPLE__
-    if (!source) source = drag_source;
-    drag_source = 0;
-    auto page_to_move = DialogContainer::page_move;
-    auto new_nb = DialogContainer::new_nb;
-    if (page_to_move && new_nb) {
-        // it's only save to move the page from drag_end handler here on macOS
-        new_nb->move_page(*page_to_move);
-        DialogContainer::page_move=0;
-        DialogContainer::new_nb=0;
-        set_floating = false;
-    }
-#endif
-
+    bool const set_floating = should_set_floating(context);
     if (set_floating) {
-        // Find source notebook and page
-        Gtk::Notebook *old_notebook = dynamic_cast<Gtk::Notebook *>(source);
-        if (!old_notebook) {
-            std::cerr << "DialogNotebook::on_drag_end: notebook not found!" << std::endl;
-        } else {
-            // Find page
-            Gtk::Widget *page = old_notebook->get_nth_page(old_notebook->get_current_page());
-            if (page) {
-                // Move page to notebook in new dialog window
-                auto inkscape_window = _container->get_inkscape_window();
-                auto window = new DialogWindow(inkscape_window, page);
+        // Find page
+        if (auto const page = _notebook.get_nth_page(_notebook.get_current_page())) {
+            // Move page to notebook in new dialog window
+            auto inkscape_window = _container->get_inkscape_window();
+            auto window = new DialogWindow(inkscape_window, page);
 
-                // Move window to mouse pointer
-                if (auto device = context->get_device()) {
-                    int x = 0, y = 0;
-                    device->get_position(x, y);
-                    window->move(std::max(0, x - 50), std::max(0, y - 50));
-                }
-
-                window->show_all();
+            // Move window to mouse pointer
+            if (auto device = context->get_device()) {
+                int x = 0, y = 0;
+                device->get_position(x, y);
+                window->move(std::max(0, x - 50), std::max(0, y - 50));
             }
+
+            window->show_all();
         }
     }
 
@@ -518,12 +491,6 @@ void DialogNotebook::on_drag_end(const Glib::RefPtr<Gdk::DragContext> &context)
 
 void DialogNotebook::on_drag_begin(const Glib::RefPtr<Gdk::DragContext> &context)
 {
-#ifdef __APPLE__
-    drag_source = Gtk::Widget::drag_get_source_widget(context);
-    DialogContainer::page_move = 0;
-    DialogContainer::new_nb = 0;
-#endif
-
     DialogMultipaned::add_drop_zone_highlight_instances();
     for (auto instance : _instances) {
         instance->add_highlight_header();

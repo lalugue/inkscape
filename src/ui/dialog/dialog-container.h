@@ -17,7 +17,7 @@
 #include <memory>
 #include <set>
 #include <string>
-#include <glibmm/refptr.h>
+#include <vector>
 #include <glibmm/ustring.h>
 #include <glibmm/keyfile.h>
 #include <gtkmm/accelkey.h>
@@ -28,7 +28,7 @@
 #include "helper/auto-connection.h"
 
 namespace Gtk {
-class TargetEntry;
+class SelectionData;
 } // namespace Gtk
 
 namespace Inkscape::UI::Dialog {
@@ -79,17 +79,9 @@ public:
     std::shared_ptr<Glib::KeyFile> get_container_state(const window_position_t* position) const;
     void load_container_state(Glib::KeyFile& state, const std::string& window_id);
 
-#ifdef __APPLE__
-// Note: this is an ugly work-around for https://gitlab.com/inkscape/inkscape/-/issues/4111
-// ToDo: revisit and hopefully remove this hack in gtk4
-static DialogNotebook* new_nb;
-static Gtk::Widget* page_move;
-#endif
-
 private:
     InkscapeWindow *_inkscape_window = nullptr;   // Every container is attached to an InkscapeWindow.
     std::unique_ptr<DialogMultipaned> columns ;   // The main widget inside which other children are kept.
-    std::vector<Gtk::TargetEntry> target_entries; // What kind of object can be dropped.
 
     /**
      * Due to the way Gtk handles dragging between notebooks, one can
@@ -113,9 +105,9 @@ private:
 
     // Handlers
     void on_unrealize() override;
-    DialogNotebook *prepare_drop(Glib::RefPtr<Gdk::DragContext> const &context);
-    void prepend_drop           (Glib::RefPtr<Gdk::DragContext> const &context, DialogMultipaned *column);
-    void append_drop            (Glib::RefPtr<Gdk::DragContext> const &context, DialogMultipaned *column);
+    DialogNotebook *prepare_drop(Gtk::SelectionData const &selection_data);
+    void prepend_drop           (Gtk::SelectionData const &selection_data, DialogMultipaned *column);
+    void append_drop            (Gtk::SelectionData const &selection_data, DialogMultipaned *column);
     void column_empty(DialogMultipaned *column);
     DialogBase* find_existing_dialog(const Glib::ustring& dialog_type);
     static bool recreate_dialogs_from_state(InkscapeWindow* inkscape_window, const Glib::KeyFile* keyfile);

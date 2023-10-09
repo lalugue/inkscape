@@ -28,6 +28,7 @@ class DragContext;
 
 namespace Gtk {
 class GestureDrag;
+class SelectionData;
 class TargetEntry;
 } // namespace Gtk
 
@@ -58,8 +59,8 @@ public:
     bool has_empty_widget() { return (bool)_empty_widget; }
 
     // Signals
-    sigc::signal<void (Glib::RefPtr<Gdk::DragContext> const &)> signal_prepend_drag_data();
-    sigc::signal<void (Glib::RefPtr<Gdk::DragContext> const &)> signal_append_drag_data();
+    sigc::signal<void (Gtk::SelectionData const &)> signal_prepend_drag_data();
+    sigc::signal<void (Gtk::SelectionData const &)> signal_append_drag_data();
     sigc::signal<void ()> signal_now_empty();
 
     // UI functions
@@ -72,7 +73,7 @@ public:
     static void    add_drop_zone_highlight_instances();
     static void remove_drop_zone_highlight_instances();
 
-protected:
+private:
     // Overrides
     Gtk::SizeRequestMode get_request_mode_vfunc() const override;
     void get_preferred_width_vfunc(int &minimum_width, int &natural_width) const override;
@@ -88,11 +89,10 @@ protected:
     void on_remove(Gtk::Widget *child) override;
 
     // Signals
-    sigc::signal<void (Glib::RefPtr<Gdk::DragContext> const &)> _signal_prepend_drag_data;
-    sigc::signal<void (Glib::RefPtr<Gdk::DragContext> const &)> _signal_append_drag_data;
+    sigc::signal<void (Gtk::SelectionData const &)> _signal_prepend_drag_data;
+    sigc::signal<void (Gtk::SelectionData const &)> _signal_append_drag_data;
     sigc::signal<void ()> _signal_now_empty;
 
-private:
     // We must manage children ourselves.
     std::vector<Gtk::Widget *> children;
 

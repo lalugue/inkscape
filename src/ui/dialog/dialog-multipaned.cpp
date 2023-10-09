@@ -1342,29 +1342,29 @@ void DialogMultipaned::set_target_entries(const std::vector<Gtk::TargetEntry> &t
 void DialogMultipaned::on_drag_data(Glib::RefPtr<Gdk::DragContext> const &context, int x, int y,
                                     const Gtk::SelectionData &selection_data, guint info, guint time)
 {
-    _signal_prepend_drag_data.emit(context);
+    _signal_prepend_drag_data.emit(selection_data);
 }
 
 void DialogMultipaned::on_prepend_drag_data(Glib::RefPtr<Gdk::DragContext> const &context, int x, int y,
                                             const Gtk::SelectionData &selection_data, guint info, guint time)
 {
-    _signal_prepend_drag_data.emit(context);
+    _signal_prepend_drag_data.emit(selection_data);
 }
 
 void DialogMultipaned::on_append_drag_data(Glib::RefPtr<Gdk::DragContext> const &context, int x, int y,
                                            const Gtk::SelectionData &selection_data, guint info, guint time)
 {
-    _signal_append_drag_data.emit(context);
+    _signal_append_drag_data.emit(selection_data);
 }
 
 // Signals
-sigc::signal<void (Glib::RefPtr<Gdk::DragContext> const &)> DialogMultipaned::signal_prepend_drag_data()
+sigc::signal<void (Gtk::SelectionData const &)> DialogMultipaned::signal_prepend_drag_data()
 {
     resize_widget_children(this);
     return _signal_prepend_drag_data;
 }
 
-sigc::signal<void (Glib::RefPtr<Gdk::DragContext> const &)> DialogMultipaned::signal_append_drag_data()
+sigc::signal<void (Gtk::SelectionData const &)> DialogMultipaned::signal_append_drag_data()
 {
     resize_widget_children(this);
     return _signal_append_drag_data;
