@@ -24,6 +24,7 @@
 #include <sigc++/functors/mem_fun.h>
 
 #include "document.h"
+#include "ui/builder-utils.h"
 #include "ui/monitor.h"
 #include "ui/view/svg-view-widget.h"
 #include "util/units.h"
@@ -285,12 +286,7 @@ InkviewWindow::show_control()
             return;
         }
 
-
-        builder->get_widget("ControlWindow", _controlwindow);
-        if (!_controlwindow) {
-            std::cerr << "InkviewWindow::show_control: Control Window not found!" << std::endl;
-            return;
-        }
+        _controlwindow = &Inkscape::UI::get_widget<Gtk::Window>(builder, "ControlWindow");
 
         // Need to give control window access to viewer window's actions.
         Glib::RefPtr<Gio::ActionGroup> viewer = get_action_group("win");

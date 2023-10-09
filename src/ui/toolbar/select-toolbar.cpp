@@ -19,6 +19,9 @@
 #include <2geom/rect.h>
 #include <glibmm/i18n.h>
 #include <glibmm/main.h>
+#include <gtkmm/box.h>
+#include <gtkmm/image.h>
+#include <gtkmm/togglebutton.h>
 
 #include "desktop.h"
 #include "document-undo.h"

@@ -22,29 +22,26 @@
 #include <vector>
 #include <glibmm/refptr.h>
 #include <glibmm/ustring.h>
-#include <gtkmm/builder.h>
 #include <gtkmm/cellrendererpixbuf.h>
-#include <gtkmm/enums.h>
-#include <gtkmm/treemodel.h>
-#include <gtkmm/treemodelcolumn.h>
+#include <gtkmm/liststore.h>
+#include <gtkmm/treemodelfilter.h>
+#include <gtkmm/treemodelsort.h>
+#include <gtkmm/treepath.h>
 #include <boost/compute/detail/lru_cache.hpp>
 
-#include "desktop.h"
 #include "display/drawing.h"
-#include "document.h"
 #include "helper/auto-connection.h"
-#include "selection.h"
 #include "ui/dialog/dialog-base.h"
 #include "ui/operation-blocker.h"
 
 namespace Gtk {
 class Box;
+class Builder;
 class Button;
 class CheckButton;
 class IconView;
 class Image;
 class Label;
-class ListStore;
 class MenuButton;
 class Overlay;
 class Scale;
@@ -52,9 +49,14 @@ class ScrolledWindow;
 class SearchEntry;
 } // namespace Gtk
 
+class SPDesktop;
 class SPObject;
 class SPSymbol;
 class SPUse;
+
+namespace Inkscape {
+class Selection;
+} // namespace Inkscape
 
 namespace Inkscape::UI::Dialog {
 

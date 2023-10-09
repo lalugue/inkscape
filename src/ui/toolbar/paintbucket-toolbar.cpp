@@ -30,6 +30,8 @@
 
 #include <glibmm/i18n.h>
 #include <gtkmm/adjustment.h>
+#include <gtkmm/box.h>
+#include <gtkmm/button.h>
 #include <gtkmm/liststore.h>
 #include <gtkmm/treemodel.h>
 

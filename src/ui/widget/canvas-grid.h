@@ -33,7 +33,6 @@ class Builder;
 class GestureMultiPress;
 } // namespace Gtk
 
-class SPPage;
 class SPDocument;
 class SPDesktopWidget;
 
@@ -119,7 +118,7 @@ private:
     Gtk::ToggleButton _guide_lock;
     Gtk::ToggleButton _cms_adjust;
     Gtk::MenuButton _quick_actions;
-    Glib::RefPtr<Gtk::Builder> _display_popup;
+    Glib::RefPtr<Gtk::Builder> _builder_display_popup;
 
     // To be replaced by stateful Gio::Actions
     bool _show_scrollbars = true;

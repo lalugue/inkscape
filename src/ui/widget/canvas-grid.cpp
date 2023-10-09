@@ -23,7 +23,9 @@
 #include <gtkmm/checkbutton.h>
 #include <gtkmm/enums.h>
 #include <gtkmm/gesturemultipress.h>
+#include <gtkmm/image.h>
 #include <gtkmm/label.h>
+#include <gtkmm/popover.h>
 #include <sigc++/adaptors/bind.h>
 #include <sigc++/functors/mem_fun.h>
 
@@ -35,6 +37,7 @@
 #include "object/sp-grid.h"
 #include "object/sp-root.h"
 #include "page-manager.h"
+#include "ui/builder-utils.h"
 #include "ui/controller.h"
 #include "ui/dialog/command-palette.h"
 #include "ui/tools/tool-base.h"
@@ -119,14 +122,12 @@ CanvasGrid::CanvasGrid(SPDesktopWidget *dtw)
     _cms_adjust.set_tooltip_text(_("Toggle color-managed display for this document window"));
 
     // popover with some common display mode related options
-    auto builder = Gtk::Builder::create_from_file(Inkscape::IO::Resource::get_filename(Inkscape::IO::Resource::UIS, "display-popup.glade"));
-    _display_popup = builder;
-    Gtk::Popover* popover;
-    _display_popup->get_widget("popover", popover);
-    Gtk::CheckButton* sticky_zoom;
-    _display_popup->get_widget("zoom-resize", sticky_zoom);
+    _builder_display_popup = create_builder("display-popup.glade");
+    auto popover     = &get_widget<Gtk::Popover>    (_builder_display_popup, "popover");
+    auto sticky_zoom = &get_widget<Gtk::CheckButton>(_builder_display_popup, "zoom-resize");
+
     // To be replaced by Gio::Action:
-    sticky_zoom->signal_toggled().connect([=](){ _dtw->sticky_zoom_toggled(); });
+    sticky_zoom->signal_toggled().connect([this](){ _dtw->sticky_zoom_toggled(); });
     _quick_actions.set_name("QuickActions");
     _quick_actions.set_popover(*popover);
     _quick_actions.set_image_from_icon_name("display-symbolic");
@@ -159,7 +160,7 @@ void CanvasGrid::on_realize() {
     // actions should be available now
 
     if (auto map = _dtw->get_action_map()) {
-        auto set_display_icon = [=]() {
+        auto set_display_icon = [this]() {
             Glib::ustring id;
             auto mode = _canvas->get_render_mode();
             switch (mode) {
@@ -210,9 +211,7 @@ void CanvasGrid::on_realize() {
 
 // TODO: remove when sticky zoom gets replaced by Gio::Action:
 Gtk::ToggleButton* CanvasGrid::GetStickyZoom() {
-    Gtk::CheckButton* sticky_zoom;
-    _display_popup->get_widget("zoom-resize", sticky_zoom);
-    return sticky_zoom;
+    return &get_widget<Gtk::ToggleButton>(_builder_display_popup, "zoom-resize");
 }
 
 // _dt2r should be a member of _canvas.

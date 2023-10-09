@@ -9,6 +9,8 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#include "symbols.h"
+
 #include <cassert>
 #include <cmath>
 #include <algorithm>
@@ -17,7 +19,6 @@
 #include <locale>
 #include <regex>
 #include <sstream>
-#include <2geom/point.h>
 #include <cairo.h>
 #include <cairomm/refptr.h>
 #include <cairomm/surface.h>
@@ -30,39 +31,43 @@
 #include <gdkmm/pixbuf.h>
 #include <gdkmm/rgba.h>
 #include <gtkmm/box.h>
+#include <gtkmm/builder.h>
 #include <gtkmm/cellrenderertext.h>
 #include <gtkmm/checkbutton.h>
 #include <gtkmm/comboboxtext.h>
 #include <gtkmm/enums.h>
 #include <gtkmm/iconview.h>
 #include <gtkmm/label.h>
-#include <gtkmm/liststore.h>
 #include <gtkmm/menubutton.h>
 #include <gtkmm/popover.h>
 #include <gtkmm/scale.h>
 #include <gtkmm/searchentry.h>
-#include <gtkmm/treemodelfilter.h>
 #include <gtkmm/treemodel.h>
+#include <gtkmm/treemodelfilter.h>
 #include <gtkmm/treemodelsort.h>
 #include <gtkmm/treepath.h>
 #include <pangomm/layout.h>
+#include <2geom/point.h>
 
 #ifdef HAVE_CONFIG_H
 # include "config.h"  // only include where actually required!
 #endif
 
-#include "symbols.h"
+#include "desktop.h"
+#include "document.h"
+#include "inkscape.h"
+#include "path-prefix.h"
+#include "preferences.h"
+#include "selection.h"
+
 #include "display/cairo-utils.h"
 #include "include/gtkmm_version.h"
-#include "inkscape.h"
 #include "io/resource.h"
 #include "io/sys.h"
 #include "object/sp-defs.h"
 #include "object/sp-root.h"
 #include "object/sp-symbol.h"
 #include "object/sp-use.h"
-#include "path-prefix.h"
-#include "preferences.h"
 #include "ui/builder-utils.h"
 #include "ui/cache/svg_preview_cache.h"
 #include "ui/clipboard.h"
@@ -295,7 +300,7 @@ SymbolsDialog::SymbolsDialog(const char* prefsPath)
     // in the dialog code so think is safer call inside
     fix_inner_scroll(scroller);
 
-    _builder->get_widget("overlay", overlay);
+    overlay = &get_widget<Gtk::Overlay>(_builder, "overlay");
 
     /*************************Overlays******************************/
     // No results
@@ -329,10 +334,10 @@ SymbolsDialog::SymbolsDialog(const char* prefsPath)
 
     /******************** Tools *******************************/
 
-    _builder->get_widget("add-symbol", add_symbol);
+    add_symbol = &get_widget<Gtk::Button>(_builder, "add-symbol");
     add_symbol->signal_clicked().connect(sigc::mem_fun(*this, &SymbolsDialog::insertSymbol));
 
-    _builder->get_widget("remove-symbol", remove_symbol);
+    remove_symbol = &get_widget<Gtk::Button>(_builder, "remove-symbol");
     remove_symbol->signal_clicked().connect(sigc::mem_fun(*this, &SymbolsDialog::revertSymbol));
 
     // Pack size (controls display area)
@@ -375,7 +380,7 @@ SymbolsDialog::SymbolsDialog(const char* prefsPath)
     });
 
     // Toggle scale to fit on/off
-    _builder->get_widget("zoom-to-fit", fit_symbol);
+    fit_symbol = &get_widget<Gtk::CheckButton>(_builder, "zoom-to-fit");
     auto fit = prefs->getBool(path + "zoom-to-fit", true);
     fit_symbol->set_active(fit);
     fit_symbol->signal_clicked().connect([=, this](){

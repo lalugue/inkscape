@@ -54,25 +54,20 @@ namespace Inkscape::UI::Toolbar {
 ConnectorToolbar::ConnectorToolbar(SPDesktop *desktop)
     : Toolbar(desktop)
     , _builder(create_builder("toolbar-connector.ui"))
-
-    , _orthogonal_btn(get_widget<Gtk::ToggleButton>(_builder, "_orthogonal_btn"))
+    , _orthogonal_btn(get_widget<Gtk::ToggleButton>             (_builder, "_orthogonal_btn"))
     , _curvature_item(get_derived_widget<UI::Widget::SpinButton>(_builder, "_curvature_item"))
-    , _spacing_item(get_derived_widget<UI::Widget::SpinButton>(_builder, "_spacing_item"))
-    , _length_item(get_derived_widget<UI::Widget::SpinButton>(_builder, "_length_item"))
-    , _directed_btn(get_widget<Gtk::ToggleButton>(_builder, "_directed_btn"))
-    , _overlap_btn(get_widget<Gtk::ToggleButton>(_builder, "_overlap_btn"))
+    , _spacing_item  (get_derived_widget<UI::Widget::SpinButton>(_builder, "_spacing_item"))
+    , _length_item   (get_derived_widget<UI::Widget::SpinButton>(_builder, "_length_item"))
+    , _directed_btn  (get_widget<Gtk::ToggleButton>             (_builder, "_directed_btn"))
+    , _overlap_btn   (get_widget<Gtk::ToggleButton>             (_builder, "_overlap_btn"))
 {
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-
-    _builder->get_widget("connector-toolbar", _toolbar);
-    if (!_toolbar) {
-        std::cerr << "InkscapeWindow: Failed to load connector toolbar!" << std::endl;
-    }
 
     setup_derived_spin_button(_curvature_item, "curvature", defaultConnCurvature, &ConnectorToolbar::curvature_changed);
     setup_derived_spin_button(_spacing_item, "spacing", defaultConnSpacing, &ConnectorToolbar::spacing_changed);
     setup_derived_spin_button(_length_item, "length", 100, &ConnectorToolbar::length_changed);
 
+    _toolbar = &get_widget<Gtk::Box>(_builder, "connector-toolbar");
     add(*_toolbar);
 
     // Orthogonal connectors toggle button
