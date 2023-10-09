@@ -6,17 +6,15 @@
 # detailed instructions.
 #
 # The following instructions assume you are building for the standard x86_64 processor architecture,
-# which means that you use the MINGW64 variant of msys2.
-# Else, replace MINGW64 with the appropriate variant for your architecture.
+# which means that you use the UCRT64 variant of msys2.
+# Else, replace UCRT64 with the appropriate variant for your architecture.
 #
-# To run this script, execute it once on an MINGW64 shell, i.e.
-#    - use the "MSYS2 MINGW64" shortcut in the start menu or
-#    - run "mingw64.exe" in MSYS2's installation folder
+# To run this script, execute it once on an UCRT64 shell, i.e.
+#    - use the "MSYS2 UCRT64" shortcut in the start menu or
+#    - run "ucrt64.exe" in MSYS2's installation folder
 #
 # MSYS2 and installed libraries can be updated later by executing
 #   pacman -Syu
-# in an MSYS shell ("MSYS2 MSYS" shortcut in the start menu or "msys2.exe" in the
-# MSYS2 folder)
 # -------------------------------------------------------------------------------
 
 # select if you want to build 32-bit (i686), 64-bit (x86_64), or both
