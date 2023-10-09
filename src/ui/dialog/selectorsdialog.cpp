@@ -218,8 +218,7 @@ SelectorsDialog::SelectorsDialog()
     m_styletextwatcher = std::make_unique<NodeObserver>(this);
 
     // Tree
-    Inkscape::UI::Widget::IconRenderer * addRenderer = manage(
-                new Inkscape::UI::Widget::IconRenderer() );
+    auto const addRenderer = Gtk::make_managed<UI::Widget::IconRenderer>();
     addRenderer->add_icon("edit-delete");
     addRenderer->add_icon("list-add");
     addRenderer->add_icon("empty-icon");

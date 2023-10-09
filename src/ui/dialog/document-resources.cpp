@@ -364,7 +364,7 @@ DocumentResources::DocumentResources()
         return id == "-" || is_resource_present(id, _stats);
     });
     _selector.set_model(_categories);
-    auto icon_renderer = manage(new Inkscape::UI::Widget::CellRendererItemIcon());
+    auto const icon_renderer = Gtk::make_managed<UI::Widget::CellRendererItemIcon>();
     _selector.insert_column("", *icon_renderer, 0);
     auto column = _selector.get_column(0);
     column->add_attribute(*icon_renderer, icon_renderer->property_shape_type().get_name(), COL_ICON);

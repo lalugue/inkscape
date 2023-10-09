@@ -158,7 +158,7 @@ AttrDialog::AttrDialog()
     _treeView.set_model(_store);
 
     // high-res aware icon renderer for a trash can
-    auto delete_renderer = manage(new Inkscape::UI::Widget::CellRendererItemIcon());
+    auto const delete_renderer = Gtk::make_managed<UI::Widget::CellRendererItemIcon>();
     delete_renderer->property_shape_type().set_value("edit-delete");
     delete_renderer->signal_activated().connect(sigc::mem_fun(*this, &AttrDialog::onAttrDelete));
     _treeView.append_column("", *delete_renderer);
