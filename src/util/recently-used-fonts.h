@@ -15,7 +15,9 @@
 
 #include <list>
 #include <set>
-#include <sigc++/sigc++.h>
+#include <glibmm/ustring.h>
+#include <sigc++/connection.h>
+#include <sigc++/signal.h>
 
 #include "io/dir-util.h"
 #include "io/resource.h"

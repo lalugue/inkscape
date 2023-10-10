@@ -772,10 +772,9 @@ static void append(std::vector<T> &target, std::vector<T> &&source)
 }
 
 // Get a list of filenames to populate menu
-std::vector<std::pair<Glib::ustring, Glib::ustring>>
+std::vector<std::pair<Glib::ustring, std::string>>
 Shortcuts::get_file_names()
 {
-    // TODO  Filenames should be std::string but that means changing the whole stack.
     using namespace Inkscape::IO::Resource;
 
     // Make a list of all key files from System and User.  Glib::ustring should be std::string!
@@ -785,14 +784,14 @@ Shortcuts::get_file_names()
     append(filenames, get_filenames(USER  , KEYS, {".xml"}, {"default.xml"}));
 
     // Check file exists and extract out label if it does.
-    std::vector<std::pair<Glib::ustring, Glib::ustring>> names_and_paths;
+    std::vector<std::pair<Glib::ustring, std::string>> names_and_paths;
     for (auto const &filename : filenames) {
         Glib::ustring label = Glib::path_get_basename(filename);
         auto filename_relative = sp_relative_path_from_path(filename, get_path_string(SYSTEM, KEYS));
 
         XML::Document *document = sp_repr_read_file(filename.c_str(), nullptr, true);
         if (!document) {
-            std::cerr << "Shortcut::get_file_names: could not parse file: " << filename.raw() << std::endl;
+            std::cerr << "Shortcut::get_file_names: could not parse file: " << filename << std::endl;
             continue;
         }
 
@@ -808,7 +807,7 @@ Shortcuts::get_file_names()
             }
         }
         if (!iter) {
-            std::cerr << "Shortcuts::get_File_names: not a shortcut keys file: " << filename.raw() << std::endl;
+            std::cerr << "Shortcuts::get_File_names: not a shortcut keys file: " << filename << std::endl;
         }
 
         Inkscape::GC::release(document);
@@ -843,7 +842,6 @@ Shortcuts::get_file_names()
 void
 Shortcuts::update_gui_text_recursive(Gtk::Widget* widget)
 {
-
     // NOT what we want
     // auto activatable = dynamic_cast<Gtk::Activatable *>(widget);
 

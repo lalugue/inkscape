@@ -10,6 +10,7 @@
 
 #include "template.h"
 
+#include <string>
 #include <glibmm/i18n.h>
 #include <glibmm/fileutils.h>
 #include <glibmm/miscutils.h>
@@ -53,7 +54,7 @@ TemplatePreset::TemplatePreset(Template *mod, const Inkscape::XML::Node *repr, T
             else if (name == "icon")
                 _icon = value;
             else if (name == "priority")
-                _priority = strtol(value.c_str(), nullptr, 0);
+                _priority = std::stoi(value);
             else if (name == "visibility") {
                 _visibility = mod->parse_visibility(value);
             } else {
@@ -73,19 +74,19 @@ TemplatePreset::TemplatePreset(Template *mod, const Inkscape::XML::Node *repr, T
  *  2. Searches the inx folder location (if any)
  *  3. Returns a default icon file path.
  */
-Glib::ustring TemplatePreset::get_icon_path() const
+std::string TemplatePreset::get_icon_path() const
 {
     static auto default_icon = _get_icon_path("default");
     auto filename = _get_icon_path(_icon);
     return filename.empty() ? default_icon : filename;
 }
 
-Glib::ustring TemplatePreset::_get_icon_path(const std::string &name) const
+std::string TemplatePreset::_get_icon_path(std::string const &name) const
 {
     auto filename = name + ".svg";
 
     auto const filepath = Glib::build_filename("icons", filename);
-    Glib::ustring fullpath = get_filename(TEMPLATES, filepath.c_str(), false, true);
+    auto const fullpath = get_filename(TEMPLATES, filepath.c_str(), false, true);
     if (!fullpath.empty()) return fullpath;
 
     auto base = _mod->get_base_directory();
@@ -199,7 +200,7 @@ Template::Template(Inkscape::XML::Node *in_repr, Implementation::Implementation 
                 } else if (name == "visibility") {
                     _visibility = parse_visibility(value);
                 } else if (name == "priority") {
-                    set_sort_priority(strtol(value.c_str(), nullptr, 0));
+                    set_sort_priority(std::stoi(value));
                 } else {
                     prefs[name] = value;
                 }
@@ -219,8 +220,8 @@ Template::Template(Inkscape::XML::Node *in_repr, Implementation::Implementation 
             }
             // Keep presets sorted internally for simple use cases.
             std::sort(std::begin(_presets), std::end(_presets),
-                [](std::shared_ptr<TemplatePreset> a,
-                   std::shared_ptr<TemplatePreset> b) {
+                [](std::shared_ptr<TemplatePreset> const &a,
+                   std::shared_ptr<TemplatePreset> const &b) {
                 return a->get_sort_priority() < b->get_sort_priority();
             });
         }
@@ -382,12 +383,12 @@ Glib::RefPtr<Gio::File> Template::get_template_filename() const
     Glib::RefPtr<Gio::File> file;
 
     if (!_source.empty()) {
-        auto filename = get_filename_string(TEMPLATES, _source.c_str(), true);
+        auto const filename = get_filename(TEMPLATES, _source.c_str(), true);
         file = Gio::File::create_for_path(filename);
     }
     if (!file) {
         // Failure to open, so open up a new document instead.
-        auto filename = get_filename_string(TEMPLATES, "default.svg", true);
+        auto const filename = get_filename(TEMPLATES, "default.svg", true);
         file = Gio::File::create_for_path(filename);
 
         if (!file) {

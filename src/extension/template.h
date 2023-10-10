@@ -12,11 +12,11 @@
 #define INKSCAPE_EXTENSION_TEMPLATE_H__
 
 #include <exception>
+#include <map>
+#include <string>
 #include <giomm/file.h>
 #include <glibmm/refptr.h>
 #include <glibmm/ustring.h>
-#include <map>
-#include <string>
 
 #include "extension/db.h"
 #include "extension/extension.h"
@@ -68,7 +68,7 @@ public:
     void resize_to_template(SPDocument *doc, SPPage *page, const TemplatePrefs &others = {});
     bool match_size(double width, double height, const TemplatePrefs &others = {});
 
-    Glib::ustring get_icon_path() const;
+    std::string get_icon_path() const;
 
 private:
     Template *_mod;
@@ -84,7 +84,7 @@ protected:
     // This is a set of preferences given to the extension
     TemplatePrefs _prefs;
 
-    Glib::ustring _get_icon_path(const std::string &name) const;
+    std::string _get_icon_path(std::string const &name) const;
     bool setup_prefs(const TemplatePrefs &others = {});
     void _add_prefs(const TemplatePrefs &prefs);
 };

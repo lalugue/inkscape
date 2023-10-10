@@ -32,15 +32,7 @@
 
 using Inkscape::IO::file_test;
 
-namespace Inkscape {
-
-namespace IO {
-
-namespace Resource {
-
-
-static void get_foldernames_from_path(std::vector<Glib::ustring> &folders, std::string const &path,
-                                      std::vector<const char *> const &exclusions = {});
+namespace Inkscape::IO::Resource {
 
 #define INKSCAPE_PROFILE_DIR "inkscape"
 
@@ -144,16 +136,7 @@ Util::ptr_shared get_path(Domain domain, Type type, char const *filename, char c
     g_free(path);
     return result;
 }
-Glib::ustring get_path_ustring(Domain domain, Type type, char const *filename, char const *extra)
-{
-    Glib::ustring result;
-    char *path = _get_path(domain, type, filename, extra);
-    if(path) {
-      result = Glib::ustring(path);
-      g_free(path);
-    }
-    return result;
-}
+
 std::string get_path_string(Domain domain, Type type, char const *filename, char const *extra)
 {
     std::string result;
@@ -176,12 +159,7 @@ std::string get_path_string(Domain domain, Type type, char const *filename, char
  *  silent    - do not warn if file doesn't exist
  * 
  */
-Glib::ustring get_filename(Type type, char const *filename, bool localized, bool silent)
-{
-    return get_filename_string(type, filename, localized, silent);
-}
-
-std::string get_filename_string(Type type, char const *filename, bool localized, bool silent)
+std::string get_filename(Type type, char const *filename, bool localized, bool silent)
 {
     std::string result;
 
@@ -249,12 +227,6 @@ std::string get_filename_string(Type type, char const *filename, bool localized,
  *  path - A directory or filename that is considered local to the path resolution.
  *  filename - The filename that we are looking for.
  */
-Glib::ustring get_filename(Glib::ustring path, Glib::ustring filename)
-{
-    return get_filename(Glib::filename_from_utf8(path), //
-                        Glib::filename_from_utf8(filename));
-}
-
 std::string get_filename(std::string const& path, std::string const& filename)
 {
     // Test if it's a filename and get the parent directory instead
@@ -284,9 +256,9 @@ std::string get_filename(std::string const& path, std::string const& filename)
  *  extensions - A list of extensions to return, e.g. xml, svg
  *  exclusions - A list of names to exclude e.g. default.xml
  */
-std::vector<Glib::ustring> get_filenames(Type type, std::vector<const char *> const &extensions, std::vector<const char *> const &exclusions)
+std::vector<std::string> get_filenames(Type type, std::vector<const char *> const &extensions, std::vector<const char *> const &exclusions)
 {
-    std::vector<Glib::ustring> ret;
+    std::vector<std::string> ret;
     get_filenames_from_path(ret, get_path_string(USER, type), extensions, exclusions);
     get_filenames_from_path(ret, get_path_string(SHARED, type), extensions, exclusions);
     get_filenames_from_path(ret, get_path_string(SYSTEM, type), extensions, exclusions);
@@ -294,15 +266,15 @@ std::vector<Glib::ustring> get_filenames(Type type, std::vector<const char *> co
     return ret;
 }
 
-std::vector<Glib::ustring> get_filenames(Domain domain, Type type, std::vector<const char *> const &extensions, std::vector<const char *> const &exclusions)
+std::vector<std::string> get_filenames(Domain domain, Type type, std::vector<const char *> const &extensions, std::vector<const char *> const &exclusions)
 {
-    std::vector<Glib::ustring> ret;
+    std::vector<std::string> ret;
     get_filenames_from_path(ret, get_path_string(domain, type), extensions, exclusions);
     return ret;
 }
-std::vector<Glib::ustring> get_filenames(Glib::ustring path, std::vector<const char *> const &extensions, std::vector<const char *> const &exclusions)
+std::vector<std::string> get_filenames(std::string path, std::vector<const char *> const &extensions, std::vector<const char *> const &exclusions)
 {
-    std::vector<Glib::ustring> ret;
+    std::vector<std::string> ret;
     get_filenames_from_path(ret, Glib::filename_from_utf8(path), extensions, exclusions);
     return ret;
 }
@@ -315,25 +287,26 @@ std::vector<Glib::ustring> get_filenames(Glib::ustring path, std::vector<const c
  *  extensions - A list of extensions to return, e.g. xml, svg
  *  exclusions - A list of names to exclude e.g. default.xml
  */
-std::vector<Glib::ustring> get_foldernames(Type type, std::vector<const char *> const &exclusions)
+std::vector<std::string> get_foldernames(Type type, std::vector<const char *> const &exclusions)
 {
-    std::vector<Glib::ustring> ret;
-    get_foldernames_from_path(ret, get_path_ustring(USER, type), exclusions);
-    get_foldernames_from_path(ret, get_path_ustring(SHARED, type), exclusions);
-    get_foldernames_from_path(ret, get_path_ustring(SYSTEM, type), exclusions);
-    get_foldernames_from_path(ret, get_path_ustring(CREATE, type), exclusions);
+    std::vector<std::string> ret;
+    get_foldernames_from_path(ret, get_path_string(USER, type), exclusions);
+    get_foldernames_from_path(ret, get_path_string(SHARED, type), exclusions);
+    get_foldernames_from_path(ret, get_path_string(SYSTEM, type), exclusions);
+    get_foldernames_from_path(ret, get_path_string(CREATE, type), exclusions);
     return ret;
 }
 
-std::vector<Glib::ustring> get_foldernames(Domain domain, Type type, std::vector<const char *> const &exclusions)
+std::vector<std::string> get_foldernames(Domain domain, Type type, std::vector<const char *> const &exclusions)
 {
-    std::vector<Glib::ustring> ret;
-    get_foldernames_from_path(ret, get_path_ustring(domain, type), exclusions);
+    std::vector<std::string> ret;
+    get_foldernames_from_path(ret, get_path_string(domain, type), exclusions);
     return ret;
 }
-std::vector<Glib::ustring> get_foldernames(Glib::ustring path, std::vector<const char *> const &exclusions)
+
+std::vector<std::string> get_foldernames(std::string const &path, std::vector<const char *> const &exclusions)
 {
-    std::vector<Glib::ustring> ret;
+    std::vector<std::string> ret;
     get_foldernames_from_path(ret, path, exclusions);
     return ret;
 }
@@ -347,7 +320,7 @@ std::vector<Glib::ustring> get_foldernames(Glib::ustring path, std::vector<const
  * extensions - Only add files with these extensions, they must be duplicated
  * exclusions - Exclude files that exactly match these names.
  */
-void get_filenames_from_path(std::vector<Glib::ustring> &files, std::string const &path,
+void get_filenames_from_path(std::vector<std::string> &files, std::string const &path,
                              std::vector<const char *> const &extensions, std::vector<const char *> const &exclusions)
 {
     if(!Glib::file_test(path, Glib::FILE_TEST_IS_DIR)) {
@@ -389,13 +362,7 @@ void get_filenames_from_path(std::vector<Glib::ustring> &files, std::string cons
  * path - The directory to parse, will add nothing if directory doesn't exist
  * exclusions - Exclude files that exactly match these names.
  */
-void get_foldernames_from_path(std::vector<Glib::ustring> &folders, Glib::ustring path,
-                               std::vector<const char *> exclusions)
-{
-    get_foldernames_from_path(folders, Glib::filename_from_utf8(path), exclusions);
-}
-
-void get_foldernames_from_path(std::vector<Glib::ustring> &folders, std::string const &path,
+void get_foldernames_from_path(std::vector<std::string> &folders, std::string const &path,
                                std::vector<const char *> const &exclusions)
 {
     if (!Glib::file_test(path, Glib::FILE_TEST_IS_DIR)) {
@@ -540,11 +507,7 @@ std::string homedir_path()
     return g_get_home_dir();
 }
 
-}
-
-}
-
-}
+} // namespace Inkscape::IO::Resource
 
 /*
   Local Variables:

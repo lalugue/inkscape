@@ -233,9 +233,9 @@ Application::Application(bool use_gui) :
     if (use_gui) {
         using namespace Inkscape::IO::Resource;
         auto icon_theme = Gtk::IconTheme::get_default();
-        icon_theme->prepend_search_path(get_path_ustring(SYSTEM, ICONS));
-        icon_theme->prepend_search_path(get_path_ustring(SHARED, ICONS));
-        icon_theme->prepend_search_path(get_path_ustring(USER, ICONS));
+        icon_theme->prepend_search_path(get_path_string(SYSTEM, ICONS));
+        icon_theme->prepend_search_path(get_path_string(SHARED, ICONS));
+        icon_theme->prepend_search_path(get_path_string(USER, ICONS));
         themecontext = new Inkscape::UI::ThemeContext();
         themecontext->add_gtk_css(false);
         auto scale = prefs->getDoubleLimited(UI::ThemeContext::get_font_scale_pref_path(), 100, 50, 150);

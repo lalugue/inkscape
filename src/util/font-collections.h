@@ -69,7 +69,7 @@ public:
     void clear();
     // void print_collection_font_map();
 
-    void read(const std::vector <Glib::ustring>&, bool is_system = false);
+    void read(std::vector<std::string> const &files, bool is_system = false);
     void write_collection(const Glib::ustring& collection_name, const std::set <Glib::ustring>& fonts, bool is_system = false);
 
     // System collections.
@@ -118,7 +118,7 @@ private:
     std::set <FontCollection> _user_collections;
     std::set <Glib::ustring> _selected_collections;
 
-    void _read(const Glib::ustring&, bool is_system = false);
+    void _read(std::string const &file, bool is_system = false);
 
     sigc::signal <void ()> update_signal;
     sigc::signal <void ()> selection_update_signal;

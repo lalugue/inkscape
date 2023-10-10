@@ -16,7 +16,9 @@
 #include <vector>
 #include <map>
 #include <set>
-#include <sigc++/sigc++.h>
+#include <glibmm/ustring.h>
+#include <sigc++/connection.h>
+#include <sigc++/signal.h>
 
 #include "io/resource.h"
 #include "io/dir-util.h"
@@ -24,7 +26,6 @@
 namespace Inkscape {
 
 class DocumentFonts {
-
 public:
     enum What {
         All,

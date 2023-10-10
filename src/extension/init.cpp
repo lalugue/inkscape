@@ -146,8 +146,8 @@ update_pref(Glib::ustring const &pref_path,
 }
 
 // A list of user extensions loaded, used for refreshing
-static std::vector<Glib::ustring> user_extensions;
-static std::vector<Glib::ustring> shared_extensions;
+static std::vector<std::string> user_extensions;
+static std::vector<std::string> shared_extensions;
 
 /**
  * Invokes the init routines for internal modules.

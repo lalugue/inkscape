@@ -60,8 +60,8 @@ void FontCollections::init()
     // Step 2: Get the names of the files present in this directory.
     std::vector<const char *> allowed_user_ext = {"txt"};
     std::vector<const char *> allowed_system_ext = {"log"};
-    std::vector <Glib::ustring> user_files = {};
-    std::vector <Glib::ustring> system_files = {};
+    std::vector<std::string> user_files = {};
+    std::vector<std::string> system_files = {};
     Inkscape::IO::Resource::get_filenames_from_path(user_files, directory, allowed_user_ext,
                                                     (std::vector<const char *>){});
     Inkscape::IO::Resource::get_filenames_from_path(system_files, directory, allowed_system_ext,
@@ -107,7 +107,7 @@ void FontCollections::print_collection_font_map()
 */
 
 // Read collections files.
-void FontCollections::read(const std::vector<Glib::ustring>& files, bool is_system)
+void FontCollections::read(std::vector<std::string> const &files, bool const is_system)
 {
     // Iterate over the files vector and read each file.
     for(auto const &file: files) {
@@ -116,7 +116,7 @@ void FontCollections::read(const std::vector<Glib::ustring>& files, bool is_syst
 }
 
 // Read fonts stored in a collection file.
-void FontCollections::_read(const Glib::ustring& file, bool is_system)
+void FontCollections::_read(std::string const &file, bool const is_system)
 {
     // Filestream object to read data from the file.
     std::ifstream input_file(file);

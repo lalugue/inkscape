@@ -114,7 +114,7 @@ public:
     std::vector<Glib::ustring> list_all_detailed_action_names();
     std::vector<Glib::ustring> list_all_actions();
 
-    static std::vector<std::pair<Glib::ustring, Glib::ustring>> get_file_names();
+    static std::vector<std::pair<Glib::ustring, std::string>> get_file_names();
 
     void update_gui_text_recursive(Gtk::Widget* widget);
 

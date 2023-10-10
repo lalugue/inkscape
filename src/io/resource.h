@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 /** @file
- * TODO: insert short description here
+ * Inkscape::IO::Resource - simple resource API
  *//*
  * Authors:
  *   MenTaLguY <mental@rydia.net>
@@ -13,18 +13,12 @@
 #ifndef SEEN_INKSCAPE_IO_RESOURCE_H
 #define SEEN_INKSCAPE_IO_RESOURCE_H
 
+#include <string>
 #include <vector>
-#include <glibmm/ustring.h>
+
 #include "util/share.h"
 
-namespace Inkscape {
-
-namespace IO {
-
-/**
- * simple resource API
- */
-namespace Resource {
+namespace Inkscape::IO::Resource {
 
 enum Type {
     ATTRIBUTES,
@@ -56,67 +50,68 @@ enum Domain {
     USER
 };
 
+[[nodiscard]]
 Util::ptr_shared get_path(Domain domain, Type type,
-                                char const *filename=nullptr,
-                                char const *extra=nullptr);
+                          char const *filename=nullptr,
+                          char const *extra=nullptr);
 
-Glib::ustring get_path_ustring(Domain domain, Type type,
-                                char const *filename=nullptr,
-                                char const *extra=nullptr);
+[[nodiscard]]
 std::string get_path_string(Domain domain, Type type,
-                                char const *filename = nullptr,
-                                char const *extra=nullptr);
+                            char const *filename = nullptr,
+                            char const *extra=nullptr);
 
-std::string get_filename_string(Type type, char const *filename, bool localized = false, bool silent = false);
-Glib::ustring get_filename(Type type, char const *filename, bool localized = false, bool silent = false);
-// TODO consolidate with Glib::StdStringView
-Glib::ustring get_filename(Glib::ustring path, Glib::ustring filename);
-std::string get_filename(std::string const& path, std::string const& filename);
-inline std::string get_filename(const char *path, const char *filename)
-{
-    return get_filename(std::string(path), std::string(filename));
-}
+std::string get_filename(Type type, char const *filename, bool localized = false, bool silent = false);
 
-std::vector<Glib::ustring> get_filenames(Type type,
-                                std::vector<const char *> const &extensions={},
-                                std::vector<const char *> const &exclusions={});
+// TODO: GTK4: Glib::StdStringView
+std::string get_filename(std::string const &path, std::string const& filename);
 
-std::vector<Glib::ustring> get_filenames(Domain domain, Type type,
-                                std::vector<const char *> const &extensions={},
-                                std::vector<const char *> const &exclusions={});
+// TODO: C++20: Use std::span instead of std::vector.
 
-std::vector<Glib::ustring> get_filenames(Glib::ustring path,
-                                std::vector<const char *> const &extensions={},
-                                std::vector<const char *> const &exclusions={});
+[[nodiscard]]
+std::vector<std::string> get_filenames(Type type,
+                                       std::vector<const char *> const &extensions={},
+                                       std::vector<const char *> const &exclusions={});
 
-std::vector<Glib::ustring> get_foldernames(Type type, std::vector<const char *> const &exclusions = {});
+[[nodiscard]]
+std::vector<std::string> get_filenames(Domain domain, Type type,
+                                       std::vector<const char *> const &extensions={},
+                                       std::vector<const char *> const &exclusions={});
 
-std::vector<Glib::ustring> get_foldernames(Domain domain, Type type, std::vector<const char *> const &exclusions = {});
+[[nodiscard]]
+std::vector<std::string> get_filenames(std::string path,
+                                       std::vector<const char *> const &extensions={},
+                                       std::vector<const char *> const &exclusions={});
 
-std::vector<Glib::ustring> get_foldernames(Glib::ustring path, std::vector<const char *> const &exclusions = {});
+[[nodiscard]]
+std::vector<std::string> get_foldernames(Type type,
+                                         std::vector<const char *> const &exclusions = {});
 
-void get_foldernames_from_path(std::vector<Glib::ustring> &files, Glib::ustring path,
-                               std::vector<const char *> exclusions = {});
+[[nodiscard]]
+std::vector<std::string> get_foldernames(Domain domain, Type type,
+                                         std::vector<const char *> const &exclusions = {});
 
-void get_filenames_from_path(std::vector<Glib::ustring> &files, std::string const &path,
-                                    std::vector<const char *> const &extensions = {},
-                                    std::vector<const char *> const &exclusions = {});
+[[nodiscard]]
+std::vector<std::string> get_foldernames(std::string const &path,
+                                         std::vector<const char *> const &exclusions = {});
 
+void get_foldernames_from_path(std::vector<std::string> &folders, std::string const &path,
+                               std::vector<const char *> const &exclusions = {});
 
-std::string profile_path();
-std::string profile_path(const char *filename);
-std::string shared_path();
-std::string shared_path(const char *filename);
-std::string homedir_path();
-std::string log_path(const char *filename);
+void get_filenames_from_path(std::vector<std::string> &files, std::string const &path,
+                             std::vector<const char *> const &extensions = {},
+                             std::vector<const char *> const &exclusions = {});
 
-}
+[[nodiscard]] std::string profile_path();
+[[nodiscard]] std::string profile_path(const char *filename);
+[[nodiscard]] std::string shared_path();
+[[nodiscard]] std::string shared_path(const char *filename);
+[[nodiscard]] std::string homedir_path();
+[[nodiscard]] std::string log_path(const char *filename);
 
-}
+} // namespace Inkscape::IO::Resource
 
-}
+#endif // SEEN_INKSCAPE_IO_RESOURCE_H
 
-#endif
 /*
   Local Variables:
   mode:c++

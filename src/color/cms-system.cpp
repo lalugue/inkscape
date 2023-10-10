@@ -103,10 +103,8 @@ void CMSSystem::load_profiles()
 
     // Look for icc files in specified directories.
     for (auto const &directory_path : directory_paths) {
-
         using Inkscape::IO::Resource::get_filenames;
-        for (auto const &filename : get_filenames(directory_path.first, {".icc", ".icm"})) {
-
+        for (auto &&filename : get_filenames(directory_path.first, {".icc", ".icm"})) {
             // Check if files are ICC files and extract out basic information, add to list.
             if (!is_icc_file(filename)) {
                 std::cerr << "CMSSystem::load_profiles: " << filename << " is not an ICC file!" << std::endl;
@@ -119,7 +117,7 @@ void CMSSystem::load_profiles()
                 continue;
             }
 
-            ICCProfileInfo info(profile, filename, directory_path.second);
+            ICCProfileInfo info{profile, std::move(filename), directory_path.second};
             cmsCloseProfile(profile);
             profile = nullptr;
 

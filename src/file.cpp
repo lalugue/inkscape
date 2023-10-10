@@ -95,7 +95,6 @@ using Inkscape::IO::Resource::USER;
 void dump_str(gchar const *str, gchar const *prefix);
 void dump_ustr(Glib::ustring const &ustr);
 
-
 /*######################
 ## N E W
 ######################*/
@@ -121,7 +120,7 @@ SPDesktop *sp_file_new(const std::string &templ)
 
 std::string sp_file_default_template_uri()
 {
-    return Inkscape::IO::Resource::get_filename_string(TEMPLATES, "default.svg", true);
+    return Inkscape::IO::Resource::get_filename(TEMPLATES, "default.svg", true);
 }
 
 SPDesktop* sp_file_new_default()
@@ -131,7 +130,6 @@ SPDesktop* sp_file_new_default()
 
     return desk;
 }
-
 
 /*######################
 ## D E L E T E
@@ -155,7 +153,6 @@ void sp_file_exit()
         app->destroy_all();
     }
 }
-
 
 /**
  *  Handle prompting user for "do you want to revert"?  Revert on "OK"
@@ -400,7 +397,6 @@ sp_file_open_dialog(Gtk::Window &parentWindow, gpointer /*object*/, gpointer /*d
         return;
     }
 
-
     if (!fileName.empty())
     {
         Glib::ustring newFileName = Glib::filename_to_utf8(fileName);
@@ -420,7 +416,6 @@ sp_file_open_dialog(Gtk::Window &parentWindow, gpointer /*object*/, gpointer /*d
 
     return;
 }
-
 
 /*######################
 ## V A C U U M
@@ -449,8 +444,6 @@ void sp_file_vacuum(SPDocument *doc)
         }
     }
 }
-
-
 
 /*######################
 ## S A V E
@@ -553,7 +546,6 @@ file_save(Gtk::Window &parentWindow, SPDocument *doc, const Glib::ustring &uri,
     SP_ACTIVE_DESKTOP->messageStack()->flash(Inkscape::NORMAL_MESSAGE, msg.c_str());
     return true;
 }
-
 
 /**
  *  Display a SaveAs dialog.  Save the document if OK pressed.
@@ -676,10 +668,8 @@ sp_file_save_dialog(Gtk::Window &parentWindow, SPDocument *doc, Inkscape::Extens
         return success;
     }
 
-
     return false;
 }
-
 
 /**
  * Save a document, displaying a SaveAs dialog if necessary.
@@ -729,7 +719,6 @@ sp_file_save_document(Gtk::Window &parentWindow, SPDocument *doc)
     return success;
 }
 
-
 /**
  * Save a document.
  */
@@ -745,7 +734,6 @@ sp_file_save(Gtk::Window &parentWindow, gpointer /*object*/, gpointer /*data*/)
     return sp_file_save_document(parentWindow, SP_ACTIVE_DOCUMENT);
 }
 
-
 /**
  *  Save a document, always displaying the SaveAs dialog.
  */
@@ -757,8 +745,6 @@ sp_file_save_as(Gtk::Window &parentWindow, gpointer /*object*/, gpointer /*data*
     sp_namedview_document_from_window(SP_ACTIVE_DESKTOP);
     return sp_file_save_dialog(parentWindow, SP_ACTIVE_DOCUMENT, Inkscape::Extension::FILE_SAVE_METHOD_SAVE_AS);
 }
-
-
 
 /**
  *  Save a copy of a document, always displaying a sort of SaveAs dialog.
@@ -842,12 +828,11 @@ sp_file_save_template(Gtk::Window &parentWindow, Glib::ustring name,
     auto encodedName = Glib::uri_escape_string(name, " ", true);
     encodedName.append(".svg");
 
-    auto filename = Inkscape::IO::Resource::get_path_ustring(USER, TEMPLATES, encodedName.c_str());
+    auto filename = Inkscape::IO::Resource::get_path_string(USER, TEMPLATES, encodedName.c_str());
 
-    auto operation_confirmed = sp_ui_overwrite_file(filename.raw());
+    auto operation_confirmed = sp_ui_overwrite_file(filename);
 
     if (operation_confirmed) {
-
         file_save(parentWindow, document, filename,
             Inkscape::Extension::db.get(".svg"), false, false,
             Inkscape::Extension::FILE_SAVE_METHOD_INKSCAPE_SVG);
@@ -856,10 +841,10 @@ sp_file_save_template(Gtk::Window &parentWindow, Glib::ustring name,
             // save as "default.svg" by default (so it works independently of UI language), unless
             // a localized template like "default.de.svg" is already present (which overrides "default.svg")
             Glib::ustring default_svg_localized = Glib::ustring("default.") + _("en") + ".svg";
-            filename = Inkscape::IO::Resource::get_path_ustring(USER, TEMPLATES, default_svg_localized.c_str());
+            filename = Inkscape::IO::Resource::get_path_string(USER, TEMPLATES, default_svg_localized.c_str());
 
             if (!Inkscape::IO::file_test(filename.c_str(), G_FILE_TEST_EXISTS)) {
-                filename = Inkscape::IO::Resource::get_path_ustring(USER, TEMPLATES, "default.svg");
+                filename = Inkscape::IO::Resource::get_path_string(USER, TEMPLATES, "default.svg");
             }
 
             file_save(parentWindow, document, filename,
@@ -873,8 +858,6 @@ sp_file_save_template(Gtk::Window &parentWindow, Glib::ustring name,
 
     return operation_confirmed;
 }
-
-
 
 /*######################
 ## I M P O R T
@@ -988,7 +971,6 @@ void sp_import_document(SPDesktop *desktop, SPDocument *clipdoc, bool in_place, 
     // Update (among other things) all curves in paths, for bounds() to work
     target_document->ensureUpToDate();
 
-
     // move selection either to original position (in_place) or to mouse pointer
     Geom::OptRect sel_bbox = selection->visualBounds();
     if (sel_bbox) {
@@ -1031,7 +1013,6 @@ void sp_import_document(SPDesktop *desktop, SPDocument *clipdoc, bool in_place, 
     }
     target_document->emitReconstructionFinish();
 }
-
 
 /**
  *  Import a resource.  Called by sp_file_import()
@@ -1315,7 +1296,6 @@ sp_file_import(Gtk::Window &parentWindow)
         return;
     }
 
-
     if (!fileName.empty()) {
 
         Glib::ustring newFileName = Glib::filename_to_utf8(fileName);
@@ -1339,7 +1319,6 @@ sp_file_import(Gtk::Window &parentWindow)
 ## P R I N T
 ######################*/
 
-
 /**
  *  Print the current document, if any.
  */
@@ -1350,7 +1329,6 @@ sp_file_print(Gtk::Window& parentWindow)
     if (doc)
         sp_print_document(parentWindow, doc);
 }
-
 
 /*
   Local Variables:
