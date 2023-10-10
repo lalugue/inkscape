@@ -121,7 +121,12 @@ void autohide_tooltip(Gtk::Popover &popover)
 
 void menuize_popover(Gtk::Popover &popover)
 {
-    popover.get_style_context()->add_class("menuize");
+    static Glib::ustring const css_class = "menuize";
+
+    auto const style_context = popover.get_style_context();
+    if (style_context->has_class(css_class)) return;
+
+    style_context->add_class(css_class);
     menuize_all(popover, "modelbutton");
     autohide_tooltip(popover);
     // TODO: GTK4.14: Be more GtkMenu-like by using PopoverMenu::Flags::NESTED
