@@ -464,7 +464,7 @@
             <property name="tooltip-text" translatable="yes">Horizontal coordinate of selection</property>
             <property name="width-chars">10</property>
             <property name="adjustment">_x_adj</property>
-            <property name="climb-rate">0.10</property>
+            <property name="climb-rate">1.0</property>
             <property name="digits">3</property>
           </object>
           <packing>
@@ -496,7 +496,7 @@
             <property name="width-chars">10</property>
             <property name="text" translatable="yes">0.000</property>
             <property name="adjustment">_y_adj</property>
-            <property name="climb-rate">0.10</property>
+            <property name="climb-rate">1.0</property>
             <property name="digits">3</property>
           </object>
           <packing>
@@ -528,7 +528,7 @@
             <property name="width-chars">10</property>
             <property name="text" translatable="yes">0.000</property>
             <property name="adjustment">_w_adj</property>
-            <property name="climb-rate">0.10</property>
+            <property name="climb-rate">1.0</property>
             <property name="digits">3</property>
           </object>
           <packing>
@@ -546,7 +546,7 @@
     <child>
       <object class="GtkToggleButton" id="_lock_btn">
         <property name="visible">True</property>
-        <property name="can-focus">True</property>
+        <property name="can-focus">False</property>
         <property name="tooltip-text" translatable="yes">When scaling objects, scale the stroke width by the same proportion</property>
         <property name="image">image17</property>
         <property name="relief">none</property>
@@ -573,7 +573,7 @@
             <property name="width-chars">10</property>
             <property name="text" translatable="yes">0.000</property>
             <property name="adjustment">_h_adj</property>
-            <property name="climb-rate">0.10</property>
+            <property name="climb-rate">1.0</property>
             <property name="digits">3</property>
           </object>
           <packing>
