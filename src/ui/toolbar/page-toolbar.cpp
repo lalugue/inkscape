@@ -151,9 +151,9 @@ PageToolbar::PageToolbar(SPDesktop *desktop)
             setSizeText();
         });
 
-        _entry_page_sizes->property_is_focus().signal_changed().connect([=] {
+        _entry_page_sizes->property_has_focus().signal_changed().connect([this] {
             if (_document) {
-                auto const display_only = !is_focus();
+                auto const display_only = !has_focus();
                 setSizeText(nullptr, display_only);
             }
         });

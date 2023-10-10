@@ -50,8 +50,8 @@ CompletionPopup::CompletionPopup() :
         return true;
     }, false);
 
-    _search.property_is_focus().signal_changed().connect([&]{
-        if (_search.is_focus()) {
+    _search.property_has_focus().signal_changed().connect([this]{
+        if (_search.has_focus()) {
             _on_focus.emit();
         }
         clear();

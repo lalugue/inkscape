@@ -37,8 +37,8 @@ static void on_motion_grab_focus(GtkEventControllerMotion * const motion, double
                                  void * /*user_data*/)
 {
     auto &widget = get_widget(motion);
-    if (widget.is_focus()) return;
-    widget.grab_focus(); // Weʼll then run the below handler @ notify::is-focus
+    if (widget.has_focus()) return;
+    widget.grab_focus(); // Weʼll then run the below handler @ notify::has-focus
 }
 
 static void unset_state(Gtk::Widget &widget)
@@ -68,9 +68,9 @@ void menuize(Gtk::Widget &widget)
     manage(Glib::wrap(motion), widget);
 
     // If key-focused in/out, ‘fake’ correspondingly appearing as hovered or not
-    widget.property_is_focus().signal_changed().connect([&]
+    widget.property_has_focus().signal_changed().connect([&]
     {
-        if (widget.is_focus()) {
+        if (widget.has_focus()) {
             widget.set_state_flags(Gtk::STATE_FLAG_PRELIGHT, false);
         } else {
             widget.unset_state_flags(Gtk::STATE_FLAG_PRELIGHT);
