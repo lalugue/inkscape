@@ -16,35 +16,45 @@
 
 #include <glibmm/i18n.h>
 #include <glibmm/markup.h>
+#include <gtkmm/cellrenderertext.h>
 #include <gtkmm/messagedialog.h>
+#include <gtkmm/targetentry.h>
+#include <gtkmm/treestore.h>
 #include <sigc++/functors/mem_fun.h>
 
 #include "libnrtype/font-lister.h"
 #include "ui/controller.h"
 #include "ui/dialog-run.h"
+#include "ui/tools/tool-base.h"
+#include "ui/widget/iconrenderer.h"
+#include "util/document-fonts.h"
+#include "util/font-collections.h"
+#include "util/recently-used-fonts.h"
 
 namespace Inkscape::UI::Widget {
 
 FontCollectionSelector::FontCollectionSelector()
 {
-    // Step 1: Initialize the treeview.
     treeview = Gtk::make_managed<Gtk::TreeView>();
-
-    // Step 2: Setup the treeview.
     setup_tree_view(treeview);
-
-    // Step 3: Intialize the model.
     store = Gtk::TreeStore::create(FontCollection);
-    // Step 4: Populate the ListStore.
     treeview->set_model(store);
 
-    // Signals.
     setup_signals();
 
     show_all_children();
 }
 
 FontCollectionSelector::~FontCollectionSelector() = default;
+
+[[nodiscard]] static auto const &get_target_entries()
+{
+    static std::vector<Gtk::TargetEntry> const target_entries{
+        Gtk::TargetEntry{"STRING"    , {}, 0},
+        Gtk::TargetEntry{"text/plain", {}, 0},
+    };
+    return target_entries;
+}
 
 // Setup the treeview of the widget.
 void FontCollectionSelector::setup_tree_view(Gtk::TreeView *tv)
@@ -62,14 +72,9 @@ void FontCollectionSelector::setup_tree_view(Gtk::TreeView *tv)
     // Attach the cell data functions.
     text_column.set_cell_data_func(*cell_text, sigc::mem_fun(*this, &FontCollectionSelector::text_cell_data_func));
 
-    treeview->enable_model_drag_dest (Gdk::ACTION_MOVE);
     treeview->set_headers_visible (false);
-
-    // Target entries for Drag and Drop.
-    target_entries.emplace_back(Gtk::TargetEntry("STRING", (Gtk::TargetFlags)0, 0));
-    target_entries.emplace_back(Gtk::TargetEntry("text/plain", (Gtk::TargetFlags)0, 0));
-
-    treeview->drag_dest_set(target_entries, Gtk::DEST_DEFAULT_ALL, Gdk::ACTION_COPY);
+    treeview->enable_model_drag_dest (Gdk::ACTION_MOVE);
+    treeview->drag_dest_set(get_target_entries(), Gtk::DEST_DEFAULT_ALL, Gdk::ACTION_COPY);
 
     // Append the columns to the treeview.
     treeview->append_column(text_column);

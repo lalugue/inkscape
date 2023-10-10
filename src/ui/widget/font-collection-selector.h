@@ -15,25 +15,24 @@
 #ifndef INKSCAPE_UI_WIDGET_FONT_COLLECTION_SELECTOR_H
 #define INKSCAPE_UI_WIDGET_FONT_COLLECTION_SELECTOR_H
 
-#include <vector>
+#include <glibmm/refptr.h>
 #include <glibmm/ustring.h>
-#include <gtkmm/comboboxtext.h>
 #include <gtkmm/frame.h>
 #include <gtkmm/grid.h>
 #include <gtkmm/scrolledwindow.h>
 #include <gtkmm/treemodel.h>
-#include <gtkmm/treestore.h>
 #include <gtkmm/treeview.h>
 #include <sigc++/signal.h>
 
-#include "ui/tools/tool-base.h"
-#include "ui/widget/iconrenderer.h"
-#include "ui/widget/scrollprotected.h"
-#include "util/font-collections.h"
-#include "util/document-fonts.h"
-#include "util/recently-used-fonts.h"
+namespace Gtk {
+class CellRenderer;
+class CellRendererText;
+class TreeStore;
+} // namespace Gtk
 
 namespace Inkscape::UI::Widget {
+
+class IconRenderer;
 
 /**
  * A container of widgets for selecting font faces.
@@ -97,7 +96,7 @@ public:
         return signal_changed.connect(slot);
     }
 
-protected:
+private:
     class FontCollectionClass : public Gtk::TreeModelColumnRecord
     {
     public:
@@ -112,18 +111,16 @@ protected:
     };
     FontCollectionClass FontCollection;
 
-    Gtk::TreeView *treeview;
+    Gtk::TreeView *treeview = nullptr;
     Gtk::Frame frame;
     Gtk::ScrolledWindow scroll;
     Gtk::TreeViewColumn text_column;
     Gtk::TreeViewColumn del_icon_column;
-    Gtk::CellRendererText *cell_text;
-    Inkscape::UI::Widget::IconRenderer *del_icon_renderer;
+    Gtk::CellRendererText *cell_text = nullptr;
+    UI::Widget::IconRenderer *del_icon_renderer = nullptr;
 
     Glib::RefPtr<Gtk::TreeStore> store;
 
-    // What type of object can be dropped.
-    std::vector<Gtk::TargetEntry> target_entries;
     sigc::signal <void (int)> signal_changed;
 };
 
