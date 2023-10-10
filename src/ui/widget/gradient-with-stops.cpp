@@ -13,6 +13,7 @@
 
 #include "gradient-with-stops.h"
 
+#include <cmath>
 #include <string>
 #include <gdkmm/cursor.h>
 #include <gdkmm/general.h>
@@ -33,6 +34,7 @@ constexpr static int GRADIENT_IMAGE_HEIGHT = 3 * 6;
 
 namespace Inkscape::UI::Widget {
 
+using std::round;
 using namespace Inkscape::IO;
 
 std::string get_stop_template_path(const char* filename) {
@@ -515,20 +517,15 @@ bool GradientWithStops::on_drawing_area_draw(Cairo::RefPtr<Cairo::Context> const
 
         // selected handle sports a 'tip' to make it easily noticeable
         if (is_selected && tip) {
-            if (auto surface = Gdk::Cairo::create_surface_from_pixbuf(tip, 1)) {
-                cr->save();
-                // scale back to physical pixels
-                cr->scale(1 / scale, 1 / scale);
-                // paint tip bitmap
-                cr->set_source(surface, round(pos.tip * scale - tip->get_width() / 2), layout.y * scale);
-                cr->paint();
-                cr->restore();
-            }
+            cr->save();
+            // scale back to physical pixels
+            cr->scale(1 / scale, 1 / scale);
+            // paint tip bitmap
+            Gdk::Cairo::set_source_pixbuf(cr, tip, round(pos.tip * scale - tip->get_width() / 2),
+                                                   layout.y * scale);
+            cr->paint();
+            cr->restore();
         }
-
-        // surface from pixbuf *without* scaling (scale = 1)
-        auto surface = Gdk::Cairo::create_surface_from_pixbuf(pix, 1);
-        if (!surface) continue;
 
         // calc space available for stop marker
         cr->save();
@@ -537,7 +534,8 @@ bool GradientWithStops::on_drawing_area_draw(Cairo::RefPtr<Cairo::Context> const
         // scale back to physical pixels
         cr->scale(1 / scale, 1 / scale);
         // paint bitmap
-        cr->set_source(surface, round(pos.tip * scale - pix->get_width() / 2), pos.top * scale);
+        Gdk::Cairo::set_source_pixbuf(cr, pix, round(pos.tip * scale - pix->get_width() / 2),
+                                               pos.top * scale);
         cr->paint();
         cr->restore();
         cr->reset_clip();
