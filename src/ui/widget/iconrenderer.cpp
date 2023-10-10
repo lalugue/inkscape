@@ -66,17 +66,6 @@ void IconRenderer::get_preferred_width_vfunc(Gtk::Widget &widget,
     }
 }
 
-void IconRenderer::render_vfunc(const Cairo::RefPtr<Cairo::Context> &cr,
-                                Gtk::Widget &widget,
-                                const Gdk::Rectangle &background_area,
-                                const Gdk::Rectangle &cell_area,
-                                Gtk::CellRendererState flags)
-{
-    set_icon_name();
-    
-    Gtk::CellRendererPixbuf::render_vfunc(cr, widget, background_area, cell_area, flags);
-}
-
 bool IconRenderer::activate_vfunc(GdkEvent * /*event*/,
                                   Gtk::Widget &/*widget*/,
                                   const Glib::ustring &path,
@@ -90,6 +79,11 @@ bool IconRenderer::activate_vfunc(GdkEvent * /*event*/,
 
 void IconRenderer::add_icon(Glib::ustring name)
 {
+    // If we add name for current index (especially 0), ensure we set :icon-name
+    if (property_icon().get_value() == _icons.size()) {
+        property_icon_name().set_value(name);
+    }
+
     _icons.push_back(std::move(name));
 }
 
