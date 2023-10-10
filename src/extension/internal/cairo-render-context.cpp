@@ -1892,6 +1892,7 @@ CairoRenderContext::renderGlyphtext(PangoFont *font, Geom::Affine const &font_ma
             // just add the glyph paths to the current context
             _showGlyphs(_cr, font, glyphtext, TRUE);
         }
+        cairo_restore(_cr);
         return false;
     }
 
@@ -1901,8 +1902,10 @@ CairoRenderContext::renderGlyphtext(PangoFont *font, Geom::Affine const &font_ma
 
     bool fill = style->fill.isColor() || style->fill.isPaintserver();
     bool stroke = style->stroke.isColor() || style->stroke.isPaintserver();
-    if (!fill && !stroke)
+    if (!fill && !stroke) {
+        cairo_restore(_cr);
         return false;
+    }
 
     // Text never has markers, and no-fill doesn't matter.
     bool stroke_over_fill = style->paint_order.get_order(SP_CSS_PAINT_ORDER_STROKE)
