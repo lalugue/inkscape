@@ -577,7 +577,7 @@ void DialogNotebook::on_page_removed(Gtk::Widget *page, int page_num)
 void DialogNotebook::on_size_allocate_scroll(Gtk::Allocation &a)
 {
     // magic number
-    const int MIN_HEIGHT = 60;
+    static constexpr int MIN_HEIGHT = 60;
     //  set or unset scrollbars to completely hide a notebook
     // because we have a "blocking" scroll per tab we need to loop to aboid
     // other page stop out scroll
@@ -587,11 +587,12 @@ void DialogNotebook::on_size_allocate_scroll(Gtk::Allocation &a)
             if (scrolledwindow) {
                 double height = scrolledwindow->get_allocation().get_height();
                 if (height > 1) {
-                    Gtk::PolicyType policy = scrolledwindow->property_vscrollbar_policy().get_value();
+                    auto property = scrolledwindow->property_vscrollbar_policy();
+                    auto const policy = property.get_value();
                     if (height >= MIN_HEIGHT && policy != Gtk::POLICY_AUTOMATIC) {
-                        scrolledwindow->property_vscrollbar_policy().set_value(Gtk::POLICY_AUTOMATIC);
-                    } else if(height < MIN_HEIGHT && policy != Gtk::POLICY_EXTERNAL) {
-                        scrolledwindow->property_vscrollbar_policy().set_value(Gtk::POLICY_EXTERNAL);
+                        property.set_value(Gtk::POLICY_AUTOMATIC);
+                    } else if (height < MIN_HEIGHT && policy != Gtk::POLICY_EXTERNAL) {
+                        property.set_value(Gtk::POLICY_EXTERNAL);
                     } else {
                         // we don't need to update; break
                         return ForEachResult::_break;

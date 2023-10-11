@@ -253,8 +253,7 @@ void attach_all(Gtk::Grid &table, Gtk::Widget *const arr[], unsigned const n)
 
                 table.attach(*arr[i+1], 0, r, 2, 1);
             } else if (arr[i]) {
-                Gtk::Label& label = reinterpret_cast<Gtk::Label&>(*arr[i]);
-
+                auto &label = dynamic_cast<Gtk::Label &>(*arr[i]);
                 label.set_hexpand();
                 label.set_halign(Gtk::ALIGN_START);
                 label.set_valign(Gtk::ALIGN_CENTER);
@@ -262,7 +261,6 @@ void attach_all(Gtk::Grid &table, Gtk::Widget *const arr[], unsigned const n)
             } else {
                 auto const space = Gtk::make_managed<Gtk::Box>();
                 space->set_size_request (SPACE_SIZE_X, SPACE_SIZE_Y);
-
                 space->set_halign(Gtk::ALIGN_CENTER);
                 space->set_valign(Gtk::ALIGN_CENTER);
                 table.attach(*space, 0, r, 1, 1);
@@ -694,8 +692,8 @@ struct _cmp {
   {
     const Inkscape::ColorProfile &a_prof = reinterpret_cast<const Inkscape::ColorProfile &>(*a);
     const Inkscape::ColorProfile &b_prof = reinterpret_cast<const Inkscape::ColorProfile &>(*b);
-    gchar *a_name_casefold = g_utf8_casefold(a_prof.name, -1 );
-    gchar *b_name_casefold = g_utf8_casefold(b_prof.name, -1 );
+    auto const a_name_casefold = g_utf8_casefold(a_prof.name, -1);
+    auto const b_name_casefold = g_utf8_casefold(b_prof.name, -1);
     int result = g_strcmp0(a_name_casefold, b_name_casefold);
     g_free(a_name_casefold);
     g_free(b_name_casefold);
@@ -781,7 +779,7 @@ void DocumentProperties::build_cms()
     _unlink_btn.set_tooltip_text(_("Unlink Profile"));
     docprops_style_button(_unlink_btn, INKSCAPE_ICON("list-remove"));
 
-    gint row = 0;
+    int row = 0;
 
     label_link->set_hexpand();
     label_link->set_halign(Gtk::ALIGN_START);
@@ -878,7 +876,7 @@ void DocumentProperties::build_scripting()
     _external_remove_btn.set_tooltip_text(_("Remove"));
     docprops_style_button(_external_remove_btn, INKSCAPE_ICON("list-remove"));
 
-    gint row = 0;
+    int row = 0;
 
     label_external->set_hexpand();
     label_external->set_halign(Gtk::ALIGN_START);
@@ -1292,9 +1290,8 @@ void DocumentProperties::changeEmbeddedScript(){
             //TODO: shouldn't we get all children instead of simply the first child?
 
             if (child && child->getRepr()){
-                const gchar* content = child->getRepr()->content();
-                if (content){
-                    voidscript=false;
+                if (auto const content = child->getRepr()->content()) {
+                    voidscript = false;
                     _EmbeddedContent.get_buffer()->set_text(content);
                 }
             }
@@ -1657,7 +1654,7 @@ void DocumentProperties::onNewGrid(GridType grid_type)
 
 void DocumentProperties::onRemoveGrid()
 {
-    gint pagenum = _grids_notebook.get_current_page();
+    int pagenum = _grids_notebook.get_current_page();
     if (pagenum == -1) // no pages
       return;
 
