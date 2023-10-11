@@ -10,10 +10,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Inkscape 1.3\n"
+"Project-Id-Version: Inkscape 1.3.1\n"
 "Report-Msgid-Bugs-To: inkscape-translator@lists.inkscape.org\n"
-"POT-Creation-Date: 2023-07-04 21:25+0000\n"
-"PO-Revision-Date: 2023-07-06 18:20+0200\n"
+"POT-Creation-Date: 2023-09-22 14:02+0000\n"
+"PO-Revision-Date: 2023-10-10 16:12+0200\n"
 "Last-Translator: Lucas Vieites <lucas.vieites@gmail.com>\n"
 "Language-Team: Español; Castellano <inkscape-translator@lists.inkscape.org>\n"
 "Language: es\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.3.1\n"
+"X-Generator: Poedit 3.3.2\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-Basepath: .\n"
 "X-Poedit-SearchPath-0: share\n"
@@ -181,7 +181,7 @@ msgstr "Ondulación"
 #: ../build/share/filters/filters.svg.h:523 ../build/share/filters/filters.svg.h:639
 #: ../src/extension/internal/filter/distort.h:98
 #: ../src/extension/internal/filter/distort.h:211
-#: ../src/ui/dialog/livepatheffect-editor.cpp:313
+#: ../src/ui/dialog/livepatheffect-editor.cpp:315
 msgid "Distort"
 msgstr "Distorsionar"
 
@@ -3375,6 +3375,11 @@ msgstr "Lunares, medianos"
 msgid "Polka dots, large"
 msgstr "Lunares, grandes"
 
+#: ../build/share/paint/patterns.svg.h:1 ../src/ui/dialog/document-resources.cpp:894
+#: ../share/ui/dialog-document-resources.glade:103
+msgid "Patterns"
+msgstr "Patrones"
+
 #: ../build/share/paint/patterns.svg.h:1
 msgid "Stripes 01 (1:1)"
 msgstr "Rayas 01 (1:1)"
@@ -3559,6 +3564,10 @@ msgstr "Textura sucia"
 #: ../build/share/paint/patterns.svg.h:1
 msgid "Noise"
 msgstr "Ruido"
+
+#: ../build/share/paint/patterns.svg.h:1
+msgid "Hatches"
+msgstr "Tramados"
 
 #: ../build/share/symbols/symbols.h:2
 msgctxt "Symbol"
@@ -6894,7 +6903,7 @@ msgid "Show or hide all dialogs"
 msgstr "Mostrar/ocultar todos los diálogos"
 
 #: ../src/actions/actions-edit-document.cpp:58
-#: ../src/actions/actions-edit-document.cpp:93 ../src/selection-chemistry.cpp:4369
+#: ../src/actions/actions-edit-document.cpp:93 ../src/selection-chemistry.cpp:4374
 msgid "Fit Page to Drawing"
 msgstr "Ajustar el lienzo al dibujo"
 
@@ -7216,11 +7225,11 @@ msgstr "Eliminar todos los efectos de los objetos seleccionados"
 msgid "Swap fill and stroke"
 msgstr "Intercambiar relleno y trazo"
 
-#: ../src/actions/actions-edit.cpp:312 ../src/selection-chemistry.cpp:4215
+#: ../src/actions/actions-edit.cpp:312 ../src/selection-chemistry.cpp:4220
 msgid "Swap fill and stroke of an object"
 msgstr "Intercambiar relleno y borde de un objeto"
 
-#: ../src/actions/actions-edit.cpp:313 ../src/selection-chemistry.cpp:4138
+#: ../src/actions/actions-edit.cpp:313 ../src/selection-chemistry.cpp:4143
 msgid "Fit Page to Selection"
 msgstr "Ajustar la página a la selección"
 
@@ -7395,7 +7404,7 @@ msgstr "Guardar plantilla"
 msgid "Save a copy of the document as template"
 msgstr "Guardar una copia del documento como plantilla"
 
-#: ../src/actions/actions-file-window.cpp:125 ../src/file.cpp:1187
+#: ../src/actions/actions-file-window.cpp:125 ../src/file.cpp:1189
 #: ../src/ui/dialog/command-palette.cpp:267
 #: ../src/ui/dialog/inkscape-preferences.cpp:3002
 msgid "Import"
@@ -8310,10 +8319,10 @@ msgstr "Eliminar efecto de trayecto"
 
 #: ../src/actions/actions-object.cpp:278
 #: ../src/ui/dialog/livepatheffect-editor.cpp:81
-#: ../src/ui/dialog/livepatheffect-editor.cpp:470
-#: ../src/ui/dialog/livepatheffect-editor.cpp:478
-#: ../src/ui/dialog/livepatheffect-editor.cpp:1230
-#: ../src/ui/dialog/livepatheffect-editor.cpp:1239
+#: ../src/ui/dialog/livepatheffect-editor.cpp:472
+#: ../src/ui/dialog/livepatheffect-editor.cpp:480
+#: ../src/ui/dialog/livepatheffect-editor.cpp:1227
+#: ../src/ui/dialog/livepatheffect-editor.cpp:1236
 msgid "Create and apply path effect"
 msgstr "Crear y aplicar un efecto de trayecto"
 
@@ -10215,11 +10224,11 @@ msgstr "<b>Línea guía</b>: %s"
 msgid "<b>Locked</b> object(s) cannot be modified."
 msgstr "Los objetos <b>bloqueados</b> no se pueden modificar."
 
-#: ../src/desktop.cpp:491
+#: ../src/desktop.cpp:492
 msgid "No previous transform."
 msgstr "No hay transformación anterior."
 
-#: ../src/desktop.cpp:513
+#: ../src/desktop.cpp:514
 msgid "No next transform."
 msgstr "No hay siguiente transformación."
 
@@ -11276,7 +11285,7 @@ msgstr "Incrustar tipografías"
 #: ../src/extension/internal/cairo-ps-out.cpp:292
 #: ../src/extension/internal/cairo-ps-out.cpp:336
 #: ../src/extension/internal/cairo-renderer-pdf-out.cpp:228
-#: ../src/ui/dialog/livepatheffect-editor.cpp:498
+#: ../src/ui/dialog/livepatheffect-editor.cpp:500
 #: ../share/extensions/other/extension-xaml/inkxaml/svg2xaml.inx:25
 msgid "Convert text to paths"
 msgstr "Convertir textos en trayectos"
@@ -13045,7 +13054,7 @@ msgid "Convert image to an engraving made of vertical and horizontal lines"
 msgstr "Convertir la imagen en un grabado de líneas verticales y horizontales"
 
 #: ../src/extension/internal/filter/paint.h:341
-#: ../src/widgets/desktop-widget.cpp:1464 ../share/ui/align-and-distribute.ui:64
+#: ../src/widgets/desktop-widget.cpp:1433 ../share/ui/align-and-distribute.ui:64
 msgid "Drawing"
 msgstr "Dibujo"
 
@@ -14524,7 +14533,7 @@ msgstr ""
 "No se podido detectar el formato del archivo. Un intento de abrirlo como SVG "
 "también ha fallado."
 
-#: ../src/extension/template.cpp:186 ../src/ui/dialog/dialog-data.h:39
+#: ../src/extension/template.cpp:188 ../src/ui/dialog/dialog-data.h:39
 #: ../share/extensions/interp_att_g.inx:15
 msgid "Other"
 msgstr "Otro"
@@ -14741,16 +14750,16 @@ msgstr "No hay cambios que necesiten ser guardados."
 msgid "Saving document..."
 msgstr "Guardando documento..."
 
-#: ../src/file.cpp:1087
+#: ../src/file.cpp:1089
 msgid "Import Pages"
 msgstr "Importar páginas"
 
-#: ../src/file.cpp:1190 ../src/inkscape-application.cpp:887
+#: ../src/file.cpp:1192 ../src/inkscape-application.cpp:887
 #, c-format
 msgid "Failed to load the requested file %s"
 msgstr "Error al cargar el archivo pedido %s"
 
-#: ../src/file.cpp:1281
+#: ../src/file.cpp:1283
 msgid "Select file to import"
 msgstr "Seleccionar el archivo a importar"
 
@@ -20683,7 +20692,7 @@ msgstr "Amplitud del texto"
 msgid "Symbol"
 msgstr "Símbolo"
 
-#: ../src/object/sp-use.cpp:266 ../src/ui/dialog/livepatheffect-editor.cpp:514
+#: ../src/object/sp-use.cpp:266 ../src/ui/dialog/livepatheffect-editor.cpp:516
 msgid "Clone"
 msgstr "Clon"
 
@@ -20772,24 +20781,24 @@ msgstr "<b>No hay trayectos</b> reversibles en la selección."
 msgid "Cut path"
 msgstr "Cortar trayecto"
 
-#: ../src/path/path-boolop.cpp:418
+#: ../src/path/path-boolop.cpp:402
 msgid "Select <b>at least 1 path</b> to perform a boolean union."
 msgstr ""
 "Debe seleccionar <b>al menos un trayecto</b> para realizar una unión booleana."
 
-#: ../src/path/path-boolop.cpp:424
+#: ../src/path/path-boolop.cpp:408
 msgid "Select <b>at least 2 paths</b> to perform a boolean operation."
 msgstr ""
 "Debe seleccionar <b>al menos dos trayectos</b> para realizar una operación "
 "booleana."
 
-#: ../src/path/path-boolop.cpp:430
+#: ../src/path/path-boolop.cpp:414
 msgid "One of the objects is <b>not a path</b>, cannot perform boolean operation."
 msgstr ""
 "Uno de los objetos <b>no es un trayecto</b>, no se puede realizar una operación "
 "booleana."
 
-#: ../src/path/path-boolop.cpp:436
+#: ../src/path/path-boolop.cpp:420
 msgid ""
 "Unable to determine the <b>z-order</b> of the objects selected for difference, "
 "XOR, division, or path cut."
@@ -20823,32 +20832,32 @@ msgstr "<b>%d</b> trayectos simplificados."
 msgid "<b>No paths</b> to simplify in the selection."
 msgstr "No hay <b>trayectos</b> simplificables en la selección."
 
-#: ../src/path/path-offset.cpp:117
+#: ../src/path/path-offset.cpp:118
 msgid "Selected object is <b>not a path</b>, cannot inset/outset."
 msgstr ""
 "El objeto seleccionado <b>no es un trayecto</b>, no se puede reducir/ampliar."
 
-#: ../src/path/path-offset.cpp:186 ../src/path/path-offset.cpp:255
+#: ../src/path/path-offset.cpp:187 ../src/path/path-offset.cpp:256
 msgid "Create linked offset"
 msgstr "Crear desvío enlazado"
 
-#: ../src/path/path-offset.cpp:187 ../src/path/path-offset.cpp:256
+#: ../src/path/path-offset.cpp:188 ../src/path/path-offset.cpp:257
 msgid "Create dynamic offset"
 msgstr "Crear desvió dinámico"
 
-#: ../src/path/path-offset.cpp:276
+#: ../src/path/path-offset.cpp:277
 msgid "Select <b>path(s)</b> to inset/outset."
 msgstr "Seleccione <b>trayectos</b> para reducir/ampliar."
 
-#: ../src/path/path-offset.cpp:449
+#: ../src/path/path-offset.cpp:451
 msgid "Outset path"
 msgstr "Trayecto de ampliación"
 
-#: ../src/path/path-offset.cpp:449
+#: ../src/path/path-offset.cpp:451
 msgid "Inset path"
 msgstr "Trayecto de reducción"
 
-#: ../src/path/path-offset.cpp:452
+#: ../src/path/path-offset.cpp:454
 msgid "<b>No paths</b> to inset/outset in the selection."
 msgstr "<b>No hay trayectos</b> para reducir/ampliar en la selección."
 
@@ -21308,96 +21317,96 @@ msgstr "Rotar 90° a la derecha"
 msgid "Rotate 90° CCW"
 msgstr "Rotar 90° a la izquierda"
 
-#: ../src/selection-chemistry.cpp:2325
+#: ../src/selection-chemistry.cpp:2330
 msgid "Rotate by pixels"
 msgstr "Rotar por píxeles"
 
-#: ../src/selection-chemistry.cpp:2352
+#: ../src/selection-chemistry.cpp:2357
 msgid "Grow"
 msgstr "Agrandar"
 
-#: ../src/selection-chemistry.cpp:2352
+#: ../src/selection-chemistry.cpp:2357
 msgid "Shrink"
 msgstr "Encoger"
 
-#: ../src/selection-chemistry.cpp:2376
+#: ../src/selection-chemistry.cpp:2381
 msgid "Scale by whole factor"
 msgstr "Escalar por factor entero"
 
-#: ../src/selection-chemistry.cpp:2389
+#: ../src/selection-chemistry.cpp:2394
 msgid "Move vertically"
 msgstr "Mover verticalmente"
 
-#: ../src/selection-chemistry.cpp:2391
+#: ../src/selection-chemistry.cpp:2396
 msgid "Move horizontally"
 msgstr "Mover horizontalmente"
 
-#: ../src/selection-chemistry.cpp:2393 ../src/selection-chemistry.cpp:2416
+#: ../src/selection-chemistry.cpp:2398 ../src/selection-chemistry.cpp:2421
 #: ../src/seltrans.cpp:489 ../src/ui/dialog/transformation.cpp:750
 msgid "Move"
 msgstr "Mover"
 
-#: ../src/selection-chemistry.cpp:2412
+#: ../src/selection-chemistry.cpp:2417
 msgid "Move vertically by pixels"
 msgstr "Mover verticalmente por píxeles"
 
-#: ../src/selection-chemistry.cpp:2414
+#: ../src/selection-chemistry.cpp:2419
 msgid "Move horizontally by pixels"
 msgstr "Mover horizontalmente por píxeles"
 
-#: ../src/selection-chemistry.cpp:2620
+#: ../src/selection-chemistry.cpp:2625
 msgid "The selection has no applied path effect."
 msgstr "La selección no tiene aplicado ningún efecto de trayecto."
 
-#: ../src/selection-chemistry.cpp:2664 ../src/ui/dialog/clonetiler.cpp:2083
+#: ../src/selection-chemistry.cpp:2669 ../src/ui/dialog/clonetiler.cpp:2083
 msgid "Select an <b>object</b> to clone."
 msgstr "Seleccione el <b>objeto</b> que desea clonar."
 
-#: ../src/selection-chemistry.cpp:2700
+#: ../src/selection-chemistry.cpp:2705
 msgctxt "Action"
 msgid "Clone"
 msgstr "Clonar"
 
-#: ../src/selection-chemistry.cpp:2709
+#: ../src/selection-chemistry.cpp:2714
 msgid "Select <b>clones</b> to relink."
 msgstr "Seleccione los <b>clones</b> que desea reconectar."
 
-#: ../src/selection-chemistry.cpp:2717
+#: ../src/selection-chemistry.cpp:2722
 msgid "Copy an <b>object</b> to clipboard to relink clones to."
 msgstr "Copie un <b>objeto</b> al portapapeles al que reconectar los clones."
 
-#: ../src/selection-chemistry.cpp:2776
+#: ../src/selection-chemistry.cpp:2781
 msgid "<b>No clones to relink</b> in the selection."
 msgstr "<b>No hay clones reasociables</b> en la selección."
 
-#: ../src/selection-chemistry.cpp:2778
+#: ../src/selection-chemistry.cpp:2783
 msgid "Relink clone"
 msgstr "Resconectar clon"
 
-#: ../src/selection-chemistry.cpp:2787 ../src/selection-chemistry.cpp:2879
+#: ../src/selection-chemistry.cpp:2792 ../src/selection-chemistry.cpp:2884
 msgid "Select <b>clones</b> to unlink."
 msgstr "Seleccione los <b>clones</b> que desea desconectar."
 
-#: ../src/selection-chemistry.cpp:2867 ../src/selection-chemistry.cpp:2905
+#: ../src/selection-chemistry.cpp:2872 ../src/selection-chemistry.cpp:2910
 msgid "<b>No clones to unlink</b> in the selection."
 msgstr "<b>No hay clones desconectables</b> en la selección."
 
-#: ../src/selection-chemistry.cpp:2871
+#: ../src/selection-chemistry.cpp:2876
 msgid "Unlink clone"
 msgstr "Desconectar clon"
 
-#: ../src/selection-chemistry.cpp:2886
+#: ../src/selection-chemistry.cpp:2891
 msgid ""
 "Unable to unlink. Check the setting for 'Unlinking Clones' in your preferences."
 msgstr ""
 "No se pueden desconectar. Compruebe el ajuste de «Desconectar clones» en sus "
 "preferencias."
 
-#: ../src/selection-chemistry.cpp:2908
+#: ../src/selection-chemistry.cpp:2913
 msgid "Unlink clone recursively"
 msgstr "Desconectar clon recursivamente"
 
-#: ../src/selection-chemistry.cpp:2952
+#: ../src/selection-chemistry.cpp:2957
 msgid ""
 "Select a <b>clone</b> to go to its original. Select a <b>linked offset</b> to go "
 "to its source. Select a <b>text on path</b> to go to the path. Select a <b>flowed "
@@ -21407,7 +21416,7 @@ msgstr ""
 "b> para ir a su origen. Seleccione un <b>texto en trayecto</b> para ir al "
 "trayecto. Seleccione un <b>texto fluido</b> para ir a su marco."
 
-#: ../src/selection-chemistry.cpp:2993
+#: ../src/selection-chemistry.cpp:2998
 msgid ""
 "<b>Cannot find</b> the object to select (orphaned clone, offset, textpath, flowed "
 "text?)"
@@ -21415,115 +21424,115 @@ msgstr ""
 "<b>No se pudo encontrar</b> el objeto que quiere seleccionar (¿clon huérfano, "
 "desvío, trayecto de un texto o texto fluido?)"
 
-#: ../src/selection-chemistry.cpp:3000
+#: ../src/selection-chemistry.cpp:3005
 msgid ""
 "The object you're trying to select is <b>not visible</b> (it is in &lt;defs&gt;)"
 msgstr "El objeto que desea seleccionar <b>no es visible</b> (está en &lt;defs&gt;)"
 
-#: ../src/selection-chemistry.cpp:3120
+#: ../src/selection-chemistry.cpp:3125
 msgid "Fill between many"
 msgstr "Rellenar entre muchos"
 
-#: ../src/selection-chemistry.cpp:3122
+#: ../src/selection-chemistry.cpp:3127
 msgid "Clone original"
 msgstr "Clonar original"
 
-#: ../src/selection-chemistry.cpp:3128
+#: ../src/selection-chemistry.cpp:3133
 msgid "Select path(s) to fill."
 msgstr "Seleccione trayecto(s) para llenar."
 
-#: ../src/selection-chemistry.cpp:3143
+#: ../src/selection-chemistry.cpp:3148
 msgid "Select <b>object(s)</b> to convert to marker."
 msgstr "Seleccione los <b>objetos</b> que desea convertir a marcador."
 
-#: ../src/selection-chemistry.cpp:3206
+#: ../src/selection-chemistry.cpp:3211
 msgid "Objects to marker"
 msgstr "Objetos a marcador"
 
-#: ../src/selection-chemistry.cpp:3229
+#: ../src/selection-chemistry.cpp:3234
 msgid "Select <b>object(s)</b> to convert to guides."
 msgstr "Seleccione los <b>objetos</b> que desea convertir a guías."
 
-#: ../src/selection-chemistry.cpp:3250
+#: ../src/selection-chemistry.cpp:3255
 msgid "Objects to guides"
 msgstr "Objetos a guías"
 
-#: ../src/selection-chemistry.cpp:3281
+#: ../src/selection-chemistry.cpp:3286
 msgid "Select <b>objects</b> to convert to symbol."
 msgstr "Seleccione los <b>objetos</b> que desea convertir a símbolo."
 
-#: ../src/selection-chemistry.cpp:3416
+#: ../src/selection-chemistry.cpp:3421
 msgid "Group to symbol"
 msgstr "Grupo a símbolo"
 
-#: ../src/selection-chemistry.cpp:3433
+#: ../src/selection-chemistry.cpp:3438
 msgid "unSymbol all selected symbols"
 msgstr "Des-simbolizar los símbolos seleccionados"
 
-#: ../src/selection-chemistry.cpp:3447
+#: ../src/selection-chemistry.cpp:3452
 msgid "Select <b>object(s)</b> to convert to pattern."
 msgstr "Seleccione los <b>objetos</b> que desea convertir en patrón."
 
-#: ../src/selection-chemistry.cpp:3533
+#: ../src/selection-chemistry.cpp:3538
 msgid "Objects to pattern"
 msgstr "Objetos a patrón"
 
-#: ../src/selection-chemistry.cpp:3545
+#: ../src/selection-chemistry.cpp:3550
 msgid "Select an <b>object with pattern fill</b> to extract objects from."
 msgstr "Seleccione un <b>objeto con relleno de mosaico</b> del que extraer objetos."
 
-#: ../src/selection-chemistry.cpp:3605
+#: ../src/selection-chemistry.cpp:3610
 msgid "<b>No pattern fills</b> in the selection."
 msgstr "No hay <b>rellenos de mosaico</b> en la selección."
 
-#: ../src/selection-chemistry.cpp:3607
+#: ../src/selection-chemistry.cpp:3612
 msgid "Pattern to objects"
 msgstr "Patrón a objetos"
 
-#: ../src/selection-chemistry.cpp:3621
+#: ../src/selection-chemistry.cpp:3626
 msgid "Select <b>object(s)</b> to make a bitmap copy."
 msgstr ""
 "Seleccione los <b>objetos</b> de los que desea hacer una copia en mapa de bits."
 
-#: ../src/selection-chemistry.cpp:3626
+#: ../src/selection-chemistry.cpp:3631
 msgid "Rendering bitmap..."
 msgstr "Generando mapa de bits..."
 
-#: ../src/selection-chemistry.cpp:3713
+#: ../src/selection-chemistry.cpp:3718
 msgid "Create bitmap"
 msgstr "Crear mapa de bits"
 
-#: ../src/selection-chemistry.cpp:3734 ../src/selection-chemistry.cpp:3841
+#: ../src/selection-chemistry.cpp:3739 ../src/selection-chemistry.cpp:3846
 msgid "Select <b>object(s)</b> to create clippath or mask from."
 msgstr ""
 "Seleccione los <b>objetos</b> de los que crear el trayecto o la máscara de "
 "recorte."
 
-#: ../src/selection-chemistry.cpp:3817
+#: ../src/selection-chemistry.cpp:3822
 msgid "Create Clip Group"
 msgstr "Crear grupo de recorte"
 
-#: ../src/selection-chemistry.cpp:3845
+#: ../src/selection-chemistry.cpp:3850
 msgid "Select mask object and <b>object(s)</b> to apply clippath or mask to."
 msgstr ""
 "Seleccione el objeto de máscara y los <b>objetos</b> a los que aplicar el "
 "trayecto o máscara de recorte."
 
-#: ../src/selection-chemistry.cpp:4002
+#: ../src/selection-chemistry.cpp:4007
 msgid "Select <b>object(s)</b> to remove clippath or mask from."
 msgstr ""
 "Seleccione los <b>objetos</b> de los que desea eliminar el trayecto o la máscara "
 "de recorte."
 
-#: ../src/selection-chemistry.cpp:4131
+#: ../src/selection-chemistry.cpp:4136
 msgid "Select <b>object(s)</b> to fit canvas to."
 msgstr "Seleccione los <b>objetos</b> a los que ajustar el lienzo."
 
-#: ../src/selection-chemistry.cpp:4234
+#: ../src/selection-chemistry.cpp:4239
 msgid "Select <b>path(s)</b> to create fill between."
 msgstr "Seleccione los <b>trayectos</b> entre los que desea crear relleno."
 
-#: ../src/selection-chemistry.cpp:4288
+#: ../src/selection-chemistry.cpp:4293
 msgid "Create linked fill object between paths"
 msgstr "Crear objeto de relleno enlazado entre los trayectos seleccionados"
 
@@ -21864,49 +21873,49 @@ msgstr "Vectorizar mapa de bits"
 msgid "Trace: Done. %ld nodes created"
 msgstr "Vectorizar: Terminado. Se han creado %ld nodos"
 
-#: ../src/ui/clipboard.cpp:284
+#: ../src/ui/clipboard.cpp:287
 msgid "Nothing was copied."
 msgstr "No se ha copiado nada."
 
-#: ../src/ui/clipboard.cpp:473
+#: ../src/ui/clipboard.cpp:476
 msgid "Can't paste text outside of the text tool."
 msgstr "No se puede pegar fuera de la herramienta de texto."
 
-#: ../src/ui/clipboard.cpp:476 ../src/ui/clipboard.cpp:898
-#: ../src/ui/clipboard.cpp:933 ../src/ui/clipboard.cpp:974
+#: ../src/ui/clipboard.cpp:479 ../src/ui/clipboard.cpp:901
+#: ../src/ui/clipboard.cpp:936 ../src/ui/clipboard.cpp:977
 msgid "Nothing on the clipboard."
 msgstr "No hay nada en el portapapeles."
 
-#: ../src/ui/clipboard.cpp:726
+#: ../src/ui/clipboard.cpp:729
 msgid "Select <b>object(s)</b> to paste style to."
 msgstr "Seleccione los <b>objetos</b> a los que pegar el estilo."
 
-#: ../src/ui/clipboard.cpp:738 ../src/ui/clipboard.cpp:768
+#: ../src/ui/clipboard.cpp:741 ../src/ui/clipboard.cpp:771
 msgid "No style on the clipboard."
 msgstr "No hay estilo en el portapapeles."
 
-#: ../src/ui/clipboard.cpp:793
+#: ../src/ui/clipboard.cpp:796
 msgid "Select <b>object(s)</b> to paste size to."
 msgstr "Seleccione los <b>objetos</b> a los que pegar el tamaño."
 
-#: ../src/ui/clipboard.cpp:801
+#: ../src/ui/clipboard.cpp:804
 msgid "No size on the clipboard."
 msgstr "No hay tamaño en el portapapeles."
 
-#: ../src/ui/clipboard.cpp:858
+#: ../src/ui/clipboard.cpp:861
 msgid "Select <b>object(s)</b> to paste live path effect to."
 msgstr ""
 "Seleccione los <b>objetos</b> a los que pegar el el efecto de trayecto vivo."
 
-#: ../src/ui/clipboard.cpp:885
+#: ../src/ui/clipboard.cpp:888
 msgid "No effect on the clipboard."
 msgstr "No hay efecto en el portapapeles."
 
-#: ../src/ui/clipboard.cpp:907 ../src/ui/clipboard.cpp:957
+#: ../src/ui/clipboard.cpp:910 ../src/ui/clipboard.cpp:960
 msgid "Clipboard does not contain a path."
 msgstr "El portapapeles no contiene ningún trayecto."
 
-#: ../src/ui/clipboard.cpp:1004
+#: ../src/ui/clipboard.cpp:1007
 msgid "Clipboard does not contain any objects of type \"%1\"."
 msgstr "El portapapeles no contiene ningun objeto de tipo «%1»."
 
@@ -23056,7 +23065,7 @@ msgid "Unpin swatch"
 msgstr "Desprender muestra"
 
 #: ../src/ui/dialog/color-item.cpp:368
-#: ../src/ui/dialog/livepatheffect-editor.cpp:315
+#: ../src/ui/dialog/livepatheffect-editor.cpp:317
 msgid "Convert"
 msgstr "Convertir"
 
@@ -23737,11 +23746,6 @@ msgstr "Degradados"
 #: ../src/ui/dialog/document-resources.cpp:893
 msgid "Mesh gradients"
 msgstr "Degradados de rejilla"
-
-#: ../src/ui/dialog/document-resources.cpp:894
-#: ../share/ui/dialog-document-resources.glade:103
-msgid "Patterns"
-msgstr "Patrones"
 
 #: ../src/ui/dialog/document-resources.cpp:895 ../src/ui/dialog/symbols.cpp:1086
 #: ../src/ui/dialog/symbols.cpp:1089 ../src/ui/dialog/symbols.cpp:1092
@@ -26038,7 +26042,7 @@ msgid "Arrange in a grid"
 msgstr "Ordenar en una rejilla"
 
 #: ../src/ui/dialog/grid-arrange-tab.cpp:474 ../src/ui/toolbar/node-toolbar.cpp:280
-#: ../src/ui/widget/registered-widget.cpp:691 ../src/widgets/desktop-widget.cpp:401
+#: ../src/ui/widget/registered-widget.cpp:691 ../src/widgets/desktop-widget.cpp:404
 #: ../share/ui/page-properties.glade:310
 msgid "X:"
 msgstr "X:"
@@ -26048,7 +26052,7 @@ msgid "Horizontal spacing between columns."
 msgstr "Espacio horizontal entre columnas."
 
 #: ../src/ui/dialog/grid-arrange-tab.cpp:475 ../src/ui/toolbar/node-toolbar.cpp:296
-#: ../src/ui/widget/registered-widget.cpp:692 ../src/widgets/desktop-widget.cpp:402
+#: ../src/ui/widget/registered-widget.cpp:692 ../src/widgets/desktop-widget.cpp:405
 #: ../share/ui/page-properties.glade:326
 msgid "Y:"
 msgstr "Y:"
@@ -30284,13 +30288,13 @@ msgid "Nothing found! Please try again with different search terms."
 msgstr "No se ha encontrado. Intente usar un término distinto."
 
 #: ../src/ui/dialog/livepatheffect-editor.cpp:138
-#: ../src/ui/dialog/livepatheffect-editor.cpp:901
+#: ../src/ui/dialog/livepatheffect-editor.cpp:903
 #: ../share/ui/dialog-livepatheffect-item.glade:63
 msgid "Set Favorite"
 msgstr "Fijar favorito"
 
 #: ../src/ui/dialog/livepatheffect-editor.cpp:141
-#: ../src/ui/dialog/livepatheffect-editor.cpp:899
+#: ../src/ui/dialog/livepatheffect-editor.cpp:901
 msgid "Unset Favorite"
 msgstr "Quitar favorito"
 
@@ -30298,73 +30302,73 @@ msgstr "Quitar favorito"
 msgid "Add Live Path Effect"
 msgstr "Añadir efecto de trayecto vivo"
 
-#: ../src/ui/dialog/livepatheffect-editor.cpp:306
+#: ../src/ui/dialog/livepatheffect-editor.cpp:308
 msgid "Deactivate path effect"
 msgstr "Desactivar el efecto de trayecto"
 
-#: ../src/ui/dialog/livepatheffect-editor.cpp:306
+#: ../src/ui/dialog/livepatheffect-editor.cpp:308
 msgid "Activate path effect"
 msgstr "Activar el efecto de trayecto"
 
-#: ../src/ui/dialog/livepatheffect-editor.cpp:311
+#: ../src/ui/dialog/livepatheffect-editor.cpp:313
 msgid "Favorites"
 msgstr "Favoritos"
 
-#: ../src/ui/dialog/livepatheffect-editor.cpp:312
+#: ../src/ui/dialog/livepatheffect-editor.cpp:314
 msgid "Edit/Tools"
 msgstr "Edición/Herramientas"
 
-#: ../src/ui/dialog/livepatheffect-editor.cpp:314
+#: ../src/ui/dialog/livepatheffect-editor.cpp:316
 msgid "Generate"
 msgstr "Generar"
 
-#: ../src/ui/dialog/livepatheffect-editor.cpp:316
+#: ../src/ui/dialog/livepatheffect-editor.cpp:318
 #: ../share/ui/dialog-livepatheffect-effect.glade:113
 msgid "Experimental"
 msgstr "Experimental"
 
-#: ../src/ui/dialog/livepatheffect-editor.cpp:496
+#: ../src/ui/dialog/livepatheffect-editor.cpp:498
 msgid "Text objects do not support Live Path Effects"
 msgstr "Los objetos de texto no soportan  efectos de trayecto vivo (LPE)"
 
-#: ../src/ui/dialog/livepatheffect-editor.cpp:532
-#: ../src/ui/dialog/livepatheffect-editor.cpp:586
+#: ../src/ui/dialog/livepatheffect-editor.cpp:534
+#: ../src/ui/dialog/livepatheffect-editor.cpp:588
 msgid "Select a path, shape, clone or group"
 msgstr "Seleccione un trayecto, forma, clon o grupo"
 
-#: ../src/ui/dialog/livepatheffect-editor.cpp:558
+#: ../src/ui/dialog/livepatheffect-editor.cpp:560
 msgid "Select %1 with %2 LPE"
 msgstr "Seleccione %1 con LPE %2"
 
-#: ../src/ui/dialog/livepatheffect-editor.cpp:589
+#: ../src/ui/dialog/livepatheffect-editor.cpp:591
 msgid "Select only one path, shape, clone or group"
 msgstr "Seleccione solo un trayecto, forma, clon o grupo"
 
-#: ../src/ui/dialog/livepatheffect-editor.cpp:656
+#: ../src/ui/dialog/livepatheffect-editor.cpp:658
 msgid "<small>Without parameters</small>"
 msgstr "<small>Sin parámetros</small>"
 
-#: ../src/ui/dialog/livepatheffect-editor.cpp:817
+#: ../src/ui/dialog/livepatheffect-editor.cpp:819
 msgid "Drag to change position in path effects stack"
 msgstr "Arrastre para cambiar la posición en la pila de efectos de trayecto"
 
-#: ../src/ui/dialog/livepatheffect-editor.cpp:871
+#: ../src/ui/dialog/livepatheffect-editor.cpp:873
 msgid "Duplicate path effect"
 msgstr "Duplicar efecto de trayecto"
 
-#: ../src/ui/dialog/livepatheffect-editor.cpp:876
+#: ../src/ui/dialog/livepatheffect-editor.cpp:878
 msgid "Move path effect up"
 msgstr "Elevar el efecto de trayecto"
 
-#: ../src/ui/dialog/livepatheffect-editor.cpp:881
+#: ../src/ui/dialog/livepatheffect-editor.cpp:883
 msgid "Move path effect down"
 msgstr "Bajar el efecto de trayecto"
 
-#: ../src/ui/dialog/livepatheffect-editor.cpp:1098
+#: ../src/ui/dialog/livepatheffect-editor.cpp:1100
 msgid "Flatten path effect(s)"
 msgstr "Aplanar efecto(s) de trayecto"
 
-#: ../src/ui/dialog/livepatheffect-editor.cpp:1116
+#: ../src/ui/dialog/livepatheffect-editor.cpp:1118
 msgid "Remove path effect"
 msgstr "Eliminar efecto de trayecto"
 
@@ -30707,11 +30711,11 @@ msgstr "Renombrar objeto"
 msgid "Move items"
 msgstr "Mover elementos"
 
-#: ../src/ui/dialog/paint-servers.cpp:55
+#: ../src/ui/dialog/paint-servers.cpp:52
 msgid "All paint servers"
 msgstr "Todos los servidores de pintura"
 
-#: ../src/ui/dialog/paint-servers.cpp:56 ../src/ui/dialog/symbols.cpp:160
+#: ../src/ui/dialog/paint-servers.cpp:53 ../src/ui/dialog/symbols.cpp:160
 msgid "Current document"
 msgstr "Documento actual"
 
@@ -31909,7 +31913,7 @@ msgstr "Sin categoría"
 msgid "Canvas"
 msgstr "Lienzo"
 
-#: ../src/ui/modifiers.cpp:65 ../src/widgets/desktop-widget.cpp:1468
+#: ../src/ui/modifiers.cpp:65 ../src/widgets/desktop-widget.cpp:1437
 #: ../share/ui/dialog-export.glade:64 ../share/ui/dialog-export.glade:883
 #: ../share/extensions/printing_marks.inx:18
 msgid "Selection"
@@ -35489,23 +35493,23 @@ msgstr ""
 "<b>Pinte por encima</b> de las áreas para añadir al relleno, pulse <b>Alt</b> "
 "para relleno por contacto"
 
-#: ../src/ui/tools/freehand-base.cpp:718 ../src/ui/tools/freehand-base.cpp:781
+#: ../src/ui/tools/freehand-base.cpp:719 ../src/ui/tools/freehand-base.cpp:782
 msgid "Path is closed."
 msgstr "El trayecto está cerrado."
 
-#: ../src/ui/tools/freehand-base.cpp:732
+#: ../src/ui/tools/freehand-base.cpp:733
 msgid "Closing path."
 msgstr "Cerrar trayecto."
 
-#: ../src/ui/tools/freehand-base.cpp:868
+#: ../src/ui/tools/freehand-base.cpp:869
 msgid "Draw path"
 msgstr "Dibujar trayecto"
 
-#: ../src/ui/tools/freehand-base.cpp:989
+#: ../src/ui/tools/freehand-base.cpp:990
 msgid "Creating single dot"
 msgstr "Creando un punto simple"
 
-#: ../src/ui/tools/freehand-base.cpp:990
+#: ../src/ui/tools/freehand-base.cpp:991
 msgid "Create single dot"
 msgstr "Crear un punto simple"
 
@@ -35727,7 +35731,7 @@ msgstr ""
 "<b>Arrastre alrededor</b> de los nodos para seleccionarlos; pulse <b>%s</b> para "
 "cambiar a selección de caja"
 
-#: ../src/ui/tools/node-tool.cpp:688
+#: ../src/ui/tools/node-tool.cpp:686
 msgctxt "Node tool tip"
 msgid ""
 "<b>Shift</b>: drag to add nodes to the selection, click to toggle object selection"
@@ -35735,23 +35739,23 @@ msgstr ""
 "<b>Mayús</b>: arrastre para añadir nodos a la selección, pulse para intercambiar "
 "la selección del objeto"
 
-#: ../src/ui/tools/node-tool.cpp:692
+#: ../src/ui/tools/node-tool.cpp:690
 msgctxt "Node tool tip"
 msgid "<b>Shift</b>: drag to add nodes to the selection"
 msgstr "<b>Mayús</b>: arrastre para añadir nodos a la selección"
 
-#: ../src/ui/tools/node-tool.cpp:705
+#: ../src/ui/tools/node-tool.cpp:703
 #, c-format
 msgid "<b>%u of %u</b> node selected."
 msgid_plural "<b>%u of %u</b> nodes selected."
 msgstr[0] "<b>%u of %u</b> nodo seleccionado."
 msgstr[1] "<b>%u of %u</b> nodos seleccionados."
 
-#: ../src/ui/tools/node-tool.cpp:724
+#: ../src/ui/tools/node-tool.cpp:722
 msgid "Angle: %1°."
 msgstr "Ángulo: %1°."
 
-#: ../src/ui/tools/node-tool.cpp:731
+#: ../src/ui/tools/node-tool.cpp:729
 #, c-format
 msgctxt "Node tool tip"
 msgid "%s Drag to select nodes, click to edit only this object (more: Shift)"
@@ -35759,30 +35763,30 @@ msgstr ""
 "%s Arrastre para seleccionar nodos, pulse para editar solo este objeto (más: "
 "Mayús)"
 
-#: ../src/ui/tools/node-tool.cpp:737
+#: ../src/ui/tools/node-tool.cpp:735
 #, c-format
 msgctxt "Node tool tip"
 msgid "%s Drag to select nodes, click clear the selection"
 msgstr "%s Arrastre para seleccionar nodos, pulse para limpiar la selección"
 
-#: ../src/ui/tools/node-tool.cpp:745
+#: ../src/ui/tools/node-tool.cpp:743
 msgctxt "Node tool tip"
 msgid "Drag to select nodes, click to edit only this object"
 msgstr "Arrastre para seleccionar nodos, pulse para editar solo este objeto"
 
-#: ../src/ui/tools/node-tool.cpp:748
+#: ../src/ui/tools/node-tool.cpp:746
 msgctxt "Node tool tip"
 msgid "Drag to select nodes, click to clear the selection"
 msgstr "Arrastre para seleccionar nodos, pulse para limpiar la selección"
 
-#: ../src/ui/tools/node-tool.cpp:753
+#: ../src/ui/tools/node-tool.cpp:751
 msgctxt "Node tool tip"
 msgid "Drag to select objects to edit, click to edit this object (more: Shift)"
 msgstr ""
 "Arrastre para seleccionar objeto para edición, pulse para editar este objeto "
 "(más: Mayús)"
 
-#: ../src/ui/tools/node-tool.cpp:756
+#: ../src/ui/tools/node-tool.cpp:754
 msgctxt "Node tool tip"
 msgid "Drag to select objects to edit"
 msgstr "Arrastre para seleccionar objeto para edición"
@@ -37983,7 +37987,7 @@ msgstr[1] ""
 "con <b>Mayús</b> para separar"
 
 #  display the initial welcome message in the statusbar
-#: ../src/widgets/desktop-widget.cpp:330
+#: ../src/widgets/desktop-widget.cpp:333
 msgid ""
 "<b>Welcome to Inkscape!</b> Use shape or freehand tools to create objects; use "
 "selector (arrow) to move or transform them."
@@ -37991,85 +37995,85 @@ msgstr ""
 "<b>Bienvenido a Inkscape.</b> Utilice las herramientas de forma o mano alzada "
 "para crear objetos; utilice el selector (flecha) para moverlos o transformarlos."
 
-#: ../src/widgets/desktop-widget.cpp:340 ../share/ui/dialog-symbols.glade:94
+#: ../src/widgets/desktop-widget.cpp:343 ../share/ui/dialog-symbols.glade:94
 msgid "Zoom"
 msgstr "Zoom"
 
-#: ../src/widgets/desktop-widget.cpp:372
+#: ../src/widgets/desktop-widget.cpp:375
 msgid "Rotation. (Also Ctrl+Shift+Scroll)"
 msgstr "Rotación. (También Ctrl+Mayús+Rueda)"
 
-#: ../src/widgets/desktop-widget.cpp:400
+#: ../src/widgets/desktop-widget.cpp:403
 msgid "Cursor coordinates"
 msgstr "Coordenadas del cursor"
 
 #. TRANSLATORS: Abbreviation for canvas zoom level
-#: ../src/widgets/desktop-widget.cpp:415
+#: ../src/widgets/desktop-widget.cpp:418
 msgctxt "canvas"
 msgid "Z:"
 msgstr "Z:"
 
 #. TRANSLATORS: Abbreviation for canvas rotation
-#: ../src/widgets/desktop-widget.cpp:418
+#: ../src/widgets/desktop-widget.cpp:421
 msgctxt "canvas"
 msgid "R:"
 msgstr "R:"
 
-#: ../src/widgets/desktop-widget.cpp:587
+#: ../src/widgets/desktop-widget.cpp:590
 msgid "outline"
 msgstr "contorno"
 
-#: ../src/widgets/desktop-widget.cpp:589
+#: ../src/widgets/desktop-widget.cpp:592
 msgid "no filters"
 msgstr "sin filtros"
 
-#: ../src/widgets/desktop-widget.cpp:591
+#: ../src/widgets/desktop-widget.cpp:594
 msgid "enhance thin lines"
 msgstr "realzar líneas delgadas"
 
-#: ../src/widgets/desktop-widget.cpp:593
+#: ../src/widgets/desktop-widget.cpp:596
 msgid "outline overlay"
 msgstr "superposición de contorno"
 
-#: ../src/widgets/desktop-widget.cpp:602
+#: ../src/widgets/desktop-widget.cpp:605
 msgid "grayscale"
 msgstr "escala de grises"
 
-#: ../src/widgets/desktop-widget.cpp:604
+#: ../src/widgets/desktop-widget.cpp:607
 msgid "print colors preview"
 msgstr "vista previa de colores de impresión"
 
-#: ../src/widgets/desktop-widget.cpp:777
+#: ../src/widgets/desktop-widget.cpp:746
 msgid "Locked all guides"
 msgstr "Bloqueadas todas las guías"
 
-#: ../src/widgets/desktop-widget.cpp:777
+#: ../src/widgets/desktop-widget.cpp:746
 msgid "Unlocked all guides"
 msgstr "Desbloqueadas todas las guías"
 
-#: ../src/widgets/desktop-widget.cpp:792
+#: ../src/widgets/desktop-widget.cpp:761
 msgid "Color-managed display is <b>enabled</b> in this window"
 msgstr "La pantalla con gestión de color está <b>activa</b> en esta ventana"
 
-#: ../src/widgets/desktop-widget.cpp:794
+#: ../src/widgets/desktop-widget.cpp:763
 msgid "Color-managed display is <b>disabled</b> in this window"
 msgstr "La pantalla con gestión de color está <b>inactiva</b> en esta ventana"
 
-#: ../src/widgets/desktop-widget.cpp:925
+#: ../src/widgets/desktop-widget.cpp:894
 msgid "Note:"
 msgstr "Nota:"
 
-#: ../src/widgets/desktop-widget.cpp:1460 ../share/ui/dialog-export.glade:100
+#: ../src/widgets/desktop-widget.cpp:1429 ../share/ui/dialog-export.glade:100
 #: ../share/ui/page-properties.glade:799 ../share/ui/align-and-distribute.ui:60
 #: ../share/extensions/voronoi_diagram.inx:15
 msgid "Page"
 msgstr "Página"
 
-#: ../src/widgets/desktop-widget.cpp:1472
+#: ../src/widgets/desktop-widget.cpp:1441
 msgid "Centre Page"
 msgstr "Centrar página"
 
-#: ../src/widgets/desktop-widget.cpp:1813
+#: ../src/widgets/desktop-widget.cpp:1788
 msgid "Create guide"
 msgstr "Crear guía"
 
@@ -40790,7 +40794,7 @@ msgstr ""
 "Se ha detectado un objeto que tiene un conjunto de parámetros de extrusión. La "
 "figura importada podría ser representada incorrectamente."
 
-#: ../share/extensions/dxf_outlines.py:217
+#: ../share/extensions/dxf_outlines.py:214
 msgid ""
 "Failed to import the numpy or numpy.linalg modules. These modules are required by "
 "the ROBO option.Please install them and try again."
@@ -40798,13 +40802,13 @@ msgstr ""
 "No se ha podido cargar el módulo numpy o numpy.linalg. La opción ROBO necesita "
 "estos módulos. Vuelva a intentarlo después de instalarlos."
 
-#: ../share/extensions/dxf_outlines.py:367
+#: ../share/extensions/dxf_outlines.py:364
 msgid "Too many nested groups. Please use the \"Deep Ungroup\" extension first."
 msgstr ""
 "Demasiados grupos anidados. Utilice primero la extensión \"Desagrupación "
 "profunda\"."
 
-#: ../share/extensions/dxf_outlines.py:382
+#: ../share/extensions/dxf_outlines.py:379
 msgid ""
 "Error: Field 'Layer match name' must be filled when using 'By name match' option"
 msgstr ""
@@ -50927,7 +50931,7 @@ msgstr "La mitad de la altura de la fuente"
 
 #~ msgid "translator-credits"
 #~ msgstr ""
-#~ "Lucas Vieites Fariña, 2003-2020\n"
+#~ "Lucas Vieites Fariña, 2003-2023\n"
 #~ "Francisco Javier F. Serrador, 2003\n"
 #~ "José Antonio Salgueiro Aquino, 2003"
 
