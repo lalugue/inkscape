@@ -172,7 +172,6 @@ PageToolbar::PageToolbar(SPDesktop *desktop)
     });
 
     show_all();
-    toolChanged(desktop, desktop->getTool());
 }
 
 /**

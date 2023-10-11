@@ -108,84 +108,64 @@ Toolbars::Toolbars()
     set_name("Tool-Toolbars");
 }
 
-void Toolbars::setup_initial_toolbar(SPDesktop *desktop)
+// Fill the toolbars widget with toolbars.
+// Toolbars are contained inside a grid with an optional swatch.
+void Toolbars::create_toolbars(SPDesktop *desktop)
 {
+    // Create the toolbars using their "create" methods.
+    for (int i = 0; aux_toolboxes[i].type_name; i++) {
+        if (aux_toolboxes[i].create) {
+            // Change create_func to return Gtk::Box!
+            auto const sub_toolbox = Gtk::manage(aux_toolboxes[i].create(desktop).release());
+            sub_toolbox->set_name("SubToolBox");
+
+            // Use a grid to wrap the toolbar and a possible swatch.
+            auto const grid = Gtk::make_managed<Gtk::Grid>();
+
+            // Store a pointer to the grid so we can show/hide it as the tool changes.
+            toolbar_map[aux_toolboxes[i].tool_name] = grid;
+
+            Glib::ustring ui_name = aux_toolboxes[i].tool_name +
+                                    "Toolbar"; // If you change "Toolbar" here, change it also in desktop-widget.cpp.
+            grid->set_name(ui_name);
+
+            grid->attach(*sub_toolbox, 0, 0, 1, 1);
+
+            // Add a swatch widget if swatch tooltip is defined.
+            if (aux_toolboxes[i].swatch_tip) {
+                auto const swatch =
+                    Gtk::make_managed<Inkscape::UI::Widget::StyleSwatch>(nullptr, _(aux_toolboxes[i].swatch_tip));
+                swatch->setDesktop(desktop);
+                swatch->setToolName(aux_toolboxes[i].tool_name);
+                swatch->setWatchedTool(aux_toolboxes[i].type_name, true);
+
+                //               ===== Styling =====
+                // TODO: Remove and use CSS
+                swatch->set_margin_start(7);
+                swatch->set_margin_end(7);
+                swatch->set_margin_top(3);
+                swatch->set_margin_bottom(3);
+                //             ===== End Styling =====
+
+                grid->attach(*swatch, 1, 0, 1, 1);
+            }
+
+            grid->show_all();
+
+            add(*grid);
+
+        } else if (aux_toolboxes[i].swatch_tip) {
+            std::cerr << "Toolbars::create_toolbars: Could not create: " << aux_toolboxes[i].tool_name << std::endl;
+        }
+    }
+
     desktop->connectEventContextChanged(sigc::mem_fun(*this, &Toolbars::change_toolbar));
 
     // Show initial toolbar, hide others.
     change_toolbar(desktop, desktop->getTool());
 }
 
-// Create toolbars by using lazy loading technique.
-void Toolbars::create_toolbar(SPDesktop *desktop, int i)
-{
-    auto prefs = Preferences::get();
-
-    // Create the toolbars using their "create" methods.
-    auto const sub_toolbox = Gtk::manage(aux_toolboxes[i].create(desktop).release());
-    sub_toolbox->set_name("SubToolBox");
-
-    //               ===== Styling =====
-
-    // Center buttons to prevent stretching; all buttons will look
-    // uniform across toolbars if their original size is preserved.
-    for (auto const button : UI::get_children(*sub_toolbox)) {
-        if (dynamic_cast<Gtk::Button *>(button) ||
-            dynamic_cast<Gtk::SpinButton *>(button))
-        {
-            button->set_valign(Gtk::ALIGN_CENTER);
-            button->set_halign(Gtk::ALIGN_CENTER);
-        }
-    }
-
-    if (prefs->getBool("/toolbox/icononly", true)) {
-        // sub_toolbox->set_toolbar_style(Gtk::TOOLBAR_ICONS);
-    }
-
-    // TODO Remove and rely on CSS (add class)
-    int pixel_size = prefs->getIntLimited("/toolbox/controlbars/icons_size", 16, 16, 48);
-    Inkscape::UI::set_icon_sizes(sub_toolbox, pixel_size);
-
-    sub_toolbox->set_hexpand(true);
-
-    //             ===== End Styling =====
-
-    // Use a grid to wrap the toolbar and a possible swatch.
-    auto const grid = Gtk::make_managed<Gtk::Grid>();
-
-    // Store a pointer to the grid so we can show/hide it as the tool changes.
-    toolbar_map[aux_toolboxes[i].tool_name] = grid;
-
-    Glib::ustring ui_name = aux_toolboxes[i].tool_name + "Toolbar"; // If you change "Toolbar" here, change it also in desktop-widget.cpp.
-    grid->set_name(ui_name);
-
-    grid->attach(*sub_toolbox, 0, 0, 1, 1);
-
-    // Add a swatch widget if swatch tooltip is defined.
-    if (aux_toolboxes[i].swatch_tip) {
-        auto const swatch =
-            Gtk::make_managed<Inkscape::UI::Widget::StyleSwatch>(nullptr, _(aux_toolboxes[i].swatch_tip));
-        swatch->setDesktop(desktop);
-        swatch->setToolName(aux_toolboxes[i].tool_name);
-        swatch->setWatchedTool(aux_toolboxes[i].type_name, true);
-
-        //               ===== Styling =====
-        // TODO: Remove and use CSS
-        swatch->set_margin_start(7);
-        swatch->set_margin_end(7);
-        swatch->set_margin_top(3);
-        swatch->set_margin_bottom(3);
-        //             ===== End Styling =====
-
-        grid->attach(*swatch, 1, 0, 1, 1);
-    }
-
-    grid->show_all();
-
-    add(*grid);
-}
-
-void Toolbars::change_toolbar(SPDesktop *desktop, Tools::ToolBase *tool)
+void Toolbars::change_toolbar(SPDesktop * /*desktop*/, Tools::ToolBase *tool)
 {
     if (!tool) {
         std::cerr << "Toolbars::change_toolbar: tool is null!" << std::endl;
@@ -194,14 +174,8 @@ void Toolbars::change_toolbar(SPDesktop *desktop, Tools::ToolBase *tool)
 
     for (int i = 0; aux_toolboxes[i].type_name; i++) {
         if (tool->getPrefsPath() == aux_toolboxes[i].type_name) {
-            // Construct the toolbar if not already constructed.
-            if (!toolbar_map[aux_toolboxes[i].tool_name]) {
-                // g_message("Creating the toolbar: %s", aux_toolboxes[i].tool_name.c_str());
-                create_toolbar(desktop, i);
-            }
-
-            toolbar_map[aux_toolboxes[i].tool_name]->set_visible(true);
-        } else if (toolbar_map[aux_toolboxes[i].tool_name]) {
+            toolbar_map[aux_toolboxes[i].tool_name]->show_now();
+        } else {
             toolbar_map[aux_toolboxes[i].tool_name]->set_visible(false);
         }
     }
