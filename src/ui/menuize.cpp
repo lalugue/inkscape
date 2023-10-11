@@ -133,12 +133,12 @@ void menuize_popover(Gtk::Popover &popover)
 }
 
 std::unique_ptr<Gtk::Popover>
-make_menuized_popover(Glib::RefPtr<Gio::MenuModel> model, Gtk::Widget &relative_to)
+make_menuized_popover(Glib::RefPtr<Gio::MenuModel> model, Gtk::Widget &parent)
 {
     // TODO: GTK4: Be more GtkMenu-like by using PopoverMenu::Flags::NESTED
     auto popover = std::make_unique<Gtk::PopoverMenu>();
     popover->bind_model(std::move(model));
-    popover->set_relative_to(relative_to);
+    popover->set_relative_to(parent);
     menuize_popover(*popover);
     return popover;
 }

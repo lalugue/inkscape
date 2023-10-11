@@ -651,7 +651,7 @@ static UI::Widget::PopoverMenuItem *make_menu_item(Glib::ustring const &label, S
 
 void SelectedStyle::make_popup(FillOrStroke const i)
 {
-    _popup[i] = std::make_unique<UI::Widget::PopoverMenu>(Gtk::POS_TOP);
+    _popup[i] = std::make_unique<UI::Widget::PopoverMenu>(*this, Gtk::POS_TOP);
 
 
     auto const add_item = [&](Glib::ustring const &  fill_label, auto const   fill_method,
@@ -714,7 +714,7 @@ void SelectedStyle::make_popup(FillOrStroke const i)
 
 void SelectedStyle::make_popup_units()
 {
-    _popup_sw = std::make_unique<UI::Widget::PopoverMenu>(Gtk::POS_TOP);
+    _popup_sw = std::make_unique<UI::Widget::PopoverMenu>(*this, Gtk::POS_TOP);
 
     _popup_sw->append_section_label(_("<b>Stroke Width</b>"));
 
@@ -1012,7 +1012,7 @@ void SelectedStyle::opacity_1()   {opacity_sb->set_value(100);}
 
 void SelectedStyle::make_popup_opacity()
 {
-    _popup_opacity = std::make_unique<UI::Widget::PopoverMenu>(Gtk::POS_TOP);
+    _popup_opacity = std::make_unique<UI::Widget::PopoverMenu>(*this, Gtk::POS_TOP);
     auto const add_item = [&](Glib::ustring const &label, auto const method)
                           { _popup_opacity->append(*make_menu_item(label, sigc::mem_fun(*this, method))); };
     add_item(_("0 (Transparent)"), &SelectedStyle::opacity_0  );

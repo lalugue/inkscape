@@ -770,6 +770,7 @@ ObjectsPanel::ObjectsPanel()
         return true;
     });
 
+    _object_menu.set_relative_to(*this);
     _object_menu.signal_closed().connect([this]{
         _item_state_toggler->set_force_visible(false);
         _tree.queue_draw();

@@ -58,6 +58,7 @@
 #include "ui/icon-names.h"
 #include "ui/menuize.h"
 #include "ui/pack.h"
+#include "ui/popup-menu.h"
 #include "ui/syntax.h"
 #include "ui/widget/shapeicon.h"
 #include "util/numeric/converters.h"
@@ -219,6 +220,7 @@ AttrDialog::AttrDialog()
         _popover->popdown();
     });
 
+    _popover->set_relative_to(*this);
     _popover->signal_closed().connect([this]{ popClosed(); });
     Controller::add_key<&AttrDialog::onPopoverKeyPressed>(*_popover, *this, Gtk::PHASE_CAPTURE);
 
@@ -468,6 +470,7 @@ void AttrDialog::startValueEdit(Gtk::CellEditable *cell, const Glib::ustring &pa
         edit_in_popup || colwidth - 10 < width)
     {
         _value_editing = entry->get_text();
+
         Gdk::Rectangle rect;
         _treeView.get_cell_area((Gtk::TreeModel::Path)iter, *_valueCol, rect);
         if (_popover->get_position() == Gtk::PositionType::POS_BOTTOM) {
@@ -476,7 +479,6 @@ void AttrDialog::startValueEdit(Gtk::CellEditable *cell, const Glib::ustring &pa
         if (rect.get_x() >= dlg_width) {
             rect.set_x(dlg_width - 1);
         }
-        _popover->set_pointing_to(rect);
 
         auto current_value = row[_attrColumns._attributeValue];
         _current_text_edit->setStyle(theme);
@@ -491,7 +493,8 @@ void AttrDialog::startValueEdit(Gtk::CellEditable *cell, const Glib::ustring &pa
             cell->remove_widget();
         }, 0);
         // and show popup edit instead
-        Glib::signal_timeout().connect_once([this]{ _popover->popup(); }, 10);
+        Glib::signal_timeout().connect_once([=, this]{ UI::popup_at(*_popover, _treeView, rect); },
+                                            10);
     } else {
         setEditingEntry(entry, true);
     }

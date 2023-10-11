@@ -16,12 +16,14 @@
 
 #include <utility>
 #include <2geom/point.h>
+#include <gdkmm/rectangle.h>
 #include <gtkmm/gesturemultipress.h>
 #include <gtkmm/popover.h>
 #include <gtkmm/widget.h>
 
 #include "controller.h"
 #include "manage.h"
+#include "ui/util.h"
 
 namespace Inkscape::UI {
 
@@ -72,34 +74,53 @@ sigc::connection on_hide_reset(std::shared_ptr<Gtk::Widget> widget)
     return widget->signal_hide().connect( [widget = std::move(widget)]() mutable { widget.reset(); });
 }
 
-void popup_at(Gtk::Popover &popover, Gtk::Widget &relative_to,
-              int const x_offset, int const y_offset)
+static void popup_at(Gtk::Popover &popover, Gtk::Widget &widget,
+                     int const x_offset, int const y_offset,
+                     int width, int height)
 {
     popover.set_visible(false);
 
-    popover.set_relative_to(relative_to);
+    auto const parent = popover.get_relative_to();
+    g_return_if_fail(parent);
+    g_return_if_fail(&widget == parent || is_descendant_of(widget, *parent));
 
-    if (x_offset != 0 || y_offset != 0) {
-        popover.set_pointing_to({x_offset, y_offset, 1, 1});
-    }
+    auto const allocation = widget.get_allocation();
+    if (!width ) width  = x_offset ? 1 : allocation.get_width ();
+    if (!height) height = y_offset ? 1 : allocation.get_height();
+    int x{}, y{};
+    widget.translate_coordinates(*parent, 0, 0, x, y);
+    x += x_offset;
+    y += y_offset;
+    popover.set_pointing_to({x, y, width, height});
 
     popover.show_all_children();
     popover.popup();
 }
 
-void popup_at(Gtk::Popover &popover, Gtk::Widget &relative_to,
+void popup_at(Gtk::Popover &popover, Gtk::Widget &widget,
+              int const x_offset, int const y_offset)
+{
+    popup_at(popover, widget, x_offset, y_offset, 0, 0);
+}
+
+void popup_at(Gtk::Popover &popover, Gtk::Widget &widget,
               std::optional<Geom::Point> const &offset)
 {
     auto const x_offset = offset ? offset->x() : 0;
     auto const y_offset = offset ? offset->y() : 0;
-    popup_at(popover, relative_to, x_offset, y_offset);
+    popup_at(popover, widget, x_offset, y_offset);
 }
 
-void popup_at_center(Gtk::Popover &popover, Gtk::Widget &relative_to)
+void popup_at_center(Gtk::Popover &popover, Gtk::Widget &widget)
 {
-    auto const x_offset = relative_to.get_width () / 2;
-    auto const y_offset = relative_to.get_height() / 2;
-    popup_at(popover, relative_to, x_offset, y_offset);
+    auto const x_offset = widget.get_width () / 2;
+    auto const y_offset = widget.get_height() / 2;
+    popup_at(popover, widget, x_offset, y_offset);
+}
+
+void popup_at(Gtk::Popover &popover, Gtk::Widget &widget, Gdk::Rectangle const &rect)
+{
+    popup_at(popover, widget, rect.get_x(), rect.get_y(), rect.get_width(), rect.get_height());
 }
 
 } // namespace Inkscape::UI

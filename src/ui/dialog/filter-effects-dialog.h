@@ -217,7 +217,8 @@ private:
         sigc::signal<void ()>& signal_primitive_changed();
 
         void update();
-        void set_menu(sigc::slot<void ()>  dup,
+        void set_menu(Gtk::Widget &parent,
+                      sigc::slot<void ()>  dup,
                       sigc::slot<void ()>  rem);
 
         SPFilterPrimitive* get_selected();

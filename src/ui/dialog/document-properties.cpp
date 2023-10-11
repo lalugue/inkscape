@@ -135,7 +135,7 @@ static bool do_remove_popup_menu(PopupMenuOptionalClick const click,
 
     auto const mi = Gtk::make_managed<UI::Widget::PopoverMenuItem>(_("_Remove"), true);
     mi->signal_activate().connect(slot);
-    auto const menu = std::make_shared<UI::Widget::PopoverMenu>(Gtk::POS_BOTTOM);
+    auto const menu = std::make_shared<UI::Widget::PopoverMenu>(tree_view, Gtk::POS_BOTTOM);
     menu->append(*mi);
     UI::on_hide_reset(menu);
 

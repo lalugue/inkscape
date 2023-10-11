@@ -24,6 +24,10 @@ namespace Geom {
 class Point;
 } // namespace Geom
 
+namespace Gdk {
+class Rectangle;
+} // namespace Gdk
+
 namespace Gtk {
 class Popover;
 class Widget;
@@ -54,14 +58,21 @@ sigc::connection on_hide_reset(std::shared_ptr<Gtk::Widget> widget);
 
 /// Replace Gtk::Menu::popup_at_pointer. If x or y
 /// offsets != 0, :pointing-to is set to {x,y,1,1}
-void popup_at(Gtk::Popover &popover, Gtk::Widget &relative_to,
+/// else it is set to the full allocation of @a widget, translated into the coordinate space of the
+/// @a popoverʼs parent (:relative-to) widget. Hence, the @a widget must be the @a popoverʼs parent
+/// (:relative-to) widget or a descendant thereof.
+void popup_at(Gtk::Popover &popover, Gtk::Widget &widget,
               int x_offset = 0, int y_offset = 0);
 /// @copydoc popup_at()
-void popup_at(Gtk::Popover &popover, Gtk::Widget &relative_to,
+void popup_at(Gtk::Popover &popover, Gtk::Widget &widget,
               std::optional<Geom::Point> const &offset);
 
 /// As popup_at() but point to center of widget
-void popup_at_center(Gtk::Popover &popover, Gtk::Widget &relative_to);
+void popup_at_center(Gtk::Popover &popover, Gtk::Widget &widget);
+
+/// As popup_at() but point to center of @a rect
+/// @a rect must be valid within the coords of @widget, & @awidget must be a descendant of @parent.
+void popup_at(Gtk::Popover &popover, Gtk::Widget &widget, Gdk::Rectangle const &rect);
 
 } // namespace UI
 

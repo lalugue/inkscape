@@ -47,6 +47,7 @@
 #include "ui/desktop/menu-set-tooltips-shift-icons.h"
 #include "ui/menuize.h"
 #include "ui/util.h"
+#include "ui/widget/desktop-widget.h"
 
 static void
 AppendItemFromAction(Glib::RefPtr<Gio::Menu> const &gmenu,
@@ -333,6 +334,9 @@ ContextMenu::ContextMenu(SPDesktop *desktop, SPObject *object, bool hide_layers_
     }
     // clang-format on
 
+    auto const widget = desktop->getDesktopWidget();
+    g_assert(widget);
+    set_relative_to(*widget);
     bind_model(gmenu);
     set_position(Gtk::POS_BOTTOM);
     show_all_images(*this);

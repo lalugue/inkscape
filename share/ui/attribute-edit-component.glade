@@ -104,7 +104,6 @@
     </section>
   </menu>
   <object class="GtkPopover" id="popup">
-    <property name="relative-to">tree-view</property>
     <property name="position">bottom</property>
     <child>
       <object class="GtkBox">

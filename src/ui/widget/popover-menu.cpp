@@ -43,7 +43,7 @@ public:
     }
 };
 
-PopoverMenu::PopoverMenu(Gtk::PositionType const position)
+PopoverMenu::PopoverMenu(Gtk::Widget &parent, Gtk::PositionType const position)
     : Glib::ObjectBase{"PopoverMenu"}
     , Gtk::Popover{}
     , _grid{*Gtk::make_managed<PopoverMenuGrid>()}
@@ -51,6 +51,8 @@ PopoverMenu::PopoverMenu(Gtk::PositionType const position)
     auto const style_context = get_style_context();
     style_context->add_class("popover-menu");
     style_context->add_class("menu");
+
+    set_relative_to(parent);
     set_position(position);
     add(_grid);
 
@@ -124,15 +126,15 @@ void PopoverMenu::append_separator()
     append(*Gtk::make_managed<Gtk::Separator>(Gtk::ORIENTATION_HORIZONTAL));
 }
 
-void PopoverMenu::popup_at(Gtk::Widget &relative_to,
+void PopoverMenu::popup_at(Gtk::Widget &widget,
                            int const x_offset, int const y_offset)
 {
-    ::Inkscape::UI::popup_at(*this, relative_to, x_offset, y_offset);
+    ::Inkscape::UI::popup_at(*this, widget, x_offset, y_offset);
 }
 
-void PopoverMenu::popup_at_center(Gtk::Widget &relative_to)
+void PopoverMenu::popup_at_center(Gtk::Widget &widget)
 {
-    ::Inkscape::UI::popup_at_center(*this, relative_to);
+    ::Inkscape::UI::popup_at_center(*this, widget);
 }
 
 std::vector<Gtk::Widget *> const &PopoverMenu::get_items()

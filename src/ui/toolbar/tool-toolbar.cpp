@@ -129,7 +129,7 @@ std::unique_ptr<UI::Widget::PopoverMenu> ToolToolbar::makeContextMenu(InkscapeWi
         _context_menu_tool_name.clear();
     });
 
-    auto menu = std::make_unique<UI::Widget::PopoverMenu>(Gtk::POS_BOTTOM);
+    auto menu = std::make_unique<UI::Widget::PopoverMenu>(*this, Gtk::POS_BOTTOM);
     menu->append(item);
     return menu;
 }

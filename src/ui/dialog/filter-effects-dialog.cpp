@@ -1295,17 +1295,15 @@ private:
     bool _locked;
 };
 
-    // ComponentTransferValues
 FilterEffectsDialog::ComponentTransferValues* FilterEffectsDialog::Settings::add_componenttransfervalues(const Glib::ustring& label, SPFeFuncNode::Channel channel)
-    {
-        auto const ct = Gtk::make_managed<ComponentTransferValues>(_dialog, channel);
-        add_widget(ct, label);
-        add_attr_widget(ct);
-        ct->set_margin_top(4);
-        ct->set_margin_bottom(4);
-        return ct;
-    }
-
+{
+    auto const ct = Gtk::make_managed<ComponentTransferValues>(_dialog, channel);
+    add_widget(ct, label);
+    add_attr_widget(ct);
+    ct->set_margin_top(4);
+    ct->set_margin_bottom(4);
+    return ct;
+}
 
 FilterEffectsDialog::LightSourceControl* FilterEffectsDialog::Settings::add_lightsource()
 {
@@ -1315,10 +1313,11 @@ FilterEffectsDialog::LightSourceControl* FilterEffectsDialog::Settings::add_ligh
     return ls;
 }
 
-static std::unique_ptr<UI::Widget::PopoverMenu> create_popup_menu(sigc::slot<void ()> dup,
+static std::unique_ptr<UI::Widget::PopoverMenu> create_popup_menu(Gtk::Widget &parent,
+                                                                  sigc::slot<void ()> dup,
                                                                   sigc::slot<void ()> rem)
 {
-    auto menu = std::make_unique<UI::Widget::PopoverMenu>(Gtk::POS_RIGHT);
+    auto menu = std::make_unique<UI::Widget::PopoverMenu>(parent, Gtk::POS_RIGHT);
 
     auto mi = Gtk::make_managed<UI::Widget::PopoverMenuItem>(_("_Duplicate"), true);
     mi->signal_activate().connect(std::move(dup));
@@ -1430,7 +1429,7 @@ void FilterEffectsDialog::FilterModifier::update_selection(Selection *sel)
 
 std::unique_ptr<UI::Widget::PopoverMenu> FilterEffectsDialog::FilterModifier::create_menu()
 {
-    auto menu = std::make_unique<UI::Widget::PopoverMenu>(Gtk::POS_BOTTOM);
+    auto menu = std::make_unique<UI::Widget::PopoverMenu>(*this, Gtk::POS_BOTTOM);
     auto append = [&](Glib::ustring const &text, auto const mem_fun)
     {
         auto &item = *Gtk::make_managed<UI::Widget::PopoverMenuItem>(text, true);
@@ -1912,10 +1911,11 @@ void FilterEffectsDialog::PrimitiveList::update()
     }
 }
 
-void FilterEffectsDialog::PrimitiveList::set_menu(sigc::slot<void ()> dup,
+void FilterEffectsDialog::PrimitiveList::set_menu(Gtk::Widget &parent,
+                                                  sigc::slot<void ()> dup,
                                                   sigc::slot<void ()> rem)
 {
-    _primitive_menu = create_popup_menu(std::move(dup), std::move(rem));
+    _primitive_menu = create_popup_menu(parent, std::move(dup), std::move(rem));
 }
 
 SPFilterPrimitive* FilterEffectsDialog::PrimitiveList::get_selected()
@@ -2851,7 +2851,8 @@ FilterEffectsDialog::FilterEffectsDialog()
     });
 
     _add_primitive.signal_clicked().connect(sigc::mem_fun(*this, &FilterEffectsDialog::add_primitive));
-    _primitive_list.set_menu(sigc::mem_fun(*this, &FilterEffectsDialog::duplicate_primitive),
+    _primitive_list.set_menu(*this,
+                             sigc::mem_fun(*this, &FilterEffectsDialog::duplicate_primitive),
                              sigc::mem_fun(_primitive_list, &PrimitiveList::remove_selected));
 
     get_widget<Gtk::Button>(_builder, "new-filter").signal_clicked().connect([this]{ _filter_modifier.add_filter(); });

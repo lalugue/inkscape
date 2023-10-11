@@ -24,6 +24,7 @@
 #include "ink-ruler.h"
 #include "inkscape.h"
 #include "ui/controller.h"
+#include "ui/popup-menu.h"
 #include "ui/themes.h"
 #include "ui/util.h"
 #include "util/units.h"
@@ -192,8 +193,7 @@ Gtk::EventSequenceState
 Ruler::on_click_pressed(Gtk::GestureMultiPress const & /*click*/,
                         int /*n_press*/, double const x, double const y)
 {
-    _popover->set_pointing_to(Gdk::Rectangle(x, y, 1, 1));
-    _popover->popup();
+    UI::popup_at(*_popover, *this, x, y);
     return Gtk::EVENT_SEQUENCE_CLAIMED;
 }
 

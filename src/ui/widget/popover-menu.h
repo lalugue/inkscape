@@ -37,7 +37,7 @@ class PopoverMenu final : public Gtk::Popover {
 public:
     /// Create popover with CSS classes `.menu` & `.popover-menu`,
     /// positioned as requested vs. relative-to/popup_at() widget.
-    [[nodiscard]] PopoverMenu(Gtk::PositionType const position);
+    [[nodiscard]] PopoverMenu(Gtk::Widget &parent, Gtk::PositionType const position);
 
     /// Add child at pos as per Gtk::Menu::attach()
     void attach(Gtk::Widget &child,
@@ -57,10 +57,11 @@ public:
 
     /// Replace Gtk::Menu::popup_at_pointer. If x or y
     /// offsets != 0, :pointing-to is set to {x,y,1,1}
-    void popup_at(Gtk::Widget &relative_to,
+    /// @a widget must be the parent passed to self constructor or a descendant.
+    void popup_at(Gtk::Widget &widget,
                   int x_offset = 0, int y_offset = 0);
     /// As popup_at() but point to center of widget
-    void popup_at_center(Gtk::Widget &relative_to);
+    void popup_at_center(Gtk::Widget &widget);
 
     /// Get the list of menu items (children of our grid)
     /// Take copy, not reference, if you iterate & change items!
