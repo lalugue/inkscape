@@ -375,12 +375,12 @@ void draw_shape(uint32_t *cache,
             // Actually any rectangular shape.
             for (int i = 0; i < width; ++i) {
                 for (int j = 0; j < width; ++j) {
-                    if (        i <  outline_width ||         j <  outline_width ||
-                        width - i <= outline_width || width - j <= outline_width)
+                    if (        i <  scaled_outline ||         j <  scaled_outline ||
+                        width - i <= scaled_outline || width - j <= scaled_outline)
                     {
                         *p++ = outline;
-                    } else if (        i <  outline_width + stroke_width ||         j <  outline_width + stroke_width ||
-                               width - i <= outline_width + stroke_width || width - j <= outline_width + stroke_width)
+                    } else if (        i <  scaled_outline + scaled_stroke ||         j <  scaled_outline + scaled_stroke ||
+                               width - i <= scaled_outline + scaled_stroke || width - j <= scaled_outline + scaled_stroke)
                     {
                         *p++ = stroke;
                     } else {
