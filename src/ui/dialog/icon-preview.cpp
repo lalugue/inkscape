@@ -20,9 +20,9 @@
 #include <glibmm/i18n.h>
 #include <glibmm/timer.h>
 #include <glibmm/main.h>
-#include <gtkmm/box.h>
 #include <gtkmm/checkbutton.h>
 #include <gtkmm/frame.h>
+#include <gtkmm/togglebutton.h>
 #include <sigc++/adaptors/bind.h>
 #include <sigc++/functors/mem_fun.h>
 
@@ -31,7 +31,6 @@
 #include "inkscape.h"
 #include "page-manager.h"
 #include "selection.h"
-
 #include "display/cairo-utils.h"
 #include "display/drawing-context.h"
 #include "display/drawing.h"
@@ -145,16 +144,18 @@ IconPreviewPanel::IconPreviewPanel()
 
         auto const &label = labels[i];
 
-        buttons[i] = Gtk::make_managed<Gtk::ToggleToolButton>(label);
+        buttons[i] = Gtk::make_managed<Gtk::ToggleButton>();
+        buttons[i]->get_style_context()->add_class("icon-preview");
+        buttons[i]->set_relief(Gtk::RELIEF_NONE);
         buttons[i]->set_active( i == hot );
 
         if ( prefs->getBool("/iconpreview/showFrames", true) ) {
             auto const frame = Gtk::make_managed<Gtk::Frame>();
             frame->set_shadow_type(Gtk::SHADOW_ETCHED_IN);
             frame->add(*images[i]);
-            buttons[i]->set_icon_widget(*frame);
+            buttons[i]->add(*frame);
         } else {
-            buttons[i]->set_icon_widget(*images[i]);
+            buttons[i]->add(*images[i]);
         }
 
         buttons[i]->set_tooltip_text(label);
@@ -181,11 +182,12 @@ IconPreviewPanel::IconPreviewPanel()
             if (sizes[i] <= avail) {
                 if (!horiz) {
                     horiz = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL);
+                    horiz->set_halign(Gtk::ALIGN_CENTER);
                     avail = previous;
                     UI::pack_end(*verts, *horiz, UI::PackOptions::shrink);
                 }
 
-                UI::pack_start(*horiz, *buttons[i], UI::PackOptions::expand_widget);
+                UI::pack_end(*horiz, *buttons[i], UI::PackOptions::expand_widget);
 
                 avail -= sizes[i];
                 avail -= pad; // a little extra for padding
@@ -269,7 +271,7 @@ void IconPreviewPanel::documentReplaced()
         drawing = std::make_unique<Inkscape::Drawing>();
         visionkey = SPItem::display_key_new(1);
         drawing->setRoot(drawing_doc->getRoot()->invoke_show(*drawing, visionkey, SP_ITEM_SHOW_DISPLAY));
-        docDesConn = drawing_doc->connectDestroy([=]() { removeDrawing(); });
+        docDesConn = drawing_doc->connectDestroy([this]{ removeDrawing(); });
         queueRefresh();
     }
 }

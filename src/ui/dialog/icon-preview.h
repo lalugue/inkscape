@@ -24,8 +24,6 @@
 #include <gtkmm/image.h>
 #include <gtkmm/label.h>
 #include <gtkmm/paned.h>
-#include <gtkmm/togglebutton.h>
-#include <gtkmm/toggletoolbutton.h>
 
 #include "helper/auto-connection.h"
 #include "ui/dialog/dialog-base.h"
@@ -36,12 +34,15 @@ namespace Glib {
 class Timer;
 } // namespace Glib
 
+namespace Gtk {
+class ToggleButton;
+} // namespace Gtk
+
 namespace Inkscape {
 
 class Drawing;
 
 namespace UI::Dialog {
-
 
 /**
  * A panel that displays an icon preview
@@ -81,7 +82,7 @@ private:
     std::vector<std::vector<unsigned char>> pixMem;
     std::vector<Gtk::Image *> images;
     std::vector<Glib::ustring> labels;
-    std::vector<Gtk::ToggleToolButton *> buttons;
+    std::vector<Gtk::ToggleButton *> buttons;
     auto_connection docModConn;
     auto_connection docDesConn;
 
@@ -95,7 +96,6 @@ private:
 };
 
 } // namespace UI::Dialog
-
 } // namespace Inkscape
 
 #endif // SEEN_ICON_PREVIEW_H
