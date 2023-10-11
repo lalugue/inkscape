@@ -122,9 +122,22 @@ NodeToolbar::NodeToolbar(SPDesktop *desktop)
     add(*_toolbar);
 
     // Attach the signals.
-    get_widget<Gtk::MenuButton>(_builder, "insert_node_btn")
+    get_widget<Gtk::Button>(_builder, "insert_node_btn")
         .signal_clicked()
         .connect(sigc::mem_fun(*this, &NodeToolbar::edit_add));
+    get_widget<Gtk::MenuItem>(_builder, "insert_min_x_item")
+        .signal_activate()
+        .connect(sigc::mem_fun(*this, &NodeToolbar::edit_add_min_x));
+    get_widget<Gtk::MenuItem>(_builder, "insert_max_x_item")
+        .signal_activate()
+        .connect(sigc::mem_fun(*this, &NodeToolbar::edit_add_max_x));
+    get_widget<Gtk::MenuItem>(_builder, "insert_min_y_item")
+        .signal_activate()
+        .connect(sigc::mem_fun(*this, &NodeToolbar::edit_add_min_y));
+    get_widget<Gtk::MenuItem>(_builder, "insert_max_y_item")
+        .signal_activate()
+        .connect(sigc::mem_fun(*this, &NodeToolbar::edit_add_max_y));
+
     get_widget<Gtk::Button>(_builder, "delete_btn")
         .signal_clicked()
         .connect(sigc::mem_fun(*this, &NodeToolbar::edit_delete));
