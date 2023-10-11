@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hu\n"
 "Report-Msgid-Bugs-To: inkscape-translator@lists.inkscape.org\n"
-"POT-Creation-Date: 2023-07-04 21:25+0000\n"
-"PO-Revision-Date: 2013-07-05 17:58+0000\n"
+"POT-Creation-Date: 2023-09-22 14:02+0000\n"
+"PO-Revision-Date: 2023-10-11 18:34+0000\n"
 "Last-Translator: Gyuris Gellért <jobel@ujevangelizacio.hu>, 2023\n"
 "Language-Team: Hungarian (https://app.transifex.com/fsf-hu/teams/77907/hu/)\n"
 "Language: hu\n"
@@ -215,7 +215,7 @@ msgstr "Fodrozódás"
 #: ../build/share/filters/filters.svg.h:639
 #: ../src/extension/internal/filter/distort.h:98
 #: ../src/extension/internal/filter/distort.h:211
-#: ../src/ui/dialog/livepatheffect-editor.cpp:313
+#: ../src/ui/dialog/livepatheffect-editor.cpp:315
 msgid "Distort"
 msgstr "Torzítás"
 
@@ -3500,6 +3500,12 @@ msgid "Polka dots, large"
 msgstr "Pöttyök, nagy"
 
 #: ../build/share/paint/patterns.svg.h:1
+#: ../src/ui/dialog/document-resources.cpp:894
+#: ../share/ui/dialog-document-resources.glade:103
+msgid "Patterns"
+msgstr "Minták"
+
+#: ../build/share/paint/patterns.svg.h:1
 msgid "Stripes 01 (1:1)"
 msgstr "Csíkok 01 (1:1)"
 
@@ -3683,6 +3689,10 @@ msgstr "Piszkos szövet"
 #: ../build/share/paint/patterns.svg.h:1
 msgid "Noise"
 msgstr "Zaj"
+
+#: ../build/share/paint/patterns.svg.h:1
+msgid "Hatches"
+msgstr "Vonalkák"
 
 #: ../build/share/symbols/symbols.h:2
 msgctxt "Symbol"
@@ -7040,7 +7050,7 @@ msgstr "Az összes aktív párbeszédablak megnyitása vagy elrejtése"
 
 #: ../src/actions/actions-edit-document.cpp:58
 #: ../src/actions/actions-edit-document.cpp:93
-#: ../src/selection-chemistry.cpp:4369
+#: ../src/selection-chemistry.cpp:4374
 msgid "Fit Page to Drawing"
 msgstr "Oldal illesztése a rajzhoz"
 
@@ -7372,11 +7382,11 @@ msgstr "Az összes útvonaleffektus eltávolítása a kijelölt objektumokról"
 msgid "Swap fill and stroke"
 msgstr "Kitöltés és körvonal felcserélése"
 
-#: ../src/actions/actions-edit.cpp:312 ../src/selection-chemistry.cpp:4215
+#: ../src/actions/actions-edit.cpp:312 ../src/selection-chemistry.cpp:4220
 msgid "Swap fill and stroke of an object"
 msgstr "Egy objektum kitöltésének és körvonalának felcserélése"
 
-#: ../src/actions/actions-edit.cpp:313 ../src/selection-chemistry.cpp:4138
+#: ../src/actions/actions-edit.cpp:313 ../src/selection-chemistry.cpp:4143
 msgid "Fit Page to Selection"
 msgstr "Az oldal illesztése a kijelöléshez"
 
@@ -7548,7 +7558,7 @@ msgstr "Sablon mentése"
 msgid "Save a copy of the document as template"
 msgstr "A dokumentum egy másolatának mentése sablonként"
 
-#: ../src/actions/actions-file-window.cpp:125 ../src/file.cpp:1187
+#: ../src/actions/actions-file-window.cpp:125 ../src/file.cpp:1189
 #: ../src/ui/dialog/command-palette.cpp:267
 #: ../src/ui/dialog/inkscape-preferences.cpp:3002
 msgid "Import"
@@ -8464,10 +8474,10 @@ msgstr "Élő útvonaleffektus eltávolítása"
 
 #: ../src/actions/actions-object.cpp:278
 #: ../src/ui/dialog/livepatheffect-editor.cpp:81
-#: ../src/ui/dialog/livepatheffect-editor.cpp:470
-#: ../src/ui/dialog/livepatheffect-editor.cpp:478
-#: ../src/ui/dialog/livepatheffect-editor.cpp:1230
-#: ../src/ui/dialog/livepatheffect-editor.cpp:1239
+#: ../src/ui/dialog/livepatheffect-editor.cpp:472
+#: ../src/ui/dialog/livepatheffect-editor.cpp:480
+#: ../src/ui/dialog/livepatheffect-editor.cpp:1227
+#: ../src/ui/dialog/livepatheffect-editor.cpp:1236
 msgid "Create and apply path effect"
 msgstr "Útvonaleffektus létrehozása és alkalmazása"
 
@@ -10423,11 +10433,11 @@ msgstr "<b>Segédvonal</b>: %s"
 msgid "<b>Locked</b> object(s) cannot be modified."
 msgstr "A <b>zárolt</b> objektumo(ka)t nem lehet módosítani."
 
-#: ../src/desktop.cpp:491
+#: ../src/desktop.cpp:492
 msgid "No previous transform."
 msgstr "Nincs előző transzformáció."
 
-#: ../src/desktop.cpp:513
+#: ../src/desktop.cpp:514
 msgid "No next transform."
 msgstr "Nincs következő transzformáció."
 
@@ -11487,7 +11497,7 @@ msgstr "Betűkészletek beágyazása"
 #: ../src/extension/internal/cairo-ps-out.cpp:292
 #: ../src/extension/internal/cairo-ps-out.cpp:336
 #: ../src/extension/internal/cairo-renderer-pdf-out.cpp:228
-#: ../src/ui/dialog/livepatheffect-editor.cpp:498
+#: ../src/ui/dialog/livepatheffect-editor.cpp:500
 #: ../share/extensions/other/extension-xaml/inkxaml/svg2xaml.inx:25
 msgid "Convert text to paths"
 msgstr "Szövegek átalakítása útvonalakká"
@@ -13281,7 +13291,7 @@ msgid "Convert image to an engraving made of vertical and horizontal lines"
 msgstr "Gravírozott függőleges és vízszintes vonalakká alakítja a képet"
 
 #: ../src/extension/internal/filter/paint.h:341
-#: ../src/widgets/desktop-widget.cpp:1464
+#: ../src/widgets/desktop-widget.cpp:1433
 #: ../share/ui/align-and-distribute.ui:64
 msgid "Drawing"
 msgstr "Rajz"
@@ -14780,7 +14790,7 @@ msgstr ""
 "Nem sikerült felismerni a fájlformátumot. Az SVG-ként való megnyitási "
 "kísérlet is sikertelen volt."
 
-#: ../src/extension/template.cpp:186 ../src/ui/dialog/dialog-data.h:39
+#: ../src/extension/template.cpp:188 ../src/ui/dialog/dialog-data.h:39
 #: ../share/extensions/interp_att_g.inx:15
 msgid "Other"
 msgstr "Egyéb"
@@ -15004,16 +15014,16 @@ msgstr "Nincs elmentést igénylő módosítás."
 msgid "Saving document..."
 msgstr "Dokumentum mentése…"
 
-#: ../src/file.cpp:1087
+#: ../src/file.cpp:1089
 msgid "Import Pages"
 msgstr "Oldalak importálása"
 
-#: ../src/file.cpp:1190 ../src/inkscape-application.cpp:887
+#: ../src/file.cpp:1192 ../src/inkscape-application.cpp:887
 #, c-format
 msgid "Failed to load the requested file %s"
 msgstr "Nem sikerült betölteni a kért fájlt (%s)"
 
-#: ../src/file.cpp:1281
+#: ../src/file.cpp:1283
 msgid "Select file to import"
 msgstr "Válassza ki az importálandó fájlt"
 
@@ -20976,7 +20986,7 @@ msgstr "Szövegrészlet"
 msgid "Symbol"
 msgstr "Szimbólum"
 
-#: ../src/object/sp-use.cpp:266 ../src/ui/dialog/livepatheffect-editor.cpp:514
+#: ../src/object/sp-use.cpp:266 ../src/ui/dialog/livepatheffect-editor.cpp:516
 msgid "Clone"
 msgstr "Klónozás"
 
@@ -21065,21 +21075,21 @@ msgstr "A kijelölésben <b>nincs megfordítható útvonal</b>."
 msgid "Cut path"
 msgstr "Útvonal elvágása"
 
-#: ../src/path/path-boolop.cpp:418
+#: ../src/path/path-boolop.cpp:402
 msgid "Select <b>at least 1 path</b> to perform a boolean union."
 msgstr "Logikai unióképzéshez jelöljön ki <b>legalább 1 útvonalat</b>."
 
-#: ../src/path/path-boolop.cpp:424
+#: ../src/path/path-boolop.cpp:408
 msgid "Select <b>at least 2 paths</b> to perform a boolean operation."
 msgstr "Logikai műveletekhez <b>legalább 2 útvonalat</b> ki kell jelölni."
 
-#: ../src/path/path-boolop.cpp:430
+#: ../src/path/path-boolop.cpp:414
 msgid ""
 "One of the objects is <b>not a path</b>, cannot perform boolean operation."
 msgstr ""
 "Az egyik objektum <b>nem útvonal</b>; logikai művelet nem hajtható végre."
 
-#: ../src/path/path-boolop.cpp:436
+#: ../src/path/path-boolop.cpp:420
 msgid ""
 "Unable to determine the <b>z-order</b> of the objects selected for "
 "difference, XOR, division, or path cut."
@@ -21115,33 +21125,33 @@ msgstr "<b>%d</b> útvonal egyszerűsítve."
 msgid "<b>No paths</b> to simplify in the selection."
 msgstr "A kijelölésben <b>nincs egyszerűsíthető útvonal</b>."
 
-#: ../src/path/path-offset.cpp:117
+#: ../src/path/path-offset.cpp:118
 msgid "Selected object is <b>not a path</b>, cannot inset/outset."
 msgstr ""
 "A kijelölt objektum <b>nem útvonal</b>; zsugorítás illetve nyújtás nem "
 "végezhető."
 
-#: ../src/path/path-offset.cpp:186 ../src/path/path-offset.cpp:255
+#: ../src/path/path-offset.cpp:187 ../src/path/path-offset.cpp:256
 msgid "Create linked offset"
 msgstr "Kapcsolt perem létrehozása"
 
-#: ../src/path/path-offset.cpp:187 ../src/path/path-offset.cpp:256
+#: ../src/path/path-offset.cpp:188 ../src/path/path-offset.cpp:257
 msgid "Create dynamic offset"
 msgstr "Dinamikus perem létrehozása"
 
-#: ../src/path/path-offset.cpp:276
+#: ../src/path/path-offset.cpp:277
 msgid "Select <b>path(s)</b> to inset/outset."
 msgstr "Jelölje ki a zsugorítandó illetve nyújtandó <b>útvonalakat</b>."
 
-#: ../src/path/path-offset.cpp:449
+#: ../src/path/path-offset.cpp:451
 msgid "Outset path"
 msgstr "Útvonal nyújtása"
 
-#: ../src/path/path-offset.cpp:449
+#: ../src/path/path-offset.cpp:451
 msgid "Inset path"
 msgstr "Útvonal zsugorítása"
 
-#: ../src/path/path-offset.cpp:452
+#: ../src/path/path-offset.cpp:454
 msgid "<b>No paths</b> to inset/outset in the selection."
 msgstr "A kijelölésben <b>nincs zsugorítható illetve nyújtható útvonal</b>."
 
@@ -21603,87 +21613,87 @@ msgstr "Elforgatás 90°-kal ↻ irányban"
 msgid "Rotate 90° CCW"
 msgstr "Elforgatás 90°-kal ↺ irányban"
 
-#: ../src/selection-chemistry.cpp:2325
+#: ../src/selection-chemistry.cpp:2330
 msgid "Rotate by pixels"
 msgstr "Forgatás képpontokkal"
 
-#: ../src/selection-chemistry.cpp:2352
+#: ../src/selection-chemistry.cpp:2357
 msgid "Grow"
 msgstr "Növelés"
 
-#: ../src/selection-chemistry.cpp:2352
+#: ../src/selection-chemistry.cpp:2357
 msgid "Shrink"
 msgstr "Zsugorítás"
 
-#: ../src/selection-chemistry.cpp:2376
+#: ../src/selection-chemistry.cpp:2381
 msgid "Scale by whole factor"
 msgstr "Méretezés egész tényezővel"
 
-#: ../src/selection-chemistry.cpp:2389
+#: ../src/selection-chemistry.cpp:2394
 msgid "Move vertically"
 msgstr "Függőleges áthelyezés"
 
-#: ../src/selection-chemistry.cpp:2391
+#: ../src/selection-chemistry.cpp:2396
 msgid "Move horizontally"
 msgstr "Vízszintes áthelyezés"
 
-#: ../src/selection-chemistry.cpp:2393 ../src/selection-chemistry.cpp:2416
+#: ../src/selection-chemistry.cpp:2398 ../src/selection-chemistry.cpp:2421
 #: ../src/seltrans.cpp:489 ../src/ui/dialog/transformation.cpp:750
 msgid "Move"
 msgstr "Áthelyezés"
 
-#: ../src/selection-chemistry.cpp:2412
+#: ../src/selection-chemistry.cpp:2417
 msgid "Move vertically by pixels"
 msgstr "Függőleges elmozdítás képpontokkal"
 
-#: ../src/selection-chemistry.cpp:2414
+#: ../src/selection-chemistry.cpp:2419
 msgid "Move horizontally by pixels"
 msgstr "Vízszintes elmozdítás képpontokkal"
 
-#: ../src/selection-chemistry.cpp:2620
+#: ../src/selection-chemistry.cpp:2625
 msgid "The selection has no applied path effect."
 msgstr "A kijelölésben nincs alkalmazott útvonaleffektus."
 
-#: ../src/selection-chemistry.cpp:2664 ../src/ui/dialog/clonetiler.cpp:2083
+#: ../src/selection-chemistry.cpp:2669 ../src/ui/dialog/clonetiler.cpp:2083
 msgid "Select an <b>object</b> to clone."
 msgstr "Jelölje ki a klónozandó <b>objektumot</b>."
 
-#: ../src/selection-chemistry.cpp:2700
+#: ../src/selection-chemistry.cpp:2705
 msgctxt "Action"
 msgid "Clone"
 msgstr "Klónozás"
 
-#: ../src/selection-chemistry.cpp:2709
+#: ../src/selection-chemistry.cpp:2714
 msgid "Select <b>clones</b> to relink."
 msgstr "Jelölje ki az átkapcsolandó <b>klónokat</b>."
 
-#: ../src/selection-chemistry.cpp:2717
+#: ../src/selection-chemistry.cpp:2722
 msgid "Copy an <b>object</b> to clipboard to relink clones to."
 msgstr ""
 "Másolja a vágólapra azt az <b>objektumot</b>, amelyhez a klónok "
 "átkapcsolandók."
 
-#: ../src/selection-chemistry.cpp:2776
+#: ../src/selection-chemistry.cpp:2781
 msgid "<b>No clones to relink</b> in the selection."
 msgstr "A kijelölésben <b>nincs átkapcsolható klón</b>."
 
-#: ../src/selection-chemistry.cpp:2778
+#: ../src/selection-chemistry.cpp:2783
 msgid "Relink clone"
 msgstr "Klón átkapcsolása"
 
-#: ../src/selection-chemistry.cpp:2787 ../src/selection-chemistry.cpp:2879
+#: ../src/selection-chemistry.cpp:2792 ../src/selection-chemistry.cpp:2884
 msgid "Select <b>clones</b> to unlink."
 msgstr "Jelölje ki a lekapcsolandó <b>klónokat</b>."
 
-#: ../src/selection-chemistry.cpp:2867 ../src/selection-chemistry.cpp:2905
+#: ../src/selection-chemistry.cpp:2872 ../src/selection-chemistry.cpp:2910
 msgid "<b>No clones to unlink</b> in the selection."
 msgstr "A kijelölésben <b>nincs lekapcsolható klón</b>."
 
-#: ../src/selection-chemistry.cpp:2871
+#: ../src/selection-chemistry.cpp:2876
 msgid "Unlink clone"
 msgstr "Klón lekapcsolása"
 
-#: ../src/selection-chemistry.cpp:2886
+#: ../src/selection-chemistry.cpp:2891
 msgid ""
 "Unable to unlink. Check the setting for 'Unlinking Clones' in your "
 "preferences."
@@ -21691,11 +21701,11 @@ msgstr ""
 "Nem lehetséges a klónok lekapcsolása. Ellenőrizze a „Klónok lekapcsolása” "
 "beállítást."
 
-#: ../src/selection-chemistry.cpp:2908
+#: ../src/selection-chemistry.cpp:2913
 msgid "Unlink clone recursively"
 msgstr "Klónok rekurzív lekapcsolása"
 
-#: ../src/selection-chemistry.cpp:2952
+#: ../src/selection-chemistry.cpp:2957
 msgid ""
 "Select a <b>clone</b> to go to its original. Select a <b>linked offset</b> "
 "to go to its source. Select a <b>text on path</b> to go to the path. Select "
@@ -21706,7 +21716,7 @@ msgstr ""
 "kijelölve az útvonalhoz; <b>tördelt szöveget</b> kijelölve pedig annak "
 "keretéhez."
 
-#: ../src/selection-chemistry.cpp:2993
+#: ../src/selection-chemistry.cpp:2998
 msgid ""
 "<b>Cannot find</b> the object to select (orphaned clone, offset, textpath, "
 "flowed text?)"
@@ -21714,119 +21724,119 @@ msgstr ""
 "A kijelölendő objektum <b>nem található</b> (elárvult klón, perem, szöveg-"
 "útvonal, vagy tördelt szöveg?)"
 
-#: ../src/selection-chemistry.cpp:3000
+#: ../src/selection-chemistry.cpp:3005
 msgid ""
 "The object you're trying to select is <b>not visible</b> (it is in &lt;"
 "defs&gt;)"
 msgstr "A kijelölendő objektum <b>nem látható</b> (&lt;defs&gt;-ben szerepel)"
 
-#: ../src/selection-chemistry.cpp:3120
+#: ../src/selection-chemistry.cpp:3125
 msgid "Fill between many"
 msgstr "Többelemű kitöltés"
 
-#: ../src/selection-chemistry.cpp:3122
+#: ../src/selection-chemistry.cpp:3127
 msgid "Clone original"
 msgstr "Eredeti klónozása"
 
-#: ../src/selection-chemistry.cpp:3128
+#: ../src/selection-chemistry.cpp:3133
 msgid "Select path(s) to fill."
 msgstr "Jelölje ki a kitöltendő útvonalakat."
 
-#: ../src/selection-chemistry.cpp:3143
+#: ../src/selection-chemistry.cpp:3148
 msgid "Select <b>object(s)</b> to convert to marker."
 msgstr "Jelölje ki a jelölőelemmé alakítandó <b>objektumokat</b>."
 
-#: ../src/selection-chemistry.cpp:3206
+#: ../src/selection-chemistry.cpp:3211
 msgid "Objects to marker"
 msgstr "Objektumok átalakítása jelölőelemmé"
 
-#: ../src/selection-chemistry.cpp:3229
+#: ../src/selection-chemistry.cpp:3234
 msgid "Select <b>object(s)</b> to convert to guides."
 msgstr "Jelölje ki a segédvonalakká alakítandó <b>objektumokat</b>."
 
-#: ../src/selection-chemistry.cpp:3250
+#: ../src/selection-chemistry.cpp:3255
 msgid "Objects to guides"
 msgstr "Objektumok átalakítása segédvonalakká"
 
-#: ../src/selection-chemistry.cpp:3281
+#: ../src/selection-chemistry.cpp:3286
 msgid "Select <b>objects</b> to convert to symbol."
 msgstr "Jelölje ki a szimbólummá alakítandó <b>objektumokat</b>."
 
-#: ../src/selection-chemistry.cpp:3416
+#: ../src/selection-chemistry.cpp:3421
 msgid "Group to symbol"
 msgstr "Csoport szimbólummá"
 
-#: ../src/selection-chemistry.cpp:3433
+#: ../src/selection-chemistry.cpp:3438
 msgid "unSymbol all selected symbols"
 msgstr "Minden kijelölt szimbólum objektummá alakítása"
 
-#: ../src/selection-chemistry.cpp:3447
+#: ../src/selection-chemistry.cpp:3452
 msgid "Select <b>object(s)</b> to convert to pattern."
 msgstr "Jelölje ki a mintává alakítandó <b>objektumokat</b>."
 
-#: ../src/selection-chemistry.cpp:3533
+#: ../src/selection-chemistry.cpp:3538
 msgid "Objects to pattern"
 msgstr "Objektumok átalakítása mintává"
 
-#: ../src/selection-chemistry.cpp:3545
+#: ../src/selection-chemistry.cpp:3550
 msgid "Select an <b>object with pattern fill</b> to extract objects from."
 msgstr ""
 "Jelölje ki azt a <b>mintával kitöltött objektumot</b>, amelyből ki szeretné "
 "nyerni az objektumokat."
 
-#: ../src/selection-chemistry.cpp:3605
+#: ../src/selection-chemistry.cpp:3610
 msgid "<b>No pattern fills</b> in the selection."
 msgstr "A kijelölésben <b>nincs kitöltőminta</b>."
 
-#: ../src/selection-chemistry.cpp:3607
+#: ../src/selection-chemistry.cpp:3612
 msgid "Pattern to objects"
 msgstr "Minta átalakítása objektumokká"
 
-#: ../src/selection-chemistry.cpp:3621
+#: ../src/selection-chemistry.cpp:3626
 msgid "Select <b>object(s)</b> to make a bitmap copy."
 msgstr "Jelölje ki a bitképbe másolandó <b>objektumokat</b>."
 
-#: ../src/selection-chemistry.cpp:3626
+#: ../src/selection-chemistry.cpp:3631
 msgid "Rendering bitmap..."
 msgstr "Bitkép leképezése…"
 
-#: ../src/selection-chemistry.cpp:3713
+#: ../src/selection-chemistry.cpp:3718
 msgid "Create bitmap"
 msgstr "Bitkép létrehozása"
 
-#: ../src/selection-chemistry.cpp:3734 ../src/selection-chemistry.cpp:3841
+#: ../src/selection-chemistry.cpp:3739 ../src/selection-chemistry.cpp:3846
 msgid "Select <b>object(s)</b> to create clippath or mask from."
 msgstr ""
 "Jelölje ki a vágóútvonal illetve a maszk létrehozásához használandó "
 "<b>objektumokat</b>."
 
-#: ../src/selection-chemistry.cpp:3817
+#: ../src/selection-chemistry.cpp:3822
 msgid "Create Clip Group"
 msgstr "Vágócsoport létrehozása"
 
-#: ../src/selection-chemistry.cpp:3845
+#: ../src/selection-chemistry.cpp:3850
 msgid "Select mask object and <b>object(s)</b> to apply clippath or mask to."
 msgstr ""
 "Jelölje ki a maszkobjektumot és azon <b>objektumokat</b>, amelyekre a "
 "vágóútvonal illetve a maszk alkalmazandó."
 
-#: ../src/selection-chemistry.cpp:4002
+#: ../src/selection-chemistry.cpp:4007
 msgid "Select <b>object(s)</b> to remove clippath or mask from."
 msgstr ""
 "Jelölje ki azon <b>objektumokat</b>, amelyekről eltávolítandó a vágóútvonal "
 "illetve a maszk."
 
-#: ../src/selection-chemistry.cpp:4131
+#: ../src/selection-chemistry.cpp:4136
 msgid "Select <b>object(s)</b> to fit canvas to."
 msgstr ""
 "Jelölje ki az <b>objektumokat</b>, amelyekhez a rajzvászon illesztendő."
 
-#: ../src/selection-chemistry.cpp:4234
+#: ../src/selection-chemistry.cpp:4239
 msgid "Select <b>path(s)</b> to create fill between."
 msgstr ""
 "Jelöljön ki egy vagy több <b>útvonalat</b> kitöltés létrehozására közöttük."
 
-#: ../src/selection-chemistry.cpp:4288
+#: ../src/selection-chemistry.cpp:4293
 msgid "Create linked fill object between paths"
 msgstr "Kapcsolt kitöltő objektum létrehozása útvonalak között"
 
@@ -22168,49 +22178,49 @@ msgstr "Bitkép vektorizálása"
 msgid "Trace: Done. %ld nodes created"
 msgstr "Vektorizálás: kész. %ld csomópont létrehozva"
 
-#: ../src/ui/clipboard.cpp:284
+#: ../src/ui/clipboard.cpp:287
 msgid "Nothing was copied."
 msgstr "Nem történt másolás."
 
-#: ../src/ui/clipboard.cpp:473
+#: ../src/ui/clipboard.cpp:476
 msgid "Can't paste text outside of the text tool."
 msgstr "Nem lehet szöveget beilleszteni a szöveg eszközön kívülről."
 
-#: ../src/ui/clipboard.cpp:476 ../src/ui/clipboard.cpp:898
-#: ../src/ui/clipboard.cpp:933 ../src/ui/clipboard.cpp:974
+#: ../src/ui/clipboard.cpp:479 ../src/ui/clipboard.cpp:901
+#: ../src/ui/clipboard.cpp:936 ../src/ui/clipboard.cpp:977
 msgid "Nothing on the clipboard."
 msgstr "A vágólap üres."
 
-#: ../src/ui/clipboard.cpp:726
+#: ../src/ui/clipboard.cpp:729
 msgid "Select <b>object(s)</b> to paste style to."
 msgstr "Jelöljön ki <b>objektumokat</b> a stílus beillesztéséhez."
 
-#: ../src/ui/clipboard.cpp:738 ../src/ui/clipboard.cpp:768
+#: ../src/ui/clipboard.cpp:741 ../src/ui/clipboard.cpp:771
 msgid "No style on the clipboard."
 msgstr "Nincs stílus a vágólapon."
 
-#: ../src/ui/clipboard.cpp:793
+#: ../src/ui/clipboard.cpp:796
 msgid "Select <b>object(s)</b> to paste size to."
 msgstr "Jelöljön ki <b>objektumokat</b> a méret beillesztéséhez."
 
-#: ../src/ui/clipboard.cpp:801
+#: ../src/ui/clipboard.cpp:804
 msgid "No size on the clipboard."
 msgstr "Nincs méret a vágólapon."
 
-#: ../src/ui/clipboard.cpp:858
+#: ../src/ui/clipboard.cpp:861
 msgid "Select <b>object(s)</b> to paste live path effect to."
 msgstr ""
 "Jelöljön ki <b>objektumokat</b> az élő útvonaleffektus beillesztéséhez."
 
-#: ../src/ui/clipboard.cpp:885
+#: ../src/ui/clipboard.cpp:888
 msgid "No effect on the clipboard."
 msgstr "Nincs effektus a vágólapon."
 
-#: ../src/ui/clipboard.cpp:907 ../src/ui/clipboard.cpp:957
+#: ../src/ui/clipboard.cpp:910 ../src/ui/clipboard.cpp:960
 msgid "Clipboard does not contain a path."
 msgstr "A vágólap nem tartalmaz útvonalat."
 
-#: ../src/ui/clipboard.cpp:1004
+#: ../src/ui/clipboard.cpp:1007
 msgid "Clipboard does not contain any objects of type \"%1\"."
 msgstr "A vágólap nem tartalmaz ilyen típusú objektumot: „%1”."
 
@@ -23350,7 +23360,7 @@ msgid "Unpin swatch"
 msgstr "Színminta kitűzésének törlése"
 
 #: ../src/ui/dialog/color-item.cpp:368
-#: ../src/ui/dialog/livepatheffect-editor.cpp:315
+#: ../src/ui/dialog/livepatheffect-editor.cpp:317
 msgid "Convert"
 msgstr "Átalakítás"
 
@@ -24030,11 +24040,6 @@ msgstr "Színátmenetek"
 #: ../src/ui/dialog/document-resources.cpp:893
 msgid "Mesh gradients"
 msgstr "Színátmenetes-hálók"
-
-#: ../src/ui/dialog/document-resources.cpp:894
-#: ../share/ui/dialog-document-resources.glade:103
-msgid "Patterns"
-msgstr "Minták"
 
 #: ../src/ui/dialog/document-resources.cpp:895
 #: ../src/ui/dialog/symbols.cpp:1086 ../src/ui/dialog/symbols.cpp:1089
@@ -26343,7 +26348,7 @@ msgstr "Rácsra való igazítás"
 #: ../src/ui/dialog/grid-arrange-tab.cpp:474
 #: ../src/ui/toolbar/node-toolbar.cpp:280
 #: ../src/ui/widget/registered-widget.cpp:691
-#: ../src/widgets/desktop-widget.cpp:401 ../share/ui/page-properties.glade:310
+#: ../src/widgets/desktop-widget.cpp:404 ../share/ui/page-properties.glade:310
 msgid "X:"
 msgstr "X:"
 
@@ -26354,7 +26359,7 @@ msgstr "Vízszintes helykihagyás az oszlopok közt."
 #: ../src/ui/dialog/grid-arrange-tab.cpp:475
 #: ../src/ui/toolbar/node-toolbar.cpp:296
 #: ../src/ui/widget/registered-widget.cpp:692
-#: ../src/widgets/desktop-widget.cpp:402 ../share/ui/page-properties.glade:326
+#: ../src/widgets/desktop-widget.cpp:405 ../share/ui/page-properties.glade:326
 msgid "Y:"
 msgstr "Y:"
 
@@ -30678,13 +30683,13 @@ msgid "Nothing found! Please try again with different search terms."
 msgstr "Nincs találat. Próbáljon ki egy másik keresési kifejezést."
 
 #: ../src/ui/dialog/livepatheffect-editor.cpp:138
-#: ../src/ui/dialog/livepatheffect-editor.cpp:901
+#: ../src/ui/dialog/livepatheffect-editor.cpp:903
 #: ../share/ui/dialog-livepatheffect-item.glade:63
 msgid "Set Favorite"
 msgstr "Beállítás kedvencként"
 
 #: ../src/ui/dialog/livepatheffect-editor.cpp:141
-#: ../src/ui/dialog/livepatheffect-editor.cpp:899
+#: ../src/ui/dialog/livepatheffect-editor.cpp:901
 msgid "Unset Favorite"
 msgstr "Törlés a kedvencek közül"
 
@@ -30692,73 +30697,73 @@ msgstr "Törlés a kedvencek közül"
 msgid "Add Live Path Effect"
 msgstr "Élő útvonaleffektus hozzáadása"
 
-#: ../src/ui/dialog/livepatheffect-editor.cpp:306
+#: ../src/ui/dialog/livepatheffect-editor.cpp:308
 msgid "Deactivate path effect"
 msgstr "Útvonaleffektus deaktiválása"
 
-#: ../src/ui/dialog/livepatheffect-editor.cpp:306
+#: ../src/ui/dialog/livepatheffect-editor.cpp:308
 msgid "Activate path effect"
 msgstr "Útvonaleffektus aktiválása"
 
-#: ../src/ui/dialog/livepatheffect-editor.cpp:311
+#: ../src/ui/dialog/livepatheffect-editor.cpp:313
 msgid "Favorites"
 msgstr "Kedvencek"
 
-#: ../src/ui/dialog/livepatheffect-editor.cpp:312
+#: ../src/ui/dialog/livepatheffect-editor.cpp:314
 msgid "Edit/Tools"
 msgstr "Szerkesztés/Eszközök"
 
-#: ../src/ui/dialog/livepatheffect-editor.cpp:314
+#: ../src/ui/dialog/livepatheffect-editor.cpp:316
 msgid "Generate"
 msgstr "Létrehozás"
 
-#: ../src/ui/dialog/livepatheffect-editor.cpp:316
+#: ../src/ui/dialog/livepatheffect-editor.cpp:318
 #: ../share/ui/dialog-livepatheffect-effect.glade:113
 msgid "Experimental"
 msgstr "Kísérleti"
 
-#: ../src/ui/dialog/livepatheffect-editor.cpp:496
+#: ../src/ui/dialog/livepatheffect-editor.cpp:498
 msgid "Text objects do not support Live Path Effects"
 msgstr "A szövegobjektumok nem támogatják az élő útvonaleffektusokat"
 
-#: ../src/ui/dialog/livepatheffect-editor.cpp:532
-#: ../src/ui/dialog/livepatheffect-editor.cpp:586
+#: ../src/ui/dialog/livepatheffect-editor.cpp:534
+#: ../src/ui/dialog/livepatheffect-editor.cpp:588
 msgid "Select a path, shape, clone or group"
 msgstr "Jelöljön ki egy útvonalat, alakzatot, klónt vagy csoportot"
 
-#: ../src/ui/dialog/livepatheffect-editor.cpp:558
+#: ../src/ui/dialog/livepatheffect-editor.cpp:560
 msgid "Select %1 with %2 LPE"
 msgstr "%1 kijelölése %2 élő útvonaleffektussal"
 
-#: ../src/ui/dialog/livepatheffect-editor.cpp:589
+#: ../src/ui/dialog/livepatheffect-editor.cpp:591
 msgid "Select only one path, shape, clone or group"
 msgstr "Jelöljön ki egyetlen útvonalat, alakzatot, klónt vagy csoportot"
 
-#: ../src/ui/dialog/livepatheffect-editor.cpp:656
+#: ../src/ui/dialog/livepatheffect-editor.cpp:658
 msgid "<small>Without parameters</small>"
 msgstr "<small>Paraméterek nélkül</small>"
 
-#: ../src/ui/dialog/livepatheffect-editor.cpp:817
+#: ../src/ui/dialog/livepatheffect-editor.cpp:819
 msgid "Drag to change position in path effects stack"
 msgstr "Húzza a útvonaleffektus veremben való pozíciója módosításához"
 
-#: ../src/ui/dialog/livepatheffect-editor.cpp:871
+#: ../src/ui/dialog/livepatheffect-editor.cpp:873
 msgid "Duplicate path effect"
 msgstr "Útvonaleffektus duplikálása"
 
-#: ../src/ui/dialog/livepatheffect-editor.cpp:876
+#: ../src/ui/dialog/livepatheffect-editor.cpp:878
 msgid "Move path effect up"
 msgstr "Útvonaleffektus feljebb helyezése"
 
-#: ../src/ui/dialog/livepatheffect-editor.cpp:881
+#: ../src/ui/dialog/livepatheffect-editor.cpp:883
 msgid "Move path effect down"
 msgstr "Útvonaleffektus lejjebb helyezése"
 
-#: ../src/ui/dialog/livepatheffect-editor.cpp:1098
+#: ../src/ui/dialog/livepatheffect-editor.cpp:1100
 msgid "Flatten path effect(s)"
 msgstr "Útvonaleffektus(ok) lapítása"
 
-#: ../src/ui/dialog/livepatheffect-editor.cpp:1116
+#: ../src/ui/dialog/livepatheffect-editor.cpp:1118
 msgid "Remove path effect"
 msgstr "Útvonaleffektus eltávolítása"
 
@@ -31108,11 +31113,11 @@ msgstr "Objektum átnevezése"
 msgid "Move items"
 msgstr "Elemek mozgatása"
 
-#: ../src/ui/dialog/paint-servers.cpp:55
+#: ../src/ui/dialog/paint-servers.cpp:52
 msgid "All paint servers"
 msgstr "Összes festő-kiszolgáló"
 
-#: ../src/ui/dialog/paint-servers.cpp:56 ../src/ui/dialog/symbols.cpp:160
+#: ../src/ui/dialog/paint-servers.cpp:53 ../src/ui/dialog/symbols.cpp:160
 msgid "Current document"
 msgstr "Jelenlegi dokumentum"
 
@@ -32339,7 +32344,7 @@ msgstr "Kategória nélkül"
 msgid "Canvas"
 msgstr "Rajzvászon"
 
-#: ../src/ui/modifiers.cpp:65 ../src/widgets/desktop-widget.cpp:1468
+#: ../src/ui/modifiers.cpp:65 ../src/widgets/desktop-widget.cpp:1437
 #: ../share/ui/dialog-export.glade:64 ../share/ui/dialog-export.glade:883
 #: ../share/extensions/printing_marks.inx:18
 msgid "Selection"
@@ -35846,7 +35851,7 @@ msgstr "Ellipszis létrehozása"
 
 #: ../src/ui/tools/booleans-tool.cpp:81
 msgid "You must select some objects to use the Shape Builder tool."
-msgstr "Ki kell jelölni néhány objektumot a alakképző eszköz használatához."
+msgstr "Ki kell jelölni néhány objektumot az alakképző eszköz használatához."
 
 #: ../src/ui/tools/booleans-tool.cpp:83
 msgid "The Shape Builder requires regular shapes to be selected."
@@ -36052,23 +36057,23 @@ msgstr ""
 "Hozzáadás a kitöltéshez: <b>a területekre való rajzolással</b>. Érintéses "
 "kijelölés: <b>Alt</b> nyomva tartása."
 
-#: ../src/ui/tools/freehand-base.cpp:718 ../src/ui/tools/freehand-base.cpp:781
+#: ../src/ui/tools/freehand-base.cpp:719 ../src/ui/tools/freehand-base.cpp:782
 msgid "Path is closed."
 msgstr "Az útvonal lezárva."
 
-#: ../src/ui/tools/freehand-base.cpp:732
+#: ../src/ui/tools/freehand-base.cpp:733
 msgid "Closing path."
 msgstr "Az útvonal lezárása."
 
-#: ../src/ui/tools/freehand-base.cpp:868
+#: ../src/ui/tools/freehand-base.cpp:869
 msgid "Draw path"
 msgstr "Útvonal rajzolása"
 
-#: ../src/ui/tools/freehand-base.cpp:989
+#: ../src/ui/tools/freehand-base.cpp:990
 msgid "Creating single dot"
 msgstr "Pont létrehozása"
 
-#: ../src/ui/tools/freehand-base.cpp:990
+#: ../src/ui/tools/freehand-base.cpp:991
 msgid "Create single dot"
 msgstr "Pont létrehozása"
 
@@ -36297,7 +36302,7 @@ msgstr ""
 "Csomópontok kijelölése: <b>húzással való körülrajzolással</b>. Váltás "
 "téglalapos kijelölésre: <b>%s</b>."
 
-#: ../src/ui/tools/node-tool.cpp:688
+#: ../src/ui/tools/node-tool.cpp:686
 msgctxt "Node tool tip"
 msgid ""
 "<b>Shift</b>: drag to add nodes to the selection, click to toggle object "
@@ -36306,23 +36311,23 @@ msgstr ""
 "<b>Shift</b>. Csomópontok felvétele a kijelölésbe: húzással. "
 "Objektumkijelölés átváltása: kattintással."
 
-#: ../src/ui/tools/node-tool.cpp:692
+#: ../src/ui/tools/node-tool.cpp:690
 msgctxt "Node tool tip"
 msgid "<b>Shift</b>: drag to add nodes to the selection"
 msgstr "<b>Shift</b>. Csomópontok felvétele a kijelölésbe: húzással."
 
-#: ../src/ui/tools/node-tool.cpp:705
+#: ../src/ui/tools/node-tool.cpp:703
 #, c-format
 msgid "<b>%u of %u</b> node selected."
 msgid_plural "<b>%u of %u</b> nodes selected."
 msgstr[0] "<b>%u/%u</b> csomópont kijelölve."
 msgstr[1] "<b>%u/%u</b> csomópont kijelölve."
 
-#: ../src/ui/tools/node-tool.cpp:724
+#: ../src/ui/tools/node-tool.cpp:722
 msgid "Angle: %1°."
 msgstr "Szög: %1°."
 
-#: ../src/ui/tools/node-tool.cpp:731
+#: ../src/ui/tools/node-tool.cpp:729
 #, c-format
 msgctxt "Node tool tip"
 msgid "%s Drag to select nodes, click to edit only this object (more: Shift)"
@@ -36330,32 +36335,32 @@ msgstr ""
 "%s Csomópontok kijelölése: húzással. Csak ezen objektum szerkesztése: "
 "kattintással. (Továbbiak: Shift.)"
 
-#: ../src/ui/tools/node-tool.cpp:737
+#: ../src/ui/tools/node-tool.cpp:735
 #, c-format
 msgctxt "Node tool tip"
 msgid "%s Drag to select nodes, click clear the selection"
 msgstr "%s Csomópontok kijelölése: húzással. Kijelölés törlése: kattintással."
 
-#: ../src/ui/tools/node-tool.cpp:745
+#: ../src/ui/tools/node-tool.cpp:743
 msgctxt "Node tool tip"
 msgid "Drag to select nodes, click to edit only this object"
 msgstr ""
 "Csomópontok kijelölése: húzással. Csak ezen objektum szerkesztése: "
 "kattintással."
 
-#: ../src/ui/tools/node-tool.cpp:748
+#: ../src/ui/tools/node-tool.cpp:746
 msgctxt "Node tool tip"
 msgid "Drag to select nodes, click to clear the selection"
 msgstr "Csomópontok kijelölése: húzással. Kijelölés törlése: kattintással."
 
-#: ../src/ui/tools/node-tool.cpp:753
+#: ../src/ui/tools/node-tool.cpp:751
 msgctxt "Node tool tip"
 msgid "Drag to select objects to edit, click to edit this object (more: Shift)"
 msgstr ""
 "Szerkesztendő objektumok kijelölése: húzással. Ezen objektum szerkesztése: "
 "kattintással. (Továbbiak: Shift.)"
 
-#: ../src/ui/tools/node-tool.cpp:756
+#: ../src/ui/tools/node-tool.cpp:754
 msgctxt "Node tool tip"
 msgid "Drag to select objects to edit"
 msgstr "Szerkesztendő objektumok kijelölése: húzással."
@@ -38623,7 +38628,7 @@ msgstr[1] ""
 "<b>%d</b> téglatestek <b>%d</b> távlatpontgyűjteménye; szétválasztás: "
 "<b>Shift</b>+húzással"
 
-#: ../src/widgets/desktop-widget.cpp:330
+#: ../src/widgets/desktop-widget.cpp:333
 msgid ""
 "<b>Welcome to Inkscape!</b> Use shape or freehand tools to create objects; "
 "use selector (arrow) to move or transform them."
@@ -38632,87 +38637,87 @@ msgstr ""
 "alakzateszközöket és a szabadkézi eszközöket, áthelyezéshez/módosításhoz "
 "pedig a kijelölőeszközt (nyilat)."
 
-#: ../src/widgets/desktop-widget.cpp:340 ../share/ui/dialog-symbols.glade:94
+#: ../src/widgets/desktop-widget.cpp:343 ../share/ui/dialog-symbols.glade:94
 msgid "Zoom"
 msgstr "Nagyítás"
 
-#: ../src/widgets/desktop-widget.cpp:372
+#: ../src/widgets/desktop-widget.cpp:375
 msgid "Rotation. (Also Ctrl+Shift+Scroll)"
 msgstr "Elforgatás. (Vagyis Ctrl+Shift+görgetés)"
 
-#: ../src/widgets/desktop-widget.cpp:400
+#: ../src/widgets/desktop-widget.cpp:403
 msgid "Cursor coordinates"
 msgstr "Kurzorkoordináták"
 
 #. TRANSLATORS: Abbreviation for canvas zoom level
-#: ../src/widgets/desktop-widget.cpp:415
+#: ../src/widgets/desktop-widget.cpp:418
 msgctxt "canvas"
 msgid "Z:"
 msgstr "N:"
 
 #. TRANSLATORS: Abbreviation for canvas rotation
-#: ../src/widgets/desktop-widget.cpp:418
+#: ../src/widgets/desktop-widget.cpp:421
 msgctxt "canvas"
 msgid "R:"
 msgstr "R:"
 
-#: ../src/widgets/desktop-widget.cpp:587
+#: ../src/widgets/desktop-widget.cpp:590
 msgid "outline"
 msgstr "kontúr"
 
-#: ../src/widgets/desktop-widget.cpp:589
+#: ../src/widgets/desktop-widget.cpp:592
 msgid "no filters"
 msgstr "szűrők nélkül"
 
-#: ../src/widgets/desktop-widget.cpp:591
+#: ../src/widgets/desktop-widget.cpp:594
 msgid "enhance thin lines"
 msgstr "vékony vonalak kiemelése"
 
-#: ../src/widgets/desktop-widget.cpp:593
+#: ../src/widgets/desktop-widget.cpp:596
 msgid "outline overlay"
 msgstr "kontúrátfedés"
 
-#: ../src/widgets/desktop-widget.cpp:602
+#: ../src/widgets/desktop-widget.cpp:605
 msgid "grayscale"
 msgstr "szürkeárnyalatos"
 
-#: ../src/widgets/desktop-widget.cpp:604
+#: ../src/widgets/desktop-widget.cpp:607
 msgid "print colors preview"
 msgstr "nyomtatási színek előnézete"
 
-#: ../src/widgets/desktop-widget.cpp:777
+#: ../src/widgets/desktop-widget.cpp:746
 msgid "Locked all guides"
 msgstr "Összes segédvonal zárolva"
 
-#: ../src/widgets/desktop-widget.cpp:777
+#: ../src/widgets/desktop-widget.cpp:746
 msgid "Unlocked all guides"
 msgstr "Összes segédvonal zárolása feloldva"
 
-#: ../src/widgets/desktop-widget.cpp:792
+#: ../src/widgets/desktop-widget.cpp:761
 msgid "Color-managed display is <b>enabled</b> in this window"
 msgstr ""
 "A színkezelési képernyő-beállítás <b>be van kapcsolva</b> ebben az ablakban"
 
-#: ../src/widgets/desktop-widget.cpp:794
+#: ../src/widgets/desktop-widget.cpp:763
 msgid "Color-managed display is <b>disabled</b> in this window"
 msgstr ""
 "A színkezelési képernyő-beállítás <b>ki van kapcsolva</b> ebben az ablakban"
 
-#: ../src/widgets/desktop-widget.cpp:925
+#: ../src/widgets/desktop-widget.cpp:894
 msgid "Note:"
 msgstr "Megjegyzés:"
 
-#: ../src/widgets/desktop-widget.cpp:1460 ../share/ui/dialog-export.glade:100
+#: ../src/widgets/desktop-widget.cpp:1429 ../share/ui/dialog-export.glade:100
 #: ../share/ui/page-properties.glade:799 ../share/ui/align-and-distribute.ui:60
 #: ../share/extensions/voronoi_diagram.inx:15
 msgid "Page"
 msgstr "Oldal"
 
-#: ../src/widgets/desktop-widget.cpp:1472
+#: ../src/widgets/desktop-widget.cpp:1441
 msgid "Centre Page"
 msgstr "Oldalközéppont"
 
-#: ../src/widgets/desktop-widget.cpp:1813
+#: ../src/widgets/desktop-widget.cpp:1788
 msgid "Create guide"
 msgstr "Segédvonal létrehozása"
 
@@ -41474,7 +41479,7 @@ msgstr ""
 "Olyan objektumot észlelve, amelynél be van állítva a kihúzási paraméter. Az "
 "importált ábra helytelenül jelenhet meg."
 
-#: ../share/extensions/dxf_outlines.py:217
+#: ../share/extensions/dxf_outlines.py:214
 msgid ""
 "Failed to import the numpy or numpy.linalg modules. These modules are "
 "required by the ROBO option.Please install them and try again."
@@ -41483,14 +41488,14 @@ msgstr ""
 "paraméterhez van szükség ezekre a modulokra. Telepítse ezeket, majd "
 "próbálkozzon újra."
 
-#: ../share/extensions/dxf_outlines.py:367
+#: ../share/extensions/dxf_outlines.py:364
 msgid ""
 "Too many nested groups. Please use the \"Deep Ungroup\" extension first."
 msgstr ""
 "Túl sok beágyazott csoport. Előbb használja a „Mély csoportbontás” "
 "kiterjesztést."
 
-#: ../share/extensions/dxf_outlines.py:382
+#: ../share/extensions/dxf_outlines.py:379
 msgid ""
 "Error: Field 'Layer match name' must be filled when using 'By name match' "
 "option"
