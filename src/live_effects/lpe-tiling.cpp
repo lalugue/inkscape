@@ -14,8 +14,8 @@
 #include "live_effects/lpe-tiling.h"
 
 #include <algorithm>
+#include <functional>
 #include <limits>
-#include <vector>
 #include <2geom/intersection-graph.h>
 #include <2geom/path-intersection.h>
 #include <2geom/sbasis-to-bezier.h>
@@ -25,6 +25,7 @@
 #include <gtkmm/box.h>
 #include <gtkmm/combobox.h>
 #include <gtkmm/frame.h>
+#include <gtkmm/image.h>
 #include <gtkmm/label.h>
 #include <gtkmm/object.h>
 #include <gtkmm/radiobutton.h>
@@ -652,14 +653,12 @@ Gtk::RadioButton* create_radio_button(Gtk::RadioButtonGroup& group, const Glib::
 
 void align_widgets(const std::vector<Gtk::Widget*>& widgets, int spinbutton_chars = 7) {
     // traverse container, locate n-th child in each row
-    auto for_child_n = [=](int child_index, const std::function<void (Gtk::Widget*)>& action) {
+    auto const for_child_n = [&widgets](int const child_index,
+                                        std::function<void (Gtk::Widget *)> const &action)
+    {
         for (auto child : widgets) {
             auto container = dynamic_cast<Gtk::Box *>(child);
             if (!container) continue;
-
-            if (auto const inner = dynamic_cast<Gtk::Box *>(container)) {
-                container = inner;
-            }
 
             auto const children = UI::get_children(*container);
             if (child_index < children.size()) {
@@ -668,16 +667,20 @@ void align_widgets(const std::vector<Gtk::Widget*>& widgets, int spinbutton_char
         }
     };
 
+    auto const get_natural_width = [](Gtk::Widget const &widget)
+    {
+        g_assert(widget.get_visible());
+        int minimum{}, natural{};
+        widget.get_preferred_width(minimum, natural);
+        return natural;
+    };
+
     // column 0 - labels
     int max_width = 0;
     for_child_n(0, [&](Gtk::Widget* child){
         if (auto label = dynamic_cast<Gtk::Label*>(child)) {
             label->set_xalign(0); // left-align
-            int label_width = 0, dummy = 0;
-            label->get_preferred_width(dummy, label_width);
-            if (label_width > max_width) {
-                max_width = label_width;
-            }
+            max_width = std::max(max_width, get_natural_width(*label));
         }
     });
     // align
@@ -693,8 +696,7 @@ void align_widgets(const std::vector<Gtk::Widget*>& widgets, int spinbutton_char
         if (auto spin = dynamic_cast<Gtk::SpinButton*>(child)) {
             // arbitrarily selected spinbutton size
             spin->set_width_chars(spinbutton_chars);
-            int dummy = 0;
-            spin->get_preferred_width(dummy, button_width);
+            button_width = std::max(button_width, get_natural_width(*spin));
         } 
     });
     // set min size for comboboxes, if any
@@ -791,11 +793,15 @@ Gtk::Widget * LPETiling::newWidget()
             first->set_no_show_all(true);
 
             auto const button = dynamic_cast<Gtk::Button *>(children.at(1));
-            button->set_always_show_image(true);
-            button->set_label(_("Randomize"));
+            g_assert(button);
+            auto const box = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL, 6);
+            box->add(*Gtk::manage(sp_get_icon_image(INKSCAPE_ICON("randomize"), Gtk::ICON_SIZE_BUTTON)));
+            box->add(*Gtk::make_managed<Gtk::Label>(_("Randomize")));
+            button->remove();
+            button->add(*box);
             button->set_tooltip_markup(_("Randomization seed for random mode for scaling, rotation and gaps"));
             button->set_relief(Gtk::RELIEF_NORMAL);
-            button->set_image_from_icon_name(INKSCAPE_ICON("randomize"), Gtk::IconSize(Gtk::ICON_SIZE_BUTTON));
+            button->set_valign(Gtk::ALIGN_START);
 
             widgrand->set_vexpand(false);
             widgrand->set_hexpand(false);
@@ -1007,9 +1013,10 @@ Gtk::Widget * LPETiling::newWidget()
         }
     }
 
+    // must show children 1st, as align_widgets() measures them! TODO: GTK4: n/a
+    vbox->show_all();
     align_widgets(scalars, 5);
 
-    vbox->show_all();
     return vbox;
 }
 
