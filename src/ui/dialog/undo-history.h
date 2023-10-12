@@ -23,7 +23,6 @@
 
 #include "event-log.h"
 #include "ui/dialog/dialog-base.h"
-#include "ui/manage.h"
 
 namespace Inkscape::UI::Dialog {
 
@@ -76,7 +75,7 @@ public:
     void documentReplaced() override;
 
 private:
-    EventLog *_event_log;
+    EventLog *_event_log = nullptr;
 
     Gtk::ScrolledWindow _scrolled_window;
 

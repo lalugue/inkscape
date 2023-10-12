@@ -14,7 +14,7 @@
 
 #include "undo-history.h"
 
-#include <sstream>
+#include <string>
 #include <gtkmm/cellrendererpixbuf.h>
 
 #include "actions/actions-tools.h"
@@ -34,9 +34,7 @@ void CellRendererInt::render_vfunc(const Cairo::RefPtr<Cairo::Context>& cr,
                                    Gtk::CellRendererState flags)
 {
     if( _filter(_property_number) ) {
-        std::ostringstream s;
-        s << _property_number << std::flush;
-        property_text() = s.str();
+        property_text().set_value(std::to_string(_property_number.get_value()));
         Gtk::CellRendererText::render_vfunc(cr, widget, background_area,
                                             cell_area, flags);
     }
@@ -46,13 +44,9 @@ const CellRendererInt::Filter &CellRendererInt::no_filter = CellRendererInt::NoF
 
 UndoHistory::UndoHistory()
     : DialogBase("/dialogs/undo-history", "UndoHistory"),
-      _event_log(nullptr),
-      _scrolled_window(),
-      _event_list_store(),
-      _event_list_selection(_event_list_view.get_selection()),
-      _callback_connections()
+      _event_list_selection(_event_list_view.get_selection())
 {
-    auto *_columns = &EventLog::getColumns();
+    auto const columns = &EventLog::getColumns();
 
     set_size_request(-1, -1);
 
@@ -67,8 +61,8 @@ UndoHistory::UndoHistory()
     icon_renderer->property_width() = 24;
     int cols_count = _event_list_view.append_column("Icon", *icon_renderer);
 
-    Gtk::TreeView::Column* icon_column = _event_list_view.get_column(cols_count-1);
-    icon_column->add_attribute(icon_renderer->property_icon_name(), _columns->icon_name);
+    auto const icon_column = _event_list_view.get_column(cols_count - 1);
+    icon_column->add_attribute(icon_renderer->property_icon_name(), columns->icon_name);
 
     auto const children_renderer = Gtk::make_managed<CellRendererInt>(greater_than_1);
     children_renderer->property_weight() = 600; // =Pango::WEIGHT_SEMIBOLD (not defined in old versions of pangomm)
@@ -77,20 +71,20 @@ UndoHistory::UndoHistory()
     children_renderer->property_width() = 24;
 
     cols_count = _event_list_view.append_column("Children", *children_renderer);
-    Gtk::TreeView::Column* children_column = _event_list_view.get_column(cols_count-1);
-    children_column->add_attribute(children_renderer->property_number(), _columns->child_count);
+    auto const children_column = _event_list_view.get_column(cols_count - 1);
+    children_column->add_attribute(children_renderer->property_number(), columns->child_count);
 
     auto const description_renderer = Gtk::make_managed<Gtk::CellRendererText>();
     description_renderer->property_ellipsize() = Pango::ELLIPSIZE_END;
 
     cols_count = _event_list_view.append_column("Description", *description_renderer);
-    Gtk::TreeView::Column* description_column = _event_list_view.get_column(cols_count-1);
-    description_column->add_attribute(description_renderer->property_text(), _columns->description);
+    auto const description_column = _event_list_view.get_column(cols_count - 1);
+    description_column->add_attribute(description_renderer->property_text(), columns->description);
     description_column->set_resizable();
     description_column->set_sizing(Gtk::TREE_VIEW_COLUMN_AUTOSIZE);
     description_column->set_min_width (150);
 
-    _event_list_view.set_expander_column( *_event_list_view.get_column(cols_count-1) );
+    _event_list_view.set_expander_column( *_event_list_view.get_column(cols_count - 1) );
 
     _scrolled_window.add(_event_list_view);
     _scrolled_window.set_overlay_scrolling(false);
