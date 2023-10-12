@@ -1,12 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-/*
- * Author:
- *   Tavmjong Bah <tavmjong@free.fr>
- *
- * Copyright (C) 2018 Tavmong Bah
- *
- * Released under GNU GPL v2+, read the file 'COPYING' for more information.
- *
+/**
+ * @file
  *
  * The routines here create and manage a font selector widget with three parts,
  * one each for font-family, font-style, and font-size.
@@ -25,24 +19,33 @@
  *   Emit a signal when any change is made so that the Text Preview can be updated.
  *   Provide the currently selected values.
  */
+/*
+ * Author:
+ *   Tavmjong Bah <tavmjong@free.fr>
+ *
+ * Copyright (C) 2018 Tavmong Bah
+ *
+ * Released under GNU GPL v2+, read the file 'COPYING' for more information.
+ */
 
 #ifndef INKSCAPE_UI_WIDGET_FONT_SELECTOR_H
 #define INKSCAPE_UI_WIDGET_FONT_SELECTOR_H
 
-#include <gtkmm/grid.h>
+#include <gtkmm/cellrenderertext.h>
+#include <gtkmm/comboboxtext.h>
 #include <gtkmm/frame.h>
+#include <gtkmm/grid.h>
+#include <gtkmm/label.h>
 #include <gtkmm/scrolledwindow.h>
 #include <gtkmm/treemodel.h>
 #include <gtkmm/treeview.h>
-#include <gtkmm/label.h>
-#include <gtkmm/comboboxtext.h>
+#include <sigc++/connection.h>
+#include <sigc++/signal.h>
 
 #include "ui/widget/font-variations.h"
 #include "ui/widget/scrollprotected.h"
 
-namespace Inkscape {
-namespace UI {
-namespace Widget {
+namespace Inkscape::UI::Widget {
 
 /**
  * A container of widgets for selecting font faces.
@@ -95,7 +98,6 @@ protected:
     FontVariations      font_variations;
 
 private:
-
     // Set sizes in font size combobox.
     void set_sizes();
     void set_fontsize_tooltip();
@@ -122,8 +124,6 @@ private:
     // control font variations update and UI element size
     void update_variations(const Glib::ustring& fontspec);
 
-    // What type of object can be dropped.
-    std::vector<Gtk::TargetEntry> target_entries;
     static gboolean set_cell_markup(gpointer);
     void on_realize_list();
     // For drag and drop.
@@ -131,7 +131,6 @@ private:
     void on_drag_data_get(Glib::RefPtr<Gdk::DragContext> const &context, Gtk::SelectionData &selection_data, guint info, guint time) override;
 
 public:
-
     /**
      * Update GUI based on fontspec
      */
@@ -159,10 +158,7 @@ public:
     }
 };
 
- 
-} // namespace Widget
-} // namespace UI
-} // namespace Inkscape
+} // namespace Inkscape::UI::Widget
 
 #endif // INKSCAPE_UI_WIDGET_FONT_SETTINGS_H
 

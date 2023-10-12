@@ -8,23 +8,34 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#include "font-selector.h"
+
+#include <iostream>
+#include <stdexcept>
+#include <string>
+#include <vector>
 #include <glibmm/i18n.h>
 #include <glibmm/markup.h>
-
-#include "font-selector.h"
+#include <gtkmm/targetentry.h>
 
 #include "libnrtype/font-lister.h"
 #include "libnrtype/font-instance.h"
 #include "libnrtype/font-factory.h"
-
 // For updating from selection
 #include "inkscape.h"
 #include "desktop.h"
 #include "object/sp-text.h"
 
-namespace Inkscape {
-namespace UI {
-namespace Widget {
+namespace Inkscape::UI::Widget {
+
+[[nodiscard]] static auto const &get_target_entries()
+{
+    static std::vector<Gtk::TargetEntry> const target_entries{
+        Gtk::TargetEntry{"STRING"    , {}, 0},
+        Gtk::TargetEntry{"text/plain", {}, 0},
+    };
+    return target_entries;
+}
 
 FontSelector::FontSelector (bool with_size, bool with_variations)
     : Gtk::Grid ()
@@ -35,9 +46,9 @@ FontSelector::FontSelector (bool with_size, bool with_variations)
     , signal_block (false)
     , font_size (18)
 {
-
     Inkscape::FontLister* font_lister = Inkscape::FontLister::get_instance();
     Glib::RefPtr<Gtk::TreeModel> model = font_lister->get_font_list();
+
     // Font family
     family_treecolumn.pack_start (family_cell, false);
     int total = model->children().size();
@@ -58,7 +69,6 @@ FontSelector::FontSelector (bool with_size, bool with_variations)
     }
     family_treecolumn.set_fixed_width (120); // limit minimal width to keep entire dialog narrow; column can still grow
     family_treecolumn.add_attribute (family_cell, "text", 0);
-    // family_treecolumn.set_cell_data_func (family_cell, &font_lister_cell_data_func);
     family_treecolumn.set_cell_data_func (family_cell, &font_lister_cell_data_func_markup);
     family_treeview.set_row_separator_func (&font_lister_separator_func);
     family_treeview.set_model(model);
@@ -126,12 +136,7 @@ FontSelector::FontSelector (bool with_size, bool with_variations)
     }
 
     // For drag and drop.
-    // Target entries for Drag and Drop.
-    // target_entries.emplace_back(Gtk::TargetEntry("text/uri-list", (Gtk::TargetFlags)0, 0));
-    target_entries.emplace_back(Gtk::TargetEntry("STRING", (Gtk::TargetFlags)0, 0));
-    target_entries.emplace_back(Gtk::TargetEntry("text/plain", (Gtk::TargetFlags)0, 0));
-
-    family_treeview.drag_source_set(target_entries, Gdk::BUTTON1_MASK, Gdk::ACTION_COPY | Gdk::ACTION_DEFAULT);
+    family_treeview.drag_source_set(get_target_entries(), Gdk::BUTTON1_MASK, Gdk::ACTION_COPY | Gdk::ACTION_DEFAULT);
     family_treeview.signal_drag_data_get().connect(sigc::mem_fun(*this, &FontSelector::on_drag_data_get));
     family_treeview.signal_drag_begin().connect(sigc::mem_fun(*this, &FontSelector::on_drag_start), false);
 
@@ -146,7 +151,6 @@ FontSelector::FontSelector (bool with_size, bool with_variations)
 
     // Initialize font family lists. (May already be done.) Should be done on document change.
     font_lister->update_font_list(SP_ACTIVE_DESKTOP->getDocument());
-   
 }
 
 void FontSelector::on_realize_list() {
@@ -403,7 +407,6 @@ FontSelector::style_cell_data_func (Gtk::CellRenderer *renderer, Gtk::TreeModel:
     renderer->set_property("markup", markup);
 }
 
-
 // Callbacks
 
 // Need to update style list
@@ -546,9 +549,7 @@ void FontSelector::update_variations(const Glib::ustring& fontspec) {
     font_variations_scroll.set_vexpand(hasContent);
 }
 
-} // namespace Widget
-} // namespace UI
-} // namespace Inkscape
+} // namespace Inkscape::UI::Widget
 
 /*
   Local Variables:
