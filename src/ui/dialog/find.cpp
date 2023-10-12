@@ -17,7 +17,6 @@
 #include <glibmm/regex.h>
 #include <gtkmm/entry.h>
 #include <gtkmm/enums.h>
-#include <gtkmm/label.h>
 #include <gtkmm/sizegroup.h>
 
 #include "desktop.h"
@@ -52,9 +51,7 @@
 #include "xml/attribute-record.h"
 #include "xml/node-iterators.h"
 
-namespace Inkscape {
-namespace UI {
-namespace Dialog {
+namespace Inkscape::UI::Dialog {
 
 Find::Find()
     : DialogBase("/dialogs/find", "Find"),
@@ -223,11 +220,7 @@ Find::Find()
     check_offsets.set_active(false);
 
     entry_find.getEntry()->set_width_chars(25);
-    entry_find.child_property_fill(*entry_find.getEntry()) = true;
-    entry_find.child_property_expand(*entry_find.getEntry()) = true;
     entry_replace.getEntry()->set_width_chars(25);
-    entry_replace.child_property_fill(*entry_replace.getEntry()) = true;
-    entry_replace.child_property_expand(*entry_replace.getEntry()) = true;
 
     Gtk::RadioButtonGroup grp_searchin = check_searchin_text.get_group();
     check_searchin_property.set_group(grp_searchin);
@@ -374,6 +367,8 @@ Find::Find()
     //button_find.grab_default(); // activatable by Enter
     entry_find.getEntry()->grab_focus();
 }
+
+Find::~Find() = default;
 
 void Find::desktopReplaced()
 {
@@ -1126,10 +1121,7 @@ void Find::squeeze_window()
     // set_size_request(-1, -1);
 }
 
-} // namespace Dialog
-} // namespace UI
-} // namespace Inkscape
-
+} // namespace Inkscape::UI::Dialog
 
 /*
   Local Variables:

@@ -143,7 +143,6 @@ public:
     // Reading and writing the style element.
 
     Inkscape::XML::Node *_getStyleTextNode(bool create_if_missing = false);
-    Glib::RefPtr<Gtk::TreeModel> _selectTree(Glib::ustring const &selector);
 
     void _writeStyleElement(Glib::RefPtr<Gtk::TreeStore> const &store,
                             Glib::ustring selector, Glib::ustring const &new_selector = {});

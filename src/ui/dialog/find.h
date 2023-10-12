@@ -13,24 +13,28 @@
 #ifndef INKSCAPE_UI_DIALOG_FIND_H
 #define INKSCAPE_UI_DIALOG_FIND_H
 
+#include <glibmm/refptr.h>
 #include <gtkmm/box.h>
 #include <gtkmm/expander.h>
 #include <gtkmm/label.h>
 #include <gtkmm/radiobutton.h>
-#include <gtkmm/sizegroup.h>
 
 #include "ui/dialog/dialog-base.h"
 #include "ui/widget/entry.h"
 #include "ui/widget/frame.h"
 
+namespace Gtk {
+class SizeGroup;
+} // namespace Gtk
+
 class SPItem;
 class SPObject;
 
 namespace Inkscape {
+
 class Selection;
 
-namespace UI {
-namespace Dialog {
+namespace UI::Dialog {
 
 /**
  * The Find class defines the Find and replace dialog.
@@ -46,14 +50,12 @@ class Find : public DialogBase
 {
 public:
     Find();
-    ~Find() override {};
+    ~Find() override;
 
     void desktopReplaced() override;
     void selectionChanged(Selection *selection) override;
 
 protected:
-
-
     /**
      * Callbacks for pressing the dialog buttons.
      */
@@ -290,12 +292,9 @@ private:
      */
     bool _action_replace;
     bool blocked;
-
-    sigc::connection selectChangedConn;
 };
 
-} // namespace Dialog
-} // namespace UI
+} // namespace UI::Dialog
 } // namespace Inkscape
 
 #endif // INKSCAPE_UI_DIALOG_FIND_H

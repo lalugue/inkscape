@@ -273,25 +273,33 @@ void SelectorsDialog::_showWidgets()
 
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
     bool dir = prefs->getBool("/dialogs/selectors/vertical", true);
+
     _paned.set_orientation(dir ? Gtk::ORIENTATION_VERTICAL : Gtk::ORIENTATION_HORIZONTAL);
+
     _selectors_box.set_orientation(Gtk::ORIENTATION_VERTICAL);
     _selectors_box.set_name("SelectorsDialog");
+
     _scrolled_window_selectors.add(_treeView);
     _scrolled_window_selectors.set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
     _scrolled_window_selectors.set_overlay_scrolling(false);
+
     _vadj = _scrolled_window_selectors.get_vadjustment();
     _vadj->signal_value_changed().connect(sigc::mem_fun(*this, &SelectorsDialog::_vscroll));
     UI::pack_start(_selectors_box, _scrolled_window_selectors, UI::PackOptions::expand_widget);
+
     /* auto const dirtogglerlabel = Gtk::make_managed<Gtk::Label>(_("Paned vertical"));
     dirtogglerlabel->get_style_context()->add_class("inksmall");
     _direction.property_active() = dir;
     _direction.property_active().signal_changed().connect(sigc::mem_fun(*this, &SelectorsDialog::_toggleDirection));
     _direction.get_style_context()->add_class("inkswitch"); */
+
     _styleButton(_create, "list-add", "Add a new CSS Selector");
     _create.signal_clicked().connect(sigc::mem_fun(*this, &SelectorsDialog::_addSelector));
     _styleButton(_del, "list-remove", "Remove a CSS Selector");
+
     UI::pack_start(_button_box, _create, UI::PackOptions::shrink);
     UI::pack_start(_button_box, _del, UI::PackOptions::shrink);
+
     Gtk::RadioButton::Group group;
     auto const _horizontal = Gtk::make_managed<Gtk::RadioButton>();
     auto const _vertical = Gtk::make_managed<Gtk::RadioButton>();
@@ -306,23 +314,29 @@ void SelectorsDialog::_showWidgets()
     _vertical->property_draw_indicator() = false;
     UI::pack_end(_button_box, *_horizontal, false, false);
     UI::pack_end(_button_box, *_vertical, false, false);
+
     _del.signal_clicked().connect(sigc::mem_fun(*this, &SelectorsDialog::_delSelector));
     _del.set_visible(false);
+
     _style_dialog = Gtk::make_managed<StyleDialog>();
     _style_dialog->set_name("StyleDialog");
+
     _paned.pack1(*_style_dialog, Gtk::SHRINK);
     _paned.pack2(_selectors_box, true, true);
     _paned.set_wide_handle(true);
+
     auto const contents = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_VERTICAL);
     UI::pack_start(*contents, _paned, UI::PackOptions::expand_widget);
     UI::pack_start(*contents, _button_box, false, false);
     contents->set_valign(Gtk::ALIGN_FILL);
-    contents->child_property_fill(_paned);
     UI::pack_start(*this, *contents, UI::PackOptions::expand_widget);
+
     show_all();
+
     _updating = true;
     _paned.property_position() = 200;
     _updating = false;
+
     set_size_request(320, -1);
     set_name("SelectorsAndStyleDialog");
 }

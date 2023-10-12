@@ -241,14 +241,18 @@ StyleDialog::StyleDialog()
 
     UI::pack_start(_mainBox, _scrolledWindow, UI::PackOptions::expand_widget);
     _scrolledWindow.set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
+
     _styleBox.set_name("StyleBox");
     _styleBox.set_orientation(Gtk::ORIENTATION_VERTICAL);
     _styleBox.set_valign(Gtk::ALIGN_START);
+
     _scrolledWindow.add(_styleBox);
     _scrolledWindow.set_overlay_scrolling(false);
     _vadj = _scrolledWindow.get_vadjustment();
     _vadj->signal_value_changed().connect(sigc::mem_fun(*this, &StyleDialog::_vscroll));
+
     _mainBox.set_orientation(Gtk::ORIENTATION_VERTICAL);
+
     UI::pack_start(*this, _mainBox, UI::PackOptions::expand_widget);
 }
 
@@ -332,43 +336,6 @@ Inkscape::XML::Node *StyleDialog::_getStyleTextNode(bool create_if_missing)
     }
 
     return textNode;
-}
-
-Glib::RefPtr<Gtk::TreeModel> StyleDialog::_selectTree(Glib::ustring const &selector)
-{
-    g_debug("StyleDialog::_selectTree");
-
-    Gtk::Label *selectorlabel;
-    for (auto const fullstyle : UI::get_children(_styleBox)) {
-        auto &style = dynamic_cast<Gtk::Box &>(*fullstyle);
-        for (auto const stylepart : UI::get_children(style)) {
-            switch (style.child_property_position(*stylepart)) {
-                case 0: {
-                    auto &selectorbox = dynamic_cast<Gtk::Box &>(*stylepart);
-                    for (auto const styleheader : UI::get_children(selectorbox)) {
-                        if (selectorbox.child_property_position(*styleheader) == 0) {
-                            selectorlabel = dynamic_cast<Gtk::Label *>(styleheader);
-                        }
-                    }
-                    break;
-                }
-                case 1: {
-                    g_assert(selectorlabel);
-                    Glib::ustring wdg_selector = selectorlabel->get_text();
-                    if (wdg_selector == selector) {
-                        Gtk::TreeView *treeview = dynamic_cast<Gtk::TreeView *>(stylepart);
-                        if (treeview) {
-                            return treeview->get_model();
-                        }
-                    }
-                    break;
-                }
-                default:
-                    break;
-            }
-        }
-    }
-    return {};
 }
 
 void StyleDialog::setCurrentSelector(Glib::ustring current_selector)
