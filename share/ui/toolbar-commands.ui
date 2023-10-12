@@ -254,7 +254,8 @@
         <property name="can-focus">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Export...</property>
-        <property name="action-name">win.document-export</property>
+        <property name="action-name">win.dialog-open</property>
+        <property name="action-target">'Export'</property>
         <property name="relief">none</property>
         <style>
           <class name="tag1"/>
