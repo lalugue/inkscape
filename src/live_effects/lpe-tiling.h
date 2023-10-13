@@ -109,6 +109,7 @@ private:
     double prev_num_rows;
     bool reset;
     gdouble scaleok = 1.0;
+    Glib::ustring display_unit;
     Glib::ustring prev_unit = "px";
     std::vector<double> random_x;
     std::vector<double> random_y;

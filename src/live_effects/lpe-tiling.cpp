@@ -160,6 +160,7 @@ LPETiling::LPETiling(LivePathEffectObject *lpeobject) :
     prev_num_rows = num_rows;
     _knotholder = nullptr;
     reset = link_styles;
+    display_unit = getSPDoc()->getDisplayUnit()->abbr;
 }
 
 LPETiling::~LPETiling() = default;
@@ -1204,7 +1205,15 @@ LPETiling::doBeforeEffect (SPLPEItem const* lpeitem)
             lpesatellites.update_satellites();
         }
     }
-    Glib::ustring display_unit = lpeitem->document->getDisplayUnit()->abbr.c_str();
+    auto const prev_display_unit = std::move(display_unit);
+    display_unit = getSPDoc()->getDisplayUnit()->abbr;
+    if (!display_unit.empty() && display_unit != prev_display_unit) {
+        //_document->getDocumentScale().inverse()
+        gapx.param_set_value(Inkscape::Util::Quantity::convert(gapx, display_unit.c_str(), prev_display_unit.c_str()));
+        gapy.param_set_value(Inkscape::Util::Quantity::convert(gapy, display_unit.c_str(), prev_display_unit.c_str()));
+        gapx.write_to_SVG();
+        gapy.write_to_SVG();
+    }
     gapx_unit = Inkscape::Util::Quantity::convert(gapx, unit.get_abbreviation(), display_unit.c_str());
     gapy_unit = Inkscape::Util::Quantity::convert(gapy, unit.get_abbreviation(), display_unit.c_str());
     original_bbox(sp_lpe_item, false, true, transformoriginal);
