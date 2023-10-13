@@ -325,10 +325,9 @@ LPECloneOriginal::doBeforeEffect (SPLPEItem const* lpeitem){
             auto curve = text_origin->getNormalizedBpath();
             if (dest_path) {
                 dest->setAttribute("inkscape:original-d", sp_svg_write_path(curve.get_pathvector()));
-            } else {
-                dest_shape->setCurveInsync(curve);
-                dest_shape->setAttribute("d", sp_svg_write_path(curve.get_pathvector()));
             }
+            dest_shape->setCurveInsync(curve);
+            dest_shape->setAttribute("d", sp_svg_write_path(curve.get_pathvector()));
             attr = "";
         }
         if (g_strcmp0(linked.c_str(), id) && !is_load) {
