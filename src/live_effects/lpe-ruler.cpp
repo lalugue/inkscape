@@ -131,9 +131,23 @@ LPERuler::doEffect_pwd2 (Geom::Piecewise<Geom::D2<Geom::SBasis> > const & pwd2_i
     
     //find at which times to draw a mark:
     std::vector<double> s_cuts;
-
-    double real_mark_distance = mark_distance;
     SPDocument *document = getSPDoc();
+    if (document) {
+        auto const prev_display_unit = std::move(display_unit);
+        display_unit = getSPDoc()->getDisplayUnit()->abbr;
+        if (!display_unit.empty() && display_unit != prev_display_unit) {
+            //_document->getDocumentScale().inverse()
+            mark_distance.param_set_value(Inkscape::Util::Quantity::convert(mark_distance, display_unit.c_str(), prev_display_unit.c_str()));
+            offset.param_set_value(Inkscape::Util::Quantity::convert(offset, display_unit.c_str(), prev_display_unit.c_str()));
+            minor_mark_length.param_set_value(Inkscape::Util::Quantity::convert(minor_mark_length, display_unit.c_str(), prev_display_unit.c_str()));
+            mark_length.param_set_value(Inkscape::Util::Quantity::convert(mark_length, display_unit.c_str(), prev_display_unit.c_str()));
+            minor_mark_length.write_to_SVG();
+            mark_length.write_to_SVG();
+            mark_distance.write_to_SVG();
+            offset.write_to_SVG();
+        }
+    }
+    double real_mark_distance = mark_distance;
     if (document) {
         real_mark_distance = Inkscape::Util::Quantity::convert(real_mark_distance, unit.get_abbreviation(), document->getDisplayUnit()->abbr.c_str());
     }  
