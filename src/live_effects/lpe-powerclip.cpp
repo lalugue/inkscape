@@ -150,9 +150,10 @@ void LPEPowerClip::add()
     if (clip_path) {
         Inkscape::XML::Document *xml_doc = document->getReprDoc();
         Inkscape::XML::Node *parent = clip_path->getRepr();
-        auto childitem = cast<SPLPEItem>(clip_path->childList(true).back());
+        auto childitems = clip_path->childList(true);
+        auto childitem = cast<SPLPEItem>(childitems.empty() ? nullptr : childitems.back());
         if (childitem) {
-            if (const gchar *powerclip = childitem->getRepr()->attribute("class")) {
+           if (const gchar *powerclip = childitem->getRepr()->attribute("class")) {
                 if (!strcmp(powerclip, "powerclip")) {
                     Glib::ustring newclip = Glib::ustring("clipath_") + getId();
                     Glib::ustring uri = Glib::ustring("url(#") + newclip + Glib::ustring(")");
@@ -161,8 +162,8 @@ void LPEPowerClip::add()
                     clip_path = document->getDefs()->appendChildRepr(parent);
                     Inkscape::GC::release(parent);
                     sp_lpe_item->setAttribute("clip-path", uri);
-                    auto childitemdel = cast<SPLPEItem>(clip_path->childList(true).back());
-                    if (childitemdel) {
+                    auto childitems2 = clip_path->childList(true);
+                    if (auto childitemdel = cast<SPLPEItem>(childitems2.empty() ? nullptr : childitems2.back())) {
                         childitemdel->setAttribute("id", getId());
                         return;
                     }
