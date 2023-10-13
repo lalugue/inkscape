@@ -13,7 +13,6 @@
 #ifndef SEEN_UI_CONTROLLER_H
 #define SEEN_UI_CONTROLLER_H
 
-#include <concepts>
 #include <cstddef>
 #include <functional>
 #include <type_traits>
@@ -156,66 +155,67 @@ void connect(Emitter * const emitter, char const * const detailed_signal,
 /// Whether Function can be invoked with Args... to return Result; OR it's a nullptr.
 // FIXME: shouldnʼt allow functions that return non-void for signals declaring a void
 //        result, as thatʼs misleading, but I didnʼt yet manage that with type_traits
-template <auto function, typename Result, typename ...Args>
-concept callable_or_null = std::same_as         <decltype(function), std::nullptr_t > ||
-                           std::is_invocable_r_v<Result, decltype(function), Args...>;
+// TODO: C++20: Use <concepts> instead…but not quite yet since Ubuntu 20.04 GCC lacks
+template <typename Function, typename Result, typename ...Args>
+auto constexpr callable_or_null = std::is_same_v       <Function, std::nullptr_t > ||
+                                  std::is_invocable_r_v<Result, Function, Args...>;
 
 } // namespace Detail
 
-/// Whether function is suitable to handle Gesture::begin|end.
+/// Whether Function is suitable to handle Gesture::begin|end.
 /// The arguments are the gesture & triggering event sequence.
-template <auto function, typename Listener>
-concept is_gesture_handler = Detail::callable_or_null<function, void,
+template <typename Function, typename Listener>
+auto constexpr is_gesture_handler = Detail::callable_or_null<Function, void,
     Listener *, GtkGesture *, GdkEventSequence *>;
 
-/// Whether function is suitable to handle EventControllerKey::pressed|released.
+/// Whether Function is suitable to handle EventControllerKey::pressed|released.
 /// The arguments are the controller, keyval, hardware keycode & modifier state.
-template <auto function, typename Listener>
-concept is_key_handler = Detail::callable_or_null<function, bool,
+template <typename Function, typename Listener>
+auto constexpr is_key_handler = Detail::callable_or_null<Function, bool,
     Listener *, GtkEventControllerKey *, unsigned, unsigned, GdkModifierType>;
 
-/// Whether function is suitable to handle EventControllerKey::modifiers.
+/// Whether Function is suitable to handle EventControllerKey::modifiers.
 /// The arguments are the controller & modifier state.
 /// Note that this signal seems buggy, i.e. gives wrong state, in GTK3. Beware!!
-template <auto function, typename Listener>
-concept is_key_mod_handler = Detail::callable_or_null<function, bool,
+template <typename Function, typename Listener>
+auto constexpr is_key_mod_handler = Detail::callable_or_null<Function, bool,
     Listener *, GtkEventControllerKey *, GdkModifierType>;
 
-/// Whether function is suitable to handle EventControllerKey::focus-(in|out).
+/// Whether Function is suitable to handle EventControllerKey::focus-(in|out).
 /// The argument is the controller.
 /// Note these signals seem buggy, i.e. not (always?) emitted, in GTK3. Beware!!
-template <auto function, typename Listener>
-concept is_key_focus_handler = Detail::callable_or_null<function, void,
+template <typename Function, typename Listener>
+auto constexpr is_key_focus_handler = Detail::callable_or_null<Function, void,
     Listener *, GtkEventControllerKey *>;
 
-/// Whether function is suitable to handle EventControllerMotion::enter|motion.
+/// Whether Function is suitable to handle EventControllerMotion::enter|motion.
 /// The arguments are the controller, x coordinate & y coord (in widget space).
-template <auto function, typename Listener>
-concept is_motion_handler = Detail::callable_or_null<function, void,
+template <typename Function, typename Listener>
+auto constexpr is_motion_handler = Detail::callable_or_null<Function, void,
     Listener *, GtkEventControllerMotion *, double, double>;
 
-/// Whether function is suitable to handle EventControllerMotion::leave.
+/// Whether Function is suitable to handle EventControllerMotion::leave.
 /// The argument is the controller. Coordinates arenʼt given on leaving.
-template <auto function, typename Listener>
-concept is_leave_handler = Detail::callable_or_null<function, void,
+template <typename Function, typename Listener>
+auto constexpr is_leave_handler = Detail::callable_or_null<Function, void,
     Listener *, GtkEventControllerMotion *>;
 
-/// Whether function is suitable for EventControllerScroll::scroll-(begin|end).
+/// Whether Function is suitable for EventControllerScroll::scroll-(begin|end).
 /// The argument is the controller.
-template <auto function, typename Listener>
-concept is_scroll_handler = Detail::callable_or_null<function, void,
+template <typename Function, typename Listener>
+auto constexpr is_scroll_handler = Detail::callable_or_null<Function, void,
     Listener *, GtkEventControllerScroll *>;
 
-/// Whether function is suitable for EventControllerScroll::scroll|decelerate.
+/// Whether Function is suitable for EventControllerScroll::scroll|decelerate.
 /// The arguments are controller & for scroll dx,dy; or decelerate: vel_x, vel_y
-template <auto function, typename Listener>
-concept is_scroll_xy_handler = Detail::callable_or_null<function, void,
+template <typename Function, typename Listener>
+auto constexpr is_scroll_xy_handler = Detail::callable_or_null<Function, void,
     Listener *, GtkEventControllerScroll *, double, double>;
 
-/// Whether function is suitable for GestureZoom::scale-changed.
+/// Whether Function is suitable for GestureZoom::scale-changed.
 /// The arguments are gesture & scale delta (initial state as 1)
-template <auto function, typename Listener>
-concept is_zoom_scale_handler = Detail::callable_or_null<function, void,
+template <typename Function, typename Listener>
+auto constexpr is_zoom_scale_handler = Detail::callable_or_null<Function, void,
     Listener *, GtkGestureZoom *, double>;
 
 /// Create a key event controller for & manage()d by widget.
@@ -230,13 +230,15 @@ template <auto on_pressed, auto on_released = nullptr, auto on_modifiers = nullp
 decltype(auto) add_key(Gtk::Widget &widget, Listener &listener,
                        Gtk::PropagationPhase const phase = Gtk::PHASE_BUBBLE,
                        When const when = When::after)
-// N.B. make_g_callback must type-erase function, so we have to check the arguments are compatible.
-requires (is_key_handler      <on_pressed  , Listener> &&
-          is_key_handler      <on_released , Listener> &&
-          is_key_mod_handler  <on_modifiers, Listener> &&
-          is_key_focus_handler<on_focus_in , Listener> &&
-          is_key_focus_handler<on_focus_out, Listener>)
 {
+    // NB make_g_callback<> must type-erase methods, so we must check arg compat
+    // TODO: C++20: Use <concepts> instead…but not quite yet since Ubuntu 20.04 GCC lacks
+    static_assert(is_key_handler      <decltype(on_pressed  ), Listener>);
+    static_assert(is_key_handler      <decltype(on_released ), Listener>);
+    static_assert(is_key_mod_handler  <decltype(on_modifiers), Listener>);
+    static_assert(is_key_focus_handler<decltype(on_focus_in ), Listener>);
+    static_assert(is_key_focus_handler<decltype(on_focus_out), Listener>);
+
     auto const gcontroller = gtk_event_controller_key_new(widget.gobj());
     gtk_event_controller_set_propagation_phase(gcontroller, static_cast<GtkPropagationPhase>(phase));
     Detail::connect<on_pressed  >(gcontroller, "key-pressed" , listener, when);
@@ -261,11 +263,12 @@ Gtk::EventController &add_motion(Gtk::Widget &widget  ,
                                  Listener    &listener,
                                  Gtk::PropagationPhase const phase = Gtk::PHASE_BUBBLE,
                                  When const when = When::after)
-// N.B. make_g_callback must type-erase function, so we have to check the arguments are compatible.
-requires (is_motion_handler<on_enter , Listener> &&
-          is_motion_handler<on_motion, Listener> &&
-          is_leave_handler <on_leave , Listener>)
 {
+    // NB make_g_callback<> must type-erase methods, so we must check arg compat
+    static_assert(is_motion_handler<decltype(on_enter ), Listener>);
+    static_assert(is_motion_handler<decltype(on_motion), Listener>);
+    static_assert( is_leave_handler<decltype(on_leave ), Listener>);
+
     // GTK3 does not emit these events unless we explicitly request them
     Detail::add_events_for<on_enter >(widget, Gdk::ENTER_NOTIFY_MASK  );
     Detail::add_events_for<on_motion>(widget, Gdk::POINTER_MOTION_MASK);
@@ -288,12 +291,13 @@ Gtk::EventController &add_scroll(Gtk::Widget &widget  ,
                                  GtkEventControllerScrollFlags const flags = GTK_EVENT_CONTROLLER_SCROLL_BOTH_AXES,
                                  Gtk::PropagationPhase const phase = Gtk::PHASE_BUBBLE,
                                  When const when = When::after)
-// N.B. make_g_callback must type-erase function, so we have to check the arguments are compatible.
-requires (is_scroll_handler   <on_scroll_begin, Listener> &&
-          is_scroll_xy_handler<on_scroll      , Listener> &&
-          is_scroll_handler   <on_scroll_end  , Listener> &&
-          is_scroll_xy_handler<on_decelerate  , Listener>)
 {
+    // NB make_g_callback<> must type-erase methods, so we must check arg compat
+    static_assert(is_scroll_handler   <decltype(on_scroll_begin), Listener>);
+    static_assert(is_scroll_xy_handler<decltype(on_scroll      ), Listener>);
+    static_assert(is_scroll_handler   <decltype(on_scroll_end  ), Listener>);
+    static_assert(is_scroll_xy_handler<decltype(on_decelerate  ), Listener>);
+
     auto const gcontroller = gtk_event_controller_scroll_new(widget.gobj(), flags);
     gtk_event_controller_set_propagation_phase(gcontroller, static_cast<GtkPropagationPhase>(phase));
     Detail::connect<on_scroll_begin>(gcontroller, "scroll-begin", listener, when);
@@ -310,11 +314,12 @@ decltype(auto) add_zoom(Gtk::Widget &widget  ,
                         Listener    &listener,
                         Gtk::PropagationPhase const phase = Gtk::PHASE_BUBBLE,
                         When const when = When::after)
-// N.B. make_g_callback must type-erase function, so we have to check the arguments are compatible.
-requires (is_gesture_handler   <on_begin        , Listener> &&
-          is_zoom_scale_handler<on_scale_changed, Listener> &&
-          is_gesture_handler   <on_end          , Listener>)
 {
+    // NB make_g_callback<> must type-erase methods, so we must check arg compat
+    static_assert(is_gesture_handler   <decltype(on_begin        ), Listener>);
+    static_assert(is_zoom_scale_handler<decltype(on_scale_changed), Listener>);
+    static_assert(is_gesture_handler   <decltype(on_end          ), Listener>);
+
     auto const gcontroller = GTK_EVENT_CONTROLLER(gtk_gesture_zoom_new(widget.gobj()));
     gtk_event_controller_set_propagation_phase(gcontroller, static_cast<GtkPropagationPhase>(phase));
     Detail::connect<on_begin        >(gcontroller, "begin"        , listener, when);
