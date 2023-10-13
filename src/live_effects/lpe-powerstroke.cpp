@@ -350,6 +350,12 @@ static Geom::Path path_from_piecewise_fix_cusps( Geom::Piecewise<Geom::D2<Geom::
                          pb.lineTo(B[i].at0());
                          break;
                     }
+                    catch (Geom::RangeError &e) {
+                        // 2geom did not find a fitting ellipse, this happens for weird thick paths :)
+                        // do bevel, and break
+                         pb.lineTo(B[i].at0());
+                         break;
+                    }
 
                     // check if ellipse.ray is within 'sane' range.
                     if ( ( fabs(ellipse.ray(Geom::X)) > 1e6 ) ||
