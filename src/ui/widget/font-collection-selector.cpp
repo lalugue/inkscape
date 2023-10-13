@@ -117,29 +117,25 @@ void FontCollectionSelector::setup_signals()
     // treeview->signal_drag_failed().connect(sigc::mem_fun(*this, &FontCollectionSelector::on_drag_failed), false);
     treeview->signal_drag_leave().connect(sigc::mem_fun(*this, &FontCollectionSelector::on_drag_leave), false);
     treeview->signal_drag_end().connect(sigc::mem_fun(*this, &FontCollectionSelector::on_drag_end), false);
-    treeview->get_selection()->signal_changed().connect([=](){ on_selection_changed(); });
+    treeview->get_selection()->signal_changed().connect([this]{ on_selection_changed(); });
     Inkscape::RecentlyUsedFonts::get()->connectUpdate(sigc::mem_fun(*this, &FontCollectionSelector::populate_system_collections));
 }
 
 // To distinguish the collection name and the font name.
-Glib::ustring FontCollectionSelector::get_text_cell_markup(Gtk::TreeModel::iterator const &iter)
+Glib::ustring FontCollectionSelector::get_text_cell_markup(Gtk::TreeModel::const_iterator const &iter)
 {
     Glib::ustring markup;
-    auto parent = (*iter)->parent();
-
-    if(parent) {
+    if (auto const parent = iter->parent()) {
         // It is a font.
         markup = "<span alpha='50%'>";
         markup += (*iter)[FontCollection.name];
         markup += "</span>";
-    }
-    else {
+    } else {
         // It is a collection.
         markup = "<span>";
         markup += (*iter)[FontCollection.name];
         markup += "</span>";
     }
-
     return markup;
 }
 
@@ -157,10 +153,7 @@ void FontCollectionSelector::icon_cell_data_func(Gtk::CellRenderer * const rende
                                                  Gtk::TreeModel::const_iterator const &iter)
 {
     // Add the delete icon only if the collection is editable(user-collection).
-    Gtk::TreeModel::Row row = *iter;
-    auto parent = (*iter)->parent();
-
-    if(parent) {
+    if (auto const parent = iter->parent()) {
         // Case: It is a font.
         bool is_user = (*parent)[FontCollection.is_editable];
         del_icon_renderer->set_visible(is_user);
@@ -198,7 +191,7 @@ void FontCollectionSelector::check_button_cell_data_func(Gtk::CellRenderer * con
 bool FontCollectionSelector::row_separator_func(Glib::RefPtr<Gtk::TreeModel> const &/*model*/,
                                                 Gtk::TreeModel::const_iterator const &iter)
 {
-    return (*iter)[FontCollection.name] == "#";
+    return iter->get_value(FontCollection.name) == "#";
 }
 
 void FontCollectionSelector::populate_collections()
@@ -239,7 +232,6 @@ void FontCollectionSelector::populate_system_collections()
     iter = store->prepend();
     (*iter)[FontCollection.name] = "#";
     (*iter)[FontCollection.is_editable] = false;
-    iter = store->children();
 
     for(auto const &col: system_collections) {
         iter = store->prepend();
@@ -349,9 +341,7 @@ void FontCollectionSelector::on_delete_icon_clicked(Glib::ustring const &path)
 {
     auto collections = Inkscape::FontCollections::get();
     auto iter = store->get_iter(path);
-    auto parent = (*iter)->parent();
-
-    if (!parent) {
+    if (auto const parent = iter->parent()) {
         // It is a collection.
 
         // No need to confirm in case of empty collections.
@@ -410,13 +400,10 @@ void FontCollectionSelector::on_rename_collection(const Glib::ustring& path, con
     }
 
     // To check if it's a font-collection or a font.
-    auto parent = (*iter)->parent();
-
-    if(!parent) {
+    if (auto const parent = iter->parent(); !parent) {
         // Call the rename_collection function
         collections->rename_collection((*iter)[FontCollection.name], new_text);
-    }
-    else {
+    } else {
         collections->rename_font((*parent)[FontCollection.name], (*iter)[FontCollection.name], new_text);
     }
 
@@ -430,7 +417,7 @@ void FontCollectionSelector::on_delete_button_pressed()
     Glib::RefPtr<Gtk::TreeSelection> selection = treeview->get_selection();
     Gtk::TreeModel::iterator iter = selection->get_selected();
     Gtk::TreeModel::Row row = *iter;
-    auto parent = row->parent();
+    auto const parent = iter->parent();
 
     auto collections = Inkscape::FontCollections::get();
 
@@ -475,11 +462,10 @@ void FontCollectionSelector::on_edit_button_pressed()
             return;
         }
 
-        Gtk::TreeModel::Row row = *iter;
-        auto parent = row->parent();
+        auto const parent = iter->parent();
         bool is_system = Inkscape::FontCollections::get()->find_collection((*iter)[FontCollection.name], true);
 
-        if(!parent && !is_system) {
+        if (!parent && !is_system) {
             // It is a collection.
             treeview->set_cursor(Gtk::TreePath(iter), text_column, true);
         }
@@ -529,56 +515,47 @@ bool FontCollectionSelector::on_drag_motion(const Glib::RefPtr<Gdk::DragContext>
 }
 
 void FontCollectionSelector::on_drag_data_received(const Glib::RefPtr<Gdk::DragContext> context,
-                                                   int x,
-                                                   int y,
+                                                   int const wx, int const wy,
                                                    const Gtk::SelectionData &selection_data,
                                                    guint info, guint time)
 {
     // std::cout << "FontCollectionSelector::on_drag_data_received()" << std::endl;
     // 1. Get the row at which the data is dropped.
     Gtk::TreePath path;
-    treeview->get_path_at_pos(x, y, path);
+    int bx{}, by{};
+    treeview->convert_widget_to_bin_window_coords(wx, wy, bx, by);
+    if (!treeview->get_path_at_pos(bx, by, path)) {
+        return;
+    }
     Gtk::TreeModel::iterator iter = store->get_iter(path);
-    bool is_expanded = false;
-
     // Case when the font is dragged in the empty space.
     if(!iter) {
         return;
     }
 
     Glib::ustring collection_name = (*iter)[FontCollection.name];
-    auto font_name = Inkscape::FontLister::get_instance()->get_dragging_family();
 
-    FontCollections *collections = Inkscape::FontCollections::get();
-    std::vector <Glib::ustring> system_collections = collections->get_collections(true);
-    auto parent = (*iter)->parent();
-
-    if(parent) {
+    bool is_expanded = false;
+    if (auto const parent = iter->parent()) {
         is_expanded = true;
         collection_name = (*parent)[FontCollection.name];
-        bool is_system = collections->find_collection(collection_name, true);
-
-        if(is_system) {
-            // The font is dropped in a system collection.
-            return;
-        }
     } else {
-        if (treeview->row_expanded(path)) {
-            is_expanded = true;
-        }
+        is_expanded = treeview->row_expanded(path);
+    }
 
-        bool is_system = collections->find_collection(collection_name, true);
+    auto const collections = Inkscape::FontCollections::get();
 
-        if(is_system) {
-            // The font is dropped in a system collection.
-            return;
-        }
+    bool const is_system = collections->find_collection(collection_name, true);
+    if (is_system) {
+        // The font is dropped in a system collection.
+        return;
     }
 
     // 2. Get the data that is sent by the source.
     // std::cout << "Received: " << selection_data.get_data() << std::endl;
     // std::cout << (*iter)[FontCollection.name] << std::endl;
     // Add the font into the collection.
+    auto const font_name = Inkscape::FontLister::get_instance()->get_dragging_family();
     collections->add_font(collection_name, font_name);
 
     // Re-populate the collection.

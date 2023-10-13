@@ -51,7 +51,7 @@ public:
     void change_frame_name(const Glib::ustring&);
     void setup_signals();
 
-    Glib::ustring get_text_cell_markup(Gtk::TreeModel::iterator const &iter);
+    Glib::ustring get_text_cell_markup(Gtk::TreeModel::const_iterator const &iter);
 
     // Custom renderers.
     void text_cell_data_func        (Gtk::CellRenderer *renderer,
@@ -79,6 +79,11 @@ public:
     void on_delete_button_pressed();
     void on_edit_button_pressed();
 
+    sigc::connection connect_signal_changed(sigc::slot <void (int)> slot) {
+        return signal_changed.connect(slot);
+    }
+
+private:
     void deletion_warning_message_dialog(Glib::ustring const &collection_name, sigc::slot<void(int)> onresponse);
     bool on_key_pressed(GtkEventControllerKey const * controller,
                         unsigned keyval, unsigned keycode, GdkModifierType state);
@@ -92,11 +97,6 @@ public:
     void on_drag_end(const Glib::RefPtr<Gdk::DragContext> &) override;
     void on_selection_changed();
 
-    sigc::connection connect_signal_changed(sigc::slot <void (int)> slot) {
-        return signal_changed.connect(slot);
-    }
-
-private:
     class FontCollectionClass : public Gtk::TreeModelColumnRecord
     {
     public:
