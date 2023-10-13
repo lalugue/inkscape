@@ -304,40 +304,27 @@ void parse_handle_styles()
     cr_doc_handler_destroy(sac);
 }
 
+uint32_t combine_rgb_a(uint32_t rgb, float a)
+{
+    EXTRACT_ARGB32(rgb, _, r, g, b)
+    return Display::AssembleARGB32(r, g, b, a * 255);
+}
+
 } // namespace
 
 uint32_t HandleStyle::getFill() const
 {
-    EXTRACT_ARGB32((fill()), a, r, g, b)
-    a = int(fill_opacity() * opacity() * 255);
-    ASSEMBLE_ARGB32(fill_color, a, r, g, b)
-    return rgba_from_argb32(fill_color);
+    return combine_rgb_a(fill(), fill_opacity() * opacity());
 }
 
 uint32_t HandleStyle::getStroke() const
 {
-    EXTRACT_ARGB32(stroke(), stroke_a, stroke_r, stroke_g, stroke_b)
-    EXTRACT_ARGB32(fill(), fill_a, fill_r, fill_g, fill_b)
-    float fill_af = fill_opacity();
-    float stroke_af = stroke_opacity();
-    float result_af = stroke_af + fill_af * (1 - stroke_af);
-    if (result_af == 0) {
-        return 0;
-    }
-
-    uint8_t result_r = int((stroke_r * stroke_af + fill_r * fill_af * (1 - stroke_af)) / result_af);
-    uint8_t result_g = int((stroke_g * stroke_af + fill_g * fill_af * (1 - stroke_af)) / result_af);
-    uint8_t result_b = int((stroke_b * stroke_af + fill_b * fill_af * (1 - stroke_af)) / result_af);
-    ASSEMBLE_ARGB32(blend, (int(opacity() * result_af * 255)), result_r, result_g, result_b)
-    return rgba_from_argb32(blend);
+    return combine_rgb_a(stroke(), stroke_opacity() * opacity());
 }
 
 uint32_t HandleStyle::getOutline() const
 {
-    EXTRACT_ARGB32((outline()), a, r, g, b)
-    a = int(outline_opacity() * opacity() * 255);
-    ASSEMBLE_ARGB32(outline_color, a, r, g, b)
-    return rgba_from_argb32(outline_color);
+    return combine_rgb_a(outline(), outline_opacity() * opacity());
 }
 
 void ensure_handle_styles_parsed()

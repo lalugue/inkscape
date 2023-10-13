@@ -12,7 +12,7 @@
 namespace Inkscape {
 namespace {
 
-void draw_darrow(Cairo::RefPtr<Cairo::Context> const &cr, double size, double offset_x, double offset_y)
+void draw_darrow(Cairo::RefPtr<Cairo::Context> const &cr, double size)
 {
     // Find points, starting from tip of one arrowhead, working clockwise.
     /*   1        4
@@ -61,20 +61,20 @@ void draw_darrow(Cairo::RefPtr<Cairo::Context> const &cr, double size, double of
     double y9 = size - out_y;
 
     // Draw arrow
-    cr->move_to(offset_x + x0, offset_y + y0);
-    cr->line_to(offset_x + x1, offset_y + y1);
-    cr->line_to(offset_x + x2, offset_y + y2);
-    cr->line_to(offset_x + x3, offset_y + y3);
-    cr->line_to(offset_x + x4, offset_y + y4);
-    cr->line_to(offset_x + x5, offset_y + y5);
-    cr->line_to(offset_x + x6, offset_y + y6);
-    cr->line_to(offset_x + x7, offset_y + y7);
-    cr->line_to(offset_x + x8, offset_y + y8);
-    cr->line_to(offset_x + x9, offset_y + y9);
+    cr->move_to(x0, y0);
+    cr->line_to(x1, y1);
+    cr->line_to(x2, y2);
+    cr->line_to(x3, y3);
+    cr->line_to(x4, y4);
+    cr->line_to(x5, y5);
+    cr->line_to(x6, y6);
+    cr->line_to(x7, y7);
+    cr->line_to(x8, y8);
+    cr->line_to(x9, y9);
     cr->close_path();
 }
 
-void draw_carrow(Cairo::RefPtr<Cairo::Context> const &cr, double size, double offset_x, double offset_y)
+void draw_carrow(Cairo::RefPtr<Cairo::Context> const &cr, double size)
 {
     // Length of arrowhead (not including stroke).
     double delta = (size - 3) / 4.0; // Use unscaled width.
@@ -111,20 +111,20 @@ void draw_carrow(Cairo::RefPtr<Cairo::Context> const &cr, double size, double of
     double y9 = y0 + delta;
 
     // Draw arrow
-    cr->move_to(offset_x + x0, offset_y + y0);
-    cr->line_to(offset_x + x1, offset_y + y1);
-    cr->line_to(offset_x + x2, offset_y + y2);
-    cr->arc(offset_x + x1, offset_y + y4, x3 - x2, 3.0 * M_PI / 2.0, 0);
-    cr->line_to(offset_x + x4, offset_y + y4);
-    cr->line_to(offset_x + x5, offset_y + y5);
-    cr->line_to(offset_x + x6, offset_y + y6);
-    cr->line_to(offset_x + x7, offset_y + y7);
-    cr->arc_negative(offset_x + x1, offset_y + y4, x7 - x8, 0, 3.0 * M_PI / 2.0);
-    cr->line_to(offset_x + x9, offset_y + y9);
+    cr->move_to(x0, y0);
+    cr->line_to(x1, y1);
+    cr->line_to(x2, y2);
+    cr->arc(x1, y4, x3 - x2, 3.0 * M_PI / 2.0, 0);
+    cr->line_to(x4, y4);
+    cr->line_to(x5, y5);
+    cr->line_to(x6, y6);
+    cr->line_to(x7, y7);
+    cr->arc_negative(x1, y4, x7 - x8, 0, 3.0 * M_PI / 2.0);
+    cr->line_to(x9, y9);
     cr->close_path();
 }
 
-void draw_triangle(Cairo::RefPtr<Cairo::Context> const &cr, double size, double offset_x, double offset_y)
+void draw_triangle(Cairo::RefPtr<Cairo::Context> const &cr, double size)
 {
     // Construct an arrowhead (triangle)
     double s = size / 2.0;
@@ -135,13 +135,13 @@ void draw_triangle(Cairo::RefPtr<Cairo::Context> const &cr, double size, double 
     Geom::Point p2f(s + wcos - 1, s + hsin);
     Geom::Point p3f(s + wcos - 1, s - hsin);
     // Draw arrow
-    cr->move_to(offset_x + p1f[0], offset_y + p1f[1]);
-    cr->line_to(offset_x + p2f[0], offset_y + p2f[1]);
-    cr->line_to(offset_x + p3f[0], offset_y + p3f[1]);
+    cr->move_to(p1f[0], p1f[1]);
+    cr->line_to(p2f[0], p2f[1]);
+    cr->line_to(p3f[0], p3f[1]);
     cr->close_path();
 }
 
-void draw_triangle_angled(Cairo::RefPtr<Cairo::Context> const &cr, double size, double offset_x, double offset_y)
+void draw_triangle_angled(Cairo::RefPtr<Cairo::Context> const &cr, double size)
 {
     // Construct an arrowhead (triangle) of half size.
     double s = size / 2.0;
@@ -151,13 +151,13 @@ void draw_triangle_angled(Cairo::RefPtr<Cairo::Context> const &cr, double size, 
     Geom::Point p2f(s + wcos - 1, s + hsin - 1);
     Geom::Point p3f(s + wcos - 1, s - (hsin - 1));
     // Draw arrow
-    cr->move_to(offset_x + p1f[0], offset_y + p1f[1]);
-    cr->line_to(offset_x + p2f[0], offset_y + p2f[1]);
-    cr->line_to(offset_x + p3f[0], offset_y + p3f[1]);
+    cr->move_to(p1f[0], p1f[1]);
+    cr->line_to(p2f[0], p2f[1]);
+    cr->line_to(p3f[0], p3f[1]);
     cr->close_path();
 }
 
-void draw_pivot(Cairo::RefPtr<Cairo::Context> const &cr, double size, double offset_x, double offset_y)
+void draw_pivot(Cairo::RefPtr<Cairo::Context> const &cr, double size)
 {
     double delta4 = (size - 5) / 4.0; // Keep away from edge or will clip when rotating.
     double delta8 = delta4 / 2;
@@ -165,7 +165,7 @@ void draw_pivot(Cairo::RefPtr<Cairo::Context> const &cr, double size, double off
     // Line start
     double center = size / 2.0;
 
-    cr->move_to(offset_x + center - delta8, offset_y + center - 2 * delta4 - delta8);
+    cr->move_to(center - delta8, center - 2 * delta4 - delta8);
     cr->rel_line_to(delta4,  0);
     cr->rel_line_to(0,       delta4);
 
@@ -191,10 +191,10 @@ void draw_pivot(Cairo::RefPtr<Cairo::Context> const &cr, double size, double off
     cr->close_path();
 
     cr->begin_new_sub_path();
-    cr->arc_negative(offset_x + center, offset_y + center, delta4, 0, -2 * M_PI);
+    cr->arc_negative(center, center, delta4, 0, -2 * M_PI);
 }
 
-void draw_salign(Cairo::RefPtr<Cairo::Context> const &cr, double size, double offset_x, double offset_y)
+void draw_salign(Cairo::RefPtr<Cairo::Context> const &cr, double size)
 {
     // Triangle pointing at line.
 
@@ -220,20 +220,20 @@ void draw_salign(Cairo::RefPtr<Cairo::Context> const &cr, double size, double of
     double iline = size / 2.0 + (int)delta8;
 
     // Draw triangle
-    cr->move_to(offset_x + tip_x,        offset_y + tip_y);
-    cr->line_to(offset_x + outer,        offset_y + outer);
-    cr->line_to(offset_x + size - outer, offset_y + outer);
+    cr->move_to(tip_x,        tip_y);
+    cr->line_to(outer,        outer);
+    cr->line_to(size - outer, outer);
     cr->close_path();
 
     // Draw line
-    cr->move_to(offset_x + outer,        offset_y + iline);
-    cr->line_to(offset_x + size - outer, offset_y + iline);
-    cr->line_to(offset_x + size - outer, offset_y + oline);
-    cr->line_to(offset_x + outer,        offset_y + oline);
+    cr->move_to(outer,        iline);
+    cr->line_to(size - outer, iline);
+    cr->line_to(size - outer, oline);
+    cr->line_to(outer,        oline);
     cr->close_path();
 }
 
-void draw_calign(Cairo::RefPtr<Cairo::Context> const &cr, double size, double offset_x, double offset_y)
+void draw_calign(Cairo::RefPtr<Cairo::Context> const &cr, double size)
 {
     // Basic units.
     double delta4 = (size - 1) / 4.0; // Use unscaled width.
@@ -260,22 +260,22 @@ void draw_calign(Cairo::RefPtr<Cairo::Context> const &cr, double size, double of
     double iline = size / 2.0 + (int)delta8;
 
     // Draw triangle
-    cr->move_to(offset_x + tip_x, offset_y + tip_y);
-    cr->line_to(offset_x + outer, offset_y + tip_y);
-    cr->line_to(offset_x + tip_x, offset_y + outer);
+    cr->move_to(tip_x, tip_y);
+    cr->line_to(outer, tip_y);
+    cr->line_to(tip_x, outer);
     cr->close_path();
 
     // Draw line
-    cr->move_to(offset_x + iline, offset_y + iline);
-    cr->line_to(offset_x + iline, offset_y + eline);
-    cr->line_to(offset_x + oline, offset_y + eline);
-    cr->line_to(offset_x + oline, offset_y + oline);
-    cr->line_to(offset_x + eline, offset_y + oline);
-    cr->line_to(offset_x + eline, offset_y + iline);
+    cr->move_to(iline, iline);
+    cr->line_to(iline, eline);
+    cr->line_to(oline, eline);
+    cr->line_to(oline, oline);
+    cr->line_to(eline, oline);
+    cr->line_to(eline, iline);
     cr->close_path();
 }
 
-void draw_malign(Cairo::RefPtr<Cairo::Context> const &cr, double size, double offset_x, double offset_y)
+void draw_malign(Cairo::RefPtr<Cairo::Context> const &cr, double size)
 {
     // Basic units.
     double delta4 = (size - 1) / 4.0; // Use unscaled width.
@@ -290,62 +290,61 @@ void draw_malign(Cairo::RefPtr<Cairo::Context> const &cr, double size, double of
     double tip_1 = size / 2.0 - delta8;
 
     // Draw triangles
-    cr->move_to(offset_x + tip_0,           offset_y + tip_1);
-    cr->line_to(offset_x + tip_0 - delta4,  offset_y + tip_1 - delta4);
-    cr->line_to(offset_x + tip_0 + delta4,  offset_y + tip_1 - delta4);
+    cr->move_to(tip_0,           tip_1);
+    cr->line_to(tip_0 - delta4,  tip_1 - delta4);
+    cr->line_to(tip_0 + delta4,  tip_1 - delta4);
     cr->close_path();
 
-    cr->move_to(offset_x + size - tip_1,           offset_y + tip_0);
-    cr->line_to(offset_x + size - tip_1 + delta4,  offset_y + tip_0 - delta4);
-    cr->line_to(offset_x + size - tip_1 + delta4,  offset_y + tip_0 + delta4);
+    cr->move_to(size - tip_1,           tip_0);
+    cr->line_to(size - tip_1 + delta4,  tip_0 - delta4);
+    cr->line_to(size - tip_1 + delta4,  tip_0 + delta4);
     cr->close_path();
 
-    cr->move_to(offset_x + size - tip_0,           offset_y + size - tip_1);
-    cr->line_to(offset_x + size - tip_0 + delta4,  offset_y + size - tip_1 + delta4);
-    cr->line_to(offset_x + size - tip_0 - delta4,  offset_y + size - tip_1 + delta4);
+    cr->move_to(size - tip_0,           size - tip_1);
+    cr->line_to(size - tip_0 + delta4,  size - tip_1 + delta4);
+    cr->line_to(size - tip_0 - delta4,  size - tip_1 + delta4);
     cr->close_path();
 
-    cr->move_to(offset_x + tip_1,           offset_y + tip_0);
-    cr->line_to(offset_x + tip_1 - delta4,  offset_y + tip_0 + delta4);
-    cr->line_to(offset_x + tip_1 - delta4,  offset_y + tip_0 - delta4);
+    cr->move_to(tip_1,           tip_0);
+    cr->line_to(tip_1 - delta4,  tip_0 + delta4);
+    cr->line_to(tip_1 - delta4,  tip_0 - delta4);
     cr->close_path();
 }
 
-void draw_cairo_path(CanvasItemCtrlShape shape, Cairo::RefPtr<Cairo::Context> const &cr,
-                     double size, double offset_x, double offset_y)
+void draw_cairo_path(CanvasItemCtrlShape shape, Cairo::RefPtr<Cairo::Context> const &cr, double size)
 {
     switch (shape) {
         case CANVAS_ITEM_CTRL_SHAPE_DARROW:
         case CANVAS_ITEM_CTRL_SHAPE_SARROW:
-            draw_darrow(cr, size, offset_x, offset_y);
+            draw_darrow(cr, size);
             break;
 
         case CANVAS_ITEM_CTRL_SHAPE_TRIANGLE:
-            draw_triangle(cr, size, offset_x, offset_y);
+            draw_triangle(cr, size);
             break;
 
         case CANVAS_ITEM_CTRL_SHAPE_TRIANGLE_ANGLED:
-            draw_triangle_angled(cr, size, offset_x, offset_y);
+            draw_triangle_angled(cr, size);
             break;
 
         case CANVAS_ITEM_CTRL_SHAPE_CARROW:
-            draw_carrow(cr, size, offset_x, offset_y);
+            draw_carrow(cr, size);
             break;
 
         case CANVAS_ITEM_CTRL_SHAPE_PIVOT:
-            draw_pivot(cr, size, offset_x, offset_y);
+            draw_pivot(cr, size);
             break;
 
         case CANVAS_ITEM_CTRL_SHAPE_SALIGN:
-            draw_salign(cr, size, offset_x, offset_y);
+            draw_salign(cr, size);
             break;
 
         case CANVAS_ITEM_CTRL_SHAPE_CALIGN:
-            draw_calign(cr, size, offset_x, offset_y);
+            draw_calign(cr, size);
             break;
 
         case CANVAS_ITEM_CTRL_SHAPE_MALIGN:
-            draw_malign(cr, size, offset_x, offset_y);
+            draw_malign(cr, size);
             break;
 
         default:
@@ -495,7 +494,7 @@ void draw_shape(uint32_t *cache,
             }
             break;
 
-        case CANVAS_ITEM_CTRL_SHAPE_TRIANGLE:        //triangle optionaly rotated
+        case CANVAS_ITEM_CTRL_SHAPE_TRIANGLE:        // Triangle optionally rotated
         case CANVAS_ITEM_CTRL_SHAPE_TRIANGLE_ANGLED: // triangle with pointing to center of  knot and rotated this way
         case CANVAS_ITEM_CTRL_SHAPE_DARROW:          // Double arrow
         case CANVAS_ITEM_CTRL_SHAPE_SARROW:          // Same shape as darrow but rendered rotated 90 degrees.
@@ -509,35 +508,35 @@ void draw_shape(uint32_t *cache,
             auto work = Cairo::ImageSurface::create(Cairo::FORMAT_ARGB32, device_scale * size, device_scale * size);
             cairo_surface_set_device_scale(work->cobj(), device_scale, device_scale); // No C++ API!
             auto cr = Cairo::Context::create(work);
+            cr->set_operator(Cairo::OPERATOR_SOURCE);
+
             // Rotate around center
-            cr->translate(size / 2.0,  size / 2.0);
+            cr->translate(size / 2.0, size / 2.0);
             cr->rotate(angle);
             cr->translate(-size / 2.0, -size / 2.0);
 
-            // Clip the region outside the handle for outline.
             // (1.5 is an approximation of root(2) and 3 is 1.5 * 2)
             double effective_outline = outline_width + 0.5 * stroke_width;
-            cr->rectangle(size, 0,  -size, size);
-            draw_cairo_path(shape, cr, size - 3 * effective_outline, 1.5 * effective_outline, 1.5 * effective_outline);
-            cr->clip();
+            cr->translate(1.5 * effective_outline, 1.5 * effective_outline);
 
-            // Draw the outline.
-            draw_cairo_path(shape, cr, size - 3 * effective_outline, 1.5 * effective_outline, 1.5 * effective_outline);
+            draw_cairo_path(shape, cr, size - 3 * effective_outline);
+
+            // Outline.
             cr->set_source_rgba(SP_RGBA32_R_F(outline),
                                 SP_RGBA32_G_F(outline),
                                 SP_RGBA32_B_F(outline),
                                 SP_RGBA32_A_F(outline));
             cr->set_line_width(2 * effective_outline);
-            cr->stroke();
-            cr->reset_clip();
+            cr->stroke_preserve();
 
-            // Fill and stroke.
-            draw_cairo_path(shape, cr, size - 3 * effective_outline, 1.5 * effective_outline, 1.5 * effective_outline);
+            // Fill.
             cr->set_source_rgba(SP_RGBA32_R_F(fill),
                                 SP_RGBA32_G_F(fill),
                                 SP_RGBA32_B_F(fill),
                                 SP_RGBA32_A_F(fill));
             cr->fill_preserve();
+
+            // Stroke.
             cr->set_source_rgba(SP_RGBA32_R_F(stroke),
                                 SP_RGBA32_G_F(stroke),
                                 SP_RGBA32_B_F(stroke),

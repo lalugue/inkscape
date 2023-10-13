@@ -481,19 +481,14 @@ void CanvasItemCtrl::_render(CanvasItemBuffer &buf) const
             uint32_t base = row_ptr[j];
             uint32_t handle_px = *handle_ptr++;
 
-            EXTRACT_ARGB32(base, base_a, base_r, base_g, base_b)
-            uint32_t handle_argb = (handle_px >> 8) | (handle_px << 24);
-            EXTRACT_ARGB32(handle_argb, handle_a, handle_r, handle_g, handle_b)
+            EXTRACT_ARGB32(base, base_a, base_r, base_g, base_b) // premultiplied
+            EXTRACT_ARGB32(handle_px, handle_r, handle_g, handle_b, handle_a) // unpremultiplied
             float handle_af = handle_a / 255.0f;
             float base_af = base_a / 255.0f;
             float result_af = handle_af + base_af * (1 - handle_af);
-            if (result_af == 0) {
-                row_ptr[j] = 0;
-                continue;
-            }
-            uint32_t result_r = (handle_r * handle_af + base_r * base_af * (1 - handle_af)) / result_af;
-            uint32_t result_g = (handle_g * handle_af + base_g * base_af * (1 - handle_af)) / result_af;
-            uint32_t result_b = (handle_b * handle_af + base_b * base_af * (1 - handle_af)) / result_af;
+            uint32_t result_r = handle_r * handle_af + base_r * (1 - handle_af); // premultiplied
+            uint32_t result_g = handle_g * handle_af + base_g * (1 - handle_af);
+            uint32_t result_b = handle_b * handle_af + base_b * (1 - handle_af);
             ASSEMBLE_ARGB32(result, int(result_af * 255), result_r, result_g, result_b)
             row_ptr[j] = result;
         }
