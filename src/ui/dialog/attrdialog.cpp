@@ -96,7 +96,7 @@ std::unique_ptr<Syntax::TextEditView> AttrDialog::init_text_view(AttrDialog* own
 {
     auto edit = Syntax::TextEditView::create(coloring);
     auto& textview = edit->getTextView();
-    textview.set_wrap_mode(Gtk::WrapMode::WRAP_WORD);
+    textview.set_wrap_mode(Gtk::WrapMode::WORD);
 
     // this actually sets padding rather than margin and extends textview's background color to the sides
     textview.set_top_margin(TEXT_MARGIN);
@@ -198,7 +198,7 @@ AttrDialog::AttrDialog()
     _valueRenderer = Gtk::make_managed<Gtk::CellRendererText>();
     _valueRenderer->property_editable() = true;
     _valueRenderer->property_placeholder_text().set_value(_("Attribute Value"));
-    _valueRenderer->property_ellipsize().set_value(Pango::ELLIPSIZE_END);
+    _valueRenderer->property_ellipsize().set_value(Pango::EllipsizeMode::END);
     _valueRenderer->signal_edited().connect(sigc::mem_fun(*this, &AttrDialog::valueEdited));
     _valueRenderer->signal_editing_started().connect(sigc::mem_fun(*this, &AttrDialog::startValueEdit), true);
     _treeView.append_column(_("Value"), *_valueRenderer);
@@ -223,7 +223,7 @@ AttrDialog::AttrDialog()
 
     _popover->set_relative_to(*this);
     _popover->signal_closed().connect([this]{ popClosed(); });
-    Controller::add_key<&AttrDialog::onPopoverKeyPressed>(*_popover, *this, Gtk::PHASE_CAPTURE);
+    Controller::add_key<&AttrDialog::onPopoverKeyPressed>(*_popover, *this, Gtk::PropagationPhase::CAPTURE);
 
     get_widget<Gtk::Button>(_builder, "btn-truncate").signal_clicked().connect([this]{ truncateDigits(); });
 
@@ -426,7 +426,7 @@ void AttrDialog::startValueEdit(Gtk::CellEditable *cell, const Glib::ustring &pa
 
         Gdk::Rectangle rect;
         _treeView.get_cell_area((Gtk::TreeModel::Path)iter, *_valueCol, rect);
-        if (_popover->get_position() == Gtk::PositionType::POS_BOTTOM) {
+        if (_popover->get_position() == Gtk::PositionType::BOTTOM) {
             rect.set_y(rect.get_y() + 20);
         }
         if (rect.get_x() >= dlg_width) {

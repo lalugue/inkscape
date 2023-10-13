@@ -390,7 +390,7 @@ Css parse_css(const std::string& css_file_name)
 
     auto parse = [&] (IO::Resource::Domain domain) {
         auto const css_path = IO::Resource::get_path_string(domain, IO::Resource::UIS, css_file_name.c_str());
-        if (Glib::file_test(css_path, Glib::FILE_TEST_EXISTS)) {
+        if (Glib::file_test(css_path, Glib::FileTest::EXISTS)) {
             auto parser = delete_with<cr_parser_destroy>(cr_parser_new_from_file(reinterpret_cast<unsigned char const *>(css_path.c_str()), CR_UTF_8));
             cr_parser_set_sac_handler(parser.get(), sac.get());
             cr_parser_parse(parser.get());
@@ -402,7 +402,7 @@ Css parse_css(const std::string& css_file_name)
         auto domain = IO::Resource::SYSTEM; // import files form installation folder
         auto fname = a_uri->stryng->str;
         auto const css_path = IO::Resource::get_path_string(domain, IO::Resource::UIS, fname);
-        if (Glib::file_test(css_path, Glib::FILE_TEST_EXISTS)) {
+        if (Glib::file_test(css_path, Glib::FileTest::EXISTS)) {
             auto parser = delete_with<cr_parser_destroy>(cr_parser_new_from_file(reinterpret_cast<unsigned char const *>(css_path.c_str()), CR_UTF_8));
             cr_parser_set_sac_handler(parser.get(), a_handler);
             cr_parser_parse(parser.get());

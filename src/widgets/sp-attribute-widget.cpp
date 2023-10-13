@@ -73,8 +73,8 @@ void SPAttributeTable::create(const std::vector<Glib::ustring>& labels, const st
 
     for (std::size_t i = 0; i < attributes.size(); ++i) {
         auto const ll = Gtk::make_managed<Gtk::Label>(_(labels[i].c_str()));
-        ll->set_halign(Gtk::ALIGN_START);
-        ll->set_valign(Gtk::ALIGN_CENTER);
+        ll->set_halign(Gtk::Align::START);
+        ll->set_valign(Gtk::Align::CENTER);
         ll->set_vexpand(false);
         ll->set_margin_end(XPAD);
         ll->set_margin_top(YPAD);
@@ -87,7 +87,7 @@ void SPAttributeTable::create(const std::vector<Glib::ustring>& labels, const st
             edit->setStyle(theme);
             auto& tv = edit->getTextView();
             entry._text_view = &tv;
-            tv.set_wrap_mode(Gtk::WRAP_WORD);
+            tv.set_wrap_mode(Gtk::WrapMode::WORD);
             auto wnd = Gtk::make_managed<Gtk::ScrolledWindow>();
             wnd->set_hexpand();
             wnd->set_vexpand(false);
@@ -96,7 +96,7 @@ void SPAttributeTable::create(const std::vector<Glib::ustring>& labels, const st
             wnd->set_margin_bottom(YPAD);
             wnd->add(tv);
             wnd->set_shadow_type(Gtk::SHADOW_IN);
-            wnd->set_policy(Gtk::POLICY_NEVER, Gtk::POLICY_AUTOMATIC);
+            wnd->set_policy(Gtk::PolicyType::NEVER, Gtk::PolicyType::AUTOMATIC);
             table->attach(*wnd, 1, i, 1, 1);
 
             tv.get_buffer()->signal_end_user_action().connect([i, this](){

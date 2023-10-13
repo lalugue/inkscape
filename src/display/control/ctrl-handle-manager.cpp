@@ -48,7 +48,7 @@ ManagerImpl::ManagerImpl()
     auto const path = IO::Resource::get_path_string(IO::Resource::USER, IO::Resource::UIS, "node-handles.css");
     auto file = Gio::File::create_for_path(path);
     monitor = file->monitor_file();
-    monitor->signal_changed().connect([this] (Glib::RefPtr<Gio::File> const &, Glib::RefPtr<Gio::File> const &, Gio::FileMonitorEvent) {
+    monitor->signal_changed().connect([this] (Glib::RefPtr<Gio::File> const &, Glib::RefPtr<Gio::File> const &, Gio::FileMonitor::Event) {
         if (timeout) return;
         timeout = Glib::signal_timeout().connect([this] {
             updateCss();

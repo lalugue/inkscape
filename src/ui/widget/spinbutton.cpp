@@ -105,7 +105,7 @@ bool SpinButton::on_key_pressed(GtkEventControllerKey const * const controller,
     double val = 0;
 
     if (_increment > 0) {
-        constexpr auto modifiers = GDK_SHIFT_MASK | GDK_CONTROL_MASK | GDK_MOD1_MASK | GDK_MOD2_MASK | GDK_SUPER_MASK | GDK_HYPER_MASK | GDK_META_MASK;
+        constexpr auto modifiers = GDK_SHIFT_MASK | GDK_CONTROL_MASK | GDK_ALT_MASK | GDK_MOD2_MASK | GDK_SUPER_MASK | GDK_HYPER_MASK | GDK_META_MASK;
         // no modifiers pressed?
         if ((state & modifiers) == 0) {
             inc = true;
@@ -198,7 +198,7 @@ std::shared_ptr<UI::Widget::PopoverMenu> SpinButton::get_popover_menu()
     values.emplace(std::fmin(adj_value + page, upper), "");
     values.emplace(std::fmax(adj_value - page, lower), "");
 
-    static auto popover_menu = std::make_shared<UI::Widget::PopoverMenu>(*this, Gtk::POS_BOTTOM);
+    static auto popover_menu = std::make_shared<UI::Widget::PopoverMenu>(*this, Gtk::PositionType::BOTTOM);
     popover_menu->delete_all();
     Gtk::RadioButton::Group group;
 

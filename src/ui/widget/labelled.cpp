@@ -24,9 +24,9 @@ Labelled::Labelled(Glib::ustring const &label, Glib::ustring const &tooltip,
                    Gtk::Widget *widget,
                    Glib::ustring const &icon,
                    bool mnemonic)
-    : Gtk::Box{Gtk::ORIENTATION_HORIZONTAL, 6}
+    : Gtk::Box{Gtk::Orientation::HORIZONTAL, 6}
     , _widget{widget}
-    , _label{Gtk::make_managed<Gtk::Label>(label, Gtk::ALIGN_START, Gtk::ALIGN_CENTER, mnemonic)}
+    , _label{Gtk::make_managed<Gtk::Label>(label, Gtk::Align::START, Gtk::Align::CENTER, mnemonic)}
 {
     g_assert(widget);
     g_assert(g_utf8_validate(icon.c_str(), -1, nullptr));
@@ -39,7 +39,7 @@ Labelled::Labelled(Glib::ustring const &label, Glib::ustring const &tooltip,
     }
 
     UI::pack_start(*this, *_label, UI::PackOptions::shrink);
-    _label->set_halign(Gtk::ALIGN_START);
+    _label->set_halign(Gtk::Align::START);
     UI::pack_start(*this, *Gtk::manage(_widget), UI::PackOptions::shrink);
 
     if (mnemonic) {

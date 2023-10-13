@@ -102,7 +102,7 @@ ObjectAttributes::ObjectAttributes()
     _builder(create_builder("object-attributes.glade")),
     _main_panel(get_widget<Gtk::Box>(_builder, "main-panel")),
     _obj_title(get_widget<Gtk::Label>(_builder, "main-obj-name")),
-    _style_swatch(nullptr, _("Item's fill, stroke and opacity"), Gtk::ORIENTATION_HORIZONTAL),
+    _style_swatch(nullptr, _("Item's fill, stroke and opacity"), Gtk::Orientation::HORIZONTAL),
     _obj_properties(*Gtk::make_managed<ObjectProperties>())
 {
     auto& main = get_widget<Gtk::Box>(_builder, "main-widget");
@@ -110,7 +110,7 @@ ObjectAttributes::ObjectAttributes()
 
     _obj_title.set_text("");
     _style_swatch.set_hexpand(false);
-    _style_swatch.set_valign(Gtk::ALIGN_CENTER);
+    _style_swatch.set_valign(Gtk::Align::CENTER);
     UI::pack_end(get_widget<Gtk::Box>(_builder, "main-header"), _style_swatch, false, true);
     auto& box = get_widget<Gtk::Box>(_builder, "main-header");
     box.child_property_pack_type(_style_swatch).set_value(Gtk::PACK_END);
@@ -817,7 +817,7 @@ public:
 
         auto theme = Inkscape::Preferences::get()->getString("/theme/syntax-color-theme", "-none-");
         _svgd_edit->setStyle(theme);
-        _data.set_wrap_mode(Gtk::WrapMode::WRAP_WORD);
+        _data.set_wrap_mode(Gtk::WrapMode::WORD);
 
         Controller::add_key<&PathPanel::on_key_pressed>(_data, *this);
         auto& wnd = get_widget<Gtk::ScrolledWindow>(builder, "path-data-wnd");

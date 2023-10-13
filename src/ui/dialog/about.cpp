@@ -149,7 +149,7 @@ private:
         int width = image->get_width();
         int height = 5 * scale;
         int y = (image->get_height() - height) / scale;
-        auto surface = Cairo::ImageSurface::create(Cairo::FORMAT_ARGB32, width, height);
+        auto surface = Cairo::ImageSurface::create(Cairo::Surface::Format::ARGB32, width, height);
         cairo_surface_set_device_scale(surface->cobj(), scale, scale);
         auto ctx = Cairo::Context::create(surface);
         ctx->set_source(image, 0, -y);

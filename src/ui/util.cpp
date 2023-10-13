@@ -121,7 +121,7 @@ void set_icon_sizes(GtkWidget* parent, int pixel_size)
 void gui_warning(const std::string &msg, Gtk::Window *parent_window) {
     g_warning("%s", msg.c_str());
     if (INKSCAPE.active_desktop()) {
-        Gtk::MessageDialog warning(_(msg.c_str()), false, Gtk::MESSAGE_WARNING, Gtk::BUTTONS_OK, true);
+        Gtk::MessageDialog warning(_(msg.c_str()), false, Gtk::MessageType::WARNING, Gtk::ButtonsType::OK, true);
         warning.set_transient_for( parent_window ? *parent_window : *(INKSCAPE.active_desktop()->getToplevel()) );
         dialog_run(warning);
     }
@@ -428,7 +428,7 @@ Glib::ustring round_numbers(const Glib::ustring& text, int precision) {
     // match floating point number followed by something else (not a number); repeat
     static const auto numbers = Glib::Regex::create("([-+]?(?:(?:\\d+\\.?\\d*)|(?:\\.\\d+))(?:[eE][-+]?\\d*)?)([^+\\-0-9]*)", Glib::REGEX_MULTILINE);
 
-    return numbers->replace_eval(text, text.size(), 0, Glib::RegexMatchFlags::REGEX_MATCH_NOTEMPTY, &fmt_number, &precision);
+    return numbers->replace_eval(text, text.size(), 0, Glib::Regex::MatchFlags::NOTEMPTY, &fmt_number, &precision);
 }
 
 // Round the selected floating point numbers in the attribute edit popover.

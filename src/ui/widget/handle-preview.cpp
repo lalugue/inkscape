@@ -22,7 +22,7 @@ Cairo::RefPtr<Cairo::Surface> draw_handles_preview(int device_scale) {
         CANVAS_ITEM_CTRL_TYPE_NODE_SMOOTH,
     });
     auto h = static_cast<int>(1.5 * step);
-    auto surface = Cairo::ImageSurface::create(Cairo::FORMAT_ARGB32, (types.size() + 1) * step * device_scale, h * device_scale);
+    auto surface = Cairo::ImageSurface::create(Cairo::Surface::Format::ARGB32, (types.size() + 1) * step * device_scale, h * device_scale);
     cairo_surface_set_device_scale(surface->cobj(), device_scale, device_scale);
     auto buf = CanvasItemBuffer{
         .rect = Geom::IntRect(0, 0, surface->get_width(), surface->get_height()),
