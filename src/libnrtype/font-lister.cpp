@@ -1,10 +1,19 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 /** @file
- * TODO: insert short description here
- *//*
- * Authors: see git history
+ * Font selection widgets
+ */
+/*
+ * Authors:
+ *   Chris Lahey <clahey@ximian.com>
+ *   Lauris Kaplinski <lauris@kaplinski.com>
+ *   Tavmjong Bah <tavmjong@free.fr>
+ *   See Git history
  *
- * Copyright (C) 2018 Authors
+ * Copyright (C) 1999-2001 Ximian, Inc.
+ * Copyright (C) 2002 Lauris Kaplinski
+ * Copyright (C) 2013 Tavmjong Bah
+ * Copyright (C) 2018+ Authors
+ *
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
@@ -290,9 +299,8 @@ void FontLister::apply_collections(std::set <Glib::ustring>& selected_collection
     update_signal.emit ();
 }
 
-// To do: remove model (not needed for C++ version).
 // Ensures the style list for a particular family has been created.
-void FontLister::ensureRowStyles(Glib::RefPtr<Gtk::TreeModel> model, Gtk::TreeModel::iterator const iter)
+void FontLister::ensureRowStyles(Gtk::TreeModel::iterator iter)
 {
     Gtk::TreeModel::Row row = *iter;
     if (!row[FontList.styles]) {
@@ -304,9 +312,9 @@ void FontLister::ensureRowStyles(Glib::RefPtr<Gtk::TreeModel> model, Gtk::TreeMo
     }
 }
 
-Glib::ustring FontLister::get_font_family_markup(Gtk::TreeModel::iterator const &iter)
+Glib::ustring FontLister::get_font_family_markup(Gtk::TreeModel::const_iterator const &iter)
 {
-    Gtk::TreeModel::Row row = *iter;
+    auto const &row = *iter;
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
 
     Glib::ustring family = row[FontList.family];
@@ -364,11 +372,12 @@ Glib::ustring FontLister::get_font_family_markup(Gtk::TreeModel::iterator const 
 
 // Example of how to use "foreach_iter"
 // bool
-// FontLister::print_document_font( const Gtk::TreeModel::iterator &iter ) {
-//   Gtk::TreeModel::Row row = *iter;
-//   if( !row[FontList.onSystem] ) {
-// 	   std::cout << " Not on system: " << row[FontList.family] << std::endl;
-// 	   return false;
+// FontLister::print_document_font(Gtk::TreeModel::const_iterator const &iter)
+// {
+//   auto const &row = *iter;
+//   if(!row[FontList.onSystem]) {
+//       std::cout << " Not on system: " << row[FontList.family] << std::endl;
+//       return false;
 //   }
 //   return true;
 // }
@@ -1297,7 +1306,8 @@ void font_lister_cell_data_func(Gtk::CellRenderer * /*renderer*/,
 
 // Draw system fonts in dark blue, missing fonts with red strikeout.
 // Used by both FontSelector and Text toolbar.
-void font_lister_cell_data_func_markup (Gtk::CellRenderer *renderer, Gtk::TreeModel::iterator const &iter)
+void font_lister_cell_data_func_markup(Gtk::CellRenderer * const renderer,
+                                       Gtk::TreeModel::const_iterator const &iter)
 {
     Inkscape::FontLister* font_lister = Inkscape::FontLister::get_instance();
     Glib::ustring markup = font_lister->get_font_family_markup(iter);
@@ -1379,7 +1389,7 @@ void font_lister_cell_data_func2(GtkCellLayout * /*cell_layout*/,
 
 // Draw Face name with face style.
 void font_lister_style_cell_data_func(Gtk::CellRenderer *const renderer,
-                                     Gtk::TreeModel::const_iterator const &iter)
+                                      Gtk::TreeModel::const_iterator const &iter)
 {
     Inkscape::FontLister* font_lister = Inkscape::FontLister::get_instance();
     Gtk::TreeModel::Row row = *iter;

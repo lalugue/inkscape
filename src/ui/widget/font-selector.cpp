@@ -385,10 +385,11 @@ FontSelector::get_fontspec(bool use_variations) {
 }
 
 void
-FontSelector::style_cell_data_func (Gtk::CellRenderer *renderer, Gtk::TreeModel::iterator const &iter)
+FontSelector::style_cell_data_func(Gtk::CellRenderer * const renderer,
+                                   Gtk::TreeModel::const_iterator const &iter)
 {
     Glib::ustring family = "Sans";  // Default...family list may not have been constructed.
-    Gtk::TreeModel::iterator iter_family = family_treeview.get_selection()->get_selected(); 
+    auto const iter_family = family_treeview.get_selection()->get_selected();
     if (iter_family) {
         (*iter_family).get_value(0, family);
     }
@@ -426,7 +427,7 @@ FontSelector::on_family_changed() {
     }
 
     Inkscape::FontLister *fontlister = Inkscape::FontLister::get_instance();
-    fontlister->ensureRowStyles(model, iter);
+    fontlister->ensureRowStyles(iter);
 
     Gtk::TreeModel::Row row = *iter;
 

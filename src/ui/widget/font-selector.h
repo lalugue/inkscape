@@ -64,7 +64,6 @@ namespace Inkscape::UI::Widget {
  */
 class FontSelector : public Gtk::Grid
 {
-
 public:
 
     /**
@@ -103,7 +102,8 @@ private:
     void set_fontsize_tooltip();
 
     // Use font style when listing style names.
-    void style_cell_data_func (Gtk::CellRenderer *renderer, Gtk::TreeModel::iterator const &iter);
+    void style_cell_data_func(Gtk::CellRenderer *renderer,
+                              Gtk::TreeModel::const_iterator const &iter);
 
     // Signal handlers
     void on_family_changed();
