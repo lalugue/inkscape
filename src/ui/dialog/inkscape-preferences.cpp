@@ -29,6 +29,7 @@
 #include <glibmm/i18n.h>
 #include <glibmm/markup.h>
 #include <glibmm/miscutils.h>
+#include <glibmm/convert.h>
 #include <glibmm/regex.h>
 #include <glibmm/ustring.h>
 #include <giomm/themedicon.h>
@@ -1470,7 +1471,8 @@ void InkscapePreferences::symbolicThemeCheck()
                 folder.erase(0, last_slash_idx + 1);
             }
 
-            if (folder == themeiconname.raw()) {
+            auto const folder_utf8 = Glib::filename_to_utf8(folder);
+            if (folder_utf8 == themeiconname) {
 #ifdef _WIN32
                 path += g_win32_locale_filename_from_utf8("/symbolic/actions");
 #else
@@ -1801,7 +1803,8 @@ void InkscapePreferences::initPageUI()
             }
 
             // we want use Adwaita instead fallback hicolor theme
-            if (folder == default_icon_theme.raw()) {
+            auto const folder_utf8 = Glib::filename_to_utf8(folder);
+            if (folder_utf8 == default_icon_theme) {
                 continue;
             }
 
