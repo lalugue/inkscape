@@ -121,9 +121,9 @@ findShadowedTime(Geom::Path const &patha, std::vector<Geom::Point> const &pt_and
         times_i.insert(times_i.end(), temptimes.begin(), temptimes.end() ); 
         temptimes = roots(f[Y]+width);
         times_i.insert(times_i.end(), temptimes.begin(), temptimes.end() ); 
-        temptimes = roots(f[X]-3*width);
+        temptimes = roots(f[X]-3*(width?width:EPSILON/2.0));
         times_i.insert(times_i.end(), temptimes.begin(), temptimes.end() ); 
-        temptimes = roots(f[X]+3*width);
+        temptimes = roots(f[X]+3*(width?width:EPSILON/2.0));
         times_i.insert(times_i.end(), temptimes.begin(), temptimes.end() );
         for (double & k : times_i){
             k+=i;
