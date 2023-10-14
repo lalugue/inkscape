@@ -287,6 +287,9 @@ void SPPattern::modified(unsigned flags)
     auto const cflags = cascade_flags(flags);
 
     for (auto c : childList(true)) {
+        if (auto lpeitem = cast<SPLPEItem>(c)) {
+            sp_lpe_item_enable_path_effects(lpeitem, false);
+        }
         if (cflags || (c->mflags & (SP_OBJECT_MODIFIED_FLAG | SP_OBJECT_CHILD_MODIFIED_FLAG))) {
             c->emitModified(cflags);
         }
