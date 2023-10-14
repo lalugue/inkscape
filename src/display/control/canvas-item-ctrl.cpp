@@ -16,9 +16,8 @@
 
 #include <2geom/transforms.h>
 
-#include "display/cairo-utils.h" // 32bit color handling.
 #include "ctrl-handle-rendering.h"
-#include "preferences.h" // Default size. 
+#include "preferences.h" // Default size.
 #include "ui/widget/canvas.h"
 
 namespace Inkscape {
@@ -446,65 +445,27 @@ void CanvasItemCtrl::_render(CanvasItemBuffer &buf) const
         build_cache(buf.device_scale);
     });
 
-    Geom::Point point = (_bounds->min() - buf.rect.min());
-    auto [x, y] = point.round(); // Must be pixel aligned.
+    if (!_cache) {
+        return;
+    }
+
+    auto const [x, y] = _bounds->min().round(); // Must be pixel aligned.
 
     buf.cr->save();
-    // This code works regardless of source type.
-
-    // 1. Copy the affected part of output to a temporary surface
-
-    // Size in device pixels. Does not set device scale.
-    int width  = _width * buf.device_scale;
-    auto work = Cairo::ImageSurface::create(Cairo::FORMAT_ARGB32, width, width);
-    cairo_surface_set_device_scale(work->cobj(), buf.device_scale, buf.device_scale); // No C++ API!       
-
-    auto cr = Cairo::Context::create(work);
-    cr->translate(-_bounds->left(), -_bounds->top());
-    cr->set_source(buf.cr->get_target(), buf.rect.left(), buf.rect.top());
-    cr->paint();
-
-    if constexpr (false) { // Debug
-        static int a = 0;
-        auto const name = "ctrl0_" + _name + "_" + std::to_string(a++) + ".png";
-        work->write_to_png(name);
-    }
-
-    // 2. Composite the control on a temporary surface
-    work->flush();
-    int stride = work->get_stride() / 4; // divided by 4 to covert from bytes to 1 pixel (32 bits)
-    auto row_ptr = reinterpret_cast<uint32_t *>(work->get_data());
-
-    auto handle_ptr = _cache.get();
-    for (int i = 0; i < width; ++i) {
-        for (int j = 0; j < width; ++j) {
-            uint32_t base = row_ptr[j];
-            uint32_t handle_px = *handle_ptr++;
-
-            EXTRACT_ARGB32(base, base_a, base_r, base_g, base_b) // premultiplied
-            EXTRACT_ARGB32(handle_px, handle_r, handle_g, handle_b, handle_a) // unpremultiplied
-            float handle_af = handle_a / 255.0f;
-            float base_af = base_a / 255.0f;
-            float result_af = handle_af + base_af * (1 - handle_af);
-            uint32_t result_r = handle_r * handle_af + base_r * (1 - handle_af); // premultiplied
-            uint32_t result_g = handle_g * handle_af + base_g * (1 - handle_af);
-            uint32_t result_b = handle_b * handle_af + base_b * (1 - handle_af);
-            ASSEMBLE_ARGB32(result, int(result_af * 255), result_r, result_g, result_b)
-            row_ptr[j] = result;
-        }
-        // move the row pointer to the next row
-        row_ptr += stride;
-    }
-    work->mark_dirty();
-
-    // 3. Replace the affected part of output with contents of temporary surface
-    buf.cr->set_source(work, x, y);
-
-    buf.cr->rectangle(x, y, _width, _width);
-    buf.cr->clip();
-    buf.cr->set_operator(Cairo::OPERATOR_SOURCE);
+    cairo_set_source_surface(buf.cr->cobj(), const_cast<cairo_surface_t *>(_cache->cobj()), x - buf.rect.left(), y - buf.rect.top()); // C API is const-incorrect.
     buf.cr->paint();
     buf.cr->restore();
+}
+
+// Convert a Cairo::RefPtr to a std::shared_ptr.
+// This is to circumvent Cairo::RefPtr's thread unsafe refcounting.
+// Todo: (GTK4) Remove this, since no conversion is required.
+template <typename T>
+static std::shared_ptr<T> to_shared(Cairo::RefPtr<T> const &surface)
+{
+    auto const ptr = surface.operator->();
+    auto shared = std::make_shared<Cairo::RefPtr<T>>(surface);
+    return std::shared_ptr<T>(std::move(shared), ptr);
 }
 
 /**
@@ -524,7 +485,9 @@ void CanvasItemCtrl::build_cache(int device_scale) const
     int width = _width * device_scale;  // Not unsigned or math errors occur!
 
     if (_shape_set || _fill_set || _stroke_set) {
-        auto cache = std::make_unique<uint32_t []>(width * width); // TODO: (When supported) make_shared
+        auto cache = to_shared(Cairo::ImageSurface::create(Cairo::FORMAT_ARGB32, width, width));
+        cairo_surface_set_device_scale(cache->cobj(), device_scale, device_scale); // No C++ API!
+
         if (auto style = lookup_handle_style(_handle)) {
             auto shape = _shape_set ? _shape : style->shape();
             auto fill = _fill_set ? _fill : style->getFill();
@@ -532,10 +495,11 @@ void CanvasItemCtrl::build_cache(int device_scale) const
             auto outline = style->getOutline();
             auto stroke_width = style->stroke_width();
             auto outline_width = style->outline_width();
-            draw_shape(cache.get(), shape, fill, stroke, outline, stroke_width, outline_width, width, _angle, device_scale);
+            draw_shape(*cache, shape, fill, stroke, outline, stroke_width, outline_width, width, _angle, device_scale);
         } else {
-            draw_shape(cache.get(), _shape, _fill, _stroke, 0, 1, 0, width, _angle, device_scale);
+            draw_shape(*cache, _shape, _fill, _stroke, 0, 1, 0, width, _angle, device_scale);
         }
+
         _cache = std::move(cache);
         return;
     }
@@ -546,7 +510,8 @@ void CanvasItemCtrl::build_cache(int device_scale) const
         return;
     }
 
-    auto cache = std::shared_ptr{std::make_unique<uint32_t []>(width * width)}; // TODO: (When supported) make_shared
+    auto cache = to_shared(Cairo::ImageSurface::create(Cairo::FORMAT_ARGB32, width, width));
+    cairo_surface_set_device_scale(cache->cobj(), device_scale, device_scale); // No C++ API!
     if (auto style = lookup_handle_style(_handle)) {
         auto shape = style->shape();
         auto fill = style->getFill();
@@ -554,7 +519,7 @@ void CanvasItemCtrl::build_cache(int device_scale) const
         auto outline = style->getOutline();
         auto stroke_width = style->stroke_width();
         auto outline_width = style->outline_width();
-        draw_shape(cache.get(), shape, fill, stroke, outline, stroke_width, outline_width, width, _angle, device_scale);
+        draw_shape(*cache, shape, fill, stroke, outline, stroke_width, outline_width, width, _angle, device_scale);
         insert_cache(handle_prop, cache);
     } else {
         // Shouldn't happen - every ctrl either have a style in handle_styles

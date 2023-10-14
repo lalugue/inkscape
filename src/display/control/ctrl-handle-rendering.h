@@ -17,6 +17,8 @@
 
 #include "ctrl-handle-styling.h"
 
+namespace Cairo { class ImageSurface; }
+
 namespace Inkscape {
 
 using HandleTuple = std::tuple<Handle, int, double>;
@@ -24,13 +26,13 @@ using HandleTuple = std::tuple<Handle, int, double>;
 /**
  * Draw the handles as described by the arguments.
  */
-void draw_shape(uint32_t *cache,
+void draw_shape(Cairo::ImageSurface &surface,
                 CanvasItemCtrlShape shape, uint32_t fill, uint32_t stroke, uint32_t outline,
                 int stroke_width, int outline_width,
                 int width, double angle, int device_scale);
 
-std::shared_ptr<uint32_t const []> lookup_cache(HandleTuple const &prop);
-void insert_cache(HandleTuple const &prop, std::shared_ptr<uint32_t const []> cache);
+std::shared_ptr<Cairo::ImageSurface const> lookup_cache(HandleTuple const &prop);
+void insert_cache(HandleTuple const &prop, std::shared_ptr<Cairo::ImageSurface const> cache);
 
 } // namespace Inkscape
 

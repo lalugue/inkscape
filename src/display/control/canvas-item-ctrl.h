@@ -74,7 +74,7 @@ protected:
 
     // Display
     InitLock _built;
-    mutable std::shared_ptr<uint32_t const []> _cache;
+    mutable std::shared_ptr<Cairo::ImageSurface const> _cache;
 
     // Properties
     Handle _handle;

@@ -12,7 +12,7 @@
 namespace Inkscape {
 namespace {
 
-void draw_darrow(Cairo::RefPtr<Cairo::Context> const &cr, double size)
+void draw_darrow(Cairo::Context &cr, double size)
 {
     // Find points, starting from tip of one arrowhead, working clockwise.
     /*   1        4
@@ -61,20 +61,20 @@ void draw_darrow(Cairo::RefPtr<Cairo::Context> const &cr, double size)
     double y9 = size - out_y;
 
     // Draw arrow
-    cr->move_to(x0, y0);
-    cr->line_to(x1, y1);
-    cr->line_to(x2, y2);
-    cr->line_to(x3, y3);
-    cr->line_to(x4, y4);
-    cr->line_to(x5, y5);
-    cr->line_to(x6, y6);
-    cr->line_to(x7, y7);
-    cr->line_to(x8, y8);
-    cr->line_to(x9, y9);
-    cr->close_path();
+    cr.move_to(x0, y0);
+    cr.line_to(x1, y1);
+    cr.line_to(x2, y2);
+    cr.line_to(x3, y3);
+    cr.line_to(x4, y4);
+    cr.line_to(x5, y5);
+    cr.line_to(x6, y6);
+    cr.line_to(x7, y7);
+    cr.line_to(x8, y8);
+    cr.line_to(x9, y9);
+    cr.close_path();
 }
 
-void draw_carrow(Cairo::RefPtr<Cairo::Context> const &cr, double size)
+void draw_carrow(Cairo::Context &cr, double size)
 {
     // Length of arrowhead (not including stroke).
     double delta = (size - 3) / 4.0; // Use unscaled width.
@@ -111,20 +111,20 @@ void draw_carrow(Cairo::RefPtr<Cairo::Context> const &cr, double size)
     double y9 = y0 + delta;
 
     // Draw arrow
-    cr->move_to(x0, y0);
-    cr->line_to(x1, y1);
-    cr->line_to(x2, y2);
-    cr->arc(x1, y4, x3 - x2, 3.0 * M_PI / 2.0, 0);
-    cr->line_to(x4, y4);
-    cr->line_to(x5, y5);
-    cr->line_to(x6, y6);
-    cr->line_to(x7, y7);
-    cr->arc_negative(x1, y4, x7 - x8, 0, 3.0 * M_PI / 2.0);
-    cr->line_to(x9, y9);
-    cr->close_path();
+    cr.move_to(x0, y0);
+    cr.line_to(x1, y1);
+    cr.line_to(x2, y2);
+    cr.arc(x1, y4, x3 - x2, 3.0 * M_PI / 2.0, 0);
+    cr.line_to(x4, y4);
+    cr.line_to(x5, y5);
+    cr.line_to(x6, y6);
+    cr.line_to(x7, y7);
+    cr.arc_negative(x1, y4, x7 - x8, 0, 3.0 * M_PI / 2.0);
+    cr.line_to(x9, y9);
+    cr.close_path();
 }
 
-void draw_triangle(Cairo::RefPtr<Cairo::Context> const &cr, double size)
+void draw_triangle(Cairo::Context &cr, double size)
 {
     // Construct an arrowhead (triangle)
     double s = size / 2.0;
@@ -135,13 +135,13 @@ void draw_triangle(Cairo::RefPtr<Cairo::Context> const &cr, double size)
     Geom::Point p2f(s + wcos - 1, s + hsin);
     Geom::Point p3f(s + wcos - 1, s - hsin);
     // Draw arrow
-    cr->move_to(p1f[0], p1f[1]);
-    cr->line_to(p2f[0], p2f[1]);
-    cr->line_to(p3f[0], p3f[1]);
-    cr->close_path();
+    cr.move_to(p1f[0], p1f[1]);
+    cr.line_to(p2f[0], p2f[1]);
+    cr.line_to(p3f[0], p3f[1]);
+    cr.close_path();
 }
 
-void draw_triangle_angled(Cairo::RefPtr<Cairo::Context> const &cr, double size)
+void draw_triangle_angled(Cairo::Context &cr, double size)
 {
     // Construct an arrowhead (triangle) of half size.
     double s = size / 2.0;
@@ -151,13 +151,13 @@ void draw_triangle_angled(Cairo::RefPtr<Cairo::Context> const &cr, double size)
     Geom::Point p2f(s + wcos - 1, s + hsin - 1);
     Geom::Point p3f(s + wcos - 1, s - (hsin - 1));
     // Draw arrow
-    cr->move_to(p1f[0], p1f[1]);
-    cr->line_to(p2f[0], p2f[1]);
-    cr->line_to(p3f[0], p3f[1]);
-    cr->close_path();
+    cr.move_to(p1f[0], p1f[1]);
+    cr.line_to(p2f[0], p2f[1]);
+    cr.line_to(p3f[0], p3f[1]);
+    cr.close_path();
 }
 
-void draw_pivot(Cairo::RefPtr<Cairo::Context> const &cr, double size)
+void draw_pivot(Cairo::Context &cr, double size)
 {
     double delta4 = (size - 5) / 4.0; // Keep away from edge or will clip when rotating.
     double delta8 = delta4 / 2;
@@ -165,36 +165,36 @@ void draw_pivot(Cairo::RefPtr<Cairo::Context> const &cr, double size)
     // Line start
     double center = size / 2.0;
 
-    cr->move_to(center - delta8, center - 2 * delta4 - delta8);
-    cr->rel_line_to(delta4,  0);
-    cr->rel_line_to(0,       delta4);
+    cr.move_to(center - delta8, center - 2 * delta4 - delta8);
+    cr.rel_line_to(delta4,  0);
+    cr.rel_line_to(0,       delta4);
 
-    cr->rel_line_to(delta4,  delta4);
+    cr.rel_line_to(delta4,  delta4);
 
-    cr->rel_line_to(delta4,  0);
-    cr->rel_line_to(0,       delta4);
-    cr->rel_line_to(-delta4,  0);
+    cr.rel_line_to(delta4,  0);
+    cr.rel_line_to(0,       delta4);
+    cr.rel_line_to(-delta4,  0);
 
-    cr->rel_line_to(-delta4,  delta4);
+    cr.rel_line_to(-delta4,  delta4);
 
-    cr->rel_line_to(0,       delta4);
-    cr->rel_line_to(-delta4,  0);
-    cr->rel_line_to(0,      -delta4);
+    cr.rel_line_to(0,       delta4);
+    cr.rel_line_to(-delta4,  0);
+    cr.rel_line_to(0,      -delta4);
 
-    cr->rel_line_to(-delta4, -delta4);
+    cr.rel_line_to(-delta4, -delta4);
 
-    cr->rel_line_to(-delta4,  0);
-    cr->rel_line_to(0,      -delta4);
-    cr->rel_line_to(delta4,  0);
+    cr.rel_line_to(-delta4,  0);
+    cr.rel_line_to(0,      -delta4);
+    cr.rel_line_to(delta4,  0);
 
-    cr->rel_line_to(delta4, -delta4);
-    cr->close_path();
+    cr.rel_line_to(delta4, -delta4);
+    cr.close_path();
 
-    cr->begin_new_sub_path();
-    cr->arc_negative(center, center, delta4, 0, -2 * M_PI);
+    cr.begin_new_sub_path();
+    cr.arc_negative(center, center, delta4, 0, -2 * M_PI);
 }
 
-void draw_salign(Cairo::RefPtr<Cairo::Context> const &cr, double size)
+void draw_salign(Cairo::Context &cr, double size)
 {
     // Triangle pointing at line.
 
@@ -220,20 +220,20 @@ void draw_salign(Cairo::RefPtr<Cairo::Context> const &cr, double size)
     double iline = size / 2.0 + (int)delta8;
 
     // Draw triangle
-    cr->move_to(tip_x,        tip_y);
-    cr->line_to(outer,        outer);
-    cr->line_to(size - outer, outer);
-    cr->close_path();
+    cr.move_to(tip_x,        tip_y);
+    cr.line_to(outer,        outer);
+    cr.line_to(size - outer, outer);
+    cr.close_path();
 
     // Draw line
-    cr->move_to(outer,        iline);
-    cr->line_to(size - outer, iline);
-    cr->line_to(size - outer, oline);
-    cr->line_to(outer,        oline);
-    cr->close_path();
+    cr.move_to(outer,        iline);
+    cr.line_to(size - outer, iline);
+    cr.line_to(size - outer, oline);
+    cr.line_to(outer,        oline);
+    cr.close_path();
 }
 
-void draw_calign(Cairo::RefPtr<Cairo::Context> const &cr, double size)
+void draw_calign(Cairo::Context &cr, double size)
 {
     // Basic units.
     double delta4 = (size - 1) / 4.0; // Use unscaled width.
@@ -260,22 +260,22 @@ void draw_calign(Cairo::RefPtr<Cairo::Context> const &cr, double size)
     double iline = size / 2.0 + (int)delta8;
 
     // Draw triangle
-    cr->move_to(tip_x, tip_y);
-    cr->line_to(outer, tip_y);
-    cr->line_to(tip_x, outer);
-    cr->close_path();
+    cr.move_to(tip_x, tip_y);
+    cr.line_to(outer, tip_y);
+    cr.line_to(tip_x, outer);
+    cr.close_path();
 
     // Draw line
-    cr->move_to(iline, iline);
-    cr->line_to(iline, eline);
-    cr->line_to(oline, eline);
-    cr->line_to(oline, oline);
-    cr->line_to(eline, oline);
-    cr->line_to(eline, iline);
-    cr->close_path();
+    cr.move_to(iline, iline);
+    cr.line_to(iline, eline);
+    cr.line_to(oline, eline);
+    cr.line_to(oline, oline);
+    cr.line_to(eline, oline);
+    cr.line_to(eline, iline);
+    cr.close_path();
 }
 
-void draw_malign(Cairo::RefPtr<Cairo::Context> const &cr, double size)
+void draw_malign(Cairo::Context &cr, double size)
 {
     // Basic units.
     double delta4 = (size - 1) / 4.0; // Use unscaled width.
@@ -290,28 +290,28 @@ void draw_malign(Cairo::RefPtr<Cairo::Context> const &cr, double size)
     double tip_1 = size / 2.0 - delta8;
 
     // Draw triangles
-    cr->move_to(tip_0,           tip_1);
-    cr->line_to(tip_0 - delta4,  tip_1 - delta4);
-    cr->line_to(tip_0 + delta4,  tip_1 - delta4);
-    cr->close_path();
+    cr.move_to(tip_0,           tip_1);
+    cr.line_to(tip_0 - delta4,  tip_1 - delta4);
+    cr.line_to(tip_0 + delta4,  tip_1 - delta4);
+    cr.close_path();
 
-    cr->move_to(size - tip_1,           tip_0);
-    cr->line_to(size - tip_1 + delta4,  tip_0 - delta4);
-    cr->line_to(size - tip_1 + delta4,  tip_0 + delta4);
-    cr->close_path();
+    cr.move_to(size - tip_1,           tip_0);
+    cr.line_to(size - tip_1 + delta4,  tip_0 - delta4);
+    cr.line_to(size - tip_1 + delta4,  tip_0 + delta4);
+    cr.close_path();
 
-    cr->move_to(size - tip_0,           size - tip_1);
-    cr->line_to(size - tip_0 + delta4,  size - tip_1 + delta4);
-    cr->line_to(size - tip_0 - delta4,  size - tip_1 + delta4);
-    cr->close_path();
+    cr.move_to(size - tip_0,           size - tip_1);
+    cr.line_to(size - tip_0 + delta4,  size - tip_1 + delta4);
+    cr.line_to(size - tip_0 - delta4,  size - tip_1 + delta4);
+    cr.close_path();
 
-    cr->move_to(tip_1,           tip_0);
-    cr->line_to(tip_1 - delta4,  tip_0 + delta4);
-    cr->line_to(tip_1 - delta4,  tip_0 - delta4);
-    cr->close_path();
+    cr.move_to(tip_1,           tip_0);
+    cr.line_to(tip_1 - delta4,  tip_0 + delta4);
+    cr.line_to(tip_1 - delta4,  tip_0 - delta4);
+    cr.close_path();
 }
 
-void draw_cairo_path(CanvasItemCtrlShape shape, Cairo::RefPtr<Cairo::Context> const &cr, double size)
+void draw_cairo_path(CanvasItemCtrlShape shape, Cairo::Context &cr, double size)
 {
     switch (shape) {
         case CANVAS_ITEM_CTRL_SHAPE_DARROW:
@@ -353,12 +353,12 @@ void draw_cairo_path(CanvasItemCtrlShape shape, Cairo::RefPtr<Cairo::Context> co
     }
 }
 
-std::unordered_map<HandleTuple, std::shared_ptr<uint32_t const []>> handle_cache;
+std::unordered_map<HandleTuple, std::shared_ptr<Cairo::ImageSurface const>> handle_cache;
 std::mutex cache_mutex;
 
 } // namespace
 
-void draw_shape(uint32_t *cache,
+void draw_shape(Cairo::ImageSurface &surface,
                 CanvasItemCtrlShape shape, uint32_t fill, uint32_t stroke, uint32_t outline,
                 int stroke_width, int outline_width,
                 int width, double angle, int device_scale)
@@ -367,23 +367,92 @@ void draw_shape(uint32_t *cache,
     int const scaled_stroke = device_scale * stroke_width;
     int const scaled_outline = device_scale * outline_width;
 
-    auto p = cache;
+    // Deal with shapes that can be drawn using Cairo first.
+    switch (shape) {
+        case CANVAS_ITEM_CTRL_SHAPE_TRIANGLE:        // Triangle optionally rotated
+        case CANVAS_ITEM_CTRL_SHAPE_TRIANGLE_ANGLED: // triangle with pointing to center of  knot and rotated this way
+        case CANVAS_ITEM_CTRL_SHAPE_DARROW:          // Double arrow
+        case CANVAS_ITEM_CTRL_SHAPE_SARROW:          // Same shape as darrow but rendered rotated 90 degrees.
+        case CANVAS_ITEM_CTRL_SHAPE_CARROW:          // Double corner arrow
+        case CANVAS_ITEM_CTRL_SHAPE_PIVOT:           // Fancy "plus"
+        case CANVAS_ITEM_CTRL_SHAPE_SALIGN:          // Side align (triangle pointing toward line)
+        case CANVAS_ITEM_CTRL_SHAPE_CALIGN:          // Corner align (triangle pointing into "L")
+        case CANVAS_ITEM_CTRL_SHAPE_MALIGN: {        // Middle align (four triangles poining inward)
+            double size = width / device_scale; // Use unscaled width.
+
+            auto cr = Cairo::Context(cairo_create(surface.cobj()), true);
+            cr.set_operator(Cairo::OPERATOR_SOURCE);
+
+            // Rotate around center
+            cr.translate(size / 2.0, size / 2.0);
+            cr.rotate(angle);
+            cr.translate(-size / 2.0, -size / 2.0);
+
+            // (1.5 is an approximation of root(2) and 3 is 1.5 * 2)
+            double effective_outline = outline_width + 0.5 * stroke_width;
+            cr.translate(1.5 * effective_outline, 1.5 * effective_outline);
+
+            draw_cairo_path(shape, cr, size - 3 * effective_outline);
+
+            // Outline.
+            cr.set_source_rgba(SP_RGBA32_R_F(outline),
+                                SP_RGBA32_G_F(outline),
+                                SP_RGBA32_B_F(outline),
+                                SP_RGBA32_A_F(outline));
+            cr.set_line_width(2 * effective_outline);
+            cr.stroke_preserve();
+
+            // Fill.
+            cr.set_source_rgba(SP_RGBA32_R_F(fill),
+                                SP_RGBA32_G_F(fill),
+                                SP_RGBA32_B_F(fill),
+                                SP_RGBA32_A_F(fill));
+            cr.fill_preserve();
+
+            // Stroke.
+            cr.set_source_rgba(SP_RGBA32_R_F(stroke),
+                                SP_RGBA32_G_F(stroke),
+                                SP_RGBA32_B_F(stroke),
+                                SP_RGBA32_A_F(stroke));
+            cr.set_line_width(stroke_width);
+            cr.stroke();
+
+            return;
+        }
+
+        default:
+            break;
+    }
+
+    // Acquire data pointer.
+    surface.flush();
+    auto p = reinterpret_cast<uint32_t *>(surface.get_data());
+
+    // Acquire skip.
+    auto const stride = surface.get_stride();
+    assert(stride % 4 == 0);
+    auto const skip = stride / 4 - surface.get_width();
+
+    // Convert colours to Cairo format.
+    fill = argb32_from_rgba(fill);
+    stroke = argb32_from_rgba(stroke);
+    outline = argb32_from_rgba(outline);
 
     switch (shape) {
         case CANVAS_ITEM_CTRL_SHAPE_SQUARE:
             // Actually any rectangular shape.
-            for (int i = 0; i < width; ++i) {
-                for (int j = 0; j < width; ++j) {
+            for (int i = 0; i < width; ++i, p += skip) {
+                for (int j = 0; j < width; ++j, ++p) {
                     if (        i <  scaled_outline ||         j <  scaled_outline ||
                         width - i <= scaled_outline || width - j <= scaled_outline)
                     {
-                        *p++ = outline;
+                        *p = outline;
                     } else if (        i <  scaled_outline + scaled_stroke ||         j <  scaled_outline + scaled_stroke ||
                                width - i <= scaled_outline + scaled_stroke || width - j <= scaled_outline + scaled_stroke)
                     {
-                        *p++ = stroke;
+                        *p = stroke;
                     } else {
-                        *p++ = fill;
+                        *p = fill;
                     }
                 }
             }
@@ -392,28 +461,26 @@ void draw_shape(uint32_t *cache,
         case CANVAS_ITEM_CTRL_SHAPE_DIAMOND: {
             int m = (width + 1) / 2;
 
-            for (int i = 0; i < width; ++i) {
-                for (int j = 0; j < width; ++j) {
+            for (int i = 0; i < width; ++i, p += skip) {
+                for (int j = 0; j < width; ++j, ++p) {
                     if (             i  +              j  > m - 1 + scaled_stroke + scaled_outline &&
                         (width - 1 - i) +              j  > m - 1 + scaled_stroke + scaled_outline &&
                         (width - 1 - i) + (width - 1 - j) > m - 1 + scaled_stroke + scaled_outline &&
                                      i  + (width - 1 - j) > m - 1 + scaled_stroke + scaled_outline)
                     {
-                        *p++ = fill;
+                        *p = fill;
                     } else if (             i  +              j  > m - 1 + scaled_outline &&
                                (width - 1 - i) +              j  > m - 1 + scaled_outline &&
                                (width - 1 - i) + (width - 1 - j) > m - 1 + scaled_outline &&
                                             i  + (width - 1 - j) > m - 1 + scaled_outline)
                     {
-                        *p++ = stroke;
+                        *p = stroke;
                     } else if (             i  +              j  > m - 2 &&
                                (width - 1 - i) +              j  > m - 2 &&
                                (width - 1 - i) + (width - 1 - j) > m - 2 &&
                                             i  + (width - 1 - j) > m - 2)
                     {
-                        *p++ = outline;
-                    } else {
-                        *p++ = 0;
+                        *p = outline;
                     }
                 }
             }
@@ -428,21 +495,18 @@ void draw_shape(uint32_t *cache,
             double rf  = ro - (scaled_stroke + scaled_outline);
             double rf2 = rf * rf;
 
-            for (int i = 0; i < width; ++i) {
-                for (int j = 0; j < width; ++j) {
-
+            for (int i = 0; i < width; ++i, p += skip) {
+                for (int j = 0; j < width; ++j, ++p) {
                     double rx = i - (width / 2.0) + 0.5;
                     double ry = j - (width / 2.0) + 0.5;
                     double r2 = rx * rx + ry * ry;
 
                     if (r2 < rf2) {
-                        *p++ = fill;
+                        *p = fill;
                     } else if (r2 < rs2) {
-                        *p++ = stroke;
+                        *p = stroke;
                     } else if (r2 < ro2) {
-                        *p++ = outline;
-                    } else {
-                        *p++ = 0;
+                        *p = outline;
                     }
                 }
             }
@@ -455,18 +519,16 @@ void draw_shape(uint32_t *cache,
             double rel1 = (2 * scaled_outline + scaled_stroke) / sqrt(2);
             double rel2 = (4 * scaled_outline + scaled_stroke) / sqrt(2);
 
-            for (int y = 0; y < width; y++) {
-                for (int x = 0; x < width; x++) {
+            for (int y = 0; y < width; y++, p += skip) {
+                for (int x = 0; x < width; x++, p++) {
                     if ((abs(x - y) <= std::max(width - rel2, 0.0) && abs(x + y - width) <= rel0) ||
                         (abs(x - y) <= rel0 && abs(x + y - width) <= std::max(width - rel2, 0.0)))
                     {
-                        *p++ = stroke;
+                        *p = stroke;
                     } else if ((abs(x - y) <= std::max(width - rel1, 0.0) && abs(x + y - width) <= rel1) ||
                                (abs(x - y) <= rel1 && abs(x + y - width) <= std::max(width - rel1, 0.0)))
                     {
-                        *p++ = outline;
-                    } else {
-                        *p++ = 0;
+                        *p = outline;
                     }
                 }
             }
@@ -475,95 +537,31 @@ void draw_shape(uint32_t *cache,
 
         case CANVAS_ITEM_CTRL_SHAPE_PLUS:
             // Actually an '+'.
-            for (int y = 0; y < width; y++) {
-                for (int x = 0; x < width; x++) {
+            for (int y = 0; y < width; y++, p += skip) {
+                for (int x = 0; x < width; x++, p++) {
                     if ((std::abs(x - width / 2) < scaled_stroke / 2.0 ||
                          std::abs(y - width / 2) < scaled_stroke / 2.0) &&
                         (x >= scaled_outline && y >= scaled_outline &&
                          width - x >= scaled_outline + 1 && width - y >= scaled_outline + 1))
                     {
-                        *p++ = stroke;
+                        *p = stroke;
                     } else if (std::abs(x - width / 2) < scaled_stroke / 2.0 + scaled_outline ||
                                std::abs(y - width / 2) < scaled_stroke / 2.0 + scaled_outline)
                     {
-                        *p++ = outline;
-                    } else {
-                        *p++ = 0;
+                        *p = outline;
                     }
                 }
             }
             break;
 
-        case CANVAS_ITEM_CTRL_SHAPE_TRIANGLE:        // Triangle optionally rotated
-        case CANVAS_ITEM_CTRL_SHAPE_TRIANGLE_ANGLED: // triangle with pointing to center of  knot and rotated this way
-        case CANVAS_ITEM_CTRL_SHAPE_DARROW:          // Double arrow
-        case CANVAS_ITEM_CTRL_SHAPE_SARROW:          // Same shape as darrow but rendered rotated 90 degrees.
-        case CANVAS_ITEM_CTRL_SHAPE_CARROW:          // Double corner arrow
-        case CANVAS_ITEM_CTRL_SHAPE_PIVOT:           // Fancy "plus"
-        case CANVAS_ITEM_CTRL_SHAPE_SALIGN:          // Side align (triangle pointing toward line)
-        case CANVAS_ITEM_CTRL_SHAPE_CALIGN:          // Corner align (triangle pointing into "L")
-        case CANVAS_ITEM_CTRL_SHAPE_MALIGN: {        // Middle align (four triangles poining inward)
-            double size = width / device_scale; // Use unscaled width.
-
-            auto work = Cairo::ImageSurface::create(Cairo::FORMAT_ARGB32, device_scale * size, device_scale * size);
-            cairo_surface_set_device_scale(work->cobj(), device_scale, device_scale); // No C++ API!
-            auto cr = Cairo::Context::create(work);
-            cr->set_operator(Cairo::OPERATOR_SOURCE);
-
-            // Rotate around center
-            cr->translate(size / 2.0, size / 2.0);
-            cr->rotate(angle);
-            cr->translate(-size / 2.0, -size / 2.0);
-
-            // (1.5 is an approximation of root(2) and 3 is 1.5 * 2)
-            double effective_outline = outline_width + 0.5 * stroke_width;
-            cr->translate(1.5 * effective_outline, 1.5 * effective_outline);
-
-            draw_cairo_path(shape, cr, size - 3 * effective_outline);
-
-            // Outline.
-            cr->set_source_rgba(SP_RGBA32_R_F(outline),
-                                SP_RGBA32_G_F(outline),
-                                SP_RGBA32_B_F(outline),
-                                SP_RGBA32_A_F(outline));
-            cr->set_line_width(2 * effective_outline);
-            cr->stroke_preserve();
-
-            // Fill.
-            cr->set_source_rgba(SP_RGBA32_R_F(fill),
-                                SP_RGBA32_G_F(fill),
-                                SP_RGBA32_B_F(fill),
-                                SP_RGBA32_A_F(fill));
-            cr->fill_preserve();
-
-            // Stroke.
-            cr->set_source_rgba(SP_RGBA32_R_F(stroke),
-                                SP_RGBA32_G_F(stroke),
-                                SP_RGBA32_B_F(stroke),
-                                SP_RGBA32_A_F(stroke));
-            cr->set_line_width(stroke_width);
-            cr->stroke();
-
-            // Copy to buffer.
-            work->flush();
-            int stride = work->get_stride();
-            unsigned char *work_ptr = work->get_data();
-            for (int i = 0; i < device_scale * size; ++i) {
-                auto pb = reinterpret_cast<uint32_t *>(work_ptr + i * stride);
-                for (int j = 0; j < width; ++j) {
-                    *p++ = rgba_from_argb32(*pb++);
-                }
-            }
-            break;
-        }
-
         default:
-            std::cerr << "CanvasItemCtrl::draw_shape: unhandled shape!" << std::endl;
             break;
     }
+
+    surface.mark_dirty();
 }
 
-std::shared_ptr<uint32_t const []> lookup_cache(HandleTuple const &prop)
+std::shared_ptr<Cairo::ImageSurface const> lookup_cache(HandleTuple const &prop)
 {
     auto lock = std::lock_guard{cache_mutex};
     auto const it = handle_cache.find(prop);
@@ -573,7 +571,7 @@ std::shared_ptr<uint32_t const []> lookup_cache(HandleTuple const &prop)
     return it->second;
 }
 
-void insert_cache(HandleTuple const &prop, std::shared_ptr<uint32_t const []> cache)
+void insert_cache(HandleTuple const &prop, std::shared_ptr<Cairo::ImageSurface const> cache)
 {
     auto lock = std::lock_guard{cache_mutex};
     handle_cache[prop] = std::move(cache);
