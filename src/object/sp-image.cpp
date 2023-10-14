@@ -34,6 +34,7 @@
 #include "print.h"
 #include "snap-candidate.h"
 #include "snap-preferences.h"
+#include "preferences.h"
 
 #include "display/drawing-image.h"
 #include "display/cairo-utils.h"
@@ -635,6 +636,12 @@ static std::string broken_image_svg = R"A(
  */
 Inkscape::Pixbuf *SPImage::getBrokenImage(double width, double height)
 {
+    // Limit the size of the broken image raster. smaller than the size in cairo-utils.
+    Inkscape::Preferences *prefs = Inkscape::Preferences::get();
+    double dpi = prefs->getDouble("/dialogs/import/defaultxdpi/value", 96.0);
+    width = std::min(width, dpi * 20);
+    height = std::min(height, dpi * 20);
+
     // Cheap templating for size allows for dynamic sized svg
     std::string copy = broken_image_svg;
     copy.replace(copy.find("{width}"), std::string("{width}").size(), std::to_string(width));
