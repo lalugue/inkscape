@@ -431,8 +431,9 @@ Pixbuf *Pixbuf::create_from_buffer(gchar *&&data, gsize len, double svgdpi, std:
                 // Get the size of the document
                 Inkscape::Util::Quantity svgWidth = svgDoc->getWidth();
                 Inkscape::Util::Quantity svgHeight = svgDoc->getHeight();
-                const double svgWidth_px = svgWidth.value("px");
-                const double svgHeight_px = svgHeight.value("px");
+                // Limit the size of the document to 100 inches square
+                const double svgWidth_px = std::min(svgWidth.value("px"), dpi * 100);
+                const double svgHeight_px = std::min(svgHeight.value("px"), dpi * 100);
                 if (svgWidth_px < 0 || svgHeight_px < 0) {
                     g_warning("create_from_buffer: malformed document: svgWidth_px=%f, svgHeight_px=%f", svgWidth_px,
                               svgHeight_px);
@@ -441,6 +442,9 @@ Pixbuf *Pixbuf::create_from_buffer(gchar *&&data, gsize len, double svgdpi, std:
 
                 Geom::Rect area(0, 0, svgWidth_px, svgHeight_px);
                 pb = sp_generate_internal_bitmap(svgDoc.get(), area, dpi);
+                if (!pb)
+                    return nullptr;
+
                 buf = pb->getPixbufRaw();
 
                 // Tidy up
