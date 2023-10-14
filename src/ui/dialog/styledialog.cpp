@@ -421,7 +421,8 @@ void StyleDialog::readStyleElement()
     // regex1->match(content, minfo);
 
     // Split on curly brackets. Even tokens are selectors, odd are values.
-    std::vector<Glib::ustring> tokens = Glib::Regex::split_simple("[}{]", content);
+    std::vector<Glib::ustring> tokens = Glib::Regex::split_simple("[}{]", content.c_str()); // Must use c_str() as "content" is a std::string which cannot
+                                                                                            // be converted directly to a Glib::UStringView in Gtk4.
     _owner_style.clear();
     // If text node is empty, return (avoids problem with negative below).
 

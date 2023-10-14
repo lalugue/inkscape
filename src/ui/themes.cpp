@@ -354,7 +354,10 @@ void ThemeContext::add_gtk_css(bool only_providers, bool cached)
             }
             if (!cached) {
                 // Split on curly brackets. Even tokens are selectors, odd are values.
-                std::vector<Glib::ustring> tokens = Glib::Regex::split_simple("[}{]", cssstringcached);
+                std::vector<Glib::ustring> tokens = Glib::Regex::split_simple("[}{]", cssstringcached.c_str()); // Must use c_str() as a std::string
+                                                                                                                // cannot be converted converted directly
+                                                                                                                // to a Glib::UStringView in Gtk4.
+
                 cssstringcached = "";
                 for (unsigned i = 0; i < tokens.size() - 1; i += 2) {
                     Glib::ustring selector = tokens[i];

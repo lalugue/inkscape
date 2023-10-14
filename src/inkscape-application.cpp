@@ -1173,8 +1173,8 @@ InkscapeApplication::parse_actions(const Glib::ustring& input, action_vector_t& 
     for (auto token : tokens) {
         // Note: split into 2 tokens max ("param:value"); allows value to contain colon (e.g. abs. paths on Windows)
         std::vector<Glib::ustring> tokens2 = re_colon->split(token, 0,  static_cast<Glib::RegexMatchFlags>(0), 2);
-        std::string action;
-        std::string value;
+        Glib::ustring action;
+        Glib::ustring value;
         if (tokens2.size() > 0) {
             action = tokens2[0];
         }

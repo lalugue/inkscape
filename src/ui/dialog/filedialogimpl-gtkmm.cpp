@@ -424,19 +424,6 @@ FileSaveDialogImplGtk::FileSaveDialogImplGtk(Gtk::Window &parentWindow, const Gl
     checksBox.add(svgexportCheckbox);
     set_extra_widget(childBox);
 
-    // Let's do some customization
-    fileNameEntry = dynamic_cast<Gtk::Entry *>(find_widget_by_name(*this, "GtkEntry"));
-    if (fileNameEntry) {
-        // Catch when user hits [return] on the text field
-        fileNameEntry->signal_activate().connect(
-            sigc::mem_fun(*this, &FileSaveDialogImplGtk::fileNameEntryChangedCallback));
-    }
-
-    if (auto const expander = dynamic_cast<Gtk::Expander *>(find_widget_by_name(*this, "GtkExpander"))) {
-        // Always show the file list
-        expander->set_expanded(true);
-    }
-
     signal_selection_changed().connect(sigc::mem_fun(*this, &FileSaveDialogImplGtk::fileNameChanged));
 
     // allow easy access to the user's own templates folder
@@ -451,41 +438,6 @@ FileSaveDialogImplGtk::FileSaveDialogImplGtk(Gtk::Window &parentWindow, const Gl
     set_default(*add_button(_("_Save"), Gtk::RESPONSE_OK));
 
     show_all_children();
-}
-
-/**
- * Callback for fileNameEntry widget
- */
-void FileSaveDialogImplGtk::fileNameEntryChangedCallback()
-{
-    if (!fileNameEntry)
-        return;
-
-    Glib::ustring fileName = fileNameEntry->get_text();
-    if (!Glib::get_charset()) // If we are not utf8
-        fileName = Glib::filename_to_utf8(fileName);
-
-    // g_message("User hit return.  Text is '%s'\n", fileName.c_str());
-
-    if (!Glib::path_is_absolute(fileName)) {
-        // try appending to the current path
-        // not this way: fileName = get_current_folder() + "/" + fileName;
-        std::vector<Glib::ustring> pathSegments;
-        pathSegments.emplace_back(get_current_folder());
-        pathSegments.push_back(fileName);
-        fileName = Glib::build_filename(pathSegments);
-    }
-
-    // g_message("path:'%s'\n", fileName.c_str());
-
-    if (Glib::file_test(fileName, Glib::FILE_TEST_IS_DIR)) {
-        set_current_folder(fileName);
-    } else if (/*Glib::file_test(fileName, Glib::FILE_TEST_IS_REGULAR)*/ true) {
-        // dialog with either (1) select a regular file or (2) cd to dir
-        // simulate an 'OK'
-        set_filename(fileName);
-        response(Gtk::RESPONSE_OK);
-    }
 }
 
 /**

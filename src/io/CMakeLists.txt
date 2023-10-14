@@ -13,7 +13,6 @@ set(io_SRC
   stream/uristream.cpp
   stream/xsltstream.cpp
   sys.cpp
-  http.cpp
 
   # -------
   # Headers
@@ -29,7 +28,6 @@ set(io_SRC
   stream/uristream.h
   stream/xsltstream.h
   sys.h
-  http.h
 )
 
 # add_inkscape_lib(io_LIB "${io_SRC}")
