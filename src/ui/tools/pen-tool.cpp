@@ -1290,6 +1290,7 @@ void PenTool::_bsplineSpiroOn()
         this->p[0] = *this->red_curve.first_point();
         this->p[3] = this->red_curve.first_segment()->finalPoint();
         this->p[2] = this->p[3] + (1./3)*(this->p[0] - this->p[3]);
+        _bsplineSpiroMotion(GDK_MOD1_MASK);
     }
 }
 
