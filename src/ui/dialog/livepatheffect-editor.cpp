@@ -365,8 +365,9 @@ void LivePathEffectEditor::add_lpes(Inkscape::UI::Widget::CompletionPopup& popup
         menu.remove(*w);
     }
     Inkscape::UI::ColumnMenuBuilder<Inkscape::LivePathEffect::LPECategory> builder(menu, 3, Gtk::ICON_SIZE_LARGE_TOOLBAR);
-
+    std::map<Glib::ustring, LPE> lpesorted;
     for (auto& lpe : lpes) {
+        lpesorted[lpe.label] = lpe;
         // build popup menu
         auto type = lpe.type;
         auto *menuitem = builder.add_item(lpe.label, lpe.category, lpe.tooltip, lpe.icon_name, lpe.sensitive, true, [=](){ onAdd((LivePathEffect::EffectType)type); });
@@ -378,10 +379,18 @@ void LivePathEffectEditor::add_lpes(Inkscape::UI::Widget::CompletionPopup& popup
         if (builder.new_section()) {
             builder.set_section(get_category_name(lpe.category));
         }
-    
+    }
+    for (auto lpemapitem : lpesorted) {
+        auto lpe = lpemapitem.second;
         // build completion list
         if (lpe.sensitive) {
-            popup.add_to_completion_list(static_cast<int>(lpe.type), lpe.label, lpe.icon_name + (symbolic ? "-symbolic" : ""));
+            Glib::ustring untranslated_label = converter.get_label(lpe.type);
+            Glib::ustring untranslated_description = converter.get_description(lpe.type);
+            Glib::ustring search = Glib::ustring::compose("%1_%2", untranslated_label, untranslated_description);
+            if (lpe.label != untranslated_label) {
+                search = Glib::ustring::compose("%1_%2_%3", search, lpe.label, _(converter.get_description(lpe.type).c_str()));
+            }
+            popup.add_to_completion_list(static_cast<int>(lpe.type), lpe.label , lpe.icon_name + (symbolic ? "-symbolic" : ""), search);
         }
     }
 
