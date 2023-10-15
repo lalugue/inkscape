@@ -39,7 +39,7 @@ CompletionPopup::CompletionPopup() :
         if (str.empty()) {
             return false;
         }
-        return str.lowercase().find(text.lowercase()) != Glib::ustring::npos;
+        return str.normalize().lowercase().find(text.normalize().lowercase()) != Glib::ustring::npos;
     });
 
     _completion->signal_match_selected().connect([this](const Gtk::TreeModel::iterator& it){
