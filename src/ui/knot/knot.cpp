@@ -13,17 +13,18 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#include "knot.h"
+
 #include <utility>
 #include <gdk/gdkkeysyms.h>
 #include <glibmm/i18n.h>
 
 #include "desktop.h"
-#include "knot.h"
-#include "knot-ptr.h"
-#include "document.h"
 #include "document-undo.h"
-#include "message-stack.h"
+#include "knot-ptr.h"
 #include "message-context.h"
+#include "message-stack.h"
+
 #include "display/control/canvas-item-ctrl.h"
 #include "ui/tools/tool-base.h"
 #include "ui/tools/node-tool.h"

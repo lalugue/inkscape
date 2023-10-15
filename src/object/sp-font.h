@@ -18,8 +18,8 @@ class SPGlyph;
 
 class SPFont final : public SPObject {
 public:
-	SPFont();
-	~SPFont() override;
+    SPFont();
+    ~SPFont() override;
     int tag() const override { return tag_of<decltype(*this)>; }
 
     double horiz_origin_x;
@@ -36,20 +36,31 @@ public:
     void sort_glyphs();
 
 protected:
-	void build(SPDocument* doc, Inkscape::XML::Node* repr) override;
-	void release() override;
+    void build(SPDocument* doc, Inkscape::XML::Node* repr) override;
+    void release() override;
 
-	void child_added(Inkscape::XML::Node* child, Inkscape::XML::Node* ref) override;
-	void remove_child(Inkscape::XML::Node* child) override;
+    void child_added(Inkscape::XML::Node* child, Inkscape::XML::Node* ref) override;
+    void remove_child(Inkscape::XML::Node* child) override;
 
-	void set(SPAttr key, char const* value) override;
+    void set(SPAttr key, char const* value) override;
 
-	void update(SPCtx* ctx, unsigned int flags) override;
+    void update(SPCtx* ctx, unsigned int flags) override;
 
-	Inkscape::XML::Node* write(Inkscape::XML::Document* doc, Inkscape::XML::Node* repr, unsigned int flags) override;
+    Inkscape::XML::Node* write(Inkscape::XML::Document* doc, Inkscape::XML::Node* repr, unsigned int flags) override;
 
 private:
     bool _block = false;
 };
 
 #endif //#ifndef SP_FONT_H_SEEN
+
+/*
+  Local Variables:
+  mode:c++
+  c-file-style:"stroustrup"
+  c-file-offsets:((innamespace . 0)(inline-open . 0)(case-label . +))
+  indent-tabs-mode:nil
+  fill-column:99
+  End:
+*/
+// vim: filetype=cpp:expandtab:shiftwidth=4:tabstop=8:softtabstop=4 :

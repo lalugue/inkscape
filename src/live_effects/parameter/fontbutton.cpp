@@ -8,13 +8,10 @@
 #include "fontbutton.h"
 
 #include <glibmm/i18n.h>
-#include <gtkmm.h>
 
 #include "live_effects/effect.h"
 #include "svg/stringstream.h"
-#include "svg/svg.h"
 #include "ui/icon-names.h"
-#include "ui/widget/font-button.h"
 #include "ui/widget/registered-widget.h"
 
 

@@ -15,13 +15,15 @@
  */
 
 #include "distantlight.h"
-#include "diffuselighting.h"
-#include "specularlighting.h"
 
-#include "attributes.h"
-#include "document.h"
+#include "attributes.h"  // for SPAttr
+#include "document.h"    // for SPDocument
+#include "xml/node.h"    // for Node
 
-#include "xml/repr.h"
+namespace Inkscape::XML {
+struct Document;
+} // namespace Inkscape::XML
+
 
 SPFeDistantLight::SPFeDistantLight()
     : azimuth(0)

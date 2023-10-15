@@ -15,22 +15,31 @@
  */
 
 #include "specularlighting.h"
-#include "distantlight.h"
-#include "pointlight.h"
-#include "spotlight.h"
 
-#include "attributes.h"
-#include "strneq.h"
+#include "attributes.h"                          // for SPAttr
+#include "distantlight.h"                        // for SPFeDistantLight
+#include "pointlight.h"                          // for SPFePointLight
+#include "spotlight.h"                           // for SPFeSpotLight
+#include "strneq.h"                              // for strneq
 
-#include "display/nr-filter.h"
-#include "display/nr-filter-specularlighting.h"
+#include "display/nr-filter-specularlighting.h"  // for FilterSpecularLighting
+#include "display/nr-light-types.h"              // for SpotLightData, Light...
+#include "object/filters/sp-filter-primitive.h"  // for SPFilterPrimitive
+#include "object/sp-object.h"                    // for SP_OBJECT_MODIFIED_FLAG
+#include "svg/svg-color.h"                       // for sp_svg_read_color
+#include "xml/node.h"                            // for Node
 
-#include "object/sp-object.h"
+class SPDocument;
 
-#include "svg/svg.h"
-#include "svg/svg-color.h"
-
-#include "xml/repr.h"
+namespace Inkscape {
+class DrawingItem;
+namespace Filters {
+class FilterPrimitive;
+} // namespace Filters
+namespace XML {
+class Document;
+} // namespace XML
+} // namespace Inkscape
 
 void SPFeSpecularLighting::build(SPDocument *document, Inkscape::XML::Node *repr)
 {

@@ -12,11 +12,15 @@
  */
 
 #include "tile.h"
-#include "attributes.h"
-#include "display/nr-filter.h"
-#include "display/nr-filter-tile.h"
-#include "svg/svg.h"
-#include "xml/repr.h"
+
+#include "display/nr-filter-tile.h"  // for FilterTile
+
+namespace Inkscape {
+class DrawingItem;
+namespace Filters {
+class FilterPrimitive;
+} // namespace Filters
+} // namespace Inkscape
 
 std::unique_ptr<Inkscape::Filters::FilterPrimitive> SPFeTile::build_renderer(Inkscape::DrawingItem*) const
 {

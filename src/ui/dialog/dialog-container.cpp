@@ -26,6 +26,7 @@
 #include <sigc++/functors/mem_fun.h>
 
 #include "enums.h"
+#include "inkscape.h"
 #include "inkscape-application.h"
 #include "inkscape-window.h"
 #include "ui/dialog/clonetiler.h"

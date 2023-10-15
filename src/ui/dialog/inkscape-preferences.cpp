@@ -14,6 +14,8 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#include "inkscape-preferences.h"
+
 #ifdef HAVE_CONFIG_H
 # include "config.h"  // only include where actually required!
 #endif
@@ -22,9 +24,7 @@
 #include <fstream>
 #include <iomanip>
 #include <string>
-#include <gio/gio.h>
 #include <glibmm/i18n.h>
-#include <glibmm/main.h>
 #include <glibmm/markup.h>
 #include <glibmm/miscutils.h>
 #include <glibmm/regex.h>
@@ -35,7 +35,6 @@
 #include <gtkmm/dialog.h>
 #include <gtkmm/entry.h>
 #include <gtkmm/enums.h>
-#include <gtkmm/fontbutton.h>
 #include <gtkmm/fontchooserdialog.h>
 #include <gtkmm/icontheme.h>
 #include <gtkmm/image.h>
@@ -53,7 +52,6 @@
 #   include <gtksourceview/gtksource.h>
 #endif
 
-#include "inkscape-preferences.h"
 #include "auto-save.h"
 #include "document.h"
 #include "enums.h"
@@ -66,12 +64,12 @@
 #include "selection-chemistry.h"
 #include "selection.h"
 #include "style.h"
+
 #include "color/cms-system.h"
 #include "display/control/canvas-item-grid.h"
 #include "display/nr-filter-gaussian.h"
 #include "extension/internal/gdkpixbuf-input.h"
 #include "io/resource.h"
-#include "object/color-profile.h"
 #include "svg/svg-color.h"
 #include "ui/builder-utils.h"
 #include "ui/controller.h"
@@ -82,12 +80,10 @@
 #include "ui/pack.h"
 #include "ui/shortcuts.h"
 #include "ui/themes.h"
-#include "ui/toolbar/toolbar-constants.h"
 #include "ui/toolbar/tool-toolbar.h"
+#include "ui/toolbar/toolbar-constants.h"
 #include "ui/util.h"
-#include "ui/widget/canvas.h"
 #include "ui/widget/color-scales.h"
-#include "ui/widget/desktop-widget.h"
 #include "ui/widget/preferences-widget.h"
 #include "ui/widget/style-swatch.h"
 #include "util/recently-used-fonts.h"

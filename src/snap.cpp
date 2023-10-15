@@ -19,15 +19,14 @@
 #include "snap.h"
 
 #include <memory>
-#include <utility>
 #include <vector>
 
+#include <glib.h>                                          // for g_assert
 #include <glibmm/timer.h>
 
 #include <2geom/transforms.h>
 
 #include "desktop.h"
-#include "inkscape.h"
 #include "preferences.h"
 #include "pure-transform.h"
 #include "selection.h"
@@ -45,9 +44,6 @@
 #include "object/sp-namedview.h"
 #include "object/sp-object.h"
 #include "object/sp-page.h"
-#include "object/sp-root.h"
-#include "object/sp-use.h"
-#include "ui/tools/tool-base.h"
 
 using Inkscape::Util::round_to_upper_multiple_plus;
 using Inkscape::Util::round_to_lower_multiple_plus;

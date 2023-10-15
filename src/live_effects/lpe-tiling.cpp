@@ -32,6 +32,7 @@
 #include <gtkmm/radiobuttongroup.h>
 #include <gtkmm/spinbutton.h>
 
+#include "inkscape.h"
 #include "display/curve.h"
 #include "helper/geom.h"
 #include "live_effects/lpeobject.h"

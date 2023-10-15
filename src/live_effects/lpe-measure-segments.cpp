@@ -15,23 +15,27 @@
 
 #include <cmath>
 #include <iomanip>
+
+#include <glibmm/i18n.h>
+#include <gtkmm/box.h>
+#include <gtkmm/notebook.h>
+
 #include <2geom/affine.h>
 #include <2geom/angle.h>
 #include <2geom/point.h>
 #include <2geom/ray.h>
-#include <gtkmm/box.h>
-#include <gtkmm/notebook.h>
-#include <libnrtype/font-lister.h>
+
 #include <pangomm/fontdescription.h>
 
-#include "display/curve.h"
 #include "document.h"
 #include "document-undo.h"
+#include "preferences.h"
+
+#include "display/curve.h"
 #include "helper/geom.h"
-#include "inkscape.h"
 #include "libnrtype/Layout-TNG.h"
+#include "libnrtype/font-lister.h"
 #include "live_effects/lpeobject.h"
-#include "live_effects/lpeobject-reference.h"
 #include "live_effects/parameter/satellite-reference.h"
 #include "object/sp-defs.h"
 #include "object/sp-flowtext.h"
@@ -41,13 +45,9 @@
 #include "object/sp-root.h"
 #include "object/sp-shape.h"
 #include "object/sp-text.h"
-#include "path-chemistry.h"
-#include "preferences.h"
-#include "style.h"
 #include "svg/stringstream.h"
 #include "svg/svg-color.h"
 #include "svg/svg.h"
-#include "svg/svg-length.h"
 #include "text-editing.h"
 #include "ui/pack.h"
 #include "util/safe-printf.h"
@@ -55,8 +55,6 @@
 #include "xml/node.h"
 #include "xml/sp-css-attr.h"
 
-// TODO due to internal breakage in glibmm headers, this must be last:
-#include <glibmm/i18n.h>
 
 using namespace Geom;
 namespace Inkscape {

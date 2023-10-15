@@ -45,8 +45,6 @@
 #include "object/weakptr.h"
 #include "ui/icon-names.h"
 #include "ui/dialog-run.h"
-#include "xml/repr.h"
-#include "xml/attribute-record.h"
 
 namespace Inkscape::Trace {
 

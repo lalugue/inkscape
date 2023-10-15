@@ -11,13 +11,15 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include "xml/repr.h"
-#include "attributes.h"
 #include "sp-font.h"
-#include "sp-glyph.h"
-#include "document.h"
 
-#include "display/nr-svgfonts.h"
+#include "attributes.h"                              // for SPAttr
+#include "document.h"                                // for SPDocument
+#include "sp-glyph.h"                                // for SPGlyph
+
+#include "object/sp-object.h"                        // for SPObject, SP_OBJ...
+#include "xml/document.h"                            // for Document
+#include "xml/node.h"                                // for Node
 
 
 //I think we should have extra stuff here and in the set method in order to set default value as specified at http://www.w3.org/TR/SVG/fonts.html

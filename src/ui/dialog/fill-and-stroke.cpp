@@ -23,11 +23,7 @@
 #include <gtkmm/label.h>
 
 #include "desktop-style.h"
-#include "document.h"
-#include "filter-chemistry.h"
-#include "inkscape.h"
 #include "preferences.h"
-#include "svg/css-ostringstream.h"
 #include "ui/icon-loader.h"
 #include "ui/icon-names.h"
 #include "ui/pack.h"

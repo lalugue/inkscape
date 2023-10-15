@@ -18,6 +18,9 @@
 
 #include "live_effects/parameter/parameter.h"
 
+namespace Gtk {
+class Widget;
+} // namespace Gtk
 
 namespace Inkscape {
 

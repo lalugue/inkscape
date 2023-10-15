@@ -13,15 +13,28 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#include "blend.h"
+
 #include <cstring>
 
-#include "blend.h"
-#include "attributes.h"
-#include "display/nr-filter.h"
-#include "object/sp-filter.h"
-#include "xml/repr.h"
-#include "slot-resolver.h"
-#include "util/optstr.h"
+#include "attributes.h"                          // for SPAttr
+#include "slot-resolver.h"                       // for SlotResolver
+
+#include "display/nr-filter-blend.h"             // for FilterBlend
+#include "object/filters/sp-filter-primitive.h"  // for SPFilterPrimitive
+#include "object/sp-object.h"                    // for SP_OBJECT_MODIFIED_FLAG
+#include "util/optstr.h"                         // for assign, to_cstr
+#include "xml/document.h"                        // for Document
+
+class SPDocument;
+
+namespace Inkscape {
+class DrawingItem;
+
+namespace Filters {
+class FilterPrimitive;
+} // namespace Filters
+} // namespace Inkscape
 
 void SPFeBlend::build(SPDocument *document, Inkscape::XML::Node *repr)
 {

@@ -12,10 +12,12 @@
 #define INKSCAPE_EXTENSION_DEPENDENCY_H__
 
 #include <glibmm/ustring.h>
-#include "xml/repr.h"
 
-namespace Inkscape {
-namespace Extension {
+namespace Inkscape::XML {
+class Node;
+} // namespace Inkscape::XML
+
+namespace Inkscape::Extension {
 
 class Extension;
 
@@ -82,7 +84,7 @@ public:
 }; /* class Dependency */
 
 
-} }  /* namespace Extension, Inkscape */
+}  // namespace Inkscape::Extension
 
 #endif /* INKSCAPE_EXTENSION_DEPENDENCY_H__ */
 

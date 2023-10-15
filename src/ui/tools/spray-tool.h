@@ -21,10 +21,12 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#include <2geom/pathvector.h>
 #include <2geom/point.h>
-#include "ui/tools/tool-base.h"
-#include "object/object-set.h"
+
 #include "display/control/canvas-item-ptr.h"
+#include "object/object-set.h"
+#include "ui/tools/tool-base.h"
 
 namespace Inkscape { class CanvasItemBpath; }
 

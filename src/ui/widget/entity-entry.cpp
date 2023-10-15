@@ -20,8 +20,8 @@
 #include <gtkmm/entry.h>
 
 #include "desktop.h"
+#include "document.h"
 #include "document-undo.h"
-#include "inkscape.h"
 #include "preferences.h"
 #include "rdf.h"
 

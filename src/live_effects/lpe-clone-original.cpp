@@ -16,6 +16,7 @@
 #include "lpeobject-reference.h"
 #include "lpe-spiro.h"
 
+#include "inkscape.h"
 #include "selection.h"
 
 #include "actions/actions-tools.h"

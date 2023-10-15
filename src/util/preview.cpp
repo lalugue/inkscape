@@ -15,12 +15,8 @@
 
 #include "preview.h"
 
-#include "document.h"
 #include "display/cairo-utils.h"
 #include "display/drawing-context.h"
-#include "object/sp-namedview.h"
-#include "object/sp-root.h"
-#include "async/async.h"
 
 namespace Inkscape {
 namespace UI {

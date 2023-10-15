@@ -18,11 +18,19 @@
 #include <optional>
 
 #include "helper/auto-connection.h"
-#include "sp-object.h"
-#include "svg/svg-length.h"
 
+#include "sp-object.h"          // for SPObject
+#include "util/cast.h"          // for tag_of
+#include "xml/node.h"           // for Node
+
+class SPDocument;
 class SPItem;
 class SPTagUseReference;
+enum class SPAttr;
+namespace Inkscape::XML {
+class Node;
+class Document;
+} // namespace Inkscape::XML
 
 class SPTagUse final : public SPObject {
     int tag() const override { return tag_of<decltype(*this)>; }
@@ -37,8 +45,8 @@ public:
     ~SPTagUse() override;
     
     void build(SPDocument *doc, Inkscape::XML::Node *repr) override;
-    void set(SPAttr key, gchar const *value) override;
-    Inkscape::XML::Node* write(Inkscape::XML::Document* doc, Inkscape::XML::Node* repr, guint flags) override;
+    void set(SPAttr key, char const *value) override;
+    Inkscape::XML::Node* write(Inkscape::XML::Document* doc, Inkscape::XML::Node* repr, unsigned flags) override;
     void release() override;
     
     virtual void href_changed(SPObject* old_ref, SPObject* ref);
@@ -63,4 +71,4 @@ public:
   fill-column:99
   End:
 */
-// vim: filetype=cpp:expandtab:shiftwidth=4:tabstop=8:softtabstop=4 :
+// vim: filetype=cpp:expandtab:shiftwidth=4:tabstop=8:softtabstop=4:fileencoding=utf-8:textwidth=99 :

@@ -12,13 +12,18 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include "attributes.h"
-#include "sp-polygon.h"
 #include "sp-polyline.h"
-#include "display/curve.h"
+
 #include <glibmm/i18n.h>
-#include "xml/repr.h"
-#include "document.h"
+
+#include "attributes.h"        // for SPAttr
+#include "object/sp-object.h"  // for SP_OBJECT_WRITE_BUILD
+#include "object/sp-shape.h"   // for SPShape
+#include "sp-polygon.h"        // for sp_poly_parse_curve
+#include "xml/document.h"      // for Document
+#include "xml/node.h"          // for Node
+
+class SPDocument;
 
 SPPolyLine::SPPolyLine() : SPShape() {
 }

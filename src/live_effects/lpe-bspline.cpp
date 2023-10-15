@@ -2,22 +2,23 @@
 /*
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
-#include <gtkmm.h>
+
+#include <glibmm/i18n.h>
+#include <glibmm/ustring.h>                 // for operator==, ustring
+#include <gtkmm/box.h>                      // for Box
+#include <gtkmm/button.h>                   // for Button
+#include <gtkmm/entry.h>                    // for Entry
+#include <gtkmm/enums.h>                    // for Orientation
+#include <gtkmm/widget.h>                   // for Widget
 
 #include "display/curve.h"
-#include "helper/geom-curves.h"
 #include "live_effects/lpe-bspline.h"
 #include "object/sp-path.h"
 #include "preferences.h"
 #include "svg/svg.h"
-#include "ui/icon-names.h"
 #include "ui/pack.h"
 #include "ui/util.h"
 #include "ui/widget/scalar.h"
-#include "xml/repr.h"
-
-// TODO due to internal breakage in glibmm headers, this must be last:
-#include <glibmm/i18n.h>
 
 namespace Inkscape::LivePathEffect {
 

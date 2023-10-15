@@ -16,12 +16,14 @@
 #define noSP_ANCHOR_VERBOSE
 
 #include <glibmm/i18n.h>
-#include "xml/quote.h"
-#include "xml/repr.h"
-#include "xml/href-attribute-helper.h"
+
 #include "attributes.h"
-#include "sp-anchor.h"
 #include "document.h"
+#include "sp-anchor.h"
+
+#include "xml/document.h"               // for Document
+#include "xml/href-attribute-helper.h"  // for setHrefAttribute
+#include "xml/quote.h"                  // for xml_quote_strdup
 
 void SPAnchor::build(SPDocument *document, Inkscape::XML::Node *repr) {
     SPGroup::build(document, repr);

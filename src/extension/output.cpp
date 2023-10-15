@@ -16,8 +16,8 @@
 #include "io/sys.h"
 #include "implementation/implementation.h"
 
-#include "xml/repr.h"
 #include "xml/attribute-record.h"
+#include "xml/node.h"
 
 /* Inkscape::Extension::Output */
 

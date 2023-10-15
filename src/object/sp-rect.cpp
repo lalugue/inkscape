@@ -12,19 +12,20 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include "display/curve.h"
-
-#include "inkscape.h"
-#include "document.h"
-#include "attributes.h"
-#include "style.h"
 #include "sp-rect.h"
-#include "sp-guide.h"
+
+#include <glibmm/i18n.h>
+
+#include "attributes.h"
+#include "document.h"
 #include "preferences.h"
-#include "svg/svg.h"
 #include "snap-candidate.h"
 #include "snap-preferences.h"
-#include <glibmm/i18n.h>
+#include "sp-guide.h"
+#include "style.h"
+
+#include "display/curve.h"
+#include "svg/svg.h"
 
 #define noRECT_VERBOSE
 

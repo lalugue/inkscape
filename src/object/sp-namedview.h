@@ -15,13 +15,13 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include "attributes.h"
-#include "sp-object-group.h"
-#include "snap.h"
-#include "document.h"
-#include "util/units.h"
-#include "svg/svg-bool.h"
 #include <vector>
+
+#include "attributes.h"
+#include "snap.h"
+#include "sp-object-group.h"
+
+#include "svg/svg-bool.h"
 
 namespace Inkscape {
     class CanvasPage;

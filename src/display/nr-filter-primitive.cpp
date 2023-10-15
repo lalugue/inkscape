@@ -10,17 +10,15 @@
  *
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
-
 #include "display/nr-filter-primitive.h"
-#include "display/nr-filter-slot.h"
-#include "display/nr-filter-types.h"
-#include "svg/svg-length.h"
 
-#include "inkscape.h"
-#include "desktop.h"
-
-#include "document.h"
 #include "style.h"
+
+#include "display/nr-filter-slot.h"   // for FilterSlot
+#include "display/nr-filter-types.h"  // for FilterSlotType
+#include "display/nr-filter-units.h"  // for FilterUnits
+#include "object/sp-filter-units.h"   // for SPFilterUnits
+#include "svg/svg-length.h"           // for SVGLength
 
 namespace Inkscape {
 namespace Filters {

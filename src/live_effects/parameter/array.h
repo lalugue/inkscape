@@ -20,7 +20,6 @@
 #include "live_effects/parameter/satellite-reference.h"
 #include "object/uri.h"
 #include "svg/stringstream.h"
-#include "svg/svg.h"
 
 namespace Inkscape::LivePathEffect {
 

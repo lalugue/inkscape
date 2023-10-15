@@ -19,24 +19,23 @@
 #include "sp-guide.h"
 
 #include <cstring>
-#include <glibmm/i18n.h>
 #include <vector>
+
+#include <glibmm/i18n.h>
 
 #include "attributes.h"
 #include "desktop-events.h"
-#include "desktop.h"
-#include "display/control/canvas-item-guideline.h"
 #include "document-undo.h"
-#include "inkscape.h"
-#include "object/sp-page.h"
 #include "page-manager.h"
 #include "sp-namedview.h"
 #include "sp-root.h"
-#include "svg/stringstream.h"
+
+#include "display/control/canvas-item-guideline.h"
+#include "object/sp-page.h"
 #include "svg/svg-color.h"
 #include "svg/svg.h"
-#include "ui/widget/canvas.h" // Should really be here
 #include "util/numeric/converters.h"
+#include "util/units.h"
 #include "xml/repr.h"
 
 using Inkscape::DocumentUndo;

@@ -27,31 +27,30 @@
 #include <set>
 #include <string>
 #include <tuple>
+
+#include <glibmm/convert.h>
 #include <gtkmm/image.h>
 #include <gtkmm/liststore.h>
+#include <gtkmm/sizegroup.h>
 #include <sigc++/adaptors/bind.h>
 #include <sigc++/functors/mem_fun.h>
 
 #include "rdf.h"
+#include "page-manager.h"
 #include "selection.h"
-#include "style.h"
-#include "actions/actions-tools.h"
+
 #include "color/cms-system.h"
 #include "helper/auto-connection.h"
-#include "include/gtkmm_version.h"
 #include "io/sys.h"
 #include "object/color-profile.h"
 #include "object/sp-grid.h"
 #include "object/sp-root.h"
 #include "object/sp-script.h"
-#include "page-manager.h"
-#include "svg/svg-color.h"
 #include "ui/dialog/filedialog.h"
 #include "ui/icon-loader.h"
 #include "ui/icon-names.h"
 #include "ui/pack.h"
 #include "ui/popup-menu.h"
-#include "ui/shape-editor.h"
 #include "ui/util.h"
 #include "ui/widget/alignment-selector.h"
 #include "ui/widget/entity-entry.h"

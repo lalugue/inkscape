@@ -11,6 +11,7 @@
 
 #include <glibmm/i18n.h>
 
+#include "inkscape.h"
 #include "selection.h"
 
 #include "display/control/canvas-item-bpath.h"
@@ -21,7 +22,7 @@
 #include "svg/stringstream.h"
 #include "svg/svg.h"
 #include "ui/icon-names.h"
-#include "xml/repr.h"
+#include "xml/node.h"
 
 #define noLPEREALPARAM_DEBUG
 

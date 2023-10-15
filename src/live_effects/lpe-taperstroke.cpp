@@ -12,27 +12,22 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include "live_effects/lpe-taperstroke.h"
-#include "live_effects/fill-conversion.h"
+#include "lpe-taperstroke.h"
 
-#include <2geom/circle.h>
+#include <glibmm/i18n.h>
+
 #include <2geom/sbasis-to-bezier.h>
 
 #include "style.h"
 
-#include "display/curve.h"
 #include "helper/geom.h"
 #include "helper/geom-nodetype.h"
 #include "helper/geom-pathstroke.h"
+#include "live_effects/fill-conversion.h"
 #include "object/sp-shape.h"
-#include "svg/svg-color.h"
-#include "svg/css-ostringstream.h"
 #include "svg/svg.h"
 #include "ui/knot/knot-holder.h"
 #include "ui/knot/knot-holder-entity.h"
-
-// TODO due to internal breakage in glibmm headers, this must be last:
-#include <glibmm/i18n.h>
 
 template<typename T>
 inline bool withinRange(T value, T low, T high) {

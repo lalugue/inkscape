@@ -15,27 +15,21 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include <glibmm.h>
 #include <glibmm/i18n.h>
-
-#include "live_effects/effect.h"
-#include "live_effects/lpeobject.h"
-#include "live_effects/lpeobject-reference.h"
 
 #include <2geom/angle.h>
 #include <2geom/circle.h>
-#include <2geom/ellipse.h>
 #include <2geom/path-sink.h>
 
 #include "attributes.h"
-#include "display/curve.h"
-#include "document.h"
 #include "preferences.h"
 #include "snap-candidate.h"
+#include "snap-preferences.h"   // for SnapPreferences
 #include "sp-ellipse.h"
 #include "style.h"
+
+#include "display/curve.h"
 #include "svg/svg.h"
-#include "svg/path-string.h"
 
 #define SP_2PI (2 * M_PI)
 

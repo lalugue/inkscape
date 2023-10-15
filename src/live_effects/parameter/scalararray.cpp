@@ -16,6 +16,7 @@
 #include "live_effects/effect.h"
 #include "ui/icon-names.h"
 #include "ui/knot/knot-holder-entity.h"
+#include "svg/svg.h"
 
 namespace Inkscape::LivePathEffect {
 

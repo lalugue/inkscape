@@ -9,22 +9,19 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#include "execution-env.h"
+
 #include <gtkmm/dialog.h>
 #include <gtkmm/messagedialog.h>
 
-#include "execution-env.h"
-#include "prefdialog/prefdialog.h"
-#include "implementation/implementation.h"
-
-#include "selection.h"
-#include "effect.h"
-#include "document.h"
 #include "desktop.h"
-#include "inkscape.h"
 #include "document-undo.h"
-#include "desktop.h"
-#include "object/sp-namedview.h"
+#include "effect.h"
+#include "inkscape.h"
+#include "selection.h"
 
+#include "implementation/implementation.h"
+#include "prefdialog/prefdialog.h"
 #include "ui/widget/canvas.h"  // To get window (perverse!)
 
 namespace Inkscape {

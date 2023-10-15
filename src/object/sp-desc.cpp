@@ -11,7 +11,8 @@
  */
 
 #include "sp-desc.h"
-#include "xml/repr.h"
+
+#include "xml/node.h"
 
 SPDesc::SPDesc() : SPObject() {
 }

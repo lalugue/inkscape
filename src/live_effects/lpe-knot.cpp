@@ -15,34 +15,23 @@
 
 #include "lpe-knot.h"
 
-#include <gdk/gdk.h>
 #include <optional>
 
-#include <2geom/sbasis-to-bezier.h>
-#include <2geom/bezier-to-sbasis.h>
-#include <2geom/basic-intersection.h>
+#include <gdk/gdk.h>
+#include <glibmm/i18n.h>
 
-// for change crossing undo
-#include "document.h"
-#include "document-undo.h"
+#include <2geom/basic-intersection.h>
 
 #include "style.h"
 
 #include "display/curve.h"
-
 #include "helper/geom.h"
-
 #include "object/sp-item-group.h"
 #include "object/sp-path.h"
 #include "object/sp-shape.h"
-
-#include "ui/icon-names.h"
 #include "ui/knot/knot-holder.h"
 #include "ui/knot/knot-holder-entity.h"
-
-
-// TODO due to internal breakage in glibmm headers, this must be last:
-#include <glibmm/i18n.h>
+#include "svg/svg.h"
 
 namespace Inkscape {
 namespace LivePathEffect {

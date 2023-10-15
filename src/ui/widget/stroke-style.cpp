@@ -25,6 +25,7 @@
 #include <gtkmm/label.h>
 #include <gtkmm/togglebutton.h>
 
+#include "document-undo.h"
 #include "fill-or-stroke.h"
 #include "inkscape.h"
 #include "selection.h"

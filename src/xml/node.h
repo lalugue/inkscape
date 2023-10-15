@@ -13,23 +13,22 @@
 #ifndef SEEN_INKSCAPE_XML_NODE_H
 #define SEEN_INKSCAPE_XML_NODE_H
 
-#include <cassert>
 #include <vector>
-#include <list>
+
 #include <2geom/point.h>
 
 #include "gc-anchored.h"
 #include "inkgc/gc-alloc.h"
 #include "node-iterators.h"
 #include "util/const_char_ptr.h"
-#include "svg/svg-length.h"
+
+class SVGLength;
 
 namespace Inkscape {
 namespace XML {
 
 class AttributeRecord;
 struct Document;
-class Event;
 class NodeObserver;
 
 using AttributeVector = std::vector<AttributeRecord, Inkscape::GC::Alloc<AttributeRecord>>;
@@ -154,7 +153,7 @@ public:
      * The returned list is a functional programming style list rather than a standard one.
      *
      * @return A list of AttributeRecord structures describing the attributes
-     * @todo This method should return std::map<Glib::Quark const, gchar const *>
+     * @todo This method should return std::map<Glib::Quark const, char const *>
      *       or something similar with a custom allocator
      */
     virtual const AttributeVector & attributeList() const=0;
@@ -467,7 +466,7 @@ public:
      * @param src The node to check for elements into this node
      * @param key The attribute to use as the identity attribute
      */
-    virtual void cleanOriginal(Node *src, gchar const *key) = 0;
+    virtual void cleanOriginal(Node *src, char const *key) = 0;
 
     /**
      * @brief Compare 2 nodes equality

@@ -7,21 +7,12 @@
  * Copyright (C) 2018 Authors
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
-#ifdef HAVE_CONFIG_H
-# include "config.h"  // only include where actually required!
-#endif
 
 #include "color-profile.h"
 
 #include <cstring>
-#include <utility>
-#include <fcntl.h>
-#include <unistd.h>
 
-#include <gdkmm/rgba.h>
-#include <glib/gstdio.h>
-#include <glibmm/checksum.h>
-#include <glibmm/convert.h>
+#include <glib.h>                         // for g_free, guchar, g_utf8_case...
 
 #ifdef _WIN32
 #include <windows.h>
@@ -37,13 +28,9 @@
 #include "preferences.h"
 #include "uri.h"
 
-#include "color/cms-system.h"
 #include "color/color-profile-cms-fns.h"
 
-#include <io/sys.h>
-#include <io/resource.h>
-
-#include "xml/repr.h"
+#include "xml/document.h"
 #include "xml/href-attribute-helper.h"
 
 using Inkscape::ColorProfile;

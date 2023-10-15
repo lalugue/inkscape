@@ -16,14 +16,15 @@
 
 #include "knot-holder.h"
 
+#include <glibmm/i18n.h>
+
 #include "desktop.h"
 #include "document-undo.h"
-#include "document.h"
 #include "knot-holder-entity.h"
 #include "knot.h"
+#include "style.h"
 
-#include "live_effects/effect.h"
-#include "live_effects/lpeobject.h"
+#include "display/control/snap-indicator.h"
 
 #include "object/box3d.h"
 #include "object/sp-ellipse.h"
@@ -36,7 +37,6 @@
 #include "object/sp-star.h"
 #include "object/sp-marker.h"
 #include "object/filters/gaussian-blur.h"
-#include "style.h"
 
 #include "ui/icon-names.h"
 #include "ui/shape-editor.h"
@@ -46,14 +46,8 @@
 #include "ui/tools/spiral-tool.h"
 #include "ui/tools/tweak-tool.h"
 
-#include "display/control/snap-indicator.h"
-
-// TODO due to internal breakage in glibmm headers, this must be last:
-#include <glibmm/i18n.h>
 
 using Inkscape::DocumentUndo;
-
-class SPDesktop;
 
 KnotHolder::KnotHolder(SPDesktop *desktop, SPItem *item, SPKnotHolderReleasedFunc relhandler) :
     desktop(desktop),

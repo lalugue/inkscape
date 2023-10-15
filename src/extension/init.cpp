@@ -25,7 +25,6 @@
 #include <glibmm/ustring.h>
 
 #include "db.h"
-#include "inkscape.h"
 #include "internal/emf-inout.h"
 #include "internal/emf-print.h"
 #include "internal/svgz.h"
@@ -37,7 +36,6 @@
 #include "internal/template-video.h"
 #include "internal/wmf-inout.h"
 #include "internal/wmf-print.h"
-#include "path-prefix.h"
 #include "system.h"
 
 #ifdef HAVE_POPPLER
@@ -69,7 +67,6 @@
 #include "internal/cdr-input.h"
 #endif
 #include "preferences.h"
-#include "io/sys.h"
 #include "io/resource.h"
 
 #ifdef WITH_MAGICK

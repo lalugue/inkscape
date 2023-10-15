@@ -13,18 +13,15 @@
  */
 
 #include "box3d-side.h"
-#include "document.h"
-#include "xml/document.h"
-#include "xml/repr.h"
-#include "display/curve.h"
-#include "svg/svg.h"
+
 #include "attributes.h"
-#include "inkscape.h"
-#include "object/persp3d.h"
-#include "object/persp3d-reference.h"
+#include "document.h"
+
+#include "display/curve.h"
 #include "object/box3d.h"
-#include "ui/tools/box3d-tool.h"
-#include "desktop-style.h"
+#include "object/persp3d-reference.h"
+#include "svg/svg.h"
+#include "xml/document.h"
 
 static void box3d_side_compute_corner_ids(Box3DSide *side, unsigned int corners[4]);
 

@@ -7,23 +7,19 @@
 
 #include "colorpicker.h"
 
+#include <glibmm/i18n.h>
 #include <gtkmm/box.h>
 
-#include "color.h"
-#include "document.h"
-#include "document-undo.h"
-#include "inkscape.h"
-#include "live_effects/effect.h"
-#include "live_effects/parameter/colorpicker.h"
-#include "svg/stringstream.h"
-#include "svg/svg-color.h"
-#include "svg/svg.h"
-#include "ui/icon-names.h"
-#include "ui/pack.h"
-#include "ui/widget/registered-widget.h"
-#include "util/safe-printf.h"
+#include "document-undo.h"                       // for DocumentUndo
+#include "live_effects/effect.h"                 // for Effect
+#include "live_effects/parameter/colorpicker.h"  // for ColorPickerParam
+#include "svg/svg-color.h"                       // for guint32
+#include "ui/icon-names.h"                       // for INKSCAPE_ICON
+#include "ui/pack.h"                             // for pack_start
+#include "ui/widget/registered-widget.h"         // for RegisteredColorPicker
+#include "util/safe-printf.h"                    // for safeprintf
 
-#include <glibmm/i18n.h>
+class SPDocument;
 
 namespace Inkscape {
 namespace LivePathEffect {

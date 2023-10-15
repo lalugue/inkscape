@@ -19,12 +19,9 @@
 
 #include "desktop.h"
 #include "desktop-style.h"
-#include "document.h"
 #include "document-undo.h"
 #include "filter-chemistry.h"
-#include "inkscape.h"
 #include "style.h"
-#include "object/filters/blend.h"
 #include "svg/css-ostringstream.h"
 #include "ui/pack.h"
 #include "ui/widget/style-subject.h"

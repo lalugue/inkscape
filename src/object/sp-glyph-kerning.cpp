@@ -12,13 +12,15 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include "xml/repr.h"
-#include "attributes.h"
 #include "sp-glyph-kerning.h"
 
-#include "document.h"
-#include <cstring>
+#include "attributes.h"        // for SPAttr
+#include "object/sp-object.h"  // for SPObject, SP_OBJECT_MODIFIED_FLAG, SPC...
+#include "unicoderange.h"      // for UnicodeRange
+#include "xml/document.h"      // for Document
+#include "xml/node.h"          // for Node
 
+class SPDocument;
 
 SPGlyphKerning::SPGlyphKerning() 
     : SPObject()

@@ -14,19 +14,24 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include <cstring>
-#include <string>
-#include <glib.h>
-#include "live_effects/effect.h"
-
-#include "svg/svg.h"
-#include "attributes.h"
-#include "display/curve.h"
-#include "xml/repr.h"
-#include "document.h"
-
 #include "sp-star.h"
+
+#include <cstring>
+
+#include <glib.h>
 #include <glibmm/i18n.h>
+
+#include "attributes.h"
+#include "snap-candidate.h"       // for SnapCandidatePoint
+#include "snap-enums.h"           // for SnapTargetType, SnapSourceType
+#include "snap-preferences.h"     // for SnapPreferences
+
+#include "display/curve.h"
+#include "svg/svg.h"
+#include "xml/document.h"         // for Document
+#include "xml/node.h"             // for Node
+
+class SPDocument;
 
 SPStar::SPStar() : SPShape() ,
 	sides(5),

@@ -14,19 +14,17 @@
 #ifndef EXTENSION_INTERNAL_TEMPLATE_FROM_FILE_H
 #define EXTENSION_INTERNAL_TEMPLATE_FROM_FILE_H
 
-#include <glib.h>
-
-#include "extension/extension.h"
-#include "extension/implementation/implementation.h"
-#include "extension/system.h"
-#include "extension/template.h"
-#include "xml/repr.h"
+#include <string>                                     // for string
+#include "extension/implementation/implementation.h"  // for Implementation
+#include "extension/template.h"                       // for Template (ptr o...
 
 class SPDocument;
 
-namespace Inkscape {
-namespace Extension {
-namespace Internal {
+namespace Inkscape::XML {
+class Node;
+} // namespace Inkscape::XML
+
+namespace Inkscape::Extension::Internal {
 
 class TemplatePresetFile : public TemplatePreset
 {
@@ -47,7 +45,17 @@ public:
 private:
 };
 
-} // namespace Internal
-} // namespace Extension
-} // namespace Inkscape
+} // namespace Inkscape::Extension::Internal
+
 #endif /* EXTENSION_INTERNAL_TEMPLATE_FROM_FILE_H */
+
+/*
+  Local Variables:
+  mode:c++
+  c-file-style:"stroustrup"
+  c-file-offsets:((innamespace . 0)(inline-open . 0)(case-label . +))
+  indent-tabs-mode:nil
+  fill-column:99
+  End:
+*/
+// vim: filetype=cpp:expandtab:shiftwidth=4:tabstop=8:softtabstop=4:fileencoding=utf-8:textwidth=99 :

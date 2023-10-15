@@ -17,13 +17,11 @@
 #include <glibmm/i18n.h>
 #include <gtkmm/application.h>
 #include <gtkmm/box.h>
-#include <gtkmm/label.h>
 
 #include "document.h"
-#include "enums.h"
+#include "inkscape.h"
 #include "inkscape-application.h"
 #include "inkscape-window.h"
-#include "inkscape.h"
 #include "preferences.h"
 #include "ui/dialog/dialog-base.h"
 #include "ui/dialog/dialog-container.h"
@@ -31,9 +29,7 @@
 #include "ui/dialog/dialog-multipaned.h"
 #include "ui/dialog/dialog-notebook.h"
 #include "ui/pack.h"
-#include "ui/shortcuts.h"
 #include "ui/themes.h"
-#include "ui/util.h"
 
 // Sizing constants
 static constexpr int MINIMUM_WINDOW_WIDTH       = 210;

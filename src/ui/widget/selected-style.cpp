@@ -51,6 +51,7 @@
 #include "ui/widget/popover-menu.h"
 #include "ui/widget/popover-menu-item.h"
 #include "util/safe-printf.h"
+#include "util/units.cpp"
 #include "widgets/paintdef.h"
 #include "widgets/spw-utilities.h"
 

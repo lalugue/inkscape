@@ -22,11 +22,8 @@
 
 #include "print.h"
 
-#include "desktop.h"
 #include "document.h"
-#include "inkscape.h"
 
-#include "display/drawing-item.h"
 #include "display/drawing.h"
 
 #include "extension/print.h"

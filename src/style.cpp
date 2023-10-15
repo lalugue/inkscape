@@ -24,7 +24,6 @@
 
 #include <cstring>
 #include <string>
-#include <algorithm>
 #include <unordered_map>
 #include <vector>
 
@@ -38,11 +37,9 @@
 #include "3rdparty/libcroco/src/cr-sel-eng.h"
 
 #include "object/sp-paint-server.h"
-#include "object/uri-references.h"
 #include "object/uri.h"
 
 #include "svg/css-ostringstream.h"
-#include "svg/svg.h"
 
 #include "util/units.h"
 
@@ -55,9 +52,7 @@
 
 using Inkscape::CSSOStringStream;
 
-#define BMAX 8192
-
-struct SPStyleEnum;
+static constexpr int BMAX = 8192;
 
 // static int _count = 0;
 

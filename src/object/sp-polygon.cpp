@@ -12,15 +12,23 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include "attributes.h"
 #include "sp-polygon.h"
-#include "display/curve.h"
+
 #include <glibmm/i18n.h>
-#include <2geom/curves.h>
-#include "helper/geom-curves.h"
-#include "svg/stringstream.h"
-#include "xml/repr.h"
-#include "document.h"
+
+#include "attributes.h"          // for SPAttr
+#include "curve.h"               // for Curve
+#include "display/curve.h"       // for SPCurve
+#include "helper/geom-curves.h"  // for is_straight_curve
+#include "object/sp-object.h"    // for SP_OBJECT_WRITE_BUILD
+#include "object/sp-shape.h"     // for SPShape
+#include "path.h"                // for Path, BaseIterator
+#include "pathvector.h"          // for PathVector
+#include "point.h"               // for Point
+#include "svg/stringstream.h"    // for SVGOStringStream
+#include "xml/document.h"        // for Document
+#include "xml/node.h"            // for Node
+class SPDocument;
 
 SPPolygon::SPPolygon() : SPShape() {
 }

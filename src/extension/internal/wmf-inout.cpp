@@ -23,33 +23,29 @@
  *      http://msdn.microsoft.com/library/en-us/gdi/metafile_5hkj.asp
  */
 
-//#include <png.h>   //This must precede text_reassemble.h or it blows up in pngconf.h when compiling
+#include "wmf-inout.h"
+
 #include <cstdio>
 #include <cstdlib>
 #include <cstdint>
 #include <3rdparty/libuemf/symbol_convert.h>
 
+#include "clear-n_.h"
 #include "document.h"
-#include "object/sp-root.h" // even though it is included indirectly by wmf-inout.h
-#include "object/sp-path.h"
 #include "print.h"
-#include "extension/system.h"
-#include "extension/print.h"
+#include "wmf-print.h"
+
+#include "display/drawing.h"
 #include "extension/db.h"
 #include "extension/input.h"
 #include "extension/output.h"
-#include "display/drawing.h"
-#include "display/drawing-item.h"
-#include "clear-n_.h"
+#include "extension/print.h"
+#include "extension/system.h"
+#include "object/sp-root.h"
 #include "path/path-boolop.h"
 #include "svg/svg.h"
 #include "util/safe-printf.h"
-#include "util/units.h" // even though it is included indirectly by wmf-inout.h
-#include "inkscape.h" // even though it is included indirectly by wmf-inout.h
-
-
-#include "wmf-inout.h"
-#include "wmf-print.h"
+#include "util/units.h"
 
 #define PRINT_WMF "org.inkscape.print.wmf"
 

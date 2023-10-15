@@ -55,6 +55,7 @@
 #include "ui/dialog-run.h"
 #include "ui/dialog/dialog-manager.h"
 #include "ui/dialog/dialog-window.h"
+#include "ui/themes.h"
 #include "ui/tools/tool-base.h"
 #include "ui/util.h"
 #include "util/units.h"

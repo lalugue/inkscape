@@ -12,16 +12,16 @@
 
 #include <memory>
 #include <vector>
-#include <2geom/pathvector.h>
+
 #include <glibmm/refptr.h>
 #include <glibmm/ustring.h>
 #include <gtkmm/treemodel.h>
 
-#include "live_effects/parameter/parameter.h"
-#include "live_effects/parameter/path-reference.h"
-#include "svg/svg.h"
-#include "svg/stringstream.h"
-#include "path-reference.h"
+#include <2geom/pathvector.h>
+
+#include "live_effects/effect-enum.h"          // for ParamType
+#include "live_effects/parameter/parameter.h"  // for Parameter
+#include "object/uri-references.h"             // for URIReference
 
 namespace Gtk {
 class TreeStore;

@@ -13,18 +13,13 @@
 
 #include <cstdio>
 #include <glibmm/convert.h>
-#include <glibmm/fileutils.h>
 #include <glibmm/miscutils.h>
 #include <glibmm/ustring.h>
 
 #include "inkscape-application.h"
-#include "inkscape.h"
-#include "selection.h"
-#include "xml/simple-document.h"
-#include "xml/node.h"
-#include "xml/node-iterators.h"
-
-using namespace Inkscape::IO;
+#include "xml/document.h"          // for Document
+#include "xml/node.h"              // for Node
+#include "xml/repr.h"              // for sp_repr_document_new, sp_repr_save...
 
 static bool use_active_window = false;
 static Inkscape::XML::Document *active_window_data = nullptr; 

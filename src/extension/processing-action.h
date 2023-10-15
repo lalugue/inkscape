@@ -11,12 +11,15 @@
 #ifndef INKSCAPE_EXTENSION_PROCESSING_ACTION_H__
 #define INKSCAPE_EXTENSION_PROCESSING_ACTION_H__
 
-#include "xml/repr.h"
+#include <string>  // for string
 
 class SPDocument;
 
-namespace Inkscape {
-namespace Extension {
+namespace Inkscape::XML {
+class Node;
+}
+
+namespace Inkscape::Extension {
 
 class ProcessingAction {
 public:
@@ -32,7 +35,7 @@ private:
     bool _pref_default = true;
 };
 
-} }  /* namespace Extension, Inkscape */
+}  // namespace Inkscape::Extension
 
 #endif /* INKSCAPE_EXTENSION_PROCESSING_ACTION_H__ */
 

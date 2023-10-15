@@ -12,23 +12,19 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include <cstring>
+#include "sp-mask.h"
+
 #include <string>
 #include <2geom/transforms.h>
 
-#include "display/drawing.h"
 #include "display/drawing-group.h"
-#include "xml/repr.h"
 
-#include "enums.h"
-#include "attributes.h"
-#include "document.h"
-#include "style.h"
-#include "attributes.h"
-
-#include "sp-defs.h"
-#include "sp-item.h"
-#include "sp-mask.h"
+#include "attributes.h"                              // for SPAttr
+#include "document.h"                                // for SPDocument
+#include "enums.h"                                   // for SP_CONTENT_UNITS...
+#include "sp-defs.h"                                 // for SPDefs
+#include "sp-item.h"                                 // for SPItem, SP_ITEM_...
+#include "xml/document.h"                            // for Document
 
 SPMask::SPMask()
 {

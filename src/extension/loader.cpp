@@ -12,12 +12,14 @@
 
 #include "loader.h"
 
+#include <cstring>
+
 #include <gmodule.h>
 
-#include "system.h"
-#include <cstring>
 #include "dependency.h"
 #include "inkscape-version.h"
+#include "xml/document.h"         // for Document
+#include "xml/node.h"             // for Node
 
 namespace Inkscape {
 namespace Extension {

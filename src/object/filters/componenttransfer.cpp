@@ -12,12 +12,26 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include "attributes.h"
-#include "document.h"
 #include "componenttransfer.h"
-#include "componenttransfer-funcnode.h"
-#include "display/nr-filter.h"
-#include "xml/repr.h"
+
+#include <vector>                                    // for vector
+
+#include "componenttransfer-funcnode.h"              // for SPFeFuncNode
+#include "document.h"                                // for SPDocument
+
+#include "display/nr-filter-component-transfer.h"    // for FilterComponentT...
+#include "object/filters/sp-filter-primitive.h"      // for SPFilterPrimitive
+#include "object/sp-object.h"                        // for SPObject, SP_OBJ...
+
+namespace Inkscape {
+class DrawingItem;
+namespace Filters {
+class FilterPrimitive;
+} // namespace Filters
+namespace XML {
+class Node;
+} // namespace XML
+} // namespace Inkscape
 
 void SPFeComponentTransfer::build(SPDocument *document, Inkscape::XML::Node *repr)
 {

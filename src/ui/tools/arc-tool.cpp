@@ -16,6 +16,9 @@
  *
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
+
+#include "arc-tool.h"
+
 #include <glibmm/i18n.h>
 #include <gdk/gdkkeysyms.h>
 
@@ -34,10 +37,11 @@
 
 #include "ui/icon-names.h"
 #include "ui/modifiers.h"
-#include "ui/tools/arc-tool.h"
 #include "ui/shape-editor.h"
 #include "ui/tools/tool-base.h"
 #include "ui/widget/events/canvas-event.h"
+
+#include "util/units.h"
 
 using Inkscape::DocumentUndo;
 

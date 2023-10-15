@@ -12,11 +12,11 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include <glibmm/ustring.h>
+#include "selected-color.h"
+
 #include <cmath>
 
-#include "svg/svg-icc-color.h"
-#include "ui/selected-color.h"
+#include <glibmm/ustring.h>
 
 namespace Inkscape {
 namespace UI {

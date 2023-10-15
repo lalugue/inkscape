@@ -19,15 +19,14 @@
 #include <optional>
 #include <sstream>
 #include <utility>
+
 #include <glibmm/fileutils.h>
 #include <glibmm/i18n.h>
 #include <glibmm/main.h>
-#include <gtkmm/builder.h>
 #include <gtkmm/button.h>
 #include <gtkmm/checkbutton.h>
 #include <gtkmm/flowbox.h>
 #include <gtkmm/grid.h>
-#include <gtkmm/icontheme.h>
 #include <gtkmm/image.h>
 #include <gtkmm/label.h>
 #include <gtkmm/menubutton.h>
@@ -35,24 +34,14 @@
 #include <gtkmm/spinbutton.h>
 #include <gtkmm/window.h>
 
-#include "desktop-style.h"
 #include "helper/stock-items.h"
-#include "inkscape.h"
 #include "io/resource.h"
-#include "manipulation/copy-resource.h"
 #include "object/sp-defs.h"
 #include "object/sp-marker.h"
 #include "object/sp-root.h"
-#include "path-prefix.h"
-#include "style.h"
 #include "ui/builder-utils.h"
-#include "ui/cache/svg_preview_cache.h"
-#include "ui/dialog-events.h"
-#include "ui/icon-loader.h"
 #include "ui/svg-renderer.h"
 #include "ui/util.h"
-#include "ui/widget/spinbutton.h"
-#include "ui/widget/stroke-style.h"
 #include "util/object-renderer.h"
 
 #define noTIMING_INFO 1;

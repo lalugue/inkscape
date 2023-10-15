@@ -10,18 +10,16 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include <glibmm/i18n.h>
-
 #include "sp-page.h"
 
+#include <glibmm/i18n.h>
+
 #include "attributes.h"
-#include "desktop.h"
+#include "document.h"
+
 #include "display/control/canvas-page.h"
-#include "inkscape.h"
 #include "object/object-set.h"
-#include "sp-namedview.h"
-#include "sp-root.h"
-#include "util/numeric/converters.h"
+#include "util/units.h"
 
 using Inkscape::DocumentUndo;
 

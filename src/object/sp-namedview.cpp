@@ -26,7 +26,6 @@
 
 #include "attributes.h"
 #include "conn-avoid-ref.h" // for defaultConnSpacing.
-#include "desktop-events.h"
 #include "desktop.h"
 #include "document-undo.h"
 #include "document.h"
@@ -49,7 +48,6 @@
 #include "ui/widget/canvas-grid.h"
 #include "ui/widget/desktop-widget.h"
 #include "util/units.h"
-#include "xml/repr.h"
 
 using Inkscape::DocumentUndo;
 using Inkscape::Util::unit_table;

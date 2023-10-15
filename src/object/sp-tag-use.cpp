@@ -16,18 +16,19 @@
 #include <glibmm/i18n.h>
 #include <sigc++/functors/mem_fun.h>
 
-#include "bad-uri-exception.h"
-#include "display/drawing-group.h"
-#include "attributes.h"
-#include "document.h"
-#include "uri.h"
-#include "xml/repr.h"
-#include "xml/href-attribute-helper.h"
-#include "preferences.h"
-#include "style.h"
-#include "sp-factory.h"
-#include "sp-symbol.h"
-#include "sp-tag-use-reference.h"
+#include "attributes.h"                 // for SPAttr
+#include "bad-uri-exception.h"          // for BadURIException
+#include "sp-item.h"                    // for SPItem
+#include "sp-object.h"                  // for SPObject, sp_object_unref
+#include "sp-factory.h"                 // for NodeTraits, SPFactory
+#include "sp-tag-use-reference.h"       // for SPTagUseReference
+#include "uri.h"                        // for URI
+
+#include "xml/document.h"               // for Document
+#include "xml/href-attribute-helper.h"  // for getHrefAttribute
+#include "xml/node.h"                   // for Node
+
+class SPDocument;
 
 SPTagUse::SPTagUse()
     : ref{std::make_unique<SPTagUseReference>(this)}
@@ -75,7 +76,7 @@ SPTagUse::release()
 }
 
 void
-SPTagUse::set(SPAttr key, gchar const *value)
+SPTagUse::set(SPAttr key, char const *value)
 {
 
     switch (key) {
@@ -110,7 +111,7 @@ SPTagUse::set(SPAttr key, gchar const *value)
 }
 
 Inkscape::XML::Node *
-SPTagUse::write(Inkscape::XML::Document *xml_doc, Inkscape::XML::Node *repr, guint flags)
+SPTagUse::write(Inkscape::XML::Document *xml_doc, Inkscape::XML::Node *repr, unsigned flags)
 {
     if ((flags & SP_OBJECT_WRITE_BUILD) && !repr) {
         repr = xml_doc->createElement("inkscape:tagref");

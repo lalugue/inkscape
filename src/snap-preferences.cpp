@@ -11,8 +11,9 @@
  */
 
 #include <cassert>
+#include <cstddef>                                         // for size_t
+#include <glib.h>                                          // for g_assert
 
-#include "inkscape.h"
 #include "snap-preferences.h"
 
 Inkscape::SnapPreferences::SnapPreferences() :

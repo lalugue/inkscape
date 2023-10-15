@@ -36,6 +36,7 @@
 
 #include "desktop.h"
 #include "document.h"
+#include "document-undo.h"
 #include "layer-manager.h"
 #include "page-manager.h"
 #include "selection.h"

@@ -12,7 +12,6 @@
 #include <map>
 
 #include "document-subset.h"
-#include "document.h"
 
 #include "object/sp-object.h"
 

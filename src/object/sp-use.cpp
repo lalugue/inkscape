@@ -15,36 +15,40 @@
  */
 
 #include <cstring>
-#include <string>
 
 #include <2geom/transforms.h>
 #include <glibmm/i18n.h>
 #include <glibmm/markup.h>
 
-#include "bad-uri-exception.h"
-#include "display/curve.h"
-#include "display/drawing-group.h"
 #include "attributes.h"
+#include "bad-uri-exception.h"
 #include "document.h"
+#include "enums.h"                                   // for SP_CLONE_COMPENS...
+#include "preferences.h"
+#include "print.h"
 #include "sp-clippath.h"
-#include "sp-mask.h"
 #include "sp-factory.h"
 #include "sp-flowregion.h"
-#include "uri.h"
-#include "print.h"
-#include "xml/repr.h"
-#include "xml/href-attribute-helper.h"
-#include "svg/svg.h"
-#include "preferences.h"
-#include "style.h"
-
-#include "sp-use.h"
-#include "sp-symbol.h"
-#include "sp-root.h"
-#include "sp-use-reference.h"
-#include "sp-shape.h"
-#include "sp-text.h"
 #include "sp-flowtext.h"
+#include "sp-mask.h"
+#include "sp-root.h"
+#include "sp-shape.h"
+#include "sp-symbol.h"
+#include "sp-text.h"
+#include "sp-use-reference.h"
+#include "sp-use.h"
+#include "style.h"
+#include "uri.h"
+
+#include "display/drawing-group.h"
+#include "xml/document.h"                            // for Document
+#include "xml/href-attribute-helper.h"               // for getHrefAttribute
+
+namespace Inkscape {
+class Drawing;
+class SnapCandidatePoint;
+class SnapPreferences;
+} // namespace Inkscape
 
 SPUse::SPUse()
     : SPItem(),

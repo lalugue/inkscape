@@ -7,16 +7,14 @@
 
 
 #include "live_effects/lpe-fill-between-many.h"
-#include "live_effects/lpeobject.h"
-#include "xml/node.h"
-#include "display/curve.h"
+
 #include "inkscape.h"
 #include "selection.h"
 
+#include "display/curve.h"
 #include "object/sp-defs.h"
 #include "object/sp-root.h"
 #include "object/sp-shape.h"
-#include "svg/svg.h"
 
 // TODO due to internal breakage in glibmm headers, this must be last:
 #include <glibmm/i18n.h>

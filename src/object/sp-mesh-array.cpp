@@ -38,10 +38,13 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#include "sp-mesh-array.h"
+
 #include <algorithm>
 #include <cmath>
 #include <set>
 #include <glibmm.h>
+
 // Includes bezier-curve.h, ray.h, crossing.h
 #include <2geom/line.h>
 
@@ -53,21 +56,24 @@
 #include "gradient-chemistry.h" // average_color()
 #include "sp-root.h"
 #include "sp-mesh-gradient.h"
-#include "sp-mesh-array.h"
 #include "sp-mesh-row.h"
 #include "sp-mesh-patch.h"
 #include "sp-stop.h"
 #include "display/curve.h"
+
 // For new mesh creation
 #include "preferences.h"
 #include "sp-ellipse.h"
 #include "sp-star.h"
+
 // For writing color/opacity to style
 #include "svg/css-ostringstream.h"
+
 // For default color
 #include "style.h"
-#include "svg/svg-color.h"
-#include "xml/repr.h"
+
+#include "xml/document.h"                            // for Document
+#include "xml/node.h"                                // for Node
 
 enum { ROW, COL };
 

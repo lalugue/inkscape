@@ -19,7 +19,6 @@
 #include "extension.h"
 
 #include <glib/gprintf.h>
-#include <glib/gstdio.h>
 #include <glibmm/fileutils.h>
 #include <glibmm/i18n.h>
 #include <glibmm/miscutils.h>
@@ -44,7 +43,7 @@
 #include "timer.h"
 #include "ui/dialog-run.h"
 #include "ui/pack.h"
-#include "xml/repr.h"
+#include "xml/node.h"
 
 namespace Inkscape {
 namespace Extension {

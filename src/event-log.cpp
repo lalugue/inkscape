@@ -14,15 +14,8 @@
 
 #include <glibmm/i18n.h>
 
-#include "actions/actions-undo-document.h"
-
-#include "desktop.h"
 #include "document.h"
-#include "inkscape.h"
-#include "inkscape-application.h"
-#include "inkscape-window.h"
-
-#include "ui/desktop/menubar.h"
+#include "actions/actions-undo-document.h"
 #include "util/signal-blocker.h"
 
 namespace

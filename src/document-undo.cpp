@@ -47,20 +47,25 @@
 
 #include "document-undo.h"
 
-#include <cstddef>
-#include <string>
+#include <glibmm/ustring.h>                 // for ustring, operator==
+#include <vector>                           // for vector
 
-#include "document.h"
-#include "event.h"
-#include "inkscape.h"
+#include "document.h"                       // for SPDocument
+#include "event.h"                          // for Event
+#include "inkscape.h"                       // for Application, INKSCAPE
+#include "composite-undo-stack-observer.h"  // for CompositeUndoStackObserver
 
-#include "debug/event-tracker.h"
-#include "debug/simple-event.h"
-#include "debug/timestamp.h"
-#include "util/optstr.h"
-#include "xml/repr.h"
-#include "object/sp-root.h"
-#include "object/sp-lpe-item.h"
+#include "debug/event-tracker.h"            // for EventTracker
+#include "debug/event.h"                    // for Event
+#include "debug/simple-event.h"             // for SimpleEvent
+#include "debug/timestamp.h"                // for timestamp
+#include "object/sp-lpe-item.h"             // for sp_lpe_item_update_pathef...
+#include "object/sp-root.h"                 // for SPRoot
+#include "xml/event-fns.h"                  // for sp_repr_begin_transaction
+
+namespace Inkscape::XML {
+class Event;
+} // namespace Inkscape::XML
 
 
 /*

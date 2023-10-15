@@ -10,7 +10,10 @@
 #ifndef SEEN_ID_CLASH_H
 #define SEEN_ID_CLASH_H
 
-#include "document.h"
+#include <glibmm/ustring.h>  // for ustring
+
+class SPDocument;
+class SPObject;
 
 void prevent_id_clashes(SPDocument *imported_doc, SPDocument *current_doc, bool from_clipboard = false);
 void rename_id(SPObject *elem, Glib::ustring const &newname);

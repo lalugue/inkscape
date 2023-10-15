@@ -10,6 +10,7 @@
 
 #include <vector>
 
+#include "inkscape.h"
 #include "selection.h"
 #include "display/curve.h"
 #include "object/sp-lpe-item.h"

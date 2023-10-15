@@ -29,17 +29,14 @@
 #include "inkscape.h"
 #include "layer-manager.h"
 #include "page-manager.h"
-#include "preferences.h"
 
 #include "object/sp-defs.h"
 #include "object/sp-page.h"
 #include "object/sp-path.h"
 #include "object/sp-shape.h"
 #include "ui/tool/control-point-selection.h"
-#include "ui/tool/multi-path-manipulator.h"
 #include "ui/tool/path-manipulator.h"
 #include "ui/tools/node-tool.h"
-#include "xml/repr.h"
 
 static constexpr auto SP_SELECTION_UPDATE_PRIORITY = G_PRIORITY_HIGH_IDLE + 1;
 

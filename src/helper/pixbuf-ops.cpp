@@ -13,20 +13,16 @@
  */
 
 #include <2geom/transforms.h>
-#include <gdk/gdk.h>
 
-#include "helper/pixbuf-ops.h"
-#include "helper/png-write.h"
-#include "display/cairo-utils.h"
-#include "display/drawing.h"
-#include "display/drawing-context.h"
 #include "document.h"
+
+#include "display/cairo-utils.h"
+#include "display/drawing-context.h"
+#include "display/drawing.h"
+#include "helper/pixbuf-ops.h"
 #include "object/sp-root.h"
-#include "object/sp-defs.h"
-#include "object/sp-use.h"
-#include "util/units.h"
 #include "util/scope_exit.h"
-#include "inkscape.h"
+#include "util/units.h"
 
 /**
     Generates a bitmap from given items. The bitmap is stored in RAM and not written to file.

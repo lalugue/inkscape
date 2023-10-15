@@ -23,11 +23,8 @@
 #include <gdk/gdkkeysyms.h>
 #include <glibmm/i18n.h>
 
-#include <2geom/curves.h>
-
 #include "context-fns.h"
 #include "desktop.h"
-#include "inkscape-application.h" // Undo check
 #include "message-context.h"
 #include "message-stack.h"
 #include "selection-chemistry.h"
@@ -41,27 +38,18 @@
 #include "object/sp-path.h"
 
 #include "ui/draw-anchor.h"
-#include "ui/shortcuts.h"
 #include "ui/tools/pen-tool.h"
 #include "ui/widget/events/canvas-event.h"
 
 // we include the necessary files for BSpline & Spiro
-#include "live_effects/lpeobject.h"
-#include "live_effects/lpeobject-reference.h"
-#include "live_effects/parameter/path.h"
+#include "live_effects/effect.h"                // for Effect
+#include "live_effects/lpeobject.h"             // for LivePathEffectObject
 
 #define INKSCAPE_LPE_SPIRO_C
-#include "live_effects/lpe-spiro.h"
-
-#include "helper/geom-nodetype.h"
-
-// For handling un-continuous paths:
-#include "inkscape.h"
-
-#include "live_effects/spiro.h"
+#include "live_effects/lpe-spiro.h"             // for sp_spiro_do_effect
 
 #define INKSCAPE_LPE_BSPLINE_C
-#include "live_effects/lpe-bspline.h"
+#include "live_effects/lpe-bspline.h"           // for sp_bspline_do_effect
 
 // Given an optionally-present SPCurve, e.g. a smart/raw pointer or an optional,
 // return a copy of its pathvector if present, or a blank pathvector otherwise.

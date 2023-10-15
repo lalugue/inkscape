@@ -10,23 +10,24 @@
 /*
  */
 
-#include <glibmm/i18n.h>
-
-#include <xml/repr.h>
-#include "display/curve.h"
-#include "sp-shape.h"
-#include "sp-text.h"
-#include "sp-use.h"
-#include "style.h"
-#include "document.h"
-#include "sp-title.h"
-#include "sp-desc.h"
-
 #include "sp-flowregion.h"
 
+#include <glibmm/i18n.h>
+
+#include "sp-desc.h"
+#include "sp-shape.h"
+#include "sp-text.h"
+#include "sp-title.h"
+#include "sp-use.h"
+#include "style.h"
+
+#include "display/curve.h"
 #include "livarot/Path.h"
 #include "livarot/Shape.h"
+#include "xml/document.h"
 
+class SPDesc;
+class SPTitle;
 
 static void         GetDest(SPObject* child,Shape **computed);
 

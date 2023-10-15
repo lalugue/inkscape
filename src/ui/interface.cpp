@@ -20,23 +20,27 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include <glibmm/convert.h>
-#include <glibmm/i18n.h>
-#include <glibmm/miscutils.h>
-#include <gtkmm/messagedialog.h>
-#include <gtkmm/window.h>
+#include "interface.h"
 
-#include "desktop.h"
-#include "document.h"
-#include "file.h"
-#include "inkscape.h"
-#include "inkscape-application.h"
+#include <cassert>                 // for assert
+#include <cstring>                 // for strlen
 
-#include "io/sys.h"
+#include <glibmm/convert.h>        // for filename_to_utf8
+#include <glibmm/i18n.h>           // for _
+#include <glibmm/miscutils.h>      // for path_get_basename, path_get_dirname
+#include <gtk/gtk.h>               // for gtk_dialog_run, gtk_widget_destroy
+#include <gtkmm/messagedialog.h>   // for MessageDialog, ButtonsType
 
-#include "ui/dialog-events.h"
-#include "ui/dialog-run.h"
-#include "ui/interface.h"
+#include "desktop.h"               // for SPDesktop
+#include "file.h"                  // for file_import
+#include "inkscape-application.h"  // for InkscapeApplication
+#include "inkscape.h"              // for Application, SP_ACTIVE_DOCUMENT
+
+#include "io/sys.h"                // for file_test, sanitizeString
+#include "ui/dialog-events.h"      // for sp_transientize
+#include "ui/dialog-run.h"         // for dialog_run
+
+class SPDocument;
 
 void sp_ui_new_view()
 {

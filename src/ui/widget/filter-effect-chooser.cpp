@@ -14,9 +14,6 @@
 
 #include "filter-effect-chooser.h"
 
-#include "document.h"
-#include "style-enums.h"
-
 #include "ui/pack.h"
 
 namespace Inkscape {

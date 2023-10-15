@@ -12,12 +12,10 @@
 
 #include <giomm.h> // Not <gtkmm.h>! To eventually allow a headless version!
 #include <glibmm/i18n.h>
-#include <iostream>
 
 #include "actions-helper.h"
 #include "document-undo.h"
 #include "inkscape-application.h"
-#include "inkscape.h"  // Inkscape::Application
 #include "preferences.h"
 #include "selection.h" // Selection
 #include "page-manager.h"

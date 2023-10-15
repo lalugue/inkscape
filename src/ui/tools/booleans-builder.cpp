@@ -13,6 +13,7 @@
 #include "booleans-builder.h"
 
 #include "desktop.h"
+#include "document.h"
 #include "style.h"
 
 #include "actions/actions-undo-document.h"

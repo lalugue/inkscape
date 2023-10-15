@@ -7,9 +7,6 @@
  * Copyright (C) 2018 Authors
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
-#ifdef HAVE_CONFIG_H
-# include "config.h"  // only include where actually required!
-#endif
 
 #include "color-icc-selector.h"
 
@@ -28,7 +25,6 @@
 #include "document.h"
 #include "inkscape.h"
 #include "profile-manager.h"
-#include "svg/svg-icc-color.h"
 #include "ui/dialog-events.h"
 #include "ui/util.h"
 #include "ui/widget/color-scales.h"
@@ -38,7 +34,6 @@
 #define noDEBUG_LCMS
 
 #include "object/color-profile.h"
-#include "color/cms-system.h"
 #include "color/color-profile-cms-fns.h"
 
 #ifdef DEBUG_LCMS

@@ -13,10 +13,9 @@
 #include <gtkmm/label.h>
 
 #include "inkscape.h"
-#include "live_effects/effect.h"
 #include "selection.h"
-#include "svg/stringstream.h"
-#include "svg/svg.h"
+
+#include "live_effects/effect.h"
 #include "ui/icon-loader.h"
 #include "ui/icon-names.h"
 #include "ui/pack.h"

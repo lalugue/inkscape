@@ -8,13 +8,15 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include <glibmm/i18n.h>
-
 #include "processing-action.h"
 
-#include "xml/attribute-record.h"
+#include <glibmm/i18n.h>
+
 #include "document.h"
 #include "preferences.h"
+
+#include "xml/attribute-record.h"
+#include "xml/node.h"
 
 namespace Inkscape::Extension {
 

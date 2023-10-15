@@ -12,7 +12,8 @@
 
 class SPLPEItem;
 
-#include <2geom/interval.h>
+#include <2geom/affine.h>    // for identity, Affine (ptr only)
+#include <2geom/interval.h>  // for Interval
 
 namespace Inkscape {
 namespace LivePathEffect {

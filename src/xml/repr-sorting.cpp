@@ -8,10 +8,12 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include "util/longest-common-suffix.h"
-#include "xml/repr.h"
-#include "xml/node-iterators.h"
 #include "repr-sorting.h"
+
+#include "util/forward-pointer-iterator.h"  // for ForwardPointerIterator
+#include "util/longest-common-suffix.h"     // for nearest_common_ancestor
+#include "xml/node-iterators.h"             // for NodeParentIteratorStrategy
+#include "xml/node.h"                       // for Node, NodeType
 
 Inkscape::XML::Node const *lowest_common_ancestor(Inkscape::XML::Node const *a, Inkscape::XML::Node const *b)
 {

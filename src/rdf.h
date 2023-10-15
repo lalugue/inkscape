@@ -13,9 +13,10 @@
 #define SEEN_RDF_H
 
 #include <glibmm/i18n.h>
-#include "document.h"
 
-#define PREFS_METADATA      "/metadata/rdf/"
+class SPDocument;
+
+inline constexpr auto PREFS_METADATA = "/metadata/rdf/";
 
 // yeah, it's not a triple yet...
 /**

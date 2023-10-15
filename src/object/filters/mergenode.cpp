@@ -15,13 +15,17 @@
  */
 
 #include "mergenode.h"
-#include "merge.h"
-#include "object/sp-filter.h"
 
-#include "attributes.h"
-#include "xml/repr.h"
-#include "slot-resolver.h"
-#include "util/optstr.h"
+#include "attributes.h"     // for SPAttr
+#include "merge.h"          // for SPFeMerge
+#include "slot-resolver.h"  // for SlotResolver
+#include "util/optstr.h"    // for assign
+
+class SPDocument;
+
+namespace Inkscape::XML {
+class Node;
+} // namespace Inkscape::XML
 
 void SPFeMergeNode::build(SPDocument */*document*/, Inkscape::XML::Node */*repr*/)
 {

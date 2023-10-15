@@ -24,45 +24,49 @@
  *
  */
 
-#include <2geom/affine.h>
-#include <libnrtype/font-factory.h>
-#include <libnrtype/font-instance.h>
+#include "sp-text.h"
 
 #include <glibmm/i18n.h>
 #include <glibmm/regex.h>
 
-#include "svg/svg.h"
-#include "display/drawing-text.h"
+#include <2geom/affine.h>
+
+#include "libnrtype/font-factory.h"
+#include "libnrtype/font-instance.h"
+
 #include "attributes.h"
-#include "document.h"
-#include "preferences.h"
-#include "desktop.h"
 #include "desktop-style.h"
-#include "sp-namedview.h"
-#include "inkscape.h"
-#include "xml/quote.h"
+#include "desktop.h"
+#include "document.h"
+#include "layer-manager.h"
 #include "mod360.h"
-#include "path/path-boolop.h"
+#include "preferences.h"                             // for Preferences
+#include "snap-candidate.h"                          // for SnapCandidatePoint
+#include "snap-enums.h"                              // for SnapTargetType
+#include "snap-preferences.h"                        // for SnapPreferences
+#include "text-editing.h"
 
-#include "sp-title.h"
 #include "sp-desc.h"
+#include "sp-flowregion.h"
 #include "sp-rect.h"
-#include "sp-text.h"
-
 #include "sp-shape.h"
 #include "sp-textpath.h"
+#include "sp-title.h"
 #include "sp-tref.h"
 #include "sp-tspan.h"
-#include "sp-flowregion.h"
 
-#include "text-editing.h"
+#include "display/drawing-text.h"
+#include "path/path-boolop.h"
+#include "svg/svg.h"
+#include "util/units.h"
+#include "xml/quote.h"
+
 
 // For SVG 2 text flow
 #include "livarot/Path.h"
 #include "livarot/Shape.h"
 #include "display/curve.h"
 
-#include "layer-manager.h"
 
 /*#####################################################
 #  SPTEXT

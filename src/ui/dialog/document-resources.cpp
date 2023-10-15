@@ -7,27 +7,15 @@
 
 #include "document-resources.h"
 
-#include <cassert>
+#include <cstddef>
 #include <map>
-#include <optional>
-#include <sstream>
-#include <typeindex>
-#include <unordered_map>
-#include <vector>
+#include <memory>
 
 #include <cairo.h>
 #include <cairomm/enums.h>
 #include <cairomm/refptr.h>
 #include <cairomm/surface.h>
-#include <cassert>
-#include <cstddef>
-#include <cstdint>
-#include <memory>
-#include <optional>
-#include <sstream>
-#include <typeindex>
-#include <unordered_map>
-#include <vector>
+
 #include <gdkmm/pixbuf.h>
 #include <gdkmm/rgba.h>
 #include <glib/gi18n.h>
@@ -62,6 +50,8 @@
 #include "color.h"
 #include "desktop.h"
 #include "display/cairo-utils.h"
+#include "document.h"
+#include "document-undo.h"
 #include "extension/system.h"
 #include "helper/choose-file.h"
 #include "helper/save-image.h"
@@ -80,7 +70,6 @@
 #include "object/sp-path.h"
 #include "object/sp-pattern.h"
 #include "object/tags.h"
-#include "pattern-manipulation.h"
 #include "rdf.h"
 #include "selection.h"
 #include "object/sp-defs.h"
@@ -89,9 +78,7 @@
 #include "object/sp-use.h"
 #include "style.h"
 #include "ui/builder-utils.h"
-#include "ui/dialog/filedialog.h"
 #include "ui/icon-names.h"
-#include "ui/pack.h"
 #include "ui/themes.h"
 #include "ui/util.h"
 #include "ui/widget/shapeicon.h"

@@ -12,6 +12,8 @@
  *
  */
 
+#include "svg-builder.h"
+
 #ifdef HAVE_CONFIG_H
 # include "config.h"  // only include where actually required!
 #endif
@@ -21,35 +23,29 @@
 #include <codecvt>
 
 #ifdef HAVE_POPPLER
-#define USE_CMS
 
 #include "Function.h"
 #include "GfxFont.h"
 #include "GfxState.h"
-#include "GlobalParams.h"
 #include "Page.h"
 #include "Stream.h"
-#include "UnicodeMap.h"
-#include "color/cms-util.h"
 #include "color.h"
-#include "display/cairo-utils.h"
-#include "display/nr-filter-utils.h"
 #include "document.h"
 #include "extract-uri.h"
-#include "libnrtype/font-factory.h"
-#include "libnrtype/font-instance.h"
-#include "object/sp-defs.h"
-#include "object/sp-item-group.h"
-#include "object/sp-namedview.h"
 #include "pdf-parser.h"
 #include "pdf-utils.h"
 #include "png.h"
 #include "poppler-cairo-font-engine.h"
 #include "profile-manager.h"
-#include "svg-builder.h"
+
+#include "color/cms-util.h"
+#include "display/cairo-utils.h"
+#include "display/nr-filter-utils.h"
+#include "object/sp-defs.h"
+#include "object/sp-item-group.h"
+#include "object/sp-namedview.h"
 #include "svg/css-ostringstream.h"
 #include "svg/path-string.h"
-#include "svg/svg-color.h"
 #include "svg/svg.h"
 #include "util/units.h"
 #include "xml/document.h"

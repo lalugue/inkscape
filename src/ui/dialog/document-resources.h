@@ -9,7 +9,6 @@
 #define SEEN_DOC_RESOURCES_H
 
 #include <cstddef>
-#include <memory>
 #include <string>
 #include <boost/ptr_container/ptr_vector.hpp>
 #include <glibmm/refptr.h>
@@ -17,7 +16,6 @@
 #include <gtkmm/cellrendererpixbuf.h>
 #include <gtkmm/treemodel.h>
 
-#include "document.h"
 #include "helper/auto-connection.h"
 #include "ui/dialog/dialog-base.h"
 #include "ui/widget/entity-entry.h"

@@ -12,21 +12,23 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#include "sp-conn-end-pair.h"
+
 #include <cstring>
 #include <string>
 #include <glibmm/stringutils.h>
 
 #include "attributes.h"
+#include "document.h"
 #include "sp-conn-end.h"
-#include "uri.h"
-#include "display/curve.h"
-#include "xml/repr.h"
+#include "sp-item-group.h"
 #include "sp-path.h"
 #include "sp-use.h"
-#include "3rdparty/adaptagrams/libavoid/router.h"
-#include "document.h"
-#include "sp-item-group.h"
+#include "uri.h"
 
+#include "3rdparty/adaptagrams/libavoid/router.h"
+#include "display/curve.h"
+#include "xml/node.h"
 
 SPConnEndPair::SPConnEndPair(SPPath *const owner)
     : _path(owner)

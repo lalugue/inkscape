@@ -12,14 +12,14 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#include "sp-line.h"
+
+#include <glibmm/i18n.h>
+
 #include "attributes.h"
 #include "style.h"
-#include "sp-line.h"
 #include "sp-guide.h"
 #include "display/curve.h"
-#include <glibmm/i18n.h>
-#include "document.h"
-#include "inkscape.h"
 
 SPLine::SPLine() : SPShape() {
     this->x1.unset();

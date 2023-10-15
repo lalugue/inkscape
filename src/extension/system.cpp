@@ -22,6 +22,7 @@
 #include <glibmm/miscutils.h>
 
 #include "db.h"
+#include "document.h"
 #include "document-undo.h"
 #include "effect.h"
 #include "extension.h"

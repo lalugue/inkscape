@@ -13,13 +13,25 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include <cstring>
-
-#include "attributes.h"
-#include "svg/svg.h"
 #include "morphology.h"
-#include "xml/repr.h"
-#include "display/nr-filter.h"
+
+#include <cstring>                               // for strcmp
+
+#include "attributes.h"                          // for SPAttr
+#include "object/filters/sp-filter-primitive.h"  // for SPFilterPrimitive
+#include "object/sp-object.h"                    // for SP_OBJECT_MODIFIED_FLAG
+
+class SPDocument;
+
+namespace Inkscape {
+class DrawingItem;
+namespace Filters {
+class FilterPrimitive;
+} // namespace Filters
+namespace XML {
+class Node;
+} // namespace XML
+} // namespace Inkscape
 
 void SPFeMorphology::build(SPDocument *document, Inkscape::XML::Node *repr)
 {

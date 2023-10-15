@@ -13,13 +13,19 @@
  * Read the file 'COPYING' for more information.
  */
 
+#include "inkscape-window.h"
+
 #include <iostream>
-#include <giomm/file.h>
 #include <gtkmm/box.h>
 #include <gtkmm/menubar.h>
 #include <sigc++/functors/mem_fun.h>
 
-#include "inkscape-window.h"
+#include "desktop.h"
+#include "desktop-events.h" // Handle key events
+#include "document.h"
+#include "enums.h"      // PREFS_WINDOW_GEOMETRY_NONE
+#include "inkscape-application.h"
+
 #include "actions/actions-canvas-mode.h"
 #include "actions/actions-canvas-snapping.h"
 #include "actions/actions-canvas-transform.h"
@@ -35,24 +41,15 @@
 #include "actions/actions-tools.h"
 #include "actions/actions-view-mode.h"
 #include "actions/actions-view-window.h"
-#include "desktop-events.h" // Handle key events
-#include "enums.h"      // PREFS_WINDOW_GEOMETRY_NONE
-#include "inkscape-application.h"
-#include "inkscape.h"   // SP_ACTIVE_DESKTOP
 #include "object/sp-namedview.h"  // TODO Remove need for this!
 #include "ui/desktop/menubar.h"
 #include "ui/desktop/menu-set-tooltips-shift-icons.h"
-#include "ui/dialog/dialog-container.h"
 #include "ui/dialog/dialog-manager.h"
 #include "ui/dialog/dialog-window.h"
 #include "ui/drag-and-drop.h"
-#include "ui/drag-and-drop.h"  // Move to canvas?
-#include "ui/interface.h" // main menu
-#include "ui/monitor.h" // get_monitor_geometry_at_point()
 #include "ui/pack.h"
 #include "ui/shortcuts.h"
 #include "ui/util.h"
-#include "ui/widget/canvas.h"
 #include "ui/widget/desktop-widget.h"
 
 using Inkscape::UI::Dialog::DialogManager;

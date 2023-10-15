@@ -38,6 +38,7 @@
 #include "conn-avoid-ref.h"
 #include "desktop.h"
 #include "display/control/canvas-item-drawing.h"
+#include "document.h"
 #include "document-undo.h"
 #include "enums.h"
 #include "inkscape.h"

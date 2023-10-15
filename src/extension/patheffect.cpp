@@ -11,15 +11,20 @@
 
 #include "patheffect.h"
 
-#include "db.h"
+#include <glib.h>                 // for gchar, g_strfreev, g_strsplit
 
-#include "object/sp-defs.h"
+#include "db.h"                   // for DB, db
+#include "document.h"             // for SPDocument
+#include "extension/extension.h"  // for Extension
+#include "object/sp-defs.h"       // for SPDefs
+#include "xml/node.h"             // for Node
+#include "xml/repr.h"             // for sp_repr_lookup_child
 
-#include "xml/repr.h"
+namespace Inkscape::Extension::Implementation {
+class Implementation;
+} // namespace Inkscape::Extension::Implementation
 
-
-namespace Inkscape {
-namespace Extension {
+namespace Inkscape::Extension {
 
 PathEffect::PathEffect (Inkscape::XML::Node *in_repr, Implementation::Implementation *in_imp, std::string *base_directory)
     : Extension(in_repr, in_imp, base_directory)
@@ -76,8 +81,7 @@ PathEffect::processPathEffects (SPDocument * doc, Inkscape::XML::Node * path)
     return;
 }
 
-
-} }  /* namespace Inkscape, Extension */
+} // namespace Inkscape::Extension
 
 /*
   Local Variables:

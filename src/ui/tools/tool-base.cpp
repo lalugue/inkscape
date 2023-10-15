@@ -18,8 +18,10 @@
 #include "ui/tools/tool-base.h"
 
 #include <set>
+
 #include <gdk/gdkkeysyms.h>
 #include <gdkmm/display.h>
+#include <giomm/simpleactiongroup.h>
 #include <glibmm/i18n.h>
 
 #include "desktop-events.h"

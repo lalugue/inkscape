@@ -15,11 +15,12 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include "inkscape.h"
-#include "preferences.h"
 #include "rdf.h"
 
-#include "object/sp-item-group.h"
+#include "document.h"
+#include "inkscape.h"
+#include "preferences.h"
+
 #include "object/sp-root.h"
 
 #include "xml/repr.h"

@@ -14,23 +14,15 @@
 #include <gtkmm/label.h>
 
 #include "bad-uri-exception.h"
-#include "bad-uri-exception.h"
-#include "desktop.h"
-#include "enums.h"
 #include "inkscape.h"
+
 #include "live_effects/effect.h"
 #include "live_effects/lpeobject.h"
-#include "message-stack.h"
 #include "object/sp-item.h"
 #include "object/uri.h"
-#include "selection-chemistry.h"
-#include "svg/svg.h"
 #include "ui/clipboard.h"
 #include "ui/icon-loader.h"
-#include "ui/icon-names.h"
 #include "ui/pack.h"
-#include "ui/widget/point.h"
-#include "xml/repr.h"
 
 namespace Inkscape {
 namespace LivePathEffect {

@@ -14,33 +14,15 @@
 
 #include <memory>
 
-#include <2geom/circle.h>
-#include <2geom/line.h>
-#include <2geom/path-intersection.h>
-#include <2geom/path-sink.h>
-
 #include "desktop.h"
-#include "display/curve.h"
 #include "document.h"
-#include "inkscape.h"
 #include "preferences.h"
 #include "selection.h"
-#include "style.h"
+#include "snap.h"
 
-#include "live_effects/effect-enum.h"
-#include "object/sp-clippath.h"
-#include "object/sp-flowtext.h"
-#include "object/sp-image.h"
-#include "object/sp-item-group.h"
-#include "object/sp-mask.h"
-#include "object/sp-namedview.h"
-#include "object/sp-path.h"
+#include "object/sp-item.h"
 #include "object/sp-root.h"
-#include "object/sp-shape.h"
-#include "object/sp-text.h"
 #include "object/sp-use.h"
-#include "path/path-util.h" // curve_for_item
-#include "svg/svg.h"
 
 #define DISTRIBUTION_SNAPPING_EPSILON 0.5e-4f
 

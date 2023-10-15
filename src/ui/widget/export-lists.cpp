@@ -9,43 +9,23 @@
 
 #include "export-lists.h"
 
-#include <glibmm/convert.h>
 #include <glibmm/i18n.h>
-#include <glibmm/miscutils.h>
 #include <gtkmm/builder.h>
 #include <gtkmm/menubutton.h>
 #include <gtkmm/popover.h>
 #include <gtkmm/spinbutton.h>
 #include <gtkmm/viewport.h>
-#include <png.h>
 
-#include "desktop.h"
-#include "document-undo.h"
-#include "document.h"
 #include "extension/db.h"
 #include "extension/output.h"
 #include "file.h"
 #include "helper/png-write.h"
-#include "inkscape-window.h"
-#include "inkscape.h"
-#include "io/resource.h"
 #include "io/sys.h"
-#include "message-stack.h"
-#include "object/object-set.h"
-#include "object/sp-namedview.h"
-#include "object/sp-page.h"
-#include "object/sp-root.h"
-#include "page-manager.h"
 #include "preferences.h"
-#include "selection-chemistry.h"
-#include "ui/builder-utils.h"
-#include "ui/dialog-events.h"
-#include "ui/dialog/dialog-notebook.h"
-#include "ui/dialog/filedialog.h"
 #include "ui/icon-loader.h"
-#include "ui/interface.h"
 #include "ui/widget/scrollprotected.h"
-#include "ui/widget/unit-menu.h"
+#include "ui/builder-utils.h"
+#include "util/units.h"
 
 using Inkscape::Util::unit_table;
 

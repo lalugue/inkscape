@@ -8,23 +8,31 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include <glibmm/miscutils.h>
-
-#include "document.h"
-#include "extension/prefdialog/parameter.h"
-#include "io/file.h"
-#include "io/resource.h"
-#include "io/sys.h"
-#include "page-manager.h"
 #include "template-from-file.h"
 
-#include "clear-n_.h"
+#include <cstring>                                  // for strcmp
+#include <algorithm>                                // for replace
+#include <memory>                                   // for shared_ptr, alloc...
+#include <vector>                                   // for vector
+
+#include <glib.h>                                   // for GFileTest, G_FILE...
+#include <glibmm/miscutils.h>                       // for path_get_basename
+#include <glibmm/ustring.h>                         // for ustring
+
+#include "extension/extension.h"                    // for INKSCAPE_EXTENSIO...
+#include "extension/internal/clear-n_.h"            // for N_, NC_
+#include "extension/internal/template-from-file.h"  // for TemplatePresetFile
+#include "extension/system.h"                       // for build_from_mem
+#include "io/file.h"                                // for ink_file_new
+#include "io/resource.h"                            // for get_filenames
+#include "io/sys.h"                                 // for file_test
+#include "xml/document.h"                           // for Document
+#include "xml/node.h"                               // for Node
+#include "xml/repr.h"                               // for sp_repr_lookup_co...
 
 using namespace Inkscape::IO::Resource;
 
-namespace Inkscape {
-namespace Extension {
-namespace Internal {
+namespace Inkscape::Extension::Internal {
 
 /**
  * A file based template preset.
@@ -116,10 +124,7 @@ void TemplateFromFile::get_template_presets(const Template *tmod, TemplatePreset
     }
 }
 
-
-} // namespace Internal
-} // namespace Extension
-} // namespace Inkscape
+} // namespace Inkscape::Extension::Internal
 
 /*
   Local Variables:

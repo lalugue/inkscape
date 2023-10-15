@@ -8,10 +8,12 @@
 
 #include <glibmm/i18n.h>
 
+#include "inkscape.h"
 #include "selection.h"
+
 #include "display/curve.h"
 #include "object/sp-root.h"
-#include "svg/svg.h"
+
 
 namespace Inkscape {
 namespace LivePathEffect {

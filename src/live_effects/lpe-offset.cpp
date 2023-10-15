@@ -16,13 +16,6 @@
 
 #include "lpe-offset.h"
 
-#include <2geom/path-intersection.h>
-#include <2geom/piecewise.h>
-#include <2geom/svg-path-parser.h>
-
-#include "inkscape.h"
-#include "style.h"
-
 #include "display/curve.h"
 #include "helper/geom-pathstroke.h"
 #include "helper/geom.h"
@@ -30,9 +23,6 @@
 #include "object/sp-item-group.h"
 #include "object/sp-lpe-item.h"
 #include "object/sp-shape.h"
-#include "path/path-boolop.h"
-#include "path/path-util.h"
-#include "svg/svg.h"
 #include "ui/knot/knot-holder-entity.h"
 #include "ui/knot/knot-holder.h"
 #include "util/units.h"

@@ -24,18 +24,18 @@
  *
  */
 
+#include "sp-tspan.h"
+
 #include <cstring>
-#include <string>
+
 #include <glibmm/i18n.h>
 #include <glibmm/regex.h>
 
 #include "attributes.h"
-#include "document.h"
 #include "text-editing.h"
 
 #include "sp-textpath.h"
 #include "sp-tref.h"
-#include "sp-tspan.h"
 #include "sp-use-reference.h"
 #include "style.h"
 

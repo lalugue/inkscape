@@ -14,12 +14,21 @@
  */
 
 #include "gaussian-blur.h"
-#include "attributes.h"
-#include "display/nr-filter.h"
-#include "display/nr-filter-gaussian.h"
-#include "svg/svg.h"
-#include "util/numeric/converters.h"
-#include "xml/repr.h"
+#include "attributes.h"                          // for SPAttr
+#include "display/nr-filter-gaussian.h"          // for FilterGaussian
+#include "object/filters/sp-filter-primitive.h"  // for SPFilterPrimitive
+#include "object/sp-object.h"                    // for SP_OBJECT_MODIFIED_FLAG
+#include "util/numeric/converters.h"             // for format_number
+#include "xml/node.h"                            // for Node
+
+class SPDocument;
+
+namespace Inkscape {
+class DrawingItem;
+namespace Filters {
+class FilterPrimitive;
+} // namespace Filters
+} // namespace Inkscape
 
 void SPGaussianBlur::build(SPDocument *document, Inkscape::XML::Node *repr)
 {

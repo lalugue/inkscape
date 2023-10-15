@@ -11,11 +11,9 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#include "hidden.h"
 
-#include "live_effects/parameter/hidden.h"
-#include "live_effects/effect.h"
-#include "svg/svg.h"
-#include "svg/stringstream.h"
+#include <gtkmm/widget.h>
 
 namespace Inkscape {
 

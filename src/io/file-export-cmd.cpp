@@ -44,6 +44,7 @@
 #include "selection-chemistry.h" // fit_canvas_to_drawing
 #include "svg/svg-color.h"       // Background color
 #include "text-editing.h"        // te_update_layout_now_recursive
+#include "util/units.h"
 #include "util/parse-int-range.h"
 #include "io/sys.h"
 

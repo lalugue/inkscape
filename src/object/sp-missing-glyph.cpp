@@ -11,10 +11,14 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include "xml/repr.h"
-#include "attributes.h"
 #include "sp-missing-glyph.h"
-#include "document.h"
+
+#include "attributes.h"        // for SPAttr
+#include "object/sp-object.h"  // for SPObject, SP_OBJECT_MODIFIED_FLAG, SP_...
+#include "xml/document.h"      // for Document
+#include "xml/node.h"          // for Node
+
+class SPDocument;
 
 SPMissingGlyph::SPMissingGlyph() : SPObject() {
 //TODO: correct these values:

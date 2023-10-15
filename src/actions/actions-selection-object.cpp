@@ -21,14 +21,10 @@
 
 #include "actions-selection-object.h"
 #include "actions-helper.h"
+#include "document-undo.h"
 #include "inkscape-application.h"
-#include "inkscape-window.h" // Anchor
-#include "inkscape.h"
 #include "page-manager.h"
-#include "preferences.h" // Scaling factor
 #include "selection.h"
-
-#include "object/sp-namedview.h"
 
 #include "ui/dialog/dialog-container.h" // Used by select_object_link() to open dialog to add hyperlink.
 #include "ui/icon-names.h"

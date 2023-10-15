@@ -15,13 +15,18 @@
 #ifndef SP_ROOT_H_SEEN
 #define SP_ROOT_H_SEEN
 
-#include "version.h"
-#include "svg/svg-length.h"
-#include "sp-item-group.h"
-#include "viewbox.h"
-#include "sp-dimensions.h"
+#include "sp-dimensions.h"         // for SPDimensions
+#include "sp-item-group.h"         // for SPGroup
+#include "version.h"               // for Version
+#include "viewbox.h"               // for SPViewBox
+
+#include "display/drawing-item.h"  // for DrawingItem
+#include "util/cast.h"             // for tag_of
+#include "xml/node.h"              // for Node
 
 class SPDefs;
+class SPDocument;
+enum class SPAttr;
 
 /** \<svg\> element */
 class SPRoot final : public SPGroup, public SPViewBox, public SPDimensions {

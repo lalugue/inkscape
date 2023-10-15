@@ -37,6 +37,7 @@
 #include <sigc++/adaptors/hide.h>
 #include <sigc++/functors/mem_fun.h>
 
+#include "inkscape.h"
 #include "live_effects/effect.h"
 #include "live_effects/effect-enum.h"
 #include "live_effects/lpeobject.h"

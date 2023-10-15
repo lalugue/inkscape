@@ -13,19 +13,19 @@
 #ifndef SEEN_SP_COLOR_NOTEBOOK_H
 #define SEEN_SP_COLOR_NOTEBOOK_H
 
-#ifdef HAVE_CONFIG_H
-# include "config.h"  // only include where actually required!
-#endif
+#include <memory>               // for unique_ptr
+#include <vector>               // for vector
 
-#include <memory>
-#include <vector>
-#include <gtkmm/grid.h>
-#include <sigc++/connection.h>
+#include <glibmm/ustring.h>     // for ustring
+#include <gtkmm/grid.h>         // for Grid
+#include <gtkmm/widget.h>       // for GtkWidget, Widget (ptr only)
+#include <sigc++/connection.h>  // for connection
 
-#include "color.h"
-#include "color-rgba.h"
-#include "preferences.h"
-#include "ui/selected-color.h"
+#include "preferences.h"        // for PrefObserver
+#include "ui/selected-color.h"  // for ColorSelectorFactory, SelectedColor (...
+
+class ColorRGBA;
+class SPDocument;
 
 namespace Gtk {
 class Box;

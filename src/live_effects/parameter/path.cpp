@@ -17,33 +17,28 @@
 #include <gtkmm/button.h>
 #include <gtkmm/label.h>
 
-#include "actions/actions-tools.h"
 #include "bad-uri-exception.h"
 #include "desktop.h"
-#include "display/curve.h"
 #include "document.h"
 #include "document-undo.h"
 #include "inkscape.h"
+#include "selection.h"
+
+#include "actions/actions-tools.h"
+#include "display/curve.h"
 #include "live_effects/effect.h"
 #include "live_effects/lpeobject.h"
-#include "message-stack.h"
 #include "object/sp-item.h"
 #include "object/sp-shape.h"
 #include "object/sp-text.h"
 #include "object/uri.h"
-#include "selection-chemistry.h"
-#include "selection.h"
 #include "svg/svg.h"
 #include "ui/clipboard.h" // clipboard support
 #include "ui/icon-loader.h"
-#include "ui/icon-names.h"
 #include "ui/pack.h"
-#include "ui/shape-editor.h" // needed for on-canvas editing:
 #include "ui/tool/multi-path-manipulator.h"
 #include "ui/tool/shape-record.h"
 #include "ui/tools/node-tool.h"
-#include "ui/widget/point.h"
-#include "xml/repr.h"
 
 namespace Inkscape {
 namespace LivePathEffect {

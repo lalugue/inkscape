@@ -14,10 +14,14 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include "xml/repr.h"
-#include "attributes.h"
 #include "sp-glyph.h"
-#include "document.h"
+
+#include "attributes.h"        // for SPAttr
+#include "object/sp-object.h"  // for SP_OBJECT_MODIFIED_FLAG, SPObject, SPC...
+#include "xml/document.h"      // for Document
+#include "xml/node.h"          // for Node
+
+class SPDocument;
 
 SPGlyph::SPGlyph()
     : SPObject() 

@@ -9,13 +9,16 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#include "dependency.h"
+
 #include <glibmm/i18n.h>
 #include <glibmm/fileutils.h>
 #include <glibmm/miscutils.h>
-#include "dependency.h"
+
 #include "db.h"
 #include "extension.h"
 #include "io/resource.h"
+#include "xml/node.h"
 
 namespace Inkscape {
 namespace Extension {

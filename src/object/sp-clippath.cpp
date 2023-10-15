@@ -13,19 +13,17 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include <cstring>
-#include <string>
+#include "sp-clippath.h"
 
-#include "xml/repr.h"
+#include <cstring>
+
+#include <2geom/transforms.h>
 
 #include "enums.h"
 #include "attributes.h"
 #include "document.h"
 #include "style.h"
 
-#include <2geom/transforms.h>
-
-#include "sp-clippath.h"
 #include "sp-item.h"
 #include "sp-defs.h"
 

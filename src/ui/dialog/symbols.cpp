@@ -11,14 +11,17 @@
 
 #include "symbols.h"
 
+#include <algorithm>
 #include <cassert>
 #include <cmath>
-#include <algorithm>
 #include <fstream>
 #include <iostream>
 #include <locale>
 #include <regex>
 #include <sstream>
+
+#include <2geom/point.h>
+
 #include <cairo.h>
 #include <cairomm/refptr.h>
 #include <cairomm/surface.h>
@@ -53,8 +56,9 @@
 # include "config.h"  // only include where actually required!
 #endif
 
-#include "desktop.h"
 #include "document.h"
+#include "document-undo.h"
+#include "desktop.h"
 #include "inkscape.h"
 #include "path-prefix.h"
 #include "preferences.h"

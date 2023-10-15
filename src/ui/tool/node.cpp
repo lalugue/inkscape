@@ -7,23 +7,26 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#include "node.h"
+
 #include <atomic>
 #include <iostream>
 #include <vector>
-#include <2geom/bezier-utils.h>
+
 #include <glib/gi18n.h>
 #include <gdk/gdkkeysyms.h>
 
 #include "desktop.h"
-#include "object/sp-namedview.h"
 #include "snap.h"
-#include "display/control/canvas-item-group.h"
+
 #include "display/control/canvas-item-curve.h"
+#include "object/sp-namedview.h"
 #include "ui/tool/control-point-selection.h"
 #include "ui/tool/path-manipulator.h"
 #include "ui/tools/node-tool.h"
 #include "ui/modifiers.h"
 #include "ui/widget/events/canvas-event.h"
+#include "util/units.h"
 
 namespace {
 

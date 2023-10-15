@@ -15,19 +15,15 @@
 #include <string>
 
 #include "attributes.h"
-#include "xml/repr.h"
-#include "style.h"
-#include "inkscape.h"
-#include "document.h"
-
-#include "desktop.h"
 #include "desktop-style.h"
-#include "svg/svg.h"
+#include "desktop.h"
+#include "document.h"
+#include "layer-manager.h"
 #include "snap-candidate.h"
 #include "snap-preferences.h"
-
-#include "text-tag-attributes.h"
+#include "style.h"
 #include "text-editing.h"
+#include "text-tag-attributes.h"
 
 #include "sp-flowdiv.h"
 #include "sp-flowregion.h"
@@ -37,15 +33,14 @@
 #include "sp-text.h"
 #include "sp-use.h"
 
-#include "libnrtype/font-instance.h"
-#include "libnrtype/font-factory.h"
-
-#include "livarot/Shape.h"
-
 #include "display/curve.h"
-#include "display/drawing-text.h"
+#include "display/drawing-group.h"
+#include "libnrtype/font-factory.h"
+#include "libnrtype/font-instance.h"
+#include "livarot/Shape.h"
+#include "svg/svg.h"
+#include "xml/repr.h"
 
-#include "layer-manager.h"
 
 SPFlowtext::SPFlowtext() : SPItem(),
     par_indent(0),

@@ -16,23 +16,33 @@
 
 #include "image.h"
 
-#include <sigc++/bind.h>
+#include <algorithm>                             // for find_if
+#include <cassert>                               // for assert
+#include <cstring>                               // for strcmp, memcpy
 
-#include "attributes.h"
+#include <sigc++/signal.h>                       // for signal
 
-#include "bad-uri-exception.h"
-#include "document.h"
-#include "display/cairo-utils.h"
-#include "display/drawing-image.h"
+#include "attributes.h"                          // for SPAttr
+#include "bad-uri-exception.h"                   // for BadURIException
+#include "document.h"                            // for SPDocument
 
-#include "object/sp-image.h"
-#include "object/uri.h"
-#include "object/uri-references.h"
+#include "display/cairo-utils.h"                 // for Pixbuf
+#include "display/drawing-image.h"               // for DrawingImage
+#include "display/drawing-item.h"                // for DrawingItem
+#include "display/nr-filter-image.h"             // for FilterImage
+#include "display/nr-filter-primitive.h"         // for FilterPrimitive
+#include "display/nr-filter.h"                   // for Filter
 
-#include "display/nr-filter-image.h"
-#include "display/nr-filter.h"
+#include "object/filters/sp-filter-primitive.h"  // for SPFilterPrimitive
+#include "object/sp-item.h"                      // for SPItem, SP_ITEM_SHOW...
+#include "object/sp-object.h"                    // for SPObject, SP_OBJECT_...
+#include "object/uri-references.h"               // for URIReference
+#include "object/uri.h"                          // for URI
 
-#include "xml/repr.h"
+namespace Inkscape::XML {
+class Node;
+} // namespace Inkscape::XML
+
 
 SPFeImage::SPFeImage()
     : elemref(std::make_unique<Inkscape::URIReference>(this)) {}

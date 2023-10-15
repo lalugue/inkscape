@@ -19,6 +19,7 @@
 
 #include "desktop.h"
 #include "document.h"
+#include "document-undo.h"
 #include "inkscape-application.h"
 #include "inkscape-window.h"
 #include "message-stack.h"

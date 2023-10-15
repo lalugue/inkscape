@@ -14,29 +14,23 @@
 
 #include "tweak-tool.h"
 
-#include <numeric>
-
-#include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 #include <glibmm/i18n.h>
 
 #include <2geom/circle.h>
 
 #include "context-fns.h"
-#include "desktop-events.h"
 #include "desktop-style.h"
 #include "desktop.h"
 #include "document-undo.h"
 #include "document.h"
 #include "filter-chemistry.h"
 #include "gradient-chemistry.h"
-#include "inkscape.h"
 #include "message-context.h"
 #include "path-chemistry.h"
 #include "selection.h"
 #include "style.h"
 
-#include "display/curve.h"
 #include "display/control/canvas-item-bpath.h"
 
 #include "livarot/Path.h"
@@ -45,7 +39,6 @@
 #include "object/box3d.h"
 #include "object/filters/gaussian-blur.h"
 #include "object/sp-flowtext.h"
-#include "object/sp-item-transform.h"
 #include "object/sp-linear-gradient.h"
 #include "object/sp-mesh-gradient.h"
 #include "object/sp-path.h"
@@ -54,8 +47,6 @@
 #include "object/sp-text.h"
 
 #include "path/path-util.h"
-
-#include "svg/svg.h"
 
 #include "ui/icon-names.h"
 #include "ui/toolbar/tweak-toolbar.h"

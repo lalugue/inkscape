@@ -18,7 +18,7 @@
 #include "sp-marker.h"
 
 #include <cstring>
-#include <string>
+
 #include <glib/gi18n.h>
 
 #include <2geom/affine.h>
@@ -36,7 +36,7 @@
 #include "svg/css-ostringstream.h"
 #include "svg/svg.h"
 #include "ui/icon-names.h"
-#include "xml/repr.h"
+#include "xml/document.h"              // for Document
 
 using Inkscape::DocumentUndo;
 using Inkscape::ObjectSet;

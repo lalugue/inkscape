@@ -9,8 +9,10 @@
 #include <cairomm/refptr.h>
 #include <glibmm/refptr.h>
 
-#include "document.h"
 #include "color.h"
+
+class SPDocument;
+class SPRoot;
 
 namespace Cairo {
 class Surface;

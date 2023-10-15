@@ -16,13 +16,9 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include <cstddef>
-#include <sigc++/sigc++.h>
 
-#include "svg/svg-length.h"
 #include "sp-dimensions.h"
 #include "sp-item.h"
-#include "enums.h"
 
 class SPUseReference;
 

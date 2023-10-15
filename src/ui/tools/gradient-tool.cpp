@@ -19,7 +19,6 @@
 
 #include "desktop.h"
 #include "document-undo.h"
-#include "document.h"
 #include "gradient-chemistry.h"
 #include "gradient-drag.h"
 #include "message-context.h"

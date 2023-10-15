@@ -9,18 +9,11 @@
  */
 #include "sp-conn-end.h"
 
-#include <cstring>
-#include <string>
-#include <limits>
+#include <2geom/path-intersection.h>
 
-#include "bad-uri-exception.h"
-#include "display/curve.h"
-#include "xml/repr.h"
-#include "sp-path.h"
-#include "uri.h"
-#include "document.h"
 #include "sp-item-group.h"
-#include "2geom/path-intersection.h"
+#include "sp-path.h"
+#include "display/curve.h"
 
 
 static void change_endpts(SPPath *path, double endPos[2]);

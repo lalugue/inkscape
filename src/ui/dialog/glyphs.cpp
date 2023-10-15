@@ -27,9 +27,7 @@
 #include <libnrtype/font-lister.h>
 #include <libnrtype/font-factory.h>
 
-#include "desktop.h"
 #include "document-undo.h"
-#include "document.h" // for SPDocumentUndo::done()
 #include "selection.h"
 #include "text-editing.h"
 #include "object/sp-flowtext.h"

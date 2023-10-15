@@ -9,22 +9,20 @@
  */
 #include "sp-style-elem.h"
 
+// For external style sheets
+#include <iostream>
+
 #include "3rdparty/libcroco/src/cr-parser.h"
 
 #include "attributes.h"
 #include "document.h"
 #include "sp-root.h"
 #include "style.h"
-#include "xml/repr.h"
-
-// For external style sheets
-#include <fstream>
-#include <iostream>
 
 #include "io/resource.h"
-
-// For font-rule
-#include "libnrtype/font-factory.h"
+#include "libnrtype/font-factory.h" // For font-rule
+#include "xml/document.h"                               // for Document
+#include "xml/node.h"                                   // for Node, NodeType
 
 void SPStyleElemTextNodeObserver::notifyContentChanged(Inkscape::XML::Node &, Inkscape::Util::ptr_shared,
                                                        Inkscape::Util::ptr_shared)

@@ -11,8 +11,9 @@
 #ifndef INKSCAPE_EXTENSION_PATHEFFECT_H__
 #define INKSCAPE_EXTENSION_PATHEFFECT_H__
 
-#include "document.h"
 #include "extension.h"
+
+class SPDocument;
 
 namespace Inkscape {
 namespace Extension {

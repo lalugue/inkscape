@@ -11,9 +11,7 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#ifdef HAVE_CONFIG_H
-# include "config.h"  // only include where actually required!
-#endif
+#include "color-notebook.h"
 
 #undef SPCS_PREVIEW
 #define noDUMP_CHANGE_INFO
@@ -31,18 +29,14 @@
 #include "profile-manager.h"
 #include "color/cms-system.h"
 #include "object/color-profile.h"
-#include "svg/svg-icc-color.h"
 #include "ui/dialog-events.h"
 #include "ui/icon-loader.h"
 #include "ui/pack.h"
 #include "ui/tools/dropper-tool.h"
 #include "ui/util.h"
 #include "ui/widget/color-entry.h"
-#include "ui/widget/color-icc-selector.h"
-#include "ui/widget/color-notebook.h"
 #include "ui/widget/color-scales.h"
 #include "ui/widget/icon-combobox.h"
-#include "widgets/spw-utilities.h"
 
 using Inkscape::CMSSystem;
 

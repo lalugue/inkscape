@@ -7,16 +7,24 @@
  * Copyright (C) 2018 Authors
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
-#include <cairo.h>
-#include <2geom/transforms.h>
 
 #include "sp-radial-gradient.h"
 
-#include "attributes.h"
-#include "style.h"
-#include "xml/repr.h"
+#include "attributes.h"                   // for SPAttr
+#include "rect.h"                         // for Rect
+#include "style.h"                        // for SPStyle
 
-#include "display/drawing-paintserver.h"
+#include "display/drawing-paintserver.h"  // for DrawingRadialGradient, Draw...
+#include "object/sp-gradient-units.h"     // for SPGradientUnits
+#include "object/sp-gradient-vector.h"    // for SPGradientVector
+#include "object/sp-gradient.h"           // for SPGradient
+#include "object/sp-item.h"               // for SPItemCtx
+#include "object/sp-object.h"             // for SP_OBJECT_MODIFIED_FLAG
+#include "style-internal.h"               // for SPIFontSize
+#include "xml/document.h"                 // for Document
+#include "xml/node.h"                     // for Node
+
+class SPDocument;
 
 /*
  * Radial Gradient

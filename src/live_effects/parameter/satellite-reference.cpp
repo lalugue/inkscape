@@ -2,14 +2,21 @@
 
 #include "satellite-reference.h"
 
-#include "document.h"
 #include "live_effects/lpeobject.h"
+#include "object/sp-item.h"
 #include "object/sp-item-group.h"
 #include "object/sp-lpe-item.h"
+#include "object/sp-object.h"       // for SPObject
 #include "object/sp-shape.h"
 #include "object/sp-text.h"
 #include "object/sp-use.h"
-#include "object/uri-references.h"
+#include "object/uri-references.h"  // for URIReference
+#include "util/cast.h"              // for is
+
+class LivePathEffectObject;
+class SPGroup;
+class SPShape;
+class SPText;
 
 // SPDX-License-Identifier: GPL-2.0-or-later
 /** @file

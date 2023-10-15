@@ -15,23 +15,19 @@
  */
 
 #include <cmath>
-#include <cstring>
-#include <string>
 #include <cstdio>
-#include <typeinfo>
-#include "Path.h"
-#include "style.h"
-#include "livarot/path-description.h"
+#include <vector>
+
 #include <2geom/pathvector.h>
 #include <2geom/point.h>
 #include <2geom/affine.h>
 #include <2geom/sbasis-to-bezier.h>
 #include <2geom/curves.h>
-#include <vector>
-#include "helper/geom-curves.h"
-#include "helper/geom.h"
 
-#include "svg/svg.h"
+#include "Path.h"
+#include "style.h"
+#include "livarot/path-description.h"
+#include "helper/geom-curves.h"
 
 void  Path::DashPolyline(float head,float tail,float body,int nbD, const float dashs[],bool stPlain,float stOffset)
 {

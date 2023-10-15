@@ -11,10 +11,16 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include "attributes.h"
 #include "sp-tag.h"
-#include "xml/repr.h"
-#include <cstring>
+
+#include <cstring>             // for strcmp
+
+#include "attributes.h"        // for SPAttr
+#include "object/sp-object.h"  // for SPObject, SPCtx (ptr only), SP_OBJECT_...
+#include "xml/document.h"      // for Document
+#include "xml/node.h"          // for Node
+
+class SPDocument;
 
 /*
  * Move this SPItem into or after another SPItem in the doc

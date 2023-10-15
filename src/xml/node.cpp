@@ -11,9 +11,10 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#include "node.h"
+
 #include <2geom/point.h>
 
-#include "node.h"
 #include "svg/stringstream.h"
 #include "svg/css-ostringstream.h"
 #include "svg/svg-length.h"
@@ -90,7 +91,7 @@ bool Node::setAttributeBoolean(Util::const_char_ptr key, bool val)
 
 bool Node::setAttributeInt(Util::const_char_ptr key, int val)
 {
-    gchar c[32];
+    char c[32];
 
     g_snprintf(c, 32, "%d", val);
 
@@ -149,7 +150,7 @@ Geom::Point Node::getAttributePoint(Util::const_char_ptr key, Geom::Point defaul
         return default_value;
     }
 
-    gchar **strarray = g_strsplit(v, ",", 2);
+    char **strarray = g_strsplit(v, ",", 2);
 
     if (strarray && strarray[0] && strarray[1]) {
         double newx, newy;

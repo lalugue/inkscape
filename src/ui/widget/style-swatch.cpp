@@ -16,23 +16,22 @@
 
 #include <functional>
 #include <utility>
-#include <sigc++/adaptors/bind.h>
-#include <sigc++/functors/mem_fun.h>
 #include <glibmm/i18n.h>
 #include <gtkmm/grid.h>
+#include <sigc++/adaptors/bind.h>
+#include <sigc++/functors/mem_fun.h>
+
+#include "style.h"
 
 #include "actions/actions-tools.h"  // Open tool preferences.
-#include "inkscape.h"
 #include "object/sp-linear-gradient.h"
+#include "object/sp-paint-server.h"
 #include "object/sp-pattern.h"
 #include "object/sp-radial-gradient.h"
-#include "style.h"
 #include "ui/controller.h"
 #include "ui/pack.h"
 #include "ui/widget/color-preview.h"
 #include "util/units.h"
-#include "widgets/spw-utilities.h"
-#include "xml/attribute-record.h"
 #include "xml/sp-css-attr.h"
 
 static constexpr int STYLE_SWATCH_WIDTH = 135;

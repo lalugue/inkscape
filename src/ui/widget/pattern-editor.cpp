@@ -28,14 +28,16 @@
 #include <gtkmm/treemodel.h>
 #include <gtkmm/viewport.h>
 
+#include "document.h"
+#include "preferences.h"
+#include "style.h"
+
 #include "io/resource.h"
 #include "manipulation/copy-resource.h"
 #include "object/sp-defs.h"
 #include "object/sp-root.h"
 #include "pattern-manager.h"
 #include "pattern-manipulation.h"
-#include "preferences.h"
-#include "style.h"
 #include "ui/builder-utils.h"
 #include "ui/pack.h"
 #include "ui/svg-renderer.h"

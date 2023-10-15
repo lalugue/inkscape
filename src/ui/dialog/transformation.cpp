@@ -17,20 +17,16 @@
 #include <sigc++/functors/mem_fun.h>
 #include <gtkmm/box.h>
 #include <gtkmm/button.h>
-#include <gtkmm/dialog.h>
 #include <gtkmm/entry.h>
 #include <gtkmm/grid.h>
 #include <gtkmm/label.h>
+
 #include <2geom/transforms.h>
-#include <gtkmm/dialog.h>
 
 #include "desktop.h"
 #include "document-undo.h"
-#include "document.h"
-#include "inkscape.h"
 #include "message-stack.h"
 #include "selection.h"
-#include "selection-chemistry.h"
 
 #include "object/algorithms/bboxsort.h"
 #include "object/sp-item-transform.h"

@@ -15,17 +15,23 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include "live_effects/effect.h"
-#include "svg/svg.h"
-#include "attributes.h"
-#include <2geom/bezier-utils.h>
-#include <2geom/pathvector.h>
-#include "display/curve.h"
-#include <glibmm/i18n.h>
-#include "xml/repr.h"
-#include "document.h"
-
 #include "sp-spiral.h"
+
+#include <glibmm/i18n.h>
+
+#include <2geom/bezier-utils.h>
+
+#include "attributes.h"
+
+#include "display/curve.h"
+#include "snap-candidate.h"      // for SnapCandidatePoint
+#include "snap-enums.h"          // for SnapTargetType, SnapSourceType
+#include "snap-preferences.h"    // for SnapPreferences
+#include "svg/svg.h"
+#include "xml/document.h"        // for Document
+#include "xml/node.h"            // for Node
+
+class SPDocument;
 
 SPSpiral::SPSpiral()
     : SPShape()

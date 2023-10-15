@@ -27,56 +27,66 @@
 #include "odf.h"
 
 //# System includes
-#include <cstdio>
-#include <ctime>
-#include <vector>
-#include <cmath>
+#include <clocale>                        // for setlocale, LC_NUMERIC
+#include <cmath>                          // for fabs, sqrt, atan, pow, M_PI
+#include <cstring>                        // for strcmp
+#include <optional>                       // for optional
+#include <utility>                        // for pair
+
+//# 2geom includes
+#include <2geom/pathvector.h>
+#include <2geom/transforms.h>
+#include "helper/geom.h"
+#include "helper/geom-curves.h"
 
 //# Inkscape includes
-#include "clear-n_.h"
-#include "inkscape.h"
-#include "display/curve.h"
-#include <2geom/pathvector.h>
-#include <2geom/curves.h>
-#include <2geom/transforms.h>
-#include <helper/geom.h>
-#include "helper/geom-curves.h"
-#include "extension/system.h"
+#include "affine.h"                       // for Affine
+#include "attributes.h"                   // for SPAttr
+#include "bezier-curve.h"                 // for CubicBezier
+#include "color.h"                        // for SPColor
+#include "coord.h"                        // for Dim2, X, Y
+#include "curve.h"                        // for Curve
+#include "document.h"                     // for SPDocument
+#include "preferences.h"                  // for guint32
+#include "style-internal.h"               // for SPIPaint, SPIScale24, SPILe...
+#include "style.h"                        // for SPStyle
+#include "text-editing.h"                 // for te_get_layout
 
-#include "xml/repr.h"
-#include "xml/attribute-record.h"
-#include "object/sp-image.h"
-#include "object/sp-gradient.h"
-#include "object/sp-stop.h"
-#include "object/sp-linear-gradient.h"
-#include "object/sp-radial-gradient.h"
-#include "object/sp-root.h"
-#include "object/sp-path.h"
-#include "object/sp-text.h"
-#include "object/sp-flowtext.h"
-#include "object/uri.h"
-#include "style.h"
+#include "display/curve.h"                // for SPCurve
+#include "extension/extension.h"          // for Extension (ptr only), INKSC...
+#include "extension/internal/clear-n_.h"  // for N_
+#include "extension/internal/odf.h"       // for OdfOutput, GradientInfo
+#include "extension/system.h"             // for build_from_mem
+#include "helper/geom-curves.h"           // for is_straight_curve
+#include "inkscape-version.h"             // for version_string
+#include "io/stream/bufferstream.h"       // for BufferOutputStream
+#include "io/stream/stringstream.h"       // for StringOutputStream
+#include "io/sys.h"                       // for get_file_extension
+#include "libnrtype/Layout-TNG.h"         // for Layout
+#include "object/sp-flowtext.h"           // for SPFlowtext
+#include "object/sp-gradient.h"           // for SPGradient
+#include "object/sp-image.h"              // for SPImage
+#include "object/sp-item.h"               // for SPItem
+#include "object/sp-linear-gradient.h"    // for SPLinearGradient
+#include "object/sp-object.h"             // for SPObject
+#include "object/sp-radial-gradient.h"    // for SPRadialGradient
+#include "object/sp-root.h"               // for SPRoot
+#include "object/sp-shape.h"              // for SPShape
+#include "object/sp-stop.h"               // for SPStop
+#include "object/sp-text.h"               // for SPText
+#include "object/uri.h"                   // for URI
+#include "svg/svg-length.h"               // for SVGLength
+#include "util/cast.h"                    // for cast, is
+#include "util/ziptool.h"                 // for ZipFile
+#include "xml/node.h"                     // for Node, NodeType
 
-#include "svg/svg.h"
-#include "text-editing.h"
-#include "util/units.h"
+namespace Inkscape::Extension {
+class Output;
+} // namespace Inkscape::Extension
 
 
-#include "inkscape-version.h"
-#include "document.h"
-#include "extension/extension.h"
+namespace Inkscape::Extension::Internal {
 
-#include "io/stream/bufferstream.h"
-#include "io/stream/stringstream.h"
-#include "io/sys.h"
-#include <util/ziptool.h>
-#include <iomanip>
-namespace Inkscape
-{
-namespace Extension
-{
-namespace Internal
-{
 //# Shorthand notation
 typedef Inkscape::IO::BufferOutputStream BufferOutputStream;
 typedef Inkscape::IO::OutputStreamWriter OutputStreamWriter;
@@ -86,7 +96,6 @@ typedef Inkscape::IO::StringOutputStream StringOutputStream;
 //########################################################################
 //# C L A S S    SingularValueDecomposition
 //########################################################################
-#include <cmath>
 
 class SVDMatrix
 {
@@ -2097,15 +2106,13 @@ bool OdfOutput::check (Inkscape::Extension::Extension */*module*/)
 {
     /* We don't need a Key
     if (NULL == Inkscape::Extension::db.get(SP_MODULE_KEY_OUTPUT_POV))
-        return FALSE;
+        return false;
     */
 
-    return TRUE;
+    return true;
 }
 
-}  //namespace Internal
-}  //namespace Extension
-}  //namespace Inkscape
+}  //namespace Inkscape::Extension::Internal
 
 
 //########################################################################

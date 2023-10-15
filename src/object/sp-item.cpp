@@ -33,6 +33,7 @@
 #include "gradient-chemistry.h"
 #include "conn-avoid-ref.h"
 #include "conditions.h"
+#include "enums.h"
 #include "filter-chemistry.h"
 
 #include "sp-clippath.h"

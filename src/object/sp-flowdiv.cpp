@@ -10,10 +10,10 @@
 /*
  */
 
-#include "xml/repr.h"
 #include "sp-flowdiv.h"
+
 #include "sp-string.h"
-#include "document.h"
+#include "xml/document.h"
 
 SPFlowdiv::SPFlowdiv() : SPItem() {
 }

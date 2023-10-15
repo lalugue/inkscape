@@ -14,12 +14,29 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include "attributes.h"
-#include "svg/svg.h"
 #include "turbulence.h"
-#include "util/numeric/converters.h"
-#include "xml/repr.h"
-#include "display/nr-filter.h"
+
+#include <cmath>                                 // for floor
+#include <cstring>                               // for strcmp
+
+#include "attributes.h"                          // for SPAttr
+
+#include "object/filters/sp-filter-primitive.h"  // for SPFilterPrimitive
+#include "object/sp-object.h"                    // for SP_OBJECT_MODIFIED_FLAG
+#include "util/numeric/converters.h"             // for read_number
+#include "xml/node.h"                            // for Node
+
+class SPDocument;
+
+namespace Inkscape {
+class DrawingItem;
+namespace Filters {
+class FilterPrimitive;
+} // namespace Filters
+namespace XML {
+class Document;
+} // namespace XML
+} // namespace Inkscape
 
 void SPFeTurbulence::build(SPDocument *document, Inkscape::XML::Node *repr)
 {
@@ -135,7 +152,7 @@ void SPFeTurbulence::set(SPAttr key, char const *value)
     }
 }
 
-Inkscape::XML::Node *SPFeTurbulence::write(Inkscape::XML::Document *doc, Inkscape::XML::Node *repr, guint flags)
+Inkscape::XML::Node *SPFeTurbulence::write(Inkscape::XML::Document *doc, Inkscape::XML::Node *repr, unsigned flags)
 {
     // TODO: Don't just clone, but create a new repr node and write all relevant values into it.
     if (!repr) {

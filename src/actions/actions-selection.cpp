@@ -17,7 +17,6 @@
 #include "actions-helper.h"
 
 #include "document.h"
-#include "inkscape.h"             // Inkscape::Application
 #include "inkscape-application.h"
 #include "selection.h"            // Selection
 

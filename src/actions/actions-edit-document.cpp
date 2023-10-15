@@ -13,19 +13,17 @@
 
 #include "actions-edit-document.h"
 
-#include <giomm.h>
 #include <glibmm/i18n.h>
 
-#include "actions-helper.h"
-#include "actions/actions-extra-data.h"
 #include "document.h"
+#include "document-undo.h"
 #include "inkscape-application.h"
-#include "inkscape.h"
 #include "selection-chemistry.h"
 
+#include "actions/actions-extra-data.h"
 #include "object/sp-guide.h"
 #include "object/sp-namedview.h"
-#include "xml/repr.h"
+#include "xml/node.h"
 
 void
 create_guides_around_page(SPDocument* document)

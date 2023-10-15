@@ -12,7 +12,6 @@
 
 #include "effect.h"
 
-#include <iostream>
 #include <string>
 
 #include <glibmm/fileutils.h>
@@ -24,13 +23,12 @@
 #include "streq.h"
 #include "timer.h"
 
-#include "actions/actions-effect-data.h"
 #include "actions/actions-effect.h"
+#include "extension/internal/filter/filter.h"  // for Filter
 #include "implementation/implementation.h"
-#include "internal/filter/filter.h"
 #include "io/sys.h"
 #include "prefdialog/prefdialog.h"
-#include "xml/repr.h"
+#include "xml/node.h"
 
 /* Inkscape::Extension::Effect */
 

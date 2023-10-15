@@ -14,12 +14,16 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include "attributes.h"
-#include "document.h"
-#include "componenttransfer.h"
 #include "componenttransfer-funcnode.h"
-#include "util/numeric/converters.h"
-#include "xml/repr.h"
+
+#include <cstring>                    // for strcmp
+#include "attributes.h"               // for SPAttr
+#include "document.h"                 // for SPDocument
+#include "util/numeric/converters.h"  // for read_number, read_vector
+
+namespace Inkscape::XML {
+class Node;
+} // namespace Inkscape::XML
 
 void SPFeFuncNode::build(SPDocument *document, Inkscape::XML::Node *repr)
 {

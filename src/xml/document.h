@@ -18,6 +18,8 @@
 namespace Inkscape {
 namespace XML {
 
+class Event;
+
 /**
  * @brief Interface for XML documents
  *

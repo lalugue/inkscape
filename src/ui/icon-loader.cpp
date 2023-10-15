@@ -25,8 +25,6 @@
 
 #include "desktop.h"
 #include "inkscape.h"
-#include "io/resource.h"
-#include "svg/svg-color.h"
 
 
 Gtk::Image *sp_get_icon_image(Glib::ustring const &icon_name, int size)

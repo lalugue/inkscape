@@ -23,8 +23,7 @@
 #include "document.h"
 #include "inkscape.h"
 #include "path-prefix.h"
-#include "pattern-manipulation.h"
-#include "io/sys.h"
+
 #include "io/resource.h"
 #include "libnrtype/font-factory.h"
 #include "manipulation/copy-resource.h"
@@ -33,7 +32,6 @@
 #include "object/sp-marker.h"
 #include "object/sp-defs.h"
 #include "util/statics.h"
-#include "xml/repr.h"
 
 // Stock objects kept in documents with controlled life time
 struct Documents {

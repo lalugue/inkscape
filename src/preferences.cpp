@@ -16,19 +16,18 @@
 #include <iomanip>
 #include <sstream>
 #include <utility>
-#include <glibmm/fileutils.h>
 #include <glibmm/convert.h>
 #include <glibmm/i18n.h>
 #include <glib/gstdio.h>
+
 #include "preferences.h"
 #include "preferences-skeleton.h"
-#include "inkscape.h"
-#include "xml/node-observer.h"
-#include "xml/node-iterators.h"
-#include "xml/attribute-record.h"
 #include "util/units.h"
 #include "attribute-rel-util.h"
 #include "io/resource.h"
+#include "xml/node-observer.h"
+#include "xml/node-iterators.h"
+#include "xml/attribute-record.h"
 
 #define PREFERENCES_FILE_NAME "preferences.xml"
 

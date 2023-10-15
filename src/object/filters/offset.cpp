@@ -13,17 +13,28 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include <2geom/transforms.h>
-
 #include "offset.h"
-#include "attributes.h"
 
-#include "display/nr-filter.h"
-#include "display/nr-filter-offset.h"
+#include <2geom/transforms.h>                    // for Translate
 
-#include "util/numeric/converters.h"
-#include "svg/svg.h"
-#include "xml/repr.h"
+#include "attributes.h"                          // for SPAttr
+
+#include "display/nr-filter-offset.h"            // for FilterOffset
+#include "object/filters/sp-filter-primitive.h"  // for SPFilterPrimitive
+#include "object/sp-object.h"                    // for SP_OBJECT_MODIFIED_FLAG
+#include "util/numeric/converters.h"             // for read_number
+
+class SPDocument;
+
+namespace Inkscape {
+class DrawingItem;
+namespace Filters {
+class FilterPrimitive;
+} // namespace Filters
+namespace XML {
+class Node;
+} // namespace XML
+} // namespace Inkscape
 
 void SPFeOffset::build(SPDocument *document, Inkscape::XML::Node *repr)
 {

@@ -13,6 +13,7 @@
 
 #include "live_effects/effect.h"
 #include "live_effects/lpeobject.h"
+#include "svg/svg.h"
 
 namespace Inkscape::LivePathEffect {
 

@@ -14,21 +14,31 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include <string>
-#include <2geom/transforms.h>
-
-#include "attributes.h"
-#include "print.h"
-#include "document.h"
-#include "inkscape-version.h"
-#include "sp-defs.h"
-#include "sp-namedview.h"
 #include "sp-root.h"
-#include "sp-use.h"
-#include "display/drawing-group.h"
-#include "svg/svg.h"
-#include "xml/repr.h"
-#include "util/units.h"
+
+#include "affine.h"                                  // for identity, Affine
+#include "attributes.h"                              // for SPAttr
+#include "display/drawing-group.h"                   // for DrawingGroup
+#include "display/drawing-item-ptr.h"                // for DrawingItemPtr
+#include "document.h"                                // for SPDocument
+#include "print.h"                                   // for SPPrintContext
+#include "rect.h"                                    // for Rect
+#include "sp-defs.h"                                 // for SPDefs
+#include "sp-namedview.h"                            // for SPNamedView
+#include "sp-use.h"                                  // for SPUse
+#include "sp-item-group.h"                           // for SPGroup
+#include "sp-item.h"                                 // for SPItemCtx, SPIte...
+#include "sp-object.h"                               // for SP_OBJECT_VIEWPO...
+#include "viewbox.h"                                 // for SPViewBox
+
+#include "svg/svg-length.h"                          // for SVGLength
+#include "svg/svg.h"                                 // for sp_svg_length_wr...
+#include "util/units.h"                              // for Quantity
+#include "xml/document.h"                            // for Document
+
+namespace Inkscape {
+class Drawing;
+} // namespace Inkscape
 
 SPRoot::SPRoot() : SPGroup(), SPViewBox()
 {

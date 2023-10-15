@@ -12,21 +12,16 @@
 #include <2geom/intersection-graph.h>
 
 #include "extract-uri.h"
-#include "path-chemistry.h"
 #include "selection.h"
 
-#include "display/curve.h"
-#include "helper/geom.h"
+#include "inkscape.h"
+
 #include "live_effects/lpeobject-reference.h"
 #include "live_effects/lpeobject.h"
 #include "object/sp-defs.h"
 #include "object/sp-item-group.h"
 #include "object/sp-mask.h"
-#include "object/sp-path.h"
-#include "object/sp-shape.h"
-#include "object/uri.h"
 #include "svg/stringstream.h"
-#include "svg/svg-color.h"
 #include "svg/svg.h"
 #include "util/safe-printf.h"
 

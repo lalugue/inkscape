@@ -18,27 +18,29 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#include <cstddef>                             // for size_t
+#include <deque>                               // for deque
+#include <map>                                 // for map
+#include <memory>                              // for unique_ptr, default_de...
+#include <queue>                               // for queue
+#include <string>                              // for string
+#include <vector>                              // for vector
 
-#include <cstddef>
-#include <deque>
-#include <map>
-#include <memory>
-#include <vector>
-#include <queue>
+#include <boost/ptr_container/ptr_list.hpp>    // for ptr_list
 
-#include <boost/ptr_container/ptr_list.hpp>
+#include <giomm/simpleactiongroup.h>           // for SimpleActionGroup
+#include <glib.h>                              // for GQuark, gboolean, gchar
+#include <glibmm/refptr.h>                     // for RefPtr
+#include <glibmm/ustring.h>                    // for ustring
+#include <sigc++/connection.h>                 // for connection
+#include <sigc++/signal.h>                     // for signal
 
-#include <glibmm/ustring.h>
-#include <giomm/simpleactiongroup.h>
-#include <sigc++/sigc++.h>
+#include <2geom/affine.h>                      // for Affine
+#include <2geom/rect.h>                        // for Rect, OptRect
+#include <2geom/transforms.h>                  // for Scale
 
-#include <2geom/affine.h>
-#include <2geom/forward.h>
+#include "3rdparty/libcroco/src/cr-cascade.h"  // for CRCascade
 
-#include "3rdparty/libcroco/src/cr-cascade.h"
-
-#include "document-undo.h"
-#include "event.h"
 #include "gc-anchored.h"
 #include "gc-finalized.h"
 
@@ -56,7 +58,6 @@
 extern bool sp_no_convert_text_baseline_spacing;
 
 
-
 // This variable is introduced with 0.92.1
 // with the introduction of automatic fix 
 // for files detected to have been created 
@@ -65,41 +66,38 @@ extern bool sp_no_convert_text_baseline_spacing;
 extern bool sp_do_not_fix_pre_92;
 
 
-
 namespace Avoid {
 class Router;
 }
 
-class SPItem;
-class SPObject;
+class Persp3D;
+class Persp3DImpl;
+class SPDefs;
 class SPGroup;
-class SPRoot;
+class SPItem;
+class SPItemCtx;
 class SPNamedView;
+class SPObject;
+class SPRoot;
 
 namespace Inkscape {
-    class Selection; 
-    class UndoStackObserver;
+    class DocumentUndo;
+    class Event;
     class EventLog;
-    class ProfileManager;
     class PageManager;
+    class ProfileManager;
+    class Selection;
+    class UndoStackObserver;
     namespace XML {
         struct Document;
+        class Event;
         class Node;
-    }
+    } // namespace XML
     namespace Util {
         class Unit;
         class Quantity;
-    }
-}
-
-class SPDefs;
-class Persp3D;
-class Persp3DImpl;
-class SPItemCtx;
-
-namespace Proj {
-    class TransfMat3x4;
-}
+    } // namespace Util
+} // namespace Inkscape
 
 /// Typed SVG document implementation.
 class SPDocument : public Inkscape::GC::Managed<>,

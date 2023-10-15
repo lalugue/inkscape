@@ -13,25 +13,24 @@
 #ifndef EXTENSION_INTERNAL_ODG_OUT_H
 #define EXTENSION_INTERNAL_ODG_OUT_H
 
-#include <util/ziptool.h>
+#include <map>                                        // for map
+#include <string>                                     // for string
+#include <vector>                                     // for vector
 
-#include "extension/implementation/implementation.h"
+#include <glibmm/ustring.h>                           // for ustring, operat...
 
-#include <xml/repr.h>
-#include <string>
-#include <map>
+#include "extension/implementation/implementation.h"  // for Implementation
+#include "io/stream/inkscapestream.h"                 // for Writer
 
-#include "object/uri.h"
+class SPDocument;
 class SPItem;
+class ZipFile;
 
-#include <glibmm/ustring.h>
+namespace Geom {
+class Affine;
+} // namespace Geom
 
-namespace Inkscape
-{
-namespace Extension
-{
-namespace Internal
-{
+namespace Inkscape::Extension::Internal {
 
 typedef Inkscape::IO::Writer Writer;
 
@@ -259,7 +258,7 @@ public:
 
     void save  (Inkscape::Extension::Output *mod,
 	        SPDocument *doc,
-	        gchar const *filename) override;
+	        char const *filename) override;
 
     static void   init  ();
 
@@ -318,12 +317,18 @@ private:
 
 };
 
-
-}  //namespace Internal
-}  //namespace Extension
-}  //namespace Inkscape
-
-
+}  //namespace Inkscape::Extension::Internal
 
 #endif /* EXTENSION_INTERNAL_ODG_OUT_H */
+
+/*
+  Local Variables:
+  mode:c++
+  c-file-style:"stroustrup"
+  c-file-offsets:((innamespace . 0)(inline-open . 0)(case-label . +))
+  indent-tabs-mode:nil
+  fill-column:99
+  End:
+*/
+// vim: filetype=cpp:expandtab:shiftwidth=4:tabstop=8:softtabstop=4:fileencoding=utf-8:textwidth=99 :
 

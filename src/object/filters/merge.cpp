@@ -11,14 +11,26 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include "attributes.h"
-#include "svg/svg.h"
-#include "xml/repr.h"
-
 #include "merge.h"
-#include "mergenode.h"
-#include "display/nr-filter.h"
-#include "display/nr-filter-merge.h"
+
+#include <utility>                                   // for as_const
+
+#include "mergenode.h"                               // for SPFeMergeNode
+#include "display/nr-filter-merge.h"                 // for FilterMerge
+#include "object/filters/sp-filter-primitive.h"      // for SPFilterPrimitive
+#include "object/sp-object.h"                        // for SPObject, SP_OBJ...
+
+class SlotResolver;
+
+namespace Inkscape {
+class DrawingItem;
+namespace Filters {
+class FilterPrimitive;
+} // namespace Filters
+namespace XML {
+class Node;
+} // namespace XML
+} // namespace Inkscape
 
 void SPFeMerge::modified(unsigned flags)
 {

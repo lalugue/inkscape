@@ -13,6 +13,8 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#include "desktop-events.h"
+
 #include <map>
 #include <string>
 
@@ -21,13 +23,10 @@
 
 #include <gdkmm/display.h>
 #include <gdkmm/seat.h>
-#include <gtk/gtk.h>
 #include <glibmm/i18n.h>
 
 #include "desktop.h"
-#include "desktop-events.h"
 #include "document-undo.h"
-#include "document.h"
 #include "message-context.h"
 #include "preferences.h"
 #include "snap.h"

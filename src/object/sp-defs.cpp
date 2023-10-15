@@ -18,9 +18,13 @@
  */
 
 #include "sp-defs.h"
-#include "xml/repr.h"
-#include "document.h"
-#include "attributes.h"
+
+#include "attributes.h"                              // for SPAttr
+#include "object/sp-object.h"                        // for SPObject, sp_obj...
+#include "xml/document.h"                            // for Document
+#include "xml/node.h"                                // for Node
+
+class SPDocument;
 
 SPDefs::SPDefs() : SPObject() {
 }

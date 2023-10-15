@@ -14,8 +14,10 @@
  */
 
 #include "sp-object-group.h"
-#include "xml/repr.h"
-#include "document.h"
+
+#include "object/sp-object.h"                        // for SPObject, SP_OBJ...
+#include "xml/document.h"                            // for Document
+#include "xml/node.h"                                // for Node
 
 SPObjectGroup::SPObjectGroup() : SPObject() {
 }

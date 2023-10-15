@@ -10,36 +10,24 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#include <memory>
+
 #include <2geom/circle.h>
 #include <2geom/line.h>
 #include <2geom/path-intersection.h>
 #include <2geom/path-sink.h>
-#include <memory>
 
 #include "desktop.h"
 #include "display/curve.h"
 #include "document.h"
-#include "inkscape.h"
-#include "live_effects/effect-enum.h"
-#include "object/sp-clippath.h"
-#include "object/sp-flowtext.h"
-#include "object/sp-image.h"
-#include "object/sp-item-group.h"
-#include "object/sp-mask.h"
-#include "object/sp-namedview.h"
+#include "page-manager.h"
+#include "preferences.h"
+#include "snap-enums.h"
+
 #include "object/sp-page.h"
 #include "object/sp-path.h"
 #include "object/sp-root.h"
-#include "object/sp-shape.h"
-#include "object/sp-text.h"
 #include "object/sp-use.h"
-#include "path/path-util.h" // curve_for_item
-#include "preferences.h"
-#include "snap-enums.h"
-#include "style.h"
-#include "svg/svg.h"
-#include "text-editing.h"
-#include "page-manager.h"
 
 Inkscape::AlignmentSnapper::AlignmentSnapper(SnapManager *sm, Geom::Coord const d)
     : Snapper(sm, d)

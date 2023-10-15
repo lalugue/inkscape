@@ -15,12 +15,16 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include "xml/repr.h"
-#include "attributes.h"
 #include "sp-font-face.h"
-#include "document.h"
 
 #include <cstring>
+
+#include "attributes.h"        // for SPAttr
+#include "object/sp-object.h"  // for SP_OBJECT_MODIFIED_FLAG, SPObject, SPC...
+#include "xml/document.h"      // for Document
+#include "xml/node.h"          // for Node
+
+class SPDocument;
 
 static std::vector<FontFaceStyleType> sp_read_fontFaceStyleType(gchar const *value){
     std::vector<FontFaceStyleType> v;

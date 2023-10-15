@@ -8,7 +8,7 @@
  *
  */
 
-#include <iostream>
+//#include <iostream>
 
 #include <giomm.h>  // Not <gtkmm.h>! To eventually allow a headless version!
 #include <glibmm/i18n.h>
@@ -18,9 +18,7 @@
 #include "document-undo.h"
 #include "inkscape-application.h"
 
-#include "inkscape.h"             // Inkscape::Application
 #include "selection.h"            // Selection
-#include "path/path-simplify.h"
 #include "live_effects/effect.h"
 #include "live_effects/lpe-powerclip.h"
 #include "live_effects/lpe-powermask.h"

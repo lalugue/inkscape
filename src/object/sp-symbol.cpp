@@ -12,22 +12,28 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include <string>
+#include "sp-symbol.h"
+
 #include <glibmm/i18n.h>
+
 #include <2geom/transforms.h>
 #include <2geom/pathvector.h>
 
-#include "display/drawing-group.h"
-#include "xml/repr.h"
 #include "attributes.h"
-#include "print.h"
-#include "sp-symbol.h"
-#include "sp-use.h"
-#include "svg/svg.h"
+#include "desktop.h"
 #include "document.h"
 #include "inkscape.h"
-#include "desktop.h"
 #include "layer-manager.h"
+#include "print.h"
+#include "sp-use.h"
+
+#include "display/drawing-group.h"
+#include "svg/svg.h"
+#include "xml/document.h"                            // for Document
+
+namespace Inkscape {
+class Drawing;
+} // namespace Inkscape
 
 SPSymbol::SPSymbol() : SPGroup(), SPViewBox() {
 }

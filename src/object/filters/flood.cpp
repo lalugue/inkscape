@@ -13,13 +13,27 @@
  */
 
 #include "flood.h"
-#include "strneq.h"
-#include "attributes.h"
-#include "svg/svg.h"
-#include "svg/svg-color.h"
-#include "display/nr-filter.h"
-#include "display/nr-filter-flood.h"
-#include "xml/repr.h"
+
+#include <cstring>                               // for strncmp
+
+#include "attributes.h"                          // for SPAttr
+
+#include "display/nr-filter-flood.h"             // for FilterFlood
+#include "object/filters/sp-filter-primitive.h"  // for SPFilterPrimitive
+#include "object/sp-object.h"                    // for SP_OBJECT_MODIFIED_FLAG
+#include "svg/svg-color.h"                       // for sp_svg_read_color
+
+class SPDocument;
+
+namespace Inkscape {
+class DrawingItem;
+namespace Filters {
+class FilterPrimitive;
+} // namespace Filters
+namespace XML {
+class Node;
+} // namespace XML
+} // namespace Inkscape
 
 void SPFeFlood::build(SPDocument *document, Inkscape::XML::Node *repr)
 {

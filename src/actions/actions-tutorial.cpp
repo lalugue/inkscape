@@ -11,16 +11,18 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#include "actions-tutorial.h"
+
 #include <glibmm/i18n.h>
 #include <sigc++/adaptors/bind.h>
 
-#include "actions-tutorial.h"
 #include "actions/actions-extra-data.h"
-#include "document.h"
 #include "inkscape-application.h"
 #include "ui/interface.h"
 #include "ui/dialog/about.h"
 #include "io/resource.h"
+
+class SPDocument;
 
 using Inkscape::IO::Resource::UIS;
 

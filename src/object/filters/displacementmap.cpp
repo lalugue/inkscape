@@ -13,15 +13,26 @@
  */
 
 #include "displacementmap.h"
-#include "attributes.h"
-#include "display/nr-filter-displacement-map.h"
-#include "display/nr-filter.h"
-#include "object/sp-filter.h"
-#include "svg/svg.h"
-#include "util/numeric/converters.h"
-#include "xml/repr.h"
-#include "slot-resolver.h"
-#include "util/optstr.h"
+
+#include "attributes.h"                          // for SPAttr
+#include "slot-resolver.h"                       // for SlotResolver
+
+#include "display/nr-filter-displacement-map.h"  // for FilterDisplacementMap
+#include "object/filters/sp-filter-primitive.h"  // for SPFilterPrimitive
+#include "object/sp-object.h"                    // for SP_OBJECT_MODIFIED_FLAG
+#include "util/numeric/converters.h"             // for read_number
+#include "util/optstr.h"                         // for assign, to_cstr
+#include "xml/document.h"                        // for Document
+#include "xml/node.h"                            // for Node
+
+class SPDocument;
+
+namespace Inkscape {
+class DrawingItem;
+namespace Filters {
+class FilterPrimitive;
+} // namespace Filters
+} // namespace Inkscape
 
 void SPFeDisplacementMap::build(SPDocument *document, Inkscape::XML::Node *repr)
 {

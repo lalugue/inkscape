@@ -20,9 +20,10 @@
 #include <glibmm/i18n.h>  // Internationalization
 #include <gtkmm/messagedialog.h>
 
-#include "extension/system.h" // Inkscape::Extension::FILE...
+#include "document.h"
 #include "file.h"
 #include "inkscape-window.h"
+#include "extension/system.h" // Inkscape::Extension::FILE...
 #include "object/sp-namedview.h"
 #include "ui/dialog-run.h"
 #include "ui/util.h"

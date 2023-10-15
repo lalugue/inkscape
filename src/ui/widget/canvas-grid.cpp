@@ -32,11 +32,14 @@
 #include "canvas-grid.h"
 #include "desktop.h"        // Hopefully temp.
 #include "desktop-events.h" // Hopefully temp.
+#include "document-undo.h"
 #include "selection.h"
 #include "display/control/canvas-item-guideline.h"
+#include "page-manager.h"
+
+#include "io/resource.h"
 #include "object/sp-grid.h"
 #include "object/sp-root.h"
-#include "page-manager.h"
 #include "ui/builder-utils.h"
 #include "ui/controller.h"
 #include "ui/dialog/command-palette.h"
@@ -46,7 +49,8 @@
 #include "ui/widget/events/canvas-event.h"
 #include "ui/widget/canvas-notice.h"
 #include "ui/widget/ink-ruler.h"
-#include "io/resource.h"
+#include "util/units.h"
+
 
 namespace Inkscape::UI::Widget {
 

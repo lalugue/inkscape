@@ -13,8 +13,8 @@
 #include <glibmm/i18n.h>
 
 #include "document-undo.h"
-#include "document.h"
 #include "gradient-chemistry.h"
+
 #include "object/sp-stop.h"
 #include "ui/icon-names.h"
 #include "ui/pack.h"

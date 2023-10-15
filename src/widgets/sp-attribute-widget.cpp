@@ -20,10 +20,9 @@
 #include <gtkmm/grid.h>
 #include <sigc++/adaptors/bind.h>
 
-#include "document.h"
 #include "document-undo.h"
 #include "object/sp-object.h"
-#include "xml/repr.h"
+#include "xml/node.h"
 
 using Inkscape::DocumentUndo;
 

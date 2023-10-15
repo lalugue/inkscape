@@ -21,46 +21,36 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include <numeric>
+#include "spray-tool.h"
+
 #include <vector>
-#include <tuple>
 
 #include <gdk/gdkkeysyms.h>
 #include <glibmm/i18n.h>
 
 #include <2geom/circle.h>
 
-
 #include "context-fns.h"
-#include "desktop-events.h"
 #include "desktop-style.h"
 #include "desktop.h"
 #include "document-undo.h"
 #include "document.h"
-#include "filter-chemistry.h"
-#include "inkscape.h"
 #include "message-context.h"
-#include "path-chemistry.h"
 #include "selection.h"
 
-#include "display/cairo-utils.h"
 #include "display/curve.h"
-#include "display/drawing-context.h"
 #include "display/drawing.h"
 #include "display/control/canvas-item-bpath.h"
 #include "display/control/canvas-item-drawing.h"
 
 #include "object/box3d.h"
+#include "object/sp-shape.h"
 #include "object/sp-use.h"
-#include "object/sp-item-transform.h"
 
-#include "svg/svg.h"
 #include "svg/svg-color.h"
 
 #include "ui/icon-names.h"
 #include "ui/toolbar/spray-toolbar.h"
-#include "ui/tools/spray-tool.h"
-#include "ui/widget/canvas.h"
 #include "ui/widget/events/canvas-event.h"
 
 using Inkscape::DocumentUndo;

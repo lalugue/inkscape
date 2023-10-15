@@ -5,7 +5,7 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include "live_effects/parameter/patharray.h"
+#include "patharray.h"
 
 #include <utility>
 #include <glibmm/i18n.h>
@@ -18,10 +18,10 @@
 #include <gtkmm/treestore.h>
 #include <gtkmm/treeview.h>
 
-#include "display/curve.h"
 #include "document.h"
-#include "document-undo.h"
 #include "inkscape.h"
+
+#include "display/curve.h"
 #include "live_effects/effect.h"
 #include "live_effects/lpe-bspline.h"
 #include "live_effects/lpeobject.h"
@@ -31,12 +31,9 @@
 #include "object/sp-shape.h"
 #include "object/sp-text.h"
 #include "object/uri.h"
-#include "originalpath.h"
 #include "svg/stringstream.h"
-#include "svg/svg.h"
 #include "ui/clipboard.h"
 #include "ui/icon-loader.h"
-#include "ui/icon-names.h"
 #include "ui/pack.h"
 
 namespace Inkscape::LivePathEffect {

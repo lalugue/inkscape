@@ -11,17 +11,16 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include <vector>
-#include <set>
-
-#include <glibmm/ustring.h>
-
 #include "conditions.h"
-#include "rdf.h"
 
-#include "object/sp-item.h"
+#include <glibmm/ustring.h>  // for ustring, operator<
 
-#include "xml/repr.h"
+#include <cstring>           // for strlen, strstr, strchr, strcmp
+#include <set>               // for set, operator!=, operator==
+#include <vector>            // for vector
+
+#include "document.h"        // for SPDocument
+#include "object/sp-item.h"  // for SPItem
 
 typedef bool (* condition_evaluator)(SPItem const *item, gchar const *value);
 

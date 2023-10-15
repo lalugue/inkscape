@@ -17,6 +17,7 @@
 #include <glibmm/regex.h>
 
 #include "document.h"
+#include "document-undo.h"
 #include "implementation/implementation.h"
 #include "io/file.h"
 #include "io/resource.h"

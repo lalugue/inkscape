@@ -24,25 +24,19 @@
 #include <glibmm/fileutils.h>
 #include <glibmm/i18n.h>
 #include <glibmm/miscutils.h>
-#include <glibmm/regex.h>
 #include <glibmm/stringutils.h>
 #include <gtkmm/expander.h>
 #include <gtkmm/liststore.h>
 
-#include "document.h"
 #include "extension/db.h"
 #include "extension/input.h"
 #include "extension/output.h"
-#include "inkscape.h"
 #include "io/resource.h"
 #include "io/sys.h"
-#include "path-prefix.h"
 #include "preferences.h"
 #include "ui/dialog-events.h"
 #include "ui/dialog-run.h"
 #include "ui/util.h"
-#include "ui/view/svg-view-widget.h"
-#include "widgets/spw-utilities.h"
 
 // Routines from file.cpp
 #undef INK_DUMP_FILENAME_CONV

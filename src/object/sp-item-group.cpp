@@ -22,6 +22,7 @@
 #include "attributes.h"
 #include "document-undo.h"
 #include "document.h"
+#include "enums.h"
 #include "persp3d.h"
 #include "selection-chemistry.h"
 #include "style.h"

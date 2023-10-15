@@ -60,6 +60,7 @@
 #include "ui/widget/events/canvas-event.h"
 #include "ui/widget/events/debug.h"
 #include "util/callback-converter.h"
+#include "util/units.h"
 #include "xml/sp-css-attr.h"
 
 using Inkscape::DocumentUndo;

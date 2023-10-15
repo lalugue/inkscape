@@ -13,6 +13,7 @@
 #include "selection.h"
 #include "style.h"
 
+#include "inkscape.h"
 #include "display/curve.h"
 #include "live_effects/lpeobject-reference.h"
 #include "live_effects/lpeobject.h"

@@ -17,7 +17,6 @@
 #include <glibmm/i18n.h>
 
 #include "desktop.h"
-#include "document.h"
 #include "document-undo.h"
 #include "node.h"
 

@@ -13,15 +13,28 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include <cstring>
-#include <cmath>
-#include <vector>
-
 #include "convolvematrix.h"
-#include "attributes.h"
-#include "display/nr-filter.h"
-#include "util/numeric/converters.h"
-#include "xml/repr.h"
+
+#include <cmath>                                 // for floor
+#include <cstring>                               // for strcmp
+#include <vector>                                // for vector
+
+#include "attributes.h"                          // for SPAttr
+#include "object/filters/sp-filter-primitive.h"  // for SPFilterPrimitive
+#include "object/sp-object.h"                    // for SP_OBJECT_MODIFIED_FLAG
+#include "util/numeric/converters.h"             // for read_number, read_bool
+
+class SPDocument;
+
+namespace Inkscape {
+class DrawingItem;
+namespace Filters {
+class FilterPrimitive;
+} // namespace Filters
+namespace XML {
+class Node;
+} // namespace XML
+} // namespace Inkscape
 
 void SPFeConvolveMatrix::build(SPDocument *document, Inkscape::XML::Node *repr)
 {

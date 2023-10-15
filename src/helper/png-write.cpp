@@ -21,9 +21,7 @@
 #include <png.h>
 
 #include "document.h"
-#include "inkscape.h"
 #include "png-write.h"
-#include "preferences.h"
 #include "rdf.h"
 
 #include "display/cairo-utils.h"
@@ -37,7 +35,6 @@
 #include "object/sp-root.h"
 
 #include "ui/interface.h"
-#include "util/units.h"
 
 /* This is an example of how to use libpng to read and write PNG files.
  * The file libpng.txt is much more verbose then this.  If you have not

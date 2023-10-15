@@ -22,6 +22,7 @@
 #include <2geom/path-intersection.h>
 #include <2geom/sbasis-to-bezier.h>
 
+#include "inkscape.h"
 #include "style.h"
 #include "display/curve.h"
 #include "helper/geom.h"

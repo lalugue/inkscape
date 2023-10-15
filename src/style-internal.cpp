@@ -32,16 +32,13 @@
 
 #include "bad-uri-exception.h"
 #include "extract-uri.h"
-#include "inkscape.h"
 #include "preferences.h"
 #include "streq.h"
 #include "strneq.h"
 
-#include "object/sp-text.h"
 #include "object/object-set.h"
 
 #include "svg/svg.h"
-#include "svg/svg-color.h"
 #include "svg/css-ostringstream.h"
 
 #include "util/units.h"

@@ -16,11 +16,10 @@
 #include <gtkmm/box.h>
 #include <gtkmm/button.h>
 
-#include "display/control/canvas-item-text.h"
 #include "inkscape.h"
+
+#include "display/control/canvas-item-text.h"
 #include "live_effects/effect.h"
-#include "svg/stringstream.h"
-#include "svg/svg.h"
 #include "ui/icon-names.h"
 #include "ui/pack.h"
 #include "ui/widget/registered-widget.h"

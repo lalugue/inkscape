@@ -38,6 +38,8 @@
 #include "ui/shape-editor.h"
 #include "ui/widget/events/canvas-event.h"
 
+#include "util/units.h"
+
 using Inkscape::DocumentUndo;
 
 namespace Inkscape::UI::Tools {

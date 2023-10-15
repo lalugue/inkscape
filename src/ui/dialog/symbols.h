@@ -20,14 +20,19 @@
 #include <optional>
 #include <string>
 #include <vector>
-#include <glibmm/refptr.h>
-#include <glibmm/ustring.h>
-#include <gtkmm/cellrendererpixbuf.h>
-#include <gtkmm/liststore.h>
-#include <gtkmm/treemodelfilter.h>
-#include <gtkmm/treemodelsort.h>
-#include <gtkmm/treepath.h>
-#include <boost/compute/detail/lru_cache.hpp>
+
+#include <boost/compute/detail/lru_cache.hpp>  // for lru_cache
+
+#include <glibmm/refptr.h>                     // for RefPtr
+#include <glibmm/ustring.h>                    // for ustring
+#include <gtkmm/builder.h>                     // for Builder
+#include <gtkmm/cellrendererpixbuf.h>          // for CellRendererPixbuf
+#include <gtkmm/liststore.h>                   // for ListStore
+#include <gtkmm/treeiter.h>                    // for TreeIter
+#include <gtkmm/treemodel.h>                   // for TreeModel
+#include <gtkmm/treemodelfilter.h>             // for TreeModelFilter
+#include <gtkmm/treemodelsort.h>               // for TreeModelSort
+#include <gtkmm/treepath.h>                    // for TreePath
 
 #include "display/drawing.h"
 #include "helper/auto-connection.h"

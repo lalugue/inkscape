@@ -16,27 +16,27 @@
 
 #include <cstdlib>
 #include <cstring>
-#include <glibmm/regex.h>
 #include <list>
 #include <map>
 #include <string>
 #include <utility>
 
-#include "extract-uri.h"
+#include <glibmm/regex.h>
+
+#include "attributes.h"                              // for SPAttr
+#include "document.h"                                // for SPDocument
+#include "extract-uri.h"                             // for extract_uri
+#include "style-internal.h"                          // for SPIPaint, SPIShapes
+#include "style.h"                                   // for SPStyle, sp_styl...
+
 #include "live_effects/effect.h"
 #include "live_effects/lpeobject.h"
-#include "live_effects/parameter/originalpath.h"
-#include "live_effects/parameter/path.h"
-#include "live_effects/parameter/patharray.h"
-#include "live_effects/parameter/originalsatellite.h"
 #include "live_effects/parameter/parameter.h"
-#include "live_effects/parameter/satellitearray.h"
 #include "object/sp-gradient.h"
 #include "object/sp-object.h"
 #include "object/sp-paint-server.h"
 #include "object/sp-root.h"
 #include "object/sp-use.h"
-#include "style.h"
 
 enum ID_REF_TYPE { REF_HREF, REF_STYLE, REF_SHAPES, REF_URL, REF_CLIPBOARD };
 

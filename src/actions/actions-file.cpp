@@ -17,6 +17,7 @@
 
 #include "actions-helper.h"
 #include "document.h"
+#include "document-undo.h"
 #include "inkscape.h"             // Inkscape::Application
 #include "inkscape-application.h"
 

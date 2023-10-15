@@ -28,7 +28,6 @@
 #include "document-undo.h"
 #include "document.h"
 #include "gradient-chemistry.h"
-#include "inkscape.h"
 #include "pattern-manipulation.h"
 #include "selection.h"
 #include "style.h"

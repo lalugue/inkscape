@@ -14,18 +14,15 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#ifdef HAVE_CONFIG_H
-# include "config.h"  // only include where actually required!
-#endif
+#include "sp-image.h"
 
 #include <cstring>
 #include <algorithm>
 #include <string>
 
-#include <glibmm.h>
+#include <giomm/error.h>
 #include <glib/gstdio.h>
 #include <glibmm/i18n.h>
-#include <giomm/error.h>
 
 #include <lcms2.h>
 #include <2geom/rect.h>
@@ -34,18 +31,13 @@
 // Added for preserveAspectRatio support -- EAF
 #include "attributes.h"
 #include "document.h"
-#include "preferences.h"
 #include "print.h"
 #include "snap-candidate.h"
 #include "snap-preferences.h"
 
-#include "sp-image.h"
-#include "sp-clippath.h"
-
 #include "display/drawing-image.h"
 #include "display/cairo-utils.h"
 #include "display/curve.h"
-#include "io/sys.h"
 #include "xml/quote.h"
 #include "xml/href-attribute-helper.h"
 
