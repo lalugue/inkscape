@@ -133,7 +133,9 @@ PageToolbar::PageToolbar(SPDesktop *desktop)
     _combo_page_sizes.set_id_column(2);
     _combo_page_sizes.signal_changed().connect([=] {
         std::string preset_key = _combo_page_sizes.get_active_id();
-        sizeChoose(preset_key);
+        if (preset_key.size()) {
+            sizeChoose(preset_key);
+        }
     });
 
     _entry_page_sizes = dynamic_cast<Gtk::Entry *>(_combo_page_sizes.get_child());
@@ -152,10 +154,10 @@ PageToolbar::PageToolbar(SPDesktop *desktop)
         });
 
         _entry_page_sizes->property_has_focus().signal_changed().connect([this] {
-            if (_document) {
-                auto const display_only = !has_focus();
-                setSizeText(nullptr, display_only);
-            }
+            if (!_document)
+                return;
+            auto const display_only = !has_focus();
+            setSizeText(nullptr, display_only);
         });
 
         populate_sizes();
@@ -366,7 +368,21 @@ double PageToolbar::_unit_to_size(std::string number, std::string unit_str,
 void PageToolbar::sizeChanged()
 {
     // Parse the size out of the typed text if possible.
-    auto text = std::string(_combo_page_sizes.get_active_text());
+    Glib::ustring cb_text = std::string(_combo_page_sizes.get_active_text());
+
+    // Replace utf8 x with regular x
+    auto pos = cb_text.find_first_of("×");
+    if (pos != cb_text.npos) {
+        cb_text.replace(pos, 1, "x");
+    }
+    // Remove parens from auto generated names
+    auto pos1 = cb_text.find_first_of("(");
+    auto pos2 = cb_text.find_first_of(")");
+    if (pos1 != cb_text.npos && pos2 != cb_text.npos && pos1 < pos2) {
+        cb_text = cb_text.substr(pos1+1, pos2-pos1-1);
+    }
+    std::string text = cb_text;
+
     // This does not support negative values, because pages can not be negatively sized.
     static std::string arg = "([0-9]+[\\.,]?[0-9]*|\\.[0-9]+) ?(px|mm|cm|in|\\\")?";
     // We can't support × here since it's UTF8 and this doesn't match
