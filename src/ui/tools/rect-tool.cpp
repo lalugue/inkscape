@@ -396,7 +396,8 @@ void RectTool::finishItem() {
 
         this->rect->updateRepr();
         this->rect->doWriteTransform(this->rect->transform, nullptr, true);
-
+        // update while creating inside a LPE group
+        sp_lpe_item_update_patheffect(this->rect.get(), true, true);
         _desktop->getSelection()->set(rect.get());
 
         DocumentUndo::done(_desktop->getDocument(), _("Create rectangle"), INKSCAPE_ICON("draw-rectangle"));

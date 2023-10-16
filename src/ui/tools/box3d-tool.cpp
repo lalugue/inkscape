@@ -260,6 +260,8 @@ bool Box3dTool::root_handler(CanvasEvent const &event)
             if (!within_tolerance) {
                 // we've been dragging (or switched tools if !box3d), finish the box
                 if (box3d) {
+                    // update while creating inside a LPE group
+                    sp_lpe_item_update_patheffect(this->box3d.get(), true, true);
                     _desktop->getSelection()->set(box3d.get()); // Updating the selection will send signals to the box3d-toolbar ...
                 }
                 finishItem(); // .. but finishItem() will be called from the destructor too and shall NOT fire such signals!

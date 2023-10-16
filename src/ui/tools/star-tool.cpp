@@ -363,7 +363,8 @@ void StarTool::finishItem() {
         double const expansion = this->star->transform.descrim();
         this->star->doWriteTransform(this->star->transform, nullptr, true);
         this->star->adjust_stroke_width_recursive(expansion);
-
+        // update while creating inside a LPE group
+        sp_lpe_item_update_patheffect(this->star.get(), true, true);
         _desktop->getSelection()->set(star.get());
         DocumentUndo::done(_desktop->getDocument(), _("Create star"), INKSCAPE_ICON("draw-polygon-star"));
 

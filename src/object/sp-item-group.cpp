@@ -119,7 +119,7 @@ void SPGroup::child_added(Inkscape::XML::Node* child, Inkscape::XML::Node* ref) 
 
 void SPGroup::remove_child(Inkscape::XML::Node *child) {
     SPLPEItem::remove_child(child);
-
+    sp_lpe_item_update_patheffect(this, true, true);
     this->requestModified(SP_OBJECT_MODIFIED_FLAG);
 }
 
