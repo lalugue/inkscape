@@ -13,31 +13,28 @@
 #ifndef SEEN_INKSCAPE_EXTENSION_IMPEMENTATION_XSLT_H
 #define SEEN_INKSCAPE_EXTENSION_IMPEMENTATION_XSLT_H
 
+#include <string>
+
 #include "implementation.h"
 
 #include "libxml/tree.h"
 #include "libxslt/xslt.h"
 #include "libxslt/xsltInternals.h"
 
-namespace Inkscape {
-namespace XML {
+namespace Inkscape::XML {
 class Node;
-}
-}
+} // namespace Inkscape::XML
 
-
-namespace Inkscape {
-namespace Extension {
-namespace Implementation {
+namespace Inkscape::Extension::Implementation {
 
 class XSLT : public Implementation {
 private:
     std::string _filename;
-    xmlDocPtr _parsedDoc;
-    xsltStylesheetPtr _stylesheet;
+    xmlDocPtr _parsedDoc = nullptr;
+    xsltStylesheetPtr _stylesheet = nullptr;
 
 public:
-    XSLT ();
+    XSLT() = default;
 
     bool load(Inkscape::Extension::Extension *module) override;
     void unload(Inkscape::Extension::Extension *module) override;
@@ -49,9 +46,8 @@ public:
     void save(Inkscape::Extension::Output *module, SPDocument *doc, gchar const *filename) override;
 };
 
-}  /* Inkscape  */
-}  /* Extension  */
-}  /* Implementation  */
+} // namespace Inkscape::Extension::Implementation
+
 #endif // SEEN_INKSCAPE_EXTENSION_IMPEMENTATION_XSLT_H
 
 /*

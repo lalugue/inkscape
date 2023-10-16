@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-#ifndef INK_EXTENSION_H
-#define INK_EXTENSION_H
-
 /** \file
+ * Inkscape::Extension::Extension:
  * Frontend to certain, possibly pluggable, actions.
+ * the ability to have features that are more modular so that they
+ * can be added and removed easily.  This is the basis for defining
+ * those actions.
  */
-
 /*
  * Authors:
  *   Ted Gould <ted@gould.cx>
@@ -15,22 +15,27 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include <fstream>
-#include <ostream>
+#ifndef INK_EXTENSION_H
+#define INK_EXTENSION_H
+
+#include <cstdint>
+#include <list>
+#include <memory>
+#include <string>
 #include <vector>
 
-#include <glib.h>
+#include <glibmm/ustring.h>
 #include <sigc++/signal.h>
 
 namespace Glib {
-    class ustring;
-}
+class ustring;
+} // namespace Glib
 
 namespace Gtk {
-	class Grid;
-	class Box;
-	class Widget;
-}
+class Grid;
+class Box;
+class Widget;
+} // namespace Gtk
 
 /** The key that is used to identify that the I/O should be autodetected */
 #define SP_MODULE_KEY_AUTODETECT "autodetect"
@@ -81,6 +86,7 @@ enum ModuleImpType
     MODULE_PLUGIN,      // plugins/*/*.h C++ extensions
     MODULE_UNKNOWN_IMP  // No implementation, so nothing created.
 };
+
 enum ModuleFuncType
 {
     MODULE_TEMPLATE,
@@ -98,7 +104,7 @@ namespace Inkscape {
 
 namespace XML {
 class Node;
-}
+} // namespace XML
 
 namespace Extension {
 
@@ -110,11 +116,9 @@ class ExpirationTimer;
 class InxParameter;
 class InxWidget;
 
-namespace Implementation
-{
+namespace Implementation {
 class Implementation;
-}
-
+} // namespace Implementation
 
 /** The object that is the basis for the Extension system.  This object
     contains all of the information that all Extension have.  The
@@ -131,29 +135,29 @@ public:
     };
 
 private:
-    gchar     *_id = nullptr;                  /**< The unique identifier for the Extension */
-    gchar     *_name = nullptr;                /**< A user friendly name for the Extension */
+    std::string _id  ;                         /**< The unique identifier for the Extension */
+    std::string _name;                         /**< A user friendly name for the Extension */
     state_t    _state = STATE_UNLOADED;        /**< Which state the Extension is currently in */
     int _priority = 0;                         /**< when sorted, should this come before any others */
-    std::vector<Dependency *>  _deps;          /**< Dependencies for this extension */
+    std::vector<std::unique_ptr<Dependency>> _deps; /**< Dependencies for this extension */
     static FILE *error_file;                   /**< This is the place where errors get reported */
     std::string _error_reason;                 /**< Short, textual explanation for the latest error */
-    bool _gui;
+    bool _gui = true;
 
     std::vector<ProcessingAction> _actions;    /**< Processing actions */
 
 protected:
     Inkscape::XML::Node *repr;                 /**< The XML description of the Extension */
     Implementation::Implementation * imp;      /**< An object that holds all the functions for making this work */
-    ExecutionEnv * execution_env;              /**< Execution environment of the extension
+    ExecutionEnv * execution_env = nullptr;    /**< Execution environment of the extension
                                                  *  (currently only used by Effects) */
     std::string _base_directory;               /**< Directory containing the .inx file,
                                                  *  relative paths in the extension should usually be relative to it */
-    ExpirationTimer * timer = nullptr;         /**< Timeout to unload after a given time */
+    std::unique_ptr<ExpirationTimer> timer;    /**< Timeout to unload after a given time */
     bool _translation_enabled = true;          /**< Attempt translation of strings provided by the extension? */
 
 private:
-    const char *_translationdomain = nullptr;  /**< Domainname of gettext textdomain that should
+    char const *_translationdomain = nullptr;  /**< Domainname of gettext textdomain that should
                                                  *  be used for translation of the extension's strings */
     std::string _gettext_catalog_dir;          /**< Directory containing the gettext catalog for _translationdomain */
 
@@ -168,21 +172,21 @@ public:
     bool          loaded       ();
     virtual bool  check        ();
     virtual bool prefs();
-    Inkscape::XML::Node *      get_repr     ();
-    gchar *       get_id       () const;
-    const gchar * get_name     () const;
+    Inkscape::XML::Node *get_repr();
+    char const   *get_id       () const;
+    char const   *get_name     () const;
     virtual void  deactivate   ();
     bool          deactivated  ();
-    void          printFailure (Glib::ustring reason);
+    void          printFailure (Glib::ustring const &reason);
     std::string const &getErrorReason() { return _error_reason; };
     Implementation::Implementation * get_imp () { return imp; };
     void          set_execution_env (ExecutionEnv * env) { execution_env = env; };
     ExecutionEnv *get_execution_env () { return execution_env; };
-    std::string   get_base_directory() const { return _base_directory; };
+    auto const   &get_base_directory() const { return _base_directory; };
     void          set_base_directory(std::string const &base_directory) { _base_directory = base_directory; };
-    std::string   get_dependency_location(const char *name);
-    const char   *get_translation(const char* msgid, const char *msgctxt=nullptr) const;
-    void          set_environment(const SPDocument *doc=nullptr);
+    std::string   get_dependency_location(char const *name);
+    char const   *get_translation(char const *msgid, char const *msgctxt = nullptr) const;
+    void          set_environment(SPDocument const *doc = nullptr);
     ModuleImpType get_implementation_type();
 
     int get_sort_priority() const { return _priority; }
@@ -192,14 +196,13 @@ public:
 
     /* Parameter Stuff */
 private:
-    std::vector<InxWidget *> _widgets; /**< A list of widgets for this extension. */
+    std::vector<std::unique_ptr<InxWidget>> _widgets; /**< A list of widgets for this extension. */
 
 public:
     /** \brief  A function to get the number of visible parameters of the extension.
         \return The number of visible parameters. */
     unsigned int widget_visible_count() const;
 
-public:
     /** An error class for when a parameter is looked for that just
      * simply doesn't exist */
     class param_not_exist {};
@@ -232,58 +235,55 @@ private:
      * @param  name Name of the parameter to search for.
      * @return Parameter with matching name.
      */
-     InxParameter *get_param(const gchar *name);
+     InxParameter *get_param(char const *name);
 
-     InxParameter const *get_param(const gchar *name) const;
+     /// @copydoc get_param()
+     InxParameter const *get_param(char const *name) const;
 
 public:
-    bool        get_param_bool          (const gchar *name) const;
-    bool        get_param_bool          (const gchar *name, bool alt) const;
-    int         get_param_int           (const gchar *name) const;
-    int         get_param_int           (const gchar *name, int alt) const;
-    double      get_param_float         (const gchar *name) const;
-    double      get_param_float         (const gchar *name, double alt) const;
-    const char *get_param_string        (const gchar *name, const char *alt) const;
-    const char *get_param_string        (const gchar *name) const;
-    const char *get_param_optiongroup   (const gchar *name, const char *alt) const;
-    const char *get_param_optiongroup   (const gchar *name) const;
-    guint32     get_param_color         (const gchar *name) const;
+    bool        get_param_bool          (char const *name) const;
+    bool        get_param_bool          (char const *name, bool alt) const;
+    int         get_param_int           (char const *name) const;
+    int         get_param_int           (char const *name, int alt) const;
+    double      get_param_float         (char const *name) const;
+    double      get_param_float         (char const *name, double alt) const;
+    char const *get_param_string        (char const *name, char const *alt) const;
+    char const *get_param_string        (char const *name) const;
+    char const *get_param_optiongroup   (char const *name, char const *alt) const;
+    char const *get_param_optiongroup   (char const *name) const;
+    std::uint32_t get_param_color       (char const *name) const;
 
-    bool get_param_optiongroup_contains (const gchar *name, const char   *value) const;
+    bool get_param_optiongroup_contains (char const *name, char const   *value) const;
 
-    bool        set_param_bool          (const gchar *name, const bool    value);
-    int         set_param_int           (const gchar *name, const int     value);
-    double      set_param_float         (const gchar *name, const double  value);
-    const char *set_param_string        (const gchar *name, const char   *value);
-    const char *set_param_optiongroup   (const gchar *name, const char   *value);
-    guint32     set_param_color         (const gchar *name, const guint32 color);
-    void set_param_any(const gchar *name, std::string value);
-    void set_param_hidden(const gchar *name, bool hidden);
+    bool        set_param_bool          (char const *name, bool    value);
+    int         set_param_int           (char const *name, int     value);
+    double      set_param_float         (char const *name, double  value);
+    char const *set_param_string        (char const *name, char const   *value);
+    char const *set_param_optiongroup   (char const *name, char const   *value);
+    std::uint32_t set_param_color       (char const *name, std::uint32_t color);
+    void set_param_any(char const *name, std::string const &value);
+    void set_param_hidden(char const *name, bool hidden);
 
     /* Error file handling */
-public:
-    static void      error_file_open  ();
-    static void      error_file_close ();
-    static void      error_file_write (Glib::ustring text);
+    static void      error_file_open ();
+    static void      error_file_close();
+    static void      error_file_write(Glib::ustring const &text);
 
-public:
     Gtk::Widget *autogui (SPDocument *doc, Inkscape::XML::Node *node, sigc::signal<void ()> *changeSignal = nullptr);
-    void paramListString(std::list <std::string> &retlist);
+    void paramListString(std::list<std::string> &retlist) const;
     void set_gui(bool s) { _gui = s; }
-    bool get_gui() { return _gui; }
+    bool get_gui() const { return _gui; }
 
     /* Extension editor dialog stuff */
-public:
     Gtk::Box *get_info_widget();
     Gtk::Box *get_params_widget();
+
 protected:
-    inline static void add_val(Glib::ustring labelstr, Glib::ustring valuestr, Gtk::Grid * table, int * row);
+    inline static void add_val(Glib::ustring const &labelstr, Glib::ustring const &valuestr,
+                               Gtk::Grid * table, int * row);
 };
 
-
-
 /*
-
 This is a prototype for how collections should work.  Whoever gets
 around to implementing this gets to decide what a 'folder' and an
 'item' really is.  That is the joy of implementing it, eh?
@@ -302,8 +302,8 @@ public:
 };
 */
 
-}  /* namespace Extension */
-}  /* namespace Inkscape */
+} // namespace Extension
+} // namespace Inkscape
 
 #endif // INK_EXTENSION_H
 

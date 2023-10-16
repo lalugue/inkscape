@@ -16,47 +16,24 @@
 #include "xslt.h"
 
 #include <unistd.h>
+#include <clocale>
 #include <cstring>
-
 #include <glibmm/fileutils.h>
 #include <libxslt/transform.h>
 #include <libxslt/xsltutils.h>
 
 #include "document.h"
 #include "file.h"
-
 #include "extension/extension.h"
 #include "extension/output.h"
 #include "extension/input.h"
-
 #include "io/resource.h"
-
 #include "xml/node.h"
 #include "xml/repr.h"
 
-#include <clocale>
+Inkscape::XML::Document *sp_repr_do_read(xmlDocPtr doc, char const *default_ns);
 
-Inkscape::XML::Document * sp_repr_do_read (xmlDocPtr doc, const gchar * default_ns);
-
-/* Namespaces */
-namespace Inkscape {
-namespace Extension {
-namespace Implementation {
-
-/* Real functions */
-/**
-    \return    A XSLT object
-    \brief     This function creates a XSLT object and sets up the
-               variables.
-
-*/
-XSLT::XSLT() :
-    Implementation(),
-    _filename(""),
-    _parsedDoc(nullptr),
-    _stylesheet(nullptr)
-{
-}
+namespace Inkscape::Extension::Implementation {
 
 bool XSLT::check(Inkscape::Extension::Extension *module)
 {
@@ -80,7 +57,7 @@ bool XSLT::load(Inkscape::Extension::Extension *module)
                 if (!strcmp(child_repr->name(), INKSCAPE_EXTENSION_NS "file")) {
                     // TODO: we already parse xslt files as dependencies in extension.cpp
                     //       can can we optimize this to be less indirect?
-                    const char *filename = child_repr->firstChild()->content();
+                    char const *filename = child_repr->firstChild()->content();
                     _filename = module->get_dependency_location(filename);
                 }
                 child_repr = child_repr->next();
@@ -104,27 +81,26 @@ void XSLT::unload(Inkscape::Extension::Extension *module)
     if (!module->loaded()) { return; }
     xsltFreeStylesheet(_stylesheet);
     // No need to use xmlfreedoc(_parsedDoc), it's handled by xsltFreeStylesheet(_stylesheet);
-    return;
 }
 
 SPDocument * XSLT::open(Inkscape::Extension::Input */*module*/,
-                        gchar const *filename)
+                        char const *filename)
 {
     xmlDocPtr filein = xmlParseFile(filename);
     if (filein == nullptr) { return nullptr; }
 
-    const char * params[1];
-    params[0] = nullptr;
-    char *oldlocale = g_strdup(std::setlocale(LC_NUMERIC, nullptr));
+    char const *params[1] = {nullptr};
+    std::string const oldlocale = std::setlocale(LC_NUMERIC, nullptr);
     std::setlocale(LC_NUMERIC, "C");
 
     xmlDocPtr result = xsltApplyStylesheet(_stylesheet, filein, params);
+
     xmlFreeDoc(filein);
 
-    Inkscape::XML::Document * rdoc = sp_repr_do_read( result, SP_SVG_NS_URI);
+    Inkscape::XML::Document * rdoc = sp_repr_do_read(result, SP_SVG_NS_URI);
+
     xmlFreeDoc(result);
-    std::setlocale(LC_NUMERIC, oldlocale);
-    g_free(oldlocale);
+    std::setlocale(LC_NUMERIC, oldlocale.c_str());
 
     if (rdoc == nullptr) {
         return nullptr;
@@ -134,9 +110,9 @@ SPDocument * XSLT::open(Inkscape::Extension::Input */*module*/,
         return nullptr;
     }
 
-    gchar * base = nullptr;
-    gchar * name = nullptr;
-    gchar * s = nullptr, * p = nullptr;
+    char *base = nullptr;
+    char *name = nullptr;
+    char *s = nullptr, *p = nullptr;
     s = g_strdup(filename);
     p = strrchr(s, '/');
     if (p) {
@@ -156,7 +132,7 @@ SPDocument * XSLT::open(Inkscape::Extension::Input */*module*/,
     return doc;
 }
 
-void XSLT::save(Inkscape::Extension::Output *module, SPDocument *doc, gchar const *filename)
+void XSLT::save(Inkscape::Extension::Output *module, SPDocument *doc, char const *filename)
 {
     /* TODO: Should we assume filename to be in utf8 or to be a raw filename?
      * See JavaFXOutput::save for discussion.
@@ -198,29 +174,27 @@ void XSLT::save(Inkscape::Extension::Output *module, SPDocument *doc, gchar cons
 
     std::list<std::string> params;
     module->paramListString(params);
-    const int max_parameters = params.size() * 2;
-    const char * xslt_params[max_parameters+1] ;
+    auto const max_parameters = params.size() * 2;
+    char const *xslt_params[max_parameters + 1];
 
-    int count = 0;
-    for(auto & param : params) {
+    std::size_t count = 0;
+    for (auto const &param : params) {
         std::size_t pos = param.find("=");
-        std::ostringstream parameter;
-        std::ostringstream value;
-        parameter << param.substr(2,pos-2);
-        value << param.substr(pos+1);
-        xslt_params[count++] = g_strdup_printf("%s", parameter.str().c_str());
-        xslt_params[count++] = g_strdup_printf("'%s'", value.str().c_str());
+        auto const parameter = param.substr(2, pos - 2);
+        auto const value     = param.substr(pos + 1   );
+        xslt_params[count++] = g_strdup       (        parameter.c_str());
+        xslt_params[count++] = g_strdup_printf("'%s'", value    .c_str());
     }
     xslt_params[count] = nullptr;
 
     // workaround for inbox#2208
-    char *oldlocale = g_strdup(std::setlocale(LC_NUMERIC, nullptr));
+    std::string const oldlocale = std::setlocale(LC_NUMERIC, nullptr);
     std::setlocale(LC_NUMERIC, "C");
+
     xmlDocPtr newdoc = xsltApplyStylesheet(_stylesheet, svgdoc, xslt_params);
-    //xmlSaveFile(filename, newdoc);
     int success = xsltSaveResultToFilename(filename, newdoc, _stylesheet, 0);
-    std::setlocale(LC_NUMERIC, oldlocale);
-    g_free(oldlocale);
+
+    std::setlocale(LC_NUMERIC, oldlocale.c_str());
 
     xmlFreeDoc(newdoc);
     xmlFreeDoc(svgdoc);
@@ -231,15 +205,9 @@ void XSLT::save(Inkscape::Extension::Output *module, SPDocument *doc, gchar cons
     if (success < 1) {
         throw Inkscape::Extension::Output::save_failed();
     }
-
-    return;
 }
 
-
-}  /* Implementation  */
-}  /* module  */
-}  /* Inkscape  */
-
+} // namespace Inkscape::Extension::Implementation
 
 /*
   Local Variables:
