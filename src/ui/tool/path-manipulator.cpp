@@ -181,7 +181,9 @@ bool PathManipulator::empty() {
  */
 void PathManipulator::update(bool alert_LPE)
 {
+    _observer->block();
     _createGeometryFromControlPoints(alert_LPE);
+    _observer->unblock();
 }
 
 /** Store the changes to the path in XML. */
