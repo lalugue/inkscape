@@ -369,6 +369,8 @@ void SpiralTool::finishItem() {
         spiral->doWriteTransform(spiral->transform, nullptr, true);
         spiral->adjust_stroke_width_recursive(expansion);
 
+        // update while creating inside a LPE group
+        sp_lpe_item_update_patheffect(this->spiral, true, true);
         _desktop->getSelection()->set(this->spiral);
         DocumentUndo::done(_desktop->getDocument(), _("Create spiral"), INKSCAPE_ICON("draw-spiral"));
 

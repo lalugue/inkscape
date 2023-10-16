@@ -69,6 +69,9 @@ protected:
 
     void pathCompareInternal(char const *a, char const *b, double precision, bool &success)
     {
+        if (!b) { // a is never nullptr
+            FAIL() << "Path not set";
+        }
         bool a_empty = a[0] == '\0';
         bool b_empty = b[0] == '\0';
         if (a_empty || b_empty) {

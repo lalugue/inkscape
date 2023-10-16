@@ -411,7 +411,9 @@ void ArcTool::finishItem() {
 
         this->arc->updateRepr();
         this->arc->doWriteTransform(this->arc->transform, nullptr, true);
+        // update while creating inside a LPE group
 
+        sp_lpe_item_update_patheffect(this->arc, true, true);
         _desktop->getSelection()->set(this->arc);
 
         DocumentUndo::done(_desktop->getDocument(), _("Create ellipse"), INKSCAPE_ICON("draw-ellipse"));
