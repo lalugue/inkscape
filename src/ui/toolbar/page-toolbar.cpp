@@ -122,7 +122,9 @@ PageToolbar::PageToolbar(BaseObjectType *cobject, const Glib::RefPtr<Gtk::Builde
         combo_page_sizes->set_id_column(2);
         _size_edited = combo_page_sizes->signal_changed().connect([=] {
             std::string preset_key = combo_page_sizes->get_active_id();
-            sizeChoose(preset_key);
+            if (preset_key.size()) {
+                sizeChoose(preset_key);
+            }
         });
         entry_page_sizes = dynamic_cast<Gtk::Entry *>(combo_page_sizes->get_child());
         if (entry_page_sizes) {
@@ -137,7 +139,9 @@ PageToolbar::PageToolbar(BaseObjectType *cobject, const Glib::RefPtr<Gtk::Builde
                 setSizeText();
             });
             entry_page_sizes->signal_focus_in_event().connect([=](GdkEventFocus *) {
-                setSizeText(nullptr, false); // Show just raw dimensions when user starts editing
+                if (_document) {
+                    setSizeText(nullptr, false); // Show just raw dimensions when user starts editing
+                }
                 return false;
             });
             entry_page_sizes->signal_focus_out_event().connect([=](GdkEventFocus *) {
@@ -359,7 +363,21 @@ double PageToolbar::_unit_to_size(std::string number, std::string unit_str, std:
 void PageToolbar::sizeChanged()
 {
     // Parse the size out of the typed text if possible.
-    auto text = std::string(combo_page_sizes->get_active_text());
+    Glib::ustring cb_text = std::string(combo_page_sizes->get_active_text());
+
+    // Replace utf8 x with regular x
+    auto pos = cb_text.find_first_of("×");
+    if (pos != cb_text.npos) {
+        cb_text.replace(pos, 1, "x");
+    }
+    // Remove parens from auto generated names
+    auto pos1 = cb_text.find_first_of("(");
+    auto pos2 = cb_text.find_first_of(")");
+    if (pos1 != cb_text.npos && pos2 != cb_text.npos && pos1 < pos2) {
+        cb_text = cb_text.substr(pos1+1, pos2-pos1-1);
+    }
+    std::string text = cb_text;
+
     // This does not support negative values, because pages can not be negatively sized.
     static std::string arg = "([0-9]+[\\.,]?[0-9]*|\\.[0-9]+) ?(px|mm|cm|in|\\\")?";
     // We can't support × here since it's UTF8 and this doesn't match
