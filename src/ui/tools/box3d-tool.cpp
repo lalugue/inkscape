@@ -294,6 +294,8 @@ bool Box3dTool::root_handler(GdkEvent* event) {
             if (!this->within_tolerance) {
                 // we've been dragging (or switched tools if !box3d), finish the box
                 if (this->box3d) {
+                    // update while creating inside a LPE group
+                    sp_lpe_item_update_patheffect(this->box3d, true, true);
                     _desktop->getSelection()->set(this->box3d); // Updating the selection will send signals to the box3d-toolbar ...
                 }
                 this->finishItem(); // .. but finishItem() will be called from the deconstructor too and shall NOT fire such signals!

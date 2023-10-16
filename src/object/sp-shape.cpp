@@ -67,6 +67,20 @@ void SPShape::build(SPDocument *document, Inkscape::XML::Node *repr)
     for (int i = 0 ; i < SP_MARKER_LOC_QTY ; i++) {
         set_marker(i, style->marker_ptrs[i]->value());
     }
+    if (!hasPathEffectOnClipOrMaskRecursive(this)) {
+        if (is<SPPath>(this)) {
+            if (auto originald = getAttribute("inkscape:original-d")) {
+                if (isOnClipboard()) {
+                    setAttribute("d", originald);
+                }
+                setAttribute("inkscape:original-d", nullptr);
+            }
+        } else {
+            if (getAttribute("d")) {
+                setAttribute("d", nullptr);
+            }
+        }
+    }
 }
 
 /**
