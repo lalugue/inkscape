@@ -42,18 +42,6 @@
     <property name="icon-name">entries-unlinked-symbolic</property>
     <property name="icon-size">3</property>
   </object>
-  <object class="GtkImage" id="image1">
-    <property name="visible">True</property>
-    <property name="icon-name">orient-auto-reverse</property>
-  </object>
-  <object class="GtkImage" id="image2">
-    <property name="visible">True</property>
-    <property name="icon-name">orient-auto</property>
-  </object>
-  <object class="GtkImage" id="image3">
-    <property name="visible">True</property>
-    <property name="icon-name">orient-angle</property>
-  </object>
   <object class="GtkRadioButton" id="radio-orient">
     <property name="label">radiobutton</property>
     <property name="visible">True</property>
@@ -196,13 +184,17 @@
                     <property name="can-focus">True</property>
                     <property name="receives-default">True</property>
                     <property name="tooltip-text" translatable="yes">Orient along the path, reversing at the start</property>
-                    <property name="image">image1</property>
-                    <property name="always-show-image">True</property>
                     <property name="draw-indicator">False</property>
                     <property name="group">radio-orient</property>
                     <style>
                       <class name="tight-button"/>
                     </style>
+                    <child>
+                      <object class="GtkImage" id="image1">
+                        <property name="visible">True</property>
+                        <property name="icon-name">orient-auto-reverse</property>
+                      </object>
+                    </child>
                   </object>
                 </child>
                 <child>
@@ -211,13 +203,17 @@
                     <property name="can-focus">True</property>
                     <property name="receives-default">True</property>
                     <property name="tooltip-text" translatable="yes">Orient along the path</property>
-                    <property name="image">image2</property>
-                    <property name="always-show-image">True</property>
                     <property name="draw-indicator">False</property>
                     <property name="group">radio-orient</property>
                     <style>
                       <class name="tight-button"/>
                     </style>
+                    <child>
+                      <object class="GtkImage" id="image2">
+                        <property name="visible">True</property>
+                        <property name="icon-name">orient-auto</property>
+                      </object>
+                    </child>
                   </object>
                   <packing>
                     <property name="position">1</property>
@@ -228,13 +224,18 @@
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
                     <property name="tooltip-text" translatable="yes">Fixed specified angle</property>
-                    <property name="image">image3</property>
                     <property name="active">True</property>
                     <property name="draw-indicator">False</property>
                     <property name="group">radio-orient</property>
                     <style>
                       <class name="tight-button"/>
                     </style>
+                    <child>
+                      <object class="GtkImage" id="image3">
+                        <property name="visible">True</property>
+                        <property name="icon-name">orient-angle</property>
+                      </object>
+                    </child>
                   </object>
                   <packing>
                     <property name="position">2</property>

@@ -751,18 +751,6 @@
       </object>
     </child>
   </object>
-  <object class="GtkImage" id="image1">
-    <property name="visible">True</property>
-    <property name="icon-name">snap-bounding-box-center</property>
-  </object>
-  <object class="GtkImage" id="image2">
-    <property name="visible">True</property>
-    <property name="icon-name">snap-nodes-cusp</property>
-  </object>
-  <object class="GtkImage" id="image3">
-    <property name="visible">True</property>
-    <property name="icon-name">align-horizontal-left-to-anchor-symbolic</property>
-  </object>
   <object class="GtkPopover" id="simple">
     <child>
       <object class="GtkGrid">
@@ -795,7 +783,12 @@
             <property name="focus-on-click">False</property>
             <property name="receives-default">True</property>
             <property name="action-name">win.simple-snap-bbox</property>
-            <property name="image">image1</property>
+            <child>
+              <object class="GtkImage" id="image1">
+                <property name="visible">True</property>
+                <property name="icon-name">snap-bounding-box-center</property>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="left-attach">1</property>
@@ -819,7 +812,12 @@
             <property name="focus-on-click">False</property>
             <property name="receives-default">True</property>
             <property name="action-name">win.simple-snap-nodes</property>
-            <property name="image">image2</property>
+            <child>
+              <object class="GtkImage" id="image2">
+                <property name="visible">True</property>
+                <property name="icon-name">snap-nodes-cusp</property>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="left-attach">1</property>
@@ -843,7 +841,12 @@
             <property name="focus-on-click">False</property>
             <property name="receives-default">True</property>
             <property name="action-name">win.simple-snap-alignment</property>
-            <property name="image">image3</property>
+            <child>
+              <object class="GtkImage" id="image3">
+                <property name="visible">True</property>
+                <property name="icon-name">align-horizontal-left-to-anchor-symbolic</property>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="left-attach">1</property>

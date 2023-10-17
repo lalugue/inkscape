@@ -62,10 +62,6 @@
     <property name="step-increment">1</property>
     <property name="page-increment">10</property>
   </object>
-  <object class="GtkImage" id="image5">
-    <property name="visible">True</property>
-    <property name="icon-name">pages-move-toggle</property>
-  </object>
   <object class="GtkPopover" id="popover1">
     <property name="modal">True</property>
     <child>
@@ -266,7 +262,12 @@
         <property name="can-focus">True</property>
         <property name="receives-default">True</property>
         <property name="action-name">doc.page-move-objects</property>
-        <property name="image">image5</property>
+        <child>
+          <object class="GtkImage" id="image5">
+            <property name="visible">True</property>
+            <property name="icon-name">pages-move-toggle</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="position">11</property>

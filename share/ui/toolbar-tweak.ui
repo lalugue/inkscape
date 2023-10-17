@@ -20,62 +20,6 @@
     <property name="step-increment">1</property>
     <property name="page-increment">10</property>
   </object>
-  <object class="GtkImage" id="image10">
-    <property name="visible">True</property>
-    <property name="icon-name">path-tweak-attract</property>
-  </object>
-  <object class="GtkImage" id="image11">
-    <property name="visible">True</property>
-    <property name="icon-name">path-tweak-roughen</property>
-  </object>
-  <object class="GtkImage" id="image12">
-    <property name="visible">True</property>
-    <property name="icon-name">object-tweak-paint</property>
-  </object>
-  <object class="GtkImage" id="image13">
-    <property name="visible">True</property>
-    <property name="icon-name">object-tweak-jitter-color</property>
-  </object>
-  <object class="GtkImage" id="image14">
-    <property name="visible">True</property>
-    <property name="icon-name">object-tweak-blur</property>
-  </object>
-  <object class="GtkImage" id="image15">
-    <property name="visible">True</property>
-    <property name="icon-name">draw-use-pressure</property>
-  </object>
-  <object class="GtkImage" id="image2">
-    <property name="visible">True</property>
-    <property name="icon-name">object-tweak-push</property>
-  </object>
-  <object class="GtkImage" id="image3">
-    <property name="visible">True</property>
-    <property name="icon-name">object-tweak-attract</property>
-  </object>
-  <object class="GtkImage" id="image4">
-    <property name="visible">True</property>
-    <property name="icon-name">object-tweak-randomize</property>
-  </object>
-  <object class="GtkImage" id="image5">
-    <property name="visible">True</property>
-    <property name="icon-name">object-tweak-shrink</property>
-  </object>
-  <object class="GtkImage" id="image6">
-    <property name="visible">True</property>
-    <property name="icon-name">object-tweak-rotate</property>
-  </object>
-  <object class="GtkImage" id="image7">
-    <property name="visible">True</property>
-    <property name="icon-name">object-tweak-duplicate</property>
-  </object>
-  <object class="GtkImage" id="image8">
-    <property name="visible">True</property>
-    <property name="icon-name">path-tweak-push</property>
-  </object>
-  <object class="GtkImage" id="image9">
-    <property name="visible">True</property>
-    <property name="icon-name">path-tweak-shrink</property>
-  </object>
   <object class="GtkRadioButton" id="mode_buttons_group">
     <property name="visible">True</property>
     <property name="can-focus">True</property>
@@ -145,12 +89,16 @@
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="tooltip-text" translatable="yes">Move objects in any direction</property>
-            <property name="image">image2</property>
             <property name="relief">none</property>
-            <property name="always-show-image">True</property>
             <property name="active">True</property>
             <property name="draw-indicator">False</property>
             <property name="group">mode_buttons_group</property>
+            <child>
+              <object class="GtkImage" id="image2">
+                <property name="visible">True</property>
+                <property name="icon-name">object-tweak-push</property>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="position">1</property>
@@ -161,11 +109,15 @@
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="tooltip-text" translatable="yes">Move objects towards cursor; with Shift from cursor</property>
-            <property name="image">image3</property>
             <property name="relief">none</property>
-            <property name="always-show-image">True</property>
             <property name="draw-indicator">False</property>
             <property name="group">mode_buttons_group</property>
+            <child>
+              <object class="GtkImage" id="image3">
+                <property name="visible">True</property>
+                <property name="icon-name">object-tweak-attract</property>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="position">2</property>
@@ -176,11 +128,15 @@
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="tooltip-text" translatable="yes">Move objects in random directions</property>
-            <property name="image">image4</property>
             <property name="relief">none</property>
-            <property name="always-show-image">True</property>
             <property name="draw-indicator">False</property>
             <property name="group">mode_buttons_group</property>
+            <child>
+              <object class="GtkImage" id="image4">
+                <property name="visible">True</property>
+                <property name="icon-name">object-tweak-randomize</property>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="position">3</property>
@@ -191,11 +147,15 @@
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="tooltip-text" translatable="yes">Shrink objects, with Shift enlarge</property>
-            <property name="image">image5</property>
             <property name="relief">none</property>
-            <property name="always-show-image">True</property>
             <property name="draw-indicator">False</property>
             <property name="group">mode_buttons_group</property>
+            <child>
+              <object class="GtkImage" id="image5">
+                <property name="visible">True</property>
+                <property name="icon-name">object-tweak-shrink</property>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="position">4</property>
@@ -206,11 +166,15 @@
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="tooltip-text" translatable="yes">Rotate objects, with Shift counterclockwise</property>
-            <property name="image">image6</property>
             <property name="relief">none</property>
-            <property name="always-show-image">True</property>
             <property name="draw-indicator">False</property>
             <property name="group">mode_buttons_group</property>
+            <child>
+              <object class="GtkImage" id="image6">
+                <property name="visible">True</property>
+                <property name="icon-name">object-tweak-rotate</property>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="position">5</property>
@@ -221,11 +185,15 @@
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="tooltip-text" translatable="yes">Duplicate objects, with Shift delete</property>
-            <property name="image">image7</property>
             <property name="relief">none</property>
-            <property name="always-show-image">True</property>
             <property name="draw-indicator">False</property>
             <property name="group">mode_buttons_group</property>
+            <child>
+              <object class="GtkImage" id="image7">
+                <property name="visible">True</property>
+                <property name="icon-name">object-tweak-duplicate</property>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="position">6</property>
@@ -236,11 +204,15 @@
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="tooltip-text" translatable="yes">Push parts of paths in any direction</property>
-            <property name="image">image8</property>
             <property name="relief">none</property>
-            <property name="always-show-image">True</property>
             <property name="draw-indicator">False</property>
             <property name="group">mode_buttons_group</property>
+            <child>
+              <object class="GtkImage" id="image8">
+                <property name="visible">True</property>
+                <property name="icon-name">path-tweak-push</property>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="position">7</property>
@@ -251,11 +223,15 @@
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="tooltip-text" translatable="yes">Shrink (inset) parts of paths; with Shift grow (outset)</property>
-            <property name="image">image9</property>
             <property name="relief">none</property>
-            <property name="always-show-image">True</property>
             <property name="draw-indicator">False</property>
             <property name="group">mode_buttons_group</property>
+            <child>
+              <object class="GtkImage" id="image9">
+                <property name="visible">True</property>
+                <property name="icon-name">path-tweak-shrink</property>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="position">8</property>
@@ -266,11 +242,15 @@
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="tooltip-text" translatable="yes">Attract parts of paths towards cursor; with Shift from cursor</property>
-            <property name="image">image10</property>
             <property name="relief">none</property>
-            <property name="always-show-image">True</property>
             <property name="draw-indicator">False</property>
             <property name="group">mode_buttons_group</property>
+            <child>
+              <object class="GtkImage" id="image10">
+                <property name="visible">True</property>
+                <property name="icon-name">path-tweak-attract</property>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="position">9</property>
@@ -281,11 +261,15 @@
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="tooltip-text" translatable="yes">Roughen parts of paths</property>
-            <property name="image">image11</property>
             <property name="relief">none</property>
-            <property name="always-show-image">True</property>
             <property name="draw-indicator">False</property>
             <property name="group">mode_buttons_group</property>
+            <child>
+              <object class="GtkImage" id="image11">
+                <property name="visible">True</property>
+                <property name="icon-name">path-tweak-roughen</property>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="position">10</property>
@@ -296,11 +280,15 @@
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="tooltip-text" translatable="yes">Paint the tool's color upon selected objects</property>
-            <property name="image">image12</property>
             <property name="relief">none</property>
-            <property name="always-show-image">True</property>
             <property name="draw-indicator">False</property>
             <property name="group">mode_buttons_group</property>
+            <child>
+              <object class="GtkImage" id="image12">
+                <property name="visible">True</property>
+                <property name="icon-name">object-tweak-paint</property>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="position">11</property>
@@ -311,11 +299,15 @@
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="tooltip-text" translatable="yes">Jitter the colors of selected objects</property>
-            <property name="image">image13</property>
             <property name="relief">none</property>
-            <property name="always-show-image">True</property>
             <property name="draw-indicator">False</property>
             <property name="group">mode_buttons_group</property>
+            <child>
+              <object class="GtkImage" id="image13">
+                <property name="visible">True</property>
+                <property name="icon-name">object-tweak-jitter-color</property>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="position">12</property>
@@ -326,11 +318,15 @@
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="tooltip-text" translatable="yes">Blur selected objects more; with Shift, blur less</property>
-            <property name="image">image14</property>
             <property name="relief">none</property>
-            <property name="always-show-image">True</property>
             <property name="draw-indicator">False</property>
             <property name="group">mode_buttons_group</property>
+            <child>
+              <object class="GtkImage" id="image14">
+                <property name="visible">True</property>
+                <property name="icon-name">object-tweak-blur</property>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="position">13</property>
@@ -416,9 +412,13 @@
         <property name="can-focus">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Use the pressure of the input device to alter the force of tweak action</property>
-        <property name="image">image15</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
+        <child>
+          <object class="GtkImage" id="image15">
+            <property name="visible">True</property>
+            <property name="icon-name">draw-use-pressure</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="position">6</property>

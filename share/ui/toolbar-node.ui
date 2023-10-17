@@ -14,26 +14,6 @@
     <property name="step-increment">0.10</property>
     <property name="page-increment">5</property>
   </object>
-  <object class="GtkImage" id="image13">
-    <property name="visible">True</property>
-    <property name="icon-name">path-clip-edit</property>
-  </object>
-  <object class="GtkImage" id="image14">
-    <property name="visible">True</property>
-    <property name="icon-name">path-mask-edit</property>
-  </object>
-  <object class="GtkImage" id="image15">
-    <property name="visible">True</property>
-    <property name="icon-name">node-transform</property>
-  </object>
-  <object class="GtkImage" id="image16">
-    <property name="visible">True</property>
-    <property name="icon-name">show-node-handles</property>
-  </object>
-  <object class="GtkImage" id="image19">
-    <property name="visible">True</property>
-    <property name="icon-name">show-path-outline</property>
-  </object>
   <object class="GtkMenu" id="insert_node_menu">
     <property name="visible">True</property>
     <child>
@@ -584,12 +564,16 @@
         <property name="visible">True</property>
         <property name="can-focus">True</property>
         <property name="tooltip-text" translatable="yes">Show path outline (without path effects)</property>
-        <property name="image">image19</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
         <style>
           <class name="tag2"/>
         </style>
+        <child>
+          <object class="GtkImage" id="image19">
+            <property name="visible">True</property>
+            <property name="icon-name">show-path-outline</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="position">31</property>
@@ -600,12 +584,16 @@
         <property name="visible">True</property>
         <property name="can-focus">True</property>
         <property name="tooltip-text" translatable="yes">Show Bezier handles of selected nodes</property>
-        <property name="image">image16</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
         <style>
           <class name="tag2"/>
         </style>
+        <child>
+          <object class="GtkImage" id="image16">
+            <property name="visible">True</property>
+            <property name="icon-name">show-node-handles</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="position">32</property>
@@ -616,12 +604,16 @@
         <property name="visible">True</property>
         <property name="can-focus">True</property>
         <property name="tooltip-text" translatable="yes">Show transformation handles for selected nodes</property>
-        <property name="image">image15</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
         <style>
           <class name="tag2"/>
         </style>
+        <child>
+          <object class="GtkImage" id="image15">
+            <property name="visible">True</property>
+            <property name="icon-name">node-transform</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="position">33</property>
@@ -632,12 +624,16 @@
         <property name="visible">True</property>
         <property name="can-focus">True</property>
         <property name="tooltip-text" translatable="yes">Show mask(s) of selected object(s)</property>
-        <property name="image">image14</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
         <style>
           <class name="tag2"/>
         </style>
+        <child>
+          <object class="GtkImage" id="image14">
+            <property name="visible">True</property>
+            <property name="icon-name">path-mask-edit</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="position">34</property>
@@ -648,12 +644,16 @@
         <property name="visible">True</property>
         <property name="can-focus">True</property>
         <property name="tooltip-text" translatable="yes">Show clipping path(s) of selected object(s)</property>
-        <property name="image">image13</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
         <style>
           <class name="tag2"/>
         </style>
+        <child>
+          <object class="GtkImage" id="image13">
+            <property name="visible">True</property>
+            <property name="icon-name">path-clip-edit</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="position">35</property>

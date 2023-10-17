@@ -31,14 +31,6 @@
     <property name="active">True</property>
     <property name="draw-indicator">False</property>
   </object>
-  <object class="GtkImage" id="image3">
-    <property name="visible">True</property>
-    <property name="icon-name">draw-polygon</property>
-  </object>
-  <object class="GtkImage" id="image4">
-    <property name="visible">True</property>
-    <property name="icon-name">draw-star</property>
-  </object>
   <object class="GtkPopover" id="popover1">
     <property name="modal">True</property>
     <child>
@@ -71,12 +63,16 @@
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="tooltip-text" translatable="yes">Regular polygon (with one handle) instead of a star</property>
-            <property name="image">image3</property>
             <property name="relief">none</property>
-            <property name="always-show-image">True</property>
             <property name="active">True</property>
             <property name="draw-indicator">False</property>
             <property name="group">flat_button_group</property>
+            <child>
+              <object class="GtkImage" id="image3">
+                <property name="visible">True</property>
+                <property name="icon-name">draw-polygon</property>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="position">2</property>
@@ -87,11 +83,15 @@
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="tooltip-text" translatable="yes">Star instead of a regular polygon (with one handle)</property>
-            <property name="image">image4</property>
             <property name="relief">none</property>
-            <property name="always-show-image">True</property>
             <property name="draw-indicator">False</property>
             <property name="group">flat_button_group</property>
+            <child>
+              <object class="GtkImage" id="image4">
+                <property name="visible">True</property>
+                <property name="icon-name">draw-star</property>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="position">3</property>

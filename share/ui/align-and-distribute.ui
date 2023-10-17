@@ -82,15 +82,6 @@
     <property name="step-increment">1</property>
     <property name="page-increment">5</property>
   </object>
-  <object class="GtkImage" id="image-align-on-canvas">
-    <property name="visible">True</property>
-    <property name="icon-name">align-on-canvas</property>
-  </object>
-  <object class="GtkImage" id="image-align-sel-as-group">
-    <property name="visible">True</property>
-    <property name="icon-name">align-sel-as-group</property>
-    <property name="use-fallback">True</property>
-  </object>
   <object class="GtkBox" id="align-and-distribute-box">
     <property name="name">align-and-distribute-box</property>
     <property name="visible">True</property>
@@ -122,11 +113,15 @@
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
                         <property name="receives-default">True</property>
-                        <property name="image">image-align-on-canvas</property>
                         <property name="relief">none</property>
-                        <property name="always-show-image">True</property>
                         <property name="tooltip-text" translatable="yes">Enable on-canvas alignment handles</property>
                         <property name="action-name">app.object-align-on-canvas</property>
+                        <child>
+                          <object class="GtkImage" id="image-align-on-canvas">
+                            <property name="visible">True</property>
+                            <property name="icon-name">align-on-canvas</property>
+                          </object>
+                        </child>
                       </object>
                       <packing>
                         <property name="left-attach">0</property>
@@ -138,10 +133,15 @@
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
                         <property name="receives-default">True</property>
-                        <property name="image">image-align-sel-as-group</property>
                         <property name="relief">none</property>
-                        <property name="always-show-image">True</property>
                         <property name="tooltip-text" translatable="yes">Treat selection as group</property>
+                        <child>
+                          <object class="GtkImage" id="image-align-sel-as-group">
+                            <property name="visible">True</property>
+                            <property name="icon-name">align-sel-as-group</property>
+                            <property name="use-fallback">True</property>
+                          </object>
+                        </child>
                       </object>
                       <packing>
                         <property name="left-attach">0</property>

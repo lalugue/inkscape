@@ -28,26 +28,6 @@
     <property name="step-increment">1</property>
     <property name="page-increment">10</property>
   </object>
-  <object class="GtkImage" id="image1">
-    <property name="visible">True</property>
-    <property name="icon-name">draw-eraser-delete-objects</property>
-  </object>
-  <object class="GtkImage" id="image2">
-    <property name="visible">True</property>
-    <property name="icon-name">path-difference</property>
-  </object>
-  <object class="GtkImage" id="image3">
-    <property name="visible">True</property>
-    <property name="icon-name">path-intersection</property>
-  </object>
-  <object class="GtkImage" id="image4">
-    <property name="visible">True</property>
-    <property name="icon-name">draw-use-pressure</property>
-  </object>
-  <object class="GtkImage" id="image6">
-    <property name="visible">True</property>
-    <property name="icon-name">distribute-randomize</property>
-  </object>
   <object class="GtkRadioButton" id="mode_buttons_group">
     <property name="visible">True</property>
     <property name="can-focus">True</property>
@@ -86,11 +66,15 @@
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="tooltip-text" translatable="yes">Delete objects touched by eraser</property>
-            <property name="image">image1</property>
             <property name="relief">none</property>
-            <property name="always-show-image">True</property>
             <property name="draw-indicator">False</property>
             <property name="group">mode_buttons_group</property>
+            <child>
+              <object class="GtkImage" id="image1">
+                <property name="visible">True</property>
+                <property name="icon-name">draw-eraser-delete-objects</property>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="position">3</property>
@@ -101,11 +85,15 @@
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="tooltip-text" translatable="yes">Cut out from paths and shapes</property>
-            <property name="image">image2</property>
             <property name="relief">none</property>
-            <property name="always-show-image">True</property>
             <property name="draw-indicator">False</property>
             <property name="group">mode_buttons_group</property>
+            <child>
+              <object class="GtkImage" id="image2">
+                <property name="visible">True</property>
+                <property name="icon-name">path-difference</property>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="position">4</property>
@@ -116,11 +104,15 @@
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="tooltip-text" translatable="yes">Clip from objects</property>
-            <property name="image">image3</property>
             <property name="relief">none</property>
-            <property name="always-show-image">True</property>
             <property name="draw-indicator">False</property>
             <property name="group">mode_buttons_group</property>
+            <child>
+              <object class="GtkImage" id="image3">
+                <property name="visible">True</property>
+                <property name="icon-name">path-intersection</property>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="position">5</property>
@@ -174,9 +166,13 @@
         <property name="can-focus">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Use the pressure of the input device to alter the width of the pen</property>
-        <property name="image">image4</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
+        <child>
+          <object class="GtkImage" id="image4">
+            <property name="visible">True</property>
+            <property name="icon-name">draw-use-pressure</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="position">4</property>
@@ -336,9 +332,13 @@
         <property name="can-focus">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Break apart cut items</property>
-        <property name="image">image6</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
+        <child>
+          <object class="GtkImage" id="image6">
+            <property name="visible">True</property>
+            <property name="icon-name">distribute-randomize</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="position">11</property>

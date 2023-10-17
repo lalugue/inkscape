@@ -75,22 +75,6 @@
     <property name="step-increment">0.01</property>
     <property name="page-increment">0.10</property>
   </object>
-  <object class="GtkImage" id="image-arc">
-    <property name="visible">True</property>
-    <property name="icon-name">draw-ellipse-arc</property>
-  </object>
-  <object class="GtkImage" id="image-chord">
-    <property name="visible">True</property>
-    <property name="icon-name">draw-ellipse-chord</property>
-  </object>
-  <object class="GtkImage" id="image-poly">
-    <property name="visible">True</property>
-    <property name="icon-name">draw-polygon</property>
-  </object>
-  <object class="GtkImage" id="image-seg">
-    <property name="visible">True</property>
-    <property name="icon-name">draw-ellipse-segment</property>
-  </object>
   <!-- n-columns=5 n-rows=6 -->
   <object class="GtkGrid" id="rect-main">
     <property name="visible">True</property>
@@ -303,10 +287,6 @@
       </packing>
     </child>
   </object>
-  <object class="GtkImage" id="image-star">
-    <property name="visible">True</property>
-    <property name="icon-name">draw-star</property>
-  </object>
   <!-- n-columns=4 n-rows=6 -->
   <object class="GtkGrid" id="star-main">
     <property name="visible">True</property>
@@ -410,8 +390,13 @@
             <property name="can-focus">True</property>
             <property name="receives-default">True</property>
             <property name="tooltip-text" translatable="yes">Regular polygon (with one handle) instead of a star</property>
-            <property name="image">image-poly</property>
             <property name="draw-indicator">False</property>
+            <child>
+              <object class="GtkImage" id="image-poly">
+                <property name="visible">True</property>
+                <property name="icon-name">draw-polygon</property>
+              </object>
+            </child>
           </object>
         </child>
         <child>
@@ -420,9 +405,14 @@
             <property name="can-focus">True</property>
             <property name="receives-default">True</property>
             <property name="tooltip-text" translatable="yes">Star instead of a regular polygon (with one handle)</property>
-            <property name="image">image-star</property>
             <property name="draw-indicator">False</property>
             <property name="group">star-poly</property>
+            <child>
+              <object class="GtkImage" id="image-star">
+                <property name="visible">True</property>
+                <property name="icon-name">draw-star</property>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="position">1</property>
@@ -715,8 +705,13 @@
             <property name="can-focus">True</property>
             <property name="receives-default">True</property>
             <property name="tooltip-text" translatable="yes">Switch to slice (closed shape with two radii)</property>
-            <property name="image">image-seg</property>
             <property name="draw-indicator">False</property>
+            <child>
+              <object class="GtkImage" id="image-seg">
+                <property name="visible">True</property>
+                <property name="icon-name">draw-ellipse-segment</property>
+              </object>
+            </child>
           </object>
         </child>
         <child>
@@ -725,9 +720,14 @@
             <property name="can-focus">True</property>
             <property name="receives-default">True</property>
             <property name="tooltip-text" translatable="yes">Switch to arc (unclosed shape)</property>
-            <property name="image">image-arc</property>
             <property name="draw-indicator">False</property>
             <property name="group">el-slice</property>
+            <child>
+              <object class="GtkImage" id="image-arc">
+                <property name="visible">True</property>
+                <property name="icon-name">draw-ellipse-arc</property>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="position">1</property>
@@ -739,9 +739,14 @@
             <property name="can-focus">True</property>
             <property name="receives-default">True</property>
             <property name="tooltip-text" translatable="yes">Switch to chord (closed shape)</property>
-            <property name="image">image-chord</property>
             <property name="draw-indicator">False</property>
             <property name="group">el-slice</property>
+            <child>
+              <object class="GtkImage" id="image-chord">
+                <property name="visible">True</property>
+                <property name="icon-name">draw-ellipse-chord</property>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="position">2</property>

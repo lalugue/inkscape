@@ -2,14 +2,6 @@
 <!-- Generated with glade 3.38.2 -->
 <interface>
   <requires lib="gtk+" version="3.24"/>
-  <object class="GtkImage" id="image1">
-    <property name="visible">True</property>
-    <property name="icon-name">color-management-symbolic</property>
-  </object>
-  <object class="GtkImage" id="image2">
-    <property name="visible">True</property>
-    <property name="icon-name">grayscale-mode-symbolic</property>
-  </object>
   <object class="GtkPopover" id="popover">
     <property name="no-show-all">True</property>
     <property name="position">left</property>
@@ -235,7 +227,12 @@
                 <property name="receives-default">True</property>
                 <property name="tooltip-text" translatable="yes">Toggle between normal and color managed modes</property>
                 <property name="action-name">win.canvas-color-manage</property>
-                <property name="image">image1</property>
+                <child>
+                  <object class="GtkImage" id="image1">
+                    <property name="visible">True</property>
+                    <property name="icon-name">color-management-symbolic</property>
+                  </object>
+                </child>
               </object>
             </child>
             <child>
@@ -245,7 +242,12 @@
                 <property name="receives-default">True</property>
                 <property name="tooltip-text" translatable="yes">Toggle between normal and grayscale modes</property>
                 <property name="action-name">win.canvas-color-mode</property>
-                <property name="image">image2</property>
+                <child>
+                  <object class="GtkImage" id="image2">
+                    <property name="visible">True</property>
+                    <property name="icon-name">grayscale-mode-symbolic</property>
+                  </object>
+                </child>
               </object>
               <packing>
                 <property name="position">1</property>

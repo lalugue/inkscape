@@ -24,21 +24,6 @@
     <property name="step-increment">1</property>
     <property name="page-increment">10</property>
   </object>
-  <object class="GtkImage" id="image1">
-    <property name="visible">True</property>
-    <property name="can-focus">False</property>
-    <property name="icon-name">draw-ellipse-segment</property>
-  </object>
-  <object class="GtkImage" id="image3">
-    <property name="visible">True</property>
-    <property name="can-focus">False</property>
-    <property name="icon-name">draw-ellipse-arc</property>
-  </object>
-  <object class="GtkImage" id="image4">
-    <property name="visible">True</property>
-    <property name="can-focus">False</property>
-    <property name="icon-name">draw-ellipse-chord</property>
-  </object>
   <object class="GtkPopover" id="popover1">
     <property name="can-focus">False</property>
     <property name="modal">True</property>
@@ -338,14 +323,19 @@
         <property name="can-focus">True</property>
         <property name="receives-default">False</property>
         <property name="tooltip-text" translatable="yes">Switch to slice (closed shape with two radii)</property>
-        <property name="image">image1</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
         <property name="draw-indicator">False</property>
         <property name="group">radio_button_group</property>
         <style>
           <class name="tag2"/>
         </style>
+        <child>
+          <object class="GtkImage" id="image1">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="icon-name">draw-ellipse-segment</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="expand">False</property>
@@ -359,14 +349,19 @@
         <property name="can-focus">True</property>
         <property name="receives-default">False</property>
         <property name="tooltip-text" translatable="yes">Switch to arc (unclosed shape)</property>
-        <property name="image">image3</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
         <property name="draw-indicator">False</property>
         <property name="group">radio_button_group</property>
         <style>
           <class name="tag2"/>
         </style>
+        <child>
+          <object class="GtkImage" id="image3">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="icon-name">draw-ellipse-arc</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="expand">False</property>
@@ -380,14 +375,19 @@
         <property name="can-focus">True</property>
         <property name="receives-default">False</property>
         <property name="tooltip-text" translatable="yes">Switch to chord (closed shape)</property>
-        <property name="image">image4</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
         <property name="draw-indicator">False</property>
         <property name="group">radio_button_group</property>
         <style>
           <class name="tag2"/>
         </style>
+        <child>
+          <object class="GtkImage" id="image4">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="icon-name">draw-ellipse-chord</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="expand">False</property>

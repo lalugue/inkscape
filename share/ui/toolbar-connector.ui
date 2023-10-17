@@ -18,18 +18,6 @@
     <property name="step-increment">1</property>
     <property name="page-increment">10</property>
   </object>
-  <object class="GtkImage" id="image3">
-    <property name="visible">True</property>
-    <property name="icon-name">connector-orthogonal</property>
-  </object>
-  <object class="GtkImage" id="image5">
-    <property name="visible">True</property>
-    <property name="icon-name">distribute-graph-directed</property>
-  </object>
-  <object class="GtkImage" id="image6">
-    <property name="visible">True</property>
-    <property name="icon-name">distribute-remove-overlaps</property>
-  </object>
   <object class="GtkBox" id="connector-toolbar">
     <property name="visible">True</property>
     <property name="halign">start</property>
@@ -74,8 +62,13 @@
         <property name="can-focus">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Make connector orthogonal or polyline</property>
-        <property name="image">image3</property>
         <property name="relief">none</property>
+        <child>
+          <object class="GtkImage" id="image3">
+            <property name="visible">True</property>
+            <property name="icon-name">connector-orthogonal</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="position">2</property>
@@ -198,8 +191,13 @@
         <property name="can-focus">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Make connectors with end-markers (arrows) point downwards</property>
-        <property name="image">image5</property>
         <property name="relief">none</property>
+        <child>
+          <object class="GtkImage" id="image5">
+            <property name="visible">True</property>
+            <property name="icon-name">distribute-graph-directed</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="position">8</property>
@@ -211,8 +209,13 @@
         <property name="can-focus">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Do not allow overlapping shapes</property>
-        <property name="image">image6</property>
         <property name="relief">none</property>
+        <child>
+          <object class="GtkImage" id="image6">
+            <property name="visible">True</property>
+            <property name="icon-name">distribute-remove-overlaps</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="position">9</property>

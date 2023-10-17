@@ -46,18 +46,6 @@
     <property name="step-increment">1</property>
     <property name="page-increment">10</property>
   </object>
-  <object class="GtkImage" id="image2">
-    <property name="visible">True</property>
-    <property name="icon-name">draw-use-pressure</property>
-  </object>
-  <object class="GtkImage" id="image3">
-    <property name="visible">True</property>
-    <property name="icon-name">draw-trace-background</property>
-  </object>
-  <object class="GtkImage" id="image4">
-    <property name="visible">True</property>
-    <property name="icon-name">draw-use-tilt</property>
-  </object>
   <object class="GtkPopover" id="popover1">
     <property name="modal">True</property>
     <child>
@@ -231,12 +219,16 @@
         <property name="can-focus">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Use the pressure of the input device to alter the width of the pen</property>
-        <property name="image">image2</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
         <style>
           <class name="tag2"/>
         </style>
+        <child>
+          <object class="GtkImage" id="image2">
+            <property name="visible">True</property>
+            <property name="icon-name">draw-use-pressure</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="position">7</property>
@@ -247,12 +239,16 @@
         <property name="visible">True</property>
         <property name="can-focus">True</property>
         <property name="tooltip-text" translatable="yes">Trace the lightness of the background by the width of the pen (white - minimum width, black - maximum width)</property>
-        <property name="image">image3</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
         <style>
           <class name="tag2"/>
         </style>
+        <child>
+          <object class="GtkImage" id="image3">
+            <property name="visible">True</property>
+            <property name="icon-name">draw-trace-background</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="position">8</property>
@@ -407,12 +403,16 @@
         <property name="can-focus">True</property>
         <property name="tooltip-text" translatable="yes">Use the tilt of the input device to alter the angle of the pen's nib</property>
         <property name="margin-end">3</property>
-        <property name="image">image4</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
         <style>
           <class name="tag4"/>
         </style>
+        <child>
+          <object class="GtkImage" id="image4">
+            <property name="visible">True</property>
+            <property name="icon-name">draw-use-tilt</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="position">15</property>

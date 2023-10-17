@@ -49,10 +49,6 @@
       <column type="gchararray"/>
     </columns>
   </object>
-  <object class="GtkImage" id="image-toggle">
-    <property name="visible">True</property>
-    <property name="icon-name">panel-left</property>
-  </object>
   <object class="GtkBox" id="main">
     <property name="visible">True</property>
     <property name="no-show-all">True</property>
@@ -77,8 +73,13 @@
             <property name="halign">start</property>
             <property name="valign">center</property>
             <property name="margin-end">5</property>
-            <property name="image">image-toggle</property>
             <property name="relief">none</property>
+            <child>
+              <object class="GtkImage" id="image-toggle">
+                <property name="visible">True</property>
+                <property name="icon-name">panel-left</property>
+              </object>
+            </child>
           </object>
         </child>
         <child>

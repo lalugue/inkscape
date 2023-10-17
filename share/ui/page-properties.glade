@@ -45,16 +45,6 @@
     <property name="step-increment">1</property>
     <property name="page-increment">10</property>
   </object>
-  <object class="GtkImage" id="image1">
-    <property name="visible">True</property>
-    <property name="pixel-size">20</property>
-    <property name="icon-name">page-portrait-symbolic</property>
-  </object>
-  <object class="GtkImage" id="image2">
-    <property name="visible">True</property>
-    <property name="pixel-size">20</property>
-    <property name="icon-name">page-landscape-symbolic</property>
-  </object>
   <object class="GtkPopover" id="templates-popover">
     <property name="position">bottom</property>
   </object>
@@ -173,10 +163,16 @@
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="margin-end">5</property>
-                <property name="image">image2</property>
                 <property name="active">True</property>
                 <property name="draw-indicator">True</property>
                 <property name="group">page-portrait</property>
+                <child>
+                  <object class="GtkImage" id="image2">
+                    <property name="visible">True</property>
+                    <property name="pixel-size">20</property>
+                    <property name="icon-name">page-landscape-symbolic</property>
+                  </object>
+                </child>
               </object>
               <packing>
                 <property name="pack-type">end</property>
@@ -188,9 +184,15 @@
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="margin-end">5</property>
-                <property name="image">image1</property>
                 <property name="active">True</property>
                 <property name="draw-indicator">True</property>
+                <child>
+                  <object class="GtkImage" id="image1">
+                    <property name="visible">True</property>
+                    <property name="pixel-size">20</property>
+                    <property name="icon-name">page-portrait-symbolic</property>
+                  </object>
+                </child>
               </object>
               <packing>
                 <property name="pack-type">end</property>

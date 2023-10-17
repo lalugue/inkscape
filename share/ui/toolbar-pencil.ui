@@ -20,34 +20,6 @@
     <property name="step-increment">0.5</property>
     <property name="page-increment">1</property>
   </object>
-  <object class="GtkImage" id="image1">
-    <property name="visible">True</property>
-    <property name="icon-name">path-mode-bezier</property>
-  </object>
-  <object class="GtkImage" id="image2">
-    <property name="visible">True</property>
-    <property name="icon-name">path-mode-spiro</property>
-  </object>
-  <object class="GtkImage" id="image3">
-    <property name="visible">True</property>
-    <property name="icon-name">path-mode-bspline</property>
-  </object>
-  <object class="GtkImage" id="image4">
-    <property name="visible">True</property>
-    <property name="icon-name">path-mode-polyline</property>
-  </object>
-  <object class="GtkImage" id="image5">
-    <property name="visible">True</property>
-    <property name="icon-name">path-mode-polyline-paraxial</property>
-  </object>
-  <object class="GtkImage" id="image7">
-    <property name="visible">True</property>
-    <property name="icon-name">draw-use-pressure</property>
-  </object>
-  <object class="GtkImage" id="image8">
-    <property name="visible">True</property>
-    <property name="icon-name">interactive_simplify</property>
-  </object>
   <object class="GtkRadioButton" id="mode_buttons_group">
     <property name="visible">True</property>
     <property name="can-focus">True</property>
@@ -110,11 +82,15 @@
             <property name="can-focus">True</property>
             <property name="focus-on-click">False</property>
             <property name="tooltip-text" translatable="yes">Create regular Bezier path</property>
-            <property name="image">image1</property>
             <property name="relief">none</property>
-            <property name="always-show-image">True</property>
             <property name="draw-indicator">False</property>
             <property name="group">mode_buttons_group</property>
+            <child>
+              <object class="GtkImage" id="image1">
+                <property name="visible">True</property>
+                <property name="icon-name">path-mode-bezier</property>
+              </object>
+            </child>
           </object>
         </child>
         <child>
@@ -123,11 +99,15 @@
             <property name="can-focus">True</property>
             <property name="focus-on-click">False</property>
             <property name="tooltip-text" translatable="yes">Create Spiro path</property>
-            <property name="image">image2</property>
             <property name="relief">none</property>
-            <property name="always-show-image">True</property>
             <property name="draw-indicator">False</property>
             <property name="group">mode_buttons_group</property>
+            <child>
+              <object class="GtkImage" id="image2">
+                <property name="visible">True</property>
+                <property name="icon-name">path-mode-spiro</property>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="position">1</property>
@@ -139,11 +119,15 @@
             <property name="can-focus">True</property>
             <property name="focus-on-click">False</property>
             <property name="tooltip-text" translatable="yes">Create BSpline path</property>
-            <property name="image">image3</property>
             <property name="relief">none</property>
-            <property name="always-show-image">True</property>
             <property name="draw-indicator">False</property>
             <property name="group">mode_buttons_group</property>
+            <child>
+              <object class="GtkImage" id="image3">
+                <property name="visible">True</property>
+                <property name="icon-name">path-mode-bspline</property>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="position">2</property>
@@ -155,11 +139,15 @@
             <property name="can-focus">True</property>
             <property name="focus-on-click">False</property>
             <property name="tooltip-text" translatable="yes">Create a sequence of straight line segments</property>
-            <property name="image">image4</property>
             <property name="relief">none</property>
-            <property name="always-show-image">True</property>
             <property name="draw-indicator">False</property>
             <property name="group">mode_buttons_group</property>
+            <child>
+              <object class="GtkImage" id="image4">
+                <property name="visible">True</property>
+                <property name="icon-name">path-mode-polyline</property>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="position">3</property>
@@ -171,11 +159,15 @@
             <property name="can-focus">True</property>
             <property name="focus-on-click">False</property>
             <property name="tooltip-text" translatable="yes">Create a sequence of paraxial line segments</property>
-            <property name="image">image5</property>
             <property name="relief">none</property>
-            <property name="always-show-image">True</property>
             <property name="draw-indicator">False</property>
             <property name="group">mode_buttons_group</property>
+            <child>
+              <object class="GtkImage" id="image5">
+                <property name="visible">True</property>
+                <property name="icon-name">path-mode-polyline-paraxial</property>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="position">4</property>
@@ -234,9 +226,13 @@
             <property name="focus-on-click">False</property>
             <property name="receives-default">True</property>
             <property name="tooltip-text" translatable="yes">Use pressure input</property>
-            <property name="image">image7</property>
             <property name="relief">none</property>
-            <property name="always-show-image">True</property>
+            <child>
+              <object class="GtkImage" id="image7">
+                <property name="visible">True</property>
+                <property name="icon-name">draw-use-pressure</property>
+              </object>
+            </child>
           </object>
         </child>
         <child>
@@ -348,9 +344,13 @@
             <property name="focus-on-click">False</property>
             <property name="receives-default">True</property>
             <property name="tooltip-text" translatable="yes">LPE based interactive simplify</property>
-            <property name="image">image8</property>
             <property name="relief">none</property>
-            <property name="always-show-image">True</property>
+            <child>
+              <object class="GtkImage" id="image8">
+                <property name="visible">True</property>
+                <property name="icon-name">interactive_simplify</property>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="position">6</property>

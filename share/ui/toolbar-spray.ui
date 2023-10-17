@@ -40,70 +40,6 @@
     <property name="step-increment">1</property>
     <property name="page-increment">10</property>
   </object>
-  <object class="GtkImage" id="image1">
-    <property name="visible">True</property>
-    <property name="icon-name">spray-mode-copy</property>
-  </object>
-  <object class="GtkImage" id="image10">
-    <property name="visible">True</property>
-    <property name="icon-name">symbol-bigger</property>
-  </object>
-  <object class="GtkImage" id="image11">
-    <property name="visible">True</property>
-    <property name="icon-name">distribute-randomize</property>
-  </object>
-  <object class="GtkImage" id="image12">
-    <property name="visible">True</property>
-    <property name="icon-name">color-picker</property>
-  </object>
-  <object class="GtkImage" id="image13">
-    <property name="visible">True</property>
-    <property name="icon-name">paint-solid</property>
-  </object>
-  <object class="GtkImage" id="image14">
-    <property name="visible">True</property>
-    <property name="icon-name">no-marker</property>
-  </object>
-  <object class="GtkImage" id="image15">
-    <property name="visible">True</property>
-    <property name="icon-name">object-tweak-shrink</property>
-  </object>
-  <object class="GtkImage" id="image16">
-    <property name="visible">True</property>
-    <property name="icon-name">snap-bounding-box-center</property>
-  </object>
-  <object class="GtkImage" id="image2">
-    <property name="visible">True</property>
-    <property name="icon-name">spray-mode-clone</property>
-  </object>
-  <object class="GtkImage" id="image3">
-    <property name="visible">True</property>
-    <property name="icon-name">spray-mode-union</property>
-  </object>
-  <object class="GtkImage" id="image4">
-    <property name="visible">True</property>
-    <property name="icon-name">draw-eraser</property>
-  </object>
-  <object class="GtkImage" id="image5">
-    <property name="visible">True</property>
-    <property name="icon-name">draw-use-pressure</property>
-  </object>
-  <object class="GtkImage" id="image6">
-    <property name="visible">True</property>
-    <property name="icon-name">draw-use-pressure</property>
-  </object>
-  <object class="GtkImage" id="image7">
-    <property name="visible">True</property>
-    <property name="icon-name">draw-use-pressure</property>
-  </object>
-  <object class="GtkImage" id="image8">
-    <property name="visible">True</property>
-    <property name="icon-name">object-visible</property>
-  </object>
-  <object class="GtkImage" id="image9">
-    <property name="visible">True</property>
-    <property name="icon-name">object-hidden</property>
-  </object>
   <object class="GtkRadioButton" id="mode_buttons_group">
     <property name="visible">True</property>
     <property name="can-focus">True</property>
@@ -194,11 +130,15 @@
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="tooltip-text" translatable="yes">Spray copies of the initial selection</property>
-            <property name="image">image1</property>
             <property name="relief">none</property>
-            <property name="always-show-image">True</property>
             <property name="draw-indicator">False</property>
             <property name="group">mode_buttons_group</property>
+            <child>
+              <object class="GtkImage" id="image1">
+                <property name="visible">True</property>
+                <property name="icon-name">spray-mode-copy</property>
+              </object>
+            </child>
           </object>
         </child>
         <child>
@@ -206,11 +146,15 @@
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="tooltip-text" translatable="yes">Spray clones of the initial selection</property>
-            <property name="image">image2</property>
             <property name="relief">none</property>
-            <property name="always-show-image">True</property>
             <property name="draw-indicator">False</property>
             <property name="group">mode_buttons_group</property>
+            <child>
+              <object class="GtkImage" id="image2">
+                <property name="visible">True</property>
+                <property name="icon-name">spray-mode-clone</property>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="position">1</property>
@@ -221,11 +165,15 @@
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="tooltip-text" translatable="yes">Spray objects in a single path</property>
-            <property name="image">image3</property>
             <property name="relief">none</property>
-            <property name="always-show-image">True</property>
             <property name="draw-indicator">False</property>
             <property name="group">mode_buttons_group</property>
+            <child>
+              <object class="GtkImage" id="image3">
+                <property name="visible">True</property>
+                <property name="icon-name">spray-mode-union</property>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="position">2</property>
@@ -236,11 +184,15 @@
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="tooltip-text" translatable="yes">Delete sprayed items from selection</property>
-            <property name="image">image4</property>
             <property name="relief">none</property>
-            <property name="always-show-image">True</property>
             <property name="draw-indicator">False</property>
             <property name="group">mode_buttons_group</property>
+            <child>
+              <object class="GtkImage" id="image4">
+                <property name="visible">True</property>
+                <property name="icon-name">draw-eraser</property>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="position">5</property>
@@ -319,12 +271,16 @@
         <property name="can-focus">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Use the pressure of the input device to alter the width of spray area</property>
-        <property name="image">image5</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
         <style>
           <class name="tag2"/>
         </style>
+        <child>
+          <object class="GtkImage" id="image5">
+            <property name="visible">True</property>
+            <property name="icon-name">draw-use-pressure</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="position">6</property>
@@ -368,12 +324,16 @@
         <property name="can-focus">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Use the pressure of the input device to alter the width of spray area</property>
-        <property name="image">image6</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
         <style>
           <class name="tag2"/>
         </style>
+        <child>
+          <object class="GtkImage" id="image6">
+            <property name="visible">True</property>
+            <property name="icon-name">draw-use-pressure</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="position">8</property>
@@ -449,9 +409,13 @@
         <property name="can-focus">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Use the pressure of the input device to alter the scale of new items</property>
-        <property name="image">image7</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
+        <child>
+          <object class="GtkImage" id="image7">
+            <property name="visible">True</property>
+            <property name="icon-name">draw-use-pressure</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="position">12</property>
@@ -554,12 +518,16 @@
         <property name="can-focus">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Apply over no transparent areas</property>
-        <property name="image">image8</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
         <style>
           <class name="tag3"/>
         </style>
+        <child>
+          <object class="GtkImage" id="image8">
+            <property name="visible">True</property>
+            <property name="icon-name">object-visible</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="position">18</property>
@@ -571,12 +539,16 @@
         <property name="can-focus">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Apply over transparent areas</property>
-        <property name="image">image9</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
         <style>
           <class name="tag3"/>
         </style>
+        <child>
+          <object class="GtkImage" id="image9">
+            <property name="visible">True</property>
+            <property name="icon-name">object-hidden</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="position">19</property>
@@ -588,12 +560,16 @@
         <property name="can-focus">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">No overlap between colors</property>
-        <property name="image">image10</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
         <style>
           <class name="tag3"/>
         </style>
+        <child>
+          <object class="GtkImage" id="image10">
+            <property name="visible">True</property>
+            <property name="icon-name">symbol-bigger</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="position">20</property>
@@ -605,12 +581,16 @@
         <property name="can-focus">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Prevent overlapping objects</property>
-        <property name="image">image11</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
         <style>
           <class name="tag3"/>
         </style>
+        <child>
+          <object class="GtkImage" id="image11">
+            <property name="visible">True</property>
+            <property name="icon-name">distribute-randomize</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="position">21</property>
@@ -677,12 +657,16 @@
         <property name="can-focus">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Pick color from the drawing. You can use clonetiler trace dialog for advanced effects. In clone mode original fill or stroke colors must be unset.</property>
-        <property name="image">image12</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
         <style>
           <class name="tag4"/>
         </style>
+        <child>
+          <object class="GtkImage" id="image12">
+            <property name="visible">True</property>
+            <property name="icon-name">color-picker</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="position">27</property>
@@ -694,12 +678,16 @@
         <property name="can-focus">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Apply picked color to fill</property>
-        <property name="image">image13</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
         <style>
           <class name="tag4"/>
         </style>
+        <child>
+          <object class="GtkImage" id="image13">
+            <property name="visible">True</property>
+            <property name="icon-name">paint-solid</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="position">28</property>
@@ -711,12 +699,16 @@
         <property name="can-focus">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Apply picked color to stroke</property>
-        <property name="image">image14</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
         <style>
           <class name="tag4"/>
         </style>
+        <child>
+          <object class="GtkImage" id="image14">
+            <property name="visible">True</property>
+            <property name="icon-name">no-marker</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="position">29</property>
@@ -728,12 +720,16 @@
         <property name="can-focus">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Inverted pick value, retaining color in advanced trace mode</property>
-        <property name="image">image15</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
         <style>
           <class name="tag4"/>
         </style>
+        <child>
+          <object class="GtkImage" id="image15">
+            <property name="visible">True</property>
+            <property name="icon-name">object-tweak-shrink</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="position">30</property>
@@ -745,12 +741,16 @@
         <property name="can-focus">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Pick from center instead of average area.</property>
-        <property name="image">image16</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
         <style>
           <class name="tag4"/>
         </style>
+        <child>
+          <object class="GtkImage" id="image16">
+            <property name="visible">True</property>
+            <property name="icon-name">snap-bounding-box-center</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="position">31</property>

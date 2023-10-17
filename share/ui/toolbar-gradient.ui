@@ -7,26 +7,6 @@
     <property name="step-increment">0.01</property>
     <property name="page-increment">0.10</property>
   </object>
-  <object class="GtkImage" id="image1">
-    <property name="visible">True</property>
-    <property name="icon-name">paint-gradient-linear</property>
-  </object>
-  <object class="GtkImage" id="image2">
-    <property name="visible">True</property>
-    <property name="icon-name">paint-gradient-radial</property>
-  </object>
-  <object class="GtkImage" id="image3">
-    <property name="visible">True</property>
-    <property name="icon-name">object-fill</property>
-  </object>
-  <object class="GtkImage" id="image4">
-    <property name="visible">True</property>
-    <property name="icon-name">object-stroke</property>
-  </object>
-  <object class="GtkImage" id="image5">
-    <property name="visible">True</property>
-    <property name="icon-name">object-unlocked</property>
-  </object>
   <object class="GtkRadioButton" id="new_fillstroke_buttons_group">
     <property name="visible">True</property>
     <property name="can-focus">True</property>
@@ -73,11 +53,15 @@
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="tooltip-text" translatable="yes">Create linear gradient</property>
-            <property name="image">image1</property>
             <property name="relief">none</property>
-            <property name="always-show-image">True</property>
             <property name="draw-indicator">False</property>
             <property name="group">new_type_buttons_group</property>
+            <child>
+              <object class="GtkImage" id="image1">
+                <property name="visible">True</property>
+                <property name="icon-name">paint-gradient-linear</property>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="position">3</property>
@@ -88,11 +72,15 @@
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="tooltip-text" translatable="yes">Create radial (elliptic or circular) gradient</property>
-            <property name="image">image2</property>
             <property name="relief">none</property>
-            <property name="always-show-image">True</property>
             <property name="draw-indicator">False</property>
             <property name="group">new_type_buttons_group</property>
+            <child>
+              <object class="GtkImage" id="image2">
+                <property name="visible">True</property>
+                <property name="icon-name">paint-gradient-radial</property>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="position">4</property>
@@ -112,11 +100,15 @@
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="tooltip-text" translatable="yes">Create gradient in the fill</property>
-            <property name="image">image3</property>
             <property name="relief">none</property>
-            <property name="always-show-image">True</property>
             <property name="draw-indicator">False</property>
             <property name="group">new_fillstroke_buttons_group</property>
+            <child>
+              <object class="GtkImage" id="image3">
+                <property name="visible">True</property>
+                <property name="icon-name">object-fill</property>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="position">3</property>
@@ -127,11 +119,15 @@
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="tooltip-text" translatable="yes">Create gradient in the stroke</property>
-            <property name="image">image4</property>
             <property name="relief">none</property>
-            <property name="always-show-image">True</property>
             <property name="draw-indicator">False</property>
             <property name="group">new_fillstroke_buttons_group</property>
+            <child>
+              <object class="GtkImage" id="image4">
+                <property name="visible">True</property>
+                <property name="icon-name">object-stroke</property>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="position">4</property>
@@ -186,12 +182,16 @@
         <property name="can-focus">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Link gradients to change all related gradients</property>
-        <property name="image">image5</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
         <style>
           <class name="tag1"/>
         </style>
+        <child>
+          <object class="GtkImage" id="image5">
+            <property name="visible">True</property>
+            <property name="icon-name">object-unlocked</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="position">6</property>

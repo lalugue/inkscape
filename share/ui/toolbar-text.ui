@@ -98,62 +98,6 @@
       </object>
     </child>
   </object>
-  <object class="GtkImage" id="image15">
-    <property name="visible">True</property>
-    <property name="icon-name">frmt-text-direction-horizontal</property>
-  </object>
-  <object class="GtkImage" id="image16">
-    <property name="visible">True</property>
-    <property name="icon-name">frmt-text-direction-vertical</property>
-  </object>
-  <object class="GtkImage" id="image17">
-    <property name="visible">True</property>
-    <property name="icon-name">frmt-text-direction-vertical-lr</property>
-  </object>
-  <object class="GtkImage" id="image18">
-    <property name="visible">True</property>
-    <property name="icon-name">text-orientation-auto</property>
-  </object>
-  <object class="GtkImage" id="image19">
-    <property name="visible">True</property>
-    <property name="icon-name">text-orientation-upright</property>
-  </object>
-  <object class="GtkImage" id="image20">
-    <property name="visible">True</property>
-    <property name="icon-name">text-orientation-sideways</property>
-  </object>
-  <object class="GtkImage" id="image21">
-    <property name="visible">True</property>
-    <property name="icon-name">frmt-text-direction-horizontal</property>
-  </object>
-  <object class="GtkImage" id="image22">
-    <property name="visible">True</property>
-    <property name="icon-name">frmt-text-direction-r2l</property>
-  </object>
-  <object class="GtkImage" id="image4">
-    <property name="visible">True</property>
-    <property name="icon-name">format-justify-left</property>
-  </object>
-  <object class="GtkImage" id="image5">
-    <property name="visible">True</property>
-    <property name="icon-name">format-justify-center</property>
-  </object>
-  <object class="GtkImage" id="image6">
-    <property name="visible">True</property>
-    <property name="icon-name">format-justify-right</property>
-  </object>
-  <object class="GtkImage" id="image7">
-    <property name="visible">True</property>
-    <property name="icon-name">format-justify-fill</property>
-  </object>
-  <object class="GtkImage" id="image8">
-    <property name="visible">True</property>
-    <property name="icon-name">text_superscript</property>
-  </object>
-  <object class="GtkImage" id="image9">
-    <property name="visible">True</property>
-    <property name="icon-name">text_subscript</property>
-  </object>
   <object class="GtkRadioButton" id="orientation_buttons_mode_group">
     <property name="visible">True</property>
     <property name="can-focus">True</property>
@@ -403,11 +347,15 @@
             <property name="can-focus">True</property>
             <property name="focus-on-click">False</property>
             <property name="tooltip-text" translatable="yes">Align left</property>
-            <property name="image">image4</property>
             <property name="relief">none</property>
-            <property name="always-show-image">True</property>
             <property name="draw-indicator">False</property>
             <property name="group">alignment_mode_group</property>
+            <child>
+              <object class="GtkImage" id="image4">
+                <property name="visible">True</property>
+                <property name="icon-name">format-justify-left</property>
+              </object>
+            </child>
           </object>
         </child>
         <child>
@@ -416,11 +364,15 @@
             <property name="can-focus">True</property>
             <property name="focus-on-click">False</property>
             <property name="tooltip-text" translatable="yes">Align center</property>
-            <property name="image">image5</property>
             <property name="relief">none</property>
-            <property name="always-show-image">True</property>
             <property name="draw-indicator">False</property>
             <property name="group">alignment_mode_group</property>
+            <child>
+              <object class="GtkImage" id="image5">
+                <property name="visible">True</property>
+                <property name="icon-name">format-justify-center</property>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="position">3</property>
@@ -432,11 +384,15 @@
             <property name="can-focus">True</property>
             <property name="focus-on-click">False</property>
             <property name="tooltip-text" translatable="yes">Align right</property>
-            <property name="image">image6</property>
             <property name="relief">none</property>
-            <property name="always-show-image">True</property>
             <property name="draw-indicator">False</property>
             <property name="group">alignment_mode_group</property>
+            <child>
+              <object class="GtkImage" id="image6">
+                <property name="visible">True</property>
+                <property name="icon-name">format-justify-right</property>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="position">4</property>
@@ -448,11 +404,15 @@
             <property name="can-focus">True</property>
             <property name="focus-on-click">False</property>
             <property name="tooltip-text" translatable="yes">Justify (only flowed text)</property>
-            <property name="image">image7</property>
             <property name="relief">none</property>
-            <property name="always-show-image">True</property>
             <property name="draw-indicator">False</property>
             <property name="group">alignment_mode_group</property>
+            <child>
+              <object class="GtkImage" id="image7">
+                <property name="visible">True</property>
+                <property name="icon-name">format-justify-fill</property>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="position">5</property>
@@ -480,9 +440,13 @@
         <property name="can-focus">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Toggle superscript</property>
-        <property name="image">image8</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
+        <child>
+          <object class="GtkImage" id="image8">
+            <property name="visible">True</property>
+            <property name="icon-name">text_superscript</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="position">14</property>
@@ -494,9 +458,13 @@
         <property name="can-focus">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Toggle subscript</property>
-        <property name="image">image9</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
+        <child>
+          <object class="GtkImage" id="image9">
+            <property name="visible">True</property>
+            <property name="icon-name">text_subscript</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="position">15</property>
@@ -540,11 +508,15 @@
             <property name="can-focus">True</property>
             <property name="focus-on-click">False</property>
             <property name="tooltip-text" translatable="yes">Horizontal text</property>
-            <property name="image">image15</property>
             <property name="relief">none</property>
-            <property name="always-show-image">True</property>
             <property name="draw-indicator">False</property>
             <property name="group">writing_buttons_mode_group</property>
+            <child>
+              <object class="GtkImage" id="image15">
+                <property name="visible">True</property>
+                <property name="icon-name">frmt-text-direction-horizontal</property>
+              </object>
+            </child>
           </object>
         </child>
         <child>
@@ -553,11 +525,15 @@
             <property name="can-focus">True</property>
             <property name="focus-on-click">False</property>
             <property name="tooltip-text" translatable="yes">Vertical text — lines: right to left</property>
-            <property name="image">image16</property>
             <property name="relief">none</property>
-            <property name="always-show-image">True</property>
             <property name="draw-indicator">False</property>
             <property name="group">writing_buttons_mode_group</property>
+            <child>
+              <object class="GtkImage" id="image16">
+                <property name="visible">True</property>
+                <property name="icon-name">frmt-text-direction-vertical</property>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="position">3</property>
@@ -569,11 +545,15 @@
             <property name="can-focus">True</property>
             <property name="focus-on-click">False</property>
             <property name="tooltip-text" translatable="yes">Vertical text — lines: left to right</property>
-            <property name="image">image17</property>
             <property name="relief">none</property>
-            <property name="always-show-image">True</property>
             <property name="draw-indicator">False</property>
             <property name="group">writing_buttons_mode_group</property>
+            <child>
+              <object class="GtkImage" id="image17">
+                <property name="visible">True</property>
+                <property name="icon-name">frmt-text-direction-vertical-lr</property>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="position">4</property>
@@ -625,11 +605,15 @@
             <property name="can-focus">True</property>
             <property name="focus-on-click">False</property>
             <property name="tooltip-text" translatable="yes">Auto glyph orientation</property>
-            <property name="image">image18</property>
             <property name="relief">none</property>
-            <property name="always-show-image">True</property>
             <property name="draw-indicator">False</property>
             <property name="group">orientation_buttons_mode_group</property>
+            <child>
+              <object class="GtkImage" id="image18">
+                <property name="visible">True</property>
+                <property name="icon-name">text-orientation-auto</property>
+              </object>
+            </child>
           </object>
         </child>
         <child>
@@ -638,11 +622,15 @@
             <property name="can-focus">True</property>
             <property name="focus-on-click">False</property>
             <property name="tooltip-text" translatable="yes">Upright glyph orientation</property>
-            <property name="image">image19</property>
             <property name="relief">none</property>
-            <property name="always-show-image">True</property>
             <property name="draw-indicator">False</property>
             <property name="group">orientation_buttons_mode_group</property>
+            <child>
+              <object class="GtkImage" id="image19">
+                <property name="visible">True</property>
+                <property name="icon-name">text-orientation-upright</property>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="position">3</property>
@@ -654,11 +642,15 @@
             <property name="can-focus">True</property>
             <property name="focus-on-click">False</property>
             <property name="tooltip-text" translatable="yes">Sideways glyph orientation</property>
-            <property name="image">image20</property>
             <property name="relief">none</property>
-            <property name="always-show-image">True</property>
             <property name="draw-indicator">False</property>
             <property name="group">orientation_buttons_mode_group</property>
+            <child>
+              <object class="GtkImage" id="image20">
+                <property name="visible">True</property>
+                <property name="icon-name">text-orientation-sideways</property>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="position">4</property>
@@ -710,11 +702,15 @@
             <property name="can-focus">True</property>
             <property name="focus-on-click">False</property>
             <property name="tooltip-text" translatable="yes">Left to right text</property>
-            <property name="image">image21</property>
             <property name="relief">none</property>
-            <property name="always-show-image">True</property>
             <property name="draw-indicator">False</property>
             <property name="group">direction_buttons_mode_group</property>
+            <child>
+              <object class="GtkImage" id="image21">
+                <property name="visible">True</property>
+                <property name="icon-name">frmt-text-direction-horizontal</property>
+              </object>
+            </child>
           </object>
         </child>
         <child>
@@ -723,11 +719,15 @@
             <property name="can-focus">True</property>
             <property name="focus-on-click">False</property>
             <property name="tooltip-text" translatable="yes">Right to left text</property>
-            <property name="image">image22</property>
             <property name="relief">none</property>
-            <property name="always-show-image">True</property>
             <property name="draw-indicator">False</property>
             <property name="group">direction_buttons_mode_group</property>
+            <child>
+              <object class="GtkImage" id="image22">
+                <property name="visible">True</property>
+                <property name="icon-name">frmt-text-direction-r2l</property>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="position">3</property>

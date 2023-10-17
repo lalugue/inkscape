@@ -26,30 +26,6 @@
     <property name="step-increment">0.10</property>
     <property name="page-increment">5</property>
   </object>
-  <object class="GtkImage" id="image13">
-    <property name="visible">True</property>
-    <property name="icon-name">transform-affect-stroke</property>
-  </object>
-  <object class="GtkImage" id="image14">
-    <property name="visible">True</property>
-    <property name="icon-name">transform-affect-rounded-corners</property>
-  </object>
-  <object class="GtkImage" id="image15">
-    <property name="visible">True</property>
-    <property name="icon-name">transform-affect-gradient</property>
-  </object>
-  <object class="GtkImage" id="image16">
-    <property name="visible">True</property>
-    <property name="icon-name">transform-affect-pattern</property>
-  </object>
-  <object class="GtkImage" id="image17">
-    <property name="visible">True</property>
-    <property name="icon-name">object-locked</property>
-  </object>
-  <object class="GtkImage" id="image4">
-    <property name="visible">True</property>
-    <property name="icon-name">selection-touch</property>
-  </object>
   <object class="GtkPopover" id="popover1">
     <property name="modal">True</property>
     <child>
@@ -162,12 +138,16 @@
         <property name="visible">True</property>
         <property name="can-focus">True</property>
         <property name="tooltip-text" translatable="yes">Toggle selection box to select all touched objects.</property>
-        <property name="image">image4</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
         <style>
           <class name="tag1"/>
         </style>
+        <child>
+          <object class="GtkImage" id="image4">
+            <property name="visible">True</property>
+            <property name="icon-name">selection-touch</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="position">4</property>
@@ -393,9 +373,13 @@
         <property name="visible">True</property>
         <property name="can-focus">True</property>
         <property name="tooltip-text" translatable="yes">When scaling objects, scale the stroke width by the same proportion</property>
-        <property name="image">image13</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
+        <child>
+          <object class="GtkImage" id="image13">
+            <property name="visible">True</property>
+            <property name="icon-name">transform-affect-stroke</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="position">17</property>
@@ -406,9 +390,13 @@
         <property name="visible">True</property>
         <property name="can-focus">True</property>
         <property name="tooltip-text" translatable="yes">When scaling rectangles, scale the radii of rounded corners</property>
-        <property name="image">image14</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
+        <child>
+          <object class="GtkImage" id="image14">
+            <property name="visible">True</property>
+            <property name="icon-name">transform-affect-rounded-corners</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="position">18</property>
@@ -419,9 +407,13 @@
         <property name="visible">True</property>
         <property name="can-focus">True</property>
         <property name="tooltip-text" translatable="yes">Move gradients (in fill or stroke) along with the objects</property>
-        <property name="image">image15</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
+        <child>
+          <object class="GtkImage" id="image15">
+            <property name="visible">True</property>
+            <property name="icon-name">transform-affect-gradient</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="position">19</property>
@@ -432,9 +424,13 @@
         <property name="visible">True</property>
         <property name="can-focus">True</property>
         <property name="tooltip-text" translatable="yes">Move patterns (in fill or stroke) along with the objects</property>
-        <property name="image">image16</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
+        <child>
+          <object class="GtkImage" id="image16">
+            <property name="visible">True</property>
+            <property name="icon-name">transform-affect-pattern</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="position">20</property>
@@ -548,9 +544,13 @@
         <property name="visible">True</property>
         <property name="can-focus">False</property>
         <property name="tooltip-text" translatable="yes">When scaling objects, scale the stroke width by the same proportion</property>
-        <property name="image">image17</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
+        <child>
+          <object class="GtkImage" id="image17">
+            <property name="visible">True</property>
+            <property name="icon-name">object-locked</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="position">25</property>

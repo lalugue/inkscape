@@ -2,16 +2,6 @@
 <!-- Generated with glade 3.40.0 -->
 <interface>
   <requires lib="gtk+" version="3.24"/>
-  <object class="GtkImage" id="image-grid">
-    <property name="visible">True</property>
-    <property name="can-focus">False</property>
-    <property name="icon-name">glyph-grid</property>
-  </object>
-  <object class="GtkImage" id="image-list">
-    <property name="visible">True</property>
-    <property name="can-focus">False</property>
-    <property name="icon-name">glyph-list</property>
-  </object>
   <object class="GtkRadioButton" id="radiobutton1">
     <property name="label" translatable="yes">radiobutton</property>
     <property name="visible">True</property>
@@ -248,10 +238,16 @@
             <property name="can-focus">True</property>
             <property name="receives-default">True</property>
             <property name="tooltip-text" translatable="yes">Show colors in a grid</property>
-            <property name="image">image-grid</property>
             <property name="relief">none</property>
             <property name="draw-indicator">False</property>
             <property name="group">radiobutton1</property>
+            <child>
+              <object class="GtkImage" id="image-grid">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="icon-name">glyph-grid</property>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -266,10 +262,16 @@
             <property name="can-focus">True</property>
             <property name="receives-default">True</property>
             <property name="tooltip-text" translatable="yes">Show colors with names</property>
-            <property name="image">image-list</property>
             <property name="relief">none</property>
             <property name="draw-indicator">False</property>
             <property name="group">radiobutton1</property>
+            <child>
+              <object class="GtkImage" id="image-list">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="icon-name">glyph-list</property>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="expand">False</property>

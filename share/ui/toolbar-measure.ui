@@ -28,26 +28,6 @@
     <property name="step-increment">1</property>
     <property name="page-increment">4</property>
   </object>
-  <object class="GtkImage" id="image1">
-    <property name="visible">True</property>
-    <property name="icon-name">snap-bounding-box-center</property>
-  </object>
-  <object class="GtkImage" id="image2">
-    <property name="visible">True</property>
-    <property name="icon-name">draw-geometry-line-segment</property>
-  </object>
-  <object class="GtkImage" id="image3">
-    <property name="visible">True</property>
-    <property name="icon-name">distribute-randomize</property>
-  </object>
-  <object class="GtkImage" id="image4">
-    <property name="visible">True</property>
-    <property name="icon-name">object-hidden</property>
-  </object>
-  <object class="GtkImage" id="image5">
-    <property name="visible">True</property>
-    <property name="icon-name">dialog-layers</property>
-  </object>
   <object class="GtkPopover" id="popover1">
     <property name="modal">True</property>
     <child>
@@ -203,12 +183,16 @@
         <property name="can-focus">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Measure only selected</property>
-        <property name="image">image1</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
         <style>
           <class name="tag1"/>
         </style>
+        <child>
+          <object class="GtkImage" id="image1">
+            <property name="visible">True</property>
+            <property name="icon-name">snap-bounding-box-center</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="position">6</property>
@@ -220,12 +204,16 @@
         <property name="can-focus">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Ignore first and last</property>
-        <property name="image">image2</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
         <style>
           <class name="tag1"/>
         </style>
+        <child>
+          <object class="GtkImage" id="image2">
+            <property name="visible">True</property>
+            <property name="icon-name">draw-geometry-line-segment</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="position">7</property>
@@ -237,12 +225,16 @@
         <property name="can-focus">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Show measures between items</property>
-        <property name="image">image3</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
         <style>
           <class name="tag1"/>
         </style>
+        <child>
+          <object class="GtkImage" id="image3">
+            <property name="visible">True</property>
+            <property name="icon-name">distribute-randomize</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="position">8</property>
@@ -254,12 +246,16 @@
         <property name="can-focus">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Show hidden intersections</property>
-        <property name="image">image4</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
         <style>
           <class name="tag1"/>
         </style>
+        <child>
+          <object class="GtkImage" id="image4">
+            <property name="visible">True</property>
+            <property name="icon-name">object-hidden</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="position">9</property>
@@ -271,12 +267,16 @@
         <property name="can-focus">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Measure all layers</property>
-        <property name="image">image5</property>
         <property name="relief">none</property>
-        <property name="always-show-image">True</property>
         <style>
           <class name="tag1"/>
         </style>
+        <child>
+          <object class="GtkImage" id="image5">
+            <property name="visible">True</property>
+            <property name="icon-name">dialog-layers</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="position">10</property>
