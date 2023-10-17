@@ -78,7 +78,6 @@ public:
     virtual void filterChangedCallback() {}
 
 protected:
-    void cleanup( bool showConfirmed );
 
     Glib::ustring const _preferenceBase;
 
@@ -93,12 +92,6 @@ protected:
     SVGPreview svgPreview;
 
     /**
-     * Child widgets
-     */
-    Gtk::CheckButton previewCheckbox;
-    Gtk::CheckButton svgexportCheckbox;
-
-    /**
      * Aquired Widgets
      */
     Gtk::ComboBoxText *filterComboBox;
@@ -108,11 +101,6 @@ private:
      * Callback for seeing if the preview needs to be drawn
      */
     void _updatePreviewCallback();
-
-    /**
-     * Callback to for SVG 2 to SVG 1.1 export.
-     */
-    void _svgexportEnabledCB();
 
     /**
      * Overriden filter store.
@@ -202,9 +190,6 @@ private:
      * Fix to allow the user to type the file name
      */
     Gtk::Entry *fileNameEntry;
-    Gtk::Box childBox;
-    Gtk::Box checksBox;
-    Gtk::CheckButton fileTypeCheckbox;
 
     /**
      * Callback for user input into fileNameEntry

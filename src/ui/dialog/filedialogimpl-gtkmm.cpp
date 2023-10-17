@@ -91,55 +91,25 @@ FileDialogBaseGtk::FileDialogBaseGtk(Gtk::Window &parentWindow, Glib::ustring co
 
     // Open executable file dialogs don't need the preview panel
     if (_dialogType != EXE_TYPES) {
-        Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-        bool enablePreview   = prefs->getBool(_preferenceBase + "/enable_preview", true);
-        bool enableSVGExport = prefs->getBool(_preferenceBase + "/enable_svgexport", false);
-
-        previewCheckbox.set_label(Glib::ustring(_("Enable preview")));
-        previewCheckbox.set_active(enablePreview);
-
-        previewCheckbox.signal_toggled().connect(sigc::mem_fun(*this, &FileDialogBaseGtk::_updatePreviewCallback));
-
-        svgexportCheckbox.set_label(Glib::ustring(_("Export as SVG 1.1 per settings in Preferences dialog")));
-        svgexportCheckbox.set_active(enableSVGExport);
-
-        svgexportCheckbox.signal_toggled().connect(sigc::mem_fun(*this, &FileDialogBaseGtk::_svgexportEnabledCB));
 
         // Catch selection-changed events, so we can adjust the text widget
         signal_update_preview().connect(sigc::mem_fun(*this, &FileDialogBaseGtk::_updatePreviewCallback));
 
         //###### Add a preview widget
         set_preview_widget(svgPreview);
-        set_preview_widget_active(enablePreview);
+        set_preview_widget_active(true);
         set_use_preview_label(false);
     }
 }
 
 FileDialogBaseGtk::~FileDialogBaseGtk() = default;
 
-void FileDialogBaseGtk::cleanup(bool showConfirmed)
-{
-    if (_dialogType != EXE_TYPES) {
-        Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-        if (showConfirmed) {
-            prefs->setBool(_preferenceBase + "/enable_preview", previewCheckbox.get_active());
-        }
-    }
-}
-
-void FileDialogBaseGtk::_svgexportEnabledCB()
-{
-    bool enabled = svgexportCheckbox.get_active();
-    Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-    prefs->setBool(_preferenceBase + "/enable_svgexport", enabled);
-}
-
 /**
  * Callback for checking if the preview needs to be redrawn
  */
 void FileDialogBaseGtk::_updatePreviewCallback()
 {
-    bool enabled = previewCheckbox.get_active();
+    bool enabled = true;
 
     set_preview_widget_active(enabled);
 
@@ -237,10 +207,6 @@ FileOpenDialogImplGtk::FileOpenDialogImplGtk(Gtk::Window &parentWindow, const Gl
         }
     }
 
-    if (_dialogType != EXE_TYPES) {
-        set_extra_widget(previewCheckbox);
-    }
-
     //###### Add the file types menu
     createFilterMenu();
 
@@ -313,12 +279,12 @@ void FileOpenDialogImplGtk::createFilterMenu()
  */
 bool FileOpenDialogImplGtk::show()
 {
-    set_modal(TRUE); // Window
+    set_modal(true); // Window
     sp_transientize(GTK_WIDGET(gobj())); // Make transient
-    gint b = dialog_run(*this); // Dialog
+    int response = dialog_run(*this); // Dialog
     svgPreview.showNoPreview();
 
-    if (b == Gtk::RESPONSE_OK) {
+    if (response == Gtk::RESPONSE_OK) {
         if (auto iter = filterComboBox->get_active()) {
             setExtension((*iter)[FilterList.extension]);
         }
@@ -326,12 +292,10 @@ bool FileOpenDialogImplGtk::show()
         auto fn = get_filename();
         setFilename(fn.empty() ? get_uri() : Glib::ustring(fn));
 
-        cleanup(true);
         return true;
-    } else {
-        cleanup(false);
-        return false;
     }
+
+    return false;
 }
 
 /**
@@ -375,8 +339,6 @@ FileSaveDialogImplGtk::FileSaveDialogImplGtk(Gtk::Window &parentWindow, const Gl
                                                                                          : "/dialogs/save_as")
     , save_method(save_method)
     , fromCB(false)
-    , checksBox(Gtk::ORIENTATION_VERTICAL)
-    , childBox(Gtk::ORIENTATION_HORIZONTAL)
 {
     FileSaveDialog::myDocTitle = docTitle;
 
@@ -400,27 +362,33 @@ FileSaveDialogImplGtk::FileSaveDialogImplGtk(Gtk::Window &parentWindow, const Gl
         setFilename(udir);
     }
 
-    //###### Do we want the .xxx extension automatically added?
+    // Choices
+    add_choice("Extension",  _("Append filename extension automatically"));
+    add_choice("SVG1.1",     _("Export as SVG 1.1 per settings in Preferences dialog"));
+
+    // Initial choice values.
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-    fileTypeCheckbox.set_label(Glib::ustring(_("Append filename extension automatically")));
+
+    // Append extention automatically?
+    bool append_extension = false;
     if (save_method == Inkscape::Extension::FILE_SAVE_METHOD_SAVE_COPY) {
-        fileTypeCheckbox.set_active(prefs->getBool("/dialogs/save_copy/append_extension", true));
+        append_extension = prefs->getBool("/dialogs/save_copy/append_extension", true);
     } else {
-        fileTypeCheckbox.set_active(prefs->getBool("/dialogs/save_as/append_extension", true));
+        append_extension = prefs->getBool("/dialogs/save_as/append_extension", true);
     }
+    set_choice("Extension", append_extension ? "true" : "false");  // set_boolean_extension missing
 
-    if (_dialogType != CUSTOM_TYPE)
+    // Export as SVG1.1?
+    bool export_as_svg1_1 = prefs->getBool(_preferenceBase + "/dialogs/s/enable_svgexport", false); 
+    set_choice("SVG1.1", export_as_svg1_1 ? "true" : "false");
+
+    if (_dialogType != CUSTOM_TYPE) {
         createFilterMenu();
-
-    childBox.add(checksBox);
-    checksBox.add(fileTypeCheckbox);
-    checksBox.add(previewCheckbox);
-    checksBox.add(svgexportCheckbox);
-    set_extra_widget(childBox);
+    }
 
     signal_selection_changed().connect(sigc::mem_fun(*this, &FileSaveDialogImplGtk::fileNameChanged));
 
-    // allow easy access to the user's own templates folder
+    // Allow easy access to the user's own templates folder.
     using namespace Inkscape::IO::Resource;
     char const *templates = Inkscape::IO::Resource::get_path(USER, TEMPLATES);
     if (Inkscape::IO::file_test(templates, G_FILE_TEST_EXISTS) &&
@@ -490,33 +458,33 @@ void FileSaveDialogImplGtk::createFilterMenu()
 bool FileSaveDialogImplGtk::show()
 {
     change_path(getFilename());
-    set_modal(TRUE); // Window
+    set_modal(true); // Window
     sp_transientize(GTK_WIDGET(gobj())); // Make transient
-    gint b = dialog_run(*this); // Dialog
+    int response = dialog_run(*this); // Dialog
     svgPreview.showNoPreview();
     set_preview_widget_active(false);
 
-    if (b == Gtk::RESPONSE_OK) {
+    if (response == Gtk::RESPONSE_OK) {
         updateNameAndExtension();
         Inkscape::Preferences *prefs = Inkscape::Preferences::get();
 
-        // Store changes of the "Append filename automatically" checkbox back to preferences.
+        // Store changes of "Choices".
+        bool append_extension = get_choice("Extension") == "true";
+        bool save_as_svg1_1   = get_choice("SVG1.1")    == "true";
         if (save_method == Inkscape::Extension::FILE_SAVE_METHOD_SAVE_COPY) {
-            prefs->setBool("/dialogs/save_copy/append_extension", fileTypeCheckbox.get_active());
+            prefs->setBool("/dialogs/save_copy/append_extension", append_extension);
+            prefs->setBool("/dialogs/save_copy/enable_svgexport", save_as_svg1_1);
         } else {
-            prefs->setBool("/dialogs/save_as/append_extension", fileTypeCheckbox.get_active());
+            prefs->setBool("/dialogs/save_as/append_extension", append_extension);
+            prefs->setBool("/dialogs/save_as/enable_svgexport", save_as_svg1_1);
         }
 
         auto extension = getExtension();
         Inkscape::Extension::store_file_extension_in_prefs((extension != nullptr ? extension->get_id() : ""), save_method);
-
-        cleanup(true);
-
         return true;
-    } else {
-        cleanup(false);
-        return false;
     }
+
+    return false;
 }
 
 void FileSaveDialogImplGtk::setExtension(Inkscape::Extension::Extension *key)
@@ -594,7 +562,7 @@ void FileSaveDialogImplGtk::updateNameAndExtension()
     }
 
     auto output = dynamic_cast<Inkscape::Extension::Output *>(getExtension());
-    if (fileTypeCheckbox.get_active() && output) {
+    if (output && get_choice("Extension") == "true") {
         // Append the file extension if it's not already present and display it in the file name entry field
         appendExtension(_filename, output);
         change_path(_filename);
