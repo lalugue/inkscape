@@ -140,7 +140,7 @@ static std::vector<Geom::PathVector> improved_cut(Geom::PathVector const &pathv,
     {
         path.SetBackData(false);
         Path *paths[2] = { &patha, &pathb };
-        shape.ConvertToFormeNested(&path, 2, paths, 1, num_nesting, nesting, conts);
+        shape.ConvertToFormeNested(&path, 2, paths, 1, num_nesting, nesting, conts, false, true);
     }
 
     int num_paths;

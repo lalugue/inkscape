@@ -359,6 +359,8 @@ sp_pathvector_boolop(Geom::PathVector const &pathva, Geom::PathVector const &pat
         res->Copy(originaux[0]);
         res->ConvertPositionsToMoveTo(nbToCut, toCut); // cut where you found intersections
         free(toCut);
+    } else if (bop == bool_op_cut) {
+        theShape->ConvertToForme(res, nbOriginaux, &originaux[0], false, true);
     } else {
         theShape->ConvertToForme(res, nbOriginaux, &originaux[0]);
     }
@@ -767,7 +769,7 @@ BoolOpErrors Inkscape::ObjectSet::pathBoolOp(bool_op bop, const bool skip_undo, 
         // function needs it.
         // this function uses the point_data to get the winding number of each path (ie: is a hole or not)
         // for later reconstruction in objects, you also need to extract which path is parent of holes (nesting info)
-        theShape->ConvertToFormeNested(res, nbOriginaux, &originaux[0], 1, nbNest, nesting, conts);
+        theShape->ConvertToFormeNested(res, nbOriginaux, &originaux[0], 1, nbNest, nesting, conts, false, true);
     } else {
         theShape->ConvertToForme(res, nbOriginaux, &originaux[0]);
     }

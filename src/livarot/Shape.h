@@ -320,10 +320,10 @@ public:
      * @param orig An array of pointers to Path, one Path object for each path id in the graph.
      * @param splitWhenForced TODO: Figure this out.
      */
-    void ConvertToForme(Path *dest, int nbP, Path **orig, bool splitWhenForced = false);
+    void ConvertToForme(Path *dest, int nbP, Path **orig, bool splitWhenForced = false, bool never_split = false);
     // version trying to recover the nesting of subpaths (ie: holes)
     void ConvertToFormeNested(Path *dest, int nbP, Path **orig, int wildPath, int &nbNest,
-                              int *&nesting, int *&contStart, bool splitWhenForced = false);
+                              int *&nesting, int *&contStart, bool splitWhenForced = false, bool never_split = false);
   
     // sweeping a digraph to produce a intersection-free polygon
     // return 0 if everything is ok and a return code otherwise (see LivarotDefs.h)
@@ -1114,11 +1114,11 @@ private:
      * @param splitWhenForced  TODO: No idea what it does. We never use ForcedPoints in Inkscape so doesn't matter I think.
      */
     void AddContour(Path * dest, int nbP, Path **orig, int startBord,
-                   int curBord, bool splitWhenForced);
+                   int curBord, bool splitWhenForced, bool never_split = false);
 
-    int ReFormeLineTo(int bord, int curBord, Path *dest, Path *orig);
-    int ReFormeArcTo(int bord, int curBord, Path *dest, Path *orig);
-    int ReFormeCubicTo(int bord, int curBord, Path *dest, Path *orig);
+    int ReFormeLineTo(int bord, int curBord, Path *dest, Path *orig, bool never_split);
+    int ReFormeArcTo(int bord, int curBord, Path *dest, Path *orig, bool never_split);
+    int ReFormeCubicTo(int bord, int curBord, Path *dest, Path *orig, bool never_split);
     int ReFormeBezierTo(int bord, int curBord, Path *dest, Path *orig);
     void ReFormeBezierChunk(const Geom::Point px, const Geom::Point nx,
                             Path *dest, int inBezier, int nbInterm,

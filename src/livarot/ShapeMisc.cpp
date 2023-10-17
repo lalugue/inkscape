@@ -190,7 +190,7 @@ Shape::ConvertToForme (Path * dest)
 // the original(s) path(s)
 // originals are in the orig array, whose size is nbP
 void
-Shape::ConvertToForme (Path * dest, int nbP, Path * *orig, bool splitWhenForced)
+Shape::ConvertToForme (Path * dest, int nbP, Path * *orig, bool splitWhenForced, bool never_split)
 {
   // the function is similar to the other version of ConvertToForme, I'm adding comments
   // where there are significant differences to explain
@@ -296,7 +296,7 @@ Shape::ConvertToForme (Path * dest, int nbP, Path * *orig, bool splitWhenForced)
             else // if not, we now have a contour to add
             {
               swdData[curBord].suivParc = -1;
-              AddContour (dest, nbP, orig, startBord, curBord,splitWhenForced);
+              AddContour (dest, nbP, orig, startBord, curBord,splitWhenForced, never_split);
             }
             //                                              dest->Close();
           }
@@ -318,7 +318,7 @@ Shape::ConvertToForme (Path * dest, int nbP, Path * *orig, bool splitWhenForced)
             if ( getEdge(curBord).en == curStartPt ) { // if we are going forward and the endpoint of this edge is the actual start point
               //printf("contour %i ",curStartPt);
               swdData[curBord].suivParc = -1; //  why tho? seems useless since we set it right after this block ends
-              AddContour (dest, nbP, orig, startBord, curBord,splitWhenForced); // add the contour
+              AddContour (dest, nbP, orig, startBord, curBord,splitWhenForced, never_split); // add the contour
               startBord=nb; // set startBord to this edge
             }
           }
@@ -341,7 +341,7 @@ Shape::ConvertToForme (Path * dest, int nbP, Path * *orig, bool splitWhenForced)
   MakeSweepDestData (false);
 }
 void 
-Shape::ConvertToFormeNested (Path * dest, int nbP, Path * *orig, int /*wildPath*/,int &nbNest,int *&nesting,int *&contStart,bool splitWhenForced)
+Shape::ConvertToFormeNested (Path * dest, int nbP, Path * *orig, int /*wildPath*/,int &nbNest,int *&nesting,int *&contStart,bool splitWhenForced, bool never_split)
 {
   nesting=nullptr;
   contStart=nullptr;
@@ -489,7 +489,7 @@ Shape::ConvertToFormeNested (Path * dest, int nbP, Path * *orig, int /*wildPath*
                 nesting[nbNest++]=-1; // contient des bouts de coupure -> a part
               }
               swdData[curBord].suivParc = -1;
-              AddContour (dest, nbP, orig, startBord, curBord,splitWhenForced);
+              AddContour (dest, nbP, orig, startBord, curBord,splitWhenForced, never_split);
             }
             //                                              dest->Close();
           }
@@ -530,7 +530,7 @@ Shape::ConvertToFormeNested (Path * dest, int nbP, Path * *orig, int /*wildPath*
                 nesting[nbNest++]=-1; // contient des bouts de coupure -> a part
               }
               swdData[curBord].suivParc = -1;
-              AddContour (dest, nbP, orig, startBord, curBord,splitWhenForced);
+              AddContour (dest, nbP, orig, startBord, curBord,splitWhenForced, never_split);
               startBord=nb;
             }
           }
@@ -901,7 +901,7 @@ Shape::MakeOffset (Shape * a, double dec, JoinType join, double miter, bool do_p
 // polyline. since it was a DFS, the precParc and suivParc make a nice doubly-linked list of the edges in
 // the contour. the first and last edges of the contour are startBord and curBord
 void
-Shape::AddContour (Path * dest, int nbP, Path * *orig, int startBord, int curBord, bool splitWhenForced)
+Shape::AddContour (Path * dest, int nbP, Path * *orig, int startBord, int curBord, bool splitWhenForced, bool never_split)
 {
   int bord = startBord; // start at the first edge
   
@@ -941,15 +941,15 @@ Shape::AddContour (Path * dest, int nbP, Path * *orig, int startBord, int curBor
         }
 	      else if (nType == descr_lineto) // for the other ones, call the appropriate function, bord gets the return value which tells us the next edge we should look at
         {
-          bord = ReFormeLineTo (bord, curBord, dest, from);
+          bord = ReFormeLineTo (bord, curBord, dest, from, never_split);
         }
 	      else if (nType == descr_arcto)
         {
-          bord = ReFormeArcTo (bord, curBord, dest, from);
+          bord = ReFormeArcTo (bord, curBord, dest, from, never_split);
         }
 	      else if (nType == descr_cubicto)
         {
-          bord = ReFormeCubicTo (bord, curBord, dest, from);
+          bord = ReFormeCubicTo (bord, curBord, dest, from, never_split);
         }
 	      else if (nType == descr_bezierto)
         {
@@ -958,7 +958,7 @@ Shape::AddContour (Path * dest, int nbP, Path * *orig, int startBord, int curBor
 	  
           if (nBData->nb == 0)
           {
-            bord = ReFormeLineTo (bord, curBord, dest, from);
+            bord = ReFormeLineTo (bord, curBord, dest, from, never_split);
           }
           else
           {
@@ -980,30 +980,32 @@ Shape::AddContour (Path * dest, int nbP, Path * *orig, int startBord, int curBor
         // You can see the code for PathDescrForced in path-description.h to confirm this
         // Also, I'm not sure if there is anything that increases the degree so oldDegree and totalDegree() would differ
         // at all.
-	      if (bord >= 0 && getPoint(getEdge(bord).st).totalDegree() > 2 ) {
-          dest->ForcePoint ();
-        } else if ( bord >= 0 && getPoint(getEdge(bord).st).oldDegree > 2 && getPoint(getEdge(bord).st).totalDegree() == 2)  {
-          if ( splitWhenForced ) {
-            // pour les coupures
+        if (!never_split) {
+          if (bord >= 0 && getPoint(getEdge(bord).st).totalDegree() > 2 ) {
             dest->ForcePoint ();
-         } else {
-            if ( _has_back_data ) {
-              int   prevEdge=getPoint(getEdge(bord).st).incidentEdge[FIRST];
-              int   nextEdge=getPoint(getEdge(bord).st).incidentEdge[LAST];
-              if ( getEdge(prevEdge).en != getEdge(bord).st ) {
-                int  swai=prevEdge;prevEdge=nextEdge;nextEdge=swai;
-              }
-              if ( ebData[prevEdge].pieceID == ebData[nextEdge].pieceID  && ebData[prevEdge].pathID == ebData[nextEdge].pathID ) {
-                if ( fabs(ebData[prevEdge].tEn-ebData[nextEdge].tSt) < 0.05 ) {
+          } else if ( bord >= 0 && getPoint(getEdge(bord).st).oldDegree > 2 && getPoint(getEdge(bord).st).totalDegree() == 2)  {
+            if ( splitWhenForced ) {
+              // pour les coupures
+              dest->ForcePoint ();
+           } else {
+              if ( _has_back_data ) {
+                int   prevEdge=getPoint(getEdge(bord).st).incidentEdge[FIRST];
+                int   nextEdge=getPoint(getEdge(bord).st).incidentEdge[LAST];
+                if ( getEdge(prevEdge).en != getEdge(bord).st ) {
+                  int  swai=prevEdge;prevEdge=nextEdge;nextEdge=swai;
+                }
+                if ( ebData[prevEdge].pieceID == ebData[nextEdge].pieceID  && ebData[prevEdge].pathID == ebData[nextEdge].pathID ) {
+                  if ( fabs(ebData[prevEdge].tEn-ebData[nextEdge].tSt) < 0.05 ) {
+                  } else {
+                    dest->ForcePoint ();
+                  }
                 } else {
                   dest->ForcePoint ();
                 }
               } else {
                 dest->ForcePoint ();
-              }
-            } else {
-              dest->ForcePoint ();
-            }    
+              }    
+            }
           }
         }
       }
@@ -1013,7 +1015,7 @@ Shape::AddContour (Path * dest, int nbP, Path * *orig, int startBord, int curBor
 }
 
 int
-Shape::ReFormeLineTo (int bord, int /*curBord*/, Path * dest, Path * /*orig*/)
+Shape::ReFormeLineTo (int bord, int /*curBord*/, Path * dest, Path * /*orig*/, bool never_split)
 {
   int nPiece = ebData[bord].pieceID;
   int nPath = ebData[bord].pathID;
@@ -1022,8 +1024,8 @@ Shape::ReFormeLineTo (int bord, int /*curBord*/, Path * dest, Path * /*orig*/)
   bord = swdData[bord].suivParc;
   while (bord >= 0)
   {
-    if (getPoint(getEdge(bord).st).totalDegree() > 2
-        || getPoint(getEdge(bord).st).oldDegree > 2)
+    if (!never_split && (getPoint(getEdge(bord).st).totalDegree() > 2
+        || getPoint(getEdge(bord).st).oldDegree > 2))
     {
       break;
     }
@@ -1047,7 +1049,7 @@ Shape::ReFormeLineTo (int bord, int /*curBord*/, Path * dest, Path * /*orig*/)
 }
 
 int
-Shape::ReFormeArcTo (int bord, int /*curBord*/, Path * dest, Path * from)
+Shape::ReFormeArcTo (int bord, int /*curBord*/, Path * dest, Path * from, bool never_split)
 {
   int nPiece = ebData[bord].pieceID;
   int nPath = ebData[bord].pathID;
@@ -1057,8 +1059,8 @@ Shape::ReFormeArcTo (int bord, int /*curBord*/, Path * dest, Path * from)
   bord = swdData[bord].suivParc;
   while (bord >= 0)
   {
-    if (getPoint(getEdge(bord).st).totalDegree() > 2
-        || getPoint(getEdge(bord).st).oldDegree > 2)
+    if (!never_split && (getPoint(getEdge(bord).st).totalDegree() > 2
+        || getPoint(getEdge(bord).st).oldDegree > 2))
     {
       break;
     }
@@ -1125,7 +1127,7 @@ Shape::ReFormeArcTo (int bord, int /*curBord*/, Path * dest, Path * from)
 }
 
 int
-Shape::ReFormeCubicTo (int bord, int /*curBord*/, Path * dest, Path * from)
+Shape::ReFormeCubicTo (int bord, int /*curBord*/, Path * dest, Path * from, bool never_split)
 {
   int nPiece = ebData[bord].pieceID;
   int nPath = ebData[bord].pathID;
@@ -1134,8 +1136,8 @@ Shape::ReFormeCubicTo (int bord, int /*curBord*/, Path * dest, Path * from)
   bord = swdData[bord].suivParc;
   while (bord >= 0)
   {
-    if (getPoint(getEdge(bord).st).totalDegree() > 2
-        || getPoint(getEdge(bord).st).oldDegree > 2)
+    if (!never_split && (getPoint(getEdge(bord).st).totalDegree() > 2
+        || getPoint(getEdge(bord).st).oldDegree > 2))
     {
       break;
     }
