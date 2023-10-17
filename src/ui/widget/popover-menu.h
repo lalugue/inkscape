@@ -49,6 +49,10 @@ public:
     void prepend(Gtk::Widget &child);
     /// Remove/unparent added child.
     void remove(Gtk::Widget &child);
+    /// Remove/unparent all items. If they were Gtk::manage()d, theyʼll regain floating references.
+    void remove_all();
+    /// Remove/unparent all items, also calling `delete` on each assuming they were Gtk::manage()d.
+    void delete_all();
 
     /// Append label, w/ markup & the .dim-label style class.
     void append_section_label(Glib::ustring const &markup);
@@ -79,6 +83,8 @@ private:
     // Let PopoverMenuItem call this without making it public API
     friend class PopoverMenuItem;
     void unset_items_focus_hover(Gtk::Widget *except_active);
+
+    void remove_all(bool and_delete);
 };
 
 } // namespace Inkscape::UI::Widget

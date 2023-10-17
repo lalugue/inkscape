@@ -4,7 +4,9 @@
 #define COLUMN_MENU_BUILDER_INCLUDED
 
 #include <cassert>
+#include <cstddef>
 #include <optional>
+#include <type_traits>
 #include <utility>
 #include <sigc++/slot.h>
 #include <glibmm/ustring.h>
@@ -19,7 +21,7 @@ namespace Inkscape::UI {
 
 // TODO: GTK4: Can we use Gtk::GridView? 4.12 has section/headings, so if they can span columns, OK
 
-template <typename SectionData>
+template <typename SectionData = std::nullptr_t> // nullptr_t means no sections.
 class ColumnMenuBuilder {
 public:
     ColumnMenuBuilder(Widget::PopoverMenu& menu, int columns,
@@ -34,14 +36,16 @@ public:
         assert(_columns >= 1);
     }
 
-    Widget::PopoverMenuItem* add_item(
-        Glib::ustring const &label, SectionData section, Glib::ustring const &tooltip,
-        Glib::ustring const &icon_name, bool const sensitive, bool const customtooltip,
+    Widget::PopoverMenuItem *add_item(
+        Glib::ustring const &label, std::optional<SectionData> const &section,
+        Glib::ustring const &tooltip, Glib::ustring const &icon_name,
+        bool const sensitive, bool const customtooltip,
         sigc::slot<void ()> callback)
     {
         _new_section = false;
         _section = nullptr;
-        if (!_last_section || *_last_section != section) {
+        if (section && (!_last_section || *_last_section != *section)) {
+            g_assert(!(std::is_same_v<SectionData, std::nullptr_t>));
             _new_section = true;
         }
 
@@ -56,7 +60,7 @@ public:
                 _row++;
             }
 
-            _last_section = std::move(section);
+            _last_section = section;
 
             auto const sep = Gtk::make_managed<Widget::PopoverMenuItem>();
             sep->get_style_context()->add_class("menu-category");
@@ -87,11 +91,21 @@ public:
         return item;
     }
 
-    bool new_section() {
+    Widget::PopoverMenuItem *add_item(
+        Glib::ustring const &label,
+        Glib::ustring const &tooltip, Glib::ustring const &icon_name,
+        bool const sensitive, bool const customtooltip,
+        sigc::slot<void ()> callback)
+    {
+        return add_item(label, std::nullopt, tooltip, icon_name,
+                        sensitive, customtooltip, std::move(callback));
+    }
+
+    bool new_section() const {
         return _new_section;
     }
 
-    void set_section(Glib::ustring name) {
+    void set_section(Glib::ustring const &name) {
         // name lastest section
         if (_section) {
             _section->set_label(name.uppercase());
@@ -112,3 +126,14 @@ private:
 } // namespace Inkscape::UI
 
 #endif // COLUMN_MENU_BUILDER_INCLUDED
+
+/*
+  Local Variables:
+  mode:c++
+  c-file-style:"stroustrup"
+  c-file-offsets:((innamespace . 0)(inline-open . 0)(case-label . +))
+  indent-tabs-mode:nil
+  fill-column:99
+  End:
+*/
+// vim: filetype=cpp:expandtab:shiftwidth=4:tabstop=8:softtabstop=4:fileencoding=utf-8:textwidth=99 :

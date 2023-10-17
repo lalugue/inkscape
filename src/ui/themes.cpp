@@ -181,7 +181,7 @@ ThemeContext::get_symbolic_colors()
     bool overridebasecolor = !prefs->getBool("/theme/symbolicDefaultBaseColors", true);
     if (overridebasecolor) {
         css_str += "#InkRuler:not(.shadow):not(.page):not(.selection),";
-        css_str += ":not(.rawstyle) > image,";
+        css_str += ":not(.rawstyle) > image:not(.arrow),";
         css_str += ":not(.rawstyle) treeview.image";
         css_str += "{color:";
         css_str += colornamed;

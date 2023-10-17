@@ -12,19 +12,23 @@
 #ifndef INKSCAPE_UI_DIALOG_SVG_FONTS_H
 #define INKSCAPE_UI_DIALOG_SVG_FONTS_H
 
+#include <memory>
+#include <vector>
 #include <2geom/pathvector.h>
 #include <glibmm/property.h>
 #include <glibmm/propertyproxy.h>
 #include <glibmm/refptr.h>
+#include <glibmm/ustring.h>
 #include <gtkmm/box.h>
 #include <gtkmm/button.h>
 #include <gtkmm/cellrenderer.h>
-#include <gtkmm/comboboxtext.h>
+#include <gtkmm/combobox.h>
 #include <gtkmm/drawingarea.h>
 #include <gtkmm/entry.h>
 #include <gtkmm/grid.h>
 #include <gtkmm/iconview.h>
 #include <gtkmm/label.h>
+#include <gtkmm/menubutton.h>
 #include <gtkmm/scrolledwindow.h>
 #include <gtkmm/treemodel.h>
 #include <gtkmm/treeview.h>
@@ -56,21 +60,34 @@ public:
     void redraw();
 
 private:
-    int _x,_y;
-    SvgFont* _svgfont;
+    int _x = 0, _y = 0;
+    SvgFont *_svgfont = nullptr;
     Glib::ustring _text;
     bool on_draw(const Cairo::RefPtr<Cairo::Context> &cr) final;
 };
 
 class SPFont;
 
-namespace Inkscape::UI::Dialog {
+namespace Inkscape::UI {
 
-class GlyphComboBox final : public Gtk::ComboBoxText {
+namespace Widget {
+class PopoverMenu;
+class PopoverMenuItem;
+} // namespace Widget
+
+namespace Dialog {
+
+class GlyphMenuButton final : public Gtk::MenuButton {
 public:
-    GlyphComboBox();
+    GlyphMenuButton();
+    ~GlyphMenuButton() final;
 
-    void update(SPFont*);
+    void update(SPFont const *spfont);
+    [[nodiscard]] Glib::ustring get_active_text() const;
+
+private:
+    Gtk::Label _label;
+    std::unique_ptr<UI::Widget::PopoverMenu> _menu;
 };
 
 // cell text renderer for SVG font glyps (relying on Cairo "user font");
@@ -210,7 +227,7 @@ private:
 
     void update_glyphs(SPGlyph* changed_glyph = nullptr);
     void update_glyph(SPGlyph* glyph);
-    void set_glyph_row(const Gtk::TreeRow& row, SPGlyph& glyph);
+    void set_glyph_row(Gtk::TreeRow &row, SPGlyph &glyph);
     void refresh_svgfont();
     void update_sensitiveness();
     void update_global_settings_tab();
@@ -253,18 +270,18 @@ private:
 
     // <font>
     Gtk::Label* _font_label;
-    AttrSpin*  _horiz_adv_x_spin;
-    AttrSpin*  _horiz_origin_x_spin;
-    AttrSpin*  _horiz_origin_y_spin;
+    std::unique_ptr<AttrSpin> _horiz_adv_x_spin;
+    std::unique_ptr<AttrSpin> _horiz_origin_x_spin;
+    std::unique_ptr<AttrSpin> _horiz_origin_y_spin;
 
     // <font-face>
     Gtk::Label* _font_face_label;
-    AttrEntry* _familyname_entry;
-    AttrSpin*  _units_per_em_spin;
-    AttrSpin*  _ascent_spin;
-    AttrSpin*  _descent_spin;
-    AttrSpin*  _cap_height_spin;
-    AttrSpin*  _x_height_spin;
+    std::unique_ptr<AttrEntry> _familyname_entry;
+    std::unique_ptr<AttrSpin> _units_per_em_spin;
+    std::unique_ptr<AttrSpin> _ascent_spin;
+    std::unique_ptr<AttrSpin> _descent_spin;
+    std::unique_ptr<AttrSpin> _cap_height_spin;
+    std::unique_ptr<AttrSpin> _x_height_spin;
 
     Gtk::Box* kerning_tab();
     Gtk::Box* glyphs_tab();
@@ -352,7 +369,7 @@ private:
     void set_glyphs_view_mode(bool list);
 
     SvgFontDrawingArea _font_da, kerning_preview;
-    GlyphComboBox first_glyph, second_glyph;
+    GlyphMenuButton first_glyph, second_glyph;
     SPGlyphKerning* kerning_pair;
     Inkscape::UI::Widget::SpinButton setwidth_spin;
     Gtk::Scale* kerning_slider;
@@ -375,7 +392,9 @@ private:
     EntryWidget _font_family, _font_variant;
 };
 
-} // namespace Inkscape::UI::Dialog
+} // namespace Dialog
+
+} // namespace Inkscape::UI
 
 #endif // INKSCAPE_UI_DIALOG_SVG_FONTS_H
 

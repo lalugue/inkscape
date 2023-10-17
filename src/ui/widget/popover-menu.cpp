@@ -111,6 +111,16 @@ void PopoverMenu::remove(Gtk::Widget &item)
     _items.erase(it);
 }
 
+void PopoverMenu::remove_all()
+{
+    remove_all(false);
+}
+
+void PopoverMenu::delete_all()
+{
+    remove_all(true);
+}
+
 void PopoverMenu::append_section_label(Glib::ustring const &markup)
 {
     auto const label = Gtk::make_managed<Gtk::Label>();
@@ -149,6 +159,18 @@ void PopoverMenu::unset_items_focus_hover(Gtk::Widget * const except_active)
             item->unset_state_flags(Gtk::STATE_FLAG_FOCUSED | Gtk::STATE_FLAG_PRELIGHT);
         }
     }
+}
+
+void PopoverMenu::remove_all(bool const and_delete)
+{
+    for (auto const item: _items) {
+        _grid.remove(*item);
+        if (and_delete) {
+            g_assert(item->is_managed_()); // "Private API", but sanity check for us
+            delete item; // This is not ideal, but gtkmm/object.cc says should be OK
+        }
+    }
+    _items.clear();
 }
 
 } // namespace Inkscape::UI::Widget

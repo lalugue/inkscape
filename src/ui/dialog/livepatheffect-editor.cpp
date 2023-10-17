@@ -321,13 +321,7 @@ void LivePathEffectEditor::add_lpes(Inkscape::UI::Widget::CompletionPopup &popup
     // TODO: GTK4: Use MenuButton.set_create_popup_func() to create new menu every time, on demand?
 
     auto &menu = popup.get_menu();
-
-    // N.B. Removing items will update _items, so make a copy of that vector, not take it by const&
-    for (auto const item : std::vector<Gtk::Widget *>(menu.get_items())) {
-        menu.remove(*item);
-        g_assert(item->is_managed_()); // "Private API", but sanity check for us
-        delete item; // This is not ideal, but gtkmm/object.cc says should be OK
-    }
+    menu.delete_all();
 
     ColumnMenuBuilder<LivePathEffect::LPECategory> builder{menu, 3, Gtk::ICON_SIZE_LARGE_TOOLBAR};
 

@@ -18,15 +18,18 @@
 #include <exception>
 #include <iomanip>
 #include <sstream>
-#include <vector>
+#include <utility>
 #include <glibmm/i18n.h>
 #include <glibmm/markup.h>
 #include <glibmm/stringutils.h>
+#include <giomm/themedicon.h>
 #include <gtkmm/expander.h>
+#include <gtkmm/image.h>
 #include <gtkmm/liststore.h>
 #include <gtkmm/notebook.h>
 #include <gtkmm/radiobutton.h>
 #include <gtkmm/scale.h>
+#include <gtkmm/stylecontext.h>
 
 #include "desktop.h"
 #include "document.h"
@@ -44,16 +47,15 @@
 #include "object/sp-missing-glyph.h"
 #include "object/sp-path.h"
 #include "svg/svg.h"
+#include "ui/column-menu-builder.h"
 #include "ui/pack.h"
 #include "ui/util.h"
+#include "ui/widget/popover-menu.h"
+#include "ui/widget/popover-menu-item.h"
 #include "util/units.h"
 #include "xml/repr.h"
 
-SvgFontDrawingArea::SvgFontDrawingArea():
-    _x(0),
-    _y(0),
-    _svgfont(nullptr),
-    _text()
+SvgFontDrawingArea::SvgFontDrawingArea()
 {
     set_name("SVGFontDrawingArea");
 }
@@ -63,7 +65,7 @@ void SvgFontDrawingArea::set_svgfont(SvgFont* svgfont){
 }
 
 void SvgFontDrawingArea::set_text(Glib::ustring text){
-    _text = text;
+    _text = std::move(text);
     redraw();
 }
 
@@ -255,27 +257,59 @@ Gtk::Box* SvgFontsDialog::AttrCombo(gchar* lbl, const SPAttr /*attr*/){
     return hbox;
 }
 
-/*** SvgFontsDialog ***/
+GlyphMenuButton::GlyphMenuButton()
+    : _menu{std::make_unique<UI::Widget::PopoverMenu>(*this, Gtk::POS_BOTTOM)}
+{
+    _label.set_width_chars(2);
 
-GlyphComboBox::GlyphComboBox() {
+    auto const arrow = Gtk::make_managed<Gtk::Image>("pan-down-symbolic", Gtk::ICON_SIZE_BUTTON);
+    arrow->get_style_context()->add_class("arrow");
+
+    auto const box = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL, 2);
+    box->add(_label);
+    box->add(*arrow);
+    add(*box);
+    show_all();
+
+    set_popover(*_menu);
 }
 
-void GlyphComboBox::update(SPFont* spfont){
+GlyphMenuButton::~GlyphMenuButton() = default;
+
+void GlyphMenuButton::update(SPFont const * const spfont)
+{
+    set_sensitive(false);
+    _label.set_label({});
+    _menu->delete_all();
+
     if (!spfont) return;
 
-    // remove wrapping - it has severe performance penalty for appending items
-    set_wrap_width(0);
+    auto const &font_nodes = spfont->children;
+    if (font_nodes.empty()) return;
 
-    this->remove_all();
+    // TODO: GTK4: probably nicer to use GtkColumnView.
+    Inkscape::UI::ColumnMenuBuilder builder{*_menu, 4};
+    Glib::ustring active_label;
 
-    for (auto& node: spfont->children) {
-        if (is<SPGlyph>(&node)){
-            this->append((static_cast<SPGlyph*>(&node))->unicode);
-        }
+    for (auto const &node: font_nodes) {
+        if (!is<SPGlyph>(&node)) continue;
+
+        Glib::ustring text = static_cast<SPGlyph const *>(&node)->unicode;
+        if (text.empty()) continue;
+
+        builder.add_item(text, {}, {}, true, false,
+                         [=, this]{ _label.set_label(text); });
+        if (active_label.empty()) active_label = std::move(text);
     }
 
-    // set desired wrpping now
-    set_wrap_width(4);
+    set_sensitive(true);
+    _label.set_label(active_label);
+    _menu->show_all_children();
+}
+
+Glib::ustring GlyphMenuButton::get_active_text() const
+{
+    return _label.get_label();
 }
 
 void SvgFontsDialog::on_kerning_value_changed(){
@@ -686,7 +720,7 @@ SPGlyph* SvgFontsDialog::get_selected_glyph()
 void SvgFontsDialog::set_selected_glyph(SPGlyph* glyph) {
     if (!glyph) return;
 
-    _GlyphsListStore->foreach_iter([=](const Gtk::TreeModel::iterator& it) {
+    _GlyphsListStore->foreach_iter([=, this](Gtk::TreeModel::iterator const &it) {
         if (it->get_value(_GlyphsListColumns.glyph_node) == glyph) {
             if (auto selection = _GlyphsList.get_selection()) {
                 selection->select(it);
@@ -707,6 +741,7 @@ SPGuide* get_guide(SPDocument& doc, const Glib::ustring& id) {
     if (auto guide = cast<SPGuide>(object)) {
         return guide;
     }
+
     // remove colliding object
     object->deleteObject();
     return nullptr;
@@ -773,7 +808,6 @@ void set_up_typography_canvas(SPDocument* document, double em, double asc, doubl
 const int MARGIN_SPACE = 4;
 
 Gtk::Box* SvgFontsDialog::global_settings_tab(){
-
     _fonts_scroller.set_policy(Gtk::POLICY_NEVER, Gtk::POLICY_AUTOMATIC);
     _fonts_scroller.add(_FontsList);
     _fonts_scroller.set_hexpand();
@@ -795,24 +829,23 @@ Gtk::Box* SvgFontsDialog::global_settings_tab(){
     _font_remove.set_valign(Gtk::ALIGN_CENTER);
     _font_remove.set_halign(Gtk::ALIGN_CENTER);
     _font_remove.set_image_from_icon_name("list-remove", Gtk::ICON_SIZE_BUTTON);
-    _font_remove.signal_clicked().connect([=](){ remove_selected_font(); });
+    _font_remove.signal_clicked().connect([this]{ remove_selected_font(); });
 
     global_vbox.set_name("SVGFontsGlobalSettingsTab");
     UI::pack_start(global_vbox, _header_box, false, false);
 
-    _font_label          = new Gtk::Label(Glib::ustring("<b>") + _("Font Attributes") + "</b>", Gtk::ALIGN_START, Gtk::ALIGN_CENTER);
-    _horiz_adv_x_spin    = new AttrSpin( this, (gchar*) _("Horizontal advance X:"), _("Default glyph width for horizontal text"), SPAttr::HORIZ_ADV_X);
-    _horiz_origin_x_spin = new AttrSpin( this, (gchar*) _("Horizontal origin X:"), _("Default X-coordinate of the origin of a glyph (for horizontal text)"), SPAttr::HORIZ_ORIGIN_X);
-    _horiz_origin_y_spin = new AttrSpin( this, (gchar*) _("Horizontal origin Y:"), _("Default Y-coordinate of the origin of a glyph (for horizontal text)"), SPAttr::HORIZ_ORIGIN_Y);
-    _font_face_label     = new Gtk::Label(Glib::ustring("<b>") + _("Font face attributes") + "</b>", Gtk::ALIGN_START, Gtk::ALIGN_CENTER);
-    _familyname_entry    = new AttrEntry(this, (gchar*) _("Family name:"), _("Name of the font as it appears in font selectors and css font-family properties"), SPAttr::FONT_FAMILY);
-    _units_per_em_spin   = new AttrSpin( this, (gchar*) _("Em-size:"), _("Display units per <italic>em</italic> (nominally width of 'M' character)"), SPAttr::UNITS_PER_EM);
-    _ascent_spin         = new AttrSpin( this, (gchar*) _("Ascender:"),      _("Amount of space taken up by ascenders like the tall line on the letter 'h'"), SPAttr::ASCENT);
-    _cap_height_spin     = new AttrSpin( this, (gchar*) _("Caps height:"),  _("The height of a capital letter above the baseline like the letter 'H' or 'I'"), SPAttr::CAP_HEIGHT);
-    _x_height_spin       = new AttrSpin( this, (gchar*) _("x-height:"),    _("The height of a lower-case letter above the baseline like the letter 'x'"), SPAttr::X_HEIGHT);
-    _descent_spin        = new AttrSpin( this, (gchar*) _("Descender:"),     _("Amount of space taken up by descenders like the tail on the letter 'g'"), SPAttr::DESCENT);
+    _font_label          = Gtk::make_managed<Gtk::Label>(Glib::ustring::compose("<b>%1</b>", _("Font Attributes")), Gtk::ALIGN_START, Gtk::ALIGN_CENTER);
+    _horiz_adv_x_spin    = std::make_unique <AttrSpin  >(this, _("Horizontal advance X:"), _("Default glyph width for horizontal text"                            ), SPAttr::HORIZ_ADV_X   );
+    _horiz_origin_x_spin = std::make_unique <AttrSpin  >(this, _("Horizontal origin X:" ), _("Default X-coordinate of the origin of a glyph (for horizontal text)"), SPAttr::HORIZ_ORIGIN_X);
+    _horiz_origin_y_spin = std::make_unique <AttrSpin  >(this, _("Horizontal origin Y:" ), _("Default Y-coordinate of the origin of a glyph (for horizontal text)"), SPAttr::HORIZ_ORIGIN_Y);
+    _font_face_label     = Gtk::make_managed<Gtk::Label>(Glib::ustring::compose("<b>%1</b>", _("Font face attributes")), Gtk::ALIGN_START, Gtk::ALIGN_CENTER);
+    _familyname_entry    = std::make_unique <AttrEntry >(this, _("Family name:"         ), _("Name of the font as it appears in font selectors and css font-family properties"), SPAttr::FONT_FAMILY );
+    _units_per_em_spin   = std::make_unique <AttrSpin  >(this, _("Em-size:"             ), _("Display units per <italic>em</italic> (nominally width of 'M' character)"       ), SPAttr::UNITS_PER_EM);
+    _ascent_spin         = std::make_unique <AttrSpin  >(this, _("Ascender:"            ), _("Amount of space taken up by ascenders like the tall line on the letter 'h'"     ), SPAttr::ASCENT      );
+    _cap_height_spin     = std::make_unique <AttrSpin  >(this, _("Caps height:"         ), _("The height of a capital letter above the baseline like the letter 'H' or 'I'"   ), SPAttr::CAP_HEIGHT  );
+    _x_height_spin       = std::make_unique <AttrSpin  >(this, _("x-height:"            ), _("The height of a lower-case letter above the baseline like the letter 'x'"       ), SPAttr::X_HEIGHT    );
+    _descent_spin        = std::make_unique <AttrSpin  >(this, _("Descender:"           ), _("Amount of space taken up by descenders like the tail on the letter 'g'"         ), SPAttr::DESCENT     );
 
-    //_descent_spin->set_range(-4096,0);
     _font_label->set_use_markup();
     _font_face_label->set_use_markup();
 
@@ -824,8 +857,9 @@ Gtk::Box* SvgFontsDialog::global_settings_tab(){
     int row = 0;
 
     _grid.attach(*_font_label, 0, row++, 2);
-    SvgFontsDialog::AttrSpin* font[] = {_horiz_adv_x_spin, _horiz_origin_x_spin, _horiz_origin_y_spin};
-    for (auto spin : font) {
+    for (auto const spin: {_horiz_adv_x_spin.get(),
+                           _horiz_origin_x_spin.get(), _horiz_origin_y_spin.get()})
+    {
         spin->get_label()->set_margin_start(indent);
         _grid.attach(*spin->get_label(), 0, row);
         _grid.attach(*spin->getSpin(), 1, row++);
@@ -837,8 +871,8 @@ Gtk::Box* SvgFontsDialog::global_settings_tab(){
     _grid.attach(*_familyname_entry->get_label(), 0, row);
     _grid.attach(*_familyname_entry->get_entry(), 1, row++, 2);
 
-    SvgFontsDialog::AttrSpin* face[] = {_units_per_em_spin, _ascent_spin, _cap_height_spin, _x_height_spin, _descent_spin};
-    for (auto spin : face) {
+    for (auto const &spin : {_units_per_em_spin.get(), _ascent_spin.get(), _cap_height_spin.get(),
+                             _x_height_spin.get(), _descent_spin.get()}) {
         spin->get_label()->set_margin_start(indent);
         _grid.attach(*spin->get_label(), 0, row);
         _grid.attach(*spin->getSpin(), 1, row++);
@@ -847,7 +881,7 @@ Gtk::Box* SvgFontsDialog::global_settings_tab(){
     auto const setup = Gtk::make_managed<Gtk::Button>(_("Set up canvas"));
     _grid.attach(*setup, 0, row++, 2);
     setup->set_halign(Gtk::ALIGN_START);
-    setup->signal_clicked().connect([=](){
+    setup->signal_clicked().connect([this]{
         // set up typography canvas
         set_up_typography_canvas(
             getDocument(),
@@ -861,16 +895,11 @@ Gtk::Box* SvgFontsDialog::global_settings_tab(){
 
     global_vbox.property_margin().set_value(2);
     UI::pack_start(global_vbox, _grid, false, true);
-
-/*    global_vbox->add(*AttrCombo((gchar*) _("Style:"), SPAttr::FONT_STYLE));
-    global_vbox->add(*AttrCombo((gchar*) _("Variant:"), SPAttr::FONT_VARIANT));
-    global_vbox->add(*AttrCombo((gchar*) _("Weight:"), SPAttr::FONT_WEIGHT));
-*/
-
     return &global_vbox;
 }
 
-void SvgFontsDialog::set_glyph_row(const Gtk::TreeRow& row, SPGlyph& glyph) {
+void SvgFontsDialog::set_glyph_row(Gtk::TreeRow &row, SPGlyph &glyph)
+{
     auto unicode_name = create_unicode_name(glyph.unicode, 3);
     row[_GlyphsListColumns.glyph_node] = &glyph;
     row[_GlyphsListColumns.glyph_name] = glyph.glyph_name;
@@ -944,7 +973,7 @@ void SvgFontsDialog::update_glyph(SPGlyph* glyph) {
 
     _GlyphsListStore->foreach_iter([&](const Gtk::TreeModel::iterator& it) {
         if (it->get_value(_GlyphsListColumns.glyph_node) == glyph) {
-            const Gtk::TreeRow& row = *it;
+            Gtk::TreeRow row = *it;
             set_glyph_row(row, *glyph);
             return true; // stop
         }
@@ -1146,7 +1175,7 @@ void SvgFontsDialog::glyph_name_edit(const Glib::ustring&, const Glib::ustring& 
 
     if (glyph->glyph_name == str) return; // no change
 
-    change_glyph_attribute(getDesktop(), *glyph, [=](){
+    change_glyph_attribute(getDesktop(), *glyph, [=, this]{
         //XML Tree being directly used here while it shouldn't be.
         glyph->setAttribute("glyph-name", str);
 
@@ -1161,7 +1190,7 @@ void SvgFontsDialog::glyph_unicode_edit(const Glib::ustring&, const Glib::ustrin
 
     if (glyph->unicode == str) return; // no change
 
-    change_glyph_attribute(getDesktop(), *glyph, [=]() {
+    change_glyph_attribute(getDesktop(), *glyph, [=, this]{
         // XML Tree being directly used here while it shouldn't be.
         glyph->setAttribute("unicode", str);
 
@@ -1320,7 +1349,7 @@ Gtk::Box* SvgFontsDialog::glyphs_tab() {
     _glyph_renderer->set_font_size(size * 9 / 10);
     _glyph_renderer->set_cell_size(size * 3 / 2, size);
     _glyph_renderer->set_tree(&_GlyphsList);
-    _glyph_renderer->signal_clicked().connect([=](const GdkEvent*, const Glib::ustring& unicodes) {
+    _glyph_renderer->signal_clicked().connect([this](GdkEvent const *, Glib::ustring const &unicodes) {
         // set preview: show clicked glyph only
         _preview_entry.set_text(unicodes);
     });
@@ -1333,25 +1362,29 @@ Gtk::Box* SvgFontsDialog::glyphs_tab() {
     _GlyphsList.append_column(_("Unicode"), _GlyphsListColumns.UplusCode);
     _GlyphsList.append_column_numeric_editable(_("Advance"), _GlyphsListColumns.advance, "%.2f");
     _GlyphsList.set_visible(true);
-    _GlyphsList.signal_row_activated().connect([=](const Gtk::TreeModel::Path& path, Gtk::TreeViewColumn*) {
+    _GlyphsList.signal_row_activated().connect([this](Gtk::TreeModel::Path const &path, Gtk::TreeViewColumn*) {
         edit_glyph(get_selected_glyph());
     });
 
-    auto const glyph_from_path_button = Gtk::make_managed<Gtk::Button>(_("Get curves"));
-    glyph_from_path_button->set_always_show_image();
-    glyph_from_path_button->set_image_from_icon_name("glyph-copy-from");
+    auto const glyph_from_path_button = Gtk::make_managed<Gtk::Button>();
+    auto box = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL, 2);
+    box->add(*Gtk::make_managed<Gtk::Image>("glyph-copy-from", Gtk::ICON_SIZE_BUTTON));
+    box->add(*Gtk::make_managed<Gtk::Label>(_("Get curves")));
+    glyph_from_path_button->add(*box);
     glyph_from_path_button->set_tooltip_text(_("Get curves from selection to replace current glyph"));
     glyph_from_path_button->signal_clicked().connect(sigc::mem_fun(*this, &SvgFontsDialog::set_glyph_description_from_selected_path));
 
-    auto const edit = Gtk::make_managed<Gtk::Button>(_("Edit"));
-    edit->set_always_show_image();
-    edit->set_image_from_icon_name("edit");
+    auto const edit = Gtk::make_managed<Gtk::Button>();
+    box = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL, 2);
+    box->add(*Gtk::make_managed<Gtk::Image>("edit", Gtk::ICON_SIZE_BUTTON));
+    box->add(*Gtk::make_managed<Gtk::Label>(_("Edit")));
+    edit->add(*box);
     edit->set_tooltip_text(_("Switch to a layer with the same name as current glyph"));
-    edit->signal_clicked().connect([=]() { edit_glyph(get_selected_glyph()); });
+    edit->signal_clicked().connect([this]{ edit_glyph(get_selected_glyph()); });
 
     auto const sort_glyphs_button = Gtk::make_managed<Gtk::Button>(_("Sort glyphs"));
     sort_glyphs_button->set_tooltip_text(_("Sort glyphs in Unicode order"));
-    sort_glyphs_button->signal_clicked().connect([=]() { sort_glyphs(get_selected_spfont()); });
+    sort_glyphs_button->signal_clicked().connect([this]{ sort_glyphs(get_selected_spfont()); });
 
     auto const add_glyph_button = Gtk::make_managed<Gtk::Button>();
     add_glyph_button->set_image_from_icon_name("list-add");
@@ -1361,7 +1394,7 @@ Gtk::Box* SvgFontsDialog::glyphs_tab() {
     auto const remove_glyph_button = Gtk::make_managed<Gtk::Button>();
     remove_glyph_button->set_image_from_icon_name("list-remove");
     remove_glyph_button->set_tooltip_text(_("Delete current glyph"));
-    remove_glyph_button->signal_clicked().connect([=](){ remove_selected_glyph(); });
+    remove_glyph_button->signal_clicked().connect([this]{ remove_selected_glyph(); });
 
     auto const hb = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL, 4);
     UI::pack_start(*hb, *glyph_from_path_button, false, false);
@@ -1392,12 +1425,12 @@ Gtk::Box* SvgFontsDialog::glyphs_tab() {
     _glyphs_grid.pack_start(*_glyph_cell_renderer);
     _glyphs_grid.add_attribute(*_glyph_cell_renderer, "glyph", _GlyphsListColumns.unicode);
     _glyphs_grid.set_visible(true);
-    _glyphs_grid.signal_item_activated().connect([=](const Gtk::TreeModel::Path& path) {
+    _glyphs_grid.signal_item_activated().connect([this](Gtk::TreeModel::Path const &path) {
         edit_glyph(get_selected_glyph());
     });
 
     // keep selection in sync between the two views: list and grid
-    _glyphs_grid.signal_selection_changed().connect([=]() {
+    _glyphs_grid.signal_selection_changed().connect([this]{
         if (_glyphs_icon_scroller.get_visible()) {
             if (auto selected = get_selected_glyph_iter()) {
                 if (auto selection = _GlyphsList.get_selection()) {
@@ -1407,7 +1440,7 @@ Gtk::Box* SvgFontsDialog::glyphs_tab() {
         }
     });
     if (auto selection = _GlyphsList.get_selection()) {
-        selection->signal_changed().connect([=]() {
+        selection->signal_changed().connect([this]{
             if (_GlyphsListScroller.get_visible()) {
                 if (auto selected = get_selected_glyph_iter()) {
                     auto selected_item = _GlyphsListStore->get_path(selected);
@@ -1425,13 +1458,13 @@ Gtk::Box* SvgFontsDialog::glyphs_tab() {
     list->set_image_from_icon_name("glyph-list");
     list->set_tooltip_text(_("Glyph list view"));
     list->set_valign(Gtk::ALIGN_START);
-    list->signal_toggled().connect([=]() { set_glyphs_view_mode(true); });
+    list->signal_toggled().connect([this]{ set_glyphs_view_mode(true); });
     auto const grid = Gtk::make_managed<Gtk::RadioButton>(group);
     grid->set_mode(false);
     grid->set_image_from_icon_name("glyph-grid");
     grid->set_tooltip_text(_("Glyph grid view"));
     grid->set_valign(Gtk::ALIGN_START);
-    grid->signal_toggled().connect([=]() { set_glyphs_view_mode(false); });
+    grid->signal_toggled().connect([this] { set_glyphs_view_mode(false); });
     UI::pack_start(*hbox, *missing_glyph);
     UI::pack_end(*hbox, *grid, false, false);
     UI::pack_end(*hbox, *list, false, false);
@@ -1459,7 +1492,7 @@ Gtk::Box* SvgFontsDialog::glyphs_tab() {
     static_cast<Gtk::CellRendererText*>(_GlyphsList.get_column_cell_renderer(ColAdvance))->signal_edited().connect(
         sigc::mem_fun(*this, &SvgFontsDialog::glyph_advance_edit));
 
-    _glyphs_observer.signal_changed().connect([=]() { update_glyphs(); });
+    _glyphs_observer.signal_changed().connect([this]{ update_glyphs(); });
 
     return &glyphs_vbox;
 }
@@ -1499,7 +1532,7 @@ void SvgFontsDialog::add_kerning_pair() {
 
     // select newly added pair
     if (auto selection = _KerningPairsList.get_selection()) {
-        _KerningPairsListStore->foreach_iter([=](const Gtk::TreeModel::iterator& it) {
+        _KerningPairsListStore->foreach_iter([=, this](Gtk::TreeModel::iterator const &it) {
             if (it->get_value(_KerningPairsListColumns.spnode) == kerning_pair) {
                 selection->select(it);
                 return true; // stop
@@ -1512,22 +1545,18 @@ void SvgFontsDialog::add_kerning_pair() {
 }
 
 Gtk::Box* SvgFontsDialog::kerning_tab(){
-
-//Kerning Setup:
-
     auto const add_kernpair_button = Gtk::make_managed<Gtk::Button>(_("Add pair"));
     add_kernpair_button->signal_clicked().connect(sigc::mem_fun(*this, &SvgFontsDialog::add_kerning_pair));
 
     auto const remove_kernpair_button = Gtk::make_managed<Gtk::Button>(_("Remove pair"));
     remove_kernpair_button->signal_clicked().connect(sigc::mem_fun(*this, &SvgFontsDialog::remove_selected_kerning_pair));
 
-    auto const kerning_selector = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL);
-    UI::pack_start(*kerning_selector, *Gtk::make_managed<Gtk::Label>(_("Select glyphs:")), false, false);
-    UI::pack_start(*kerning_selector, first_glyph, false, false, MARGIN_SPACE / 2);
-    UI::pack_start(*kerning_selector, second_glyph, false, false, MARGIN_SPACE / 2);
-    UI::pack_start(*kerning_selector, *add_kernpair_button, false, false, MARGIN_SPACE / 2);
-    UI::pack_start(*kerning_selector, *remove_kernpair_button, false, false, MARGIN_SPACE / 2);
-
+    auto const kerning_selector = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL, MARGIN_SPACE);
+    kerning_selector->add(*Gtk::make_managed<Gtk::Label>(_("Select glyphs:")));
+    kerning_selector->add(first_glyph);
+    kerning_selector->add(second_glyph);
+    kerning_selector->add(*add_kernpair_button);
+    kerning_selector->add(*remove_kernpair_button);
 
     _KerningPairsList.set_model(_KerningPairsListStore);
     _KerningPairsList.append_column(_("First glyph"), _KerningPairsListColumns.first_glyph);
@@ -1657,7 +1686,7 @@ SvgFontsDialog::SvgFontsDialog()
     // connect to the cell renderer's edit signal; there's also model's row_changed, but it is less specific
     if (auto renderer = dynamic_cast<Gtk::CellRendererText*>(_FontsList.get_column_cell_renderer(0))) {
         // commit font names when user edits them
-        renderer->signal_edited().connect([=](const Glib::ustring& path, const Glib::ustring& new_name) {
+        renderer->signal_edited().connect([this](Glib::ustring const &path, Glib::ustring const &new_name) {
             if (auto it = _model->get_iter(path)) {
                 auto font = it->get_value(_columns.spfont);
                 font->setLabel(new_name.c_str());
@@ -1673,7 +1702,7 @@ SvgFontsDialog::SvgFontsDialog()
     tabs->append_page(*global_settings_tab(), _("_Global settings"), true);
     tabs->append_page(*glyphs_tab(), _("_Glyphs"), true);
     tabs->append_page(*kerning_tab(), _("_Kerning"), true);
-    tabs->signal_switch_page().connect([=](Gtk::Widget*, guint page) {
+    tabs->signal_switch_page().connect([this](Gtk::Widget*, guint page) {
         if (page == 2) {
             // update kerning glyph combos
             if (SPFont* font = get_selected_spfont()) {
@@ -1709,7 +1738,7 @@ void SvgFontsDialog::documentReplaced()
     _defs_observer_connection.disconnect();
     if (auto document = getDocument()) {
         _defs_observer.set(document->getDefs());
-        _defs_observer_connection = _defs_observer.signal_changed().connect([=](){ update_fonts(false); });
+        _defs_observer_connection = _defs_observer.signal_changed().connect([this]{ update_fonts(false); });
     }
     update_fonts(true);
 }
