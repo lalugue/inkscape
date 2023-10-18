@@ -29,12 +29,13 @@
 #include "node-toolbar.h"
 
 #include <glibmm/i18n.h>
-
+#include <giomm/simpleactiongroup.h>
 #include <gtkmm/adjustment.h>
 #include <gtkmm/box.h>
 #include <gtkmm/button.h>
 #include <gtkmm/image.h>
 #include <gtkmm/togglebutton.h>
+#include <sigc++/functors/mem_fun.h>
 
 #include "desktop.h"
 #include "document-undo.h"
@@ -122,21 +123,12 @@ NodeToolbar::NodeToolbar(SPDesktop *desktop)
     add(*_toolbar);
 
     // Attach the signals.
+
     get_widget<Gtk::Button>(_builder, "insert_node_btn")
         .signal_clicked()
         .connect(sigc::mem_fun(*this, &NodeToolbar::edit_add));
-    get_widget<Gtk::MenuItem>(_builder, "insert_min_x_item")
-        .signal_activate()
-        .connect(sigc::mem_fun(*this, &NodeToolbar::edit_add_min_x));
-    get_widget<Gtk::MenuItem>(_builder, "insert_max_x_item")
-        .signal_activate()
-        .connect(sigc::mem_fun(*this, &NodeToolbar::edit_add_max_x));
-    get_widget<Gtk::MenuItem>(_builder, "insert_min_y_item")
-        .signal_activate()
-        .connect(sigc::mem_fun(*this, &NodeToolbar::edit_add_min_y));
-    get_widget<Gtk::MenuItem>(_builder, "insert_max_y_item")
-        .signal_activate()
-        .connect(sigc::mem_fun(*this, &NodeToolbar::edit_add_max_y));
+
+    setup_insert_node_menu();
 
     get_widget<Gtk::Button>(_builder, "delete_btn")
         .signal_clicked()
@@ -222,6 +214,17 @@ void NodeToolbar::setup_derived_spin_button(Inkscape::UI::Widget::SpinButton &bt
 
     // TODO: Handle this in the toolbar class.
     btn.set_sensitive(false);
+}
+
+void NodeToolbar::setup_insert_node_menu()
+{
+    // insert_node_menu
+    auto const actions = Gio::SimpleActionGroup::create();
+    actions->add_action("insert-min-x", sigc::mem_fun(*this, &NodeToolbar::edit_add_min_x));
+    actions->add_action("insert-max-x", sigc::mem_fun(*this, &NodeToolbar::edit_add_max_x));
+    actions->add_action("insert-min-y", sigc::mem_fun(*this, &NodeToolbar::edit_add_min_y));
+    actions->add_action("insert-max-y", sigc::mem_fun(*this, &NodeToolbar::edit_add_max_y));
+    insert_action_group("node-toolbar", actions);
 }
 
 void NodeToolbar::value_changed(Geom::Dim2 d)

@@ -14,9 +14,7 @@
 #include <gtkmm/frame.h>
 #include <gtkmm/label.h>
 
-namespace Inkscape {
-namespace UI {
-namespace Widget {
+namespace Inkscape::UI::Widget {
 
 /**
  * Creates a Gnome HIG style indented frame with bold label
@@ -31,7 +29,7 @@ public:
      *
      * @param label     The frame text.
      */
-    Frame(Glib::ustring const &label = "", gboolean label_bold = TRUE);
+    Frame(Glib::ustring const &label = {}, bool label_bold = true);
 
     /**
      * Return the label widget
@@ -46,20 +44,19 @@ public:
     /**
      * Set the frame label text and if bold or not
      */
-    void set_label(const Glib::ustring &label, gboolean label_bold = TRUE);
+    void set_label(Glib::ustring const &label, bool label_bold = true);
 
     /**
      * Set the frame padding
      */
-    void set_padding (guint padding_top, guint padding_bottom, guint padding_left, guint padding_right);
+    void set_padding(unsigned padding_top, unsigned padding_bottom,
+                     unsigned padding_left, unsigned padding_right);
 
 protected:
-    Gtk::Label   _label;
+    Gtk::Label _label;
 };
 
-} // namespace Widget
-} // namespace UI
-} // namespace Inkscape
+} // namespace Inkscape::UI::Widget
 
 #endif // INKSCAPE_UI_WIDGET_FRAME_H
 

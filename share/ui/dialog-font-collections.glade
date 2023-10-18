@@ -76,7 +76,6 @@
                     <property name="can-focus">True</property>
                     <property name="receives-default">True</property>
                     <property name="tooltip-text" translatable="yes">Create new collection</property>
-                    <property name="always-show-image">True</property>
                   </object>
                 </child>
                 <child>
@@ -86,7 +85,6 @@
                     <property name="receives-default">True</property>
                     <property name="tooltip-text" translatable="yes">Edit selected collection</property>
                     <property name="margin-start">2</property>
-                    <property name="always-show-image">True</property>
                   </object>
                   <packing>
                     <property name="position">1</property>
@@ -99,7 +97,6 @@
                     <property name="receives-default">True</property>
                     <property name="tooltip-text" translatable="yes">Delete selected item</property>
                     <property name="margin-start">2</property>
-                    <property name="always-show-image">True</property>
                   </object>
                   <packing>
                     <property name="position">2</property>

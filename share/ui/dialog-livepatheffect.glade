@@ -25,7 +25,6 @@
       <object class="GtkBox" id="LPECurrentItem">
         <property name="name">LPECurrentItem</property>
         <property name="visible">True</property>
-        <property name="events"/>
         <property name="orientation">vertical</property>
       </object>
       <packing>

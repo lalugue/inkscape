@@ -37,9 +37,7 @@
 #include "ui/dialog-run.h"
 #include "ui/pack.h"
 
-namespace Inkscape {
-namespace UI {
-namespace Dialog {
+namespace Inkscape::UI::Dialog {
 
 namespace {
 
@@ -224,9 +222,7 @@ void checkFontSubstitutions(SPDocument *doc)
     }
 }
 
-} // namespace Dialog
-} // namespace UI
-} // namespace Inkscape
+} // namespace Inkscape::UI::Dialog
 
 /*
   Local Variables:

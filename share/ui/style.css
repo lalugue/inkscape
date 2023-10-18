@@ -1249,3 +1249,9 @@ button.icon-preview {
     min-height: 0;
     padding: 5px;
 }
+
+/* GtkFrames that formerly had :shadow-type == NONE */
+/* TODO: GTK4: border submode is removed */
+frame.flat > border {
+    border: none;
+ }

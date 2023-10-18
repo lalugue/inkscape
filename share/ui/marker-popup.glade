@@ -445,7 +445,7 @@
           <object class="GtkImage" id="current-img">
             <property name="visible">True</property>
             <property name="hexpand">True</property>
-            <property name="stock">gtk-missing-image</property>
+            <property name="icon-name">image-missing</property>
           </object>
         </child>
         <child>

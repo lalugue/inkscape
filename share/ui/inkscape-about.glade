@@ -26,8 +26,10 @@
                 <property name="width-request">750</property>
                 <property name="height-request">625</property>
                 <property name="visible">True</property>
-                <property name="shadow-type">none</property>
                 <property name="yalign">0</property>
+                <style>
+                  <class name="flat"/>
+                </style>
               </object>
             </child>
             <child type="tab">

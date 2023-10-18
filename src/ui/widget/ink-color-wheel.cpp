@@ -89,7 +89,7 @@ ColorWheel::ColorWheel()
 {
     set_name("ColorWheel");
     set(0.5, 0.5, 1.0, false);
-    set_shadow_type(Gtk::SHADOW_NONE);
+    get_style_context()->add_class("flat");
 
     _drawing_area->set_visible(true);
     _drawing_area->set_can_focus(true);

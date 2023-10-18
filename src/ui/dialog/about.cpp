@@ -129,13 +129,11 @@ void show_about()
             double width  = document->getWidth().value("px");
             double height = document->getHeight().value("px");
             viewer->setResize(width, height);
+            viewer->set_visible(true);
 
             auto splash_widget = &get_widget<Gtk::AspectFrame>(builder, "aspect-frame");
-            splash_widget->unset_label();
-            splash_widget->set_shadow_type(Gtk::SHADOW_NONE);
             splash_widget->property_ratio() = width / height;
             splash_widget->add(*viewer);
-            splash_widget->show_all();
         } else {
             g_error("Error loading about screen SVG: no document!");
         }

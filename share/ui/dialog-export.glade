@@ -379,7 +379,6 @@
                                     <property name="hexpand">True</property>
                                     <property name="width-chars">0</property>
                                     <property name="max-width-chars">0</property>
-                                    <property name="input-purpose">number</property>
                                   </object>
                                   <packing>
                                     <property name="left-attach">1</property>
@@ -486,7 +485,7 @@
                                         <property name="visible">True</property>
                                         <property name="halign">center</property>
                                         <property name="valign">center</property>
-                                        <property name="stock">gtk-missing-image</property>
+                                        <property name="icon-name">image-missing</property>
                                       </object>
                                     </child>
                                   </object>

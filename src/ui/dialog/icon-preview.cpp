@@ -146,7 +146,6 @@ IconPreviewPanel::IconPreviewPanel()
 
         if ( prefs->getBool("/iconpreview/showFrames", true) ) {
             auto const frame = Gtk::make_managed<Gtk::Frame>();
-            frame->set_shadow_type(Gtk::SHADOW_ETCHED_IN);
             frame->add(*images[i]);
             buttons[i]->add(*frame);
         } else {

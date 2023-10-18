@@ -1,7 +1,4 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-#ifndef SEEN_NODE_TOOLBAR_H
-#define SEEN_NODE_TOOLBAR_H
-
 /**
  * @file
  * Node aux toolbar
@@ -28,6 +25,9 @@
  *
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
+
+#ifndef SEEN_NODE_TOOLBAR_H
+#define SEEN_NODE_TOOLBAR_H
 
 #include <memory>
 #include <2geom/coord.h>
@@ -119,6 +119,7 @@ private:
     void on_pref_toggled(Gtk::ToggleButton *item, const Glib::ustring &path);
 
     void setup_derived_spin_button(Inkscape::UI::Widget::SpinButton &btn, Glib::ustring const &name);
+    void setup_insert_node_menu();
 };
 
 } // namespace Toolbar

@@ -45,6 +45,7 @@
 #include <gtkmm/popover.h>
 #include <gtkmm/scrolledwindow.h>
 #include <gtkmm/sizegroup.h>
+#include <gtkmm/stylecontext.h>
 #include <gtkmm/textview.h>
 #include <gtkmm/treeviewcolumn.h>
 #include <gtkmm/treeview.h>
@@ -393,7 +394,6 @@ public:
         _tree.set_headers_visible(false);
         _tree.set_visible(true);
         add(_tree);
-        set_shadow_type(Gtk::SHADOW_IN);
         if (tip_text) {
             _tree.set_tooltip_text(tip_text);
         }
@@ -539,7 +539,7 @@ public:
         _label.set_visible(true);
         _label.set_sensitive(false);
 
-        set_shadow_type(Gtk::SHADOW_NONE);
+        get_style_context()->add_class("flat");
     }
 
     void set_from_attribute(SPObject* o) override
@@ -1026,7 +1026,8 @@ public:
           _funcNode(nullptr),
           _box(Gtk::ORIENTATION_VERTICAL)
     {
-        set_shadow_type(Gtk::SHADOW_NONE);
+        get_style_context()->add_class("flat");
+
         add(_box);
         _box.add(_type);
         _box.reorder_child(_type, 0);

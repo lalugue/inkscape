@@ -27,9 +27,8 @@
  *   Abhishek Sharma
  */
 
-#ifndef SEEN_DIALOGS_ITEM_PROPERTIES_H
-#define SEEN_DIALOGS_ITEM_PROPERTIES_H
-
+#ifndef SEEN_INKSCAPE_UI_DIALOG_OBJECTPROPERTIES_H
+#define SEEN_INKSCAPE_UI_DIALOG_OBJECTPROPERTIES_H
 
 #include <gtkmm/checkbutton.h>
 #include <gtkmm/comboboxtext.h>
@@ -49,11 +48,9 @@ class SPItem;
 
 namespace Gtk {
 class Grid;
-}
+} // namespace Gtk
 
-namespace Inkscape {
-namespace UI {
-namespace Dialog {
+namespace Inkscape::UI::Dialog {
 
 /**
  * A dialog widget to show object properties.
@@ -125,11 +122,10 @@ private:
 
     void desktopReplaced() override;
 };
-}
-}
-}
 
-#endif
+} // namespace Inkscape::UI::Dialog
+
+#endif // SEEN_INKSCAPE_UI_DIALOG_OBJECTPROPERTIES_H
 
 /*
   Local Variables:

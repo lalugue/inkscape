@@ -99,7 +99,9 @@
           <object class="GtkFrame">
             <property name="visible">True</property>
             <property name="margin-bottom">4</property>
-            <property name="shadow-type">none</property>
+            <style>
+              <class name="flat"/>
+            </style>
             <child>
               <object class="GtkBox">
                 <property name="visible">True</property>
@@ -451,7 +453,8 @@
             <child type="label">
               <object class="GtkLabel">
                 <property name="visible">True</property>
-                <property name="ypad">2</property>
+                <property name="margin-top">2</property>
+                <property name="margin-bottom">2</property>
                 <property name="label" translatable="yes">Align</property>
                 <attributes>
                   <attribute name="weight" value="bold"/>
@@ -464,7 +467,9 @@
           <object class="GtkFrame">
             <property name="visible">True</property>
             <property name="margin-bottom">4</property>
-            <property name="shadow-type">none</property>
+            <style>
+              <class name="flat"/>
+            </style>
             <!-- n-columns=5 n-rows=2 -->
             <child>
               <object class="GtkGrid">
@@ -694,7 +699,8 @@
             <child type="label">
               <object class="GtkLabel">
                 <property name="visible">True</property>
-                <property name="ypad">2</property>
+                <property name="margin-top">2</property>
+                <property name="margin-bottom">2</property>
                 <property name="label" translatable="yes">Distribute</property>
                 <attributes>
                   <attribute name="weight" value="bold"/>
@@ -707,7 +713,9 @@
           <object class="GtkFrame">
             <property name="visible">True</property>
             <property name="margin-bottom">4</property>
-            <property name="shadow-type">none</property>
+            <style>
+              <class name="flat"/>
+            </style>
             <!-- n-columns=6 n-rows=1 -->
             <child>
               <object class="GtkGrid">
@@ -849,7 +857,8 @@
             <child type="label">
               <object class="GtkLabel">
                 <property name="visible">True</property>
-                <property name="ypad">2</property>
+                <property name="margin-top">2</property>
+                <property name="margin-bottom">2</property>
                 <property name="label" translatable="yes">Rearrange</property>
                 <attributes>
                   <attribute name="weight" value="bold"/>
@@ -863,7 +872,9 @@
     <child>
       <object class="GtkFrame">
         <property name="visible">True</property>
-        <property name="shadow-type">none</property>
+        <style>
+          <class name="flat"/>
+        </style>
         <child>
           <object class="GtkBox">
             <property name="visible">True</property>
@@ -879,7 +890,6 @@
               <object class="GtkSpinButton" id="remove-overlap-hgap">
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
-                <property name="input-purpose">number</property>
                 <property name="adjustment">RemoveOverlap_HGap</property>
                 <property name="numeric">True</property>
                 <property name="tooltip-text" translatable="yes">Minimum horizontal gap (in pixel units) between bounding boxes</property>
@@ -896,7 +906,6 @@
               <object class="GtkSpinButton" id="remove-overlap-vgap">
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
-                <property name="input-purpose">number</property>
                 <property name="adjustment">RemoveOverlap_VGap</property>
                 <property name="numeric">True</property>
                 <property name="tooltip-text" translatable="yes">Minimum vertical gap (in pixel units) between bounding boxes</property>
@@ -924,7 +933,8 @@
         <child type="label">
           <object class="GtkLabel">
             <property name="visible">True</property>
-            <property name="ypad">2</property>
+            <property name="margin-top">2</property>
+            <property name="margin-bottom">2</property>
             <property name="label" translatable="yes">Remove overlaps</property>
             <attributes>
               <attribute name="weight" value="bold"/>
@@ -944,7 +954,9 @@
           <object class="GtkFrame">
             <property name="visible">True</property>
             <property name="margin-bottom">4</property>
-            <property name="shadow-type">none</property>
+            <style>
+              <class name="flat"/>
+            </style>
             <child>
               <object class="GtkBox">
                 <property name="visible">True</property>
@@ -1026,7 +1038,8 @@
             <child type="label">
               <object class="GtkLabel">
                 <property name="visible">True</property>
-                <property name="ypad">2</property>
+                <property name="margin-top">2</property>
+                <property name="margin-bottom">2</property>
                 <property name="label" translatable="yes">Align Nodes</property>
                 <attributes>
                   <attribute name="weight" value="bold"/>
@@ -1038,7 +1051,9 @@
         <child>
           <object class="GtkFrame">
             <property name="visible">True</property>
-            <property name="shadow-type">none</property>
+            <style>
+              <class name="flat"/>
+            </style>
             <child>
               <object class="GtkBox">
                 <property name="visible">True</property>
@@ -1096,7 +1111,8 @@
             <child type="label">
               <object class="GtkLabel">
                 <property name="visible">True</property>
-                <property name="ypad">2</property>
+                <property name="margin-top">2</property>
+                <property name="margin-bottom">2</property>
                 <property name="label" translatable="yes">Distribute Nodes</property>
                 <attributes>
                   <attribute name="weight" value="bold"/>

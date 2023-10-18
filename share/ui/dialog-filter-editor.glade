@@ -196,7 +196,7 @@
         </child>
         <child>
           <object class="GtkImage" id="effect-image">
-            <property name="stock">gtk-missing-image</property>
+            <property name="icon-name">image-missing</property>
           </object>
           <packing>
             <property name="left-attach">0</property>

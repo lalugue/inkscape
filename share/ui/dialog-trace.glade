@@ -1165,7 +1165,9 @@
             <property name="margin-end">4</property>
             <property name="hexpand">True</property>
             <property name="vexpand">True</property>
-            <property name="shadow-type">none</property>
+            <style>
+              <class name="flat"/>
+            </style>
             <child>
               <object class="GtkBox">
                 <property name="visible">True</property>
@@ -1275,10 +1277,9 @@
                     <property name="halign">center</property>
                     <child>
                       <object class="GtkButton" id="B_RESET">
-                        <property name="label">gtk-revert-to-saved</property>
+                        <property name="label" translatable="yes">Revert</property>
                         <property name="can-focus">True</property>
                         <property name="receives-default">True</property>
-                        <property name="use-stock">True</property>
                       </object>
                       <packing>
                         <property name="expand">True</property>

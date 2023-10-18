@@ -10,17 +10,14 @@
 
 #include "frame.h"
 
+#include <gtkmm/stylecontext.h>
 
-// Inkscape::UI::Widget::Frame
+namespace Inkscape::UI::Widget {
 
-namespace Inkscape {
-namespace UI {
-namespace Widget {
-
-Frame::Frame(Glib::ustring const &label_text /*= ""*/, gboolean label_bold /*= TRUE*/ )
+Frame::Frame(Glib::ustring const &label_text /*= {}*/, bool label_bold /*= true*/ )
     : _label(label_text, Gtk::ALIGN_END, Gtk::ALIGN_CENTER, true)
 {
-    set_shadow_type(Gtk::SHADOW_NONE);
+    get_style_context()->add_class("flat");
 
     set_label_widget(_label);
     set_label(label_text, label_bold);
@@ -35,7 +32,7 @@ Frame::add(Widget& widget)
 }
 
 void
-Frame::set_label(const Glib::ustring &label_text, gboolean label_bold /*= TRUE*/)
+Frame::set_label(Glib::ustring const &label_text, bool label_bold /*= true*/)
 {
     if (label_bold) {
         _label.set_markup(Glib::ustring("<b>") + label_text + "</b>");
@@ -45,7 +42,8 @@ Frame::set_label(const Glib::ustring &label_text, gboolean label_bold /*= TRUE*/
 }
 
 void
-Frame::set_padding (guint padding_top, guint padding_bottom, guint padding_left, guint padding_right)
+Frame::set_padding(unsigned const padding_top, unsigned const padding_bottom,
+                   unsigned const padding_left, unsigned const padding_right)
 {
     auto child = get_child();
 
@@ -64,9 +62,7 @@ Frame::get_label_widget() const
     return &_label;
 }
 
-} // namespace Widget
-} // namespace UI
-} // namespace Inkscape
+} // namespace Inkscape::UI::Widget
 
 /*
   Local Variables:

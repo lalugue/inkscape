@@ -21,20 +21,13 @@
       </object>
     </child>
   </object>
-  <object class="GtkRadioButton" id="radio_button_group">
-    <property name="visible">True</property>
-    <property name="can-focus">True</property>
-    <property name="always-show-image">True</property>
-    <property name="active">True</property>
-    <property name="draw-indicator">False</property>
-  </object>
   <object class="GtkBox" id="booleans-toolbar">
     <property name="visible">True</property>
     <property name="halign">start</property>
     <property name="valign">center</property>
     <property name="spacing">3</property>
     <child>
-      <object class="GtkRadioButton">
+      <object class="GtkRadioButton" id="radio_button_group">
         <property name="visible">True</property>
         <property name="can-focus">True</property>
         <property name="tooltip-text" translatable="yes">Add to the Shape</property>
@@ -43,7 +36,6 @@
         <property name="relief">none</property>
         <property name="active">True</property>
         <property name="draw-indicator">False</property>
-        <property name="group">radio_button_group</property>
         <child>
           <object class="GtkImage" id="image1">
             <property name="visible">True</property>

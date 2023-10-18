@@ -44,6 +44,7 @@
 #include <gtkmm/revealer.h>
 #include <gtkmm/scale.h>
 #include <gtkmm/settings.h>
+#include <gtkmm/stylecontext.h>
 #include <gtkmm/togglebutton.h>
 #include <sigc++/adaptors/bind.h>
 #include <sigc++/functors/mem_fun.h>
@@ -380,8 +381,8 @@ InkscapePreferences::InkscapePreferences()
     title_frame->add(_page_title);
     UI::pack_start(*vbox_page, *title_frame, false, false);
     UI::pack_start(*vbox_page, _page_frame, true, true);
-    _page_frame.set_shadow_type(Gtk::SHADOW_NONE);
-    title_frame->set_shadow_type(Gtk::SHADOW_NONE);
+    _page_frame.get_style_context()->add_class("flat");
+    title_frame->get_style_context()->add_class("flat");
 
     initPageTools();
     initPageUI();

@@ -43,9 +43,7 @@
 #include "ui/pack.h"
 #include "widgets/sp-attribute-widget.h"
 
-namespace Inkscape {
-namespace UI {
-namespace Dialog {
+namespace Inkscape::UI::Dialog {
 
 ObjectProperties::ObjectProperties()
     : DialogBase("/dialogs/object/", "ObjectProperties")
@@ -168,7 +166,6 @@ void ObjectProperties::_init()
     _ft_description.property_margin().set_value(4);
     _ft_description.set_sensitive(FALSE);
     frame_desc->add(_ft_description);
-    _ft_description.set_shadow_type(Gtk::SHADOW_IN);
 
     _tv_description.set_wrap_mode(Gtk::WRAP_WORD);
     _tv_description.get_buffer()->set_text("");
@@ -565,9 +562,7 @@ void ObjectProperties::desktopReplaced()
     update_entries();
 }
 
-}
-}
-}
+} // namespace Inkscape::UI::Dialog
 
 /*
   Local Variables:

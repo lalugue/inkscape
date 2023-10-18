@@ -495,7 +495,7 @@ SVG element positions are expressed in user units.</property>
             <property name="halign">center</property>
             <property name="valign">center</property>
             <property name="margin-start">2</property>
-            <property name="stock">gtk-missing-image</property>
+            <property name="icon-name">image-missing</property>
             <style>
               <class name="viewbox"/>
             </style>

@@ -14,37 +14,26 @@
     <property name="step-increment">0.10</property>
     <property name="page-increment">5</property>
   </object>
-  <object class="GtkMenu" id="insert_node_menu">
-    <property name="visible">True</property>
-    <child>
-      <object class="GtkMenuItem" id="insert_min_x_item">
-        <property name="visible">True</property>
-        <property name="tooltip-text" translatable="yes">Insert new nodes at min X into selected segments</property>
-        <property name="label" translatable="yes">Insert node at min X</property>
-      </object>
-    </child>
-    <child>
-      <object class="GtkMenuItem" id="insert_max_x_item">
-        <property name="visible">True</property>
-        <property name="tooltip-text" translatable="yes">Insert new nodes at max X into selected segments</property>
-        <property name="label" translatable="yes">Insert node at max X</property>
-      </object>
-    </child>
-    <child>
-      <object class="GtkMenuItem" id="insert_min_y_item">
-        <property name="visible">True</property>
-        <property name="tooltip-text" translatable="yes">Insert new nodes at min Y into selected segments</property>
-        <property name="label" translatable="yes">Insert node at min Y</property>
-      </object>
-    </child>
-    <child>
-      <object class="GtkMenuItem" id="insert_max_y_item">
-        <property name="visible">True</property>
-        <property name="tooltip-text" translatable="yes">Insert new nodes at max Y into selected segments</property>
-        <property name="label" translatable="yes">Insert node at max Y</property>
-      </object>
-    </child>
-  </object>
+  <menu id="insert_node_menu">
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">Insert node at min X</attribute>
+        <attribute name="action">node-toolbar.insert-min-x</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Insert node at max X</attribute>
+        <attribute name="action">node-toolbar.insert-max-x</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Insert node at min Y</attribute>
+        <attribute name="action">node-toolbar.insert-min-y</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Insert node at max Y</attribute>
+        <attribute name="action">node-toolbar.insert-max-y</attribute>
+      </item>
+    </section>
+  </menu>
   <object class="GtkPopover" id="popover1">
     <child>
       <object class="GtkBox" id="popover_box1">
@@ -90,7 +79,7 @@
         <property name="focus-on-click">False</property>
         <property name="receives-default">True</property>
         <property name="relief">none</property>
-        <property name="popup">insert_node_menu</property>
+        <property name="menu-model">insert_node_menu</property>
         <child>
           <object class="GtkImage" id="image18">
             <property name="visible">True</property>

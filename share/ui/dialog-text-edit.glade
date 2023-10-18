@@ -15,7 +15,9 @@
           <object class="GtkFrame" id="frame">
             <property name="visible">True</property>
             <property name="margin-top">4</property>
-            <property name="shadow-type">none</property>
+            <style>
+              <class name="flat"/>
+            </style>
             <child>
               <object class="GtkListBox" id="collections_list">
                 <property name="visible">True</property>
