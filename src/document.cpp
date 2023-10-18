@@ -755,7 +755,10 @@ std::unique_ptr<SPDocument const> SPDocument::doRef() const
 /// guaranteed not to return nullptr
 Inkscape::Util::Unit const* SPDocument::getDisplayUnit()
 {
-    return getNamedView()->getDisplayUnit();
+    if (auto nv = getNamedView()) {
+        return nv->getDisplayUnit();
+    }
+    return unit_table.getUnit("px");
 }
 
 /// Sets document scale (by changing viewBox)
