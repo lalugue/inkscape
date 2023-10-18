@@ -62,7 +62,6 @@ private:
     BoolParam hide_knots;
     BoolParam apply_no_radius;
     BoolParam apply_with_radius;
-    bool _degenerate_hide;
     PathVectorNodeSatellites *_pathvector_nodesatellites;
     Geom::PathVector _hp;
     Glib::ustring previous_unit;

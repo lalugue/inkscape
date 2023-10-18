@@ -234,7 +234,7 @@ LPEPowerStroke::doOnApply(SPLPEItem const* lpeitem)
             } else {
                 size_t current_pos = 0;
                 for (auto path : pathv) {
-                    size_t psize = pathv_real_size(path);
+                    size_t psize = count_pathvector_curves(path);
                     if (!path.closed()) {
                         points.emplace_back(0.2 + current_pos, width);
                     }
@@ -623,7 +623,7 @@ LPEPowerStroke::doEffect_path (Geom::PathVector const & path_in)
     offset_points.set_pwd2(pwd2_in , n);
     size_t pathindex = 0;
     for (auto path : pathv) {
-        size_t psize = pathv_real_size(path);
+        size_t psize = count_pathvector_curves(path);
         path_init += psize;
         if (!offset_points.unplaced && 
             knotdragging && 

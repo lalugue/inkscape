@@ -79,8 +79,9 @@ void NodeSatelliteArrayParam::reloadKnots()
             for (auto &_shape_editor : nt->_shape_editors) {
                 Inkscape::UI::ShapeEditor *shape_editor = _shape_editor.second.get();
                 if (shape_editor && shape_editor->lpeknotholder) {
-                    SPItem *item = shape_editor->knotholder->item;
-                    shape_editor->unset_item(true);
+                    SPItem *item = shape_editor->lpeknotholder->item;
+                    delete shape_editor->lpeknotholder;
+                    shape_editor->lpeknotholder = nullptr;
                     shape_editor->set_item(item);
                 }
             }
@@ -415,10 +416,15 @@ Geom::Point FilletChamferKnotHolderEntity::knot_get() const
     if (previous_index < 0 || subsatelite_index > pathv[satelite_index].size_open()) {
         return Geom::Point(Geom::infinity(), Geom::infinity());
     }
+    auto const &ssat_path = pathv[satelite_index][subsatelite_index];
+    auto const &prev_path = pathv[satelite_index][previous_index   ];
     Geom::Curve const &curve_in = pathv[satelite_index][previous_index];
-
-
-    double s = nodesatellite.arcDistance(pathv[satelite_index][subsatelite_index]);
+    double s = nodesatellite.arcDistance(ssat_path);
+    if (Geom::are_near(ssat_path.length(),0, 0.5) || 
+        Geom::are_near(prev_path.length(), 0, 0.5)) 
+    {
+        return Geom::Point(Geom::infinity(), Geom::infinity());
+    }
     double t = nodesatellite.time(s, true, curve_in);
     if (t > 1) {
         t = 1;
@@ -445,9 +451,9 @@ Geom::Point FilletChamferKnotHolderEntity::knot_get() const
     }
     double angle = ray.angle();
     Geom::Point other = tmp_point;
-    tmp_point = nodesatellite.getPosition(pathv[satelite_index][subsatelite_index]);
+    tmp_point = nodesatellite.getPosition(ssat_path);
     segment.clear();
-    segment.append(pathv[satelite_index][subsatelite_index]);
+    segment.append(ssat_path);
     segment = segment.portion(Geom::nearest_time(tmp_point,segment), 1);
     segment *= itemtransform;
     Geom::CubicBezier const *cubic2 = dynamic_cast<Geom::CubicBezier const *>(&segment[0]);
@@ -460,7 +466,7 @@ Geom::Point FilletChamferKnotHolderEntity::knot_get() const
     
     if (!is_mirror) {
         angle = ray2.angle() + Geom::rad_from_deg(180);
-        contracted = pathv[satelite_index][subsatelite_index].pointAt(0.1);
+        contracted = ssat_path.pointAt(0.1);
     }
     if (is_mirror) {
         tmp_point = other;
@@ -487,6 +493,13 @@ Geom::Point FilletChamferKnotHolderEntity::knot_get() const
             knot->setShape(CANVAS_ITEM_CTRL_SHAPE_CIRCLE);
             knot->setSize(11);
         }
+    }
+    
+    if (_pparam->_current_zoom && 
+        (Geom::are_near(ssat_path.pointAt(0), ssat_path.pointAt(0.1), 0.5 / _pparam->_current_zoom) ||
+         Geom::are_near(prev_path.pointAt(0), prev_path.pointAt(0.1), 0.5 / _pparam->_current_zoom)))
+    {
+        knot->hide();
     }
     knot->updateCtrl();
     return tmp_point;
