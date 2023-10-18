@@ -137,6 +137,7 @@ private:
     Glib::ustring _item_type;
     bool _has_clip = false;
     bool _has_mask = false;
+    bool _experimental = false;
 };
 
 } // namespace Inkscape::UI::Dialog

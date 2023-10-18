@@ -105,7 +105,16 @@ static void sp_remove_fav(Glib::ustring effect)
     prefs->setString(favs_path, favlist);
 }
 
-
+bool sp_set_experimental(bool &_experimental) 
+{
+    Inkscape::Preferences *prefs = Inkscape::Preferences::get();
+    bool experimental = prefs->getBool("/dialogs/livepatheffect/showexperimental", false);
+    if (experimental != _experimental) {
+        _experimental = experimental;
+        return true;
+    }
+    return false;
+}
 /*####################
  * Callback functions
  */
@@ -162,7 +171,7 @@ LivePathEffectEditor::LivePathEffectEditor()
     _lpes_popup.on_button_press().connect([this]{ setMenu(); });
     _lpes_popup.on_focus().connect([this]{ setMenu(); return true; });
     UI::pack_start(_LPEAddContainer, _lpes_popup);
-
+    sp_set_experimental(_experimental);
     show_all();
 }
 
@@ -384,16 +393,13 @@ LivePathEffectEditor::setMenu()
         item_type = "shape";
     }
 
-    if (!(_item_type != item_type || has_clip != _has_clip || has_mask != _has_mask)) {
+    if (!(sp_set_experimental(_experimental) || _item_type != item_type || has_clip != _has_clip || has_mask != _has_mask)) {
         return;
     }
-
     _item_type = item_type;
     _has_clip = has_clip;
     _has_mask = has_mask;
 
-    Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-    bool experimental = prefs->getBool("/dialogs/livepatheffect/showexperimental", false);
     bool symbolic = Inkscape::Preferences::get()->getBool("/theme/symbolicIcons", true);
 
     auto lpes = std::vector<LPEMetadata>{};
@@ -408,7 +414,7 @@ LivePathEffectEditor::setMenu()
             category = Inkscape::LivePathEffect::LPECategory::Favorites;
         }
 
-        if (!experimental && category == Inkscape::LivePathEffect::LPECategory::Experimental) {
+        if (!_experimental && category == Inkscape::LivePathEffect::LPECategory::Experimental) {
             continue;
         }
 
