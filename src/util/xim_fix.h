@@ -11,17 +11,16 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#ifndef SEEN_INKSCAPE_UTIL_MISC_H
-#define SEEN_INKSCAPE_UTIL_MISC_H
+#ifndef SEEN_INKSCAPE_UTIL_XIM_FIX_H
+#define SEEN_INKSCAPE_UTIL_XIM_FIX_H
 
-namespace Inkscape {
-namespace Util {
+namespace Inkscape::Util {
 
 /**
  * @brief
  * Removes the XIM input method module from the module list. This is
- * useful for working around broken XIM input method module behavior
- * which is known to cause graphical artifacts. Only needed for GTK3.
+ * useful for working around broken XIM input method module behaviour
+ * which is known to cause graphical artifacts.
  *
  * See https://gitlab.com/inkscape/inkscape/-/issues/3664
  *
@@ -31,15 +30,14 @@ namespace Util {
  *                   or the "gtk-im-module" property of GtkSettings, for example.
  *                   The returned string may be empty.
  *
- * returns true if xim was stripped out, false if no change was applied
+ * @return true if xim was stripped out, false if no change was applied
  */
-bool
-workaround_xim_module(std::string& gtk_im_modules);
+bool workaround_xim_module(std::string &gtk_im_modules);
 
-} // namespace Util
-} // namespace Inkscape
+} // namespace Inkscape::Util
 
-#endif // SEEN_INKSCAPE_UTIL_MISC_H
+#endif // SEEN_INKSCAPE_UTIL_XIM_FIX_H
+
 /*
   Local Variables:
   mode:c++

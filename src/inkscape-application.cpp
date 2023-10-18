@@ -52,7 +52,9 @@
 #include <cairo.h>
 #endif
 
+#include <gdk/gdk.h> // GDK_WINDOWING_X11
 #include <glibmm/i18n.h>  // Internationalization
+#include <gtkmm/settings.h>
 
 #ifdef HAVE_CONFIG_H
 # include "config.h"      // Defines ENABLE_NLS
@@ -1037,21 +1039,22 @@ InkscapeApplication::process_document(SPDocument* document, std::string output_p
 void
 InkscapeApplication::on_startup()
 {
-#if !defined(_WIN32) && GTK_MAJOR_VERSION == 3
-    // the XIM input method can cause graphical artifacts
-    Glib::RefPtr<Gtk::Settings> settings = Gtk::Settings::get_default();
-    std::string gtk_im_module = settings->property_gtk_im_module().get_value();
-    if (Inkscape::Util::workaround_xim_module(gtk_im_module)) {
-        std::cerr << "Message: XIM input method is not supported" << std::endl;
+#if defined(GDK_WINDOWING_X11)
+    if (_with_gui) {
+        // The XIM input method can cause graphical artifacts.
+        auto const settings = Gtk::Settings::get_default();
+        auto gtk_im_module = settings->property_gtk_im_module().get_value().raw();
 
-        if (!gtk_im_module.empty()) {
-            std::cerr << "Setting GtkSettings::gtk-im-module as `"
-                      << gtk_im_module << "'" << std::endl;
-            settings->property_gtk_im_module().set_value(gtk_im_module);
-        }
-        else {
-            std::cerr << "Setting GtkSettings::gtk-im-module as NULL" << std::endl;
-            g_object_set(settings->gobj(), "gtk-im-module", nullptr, nullptr);
+        if (Inkscape::Util::workaround_xim_module(gtk_im_module)) {
+            std::cerr << "Message: XIM input method is not supported" << std::endl;
+
+            if (!gtk_im_module.empty()) {
+                std::cerr << "Setting GtkSettings::gtk-im-module to '" << gtk_im_module << "'" << std::endl;
+                settings->property_gtk_im_module().set_value(gtk_im_module);
+            } else {
+                std::cerr << "Setting GtkSettings::gtk-im-module to NULL" << std::endl;
+                g_object_set(settings->gobj(), "gtk-im-module", nullptr, nullptr);
+            }
         }
     }
 #endif
