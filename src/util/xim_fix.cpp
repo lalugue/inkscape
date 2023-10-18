@@ -19,44 +19,40 @@
 
 #include <boost/algorithm/string/split.hpp>
 
-namespace Inkscape {
-namespace Util {
+namespace Inkscape::Util {
 
-bool
-workaround_xim_module(std::string& gtk_im_module)
+bool workaround_xim_module(std::string &gtk_im_module)
 {
-    if (gtk_im_module.empty())
+    if (gtk_im_module.empty()) {
         return false;
-
-    std::vector<std::string> modules;
-    boost::split(modules, gtk_im_module, [](char c){ return c == ':'; });
-
-    if (modules.empty())
-        return false;
-
-    auto iter = std::remove(modules.begin(), modules.end(), "xim");
-    if (iter != modules.end()) {
-        modules.erase(iter, modules.end());
-
-        gtk_im_module.clear();
-        if (!modules.empty()) {
-            for (size_t i = 0; i + 1 < modules.size(); ++i)
-                gtk_im_module += modules[i] + ':';
-            gtk_im_module += modules.back();
-        }
-
-        return true;
     }
 
-    return false;
+    std::vector<std::string> modules;
+    boost::split(modules, gtk_im_module, [] (char c) { return c == ':'; });
 
-#   if GTK_MAJOR_VERSION > 3
-#       message "workaround_xim_module is not necessary for GTK > 3"
-#   endif
+    if (modules.empty()) {
+        return false;
+    }
+
+    auto iter = std::remove(modules.begin(), modules.end(), "xim");
+    if (iter == modules.end()) {
+        return false;
+    }
+
+    modules.erase(iter, modules.end());
+
+    gtk_im_module.clear();
+    if (!modules.empty()) {
+        for (size_t i = 0; i + 1 < modules.size(); ++i) {
+            gtk_im_module += modules[i] + ':';
+        }
+        gtk_im_module += modules.back();
+    }
+
+    return true;
 }
 
-} // namespace Util
-} // namespace Inkscape
+} // namespace Inkscape::Util
 
 /*
   Local Variables:

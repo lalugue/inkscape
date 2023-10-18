@@ -10,6 +10,7 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#include <gdk/gdk.h> // GDK_WINDOWING_X11
 #include <glibmm/miscutils.h>
 
 #ifdef _WIN32
@@ -204,26 +205,23 @@ int main(int argc, char *argv[])
     _setmode(_fileno(stdout), _O_BINARY); // binary mode seems required for this to work properly
 #endif
 
-#if !defined(_WIN32) && GTK_MAJOR_VERSION == 3
-    // the XIM input method can cause graphical artifacts
-    constexpr auto GTK_IM_MODULE = "GTK_IM_MODULE";
-    auto gtk_im_module = Glib::getenv(GTK_IM_MODULE);
+#if defined(GDK_WINDOWING_X11)
+    // The XIM input method can cause graphical artifacts.
+    constexpr auto varname = "GTK_IM_MODULE";
+    auto gtk_im_module = Glib::getenv(varname);
 
     if (Inkscape::Util::workaround_xim_module(gtk_im_module)) {
         std::cerr << "Message: XIM input method is not supported" << std::endl;
 
         if (!gtk_im_module.empty()) {
             /* TODO: we're outputting data in an environment variable to the terminal.
-             * is ther a way to escape the string so that we send only a) prinatble
+             * Is there a way to escape the string so that we send only a) printable
              * characters b) no VT escape sequences? */
-            std::cerr << "Setting the " << GTK_IM_MODULE << " environment variable as `"
-                      << gtk_im_module << "'" << std::endl;
-            constexpr bool overwrite = true;
-            Glib::setenv(GTK_IM_MODULE, gtk_im_module, overwrite);
-        }
-        else {
-            std::cerr << "Unsetting the " << GTK_IM_MODULE << " environment variable" << std::endl;
-            Glib::unsetenv(GTK_IM_MODULE);
+            std::cerr << "Setting the " << varname << " environment variable to '" << gtk_im_module << "'" << std::endl;
+            Glib::setenv(varname, gtk_im_module);
+        } else {
+            std::cerr << "Unsetting the " << varname << " environment variable" << std::endl;
+            Glib::unsetenv(varname);
         }
     }
 #endif
