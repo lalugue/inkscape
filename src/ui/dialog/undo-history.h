@@ -13,6 +13,8 @@
 #ifndef INKSCAPE_UI_DIALOG_UNDO_HISTORY_H
 #define INKSCAPE_UI_DIALOG_UNDO_HISTORY_H
 
+#include <string>
+#include <utility>
 #include <glibmm/property.h>
 #include <glibmm/propertyproxy.h>
 #include <glibmm/refptr.h>
@@ -36,11 +38,21 @@ public:
     };
 
     CellRendererInt(const Filter &filter = no_filter) :
-        Glib::ObjectBase(typeid(CellRendererText)),
+        Glib::ObjectBase{"CellRendererInt"},
         Gtk::CellRendererText(),
         _property_number(*this, "number", 0),
         _filter (filter)
-    { }
+    {
+        auto const set_text = [this]{
+            Glib::ustring text;
+            if (auto const value = _property_number.get_value(); _filter(value)) {
+                text = std::to_string(value);
+            }
+            property_text().set_value(std::move(text));
+        };
+        set_text();
+        property_number().signal_changed().connect(set_text);
+    }
 
     Glib::PropertyProxy<int>
     property_number() { return _property_number.get_proxy(); }
@@ -48,12 +60,6 @@ public:
     static const Filter &no_filter;
 
 private:
-    void render_vfunc(const Cairo::RefPtr<Cairo::Context>& cr,
-                      Gtk::Widget &widget,
-                      const Gdk::Rectangle &background_area,
-                      const Gdk::Rectangle &cell_area,
-                      Gtk::CellRendererState flags) override;
-
     Glib::Property<int> _property_number;
     const Filter &_filter;
 

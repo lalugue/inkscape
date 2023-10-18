@@ -14,7 +14,6 @@
 
 #include "undo-history.h"
 
-#include <string>
 #include <gtkmm/cellrendererpixbuf.h>
 
 #include "actions/actions-tools.h"
@@ -25,20 +24,6 @@
 #include "util/signal-blocker.h"
 
 namespace Inkscape::UI::Dialog {
-
-/* Rendering functions for custom cell renderers */
-void CellRendererInt::render_vfunc(const Cairo::RefPtr<Cairo::Context>& cr,
-                                   Gtk::Widget &widget,
-                                   const Gdk::Rectangle &background_area,
-                                   const Gdk::Rectangle &cell_area,
-                                   Gtk::CellRendererState flags)
-{
-    if( _filter(_property_number) ) {
-        property_text().set_value(std::to_string(_property_number.get_value()));
-        Gtk::CellRendererText::render_vfunc(cr, widget, background_area,
-                                            cell_area, flags);
-    }
-}
 
 const CellRendererInt::Filter &CellRendererInt::no_filter = CellRendererInt::NoFilter();
 
@@ -164,104 +149,100 @@ void *UndoHistory::_handleEventLogDestroy()
 void
 UndoHistory::_onListSelectionChange()
 {
-
-    EventLog::const_iterator selected = _event_list_selection->get_selected();
+    auto selected = _event_list_selection->get_selected();
 
     /* If no event is selected in the view, find the right one and select it. This happens whenever
      * a branch we're currently in is collapsed.
      */
     if (!selected) {
-        EventLog::iterator curr_event = _event_log->getCurrEvent();
+        auto curr_event = _event_log->getCurrEvent();
+        auto const curr_event_parent = curr_event->parent();
 
-        if (curr_event->parent()) {
-
-            EventLog::iterator curr_event_parent = curr_event->parent();
-            EventLog::iterator last = curr_event_parent->children().end();
-
+        if (curr_event_parent) {
             _event_log->blockNotifications();
-            for ( --last ; curr_event != last ; ++curr_event ) {
+
+            auto const last = --curr_event_parent->children().end();
+            for (; curr_event != last ; ++curr_event ) {
                 DocumentUndo::redo(getDocument());
             }
+
             _event_log->blockNotifications(false);
 
             _event_log->setCurrEvent(curr_event);
             _event_list_selection->select(curr_event_parent);
-
         } else {  // this should not happen
             _event_list_selection->select(curr_event);
         }
 
-    } else {
+        return;
+    }
 
-        EventLog::const_iterator last_selected = _event_log->getCurrEvent();
+    /* Selecting a collapsed parent event is equal to selecting the last child
+     * of that parent's branch.
+     */
+    if ( !selected->children().empty() &&
+         !_event_list_view.row_expanded(_event_list_store->get_path(selected)) )
+    {
+        selected = selected->children().end();
+        --selected;
+    }
 
-        /* Selecting a collapsed parent event is equal to selecting the last child
-         * of that parent's branch.
-         */
+    // An event before the current one has been selected. Undo to the selected event.
+    auto last_selected = _event_log->getCurrEvent();
+    if ( _event_list_store->get_path(selected) <
+         _event_list_store->get_path(last_selected) )
+    {
+        _event_log->blockNotifications();
 
-        if ( !selected->children().empty() &&
-             !_event_list_view.row_expanded(_event_list_store->get_path(selected)) )
-        {
-            selected = selected->children().end();
-            --selected;
-        }
+        while ( selected != last_selected ) {
+            DocumentUndo::undo(getDocument());
 
-        // An event before the current one has been selected. Undo to the selected event.
-        if ( _event_list_store->get_path(selected) <
-             _event_list_store->get_path(last_selected) )
-        {
-            _event_log->blockNotifications();
-
-            while ( selected != last_selected ) {
-
-                DocumentUndo::undo(getDocument());
-
-                if ( last_selected->parent() &&
-                     last_selected == last_selected->parent()->children().begin() )
-                {
-                    last_selected = last_selected->parent();
-                    _event_log->setCurrEventParent((EventLog::iterator)nullptr);
-                } else {
-                    --last_selected;
-                    if ( !last_selected->children().empty() ) {
-                        _event_log->setCurrEventParent(last_selected);
-                        last_selected = last_selected->children().end();
-                        --last_selected;
-                    }
-                }
-            }
-            _event_log->blockNotifications(false);
-            _event_log->updateUndoVerbs();
-
-        } else { // An event after the current one has been selected. Redo to the selected event.
-
-            _event_log->blockNotifications();
-
-            while (last_selected && selected != last_selected ) {
-
-                DocumentUndo::redo(getDocument());
-
+            if ( last_selected->parent() &&
+                 last_selected == last_selected->parent()->children().begin() )
+            {
+                last_selected = last_selected->parent();
+                _event_log->setCurrEventParent({});
+            } else {
+                --last_selected;
                 if ( !last_selected->children().empty() ) {
                     _event_log->setCurrEventParent(last_selected);
-                    last_selected = last_selected->children().begin();
-                } else {
-                    ++last_selected;
-                    if ( last_selected->parent() &&
-                         last_selected == last_selected->parent()->children().end() )
-                    {
-                        last_selected = last_selected->parent();
-                        ++last_selected;
-                        _event_log->setCurrEventParent((EventLog::iterator)nullptr);
-                    }
+                    last_selected = last_selected->children().end();
+                    --last_selected;
                 }
             }
-            _event_log->blockNotifications(false);
-
         }
 
-        _event_log->setCurrEvent(selected);
+        _event_log->blockNotifications(false);
+
         _event_log->updateUndoVerbs();
+    } else { // An event after the current one has been selected. Redo to the selected event.
+        _event_log->blockNotifications();
+
+        while (last_selected && selected != last_selected ) {
+            DocumentUndo::redo(getDocument());
+
+            if ( !last_selected->children().empty() ) {
+                _event_log->setCurrEventParent(last_selected);
+                last_selected = last_selected->children().begin();
+            } else {
+                ++last_selected;
+
+                if ( last_selected->parent() &&
+                     last_selected == last_selected->parent()->children().end() )
+                {
+                    last_selected = last_selected->parent();
+                    ++last_selected;
+                    _event_log->setCurrEventParent({});
+                }
+            }
+        }
+
+        _event_log->blockNotifications(false);
+
     }
+
+    _event_log->setCurrEvent(selected);
+    _event_log->updateUndoVerbs();
 }
 
 void
@@ -276,17 +257,18 @@ void
 UndoHistory::_onCollapseEvent(const Gtk::TreeModel::iterator &iter, const Gtk::TreeModel::Path &/*path*/)
 {
     // Collapsing a branch we're currently in is equal to stepping to the last event in that branch
-    if ( iter == _event_log->getCurrEvent() ) {
-        EventLog::const_iterator curr_event_parent = _event_log->getCurrEvent();
-        EventLog::const_iterator curr_event = curr_event_parent->children().begin();
-        EventLog::const_iterator last = curr_event_parent->children().end();
-
+    auto const curr_event_parent = _event_log->getCurrEvent();
+    if (iter == curr_event_parent) {
         _event_log->blockNotifications();
+
         DocumentUndo::redo(getDocument());
 
-        for ( --last ; curr_event != last ; ++curr_event ) {
+        auto curr_event = curr_event_parent->children().begin();
+        auto const last = --curr_event_parent->children().end();
+        for (; curr_event != last ; ++curr_event) {
             DocumentUndo::redo(getDocument());
         }
+
         _event_log->blockNotifications(false);
 
         _event_log->setCurrEvent(curr_event);
