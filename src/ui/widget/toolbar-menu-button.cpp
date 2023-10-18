@@ -19,8 +19,9 @@ ToolbarMenuButton::ToolbarMenuButton(BaseObjectType *cobject, Glib::RefPtr<Gtk::
 {
     // Workaround to hide the widget by default and when there are no children in the popover.
     set_visible(false);
-    signal_show().connect([=] {
-        if (_popover_box->get_children().empty()) {
+    signal_show().connect([this]{
+        g_assert(_popover_box);
+        if (_popover_box && _popover_box->get_children().empty()) {
             set_visible(false);
         }
     }, false);
@@ -29,7 +30,7 @@ ToolbarMenuButton::ToolbarMenuButton(BaseObjectType *cobject, Glib::RefPtr<Gtk::
 void ToolbarMenuButton::init(int priority, std::string tag, Gtk::Box *popover_box, std::vector<Gtk::Widget *> &children)
 {
     _priority = priority;
-    _tag = tag;
+    _tag = std::move(tag);
     _popover_box = popover_box;
 
     // Automatically fetch all the children having "tag" as their style class.
@@ -38,7 +39,6 @@ void ToolbarMenuButton::init(int priority, std::string tag, Gtk::Box *popover_bo
     // be used to reinsert the child in the right place when the toolbar is
     // large enough.
     int pos = 0;
-
     for (auto child : children) {
         auto style_context = child->get_style_context();
         bool is_child = style_context->has_class(tag);
@@ -53,6 +53,9 @@ void ToolbarMenuButton::init(int priority, std::string tag, Gtk::Box *popover_bo
 
 static int minw(Gtk::Widget const *widget)
 {
+    g_assert(widget);
+    if (!widget) return 0;
+
     int min = 0;
     int nat = 0;
     widget->get_preferred_width(min, nat);

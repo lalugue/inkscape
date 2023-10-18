@@ -12,8 +12,10 @@
 #define INKSCAPE_UI_WIDGET_TOOLBAR_MENU_BUTTON_H
 
 #include <string>
+#include <utility>
 #include <vector>
 
+#include <glibmm/refptr.h>
 #include <gtkmm/menubutton.h>
 
 namespace Gtk {
