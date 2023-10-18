@@ -180,24 +180,22 @@ MeshToolbar::MeshToolbar(SPDesktop *desktop)
     // Configure mode buttons
     int mode = prefs->getInt("/tools/mesh/mesh_geometry", SP_MESH_GEOMETRY_NORMAL);
 
-    for_each_child(get_widget<Gtk::Box>(_builder, "new_type_buttons_box"), [=](Gtk::Widget &item) {
-        static int btn_index = 0;
+    int btn_index = 0;
+    for_each_child(get_widget<Gtk::Box>(_builder, "new_type_buttons_box"), [&](Gtk::Widget &item){
         auto &btn = dynamic_cast<Gtk::RadioButton &>(item);
         btn.set_active(btn_index == mode);
         btn.signal_clicked().connect(sigc::bind(sigc::mem_fun(*this, &MeshToolbar::new_geometry_changed), btn_index++));
-
         return ForEachResult::_continue;
     });
 
     mode = prefs->getInt("/tools/mesh/newfillorstroke");
 
-    for_each_child(get_widget<Gtk::Box>(_builder, "new_fillstroke_buttons_box"), [=](Gtk::Widget &item) {
-        static int btn_index = 0;
+    btn_index = 0;
+    for_each_child(get_widget<Gtk::Box>(_builder, "new_fillstroke_buttons_box"), [&](Gtk::Widget &item){
         auto &btn = dynamic_cast<Gtk::RadioButton &>(item);
         btn.set_active(btn_index == mode);
         btn.signal_clicked().connect(
             sigc::bind(sigc::mem_fun(*this, &MeshToolbar::new_fillstroke_changed), btn_index++));
-
         return ForEachResult::_continue;
     });
 

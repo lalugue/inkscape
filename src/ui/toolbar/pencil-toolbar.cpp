@@ -77,12 +77,11 @@ PencilToolbar::PencilToolbar(SPDesktop *desktop, bool pencil_mode)
     auto prefs = Inkscape::Preferences::get();
 
     // Configure mode buttons
-    for_each_child(get_widget<Gtk::Box>(_builder, "mode_buttons_box"), [=](Gtk::Widget &item) {
-        static int btn_index = 0;
+    int btn_index = 0;
+    for_each_child(get_widget<Gtk::Box>(_builder, "mode_buttons_box"), [&](Gtk::Widget &item){
         auto &btn = dynamic_cast<Gtk::RadioButton &>(item);
         _mode_buttons.push_back(&btn);
         btn.signal_clicked().connect(sigc::bind(sigc::mem_fun(*this, &PencilToolbar::mode_changed), btn_index++));
-
         return ForEachResult::_continue;
     });
 

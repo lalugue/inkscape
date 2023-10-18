@@ -345,25 +345,23 @@ GradientToolbar::GradientToolbar(SPDesktop *desktop)
     setup_derived_spin_button(_offset_item, "stopoffset", 0);
 
     // Configure mode buttons
-    for_each_child(get_widget<Gtk::Box>(_builder, "new_type_buttons_box"), [=](Gtk::Widget &item) {
-        static int btn_index = 0;
+    int btn_index = 0;
+    for_each_child(get_widget<Gtk::Box>(_builder, "new_type_buttons_box"), [&](Gtk::Widget &item){
         auto &btn = dynamic_cast<Gtk::RadioButton &>(item);
         _new_type_buttons.push_back(&btn);
         btn.signal_clicked().connect(sigc::bind(sigc::mem_fun(*this, &GradientToolbar::new_type_changed), btn_index++));
-
         return ForEachResult::_continue;
     });
 
     int mode = prefs->getInt("/tools/gradient/newgradient", SP_GRADIENT_TYPE_LINEAR);
     _new_type_buttons[mode == SP_GRADIENT_TYPE_LINEAR ? 0 : 1]->set_active(); // linear == 1, radial == 2
 
-    for_each_child(get_widget<Gtk::Box>(_builder, "new_fillstroke_buttons_box"), [=](Gtk::Widget &item) {
-        static int btn_index = 0;
+    btn_index = 0;
+    for_each_child(get_widget<Gtk::Box>(_builder, "new_fillstroke_buttons_box"), [&](Gtk::Widget &item){
         auto &btn = dynamic_cast<Gtk::RadioButton &>(item);
         _new_fillstroke_buttons.push_back(&btn);
         btn.signal_clicked().connect(
             sigc::bind(sigc::mem_fun(*this, &GradientToolbar::new_fillstroke_changed), btn_index++));
-
         return ForEachResult::_continue;
     });
 
