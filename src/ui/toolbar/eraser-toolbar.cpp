@@ -47,7 +47,6 @@ namespace Inkscape::UI::Toolbar {
 
 EraserToolbar::EraserToolbar(SPDesktop *desktop)
     : Toolbar(desktop)
-    , _freeze(false)
     , _builder(create_builder("toolbar-eraser.ui"))
     , _width_item(get_derived_widget<UI::Widget::SpinButton>(_builder, "_width_item"))
     , _thinning_item(get_derived_widget<UI::Widget::SpinButton>(_builder, "_thinning_item"))
@@ -58,7 +57,7 @@ EraserToolbar::EraserToolbar(SPDesktop *desktop)
     , _split_btn(get_widget<Gtk::ToggleButton>(_builder, "_split_btn"))
 {
     auto prefs = Inkscape::Preferences::get();
-    gint const eraser_mode = prefs->getInt("/tools/eraser/mode", _modeAsInt(Tools::DEFAULT_ERASER_MODE));
+    int const eraser_mode = prefs->getInt("/tools/eraser/mode", _modeAsInt(Tools::DEFAULT_ERASER_MODE));
 
     _toolbar = &get_widget<Gtk::Box>(_builder, "eraser-toolbar");
 
@@ -128,7 +127,7 @@ void EraserToolbar::setup_derived_spin_button(UI::Widget::SpinButton &btn, Glib:
  * @param mode A mode of the eraser tool, from the enum EraserToolMode
  * @return the integer to be stored in the prefs as the selected mode
  */
-guint EraserToolbar::_modeAsInt(Inkscape::UI::Tools::EraserToolMode mode)
+unsigned EraserToolbar::_modeAsInt(Tools::EraserToolMode const mode)
 {
     using namespace Inkscape::UI::Tools;
 
@@ -167,12 +166,11 @@ void EraserToolbar::mode_changed(int mode)
     }
 }
 
-void EraserToolbar::set_eraser_mode_visibility(const guint eraser_mode)
+void EraserToolbar::set_eraser_mode_visibility(unsigned const eraser_mode)
 {
     using namespace Inkscape::UI::Tools;
 
-    const gboolean visibility = (eraser_mode != _modeAsInt(EraserToolMode::DELETE));
-
+    bool const visibility = eraser_mode != _modeAsInt(EraserToolMode::DELETE);
     auto children = _toolbar->get_children();
     const int visible_children_count = 2;
 

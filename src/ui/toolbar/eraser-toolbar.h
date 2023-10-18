@@ -1,7 +1,4 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-#ifndef SEEN_ERASOR_TOOLBAR_H
-#define SEEN_ERASOR_TOOLBAR_H
-
 /**
  * @file
  * Eraser toolbar
@@ -28,6 +25,11 @@
  *
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
+
+#ifndef SEEN_INKCAPE_UI_ERASERTOOLBAR_H
+#define SEEN_INKCAPE_UI_ERASERTOOLBAR_H
+
+#include <glibmm/refptr.h>
 
 #include "toolbar.h"
 
@@ -62,25 +64,23 @@ private:
     using ValueChangedMemFun = void (EraserToolbar::*)();
 
     Glib::RefPtr<Gtk::Builder> _builder;
-
     UI::Widget::SpinButton &_width_item;
     UI::Widget::SpinButton &_thinning_item;
     UI::Widget::SpinButton &_cap_rounding_item;
     UI::Widget::SpinButton &_tremor_item;
     UI::Widget::SpinButton &_mass_item;
-
-    Gtk::ToggleButton *_usepressure_btn;
+    Gtk::ToggleButton *_usepressure_btn = nullptr;
     Gtk::ToggleButton &_split_btn;
 
     std::unique_ptr<SimplePrefPusher> _pressure_pusher;
 
-    bool _freeze;
+    bool _freeze = false;
 
     void setup_derived_spin_button(UI::Widget::SpinButton &btn, Glib::ustring const &name, double default_value,
-                                   ValueChangedMemFun const value_changed_mem_fun);
-    static guint _modeAsInt(Inkscape::UI::Tools::EraserToolMode mode);
+                                   ValueChangedMemFun value_changed_mem_fun);
+    static unsigned _modeAsInt(Tools::EraserToolMode mode);
     void mode_changed(int mode);
-    void set_eraser_mode_visibility(const guint eraser_mode);
+    void set_eraser_mode_visibility(unsigned eraser_mode);
     void width_value_changed();
     void mass_value_changed();
     void velthin_value_changed();
@@ -90,8 +90,20 @@ private:
     void toggle_break_apart();
     void usepressure_toggled();
 };
-}
-}
-}
 
-#endif /* !SEEN_ERASOR_TOOLBAR_H */
+} // namespace Toolbar
+} // namespace UI
+} // namespace Inkscape
+
+#endif // SEEN_INKCAPE_UI_ERASERTOOLBAR_H
+
+/*
+  Local Variables:
+  mode:c++
+  c-file-style:"stroustrup"
+  c-file-offsets:((innamespace . 0)(inline-open . 0)(case-label . +))
+  indent-tabs-mode:nil
+  fill-column:99
+  End:
+*/
+// vim: filetype=cpp:expandtab:shiftwidth=4:tabstop=8:softtabstop=4:fileencoding=utf-8:textwidth=99 :
