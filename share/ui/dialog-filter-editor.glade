@@ -258,6 +258,9 @@
                   <object class="GtkImage">
                     <property name="visible">True</property>
                     <property name="icon-name">pan-down-symbolic</property>
+                    <style>
+                      <class name="arrow"/>
+                    </style>
                   </object>
                   <packing>
                     <property name="position">1</property>
