@@ -318,7 +318,7 @@ FontData::FontData(FontPtr font)
     if (desc) {
         // Now we pull data out of the description.
         auto new_family = pango_font_description_get_family(desc);
-        if (FontFactory::get().hasFontFamily(new_family)) {
+        if (new_family && FontFactory::get().hasFontFamily(new_family)) {
             family = new_family;
 
             // Style from pango description
