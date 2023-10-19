@@ -369,6 +369,7 @@ void draw_shape(Cairo::ImageSurface &surface,
 
     // Deal with shapes that can be drawn using Cairo first.
     switch (shape) {
+        case CANVAS_ITEM_CTRL_SHAPE_CIRCLE:
         case CANVAS_ITEM_CTRL_SHAPE_TRIANGLE:        // Triangle optionally rotated
         case CANVAS_ITEM_CTRL_SHAPE_TRIANGLE_ANGLED: // triangle with pointing to center of  knot and rotated this way
         case CANVAS_ITEM_CTRL_SHAPE_DARROW:          // Double arrow
@@ -388,11 +389,16 @@ void draw_shape(Cairo::ImageSurface &surface,
             cr.rotate(angle);
             cr.translate(-size / 2.0, -size / 2.0);
 
-            // (1.5 is an approximation of root(2) and 3 is 1.5 * 2)
             double effective_outline = outline_width + 0.5 * stroke_width;
-            cr.translate(1.5 * effective_outline, 1.5 * effective_outline);
 
-            draw_cairo_path(shape, cr, size - 3 * effective_outline);
+            if (shape == CANVAS_ITEM_CTRL_SHAPE_CIRCLE) {
+                cr.arc(size / 2.0, size / 2.0, size / 2.0 - outline_width, 0, 2 * M_PI);
+            } else {
+                // (1.5 is an approximation of root(2) and 3 is 1.5 * 2), 
+                // this is because the angled shape have their stroke at 45 degrees
+                cr.translate(1.5 * effective_outline, 1.5 * effective_outline);
+                draw_cairo_path(shape, cr, size - 3 * effective_outline);
+            }
 
             // Outline.
             cr.set_source_rgba(SP_RGBA32_R_F(outline),
@@ -480,32 +486,6 @@ void draw_shape(Cairo::ImageSurface &surface,
                                (width - 1 - i) + (width - 1 - j) > m - 2 &&
                                             i  + (width - 1 - j) > m - 2)
                     {
-                        *p = outline;
-                    }
-                }
-            }
-            break;
-        }
-
-        case CANVAS_ITEM_CTRL_SHAPE_CIRCLE: {
-            double ro  = width / 2.0;
-            double ro2 = ro * ro;
-            double rs  = ro - scaled_outline;
-            double rs2 = rs * rs;
-            double rf  = ro - (scaled_stroke + scaled_outline);
-            double rf2 = rf * rf;
-
-            for (int i = 0; i < width; ++i, p += skip) {
-                for (int j = 0; j < width; ++j, ++p) {
-                    double rx = i - (width / 2.0) + 0.5;
-                    double ry = j - (width / 2.0) + 0.5;
-                    double r2 = rx * rx + ry * ry;
-
-                    if (r2 < rf2) {
-                        *p = fill;
-                    } else if (r2 < rs2) {
-                        *p = stroke;
-                    } else if (r2 < ro2) {
                         *p = outline;
                     }
                 }
