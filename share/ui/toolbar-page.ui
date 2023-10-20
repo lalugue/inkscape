@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Generated with glade 3.40.0 -->
 <interface>
-  <requires lib="gtk+" version="3.22"/>
+  <requires lib="gtk" version="4.0"/>
   <object class="GtkListStore" id="_sizes_list">
     <columns>
       <!-- column-name name -->
@@ -66,29 +66,25 @@
     <property name="modal">True</property>
     <child>
       <object class="GtkBox" id="popover_box1">
-        <property name="visible">True</property>
         <property name="valign">center</property>
         <property name="spacing">3</property>
       </object>
     </child>
   </object>
   <object class="GtkBox" id="page-toolbar">
-    <property name="visible">True</property>
     <property name="halign">start</property>
     <property name="valign">center</property>
     <property name="spacing">3</property>
     <property name="hexpand">True</property>
     <child>
       <object class="GtkButton" id="page_new">
-        <property name="visible">True</property>
-        <property name="can-focus">True</property>
+        <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Make corners sharp</property>
         <property name="action-name">win.page-new</property>
-        <property name="relief">none</property>
+        <property name="has-frame">false</property>
         <child>
           <object class="GtkImage" id="image1">
-            <property name="visible">True</property>
             <property name="icon-name">pages-add</property>
           </object>
         </child>
@@ -98,7 +94,6 @@
       <object class="GtkComboBoxText" id="_combo_page_sizes">
         <property name="model">_sizes_list</property>
         <property name="width-request">250</property>
-        <property name="visible">True</property>
         <property name="active">0</property>
         <property name="has-entry">True</property>
         <property name="active-id">-1</property>
@@ -116,7 +111,7 @@
         </child>
         <child internal-child="entry">
           <object class="GtkEntry">
-            <property name="can-focus">True</property>
+            <property name="focusable">True</property>
             <property name="completion">_sizes_searcher</property>
           </object>
         </child>
@@ -127,8 +122,7 @@
     </child>
     <child>
       <object class="GtkEntry" id="_text_page_margins">
-        <property name="visible">True</property>
-        <property name="can-focus">True</property>
+        <property name="focusable">True</property>
         <property name="tooltip-text" translatable="yes">Page Margins</property>
         <property name="primary-icon-name">view-restore</property>
         <property name="placeholder-text" translatable="yes">Margins</property>
@@ -139,7 +133,6 @@
     </child>
     <child>
       <object class="GtkSeparator">
-        <property name="visible">True</property>
       </object>
       <packing>
         <property name="position">3</property>
@@ -147,15 +140,13 @@
     </child>
     <child>
       <object class="GtkMenuButton" id="menu_btn1">
-        <property name="visible">True</property>
-        <property name="can-focus">True</property>
+        <property name="focusable">True</property>
         <property name="focus-on-click">False</property>
         <property name="receives-default">True</property>
-        <property name="relief">none</property>
+        <property name="has-frame">false</property>
         <property name="popover">popover1</property>
         <child>
           <object class="GtkImage" id="image18">
-            <property name="visible">True</property>
             <property name="icon-name">go-down</property>
           </object>
         </child>
@@ -166,18 +157,16 @@
     </child>
     <child>
       <object class="GtkButton" id="_btn_page_backward">
-        <property name="visible">True</property>
-        <property name="can-focus">True</property>
+        <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Make corners sharp</property>
         <property name="action-name">doc.page-move-backward</property>
-        <property name="relief">none</property>
+        <property name="has-frame">false</property>
         <style>
           <class name="tag1"/>
         </style>
         <child>
           <object class="GtkImage" id="image2">
-            <property name="visible">True</property>
             <property name="icon-name">pages-order-backwards</property>
           </object>
         </child>
@@ -188,7 +177,6 @@
     </child>
     <child>
       <object class="GtkLabel" id="_label_page_pos">
-        <property name="visible">True</property>
         <property name="label" translatable="yes">1/-</property>
         <style>
           <class name="tag1"/>
@@ -200,18 +188,16 @@
     </child>
     <child>
       <object class="GtkButton" id="_btn_page_foreward">
-        <property name="visible">True</property>
-        <property name="can-focus">True</property>
+        <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Make corners sharp</property>
         <property name="action-name">doc.page-move-forward</property>
-        <property name="relief">none</property>
+        <property name="has-frame">false</property>
         <style>
           <class name="tag1"/>
         </style>
         <child>
           <object class="GtkImage" id="image3">
-            <property name="visible">True</property>
             <property name="icon-name">pages-order-forwards</property>
           </object>
         </child>
@@ -222,8 +208,7 @@
     </child>
     <child>
       <object class="GtkEntry" id="_text_page_label">
-        <property name="visible">True</property>
-        <property name="can-focus">True</property>
+        <property name="focusable">True</property>
         <property name="placeholder-text" translatable="yes">Page Label</property>
       </object>
       <packing>
@@ -232,15 +217,13 @@
     </child>
     <child>
       <object class="GtkButton" id="_btn_page_delete">
-        <property name="visible">True</property>
-        <property name="can-focus">True</property>
+        <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Make corners sharp</property>
         <property name="action-name">win.page-delete</property>
-        <property name="relief">none</property>
+        <property name="has-frame">false</property>
         <child>
           <object class="GtkImage" id="image4">
-            <property name="visible">True</property>
             <property name="icon-name">pages-remove</property>
           </object>
         </child>
@@ -251,7 +234,6 @@
     </child>
     <child>
       <object class="GtkSeparator" id="_sep1">
-        <property name="visible">True</property>
       </object>
       <packing>
         <property name="position">10</property>
@@ -259,13 +241,11 @@
     </child>
     <child>
       <object class="GtkToggleButton" id="_btn_move_toggle">
-        <property name="visible">True</property>
-        <property name="can-focus">True</property>
+        <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="action-name">doc.page-move-objects</property>
         <child>
           <object class="GtkImage" id="image5">
-            <property name="visible">True</property>
             <property name="icon-name">pages-move-toggle</property>
           </object>
         </child>
@@ -284,7 +264,6 @@
     <!-- n-columns=3 n-rows=4 -->
     <child>
       <object class="GtkGrid">
-        <property name="visible">True</property>
         <property name="margin-start">5</property>
         <property name="margin-top">5</property>
         <property name="margin-bottom">5</property>
@@ -292,7 +271,6 @@
         <property name="column-spacing">3</property>
         <child>
           <object class="GtkLabel">
-            <property name="visible">True</property>
             <property name="margin-start">10</property>
             <property name="margin-top">10</property>
             <property name="margin-bottom">10</property>
@@ -305,8 +283,7 @@
         </child>
         <child>
           <object class="GtkSpinButton" id="_margin_right">
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
+            <property name="focusable">True</property>
             <property name="valign">center</property>
             <property name="margin-start">5</property>
             <property name="margin-top">5</property>
@@ -324,8 +301,7 @@
         </child>
         <child>
           <object class="GtkSpinButton" id="_margin_top">
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
+            <property name="focusable">True</property>
             <property name="valign">center</property>
             <property name="placeholder-text">0px</property>
             <property name="adjustment">adjust_margin_top</property>
@@ -338,8 +314,7 @@
         </child>
         <child>
           <object class="GtkSpinButton" id="_margin_left">
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
+            <property name="focusable">True</property>
             <property name="valign">center</property>
             <property name="margin-start">5</property>
             <property name="margin-top">5</property>
@@ -356,8 +331,7 @@
         </child>
         <child>
           <object class="GtkSpinButton" id="_margin_bottom">
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
+            <property name="focusable">True</property>
             <property name="valign">center</property>
             <property name="margin-start">5</property>
             <property name="margin-top">5</property>
@@ -373,15 +347,13 @@
         </child>
         <child>
           <object class="GtkExpander">
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
+            <property name="focusable">True</property>
             <property name="margin-start">5</property>
             <property name="margin-top">5</property>
             <property name="margin-bottom">5</property>
             <child>
               <object class="GtkEntry" id="_text_page_bleeds">
-                <property name="visible">True</property>
-                <property name="can-focus">True</property>
+                <property name="focusable">True</property>
                 <property name="margin-start">5</property>
                 <property name="margin-top">5</property>
                 <property name="margin-bottom">5</property>
@@ -390,7 +362,6 @@
             </child>
             <child type="label">
               <object class="GtkLabel">
-                <property name="visible">True</property>
                 <property name="label" translatable="yes">Page Bleed</property>
               </object>
             </child>

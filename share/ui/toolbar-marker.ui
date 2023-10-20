@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Generated with glade 3.40.0 -->
 <interface>
-  <requires lib="gtk+" version="3.22"/>
+  <requires lib="gtk" version="4.0"/>
   <object class="GtkBox" id="marker-toolbar">
-    <property name="visible">True</property>
-    <property name="can-focus">False</property>
+    <property name="focusable">False</property>
     <property name="halign">start</property>
     <property name="valign">center</property>
     <property name="spacing">3</property>

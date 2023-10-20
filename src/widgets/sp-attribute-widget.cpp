@@ -95,7 +95,7 @@ void SPAttributeTable::create(const std::vector<Glib::ustring>& labels, const st
             wnd->set_margin_top(YPAD);
             wnd->set_margin_bottom(YPAD);
             wnd->add(tv);
-            wnd->set_shadow_type(Gtk::SHADOW_IN);
+            wnd->set_has_frame(true);
             wnd->set_policy(Gtk::PolicyType::NEVER, Gtk::PolicyType::AUTOMATIC);
             table->attach(*wnd, 1, i, 1, 1);
 
