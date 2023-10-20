@@ -14,6 +14,7 @@
 #define UI_DIALOG_SWATCHES_H
 
 #include <array>
+#include <utility>
 #include <variant>
 #include <vector>
 #include <boost/unordered_map.hpp>
@@ -25,12 +26,13 @@
 #include "preferences.h"  // PrefObserver
 #include "ui/dialog/dialog-base.h"
 #include "ui/dialog/global-palettes.h"
+#include "ui/widget/palette_t.h"
 
 namespace Gtk {
 class Builder;
 class Button;
-class ComboBoxText;
-class ListStore;
+class Label;
+class MenuButton;
 class RadioButton;
 } // namespace Gtk
 
@@ -40,6 +42,7 @@ namespace Inkscape::UI {
 
 namespace Widget {
 class ColorPalette;
+class PopoverMenu;
 } // namespace Widget
 
 namespace Dialog {
@@ -60,7 +63,7 @@ public:
     SwatchesPanel(bool compact, char const *prefsPath = "/dialogs/swatches");
     ~SwatchesPanel() final;
 
-protected:
+private:
     void documentReplaced() final;
     void desktopReplaced() final;
     void selectionChanged(Selection *selection) final;
@@ -68,12 +71,16 @@ protected:
 
     void on_size_allocate(Gtk::Allocation &) final;
 
-private:
     void update_palettes(bool compact);
     void rebuild();
     bool load_swatches();
     bool load_swatches(Glib::ustring path);
     void update_store_entry();
+    void setup_selector_menu();
+    bool on_selector_key_pressed(GtkEventControllerKey const * controller,
+                                 unsigned keyval, unsigned keycode, GdkModifierType state);
+    void update_selector_menu();
+    void update_selector_label(Glib::ustring const &active_id);
     void clear_filter();
     void filter_colors(const Glib::ustring& text);
     bool filter_callback(const Dialog::ColorItem& color) const;
@@ -112,8 +119,14 @@ private:
     Gtk::RadioButton& _list_btn;
     Gtk::RadioButton& _grid_btn;
     PaletteFileData _loaded_palette;
-    Gtk::ComboBoxText& _selector;
-    Glib::RefPtr<Gtk::ListStore> _palette_store;
+
+    Gtk::MenuButton &_selector;
+    std::unique_ptr<UI::Widget::PopoverMenu> _selector_menu;
+    Gtk::Label &_selector_label;
+
+    using PaletteLoaded = std::pair<UI::Widget::palette_t, bool>;
+    std::vector<PaletteLoaded> _palettes;
+
     Glib::ustring _color_filter_text;
     Gtk::Button& _new_btn;
     Gtk::Button& _edit_btn;

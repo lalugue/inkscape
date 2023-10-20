@@ -1,6 +1,11 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
+/**
+ * @file
+ * Combobox for selecting dash patterns.
+ */
 /* Authors:
  *   Lauris Kaplinski <lauris@kaplinski.com>
+ *   bulia byak <buliabyak@users.sf.net>
  *   Maximilian Albert <maximilian.albert> (gtkmm-ification)
  *
  * Copyright (C) 2002 Lauris Kaplinski

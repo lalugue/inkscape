@@ -21,6 +21,10 @@ namespace Glib {
 class ustring;
 } // namespace Glib
 
+namespace Gtk {
+class ScrolledWindow;
+} // namespace Gtk
+
 namespace Inkscape::UI::Widget {
 
 // TODO: GTK4: Can we use Gtk::GridView, Gio::ListModel, etc.?
@@ -77,8 +81,12 @@ public:
     void get_children()       = delete;
 
 private:
+    Gtk::ScrolledWindow &_scrolled_window;
     PopoverMenuGrid &_grid;
     std::vector<Gtk::Widget *> _items;
+
+    void check_child_invariants();
+    void set_scrolled_window_size();
 
     // Let PopoverMenuItem call this without making it public API
     friend class PopoverMenuItem;

@@ -14,11 +14,12 @@
 
 #include "swatches.h"
 
+#include <algorithm>
+#include <iterator>
 #include <optional>
 #include <utility>
 #include <string>
 #include <vector>
-
 #include <giomm/file.h>
 #include <giomm/inputstream.h>
 #include <glibmm/i18n.h>
@@ -27,11 +28,11 @@
 #include <gtkmm/builder.h>
 #include <gtkmm/button.h>
 #include <gtkmm/cellrenderertext.h>
-#include <gtkmm/comboboxtext.h>
-#include <gtkmm/liststore.h>
+#include <gtkmm/label.h>
 #include <gtkmm/menubutton.h>
 #include <gtkmm/radiobutton.h>
 #include <gtkmm/searchentry.h>
+#include <gtkmm/sizegroup.h>
 #include <gtkmm/window.h>
 #include <pangomm/layout.h>
 
@@ -40,39 +41,20 @@
 #include "document.h"
 #include "preferences.h"
 #include "style.h"
-
 #include "object/sp-defs.h"
 #include "object/sp-gradient.h"
 #include "object/sp-gradient-reference.h"
 #include "ui/builder-utils.h"
+#include "ui/column-menu-builder.h"
+#include "ui/controller.h"
 #include "ui/dialog/color-item.h"
 #include "ui/dialog/global-palettes.h"
-#include "ui/pack.h"
 #include "ui/widget/color-palette.h"
 #include "widgets/paintdef.h"
 
 namespace Inkscape::UI::Dialog {
-namespace {
 
-struct PaletteSetColumns : public Gtk::TreeModel::ColumnRecord {
-    Gtk::TreeModelColumn<Glib::ustring> translated_title;
-    Gtk::TreeModelColumn<Glib::ustring> id;
-    Gtk::TreeModelColumn<bool> loaded; // true for a palette loaded by the user
-    Gtk::TreeModelColumn<Cairo::RefPtr<Cairo::Surface>> set_image;
-
-    PaletteSetColumns() {
-        add(translated_title);
-        add(id);
-        add(loaded);
-        add(set_image);
-    }
-};
-
-PaletteSetColumns const g_set_columns;
-
-constexpr char auto_id[] = "Auto";
-
-} // namespace
+static constexpr auto auto_id = "Auto";
 
 /*
  * Lifecycle
@@ -83,7 +65,10 @@ SwatchesPanel::SwatchesPanel(bool compact, char const *prefsPath)
     _builder(create_builder("dialog-swatches.glade")),
     _list_btn(get_widget<Gtk::RadioButton>(_builder, "list")),
     _grid_btn(get_widget<Gtk::RadioButton>(_builder, "grid")),
-    _selector(get_widget<Gtk::ComboBoxText>(_builder, "selector")),
+    _selector(get_widget<Gtk::MenuButton>(_builder, "selector")),
+    _selector_label(get_widget<Gtk::Label>(_builder, "selector-label")),
+    _selector_menu{compact ? nullptr
+                   : std::make_unique<UI::Widget::PopoverMenu>(_selector, Gtk::POS_BOTTOM)},
     _new_btn(get_widget<Gtk::Button>(_builder, "new")),
     _edit_btn(get_widget<Gtk::Button>(_builder, "edit")),
     _delete_btn(get_widget<Gtk::Button>(_builder, "delete"))
@@ -96,23 +81,22 @@ SwatchesPanel::SwatchesPanel(bool compact, char const *prefsPath)
     _palette = Gtk::make_managed<Inkscape::UI::Widget::ColorPalette>();
     _palette->set_visible();
     if (compact) {
-        UI::pack_start(*this, *_palette);
-    }
-    else {
-        get_widget<Gtk::Box>(_builder, "content").pack_start(*_palette);
+        add(*_palette);
+    } else {
+        get_widget<Gtk::Box>(_builder, "content").add(*_palette);
+
         _palette->set_settings_visibility(false);
 
         get_widget<Gtk::MenuButton>(_builder, "settings").set_popover(_palette->get_settings_popover());
 
-        _palette->set_filter([=](const Dialog::ColorItem& color){
+        _palette->set_filter([this](Dialog::ColorItem const &color){
             return filter_callback(color);
         });
         auto& search = get_widget<Gtk::SearchEntry>(_builder, "search");
-        search.signal_search_changed().connect([=, &search](){
+        search.signal_search_changed().connect([this, &search]{
             if (search.get_text_length() == 0) {
                 clear_filter();
-            }
-            else {
+            } else {
                 filter_colors(search.get_text());
             }
         });
@@ -134,20 +118,11 @@ SwatchesPanel::SwatchesPanel(bool compact, char const *prefsPath)
         if (loaded) {
             update_store_entry();
         }
-        _selector.set_wrap_width(2);
-        auto cr = dynamic_cast<Gtk::CellRendererText*>(_selector.get_first_cell());
-        cr->property_ellipsize() = Pango::ELLIPSIZE_MIDDLE;
-        _selector.set_model(_palette_store);
-        _selector.set_id_column(g_set_columns.id.index());
-        _selector.set_active_id(_current_palette_id);
-        _selector.signal_changed().connect([=](){
-            auto it = _selector.get_active();
-            if (it) {
-                auto row = *it;
-                Glib::ustring id = row[g_set_columns.id];
-                set_palette(id);
-            }
-        });
+
+        g_assert(_selector_menu);
+        setup_selector_menu();
+        update_selector_menu();
+        update_selector_label(_current_palette_id);
     }
 
     bool embedded = compact;
@@ -163,7 +138,7 @@ SwatchesPanel::SwatchesPanel(bool compact, char const *prefsPath)
     _palette->enable_labels(!embedded && prefs->getBool(_prefs_path + "/show_labels", true));
 
     // save settings when they change
-    _palette->get_settings_changed_signal().connect([=] {
+    _palette->get_settings_changed_signal().connect([=, this]{
         prefs->setInt(_prefs_path + "/tile_size", _palette->get_tile_size());
         prefs->setDouble(_prefs_path + "/tile_aspect", _palette->get_aspect());
         prefs->setInt(_prefs_path + "/tile_border", _palette->get_tile_border());
@@ -173,10 +148,10 @@ SwatchesPanel::SwatchesPanel(bool compact, char const *prefsPath)
         prefs->setBool(_prefs_path + "/show_labels", !embedded && _palette->are_labels_enabled());
     });
 
-    _list_btn.signal_clicked().connect([=](){
+    _list_btn.signal_clicked().connect([this]{
         _palette->enable_labels(true);
     });
-    _grid_btn.signal_clicked().connect([=](){
+    _grid_btn.signal_clicked().connect([this]{
         _palette->enable_labels(false);
     });
     (_palette->are_labels_enabled() ? _list_btn : _grid_btn).set_active();
@@ -193,15 +168,15 @@ SwatchesPanel::SwatchesPanel(bool compact, char const *prefsPath)
         _palette->get_palette_selected_signal().connect([this] (Glib::ustring name) {
             set_palette(name);
         });
-    }
-    else {
-        pack_start(get_widget<Gtk::Box>(_builder, "main"));
+    } else {
+        add(get_widget<Gtk::Box>(_builder, "main"));
 
-        get_widget<Gtk::Button>(_builder, "open").signal_clicked().connect([=](){
+        get_widget<Gtk::Button>(_builder, "open").signal_clicked().connect([this]{
             // load a color palette file selected by the user
             if (load_swatches()) {
                 update_store_entry();
-                _selector.set_active_id(_loaded_palette.id);
+                update_selector_menu();
+                update_selector_label(_loaded_palette.id);
             }
         });;
     }
@@ -256,6 +231,7 @@ const PaletteFileData* SwatchesPanel::get_palette(const Glib::ustring& id) {
 
 void SwatchesPanel::select_palette(const Glib::ustring& id) {
     if (_current_palette_id == id) return;
+
     _current_palette_id = id;
 
     bool edit = false;
@@ -267,6 +243,8 @@ void SwatchesPanel::select_palette(const Glib::ustring& id) {
     } else {
         untrack_gradients();
     }
+
+    update_selector_label(_current_palette_id);
 
     _new_btn.set_visible(edit);
     _edit_btn.set_visible(edit);
@@ -472,7 +450,7 @@ void SwatchesPanel::update_fillstroke_indicators()
  * Process the list of available palettes and update the list in the _palette widget.
  */
 void SwatchesPanel::update_palettes(bool compact) {
-    std::vector<Inkscape::UI::Widget::ColorPalette::palette_t> palettes;
+    std::vector<UI::Widget::palette_t> palettes;
     palettes.reserve(1 + GlobalPalettes::get().palettes().size());
 
     // The first palette in the list is always the "Auto" palette. Although this
@@ -481,7 +459,7 @@ void SwatchesPanel::update_palettes(bool compact) {
 
     // The remaining palettes in the list are the global palettes.
     for (auto &p : GlobalPalettes::get().palettes()) {
-        Inkscape::UI::Widget::ColorPalette::palette_t palette;
+        UI::Widget::palette_t palette;
         palette.name = p.name;
         palette.id = p.id;
         for (auto const &c : p.colors) {
@@ -493,15 +471,10 @@ void SwatchesPanel::update_palettes(bool compact) {
 
     _palette->set_palettes(palettes);
 
-    if (!compact) {
-        _palette_store = Gtk::ListStore::create(g_set_columns);
-        for (auto&& p : palettes) {
-            auto row = _palette_store->append();
-            (*row)[g_set_columns.translated_title] = p.name;
-            (*row)[g_set_columns.id] = p.id;
-            (*row)[g_set_columns.loaded] = false;
-        }
-    }
+    _palettes.clear();
+    _palettes.reserve(palettes.size());
+    std::transform(palettes.begin(), palettes.end(), std::back_inserter(_palettes),
+                   [](auto &&palette){ return PaletteLoaded{std::move(palette), false}; });
 }
 
 /**
@@ -543,7 +516,7 @@ void SwatchesPanel::rebuild()
                 palette.emplace_back(w);
                 widgetmap.emplace(grad, w);
                 // Rebuild if the gradient gets pinned or unpinned
-                w->signal_pinned().connect([=]() {
+                w->signal_pinned().connect([this]{
                     rebuild();
                 });
             }
@@ -590,18 +563,95 @@ bool SwatchesPanel::load_swatches(Glib::ustring path) {
 
 void SwatchesPanel::update_store_entry() {
     // add or update last entry in a store to match loaded palette
-    auto items = _palette_store->children();
-    auto last = items.size() - 1;
-    if (!items.empty() && items[last].get_value(g_set_columns.loaded)) {
-        items[last].set_value(g_set_columns.translated_title, _loaded_palette.name);
-        items[last].set_value(g_set_columns.id, _loaded_palette.id);
+    if (!_palettes.empty() && _palettes.back().second) { // & loaded?
+        auto &palette = _palettes.back().first;
+        palette.name = _loaded_palette.name;
+        palette.id   = _loaded_palette.id  ;
+    } else {
+        UI::Widget::palette_t palette;
+        palette.name = _loaded_palette.name;
+        palette.id   = _loaded_palette.id  ;
+        _palettes.emplace_back(std::move(palette), true); // Tis now!
     }
-    else {
-        auto row = _palette_store->append();
-        (*row)[g_set_columns.translated_title] = _loaded_palette.name;
-        (*row)[g_set_columns.id] = _loaded_palette.id;
-        (*row)[g_set_columns.loaded] = true;
+}
+
+void SwatchesPanel::setup_selector_menu()
+{
+    _selector.set_popover(*_selector_menu);
+    Controller::add_key<&SwatchesPanel::on_selector_key_pressed>(_selector, *this);
+}
+
+bool SwatchesPanel::on_selector_key_pressed(GtkEventControllerKey const * controller,
+                                            unsigned const keyval, unsigned /*keycode*/,
+                                            GdkModifierType const state)
+{
+    // We act like GtkComboBox in that we only move the active item if no modifier key was pressed:
+    if (Controller::has_flag(state, gtk_accelerator_get_default_mod_mask())) return false;
+
+    auto const begin = _palettes.cbegin(), end = _palettes.cend();
+    auto it = std::find_if(begin, end, [&](auto &p){ return p.first.id == _current_palette_id; });
+    if (it == end) return false;
+
+    int const old_index = std::distance(begin, it), back = _palettes.size() - 1;
+    int       new_index = old_index;
+
+    switch (keyval) {
+        case GDK_KEY_Up  : --new_index       ; break;
+        case GDK_KEY_Down: ++new_index       ; break;
+        case GDK_KEY_Home:   new_index = 0   ; break;
+        case GDK_KEY_End :   new_index = back; break;
+        default: return false;
     }
+
+    new_index = std::clamp(new_index, 0, back);
+    if (new_index != old_index) {
+        it = begin + new_index;
+        set_palette(it->first.id);
+    }
+    return true;
+}
+
+void SwatchesPanel::update_selector_menu()
+{
+    g_assert(_selector_menu);
+
+    _selector.set_sensitive(false);
+    _selector_label.set_label({});
+    _selector_menu->delete_all();
+
+    if (_palettes.empty()) return;
+
+    // TODO: GTK4: probably nicer to use GtkGridView.
+    static constexpr int max_chars = 35; // Make PopoverMenuItems ellipsize long labels, in middle.
+    Inkscape::UI::ColumnMenuBuilder builder{*_selector_menu, 2, Gtk::ICON_SIZE_MENU, 0, max_chars};
+    // Items are put in a SizeGroup to keep the two columnsʼ widths homogeneous
+    auto const size_group = Gtk::SizeGroup::create(Gtk::SIZE_GROUP_HORIZONTAL);
+    auto const add_item = [&](UI::Widget::palette_t const &palette){
+        auto const item = builder.add_item(palette.name, {}, {}, true, false,
+                                           [id = palette.id, this]{ set_palette(id); });
+        size_group->add_widget(*item);
+    };
+    // Acrobatics are done to sort down columns, not over rows
+    auto const size = _palettes.size(), half = (size + 1) / 2;
+    for (std::size_t left = 0; left < half; ++left) {
+        add_item(_palettes.at(left).first);
+        if (auto const right = left + half; right < size) {
+            add_item(_palettes.at(right).first);
+        }
+    }
+
+    _selector.set_sensitive(true);
+    size_group->add_widget(_selector_label);
+    _selector_menu->show_all_children();
+}
+
+void SwatchesPanel::update_selector_label(Glib::ustring const &active_id)
+{
+    // Set the new paletteʼs name as label of the selector menubutton.
+    auto const it = std::find_if(_palettes.cbegin(), _palettes.cend(),
+                                 [&](auto const &pair){ return pair.first.id == active_id; });
+    g_assert(it != _palettes.cend());
+    _selector_label.set_label(it->first.name);
 }
 
 void SwatchesPanel::clear_filter() {

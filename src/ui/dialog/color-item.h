@@ -79,13 +79,12 @@ public:
     sigc::signal<void ()>& signal_modified() { return _signal_modified; };
     sigc::signal<void ()>& signal_pinned() { return _signal_pinned; };
 
-protected:
+private:
     bool on_draw(Cairo::RefPtr<Cairo::Context> const&) override;
     void on_size_allocate(Gtk::Allocation&) override;
     void on_drag_data_get(Glib::RefPtr<Gdk::DragContext> const &context, Gtk::SelectionData &selection_data, guint info, guint time) override;
     void on_drag_begin(Glib::RefPtr<Gdk::DragContext> const&) override;
 
-private:
     // Common post-construction setup.
     void common_setup();
 

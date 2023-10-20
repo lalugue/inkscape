@@ -530,6 +530,7 @@ set(ui_SRC
 	widget/optglarea.h
 	widget/page-selector.h
 	widget/paint-selector.h
+	widget/palette_t.h
 	widget/pattern-editor.h
 	widget/point.h
 	widget/popover-menu.h

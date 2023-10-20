@@ -45,6 +45,7 @@ DashSelector::DashSelector()
     // TODO: find something more sensible here!!
     init_dashes();
 
+    // TODO: GTK4: Replace w/ MenuButton+GridView (not PopoverMenu as we dynamically render imgs)
     _dash_store = Gtk::ListStore::create(dash_columns);
     _dash_combo.set_model(_dash_store);
     _dash_combo.pack_start(_image_renderer);

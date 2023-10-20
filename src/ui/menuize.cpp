@@ -13,18 +13,38 @@
 
 #include "menuize.h"
 
+#include <optional>
 #include <utility>
-#include <gtk/gtk.h> // GtkEventControllerMotion
+#include <glibmm/main.h>
 #include <giomm/menumodel.h>
+#include <gdkmm/display.h>
+#include <gdkmm/seat.h>
+#include <gdkmm/window.h>
 #include <gtkmm/eventcontroller.h>
 #include <gtkmm/popovermenu.h>
 #include <gtkmm/stylecontext.h>
 #include <gtkmm/widget.h>
+#include <gtkmm/window.h>
 
 #include "ui/manage.h"
 #include "ui/util.h"
 
 namespace Inkscape::UI {
+
+// Now that our PopoverMenu is scrollable, we want to distinguish between the pointer really moving
+// into or within a menu item, versus the pointer staying still but the item being moved beneath it
+// …so while I would welcome a nicer way to do that, this is the solution Iʼve come up with for now
+// Without GTK supplying absolute coordinates or a ‘synthesised event’ flag I canʼt see another way
+[[nodiscard]] static bool pointer_has_moved(Gtk::Widget const &widget)
+{
+    static std::optional<double> old_x, old_y;
+    auto &window = dynamic_cast<Gtk::Window const &>(*widget.get_toplevel());
+    auto const surface = window.get_window();
+    auto const device = surface->get_display()->get_default_seat()->get_pointer();
+    double new_x{}, new_y{}; Gdk::ModifierType state{};
+    surface->get_device_position(device, new_x, new_y, state);
+    return std::exchange(old_x, new_x) != new_x | std::exchange(old_y, new_y) != new_y; // NOT `||`
+}
 
 static Gtk::Widget &get_widget(GtkEventControllerMotion * const motion)
 {
@@ -33,23 +53,34 @@ static Gtk::Widget &get_widget(GtkEventControllerMotion * const motion)
     return *Glib::wrap(widget);
 }
 
-static void on_motion_grab_focus(GtkEventControllerMotion * const motion, double /*x*/, double /*y*/,
-                                 void * /*user_data*/)
-{
-    auto &widget = get_widget(motion);
-    if (widget.has_focus()) return;
-    widget.grab_focus(); // Weʼll then run the below handler @ notify::has-focus
-}
-
 static void unset_state(Gtk::Widget &widget)
 {
     widget.unset_state_flags(Gtk::STATE_FLAG_FOCUSED | Gtk::STATE_FLAG_PRELIGHT);
+}
+
+static void on_motion_grab_focus(GtkEventControllerMotion * const motion, double /*x*/, double /*y*/,
+                                 void * const user_data)
+{
+    auto &widget = get_widget(motion);
+
+    // If pointer didnʼt move, we got here from a synthesised enter: un-hover item *after* GTK does
+    // Sadly it also catches item that ends under pointer after scroll, but I donʼt know how to fix
+    if (bool const is_enter = GPOINTER_TO_INT(user_data);
+        is_enter && !pointer_has_moved(widget))
+    {
+        Glib::signal_idle().connect_once([&]{ unset_state(widget); });
+        return;
+    }
+
+    if (widget.has_focus()) return;
+    widget.grab_focus(); // Weʼll then run the below handler @ notify::has-focus
 }
 
 static void on_leave_unset_state(GtkEventControllerMotion * const motion, double /*x*/, double /*y*/,
                                  void * /*user_data*/)
 {
     auto &widget = get_widget(motion);
+    if (!pointer_has_moved(widget)) return;
     auto &parent = dynamic_cast<Gtk::Widget &>(*widget.get_parent());
     unset_state(widget); // This is somehow needed for GtkPopoverMenu, although not our PopoverMenu
     unset_state(parent); // Try to unset state on all other menu items, in case we left by keyboard
@@ -62,8 +93,8 @@ void menuize(Gtk::Widget &widget)
     widget.add_events(Gdk::ENTER_NOTIFY_MASK | Gdk::POINTER_MOTION_MASK | Gdk::LEAVE_NOTIFY_MASK);
     auto const motion = gtk_event_controller_motion_new(widget.gobj());
     gtk_event_controller_set_propagation_phase(motion, GTK_PHASE_TARGET);
-    g_signal_connect(motion, "enter" , G_CALLBACK(on_motion_grab_focus), NULL);
-    g_signal_connect(motion, "motion", G_CALLBACK(on_motion_grab_focus), NULL);
+    g_signal_connect(motion, "enter" , G_CALLBACK(on_motion_grab_focus), GINT_TO_POINTER(TRUE ));
+    g_signal_connect(motion, "motion", G_CALLBACK(on_motion_grab_focus), GINT_TO_POINTER(FALSE));
     g_signal_connect(motion, "leave" , G_CALLBACK(on_leave_unset_state), NULL);
     manage(Glib::wrap(motion), widget);
 

@@ -666,7 +666,7 @@ public:
     ColorPaletteMenuItem(Gtk::RadioButton::Group &group,
                          Glib::ustring const &label,
                          Glib::ustring id,
-                         std::vector<ColorPalette::rgb_t> colors)
+                         std::vector<rgb_t> colors)
         : Glib::ObjectBase{"ColorPaletteMenuItem"}
         , PopoverMenuItem{}
         , _radio_button{Gtk::make_managed<Gtk::RadioButton>(group, label)}
@@ -692,7 +692,7 @@ public:
 private:
     Gtk::RadioButton *_radio_button;
     Gtk::DrawingArea *_drawing_area;
-    std::vector<ColorPalette::rgb_t> _colors;
+    std::vector<rgb_t> _colors;
 
     bool on_drawing_area_draw(Cairo::RefPtr<Cairo::Context> const &cr);
 };
@@ -725,7 +725,8 @@ bool ColorPaletteMenuItem::on_drawing_area_draw(Cairo::RefPtr<Cairo::Context> co
     return true;
 }
 
-void ColorPalette::set_palettes(const std::vector<ColorPalette::palette_t>& palettes) {
+void ColorPalette::set_palettes(std::vector<palette_t> const &palettes)
+{
     for (auto const &item: _palette_menu_items) {
         _menu->remove(*item);
     }

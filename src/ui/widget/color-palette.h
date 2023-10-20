@@ -20,6 +20,7 @@
 #include <sigc++/signal.h>
 
 #include "helper/auto-connection.h"
+#include "ui/widget/palette_t.h"
 
 namespace Gtk {
 class Builder;
@@ -43,9 +44,6 @@ class ColorPalette final : public Gtk::Box {
 public:
     ColorPalette();
     ~ColorPalette() override;
-
-    struct rgb_t { double r; double g; double b; };
-    struct palette_t { Glib::ustring name; Glib::ustring id; std::vector<rgb_t> colors; };
 
     // set colors presented in a palette
     void set_colors(std::vector<Dialog::ColorItem*> const &swatches);

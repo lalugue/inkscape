@@ -16,11 +16,14 @@
 #include <glibmm/main.h>
 #include <gtkmm/grid.h>
 #include <gtkmm/label.h>
+#include <gtkmm/scrolledwindow.h>
 #include <gtkmm/separator.h>
 #include <gtkmm/stylecontext.h>
+#include <gtkmm/window.h>
 
 #include "ui/menuize.h"
 #include "ui/popup-menu.h"
+#include "ui/util.h"
 #include "ui/widget/css-name-class-init.h"
 #include "ui/widget/popover-menu-item.h"
 
@@ -46,7 +49,8 @@ public:
 PopoverMenu::PopoverMenu(Gtk::Widget &parent, Gtk::PositionType const position)
     : Glib::ObjectBase{"PopoverMenu"}
     , Gtk::Popover{}
-    , _grid{*Gtk::make_managed<PopoverMenuGrid>()}
+    , _scrolled_window{*Gtk::make_managed<Gtk::ScrolledWindow>()}
+    , _grid           {*Gtk::make_managed<PopoverMenuGrid    >()}
 {
     auto const style_context = get_style_context();
     style_context->add_class("popover-menu");
@@ -54,12 +58,17 @@ PopoverMenu::PopoverMenu(Gtk::Widget &parent, Gtk::PositionType const position)
 
     set_relative_to(parent);
     set_position(position);
-    add(_grid);
+
+    _scrolled_window.set_propagate_natural_width (true);
+    _scrolled_window.set_propagate_natural_height(true);
+    _scrolled_window.add(_grid);
+    add(_scrolled_window);
 
     signal_show().connect([this]
     {
-        // Check no one (accidentally?) removes Grid.
-        g_return_if_fail(_grid.get_parent() == this);
+        check_child_invariants();
+
+        set_scrolled_window_size();
 
         // FIXME: Initially focused item is sometimes wrong on first popup. GTK bug?
         // Grabbing focus in ::show does not always work & sometimes even crashes :(
@@ -76,8 +85,7 @@ void PopoverMenu::attach(Gtk::Widget &item,
                          int const left_attach, int const right_attach,
                          int const top_attach, int const bottom_attach)
 {
-    // Check no one (accidentally?) removes Grid.
-    g_return_if_fail(_grid.get_parent() == this);
+    check_child_invariants();
 
     auto const width = right_attach - left_attach;
     auto const height = bottom_attach - top_attach;
@@ -87,7 +95,7 @@ void PopoverMenu::attach(Gtk::Widget &item,
 
 void PopoverMenu::append(Gtk::Widget &item)
 {
-    g_return_if_fail(_grid.get_parent() == this);
+    check_child_invariants();
 
     _grid.attach_next_to(item, Gtk::POS_BOTTOM);
     _items.push_back(&item);
@@ -95,7 +103,7 @@ void PopoverMenu::append(Gtk::Widget &item)
 
 void PopoverMenu::prepend(Gtk::Widget &item)
 {
-    g_return_if_fail(_grid.get_parent() == this);
+    check_child_invariants();
 
     _grid.attach_next_to(item, Gtk::POS_TOP);
     _items.push_back(&item);
@@ -150,6 +158,23 @@ void PopoverMenu::popup_at_center(Gtk::Widget &widget)
 std::vector<Gtk::Widget *> const &PopoverMenu::get_items()
 {
     return _items;
+}
+
+void PopoverMenu::check_child_invariants()
+{
+    // Check no one (accidentally?) removes our Grid or ScrolledWindow.
+    g_assert(_scrolled_window.get_parent() ==  this);
+    // ScrolledWindow will have interposed a Gtk::Viewport between, so:
+    g_assert(_grid.get_parent());
+    g_assert(is_descendant_of(_grid, _scrolled_window));
+}
+
+void PopoverMenu::set_scrolled_window_size()
+{
+    static constexpr int padding = 16; // Spare some window size for border etc.
+    auto &window = dynamic_cast<Gtk::Window const &>(*get_toplevel());
+    _scrolled_window.set_max_content_width (window.get_width () - 2 * padding);
+    _scrolled_window.set_max_content_height(window.get_height() - 2 * padding);
 }
 
 void PopoverMenu::unset_items_focus_hover(Gtk::Widget * const except_active)

@@ -26,10 +26,12 @@ class ColumnMenuBuilder {
 public:
     ColumnMenuBuilder(Widget::PopoverMenu& menu, int columns,
                       Gtk::IconSize icon_size = Gtk::ICON_SIZE_MENU,
-                      int const first_row = 0)
-        : _menu(menu)
+                      int const first_row = 0,
+                      int const max_width_chars = 0)
+       : _menu(menu)
         , _row(first_row)
         , _columns(columns)
+        , _max_width_chars{max_width_chars}
         , _icon_size(static_cast<int>(icon_size))
     {
         assert(_row >= 0);
@@ -73,7 +75,7 @@ public:
             _col = 0;
         }
 
-        auto const item = Gtk::make_managed<Widget::PopoverMenuItem>(label, true,
+        auto const item = Gtk::make_managed<Widget::PopoverMenuItem>(label, true, _max_width_chars,
                                                                      icon_name, _icon_size);
         if (!customtooltip) {
             item->set_tooltip_markup(tooltip);
@@ -120,6 +122,7 @@ private:
     bool _new_section = false;
     std::optional<SectionData> _last_section;
     Widget::PopoverMenuItem *_section = nullptr;
+    int _max_width_chars = 0;
     Gtk::IconSize _icon_size;
 };
 

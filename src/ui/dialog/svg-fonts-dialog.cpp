@@ -287,7 +287,7 @@ void GlyphMenuButton::update(SPFont const * const spfont)
     auto const &font_nodes = spfont->children;
     if (font_nodes.empty()) return;
 
-    // TODO: GTK4: probably nicer to use GtkColumnView.
+    // TODO: GTK4: probably nicer to use GtkGridView.
     Inkscape::UI::ColumnMenuBuilder builder{*_menu, 4};
     Glib::ustring active_label;
 
