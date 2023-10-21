@@ -161,6 +161,7 @@ public:
     void setDefaultParameters();
     void resetDefaultParameters();
     bool hasDefaultParameters();
+    virtual bool getHolderRemove() { return false; }
 protected:
     Effect(LivePathEffectObject *lpeobject);
     friend class SatelliteArrayParam;
@@ -207,7 +208,6 @@ private:
     void unsetDefaultParam(Glib::ustring pref_path, Parameter *param);
     bool provides_own_flash_paths; // if true, the standard flash path is suppressed
     sigc::connection _before_commit_connection;
-    bool destroying = false;
     bool is_ready;
     bool defaultsopen;
 };

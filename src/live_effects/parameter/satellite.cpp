@@ -59,7 +59,7 @@ bool SatelliteParam::param_readSVGValue(const gchar *strvalue)
         bool write = false;
         auto lpeitems = param_effect->getCurrrentLPEItems();
         Glib::ustring id_tmp;
-        if (!lpeitems.size() && !param_effect->is_applied && !param_effect->getSPDoc()->isSeeking()) {
+        if (lpeitems.empty() && !param_effect->is_applied && !param_effect->getSPDoc()->isSeeking()) {
             SPObject * old_ref = param_effect->getSPDoc()->getObjectByHref(strvalue);
             if (old_ref) {
                 SPObject * tmpsuccessor = old_ref->_tmpsuccessor;
@@ -92,7 +92,7 @@ bool SatelliteParam::param_readSVGValue(const gchar *strvalue)
                 g_warning("%s", e.what());
                 lperef->detach();
             }
-        } else if (!lpeitems.size() && !param_effect->is_applied && !param_effect->getSPDoc()->isSeeking()) {
+        } else if (lpeitems.empty() && !param_effect->is_applied && !param_effect->getSPDoc()->isSeeking()) {
             param_write_to_repr("");
         }
         if (write) {

@@ -1186,10 +1186,9 @@ std::vector<SPLPEItem *>
 Effect::getCurrrentLPEItems() const {
     std::vector<SPLPEItem *> result;
     auto hreflist = getLPEObj()->hrefList;
-    for (auto item : hreflist) {
-        if (item->document) {
-            auto lpeitem = cast<SPLPEItem>(item);
-            if (lpeitem) {
+    if (!getLPEObj()->deleted) {
+        for (auto item : hreflist) {
+            if (auto lpeitem = cast<SPLPEItem>(item)) {
                 result.push_back(lpeitem);
             }
         }
@@ -1247,13 +1246,11 @@ Effect::setSelectedNodePoints(std::vector<Geom::Point> sNP)
  */
 bool Effect::isOnClipboard()
 {
-    SPDocument *document = getSPDoc();
-    if (!document) {
-        return false;
+    if (auto lpeobj = getLPEObj()) {
+        return lpeobj->isOnClipboard();
     }
-    Inkscape::XML::Node *root = document->getReprRoot();
-    Inkscape::XML::Node *clipnode = sp_repr_lookup_name(root, "inkscape:clipboard", 1);
-    return clipnode != nullptr;
+    assert(lpeobj != nullptr);
+    return false;
 }
 
 bool
@@ -1330,15 +1327,11 @@ void Effect::doOnBeforeCommit()
         SPObject *elemref;
         if (iter && iter->isAttached() && (elemref = iter->getObject())) {
             if (auto *item = cast<SPItem>(elemref)) {
-                auto lpeitem = cast<SPLPEItem>(item);
                 Inkscape::XML::Node *elemnode = elemref->getRepr();
                 SPCSSAttr *css;
                 Glib::ustring css_str;
                 switch (lpe_action) {
                     case LPE_TO_OBJECTS:
-                        if (lpeitem && item->isHidden()) {
-                            lpeitem->removeAllPathEffects(false);
-                        }
                         if (item->isHidden()) {
                             // We set updating because item signal fire a deletion that reset whole parameter satellites
                             if (lpesatellites) {
@@ -1360,9 +1353,6 @@ void Effect::doOnBeforeCommit()
                         break;
 
                     case LPE_ERASE:
-                        if (lpeitem) {
-                            lpeitem->removeAllPathEffects(false);
-                        }
                         // We set updating because item signal fire a deletion that reset whole parameter satellites
                         if (lpesatellites) {
                             lpesatellites->setUpdating(true);
@@ -1503,6 +1493,7 @@ void Effect::doOnRemove_impl(SPLPEItem const* lpeitem)
         }
     }
     doOnRemove(sp_lpe_item);
+    getLPEObj()->deleted = true;
 }
 
 /**
