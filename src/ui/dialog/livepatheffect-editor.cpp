@@ -320,7 +320,7 @@ struct LivePathEffectEditor::LPEMetadata final {
 
 // populate popup with lpes and completion list for a search box
 void LivePathEffectEditor::add_lpes(Inkscape::UI::Widget::CompletionPopup &popup, bool const symbolic,
-                                    std::vector<LPEMetadata> const &lpes)
+                                    std::vector<LPEMetadata> &&lpes)
 {
     popup.clear_completion_list();
 
@@ -333,9 +333,9 @@ void LivePathEffectEditor::add_lpes(Inkscape::UI::Widget::CompletionPopup &popup
     menu.delete_all();
 
     ColumnMenuBuilder<LivePathEffect::LPECategory> builder{menu, 3, Gtk::ICON_SIZE_LARGE_TOOLBAR};
-    std::map<Glib::ustring, LPEMetadata> lpesorted;
+    auto const tie = [](LPEMetadata const &lpe){ return std::tie(lpe.category, lpe.label); };
+    std::sort(lpes.begin(), lpes.end(), [=](auto &l, auto &r){ return tie(l) < tie(r); });
     for (auto const &lpe : lpes) {
-        lpesorted[lpe.label] = lpe;
         // build popup menu
         auto const type = lpe.type;
         int const id = static_cast<int>(type);
@@ -349,12 +349,12 @@ void LivePathEffectEditor::add_lpes(Inkscape::UI::Widget::CompletionPopup &popup
             builder.set_section(get_category_name(lpe.category));
         }
     }
-    for (auto lpemapitem : lpesorted) {
-        auto lpe = lpemapitem.second;
-        auto const type = lpe.type;
-        int const id = static_cast<int>(type);
-        // build completion list
+
+    // build completion list
+    std::sort(lpes.begin(), lpes.end(), [=](auto &l, auto &r){ return l.label < r.label; });
+    for (auto const &lpe: lpes) {
         if (lpe.sensitive) {
+            int const id = static_cast<int>(lpe.type);
             Glib::ustring untranslated_label = converter.get_label(lpe.type);
             Glib::ustring untranslated_description = converter.get_description(lpe.type);
             Glib::ustring search = Glib::ustring::compose("%1_%2", untranslated_label, untranslated_description);
@@ -437,9 +437,7 @@ LivePathEffectEditor::setMenu()
         lpes.push_back({type, category, std::move(label), icon, std::move(tooltip), sensitive});
     }
 
-    auto const tie = [](LPEMetadata const &lpe){ return std::tie(lpe.category, lpe.label); };
-    std::sort(lpes.begin(), lpes.end(), [=](auto &l, auto &r){ return tie(l) < tie(r); });
-    add_lpes(_lpes_popup, symbolic, lpes);
+    add_lpes(_lpes_popup, symbolic, std::move(lpes));
 }
 
 void LivePathEffectEditor::onAdd(LivePathEffect::EffectType etype)

@@ -81,7 +81,7 @@ private:
     int dndy = 0;
 
     struct LPEMetadata;
-    void add_lpes(UI::Widget::CompletionPopup &, bool symbolic, std::vector<LPEMetadata> const &);
+    void add_lpes(UI::Widget::CompletionPopup &, bool symbolic, std::vector<LPEMetadata> &&lpes);
     Glib::ustring get_tooltip(LivePathEffect::EffectType, Glib::ustring const &untranslated_label);
 
     void clear_lpe_list();
