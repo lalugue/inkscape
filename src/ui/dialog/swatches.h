@@ -75,7 +75,7 @@ private:
     void rebuild();
     bool load_swatches();
     bool load_swatches(Glib::ustring path);
-    void update_store_entry();
+    void update_loaded_palette_entry();
     void setup_selector_menu();
     bool on_selector_key_pressed(GtkEventControllerKey const * controller,
                                  unsigned keyval, unsigned keycode, GdkModifierType state);

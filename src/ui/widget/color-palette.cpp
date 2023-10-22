@@ -16,7 +16,6 @@
 #include <gtkmm/adjustment.h>
 #include <gtkmm/builder.h>
 #include <gtkmm/button.h>
-#include <gtkmm/drawingarea.h>
 #include <gtkmm/flowbox.h>
 #include <gtkmm/flowboxchild.h>
 #include <gtkmm/menubutton.h>
@@ -32,6 +31,7 @@
 #include "ui/builder-utils.h"
 #include "ui/dialog/color-item.h"
 #include "ui/util.h"
+#include "ui/widget/color-palette-preview.h"
 #include "ui/widget/popover-menu.h"
 #include "ui/widget/popover-menu-item.h"
 
@@ -670,17 +670,12 @@ public:
         : Glib::ObjectBase{"ColorPaletteMenuItem"}
         , PopoverMenuItem{}
         , _radio_button{Gtk::make_managed<Gtk::RadioButton>(group, label)}
-        , _drawing_area{Gtk::make_managed<Gtk::DrawingArea>()}
+        , _preview{Gtk::make_managed<ColorPalettePreview>(std::move(colors))}
         , id{std::move(id)}
-        , _colors{std::move(colors)}
     {
-        _drawing_area->set_size_request(-1, 2);
-        _drawing_area->signal_draw().connect(
-            sigc::mem_fun(*this, &ColorPaletteMenuItem::on_drawing_area_draw));
-
-        auto const box = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_VERTICAL);
+        auto const box = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_VERTICAL, 1);
         box->add(*_radio_button);
-        box->add(*_drawing_area);
+        box->add(*_preview     );
         add(*box);
         show_all();
     }
@@ -690,40 +685,18 @@ public:
     Glib::ustring const id;
 
 private:
-    Gtk::RadioButton *_radio_button;
-    Gtk::DrawingArea *_drawing_area;
-    std::vector<rgb_t> _colors;
+    Gtk::RadioButton    *_radio_button = nullptr;
+    ColorPalettePreview *_preview      = nullptr;
 
-    bool on_drawing_area_draw(Cairo::RefPtr<Cairo::Context> const &cr);
-};
+    bool on_draw(Cairo::RefPtr<Cairo::Context> const &cr) final
+    {
+        // Skip height of radiobutton at side, to skip the circular radio indicator.
+        // Doing this in size_allocate_vfunc() did not work, but this one *seems* to
+        _preview->set_margin_start(_radio_button->get_height());
 
-bool ColorPaletteMenuItem::on_drawing_area_draw(Cairo::RefPtr<Cairo::Context> const &cr)
-{
-    if (_colors.empty()) return true;
-
-    auto const width = _drawing_area->get_width(), height = _drawing_area->get_height();
-    // Skip height of radiobutton at side, to skip the circular radio indicator.
-    auto const left = _radio_button->get_height();
-    constexpr auto dx = 1; // width per color
-    auto const w = width - left;
-    if (w <= 0) return true;
-
-    auto px = left;
-    for (int i = 0; i < w; ++i) {
-        if (px >= width) return true;
-
-        int index = i * _colors.size() / w;
-        auto& color = _colors.at(index);
-
-        cr->set_source_rgb(color.r, color.g, color.b);
-        cr->rectangle(px, 0, dx, height);
-        cr->fill();
-
-        px += dx;
+        return PopoverMenuItem::on_draw(cr);
     }
-
-    return true;
-}
+};
 
 void ColorPalette::set_palettes(std::vector<palette_t> const &palettes)
 {

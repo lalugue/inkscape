@@ -25,6 +25,7 @@
 #include <glibmm/i18n.h>
 #include <glibmm/ustring.h>
 #include <glibmm/utility.h>
+#include <gtkmm/box.h>
 #include <gtkmm/builder.h>
 #include <gtkmm/button.h>
 #include <gtkmm/cellrenderertext.h>
@@ -49,7 +50,10 @@
 #include "ui/controller.h"
 #include "ui/dialog/color-item.h"
 #include "ui/dialog/global-palettes.h"
+#include "ui/util.h" // ellipsize()
 #include "ui/widget/color-palette.h"
+#include "ui/widget/color-palette-preview.h"
+#include "ui/widget/popover-menu-item.h"
 #include "widgets/paintdef.h"
 
 namespace Inkscape::UI::Dialog {
@@ -116,7 +120,7 @@ SwatchesPanel::SwatchesPanel(bool compact, char const *prefsPath)
 
     if (!compact) {
         if (loaded) {
-            update_store_entry();
+            update_loaded_palette_entry();
         }
 
         g_assert(_selector_menu);
@@ -174,7 +178,7 @@ SwatchesPanel::SwatchesPanel(bool compact, char const *prefsPath)
         get_widget<Gtk::Button>(_builder, "open").signal_clicked().connect([this]{
             // load a color palette file selected by the user
             if (load_swatches()) {
-                update_store_entry();
+                update_loaded_palette_entry();
                 update_selector_menu();
                 update_selector_label(_loaded_palette.id);
             }
@@ -446,6 +450,18 @@ void SwatchesPanel::update_fillstroke_indicators()
     for (auto w : current_stroke) w->set_stroke(true);
 }
 
+[[nodiscard]] static auto to_palette_t(PaletteFileData const &p)
+{
+    UI::Widget::palette_t palette;
+    palette.name = p.name;
+    palette.id = p.id;
+    for (auto const &c : p.colors) {
+        auto [r, g, b] = c.rgb;
+        palette.colors.push_back({r / 255.0, g / 255.0, b / 255.0});
+    }
+    return palette;
+}
+
 /**
  * Process the list of available palettes and update the list in the _palette widget.
  */
@@ -459,13 +475,7 @@ void SwatchesPanel::update_palettes(bool compact) {
 
     // The remaining palettes in the list are the global palettes.
     for (auto &p : GlobalPalettes::get().palettes()) {
-        UI::Widget::palette_t palette;
-        palette.name = p.name;
-        palette.id = p.id;
-        for (auto const &c : p.colors) {
-            auto [r, g, b] = c.rgb;
-            palette.colors.push_back({r / 255.0, g / 255.0, b / 255.0});
-        }
+        auto palette = to_palette_t(p);
         palettes.emplace_back(std::move(palette));
     }
 
@@ -561,18 +571,14 @@ bool SwatchesPanel::load_swatches(Glib::ustring path) {
     return false;
 }
 
-void SwatchesPanel::update_store_entry() {
+void SwatchesPanel::update_loaded_palette_entry() {
     // add or update last entry in a store to match loaded palette
-    if (!_palettes.empty() && _palettes.back().second) { // & loaded?
-        auto &palette = _palettes.back().first;
-        palette.name = _loaded_palette.name;
-        palette.id   = _loaded_palette.id  ;
-    } else {
-        UI::Widget::palette_t palette;
-        palette.name = _loaded_palette.name;
-        palette.id   = _loaded_palette.id  ;
-        _palettes.emplace_back(std::move(palette), true); // Tis now!
+    if (_palettes.empty() || !_palettes.back().second) { // last palette !loaded
+        _palettes.emplace_back();
     }
+    auto &[palette, loaded] = _palettes.back();
+    palette = to_palette_t(_loaded_palette);
+    loaded = true;
 }
 
 void SwatchesPanel::setup_selector_menu()
@@ -611,6 +617,24 @@ bool SwatchesPanel::on_selector_key_pressed(GtkEventControllerKey const * contro
     return true;
 }
 
+[[nodiscard]] static auto make_selector_item(UI::Widget::palette_t const &palette)
+{
+    static constexpr int max_chars = 35; // Make PopoverMenuItems ellipsize long labels, in middle.
+
+    auto const label = Gtk::make_managed<Gtk::Label>(palette.name, true);
+    label->set_xalign(0.0);
+    UI::ellipsize(*label, max_chars, Pango::ELLIPSIZE_MIDDLE);
+
+    auto const box = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_VERTICAL, 1);
+    box->add(*label);
+    box->add(*Gtk::make_managed<UI::Widget::ColorPalettePreview>(palette.colors));
+
+    auto const item = Gtk::make_managed<UI::Widget::PopoverMenuItem>();
+    item->add(*box);
+
+    return std::pair{item, label};
+}
+
 void SwatchesPanel::update_selector_menu()
 {
     g_assert(_selector_menu);
@@ -622,14 +646,14 @@ void SwatchesPanel::update_selector_menu()
     if (_palettes.empty()) return;
 
     // TODO: GTK4: probably nicer to use GtkGridView.
-    static constexpr int max_chars = 35; // Make PopoverMenuItems ellipsize long labels, in middle.
-    Inkscape::UI::ColumnMenuBuilder builder{*_selector_menu, 2, Gtk::ICON_SIZE_MENU, 0, max_chars};
+    Inkscape::UI::ColumnMenuBuilder builder{*_selector_menu, 2};
     // Items are put in a SizeGroup to keep the two columnsʼ widths homogeneous
     auto const size_group = Gtk::SizeGroup::create(Gtk::SIZE_GROUP_HORIZONTAL);
     auto const add_item = [&](UI::Widget::palette_t const &palette){
-        auto const item = builder.add_item(palette.name, {}, {}, true, false,
-                                           [id = palette.id, this]{ set_palette(id); });
-        size_group->add_widget(*item);
+        auto const [item, label] = make_selector_item(palette);
+        item->signal_activate().connect([id = palette.id, this]{ set_palette(id); });
+        size_group->add_widget(*label);
+        builder.add_item(*item);
     };
     // Acrobatics are done to sort down columns, not over rows
     auto const size = _palettes.size(), half = (size + 1) / 2;

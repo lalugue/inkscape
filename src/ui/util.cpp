@@ -20,8 +20,10 @@
 #include <gtkmm/bin.h>
 #include <gtkmm/container.h>
 #include <gtkmm/image.h>
+#include <gtkmm/label.h>
 #include <gtkmm/messagedialog.h>
 #include <gtkmm/revealer.h>
+#include <gtkmm/tooltip.h>
 #include <gtkmm/widget.h>
 #include <pangomm/context.h>
 #include <pangomm/fontdescription.h>
@@ -224,6 +226,23 @@ get_font_size(Gtk::Widget &widget)
     auto font_size = font.get_size();
     if (!font.get_size_is_absolute()) font_size /= Pango::SCALE;
     return font_size;
+}
+
+void ellipsize(Gtk::Label &label, int const max_width_chars, Pango::EllipsizeMode const mode)
+{
+    if (max_width_chars <= 0) return;
+
+    label.set_max_width_chars(max_width_chars);
+    label.set_ellipsize(mode);
+    label.set_has_tooltip(true);
+    label.signal_query_tooltip().connect([&](int, int, bool,
+                                             Glib::RefPtr<Gtk::Tooltip> const &tooltip)
+    {
+        if (!label.get_layout()->is_ellipsized()) return false;
+
+        tooltip->set_text(label.get_text());
+        return true;
+    });
 }
 
 } // namespace Inkscape::UI

@@ -18,6 +18,7 @@
 #include <type_traits>
 #include <vector>
 
+#include <pangomm/layout.h> // Pango::EllipsizeMode
 #include <gdkmm/rgba.h>
 #include <gtkmm/cellrenderer.h>
 #include <gtkmm/enums.h>
@@ -46,10 +47,12 @@ class ustring;
 } // namespace Glib
 
 namespace Gtk {
+class Label;
 class Widget;
 } // namespace Gtk
 
 Glib::ustring ink_ellipsize_text (Glib::ustring const &src, size_t maxlen);
+
 void reveal_widget(Gtk::Widget *widget, bool show);
 
 // check if widget in a container is actually visible
@@ -141,6 +144,11 @@ Gtk::Widget *for_each_parent(Gtk::Widget &widget, Func &&func)
 [[nodiscard]] bool is_descendant_of(Gtk::Widget const &descendant, Gtk::Widget const &ancestor);
 
 [[nodiscard]] int get_font_size(Gtk::Widget &widget);
+
+// If max_width_chars is > 0, then the created Label has :max-width-chars set to
+// that limit, the :ellipsize mode is set to the passed-in @a mode, & a ::query-
+// tooltip handler is connected to show the label as the tooltip when ellipsized
+void ellipsize(Gtk::Label &label, int max_width_chars, Pango::EllipsizeMode mode);
 
 } // namespace Inkscape::UI
 

@@ -196,6 +196,7 @@ set(ui_SRC
 	widget/color-icc-selector.cpp
 	widget/color-notebook.cpp
 	widget/color-palette.cpp
+	widget/color-palette-preview.cpp
 	widget/color-picker.cpp
 	widget/color-preview.cpp
 	icon-loader.cpp
@@ -482,6 +483,7 @@ set(ui_SRC
 	widget/color-icc-selector.h
 	widget/color-notebook.h
 	widget/color-palette.h
+	widget/color-palette-preview.h
 	widget/color-picker.h
 	widget/color-preview.h
 	widget/color-scales.h

@@ -26,23 +26,18 @@ class ColumnMenuBuilder {
 public:
     ColumnMenuBuilder(Widget::PopoverMenu& menu, int columns,
                       Gtk::IconSize icon_size = Gtk::ICON_SIZE_MENU,
-                      int const first_row = 0,
-                      int const max_width_chars = 0)
+                      int const first_row = 0)
        : _menu(menu)
         , _row(first_row)
         , _columns(columns)
-        , _max_width_chars{max_width_chars}
         , _icon_size(static_cast<int>(icon_size))
     {
         assert(_row >= 0);
         assert(_columns >= 1);
     }
 
-    Widget::PopoverMenuItem *add_item(
-        Glib::ustring const &label, std::optional<SectionData> const &section,
-        Glib::ustring const &tooltip, Glib::ustring const &icon_name,
-        bool const sensitive, bool const customtooltip,
-        sigc::slot<void ()> callback)
+    void add_item(Widget::PopoverMenuItem &item,
+                  std::optional<SectionData> const &section = {})
     {
         _new_section = false;
         _section = nullptr;
@@ -75,7 +70,22 @@ public:
             _col = 0;
         }
 
-        auto const item = Gtk::make_managed<Widget::PopoverMenuItem>(label, true, _max_width_chars,
+        _menu.attach(item, _col, _col + 1, _row, _row + 1);
+
+        _col++;
+        if (_col >= _columns) {
+            _col = 0;
+            _row++;
+        }
+    }
+
+    Widget::PopoverMenuItem *add_item(
+        Glib::ustring const &label, std::optional<SectionData> const &section,
+        Glib::ustring const &tooltip, Glib::ustring const &icon_name,
+        bool const sensitive, bool const customtooltip,
+        sigc::slot<void ()> callback)
+    {
+        auto const item = Gtk::make_managed<Widget::PopoverMenuItem>(label, true,
                                                                      icon_name, _icon_size);
         if (!customtooltip) {
             item->set_tooltip_markup(tooltip);
@@ -83,12 +93,8 @@ public:
         item->set_sensitive(sensitive);
         item->signal_activate().connect(std::move(callback));
         item->show_all();
-        _menu.attach(*item, _col, _col + 1, _row, _row + 1);
-        _col++;
-        if (_col >= _columns) {
-            _col = 0;
-            _row++;
-        }
+
+        add_item(*item, section);
 
         return item;
     }
@@ -122,7 +128,6 @@ private:
     bool _new_section = false;
     std::optional<SectionData> _last_section;
     Widget::PopoverMenuItem *_section = nullptr;
-    int _max_width_chars = 0;
     Gtk::IconSize _icon_size;
 };
 

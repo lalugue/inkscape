@@ -35,16 +35,6 @@ public:
     // If text & icon_name are present, we add a Box containing a Image & Label.
     // If only 1 of text or icon_name are present, we add only a Label or Image.
     // If neither text or icon_name are present, we add no child: you can do so
-    // If max_width_chars is > 0, the created Label has :max-width-chars set to
-    // that value, and the :ellipsize mode set to Pango::ELLIPSIZE_END to match.
-    [[nodiscard]] PopoverMenuItem(Glib::ustring const &text,
-                                  bool mnemonic,
-                                  int max_width_chars,
-                                  Glib::ustring const &icon_name,
-                                  Gtk::IconSize icon_size,
-                                  bool popdown_on_activate = true);
-
-    /// @copydoc PopoverMenuItem()
     [[nodiscard]] explicit PopoverMenuItem(Glib::ustring const &text = {},
                                            bool mnemonic = false,
                                            Glib::ustring const &icon_name = {},
