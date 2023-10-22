@@ -132,10 +132,12 @@ Notes:
 
 .inkscape-center {
     shape: "plus";
+    stroke-width: 1px;
 }
 
 .inkscape-marker {
     shape: "cross";
+    stroke-width: 1px;
 }
 
 .inkscape-invisible {

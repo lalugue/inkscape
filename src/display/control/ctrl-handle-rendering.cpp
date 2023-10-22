@@ -311,6 +311,46 @@ void draw_malign(Cairo::Context &cr, double size)
     cr.close_path();
 }
 
+void draw_circle(Cairo::Context &cr, double size)
+{
+    cr.arc(size / 2.0, size / 2.0, size / 2.0, 0, 2 * M_PI);
+}
+
+void draw_square(Cairo::Context &cr, double size)
+{
+    cr.rectangle(0, 0, size, size);
+}
+
+void draw_diamond(Cairo::Context &cr, double size)
+{
+    cr.translate(size / 2.0, size / 2.0);
+    cr.rotate(M_PI / 4);
+
+    double const size2 = size / std::sqrt(2);
+    cr.translate(-size2 / 2.0, -size2 / 2.0);
+    cr.rectangle(0, 0, size2, size2);
+}
+
+void draw_cross(Cairo::Context &cr, double size)
+{
+    cr.move_to(0, 0);
+    cr.line_to(size, size);
+
+    cr.move_to(0, size);
+    cr.line_to(size, 0);
+}
+
+void draw_plus(Cairo::Context &cr, double size)
+{
+    double const half = size / 2;
+
+    cr.move_to(half, 0);
+    cr.line_to(half, size);
+
+    cr.move_to(0, half);
+    cr.line_to(size, half);
+}
+
 void draw_cairo_path(CanvasItemCtrlShape shape, Cairo::Context &cr, double size)
 {
     switch (shape) {
@@ -347,6 +387,26 @@ void draw_cairo_path(CanvasItemCtrlShape shape, Cairo::Context &cr, double size)
             draw_malign(cr, size);
             break;
 
+        case CANVAS_ITEM_CTRL_SHAPE_CIRCLE:
+            draw_circle(cr, size);
+            break;
+
+        case CANVAS_ITEM_CTRL_SHAPE_SQUARE:
+            draw_square(cr, size);
+            break;
+
+        case CANVAS_ITEM_CTRL_SHAPE_DIAMOND:
+            draw_diamond(cr, size);
+            break;
+
+        case CANVAS_ITEM_CTRL_SHAPE_CROSS:
+            draw_cross(cr, size);
+            break;
+
+        case CANVAS_ITEM_CTRL_SHAPE_PLUS:
+            draw_plus(cr, size);
+            break;
+
         default:
             // Shouldn't happen
             break;
@@ -364,181 +424,46 @@ void draw_shape(Cairo::ImageSurface &surface,
                 int width, double angle, int device_scale)
 {
     // TODO: Maybe replace the long list of arguments with a handle-style entity.
-    int const scaled_stroke = device_scale * stroke_width;
-    int const scaled_outline = device_scale * outline_width;
 
-    // Deal with shapes that can be drawn using Cairo first.
-    switch (shape) {
-        case CANVAS_ITEM_CTRL_SHAPE_CIRCLE:
-        case CANVAS_ITEM_CTRL_SHAPE_TRIANGLE:        // Triangle optionally rotated
-        case CANVAS_ITEM_CTRL_SHAPE_TRIANGLE_ANGLED: // triangle with pointing to center of  knot and rotated this way
-        case CANVAS_ITEM_CTRL_SHAPE_DARROW:          // Double arrow
-        case CANVAS_ITEM_CTRL_SHAPE_SARROW:          // Same shape as darrow but rendered rotated 90 degrees.
-        case CANVAS_ITEM_CTRL_SHAPE_CARROW:          // Double corner arrow
-        case CANVAS_ITEM_CTRL_SHAPE_PIVOT:           // Fancy "plus"
-        case CANVAS_ITEM_CTRL_SHAPE_SALIGN:          // Side align (triangle pointing toward line)
-        case CANVAS_ITEM_CTRL_SHAPE_CALIGN:          // Corner align (triangle pointing into "L")
-        case CANVAS_ITEM_CTRL_SHAPE_MALIGN: {        // Middle align (four triangles poining inward)
-            double size = width / device_scale; // Use unscaled width.
+    double size = width / device_scale; // Use unscaled width.
 
-            auto cr = Cairo::Context(cairo_create(surface.cobj()), true);
-            cr.set_operator(Cairo::OPERATOR_SOURCE);
+    auto cr = Cairo::Context(cairo_create(surface.cobj()), true);
+    cr.set_operator(Cairo::OPERATOR_SOURCE);
+    cr.set_line_cap(Cairo::LINE_CAP_SQUARE);
 
-            // Rotate around center
-            cr.translate(size / 2.0, size / 2.0);
-            cr.rotate(angle);
-            cr.translate(-size / 2.0, -size / 2.0);
+    // Rotate around center
+    cr.translate(size / 2.0, size / 2.0);
+    cr.rotate(angle);
+    cr.translate(-size / 2.0, -size / 2.0);
 
-            double effective_outline = outline_width + 0.5 * stroke_width;
+    // (1.5 is an approximation of root(2) and 3 is 1.5 * 2)
+    double effective_outline = outline_width + 0.5 * stroke_width;
+    cr.translate(1.5 * effective_outline, 1.5 * effective_outline);
 
-            if (shape == CANVAS_ITEM_CTRL_SHAPE_CIRCLE) {
-                cr.arc(size / 2.0, size / 2.0, size / 2.0 - outline_width, 0, 2 * M_PI);
-            } else {
-                // (1.5 is an approximation of root(2) and 3 is 1.5 * 2), 
-                // this is because the angled shape have their stroke at 45 degrees
-                cr.translate(1.5 * effective_outline, 1.5 * effective_outline);
-                draw_cairo_path(shape, cr, size - 3 * effective_outline);
-            }
+    draw_cairo_path(shape, cr, size - 3 * effective_outline);
 
-            // Outline.
-            cr.set_source_rgba(SP_RGBA32_R_F(outline),
-                                SP_RGBA32_G_F(outline),
-                                SP_RGBA32_B_F(outline),
-                                SP_RGBA32_A_F(outline));
-            cr.set_line_width(2 * effective_outline);
-            cr.stroke_preserve();
+    // Outline.
+    cr.set_source_rgba(SP_RGBA32_R_F(outline),
+                        SP_RGBA32_G_F(outline),
+                        SP_RGBA32_B_F(outline),
+                        SP_RGBA32_A_F(outline));
+    cr.set_line_width(2 * effective_outline);
+    cr.stroke_preserve();
 
-            // Fill.
-            cr.set_source_rgba(SP_RGBA32_R_F(fill),
-                                SP_RGBA32_G_F(fill),
-                                SP_RGBA32_B_F(fill),
-                                SP_RGBA32_A_F(fill));
-            cr.fill_preserve();
+    // Fill.
+    cr.set_source_rgba(SP_RGBA32_R_F(fill),
+                        SP_RGBA32_G_F(fill),
+                        SP_RGBA32_B_F(fill),
+                        SP_RGBA32_A_F(fill));
+    cr.fill_preserve();
 
-            // Stroke.
-            cr.set_source_rgba(SP_RGBA32_R_F(stroke),
-                                SP_RGBA32_G_F(stroke),
-                                SP_RGBA32_B_F(stroke),
-                                SP_RGBA32_A_F(stroke));
-            cr.set_line_width(stroke_width);
-            cr.stroke();
-
-            return;
-        }
-
-        default:
-            break;
-    }
-
-    // Acquire data pointer.
-    surface.flush();
-    auto p = reinterpret_cast<uint32_t *>(surface.get_data());
-
-    // Acquire skip.
-    auto const stride = surface.get_stride();
-    assert(stride % 4 == 0);
-    auto const skip = stride / 4 - surface.get_width();
-
-    // Convert colours to Cairo format.
-    fill = argb32_from_rgba(fill);
-    stroke = argb32_from_rgba(stroke);
-    outline = argb32_from_rgba(outline);
-
-    switch (shape) {
-        case CANVAS_ITEM_CTRL_SHAPE_SQUARE:
-            // Actually any rectangular shape.
-            for (int i = 0; i < width; ++i, p += skip) {
-                for (int j = 0; j < width; ++j, ++p) {
-                    if (        i <  scaled_outline ||         j <  scaled_outline ||
-                        width - i <= scaled_outline || width - j <= scaled_outline)
-                    {
-                        *p = outline;
-                    } else if (        i <  scaled_outline + scaled_stroke ||         j <  scaled_outline + scaled_stroke ||
-                               width - i <= scaled_outline + scaled_stroke || width - j <= scaled_outline + scaled_stroke)
-                    {
-                        *p = stroke;
-                    } else {
-                        *p = fill;
-                    }
-                }
-            }
-            break;
-
-        case CANVAS_ITEM_CTRL_SHAPE_DIAMOND: {
-            int m = (width + 1) / 2;
-
-            for (int i = 0; i < width; ++i, p += skip) {
-                for (int j = 0; j < width; ++j, ++p) {
-                    if (             i  +              j  > m - 1 + scaled_stroke + scaled_outline &&
-                        (width - 1 - i) +              j  > m - 1 + scaled_stroke + scaled_outline &&
-                        (width - 1 - i) + (width - 1 - j) > m - 1 + scaled_stroke + scaled_outline &&
-                                     i  + (width - 1 - j) > m - 1 + scaled_stroke + scaled_outline)
-                    {
-                        *p = fill;
-                    } else if (             i  +              j  > m - 1 + scaled_outline &&
-                               (width - 1 - i) +              j  > m - 1 + scaled_outline &&
-                               (width - 1 - i) + (width - 1 - j) > m - 1 + scaled_outline &&
-                                            i  + (width - 1 - j) > m - 1 + scaled_outline)
-                    {
-                        *p = stroke;
-                    } else if (             i  +              j  > m - 2 &&
-                               (width - 1 - i) +              j  > m - 2 &&
-                               (width - 1 - i) + (width - 1 - j) > m - 2 &&
-                                            i  + (width - 1 - j) > m - 2)
-                    {
-                        *p = outline;
-                    }
-                }
-            }
-            break;
-        }
-
-        case CANVAS_ITEM_CTRL_SHAPE_CROSS: {
-            // Actually an 'x'.
-            double rel0 = scaled_stroke / sqrt(2);
-            double rel1 = (2 * scaled_outline + scaled_stroke) / sqrt(2);
-            double rel2 = (4 * scaled_outline + scaled_stroke) / sqrt(2);
-
-            for (int y = 0; y < width; y++, p += skip) {
-                for (int x = 0; x < width; x++, p++) {
-                    if ((abs(x - y) <= std::max(width - rel2, 0.0) && abs(x + y - width) <= rel0) ||
-                        (abs(x - y) <= rel0 && abs(x + y - width) <= std::max(width - rel2, 0.0)))
-                    {
-                        *p = stroke;
-                    } else if ((abs(x - y) <= std::max(width - rel1, 0.0) && abs(x + y - width) <= rel1) ||
-                               (abs(x - y) <= rel1 && abs(x + y - width) <= std::max(width - rel1, 0.0)))
-                    {
-                        *p = outline;
-                    }
-                }
-            }
-            break;
-        }
-
-        case CANVAS_ITEM_CTRL_SHAPE_PLUS:
-            // Actually an '+'.
-            for (int y = 0; y < width; y++, p += skip) {
-                for (int x = 0; x < width; x++, p++) {
-                    if ((std::abs(x - width / 2) < scaled_stroke / 2.0 ||
-                         std::abs(y - width / 2) < scaled_stroke / 2.0) &&
-                        (x >= scaled_outline && y >= scaled_outline &&
-                         width - x >= scaled_outline + 1 && width - y >= scaled_outline + 1))
-                    {
-                        *p = stroke;
-                    } else if (std::abs(x - width / 2) < scaled_stroke / 2.0 + scaled_outline ||
-                               std::abs(y - width / 2) < scaled_stroke / 2.0 + scaled_outline)
-                    {
-                        *p = outline;
-                    }
-                }
-            }
-            break;
-
-        default:
-            break;
-    }
-
-    surface.mark_dirty();
+    // Stroke.
+    cr.set_source_rgba(SP_RGBA32_R_F(stroke),
+                        SP_RGBA32_G_F(stroke),
+                        SP_RGBA32_B_F(stroke),
+                        SP_RGBA32_A_F(stroke));
+    cr.set_line_width(stroke_width);
+    cr.stroke();
 }
 
 std::shared_ptr<Cairo::ImageSurface const> lookup_cache(HandleTuple const &prop)
