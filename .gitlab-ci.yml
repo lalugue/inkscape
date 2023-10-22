@@ -131,6 +131,7 @@ inkscape:macos:x64:
   variables:
     INK_BUILD: $CI_PIPELINE_IID
     MACOSX_DEPLOYMENT_TARGET: "10.13"
+    WRK_DIR: /Users/Shared/work
   script:
     - packaging/macos/build.sh
   artifacts:
@@ -152,7 +153,7 @@ inkscape:macos:arm:
   cache:
     key: "cache-macos"
     paths:
-      - $CI_PROJECT_DIR/ccache
+      - ccache
 
 
 .windows:
@@ -232,12 +233,12 @@ test:linux:
       - build/Testing
     when: on_failure
 
-test:macos:x64:
-  extends: inkscape:macos:x64
+test:macos:arm:
+  extends: inkscape:macos:arm
   stage: test
   dependencies:
-    - inkscape:macos:x64
-  needs: ["inkscape:macos:x64"]
+    - inkscape:macos:arm
+  needs: ["inkscape:macos:arm"]
   script:
     - packaging/macos/test.sh
   artifacts:
