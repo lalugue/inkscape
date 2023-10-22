@@ -16,7 +16,7 @@
 #include <compare>
 #include <cstdint>
 #include <functional> // std::hash
-#include <tuple>
+#include <unordered_map>
 
 #include "canvas-item-enums.h"
 
@@ -34,6 +34,24 @@ struct TypeState
 
     auto operator<=>(TypeState const &) const = default;
 };
+
+} // namespace Inkscape::Handles
+
+/**
+ * TypeState hash.
+ */
+template <> struct std::hash<Inkscape::Handles::TypeState>
+{
+    size_t operator()(Inkscape::Handles::TypeState const &handle) const
+    {
+        return (size_t{handle.type} << 3) |
+               (size_t{handle.selected} << 2) |
+               (size_t{handle.hover} << 1) |
+               (size_t{handle.click});
+    }
+};
+
+namespace Inkscape::Handles {
 
 /**
  * Template struct for properties with specificities.
@@ -90,21 +108,18 @@ struct Style
     uint32_t getOutline() const;
 };
 
-void ensure_styles_parsed();
-Style const &lookup_style(TypeState const &handle);
+/**
+ * The result of parsing the handle styling CSS files, containing all information
+ * needed to style a given handle.
+ */
+struct Css
+{
+    std::unordered_map<TypeState, Style> style_map;
+};
+
+Css parse_css();
 
 } // namespace Inkscape::Handles
-
-template <> struct std::hash<Inkscape::Handles::TypeState>
-{
-    size_t operator()(Inkscape::Handles::TypeState const &handle) const
-    {
-        return (size_t{handle.type} << 3) |
-               (size_t{handle.selected} << 2) |
-               (size_t{handle.hover} << 1) |
-               (size_t{handle.click});
-    }
-};
 
 #endif // INKSCAPE_DISPLAY_CONTROL_CTRL_HANDLE_STYLING_H
 

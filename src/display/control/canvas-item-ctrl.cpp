@@ -323,12 +323,10 @@ void CanvasItemCtrl::_update(bool)
     // Set _angle, and compute adjustment for anchor.
     int dx = 0;
     int dy = 0;
-    
-    Handles::ensure_styles_parsed();
 
     CanvasItemCtrlShape shape = _shape;
     if (!_shape_set) {
-        auto const &style = Handles::lookup_style(_handle);
+        auto const &style = _context->handlesCss()->style_map.at(_handle);
         shape = style.shape();
     }
 
@@ -456,6 +454,13 @@ void CanvasItemCtrl::_render(CanvasItemBuffer &buf) const
     buf.cr->restore();
 }
 
+void CanvasItemCtrl::_invalidate_ctrl_handles()
+{
+    assert(!_context->snapshotted()); // precondition
+    _built.reset();
+    request_update();
+}
+
 /**
  * Build object-specific cache.
  */
@@ -469,8 +474,8 @@ void CanvasItemCtrl::build_cache(int device_scale) const
         std::cerr << "CanvasItemCtrl::build_cache: Width not odd integer! "
                   << _name << ":  width: " << _width << std::endl;
     }
-
-    auto const &style = Handles::lookup_style(_handle);
+    
+    auto const &style = _context->handlesCss()->style_map.at(_handle);
 
     _cache = Handles::draw({
         .shape = _shape_set ? _shape : style.shape(),

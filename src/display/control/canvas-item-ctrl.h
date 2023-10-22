@@ -66,6 +66,7 @@ protected:
 
     void _update(bool propagate) override;
     void _render(CanvasItemBuffer &buf) const override;
+    void _invalidate_ctrl_handles() override;
 
     void build_cache(int device_scale) const;
 

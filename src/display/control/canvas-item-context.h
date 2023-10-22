@@ -7,11 +7,13 @@
 #define SEEN_CANVAS_ITEM_CONTEXT_H
 
 #include <2geom/affine.h>
+#include "helper/auto-connection.h"
 #include "util/funclog.h"
 
 namespace Inkscape {
 
 namespace UI::Widget { class Canvas; }
+namespace Handles { class Css; }
 
 class CanvasItemGroup;
 
@@ -31,6 +33,9 @@ public:
     Geom::Affine const &affine() const { return _affine; }
     void setAffine(Geom::Affine const &affine) { _affine = affine; }
 
+    // Control handle styling
+    std::shared_ptr<Handles::Css const> const &handlesCss() const { return _handles_css; }
+
     // Snapshotting
     void snapshot();
     void unsnapshot();
@@ -46,6 +51,10 @@ private:
 
     // Geometry
     Geom::Affine _affine;
+
+    // Control handle styling
+    std::shared_ptr<Handles::Css const> _handles_css;
+    auto_connection _css_updated_conn;
 
     // Snapshotting
     char _cacheline_separator[127];

@@ -78,6 +78,13 @@ void CanvasItemGroup::_render(Inkscape::CanvasItemBuffer &buf) const
     }
 }
 
+void CanvasItemGroup::_invalidate_ctrl_handles()
+{
+    for (auto &c : items) {
+        c._invalidate_ctrl_handles();
+    }
+}
+
 // Return last visible and pickable item that contains point.
 // SPCanvasGroup returned distance but it was not used.
 CanvasItem *CanvasItemGroup::pick_item(Geom::Point const &p)

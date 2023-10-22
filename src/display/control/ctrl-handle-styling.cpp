@@ -2,7 +2,6 @@
 #include "ctrl-handle-styling.h"
 
 #include <optional>
-#include <unordered_map>
 #include <boost/functional/hash.hpp>
 #include <glibmm/fileutils.h>
 #include <glibmm/i18n.h>
@@ -23,15 +22,6 @@ using Inkscape::Util::delete_with;
 
 namespace Inkscape::Handles {
 namespace {
-
-/**
- * The result of parsing the handle styling CSS files, containing all information
- * needed to style a given handle.
- */
-struct Css
-{
-    std::unordered_map<TypeState, Style> style_map;
-};
 
 /**
  * State needed for parsing (between functions).
@@ -324,10 +314,30 @@ void clear_selectors(CRDocHandler *a_handler, CRSelector *a_selector)
     state.selected_handles.clear();
 }
 
-/**
- * Parse and set handle styles from css.
- */
-Css parse_handle_styles()
+uint32_t combine_rgb_a(uint32_t rgb, float a)
+{
+    EXTRACT_ARGB32(rgb, _, r, g, b)
+    return Display::AssembleARGB32(r, g, b, a * 255);
+}
+
+} // namespace
+
+uint32_t Style::getFill() const
+{
+    return combine_rgb_a(fill(), fill_opacity() * opacity());
+}
+
+uint32_t Style::getStroke() const
+{
+    return combine_rgb_a(stroke(), stroke_opacity() * opacity());
+}
+
+uint32_t Style::getOutline() const
+{
+    return combine_rgb_a(outline(), outline_opacity() * opacity());
+}
+
+Css parse_css()
 {
     Css result;
 
@@ -364,44 +374,6 @@ Css parse_handle_styles()
     parse(IO::Resource::USER);
 
     return result;
-}
-
-uint32_t combine_rgb_a(uint32_t rgb, float a)
-{
-    EXTRACT_ARGB32(rgb, _, r, g, b)
-    return Display::AssembleARGB32(r, g, b, a * 255);
-}
-
-std::optional<Css> css;
-
-} // namespace
-
-uint32_t Style::getFill() const
-{
-    return combine_rgb_a(fill(), fill_opacity() * opacity());
-}
-
-uint32_t Style::getStroke() const
-{
-    return combine_rgb_a(stroke(), stroke_opacity() * opacity());
-}
-
-uint32_t Style::getOutline() const
-{
-    return combine_rgb_a(outline(), outline_opacity() * opacity());
-}
-
-void ensure_styles_parsed()
-{
-    [[unlikely]] if (!css) {
-        css = parse_handle_styles();
-    }
-}
-
-Style const &lookup_style(TypeState const &handle)
-{
-    assert(css);
-    return css->style_map.at(handle); // all handles should exist
 }
 
 } // namespace Inkscape::Handles

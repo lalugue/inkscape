@@ -6,6 +6,7 @@
 #include "canvas-item-context.h"
 
 #include "canvas-item-group.h"
+#include "ctrl-handle-manager.h"
 
 namespace Inkscape {
 
@@ -13,6 +14,14 @@ CanvasItemContext::CanvasItemContext(UI::Widget::Canvas *canvas)
     : _canvas(canvas)
     , _root(new CanvasItemGroup(this))
 {
+    auto &m = Handles::Manager::get();
+    _handles_css = m.getCss();
+    _css_updated_conn = m.connectCssUpdated([this] {
+        defer([this] {
+            _handles_css = Handles::Manager::get().getCss();
+            _root->_invalidate_ctrl_handles();
+        });
+    });
 }
 
 CanvasItemContext::~CanvasItemContext()

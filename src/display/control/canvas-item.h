@@ -111,6 +111,7 @@ public:
 
 protected:
     friend class CanvasItemGroup;
+    friend class CanvasItemContext; // access to _invalidate_ctrl_handles
 
     virtual ~CanvasItem();
 
@@ -124,6 +125,7 @@ protected:
     Geom::Affine const &affine() const { return _context->affine(); }
     virtual void _update(bool propagate) = 0;
     virtual void _mark_net_invisible();
+    virtual void _invalidate_ctrl_handles() {}
 
     // Display
     bool _visible = true;
