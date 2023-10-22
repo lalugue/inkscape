@@ -23,7 +23,6 @@ MessageParam::MessageParam( const Glib::ustring& label, const Glib::ustring& tip
                       Effect* effect, const gchar * default_message, Glib::ustring  legend, 
                       Gtk::Align halign, Gtk::Align valign, double marginstart, double marginend)
     : Parameter(label, tip, key, wr, effect),
-      message(default_message),
       defmessage(default_message),
       _legend(std::move(legend)),
       _halign(halign),
@@ -41,7 +40,7 @@ MessageParam::MessageParam( const Glib::ustring& label, const Glib::ustring& tip
 void
 MessageParam::param_set_default()
 {
-    param_setValue(defmessage);
+    // do nothing
 }
 
 void 
@@ -60,7 +59,9 @@ MessageParam::param_readSVGValue(const gchar * strvalue)
 Glib::ustring
 MessageParam::param_getSVGValue() const
 {
-    return message;
+    return "";  // we dorn want to store messages in the SVG we store in LPE volatile
+    // variables and get content with
+    // param_getDefaultSVGValue() instead
 }
 
 Glib::ustring
@@ -87,7 +88,7 @@ MessageParam::param_newWidget()
     widg_frame->set_margin_end(_marginend);
     widg_frame->set_margin_start(_marginstart);
 
-    _label = Gtk::make_managed<Gtk::Label>(message, Gtk::ALIGN_END);
+    _label = Gtk::make_managed<Gtk::Label>(defmessage, Gtk::ALIGN_END);
     _label->set_use_underline (true);
     _label->set_use_markup();
     _label->set_line_wrap(true);
@@ -104,10 +105,10 @@ MessageParam::param_newWidget()
 void
 MessageParam::param_setValue(const gchar * strvalue)
 {
-    if (strcmp(strvalue, message) != 0) {
+    if (g_strcmp0(strvalue, defmessage.c_str())) {
         param_effect->refresh_widgets = true;
     }
-    message = strvalue;
+    defmessage = strvalue;
 }
 
 

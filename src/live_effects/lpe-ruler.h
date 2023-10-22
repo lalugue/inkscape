@@ -45,7 +45,7 @@ class LPERuler : public Effect {
 public:
     LPERuler(LivePathEffectObject *lpeobject);
     ~LPERuler() override;
-
+    void doOnApply(SPLPEItem const* lpeitem) override;
     Geom::Piecewise<Geom::D2<Geom::SBasis> > doEffect_pwd2 (Geom::Piecewise<Geom::D2<Geom::SBasis> > const & pwd2_in) override;
 
 private:
@@ -63,7 +63,8 @@ private:
     EnumParam<MarkDirType> mark_dir;
     ScalarParam offset;
     EnumParam<BorderMarkType> border_marks;
-    Glib::ustring display_unit;
+    Glib::ustring prev_unit;
+    bool legacy = false;
     static Geom::Point n_major, n_minor; // used for internal computations
 
     LPERuler(const LPERuler&) = delete;

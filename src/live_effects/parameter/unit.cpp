@@ -22,21 +22,25 @@ UnitParam::UnitParam(const Glib::ustring& label, const Glib::ustring& tip,
                      const Glib::ustring& key, Inkscape::UI::Widget::Registry* wr,
                      Effect* effect, Glib::ustring default_unit)
     : Parameter(label, tip, key, wr, effect)
-    , defunit{unit_table.getUnit(default_unit)}
-    , unit{defunit}
+    , defunit{default_unit}
 {
+   unit = std::make_unique<Inkscape::Util::Unit const>(*unit_table.getUnit(default_unit));
 }
 
 UnitParam::~UnitParam()
 {
-    free_unit();
+    if (unit) {
+        delete unit.get();
+        unit.release();
+    }
 }
+
 
 bool
 UnitParam::param_readSVGValue(const gchar * strvalue)
 {
     if (strvalue) {
-        param_set_value(*unit_table.getUnit(strvalue));
+        param_set_value(strvalue);
         return true;
     }
     return false;
@@ -45,39 +49,47 @@ UnitParam::param_readSVGValue(const gchar * strvalue)
 Glib::ustring
 UnitParam::param_getSVGValue() const
 {
-    return unit->abbr;
+    return unit.get()->abbr;
 }
 
 Glib::ustring
 UnitParam::param_getDefaultSVGValue() const
 {
-    return defunit->abbr;
+    return defunit;
 }
 
 void
 UnitParam::param_set_default()
 {
-    param_set_value(*defunit);
+    param_set_value(defunit.c_str());
 }
 
 void 
 UnitParam::param_update_default(const gchar * default_unit)
 {
-    defunit = unit_table.getUnit((Glib::ustring)default_unit);
+    defunit = "px"; // fallback to px
+    if (default_unit) {
+        defunit = default_unit;
+    }
 }
 
 void
-UnitParam::param_set_value(Inkscape::Util::Unit const &val)
+UnitParam::param_set_value(const gchar * strvalue)
 {
-    param_effect->refresh_widgets = true;
-    free_unit();
-    unit = new Inkscape::Util::Unit(val);
+    if (strvalue) {
+        param_effect->refresh_widgets = true;
+        if (unit) {
+            delete unit.get();
+            unit.release();
+        }
+        unit = std::make_unique<Inkscape::Util::Unit const>(*unit_table.getUnit(strvalue));
+    }
 }
 
 const gchar *
 UnitParam::get_abbreviation() const
 {
-    return unit->abbr.c_str();
+    return unit.get()->abbr.c_str();
 }
 
 Gtk::Widget *
@@ -89,19 +101,11 @@ UnitParam::param_newWidget()
                                                                               param_effect->getRepr(),
                                                                               param_effect->getSPDoc() );
 
-    unit_menu->setUnit(unit->abbr);
+    unit_menu->setUnit(unit.get()->abbr);
     unit_menu->set_undo_parameters(_("Change unit parameter"), INKSCAPE_ICON("dialog-path-effects"));
     return unit_menu;
 }
 
-void
-UnitParam::free_unit()
-{
-    // Exception: If we just refer to unit_table.getUnit(default_unit), leave it
-    if (unit && unit != defunit) {
-        delete unit;
-    }
-}
 
 } // Inkscape::LivePathEffect
 

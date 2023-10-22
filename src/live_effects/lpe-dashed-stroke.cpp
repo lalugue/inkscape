@@ -30,6 +30,8 @@ LPEDashedStroke::LPEDashedStroke(LivePathEffectObject *lpeobject)
     registerParameter(&halfextreme);
     registerParameter(&unifysegment);
     registerParameter(&message);
+    
+    message.write_to_SVG(); // resert old legacy uneeded data
     numberdashes.param_set_range(2, 999999999);
     numberdashes.param_set_increments(1, 1);
     numberdashes.param_set_digits(0);

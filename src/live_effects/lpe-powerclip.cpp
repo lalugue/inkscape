@@ -43,6 +43,7 @@ LPEPowerClip::LPEPowerClip(LivePathEffectObject *lpeobject)
     registerParameter(&hide_clip);
     registerParameter(&message);
     message.param_set_min_height(55);
+    message.write_to_SVG(); // resert old legacy uneeded data
     _updating = false;
     _legacy = false;
     // legazy fix between 0.92.4 launch and 1.0beta1

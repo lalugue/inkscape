@@ -129,6 +129,7 @@ private:
     gdouble scaleok = 1.0;
     Glib::ustring display_unit;
     Glib::ustring prev_unit = "px";
+    bool legacy = false;
     std::vector<double> random_x;
     std::vector<double> random_y;
     std::vector<double> random_s;

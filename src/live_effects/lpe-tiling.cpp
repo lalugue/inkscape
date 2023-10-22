@@ -175,7 +175,7 @@ LPETiling::LPETiling(LivePathEffectObject *lpeobject) :
     prev_num_rows = num_rows;
     _knotholder = nullptr;
     reset = link_styles;
-    display_unit = getSPDoc()->getDisplayUnit()->abbr;
+    display_unit = getSPDoc()->getWidth().unit->abbr;
 }
 
 LPETiling::~LPETiling()
@@ -1178,12 +1178,17 @@ LPETiling::doOnApply(SPLPEItem const* lpeitem)
     } else {
         transformorigin.param_setValue("", true);
     }
+    lpeversion.param_setValue("1.3.1", true);
+    legacy = false;
     doBeforeEffect(lpeitem);
 }
 
 void
 LPETiling::doBeforeEffect (SPLPEItem const* lpeitem)
 {
+    if (is_load) {
+        legacy = lpeversion.param_getSVGValue() < "1.3.1";
+    }
     auto transformorigin_str = lpeitem->getAttribute("transform");
     if (transformorigin_str) {
         transformorigin.read_from_SVG();
@@ -1238,17 +1243,22 @@ LPETiling::doBeforeEffect (SPLPEItem const* lpeitem)
             lpesatellites.update_satellites();
         }
     }
-    auto const prev_display_unit = std::move(display_unit);
-    display_unit = getSPDoc()->getDisplayUnit()->abbr;
-    if (!display_unit.empty() && display_unit != prev_display_unit) {
-        //_document->getDocumentScale().inverse()
-        gapx.param_set_value(Inkscape::Util::Quantity::convert(gapx, display_unit.c_str(), prev_display_unit.c_str()));
-        gapy.param_set_value(Inkscape::Util::Quantity::convert(gapy, display_unit.c_str(), prev_display_unit.c_str()));
-        gapx.write_to_SVG();
-        gapy.write_to_SVG();
+    if (legacy) {
+        auto const prev_display_unit = std::move(display_unit);
+        display_unit = getSPDoc()->getDisplayUnit()->abbr;
+        if (!display_unit.empty() && display_unit != prev_display_unit) {
+            //_document->getDocumentScale().inverse()
+            gapx.param_set_value(Inkscape::Util::Quantity::convert(gapx, display_unit.c_str(), prev_display_unit.c_str()));
+            gapy.param_set_value(Inkscape::Util::Quantity::convert(gapy, display_unit.c_str(), prev_display_unit.c_str()));
+            gapx.write_to_SVG();
+            gapy.write_to_SVG();
+        }
+        gapx_unit = Inkscape::Util::Quantity::convert(gapx, unit.get_abbreviation(), display_unit.c_str());
+        gapy_unit = Inkscape::Util::Quantity::convert(gapy, unit.get_abbreviation(), display_unit.c_str());
+    } else {
+        gapx_unit = Inkscape::Util::Quantity::convert(gapx, unit.get_abbreviation(), "px") / getSPDoc()->getDocumentScale()[Geom::X];
+        gapy_unit = Inkscape::Util::Quantity::convert(gapy, unit.get_abbreviation(), "px") / getSPDoc()->getDocumentScale()[Geom::X];
     }
-    gapx_unit = Inkscape::Util::Quantity::convert(gapx, unit.get_abbreviation(), display_unit.c_str());
-    gapy_unit = Inkscape::Util::Quantity::convert(gapy, unit.get_abbreviation(), display_unit.c_str());
     original_bbox(sp_lpe_item, false, true, transformoriginal);
     originalbbox = Geom::OptRect(boundingbox_X,boundingbox_Y);
     Geom::Point A = Point(boundingbox_X.min() - (gapx_unit / 2.0), boundingbox_Y.min() - (gapy_unit / 2.0));
@@ -1672,8 +1682,12 @@ void KnotHolderEntityCopyGapX::knot_set(Geom::Point const &p, Geom::Point const&
         Geom::Point point = (*lpe->originalbbox).corner(1);
         point *= lpe->transformoriginal.inverse();
         double value = s[Geom::X] - point[Geom::X];
-        Glib::ustring display_unit = SP_ACTIVE_DOCUMENT->getDisplayUnit()->abbr.c_str();
-        value = Inkscape::Util::Quantity::convert((value/lpe->end_scale(lpe->scaleok, false)) * 2, display_unit.c_str(),lpe->unit.get_abbreviation());
+        if (lpe->legacy) {
+            Glib::ustring doc_unit = SP_ACTIVE_DOCUMENT->getWidth().unit->abbr.c_str();
+            value = Inkscape::Util::Quantity::convert((value/lpe->end_scale(lpe->scaleok, false)) * 2, doc_unit.c_str(),lpe->unit.get_abbreviation());
+        } else {
+            value = Inkscape::Util::Quantity::convert((value/lpe->end_scale(lpe->scaleok, false)) * 2, "px", lpe->unit.get_abbreviation()) * SP_ACTIVE_DOCUMENT->getDocumentScale()[Geom::X];
+        }
         lpe->gapx.param_set_value(value);
         lpe->gapx.write_to_SVG();
     }
@@ -1688,8 +1702,12 @@ void KnotHolderEntityCopyGapY::knot_set(Geom::Point const &p, Geom::Point const&
         Geom::Point point = (*lpe->originalbbox).corner(3);
         point *= lpe->transformoriginal.inverse();
         double value = s[Geom::Y] - point[Geom::Y];
-        Glib::ustring display_unit = SP_ACTIVE_DOCUMENT->getDisplayUnit()->abbr.c_str();
-        value = Inkscape::Util::Quantity::convert((value/lpe->end_scale(lpe->scaleok, false)) * 2, display_unit.c_str(),lpe->unit.get_abbreviation());
+        if (lpe->legacy) {
+            Glib::ustring doc_unit = SP_ACTIVE_DOCUMENT->getWidth().unit->abbr.c_str();
+            value = Inkscape::Util::Quantity::convert((value/lpe->end_scale(lpe->scaleok, false)) * 2, doc_unit.c_str(),lpe->unit.get_abbreviation());
+        } else {
+            value = Inkscape::Util::Quantity::convert((value/lpe->end_scale(lpe->scaleok, false)) * 2, "px", lpe->unit.get_abbreviation()) * SP_ACTIVE_DOCUMENT->getDocumentScale()[Geom::X];
+        }
         lpe->gapy.param_set_value(value);
         lpe->gapy.write_to_SVG();
     }
@@ -1701,8 +1719,13 @@ Geom::Point KnotHolderEntityCopyGapX::knot_get() const
     Geom::Point ret = Geom::Point(Geom::infinity(),Geom::infinity());
     if (lpe->originalbbox) {
         auto bbox = (*lpe->originalbbox);
-        Glib::ustring display_unit = SP_ACTIVE_DOCUMENT->getDisplayUnit()->abbr.c_str();
-        double value = Inkscape::Util::Quantity::convert(lpe->gapx, lpe->unit.get_abbreviation(), display_unit.c_str());
+        double value;
+        if (lpe->legacy) {
+            Glib::ustring prev_unit = SP_ACTIVE_DOCUMENT->getDisplayUnit()->abbr.c_str();
+            value = Inkscape::Util::Quantity::convert(lpe->gapx, lpe->unit.get_abbreviation(), prev_unit.c_str());
+        } else {
+            value = Inkscape::Util::Quantity::convert(lpe->gapx, lpe->unit.get_abbreviation(), "px") / SP_ACTIVE_DOCUMENT->getDocumentScale()[Geom::X];
+        }
         double scale = lpe->scaleok;
         ret = (bbox).corner(1) + Geom::Point((value * lpe->end_scale(scale, false))/2.0,0);
         ret *= lpe->transformoriginal.inverse();
@@ -1716,8 +1739,13 @@ Geom::Point KnotHolderEntityCopyGapY::knot_get() const
     Geom::Point ret = Geom::Point(Geom::infinity(),Geom::infinity());
     if (lpe->originalbbox) {
         auto bbox = (*lpe->originalbbox);
-        Glib::ustring display_unit = SP_ACTIVE_DOCUMENT->getDisplayUnit()->abbr.c_str();
-        double value = Inkscape::Util::Quantity::convert(lpe->gapy, lpe->unit.get_abbreviation(), display_unit.c_str());
+        double value;
+        if (lpe->legacy) {
+            Glib::ustring prev_unit = SP_ACTIVE_DOCUMENT->getDisplayUnit()->abbr.c_str();
+            value = Inkscape::Util::Quantity::convert(lpe->gapy, lpe->unit.get_abbreviation(), prev_unit.c_str());
+        } else {
+            value = Inkscape::Util::Quantity::convert(lpe->gapy, lpe->unit.get_abbreviation(), "px") / SP_ACTIVE_DOCUMENT->getDocumentScale()[Geom::X];
+        }
         double scale = lpe->scaleok;
         ret = (bbox).corner(3) + Geom::Point(0,(value * lpe->end_scale(scale, false))/2.0);
         ret *= lpe->transformoriginal.inverse();

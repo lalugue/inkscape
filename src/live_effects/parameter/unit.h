@@ -37,19 +37,16 @@ public:
     Glib::ustring param_getSVGValue() const override;
     Glib::ustring param_getDefaultSVGValue() const override;
     void param_set_default() override;
-    void param_set_value(Inkscape::Util::Unit const &val);
+    void param_set_value(const gchar * unit);
     void param_update_default(const gchar * default_unit) override;
     const gchar *get_abbreviation() const;
     Gtk::Widget * param_newWidget() override;
     
-    operator Inkscape::Util::Unit const *() const { return unit; }
     ParamType paramType() const override { return ParamType::UNIT; };
 
 private:
-    Inkscape::Util::Unit const *defunit;
-    Inkscape::Util::Unit const *unit;
-
-    void free_unit();
+    Glib::ustring defunit;
+    std::unique_ptr<Inkscape::Util::Unit const> unit;
 };
 
 } // namespace LivePathEffect

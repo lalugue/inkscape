@@ -102,30 +102,32 @@ void LPEFilletChamfer::doOnApply(SPLPEItem const *lpeItem)
         item->removeCurrentPathEffect(false);
     }
     auto rect = cast<SPRect>(splpeitem);
-    SPDocument *document = getSPDoc();
-    Glib::ustring display_unit = document->getDisplayUnit()->abbr.c_str();
     Geom::PathVector pathv = pathv_to_linear_and_cubic_beziers(shape->curve()->get_pathvector());
+    double power = radius;
+    double a = 0;
     if (rect) {
         double a = rect->getVisibleRx();
         a = std::max(a, rect->getVisibleRy());
-        rect->setVisibleRx(0);
-        rect->setVisibleRy(0);
-        pathv = Geom::PathVector(Geom::Path(rect->getRect()));
-        if (!Geom::are_near(a,0)) {
-            a *= rect->i2doc_affine().inverse().descrim();
-            a = Inkscape::Util::Quantity::convert(a, display_unit.c_str(), unit.get_abbreviation());
-            radius.param_set_value(a);
+        if (a) {
+            rect->setRx(true, 0);
+            rect->setRy(true, 0);
+            pathv = Geom::PathVector(Geom::Path(rect->getRect()));
+            if (!Geom::are_near(a, 0)) {
+                a /= getSPDoc()->getDocumentScale()[Geom::X];
+                unit.param_set_value(getSPDoc()->getWidth().unit->abbr.c_str());
+                flexible.param_setValue(false);
+                radius.param_set_value(a);
+                power = a;
+            }
         }
     }
 
     
     NodeSatellites nodesatellites;
-    double power = radius;
-
-    if (!flexible) {
-        SPDocument *document = getSPDoc();
-        Glib::ustring display_unit = document->getDisplayUnit()->abbr.c_str();
-        power = Inkscape::Util::Quantity::convert(power, unit.get_abbreviation(), display_unit.c_str());
+    if (!flexible && Geom::are_near(a, 0)) {
+        auto trans = lpeItem->transform.inverse();
+        power = Inkscape::Util::Quantity::convert(power, unit.get_abbreviation(), "px") / getSPDoc()->getDocumentScale()[Geom::X];
+        power *= ((trans.expansionX() + trans.expansionY()) / 2.0);
     }
 
     NodeSatelliteType nodesatellite_type = FILLET;
@@ -149,9 +151,6 @@ void LPEFilletChamfer::doOnApply(SPLPEItem const *lpeItem)
     nodesatellite.setHasMirror(true);
     nodesatellite.setHidden(hide_knots);
     _pathvector_nodesatellites->recalculateForNewPathVector(pathv, nodesatellite);
-    
-
-    
     nodesatellites_param.setPathVectorNodeSatellites(_pathvector_nodesatellites);
 }
 
@@ -234,9 +233,13 @@ void LPEFilletChamfer::updateAmount()
     setSelected(_pathvector_nodesatellites);
     double power = radius;
     if (!flexible) {
-        SPDocument *document = getSPDoc();
-        Glib::ustring display_unit = document->getDisplayUnit()->abbr.c_str();
-        power = Inkscape::Util::Quantity::convert(power, unit.get_abbreviation(), display_unit.c_str());
+        power = Inkscape::Util::Quantity::convert(power, unit.get_abbreviation(), "px") / getSPDoc()->getDocumentScale()[Geom::X];
+        std::vector<SPLPEItem *> lpeitems = getCurrrentLPEItems();
+        if (lpeitems.size() == 1) {
+            sp_lpe_item = lpeitems[0];
+            auto trans = sp_lpe_item->transform.inverse();
+            power *= ((trans.expansionX() + trans.expansionY()) / 2.0);
+        }
     }
     _pathvector_nodesatellites->updateAmount(power, apply_no_radius, apply_with_radius, only_selected,
                                              use_knot_distance, flexible);
@@ -347,9 +350,7 @@ void LPEFilletChamfer::doBeforeEffect(SPLPEItem const *lpeItem)
             if (is_load || number_nodes != previous_number_nodes) {
                 double power = radius;
                 if (!flexible) {
-                    SPDocument *document = getSPDoc();
-                    Glib::ustring display_unit = document->getDisplayUnit()->abbr.c_str();
-                    power = Inkscape::Util::Quantity::convert(power, unit.get_abbreviation(), display_unit.c_str());
+                    power = Inkscape::Util::Quantity::convert(power, unit.get_abbreviation(), "px") / getSPDoc()->getDocumentScale()[Geom::X];
                 }
                 NodeSatelliteType nodesatellite_type = FILLET;
                 std::map<std::string, NodeSatelliteType> gchar_map_to_nodesatellite_type = boost::assign::map_list_of(
@@ -376,11 +377,6 @@ void LPEFilletChamfer::doBeforeEffect(SPLPEItem const *lpeItem)
                 nodesatellites_param.reloadKnots();
             }
         }
-        Glib::ustring current_unit = unit.get_abbreviation();
-        if (previous_unit != current_unit && previous_unit != "") {
-            updateAmount();
-        }
-        previous_unit = std::move(current_unit);
     } else {
         g_warning("LPE Fillet can only be applied to shapes (not groups).");
     }

@@ -92,11 +92,19 @@ LPERuler::ruler_mark(Geom::Point const &A, Geom::Point const &n, MarkType const 
     double real_mark_length = mark_length;
     SPDocument *document = getSPDoc();
     if (document) {
-        real_mark_length = Inkscape::Util::Quantity::convert(real_mark_length, unit.get_abbreviation(), document->getDisplayUnit()->abbr.c_str());
+        if (legacy) {
+            real_mark_length = Inkscape::Util::Quantity::convert(real_mark_length, unit.get_abbreviation(), document->getWidth().unit->abbr.c_str());
+        } else {
+            real_mark_length = Inkscape::Util::Quantity::convert(real_mark_length, unit.get_abbreviation(), "px") / document->getDocumentScale()[Geom::X];
+        }
     }
     double real_minor_mark_length = minor_mark_length;
     if (document) {
-        real_minor_mark_length = Inkscape::Util::Quantity::convert(real_minor_mark_length, unit.get_abbreviation(), document->getDisplayUnit()->abbr.c_str());
+        if (legacy) {
+            real_minor_mark_length = Inkscape::Util::Quantity::convert(real_minor_mark_length, unit.get_abbreviation(), document->getWidth().unit->abbr.c_str());
+        } else {
+            real_minor_mark_length = Inkscape::Util::Quantity::convert(real_minor_mark_length, unit.get_abbreviation(), "px") / document->getDocumentScale()[Geom::X];
+        }
     }
     n_major = real_mark_length * n;
     n_minor = real_minor_mark_length * n;
@@ -157,9 +165,19 @@ LPERuler::ruler_mark(Geom::Point const &A, Geom::Point const &n, MarkType const 
     return seg;
 }
 
+void
+LPERuler::doOnApply(SPLPEItem const* lpeitem)
+{
+    lpeversion.param_setValue("1.3.1", true);
+    legacy = false;
+}
+
 Geom::Piecewise<Geom::D2<Geom::SBasis> >
 LPERuler::doEffect_pwd2 (Geom::Piecewise<Geom::D2<Geom::SBasis> > const & pwd2_in)
 {
+    if (is_load) {
+        legacy = lpeversion.param_getSVGValue() < "1.3.1";
+    }
     using namespace Geom;
 
     const int mminterval = static_cast<int>(major_mark_steps);
@@ -174,15 +192,32 @@ LPERuler::doEffect_pwd2 (Geom::Piecewise<Geom::D2<Geom::SBasis> > const & pwd2_i
     //find at which times to draw a mark:
     std::vector<double> s_cuts;
     SPDocument *document = getSPDoc();
+    
     if (document) {
-        auto const prev_display_unit = std::move(display_unit);
-        display_unit = getSPDoc()->getDisplayUnit()->abbr;
-        if (!display_unit.empty() && display_unit != prev_display_unit) {
-            //_document->getDocumentScale().inverse()
-            mark_distance.param_set_value(Inkscape::Util::Quantity::convert(mark_distance, display_unit.c_str(), prev_display_unit.c_str()));
-            offset.param_set_value(Inkscape::Util::Quantity::convert(offset, display_unit.c_str(), prev_display_unit.c_str()));
-            minor_mark_length.param_set_value(Inkscape::Util::Quantity::convert(minor_mark_length, display_unit.c_str(), prev_display_unit.c_str()));
-            mark_length.param_set_value(Inkscape::Util::Quantity::convert(mark_length, display_unit.c_str(), prev_display_unit.c_str()));
+        bool write = false;
+        if (legacy) {
+            auto const punit = prev_unit;
+            prev_unit = getSPDoc()->getDisplayUnit()->abbr;
+            if (!punit.empty() && prev_unit != punit) {
+                //_document->getDocumentScale().inverse()
+                mark_distance.param_set_value(Inkscape::Util::Quantity::convert(mark_distance, prev_unit.c_str(), punit.c_str()));
+                offset.param_set_value(Inkscape::Util::Quantity::convert(offset, prev_unit.c_str(), punit.c_str()));
+                minor_mark_length.param_set_value(Inkscape::Util::Quantity::convert(minor_mark_length, prev_unit.c_str(), punit.c_str()));
+                mark_length.param_set_value(Inkscape::Util::Quantity::convert(mark_length, prev_unit.c_str(), punit.c_str()));
+                write = true;
+            }
+        } else {
+            auto const punit = prev_unit;
+            prev_unit = unit.get_abbreviation();
+            if (!punit.empty() && prev_unit != punit) {
+                mark_distance.param_set_value(Inkscape::Util::Quantity::convert(mark_distance, punit, unit.get_abbreviation()));
+                offset.param_set_value(Inkscape::Util::Quantity::convert(offset, punit, unit.get_abbreviation()));
+                minor_mark_length.param_set_value(Inkscape::Util::Quantity::convert(minor_mark_length, punit, unit.get_abbreviation()));
+                mark_length.param_set_value(Inkscape::Util::Quantity::convert(mark_length, punit, unit.get_abbreviation()));
+                write = true;
+            }
+        }
+        if (write) {
             minor_mark_length.write_to_SVG();
             mark_length.write_to_SVG();
             mark_distance.write_to_SVG();
@@ -191,11 +226,19 @@ LPERuler::doEffect_pwd2 (Geom::Piecewise<Geom::D2<Geom::SBasis> > const & pwd2_i
     }
     double real_mark_distance = mark_distance;
     if (document) {
-        real_mark_distance = Inkscape::Util::Quantity::convert(real_mark_distance, unit.get_abbreviation(), document->getDisplayUnit()->abbr.c_str());
+        if (legacy) {
+            real_mark_distance = Inkscape::Util::Quantity::convert(real_mark_distance, unit.get_abbreviation(), document->getWidth().unit->abbr.c_str());
+        } else {
+            real_mark_distance = Inkscape::Util::Quantity::convert(real_mark_distance, unit.get_abbreviation(), "px")  / document->getDocumentScale()[Geom::X];
+        }
     }  
     double real_offset = offset;
     if (document) {
-        real_offset = Inkscape::Util::Quantity::convert(real_offset, unit.get_abbreviation(), document->getDisplayUnit()->abbr.c_str());
+        if (legacy) {
+            real_offset = Inkscape::Util::Quantity::convert(real_offset, unit.get_abbreviation(), document->getWidth().unit->abbr.c_str());
+        } else {
+            real_offset = Inkscape::Util::Quantity::convert(real_offset, unit.get_abbreviation(), "px")  / document->getDocumentScale()[Geom::X];
+        }
     }
     for (double s = real_offset; s<totlength; s+=real_mark_distance){
         s_cuts.push_back(s);

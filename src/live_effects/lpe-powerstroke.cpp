@@ -180,7 +180,8 @@ LPEPowerStroke::LPEPowerStroke(LivePathEffectObject *lpeobject) :
     registerParameter(&not_jump);
     registerParameter(&sort_points);
     registerParameter(&message);
-
+    
+    message.write_to_SVG(); // resert old legacy uneeded data
     interpolator_beta.addSlider(true);
     interpolator_beta.param_set_range(0.,1.);
 
@@ -190,6 +191,7 @@ LPEPowerStroke::LPEPowerStroke(LivePathEffectObject *lpeobject) :
     scale_width.param_set_digits(1);   
     recusion_limit = 0;
     has_recursion = false;
+    
 }
 
 LPEPowerStroke::~LPEPowerStroke() = default;
@@ -261,6 +263,7 @@ void LPEPowerStroke::doOnRemove(SPLPEItem const* lpeitem)
     auto shape = cast<SPShape>(lpeitem_mutable);
 
     if (shape && !keep_paths) {
+        // medial width give half
         lpe_shape_revert_stroke_and_fill(shape, offset_points.median_width() * 2);
     }
 }

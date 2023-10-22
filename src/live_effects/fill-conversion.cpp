@@ -188,6 +188,7 @@ void lpe_shape_convert_stroke_and_fill(SPShape *shape)
 
 void lpe_shape_revert_stroke_and_fill(SPShape *shape, double width)
 {
+    // width is in pixels, if use in a LPE with other units convert before use
     SPObject *linked = get_linked_fill(shape);
     SPCSSAttr *css = sp_repr_css_attr_new();
 
@@ -210,13 +211,18 @@ void lpe_shape_revert_stroke_and_fill(SPShape *shape, double width)
     } else {
         sp_repr_css_set_property(css, "fill", "none");
     }
-    
-    Glib::ustring display_unit = shape->document->getDisplayUnit()->abbr.c_str();
-    width = Inkscape::Util::Quantity::convert(width, display_unit.c_str(), "px");
     Inkscape::CSSOStringStream os;
     os << fabs(width);
     sp_repr_css_set_property(css, "stroke-width", os.str().c_str());
-
+    // Reverse affine by desktop style apply.
+    {
+        Geom::Affine const local(shape->i2doc_affine());
+        double const ex(local.descrim());
+        if ( ( ex != 0. )
+                && ( ex != 1. ) ) {
+            sp_css_attr_scale(css, ex);
+        }
+    }
     sp_desktop_apply_css_recursive(shape, css, true);
     sp_repr_css_attr_unref(css);
 }

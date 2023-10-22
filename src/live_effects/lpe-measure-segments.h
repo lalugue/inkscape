@@ -53,7 +53,7 @@ public:
     void processObjects(LPEAction lpe_action) override;
     Gtk::Widget * newWidget() override;
     void createLine(Geom::Point start,Geom::Point end, Glib::ustring name, size_t counter, bool main, bool remove, bool arrows = false);
-    void createTextLabel(Geom::Point pos, size_t counter, double length, Geom::Coord angle, bool remove, bool valid);
+    void createTextLabel(Geom::Point &pos, size_t counter, double length, Geom::Coord angle, bool remove, bool valid);
     void createArrowMarker(Glib::ustring mode);
     bool isWhitelist(size_t i,  std::string listsegments, bool whitelist);
     void on_my_switch_page(Gtk::Widget* page, guint page_number);
@@ -93,11 +93,13 @@ private:
     ScalarParam angle_projection;
     BoolParam avoid_overlapping;
     MessageParam helpdata;
-    Glib::ustring display_unit;
+    bool legacy = false;
     double fontsize;
+    double prevfontsize = 0;
     double anotation_width;
     double previous_size;
     guint32 rgb32;
+    Glib::ustring prevunit = "";
     double arrow_gap;
     guint pagenumber;
     gchar const* locale_base;

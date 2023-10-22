@@ -40,15 +40,14 @@ public:
     
     void param_set_default() override;
     void param_set_min_height(int height);
-    const gchar *  get_value() const { return message; };
+    const gchar *  get_value() const { return defmessage.c_str(); };
     ParamType paramType() const override { return ParamType::MESSAGE; };
 private:
     Gtk::Label * _label;
     int _min_height;
     MessageParam(const MessageParam&) = delete;
     MessageParam& operator=(const MessageParam&) = delete;
-    const gchar *  message;
-    const gchar *  defmessage;
+    Glib::ustring defmessage;
     Glib::ustring _legend;
     Gtk::Align _halign;
     Gtk::Align _valign;
