@@ -149,6 +149,7 @@ public:
     std::unique_ptr<Inkscape::XML::NodeObserver> m_styletextwatcher;
 
     // Manipulate Tree
+    [[nodiscard]] std::vector<SPObject *> getSelectedObjects();
     void _addToSelector(Gtk::TreeModel::Row row);
     void _removeFromSelector(Gtk::TreeModel::Row row);
     Glib::ustring _getIdList(std::vector<SPObject *>);
