@@ -1,9 +1,11 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 #include "ctrl-handle-styling.h"
 
+#include <optional>
 #include <unordered_map>
 #include <boost/functional/hash.hpp>
 #include <glibmm/fileutils.h>
+#include <glibmm/i18n.h>
 #include <glibmm/regex.h>
 
 #include "3rdparty/libcroco/src/cr-selector.h"
@@ -15,17 +17,38 @@
 #include "3rdparty/libcroco/src/cr-utils.h"
 
 #include "display/cairo-utils.h" // argb32_from_rgba()
-
 #include "io/resource.h"
+#include "util/delete-with.h"
+using Inkscape::Util::delete_with;
 
-namespace Inkscape {
+namespace Inkscape::Handles {
 namespace {
 
 /**
- * For Handle Styling (shared between all handles)
+ * The result of parsing the handle styling CSS files, containing all information
+ * needed to style a given handle.
  */
-std::unordered_map<Handle, HandleStyle> handle_styles;
-bool parsed = false;
+struct Css
+{
+    std::unordered_map<TypeState, Style> style_map;
+};
+
+/**
+ * State needed for parsing (between functions).
+ */
+struct ParsingState
+{
+    Css &result;
+    std::vector<std::pair<Style *, int>> selected_handles;
+};
+
+/**
+ * Get the parsing state from the document handler.
+ */
+ParsingState &get_parsing_state(CRDocHandler *a_handler)
+{
+    return *reinterpret_cast<ParsingState *>(a_handler->app_data);
+}
 
 /**
  * Conversion maps for ctrl types (CSS parsing).
@@ -51,7 +74,7 @@ std::unordered_map<std::string, CanvasItemCtrlType> const ctrl_type_map = {
     {".inkscape-node-auto", CANVAS_ITEM_CTRL_TYPE_NODE_AUTO},
     {".inkscape-node-cusp", CANVAS_ITEM_CTRL_TYPE_NODE_CUSP},
     {".inkscape-node-smooth", CANVAS_ITEM_CTRL_TYPE_NODE_SMOOTH},
-    {".inkscape-node-symmetrical", CANVAS_ITEM_CTRL_TYPE_NODE_SYMETRICAL},
+    {".inkscape-node-symmetrical", CANVAS_ITEM_CTRL_TYPE_NODE_SYMMETRICAL},
     {".inkscape-mesh", CANVAS_ITEM_CTRL_TYPE_MESH},
     {".inkscape-invisible", CANVAS_ITEM_CTRL_TYPE_INVISIPOINT}
 };
@@ -77,43 +100,149 @@ std::unordered_map<std::string, CanvasItemCtrlShape> const ctrl_shape_map = {
     {"'middle-align'", CANVAS_ITEM_CTRL_SHAPE_MALIGN}
 };
 
+struct Exception
+{
+    Glib::ustring msg;
+};
+
+void log_error(Glib::ustring const &err, CRParsingLocation const &loc)
+{
+    std::cerr << loc.line << ':' << loc.column << ": " << err << std::endl;
+}
+
+std::string get_string(CRTerm const *term)
+{
+    auto const cstr = delete_with<g_free>(cr_term_to_string(term));
+    if (!cstr) {
+        throw Exception{_("Empty or improper value, skipped")};
+    }
+    return reinterpret_cast<char *>(cstr.get());
+}
+
+CanvasItemCtrlShape parse_shape(CRTerm const *term)
+{
+    auto const str = get_string(term);
+    auto const it = ctrl_shape_map.find(str);
+    if (it == ctrl_shape_map.end()) {
+        throw Exception{Glib::ustring::compose(_("Unrecognized shape %1"), str)};
+    }
+    return it->second;
+}
+
+uint32_t parse_rgb(CRTerm const *term)
+{
+    auto const rgb = delete_with<cr_rgb_destroy>(cr_rgb_new());
+    auto const status = cr_rgb_set_from_term(rgb.get(), term);
+    if (status != CR_OK) {
+        throw Exception{Glib::ustring::compose(_("Unrecognized color '%1'"), get_string(term))};
+    }
+    return Display::AssembleARGB32(255, rgb->red, rgb->green, rgb->blue);
+}
+
+float parse_opacity(CRTerm const *term)
+{
+    auto const num = term->content.num;
+    if (!num) {
+        throw Exception{Glib::ustring::compose(_("Invalid opacity '%1'"), get_string(term))};
+    }
+
+    double value;
+    if (num->type == NUM_PERCENTAGE) {
+        value = num->val / 100.0f;
+    } else if (num->type == NUM_GENERIC) {
+        value = num->val;
+    } else {
+        throw Exception{Glib::ustring::compose(_("Invalid opacity units '%1'"), get_string(term))};
+    }
+
+    if (value > 1 || value < 0) {
+        throw Exception{Glib::ustring::compose(_("Opacity '%1' out of range"), get_string(term))};
+    }
+
+    return value;
+}
+
+int parse_width(CRTerm const *term)
+{
+    // Assuming px value only, which stays the same regardless of the size of the handles.
+    auto const num = term->content.num;
+    if (!num) {
+        throw Exception{Glib::ustring::compose(_("Invalid width '%1'"), get_string(term))};
+    }
+
+    int value;
+    if (num->type == NUM_LENGTH_PX) {
+        value = static_cast<int>(num->val);
+    } else {
+        throw Exception{Glib::ustring::compose(_("Invalid width units '%1'"), get_string(term))};
+    }
+
+    return value;
+}
+
+template <auto parse, auto member>
+auto setter = +[] (CRDocHandler *handler, CRTerm const *term, bool important)
+{
+    auto &state = get_parsing_state(handler);
+    auto const value = parse(term);
+    for (auto &[handle, specificity] : state.selected_handles) {
+        (handle->*member).setProperty(value, specificity + 100000 * important);
+    }
+};
+
 /**
- * A global vector needed for parsing (between functions).
+ * Lookup table for setting properties.
  */
-std::vector<std::pair<HandleStyle *, int>> selected_handles;
+std::unordered_map<std::string, void(*)(CRDocHandler *, CRTerm const *, bool)> const property_map = {
+    {"shape",           setter<parse_shape,   &Style::shape>},
+    {"fill",            setter<parse_rgb,     &Style::fill>},
+    {"stroke",          setter<parse_rgb,     &Style::stroke>},
+    {"outline",         setter<parse_rgb,     &Style::outline>},
+    {"opacity",         setter<parse_opacity, &Style::opacity>},
+    {"fill-opacity",    setter<parse_opacity, &Style::fill_opacity>},
+    {"stroke-opacity",  setter<parse_opacity, &Style::stroke_opacity>},
+    {"outline-opacity", setter<parse_opacity, &Style::outline_opacity>},
+    {"stroke-width",    setter<parse_width,   &Style::stroke_width>},
+    {"outline-width",   setter<parse_width,   &Style::outline_width>},
+};
 
 /**
  * Parses the CSS selector for handles.
  */
-std::optional<std::pair<Handle, int>> configure_selector(CRSelector *a_selector)
+std::optional<std::pair<TypeState, int>> configure_selector(CRSelector *a_selector)
 {
+    auto log_unrecognised = [&] (char const *selector) {
+        log_error(Glib::ustring::compose(_("Unrecognized selector '%1'"), selector),
+                  a_selector->location);
+    };
+
     cr_simple_sel_compute_specificity(a_selector->simple_sel);
     int specificity = a_selector->simple_sel->specificity;
-    auto selector_str = reinterpret_cast<char const *>(cr_simple_sel_one_to_string(a_selector->simple_sel));
-    std::vector<std::string> tokens = Glib::Regex::split_simple(":", selector_str);
-    CanvasItemCtrlType type;
-    int token_iterator = 0;
-    if (auto it = ctrl_type_map.find(tokens[token_iterator]); it != ctrl_type_map.end()) {
-        type = it->second;
-        token_iterator++;
-    } else {
-        std::cerr << "Unrecognized/unhandled selector: " << selector_str << std::endl;
+
+    auto const selector_str = reinterpret_cast<char const *>(cr_simple_sel_one_to_string(a_selector->simple_sel));
+    std::vector<std::string> const tokens = Glib::Regex::split_simple(":", selector_str);
+    auto const type_it = tokens.empty() ? ctrl_type_map.end() : ctrl_type_map.find(tokens.front());
+    if (type_it == ctrl_type_map.end()) {
+        log_unrecognised(selector_str);
         return {};
     }
-    auto selector = Handle{type};
-    for (; token_iterator < tokens.size(); token_iterator++) {
-        if (tokens[token_iterator] == "*") {
+
+    auto selector = TypeState{type_it->second};
+    // for (auto &tok : tokens | std::views::drop(1)) { // Todo: When supported by CI Apple Clang.
+    for (int i = 1; i < tokens.size(); i++) {
+        auto &tok = tokens[i];
+        if (tok == "*") {
             continue;
-        } else if (tokens[token_iterator] == "selected") {
+        } else if (tok == "selected") {
             selector.selected = true;
-        } else if (tokens[token_iterator] == "hover") {
+        } else if (tok == "hover") {
             specificity++;
             selector.hover = true;
-        } else if (tokens[token_iterator] == "click") {
+        } else if (tok == "click") {
             specificity++;
-            selector. click = true;
+            selector.click = true;
         } else {
-            std::cerr << "Unrecognized/unhandled selector: " << selector_str << std::endl;
+            log_unrecognised(tok.c_str());
             return {};
         }
     }
@@ -121,7 +250,7 @@ std::optional<std::pair<Handle, int>> configure_selector(CRSelector *a_selector)
     return {{ selector, specificity }};
 }
 
-bool handle_fits(Handle const &selector, Handle const &handle)
+bool fits(TypeState const &selector, TypeState const &handle)
 {
     // Type must match for non-default selectors.
     if (selector.type != CANVAS_ITEM_CTRL_TYPE_DEFAULT && selector.type != handle.type) {
@@ -138,12 +267,13 @@ bool handle_fits(Handle const &selector, Handle const &handle)
  */
 void set_selectors(CRDocHandler *a_handler, CRSelector *a_selector, bool is_users)
 {
+    auto &state = get_parsing_state(a_handler);
     while (a_selector) {
         if (auto const ret = configure_selector(a_selector)) {
             auto const &[selector, specificity] = *ret;
-            for (auto &[handle, style] : handle_styles) {
-                if (handle_fits(selector, handle)) {
-                    selected_handles.emplace_back(&style, specificity + 10000 * is_users);
+            for (auto &[handle, style] : state.result.style_map) {
+                if (fits(selector, handle)) {
+                    state.selected_handles.emplace_back(&style, specificity + 10000 * is_users);
                 }
             }
         }
@@ -162,99 +292,26 @@ void set_selectors(CRDocHandler *a_handler, CRSelector *a_selector)
  */
 void set_properties(CRDocHandler *a_handler, CRString *a_name, CRTerm *a_value, gboolean a_important)
 {
-    auto gvalue = cr_term_to_string(a_value);
-    auto gproperty = cr_string_peek_raw_str(a_name);
-    if (!gvalue || !gproperty) {
-        std::cerr << "Empty or improper value or property, skipped." << std::endl;
+    auto log_error_local = [&] (Glib::ustring const &err) {
+        log_error(err, a_value->location);
+    };
+
+    auto const property = cr_string_peek_raw_str(a_name);
+    if (!property) {
+        log_error_local(_("Empty or improper property, skipped."));
         return;
     }
-    std::string const value = reinterpret_cast<char *>(gvalue);
-    std::string const property = gproperty;
-    g_free(gvalue);
-    if (property == "shape") {
-        if (auto it = ctrl_shape_map.find(value); it != ctrl_shape_map.end()) {
-            for (auto &[handle, specificity] : selected_handles) {
-                handle->shape.setProperty(it->second, specificity + 100000 * a_important);
-            }
-        } else {
-            std::cerr << "Unrecognized value for " << property << ": " << value << std::endl;
-            return;
-        }
-    } else if (property == "fill" || property == "stroke" || property == "outline") {
-        auto rgb = cr_rgb_new();
-        CRStatus status = cr_rgb_set_from_term(rgb, a_value);
 
-        if (status == CR_OK) {
-            ASSEMBLE_ARGB32(color, 255, (uint8_t)rgb->red, (uint8_t)rgb->green, (uint8_t)rgb->blue)
-            for (auto &[handle, specificity] : selected_handles) {
-                if (property == "fill") {
-                    handle->fill.setProperty(color, specificity + 100000 * a_important);
-                } else if (property == "stroke") {
-                    handle->stroke.setProperty(color, specificity + 100000 * a_important);
-                } else { // outline
-                    handle->outline.setProperty(color, specificity + 100000 * a_important);
-                }
-            }
-        } else {
-            std::cerr << "Unrecognized value for " << property << ": " << value << std::endl;
-        }
+    auto const it = property_map.find(property);
+    if (it == property_map.end()) {
+        log_error_local(Glib::ustring::compose(_("Unrecognized property '%1'"), property));
+        return;
+    }
 
-        cr_rgb_destroy(rgb);
-    } else if (property == "opacity" || property == "fill-opacity" ||
-               property == "stroke-opacity" || property == "outline-opacity") {
-        if (!a_value->content.num) {
-            std::cerr << "Invalid value for " << property << ": " << value << std::endl;
-            return;
-        }
-
-        double val;
-        if (a_value->content.num->type == NUM_PERCENTAGE) {
-            val = a_value->content.num->val / 100.0f;
-        } else if (a_value->content.num->type == NUM_GENERIC) {
-            val = a_value->content.num->val;
-        } else {
-            std::cerr << "Invalid type for " << property << ": " << value << std::endl;
-            return;
-        }
-
-        if (val > 1 || val < 0) {
-            std::cerr << "Invalid value for " << property << ": " << value << std::endl;
-            return;
-        }
-        for (auto &[handle, specificity] : selected_handles) {
-            if (property == "opacity") {
-                handle->opacity.setProperty(val, specificity + 100000 * a_important);
-            } else if (property == "fill-opacity") {
-                handle->fill_opacity.setProperty(val, specificity + 100000 * a_important);
-            } else if (property == "stroke-opacity") {
-                handle->stroke_opacity.setProperty(val, specificity + 100000 * a_important);
-            } else { // outline opacity
-                handle->outline_opacity.setProperty(val, specificity + 100000 * a_important);
-            }
-        }
-    } else if (property == "stroke-width" || property == "outline-width") {
-        // Assuming px value only, which stays the same regardless of the size of the handles.
-        int val;
-        if (!a_value->content.num) {
-            std::cerr << "Invalid value for " << property << ": " << value << std::endl;
-            return;
-        }
-        if (a_value->content.num->type == NUM_LENGTH_PX) {
-            val = int(a_value->content.num->val);
-        } else {
-            std::cerr << "Invalid type for " << property << ": " << value << std::endl;
-            return;
-        }
-
-        for (auto &[handle, specificity] : selected_handles) {
-            if (property == "stroke-width") {
-                handle->stroke_width.setProperty(val, specificity + 100000 * a_important);
-            } else {
-                handle->outline_width.setProperty(val, specificity + 100000 * a_important);
-            }
-        }
-    } else {
-        std::cerr << "Unrecognized property: " << property << std::endl;
+    try {
+        it->second(a_handler, a_value, a_important);
+    } catch (Exception const &e) {
+        log_error_local(e.msg);
     }
 }
 
@@ -263,35 +320,40 @@ void set_properties(CRDocHandler *a_handler, CRString *a_name, CRTerm *a_value, 
  */
 void clear_selectors(CRDocHandler *a_handler, CRSelector *a_selector)
 {
-    selected_handles.clear();
+    auto &state = get_parsing_state(a_handler);
+    state.selected_handles.clear();
 }
 
 /**
  * Parse and set handle styles from css.
  */
-void parse_handle_styles()
+Css parse_handle_styles()
 {
+    Css result;
+
     for (int type_i = CANVAS_ITEM_CTRL_TYPE_DEFAULT; type_i <= CANVAS_ITEM_CTRL_TYPE_INVISIPOINT; type_i++) {
         auto type = static_cast<CanvasItemCtrlType>(type_i);
         for (auto state_bits = 0; state_bits < 8; state_bits++) {
-            bool selected = state_bits & (1<<2);
-            bool hover = state_bits & (1<<1);
-            bool click = state_bits & (1<<0);
-            handle_styles[Handle{type, selected, hover, click}] = {};
+            bool selected = state_bits & (1 << 2);
+            bool hover = state_bits & (1 << 1);
+            bool click = state_bits & (1 << 0);
+            result.style_map[TypeState{type, selected, hover, click}] = {};
         }
     }
 
-    auto sac = cr_doc_handler_new();
+    ParsingState state{result};
+
+    auto sac = delete_with<cr_doc_handler_destroy>(cr_doc_handler_new());
+    sac->app_data = &state;
     sac->property = set_properties;
     sac->end_selector = clear_selectors;
 
     auto parse = [&] (IO::Resource::Domain domain) {
         auto const css_path = IO::Resource::get_path_string(domain, IO::Resource::UIS, "node-handles.css");
         if (Glib::file_test(css_path, Glib::FILE_TEST_EXISTS)) {
-            auto parser = cr_parser_new_from_file(reinterpret_cast<unsigned char const *>(css_path.c_str()), CR_ASCII);
-            cr_parser_set_sac_handler(parser, sac);
-            cr_parser_parse(parser);
-            cr_parser_destroy(parser);
+            auto parser = delete_with<cr_parser_destroy>(cr_parser_new_from_file(reinterpret_cast<unsigned char const *>(css_path.c_str()), CR_UTF_8));
+            cr_parser_set_sac_handler(parser.get(), sac.get());
+            cr_parser_parse(parser.get());
         }
     };
 
@@ -301,7 +363,7 @@ void parse_handle_styles()
     sac->start_selector = set_selectors<true>;
     parse(IO::Resource::USER);
 
-    cr_doc_handler_destroy(sac);
+    return result;
 }
 
 uint32_t combine_rgb_a(uint32_t rgb, float a)
@@ -310,44 +372,39 @@ uint32_t combine_rgb_a(uint32_t rgb, float a)
     return Display::AssembleARGB32(r, g, b, a * 255);
 }
 
+std::optional<Css> css;
+
 } // namespace
 
-uint32_t HandleStyle::getFill() const
+uint32_t Style::getFill() const
 {
     return combine_rgb_a(fill(), fill_opacity() * opacity());
 }
 
-uint32_t HandleStyle::getStroke() const
+uint32_t Style::getStroke() const
 {
     return combine_rgb_a(stroke(), stroke_opacity() * opacity());
 }
 
-uint32_t HandleStyle::getOutline() const
+uint32_t Style::getOutline() const
 {
     return combine_rgb_a(outline(), outline_opacity() * opacity());
 }
 
-void ensure_handle_styles_parsed()
+void ensure_styles_parsed()
 {
-    [[unlikely]] if (!parsed) {
-        parse_handle_styles();
-        parsed = true;
+    [[unlikely]] if (!css) {
+        css = parse_handle_styles();
     }
 }
 
-HandleStyle const *lookup_handle_style(Handle const &handle)
+Style const &lookup_style(TypeState const &handle)
 {
-    assert(parsed);
-
-    auto const it = handle_styles.find(handle);
-    if (it == handle_styles.end()) {
-        return nullptr;
-    }
-
-    return &it->second;
+    assert(css);
+    return css->style_map.at(handle); // all handles should exist
 }
 
-} // namespace Inkscape
+} // namespace Inkscape::Handles
 
 /*
   Local Variables:

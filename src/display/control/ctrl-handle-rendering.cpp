@@ -5,11 +5,11 @@
 #include <unordered_map>
 #include <boost/container_hash/hash.hpp>
 #include <cairomm/context.h>
+#include <2geom/point.h>
 
 #include "color.h"
-#include "display/cairo-utils.h"
 
-namespace Inkscape {
+namespace Inkscape::Handles {
 namespace {
 
 void draw_darrow(Cairo::Context &cr, double size)
@@ -413,86 +413,90 @@ void draw_cairo_path(CanvasItemCtrlShape shape, Cairo::Context &cr, double size)
     }
 }
 
-std::unordered_map<HandleTuple, std::shared_ptr<Cairo::ImageSurface const>> handle_cache;
-std::mutex cache_mutex;
+std::unordered_map<RenderParams, std::shared_ptr<Cairo::ImageSurface const>> cache;
+std::mutex mutex;
 
-} // namespace
-
-void draw_shape(Cairo::ImageSurface &surface,
-                CanvasItemCtrlShape shape, uint32_t fill, uint32_t stroke, uint32_t outline,
-                int stroke_width, int outline_width,
-                int width, double angle, int device_scale)
+// Convert a Cairo::RefPtr to a std::shared_ptr.
+// This is to circumvent Cairo::RefPtr's thread unsafe refcounting.
+// Todo: (GTK4) Remove this, since no conversion is required.
+template <typename T>
+static std::shared_ptr<T> to_shared(Cairo::RefPtr<T> const &surface)
 {
-    // TODO: Maybe replace the long list of arguments with a handle-style entity.
+    auto const ptr = surface.operator->();
+    auto shared = std::make_shared<Cairo::RefPtr<T>>(surface);
+    return std::shared_ptr<T>(std::move(shared), ptr);
+}
 
-    double size = width / device_scale; // Use unscaled width.
+void set_source_rgba32(Cairo::Context &cr, uint32_t rgba)
+{
+    cr.set_source_rgba(SP_RGBA32_R_F(rgba),
+                       SP_RGBA32_G_F(rgba),
+                       SP_RGBA32_B_F(rgba),
+                       SP_RGBA32_A_F(rgba));
+}
 
-    auto cr = Cairo::Context(cairo_create(surface.cobj()), true);
+std::shared_ptr<Cairo::ImageSurface const> draw_uncached(RenderParams const &p)
+{
+    auto surface = to_shared(Cairo::ImageSurface::create(Cairo::FORMAT_ARGB32, p.width, p.width));
+    cairo_surface_set_device_scale(surface->cobj(), p.device_scale, p.device_scale); // No C++ API!
+
+    double size = p.width / p.device_scale; // Use unscaled width.
+
+    auto cr = Cairo::Context(cairo_create(surface->cobj()), true);
     cr.set_operator(Cairo::OPERATOR_SOURCE);
     cr.set_line_cap(Cairo::LINE_CAP_SQUARE);
 
     // Rotate around center
     cr.translate(size / 2.0, size / 2.0);
-    cr.rotate(angle);
+    cr.rotate(p.angle);
     cr.translate(-size / 2.0, -size / 2.0);
 
     // (1.5 is an approximation of root(2) and 3 is 1.5 * 2)
-    double effective_outline = outline_width + 0.5 * stroke_width;
+    double effective_outline = p.outline_width + 0.5 * p.stroke_width;
     cr.translate(1.5 * effective_outline, 1.5 * effective_outline);
 
-    draw_cairo_path(shape, cr, size - 3 * effective_outline);
+    draw_cairo_path(p.shape, cr, size - 3 * effective_outline);
 
     // Outline.
-    cr.set_source_rgba(SP_RGBA32_R_F(outline),
-                        SP_RGBA32_G_F(outline),
-                        SP_RGBA32_B_F(outline),
-                        SP_RGBA32_A_F(outline));
+    set_source_rgba32(cr, p.outline);
     cr.set_line_width(2 * effective_outline);
     cr.stroke_preserve();
 
     // Fill.
-    cr.set_source_rgba(SP_RGBA32_R_F(fill),
-                        SP_RGBA32_G_F(fill),
-                        SP_RGBA32_B_F(fill),
-                        SP_RGBA32_A_F(fill));
+    set_source_rgba32(cr, p.fill);;
     cr.fill_preserve();
 
     // Stroke.
-    cr.set_source_rgba(SP_RGBA32_R_F(stroke),
-                        SP_RGBA32_G_F(stroke),
-                        SP_RGBA32_B_F(stroke),
-                        SP_RGBA32_A_F(stroke));
-    cr.set_line_width(stroke_width);
+    set_source_rgba32(cr, p.stroke);
+    cr.set_line_width(p.stroke_width);
     cr.stroke();
+
+    return surface;
 }
 
-std::shared_ptr<Cairo::ImageSurface const> lookup_cache(HandleTuple const &prop)
+} // namespace
+
+std::shared_ptr<Cairo::ImageSurface const> draw(RenderParams const &params)
 {
-    auto lock = std::lock_guard{cache_mutex};
-    auto const it = handle_cache.find(prop);
-    if (it == handle_cache.end()) {
-        return {};
+    auto lock = std::unique_lock{mutex};
+
+    auto &surface = cache[params];
+
+    if (!surface) {
+        surface = draw_uncached(params);
     }
-    return it->second;
-}
 
-void insert_cache(HandleTuple const &prop, std::shared_ptr<Cairo::ImageSurface const> cache)
-{
-    auto lock = std::lock_guard{cache_mutex};
-    handle_cache[prop] = std::move(cache);
+    return surface;
 }
 
 } // namespace Inkscape
 
-namespace std {
-size_t hash<Inkscape::HandleTuple>::operator()(Inkscape::HandleTuple const &tuple) const
+size_t std::hash<Inkscape::Handles::RenderParams>::operator()(Inkscape::Handles::RenderParams const &params) const
 {
-    auto const tmp = std::make_tuple(hash<Inkscape::Handle>{}(std::get<0>(tuple)),
-                                     std::get<1>(tuple),
-                                     std::get<2>(tuple));
-    return boost::hash<decltype(tmp)>{}(tmp);
+    auto const [a, b, c, d, e, f, g, h, i] = params;
+    auto const tuple = std::make_tuple(a, b, c, d, e, f, g, h, i);
+    return boost::hash<decltype(tuple)>{}(tuple);
 }
-} // namespace std
 
 /*
   Local Variables:

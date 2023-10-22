@@ -41,7 +41,7 @@ Inkscape::CanvasItemCtrlType nodeTypeToCtrlType(Inkscape::UI::NodeType type)
             result = Inkscape::CANVAS_ITEM_CTRL_TYPE_NODE_AUTO;
             break;
         case Inkscape::UI::NODE_SYMMETRIC:
-            result = Inkscape::CANVAS_ITEM_CTRL_TYPE_NODE_SYMETRICAL;
+            result = Inkscape::CANVAS_ITEM_CTRL_TYPE_NODE_SYMMETRICAL;
             break;
         case Inkscape::UI::NODE_CUSP:
         default:

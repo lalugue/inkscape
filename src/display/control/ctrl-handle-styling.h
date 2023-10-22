@@ -20,19 +20,19 @@
 
 #include "canvas-item-enums.h"
 
-namespace Inkscape {
+namespace Inkscape::Handles {
 
 /**
- * Struct to manage state and type.
+ * Struct to manage type and state.
  */
-struct Handle
+struct TypeState
 {
     CanvasItemCtrlType type = CANVAS_ITEM_CTRL_TYPE_DEFAULT;
     bool selected = false;
     bool hover = false;
     bool click = false;
 
-    auto operator<=>(Handle const &) const = default;
+    auto operator<=>(TypeState const &) const = default;
 };
 
 /**
@@ -72,7 +72,7 @@ private:
 /**
  * Struct containing all required styling for handles.
  */
-struct HandleStyle
+struct Style
 {
     Property<CanvasItemCtrlShape> shape{CANVAS_ITEM_CTRL_SHAPE_SQUARE};
     Property<uint32_t> fill{0xffffff};
@@ -90,14 +90,14 @@ struct HandleStyle
     uint32_t getOutline() const;
 };
 
-void ensure_handle_styles_parsed();
-HandleStyle const *lookup_handle_style(Handle const &handle);
+void ensure_styles_parsed();
+Style const &lookup_style(TypeState const &handle);
 
-} // namespace Inkscape
+} // namespace Inkscape::Handles
 
-template <> struct std::hash<Inkscape::Handle>
+template <> struct std::hash<Inkscape::Handles::TypeState>
 {
-    size_t operator()(Inkscape::Handle const &handle) const
+    size_t operator()(Inkscape::Handles::TypeState const &handle) const
     {
         return (size_t{handle.type} << 3) |
                (size_t{handle.selected} << 2) |

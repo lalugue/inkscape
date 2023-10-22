@@ -181,7 +181,7 @@ void CanvasItemCtrl::set_size_via_index(int size_index)
         break;
 
     case CANVAS_ITEM_CTRL_TYPE_NODE_SMOOTH:
-    case CANVAS_ITEM_CTRL_TYPE_NODE_SYMETRICAL:
+    case CANVAS_ITEM_CTRL_TYPE_NODE_SYMMETRICAL:
         size = size_index * 2 + 3;
         break;
 
@@ -323,14 +323,13 @@ void CanvasItemCtrl::_update(bool)
     // Set _angle, and compute adjustment for anchor.
     int dx = 0;
     int dy = 0;
-
-    ensure_handle_styles_parsed();
+    
+    Handles::ensure_styles_parsed();
 
     CanvasItemCtrlShape shape = _shape;
     if (!_shape_set) {
-        if (auto style = lookup_handle_style(_handle)) {
-            shape = style->shape();
-        }
+        auto const &style = Handles::lookup_style(_handle);
+        shape = style.shape();
     }
 
     switch (shape) {
@@ -457,17 +456,6 @@ void CanvasItemCtrl::_render(CanvasItemBuffer &buf) const
     buf.cr->restore();
 }
 
-// Convert a Cairo::RefPtr to a std::shared_ptr.
-// This is to circumvent Cairo::RefPtr's thread unsafe refcounting.
-// Todo: (GTK4) Remove this, since no conversion is required.
-template <typename T>
-static std::shared_ptr<T> to_shared(Cairo::RefPtr<T> const &surface)
-{
-    auto const ptr = surface.operator->();
-    auto shared = std::make_shared<Cairo::RefPtr<T>>(surface);
-    return std::shared_ptr<T>(std::move(shared), ptr);
-}
-
 /**
  * Build object-specific cache.
  */
@@ -482,51 +470,19 @@ void CanvasItemCtrl::build_cache(int device_scale) const
                   << _name << ":  width: " << _width << std::endl;
     }
 
-    int width = _width * device_scale;  // Not unsigned or math errors occur!
+    auto const &style = Handles::lookup_style(_handle);
 
-    if (_shape_set || _fill_set || _stroke_set) {
-        auto cache = to_shared(Cairo::ImageSurface::create(Cairo::FORMAT_ARGB32, width, width));
-        cairo_surface_set_device_scale(cache->cobj(), device_scale, device_scale); // No C++ API!
-
-        if (auto style = lookup_handle_style(_handle)) {
-            auto shape = _shape_set ? _shape : style->shape();
-            auto fill = _fill_set ? _fill : style->getFill();
-            auto stroke = _stroke_set ? _stroke : style->getStroke();
-            auto outline = style->getOutline();
-            auto stroke_width = style->stroke_width();
-            auto outline_width = style->outline_width();
-            draw_shape(*cache, shape, fill, stroke, outline, stroke_width, outline_width, width, _angle, device_scale);
-        } else {
-            draw_shape(*cache, _shape, _fill, _stroke, 0, 1, 0, width, _angle, device_scale);
-        }
-
-        _cache = std::move(cache);
-        return;
-    }
-
-    auto const handle_prop = std::make_tuple(_handle, width, _angle);
-    if (auto ret = lookup_cache(handle_prop)) {
-        _cache = std::move(ret);
-        return;
-    }
-
-    auto cache = to_shared(Cairo::ImageSurface::create(Cairo::FORMAT_ARGB32, width, width));
-    cairo_surface_set_device_scale(cache->cobj(), device_scale, device_scale); // No C++ API!
-    if (auto style = lookup_handle_style(_handle)) {
-        auto shape = style->shape();
-        auto fill = style->getFill();
-        auto stroke = style->getStroke();
-        auto outline = style->getOutline();
-        auto stroke_width = style->stroke_width();
-        auto outline_width = style->outline_width();
-        draw_shape(*cache, shape, fill, stroke, outline, stroke_width, outline_width, width, _angle, device_scale);
-        insert_cache(handle_prop, cache);
-    } else {
-        // Shouldn't happen - every ctrl either have a style in handle_styles
-        // or their style must be set in the code
-        std::cerr << "CanvasItemCtrl::build_cache: Unhandled Ctrl - " << _name << std::endl;
-    }
-    _cache = std::move(cache);
+    _cache = Handles::draw({
+        .shape = _shape_set ? _shape : style.shape(),
+        .fill = _fill_set ? _fill : style.getFill(),
+        .stroke = _stroke_set ? _stroke : style.getStroke(),
+        .outline = style.getOutline(),
+        .stroke_width = style.stroke_width(),
+        .outline_width = style.outline_width(),
+        .width = _width * device_scale,
+        .angle = _angle,
+        .device_scale = device_scale
+    });
 }
 
 } // namespace Inkscape

@@ -15,30 +15,34 @@
 
 #include <memory>
 
-#include "ctrl-handle-styling.h"
+#include "canvas-item-enums.h"
 
 namespace Cairo { class ImageSurface; }
 
-namespace Inkscape {
+namespace Inkscape::Handles {
 
-using HandleTuple = std::tuple<Handle, int, double>;
-
-/**
- * Draw the handles as described by the arguments.
- */
-void draw_shape(Cairo::ImageSurface &surface,
-                CanvasItemCtrlShape shape, uint32_t fill, uint32_t stroke, uint32_t outline,
-                int stroke_width, int outline_width,
-                int width, double angle, int device_scale);
-
-std::shared_ptr<Cairo::ImageSurface const> lookup_cache(HandleTuple const &prop);
-void insert_cache(HandleTuple const &prop, std::shared_ptr<Cairo::ImageSurface const> cache);
-
-} // namespace Inkscape
-
-template <> struct std::hash<Inkscape::HandleTuple>
+struct RenderParams
 {
-    size_t operator()(Inkscape::HandleTuple const &tuple) const;
+    CanvasItemCtrlShape shape;
+    uint32_t fill;
+    uint32_t stroke;
+    uint32_t outline;
+    int stroke_width;
+    int outline_width;
+    int width;
+    double angle;
+    int device_scale;
+
+    auto operator<=>(RenderParams const &) const = default;
+};
+
+std::shared_ptr<Cairo::ImageSurface const> draw(RenderParams const &params);
+
+} // namespace Inkscape::Handles
+
+template <> struct std::hash<Inkscape::Handles::RenderParams>
+{
+    size_t operator()(Inkscape::Handles::RenderParams const &tuple) const;
 };
 
 #endif // INKSCAPE_DISPLAY_CONTROL_CTRL_HANDLE_RENDERING_H

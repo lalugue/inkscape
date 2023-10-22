@@ -77,7 +77,7 @@ protected:
     mutable std::shared_ptr<Cairo::ImageSurface const> _cache;
 
     // Properties
-    Handle _handle;
+    Handles::TypeState _handle;
     CanvasItemCtrlShape _shape = CANVAS_ITEM_CTRL_SHAPE_SQUARE;
     uint32_t _fill = 0x000000ff;
     uint32_t _stroke = 0xffffffff;
