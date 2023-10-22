@@ -168,7 +168,12 @@ StatusBar::set_desktop(SPDesktop* desktop_in)
 void
 StatusBar::set_message(const Inkscape::MessageType type, const char* message)
 {
-    selection->set_markup(message ? message : "");
+#if PANGO_VERSION_CHECK(1,50,0)
+    auto const msg = Glib::ustring::compose("<span line_height='0.9'>%1</span>", message ? message : "");
+    selection->set_markup(msg.c_str());
+#else
+     selection->set_markup(message ? message : "");
+#endif
 
     // Display important messages immediately!
     if (type == Inkscape::IMMEDIATE_MESSAGE && selection->get_is_drawable()) {
