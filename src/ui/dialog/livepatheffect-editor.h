@@ -72,6 +72,7 @@ private:
     std::vector<LPEExpander> _LPEExpanders;
     bool updating = false;
     SPLPEItem *current_lpeitem = nullptr;
+    SPUse *_current_use = nullptr;
     LPEExpander current_lperef = {nullptr, nullptr};
     bool selection_changed_lock = false;
     bool dnd = false;

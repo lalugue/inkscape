@@ -131,6 +131,7 @@ void LivePathEffectEditor::selectionChanged(Inkscape::Selection * selection)
 void LivePathEffectEditor::selectionModified(Inkscape::Selection * selection, guint flags)
 {
     current_lpeitem = cast<SPLPEItem>(selection->singleItem());
+    _current_use = cast<SPUse>(selection->singleItem());
     if (!selection_changed_lock && current_lpeitem && effectlist != current_lpeitem->getEffectList()) {
         onSelectionChanged(selection);
     } else if (current_lpeitem && current_lperef.first) {
@@ -403,6 +404,8 @@ LivePathEffectEditor::setMenu()
         item_type = "path";
     } else if (shape) {
         item_type = "shape";
+    } else if (_current_use) {
+        item_type = "use";
     }
 
     if (!(sp_set_experimental(_experimental) || _item_type != item_type || has_clip != _has_clip || has_mask != _has_mask)) {
@@ -447,6 +450,7 @@ void LivePathEffectEditor::onAdd(LivePathEffect::EffectType etype)
     SPLPEItem *fromclone = clonetolpeitem();
     if (fromclone) {
         current_lpeitem = fromclone;
+        _current_use = nullptr;
         if (key == "clone_original") {
             current_lpeitem->getCurrentLPE()->refresh_widgets = true;
             selection_changed_lock = false;
@@ -578,16 +582,20 @@ LivePathEffectEditor::onSelectionChanged(Inkscape::Selection *sel)
         SPItem *item = sel->singleItem();
         if ( item ) {
             auto lpeitem = cast<SPLPEItem>(item);
-            use = cast<SPUse>(item);
+            _current_use = cast<SPUse>(item);
             if (lpeitem) {
                 lpeitem->update_satellites();
                 current_lpeitem = lpeitem;
                 _LPEAddContainer.set_sensitive(true);
                 effect_list_reload(lpeitem);
                 return;
+            } else if (_current_use) {
+                _LPEAddContainer.set_sensitive(true);
+                return;
             }
         }
     }
+    _current_use = nullptr;
     current_lpeitem = nullptr;
     _LPEAddContainer.set_sensitive(use != nullptr);
     clear_lpe_list();
@@ -983,6 +991,7 @@ LivePathEffectEditor::lpeFlatten(PathEffectSharedPtr const &lperef)
 {
     current_lpeitem->setCurrentPathEffect(lperef);
     current_lpeitem = current_lpeitem->flattenCurrentPathEffect();
+    _current_use = nullptr;
     auto selection = getSelection();
     if (selection && selection->isEmpty() ) {
         selection->add(current_lpeitem);
@@ -999,6 +1008,7 @@ LivePathEffectEditor::removeEffect(Gtk::Expander * expander) {
         if (w.first == expander) {
             current_lpeitem->setCurrentPathEffect(w.second);
             current_lpeitem = current_lpeitem->removeCurrentPathEffect(false);
+            _current_use = nullptr;
         } 
     }
     if (current_lpeitem) {
