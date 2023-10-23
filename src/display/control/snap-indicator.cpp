@@ -81,7 +81,7 @@ static std::map<SnapTargetType, Glib::ustring> target2string = {
     {SNAPTARGET_PATH_MASK, _("mask-path")},
     {SNAPTARGET_ELLIPSE_QUADRANT_POINT, _("quadrant point")},
     {SNAPTARGET_RECT_CORNER, _("corner")},
-    {SNAPTARGET_GRID, _("grid line")},
+    {SNAPTARGET_GRID_LINE, _("grid line")},
     {SNAPTARGET_GRID_INTERSECTION, _("grid intersection")},
     {SNAPTARGET_GRID_PERPENDICULAR, _("grid line (perpendicular)")},
     {SNAPTARGET_GUIDE, _("guide")},

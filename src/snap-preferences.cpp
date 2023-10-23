@@ -138,6 +138,7 @@ void Inkscape::SnapPreferences::_mapTargetToArrayIndex(Inkscape::SnapTargetType 
 
             // These are only listed for completeness
             case SNAPTARGET_GRID:
+            case SNAPTARGET_GRID_LINE:
             case SNAPTARGET_GUIDE:
             case SNAPTARGET_PAGE_EDGE_BORDER:
             case SNAPTARGET_PAGE_MARGIN_BORDER:

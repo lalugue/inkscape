@@ -78,6 +78,7 @@ SnapVector snap_all_the_rest = {
     { "snap-page-border",        SNAPTARGET_PAGE_EDGE_BORDER,   true },
     { "snap-page-margin",        SNAPTARGET_PAGE_MARGIN_BORDER, true },
     { "snap-grid",               SNAPTARGET_GRID,               true },
+    { "snap-grid-line",          SNAPTARGET_GRID_LINE,          true },
     { "snap-guide",              SNAPTARGET_GUIDE,              true },
 };
 
@@ -270,6 +271,7 @@ std::vector<std::vector<Glib::ustring>> raw_data_canvas_snapping =
     {"win.snap-page-border",          N_("Snap Page Border"),                  "Snap",  N_("Toggle snapping to page border")                     },
     {"win.snap-page-margin",          N_("Snap Page Margin"),                  "Snap",  N_("Toggle snapping to page margin")                     },
     {"win.snap-grid",                 N_("Snap Grids"),                        "Snap",  N_("Toggle snapping to grids")                           },
+    {"win.snap-grid-line",            N_("Snap Grid Lines"),                   "Snap",  N_("Toggle snapping to grid lines")                      },
     {"win.snap-guide",                N_("Snap Guide Lines"),                  "Snap",  N_("Toggle snapping to guide lines")                     },
 
     {"win.snap-path-mask",            N_("Snap Mask Paths"),                   "Snap",  N_("Toggle snapping to mask paths")                      },
@@ -343,6 +345,7 @@ void set_actions_canvas_snapping(Gio::ActionMap& map) {
     bool bbox = snapprefs.isTargetSnappable(SNAPTARGET_BBOX_CATEGORY);
     bool node = snapprefs.isTargetSnappable(SNAPTARGET_NODE_CATEGORY);
     bool other = snapprefs.isTargetSnappable(SNAPTARGET_OTHERS_CATEGORY);
+    bool grid = snapprefs.isTargetSnappable(SNAPTARGET_GRID);
 
     struct { const char* action; bool state; bool enabled; } snap_options[] = {
         { "snap-global-toggle", global, true }, // Always enabled
@@ -377,6 +380,7 @@ void set_actions_canvas_snapping(Gio::ActionMap& map) {
         { "snap-page-border",        snapprefs.isSnapButtonEnabled(SNAPTARGET_PAGE_EDGE_BORDER),   global },
         { "snap-page-margin",        snapprefs.isSnapButtonEnabled(SNAPTARGET_PAGE_MARGIN_BORDER), global },
         { "snap-grid",               snapprefs.isSnapButtonEnabled(SNAPTARGET_GRID),               global },
+        { "snap-grid-line",          snapprefs.isSnapButtonEnabled(SNAPTARGET_GRID_LINE),          global && grid},
         { "snap-guide",              snapprefs.isSnapButtonEnabled(SNAPTARGET_GUIDE),              global },
 
         { "simple-snap-bbox", bbox, global },

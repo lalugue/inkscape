@@ -560,9 +560,13 @@ Inkscape::SnappedPoint SnapManager::findBestSnap(Inkscape::SnapCandidatePoint co
     }
 
     // search for the closest snapped grid line
-    Inkscape::SnappedLine closestGridLine;
-    if (getClosestSL(isr.grid_lines, closestGridLine)) {
-        sp_list.emplace_back(closestGridLine);
+    if (snapprefs.isTargetSnappable(Inkscape::SNAPTARGET_GRID_LINE)) {
+        Inkscape::SnappedLine closestGridLine;
+        if (getClosestSL(isr.grid_lines, closestGridLine)) {
+            closestGridLine.setSource(p.getSourceType());
+            closestGridLine.setTarget(Inkscape::SNAPTARGET_GRID_LINE);
+            sp_list.emplace_back(closestGridLine);
+        }
     }
 
     // search for the closest snapped guide line

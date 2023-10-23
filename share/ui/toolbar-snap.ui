@@ -287,7 +287,7 @@
           </object>
           <packing>
             <property name="left-attach">0</property>
-            <property name="top-attach">30</property>
+            <property name="top-attach">32</property>
             <property name="width">2</property>
           </packing>
         </child>
@@ -303,7 +303,7 @@
           </object>
           <packing>
             <property name="left-attach">0</property>
-            <property name="top-attach">31</property>
+            <property name="top-attach">33</property>
             <property name="width">2</property>
           </packing>
         </child>
@@ -349,7 +349,7 @@
           </object>
           <packing>
             <property name="left-attach">1</property>
-            <property name="top-attach">33</property>
+            <property name="top-attach">35</property>
             <property name="width">2</property>
           </packing>
         </child>
@@ -532,7 +532,7 @@
           </object>
           <packing>
             <property name="left-attach">2</property>
-            <property name="top-attach">30</property>
+            <property name="top-attach">32</property>
           </packing>
         </child>
         <child>
@@ -545,7 +545,7 @@
           </object>
           <packing>
             <property name="left-attach">2</property>
-            <property name="top-attach">31</property>
+            <property name="top-attach">33</property>
           </packing>
         </child>
         <child>
@@ -779,7 +779,7 @@
           </object>
           <packing>
             <property name="left-attach">1</property>
-            <property name="top-attach">32</property>
+            <property name="top-attach">31</property>
           </packing>
         </child>
         <child>
@@ -794,7 +794,7 @@
           </object>
           <packing>
             <property name="left-attach">0</property>
-            <property name="top-attach">32</property>
+            <property name="top-attach">34</property>
             <property name="width">2</property>
           </packing>
         </child>
@@ -808,7 +808,35 @@
           </object>
           <packing>
             <property name="left-attach">2</property>
-            <property name="top-attach">32</property>
+            <property name="top-attach">34</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkCheckButton" id="snap-grid-line">
+            <property name="label" translatable="yes">Grid Lines</property>
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">False</property>
+            <property name="halign">start</property>
+            <property name="action-name">win.snap-grid-line</property>
+            <property name="draw-indicator">True</property>
+          </object>
+          <packing>
+            <property name="left-attach">1</property>
+            <property name="top-attach">30</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkImage">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="halign">start</property>
+            <property name="valign">center</property>
+            <property name="icon-name">grid-rectangular</property>
+          </object>
+          <packing>
+            <property name="left-attach">2</property>
+            <property name="top-attach">30</property>
           </packing>
         </child>
         <child>

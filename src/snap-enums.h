@@ -94,6 +94,7 @@ enum SnapTargetType {
     //-------------------------------------------------------------------
     SNAPTARGET_DATUMS_CATEGORY = 64, // will be used as a flag and must therefore be a power of two
     SNAPTARGET_GRID,
+    SNAPTARGET_GRID_LINE,
     SNAPTARGET_GRID_INTERSECTION,
     SNAPTARGET_GRID_PERPENDICULAR,
     SNAPTARGET_GUIDE,
