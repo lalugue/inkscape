@@ -224,10 +224,6 @@ iconview *:hover {
     border-width:0;
 }
 
-#start-screen-window .combo {
-    padding:15px 20px;
-}
-
 .inksmall {
     font-size: 0.8em;
 }
@@ -528,20 +524,23 @@ button.close-button:hover{
     background: linear-gradient(to bottom, transparent 0%, transparent 50%, @theme_bg_color);
 }
 
-button.primary {
-    background-image: linear-gradient(to bottom, rgba(22, 169, 249, 1), rgba(2, 135, 204, 1));
-    box-shadow: 0 1px rgba(255, 255, 255, 0.3) inset;
-    text-shadow: none;
+#start-screen-window .combo {
+    padding:1px 10px;
+
 }
-button.primary:hover {
-    background-image: linear-gradient(to bottom, rgba(32, 179, 255, 1), rgba(12, 145, 214, 1));
+#start-screen-window .combo * {
+    padding:2px;
 }
-button.primary:active {
-    background-image: linear-gradient(to top, rgba(12, 149, 219, 1), rgba(0, 115, 184, 1));
+
+#start-screen-window grid label {
+    font-size:small;
+    margin:12px;
 }
-button.primary label {
-    color: white;
+
+#start-screen-window * {
+    outline:0;
 }
+
 button.link:hover image {
     -gtk-icon-effect: dim;
 }
