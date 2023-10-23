@@ -90,6 +90,7 @@ public:
     void deletePage(bool contents = false);
     void resizePage(double width, double height);
     void resizePage(SPPage *page, double width, double height);
+    void scalePages(Geom::Scale const &scale);
     void rotatePage(int turns);
     void changeOrientation();
     void fitToSelection(ObjectSet *selection, bool add_margins = true);

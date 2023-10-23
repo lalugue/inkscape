@@ -792,22 +792,48 @@ void SPDocument::setDocumentScale(double scale) {
 
 /// Returns document scale as defined by width/height (in pixels) and viewBox (real world to
 /// user-units).
-Geom::Scale SPDocument::getDocumentScale() const
+Geom::Scale SPDocument::getDocumentScale(bool computed) const
 {
     Geom::Scale scale;
     if( root->viewBox_set ) {
         double scale_x = 1.0;
         double scale_y = 1.0;
         if( root->viewBox.width() > 0.0 ) {
-            scale_x = root->width.computed / root->viewBox.width();
+            scale_x = (computed ? root->width.computed : root->width.value) / root->viewBox.width();
         }
         if( root->viewBox.height() > 0.0 ) {
-            scale_y = root->height.computed / root->viewBox.height();
+            scale_y = (computed ? root->height.computed : root->height.value) / root->viewBox.height();
         }
         scale = Geom::Scale(scale_x, scale_y);
     }
     // std::cout << "SPDocument::getDocumentScale():\n" << scale << std::endl;
     return scale;
+}
+
+/**
+ * Scale the content, used by file-update and document properties when modifying the
+ * the document's viewBox while retaining the content's physical size.
+ */
+void SPDocument::scaleContentBy(Geom::Scale const &delta)
+{
+    Inkscape::Preferences *prefs = Inkscape::Preferences::get();
+    bool transform_stroke = prefs->getBool("/options/transform/stroke", true);
+    bool transform_rectcorners = prefs->getBool("/options/transform/rectcorners", true);
+    bool transform_pattern = prefs->getBool("/options/transform/pattern", true);
+    bool transform_gradient = prefs->getBool("/options/transform/gradient", true);
+
+    prefs->setBool("/options/transform/stroke", true);
+    prefs->setBool("/options/transform/rectcorners", true);
+    prefs->setBool("/options/transform/pattern", true);
+    prefs->setBool("/options/transform/gradient", true);
+
+    getRoot()->scaleChildItemsRec(delta, Geom::Point(0, 0), false);
+
+    // Restore preferences
+    prefs->setBool("/options/transform/stroke", transform_stroke);
+    prefs->setBool("/options/transform/rectcorners", transform_rectcorners);
+    prefs->setBool("/options/transform/pattern", transform_pattern);
+    prefs->setBool("/options/transform/gradient", transform_gradient);
 }
 
 // Avoid calling root->updateRepr() twice by combining setting width and height.

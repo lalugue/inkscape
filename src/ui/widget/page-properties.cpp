@@ -57,6 +57,8 @@ namespace Inkscape::UI::Widget {
 
 const char* g_linked = "entries-linked-symbolic";
 const char* g_unlinked = "entries-unlinked-symbolic";
+const char* s_linked = "scale-linked-symbolic";
+const char* s_unlinked = "scale-unlinked-symbolic";
 
 static std::tuple<int, Glib::ustring, std::string> get_sorter(PaperSize const &page)
 {
@@ -131,6 +133,7 @@ public:
       , _portrait             (get_widget<Gtk::RadioButton>      (_builder, "page-portrait"))
       , _landscape            (get_widget<Gtk::RadioButton>      (_builder, "page-landscape"))
       , _scale_x              (get_derived_widget<MathSpinButton>(_builder, "scale-x"))
+      , _link_scale_content   (get_widget<Gtk::Button>           (_builder, "link-scale-content"))
       , _unsupported_size     (get_widget<Gtk::Label>            (_builder, "unsupported"))
       , _nonuniform_scale     (get_widget<Gtk::Label>            (_builder, "nonuniform-scale"))
       , _doc_units            (get_widget<Gtk::Label>            (_builder, "user-units"))
@@ -217,8 +220,15 @@ public:
             _link_width_height.set_image_from_icon_name(_locked_size_ratio && _size_ratio > 0 ? g_linked : g_unlinked, Gtk::ICON_SIZE_LARGE_TOOLBAR);
         });
         _link_width_height.set_image_from_icon_name(g_unlinked, Gtk::ICON_SIZE_LARGE_TOOLBAR);
+
+        _link_scale_content.signal_clicked().connect([=](){
+            _locked_content_scale = !_locked_content_scale;
+            _link_scale_content.set_image_from_icon_name(_locked_content_scale ? s_linked : s_unlinked, Gtk::ICON_SIZE_LARGE_TOOLBAR);
+        });
+        _link_scale_content.set_image_from_icon_name(s_unlinked, Gtk::ICON_SIZE_LARGE_TOOLBAR);
+
         // set image for linked scale
-        _linked_viewbox_scale.set_from_icon_name(g_linked, Gtk::ICON_SIZE_LARGE_TOOLBAR);
+        _linked_viewbox_scale.set_from_icon_name(s_linked, Gtk::ICON_SIZE_LARGE_TOOLBAR);
 
         // report page size changes
         _page_width .signal_value_changed().connect([=](){ set_page_size_linked(true); });
@@ -236,7 +246,10 @@ public:
             auto b2 = &pair.second;
             if (dim == Dimension::Scale) {
                 // uniform scale: report the same x and y
-                b1->signal_value_changed().connect([=](){ fire_value_changed(*b1, *b1, nullptr, dim); });
+                b1->signal_value_changed().connect([=](){
+                    // Report the dimention differently if locked
+                    fire_value_changed(*b1, *b1, nullptr, _locked_content_scale ? Dimension::ScaleContent : Dimension::Scale);
+                });
             }
             else {
                 b1->signal_value_changed().connect([=](){ fire_value_changed(*b1, *b2, nullptr, dim); });
@@ -527,7 +540,8 @@ private:
         switch (dimension) {
             case Dimension::PageSize: return spin_pair(_page_width, _page_height);
             case Dimension::PageTemplate: return spin_pair(_page_width, _page_height);
-            case Dimension::Scale: return spin_pair(_scale_x, _scale_x);
+            case Dimension::Scale:
+            case Dimension::ScaleContent: return spin_pair(_scale_x, _scale_x);
             case Dimension::ViewboxPosition: return spin_pair(_viewbox_x, _viewbox_y);
             case Dimension::ViewboxSize: return spin_pair(_viewbox_width, _viewbox_height);
 
@@ -544,6 +558,7 @@ private:
     Gtk::RadioButton &_portrait;
     Gtk::RadioButton &_landscape;
     MathSpinButton &_scale_x;
+    Gtk::Button &_link_scale_content;
     Gtk::Label &_unsupported_size;
     Gtk::Label &_nonuniform_scale;
     Gtk::Label &_doc_units;
@@ -579,6 +594,7 @@ private:
     double _size_ratio = 1; // width to height ratio
     bool _locked_size_ratio = false;
     bool _scale_is_uniform = true;
+    bool _locked_content_scale = false;
 };
 
 PageProperties* PageProperties::create() {

@@ -332,6 +332,17 @@ std::string SPPage::getBleedLabel() const
     return bleed.toString(unit, scale, 2);
 }
 
+double SPPage::getBleedSide(int side)
+{
+    return this->bleed.get((BoxSide)side);
+}
+
+void SPPage::setBleedSide(int side, double value)
+{
+    this->bleed.set((BoxSide)side, value, false);
+    this->updateRepr();
+}
+
 /**
  * Get the items which are ONLY on this page and don't overlap.
  *

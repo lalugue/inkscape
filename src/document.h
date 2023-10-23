@@ -242,7 +242,8 @@ public:
 
     void setDocumentScale( const double scaleX, const double scaleY );
     void setDocumentScale( const double scale );
-    Geom::Scale getDocumentScale() const;
+    Geom::Scale getDocumentScale(bool computed = true) const;
+    void scaleContentBy(Geom::Scale const &delta);
 
     void setWidthAndHeight(const Inkscape::Util::Quantity &width, const Inkscape::Util::Quantity &height, bool changeSize=true);
     Geom::Point getDimensions() const;

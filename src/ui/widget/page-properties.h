@@ -35,7 +35,7 @@ public:
                        DisabledScale, UnsupportedSize, ClipToPage, PageLabelStyle };
     virtual void set_check(Check element, bool checked) = 0;
 
-    enum class Dimension { PageSize, ViewboxSize, ViewboxPosition, Scale, PageTemplate };
+    enum class Dimension { PageSize, ViewboxSize, ViewboxPosition, Scale, ScaleContent, PageTemplate };
     virtual void set_dimension(Dimension dim, double x, double y) = 0;
 
     enum class Units { Display, Document };

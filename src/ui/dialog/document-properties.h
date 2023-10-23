@@ -123,6 +123,7 @@ protected:
     void update_viewbox(SPDesktop* desktop);
     void update_scale_ui(SPDesktop* desktop);
     void update_viewbox_ui(SPDesktop* desktop);
+    void set_content_scale(SPDesktop *desktop, double scale_x);
     void set_document_scale(SPDesktop* desktop, double scale_x);
     void set_viewbox_pos(SPDesktop* desktop, double x, double y);
     void set_viewbox_size(SPDesktop* desktop, double width, double height);

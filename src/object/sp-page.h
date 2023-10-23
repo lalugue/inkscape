@@ -52,6 +52,8 @@ public:
     void setMarginSide(int side, const std::string &value, bool confine = false);
     std::string getMarginLabel() const;
 
+    double getBleedSide(int side);
+    void setBleedSide(int side, double value);
     const SVGBox &getBleed() const { return bleed; }
     void setBleed(const std::string &value);
     std::string getBleedLabel() const;

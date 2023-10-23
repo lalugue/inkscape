@@ -352,6 +352,32 @@ void set_document_scale_helper(SPDocument& document, double scale) {
     );
 }
 
+void DocumentProperties::set_content_scale(SPDesktop *desktop, double scale)
+{
+    if (!desktop) return;
+
+    auto document = desktop->getDocument();
+    if (!document) return;
+
+    if (scale > 0) {
+        auto old_scale = document->getDocumentScale(false);
+        auto delta = old_scale * Geom::Scale(scale).inverse();
+
+        // Shapes in the document
+        document->scaleContentBy(delta);
+
+        // Pages, margins and bleeds
+        document->getPageManager().scalePages(delta);
+
+        // Grids
+        if (auto nv = document->getNamedView()) {
+            for (auto grid : nv->grids) {
+                grid->scale(delta);
+            }
+        }
+    }
+}
+
 void DocumentProperties::set_document_scale(SPDesktop* desktop, double scale) {
     if (!desktop) return;
 
@@ -477,8 +503,11 @@ void DocumentProperties::build_page()
                 set_viewbox_pos(_wr.desktop(), x, y);
                 break;
 
+            case PageProperties::Dimension::ScaleContent:
+                set_content_scale(_wr.desktop(), x);
             case PageProperties::Dimension::Scale:
                 set_document_scale(_wr.desktop(), x); // only uniform scale; there's no 'y' in the dialog
+                break;
         }
         _wr.setUpdating(false);
     });

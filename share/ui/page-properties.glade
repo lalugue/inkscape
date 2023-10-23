@@ -227,7 +227,6 @@
         </child>
         <child>
           <object class="GtkButton" id="link-width-height">
-            <property name="name">LockGuides</property>
             <property name="visible">True</property>
             <property name="focus-on-click">False</property>
             <property name="receives-default">True</property>
@@ -261,6 +260,7 @@
         <child>
           <object class="GtkSpinButton" id="scale-x">
             <property name="visible">True</property>
+            <property name="valign">center</property>
             <property name="can-focus">True</property>
             <property name="tooltip-text" translatable="yes">Document scale establishes size of user units.
 SVG element positions are expressed in user units.</property>
@@ -573,6 +573,55 @@ SVG element positions are expressed in user units.</property>
             <property name="top-attach">4</property>
             <property name="width">3</property>
           </packing>
+        </child>
+        <child>
+          <object class="GtkButton" id="link-scale-content">
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="focus-on-click">False</property>
+            <property name="receives-default">True</property>
+            <property name="tooltip-text" translatable="yes">Link the scale of the viewbox to the scale of the content in the document.</property>
+            <property name="halign">start</property>
+            <property name="margin-left">2</property>
+            <property name="margin-start">2</property>
+            <property name="margin-top">5</property>
+            <property name="margin-bottom">5</property>
+            <property name="relief">none</property>
+            <style>
+              <class name="link-edit-button"/>
+            </style>
+          </object>
+          <packing>
+            <property name="left-attach">3</property>
+            <property name="top-attach">7</property>
+          </packing>
+        </child>
+        <child>
+          <placeholder/>
+        </child>
+        <child>
+          <placeholder/>
+        </child>
+        <child>
+          <placeholder/>
+        </child>
+        <child>
+          <placeholder/>
+        </child>
+        <child>
+          <placeholder/>
+        </child>
+        <child>
+          <placeholder/>
+        </child>
+        <child>
+          <placeholder/>
+        </child>
+        <child>
+          <placeholder/>
+        </child>
+        <child>
+          <placeholder/>
         </child>
       </object>
       <packing>

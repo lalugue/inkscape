@@ -513,6 +513,20 @@ void PageManager::centerToPage(SPDesktop *desktop, SPPage *page)
     desktop->set_display_center(rect);
 }
 
+/**
+ * Change page size, margins and bleeds by a set amount
+ */
+void PageManager::scalePages(Geom::Scale const &scale)
+{
+    for (auto &page : pages) {
+        page->setRect(page->getRect() * scale);
+        for (int side = 0; side < 4; side++) {
+            page->setMarginSide(side, page->getMarginSide(side) * scale.vector()[0]);
+            page->setBleedSide(side, page->getBleedSide(side) * scale.vector()[0]);
+        }
+    }
+}
+
 void PageManager::resizePage(double width, double height)
 {
     resizePage(_selected_page, width, height);
