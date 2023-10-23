@@ -104,6 +104,7 @@ private:
     bool _has_clip;
     bool _has_mask;
     bool _frezee = false;
+    bool _experimental = false;
 
     Gtk::Button &_LPEGallery;
     std::unique_ptr<Preferences::PreferencesObserver> const _showgallery_observer;

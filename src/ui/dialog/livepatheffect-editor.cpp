@@ -142,6 +142,20 @@ void sp_toggle_fav(Glib::ustring effect, Gtk::MenuItem *LPEtoggleFavorite)
     }
 }
 
+
+
+bool sp_set_experimental(bool &_experimental) 
+{
+    Inkscape::Preferences *prefs = Inkscape::Preferences::get();
+    bool experimental = prefs->getBool("/dialogs/livepatheffect/showexperimental", false);
+    if (experimental != _experimental) {
+        _experimental = experimental;
+        return true;
+    }
+    return false;
+}
+
+
 void LivePathEffectEditor::selectionChanged(Inkscape::Selection * selection)
 {
     if (selection_changed_lock) {
@@ -193,6 +207,7 @@ LivePathEffectEditor::LivePathEffectEditor()
     _lpes_popup.on_button_press().connect([=](){ setMenu(); });
     _lpes_popup.on_focus().connect([=](){ setMenu(); return true; });
     _LPEAddContainer.pack_start(_lpes_popup);
+    sp_set_experimental(_experimental);
     show_all();
 }
 
@@ -419,13 +434,11 @@ LivePathEffectEditor::setMenu()
     } else if (shape) {
         item_type = "shape";
     }
-    if (_item_type != item_type || has_clip != _has_clip || has_mask != _has_mask) {
+    if (sp_set_experimental(_experimental) || _item_type != item_type || has_clip != _has_clip || has_mask != _has_mask) {
         _item_type = item_type;
         _has_clip = has_clip;
         _has_mask = has_mask;
         g_lpes.clear();
-        Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-        bool experimental = prefs->getBool("/dialogs/livepatheffect/showexperimental", false);
         std::map<Inkscape::LivePathEffect::LPECategory, std::map< Glib::ustring, const LivePathEffect::EnumEffectData<LivePathEffect::EffectType> *> > lpesorted;
         for (int i = 0; i < static_cast<int>(converter._length); ++i) {
             const LivePathEffect::EnumEffectData<LivePathEffect::EffectType> *data = &converter.data(i);
@@ -440,7 +453,7 @@ LivePathEffectEditor::setMenu()
                 //category = 0;
                 category = Inkscape::LivePathEffect::LPECategory::Favorites;
             }
-            if (!experimental && category == Inkscape::LivePathEffect::LPECategory::Experimental) {
+            if (!_experimental && category == Inkscape::LivePathEffect::LPECategory::Experimental) {
                 continue;
             }
             lpesorted[category][name] = data;
