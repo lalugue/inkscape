@@ -17,8 +17,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pt_BR\n"
 "Report-Msgid-Bugs-To: inkscape-translator@lists.inkscape.org\n"
-"POT-Creation-Date: 2023-06-06 18:26+0000\n"
-"PO-Revision-Date: 2023-06-14 11:42-0300\n"
+"POT-Creation-Date: 2023-07-21 12:23+0000\n"
+"PO-Revision-Date: 2023-10-07 15:54-0300\n"
 "Last-Translator: João Lima Neto <contato@joaolimaneto.com.br>\n"
 "Language-Team: Brazilian Portuguese <contato@joaolimaneto.com.br>\n"
 "Language: pt_BR\n"
@@ -26,7 +26,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 3.3.1\n"
+"X-Generator: Poedit 3.0.1\n"
 "X-Poedit-Bookmarks: 2980,-1,-1,-1,-1,-1,-1,-1,-1,-1\n"
 
 #: ../build/share/filters/filters.svg.h:2
@@ -223,7 +223,7 @@ msgstr "Ondulação"
 #: ../build/share/filters/filters.svg.h:639
 #: ../src/extension/internal/filter/distort.h:98
 #: ../src/extension/internal/filter/distort.h:211
-#: ../src/ui/dialog/livepatheffect-editor.cpp:313
+#: ../src/ui/dialog/livepatheffect-editor.cpp:315
 msgid "Distort"
 msgstr "Distorçer"
 
@@ -1601,7 +1601,7 @@ msgstr ""
 
 #: ../build/share/filters/filters.svg.h:578
 msgid "Soft Colors"
-msgstr "Cores Suaves"
+msgstr "Suavizar Cores"
 
 #: ../build/share/filters/filters.svg.h:580
 msgid "Adds a colorizable edges glow inside objects and pictures"
@@ -2200,6 +2200,7 @@ msgid "Square"
 msgstr "Quadrado"
 
 #: ../build/share/markers/markers.svg.h:17
+#: ../share/extensions/other/templates/template_shape_prefab.inx:13
 msgid "Diamond"
 msgstr "Diamante"
 
@@ -3511,6 +3512,12 @@ msgid "Polka dots, large"
 msgstr "Bolinhas, grandes"
 
 #: ../build/share/paint/patterns.svg.h:1
+#: ../src/ui/dialog/document-resources.cpp:894
+#: ../share/ui/dialog-document-resources.glade:103
+msgid "Patterns"
+msgstr "Padrões"
+
+#: ../build/share/paint/patterns.svg.h:1
 msgid "Stripes 01 (1:1)"
 msgstr "Listras 01 (1:1)"
 
@@ -3694,6 +3701,10 @@ msgstr "Textura suja"
 #: ../build/share/paint/patterns.svg.h:1
 msgid "Noise"
 msgstr "Ruído"
+
+#: ../build/share/paint/patterns.svg.h:1
+msgid "Hatches"
+msgstr "Hachuras"
 
 #: ../build/share/symbols/symbols.h:2
 msgctxt "Symbol"
@@ -7041,7 +7052,7 @@ msgstr "Exibir ou ocultar todas as janelas de diálogo"
 
 #: ../src/actions/actions-edit-document.cpp:58
 #: ../src/actions/actions-edit-document.cpp:93
-#: ../src/selection-chemistry.cpp:4369
+#: ../src/selection-chemistry.cpp:4374
 msgid "Fit Page to Drawing"
 msgstr "Ajustar Tela ao Desenho"
 
@@ -7371,11 +7382,11 @@ msgstr "Remover qualquer Modificador dos objetos selecionados"
 msgid "Swap fill and stroke"
 msgstr "Permutar preenchimento e contorno"
 
-#: ../src/actions/actions-edit.cpp:312 ../src/selection-chemistry.cpp:4215
+#: ../src/actions/actions-edit.cpp:312 ../src/selection-chemistry.cpp:4220
 msgid "Swap fill and stroke of an object"
 msgstr "Trocar o preenchimento e o contorno de um objeto"
 
-#: ../src/actions/actions-edit.cpp:313 ../src/selection-chemistry.cpp:4138
+#: ../src/actions/actions-edit.cpp:313 ../src/selection-chemistry.cpp:4143
 msgid "Fit Page to Selection"
 msgstr "Ajustar Tela à Seleção"
 
@@ -7548,7 +7559,7 @@ msgstr "Salvar Modelo"
 msgid "Save a copy of the document as template"
 msgstr "Salvar uma cópia do documento como modelo"
 
-#: ../src/actions/actions-file-window.cpp:125 ../src/file.cpp:1187
+#: ../src/actions/actions-file-window.cpp:125 ../src/file.cpp:1189
 #: ../src/ui/dialog/command-palette.cpp:267
 #: ../src/ui/dialog/inkscape-preferences.cpp:3002
 msgid "Import"
@@ -8480,10 +8491,10 @@ msgstr "Remover Modificador"
 
 #: ../src/actions/actions-object.cpp:278
 #: ../src/ui/dialog/livepatheffect-editor.cpp:81
-#: ../src/ui/dialog/livepatheffect-editor.cpp:470
-#: ../src/ui/dialog/livepatheffect-editor.cpp:478
-#: ../src/ui/dialog/livepatheffect-editor.cpp:1230
-#: ../src/ui/dialog/livepatheffect-editor.cpp:1239
+#: ../src/ui/dialog/livepatheffect-editor.cpp:472
+#: ../src/ui/dialog/livepatheffect-editor.cpp:480
+#: ../src/ui/dialog/livepatheffect-editor.cpp:1227
+#: ../src/ui/dialog/livepatheffect-editor.cpp:1236
 msgid "Create and apply path effect"
 msgstr "Criar e aplicar Modificador"
 
@@ -9098,9 +9109,9 @@ msgid "Fracture one or more overlapping objects into all possible segments"
 msgstr "Frature um ou mais objetos sobrepostos em todos os segmentos possíveis"
 
 #: ../src/actions/actions-paths.cpp:236
-#: ../share/ui/dialog-livepatheffect-item.glade:37
+msgctxt "Path flatten"
 msgid "Flatten"
-msgstr "Aplicar"
+msgstr "Nivelar"
 
 #: ../src/actions/actions-paths.cpp:236
 msgid "Flatten one or more overlapping objects into their visible parts"
@@ -10413,11 +10424,11 @@ msgstr "<b>Linha guia</b>: %s"
 msgid "<b>Locked</b> object(s) cannot be modified."
 msgstr "Objeto(s) <b>Bloqueado(s)</b> não pode(m) ser modificado(s)."
 
-#: ../src/desktop.cpp:491
+#: ../src/desktop.cpp:492
 msgid "No previous transform."
 msgstr "Nenhuma transformação anterior."
 
-#: ../src/desktop.cpp:513
+#: ../src/desktop.cpp:514
 msgid "No next transform."
 msgstr "Nenhuma transformação."
 
@@ -10428,8 +10439,8 @@ msgstr "lg1p$"
 
 #: ../src/display/control/snap-indicator.cpp:42
 #: ../src/display/control/snap-indicator.cpp:67
-#: ../src/display/control/snap-indicator.cpp:152
-#: ../src/display/control/snap-indicator.cpp:153
+#: ../src/display/control/snap-indicator.cpp:154
+#: ../src/display/control/snap-indicator.cpp:155
 msgid "UNDEFINED"
 msgstr "INDEFINIDO"
 
@@ -10572,7 +10583,7 @@ msgid "quadrant point"
 msgstr "ponto do quadrante"
 
 #: ../src/display/control/snap-indicator.cpp:83
-#: ../src/display/control/snap-indicator.cpp:99
+#: ../src/display/control/snap-indicator.cpp:101
 msgid "corner"
 msgstr "canto"
 
@@ -10633,30 +10644,38 @@ msgid "page margin center"
 msgstr "centro da margem da página"
 
 #: ../src/display/control/snap-indicator.cpp:98
+msgid "page bleed border"
+msgstr "borda de sangria de página"
+
+#: ../src/display/control/snap-indicator.cpp:99
+msgid "page bleed corner"
+msgstr "canto de sangria da página"
+
+#: ../src/display/control/snap-indicator.cpp:100
 msgid "object midpoint"
 msgstr "centro do objeto"
 
-#: ../src/display/control/snap-indicator.cpp:100
+#: ../src/display/control/snap-indicator.cpp:102
 msgid "object rotation center"
 msgstr "centro de rotação do objeto"
 
-#: ../src/display/control/snap-indicator.cpp:101
+#: ../src/display/control/snap-indicator.cpp:103
 msgid "text anchor"
 msgstr "âncora de texto"
 
-#: ../src/display/control/snap-indicator.cpp:102
+#: ../src/display/control/snap-indicator.cpp:104
 msgid "text baseline"
 msgstr "linha base do texto"
 
-#: ../src/display/control/snap-indicator.cpp:103
+#: ../src/display/control/snap-indicator.cpp:105
 msgid "constrained angle"
 msgstr "ângulo constante"
 
-#: ../src/display/control/snap-indicator.cpp:104
+#: ../src/display/control/snap-indicator.cpp:106
 msgid "constraint"
 msgstr "constante"
 
-#: ../src/display/control/snap-indicator.cpp:220
+#: ../src/display/control/snap-indicator.cpp:222
 msgid " to "
 msgstr " para "
 
@@ -11485,7 +11504,7 @@ msgstr "Incorporar fontes"
 #: ../src/extension/internal/cairo-ps-out.cpp:292
 #: ../src/extension/internal/cairo-ps-out.cpp:336
 #: ../src/extension/internal/cairo-renderer-pdf-out.cpp:228
-#: ../src/ui/dialog/livepatheffect-editor.cpp:498
+#: ../src/ui/dialog/livepatheffect-editor.cpp:500
 #: ../share/extensions/other/extension-xaml/inkxaml/svg2xaml.inx:25
 msgid "Convert text to paths"
 msgstr "Converter textos em caminhos"
@@ -12814,7 +12833,7 @@ msgstr "Rotação da matiz (°)"
 
 #: ../src/extension/internal/filter/color.h:1729
 msgid "Moonarize"
-msgstr "Moonrize"
+msgstr "Lunarizar"
 
 #: ../src/extension/internal/filter/color.h:1738
 msgid "Classic photographic solarization effect"
@@ -13282,7 +13301,7 @@ msgstr ""
 "Converter a imagem em uma gravura feita de linhas verticais e horizontais"
 
 #: ../src/extension/internal/filter/paint.h:341
-#: ../src/widgets/desktop-widget.cpp:1464
+#: ../src/widgets/desktop-widget.cpp:1433
 #: ../share/ui/align-and-distribute.ui:64
 msgid "Drawing"
 msgstr "Desenho"
@@ -14103,6 +14122,7 @@ msgid "Miscellaneous document formats"
 msgstr "Diversos formatos de documento"
 
 #: ../src/extension/internal/template-other.cpp:39
+#: ../share/extensions/template_seamless_pattern.inx:7
 msgctxt "TemplateCategory"
 msgid "Other"
 msgstr "Outro"
@@ -14124,6 +14144,30 @@ msgstr "Unidade"
 msgid "Size"
 msgstr "Dimensões"
 
+#: ../src/extension/internal/template-other.cpp:46
+msgid "Icon 16x16"
+msgstr "Ícone 16x16"
+
+#: ../src/extension/internal/template-other.cpp:47
+msgid "Icon 32x32"
+msgstr "Ícone 32x32"
+
+#: ../src/extension/internal/template-other.cpp:48
+msgid "Icon 48x48"
+msgstr "Ícone 48x48"
+
+#: ../src/extension/internal/template-other.cpp:49
+msgid "Icon 120x120"
+msgstr "Ícone 120x120"
+
+#: ../src/extension/internal/template-other.cpp:50
+msgid "Icon 180x180"
+msgstr "Ícone 180x180"
+
+#: ../src/extension/internal/template-other.cpp:51
+msgid "Icon 512x512"
+msgstr "Ícone 512x512"
+
 #: ../src/extension/internal/template-paper.cpp:45
 msgid "Paper Sizes"
 msgstr "Tamanhos do Papel"
@@ -14133,6 +14177,8 @@ msgid "Standard paper document formats"
 msgstr "Formatos padrão de documentos em papel"
 
 #: ../src/extension/internal/template-paper.cpp:47
+#: ../share/extensions/template_business_card.inx:7
+#: ../share/extensions/template_dvd_cover.inx:7
 msgctxt "TemplateCategory"
 msgid "Print"
 msgstr "Impressão"
@@ -14160,6 +14206,247 @@ msgstr "Retrato"
 msgid "Landscape"
 msgstr "Paisagem"
 
+#: ../src/extension/internal/template-paper.cpp:58
+msgid "A4 (Portrait)"
+msgstr "A4 (Retrato)"
+
+#: ../src/extension/internal/template-paper.cpp:59
+msgid "A4 (Landscape)"
+msgstr "A4 (Paisagem)"
+
+#: ../src/extension/internal/template-paper.cpp:60
+msgid "US Letter (Portrait)"
+msgstr "Carta - EUA (Retrato)"
+
+#: ../src/extension/internal/template-paper.cpp:61
+msgid "US Letter (Landscape)"
+msgstr "Carta - EUA (Paisagem)"
+
+#: ../src/extension/internal/template-paper.cpp:62
+msgid "A0"
+msgstr "A0"
+
+#: ../src/extension/internal/template-paper.cpp:63
+msgid "A1"
+msgstr "A1"
+
+#: ../src/extension/internal/template-paper.cpp:64
+msgid "A2"
+msgstr "A2"
+
+#: ../src/extension/internal/template-paper.cpp:65
+msgid "A3"
+msgstr "A3"
+
+#: ../src/extension/internal/template-paper.cpp:66
+#: ../share/ui/page-properties.glade:468
+msgid "A4"
+msgstr "A4"
+
+#: ../src/extension/internal/template-paper.cpp:67
+msgid "A5"
+msgstr "A5"
+
+#: ../src/extension/internal/template-paper.cpp:68
+msgid "A6"
+msgstr "A6"
+
+#: ../src/extension/internal/template-paper.cpp:69
+msgid "A7"
+msgstr "A7"
+
+#: ../src/extension/internal/template-paper.cpp:70
+msgid "A8"
+msgstr "A8"
+
+#: ../src/extension/internal/template-paper.cpp:71
+msgid "A9"
+msgstr "A9"
+
+#: ../src/extension/internal/template-paper.cpp:72
+msgid "A10"
+msgstr "A10"
+
+#: ../src/extension/internal/template-paper.cpp:73
+msgid "B0"
+msgstr "B0"
+
+#: ../src/extension/internal/template-paper.cpp:74
+msgid "B1"
+msgstr "B1"
+
+#: ../src/extension/internal/template-paper.cpp:75
+msgid "B2"
+msgstr "B2"
+
+#: ../src/extension/internal/template-paper.cpp:76
+msgid "B3"
+msgstr "B3"
+
+#: ../src/extension/internal/template-paper.cpp:77
+msgid "B4"
+msgstr "B4"
+
+#: ../src/extension/internal/template-paper.cpp:78
+msgid "B5"
+msgstr "B5"
+
+#: ../src/extension/internal/template-paper.cpp:79
+msgid "B6"
+msgstr "B6"
+
+#: ../src/extension/internal/template-paper.cpp:80
+msgid "B7"
+msgstr "B7"
+
+#: ../src/extension/internal/template-paper.cpp:81
+msgid "B8"
+msgstr "B8"
+
+#: ../src/extension/internal/template-paper.cpp:82
+msgid "B9"
+msgstr "B9"
+
+#: ../src/extension/internal/template-paper.cpp:83
+msgid "B10"
+msgstr "B10"
+
+#: ../src/extension/internal/template-paper.cpp:84
+msgid "C0"
+msgstr "C0"
+
+#: ../src/extension/internal/template-paper.cpp:85
+msgid "C1"
+msgstr "C1"
+
+#: ../src/extension/internal/template-paper.cpp:86
+msgid "C2"
+msgstr "C2"
+
+#: ../src/extension/internal/template-paper.cpp:87
+msgid "C3"
+msgstr "C3"
+
+#: ../src/extension/internal/template-paper.cpp:88
+msgid "C4"
+msgstr "C4"
+
+#: ../src/extension/internal/template-paper.cpp:89
+msgid "C5"
+msgstr "C5"
+
+#: ../src/extension/internal/template-paper.cpp:90
+msgid "C6"
+msgstr "C6"
+
+#: ../src/extension/internal/template-paper.cpp:91
+msgid "C7"
+msgstr "C7"
+
+#: ../src/extension/internal/template-paper.cpp:92
+msgid "C8"
+msgstr "C8"
+
+#: ../src/extension/internal/template-paper.cpp:93
+msgid "C9"
+msgstr "C9"
+
+#: ../src/extension/internal/template-paper.cpp:94
+msgid "C10"
+msgstr "C10"
+
+#: ../src/extension/internal/template-paper.cpp:95
+msgid "D1"
+msgstr "D1"
+
+#: ../src/extension/internal/template-paper.cpp:96
+msgid "D2"
+msgstr "D2"
+
+#: ../src/extension/internal/template-paper.cpp:97
+msgid "D3"
+msgstr "D3"
+
+#: ../src/extension/internal/template-paper.cpp:98
+msgid "D4"
+msgstr "D4"
+
+#: ../src/extension/internal/template-paper.cpp:99
+msgid "D5"
+msgstr "D5"
+
+#: ../src/extension/internal/template-paper.cpp:100
+msgid "D6"
+msgstr "D6"
+
+#: ../src/extension/internal/template-paper.cpp:101
+msgid "D7"
+msgstr "D7"
+
+#: ../src/extension/internal/template-paper.cpp:102
+msgid "E3"
+msgstr "E3"
+
+#: ../src/extension/internal/template-paper.cpp:103
+msgid "E4"
+msgstr "E4"
+
+#: ../src/extension/internal/template-paper.cpp:104
+msgid "E5"
+msgstr "E5"
+
+#: ../src/extension/internal/template-paper.cpp:105
+msgid "E6"
+msgstr "E6"
+
+#: ../src/extension/internal/template-paper.cpp:106
+msgid "Ledger/Tabloid"
+msgstr "Livro-razão/Tablóide"
+
+#: ../src/extension/internal/template-paper.cpp:107
+msgid "US Executive"
+msgstr "Executivo - EUA"
+
+#: ../src/extension/internal/template-paper.cpp:108
+msgid "US Legal"
+msgstr "Ofício - EUA"
+
+#: ../src/extension/internal/template-paper.cpp:109
+msgid "US Letter"
+msgstr "Carta - EUA"
+
+#: ../src/extension/internal/template-paper.cpp:110
+msgid "DL Envelope"
+msgstr "Envelope DL"
+
+#: ../src/extension/internal/template-paper.cpp:111
+msgid "US #10 Envelope"
+msgstr "Envelope #10 EUA"
+
+#: ../src/extension/internal/template-paper.cpp:112
+msgid "Arch A"
+msgstr "Arco A"
+
+#: ../src/extension/internal/template-paper.cpp:113
+msgid "Arch B"
+msgstr "Arco B"
+
+#: ../src/extension/internal/template-paper.cpp:114
+msgid "Arch C"
+msgstr "Arco C"
+
+#: ../src/extension/internal/template-paper.cpp:115
+msgid "Arch D"
+msgstr "Arco D"
+
+#: ../src/extension/internal/template-paper.cpp:116
+msgid "Arch E"
+msgstr "Arco E"
+
+#: ../src/extension/internal/template-paper.cpp:117
+msgid "Arch E1"
+msgstr "Arco E1"
+
 #: ../src/extension/internal/template-screen.cpp:28
 msgid "Screen Sizes"
 msgstr "Tamanhos de tela"
@@ -14172,6 +14459,46 @@ msgstr "Formatos de documento usando resoluções de tela comuns"
 msgctxt "TemplateCategory"
 msgid "Screen"
 msgstr "Tela"
+
+#: ../src/extension/internal/template-screen.cpp:38
+msgid "Desktop 1080p"
+msgstr "Tela - 1080p"
+
+#: ../src/extension/internal/template-screen.cpp:39
+msgid "Desktop 2K"
+msgstr "Tela - 2K"
+
+#: ../src/extension/internal/template-screen.cpp:40
+msgid "Desktop 4K"
+msgstr "Tela - 4K"
+
+#: ../src/extension/internal/template-screen.cpp:41
+msgid "Desktop 720p"
+msgstr "Tela - 720 p"
+
+#: ../src/extension/internal/template-screen.cpp:42
+msgid "Desktop SD"
+msgstr "Tela - SD"
+
+#: ../src/extension/internal/template-screen.cpp:43
+msgid "iPhone 5"
+msgstr "iPhone 5"
+
+#: ../src/extension/internal/template-screen.cpp:44
+msgid "iPhone X"
+msgstr "iPhone X"
+
+#: ../src/extension/internal/template-screen.cpp:45
+msgid "Mobile-smallest"
+msgstr "Celular - Menores"
+
+#: ../src/extension/internal/template-screen.cpp:46
+msgid "iPad Pro"
+msgstr "iPad Pro"
+
+#: ../src/extension/internal/template-screen.cpp:47
+msgid "Tablet-smallest"
+msgstr "Tablet - Menores"
 
 #: ../src/extension/internal/template-social.cpp:28
 msgid "Social Sizes"
@@ -14186,6 +14513,98 @@ msgctxt "TemplateCategory"
 msgid "Social"
 msgstr "Rede Social"
 
+#: ../src/extension/internal/template-social.cpp:38
+msgid "Facebook cover photo"
+msgstr "Facebook - Foto da Capa"
+
+#: ../src/extension/internal/template-social.cpp:39
+msgid "Facebook event image"
+msgstr "Facebook - Imagem de Evento"
+
+#: ../src/extension/internal/template-social.cpp:40
+msgid "Facebook image post"
+msgstr "Facebook - Imagem de Post"
+
+#: ../src/extension/internal/template-social.cpp:41
+msgid "Facebook link image"
+msgstr "Facebook - Imagem de Link"
+
+#: ../src/extension/internal/template-social.cpp:42
+msgid "Facebook profile picture"
+msgstr "Facebook - Foto de Perfil"
+
+#: ../src/extension/internal/template-social.cpp:43
+msgid "Facebook video"
+msgstr "Facebook - Vídeo"
+
+#: ../src/extension/internal/template-social.cpp:44
+msgid "Instagram landscape"
+msgstr "Instagram - Paisagem"
+
+#: ../src/extension/internal/template-social.cpp:45
+msgid "Instagram portrait"
+msgstr "Instagram - Retrato"
+
+#: ../src/extension/internal/template-social.cpp:46
+msgid "Instagram square"
+msgstr "Instagram - Quadrado"
+
+#: ../src/extension/internal/template-social.cpp:47
+msgid "LinkedIn business banner image"
+msgstr "LinkedIn - Banner de Negócios"
+
+#: ../src/extension/internal/template-social.cpp:48
+msgid "LinkedIn company logo"
+msgstr "LinkedIn - Logotipo da Companhia"
+
+#: ../src/extension/internal/template-social.cpp:49
+msgid "LinkedIn cover photo"
+msgstr "LinkedIn - Foto da Capa"
+
+#: ../src/extension/internal/template-social.cpp:50
+msgid "LinkedIn dynamic ad"
+msgstr "LinkedIn - Anúncio Dinâmico"
+
+#: ../src/extension/internal/template-social.cpp:51
+msgid "LinkedIn hero image"
+msgstr "LinkedIn - Imagem Hero"
+
+#: ../src/extension/internal/template-social.cpp:52
+msgid "LinkedIn sponsored content image"
+msgstr "LinkedIn - Conteúdo Patrocinado"
+
+#: ../src/extension/internal/template-social.cpp:53
+msgid "Snapchat advertisement"
+msgstr "Snapchat - Anúncio"
+
+#: ../src/extension/internal/template-social.cpp:54
+msgid "Twitter card image"
+msgstr "Twitter - Imagem do Cartão"
+
+#: ../src/extension/internal/template-social.cpp:55
+msgid "Twitter header"
+msgstr "Twitter - Cabeçalho"
+
+#: ../src/extension/internal/template-social.cpp:56
+msgid "Twitter post image"
+msgstr "Twitter - Imagem de Postagem"
+
+#: ../src/extension/internal/template-social.cpp:57
+msgid "Twitter profile picture"
+msgstr "Twitter - Foto do Perfil"
+
+#: ../src/extension/internal/template-social.cpp:58
+msgid "Twitter video landscape"
+msgstr "Twitter - Vídeo paisagem"
+
+#: ../src/extension/internal/template-social.cpp:59
+msgid "Twitter video portrait"
+msgstr "Twitter - Vídeo retrato"
+
+#: ../src/extension/internal/template-social.cpp:60
+msgid "Twitter video square"
+msgstr "Twitter - Vídeo quadrado"
+
 #: ../src/extension/internal/template-video.cpp:28
 msgid "Video Sizes"
 msgstr "Tamanho de Vídeos"
@@ -14198,6 +14617,46 @@ msgstr "Formatos de documento usando resoluções de vídeo comuns"
 msgctxt "TemplateCategory"
 msgid "Video"
 msgstr "Vídeo"
+
+#: ../src/extension/internal/template-video.cpp:38
+msgid "Video SD PAL"
+msgstr "Vídeo - SD / PAL"
+
+#: ../src/extension/internal/template-video.cpp:39
+msgid "Video SD Widescreen / PAL"
+msgstr "Vídeo - SD - Panorâmico / PAL"
+
+#: ../src/extension/internal/template-video.cpp:40
+msgid "Video SD NTSC"
+msgstr "Vídeo - SD / NTSC"
+
+#: ../src/extension/internal/template-video.cpp:41
+msgid "Video SD Widescreen NTSC"
+msgstr "Vídeo - SD - Panorâmica / NTSC"
+
+#: ../src/extension/internal/template-video.cpp:42
+msgid "Video HD 720p"
+msgstr "Vídeo - HD 720p"
+
+#: ../src/extension/internal/template-video.cpp:43
+msgid "Video HD 1080p"
+msgstr "Vídeo - HD 1080p"
+
+#: ../src/extension/internal/template-video.cpp:44
+msgid "Video DCI 2k (Full Frame)"
+msgstr "Vídeo - DCI 2k (Quadro Completo)"
+
+#: ../src/extension/internal/template-video.cpp:45
+msgid "Video UHD 4k"
+msgstr "Vídeo - UHD 4k"
+
+#: ../src/extension/internal/template-video.cpp:46
+msgid "Video DCI 4k (Full Frame)"
+msgstr "Vídeo - DCI 4k (Quadro Completo)"
+
+#: ../src/extension/internal/template-video.cpp:47
+msgid "Video UHD 8k"
+msgstr "Vídeo - UHD 8k"
 
 #: ../src/extension/internal/vsd-input.cpp:317
 msgid "VSD Input"
@@ -14335,7 +14794,7 @@ msgstr ""
 "Não foi possível detectar o formato do arquivo. Tentei abri-lo como um SVG "
 "de qualquer maneira, mas isso também falhou."
 
-#: ../src/extension/template.cpp:186 ../src/ui/dialog/dialog-data.h:39
+#: ../src/extension/template.cpp:188 ../src/ui/dialog/dialog-data.h:39
 #: ../share/extensions/interp_att_g.inx:15
 msgid "Other"
 msgstr "Outro"
@@ -14559,16 +15018,16 @@ msgstr "Nenhuma mudança que precise ser salva."
 msgid "Saving document..."
 msgstr "Salvando o documento..."
 
-#: ../src/file.cpp:1087
+#: ../src/file.cpp:1089
 msgid "Import Pages"
 msgstr "Importar Páginas"
 
-#: ../src/file.cpp:1190 ../src/inkscape-application.cpp:887
+#: ../src/file.cpp:1192 ../src/inkscape-application.cpp:887
 #, c-format
 msgid "Failed to load the requested file %s"
 msgstr "Falha ao carregar o arquivo %s"
 
-#: ../src/file.cpp:1281
+#: ../src/file.cpp:1283
 msgid "Select file to import"
 msgstr "Selecionar arquivo para importar"
 
@@ -19551,7 +20010,7 @@ msgid "Columns"
 msgstr "Colunas"
 
 #: ../src/live_effects/lpe-tiling.cpp:79
-#: ../src/ui/dialog/grid-arrange-tab.cpp:542
+#: ../src/ui/dialog/grid-arrange-tab.cpp:543
 msgid "Number of columns"
 msgstr "Número de colunas"
 
@@ -19560,7 +20019,7 @@ msgid "Rows"
 msgstr "Linhas"
 
 #: ../src/live_effects/lpe-tiling.cpp:80
-#: ../src/ui/dialog/grid-arrange-tab.cpp:501
+#: ../src/ui/dialog/grid-arrange-tab.cpp:502
 msgid "Number of rows"
 msgstr "Número de linhas"
 
@@ -20501,7 +20960,7 @@ msgstr "expandir"
 msgid "inset"
 msgstr "contrair"
 
-#: ../src/object/sp-page.cpp:598
+#: ../src/object/sp-page.cpp:602
 #, c-format
 msgid "Page %d"
 msgstr "Página %d"
@@ -20622,7 +21081,7 @@ msgstr "Faixa de Texto"
 msgid "Symbol"
 msgstr "Símbolo"
 
-#: ../src/object/sp-use.cpp:266 ../src/ui/dialog/livepatheffect-editor.cpp:514
+#: ../src/object/sp-use.cpp:266 ../src/ui/dialog/livepatheffect-editor.cpp:516
 msgid "Clone"
 msgstr "Clone"
 
@@ -20711,25 +21170,25 @@ msgstr "<b>Nenhum caminho</b> para reverter na seleção."
 msgid "Cut path"
 msgstr "Cortar"
 
-#: ../src/path/path-boolop.cpp:418
+#: ../src/path/path-boolop.cpp:402
 msgid "Select <b>at least 1 path</b> to perform a boolean union."
 msgstr ""
 "Selecione <b>pelo menos 1 caminho</b> para realizar uma operação booleana."
 
-#: ../src/path/path-boolop.cpp:424
+#: ../src/path/path-boolop.cpp:408
 msgid "Select <b>at least 2 paths</b> to perform a boolean operation."
 msgstr ""
 "Selecione <b>pelo menos dois caminhos</b> para realizar uma operação "
 "booleana."
 
-#: ../src/path/path-boolop.cpp:430
+#: ../src/path/path-boolop.cpp:414
 msgid ""
 "One of the objects is <b>not a path</b>, cannot perform boolean operation."
 msgstr ""
 "Um dos objetos <b>não é um caminho</b>, a operação booleana não pôde ser "
 "realizada."
 
-#: ../src/path/path-boolop.cpp:436
+#: ../src/path/path-boolop.cpp:420
 msgid ""
 "Unable to determine the <b>z-order</b> of the objects selected for "
 "difference, XOR, division, or path cut."
@@ -20762,33 +21221,33 @@ msgstr "<b>%d</b> caminhos simplificados."
 msgid "<b>No paths</b> to simplify in the selection."
 msgstr "<b>Nenhum caminho</b> para simplificar na seleção."
 
-#: ../src/path/path-offset.cpp:117
+#: ../src/path/path-offset.cpp:118
 msgid "Selected object is <b>not a path</b>, cannot inset/outset."
 msgstr ""
 "O objeto selecionado <b>não é um caminho</b>, não foi possível contrair/"
 "expandir."
 
-#: ../src/path/path-offset.cpp:186 ../src/path/path-offset.cpp:255
+#: ../src/path/path-offset.cpp:187 ../src/path/path-offset.cpp:256
 msgid "Create linked offset"
 msgstr "Criar expansão/compressão vinculada"
 
-#: ../src/path/path-offset.cpp:187 ../src/path/path-offset.cpp:256
+#: ../src/path/path-offset.cpp:188 ../src/path/path-offset.cpp:257
 msgid "Create dynamic offset"
 msgstr "Criar expansão/compressão dinâmica"
 
-#: ../src/path/path-offset.cpp:276
+#: ../src/path/path-offset.cpp:277
 msgid "Select <b>path(s)</b> to inset/outset."
 msgstr "Selecione <b>caminho(os)</b> para contrair/expandir."
 
-#: ../src/path/path-offset.cpp:449
+#: ../src/path/path-offset.cpp:451
 msgid "Outset path"
 msgstr "Caminho para fora"
 
-#: ../src/path/path-offset.cpp:449
+#: ../src/path/path-offset.cpp:451
 msgid "Inset path"
 msgstr "Caminho para dentro"
 
-#: ../src/path/path-offset.cpp:452
+#: ../src/path/path-offset.cpp:454
 msgid "<b>No paths</b> to inset/outset in the selection."
 msgstr "<b>Nenhum caminho</b> para comprimir/expandir na seleção."
 
@@ -21249,86 +21708,86 @@ msgstr "Rotacionar 90° (sentido horário)"
 msgid "Rotate 90° CCW"
 msgstr "Rotacionar 90° (sentido anti-horário)"
 
-#: ../src/selection-chemistry.cpp:2325
+#: ../src/selection-chemistry.cpp:2330
 msgid "Rotate by pixels"
 msgstr "Rotacionar por pixels"
 
-#: ../src/selection-chemistry.cpp:2352
+#: ../src/selection-chemistry.cpp:2357
 msgid "Grow"
 msgstr "Crescer"
 
-#: ../src/selection-chemistry.cpp:2352
+#: ../src/selection-chemistry.cpp:2357
 msgid "Shrink"
 msgstr "Encolher"
 
-#: ../src/selection-chemistry.cpp:2376
+#: ../src/selection-chemistry.cpp:2381
 msgid "Scale by whole factor"
 msgstr "Escalar por um fator inteiro"
 
-#: ../src/selection-chemistry.cpp:2389
+#: ../src/selection-chemistry.cpp:2394
 msgid "Move vertically"
 msgstr "Mover verticalmente"
 
-#: ../src/selection-chemistry.cpp:2391
+#: ../src/selection-chemistry.cpp:2396
 msgid "Move horizontally"
 msgstr "Mover horizontalmente"
 
-#: ../src/selection-chemistry.cpp:2393 ../src/selection-chemistry.cpp:2416
+#: ../src/selection-chemistry.cpp:2398 ../src/selection-chemistry.cpp:2421
 #: ../src/seltrans.cpp:489 ../src/ui/dialog/transformation.cpp:750
 msgid "Move"
 msgstr "Mover"
 
-#: ../src/selection-chemistry.cpp:2412
+#: ../src/selection-chemistry.cpp:2417
 msgid "Move vertically by pixels"
 msgstr "Mover verticalmente em pixels"
 
-#: ../src/selection-chemistry.cpp:2414
+#: ../src/selection-chemistry.cpp:2419
 msgid "Move horizontally by pixels"
 msgstr "Mover horizontalmente em pixels"
 
-#: ../src/selection-chemistry.cpp:2620
+#: ../src/selection-chemistry.cpp:2625
 msgid "The selection has no applied path effect."
 msgstr "A seleção não possui Modificador aplicado."
 
-#: ../src/selection-chemistry.cpp:2664 ../src/ui/dialog/clonetiler.cpp:2083
+#: ../src/selection-chemistry.cpp:2669 ../src/ui/dialog/clonetiler.cpp:2083
 msgid "Select an <b>object</b> to clone."
 msgstr "Selecione um <b>objeto</b> para clonar."
 
-#: ../src/selection-chemistry.cpp:2700
+#: ../src/selection-chemistry.cpp:2705
 msgctxt "Action"
 msgid "Clone"
 msgstr "Clone"
 
-#: ../src/selection-chemistry.cpp:2709
+#: ../src/selection-chemistry.cpp:2714
 msgid "Select <b>clones</b> to relink."
 msgstr "Selecione os <b>clones</b> a revincular."
 
-#: ../src/selection-chemistry.cpp:2717
+#: ../src/selection-chemistry.cpp:2722
 msgid "Copy an <b>object</b> to clipboard to relink clones to."
 msgstr ""
 "Copiar um <b>objeto</b> para Área de Transferência para revincular clones."
 
-#: ../src/selection-chemistry.cpp:2776
+#: ../src/selection-chemistry.cpp:2781
 msgid "<b>No clones to relink</b> in the selection."
 msgstr "<b>Nenhum clone a revincular</b> na seleção."
 
-#: ../src/selection-chemistry.cpp:2778
+#: ../src/selection-chemistry.cpp:2783
 msgid "Relink clone"
 msgstr "Revincular clone"
 
-#: ../src/selection-chemistry.cpp:2787 ../src/selection-chemistry.cpp:2879
+#: ../src/selection-chemistry.cpp:2792 ../src/selection-chemistry.cpp:2884
 msgid "Select <b>clones</b> to unlink."
 msgstr "Selecione os <b>clones</b> a desvincular."
 
-#: ../src/selection-chemistry.cpp:2867 ../src/selection-chemistry.cpp:2905
+#: ../src/selection-chemistry.cpp:2872 ../src/selection-chemistry.cpp:2910
 msgid "<b>No clones to unlink</b> in the selection."
 msgstr "<b>Nenhum clone a desvincular</b> na seleção."
 
-#: ../src/selection-chemistry.cpp:2871
+#: ../src/selection-chemistry.cpp:2876
 msgid "Unlink clone"
 msgstr "Desvincular clone"
 
-#: ../src/selection-chemistry.cpp:2886
+#: ../src/selection-chemistry.cpp:2891
 msgid ""
 "Unable to unlink. Check the setting for 'Unlinking Clones' in your "
 "preferences."
@@ -21336,11 +21795,11 @@ msgstr ""
 "Não foi possível desvincular. Verifique a configuração de 'Desvinculando "
 "clones' em suas preferências."
 
-#: ../src/selection-chemistry.cpp:2908
+#: ../src/selection-chemistry.cpp:2913
 msgid "Unlink clone recursively"
 msgstr "Desvincular clone recursivamente"
 
-#: ../src/selection-chemistry.cpp:2952
+#: ../src/selection-chemistry.cpp:2957
 msgid ""
 "Select a <b>clone</b> to go to its original. Select a <b>linked offset</b> "
 "to go to its source. Select a <b>text on path</b> to go to the path. Select "
@@ -21350,7 +21809,7 @@ msgstr ""
 "vinculado</b> para ir à sua fonte. Selecione um <b>texto em caminho</b> para "
 "ir ao caminho. Selecione um <b>texto de parágrafo</b> para ir à sua caixa."
 
-#: ../src/selection-chemistry.cpp:2993
+#: ../src/selection-chemistry.cpp:2998
 msgid ""
 "<b>Cannot find</b> the object to select (orphaned clone, offset, textpath, "
 "flowed text?)"
@@ -21358,7 +21817,7 @@ msgstr ""
 "<b>Não foi encontrado</b> o objeto para selecionar (clone órfão, texto comum "
 "ou texto de parágrafo?)"
 
-#: ../src/selection-chemistry.cpp:3000
+#: ../src/selection-chemistry.cpp:3005
 msgid ""
 "The object you're trying to select is <b>not visible</b> (it is in &lt;"
 "defs&gt;)"
@@ -21366,110 +21825,110 @@ msgstr ""
 "O objeto que você está tentando selecionar <b>não está visível</b> (está no "
 "&lt;defs&gt;)"
 
-#: ../src/selection-chemistry.cpp:3120
+#: ../src/selection-chemistry.cpp:3125
 msgid "Fill between many"
 msgstr "Preencher Entre Muitos"
 
-#: ../src/selection-chemistry.cpp:3122
+#: ../src/selection-chemistry.cpp:3127
 msgid "Clone original"
 msgstr "Clonar Original"
 
-#: ../src/selection-chemistry.cpp:3128
+#: ../src/selection-chemistry.cpp:3133
 msgid "Select path(s) to fill."
 msgstr "Selecione caminho(s) para preencher."
 
-#: ../src/selection-chemistry.cpp:3143
+#: ../src/selection-chemistry.cpp:3148
 msgid "Select <b>object(s)</b> to convert to marker."
 msgstr "Selecione um ou mais <b>objetos</b> para converter em marcador."
 
-#: ../src/selection-chemistry.cpp:3206
+#: ../src/selection-chemistry.cpp:3211
 msgid "Objects to marker"
 msgstr "Objetos para marcador"
 
-#: ../src/selection-chemistry.cpp:3229
+#: ../src/selection-chemistry.cpp:3234
 msgid "Select <b>object(s)</b> to convert to guides."
 msgstr "Selecione um ou mais <b>objetos</b> a serem convertidos em guias."
 
-#: ../src/selection-chemistry.cpp:3250
+#: ../src/selection-chemistry.cpp:3255
 msgid "Objects to guides"
 msgstr "Objetos para guias"
 
-#: ../src/selection-chemistry.cpp:3281
+#: ../src/selection-chemistry.cpp:3286
 msgid "Select <b>objects</b> to convert to symbol."
 msgstr "Selecione <b>objetos</b> para converter em símbolo."
 
-#: ../src/selection-chemistry.cpp:3416
+#: ../src/selection-chemistry.cpp:3421
 msgid "Group to symbol"
 msgstr "Grupo para símbolo"
 
-#: ../src/selection-chemistry.cpp:3433
+#: ../src/selection-chemistry.cpp:3438
 msgid "unSymbol all selected symbols"
 msgstr "Todos os símbolos selecionados"
 
-#: ../src/selection-chemistry.cpp:3447
+#: ../src/selection-chemistry.cpp:3452
 msgid "Select <b>object(s)</b> to convert to pattern."
 msgstr "Selecione <b>um ou mais objetos</b> para converter em padrão."
 
-#: ../src/selection-chemistry.cpp:3533
+#: ../src/selection-chemistry.cpp:3538
 msgid "Objects to pattern"
 msgstr "Objeto para padrão"
 
-#: ../src/selection-chemistry.cpp:3545
+#: ../src/selection-chemistry.cpp:3550
 msgid "Select an <b>object with pattern fill</b> to extract objects from."
 msgstr ""
 "Selecione um <b>objeto com padrão de preenchimento</b> para extrair objetos "
 "dele."
 
-#: ../src/selection-chemistry.cpp:3605
+#: ../src/selection-chemistry.cpp:3610
 msgid "<b>No pattern fills</b> in the selection."
 msgstr "<b>Nenhum preenchimento com padrões de preenchimento</b> na seleção."
 
-#: ../src/selection-chemistry.cpp:3607
+#: ../src/selection-chemistry.cpp:3612
 msgid "Pattern to objects"
 msgstr "Padrão para objeto"
 
-#: ../src/selection-chemistry.cpp:3621
+#: ../src/selection-chemistry.cpp:3626
 msgid "Select <b>object(s)</b> to make a bitmap copy."
 msgstr "Selecione alguns objetos para subir até o topo."
 
-#: ../src/selection-chemistry.cpp:3626
+#: ../src/selection-chemistry.cpp:3631
 msgid "Rendering bitmap..."
 msgstr "Renderizando bitmap..."
 
-#: ../src/selection-chemistry.cpp:3713
+#: ../src/selection-chemistry.cpp:3718
 msgid "Create bitmap"
 msgstr "Criar bitmap"
 
-#: ../src/selection-chemistry.cpp:3734 ../src/selection-chemistry.cpp:3841
+#: ../src/selection-chemistry.cpp:3739 ../src/selection-chemistry.cpp:3846
 msgid "Select <b>object(s)</b> to create clippath or mask from."
 msgstr ""
 "Selecione o(s) <b>objeto(s)</b> para criar um caminho de clip ou uma máscara "
 "a partir dele(s)."
 
-#: ../src/selection-chemistry.cpp:3817
+#: ../src/selection-chemistry.cpp:3822
 msgid "Create Clip Group"
 msgstr "Criar Grupo de Clip"
 
-#: ../src/selection-chemistry.cpp:3845
+#: ../src/selection-chemistry.cpp:3850
 msgid "Select mask object and <b>object(s)</b> to apply clippath or mask to."
 msgstr ""
 "Selecione objeto máscara e <b>o(s) objeto(s)</b> para aplicar o caminho de "
 "clip ou máscara."
 
-#: ../src/selection-chemistry.cpp:4002
+#: ../src/selection-chemistry.cpp:4007
 msgid "Select <b>object(s)</b> to remove clippath or mask from."
 msgstr ""
 "Selecione o(s) <b>objetos(s)</b> para remover seu caminho de clip ou máscara."
 
-#: ../src/selection-chemistry.cpp:4131
+#: ../src/selection-chemistry.cpp:4136
 msgid "Select <b>object(s)</b> to fit canvas to."
 msgstr "Selecione <b>objeto(s)</b> para encaixar no espaço de trabalho."
 
-#: ../src/selection-chemistry.cpp:4234
+#: ../src/selection-chemistry.cpp:4239
 msgid "Select <b>path(s)</b> to create fill between."
 msgstr "Selecione <b>caminho(s)</b> para criar um preenchimento entre eles."
 
-#: ../src/selection-chemistry.cpp:4288
+#: ../src/selection-chemistry.cpp:4293
 msgid "Create linked fill object between paths"
 msgstr "Criar objeto de preenchimento vinculado entre caminhos"
 
@@ -21810,48 +22269,48 @@ msgstr "Traçar bitmap"
 msgid "Trace: Done. %ld nodes created"
 msgstr "Traçado: Finalizado. %ld nós criados"
 
-#: ../src/ui/clipboard.cpp:284
+#: ../src/ui/clipboard.cpp:287
 msgid "Nothing was copied."
 msgstr "Nada foi copiado."
 
-#: ../src/ui/clipboard.cpp:473
+#: ../src/ui/clipboard.cpp:476
 msgid "Can't paste text outside of the text tool."
 msgstr "Não é possível colar texto fora da ferramenta de texto."
 
-#: ../src/ui/clipboard.cpp:476 ../src/ui/clipboard.cpp:898
-#: ../src/ui/clipboard.cpp:933 ../src/ui/clipboard.cpp:974
+#: ../src/ui/clipboard.cpp:479 ../src/ui/clipboard.cpp:901
+#: ../src/ui/clipboard.cpp:936 ../src/ui/clipboard.cpp:977
 msgid "Nothing on the clipboard."
 msgstr "Nada na Área de Transferência."
 
-#: ../src/ui/clipboard.cpp:726
+#: ../src/ui/clipboard.cpp:729
 msgid "Select <b>object(s)</b> to paste style to."
 msgstr "Selecione <b>os objetos</b> aos quais será colado o estilo."
 
-#: ../src/ui/clipboard.cpp:738 ../src/ui/clipboard.cpp:768
+#: ../src/ui/clipboard.cpp:741 ../src/ui/clipboard.cpp:771
 msgid "No style on the clipboard."
 msgstr "Não há estilo na Área de Transferência."
 
-#: ../src/ui/clipboard.cpp:793
+#: ../src/ui/clipboard.cpp:796
 msgid "Select <b>object(s)</b> to paste size to."
 msgstr "Selecione <b>o(s) objeto(s)</b> para onde será colado o tamanho."
 
-#: ../src/ui/clipboard.cpp:801
+#: ../src/ui/clipboard.cpp:804
 msgid "No size on the clipboard."
 msgstr "Não há tamanho na Área de Transferência."
 
-#: ../src/ui/clipboard.cpp:858
+#: ../src/ui/clipboard.cpp:861
 msgid "Select <b>object(s)</b> to paste live path effect to."
 msgstr "Selecione <b>objeto(s)</b> para colar Modificadores."
 
-#: ../src/ui/clipboard.cpp:885
+#: ../src/ui/clipboard.cpp:888
 msgid "No effect on the clipboard."
 msgstr "Não há efeitos na Área de Transferência."
 
-#: ../src/ui/clipboard.cpp:907 ../src/ui/clipboard.cpp:957
+#: ../src/ui/clipboard.cpp:910 ../src/ui/clipboard.cpp:960
 msgid "Clipboard does not contain a path."
 msgstr "Área de Transferência não contém caminho."
 
-#: ../src/ui/clipboard.cpp:1004
+#: ../src/ui/clipboard.cpp:1007
 msgid "Clipboard does not contain any objects of type \"%1\"."
 msgstr "A Área de Transferência não contém nenhum objeto do tipo \"%1\"."
 
@@ -22982,7 +23441,7 @@ msgid "Unpin swatch"
 msgstr "Desfixar amostra de cor"
 
 #: ../src/ui/dialog/color-item.cpp:368
-#: ../src/ui/dialog/livepatheffect-editor.cpp:315
+#: ../src/ui/dialog/livepatheffect-editor.cpp:317
 msgid "Convert"
 msgstr "Converter"
 
@@ -23662,11 +24121,6 @@ msgstr "Gradientes"
 #: ../src/ui/dialog/document-resources.cpp:893
 msgid "Mesh gradients"
 msgstr "Malhas de gradiente"
-
-#: ../src/ui/dialog/document-resources.cpp:894
-#: ../share/ui/dialog-document-resources.glade:103
-msgid "Patterns"
-msgstr "Padrões"
 
 #: ../src/ui/dialog/document-resources.cpp:895
 #: ../src/ui/dialog/symbols.cpp:1086 ../src/ui/dialog/symbols.cpp:1089
@@ -25973,68 +26427,68 @@ msgstr "Acrescentar"
 msgid "Append text"
 msgstr "Acrescentar texto"
 
-#: ../src/ui/dialog/grid-arrange-tab.cpp:258
+#: ../src/ui/dialog/grid-arrange-tab.cpp:259
 msgid "Arrange in a grid"
 msgstr "Organizar em uma grade"
 
-#: ../src/ui/dialog/grid-arrange-tab.cpp:473
+#: ../src/ui/dialog/grid-arrange-tab.cpp:474
 #: ../src/ui/toolbar/node-toolbar.cpp:280
 #: ../src/ui/widget/registered-widget.cpp:691
-#: ../src/widgets/desktop-widget.cpp:401 ../share/ui/page-properties.glade:310
+#: ../src/widgets/desktop-widget.cpp:404 ../share/ui/page-properties.glade:310
 msgid "X:"
 msgstr "X:"
 
-#: ../src/ui/dialog/grid-arrange-tab.cpp:473
+#: ../src/ui/dialog/grid-arrange-tab.cpp:474
 msgid "Horizontal spacing between columns."
 msgstr "Espaçamento horizontal entre colunas."
 
-#: ../src/ui/dialog/grid-arrange-tab.cpp:474
+#: ../src/ui/dialog/grid-arrange-tab.cpp:475
 #: ../src/ui/toolbar/node-toolbar.cpp:296
 #: ../src/ui/widget/registered-widget.cpp:692
-#: ../src/widgets/desktop-widget.cpp:402 ../share/ui/page-properties.glade:326
+#: ../src/widgets/desktop-widget.cpp:405 ../share/ui/page-properties.glade:326
 msgid "Y:"
 msgstr "Y:"
 
-#: ../src/ui/dialog/grid-arrange-tab.cpp:474
+#: ../src/ui/dialog/grid-arrange-tab.cpp:475
 msgid "Vertical spacing between rows."
 msgstr "Espaçamento horizontal entre colunas."
 
-#: ../src/ui/dialog/grid-arrange-tab.cpp:492
+#: ../src/ui/dialog/grid-arrange-tab.cpp:493
 msgid "_Rows:"
 msgstr "_Linhas:"
 
-#: ../src/ui/dialog/grid-arrange-tab.cpp:505
+#: ../src/ui/dialog/grid-arrange-tab.cpp:506
 msgid "Equal _height"
 msgstr "_Altura igual"
 
-#: ../src/ui/dialog/grid-arrange-tab.cpp:516
+#: ../src/ui/dialog/grid-arrange-tab.cpp:517
 msgid "If not set, each row has the height of the tallest object in it"
 msgstr ""
 "Se não configurado, cada linha terá a altura do objeto mais alto dentre eles"
 
-#: ../src/ui/dialog/grid-arrange-tab.cpp:533
+#: ../src/ui/dialog/grid-arrange-tab.cpp:534
 msgid "_Columns:"
 msgstr "_Colunas:"
 
-#: ../src/ui/dialog/grid-arrange-tab.cpp:546
+#: ../src/ui/dialog/grid-arrange-tab.cpp:547
 msgid "Equal _width"
 msgstr "_Largura igual"
 
-#: ../src/ui/dialog/grid-arrange-tab.cpp:556
+#: ../src/ui/dialog/grid-arrange-tab.cpp:557
 msgid "If not set, each column has the width of the widest object in it"
 msgstr ""
 "Se não configurado, cada coluna terá a altura do objeto mais largo dentre "
 "eles"
 
-#: ../src/ui/dialog/grid-arrange-tab.cpp:568
+#: ../src/ui/dialog/grid-arrange-tab.cpp:569
 msgid "Alignment:"
 msgstr "Alinhamento:"
 
-#: ../src/ui/dialog/grid-arrange-tab.cpp:578
+#: ../src/ui/dialog/grid-arrange-tab.cpp:579
 msgid "_Fit into selection box"
 msgstr "_Ajustar na caixa delimitadora"
 
-#: ../src/ui/dialog/grid-arrange-tab.cpp:585
+#: ../src/ui/dialog/grid-arrange-tab.cpp:586
 msgid "_Set spacing:"
 msgstr "Definir _espaçamento:"
 
@@ -28770,7 +29224,7 @@ msgstr ""
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2643
 msgid "_Arrow keys move by:"
-msgstr "_Setas do teclado deslocam por:"
+msgstr "_Setas do teclado deslocar por:"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2644
 msgid ""
@@ -28781,7 +29235,7 @@ msgstr ""
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2647
 msgid "&gt; and &lt; _scale by:"
-msgstr "Teclas \"<\" e \">\" _escalaR por:"
+msgstr "Teclas \"<\" e \">\" _escalar por:"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2648
 msgid "Pressing > or < scales selection up or down by this increment"
@@ -30298,13 +30752,13 @@ msgstr ""
 "pesquisa."
 
 #: ../src/ui/dialog/livepatheffect-editor.cpp:138
-#: ../src/ui/dialog/livepatheffect-editor.cpp:901
+#: ../src/ui/dialog/livepatheffect-editor.cpp:903
 #: ../share/ui/dialog-livepatheffect-item.glade:63
 msgid "Set Favorite"
 msgstr "Definir Favorito"
 
 #: ../src/ui/dialog/livepatheffect-editor.cpp:141
-#: ../src/ui/dialog/livepatheffect-editor.cpp:899
+#: ../src/ui/dialog/livepatheffect-editor.cpp:901
 msgid "Unset Favorite"
 msgstr "Não Definir Favorito"
 
@@ -30312,73 +30766,73 @@ msgstr "Não Definir Favorito"
 msgid "Add Live Path Effect"
 msgstr "Adicionar Modificador"
 
-#: ../src/ui/dialog/livepatheffect-editor.cpp:306
+#: ../src/ui/dialog/livepatheffect-editor.cpp:308
 msgid "Deactivate path effect"
 msgstr "Desativar Modificador"
 
-#: ../src/ui/dialog/livepatheffect-editor.cpp:306
+#: ../src/ui/dialog/livepatheffect-editor.cpp:308
 msgid "Activate path effect"
 msgstr "Ativar Modificador"
 
-#: ../src/ui/dialog/livepatheffect-editor.cpp:311
+#: ../src/ui/dialog/livepatheffect-editor.cpp:313
 msgid "Favorites"
 msgstr "Favoritos"
 
-#: ../src/ui/dialog/livepatheffect-editor.cpp:312
+#: ../src/ui/dialog/livepatheffect-editor.cpp:314
 msgid "Edit/Tools"
 msgstr "Editar/Ferramentas"
 
-#: ../src/ui/dialog/livepatheffect-editor.cpp:314
+#: ../src/ui/dialog/livepatheffect-editor.cpp:316
 msgid "Generate"
 msgstr "Gerar"
 
-#: ../src/ui/dialog/livepatheffect-editor.cpp:316
+#: ../src/ui/dialog/livepatheffect-editor.cpp:318
 #: ../share/ui/dialog-livepatheffect-effect.glade:113
 msgid "Experimental"
 msgstr "Experimental"
 
-#: ../src/ui/dialog/livepatheffect-editor.cpp:496
+#: ../src/ui/dialog/livepatheffect-editor.cpp:498
 msgid "Text objects do not support Live Path Effects"
 msgstr "Objetos de texto não suportam Modificadores"
 
-#: ../src/ui/dialog/livepatheffect-editor.cpp:532
-#: ../src/ui/dialog/livepatheffect-editor.cpp:586
+#: ../src/ui/dialog/livepatheffect-editor.cpp:534
+#: ../src/ui/dialog/livepatheffect-editor.cpp:588
 msgid "Select a path, shape, clone or group"
 msgstr "Selecione um caminho, forma, clone ou grupo"
 
-#: ../src/ui/dialog/livepatheffect-editor.cpp:558
+#: ../src/ui/dialog/livepatheffect-editor.cpp:560
 msgid "Select %1 with %2 LPE"
 msgstr "Selecionar %1 com %2 Modificador"
 
-#: ../src/ui/dialog/livepatheffect-editor.cpp:589
+#: ../src/ui/dialog/livepatheffect-editor.cpp:591
 msgid "Select only one path, shape, clone or group"
 msgstr "Selecione apenas um caminho, forma, clone ou grupo"
 
-#: ../src/ui/dialog/livepatheffect-editor.cpp:656
+#: ../src/ui/dialog/livepatheffect-editor.cpp:658
 msgid "<small>Without parameters</small>"
 msgstr "<small>Sem parâmetros</small>"
 
-#: ../src/ui/dialog/livepatheffect-editor.cpp:817
+#: ../src/ui/dialog/livepatheffect-editor.cpp:819
 msgid "Drag to change position in path effects stack"
 msgstr "Arraste para alterar a posição na pilha de Modificadores"
 
-#: ../src/ui/dialog/livepatheffect-editor.cpp:871
+#: ../src/ui/dialog/livepatheffect-editor.cpp:873
 msgid "Duplicate path effect"
 msgstr "Modificador duplicado"
 
-#: ../src/ui/dialog/livepatheffect-editor.cpp:876
+#: ../src/ui/dialog/livepatheffect-editor.cpp:878
 msgid "Move path effect up"
 msgstr "Move Modificador para cima"
 
-#: ../src/ui/dialog/livepatheffect-editor.cpp:881
+#: ../src/ui/dialog/livepatheffect-editor.cpp:883
 msgid "Move path effect down"
 msgstr "Mover Modificador para baixo"
 
-#: ../src/ui/dialog/livepatheffect-editor.cpp:1098
+#: ../src/ui/dialog/livepatheffect-editor.cpp:1100
 msgid "Flatten path effect(s)"
 msgstr "Modificador achatado"
 
-#: ../src/ui/dialog/livepatheffect-editor.cpp:1116
+#: ../src/ui/dialog/livepatheffect-editor.cpp:1118
 msgid "Remove path effect"
 msgstr "Remover Modificador"
 
@@ -30723,15 +31177,15 @@ msgstr "Alternar bloqueio do item"
 msgid "Rename object"
 msgstr "Renomear objeto"
 
-#: ../src/ui/dialog/objects.cpp:1738
+#: ../src/ui/dialog/objects.cpp:1732
 msgid "Move items"
 msgstr "Mover itens"
 
-#: ../src/ui/dialog/paint-servers.cpp:55
+#: ../src/ui/dialog/paint-servers.cpp:52
 msgid "All paint servers"
 msgstr "Todos os padrões e hachuras"
 
-#: ../src/ui/dialog/paint-servers.cpp:56 ../src/ui/dialog/symbols.cpp:160
+#: ../src/ui/dialog/paint-servers.cpp:53 ../src/ui/dialog/symbols.cpp:160
 msgid "Current document"
 msgstr "Documento atual"
 
@@ -31957,7 +32411,7 @@ msgstr "Sem Categoria"
 msgid "Canvas"
 msgstr "Página"
 
-#: ../src/ui/modifiers.cpp:65 ../src/widgets/desktop-widget.cpp:1468
+#: ../src/ui/modifiers.cpp:65 ../src/widgets/desktop-widget.cpp:1437
 #: ../share/ui/dialog-export.glade:64 ../share/ui/dialog-export.glade:883
 #: ../share/extensions/printing_marks.inx:18
 msgid "Selection"
@@ -32595,20 +33049,20 @@ msgstr "Alça de escala"
 msgid "Rotate handle"
 msgstr "Alça de rotação"
 
-#: ../src/ui/tool/path-manipulator.cpp:1660
+#: ../src/ui/tool/path-manipulator.cpp:1665
 #: ../src/ui/toolbar/node-toolbar.cpp:147 ../share/ui/dialog-xml.glade:138
 msgid "Delete node"
 msgstr "Excluir nó"
 
-#: ../src/ui/tool/path-manipulator.cpp:1668
+#: ../src/ui/tool/path-manipulator.cpp:1673
 msgid "Cycle node type"
 msgstr "Tipo de nó de ciclo"
 
-#: ../src/ui/tool/path-manipulator.cpp:1683
+#: ../src/ui/tool/path-manipulator.cpp:1688
 msgid "Drag handle"
 msgstr "Alça de arrasto"
 
-#: ../src/ui/tool/path-manipulator.cpp:1692
+#: ../src/ui/tool/path-manipulator.cpp:1697
 msgid "Retract handle"
 msgstr "Retrair alça"
 
@@ -33998,37 +34452,37 @@ msgstr ""
 "ou escolha a predefinição no menu suspenso."
 
 #: ../src/ui/toolbar/page-toolbar.cpp:135
-#: ../src/ui/toolbar/page-toolbar.cpp:321
+#: ../src/ui/toolbar/page-toolbar.cpp:324
 msgid "Resize Page"
 msgstr "Redimensionar página"
 
-#: ../src/ui/toolbar/page-toolbar.cpp:238
+#: ../src/ui/toolbar/page-toolbar.cpp:241
 msgid "Relabel Page"
 msgstr "Rotular novamente a página"
 
-#: ../src/ui/toolbar/page-toolbar.cpp:252
+#: ../src/ui/toolbar/page-toolbar.cpp:255
 msgid "Edit page bleed"
 msgstr "Editar sangria da página"
 
-#: ../src/ui/toolbar/page-toolbar.cpp:269
-#: ../src/ui/toolbar/page-toolbar.cpp:298
+#: ../src/ui/toolbar/page-toolbar.cpp:272
+#: ../src/ui/toolbar/page-toolbar.cpp:301
 msgid "Edit page margin"
 msgstr "Editar margem da página"
 
-#: ../src/ui/toolbar/page-toolbar.cpp:440
+#: ../src/ui/toolbar/page-toolbar.cpp:443
 msgid "Page label"
 msgstr "Rótulo da página"
 
 #. TRANSLATORS: "%1" is replaced with the page we are on, and "%2" is the total number of pages.
-#: ../src/ui/toolbar/page-toolbar.cpp:457
+#: ../src/ui/toolbar/page-toolbar.cpp:460
 msgid "%1/%2"
 msgstr "%1/%2"
 
-#: ../src/ui/toolbar/page-toolbar.cpp:471
+#: ../src/ui/toolbar/page-toolbar.cpp:474
 msgid "Single Page Document"
 msgstr "Documento de página única"
 
-#: ../src/ui/toolbar/page-toolbar.cpp:472 ../share/ui/toolbar-page.ui:172
+#: ../src/ui/toolbar/page-toolbar.cpp:475 ../share/ui/toolbar-page.ui:172
 msgid "1/-"
 msgstr "1/-"
 
@@ -35656,23 +36110,23 @@ msgstr ""
 "<b>Desenhe sobre</b> as áreas para adicionar preenchimento, segure <b>Alt</"
 "b> para preencher tudo o que for tocado"
 
-#: ../src/ui/tools/freehand-base.cpp:718 ../src/ui/tools/freehand-base.cpp:781
+#: ../src/ui/tools/freehand-base.cpp:719 ../src/ui/tools/freehand-base.cpp:782
 msgid "Path is closed."
 msgstr "O caminho está fechado."
 
-#: ../src/ui/tools/freehand-base.cpp:732
+#: ../src/ui/tools/freehand-base.cpp:733
 msgid "Closing path."
 msgstr "Fechando o caminho."
 
-#: ../src/ui/tools/freehand-base.cpp:868
+#: ../src/ui/tools/freehand-base.cpp:869
 msgid "Draw path"
 msgstr "Desenhar caminho"
 
-#: ../src/ui/tools/freehand-base.cpp:989
+#: ../src/ui/tools/freehand-base.cpp:990
 msgid "Creating single dot"
 msgstr "Criando ponto único"
 
-#: ../src/ui/tools/freehand-base.cpp:990
+#: ../src/ui/tools/freehand-base.cpp:991
 msgid "Create single dot"
 msgstr "Criar ponto único"
 
@@ -35882,7 +36336,7 @@ msgstr "Ajustar a malha dentro da caixa delimitadora"
 msgid "Create mesh"
 msgstr "Criar malha"
 
-#: ../src/ui/tools/node-tool.cpp:462
+#: ../src/ui/tools/node-tool.cpp:463
 #, c-format
 msgid ""
 "<b>Draw over</b> lines to select their nodes; release <b>%s</b> to switch to "
@@ -35891,7 +36345,7 @@ msgstr ""
 "<b>Desenhe sobre</b> linhas para selecionar seus nós; solte <b>%s</b> para "
 "alternar para a seleção de elástica"
 
-#: ../src/ui/tools/node-tool.cpp:465
+#: ../src/ui/tools/node-tool.cpp:466
 #, c-format
 msgid ""
 "<b>Drag around</b> nodes to select them; press <b>%s</b> to switch to box "
@@ -36794,7 +37248,7 @@ msgstr "Padrão de Tipografia"
 
 #: ../src/ui/widget/export-lists.cpp:174
 msgid "Add Export"
-msgstr "Adicionar Exportação"
+msgstr "Adicionar Formato"
 
 #: ../src/ui/widget/export-lists.cpp:180 ../src/ui/widget/export-lists.cpp:220
 msgid "Suffix"
@@ -38227,7 +38681,7 @@ msgstr[1] ""
 "Coleção de <b>%d</b> pontos de fuga compartilhada por <b>%d</b> caixas; "
 "arraste com <b>Shift</b> para separar"
 
-#: ../src/widgets/desktop-widget.cpp:330
+#: ../src/widgets/desktop-widget.cpp:333
 msgid ""
 "<b>Welcome to Inkscape!</b> Use shape or freehand tools to create objects; "
 "use selector (arrow) to move or transform them."
@@ -38235,88 +38689,88 @@ msgstr ""
 "<b>Bem vindo ao Inkscape!</b> Use as ferramentas de forma ou mão-livre para "
 "criar objetos. Use o seletor (seta) para mover ou transformá-los."
 
-#: ../src/widgets/desktop-widget.cpp:340 ../share/ui/dialog-symbols.glade:94
+#: ../src/widgets/desktop-widget.cpp:343 ../share/ui/dialog-symbols.glade:94
 msgid "Zoom"
 msgstr "Zoom"
 
-#: ../src/widgets/desktop-widget.cpp:372
+#: ../src/widgets/desktop-widget.cpp:375
 msgid "Rotation. (Also Ctrl+Shift+Scroll)"
 msgstr "Rotação. (Também Ctrl+Shift+Scroll)"
 
-#: ../src/widgets/desktop-widget.cpp:400
+#: ../src/widgets/desktop-widget.cpp:403
 msgid "Cursor coordinates"
 msgstr "Coordenadas do cursor"
 
 # Abreciação para  nível de Zoom
 #. TRANSLATORS: Abbreviation for canvas zoom level
-#: ../src/widgets/desktop-widget.cpp:415
+#: ../src/widgets/desktop-widget.cpp:418
 msgctxt "canvas"
 msgid "Z:"
 msgstr "Z:"
 
 # Abreviação para nível de rotação
 #. TRANSLATORS: Abbreviation for canvas rotation
-#: ../src/widgets/desktop-widget.cpp:418
+#: ../src/widgets/desktop-widget.cpp:421
 msgctxt "canvas"
 msgid "R:"
 msgstr "R:"
 
-#: ../src/widgets/desktop-widget.cpp:587
+#: ../src/widgets/desktop-widget.cpp:590
 msgid "outline"
 msgstr "caminhos"
 
-#: ../src/widgets/desktop-widget.cpp:589
+#: ../src/widgets/desktop-widget.cpp:592
 msgid "no filters"
 msgstr "sem filtros"
 
-#: ../src/widgets/desktop-widget.cpp:591
+#: ../src/widgets/desktop-widget.cpp:594
 msgid "enhance thin lines"
 msgstr "melhorar linhas finas"
 
-#: ../src/widgets/desktop-widget.cpp:593
+#: ../src/widgets/desktop-widget.cpp:596
 msgid "outline overlay"
 msgstr "contorno sobreposto"
 
-#: ../src/widgets/desktop-widget.cpp:602
+#: ../src/widgets/desktop-widget.cpp:605
 msgid "grayscale"
 msgstr "escala de cinza"
 
-#: ../src/widgets/desktop-widget.cpp:604
+#: ../src/widgets/desktop-widget.cpp:607
 msgid "print colors preview"
 msgstr "pré-visualizador de impressão de cores"
 
-#: ../src/widgets/desktop-widget.cpp:777
+#: ../src/widgets/desktop-widget.cpp:746
 msgid "Locked all guides"
 msgstr "Bloquear todas as guias"
 
-#: ../src/widgets/desktop-widget.cpp:777
+#: ../src/widgets/desktop-widget.cpp:746
 msgid "Unlocked all guides"
 msgstr "Desbloquear todas as guias"
 
-#: ../src/widgets/desktop-widget.cpp:792
+#: ../src/widgets/desktop-widget.cpp:761
 msgid "Color-managed display is <b>enabled</b> in this window"
 msgstr "O monitor com gerenciamento de cores está <b>ativado</b> nesta janela"
 
-#: ../src/widgets/desktop-widget.cpp:794
+#: ../src/widgets/desktop-widget.cpp:763
 msgid "Color-managed display is <b>disabled</b> in this window"
 msgstr ""
 "O monitor com gerenciamento de cores está <b>desativado</b> nesta janela"
 
-#: ../src/widgets/desktop-widget.cpp:925
+#: ../src/widgets/desktop-widget.cpp:894
 msgid "Note:"
 msgstr "Nota:"
 
-#: ../src/widgets/desktop-widget.cpp:1460 ../share/ui/dialog-export.glade:100
+#: ../src/widgets/desktop-widget.cpp:1429 ../share/ui/dialog-export.glade:100
 #: ../share/ui/page-properties.glade:799 ../share/ui/align-and-distribute.ui:60
 #: ../share/extensions/voronoi_diagram.inx:15
 msgid "Page"
 msgstr "Página"
 
-#: ../src/widgets/desktop-widget.cpp:1472
+#: ../src/widgets/desktop-widget.cpp:1441
 msgid "Centre Page"
 msgstr "Centro da Página"
 
-#: ../src/widgets/desktop-widget.cpp:1813
+#: ../src/widgets/desktop-widget.cpp:1788
 msgid "Create guide"
 msgstr "Criar guia"
 
@@ -38628,7 +39082,7 @@ msgstr "Exportar para vários arquivos e formatos de arquivo"
 
 #: ../share/ui/dialog-export.glade:1204
 msgid "Batch Export"
-msgstr "Exportação em Lote"
+msgstr "Arquivos Separados"
 
 #: ../share/ui/dialog-filter-editor.glade:29
 msgid "R_ename"
@@ -38742,6 +39196,10 @@ msgid ""
 msgstr ""
 "Aplicar este efeito e todos os efeitos acima deste ao caminho. Isso remove "
 "esses efeitos da pilha."
+
+#: ../share/ui/dialog-livepatheffect-item.glade:37
+msgid "Flatten"
+msgstr "Aplicar"
 
 #: ../share/ui/dialog-livepatheffect-item.glade:45
 msgid "Use the current values as custom defaults for this LPE"
@@ -39302,8 +39760,8 @@ msgid "Media Box"
 msgstr "Caixa de Mídia"
 
 #: ../share/ui/extension-pdfinput.glade:23
-msgid "Clip Box"
-msgstr "Caixa de Clipes"
+msgid "Crop Box"
+msgstr "Caixa de Corte"
 
 #: ../share/ui/extension-pdfinput.glade:27
 msgid "Trim Box"
@@ -39882,10 +40340,6 @@ msgstr ""
 #: ../share/ui/page-properties.glade:457
 msgid "Predefined paper sizes to choose from"
 msgstr "Tamanhos de papel predefinidos para escolher"
-
-#: ../share/ui/page-properties.glade:468
-msgid "A4"
-msgstr "A4"
 
 #: ../share/ui/page-properties.glade:484
 msgid "Document's units used to specify document size only"
@@ -41078,7 +41532,7 @@ msgstr ""
 "Foi detectado um objeto que possui o conjunto de parâmetros de extrusão. A "
 "figura importada pode ser exibida incorretamente."
 
-#: ../share/extensions/dxf_outlines.py:217
+#: ../share/extensions/dxf_outlines.py:214
 msgid ""
 "Failed to import the numpy or numpy.linalg modules. These modules are "
 "required by the ROBO option.Please install them and try again."
@@ -41086,14 +41540,14 @@ msgstr ""
 "Falha ao importar os módulos numpy ou numpy.linalg. Esses módulos são "
 "requeridos pela opção ROBO. Instale-os e tente novamente."
 
-#: ../share/extensions/dxf_outlines.py:367
+#: ../share/extensions/dxf_outlines.py:364
 msgid ""
 "Too many nested groups. Please use the \"Deep Ungroup\" extension first."
 msgstr ""
 "Muitos grupos aninhados. Por favor, use a extensão \" Desagrupar Profundo \" "
 "primeiro."
 
-#: ../share/extensions/dxf_outlines.py:382
+#: ../share/extensions/dxf_outlines.py:379
 msgid ""
 "Error: Field 'Layer match name' must be filled when using 'By name match' "
 "option"
@@ -47133,9 +47587,78 @@ msgstr ""
 msgid "Shape Builder Prefab"
 msgstr "Formas Pré-fabricadas"
 
+#: ../share/extensions/other/templates/template_shape_prefab.inx:7
+msgctxt "TemplateCategory"
+msgid "Shape Builder"
+msgstr "Construtor de Formas"
+
 #: ../share/extensions/other/templates/template_shape_prefab.inx:9
 msgid "Template:"
 msgstr "Modelo:"
+
+#: ../share/extensions/other/templates/template_shape_prefab.inx:12
+msgid "Trellis"
+msgstr "Treliça"
+
+#: ../share/extensions/other/templates/template_shape_prefab.inx:14
+msgid "Cross"
+msgstr "Cruz"
+
+#: ../share/extensions/other/templates/template_shape_prefab.inx:15
+msgid "Very Cross"
+msgstr "Muito Cruzado"
+
+#: ../share/extensions/other/templates/template_shape_prefab.inx:16
+msgid "Target"
+msgstr "Alvo"
+
+#: ../share/extensions/other/templates/template_shape_prefab.inx:17
+msgid "Hive"
+msgstr "Colmeia"
+
+#: ../share/extensions/other/templates/template_shape_prefab.inx:18
+msgid "Double Vision"
+msgstr "Visão Dupla"
+
+#: ../share/extensions/other/templates/template_shape_prefab.inx:19
+msgid "Celtic Flower"
+msgstr "Flor Celta"
+
+#: ../share/extensions/other/templates/template_shape_prefab.inx:20
+msgid "Celtic Knot"
+msgstr "Nó Celta"
+
+#: ../share/extensions/other/templates/template_shape_prefab.inx:21
+msgid "Kitchen Tile"
+msgstr "Azulejo de Cozinha"
+
+#: ../share/extensions/other/templates/template_shape_prefab.inx:22
+msgid "Rose"
+msgstr "Rosa"
+
+#: ../share/extensions/other/templates/template_shape_prefab.inx:23
+msgid "Lily"
+msgstr "Lírio"
+
+#: ../share/extensions/other/templates/template_shape_prefab.inx:24
+msgid "Crown"
+msgstr "Coroa"
+
+#: ../share/extensions/other/templates/template_shape_prefab.inx:25
+msgid "Diamond Target"
+msgstr "Alvo de Damante"
+
+#: ../share/extensions/other/templates/template_shape_prefab.inx:26
+msgid "TV Test Pattern"
+msgstr "Padrão de teste de TV"
+
+#: ../share/extensions/other/templates/template_shape_prefab.inx:27
+msgid "Explosion"
+msgstr "Explosion"
+
+#: ../share/extensions/other/templates/template_shape_prefab.inx:28
+msgid "Droplet"
+msgstr "Gotícula"
 
 #: ../share/extensions/output_scour.inx:3
 msgid "Optimized SVG Output"
@@ -49590,6 +50113,7 @@ msgstr ""
 "compactado (arquivo tar)"
 
 #: ../share/extensions/template_business_card.inx:3
+#: ../share/extensions/template_business_card.inx:23
 msgid "Business Card"
 msgstr "Cartão de Visita"
 
@@ -49637,7 +50161,12 @@ msgstr "88,9 x 50,8 mm (EUA/Canadá)"
 msgid "2in x 2in (US Square)"
 msgstr "50,8 x 50,8 mm (EUA, Quadrado)"
 
+#: ../share/extensions/template_business_card.inx:23
+msgid "Various Countries"
+msgstr "Vários Países"
+
 #: ../share/extensions/template_dvd_cover.inx:3
+#: ../share/extensions/template_dvd_cover.inx:19
 msgid "DVD Cover"
 msgstr "Capa de DVD"
 
@@ -49665,7 +50194,12 @@ msgstr "Ultra Fino (5mm)"
 msgid "DVD cover bleed (mm):"
 msgstr "Sangria da capa do DVD (mm):"
 
+#: ../share/extensions/template_dvd_cover.inx:19
+msgid "Various Sizes"
+msgstr "Vários Tamanhos"
+
 #: ../share/extensions/template_seamless_pattern.inx:3
+#: ../share/extensions/template_seamless_pattern.inx:13
 msgid "Seamless Pattern"
 msgstr "Padrões Contínuos"
 
@@ -49676,6 +50210,10 @@ msgstr "Largura Personalizada (px):"
 #: ../share/extensions/template_seamless_pattern.inx:10
 msgid "Custom Height (px):"
 msgstr "Altura Personalizada (px):"
+
+#: ../share/extensions/template_seamless_pattern.inx:13
+msgid "Tiled Canvas"
+msgstr "Lona de Ladrilhos"
 
 #: ../share/extensions/text_braille.inx:3
 msgid "Convert to Braille"
@@ -51902,9 +52440,6 @@ msgstr "Metade da altura da fonte"
 #~ msgid "Text"
 #~ msgstr "Texto"
 
-#~ msgid "Dropper"
-#~ msgstr "Conta-gotas"
-
 #~ msgid "Paint Bucket"
 #~ msgstr "Balde de Tinta"
 
@@ -52254,59 +52789,17 @@ msgstr "Metade da altura da fonte"
 #~ msgid "About Screen"
 #~ msgstr "Tela Sobre"
 
-#~ msgid "Icon 120x120"
-#~ msgstr "Ícone 120x120"
-
-#~ msgid "Icon 16x16"
-#~ msgstr "Ícone 16x16"
-
-#~ msgid "Icon 180x180"
-#~ msgstr "Ícone 180x180"
-
-#~ msgid "Icon 32x32"
-#~ msgstr "Ícone 32x32"
-
-#~ msgid "Icon 48x48"
-#~ msgstr "Ícone 48x48"
-
-#~ msgid "Icon 512x512"
-#~ msgstr "Ícone 512x512"
-
-#~ msgid "A4 (Landscape)"
-#~ msgstr "A4 (Paisagem)"
-
-#~ msgid "US Letter"
-#~ msgstr "Carta EUA"
-
-#~ msgid "US Letter (Landscape)"
-#~ msgstr "Carta EUA (Paisagem)"
-
-#~ msgid "A0"
-#~ msgstr "A0"
-
 #~ msgid "A0 (Landscape)"
 #~ msgstr "A0 (Paisagem)"
-
-#~ msgid "A1"
-#~ msgstr "A1"
 
 #~ msgid "A1 (Landscape)"
 #~ msgstr "A1 (Paisagem)"
 
-#~ msgid "A2"
-#~ msgstr "A2"
-
 #~ msgid "A2 (Landscape)"
 #~ msgstr "A2 (Paisagem)"
 
-#~ msgid "A3"
-#~ msgstr "A3"
-
 #~ msgid "A3 (Landscape)"
 #~ msgstr "A3 (Paisagem)"
-
-#~ msgid "A5"
-#~ msgstr "A5"
 
 #~ msgid "A5 (Landscape)"
 #~ msgstr "A5 (Paisagem)"
@@ -52332,152 +52825,11 @@ msgstr "Metade da altura da fonte"
 #~ msgid "Business Card US (Portrait)"
 #~ msgstr "Cartão de Visita EUA (retrato)"
 
-#~ msgid "DL Envelope"
-#~ msgstr "Envelope DL"
-
-#~ msgid "Ledger/Tabloid"
-#~ msgstr "Livro-razão/Tablóide"
-
-#~ msgid "US #10 Envelope"
-#~ msgstr "Envelope #10 EUA"
-
-#~ msgid "US Executive"
-#~ msgstr "Executivo EUA"
-
 #~ msgid "US Executive (Landscape)"
 #~ msgstr "Executivo EUA (paisagem)"
 
-#~ msgid "US Legal"
-#~ msgstr "Ofício EUA"
-
 #~ msgid "US Legal (Landscape)"
 #~ msgstr "Ofício EUA (paisagem)"
-
-#~ msgid "Desktop 1080p"
-#~ msgstr "Tela 1080p"
-
-#~ msgid "Desktop 4K"
-#~ msgstr "Tela 4K"
-
-#~ msgid "Desktop 720p"
-#~ msgstr "Tela 720 p"
-
-#~ msgid "Desktop SD"
-#~ msgstr "Tela SD"
-
-#~ msgid "iPhone 5"
-#~ msgstr "iPhone 5"
-
-#~ msgid "iPhone X"
-#~ msgstr "iPhone X"
-
-#~ msgid "Mobile-smallest"
-#~ msgstr "Celular - Menores"
-
-#~ msgid "iPad Pro"
-#~ msgstr "iPad Pro"
-
-#~ msgid "Tablet-smallest"
-#~ msgstr "Tablet - Menores"
-
-#~ msgid "Facebook cover photo"
-#~ msgstr "Facebook - Foto da Capa"
-
-#~ msgid "Facebook event image"
-#~ msgstr "Facebook - Imagem de Evento"
-
-#~ msgid "Facebook image post"
-#~ msgstr "Facebook - Imagem de Post"
-
-#~ msgid "Facebook link image"
-#~ msgstr "Facebook - Imagem de Link"
-
-#~ msgid "Facebook profile picture"
-#~ msgstr "Facebook - Foto de Perfil"
-
-#~ msgid "Facebook video"
-#~ msgstr "Facebook - Vídeo"
-
-#~ msgid "Instagram landscape"
-#~ msgstr "Instagram - Paisagem"
-
-#~ msgid "Instagram portrait"
-#~ msgstr "Instagram - Retrato"
-
-#~ msgid "Instagram square"
-#~ msgstr "Instagram - Quadrado"
-
-#~ msgid "LinkedIn business banner image"
-#~ msgstr "LinkedIn - Banner de Negócios"
-
-#~ msgid "LinkedIn company logo"
-#~ msgstr "LinkedIn - Logotipo da Companhia"
-
-#~ msgid "LinkedIn cover photo"
-#~ msgstr "LinkedIn - Foto da Capa"
-
-#~ msgid "LinkedIn dynamic ad"
-#~ msgstr "LinkedIn - Anúncio Dinâmico"
-
-#~ msgid "LinkedIn hero image"
-#~ msgstr "LinkedIn - Imagem Hero"
-
-#~ msgid "LinkedIn sponsored content image"
-#~ msgstr "LinkedIn - Conteúdo Patrocinado"
-
-#~ msgid "Snapchat advertisement"
-#~ msgstr "Snapchat - Anúncio"
-
-#~ msgid "Twitter card image"
-#~ msgstr "Twitter - Imagem do Cartão"
-
-#~ msgid "Twitter header"
-#~ msgstr "Twitter - Cabeçalho"
-
-#~ msgid "Twitter post image"
-#~ msgstr "Twitter - Imagem de Postagem"
-
-#~ msgid "Twitter profile picture"
-#~ msgstr "Twitter - Foto do Perfil"
-
-#~ msgid "Twitter video landscape"
-#~ msgstr "Twitter - Vídeo paisagem"
-
-#~ msgid "Twitter video portrait"
-#~ msgstr "Twitter - Vídeo retrato"
-
-#~ msgid "Twitter video square"
-#~ msgstr "Twitter - Vídeo quadrado"
-
-#~ msgid "Video DCI 2k (Full Frame)"
-#~ msgstr "Vídeo - DCI 2k (Quadro Completo)"
-
-#~ msgid "Video DCI 4k (Full Frame)"
-#~ msgstr "Vídeo - DCI 4k (Quadro Completo)"
-
-#~ msgid "Video HD 1080p"
-#~ msgstr "Vídeo - HD 1080p"
-
-#~ msgid "Video HD 720p"
-#~ msgstr "Vídeo - HD 720p"
-
-#~ msgid "Video SD / NTSC"
-#~ msgstr "Vídeo - SD / NTSC"
-
-#~ msgid "Video SD / PAL"
-#~ msgstr "Vídeo - SD / PAL"
-
-#~ msgid "Video SD-Widescreen / NTSC"
-#~ msgstr "Vídeo SD-Tela Panorâmica / NTSC"
-
-#~ msgid "Video SD-Widescreen / PAL"
-#~ msgstr "Video SD-Widescreen / PAL"
-
-#~ msgid "Video UHD 4k"
-#~ msgstr "Vídeo - UHD 4k"
-
-#~ msgid "Video UHD 8k"
-#~ msgstr "Vídeo - UHD 8k"
 
 #~ msgctxt "Document format category"
 #~ msgid "Print"
@@ -52634,9 +52986,6 @@ msgstr "Metade da altura da fonte"
 
 #~ msgid "Page orientation:"
 #~ msgstr "Orientação da página:"
-
-#~ msgid "Vertical (Portrait)"
-#~ msgstr "Vertical (Retrato)"
 
 #~ msgid "Horizontal (Landscape)"
 #~ msgstr "Horizontal (paisagem)"
@@ -53044,12 +53393,6 @@ msgstr "Metade da altura da fonte"
 #~ msgid "5 Items"
 #~ msgstr "5 itens"
 
-#~ msgid "8"
-#~ msgstr "8"
-
-#~ msgid "2"
-#~ msgstr "2"
-
 #~ msgid "1.00"
 #~ msgstr "1,00"
 
@@ -53178,9 +53521,6 @@ msgstr "Metade da altura da fonte"
 
 #~ msgid "radiobutton"
 #~ msgstr "botaoderadio"
-
-#~ msgid "0"
-#~ msgstr "0"
 
 #~ msgid "xx"
 #~ msgstr "xx"
@@ -53677,9 +54017,6 @@ msgstr "Metade da altura da fonte"
 
 #~ msgid "_Grow on screen"
 #~ msgstr "_Crescer na tela"
-
-#~ msgid "_Double size"
-#~ msgstr "Tamanho _duplo"
 
 #~ msgid "Double the size of selected objects"
 #~ msgstr "Dobre o tamanho dos objetos selecionados"
@@ -55697,9 +56034,6 @@ msgstr "Metade da altura da fonte"
 
 #~ msgid "Latin 1"
 #~ msgstr "Latin 1"
-
-#~ msgid "CP 1250"
-#~ msgstr "CP 1250"
 
 #~ msgid "CP 1252"
 #~ msgstr "CP 1252"
@@ -58020,9 +58354,6 @@ msgstr "Metade da altura da fonte"
 #~ "Se defino para 1, todos os itens docáveis encaixados na doca mestre(ex.: "
 #~ "barras, janelas, etc.) são bloqueados; Se for 0, todos são desbloqueados; "
 #~ "-1 indica inconsistência dentre os itens"
-
-#~ msgid "Switcher Style"
-#~ msgstr "Alternador de estilo"
 
 #~ msgid "Switcher buttons style"
 #~ msgstr "Alternador de estilo de botões"
