@@ -1242,6 +1242,23 @@ popover.menu.menuize > stack > box > modelbutton:first-child > * /* Affect child
     min-height: 256px;
 }
 
+#CanvasGrid button {
+    min-width:16px;
+    min-height:16px;
+    outline:none;
+    border-radius:0;
+    border-width:0px;
+    padding: 0;
+}
+
+#CanvasGrid #QuickActions image{
+    padding: 4px 0 0 0;
+}
+
+#CanvasGrid button:checked * {
+    background-color:alpha(@theme_selected_bg_color,0.9);
+}
+
 /* IconPreview */
 button.icon-preview {
     min-width : 0;
