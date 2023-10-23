@@ -281,7 +281,7 @@ LPEOffset::doEffect_path(Geom::PathVector const & path_in)
                 _knotholder->entity.front()->knot_get();
             }
         }
-        return path_in;
+        // allow offset 0 to get flattened version
     }
     // Get the used fillrule
     Glib::ustring fr = sp_get_fill_rule(item);

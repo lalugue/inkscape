@@ -1237,11 +1237,6 @@ do_offset(Geom::PathVector const & path_in
 {
     Geom::PathVector ret_closed;
     Geom::PathVector ret_open;
-    if (Geom::are_near(to_offset,0.0)) {
-        // this is to keep reference to multiple pathvectors like in a group. Used by knot position in LPE Offset
-        mix_pathv_all.insert(mix_pathv_all.end(), path_in.begin(), path_in.end());
-        return path_in;
-    }
     Geom::PathVector open_pathv;
     Geom::PathVector closed_pathv;
     Geom::PathVector orig_pathv = pathv_to_linear_and_cubic_beziers(path_in);
@@ -1263,6 +1258,12 @@ do_offset(Geom::PathVector const & path_in
     // we use user fill rule to match original view
     // after flatten all elements has the same direction in his widding
     sp_flatten(closed_pathv, fillrule);
+    if (Geom::are_near(to_offset,0.0)) {
+        // this is to keep reference to multiple pathvectors like in a group. Used by knot position in LPE Offset
+        mix_pathv_all.insert(mix_pathv_all.end(), path_in.begin(), path_in.end());
+        closed_pathv.insert(closed_pathv.end(), open_pathv.begin(), open_pathv.end());
+        return closed_pathv;
+    }
     if (to_offset < 0) {
         Geom::OptRect bbox = closed_pathv.boundsFast();
         if (bbox) {
