@@ -39,6 +39,8 @@ public:
     Inkscape::LivePathEffect::EffectType effecttype{Inkscape::LivePathEffect::INVALID_LPE};
 
     bool effecttype_set{false};
+    bool deleted{false};
+    bool isOnClipboard() const { return _isOnClipboard; };
     // dont check values only structure and ID
     bool is_similar(LivePathEffectObject *that);
 
@@ -60,6 +62,8 @@ protected:
     Inkscape::XML::Node *write(Inkscape::XML::Document *doc, Inkscape::XML::Node *repr, unsigned int flags) override;
 
 private:
+    void setOnClipboard();
+    bool _isOnClipboard = false;
     friend LPENodeObserver; // for static_cast
     LPENodeObserver &nodeObserver() { return *this; }
 };

@@ -937,21 +937,6 @@ void ObjectSet::ungroup(bool skip_undo)
     }
 
     ungroup_impl(this);
-    std::vector<SPItem*> selection(items().begin(), items().end());
-    for (auto item : selection) {
-        auto lpeitem = cast<SPLPEItem>(item);
-        if (lpeitem) {
-            for (auto *lpe : lpeitem->getPathEffects()) {
-                if (lpe) {
-                    //lpe->doOnOpen(lpeitem);
-                    for (auto & p : lpe->param_vector) {
-                        p->read_from_SVG();
-                    }
-                }
-            }
-            sp_lpe_item_update_patheffect(lpeitem, false, false, true);
-        }
-    }
     if(document() && !skip_undo)
         DocumentUndo::done(document(), _("Ungroup"), INKSCAPE_ICON("object-ungroup"));
 }
@@ -2654,7 +2639,7 @@ void scroll_to_show_item(SPDesktop *desktop, SPItem *item)
     }
 }
 
-void ObjectSet::clone()
+void ObjectSet::clone(bool skip_undo)
 {
     if (document() == nullptr) {
         return;
@@ -2700,8 +2685,9 @@ void ObjectSet::clone()
         newsel.push_back(clone);
         Inkscape::GC::release(clone);
     }
-
-    DocumentUndo::done(document(), C_("Action", "Clone"), INKSCAPE_ICON("edit-clone"));
+    if (!skip_undo) {
+        DocumentUndo::done(document(), C_("Action", "Clone"), INKSCAPE_ICON("edit-clone"));
+    }
 
     setReprList(newsel);
 }

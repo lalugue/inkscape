@@ -1133,10 +1133,12 @@ LivePathEffectEditor::removeEffect(Gtk::Expander * expander) {
             current_lpeitem = current_lpeitem->removeCurrentPathEffect(false);
         } 
     }
-    if (reload) {
-        current_lpeitem->setCurrentPathEffect(current_lperef_tmp.second);
+    if (current_lpeitem) {
+        if (reload) {
+            current_lpeitem->setCurrentPathEffect(current_lperef_tmp.second);
+        }
+        effect_list_reload(current_lpeitem);
     }
-    effect_list_reload(current_lpeitem);
     DocumentUndo::done(getDocument(), _("Remove path effect"), INKSCAPE_ICON("dialog-path-effects"));
 }
 
@@ -1186,14 +1188,14 @@ SPLPEItem * LivePathEffectEditor::clonetolpeitem()
             // convert to path, apply CLONE_ORIGINAL LPE, link it to the cloned path
 
             // test whether linked object is supported by the CLONE_ORIGINAL LPE
-            SPItem *orig = use->get_original();
+            SPItem *orig = use->trueOriginal();
             if ( is<SPShape>(orig) || is<SPGroup>(orig) || is<SPText>(orig) ) {
                 // select original
                 selection->set(orig);
 
                 // delete clone but remember its id and transform
                 auto id_copy = Util::to_opt(use->getAttribute("id"));
-                auto transform_copy = Util::to_opt(use->getAttribute("transform"));
+                auto transform_use = use->get_root_transform();
                 use->deleteObject(false);
                 use = nullptr;
 
@@ -1204,10 +1206,9 @@ SPLPEItem * LivePathEffectEditor::clonetolpeitem()
                 // Check that the cloning was successful. We don't want to change the ID of the original referenced path!
                 if (new_item && (new_item != orig)) {
                     new_item->setAttribute("id", Util::to_cstr(id_copy));
-                    if (Util::to_cstr(transform_copy)) {
-                        Geom::Affine item_t(Geom::identity());
-                        sp_svg_transform_read(Util::to_cstr(transform_copy), &item_t);
-                        new_item->transform *= item_t;
+                    if (transform_use != Geom::identity()) {
+                        // update use real transform
+                        new_item->transform *= transform_use;
                         new_item->doWriteTransform(new_item->transform);
                         new_item->requestDisplayUpdate(SP_OBJECT_MODIFIED_FLAG);
                     }

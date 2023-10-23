@@ -420,7 +420,7 @@ public:
     //in selection-chemistry.cpp
     void deleteItems(bool skip_undo = false);
     void duplicate(bool suppressDone = false, bool duplicateLayer = false);
-    void clone();
+    void clone(bool skip_undo = false);
 
     /**
      * @brief Unlink all directly selected clones.

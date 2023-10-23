@@ -36,7 +36,7 @@ void LivePathEffectObject::build(SPDocument *document, Inkscape::XML::Node *repr
     if (repr) {
         repr->addObserver(nodeObserver());
     }
-
+    setOnClipboard();
     /* Register ourselves, is this necessary? */
     // document->addResource("path-effect", object);
 }
@@ -46,31 +46,7 @@ void LivePathEffectObject::build(SPDocument *document, Inkscape::XML::Node *repr
  */
 void LivePathEffectObject::release()
 {
-    if (this->lpe) {
-        std::vector<SPLPEItem *> lpeitems = lpe->getCurrrentLPEItems();
-        if (lpeitems.size() >= 1) {
-            lpe->sp_lpe_item = lpeitems[0];
-        }
-        lpe->sp_lpe_item = nullptr;
-    }
     getRepr()->removeObserver(nodeObserver());
-
-/*
-    if (object->document) {
-        // Unregister ourselves
-        sp_document_removeResource(object->document, "livepatheffect", object);
-    }
-
-    if (gradient->ref) {
-        gradient->modified_connection.disconnect();
-        gradient->ref->detach();
-        delete gradient->ref;
-        gradient->ref = NULL;
-    }
-
-    gradient->modified_connection.~connection();
-*/
-
     if (this->lpe) {
         delete this->lpe;
         this->lpe = nullptr;
@@ -95,11 +71,11 @@ void LivePathEffectObject::set(SPAttr key, gchar const *value) {
                 delete this->lpe;
                 this->lpe = nullptr;
             }
-
             if ( value && Inkscape::LivePathEffect::LPETypeConverter.is_valid_key(value) ) {
                 this->effecttype = Inkscape::LivePathEffect::LPETypeConverter.get_id_from_key(value);
                 this->lpe = Inkscape::LivePathEffect::Effect::New(this->effecttype, this);
                 this->effecttype_set = true;
+                this->deleted = false;
             } else {
                 this->effecttype = Inkscape::LivePathEffect::INVALID_LPE;
                 this->lpe = nullptr;
@@ -149,6 +125,22 @@ bool LivePathEffectObject::is_similar(LivePathEffectObject *that)
         }
     }
     return true;
+}
+
+/**
+ * Set lpeobject is on clipboard
+ */
+void LivePathEffectObject::setOnClipboard()
+{
+    // when no document we are intermedite state between clipboard
+    if (!document) { 
+        _isOnClipboard = true;
+        return;
+    }
+    
+    Inkscape::XML::Node *root = document->getReprRoot();
+    Inkscape::XML::Node *clipnode = sp_repr_lookup_name(root, "inkscape:clipboard", 1);
+    _isOnClipboard = clipnode != nullptr;
 }
 
 /**
