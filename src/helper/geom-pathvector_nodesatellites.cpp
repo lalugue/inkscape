@@ -204,24 +204,27 @@ void PathVectorNodeSatellites::recalculateForNewPathVector(Geom::PathVector cons
     // * without empty subpats
     // * _pathvector and nodesatellites (old data) are paired
     NodeSatellites nodesatellites;
-    bool found = false;
+
     // TODO evaluate fix on nodes at same position
     // size_t number_nodes = count_pathvector_nodes(pathv);
     // size_t previous_number_nodes = getTotalNodeSatellites();
-    for (const auto & i : pathv) {
+    size_t npaths = pathv.size();
+    for (size_t i = 0; i < npaths; ++i) {
         std::vector<NodeSatellite> path_nodesatellites;
-        size_t count = count_path_nodes(i);
-        for (size_t j = 0; j < count; j++) {
-            found = false;
-            for (size_t k = 0; k < _pathvector.size(); k++) {
-                if (k == _nodesatellites.size()) break;
-
-                size_t count2 = std::min(count_path_nodes(_pathvector[k]), _nodesatellites[k].size());
-                for (size_t l = 0; l < count2; l++) {
-                    if (Geom::are_near(_pathvector[k][l].initialPoint(),  i[j].initialPoint())) {
-                        path_nodesatellites.push_back(_nodesatellites.at(k).at(l));
-                        found = true;
-                        break;
+        size_t count = count_path_nodes(pathv[i]);
+        for (size_t j = 0; j < count; ++j) {
+            bool found = false;
+            for (size_t k = 0; k < _pathvector.size(); ++k) {
+                size_t countnodes = count_path_nodes(_pathvector[k]);
+                size_t countcurves = count_path_curves(_pathvector[k]);
+                if (!_nodesatellites.empty() && !_nodesatellites[k].empty()) {
+                    assert(countnodes == _nodesatellites[k].size());
+                    for (size_t l = 0; l < countcurves; ++l) {
+                        if (Geom::are_near(_pathvector[k][l].initialPoint(),  pathv[i][j].initialPoint())) {
+                            path_nodesatellites.push_back(_nodesatellites[k][l]);
+                            found = true;
+                            break;
+                        }
                     }
                 }
                 if (found) {
@@ -229,7 +232,15 @@ void PathVectorNodeSatellites::recalculateForNewPathVector(Geom::PathVector cons
                 }
             }
             if (!found) {
-                path_nodesatellites.push_back(S);
+                if (_pathvector.empty()) {
+                    if (i < _nodesatellites.size() && j < _nodesatellites[i].size()) {
+                        path_nodesatellites.push_back(_nodesatellites[i][j]);
+                    } else {
+                        path_nodesatellites.push_back(S);
+                    }
+                } else {
+                    path_nodesatellites.push_back(S);
+                }
             }
         }
         nodesatellites.push_back(path_nodesatellites);

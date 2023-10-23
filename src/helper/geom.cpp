@@ -192,19 +192,6 @@ bool pathv_similar(Geom::PathVector const &apv, Geom::PathVector const &bpv, dou
     return true;
 }
 
-size_t
-pathv_real_size(Geom::Path path) 
-{
-    size_t psize = path.size_default();
-    if (path.closed()) {
-        const Geom::Curve &closingline = path.back_closed(); 
-        if (are_near(closingline.initialPoint(), closingline.finalPoint())) {
-        psize = path.size_open();
-        }
-    }
-    return psize;
-}
-
 static void
 geom_line_wind_distance (Geom::Coord x0, Geom::Coord y0, Geom::Coord x1, Geom::Coord y1, Geom::Point const &pt, int *wind, Geom::Coord *best)
 {
@@ -640,7 +627,7 @@ pathv_to_cubicbezier( Geom::PathVector const &pathv, bool nolines)
         output.back().close( pit.closed() );
         bool end_open = false;
         if (pit.closed()) {
-            const Geom::Curve &closingline = pit.back_closed();
+            auto const &closingline = pit.back_closed();
             if (!are_near(closingline.initialPoint(), closingline.finalPoint())) {
                 end_open = true;
             }
@@ -685,6 +672,15 @@ count_pathvector_nodes(Geom::PathVector const &pathv) {
 }
 
 size_t
+count_pathvector_curves(Geom::PathVector const &pathv) {
+    size_t tot = 0;
+    for (auto const &subpath : pathv) {
+        tot += count_path_curves(subpath);
+    }
+    return tot;
+}
+
+size_t
 count_pathvector_degenerations(Geom::PathVector const &pathv) {
     size_t tot = 0;
     for (auto const &subpath : pathv) {
@@ -699,7 +695,7 @@ size_t count_path_degenerations(Geom::Path const &path)
     Geom::Path::const_iterator curve_it = path.begin();
     Geom::Path::const_iterator curve_endit = path.end_default();
     if (path.closed()) {
-        const Geom::Curve &closingline = path.back_closed();
+        auto const &closingline = path.back_closed();
         // the closing line segment is always of type
         // Geom::LineSegment.
         if (are_near(closingline.initialPoint(), closingline.finalPoint())) {
@@ -711,7 +707,7 @@ size_t count_path_degenerations(Geom::Path const &path)
         }
     }
     while (curve_it != curve_endit) {
-        if (curve_it->isDegenerate()) {
+        if (Geom::are_near((*curve_it).length(),0)) {
             tot += 1;
         }
         ++curve_it;
@@ -721,12 +717,31 @@ size_t count_path_degenerations(Geom::Path const &path)
 
 size_t count_path_nodes(Geom::Path const &path)
 {
-    size_t tot = path.size_closed();
+    size_t tot = path.size_default() + 1; // if degenerate closing line one is erased no need to duple
     if (path.closed()) {
-        const Geom::Curve &closingline = path.back_closed();
+        tot -= 1;
+        auto const &closingline = path.back_closed();
         // the closing line segment is always of type
         // Geom::LineSegment.
-        if (are_near(closingline.initialPoint(), closingline.finalPoint())) {
+        if (!closingline.isDegenerate() && are_near(closingline.initialPoint(), closingline.finalPoint())) {
+            // closingline.isDegenerate() did not work, because it only checks for
+            // *exact* zero length, which goes wrong for relative coordinates and
+            // rounding errors...
+            // the closing line segment has zero-length. So stop before that one!
+            tot -= 1;
+        }
+    }
+    return tot;
+}
+
+size_t count_path_curves(Geom::Path const &path)
+{
+    size_t tot = path.size_default(); // if degenerate closing line one is erased no need to duple
+    if (path.closed()) {
+        auto const &closingline = path.back_closed();
+        // the closing line segment is always of type
+        // Geom::LineSegment.
+        if (!closingline.isDegenerate() && are_near(closingline.initialPoint(), closingline.finalPoint())) {
             // closingline.isDegenerate() did not work, because it only checks for
             // *exact* zero length, which goes wrong for relative coordinates and
             // rounding errors...

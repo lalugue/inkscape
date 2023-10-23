@@ -104,7 +104,7 @@ size_t sp_calculate_origin(size_t i, Geom::PathVector pathv) {
         if (pos == i) {
             break;
         }
-        size_t psize = pathv_real_size(path);
+        size_t psize = count_pathvector_curves(path);
         origin += psize;
         pos ++;
     }
@@ -230,7 +230,7 @@ PowerStrokePointArrayParamKnotHolderEntity::knot_set(Geom::Point const &p, Geom:
     size_t psize = 0;
     size_t i = 0;
     for (auto path : pathv) {
-        psize = pathv_real_size(path);
+        psize = count_pathvector_curves(path);
         if (pathin == path) {
             end = begin + psize;
             _pparam->current_path = i;

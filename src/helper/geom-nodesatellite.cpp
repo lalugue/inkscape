@@ -218,7 +218,7 @@ void NodeSatellite::setNodeSatellitesType(gchar const *A)
 {
     std::map<std::string, NodeSatelliteType> gchar_map_to_nodesatellite_type = boost::assign::map_list_of("F", FILLET)(
         "IF", INVERSE_FILLET)("C", CHAMFER)("IC", INVERSE_CHAMFER)("KO", INVALID_SATELLITE);
-    std::map<std::string, NodeSatelliteType>::iterator it = gchar_map_to_nodesatellite_type.find(std::string(A));
+    auto it = gchar_map_to_nodesatellite_type.find(std::string(A));
     if (it != gchar_map_to_nodesatellite_type.end()) {
         nodesatellite_type = it->second;
     }
