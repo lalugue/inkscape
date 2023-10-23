@@ -883,7 +883,7 @@
             <child>
               <object class="GtkLabel">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes">H:</property>
+                <property name="label" translatable="yes" context="Abbreviation of Horizontal">H:</property>
               </object>
             </child>
             <child>
