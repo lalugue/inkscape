@@ -43,6 +43,7 @@ TemplatePreset::TemplatePreset(Template *mod, const Inkscape::XML::Node *repr, T
 {
     // Default icon and priority aren't a prefs, though they may at first look like it.
     _icon = mod->get_icon();
+    _category = mod->get_category();
 
     if (repr) {
         for (const auto &iter : repr->attributeList()) {
@@ -52,6 +53,8 @@ TemplatePreset::TemplatePreset(Template *mod, const Inkscape::XML::Node *repr, T
                 _name = value.empty() ? "?" : value;
             else if (name == "label")
                 _label = value;
+            else if (name == "desc")
+                _desc = value;
             else if (name == "icon")
                 _icon = value;
             else if (name == "priority")
@@ -408,14 +411,6 @@ SPDocument *Template::get_template_document() const
         return ink_file_new(file->get_path());
     }
     return nullptr;
-}
-
-std::string TemplatePreset::get_name() const {
-    return _name;
-}
-
-std::string TemplatePreset::get_label() const {
-    return _label;
 }
 
 } // namespace Extension

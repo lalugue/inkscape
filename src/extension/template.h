@@ -51,10 +51,12 @@ public:
     TemplatePreset(Template *mod, const Inkscape::XML::Node *repr, TemplatePrefs prefs = {}, int priority = 0);
     ~TemplatePreset() {};
 
-    std::string get_key() const { return _key; }
-    std::string get_icon() const { return _icon; }
-    std::string get_name() const;
-    std::string get_label() const;
+    std::string const &get_key() const { return _key; }
+    std::string const &get_icon() const { return _icon; }
+    std::string const &get_category() const { return _category; }
+    std::string const &get_name() const { return _name; }
+    std::string const &get_label() const { return _label; }
+    std::string const &get_description() const { return _desc; }
     int get_sort_priority() const { return _priority; }
     int get_visibility() const { return _visibility; }
 
@@ -78,6 +80,8 @@ protected:
     std::string _icon;
     std::string _name;
     std::string _label;
+    std::string _desc;
+    std::string _category;
     int _priority;
     int _visibility;
 

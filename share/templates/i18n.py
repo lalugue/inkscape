@@ -3,7 +3,7 @@
 from xml.dom import minidom
 import sys
 
-elements = ["inkscape:_name", "inkscape:_shortdesc", "inkscape:_keywords"]
+elements = ["inkscape:_name", "inkscape:_shortdesc", "inkscape:_keywords", "inkscape:category", "inkscape:label"]
 
 sys.stdout.write("char * stringlst = [")
 

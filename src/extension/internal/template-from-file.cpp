@@ -72,10 +72,20 @@ void TemplatePresetFile::_load_data(const Inkscape::XML::Node *root)
 {
     _name = sp_repr_lookup_content(root, "inkscape:name", _name);
     _name = sp_repr_lookup_content(root, "inkscape:_name", _name); // backwards-compatibility
-    _label = sp_repr_lookup_content(root, "inkscape:shortdesc", N_("Custom Template"));
-    _label = sp_repr_lookup_content(root, "inkscape:shortdesc", _label); // backwards-compatibility
+    _desc = sp_repr_lookup_content(root, "inkscape:shortdesc", _key);
+    _desc = sp_repr_lookup_content(root, "inkscape:_shortdesc", _desc); // backwards-compatibility
 
+    _label = sp_repr_lookup_content(root, "inkscape:label", N_("Custom Template"));
     _icon = sp_repr_lookup_content(root, "inkscape:icon", _icon);
+    _category = sp_repr_lookup_content(root, "inkscape:category", _category);
+
+    try {
+        _priority = std::stoi(sp_repr_lookup_content(root, "inkscape:priority", "-1"));
+    } catch(std::exception &err) {
+        g_warning("Template priority malformed number.");
+        _priority = -1;
+    }
+
     // Original functionality not yet used...
     // _author = sp_repr_lookup_content(root, "inkscape:author");
     // _preview = sp_repr_lookup_content(root, "inkscape:preview");

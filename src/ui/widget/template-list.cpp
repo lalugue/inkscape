@@ -40,14 +40,18 @@ public:
     {
         this->add(this->name);
         this->add(this->label);
+        this->add(this->tooltip);
         this->add(this->icon);
         this->add(this->key);
+        this->add(this->priority);
     }
 
     Gtk::TreeModelColumn<Glib::ustring> name;
     Gtk::TreeModelColumn<Glib::ustring> label;
+    Gtk::TreeModelColumn<Glib::ustring> tooltip;
     Gtk::TreeModelColumn<Glib::RefPtr<Gdk::Pixbuf>> icon;
     Gtk::TreeModelColumn<Glib::ustring> key;
+    Gtk::TreeModelColumn<int> priority;
 };
 
 TemplateList::TemplateList(BaseObjectType *cobject, const Glib::RefPtr<Gtk::Builder> &refGlade)
@@ -67,26 +71,32 @@ void TemplateList::init(Inkscape::Extension::TemplateShow mode)
     Inkscape::Extension::db.get_template_list(extensions);
 
     for (auto tmod : extensions) {
-        auto const &cat = tmod->get_category();
-
-        if (auto it = stores.lower_bound(cat);
-            it == stores.end() || it->first != cat)
-        {
-            try {
-                it = stores.emplace_hint(it, cat, generate_category(cat));
-                it->second->clear();
-            } catch (UIBuilderError const & /*error*/) {
-                return;
-            }
-        }
-
         for (auto preset : tmod->get_presets(mode)) {
+            auto const &cat = preset->get_category();
+
+            if (auto it = stores.lower_bound(cat);
+                it == stores.end() || it->first != cat)
+            {
+                try {
+                    it = stores.emplace_hint(it, cat, generate_category(cat));
+                    it->second->clear();
+                    it->second->set_sort_column(cols.priority, Gtk::SORT_ASCENDING);
+                } catch (UIBuilderError const & /*error*/) {
+                    return;
+                }
+            }
+
+            auto const &name = preset->get_name();
+            auto const &label = preset->get_label();
+            auto const &desc = preset->get_description();
+
             Gtk::TreeModel::Row row = *stores[cat]->append();
-            row[cols.name] = _(preset->get_name().c_str());
-            row[cols.icon] = icon_to_pixbuf(preset->get_icon_path());
-            auto label = preset->get_label();
+            row[cols.name] = _(name.c_str());
             row[cols.label] = label.empty() ? "" : _(label.c_str());
+            row[cols.tooltip] = _(desc.empty() ? name.c_str() : desc.c_str());
+            row[cols.icon] = icon_to_pixbuf(preset->get_icon_path());
             row[cols.key] = preset->get_key();
+            row[cols.priority] = preset->get_sort_priority();
         }
     }
 
