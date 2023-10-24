@@ -33,28 +33,10 @@ NodeSatelliteArrayParam::NodeSatelliteArrayParam(const Glib::ustring &label, con
                                                  const Glib::ustring &key, Inkscape::UI::Widget::Registry *wr,
                                                  Effect *effect)
     : ArrayParam<std::vector<NodeSatellite>>(label, tip, key, wr, effect, 0)
-    , _knotholder(nullptr)
 {
     param_widget_is_visible(false);
 }
 
-NodeSatelliteArrayParam::~NodeSatelliteArrayParam()
-{
-    // caution:
-    // we are using this on corners/fillet LPE
-    // if we do on other LPE and the LPE
-    // handle its knotholder we need to reset it also in
-    // effect with something like
-    // if (param_effect->effectTipe = MY_NEW_LPE) {
-    //    param_effect->knotholder = nullptr
-    // }
-    // and do the same in reverse in the same block
-    // in the destruction of the effect
-    if (_knotholder) {
-        _knotholder->clear();
-        _knotholder = nullptr;
-    }
-}
 
 void NodeSatelliteArrayParam::set_oncanvas_looks(Inkscape::CanvasItemCtrlShape shape, Inkscape::CanvasItemCtrlMode mode,
                                                  guint32 color)
@@ -275,8 +257,7 @@ void NodeSatelliteArrayParam::updateAmmount(double amount)
 
 void NodeSatelliteArrayParam::addKnotHolderEntities(KnotHolder *knotholder, SPItem *item)
 {
-    _knotholder = knotholder;
-    addKnotHolderEntities(_knotholder, item, true);
+    addKnotHolderEntities(knotholder, item, true);
 }
 
 FilletChamferKnotHolderEntity::FilletChamferKnotHolderEntity(NodeSatelliteArrayParam *p, size_t index)

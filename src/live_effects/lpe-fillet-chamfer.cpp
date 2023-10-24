@@ -231,13 +231,6 @@ Gtk::Widget *LPEFilletChamfer::newWidget()
     return vbox;
 }
 
-void LPEFilletChamfer::refreshKnots()
-{
-    if (nodesatellites_param._knotholder) {
-        nodesatellites_param._knotholder->update_knots();
-    }
-}
-
 void LPEFilletChamfer::updateAmount()
 {
     if (!_pathvector_nodesatellites) { // empty item
@@ -385,7 +378,7 @@ void LPEFilletChamfer::doBeforeEffect(SPLPEItem const *lpeItem)
                 _pathvector_nodesatellites->setPathVector(pathv);
                 _pathvector_nodesatellites->setNodeSatellites(nodesatellites); 
                 nodesatellites_param.setPathVectorNodeSatellites(_pathvector_nodesatellites, false);
-                refreshKnots();
+                nodesatellites_param.reloadKnots();
             }
 
         }
