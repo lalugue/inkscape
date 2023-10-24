@@ -11,7 +11,7 @@
 #
 
 # toolset release to build Inkscape
-VERSION=0.77
+VERSION=0.78
 
 # directory convenience handles
 SELF_DIR=$(dirname "${BASH_SOURCE[0]}")
@@ -37,8 +37,6 @@ if git -C "$MIBAP_DIR" checkout v"$VERSION"; then
   else
     # install build dependencies
     "$MIBAP_DIR"/install_toolset.sh
-    # FIXME: disable platform support check as it doesn't work correctly
-    sed -i "" "s|\(sys_platform_is_supported\)|: #\1|g" "$WRK_DIR"/mibap-${VERSION%%-*}/usr/bin/jhb
     # build Inkscape
     if "$MIBAP_DIR"/build_inkscape.sh; then
       # uninstall build dependencies and archive build files
