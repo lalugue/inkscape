@@ -52,7 +52,7 @@ public:
     virtual ~KnotHolder();
 
     KnotHolder() = delete; // declared but not defined
-
+    void clear();
     void update_knots();
     void unselect_knots();
     void knot_mousedown_handler(SPKnot *knot, unsigned int state);

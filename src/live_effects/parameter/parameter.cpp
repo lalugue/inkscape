@@ -89,12 +89,12 @@ void Parameter::param_higlight(bool highlight)
 {
     SPDesktop *desktop = SP_ACTIVE_DESKTOP;
     if (desktop) {
-        std::vector<SPLPEItem *> lpeitems = param_effect->getCurrrentLPEItems();
         if (!highlight && ownerlocator) {
             desktop->remove_temporary_canvasitem(ownerlocator);
             ownerlocator = nullptr;
         }
         if (highlight) {
+            std::vector<SPLPEItem *> lpeitems = param_effect->getCurrrentLPEItems();
             if (lpeitems.size() == 1 && param_effect->is_visible) {
                 SPCurve c;
                 std::vector<Geom::PathVector> cs; // = param_effect->getCanvasIndicators(lpeitems[0]);
@@ -155,10 +155,12 @@ void Parameter::update_satellites()
 {
     if (paramType() == ParamType::SATELLITE || paramType() == ParamType::SATELLITE_ARRAY || paramType() == ParamType::PATH ||
         paramType() == ParamType::PATH_ARRAY || paramType() == ParamType::ORIGINAL_PATH || paramType() == ParamType::ORIGINAL_SATELLITE) {
-        SPDesktop *desktop = SP_ACTIVE_DESKTOP;
-        std::vector<SPLPEItem *> lpeitems = param_effect->getCurrrentLPEItems();
-        if (lpeitems.size() == 1){
-            if (desktop) {
+        // maybe we remove desktop by change with selection get from actions-helper 
+        // but this function call param_higlight with also need 
+        // desktop to update helper canvas item
+        if (SPDesktop *desktop = SP_ACTIVE_DESKTOP) {
+            std::vector<SPLPEItem *> lpeitems = param_effect->getCurrrentLPEItems();
+            if (lpeitems.size() == 1){
                 DocumentUndo::ScopedInsensitive _no_undo(desktop->getDocument());
                 param_higlight(false);
                 Inkscape::Selection *selection = desktop->getSelection();
@@ -187,9 +189,9 @@ void Parameter::update_satellites()
                         }
                     }
                 }
+            } else {
+                param_higlight(false);
             }
-        } else {
-            param_higlight(false);
         }
     }
 }

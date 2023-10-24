@@ -23,6 +23,7 @@ namespace LivePathEffect {
 static void lpeobjectreference_href_changed(SPObject *old_ref, SPObject *ref, LPEObjectReference *lpeobjref);
 static void lpeobjectreference_release_self(SPObject *release, LPEObjectReference *lpeobjref);
 static void lpeobjectreference_source_modified(SPObject *iSource, guint flags, LPEObjectReference *lpeobjref);
+static void lpeobjectreference_release_owner(SPObject *release, LPEObjectReference *lpeobjref);
 
 LPEObjectReference::LPEObjectReference(SPObject* i_owner) : URIReference(i_owner)
 {
@@ -31,24 +32,15 @@ LPEObjectReference::LPEObjectReference(SPObject* i_owner) : URIReference(i_owner
     lpeobject_repr = nullptr;
     lpeobject = nullptr;
     _changed_connection = changedSignal().connect(sigc::bind(sigc::ptr_fun(lpeobjectreference_href_changed), this)); // listening to myself, this should be virtual instead
+    _owner_release_connection = owner->connectRelease(sigc::bind(sigc::ptr_fun(&lpeobjectreference_release_owner), this));
 
-    user_unlink = nullptr;
 }
 
 LPEObjectReference::~LPEObjectReference()
 {
-    std::vector<SPLPEItem *> lpeitems;
-    if (lpeobject && lpeobject->get_lpe()) {
-        lpeitems = lpeobject->get_lpe()->getCurrrentLPEItems();
-        lpeobject->get_lpe()->doOnBeforeCommit();
-        lpeobject->get_lpe()->sp_lpe_item = nullptr;
-    } 
+    _owner_release_connection.disconnect(); // to do before unlinking
     _changed_connection.disconnect(); // to do before unlinking
-    quit_listening();
     unlink();
-    for (auto lpeitem : lpeitems) {
-        sp_lpe_item_update_patheffect(lpeitem,false,false);
-    }
 }
 
 bool LPEObjectReference::_acceptObject(SPObject * const obj) const
@@ -65,7 +57,6 @@ void
 LPEObjectReference::link(const char *to)
 {
     if (!to || !to[0]) {
-        quit_listening();
         unlink();
     } else {
         if ( !lpeobject_href || ( strcmp(to, lpeobject_href) != 0 ) ) {
@@ -89,6 +80,8 @@ LPEObjectReference::link(const char *to)
 void
 LPEObjectReference::unlink()
 {
+    lpeobject_repr = nullptr;
+    lpeobject = nullptr;
     if (lpeobject_href) {
         g_free(lpeobject_href);
         lpeobject_href = nullptr;
@@ -108,19 +101,9 @@ LPEObjectReference::start_listening(LivePathEffectObject* to)
     _modified_connection = to->connectModified(sigc::bind<2>(sigc::ptr_fun(&lpeobjectreference_source_modified), this));
 }
 
-void
-LPEObjectReference::quit_listening()
-{
-    _modified_connection.disconnect();
-    _release_connection.disconnect();
-    lpeobject_repr = nullptr;
-    lpeobject = nullptr;
-}
-
 static void
 lpeobjectreference_href_changed(SPObject */*old_ref*/, SPObject */*ref*/, LPEObjectReference *lpeobjref)
 {
-    //lpeobjref->quit_listening();
     auto refobj = cast<LivePathEffectObject>( lpeobjref->getObject() );
     if ( refobj ) {
         lpeobjref->start_listening(refobj);
@@ -133,12 +116,14 @@ lpeobjectreference_href_changed(SPObject */*old_ref*/, SPObject */*ref*/, LPEObj
 static void
 lpeobjectreference_release_self(SPObject */*release*/, LPEObjectReference *lpeobjref)
 {
-    lpeobjref->quit_listening();
     lpeobjref->unlink();
-    if (lpeobjref->user_unlink) {
-        lpeobjref->user_unlink(lpeobjref, lpeobjref->owner);
-    }
-    
+}
+
+static void
+lpeobjectreference_release_owner(SPObject */*release*/, LPEObjectReference *lpeobjref)
+{
+    lpeobjref->unlink();
+    lpeobjref->owner = nullptr;
 }
 
 static void

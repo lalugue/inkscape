@@ -716,11 +716,14 @@ SPLPEItem * SPLPEItem::removeCurrentPathEffect(bool keep_paths)
     }
     if (Inkscape::LivePathEffect::Effect* effect_ = this->getCurrentLPE()) {
         effect_->keep_paths = keep_paths;
-        effect_->on_remove_all = false;
+        effect_->on_remove_all = false; 
+        if (effect_->getHolderRemove()) {
+            this->deleteObject(true);
+            return nullptr;
+        }
         effect_->doOnRemove_impl(this);
     }
     this->path_effect_list->remove(lperef); //current lpe ref is always our 'own' pointer from the path_effect_list
-    //effect_->getLPEObj()->hrefList.clear();
     this->setAttributeOrRemoveIfEmpty("inkscape:path-effect", patheffectlist_svg_string(*this->path_effect_list));
     if (!keep_paths) {
         // Make sure that ellipse is stored as <svg:circle> or <svg:ellipse> if possible.
@@ -756,8 +759,8 @@ SPLPEItem * SPLPEItem::removeAllPathEffects(bool keep_paths, bool recursive)
             return nullptr;
         }
     }
-    PathEffectList path_effect_list(*this->path_effect_list);
-    for (auto &lperef : path_effect_list) {
+    PathEffectList a_path_effect_list(*path_effect_list);
+    for (auto &lperef : a_path_effect_list) {
         if (!lperef) {
             continue;
         }
@@ -767,12 +770,16 @@ SPLPEItem * SPLPEItem::removeAllPathEffects(bool keep_paths, bool recursive)
             if (lpe) {
                 lpe->keep_paths = keep_paths;
                 lpe->on_remove_all = true;
+                if (lpe->getHolderRemove()) {
+                    this->deleteObject(true);
+                    return nullptr;
+                }
                 lpe->doOnRemove_impl(this);
             }
-            lpeobj->hrefList.clear();
         }
+        // this allow to keep references and propely delete satellites
+        path_effect_list->remove(lperef);
     }
-    clear_path_effect_list(this->path_effect_list);
     this->removeAttribute("inkscape:path-effect");
     if (!keep_paths) {
         // Make sure that ellipse is stored as <svg:circle> or <svg:ellipse> if possible.
@@ -876,6 +883,7 @@ void SPLPEItem::removePathEffect(Inkscape::LivePathEffect::Effect *lpe, bool kee
         }
     }
     if (exist) {
+        // this function is called only with FILLET_CHAMFER if do with holderRemove LPE`s (clones LPE) need to rework
         removeCurrentPathEffect(keep_paths);
     } else {
         g_warning("LPE dont exist to remove");

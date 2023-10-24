@@ -218,8 +218,9 @@ const LivePathEffectObject* find_lpeffect(SPLPEItem* item, LivePathEffect::Effec
 void remove_lpeffect(SPLPEItem* item, LivePathEffect::EffectType type) {
     if (auto effect = find_lpeffect(item, type)) {
         item->setCurrentPathEffect(effect);
+        auto document = item->document;
         item->removeCurrentPathEffect(false);
-        DocumentUndo::done(item->document, _("Removed live path effect"), INKSCAPE_ICON("dialog-path-effects"));
+        DocumentUndo::done(document, _("Removed live path effect"), INKSCAPE_ICON("dialog-path-effects"));
     }
 }
 

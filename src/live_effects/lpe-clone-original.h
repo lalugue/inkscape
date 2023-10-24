@@ -28,6 +28,7 @@ public:
     void doBeforeEffect (SPLPEItem const* lpeitem) override;
     bool doOnOpen(SPLPEItem const *lpeitem) override;
     void doOnRemove(SPLPEItem const * /*lpeitem*/) override;
+    bool getHolderRemove() override;
     Gtk::Widget *newWidget() override;
     OriginalSatelliteParam linkeditem;
 
@@ -43,6 +44,7 @@ private:
     void cloneAttributes(SPObject *origin, SPObject *dest, const gchar *attributes, const gchar *css_properties,
                          bool init);
     bool sync;
+    bool holderRemove = false; // move to effect if use more
     LPECloneOriginal(const LPECloneOriginal&) = delete;
     LPECloneOriginal& operator=(const LPECloneOriginal&) = delete;
 };

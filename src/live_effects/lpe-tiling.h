@@ -54,7 +54,7 @@ public:
     void addKnotHolderEntities(KnotHolder * knotholder, SPItem * item) override;
 protected:
     void addCanvasIndicators(SPLPEItem const *lpeitem, std::vector<Geom::PathVector> &hp_vec) override;
-    KnotHolder *_knotholder;
+    KnotHolder *_knotholder = nullptr;
     double gapx_unit = 0;
     double gapy_unit = 0;
     double offset_unit = 0;

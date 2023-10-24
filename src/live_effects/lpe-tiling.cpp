@@ -163,7 +163,12 @@ LPETiling::LPETiling(LivePathEffectObject *lpeobject) :
     display_unit = getSPDoc()->getDisplayUnit()->abbr;
 }
 
-LPETiling::~LPETiling() = default;
+LPETiling::~LPETiling(){
+    if (_knotholder) {
+        _knotholder->clear();
+        _knotholder = nullptr;
+    }
+};
 bool LPETiling::doOnOpen(SPLPEItem const *lpeitem)
 {
     bool fixed = false;

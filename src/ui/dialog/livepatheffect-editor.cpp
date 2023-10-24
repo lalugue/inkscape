@@ -142,6 +142,20 @@ void sp_toggle_fav(Glib::ustring effect, Gtk::MenuItem *LPEtoggleFavorite)
     }
 }
 
+
+
+bool sp_set_experimental(bool &_experimental) 
+{
+    Inkscape::Preferences *prefs = Inkscape::Preferences::get();
+    bool experimental = prefs->getBool("/dialogs/livepatheffect/showexperimental", false);
+    if (experimental != _experimental) {
+        _experimental = experimental;
+        return true;
+    }
+    return false;
+}
+
+
 void LivePathEffectEditor::selectionChanged(Inkscape::Selection * selection)
 {
     if (selection_changed_lock) {
@@ -193,6 +207,7 @@ LivePathEffectEditor::LivePathEffectEditor()
     _lpes_popup.on_button_press().connect([=](){ setMenu(); });
     _lpes_popup.on_focus().connect([=](){ setMenu(); return true; });
     _LPEAddContainer.pack_start(_lpes_popup);
+    sp_set_experimental(_experimental);
     show_all();
 }
 
@@ -419,13 +434,11 @@ LivePathEffectEditor::setMenu()
     } else if (shape) {
         item_type = "shape";
     }
-    if (_item_type != item_type || has_clip != _has_clip || has_mask != _has_mask) {
+    if (sp_set_experimental(_experimental) || _item_type != item_type || has_clip != _has_clip || has_mask != _has_mask) {
         _item_type = item_type;
         _has_clip = has_clip;
         _has_mask = has_mask;
         g_lpes.clear();
-        Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-        bool experimental = prefs->getBool("/dialogs/livepatheffect/showexperimental", false);
         std::map<Inkscape::LivePathEffect::LPECategory, std::map< Glib::ustring, const LivePathEffect::EnumEffectData<LivePathEffect::EffectType> *> > lpesorted;
         for (int i = 0; i < static_cast<int>(converter._length); ++i) {
             const LivePathEffect::EnumEffectData<LivePathEffect::EffectType> *data = &converter.data(i);
@@ -440,7 +453,7 @@ LivePathEffectEditor::setMenu()
                 //category = 0;
                 category = Inkscape::LivePathEffect::LPECategory::Favorites;
             }
-            if (!experimental && category == Inkscape::LivePathEffect::LPECategory::Experimental) {
+            if (!_experimental && category == Inkscape::LivePathEffect::LPECategory::Experimental) {
                 continue;
             }
             lpesorted[category][name] = data;
@@ -1120,10 +1133,12 @@ LivePathEffectEditor::removeEffect(Gtk::Expander * expander) {
             current_lpeitem = current_lpeitem->removeCurrentPathEffect(false);
         } 
     }
-    if (reload) {
-        current_lpeitem->setCurrentPathEffect(current_lperef_tmp.second);
+    if (current_lpeitem) {
+        if (reload) {
+            current_lpeitem->setCurrentPathEffect(current_lperef_tmp.second);
+        }
+        effect_list_reload(current_lpeitem);
     }
-    effect_list_reload(current_lpeitem);
     DocumentUndo::done(getDocument(), _("Remove path effect"), INKSCAPE_ICON("dialog-path-effects"));
 }
 
@@ -1173,14 +1188,14 @@ SPLPEItem * LivePathEffectEditor::clonetolpeitem()
             // convert to path, apply CLONE_ORIGINAL LPE, link it to the cloned path
 
             // test whether linked object is supported by the CLONE_ORIGINAL LPE
-            SPItem *orig = use->get_original();
+            SPItem *orig = use->trueOriginal();
             if ( is<SPShape>(orig) || is<SPGroup>(orig) || is<SPText>(orig) ) {
                 // select original
                 selection->set(orig);
 
                 // delete clone but remember its id and transform
                 auto id_copy = Util::to_opt(use->getAttribute("id"));
-                auto transform_copy = Util::to_opt(use->getAttribute("transform"));
+                auto transform_use = use->get_root_transform();
                 use->deleteObject(false);
                 use = nullptr;
 
@@ -1191,10 +1206,9 @@ SPLPEItem * LivePathEffectEditor::clonetolpeitem()
                 // Check that the cloning was successful. We don't want to change the ID of the original referenced path!
                 if (new_item && (new_item != orig)) {
                     new_item->setAttribute("id", Util::to_cstr(id_copy));
-                    if (Util::to_cstr(transform_copy)) {
-                        Geom::Affine item_t(Geom::identity());
-                        sp_svg_transform_read(Util::to_cstr(transform_copy), &item_t);
-                        new_item->transform *= item_t;
+                    if (transform_use != Geom::identity()) {
+                        // update use real transform
+                        new_item->transform *= transform_use;
                         new_item->doWriteTransform(new_item->transform);
                         new_item->requestDisplayUpdate(SP_OBJECT_MODIFIED_FLAG);
                     }

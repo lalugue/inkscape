@@ -483,11 +483,9 @@ void LPEBool::doBeforeEffect(SPLPEItem const *lpeitem)
             }
         }
     }
-    bool active = true;
-    if (operand_item.lperef && operand_item.lperef->isAttached() && operand_item.lperef.get()->getObject() == nullptr) {
-        active = false;
-    }
-    if (!active && !is_load) {
+    if (!is_load && !isOnClipboard() && operand_item.lperef && 
+        operand_item.lperef->isAttached() && operand_item.lperef.get()->getObject() == nullptr) 
+    {
         operand_item.unlink();
         return;
     }

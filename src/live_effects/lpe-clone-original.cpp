@@ -282,25 +282,22 @@ LPECloneOriginal::doBeforeEffect (SPLPEItem const* lpeitem){
     if (!document) {
         return;
     }
-    bool active = true;
-    if (linkeditem.lperef && linkeditem.lperef->isAttached() && linkeditem.lperef.get()->getObject() == nullptr) {
-        active = false;
-    }
-    if (!active) {
+    if (!is_load && !isOnClipboard() && linkeditem.lperef && 
+        linkeditem.lperef->isAttached() && linkeditem.lperef.get()->getObject() == nullptr) 
+    {
         linkeditem.unlink();
         return;
     }
-    
+    bool init = false;
+    if (!linkeditem.linksToItem() || isOnClipboard()) {
+        linkeditem.read_from_SVG();
+        init = true;
+    } 
     if (linkeditem.linksToItem()) {
         if (!linkeditem.isConnected() && linkeditem.getObject()) {
             linkeditem.start_listening(linkeditem.getObject());
             sp_lpe_item_update_patheffect(sp_lpe_item, false, false, true);
             return;
-        }
-        sp_lpe_item = nullptr;
-        auto lpeitems = getCurrrentLPEItems();
-        if (lpeitems.size()) {
-            sp_lpe_item = lpeitems[0];
         }
         auto orig = cast<SPItem>(linkeditem.getObject());
         if(!orig) {
@@ -311,7 +308,7 @@ LPECloneOriginal::doBeforeEffect (SPLPEItem const* lpeitem){
         auto *dest_path = cast<SPPath>(sp_lpe_item);
         auto *dest_shape = cast<SPShape>(sp_lpe_item);
         const gchar * id = getLPEObj()->getAttribute("linkeditem");
-        bool init = linked == "" || g_strcmp0(id, linked.c_str()) != 0;
+        init = init || linked == "" || g_strcmp0(id, linked.c_str()) != 0;
         /* if (sp_lpe_item->getRepr()->attribute("style")) {
             init = false;
         } */
@@ -351,35 +348,54 @@ LPECloneOriginal::doBeforeEffect (SPLPEItem const* lpeitem){
     }
 }
 
+bool LPECloneOriginal::getHolderRemove() {
+    // this leave a empty path item but keep clone
+    std::vector<SPLPEItem *> lpeitems = getCurrrentLPEItems();
+    if (!holderRemove && lpeitems.size() == 1 && !keep_paths && !on_remove_all) {
+        if (lpeitems[0] && lpeitems[0]->getAttribute("class")) {
+            Glib::ustring fromclone = sp_lpe_item->getAttribute("class");
+            size_t pos = fromclone.find("fromclone");
+            if (pos != Glib::ustring::npos && !lpeitems[0]->document->isSeeking()) {
+                if (linkeditem.lperef->getObject() && SP_ACTIVE_DESKTOP) {
+                    holderRemove = true;
+                    return holderRemove;
+                }
+            }
+        }
+    }
+    return false;
+}
+
 void LPECloneOriginal::doOnRemove(SPLPEItem const *lpeitem)
 {
     // this leave a empty path item but keep clone
-    std::vector<SPLPEItem *> lpeitems = getCurrrentLPEItems();
-    if (lpeitems.size() == 1) {
-        sp_lpe_item = lpeitems[0];
-        if (sp_lpe_item && sp_lpe_item->getAttribute("class")) {
-            Glib::ustring fromclone = sp_lpe_item->getAttribute("class");
+    if (holderRemove && lpeitem) {
+        if (lpeitem->getAttribute("class")) {
+            Glib::ustring fromclone = lpeitem->getAttribute("class");
             size_t pos = fromclone.find("fromclone");
-            if (pos != Glib::ustring::npos && !sp_lpe_item->document->isSeeking()) {
+            if (pos != Glib::ustring::npos && !lpeitem->document->isSeeking()) {
                 auto transform_copy = Util::to_opt(sp_lpe_item->getAttribute("transform"));
-                linkeditem.quit_listening();
-                SPObject *owner = linkeditem.lperef->getObject();
-                if (owner) {
-                    SPDesktop *desktop = SP_ACTIVE_DESKTOP;
-                    if (desktop) {
-                        desktop->getSelection()->clone();
-                        SPUse *clone;
-                        if (( clone = cast<SPUse>(desktop->getSelection()->singleItem()))) {
-                            gchar *href_str = g_strdup_printf("#%s", owner->getAttribute("id"));
-                            clone->setAttribute("xlink:href", href_str);
-                            clone->setAttribute("transform", Util::to_cstr(transform_copy));
-                            g_free(href_str);
+                if (SPObject *owner = linkeditem.lperef->getObject()) {
+                    auto oset = ObjectSet(lpeitem->document);
+                    oset.add(owner);
+                    oset.clone(true);
+                    if (SPUse *clone = cast<SPUse>(oset.singleItem())) {
+                        auto transform_use = clone->get_root_transform();
+                        clone->transform *= transform_use.inverse();
+                        if (Util::to_cstr(transform_copy)) {
+                            Geom::Affine item_t(Geom::identity());
+                            sp_svg_transform_read(Util::to_cstr(transform_copy), &item_t);
+                            clone->transform *= item_t;
                         }
+                        // update use real transform
+                        clone->doWriteTransform(clone->transform);
+                        clone->requestDisplayUpdate(SP_OBJECT_MODIFIED_FLAG);
                     }
                 }
             }
         }
     }
+    linkeditem.quit_listening();
     linkeditem.unlink();
 }
 
