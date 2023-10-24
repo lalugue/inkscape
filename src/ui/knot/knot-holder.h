@@ -62,7 +62,7 @@ public:
     void knot_ungrabbed_handler(SPKnot *knot, unsigned int state);
     void transform_selected(Geom::Affine transform);
     void add(KnotHolderEntity *e);
-
+    void remove(KnotHolderEntity *e);
     void add_pattern_knotholder();
     void add_hatch_knotholder();
     void add_filter_knotholder();

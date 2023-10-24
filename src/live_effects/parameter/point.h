@@ -69,7 +69,7 @@ private:
     bool on_button_release(GdkEventButton* button_event);
     Geom::Point defvalue;
     bool liveupdate;
-    KnotHolder * _knotholder = nullptr;
+    KnotHolderEntity *_knot_entity = nullptr;
     Inkscape::CanvasItemCtrlShape knot_shape = Inkscape::CANVAS_ITEM_CTRL_SHAPE_DIAMOND;
     Inkscape::CanvasItemCtrlMode knot_mode = Inkscape::CANVAS_ITEM_CTRL_MODE_XOR;
     guint32 knot_color = 0xffffff00;
