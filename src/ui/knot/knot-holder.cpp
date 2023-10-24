@@ -351,6 +351,20 @@ void KnotHolder::add(KnotHolderEntity *e)
     entity.push_back(e);
 }
 
+void KnotHolder::remove(KnotHolderEntity *e)
+{
+    std::size_t counter = -1;
+    for (auto & i : entity) {
+        ++ counter;
+        if (e == i) {
+            entity.remove_if([i=&i](auto& x){return &x==i;});
+            delete i;
+            break;
+        }
+    }
+    entity.clear(); // is this necessary?
+}
+
 void KnotHolder::add_pattern_knotholder()
 {
     if (is<SPPattern>(item->style->getFillPaintServer())) {

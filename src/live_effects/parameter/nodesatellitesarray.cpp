@@ -38,17 +38,8 @@ NodeSatelliteArrayParam::NodeSatelliteArrayParam(const Glib::ustring &label, con
                                                  const Glib::ustring &key, Inkscape::UI::Widget::Registry *wr,
                                                  Effect *effect)
     : ArrayParam<std::vector<NodeSatellite>>(label, tip, key, wr, effect, 0)
-    , _knotholder(nullptr)
 {
     param_widget_is_visible(false);
-}
-
-NodeSatelliteArrayParam::~NodeSatelliteArrayParam()
-{
-    if (_knotholder) {
-        _knotholder->clear();
-        _knotholder = nullptr;
-    }
 }
 
 void NodeSatelliteArrayParam::set_oncanvas_looks(Inkscape::CanvasItemCtrlShape shape, Inkscape::CanvasItemCtrlMode mode,
@@ -201,7 +192,6 @@ void NodeSatelliteArrayParam::param_transform_multiply(Geom::Affine const &postm
 
 void NodeSatelliteArrayParam::addKnotHolderEntities(KnotHolder *knotholder, SPItem *item, bool mirror)
 {
-    _knotholder = knotholder;
     if (!_last_pathvector_nodesatellites) {
         return;
     }
@@ -239,7 +229,7 @@ void NodeSatelliteArrayParam::addKnotHolderEntities(KnotHolder *knotholder, SPIt
                 FilletChamferKnotHolderEntity *e = new FilletChamferKnotHolderEntity(this, index);
                 e->create(nullptr, item, knotholder, Inkscape::CANVAS_ITEM_CTRL_TYPE_LPE, "LPE:Chamfer",
                           tip, _knot_color);
-                _knotholder->add(e);
+                knotholder->add(e);
                 e->knot->setMode(CANVAS_ITEM_CTRL_MODE_COLOR);
                 e->knot->setFill(0xffffffff, 0x44ff44ff, 0x44ff44ff, 0xffffffff);
                 e->knot->setStroke(0x555555ff, 0x555555ff, 0x555555ff, 0x555555ff);
@@ -271,7 +261,6 @@ void NodeSatelliteArrayParam::updateAmmount(double amount)
 
 void NodeSatelliteArrayParam::addKnotHolderEntities(KnotHolder *knotholder, SPItem *item)
 {
-    _knotholder = knotholder;
     addKnotHolderEntities(knotholder, item, true);
 }
 

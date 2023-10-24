@@ -46,7 +46,6 @@ public:
     //void convertUnit();
     void updateChamferSteps();
     void updateAmount();
-    void refreshKnots();
     bool helperpath;
     NodeSatelliteArrayParam nodesatellites_param;
 
