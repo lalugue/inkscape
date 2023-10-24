@@ -66,9 +66,9 @@ Geom::Coord GridSnapper::getSnapperTolerance() const
     return _snapmanager->snapprefs.getGridTolerance() / zoom;
 }
 
-bool GridSnapper::getSnapperAlwaysSnap() const
+bool GridSnapper::getSnapperAlwaysSnap(SnapSourceType const &/*source*/) const
 {
-    return _snapmanager->snapprefs.getGridTolerance() == 10000; //TODO: Replace this threshold of 10000 by a constant; see also tolerance-slider.cpp
+    return Preferences::get()->getBool("/options/snap/grid/always", false);
 }
 
 LineSnapper::LineList GridSnapper::_getSnapLines(Geom::Point const &p) const
@@ -87,17 +87,17 @@ LineSnapper::LineList GridSnapper::_getSnapLines(Geom::Point const &p) const
 
 void GridSnapper::_addSnappedLine(IntermSnapResults &isr, Geom::Point const &snapped_point, Geom::Coord const &snapped_distance,  SnapSourceType const &source, long source_num, Geom::Point const &normal_to_line, Geom::Point const &point_on_line) const
 {
-    isr.grid_lines.emplace_back(snapped_point, snapped_distance, source, source_num, SNAPTARGET_GRID, getSnapperTolerance(), getSnapperAlwaysSnap(), normal_to_line, point_on_line);
+    isr.grid_lines.emplace_back(snapped_point, snapped_distance, source, source_num, SNAPTARGET_GRID, getSnapperTolerance(), getSnapperAlwaysSnap(source), normal_to_line, point_on_line);
 }
 
 void GridSnapper::_addSnappedPoint(IntermSnapResults &isr, Geom::Point const &snapped_point, Geom::Coord const &snapped_distance, SnapSourceType const &source, long source_num, bool constrained_snap) const
 {
-    isr.points.emplace_back(snapped_point, source, source_num, SNAPTARGET_GRID, snapped_distance, getSnapperTolerance(), getSnapperAlwaysSnap(), constrained_snap, true);
+    isr.points.emplace_back(snapped_point, source, source_num, SNAPTARGET_GRID, snapped_distance, getSnapperTolerance(), getSnapperAlwaysSnap(source), constrained_snap, true);
 }
 
 void GridSnapper::_addSnappedLinePerpendicularly(IntermSnapResults &isr, Geom::Point const &snapped_point, Geom::Coord const &snapped_distance, SnapSourceType const &source, long source_num, bool constrained_snap) const
 {
-    isr.points.emplace_back(snapped_point, source, source_num, SNAPTARGET_GRID_PERPENDICULAR, snapped_distance, getSnapperTolerance(), getSnapperAlwaysSnap(), constrained_snap, true);
+    isr.points.emplace_back(snapped_point, source, source_num, SNAPTARGET_GRID_PERPENDICULAR, snapped_distance, getSnapperTolerance(), getSnapperAlwaysSnap(source), constrained_snap, true);
 }
 
 /**

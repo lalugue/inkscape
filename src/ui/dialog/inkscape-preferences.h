@@ -228,6 +228,11 @@ protected:
     UI::Widget::PrefCheckButton _snap_closest_only;
     UI::Widget::PrefCheckButton _snap_mouse_pointer;
     UI::Widget::PrefCheckButton _snap_indicator_distance;
+    UI::Widget::PrefCheckButton _snap_always_grid;
+    UI::Widget::PrefCheckButton _snap_always_guide;
+    UI::Widget::PrefCheckButton _snap_always_object;
+    UI::Widget::PrefCheckButton _snap_always_align;
+    UI::Widget::PrefCheckButton _snap_always_dist;
 
     UI::Widget::PrefCombo       _steps_rot_snap;
     UI::Widget::PrefCheckButton _steps_rot_relative;

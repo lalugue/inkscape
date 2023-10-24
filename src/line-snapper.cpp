@@ -40,8 +40,8 @@ void Inkscape::LineSnapper::freeSnap(IntermSnapResults &isr,
 
         Geom::Point const p_proj = Geom::projection(p.getPoint(), Geom::Line(p1, p2));
         Geom::Coord const dist = Geom::L2(p_proj - p.getPoint());
-        //Store any line that's within snapping range
-        if (dist < getSnapperTolerance()) {
+        //Store any line that's within snapping range, adds the basic line (not the perp or origin) if always snap is true
+        if (getSnapperAlwaysSnap(p.getSourceType()) || dist < getSnapperTolerance()) {
             _addSnappedLine(isr, p_proj, dist, p.getSourceType(), p.getSourceNum(), line.first, line.second);
             // For any line that's within range, we will also look at it's "point on line" p1. For guides
             // this point coincides with its origin; for grids this is of no use, but we cannot

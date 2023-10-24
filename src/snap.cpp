@@ -652,7 +652,7 @@ Inkscape::SnappedPoint SnapManager::findBestSnap(Inkscape::SnapCandidatePoint co
         // std::cout << "sp = " << (*i).getPoint() << " | source = " << (*i).getSource() << " | target = " << (*i).getTarget();
         bool onScreen = _desktop->get_display_area().contains((*i).getPoint());
         if (onScreen || allowOffScreen) { // Only snap to points which are not off the screen
-            if ((*i).getSnapDistance() <= (*i).getTolerance()) { // Only snap to points within snapping range
+            if ((*i).getAlwaysSnap() || (*i).getSnapDistance() <= (*i).getTolerance()) { // Only snap to points within snapping range
                 // if it's the first point, or if it is closer than the best snapped point so far
                 if (i == sp_list.begin() || bestSnappedPoint.isOtherSnapBetter(*i, false)) {
                     // then prefer this point over the previous one

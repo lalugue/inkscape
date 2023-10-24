@@ -29,7 +29,7 @@ public:
     bool ThisSnapperMightSnap() const override;
 
     Geom::Coord getSnapperTolerance() const override; //returns the tolerance of the snapper in screen pixels (i.e. independent of zoom)
-    bool getSnapperAlwaysSnap() const override; //if true, then the snapper will always snap, regardless of its tolerance
+    bool getSnapperAlwaysSnap(SnapSourceType const &source) const override; //if true, then the snapper will always snap, regardless of its tolerance
 
 private:
     LineList _getSnapLines(Geom::Point const &p) const override;

@@ -2609,16 +2609,16 @@ void InkscapePreferences::initPageBehavior()
     _snap_indicator.init( _("Enable snap indicator"), "/options/snapindicator/value", true);
     _page_snapping.add_line( true, "", _snap_indicator, "",
                              _("After snapping, a symbol is drawn at the point that has snapped"));
-
     _snap_indicator.changed_signal.connect( sigc::mem_fun(_snap_persistence, &Gtk::Widget::set_sensitive) );
+
+    _snap_indicator_distance.init( _("Show snap distance in case of alignment or distribution snap"), "/options/snapindicatordistance/value", false);
+    _page_snapping.add_line( true, "", _snap_indicator_distance, "",
+                             _("Show snap distance in case of alignment or distribution snap"));
 
     _snap_persistence.init("/options/snapindicatorpersistence/value", 0.1, 10, 0.1, 1, 2, 1);
     _page_snapping.add_line( true, _("Snap indicator persistence (in seconds):"), _snap_persistence, "",
                              _("Controls how long the snap indicator message will be shown, before it disappears"), true);
 
-    _snap_indicator_distance.init( _("Show snap distance in case of alignment or distribution snap"), "/options/snapindicatordistance/value", false);
-    _page_snapping.add_line( true, "", _snap_indicator_distance, "",
-                             _("Show snap distance in case of alignment or distribution snap"));
 
     _page_snapping.add_group_header( _("What should snap"));
 
@@ -2626,13 +2626,13 @@ void InkscapePreferences::initPageBehavior()
     _page_snapping.add_line( true, "", _snap_closest_only, "",
                              _("Only try to snap the node that is initially closest to the mouse pointer"));
 
-    _snap_weight.init("/options/snapweight/value", 0, 1, 0.1, 0.2, 0.5, 1);
-    _page_snapping.add_line( true, _("_Weight factor:"), _snap_weight, "",
-                             _("When multiple snap solutions are found, then Inkscape can either prefer the closest transformation (when set to 0), or prefer the node that was initially the closest to the pointer (when set to 1)"), true);
-
     _snap_mouse_pointer.init( _("Snap the mouse pointer when dragging a constrained knot"), "/options/snapmousepointer/value", false);
     _page_snapping.add_line( true, "", _snap_mouse_pointer, "",
                              _("When dragging a knot along a constraint line, then snap the position of the mouse pointer instead of snapping the projection of the knot onto the constraint line"));
+
+    _snap_weight.init("/options/snapweight/value", 0, 1, 0.1, 0.2, 0.5, 1);
+    _page_snapping.add_line( true, _("_Weight factor:"), _snap_weight, "",
+                             _("When multiple snap solutions are found, then Inkscape can either prefer the closest transformation (when set to 0), or prefer the node that was initially the closest to the pointer (when set to 1)"), true);
 
     _page_snapping.add_group_header( _("Delayed snap"));
 
@@ -2640,6 +2640,24 @@ void InkscapePreferences::initPageBehavior()
     _page_snapping.add_line( true, _("Delay (in seconds):"), _snap_delay, "",
                              _("Postpone snapping as long as the mouse is moving, and then wait an additional fraction of a second. This additional delay is specified here. When set to zero or to a very small number, snapping will be immediate."), true);
 
+    _page_snapping.add_group_header( _("Always Snap"));
+
+    _snap_always_grid.init(_("Always snap to grid"), "/options/snap/grid/always", false);
+    _page_snapping.add_line(true, "", _snap_always_grid, "", _("Always snap to a grid, ignoring thresholds."));
+
+    _snap_always_guide.init(_("Always snap to guides"), "/options/snap/guide/always", false);
+    _page_snapping.add_line(true, "", _snap_always_guide, "", _("Always snap to guidelines, ignoring thresholds."));
+
+    _page_snapping.add_group_header( _("Also Snap while Always Snapping"));
+
+    _snap_always_object.init(_("Allow object snapping"), "/options/snap/object/always", false);
+    _page_snapping.add_line(true, "", _snap_always_object, "", _("Allow object snapping while always snapping to grid or guides, if object is closer."));
+
+    _snap_always_align.init(_("Allow alignment"), "/options/snap/alignment/always", false);
+    _page_snapping.add_line(true, "", _snap_always_align, "", _("Allow alignment snapping while always snapping to grid or guides, if alignment is closer."));
+
+    _snap_always_dist.init(_("Allow distribution"), "/options/snap/distribution/always", false);
+    _page_snapping.add_line(true, "", _snap_always_dist, "", _("Allow distribution snapping while always snapping to grid or guides, if distribuition is closer."));
 
     this->AddPage(_page_snapping, _("Snapping"), iter_behavior, PREFS_PAGE_BEHAVIOR_SNAPPING);
 

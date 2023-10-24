@@ -43,7 +43,7 @@ public:
     virtual ~Snapper() = default;
 
     virtual Geom::Coord getSnapperTolerance() const = 0; //returns the tolerance of the snapper in screen pixels (i.e. independent of zoom)
-    virtual bool getSnapperAlwaysSnap() const = 0; //if true, then the snapper will always snap, regardless of its tolerance
+    virtual bool getSnapperAlwaysSnap(SnapSourceType const &source) const = 0; //if true, then the snapper will always snap, regardless of its tolerance
 
     /**
     *  \return true if this Snapper will snap at least one kind of point.

@@ -324,6 +324,7 @@ void Inkscape::DistributionSnapper::_snapEquidistantPoints(IntermSnapResults &is
     if (p.getSourceType() != SNAPSOURCE_BBOX_MIDPOINT)
         return;
 
+    bool always = getSnapperAlwaysSnap(p.getSourceType());
     Geom::Coord equal_dist;
 
     SnappedPoint sr, sl, sx, su, sd, sy;
@@ -363,7 +364,7 @@ void Inkscape::DistributionSnapper::_snapEquidistantPoints(IntermSnapResults &is
             }
 
             dist_x = abs(offset);
-            sx = SnappedPoint(target, vecRight, bbox, equal_dist, p.getSourceType(), p.getSourceNum(), SNAPTARGET_DISTRIBUTION_RIGHT, dist_x, getSnapperTolerance(), getSnapperAlwaysSnap(), false, true);
+            sx = SnappedPoint(target, vecRight, bbox, equal_dist, p.getSourceType(), p.getSourceNum(), SNAPTARGET_DISTRIBUTION_RIGHT, dist_x, getSnapperTolerance(), always, false, true);
             snap_x = true;
         }
     }
@@ -401,7 +402,7 @@ void Inkscape::DistributionSnapper::_snapEquidistantPoints(IntermSnapResults &is
             }
 
             dist_x = abs(offset);
-            sx = SnappedPoint(target, vecLeft, bbox, equal_dist, p.getSourceType(), p.getSourceNum(), SNAPTARGET_DISTRIBUTION_LEFT, dist_x, getSnapperTolerance(), getSnapperAlwaysSnap(), false, true);
+            sx = SnappedPoint(target, vecLeft, bbox, equal_dist, p.getSourceType(), p.getSourceNum(), SNAPTARGET_DISTRIBUTION_LEFT, dist_x, getSnapperTolerance(), always, false, true);
             snap_x = true;
         }
     }
@@ -420,7 +421,7 @@ void Inkscape::DistributionSnapper::_snapEquidistantPoints(IntermSnapResults &is
             _correctSelectionBBox(target, p.getPoint(), *bbox_to_snap);
 
             equal_dist = bbox.min().x() - vecLeft.front().max().x();
-            sx = SnappedPoint(target, bboxes, bbox, equal_dist, p.getSourceType(), p.getSourceNum(), SNAPTARGET_DISTRIBUTION_X, offset, getSnapperTolerance(), getSnapperAlwaysSnap(), false, true);
+            sx = SnappedPoint(target, bboxes, bbox, equal_dist, p.getSourceType(), p.getSourceNum(), SNAPTARGET_DISTRIBUTION_X, offset, getSnapperTolerance(), always, false, true);
             snap_x = true;
         }
     }
@@ -460,7 +461,7 @@ void Inkscape::DistributionSnapper::_snapEquidistantPoints(IntermSnapResults &is
             }
 
             dist_y = abs(offset);
-            sy = SnappedPoint(target, vecUp, bbox, equal_dist, p.getSourceType(), p.getSourceNum(), SNAPTARGET_DISTRIBUTION_UP, dist_y, getSnapperTolerance(), getSnapperAlwaysSnap(), false, true);
+            sy = SnappedPoint(target, vecUp, bbox, equal_dist, p.getSourceType(), p.getSourceNum(), SNAPTARGET_DISTRIBUTION_UP, dist_y, getSnapperTolerance(), always, false, true);
             snap_y = true;
         }
     }
@@ -498,7 +499,7 @@ void Inkscape::DistributionSnapper::_snapEquidistantPoints(IntermSnapResults &is
             }
 
             dist_y = abs(offset);
-            sy = SnappedPoint(target, vecDown, bbox, equal_dist, p.getSourceType(), p.getSourceNum(), SNAPTARGET_DISTRIBUTION_DOWN, dist_y, getSnapperTolerance(), getSnapperAlwaysSnap(), false, true);
+            sy = SnappedPoint(target, vecDown, bbox, equal_dist, p.getSourceType(), p.getSourceNum(), SNAPTARGET_DISTRIBUTION_DOWN, dist_y, getSnapperTolerance(), always, false, true);
             snap_y = true;
         }
     }
@@ -517,7 +518,7 @@ void Inkscape::DistributionSnapper::_snapEquidistantPoints(IntermSnapResults &is
             _correctSelectionBBox(target, p.getPoint(), *bbox_to_snap);
 
             equal_dist = bbox.min().y() - vecUp.front().max().y();
-            sy = SnappedPoint(target, bboxes, bbox, equal_dist, p.getSourceType(), p.getSourceNum(), SNAPTARGET_DISTRIBUTION_Y, offset, getSnapperTolerance(), getSnapperAlwaysSnap(), false, true);
+            sy = SnappedPoint(target, bboxes, bbox, equal_dist, p.getSourceType(), p.getSourceNum(), SNAPTARGET_DISTRIBUTION_Y, offset, getSnapperTolerance(), always, false, true);
             snap_y = true;
         }
     }
@@ -531,7 +532,7 @@ void Inkscape::DistributionSnapper::_snapEquidistantPoints(IntermSnapResults &is
 
         // Do not need to correct here, already did that earlier for each direction separately
         //_correctSelectionBBox(target, p.getPoint(), *bbox_to_snap);
-        auto si = SnappedPoint(target, bboxes_x, bboxes_y, bbox, sx.getDistributionDistance(), sy.getDistributionDistance(), p.getSourceType(), p.getSourceNum(), SNAPTARGET_DISTRIBUTION_XY, offset, getSnapperTolerance(), getSnapperAlwaysSnap(), false, true);
+        auto si = SnappedPoint(target, bboxes_x, bboxes_y, bbox, sx.getDistributionDistance(), sy.getDistributionDistance(), p.getSourceType(), p.getSourceNum(), SNAPTARGET_DISTRIBUTION_XY, offset, getSnapperTolerance(), always, false, true);
         isr.points.push_back(si);
         return;
     }
@@ -610,10 +611,9 @@ bool Inkscape::DistributionSnapper::ThisSnapperMightSnap() const
     return true;
 }
 
-bool Inkscape::DistributionSnapper::getSnapperAlwaysSnap() const
+bool Inkscape::DistributionSnapper::getSnapperAlwaysSnap(SnapSourceType const &/*source*/) const
 {
-    // TODO: Replace this threshold of 10000 by a constant; see also tolerance-slider.cpp
-    return _snapmanager->snapprefs.getDistributionTolerance() == 10000;
+    return Preferences::get()->getBool("/options/snap/distribution/always", false);
 }
 
 Geom::Coord Inkscape::DistributionSnapper::getSnapperTolerance() const

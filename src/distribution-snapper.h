@@ -47,7 +47,7 @@ public:
      */
     Geom::Coord getSnapperTolerance() const override; //returns the tolerance of the snapper in screen pixels (i.e. independent of zoom)
 
-    bool getSnapperAlwaysSnap() const override; //if true, then the snapper will always snap, regardless of its tolerance
+    bool getSnapperAlwaysSnap(SnapSourceType const &source) const override; //if true, then the snapper will always snap, regardless of its tolerance
 
     void freeSnap(IntermSnapResults &isr,
                   Inkscape::SnapCandidatePoint const &p,

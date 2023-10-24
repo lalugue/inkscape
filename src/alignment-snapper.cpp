@@ -139,6 +139,7 @@ void Inkscape::AlignmentSnapper::_snapBBoxPoints(IntermSnapResults &isr,
     bool success_y = false;
     bool intersection = false;
     bool strict_snapping = _snapmanager->snapprefs.getStrictSnapping();
+    bool always = getSnapperAlwaysSnap(p.getSourceType());
 
     for (const auto & k : *_points_to_snap_to) {
         if (_allowSourceToSnapToTarget(p.getSourceType(), k.getTargetType(), strict_snapping)) {
@@ -167,7 +168,7 @@ void Inkscape::AlignmentSnapper::_snapBBoxPoints(IntermSnapResults &isr,
                                  is_target_node ? SNAPTARGET_ALIGNMENT_HANDLE : k.getTargetType(),
                                  distX,
                                  getSnapperTolerance(),
-                                 getSnapperAlwaysSnap(),
+                                 always,
                                  false,
                                  true,
                                  k.getTargetBBox());
@@ -182,7 +183,7 @@ void Inkscape::AlignmentSnapper::_snapBBoxPoints(IntermSnapResults &isr,
                                  is_target_node ? SNAPTARGET_ALIGNMENT_HANDLE : k.getTargetType(),
                                  distY,
                                  getSnapperTolerance(),
-                                 getSnapperAlwaysSnap(),
+                                 always,
                                  false,
                                  true,
                                  k.getTargetBBox());
@@ -202,7 +203,7 @@ void Inkscape::AlignmentSnapper::_snapBBoxPoints(IntermSnapResults &isr,
                                      SNAPTARGET_ALIGNMENT_INTERSECTION,
                                      d,
                                      getSnapperTolerance(),
-                                     getSnapperAlwaysSnap(),
+                                     always,
                                      false,
                                      true,
                                      k.getTargetBBox());
@@ -301,9 +302,9 @@ bool Inkscape::AlignmentSnapper::ThisSnapperMightSnap() const
     return true;
 }
 
-bool Inkscape::AlignmentSnapper::getSnapperAlwaysSnap() const
+bool Inkscape::AlignmentSnapper::getSnapperAlwaysSnap(SnapSourceType const &/*source*/) const
 {
-    return _snapmanager->snapprefs.getAlignmentTolerance() == 10000; //TODO: Replace this threshold of 10000 by a constant; see also tolerance-slider.cpp
+    return Preferences::get()->getBool("/options/snap/alignment/always", false);
 }
 
 Geom::Coord Inkscape::AlignmentSnapper::getSnapperTolerance() const
