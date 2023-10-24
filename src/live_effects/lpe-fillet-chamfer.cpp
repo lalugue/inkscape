@@ -233,8 +233,8 @@ Gtk::Widget *LPEFilletChamfer::newWidget()
 
 void LPEFilletChamfer::refreshKnots()
 {
-    if (nodesatellites_param._knoth) {
-        nodesatellites_param._knoth->update_knots();
+    if (nodesatellites_param._knotholder) {
+        nodesatellites_param._knotholder->update_knots();
     }
 }
 
