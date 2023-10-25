@@ -17,14 +17,14 @@
 #include <glibmm/i18n.h>
 
 #include "attributes.h"          // for SPAttr
-#include "curve.h"               // for Curve
+#include <2geom/curve.h>         // for Curve
 #include "display/curve.h"       // for SPCurve
 #include "helper/geom-curves.h"  // for is_straight_curve
 #include "object/sp-object.h"    // for SP_OBJECT_WRITE_BUILD
 #include "object/sp-shape.h"     // for SPShape
-#include "path.h"                // for Path, BaseIterator
-#include "pathvector.h"          // for PathVector
-#include "point.h"               // for Point
+#include <2geom/path.h>          // for Path, BaseIterator
+#include <2geom/pathvector.h>    // for PathVector
+#include <2geom/point.h>         // for Point
 #include "svg/stringstream.h"    // for SVGOStringStream
 #include "xml/document.h"        // for Document
 #include "xml/node.h"            // for Node

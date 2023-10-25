@@ -11,7 +11,7 @@
 #include "sp-linear-gradient.h"
 
 #include "attributes.h"                   // for SPAttr
-#include "rect.h"                         // for Rect
+#include <2geom/rect.h>                   // for Rect
 #include "style-internal.h"               // for SPIFontSize
 #include "style.h"                        // for SPStyle
 

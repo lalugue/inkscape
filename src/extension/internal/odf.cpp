@@ -34,18 +34,18 @@
 #include <utility>                        // for pair
 
 //# 2geom includes
+#include <2geom/affine.h>                 // for Affine
+#include <2geom/bezier-curve.h>           // for CubicBezier
+#include <2geom/coord.h>                  // for Dim2, X, Y
+#include <2geom/curve.h>                  // for Curve
 #include <2geom/pathvector.h>
 #include <2geom/transforms.h>
 #include "helper/geom.h"
 #include "helper/geom-curves.h"
 
 //# Inkscape includes
-#include "affine.h"                       // for Affine
 #include "attributes.h"                   // for SPAttr
-#include "bezier-curve.h"                 // for CubicBezier
 #include "color.h"                        // for SPColor
-#include "coord.h"                        // for Dim2, X, Y
-#include "curve.h"                        // for Curve
 #include "document.h"                     // for SPDocument
 #include "preferences.h"                  // for guint32
 #include "style-internal.h"               // for SPIPaint, SPIScale24, SPILe...

@@ -17,7 +17,7 @@
 
 #include <glibmm/i18n.h>
 
-#include "sbasis-to-bezier.h"   // for path_from_piecewise
+#include <2geom/sbasis-to-bezier.h> // for path_from_piecewise
 #include "object/sp-path.h"
 #include "svg/svg.h"
 #include "xml/node.h"

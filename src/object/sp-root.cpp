@@ -16,13 +16,13 @@
 
 #include "sp-root.h"
 
-#include "affine.h"                                  // for identity, Affine
+#include <2geom/affine.h>                            // for identity, Affine
 #include "attributes.h"                              // for SPAttr
 #include "display/drawing-group.h"                   // for DrawingGroup
 #include "display/drawing-item-ptr.h"                // for DrawingItemPtr
 #include "document.h"                                // for SPDocument
 #include "print.h"                                   // for SPPrintContext
-#include "rect.h"                                    // for Rect
+#include <2geom/rect.h>                              // for Rect
 #include "sp-defs.h"                                 // for SPDefs
 #include "sp-namedview.h"                            // for SPNamedView
 #include "sp-use.h"                                  // for SPUse

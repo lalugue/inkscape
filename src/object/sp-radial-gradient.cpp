@@ -11,7 +11,7 @@
 #include "sp-radial-gradient.h"
 
 #include "attributes.h"                   // for SPAttr
-#include "rect.h"                         // for Rect
+#include <2geom/rect.h>                   // for Rect
 #include "style.h"                        // for SPStyle
 
 #include "display/drawing-paintserver.h"  // for DrawingRadialGradient, Draw...
