@@ -189,7 +189,7 @@ void ObjectProperties::_init()
 
     /* Create the text view box for the object description */
     _ft_description.set_sensitive(false);
-    frame_desc->add(_ft_description);
+    frame_desc->set_child(_ft_description);
     _ft_description.set_margin(0);
 
     _tv_description.set_wrap_mode(Gtk::WrapMode::WORD);
@@ -212,7 +212,9 @@ void ObjectProperties::_init()
 
     _label_dpi.set_mnemonic_widget(_spin_dpi);
     // pressing enter in the label field is the same as clicking Set:
+#if GTKMM_CHECK_VERSION(4, 14, 0)
     _spin_dpi.signal_activate().connect(sigc::mem_fun(*this, &ObjectProperties::_labelChanged));
+#endif
 
     /* Check boxes */
     auto const hb_checkboxes = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL);
