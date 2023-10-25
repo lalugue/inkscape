@@ -148,7 +148,7 @@ std::vector<Gtk::Widget *> get_children(Gtk::Widget &widget)
 void remove_all_children(Gtk::Widget &widget)
 {
     for (auto const child: get_children(widget)) {
-        widget.remove(*child);
+        widget.unparent(*child);
     }
 }
 

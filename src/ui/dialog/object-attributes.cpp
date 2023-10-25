@@ -399,9 +399,8 @@ public:
         if (changed) {
             _table->change_object(anchor);
 
-            if (auto grid = dynamic_cast<Gtk::Grid*>(get_first_child(*_table))) {
+            if (auto grid = dynamic_cast<Gtk::Grid*>(_table->get_first_child())) {
                 auto button = Gtk::make_managed<Gtk::Button>();
-                button->show();
                 button->set_margin_start(4);
                 button->set_image_from_icon_name("object-pick");
                 button->signal_clicked().connect([=](){
