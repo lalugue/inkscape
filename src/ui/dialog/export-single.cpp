@@ -409,6 +409,7 @@ void SingleExport::loadExportHints()
     if (filename_modified || !_document || !_desktop) return;
 
     Glib::ustring old_filename = si_filename_entry.get_text();
+    Glib::ustring save_path = Glib::path_get_dirname(old_filename);
     Glib::ustring filename;
     Geom::Point dpi;
     switch (current_key) {
@@ -462,8 +463,11 @@ void SingleExport::loadExportHints()
         si_extension_cb.removeExtension(filename);
         ext->add_extension(filename);
     }
-
-    original_name = filename;
+    
+    original_name = save_path;
+    original_name.append(G_DIR_SEPARATOR_S);
+    original_name += filename;
+    filename = original_name;
     si_filename_entry.set_text(filename);
     si_filename_entry.set_position(filename.length());
 
