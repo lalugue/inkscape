@@ -246,8 +246,8 @@ along with Inkscape Extensions Manager.  If not, see <http://www.gnu.org/license
       <row>
         <col id="0">system</col>
         <col id="1" translatable="yes">System Default</col>
-        <col id="2"/>
-        <col id="3"/>
+        <col id="2"></col>
+        <col id="3"></col>
         <col id="4">0</col>
         <col id="5">0</col>
         <col id="6">0</col>
@@ -758,6 +758,7 @@ If you would like to get involved and make the next version of Inkscape even bet
                         <property name="orientation">vertical</property>
                         <child>
                           <object class="GtkImage">
+                            <property name="height-request">160</property>
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <property name="margin-left">10</property>
@@ -819,6 +820,7 @@ Contribute Time</property>
                         <property name="orientation">vertical</property>
                         <child>
                           <object class="GtkImage">
+                            <property name="height-request">160</property>
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <property name="margin-top">10</property>
