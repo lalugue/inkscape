@@ -1358,7 +1358,7 @@ static void update_latin_keys_group()
     latin_keys_group_valid = FALSE;
     latin_keys_groups.clear();
 
-    if (gdk_keymap_get_entries_for_keyval(Gdk::Display::get_default()->get_keymap(), GDK_KEY_a, &keys, &n_keys)) {
+    if (gdk_display_map_keyval(gdk_display_get_default(), GDK_KEY_a, &keys, &n_keys)) {
         for (int i = 0; i < n_keys; i++) {
             latin_keys_groups.insert(keys[i].group);
 
@@ -1376,7 +1376,7 @@ static void update_latin_keys_group()
  */
 void init_latin_keys_group()
 {
-    g_signal_connect(G_OBJECT(Gdk::Display::get_default()->get_keymap()), "keys-changed", G_CALLBACK(update_latin_keys_group), nullptr);
+    g_signal_connect(G_OBJECT(gdk_display_get_default()), "keys-changed", G_CALLBACK(update_latin_keys_group), nullptr);
     update_latin_keys_group();
 }
 
@@ -1392,11 +1392,14 @@ unsigned get_latin_keyval_impl(unsigned const event_keyval, unsigned const event
         // Keyboard group is a latin layout, so just use it.
         group = event_group;
     }
-
-    gdk_keymap_translate_keyboard_state(Gdk::Display::get_default()->get_keymap(),
-                                        event_keycode, event_state, group,
-                                        &keyval, nullptr, nullptr, &modifiers);
-
+    gdk_display_translate_key(gdk_display_get_default(),
+                              event_keycode,
+                              event_state,
+                              group,
+                              &keyval,
+                              nullptr,
+                              nullptr,
+                              &modifiers);
     if (consumed_modifiers) {
         *consumed_modifiers = modifiers;
     }
