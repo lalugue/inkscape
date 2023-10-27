@@ -126,7 +126,7 @@ FontSelectorToolbar::update_font ()
     try {
         row = font_lister->get_row_for_font ();
         family_combo.set_active (row);
-    } catch (...) {
+    } catch (FontLister::Exception) {
         std::cerr << "FontSelectorToolbar::update_font: Couldn't find row for family: "
                   << font_lister->get_font_family().raw() << std::endl;
     }
@@ -135,7 +135,7 @@ FontSelectorToolbar::update_font ()
     try {
         row = font_lister->get_row_for_style ();
         style_combo.set_active (row);
-    } catch (...) {
+    } catch (FontLister::Exception) {
         std::cerr << "FontSelectorToolbar::update_font: Couldn't find row for style: "
                   << font_lister->get_font_style().raw() << std::endl;
     }
@@ -176,8 +176,8 @@ FontSelectorToolbar::get_missing_fonts ()
         Gtk::TreeModel::Children children = font_lister->get_font_list()->children();
         for (auto iter2: children) {
             Gtk::TreeModel::Row row2 = *iter2;
-            Glib::ustring family2 = row2[font_lister->FontList.family];
-            bool onSystem2        = row2[font_lister->FontList.onSystem];
+            Glib::ustring family2 = row2[font_lister->font_list.family];
+            bool onSystem2        = row2[font_lister->font_list.onSystem];
             // CSS dictates that font family names are case insensitive.
             // This should really implement full Unicode case unfolding.
             if (onSystem2 && token.casefold().compare(family2.casefold()) == 0) {
