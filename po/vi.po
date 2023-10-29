@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: inkscape\n"
 "Report-Msgid-Bugs-To: inkscape-translator@lists.inkscape.org\n"
 "POT-Creation-Date: 2023-06-06 16:19+0200\n"
-"PO-Revision-Date: 2023-10-13 17:00+0100\n"
+"PO-Revision-Date: 2023-10-29 15:03+0000\n"
 "Last-Translator: Hoang Duy Tran <hoangduytran1960@googlemail.com>\n"
 "Language-Team: UK, Vietnamese <hoangduytran1960@gmail.com>\n"
 "Language: vi\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "Generated-By: Babel 2.11.0\n"
-"X-Generator: Poedit 3.4\n"
+"X-Generator: Poedit 3.4.1\n"
 
 #: ../../build/share/filters/filters.svg.h:2
 msgid "Fast Crop"
@@ -2163,7 +2163,7 @@ msgstr "Hình bán nguyệt tô kín"
 
 #: ../../build/share/markers/markers.svg.h:24
 msgid "Empty semicircle"
-msgstr "hình bán nguyệt rỗng"
+msgstr "Hình bán nguyệt rỗng"
 
 #: ../../build/share/markers/markers.svg.h:25
 msgid "Curvy cross"
@@ -2220,7 +2220,7 @@ msgstr "Nắp bịt đầu phẳng"
 
 #: ../../build/share/markers/markers.svg.h:38
 msgid "Serif cap"
-msgstr "Nắp bịt đầu Serif:"
+msgstr "Nắp bịt đầu Serif"
 
 #: ../../build/share/palettes/palettes.h:2
 msgctxt "Palette"
@@ -3565,7 +3565,7 @@ msgstr "Đường dọc tô bóng"
 
 #: ../../build/share/paint/patterns.svg.h:1
 msgid "Lines half circle shading "
-msgstr "Đường tô bóng nửa hình tròn"
+msgstr "Đường tô bóng nửa hình tròn "
 
 #: ../../build/share/paint/patterns.svg.h:1
 msgid "Triangles shading 5"
@@ -4914,7 +4914,7 @@ msgstr "Cửa nâng"
 #: ../../build/share/symbols/symbols.h:398
 msgctxt "Symbol"
 msgid "Steps"
-msgstr "Bước cầu thang"
+msgstr "Bước Bậc Thang"
 
 #: ../../build/share/symbols/symbols.h:387
 #: ../../build/share/symbols/symbols.h:399
@@ -8506,7 +8506,7 @@ msgstr "Đồng đều khoảng cách chiều ngang"
 #: ../src/actions/actions-object-align.cpp:783
 #: ../share/ui/align-and-distribute.ui:729
 msgid "Distribute horizontally with even horizontal gaps"
-msgstr "Phân bổ theo chiều ngang với các khoảng cách chiều ngang đồng đều."
+msgstr "Phân bổ theo chiều ngang với các khoảng cách chiều ngang đồng đều"
 
 #: ../src/actions/actions-object-align.cpp:784
 msgid "Even left edges"
@@ -8515,7 +8515,7 @@ msgstr "Đồng đều các cạnh trái"
 #: ../src/actions/actions-object-align.cpp:784
 #: ../share/ui/align-and-distribute.ui:678
 msgid "Distribute horizontally with even spacing between left edges"
-msgstr "Phân bổ theo chiều ngang với khoảng cách giữa các cạnh trái đồng đều với nhau."
+msgstr "Phân bổ theo chiều ngang với khoảng cách giữa các cạnh trái đồng đều với nhau"
 
 #: ../src/actions/actions-object-align.cpp:785
 msgid "Even horizontal centers"
@@ -8524,7 +8524,7 @@ msgstr "Đồng đều trung theo tâm ngang"
 #: ../src/actions/actions-object-align.cpp:785
 #: ../share/ui/align-and-distribute.ui:695
 msgid "Distribute horizontally with even spacing between centers"
-msgstr "Phân bổ theo chiều ngang với khoảng cách giữa các trung tâm đồng đều với nhau."
+msgstr "Phân bổ theo chiều ngang với khoảng cách giữa các trung tâm đồng đều với nhau"
 
 #: ../src/actions/actions-object-align.cpp:786
 msgid "Even right edges"
@@ -8533,7 +8533,7 @@ msgstr "Đồng đều các cạnh phải"
 #: ../src/actions/actions-object-align.cpp:786
 #: ../share/ui/align-and-distribute.ui:712
 msgid "Distribute horizontally with even spacing between right edges"
-msgstr "Phân bổ theo chiều ngang với khoảng cách giữa các cạnh phải đồng đều với nhau."
+msgstr "Phân bổ theo chiều ngang với khoảng cách giữa các cạnh phải đồng đều với nhau"
 
 #: ../src/actions/actions-object-align.cpp:787
 msgid "Even vertical gaps"
@@ -8542,7 +8542,7 @@ msgstr "Đồng đều khoảng cách chiều dọc"
 #: ../src/actions/actions-object-align.cpp:787
 #: ../share/ui/align-and-distribute.ui:814
 msgid "Distribute vertically with even vertical gaps"
-msgstr "Phân bổ theo chiều dọc với các khoảng cách dọc đồng đều với nhau."
+msgstr "Phân bổ theo chiều dọc với các khoảng cách dọc đồng đều với nhau"
 
 #: ../src/actions/actions-object-align.cpp:788
 msgid "Even top edges"
@@ -8551,7 +8551,7 @@ msgstr "Đồng đều các cạnh đỉnh"
 #: ../src/actions/actions-object-align.cpp:788
 #: ../share/ui/align-and-distribute.ui:763
 msgid "Distribute vertically with even spacing between top edges"
-msgstr "Phân bổ theo chiều dọc với khoảng cách giữa các cạnh đỉnh đồng đều với nhau."
+msgstr "Phân bổ theo chiều dọc với khoảng cách giữa các cạnh đỉnh đồng đều với nhau"
 
 #: ../src/actions/actions-object-align.cpp:789
 msgid "Even vertical centers"
@@ -8560,7 +8560,7 @@ msgstr "Đồng đều các trung tâm theo chiều dọc"
 #: ../src/actions/actions-object-align.cpp:789
 #: ../share/ui/align-and-distribute.ui:780
 msgid "Distribute vertically with even spacing between centers"
-msgstr "Phân bổ theo chiều dọc với khoảng cách giữa các trung tâm đồng đều với nhau."
+msgstr "Phân bổ theo chiều dọc với khoảng cách giữa các trung tâm đồng đều với nhau"
 
 #: ../src/actions/actions-object-align.cpp:790
 msgid "Even bottom edges"
@@ -8569,7 +8569,7 @@ msgstr "Đồng đều các cạnh đáy"
 #: ../src/actions/actions-object-align.cpp:790
 #: ../share/ui/align-and-distribute.ui:797
 msgid "Distribute vertically with even spacing between bottom edges"
-msgstr "Phân bổ theo chiều dọc khoảng cách giữa các cạnh đáy đồng đều với nhau."
+msgstr "Phân bổ theo chiều dọc khoảng cách giữa các cạnh đáy đồng đều với nhau"
 
 #: ../src/actions/actions-object-align.cpp:792
 #: ../src/actions/actions-object-align.cpp:793
@@ -8781,7 +8781,7 @@ msgstr "Đặt Cắt Xén Đối Tượng Đảo Nghịch"
 
 #: ../src/actions/actions-object.cpp:313
 msgid "Apply inverse clipping path to selection (Power Clip LPE)"
-msgstr "Áp dụng đường dẫn cắt khít đảo nghịch cho lựa chọn (Cắt Xén Quyền Lực LPE)"
+msgstr "Áp dụng đường dẫn cắt khít đảo nghịch cho lựa chọn (Cắt Xén Power LPE)"
 
 #: ../src/actions/actions-object.cpp:314
 msgid "Object Clip Release"
@@ -13922,7 +13922,7 @@ msgstr "9 - Nén Tốt Nhất"
 
 #: ../src/extension/internal/png-output.cpp:80
 msgid "pHYs DPI"
-msgstr "Lượng Chấm trong mỗi Insơ Anh"
+msgstr "lượng Chấm trong mỗi Insơ Anh"
 
 #: ../src/extension/internal/png-output.cpp:81
 msgid "Antialias"
@@ -15375,7 +15375,7 @@ msgstr "Thêm các dấu thước đo vào đối tượng với nhiều phân k
 #: ../src/live_effects/effect.cpp:286
 msgctxt "path effect"
 msgid "Power stroke"
-msgstr "Nét vẽ Quyền Lực"
+msgstr "Nét vẽ Power"
 
 #: ../src/live_effects/effect.cpp:289
 msgid "Create calligraphic strokes and control their variable width and curvature. This effect can also be used directly on the canvas with a pressure sensitive stylus and the Pencil tool."
@@ -15520,7 +15520,7 @@ msgstr "Tô phủ kín vào giữa nhiều cái"
 
 #: ../src/live_effects/effect.cpp:502
 msgid "Turn the path into a fill between multiple other open paths (e.g. between paths with PowerStroke applied to them)"
-msgstr "Biến vùng giữa nhiều đường dẫn mở khác nhau thành một vùng tô phủ kín (ví dụ: giữa các đường dẫn được áp dụng PowerStroke)"
+msgstr "Biến vùng giữa nhiều đường dẫn mở khác nhau thành một vùng tô phủ kín (ví dụ: giữa các đường dẫn được áp dụng Nét Vẽ Power)"
 
 #: ../src/live_effects/effect.cpp:513
 msgctxt "path effect"
@@ -15709,7 +15709,7 @@ msgstr "Tô phủ kín giữa các nét"
 
 #: ../src/live_effects/effect.cpp:801
 msgid "Turn the path into a fill between two other open paths (e.g. between two paths with PowerStroke applied to them)"
-msgstr "Biến vùng giữa hai đường dẫn khác nhau mở thành một vùng tô phủ kín (ví dụ: giữa hai đường dẫn đã được áp dụng PowerStroke)"
+msgstr "Biến vùng giữa hai đường dẫn khác nhau mở thành một vùng tô phủ kín (ví dụ: giữa hai đường dẫn đã được áp dụng Nét vẽ Power)"
 
 #: ../src/live_effects/effect.cpp:813
 msgctxt "path effect"
@@ -18048,7 +18048,7 @@ msgstr "Sắp xếp các điểm dịch chuyển chiểu theo giá trị thời 
 
 #: ../src/live_effects/lpe-powerstroke.cpp:165
 msgid "Smoothing type"
-msgstr "Kiểu làm mịn:"
+msgstr "Kiểu làm mịn"
 
 #: ../src/live_effects/lpe-powerstroke.cpp:166
 #: ../share/extensions/fractalize.inx:6
@@ -18079,7 +18079,7 @@ msgstr "Xác định hình dạng của đầu đường dẫn"
 # corners of paths. It can be "miter", "round" or "bevel".
 #: ../src/live_effects/lpe-powerstroke.cpp:169
 msgid "Join"
-msgstr "Đầu Nối:"
+msgstr "Đầu Nối"
 
 #: ../src/live_effects/lpe-powerstroke.cpp:170
 msgid "Miter limit"
@@ -18092,7 +18092,7 @@ msgstr "Chiều dài tối đa của góc cắt (trong đơn vị chiều rộng
 
 #: ../src/live_effects/lpe-powerstroke.cpp:171
 msgid "End cap"
-msgstr "Nắp cuối:"
+msgstr "Nắp cuối"
 
 #: ../src/live_effects/lpe-powerstroke.cpp:171
 msgid "Determines the shape of the path's end"
@@ -18257,7 +18257,7 @@ msgstr "Sự biến thiên toàn cầu của khoảng cách giữa các vùng g�
 
 #: ../src/live_effects/lpe-rough-hatches.cpp:220
 msgid "Growth"
-msgstr "Phát triển:"
+msgstr "Phát triển"
 
 #: ../src/live_effects/lpe-rough-hatches.cpp:220
 msgid "Growth of distance between hatches."
@@ -18645,7 +18645,7 @@ msgstr "Lặp lại"
 
 #: ../src/live_effects/lpe-simplify.cpp:27
 msgid "Change number of repeats of simplifying operation. Useful for complex paths that need to be significantly simplified. "
-msgstr "Thay đổi số lần lặp lại thao tác đơn giản hóa. Hữu ích đối với các đường dẫn phức tạp cần được đơn giản hóa một cách đáng kể."
+msgstr "Thay đổi số lần lặp lại thao tác đơn giản hóa. Hữu ích đối với các đường dẫn phức tạp cần được đơn giản hóa một cách đáng kể. "
 
 #: ../src/live_effects/lpe-simplify.cpp:28
 msgid "Drag slider to set the amount of simplification"
@@ -21900,7 +21900,7 @@ msgstr "Lựa tổng tích lũy độ đục"
 
 #: ../src/ui/dialog/clonetiler.cpp:848
 msgid "R"
-msgstr "Đỏ (R=Red)"
+msgstr ""
 
 #: ../src/ui/dialog/clonetiler.cpp:849
 msgid "Pick the Red component of the color"
@@ -21908,7 +21908,7 @@ msgstr "Chọn thành phần màu đỏ của màu"
 
 #: ../src/ui/dialog/clonetiler.cpp:855
 msgid "G"
-msgstr "Lục (G=Green)"
+msgstr ""
 
 #: ../src/ui/dialog/clonetiler.cpp:856
 msgid "Pick the Green component of the color"
@@ -21916,7 +21916,7 @@ msgstr "Chọn thành phần màu lục của màu"
 
 #: ../src/ui/dialog/clonetiler.cpp:862
 msgid "B"
-msgstr "Lam (B=Blue)"
+msgstr ""
 
 #: ../src/ui/dialog/clonetiler.cpp:863
 msgid "Pick the Blue component of the color"
@@ -21925,7 +21925,7 @@ msgstr "Chọn thành phần màu lam của màu"
 #: ../src/ui/dialog/clonetiler.cpp:869
 msgctxt "Clonetiler color hue"
 msgid "H"
-msgstr "Sắc (H = Hue)"
+msgstr ""
 
 #: ../src/ui/dialog/clonetiler.cpp:870
 msgid "Pick the hue of the color"
@@ -21934,7 +21934,7 @@ msgstr "Chọn sắc của màu"
 #: ../src/ui/dialog/clonetiler.cpp:876
 msgctxt "Clonetiler color saturation"
 msgid "S"
-msgstr "Độ Bão Hòa (S = Saturation)"
+msgstr ""
 
 #: ../src/ui/dialog/clonetiler.cpp:877
 msgid "Pick the saturation of the color"
@@ -21943,7 +21943,7 @@ msgstr "Chọn độ bão hoà của màu"
 #: ../src/ui/dialog/clonetiler.cpp:883
 msgctxt "Clonetiler color lightness"
 msgid "L"
-msgstr "Độ Sáng (L = Lightness)"
+msgstr ""
 
 #: ../src/ui/dialog/clonetiler.cpp:884
 msgid "Pick the lightness of the color"
@@ -24177,7 +24177,7 @@ msgstr "Lào"
 
 #: ../src/ui/dialog/glyphs.cpp:76
 msgid "Latin"
-msgstr ""
+msgstr "La-tinh"
 
 #: ../src/ui/dialog/glyphs.cpp:77 ../src/ui/dialog/glyphs.cpp:250
 msgid "Malayalam"
@@ -26289,7 +26289,7 @@ msgstr "Lựa chọn phông chữ chiều rộng cố định"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:1914
 msgid "Use monospaced font"
-msgstr "Sử dụng phông chữ đơn cách:"
+msgstr "Sử dụng phông chữ đơn cách"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:1915
 msgid "XML tree:"
@@ -27522,7 +27522,7 @@ msgstr "Xoay khung vẽ thuận chiều kim đồng hồ và ngược chiều ki
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2674
 msgid "Steps"
-msgstr "Số bước"
+msgstr "Bước"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2677
 msgid "Move in parallel"
@@ -33375,7 +33375,7 @@ msgstr "(cường độ tối đa)"
 
 #: ../src/ui/toolbar/tweak-toolbar.cpp:75
 msgid "Force:"
-msgstr "Cường Độ:"
+msgstr "Lực:"
 
 #: ../src/ui/toolbar/tweak-toolbar.cpp:76
 msgid "The force of the tweak action"
@@ -33515,7 +33515,7 @@ msgstr "Kênh:"
 #: ../src/ui/toolbar/tweak-toolbar.cpp:203
 msgctxt "Hue"
 msgid "H"
-msgstr "Sắc (H = Hue)"
+msgstr ""
 
 #: ../src/ui/toolbar/tweak-toolbar.cpp:204
 msgid "In color mode, act on object's hue"
@@ -33526,7 +33526,7 @@ msgstr "Trong chế độ màu, hành động theo màu sắc của đối tư�
 #: ../src/ui/toolbar/tweak-toolbar.cpp:210
 msgctxt "Saturation"
 msgid "S"
-msgstr "Độ Bão Hòa (S = Saturation)"
+msgstr ""
 
 #: ../src/ui/toolbar/tweak-toolbar.cpp:211
 msgid "In color mode, act on object's saturation"
@@ -33537,7 +33537,7 @@ msgstr "Trong chế độ màu, hành động trên độ bão hòa của đối
 #: ../src/ui/toolbar/tweak-toolbar.cpp:217
 msgctxt "Lightness"
 msgid "L"
-msgstr "Độ Sáng (L = Lightness)"
+msgstr ""
 
 #: ../src/ui/toolbar/tweak-toolbar.cpp:218
 msgid "In color mode, act on object's lightness"
@@ -33549,7 +33549,7 @@ msgstr "Trong chế độ màu, hành động trên độ sáng/nhạt của đ�
 #: ../src/ui/toolbar/tweak-toolbar.cpp:224
 msgctxt "Opacity"
 msgid "O"
-msgstr "Độ Đục (O = Opacity)"
+msgstr ""
 
 #: ../src/ui/toolbar/tweak-toolbar.cpp:225
 msgid "In color mode, act on object's opacity"
@@ -36310,7 +36310,7 @@ msgstr "Bấm Chuột để Sao chép"
 
 #: ../share/ui/command-palette-operation.glade:99
 msgid "Label "
-msgstr "Nhãn"
+msgstr "Nhãn "
 
 #: ../share/ui/command-palette-operation.glade:154
 msgid "Ctrl+F"
@@ -37047,7 +37047,7 @@ msgstr "Lớp lồng đường viền"
 
 #: ../share/ui/display-popup.glade:108
 msgid "Enhance thin lines"
-msgstr "nâng cấp các đường mỏng"
+msgstr "Nâng cấp các đường mỏng"
 
 #: ../share/ui/display-popup.glade:126
 msgid "No filters"
@@ -37079,7 +37079,7 @@ msgstr ""
 
 #: ../share/ui/display-popup.glade:225
 msgid "Hold this key for document preview, hiding grids, guides, handles etc."
-msgstr "Giữ phím này để duyệt thảo tài liệu, ẩn giấu các khung lưới đồ thị, đường gióng, tay cầm, v.v. đi"
+msgstr "Giữ phím này để duyệt thảo tài liệu, ẩn giấu các khung lưới đồ thị, đường gióng, tay cầm, v.v. đi."
 
 #: ../share/ui/display-popup.glade:229
 msgid "<b>F</b>"
@@ -37748,7 +37748,7 @@ msgstr "Khoảng cách Y:"
 
 #: ../share/ui/pattern-edit.glade:714
 msgid "Color: "
-msgstr "Màu sắc:"
+msgstr "Màu Sắc: "
 
 #: ../share/ui/pattern-edit.glade:727
 msgid "Apply color to the current pattern"
@@ -42591,7 +42591,7 @@ msgstr "Các kích thước về trình bày"
 
 #: ../share/extensions/layout_nup.inx:24
 msgid "Cols:"
-msgstr "Số Cột"
+msgstr "Số Cột:"
 
 #
 # File: ../share/extensions/layout_nup.inx, line: 28
@@ -42634,7 +42634,7 @@ msgstr "Hộp lề đệm"
 
 #: ../share/extensions/layout_nup.inx:45
 msgid "Margin box"
-msgstr "hộp lề trang"
+msgstr "Hộp lề trang"
 
 #
 # File: ../share/extensions/layout_nup.inx, line: 49
@@ -44027,7 +44027,8 @@ msgstr ""
 "\n"
 "Công trạng thuộc về: Nick Drobchenko, Vladimir Kalyaev, John Brooker, Henry Nicolas, Chris Lusby Taylor.\n"
 "\n"
-"Phiên bản Gcodetools 1.7"
+"Phiên bản Gcodetools 1.7\n"
+"      "
 
 #: ../share/extensions/other/gcodetools/gcodetools_prepare_path_for_plasma.inx:4
 msgid "Prepare Path for Plasma"
@@ -44460,7 +44461,7 @@ msgstr "Bảo tồn ID bắt đầu bằng:"
 
 #: ../share/extensions/output_scour.inx:93
 msgid "Preserve all IDs that start with the specified prefix (e.g. specify \"flag\" to preserve \"flag-mx\", \"flag-pt\", etc.)."
-msgstr "bảo tồn toàn bộ các ID bắt đầu bằng tiền tố chỉ định (ví dụ: xác định \"cờ\" để bảo tồn \"flag-mx\", \"flag-pt\", v.v.)."
+msgstr "Bảo tồn toàn bộ các ID bắt đầu bằng tiền tố chỉ định (ví dụ: xác định \"cờ\" để bảo tồn \"flag-mx\", \"flag-pt\", v.v.)."
 
 #: ../share/extensions/output_scour.inx:101
 msgid "Optimized SVG Output is provided by"
@@ -45090,7 +45091,7 @@ msgstr "Khối Hai Mươi Mặt"
 
 #: ../share/extensions/polyhedron_3d.inx:17
 msgid "Truncated Icosahedron"
-msgstr "Khối Hai Mươi Mặt Cắt Ngắn "
+msgstr "Khối Hai Mươi Mặt Cắt Ngắn"
 
 #: ../share/extensions/polyhedron_3d.inx:18
 msgid "Small Triambic Icosahedron"
@@ -47391,7 +47392,7 @@ msgstr "Các cải tiến hiệu suất"
 #: ../org.inkscape.Inkscape.appdata.xml.in:144
 #: ../org.inkscape.Inkscape.appdata.xml.in:157
 msgid "And many more bugfixes"
-msgstr "Cùng nhiều chỉnh sửa lỗi khác!"
+msgstr "Cùng nhiều chỉnh sửa lỗi khác"
 
 #: ../org.inkscape.Inkscape.appdata.xml.in:153
 msgid "New command-line options to control page size when exporting to SVG"
