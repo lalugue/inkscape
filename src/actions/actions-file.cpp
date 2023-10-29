@@ -47,7 +47,13 @@ file_open(const Glib::VariantBase& value, InkscapeApplication *app)
 void
 file_open_with_window(const Glib::VariantBase& value, InkscapeApplication *app)
 {
-    Glib::Variant<Glib::ustring> s = Glib::VariantBase::cast_dynamic<Glib::Variant<Glib::ustring> >(value);
+    auto window = app->get_active_window();
+    if (!window) {
+        show_output("You cannot run this action without an active window");
+        return;
+    }
+
+    Glib::Variant<Glib::ustring> s = Glib::VariantBase::cast_dynamic<Glib::Variant<Glib::ustring>>(value);
     Glib::RefPtr<Gio::File> file = Gio::File::create_for_path(s.get());
     if (!file->query_exists()) {
         show_output(Glib::ustring("file_open: file '") + s.get().raw() + "' does not exist.");
