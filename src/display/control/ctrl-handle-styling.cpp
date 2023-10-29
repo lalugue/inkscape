@@ -152,7 +152,7 @@ float parse_opacity(CRTerm const *term)
     return value;
 }
 
-int parse_width(CRTerm const *term)
+float parse_width(CRTerm const *term)
 {
     // Assuming px value only, which stays the same regardless of the size of the handles.
     auto const num = term->content.num;
@@ -160,11 +160,34 @@ int parse_width(CRTerm const *term)
         throw Exception{Glib::ustring::compose(_("Invalid width '%1'"), get_string(term))};
     }
 
-    int value;
+    float value;
     if (num->type == NUM_LENGTH_PX) {
-        value = static_cast<int>(num->val);
+        value = static_cast<float>(num->val);
     } else {
         throw Exception{Glib::ustring::compose(_("Invalid width units '%1'"), get_string(term))};
+    }
+
+    return value;
+}
+
+float parse_scale(CRTerm const *term)
+{
+    auto const num = term->content.num;
+    if (!num) {
+        throw Exception{Glib::ustring::compose(_("Invalid opacity '%1'"), get_string(term))};
+    }
+
+    double value;
+    if (num->type == NUM_PERCENTAGE) {
+        value = num->val / 100.0f;
+    } else if (num->type == NUM_GENERIC) {
+        value = num->val;
+    } else {
+        throw Exception{Glib::ustring::compose(_("Invalid scale units '%1'"), get_string(term))};
+    }
+
+    if (value > 100 || value <= 0) {
+        throw Exception{Glib::ustring::compose(_("Scale '%1' out of range"), get_string(term))};
     }
 
     return value;
@@ -194,6 +217,8 @@ std::unordered_map<std::string, void(*)(CRDocHandler *, CRTerm const *, bool)> c
     {"outline-opacity", setter<parse_opacity, &Style::outline_opacity>},
     {"stroke-width",    setter<parse_width,   &Style::stroke_width>},
     {"outline-width",   setter<parse_width,   &Style::outline_width>},
+    {"scale",           setter<parse_scale,   &Style::scale>},
+    {"size-extra",      setter<parse_width,   &Style::size_extra>},
 };
 
 /**

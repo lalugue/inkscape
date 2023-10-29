@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 #include "ctrl-handle-rendering.h"
 
+#include <cairomm/enums.h>
+#include <cmath>
 #include <mutex>
 #include <unordered_map>
 #include <boost/container_hash/hash.hpp>
@@ -438,39 +440,55 @@ void set_source_rgba32(Cairo::Context &cr, uint32_t rgba)
 std::shared_ptr<Cairo::ImageSurface const> draw_uncached(RenderParams const &p)
 {
     auto surface = to_shared(Cairo::ImageSurface::create(Cairo::FORMAT_ARGB32, p.width, p.width));
-    cairo_surface_set_device_scale(surface->cobj(), p.device_scale, p.device_scale); // No C++ API!
+    // operate on a physical pixel scale, to make pixel grid aligning easier to understand
+    cairo_surface_set_device_scale(surface->cobj(), 1, 1);
 
-    double size = p.width / p.device_scale; // Use unscaled width.
+    const auto scale = p.device_scale;
+    const auto size = p.size * scale;
 
     auto cr = Cairo::Context(cairo_create(surface->cobj()), true);
+
+    // align stroke to pixel grid; even width stroke needs whole coordinates, odd width needs half a pixel shift
+    auto offset_stroke = [&](float stroke) {
+        auto size = static_cast<int>(std::round(stroke * scale));
+        auto half_pixel = size & 1;
+        auto offset = half_pixel ? size / 2 + 0.5 : size / 2;
+        cr.translate(offset, offset);
+        return half_pixel;
+    };
+
     cr.set_operator(Cairo::OPERATOR_SOURCE);
     cr.set_line_cap(Cairo::LINE_CAP_SQUARE);
+    cr.set_line_join(Cairo::LINE_JOIN_MITER);
+    cr.set_miter_limit(4);
 
     // Rotate around center
     cr.translate(size / 2.0, size / 2.0);
     cr.rotate(p.angle);
     cr.translate(-size / 2.0, -size / 2.0);
 
-    // (1.5 is an approximation of root(2) and 3 is 1.5 * 2)
-    double effective_outline = p.outline_width + 0.5 * p.stroke_width;
-    cr.translate(1.5 * effective_outline, 1.5 * effective_outline);
+    auto effective_outline = 2 * p.outline_width + p.stroke_width;
+    auto half_pixel_shift = offset_stroke(effective_outline);
 
-    draw_cairo_path(p.shape, cr, size - 3 * effective_outline);
+    draw_cairo_path(p.shape, cr, size - effective_outline * scale);
 
     // Outline.
     set_source_rgba32(cr, p.outline);
-    cr.set_line_width(2 * effective_outline);
+    cr.set_line_width(effective_outline * scale);
     cr.stroke_preserve();
 
     // Fill.
+    if (half_pixel_shift) cr.translate(-0.5, -0.5);
     set_source_rgba32(cr, p.fill);;
     cr.fill_preserve();
 
     // Stroke.
+    if (half_pixel_shift) cr.translate(0.5, 0.5);
     set_source_rgba32(cr, p.stroke);
-    cr.set_line_width(p.stroke_width);
+    cr.set_line_width(p.stroke_width * scale);
     cr.stroke();
 
+    cairo_surface_set_device_scale(surface->cobj(), p.device_scale, p.device_scale); // No C++ API!
     return surface;
 }
 
@@ -493,8 +511,8 @@ std::shared_ptr<Cairo::ImageSurface const> draw(RenderParams const &params)
 
 size_t std::hash<Inkscape::Handles::RenderParams>::operator()(Inkscape::Handles::RenderParams const &params) const
 {
-    auto const [a, b, c, d, e, f, g, h, i] = params;
-    auto const tuple = std::make_tuple(a, b, c, d, e, f, g, h, i);
+    auto const [a, b, c, d, e, f, g, h, i, j] = params;
+    auto const tuple = std::make_tuple(a, b, c, d, e, f, g, h, i, j);
     return boost::hash<decltype(tuple)>{}(tuple);
 }
 

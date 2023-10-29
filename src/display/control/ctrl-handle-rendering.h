@@ -27,9 +27,10 @@ struct RenderParams
     uint32_t fill;
     uint32_t stroke;
     uint32_t outline;
-    int stroke_width;
-    int outline_width;
-    int width;
+    float stroke_width;
+    float outline_width;
+    int width;  // pixmap size
+    float size; // handle size (size <= width)
     double angle;
     int device_scale;
 

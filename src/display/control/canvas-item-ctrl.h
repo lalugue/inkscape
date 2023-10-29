@@ -69,6 +69,7 @@ protected:
     void _invalidate_ctrl_handles() override;
 
     void build_cache(int device_scale) const;
+    float get_width() const;
 
     // Geometry
     Geom::Point _position;
@@ -86,10 +87,12 @@ protected:
     bool _fill_set = false;
     bool _stroke_set = false;
     bool _size_set = false;
-    int _width  = 5;
     int _extra  = 0; // Used to temporarily increase size.
     double _angle = 0; // Used for triangles, could be used for arrows.
     SPAnchorType _anchor = SP_ANCHOR_CENTER;
+private:
+    int _width  = 5;
+    int get_pixmap_width(int device_scale) const;
 };
 
 } // namespace Inkscape

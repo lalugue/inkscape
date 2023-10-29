@@ -15,6 +15,8 @@
 #include "canvas-item-ctrl.h"
 
 #include <2geom/transforms.h>
+#include <cmath>
+#include <iostream>
 
 #include "ctrl-handle-rendering.h"
 #include "preferences.h" // Default size.
@@ -149,63 +151,17 @@ void CanvasItemCtrl::set_size_via_index(int size_index)
         size_index = 3;
     }
 
-    int size = 0;
-    switch (_handle.type) {
-    case CANVAS_ITEM_CTRL_TYPE_ADJ_HANDLE:
-    case CANVAS_ITEM_CTRL_TYPE_ADJ_SKEW:
-        size = size_index * 2 + 7;
-        break;
-
-    case CANVAS_ITEM_CTRL_TYPE_ADJ_ROTATE:
-    case CANVAS_ITEM_CTRL_TYPE_ADJ_CENTER:
-        size = size_index * 2 + 9; // 2 larger than HANDLE/SKEW
-        break;
-
-    case CANVAS_ITEM_CTRL_TYPE_ADJ_SALIGN:
-    case CANVAS_ITEM_CTRL_TYPE_ADJ_CALIGN:
-    case CANVAS_ITEM_CTRL_TYPE_ADJ_MALIGN:
-        size = size_index * 4 + 5; // Needs to be larger to allow for rotating.
-        break;
-
-    case CANVAS_ITEM_CTRL_TYPE_ROTATE:
-    case CANVAS_ITEM_CTRL_TYPE_MARGIN:
-    case CANVAS_ITEM_CTRL_TYPE_CENTER:
-    case CANVAS_ITEM_CTRL_TYPE_SIZER:
-    case CANVAS_ITEM_CTRL_TYPE_SHAPER:
-    case CANVAS_ITEM_CTRL_TYPE_MARKER:
-    case CANVAS_ITEM_CTRL_TYPE_MESH:
-    case CANVAS_ITEM_CTRL_TYPE_LPE:
-    case CANVAS_ITEM_CTRL_TYPE_NODE_AUTO:
-    case CANVAS_ITEM_CTRL_TYPE_NODE_CUSP:
-        size = size_index * 2 + 5;
-        break;
-
-    case CANVAS_ITEM_CTRL_TYPE_NODE_SMOOTH:
-    case CANVAS_ITEM_CTRL_TYPE_NODE_SYMMETRICAL:
-        size = size_index * 2 + 3;
-        break;
-
-    case CANVAS_ITEM_CTRL_TYPE_INVISIPOINT:
-        size = 1;
-        break;
-
-    case CANVAS_ITEM_CTRL_TYPE_GUIDE_HANDLE:
-        size = size_index | 1; // "or" with 1 will make it odd if even
-        break;
-
-    case CANVAS_ITEM_CTRL_TYPE_ANCHOR: // vanishing point for 3D box and anchor for pencil
-    case CANVAS_ITEM_CTRL_TYPE_POINT:
-    case CANVAS_ITEM_CTRL_TYPE_DEFAULT:
-        size = size_index * 2 + 1;
-        break;
-
-    default:
-        g_warning("set_size_via_index: missing case for handle type: %d", static_cast<int>(_handle.type));
-        size = size_index * 2 + 1;
-        break;
-    }
-
+    auto size = size_index;
     set_size(size, false);
+}
+
+float CanvasItemCtrl::get_width() const {
+    auto const &style = _context->handlesCss()->style_map.at(_handle);
+    return _width * style.scale() + style.size_extra();
+}
+
+int CanvasItemCtrl::get_pixmap_width(int device_scale) const {
+    return static_cast<int>(get_width()) * device_scale | 1;
 }
 
 void CanvasItemCtrl::set_size_default()
@@ -315,10 +271,10 @@ void CanvasItemCtrl::_update(bool)
     }
 
     // Width is always odd.
-    assert(_width % 2 == 1);
+    const auto width = static_cast<int>(std::ceil(get_width())) | 1;
 
     // Get half width, rounded down.
-    int const w_half = _width / 2;
+    int const w_half = width / 2;
 
     // Set _angle, and compute adjustment for anchor.
     int dx = 0;
@@ -326,6 +282,10 @@ void CanvasItemCtrl::_update(bool)
 
     CanvasItemCtrlShape shape = _shape;
     if (!_shape_set) {
+        if (_context->handlesCss()->style_map.count(_handle) == 0) {
+            std::cout << "Missing style for handle " << _handle.type << std::endl;
+            return;
+        }
         auto const &style = _context->handlesCss()->style_map.at(_handle);
         shape = style.shape();
     }
@@ -337,7 +297,7 @@ void CanvasItemCtrl::_update(bool)
     case CANVAS_ITEM_CTRL_SHAPE_SALIGN:
     case CANVAS_ITEM_CTRL_SHAPE_CALIGN: {
         double angle = int{_anchor} * M_PI_4 + angle_of(affine());
-        double const half = _width / 2.0;
+        double const half = width / 2.0;
 
         dx = -(half + 2) * cos(angle); // Add a bit to prevent tip from overlapping due to rounding errors.
         dy = -(half + 2) * sin(angle);
@@ -427,7 +387,7 @@ void CanvasItemCtrl::_update(bool)
     }
 
     auto const pt = Geom::IntPoint(-w_half, -w_half) + Geom::IntPoint(dx, dy) + (_position * affine()).floor();
-    _bounds = Geom::IntRect(pt, pt + Geom::IntPoint(_width, _width));
+    _bounds = Geom::IntRect(pt, pt + Geom::IntPoint(width, width));
 
     // Queue redraw of new area
     request_redraw();
@@ -466,25 +426,31 @@ void CanvasItemCtrl::_invalidate_ctrl_handles()
  */
 void CanvasItemCtrl::build_cache(int device_scale) const
 {
-    if (_width < 2) {
+    auto width = get_width();
+    if (width < 2) {
         return; // Nothing to render
     }
 
-    if (_width % 2 == 0) {
-        std::cerr << "CanvasItemCtrl::build_cache: Width not odd integer! "
-                  << _name << ":  width: " << _width << std::endl;
-    }
-    
+    // take size in logical pixels and make it fit physical pixel grid
+    auto pixel_fit = [=](float v) { return std::round(v * device_scale) / device_scale; };
+
     auto const &style = _context->handlesCss()->style_map.at(_handle);
+    // growing stroke width with handle size:
+    auto stroke_width = pixel_fit(style.stroke_width() * (0.7f + _width / 6.0f));
+    // fixed-size outline
+    auto outline_width = pixel_fit(style.outline_width());
+    // handle size
+    auto size = std::floor(width * device_scale) / device_scale;
 
     _cache = Handles::draw({
         .shape = _shape_set ? _shape : style.shape(),
         .fill = _fill_set ? _fill : style.getFill(),
         .stroke = _stroke_set ? _stroke : style.getStroke(),
         .outline = style.getOutline(),
-        .stroke_width = style.stroke_width(),
-        .outline_width = style.outline_width(),
-        .width = _width * device_scale,
+        .stroke_width = stroke_width,
+        .outline_width = outline_width,
+        .size = size,
+        .width = get_pixmap_width(device_scale),
         .angle = _angle,
         .device_scale = device_scale
     });

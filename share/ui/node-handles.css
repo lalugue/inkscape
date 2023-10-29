@@ -60,9 +60,11 @@ Notes:
     fill: white;
     stroke: black;
     outline: white;
-    stroke-width: 2px;
-    outline-width: 1px;
-    outline-opacity: 80%;
+    stroke-width: 1.0px;
+    outline-width: 1.0px;
+    outline-opacity: 60%;
+    scale: 2.0;
+    size-extra: 7px; /* extra space due to outline and stroke */
 }
 
 *:selected {
@@ -74,10 +76,12 @@ Notes:
     fill: #0066ff;
 }
 
+
 .inkscape-node-cusp,
 .inkscape-shaper,
 .inkscape-lpe {
     shape: "diamond";
+    scale: 2.828427; /* 2 * sqrt(2) */
 }
 
 .inkscape-node-smooth,
@@ -91,11 +95,13 @@ Notes:
 .inkscape-margin,
 .inkscape-point {
     shape: "circle";
+    scale: 2.256758; /* 4 / sqrt(PI) */
 }
 
 .inkscape-mesh,
 .inkscape-rotate {
     shape: "circle";
+    scale: 2.256758; /* 4 / sqrt(PI) */
 }
 
 .inkscape-mesh:selected {
@@ -104,18 +110,25 @@ Notes:
 
 .inkscape-adj-handle {
     shape: "arrow";
+    fill: #d0d0d0;
+    scale: 3.0;
 }
 
 .inkscape-adj-skew {
     shape: "skew-arrow";
+    fill: #d0d0d0;
+    scale: 3.0;
 }
 
 .inkscape-adj-rotate {
     shape: "curved-arrow";
+    fill: #d0d0d0;
+    scale: 3.0;
 }
 
 .inkscape-adj-center {
     shape: "pivot";
+    fill: #d0d0d0;
 }
 
 .inkscape-adj-salign {

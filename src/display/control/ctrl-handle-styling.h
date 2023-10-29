@@ -100,8 +100,10 @@ struct Style
     Property<float> stroke_opacity{1.0};
     Property<float> outline_opacity{1.0};
     Property<float> opacity{1.0};
-    Property<int> stroke_width{1};
-    Property<int> outline_width{0};
+    Property<float> stroke_width{1.0};
+    Property<float> outline_width{0.0};
+    Property<float> scale{2.0};
+    Property<float> size_extra{1.0};
 
     uint32_t getFill() const;
     uint32_t getStroke() const;

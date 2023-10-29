@@ -274,7 +274,7 @@ CanvasItemGuideHandle::CanvasItemGuideHandle(CanvasItemGroup *group,
  */
 double CanvasItemGuideHandle::radius() const
 {
-    return 0.5 * static_cast<double>(_width); // radius is half the width
+    return 0.5 * static_cast<double>(get_width()); // radius is half the width
 }
 
 /**
@@ -288,11 +288,12 @@ void CanvasItemGuideHandle::set_size_via_index(int index)
     if (size < MINIMUM_SIZE) {
         size = MINIMUM_SIZE;
     }
-    defer([=, this] {
-        if (_width == size) return;
-        _width = size;
-        _built.reset();
-        request_update();
+    set_size(size);
+    defer([=] {
+        // if (get_width() == size) return;
+        // _width = size;
+        // _built.reset();
+        // request_update();
         _my_line->request_update();
     });
 }
