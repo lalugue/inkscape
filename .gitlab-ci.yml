@@ -168,7 +168,7 @@ inkscape:macos:
     CCACHE_DIR: $CI_PROJECT_DIR/ccache
     CCACHE_MAXSIZE: "1.0G"
     IDW_ARCHIVE: msys64.7z
-    IDW_RELEASE_TAG: r231022.1
+    IDW_RELEASE_TAG: r231031.1
     IDW_RELEASE_URL: https://gitlab.com/api/v4/projects/46863172/packages/generic/windows/$IDW_RELEASE_TAG/$IDW_ARCHIVE
   before_script:
     - wget.exe --quiet --no-check-certificate $IDW_RELEASE_URL
