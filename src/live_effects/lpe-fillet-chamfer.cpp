@@ -341,41 +341,39 @@ void LPEFilletChamfer::doBeforeEffect(SPLPEItem const *lpeItem)
                 nodesatellites[i][0].amount = 0;
                 nodesatellites[i][count_path_nodes(pathv[i]) - 1].amount = 0;
             }
-            if (!_pathvector_nodesatellites) {
-                _pathvector_nodesatellites = new PathVectorNodeSatellites();
+        } 
+        if (!_pathvector_nodesatellites) {
+            _pathvector_nodesatellites = new PathVectorNodeSatellites();
+        }
+        size_t number_nodes = count_pathvector_nodes(pathv);
+        size_t previous_number_nodes = _pathvector_nodesatellites->getTotalNodeSatellites();
+        if (is_load || number_nodes != previous_number_nodes) {
+            double power = radius;
+            if (!flexible) {
+                power = Inkscape::Util::Quantity::convert(power, unit.get_abbreviation(), "px") / getSPDoc()->getDocumentScale()[Geom::X];
             }
-            
-            size_t number_nodes = count_pathvector_nodes(pathv);
-            size_t previous_number_nodes = _pathvector_nodesatellites->getTotalNodeSatellites();
-            if (is_load || number_nodes != previous_number_nodes) {
-                double power = radius;
-                if (!flexible) {
-                    power = Inkscape::Util::Quantity::convert(power, unit.get_abbreviation(), "px") / getSPDoc()->getDocumentScale()[Geom::X];
-                }
-                NodeSatelliteType nodesatellite_type = FILLET;
-                std::map<std::string, NodeSatelliteType> gchar_map_to_nodesatellite_type = boost::assign::map_list_of(
-                    "F", FILLET)("IF", INVERSE_FILLET)("C", CHAMFER)("IC", INVERSE_CHAMFER)("KO", INVALID_SATELLITE);
-                auto mode_str = mode.param_getSVGValue();
-                auto it = gchar_map_to_nodesatellite_type.find(mode_str.raw());
-                if (it != gchar_map_to_nodesatellite_type.end()) {
-                    nodesatellite_type = it->second;
-                }
-                NodeSatellite nodesatellite(nodesatellite_type);
-                nodesatellite.setSteps(chamfer_steps);
-                nodesatellite.setAmount(power);
-                nodesatellite.setIsTime(flexible);
-                nodesatellite.setHasMirror(true);
-                nodesatellite.setHidden(hide_knots);
-                _pathvector_nodesatellites->setNodeSatellites(nodesatellites);
-                _pathvector_nodesatellites->recalculateForNewPathVector(pathv, nodesatellite);
-                nodesatellites_param.setPathVectorNodeSatellites(_pathvector_nodesatellites, true);
-                nodesatellites_param.reloadKnots();
-            } else {   
-                _pathvector_nodesatellites->setPathVector(pathv);
-                _pathvector_nodesatellites->setNodeSatellites(nodesatellites); 
-                nodesatellites_param.setPathVectorNodeSatellites(_pathvector_nodesatellites, false);
-                nodesatellites_param.reloadKnots();
+            NodeSatelliteType nodesatellite_type = FILLET;
+            std::map<std::string, NodeSatelliteType> gchar_map_to_nodesatellite_type = boost::assign::map_list_of(
+                "F", FILLET)("IF", INVERSE_FILLET)("C", CHAMFER)("IC", INVERSE_CHAMFER)("KO", INVALID_SATELLITE);
+            auto mode_str = mode.param_getSVGValue();
+            auto it = gchar_map_to_nodesatellite_type.find(mode_str.raw());
+            if (it != gchar_map_to_nodesatellite_type.end()) {
+                nodesatellite_type = it->second;
             }
+            NodeSatellite nodesatellite(nodesatellite_type);
+            nodesatellite.setSteps(chamfer_steps);
+            nodesatellite.setAmount(power);
+            nodesatellite.setIsTime(flexible);
+            nodesatellite.setHasMirror(true);
+            nodesatellite.setHidden(hide_knots);
+            _pathvector_nodesatellites->setNodeSatellites(nodesatellites);
+            _pathvector_nodesatellites->recalculateForNewPathVector(pathv, nodesatellite);
+            nodesatellites_param.setPathVectorNodeSatellites(_pathvector_nodesatellites, true);
+            nodesatellites_param.reloadKnots();
+        } else {   
+            _pathvector_nodesatellites->setPathVector(pathv);
+            _pathvector_nodesatellites->setNodeSatellites(nodesatellites); 
+            nodesatellites_param.setPathVectorNodeSatellites(_pathvector_nodesatellites, false);
         }
     } else {
         g_warning("LPE Fillet can only be applied to shapes (not groups).");
