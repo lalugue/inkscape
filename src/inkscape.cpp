@@ -24,6 +24,7 @@
 #include <glibmm/i18n.h>
 #include <glibmm/miscutils.h>
 #include <glibmm/convert.h>
+#include <glibmm/main.h>
 #include <gtkmm/icontheme.h>
 #include <gtkmm/label.h>
 #include <gtkmm/messagedialog.h>
@@ -521,12 +522,23 @@ Application::crash_handler (int /*signum*/)
 
     if ( exists() && instance().use_gui() ) {
         try {
+            auto mainloop = Glib::MainLoop::create();
             auto builder = UI::create_builder("dialog-crash.glade");
-            UI::get_widget<Gtk::Label>(builder, "message").set_label(b);
+            auto &autosaves = UI::get_widget<Gtk::Label>(builder, "autosaves");
+            if (std::strlen(b) == 0) {
+                autosaves.set_visible(false);
+            } else {
+                autosaves.set_label(b);
+            }
             UI::get_object<Gtk::TextBuffer>(builder, "stacktrace")->set_text("<pre>\n" + boost::stacktrace::to_string(boost::stacktrace::stacktrace()) + "</pre>\n<details><summary>System info</summary>\n" + debug_info() + "\n</details>");
-            Gtk::MessageDialog &m = UI::get_widget<Gtk::MessageDialog>(builder, "crash_dialog");
-            sp_transientize(m.Gtk::Widget::gobj());
-            UI::dialog_run(m);
+            auto &window = UI::get_widget<Gtk::Window>(builder, "crash_dialog");
+            auto &button_ok = UI::get_widget<Gtk::Button>(builder, "button_ok");
+            button_ok.signal_clicked().connect([&] { window.close(); });
+            button_ok.grab_focus();
+            window.signal_close_request().connect([&] { mainloop->quit(); return false; }, true);
+            sp_transientize(window);
+            window.present();
+            mainloop->run();
         } catch (const Glib::Error &ex) {
             g_message("Glade file loading failed for crash handler... Anyway, error was: %s", b);
             std::cerr << boost::stacktrace::stacktrace();
