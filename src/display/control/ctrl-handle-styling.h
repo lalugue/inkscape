@@ -104,6 +104,7 @@ struct Style
     Property<float> outline_width{0.0};
     Property<float> scale{2.0};
     Property<float> size_extra{1.0};
+    Property<float> stroke_scale{0.125};
 
     uint32_t getFill() const;
     uint32_t getStroke() const;

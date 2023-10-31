@@ -16,6 +16,7 @@
 #include "3rdparty/libcroco/src/cr-utils.h"
 
 #include "display/cairo-utils.h" // argb32_from_rgba()
+#include "display/control/canvas-item-enums.h"
 #include "io/resource.h"
 #include "util/delete-with.h"
 using Inkscape::Util::delete_with;
@@ -66,7 +67,10 @@ std::unordered_map<std::string, CanvasItemCtrlType> const ctrl_type_map = {
     {".inkscape-node-smooth", CANVAS_ITEM_CTRL_TYPE_NODE_SMOOTH},
     {".inkscape-node-symmetrical", CANVAS_ITEM_CTRL_TYPE_NODE_SYMMETRICAL},
     {".inkscape-mesh", CANVAS_ITEM_CTRL_TYPE_MESH},
-    {".inkscape-invisible", CANVAS_ITEM_CTRL_TYPE_INVISIPOINT}
+    {".inkscape-invisible", CANVAS_ITEM_CTRL_TYPE_INVISIPOINT},
+    {".inkscape-guide-handle", CANVAS_ITEM_CTRL_TYPE_GUIDE_HANDLE},
+    {".inkscape-pointer", CANVAS_ITEM_CTRL_TYPE_POINTER},
+    {".inkscape-move", CANVAS_ITEM_CTRL_TYPE_MOVE}
 };
 
 /**
@@ -186,7 +190,7 @@ float parse_scale(CRTerm const *term)
         throw Exception{Glib::ustring::compose(_("Invalid scale units '%1'"), get_string(term))};
     }
 
-    if (value > 100 || value <= 0) {
+    if (value > 100 || value < 0) {
         throw Exception{Glib::ustring::compose(_("Scale '%1' out of range"), get_string(term))};
     }
 
@@ -219,6 +223,7 @@ std::unordered_map<std::string, void(*)(CRDocHandler *, CRTerm const *, bool)> c
     {"outline-width",   setter<parse_width,   &Style::outline_width>},
     {"scale",           setter<parse_scale,   &Style::scale>},
     {"size-extra",      setter<parse_width,   &Style::size_extra>},
+    {"stroke-scale",    setter<parse_scale,   &Style::stroke_scale>},
 };
 
 /**
@@ -366,7 +371,7 @@ Css parse_css()
 {
     Css result;
 
-    for (int type_i = CANVAS_ITEM_CTRL_TYPE_DEFAULT; type_i <= CANVAS_ITEM_CTRL_TYPE_INVISIPOINT; type_i++) {
+    for (int type_i = CANVAS_ITEM_CTRL_TYPE_DEFAULT; type_i < LAST_ITEM_CANVAS_ITEM_CTRL_TYPE; type_i++) {
         auto type = static_cast<CanvasItemCtrlType>(type_i);
         for (auto state_bits = 0; state_bits < 8; state_bits++) {
             bool selected = state_bits & (1 << 2);

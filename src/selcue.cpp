@@ -199,7 +199,7 @@ void SelCue::_newTextBaselines()
         }
         if (pt) {
             auto canvas_item = make_canvasitem<CanvasItemCtrl>(_desktop->getCanvasControls(), CANVAS_ITEM_CTRL_TYPE_SIZER, (*pt) * item->i2dt_affine());
-            canvas_item->set_size(5);
+            canvas_item->set_size(Inkscape::HandleSize::XTINY);
             canvas_item->lower_to_bottom();
             canvas_item->set_visible(true);
             _text_baselines.emplace_back(std::move(canvas_item));

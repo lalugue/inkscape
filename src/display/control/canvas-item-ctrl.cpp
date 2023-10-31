@@ -15,6 +15,7 @@
 #include "canvas-item-ctrl.h"
 
 #include <2geom/transforms.h>
+#include <algorithm>
 #include <cmath>
 #include <iostream>
 
@@ -128,36 +129,56 @@ void CanvasItemCtrl::set_shape(CanvasItemCtrlShape shape)
     });
 }
 
-void CanvasItemCtrl::set_size(int size, bool manual)
+void CanvasItemCtrl::_set_size(int size)
 {
     defer([=, this] {
-        _size_set = manual;
-        if (_width == size + _extra) return;
-        _width  = size + _extra;
+        if (_width == size) return;
+        _width  = size;
         _built.reset();
         request_update(); // Geometry change
     });
 }
 
+void CanvasItemCtrl::set_odd_size(bool odd) {
+    defer([=, this] {
+        if (_force_odd_size == odd) return;
+        _force_odd_size = odd;
+        _built.reset();
+        request_update(); // Geometry change
+    });
+}
+
+constexpr int MIN_INDEX = 1;
+constexpr int MAX_INDEX = 15;
+
+int get_size_default() {
+    return Preferences::get()->getIntLimited("/options/grabsize/value", 3, MIN_INDEX, MAX_INDEX);
+}
+
+void CanvasItemCtrl::set_size(HandleSize rel_size) {
+    _rel_size = rel_size;
+    set_size_via_index(get_size_default());
+}
+
 void CanvasItemCtrl::set_size_via_index(int size_index)
 {
-    // If size has been set manually in the code, the handles shouldn't be affected.
-    if (_size_set) {
-        return;
-    }
     // Size must always be an odd number to center on pixel.
-    if (size_index < 1 || size_index > 15) {
+    if (size_index < MIN_INDEX || size_index > MAX_INDEX) {
         std::cerr << "CanvasItemCtrl::set_size_via_index: size_index out of range!" << std::endl;
         size_index = 3;
     }
 
-    auto size = size_index;
-    set_size(size, false);
+    auto size = std::clamp(size_index + static_cast<int>(_rel_size), MIN_INDEX, MAX_INDEX);
+    _set_size(size);
 }
 
 float CanvasItemCtrl::get_width() const {
     auto const &style = _context->handlesCss()->style_map.at(_handle);
-    return _width * style.scale() + style.size_extra();
+    auto size = _width * style.scale() + style.size_extra();
+    if (_force_odd_size) {
+        size = static_cast<int>(std::round(size)) | 1;
+    }
+    return size;
 }
 
 int CanvasItemCtrl::get_pixmap_width(int device_scale) const {
@@ -166,18 +187,8 @@ int CanvasItemCtrl::get_pixmap_width(int device_scale) const {
 
 void CanvasItemCtrl::set_size_default()
 {
-    int size = Preferences::get()->getIntLimited("/options/grabsize/value", 3, 1, 15);
+    int size = get_size_default();
     set_size_via_index(size);
-}
-
-void CanvasItemCtrl::set_size_extra(int extra)
-{
-    defer([=, this] {
-        _width  += extra - _extra;
-        _extra = extra;
-        _built.reset();
-        request_update(); // Geometry change
-    });
 }
 
 void CanvasItemCtrl::set_type(CanvasItemCtrlType type)
@@ -282,10 +293,6 @@ void CanvasItemCtrl::_update(bool)
 
     CanvasItemCtrlShape shape = _shape;
     if (!_shape_set) {
-        if (_context->handlesCss()->style_map.count(_handle) == 0) {
-            std::cout << "Missing style for handle " << _handle.type << std::endl;
-            return;
-        }
         auto const &style = _context->handlesCss()->style_map.at(_handle);
         shape = style.shape();
     }
@@ -435,8 +442,8 @@ void CanvasItemCtrl::build_cache(int device_scale) const
     auto pixel_fit = [=](float v) { return std::round(v * device_scale) / device_scale; };
 
     auto const &style = _context->handlesCss()->style_map.at(_handle);
-    // growing stroke width with handle size:
-    auto stroke_width = pixel_fit(style.stroke_width() * (0.7f + _width / 6.0f));
+    // growing stroke width with handle size, if style enables it
+    auto stroke_width = pixel_fit(style.stroke_width() * (1.0f + _width * style.stroke_scale()));
     // fixed-size outline
     auto outline_width = pixel_fit(style.outline_width());
     // handle size
@@ -449,8 +456,8 @@ void CanvasItemCtrl::build_cache(int device_scale) const
         .outline = style.getOutline(),
         .stroke_width = stroke_width,
         .outline_width = outline_width,
-        .size = size,
         .width = get_pixmap_width(device_scale),
+        .size = size,
         .angle = _angle,
         .device_scale = device_scale
     });

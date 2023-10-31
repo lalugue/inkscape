@@ -3,6 +3,7 @@
 
 #include <cairomm/enums.h>
 #include <cmath>
+#include <iostream>
 #include <mutex>
 #include <unordered_map>
 #include <boost/container_hash/hash.hpp>
@@ -10,6 +11,7 @@
 #include <2geom/point.h>
 
 #include "color.h"
+#include "display/control/canvas-item-enums.h"
 
 namespace Inkscape::Handles {
 namespace {
@@ -411,6 +413,7 @@ void draw_cairo_path(CanvasItemCtrlShape shape, Cairo::Context &cr, double size)
 
         default:
             // Shouldn't happen
+            std::cout << "Missing drawing routine for shape " << shape << std::endl;
             break;
     }
 }

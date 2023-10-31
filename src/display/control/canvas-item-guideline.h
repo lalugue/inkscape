@@ -76,7 +76,6 @@ class CanvasItemGuideHandle final : public CanvasItemCtrl
 public:
     CanvasItemGuideHandle(CanvasItemGroup *group, Geom::Point const &pos, CanvasItemGuideLine *line);
     double radius() const;
-    void set_size_via_index(int index) override;
 
 protected:
     ~CanvasItemGuideHandle() override = default;
@@ -85,7 +84,7 @@ protected:
 
     // static data
     static constexpr double   SCALE        = 0.55; // handle size relative to an auto-smooth node
-    static constexpr unsigned MINIMUM_SIZE = 7;    // smallest handle size, must be an odd int
+    static constexpr float MINIMUM_SIZE = 7;    // smallest handle size, must be an odd int
 };
 
 } // namespace Inkscape

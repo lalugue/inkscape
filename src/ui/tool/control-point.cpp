@@ -123,7 +123,8 @@ Glib::ustring ControlPoint::format_tip(char const *format, ...)
 
 void ControlPoint::_setSize(unsigned int size)
 {
-    _canvas_item_ctrl->set_size(size);
+    std::cout << "ctrl-point size " << size;
+    // _canvas_item_ctrl->set_size(size);
 }
 
 void ControlPoint::_setControlType(Inkscape::CanvasItemCtrlType type)

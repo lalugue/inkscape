@@ -1181,25 +1181,8 @@ void GrDragger::fireDraggables(bool write_repr, bool scale_radial, bool merging_
     }
 }
 
-// TODO: REMOVE THIS
-void GrDragger::updateControlSizesOverload(SPKnot * knot)
-{
-    Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-    int size = prefs->getIntLimited("/options/grabsize/value", 3, 1, 15);
-
-    // shadow what's done in CanvasItemCtrl::set_size_via_index;
-    // TODO: code should likely be merged
-    int knot_size = size * 2 + 3;
-    if(knot->shape == Inkscape::CANVAS_ITEM_CTRL_SHAPE_TRIANGLE) {
-        knot_size = size * 4 + 1;
-    }
-
-    knot->setSize(knot_size);
-}
-
 void GrDragger::updateControlSizes()
 {
-    updateControlSizesOverload(this->knot);
     this->knot->updateCtrl();
     this->updateKnotShape();
 }
@@ -1590,7 +1573,6 @@ GrDragger::GrDragger(GrDrag *parent, Geom::Point p, GrDraggable *draggable)
 
     // create the knot
     this->knot = new SPKnot(parent->desktop, "", Inkscape::CANVAS_ITEM_CTRL_TYPE_SIZER, "CanvasItemCtrl::GrDragger");
-    this->updateControlSizesOverload(this->knot);
     this->knot->updateCtrl();
 
     // move knot to the given point
@@ -1776,7 +1758,6 @@ void GrDragger::highlightNode(SPMeshNode *node, bool highlight, Geom::Point corn
             return;
         }
 
-        this->updateControlSizesOverload(knot);
         knot->setAngle(angl);
         knot->updateCtrl();
         d->updateKnotShape();

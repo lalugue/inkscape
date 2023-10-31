@@ -20,6 +20,7 @@
 #include "canvas-item-ctrl.h"
 
 #include "desktop.h" // Canvas orientation so label is orientated correctly.
+#include "display/control/canvas-item-enums.h"
 #include "ui/widget/canvas.h"
 
 namespace Inkscape {
@@ -267,6 +268,7 @@ CanvasItemGuideHandle::CanvasItemGuideHandle(CanvasItemGroup *group,
     : CanvasItemCtrl(group, CANVAS_ITEM_CTRL_TYPE_GUIDE_HANDLE, pos)
     , _my_line(line) // Save a pointer to our guide line
 {
+    set_shape(CANVAS_ITEM_CTRL_SHAPE_CIRCLE);
 }
 
 /**
@@ -274,28 +276,8 @@ CanvasItemGuideHandle::CanvasItemGuideHandle(CanvasItemGroup *group,
  */
 double CanvasItemGuideHandle::radius() const
 {
-    return 0.5 * static_cast<double>(get_width()); // radius is half the width
-}
-
-/**
- * Update the size of the handle based on the index from Preferences
- */
-void CanvasItemGuideHandle::set_size_via_index(int index)
-{
-    double const r = static_cast<double>(index) * SCALE;
-    unsigned long const rounded_diameter = std::lround(r * 2.0); // diameter is twice the radius
-    unsigned long size = rounded_diameter | 0x1; // make sure the size is always odd
-    if (size < MINIMUM_SIZE) {
-        size = MINIMUM_SIZE;
-    }
-    set_size(size);
-    defer([=] {
-        // if (get_width() == size) return;
-        // _width = size;
-        // _built.reset();
-        // request_update();
-        _my_line->request_update();
-    });
+    auto width = std::round(get_width());
+    return 0.5 * static_cast<double>(width); // radius is half the width
 }
 
 } // namespace Inkscape

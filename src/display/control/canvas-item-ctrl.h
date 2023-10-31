@@ -30,6 +30,9 @@
 
 namespace Inkscape {
 
+// Handle sizes relative to the preferred size
+enum class HandleSize { XTINY = -4, TINY = -2, SMALL = -1, NORMAL = 0, LARGE = 1 };
+
 class CanvasItemCtrl : public CanvasItem
 {
 public:
@@ -46,13 +49,12 @@ public:
     bool contains(Geom::Point const &p, double tolerance = 0) override;
 
     // Properties
-    void set_size(int size, bool manual = true);
+    void set_size(HandleSize rel_size);
     void set_fill(uint32_t rgba) override;
     void set_stroke(uint32_t rgba) override;
     void set_shape(CanvasItemCtrlShape shape);
-    virtual void set_size_via_index(int size_index);
+    void set_size_via_index(int size_index);
     void set_size_default(); // Use preference and type to set size.
-    void set_size_extra(int extra); // Used to temporary increase size of ctrl.
     void set_anchor(SPAnchorType anchor);
     void set_angle(double angle);
     void set_type(CanvasItemCtrlType type);
@@ -60,6 +62,7 @@ public:
     void set_click(bool click = true);
     void set_hover(bool hover = true);
     void set_normal(bool selected = false);
+    void set_odd_size(bool odd = true);
 
 protected:
     ~CanvasItemCtrl() override = default;
@@ -71,13 +74,12 @@ protected:
     void build_cache(int device_scale) const;
     float get_width() const;
 
+private:
     // Geometry
     Geom::Point _position;
-
     // Display
     InitLock _built;
     mutable std::shared_ptr<Cairo::ImageSurface const> _cache;
-
     // Properties
     Handles::TypeState _handle;
     CanvasItemCtrlShape _shape = CANVAS_ITEM_CTRL_SHAPE_SQUARE;
@@ -87,12 +89,14 @@ protected:
     bool _fill_set = false;
     bool _stroke_set = false;
     bool _size_set = false;
-    int _extra  = 0; // Used to temporarily increase size.
     double _angle = 0; // Used for triangles, could be used for arrows.
     SPAnchorType _anchor = SP_ANCHOR_CENTER;
-private:
     int _width  = 5;
+    bool _force_odd_size = true;
+    HandleSize _rel_size = HandleSize::NORMAL;
+
     int get_pixmap_width(int device_scale) const;
+    void _set_size(int size);
 };
 
 } // namespace Inkscape

@@ -324,7 +324,7 @@ bool ConnectorTool::_ptHandleTest(Geom::Point& p, gchar **href, gchar **subhref)
 static void cc_select_handle(SPKnot* knot)
 {
     knot->ctrl->set_selected(true);
-    knot->setSize(11); // Should be odd.
+    knot->setSize(HandleSize::LARGE);
     knot->setAnchor(SP_ANCHOR_CENTER);
     knot->updateCtrl();
 }
@@ -332,7 +332,7 @@ static void cc_select_handle(SPKnot* knot)
 static void cc_deselect_handle(SPKnot* knot)
 {
     knot->ctrl->set_selected(false);
-    knot->setSize(9); // Should be odd.
+    knot->setSize(HandleSize::NORMAL);
     knot->setAnchor(SP_ANCHOR_CENTER);
     knot->updateCtrl();
 }
@@ -992,13 +992,13 @@ void ConnectorTool::_activeShapeAddKnot(SPItem* item, SPItem* subitem)
         auto use = cast<SPUse>(item);
         g_assert(use != nullptr);
         knot->sub_owner = subitem;
-        knot->setSize(11); // Must be odd
+        knot->setSize(HandleSize::LARGE);
         knot->setAnchor(SP_ANCHOR_CENTER);
 
         // Set the point to the middle of the sub item
         knot->setPosition(subitem->getAvoidRef().getConnectionPointPos() * _desktop->doc2dt(), 0);
     } else {
-        knot->setSize(9); // Must be odd
+        knot->setSize(HandleSize::NORMAL);
         knot->setAnchor(SP_ANCHOR_CENTER);
         // Set the point to the middle of the object
         knot->setPosition(item->getAvoidRef().getConnectionPointPos() * _desktop->doc2dt(), 0);
@@ -1120,7 +1120,7 @@ void ConnectorTool::cc_set_active_conn(SPItem *item)
                                       _("<b>Connector endpoint</b>: drag to reroute or connect to new shapes"),
                                       Inkscape::CANVAS_ITEM_CTRL_TYPE_SHAPER, "CanvasItemCtrl:ConnectorTool:Endpoint");
 
-            knot->setSize(7);
+            knot->setSize(HandleSize::SMALL);
             knot->setAnchor(SP_ANCHOR_CENTER);
             knot->updateCtrl();
 

@@ -17,6 +17,7 @@
 #include <gdk/gdkkeysyms.h>
 
 #include "desktop.h"
+#include "display/control/canvas-item-ctrl.h"
 #include "snap.h"
 
 #include "display/control/canvas-item-curve.h"
@@ -1311,7 +1312,7 @@ void Node::_linearGrow(int dir)
 void Node::_setState(State state)
 {
     // change node size to match type and selection state
-    _canvas_item_ctrl->set_size_extra(selected() ? 2 : 0);
+    _canvas_item_ctrl->set_size(selected() ? HandleSize::LARGE : HandleSize::NORMAL);
     switch (state) {
         // These were used to set "active" and "prelight" flags but the flags weren't being used.
         case STATE_NORMAL:

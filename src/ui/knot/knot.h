@@ -22,6 +22,7 @@
 #include <glibmm/refptr.h>
 #include <gdkmm/cursor.h>
 
+#include "display/control/canvas-item-ctrl.h"
 #include "knot-enums.h"
 #include "display/control/canvas-item-enums.h"
 #include "display/control/canvas-item-ptr.h"
@@ -61,7 +62,7 @@ public:
     SPItem *sub_owner   = nullptr;                  /**< Optional SubOwner Item */
     unsigned int flags  = SP_KNOT_VISIBLE;
 
-    unsigned int size   = 9;                        /**< Always square. Must be odd. */
+    Inkscape::HandleSize _size = Inkscape::HandleSize::NORMAL; /**< Always square. Must be odd. */
     bool size_set       = false;                    /**< Use default size unless explicitly set. */
     double angle        = 0.0;                      /**< Angle of mesh handle. */
     bool is_lpe         = false;                    /**< is lpe knot. */
@@ -100,7 +101,7 @@ public:
     sigc::signal<bool (SPKnot*, Geom::Point*, unsigned int)> request_signal;
 
     // TODO: all the members above should eventually become private, accessible via setters/getters
-    void setSize(unsigned int i);
+    void setSize(Inkscape::HandleSize size);
     void setAnchor(unsigned int i);
     void setAngle(double i);
 

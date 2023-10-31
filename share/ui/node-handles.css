@@ -38,6 +38,7 @@ All available selectors:
     .inkscape-node-symmetrical
     .inkscape-mesh
     .inkscape-invisible
+    .inkscape-guide-handle
 
 All available pseudo-classes (states):
     :hover
@@ -65,6 +66,7 @@ Notes:
     outline-opacity: 60%;
     scale: 2.0;
     size-extra: 7px; /* extra space due to outline and stroke */
+    stroke-scale: 0.125; /* factor for scaling stroke with handle size or 0 to disable scaling */
 }
 
 *:selected {
@@ -93,9 +95,19 @@ Notes:
 
 .inkscape-node-auto,
 .inkscape-margin,
-.inkscape-point {
+.inkscape-move {
+
     shape: "circle";
     scale: 2.256758; /* 4 / sqrt(PI) */
+}
+
+.inkscape-point {
+    shape: "circle";
+    stroke-width: 0px;
+    outline-width: 1px;
+    fill: red;
+    scale: 1;
+    size-extra: 3px;
 }
 
 .inkscape-mesh,
@@ -108,27 +120,42 @@ Notes:
     shape: "triangle";
 }
 
+.inkscape-adj-handle, .inkscape-adj-skew, .inkscape-adj-rotate,
+.inkscape-adj-salign, .inkscape-adj-calign, .inkscape-adj-malign,
+.inkscape-adj-center {
+    fill: black;
+}
+
+.inkscape-adj-handle:selected, .inkscape-adj-skew:selected, .inkscape-adj-rotate:selected,
+.inkscape-adj-salign:selected, .inkscape-adj-calign:selected, .inkscape-adj-malign:selected,
+.inkscape-adj-center:selected {
+    fill: #4992fe;
+}
+
+.inkscape-adj-handle:hover, .inkscape-adj-skew:hover, .inkscape-adj-rotate:hover,
+.inkscape-adj-salign:hover, .inkscape-adj-calign:hover, .inkscape-adj-malign:hover,
+.inkscape-adj-center:hover {
+    fill: #6da7ff;
+}
+
 .inkscape-adj-handle {
     shape: "arrow";
-    fill: #d0d0d0;
-    scale: 3.0;
 }
 
 .inkscape-adj-skew {
     shape: "skew-arrow";
-    fill: #d0d0d0;
-    scale: 3.0;
 }
 
 .inkscape-adj-rotate {
     shape: "curved-arrow";
-    fill: #d0d0d0;
-    scale: 3.0;
 }
 
 .inkscape-adj-center {
     shape: "pivot";
-    fill: #d0d0d0;
+}
+
+.inkscape-adj-salign, .inkscape-adj-calign, .inkscape-adj-malign {
+    size-extra: 11px;
 }
 
 .inkscape-adj-salign {
@@ -151,8 +178,22 @@ Notes:
 .inkscape-marker {
     shape: "cross";
     stroke-width: 1px;
+    size-extra: 3px;
 }
 
 .inkscape-invisible {
     opacity: 0% !important;
+}
+
+.inkscape-guide-handle {
+    scale: 0.5;
+    size-extra: 3px;
+    stroke-width: 1.0px;
+    stroke-scale: 0;
+    outline-width: 0px;
+}
+
+.inkscape-pointer {
+    shape: "triangle-angled";
+    scale: 5.0; /* angled triangle occupies half of the image, so it needs larger scale */
 }

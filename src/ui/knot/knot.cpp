@@ -390,7 +390,7 @@ void SPKnot::updateCtrl() {
 
     if (ctrl) {
         if (size_set) {
-            ctrl->set_size(size);
+            ctrl->set_size(_size);
         }
         ctrl->set_angle(angle);
         ctrl->set_anchor(anchor);
@@ -410,8 +410,8 @@ void SPKnot::_setCtrlState() {
     }
 }
 
-void SPKnot::setSize(guint i) {
-    size = i;
+void SPKnot::setSize(Inkscape::HandleSize size) {
+    _size = size;
     size_set = true;
 }
 

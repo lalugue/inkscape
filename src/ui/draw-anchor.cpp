@@ -46,20 +46,19 @@ SPDrawAnchor::~SPDrawAnchor() = default;
  */
 SPDrawAnchor *SPDrawAnchor::anchorTest(Geom::Point w, bool activate)
 {
-    if ( activate && this->ctrl->contains(w)) {
-        
-        if (!this->active) {
-            this->ctrl->set_hover();
-            this->ctrl->set_size_extra(4);
-            this->active = TRUE;
+    if (activate && ctrl->contains(w)) {
+        if (!active) {
+            ctrl->set_hover();
+            ctrl->set_size(Inkscape::HandleSize::LARGE);
+            active = TRUE;
         }
         return this;
     }
 
-    if (this->active) {
-        this->ctrl->set_normal();
-        this->ctrl->set_size_extra(0);
-        this->active = FALSE;
+    if (active) {
+        ctrl->set_normal();
+        ctrl->set_size(Inkscape::HandleSize::NORMAL);
+        active = FALSE;
     }
 
     return nullptr;

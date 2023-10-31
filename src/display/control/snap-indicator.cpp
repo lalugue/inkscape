@@ -198,7 +198,6 @@ SnapIndicator::set_new_snaptarget(Inkscape::SnappedPoint const &p, bool pre_snap
         if (!is_alignment && !is_distribution) {
             // Display snap indicator at snap target
             ctrl = new Inkscape::CanvasItemCtrl(_desktop->getCanvasTemp(), Inkscape::CANVAS_ITEM_CTRL_TYPE_MARKER, p.getPoint());
-            ctrl->set_size(15);
             ctrl->set_selected(!pre_snap);
 
             _snaptarget = _desktop->add_temporary_canvasitem(ctrl, timeout_val*1000.0);
@@ -301,7 +300,6 @@ SnapIndicator::set_new_snapsource(Inkscape::SnapCandidatePoint const &p)
 
     if (value) {
         auto ctrl = new Inkscape::CanvasItemCtrl(_desktop->getCanvasTemp(), Inkscape::CANVAS_ITEM_CTRL_TYPE_POINT);
-        ctrl->set_size(7);
         ctrl->set_position(p.getPoint());
         _snapsource = _desktop->add_temporary_canvasitem(ctrl, 1000);
     }
@@ -312,7 +310,7 @@ SnapIndicator::set_new_debugging_point(Geom::Point const &p)
 {
     g_assert(_desktop != nullptr);
     auto ctrl = new Inkscape::CanvasItemCtrl(_desktop->getCanvasTemp(), Inkscape::CANVAS_ITEM_CTRL_TYPE_SHAPER, p);
-    ctrl->set_size(11);
+    ctrl->set_size(Inkscape::HandleSize::LARGE);
     _debugging_points.push_back(_desktop->add_temporary_canvasitem(ctrl, 5000));
 }
 
@@ -404,13 +402,11 @@ void SnapIndicator::make_alignment_indicator(Geom::Point const &p1, Geom::Point 
     Inkscape::CanvasItemCurve *line;
 
     auto ctrl = new Inkscape::CanvasItemCtrl(_desktop->getCanvasTemp(), Inkscape::CANVAS_ITEM_CTRL_TYPE_POINT);
-    ctrl->set_size(7);
     ctrl->set_position(p1);
     ctrl->set_pickable(false);
     _alignment_snap_indicators.push_back(_desktop->add_temporary_canvasitem(ctrl, 0));
 
     ctrl = new Inkscape::CanvasItemCtrl(_desktop->getCanvasTemp(), Inkscape::CANVAS_ITEM_CTRL_TYPE_POINT);
-    ctrl->set_size(7);
     ctrl->set_position(p2);
     ctrl->set_pickable(false);
     _alignment_snap_indicators.push_back(_desktop->add_temporary_canvasitem(ctrl, 0));

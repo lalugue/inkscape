@@ -13,6 +13,7 @@
 
 #include <2geom/path-intersection.h>
 
+#include "display/control/canvas-item-enums.h"
 #include "inkscape.h"
 #include "preferences.h"
 
@@ -467,16 +468,16 @@ Geom::Point FilletChamferKnotHolderEntity::knot_get() const
     } */
     
     knot->setAngle(angle + Geom::rad_from_deg(90));
-    knot->setSize(33);
-    knot->ctrl->set_shape(CANVAS_ITEM_CTRL_SHAPE_TRIANGLE_ANGLED);
+    knot->setSize(Inkscape::HandleSize::NORMAL);
+    knot->ctrl->set_type(CANVAS_ITEM_CTRL_TYPE_POINTER);
     if (nodesatellite.amount == 0) {
         if (is_mirror) {
             knot->hide();
         } else {
             tmp_point = contracted;
             _set_circle = true;
-            knot->ctrl->set_shape(CANVAS_ITEM_CTRL_SHAPE_CIRCLE);
-            knot->setSize(11);
+            knot->ctrl->set_type(CANVAS_ITEM_CTRL_TYPE_MOVE);
+            knot->setSize(Inkscape::HandleSize::TINY);
         }
     }
     
