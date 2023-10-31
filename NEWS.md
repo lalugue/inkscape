@@ -1,3 +1,16 @@
+Inkscape 1.3.1
+
+Released on 2023-11-01
+
+    Improvements on node count when using shape builder
+    Ability to disable snapping to grid lines
+    Possibility to split text into characters while keeping kerning
+    Lots of bugfixes and crash fixes, and translation improvements
+
+
+
+
+
 Inkscape 1.3
 
 Release highlights

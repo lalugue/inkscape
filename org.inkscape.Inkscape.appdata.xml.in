@@ -44,6 +44,18 @@
     </screenshot>
   </screenshots>
   <releases>
+    <release version="1.3.1" date="2023-11-01">
+      <description>
+        <p>Inkscape 1.3.1</p>
+        <ul>
+          <li>Improvements on node count when using shape builder</li>
+          <li>Ability to disable snapping to grid lines</li>
+          <li>Possibility to split text into characters while keeping kerning</li>
+          <li>Lots of bugfixes and crash fixes, and translation improvements</li>
+        </ul>
+      </description>
+      <url>http://wiki.inkscape.org/wiki/index.php/Release_notes/1.3.1</url>
+    </release>
     <release version="1.3" date="2023-07-21">
       <description>
         <p>Inkscape 1.3</p>
