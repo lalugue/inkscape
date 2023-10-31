@@ -16,6 +16,7 @@
 #include "gtest/gtest.h"
 #include "util/longest-common-suffix.h"
 #include "util/parse-int-range.h"
+#include "util/delete-with.h"
 
 TEST(UtilTest, NearestCommonAncestor)
 {
@@ -110,6 +111,38 @@ TEST(UtilTest, ParseIntRangeTest)
 
     // Mixeed formats
     ASSERT_EQ(Inkscape::parseIntRange("2-4,7-9", 1, 10), std::set<unsigned int>({2,3,4,7,8,9}));
+}
+
+namespace {
+
+bool flag;
+
+void set_flag(bool *)
+{
+    flag = true;
+}
+
+} // namespace
+
+TEST(UtilTest, DeleteWithTest)
+{
+    using Inkscape::Util::delete_with;
+
+    // Deleting non-null pointer runs function.
+    flag = false;
+    {
+        auto x = delete_with<set_flag>(&flag);
+        ASSERT_EQ(flag, false);
+    }
+    ASSERT_EQ(flag, true);
+
+    // Deleting null pointer does nothing.
+    flag = false;
+    {
+        auto x = delete_with<set_flag>(static_cast<bool *>(nullptr));
+        ASSERT_EQ(flag, false);
+    }
+    ASSERT_EQ(flag, false);
 }
 
 // vim: filetype=cpp:expandtab:shiftwidth=4:softtabstop=4:fileencoding=utf-8:textwidth=99 :
