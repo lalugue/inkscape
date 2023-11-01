@@ -203,7 +203,7 @@ void LayerSelector::_layerChoose()
 
 Glib::ustring LayerSelector::getThisCssClass() const
 {
-    return "this" + Glib::ustring::format(this);
+    return "this" + std::to_string(reinterpret_cast<uintptr_t>(this));
 }
 
 } // namespace Inkscape::UI::Widget
