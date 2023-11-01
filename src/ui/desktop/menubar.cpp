@@ -146,7 +146,8 @@ build_menu()
         // sort by "last modified" time, which puts the most recently opened files first
         std::sort(begin(recent_files), end(recent_files),
             [](auto const &a, auto const &b) -> bool {
-                return a->get_modified().compare(b->get_modified()) < 0;
+                // Fixme: In GTKmm 4.14, go back to using the C++ API (which crashes at the moment).
+                return g_date_time_compare(gtk_recent_info_get_modified(a->gobj()), gtk_recent_info_get_modified(b->gobj())) < 0;
             }
         );
 
