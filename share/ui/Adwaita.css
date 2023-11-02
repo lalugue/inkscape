@@ -69,3 +69,14 @@ notebook notebook header image {
 #AlignDistribute #align {
     margin-top:-15px;
 }
+
+button.toggle,button.radio{
+    outline:none;
+}
+
+/* checked buttons */
+button.radio:checked,
+button.toggle:checked {
+    background-color: transparent;
+    background-image: image(linear-gradient(alpha(@theme_selected_bg_color,0.75), alpha(@theme_selected_bg_color,0.4)));
+}
