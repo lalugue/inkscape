@@ -449,10 +449,13 @@ void truncate_digits(const Glib::RefPtr<Gtk::TextBuffer>& buffer, int precision)
 
 Glib::RefPtr<Gdk::Texture> to_texture(Cairo::RefPtr<Cairo::Surface> const &surface)
 {
-    assert(surface);
+    if (!surface) {
+        return {};
+    }
+
     assert(surface->get_type() == Cairo::Surface::Type::IMAGE);
 
-    auto img = Cairo::ImageSurface(surface->cobj(), true);
+    auto img = Cairo::ImageSurface(surface->cobj());
     assert(img.get_format() == Cairo::ImageSurface::Format::ARGB32);
 
     auto bytes = g_bytes_new_with_free_func(img.get_data(),
