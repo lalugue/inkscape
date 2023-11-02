@@ -291,7 +291,6 @@ set(ui_SRC
 	icon-names.h
 	icon-loader.h
 	interface.h
-	manage.h
 	menuize.h
 	monitor.h
 	pack.h
