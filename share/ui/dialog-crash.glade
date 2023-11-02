@@ -4,6 +4,7 @@
   <object class="GtkTextBuffer" id="stacktrace"/>
   <object class="GtkWindow" id="crash_dialog">
     <property name="modal">True</property>
+    <property name="resizable">True</property>
     <property name="default-height">300</property>
     <property name="child">
       <object class="GtkBox">
@@ -59,7 +60,7 @@
           <object class="GtkButton" id="button_ok">
             <property name="label" translatable="yes">OK</property>
             <property name="halign">end</property>
-            <property name="receives_default">1</property>
+            <property name="receives_default">True</property>
           </object>
         </child>
       </object>
