@@ -220,7 +220,7 @@ void PathVectorNodeSatellites::recalculateForNewPathVector(Geom::PathVector cons
                 if (!_nodesatellites.empty() && !_nodesatellites[k].empty()) {
                     assert(countnodes == _nodesatellites[k].size());
                     for (size_t l = 0; l < countcurves; ++l) {
-                        if (Geom::are_near(_pathvector[k][l].initialPoint(),  pathv[i][j].initialPoint())) {
+                        if (Geom::are_near(_pathvector[k][l].initialPoint(),  pathv[i][j].initialPoint(), 0.001)) { // epsilon is not enought big
                             path_nodesatellites.push_back(_nodesatellites[k][l]);
                             found = true;
                             break;
