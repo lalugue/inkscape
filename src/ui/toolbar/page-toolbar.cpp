@@ -218,6 +218,9 @@ PageToolbar::~PageToolbar()
 void PageToolbar::toolChanged(SPDesktop *desktop, Inkscape::UI::Tools::ToolBase *ec)
 {
     _document = nullptr;
+    _page_selected.disconnect();
+    _page_modified.disconnect();
+    _pages_changed.disconnect();
 
     if (dynamic_cast<Inkscape::UI::Tools::PagesTool *>(ec)) {
         // Save the document and page_manager for future use.
