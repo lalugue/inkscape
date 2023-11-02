@@ -526,8 +526,12 @@ sp_lpe_item_cleanup_original_path_recursive(SPLPEItem *lpeitem, bool keep_paths,
     if (group) {
         std::vector<SPItem*> item_list = cast<SPGroup>(lpeitem)->item_list();
         for (auto iter : item_list) {
-            auto subitem = cast<SPLPEItem>(iter);
-            if (subitem) {
+            if (auto subitem = cast<SPLPEItem>(iter)) {
+                if (auto shape = cast<SPShape>(iter)) {
+                    if (gchar const * value = shape->getAttribute("d")) {
+                        shape->setCurve(SPCurve(sp_svg_read_pathv(value)));
+                    }
+                }
                 sp_lpe_item_cleanup_original_path_recursive(subitem, keep_paths);
             }
         }
