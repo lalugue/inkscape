@@ -223,6 +223,7 @@ void DialogBase::setDesktop(SPDesktop *new_desktop)
 
 void DialogBase::fix_inner_scroll(Gtk::Widget * const widget)
 {
+#if 0 // Todo: Is this needed anymore?
     auto const scrollwin = dynamic_cast<Gtk::ScrolledWindow *>(widget);
     if (!scrollwin) return;
 
@@ -251,6 +252,7 @@ void DialogBase::fix_inner_scroll(Gtk::Widget * const widget)
         }
         return false;
     });
+#endif
 }
 
 /**

@@ -66,11 +66,11 @@ DialogWindow::DialogWindow(InkscapeWindow *inkscape_window, Gtk::Widget *page)
         DialogManager::singleton().store_state(*this);
         delete this;
         return true;
-    }, true);
+    }, false); // before GTKʼs default handler, so it wonʼt try to double-delete
 
     auto win_action_group = dynamic_cast<Gio::ActionGroup *>(inkscape_window);
     if (win_action_group) {
-        insert_action_group("win", Glib::wrap(win_action_group, false));
+        //insert_action_group("win", Glib::wrap(win_action_group, false));
     } else {
         std::cerr << "DialogWindow::DialogWindow: Can't find InkscapeWindow Gio:ActionGroup!" << std::endl;
     }
@@ -116,7 +116,7 @@ DialogWindow::DialogWindow(InkscapeWindow *inkscape_window, Gtk::Widget *page)
         // Set window size considering what the dialog needs
         Gtk::Requisition minimum_size, natural_size;
         dialog->get_preferred_size(minimum_size, natural_size);
-        int overhead = 2 * (drop_size + dialog->property_margin().get_value());
+        int overhead = 0;
         int width = natural_size.get_width() + overhead;
         int height = natural_size.get_height() + overhead + NOTEBOOK_TAB_HEIGHT;
         window_width = std::max(width, window_width);
@@ -204,7 +204,7 @@ void DialogWindow::update_window_size_to_fit_children()
         dialog->get_preferred_size(minimum_size, natural_size);
         width = std::max(natural_size.get_width(), width);
         height = std::max(natural_size.get_height(), height);
-        overhead = std::max(overhead, dialog->property_margin().get_value());
+        overhead = 0;
     }
 
     // Compute sizes including overhead
@@ -222,7 +222,6 @@ void DialogWindow::update_window_size_to_fit_children()
     height = std::max(height, allocation.get_height());
 
     // Resize window
-    move(pos_x, pos_y);
     set_default_size(width, height);
 
     // Note: This function also used to maintain the center of the window
