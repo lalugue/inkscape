@@ -132,6 +132,7 @@ parts:
     source: .
     build-packages:
       - python3-pip
+      - libgirepository1.0-dev
     override-build: |
       export PYTHONUSERBASE=${SNAPCRAFT_PART_INSTALL}
       pip3 install poetry
