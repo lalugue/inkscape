@@ -15,7 +15,6 @@
 #define INKSCAPE_UI_DIALOG_NOTEBOOK_H
 
 #include <map>
-#include <memory>
 #include <variant>
 #include <vector>
 #include <glibmm/refptr.h>
@@ -37,10 +36,6 @@ class GestureMultiPress;
 } // namespace Gtk
 
 namespace Inkscape::UI {
-
-namespace Widget {
-class PopoverMenuItem;
-} // namespace Widget
 
 namespace Dialog {
 
@@ -84,7 +79,6 @@ private:
     DialogContainer *_container;
     UI::Widget::PopoverMenu _menu;
     UI::Widget::PopoverMenu _menutabs;
-    std::vector<std::unique_ptr<UI::Widget::PopoverMenuItem>> _menutabs_items;
     Gtk::Notebook _notebook;
 
     // State variables

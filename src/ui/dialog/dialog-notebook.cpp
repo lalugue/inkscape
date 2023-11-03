@@ -761,13 +761,10 @@ void DialogNotebook::reload_tab_menu()
 {
     if (_reload_context) {
         _reload_context = false;
+
         _connmenu.clear();
 
-        // In GTK4 we'll need to remove before delete (via unique_ptr). Do so now too.
-        for (auto const &item: _menutabs_items) {
-            _menutabs.remove(*item);
-        }
-        _menutabs_items.clear();
+        _menutabs.delete_all();
 
         auto prefs = Inkscape::Preferences::get();
         bool symbolic = false;
@@ -784,7 +781,7 @@ void DialogNotebook::reload_tab_menu()
             auto const boxmenu = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL, 8);
             boxmenu->set_halign(Gtk::ALIGN_START);
 
-            auto const &menuitem = _menutabs_items.emplace_back(std::make_unique<UI::Widget::PopoverMenuItem>());
+            auto const menuitem = Gtk::make_managed<UI::Widget::PopoverMenuItem>();
             menuitem->add(*boxmenu);
 
             auto const &[icon, label, close] = *children;
