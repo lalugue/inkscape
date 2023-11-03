@@ -15,8 +15,11 @@
 #include "libnrtype/font-lister.h"
 #include "preferences.h"
 
+#include <exception>
 #include <fstream>
-// #include <iostream>
+#include <glibmm/error.h>
+#include <glibmm/exception.h>
+#include <iostream>
 
 #ifdef _WIN32
 #include<direct.h>
@@ -86,7 +89,19 @@ void RecentlyUsedFonts::print_recently_used_fonts()
 */
 
 // Read fonts stored in a collection file.
-void RecentlyUsedFonts::read(const Glib::ustring& file_path)
+void RecentlyUsedFonts::read(const Glib::ustring& file_path) {
+    try {
+        _read(file_path);
+    }
+    catch (std::exception& ex) {
+        std::cerr << "Failed to read recently used fonts file: " << ex.what() << std::endl;
+    }
+    catch (Glib::Exception& ex) {
+        std::cerr << "Failed to read recently used fonts file: " << ex.what() << std::endl;
+    }
+}
+
+void RecentlyUsedFonts::_read(const Glib::ustring& file_path)
 {
     // Filestream object to read data from the file.
     std::ifstream input_file(file_path);
@@ -118,7 +133,19 @@ void RecentlyUsedFonts::read(const Glib::ustring& file_path)
 }
 
 // Function to write the recently used fonts to a file.
-void RecentlyUsedFonts::write_recently_used_fonts()
+void RecentlyUsedFonts::write_recently_used_fonts() {
+    try {
+        _write_recently_used_fonts();
+    }
+    catch (std::exception& ex) {
+        std::cerr << "Failed to write recently used fonts file: " << ex.what() << std::endl;
+    }
+    catch (Glib::Exception& ex) {
+        std::cerr << "Failed to write recently used fonts file: " << ex.what() << std::endl;
+    }
+}
+
+void RecentlyUsedFonts::_write_recently_used_fonts()
 {
     // Step 1: Fetch the collections directory from the system directory.
 
