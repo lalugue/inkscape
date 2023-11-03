@@ -59,6 +59,8 @@ public:
 
 private:
     RecentlyUsedFonts();
+    void _read(const Glib::ustring& file_name);
+    void _write_recently_used_fonts();
 
     // This list will contain the recently used fonts queue.
     std::list <Glib::ustring> _recent_list;
