@@ -615,6 +615,7 @@ void sp_namedview_window_from_document(SPDesktop *desktop)
             w = h = MIN_WINDOW_SIZE;
         } else if (default_size == PREFS_WINDOW_SIZE_NATURAL) {
             // don't set size (i.e. keep the gtk+ default, which will be the natural size)
+            w = h = 0;
             // unless gtk+ decided it would be a good idea to show a window that is larger than the screen
             Gdk::Rectangle monitor_geometry = Inkscape::UI::get_monitor_geometry_at_window(win->get_window());
             int monitor_width =  monitor_geometry.get_width();
