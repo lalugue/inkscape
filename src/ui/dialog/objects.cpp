@@ -1113,18 +1113,22 @@ bool ObjectsPanel::_selectionChanged()
 
     for (auto item : getSelection()->items()) {
         keep_current_item |= (item == current_item);
-        // Failing to find the watchers here means the object is filtered out
-        // of the current object view and can be safely skipped.
         if (auto watcher = unpackToObject(item)) {
-            if (auto child_watcher = watcher->findChild(item->getRepr())) {
-                // Expand layers themselves, but do not expand groups.
-                auto focus_watcher = watcher;
-                child_watcher->setSelectedBit(SELECTED_OBJECT, true);
+            // Expand layers themselves, but do not expand groups.
+            auto focus_watcher = watcher;
 
+            // Failing to find the child watcher here means the object is filtered out
+            // of the current object view and we expand to the closest sublayer instead.
+            if (auto child_watcher = watcher->findChild(item->getRepr())) {
+                child_watcher->setSelectedBit(SELECTED_OBJECT, true);
+                watcher = child_watcher;
+            }
+
+            {
                 if (prefs->getBool("/dialogs/objects/expand_to_layer", true)) {
                     _tree.expand_to_path(focus_watcher->getTreePath());
                     if (!_scroll_lock) {
-                        _tree.scroll_to_row(child_watcher->getTreePath(), 0.5);
+                        _tree.scroll_to_row(watcher->getTreePath(), 0.5);
                     }
                 }
             }
