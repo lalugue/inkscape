@@ -657,7 +657,8 @@ void sp_import_document(SPDesktop *desktop, SPDocument *clipdoc, bool in_place, 
 
     SPDocument *target_document = desktop->getDocument();
     Inkscape::XML::Node *root = clipdoc->getReprRoot();
-    Inkscape::XML::Node *target_parent = desktop->layerManager().currentLayer()->getRepr();
+    auto layer = desktop->layerManager().currentLayer();
+    Inkscape::XML::Node *target_parent = layer->getRepr();
 
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
 
@@ -668,6 +669,14 @@ void sp_import_document(SPDesktop *desktop, SPDocument *clipdoc, bool in_place, 
     auto *node_after = desktop->getSelection()->topRepr();
     if (node_after && prefs->getBool("/options/paste/aboveselected", true) && node_after != target_parent) {
         target_parent = node_after->parent();
+
+        // find parent group
+        for (auto p = target_document->getObjectByRepr(node_after->parent()); p; p = p->parent) {
+            if (auto parent_group = cast<SPGroup>(p)) {
+                layer = parent_group;
+                break;
+            }
+        }
     } else {
         node_after = target_parent->lastChild();
     }
@@ -715,7 +724,6 @@ void sp_import_document(SPDesktop *desktop, SPDocument *clipdoc, bool in_place, 
     }
 
     std::vector<Inkscape::XML::Node*> pasted_objects_not;
-    auto layer = desktop->layerManager().currentLayer();
     Geom::Affine doc2parent = layer->i2doc_affine().inverse();
 
     Geom::OptRect from_page;
