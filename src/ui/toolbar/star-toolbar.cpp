@@ -65,6 +65,20 @@ StarToolbar::StarToolbar(SPDesktop *desktop)
 
     setup_derived_spin_button(_magnitude_item, "magnitude", is_flat_sided ? 3 : 2,
                               &StarToolbar::magnitude_value_changed);
+
+    _magnitude_item.set_custom_numeric_menu_data({
+        {2, ""},
+        {3, _("triangle/tri-star")},
+        {4, _("square/quad-star")},
+        {5, _("pentagon/five-pointed star")},
+        {6, _("hexagon/six-pointed star")},
+        {7, ""},
+        {8, ""},
+        {10, ""},
+        {12, ""},
+        {20, ""}
+    });
+
     setup_derived_spin_button(_spoke_item, "proportion", 0.5, &StarToolbar::proportion_value_changed);
     setup_derived_spin_button(_roundedness_item, "rounded", 0.0, &StarToolbar::rounded_value_changed);
     setup_derived_spin_button(_randomization_item, "randomized", 0.0, &StarToolbar::randomized_value_changed);
