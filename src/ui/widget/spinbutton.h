@@ -12,9 +12,12 @@
 #define INKSCAPE_UI_WIDGET_SPINBUTTON_H
 
 #include <glibmm/refptr.h>
+#include <glibmm/ustring.h>
 #include <gtkmm/spinbutton.h>
 
 #include "scrollprotected.h"
+#include "ui/popup-menu.h"
+#include "ui/widget/popover-menu.h"
 
 namespace Gtk {
 class Builder;
@@ -46,35 +49,39 @@ private:
 class SpinButton : public ScrollProtected<Gtk::SpinButton>
 {
 public:
+    using NumericMenuData = std::map<double, Glib::ustring>;
     // We canʼt inherit ctors as if we declare SpinButton(), inherited ctors donʼt call it. Really!
     template <typename ...Args>
     SpinButton(Args &&...args)
     : ScrollProtected(std::forward<Args>(args)...)
     { construct(); } // Do the non-templated stuff
-  
+
     void setUnitMenu(UnitMenu* unit_menu) { _unit_menu = unit_menu; };
     void addUnitTracker(UnitTracker* ut) { _unit_tracker = ut; };
-  
+
     // TODO: Might be better to just have a default value and a reset() method?
     inline void set_zeroable(const bool zeroable = true) { _zeroable = zeroable; }
     inline void set_oneable(const bool oneable = true) { _oneable = oneable; }
-  
+
     inline bool get_zeroable() const { return _zeroable; }
     inline bool get_oneable() const { return _oneable; }
-  
+
     void defocus();
-  
+
 private:
     UnitMenu    *_unit_menu    = nullptr; ///< Linked unit menu for unit conversion in entered expressions.
     UnitTracker *_unit_tracker = nullptr; ///< Linked unit tracker for unit conversion in entered expressions.
     double _on_focus_in_value  = 0.;
     Gtk::Widget *_defocus_widget = nullptr; ///< Widget that should grab focus when the spinbutton defocuses
-  
+
     bool _zeroable = false; ///< Reset-value should be zero
     bool _oneable  = false; ///< Reset-value should be one
-  
+
     bool _stay = false; ///< Whether to ignore defocusing
     bool _dont_evaluate = false; ///< Don't attempt to evaluate expressions
+
+    NumericMenuData _custom_menu_data;
+    bool _custom_popup = false;
 
     void construct();
 
@@ -83,7 +90,7 @@ private:
      * It calls a method to evaluate the (potential) mathematical expression.
      *
      * @retval false No conversion done, continue with default handler.
-     * @retval true  Conversion successful, don't call default handler. 
+     * @retval true  Conversion successful, don't call default handler.
      */
     int on_input(double* newvalue) final;
 
@@ -92,15 +99,18 @@ private:
      */
     void on_has_focus_changed();
 
-
     /**
      * Handle specific keypress events, like Ctrl+Z.
      *
      * @retval false continue with default handler.
-     * @retval true  don't call default handler. 
+     * @retval true  don't call default handler.
      */
     bool on_key_pressed(GtkEventControllerKey const * controller,
                         unsigned keyval, unsigned keycode, GdkModifierType state);
+
+    bool on_popup_menu(PopupMenuOptionalClick);
+    std::shared_ptr<UI::Widget::PopoverMenu> get_popover_menu();
+    void on_numeric_menu_item_activate(double value);
 
     /**
      * Undo the editing, by resetting the value upon when the spinbutton got focus.
@@ -110,6 +120,8 @@ private:
   public:
     inline void set_defocus_widget(const decltype(_defocus_widget) widget) { _defocus_widget = widget; }
     inline void set_dont_evaluate(bool flag) { _dont_evaluate = flag; }
+
+    void set_custom_numeric_menu_data(NumericMenuData &&custom_menu_data);
 };
 
 } // namespace Inkscape::UI::Widget
