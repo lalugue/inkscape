@@ -444,7 +444,7 @@ SPItem *SPDesktop::getGroupAtPoint(Geom::Point const &p) const
 }
 
 /**
- * Returns the mouse point in document coordinates; if mouse is
+ * Returns the mouse point in desktop coordinates; if mouse is
  * outside the canvas, returns the center of canvas viewpoint.
  */
 Geom::Point SPDesktop::point() const

@@ -517,10 +517,9 @@ bool ClipboardManagerImpl::_copyNodes(SPDesktop *desktop, ObjectSet *set)
     if (!node_tool || !node_tool->_selected_nodes)
         return false;
 
-    SPObject *first_path = nullptr;
+    SPPath *first_path = nullptr;
     for (auto obj : set->items()) {
-        if(is<SPPath>(obj)) {
-            first_path = obj;
+        if ((first_path = cast<SPPath>(obj))) {
             break;
         }
     }
@@ -534,15 +533,20 @@ bool ClipboardManagerImpl::_copyNodes(SPDesktop *desktop, ObjectSet *set)
     _discardInternalClipboard();
     _createInternalClipboard();
 
+    // Copy document height so that desktopVisualBounds() is equivalent in the
+    // source document and the clipboard.
+    _clipboardSPDoc->setWidthAndHeight(desktop->doc()->getWidth(), desktop->doc()->getHeight());
+
     // Were any nodes actually copied?
     if (pathv.empty() || !first_path)
         return false;
 
     Inkscape::XML::Node *pathRepr = _doc->createElement("svg:path");
 
-    // Remove the source document's scale from path as clipboard is 1:1
-    auto source_scale = first_path->document->getDocumentScale();
+    // pathv is in desktop coordinates
+    auto source_scale = first_path->i2dt_affine();
     pathRepr->setAttribute("d", sp_svg_write_path(pathv * source_scale.inverse()));
+    pathRepr->setAttributeOrRemoveIfEmpty("transform", first_path->getAttribute("transform"));
 
     // Group the path to make it consistant with other copy processes
     auto group = _doc->createElement("svg:g");
@@ -564,7 +568,8 @@ bool ClipboardManagerImpl::_copyNodes(SPDesktop *desktop, ObjectSet *set)
     if (auto path_obj = cast<SPPath>(_clipboardSPDoc->getObjectByRepr(pathRepr))) {
         // we could use pathv.boundsFast here, but that box doesn't include stroke width
         // so we must take the value from the visualBox of the new shape instead.
-        auto bbox = *(path_obj->visualBounds()) * source_scale;
+        assert(Geom::are_near(path_obj->document->getDimensions(), first_path->document->getDimensions()));
+        auto bbox = *(path_obj->desktopVisualBounds());
         _clipnode->setAttributePoint("min", bbox.min());
         _clipnode->setAttributePoint("max", bbox.max());
     }
@@ -589,46 +594,38 @@ bool ClipboardManagerImpl::_pasteNodes(SPDesktop *desktop, SPDocument *clipdoc, 
     if (!target_path)
         return false;
 
-    auto source_scale = clipdoc->getDocumentScale();
-    auto target_trans = target_path->i2doc_affine();
+    auto const dt_to_target = target_path->dt2i_affine();
     // Select all nodes prior to pasting in, for later inversion.
     node_tool->_selected_nodes->selectAll();
 
     for (auto node = clipdoc->getReprRoot()->firstChild(); node; node = node->next()) {
         auto source_obj = clipdoc->getObjectByRepr(node);
-        auto group_affine = Geom::Affine();
 
         // Unpack group that may have a transformation inside it.
         if (auto source_group = cast<SPGroup>(source_obj)) {
             if (source_group->children.size() == 1) {
                 source_obj = source_group->firstChild();
-                group_affine = source_group->i2doc_affine();
             }
         }
 
         if (auto source_path = cast<SPPath>(source_obj)) {
+            auto source_to_target = source_path->i2dt_affine();
             auto source_curve = *source_path->curveForEdit();
             auto target_curve = *target_path->curveForEdit();
 
-            // Apply group transformation which is usually the old translation plus document scaling factor
-            source_curve.transform(group_affine);
-            // Convert curve from source units (usually px so 1:1)
-            source_curve.transform(source_scale);
-
+            auto bbox = *(source_path->desktopVisualBounds());
             if (!in_place) {
-                // Move the source curve to the mouse pointer, units are px so do before target_trans
-                auto bbox = *(source_path->geometricBounds()) * group_affine;
-                auto to_mouse = Geom::Translate((desktop->point() - bbox.midpoint()).round());
-                source_curve.transform(to_mouse);
+                // Move the source curve to the mouse pointer (desktop coordinates)
+                source_to_target *= Geom::Translate((desktop->point() - bbox.midpoint()).round());
             } else if (auto clipnode = sp_repr_lookup_name(clipdoc->getReprRoot(), "inkscape:clipboard", 1)) {
                 // Force translation so a foreign path will end up in the right place.
-                auto bbox = *(source_path->visualBounds()) * group_affine;
-                auto to_origin = Geom::Translate(clipnode->getAttributePoint("min") - bbox.min());
-                source_curve.transform(to_origin);
+                source_to_target *= Geom::Translate(clipnode->getAttributePoint("min") - bbox.min());
             }
 
+            source_to_target *= dt_to_target;
+
             // Finally convert the curve into path item's coordinate system
-            source_curve.transform(target_trans.inverse());
+            source_curve.transform(source_to_target);
 
             // Add the source curve to the target copy
             target_curve.append(std::move(source_curve));
