@@ -35,6 +35,7 @@
 #include <gtkmm/entry.h>
 #include <gtkmm/expander.h>
 #include <gtkmm/frame.h>
+#include <gtkmm/label.h>
 #include <gtkmm/spinbutton.h>
 #include <gtkmm/textview.h>
 
