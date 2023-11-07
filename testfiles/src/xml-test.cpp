@@ -15,6 +15,8 @@
 #include "gtest/gtest.h"
 #include "xml/repr.h"
 
+#include <list>
+
 TEST(XmlTest, nodeiter)
 {
     auto testdoc = std::shared_ptr<Inkscape::XML::Document>(sp_repr_read_buf("<svg><g/></svg>", SP_SVG_NS_URI));
