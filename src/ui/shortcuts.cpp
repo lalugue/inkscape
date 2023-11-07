@@ -925,10 +925,8 @@ Shortcuts::import_shortcuts() {
         return false;
     }
 
-    // Get file name and read.
-    Glib::ustring path = importFileDialog->getFilename(); // It's a full path, not just a filename!
-
-    Glib::RefPtr<Gio::File> file_read = Gio::File::create_for_path(path);
+    // Get file and read.
+    auto file_read = importFileDialog->getFile();
     if (!read(file_read, true)) {
         std::cerr << "Shortcuts::import_shortcuts: Failed to read file!" << std::endl;
         return false;
@@ -954,25 +952,17 @@ Shortcuts::export_shortcuts() {
                                            _("Select a filename for export"),
                                            {}, {}, Inkscape::Extension::FILE_SAVE_METHOD_SAVE_AS)};
     saveFileDialog->addFilterMenu(_("Inkscape shortcuts (*.xml)"), "*.xml");
-    saveFileDialog->setFilename("shortcuts.xml");
+    saveFileDialog->setCurrentName("shortcuts.xml");
     bool success = saveFileDialog->show();
 
     // Get file name and write.
     if (success) {
-        Glib::ustring path = saveFileDialog->getFilename(); // It's a full path, not just a filename!
-        if (Inkscape::IO::get_file_extension(path) != ".xml") {
-            path += ".xml";
-        }
-        if (path.size() > 0) {
-            Glib::ustring newFileName = Glib::filename_to_utf8(path);  // Is this really correct? (Paths should be std::string.)
-            Glib::RefPtr<Gio::File> file = Gio::File::create_for_path(path);
-            success = write(file, User);
-        } else {
-            // Can this ever happen?
-            success = false;
+        auto file = saveFileDialog->getFile();
+        success = write(file, User);
+        if (!success) {
+            std::cerr << "Shortcuts::export_shortcuts: Failed to save file!" << std::endl;
         }
     }
-
     return success;
 };
 

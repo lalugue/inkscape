@@ -270,7 +270,7 @@ InkFileExportCmd::get_filename_out(std::string filename_in, std::string object_i
     if (!export_filename.empty()) {
         auto ext = Inkscape::IO::get_file_extension(export_filename);
         auto cmp = "." + export_type_current_native;
-        return export_filename + (ext.raw() == cmp ? "" : cmp);
+        return export_filename + (ext == cmp ? "" : cmp);
     }
 
     // Check for pipe

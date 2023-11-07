@@ -162,7 +162,6 @@ set(ui_SRC
 	dialog/startup.cpp
 	dialog/styledialog.cpp
 	dialog/svg-fonts-dialog.cpp
-	dialog/svg-preview.cpp
 	dialog/swatches.cpp
 	dialog/symbols.cpp
 	dialog/paint-servers.cpp
@@ -333,7 +332,6 @@ set(ui_SRC
 	dialog/extensions-gallery.h
 	dialog/filedialog.h
 	dialog/filedialogimpl-gtkmm.h
-	dialog/filedialogimpl-win32.h
 	dialog/fill-and-stroke.h
 	dialog/filter-effects-dialog.h
 	dialog/find.h
@@ -363,7 +361,6 @@ set(ui_SRC
 	dialog/startup.h
 	dialog/styledialog.h
 	dialog/svg-fonts-dialog.h
-	dialog/svg-preview.h
 	dialog/swatches.h
 	dialog/symbols.h
 	dialog/paint-servers.h
@@ -564,12 +561,6 @@ set(ui_SRC
 
 	view/svg-view-widget.h
 )
-
-if(WIN32)
-	list(APPEND ui_SRC
-		dialog/filedialogimpl-win32.cpp
-	)
-endif()
 
 add_inkscape_source("${ui_SRC}")
 

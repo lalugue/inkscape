@@ -31,9 +31,6 @@
 //#define INK_DUMP_FOPEN 1
 #undef INK_DUMP_FOPEN
 
-void dump_str(gchar const *str, gchar const *prefix);
-void dump_ustr(Glib::ustring const &ustr);
-
 extern guint update_in_progress;
 
 
@@ -204,11 +201,22 @@ Glib::ustring Inkscape::IO::sanitizeString(char const *str)
 }
 
 /* 
- * Returns the file extension of a path/filename
+ * Returns the file extension of a path/filename. Don't use this one unless for display.
+ * Used by src/extension/internal/odf.cpp, src/extension/output.cpp. TODO Remove!
  */
-Glib::ustring Inkscape::IO::get_file_extension(Glib::ustring path)
+Glib::ustring Inkscape::IO::get_file_extension(Glib::ustring const &path)
 {
-    Glib::ustring::size_type loc = path.find_last_of(".");
+    auto loc = path.find_last_of(".");
+    return loc < path.size() ? path.substr(loc) : "";
+}
+
+/*
+ * Returns the file extension of a path/filename. Use this one for filenames.
+ * Used by src/extension/effect.cpp, src/io/file-export-cmd.cpp, etc.
+ */
+std::string Inkscape::IO::get_file_extension(std::string const &path)
+{
+    auto loc = path.find_last_of(".");
     return loc < path.size() ? path.substr(loc) : "";
 }
 

@@ -5,7 +5,7 @@
 /* Authors:
  *   Bob Jamison <rwjj@earthlink.net>
  *   Joel Holdsworth
- *   Inkscape Guys
+ *   Inkscape developers.
  *
  * Copyright (C) 2006 Johan Engelen <johan@shouraizou.nl>
  * Copyright (C) 2007-2008 Joel Holdsworth
@@ -23,20 +23,25 @@
 
 #include "extension/system.h"
 
+#include <glibmm/refptr.h>
 #include <glibmm/ustring.h>
 
 class SPDocument;
 
-namespace Inkscape {
-namespace Extension {
+namespace Gio {
+class File;
+} // namespace Gio
+
+namespace Gtk {
+class Window;
+} // namespace Gtk
+
+namespace Inkscape::Extension {
 class Extension;
 class Output;
-}
-}
+} // namespace Inkscape::Extension
 
-namespace Inkscape {
-namespace UI {
-namespace Dialog {
+namespace Inkscape::UI::Dialog {
 
 /**
  * Used for setting filters and options, and
@@ -67,7 +72,13 @@ enum FileDialogSelectionType
 bool hasSuffix(const Glib::ustring &str, const Glib::ustring &ext);
 
 /**
- * Return true if the image is loadable by Gdk, else false
+ * Set initial directory for dialog given a preference path.
+ */
+void get_start_directory(std::string &start_path, Glib::ustring const &prefs_path, bool try_document_dir = false);
+
+/**
+ * Return true if the image is loadable by Gdk, else false.
+ * Only user is svg-preview.cpp which is disappearing, don't worry about string type.
  */
 bool isValidImageFile(const Glib::ustring &fileName);
 
@@ -81,9 +92,6 @@ public:
      */
     virtual Inkscape::Extension::Extension *getExtension() { return _extension; }
     virtual void setExtension(Inkscape::Extension::Extension *key) { _extension = key; }
-
-    const Glib::ustring &getFilename() { return _filename; }
-    void setFilename(const Glib::ustring &path) { _filename = path; }
 
     /**
      * Show file selector.
@@ -100,14 +108,11 @@ public:
     /**
      * Get the current directory of the file dialog.
      */
-    virtual Glib::ustring getCurrentDirectory() = 0;
+    virtual std::string getCurrentDirectory() = 0;
 
 protected:
     // The selected extension
     Inkscape::Extension::Extension *_extension;
-
-    // Filename that was given
-    Glib::ustring _filename;
 };
 
 /**
@@ -129,11 +134,13 @@ public:
      * @param title the title of the dialog
      */
     static FileOpenDialog *create(Gtk::Window& parentWindow,
-                                  const Glib::ustring &path,
+                                  const std::string &path,
                                   FileDialogType fileTypes,
                                   const char *title);
 
-    virtual std::vector<Glib::ustring> getFilenames() = 0;
+    virtual void setSelectMultiple(bool value) = 0;
+    virtual std::vector<Glib::RefPtr<Gio::File>> getFiles() = 0;
+    virtual Glib::RefPtr<Gio::File>        const getFile() = 0;
 
 protected:
 
@@ -141,8 +148,7 @@ protected:
 
 
 /**
- * This class provides an implementation-independent API for
- * file "Save" dialogs.
+ * This class provides an implementation-independent API for file "Save" dialogs.
  */
 class FileSaveDialog : public FileDialog
 {
@@ -159,18 +165,21 @@ public:
      * @param key a list of file types from which the user can select
      */
     static FileSaveDialog *create(Gtk::Window& parentWindow,
-                                  const Glib::ustring &path,
+                                  const std::string &path,
                                   FileDialogType fileTypes,
                                   const char *title,
                                   const Glib::ustring &default_key,
                                   const gchar *docTitle,
                                   const Inkscape::Extension::FileSaveMethod save_method);
 
+    virtual const Glib::RefPtr<Gio::File> getFile() = 0;
+    virtual void setCurrentName(Glib::ustring) = 0;
+
     /**
      * Get the document title chosen by the user.
      * Valid after an [OK]
      */
-    Glib::ustring getDocTitle ();
+    Glib::ustring getDocTitle () { return myDocTitle; } // Only used by rdf_set_work_entity()
 
 protected:
     // Doc Title that was given
@@ -179,13 +188,11 @@ protected:
     // List of known file extensions.
     std::map<Glib::ustring, Inkscape::Extension::Output *> knownExtensions;
 
-    void appendExtension(Glib::ustring& path, Inkscape::Extension::Output* outputExtension);
+    void appendExtension(Glib::ustring& filename_utf8, Inkscape::Extension::Output* outputExtension);
 
 }; //FileSaveDialog
 
-} // namespace Dialog
-} // namespace UI
-} // namespace Inkscape
+} // namespace Inkscape::UI::Dialog
 
 #endif // SEEN_FILE_DIALOG_H
 

@@ -248,10 +248,10 @@ Output::export_raster(const SPDocument *doc, std::string png_filename, gchar con
 }
 
 /**
- * Adds a valid extension to the filename if it's missing.
+ * Adds a valid extension to the filename if it's missing. Only used by export-single.cpp.
  */
 void
-Output::add_extension(Glib::ustring &filename)
+Output::add_extension(std::string &filename)
 {
     auto current_ext = Inkscape::IO::get_file_extension(filename);
     if (extension && current_ext != extension) {

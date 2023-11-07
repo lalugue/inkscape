@@ -142,7 +142,7 @@ private:
     // Store all items to be displayed in flowbox
     std::map<std::string, std::unique_ptr<BatchItem>> current_items;
 
-    Glib::ustring original_name;
+    std::string original_name;
     Glib::ustring doc_export_name;
 
     Inkscape::Preferences *prefs = nullptr;

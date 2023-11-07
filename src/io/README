@@ -1,6 +1,27 @@
 
 This directory contains code related to input and output.
 
+A comment about filenames/paths:
+
+Gtk internally uses utf8 strings. All GUI elements take/return utf8
+strings (i.e. Glib::ustring).  However, externally, utf8 may not be
+used by the operating system. This requires that filenames/paths be
+converted between utf8 and the local encoding. For example, a user
+types in a utf8 filename into a file dialog. This needs to be
+converted to a std::string in the locale encoding before using it to
+open a file. Glib provides functions to handle translating the utf8
+encoded strings to/from the locally used encoding (e.g.
+Glib::filename_from_utf8()).
+
+Gtk4 file dialogs do not use filenames directly. Instead they use
+Gio::File's. Gio::File's handle string type conversions for you. You
+can directly obtain the correct string for system use (get_path()) or
+for GUI use (get_parse_name()).
+
+SVG files generally contain utf8 encoded strings. So constructing a
+filename for opening a file from an 'id' would require converting the
+'id' to the local encoding.
+
 
 Note that input and output to particular file formats may be implemented elsewhere:
 

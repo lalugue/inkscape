@@ -229,7 +229,7 @@ StartScreen::StartScreen()
     load_btn.signal_clicked().connect(sigc::mem_fun(*this, &StartScreen::load_document));
     templates.connectItemSelected(sigc::mem_fun(*this, &StartScreen::new_document));
     new_btn->signal_clicked().connect(sigc::mem_fun(*this, &StartScreen::new_document));
-    close_btn->signal_clicked().connect([=] { response(GTK_RESPONSE_CANCEL); });
+    close_btn->signal_clicked().connect([this] { response(GTK_RESPONSE_CANCEL); });
 
     // Reparent to our dialog window
     set_titlebar(banners);
@@ -393,32 +393,30 @@ void
 StartScreen::load_document()
 {
     RecentCols cols;
-    auto prefs = Inkscape::Preferences::get();
     auto app = InkscapeApplication::instance();
 
     auto iter = recent_treeview.get_selection()->get_selected();
     if (iter) {
         Gtk::TreeModel::Row row = *iter;
         if (row) {
-            Glib::ustring _file = row[cols.col_id];
+            Glib::ustring uri = row[cols.col_id];
             Glib::RefPtr<Gio::File> file;
 
-            if (!_file.empty()) {
-                file = Gio::File::create_for_uri(_file);
+            if (!uri.empty()) {
+                file = Gio::File::create_for_uri(uri);
             } else {
-                Glib::ustring open_path = prefs->getString("/dialogs/open/path");
-                if (open_path.empty()) {
-                    open_path = g_get_home_dir();
-                    open_path.append(G_DIR_SEPARATOR_S);
-                }
-
                 // Browse for file instead
+                std::string open_path;
+                get_start_directory(open_path, "/dialogs/open/path");
+
                 auto browser = Inkscape::UI::Dialog::FileOpenDialog::create(
                     *this, open_path, Inkscape::UI::Dialog::SVG_TYPES, _("Open a different file"));
+                browser->setSelectMultiple(false); // We can only handle one document via start up screen!
 
                 if (browser->show()) {
+                    auto prefs = Inkscape::Preferences::get();
                     prefs->setString("/dialogs/open/path", browser->getCurrentDirectory());
-                    file = Gio::File::create_for_path(browser->getFilename());
+                    file = browser->getFile();
                     delete browser;
                 } else {
                     delete browser;
@@ -426,7 +424,7 @@ StartScreen::load_document()
                 }
             }
 
-            // Now we have filename, open document.
+            // Now we have file, open document.
             bool canceled = false;
             _document = app->document_open(file, &canceled);
 

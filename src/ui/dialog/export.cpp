@@ -67,11 +67,11 @@ Export::Export()
     add(container);
     show_all_children();
 
-    container.signal_realize().connect([=]() {
+    container.signal_realize().connect([=, this]() {
         setDefaultNotebookPage();
         notebook_signal = export_notebook.signal_switch_page().connect(sigc::mem_fun(*this, &Export::onNotebookPageSwitch));
     });
-    container.signal_unrealize().connect([=]() {
+    container.signal_unrealize().connect([this]() {
         notebook_signal.disconnect();
     });
 }
@@ -154,10 +154,10 @@ std::string Export::absolutizePath(SPDocument *doc, const std::string &filename)
     return path;
 }
 
-bool Export::unConflictFilename(SPDocument *doc, Glib::ustring &filename, Glib::ustring const extension)
+bool Export::unConflictFilename(SPDocument *doc, std::string &filename, std::string const extension)
 {
-    std::string path = absolutizePath(doc, Glib::filename_from_utf8(filename));
-    Glib::ustring test_filename = path + extension;
+    std::string path = absolutizePath(doc, filename);
+    std::string test_filename = path + extension;
     if (!Inkscape::IO::file_test(test_filename.c_str(), G_FILE_TEST_EXISTS)) {
         filename = test_filename;
         return true;
@@ -173,12 +173,14 @@ bool Export::unConflictFilename(SPDocument *doc, Glib::ustring &filename, Glib::
 }
 
 // Checks if the directory exists and if not, tries to create the directory and if failed, displays an error message.
-bool Export::checkOrCreateDirectory(Glib::ustring const &filename)
+bool Export::checkOrCreateDirectory(std::string const &filename)
 {
     SPDesktop *desktop = SP_ACTIVE_DESKTOP;
-    if (!desktop)
+    if (!desktop) {
         return false;
-    std::string path = absolutizePath(desktop->getDocument(), Glib::filename_from_utf8(filename));
+    }
+
+    std::string path = absolutizePath(desktop->getDocument(), filename);
     std::string dirname = Glib::path_get_dirname(path);
 
     if (dirname.empty() || !Inkscape::IO::file_test(dirname.c_str(), (GFileTest)(G_FILE_TEST_EXISTS | G_FILE_TEST_IS_DIR))) {
@@ -422,7 +424,7 @@ bool Export::exportVector(
     return true;
 }
 
-std::string Export::filePathFromObject(SPDocument *doc, SPObject *obj, const Glib::ustring &file_entry_text)
+std::string Export::filePathFromObject(SPDocument *doc, SPObject *obj, const std::string &file_entry_text)
 {
     Glib::ustring id = _("bitmap");
     if (obj && obj->getId()) {
@@ -431,14 +433,14 @@ std::string Export::filePathFromObject(SPDocument *doc, SPObject *obj, const Gli
     return filePathFromId(doc, id, file_entry_text);
 }
 
-std::string Export::filePathFromId(SPDocument *doc, Glib::ustring id, const Glib::ustring &file_entry_text)
+std::string Export::filePathFromId(SPDocument *doc, Glib::ustring id, const std::string &file_entry_text)
 {
     g_assert(!id.empty());
 
     std::string directory;
 
     if (!file_entry_text.empty()) {
-        directory = Glib::path_get_dirname(Glib::filename_from_utf8(file_entry_text));
+        directory = Glib::path_get_dirname(file_entry_text);
     }
 
     if (directory.empty()) {
@@ -456,9 +458,9 @@ std::string Export::filePathFromId(SPDocument *doc, Glib::ustring id, const Glib
     return Glib::build_filename(directory, Glib::filename_from_utf8(id));
 }
 
-Glib::ustring Export::defaultFilename(SPDocument *doc, Glib::ustring &filename_entry_text, Glib::ustring extension)
+std::string Export::defaultFilename(SPDocument *doc, std::string &filename_entry_text, std::string extension)
 {
-    Glib::ustring filename;
+    std::string filename;
     if (doc && doc->getDocumentFilename()) {
         filename = doc->getDocumentFilename();
         //appendExtensionToFilename(filename, extension);

@@ -10,6 +10,8 @@
 #include "export-lists.h"
 
 #include <glibmm/i18n.h>
+#include <glibmm/convert.h>   // filename_from_utf8
+#include <glibmm/ustring.h>
 #include <gtkmm/builder.h>
 #include <gtkmm/menubutton.h>
 #include <gtkmm/popover.h>
@@ -113,10 +115,10 @@ Inkscape::Extension::Output *ExtensionList::getExtension()
 /**
  * Returns the file extension (file ending) of the currently selected extension.
  */
-Glib::ustring ExtensionList::getFileExtension()
+std::string ExtensionList::getFileExtension()
 {
     if (auto ext = getExtension()) {
-        return ext->get_extension();
+        return Glib::filename_from_utf8(ext->get_extension());
     }
     return "";
 }
@@ -124,7 +126,7 @@ Glib::ustring ExtensionList::getFileExtension()
 /**
  * Removes the file extension, *if* it's one of the extensions in the list.
  */
-void ExtensionList::removeExtension(Glib::ustring &filename)
+void ExtensionList::removeExtension(std::string &filename)
 {
     auto ext = Inkscape::IO::get_file_extension(filename);
     if (ext_to_mod[ext]) {
@@ -132,7 +134,7 @@ void ExtensionList::removeExtension(Glib::ustring &filename)
     }
 }
 
-void ExtensionList::setExtensionFromFilename(Glib::ustring const &filename)
+void ExtensionList::setExtensionFromFilename(std::string const &filename)
 {
     auto ext = Inkscape::IO::get_file_extension(filename);
     if (ext != getFileExtension()) {
@@ -180,7 +182,7 @@ void ExportList::setup()
     this->set_column_spacing(2);
 }
 
-void ExportList::removeExtension(Glib::ustring &filename)
+void ExportList::removeExtension(std::string &filename)
 {
     ExtensionList *extension_cb = dynamic_cast<ExtensionList *>(this->get_child_at(_extension_col, 1));
     if (extension_cb) {
@@ -257,14 +259,14 @@ void ExportList::delete_row(Gtk::Widget *widget)
     }
 }
 
-Glib::ustring ExportList::get_suffix(int row)
+std::string ExportList::get_suffix(int row)
 {
-    Glib::ustring suffix = "";
+    std::string suffix = "";
     Gtk::Entry *entry = dynamic_cast<Gtk::Entry *>(this->get_child_at(_suffix_col, row + 1));
     if (entry == nullptr) {
         return suffix;
     }
-    suffix = entry->get_text();
+    suffix = Glib::filename_from_utf8(entry->get_text());
     return suffix;
 }
 Inkscape::Extension::Output *ExportList::getExtension(int row)

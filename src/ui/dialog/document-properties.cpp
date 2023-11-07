@@ -1124,47 +1124,46 @@ static Inkscape::UI::Dialog::FileOpenDialog * selectPrefsFileInstance = nullptr;
 
 void  DocumentProperties::browseExternalScript() {
 
-    //# Get the current directory for finding files
-    static Glib::ustring open_path;
-    Inkscape::Preferences *prefs = Inkscape::Preferences::get();
+    // Get the current directory for finding files.
+    static std::string open_path;
+    Inkscape::UI::Dialog::get_start_directory(open_path, _prefs_path);
 
-    Glib::ustring attr = prefs->getString(_prefs_path);
-    if (!attr.empty()) open_path = attr;
-
-    //# Test if the open_path directory exists
-    if (!Inkscape::IO::file_test(open_path.c_str(),
-              (GFileTest)(G_FILE_TEST_EXISTS | G_FILE_TEST_IS_DIR)))
-        open_path = "";
-
-    //# If no open path, default to our home directory
-    if (open_path.empty()) {
-        open_path = g_get_home_dir();
-        open_path.append(G_DIR_SEPARATOR_S);
-    }
-
-    //# Create a dialog
+    // Create a dialog.
     SPDesktop *desktop = getDesktop();
     if (desktop && !selectPrefsFileInstance) {
         selectPrefsFileInstance =
-              Inkscape::UI::Dialog::FileOpenDialog::create(
-                 *desktop->getToplevel(),
-                 open_path,
-                 Inkscape::UI::Dialog::CUSTOM_TYPE,
-                 _("Select a script to load"));
-        selectPrefsFileInstance->addFilterMenu("Javascript Files", "*.js");
+            Inkscape::UI::Dialog::FileOpenDialog::create(
+                *desktop->getToplevel(),
+                open_path,
+                Inkscape::UI::Dialog::CUSTOM_TYPE,
+                _("Select a script to load"));
+        selectPrefsFileInstance->addFilterMenu(_("JavaScript Files"), "*.js");
     }
 
-    //# Show the dialog
+    // Show the dialog.
     bool const success = selectPrefsFileInstance->show();
 
     if (!success) {
         return;
     }
 
-    //# User selected something.  Get name and type
-    Glib::ustring fileName = selectPrefsFileInstance->getFilename();
+    // User selected something, get file.
+    auto file = selectPrefsFileInstance->getFile();
+    if (!file) {
+        return;
+    }
 
-    _script_entry.set_text(fileName);
+    auto path = file->get_path();
+    if (!path.empty()) {
+        open_path = path;;
+    }
+
+    if (!open_path.empty()) {
+        Inkscape::Preferences *prefs = Inkscape::Preferences::get();
+        prefs->setString(_prefs_path, open_path);
+    }
+
+    _script_entry.set_text(file->get_parse_name());
 }
 
 void DocumentProperties::addEmbeddedScript(){

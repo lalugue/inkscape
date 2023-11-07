@@ -58,9 +58,9 @@ public:
     ~ExtensionList() override;
 
     void setup();
-    Glib::ustring getFileExtension();
-    void setExtensionFromFilename(Glib::ustring const &filename);
-    void removeExtension(Glib::ustring &filename);
+    std::string getFileExtension();
+    void setExtensionFromFilename(std::string const &filename);
+    void removeExtension(std::string &filename);
     void createList();
     Gtk::MenuButton *getPrefButton() const { return _pref_button; }
     Inkscape::Extension::Output *getExtension();
@@ -93,9 +93,9 @@ public:
     void setup();
     void append_row();
     void delete_row(Gtk::Widget *widget);
-    Glib::ustring get_suffix(int row);
+    std::string get_suffix(int row);
     Inkscape::Extension::Output *getExtension(int row);
-    void removeExtension(Glib::ustring &filename);
+    void removeExtension(std::string &filename);
     double get_dpi(int row);
     int get_rows() { return _num_rows; }
 

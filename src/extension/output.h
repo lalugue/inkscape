@@ -61,7 +61,7 @@ public:
     bool         savecopy_only() { return savecopyonly; };
     bool         is_raster() { return raster; };
     bool         is_exported() { return exported; };
-    void         add_extension(Glib::ustring &filename);
+    void         add_extension(std::string &filename);
     bool         can_save_filename(gchar const *filename);
 };
 

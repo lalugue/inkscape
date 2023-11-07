@@ -190,7 +190,7 @@ void SingleExport::setup()
     setExporting(false);
 
     // Refresh the filename when the user selects a different page
-    _pages_list_changed = pages_list.signal_selected_children_changed().connect([=]() {
+    _pages_list_changed = pages_list.signal_selected_children_changed().connect([this]() {
         loadExportHints();
         refreshArea();
     });
@@ -208,7 +208,7 @@ void SingleExport::setup()
     si_filename_entry.signal_activate().connect(sigc::mem_fun(*this, &SingleExport::onExport));
     si_show_preview.signal_toggled().connect(sigc::mem_fun(*this, &SingleExport::refreshPreview));
     si_hide_all.signal_toggled().connect(sigc::mem_fun(*this, &SingleExport::refreshPreview));
-    _bgnd_color_picker->connectChanged([=](guint32 color){
+    _bgnd_color_picker->connectChanged([=, this](guint32 color){
         if (_desktop) {
             Inkscape::UI::Dialog::set_export_bg_color(_desktop->getNamedView(), color);
         }
@@ -408,9 +408,9 @@ void SingleExport::loadExportHints()
 {
     if (filename_modified || !_document || !_desktop) return;
 
-    Glib::ustring old_filename = si_filename_entry.get_text();
-    Glib::ustring save_path = Glib::path_get_dirname(old_filename);
-    Glib::ustring filename;
+    std::string old_filename = Glib::filename_from_utf8(si_filename_entry.get_text());
+    std::string old_directory = Glib::path_get_dirname(old_filename);
+    std::string filename;
     Geom::Point dpi;
     switch (current_key) {
         case SELECTION_PAGE:
@@ -463,13 +463,14 @@ void SingleExport::loadExportHints()
         si_extension_cb.removeExtension(filename);
         ext->add_extension(filename);
     }
-    
-    original_name = save_path;
+
+    original_name = old_directory;
     original_name.append(G_DIR_SEPARATOR_S);
     original_name += filename;
     filename = original_name;
-    si_filename_entry.set_text(filename);
-    si_filename_entry.set_position(filename.length());
+    auto filename_utf8 = Glib::filename_to_utf8(filename);
+    si_filename_entry.set_text(filename_utf8);
+    si_filename_entry.set_position(filename_utf8.length());
 
     if (dpi.x() != 0.0) { // XXX Should this deal with dpi.y() ?
         spin_buttons[SPIN_DPI]->set_value(dpi.x());
@@ -721,7 +722,7 @@ void SingleExport::onBrowse(Gtk::EntryIconPosition pos, const GdkEventButton *ev
 
     browseConn.block();
 
-    Glib::ustring filename = Glib::filename_from_utf8(si_filename_entry.get_text());
+    std::string filename = Glib::filename_from_utf8(si_filename_entry.get_text());
 
     if (filename.empty()) {
         filename = Export::defaultFilename(_document, filename, ".png");
@@ -737,16 +738,20 @@ void SingleExport::onBrowse(Gtk::EntryIconPosition pos, const GdkEventButton *ev
     }
 
     if (dialog->show()) {
-        filename = dialog->getFilename();
-        // Once complete, we use the extension selected to save the file
-        if (auto ext = dialog->getExtension()) {
-            si_extension_cb.set_active_id(ext->get_id());
-        } else {
-            si_extension_cb.setExtensionFromFilename(filename);
-        }
+        auto file = dialog->getFile();
+        if (file) {
+            filename = file->get_path();
+            // Once complete, we use the extension selected to save the file
+            if (auto ext = dialog->getExtension()) {
+                si_extension_cb.set_active_id(ext->get_id());
+            } else {
+                si_extension_cb.setExtensionFromFilename(filename);
+            }
 
-        si_filename_entry.set_text(filename);
-        si_filename_entry.set_position(filename.length());
+            Glib::ustring filename_utf8 = Glib::filename_to_utf8(filename);
+            si_filename_entry.set_text(filename_utf8);
+            si_filename_entry.set_position(filename_utf8.length());
+        }
 
         // deleting dialog before exporting is important
         delete dialog;

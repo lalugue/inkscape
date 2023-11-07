@@ -759,10 +759,9 @@ void PrefEntryFileButtonHBox::init(Glib::ustring const &prefs_path,
 
 void PrefEntryFileButtonHBox::onRelatedEntryChangedCallback()
 {
-    if (this->get_visible()) //only take action if user changed value
-    {
+    if (this->get_visible()) { // Only take action if user changed value.
         Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-        prefs->setString(_prefs_path, relatedEntry->get_text());
+        prefs->setString(_prefs_path, Glib::filename_from_utf8(relatedEntry->get_text()));
     }
 }
 
@@ -770,91 +769,47 @@ static Inkscape::UI::Dialog::FileOpenDialog * selectPrefsFileInstance = nullptr;
 
 void PrefEntryFileButtonHBox::onRelatedButtonClickedCallback()
 {
-    if (this->get_visible()) //only take action if user changed value
-    {
-        //# Get the current directory for finding files
-        static Glib::ustring open_path;
-        Inkscape::Preferences *prefs = Inkscape::Preferences::get();
+    if (this->get_visible()) { // Only take action if user changed value.
 
-        Glib::ustring attr = prefs->getString(_prefs_path);
-        if (!attr.empty()) open_path = attr;
-        
-        //# Test if the open_path directory exists
-        if (!Inkscape::IO::file_test(open_path.c_str(),
-                  (GFileTest)(G_FILE_TEST_EXISTS | G_FILE_TEST_IS_DIR)))
-            open_path = "";
+        // Get the current directory for finding files.
+        static std::string open_path;
+        Inkscape::UI::Dialog::get_start_directory(open_path, _prefs_path, true);
 
-#ifdef _WIN32
-        //# If no open path, default to our win32 documents folder
-        if (open_path.empty())
-        {
-            // The path to the My Documents folder is read from the
-            // value "HKEY_CURRENT_USER\Software\Windows\CurrentVersion\Explorer\Shell Folders\Personal"
-            HKEY key = NULL;
-            if(RegOpenKeyExA(HKEY_CURRENT_USER,
-                "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Shell Folders",
-                0, KEY_QUERY_VALUE, &key) == ERROR_SUCCESS)
-            {
-                WCHAR utf16path[_MAX_PATH];
-                DWORD value_type;
-                DWORD data_size = sizeof(utf16path);
-                if(RegQueryValueExW(key, L"Personal", NULL, &value_type,
-                    (BYTE*)utf16path, &data_size) == ERROR_SUCCESS)
-                {
-                    g_assert(value_type == REG_SZ);
-                    char * const utf8path = g_utf16_to_utf8(
-                        (const gunichar2*)utf16path, -1, NULL, NULL, NULL);
-                    if(utf8path)
-                    {
-                        open_path = Glib::ustring(utf8path);
-                        g_free(utf8path);
-                    }
-                }
-            }
-        }
-#endif
-
-        //# If no open path, default to our home directory
-        if (open_path.empty())
-        {
-            open_path = g_get_home_dir();
-            open_path.append(G_DIR_SEPARATOR_S);
-        }
-
-        //# Create a dialog
+        // Create a dialog.
         SPDesktop *desktop = SP_ACTIVE_DESKTOP;
         if (!selectPrefsFileInstance) {
-        selectPrefsFileInstance =
-              Inkscape::UI::Dialog::FileOpenDialog::create(
-                 *desktop->getToplevel(),
-                 open_path,
-                 Inkscape::UI::Dialog::EXE_TYPES,
-                 _("Select a bitmap editor"));
+            selectPrefsFileInstance =
+                Inkscape::UI::Dialog::FileOpenDialog::create(
+                    *desktop->getToplevel(),
+                    open_path,
+                    Inkscape::UI::Dialog::EXE_TYPES,
+                    _("Select a bitmap editor"));
         }
         
-        //# Show the dialog
+        // Show the dialog.
         bool const success = selectPrefsFileInstance->show();
         
         if (!success) {
             return;
         }
         
-        //# User selected something.  Get name and type
-        Glib::ustring fileName = selectPrefsFileInstance->getFilename();
+        // User selected something, get file.
+        auto file = selectPrefsFileInstance->getFile();
+        if (!file) {
+            return;
+        }
 
-        if (!fileName.empty())
-        {
-            Glib::ustring newFileName = Glib::filename_to_utf8(fileName);
+        auto path = file->get_path();
+        if (!path.empty()) {
+            open_path = path;;
+        }
 
-            if ( newFileName.size() > 0)
-                open_path = newFileName;
-            else
-                g_warning( "ERROR CONVERTING OPEN FILENAME TO UTF-8" );
-
+        if (!open_path.empty()) {
+            Inkscape::Preferences *prefs = Inkscape::Preferences::get();
             prefs->setString(_prefs_path, open_path);
         }
         
-        relatedEntry->set_text(fileName);
+        relatedEntry->set_text(file->get_parse_name());
     }
 }
 

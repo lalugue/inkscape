@@ -10,6 +10,8 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#include "resource.h"
+
 #ifdef HAVE_CONFIG_H
 # include "config.h"  // only include where actually required!
 #endif
@@ -18,17 +20,18 @@
 #include <shlobj.h> // for SHGetSpecialFolderLocation
 #endif
 
+#include <sys/stat.h>
+
 #include <glibmm/convert.h>
 #include <glibmm/i18n.h>
 #include <glibmm/miscutils.h>
 #include <glibmm/stringutils.h>
 #include <glibmm/fileutils.h>
 
-#include "path-prefix.h"
-#include "io/sys.h"
-#include "io/resource.h"
 #include "inkscape-application.h"
+#include "path-prefix.h"
 #include "preferences.h"
+#include "sys.h"
 
 using Inkscape::IO::file_test;
 

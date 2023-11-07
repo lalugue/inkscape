@@ -697,55 +697,45 @@ private:
     }
 
     void select_file(){
-        //# Get the current directory for finding files
-        Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-        Glib::ustring open_path;
-        Glib::ustring attr = prefs->getString("/dialogs/open/path");
-        if (!attr.empty())
-            open_path = attr;
 
-        //# Test if the open_path directory exists
-        if (!Inkscape::IO::file_test(open_path.c_str(),
-                  (GFileTest)(G_FILE_TEST_EXISTS | G_FILE_TEST_IS_DIR)))
-            open_path = "";
+        // Get the current directory for finding files.
+        std::string open_path;
+        get_start_directory(open_path, "/dialogs/open/path");
 
-        //# If no open path, default to our home directory
-        if (open_path.size() < 1)
-            {
-            open_path = g_get_home_dir();
-            open_path.append(G_DIR_SEPARATOR_S);
-            }
-
-        //# Create a dialog if we don't already have one
+        // Create a dialog if we don't already have one.
         if (!selectFeImageFileInstance) {
             selectFeImageFileInstance =
-                  Inkscape::UI::Dialog::FileOpenDialog::create(
-                     *_dialog.getDesktop()->getToplevel(),
-                     open_path,
-                     Inkscape::UI::Dialog::SVG_TYPES,/*TODO: any image, not just svg*/
-                     (char const *)_("Select an image to be used as input."));
+                Inkscape::UI::Dialog::FileOpenDialog::create(
+                    *_dialog.getDesktop()->getToplevel(),
+                    open_path,
+                    Inkscape::UI::Dialog::SVG_TYPES, /* TODO: any image, not just svg */
+                    (char const *)_("Select an image to be used as input."));
         }
 
-        //# Show the dialog
+        // Show the dialog.
         bool const success = selectFeImageFileInstance->show();
-        if (!success)
-            return;
-
-        //# User selected something.  Get name and type
-        Glib::ustring fileName = selectFeImageFileInstance->getFilename();
-        if (fileName.empty()) return;
-
-        fileName = Glib::filename_to_utf8(fileName);
-        if (fileName.empty()) {
-            g_warning( "ERROR CONVERTING OPEN FILENAME TO UTF-8" );
+        if (!success) {
             return;
         }
 
-        open_path = fileName;
+        // User selected something.  Get name and type.
+        auto file = selectFeImageFileInstance->getFile();
+        if (!file) {
+            return;
+        }
+
+        auto path = selectFeImageFileInstance->getCurrentDirectory();
+        if (path.empty()) {
+            return;
+        }
+
+        open_path = path;
         open_path.append(G_DIR_SEPARATOR_S);
+
+        Inkscape::Preferences *prefs = Inkscape::Preferences::get();
         prefs->setString("/dialogs/open/path", open_path);
 
-        _entry.set_text(fileName);
+        _entry.set_text(file->get_parse_name());
     }
 
     Gtk::Entry _entry;

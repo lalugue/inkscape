@@ -5,6 +5,11 @@
 /*
  * System abstraction utility routines
  *
+ * WARNING:
+ *   Most of these routines should not be used. Filenames should always
+ *   be std::string, not utf8 encoded. Filenames should be converted
+ *   to/from Glib::ustring when used in the GUI.
+ *
  * Authors:
  *   Jon A. Cruz <jon@joncruz.org>
  *
@@ -14,12 +19,10 @@
  */
 
 #include <cstdio>
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <glib.h>
-#include <glibmm/spawn.h>
 #include <string>
-#include <vector>
+
+#include <glib.h>
+#include <glibmm/ustring.h>
 
 /*#####################
 ## U T I L I T Y
@@ -37,7 +40,9 @@ bool file_is_writable( char const *utf8name);
 
 Glib::ustring sanitizeString(char const *str);
 
-Glib::ustring get_file_extension(Glib::ustring path);
+Glib::ustring get_file_extension(Glib::ustring const &path);
+
+std::string get_file_extension(std::string const &path);
 
 } // namespace Inkscape::IO
 

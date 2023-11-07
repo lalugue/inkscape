@@ -66,7 +66,7 @@ BatchItem::BatchItem(SPItem *item, std::shared_ptr<PreviewDrawing> drawing)
     : _item{item}
 {
     init(std::move(drawing));
-    _object_modified_conn = _item->connectModified([=](SPObject *obj, unsigned int flags) {
+    _object_modified_conn = _item->connectModified([=, this](SPObject *obj, unsigned int flags) {
         update_label();
     });
     update_label();
@@ -76,7 +76,7 @@ BatchItem::BatchItem(SPPage *page, std::shared_ptr<PreviewDrawing> drawing)
     : _page{page}
 {
     init(std::move(drawing));
-    _object_modified_conn = _page->connectModified([=](SPObject *obj, unsigned int flags) {
+    _object_modified_conn = _page->connectModified([=, this](SPObject *obj, unsigned int flags) {
         update_label();
     });
     update_label();
@@ -141,10 +141,10 @@ void BatchItem::init(std::shared_ptr<PreviewDrawing> drawing) {
     set_visible(true);
     this->set_can_focus(false);
 
-    _selector.signal_toggled().connect([=]() {
+    _selector.signal_toggled().connect([this]() {
         set_selected(_selector.get_active());
     });
-    _option.signal_toggled().connect([=]() {
+    _option.signal_toggled().connect([this]() {
         set_selected(_option.get_active());
     });
 
@@ -198,7 +198,7 @@ void BatchItem::on_parent_changed(Gtk::Widget *previous) {
     if (!parent)
         return;
 
-    _selection_widget_changed_conn = parent->signal_selected_children_changed().connect([=]() {
+    _selection_widget_changed_conn = parent->signal_selected_children_changed().connect([this]() {
         // Syncronise the active widget state to the Flowbox selection.
         if (_selector.get_visible()) {
             _selector.set_active(is_selected());
@@ -369,7 +369,7 @@ void BatchExport::setup()
     cancel_conn = cancel_btn.signal_clicked().connect(sigc::mem_fun(*this, &BatchExport::onCancel));
     browse_conn = filename_entry.signal_icon_release().connect(sigc::mem_fun(*this, &BatchExport::onBrowse));
     hide_all.signal_toggled().connect(sigc::mem_fun(*this, &BatchExport::refreshPreview));
-    _bgnd_color_picker->connectChanged([=](guint32 color){
+    _bgnd_color_picker->connectChanged([=, this](guint32 color){
         if (_desktop) {
             Inkscape::UI::Dialog::set_export_bg_color(_desktop->getNamedView(), color);
         }
@@ -517,13 +517,13 @@ void BatchExport::loadExportHints(bool rename_file)
     if (!_desktop) return;
 
     SPDocument *doc = _desktop->getDocument();
-    auto old_filename = filename_entry.get_text();
+    auto old_filename = Glib::filename_from_utf8(filename_entry.get_text());
     if (old_filename.empty()) {
         Glib::ustring filename = doc->getRoot()->getExportFilename();
         if (rename_file && filename.empty()) {
-            Glib::ustring filename_entry_text = filename_entry.get_text();
-            Glib::ustring extension = ".png";
-            filename = Export::defaultFilename(doc, original_name, extension);
+            std::string filename_entry_text = filename_entry.get_text();
+            std::string  extension = ".png";
+            filename = Export::defaultFilename(doc, original_name, extension); // original_name never set.
         }
         filename_entry.set_text(filename);
         filename_entry.set_position(filename.length());
@@ -571,7 +571,7 @@ void BatchExport::onExport()
     }
 
     // Find and remove any extension from filename so that we can add suffix to it.
-    Glib::ustring filename = filename_entry.get_text();
+    std::string filename = Glib::filename_from_utf8(filename_entry.get_text());
     export_list.removeExtension(filename);
 
     if (!Export::checkOrCreateDirectory(filename)) {
@@ -586,7 +586,7 @@ void BatchExport::onExport()
     std::vector<Inkscape::Extension::Output *> extensions;
     std::vector<double> dpis;
     for (int i = 0; i < num_rows; i++) {
-        suffixs.push_back(export_list.get_suffix(i));
+        suffixs.emplace_back(export_list.get_suffix(i));
         extensions.push_back(export_list.getExtension(i));
         dpis.push_back(export_list.get_dpi(i));
     }
@@ -634,14 +634,14 @@ void BatchExport::onExport()
                 continue;
             }
 
-            Glib::ustring id = batchItem->getLabel();
+            std::string id = Glib::filename_from_utf8(batchItem->getLabel());
             if (id.empty()) {
                 continue;
             }
 
-            Glib::ustring item_filename = filename;
+            std::string item_filename = filename;
             if (!filename.empty()) {
-                Glib::ustring::value_type last_char = filename.at(filename.length() - 1);
+                std::string::value_type last_char = filename.at(filename.length() - 1);
                 if (last_char != '/' && last_char != '\\') {
                     item_filename += "_";
                 }
@@ -670,7 +670,7 @@ void BatchExport::onExport()
             _prog_batch.set_fraction(progress);
 
             setExporting(true,
-                         Glib::ustring::compose(_("Exporting %1"), item_filename),
+                         Glib::ustring::compose(_("Exporting %1"), Glib::filename_to_utf8(item_filename)),
                          Glib::ustring::compose(_("Format %1, Selection %2"), j + 1, count));
 
 
@@ -698,7 +698,7 @@ void BatchExport::onBrowse(Gtk::EntryIconPosition pos, const GdkEventButton *ev)
     }
     Gtk::Window *window = _app->get_active_window();
     browse_conn.block();
-    Glib::ustring filename = Glib::filename_from_utf8(filename_entry.get_text());
+    std::string filename = Glib::filename_from_utf8(filename_entry.get_text());
 
     if (filename.empty()) {
         filename = Export::defaultFilename(_document, filename, ".png");
@@ -709,19 +709,17 @@ void BatchExport::onBrowse(Gtk::EntryIconPosition pos, const GdkEventButton *ev)
         Inkscape::Extension::FILE_SAVE_METHOD_EXPORT);
 
     if (dialog->show()) {
-        filename = dialog->getFilename();
+        filename = dialog->getFile()->get_path();
         // Remove extension and don't add a new one, for obvious reasons.
         export_list.removeExtension(filename);
 
-        filename_entry.set_text(filename);
-        filename_entry.set_position(filename.length());
-
-        // deleting dialog before exporting is important
-        // proper delete function should be made for dialog IMO
-        delete dialog;
-    } else {
-        delete dialog;
+        auto filename_utf8 = Glib::filename_to_utf8(filename);
+        filename_entry.set_text(filename_utf8);
+        filename_entry.set_position(filename_utf8.length());
     }
+
+    delete dialog;
+
     browse_conn.unblock();
 }
 
@@ -806,7 +804,7 @@ void BatchExport::setDocument(SPDocument *document)
     _pages_changed_connection.disconnect();
     if (document) {
         // when the page selected is changed, update the export area
-        _pages_changed_connection = document->getPageManager().connectPagesChanged([=]() { pagesChanged(); });
+        _pages_changed_connection = document->getPageManager().connectPagesChanged([this]() { pagesChanged(); });
 
         auto bg_color = get_export_bg_color(document->getNamedView(), 0xffffff00);
         _bgnd_color_picker->setRgba32(bg_color);

@@ -7,7 +7,7 @@
  *   Johan Engelen <johan@shouraizou.nl>
  *   Joel Holdsworth
  *   Bruno Dilly
- *   Other dudes from The Inkscape Organization
+ *   Others from The Inkscape Organization
  *
  * Copyright (C) 2004-2008 Authors
  * Copyright (C) 2004-2007 The Inkscape Organization
@@ -19,23 +19,15 @@
 #define SEEN_FILE_DIALOG_IMPL_GTKMM_H
 
 #include <vector>
-#include <glib/gstdio.h>
-#include <glibmm/refptr.h>
+#include <giomm/file.h>
 #include <glibmm/ustring.h>
-#include <gtkmm/box.h>
-#include <gtkmm/checkbutton.h>
-#include <gtkmm/comboboxtext.h>
-#include <gtkmm/enums.h>
 #include <gtkmm/filechooserdialog.h>
 
 #include "filedialog.h"
-#include "svg-preview.h"
 
 namespace Gtk {
 class Entry;
-class Expander;
 class FileFilter;
-class ListStore;
 class Window;
 } // namespace Gtk
 
@@ -75,8 +67,6 @@ public:
 
     Glib::ustring extToPattern(const Glib::ustring &extension) const;
 
-    virtual void filterChangedCallback() {}
-
 protected:
 
     Glib::ustring const _preferenceBase;
@@ -87,25 +77,10 @@ protected:
     FileDialogType _dialogType;
 
     /**
-     * Our svg preview widget
+     * Maps extension <-> filter.
      */
-    SVGPreview svgPreview;
-
-    /**
-     * Aquired Widgets
-     */
-    Gtk::ComboBoxText *filterComboBox;
-
-private:
-    /**
-     * Callback for seeing if the preview needs to be drawn
-     */
-    void _updatePreviewCallback();
-
-    /**
-     * Overriden filter store.
-     */
-    Glib::RefPtr<Gtk::ListStore> filterStore;
+    std::map<Glib::RefPtr<Gtk::FileFilter>, Inkscape::Extension::Extension *> filterExtensionMap;
+    std::map<Inkscape::Extension::Extension *, Glib::RefPtr<Gtk::FileFilter>> extensionFilterMap;
 };
 
 /*#########################################################################
@@ -117,21 +92,21 @@ private:
  */
 class FileOpenDialogImplGtk final
     : public FileOpenDialog
-      , public FileDialogBaseGtk
+    , public FileDialogBaseGtk
 {
 public:
     FileOpenDialogImplGtk(Gtk::Window& parentWindow,
-    		       const Glib::ustring &dir,
-                       FileDialogType fileTypes,
-                       const Glib::ustring &title);
+                          const std::string &dir,
+                          FileDialogType fileTypes,
+                          const Glib::ustring &title);
 
     bool show() final;
 
-    Glib::ustring getFilename();
+    void setSelectMultiple(bool value) final { set_select_multiple(value); }
+    std::vector<Glib::RefPtr<Gio::File>> getFiles() final { return get_files(); }
+    Glib::RefPtr<Gio::File>        const getFile()  final { return get_file(); }
 
-    std::vector<Glib::ustring> getFilenames() final;
-
-    Glib::ustring getCurrentDirectory() final;
+    std::string getCurrentDirectory() final { return get_current_folder(); }
 
     void addFilterMenu(const Glib::ustring &name, Glib::ustring pattern = "",
                        Inkscape::Extension::Extension *mod = nullptr) final
@@ -159,7 +134,7 @@ class FileSaveDialogImplGtk final
 {
 public:
     FileSaveDialogImplGtk(Gtk::Window &parentWindow,
-                          const Glib::ustring &dir,
+                          const std::string &dir,
                           FileDialogType fileTypes,
                           const Glib::ustring &title,
                           const Glib::ustring &default_key,
@@ -167,7 +142,15 @@ public:
                           const Inkscape::Extension::FileSaveMethod save_method);
 
     bool show() final;
-    Glib::ustring getCurrentDirectory() final;
+
+    // One at a time.
+    const Glib::RefPtr<Gio::File> getFile() final { return get_file(); }
+
+    void setCurrentName(Glib::ustring name) final { set_current_name(name); }
+    std::string getCurrentDirectory() final { return get_current_folder(); }
+
+    // Sets module for saving, updating GUI if necessary.
+    bool setExtension(Glib::ustring const &filename_utf8);
     void setExtension(Inkscape::Extension::Extension *key) final;
 
     void addFilterMenu(const Glib::ustring &name, Glib::ustring pattern = {},
@@ -177,8 +160,6 @@ public:
     }
 
 private:
-    void change_path(const Glib::ustring& path);
-    void updateNameAndExtension();
 
     /**
      * The file save method (essentially whether the dialog was invoked by "Save as ..." or "Save a
@@ -187,25 +168,21 @@ private:
     Inkscape::Extension::FileSaveMethod save_method;
 
     /**
-     * Fix to allow the user to type the file name
-     */
-    Gtk::Entry *fileNameEntry;
-
-    /**
-     * Callback for user input into fileNameEntry
-     */
-    void filterChangedCallback() final;
-
-    /**
      *  Create a filter menu for this type of dialog
      */
     void createFilterMenu();
 
     /**
-     * Callback for user input into fileNameEntry
+     * Callback for filefilter.
      */
-    void fileNameChanged();
-    bool fromCB;
+    void filefilterChanged();
+    bool from_filefilter_changed = false;
+
+    /**
+     * Callback for filename.
+     */
+    void filenameChanged();
+    bool from_filename_changed = false;
 };
 
 } // namespace Dialog

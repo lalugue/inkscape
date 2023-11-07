@@ -131,7 +131,7 @@ void file_import_pages(SPDocument *this_doc, SPDocument *that_doc);
 /**
  * Imports a resource
  */
-SPObject* file_import(SPDocument *in_doc, const Glib::ustring &uri,
+SPObject* file_import(SPDocument *in_doc, const std::string &path,
                  Inkscape::Extension::Extension *key);
 
 /*######################
