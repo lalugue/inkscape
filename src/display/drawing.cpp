@@ -11,16 +11,16 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#include "drawing.h"
+
 #include <array>
 #include <thread>
-#include "display/drawing.h"
-#include "display/control/canvas-item-drawing.h"
+
+#include "cairo-utils.h"
+#include "drawing-context.h"
+#include "control/canvas-item-drawing.h"
 #include "nr-filter-gaussian.h"
 #include "nr-filter-types.h"
-
-// Grayscale colormode
-#include "cairo-templates.h"
-#include "drawing-context.h"
 
 namespace Inkscape {
 

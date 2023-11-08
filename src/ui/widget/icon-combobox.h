@@ -11,7 +11,8 @@ namespace Inkscape {
 namespace UI {
 namespace Widget {
 
-class IconComboBox : public Gtk::ComboBox {
+class IconComboBox : public Gtk::ComboBox
+{
 public:
     IconComboBox() {
         _model = Gtk::ListStore::create(_columns);

@@ -35,13 +35,13 @@ public:
     ~InkviewApplication() override;
 
 protected:
-    void on_startup()  override;
+    void on_startup() override;
     void on_activate() override;
-    void on_open(const Gio::Application::type_vec_files& files, const Glib::ustring& hint) override;
+    void on_open(Gio::Application::type_vec_files const &files, Glib::ustring const &hint) override;
 
 private:
     // Callbacks
-    int  on_handle_local_options(const Glib::RefPtr<Glib::VariantDict>& options);
+    int on_handle_local_options(Glib::RefPtr<Glib::VariantDict> const &options);
 
     // Command line options
     bool   fullscreen;
@@ -50,7 +50,7 @@ private:
     double scale;
     bool   preload;
 
-    InkviewWindow* window;
+    InkviewWindow *window;
 };
 
 #endif // INKVIEW_APPLICATION_H
