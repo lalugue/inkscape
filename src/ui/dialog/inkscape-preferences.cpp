@@ -2657,7 +2657,7 @@ void InkscapePreferences::initPageBehavior()
     _page_snapping.add_line(true, "", _snap_always_align, "", _("Allow alignment snapping while always snapping to grid or guides, if alignment is closer."));
 
     _snap_always_dist.init(_("Allow distribution"), "/options/snap/distribution/always", false);
-    _page_snapping.add_line(true, "", _snap_always_dist, "", _("Allow distribution snapping while always snapping to grid or guides, if distribuition is closer."));
+    _page_snapping.add_line(true, "", _snap_always_dist, "", _("Allow distribution snapping while always snapping to grid or guides, if distribution is closer."));
 
     this->AddPage(_page_snapping, _("Snapping"), iter_behavior, PREFS_PAGE_BEHAVIOR_SNAPPING);
 

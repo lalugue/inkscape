@@ -708,7 +708,7 @@ std::vector<std::vector<Glib::ustring>> doc_svg_processing_actions =
     {"doc.insert-hatch-polyfill",        N_("Insert Hatch Polyfill"),        "Processing", N_("Insert javascript for rendering hatches") },
 
     {"doc.all-clones-to-objects",        N_("Unlink All Clones"),            "Processing", N_("Recursively unlink all clones and symbols") },
-    {"doc.all-objects-to-paths",         N_("All Objects to Paths"),         "Processing", N_("Turn all shapes recursively into a path elements") },
+    {"doc.all-objects-to-paths",         N_("All Objects to Paths"),         "Processing", N_("Turn all shapes recursively into path elements") },
     {"doc.add-strokes-to-paths",         N_("All Strokes to Paths"),         "Processing", N_("Turn all strokes recursively into fill only paths") },
     {"doc.normalize-all-paths",          N_("Normalize Path Data"),          "Processing", N_("Make all paths absolute and predictable") },
 

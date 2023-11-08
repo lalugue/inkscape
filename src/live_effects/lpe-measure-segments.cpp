@@ -669,7 +669,7 @@ LPEMeasureSegments::doOnApply(SPLPEItem const* lpeitem)
         styleNode->appendChild(textNode);
         Inkscape::GC::release(textNode);
     }
-    // To fix old meassuring files pre 1.0
+    // To fix old measuring files pre 1.0
     Glib::ustring styleContent = Glib::ustring(textNode->content());
     if (styleContent.find(".measure-arrow\n{\n") ==  std::string::npos) {
         styleContent = styleContent + Glib::ustring("\n.measure-arrow") + Glib::ustring("\n{\n}");
@@ -848,8 +848,8 @@ LPEMeasureSegments::doBeforeEffect (SPLPEItem const* lpeitem)
             // helpdata is a message parameter, we must not need write this data into the SVG so we empty balue in this legacy files
             helpdata.write_to_SVG(); // resert old legacy uneeded data
             msg = Glib::ustring(_("<b><big>IMPORTANT</big></b>\n"
-                        "This LPE is added with a old LPE\n"
-                        "We keep your settings but advice you to remove and re-add to get better meassuring\n")) + msg;
+                        "This LPE was added in an older version.\n"
+                        "The LPE will be kept, but we recommend you remove and re-add it for better results.\n")) + msg;
         }
         helpdata.param_update_default(msg.c_str());
     }
