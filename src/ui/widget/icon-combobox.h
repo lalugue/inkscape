@@ -22,7 +22,7 @@ class IconComboBox : public Gtk::ComboBox
 {
 public:
     IconComboBox(bool use_icons = true);
-    ~IconComboBox();
+    ~IconComboBox() override;
 
     void add_row(Glib::ustring const &icon_name, Glib::ustring const &label, int id);
     void add_row(Cairo::RefPtr<Cairo::Surface> image, const Glib::ustring& label, int id);
