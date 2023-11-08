@@ -235,9 +235,9 @@ SPIFloat::merge( const SPIBase* const parent ) {
 }
 
 bool
-SPIFloat::operator==(const SPIBase& rhs) const {
+SPIFloat::equals(const SPIBase& rhs) const {
     if( const SPIFloat* r = dynamic_cast<const SPIFloat*>(&rhs) ) {
-        return (value == r->value && SPIBase::operator==(rhs));
+        return (value == r->value && SPIBase::equals(rhs));
     } else {
         return false;
     }
@@ -310,9 +310,9 @@ SPIScale24::merge( const SPIBase* const parent ) {
 }
 
 bool
-SPIScale24::operator==(const SPIBase& rhs) const {
+SPIScale24::equals(const SPIBase& rhs) const {
     if( const SPIScale24* r = dynamic_cast<const SPIScale24*>(&rhs) ) {
-        return (value == r->value && SPIBase::operator==(rhs));
+        return (value == r->value && SPIBase::equals(rhs));
     } else {
         return false;
     }
@@ -525,7 +525,7 @@ const Glib::ustring SPILength::toString(bool wname) const
 }
 
 bool
-SPILength::operator==(const SPIBase& rhs) const {
+SPILength::equals(const SPIBase& rhs) const {
     if( const SPILength* r = dynamic_cast<const SPILength*>(&rhs) ) {
 
         if( unit != r->unit ) return false;
@@ -594,11 +594,11 @@ SPILengthOrNormal::merge( const SPIBase* const parent ) {
 }
 
 bool
-SPILengthOrNormal::operator==(const SPIBase& rhs) const {
+SPILengthOrNormal::equals(const SPIBase& rhs) const {
     if( const SPILengthOrNormal* r = dynamic_cast<const SPILengthOrNormal*>(&rhs) ) {
         if( normal && r->normal ) { return true; }
         if( normal != r->normal ) { return false; }
-        return SPILength::operator==(rhs);
+        return SPILength::equals(rhs);
     } else {
         return false;
     }
@@ -687,7 +687,7 @@ SPIFontVariationSettings::merge( const SPIBase* const parent ) {
 }
 
 bool
-SPIFontVariationSettings::operator==(const SPIBase& rhs) const {
+SPIFontVariationSettings::equals(const SPIBase& rhs) const {
     if( const SPIFontVariationSettings* r = dynamic_cast<const SPIFontVariationSettings*>(&rhs) ) {
         if( normal && r->normal ) { return true; }
         if( normal != r->normal ) { return false; }
@@ -899,10 +899,10 @@ void SPIEnum<T>::merge(const SPIBase *const parent)
 }
 
 template <typename T>
-bool SPIEnum<T>::operator==(const SPIBase &rhs) const
+bool SPIEnum<T>::equals(const SPIBase &rhs) const
 {
     if (auto *r = dynamic_cast<const SPIEnum<T> *>(&rhs)) {
-        return (computed == r->computed && SPIBase::operator==(rhs));
+        return (computed == r->computed && SPIBase::equals(rhs));
     } else {
         return false;
     }
@@ -1282,9 +1282,9 @@ SPIString::merge( const SPIBase* const parent ) {
 }
 
 bool
-SPIString::operator==(const SPIBase& rhs) const {
+SPIString::equals(const SPIBase& rhs) const {
     if( const SPIString* r = dynamic_cast<const SPIString*>(&rhs) ) {
-        return g_strcmp0(_value, r->_value) == 0 && SPIBase::operator==(rhs);
+        return g_strcmp0(_value, r->_value) == 0 && SPIBase::equals(rhs);
     } else {
         return false;
     }
@@ -1452,7 +1452,7 @@ SPIColor::merge( const SPIBase* const parent ) {
 }
 
 bool
-SPIColor::operator==(const SPIBase& rhs) const {
+SPIColor::equals(const SPIBase& rhs) const {
     if( const SPIColor* r = dynamic_cast<const SPIColor*>(&rhs) ) {
 
         // ICC support is handled by SPColor==
@@ -1460,7 +1460,7 @@ SPIColor::operator==(const SPIBase& rhs) const {
             return false;
         }
 
-        return SPIBase::operator==(rhs);
+        return SPIBase::equals(rhs);
 
     } else {
         return false;
@@ -1697,7 +1697,7 @@ SPIPaint::merge( const SPIBase* const parent ) {
 }
 
 bool
-SPIPaint::operator==(const SPIBase& rhs) const {
+SPIPaint::equals(const SPIBase& rhs) const {
 
     if( const SPIPaint* r = dynamic_cast<const SPIPaint*>(&rhs) ) {
 
@@ -1721,7 +1721,7 @@ SPIPaint::operator==(const SPIBase& rhs) const {
             }
         }
 
-        return SPIBase::operator==(rhs);
+        return SPIBase::equals(rhs);
 
     } else {
         return false;
@@ -1871,14 +1871,14 @@ SPIPaintOrder::merge( const SPIBase* const parent ) {
 }
 
 bool
-SPIPaintOrder::operator==(const SPIBase& rhs) const {
+SPIPaintOrder::equals(const SPIBase& rhs) const {
     if( const SPIPaintOrder* r = dynamic_cast<const SPIPaintOrder*>(&rhs) ) {
         if( layer[0] == SP_CSS_PAINT_ORDER_NORMAL &&
-            r->layer[0] == SP_CSS_PAINT_ORDER_NORMAL ) return SPIBase::operator==(rhs);
+            r->layer[0] == SP_CSS_PAINT_ORDER_NORMAL ) return SPIBase::equals(rhs);
         for (unsigned i = 0; i < PAINT_ORDER_LAYERS; ++i ) {
             if( layer[i] != r->layer[i] ) return false;
         }
-        return SPIBase::operator==(rhs);
+        return SPIBase::equals(rhs);
     } else {
         return false;
     }
@@ -2018,7 +2018,7 @@ SPIFilter::merge( const SPIBase* const parent ) {
 
 // FIXME
 bool
-SPIFilter::operator==(const SPIBase& rhs) const {
+SPIFilter::equals(const SPIBase& rhs) const {
     if( const SPIFilter* r = dynamic_cast<const SPIFilter*>(&rhs) ) {
         (void)r;
         return true;
@@ -2104,7 +2104,7 @@ SPIDashArray::merge( const SPIBase* const parent ) {
 }
 
 bool
-SPIDashArray::operator==(const SPIBase& rhs) const {
+SPIDashArray::equals(const SPIBase& rhs) const {
     if (const SPIDashArray *r = dynamic_cast<const SPIDashArray *>(&rhs)) {
         if (values.size() != r->values.size()) {
             return false;
@@ -2115,7 +2115,7 @@ SPIDashArray::operator==(const SPIBase& rhs) const {
             }
         }
     }
-    return SPIBase::operator==(rhs);
+    return SPIBase::equals(rhs);
 }
 
 bool SPIDashArray::is_valid() const {
@@ -2356,7 +2356,7 @@ SPIFontSize::merge( const SPIBase* const parent ) {
 
 // What about different SVG units?
 bool
-SPIFontSize::operator==(const SPIBase& rhs) const {
+SPIFontSize::equals(const SPIBase& rhs) const {
     if( const SPIFontSize* r = dynamic_cast<const SPIFontSize*>(&rhs) ) {
         if( type != r->type ) { return false;}
         if( type == SP_FONT_SIZE_LENGTH ) {
@@ -2366,7 +2366,7 @@ SPIFontSize::operator==(const SPIBase& rhs) const {
         } else {
             if( value != r->value ) { return false;}
         }
-        return SPIBase::operator==(rhs);
+        return SPIBase::equals(rhs);
     } else {
         return false;
     }
@@ -2501,9 +2501,9 @@ const Glib::ustring SPIFont::get_value() const
 
 // Does nothing...
 bool
-SPIFont::operator==(const SPIBase& rhs) const {
+SPIFont::equals(const SPIBase& rhs) const {
     if( /* const SPIFont* r = */ dynamic_cast<const SPIFont*>(&rhs) ) {
-        return SPIBase::operator==(rhs);
+        return SPIBase::equals(rhs);
     } else {
         return false;
     }
@@ -2643,7 +2643,7 @@ SPIBaselineShift::merge( const SPIBase* const parent ) {
 
 // This is not used but we have it for completeness, it has not been tested.
 bool
-SPIBaselineShift::operator==(const SPIBase& rhs) const {
+SPIBaselineShift::equals(const SPIBase& rhs) const {
     if( const SPIBaselineShift* r = dynamic_cast<const SPIBaselineShift*>(&rhs) ) {
         if( type != r->type ) return false;
         if( type == SP_BASELINE_SHIFT_LENGTH ) {
@@ -2653,7 +2653,7 @@ SPIBaselineShift::operator==(const SPIBase& rhs) const {
         } else {
             if( value != r->value ) return false;
         }
-        return SPIBase::operator==(rhs);
+        return SPIBase::equals(rhs);
     } else {
         return false;
     }
@@ -2785,14 +2785,14 @@ SPITextDecorationLine::merge( const SPIBase* const parent ) {
 }
 
 bool
-SPITextDecorationLine::operator==(const SPIBase& rhs) const {
+SPITextDecorationLine::equals(const SPIBase& rhs) const {
     if( const SPITextDecorationLine* r = dynamic_cast<const SPITextDecorationLine*>(&rhs) ) {
         return
             (underline    == r->underline    ) &&
             (overline     == r->overline     ) &&
             (line_through == r->line_through ) &&
             (blink        == r->blink        ) &&
-            SPIBase::operator==(rhs);
+            SPIBase::equals(rhs);
     } else {
         return false;
     }
@@ -2905,7 +2905,7 @@ SPITextDecorationStyle::merge( const SPIBase* const parent ) {
 }
 
 bool
-SPITextDecorationStyle::operator==(const SPIBase& rhs) const {
+SPITextDecorationStyle::equals(const SPIBase& rhs) const {
     if( const SPITextDecorationStyle* r = dynamic_cast<const SPITextDecorationStyle*>(&rhs) ) {
         return
             (solid    == r->solid    ) &&
@@ -2913,7 +2913,7 @@ SPITextDecorationStyle::operator==(const SPIBase& rhs) const {
             (dotted   == r->dotted   ) &&
             (dashed   == r->dashed   ) &&
             (wavy     == r->wavy     ) &&
-            SPIBase::operator==(rhs);
+            SPIBase::equals(rhs);
     } else {
         return false;
     }
@@ -3044,10 +3044,10 @@ SPITextDecoration::merge( const SPIBase* const parent ) {
 
 // Use CSS2 value
 bool
-SPITextDecoration::operator==(const SPIBase& rhs) const {
+SPITextDecoration::equals(const SPIBase& rhs) const {
     if( const SPITextDecoration* r = dynamic_cast<const SPITextDecoration*>(&rhs) ) {
         return (style->text_decoration_line == r->style->text_decoration_line &&
-                SPIBase::operator==(rhs));
+                SPIBase::equals(rhs));
     } else {
         return false;
     }
@@ -3142,14 +3142,14 @@ const Glib::ustring SPIVectorEffect::get_value() const
 // }
 
 bool
-SPIVectorEffect::operator==(const SPIBase& rhs) const {
+SPIVectorEffect::equals(const SPIBase& rhs) const {
     if( const SPIVectorEffect* r = dynamic_cast<const SPIVectorEffect*>(&rhs) ) {
         return
             (stroke    == r->stroke) &&
             (size      == r->size  ) &&
             (rotate    == r->rotate) &&
             (fixed     == r->fixed ) &&
-            SPIBase::operator==(rhs);
+            SPIBase::equals(rhs);
     } else {
         return false;
     }
@@ -3189,11 +3189,11 @@ const Glib::ustring SPIStrokeExtensions::get_value() const
 // }
 
 bool
-SPIStrokeExtensions::operator==(const SPIBase& rhs) const {
+SPIStrokeExtensions::equals(const SPIBase& rhs) const {
     if( const SPIStrokeExtensions* r = dynamic_cast<const SPIStrokeExtensions*>(&rhs) ) {
         return
             (hairline == r->hairline  ) &&
-            SPIBase::operator==(rhs);
+            SPIBase::equals(rhs);
     } else {
         return false;
     }

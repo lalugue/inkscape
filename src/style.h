@@ -68,7 +68,7 @@ public:
     void mergeString(char const *p);
     void mergeCSS(SPCSSAttr *css);
     void mergeStatement(CRStatement *statement);
-    bool operator==(SPStyle const &rhs);
+    bool operator==(SPStyle const &rhs) const;
 
 private:
     void _mergeString(char const *p);

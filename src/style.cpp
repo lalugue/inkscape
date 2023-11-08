@@ -878,7 +878,7 @@ SPStyle::mergeStatement( CRStatement *statement ) {
 
 // Mostly for unit testing
 bool
-SPStyle::operator==(const SPStyle& rhs) {
+SPStyle::operator==(const SPStyle& rhs) const {
 
     // Uncomment for testing
     // for(std::vector<SPIBase*>::size_type i = 0; i != _properties.size(); ++i) {
