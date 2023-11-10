@@ -65,7 +65,6 @@ class SPDocument;
 
 static void refresh_offset_source(SPOffset* offset);
 
-static void sp_offset_start_listening(SPOffset *offset,SPObject* to);
 static void sp_offset_quit_listening(SPOffset *offset);
 static void sp_offset_href_changed(SPObject *old_ref, SPObject *ref, SPOffset *offset);
 static void sp_offset_move_compensate(Geom::Affine const *mp, SPItem *original, SPOffset *self);
@@ -945,7 +944,7 @@ sp_offset_top_point (SPOffset const * offset, Geom::Point *px)
 }
 
 // the listening functions
-static void sp_offset_start_listening(SPOffset *offset,SPObject* to)
+static void sp_offset_start_listening(SPOffset *offset, SPItem *to)
 {
     if ( to == nullptr ) {
         return;
@@ -955,7 +954,7 @@ static void sp_offset_start_listening(SPOffset *offset,SPObject* to)
     offset->sourceRepr = to->getRepr();
 
     offset->_delete_connection = to->connectDelete(sigc::bind(sigc::ptr_fun(&sp_offset_delete_self), offset));
-    offset->_transformed_connection = cast<SPItem>(to)->connectTransformed(sigc::bind(sigc::ptr_fun(&sp_offset_move_compensate), offset));
+    offset->_transformed_connection = to->connectTransformed(sigc::bind(sigc::ptr_fun(&sp_offset_move_compensate), offset));
     offset->_modified_connection = to->connectModified(sigc::bind<2>(sigc::ptr_fun(&sp_offset_source_modified), offset));
 }
 
@@ -1071,13 +1070,12 @@ refresh_offset_source(SPOffset* offset)
 
     // le mauvais cas: pas d'attribut d => il faut verifier que c'est une SPShape puis prendre le contour
     // The bad case: no d attribute.  Must check that it's an SPShape and then take the outline.
-    SPObject *refobj=offset->sourceObject;
+    SPItem *item = offset->sourceObject;
 
-    if ( refobj == nullptr ) {
+    if (item == nullptr) {
     	return;
     }
 
-    auto item = cast<SPItem>(refobj);
     SPCurve curve;
 
     if (auto shape = cast<SPShape>(item)) {

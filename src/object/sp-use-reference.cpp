@@ -25,6 +25,8 @@
 
 bool SPUseReference::_acceptObject(SPObject * const obj) const
 {
+    if (!is<SPItem>(obj))
+        return false;
     return URIReference::_acceptObject(obj);
 }
 
@@ -80,8 +82,7 @@ SPUsePath::unlink()
     detach();
 }
 
-void
-SPUsePath::start_listening(SPObject* to)
+void SPUsePath::start_listening(SPItem *to)
 {
     if ( to == nullptr ) {
         return;
@@ -89,7 +90,7 @@ SPUsePath::start_listening(SPObject* to)
     sourceObject = to;
     sourceRepr = to->getRepr();
     _delete_connection = to->connectDelete(sigc::bind(sigc::ptr_fun(&sp_usepath_delete_self), this));
-    _transformed_connection = cast<SPItem>(to)->connectTransformed(sigc::bind(sigc::ptr_fun(&sp_usepath_move_compensate), this));
+    _transformed_connection = to->connectTransformed(sigc::bind(sigc::ptr_fun(&sp_usepath_move_compensate), this));
     _modified_connection = to->connectModified(sigc::bind<2>(sigc::ptr_fun(&sp_usepath_source_modified), this));
 }
 

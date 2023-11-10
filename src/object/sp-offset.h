@@ -67,7 +67,7 @@ public:
     char                 *sourceHref;
     SPUseReference       *sourceRef;
     Inkscape::XML::Node  *sourceRepr; ///< the repr associated with that id
-    SPObject             *sourceObject;
+    SPItem               *sourceObject;
 
     sigc::connection _modified_connection;
     sigc::connection _delete_connection;

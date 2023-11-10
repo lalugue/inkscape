@@ -59,7 +59,7 @@ public:
 
     void link(char* to);
     void unlink();
-    void start_listening(SPObject* to);
+    void start_listening(SPItem* to);
     void quit_listening();
     void refresh_source();
 
