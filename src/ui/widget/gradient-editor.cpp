@@ -12,6 +12,7 @@
 
 #include "gradient-editor.h"
 
+#include <array>
 #include <initializer_list>
 #include <utility>
 #include <2geom/point.h>
@@ -274,11 +275,11 @@ GradientEditor::GradientEditor(const char* prefs) :
     });
 
     // connect gradient repeat modes menu
-    static auto const repeats = {std::pair
+    static auto const repeats = std::to_array({std::pair
         {SP_GRADIENT_SPREAD_PAD    , _("None"     )},
         {SP_GRADIENT_SPREAD_REPEAT , _("Direct"   )},
         {SP_GRADIENT_SPREAD_REFLECT, _("Reflected")}
-    };
+    });
     for (auto const &[mode, text] : repeats) {
         auto const icon = get_repeat_icon(mode);
         auto const item = Gtk::make_managed<UI::Widget::PopoverMenuItem>(text, false, icon);
