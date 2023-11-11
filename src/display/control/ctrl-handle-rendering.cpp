@@ -447,10 +447,9 @@ std::shared_ptr<Cairo::ImageSurface const> draw_uncached(RenderParams const &p)
     cairo_surface_set_device_scale(surface->cobj(), 1, 1);
 
     const auto scale = p.device_scale;
-    const auto size = p.size * scale;
 
     auto cr = Cairo::Context(cairo_create(surface->cobj()), true);
-
+    
     // align stroke to pixel grid; even width stroke needs whole coordinates, odd width needs half a pixel shift
     auto offset_stroke = [&](float stroke) {
         auto size = static_cast<int>(std::round(stroke * scale));
@@ -466,14 +465,14 @@ std::shared_ptr<Cairo::ImageSurface const> draw_uncached(RenderParams const &p)
     cr.set_miter_limit(4);
 
     // Rotate around center
-    cr.translate(size / 2.0, size / 2.0);
+    cr.translate(p.width / 2.0, p.width / 2.0);
     cr.rotate(p.angle);
-    cr.translate(-size / 2.0, -size / 2.0);
+    cr.translate(-p.width / 2.0, -p.width / 2.0);
 
     auto effective_outline = 2 * p.outline_width + p.stroke_width;
     auto half_pixel_shift = offset_stroke(effective_outline);
 
-    draw_cairo_path(p.shape, cr, size - effective_outline * scale);
+    draw_cairo_path(p.shape, cr, p.size * scale);
 
     // Outline.
     set_source_rgba32(cr, p.outline);

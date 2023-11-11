@@ -64,6 +64,8 @@ public:
     void set_normal(bool selected = false);
     void set_odd_size(bool odd = true);
 
+    // do not call directly; only used for invisible handle
+    void _set_size(int size);
 protected:
     ~CanvasItemCtrl() override = default;
 
@@ -73,6 +75,7 @@ protected:
 
     void build_cache(int device_scale) const;
     float get_width() const;
+    float get_total_width() const;
 
 private:
     // Geometry
@@ -95,8 +98,10 @@ private:
     bool _force_odd_size = true;
     HandleSize _rel_size = HandleSize::NORMAL;
 
+    // get effective stroke width
+    float get_stroke_width() const;
+    // get size of the pixmap needed to render this control item
     int get_pixmap_width(int device_scale) const;
-    void _set_size(int size);
 };
 
 } // namespace Inkscape

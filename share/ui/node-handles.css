@@ -65,7 +65,7 @@ Notes:
     outline-width: 1.0px;
     outline-opacity: 60%;
     scale: 2.0;
-    size-extra: 7px; /* extra space due to outline and stroke */
+    size-extra: 1px; /* extra space to fine-tune handle size */
     stroke-scale: 0.125; /* factor for scaling stroke with handle size or 0 to disable scaling */
 }
 
@@ -124,6 +124,7 @@ Notes:
 .inkscape-adj-salign, .inkscape-adj-calign, .inkscape-adj-malign,
 .inkscape-adj-center {
     fill: black;
+    size-extra: 3px;
 }
 
 .inkscape-adj-handle:selected, .inkscape-adj-skew:selected, .inkscape-adj-rotate:selected,
@@ -178,14 +179,21 @@ Notes:
 .inkscape-marker {
     shape: "cross";
     stroke-width: 1px;
-    size-extra: 3px;
+    size-extra: -1px;
 }
 
 .inkscape-invisible {
     opacity: 0% !important;
+    /* despite being invisible size of this handle is important, as it is a hit target for path manipulation */
+    scale: 2;
+    size-extra: 1px;
+    stroke-width: 0px;
+    stroke-scale: 0;
+    outline-width: 0px;
 }
 
 .inkscape-guide-handle {
+    /* guide lines handles are tiny and unobtrusive */
     scale: 0.5;
     size-extra: 3px;
     stroke-width: 1.0px;

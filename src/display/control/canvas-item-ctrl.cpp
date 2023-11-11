@@ -181,8 +181,19 @@ float CanvasItemCtrl::get_width() const {
     return size;
 }
 
+float CanvasItemCtrl::get_total_width() const {
+    const auto& style = _context->handlesCss()->style_map.at(_handle);
+    auto width = get_width() + get_stroke_width() + 2 * style.outline_width();
+    return width;
+}
+
 int CanvasItemCtrl::get_pixmap_width(int device_scale) const {
-    return static_cast<int>(get_width()) * device_scale | 1;
+    auto width = get_total_width();
+    auto size = static_cast<int>(width + 0.5f) * device_scale;
+    // with odd device scale make pixmap size odd too, and with even scale make it even
+    // to center handle on a 1 logical pixel line
+    size = device_scale & 1 ? size | 1 : (size + 1) & ~1;
+    return size;
 }
 
 void CanvasItemCtrl::set_size_default()
@@ -282,7 +293,7 @@ void CanvasItemCtrl::_update(bool)
     }
 
     // Width is always odd.
-    const auto width = static_cast<int>(std::ceil(get_width())) | 1;
+    const auto width = static_cast<int>(std::ceil(get_total_width())) | 1;
 
     // Get half width, rounded down.
     int const w_half = width / 2;
@@ -394,7 +405,8 @@ void CanvasItemCtrl::_update(bool)
     }
 
     auto const pt = Geom::IntPoint(-w_half, -w_half) + Geom::IntPoint(dx, dy) + (_position * affine()).floor();
-    _bounds = Geom::IntRect(pt, pt + Geom::IntPoint(width, width));
+    // pixmap can be larger by a pixel leading to redrawing artifacts; counter that
+    _bounds = Geom::IntRect(pt, pt + Geom::IntPoint(width + 1, width + 1));
 
     // Queue redraw of new area
     request_redraw();
@@ -428,13 +440,20 @@ void CanvasItemCtrl::_invalidate_ctrl_handles()
     request_update();
 }
 
+float CanvasItemCtrl::get_stroke_width() const {
+    const auto& style = _context->handlesCss()->style_map.at(_handle);
+    // growing stroke width with handle size, if style enables it
+    auto stroke_width = style.stroke_width() * (1.0f + _width * style.stroke_scale());
+    return stroke_width;
+}
+
 /**
  * Build object-specific cache.
  */
 void CanvasItemCtrl::build_cache(int device_scale) const
 {
     auto width = get_width();
-    if (width < 2) {
+    if (width < 1) {
         return; // Nothing to render
     }
 
@@ -442,8 +461,8 @@ void CanvasItemCtrl::build_cache(int device_scale) const
     auto pixel_fit = [=](float v) { return std::round(v * device_scale) / device_scale; };
 
     auto const &style = _context->handlesCss()->style_map.at(_handle);
-    // growing stroke width with handle size, if style enables it
-    auto stroke_width = pixel_fit(style.stroke_width() * (1.0f + _width * style.stroke_scale()));
+    // effective stroke width
+    auto stroke_width = pixel_fit(get_stroke_width());
     // fixed-size outline
     auto outline_width = pixel_fit(style.outline_width());
     // handle size
