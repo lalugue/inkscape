@@ -1025,3 +1025,8 @@ padding:3px 3px 10px 3px;
     margin:10px 4px;
     padding:0;
 }
+/*we dont want higlight with tab order only want checked ones */
+#tool-toolbar flowboxchild:selected { 
+    background-color:transparent;
+    background-image:image(@theme_bg_color);
+}

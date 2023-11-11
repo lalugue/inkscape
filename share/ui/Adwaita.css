@@ -70,10 +70,6 @@ notebook notebook header image {
     margin-top:-15px;
 }
 
-button.toggle,button.radio{
-    outline:none;
-}
-
 /* checked buttons */
 button.radio:checked,
 button.toggle:checked {
