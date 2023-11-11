@@ -62,7 +62,6 @@ public:
 
     void documentReplaced() override;
 
-    void update() override;
     void update_gridspage();
 
 protected:

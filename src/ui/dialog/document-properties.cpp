@@ -1775,11 +1775,6 @@ void DocumentProperties::documentReplaced()
     }
 }
 
-void DocumentProperties::update()
-{
-    update_widgets();
-}
-
 /*########################################################################
 # BUTTON CLICK HANDLERS    (callbacks)
 ########################################################################*/
