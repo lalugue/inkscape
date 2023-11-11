@@ -145,7 +145,7 @@ inkscape:macos:arm:
   extends: inkscape:macos:x64
   tags:
     - saas-macos-medium-m1
-  image: macos-12-xcode-13
+  image: macos-12-xcode-14
   variables:
     MACOSX_DEPLOYMENT_TARGET: "11.3"
     CCACHE_DIR: $CI_PROJECT_DIR/ccache
