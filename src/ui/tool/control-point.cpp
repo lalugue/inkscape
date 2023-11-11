@@ -123,8 +123,7 @@ Glib::ustring ControlPoint::format_tip(char const *format, ...)
 
 void ControlPoint::_setSize(unsigned int size)
 {
-    std::cout << "ctrl-point size " << size;
-    // _canvas_item_ctrl->set_size(size);
+    _canvas_item_ctrl->_set_size(size);
 }
 
 void ControlPoint::_setControlType(Inkscape::CanvasItemCtrlType type)
@@ -413,7 +412,8 @@ void ControlPoint::transferGrab(ControlPoint *prev_point, MotionEvent const &eve
 
 void ControlPoint::_setState(State state)
 {
-    _canvas_item_ctrl->set_normal();
+    _canvas_item_ctrl->set_normal(_selected_appearance);
+
     switch(state) {
         case STATE_NORMAL:
             break;
@@ -425,6 +425,13 @@ void ControlPoint::_setState(State state)
             break;
     };
     _state = state;
+}
+
+void ControlPoint::set_selected_appearance(bool selected) {
+    if (_selected_appearance == selected) return;;
+
+    _selected_appearance = selected;
+    _canvas_item_ctrl->set_selected(selected);
 }
 
 // TODO: RENAME

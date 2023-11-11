@@ -136,26 +136,6 @@ const double BSPLINE_TOL = 0.001;
 const double NO_POWER = 0.0;
 const double DEFAULT_START_POWER = 1.0/3.0;
 
-ControlPoint::ColorSet Node::node_colors = {
-    {0xbfbfbf00, 0x000000ff}, // normal fill, stroke
-    {0xff000000, 0x000000ff}, // mouseover fill, stroke
-    {0xff000000, 0x000000ff}, // clicked fill, stroke
-    //
-    {0x0000ffff, 0x000000ff}, // normal fill, stroke when selected
-    {0xff000000, 0x000000ff}, // mouseover fill, stroke when selected
-    {0xff000000, 0x000000ff}  // clicked fill, stroke when selected
-};
-
-ControlPoint::ColorSet Handle::_handle_colors = {
-    {0xffffffff, 0x000000ff}, // normal fill, stroke
-    {0xff000000, 0x000000ff}, // mouseover fill, stroke
-    {0xff000000, 0x000000ff}, // clicked fill, stroke
-    //
-    {0xffffffff, 0x000000ff}, // normal fill, stroke
-    {0xff000000, 0x000000ff}, // mouseover fill, stroke
-    {0xff000000, 0x000000ff}  // clicked fill, stroke
-};
-
 std::ostream &operator<<(std::ostream &out, NodeType type)
 {
     switch(type) {
@@ -196,6 +176,7 @@ void Handle::setVisible(bool v)
 {
     ControlPoint::setVisible(v);
     _handle_line->set_visible(v);
+    set_selected_appearance(_parent->selected());
 }
 
 void Handle::_update_bspline_handles() {

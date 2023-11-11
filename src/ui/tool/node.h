@@ -115,7 +115,6 @@ private:
 
     static double _saved_length;
     static bool _drag_out;
-    static ColorSet _handle_colors;
     friend class Node;
 };
 
@@ -245,7 +244,6 @@ private:
     Handle _back; ///< Node handle in the forward direction of the path
     NodeType _type; ///< Type of node - cusp, smooth...
     bool _handles_shown;
-    static ColorSet node_colors;
 
     // This is used by fixNeighbors to repair smooth nodes after all move
     // operations have been completed. If this is empty, no fixing is needed.

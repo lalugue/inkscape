@@ -97,7 +97,6 @@ void SelectableControlPoint::_setState(State state)
         ControlPoint::_setState(state);
     } else {
         _canvas_item_ctrl->set_normal(true);
-        ColorEntry current = {0, 0};
         switch (state) {
             case STATE_NORMAL:
                 break;

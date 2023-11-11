@@ -187,27 +187,10 @@ public:
 
     bool doubleClicked() const { return _double_clicked; }
 
+    // make handle look like "selected" one without participating in selection
+    void set_selected_appearance(bool selected);
+
 protected:
-    struct ColorEntry
-    {
-        uint32_t fill;
-        uint32_t stroke;
-    };
-
-    /**
-     * Color entries for each possible state.
-     * @todo resolve this to be in sync with the five standard GTK states.
-     */
-    struct ColorSet
-    {
-        ColorEntry normal;
-        ColorEntry mouseover;
-        ColorEntry clicked;
-        ColorEntry selected_normal;
-        ColorEntry selected_mouseover;
-        ColorEntry selected_clicked;
-    };
-
     /**
      * Create a regular control point.
      * Derive to have constructors with a reasonable number of parameters.
@@ -314,8 +297,6 @@ private:
 
     auto_connection _event_handler_connection;
 
-    static ColorSet _default_color_set;
-
     /** Stores the window point over which the cursor was during the last mouse button press. */
     static Geom::Point _drag_event_origin;
     /** Stores the desktop point from which the last drag was initiated. */
@@ -323,6 +304,7 @@ private:
     static bool _event_grab;
 
     bool _double_clicked = false;
+    bool _selected_appearance = false;
 };
 
 } // namespace Inkscape::UI
