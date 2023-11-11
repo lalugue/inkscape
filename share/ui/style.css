@@ -1271,3 +1271,9 @@ button.icon-preview {
 frame.flat > border {
     border: none;
  }
+
+/*we dont want higlight with tab order only want checked ones */
+#ToolToolbar flowboxchild:selected { 
+    background-color:transparent;
+    background-image:image(@theme_bg_color);
+}

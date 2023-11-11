@@ -70,11 +70,7 @@ notebook notebook header image {
     margin-top:-15px;
 }
 
-button.toggle,button.radio{
-    outline:none;
-}
-
-/* checked buttons: light theme version */
+/* checked buttons */
 button.radio:checked,
 button.toggle:checked {
     background-color: transparent;
