@@ -788,7 +788,7 @@ msgstr "金箔黏貼"
 
 #: ../build/share/filters/filters.svg.h:252
 msgid "Fat pasted cast metal, with golden highlights"
-msgstr "貼滿鑄造金屬，帶有黃金亮光"
+msgstr "貼滿鑄造金屬，帶有黃金光澤"
 
 #: ../build/share/filters/filters.svg.h:254
 msgid "Crumpled Plastic"
@@ -3219,41 +3219,36 @@ msgid "Jet Black"
 msgstr "深黑"
 
 #: ../build/share/paint/patterns.svg.h:1
-#, fuzzy
 msgid "Decorative Paper"
-msgstr "吸墨紙"
+msgstr "裝飾用紙"
 
 #: ../build/share/paint/patterns.svg.h:1
-#, fuzzy
 msgid "Zig Zag"
 msgstr "Z 字形"
 
 #: ../build/share/paint/patterns.svg.h:1
 msgid "Ticks"
-msgstr ""
+msgstr "記號"
 
 #: ../build/share/paint/patterns.svg.h:1
-#, fuzzy
 msgid "Triangles 3"
-msgstr "三角形"
+msgstr "三角形 3"
 
 #: ../build/share/paint/patterns.svg.h:1
 msgid "Bricks"
-msgstr ""
+msgstr "磚塊"
 
 #: ../build/share/paint/patterns.svg.h:1
 msgid "Alternating chevron"
-msgstr ""
+msgstr "交錯 V 形標記"
 
 #: ../build/share/paint/patterns.svg.h:1
-#, fuzzy
 msgid "Inverted circle"
-msgstr "反相"
+msgstr "反相圓圈"
 
 #: ../build/share/paint/patterns.svg.h:1
-#, fuzzy
 msgid "Diamond Plate"
-msgstr "膨脹"
+msgstr "壓花板"
 
 #: ../build/share/paint/patterns.svg.h:1 ../src/object/sp-ellipse.cpp:433
 #: ../share/extensions/render_barcode_qrcode.inx:81
@@ -3261,67 +3256,56 @@ msgid "Circle"
 msgstr "圓形"
 
 #: ../build/share/paint/patterns.svg.h:1
-#, fuzzy
 msgid "Hollow circle"
-msgstr "強制圓形"
+msgstr "中空圓形"
 
 #: ../build/share/paint/patterns.svg.h:1
 msgid "Pills"
-msgstr ""
+msgstr "藥丸狀"
 
 #: ../build/share/paint/patterns.svg.h:1
-#, fuzzy
 msgid "Tiles 1"
-msgstr "鋪排"
+msgstr "鋪磚 1"
 
 #: ../build/share/paint/patterns.svg.h:1
 msgid "Abstract 2"
-msgstr ""
+msgstr "抽象 2"
 
 #: ../build/share/paint/patterns.svg.h:1
-#, fuzzy
 msgid "Triangles 1"
-msgstr "三角形"
+msgstr "三角形 1"
 
 #: ../build/share/paint/patterns.svg.h:1
-#, fuzzy
 msgid "Triangles 2"
-msgstr "三角形"
+msgstr "三角形 2"
 
 #: ../build/share/paint/patterns.svg.h:1
-#, fuzzy
 msgid "Circle fill 1"
-msgstr "圓形對話框"
+msgstr "圓形填滿 1"
 
 #: ../build/share/paint/patterns.svg.h:1
-#, fuzzy
 msgid "Snake 2"
-msgstr "蜿蜒"
+msgstr "蜿蜒 2"
 
 #: ../build/share/paint/patterns.svg.h:1
-#, fuzzy
 msgid "Circle fill 6"
-msgstr "圓形對話框"
+msgstr "圓形填滿 6"
 
 #: ../build/share/paint/patterns.svg.h:1
-#, fuzzy
 msgid "Triangles 5"
-msgstr "三角形"
+msgstr "三角形 5"
 
 #: ../build/share/paint/patterns.svg.h:1
-#, fuzzy
 msgid "Semicircles 2"
-msgstr "外圓 (Excircles)"
+msgstr "半圓形 2"
 
 #: ../build/share/paint/patterns.svg.h:1
-#, fuzzy
 msgid "Triangles 4"
-msgstr "三角形"
+msgstr "三角形 4"
 
 #: ../build/share/paint/patterns.svg.h:1
-#, fuzzy
 msgid "Abstract fill 1"
-msgstr "面銑填補角度"
+msgstr "抽象填滿 1"
 
 #: ../build/share/paint/patterns.svg.h:1
 #: ../share/extensions/patternalongpath.inx:16
@@ -3329,132 +3313,112 @@ msgid "Snake"
 msgstr "蜿蜒"
 
 #: ../build/share/paint/patterns.svg.h:1
-#, fuzzy
 msgid "Grid 1"
-msgstr "格線"
+msgstr "格線 1"
 
 #: ../build/share/paint/patterns.svg.h:1
 msgid "Abstract 4"
-msgstr ""
+msgstr "抽象 4"
 
 #: ../build/share/paint/patterns.svg.h:1
 msgid "Rain drops"
-msgstr ""
+msgstr "雨滴"
 
 #: ../build/share/paint/patterns.svg.h:1
-#, fuzzy
 msgid "Circle fill 2"
-msgstr "圓形對話框"
+msgstr "圓形填滿 2"
 
 #: ../build/share/paint/patterns.svg.h:1
-#, fuzzy
 msgid "Circle fill 3"
-msgstr "圓形對話框"
+msgstr "圓形填滿 3"
 
 #: ../build/share/paint/patterns.svg.h:1
-#, fuzzy
 msgid "Inverted braid"
-msgstr "反相"
+msgstr "反相編織"
 
 #: ../build/share/paint/patterns.svg.h:1
 msgid "Rain drops 2"
-msgstr ""
+msgstr "雨滴 2"
 
 #: ../build/share/paint/patterns.svg.h:1
-#, fuzzy
 msgid "Abstract fill 2"
-msgstr "面銑填補角度"
+msgstr "抽象填滿 2"
 
 #: ../build/share/paint/patterns.svg.h:1
-#, fuzzy
 msgid "Abstract fill 3"
-msgstr "面銑填補角度"
+msgstr "抽象填滿 3"
 
 #: ../build/share/paint/patterns.svg.h:1
 msgid "Pills 2"
-msgstr ""
+msgstr "藥丸狀 2"
 
 #: ../build/share/paint/patterns.svg.h:1
 msgid "Abstract 1"
-msgstr ""
+msgstr "抽象 1"
 
 #: ../build/share/paint/patterns.svg.h:1
 msgid "Abstract 3"
-msgstr ""
+msgstr "抽象 3"
 
 #: ../build/share/paint/patterns.svg.h:1
-#, fuzzy
 msgid "Squares 1"
-msgstr "方端"
+msgstr "方形 1"
 
 #: ../build/share/paint/patterns.svg.h:1
-#, fuzzy
 msgid "Circle fill 4"
-msgstr "圓形對話框"
+msgstr "圓形填滿 4"
 
 #: ../build/share/paint/patterns.svg.h:1
-#, fuzzy
 msgid "Arrow fill"
-msgstr "無填充"
+msgstr "箭頭填滿"
 
 #: ../build/share/paint/patterns.svg.h:1
-#, fuzzy
 msgid "Semicircles 1"
-msgstr "外圓 (Excircles)"
+msgstr "半圓 1"
 
 #: ../build/share/paint/patterns.svg.h:1
-#, fuzzy
 msgid "Tiles 2"
-msgstr "鋪排"
+msgstr "鋪磚 2"
 
 #: ../build/share/paint/patterns.svg.h:1
-#, fuzzy
 msgid "Tiles 3"
-msgstr "鋪排"
+msgstr "鋪磚 3"
 
 #: ../build/share/paint/patterns.svg.h:1
-#, fuzzy
 msgid "Regular grid"
-msgstr "矩形格線"
+msgstr "標準格線"
 
 #: ../build/share/paint/patterns.svg.h:1
-#, fuzzy
 msgid "Floor tiles"
-msgstr "所有檔案"
+msgstr "地磚"
 
 #: ../build/share/paint/patterns.svg.h:1
 msgid "Hexagons packing grid"
-msgstr ""
+msgstr "六角形"
 
 #: ../build/share/paint/patterns.svg.h:1
-#, fuzzy
 msgid "Wire Fence"
-msgstr "出現"
+msgstr "菱形擴張網"
 
 #: ../build/share/paint/patterns.svg.h:1
-#, fuzzy
 msgid "Stripes grid"
-msgstr "條紋 1:1"
+msgstr "條紋網格"
 
 #: ../build/share/paint/patterns.svg.h:1
-#, fuzzy
 msgid "Inverted grid"
-msgstr "反相"
+msgstr "反相網格"
 
 #: ../build/share/paint/patterns.svg.h:1
-#, fuzzy
 msgid "Geometric grid"
-msgstr "立體格線"
+msgstr "幾何網格"
 
 #: ../build/share/paint/patterns.svg.h:1
-#, fuzzy
 msgid "Hexagonal grid"
-msgstr "對角參考線"
+msgstr "六角形網格"
 
 #: ../build/share/paint/patterns.svg.h:1
-#, fuzzy
 msgid "Triangle grid"
-msgstr "內三角"
+msgstr "三角形網格"
 
 #: ../build/share/paint/patterns.svg.h:1
 #: ../share/extensions/guides_creator.inx:11
@@ -3466,14 +3430,12 @@ msgid "Halfcircles grid"
 msgstr ""
 
 #: ../build/share/paint/patterns.svg.h:1
-#, fuzzy
 msgid "Circles in grid"
-msgstr "建立新格線"
+msgstr "網格上的圓形"
 
 #: ../build/share/paint/patterns.svg.h:1
-#, fuzzy
 msgid "Halftones"
-msgstr "仿製物件"
+msgstr "半色調"
 
 #: ../build/share/paint/patterns.svg.h:1
 msgid "Packed circles"
@@ -3498,69 +3460,56 @@ msgid "Patterns"
 msgstr "圖樣"
 
 #: ../build/share/paint/patterns.svg.h:1
-#, fuzzy
 msgid "Stripes 01 (1:1)"
-msgstr "條紋 1:1"
+msgstr "條紋 01 (1:1)"
 
 #: ../build/share/paint/patterns.svg.h:1
-#, fuzzy
 msgid "Stripes 02 (2:3)"
-msgstr "條紋 1:3"
+msgstr "條紋 02 (2:3)"
 
 #: ../build/share/paint/patterns.svg.h:1
-#, fuzzy
 msgid "Stripes 03 (1:2)"
-msgstr "條紋 1:2"
+msgstr "條紋 03 (1:2)"
 
 #: ../build/share/paint/patterns.svg.h:1
-#, fuzzy
 msgid "Stripes 04 (1:3)"
-msgstr "條紋 1:3"
+msgstr "條紋 04 (1:3)"
 
 #: ../build/share/paint/patterns.svg.h:1
-#, fuzzy
 msgid "Stripes 05 (1:4)"
-msgstr "條紋 1:4"
+msgstr "條紋 05 (1:4)"
 
 #: ../build/share/paint/patterns.svg.h:1
-#, fuzzy
 msgid "Stripes 06 (1:5)"
-msgstr "條紋 1:5"
+msgstr "條紋 06 (1:5)"
 
 #: ../build/share/paint/patterns.svg.h:1
-#, fuzzy
 msgid "Stripes 07 (1:8)"
-msgstr "條紋 1:8"
+msgstr "條紋 07 (1:8)"
 
 #: ../build/share/paint/patterns.svg.h:1
-#, fuzzy
 msgid "Stripes 08 (1:10)"
-msgstr "條紋 1:10"
+msgstr "條紋 08 (1:10)"
 
 #: ../build/share/paint/patterns.svg.h:1
-#, fuzzy
 msgid "Stripes 09 (1:16)"
-msgstr "條紋 1:16"
+msgstr "條紋 09 (1:16)"
 
 #: ../build/share/paint/patterns.svg.h:1
-#, fuzzy
 msgid "Stripes 10 (1:32)"
-msgstr "條紋 1:32"
+msgstr "條紋 10 (1:32)"
 
 #: ../build/share/paint/patterns.svg.h:1
-#, fuzzy
 msgid "Stripes 11 (1:64)"
-msgstr "條紋 1:64"
+msgstr "條紋 11 (1:64)"
 
 #: ../build/share/paint/patterns.svg.h:1
-#, fuzzy
 msgid "Stripes 12 (2:1)"
-msgstr "條紋 1:1"
+msgstr "條紋 12 (2:1)"
 
 #: ../build/share/paint/patterns.svg.h:1
-#, fuzzy
 msgid "Stripes 13 (4:1)"
-msgstr "條紋 1:1"
+msgstr "條紋 13 (4:1)"
 
 #: ../build/share/paint/patterns.svg.h:1 ../share/ui/page-properties.glade:832
 msgid "Checkerboard"
@@ -3580,48 +3529,44 @@ msgid "Grid"
 msgstr "格線"
 
 #: ../build/share/paint/patterns.svg.h:1
-#, fuzzy
 msgid "Table Cloth"
-msgstr "繪圖板"
+msgstr "桌布"
 
 #: ../build/share/paint/patterns.svg.h:1
 msgid "Circle vertical lines halftone shading"
-msgstr ""
+msgstr "圓圈垂直線半色調遮光"
 
 #: ../build/share/paint/patterns.svg.h:1
 msgid "Rectangles halftone shading 1"
-msgstr ""
+msgstr "矩形半色調遮光 1"
 
 #: ../build/share/paint/patterns.svg.h:1
 msgid "Mesh halftone shading 1"
-msgstr ""
+msgstr "網狀半色調遮光 1"
 
 #: ../build/share/paint/patterns.svg.h:1
 msgid "Diamond halftone shading 2"
-msgstr ""
+msgstr "菱形半色調遮光 2"
 
 #: ../build/share/paint/patterns.svg.h:1
 msgid "Diamond halftone shading 1"
-msgstr ""
+msgstr "菱形半色調遮光 1"
 
 #: ../build/share/paint/patterns.svg.h:1
 msgid "Circle halftones shading"
-msgstr ""
+msgstr "圓圈半色調遮光"
 
 #: ../build/share/paint/patterns.svg.h:1
-#, fuzzy
 msgid "Zigzag vertical lines shading"
-msgstr "垂直線"
+msgstr "Z 形線條半色調遮光"
 
 #: ../build/share/paint/patterns.svg.h:1
-#, fuzzy
 msgid "Wave vertical lines shading 2"
-msgstr "垂直線"
+msgstr "波浪線條半色調遮光 2"
 
 #: ../build/share/paint/patterns.svg.h:1
-#, fuzzy
 msgid "Wave vertical lines shading"
-msgstr "垂直線"
+msgstr "波浪線條半色調遮光"
 
 #: ../build/share/paint/patterns.svg.h:1
 #, fuzzy
@@ -4438,7 +4383,6 @@ msgstr "醫院"
 
 #: ../build/share/symbols/symbols.h:229 ../build/share/symbols/symbols.h:230
 #: ../build/share/symbols/symbols.h:657 ../build/share/symbols/symbols.h:685
-#, fuzzy
 msgctxt "Symbol"
 msgid "Ice skating"
 msgstr "溜冰"
@@ -4598,21 +4542,19 @@ msgid "Alpine hut"
 msgstr ""
 
 #: ../build/share/symbols/symbols.h:294 ../build/share/symbols/symbols.h:308
-#, fuzzy
 msgctxt "Symbol"
 msgid "Bed and breakfast"
-msgstr "紅和藍"
+msgstr "民宿"
 
 #: ../build/share/symbols/symbols.h:295 ../build/share/symbols/symbols.h:309
 msgctxt "Symbol"
 msgid "Bed and breakfast 2"
-msgstr ""
+msgstr "民宿 2"
 
 #: ../build/share/symbols/symbols.h:296 ../build/share/symbols/symbols.h:310
-#, fuzzy
 msgctxt "Symbol"
 msgid "Camping"
-msgstr "端點："
+msgstr "露營"
 
 #: ../build/share/symbols/symbols.h:297 ../build/share/symbols/symbols.h:311
 msgctxt "Symbol"
@@ -4631,36 +4573,34 @@ msgid "Chalet 2"
 msgstr ""
 
 #: ../build/share/symbols/symbols.h:300 ../build/share/symbols/symbols.h:314
-#, fuzzy
 msgctxt "Symbol"
 msgid "Hostel"
-msgstr "主機"
+msgstr "旅館"
 
 #: ../build/share/symbols/symbols.h:301 ../build/share/symbols/symbols.h:315
 msgctxt "Symbol"
 msgid "Hotel"
-msgstr ""
+msgstr "飯店"
 
 #: ../build/share/symbols/symbols.h:302 ../build/share/symbols/symbols.h:316
 msgctxt "Symbol"
 msgid "Hotel 2"
-msgstr ""
+msgstr "飯店 2"
 
 #: ../build/share/symbols/symbols.h:303 ../build/share/symbols/symbols.h:317
 msgctxt "Symbol"
 msgid "Motel"
-msgstr ""
+msgstr "汽車旅館"
 
 #: ../build/share/symbols/symbols.h:305 ../build/share/symbols/symbols.h:319
-#, fuzzy
 msgctxt "Symbol"
 msgid "Shelter 2"
-msgstr "避難所"
+msgstr "避難所 2"
 
 #: ../build/share/symbols/symbols.h:306 ../build/share/symbols/symbols.h:320
 msgctxt "Symbol"
 msgid "Youth hostel"
-msgstr ""
+msgstr "青年旅館"
 
 #: ../build/share/symbols/symbols.h:321
 msgctxt "Symbol"
@@ -6282,31 +6222,27 @@ msgstr "印出 Inkscape 版本後結束"
 
 #: ../src/actions/actions-base.cpp:204
 msgid "Active Window: Start Call"
-msgstr ""
+msgstr "作用中視窗：開始呼叫"
 
 #: ../src/actions/actions-base.cpp:204
-#, fuzzy
 msgid "Start execution in active window"
-msgstr "降低選取項目到上一層"
+msgstr "在作用中視窗開始執行"
 
 #: ../src/actions/actions-base.cpp:205
 msgid "Active Window: End Call"
-msgstr ""
+msgstr "作用中視窗：結束呼叫"
 
 #: ../src/actions/actions-base.cpp:205
-#, fuzzy
 msgid "End execution in active window"
-msgstr "關閉使用中視窗"
+msgstr "在作用中視窗結束執行"
 
 #: ../src/actions/actions-base.cpp:206
-#, fuzzy
 msgid "Debug Info"
-msgstr "文件資訊"
+msgstr "除錯資訊"
 
 #: ../src/actions/actions-base.cpp:206
-#, fuzzy
 msgid "Print debugging information and exit"
-msgstr "列出動作清單後結束"
+msgstr "印出除錯資訊後結束"
 
 #: ../src/actions/actions-base.cpp:207
 msgid "System Directory"
@@ -6342,20 +6278,19 @@ msgstr "移除未用到的定義（漸層等）"
 
 #: ../src/actions/actions-base.cpp:211
 msgid "Quit"
-msgstr "結束(_Q)"
+msgstr "結束"
 
 #: ../src/actions/actions-base.cpp:211
 msgid "Quit Inkscape, check for data loss"
-msgstr ""
+msgstr "結束 Inkscape，檢查是否有遺失資料"
 
 #: ../src/actions/actions-base.cpp:212
 msgid "Quit Immediately"
-msgstr ""
+msgstr "立即結束"
 
 #: ../src/actions/actions-base.cpp:212
-#, fuzzy
 msgid "Immediately quit Inkscape, no check for data loss"
-msgstr "立即結束 Inkscape"
+msgstr "立即結束 Inkscape，不檢查是否有遺失資料"
 
 #: ../src/actions/actions-base.cpp:214
 msgid "Import Page Number"
@@ -6544,112 +6479,93 @@ msgid "Toggle snapping on/off"
 msgstr "切換貼齊功能開關"
 
 #: ../src/actions/actions-canvas-snapping.cpp:245
-#, fuzzy
 msgid "Snap Objects that Align"
-msgstr "物件中心點"
+msgstr "貼齊已對齊的物件"
 
 #: ../src/actions/actions-canvas-snapping.cpp:245
 #: ../src/actions/actions-canvas-snapping.cpp:280
-#, fuzzy
 msgid "Toggle alignment snapping"
-msgstr "切換消逝點"
+msgstr "切換用對齊來貼齊"
 
 #: ../src/actions/actions-canvas-snapping.cpp:246
-#, fuzzy
 msgid "Snap Nodes that Align"
-msgstr "貼齊參考線"
+msgstr "貼齊已對齊的節點"
 
 #: ../src/actions/actions-canvas-snapping.cpp:246
-#, fuzzy
 msgid "Toggle alignment snapping to nodes in the same path"
-msgstr "相對固定角度旋轉參考線角度"
+msgstr "切換在同樣路徑中的節點用對齊來貼齊"
 
 #: ../src/actions/actions-canvas-snapping.cpp:248
 msgid "Snap Objects at Equal Distances"
-msgstr ""
+msgstr "貼齊同樣距離的物件"
 
 #: ../src/actions/actions-canvas-snapping.cpp:248
-#, fuzzy
 msgid "Toggle snapping objects at equal distances"
-msgstr "物件旋轉中心"
+msgstr "切換貼齊相同距離的物件"
 
 #: ../src/actions/actions-canvas-snapping.cpp:250
 msgid "Snap Bounding Boxes"
 msgstr "貼齊邊界框"
 
 #: ../src/actions/actions-canvas-snapping.cpp:250
-#, fuzzy
 msgid "Toggle snapping to bounding boxes (global)"
-msgstr "切換邊界框貼齊功能"
+msgstr "切換邊界框貼齊功能（全域）"
 
 #: ../src/actions/actions-canvas-snapping.cpp:251
-#, fuzzy
 msgid "Snap Bounding Box Edges"
-msgstr "貼齊邊界框"
+msgstr "貼齊邊界框邊緣"
 
 #: ../src/actions/actions-canvas-snapping.cpp:251
-#, fuzzy
 msgid "Toggle snapping to bounding-box edges"
-msgstr "貼齊邊界框邊緣中點"
+msgstr "切換貼齊邊界框邊緣"
 
 #: ../src/actions/actions-canvas-snapping.cpp:252
-#, fuzzy
 msgid "Snap Bounding Box Corners"
 msgstr "貼齊邊界框頂點"
 
 #: ../src/actions/actions-canvas-snapping.cpp:252
-#, fuzzy
 msgid "Toggle snapping to bounding-box corners"
-msgstr "貼齊邊界框頂點"
+msgstr "切換貼齊邊界框頂點"
 
 #: ../src/actions/actions-canvas-snapping.cpp:253
-#, fuzzy
 msgid "Snap Bounding Box Edge Midpoints"
-msgstr "邊界框邊緣中點"
+msgstr "貼齊邊界框邊緣中點"
 
 #: ../src/actions/actions-canvas-snapping.cpp:253
-#, fuzzy
 msgid "Toggle snapping to bounding-box edge mid-points"
-msgstr "邊界框邊緣中點"
+msgstr "切換貼齊邊界框邊緣中點"
 
 #: ../src/actions/actions-canvas-snapping.cpp:254
-#, fuzzy
 msgid "Snap Bounding Box Centers"
-msgstr "貼齊邊界框頂點"
-
-#: ../src/actions/actions-canvas-snapping.cpp:254
-#, fuzzy
-msgid "Toggle snapping to bounding-box centers"
 msgstr "貼齊邊界框中心"
 
+#: ../src/actions/actions-canvas-snapping.cpp:254
+msgid "Toggle snapping to bounding-box centers"
+msgstr "切換貼齊邊界框中心"
+
 #: ../src/actions/actions-canvas-snapping.cpp:256
-#, fuzzy
 msgid "Snap Nodes"
-msgstr "貼齊參考線"
+msgstr "貼齊節點"
 
 #: ../src/actions/actions-canvas-snapping.cpp:256
 msgid "Toggle snapping to nodes (global)"
-msgstr ""
+msgstr "接換節點是否貼齊（全域）"
 
 #: ../src/actions/actions-canvas-snapping.cpp:257
-#, fuzzy
 msgid "Snap Paths"
 msgstr "貼齊路徑"
 
 #: ../src/actions/actions-canvas-snapping.cpp:257
-#, fuzzy
 msgid "Toggle snapping to paths"
-msgstr "貼齊路徑"
+msgstr "切換貼齊路徑"
 
 #: ../src/actions/actions-canvas-snapping.cpp:258
-#, fuzzy
 msgid "Snap Path Intersections"
 msgstr "貼齊路徑交點"
 
 #: ../src/actions/actions-canvas-snapping.cpp:258
-#, fuzzy
 msgid "Toggle snapping to path intersections"
-msgstr "貼齊路徑交點"
+msgstr "切換貼齊路徑交點"
 
 #: ../src/actions/actions-canvas-snapping.cpp:259
 msgid "Snap Cusp Nodes"
@@ -6660,167 +6576,136 @@ msgid "Toggle snapping to cusp nodes, including rectangle corners"
 msgstr "貼齊到尖端節點，包括矩形頂點"
 
 #: ../src/actions/actions-canvas-snapping.cpp:260
-#, fuzzy
 msgid "Snap Smooth Node"
-msgstr "平滑節點"
+msgstr "貼齊平滑節點"
 
 #: ../src/actions/actions-canvas-snapping.cpp:260
-#, fuzzy
 msgid "Toggle snapping to smooth nodes, including quadrant points of ellipses"
-msgstr "貼齊平滑節點，包括橢圓形的象限點"
+msgstr "切換貼齊平滑節點，包括橢圓形的象限點"
 
 #: ../src/actions/actions-canvas-snapping.cpp:261
-#, fuzzy
 msgid "Snap Line Midpoints"
-msgstr "直線中點"
+msgstr "貼齊直線中點"
 
 #: ../src/actions/actions-canvas-snapping.cpp:261
-#, fuzzy
 msgid "Toggle snapping to midpoints of lines"
-msgstr "貼齊直線線段的中點"
+msgstr "切換貼齊直線線段的中點"
 
 #: ../src/actions/actions-canvas-snapping.cpp:262
-#, fuzzy
 msgid "Snap Perpendicular Lines"
-msgstr "貼齊垂直方向"
+msgstr "貼齊垂線"
 
 #: ../src/actions/actions-canvas-snapping.cpp:262
-#, fuzzy
 msgid "Toggle snapping to perpendicular lines"
-msgstr "相對固定角度旋轉參考線角度"
+msgstr "切換貼齊垂線"
 
 #: ../src/actions/actions-canvas-snapping.cpp:263
-#, fuzzy
 msgid "Snap Tangential Lines"
-msgstr "貼齊切線方向"
+msgstr "貼齊切線"
 
 #: ../src/actions/actions-canvas-snapping.cpp:263
-#, fuzzy
 msgid "Toggle snapping to tangential lines"
-msgstr "相對固定角度旋轉參考線角度"
+msgstr "切換貼齊切線"
 
 #: ../src/actions/actions-canvas-snapping.cpp:265
-#, fuzzy
 msgid "Snap Others"
-msgstr "其他"
+msgstr "貼齊其他東西"
 
 #: ../src/actions/actions-canvas-snapping.cpp:265
 msgid "Toggle snapping to misc. points (global)"
-msgstr ""
+msgstr "切換貼齊其他雜項（全域）"
 
 #: ../src/actions/actions-canvas-snapping.cpp:266
-#, fuzzy
 msgid "Snap Object Midpoint"
-msgstr "物件中心點"
+msgstr "貼齊物件中心點"
 
 #: ../src/actions/actions-canvas-snapping.cpp:266
-#, fuzzy
 msgid "Toggle snapping to object midpoint"
-msgstr "物件中心點"
+msgstr "切換貼齊物件中心點"
 
 #: ../src/actions/actions-canvas-snapping.cpp:267
-#, fuzzy
 msgid "Snap Rotation Center"
-msgstr "旋轉中心"
+msgstr "貼齊旋轉中心"
 
 #: ../src/actions/actions-canvas-snapping.cpp:267
-#, fuzzy
 msgid "Toggle snapping to object rotation center"
-msgstr "物件旋轉中心"
+msgstr "切換貼齊物件旋轉中心"
 
 #: ../src/actions/actions-canvas-snapping.cpp:268
-#, fuzzy
 msgid "Snap Text Baselines"
-msgstr "文字基線"
+msgstr "貼齊文字基線"
 
 #: ../src/actions/actions-canvas-snapping.cpp:268
 msgid "Toggle snapping to text baseline and text anchors"
-msgstr ""
+msgstr "切換貼齊文字基線及文字錨點"
 
 #: ../src/actions/actions-canvas-snapping.cpp:270
-#, fuzzy
 msgid "Snap Page Border"
-msgstr "頁邊"
+msgstr "貼齊頁邊"
 
 #: ../src/actions/actions-canvas-snapping.cpp:270
-#, fuzzy
 msgid "Toggle snapping to page border"
-msgstr "貼齊頁面邊緣"
+msgstr "切換貼齊頁面邊緣"
 
 #: ../src/actions/actions-canvas-snapping.cpp:271
-#, fuzzy
 msgid "Snap Page Margin"
-msgstr "頁面邊距"
+msgstr "貼齊頁面邊距"
 
 #: ../src/actions/actions-canvas-snapping.cpp:271
-#, fuzzy
 msgid "Toggle snapping to page margin"
-msgstr "貼齊頁面邊緣"
+msgstr "切換貼齊頁面邊距"
 
 #: ../src/actions/actions-canvas-snapping.cpp:272
-#, fuzzy
 msgid "Snap Grids"
 msgstr "貼齊格線"
 
 #: ../src/actions/actions-canvas-snapping.cpp:272
-#, fuzzy
 msgid "Toggle snapping to grids"
-msgstr "貼齊格線"
+msgstr "切換貼齊格線"
 
 #: ../src/actions/actions-canvas-snapping.cpp:273
-#, fuzzy
 msgid "Snap Guide Lines"
-msgstr "加入參考線"
+msgstr "貼齊參考線"
 
 #: ../src/actions/actions-canvas-snapping.cpp:273
-#, fuzzy
 msgid "Toggle snapping to guide lines"
-msgstr "相對固定角度旋轉參考線角度"
+msgstr "切換貼齊參考線"
 
 #: ../src/actions/actions-canvas-snapping.cpp:275
-#, fuzzy
 msgid "Snap Mask Paths"
 msgstr "貼齊遮罩路徑"
 
 #: ../src/actions/actions-canvas-snapping.cpp:275
-#, fuzzy
 msgid "Toggle snapping to mask paths"
-msgstr "貼齊遮罩路徑"
+msgstr "切換貼齊遮罩路徑"
 
 #: ../src/actions/actions-canvas-snapping.cpp:276
-#, fuzzy
 msgid "Snap Clip Paths"
 msgstr "貼齊裁剪路徑"
 
 #: ../src/actions/actions-canvas-snapping.cpp:276
-#, fuzzy
 msgid "Toggle snapping to clip paths"
-msgstr "貼齊裁剪路徑"
+msgstr "切換貼齊裁剪路徑"
 
 #: ../src/actions/actions-canvas-snapping.cpp:278
-#, fuzzy
 msgid "Simple Snap Bounding Box"
-msgstr "貼齊邊界框"
+msgstr "簡易貼齊邊界框"
 
 #: ../src/actions/actions-canvas-snapping.cpp:278
-#, fuzzy
 msgid "Toggle snapping to bounding boxes"
-msgstr "貼齊邊界框邊緣中點"
+msgstr "切換貼齊邊界框"
 
 #: ../src/actions/actions-canvas-snapping.cpp:279
-#, fuzzy
 msgid "Simple Snap Nodes"
-msgstr "貼齊參考線"
+msgstr "簡易貼齊參考線"
 
 #: ../src/actions/actions-canvas-snapping.cpp:279
-#, fuzzy
 msgid "Toggle snapping to nodes"
-msgstr "貼齊格線"
+msgstr "切換簡易貼齊參考線"
 
 #: ../src/actions/actions-canvas-snapping.cpp:280
-#, fuzzy
 msgid "Simple Snap Alignment"
-msgstr "文字對齊"
+msgstr "簡易貼齊對齊的項目"
 
 #: ../src/actions/actions-canvas-transform.cpp:204
 msgid "Zoom In"
@@ -8011,9 +7896,8 @@ msgid "Show all layers"
 msgstr "顯示全部圖層"
 
 #: ../src/actions/actions-layer.cpp:164 ../src/ui/dialog/objects.cpp:1186
-#, fuzzy
 msgid "Hide other layers"
-msgstr "隱藏全部圖層"
+msgstr "隱藏其他圖層"
 
 #: ../src/actions/actions-layer.cpp:173
 msgid "Lock all layers"
@@ -11256,7 +11140,7 @@ msgstr "邊緣"
 
 #: ../src/extension/internal/bitmap/edge.cpp:47
 msgid "Highlight edges of selected bitmap(s)"
-msgstr "高亮度標示點陣圖的邊緣"
+msgstr "醒目標示點陣圖的邊緣"
 
 #: ../src/extension/internal/bitmap/emboss.cpp:40
 msgid "Emboss"
@@ -11264,7 +11148,7 @@ msgstr "浮雕"
 
 #: ../src/extension/internal/bitmap/emboss.cpp:49
 msgid "Emboss selected bitmap(s); highlight edges with 3D effect"
-msgstr "點陣圖浮雕化；帶有立體效果的高亮度邊緣"
+msgstr "點陣圖浮雕化；讓邊緣帶有立體效果"
 
 #: ../src/extension/internal/bitmap/enhance.cpp:37
 msgid "Enhance"
@@ -12427,7 +12311,7 @@ msgstr "光照混合："
 
 #: ../src/extension/internal/filter/bumps.h:347
 msgid "Highlight blend:"
-msgstr "高亮度部份混合："
+msgstr "高光部份混合："
 
 #: ../src/extension/internal/filter/bumps.h:356
 msgid "Bump color"
@@ -23371,11 +23255,11 @@ msgstr "參考線的顏色"
 
 #: ../src/ui/dialog/document-properties.cpp:79
 msgid "_Highlight color:"
-msgstr "高亮度顯示顏色(_H)："
+msgstr "突顯色(_H)："
 
 #: ../src/ui/dialog/document-properties.cpp:79
 msgid "Highlighted guideline color"
-msgstr "高亮度顯示的參考線顏色"
+msgstr "參考線的突顯色"
 
 #: ../src/ui/dialog/document-properties.cpp:80
 msgid "Color of a guideline when it is under mouse"
@@ -23734,7 +23618,7 @@ msgstr "主要格線顏色"
 
 #: ../src/ui/dialog/document-properties.cpp:1470
 msgid "Color of the major (highlighted) grid lines"
-msgstr "主要格線 (高亮度顯示) 的顏色"
+msgstr "主要（有突顯色的）格線的顏色"
 
 #: ../src/ui/dialog/document-properties.cpp:1473
 msgid "_Major grid line every:"
@@ -27795,7 +27679,7 @@ msgstr "主要格線顏色："
 #: ../src/ui/dialog/inkscape-preferences.cpp:2148
 #: ../src/ui/dialog/inkscape-preferences.cpp:2173
 msgid "Color used for major (highlighted) grid lines"
-msgstr "主要格線 (高亮度顯示) 顏色"
+msgstr "主要（有突顯色的）格線顏色"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2150
 #: ../src/ui/dialog/inkscape-preferences.cpp:2175
@@ -28252,7 +28136,7 @@ msgstr "標示超出色域的顏色"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2404
 msgid "Highlights colors that are out of gamut for the target device"
-msgstr "超出目標裝置色域的高亮度顯示顏色"
+msgstr "超出目標裝置色域的突顯色"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2411
 msgid "Out of gamut warning color:"
@@ -30407,11 +30291,11 @@ msgstr "影像繪算(_I)："
 
 #: ../src/ui/dialog/object-properties.cpp:59
 msgid "Highlight Color:"
-msgstr "高亮度顯示顏色(_H)："
+msgstr "突顯色(_H)："
 
 #: ../src/ui/dialog/object-properties.cpp:60
 msgid "Highlight Color"
-msgstr "高亮度顯示顏色(_H)"
+msgstr "突顯色(_H)"
 
 #: ../src/ui/dialog/object-properties.cpp:61
 msgid "_Hide"
@@ -30506,9 +30390,8 @@ msgid "Set object description"
 msgstr "設定物件描述"
 
 #: ../src/ui/dialog/object-properties.cpp:471 ../src/ui/dialog/objects.cpp:878
-#, fuzzy
 msgid "Set item highlight color"
-msgstr "設定物件高亮度顯示顏色"
+msgstr "設定物件突顯色"
 
 #: ../src/ui/dialog/object-properties.cpp:494
 #: ../src/ui/widget/image-properties.cpp:97
@@ -30536,9 +30419,8 @@ msgid "Unhide object"
 msgstr "取消隱藏物件"
 
 #: ../src/ui/dialog/objects.cpp:674
-#, fuzzy
 msgid "Highlight color"
-msgstr "高亮度顯示顏色(_H)："
+msgstr "突顯色"
 
 #: ../src/ui/dialog/objects.cpp:781
 #: ../src/ui/widget/object-composite-settings.cpp:164
@@ -30548,34 +30430,32 @@ msgid "Change opacity"
 msgstr "變更不透明度"
 
 #: ../src/ui/dialog/objects.cpp:818
-#, fuzzy
 msgid "Change blend mode"
-msgstr "變更模糊/混合濾鏡"
+msgstr "變更混合模式"
 
 #: ../src/ui/dialog/objects.cpp:898
 msgid ""
 "<b>Hold ALT</b> while hovering over item to highlight, <b>hold SHIFT</b> and "
 "click to hide/lock all."
 msgstr ""
+"在游標停留的物件上<b>按住 ALT</b> 將該物件以突顯色標示，<b>按住 SHIFT</b> 的同時點擊"
+"以隱藏/鎖定所有物件。"
 
 #: ../src/ui/dialog/objects.cpp:1199 ../src/ui/dialog/objects.cpp:1420
-#, fuzzy
 msgid "Toggle item visibility"
-msgstr "切換目前圖層可見性"
+msgstr "切換物件可見性"
 
 #: ../src/ui/dialog/objects.cpp:1260 ../src/ui/dialog/objects.cpp:1424
-#, fuzzy
 msgid "Toggle item locking"
-msgstr "切換圖層單獨顯示"
+msgstr "切換物件鎖定狀態"
 
 #: ../src/ui/dialog/objects.cpp:1581
 msgid "Rename object"
 msgstr "重新命名物件"
 
 #: ../src/ui/dialog/objects.cpp:1732
-#, fuzzy
 msgid "Move items"
-msgstr "項目向上移"
+msgstr "移動物件"
 
 #: ../src/ui/dialog/paint-servers.cpp:52
 msgid "All paint servers"
@@ -30606,7 +30486,6 @@ msgid "X coordinate of the radius"
 msgstr "半徑的 X 坐標"
 
 #: ../src/ui/dialog/polar-arrange-tab.cpp:41
-#, fuzzy
 msgctxt "Polar arrange tab"
 msgid "Ending angle"
 msgstr "結束角度"
@@ -30842,161 +30721,142 @@ msgid "Adjust kerning value"
 msgstr "調整字母緊排值"
 
 #: ../src/ui/dialog/svg-fonts-dialog.cpp:503
-#, fuzzy
 msgid "_Edit current glyph"
-msgstr "編輯目前矩陣(_U)"
+msgstr "編輯目前字符(_E)"
 
 #: ../src/ui/dialog/svg-fonts-dialog.cpp:514
-#, fuzzy
 msgid "_Sort glyphs"
-msgstr "設定字形曲線"
+msgstr "排序字符"
 
 #: ../src/ui/dialog/svg-fonts-dialog.cpp:820
 #: ../share/extensions/setup_typography_canvas.py:69
-#, fuzzy
 msgid "ascender"
-msgstr "上緣："
+msgstr "上伸線"
 
 #: ../src/ui/dialog/svg-fonts-dialog.cpp:821
 #: ../share/extensions/setup_typography_canvas.py:70
 msgid "caps"
-msgstr ""
+msgstr "大寫線"
 
 #: ../src/ui/dialog/svg-fonts-dialog.cpp:822 ../share/ui/units.xml:88
 msgid "x-height"
-msgstr "x 高度"
+msgstr "x 字高"
 
 #: ../src/ui/dialog/svg-fonts-dialog.cpp:823
 #: ../share/extensions/setup_typography_canvas.py:68
-#, fuzzy
 msgid "baseline"
-msgstr "文字基線"
+msgstr "基線"
 
 #: ../src/ui/dialog/svg-fonts-dialog.cpp:824
 #: ../share/extensions/setup_typography_canvas.py:72
-#, fuzzy
 msgid "descender"
-msgstr "下緣："
+msgstr "下伸線"
 
 #: ../src/ui/dialog/svg-fonts-dialog.cpp:845
-#, fuzzy
 msgid "Set up typography canvas"
-msgstr "1 - 設定印刷畫布"
+msgstr "設定字體排印畫布"
 
 #: ../src/ui/dialog/svg-fonts-dialog.cpp:872
 msgid "Font Attributes"
 msgstr "字型特性"
 
 #: ../src/ui/dialog/svg-fonts-dialog.cpp:873
-#, fuzzy
 msgid "Horizontal advance X:"
-msgstr "水平。進階 X"
+msgstr "水平步進寬度 X："
 
 #: ../src/ui/dialog/svg-fonts-dialog.cpp:873
-#, fuzzy
 msgid "Default glyph width for horizontal text"
-msgstr "一般橫書文字的文字方向。"
+msgstr "一般橫書文字的字符寬度"
 
 #: ../src/ui/dialog/svg-fonts-dialog.cpp:874
-#, fuzzy
 msgid "Horizontal origin X:"
-msgstr "水平點："
+msgstr "水平原點 X："
 
 #: ../src/ui/dialog/svg-fonts-dialog.cpp:874
 msgid "Default X-coordinate of the origin of a glyph (for horizontal text)"
-msgstr ""
+msgstr "字符預設原點的 X 軸（橫書文字使用）"
 
 #: ../src/ui/dialog/svg-fonts-dialog.cpp:875
-#, fuzzy
 msgid "Horizontal origin Y:"
-msgstr "水平點："
+msgstr "水平原點 Y："
 
 #: ../src/ui/dialog/svg-fonts-dialog.cpp:875
 msgid "Default Y-coordinate of the origin of a glyph (for horizontal text)"
-msgstr ""
+msgstr "字符預設原點的 Y 軸（橫書文字使用）"
 
 #: ../src/ui/dialog/svg-fonts-dialog.cpp:876
 msgid "Font face attributes"
 msgstr "字型特性"
 
 #: ../src/ui/dialog/svg-fonts-dialog.cpp:877
-#, fuzzy
 msgid "Family name:"
 msgstr "字族名稱："
 
 #: ../src/ui/dialog/svg-fonts-dialog.cpp:877
-#, fuzzy
 msgid ""
 "Name of the font as it appears in font selectors and css font-family "
 "properties"
-msgstr "顯示在字型選擇器和 css 字族內容的字型名稱。"
+msgstr "顯示在字型選擇器和 css font-family 的字型名稱。"
 
 #: ../src/ui/dialog/svg-fonts-dialog.cpp:878
 #: ../share/extensions/setup_typography_canvas.inx:5
 msgid "Em-size:"
-msgstr "全方字寬："
+msgstr "Em 字寬："
 
 #: ../src/ui/dialog/svg-fonts-dialog.cpp:878
 msgid ""
 "Display units per <italic>em</italic> (nominally width of 'M' character)"
-msgstr ""
+msgstr "每「<italic>em</italic>」的顯示單位大小（名義上的「M」字符寬度）"
 
 #: ../src/ui/dialog/svg-fonts-dialog.cpp:879
 #: ../share/extensions/setup_typography_canvas.inx:6
 msgid "Ascender:"
-msgstr "上緣："
+msgstr "上伸線："
 
 #: ../src/ui/dialog/svg-fonts-dialog.cpp:879
-#, fuzzy
 msgid ""
 "Amount of space taken up by ascenders like the tall line on the letter 'h'"
-msgstr "字母上緣佔據的空間，如同字母「h」上的上端線。"
+msgstr "字母上伸線佔據的空間，如字母「h」中的直線"
 
 #: ../src/ui/dialog/svg-fonts-dialog.cpp:880
-#, fuzzy
 msgid "Caps height:"
 msgstr "大寫字母高度："
 
 #: ../src/ui/dialog/svg-fonts-dialog.cpp:880
-#, fuzzy
 msgid ""
 "The height of a capital letter above the baseline like the letter 'H' or 'I'"
-msgstr "在基線上方大寫字母高度如同字母「H」或「I」。"
+msgstr "在基線上方大寫字母高度，如字母「H」或「I」"
 
 #: ../src/ui/dialog/svg-fonts-dialog.cpp:881
-#, fuzzy
 msgid "x-height:"
-msgstr "x 高度"
+msgstr "x 字高："
 
 #: ../src/ui/dialog/svg-fonts-dialog.cpp:881
-#, fuzzy
 msgid ""
 "The height of a lower-case letter above the baseline like the letter 'x'"
-msgstr "在基線上方小寫字母的高度如同字母「x」。"
+msgstr "在基線上方小寫字母的高度，如字母「x」"
 
 #: ../src/ui/dialog/svg-fonts-dialog.cpp:882
 #: ../share/extensions/setup_typography_canvas.inx:9
 msgid "Descender:"
-msgstr "下緣："
+msgstr "下伸線："
 
 #: ../src/ui/dialog/svg-fonts-dialog.cpp:882
-#, fuzzy
 msgid "Amount of space taken up by descenders like the tail on the letter 'g'"
-msgstr "字母下緣佔據的空間，如同字母「g」的下端線。"
+msgstr "字母下伸線佔據的空間，如同字母「g」的尾部"
 
 #: ../src/ui/dialog/svg-fonts-dialog.cpp:915
-#, fuzzy
 msgid "Set up canvas"
-msgstr "不要切割畫布"
+msgstr "設定畫布"
 
 #: ../src/ui/dialog/svg-fonts-dialog.cpp:1073
 msgid "Add glyph"
-msgstr "加入字形"
+msgstr "加入字符"
 
 #: ../src/ui/dialog/svg-fonts-dialog.cpp:1116
 #: ../src/ui/dialog/svg-fonts-dialog.cpp:1156
 msgid "Select a <b>path</b> to define the curves of a glyph"
-msgstr "選擇要定義字形 (glyph) 曲線的<b>路徑</b>"
+msgstr "選擇要定義字符 (glyph) 曲線的<b>路徑</b>"
 
 #: ../src/ui/dialog/svg-fonts-dialog.cpp:1124
 #: ../src/ui/dialog/svg-fonts-dialog.cpp:1164
@@ -31014,19 +30874,19 @@ msgstr "設定字形曲線"
 
 #: ../src/ui/dialog/svg-fonts-dialog.cpp:1188
 msgid "Reset missing-glyph"
-msgstr "重設遺失的字形"
+msgstr "重設遺失的字符"
 
 #: ../src/ui/dialog/svg-fonts-dialog.cpp:1220
 msgid "Edit glyph name"
-msgstr "編輯字形的名稱"
+msgstr "編輯字符的名稱"
 
 #: ../src/ui/dialog/svg-fonts-dialog.cpp:1235
 msgid "Set glyph unicode"
-msgstr "設定字形萬國碼"
+msgstr "設定字符萬國碼"
 
 #: ../src/ui/dialog/svg-fonts-dialog.cpp:1254
 msgid "Set glyph advance"
-msgstr "設定字形進階"
+msgstr "設定字符進階"
 
 #: ../src/ui/dialog/svg-fonts-dialog.cpp:1268
 msgid "Remove font"
@@ -31034,7 +30894,7 @@ msgstr "移除字型"
 
 #: ../src/ui/dialog/svg-fonts-dialog.cpp:1279
 msgid "Remove glyph"
-msgstr "移除字形"
+msgstr "移除字符"
 
 #: ../src/ui/dialog/svg-fonts-dialog.cpp:1290
 msgid "Remove kerning pair"
@@ -31045,92 +30905,78 @@ msgid "Toggle layer solo"
 msgstr "切換圖層單獨顯示"
 
 #: ../src/ui/dialog/svg-fonts-dialog.cpp:1361
-#, fuzzy
 msgid "Missing glyph"
-msgstr "遺失的字形："
+msgstr "遺失的字符"
 
 #: ../src/ui/dialog/svg-fonts-dialog.cpp:1370
-#, fuzzy
 msgid "From selection"
-msgstr "從選取區..."
+msgstr "從選取區"
 
 #: ../src/ui/dialog/svg-fonts-dialog.cpp:1395
-#, fuzzy
 msgid "Glyph"
-msgstr "字形(_G)"
+msgstr "字符(_G)"
 
 #: ../src/ui/dialog/svg-fonts-dialog.cpp:1400
-#, fuzzy
 msgid "Characters"
-msgstr "圖表"
+msgstr "字形"
 
 #: ../src/ui/dialog/svg-fonts-dialog.cpp:1401
-#, fuzzy
 msgid "Unicode"
-msgstr "不指定大小寫"
+msgstr "萬國碼"
 
 #: ../src/ui/dialog/svg-fonts-dialog.cpp:1402
 msgid "Advance"
 msgstr "進階"
 
 #: ../src/ui/dialog/svg-fonts-dialog.cpp:1410
-#, fuzzy
 msgid "Add new glyph"
-msgstr "加入字形"
+msgstr "加入字符"
 
 #: ../src/ui/dialog/svg-fonts-dialog.cpp:1413
-#, fuzzy
 msgid "Delete current glyph"
-msgstr "刪除目前圖層"
+msgstr "刪除目前字符"
 
 #: ../src/ui/dialog/svg-fonts-dialog.cpp:1416
-#, fuzzy
 msgid "Get curves"
-msgstr "設定字形曲線"
+msgstr "取得曲線"
 
 #: ../src/ui/dialog/svg-fonts-dialog.cpp:1419
-#, fuzzy
 msgid "Get curves from selection to replace current glyph"
-msgstr "從選取區取得曲線..."
+msgstr "從選取區取得曲線以替換目前的字符"
 
 #: ../src/ui/dialog/svg-fonts-dialog.cpp:1426
-#, fuzzy
 msgid "Switch to a layer with the same name as current glyph"
-msgstr "切換到目前下方的圖層"
+msgstr "切換到與目前字符名稱相同的圖層"
 
 #: ../src/ui/dialog/svg-fonts-dialog.cpp:1489
 msgid "Glyph list view"
-msgstr ""
+msgstr "字符清單顯示"
 
 #: ../src/ui/dialog/svg-fonts-dialog.cpp:1495
 msgid "Glyph grid view"
-msgstr ""
+msgstr "字符格狀顯示"
 
 #: ../src/ui/dialog/svg-fonts-dialog.cpp:1575
 msgid "Add kerning pair"
 msgstr "加入字母緊排"
 
 #: ../src/ui/dialog/svg-fonts-dialog.cpp:1587
-#, fuzzy
 msgid "Select glyphs:"
-msgstr "選擇頁面："
+msgstr "選擇字符："
 
 #: ../src/ui/dialog/svg-fonts-dialog.cpp:1591
 msgid "Add pair"
 msgstr "加入字母緊排"
 
 #: ../src/ui/dialog/svg-fonts-dialog.cpp:1602
-#, fuzzy
 msgid "First glyph"
-msgstr "第 1 個字形："
+msgstr "第一個字符"
 
 #: ../src/ui/dialog/svg-fonts-dialog.cpp:1603
-#, fuzzy
 msgid "Second glyph"
-msgstr "第二條路徑："
+msgstr "第二個字符"
 
 #: ../src/ui/dialog/svg-fonts-dialog.cpp:1611
-#, fuzzy
 msgid "Kerning value:"
 msgstr "字母緊排值："
 
@@ -31151,12 +30997,10 @@ msgid "_Fonts"
 msgstr "字型(_F)"
 
 #: ../src/ui/dialog/svg-fonts-dialog.cpp:1725
-#, fuzzy
 msgid "Set SVG font name"
-msgstr "設定 SVG 字型屬性"
+msgstr "設定 SVG 字型名稱"
 
 #: ../src/ui/dialog/svg-fonts-dialog.cpp:1736
-#, fuzzy
 msgid "_Global settings"
 msgstr "整體設定值(_G)"
 
@@ -31170,12 +31014,10 @@ msgstr "字母緊排(_K)"
 
 #: ../src/ui/dialog/svg-fonts-dialog.cpp:1754
 #: ../src/ui/dialog/svg-fonts-dialog.cpp:1755
-#, fuzzy
 msgid "Sample text"
 msgstr "樣本文字"
 
 #: ../src/ui/dialog/svg-fonts-dialog.cpp:1759
-#, fuzzy
 msgid "Preview text:"
 msgstr "預覽文字："
 
@@ -31405,9 +31247,8 @@ msgid "Rotate in a clockwise direction"
 msgstr "順時針方向旋轉"
 
 #: ../src/ui/dialog/transformation.cpp:355
-#, fuzzy
 msgid "E and F units"
-msgstr "內外陰影"
+msgstr "E 與 F 單位"
 
 #: ../src/ui/dialog/transformation.cpp:465
 msgid ""
@@ -31415,6 +31256,9 @@ msgid ""
 "html#TransformMatrixDefined\">2D transformation matrix</a> that combines "
 "translation (E,F), scaling (A,D), rotation (A-D) and shearing (B,C).</small>"
 msgstr ""
+"<small>合併平移（E、F）、縮放（A、D）、旋轉（A-D）與傾斜（B、C）的"
+"<a href=\"https://www.w3.org/TR/SVG11/coords."
+"html#TransformMatrixDefined\">2D 變換矩陣</a>。</small>"
 
 #: ../src/ui/dialog/transformation.cpp:853
 #: ../src/ui/dialog/transformation.cpp:864
@@ -31439,7 +31283,6 @@ msgid "Drag to reorder nodes"
 msgstr "拖曳可重新排列節點"
 
 #: ../src/ui/dialog/xml-tree.cpp:129
-#, fuzzy
 msgctxt "Undo History / XML Editor"
 msgid "Drag XML subtree"
 msgstr "拖曳 XML 子目錄"
@@ -37827,14 +37670,14 @@ msgstr[0] ""
 "取的立方體"
 
 #: ../src/vanishing-point.cpp:338
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Collection of <b>%d</b> vanishing points shared by the box; drag with "
 "<b>Shift</b> to separate"
 msgid_plural ""
 "Collection of <b>%d</b> vanishing points shared by <b>%d</b> boxes; drag "
 "with <b>Shift</b> to separate"
-msgstr[0] "漸層點與 <b>%d</b> 個漸層共用；按著 <b>Shift</b> 拖曳可分離"
+msgstr[0] "在方框內共用的 <b>%d</b> 個消失點；按著 <b>Shift</b> 拖曳可分離"
 
 #: ../src/widgets/desktop-widget.cpp:333
 msgid ""
@@ -38114,14 +37957,12 @@ msgid ""
 msgstr ""
 
 #: ../share/ui/dialog-document-resources.glade:190
-#, fuzzy
 msgid "Delete selected item from the document"
-msgstr "刪除文件中所有的參考線"
+msgstr "從文件中刪除選取的項目"
 
 #: ../share/ui/dialog-document-resources.glade:236
-#, fuzzy
 msgid "Remove unused definitions"
-msgstr "移除未用到的定義（漸層等）"
+msgstr "移除未使用的定義"
 
 #: ../share/ui/dialog-document-resources.glade:353
 msgid "Property"
@@ -38500,7 +38341,6 @@ msgid "Set as _default"
 msgstr "設為預設(_D)"
 
 #: ../share/ui/dialog-trace.glade:74
-#, fuzzy
 msgid ""
 "This dialog allows you to automatically convert a raster graphic into vector "
 "paths. Several options are available for different use cases:\n"
@@ -38529,28 +38369,27 @@ msgid ""
 "  4) If your goal is to get few nodes and good precision, manual tracing is "
 "always best."
 msgstr ""
-"\n"
-"  此對話窗讓你可以自動將點陣圖轉換成向量圖形。不同用途有對應的選項可以調"
+"此對話窗讓你可以自動將點陣圖轉換成向量圖形。不同用途有對應的選項可以調"
 "整：\n"
-" * \"亮度截止\" 偵測比臨界值更暗的區域並建立圍著該區域的路徑 (使用 "
+" * 「亮度截止」偵測比臨界值更暗的區域並建立圍著該區域的路徑 (使用 "
 "potrace)。\n"
-" * \"偵測邊緣\" 偵測顏色亮度變化大於給定的臨界值的區塊並將這些區塊分成路徑 "
+" * 「偵測邊緣」偵測顏色亮度變化大於給定的臨界值的區塊，並將這些區塊分成路徑 "
 "(使用 potrace)。\n"
-" * \"色彩量化\" 將影像分成給定的顏色數量，並將這些顏色分成路徑 (使用 "
+" * 「色彩量化」將影像分成給定的顏色數量，並將這些顏色分成路徑 (使用 "
 "potrace)。\n"
-" * \"自動描繪\" 使用給定選項的自動描繪演算法。\n"
-" * \"中心線描繪\" 試著將描繪線向量化 (使用自動描繪)。\n"
-" * \"多次掃描\" 此選項會將影像分成多次掃描，掃描取決於亮度、顏色分離或灰階，"
-"並建立為其建立多條路徑。這也可以使用自動描繪。\n"
-" * 此 \"像素圖案\" 分頁可使用 depixelize 演算法向量化為像素圖案影像。\n"
+" * 「自動描繪」使用給定選項的自動描繪演算法。\n"
+" * 「中心線描繪」試著將白描圖向量化 (使用自動描繪)。\n"
+" * 「多次掃描」選項會將影像分成多次掃描，掃描取決於亮度、顏色分離或灰階"
+" (使用 potrace)，並為其建立多條路徑；或是使用自動描繪演算法建立多條路徑。\n"
+" * 「像素圖案」分頁可使用 depixelize 演算法向量化為像素圖案影像。\n"
 "\n"
 " * 備註：\n"
-"  1) 描繪前請先儲存你的檔案\n"
-"  2) 注意你的像素數量：\"描繪像素圖案\" 每個像素都會建立一個路徑。不建議對非"
+"  1) 描繪前請先儲存檔案\n"
+"  2) 注意像素數量：\"描繪像素圖案\" 會為每個像素建立一個路徑。不建議對非"
 "像素用途的圖片使用該項功能。\n"
 "  3) 自動描繪比 potrace 慢，不建議對大圖片使用自動描繪。建議先將你的圖片加大"
 "對比程度。\n"
-"  4) 如果你的目標是較少的節點且較為精確，手動描圖是最佳的方式。\n"
+"  4) 如果你的目標是較少的節點且較為精確，手動描圖是最佳的方式。"
 
 #: ../share/ui/dialog-trace.glade:175 ../share/ui/dialog-trace.glade:756
 msgid "Speckles"
@@ -38701,38 +38540,33 @@ msgid "Multicolor"
 msgstr "多次掃描"
 
 #: ../share/ui/dialog-trace.glade:1010
-#, fuzzy
 msgid "Favors connections that are part of a long curve (multiplier)"
-msgstr "想要的長路徑組成連接性"
+msgstr "偏好的連結為長條曲線的一部分（倍數）"
 
 #: ../share/ui/dialog-trace.glade:1012
-#, fuzzy
 msgid "Curves"
-msgstr "節點曲線"
+msgstr "曲線"
 
 #: ../share/ui/dialog-trace.glade:1023
-#, fuzzy
 msgid "Avoid single disconnected pixels (weight)"
 msgstr "避免單一沒有相連接的像素"
 
 #: ../share/ui/dialog-trace.glade:1025
-#, fuzzy
 msgid "Islands"
-msgstr "孤立像素 (權重)"
+msgstr "孤立像素"
 
 #: ../share/ui/dialog-trace.glade:1036 ../share/ui/dialog-trace.glade:1245
 #: ../share/ui/dialog-trace.glade:1258
 msgid "Favors connections that are part of foreground color"
-msgstr "想要的背景顏色組成連接性"
+msgstr "偏好的連結為前景顏色的一部分"
 
 #: ../share/ui/dialog-trace.glade:1039
-#, fuzzy
 msgid "Sparse pixels:"
-msgstr "半徑 (像素)："
+msgstr "稀疏像素："
 
 #: ../share/ui/dialog-trace.glade:1051 ../share/ui/dialog-trace.glade:1094
 msgid "The heuristic computed vote will be multiplied by this value"
-msgstr "試探法計算的投票會乘以這項數值"
+msgstr "試探法計算的投票值會乘以這項數值"
 
 #: ../share/ui/dialog-trace.glade:1066
 msgid "A constant vote value"
@@ -38743,18 +38577,14 @@ msgid "The radius of the window analyzed"
 msgstr "分析的視窗半徑"
 
 #: ../share/ui/dialog-trace.glade:1110
-#, fuzzy
 msgid " Heuristics:"
-msgstr ""
-"\n"
-"試探法\n"
+msgstr "試探法"
 
 #: ../share/ui/dialog-trace.glade:1177
 msgid "B-splines"
 msgstr "貝氏雲形線"
 
 #: ../share/ui/dialog-trace.glade:1181
-#, fuzzy
 msgid "Preserve staircasing artifacts"
 msgstr "保留階梯狀不自然痕跡"
 
@@ -38767,19 +38597,16 @@ msgid "Output composed of straight lines"
 msgstr "輸出直線組成"
 
 #: ../share/ui/dialog-trace.glade:1214
-#, fuzzy
 msgid " Output:"
-msgstr "EMF 輸出"
+msgstr "輸出："
 
 #: ../share/ui/dialog-trace.glade:1247
-#, fuzzy
 msgid "Multiplier"
-msgstr "色彩增值"
+msgstr "倍數"
 
 #: ../share/ui/dialog-trace.glade:1260
-#, fuzzy
 msgid "Window radius"
-msgstr "視窗"
+msgstr "視窗半徑"
 
 #: ../share/ui/dialog-trace.glade:1302
 msgid "Pixel art"
@@ -38806,19 +38633,16 @@ msgid "Abort trace operation"
 msgstr "中止進行中的描繪"
 
 #: ../share/ui/dialog-xml.glade:52
-#, fuzzy
 msgid "Automatic layout"
-msgstr "自動"
+msgstr "自動佈局"
 
 #: ../share/ui/dialog-xml.glade:61
-#, fuzzy
 msgid "Horizontal layout"
-msgstr "水平嵌入："
+msgstr "水平佈局"
 
 #: ../share/ui/dialog-xml.glade:71
-#, fuzzy
 msgid "Vertical layout"
-msgstr "垂直嵌入："
+msgstr "垂直佈局"
 
 #: ../share/ui/dialog-xml.glade:93
 msgid "New element node"
@@ -48945,9 +48769,8 @@ msgid ""
 msgstr "選取一組物件。物件群的質心會作為晶格圖案的位置。無法處理文字物件。"
 
 #: ../share/extensions/voronoi_fill.inx:3
-#, fuzzy
 msgid "Voronoi Pattern Fill"
-msgstr "范氏晶格圖案"
+msgstr "范氏晶格圖樣填滿"
 
 #: ../share/extensions/voronoi_fill.inx:8
 msgid "Average size of cell (px):"
