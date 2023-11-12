@@ -22,6 +22,8 @@
 #include "document-properties.h"
 
 #include <algorithm>
+#include <array>
+#include <gtkmm/enums.h>
 #include <iterator>
 #include <optional>
 #include <set>
@@ -54,6 +56,7 @@
 #include "ui/util.h"
 #include "ui/widget/alignment-selector.h"
 #include "ui/widget/entity-entry.h"
+#include "ui/widget/labelled.h"
 #include "ui/widget/notebook-page.h"
 #include "ui/widget/page-properties.h"
 #include "ui/widget/popover-menu.h"
@@ -1697,6 +1700,8 @@ GridWidget::GridWidget(SPGrid *grid)
     // Tab label is constructed here and passed back to parent widget for display to
     // reduce the number of watchers that have to keep tabs on the properties
     _tab = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL, 4);
+    _tab->set_halign(Gtk::ALIGN_START);
+    _tab->set_hexpand(false);
     _tab_img = Gtk::make_managed<Gtk::Image>();
     _tab_lbl = Gtk::make_managed<Gtk::Label>("-", true);
     UI::pack_start(*_tab, *_tab_img);
@@ -1791,6 +1796,12 @@ GridWidget::GridWidget(SPGrid *grid)
     _rsi = Gtk::make_managed<RegisteredInteger>(
                 _("Major grid line e_very:"), _("Number of lines"),
                 "empspacing", _wr, repr, doc);
+
+    for (auto labelled : std::to_array<Labelled*>(
+        {_rumg, _rsu_ox, _rsu_oy, _rsu_sx, _rsu_sy, _rsu_gx, _rsu_gy, _rsu_mx, _rsu_my,
+            _rsu_ax, _rsu_az, _rcp_gcol, _rcp_gmcol, _rsi})) {
+        labelled->getLabel()->set_hexpand();
+    }
 
     _rumg->set_hexpand();
     _rsu_ax->set_hexpand();
