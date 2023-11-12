@@ -122,6 +122,7 @@ Linked&lt;/small&gt;</property>
             <property name="tooltip-text" translatable="yes">Embed image in the document</property>
             <child>
               <object class="GtkBox">
+                <property name="visible">True</property>
                 <child>
                   <object class="GtkImage" id="image2">
                     <property name="visible">True</property>
@@ -146,6 +147,7 @@ Linked&lt;/small&gt;</property>
             <property name="tooltip-text" translatable="yes">Save a copy of this image to a file</property>
             <child>
               <object class="GtkBox">
+                <property name="visible">True</property>
                 <child>
                   <object class="GtkImage" id="image3">
                     <property name="visible">True</property>
