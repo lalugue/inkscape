@@ -1056,7 +1056,7 @@ bool SPLPEItem::hasPathEffectOnClipOrMask(SPLPEItem * shape) const
             continue;
         }
         Inkscape::LivePathEffect::Effect *lpe = lpeobj->get_lpe();
-        if (lpe->apply_to_clippath_and_mask) {
+        if (lpe && lpe->apply_to_clippath_and_mask) {
             return true;
         }
     }
