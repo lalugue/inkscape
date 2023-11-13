@@ -127,6 +127,7 @@
         <child>
           <object class="GtkBox">
             <property name="visible">True</property>
+            <property name="no-show-all">True</property>
             <property name="margin-start">5</property>
             <property name="margin-end">5</property>
             <property name="margin-bottom">4</property>
