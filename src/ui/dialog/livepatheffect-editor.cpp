@@ -576,7 +576,6 @@ LivePathEffectEditor::selection_info()
 void
 LivePathEffectEditor::onSelectionChanged(Inkscape::Selection *sel)
 {
-    SPUse *use = nullptr;
     _reload_menu = true;
     if ( sel && !sel->isEmpty() ) {
         SPItem *item = sel->singleItem();
@@ -590,14 +589,16 @@ LivePathEffectEditor::onSelectionChanged(Inkscape::Selection *sel)
                 effect_list_reload(lpeitem);
                 return;
             } else if (_current_use) {
+                clear_lpe_list();
                 _LPEAddContainer.set_sensitive(true);
+                 selection_info();
                 return;
             }
         }
     }
     _current_use = nullptr;
     current_lpeitem = nullptr;
-    _LPEAddContainer.set_sensitive(use != nullptr);
+    _LPEAddContainer.set_sensitive(false);
     clear_lpe_list();
     selection_info();
 }
