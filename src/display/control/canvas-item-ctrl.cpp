@@ -16,12 +16,17 @@
 
 #include <2geom/transforms.h>
 #include <algorithm>
+#include <array>
+#include <cairomm/context.h>
 #include <cmath>
 #include <iostream>
 
 #include "ctrl-handle-rendering.h"
 #include "preferences.h" // Default size.
 #include "ui/widget/canvas.h"
+
+// Render handles at different sizes and save them to "handles.png".
+constexpr bool DUMP_HANDLES = false;
 
 namespace Inkscape {
 
@@ -45,6 +50,84 @@ CanvasItemCtrl::CanvasItemCtrl(CanvasItemGroup *group, CanvasItemCtrlType type)
     _name = "CanvasItemCtrl:Type_" + std::to_string(_handle.type);
     _pickable = true; // Everybody gets events from this class!
     set_size_default();
+
+    // for debugging
+    _dump();
+}
+
+void CanvasItemCtrl::_dump()
+{
+    // Ensure dead code is not emitted if flag is off.
+    if (!DUMP_HANDLES) {
+        return;
+    }
+
+    // Note: Atomicity not required.
+    static bool first_run = true;
+    if (!first_run) return;
+    first_run = false;
+
+    constexpr int step = 40;
+    constexpr int h = 15;
+    constexpr auto types = std::to_array({
+        CANVAS_ITEM_CTRL_TYPE_ADJ_HANDLE, CANVAS_ITEM_CTRL_TYPE_ADJ_SKEW, CANVAS_ITEM_CTRL_TYPE_ADJ_ROTATE,
+        CANVAS_ITEM_CTRL_TYPE_ADJ_CENTER, CANVAS_ITEM_CTRL_TYPE_ADJ_SALIGN, CANVAS_ITEM_CTRL_TYPE_ADJ_CALIGN,
+        CANVAS_ITEM_CTRL_TYPE_ADJ_MALIGN,
+        CANVAS_ITEM_CTRL_TYPE_POINT, // dot-like handle, indicator
+        CANVAS_ITEM_CTRL_TYPE_CENTER,
+        CANVAS_ITEM_CTRL_TYPE_MARKER,
+        CANVAS_ITEM_CTRL_TYPE_NODE_AUTO, CANVAS_ITEM_CTRL_TYPE_NODE_CUSP,
+        CANVAS_ITEM_CTRL_TYPE_NODE_SMOOTH,
+        CANVAS_ITEM_CTRL_TYPE_GUIDE_HANDLE,
+        CANVAS_ITEM_CTRL_TYPE_POINTER, // pointy, triangular handle
+    });
+    // device scale to use; 1 - low res, 2 - high res
+    constexpr int scale = 1;
+
+    auto surface = Cairo::ImageSurface::create(Cairo::FORMAT_ARGB32, (types.size() + 1) * step * scale, (h + 1) * step * scale);
+    cairo_surface_set_device_scale(surface->cobj(), 1, 1);
+    auto buf = CanvasItemBuffer{
+        .rect = Geom::IntRect(0, 0, surface->get_width(), surface->get_height()),
+        .device_scale = scale,
+        .cr = Cairo::Context::create(surface),
+        .outline_pass = false
+    };
+
+    auto ctx = buf.cr;
+    ctx->set_source_rgb(1, 0.9, 0.9);
+    ctx->paint();
+    ctx->set_source_rgba(0, 0, 1, 0.2);
+    ctx->set_line_width(scale);
+    constexpr double pix = scale & 1 ? 0.5 : 0;
+    for (int size = 1; size <= h; ++size) {
+        double y = size * step * scale + pix;
+        ctx->move_to(0, y);
+        ctx->line_to(surface->get_width(), y);
+        ctx->stroke();
+    }
+    for (int i = 1; i <= types.size(); i++) {
+        double x = i * step * scale + pix;
+        ctx->move_to(x, 0);
+        ctx->line_to(x, surface->get_height());
+        ctx->stroke();
+    }
+
+    cairo_surface_set_device_scale(surface->cobj(), scale, scale);
+
+    set_hover();
+    for (int size = 1; size <= h; ++size) {
+        int i = 1;
+        for (auto type : types) {
+            set_type(type);
+            set_size_via_index(size);
+            _position = Geom::IntPoint{i++, size} * step;
+            _update(false);
+            _render(buf);
+        }
+    }
+
+    cairo_surface_set_device_scale(surface->cobj(), scale, scale);
+    surface->write_to_png("handles.png");
 }
 
 /**
@@ -139,19 +222,10 @@ void CanvasItemCtrl::_set_size(int size)
     });
 }
 
-void CanvasItemCtrl::set_odd_size(bool odd) {
-    defer([=, this] {
-        if (_force_odd_size == odd) return;
-        _force_odd_size = odd;
-        _built.reset();
-        request_update(); // Geometry change
-    });
-}
-
 constexpr int MIN_INDEX = 1;
 constexpr int MAX_INDEX = 15;
 
-int get_size_default() {
+static int get_size_default() {
     return Preferences::get()->getIntLimited("/options/grabsize/value", 3, MIN_INDEX, MAX_INDEX);
 }
 
@@ -175,9 +249,6 @@ void CanvasItemCtrl::set_size_via_index(int size_index)
 float CanvasItemCtrl::get_width() const {
     auto const &style = _context->handlesCss()->style_map.at(_handle);
     auto size = _width * style.scale() + style.size_extra();
-    if (_force_odd_size) {
-        size = static_cast<int>(std::round(size)) | 1;
-    }
     return size;
 }
 
@@ -189,7 +260,7 @@ float CanvasItemCtrl::get_total_width() const {
 
 int CanvasItemCtrl::get_pixmap_width(int device_scale) const {
     auto width = get_total_width();
-    auto size = static_cast<int>(width + 0.5f) * device_scale;
+    auto size = static_cast<int>(width * device_scale + 0.5f) + 2;
     // with odd device scale make pixmap size odd too, and with even scale make it even
     // to center handle on a 1 logical pixel line
     size = device_scale & 1 ? size | 1 : (size + 1) & ~1;
@@ -292,15 +363,14 @@ void CanvasItemCtrl::_update(bool)
         return;
     }
 
-    // Width is always odd.
-    const auto width = static_cast<int>(std::ceil(get_total_width())) | 1;
+    const auto width = static_cast<double>(get_total_width());
 
     // Get half width, rounded down.
-    int const w_half = width / 2;
+    double const w_half = width / 2;
 
     // Set _angle, and compute adjustment for anchor.
-    int dx = 0;
-    int dy = 0;
+    double dx = 0;
+    double dy = 0;
 
     CanvasItemCtrlShape shape = _shape;
     if (!_shape_set) {
@@ -404,9 +474,9 @@ void CanvasItemCtrl::_update(bool)
         break;
     }
 
-    auto const pt = Geom::IntPoint(-w_half, -w_half) + Geom::IntPoint(dx, dy) + (_position * affine()).floor();
-    // pixmap can be larger by a pixel leading to redrawing artifacts; counter that
-    _bounds = Geom::IntRect(pt, pt + Geom::IntPoint(width + 1, width + 1));
+    auto const pt = Geom::Point(-w_half, -w_half) + Geom::Point(dx, dy) + (_position * affine()).floor();
+    // pixmap can be larger by a couple of pixels leading to redrawing artifacts; counter that
+    _bounds = Geom::Rect(pt, pt + Geom::Point(width + 2, width + 2));
 
     // Queue redraw of new area
     request_redraw();

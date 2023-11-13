@@ -140,8 +140,8 @@ void CanvasItemGuideLine::_render(Inkscape::CanvasItemBuffer &buf) const
      * Lastly, the origin control is also pixel-aligned and we want to visually cut through its
      * exact center.
      */
-    // this rendering operates in logical pixels, so only align lines to pixel grid if device scale is exactly 1
-    const auto linefit = buf.device_scale == 1 ? Geom::Point(0.5, 0.5) : Geom::Point(0, 0);
+    // this rendering operates in logical pixels, so only align lines to pixel grid if device scale is odd
+    const auto linefit = buf.device_scale & 1 ? Geom::Point(0.5, 0.5) : Geom::Point(0, 0);
     Geom::Point const aligned_origin = origin.floor() + linefit;
 
     // Set up the Cairo rendering context

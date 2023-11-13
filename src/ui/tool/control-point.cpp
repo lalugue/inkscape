@@ -428,7 +428,7 @@ void ControlPoint::_setState(State state)
 }
 
 void ControlPoint::set_selected_appearance(bool selected) {
-    if (_selected_appearance == selected) return;;
+    if (_selected_appearance == selected) return;
 
     _selected_appearance = selected;
     _canvas_item_ctrl->set_selected(selected);

@@ -39,6 +39,7 @@ All available selectors:
     .inkscape-mesh
     .inkscape-invisible
     .inkscape-guide-handle
+    .inkscape-move
 
 All available pseudo-classes (states):
     :hover
@@ -66,7 +67,7 @@ Notes:
     outline-opacity: 60%;
     scale: 2.0;
     size-extra: 1px; /* extra space to fine-tune handle size */
-    stroke-scale: 0.125; /* factor for scaling stroke with handle size or 0 to disable scaling */
+    stroke-scale: 0.10; /* factor for scaling stroke with handle size or 0 to disable scaling */
 }
 
 *:selected {
@@ -84,6 +85,7 @@ Notes:
 .inkscape-lpe {
     shape: "diamond";
     scale: 2.828427; /* 2 * sqrt(2) */
+    size-extra: 2px;
 }
 
 .inkscape-node-smooth,
@@ -91,14 +93,15 @@ Notes:
 .inkscape-anchor,
 .inkscape-sizer {
     shape: "square";
+    size-extra: 2px;
 }
 
 .inkscape-node-auto,
 .inkscape-margin,
 .inkscape-move {
-
     shape: "circle";
     scale: 2.256758; /* 4 / sqrt(PI) */
+    size-extra: 2px;
 }
 
 .inkscape-point {
@@ -114,6 +117,7 @@ Notes:
 .inkscape-rotate {
     shape: "circle";
     scale: 2.256758; /* 4 / sqrt(PI) */
+    size-extra: 2px;
 }
 
 .inkscape-mesh:selected {
@@ -124,7 +128,8 @@ Notes:
 .inkscape-adj-salign, .inkscape-adj-calign, .inkscape-adj-malign,
 .inkscape-adj-center {
     fill: black;
-    size-extra: 3px;
+    size-extra: 7px;
+    stroke-scale: 0;
 }
 
 .inkscape-adj-handle:selected, .inkscape-adj-skew:selected, .inkscape-adj-rotate:selected,
@@ -174,12 +179,15 @@ Notes:
 .inkscape-center {
     shape: "plus";
     stroke-width: 1px;
+    size-extra: 1px;
+    stroke-scale: 0.08; /* make stroke heavier more slowly */
 }
 
 .inkscape-marker {
     shape: "cross";
     stroke-width: 1px;
     size-extra: -1px;
+    stroke-scale: 0.08;
 }
 
 .inkscape-invisible {
@@ -204,4 +212,5 @@ Notes:
 .inkscape-pointer {
     shape: "triangle-angled";
     scale: 5.0; /* angled triangle occupies half of the image, so it needs larger scale */
+    size-extra: 10px;
 }

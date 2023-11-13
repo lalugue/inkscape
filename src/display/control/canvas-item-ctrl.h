@@ -62,7 +62,6 @@ public:
     void set_click(bool click = true);
     void set_hover(bool hover = true);
     void set_normal(bool selected = false);
-    void set_odd_size(bool odd = true);
 
     // do not call directly; only used for invisible handle
     void _set_size(int size);
@@ -95,13 +94,14 @@ private:
     double _angle = 0; // Used for triangles, could be used for arrows.
     SPAnchorType _anchor = SP_ANCHOR_CENTER;
     int _width  = 5;
-    bool _force_odd_size = true;
     HandleSize _rel_size = HandleSize::NORMAL;
 
     // get effective stroke width
     float get_stroke_width() const;
     // get size of the pixmap needed to render this control item
     int get_pixmap_width(int device_scale) const;
+    // for debugging only - save handles to "handle.png"
+    void _dump();
 };
 
 } // namespace Inkscape

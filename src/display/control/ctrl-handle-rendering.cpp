@@ -335,7 +335,7 @@ void draw_diamond(Cairo::Context &cr, double size)
     cr.rectangle(0, 0, size2, size2);
 }
 
-void draw_cross(Cairo::Context &cr, double size)
+void draw_cross(Cairo::Context &cr, double size, bool grid_fit)
 {
     cr.move_to(0, 0);
     cr.line_to(size, size);
@@ -344,8 +344,10 @@ void draw_cross(Cairo::Context &cr, double size)
     cr.line_to(size, 0);
 }
 
-void draw_plus(Cairo::Context &cr, double size)
+void draw_plus(Cairo::Context &cr, double size, bool grid_fit)
 {
+    // draw shape and align fill to pixel grid, stroke will be grid-fitted later
+    if (grid_fit) cr.translate(0.5, 0.5);
     double const half = size / 2;
 
     cr.move_to(half, 0);
@@ -353,9 +355,10 @@ void draw_plus(Cairo::Context &cr, double size)
 
     cr.move_to(0, half);
     cr.line_to(size, half);
+    if (grid_fit) cr.translate(-0.5, -0.5);
 }
 
-void draw_cairo_path(CanvasItemCtrlShape shape, Cairo::Context &cr, double size)
+void draw_cairo_path(CanvasItemCtrlShape shape, Cairo::Context &cr, double size, bool grid_fit)
 {
     switch (shape) {
         case CANVAS_ITEM_CTRL_SHAPE_DARROW:
@@ -404,16 +407,16 @@ void draw_cairo_path(CanvasItemCtrlShape shape, Cairo::Context &cr, double size)
             break;
 
         case CANVAS_ITEM_CTRL_SHAPE_CROSS:
-            draw_cross(cr, size);
+            draw_cross(cr, size, grid_fit);
             break;
 
         case CANVAS_ITEM_CTRL_SHAPE_PLUS:
-            draw_plus(cr, size);
+            draw_plus(cr, size, grid_fit);
             break;
 
         default:
             // Shouldn't happen
-            std::cout << "Missing drawing routine for shape " << shape << std::endl;
+            std::cerr << "Missing drawing routine for shape " << shape << std::endl;
             break;
     }
 }
@@ -442,37 +445,40 @@ void set_source_rgba32(Cairo::Context &cr, uint32_t rgba)
 
 std::shared_ptr<Cairo::ImageSurface const> draw_uncached(RenderParams const &p)
 {
-    auto surface = to_shared(Cairo::ImageSurface::create(Cairo::FORMAT_ARGB32, p.width, p.width));
     // operate on a physical pixel scale, to make pixel grid aligning easier to understand
-    cairo_surface_set_device_scale(surface->cobj(), 1, 1);
+    auto surface = to_shared(Cairo::ImageSurface::create(Cairo::FORMAT_ARGB32, p.width, p.width));
 
     const auto scale = p.device_scale;
 
     auto cr = Cairo::Context(cairo_create(surface->cobj()), true);
-    
+
     // align stroke to pixel grid; even width stroke needs whole coordinates, odd width needs half a pixel shift
     auto offset_stroke = [&](float stroke) {
         auto size = static_cast<int>(std::round(stroke * scale));
+        auto half = size / 2;
         auto half_pixel = size & 1;
-        auto offset = half_pixel ? size / 2 + 0.5 : size / 2;
+        auto offset = half_pixel ? half + 0.5 : half;
         cr.translate(offset, offset);
-        return half_pixel;
     };
 
     cr.set_operator(Cairo::OPERATOR_SOURCE);
     cr.set_line_cap(Cairo::LINE_CAP_SQUARE);
     cr.set_line_join(Cairo::LINE_JOIN_MITER);
-    cr.set_miter_limit(4);
+    // miter limit tweaked to produce sharp draw_darrow(), but blunt draw_triangle_angled() tip
+    cr.set_miter_limit(2.9);
 
     // Rotate around center
     cr.translate(p.width / 2.0, p.width / 2.0);
     cr.rotate(p.angle);
     cr.translate(-p.width / 2.0, -p.width / 2.0);
 
+    // offset the path to make space for outline and stroke; pixel grid-fit the stroke
     auto effective_outline = 2 * p.outline_width + p.stroke_width;
-    auto half_pixel_shift = offset_stroke(effective_outline);
+    offset_stroke(effective_outline);
 
-    draw_cairo_path(p.shape, cr, p.size * scale);
+    // ask drawing routines to align handle fill to pixel grid (avoid fractional coordinates) if device scale is odd
+    auto grid_fit = !!(scale & 1);
+    draw_cairo_path(p.shape, cr, p.size * scale, grid_fit);
 
     // Outline.
     set_source_rgba32(cr, p.outline);
@@ -480,12 +486,10 @@ std::shared_ptr<Cairo::ImageSurface const> draw_uncached(RenderParams const &p)
     cr.stroke_preserve();
 
     // Fill.
-    if (half_pixel_shift) cr.translate(-0.5, -0.5);
     set_source_rgba32(cr, p.fill);;
     cr.fill_preserve();
 
     // Stroke.
-    if (half_pixel_shift) cr.translate(0.5, 0.5);
     set_source_rgba32(cr, p.stroke);
     cr.set_line_width(p.stroke_width * scale);
     cr.stroke();

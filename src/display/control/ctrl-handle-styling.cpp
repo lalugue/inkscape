@@ -178,7 +178,7 @@ float parse_scale(CRTerm const *term)
 {
     auto const num = term->content.num;
     if (!num) {
-        throw Exception{Glib::ustring::compose(_("Invalid opacity '%1'"), get_string(term))};
+        throw Exception{Glib::ustring::compose(_("Invalid scale '%1'"), get_string(term))};
     }
 
     double value;

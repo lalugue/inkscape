@@ -14,6 +14,7 @@
  */
 
 #include <memory>
+#include <compare>
 
 #include "canvas-item-enums.h"
 
