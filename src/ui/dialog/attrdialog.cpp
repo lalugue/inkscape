@@ -422,11 +422,17 @@ Gtk::TextView &AttrDialog::_activeTextView() const
 void AttrDialog::startValueEdit(Gtk::CellEditable *cell, const Glib::ustring &path)
 {
     _value_path = path;
-    Gtk::TreeModel::iterator iter = *_store->get_iter(path);
-    Gtk::TreeModel::Row row = *iter;
-    if (!row || !_repr || !cell) {
+
+    if (!_repr || !cell) {
         return;
     }
+
+    auto const iter = _store->get_iter(path);
+    if (!iter) {
+        return;
+    }
+
+    auto &row = *iter;
 
     // popover in GTK3 is clipped to dialog window (in a floating dialog); limit size:
     const int dlg_width = get_allocated_width() - 10;
