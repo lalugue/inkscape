@@ -54,3 +54,7 @@ src/helper/sp-marshal.*
 # Ctags
 tags
 .DS_Store
+.idea
+
+# YCM code completer
+.ycm_*

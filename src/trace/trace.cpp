@@ -47,18 +47,38 @@
 #include "ui/dialog-run.h"
 
 namespace Inkscape::Trace {
-
 namespace {
+
+void log(MessageType type, char const *message)
+{
+    if (auto desktop = SP_ACTIVE_DESKTOP) {
+        desktop->getMessageStack()->flash(type, message);
+    } else {
+        if (type == MessageType::ERROR_MESSAGE) {
+            g_error("%s", message);
+        } else {
+            g_info("%s", message);
+        }
+    }
+}
+
+Selection *getActiveSelection()
+{
+    if (auto desktop = SP_ACTIVE_DESKTOP) {
+        return desktop->getSelection();
+    } else if (auto document = SP_ACTIVE_DOCUMENT) {
+        return document->getSelection();
+    }
+    g_error("No selection available");
+    return nullptr;
+}
 
 /**
  * Grab the image and siox items from the current selection, performing some validation.
- * \pre SP_ACTIVE_DESKTOP must not be null.
  */
 std::optional<std::pair<SPImage*, std::vector<SPItem*>>> getImageAndItems(bool sioxEnabled, bool notifications = true)
 {
-    auto desktop = SP_ACTIVE_DESKTOP;
-    auto msgStack = desktop->getMessageStack();
-    auto sel = desktop->getSelection();
+    auto sel = getActiveSelection();
 
     if (sioxEnabled) {
         auto selection = std::vector<SPItem*>(sel->items().begin(), sel->items().end());
@@ -70,7 +90,7 @@ std::optional<std::pair<SPImage*, std::vector<SPItem*>>> getImageAndItems(bool s
         for (auto item : selection) {
             if (auto itemimg = cast<SPImage>(item)) {
                 if (img) { // we want only one
-                    if (notifications) msgStack->flash(Inkscape::ERROR_MESSAGE, _("Select only one <b>image</b> to trace"));
+                    if (notifications) log(Inkscape::ERROR_MESSAGE, _("Select only one <b>image</b> to trace"));
                     return {};
                 }
                 img = itemimg;
@@ -80,7 +100,7 @@ std::optional<std::pair<SPImage*, std::vector<SPItem*>>> getImageAndItems(bool s
         }
 
         if (!img || items.empty()) {
-            if (notifications) msgStack->flash(Inkscape::ERROR_MESSAGE, _("Select one image and one or more shapes above it"));
+            if (notifications) log(Inkscape::ERROR_MESSAGE, _("Select one image and one or more shapes above it"));
             return {};
         }
 
@@ -89,13 +109,13 @@ std::optional<std::pair<SPImage*, std::vector<SPItem*>>> getImageAndItems(bool s
         // SIOX not enabled. We want exactly one image selected.
         auto item = sel->singleItem();
         if (!item) {
-            if (notifications) msgStack->flash(Inkscape::ERROR_MESSAGE, _("Select an <b>image</b> to trace")); // same as above
+            if (notifications) log(Inkscape::ERROR_MESSAGE, _("Select an <b>image</b> to trace")); // same as above
             return {};
         }
 
         auto img = cast<SPImage>(item);
         if (!img) {
-            if (notifications) msgStack->flash(Inkscape::ERROR_MESSAGE, _("Select an <b>image</b> to trace"));
+            if (notifications) log(Inkscape::ERROR_MESSAGE, _("Select an <b>image</b> to trace"));
             return {};
         }
 
@@ -326,17 +346,9 @@ TraceFuture TraceTask::launch(std::unique_ptr<TraceTask> self)
 {
     // Grab data and validate setup.
 
-    auto desktop = SP_ACTIVE_DESKTOP;
-    if (!desktop) {
-        g_warning("Trace: No active desktop\n");
-        return {};
-    }
-
-    auto msgStack = desktop->getMessageStack();
-
     auto doc = SP_ACTIVE_DOCUMENT;
     if (!doc) {
-        if (type == Type::Trace) msgStack->flash(Inkscape::ERROR_MESSAGE, _("Trace: No active document"));
+        if (type == Type::Trace) log(Inkscape::ERROR_MESSAGE, _("Trace: No active document"));
         return {};
     }
     doc->ensureUpToDate();
@@ -352,7 +364,7 @@ TraceFuture TraceTask::launch(std::unique_ptr<TraceTask> self)
 
     image_pixbuf = image->pixbuf; // Note: image->pixbuf is immutable, so can be shared thread-safely.
     if (!image_pixbuf) {
-        if (type == Type::Trace) msgStack->flash(Inkscape::ERROR_MESSAGE, _("Trace: Image has no bitmap data"));
+        if (type == Type::Trace) log(Inkscape::ERROR_MESSAGE, _("Trace: Image has no bitmap data"));
         return {};
     }
 
@@ -367,7 +379,7 @@ TraceFuture TraceTask::launch(std::unique_ptr<TraceTask> self)
         siox_mask = rasterizeItems(imageanditems->second, image_transform, dimensions(*image_pixbuf));
     }
 
-    if (type == Type::Trace) msgStack->flash(Inkscape::NORMAL_MESSAGE, _("Trace: Starting trace..."));
+    if (type == Type::Trace) log(Inkscape::NORMAL_MESSAGE, _("Trace: Starting trace..."));
 
     // Open channel and launch background task.
 
@@ -454,10 +466,9 @@ void TraceTask::do_final_work(std::unique_ptr<TraceTask> self)
     assert(channel);
 
     auto doc = SP_ACTIVE_DOCUMENT;
-    auto desktop = SP_ACTIVE_DESKTOP;
     auto image_watcher = image_watcher_weak.lock();
 
-    if (!doc || !desktop || !image_watcher || traceresult.empty()) {
+    if (!doc || !image_watcher || traceresult.empty()) {
         onfinished_trace();
         return;
     }
@@ -469,8 +480,7 @@ void TraceTask::do_final_work(std::unique_ptr<TraceTask> self)
         return;
     }
 
-    auto msgStack = desktop->getMessageStack();
-    auto selection = desktop->getSelection();
+    auto selection = getActiveSelection();
 
     // Get pointers to the <image> and its parent.
     // XML Tree being used directly here while it shouldn't be
@@ -481,7 +491,7 @@ void TraceTask::do_final_work(std::unique_ptr<TraceTask> self)
     image_transform = getImageTransform(image);
 
     // OK. Now let's start making new nodes.
-    Inkscape::XML::Document *xml_doc = desktop->doc()->getReprDoc();
+    Inkscape::XML::Document *xml_doc = doc->getReprDoc();
     Inkscape::XML::Node *groupRepr = nullptr;
 
     // If more than one path, make a <g>roup of <path>s.
@@ -525,7 +535,7 @@ void TraceTask::do_final_work(std::unique_ptr<TraceTask> self)
     DocumentUndo::done(doc, _("Trace bitmap"), INKSCAPE_ICON("bitmap-trace"));
 
     auto const msg = Glib::ustring::compose(_("Trace: Done. %1 node(s) created"), totalNodeCount);
-    msgStack->flash(Inkscape::NORMAL_MESSAGE, msg.c_str());
+    log(Inkscape::NORMAL_MESSAGE, msg.c_str());
 
     onfinished_trace();
 }

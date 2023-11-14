@@ -8,8 +8,6 @@
  *
  */
 
-//#include <iostream>
-
 #include <giomm.h>  // Not <gtkmm.h>! To eventually allow a headless version!
 #include <glibmm/i18n.h>
 
@@ -17,13 +15,90 @@
 #include "actions-helper.h"
 #include "document-undo.h"
 #include "inkscape-application.h"
+#include "selection.h"
 
-#include "selection.h"            // Selection
 #include "live_effects/effect.h"
 #include "live_effects/lpe-powerclip.h"
 #include "live_effects/lpe-powermask.h"
-#include "ui/icon-names.h"
 #include "object/sp-lpe-item.h"
+#include "trace/potrace/inkscape-potrace.h"
+#include "trace/trace.h"
+#include "ui/icon-names.h"
+
+namespace {
+
+double stod_finite(std::string const &str)
+{
+    double const result = std::stod(str);
+    if (!std::isfinite(result)) {
+        throw std::out_of_range{"stod: Inf or NaN"};
+    }
+    return result;
+}
+
+void object_trace(Glib::VariantBase const &value, InkscapeApplication *app)
+{
+    auto selection = app->get_active_selection();
+    if (selection->isEmpty()) {
+        show_output("action:object_trace: selection empty!", true);
+        return;
+    }
+
+    auto const str = Glib::VariantBase::cast_dynamic<Glib::Variant<Glib::ustring>>(value);
+    std::vector<Glib::ustring> const settings = Glib::Regex::split_simple(",", str.get());
+    if (settings.size() != 7) {
+        show_output("action:object_trace: expected argument format: {scans},{smooth[false|true]},{stack[false|true]},{remove_background[false|true],{speckles},{smooth_corners},{optimize}}", true);
+        return;
+    }
+
+    int scans;
+    bool smooth;
+    bool stack;
+    bool remove_background;
+    int speckles;
+    double smooth_corners;
+    double optimize;
+    try {
+        scans = std::stoi(settings[0]);
+        smooth = settings[1] == "true";
+        stack = settings[2] == "true";
+        remove_background = settings[3] == "true";
+        speckles = std::stoi(settings[4]);
+        smooth_corners = stod_finite(settings[5]);
+        optimize = stod_finite(settings[6]);
+    } catch (std::logic_error const &e) {
+        show_output(std::string{"action:object_trace: parsing arguments failed: "} + e.what(), true);
+        return;
+    }
+
+    auto tracer = std::make_unique<Inkscape::Trace::Potrace::PotraceTracingEngine>(Inkscape::Trace::Potrace::TraceType::QUANT_COLOR, false, 64,
+                                                                                   0.45, 0.0, 0.65, scans, stack, smooth, remove_background);
+    tracer->setOptiCurve(true);
+    tracer->setTurdSize(speckles);
+    tracer->setAlphaMax(smooth_corners);
+    tracer->setOptTolerance(optimize);
+
+    auto mainloop = Glib::MainLoop::create();
+
+    auto future = Inkscape::Trace::trace(
+        std::move(tracer),
+        false,
+        [] (double progress) {
+            std::cout << "Tracing... " << std::round(100 * progress) << '%' << std::endl;
+        },
+        [&] {
+            show_output("Tracing done.");
+            mainloop->quit();
+        }
+    );
+
+    if (!future) {
+        show_output("Tracing failed.", true);
+        return;
+    }
+
+    mainloop->run();
+}
 
 // No sanity checking is done... should probably add.
 void
@@ -330,6 +405,8 @@ std::vector<std::vector<Glib::ustring>> hint_data_object =
     // clang-format on
 };
 
+} // namespace
+
 void
 add_actions_object(InkscapeApplication* app)
 {
@@ -343,6 +420,7 @@ add_actions_object(InkscapeApplication* app)
     // clang-format off
     gapp->add_action_with_parameter( "object-set-attribute",            String, sigc::bind(sigc::ptr_fun(&object_set_attribute),  app));
     gapp->add_action_with_parameter( "object-set-property",             String, sigc::bind(sigc::ptr_fun(&object_set_property),   app));
+    gapp->add_action_with_parameter( "object-trace",                    String, sigc::bind(sigc::ptr_fun(&object_trace),          app));
 
     gapp->add_action(                "object-unlink-clones",            sigc::bind(sigc::ptr_fun(&object_unlink_clones),          app));
     gapp->add_action(                "object-to-path",                  sigc::bind(sigc::ptr_fun(&object_to_path),                app));
@@ -366,7 +444,6 @@ add_actions_object(InkscapeApplication* app)
     app->get_action_extra_data().add_data(raw_data_object);
     app->get_action_hint_data().add_data(hint_data_object);
 }
-
 
 /*
   Local Variables:
