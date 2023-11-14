@@ -15,7 +15,6 @@
  *
  */
 #include <iomanip>
-#include <glibmm/i18n.h>
 #include <potracelib.h>
 
 #include "inkscape-potrace.h"
