@@ -18,6 +18,7 @@ FUZZ="$3"
 EXIT_STATUS=0
 EXPECTED="$(dirname "$TEST")/expected_rendering/$(basename "$TEST")"
 TESTNAME="$(basename "$TEST")"
+export LC_NUMERIC=C
 
 if [ "$FUZZ" = "" ]; then
     METRIC="AE"

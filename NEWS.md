@@ -1,6 +1,6 @@
 Inkscape 1.3.1
 
-Released on 2023-11-01
+Released on 2023-11-18
 
     Improvements on node count when using shape builder
     Ability to disable snapping to grid lines

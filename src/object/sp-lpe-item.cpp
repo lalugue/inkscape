@@ -666,7 +666,7 @@ void SPLPEItem::addPathEffect(std::string value, bool reset)
         HRefList hreflist;
         for (PathEffectList::const_iterator it = this->path_effect_list->begin(); it != this->path_effect_list->end(); ++it)
         {
-            hreflist.push_back( std::string((*it)->lpeobject_href) );
+            hreflist.emplace_back((*it)->lpeobject_href );
         }
         hreflist.push_back(value); // C++11: should be emplace_back std::move'd  (also the reason why passed by value to addPathEffect)
 
@@ -825,7 +825,7 @@ void SPLPEItem::duplicateCurrentPathEffect()
     PathEffectList::const_iterator cur_it = find( this->path_effect_list->begin(), this->path_effect_list->end(), lperef );
     PathEffectList path_effect_list(*this->path_effect_list);
     for (PathEffectList::const_iterator it = this->path_effect_list->begin(); it != this->path_effect_list->end(); ++it) {
-        hreflist.push_back(std::string((*it)->lpeobject_href) );
+        hreflist.emplace_back((*it)->lpeobject_href );
         LivePathEffectObject *lpeobj = (*it)->lpeobject;
         if (it == cur_it) {
             auto *duple = lpeobj->fork_private_if_necessary(0);
@@ -850,9 +850,9 @@ SPLPEItem *SPLPEItem::flattenCurrentPathEffect()
     bool done = false;
     for (PathEffectList::const_iterator it = this->path_effect_list->begin(); it != this->path_effect_list->end(); ++it) {
         if (done) {
-            hreflist2.push_back(std::string((*it)->lpeobject_href) );
+            hreflist2.emplace_back((*it)->lpeobject_href );
         } else {
-            hreflist.push_back(std::string((*it)->lpeobject_href) );
+            hreflist.emplace_back((*it)->lpeobject_href );
         }
         if (it == cur_it) {
             done = true;
@@ -1421,7 +1421,7 @@ static std::string patheffectlist_svg_string(PathEffectList const & list)
 
     for (auto it : list)
     {
-        hreflist.push_back( std::string(it->lpeobject_href) ); // C++11: use emplace_back
+        hreflist.emplace_back(it->lpeobject_href ); // C++11: use emplace_back
     }
 
     return hreflist_svg_string(hreflist);
@@ -1689,11 +1689,11 @@ void SPLPEItem::replacePathEffects( std::vector<LivePathEffectObject const *> co
             std::vector<LivePathEffectObject const *>::difference_type found_index = std::distance (old_lpeobjs.begin(), found_it);
             const gchar * repr_id = new_lpeobjs[found_index]->getRepr()->attribute("id");
             gchar *hrefstr = g_strdup_printf("#%s", repr_id);
-            hreflist.push_back( std::string(hrefstr) );
+            hreflist.emplace_back(hrefstr );
             g_free(hrefstr);
         }
         else {
-            hreflist.push_back( std::string((*it)->lpeobject_href) );
+            hreflist.emplace_back((*it)->lpeobject_href );
         }
     }
 
