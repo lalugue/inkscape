@@ -36,7 +36,9 @@ add_rendering_test(text-flow FUZZ 0.5)
 # add_rendering_test(test-baseline-shift)
 ## Small differences with code adapted for Pango 1.44.
 
-add_rendering_test(test-glyph-y-pos FUZZ 0.1)
+# broken by a harfbuzz update. To be decided if a harfbuzz bug, a pango bug, or an Inkscape bug
+add_rendering_test(test-glyph-y-pos FUZZ 0.1 DISABLE TRUE)
+
 ## to be fixed since an update happened between harfbuzz 1.5.1(OK) and 1.6.0(FAIL).
 ## If you re-enable the test, you may have to *slightly* fix the expected rendering (hoping the fix happens upstream).
 ## Please also check that the rendering with harfbuzz <=1.5.1 is not *too* wrong (for older systems)
@@ -47,10 +49,12 @@ add_rendering_test(test-glyph-y-pos FUZZ 0.1)
 ## Expected rendering generated with Pango 1.44. Currently fails with
 ## CI as CI uses Pango 1.40. Enable after updating CI to Ubuntu 20.04.
 
-add_rendering_test(text-glyphs-combining FUZZ 0.1)
+# broken by a harfbuzz update. To be decided if a harfbuzz bug, a pango bug, or an Inkscape bug
+add_rendering_test(text-glyphs-combining FUZZ 0.1 DISABLE TRUE)
 ## Expected rendering generated with Pango 1.44.
 
-add_rendering_test(text-glyphs-vertical FUZZ 0.1)
+# broken by a harfbuzz update. To be decided if a harfbuzz bug, a pango bug, or an Inkscape bug
+add_rendering_test(text-glyphs-vertical FUZZ 0.1 DISABLE TRUE)
 ## Expected rendering generated with Pango 1.44.
 
 # -- LPE tests --
@@ -63,7 +67,8 @@ add_rendering_test(symbol-svg2-ref)
 # Tests to run for 64-bit builds only. These fail in 32-bit builds (possibly due to rounding issues)
 # TODO: Figure out actual cause and see if we can fix it
 if(${CMAKE_SIZEOF_VOID_P} EQUAL 8)
-    add_rendering_test(test-rtl-vertical FUZZ 0.1)
+    # broken by a harfbuzz update. To be decided if a harfbuzz bug, a pango bug, or an Inkscape bug
+    add_rendering_test(test-rtl-vertical FUZZ 0.1 DISABLE TRUE)
 
     # .otf font with compressed SVG glyphs
     add_rendering_test(text-gzipped-svg-glyph FUZZ 0.03)
