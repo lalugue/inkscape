@@ -1796,7 +1796,7 @@ void SPObject::setExportFilename(Glib::ustring filename)
     const char *doc_filename = document->getDocumentFilename();
     std::string base = Glib::path_get_dirname(doc_filename ? doc_filename : filename);
 
-    filename = Inkscape::convertPathToRelative(filename, base);
+    filename = Inkscape::optimizePath(filename, base);
     repr->setAttributeOrRemoveIfEmpty("inkscape:export-filename", filename.c_str());
 }
 

@@ -882,9 +882,27 @@
                               </object>
                               <packing>
                                 <property name="left-attach">0</property>
-                                <property name="top-attach">4</property>
+                                <property name="top-attach">5</property>
                                 <property name="width">6</property>
                                 <property name="height">2</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkCheckButton" id="b_overwrite">
+                                <property name="label" translatable="yes">Overwrite existing files</property>
+                                <property name="visible">True</property>
+                                <property name="can-focus">True</property>
+                                <property name="focus-on-click">False</property>
+                                <property name="receives-default">False</property>
+                                <property name="tooltip-text" translatable="yes">When exporting each of the images in the batch, generated filenames which already exist will be overwritten without confirmation.</property>
+                                <property name="halign">start</property>
+                                <property name="active">True</property>
+                                <property name="draw-indicator">True</property>
+                              </object>
+                              <packing>
+                                <property name="left-attach">0</property>
+                                <property name="top-attach">4</property>
+                                <property name="width">6</property>
                               </packing>
                             </child>
                           </object>
@@ -904,16 +922,15 @@
                     <property name="row-spacing">5</property>
                     <property name="column-spacing">10</property>
                     <child>
-                      <object class="GtkEntry" id="b_filename">
+                      <object class="GtkEntry" id="b_name">
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
                         <property name="hexpand">True</property>
-                        <property name="secondary-icon-name">folder-open</property>
                         <property name="secondary-icon-tooltip-text" translatable="yes">Browse export directory</property>
                         <property name="placeholder-text" translatable="yes">Filename</property>
                       </object>
                       <packing>
-                        <property name="left-attach">0</property>
+                        <property name="left-attach">1</property>
                         <property name="top-attach">0</property>
                       </packing>
                     </child>
@@ -926,6 +943,20 @@
                       <packing>
                         <property name="left-attach">0</property>
                         <property name="top-attach">1</property>
+                        <property name="width">2</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkFileChooserButton" id="b_path">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="hexpand">True</property>
+                        <property name="action">select-folder</property>
+                        <property name="title" translatable="yes"/>
+                      </object>
+                      <packing>
+                        <property name="left-attach">0</property>
+                        <property name="top-attach">0</property>
                       </packing>
                     </child>
                   </object>

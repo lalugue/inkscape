@@ -220,6 +220,17 @@ std::string Inkscape::IO::get_file_extension(std::string const &path)
     return loc < path.size() ? path.substr(loc) : "";
 }
 
+/**
+ * Removes a file extension, if found, from the given path
+ */
+void Inkscape::IO::remove_file_extension(std::string &path)
+{
+    auto ext = Inkscape::IO::get_file_extension(path);
+    if (!ext.empty()) {
+        path.erase(path.size() - ext.size());
+    }
+}
+
 /*
   Local Variables:
   mode:c++

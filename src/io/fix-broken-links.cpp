@@ -55,25 +55,22 @@ static std::vector<std::string> splitPath( std::string const &path )
     return parts;
 }
 
-std::string convertPathToRelative( std::string const &path, std::string const &docbase )
+/**
+ * Convert an absolute path into a relative one if possible to do in the given number of parent steps.
+ *
+ * @arg path - The absolute path to convert
+ * @arg base - The base or reference path to be relative to
+ * @arg parents - The number of parents or .. segments to allow
+ */
+std::string optimizePath(std::string const &path, std::string const &base, unsigned int parents)
 {
     std::string result = path;
 
-    if ( !path.empty() && Glib::path_is_absolute(path) ) {
+    if (!path.empty() && Glib::path_is_absolute(path)) {
+
         // Whack the parts into pieces
-
         std::vector<std::string> parts = splitPath(path);
-        std::vector<std::string> baseParts = splitPath(docbase);
-
-        // TODO debug g_message("+++++++++++++++++++++++++");
-        for ( std::vector<std::string>::iterator it = parts.begin(); it != parts.end(); ++it ) {
-            // TODO debug g_message("    [%s]", it->c_str());
-        }
-        // TODO debug g_message(" - - - - - - - - - - - - - - - ");
-        for ( std::vector<std::string>::iterator it = baseParts.begin(); it != baseParts.end(); ++it ) {
-            // TODO debug g_message("    [%s]", it->c_str());
-        }
-        // TODO debug g_message("+++++++++++++++++++++++++");
+        std::vector<std::string> baseParts = splitPath(base);
 
         if ( !parts.empty() && !baseParts.empty() && (parts[0] == baseParts[0]) ) {
             // Both paths have the same root. We can proceed.
@@ -82,24 +79,13 @@ std::string convertPathToRelative( std::string const &path, std::string const &d
                 baseParts.erase( baseParts.begin() );
             }
 
-            // TODO debug g_message("+++++++++++++++++++++++++");
-            for ( std::vector<std::string>::iterator it = parts.begin(); it != parts.end(); ++it ) {
-                // TODO debug g_message("    [%s]", it->c_str());
-            }
-            // TODO debug g_message(" - - - - - - - - - - - - - - - ");
-            for ( std::vector<std::string>::iterator it = baseParts.begin(); it != baseParts.end(); ++it ) {
-                // TODO debug g_message("    [%s]", it->c_str());
-            }
-            // TODO debug g_message("+++++++++++++++++++++++++");
-
-            if ( !parts.empty() ) {
+            if (!parts.empty() && baseParts.size() <= parents) {
                 result.clear();
 
                 for ( size_t i = 0; i < baseParts.size(); ++i ) {
                     parts.insert(parts.begin(), "..");
                 }
                 result = Glib::build_filename( parts );
-                // TODO debug g_message("----> [%s]", result.c_str());
             }
         }
     }
@@ -296,7 +282,7 @@ static std::map<Glib::ustring, Glib::ustring> locateLinks(Glib::ustring const & 
 
             if ( exists ) {
                 if (Glib::path_is_absolute(filename)) {
-                    filename = convertPathToRelative(filename, docbase_native);
+                    filename = optimizePath(filename, docbase_native);
                 }
 
                 bool isAbsolute = Glib::path_is_absolute(filename);

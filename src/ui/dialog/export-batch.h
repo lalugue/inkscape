@@ -23,6 +23,7 @@
 #include <gtkmm/checkbutton.h>
 #include <gtkmm/entry.h>
 #include <gtkmm/enums.h>
+#include <gtkmm/filechooserbutton.h>
 #include <gtkmm/flowboxchild.h>
 #include <gtkmm/grid.h>
 #include <gtkmm/label.h>
@@ -129,9 +130,11 @@ private:
     std::map<selection_mode, Gtk::RadioButton *> selection_buttons;
     Gtk::FlowBox &preview_container;
     Gtk::CheckButton &show_preview;
+    Gtk::CheckButton &overwrite;
     Gtk::Label &num_elements;
     Gtk::CheckButton &hide_all;
-    Gtk::Entry &filename_entry;
+    Gtk::FileChooserButton &path_chooser;
+    Gtk::Entry &name_text;
     Gtk::Button &export_btn;
     Gtk::Button &cancel_btn;
     Gtk::ProgressBar &_prog;
@@ -143,7 +146,6 @@ private:
     std::map<std::string, std::unique_ptr<BatchItem>> current_items;
 
     std::string original_name;
-    Glib::ustring doc_export_name;
 
     Inkscape::Preferences *prefs = nullptr;
     std::map<selection_mode, Glib::ustring> selection_names;
@@ -153,16 +155,18 @@ private:
     void initialise(const Glib::RefPtr<Gtk::Builder> &builder);
     void setup();
     void setDefaultSelectionMode();
-    void onFilenameModified();
     void onAreaTypeToggle(selection_mode key);
     void onExport();
     void onCancel();
-    void onBrowse(Gtk::EntryIconPosition pos, const GdkEventButton *ev);
 
     void refreshPreview();
     void refreshItems();
     void loadExportHints(bool rename_file);
 
+    Glib::ustring getBatchPath() const;
+    void setBatchPath(Glib::ustring const &path);
+    Glib::ustring getBatchName(bool fallback) const;
+    void setBatchName(Glib::ustring const &name);
     void setExporting(bool exporting, Glib::ustring const &text = "", Glib::ustring const &test_batch = "");
 
     static unsigned int onProgressCallback(float value, void *);

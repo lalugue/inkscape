@@ -13,7 +13,7 @@ class SPDocument;
 
 namespace Inkscape {
 
-std::string convertPathToRelative(std::string const &path, std::string const &docbase);
+std::string optimizePath(std::string const &path, std::string const &base, unsigned int parents = 2);
 bool fixBrokenLinks(SPDocument *doc);
 
 }

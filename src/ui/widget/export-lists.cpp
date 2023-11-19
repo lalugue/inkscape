@@ -156,7 +156,7 @@ void ExportList::setup()
     auto const add_button = Gtk::make_managed<Gtk::Button>();
     Glib::ustring label = _("Add Export");
     add_button->set_label(label);
-    this->attach(*add_button, 0, 0, 4, 1);
+    this->attach(*add_button, 0, 0, 5, 1);
 
     this->insert_row(0);
 

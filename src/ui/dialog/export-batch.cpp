@@ -20,6 +20,7 @@
 #include <gtkmm/builder.h>
 #include <gtkmm/button.h>
 #include <gtkmm/flowbox.h>
+#include <gtkmm/messagedialog.h>
 #include <gtkmm/progressbar.h>
 #include <gtkmm/widget.h>
 #include <png.h>
@@ -42,6 +43,7 @@
 #include "helper/auto-connection.h"
 #include "helper/png-write.h"
 #include "io/resource.h"
+#include "io/fix-broken-links.h"
 #include "io/sys.h"
 #include "object/object-set.h"
 #include "object/sp-namedview.h"
@@ -52,7 +54,7 @@
 #include "ui/dialog/dialog-notebook.h"
 #include "ui/dialog/export-batch.h"
 #include "ui/dialog/export.h"
-#include "ui/dialog/filedialog.h"
+#include "ui/icon-names.h"
 #include "ui/interface.h"
 #include "ui/widget/color-picker.h"
 #include "ui/widget/export-lists.h"
@@ -266,7 +268,9 @@ BatchExport::BatchExport(BaseObjectType * const cobject, Glib::RefPtr<Gtk::Build
     , show_preview     (get_widget<Gtk::CheckButton>  (builder, "b_show_preview"))
     , num_elements     (get_widget<Gtk::Label>        (builder, "b_num_elements"))
     , hide_all         (get_widget<Gtk::CheckButton>  (builder, "b_hide_all"))
-    , filename_entry   (get_widget<Gtk::Entry>        (builder, "b_filename"))
+    , overwrite        (get_widget<Gtk::CheckButton>  (builder, "b_overwrite"))
+    , name_text        (get_widget<Gtk::Entry>        (builder, "b_name"))
+    , path_chooser     (get_widget<Gtk::FileChooserButton>(builder, "b_path"))
     , export_btn       (get_widget<Gtk::Button>       (builder, "b_export"))
     , cancel_btn       (get_widget<Gtk::Button>       (builder, "b_cancel"))
     , progress_box     (get_widget<Gtk::Box>          (builder, "b_inprogress"))
@@ -364,10 +368,8 @@ void BatchExport::setup()
         button->signal_toggled().connect(sigc::bind(sigc::mem_fun(*this, &BatchExport::onAreaTypeToggle), key));
     }
     show_preview.signal_toggled().connect(sigc::mem_fun(*this, &BatchExport::refreshPreview));
-    filename_conn = filename_entry.signal_changed().connect(sigc::mem_fun(*this, &BatchExport::onFilenameModified));
     export_conn = export_btn.signal_clicked().connect(sigc::mem_fun(*this, &BatchExport::onExport));
     cancel_conn = cancel_btn.signal_clicked().connect(sigc::mem_fun(*this, &BatchExport::onCancel));
-    browse_conn = filename_entry.signal_icon_release().connect(sigc::mem_fun(*this, &BatchExport::onBrowse));
     hide_all.signal_toggled().connect(sigc::mem_fun(*this, &BatchExport::refreshPreview));
     _bgnd_color_picker->connectChanged([=, this](guint32 color){
         if (_desktop) {
@@ -512,22 +514,89 @@ void BatchExport::refreshPreview()
     }
 }
 
+/**
+ * Get the last used batch path for the document:
+ *
+ * @returns one of:
+ *   1. An absolute path in the document's export-batch-path attribute
+ *   2. An absolute path in the preference /dialogs/export/batch/path
+ *   3. A relative attribute path from the document's location
+ *   4. A relative preferences path from the document's location
+ *   5. The document's location
+ *   6. Empty string.
+ */
+Glib::ustring BatchExport::getBatchPath() const
+{
+    auto path = prefs->getString("/dialogs/export/batch/path");
+    if (auto attr = _document->getRoot()->getAttribute("inkscape:export-batch-path")) {
+        path = attr;
+    }
+    if (!path.empty() && Glib::path_is_absolute(path)) {
+        return path;
+    }
+    // Relative to the document's position
+    if (const char *doc_filename = _document->getDocumentFilename()) {
+        auto doc_path = Glib::path_get_dirname(doc_filename);
+        if (!path.empty()) {
+            return Glib::canonicalize_filename(path.raw(), doc_path);
+        }
+        return doc_path;
+    }
+    return "";
+}
+
+void BatchExport::setBatchPath(Glib::ustring const &path)
+{
+    Glib::ustring new_path = path;
+    if (const char *doc_filename = _document->getDocumentFilename()) {
+        auto doc_path = Glib::path_get_dirname(doc_filename);
+        new_path = Inkscape::optimizePath(path, doc_path, 2);
+    }
+    prefs->setString("/dialogs/export/batch/path", new_path);
+    _document->getRoot()->setAttribute("inkscape:export-batch-path", new_path);
+}
+
+/**
+ * Get the last used batch base name for the document:
+ *
+ * @returns either
+ *   1. The name stored in the document's export-batch-name attribute
+ *   2. The document's basename stripped of it's extension
+ */
+Glib::ustring BatchExport::getBatchName(bool fallback) const
+{
+    if (auto attr = _document->getRoot()->getAttribute("inkscape:export-batch-name")) {
+        return attr;
+    } else if (!fallback)
+        return "";
+    if (const char *doc_filename = _document->getDocumentFilename()) {
+        std::string name = Glib::path_get_basename(doc_filename);
+        Inkscape::IO::remove_file_extension(name);
+        return name;
+    }
+    return "batch";
+}
+
+void BatchExport::setBatchName(Glib::ustring const &name)
+{
+    _document->getRoot()->setAttribute("inkscape:export-batch-name", name);
+}
+
 void BatchExport::loadExportHints(bool rename_file)
 {
     if (!_desktop) return;
 
-    SPDocument *doc = _desktop->getDocument();
-    auto old_filename = Glib::filename_from_utf8(filename_entry.get_text());
-    if (old_filename.empty()) {
-        Glib::ustring filename = doc->getRoot()->getExportFilename();
-        if (rename_file && filename.empty()) {
-            std::string filename_entry_text = filename_entry.get_text();
-            std::string  extension = ".png";
-            filename = Export::defaultFilename(doc, original_name, extension); // original_name never set.
+    auto old_path = path_chooser.get_filename();
+    if (old_path.empty()) {
+        old_path = getBatchPath();
+        path_chooser.set_filename(old_path);
         }
-        filename_entry.set_text(filename);
-        filename_entry.set_position(filename.length());
-        doc_export_name = filename;
+
+    auto old_name = name_text.get_text();
+    if (old_name.empty()) {
+        auto name = getBatchName(rename_file);
+        name_text.set_text(name);
+        name_text.set_position(name.length());
     }
 }
 
@@ -545,10 +614,6 @@ void BatchExport::onAreaTypeToggle(selection_mode key)
     prefs->setString("/dialogs/export/batchexportarea/value", selection_names[current_key]);
 
     queueRefresh();
-}
-
-void BatchExport::onFilenameModified()
-{
 }
 
 void BatchExport::onCancel()
@@ -570,15 +635,32 @@ void BatchExport::onExport()
         return;
     }
 
-    // Find and remove any extension from filename so that we can add suffix to it.
-    std::string filename = Glib::filename_from_utf8(filename_entry.get_text());
-    export_list.removeExtension(filename);
+    setExporting(true);
 
-    if (!Export::checkOrCreateDirectory(filename)) {
-        return;
+    std::string path = Glib::filename_from_utf8(path_chooser.get_filename());
+    std::string name = name_text.get_text();
+
+    if (!Inkscape::IO::file_test(path.c_str(), (GFileTest)(G_FILE_TEST_IS_DIR))) {
+        Gtk::Window *window = _desktop->getToplevel();
+        if (!Inkscape::IO::file_test(path.c_str(), (GFileTest)(G_FILE_TEST_EXISTS))) {
+            Gtk::MessageDialog(*window, _("Can not save to a directory that is actually a file."), true, Gtk::MESSAGE_ERROR, Gtk::BUTTONS_OK).run();
+            return;
+        }
+        Glib::ustring message = g_markup_printf_escaped(
+            _("<span weight=\"bold\" size=\"larger\">Directory \"%s\" doesn't exist. Create it now?</span>"),
+               path.c_str());
+
+        auto dialog = Gtk::MessageDialog(*window, message, true, Gtk::MESSAGE_WARNING, Gtk::BUTTONS_YES_NO);
+        if (dialog.run() != Gtk::RESPONSE_YES) {
+            return;
+        }
+        g_mkdir_with_parents(path.c_str(), S_IRWXU);
     }
 
-    setExporting(true);
+    setBatchPath(path);
+    setBatchName(name);
+    DocumentUndo::done(_document, _("Set Batch Export Options"), INKSCAPE_ICON("export"));
+
 
     // create vector of exports
     int num_rows = export_list.get_rows();
@@ -591,6 +673,7 @@ void BatchExport::onExport()
         dpis.push_back(export_list.get_dpi(i));
     }
 
+    bool ow = overwrite.get_active();
     bool hide = hide_all.get_active();
     auto sels = _desktop->getSelection()->items();
     std::vector<SPItem const *> selected_items(sels.begin(), sels.end());
@@ -639,9 +722,9 @@ void BatchExport::onExport()
                 continue;
             }
 
-            std::string item_filename = filename;
-            if (!filename.empty()) {
-                std::string::value_type last_char = filename.at(filename.length() - 1);
+            std::string item_filename = Glib::build_filename(path, name);
+            if (!name.empty()) {
+                std::string::value_type last_char = name.at(name.length() - 1);
                 if (last_char != '/' && last_char != '\\') {
                     item_filename += "_";
                 }
@@ -660,9 +743,12 @@ void BatchExport::onExport()
                 item_filename = item_filename + "_" + suffix;
             }
 
-            bool found = Export::unConflictFilename(_document, item_filename, ext->get_extension());
-            if (!found) {
-                continue;
+            if (!ow) {
+                if (!Export::unConflictFilename(_document, item_filename, ext->get_extension())) {
+                    continue;
+                }
+            } else {
+                item_filename += ext->get_extension();
             }
 
             // Set the progress bar with our updated information
@@ -689,38 +775,6 @@ void BatchExport::onExport()
     }
     // Do this right at the end to finish up
     setExporting(false);
-}
-
-void BatchExport::onBrowse(Gtk::EntryIconPosition pos, const GdkEventButton *ev)
-{
-    if (!_app || !_app->get_active_window()) {
-        return;
-    }
-    Gtk::Window *window = _app->get_active_window();
-    browse_conn.block();
-    std::string filename = Glib::filename_from_utf8(filename_entry.get_text());
-
-    if (filename.empty()) {
-        filename = Export::defaultFilename(_document, filename, ".png");
-    }
-
-    Inkscape::UI::Dialog::FileSaveDialog *dialog = Inkscape::UI::Dialog::FileSaveDialog::create(
-        *window, filename, Inkscape::UI::Dialog::EXPORT_TYPES, _("Select a filename for exporting"), "", "",
-        Inkscape::Extension::FILE_SAVE_METHOD_EXPORT);
-
-    if (dialog->show()) {
-        filename = dialog->getFile()->get_path();
-        // Remove extension and don't add a new one, for obvious reasons.
-        export_list.removeExtension(filename);
-
-        auto filename_utf8 = Glib::filename_to_utf8(filename);
-        filename_entry.set_text(filename_utf8);
-        filename_entry.set_position(filename_utf8.length());
-    }
-
-    delete dialog;
-
-    browse_conn.unblock();
 }
 
 void BatchExport::setDefaultSelectionMode()
@@ -813,6 +867,8 @@ void BatchExport::setDocument(SPDocument *document)
         _preview_drawing.reset();
     }
 
+    name_text.set_text("");
+    path_chooser.set_filename("");
     refreshItems();
 }
 

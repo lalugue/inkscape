@@ -43,6 +43,7 @@ Glib::ustring sanitizeString(char const *str);
 Glib::ustring get_file_extension(Glib::ustring const &path);
 
 std::string get_file_extension(std::string const &path);
+void remove_file_extension(std::string &path);
 
 } // namespace Inkscape::IO
 
