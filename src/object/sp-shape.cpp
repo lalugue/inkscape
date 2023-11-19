@@ -75,10 +75,6 @@ void SPShape::build(SPDocument *document, Inkscape::XML::Node *repr)
                 }
                 setAttribute("inkscape:original-d", nullptr);
             }
-        } else {
-            if (getAttribute("d")) {
-                setAttribute("d", nullptr);
-            }
         }
     }
 }
