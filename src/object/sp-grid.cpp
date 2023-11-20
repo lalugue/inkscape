@@ -100,8 +100,8 @@ void SPGrid::build(SPDocument *doc, Inkscape::XML::Node *repr)
 
     _checkOldGrid(doc, repr);
 
-    _page_selected_connection = document->getPageManager().connectPageSelected([=](void *) { update(nullptr, 0); });
-    _page_modified_connection = document->getPageManager().connectPageModified([=](void *) { update(nullptr, 0); });
+    _page_selected_connection = document->getPageManager().connectPageSelected([this] (void *) { update(nullptr, 0); });
+    _page_modified_connection = document->getPageManager().connectPageModified([this] (void *) { update(nullptr, 0); });
 
     doc->addResource("grid", this);
 }
@@ -327,7 +327,7 @@ void SPGrid::_checkOldGrid(SPDocument *doc, Inkscape::XML::Node *repr)
     }
     else if (repr->attribute("id")) {
         // fix v1.2 grids without spacing, units, origin defined
-        auto fix = [=](SPAttr attr, const char* value) {
+        auto fix = [&] (SPAttr attr, char const *value) {
             auto key = sp_attribute_name(attr);
             if (!repr->attribute(key)) {
                 repr->setAttribute(key, value);

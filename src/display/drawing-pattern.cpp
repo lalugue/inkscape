@@ -38,7 +38,7 @@ DrawingPattern::DrawingPattern(Drawing &drawing)
 
 void DrawingPattern::setPatternToUserTransform(Geom::Affine const &transform)
 {
-    defer([=] {
+    defer([=, this] {
         auto constexpr EPS = 1e-18;
         auto current = _pattern_to_user ? *_pattern_to_user : Geom::identity();
         if (Geom::are_near(transform, current, EPS)) return;
@@ -50,7 +50,7 @@ void DrawingPattern::setPatternToUserTransform(Geom::Affine const &transform)
 
 void DrawingPattern::setTileRect(Geom::Rect const &tile_rect)
 {
-    defer([=] {
+    defer([=, this] {
         _tile_rect = tile_rect;
         _markForUpdate(STATE_ALL, true);
     });
@@ -58,7 +58,7 @@ void DrawingPattern::setTileRect(Geom::Rect const &tile_rect)
 
 void DrawingPattern::setOverflow(Geom::Affine const &initial_transform, int steps, Geom::Affine const &step_transform)
 {
-    defer([=] {
+    defer([=, this] {
         _overflow_initial_transform = initial_transform;
         _overflow_steps = steps;
         _overflow_step_transform = step_transform;

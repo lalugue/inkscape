@@ -146,7 +146,7 @@ void DrawingItem::appendChild(DrawingItem *item)
     item->_parent = this;
     item->_child_type = ChildType::NORMAL;
 
-    defer([=] {
+    defer([=, this] {
         _children.push_back(*item);
 
         // This ensures that _markForUpdate() called on the child will recurse to this item
@@ -166,7 +166,7 @@ void DrawingItem::prependChild(DrawingItem *item)
     item->_parent = this;
     item->_child_type = ChildType::NORMAL;
 
-    defer([=] {
+    defer([=, this] {
         _children.push_front(*item);
         item->_state = STATE_ALL;
         item->_markForUpdate(STATE_ALL, true);
@@ -176,7 +176,7 @@ void DrawingItem::prependChild(DrawingItem *item)
 // Clear this node's ordinary children, deleting them and their descendants without otherwise changing them in any way.
 void DrawingItem::clearChildren()
 {
-    defer([=] {
+    defer([=, this] {
         if (_children.empty()) return;
         _markForRendering();
         _children.clear_and_dispose([] (auto c) { delete c; });
@@ -186,7 +186,7 @@ void DrawingItem::clearChildren()
 
 void DrawingItem::setTransform(Geom::Affine const &transform)
 {
-    defer([=] {
+    defer([=, this] {
         auto constexpr EPS = 1e-18;
         auto current = _transform ? *_transform : Geom::identity();
         if (Geom::are_near(transform, current, EPS)) return;
@@ -199,7 +199,7 @@ void DrawingItem::setTransform(Geom::Affine const &transform)
 
 void DrawingItem::setOpacity(float opacity)
 {
-    defer([=] {
+    defer([=, this] {
         if (opacity == _opacity) return;
         _opacity = opacity;
         _markForRendering();
@@ -208,7 +208,7 @@ void DrawingItem::setOpacity(float opacity)
 
 void DrawingItem::setAntialiasing(Antialiasing antialias)
 {
-    defer([=] {
+    defer([=, this] {
         if (_antialias == antialias) return;
         _antialias = antialias;
         _markForRendering();
@@ -217,7 +217,7 @@ void DrawingItem::setAntialiasing(Antialiasing antialias)
 
 void DrawingItem::setIsolation(bool isolation)
 {
-    defer([=] {
+    defer([=, this] {
         if (isolation == _isolation) return;
         _isolation = isolation;
         _markForRendering();
@@ -226,7 +226,7 @@ void DrawingItem::setIsolation(bool isolation)
 
 void DrawingItem::setBlendMode(SPBlendMode blend_mode)
 {
-    defer([=] {
+    defer([=, this] {
         if (blend_mode == _blend_mode) return;
         _blend_mode = blend_mode;
         _markForRendering();
@@ -235,7 +235,7 @@ void DrawingItem::setBlendMode(SPBlendMode blend_mode)
 
 void DrawingItem::setVisible(bool visible)
 {
-    defer([=] {
+    defer([=, this] {
         if (visible == _visible) return;
         _visible = visible;
         _markForRendering();
@@ -244,7 +244,7 @@ void DrawingItem::setVisible(bool visible)
 
 void DrawingItem::setSensitive(bool sensitive)
 {
-    defer([=] { // Must be deferred, since in bitfield.
+    defer([=, this] { // Must be deferred, since in bitfield.
         _sensitive = sensitive;
     });
 }
@@ -307,7 +307,7 @@ void DrawingItem::setStyle(SPStyle const *style, SPStyle const *context_style)
     }
 
     // Defer setting the style information on the DrawingItem.
-    defer([=] {
+    defer([=, this] {
         _markForRendering();
 
         if (background_new != _background_new) {
@@ -346,7 +346,7 @@ void DrawingItem::setClip(DrawingItem *item)
         item->_child_type = ChildType::CLIP;
     }
 
-    defer([=] {
+    defer([=, this] {
         _markForRendering();
         delete _clip;
         _clip = item;
@@ -362,7 +362,7 @@ void DrawingItem::setMask(DrawingItem *item)
         item->_child_type = ChildType::MASK;
     }
 
-    defer([=] {
+    defer([=, this] {
         _markForRendering();
         delete _mask;
         _mask = item;
@@ -378,7 +378,7 @@ void DrawingItem::setFillPattern(DrawingPattern *pattern)
         pattern->_child_type = ChildType::FILL;
     }
 
-    defer([=] {
+    defer([=, this] {
         _markForRendering();
         delete static_cast<DrawingItem*>(_fill_pattern);
         _fill_pattern = pattern;
@@ -394,7 +394,7 @@ void DrawingItem::setStrokePattern(DrawingPattern *pattern)
         pattern->_child_type = ChildType::STROKE;
     }
 
-    defer([=] {
+    defer([=, this] {
         _markForRendering();
         delete static_cast<DrawingItem*>(_stroke_pattern);
         _stroke_pattern = pattern;
@@ -407,7 +407,7 @@ void DrawingItem::setZOrder(unsigned zorder)
 {
     if (_child_type != ChildType::NORMAL) return;
 
-    defer([=] {
+    defer([=, this] {
         auto it = _parent->_children.iterator_to(*this);
         _parent->_children.erase(it);
 
@@ -420,14 +420,14 @@ void DrawingItem::setZOrder(unsigned zorder)
 
 void DrawingItem::setItemBounds(Geom::OptRect const &bounds)
 {
-    defer([=] {
+    defer([=, this] {
         _item_bbox = bounds;
     });
 }
 
 void DrawingItem::setFilterRenderer(std::unique_ptr<Filters::Filter> filter)
 {
-    defer([=, filter = std::move(filter)] () mutable {
+    defer([=, this, filter = std::move(filter)] () mutable {
         _filter = std::move(filter);
         _markForRendering();
     });
@@ -1299,7 +1299,7 @@ void propagate_antialias(SPShapeRendering shape_rendering, DrawingItem &item)
 // Remove this node from its parent, then delete it.
 void DrawingItem::unlink()
 {
-    defer([=] {
+    defer([=, this] {
         // This only happens for the top-level deleted item.
         if (_parent) {
             _markForRendering();

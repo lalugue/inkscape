@@ -513,7 +513,7 @@ void BlurKnotHolderEntity::on_created()
     _line->set_visible(false);
 
     // This watcher makes sure that adding or removing a blur results in updated knots.
-    _watch_filter = item->style->signal_filter_changed.connect([=] (auto old_obj, auto obj) {
+    _watch_filter = item->style->signal_filter_changed.connect([this] (auto old_obj, auto obj) {
         update_knot();
     }); 
 }
@@ -523,7 +523,7 @@ void BlurKnotHolderEntity::update_knot()
     if (auto blur = _blur()) {
         knot->show();
         // This watcher makes sure anything outside that modifies the blur changes the knot.
-        _watch_blur = blur->connectModified([=] (auto item, unsigned flags) {
+        _watch_blur = blur->connectModified([this] (auto item, unsigned flags) {
             KnotHolderEntity::update_knot();
         });
     } else {

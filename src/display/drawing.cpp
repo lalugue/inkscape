@@ -74,7 +74,7 @@ void Drawing::setRenderMode(RenderMode mode)
 {
     assert(mode != RenderMode::OUTLINE_OVERLAY && "Drawing::setRenderMode: OUTLINE_OVERLAY is not a true render mode");
 
-    defer([=] {
+    defer([=, this] {
         if (mode == _rendermode) return;
         _root->_markForRendering();
         _rendermode = mode;
@@ -85,7 +85,7 @@ void Drawing::setRenderMode(RenderMode mode)
 
 void Drawing::setColorMode(ColorMode mode)
 {
-    defer([=] {
+    defer([=, this] {
         if (mode == _colormode) return;
         _colormode = mode;
         if (_rendermode != RenderMode::OUTLINE || _image_outline_mode) {
@@ -96,7 +96,7 @@ void Drawing::setColorMode(ColorMode mode)
 
 void Drawing::setOutlineOverlay(bool outlineoverlay)
 {
-    defer([=] {
+    defer([=, this] {
         if (outlineoverlay == _outlineoverlay) return;
         _outlineoverlay = outlineoverlay;
         _root->_markForUpdate(DrawingItem::STATE_ALL, true);
@@ -105,7 +105,7 @@ void Drawing::setOutlineOverlay(bool outlineoverlay)
 
 void Drawing::setGrayscaleMatrix(double value_matrix[20])
 {
-    defer([=] {
+    defer([=, this] {
         _grayscale_matrix = Filters::FilterColorMatrix::ColorMatrixMatrix(std::vector<double>(value_matrix, value_matrix + 20));
         if (_rendermode != RenderMode::OUTLINE) {
             _root->_markForRendering();
@@ -115,7 +115,7 @@ void Drawing::setGrayscaleMatrix(double value_matrix[20])
 
 void Drawing::setClipOutlineColor(uint32_t col)
 {
-    defer([=] {
+    defer([=, this] {
         _clip_outline_color = col;
         if (_rendermode == RenderMode::OUTLINE || _outlineoverlay) {
             _root->_markForRendering();
@@ -125,7 +125,7 @@ void Drawing::setClipOutlineColor(uint32_t col)
 
 void Drawing::setMaskOutlineColor(uint32_t col)
 {
-    defer([=] {
+    defer([=, this] {
         _mask_outline_color = col;
         if (_rendermode == RenderMode::OUTLINE || _outlineoverlay) {
             _root->_markForRendering();
@@ -135,7 +135,7 @@ void Drawing::setMaskOutlineColor(uint32_t col)
 
 void Drawing::setImageOutlineColor(uint32_t col)
 {
-    defer([=] {
+    defer([=, this] {
         _image_outline_color = col;
         if ((_rendermode == RenderMode::OUTLINE || _outlineoverlay) && !_image_outline_mode) {
             _root->_markForRendering();
@@ -145,7 +145,7 @@ void Drawing::setImageOutlineColor(uint32_t col)
 
 void Drawing::setImageOutlineMode(bool enabled)
 {
-    defer([=] {
+    defer([=, this] {
         _image_outline_mode = enabled;
         if (_rendermode == RenderMode::OUTLINE || _outlineoverlay) {
             _root->_markForRendering();
@@ -155,7 +155,7 @@ void Drawing::setImageOutlineMode(bool enabled)
 
 void Drawing::setFilterQuality(int quality)
 {
-    defer([=] {
+    defer([=, this] {
         _filter_quality = quality;
         if (!(_rendermode == RenderMode::OUTLINE || _rendermode == RenderMode::NO_FILTERS)) {
             _root->_markForUpdate(DrawingItem::STATE_ALL, true);
@@ -166,7 +166,7 @@ void Drawing::setFilterQuality(int quality)
 
 void Drawing::setBlurQuality(int quality)
 {
-    defer([=] {
+    defer([=, this] {
         _blur_quality = quality;
         if (!(_rendermode == RenderMode::OUTLINE || _rendermode == RenderMode::NO_FILTERS)) {
             _root->_markForUpdate(DrawingItem::STATE_ALL, true);
@@ -177,7 +177,7 @@ void Drawing::setBlurQuality(int quality)
 
 void Drawing::setDithering(bool use_dithering)
 {
-    defer([=] {
+    defer([=, this] {
         _use_dithering = use_dithering;
         #if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1, 18, 0)
         if (_rendermode != RenderMode::OUTLINE) {
@@ -190,7 +190,7 @@ void Drawing::setDithering(bool use_dithering)
 
 void Drawing::setCacheBudget(size_t bytes)
 {
-    defer([=] {
+    defer([=, this] {
         _cache_budget = bytes;
         _pickItemsForCaching();
     });
@@ -198,7 +198,7 @@ void Drawing::setCacheBudget(size_t bytes)
 
 void Drawing::setCacheLimit(Geom::OptIntRect const &rect)
 {
-    defer([=] {
+    defer([=, this] {
         _cache_limit = rect;
         for (auto item : _cached_items) {
             item->_markForUpdate(DrawingItem::STATE_CACHE, false);
@@ -208,7 +208,7 @@ void Drawing::setCacheLimit(Geom::OptIntRect const &rect)
 
 void Drawing::setClip(std::optional<Geom::PathVector> &&clip)
 {
-    defer([=] {
+    defer([=, this] {
         if (clip == _clip) return;
         _clip = std::move(clip);
         _root->_markForRendering();
@@ -217,7 +217,7 @@ void Drawing::setClip(std::optional<Geom::PathVector> &&clip)
 
 void Drawing::setAntialiasingOverride(std::optional<Antialiasing> antialiasing_override)
 {
-    defer([=] {
+    defer([=, this] {
         _antialiasing_override = antialiasing_override;
         _root->_markForUpdate(DrawingItem::STATE_ALL, true);
         _clearCache();

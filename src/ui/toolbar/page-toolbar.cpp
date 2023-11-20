@@ -101,9 +101,9 @@ PageToolbar::PageToolbar(SPDesktop *desktop)
     get_object<Gtk::EntryCompletion>(_builder, "_sizes_searcher")
         ->signal_match_selected()
         .connect(
-            [=](const Gtk::TreeModel::iterator &iter) {
+            [this] (Gtk::TreeModel::iterator const &iter) {
                 SearchCols cols;
-                Gtk::TreeModel::Row row = *(iter);
+                Gtk::TreeModel::Row row = *iter;
                 Glib::ustring preset_key = row[cols.key];
                 sizeChoose(preset_key);
                 return false;
@@ -131,9 +131,9 @@ PageToolbar::PageToolbar(SPDesktop *desktop)
     _margin_left.signal_value_changed().connect(sigc::mem_fun(*this, &PageToolbar::marginLeftEdited));
 
     _combo_page_sizes.set_id_column(2);
-    _combo_page_sizes.signal_changed().connect([=] {
+    _combo_page_sizes.signal_changed().connect([this] {
         std::string preset_key = _combo_page_sizes.get_active_id();
-        if (preset_key.size()) {
+        if (!preset_key.empty()) {
             sizeChoose(preset_key);
         }
     });
@@ -477,7 +477,7 @@ void PageToolbar::selectionChanged(SPPage *page)
         auto label = Glib::ustring::compose(_("%1/%2"), page->getPagePosition(), page_manager.getPageCount());
         _label_page_pos.set_label(label);
 
-        _page_modified = page->connectModified([=](SPObject *obj, unsigned int flags) {
+        _page_modified = page->connectModified([this] (SPObject *obj, unsigned flags) {
             if (auto page = cast<SPPage>(obj)) {
                 // Make sure we don't 'select' on removal of the page
                 if (flags & SP_OBJECT_MODIFIED_FLAG) {
@@ -491,7 +491,7 @@ void PageToolbar::selectionChanged(SPPage *page)
         _text_page_label.set_placeholder_text(_("Single Page Document"));
         _label_page_pos.set_label(_("1/-"));
 
-        _page_modified = _document->connectModified([=](guint) {
+        _page_modified = _document->connectModified([this] (unsigned) {
             selectionChanged(nullptr);
         });
     }

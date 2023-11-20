@@ -68,7 +68,7 @@ void DrawingShape::setStyle(SPStyle const *style, SPStyle const *context_style)
         opacity = style->opacity.value;
     }
 
-    defer([=, nrstyle = NRStyleData(_style)] () mutable {
+    defer([=, this, nrstyle = NRStyleData(_style)] () mutable {
         _nrstyle.set(std::move(nrstyle));
         style_vector_effect_stroke = vector_effect_stroke;
         style_stroke_extensions_hairline = stroke_extensions_hairline;

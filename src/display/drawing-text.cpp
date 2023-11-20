@@ -35,7 +35,7 @@ DrawingGlyphs::DrawingGlyphs(Drawing &drawing)
 
 void DrawingGlyphs::setGlyph(std::shared_ptr<FontInstance> font, int glyph, Geom::Affine const &trans)
 {
-    defer([=, font = std::move(font)] {
+    defer([=, this, font = std::move(font)] {
         _markForRendering();
 
         assert(!_drawing.snapshotted());
@@ -228,7 +228,7 @@ bool DrawingText::addComponent(std::shared_ptr<FontInstance> const &font, int gl
     }*/
     if (!font) return false;
 
-    defer([=, font = std::move(font)] () mutable {
+    defer([=, this, font = std::move(font)] () mutable {
         _markForRendering();
         auto ng = new DrawingGlyphs(_drawing);
         assert(!_drawing.snapshotted());
@@ -256,7 +256,7 @@ void DrawingText::setStyle(SPStyle const *style, SPStyle const *context_style)
         clip_rule = _style->clip_rule.computed;
     }
 
-    defer([=, nrstyle = NRStyleData(_style, _context_style)] () mutable {
+    defer([=, this, nrstyle = NRStyleData(_style, _context_style)] () mutable {
         _nrstyle.set(std::move(nrstyle));
         style_vector_effect_stroke = vector_effect_stroke;
         style_stroke_extensions_hairline = stroke_extensions_hairline;
