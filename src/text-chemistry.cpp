@@ -587,8 +587,11 @@ text_to_glyphs()
 
         auto const &layout = text->layout;
         auto iter = layout.end();
-        while (true) {
+        while (iter != layout.begin()) {
             iter.prevCharacter();
+
+            if (layout.isWhitespace(iter))
+                continue;
 
             auto str = Glib::ustring(1, layout.characterAt(iter));
             auto point = layout.characterAnchorPoint(iter);
@@ -622,9 +625,6 @@ text_to_glyphs()
             auto new_text = cast<SPText>(doc->getObjectByRepr(new_node));
             results.push_back(new_text);
             Inkscape::GC::release(new_node);
-
-            if (iter == layout.begin())
-                break;
         }
         to_delete.push_back(text);
     }
