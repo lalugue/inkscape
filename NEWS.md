@@ -1,3 +1,9 @@
+Inkscape 1.3.2
+
+Released on 2023-11-25
+
+    Fix for a regression introduced in 1.3.1 with path data for shapes
+
 Inkscape 1.3.1
 
 Released on 2023-11-18
