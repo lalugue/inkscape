@@ -497,6 +497,14 @@ SPDocument *SPDocument::createDoc(Inkscape::XML::Document *rdoc,
         sp_file_fix_feComposite(document->getRoot());
     }
 
+    /** Fix d missing on shapes (1.3.1 files) **/
+    std::string version = sp_version_to_string(document->root->version.inkscape);
+    if (version.size() > 4) {
+        version.erase(5);
+        if (version == "1.3.1") {
+            sp_file_fix_d_on_shapes(document->getRoot());
+        }
+    }
     /** Fix dpi (pre-92 files). With GUI fixed in Inkscape::Application::fix_document. **/
     if ( !(INKSCAPE.use_gui()) && sp_version_inside_range( document->root->version.inkscape, 0, 1, 0, 92 ) ) {
         sp_file_convert_dpi(document);

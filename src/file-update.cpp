@@ -703,6 +703,13 @@ void sp_file_fix_feComposite(SPObject *o)
         sp_file_fix_feComposite(ci);
 }
 
+void sp_file_fix_d_on_shapes(SPObject *o)
+{
+    // we trigger a whole update no way to make only shapes
+    // without broken SVG data
+    o->updateRepr(SP_OBJECT_CHILD_MODIFIED_FLAG);
+}
+
 void sp_file_fix_lpe(SPDocument *doc)
 {
     // need document insensitive to avoid problems on last undo
