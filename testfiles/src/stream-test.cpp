@@ -17,6 +17,7 @@
 #include "io/stream/stringstream.h"
 #include "io/stream/uristream.h"
 #include "io/stream/xsltstream.h"
+#include "util/delete-with.h"
 
 // names and path storage for other tests
 auto const xmlpath = INKSCAPE_TESTS_DIR "/data/crystalegg.xml";
@@ -41,7 +42,7 @@ public:
     std::string getContents() const
     {
         std::string buf;
-        auto fp = std::unique_ptr<FILE, decltype(&std::fclose)>(open("rb"), &std::fclose);
+        auto fp = Inkscape::Util::delete_with<std::fclose>(open("rb"));
 
         if (!fp) {
             ADD_FAILURE() << "failed to open " << _filename;
