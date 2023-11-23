@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.40.0 -->
 <interface>
   <requires lib="gtk" version="4.0"/>
-  <!-- n-columns=4 n-rows=5 -->
   <object class="GtkGrid">
     <property name="name">text-main</property>
-    <property name="focusable">False</property>
     <property name="row-spacing">4</property>
     <property name="column-spacing">4</property>
     <child>
@@ -91,33 +88,29 @@
     <property name="step-increment">1</property>
     <property name="page-increment">10</property>
   </object>
-  <!-- n-columns=5 n-rows=6 -->
   <object class="GtkGrid" id="ellipse-main">
-    <property name="focusable">False</property>
     <property name="row-spacing">4</property>
     <property name="column-spacing">4</property>
     <child>
       <object class="GtkLabel">
-        <property name="focusable">False</property>
         <property name="halign">start</property>
         <property name="label" translatable="yes">Radii</property>
+        <layout>
+          <property name="column">0</property>
+          <property name="row">0</property>
+          <property name="column-span">4</property>
+        </layout>
       </object>
-      <packing>
-        <property name="left-attach">0</property>
-        <property name="top-attach">0</property>
-        <property name="width">4</property>
-      </packing>
     </child>
     <child>
       <object class="GtkLabel">
-        <property name="focusable">False</property>
         <property name="halign">start</property>
         <property name="label" translatable="yes">Rx:</property>
+        <layout>
+          <property name="column">0</property>
+          <property name="row">1</property>
+        </layout>
       </object>
-      <packing>
-        <property name="left-attach">0</property>
-        <property name="top-attach">1</property>
-      </packing>
     </child>
     <child>
       <object class="GtkSpinButton" id="el-rx">
@@ -127,22 +120,21 @@
         <property name="width-chars">6</property>
         <property name="adjustment">adjustment-el-rx</property>
         <property name="digits">3</property>
+        <layout>
+          <property name="column">1</property>
+          <property name="row">1</property>
+        </layout>
       </object>
-      <packing>
-        <property name="left-attach">1</property>
-        <property name="top-attach">1</property>
-      </packing>
     </child>
     <child>
       <object class="GtkLabel">
-        <property name="focusable">False</property>
         <property name="halign">start</property>
         <property name="label" translatable="yes">Ry:</property>
+        <layout>
+          <property name="column">2</property>
+          <property name="row">1</property>
+        </layout>
       </object>
-      <packing>
-        <property name="left-attach">2</property>
-        <property name="top-attach">1</property>
-      </packing>
     </child>
     <child>
       <object class="GtkSpinButton" id="el-ry">
@@ -152,45 +144,42 @@
         <property name="width-chars">6</property>
         <property name="adjustment">adjustment-el-ry</property>
         <property name="digits">3</property>
+        <layout>
+          <property name="column">3</property>
+          <property name="row">1</property>
+        </layout>
       </object>
-      <packing>
-        <property name="left-attach">3</property>
-        <property name="top-attach">1</property>
-      </packing>
     </child>
     <child>
       <object class="GtkLabel">
-        <property name="focusable">False</property>
         <property name="halign">start</property>
         <property name="margin-top">4</property>
         <property name="label" translatable="yes">Angles</property>
+        <layout>
+          <property name="column">0</property>
+          <property name="row">2</property>
+          <property name="column-span">4</property>
+        </layout>
       </object>
-      <packing>
-        <property name="left-attach">0</property>
-        <property name="top-attach">2</property>
-        <property name="width">4</property>
-      </packing>
     </child>
     <child>
       <object class="GtkLabel">
-        <property name="focusable">False</property>
         <property name="halign">start</property>
         <property name="label" translatable="yes">Start:</property>
+        <layout>
+          <property name="column">0</property>
+          <property name="row">3</property>
+        </layout>
       </object>
-      <packing>
-        <property name="left-attach">0</property>
-        <property name="top-attach">3</property>
-      </packing>
     </child>
     <child>
       <object class="GtkLabel">
-        <property name="focusable">False</property>
         <property name="label" translatable="yes">End:</property>
+        <layout>
+          <property name="column">2</property>
+          <property name="row">3</property>
+        </layout>
       </object>
-      <packing>
-        <property name="left-attach">2</property>
-        <property name="top-attach">3</property>
-      </packing>
     </child>
     <child>
       <object class="GtkSpinButton" id="el-start">
@@ -200,11 +189,11 @@
         <property name="width-chars">6</property>
         <property name="adjustment">adjustment-el-start</property>
         <property name="digits">3</property>
+        <layout>
+          <property name="column">1</property>
+          <property name="row">3</property>
+        </layout>
       </object>
-      <packing>
-        <property name="left-attach">1</property>
-        <property name="top-attach">3</property>
-      </packing>
     </child>
     <child>
       <object class="GtkSpinButton" id="el-end">
@@ -214,72 +203,47 @@
         <property name="width-chars">6</property>
         <property name="adjustment">adjustment-el-end</property>
         <property name="digits">3</property>
+        <layout>
+          <property name="column">3</property>
+          <property name="row">3</property>
+        </layout>
       </object>
-      <packing>
-        <property name="left-attach">3</property>
-        <property name="top-attach">3</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox">
-        <property name="focusable">False</property>
         <property name="spacing">4</property>
         <child>
-          <object class="GtkRadioButton" id="el-slice">
+          <object class="GtkToggleButton" id="el-slice">
             <property name="focusable">True</property>
             <property name="receives-default">True</property>
             <property name="tooltip-text" translatable="yes">Switch to slice (closed shape with two radii)</property>
-            <property name="draw-indicator">False</property>
             <property name="icon-name">draw-ellipse-segment</property>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">0</property>
-          </packing>
         </child>
         <child>
-          <object class="GtkRadioButton" id="el-arc">
+          <object class="GtkToggleButton" id="el-arc">
             <property name="focusable">True</property>
             <property name="receives-default">True</property>
             <property name="tooltip-text" translatable="yes">Switch to arc (unclosed shape)</property>
-            <property name="draw-indicator">False</property>
             <property name="group">el-slice</property>
             <property name="icon-name">draw-ellipse-arc</property>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">1</property>
-          </packing>
         </child>
         <child>
-          <object class="GtkRadioButton" id="el-chord">
+          <object class="GtkToggleButton" id="el-chord">
             <property name="focusable">True</property>
             <property name="receives-default">True</property>
             <property name="tooltip-text" translatable="yes">Switch to chord (closed shape)</property>
-            <property name="draw-indicator">False</property>
             <property name="group">el-slice</property>
             <property name="icon-name">draw-ellipse-chord</property>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">2</property>
-          </packing>
         </child>
         <child>
           <object class="GtkSeparator">
-            <property name="focusable">False</property>
             <property name="margin-start">3</property>
             <property name="margin-end">3</property>
             <property name="orientation">vertical</property>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">3</property>
-          </packing>
         </child>
         <child>
           <object class="GtkButton" id="el-whole">
@@ -288,34 +252,29 @@
             <property name="tooltip-text" translatable="yes">Make the shape a whole ellipse, not arc or segment</property>
             <property name="icon-name">draw-ellipse-whole</property>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">4</property>
-          </packing>
         </child>
+        <layout>
+          <property name="column">1</property>
+          <property name="row">4</property>
+          <property name="column-span">3</property>
+        </layout>
       </object>
-      <packing>
-        <property name="left-attach">1</property>
-        <property name="top-attach">4</property>
-        <property name="width">3</property>
-      </packing>
     </child>
     <child>
       <object class="GtkButton" id="el-round">
         <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Round numbers to nearest integer</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <property name="icon-name">rounding</property>
         <style>
           <class name="small-button"/>
         </style>
+        <layout>
+          <property name="column">4</property>
+          <property name="row">1</property>
+        </layout>
       </object>
-      <packing>
-        <property name="left-attach">4</property>
-        <property name="top-attach">1</property>
-      </packing>
     </child>
     <child>
       <placeholder/>
@@ -368,33 +327,29 @@
     <property name="step-increment">1</property>
     <property name="page-increment">5</property>
   </object>
-  <!-- n-columns=5 n-rows=6 -->
   <object class="GtkGrid" id="rect-main">
-    <property name="focusable">False</property>
     <property name="row-spacing">4</property>
     <property name="column-spacing">4</property>
     <child>
       <object class="GtkLabel">
-        <property name="focusable">False</property>
         <property name="halign">start</property>
         <property name="label" translatable="yes">Dimensions</property>
+        <layout>
+          <property name="column">0</property>
+          <property name="row">0</property>
+          <property name="column-span">4</property>
+        </layout>
       </object>
-      <packing>
-        <property name="left-attach">0</property>
-        <property name="top-attach">0</property>
-        <property name="width">4</property>
-      </packing>
     </child>
     <child>
       <object class="GtkLabel">
-        <property name="focusable">False</property>
         <property name="halign">start</property>
         <property name="label" translatable="yes">W:</property>
+        <layout>
+          <property name="column">0</property>
+          <property name="row">1</property>
+        </layout>
       </object>
-      <packing>
-        <property name="left-attach">0</property>
-        <property name="top-attach">1</property>
-      </packing>
     </child>
     <child>
       <object class="GtkSpinButton" id="rect-width">
@@ -404,22 +359,21 @@
         <property name="width-chars">6</property>
         <property name="adjustment">adjustment-rect-width</property>
         <property name="digits">3</property>
+        <layout>
+          <property name="column">1</property>
+          <property name="row">1</property>
+        </layout>
       </object>
-      <packing>
-        <property name="left-attach">1</property>
-        <property name="top-attach">1</property>
-      </packing>
     </child>
     <child>
       <object class="GtkLabel">
-        <property name="focusable">False</property>
         <property name="halign">start</property>
         <property name="label" translatable="yes" context="Abbreviation of Height">H:</property>
+        <layout>
+          <property name="column">2</property>
+          <property name="row">1</property>
+        </layout>
       </object>
-      <packing>
-        <property name="left-attach">2</property>
-        <property name="top-attach">1</property>
-      </packing>
     </child>
     <child>
       <object class="GtkSpinButton" id="rect-height">
@@ -429,35 +383,33 @@
         <property name="width-chars">6</property>
         <property name="adjustment">adjustment-rect-height</property>
         <property name="digits">3</property>
+        <layout>
+          <property name="column">3</property>
+          <property name="row">1</property>
+        </layout>
       </object>
-      <packing>
-        <property name="left-attach">3</property>
-        <property name="top-attach">1</property>
-      </packing>
     </child>
     <child>
       <object class="GtkLabel">
-        <property name="focusable">False</property>
         <property name="halign">start</property>
         <property name="margin-top">4</property>
         <property name="label" translatable="yes">Corner radius</property>
+        <layout>
+          <property name="column">0</property>
+          <property name="row">2</property>
+          <property name="column-span">4</property>
+        </layout>
       </object>
-      <packing>
-        <property name="left-attach">0</property>
-        <property name="top-attach">2</property>
-        <property name="width">4</property>
-      </packing>
     </child>
     <child>
       <object class="GtkLabel">
-        <property name="focusable">False</property>
         <property name="halign">start</property>
         <property name="label" translatable="yes">Rx:</property>
+        <layout>
+          <property name="column">0</property>
+          <property name="row">3</property>
+        </layout>
       </object>
-      <packing>
-        <property name="left-attach">0</property>
-        <property name="top-attach">3</property>
-      </packing>
     </child>
     <child>
       <object class="GtkSpinButton" id="rect-rx">
@@ -467,22 +419,21 @@
         <property name="width-chars">6</property>
         <property name="adjustment">adjustment-rect-rx</property>
         <property name="digits">3</property>
+        <layout>
+          <property name="column">1</property>
+          <property name="row">3</property>
+        </layout>
       </object>
-      <packing>
-        <property name="left-attach">1</property>
-        <property name="top-attach">3</property>
-      </packing>
     </child>
     <child>
       <object class="GtkLabel">
-        <property name="focusable">False</property>
         <property name="halign">start</property>
         <property name="label" translatable="yes">Ry:</property>
+        <layout>
+          <property name="column">2</property>
+          <property name="row">3</property>
+        </layout>
       </object>
-      <packing>
-        <property name="left-attach">2</property>
-        <property name="top-attach">3</property>
-      </packing>
     </child>
     <child>
       <object class="GtkSpinButton" id="rect-ry">
@@ -492,15 +443,14 @@
         <property name="width-chars">6</property>
         <property name="adjustment">adjustment-rect-ry</property>
         <property name="digits">3</property>
+        <layout>
+          <property name="column">3</property>
+          <property name="row">3</property>
+        </layout>
       </object>
-      <packing>
-        <property name="left-attach">3</property>
-        <property name="top-attach">3</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox">
-        <property name="focusable">False</property>
         <property name="spacing">4</property>
         <child>
           <object class="GtkButton" id="rect-sharp">
@@ -511,24 +461,13 @@
             <property name="valign">start</property>
             <property name="icon-name">rectangle-make-corners-sharp</property>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">0</property>
-          </packing>
         </child>
         <child>
           <object class="GtkSeparator">
-            <property name="focusable">False</property>
             <property name="margin-start">3</property>
             <property name="margin-end">3</property>
             <property name="orientation">vertical</property>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">1</property>
-          </packing>
         </child>
         <child>
           <object class="GtkButton" id="rect-corners">
@@ -539,33 +478,27 @@
             <property name="valign">start</property>
             <property name="icon-name">rectangle-make-corners-round</property>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">2</property>
-          </packing>
         </child>
+        <layout>
+          <property name="column">1</property>
+          <property name="row">4</property>
+        </layout>
       </object>
-      <packing>
-        <property name="left-attach">1</property>
-        <property name="top-attach">4</property>
-      </packing>
     </child>
     <child>
       <object class="GtkButton" id="rect-round">
-        <property name="focusable">False</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Round numbers to nearest integer</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <property name="icon-name">rounding</property>
         <style>
           <class name="small-button"/>
         </style>
+        <layout>
+          <property name="column">4</property>
+          <property name="row">1</property>
+        </layout>
       </object>
-      <packing>
-        <property name="left-attach">4</property>
-        <property name="top-attach">1</property>
-      </packing>
     </child>
     <child>
       <placeholder/>
@@ -611,7 +544,6 @@
     <property name="page-increment">5</property>
   </object>
   <object class="GtkAdjustment" id="adjustment-star-ratio">
-    <property name="lower">0</property>
     <property name="upper">1</property>
     <property name="step-increment">0.01</property>
     <property name="page-increment">0.10</property>
@@ -628,54 +560,48 @@
     <property name="step-increment">0.01</property>
     <property name="page-increment">0.10</property>
   </object>
-  <!-- n-columns=4 n-rows=6 -->
   <object class="GtkGrid" id="star-main">
-    <property name="focusable">False</property>
     <property name="row-spacing">4</property>
     <property name="column-spacing">4</property>
     <child>
       <object class="GtkLabel">
-        <property name="focusable">False</property>
         <property name="halign">start</property>
         <property name="label" translatable="yes">Shape</property>
+        <layout>
+          <property name="column">0</property>
+          <property name="row">0</property>
+        </layout>
       </object>
-      <packing>
-        <property name="left-attach">0</property>
-        <property name="top-attach">0</property>
-      </packing>
     </child>
     <child>
       <object class="GtkLabel">
-        <property name="focusable">False</property>
         <property name="halign">start</property>
         <property name="label" translatable="yes">Corner:</property>
+        <layout>
+          <property name="column">0</property>
+          <property name="row">1</property>
+        </layout>
       </object>
-      <packing>
-        <property name="left-attach">0</property>
-        <property name="top-attach">1</property>
-      </packing>
     </child>
     <child>
       <object class="GtkLabel">
-        <property name="focusable">False</property>
         <property name="halign">start</property>
         <property name="label" translatable="yes">Rounded:</property>
+        <layout>
+          <property name="column">0</property>
+          <property name="row">3</property>
+        </layout>
       </object>
-      <packing>
-        <property name="left-attach">0</property>
-        <property name="top-attach">3</property>
-      </packing>
     </child>
     <child>
       <object class="GtkLabel">
-        <property name="focusable">False</property>
         <property name="halign">start</property>
         <property name="label" translatable="yes">Randomized:</property>
+        <layout>
+          <property name="column">0</property>
+          <property name="row">4</property>
+        </layout>
       </object>
-      <packing>
-        <property name="left-attach">0</property>
-        <property name="top-attach">4</property>
-      </packing>
     </child>
     <child>
       <object class="GtkSpinButton" id="star-corners">
@@ -684,11 +610,11 @@
         <property name="hexpand">True</property>
         <property name="width-chars">6</property>
         <property name="adjustment">adjustment-star-corner</property>
+        <layout>
+          <property name="column">1</property>
+          <property name="row">1</property>
+        </layout>
       </object>
-      <packing>
-        <property name="left-attach">1</property>
-        <property name="top-attach">1</property>
-      </packing>
     </child>
     <child>
       <object class="GtkSpinButton" id="star-rounded">
@@ -698,11 +624,11 @@
         <property name="width-chars">6</property>
         <property name="adjustment">adjustment-star-rounded</property>
         <property name="digits">3</property>
+        <layout>
+          <property name="column">1</property>
+          <property name="row">3</property>
+        </layout>
       </object>
-      <packing>
-        <property name="left-attach">1</property>
-        <property name="top-attach">3</property>
-      </packing>
     </child>
     <child>
       <object class="GtkSpinButton" id="star-rand">
@@ -712,57 +638,38 @@
         <property name="width-chars">6</property>
         <property name="adjustment">adjustment-star-rnd</property>
         <property name="digits">3</property>
+        <layout>
+          <property name="column">1</property>
+          <property name="row">4</property>
+        </layout>
       </object>
-      <packing>
-        <property name="left-attach">1</property>
-        <property name="top-attach">4</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox">
-        <property name="focusable">False</property>
         <property name="spacing">4</property>
         <child>
-          <object class="GtkRadioButton" id="star-poly">
+          <object class="GtkToggleButton" id="star-poly">
             <property name="focusable">True</property>
             <property name="receives-default">True</property>
             <property name="tooltip-text" translatable="yes">Regular polygon (with one handle) instead of a star</property>
-            <property name="draw-indicator">False</property>
             <property name="icon-name">draw-polygon</property>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">0</property>
-          </packing>
         </child>
         <child>
-          <object class="GtkRadioButton" id="star-star">
+          <object class="GtkToggleButton" id="star-star">
             <property name="focusable">True</property>
             <property name="receives-default">True</property>
             <property name="tooltip-text" translatable="yes">Star instead of a regular polygon (with one handle)</property>
-            <property name="draw-indicator">False</property>
             <property name="group">star-poly</property>
             <property name="icon-name">draw-star</property>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">1</property>
-          </packing>
         </child>
         <child>
           <object class="GtkSeparator">
-            <property name="focusable">False</property>
             <property name="margin-start">3</property>
             <property name="margin-end">3</property>
             <property name="orientation">vertical</property>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">2</property>
-          </packing>
         </child>
         <child>
           <object class="GtkButton" id="star-align">
@@ -771,28 +678,22 @@
             <property name="tooltip-text" translatable="yes">Level shape</property>
             <property name="icon-name">object-level</property>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">3</property>
-          </packing>
         </child>
+        <layout>
+          <property name="column">1</property>
+          <property name="row">0</property>
+        </layout>
       </object>
-      <packing>
-        <property name="left-attach">1</property>
-        <property name="top-attach">0</property>
-      </packing>
     </child>
     <child>
       <object class="GtkLabel" id="star-ratio-label">
-        <property name="focusable">False</property>
         <property name="halign">start</property>
         <property name="label" translatable="yes">Spoke ratio:</property>
+        <layout>
+          <property name="column">0</property>
+          <property name="row">2</property>
+        </layout>
       </object>
-      <packing>
-        <property name="left-attach">0</property>
-        <property name="top-attach">2</property>
-      </packing>
     </child>
     <child>
       <object class="GtkSpinButton" id="star-ratio">
@@ -801,80 +702,75 @@
         <property name="width-chars">6</property>
         <property name="adjustment">adjustment-star-ratio</property>
         <property name="digits">3</property>
+        <layout>
+          <property name="column">1</property>
+          <property name="row">2</property>
+        </layout>
       </object>
-      <packing>
-        <property name="left-attach">1</property>
-        <property name="top-attach">2</property>
-      </packing>
     </child>
     <child>
       <object class="GtkLabel" id="star-spacer">
-        <property name="focusable">False</property>
         <property name="hexpand">True</property>
+        <layout>
+          <property name="column">3</property>
+          <property name="row">0</property>
+        </layout>
       </object>
-      <packing>
-        <property name="left-attach">3</property>
-        <property name="top-attach">0</property>
-      </packing>
     </child>
     <child>
       <object class="GtkButton" id="star-rnd-clear">
-        <property name="focusable">False</property>
         <property name="receives-default">True</property>
         <property name="halign">start</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <property name="icon-name">edit-clear-value</property>
         <style>
           <class name="small-button"/>
         </style>
+        <layout>
+          <property name="column">2</property>
+          <property name="row">4</property>
+        </layout>
       </object>
-      <packing>
-        <property name="left-attach">2</property>
-        <property name="top-attach">4</property>
-      </packing>
     </child>
     <child>
       <object class="GtkButton" id="star-round-clear">
-        <property name="focusable">False</property>
         <property name="receives-default">True</property>
         <property name="halign">start</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <property name="icon-name">edit-clear-value</property>
         <style>
           <class name="small-button"/>
         </style>
+        <layout>
+          <property name="column">2</property>
+          <property name="row">3</property>
+        </layout>
       </object>
-      <packing>
-        <property name="left-attach">2</property>
-        <property name="top-attach">3</property>
-      </packing>
     </child>
     <child>
       <object class="GtkButton" id="star-ratio-clear">
-        <property name="focusable">False</property>
         <property name="receives-default">True</property>
         <property name="halign">start</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <property name="icon-name">edit-clear-value</property>
         <style>
           <class name="small-button"/>
         </style>
+        <layout>
+          <property name="column">2</property>
+          <property name="row">2</property>
+        </layout>
       </object>
-      <packing>
-        <property name="left-attach">2</property>
-        <property name="top-attach">2</property>
-      </packing>
     </child>
     <child>
       <object class="GtkLabel" id="star-spacer1">
         <property name="width-request">40</property>
-        <property name="focusable">False</property>
         <property name="hexpand">True</property>
+        <layout>
+          <property name="column">2</property>
+          <property name="row">0</property>
+        </layout>
       </object>
-      <packing>
-        <property name="left-attach">2</property>
-        <property name="top-attach">0</property>
-      </packing>
     </child>
     <child>
       <placeholder/>
@@ -905,12 +801,9 @@
     </child>
   </object>
   <object class="GtkImage" id="image1">
-    <property name="focusable">False</property>
     <property name="icon-name">enter</property>
   </object>
-  <!-- n-columns=5 n-rows=8 -->
   <object class="GtkGrid" id="path-main">
-    <property name="focusable">False</property>
     <property name="row-spacing">4</property>
     <property name="column-spacing">4</property>
     <child>
@@ -918,16 +811,16 @@
         <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Round numbers to nearest integer</property>
-        <property name="has-frame">false</property>
+        <property name="has-frame">False</property>
         <property name="icon-name">rounding</property>
         <style>
           <class name="small-button"/>
         </style>
+        <layout>
+          <property name="column">4</property>
+          <property name="row">1</property>
+        </layout>
       </object>
-      <packing>
-        <property name="left-attach">4</property>
-        <property name="top-attach">1</property>
-      </packing>
     </child>
     <child>
       <object class="GtkSpinButton" id="path-y">
@@ -938,22 +831,21 @@
         <property name="text" translatable="yes">0.000</property>
         <property name="adjustment">adjustment-rect-ry</property>
         <property name="digits">3</property>
+        <layout>
+          <property name="column">3</property>
+          <property name="row">1</property>
+        </layout>
       </object>
-      <packing>
-        <property name="left-attach">3</property>
-        <property name="top-attach">1</property>
-      </packing>
     </child>
     <child>
       <object class="GtkLabel">
-        <property name="focusable">False</property>
         <property name="halign">start</property>
         <property name="label" translatable="yes">Y:</property>
+        <layout>
+          <property name="column">2</property>
+          <property name="row">1</property>
+        </layout>
       </object>
-      <packing>
-        <property name="left-attach">2</property>
-        <property name="top-attach">1</property>
-      </packing>
     </child>
     <child>
       <object class="GtkSpinButton" id="path-x">
@@ -964,57 +856,53 @@
         <property name="text" translatable="yes">0.000</property>
         <property name="adjustment">adjustment-rect-rx</property>
         <property name="digits">3</property>
+        <layout>
+          <property name="column">1</property>
+          <property name="row">1</property>
+        </layout>
       </object>
-      <packing>
-        <property name="left-attach">1</property>
-        <property name="top-attach">1</property>
-      </packing>
     </child>
     <child>
       <object class="GtkLabel">
-        <property name="focusable">False</property>
         <property name="halign">start</property>
         <property name="label" translatable="yes">X:</property>
+        <layout>
+          <property name="column">0</property>
+          <property name="row">1</property>
+        </layout>
       </object>
-      <packing>
-        <property name="left-attach">0</property>
-        <property name="top-attach">1</property>
-      </packing>
     </child>
     <child>
       <object class="GtkLabel">
-        <property name="focusable">False</property>
         <property name="halign">start</property>
         <property name="label" translatable="yes">Dimensions</property>
+        <layout>
+          <property name="column">0</property>
+          <property name="row">2</property>
+          <property name="column-span">4</property>
+        </layout>
       </object>
-      <packing>
-        <property name="left-attach">0</property>
-        <property name="top-attach">2</property>
-        <property name="width">4</property>
-      </packing>
     </child>
     <child>
       <object class="GtkLabel">
-        <property name="focusable">False</property>
         <property name="halign">start</property>
         <property name="label" translatable="yes">Location</property>
+        <layout>
+          <property name="column">0</property>
+          <property name="row">0</property>
+          <property name="column-span">4</property>
+        </layout>
       </object>
-      <packing>
-        <property name="left-attach">0</property>
-        <property name="top-attach">0</property>
-        <property name="width">4</property>
-      </packing>
     </child>
     <child>
       <object class="GtkLabel">
-        <property name="focusable">False</property>
         <property name="halign">start</property>
         <property name="label" translatable="yes">W:</property>
+        <layout>
+          <property name="column">0</property>
+          <property name="row">3</property>
+        </layout>
       </object>
-      <packing>
-        <property name="left-attach">0</property>
-        <property name="top-attach">3</property>
-      </packing>
     </child>
     <child>
       <object class="GtkSpinButton" id="path-width">
@@ -1025,22 +913,21 @@
         <property name="text" translatable="yes">0.000</property>
         <property name="adjustment">adjustment-rect-width</property>
         <property name="digits">3</property>
+        <layout>
+          <property name="column">1</property>
+          <property name="row">3</property>
+        </layout>
       </object>
-      <packing>
-        <property name="left-attach">1</property>
-        <property name="top-attach">3</property>
-      </packing>
     </child>
     <child>
       <object class="GtkLabel">
-        <property name="focusable">False</property>
         <property name="halign">start</property>
         <property name="label" translatable="yes" context="Abbreviation of Height">H:</property>
+        <layout>
+          <property name="column">2</property>
+          <property name="row">3</property>
+        </layout>
       </object>
-      <packing>
-        <property name="left-attach">2</property>
-        <property name="top-attach">3</property>
-      </packing>
     </child>
     <child>
       <object class="GtkSpinButton" id="path-height">
@@ -1051,65 +938,60 @@
         <property name="text" translatable="yes">0.000</property>
         <property name="adjustment">adjustment-rect-height</property>
         <property name="digits">3</property>
+        <layout>
+          <property name="column">3</property>
+          <property name="row">3</property>
+        </layout>
       </object>
-      <packing>
-        <property name="left-attach">3</property>
-        <property name="top-attach">3</property>
-      </packing>
     </child>
     <child>
       <object class="GtkLabel">
-        <property name="focusable">False</property>
         <property name="halign">start</property>
         <property name="label" translatable="yes">Path data</property>
+        <layout>
+          <property name="column">0</property>
+          <property name="row">4</property>
+          <property name="column-span">4</property>
+        </layout>
       </object>
-      <packing>
-        <property name="left-attach">0</property>
-        <property name="top-attach">4</property>
-        <property name="width">4</property>
-      </packing>
     </child>
     <child>
       <object class="GtkLabel" id="path-info">
-        <property name="focusable">False</property>
         <property name="valign">start</property>
         <property name="xalign">0</property>
+        <layout>
+          <property name="column">1</property>
+          <property name="row">6</property>
+          <property name="column-span">2</property>
+        </layout>
       </object>
-      <packing>
-        <property name="left-attach">1</property>
-        <property name="top-attach">6</property>
-        <property name="width">2</property>
-      </packing>
     </child>
     <child>
       <object class="GtkScrolledWindow" id="path-data-wnd">
         <property name="height-request">80</property>
         <property name="focusable">True</property>
         <property name="hexpand">True</property>
-        <property name="has-frame">true</property>
-        <child>
+        <property name="has-frame">True</property>
+        <property name="child">
           <object class="GtkViewport">
-            <property name="focusable">False</property>
             <child>
               <placeholder/>
             </child>
           </object>
-        </child>
+        </property>
+        <layout>
+          <property name="column">1</property>
+          <property name="row">5</property>
+          <property name="column-span">3</property>
+        </layout>
       </object>
-      <packing>
-        <property name="left-attach">1</property>
-        <property name="top-attach">5</property>
-        <property name="width">3</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox">
-        <property name="focusable">False</property>
         <property name="halign">end</property>
         <property name="spacing">10</property>
         <child>
           <object class="GtkBox" id="rounding-box">
-            <property name="focusable">False</property>
             <child>
               <object class="GtkButton" id="path-data-round">
                 <property name="focusable">True</property>
@@ -1118,11 +1000,6 @@
                 <property name="use-underline">True</property>
                 <property name="icon-name">rounding</property>
               </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
             </child>
             <child>
               <object class="GtkMenuButton" id="path-menu">
@@ -1130,38 +1007,25 @@
                 <property name="focus-on-click">False</property>
                 <property name="receives-default">True</property>
                 <property name="margin-start">2</property>
-                <property name="has-frame">false</property>
+                <property name="has-frame">False</property>
                 <property name="menu-model">menu1</property>
                 <child>
                   <object class="GtkBox">
-                    <property name="focusable">False</property>
                     <property name="margin-start">2</property>
                     <property name="margin-end">2</property>
                     <child>
                       <object class="GtkLabel" id="path-precision">
-                        <property name="focusable">False</property>
                         <property name="width-chars">8</property>
                         <property name="xalign">0</property>
                       </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="position">0</property>
-                      </packing>
                     </child>
                     <child>
                       <object class="GtkImage">
-                        <property name="focusable">False</property>
                         <property name="icon-name">pan-down-symbolic</property>
                         <style>
                           <class name="arrow"/>
                         </style>
                       </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="position">1</property>
-                      </packing>
                     </child>
                   </object>
                 </child>
@@ -1169,18 +1033,8 @@
                   <class name="menu-btn-tight"/>
                 </style>
               </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">1</property>
-              </packing>
             </child>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">0</property>
-          </packing>
         </child>
         <child>
           <object class="GtkButton" id="path-enter">
@@ -1190,18 +1044,13 @@
             <property name="halign">end</property>
             <property name="image">image1</property>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">1</property>
-          </packing>
         </child>
+        <layout>
+          <property name="column">1</property>
+          <property name="row">6</property>
+          <property name="column-span">3</property>
+        </layout>
       </object>
-      <packing>
-        <property name="left-attach">1</property>
-        <property name="top-attach">6</property>
-        <property name="width">3</property>
-      </packing>
     </child>
     <child>
       <placeholder/>
@@ -1244,7 +1093,6 @@
     </child>
   </object>
   <object class="GtkBox" id="main-widget">
-    <property name="focusable">False</property>
     <property name="margin-start">4</property>
     <property name="margin-end">4</property>
     <property name="margin-top">6</property>
@@ -1253,55 +1101,30 @@
     <property name="spacing">5</property>
     <child>
       <object class="GtkBox" id="main-header">
-        <property name="focusable">False</property>
         <property name="valign">start</property>
         <property name="hexpand">True</property>
         <property name="spacing">5</property>
         <child>
           <object class="GtkLabel" id="main-obj-name">
-            <property name="focusable">False</property>
             <property name="halign">start</property>
             <property name="valign">center</property>
             <property name="hexpand">True</property>
             <property name="label">label</property>
           </object>
-          <packing>
-            <property name="expand">True</property>
-            <property name="fill">True</property>
-            <property name="position">0</property>
-          </packing>
         </child>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">0</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="main-panel">
-        <property name="focusable">False</property>
         <property name="hexpand">True</property>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">1</property>
-      </packing>
     </child>
     <child>
       <object class="GtkSeparator" id="main-separator">
-        <property name="focusable">False</property>
         <property name="margin-top">4</property>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">2</property>
-      </packing>
     </child>
   </object>
-
   <menu id="menu1">
     <section>
       <item>
