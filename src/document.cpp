@@ -496,6 +496,12 @@ SPDocument *SPDocument::createDoc(Inkscape::XML::Document *rdoc,
         sp_file_fix_feComposite(document->getRoot());
     }
 
+    /** Fix 1.3.1 issue deleting the d attributes on shapes (stars, etc) **/
+    std::string version_string = sp_version_to_string(document->root->version.inkscape); // end of version is stored as a string so we can't escape a string comparison
+    if (version_string.size() > 4 && version_string.substr(0, 5) == "1.3.1") {
+        document->getRoot()->updateRepr(SP_OBJECT_CHILD_MODIFIED_FLAG);
+    }
+
 
     /** Fix dpi (pre-92 files). With GUI fixed in Inkscape::Application::fix_document. **/
     if ( !(INKSCAPE.use_gui()) && sp_version_inside_range( document->root->version.inkscape, 0, 1, 0, 92 ) ) {
