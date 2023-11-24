@@ -584,7 +584,7 @@ void rename_id(SPObject *elem, Glib::ustring const &new_name)
     // Make a note of this change, if we need to fix up refs to it
     id_changelist_type id_changes;
     if (refmap.find(old_id) != refmap.end()) {
-        id_changes.push_back(id_changeitem_type(elem, old_id));
+        id_changes.emplace_back(elem, old_id);
     }
 
     fix_up_refs(refmap, id_changes);

@@ -155,7 +155,7 @@ Effect::Effect (Inkscape::XML::Node *in_repr, Implementation::Implementation *in
                  { action_id + ".noprefs", Glib::ustring(get_name()) + " " + _("(No preferences)"), "Extensions (no prefs)", description }};
             app->get_action_extra_data().add_data(raw_data_effect);
 
-            sub_menu_list.push_front("Effects");
+            sub_menu_list.emplace_front("Effects");
         }
         
         // std::cout << " Effect: name:  " << get_name();

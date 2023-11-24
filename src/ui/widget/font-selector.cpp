@@ -128,8 +128,8 @@ FontSelector::FontSelector (bool with_size, bool with_variations)
     // For drag and drop.
     // Target entries for Drag and Drop.
     // target_entries.emplace_back(Gtk::TargetEntry("text/uri-list", (Gtk::TargetFlags)0, 0));
-    target_entries.emplace_back(Gtk::TargetEntry("STRING", (Gtk::TargetFlags)0, 0));
-    target_entries.emplace_back(Gtk::TargetEntry("text/plain", (Gtk::TargetFlags)0, 0));
+    target_entries.emplace_back("STRING", (Gtk::TargetFlags)0, 0);
+    target_entries.emplace_back("text/plain", (Gtk::TargetFlags)0, 0);
 
     family_treeview.drag_source_set(target_entries, Gdk::BUTTON1_MASK, Gdk::ACTION_COPY | Gdk::ACTION_DEFAULT);
     family_treeview.signal_drag_data_get().connect(sigc::mem_fun(*this, &FontSelector::on_drag_data_get));

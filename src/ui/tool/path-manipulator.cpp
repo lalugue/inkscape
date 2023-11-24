@@ -744,13 +744,13 @@ unsigned PathManipulator::_deleteStretch(NodeList::iterator start, NodeList::ite
             Geom::CubicBezier bc(*cur, *cur->front(), *cur.next()->back(), *cur.next());
             for (unsigned s = 0; s < samples_per_segment; ++s) {
                 auto t = t_step * s;
-                input.emplace_back(InputPoint(bc.pointAt(t), t));
+                input.emplace_back(bc.pointAt(t), t);
             }
             ++seg;
         }
         // Fill last point
         // last point + its slope
-        input.emplace_back(InputPoint(end->position(), Geom::Point(), end->back()->position(), 1.0));
+        input.emplace_back(end->position(), Geom::Point(), end->back()->position(), 1.0);
 
         // get slope for the first point
         input.front() = InputPoint(start.prev()->position(), start.prev()->front()->position(), Geom::Point(), 0.0);

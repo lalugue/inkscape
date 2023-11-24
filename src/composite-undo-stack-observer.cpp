@@ -24,9 +24,9 @@ void
 CompositeUndoStackObserver::add(UndoStackObserver& observer)
 {
 	if (!this->_iterating) {
-		this->_active.push_back(UndoStackObserverRecord(observer));
+		this->_active.emplace_back(observer);
 	} else {
-		this->_pending.push_back(UndoStackObserverRecord(observer));
+		this->_pending.emplace_back(observer);
 	}
 }
 

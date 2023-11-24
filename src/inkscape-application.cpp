@@ -1221,17 +1221,13 @@ InkscapeApplication::parse_actions(const Glib::ustring& input, action_vector_t& 
                     } else {
                         std::cerr << "InkscapeApplication::parse_actions: Invalid boolean value: " << action << ":" << value << std::endl;
                     }
-                    action_vector.push_back(
-                        std::make_pair( action, Glib::Variant<bool>::create(b)));
+                    action_vector.emplace_back( action, Glib::Variant<bool>::create(b));
                 } else if (type.get_string() == "i") {
-                    action_vector.push_back(
-                        std::make_pair( action, Glib::Variant<int>::create(std::stoi(value))));
+                    action_vector.emplace_back( action, Glib::Variant<int>::create(std::stoi(value)));
                 } else if (type.get_string() == "d") {
-                    action_vector.push_back(
-                        std::make_pair( action, Glib::Variant<double>::create(std::stod(value))));
+                    action_vector.emplace_back( action, Glib::Variant<double>::create(std::stod(value)));
                 } else if (type.get_string() == "s") {
-                    action_vector.push_back(
-                        std::make_pair( action, Glib::Variant<Glib::ustring>::create(value) ));
+                    action_vector.emplace_back( action, Glib::Variant<Glib::ustring>::create(value) );
                  } else if (type.get_string() == "(dd)") {
                     std::vector<Glib::ustring> tokens3 = Glib::Regex::split_simple(",", value);
                     if (tokens3.size() != 2) {
@@ -1249,15 +1245,14 @@ InkscapeApplication::parse_actions(const Glib::ustring& input, action_vector_t& 
                         continue;
                     }
 
-                    action_vector.push_back(
-                        std::make_pair( action, Glib::Variant<std::tuple<double, double>>::create(std::tuple<double, double>(d0, d1))));
+                    action_vector.emplace_back( action, Glib::Variant<std::tuple<double, double>>::create(std::tuple<double, double>(d0, d1)));
                } else {
                     std::cerr << "InkscapeApplication::parse_actions: unhandled action value: "
                               << action << ": " << type.get_string() << std::endl;
                 }
             } else {
                 // Stateless (i.e. no value).
-                action_vector.push_back( std::make_pair( action, Glib::VariantBase() ) );
+                action_vector.emplace_back( action, Glib::VariantBase() );
             }
         } else {
             std::cerr << "InkscapeApplication::parse_actions: could not find action for: " << action << std::endl;
@@ -1640,7 +1635,7 @@ InkscapeApplication::on_handle_local_options(const Glib::RefPtr<Glib::VariantDic
 
     // This must be done after the app has been registered!
     if (options->contains("action-list")) {
-        _command_line_actions.push_back(std::make_pair("action-list", base));
+        _command_line_actions.emplace_back("action-list", base);
     }
 
     // ================= OPEN/IMPORT ===================
@@ -1678,12 +1673,11 @@ InkscapeApplication::on_handle_local_options(const Glib::RefPtr<Glib::VariantDic
         Glib::ustring method;
         options->lookup_value("convert-dpi-method", method);
         if (!method.empty()) {
-            _command_line_actions.push_back(
-                std::make_pair("convert-dpi-method", Glib::Variant<Glib::ustring>::create(method)));
+            _command_line_actions.emplace_back("convert-dpi-method", Glib::Variant<Glib::ustring>::create(method));
         }
     }
 
-    if (options->contains("no-convert-text-baseline-spacing")) _command_line_actions.push_back(std::make_pair("no-convert-baseline", base));
+    if (options->contains("no-convert-text-baseline-spacing")) _command_line_actions.emplace_back("no-convert-baseline", base);
 
 
     // ===================== QUERY =====================
@@ -1693,28 +1687,26 @@ InkscapeApplication::on_handle_local_options(const Glib::RefPtr<Glib::VariantDic
         Glib::ustring query_id;
         options->lookup_value("query-id", query_id);
         if (!query_id.empty()) {
-            _command_line_actions.push_back(
-                std::make_pair("select-by-id", Glib::Variant<Glib::ustring>::create(query_id)));
+            _command_line_actions.emplace_back("select-by-id", Glib::Variant<Glib::ustring>::create(query_id));
         }
     }
 
-    if (options->contains("query-all"))    _command_line_actions.push_back(std::make_pair("query-all",   base));
-    if (options->contains("query-x"))      _command_line_actions.push_back(std::make_pair("query-x",     base));
-    if (options->contains("query-y"))      _command_line_actions.push_back(std::make_pair("query-y",     base));
-    if (options->contains("query-width"))  _command_line_actions.push_back(std::make_pair("query-width", base));
-    if (options->contains("query-height")) _command_line_actions.push_back(std::make_pair("query-height",base));
+    if (options->contains("query-all"))    _command_line_actions.emplace_back("query-all",   base);
+    if (options->contains("query-x"))      _command_line_actions.emplace_back("query-x",     base);
+    if (options->contains("query-y"))      _command_line_actions.emplace_back("query-y",     base);
+    if (options->contains("query-width"))  _command_line_actions.emplace_back("query-width", base);
+    if (options->contains("query-height")) _command_line_actions.emplace_back("query-height",base);
 
 
     // =================== PROCESS =====================
 
-    if (options->contains("vacuum-defs"))  _command_line_actions.push_back(std::make_pair("vacuum-defs", base));
+    if (options->contains("vacuum-defs"))  _command_line_actions.emplace_back("vacuum-defs", base);
 
     if (options->contains("select")) {
         Glib::ustring select;
         options->lookup_value("select", select);
         if (!select.empty()) {
-            _command_line_actions.push_back(
-                std::make_pair("select", Glib::Variant<Glib::ustring>::create(select)));
+            _command_line_actions.emplace_back("select", Glib::Variant<Glib::ustring>::create(select));
         }
     }
 

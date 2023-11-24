@@ -122,13 +122,13 @@ void DashSelector::init_dashes() {
                 if (!style.stroke_dasharray.values.empty()) {
                     s_dashes.emplace_back(map_values(style.stroke_dasharray.values));
                 } else {
-                    s_dashes.emplace_back(std::vector<double>());
+                    s_dashes.emplace_back();
                 }
             }
         } else {
             g_warning("Missing stock dash definitions. DashSelector::init_dashes.");
             //  This code may never execute - a new preferences.xml is created for a new user.  Maybe if the user deletes dashes from preferences.xml?
-            s_dashes.emplace_back(std::vector<double>());
+            s_dashes.emplace_back();
         }
 
         std::vector<double> custom {1, 2, 1, 4}; // 'custom' dashes second on the list, so they are at the top of the second column in a combo box

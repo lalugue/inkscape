@@ -145,46 +145,46 @@ std::vector<colorspace::Component> colorspace::getColorSpaceInfo(uint32_t space)
 {
     static std::map<cmsUInt32Number, std::vector<Component> > sets;
     if (sets.empty()) {
-        sets[cmsSigXYZData].push_back(Component("_X", "X", 2)); //  TYPE_XYZ_16
-        sets[cmsSigXYZData].push_back(Component("_Y", "Y", 1));
-        sets[cmsSigXYZData].push_back(Component("_Z", "Z", 2));
+        sets[cmsSigXYZData].emplace_back("_X", "X", 2); //  TYPE_XYZ_16
+        sets[cmsSigXYZData].emplace_back("_Y", "Y", 1);
+        sets[cmsSigXYZData].emplace_back("_Z", "Z", 2);
 
-        sets[cmsSigLabData].push_back(Component("_L", "L", 100)); // TYPE_Lab_16
-        sets[cmsSigLabData].push_back(Component("_a", "a", 256));
-        sets[cmsSigLabData].push_back(Component("_b", "b", 256));
+        sets[cmsSigLabData].emplace_back("_L", "L", 100); // TYPE_Lab_16
+        sets[cmsSigLabData].emplace_back("_a", "a", 256);
+        sets[cmsSigLabData].emplace_back("_b", "b", 256);
 
         // cmsSigLuvData
 
-        sets[cmsSigYCbCrData].push_back(Component("_Y", "Y", 1)); // TYPE_YCbCr_16
-        sets[cmsSigYCbCrData].push_back(Component("C_b", "Cb", 1));
-        sets[cmsSigYCbCrData].push_back(Component("C_r", "Cr", 1));
+        sets[cmsSigYCbCrData].emplace_back("_Y", "Y", 1); // TYPE_YCbCr_16
+        sets[cmsSigYCbCrData].emplace_back("C_b", "Cb", 1);
+        sets[cmsSigYCbCrData].emplace_back("C_r", "Cr", 1);
 
-        sets[cmsSigYxyData].push_back(Component("_Y", "Y", 1)); // TYPE_Yxy_16
-        sets[cmsSigYxyData].push_back(Component("_x", "x", 1));
-        sets[cmsSigYxyData].push_back(Component("y", "y", 1));
+        sets[cmsSigYxyData].emplace_back("_Y", "Y", 1); // TYPE_Yxy_16
+        sets[cmsSigYxyData].emplace_back("_x", "x", 1);
+        sets[cmsSigYxyData].emplace_back("y", "y", 1);
 
-        sets[cmsSigRgbData].push_back(Component(_("_R:"), _("Red"), 1)); // TYPE_RGB_16
-        sets[cmsSigRgbData].push_back(Component(_("_G:"), _("Green"), 1));
-        sets[cmsSigRgbData].push_back(Component(_("_B:"), _("Blue"), 1));
+        sets[cmsSigRgbData].emplace_back(_("_R:"), _("Red"), 1); // TYPE_RGB_16
+        sets[cmsSigRgbData].emplace_back(_("_G:"), _("Green"), 1);
+        sets[cmsSigRgbData].emplace_back(_("_B:"), _("Blue"), 1);
 
-        sets[cmsSigGrayData].push_back(Component(_("G:"), _("Gray"), 1)); // TYPE_GRAY_16
+        sets[cmsSigGrayData].emplace_back(_("G:"), _("Gray"), 1); // TYPE_GRAY_16
 
-        sets[cmsSigHsvData].push_back(Component(_("_H:"), _("Hue"), 360)); // TYPE_HSV_16
-        sets[cmsSigHsvData].push_back(Component(_("_S:"), _("Saturation"), 1));
-        sets[cmsSigHsvData].push_back(Component("_V:", "Value", 1));
+        sets[cmsSigHsvData].emplace_back(_("_H:"), _("Hue"), 360); // TYPE_HSV_16
+        sets[cmsSigHsvData].emplace_back(_("_S:"), _("Saturation"), 1);
+        sets[cmsSigHsvData].emplace_back("_V:", "Value", 1);
 
-        sets[cmsSigHlsData].push_back(Component(_("_H:"), _("Hue"), 360)); // TYPE_HLS_16
-        sets[cmsSigHlsData].push_back(Component(_("_L:"), _("Lightness"), 1));
-        sets[cmsSigHlsData].push_back(Component(_("_S:"), _("Saturation"), 1));
+        sets[cmsSigHlsData].emplace_back(_("_H:"), _("Hue"), 360); // TYPE_HLS_16
+        sets[cmsSigHlsData].emplace_back(_("_L:"), _("Lightness"), 1);
+        sets[cmsSigHlsData].emplace_back(_("_S:"), _("Saturation"), 1);
 
-        sets[cmsSigCmykData].push_back(Component(_("_C:"), _("Cyan"), 1)); // TYPE_CMYK_16
-        sets[cmsSigCmykData].push_back(Component(_("_M:"), _("Magenta"), 1));
-        sets[cmsSigCmykData].push_back(Component(_("_Y:"), _("Yellow"), 1));
-        sets[cmsSigCmykData].push_back(Component(_("_K:"), _("Black"), 1));
+        sets[cmsSigCmykData].emplace_back(_("_C:"), _("Cyan"), 1); // TYPE_CMYK_16
+        sets[cmsSigCmykData].emplace_back(_("_M:"), _("Magenta"), 1);
+        sets[cmsSigCmykData].emplace_back(_("_Y:"), _("Yellow"), 1);
+        sets[cmsSigCmykData].emplace_back(_("_K:"), _("Black"), 1);
 
-        sets[cmsSigCmyData].push_back(Component(_("_C:"), _("Cyan"), 1)); // TYPE_CMY_16
-        sets[cmsSigCmyData].push_back(Component(_("_M:"), _("Magenta"), 1));
-        sets[cmsSigCmyData].push_back(Component(_("_Y:"), _("Yellow"), 1));
+        sets[cmsSigCmyData].emplace_back(_("_C:"), _("Cyan"), 1); // TYPE_CMY_16
+        sets[cmsSigCmyData].emplace_back(_("_M:"), _("Magenta"), 1);
+        sets[cmsSigCmyData].emplace_back(_("_Y:"), _("Yellow"), 1);
 
         for (auto & set : sets) {
             knownColorspaces.insert(set.first);

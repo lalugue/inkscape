@@ -440,7 +440,7 @@ object_distribute_text(const Glib::VariantBase& value, InkscapeApplication *app)
                 if (base[Geom::Y] < b_min[Geom::Y]) b_min[Geom::Y] = base[Geom::Y];
                 if (base[Geom::X] > b_max[Geom::X]) b_max[Geom::X] = base[Geom::X];
                 if (base[Geom::Y] > b_max[Geom::Y]) b_max[Geom::Y] = base[Geom::Y];
-                baselines.emplace_back(Baseline(item, base, orientation));
+                baselines.emplace_back(item, base, orientation);
             }
         }
     }

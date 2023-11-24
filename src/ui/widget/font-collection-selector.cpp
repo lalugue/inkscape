@@ -59,8 +59,8 @@ void FontCollectionSelector::setup_tree_view(Gtk::TreeView *tv)
     treeview->set_headers_visible (false);
 
     // Target entries for Drag and Drop.
-    target_entries.emplace_back(Gtk::TargetEntry("STRING", (Gtk::TargetFlags)0, 0));
-    target_entries.emplace_back(Gtk::TargetEntry("text/plain", (Gtk::TargetFlags)0, 0));
+    target_entries.emplace_back("STRING", (Gtk::TargetFlags)0, 0);
+    target_entries.emplace_back("text/plain", (Gtk::TargetFlags)0, 0);
 
     treeview->drag_dest_set(target_entries, Gtk::DEST_DEFAULT_ALL, Gdk::ACTION_COPY);
 

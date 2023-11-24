@@ -91,7 +91,7 @@ DialogContainer::DialogContainer(InkscapeWindow* inkscape_window)
         sigc::bind<DialogMultipaned *>(sigc::mem_fun(*this, &DialogContainer::append_drop), columns)));
 
     // Setup drop targets.
-    target_entries.emplace_back(Gtk::TargetEntry("GTK_NOTEBOOK_TAB"));
+    target_entries.emplace_back("GTK_NOTEBOOK_TAB");
     columns->set_target_entries(target_entries);
 
     add(*columns);
