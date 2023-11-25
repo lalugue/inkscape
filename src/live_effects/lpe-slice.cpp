@@ -150,12 +150,14 @@ LPESlice::newWidget()
 void
 LPESlice::centerVert(){
     center_vert = true;
+    sp_lpe_item_update_patheffect(sp_lpe_item, false, false);
     makeUndoDone(_("Center Vertical"));
 }
 
 void
 LPESlice::centerHoriz(){
     center_horiz = true;
+    sp_lpe_item_update_patheffect(sp_lpe_item, false, false);
     makeUndoDone(_("Center Horizontal"));
 }
 

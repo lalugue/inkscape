@@ -22,6 +22,7 @@
 
 namespace Inkscape::LivePathEffect {
 
+static constexpr double BSPLINE_TOL = 0.001;
 static constexpr double NO_POWER = 0.0;
 static constexpr double DEFAULT_START_POWER = 1.0 / 3.0;
 static constexpr double DEFAULT_END_POWER = 2.0 / 3.0;
@@ -111,7 +112,8 @@ Gtk::Widget *LPEBSpline::newWidget()
             UI::pack_start(*buttons, *make_cusp, true, true, 2);
 
             UI::pack_start(*vbox, *buttons, true, true, 2);
-        } else if (param->param_key == "weight" || param->param_key == "steps") {
+        }
+        if (param->param_key == "weight" || param->param_key == "steps") {
             auto &scalar = dynamic_cast<UI::Widget::Scalar &>(*widg);
             scalar.signal_value_changed().connect(sigc::mem_fun(*this, &LPEBSpline::toWeight));
 
@@ -136,18 +138,21 @@ Gtk::Widget *LPEBSpline::newWidget()
 void LPEBSpline::toDefaultWeight()
 {
     changeWeight(DEFAULT_START_POWER * 100);
+    sp_lpe_item_update_patheffect(sp_lpe_item, false, false);
     makeUndoDone(_("Change to default weight"));
 }
 
 void LPEBSpline::toMakeCusp()
 {
     changeWeight(NO_POWER);
+    sp_lpe_item_update_patheffect(sp_lpe_item, false, false);
     makeUndoDone(_("Change to 0 weight"));
 }
 
 void LPEBSpline::toWeight()
 {
     changeWeight(weight);
+    sp_lpe_item_update_patheffect(sp_lpe_item, false, false);
     makeUndoDone(_("Change scalar parameter"));
 }
 
@@ -430,7 +435,7 @@ void LPEBSpline::doBSplineFromWidget(SPCurve *curve, double weight_ammount)
                 {
                     if (isNodePointSelected(point_at3) || !only_selected) {
                         point_at2 = sbasis_in.valueAt(1 - weight_ammount);
-                        if (weight_ammount != NO_POWER) {
+                        if (!Geom::are_near(weight_ammount, NO_POWER, BSPLINE_TOL)) {
                             point_at2 =
                                 Geom::Point(point_at2[X], point_at2[Y]);
                         }
@@ -442,8 +447,8 @@ void LPEBSpline::doBSplineFromWidget(SPCurve *curve, double weight_ammount)
                 }
             } else {
                 if ((apply_no_weight && apply_with_weight) || 
-                    (apply_no_weight && weight_ammount == NO_POWER) ||
-                    (apply_with_weight && weight_ammount != NO_POWER))
+                    (apply_no_weight && Geom::are_near(weight_ammount, NO_POWER, BSPLINE_TOL)) ||
+                    (apply_with_weight && !Geom::are_near(weight_ammount, NO_POWER, BSPLINE_TOL)))
                 {
                     if (isNodePointSelected(point_at0) || !only_selected) {
                         point_at1 = sbasis_in.valueAt(weight_ammount);

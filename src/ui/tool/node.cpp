@@ -131,6 +131,7 @@ bool are_collinear_within_serializing_error(const Geom::Point &A, const Geom::Po
 namespace Inkscape {
 namespace UI {
 
+const double BSPLINE_TOL = 0.001;
 const double NO_POWER = 0.0;
 const double DEFAULT_START_POWER = 1.0/3.0;
 
@@ -1076,7 +1077,7 @@ void Node::setType(NodeType type, bool update_handles)
         // with NO_POWER power in border mode, or give them the default power in curve mode.
         if (_pm()._isBSpline()) {
             double weight = NO_POWER;
-            if (_pm()._bsplineHandlePosition(this->front()) != NO_POWER) {
+            if (!Geom::are_near(_pm()._bsplineHandlePosition(this->front()), NO_POWER, BSPLINE_TOL)) {
                 weight = DEFAULT_START_POWER;
             }
             _front.setPosition(_pm()._bsplineHandleReposition(this->front(), weight));

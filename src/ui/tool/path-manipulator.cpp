@@ -54,7 +54,7 @@ enum PathChange {
 };
 
 } // anonymous namespace
-
+static constexpr double BSPLINE_TOL = 0.001;
 static constexpr double NO_POWER = 0.0;
 static constexpr double DEFAULT_START_POWER = 1.0/3.0;
 
@@ -1385,7 +1385,7 @@ double PathManipulator::_bsplineHandlePosition(Handle *h, bool check_other)
             pos = Geom::nearest_time(h->position(), *line_inside_nodes.first_segment());
         }
     }
-    if (pos == NO_POWER && check_other){
+    if (Geom::are_near(pos, NO_POWER, BSPLINE_TOL) && check_other){
         return _bsplineHandlePosition(h->other(), false);
     }
     return pos;
@@ -1408,13 +1408,13 @@ Geom::Point PathManipulator::_bsplineHandleReposition(Handle *h,double pos){
     SPCurve line_inside_nodes;
     Node * next_node = nullptr;
     next_node = n->nodeToward(h);
-    if(next_node && pos != NO_POWER){
+    if(next_node && !Geom::are_near(pos, NO_POWER, BSPLINE_TOL)){
         line_inside_nodes.moveto(n->position());
         line_inside_nodes.lineto(next_node->position());
         sbasis_inside_nodes = line_inside_nodes.first_segment()->toSBasis();
         ret = sbasis_inside_nodes.valueAt(pos);
     } else{
-        if(pos == NO_POWER){
+        if(Geom::are_near(pos, NO_POWER, BSPLINE_TOL)){
             ret = n->position();
         }
     }
