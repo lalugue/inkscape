@@ -119,18 +119,28 @@ appimage:linux:
       - Inkscape*.AppImage*
 
 
-inkscape:macos:x64:
+inkscape:macos:
   stage: build
-  tags:
-    - mac
+  parallel:
+    matrix:
+      - RUNNER: [ "macosintel", "macosarm" ]
   rules:
     - *do_not_run_for_schedules
     # Mac runner is restricted to "inkscape" and "dehesselle" namespaces; only generate pipelines for those
-    - if: '$CI_PROJECT_NAMESPACE == "inkscape"'
-    - if: '$CI_PROJECT_NAMESPACE == "dehesselle"'
+    - if: $CI_PROJECT_NAMESPACE != "inkscape" && $CI_PROJECT_NAMESPACE != "dehesselle"
+      when: never
+    # Intel runner
+    - if: $RUNNER == "macosintel"
+      variables:
+        MACOSX_DEPLOYMENT_TARGET: "10.13"
+    # Apple Silicon runner
+    - if: $RUNNER == "macosarm"
+      variables:
+        SDKROOT: /opt/sdks/MacOSX11.3.sdk
+  tags:
+    - ${RUNNER}
   variables:
     INK_BUILD: $CI_PIPELINE_IID
-    MACOSX_DEPLOYMENT_TARGET: "10.13"
     WRK_DIR: /Users/Shared/work
   script:
     - packaging/macos/build.sh
@@ -139,21 +149,6 @@ inkscape:macos:x64:
     paths:
       - Inkscape*.dmg
       - toolset_overlay.tar.xz
-
-
-inkscape:macos:arm:
-  extends: inkscape:macos:x64
-  tags:
-    - saas-macos-medium-m1
-  image: macos-12-xcode-14
-  variables:
-    MACOSX_DEPLOYMENT_TARGET: "11.3"
-    CCACHE_DIR: $CI_PROJECT_DIR/ccache
-    SYS_USRLOCAL_IGNORE: "true"
-  cache:
-    key: "cache-macos"
-    paths:
-      - ccache
 
 
 .windows:
@@ -233,12 +228,17 @@ test:linux:
       - build/Testing
     when: on_failure
 
-test:macos:arm:
-  extends: inkscape:macos:arm
+test:macos:
+  extends: inkscape:macos
   stage: test
-  dependencies:
-    - inkscape:macos:arm
-  needs: ["inkscape:macos:arm"]
+  parallel:
+    matrix:
+      - RUNNER: [ "macosintel" ]
+  needs:
+    - job: inkscape:macos
+      parallel:
+        matrix:
+          - RUNNER: macosintel
   script:
     - packaging/macos/test.sh
   artifacts:
