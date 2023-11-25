@@ -502,7 +502,7 @@ SPDocument *SPDocument::createDoc(Inkscape::XML::Document *rdoc,
     if (version.size() > 4) {
         version.erase(5);
         if (version == "1.3.1") {
-            sp_file_fix_d_on_shapes(document->getRoot());
+            document->getRoot()->updateRepr(SP_OBJECT_CHILD_MODIFIED_FLAG);
         }
     }
     /** Fix dpi (pre-92 files). With GUI fixed in Inkscape::Application::fix_document. **/

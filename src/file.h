@@ -173,7 +173,6 @@ void sp_file_convert_dpi(SPDocument *doc);
 void sp_file_fix_empty_lines(SPDocument *doc);
 void sp_file_fix_osb(SPObject *doc);
 void sp_file_fix_feComposite(SPObject *doc);
-void sp_file_fix_d_on_shapes(SPObject *obj);
 void sp_file_fix_lpe(SPDocument *doc);
 enum File_DPI_Fix { FILE_DPI_UNCHANGED = 0, FILE_DPI_VIEWBOX_SCALED, FILE_DPI_DOCUMENT_SCALED };
 extern int sp_file_convert_dpi_method_commandline;
