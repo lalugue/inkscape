@@ -1534,6 +1534,8 @@ void Effect::doOnApply_impl(SPLPEItem const* lpeitem)
     lpeversion.param_setValue("1", true);
     doOnApply(lpeitem);
     setReady();
+    // this allow keep items stored as LPE items (paths instead ellipses...)
+    sp_lpe_item->updateRepr(SP_OBJECT_CHILD_MODIFIED_FLAG);
     has_exception = false;
 }
 
