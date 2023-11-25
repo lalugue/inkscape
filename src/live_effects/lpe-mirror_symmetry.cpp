@@ -194,12 +194,14 @@ LPEMirrorSymmetry::newWidget()
 void
 LPEMirrorSymmetry::centerVert(){
     center_vert = true;
+    sp_lpe_item_update_patheffect(sp_lpe_item, false, false, true);
     makeUndoDone(_("Center Vertical"));
 }
 
 void
 LPEMirrorSymmetry::centerHoriz(){
     center_horiz = true;
+    sp_lpe_item_update_patheffect(sp_lpe_item, false, false, true);
     makeUndoDone(_("Center Horizontal"));
 }
 
