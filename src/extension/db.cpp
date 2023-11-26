@@ -32,9 +32,6 @@ namespace Extension {
 DB db;
 
 /* Types */
-
-DB::DB (void) = default;
-
 struct ModuleGenericCmp
 {
     bool operator()(Extension *module1, Extension *module2) const
@@ -82,15 +79,25 @@ struct ModuleOutputCmp {
     }
 };
 
+/**
+ * @brief Take the ownership of an extension to ensure that it is freed on program exit.
+ * @param module An owning pointer to the extension.
+ */
+void DB::take_ownership(std::unique_ptr<Extension> module)
+{
+    if (module) {
+        register_ext(module.get());
+        _extensions.emplace_back(std::move(module));
+    }
+}
 
 /**
-	\brief     Add a module to the module database
+    \brief     Add a module to the module database for lookup purposes. Does not imply ownership.
 	\param     module  The module to be registered.
 */
 void
 DB::register_ext (Extension *module)
 {
-    g_return_if_fail(module != nullptr);
     g_return_if_fail(module->get_id() != nullptr);
 
     //printf("Registering: '%s' '%s' add:%d\n", module->get_id(), module->get_name(), add_to_list);
@@ -98,9 +105,7 @@ DB::register_ext (Extension *module)
     // only add to list if it's a never-before-seen module
     auto iter = moduledict.find(module->get_id());
     if (iter != moduledict.end()) {
-        Extension *previous = iter->second;
-        unregister_ext(previous);
-        delete previous;
+        unregister_ext(iter->second);
     }
     moduledict[module->get_id()] = module;
     modulelist.push_back( module );

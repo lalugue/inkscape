@@ -247,16 +247,14 @@ Effect::effect (SPDesktop * desktop)
     \param in_effect  The effect that has been called
 
     This function sets the static variable \c _last_effect
-
-    If the \c in_effect variable is \c NULL then the last effect
-    verb is made insensitive.
 */
 void
 Effect::set_last_effect (Effect * in_effect)
 {
     _last_effect = in_effect;
-    enable_effect_actions(InkscapeApplication::instance(), !!in_effect);
-    return;
+    if (in_effect) {
+        enable_effect_actions(InkscapeApplication::instance(), true);
+    }
 }
 
 Inkscape::XML::Node *

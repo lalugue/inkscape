@@ -72,7 +72,7 @@ Extension::Extension(Inkscape::XML::Node *in_repr, Implementation::Implementatio
     Inkscape::GC::anchor(repr);
 
     if (in_imp == nullptr) {
-        imp = new Implementation::Implementation();
+        imp = new Implementation::Implementation(); // TODO: fix leak
     } else {
         imp = in_imp;
     }
@@ -172,33 +172,11 @@ Extension::Extension(Inkscape::XML::Node *in_repr, Implementation::Implementatio
         throw extension_not_compatible();
     }
 #endif
-
-    // finally register the extension if all checks passed
-    db.register_ext (this);
 }
 
-/**
-    \return   none
-    \brief    Destroys the Extension
-
-    This function frees all of the strings that could be attached
-    to the extension and also unreferences the repr.  This is better
-    than freeing it because it may (I wouldn't know why) be referenced
-    in another place.
-*/
-Extension::~Extension ()
+Extension::~Extension()
 {
-    set_state(STATE_UNLOADED);
-
-    db.unregister_ext(this);
-
     Inkscape::GC::release(repr);
-
-    _id  .clear();
-    _name.clear();
-    timer.reset();
-    _widgets.clear();
-    _deps.clear();
 }
 
 /**

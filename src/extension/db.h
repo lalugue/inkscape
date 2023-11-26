@@ -16,22 +16,22 @@
 #ifndef SEEN_MODULES_DB_H
 #define SEEN_MODULES_DB_H
 
-#include <map>
 #include <list>
 #include <cstring>
-
-#include <glib.h>
+#include <map>
+#include <memory>
 #include <vector>
 
+#include <glib.h>
 
-namespace Inkscape {
-namespace Extension {
+#include "extension.h"
+
+namespace Inkscape::Extension {
 
 class Template; // New
 class Input;    // Load
 class Output;   // Save
 class Effect;   // Modify
-class Extension;
 
 class DB {
 private:
@@ -55,16 +55,24 @@ private:
         lists via "foreach" */
     std::list <Extension *> modulelist;
 
-    static void foreach_internal (gpointer in_key, gpointer in_value, gpointer in_data);
+    /// Owning pointers to extensions to ensure their destruction on application exit.
+    std::vector<std::unique_ptr<Extension>> _extensions;
 
 public:
-    DB ();
-    Extension * get (const gchar *key) const;
-    void register_ext (Extension *module);
-    void unregister_ext (Extension *module);
-    void foreach (void (*in_func)(Extension * in_plug, gpointer in_data), gpointer in_data);
+    DB() = default;
+    DB(const DB &)            = delete;
+    DB(DB &&)                 = delete;
+    DB &operator=(const DB &) = delete;
+    DB &operator=(DB &&)      = delete;
+
+    Extension *get(const gchar *key) const;
+    void take_ownership(std::unique_ptr<Extension> module);
+    void foreach(void (*in_func)(Extension * in_plug, gpointer in_data), gpointer in_data);
 
 private:
+    void register_ext(Extension *module);
+    void unregister_ext(Extension *module);
+
     static void template_internal(Extension *in_plug, gpointer data);
     static void input_internal (Extension * in_plug, gpointer data);
     static void output_internal (Extension * in_plug, gpointer data);
@@ -85,7 +93,7 @@ public:
 
 extern DB db;
 
-} } /* namespace Extension, Inkscape */
+}  // namespace Inkscape::Extension
 
 #endif // SEEN_MODULES_DB_H
 

@@ -387,36 +387,36 @@ build_from_reprdoc(Inkscape::XML::Document *doc, Implementation::Implementation 
         imp = in_imp;
     }
 
-    Extension *module = nullptr;
+    std::unique_ptr<Extension> module;
     try {
         switch (module_functional_type) {
             case MODULE_INPUT: {
-                module = new Input(repr, imp, baseDir);
+                module = std::make_unique<Input>(repr, imp, baseDir);
                 break;
             }
             case MODULE_TEMPLATE: {
-                module = new Template(repr, imp, baseDir);
+                module = std::make_unique<Template>(repr, imp, baseDir);
                 break;
             }
             case MODULE_OUTPUT: {
-                module = new Output(repr, imp, baseDir);
+                module = std::make_unique<Output>(repr, imp, baseDir);
                 break;
             }
             case MODULE_FILTER: {
-                module = new Effect(repr, imp, baseDir, file_name);
+                module = std::make_unique<Effect>(repr, imp, baseDir, file_name);
                 break;
             }
             case MODULE_PRINT: {
-                module = new Print(repr, imp, baseDir);
+                module = std::make_unique<Print>(repr, imp, baseDir);
                 break;
             }
             case MODULE_PATH_EFFECT: {
-                module = new PathEffect(repr, imp, baseDir);
+                module = std::make_unique<PathEffect>(repr, imp, baseDir);
                 break;
             }
             default: {
                 g_warning("Extension of unknown type!"); // TODO: Should not happen! Is this even useful?
-                module = new Extension(repr, imp, baseDir);
+                module = std::make_unique<Extension>(repr, imp, baseDir);
                 break;
             }
         }
@@ -428,11 +428,11 @@ build_from_reprdoc(Inkscape::XML::Document *doc, Implementation::Implementation 
         return true; // This is not an actual error; just silently ignore the extension
     }
 
-    if (module) {
-        return true;
+    const bool success = bool(module);
+    if (success) {
+        db.take_ownership(std::move(module));
     }
-
-    return false;
+    return success;
 }
 
 /**
