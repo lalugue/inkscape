@@ -16,10 +16,9 @@
 #ifndef SEEN_MODULES_DB_H
 #define SEEN_MODULES_DB_H
 
-#include <list>
-#include <cstring>
-#include <map>
+#include <string>
 #include <memory>
+#include <unordered_map>
 #include <vector>
 
 #include <glib.h>
@@ -35,44 +34,20 @@ class Effect;   // Modify
 
 class DB {
 private:
-    /** A string comparison function to be used in the moduledict
-        to find the different extensions in the hash map. */
-    struct ltstr {
-        bool operator()(const char* s1, const char* s2) const {
-            if ( (s1 == nullptr) && (s2 != nullptr) ) {
-                return true;
-            } else if (s1 == nullptr || s2 == nullptr) {
-                return false;
-            } else {
-                return strcmp(s1, s2) < 0;
-            }
-        }
-    };
     /** This is the actual database.  It has all of the modules in it,
         indexed by their ids.  It's a hash table for faster lookups */
-    std::map <const char *, Extension *, ltstr> moduledict;
-    /** Maintain an ordered list of modules for generating the extension
-        lists via "foreach" */
-    std::list <Extension *> modulelist;
-
-    /// Owning pointers to extensions to ensure their destruction on application exit.
-    std::vector<std::unique_ptr<Extension>> _extensions;
+    std::unordered_map<std::string, std::unique_ptr<Extension>> moduledict;
 
 public:
     DB() = default;
-    DB(const DB &)            = delete;
-    DB(DB &&)                 = delete;
-    DB &operator=(const DB &) = delete;
-    DB &operator=(DB &&)      = delete;
+    DB(DB &&)            = delete; // Database is non-movable, hence also non-copyable.
+    DB &operator=(DB &&) = delete;
 
     Extension *get(const gchar *key) const;
     void take_ownership(std::unique_ptr<Extension> module);
     void foreach(void (*in_func)(Extension * in_plug, gpointer in_data), gpointer in_data);
 
 private:
-    void register_ext(Extension *module);
-    void unregister_ext(Extension *module);
-
     static void template_internal(Extension *in_plug, gpointer data);
     static void input_internal (Extension * in_plug, gpointer data);
     static void output_internal (Extension * in_plug, gpointer data);

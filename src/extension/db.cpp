@@ -28,7 +28,7 @@
 namespace Inkscape {
 namespace Extension {
 
-/** This is the actual database object.  There is only one of these */
+/** This is the actual database object. There is only one of these. */
 DB db;
 
 /* Types */
@@ -86,48 +86,7 @@ struct ModuleOutputCmp {
 void DB::take_ownership(std::unique_ptr<Extension> module)
 {
     if (module) {
-        register_ext(module.get());
-        _extensions.emplace_back(std::move(module));
-    }
-}
-
-/**
-    \brief     Add a module to the module database for lookup purposes. Does not imply ownership.
-	\param     module  The module to be registered.
-*/
-void
-DB::register_ext (Extension *module)
-{
-    g_return_if_fail(module->get_id() != nullptr);
-
-    //printf("Registering: '%s' '%s' add:%d\n", module->get_id(), module->get_name(), add_to_list);
-
-    // only add to list if it's a never-before-seen module
-    auto iter = moduledict.find(module->get_id());
-    if (iter != moduledict.end()) {
-        unregister_ext(iter->second);
-    }
-    moduledict[module->get_id()] = module;
-    modulelist.push_back( module );
-}
-
-/**
-	\brief     This function removes a module from the database
-	\param     module  The module to be removed.
-*/
-void
-DB::unregister_ext (Extension * module)
-{
-    g_return_if_fail(module != nullptr);
-    g_return_if_fail(module->get_id() != nullptr);
-
-    // printf("Extension DB: removing %s\n", module->get_id());
-
-    // only remove if it's not there any more
-    auto iter = moduledict.find(module->get_id());
-    if (iter != moduledict.end() && module == iter->second) {
-        moduledict.erase(iter);
-	modulelist.remove(module);
+        moduledict[module->get_id()] = std::move(module);
     }
 }
 
@@ -137,23 +96,20 @@ DB::unregister_ext (Extension * module)
 	           id.  It then returns a reference to that module.
 	\param     key   The unique ID of the module
 
-	Retrieves a module by name; if non-NULL, it refs the returned
-  	module; the caller is responsible for releasing that reference
-	when it is no longer needed.
+    Retrieves a module by name or nullptr if not found.
 */
-Extension *
-DB::get (const gchar *key) const
+Extension *DB::get(const gchar *key) const
 {
-        if (key == nullptr) return nullptr;
+    if (key == nullptr) return nullptr;
 
 	auto it = moduledict.find(key);
 	if (it == moduledict.end())
 		return nullptr;
 
-	Extension *mod = it->second;
+	Extension *mod = it->second.get();
 	assert(mod);
 
-	if ( !mod || mod->deactivated() )
+    if (!mod || mod->deactivated())
 		return nullptr;
 
 	return mod;
@@ -169,15 +125,11 @@ DB::get (const gchar *key) const
  	Enumerates the modules currently in the database, calling a given
 	callback for each one.
 */
-void
-DB::foreach (void (*in_func)(Extension * in_plug, gpointer in_data), gpointer in_data)
+void DB::foreach(void (*in_func)(Extension *, gpointer), gpointer in_data)
 {
-	std::list <Extension *>::iterator cur;
-
-	for (cur = modulelist.begin(); cur != modulelist.end(); ++cur) {
-		// printf("foreach: %s\n", (*cur)->get_id());
-		in_func((*cur), in_data);
-	}
+    for (auto const &item : moduledict) {
+        in_func(item.second.get(), in_data);
+    }
 }
 
 /**
@@ -239,8 +191,6 @@ DB::output_internal (Extension * in_plug, gpointer data)
 		olist->push_back(omod);
 		// printf("Added to output list: %s\n", omod->get_id());
 	}
-
-	return;
 }
 
 /**
@@ -267,8 +217,6 @@ DB::effect_internal (Extension * in_plug, gpointer data)
 		elist->push_back(emod);
 		// printf("Added to effect list: %s\n", emod->get_id());
 	}
-
-	return;
 }
 
 /**
@@ -317,7 +265,8 @@ DB::get_output_list (DB::OutputList &ou_list)
 */
 std::vector<Effect*> DB::get_effect_list() {
     std::vector<Effect*> out;
-    for (auto ex : modulelist) {
+    for (auto const &item : moduledict) {
+        auto ex = item.second.get();
         if (auto effect = dynamic_cast<Effect*>(ex)) {
             out.push_back(effect);
         }

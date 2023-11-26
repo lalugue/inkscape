@@ -462,9 +462,10 @@ build_from_file(gchar const *filename)
 }
 
 /**
- * \brief    This function creates a module from a buffer holding an
- *           XML description.
- * \param    buffer  The buffer holding the XML description of the module.
+ * \brief Create a module from a buffer holding an XML description.
+ * \param buffer The buffer holding the XML description of the module.
+ * \param in_imp An owning pointer to a freshly created implementation.
+ * \todo The implementation currently leaks! Fix the leak by taking an owning pointer to the implementation.
  *
  * This function calls build_from_reprdoc with using sp_repr_read_mem to create the reprdoc.  It
  * finds the length of the buffer using strlen.
