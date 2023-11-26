@@ -9,6 +9,9 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#include <string>
+#include <vector>
+
 #include <libintl.h>
 
 #include <gtkmm/box.h>
@@ -18,100 +21,62 @@
 #include <glib/gstdio.h>
 
 #include "desktop.h"
-
 #include "selection.h"
-
 #include "extension/effect.h"
 #include "extension/system.h"
-
 #include "imagemagick.h"
-#include <Magick++.h>
-
 #include "xml/href-attribute-helper.h"
+
+#include <Magick++.h>
 
 namespace Inkscape {
 namespace Extension {
 namespace Internal {
 namespace Bitmap {
 
+namespace {
+struct ImageInfo {
+    Inkscape::XML::Node* node = nullptr;
+    std::unique_ptr<Magick::Image> image;
+    std::string cache;
+    std::string original;
+    SPItem* item = nullptr;
+};
+}
 class ImageMagickDocCache: public Inkscape::Extension::Implementation::ImplementationDocumentCache {
     friend class ImageMagick;
 private:
-    void readImage(char const *xlink, char const *id, Magick::Image *image);
+    void readImage(char const *xlink, char const *id, Magick::Image &image);
 protected:
-    Inkscape::XML::Node** _nodes;    
-    
-    Magick::Image** _images;
-    int _imageCount;
-    char** _caches;
-    unsigned* _cacheLengths;
-    const char** _originals;
-    SPItem** _imageItems;
+    std::vector<ImageInfo> images;
 public:
     ImageMagickDocCache(SPDesktop *desktop);
-    ~ImageMagickDocCache ( ) override;
 };
 
-ImageMagickDocCache::ImageMagickDocCache(SPDesktop *desktop) :
-    Inkscape::Extension::Implementation::ImplementationDocumentCache(desktop),
-    _nodes(NULL),
-    _images(NULL),
-    _imageCount(0),
-    _caches(NULL),
-    _cacheLengths(NULL),
-    _originals(NULL),
-    _imageItems(NULL)
+ImageMagickDocCache::ImageMagickDocCache(SPDesktop *desktop)
+    : Inkscape::Extension::Implementation::ImplementationDocumentCache(desktop)
 {
-    auto selectedItemList = desktop->getSelection()->items();
-    int selectCount = (int) boost::distance(selectedItemList);
-    
-    // Init the data-holders
-    _nodes = new Inkscape::XML::Node*[selectCount];
-    _originals = new const char*[selectCount];
-    _caches = new char*[selectCount];
-    _cacheLengths = new unsigned int[selectCount];
-    _images = new Magick::Image*[selectCount];
-    _imageCount = 0;
-    _imageItems = new SPItem*[selectCount];
+    auto selected_item_list = desktop->getSelection()->items();
+    images.reserve(boost::distance(selected_item_list));
 
     // Loop through selected items
-    for (auto i = selectedItemList.begin(); i != selectedItemList.end(); ++i) {
-        SPItem *item = *i;
-        Inkscape::XML::Node *node = reinterpret_cast<Inkscape::XML::Node *>(item->getRepr());
-        if (!strcmp(node->name(), "image") || !strcmp(node->name(), "svg:image"))
-        {
-            _nodes[_imageCount] = node;    
-            char const *xlink = Inkscape::getHrefAttribute(*node).second;
-            char const *id = node->attribute("id");
-            _originals[_imageCount] = xlink;
-            _caches[_imageCount] = (char*)"";
-            _cacheLengths[_imageCount] = 0;
-            _images[_imageCount] = new Magick::Image();
-            readImage(xlink, id, _images[_imageCount]);
-            _imageItems[_imageCount] = item;
-            _imageCount++;
+    for (auto item : selected_item_list) {
+        Inkscape::XML::Node *node = item->getRepr();
+        if (strcmp(node->name(), "image") != 0 && strcmp(node->name(), "svg:image") != 0) {
+            continue;
         }
+        char const *xlink = Inkscape::getHrefAttribute(*node).second;
+        images.push_back({
+            .node = node,
+            .image = std::make_unique<Magick::Image>(),
+            .original = xlink,
+            .item = item
+        });
+        readImage(xlink, node->attribute("id"), *images.back().image);
     }
 }
 
-ImageMagickDocCache::~ImageMagickDocCache ( ) {
-    if (_nodes)
-        delete _nodes;
-    if (_originals)
-        delete _originals;
-    if (_caches)
-        delete _caches;
-    if (_cacheLengths)
-        delete _cacheLengths;
-    if (_images)
-        delete _images;
-    if (_imageItems)
-        delete _imageItems;
-    return;
-}
-
-void
-ImageMagickDocCache::readImage(const char *xlink, const char *id, Magick::Image *image)
+void ImageMagickDocCache::readImage(const char *xlink, const char *id, Magick::Image &image)
 {
     // Find if the xlink:href is base64 data, i.e. if the image is embedded 
     gchar *search = g_strndup(xlink, 30);
@@ -121,7 +86,7 @@ ImageMagickDocCache::readImage(const char *xlink, const char *id, Magick::Image 
         Magick::Blob blob;
         blob.base64(pureBase64);
         try {
-            image->read(blob);
+            image.read(blob);
         } catch (Magick::Exception &error_) {
             g_warning("ImageMagick could not read '%s'\nDetails: %s", id, error_.what());
         }
@@ -133,7 +98,7 @@ ImageMagickDocCache::readImage(const char *xlink, const char *id, Magick::Image 
             path = g_strdup(xlink);
         }
         try {
-            image->read(path);
+            image.read(path);
         } catch (Magick::Exception &error_) {
             g_warning("ImageMagick could not read '%s' from '%s'\nDetails: %s", id, path, error_.what());
         }
@@ -149,7 +114,7 @@ ImageMagick::load(Inkscape::Extension::Extension */*module*/)
 }
 
 Inkscape::Extension::Implementation::ImplementationDocumentCache *
-ImageMagick::newDocCache (Inkscape::Extension::Extension * /*ext*/, SPDesktop *desktop) {
+ImageMagick::newDocCache(Inkscape::Extension::Extension * /*ext*/, SPDesktop *desktop) {
     return new ImageMagickDocCache(desktop);
 }
 
@@ -157,72 +122,37 @@ void
 ImageMagick::effect (Inkscape::Extension::Effect *module, SPDesktop *desktop, Inkscape::Extension::Implementation::ImplementationDocumentCache * docCache)
 {
     refreshParameters(module);
-
-    if (docCache == NULL) { // should never happen
-        docCache = newDocCache(module, desktop);
-    }
     ImageMagickDocCache * dc = dynamic_cast<ImageMagickDocCache *>(docCache);
-    if (dc == NULL) { // should really never happen
-        printf("AHHHHHHHHH!!!!!");
-        std::terminate();
+    if (!dc) { // should really never happen
+        return;
     }
+    unsigned constexpr b64_line_length = 76;
 
-    for (int i = 0; i < dc->_imageCount; i++)
-    {
-        try
-        {
-            Magick::Image effectedImage = *dc->_images[i]; // make a copy
-
-            applyEffect(&effectedImage);
+    try {
+        for (auto &image : dc->images) {
+            Magick::Image effected_image = *image.image; // make a copy
+            applyEffect(&effected_image);
 
             // postEffect can be used to change things on the item itself
             // e.g. resize the image element, after the effecti is applied
-            postEffect(&effectedImage, dc->_imageItems[i]);
+            postEffect(&effected_image, image.item);
 
-//    dc->_nodes[i]->setAttribute("xlink:href", dc->_caches[i]);
+            auto blob = std::make_unique<Magick::Blob>();
+            effected_image.write(blob.get());
 
-            Magick::Blob *blob = new Magick::Blob();
-            effectedImage.write(blob);
-
-            std::string raw_string = blob->base64();
-            const int raw_len = raw_string.length();
-            const char *raw_i = raw_string.c_str();
-
-            unsigned new_len = (int)(raw_len * (77.0 / 76.0) + 100);
-            if (new_len > dc->_cacheLengths[i]) {
-                dc->_cacheLengths[i] = (int)(new_len * 1.2);
-                dc->_caches[i] = new char[dc->_cacheLengths[i]];
+            std::string base64_string = blob->base64();
+            for (size_t newline_pos = b64_line_length;
+                 newline_pos < base64_string.length();
+                 newline_pos += b64_line_length + 1) {
+                base64_string.insert(newline_pos, "\n");
             }
-            char *formatted_i = dc->_caches[i];
-            const char *src;
+            image.cache = "data:image/" + effected_image.magick() + ";base64, \n" + base64_string;
 
-            for (src = "data:image/"; *src; )
-                *formatted_i++ = *src++;
-            for (src = effectedImage.magick().c_str(); *src ; )
-                *formatted_i++ = *src++;
-            for (src = ";base64, \n" ; *src; )
-                *formatted_i++ = *src++;
-
-            int col = 0;
-            while (*raw_i) {
-               *formatted_i++ = *raw_i++;
-               if (col++ > 76) {
-                   *formatted_i++ = '\n';
-                   col = 0;
-               }
-            }            
-            if (col) {
-               *formatted_i++ = '\n';
-            }
-            *formatted_i = '\0';
-
-            Inkscape::setHrefAttribute(*dc->_nodes[i], dc->_caches[i]);
-            dc->_nodes[i]->removeAttribute("sodipodi:absref");
-            delete blob;
+            Inkscape::setHrefAttribute(*image.node, image.cache);
+            image.node->removeAttribute("sodipodi:absref");
         }
-        catch (Magick::Exception &error_) {
-            printf("Caught exception: %s \n", error_.what());
-        }
+    } catch (Magick::Exception &error) {
+        std::cerr << "ImageMagick effect exception:" << error.what() << std::endl;
     }
 }
 
@@ -233,7 +163,8 @@ ImageMagick::effect (Inkscape::Extension::Effect *module, SPDesktop *desktop, In
     Uses AutoGUI for creating the GUI.
 */
 Gtk::Widget *
-ImageMagick::prefs_effect(Inkscape::Extension::Effect *module, SPDesktop *desktop, sigc::signal<void ()> * changeSignal, Inkscape::Extension::Implementation::ImplementationDocumentCache * /*docCache*/)
+ImageMagick::prefs_effect(Inkscape::Extension::Effect *module, SPDesktop *desktop, sigc::signal<void ()> * changeSignal,
+                          Inkscape::Extension::Implementation::ImplementationDocumentCache * /*docCache*/)
 {
   SPDocument * current_document = desktop->doc();
 
