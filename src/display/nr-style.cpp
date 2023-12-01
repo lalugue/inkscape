@@ -310,7 +310,7 @@ auto NRStyle::preparePaint(Inkscape::DrawingContext &dc, Inkscape::RenderContext
     }
 
     // Otherwise, init or re-use cached pattern.
-    cp.inited.init([&, this] {
+    cp.inited.init([&] {
         // Handle remaining non-DrawingPattern cases.
         switch (paint.type) {
             case NRStyleData::PaintType::SERVER:

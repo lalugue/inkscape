@@ -36,7 +36,7 @@ void DrawingImage::setPixbuf(std::shared_ptr<Inkscape::Pixbuf const> pixbuf)
 
 void DrawingImage::setScale(double sx, double sy)
 {
-    defer([=] {
+    defer([=, this] {
         _scale = Geom::Scale(sx, sy);
         _markForUpdate(STATE_ALL, false);
     });
@@ -44,7 +44,7 @@ void DrawingImage::setScale(double sx, double sy)
 
 void DrawingImage::setOrigin(Geom::Point const &origin)
 {
-    defer([=] {
+    defer([=, this] {
         _origin = origin;
         _markForUpdate(STATE_ALL, false);
     });
@@ -52,7 +52,7 @@ void DrawingImage::setOrigin(Geom::Point const &origin)
 
 void DrawingImage::setClipbox(Geom::Rect const &box)
 {
-    defer([=] {
+    defer([=, this] {
         _clipbox = box;
         _markForUpdate(STATE_ALL, false);
     });
@@ -83,7 +83,7 @@ void DrawingImage::setStyle(SPStyle const *style, SPStyle const *context_style)
         image_rendering = _style->image_rendering.computed;
     }
 
-    defer([=] {
+    defer([=, this] {
         style_image_rendering = image_rendering;
     });
 }

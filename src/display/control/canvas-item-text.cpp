@@ -56,7 +56,7 @@ CanvasItemText::CanvasItemText(CanvasItemGroup *group, Geom::Point const &p, Gli
  */
 void CanvasItemText::set_coord(Geom::Point const &p)
 {
-    defer([=] {
+    defer([=, this] {
         if (_p == p) return;
         _p = p;
         request_update();
@@ -68,7 +68,7 @@ void CanvasItemText::set_coord(Geom::Point const &p)
  */
 void CanvasItemText::set_bg_radius(double rad)
 {
-    defer([=] {
+    defer([=, this] {
         if (_bg_rad == rad) return;
         _bg_rad = rad;
         request_update();
@@ -172,7 +172,7 @@ void CanvasItemText::_render(Inkscape::CanvasItemBuffer &buf) const
 
 void CanvasItemText::set_text(Glib::ustring text)
 {
-    defer([=, text = std::move(text)] () mutable {
+    defer([this, text = std::move(text)] () mutable {
         if (_text == text) return;
         _text = std::move(text);
         request_update(); // Might be larger than before!
@@ -181,7 +181,7 @@ void CanvasItemText::set_text(Glib::ustring text)
 
 void CanvasItemText::set_fontsize(double fontsize)
 {
-    defer([=] {
+    defer([=, this] {
         if (_fontsize == fontsize) return;
         _fontsize = fontsize;
         request_update(); // Might be larger than before!
@@ -213,7 +213,7 @@ Geom::Rect CanvasItemText::load_text_extents()
 
 void CanvasItemText::set_background(uint32_t background)
 {
-    defer([=] {
+    defer([=, this] {
         if (_background != background) {
             _background = background;
             request_redraw();
@@ -227,7 +227,7 @@ void CanvasItemText::set_background(uint32_t background)
  */
 void CanvasItemText::set_anchor(Geom::Point const &anchor_pt)
 {
-    defer([=] {
+    defer([=, this] {
         if (_anchor_position == anchor_pt) return;
         _anchor_position = anchor_pt;
         request_update();
@@ -236,7 +236,7 @@ void CanvasItemText::set_anchor(Geom::Point const &anchor_pt)
 
 void CanvasItemText::set_adjust(Geom::Point const &adjust_pt)
 {
-    defer([=] {
+    defer([=, this] {
         if (_adjust_offset == adjust_pt) return;
         _adjust_offset = adjust_pt;
         request_update();
@@ -245,7 +245,7 @@ void CanvasItemText::set_adjust(Geom::Point const &adjust_pt)
 
 void CanvasItemText::set_fixed_line(bool fixed_line)
 {
-    defer([=] {
+    defer([=, this] {
         if (_fixed_line == fixed_line) return;
         _fixed_line = fixed_line;
         request_update();
@@ -254,7 +254,7 @@ void CanvasItemText::set_fixed_line(bool fixed_line)
 
 void CanvasItemText::set_border(double border)
 {
-    defer([=] {
+    defer([=, this] {
         if (_border == border) return;
         _border = border;
         request_update();

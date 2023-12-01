@@ -51,7 +51,7 @@ CanvasItemRect::CanvasItemRect(CanvasItemGroup *group, Geom::Rect const &rect)
  */
 void CanvasItemRect::set_rect(Geom::Rect const &rect)
 {
-    defer([=] {
+    defer([=, this] {
         if (_rect == rect) return;
         _rect = rect;
         request_update();
@@ -185,7 +185,7 @@ void CanvasItemRect::_render(Inkscape::CanvasItemBuffer &buf) const
 
 void CanvasItemRect::set_is_page(bool is_page)
 {
-    defer([=] {
+    defer([=, this] {
         if (_is_page == is_page) return;
         _is_page = is_page;
         request_redraw();
@@ -200,7 +200,7 @@ void CanvasItemRect::set_fill(uint32_t fill)
 
 void CanvasItemRect::set_dashed(bool dashed)
 {
-    defer([=] {
+    defer([=, this] {
         if (_dashed == dashed) return;
         _dashed = dashed;
         request_redraw();
@@ -209,7 +209,7 @@ void CanvasItemRect::set_dashed(bool dashed)
 
 void CanvasItemRect::set_inverted(bool inverted)
 {
-    defer([=] {
+    defer([=, this] {
         if (_inverted == inverted) return;
         _inverted = inverted;
         request_redraw();
@@ -218,7 +218,7 @@ void CanvasItemRect::set_inverted(bool inverted)
 
 void CanvasItemRect::set_shadow(uint32_t color, int width)
 {
-    defer([=] {
+    defer([=, this] {
         if (_shadow_color == color && _shadow_width == width) return;
         _shadow_color = color;
         _shadow_width = width;
@@ -250,7 +250,7 @@ double CanvasItemRect::get_shadow_size() const
 
 void CanvasItemRect::set_stroke_width(int width)
 {
-    defer([=] {
+    defer([=, this] {
         if (_stroke_width == width) return;
         _stroke_width = width;
         request_redraw();

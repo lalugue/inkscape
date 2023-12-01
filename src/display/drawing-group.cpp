@@ -29,7 +29,7 @@ DrawingGroup::DrawingGroup(Drawing &drawing)
  */
 void DrawingGroup::setPickChildren(bool pick_children)
 {
-    defer([=] {
+    defer([=, this] {
         _pick_children = pick_children;
     });
 }
@@ -41,7 +41,7 @@ void DrawingGroup::setPickChildren(bool pick_children)
  */
 void DrawingGroup::setChildTransform(Geom::Affine const &transform)
 {
-    defer([=] {
+    defer([=, this] {
         auto constexpr EPS = 1e-18;
         auto current = _child_transform ? *_child_transform : Geom::identity();
         if (Geom::are_near(transform, current, EPS)) return;

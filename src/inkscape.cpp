@@ -266,7 +266,7 @@ Application::Application(bool use_gui) :
         trackalt(guint(prefs->getInt("/options/trackalt/value", 0)));
 
         /* update highlight colors when theme changes */
-        themecontext->getChangeThemeSignal().connect([=](){
+        themecontext->getChangeThemeSignal().connect([this](){
             themecontext->themechangecallback();
         });
     }

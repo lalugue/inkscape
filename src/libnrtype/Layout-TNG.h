@@ -909,7 +909,7 @@ private:
     inline unsigned _spanToCharacter(unsigned span_index) const
     {
         return std::distance(_characters.begin(),
-            std::lower_bound(_characters.begin(), _characters.end(), span_index, [this] (auto &character, unsigned index) {
+            std::lower_bound(_characters.begin(), _characters.end(), span_index, [] (auto &character, unsigned index) {
                 return character.in_span < index;
             })
         );

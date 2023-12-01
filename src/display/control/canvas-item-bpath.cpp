@@ -59,7 +59,7 @@ void CanvasItemBpath::set_bpath(SPCurve const *curve, bool phantom_line)
  */
 void CanvasItemBpath::set_bpath(Geom::PathVector path, bool phantom_line)
 {
-    defer([=, path = std::move(path)] () mutable {
+    defer([=, this, path = std::move(path)] () mutable {
         _path = std::move(path);
         _phantom_line = phantom_line;
         request_update();
@@ -71,7 +71,7 @@ void CanvasItemBpath::set_bpath(Geom::PathVector path, bool phantom_line)
  */
 void CanvasItemBpath::set_fill(uint32_t fill, SPWindRule fill_rule)
 {
-    defer([=] {
+    defer([=, this] {
         if (_fill == fill && _fill_rule == fill_rule) return;
         _fill = fill;
         _fill_rule = fill_rule;
@@ -81,7 +81,7 @@ void CanvasItemBpath::set_fill(uint32_t fill, SPWindRule fill_rule)
 
 void CanvasItemBpath::set_dashes(std::vector<double> &&dashes)
 {
-    defer([=, dashes = std::move(dashes)] () mutable {
+    defer([this, dashes = std::move(dashes)] () mutable {
         _dashes = std::move(dashes);
     });
 }
@@ -91,7 +91,7 @@ void CanvasItemBpath::set_dashes(std::vector<double> &&dashes)
  */
 void CanvasItemBpath::set_stroke_width(double width)
 {
-    defer([=] {
+    defer([=, this] {
         if (_stroke_width == width) return;
         _stroke_width = width;
         request_redraw();

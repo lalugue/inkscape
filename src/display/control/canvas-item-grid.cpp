@@ -93,7 +93,7 @@ static std::vector<Geom::Point> intersect_line_rectangle(Geom::Line const &line,
 
 void CanvasItemGrid::set_origin(Geom::Point const &point)
 {
-    defer([=] {
+    defer([=, this] {
         if (_origin == point) return;
         _origin = point;
         request_update();
@@ -102,7 +102,7 @@ void CanvasItemGrid::set_origin(Geom::Point const &point)
 
 void CanvasItemGrid::set_major_color(uint32_t color)
 {
-    defer([=] {
+    defer([=, this] {
         if (_major_color == color) return;
         _major_color = color;
         request_update();
@@ -111,7 +111,7 @@ void CanvasItemGrid::set_major_color(uint32_t color)
 
 void CanvasItemGrid::set_minor_color(uint32_t color)
 {
-    defer([=] {
+    defer([=, this] {
         if (_minor_color == color) return;
         _minor_color = color;
         request_update();
@@ -120,7 +120,7 @@ void CanvasItemGrid::set_minor_color(uint32_t color)
 
 void CanvasItemGrid::set_dotted(bool dotted)
 {
-    defer([=] {
+    defer([=, this] {
         if (_dotted == dotted) return;
         _dotted = dotted;
         request_update();
@@ -129,7 +129,7 @@ void CanvasItemGrid::set_dotted(bool dotted)
 
 void CanvasItemGrid::set_spacing(Geom::Point const &point)
 {
-    defer([=] {
+    defer([=, this] {
         if (_spacing == point) return;
         _spacing = point;
         request_update();
@@ -139,7 +139,7 @@ void CanvasItemGrid::set_spacing(Geom::Point const &point)
 void CanvasItemGrid::set_major_line_interval(int n)
 {
     if (n < 1) return;
-    defer([=] {
+    defer([=, this] {
         if (_major_line_interval == n) return;
         _major_line_interval = n;
         request_update();
@@ -360,7 +360,7 @@ void CanvasItemGridAxonom::_update(bool)
 // expects value given to be in degrees
 void CanvasItemGridAxonom::set_angle_x(double deg)
 {
-    defer([=] {
+    defer([=, this] {
         angle_deg[X] = std::clamp(deg, 0.0, 89.0); // setting to 90 and values close cause extreme slowdowns
         angle_rad[X] = Geom::rad_from_deg(angle_deg[X]);
         tan_angle[X] = std::tan(angle_rad[X]);
@@ -371,7 +371,7 @@ void CanvasItemGridAxonom::set_angle_x(double deg)
 // expects value given to be in degrees
 void CanvasItemGridAxonom::set_angle_z(double deg)
 {
-    defer([=] {
+    defer([=, this] {
         angle_deg[Z] = std::clamp(deg, 0.0, 89.0); // setting to 90 and values close cause extreme slowdowns
         angle_rad[Z] = Geom::rad_from_deg(angle_deg[Z]);
         tan_angle[Z] = std::tan(angle_rad[Z]);
@@ -517,7 +517,7 @@ CanvasItemGridTiles::CanvasItemGridTiles(Inkscape::CanvasItemGroup* group)
 }
 
 void CanvasItemGridTiles::set_gap_size(Geom::Point gap_size) {
-    defer([=] {
+    defer([=, this] {
         if (_gap == gap_size) return;
         _gap = gap_size;
         request_update();
@@ -525,7 +525,7 @@ void CanvasItemGridTiles::set_gap_size(Geom::Point gap_size) {
 }
 
 void CanvasItemGridTiles::set_margin_size(Geom::Point margin_size) {
-    defer([=] {
+    defer([=, this] {
         if (_margin == margin_size) return;
         _margin = margin_size;
         request_update();

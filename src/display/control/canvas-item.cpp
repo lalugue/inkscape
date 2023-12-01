@@ -38,7 +38,7 @@ CanvasItem::CanvasItem(CanvasItemGroup *parent)
     , _parent(parent)
 {
     if constexpr (DEBUG_LOGGING) std::cout << "CanvasItem: add " << get_name() << " to " << parent->get_name() << " " << parent->items.size() << std::endl;
-    defer([=] {
+    defer([=, this] {
         parent->items.push_back(*this);
         request_update();
     });
@@ -46,7 +46,7 @@ CanvasItem::CanvasItem(CanvasItemGroup *parent)
 
 void CanvasItem::unlink()
 {
-    defer([=] {
+    defer([=, this] {
         // Clear canvas of item.
         request_redraw();
 
@@ -90,7 +90,7 @@ void CanvasItem::set_z_position(int zpos)
         return;
     }
 
-    defer([=] {
+    defer([=, this] {
         _parent->items.erase(_parent->items.iterator_to(*this));
 
         if (zpos <= 0) {
@@ -112,7 +112,7 @@ void CanvasItem::raise_to_top()
         return;
     }
 
-    defer([=] {
+    defer([=, this] {
         _parent->items.erase(_parent->items.iterator_to(*this));
         _parent->items.push_back(*this);
     });
@@ -125,7 +125,7 @@ void CanvasItem::lower_to_bottom()
         return;
     }
 
-    defer([=] {
+    defer([=, this] {
         _parent->items.erase(_parent->items.iterator_to(*this));
         _parent->items.push_front(*this);
     });
@@ -243,7 +243,7 @@ void CanvasItem::render(CanvasItemBuffer &buf) const
 
 void CanvasItem::set_visible(bool visible)
 {
-    defer([=] {
+    defer([=, this] {
         if (_visible == visible) return;
         if (_visible) {
             request_update();
@@ -266,7 +266,7 @@ void CanvasItem::request_redraw()
 
 void CanvasItem::set_fill(uint32_t fill)
 {
-    defer([=] {
+    defer([=, this] {
         if (_fill == fill) return;
         _fill = fill;
         request_redraw();
@@ -275,7 +275,7 @@ void CanvasItem::set_fill(uint32_t fill)
 
 void CanvasItem::set_stroke(uint32_t stroke)
 {
-    defer([=] {
+    defer([=, this] {
         if (_stroke == stroke) return;
         _stroke = stroke;
         request_redraw();

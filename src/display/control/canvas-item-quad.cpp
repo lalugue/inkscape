@@ -52,7 +52,7 @@ CanvasItemQuad::CanvasItemQuad(CanvasItemGroup *group,
  */
 void CanvasItemQuad::set_coords(Geom::Point const &p0, Geom::Point const &p1, Geom::Point const &p2, Geom::Point const &p3)
 {
-    defer([=] {
+    defer([=, this] {
         _p0 = p0;
         _p1 = p1;
         _p2 = p2;
@@ -149,7 +149,7 @@ void CanvasItemQuad::_render(Inkscape::CanvasItemBuffer &buf) const
 
 void CanvasItemQuad::set_inverted(bool inverted)
 {
-    defer([=] {
+    defer([=, this] {
         if (_inverted == inverted) return;
         _inverted = inverted;
         request_redraw();

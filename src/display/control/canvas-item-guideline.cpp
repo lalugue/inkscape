@@ -229,7 +229,7 @@ void CanvasItemGuideLine::set_stroke(uint32_t color)
 
 void CanvasItemGuideLine::set_label(Glib::ustring &&label)
 {
-    defer([=, label = std::move(label)] () mutable {
+    defer([=, this, label = std::move(label)] () mutable {
         if (_label == label) return;
         _label = std::move(label);
         request_update();
@@ -238,7 +238,7 @@ void CanvasItemGuideLine::set_label(Glib::ustring &&label)
 
 void CanvasItemGuideLine::set_locked(bool locked)
 {
-    defer([=] {
+    defer([=, this] {
         if (_locked == locked) return;
         _locked = locked;
         if (_locked) {
@@ -288,7 +288,7 @@ void CanvasItemGuideHandle::set_size_via_index(int index)
     if (size < MINIMUM_SIZE) {
         size = MINIMUM_SIZE;
     }
-    defer([=] {
+    defer([=, this] {
         if (_width == size) return;
         _width = size;
         _height = size;
