@@ -1277,6 +1277,28 @@ frame.flat {
     margin:0 0 -8px -8px;
 }
 
+/* limit height of list view items */
+columnview.list-view-small > listview > row > cell {
+    padding: 5px;
+}
+
+/* gridview items with smaller margins */
+gridview.grid-view-small > child box.item-box {
+    padding: 0;
+    margin: 8px;
+    border-spacing: 8px;
+}
+
+/* list view with items based on labels need some extra vertical space */
+listview.list-view-small > row > box.item-box {
+    margin-top: 3px;
+    margin-bottom: 3px;
+}
+
+listview.list-view-small > row > box.item-box.separator {
+    margin: 1px;
+}
+
 /* About screen slide show transitions >>>>>>>>>>>>>>>>>>>>>>>>> */
 @keyframes fade_in_opacity {
     0%   { opacity: 0; }
