@@ -19,10 +19,8 @@
 # include "config.h"  // only include where actually required!
 #endif
 
+#include <cstdint> // uint8_t, etc
 
-#if HAVE_STDINT_H
-# include <cstdint> // uint8_t, etc
-#endif
 typedef unsigned int guint32;
 
 typedef void * cmsHPROFILE;
