@@ -358,7 +358,7 @@ void LaTeXTextRenderer::sp_text_render(SPText *textobj)
                 continue;
             }
 
-            bool is_bold = false, is_italic = false, is_oblique = false;
+            bool is_bold = false, is_italic = false, is_oblique = false, is_superscript = false, is_subscript = false;
 
             // newline character only -> don't attempt to add style (will break compilation in LaTeX)
             if (g_strcmp0(spanstr, "\n")) {
@@ -384,6 +384,14 @@ void LaTeXTextRenderer::sp_text_render(SPText *textobj)
                     is_oblique = true;
                     os << "\\textsl{";  // this is an accurate choice if the LaTeX chosen font matches the font in Inkscape. Gives bad results when it is not so...
                 }
+                if (spanstyle.baseline_shift.computed > 0) { // superscript
+                    is_superscript = true;
+                    os << "\\textsuperscript{";
+                }
+                if (spanstyle.baseline_shift.computed < 0) {
+                    is_subscript = true;
+                    os << "\\textsubscript{";
+                }
             }
 
             // replace carriage return with double slash
@@ -395,6 +403,8 @@ void LaTeXTextRenderer::sp_text_render(SPText *textobj)
             }
             g_strfreev(splitstr);
 
+            if (is_subscript) { os << "}"; } // subscript end
+            if (is_superscript) { os << "}"; } // superscript end
             if (is_oblique) { os << "}"; } // oblique end
             if (is_italic) { os << "}"; } // italic end
             if (is_bold) { os << "}"; } // bold end
@@ -509,7 +519,7 @@ Flowing in rectangle is possible, not in arb shape.
              li != le; li.nextStartOfSpan())
         {
             SPStyle const &spanstyle = *(sp_te_style_at_position(flowtext, li));
-            bool is_bold = false, is_italic = false, is_oblique = false;
+            bool is_bold = false, is_italic = false, is_oblique = false, is_superscript = false, is_subscript = false;
 
             if (spanstyle.font_weight.computed == SP_CSS_FONT_WEIGHT_500 ||
                 spanstyle.font_weight.computed == SP_CSS_FONT_WEIGHT_600 ||
@@ -532,6 +542,14 @@ Flowing in rectangle is possible, not in arb shape.
                 is_oblique = true;
                 os << "\\textsl{";  // this is an accurate choice if the LaTeX chosen font matches the font in Inkscape. Gives bad results when it is not so...
             }
+            if (spanstyle.baseline_shift.computed > 0) { // superscript
+                is_superscript = true;
+                os << "\\textsuperscript{";
+            }
+            if (spanstyle.baseline_shift.computed < 0) {
+                is_subscript = true;
+                os << "\\textsubscript{";
+            }
 
             Inkscape::Text::Layout::iterator ln = li; 
             ln.nextStartOfSpan();
@@ -547,6 +565,8 @@ Flowing in rectangle is possible, not in arb shape.
             g_strfreev(splitstr);
             g_free(spanstr_new);
 
+            if (is_subscript) { os << "}"; } // subscript end
+            if (is_superscript) { os << "}"; } // superscript end
             if (is_oblique) { os << "}"; } // oblique end
             if (is_italic) { os << "}"; } // italic end
             if (is_bold) { os << "}"; } // bold end
