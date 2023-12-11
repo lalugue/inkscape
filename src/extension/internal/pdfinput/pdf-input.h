@@ -19,8 +19,10 @@
 
 #include <glibmm/refptr.h>
 #include <gtkmm/dialog.h>
+#include <unordered_map>
 
 #include "../../implementation/implementation.h"
+#include "async/channel.h"
 #include "poppler-transition-api.h"
 #include "poppler-utils.h"
 #include "svg-builder.h"
@@ -125,7 +127,9 @@ private:
     int _preview_width, _preview_height;    // Size of the preview area
     bool _render_thumb;     // Whether we can/shall render thumbnails
 #ifdef HAVE_POPPLER_CAIRO
-    cairo_surface_t *_cairo_surface = nullptr;
+    bool _preview_rendering_in_progress = false;
+    std::unordered_map<int, std::shared_ptr<cairo_surface_t>> _cairo_surfaces;
+    std::vector<Async::Channel::Dest> _channels;
     PopplerDocument *_poppler_doc = nullptr;
 #endif
 };

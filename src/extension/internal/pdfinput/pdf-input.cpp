@@ -53,6 +53,7 @@
 #include <gtkmm/notebook.h>
 #include <gtkmm/scale.h>
 
+#include "async/async.h"
 #include "document.h"
 #include "document-undo.h"
 #include "extension/input.h"
@@ -66,6 +67,7 @@
 #include "ui/pack.h"
 #include "ui/widget/frame.h"
 #include "ui/widget/spinbutton.h"
+#include "util/gobjectptr.h"
 #include "util/parse-int-range.h"
 #include "util/units.h"
 
@@ -189,6 +191,7 @@ PdfImportDialog::PdfImportDialog(std::shared_ptr<PDFDoc> doc, const gchar * /*ur
     // Set default preview size
     _preview_width = 200;
     _preview_height = 300;
+    _preview_area.set_size_request(_preview_width, _preview_height);
 
     // Init preview
     _thumb_data = nullptr;
@@ -215,9 +218,6 @@ PdfImportDialog::PdfImportDialog(std::shared_ptr<PDFDoc> doc, const gchar * /*ur
 
 PdfImportDialog::~PdfImportDialog() {
 #ifdef HAVE_POPPLER_CAIRO
-    if (_cairo_surface) {
-        cairo_surface_destroy(_cairo_surface);
-    }
     if (_poppler_doc) {
         g_object_unref(G_OBJECT(_poppler_doc));
     }
@@ -382,7 +382,6 @@ void PdfImportDialog::setFontStrategies(const FontStrategies &fs)
  *
  */
 static void copy_cairo_surface_to_pixbuf (cairo_surface_t *surface,
-                                          unsigned char   *data,
                                           GdkPixbuf       *pixbuf)
 {
     int cairo_width, cairo_height, cairo_rowstride;
@@ -393,8 +392,8 @@ static void copy_cairo_surface_to_pixbuf (cairo_surface_t *surface,
 
     cairo_width = cairo_image_surface_get_width (surface);
     cairo_height = cairo_image_surface_get_height (surface);
-    cairo_rowstride = cairo_width * 4;
-    cairo_data = data;
+    cairo_rowstride = cairo_image_surface_get_stride(surface);
+    cairo_data = cairo_image_surface_get_data(surface);
 
     pixbuf_data = gdk_pixbuf_get_pixels (pixbuf);
     pixbuf_rowstride = gdk_pixbuf_get_rowstride (pixbuf);
@@ -425,7 +424,7 @@ static void copy_cairo_surface_to_pixbuf (cairo_surface_t *surface,
 
 bool PdfImportDialog::_onDraw(const Cairo::RefPtr<Cairo::Context>& cr) {
     // Check if we have a thumbnail at all
-    if (!_thumb_data) {
+    if (!_thumb_data && !_cairo_surfaces[_preview_page]) {
         return true;
     }
 
@@ -435,7 +434,7 @@ bool PdfImportDialog::_onDraw(const Cairo::RefPtr<Cairo::Context>& cr) {
     if (_render_thumb) {
         thumb = Gdk::Pixbuf::create(Gdk::COLORSPACE_RGB, true,
                                     8, _thumb_width, _thumb_height);
-    } else {
+    } else if (_thumb_data) {
         thumb = Gdk::Pixbuf::create_from_data(_thumb_data, Gdk::COLORSPACE_RGB,
             false, 8, _thumb_width, _thumb_height, _thumb_rowstride);
     }
@@ -452,7 +451,7 @@ bool PdfImportDialog::_onDraw(const Cairo::RefPtr<Cairo::Context>& cr) {
 #ifdef HAVE_POPPLER_CAIRO
     // Copy the thumbnail image from the Cairo surface
     if (_render_thumb) {
-        copy_cairo_surface_to_pixbuf(_cairo_surface, _thumb_data, thumb->gobj());
+        copy_cairo_surface_to_pixbuf(_cairo_surfaces[_preview_page].get(), thumb->gobj());
     }
 #endif
 
@@ -516,30 +515,45 @@ void PdfImportDialog::_setPreviewPage(int page) {
     // Create new Cairo surface
     _thumb_width = (int)ceil( width * scale_factor );
     _thumb_height = (int)ceil( height * scale_factor );
-    _thumb_rowstride = _thumb_width * 4;
-    if (_thumb_data) {
-        gfree(_thumb_data);
+    if (_poppler_doc && !_cairo_surfaces[page] && !_preview_rendering_in_progress) {
+        // poppler_page_render() isn't safe to call concurrently for multiple
+        // pages, so we render at most one page at a time. We'll restart
+        // rendering in "onfinish" if necessary.
+        _preview_rendering_in_progress = true;
+
+        // Render page asynchronously in a separate thread. The dialog will
+        // become available and responsive even if the rendering takes longer.
+
+        auto cairo_surface = std::shared_ptr<cairo_surface_t>(
+            cairo_image_surface_create(CAIRO_FORMAT_ARGB32, _thumb_width, _thumb_height), //
+            cairo_surface_destroy);
+
+        auto poppler_page = Util::GObjectPtr(poppler_document_get_page(_poppler_doc, page - 1));
+
+        auto [src, dst] = Async::Channel::create();
+
+        Async::fire_and_forget([cairo_surface, scale_factor, poppler_page = std::move(poppler_page),
+                                channel = std::move(src), dialog = this, page]() mutable {
+            cairo_t *cr = cairo_create(cairo_surface.get());
+            cairo_set_source_rgba(cr, 1.0, 1.0, 1.0, 1.0); // Set fill color to white
+            cairo_paint(cr);                               // Clear it
+            cairo_scale(cr, scale_factor, scale_factor);   // Use Cairo for resizing the image
+            poppler_page_render(poppler_page.get(), cr);
+            cairo_destroy(cr);
+            channel.run([=] {
+                dialog->_preview_rendering_in_progress = false;
+                dialog->_preview_area.queue_draw();
+                if (dialog->_preview_page != page) {
+                    // Restart rendering for the current page
+                    dialog->_setPreviewPage(dialog->_preview_page);
+                }
+            });
+        });
+
+        _channels.push_back(std::move(dst));
+        _cairo_surfaces[page] = std::move(cairo_surface);
     }
-    _thumb_data = reinterpret_cast<unsigned char *>(gmalloc(_thumb_rowstride * _thumb_height));
-    if (_cairo_surface) {
-        cairo_surface_destroy(_cairo_surface);
-    }
-    _cairo_surface = cairo_image_surface_create_for_data(_thumb_data,
-            CAIRO_FORMAT_ARGB32, _thumb_width, _thumb_height, _thumb_rowstride);
-    cairo_t *cr = cairo_create(_cairo_surface);
-    cairo_set_source_rgba(cr, 1.0, 1.0, 1.0, 1.0);  // Set fill color to white
-    cairo_paint(cr);    // Clear it
-    cairo_scale(cr, scale_factor, scale_factor);    // Use Cairo for resizing the image
-    // Render page
-    if (_poppler_doc != NULL) {
-        PopplerPage *poppler_page = poppler_document_get_page(_poppler_doc, page-1);
-        poppler_page_render(poppler_page, cr);
-        g_object_unref(G_OBJECT(poppler_page));
-    }
-    // Clean up
-    cairo_destroy(cr);
     // Redraw preview area
-    _preview_area.set_size_request(_preview_width, _preview_height);
     _preview_area.queue_draw();
 #endif
 }
