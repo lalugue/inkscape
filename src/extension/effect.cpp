@@ -78,7 +78,9 @@ Effect::Effect(Inkscape::XML::Node *in_repr, ImplementationHolder implementation
             }
             if (child->attribute("implements-custom-gui") && !strcmp(child->attribute("implements-custom-gui"), "true")) {
                 _workingDialog = false;
-                ignore_stderr = true;
+                if (!(child->attribute("show-stderr") && !strcmp(child->attribute("show-stderr"), "true"))) {
+                    ignore_stderr = true;    
+                }
             }
             for (auto effect_child = child->firstChild(); effect_child != nullptr; effect_child = effect_child->next()) {
                 if (!strcmp(effect_child->name(), INKSCAPE_EXTENSION_NS "effects-menu")) {
