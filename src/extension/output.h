@@ -53,16 +53,16 @@ public:
                                 std::string png_filename,
                                 gchar const *filename,
                                 bool detachbase);
-    gchar *      get_mimetype();
-    gchar *      get_extension();
-    const char * get_filetypename(bool translated=false);
-    const char * get_filetypetooltip(bool translated=false);
-    bool         causes_dataloss() { return dataloss; };
-    bool         savecopy_only() { return savecopyonly; };
-    bool         is_raster() { return raster; };
-    bool         is_exported() { return exported; };
+    gchar const *get_mimetype() const;
+    gchar const *get_extension() const;
+    const char * get_filetypename(bool translated=false) const;
+    const char * get_filetypetooltip(bool translated=false) const;
+    bool         causes_dataloss() const { return dataloss; };
+    bool         savecopy_only() const { return savecopyonly; };
+    bool         is_raster() const { return raster; };
+    bool         is_exported() const { return exported; };
     void         add_extension(std::string &filename);
-    bool         can_save_filename(gchar const *filename);
+    bool         can_save_filename(gchar const *filename) const;
 };
 
 } }  /* namespace Inkscape, Extension */

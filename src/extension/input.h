@@ -47,11 +47,11 @@ public:
     bool check() override;
 
     SPDocument *  open                 (gchar const *uri);
-    gchar *       get_mimetype         ();
-    gchar *       get_extension        ();
-    const char *  get_filetypename     (bool translated=false);
-    const char *  get_filetypetooltip  (bool translated=false);
-    bool          can_open_filename    (gchar const *filename);
+    gchar const * get_mimetype         () const;
+    gchar const * get_extension        () const;
+    const char *  get_filetypename     (bool translated=false) const;
+    const char *  get_filetypetooltip  (bool translated=false) const;
+    bool          can_open_filename    (gchar const *filename) const;
 };
 
 } }  /* namespace Inkscape, Extension */

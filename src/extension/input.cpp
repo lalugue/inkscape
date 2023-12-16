@@ -163,8 +163,8 @@ Input::open (const gchar *uri)
     \return  IETF mime-type for the extension
     \brief   Get the mime-type that describes this extension
 */
-gchar *
-Input::get_mimetype()
+gchar const *
+Input::get_mimetype() const
 {
     return mimetype;
 }
@@ -173,8 +173,8 @@ Input::get_mimetype()
     \return  Filename extension for the extension
     \brief   Get the filename extension for this extension
 */
-gchar *
-Input::get_extension()
+gchar const *
+Input::get_extension() const
 {
     return extension;
 }
@@ -184,7 +184,7 @@ Input::get_extension()
     \brief   Match filename to extension that can open it.
 */
 bool
-Input::can_open_filename(gchar const *filename)
+Input::can_open_filename(gchar const *filename) const
 {
     gchar *filenamelower = g_utf8_strdown(filename, -1);
     gchar *extensionlower = g_utf8_strdown(extension, -1);
@@ -199,7 +199,7 @@ Input::can_open_filename(gchar const *filename)
     \brief   Get the name of the filetype supported
 */
 const char *
-Input::get_filetypename(bool translated)
+Input::get_filetypename(bool translated) const
 {
     const char *name;
 
@@ -220,7 +220,7 @@ Input::get_filetypename(bool translated)
     \brief   Get the tooltip for more information on the filetype
 */
 const char *
-Input::get_filetypetooltip(bool translated)
+Input::get_filetypetooltip(bool translated) const
 {
     if (filetypetooltip && translated) {
         return get_translation(filetypetooltip);
