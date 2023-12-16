@@ -199,6 +199,7 @@ std::vector<std::vector<Glib::ustring>> raw_data_base =
     {"app.system-data-directory",     N_("System Directory"),        "Base",       N_("Print system data directory and exit")              },
     {"app.user-data-directory",       N_("User Directory"),          "Base",       N_("Print user data directory and exit")                },
     {"app.action-list",               N_("List Actions"),            "Base",       N_("Print a list of actions and exit")                  },
+    {"app.list-input-types",          N_("List input file extensions"), "Base",    N_("Print a list of input file extensions and exit")    },
     {"app.quit",                      N_("Quit"),                    "Base",       N_("Quit Inkscape, check for data loss")                },
     {"app.quit-immediate",            N_("Quit Immediately"),        "Base",       N_("Immediately quit Inkscape, no check for data loss") },
 
@@ -227,6 +228,7 @@ add_actions_base(InkscapeApplication* app)
     gapp->add_action(               "system-data-directory",                               sigc::ptr_fun(&print_system_data_directory)            );
     gapp->add_action(               "user-data-directory",                                 sigc::ptr_fun(&print_user_data_directory)              );
     gapp->add_action(               "action-list",        sigc::mem_fun(*app, &InkscapeApplication::print_action_list)                            );
+    gapp->add_action(               "list-input-types",   sigc::mem_fun(*app, &InkscapeApplication::print_input_type_list)                        );
     gapp->add_action(               "quit",               sigc::mem_fun(*app, &InkscapeApplication::on_quit)                                      );
     gapp->add_action(               "quit-immediate",     sigc::mem_fun(*app, &InkscapeApplication::on_quit_immediate)                            );
 

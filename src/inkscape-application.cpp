@@ -90,6 +90,7 @@
 #include "extension/db.h"
 #include "extension/effect.h"
 #include "extension/init.h"
+#include "extension/input.h"
 #include "include/glibmm_version.h"
 #include "inkgc/gc-core.h"          // Garbage Collecting init
 #include "io/file.h"                // File open (command line).
@@ -719,6 +720,7 @@ InkscapeApplication::InkscapeApplication()
     gapp->add_main_option_entry(T::OPTION_TYPE_BOOL,     "debug-info",             '\0', N_("Print debugging information"),                                                        "");
     gapp->add_main_option_entry(T::OPTION_TYPE_BOOL,     "system-data-directory",  '\0', N_("Print system data directory"),                                             "");
     gapp->add_main_option_entry(T::OPTION_TYPE_BOOL,     "user-data-directory",    '\0', N_("Print user data directory"),                                               "");
+    gapp->add_main_option_entry(T::OPTION_TYPE_BOOL,     "list-input-types",       '\0', N_("List all available input file extensions"),                                               "");
     gapp->add_main_option_entry(T::OPTION_TYPE_STRING,   "app-id-tag",             '\0', N_("Create a unique instance of Inkscape with the application ID 'org.inkscape.Inkscape.TAG'"), "");
 
     // Open/Import
@@ -1553,6 +1555,7 @@ InkscapeApplication::on_handle_local_options(const Glib::RefPtr<Glib::VariantDic
 
         options->contains("vacuum-defs")           ||
         options->contains("select")                ||
+        options->contains("list-input-types")      ||
         options->contains("action-list")           ||
         options->contains("actions")               ||
         options->contains("actions-file")          ||
@@ -1615,6 +1618,10 @@ InkscapeApplication::on_handle_local_options(const Glib::RefPtr<Glib::VariantDic
     // This must be done after the app has been registered!
     if (options->contains("action-list")) {
         _command_line_actions.emplace_back("action-list", base);
+    }
+
+    if (options->contains("list-input-types")) {
+        _command_line_actions.emplace_back("list-input-types", base);
     }
 
     // ================= OPEN/IMPORT ===================
@@ -1905,6 +1912,23 @@ InkscapeApplication::print_action_list()
         Glib::ustring fullname("app." + action);
         std::cout << std::left << std::setw(20) << action
                   << ":  " << _action_extra_data.get_tooltip_for_action(fullname) << std::endl;
+    }
+}
+
+/**
+ * Prints file type extensions (without leading dot) of input formats.
+ */
+void InkscapeApplication::print_input_type_list() const
+{
+    Inkscape::Extension::DB::InputList extension_list;
+    Inkscape::Extension::db.get_input_list(extension_list);
+
+    for (auto *imod : extension_list) {
+        auto suffix = imod->get_extension();
+        if (suffix[0] == '.') {
+            ++suffix;
+        }
+        std::cout << suffix << std::endl;
     }
 }
 

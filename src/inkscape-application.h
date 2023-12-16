@@ -60,6 +60,7 @@ public:
     bool destroy_window(InkscapeWindow *window, bool keep_alive = false);
     bool destroy_all();
     void print_action_list();
+    void print_input_type_list() const;
 
     void on_startup2();
     InkFileExportCmd *file_export() { return &_file_export; }

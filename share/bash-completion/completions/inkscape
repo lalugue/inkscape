@@ -1,5 +1,8 @@
 # inkscape(1) completion                                     -*- shell-script -*-
 
+_inkscape_optlist=""
+_inkscape_extlist=""
+
 _have inkscape &&
 _inkscape()
 {
@@ -10,24 +13,15 @@ _inkscape()
 
 
     if [[ "$cur" == -* ]]; then
-        COMPREPLY=( $( compgen -W \
-            '-? --help --help-all --help-gapplication --help-gtk -V --version --debug-info \
-              --system-data-directory --user-data-directory -p --pipe --pdf-page= --pdf-poppler \ 
-              --convert-dpi-method= --no-convert-text-baseline-spacing -o --export-filename= \
-              --export-overwrite --export-type= --export-extension= -C --export-area-page \
-              -D --export-area-drawing -a --export-area= --export-area-snap -d --export-dpi= \
-              -w --export-width= -h --export-height= --export-margin= -i --export-id= \
-              -j --export-id-only -l --export-plain-svg --export-png-color-mode= \
-              --export-png-use-dithering= --export-ps-level= --export-pdf-version= \ 
-              -T --export-text-to-path --export-latex --export-ignore-filters \
-              -t --export-use-hints -b --export-background= -y --export-background-opacity= \
-              -I --query-id= -S --query-all -X --query-x -Y --query-y -W --query-width -H \
-              --query-height --vacuum-defs --select= --actions= --action-list --actions-file= \
-              -g --with-gui -q --active-window --display= --app-id-tag= --batch-process --shell' \
-            -- $cur \
-        ) )
+        if [[ -z "$_inkscape_optlist" ]]; then
+            _inkscape_optlist="$(inkscape --help | grep '^ *-' | sed 's/^  *//;s/  .*//;s/=.*/=/;s/,//')"
+        fi
+        COMPREPLY=( $(compgen -W "$_inkscape_optlist" -- "$cur") )
     else
-        _filedir '@(ai|ani|bmp|cur|dia|eps|gif|ggr|ico|jpe|jpeg|jpg|pbm|pcx|pdf|pgm|png|ppm|pnm|ps|ras|sk|svg|svgz|targa|tga|tif|tiff|txt|wbmp|wmf|xbm|xpm)'
+        if [[ -z "$_inkscape_extlist" ]]; then
+            _inkscape_extlist="$(inkscape --list-input-types | tr '\n' '|' | sed 's/|$//')"
+        fi
+        _filedir "@($_inkscape_extlist)"
     fi
 
 }
