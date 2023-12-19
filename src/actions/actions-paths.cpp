@@ -107,15 +107,16 @@ select_path_fracture(InkscapeApplication *app)
 {
     auto selection = app->get_active_selection();
     auto boolean_builder = Inkscape::BooleanBuilder(selection);
-    selection->setList(boolean_builder.shape_commit(true));
+    selection->setList(boolean_builder.shape_commit(true, true));
     Inkscape::DocumentUndo::done(selection->document(), "Fracture", INKSCAPE_ICON("path-fracture"));
 }
 
 void select_path_flatten(InkscapeApplication *app)
 {
     auto selection = app->get_active_selection();
+    selection->strokesToPaths(false, true);
     auto boolean_builder = Inkscape::BooleanBuilder(selection, true);
-    selection->setList(boolean_builder.shape_commit(true));
+    selection->setList(boolean_builder.shape_commit(true, true));
     Inkscape::DocumentUndo::done(selection->document(), "Flatten", INKSCAPE_ICON("path-flatten"));
 }
 

@@ -268,16 +268,14 @@ WorkItems SubItem::build_flatten(std::vector<SPItem*> &&items)
         extract_pathvectors_recursive(item, item, extracted, item->i2dt_affine());
 
         for (auto &[pathv, root, subitem] : extracted) {
-            // Remove lines.
-            for (auto it = pathv.begin(); it != pathv.end(); ) {
-                if (!it->closed()) {
-                    it = pathv.erase(it);
-                } else {
-                    ++it;
+            // Close any non closed objects
+            for (auto &it : pathv) {
+                if (!it.closed()) {
+                    it.close();
                 }
             }
 
-            // Skip pathvectors that are just lines.
+            // Skip pathvectors that are empty
             if (pathv.empty()) {
                 continue;
             }

@@ -55,7 +55,7 @@ public:
     void undo();
     void redo();
 
-    std::vector<SPObject *> shape_commit(bool all = false);
+    std::vector<SPObject *> shape_commit(bool all = false, bool replace = true);
     ItemPair *get_item(const Geom::Point &point);
     bool task_select(const Geom::Point &point, bool add_task = true);
     bool task_add(const Geom::Point &point);

@@ -101,7 +101,8 @@ void InteractiveBooleansTool::switching_away(std::string const &new_tool)
     if (boolean_builder && (new_tool == "/tools/select" || new_tool == "/tool/nodes")) {
         // Only forcefully commit if we have the user's explicit instruction to do so.
         if (boolean_builder->has_changes() || to_commit) {
-            _desktop->getSelection()->setList(boolean_builder->shape_commit(true));
+            bool replace = Inkscape::Preferences::get()->getBool("/tools/booleans/replace", true);
+            _desktop->getSelection()->setList(boolean_builder->shape_commit(true, replace));
             DocumentUndo::done(_desktop->doc(), "Built Shapes", INKSCAPE_ICON("draw-booleans"));
         }
     }

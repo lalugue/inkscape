@@ -218,11 +218,8 @@ void BooleanBuilder::task_commit()
 /**
  * Commit the changes to the document (finish)
  */
-std::vector<SPObject *> BooleanBuilder::shape_commit(bool all)
+std::vector<SPObject *> BooleanBuilder::shape_commit(bool all, bool replace)
 {
-    auto prefs = Inkscape::Preferences::get();
-    bool replace = prefs->getBool("/tools/booleans/replace", true);
-
     std::vector<SPObject *> ret;
     std::map<SPItem *, SPItem *> used_images;
     auto doc = _set->document();
