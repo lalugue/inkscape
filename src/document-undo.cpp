@@ -205,7 +205,7 @@ void Inkscape::DocumentUndo::cancel(SPDocument *doc)
     g_assert (doc->sensitive);
     done(doc, "undozone", "");
     // ensure tere is something to undo (extension crach can do nothing)
-    if (doc->undo.back()->description == "undozone") { 
+    if (!doc->undo.empty() && doc->undo.back()->description == "undozone") { 
         undo(doc);
         clearRedo(doc);
     }
