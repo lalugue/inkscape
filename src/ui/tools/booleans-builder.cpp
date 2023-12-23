@@ -269,7 +269,7 @@ std::vector<SPObject *> BooleanBuilder::shape_commit(bool all, bool replace)
                 auto tr = i2anc_affine(item, parent);
 
                 // Make a copy of the image when not replacing it
-                if (!used_images.count(item)) {
+                if (!used_images.contains(item)) {
                     auto orig = item;
                     if (item->parent != defs && !replace) {
                         auto copy_repr = item->getRepr()->duplicate(xml_doc);
@@ -318,16 +318,21 @@ std::vector<SPObject *> BooleanBuilder::shape_commit(bool all, bool replace)
         }
     }
 
-    for (auto item : items) {
-        // Apart from the used images, everything else it to be deleted.
-        if (!used_images.count(item) && replace) {
-            sp_object_ref(item, nullptr);
-            // We must not signal the deletions as some of these objects
-            // could be linked together (for example clones)
-            item->deleteObject(false, false);
-            sp_object_unref(item, nullptr);
+    // Apart from the used images, everything else is to be deleted.
+    if (replace) {
+        for (auto item : items) {
+            if (!used_images.contains(item)) {
+                sp_object_ref(item, nullptr);
+            }
+        }
+        for (auto item : items) {
+            if (!used_images.contains(item)) {
+                item->deleteObject();
+                sp_object_unref(item, nullptr);
+            }
         }
     }
+
     return ret;
 }
 
