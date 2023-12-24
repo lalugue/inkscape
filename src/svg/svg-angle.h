@@ -39,12 +39,12 @@ public:
     Unit unit;
 
     // The value of this SVGAngle as found in the SVG.
-    float value;
+    double value;
 
     // The value in degrees.
-    float computed;
+    double computed;
 
-    float operator=(float v) {
+    double operator=(double v) {
         _set = true;
         unit = Unit::NONE;
         value = computed = v;
@@ -52,8 +52,8 @@ public:
     }
 
     bool read(gchar const *str);
-    void unset(Unit u = Unit::NONE, float v = 0, float c = 0);
-    void readOrUnset(gchar const *str, Unit u = Unit::NONE, float v = 0, float c = 0);
+    void unset(Unit u = Unit::NONE, double v = 0, double c = 0);
+    void readOrUnset(gchar const *str, Unit u = Unit::NONE, double v = 0, double c = 0);
 };
 
 #endif // SEEN_SP_SVG_ANGLE_H

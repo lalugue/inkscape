@@ -152,7 +152,9 @@ EvaluatorQuantity ExpressionEvaluator::evaluateTerm()
     EvaluatorQuantity evaluated_exp_terms = evaluateExpTerm();
     
     for ( division = false;
-        acceptToken('*', nullptr) || (division = acceptToken('/', nullptr));
+        acceptToken('*', nullptr) ||
+        (division = acceptToken('/', nullptr)) ||
+        (division = acceptToken(':', nullptr)); // accept ':' too (for ratio)
         division = false )
     {
         EvaluatorQuantity new_exp_term = evaluateExpTerm();

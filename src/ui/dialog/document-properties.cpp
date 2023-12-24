@@ -23,8 +23,18 @@
 
 #include <algorithm>
 #include <array>
+#include <cmath>
+#include <gtkmm/adjustment.h>
+#include <gtkmm/button.h>
+#include <gtkmm/entry.h>
 #include <gtkmm/enums.h>
+#include <gtkmm/grid.h>
+#include <gtkmm/menubutton.h>
+#include <gtkmm/object.h>
+#include <gtkmm/popover.h>
+#include <gtkmm/spinbutton.h>
 #include <iterator>
+#include <numbers>
 #include <optional>
 #include <set>
 #include <string>
@@ -37,6 +47,7 @@
 #include <sigc++/adaptors/bind.h>
 #include <sigc++/functors/mem_fun.h>
 
+#include "angle.h"
 #include "rdf.h"
 #include "page-manager.h"
 #include "selection.h"
@@ -61,6 +72,8 @@
 #include "ui/widget/page-properties.h"
 #include "ui/widget/popover-menu.h"
 #include "ui/widget/popover-menu-item.h"
+#include "ui/widget/scalar.h"
+#include "util/expression-evaluator.h"
 
 namespace Inkscape::UI {
 
@@ -72,12 +85,12 @@ public:
     GridWidget(SPGrid *obj);
 
     void update();
-    SPGrid *getGrid() { return grid; }
+    SPGrid *getGrid() { return _grid; }
     XML::Node *getGridRepr() { return repr; }
     Gtk::Box *getTabWidget() { return _tab; }
 
 private:
-    SPGrid *grid = nullptr;
+    SPGrid *_grid = nullptr;
     XML::Node *repr = nullptr;
 
     Gtk::Box *_tab = nullptr;
@@ -107,6 +120,8 @@ private:
     RegisteredScalarUnit* _rsu_gy = nullptr;
     RegisteredScalarUnit* _rsu_mx = nullptr;
     RegisteredScalarUnit* _rsu_my = nullptr;
+    Gtk::MenuButton* _angle_popup = nullptr;
+    Gtk::Entry* _aspect_ratio = nullptr;
 
     Inkscape::auto_connection _modified_signal;
 };
@@ -1720,7 +1735,7 @@ namespace Widget {
 
 GridWidget::GridWidget(SPGrid *grid)
     : Gtk::Box(Gtk::ORIENTATION_VERTICAL)
-    , grid(grid)
+    , _grid(grid)
     , repr(grid->getRepr())
 {
     Inkscape::XML::Node *repr = grid->getRepr();
@@ -1780,8 +1795,72 @@ GridWidget::GridWidget(SPGrid *grid)
             "dotted", _wr, false, repr, doc );
     UI::pack_start(*left, *_grid_rcb_dotted, false, false);
 
-    UI::pack_start(*left, *Gtk::make_managed<Gtk::Label>(_("Align to page:")), false, false);
+    auto align = Gtk::make_managed<Gtk::Label>(_("Align to page:"));
+    align->set_margin_top(8);
+    UI::pack_start(*left, *align, false, false);
     UI::pack_start(*left, *_grid_as_alignment, false, false);
+
+    _angle_popup = Gtk::make_managed<Gtk::MenuButton>();
+    auto angle_popover = Gtk::make_managed<Gtk::Popover>();
+    _angle_popup->set_popover(*angle_popover);
+    _angle_popup->set_valign(Gtk::ALIGN_CENTER);
+    // set grid angles from given width to height ratio
+    auto angle = Gtk::make_managed<Gtk::Label>(_("Set angle from aspect ratio:"));
+    angle->set_xalign(0);
+    auto subgrid = Gtk::make_managed<Gtk::Grid>();
+    subgrid->set_margin_top(8);
+    subgrid->set_margin_bottom(8);
+    subgrid->set_margin_start(8);
+    subgrid->set_margin_end(8);
+    subgrid->set_row_spacing(4);
+    subgrid->set_column_spacing(4);
+    _aspect_ratio = Gtk::make_managed<Gtk::Entry>();
+    _aspect_ratio->set_max_width_chars(9);
+    subgrid->attach(*angle, 0, 0);
+    subgrid->attach(*_aspect_ratio, 0, 1);
+    auto apply = Gtk::make_managed<Gtk::Button>(_("Set"));
+    apply->set_halign(Gtk::ALIGN_CENTER);
+    apply->set_size_request(100);
+    subgrid->attach(*apply, 0, 2);
+    // TRANSLATORS: Axonometric grid looks like a pattern of parallelograms. Their width to height proportions
+    // can be manipulated by changing angles in the axonometric grid. This DX/DY ratio does just that.
+    // Pressing "Set" button will calculate grid angles to produce parallelograms with requested widh to height ratio.
+    apply->set_tooltip_text(_("Set grid angles to make grid parallelograms width to height\nproportion match given aspect ratio"));
+    apply->signal_clicked().connect([=, this](){
+        auto text = _aspect_ratio->get_text();
+        try {
+            ExpressionEvaluator ex(text.c_str());
+            auto result = ex.evaluate();
+            if (!std::isfinite(result.value) || result.value <= 0) return;
+
+            auto angle = Geom::deg_from_rad(std::atan(1.0 / result.value));
+            if (angle > 0.0 && angle < 90.0) {
+                _rsu_ax->setValue(angle, false);
+                _rsu_az->setValue(angle, false);
+            }
+        }
+        catch (EvaluatorException& e) {
+            // ignoring user input error for now
+        }
+    });
+    subgrid->show_all();
+    angle_popover->add(*subgrid);
+    angle_popover->signal_show().connect([=](){
+        if (!_grid) return;
+
+        auto ax = _grid->getAngleX();
+        auto az = _grid->getAngleZ();
+        // try to guess ratio if angles are the same, otherwise leave ratio boxes intact
+        if (az == ax) {
+            auto ratio = std::tan(Geom::rad_from_deg(ax));
+            if (ratio > 0) {
+                _aspect_ratio->set_text(ratio > 1.0 ?
+                    Glib::ustring::format("1 : ", ratio) :
+                    Glib::ustring::format(1.0 / ratio, " : 1")
+                );
+            }
+        }
+    });
 
     _rumg = Gtk::make_managed<RegisteredUnitMenu>(
                 _("Grid _units:"), "units", _wr, repr, doc);
@@ -1843,22 +1922,26 @@ GridWidget::GridWidget(SPGrid *grid)
     _rsu_ox->setProgrammatically = false;
     _rsu_oy->setProgrammatically = false;
 
-    auto const column = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_VERTICAL, 4);
-    UI::pack_start(*column, *_rumg, true, false);
+    auto const column = Gtk::make_managed<Gtk::Grid>();
+    column->set_row_spacing(4);
+    column->set_column_spacing(4);
+    int row = 0;
+    column->attach(*_rumg, 0, row++);
 
-    for (auto rs : {_rsu_ox, _rsu_oy, _rsu_sx, _rsu_sy, _rsu_gx, _rsu_gy, _rsu_mx, _rsu_my}) {
-        rs->setDigits(5);
+    int angle_row = 0;
+    for (auto rs : std::to_array<Scalar*>({_rsu_ox, _rsu_oy, _rsu_sx, _rsu_sy, _rsu_ax, _rsu_az, _rsu_gx, _rsu_gy, _rsu_mx, _rsu_my})) {
+        rs->setDigits(6);
         rs->setIncrements(0.1, 1.0);
         rs->set_hexpand();
         rs->setWidthChars(12);
-        UI::pack_start(*column, *rs, true, false);
+        if (rs == _rsu_ax) angle_row = row;
+        column->attach(*rs, 0, row++);
     }
 
-    UI::pack_start(*column, *_rsu_ax, true, false);
-    UI::pack_start(*column, *_rsu_az, true, false);
-    UI::pack_start(*column, *_rcp_gcol, true, false);
-    UI::pack_start(*column, *_rcp_gmcol, true, false);
-    UI::pack_start(*column, *_rsi, true, false);    
+    column->attach(*_rcp_gcol, 0, row++);
+    column->attach(*_rcp_gmcol, 0, row++);
+    column->attach(*_rsi, 0, row++);
+    column->attach(*_angle_popup, 1, angle_row, 1, 2);
 
     _modified_signal = grid->connectModified([this, grid](SPObject const * /*obj*/, unsigned /*flags*/) {
         update();
@@ -1888,20 +1971,20 @@ GridWidget::GridWidget(SPGrid *grid)
 void GridWidget::update()
 {
     _wr.setUpdating (true);
-    auto scale = grid->document->getDocumentScale();
+    auto scale = _grid->document->getDocumentScale();
 
-    const auto modular = grid->getType() == GridType::MODULAR;
-    const auto axonometric = grid->getType() == GridType::AXONOMETRIC;
-    const auto rectangular = grid->getType() == GridType::RECTANGULAR;
+    const auto modular = _grid->getType() == GridType::MODULAR;
+    const auto axonometric = _grid->getType() == GridType::AXONOMETRIC;
+    const auto rectangular = _grid->getType() == GridType::RECTANGULAR;
 
-    _rumg->setUnit(grid->getUnit()->abbr);
+    _rumg->setUnit(_grid->getUnit()->abbr);
 
     // Doc to px so unit is conserved in RegisteredScalerUnit
-    auto origin = grid->getOrigin() * scale;
+    auto origin = _grid->getOrigin() * scale;
     _rsu_ox->setValueKeepUnit(origin[Geom::X], "px");
     _rsu_oy->setValueKeepUnit(origin[Geom::Y], "px");
 
-    auto spacing = grid->getSpacing() * scale;
+    auto spacing = _grid->getSpacing() * scale;
     _rsu_sx->setValueKeepUnit(spacing[Geom::X], "px");
     _rsu_sy->setValueKeepUnit(spacing[Geom::Y], "px");
     _rsu_sx->getLabel()->set_markup_with_mnemonic(modular ? _("Block _width:") : _("Spacing _X:"));
@@ -1915,9 +1998,10 @@ void GridWidget::update()
 
     show(_rsu_ax, axonometric);
     show(_rsu_az, axonometric);
+    show(_angle_popup, axonometric);
     if (axonometric) {
-        _rsu_ax->setValue(grid->getAngleX());
-        _rsu_az->setValue(grid->getAngleZ());
+        _rsu_ax->setValue(_grid->getAngleX());
+        _rsu_az->setValue(_grid->getAngleZ());
     }
 
     show(_rsu_gx, modular);
@@ -1925,38 +2009,38 @@ void GridWidget::update()
     show(_rsu_mx, modular);
     show(_rsu_my, modular);
     if (modular) {
-        auto gap = grid->get_gap() * scale;
-        auto margin = grid->get_margin() * scale;
+        auto gap = _grid->get_gap() * scale;
+        auto margin = _grid->get_margin() * scale;
         _rsu_gx->setValueKeepUnit(gap.x(), "px");
         _rsu_gy->setValueKeepUnit(gap.y(), "px");
         _rsu_mx->setValueKeepUnit(margin.x(), "px");
         _rsu_my->setValueKeepUnit(margin.y(), "px");
     }
 
-    _rcp_gcol->setRgba32 (grid->getMinorColor());
-    _rcp_gmcol->setRgba32 (grid->getMajorColor());
+    _rcp_gcol->setRgba32 (_grid->getMinorColor());
+    _rcp_gmcol->setRgba32 (_grid->getMajorColor());
 
     show(_rsi, !modular);
-    _rsi->setValue(grid->getMajorLineInterval());
+    _rsi->setValue(_grid->getMajorLineInterval());
 
-    _grid_rcb_enabled->setActive(grid->isEnabled());
-    _grid_rcb_visible->setActive(grid->isVisible());
+    _grid_rcb_enabled->setActive(_grid->isEnabled());
+    _grid_rcb_visible->setActive(_grid->isVisible());
 
     if (_grid_rcb_dotted)
-        _grid_rcb_dotted->setActive(grid->isDotted());
+        _grid_rcb_dotted->setActive(_grid->isDotted());
 
     show(_grid_rcb_snap_visible_only, !modular);
-    _grid_rcb_snap_visible_only->setActive(grid->getSnapToVisibleOnly());
+    _grid_rcb_snap_visible_only->setActive(_grid->getSnapToVisibleOnly());
     // which condition to use to call setActive?
     // _grid_rcb_snap_visible_only->setActive(grid->snapper()->getSnapVisibleOnly());
-    _grid_rcb_enabled->setActive(grid->snapper()->getEnabled());
+    _grid_rcb_enabled->setActive(_grid->snapper()->getEnabled());
 
     show(_grid_rcb_dotted, rectangular);
     show(_rsu_sx, !axonometric);
 
-    _name_label->set_markup(Glib::ustring("<b>") + grid->displayName() + "</b>");
-    _tab_lbl->set_label(grid->getId() ? grid->getId() : "-");
-    _tab_img->set_from_icon_name(grid->typeName(), Gtk::ICON_SIZE_MENU);
+    _name_label->set_markup(Glib::ustring("<b>") + _grid->displayName() + "</b>");
+    _tab_lbl->set_label(_grid->getId() ? _grid->getId() : "-");
+    _tab_img->set_from_icon_name(_grid->typeName(), Gtk::ICON_SIZE_MENU);
 
     _wr.setUpdating (false);
 }

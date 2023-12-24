@@ -21,7 +21,7 @@
 #include "util/units.h"
 
 
-static bool sp_svg_angle_read_lff(gchar const *str, SVGAngle::Unit &unit, float &val, float &computed);
+static bool sp_svg_angle_read_lff(gchar const *str, SVGAngle::Unit &unit, double &val, double &computed);
 
 SVGAngle::SVGAngle()
     : _set(false)
@@ -40,8 +40,8 @@ bool SVGAngle::read(gchar const *str)
     }
 
     SVGAngle::Unit u;
-    float v;
-    float c;
+    double v;
+    double c;
     if (!sp_svg_angle_read_lff(str, u, v, c)) {
         return false;
     }
@@ -54,27 +54,27 @@ bool SVGAngle::read(gchar const *str)
     return true;
 }
 
-void SVGAngle::unset(SVGAngle::Unit u, float v, float c) {
+void SVGAngle::unset(SVGAngle::Unit u, double v, double c) {
     _set = false;
     unit = u;
     value = v;
     computed = c;
 }
 
-void SVGAngle::readOrUnset(gchar const *str, Unit u, float v, float c) {
+void SVGAngle::readOrUnset(gchar const *str, Unit u, double v, double c) {
     if (!read(str)) {
         unset(u, v, c);
     }
 }
 
-static bool sp_svg_angle_read_lff(gchar const *str, SVGAngle::Unit &unit, float &val, float &computed)
+static bool sp_svg_angle_read_lff(gchar const *str, SVGAngle::Unit &unit, double &val, double &computed)
 {
     if (!str) {
         return false;
     }
 
     gchar const *e;
-    float const v = g_ascii_strtod(str, (char **) &e);
+    double const v = g_ascii_strtod(str, (char **) &e);
     if (e == str) {
         return false;
     }
