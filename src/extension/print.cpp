@@ -28,12 +28,6 @@ Print::Print (Inkscape::XML::Node *in_repr, Implementation::Implementation *in_i
 Print::~Print ()
 = default;
 
-bool
-Print::check ()
-{
-    return Extension::check();
-}
-
 unsigned int
 Print::setup ()
 {

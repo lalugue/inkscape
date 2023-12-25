@@ -40,8 +40,6 @@ public:
     Print(Inkscape::XML::Node *in_repr, Implementation::Implementation *in_imp, std::string *base_directory);
     ~Print() override;
 
-    bool check() override;
-
     /* FALSE means user hit cancel */
     unsigned int  setup       ();
     unsigned int  set_preview ();
