@@ -19,11 +19,9 @@
 
 #include "extension/implementation/implementation.h"
 
-namespace Inkscape {
-namespace Extension {
-namespace Internal {
+namespace Inkscape::Extension::Internal {
 
-class CairoPsOutput : Inkscape::Extension::Implementation::Implementation {
+class CairoPsOutput : public Inkscape::Extension::Implementation::Implementation {
 
 public:
     bool check(Inkscape::Extension::Extension *module) override;
@@ -35,7 +33,7 @@ public:
 
 };
 
-class CairoEpsOutput : Inkscape::Extension::Implementation::Implementation {
+class CairoEpsOutput : public Inkscape::Extension::Implementation::Implementation {
 
 public:
     bool check(Inkscape::Extension::Extension *module) override;
@@ -47,7 +45,7 @@ public:
 
 };
 
-} } }  /* namespace Inkscape, Extension, Implementation */
+}  // namespace Inkscape::Extension::Internal
 
 #endif /* !EXTENSION_INTERNAL_CAIRO_PS_OUT_H */
 

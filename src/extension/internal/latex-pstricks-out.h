@@ -18,7 +18,7 @@ namespace Inkscape {
 namespace Extension {
 namespace Internal {
 
-class LatexOutput : Inkscape::Extension::Implementation::Implementation { //This is a derived class
+class LatexOutput : public Inkscape::Extension::Implementation::Implementation {
     
 public:
     LatexOutput(); // Empty constructor

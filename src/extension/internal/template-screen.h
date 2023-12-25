@@ -15,18 +15,14 @@
 
 #include "extension/internal/template-base.h"
 
-namespace Inkscape {
-namespace Extension {
-namespace Internal {
+namespace Inkscape::Extension::Internal {
 
-class TemplateScreen : TemplateBase
+class TemplateScreen : public TemplateBase
 {
 public:
     TemplateScreen(){};
     static void init();
 };
 
-} // namespace Internal
-} // namespace Extension
-} // namespace Inkscape
+} // namespace Inkscape::Extension::Internal
 #endif /* EXTENSION_INTERNAL_TEMPLATE_SCREEN_H */

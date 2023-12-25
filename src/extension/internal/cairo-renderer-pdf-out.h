@@ -21,7 +21,7 @@ namespace Inkscape {
 namespace Extension {
 namespace Internal {
 
-class CairoRendererPdfOutput : Inkscape::Extension::Implementation::Implementation {
+class CairoRendererPdfOutput : public Inkscape::Extension::Implementation::Implementation {
 
 public:
     bool check(Inkscape::Extension::Extension *module) override;

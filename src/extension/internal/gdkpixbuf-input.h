@@ -12,19 +12,16 @@
 
 #include "extension/implementation/implementation.h"
 
-namespace Inkscape {
-namespace Extension {
-namespace Internal {
+namespace Inkscape::Extension::Internal {
 
-class GdkpixbufInput : Inkscape::Extension::Implementation::Implementation {
+class GdkpixbufInput : public Inkscape::Extension::Implementation::Implementation {
 public:
     SPDocument *open(Inkscape::Extension::Input *mod,
                      char const *uri) override;
     static void init();
 };
 
-} } }  /* namespace Inkscape, Extension, Implementation */
-
+}  // namespace Inkscape::Extension::Internal
 
 #endif /* INKSCAPE_EXTENSION_INTERNAL_GDKPIXBUF_INPUT_H */
 
