@@ -44,7 +44,7 @@ Negate::init()
                 "</effects-menu>\n"
                 "<menu-tip>" N_("Negate (take inverse) selected bitmap(s)") "</menu-tip>\n"
             "</effect>\n"
-        "</inkscape-extension>\n", new Negate());
+        "</inkscape-extension>\n", std::make_unique<Negate>());
     // clang-format on
 }
 

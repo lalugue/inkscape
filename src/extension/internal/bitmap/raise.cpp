@@ -51,7 +51,7 @@ Raise::init()
                 "</effects-menu>\n"
                 "<menu-tip>" N_("Alter lightness the edges of selected bitmap(s) to create a raised appearance") "</menu-tip>\n"
             "</effect>\n"
-        "</inkscape-extension>\n", new Raise());
+        "</inkscape-extension>\n", std::make_unique<Raise>());
     // clang-format on
 }
 

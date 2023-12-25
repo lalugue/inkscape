@@ -50,7 +50,7 @@ AdaptiveThreshold::init()
                 "</effects-menu>\n"
                 "<menu-tip>" N_("Apply adaptive thresholding to selected bitmap(s)") "</menu-tip>\n"
             "</effect>\n"
-        "</inkscape-extension>\n", new AdaptiveThreshold());
+        "</inkscape-extension>\n", std::make_unique<AdaptiveThreshold>());
     // clang-format on
 }
 

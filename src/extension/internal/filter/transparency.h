@@ -74,7 +74,7 @@ public:
                 "</effects-menu>\n"
                 "<menu-tip>" N_("Blend objects with background images or with themselves") "</menu-tip>\n"
               "</effect>\n"
-            "</inkscape-extension>\n", new Blend());
+            "</inkscape-extension>\n", std::make_unique<Blend>());
         // clang-format on
     };
 
@@ -149,7 +149,7 @@ public:
                 "</effects-menu>\n"
                 "<menu-tip>" N_("Replace RGB with transparency") "</menu-tip>\n"
               "</effect>\n"
-            "</inkscape-extension>\n", new ChannelTransparency());
+            "</inkscape-extension>\n", std::make_unique<ChannelTransparency>());
         // clang-format on
     };
 };
@@ -227,7 +227,7 @@ public:
                 "</effects-menu>\n"
                 "<menu-tip>" N_("Make the lightest parts of the object progressively transparent") "</menu-tip>\n"
               "</effect>\n"
-            "</inkscape-extension>\n", new LightEraser());
+            "</inkscape-extension>\n", std::make_unique<LightEraser>());
         // clang-format on
     };
 };
@@ -304,7 +304,7 @@ public:
                 "</effects-menu>\n"
                 "<menu-tip>" N_("Set opacity and strength of opacity boundaries") "</menu-tip>\n"
               "</effect>\n"
-            "</inkscape-extension>\n", new Opacity());
+            "</inkscape-extension>\n", std::make_unique<Opacity>());
         // clang-format on
     };
 };
@@ -370,7 +370,7 @@ public:
                 "</effects-menu>\n"
                 "<menu-tip>" N_("Repaint anything visible monochrome") "</menu-tip>\n"
               "</effect>\n"
-            "</inkscape-extension>\n", new Silhouette());
+            "</inkscape-extension>\n", std::make_unique<Silhouette>());
         // clang-format on
     };
 

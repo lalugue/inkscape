@@ -52,7 +52,7 @@ Level::init()
                 "</effects-menu>\n"
                 "<menu-tip>" N_("Level selected bitmap(s) by scaling values falling between the given ranges to the full color range") "</menu-tip>\n"
             "</effect>\n"
-        "</inkscape-extension>\n", new Level());
+        "</inkscape-extension>\n", std::make_unique<Level>());
     // clang-format on
 }
 

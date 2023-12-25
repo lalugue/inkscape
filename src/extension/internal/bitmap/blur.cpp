@@ -48,7 +48,7 @@ Blur::init()
                 "</effects-menu>\n"
                 "<menu-tip>" N_("Blur selected bitmap(s)") "</menu-tip>\n"
             "</effect>\n"
-        "</inkscape-extension>\n", new Blur());
+        "</inkscape-extension>\n", std::make_unique<Blur>());
     // clang-format on
 }
 

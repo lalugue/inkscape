@@ -41,7 +41,7 @@ public:
         const char *what() const noexcept override { return "Open was cancelled"; }
     };
 
-    Input(Inkscape::XML::Node *in_repr, Implementation::Implementation *in_imp, std::string *base_directory);
+    Input(Inkscape::XML::Node *in_repr, ImplementationHolder implementation, std::string *base_directory);
     ~Input() override;
 
     bool check() override;

@@ -49,8 +49,6 @@
 
 namespace Inkscape::Extension {
 
-/* Inkscape::Extension::Extension */
-
 FILE *Extension::error_file = nullptr;
 
 /**
@@ -65,17 +63,12 @@ FILE *Extension::error_file = nullptr;
     not related to the module directly.  If the Repr does not include
     a name and an ID the module will be left in an errored state.
 */
-Extension::Extension(Inkscape::XML::Node *in_repr, Implementation::Implementation *in_imp, std::string *base_directory)
+Extension::Extension(Inkscape::XML::Node *in_repr, ImplementationHolder implementation, std::string *base_directory)
+    : imp{std::move(implementation)}
 {
     g_return_if_fail(in_repr); // should be ensured in system.cpp
     repr = in_repr;
     Inkscape::GC::anchor(repr);
-
-    if (in_imp == nullptr) {
-        imp = new Implementation::Implementation(); // TODO: fix leak
-    } else {
-        imp = in_imp;
-    }
 
     if (base_directory) {
         _base_directory = *base_directory;
@@ -267,7 +260,7 @@ Extension::check ()
         printFailure(Glib::ustring(_("the XML description of it got lost.")) += inx_failure);
         return false;
     }
-    if (imp == nullptr) {
+    if (!imp) {
         printFailure(Glib::ustring(_("no implementation was defined for the extension.")) += inx_failure);
         return false;
     }
@@ -354,8 +347,7 @@ Extension::deactivate ()
 
     /* Removing the old implementation, and making this use the default. */
     /* This should save some memory */
-    delete imp;
-    imp = new Implementation::Implementation();
+    imp = ImplementationHolder();
 }
 
 /**
@@ -557,9 +549,9 @@ void Extension::set_environment(const SPDocument *doc) {
   */
 ModuleImpType Extension::get_implementation_type()
 {
-    if (dynamic_cast<Implementation::Script *>(imp)) {
+    if (dynamic_cast<Implementation::Script *>(imp.get())) {
         return MODULE_EXTENSION;
-    } else if (dynamic_cast<Implementation::XSLT *>(imp)) {
+    } else if (dynamic_cast<Implementation::XSLT *>(imp.get())) {
         return MODULE_XSLT;
     }
     // MODULE_UNKNOWN_IMP is not required because it never results in an

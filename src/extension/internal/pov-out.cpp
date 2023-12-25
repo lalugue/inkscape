@@ -716,7 +716,7 @@ PovOutput::init()
                 "<filetypetooltip>" N_("PovRay Raytracer File") "</filetypetooltip>\n"
             "</output>\n"
         "</inkscape-extension>",
-        new PovOutput());
+        std::make_unique<PovOutput>());
     // clang-format on
 }
 

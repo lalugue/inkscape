@@ -136,9 +136,8 @@ private:
 
     
 class PdfInput final: public Inkscape::Extension::Implementation::Implementation {
-    PdfInput() = default;
-
 public:
+    PdfInput() = default;
     SPDocument *open(Inkscape::Extension::Input *mod,
                      const gchar *uri) final;
     static void         init( );

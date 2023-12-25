@@ -306,7 +306,7 @@ CairoPsOutput::init ()
                 "<filetypename>" N_("PostScript (*.ps)") "</filetypename>\n"
                 "<filetypetooltip>" N_("PostScript File") "</filetypetooltip>\n"
             "</output>\n"
-        "</inkscape-extension>", new CairoPsOutput());
+        "</inkscape-extension>", std::make_unique<CairoPsOutput>());
     // clang-format on
 
     return;
@@ -350,7 +350,7 @@ CairoEpsOutput::init ()
                 "<filetypename>" N_("Encapsulated PostScript (*.eps)") "</filetypename>\n"
                 "<filetypetooltip>" N_("Encapsulated PostScript File") "</filetypetooltip>\n"
             "</output>\n"
-        "</inkscape-extension>", new CairoEpsOutput());
+        "</inkscape-extension>", std::make_unique<CairoEpsOutput>());
     // clang-format on
 
     return;

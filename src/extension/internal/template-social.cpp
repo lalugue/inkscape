@@ -61,7 +61,7 @@ void TemplateSocial::init()
 
             "</template>"
         "</inkscape-extension>",
-        new TemplateSocial());
+        std::make_unique<TemplateSocial>());
     // clang-format on
 }
 

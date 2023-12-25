@@ -117,7 +117,7 @@ public:
                 "</effects-menu>\n"
                 "<menu-tip>" N_("Chromo effect with customizable edge drawing and graininess") "</menu-tip>\n"
               "</effect>\n"
-            "</inkscape-extension>\n", new Chromolitho());
+            "</inkscape-extension>\n", std::make_unique<Chromolitho>());
         // clang-format on
     };
 };
@@ -252,7 +252,7 @@ public:
                 "</effects-menu>\n"
                 "<menu-tip>" N_("Convert image to an engraving made of vertical and horizontal lines") "</menu-tip>\n"
               "</effect>\n"
-            "</inkscape-extension>\n", new CrossEngraving());
+            "</inkscape-extension>\n", std::make_unique<CrossEngraving>());
         // clang-format on
     };
 };
@@ -375,7 +375,7 @@ public:
                 "</effects-menu>\n"
                 "<menu-tip>" N_("Convert images to duochrome drawings") "</menu-tip>\n"
               "</effect>\n"
-            "</inkscape-extension>\n", new Drawing());
+            "</inkscape-extension>\n", std::make_unique<Drawing>());
         // clang-format on
     };
 };
@@ -523,7 +523,7 @@ public:
                 "</effects-menu>\n"
                 "<menu-tip>" N_("Electro solarization effects") "</menu-tip>\n"
               "</effect>\n"
-            "</inkscape-extension>\n", new Electrize());
+            "</inkscape-extension>\n", std::make_unique<Electrize>());
         // clang-format on
     };
 };
@@ -622,7 +622,7 @@ public:
                 "</effects-menu>\n"
                 "<menu-tip>" N_("Posterize and draw smooth lines around color shapes") "</menu-tip>\n"
               "</effect>\n"
-            "</inkscape-extension>\n", new NeonDraw());
+            "</inkscape-extension>\n", std::make_unique<NeonDraw>());
         // clang-format on
     };
 };
@@ -749,7 +749,7 @@ public:
                 "</effects-menu>\n"
                 "<menu-tip>" N_("Convert image to a transparent point engraving") "</menu-tip>\n"
               "</effect>\n"
-            "</inkscape-extension>\n", new PointEngraving());
+            "</inkscape-extension>\n", std::make_unique<PointEngraving>());
         // clang-format on
     };
 
@@ -905,7 +905,7 @@ public:
                 "</effects-menu>\n"
                 "<menu-tip>" N_("Poster and painting effects") "</menu-tip>\n"
               "</effect>\n"
-            "</inkscape-extension>\n", new Posterize());
+            "</inkscape-extension>\n", std::make_unique<Posterize>());
         // clang-format on
     };
 };
@@ -1013,7 +1013,7 @@ public:
                 "</effects-menu>\n"
                 "<menu-tip>" N_("Simple posterizing effect") "</menu-tip>\n"
               "</effect>\n"
-            "</inkscape-extension>\n", new PosterizeBasic());
+            "</inkscape-extension>\n", std::make_unique<PosterizeBasic>());
         // clang-format on
     };
 };

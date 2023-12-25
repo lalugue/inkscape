@@ -49,7 +49,7 @@ Contrast::init()
                 "</effects-menu>\n"
                 "<menu-tip>" N_("Increase or decrease contrast in bitmap(s)") "</menu-tip>\n"
             "</effect>\n"
-        "</inkscape-extension>\n", new Contrast());
+        "</inkscape-extension>\n", std::make_unique<Contrast>());
     // clang-format on
 }
 

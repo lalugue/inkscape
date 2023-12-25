@@ -146,7 +146,7 @@ public:
                 "</effects-menu>\n"
                 "<menu-tip>" N_("All purposes bump filter") "</menu-tip>\n"
               "</effect>\n"
-            "</inkscape-extension>\n", new Bump());
+            "</inkscape-extension>\n", std::make_unique<Bump>());
         // clang-format on
     };
 
@@ -370,7 +370,7 @@ public:
                 "</effects-menu>\n"
                 "<menu-tip>" N_("Turns an image to jelly") "</menu-tip>\n"
               "</effect>\n"
-            "</inkscape-extension>\n", new WaxBump());
+            "</inkscape-extension>\n", std::make_unique<WaxBump>());
         // clang-format on
     };
 

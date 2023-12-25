@@ -66,7 +66,7 @@ public:
                 "</effects-menu>\n"
               "<menu-tip>" N_("Detect color edges in object") "</menu-tip>\n"
               "</effect>\n"
-            "</inkscape-extension>\n", new EdgeDetect());
+            "</inkscape-extension>\n", std::make_unique<EdgeDetect>());
         // clang-format on
     };
 

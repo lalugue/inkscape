@@ -248,7 +248,7 @@ CairoRendererPdfOutput::init ()
                 "<filetypename>Portable Document Format (*.pdf)</filetypename>\n"
                 "<filetypetooltip>PDF File</filetypetooltip>\n"
             "</output>\n"
-        "</inkscape-extension>", new CairoRendererPdfOutput());
+        "</inkscape-extension>", std::make_unique<CairoRendererPdfOutput>());
     // clang-format on
 
     return;

@@ -34,6 +34,7 @@ set(util_SRC
 	format_size.h
 	forward-pointer-iterator.h
 	funclog.h
+	hybrid-pointer.h
 	longest-common-suffix.h
     object-renderer.h
 	optstr.h

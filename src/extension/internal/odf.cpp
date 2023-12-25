@@ -2095,7 +2095,7 @@ void OdfOutput::init()
                 "<filetypetooltip>" N_("OpenDocument drawing file") "</filetypetooltip>\n"
             "</output>\n"
         "</inkscape-extension>",
-        new OdfOutput());
+        std::make_unique<OdfOutput>());
     // clang-format on
 }
 

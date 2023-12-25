@@ -46,7 +46,7 @@ OilPaint::init()
                 "</effects-menu>\n"
                 "<menu-tip>" N_("Stylize selected bitmap(s) so that they appear to be painted with oils") "</menu-tip>\n"
             "</effect>\n"
-        "</inkscape-extension>\n", new OilPaint());
+        "</inkscape-extension>\n", std::make_unique<OilPaint>());
     // clang-format on
 }
 

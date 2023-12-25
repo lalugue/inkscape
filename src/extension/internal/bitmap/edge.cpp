@@ -46,7 +46,7 @@ Edge::init()
                 "</effects-menu>\n"
                 "<menu-tip>" N_("Highlight edges of selected bitmap(s)") "</menu-tip>\n"
             "</effect>\n"
-        "</inkscape-extension>\n", new Edge());
+        "</inkscape-extension>\n", std::make_unique<Edge>());
     // clang-format on
 }
 

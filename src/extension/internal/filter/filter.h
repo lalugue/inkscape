@@ -29,7 +29,7 @@ namespace Filter {
 
 class Filter : public Inkscape::Extension::Implementation::Implementation {
 protected:
-	gchar const * _filter;
+    gchar const * _filter; // TODO: fix leaking filter strings.
 	virtual gchar const * get_filter_text (Inkscape::Extension::Extension * ext);
 
 private:

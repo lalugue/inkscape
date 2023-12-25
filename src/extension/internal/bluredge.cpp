@@ -140,7 +140,7 @@ BlurEdge::init ()
                     "<submenu name=\"" N_("Generate from Path") "\" />\n"
                 "</effects-menu>\n"
             "</effect>\n"
-        "</inkscape-extension>\n" , new BlurEdge());
+        "</inkscape-extension>\n" , std::make_unique<BlurEdge>());
     // clang-format on
     return;
 }

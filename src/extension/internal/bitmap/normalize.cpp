@@ -44,7 +44,7 @@ Normalize::init()
                 "</effects-menu>\n"
                 "<menu-tip>" N_("Normalize selected bitmap(s), expanding color range to the full possible range of color") "</menu-tip>\n"
             "</effect>\n"
-        "</inkscape-extension>\n", new Normalize());
+        "</inkscape-extension>\n", std::make_unique<Normalize>());
     // clang-format on
 }
 

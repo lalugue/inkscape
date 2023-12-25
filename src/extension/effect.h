@@ -51,8 +51,8 @@ class Effect : public Extension {
     PrefDialog * _prefDialog;
 
 public:
-    Effect(Inkscape::XML::Node *in_repr, Implementation::Implementation *in_imp, std::string *base_directory, std::string* file_name);
-    ~Effect  () override;
+    Effect(Inkscape::XML::Node *in_repr, ImplementationHolder implementation, std::string *base_directory, std::string* file_name);
+    ~Effect() override;
 
     bool         prefs   (SPDesktop * desktop);
     void         effect  (SPDesktop * desktop);

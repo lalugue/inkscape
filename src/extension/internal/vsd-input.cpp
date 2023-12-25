@@ -323,7 +323,7 @@ void VsdInput::init()
                 "<filetypename>" N_("Microsoft Visio Diagram (*.vsd)") "</filetypename>\n"
                 "<filetypetooltip>" N_("File format used by Microsoft Visio 6 and later") "</filetypetooltip>\n"
             "</input>\n"
-        "</inkscape-extension>", new VsdInput());
+        "</inkscape-extension>", std::make_unique<VsdInput>());
     /* VDX */
     Inkscape::Extension::build_from_mem(
         "<inkscape-extension xmlns=\"" INKSCAPE_EXTENSION_URI "\">\n"
@@ -335,7 +335,7 @@ void VsdInput::init()
                 "<filetypename>" N_("Microsoft Visio XML Diagram (*.vdx)") "</filetypename>\n"
                 "<filetypetooltip>" N_("File format used by Microsoft Visio 2010 and later") "</filetypetooltip>\n"
             "</input>\n"
-        "</inkscape-extension>", new VsdInput());
+        "</inkscape-extension>", std::make_unique<VsdInput>());
     /* VSDM */
     Inkscape::Extension::build_from_mem(
         "<inkscape-extension xmlns=\"" INKSCAPE_EXTENSION_URI "\">\n"
@@ -347,7 +347,7 @@ void VsdInput::init()
                 "<filetypename>" N_("Microsoft Visio 2013 drawing (*.vsdm)") "</filetypename>\n"
                 "<filetypetooltip>" N_("File format used by Microsoft Visio 2013 and later") "</filetypetooltip>\n"
             "</input>\n"
-        "</inkscape-extension>", new VsdInput());
+        "</inkscape-extension>", std::make_unique<VsdInput>());
     /* VSDX */
     Inkscape::Extension::build_from_mem(
         "<inkscape-extension xmlns=\"" INKSCAPE_EXTENSION_URI "\">\n"
@@ -359,7 +359,7 @@ void VsdInput::init()
                 "<filetypename>" N_("Microsoft Visio 2013 drawing (*.vsdx)") "</filetypename>\n"
                 "<filetypetooltip>" N_("File format used by Microsoft Visio 2013 and later") "</filetypetooltip>\n"
             "</input>\n"
-        "</inkscape-extension>", new VsdInput());
+        "</inkscape-extension>", std::make_unique<VsdInput>());
     // clang-format on
 }
 

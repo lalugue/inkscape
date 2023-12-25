@@ -51,7 +51,7 @@ Shade::init()
                 "</effects-menu>\n"
                 "<menu-tip>" N_("Shade selected bitmap(s) simulating distant light source") "</menu-tip>\n"
             "</effect>\n"
-        "</inkscape-extension>\n", new Shade());
+        "</inkscape-extension>\n", std::make_unique<Shade>());
     // clang-format on
 }
 

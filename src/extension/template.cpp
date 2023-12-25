@@ -180,58 +180,58 @@ bool TemplatePreset::match_size(double width, double height, const TemplatePrefs
 }
 
 /**
-    \return   None
     \brief    Builds a Template object from a XML description
-    \param    module  The module to be initialized
-    \param    repr    The XML description in a Inkscape::XML::Node tree
+    \param    in_repr The XML description in a Inkscape::XML::Node tree
+    \param    implementation The implementation of the extension
 */
-Template::Template(Inkscape::XML::Node *in_repr, Implementation::Implementation *in_imp, std::string *base_directory)
-    : Extension(in_repr, in_imp, base_directory)
+Template::Template(Inkscape::XML::Node *in_repr, ImplementationHolder implementation, std::string *base_directory)
+    : Extension(in_repr, std::move(implementation), base_directory)
 {
-    if (repr != nullptr) {
-        if (auto t_node = sp_repr_lookup_name(repr, INKSCAPE_EXTENSION_NS "template", 1)) {
-            _source = sp_repr_lookup_content(repr, INKSCAPE_EXTENSION_NS "source");
-            _desc = sp_repr_lookup_content(repr, INKSCAPE_EXTENSION_NS "description");
-            _category = sp_repr_lookup_content(repr, INKSCAPE_EXTENSION_NS "category", N_("Other"));
+    if (!repr) {
+        return;
+    }
+    auto const t_node = sp_repr_lookup_name(repr, INKSCAPE_EXTENSION_NS "template", 1);
+    if (!t_node) {
+        return;
+    }
+    _source = sp_repr_lookup_content(repr, INKSCAPE_EXTENSION_NS "source");
+    _desc = sp_repr_lookup_content(repr, INKSCAPE_EXTENSION_NS "description");
+    _category = sp_repr_lookup_content(repr, INKSCAPE_EXTENSION_NS "category", N_("Other"));
 
-            // Remember any global/default preferences from the root node.
-            TemplatePrefs prefs;
-            for (const auto &iter : t_node->attributeList()) {
-                std::string name = g_quark_to_string(iter.key);
-                std::string value = std::string(iter.value);
-                if (name == "icon") {
-                    _icon = value;
-                } else if (name == "visibility") {
-                    _visibility = parse_visibility(value);
-                } else if (name == "priority") {
-                    set_sort_priority(std::stoi(value));
-                } else {
-                    prefs[name] = value;
-                }
-            }
-
-            // Default priority will incriment to keep inx order where possible.
-            int priority = get_sort_priority();
-            for (auto p_node : sp_repr_lookup_name_many(t_node, INKSCAPE_EXTENSION_NS "preset")) {
-                auto preset = new TemplatePreset(this, p_node, prefs, priority);
-                _presets.emplace_back(preset);
-                priority += 1;
-                // If any preset is resizable, then the module is considered to support it.
-                if ( preset->is_visible(TEMPLATE_SIZE_SEARCH)
-                  || preset->is_visible(TEMPLATE_SIZE_LIST)) {
-                    _can_resize = true;
-                }
-            }
-            // Keep presets sorted internally for simple use cases.
-            std::sort(std::begin(_presets), std::end(_presets),
-                [](std::shared_ptr<TemplatePreset> const &a,
-                   std::shared_ptr<TemplatePreset> const &b) {
-                return a->get_sort_priority() < b->get_sort_priority();
-            });
+    // Remember any global/default preferences from the root node.
+    TemplatePrefs prefs;
+    for (const auto &iter : t_node->attributeList()) {
+        std::string name = g_quark_to_string(iter.key);
+        std::string value = std::string(iter.value);
+        if (name == "icon") {
+            _icon = value;
+        } else if (name == "visibility") {
+            _visibility = parse_visibility(value);
+        } else if (name == "priority") {
+            set_sort_priority(std::stoi(value));
+        } else {
+            prefs[name] = value;
         }
     }
 
-    return;
+    // Default priority will increment to keep inx order where possible.
+    int priority = get_sort_priority();
+    for (auto p_node : sp_repr_lookup_name_many(t_node, INKSCAPE_EXTENSION_NS "preset")) {
+        auto preset = new TemplatePreset(this, p_node, prefs, priority);
+        _presets.emplace_back(preset);
+        priority += 1;
+        // If any preset is resizable, then the module is considered to support it.
+        if ( preset->is_visible(TEMPLATE_SIZE_SEARCH)
+          || preset->is_visible(TEMPLATE_SIZE_LIST)) {
+            _can_resize = true;
+        }
+    }
+    // Keep presets sorted internally for simple use cases.
+    std::sort(std::begin(_presets), std::end(_presets),
+        [](std::shared_ptr<TemplatePreset> const &a,
+           std::shared_ptr<TemplatePreset> const &b) {
+        return a->get_sort_priority() < b->get_sort_priority();
+    });
 }
 
 /**
@@ -241,7 +241,7 @@ int Template::parse_visibility(const std::string &value)
 {
     int ret = 0;
     auto values = Glib::Regex::split_simple("," , value);
-    for (auto val : values) {
+    for (auto const &val : values) {
         ret |= (val == "icon") * TEMPLATE_NEW_ICON;
         ret |= (val == "list") * TEMPLATE_SIZE_LIST;
         ret |= (val == "search") * TEMPLATE_SIZE_SEARCH;

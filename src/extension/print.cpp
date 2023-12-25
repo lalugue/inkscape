@@ -16,17 +16,15 @@
 namespace Inkscape {
 namespace Extension {
 
-Print::Print (Inkscape::XML::Node *in_repr, Implementation::Implementation *in_imp, std::string *base_directory)
-    : Extension(in_repr, in_imp, base_directory)
+Print::Print(XML::Node *in_repr, ImplementationHolder implementation, std::string *base_directory)
+    : Extension(in_repr, std::move(implementation), base_directory)
     , base(nullptr)
     , drawing(nullptr)
     , root(nullptr)
     , dkey(0)
-{
-}
+{}
 
-Print::~Print ()
-= default;
+Print::~Print() = default;
 
 unsigned int
 Print::setup ()

@@ -92,7 +92,7 @@ public:
                 "</effects-menu>\n"
               "<menu-tip>" N_("Colorizable Drop shadow") "</menu-tip>\n"
               "</effect>\n"
-            "</inkscape-extension>\n", new ColorizableDropShadow());
+            "</inkscape-extension>\n", std::make_unique<ColorizableDropShadow>());
         // clang-format on
     };
 };

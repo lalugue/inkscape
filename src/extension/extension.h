@@ -27,6 +27,8 @@
 #include <glibmm/ustring.h>
 #include <sigc++/signal.h>
 
+#include "util/hybrid-pointer.h"
+
 namespace Glib {
 class ustring;
 } // namespace Glib
@@ -133,6 +135,7 @@ public:
         STATE_UNLOADED,    /**< The extension has not been loaded */
         STATE_DEACTIVATED  /**< The extension is missing something which makes it unusable */
     };
+    using ImplementationHolder = Util::HybridPointer<Implementation::Implementation>;
 
 private:
     std::string _id  ;                         /**< The unique identifier for the Extension */
@@ -148,7 +151,12 @@ private:
 
 protected:
     Inkscape::XML::Node *repr;                 /**< The XML description of the Extension */
-    Implementation::Implementation * imp;      /**< An object that holds all the functions for making this work */
+
+    /** An Implementation object provides the actual implementation of the Extension.
+     *  We hold an owning pointer to the implementation when the implementation is created by Inkscape,
+     *  and a non-owning pointer when the implementation is allocated in an external library.
+     */
+    ImplementationHolder imp;
     ExecutionEnv * execution_env = nullptr;    /**< Execution environment of the extension
                                                  *  (currently only used by Effects) */
     std::string _base_directory;               /**< Directory containing the .inx file,
@@ -164,7 +172,7 @@ private:
     void lookup_translation_catalog();
 
 public:
-    Extension(Inkscape::XML::Node *in_repr, Implementation::Implementation *in_imp, std::string *base_directory);
+    Extension(Inkscape::XML::Node *in_repr, ImplementationHolder implementation, std::string *base_directory);
     virtual ~Extension();
 
     void          set_state    (state_t in_state);
@@ -179,7 +187,7 @@ public:
     bool          deactivated  ();
     void          printFailure (Glib::ustring const &reason);
     std::string const &getErrorReason() { return _error_reason; };
-    Implementation::Implementation * get_imp () { return imp; };
+    Implementation::Implementation *get_imp() { return imp.get(); }
     void          set_execution_env (ExecutionEnv * env) { execution_env = env; };
     ExecutionEnv *get_execution_env () { return execution_env; };
     auto const   &get_base_directory() const { return _base_directory; };

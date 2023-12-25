@@ -3642,7 +3642,7 @@ Emf::init ()
                 "<filetypename>" N_("Enhanced Metafiles (*.emf)") "</filetypename>\n"
                 "<filetypetooltip>" N_("Enhanced Metafiles") "</filetypetooltip>\n"
             "</input>\n"
-        "</inkscape-extension>", new Emf());
+        "</inkscape-extension>", std::make_unique<Emf>());
     // clang-format on
 
     /* EMF out */
@@ -3668,7 +3668,7 @@ Emf::init ()
                 "<filetypename>" N_("Enhanced Metafile (*.emf)") "</filetypename>\n"
                 "<filetypetooltip>" N_("Enhanced Metafile") "</filetypetooltip>\n"
             "</output>\n"
-        "</inkscape-extension>", new Emf());
+        "</inkscape-extension>", std::make_unique<Emf>());
     // clang-format on
 
     return;

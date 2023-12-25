@@ -48,7 +48,7 @@ Sharpen::init()
                 "</effects-menu>\n"
                 "<menu-tip>" N_("Sharpen selected bitmap(s)") "</menu-tip>\n"
             "</effect>\n"
-        "</inkscape-extension>\n", new Sharpen());
+        "</inkscape-extension>\n", std::make_unique<Sharpen>());
     // clang-format on
 }
 

@@ -3216,7 +3216,7 @@ Wmf::init ()
                 "<filetypename>" N_("Windows Metafiles (*.wmf)") "</filetypename>\n"
                 "<filetypetooltip>" N_("Windows Metafiles") "</filetypetooltip>\n"
             "</input>\n"
-        "</inkscape-extension>", new Wmf());
+        "</inkscape-extension>", std::make_unique<Wmf>());
 
     /* WMF out */
     Inkscape::Extension::build_from_mem(
@@ -3238,7 +3238,7 @@ Wmf::init ()
                 "<filetypename>" N_("Windows Metafile (*.wmf)") "</filetypename>\n"
                 "<filetypetooltip>" N_("Windows Metafile") "</filetypetooltip>\n"
             "</output>\n"
-        "</inkscape-extension>", new Wmf());
+        "</inkscape-extension>", std::make_unique<Wmf>());
     // clang-format on
 
     return;

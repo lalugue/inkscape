@@ -74,7 +74,7 @@ LevelChannel::init()
                 "</effects-menu>\n"
                 "<menu-tip>" N_("Level the specified channel of selected bitmap(s) by scaling values falling between the given ranges to the full color range") "</menu-tip>\n"
             "</effect>\n"
-        "</inkscape-extension>\n", new LevelChannel());
+        "</inkscape-extension>\n", std::make_unique<LevelChannel>());
     // clang-format on
 }
 

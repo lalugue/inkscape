@@ -80,7 +80,7 @@ Svg::init()
                 "<filetypename>" N_("Scalable Vector Graphic (*.svg)") "</filetypename>\n"
                 "<filetypetooltip>" N_("Inkscape native file format and W3C standard") "</filetypetooltip>\n"
             "</input>\n"
-        "</inkscape-extension>", new Svg());
+        "</inkscape-extension>", std::make_unique<Svg>());
 
     /* SVG out Inkscape */
     Inkscape::Extension::build_from_mem(
@@ -102,7 +102,7 @@ Svg::init()
             "<action pref='/options/svgexport/text_insertfallback'>insert-text-fallback</action>\n"
             "<action pref='/options/svgexport/mesh_insertpolyfill'>insert-mesh-polyfill</action>\n"
             "<action pref='/options/svgexport/hatch_insertpolyfill'>insert-hatch-polyfill</action>\n"
-        "</inkscape-extension>", new Svg());
+        "</inkscape-extension>", std::make_unique<Svg>());
 
     /* SVG out */
     Inkscape::Extension::build_from_mem(
@@ -122,7 +122,7 @@ Svg::init()
             "<action pref='/options/svgexport/text_insertfallback'>insert-text-fallback</action>\n"
             "<action>prune-proprietary-namespaces</action>\n"
             "<action>prune-inkscape-namespaces</action>\n"
-        "</inkscape-extension>", new Svg());
+        "</inkscape-extension>", std::make_unique<Svg>());
     // clang-format on
 
     return;

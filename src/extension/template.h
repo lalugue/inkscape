@@ -102,7 +102,7 @@ public:
         const char *what() const noexcept override { return "Create was cancelled"; }
     };
 
-    Template(Inkscape::XML::Node *in_repr, Implementation::Implementation *in_imp, std::string *base_directory);
+    Template(Inkscape::XML::Node *in_repr, ImplementationHolder implementation, std::string *base_directory);
     ~Template() override = default;
 
     bool check() override;

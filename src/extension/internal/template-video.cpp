@@ -48,7 +48,7 @@ void TemplateVideo::init()
 
             "</template>"
         "</inkscape-extension>",
-        new TemplateVideo());
+        std::make_unique<TemplateVideo>());
     // clang-format on
 }
 

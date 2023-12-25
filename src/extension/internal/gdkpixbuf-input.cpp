@@ -227,7 +227,7 @@ GdkpixbufInput::init()
                 );
             // clang-format off
 
-            Inkscape::Extension::build_from_mem(xmlString, new GdkpixbufInput());
+            Inkscape::Extension::build_from_mem(xmlString, std::make_unique<GdkpixbufInput>());
             g_free(xmlString);
             g_free(caption);
         }}

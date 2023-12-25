@@ -80,7 +80,7 @@ public:
                 "</effects-menu>\n"
                 "<menu-tip>" N_("Smooth edges and angles of shapes") "</menu-tip>\n"
               "</effect>\n"
-            "</inkscape-extension>\n", new Crosssmooth());
+            "</inkscape-extension>\n", std::make_unique<Crosssmooth>());
         // clang-format on
     };
 
@@ -211,7 +211,7 @@ public:
                 "</effects-menu>\n"
                 "<menu-tip>" N_("Adds a colorizable outline") "</menu-tip>\n"
               "</effect>\n"
-            "</inkscape-extension>\n", new Outline());
+            "</inkscape-extension>\n", std::make_unique<Outline>());
         // clang-format on
     };
 

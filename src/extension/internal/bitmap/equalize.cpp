@@ -43,7 +43,7 @@ Equalize::init()
                 "</effects-menu>\n"
                 "<menu-tip>" N_("Equalize selected bitmap(s); histogram equalization") "</menu-tip>\n"
             "</effect>\n"
-        "</inkscape-extension>\n", new Equalize());
+        "</inkscape-extension>\n", std::make_unique<Equalize>());
     // clang-format on
 }
 

@@ -48,7 +48,7 @@ void TemplateScreen::init()
 
             "</template>"
         "</inkscape-extension>",
-        new TemplateScreen());
+        std::make_unique<TemplateScreen>());
     // clang-format on
 }
 

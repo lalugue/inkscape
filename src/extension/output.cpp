@@ -25,23 +25,21 @@ namespace Inkscape {
 namespace Extension {
 
 /**
-    \return   None
-    \brief    Builds a SPModuleOutput object from a XML description
-    \param    module  The module to be initialized
-    \param    repr    The XML description in a Inkscape::XML::Node tree
+    \brief    Builds an Output object from a XML description
+    \param    in_repr        The XML description in a Inkscape::XML::Node tree
+    \param    implementation The implementation of the extension
 
-    Okay, so you want to build a SPModuleOutput object.
+    Okay, so you want to build an Output object.
 
-    This function first takes and does the build of the parent class,
-    which is SPModule.  Then, it looks for the <output> section of the
+    This function looks for the <output> section of the
     XML description.  Under there should be several fields which
     describe the output module to excruciating detail.  Those are parsed,
     copied, and put into the structure that is passed in as module.
     Overall, there are many levels of indentation, just to handle the
     levels of indentation in the XML file.
 */
-Output::Output (Inkscape::XML::Node *in_repr, Implementation::Implementation *in_imp, std::string *base_directory)
-    : Extension(in_repr, in_imp, base_directory)
+Output::Output(Inkscape::XML::Node *in_repr, ImplementationHolder implementation, std::string *base_directory)
+    : Extension(in_repr, std::move(implementation), base_directory)
 {
     mimetype = nullptr;
     extension = nullptr;

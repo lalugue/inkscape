@@ -43,7 +43,7 @@ Enhance::init()
                 "</effects-menu>\n"
                 "<menu-tip>" N_("Enhance selected bitmap(s); minimize noise") "</menu-tip>\n"
             "</effect>\n"
-        "</inkscape-extension>\n", new Enhance());
+        "</inkscape-extension>\n", std::make_unique<Enhance>());
     // clang-format on
 }
 

@@ -67,7 +67,7 @@ public:
                 "</effects-menu>\n"
                 "<menu-tip>" N_("Simple vertical and horizontal blur effect") "</menu-tip>\n"
               "</effect>\n"
-            "</inkscape-extension>\n", new Blur());
+            "</inkscape-extension>\n", std::make_unique<Blur>());
         // clang-format on
     };
 
@@ -140,7 +140,7 @@ public:
                 "</effects-menu>\n"
                 "<menu-tip>" N_("Removes or decreases glows and jaggeries around objects edges after applying some filters") "</menu-tip>\n"
               "</effect>\n"
-            "</inkscape-extension>\n", new CleanEdges());
+            "</inkscape-extension>\n", std::make_unique<CleanEdges>());
         // clang-format on
     };
 
@@ -213,7 +213,7 @@ public:
                 "</effects-menu>\n"
                 "<menu-tip>" N_("Combine vertical and horizontal blur") "</menu-tip>\n"
               "</effect>\n"
-            "</inkscape-extension>\n", new CrossBlur());
+            "</inkscape-extension>\n", std::make_unique<CrossBlur>());
         // clang-format on
     };
 
@@ -283,7 +283,7 @@ public:
                 "</effects-menu>\n"
                 "<menu-tip>" N_("Blurred mask on the edge without altering the contents") "</menu-tip>\n"
               "</effect>\n"
-            "</inkscape-extension>\n", new Feather());
+            "</inkscape-extension>\n", std::make_unique<Feather>());
         // clang-format on
     };
 
@@ -371,7 +371,7 @@ public:
                 "</effects-menu>\n"
                 "<menu-tip>" N_("Blur eroded by white or transparency") "</menu-tip>\n"
               "</effect>\n"
-            "</inkscape-extension>\n", new ImageBlur());
+            "</inkscape-extension>\n", std::make_unique<ImageBlur>());
         // clang-format on
     };
 

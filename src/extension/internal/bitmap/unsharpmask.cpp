@@ -53,7 +53,7 @@ Unsharpmask::init()
                 "</effects-menu>\n"
                 "<menu-tip>" N_("Sharpen selected bitmap(s) using unsharp mask algorithms") "</menu-tip>\n"
             "</effect>\n"
-        "</inkscape-extension>\n", new Unsharpmask());
+        "</inkscape-extension>\n", std::make_unique<Unsharpmask>());
     // clang-format on
 }
 

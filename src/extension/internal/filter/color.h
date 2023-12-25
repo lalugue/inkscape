@@ -88,7 +88,7 @@ public:
                 "</effects-menu>\n"
                 "<menu-tip>" N_("Brightness filter") "</menu-tip>\n"
               "</effect>\n"
-            "</inkscape-extension>\n", new Brilliance());
+            "</inkscape-extension>\n", std::make_unique<Brilliance>());
         // clang-format on
     };
 };
@@ -181,7 +181,7 @@ public:
                 "</effects-menu>\n"
                 "<menu-tip>" N_("Replace RGB by any color") "</menu-tip>\n"
               "</effect>\n"
-            "</inkscape-extension>\n", new ChannelPaint());
+            "</inkscape-extension>\n", std::make_unique<ChannelPaint>());
         // clang-format on
     };
 };
@@ -296,7 +296,7 @@ public:
                 "</effects-menu>\n"
                 "<menu-tip>" N_("Simulate color blindness") "</menu-tip>\n"
               "</effect>\n"
-            "</inkscape-extension>\n", new ColorBlindness());
+            "</inkscape-extension>\n", std::make_unique<ColorBlindness>());
         // clang-format on
     };
 };
@@ -354,7 +354,7 @@ public:
                 "</effects-menu>\n"
                 "<menu-tip>" N_("Rotate and desaturate hue") "</menu-tip>\n"
               "</effect>\n"
-            "</inkscape-extension>\n", new ColorShift());
+            "</inkscape-extension>\n", std::make_unique<ColorShift>());
         // clang-format on
     };
 
@@ -443,7 +443,7 @@ public:
                   "</effects-menu>\n"
                 "<menu-tip>" N_("Blend image or object with a flood color") "</menu-tip>\n"
               "</effect>\n"
-            "</inkscape-extension>\n", new Colorize());
+            "</inkscape-extension>\n", std::make_unique<Colorize>());
         // clang-format on
     };
 
@@ -537,7 +537,7 @@ public:
                 "</effects-menu>\n"
                 "<menu-tip>" N_("Basic component transfer structure") "</menu-tip>\n"
               "</effect>\n"
-            "</inkscape-extension>\n", new ComponentTransfer());
+            "</inkscape-extension>\n", std::make_unique<ComponentTransfer>());
         // clang-format on
     };
 };
@@ -636,7 +636,7 @@ public:
                 "</effects-menu>\n"
                 "<menu-tip>" N_("Convert luminance values to a duochrome palette") "</menu-tip>\n"
               "</effect>\n"
-            "</inkscape-extension>\n", new Duochrome());
+            "</inkscape-extension>\n", std::make_unique<Duochrome>());
         // clang-format on
     };
 
@@ -762,7 +762,7 @@ public:
                 "</effects-menu>\n"
                 "<menu-tip>" N_("Extract color channel as a transparent image") "</menu-tip>\n"
               "</effect>\n"
-            "</inkscape-extension>\n", new ExtractChannel());
+            "</inkscape-extension>\n", std::make_unique<ExtractChannel>());
         // clang-format on
     };
 };
@@ -863,7 +863,7 @@ public:
                 "</effects-menu>\n"
                 "<menu-tip>" N_("Fade to black or white") "</menu-tip>\n"
               "</effect>\n"
-            "</inkscape-extension>\n", new FadeToBW());
+            "</inkscape-extension>\n", std::make_unique<FadeToBW>());
         // clang-format on
     };
 };
@@ -946,7 +946,7 @@ public:
                 "</effects-menu>\n"
                 "<menu-tip>" N_("Customize greyscale components") "</menu-tip>\n"
               "</effect>\n"
-            "</inkscape-extension>\n", new Greyscale());
+            "</inkscape-extension>\n", std::make_unique<Greyscale>());
         // clang-format on
     };
 };
@@ -1042,7 +1042,7 @@ public:
                 "</effects-menu>\n"
                 "<menu-tip>" N_("Manage hue, lightness and transparency inversions") "</menu-tip>\n"
               "</effect>\n"
-            "</inkscape-extension>\n", new Invert());
+            "</inkscape-extension>\n", std::make_unique<Invert>());
         // clang-format on
     };
 
@@ -1174,7 +1174,7 @@ public:
                 "</effects-menu>\n"
                 "<menu-tip>" N_("Modify lights and shadows separately") "</menu-tip>\n"
               "</effect>\n"
-            "</inkscape-extension>\n", new Lighting());
+            "</inkscape-extension>\n", std::make_unique<Lighting>());
         // clang-format on
     };
 };
@@ -1248,7 +1248,7 @@ public:
                 "</effects-menu>\n"
                 "<menu-tip>" N_("Modify lightness and contrast separately") "</menu-tip>\n"
               "</effect>\n"
-            "</inkscape-extension>\n", new LightnessContrast());
+            "</inkscape-extension>\n", std::make_unique<LightnessContrast>());
         // clang-format on
     };
 };
@@ -1345,7 +1345,7 @@ public:
                 "</effects-menu>\n"
                 "<menu-tip>" N_("Nudge RGB channels separately and blend them to different types of backgrounds") "</menu-tip>\n"
               "</effect>\n"
-            "</inkscape-extension>\n", new NudgeRGB());
+            "</inkscape-extension>\n", std::make_unique<NudgeRGB>());
         // clang-format on
     };
 };
@@ -1461,7 +1461,7 @@ public:
                 "</effects-menu>\n"
                 "<menu-tip>" N_("Nudge CMY channels separately and blend them to different types of backgrounds") "</menu-tip>\n"
               "</effect>\n"
-            "</inkscape-extension>\n", new NudgeCMY());
+            "</inkscape-extension>\n", std::make_unique<NudgeCMY>());
         // clang-format on
     };
 };
@@ -1570,7 +1570,7 @@ public:
                   "</effects-menu>\n"
                 "<menu-tip>" N_("Replace hue by two colors") "</menu-tip>\n"
               "</effect>\n"
-            "</inkscape-extension>\n", new Quadritone());
+            "</inkscape-extension>\n", std::make_unique<Quadritone>());
         // clang-format on
     };
 
@@ -1660,7 +1660,7 @@ public:
                 "</effects-menu>\n"
                 "<menu-tip>" N_("Simple blend filter") "</menu-tip>\n"
               "</effect>\n"
-            "</inkscape-extension>\n", new SimpleBlend());
+            "</inkscape-extension>\n", std::make_unique<SimpleBlend>());
         // clang-format on
     };
 };
@@ -1737,7 +1737,7 @@ public:
                 "</effects-menu>\n"
                 "<menu-tip>" N_("Classic photographic solarization effect") "</menu-tip>\n"
               "</effect>\n"
-            "</inkscape-extension>\n", new Solarize());
+            "</inkscape-extension>\n", std::make_unique<Solarize>());
         // clang-format on
     };
 
@@ -1852,7 +1852,7 @@ public:
                 "</effects-menu>\n"
                 "<menu-tip>" N_("Create a custom tritone palette with additional glow, blend modes and hue moving") "</menu-tip>\n"
               "</effect>\n"
-            "</inkscape-extension>\n", new Tritone());
+            "</inkscape-extension>\n", std::make_unique<Tritone>());
         // clang-format on
     };
 

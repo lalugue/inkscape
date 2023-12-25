@@ -48,7 +48,7 @@ Solarize::init()
                 "</effects-menu>\n"
                 "<menu-tip>" N_("Solarize selected bitmap(s), like overexposing photographic film") "</menu-tip>\n"
             "</effect>\n"
-        "</inkscape-extension>\n", new Solarize());
+        "</inkscape-extension>\n", std::make_unique<Solarize>());
     // clang-format on
 }
 

@@ -46,7 +46,7 @@ Swirl::init()
                 "</effects-menu>\n"
                 "<menu-tip>" N_("Swirl selected bitmap(s) around center point") "</menu-tip>\n"
             "</effect>\n"
-        "</inkscape-extension>\n", new Swirl());
+        "</inkscape-extension>\n", std::make_unique<Swirl>());
     // clang-format on
 }
 

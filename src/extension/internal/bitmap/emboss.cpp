@@ -48,7 +48,7 @@ Emboss::init()
                 "</effects-menu>\n"
                 "<menu-tip>" N_("Emboss selected bitmap(s); highlight edges with 3D effect") "</menu-tip>\n"
             "</effect>\n"
-        "</inkscape-extension>\n", new Emboss());
+        "</inkscape-extension>\n", std::make_unique<Emboss>());
     // clang-format on
 }
 

@@ -2186,10 +2186,8 @@ void PrintEmf::init()
             "<param gui-hidden=\"true\" name=\"FixPPTPatternAsHatch\" type=\"bool\">false</param>\n"
             "<param gui-hidden=\"true\" name=\"FixImageRot\" type=\"bool\">false</param>\n"
             "<print/>\n"
-        "</inkscape-extension>", new PrintEmf());
+        "</inkscape-extension>", std::make_unique<PrintEmf>());
     // clang-format on
-
-    return;
 }
 
 }  /* namespace Internal */

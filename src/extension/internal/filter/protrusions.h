@@ -59,7 +59,7 @@ public:
 					"</effects-menu>\n"
 					"<menu-tip>" N_("Snow has fallen on object") "</menu-tip>\n"
 				"</effect>\n"
-			"</inkscape-extension>\n", new Snow());
+            "</inkscape-extension>\n", std::make_unique<Snow>());
 		// clang-format on
 	};
 

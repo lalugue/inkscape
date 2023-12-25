@@ -141,7 +141,7 @@ void WpgInput::init() {
                 "<filetypename>" N_("WordPerfect Graphics (*.wpg)") "</filetypename>\n"
                 "<filetypetooltip>" N_("Vector graphics format used by Corel WordPerfect") "</filetypetooltip>\n"
             "</input>\n"
-        "</inkscape-extension>", new WpgInput());
+        "</inkscape-extension>", std::make_unique<WpgInput>());
     // clang-format on
 } // init
 

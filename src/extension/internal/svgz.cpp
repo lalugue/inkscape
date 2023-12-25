@@ -52,7 +52,7 @@ Svgz::init()
                 "<filetypename>" N_("Compressed Inkscape SVG (*.svgz)") "</filetypename>\n"
                 "<filetypetooltip>" N_("SVG file format compressed with GZip") "</filetypetooltip>\n"
             "</input>\n"
-        "</inkscape-extension>", new Svgz());
+        "</inkscape-extension>", std::make_unique<Svgz>());
 
     /* SVGZ out Inkscape */
     Inkscape::Extension::build_from_mem(
@@ -66,7 +66,7 @@ Svgz::init()
                 "<filetypetooltip>" N_("Inkscape's native file format compressed with GZip") "</filetypetooltip>\n"
                 "<dataloss>false</dataloss>\n"
             "</output>\n"
-        "</inkscape-extension>", new Svgz());
+        "</inkscape-extension>", std::make_unique<Svgz>());
 
     /* SVGZ out */
     Inkscape::Extension::build_from_mem(
@@ -79,7 +79,7 @@ Svgz::init()
                 "<filetypename>" N_("Compressed plain SVG (*.svgz)") "</filetypename>\n"
                 "<filetypetooltip>" N_("Scalable Vector Graphics format compressed with GZip") "</filetypetooltip>\n"
             "</output>\n"
-        "</inkscape-extension>\n", new Svgz());
+        "</inkscape-extension>\n", std::make_unique<Svgz>());
     // clang-format on
 
     return;

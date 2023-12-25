@@ -117,7 +117,7 @@ void TemplatePaper::init()
 "<preset name='" N_("Arch E1") "' label='30 × 42 in' min='30' max='42' unit='in' />"
             "</template>"
         "</inkscape-extension>",
-        new TemplatePaper());
+        std::make_unique<TemplatePaper>());
     // clang-format on
 }
 

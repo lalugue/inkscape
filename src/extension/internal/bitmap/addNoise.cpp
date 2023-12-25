@@ -61,7 +61,7 @@ AddNoise::init()
                 "</effects-menu>\n"
                 "<menu-tip>" N_("Add random noise to selected bitmap(s)") "</menu-tip>\n"
             "</effect>\n"
-        "</inkscape-extension>\n", new AddNoise());
+        "</inkscape-extension>\n", std::make_unique<AddNoise>());
     // clang-format on
 }
 

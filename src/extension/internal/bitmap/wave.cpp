@@ -48,7 +48,7 @@ Wave::init()
                 "</effects-menu>\n"
                 "<menu-tip>" N_("Alter selected bitmap(s) along sine wave") "</menu-tip>\n"
             "</effect>\n"
-        "</inkscape-extension>\n", new Wave());
+        "</inkscape-extension>\n", std::make_unique<Wave>());
     // clang-format on
 }
 

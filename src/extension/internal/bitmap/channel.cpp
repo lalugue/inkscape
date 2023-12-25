@@ -67,7 +67,7 @@ Channel::init()
                 "</effects-menu>\n"
                 "<menu-tip>" N_("Extract specific channel from image") "</menu-tip>\n"
             "</effect>\n"
-        "</inkscape-extension>\n", new Channel());
+        "</inkscape-extension>\n", std::make_unique<Channel>());
     // clang-format on
 }
 

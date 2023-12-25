@@ -59,7 +59,7 @@ Colorize::init()
                 "</effects-menu>\n"
                 "<menu-tip>" N_("Colorize selected bitmap(s) with specified color, using given opacity") "</menu-tip>\n"
             "</effect>\n"
-        "</inkscape-extension>\n", new Colorize());
+        "</inkscape-extension>\n", std::make_unique<Colorize>());
     // clang-format on
 }
 

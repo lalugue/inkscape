@@ -120,7 +120,7 @@ void TemplateFromFile::init()
               // Auto & lazy generated content (see function)
             "</template>"
         "</inkscape-extension>",
-        new TemplateFromFile());
+        std::make_unique<TemplateFromFile>());
 }
 
 /**

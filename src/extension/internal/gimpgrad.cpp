@@ -275,7 +275,7 @@ void GimpGrad::init ()
                 "<filetypename>" N_("GIMP Gradient (*.ggr)") "</filetypename>\n"
                 "<filetypetooltip>" N_("Gradients used in GIMP") "</filetypetooltip>\n"
             "</input>\n"
-        "</inkscape-extension>\n", new GimpGrad());
+        "</inkscape-extension>\n", std::make_unique<GimpGrad>());
     // clang-format on
     return;
 }

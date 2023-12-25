@@ -79,7 +79,7 @@ Crop::init()
             "</effects-menu>\n"
             "<menu-tip>" N_("Crop selected bitmap(s)") "</menu-tip>\n"
           "</effect>\n"
-        "</inkscape-extension>\n", new Crop());
+        "</inkscape-extension>\n", std::make_unique<Crop>());
     // clang-format on
 }
 

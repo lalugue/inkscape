@@ -84,7 +84,7 @@ public:
                 "</effects-menu>\n"
                 "<menu-tip>" N_("Basic noise fill and transparency texture") "</menu-tip>\n"
               "</effect>\n"
-            "</inkscape-extension>\n", new NoiseFill());
+            "</inkscape-extension>\n", std::make_unique<NoiseFill>());
         // clang-format on
     };
 

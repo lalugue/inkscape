@@ -49,7 +49,7 @@ Sample::init()
                 "</effects-menu>\n"
                 "<menu-tip>" N_("Alter the resolution of selected image by resizing it to the given pixel size") "</menu-tip>\n"
             "</effect>\n"
-        "</inkscape-extension>\n", new Sample());
+        "</inkscape-extension>\n", std::make_unique<Sample>());
     // clang-format on
 }
 

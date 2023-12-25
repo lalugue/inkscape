@@ -31,9 +31,8 @@
 namespace Inkscape::Extension::Internal {
 
 class VsdInput : public Inkscape::Extension::Implementation::Implementation {
-    VsdInput() = default;
-
 public:
+    VsdInput() = default;
     SPDocument *open(Inkscape::Extension::Input *mod,
                      const gchar *uri) override;
     static void init();

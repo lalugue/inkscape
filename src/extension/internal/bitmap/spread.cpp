@@ -46,7 +46,7 @@ Spread::init()
                 "</effects-menu>\n"
                 "<menu-tip>" N_("Randomly scatter pixels in selected bitmap(s), within the given radius of the original position") "</menu-tip>\n"
             "</effect>\n"
-        "</inkscape-extension>\n", new Spread());
+        "</inkscape-extension>\n", std::make_unique<Spread>());
     // clang-format on
 }
 

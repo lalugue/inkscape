@@ -48,7 +48,7 @@ GaussianBlur::init()
                 "</effects-menu>\n"
                 "<menu-tip>" N_("Gaussian blur selected bitmap(s)") "</menu-tip>\n"
             "</effect>\n"
-        "</inkscape-extension>\n", new GaussianBlur());
+        "</inkscape-extension>\n", std::make_unique<GaussianBlur>());
     // clang-format on
 }
 

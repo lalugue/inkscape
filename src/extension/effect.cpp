@@ -37,8 +37,8 @@ namespace Extension {
 
 Effect * Effect::_last_effect = nullptr;
 
-Effect::Effect (Inkscape::XML::Node *in_repr, Implementation::Implementation *in_imp, std::string *base_directory, std::string* file_name)
-    : Extension(in_repr, in_imp, base_directory)
+Effect::Effect(Inkscape::XML::Node *in_repr, ImplementationHolder implementation, std::string *base_directory, std::string* file_name)
+    : Extension(in_repr, std::move(implementation), base_directory)
     , _menu_node(nullptr)
     , _prefDialog(nullptr)
 {
@@ -99,7 +99,7 @@ Effect::Effect (Inkscape::XML::Node *in_repr, Implementation::Implementation *in
         } // children of "inkscape-extension"
     } // if we have an XML file
 
-    _filter_effect = dynamic_cast<Inkscape::Extension::Internal::Filter::Filter*>(in_imp) != nullptr;
+    _filter_effect = dynamic_cast<Internal::Filter::Filter *>(imp.get()) != nullptr;
 }
 
 /** Sanitizes the passed id in place. If an invalid character is found in the ID, a warning

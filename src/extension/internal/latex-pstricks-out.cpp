@@ -98,7 +98,7 @@ LatexOutput::init ()
                 "<filetypename>" N_("LaTeX With PSTricks macros (*.tex)") "</filetypename>\n"
                 "<filetypetooltip>" N_("LaTeX PSTricks File") "</filetypetooltip>\n"
             "</output>\n"
-        "</inkscape-extension>", new LatexOutput());
+        "</inkscape-extension>", std::make_unique<LatexOutput>());
     // clang-format on
 
     return;

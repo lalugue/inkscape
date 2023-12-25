@@ -319,7 +319,7 @@ void PrintLatex::init()
             "<param gui-hidden=\"true\" name=\"destination\" type=\"string\"></param>\n"
             "<param gui-hidden=\"true\" name=\"textToPath\" type=\"bool\">true</param>\n"
             "<print/>\n"
-        "</inkscape-extension>", new PrintLatex());
+        "</inkscape-extension>", std::make_unique<PrintLatex>());
     // clang-format on
 }
 

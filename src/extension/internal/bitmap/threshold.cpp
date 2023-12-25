@@ -47,7 +47,7 @@ Threshold::init()
                 "</effects-menu>\n"
                 "<menu-tip>" N_("Threshold selected bitmap(s)") "</menu-tip>\n"
             "</effect>\n"
-        "</inkscape-extension>\n", new Threshold());
+        "</inkscape-extension>\n", std::make_unique<Threshold>());
     // clang-format on
 }
 

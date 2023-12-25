@@ -845,7 +845,7 @@ void PdfInput::init() {
                 "<filetypename>" N_("Portable Document Format (*.pdf)") "</filetypename>\n"
                 "<filetypetooltip>" N_("Portable Document Format") "</filetypetooltip>\n"
             "</input>\n"
-        "</inkscape-extension>", new PdfInput());
+        "</inkscape-extension>", std::make_unique<PdfInput>());
     // clang-format on
 
     /* AI in */
@@ -860,7 +860,7 @@ void PdfInput::init() {
                 "<filetypename>" N_("Adobe Illustrator 9.0 and above (*.ai)") "</filetypename>\n"
                 "<filetypetooltip>" N_("Open files saved in Adobe Illustrator 9.0 and newer versions") "</filetypetooltip>\n"
             "</input>\n"
-        "</inkscape-extension>", new PdfInput());
+        "</inkscape-extension>", std::make_unique<PdfInput>());
     // clang-format on
 } // init
 

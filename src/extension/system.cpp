@@ -314,7 +314,7 @@ get_print(gchar const *key)
  * case could apply to modules that are built in (like the SVG load/save functions).
  */
 bool
-build_from_reprdoc(Inkscape::XML::Document *doc, Implementation::Implementation *in_imp, std::string* baseDir, std::string* file_name)
+build_from_reprdoc(Inkscape::XML::Document *doc, std::unique_ptr<Implementation::Implementation> in_imp, std::string* baseDir, std::string* file_name)
 {
     ModuleImpType module_implementation_type = MODULE_UNKNOWN_IMP;
     ModuleFuncType module_functional_type = MODULE_UNKNOWN_FUNC;
@@ -357,66 +357,61 @@ build_from_reprdoc(Inkscape::XML::Document *doc, Implementation::Implementation 
         //Inkscape::GC::release(old_repr);
     }
 
-    Implementation::Implementation *imp;
-    if (in_imp == nullptr) {
+    using ImplementationHolder = Util::HybridPointer<Implementation::Implementation>;
+    ImplementationHolder imp;
+    if (in_imp) {
+        imp = std::move(in_imp);
+    } else {
         switch (module_implementation_type) {
             case MODULE_EXTENSION: {
-                Implementation::Script *script = new Implementation::Script();
-                imp = static_cast<Implementation::Implementation *>(script);
+                imp = ImplementationHolder::make_owning<Implementation::Script>();
                 break;
             }
             case MODULE_XSLT: {
-                Implementation::XSLT *xslt = new Implementation::XSLT();
-                imp = static_cast<Implementation::Implementation *>(xslt);
+                imp = ImplementationHolder::make_owning<Implementation::XSLT>();
                 break;
             }
             case MODULE_PLUGIN: {
-                Inkscape::Extension::Loader loader = Inkscape::Extension::Loader();
-                if( baseDir != nullptr){
-                    loader.set_base_directory ( *baseDir );
+                auto loader = Inkscape::Extension::Loader();
+                if (baseDir) {
+                    loader.set_base_directory(*baseDir);
                 }
-                imp = loader.load_implementation(doc);
-                break;
-            }
-            default: {
-                imp = nullptr;
+                imp = ImplementationHolder::make_nonowning(loader.load_implementation(doc));
                 break;
             }
         }
-    } else {
-        imp = in_imp;
     }
 
     std::unique_ptr<Extension> module;
     try {
         switch (module_functional_type) {
             case MODULE_INPUT: {
-                module = std::make_unique<Input>(repr, imp, baseDir);
+                module = std::make_unique<Input>(repr, std::move(imp), baseDir);
                 break;
             }
             case MODULE_TEMPLATE: {
-                module = std::make_unique<Template>(repr, imp, baseDir);
+                module = std::make_unique<Template>(repr, std::move(imp), baseDir);
                 break;
             }
             case MODULE_OUTPUT: {
-                module = std::make_unique<Output>(repr, imp, baseDir);
+                module = std::make_unique<Output>(repr, std::move(imp), baseDir);
                 break;
             }
             case MODULE_FILTER: {
-                module = std::make_unique<Effect>(repr, imp, baseDir, file_name);
+                module = std::make_unique<Effect>(repr, std::move(imp), baseDir, file_name);
                 break;
             }
             case MODULE_PRINT: {
-                module = std::make_unique<Print>(repr, imp, baseDir);
+                module = std::make_unique<Print>(repr, std::move(imp), baseDir);
                 break;
             }
             case MODULE_PATH_EFFECT: {
-                module = std::make_unique<PathEffect>(repr, imp, baseDir);
+                module = std::make_unique<PathEffect>(repr, std::move(imp), baseDir);
                 break;
             }
             default: {
                 g_warning("Extension of unknown type!"); // TODO: Should not happen! Is this even useful?
-                module = std::make_unique<Extension>(repr, imp, baseDir);
+                module = std::make_unique<Extension>(repr, std::move(imp), baseDir);
                 break;
             }
         }
@@ -454,7 +449,7 @@ build_from_file(gchar const *filename)
         return;
     }
 
-    if (!build_from_reprdoc(doc, nullptr, &dir, &file_name)) {
+    if (!build_from_reprdoc(doc, {}, &dir, &file_name)) {
         g_warning("Inkscape::Extension::build_from_file() - Could not parse extension from '%s'.", filename);
     }
 
@@ -465,13 +460,12 @@ build_from_file(gchar const *filename)
  * \brief Create a module from a buffer holding an XML description.
  * \param buffer The buffer holding the XML description of the module.
  * \param in_imp An owning pointer to a freshly created implementation.
- * \todo The implementation currently leaks! Fix the leak by taking an owning pointer to the implementation.
  *
  * This function calls build_from_reprdoc with using sp_repr_read_mem to create the reprdoc.  It
  * finds the length of the buffer using strlen.
  */
 void
-build_from_mem(gchar const *buffer, Implementation::Implementation *in_imp)
+build_from_mem(gchar const *buffer, std::unique_ptr<Implementation::Implementation> in_imp)
 {
     Inkscape::XML::Document *doc = sp_repr_read_mem(buffer, strlen(buffer), INKSCAPE_EXTENSION_URI);
     if (!doc) {
@@ -479,7 +473,7 @@ build_from_mem(gchar const *buffer, Implementation::Implementation *in_imp)
         return;
     }
 
-    if (!build_from_reprdoc(doc, in_imp, nullptr, nullptr)) {
+    if (!build_from_reprdoc(doc, std::move(in_imp), nullptr, nullptr)) {
         g_critical("Inkscape::Extension::build_from_mem() - Could not parse extension from memory buffer.");
     }
 

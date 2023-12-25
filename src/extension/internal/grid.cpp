@@ -206,7 +206,7 @@ Grid::init ()
                 "</effects-menu>\n"
                 "<menu-tip>" N_("Draw a path which is a grid") "</menu-tip>\n"
             "</effect>\n"
-        "</inkscape-extension>\n", new Grid());
+        "</inkscape-extension>\n", std::make_unique<Grid>());
     // clang-format on
     return;
 }

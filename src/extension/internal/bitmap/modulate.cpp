@@ -51,7 +51,7 @@ Modulate::init()
                 "</effects-menu>\n"
                 "<menu-tip>" N_("Adjust the amount of hue, saturation, and brightness in selected bitmap(s)") "</menu-tip>\n"
             "</effect>\n"
-        "</inkscape-extension>\n", new Modulate());
+        "</inkscape-extension>\n", std::make_unique<Modulate>());
     // clang-format on
 }
 

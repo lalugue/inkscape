@@ -27,8 +27,8 @@ namespace Extension {
 namespace Internal {
 
 class WpgInput : public Inkscape::Extension::Implementation::Implementation {
-    WpgInput () = default;;
 public:
+    WpgInput() = default;
     SPDocument *open( Inkscape::Extension::Input *mod,
                                 const gchar *uri ) override;
     static void         init( );

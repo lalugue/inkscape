@@ -46,7 +46,7 @@ MedianFilter::init()
                 "</effects-menu>\n"
                 "<menu-tip>" N_("Replace each pixel component with the median color in a circular neighborhood") "</menu-tip>\n"
             "</effect>\n"
-        "</inkscape-extension>\n", new MedianFilter());
+        "</inkscape-extension>\n", std::make_unique<MedianFilter>());
     // clang-format on
 }
 

@@ -49,7 +49,7 @@ ReduceNoise::init()
                 "</effects-menu>\n"
                 "<menu-tip>" N_("Reduce noise in selected bitmap(s) using a noise peak elimination filter") "</menu-tip>\n"
             "</effect>\n"
-        "</inkscape-extension>\n", new ReduceNoise());
+        "</inkscape-extension>\n", std::make_unique<ReduceNoise>());
     // clang-format on
 }
 

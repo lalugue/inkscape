@@ -323,7 +323,7 @@ void CdrInput::init()
                 "<filetypename>" N_("Corel DRAW 7-X4 files (*.cdr)") "</filetypename>\n"
                 "<filetypetooltip>" N_("Open files saved in Corel DRAW 7-X4") "</filetypetooltip>\n"
             "</input>\n"
-        "</inkscape-extension>", new CdrInput());
+        "</inkscape-extension>", std::make_unique<CdrInput>());
     /* CDT */
     Inkscape::Extension::build_from_mem(
         "<inkscape-extension xmlns=\"" INKSCAPE_EXTENSION_URI "\">\n"
@@ -335,7 +335,7 @@ void CdrInput::init()
                 "<filetypename>" N_("Corel DRAW 7-13 template files (*.cdt)") "</filetypename>\n"
                 "<filetypetooltip>" N_("Open files saved in Corel DRAW 7-13") "</filetypetooltip>\n"
             "</input>\n"
-        "</inkscape-extension>", new CdrInput());
+        "</inkscape-extension>", std::make_unique<CdrInput>());
     /* CCX */
     Inkscape::Extension::build_from_mem(
         "<inkscape-extension xmlns=\"" INKSCAPE_EXTENSION_URI "\">\n"
@@ -347,7 +347,7 @@ void CdrInput::init()
                 "<filetypename>" N_("Corel DRAW Compressed Exchange files (*.ccx)") "</filetypename>\n"
                 "<filetypetooltip>" N_("Open compressed exchange files saved in Corel DRAW") "</filetypetooltip>\n"
             "</input>\n"
-        "</inkscape-extension>", new CdrInput());
+        "</inkscape-extension>", std::make_unique<CdrInput>());
     /* CMX */
     Inkscape::Extension::build_from_mem(
         "<inkscape-extension xmlns=\"" INKSCAPE_EXTENSION_URI "\">\n"
@@ -359,7 +359,7 @@ void CdrInput::init()
                 "<filetypename>" N_("Corel DRAW Presentation Exchange files (*.cmx)") "</filetypename>\n"
                 "<filetypetooltip>" N_("Open presentation exchange files saved in Corel DRAW") "</filetypetooltip>\n"
             "</input>\n"
-        "</inkscape-extension>", new CdrInput());
+        "</inkscape-extension>", std::make_unique<CdrInput>());
     // clang-format on
 }
 

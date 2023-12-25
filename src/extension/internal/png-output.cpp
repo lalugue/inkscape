@@ -86,7 +86,7 @@ void PngOutput::init()
                 "<filetypetooltip>" N_("Default raster graphic export") "</filetypetooltip>\n"
             "</output>\n"
         "</inkscape-extension>",
-        new PngOutput());
+        std::make_unique<PngOutput>());
     // clang-format on
 }
 

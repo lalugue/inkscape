@@ -100,7 +100,7 @@ public:
                 "</effects-menu>\n"
                 "<menu-tip>" N_("Blur and displace edges of shapes and pictures") "</menu-tip>\n"
               "</effect>\n"
-            "</inkscape-extension>\n", new FeltFeather());
+            "</inkscape-extension>\n", std::make_unique<FeltFeather>());
         // clang-format on
     };
 
@@ -213,7 +213,7 @@ public:
                 "</effects-menu>\n"
                 "<menu-tip>" N_("Small-scale roughening to edges and content") "</menu-tip>\n"
               "</effect>\n"
-            "</inkscape-extension>\n", new Roughen());
+            "</inkscape-extension>\n", std::make_unique<Roughen>());
         // clang-format on
     };
 

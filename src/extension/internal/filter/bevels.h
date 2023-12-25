@@ -67,7 +67,7 @@ public:
                 "</effects-menu>\n"
                 "<menu-tip>" N_("Basic diffuse bevel to use for building textures") "</menu-tip>\n"
               "</effect>\n"
-            "</inkscape-extension>\n", new DiffuseLight());
+            "</inkscape-extension>\n", std::make_unique<DiffuseLight>());
         // clang-format on
     };
 
@@ -150,7 +150,7 @@ public:
                 "</effects-menu>\n"
                 "<menu-tip>" N_("Bulging, matte jelly covering") "</menu-tip>\n"
               "</effect>\n"
-            "</inkscape-extension>\n", new MatteJelly());
+            "</inkscape-extension>\n", std::make_unique<MatteJelly>());
         // clang-format on
     };
 
@@ -236,7 +236,7 @@ public:
                 "</effects-menu>\n"
                 "<menu-tip>" N_("Basic specular bevel to use for building textures") "</menu-tip>\n"
               "</effect>\n"
-            "</inkscape-extension>\n", new SpecularLight());
+            "</inkscape-extension>\n", std::make_unique<SpecularLight>());
         // clang-format on
     };
 

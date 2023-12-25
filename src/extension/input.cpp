@@ -24,12 +24,11 @@ namespace Inkscape {
 namespace Extension {
 
 /**
-    \return   None
-    \brief    Builds a SPModuleInput object from a XML description
-    \param    module  The module to be initialized
-    \param    repr    The XML description in a Inkscape::XML::Node tree
+    \brief    Builds an Input object from a XML description
+    \param    in_repr The XML description in a Inkscape::XML::Node tree
+    \param    implementation The module to be initialized.
 
-    Okay, so you want to build a SPModuleInput object.
+    Okay, so you want to build an Input object.
 
     This function first takes and does the build of the parent class,
     which is SPModule.  Then, it looks for the <input> section of the
@@ -39,8 +38,8 @@ namespace Extension {
     Overall, there are many levels of indentation, just to handle the
     levels of indentation in the XML file.
 */
-Input::Input (Inkscape::XML::Node *in_repr, Implementation::Implementation *in_imp, std::string *base_directory)
-    : Extension(in_repr, in_imp, base_directory)
+Input::Input (Inkscape::XML::Node *in_repr, ImplementationHolder implementation, std::string *base_directory)
+    : Extension(in_repr, std::move(implementation), base_directory)
 {
     mimetype = nullptr;
     extension = nullptr;

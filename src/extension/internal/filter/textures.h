@@ -95,7 +95,7 @@ public:
                 "</effects-menu>\n"
                 "<menu-tip>" N_("Inkblot on tissue or rough paper") "</menu-tip>\n"
               "</effect>\n"
-            "</inkscape-extension>\n", new InkBlot());
+            "</inkscape-extension>\n", std::make_unique<InkBlot>());
         // clang-format on
 	};
 

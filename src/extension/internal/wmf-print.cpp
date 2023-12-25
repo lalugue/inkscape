@@ -1577,7 +1577,7 @@ void PrintWmf::init()
             "<param gui-hidden=\"true\" name=\"FixPPTGrad2Polys\" type=\"bool\">false</param>\n"
             "<param gui-hidden=\"true\" name=\"FixPPTPatternAsHatch\" type=\"bool\">false</param>\n"
             "<print/>\n"
-        "</inkscape-extension>", new PrintWmf());
+        "</inkscape-extension>", std::make_unique<PrintWmf>());
     // clang-format on
 
     return;

@@ -224,7 +224,7 @@ Filter::filter_init (gchar const * id, gchar const * name, gchar const * submenu
         "</effect>\n"
         "</inkscape-extension>\n", name, id, submenu, tip);
     // clang-format on
-    Inkscape::Extension::build_from_mem(xml_str, new Filter(filter));
+    Inkscape::Extension::build_from_mem(xml_str, std::make_unique<Filter>(filter));
     g_free(xml_str);
     return;
 }
