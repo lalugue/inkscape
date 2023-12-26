@@ -15,6 +15,7 @@
 #include <optional>
 #include <string>
 #include <unordered_map>
+#include <variant>
 #include <vector>
 #include <glibmm/ustring.h>
 
@@ -76,17 +77,6 @@ struct PaletteFileData
         /// Mode (not used currently, for informational purposes only)
         ColorMode mode = Normal;
 
-        /// if true, this color definition is blank, and it acts as a spacer to align other colors
-        bool filler = false;
-
-        /// if true, this color definition is blank, and it is a start of a group of colors
-        bool group = false;
-
-        static Color add_group(Glib::ustring name) {
-            Color c{{0,0,0,0}, Undefined, {0,0,0}, name, "", Normal, false, true};
-            return c;
-        }
-
 #ifdef false // not currently used
         bool operator < (const Color& c) const {
             for (int i = 0; i < rgb.size(); ++i) {
@@ -102,8 +92,18 @@ struct PaletteFileData
 #endif
     };
 
+    // dummy item used for aligning color tiles in a palette
+    enum SpacerItem {};
+
+    // item delineating start of new group of colors in a palette
+    struct GroupStart {
+        Glib::ustring name;
+    };
+
+    using ColorItem = std::variant<Color, SpacerItem, GroupStart>;
+
     /// The list of colors in the palette.
-    std::vector<Color> colors;
+    std::vector<ColorItem> colors;
 
     /// Index to a representative color of the color block; starts from 0 for each block.
     unsigned int page_offset = 0;

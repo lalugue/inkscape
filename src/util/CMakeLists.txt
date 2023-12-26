@@ -51,6 +51,7 @@ set(util_SRC
 	statics.h
 	trim.h
 	units.h
+    variant-visitor.h
 	ziptool.h
 	numeric/converters.h
 )

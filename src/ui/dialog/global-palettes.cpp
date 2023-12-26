@@ -244,13 +244,13 @@ void load_acb_palette(PaletteFileData& palette, std::string const &fname) {
         }
 
         if (name.empty()) {
-            color.filler = true;
+            palette.colors.emplace_back(PaletteFileData::SpacerItem());
         }
         else {
             color.name = prefix + name + suffix;
             color.definition = ost.str();
+            palette.colors.emplace_back(std::move(color));
         }
-        palette.colors.push_back(color);
     }
 }
 
@@ -284,7 +284,7 @@ void load_ase_swatches(PaletteFileData& palette, std::string const &fname) {
 
         if (block_type == 0xc001) { // group start
             auto name = read_pstring(stream, true);
-            palette.colors.push_back(PaletteFileData::Color::add_group(name));
+            palette.colors.emplace_back(PaletteFileData::GroupStart{.name = name});
         }
         else if (block_type == 0x0001) { // color entry
             auto color_name = read_pstring(stream, true);
@@ -298,7 +298,7 @@ void load_ase_swatches(PaletteFileData& palette, std::string const &fname) {
                 auto mode = to_mode(type);
                 auto [r, g, b] = convert.cmyk_to_rgb(c, m, y, k);
                 ost << "C: " << c << "% M: " << m << "% Y: " << y << "% K: " << k << '%';
-                palette.colors.push_back(
+                palette.colors.emplace_back(
                     PaletteFileData::Color {{c, m, y, k}, PaletteFileData::Cmyk100, {r, g, b}, color_name, ost.str(), mode}
                 );
             }
@@ -308,7 +308,7 @@ void load_ase_swatches(PaletteFileData& palette, std::string const &fname) {
                 auto b = read_float(stream) * 255;
                 auto type = read_value<uint16_t>(stream);
                 auto mode = to_mode(type);
-                palette.colors.push_back(
+                palette.colors.emplace_back(
                     PaletteFileData::Color {{r, g, b, 0}, PaletteFileData::Rgb255, {(unsigned)r, (unsigned)g, (unsigned)b}, color_name, "", mode}
                 );
             }
@@ -324,7 +324,7 @@ void load_ase_swatches(PaletteFileData& palette, std::string const &fname) {
                 unsigned ug = rgb[1] * 255;
                 unsigned ub = rgb[2] * 255;
                 ost << "L: " << l << " a: " << a << " b: " << b;
-                palette.colors.push_back(
+                palette.colors.emplace_back(
                     PaletteFileData::Color {{l, a, b, 0}, PaletteFileData::Lab100, {ur, ug, ub}, color_name, ost.str(), mode}
                 );
             }
@@ -332,7 +332,7 @@ void load_ase_swatches(PaletteFileData& palette, std::string const &fname) {
                 auto g = read_float(stream) * 255;
                 auto type = read_value<uint16_t>(stream);
                 auto mode = to_mode(type);
-                palette.colors.push_back(
+                palette.colors.emplace_back(
                     PaletteFileData::Color {{g, g, g, 0}, PaletteFileData::Rgb255, {(unsigned)g, (unsigned)g, (unsigned)g}, color_name, "", mode}
                 );
             }

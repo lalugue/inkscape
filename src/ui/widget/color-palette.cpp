@@ -638,7 +638,7 @@ void ColorPalette::rebuild_widgets()
     UI::remove_all_children(_pinned_box);
 
     for (auto item : _normal_items) {
-        // in a tile mode (no labels) groups headers are hidden:
+        // in a tile mode (no labels) group headers are hidden:
         if (!_show_labels && item->is_group()) continue;
 
         // in a list mode with labels, do not show fillers:

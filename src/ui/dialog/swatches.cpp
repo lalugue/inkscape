@@ -19,6 +19,7 @@
 #include <optional>
 #include <utility>
 #include <string>
+#include <variant>
 #include <vector>
 #include <giomm/file.h>
 #include <giomm/inputstream.h>
@@ -55,6 +56,7 @@
 #include "ui/widget/color-palette.h"
 #include "ui/widget/color-palette-preview.h"
 #include "ui/widget/popover-menu-item.h"
+#include "util/variant-visitor.h"
 #include "widgets/paintdef.h"
 
 namespace Inkscape::UI::Dialog {
@@ -457,8 +459,13 @@ void SwatchesPanel::update_fillstroke_indicators()
     palette.name = p.name;
     palette.id = p.id;
     for (auto const &c : p.colors) {
-        auto [r, g, b] = c.rgb;
-        palette.colors.push_back({r / 255.0, g / 255.0, b / 255.0});
+        std::visit(VariantVisitor {
+            [&](const PaletteFileData::Color& c) {
+                auto [r, g, b] = c.rgb;
+                palette.colors.push_back({r / 255.0, g / 255.0, b / 255.0});
+            },
+            [](...) {}
+        });
     }
     return palette;
 }
@@ -511,12 +518,23 @@ void SwatchesPanel::rebuild()
         _palette->set_page_size(pal->columns);
         palette.reserve(palette.size() + pal->colors.size());
         for (auto &c : pal->colors) {
-            auto const w = c.filler || c.group ?
-                Gtk::make_managed<ColorItem>(c.name) :
-                Gtk::make_managed<ColorItem>(PaintDef(c.rgb, c.name, c.definition), this);
-            w->set_pinned_pref(_prefs_path);
+            auto dialog = this;
+            auto w = std::visit(VariantVisitor {
+                [](const PaletteFileData::SpacerItem&) {
+                    return Gtk::make_managed<ColorItem>("");
+                },
+                [](const PaletteFileData::GroupStart& g) {
+                    return Gtk::make_managed<ColorItem>(g.name);
+                },
+                [=, this](const PaletteFileData::Color& c) {
+                    auto w = Gtk::make_managed<ColorItem>(PaintDef(c.rgb, c.name, c.definition), dialog);
+                    w->set_pinned_pref(_prefs_path);
+                    widgetmap.emplace(c.rgb, w);
+                    return w;
+                },
+            }, c);
+
             palette.emplace_back(w);
-            widgetmap.emplace(c.rgb, w);
         }
     } else if (_current_palette_id == auto_id && getDocument()) {
         auto grads = getDocument()->getResourceList("gradient");

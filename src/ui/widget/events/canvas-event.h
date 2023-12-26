@@ -20,6 +20,7 @@
 
 #include "enums.h"
 #include "util/gobjectptr.h"
+#include "util/variant-visitor.h"
 
 namespace Inkscape {
 
@@ -278,17 +279,6 @@ E &&cast_helper(CanvasEvent &&event)
     return static_cast<E &&>(event);
 }
 
-template <typename... Fs>
-struct Overloaded : Fs...
-{
-    using Fs::operator()...;
-};
-
-// Todo: Delete in C++20.
-// …BUT only once all CI runners, etc. support C++20 changes to deduction guides
-template <typename... Fs>
-Overloaded(Fs...) -> Overloaded<Fs...>;
-
 } // namespace canvas_event_detail
 
 /**
@@ -306,7 +296,7 @@ void inspect_event(E &&event, Fs... funcs)
 {
     using namespace canvas_event_detail;
 
-    auto overloaded = Overloaded{funcs...};
+    auto overloaded = VariantVisitor{funcs...};
 
     switch (event.type()) {
         case EventType::ENTER:
