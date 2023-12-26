@@ -583,10 +583,8 @@ static void sp_asbitmap_render(SPItem const *item, CairoRenderContext *ctx, SPPa
 
 static void sp_item_invoke_render(SPItem const *item, CairoRenderContext *ctx, SPItem const *origin, SPPage const *page)
 {
-    std::vector<SPObject *> links;
-    item->getLinked(links, true);
     bool is_linked = false;
-    for (auto link : links) {
+    for (auto link : item->getLinked(SPObject::LinkedObjectNature::DEPENDENT)) {
         is_linked |= is<SPAnchor>(link);
     }
 

@@ -1200,12 +1200,14 @@ Inkscape::XML::Node* SPText::get_first_rectangle()
     return nullptr;
 }
 
-void SPText::getLinked(std::vector<SPObject *> &objects, bool ignore_clones) const
+void SPText::getLinked(std::vector<SPObject *> &objects, LinkedObjectNature direction) const
 {
-    for (auto item : get_all_shape_dependencies()) {
-        objects.push_back(item);
+    if (direction == LinkedObjectNature::ANY || direction == LinkedObjectNature::DEPENDENCY) {
+        for (auto item : get_all_shape_dependencies()) {
+            objects.push_back(item);
+        }
     }
-    SPObject::getLinked(objects, ignore_clones);
+    SPObject::getLinked(objects, direction);
 }
 
 /**

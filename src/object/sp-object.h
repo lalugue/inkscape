@@ -150,6 +150,12 @@ public:
         COLLECT_WITH_PARENT,
         ALWAYS_COLLECT
     };
+    enum class LinkedObjectNature
+    {
+        DEPENDENT = -1,
+        ANY = 0,
+        DEPENDENCY = 1,
+    };
 
     SPObject();
     SPObject(SPObject const &) = delete;
@@ -248,9 +254,24 @@ public:
     }
 
     /**
-     * True if object is linked to us
+     * Get objects which are linked to this object as either a source or a target.
+     *
+     * @arg[out] objects - A list which is added to of all found links in this direction.
+     * @arg direction - Which objects to include in the output
      */
-    virtual void getLinked(std::vector<SPObject *> &objects, bool ignore_clones) const;
+    virtual void getLinked(std::vector<SPObject *> &objects, LinkedObjectNature direction = LinkedObjectNature::ANY) const;
+
+    /**
+     * Get objects which are linked, like above. But returns a new vector of objects.
+     *
+     * @arg direction - Which objects to include in the output
+     * @returns A list of SPObjects directly linked to this object in the direction specified.
+     */
+    std::vector<SPObject *> getLinked(LinkedObjectNature direction = LinkedObjectNature::ANY) const {
+        std::vector<SPObject *> ret;
+        getLinked(ret, direction);
+        return ret;
+    }
 
     /**
      * True if object is non-NULL and this is some in/direct parent of object.
@@ -488,11 +509,12 @@ public:
     void getObjectsExcept(std::vector<SPObject *> &objects, const std::vector<SPObject *> &except);
 
     /**
-     * Grows the input list with any and all linked items.
+     * Grows the input list with all linked items recursively in both child nodes and links of links.
      *
-     * @param ignore_clones - Links between objects and their child clones are not counted
+     * @arg[out] objects - The list of objects to append to
+     * @arg direction - see SPObject::getLinked direction arg.
      */
-    void getLinkedObjects(std::vector<SPObject *> &objects, bool ignore_clones) const;
+    void getLinkedRecursive(std::vector<SPObject *> &objects, LinkedObjectNature direction = LinkedObjectNature::ANY) const;
 
     /**
      * Connects a slot to be called when an object is deleted.

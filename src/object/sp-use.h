@@ -73,6 +73,7 @@ public:
     SPItem *trueOriginal() const;
     bool anyInChain(bool (*predicate)(SPItem const *)) const;
 
+    void getLinked(std::vector<SPObject *> &objects, LinkedObjectNature direction = LinkedObjectNature::ANY) const override;
 private:
     void href_changed();
     void move_compensate(Geom::Affine const *mp);

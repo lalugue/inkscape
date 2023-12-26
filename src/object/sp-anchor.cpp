@@ -153,6 +153,16 @@ gchar* SPAnchor::description() const {
     }
 }
 
+void SPAnchor::getLinked(std::vector<SPObject *> &objects, LinkedObjectNature direction) const
+{
+    if (direction == LinkedObjectNature::ANY || direction == LinkedObjectNature::DEPENDENCY) {
+        if (auto linked = (local_link ? local_link->getObject() : nullptr)) {
+            objects.emplace_back(linked);
+        }
+    }
+    SPObject::getLinked(objects, direction);
+}
+
 /*
   Local Variables:
   mode:c++

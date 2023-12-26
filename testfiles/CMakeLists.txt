@@ -73,6 +73,7 @@ set(TEST_SOURCES
     oklab-color-test
     sp-object-test
     sp-object-tags-test
+    object-links-test
     object-set-test
     object-style-test
     path-boolop-test

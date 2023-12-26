@@ -32,6 +32,7 @@ public:
 	void set(SPAttr key, char const* value) override;
     virtual void updatePageAnchor();
     Inkscape::XML::Node* write(Inkscape::XML::Document *xml_doc, Inkscape::XML::Node *repr, unsigned flags) override;
+    void getLinked(std::vector<SPObject *> &objects, LinkedObjectNature direction) const override;
 
     const char* typeName() const override;
     const char* displayName() const override;

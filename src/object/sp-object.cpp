@@ -309,15 +309,13 @@ void SPObject::_updateTotalHRefCount(int increment) {
     }
 }
 
-void SPObject::getLinked(std::vector<SPObject *> &objects, bool ignore_clones) const
+void SPObject::getLinked(std::vector<SPObject *> &objects, LinkedObjectNature direction) const
 {
-    for (auto linked : hrefList) {
-        if (auto link = cast<SPUse>(linked)) {
-            if (ignore_clones && link->ref && link->ref->getObject() == this) {
-                continue;
-            }
+    if (direction == LinkedObjectNature::ANY || direction == LinkedObjectNature::DEPENDENT) {
+        // href list is all back links
+        for (auto linked : hrefList) {
+            objects.push_back(linked);
         }
-        objects.push_back(linked);
     }
 }
 
@@ -543,6 +541,8 @@ void SPObject::cropToObject(SPObject *except)
 /**
  * Removes objects which are not related to given list of objects.
  *
+ * @arg except_objects - A list of objects to crop around
+ *
  * Use Case: Group[MyRect1 , MyRect2] , MyRect3
  * List Provided: MyRect1, MyRect3
  * Output doc: Group[MyRect1], MyRect3
@@ -554,11 +554,15 @@ void SPObject::cropToObjects(std::vector<SPObject *> except_objects)
     if (except_objects.empty()) {
         return;
     }
+    std::vector<SPObject *> links;
     std::vector<SPObject *> toDelete;
 
-    // Make sure we have all related objects so we don't delete
-    // things which will later cause a crash.
-    getLinkedObjects(except_objects, true);
+    // Get a list of all forward links so we don't delete them
+    for (auto item : except_objects) {
+        item->getLinkedRecursive(links, LinkedObjectNature::DEPENDENCY);
+    }
+
+    except_objects.insert(except_objects.end(), links.begin(), links.end());
 
     // Collect a list of objects we expect to delete.
     getObjectsExcept(toDelete, except_objects);
@@ -592,12 +596,21 @@ void SPObject::getObjectsExcept(std::vector<SPObject *> &objects, const std::vec
     }
 }
 
-void SPObject::getLinkedObjects(std::vector<SPObject *> &objects, bool ignore_clones) const
+void SPObject::getLinkedRecursive(std::vector<SPObject *> &objects, LinkedObjectNature direction) const
 {
-    getLinked(objects, ignore_clones);
+    // Recurse through multiple links
+    for (auto link : getLinked(direction)) {
+        // Make sure we never recurse objects multiple times.
+        if (std::find(objects.begin(), objects.end(), link) == objects.end()) {
+            objects.push_back(link);
+            link->getLinkedRecursive(objects, direction);
+        }
+    }
+
     for (auto &child : children) {
         if (is<SPItem>(&child)) {
-            child.getLinkedObjects(objects, ignore_clones);
+            // Recurse through all ancestors
+            child.getLinkedRecursive(objects, direction);
         }
     }
 }

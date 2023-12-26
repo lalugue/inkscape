@@ -849,6 +849,15 @@ void SPUse::snappoints(std::vector<Inkscape::SnapCandidatePoint> &p, Inkscape::S
     root->snappoints(p, snapprefs);
 }
 
+void SPUse::getLinked(std::vector<SPObject *> &objects, LinkedObjectNature direction) const
+{
+    if (direction == LinkedObjectNature::ANY || direction == LinkedObjectNature::DEPENDENCY) {
+        if (auto linked = (ref ? ref->getObject() : nullptr)) {
+            objects.emplace_back(linked);
+        }
+    }
+    SPObject::getLinked(objects, direction);
+}
 
 /*
   Local Variables:
