@@ -20,6 +20,7 @@
 #include <gtkmm/entry.h>
 #include <gtkmm/grid.h>
 #include <gtkmm/label.h>
+#include <gtkmm/version.h>
 
 #include <2geom/transforms.h>
 
@@ -34,6 +35,7 @@
 #include "ui/icon-loader.h"
 #include "ui/icon-names.h"
 #include "ui/pack.h"
+#include "ui/widget/spinbutton.h"
 
 namespace Inkscape::UI::Dialog {
 
@@ -132,11 +134,10 @@ Transformation::Transformation()
     _check_apply_separately.set_active(prefs->getBool("/dialogs/transformation/applyseparately"));
     _check_apply_separately.signal_toggled().connect(sigc::mem_fun(*this, &Transformation::onApplySeparatelyToggled));
 
+#if GTKMM_CHECK_VERSION(4, 14, 0)
     // make sure all spinbuttons activate Apply on pressing Enter
-    auto const apply_on_activate = [this](UI::Widget::ScalarUnit &scalar)
-    {
-        auto &entry = dynamic_cast<Gtk::Entry &>(*scalar.getWidget());
-        entry.signal_activate().connect(sigc::mem_fun(*this, &Transformation::_apply));
+    auto const apply_on_activate = [this](UI::Widget::ScalarUnit &scalar) {
+        scalar.getSpinButton().signal_activate().connect([this] { _apply(); });
     };
     apply_on_activate(_scalar_move_horizontal );
     apply_on_activate(_scalar_move_vertical   );
@@ -145,6 +146,7 @@ Transformation::Transformation()
     apply_on_activate(_scalar_rotate          );
     apply_on_activate(_scalar_skew_horizontal );
     apply_on_activate(_scalar_skew_vertical   );
+#endif
 
     resetButton->set_image_from_icon_name("reset-settings-symbolic");
     resetButton->set_size_request(30, -1);

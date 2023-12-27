@@ -13,7 +13,9 @@
  */
 
 #include <gtkmm/entry.h>
+#include <gtkmm/spinbutton.h>
 #include <gtkmm/window.h>
+#include <gtkmm/version.h>
 
 #ifdef GDK_WINDOWING_X11
 #include <gdk/x11/gdkx.h>
@@ -41,6 +43,15 @@ void sp_dialog_defocus_on_enter(Gtk::Entry *e)
     e->signal_activate().connect([e] {
         sp_dialog_defocus(dynamic_cast<Gtk::Window*>(e->get_root()));
     });
+}
+
+void sp_dialog_defocus_on_enter(Gtk::SpinButton &s)
+{
+#if GTKMM_CHECK_VERSION(4, 14, 0)
+    s.signal_activate().connect([&] {
+        sp_dialog_defocus(dynamic_cast<Gtk::Window*>(s.get_root()));
+    });
+#endif
 }
 
 /**
