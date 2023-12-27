@@ -86,7 +86,7 @@ public:
     static std::string absolutizePath(SPDocument *doc, const std::string &filename);
     static bool unConflictFilename(SPDocument *doc, std::string &filename, std::string const extension);
     static std::string filePathFromObject(SPDocument *doc, SPObject *obj, const std::string &file_entry_text);
-    static std::string filePathFromId(SPDocument *doc, Glib::ustring id, const std::string &file_entry_text);
+    static std::string prependDirectory(Glib::ustring id, const std::string &orig, SPDocument *doc = nullptr);
     static std::string defaultFilename(SPDocument *doc, std::string &filename_entry_text, std::string extension);
     static bool checkOrCreateDirectory(std::string const &filename);
 

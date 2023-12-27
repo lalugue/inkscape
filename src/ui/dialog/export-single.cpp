@@ -409,7 +409,6 @@ void SingleExport::loadExportHints()
     if (filename_modified || !_document || !_desktop) return;
 
     std::string old_filename = Glib::filename_from_utf8(si_filename_entry.get_text());
-    std::string old_directory = Glib::path_get_dirname(old_filename);
     std::string filename;
     Geom::Point dpi;
     switch (current_key) {
@@ -418,10 +417,13 @@ void SingleExport::loadExportHints()
             auto pages = getSelectedPages();
             if (pages.size() == 1) {
                 dpi = pages[0]->getExportDpi();
-                filename = pages[0]->getExportFilename();
-                if (filename.empty()) {
-                    filename = Export::filePathFromId(_document, pages[0]->getLabel(), old_filename);
+
+                auto page_filename = pages[0]->getExportFilename();
+                if (page_filename.empty()) {
+                    page_filename = pages[0]->getLabel();
                 }
+
+                filename = Export::prependDirectory(page_filename, old_filename, _document);
                 break;
             }
             // No or many pages means output is drawing, continue.
@@ -430,7 +432,7 @@ void SingleExport::loadExportHints()
         case SELECTION_DRAWING:
         {
             dpi = _document->getRoot()->getExportDpi();
-            filename = _document->getRoot()->getExportFilename();
+            filename = Export::prependDirectory(_document->getRoot()->getExportFilename(), old_filename, _document);
             break;
         }
         case SELECTION_SELECTION:
@@ -444,7 +446,7 @@ void SingleExport::loadExportHints()
                     dpi = item->getExportDpi();
                 }
                 if (filename.empty()) {
-                    filename = item->getExportFilename();
+                    filename = Export::prependDirectory(item->getExportFilename(), old_filename, _document);
                 }
             }
 
@@ -464,10 +466,7 @@ void SingleExport::loadExportHints()
         ext->add_extension(filename);
     }
 
-    original_name = old_directory;
-    original_name.append(G_DIR_SEPARATOR_S);
-    original_name += filename;
-    filename = original_name;
+    original_name = filename;
     auto filename_utf8 = Glib::filename_to_utf8(filename);
     si_filename_entry.set_text(filename_utf8);
     si_filename_entry.set_position(filename_utf8.length());
@@ -691,10 +690,15 @@ void SingleExport::onExport()
                 target = _document->getRoot();
                 break;
             case SELECTION_PAGE:
-                target = page_manager.getSelected();
-                if (!target)
-                    target = _document->getRoot();
+            {
+                auto pages = getSelectedPages();
+                if (pages.size() == 1) {
+                    if ((target = page_manager.getSelected()))
+                        break;
+                }
+                target = _document->getRoot();
                 break;
+            }
             case SELECTION_SELECTION:
                 target = _desktop->getSelection()->firstItem();
                 break;

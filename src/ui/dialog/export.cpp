@@ -430,20 +430,29 @@ std::string Export::filePathFromObject(SPDocument *doc, SPObject *obj, const std
     if (obj && obj->getId()) {
         id = obj->getId();
     }
-    return filePathFromId(doc, id, file_entry_text);
+    return prependDirectory(id, file_entry_text, doc);
 }
 
-std::string Export::filePathFromId(SPDocument *doc, Glib::ustring id, const std::string &file_entry_text)
+/**
+ * Adds the full directory path to the final part of a file name.
+ *
+ * @arg name - The final name part of a path, if absolute path, this is returned unchanged.
+ * @arg orig - The original filename, an optional path used previously which this name
+ *             will be appanded in order to produce the full path.
+ * @arg doc - The document to take a fallback directory from if orig is empty.
+ */
+std::string Export::prependDirectory(Glib::ustring name, const std::string &orig, SPDocument *doc)
 {
-    g_assert(!id.empty());
+    if (Glib::path_is_absolute(name) || name.empty())
+        return name;
 
     std::string directory;
 
-    if (!file_entry_text.empty()) {
-        directory = Glib::path_get_dirname(file_entry_text);
+    if (!orig.empty()) {
+        directory = Glib::path_get_dirname(orig);
     }
 
-    if (directory.empty()) {
+    if (directory.empty() && doc) {
         /* Grab document directory */
         const gchar *docFilename = doc->getDocumentFilename();
         if (docFilename) {
@@ -455,7 +464,7 @@ std::string Export::filePathFromId(SPDocument *doc, Glib::ustring id, const std:
         directory = Inkscape::IO::Resource::homedir_path();
     }
 
-    return Glib::build_filename(directory, Glib::filename_from_utf8(id));
+    return Glib::canonicalize_filename(Glib::build_filename(directory, Glib::filename_from_utf8(name)), orig);
 }
 
 std::string Export::defaultFilename(SPDocument *doc, std::string &filename_entry_text, std::string extension)
@@ -465,7 +474,7 @@ std::string Export::defaultFilename(SPDocument *doc, std::string &filename_entry
         filename = doc->getDocumentFilename();
         //appendExtensionToFilename(filename, extension);
     } else if (doc) {
-        filename = filePathFromId(doc, _("bitmap"), filename_entry_text);
+        filename = prependDirectory(_("bitmap"), filename_entry_text, doc);
         filename = filename + extension;
     }
     return filename;
