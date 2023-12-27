@@ -167,7 +167,9 @@ public:
 
     // Layers i.e Optional Groups
     void addOptionalGroup(const std::string &oc, const std::string &label, bool visible = true);
+    Inkscape::XML::Node * addXObjLayer(const std::string &label, bool visible);
     void beginMarkedContent(const char *name = nullptr, const char *group = nullptr);
+    void endXObjLayer(Inkscape::XML::Node *save);
     void endMarkedContent();
 
     void addColorProfile(unsigned char *profBuf, int length);

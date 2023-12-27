@@ -2327,40 +2327,66 @@ void PdfParser::doShowText(GooString *s) {
 // TODO not good that numArgs is ignored but args[] is used:
 void PdfParser::opXObject(Object args[], int /*numArgs*/)
 {
-  Object obj1, obj2, obj3, refObj;
+    Object obj1, obj2, obj3, refObj;
+    bool layered = false;
+    Inkscape::XML::Node *save;
 
 #if POPPLER_CHECK_VERSION(0,64,0)
-  const char *name = args[0].getName();
+    const char *name = args[0].getName();
 #else
-  char *name = args[0].getName();
+    char *name = args[0].getName();
 #endif
-  _POPPLER_CALL_ARGS(obj1, res->lookupXObject, name);
-  if (obj1.isNull()) {
-    return;
-  }
-  if (!obj1.isStream()) {
-    error(errSyntaxError, getPos(), "XObject '{0:s}' is wrong type", name);
+    _POPPLER_CALL_ARGS(obj1, res->lookupXObject, name);
+    if (obj1.isNull()) {
+        return;
+    }
+    if (!obj1.isStream()) {
+        error(errSyntaxError, getPos(), "XObject '{0:s}' is wrong type", name);
+        _POPPLER_FREE(obj1);
+        return;
+    }
+
+//add layer at root if xObject has type OCG
+    _POPPLER_CALL_ARGS(obj2, obj1.streamGetDict()->lookup, "OC");
+    if(obj2.isDict()){
+        auto type_dict = obj2.getDict();
+        if (type_dict->lookup("Type").isName("OCG")) {
+            std::string label = getDictString(type_dict, "Name");
+            auto visible = true;
+            if (type_dict->lookup("Usage").isDict()){
+                auto usage_dict = type_dict->lookup("Usage").getDict();
+                if (usage_dict->lookup("Print").isDict()){
+                    auto print_dict = usage_dict->lookup("Print").getDict();
+                    visible = print_dict->lookup("PrintState").isName("ON");
+                }
+            }      
+            save = builder->addXObjLayer(label, visible);
+            layered = true;
+        }
+    }
+
+    _POPPLER_CALL_ARGS(obj2, obj1.streamGetDict()->lookup, "Subtype");
+    if (obj2.isName(const_cast<char*>("Image"))) {
+        _POPPLER_CALL_ARGS(refObj, res->lookupXObjectNF, name);
+        doImage(&refObj, obj1.getStream(), gFalse);
+        _POPPLER_FREE(refObj);
+    } else if (obj2.isName(const_cast<char*>("Form"))) {
+        doForm(&obj1);
+    } else if (obj2.isName(const_cast<char*>("PS"))) {
+        _POPPLER_CALL_ARGS(obj3, obj1.streamGetDict()->lookup, "Level1");
+    } else if (obj2.isName()) {
+        error(errSyntaxError, getPos(), "Unknown XObject subtype '{0:s}'", obj2.getName());
+    } else {
+        error(errSyntaxError, getPos(), "XObject subtype is missing or wrong type");
+    }
+
+    //End XObject layer if OC of type OCG is present
+    if (layered) {
+        builder->endXObjLayer(save);
+    }
+
+    _POPPLER_FREE(obj2);
     _POPPLER_FREE(obj1);
-    return;
-  }
-  _POPPLER_CALL_ARGS(obj2, obj1.streamGetDict()->lookup, "Subtype");
-  if (obj2.isName(const_cast<char*>("Image"))) {
-    _POPPLER_CALL_ARGS(refObj, res->lookupXObjectNF, name);
-    doImage(&refObj, obj1.getStream(), gFalse);
-    _POPPLER_FREE(refObj);
-  } else if (obj2.isName(const_cast<char*>("Form"))) {
-    doForm(&obj1);
-  } else if (obj2.isName(const_cast<char*>("PS"))) {
-    _POPPLER_CALL_ARGS(obj3, obj1.streamGetDict()->lookup, "Level1");
-/*    out->psXObject(obj1.getStream(),
-    		   obj3.isStream() ? obj3.getStream() : (Stream *)NULL);*/
-  } else if (obj2.isName()) {
-    error(errSyntaxError, getPos(), "Unknown XObject subtype '{0:s}'", obj2.getName());
-  } else {
-    error(errSyntaxError, getPos(), "XObject subtype is missing or wrong type");
-  }
-  _POPPLER_FREE(obj2);
-  _POPPLER_FREE(obj1);
 }
 
 void PdfParser::doImage(Object * /*ref*/, Stream *str, GBool inlineImg)

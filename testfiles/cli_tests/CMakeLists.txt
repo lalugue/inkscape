@@ -937,6 +937,7 @@ add_pdfinput_test(rotated-gradients 1 draw-all)
 add_pdfinput_test(labels-utf16 1 draw-all)
 add_pdfinput_test(multi-page-sample all draw-all)
 add_pdfinput_test(multiple-style-same-text-block 1 keep)
+add_pdfinput_test(XObj_layer all draw-all)
 
 ###########################
 ### file format support ###
