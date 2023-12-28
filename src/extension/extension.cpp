@@ -66,6 +66,9 @@ FILE *Extension::error_file = nullptr;
 Extension::Extension(Inkscape::XML::Node *in_repr, ImplementationHolder implementation, std::string *base_directory)
     : imp{std::move(implementation)}
 {
+    if (!imp) {
+        throw no_implementation_for_extension();
+    }
     g_return_if_fail(in_repr); // should be ensured in system.cpp
     repr = in_repr;
     Inkscape::GC::anchor(repr);

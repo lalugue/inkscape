@@ -415,19 +415,22 @@ build_from_reprdoc(Inkscape::XML::Document *doc, std::unique_ptr<Implementation:
                 break;
             }
         }
-    } catch (const Extension::extension_no_id& e) {
+    } catch (const Extension::extension_no_id &) {
         g_warning("Building extension failed. Extension does not have a valid ID");
-    } catch (const Extension::extension_no_name& e) {
+        return false;
+    } catch (const Extension::extension_no_name &) {
         g_warning("Building extension failed. Extension does not have a valid name");
-    } catch (const Extension::extension_not_compatible& e) {
+        return false;
+    } catch (const Extension::extension_not_compatible &) {
         return true; // This is not an actual error; just silently ignore the extension
+    } catch (Extension::no_implementation_for_extension &) {
+        g_warning("Building extension failed: no implementation was found");
+        return false;
     }
 
-    const bool success = bool(module);
-    if (success) {
-        db.take_ownership(std::move(module));
-    }
-    return success;
+    assert(module);
+    db.take_ownership(std::move(module));
+    return true;
 }
 
 /**

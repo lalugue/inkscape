@@ -224,6 +224,9 @@ public:
     /** extension is not compatible with the current system and should not be loaded */
     class extension_not_compatible{};
 
+    /** No implementation could be loaded for the extension. */
+    class no_implementation_for_extension : public std::exception {};
+
     /** An error class for when a filename already exists, but the user
      * doesn't want to overwrite it */
     class no_overwrite {};
