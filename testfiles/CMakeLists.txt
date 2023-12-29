@@ -90,6 +90,7 @@ set(TEST_SOURCES
     svg-path-geom-test
     visual-bounds-test
     geom-pathstroke-test
+    livarot-pathoutline-test
     object-test
     sp-glyph-kerning-test
     cairo-utils-test

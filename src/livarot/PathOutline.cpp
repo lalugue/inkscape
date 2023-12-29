@@ -959,13 +959,20 @@ Path::OutlineJoin (Path * dest, Geom::Point pos, Geom::Point stNor, Geom::Point 
                         // Relocate the previous line end point to bisector position
                         PathDescrLineTo* nLine = dynamic_cast<PathDescrLineTo*>(prev);
                         nLine->p = pos+l*biss;
-                        if (nType == descr_close) {
-                            // Relocate the first move command to the bisector position
-                            PathDescrMoveTo* mLine = dynamic_cast<PathDescrMoveTo*>(dest->descr_cmd[0]);
-                            mLine->p = pos+l*biss;
-                        }
                     } else {
                         dest->LineTo (pos+l*biss);
+                    }
+                    if (nType == descr_close) {
+                        // If subpath starts with a line, move its starting point to the join tip
+                        auto pMove = std::find_if(dest->descr_cmd.rbegin(), dest->descr_cmd.rend(),
+                                [=](PathDescr* mLine) { return mLine->getType() == descr_moveto; });
+                        PathDescr* pStartSeg = *(pMove - 1);
+                        if (pStartSeg->getType() == descr_lineto) {
+                            PathDescrMoveTo* pStart = dynamic_cast<PathDescrMoveTo*>(*pMove);
+                            pStart->p = pos+l*biss;
+                        } else {
+                            dest->LineTo (pos + width*enNor); // Create extra node if the subpath starts curved
+                        }
                     }
                     if (nType != descr_lineto && nType != descr_close)
                         dest->LineTo (pos+width*enNor);
