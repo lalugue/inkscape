@@ -244,8 +244,9 @@ void show_about()
     auto window       = &get_derived_widget<AboutWindow>(builder, "about-screen-window");
     auto tabs         = &get_widget<Gtk::Notebook>(builder, "tabs");
     auto version      = &get_widget<Gtk::Button>  (builder, "version");
+    auto version_lbl  = &get_widget<Gtk::Label>   (builder, "version-label");
     auto label        = &get_widget<Gtk::Label>   (builder, "version-copied");
-    auto debug_info   = &get_widget<Gtk::Button>  (builder, "debug_info");
+    auto debug_info   = &get_widget<Gtk::Button>  (builder, "debug-info");
     auto label2       = &get_widget<Gtk::Label>   (builder, "debug-info-copied");
     auto copyright    = &get_widget<Gtk::Label>   (builder, "copyright");
     auto authors      = &get_widget<Gtk::TextView>(builder, "credits-authors");
@@ -253,7 +254,7 @@ void show_about()
     auto license      = &get_widget<Gtk::Label>   (builder, "license-text");
 
     auto text = Inkscape::inkscape_version();
-    version->set_label(text);
+    version_lbl->set_label(text);
     version->signal_clicked().connect(
         sigc::bind(&copy, version, label, std::move(text)));
 
@@ -261,7 +262,7 @@ void show_about()
         sigc::bind(&copy, version, label2, Inkscape::debug_info()));
 
     copyright->set_label(
-        Glib::ustring::compose(copyright->get_label(), Inkscape::inkscape_build_year()));
+        Glib::ustring::compose(copyright->get_label(), std::to_string(Inkscape::inkscape_build_year())));
 
     std::random_device rd;
     std::mt19937 g(rd());
