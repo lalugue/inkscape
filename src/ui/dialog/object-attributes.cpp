@@ -12,6 +12,7 @@
 
 #include <cmath>
 #include <cstddef>
+#include <gtkmm/entry.h>
 #include <memory>
 #include <optional>
 #include <string>
@@ -35,11 +36,9 @@
 // #include "live_effects/effect-enum.h"
 #include "mod360.h"
 #include "selection.h"
-#include "streq.h"
 #include "actions/actions-tools.h"
 #include "live_effects/effect-enum.h"
 #include "live_effects/effect.h"
-#include "live_effects/lpeobject-reference.h"
 #include "live_effects/lpeobject.h"
 #include "object/sp-anchor.h"
 #include "object/sp-ellipse.h"
@@ -51,7 +50,6 @@
 #include "object/sp-path.h"
 #include "object/sp-rect.h"
 #include "object/sp-star.h"
-#include "object/tags.h"
 #include "ui/builder-utils.h"
 #include "ui/dialog/object-attributes.h"
 #include "ui/icon-names.h"
@@ -104,6 +102,8 @@ ObjectAttributes::ObjectAttributes()
     _style_swatch.set_hexpand(false);
     _style_swatch.set_valign(Gtk::ALIGN_CENTER);
     UI::pack_end(get_widget<Gtk::Box>(_builder, "main-header"), _style_swatch, false, true);
+    auto& box = get_widget<Gtk::Box>(_builder, "main-header");
+    box.child_property_pack_type(_style_swatch).set_value(Gtk::PACK_END);
     add(main);
     create_panels();
     _style_swatch.set_visible(false);
@@ -768,6 +768,113 @@ private:
 
 ///////////////////////////////////////////////////////////////////////////////
 
+class PathPanel : public details::AttributesPanel {
+public:
+    PathPanel(Glib::RefPtr<Gtk::Builder> builder) :
+        _main(get_widget<Gtk::Grid>(builder, "path-main")),
+        _width(get_derived_widget<Inkscape::UI::Widget::SpinButton>(builder, "path-width")),
+        _height(get_derived_widget<Inkscape::UI::Widget::SpinButton>(builder, "path-height")),
+        _rx(get_derived_widget<Inkscape::UI::Widget::SpinButton>(builder, "path-x")),
+        _ry(get_derived_widget<Inkscape::UI::Widget::SpinButton>(builder, "path-y")),
+        _data(get_widget<Gtk::Entry>(builder, "path-data")),
+        _info(get_widget<Gtk::Label>(builder, "path-info"))
+    {
+        _title = _("Path");
+        _widget = &_main;
+
+        _width.get_adjustment()->signal_value_changed().connect([=](){
+            // change_value_px(_path, _width.get_adjustment(), "width", [=](double w){ _path->setVisibleWidth(w); });
+        });
+        _height.get_adjustment()->signal_value_changed().connect([=](){
+            // change_value_px(_path, _height.get_adjustment(), "height", [=](double h){ _path->setVisibleHeight(h); });
+        });
+        _rx.get_adjustment()->signal_value_changed().connect([=](){
+            // change_value_px(_path, _rx.get_adjustment(), "rx", [=](double rx){ _path->setVisibleRx(rx); });
+        });
+        _ry.get_adjustment()->signal_value_changed().connect([=](){
+            // change_value_px(_path, _ry.get_adjustment(), "ry", [=](double ry){ _path->setVisibleRy(ry); });
+        });
+        get_widget<Gtk::Button>(builder, "rect-round").signal_clicked().connect([=](){
+            auto [changed, x, y] = round_values(_width, _height);
+            if (changed) {
+                _width.get_adjustment()->set_value(x);
+                _height.get_adjustment()->set_value(y);
+            }
+        });
+        // _sharp.signal_clicked().connect([=](){
+        //     if (!_rect) return;
+
+        //     // remove rounded corners if LPE is there (first one found)
+        //     remove_lpeffect(_rect, LivePathEffect::FILLET_CHAMFER);
+        //     _rx.get_adjustment()->set_value(0);
+        //     _ry.get_adjustment()->set_value(0);
+        // });
+        // _round.signal_clicked().connect([=](){
+        //     if (!_rect || !_desktop) return;
+
+        //     // switch to node tool to show handles
+        //     set_active_tool(_desktop, "Node");
+        //     // rx/ry need to be reset first, LPE doesn't handle them too well
+        //     _rx.get_adjustment()->set_value(0);
+        //     _ry.get_adjustment()->set_value(0);
+        //     // add flexible corners effect if not yet present
+        //     if (!find_lpeffect(_rect, LivePathEffect::FILLET_CHAMFER)) {
+        //         LivePathEffect::Effect::createAndApply("fillet_chamfer", _rect->document, _rect);
+        //         DocumentUndo::done(_rect->document, _("Add fillet/chamfer effect"), INKSCAPE_ICON("dialog-path-effects"));
+        //     }
+        // });
+        _data.signal_focus_in_event().connect([=](GdkEventFocus*){
+            // path editing popup
+            return false; // propagate
+        });
+    }
+
+    ~PathPanel() override = default;
+
+    void update(SPObject* object) override {
+        _path = cast<SPPath>(object);
+        if (!_path) return;
+
+        auto scoped(_update.block());
+        // _width.set_value(_path->width.value);
+        // _height.set_value(_path->height.value);
+        // _rx.set_value(_path->rx.value);
+        // _ry.set_value(_path->ry.value);
+        // auto lpe = find_lpeffect(_path, LivePathEffect::FILLET_CHAMFER);
+        // _sharp.set_sensitive(_rect->rx.value > 0 || _rect->ry.value > 0 || lpe);
+        // _round.set_sensitive(!lpe);
+
+        auto d = _path->getAttribute("inkscape:original-d");
+        d = d && _path->hasPathEffect() ? d : _path->getAttribute("d");
+        _data.set_text(d ? d : "");
+
+        auto curve = _path->curveBeforeLPE();
+        if (!curve) curve = _path->curve();
+        size_t node_count = 0;
+        if (curve) {
+            node_count = curve->get_segment_count();
+        }
+        _info.set_text(_("Nodes: ") + std::to_string(node_count));
+
+        // _path->curve();
+        // _path->getP
+    }
+
+private:
+    SPPath* _path = nullptr;
+    Gtk::Widget& _main;
+    Inkscape::UI::Widget::SpinButton& _width;
+    Inkscape::UI::Widget::SpinButton& _height;
+    Inkscape::UI::Widget::SpinButton& _rx;
+    Inkscape::UI::Widget::SpinButton& _ry;
+    // Gtk::Button& _sharp;
+    // Gtk::Button& _round;
+    Gtk::Entry& _data;
+    Gtk::Label& _info;
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
 std::string get_key(SPObject* object) {
     if (!object) return {};
 
@@ -788,6 +895,7 @@ void ObjectAttributes::create_panels() {
     _panels[typeid(SPGenericEllipse).name()] = std::make_unique<EllipsePanel>(_builder);
     _panels[typeid(SPStar).name()] = std::make_unique<StarPanel>(_builder);
     _panels[typeid(SPAnchor).name()] = std::make_unique<AnchorPanel>();
+    _panels[typeid(SPPath).name()] = std::make_unique<PathPanel>(_builder);
 }
 
 }
