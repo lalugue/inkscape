@@ -14,7 +14,7 @@ add_custom_command(
 set_source_files_properties(${CMAKE_BINARY_DIR}/templates.h PROPERTIES GENERATED TRUE)
 add_custom_target(templates_h ALL DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/templates.h)
 
-install(FILES ${_FILES} "README" DESTINATION ${INKSCAPE_SHARE_INSTALL}/templates)
+install(FILES ${_FILES} DESTINATION ${INKSCAPE_SHARE_INSTALL}/templates)
 
 
 # create localized versions of default.svg

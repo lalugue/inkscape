@@ -9,4 +9,4 @@ set_source_files_properties(${CMAKE_BINARY_DIR}/filters.svg.h PROPERTIES GENERAT
 
 add_custom_target(filters_svg_h ALL DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/filters.svg.h)
 
-install(FILES "filters.svg" "README" DESTINATION ${INKSCAPE_SHARE_INSTALL}/filters)
+install(FILES "filters.svg" DESTINATION ${INKSCAPE_SHARE_INSTALL}/filters)

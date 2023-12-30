@@ -21,14 +21,25 @@ add_subdirectory(doc)
 install(DIRECTORY extensions DESTINATION ${INKSCAPE_SHARE_INSTALL}
     COMPONENT extensions
     PATTERN ".git*" EXCLUDE
+    PATTERN ".pylintrc" EXCLUDE
+    PATTERN ".darglint" EXCLUDE
+    PATTERN ".pre-commit-config.yaml" EXCLUDE
     PATTERN "tests" EXCLUDE
+    PATTERN "MANIFEST.in" EXCLUDE
+    PATTERN "pyproject.toml" EXCLUDE
+    PATTERN "Makefile" EXCLUDE
+    PATTERN "__pycache__" EXCLUDE
+    PATTERN "tox.ini" EXCLUDE
+    PATTERN "setup.cfg" EXCLUDE
+    PATTERN "requirements.txt" EXCLUDE
+    PATTERN "poetry.lock" EXCLUDE
+    PATTERN "*.dox" EXCLUDE
     PATTERN "*.pyc" EXCLUDE
     PATTERN "*.sh" EXCLUDE
+    PATTERN "*.bat" EXCLUDE
+    PATTERN "*.md" EXCLUDE
     PATTERN "print_win32_vector.*" EXCLUDE
     PATTERN "other/inkman" EXCLUDE
-    PATTERN "other/*/*/tests" EXCLUDE
-    PATTERN "other/*/*/MANIFEST.in" EXCLUDE
-    PATTERN "other/*/*/requirements.txt" EXCLUDE
 )
 
 install(DIRECTORY extensions/other/inkman DESTINATION ${INKSCAPE_SHARE_INSTALL}/extensions/inkman/
@@ -37,6 +48,7 @@ install(DIRECTORY extensions/other/inkman DESTINATION ${INKSCAPE_SHARE_INSTALL}/
     PATTERN ".git*" EXCLUDE
     PATTERN "MANIFEST.in" EXCLUDE
     PATTERN "requirements.txt" EXCLUDE
+    PATTERN "pyproject.toml" EXCLUDE
 )
 
 if(WIN32)
@@ -56,6 +68,7 @@ endif()
 install(DIRECTORY themes DESTINATION ${INKSCAPE_SHARE_INSTALL}
     COMPONENT themes
     PATTERN ".git*" EXCLUDE
+    PATTERN "*.md" EXCLUDE
 )
 
 

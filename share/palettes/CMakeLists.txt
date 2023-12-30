@@ -13,4 +13,4 @@ add_custom_target(palettes_h ALL DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/palettes.h)
 
 file(GLOB _FILES "*.gpl")
 
-install(FILES ${_FILES} "README" DESTINATION ${INKSCAPE_SHARE_INSTALL}/palettes)
+install(FILES ${_FILES} DESTINATION ${INKSCAPE_SHARE_INSTALL}/palettes)

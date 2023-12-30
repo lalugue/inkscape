@@ -12,4 +12,4 @@ add_custom_command(
 set_source_files_properties(${CMAKE_BINARY_DIR}/patterns.svg.h PROPERTIES GENERATED TRUE)
 add_custom_target(patterns_svg_h ALL DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/patterns.svg.h)
 
-install(FILES ${_FILES} "README" DESTINATION ${INKSCAPE_SHARE_INSTALL}/paint)
+install(FILES ${_FILES} DESTINATION ${INKSCAPE_SHARE_INSTALL}/paint)
