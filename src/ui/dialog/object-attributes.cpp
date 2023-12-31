@@ -50,7 +50,6 @@
 #include "ui/builder-utils.h"
 #include "ui/dialog/object-attributes.h"
 #include "ui/icon-names.h"
-#include "ui/pack.h"
 #include "ui/tools/node-tool.h"
 #include "ui/widget/image-properties.h"
 #include "ui/widget/spinbutton.h"
@@ -94,7 +93,7 @@ ObjectAttributes::ObjectAttributes()
     _obj_title.set_text("");
     _style_swatch.set_hexpand(false);
     _style_swatch.set_valign(Gtk::Align::CENTER);
-    UI::pack_end(get_widget<Gtk::Box>(_builder, "main-header"), _style_swatch, false, true);
+    get_widget<Gtk::Box>(_builder, "main-header").prepend(_style_swatch);
     append(main);
     create_panels();
     _style_swatch.set_visible(false);
@@ -136,7 +135,7 @@ void ObjectAttributes::widget_setup() {
         return;
     }
 
-    UI::pack_start(_main_panel, panel->widget(), true, true);
+    _main_panel.append(panel->widget());
     bool show_style = false;
     if (panel->supports_fill_stroke()) {
         if (auto style = item ? item->style : nullptr) {
