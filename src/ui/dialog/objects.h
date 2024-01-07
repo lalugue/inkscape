@@ -188,8 +188,9 @@ private:
 
     friend class ObjectWatcher;
 
-    SPItem *_solid_item;
-    std::vector<SPItem *> _translucent_items;
+    bool _translucency_enabled = false;
+    SPItem *_old_solid_item = nullptr;
+
     int _msg_id;
     Gtk::Popover& _settings_menu;
     Gtk::Popover& _object_menu;

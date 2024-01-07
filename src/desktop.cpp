@@ -47,6 +47,7 @@
 #include "display/control/canvas-item-catchall.h"
 #include "display/control/canvas-item-drawing.h"
 #include "display/control/canvas-item-group.h"
+#include "display/translucency-group.h"
 #include "io/fix-broken-links.h"
 #include "object/sp-namedview.h"
 #include "object/sp-root.h"
@@ -225,6 +226,7 @@ SPDesktop::init (SPNamedView *nv, Inkscape::UI::Widget::Canvas *acanvas, SPDeskt
     }
 
     _temporary_item_list = std::make_unique<Inkscape::Display::TemporaryItemList>();
+    _translucency_group = std::make_unique<Inkscape::Display::TranslucencyGroup>(dkey);
     _snapindicator = std::make_unique<Inkscape::Display::SnapIndicator>(this);
 
     /* --------- End Canvas Items ----------- */

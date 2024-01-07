@@ -34,7 +34,7 @@
 #include "actions/actions-tools.h"
 #include "desktop.h"
 #include "desktop-style.h"
-#include "display/drawing-group.h"
+#include "display/translucency-group.h"
 #include "document.h"
 #include "document-undo.h"
 #include "filter-chemistry.h"
@@ -1497,54 +1497,23 @@ void ObjectsPanel::on_motion_motion(GtkEventControllerMotion const * const contr
 
 void ObjectsPanel::_handleTransparentHover(bool enabled)
 {
+    auto &trg = getDesktop()->getTranslucencyGroup();
     SPItem *item = nullptr;
     if (enabled && _hovered_row_ref) {
         if (auto row = *_store->get_iter(_hovered_row_ref.get_path())) {
             item = getItem(row);
         }
     }
-
-    if (item == _solid_item)
-        return;
-
-    // Set the target item, this prevents rerunning too.
-    _solid_item = item;
-    auto desktop = getDesktop();
-
-    // Reset all the items in the list.
-    for (auto &item : _translucent_items) {
-        if (auto arenaitem = item->get_arenaitem(desktop->dkey)) {
-            arenaitem->setOpacity(SP_SCALE24_TO_FLOAT(item->style->opacity.value));
-        }
+    // Save any solid item from other inkscape features
+    if (enabled && !_translucency_enabled) {
+        _old_solid_item = trg.getSolidItem();
+    } else if (!enabled && _translucency_enabled) {
+        item = _old_solid_item;
     }
-    _translucent_items.clear();
+    _translucency_enabled = enabled;
 
-    if (item) {
-        _generateTranslucentItems(getDocument()->getRoot());
-
-        for (auto &item : _translucent_items) {
-            Inkscape::DrawingItem *arenaitem = item->get_arenaitem(desktop->dkey);
-            arenaitem->setOpacity(0.2);
-        }
-    }
-}
-
-/**
- * Generate a new list of sibling items (recursive)
- */
-void ObjectsPanel::_generateTranslucentItems(SPItem *parent)
-{
-    if (parent == _solid_item)
-        return;
-    if (parent->isAncestorOf(_solid_item)) {
-        for (auto &child: parent->children) {
-            if (auto item = cast<SPItem>(&child)) {
-                _generateTranslucentItems(item);
-            }
-        }
-    } else {
-        _translucent_items.push_back(parent);
-    }
+    // Ask the canvas to only show one item fully opaque
+    trg.setSolidItem(item);
 }
 
 [[nodiscard]] static auto get_cell_area(Gtk::TreeView const &tree_view,

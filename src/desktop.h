@@ -133,6 +133,7 @@ class Dock;
 namespace Display {
 class TemporaryItemList;
 class TemporaryItem;
+class TranslucencyGroup;
 class SnapIndicator;
 } // namespace Display
 
@@ -173,6 +174,7 @@ private:
 
     std::unique_ptr<Inkscape::UI::Tools::ToolBase       > _tool      ;
     std::unique_ptr<Inkscape::Display::TemporaryItemList> _temporary_item_list;
+    std::unique_ptr<Inkscape::Display::TranslucencyGroup> _translucency_group;
     std::unique_ptr<Inkscape::Display::SnapIndicator    > _snapindicator      ;
 
     SPNamedView                  *namedview;
@@ -303,6 +305,8 @@ public:
 
     Inkscape::Display::TemporaryItem * add_temporary_canvasitem (Inkscape::CanvasItem *item, guint lifetime, bool move_to_bottom = true);
     void remove_temporary_canvasitem (Inkscape::Display::TemporaryItem * tempitem);
+
+    Inkscape::Display::TranslucencyGroup &getTranslucencyGroup() const { return *_translucency_group; }
 
     Inkscape::UI::Dialog::DialogContainer *getContainer();
 
