@@ -166,10 +166,12 @@ inkscape:macos:
   variables:
     MSYSTEM: UCRT64
     CCACHE_DIR: $CI_PROJECT_DIR/ccache
-    CCACHE_MAXSIZE: "2.0G"
+    CCACHE_MAXSIZE: "1.0G"
     IDW_ARCHIVE: msys64.7z
-    IDW_RELEASE_TAG: r231022.1
-    IDW_RELEASE_URL: https://gitlab.com/api/v4/projects/46863172/packages/generic/windows/$IDW_RELEASE_TAG/$IDW_ARCHIVE
+    IDW_RELEASE_TAG: r231031.1
+    #IDW_RELEASE_URL: https://gitlab.com/api/v4/projects/46863172/packages/generic/windows/$IDW_RELEASE_TAG/$IDW_ARCHIVE
+    # TODO: intermediate artifact for gtk4
+    IDW_RELEASE_URL: https://gitlab.com/inkscape/deps/windows/-/jobs/5667668033/artifacts/raw/$IDW_ARCHIVE
   before_script:
     - wget.exe --quiet --no-check-certificate $IDW_RELEASE_URL
     - 7z x -oC:/ $IDW_ARCHIVE
@@ -180,7 +182,15 @@ inkscape:windows:build:
   retry: 2
   script:
     - C:/msys64/msys2_shell.cmd -defterm -no-start -ucrt64 -here -c "cmake -Bbuild -G Ninja -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache"
-    - C:/msys64/msys2_shell.cmd -defterm -no-start -ucrt64 -here -c "timeout -k 10s 70m ninja -C build"
+    # Kill the job before hitting runner's timeout. This way we can preserve the cache so the next retry
+    # will be able to advance the build further and eventually finish (after up to two retries, 3 jobs in total).
+    # Calculation is:  20 minutes for download and extraction of msys2
+    #                  80 minutes build (4800 seconds, see 'sleep' below)
+    #                  20 minutes as buffer and save cache
+    #                 --- --------------------------------
+    #                 120 minutes runner timeout
+    - Start-Job -ScriptBlock{sleep 4800; taskkill /t /F /IM "ninja.exe"}
+    - C:/msys64/msys2_shell.cmd -defterm -no-start -ucrt64 -here -c "ninja -C build"
     - 7z a build.7z build
   artifacts:
     paths:
@@ -193,6 +203,7 @@ inkscape:windows:dist:
     matrix:
       - DIST: [ "7z", "exe", "msi" ]
   rules:
+    - *do_not_run_for_schedules
     - if: $DIST != "7z"
       when: manual
       allow_failure: true
