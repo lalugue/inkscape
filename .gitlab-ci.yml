@@ -201,6 +201,7 @@ inkscape:windows:dist:
     matrix:
       - DIST: [ "7z", "exe", "msi" ]
   rules:
+    - *do_not_run_for_schedules
     - if: $DIST != "7z"
       when: manual
       allow_failure: true
