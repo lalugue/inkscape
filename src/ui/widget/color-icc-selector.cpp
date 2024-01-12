@@ -33,7 +33,6 @@
 #define noDEBUG_LCMS
 
 #include "object/color-profile.h"
-#include "color/color-profile-cms-fns.h"
 
 #ifdef DEBUG_LCMS
 #include "preferences.h"
@@ -195,7 +194,7 @@ std::vector<colorspace::Component> colorspace::getColorSpaceInfo(uint32_t space)
 
 std::vector<colorspace::Component> colorspace::getColorSpaceInfo(Inkscape::ColorProfile *prof)
 {
-    return getColorSpaceInfo(asICColorSpaceSig(prof->getColorSpace()));
+    return getColorSpaceInfo((uint32_t)0); // asICColorSpaceSig(prof->getColorSpace()));
 }
 
 namespace Inkscape::UI::Widget {
@@ -502,10 +501,10 @@ void ColorICCSelectorImpl::_switchToProfile(gchar const *name)
 #ifdef DEBUG_LCMS
                     g_message("got on out [%04x] [%04x] [%04x] [%04x]", post[0], post[1], post[2], post[3]);
 #endif // DEBUG_LCMS
-                    guint count = cmsChannelsOf(asICColorSpaceSig(newProf->getColorSpace()));
+                    guint count = 0; // cmsChannelsOf(asICColorSpaceSig(newProf->getColorSpace()));
 
                     std::vector<colorspace::Component> things =
-                        colorspace::getColorSpaceInfo(asICColorSpaceSig(newProf->getColorSpace()));
+                        colorspace::getColorSpaceInfo((uint32_t)0); // asICColorSpaceSig(newProf->getColorSpace()));
 
                     std::vector<double> colors;
                     for (guint i = 0; i < count; i++) {
@@ -711,12 +710,13 @@ void ColorICCSelectorImpl::_setProfile(const std::string &profile)
 
     if (!profile.empty()) {
         _prof = SP_ACTIVE_DOCUMENT->getProfileManager().find(profile.c_str());
-        if (_prof && (asICColorProfileClassSig(_prof->getProfileClass()) != cmsSigNamedColorClass)) {
+        // if (_prof && (asICColorProfileClassSig(_prof->getProfileClass()) != cmsSigNamedColorClass)) {
+        if (false) {
             _profChannelCount = _prof->getChannelCount();
 
             if (profChanged) {
                 std::vector<colorspace::Component> things =
-                    colorspace::getColorSpaceInfo(asICColorSpaceSig(_prof->getColorSpace()));
+                    colorspace::getColorSpaceInfo((uint32_t)0); // asICColorSpaceSig(_prof->getColorSpace()));
                 for (size_t i = 0; (i < things.size()) && (i < _profChannelCount); ++i) {
                     _compUI[i]._component = things[i];
                 }
@@ -741,8 +741,7 @@ void ColorICCSelectorImpl::_setProfile(const std::string &profile)
                     gtk_widget_set_visible(_compUI[i]._btn, false);
                 }
             }
-        }
-        else {
+        } else {
             // Give up for now on named colors
             _prof = nullptr;
         }

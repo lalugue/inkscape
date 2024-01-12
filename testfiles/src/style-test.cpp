@@ -61,8 +61,8 @@ std::vector<StyleRead> getStyleData()
         // StyleRead("fill:url(#painter) rgb(255, 0, 255)",
         //	        "fill:url(#painter) #ff00ff", "#painter"),
 
-
-        StyleRead("fill:#ff00ff icc-color(colorChange, 0.1, 0.5, 0.1)"),
+        // Requires a documentCMS to be available to the SPStyle
+        //  StyleRead("fill:#ff00ff icc-color(colorChange, 0.1, 0.5, 0.1)"),
 
         //  StyleRead("fill:url(#painter)",                     "", "#painter"),
         //  StyleRead("fill:url(#painter) none",                "", "#painter"),

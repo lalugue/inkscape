@@ -60,13 +60,38 @@ set(TEST_SOURCES
     async_channel-test
     async_funclog-test
     async_progress-test
+    colors/cms-test
+    colors/color-test
+    colors/document-cms-test
+    colors/dragndrop-test
+    colors/manager-test
+    colors/parser-test
+    colors/printer-test
+    colors/color-set-test
+    colors/spaces-cms-test
+    colors/spaces-cmyk-test
+    colors/spaces-gray-test
+    colors/spaces-hsl-test
+    colors/spaces-hsluv-test
+    colors/spaces-hsv-test
+    colors/spaces-lab-test
+    colors/spaces-lch-test
+    colors/spaces-linear-rgb-test
+    colors/spaces-luv-test
+    colors/spaces-named-test
+    colors/spaces-okhsl-test
+    colors/spaces-oklab-test
+    colors/spaces-oklch-test
+    colors/spaces-rgb-test
+    colors/spaces-xyz-test
+    colors/utils-test
+    colors/xml-color-test
     uri-test
     util-test
     drag-and-drop-svgz
     drawing-pattern-test
     extract-uri-test
     attributes-test
-    color-profile-test
     dir-util-test
     oklab-color-test
     sp-item-test
@@ -112,6 +137,7 @@ target_link_libraries(cpp_test_static_library PUBLIC ${GTEST_LIBRARIES} inkscape
 add_custom_target(tests)
 foreach(test_source ${TEST_SOURCES})
     string(REPLACE "-test" "" testname "test_${test_source}")
+    string(REPLACE "/" "_" testname "${testname}")
     add_executable(${testname} src/${test_source}.cpp)
     target_include_directories(${testname} SYSTEM PRIVATE ${GTEST_INCLUDE_DIRS})
     target_link_libraries(${testname} cpp_test_static_library 2Geom::2geom)

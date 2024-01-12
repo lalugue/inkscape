@@ -36,7 +36,6 @@ class FourCCSig {
 public:
     FourCCSig( FourCCSig const &other ) = default;
 
-protected:
     FourCCSig( guint32 value ) : value(value) {};
 
     guint32 value;
@@ -46,7 +45,6 @@ class ColorSpaceSig : public FourCCSig {
 public:
     ColorSpaceSig( ColorSpaceSig const &other ) = default;
 
-protected:
     ColorSpaceSig( guint32 value ) : FourCCSig(value) {};
 };
 
@@ -54,7 +52,6 @@ class ColorProfileClassSig : public FourCCSig {
 public:
      ColorProfileClassSig( ColorProfileClassSig const &other ) = default;
 
-protected:
      ColorProfileClassSig( guint32 value ) : FourCCSig(value) {};
 };
 

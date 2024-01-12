@@ -44,6 +44,7 @@ IGNORE_FILE_ENDINGS = [
     ".dia",
     ".dll",
     ".eps",
+    ".icc",
     ".kate-swp",
     ".ods",
     ".otf",
@@ -147,7 +148,7 @@ if __name__ == '__main__':
         main(files_all())
     except LicenseCheckError as e:
         print(e, file=sys.stderr)
-        print("If you think this message is wrong, edit buildtools/check_license_header.py", file=sys.stderr)
+        print("If you think this message is wrong, edit buildtools/check_license_headers.py", file=sys.stderr)
         sys.exit(1)
 
 # vi:sw=4:expandtab:

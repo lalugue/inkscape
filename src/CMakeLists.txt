@@ -310,6 +310,7 @@ list(APPEND inkscape_SRC
 add_subdirectory(actions)
 add_subdirectory(async)
 add_subdirectory(color)
+add_subdirectory(colors)
 add_subdirectory(debug)
 add_subdirectory(display)
 add_subdirectory(extension)

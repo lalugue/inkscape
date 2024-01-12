@@ -84,6 +84,9 @@ namespace Inkscape {
     class EventLog;
     class PageManager;
     class ProfileManager;
+    namespace Colors {
+    class Tracker;
+    }
     class Selection;
     class UndoStackObserver;
     namespace XML {
@@ -168,12 +171,15 @@ public:
     Inkscape::PageManager& getPageManager() { return *_page_manager; }
     const Inkscape::PageManager& getPageManager() const { return *_page_manager; }
 
+    Inkscape::Colors::Tracker &getColorTracker() { return *_color_tracker; }
+    const Inkscape::Colors::Tracker &getColorTracker() const { return *_color_tracker; }
 
 private:
     void _importDefsNode(SPDocument *source, Inkscape::XML::Node *defs, Inkscape::XML::Node *target_defs);
     SPObject *_activexmltree;
 
     std::unique_ptr<Inkscape::PageManager> _page_manager;
+    std::unique_ptr<Inkscape::Colors::Tracker> _color_tracker;
 
     std::queue<GQuark> pending_resource_changes;
 

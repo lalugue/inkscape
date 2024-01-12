@@ -55,6 +55,7 @@
 #include "layer-manager.h"
 #include "page-manager.h"
 #include "profile-manager.h"
+#include "colors/tracker.h"
 #include "rdf.h"
 #include "selection.h"
 
@@ -164,6 +165,7 @@ SPDocument::SPDocument() :
     add_document_actions_effect(this);
 
     _page_manager = std::make_unique<Inkscape::PageManager>(this);
+    _color_tracker = std::make_unique<Inkscape::Colors::Tracker>(this);
 }
 
 SPDocument::~SPDocument() {
