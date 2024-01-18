@@ -30,7 +30,7 @@
 namespace Inkscape::LivePathEffect {
 
 static const Util::EnumData<Filletmethod> FilletmethodData[] = {
-    { FM_AUTO, N_("Auto"), "auto" }, 
+    { FM_AUTO, N_("Auto"), "auto" },
     { FM_ARC, N_("Force arc"), "arc" },
     { FM_BEZIER, N_("Force bezier"), "bezier" }
 };
@@ -122,7 +122,7 @@ void LPEFilletChamfer::doOnApply(SPLPEItem const *lpeItem)
         }
     }
 
-    
+
     NodeSatellites nodesatellites;
     if (!flexible && Geom::are_near(a, 0)) {
         auto trans = lpeItem->transform.inverse();
@@ -195,7 +195,7 @@ Gtk::Widget *LPEFilletChamfer::newWidget()
             widg->set_has_tooltip(false);
         }
     }
-    
+
     // Fillet and chamfer containers
 
     auto const fillet_container = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL, 0);
@@ -337,11 +337,12 @@ void LPEFilletChamfer::doBeforeEffect(SPLPEItem const *lpeItem)
                     nodesatellites[i][j].setSelected(true);
                 }
             }
+
             if (pathv.size() > i && !pathv[i].closed()) {
-                nodesatellites[i][0].amount = 0;
-                nodesatellites[i][count_path_nodes(pathv[i]) - 1].amount = 0;
+                nodesatellites[i].front().amount = 0;
+                nodesatellites[i].back().amount = 0;
             }
-        } 
+        }
         if (!_pathvector_nodesatellites) {
             _pathvector_nodesatellites = new PathVectorNodeSatellites();
         }
@@ -370,9 +371,9 @@ void LPEFilletChamfer::doBeforeEffect(SPLPEItem const *lpeItem)
             _pathvector_nodesatellites->recalculateForNewPathVector(pathv, nodesatellite);
             nodesatellites_param.setPathVectorNodeSatellites(_pathvector_nodesatellites, true);
             nodesatellites_param.reloadKnots();
-        } else {   
+        } else {
             _pathvector_nodesatellites->setPathVector(pathv);
-            _pathvector_nodesatellites->setNodeSatellites(nodesatellites); 
+            _pathvector_nodesatellites->setNodeSatellites(nodesatellites);
             nodesatellites_param.setPathVectorNodeSatellites(_pathvector_nodesatellites, false);
         }
     } else {
@@ -449,7 +450,7 @@ LPEFilletChamfer::doEffect_path(Geom::PathVector const &path_in)
             }
             Geom::Curve const &curve_it2 = pathv.at(path).at(next_index);
             NodeSatellite nodesatellite = nodesatellites.at(path).at(next_index);
-            
+
             if (!curve) { //curve == 0
                 if (!path_it.closed()) {
                     time0 = 0;
@@ -520,8 +521,8 @@ LPEFilletChamfer::doEffect_path(Geom::PathVector const &path_in)
             if (time1 == time0) {
                 start_arc_point = curve_it1->pointAt(time0);
             }
-            if (time1 != 1 && !Geom::are_near(angle, Geom::rad_from_deg(360)) && 
-                !curve_it1->isDegenerate() && !curve_it2.isDegenerate()) 
+            if (time1 != 1 && !Geom::are_near(angle, Geom::rad_from_deg(360)) &&
+                !curve_it1->isDegenerate() && !curve_it2.isDegenerate())
             {
                 if (time1 != time0 || (time1 == 1 && time0 == 1)) {
                     if (!knot_curve_1->isDegenerate()) {
