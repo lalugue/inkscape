@@ -111,6 +111,8 @@ public:
     {
         return _alignment_target_type.has_value() ? *_alignment_target_type : SNAPTARGET_UNDEFINED;
     }
+    bool getOnPath() const;
+
     void setTargetBBox(Geom::OptRect const target) {_target_bbox = target;}
     Geom::OptRect const getTargetBBox() const {return _target_bbox;}
     Geom::OptRect const getSourceBBox() const {return _source_bbox;}

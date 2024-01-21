@@ -431,6 +431,24 @@ bool Inkscape::SnappedPoint::isOtherSnapBetter(Inkscape::SnappedPoint const &oth
     return other_is_better;
 }
 
+// Returns true if the snapped point is on a path (or on a line); returns false for e.g. bounding box edges, page border, and text baseline
+bool Inkscape::SnappedPoint::getOnPath() const {
+    std::vector<Inkscape::SnapTargetType> snaptargets_on_path{
+        Inkscape::SNAPTARGET_LINE_MIDPOINT,
+        Inkscape::SNAPTARGET_PATH,
+        Inkscape::SNAPTARGET_PATH_PERPENDICULAR,
+        Inkscape::SNAPTARGET_PATH_TANGENTIAL,
+        Inkscape::SNAPTARGET_PATH_INTERSECTION,
+        Inkscape::SNAPTARGET_PATH_GUIDE_INTERSECTION,
+        Inkscape::SNAPTARGET_PATH_CLIP,
+        Inkscape::SNAPTARGET_PATH_MASK,
+        Inkscape::SNAPTARGET_ELLIPSE_QUADRANT_POINT
+    };
+
+    return std::find(snaptargets_on_path.begin(), snaptargets_on_path.end(), _target) != snaptargets_on_path.end();
+}
+
+
 /*
   Local Variables:
   mode:c++

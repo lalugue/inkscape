@@ -39,7 +39,7 @@ private:
 
 }
 
-bool getClosestCurve(std::list<Inkscape::SnappedCurve> const &list, Inkscape::SnappedCurve &result, bool exclude_paths = false);
+bool getClosestCurve(std::list<Inkscape::SnappedCurve> const &list, Inkscape::SnappedCurve &result, bool exclude_paths = false, bool paths_only = false);
 bool getClosestIntersectionCS(std::list<Inkscape::SnappedCurve> const &list, Geom::Point const &p, Inkscape::SnappedPoint &result, Geom::Affine dt2doc);
 bool getClosestIntersectionCL(std::list<Inkscape::SnappedCurve> const &list1, std::list<Inkscape::SnappedLine> const &list2, Geom::Point const &p, Inkscape::SnappedPoint &result, Geom::Affine dt2doc);
 

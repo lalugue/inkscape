@@ -163,12 +163,16 @@ Inkscape::SnappedPoint Inkscape::SnappedCurve::intersect(SnappedLine const &line
 
 
 // search for the closest snapped line
-bool getClosestCurve(std::list<Inkscape::SnappedCurve> const &list, Inkscape::SnappedCurve &result, bool exclude_paths)
+bool getClosestCurve(std::list<Inkscape::SnappedCurve> const &list, Inkscape::SnappedCurve &result, bool exclude_paths, bool paths_only)
 {
     bool success = false;
 
     for (std::list<Inkscape::SnappedCurve>::const_iterator i = list.begin(); i != list.end(); ++i) {
         if (exclude_paths && ((*i).getTarget() == Inkscape::SNAPTARGET_PATH)) {
+            continue;
+        }
+        if (paths_only && (not (*i).getOnPath())) {
+            // This discards for example bounding box edges, page border, and text baseline
             continue;
         }
         if ((i == list.begin()) || (*i).getSnapDistance() < result.getSnapDistance()) {

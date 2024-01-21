@@ -549,7 +549,7 @@ Inkscape::SnappedPoint SnapManager::findBestSnap(Inkscape::SnapCandidatePoint co
     // We might have collected the paths only to snap to their intersection, without the intention to snap to the paths themselves
     // Therefore we explicitly check whether the paths should be considered as snap targets themselves
     bool exclude_paths = !snapprefs.isTargetSnappable(Inkscape::SNAPTARGET_PATH);
-    if (getClosestCurve(isr.curves, closestCurve, exclude_paths)) {
+    if (getClosestCurve(isr.curves, closestCurve, exclude_paths, to_path_only)) {
         sp_list.emplace_back(closestCurve);
     }
 
@@ -623,26 +623,10 @@ Inkscape::SnappedPoint SnapManager::findBestSnap(Inkscape::SnapCandidatePoint co
 
     // Filter out all snap targets that do NOT include a path; this is useful when we try to insert
     // a node in a path (on doubleclick in the node tool). We don't want to change the shape of the
-    // path, so the snapped point must be on a path, and not e.g. on a grid intersection
+    // path, so the snapped point must be on a path, and not e.g. on a grid intersection or on the
+    // bounding box
     if (to_path_only) {
-        std::list<Inkscape::SnappedPoint>::iterator i = sp_list.begin();
-
-        while (i != sp_list.end()) {
-            Inkscape::SnapTargetType t = (*i).getTarget();
-            if (t == Inkscape::SNAPTARGET_LINE_MIDPOINT ||
-                t == Inkscape::SNAPTARGET_PATH ||
-                t == Inkscape::SNAPTARGET_PATH_PERPENDICULAR ||
-                t == Inkscape::SNAPTARGET_PATH_TANGENTIAL ||
-                t == Inkscape::SNAPTARGET_PATH_INTERSECTION ||
-                t == Inkscape::SNAPTARGET_PATH_GUIDE_INTERSECTION ||
-                t == Inkscape::SNAPTARGET_PATH_CLIP ||
-                t == Inkscape::SNAPTARGET_PATH_MASK ||
-                t == Inkscape::SNAPTARGET_ELLIPSE_QUADRANT_POINT) {
-                ++i;
-            } else {
-                i = sp_list.erase(i);
-            }
-        }
+        sp_list.remove_if([](Inkscape::SnappedPoint sp) { return !sp.getOnPath(); });
     }
 
     // now let's see which snapped point gets a thumbs up
