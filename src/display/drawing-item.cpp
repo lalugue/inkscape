@@ -1228,32 +1228,9 @@ double DrawingItem::_cacheScore()
     return score;
 }
 
-inline void expandByScale(Geom::IntRect &rect, double scale)
-{
-    double fraction = (scale - 1) / 2;
-    rect.expandBy(rect.width() * fraction, rect.height() * fraction);
-}
-
 Geom::OptIntRect DrawingItem::_cacheRect() const
 {
-    Geom::OptIntRect r = _drawbox & _drawing.cacheLimit();
-    if (_filter && _drawing.cacheLimit() && _drawing.renderMode() != RenderMode::NO_FILTERS && r && r != _drawbox) {
-        // we check unfiltered item is enough inside the cache area to render properly
-        Geom::OptIntRect canvas = r;
-        expandByScale(*canvas, 0.5);
-        Geom::OptIntRect valid = Geom::intersect(canvas, _bbox);
-        if (!valid && _bbox) {
-            valid = _bbox;
-            // contract the item _bbox to get reduced size to render. $ seems good enough
-            expandByScale(*valid, 0.5);
-            // now we get the nearest point to cache area
-            Geom::IntPoint center = _drawing.cacheLimit()->midpoint();
-            Geom::IntPoint nearest = valid->nearestEdgePoint(center);
-            r.expandTo(nearest);
-        }
-        return _drawbox & r;
-    }
-    return r;
+    return _drawbox & _drawing.cacheLimit();
 }
 
 void apply_antialias(DrawingContext &dc, Antialiasing antialias)
