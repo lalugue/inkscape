@@ -26,6 +26,7 @@
 #include <2geom/point.h>
 
 #include "xml/repr.h"
+#include "util/scope_exit.h"
 
 class SPCSSAttr;
 typedef unsigned int guint32;
@@ -622,6 +623,23 @@ public:
      *
      */
     void remove(Glib::ustring const &pref_path);
+
+    /**
+     * Create a temporary transaction which will be rolled back when the returned scope guard is destroyed.
+     *
+     * This will allow you to change preferences and have them revert/rollback when your local process is complete.
+     */
+    [[nodiscard]] auto temporaryPreferences() {
+        bool new_transaction = !_prefs_doc->inTransaction();
+        if (new_transaction)
+            _prefs_doc->beginTransaction();
+        return scope_exit([this,new_transaction] {
+            if (new_transaction) {
+                cachedRawValue.clear();
+                _prefs_doc->rollback();
+            }
+        });
+    }
 
 protected:
     /* helper methods used by Entry
