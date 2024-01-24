@@ -153,7 +153,7 @@ void SPGuide::set(SPAttr key, const gchar *value) {
             if (success == 2) {
                 // If root viewBox set, interpret guides in terms of viewBox (90/96)
                 SPRoot *root = document->getRoot();
-                if( root->viewBox_set ) {
+                if(root->viewBox_set && root->width && root->height) {
                     if(Geom::are_near((root->width.computed * root->viewBox.height()) / (root->viewBox.width() * root->height.computed), 1.0, Geom::EPSILON)) {
                         // for uniform scaling, try to reduce numerical error
                         double vbunit2px = (root->width.computed / root->viewBox.width() + root->height.computed / root->viewBox.height())/2.0;
