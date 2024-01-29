@@ -345,7 +345,7 @@ double PageToolbar::_unit_to_size(std::string number, std::string unit_str,
         unit_str = "in";
 
     // Output is always in px as it's the most useful.
-    auto px = Inkscape::Util::unit_table.getUnit("px");
+    auto px = Inkscape::Util::UnitTable::get().getUnit("px");
 
     // Convert from user entered unit to display unit
     if (!unit_str.empty())

@@ -29,8 +29,6 @@
 #include "ui/builder-utils.h"
 #include "util/units.h"
 
-using Inkscape::Util::unit_table;
-
 namespace Inkscape::UI::Dialog {
 
 ExtensionList::ExtensionList()

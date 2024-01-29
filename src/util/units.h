@@ -202,6 +202,8 @@ public:
     /* * Saves the current UnitTable to the given file. */
     //bool    save(std::string const &filename);
 
+    static UnitTable &get();
+
 protected:
     UnitCodeMap         _unit_map;
     Glib::ustring       _primary_unit[UNIT_TYPE_QTY];
@@ -214,8 +216,6 @@ private:
     UnitTable operator=(UnitTable const &t);
 
 };
-
-extern UnitTable unit_table;
 
 } // namespace Util
 } // namespace Inkscape

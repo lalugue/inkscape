@@ -1528,7 +1528,7 @@ void DocumentProperties::update_widgets()
     SPRoot *root = document->getRoot();
 
     double doc_w = root->width.value;
-    Glib::ustring doc_w_unit = unit_table.getUnit(root->width.unit)->abbr;
+    Glib::ustring doc_w_unit = Util::UnitTable::get().getUnit(root->width.unit)->abbr;
     bool percent = doc_w_unit == "%";
     if (doc_w_unit == "") {
         doc_w_unit = "px";
@@ -1537,7 +1537,7 @@ void DocumentProperties::update_widgets()
         doc_w = root->viewBox.width();
     }
     double doc_h = root->height.value;
-    Glib::ustring doc_h_unit = unit_table.getUnit(root->height.unit)->abbr;
+    Glib::ustring doc_h_unit = Util::UnitTable::get().getUnit(root->height.unit)->abbr;
     percent = percent || doc_h_unit == "%";
     if (doc_h_unit == "") {
         doc_h_unit = "px";

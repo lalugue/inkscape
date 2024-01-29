@@ -50,7 +50,7 @@ const std::vector<PaperSize>& PaperSize::getPageSizes()
             g_strstrip(line[0]);
             g_strstrip(line[3]);
             Glib::ustring name = line[0];
-            ret.push_back(PaperSize(name, width, height, Inkscape::Util::unit_table.getUnit(line[3])));
+            ret.push_back(PaperSize(name, width, height, Inkscape::Util::UnitTable::get().getUnit(line[3])));
         }
         g_strfreev(lines); 
         g_free(content);
@@ -64,7 +64,7 @@ PaperSize::PaperSize()
     , width(0.0)
     , height(0.0)
 {
-    unit = Inkscape::Util::unit_table.getUnit("px");
+    unit = Inkscape::Util::UnitTable::get().getUnit("px");
 }
 
 
@@ -121,7 +121,7 @@ const PaperSize *PaperSize::findPaperSize(double width, double height, Inkscape:
 {
     auto [smaller, larger] = std::minmax(width, height);
     auto size = Geom::Point(smaller, larger);
-    auto px = Inkscape::Util::unit_table.getUnit("px");
+    auto px = Inkscape::Util::UnitTable::get().getUnit("px");
 
     for (auto&& page_size : Inkscape::PaperSize::getPageSizes()) {
         auto cmp = Geom::Point(

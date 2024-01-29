@@ -73,7 +73,6 @@
 using Inkscape::DocumentUndo;
 using Inkscape::Util::Unit;
 using Inkscape::Util::Quantity;
-using Inkscape::Util::unit_table;
 using Inkscape::UI::Widget::UnitTracker;
 
 //#define DEBUG_TEXT
@@ -251,6 +250,7 @@ TextToolbar::TextToolbar(SPDesktop *desktop)
     auto prefs = Inkscape::Preferences::get();
 
     // Line height unit tracker.
+    auto const &unit_table = Util::UnitTable::get();
     _tracker->prependUnit(unit_table.getUnit("")); // Ratio
     _tracker->addUnit(unit_table.getUnit("%"));
     _tracker->addUnit(unit_table.getUnit("em"));

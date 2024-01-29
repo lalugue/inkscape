@@ -45,8 +45,6 @@
 #include "ui/widget/toolbar-menu-button.h"
 #include "ui/widget/unit-tracker.h"
 
-using Inkscape::Util::unit_table;
-
 namespace Inkscape::UI::Toolbar {
 
 PaintbucketToolbar::PaintbucketToolbar(SPDesktop *desktop)
@@ -88,7 +86,7 @@ PaintbucketToolbar::PaintbucketToolbar(SPDesktop *desktop)
         // Create the units menu.
         Glib::ustring stored_unit = prefs->getString("/tools/paintbucket/offsetunits");
         if (!stored_unit.empty()) {
-            Unit const *u = unit_table.getUnit(stored_unit);
+            Unit const *u = Util::UnitTable::get().getUnit(stored_unit);
             _tracker->setActiveUnit(u);
         }
     }

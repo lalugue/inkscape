@@ -31,8 +31,6 @@
 
 #define PREFERENCES_FILE_NAME "preferences.xml"
 
-using Inkscape::Util::unit_table;
-
 namespace Inkscape {
 
 static Inkscape::XML::Document *loadImpl( std::string const& prefsFilename, Glib::ustring & errMsg );
@@ -851,6 +849,7 @@ double Preferences::_extractDouble(Entry const &v, Glib::ustring const &requeste
         // no unit specified, don't do conversion
         return val;
     }
+    auto const &unit_table = Util::UnitTable::get();
     return val * (unit_table.getUnit(unit)->factor / unit_table.getUnit(requested_unit)->factor); /// \todo rewrite using Quantity class, so the standard code handles unit conversion
 }
 

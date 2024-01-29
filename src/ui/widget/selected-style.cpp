@@ -55,8 +55,6 @@
 #include "widgets/paintdef.h"
 #include "widgets/spw-utilities.h"
 
-using Inkscape::Util::unit_table;
-
 static constexpr int SELECTED_STYLE_SB_WIDTH     =  48;
 static constexpr int SELECTED_STYLE_PLACE_WIDTH  =  50;
 static constexpr int SELECTED_STYLE_STROKE_WIDTH =  40;
@@ -723,6 +721,7 @@ void SelectedStyle::make_popup_units()
 
     _popup_sw->append_section_label(_("Unit"));
     auto group = Gtk::RadioButtonGroup{};
+    auto const &unit_table = Util::UnitTable::get();
     for (auto const &[key, value] : unit_table.units(Inkscape::Util::UNIT_TYPE_LINEAR)) {
         auto const item = Gtk::make_managed<UI::Widget::PopoverMenuItem>();
         auto const radio = Gtk::make_managed<Gtk::RadioButton>(group, key);

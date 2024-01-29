@@ -50,7 +50,7 @@
 #include "util/units.h"
 
 using Inkscape::DocumentUndo;
-using Inkscape::Util::unit_table;
+using Inkscape::Util::UnitTable;
 
 #define DEFAULTGUIDECOLOR   0x0086e599
 #define DEFAULTGUIDEHICOLOR 0xff00007f
@@ -246,8 +246,8 @@ const Inkscape::Util::Unit* sp_parse_document_units(const char* value) {
         *
         * We default to `px'.
         */
-    static Inkscape::Util::Unit const *px = unit_table.getUnit("px");
-    Inkscape::Util::Unit const *new_unit = px;
+    auto const &unit_table = UnitTable::get();
+    auto new_unit = unit_table.getUnit("px");
 
     if (value) {
         Inkscape::Util::Unit const *const req_unit = unit_table.getUnit(value);
@@ -924,7 +924,7 @@ void SPNamedView::updateGuides()
  */
 Inkscape::Util::Unit const * SPNamedView::getDisplayUnit() const
 {
-    return display_units ? display_units : unit_table.getUnit("px");
+    return display_units ? display_units : UnitTable::get().getUnit("px");
 }
 
 /**
@@ -932,7 +932,7 @@ Inkscape::Util::Unit const * SPNamedView::getDisplayUnit() const
  */
 void SPNamedView::setDisplayUnit(std::string unit)
 {
-    setDisplayUnit(unit_table.getUnit(unit));
+    setDisplayUnit(UnitTable::get().getUnit(unit));
 }
 
 void SPNamedView::setDisplayUnit(Inkscape::Util::Unit const *unit)

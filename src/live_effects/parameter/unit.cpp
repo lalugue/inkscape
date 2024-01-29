@@ -14,8 +14,6 @@
 #include "ui/widget/registered-widget.h"
 #include "util/units.h"
 
-using Inkscape::Util::unit_table;
-
 namespace Inkscape::LivePathEffect {
 
 UnitParam::UnitParam(const Glib::ustring& label, const Glib::ustring& tip,
@@ -24,17 +22,10 @@ UnitParam::UnitParam(const Glib::ustring& label, const Glib::ustring& tip,
     : Parameter(label, tip, key, wr, effect)
     , defunit{default_unit}
 {
-   unit = std::make_unique<Inkscape::Util::Unit const>(*unit_table.getUnit(default_unit));
+    unit = std::make_unique<Inkscape::Util::Unit const>(*Util::UnitTable::get().getUnit(default_unit));
 }
 
-UnitParam::~UnitParam()
-{
-    if (unit) {
-        delete unit.get();
-        unit.release();
-    }
-}
-
+UnitParam::~UnitParam() = default;
 
 bool
 UnitParam::param_readSVGValue(const gchar * strvalue)
@@ -78,11 +69,7 @@ UnitParam::param_set_value(const gchar * strvalue)
 {
     if (strvalue) {
         param_effect->refresh_widgets = true;
-        if (unit) {
-            delete unit.get();
-            unit.release();
-        }
-        unit = std::make_unique<Inkscape::Util::Unit const>(*unit_table.getUnit(strvalue));
+        unit = std::make_unique<Inkscape::Util::Unit const>(*Util::UnitTable::get().getUnit(strvalue));
     }
 }
 

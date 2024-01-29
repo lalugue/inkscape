@@ -25,7 +25,6 @@
 #include "xml/repr.h"
 
 using namespace Inkscape::IO::Resource;
-using Inkscape::Util::unit_table;
 
 namespace Inkscape {
 namespace Extension {

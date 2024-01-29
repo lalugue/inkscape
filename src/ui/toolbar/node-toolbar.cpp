@@ -59,7 +59,6 @@ using Inkscape::UI::Widget::UnitTracker;
 using Inkscape::Util::Unit;
 using Inkscape::Util::Quantity;
 using Inkscape::DocumentUndo;
-using Inkscape::Util::unit_table;
 using Inkscape::UI::Tools::NodeTool;
 
 /** Temporary hack: Returns the node tool in the active desktop.

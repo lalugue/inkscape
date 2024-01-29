@@ -40,7 +40,7 @@
 #include "ui/shape-editor.h"
 #include "ui/widget/events/canvas-event.h"
 
-using Inkscape::Util::unit_table;
+using Inkscape::Util::UnitTable;
 using Inkscape::UI::Tools::PenTool;
 
 int const num_subtools = 8;
@@ -300,6 +300,8 @@ void LpeTool::create_measuring_items(Selection *selection)
 
     auto tmpgrp = _desktop->getCanvasTemp();
 
+    auto const &unit_table = Util::UnitTable::get();
+
     Util::Unit const *unit = nullptr;
     if (prefs->getString("/tools/lpetool/unit").compare("")) {
         unit = unit_table.getUnit(prefs->getString("/tools/lpetool/unit"));
@@ -338,6 +340,8 @@ void LpeTool::delete_measuring_items()
 void LpeTool::update_measuring_items()
 {
     auto prefs = Preferences::get();
+    auto const &unit_table = Util::UnitTable::get();
+
     Util::Unit const *unit = nullptr;
     if (prefs->getString("/tools/lpetool/unit").compare("")) {
         unit = unit_table.getUnit(prefs->getString("/tools/lpetool/unit"));

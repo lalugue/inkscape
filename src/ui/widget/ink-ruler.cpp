@@ -29,8 +29,6 @@
 #include "ui/util.h"
 #include "util/units.h"
 
-using Inkscape::Util::unit_table;
-
 struct SPRulerMetric
 {
   gdouble ruler_scale[16];
@@ -249,7 +247,7 @@ Ruler::draw_scale(const::Cairo::RefPtr<::Cairo::Context>& cr_in)
     cr->stroke();
 
     // Draw a shadow which overlaps any previously painted object.
-    auto paint_shadow = [=](double size_x, double size_y, double width, double height) {
+    auto paint_shadow = [=, this] (double size_x, double size_y, double width, double height) {
         auto trans = change_alpha(_shadow, 0.0);
         auto gr = create_cubic_gradient(Geom::Rect(0, 0, size_x, size_y), _shadow, trans, Geom::Point(0, 0.5), Geom::Point(0.5, 1));
         cr->rectangle(0, 0, width, height);
@@ -273,7 +271,7 @@ Ruler::draw_scale(const::Cairo::RefPtr<::Cairo::Context>& cr_in)
     auto const pixels_per_unit = aparallel / _max_size; // pixel per distance
 
     SPRulerMetric ruler_metric = ruler_metric_general;
-    if (_unit == Inkscape::Util::unit_table.getUnit("in")) {
+    if (_unit == Util::UnitTable::get().getUnit("in")) {
         ruler_metric = ruler_metric_inches;
     }
 
@@ -539,7 +537,7 @@ void Ruler::set_context_menu()
 {
     auto unit_menu = Gio::Menu::create();
 
-    for (auto &pair : unit_table.units(Inkscape::Util::UNIT_TYPE_LINEAR)) {
+    for (auto &pair : Util::UnitTable::get().units(Inkscape::Util::UNIT_TYPE_LINEAR)) {
         auto unit = pair.second.abbr;
         Glib::ustring action_name = "doc.set-display-unit('" + unit + "')";
         auto item = Gio::MenuItem::create(unit, action_name);

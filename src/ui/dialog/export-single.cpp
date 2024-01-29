@@ -58,7 +58,7 @@
 #include "ui/widget/scrollprotected.h"
 #include "ui/widget/unit-menu.h"
 
-using Inkscape::Util::unit_table;
+using Inkscape::Util::UnitTable;
 using Inkscape::UI::Widget::UnitMenu;
 
 namespace Inkscape::UI::Dialog {
@@ -492,7 +492,7 @@ void SingleExport::setArea(double x0, double y0, double x1, double y1)
     blockSpinConns(true);
 
     Unit const *unit = units.getUnit();
-    auto px = unit_table.getUnit("px");
+    auto px = UnitTable::get().getUnit("px");
     spin_buttons[SPIN_X0]->get_adjustment()->set_value(px->convert(x0, unit));
     spin_buttons[SPIN_X1]->get_adjustment()->set_value(px->convert(x1, unit));
     spin_buttons[SPIN_Y0]->get_adjustment()->set_value(px->convert(y0, unit));
@@ -819,7 +819,7 @@ void SingleExport::areaXChange(sb_type type)
     width = x1 - x0;
     bmwidth = floor(width * dpi / DPI_BASE + 0.5);
 
-    auto px = unit_table.getUnit("px");
+    auto px = UnitTable::get().getUnit("px");
     x0_adj->set_value(px->convert(x0, unit));
     x1_adj->set_value(px->convert(x1, unit));
     width_adj->set_value(px->convert(width, unit));
@@ -869,7 +869,7 @@ void SingleExport::areaYChange(sb_type type)
     height = y1 - y0;
     bmheight = floor(height * dpi / DPI_BASE + 0.5);
 
-    auto px = unit_table.getUnit("px");
+    auto px = UnitTable::get().getUnit("px");
     y0_adj->set_value(px->convert(y0, unit));
     y1_adj->set_value(px->convert(y1, unit));
     height_adj->set_value(px->convert(height, unit));

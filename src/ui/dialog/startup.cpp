@@ -49,7 +49,6 @@
 
 using namespace Inkscape::IO;
 using namespace Inkscape::UI::View;
-using Inkscape::Util::unit_table;
 
 namespace Inkscape::UI::Dialog {
 

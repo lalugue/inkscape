@@ -79,7 +79,6 @@ using Inkscape::UI::Dialog::DialogContainer;
 using Inkscape::UI::Dialog::DialogMultipaned;
 using Inkscape::UI::Dialog::DialogWindow;
 using Inkscape::UI::Widget::UnitTracker;
-using Inkscape::Util::unit_table;
 
 //---------------------------------------------------------------------
 /* SPDesktopWidget */

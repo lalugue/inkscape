@@ -18,8 +18,6 @@
 #include "template-paper.h"
 #include "object/sp-page.h"
 
-using Inkscape::Util::unit_table;
-
 namespace Inkscape {
 namespace Extension {
 namespace Internal {
@@ -54,6 +52,7 @@ Geom::Point TemplateBase::get_template_size(Inkscape::Extension::Template *tmod,
  */
 const Util::Unit *TemplateBase::get_template_unit(Inkscape::Extension::Template *tmod) const
 {
+    auto const &unit_table = Util::UnitTable::get();
     try {
         return unit_table.getUnit(tmod->get_param_optiongroup("unit", "cm"));
     } catch (InxParameter::param_not_optiongroup_param) {
@@ -81,14 +80,14 @@ SPDocument *TemplateBase::new_from_template(Inkscape::Extension::Template *tmod)
 
 void TemplateBase::resize_to_template(Inkscape::Extension::Template *tmod, SPDocument *doc, SPPage *page)
 {
-    static auto px = unit_table.getUnit("px");
+    static auto px = Util::UnitTable::get().getUnit("px");
     auto size = this->get_template_size(tmod, px);
     doc->getPageManager().resizePage(page, size.x(), size.y());
 }
 
 bool TemplateBase::match_template_size(Inkscape::Extension::Template *tmod, double width, double height)
 {
-    static auto px = unit_table.getUnit("px");
+    static auto px = Util::UnitTable::get().getUnit("px");
     auto temp_size = get_template_size(tmod, px);
     auto page_size = Geom::Point(width, height);
     auto rota_size = Geom::Point(height, width);

@@ -47,7 +47,6 @@ using Inkscape::UI::Widget::UnitTracker;
 using Inkscape::Util::Unit;
 using Inkscape::Util::Quantity;
 using Inkscape::DocumentUndo;
-using Inkscape::Util::unit_table;
 
 namespace Inkscape::UI::Toolbar {
 
@@ -105,7 +104,7 @@ SelectToolbar::SelectToolbar(SPDesktop *desktop)
     _select_touch_btn.set_active(prefs->getBool("/tools/select/touch_box", false));
     _select_touch_btn.signal_toggled().connect(sigc::mem_fun(*this, &SelectToolbar::toggle_touch));
 
-    _tracker->addUnit(unit_table.getUnit("%"));
+    _tracker->addUnit(Util::UnitTable::get().getUnit("%"));
     _tracker->setActiveUnit(desktop->getNamedView()->display_units);
 
     // Use StyleContext to check if the child is a context item.

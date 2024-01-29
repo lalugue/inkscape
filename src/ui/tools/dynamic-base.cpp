@@ -15,7 +15,6 @@
 
 using Inkscape::Util::Unit;
 using Inkscape::Util::Quantity;
-using Inkscape::Util::unit_table;
 
 static constexpr double DRAG_MIN = 0.0;
 static constexpr double DRAG_MAX = 1.0;
@@ -38,7 +37,7 @@ void DynamicBase::set(Preferences::Entry const &value)
     auto const &full_path = value.getPath();
 
     auto prefs = Preferences::get();
-    auto const unit = unit_table.getUnit(prefs->getString("/tools/calligraphic/unit"));
+    auto const unit = Util::UnitTable::get().getUnit(prefs->getString("/tools/calligraphic/unit"));
 
     if (full_path.compare(0, presets_path.size(), presets_path) == 0) {
     	return;

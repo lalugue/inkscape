@@ -70,7 +70,6 @@
 using Inkscape::DocumentUndo;
 using Inkscape::Util::Quantity;
 using Inkscape::Util::Unit;
-using Inkscape::Util::unit_table;
 
 static constexpr double DDC_MIN_PRESSURE     = 0.0;
 static constexpr double DDC_MAX_PRESSURE     = 1.0;
@@ -379,7 +378,7 @@ bool CalligraphicTool::root_handler(CanvasEvent const &event)
     bool ret = false;
 
     auto prefs = Preferences::get();
-    auto unit = unit_table.getUnit(prefs->getString("/tools/calligraphic/unit"));
+    auto unit = Util::UnitTable::get().getUnit(prefs->getString("/tools/calligraphic/unit"));
 
     inspect_event(event,
         [&] (ButtonPressEvent const &event) {

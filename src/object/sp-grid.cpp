@@ -36,7 +36,7 @@
 #include <string>
 #include <optional>
 
-using Inkscape::Util::unit_table;
+using Inkscape::Util::UnitTable;
 
 SPGrid::SPGrid()
     : _visible(true)
@@ -149,7 +149,7 @@ void SPGrid::set(SPAttr key, const gchar* value)
         }
         case SPAttr::UNITS:
         {
-            auto unit = unit_table.getUnit(value);
+            auto unit = UnitTable::get().getUnit(value);
             if (_display_unit != unit) {
                 _display_unit = unit;
                 requestModified(SP_OBJECT_MODIFIED_FLAG);
@@ -390,7 +390,7 @@ void SPGrid::setPrefValues()
     auto unit_pref = prefs->getString(prefix + "/units", display_unit->abbr);
     setUnit(unit_pref);
 
-    _display_unit = unit_table.getUnit(unit_pref);
+    _display_unit = UnitTable::get().getUnit(unit_pref);
 
     // Origin and Spacing are the only two properties that vary depending on selected units
     // SPGrid should only store values in document units, convert whatever preferences are set to "px"

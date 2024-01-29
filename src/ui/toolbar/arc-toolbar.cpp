@@ -50,7 +50,6 @@
 using Inkscape::UI::Widget::UnitTracker;
 using Inkscape::DocumentUndo;
 using Inkscape::Util::Quantity;
-using Inkscape::Util::unit_table;
 
 namespace Inkscape::UI::Toolbar {
 

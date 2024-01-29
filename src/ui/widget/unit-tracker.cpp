@@ -24,9 +24,6 @@
 
 #define COLUMN_STRING 0
 
-using Inkscape::Util::UnitTable;
-using Inkscape::Util::unit_table;
-
 namespace Inkscape::UI::Widget {
 
 UnitTracker::UnitTracker(UnitType unit_type) :
@@ -37,7 +34,7 @@ UnitTracker::UnitTracker(UnitType unit_type) :
     _store(nullptr),
     _priorValues()
 {
-    UnitTable::UnitMap m = unit_table.units(unit_type);
+    auto const &m = Util::UnitTable::get().units(unit_type);
     
     ComboToolItemColumns columns;
     _store = Gtk::ListStore::create(columns);
@@ -133,7 +130,7 @@ void UnitTracker::setActiveUnitByLabel(Glib::ustring label)
 
 void UnitTracker::setActiveUnitByAbbr(gchar const *abbr)
 {
-    Inkscape::Util::Unit const *u = unit_table.getUnit(abbr);
+    auto u = Util::UnitTable::get().getUnit(abbr);
     setActiveUnit(u);
 }
 
@@ -221,6 +218,8 @@ void UnitTracker::_adjustmentFinalized(GObject *where_the_object_was)
 
 void UnitTracker::_setActive(gint active)
 {
+    auto const &unit_table = Util::UnitTable::get();
+
     if ( active != _active || !_activeUnitInitialized ) {
         gint oldActive = _active;
 

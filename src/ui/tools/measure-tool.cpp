@@ -56,7 +56,6 @@
 
 #include "util/units.h"
 
-using Inkscape::Util::unit_table;
 using Inkscape::DocumentUndo;
 
 namespace Inkscape::UI::Tools {

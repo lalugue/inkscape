@@ -90,7 +90,7 @@
 #include "xml/simple-document.h"
 
 using Inkscape::DocumentUndo;
-using Inkscape::Util::unit_table;
+using Inkscape::Util::UnitTable;
 
 // Higher number means lower priority.
 #define SP_DOCUMENT_UPDATE_PRIORITY (G_PRIORITY_HIGH_IDLE - 2)
@@ -767,7 +767,7 @@ Inkscape::Util::Unit const* SPDocument::getDisplayUnit()
     if (auto nv = getNamedView()) {
         return nv->getDisplayUnit();
     }
-    return unit_table.getUnit("px");
+    return UnitTable::get().getUnit("px");
 }
 
 /// Sets document scale (by changing viewBox)
@@ -842,6 +842,7 @@ void SPDocument::scaleContentBy(Geom::Scale const &delta)
 // (As done on every delete as clipboard calls this via fitToRect())
 void SPDocument::setWidthAndHeight(const Inkscape::Util::Quantity &width, const Inkscape::Util::Quantity &height, bool changeSize)
 {
+    auto const &unit_table = UnitTable::get();
     Inkscape::Util::Unit const *old_width_units = unit_table.getUnit("px");
     if (root->width.unit)
         old_width_units = unit_table.getUnit(root->width.unit);
@@ -879,6 +880,7 @@ void SPDocument::setWidthAndHeight(const Inkscape::Util::Quantity &width, const 
 
 Inkscape::Util::Quantity SPDocument::getWidth() const
 {
+    auto const &unit_table = UnitTable::get();
     g_return_val_if_fail(this->root != nullptr, Inkscape::Util::Quantity(0.0, unit_table.getUnit("")));
 
     gdouble result = root->width.value;
@@ -895,6 +897,7 @@ Inkscape::Util::Quantity SPDocument::getWidth() const
 
 void SPDocument::setWidth(const Inkscape::Util::Quantity &width, bool changeSize)
 {
+    auto const &unit_table = UnitTable::get();
     Inkscape::Util::Unit const *old_width_units = unit_table.getUnit("px");
     if (root->width.unit)
         old_width_units = unit_table.getUnit(root->width.unit);
@@ -916,6 +919,7 @@ void SPDocument::setWidth(const Inkscape::Util::Quantity &width, bool changeSize
 
 Inkscape::Util::Quantity SPDocument::getHeight() const
 {
+    auto const &unit_table = UnitTable::get();
     g_return_val_if_fail(this->root != nullptr, Inkscape::Util::Quantity(0.0, unit_table.getUnit("")));
 
     gdouble result = root->height.value;
@@ -932,6 +936,7 @@ Inkscape::Util::Quantity SPDocument::getHeight() const
 
 void SPDocument::setHeight(const Inkscape::Util::Quantity &height, bool changeSize)
 {
+    auto const &unit_table = UnitTable::get();
     Inkscape::Util::Unit const *old_height_units = unit_table.getUnit("px");
     if (root->height.unit)
         old_height_units = unit_table.getUnit(root->height.unit);
@@ -1020,6 +1025,8 @@ Geom::OptRect SPDocument::pageBounds()
 void SPDocument::fitToRect(Geom::Rect const &rect, bool)
 {
     using namespace Inkscape::Util;
+
+    auto const &unit_table = UnitTable::get();
     Unit const *nv_units = unit_table.getUnit("px");
 
     if (root->height.unit && (root->height.unit != SVGLength::PERCENT)) {

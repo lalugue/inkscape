@@ -17,8 +17,6 @@
 #include "spinbutton.h"
 #include "ui/pack.h"
 
-using Inkscape::Util::unit_table;
-
 namespace Inkscape::UI::Widget {
 
 ScalarUnit::ScalarUnit(Glib::ustring const &label, Glib::ustring const &tooltip,
@@ -214,6 +212,7 @@ void ScalarUnit::setFromPercentage(double value)
 void ScalarUnit::on_unit_changed()
 {
     Glib::ustring abbr = _unit_menu->getUnitAbbr();
+    auto const &unit_table = Util::UnitTable::get();
     Inkscape::Util::Unit const *new_unit = unit_table.getUnit(abbr);
     Inkscape::Util::Unit const *old_unit = unit_table.getUnit(lastUnits);
 

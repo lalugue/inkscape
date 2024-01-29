@@ -50,7 +50,6 @@
 #include "widgets/style-utils.h"
 
 using Inkscape::DocumentUndo;
-using Inkscape::Util::unit_table;
 
 /**
  * Extract the actual name of the link
@@ -229,7 +228,7 @@ StrokeStyle::StrokeStyle() :
     unitSelector->setUnitType(Inkscape::Util::UNIT_TYPE_LINEAR);
     SPDesktop *desktop = SP_ACTIVE_DESKTOP;
 
-    unitSelector->addUnit(*unit_table.getUnit("%"));
+    unitSelector->addUnit(*Util::UnitTable::get().getUnit("%"));
     unitSelector->append("hairline", _("Hairline"));
     _old_unit = unitSelector->getUnit();
     if (desktop) {

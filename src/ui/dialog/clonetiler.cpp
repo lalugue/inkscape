@@ -56,7 +56,6 @@
 #include "xml/href-attribute-helper.h"
 
 using Inkscape::DocumentUndo;
-using Inkscape::Util::unit_table;
 
 namespace Inkscape::UI {
 

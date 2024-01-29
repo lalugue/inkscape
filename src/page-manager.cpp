@@ -730,7 +730,7 @@ std::string PageManager::getSizeLabel(double width, double height)
         return _(preset->get_name().c_str());
     }
 
-    static auto px = Inkscape::Util::unit_table.getUnit("px");
+    static auto px = Inkscape::Util::UnitTable::get().getUnit("px");
     auto unit = _document->getDisplayUnit();
     return format_number(Quantity::convert(width, px, unit), 2)
              + " × " +

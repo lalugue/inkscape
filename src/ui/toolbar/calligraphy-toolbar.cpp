@@ -46,7 +46,7 @@
 using Inkscape::UI::Widget::UnitTracker;
 using Inkscape::Util::Quantity;
 using Inkscape::Util::Unit;
-using Inkscape::Util::unit_table;
+using Inkscape::Util::UnitTable;
 
 std::vector<Glib::ustring> get_presets_list() {
     std::vector<Glib::ustring> presets = Inkscape::Preferences::get()->getAllDirs("/tools/calligraphic/preset");
@@ -73,7 +73,7 @@ CalligraphyToolbar::CalligraphyToolbar(SPDesktop *desktop)
 {
     auto *prefs = Inkscape::Preferences::get();
 
-    _tracker->prependUnit(unit_table.getUnit("px"));
+    _tracker->prependUnit(UnitTable::get().getUnit("px"));
     _tracker->changeLabel("%", 0, true);
     if (prefs->getBool("/tools/calligraphic/abs_width")) {
         _tracker->setActiveUnitByLabel(prefs->getString("/tools/calligraphic/unit"));
@@ -179,7 +179,7 @@ void CalligraphyToolbar::setup_derived_spin_button(UI::Widget::SpinButton &btn, 
     auto adj = btn.get_adjustment();
 
     if (name == "width") {
-        Unit const *unit = unit_table.getUnit(prefs->getString("/tools/calligraphic/unit"));
+        Unit const *unit = UnitTable::get().getUnit(prefs->getString("/tools/calligraphic/unit"));
         adj = Gtk::Adjustment::create(Quantity::convert(val, "px", unit), 0.001, 100, 1.0, 10.0);
         btn.set_adjustment(adj);
     } else {

@@ -12,8 +12,6 @@
 
 #include "unit-menu.h"
 
-using Inkscape::Util::unit_table;
-
 namespace Inkscape::UI::Widget {
 
 UnitMenu::UnitMenu() : _type(UNIT_TYPE_NONE)
@@ -32,7 +30,8 @@ UnitMenu::~UnitMenu() = default;
 bool UnitMenu::setUnitType(UnitType unit_type) 
 {
     // Expand the unit widget with unit entries from the unit table
-    UnitTable::UnitMap m = unit_table.units(unit_type);
+    auto const &unit_table = Util::UnitTable::get();
+    auto const &m = unit_table.units(unit_type);
 
     for (auto & i : m) {
         append(i.first);
@@ -52,12 +51,13 @@ bool UnitMenu::resetUnitType(UnitType unit_type)
 
 void UnitMenu::addUnit(Unit const& u)
 {
-    unit_table.addUnit(u, false);
+    Util::UnitTable::get().addUnit(u, false);
     append(u.abbr);
 }
 
 Unit const * UnitMenu::getUnit() const
 {
+    auto const &unit_table = Util::UnitTable::get();
     if (get_active_text() == "") {
         g_assert(_type != UNIT_TYPE_NONE);
         return unit_table.getUnit(unit_table.primary(_type));
@@ -110,6 +110,8 @@ double UnitMenu::getDefaultPage() const
 
 double UnitMenu::getConversion(Glib::ustring const &new_unit_abbr, Glib::ustring const &old_unit_abbr) const
 {
+    auto const &unit_table = Util::UnitTable::get();
+
     double old_factor = getUnit()->factor;
     if (old_unit_abbr != "no_unit") {
         old_factor = unit_table.getUnit(old_unit_abbr)->factor;

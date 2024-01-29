@@ -35,8 +35,6 @@
 #include <cmath>
 #include <cstring>
 
-using Inkscape::Util::unit_table;
-
 namespace Inkscape {
 namespace Util {
 
@@ -371,6 +369,7 @@ bool ExpressionEvaluator::resolveUnit (const char* identifier,
                                        EvaluatorQuantity *result,
                                        Unit const* unit)
 {
+    auto const &unit_table = UnitTable::get();
     if (!unit) {
         result->value = 1;
         result->dimension = 1;
