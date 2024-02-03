@@ -246,26 +246,29 @@ void CanvasGrid::updateRulers()
         }
     }
 
-    Geom::Rect viewbox = desktop->get_display_area().bounds();
+    Geom::Rect viewbox = _canvas->get_area_world();
     Geom::Rect startbox = viewbox;
     if (prefs->getBool("/options/origincorrection/page", true)) {
         // Move viewbox according to the selected page's position (if any)
-        startbox *= pm.getSelectedPageAffine().inverse();
+        auto page_transform = pm.getSelectedPageAffine().inverse() * desktop->d2w();
+        startbox += page_transform.translation();
     }
 
-    // Scale and offset the ruler coordinates
-    // Use an integer box to align the ruler to the grid and page.
-    auto const rulerbox = startbox * Geom::Scale{_dtw->get_dt2r()};
+    // Scale coordinates to current display units
+    auto d2c_scalerot = _canvas->get_affine();
+    // w2r and c2r scale should be the same
+    // c2r = c2d * d2r = (1/d2c)*d2r
+    double w2r_scale = _dtw->get_dt2r() / d2c_scalerot.expansionX();
+    auto const rulerbox = startbox * Geom::Scale{w2r_scale};
     _hruler->set_range(rulerbox.left(), rulerbox.right());
     if (desktop->is_yaxisdown()) {
         _vruler->set_range(rulerbox.top(), rulerbox.bottom());
     } else {
-        _vruler->set_range(rulerbox.bottom(), rulerbox.top());
+        _vruler->set_range(-rulerbox.top(), -rulerbox.bottom());
     }
 
     Geom::Point pos(_canvas->get_pos());
-    auto scale = _canvas->get_affine();
-    auto d2c = Geom::Translate(pos * scale.inverse()).inverse() * scale;
+    auto d2c = d2c_scalerot * Geom::Translate(-pos);
     auto pagebox = (pm.getSelectedPageRect() * d2c).roundOutwards();
     _hruler->set_page(pagebox.left(), pagebox.right());
     _vruler->set_page(pagebox.top(), pagebox.bottom());
