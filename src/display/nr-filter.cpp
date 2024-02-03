@@ -363,6 +363,7 @@ int Filter::_resolution_limit(FilterQuality quality)
         case FILTER_QUALITY_NORMAL:
             return 256;
         case FILTER_QUALITY_BETTER:
+            return 1024;
         case FILTER_QUALITY_BEST:
         default:
             return -1;
