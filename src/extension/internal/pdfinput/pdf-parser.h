@@ -142,6 +142,9 @@ public:
 
     std::shared_ptr<CairoFontEngine> getFontEngine();
 
+    // Build all annotations provided in layer annotation - page_num
+    void build_annots(const Object &annot, int page_num);
+
 private:
     std::shared_ptr<PDFDoc> _pdf_doc;
     std::shared_ptr<CairoFontEngine> _font_engine;
@@ -291,7 +294,7 @@ private:
   // XObject operators
   void opXObject(Object args[], int numArgs);
   void doImage(Object *ref, Stream *str, GBool inlineImg);
-  void doForm(Object *str);
+  void doForm(Object *str, double *offset = nullptr);
   void doForm1(Object *str, Dict *resDict, double *matrix, double *bbox,
 	       GBool transpGroup = gFalse, GBool softMask = gFalse,
 	       GfxColorSpace *blendingColorSpace = nullptr,

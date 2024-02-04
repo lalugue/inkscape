@@ -2359,8 +2359,8 @@ void PdfParser::opXObject(Object args[], int /*numArgs*/)
                     auto print_dict = usage_dict->lookup("Print").getDict();
                     visible = print_dict->lookup("PrintState").isName("ON");
                 }
-            }      
-            save = builder->addXObjLayer(label, visible);
+            }
+            save = builder->beginLayer(label, visible);
             layered = true;
         }
     }
@@ -2382,7 +2382,7 @@ void PdfParser::opXObject(Object args[], int /*numArgs*/)
 
     //End XObject layer if OC of type OCG is present
     if (layered) {
-        builder->endXObjLayer(save);
+        builder->endLayer(save);
     }
 
     _POPPLER_FREE(obj2);
@@ -2731,98 +2731,106 @@ void PdfParser::doImage(Object * /*ref*/, Stream *str, GBool inlineImg)
     error(errSyntaxError, getPos(), "Bad image parameters");
 }
 
-void PdfParser::doForm(Object *str) {
-  Dict *dict;
-  GBool transpGroup, isolated, knockout;
-  GfxColorSpace *blendingColorSpace;
-  Object matrixObj, bboxObj;
-  double m[6], bbox[4];
-  Object resObj;
-  Dict *resDict;
-  Object obj1, obj2, obj3;
-  int i;
+void PdfParser::doForm(Object *str, double *offset)
+{
+    Dict *dict;
+    GBool transpGroup, isolated, knockout;
+    GfxColorSpace *blendingColorSpace;
+    Object matrixObj, bboxObj;
+    double m[6], bbox[4];
+    Object resObj;
+    Dict *resDict;
+    Object obj1, obj2, obj3;
+    int i;
 
-  // check for excessive recursion
-  if (formDepth > 20) {
-    return;
-  }
+    // check for excessive recursion
+    if (formDepth > 20) {
+        return;
+    }
 
-  // get stream dict
-  dict = str->streamGetDict();
+    // get stream dict
+    dict = str->streamGetDict();
 
-  // check form type
-  _POPPLER_CALL_ARGS(obj1, dict->lookup, "FormType");
-  if (!(obj1.isNull() || (obj1.isInt() && obj1.getInt() == 1))) {
-    error(errSyntaxError, getPos(), "Unknown form type");
-  }
-  _POPPLER_FREE(obj1);
-
-  // get bounding box
-  _POPPLER_CALL_ARGS(bboxObj, dict->lookup, "BBox");
-  if (!bboxObj.isArray()) {
-    _POPPLER_FREE(bboxObj);
-    error(errSyntaxError, getPos(), "Bad form bounding box");
-    return;
-  }
-  for (i = 0; i < 4; ++i) {
-    _POPPLER_CALL_ARGS(obj1, bboxObj.arrayGet, i);
-    bbox[i] = obj1.getNum();
+    // check form type
+    _POPPLER_CALL_ARGS(obj1, dict->lookup, "FormType");
+    if (!(obj1.isNull() || (obj1.isInt() && obj1.getInt() == 1))) {
+        error(errSyntaxError, getPos(), "Unknown form type");
+    }
     _POPPLER_FREE(obj1);
-  }
-  _POPPLER_FREE(bboxObj);
 
-  // get matrix
-  _POPPLER_CALL_ARGS(matrixObj, dict->lookup, "Matrix");
-  if (matrixObj.isArray()) {
-    for (i = 0; i < 6; ++i) {
-      _POPPLER_CALL_ARGS(obj1, matrixObj.arrayGet, i);
-      m[i] = obj1.getNum();
-      _POPPLER_FREE(obj1);
+    // get bounding box
+    _POPPLER_CALL_ARGS(bboxObj, dict->lookup, "BBox");
+    if (!bboxObj.isArray()) {
+        _POPPLER_FREE(bboxObj);
+        error(errSyntaxError, getPos(), "Bad form bounding box");
+        return;
     }
-  } else {
-    m[0] = 1; m[1] = 0;
-    m[2] = 0; m[3] = 1;
-    m[4] = 0; m[5] = 0;
-  }
-  _POPPLER_FREE(matrixObj);
-
-  // get resources
-  _POPPLER_CALL_ARGS(resObj, dict->lookup, "Resources");
-  resDict = resObj.isDict() ? resObj.getDict() : (Dict *)nullptr;
-
-  // check for a transparency group
-  transpGroup = isolated = knockout = gFalse;
-  blendingColorSpace = nullptr;
-  if (_POPPLER_CALL_ARGS_DEREF(obj1, dict->lookup, "Group").isDict()) {
-    if (_POPPLER_CALL_ARGS_DEREF(obj2, obj1.dictLookup, "S").isName("Transparency")) {
-      transpGroup = gTrue;
-      if (!_POPPLER_CALL_ARGS_DEREF(obj3, obj1.dictLookup, "CS").isNull()) {
-	blendingColorSpace = GfxColorSpace::parse(nullptr, &obj3, nullptr, state);
-      }
-      _POPPLER_FREE(obj3);
-      if (_POPPLER_CALL_ARGS_DEREF(obj3, obj1.dictLookup, "I").isBool()) {
-	isolated = obj3.getBool();
-      }
-      _POPPLER_FREE(obj3);
-      if (_POPPLER_CALL_ARGS_DEREF(obj3, obj1.dictLookup, "K").isBool()) {
-	knockout = obj3.getBool();
-      }
-      _POPPLER_FREE(obj3);
+    for (i = 0; i < 4; ++i) {
+        _POPPLER_CALL_ARGS(obj1, bboxObj.arrayGet, i);
+        bbox[i] = obj1.getNum();
+        _POPPLER_FREE(obj1);
     }
-    _POPPLER_FREE(obj2);
-  }
-  _POPPLER_FREE(obj1);
+    _POPPLER_FREE(bboxObj);
 
-  // draw it
-  ++formDepth;
-  doForm1(str, resDict, m, bbox,
-	  transpGroup, gFalse, blendingColorSpace, isolated, knockout);
-  --formDepth;
+    // get matrix
+    _POPPLER_CALL_ARGS(matrixObj, dict->lookup, "Matrix");
+    if (matrixObj.isArray()) {
+        for (i = 0; i < 6; ++i) {
+        _POPPLER_CALL_ARGS(obj1, matrixObj.arrayGet, i);
+        m[i] = obj1.getNum();
+        _POPPLER_FREE(obj1);
+        }
+    } else {
+        m[0] = 1;
+        m[1] = 0;
+        m[2] = 0;
+        m[3] = 1;
+        m[4] = 0;
+        m[5] = 0;
+    }
+    _POPPLER_FREE(matrixObj);
 
-  if (blendingColorSpace) {
-    delete blendingColorSpace;
-  }
-  _POPPLER_FREE(resObj);
+    if (offset) {
+        m[4] += offset[0];
+        m[5] += offset[1];
+    }
+
+    // get resources
+    _POPPLER_CALL_ARGS(resObj, dict->lookup, "Resources");
+    resDict = resObj.isDict() ? resObj.getDict() : (Dict *)nullptr;
+
+    // check for a transparency group
+    transpGroup = isolated = knockout = gFalse;
+    blendingColorSpace = nullptr;
+    if (_POPPLER_CALL_ARGS_DEREF(obj1, dict->lookup, "Group").isDict()) {
+        if (_POPPLER_CALL_ARGS_DEREF(obj2, obj1.dictLookup, "S").isName("Transparency")) {
+        transpGroup = gTrue;
+        if (!_POPPLER_CALL_ARGS_DEREF(obj3, obj1.dictLookup, "CS").isNull()) {
+                blendingColorSpace = GfxColorSpace::parse(nullptr, &obj3, nullptr, state);
+        }
+        _POPPLER_FREE(obj3);
+        if (_POPPLER_CALL_ARGS_DEREF(obj3, obj1.dictLookup, "I").isBool()) {
+                isolated = obj3.getBool();
+        }
+        _POPPLER_FREE(obj3);
+        if (_POPPLER_CALL_ARGS_DEREF(obj3, obj1.dictLookup, "K").isBool()) {
+                knockout = obj3.getBool();
+        }
+        _POPPLER_FREE(obj3);
+        }
+        _POPPLER_FREE(obj2);
+    }
+    _POPPLER_FREE(obj1);
+
+    // draw it
+    ++formDepth;
+    doForm1(str, resDict, m, bbox, transpGroup, gFalse, blendingColorSpace, isolated, knockout);
+    --formDepth;
+
+    if (blendingColorSpace) {
+        delete blendingColorSpace;
+    }
+    _POPPLER_FREE(resObj);
 }
 
 void PdfParser::doForm1(Object *str, Dict *resDict, double *matrix, double *bbox, GBool transpGroup, GBool softMask,
@@ -3174,6 +3182,51 @@ void PdfParser::loadColorProfile()
 }
 
 #endif /* HAVE_POPPLER */
+
+void PdfParser::build_annots(const Object &annot, int page_num)
+{
+    Object AP_obj, N_obj, Rect_obj, xy_obj, first_state_obj;
+    double offset[2];
+    Dict *annot_dict;
+    Inkscape::XML::Node *current_node;
+
+    if (!annot.isDict())
+        return;
+    annot_dict = annot.getDict();
+
+    _POPPLER_CALL_ARGS(AP_obj, annot_dict->lookup, "AP");
+    // If AP stream is present we use it
+    if (AP_obj.isDict()) {
+        _POPPLER_CALL_ARGS(N_obj, AP_obj.getDict()->lookup, "N");
+        if (N_obj.isDict()) {
+            // If there are several appearance states, we draw the first one
+            _POPPLER_CALL_ARGS(first_state_obj, N_obj.getDict()->getVal, 0);
+        } else {
+            // If there is only one appearance state, we get directly the stream
+            first_state_obj = N_obj.copy();
+        }
+        if (first_state_obj.isStream()) {
+            current_node = builder->beginLayer(std::to_string(page_num) + " - Annotations", true);
+            _POPPLER_CALL_ARGS(Rect_obj, annot_dict->lookup, "Rect");
+            if (Rect_obj.isArray()) {
+                for (int i = 0; i < 2; i++) {
+                    _POPPLER_CALL_ARGS(xy_obj, Rect_obj.arrayGet, i);
+                    offset[i] = xy_obj.getNum();
+                }
+                doForm(&first_state_obj, offset);
+            }
+            builder->endLayer(current_node);
+        }
+        _POPPLER_FREE(AP_obj);
+        _POPPLER_FREE(N_obj);
+        _POPPLER_FREE(Rect_obj);
+        _POPPLER_FREE(xy_obj);
+        _POPPLER_FREE(first_state_obj);
+    } else {
+        // No AP stream, we need to implement a Inkscape annotation handler for annot type
+        error(errInternal, -1, "No inkscape handler for this annotation type");
+    }
+}
 
 /*
   Local Variables:

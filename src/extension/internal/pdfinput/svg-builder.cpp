@@ -870,7 +870,7 @@ void SvgBuilder::addOptionalGroup(const std::string &oc, const std::string &labe
     _ocgs[oc] = {label, visible};
 }
 
-Inkscape::XML::Node * SvgBuilder::addXObjLayer(const std::string &label, bool visible)
+Inkscape::XML::Node *SvgBuilder::beginLayer(const std::string &label, bool visible)
 {
     Inkscape::XML::Node *save_current_location = _container;
     if (auto existing = _doc->getObjectById(label)){
@@ -887,7 +887,7 @@ Inkscape::XML::Node * SvgBuilder::addXObjLayer(const std::string &label, bool vi
     return save_current_location;
 }
 
-void SvgBuilder::endXObjLayer(Inkscape::XML::Node *save)
+void SvgBuilder::endLayer(Inkscape::XML::Node *save)
 {
     _popGroup();
     _node_stack.push_back(save);

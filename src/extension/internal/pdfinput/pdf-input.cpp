@@ -799,7 +799,7 @@ PdfInput::add_builder_page(std::shared_ptr<PDFDoc>pdf_doc, SvgBuilder *builder, 
     }
 
     // Create parser  (extension/internal/pdfinput/pdf-parser.h)
-    PdfParser *pdf_parser = new PdfParser(pdf_doc, builder, page, clipToBox);
+    auto pdf_parser = PdfParser(pdf_doc, builder, page, clipToBox);
 
     // Set up approximation precision for parser. Used for converting Mesh Gradients into tiles.
     double color_delta = prefs->getAttributeDouble("approximationPrecision", 2.0);
@@ -809,25 +809,22 @@ PdfInput::add_builder_page(std::shared_ptr<PDFDoc>pdf_doc, SvgBuilder *builder, 
         color_delta = 1.0 / color_delta;
     }
     for ( int i = 1 ; i <= pdfNumShadingTypes ; i++ ) {
-        pdf_parser->setApproximationPrecision(i, color_delta, 6);
+        pdf_parser.setApproximationPrecision(i, color_delta, 6);
     }
 
     // Parse the document structure
-#if defined(POPPLER_NEW_OBJECT_API)
     Object obj = page->getContents();
-#else
-    Object obj;
-    page->getContents(&obj);
-#endif
     if (!obj.isNull()) {
-        pdf_parser->parse(&obj);
+        pdf_parser.parse(&obj);
     }
 
-    // Cleanup
-#if !defined(POPPLER_NEW_OBJECT_API)
-    obj.free();
-#endif
-    delete pdf_parser;
+    // Parse the annotations
+    if (auto annots = page->getAnnotsObject(); annots.isArray()) {
+        auto const size = annots.arrayGetLength();
+        for (int i = 0; i < size; i++) {
+            pdf_parser.build_annots(annots.arrayGet(i), page_num);
+        }
+    }
 }
 
 #include "../clear-n_.h"
