@@ -376,8 +376,9 @@ sodipodi:docname="filters.svg">
 <feDistantLight azimuth="230" elevation="60" />
 </feSpecularLighting>
 <feComposite operator="in" result="result2" in="result1" in2="fbSourceGraphicAlpha" />
-<feComposite k3="1" k2="1" operator="arithmetic" result="result4" in="fbSourceGraphic" in2="result2" />
-<feComposite operator="atop" in="result9" in2="result4" result="result91" />
+<feComposite k3="1.2" k2="1.1" operator="arithmetic" result="result4" in="fbSourceGraphic" in2="result2" />
+<feGaussianBlur result="result80" in="result4" stdDeviation="0.5" />
+<feComposite operator="atop" in="result9" in2="result80" result="result91" />
 <feBlend mode="multiply" in2="result91" />
 </filter>
 <filter id="f038" inkscape:label="Neon" inkscape:menu="Bevels" inkscape:menu-tooltip="Neon light effect" x="-0.25" y="-0.25" width="1.5" height="1.5" style="color-interpolation-filters:sRGB;">
@@ -442,7 +443,7 @@ sodipodi:docname="filters.svg">
 <feBlend mode="normal" in2="result9" />
 </filter>
 <filter id="f042" inkscape:label="Thin Membrane" inkscape:menu="Ridges" inkscape:menu-tooltip="Thin like a soap membrane" x="-0.05" y="-0.05" width="1.1" height="1.1" style="color-interpolation-filters:sRGB;">
-<feGaussianBlur stdDeviation="5" result="result1" />
+<feGaussianBlur stdDeviation="6" result="result1" />
 <feComposite in="result1" in2="result1" result="result4" operator="xor" />
 <feGaussianBlur stdDeviation="8" result="result6" />
 <feComposite operator="atop" in="result6" in2="SourceGraphic" result="result8" />
@@ -453,9 +454,10 @@ sodipodi:docname="filters.svg">
 <fePointLight z="20000" y="-10000" x="-5000" />
 </feSpecularLighting>
 <feComposite operator="in" result="result2" in="result1" in2="fbSourceGraphicAlpha" />
-<feComposite k3="2" k2="1" operator="arithmetic" result="result4" in="fbSourceGraphic" in2="result2" />
-<feComposite operator="in" in="result4" result="result9" in2="result4" />
-<feBlend mode="multiply" in="result9" in2="result4" />
+<feComposite k3="2.5" k2="2" operator="arithmetic" result="result4" in="fbSourceGraphic" in2="result2" />
+<feGaussianBlur result="result90" in="result4" stdDeviation="0.6" />
+<feComposite operator="in"  result="result9" in2="result90" />
+<feBlend mode="multiply" in="result9" in2="result90" />
 </filter>
 <filter id="f043" inkscape:label="Matte Ridge" inkscape:menu="Ridges" inkscape:menu-tooltip="Soft pastel ridge" style="color-interpolation-filters:sRGB;">
 <feGaussianBlur stdDeviation="0.5" result="result1" />
@@ -464,12 +466,12 @@ sodipodi:docname="filters.svg">
 <feComposite operator="xor" in="result6" in2="result6" result="result8" />
 <feComposite operator="in" result="fbSourceGraphic" in="result6" in2="result8" />
 <feColorMatrix result="fbSourceGraphicAlpha" in="fbSourceGraphic" values="0 0 0 -1 0 0 0 0 -1 0 0 0 0 -1 0 0 0 0 1 0 " />
-<feGaussianBlur result="result0" in="fbSourceGraphic" stdDeviation="0.5" />
 <feSpecularLighting specularExponent="55" specularConstant="2" surfaceScale="2" lighting-color="rgb(255,255,255)" result="result1" in="result0">
 <fePointLight z="20000" y="-10000" x="-5000" />
 </feSpecularLighting>
 <feComposite operator="arithmetic" result="result2" in="result1" in2="fbSourceGraphicAlpha" k1="1" />
-<feComposite k3="1" k2="0.5" operator="arithmetic" result="result4" in="fbSourceGraphic" in2="result2" />
+<feComposite k3="1.5" k2="1.3" operator="arithmetic" result="result4" in="fbSourceGraphic" in2="result2" />
+<feGaussianBlur result="result90" in="result4" stdDeviation="0.5" />
 <feComposite operator="over" in="result9" in2="result4" result="result91" />
 <feBlend mode="screen" in2="result91" />
 </filter>
@@ -631,7 +633,8 @@ sodipodi:docname="filters.svg">
 <feDistantLight azimuth="235" elevation="45" />
 </feSpecularLighting>
 <feComposite operator="in" result="result2" in="result1" in2="fbSourceGraphicAlpha" />
-<feComposite in="fbSourceGraphic" operator="arithmetic" k2="2" k3="2" in2="result2" result="result91" />
+<feGaussianBlur result="result90" in="result2" stdDeviation="2" />
+<feComposite in="fbSourceGraphic" operator="arithmetic" k2="2" k3="2" in2="result90" result="result91" />
 <feBlend mode="multiply" in2="result91" />
 </filter>
 <filter id="f055" inkscape:label="Refractive Gel B" inkscape:menu="Ridges" inkscape:menu-tooltip="Gel effect with strong refraction" height="1.4" width="1.4" y="-0.2" x="-0.2" style="color-interpolation-filters:sRGB;">
@@ -645,7 +648,8 @@ sodipodi:docname="filters.svg">
 <feDistantLight azimuth="235" elevation="35" />
 </feSpecularLighting>
 <feComposite operator="in" result="result2" in="result1" in2="fbSourceGraphicAlpha" />
-<feComposite in="fbSourceGraphic" operator="arithmetic" k2="1.5" k3="3" in2="result2" result="result91" />
+<feGaussianBlur result="result90" in="result2" stdDeviation="0.7" />
+<feComposite in="fbSourceGraphic" operator="arithmetic" k2="1.5" k3="2" in2="result90" result="result91" />
 <feBlend mode="screen" in2="result91" />
 <feConvolveMatrix order="3 3" kernelMatrix="2 0 1 0 1 0 0 0 0 " targetX="1" targetY="1" divisor="3" />
 </filter>
@@ -676,8 +680,9 @@ sodipodi:docname="filters.svg">
 <feDistantLight azimuth="235" elevation="55" />
 </feSpecularLighting>
 <feComposite operator="in" result="result2" in="result1" in2="fbSourceGraphicAlpha" />
-<feComposite k3="1" k2="1" operator="arithmetic" result="result4" in="fbSourceGraphic" in2="result2" />
-<feComposite operator="out" in="result9" in2="result4" result="result91" />
+<feComposite k3="2" k2="1.3" operator="arithmetic" result="result4" in="fbSourceGraphic" in2="result2" />
+<feGaussianBlur result="result80" in="result4" stdDeviation="0.5"/>
+<feComposite operator="out" in="result9" in2="result80" result="result91" />
 <feBlend mode="multiply" in2="result91" />
 </filter>
 <filter id="f058" inkscape:label="Raised Border" inkscape:menu="Bevels" inkscape:menu-tooltip="Strongly raised border around a flat surface" height="1.5" width="1.5" y="-0.25" x="-0.25" style="color-interpolation-filters:sRGB;">
@@ -705,8 +710,9 @@ sodipodi:docname="filters.svg">
 <fePointLight z="20000" y="-10000" x="-5000" />
 </feSpecularLighting>
 <feComposite operator="in" result="result2" in="result1" in2="fbSourceGraphicAlpha" />
-<feComposite k3="1" k2="1" operator="arithmetic" result="result4" in="fbSourceGraphic" in2="result2" />
-<feComposite operator="atop" in="result9" in2="result4" result="result91" />
+<feComposite k3="1.6" k2="1.2" operator="arithmetic" result="result4" in="fbSourceGraphic" in2="result2" />
+<feGaussianBlur result="result90" in="result4" stdDeviation="0.5" />
+<feComposite operator="atop" in="result9" in2="result90" result="result91" />
 <feBlend mode="multiply" in2="result91" />
 </filter>
 <filter id="f060" inkscape:label="Fat Oil" inkscape:menu="Bevels" inkscape:menu-tooltip="Fat oil with some adjustable turbulence" height="1.4" width="1.4" y="-0.2" x="-0.2" style="color-interpolation-filters:sRGB;">
