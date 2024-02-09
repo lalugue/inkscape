@@ -687,63 +687,46 @@ bool SPGenericEllipse::_isSlice() const
     return !(Geom::are_near(a.extent(), 0) || Geom::are_near(a.extent(), SP_2PI));
 }
 
-/**
-Returns the ratio in which the vector from p0 to p1 is stretched by transform
- */
-gdouble SPGenericEllipse::vectorStretch(Geom::Point p0, Geom::Point p1, Geom::Affine xform) {
-    if (p0 == p1) {
-        return 0;
-    }
-
-    return (Geom::distance(p0 * xform, p1 * xform) / Geom::distance(p0, p1));
+/// Returns the ratio in which a unit vector n is stretched by transform.
+static double vectorStretch(Geom::Point const &n, Geom::Affine const &trans)
+{
+    return (n * trans.withoutTranslation()).length();
 }
 
-void SPGenericEllipse::setVisibleRx(gdouble rx) {
-    if (rx == 0) {
-        this->rx.unset();
+void SPGenericEllipse::setVisibleRx(double rx_)
+{
+    if (rx_ == 0) {
+        rx.unset();
     } else {
-        this->rx = rx / SPGenericEllipse::vectorStretch(
-            Geom::Point(this->cx.computed + 1, this->cy.computed),
-            Geom::Point(this->cx.computed, this->cy.computed),
-            this->i2doc_affine());
+        rx = rx_ / vectorStretch({1, 0}, i2doc_affine());
     }
-
-    this->updateRepr();
+    updateRepr();
 }
 
-void SPGenericEllipse::setVisibleRy(gdouble ry) {
-    if (ry == 0) {
-        this->ry.unset();
+void SPGenericEllipse::setVisibleRy(double ry_)
+{
+    if (ry_ == 0) {
+        ry.unset();
     } else {
-        this->ry = ry / SPGenericEllipse::vectorStretch(
-            Geom::Point(this->cx.computed, this->cy.computed + 1),
-            Geom::Point(this->cx.computed, this->cy.computed),
-            this->i2doc_affine());
+        ry = ry_ / vectorStretch({0, 1}, i2doc_affine());
     }
-
-    this->updateRepr();
+    updateRepr();
 }
 
-gdouble SPGenericEllipse::getVisibleRx() const {
-    if (!this->rx._set) {
+double SPGenericEllipse::getVisibleRx() const
+{
+    if (!rx._set) {
         return 0;
     }
-
-    return this->rx.computed * SPGenericEllipse::vectorStretch(
-        Geom::Point(this->cx.computed + 1, this->cy.computed),
-        Geom::Point(this->cx.computed, this->cy.computed),
-        this->i2doc_affine());
+    return rx.computed * vectorStretch({1, 0}, i2doc_affine());
 }
 
-gdouble SPGenericEllipse::getVisibleRy() const {
-    if (!this->ry._set) {
+double SPGenericEllipse::getVisibleRy() const
+{
+    if (!ry._set) {
         return 0;
     }
-
-    return this->ry.computed * SPGenericEllipse::vectorStretch(
-        Geom::Point(this->cx.computed, this->cy.computed + 1),
-        Geom::Point(this->cx.computed, this->cy.computed),
-        this->i2doc_affine());
+    return ry.computed * vectorStretch({0, 1}, i2doc_affine());
 }
 
 /*

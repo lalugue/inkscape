@@ -96,9 +96,6 @@ protected:
      * @brief Determines whether the shape is a part of an ellipse.
      */
     bool _isSlice() const;
-
-private:
-    static double vectorStretch(Geom::Point p0, Geom::Point p1, Geom::Affine xform);
 };
 
 #endif
