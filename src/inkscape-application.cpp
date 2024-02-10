@@ -1360,6 +1360,7 @@ InkscapeApplication::shell(bool active_window)
         action_vector_t action_vector;
         if (active_window) {
             input = "active-window-start;" + input + ";active-window-end";
+            unlink(get_active_desktop_commands_location().c_str());
         }
         parse_actions(input, action_vector);
         activate_any_actions(action_vector, _gio_application, _active_window, _active_document);
@@ -1389,7 +1390,7 @@ InkscapeApplication::shell(bool active_window)
 // Todo: Code can be improved by using proper IPC rather than temporary file polling.
 void InkscapeApplication::redirect_output()
 {
-    auto const tmpfile = Glib::build_filename(Glib::get_tmp_dir(), "active_desktop_commands.xml");
+    auto const tmpfile = get_active_desktop_commands_location();
 
     for (int counter = 0; ; counter++) {
         if (Glib::file_test(tmpfile, Glib::FILE_TEST_EXISTS)) {
@@ -1853,6 +1854,7 @@ InkscapeApplication::on_handle_local_options(const Glib::RefPtr<Glib::VariantDic
         } else {
             _command_line_actions.emplace(_command_line_actions.begin(), "active-window-start", base);
             _command_line_actions_input = _command_line_actions_input + ";active-window-end";
+            unlink(get_active_desktop_commands_location().c_str());
             parse_actions(_command_line_actions_input, _command_line_actions);
             activate_any_actions(_command_line_actions, _gio_application, _active_window, _active_document);
             redirect_output();

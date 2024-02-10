@@ -24,29 +24,32 @@
 static bool use_active_window = false;
 static Inkscape::XML::Document *active_window_data = nullptr; 
 
-
-
 // this function is called when in command line we call with parameter --active-window | -q
 // is called by a auto add new start and end action that fire first this action
 // and keep on till last inserted action is done
-void
-active_window_start_helper() {
+void active_window_start_helper()
+{
     use_active_window = true;
     active_window_data = sp_repr_document_new("activewindowdata");
 }
 
 // this is the end of previous function. Finish the wrap of actions to active desktop
-// it also save a file to allow print in the caller terminal the output to be redeable by
+// it also save a file to allow print in the caller terminal the output to be readable by
 // external programs like extensions.
-void
-active_window_end_helper() {
-    std::string tmpfile = Glib::build_filename(Glib::get_tmp_dir(), "active_desktop_commands.xml");
-    Glib::ustring utf8name = Glib::filename_to_utf8(Glib::build_filename(Glib::get_tmp_dir(), "active_desktop_commands_prev.xml"));
-    sp_repr_save_file(active_window_data, utf8name.c_str());
-    std::rename(utf8name.c_str(), tmpfile.c_str());
+void active_window_end_helper()
+{
+    auto const tmpfile = get_active_desktop_commands_location();
+    auto const tmpfile_next = tmpfile + ".next";
+    sp_repr_save_file(active_window_data, tmpfile_next.c_str());
+    std::rename(tmpfile_next.c_str(), tmpfile.c_str());
     use_active_window = false;
     Inkscape::GC::release(active_window_data);
     active_window_data = nullptr;
+}
+
+std::string get_active_desktop_commands_location()
+{
+    return Glib::build_filename(g_get_user_cache_dir(), "inkscape-active_desktop_commands.xml");
 }
 
 void 
