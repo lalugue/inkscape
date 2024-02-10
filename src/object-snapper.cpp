@@ -118,7 +118,7 @@ void Inkscape::ObjectSnapper::_collectNodes(SnapSourceType const &t,
                 getBBoxPoints(document->preferredBounds(), _points_to_snap_to.get(), false,
                     SNAPSOURCE_UNDEFINED, SNAPTARGET_PAGE_EDGE_CORNER,
                     SNAPSOURCE_UNDEFINED, SNAPTARGET_UNDEFINED,
-                    SNAPSOURCE_UNDEFINED, SNAPTARGET_UNDEFINED);
+                    SNAPSOURCE_PAGE_CENTER, SNAPTARGET_PAGE_EDGE_CENTER);
             }
         }
 
