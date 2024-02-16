@@ -65,7 +65,7 @@ select_object_link(InkscapeApplication* app)
     selection->set(anchor);
 
     // Open dialog to set link.
-    selection->desktop()->getContainer()->new_dialog("ObjectAttributes");
+    selection->desktop()->getContainer()->new_dialog("ObjectProperties");
     Inkscape::DocumentUndo::done(selection->document(), _("Anchor"), INKSCAPE_ICON("object-group"));
 }
 

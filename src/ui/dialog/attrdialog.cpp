@@ -40,6 +40,7 @@
 #include <sigc++/functors/mem_fun.h>
 
 #include "config.h"
+#include "ui/util.h"
 #if WITH_GSOURCEVIEW
 #   include <gtksourceview/gtksource.h>
 #endif
@@ -250,37 +251,6 @@ AttrDialog::~AttrDialog()
     setRepr(nullptr);
 }
 
-static int fmt_number(_GMatchInfo const *match, _GString *ret, void *prec)
-{
-    auto number = g_match_info_fetch(match, 1);
-
-    char *end;
-    double val = g_ascii_strtod(number, &end);
-    if (*number && (end == nullptr || end > number)) {
-        auto precision = *static_cast<int*>(prec);
-        auto fmt = Util::format_number(val, precision);
-        g_string_append(ret, fmt.c_str());
-    } else {
-        g_string_append(ret, number);
-    }
-
-    auto text = g_match_info_fetch(match, 2);
-    g_string_append(ret, text);
-
-    g_free(number);
-    g_free(text);
-
-    return false;
-}
-
-Glib::ustring AttrDialog::round_numbers(const Glib::ustring& text, int precision)
-{
-    // match floating point number followed by something else (not a number); repeat
-    static const auto numbers = Glib::Regex::create("([-+]?(?:(?:\\d+\\.?\\d*)|(?:\\.\\d+))(?:[eE][-+]?\\d*)?)([^+\\-0-9]*)", Glib::REGEX_MULTILINE);
-
-    return numbers->replace_eval(text, text.size(), 0, Glib::RegexMatchFlags::REGEX_MATCH_NOTEMPTY, &fmt_number, &precision);
-}
-
 /** Round the selected floating point numbers in the attribute edit popover. */
 void AttrDialog::truncateDigits() const
 {
@@ -289,30 +259,7 @@ void AttrDialog::truncateDigits() const
     }
 
     auto buffer = _current_text_edit->getTextView().get_buffer();
-    auto start = buffer->begin();
-    auto end = buffer->end();
-
-    bool const had_selection = buffer->get_has_selection();
-    int start_idx = 0, end_idx = 0;
-    if (had_selection) {
-        buffer->get_selection_bounds(start, end);
-        start_idx = start.get_offset();
-        end_idx = end.get_offset();
-    }
-
-    auto text = buffer->get_text(start, end);
-    auto ret = round_numbers(text, _rounding_precision);
-    buffer->erase(start, end);
-    buffer->insert_at_cursor(ret);
-
-    if (had_selection) {
-        // Restore selection but note that its length may have decreased.
-        end_idx -= text.size() - ret.size();
-        if (end_idx < start_idx) {
-            end_idx = start_idx;
-        }
-        buffer->select_range(buffer->get_iter_at_offset(start_idx), buffer->get_iter_at_offset(end_idx));
-    }
+    truncate_digits(buffer, _rounding_precision);
 }
 
 void AttrDialog::set_current_textedit(Syntax::TextEditView* edit)

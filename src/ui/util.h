@@ -208,6 +208,13 @@ auto const_wrap(T const *p, bool take_copy = false)
     return std::shared_ptr<wrapped_T const>(std::move(unconst_wrapped));
 }
 
+// Parse string that can contain floating point numbers and round them to given precision;
+// Used on path data ("d" attribute).
+Glib::ustring round_numbers(const Glib::ustring& text, int precision);
+
+// As above, but operating in-place on a TextBuffer
+void truncate_digits(const Glib::RefPtr<Gtk::TextBuffer>& buffer, int precision);
+
 #endif // UI_UTIL_SEEN
 
 /*

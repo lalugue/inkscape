@@ -202,7 +202,6 @@ ContextMenu::ContextMenu(SPDesktop *desktop, SPObject *object, bool hide_layers_
 
             // Image dialogs (mostly).
             if (auto image = cast<SPImage>(item)) {
-                AppendItemFromAction(     gmenu_dialogs, "win.dialog-open('ObjectAttributes')",          _("Image _Properties..."),  "dialog-fill-and-stroke");
                 AppendItemFromAction(     gmenu_dialogs, "win.dialog-open('Trace')",                     _("_Trace Bitmap..."),      "bitmap-trace"          );
 
                 if (image->getClipObject()) {
@@ -287,7 +286,6 @@ ContextMenu::ContextMenu(SPDesktop *desktop, SPObject *object, bool hide_layers_
             } else {
                 // Anchor menu
                 gmenu_section = Gio::Menu::create();
-                AppendItemFromAction(     gmenu_section, "win.dialog-open('ObjectAttributes')", _("Link _Properties..."),   ""                                );
                 AppendItemFromAction(     gmenu_section, "app.element-a-open-link",             _("_Open Link in Browser"), ""                                );
                 AppendItemFromAction(     gmenu_section, "app.selection-ungroup",               _("_Remove Link"),          ""                                );
                 AppendItemFromAction(     gmenu_section, "win.selection-group-enter",           _("Enter Group"),           ""                                );

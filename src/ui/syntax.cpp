@@ -16,6 +16,7 @@
 #include <pango/pango-attributes.h>
 #include <sstream>
 #include <stdexcept>
+#include <string>
 
 #include "color.h"
 #include "config.h"
@@ -312,8 +313,7 @@ public:
         : _prettify{prettify_func}
         , _minify{minify_func}
     {
-        auto manager = get_language_manager();
-        auto lang = gtk_source_language_manager_get_language(manager, language);
+        auto lang = get_language(language);
         _buffer = gtk_source_buffer_new_with_language(lang);
         auto view = gtk_source_view_new_with_buffer(_buffer);
         // Increment Glib's internal refcount to prevent the destruction of the
@@ -335,7 +335,23 @@ private:
     std::unique_ptr<Gtk::TextView> _textview;
     Glib::ustring (*_prettify)(Glib::ustring const &);
     Glib::ustring (*_minify)(Glib::ustring const &);
+    static std::map<std::string, GtkSourceLanguage*> _languages;
 
+    // get requested language; cache it, since it's an expensive operation
+    static GtkSourceLanguage* get_language(const char* language) {
+        GtkSourceLanguage* lang = nullptr;
+        auto l = std::string(language);
+        auto it = _languages.find(l);
+        if (it == _languages.end()) {
+            auto manager = get_language_manager();
+            lang = gtk_source_language_manager_get_language(manager, language);
+            _languages[l] = lang;
+        }
+        else {
+            lang = it->second;
+        }
+        return lang;
+    }
 public:
     void setStyle(Glib::ustring const &theme) override
     {
@@ -359,6 +375,8 @@ public:
     Gtk::TextView &getTextView() const override { return *_textview; };
 };
 
+std::map<std::string, GtkSourceLanguage*> SyntaxHighlighting::_languages;
+
 #endif // WITH_GSOURCEVIEW
 
 /** Create a styled text view using the desired syntax highlighting mode. */
@@ -377,6 +395,8 @@ std::unique_ptr<TextEditView> TextEditView::create(SyntaxMode mode)
             return std::make_unique<SyntaxHighlighting>("svgd", &prettify_svgd, &minify_svgd);
         case SyntaxMode::SvgPolyPoints:
             return std::make_unique<SyntaxHighlighting>("svgpoints", no_reformat, no_reformat);
+        case SyntaxMode::JavaScript:
+            return std::make_unique<SyntaxHighlighting>("js", no_reformat, no_reformat);
         default:
             throw std::runtime_error("Missing case statement in TetxEditView::create()");
     }

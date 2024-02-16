@@ -17,97 +17,60 @@
 
 #include <glibmm/i18n.h>
 #include <gtkmm/entry.h>
+#include <gtkmm/enums.h>
 #include <gtkmm/grid.h>
+#include <gtkmm/object.h>
+#include <gtkmm/scrolledwindow.h>
+#include <gtkmm/textview.h>
 #include <sigc++/adaptors/bind.h>
 
 #include "document-undo.h"
 #include "object/sp-object.h"
+#include "preferences.h"
+#include "ui/syntax.h"
 #include "xml/node.h"
 
 using Inkscape::DocumentUndo;
+using Inkscape::UI::Syntax::SyntaxMode;
 
-/**
- * Callback for user input in one of the entries.
- *
- * sp_attribute_table_entry_changed set the object property
- * to the new value and updates history. It is a callback from
- * the entries created by SPAttributeTable.
- * 
- * @param editable pointer to the entry box.
- * @param spat pointer to the SPAttributeTable instance.
- */
-static void sp_attribute_table_entry_changed (Gtk::Entry *editable, SPAttributeTable *spat);
-/**
- * Callback for a modification of the selected object (size, color, properties, etc.).
- *
- * sp_attribute_table_object_modified rereads the object properties
- * and shows the values in the entry boxes. It is a callback from a
- * connection of the SPObject.
- * 
- * @param object the SPObject to which this instance is referring to.
- * @param flags gives the applied modifications
- * @param spat pointer to the SPAttributeTable instance.
- */
-static void sp_attribute_table_object_modified(SPObject *object, unsigned flags, SPAttributeTable *spaw);
-/**
- * Callback for the deletion of the selected object.
- *
- * sp_attribute_table_object_release invalidates all data of 
- * SPAttributeTable and disables the widget.
- */
-static void sp_attribute_table_object_release (SPObject */*object*/, SPAttributeTable *spat);
+void SPAttributeTable::EntryWidget::set_text(const Glib::ustring& text) {
+    if (_entry) {
+        _entry->set_text(text);
+    }
+    else {
+        _text_view->get_buffer()->set_text(text);
+    }
+}
+
+Glib::ustring SPAttributeTable::EntryWidget::get_text() const {
+    return _entry ?  _entry->get_text() : _text_view->get_buffer()->get_text();
+}
+
+const Gtk::Widget* SPAttributeTable::EntryWidget::get_widget() const {
+    return _entry ?  static_cast<Gtk::Widget*>(_entry) : static_cast<Gtk::Widget*>(_text_view);
+}
 
 static constexpr int XPAD = 4;
 static constexpr int YPAD = 2;
 
-SPAttributeTable::SPAttributeTable(SPObject * const object,
-                                   std::vector<Glib::ustring> const &labels,
-                                   std::vector<Glib::ustring> const &attributes,
-                                   GtkWidget * const parent)
+SPAttributeTable::SPAttributeTable(std::vector<Glib::ustring> const &labels,
+                                   std::vector<Glib::ustring> const &attributes)
 {
-    set_object(object, labels, attributes, parent);
+    create(labels, attributes);
 }
 
-void SPAttributeTable::clear()
-{
-    if (table)
-    {
-        table.reset();
-
-        _attributes.clear();
-        _entries.clear();
-    }
-
-    change_object(nullptr);
-}
-
-void SPAttributeTable::set_object(SPObject * const object,
-                                  std::vector<Glib::ustring> const &labels,
-                                  std::vector<Glib::ustring> const &attributes,
-                                  GtkWidget * const parent)
-{
-    g_return_if_fail (!object || !labels.empty() || !attributes.empty());
-    g_return_if_fail (labels.size() == attributes.size());
-
-    clear();
-
-    _object = object;
-
-    if (!object) return;
-
-    blocked = true;
-
-    modified_connection = object->connectModified(sigc::bind<2>(&sp_attribute_table_object_modified, this));
-    release_connection  = object->connectRelease (sigc::bind<1>(&sp_attribute_table_object_release , this));
+void SPAttributeTable::create(const std::vector<Glib::ustring>& labels, const std::vector<Glib::ustring>& attributes) {
+    // build rows
+    _attributes = attributes;
+    _entries.clear();
+    _textviews.clear();
+    _entries.reserve(attributes.size());
 
     table = std::make_unique<Gtk::Grid>();
+    add(*table);
 
-    if (parent) {
-        gtk_container_add(GTK_CONTAINER(parent), table->Gtk::Widget::gobj());
-    }
-    
-    // Fill rows
-    _attributes = attributes;
+    auto theme = Inkscape::Preferences::get()->getString("/theme/syntax-color-theme", "-none-");
+
     for (std::size_t i = 0; i < attributes.size(); ++i) {
         auto const ll = Gtk::make_managed<Gtk::Label>(_(labels[i].c_str()));
         ll->set_halign(Gtk::ALIGN_START);
@@ -118,34 +81,55 @@ void SPAttributeTable::set_object(SPObject * const object,
         ll->set_margin_bottom(YPAD);
         table->attach(*ll, 0, i, 1, 1);
 
-        auto const ee = Gtk::make_managed<Gtk::Entry>();
-        auto const val = object->getRepr()->attribute(attributes[i].c_str());
-        ee->set_text(val ? val : "");
-        ee->set_hexpand();
-        ee->set_vexpand(false);
-        ee->set_margin_start(XPAD);
-        ee->set_margin_top(YPAD);
-        ee->set_margin_bottom(YPAD);
-        table->attach(*ee, 1, i, 1, 1);
+        EntryWidget entry;
+        if (_syntax != SyntaxMode::PlainText) {
+            auto edit = Inkscape::UI::Syntax::TextEditView::create(_syntax);
+            edit->setStyle(theme);
+            auto& tv = edit->getTextView();
+            entry._text_view = &tv;
+            tv.set_wrap_mode(Gtk::WRAP_WORD);
+            auto wnd = Gtk::make_managed<Gtk::ScrolledWindow>();
+            wnd->set_hexpand();
+            wnd->set_vexpand(false);
+            wnd->set_margin_start(XPAD);
+            wnd->set_margin_top(YPAD);
+            wnd->set_margin_bottom(YPAD);
+            wnd->add(tv);
+            wnd->set_shadow_type(Gtk::SHADOW_IN);
+            wnd->set_policy(Gtk::POLICY_NEVER, Gtk::POLICY_AUTOMATIC);
+            table->attach(*wnd, 1, i, 1, 1);
 
-        _entries.push_back(ee);
+            tv.get_buffer()->signal_end_user_action().connect([i, this](){
+                attribute_table_entry_changed(i);
+            });
+            _textviews.push_back(std::move(edit));
+        }
+        else {
+            auto const ee = Gtk::make_managed<Gtk::Entry>();
+            entry._entry = ee;
+            ee->set_hexpand();
+            ee->set_vexpand(false);
+            ee->set_margin_start(XPAD);
+            ee->set_margin_top(YPAD);
+            ee->set_margin_bottom(YPAD);
+            table->attach(*ee, 1, i, 1, 1);
 
-        ee->signal_changed().connect([ee, this](){
-            sp_attribute_table_entry_changed(ee, this);
-        });
+            ee->signal_changed().connect([i, this](){
+                attribute_table_entry_changed(i);
+            });
+        }
+
+        _entries.push_back(std::move(entry));
     }
 
-    table->show_all();
-
-    blocked = false;
+    show_all();
 }
 
 void SPAttributeTable::change_object(SPObject *object)
 {
     if (_object == object) return;
 
-    if (_object)
-    {
+    if (_object) {
         modified_connection.disconnect();
         release_connection.disconnect();
         _object = nullptr;
@@ -153,18 +137,23 @@ void SPAttributeTable::change_object(SPObject *object)
 
     _object = object;
 
-    if (!_object) return;
-
     blocked = true;
 
-    // Set up object
-    modified_connection = _object->connectModified(sigc::bind<2>(&sp_attribute_table_object_modified, this));
-    release_connection  = _object->connectRelease (sigc::bind<1>(&sp_attribute_table_object_release , this));
-    for (std::size_t i = 0; i < _attributes.size(); ++i) {
-        auto const val = _object->getRepr()->attribute(_attributes[i].c_str());
-        _entries[i]->set_text(val ? val : "");
+    if (object) {
+        // Set up object
+        modified_connection = object->connectModified([this](SPObject* object, unsigned int flags){
+            attribute_table_object_modified(object, flags);
+        });
+        release_connection  = object->connectRelease([this](SPObject* object){
+            attribute_table_object_release(object);
+        });
     }
-    
+
+    for (std::size_t i = 0; i < _attributes.size(); ++i) {
+        auto const val = object ? object->getRepr()->attribute(_attributes[i].c_str()) : nullptr;
+        _entries[i].set_text(val ? val : "");
+    }
+
     blocked = false;
 }
 
@@ -173,61 +162,67 @@ void SPAttributeTable::reread_properties()
     blocked = true;
     for (std::size_t i = 0; i < _attributes.size(); ++i) {
         auto const val = _object->getRepr()->attribute(_attributes[i].c_str());
-        _entries[i]->set_text(val ? val : "");
+        _entries.at(i).set_text(val ? val : "");
     }
     blocked = false;
 }
 
-static void sp_attribute_table_object_modified(SPObject */*object*/,
-                                               unsigned const flags,
-                                               SPAttributeTable *const spat)
-{
+/**
+ * Callback for a modification of the selected object (size, color, properties, etc.).
+ *
+ * attribute_table_object_modified rereads the object properties
+ * and shows the values in the entry boxes. It is a callback from a
+ * connection of the SPObject.
+ */
+void SPAttributeTable::attribute_table_object_modified(SPObject */*object*/, unsigned const flags) {
     if (!(flags & SP_OBJECT_MODIFIED_FLAG)) return;
 
-    auto const &attributes = spat->get_attributes();
-    auto const &entries = spat->get_entries();
-    for (std::size_t i = 0; i < attributes.size(); ++i) {
-        auto const e = entries[i];
-        auto const val = spat->_object->getRepr()->attribute(attributes[i].c_str());
+    for (std::size_t i = 0; i < _attributes.size(); ++i) {
+        auto& e = _entries.at(i);
+        auto const val = _object->getRepr()->attribute(_attributes[i].c_str());
         auto const new_text = Glib::ustring{val ? val : ""};
-        if (e->get_text() != new_text) {
+        if (e.get_text() != new_text) {
             // We are different
-            spat->blocked = true;
-            e->set_text(new_text);
-            spat->blocked = false;
+            blocked = true;
+            e.set_text(new_text);
+            blocked = false;
         }
     }
 }
 
-static void sp_attribute_table_entry_changed(Gtk::Entry * const editable,
-                                             SPAttributeTable * const spat)
-{
-    if (spat->blocked) return;
+/**
+ * Callback for user input in one of the entries.
+ *
+ * attribute_table_entry_changed set the object property
+ * to the new value and updates history. It is a callback from
+ * the entries created by SPAttributeTable.
+ */
+void SPAttributeTable::attribute_table_entry_changed(size_t index) {
+    if (blocked) return;
 
-    auto const &attributes = spat->get_attributes();
-    auto const &entries = spat->get_entries();
-    for (std::size_t i = 0; i < attributes.size(); ++i) {
-        auto const e = entries[i];
-        if (editable->Gtk::Widget::gobj() == e->Gtk::Widget::gobj()) {
-            spat->blocked = true;
-            if (spat->_object) {
-                auto const &text = e->get_text ();
-                spat->_object->getRepr()->setAttribute(attributes[i], text);
-                DocumentUndo::done(spat->_object->document, _("Set attribute"), "");
-            }
-            spat->blocked = false;
-            return;
-        }
+    if (index >= _attributes.size() || index >= _entries.size()) {
+        g_warning("file %s: line %d: Entry signalled change, but there is no such entry", __FILE__, __LINE__);
+        return;
     }
 
-    g_warning ("file %s: line %d: Entry signalled change, but there is no such entry", __FILE__, __LINE__);
+    auto& e = _entries[index];
+    blocked = true;
+    if (_object) {
+        auto text = e.get_text();
+        _object->getRepr()->setAttribute(_attributes[index], text);
+        DocumentUndo::done(_object->document, _("Set attribute"), "");
+    }
+    blocked = false;
 }
 
-static void sp_attribute_table_object_release (SPObject */*object*/, SPAttributeTable *spat)
-{
-    std::vector<Glib::ustring> labels;
-    std::vector<Glib::ustring> attributes;
-    spat->set_object (nullptr, labels, attributes, nullptr);
+/**
+ * Callback for the deletion of the selected object.
+ *
+ * attribute_table_object_release invalidates all data of 
+ * SPAttributeTable and clears the widget.
+ */
+void SPAttributeTable::attribute_table_object_release(SPObject */*object*/) {
+    change_object(nullptr);
 }
 
 /*

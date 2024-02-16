@@ -102,7 +102,8 @@ enum class SyntaxMode
     InlineCss,     ///< Inline CSS (contents of a style="..." attribute).
     CssStyle,      ///< File-scope CSS (contents of a CSS file or a <style> tag).
     SvgPathData,   ///< Contents of the 'd' attribute of the SVG <path> element.
-    SvgPolyPoints  ///< Contents of the 'points' attribute of <polyline> or <polygon>.
+    SvgPolyPoints, ///< Contents of the 'points' attribute of <polyline> or <polygon>.
+    JavaScript     // JavaScript code
 };
 
 /// Base class for styled text editing widget.

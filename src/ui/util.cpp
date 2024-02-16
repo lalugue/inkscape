@@ -17,17 +17,20 @@
 
 #include <cairomm/pattern.h>
 #include <glibmm/i18n.h>
+#include <glibmm/regex.h>
 #include <gtkmm/bin.h>
 #include <gtkmm/container.h>
 #include <gtkmm/image.h>
 #include <gtkmm/label.h>
 #include <gtkmm/messagedialog.h>
 #include <gtkmm/revealer.h>
+#include <gtkmm/textview.h>
 #include <gtkmm/tooltip.h>
 #include <gtkmm/widget.h>
 #include <pangomm/context.h>
 #include <pangomm/fontdescription.h>
 #include <pangomm/layout.h>
+#include "util/numeric/converters.h"
 
 #if (defined (_WIN32) || defined (_WIN64))
 #include <gdk/gdkwin32.h>
@@ -396,6 +399,66 @@ void set_dark_titlebar(Glib::RefPtr<Gdk::Window> const &win, bool is_dark)
         }
     }
 #endif
+}
+
+// round_numbers helper callback
+static int fmt_number(const _GMatchInfo* match, _GString* ret, void* prec) {
+    auto number = g_match_info_fetch(match, 1);
+
+    char* end = nullptr;
+    double val = g_ascii_strtod(number, &end);
+    if (*number && (end == nullptr || end > number)) {
+        auto precision = *static_cast<int*>(prec);
+        auto fmt = Inkscape::Util::format_number(val, precision);
+        g_string_append(ret, fmt.c_str());
+    } else {
+        g_string_append(ret, number);
+    }
+
+    auto text = g_match_info_fetch(match, 2);
+    g_string_append(ret, text);
+
+    g_free(number);
+    g_free(text);
+
+    return false;
+}
+
+Glib::ustring round_numbers(const Glib::ustring& text, int precision) {
+    // match floating point number followed by something else (not a number); repeat
+    static const auto numbers = Glib::Regex::create("([-+]?(?:(?:\\d+\\.?\\d*)|(?:\\.\\d+))(?:[eE][-+]?\\d*)?)([^+\\-0-9]*)", Glib::REGEX_MULTILINE);
+
+    return numbers->replace_eval(text, text.size(), 0, Glib::RegexMatchFlags::REGEX_MATCH_NOTEMPTY, &fmt_number, &precision);
+}
+
+// Round the selected floating point numbers in the attribute edit popover.
+void truncate_digits(const Glib::RefPtr<Gtk::TextBuffer>& buffer, int precision) {
+    if (!buffer) return;
+
+    auto start = buffer->begin();
+    auto end = buffer->end();
+
+    bool had_selection = buffer->get_has_selection();
+    int start_idx = 0, end_idx = 0;
+    if (had_selection) {
+        buffer->get_selection_bounds(start, end);
+        start_idx = start.get_offset();
+        end_idx = end.get_offset();
+    }
+
+    auto text = buffer->get_text(start, end);
+    auto ret = round_numbers(text, precision);
+    buffer->erase(start, end);
+    buffer->insert_at_cursor(ret);
+
+    if (had_selection) {
+        // Restore selection but note that its length may have decreased.
+        end_idx -= text.size() - ret.size();
+        if (end_idx < start_idx) {
+            end_idx = start_idx;
+        }
+        buffer->select_range(buffer->get_iter_at_offset(start_idx), buffer->get_iter_at_offset(end_idx));
+    }
 }
 
 /*

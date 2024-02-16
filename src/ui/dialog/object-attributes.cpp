@@ -5,6 +5,7 @@
  * Authors:
  * see git history
  * Kris De Gussem <Kris.DeGussem@gmail.com>
+ * Michael Kowalski
  *
  * Copyright (C) 2018 Authors
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
@@ -12,7 +13,11 @@
 
 #include <cmath>
 #include <cstddef>
+#include <cstdio>
 #include <gtkmm/entry.h>
+#include <gtkmm/menubutton.h>
+#include <gtkmm/scrolledwindow.h>
+#include <gtkmm/textview.h>
 #include <memory>
 #include <optional>
 #include <string>
@@ -32,9 +37,9 @@
 #include <2geom/rect.h>
 
 #include "desktop.h"
-// #include "helper/auto-connection.h"
-// #include "live_effects/effect-enum.h"
+#include "document-undo.h"
 #include "mod360.h"
+#include "preferences.h"
 #include "selection.h"
 #include "actions/actions-tools.h"
 #include "live_effects/effect-enum.h"
@@ -51,11 +56,13 @@
 #include "object/sp-rect.h"
 #include "object/sp-star.h"
 #include "ui/builder-utils.h"
+#include "ui/controller.h"
 #include "ui/dialog/object-attributes.h"
 #include "ui/icon-names.h"
+#include "ui/menuize.h"
 #include "ui/pack.h"
-#include "ui/tools/node-tool.h"
 #include "ui/tools/object-picker-tool.h"
+#include "ui/syntax.h"
 #include "ui/util.h"
 #include "ui/widget/image-properties.h"
 #include "ui/widget/spinbutton.h"
@@ -63,9 +70,7 @@
 #include "widgets/sp-attribute-widget.h"
 #include "xml/href-attribute-helper.h"
 
-namespace Inkscape {
-namespace UI {
-namespace Dialog {
+namespace Inkscape::UI::Dialog {
 
 struct SPAttrDesc {
     gchar const *label;
@@ -90,14 +95,19 @@ static const SPAttrDesc anchor_desc[] = {
     { nullptr, nullptr}
 };
 
+const auto dlg_pref_path = Glib::ustring("/dialogs/object-properties/");
+
 ObjectAttributes::ObjectAttributes()
-    : DialogBase("/dialogs/objectattr/", "ObjectAttributes"),
+    : DialogBase(dlg_pref_path.c_str(), "ObjectProperties"),
     _builder(create_builder("object-attributes.glade")),
     _main_panel(get_widget<Gtk::Box>(_builder, "main-panel")),
     _obj_title(get_widget<Gtk::Label>(_builder, "main-obj-name")),
-    _style_swatch(nullptr, _("Item's fill, stroke and opacity"), Gtk::ORIENTATION_HORIZONTAL)
+    _style_swatch(nullptr, _("Item's fill, stroke and opacity"), Gtk::ORIENTATION_HORIZONTAL),
+    _obj_properties(*Gtk::make_managed<ObjectProperties>())
 {
     auto& main = get_widget<Gtk::Box>(_builder, "main-widget");
+    main.add(_obj_properties);
+
     _obj_title.set_text("");
     _style_swatch.set_hexpand(false);
     _style_swatch.set_valign(Gtk::ALIGN_CENTER);
@@ -126,6 +136,7 @@ void ObjectAttributes::widget_setup() {
 
     _current_panel = panel;
     _current_item = nullptr;
+    bool enable_props = panel != nullptr;
 
     Glib::ustring title = panel ? panel->get_title() : "";
     if (!panel) {
@@ -133,29 +144,39 @@ void ObjectAttributes::widget_setup() {
             if (auto name = item->displayName()) {
                 title = name;
             }
+            // show properties for element without dedicated attributes panel
+            enable_props = true;
         }
         else if (selection->size() > 1) {
             title = _("Multiple objects selected");
+            // current "object properties" subdialog doesn't handle multiselection
+            enable_props = false;
+        }
+        else {
+            title = _("No selection");
         }
     }
     _obj_title.set_markup("<b>" + Glib::Markup::escape_text(title) + "</b>");
 
     if (!panel) {
         _style_swatch.set_visible(false);
-        return;
+    }
+    else {
+        if (_main_panel.get_children().empty()) {
+            UI::pack_start(_main_panel, panel->widget(), true, true);
+        }
+        bool show_style = false;
+        if (panel->supports_fill_stroke()) {
+            if (auto style = item ? item->style : nullptr) {
+                _style_swatch.setStyle(style);
+                show_style = true;
+            }
+        }
+        _style_swatch.set_visible(show_style);
+        panel->update_panel(item, getDesktop());
+        panel->widget().set_visible(true);
     }
 
-    UI::pack_start(_main_panel, panel->widget(), true, true);
-    bool show_style = false;
-    if (panel->supports_fill_stroke()) {
-        if (auto style = item ? item->style : nullptr) {
-            _style_swatch.setStyle(style);
-            show_style = true;
-        }
-    }
-    _style_swatch.set_visible(show_style);
-    panel->update_panel(item, getDesktop());
-    panel->widget().set_visible(true);
     _current_item = item;
 
     // TODO
@@ -175,11 +196,12 @@ void ObjectAttributes::update_panel(SPObject* item) {
 }
 
 void ObjectAttributes::desktopReplaced() {
-    //todo; if anything
+    _obj_properties.update_entries();
 }
 
 void ObjectAttributes::selectionChanged(Selection* selection) {
     widget_setup();
+    _obj_properties.update_entries();
 }
 
 void ObjectAttributes::selectionModified(Selection* _selection, guint flags) {
@@ -352,7 +374,18 @@ public:
         _table->set_hexpand();
         _table->set_vexpand(false);
         _widget = _table.get();
+
+        std::vector<Glib::ustring> labels;
+        std::vector<Glib::ustring> attrs;
+        int len = 0;
+        while (anchor_desc[len].label) {
+            labels.emplace_back(anchor_desc[len].label);
+            attrs.emplace_back(anchor_desc[len].attribute);
+            len += 1;
+        }
+        _table->create(labels, attrs);
     }
+
     ~AnchorPanel() override = default;
 
     void update(SPObject* object) override {
@@ -364,22 +397,9 @@ public:
             return;
         }
 
-        std::vector<Glib::ustring> labels;
-        std::vector<Glib::ustring> attrs;
         if (changed) {
-            int len = 0;
-            while (anchor_desc[len].label) {
-                labels.emplace_back(anchor_desc[len].label);
-                attrs.emplace_back(anchor_desc[len].attribute);
-                len += 1;
-            }
-            if (_first_time_update) {
-                _first_time_update = false;
-                _table->set_object(anchor, labels, attrs, (GtkWidget*)_table->gobj());
-            }
-            else {
-                _table->change_object(anchor);
-            }
+            _table->change_object(anchor);
+
             if (auto grid = dynamic_cast<Gtk::Grid*>(get_first_child(*_table))) {
                 auto button = Gtk::make_managed<Gtk::Button>();
                 button->show();
@@ -774,59 +794,65 @@ public:
         _main(get_widget<Gtk::Grid>(builder, "path-main")),
         _width(get_derived_widget<Inkscape::UI::Widget::SpinButton>(builder, "path-width")),
         _height(get_derived_widget<Inkscape::UI::Widget::SpinButton>(builder, "path-height")),
-        _rx(get_derived_widget<Inkscape::UI::Widget::SpinButton>(builder, "path-x")),
-        _ry(get_derived_widget<Inkscape::UI::Widget::SpinButton>(builder, "path-y")),
-        _data(get_widget<Gtk::Entry>(builder, "path-data")),
-        _info(get_widget<Gtk::Label>(builder, "path-info"))
+        _x(get_derived_widget<Inkscape::UI::Widget::SpinButton>(builder, "path-x")),
+        _y(get_derived_widget<Inkscape::UI::Widget::SpinButton>(builder, "path-y")),
+        _info(get_widget<Gtk::Label>(builder, "path-info")),
+        _data(_svgd_edit->getTextView())
     {
         _title = _("Path");
         _widget = &_main;
 
+        //TODO: do we need to duplicate x/y/w/h toolbar widgets here?
+        /*
         _width.get_adjustment()->signal_value_changed().connect([=](){
-            // change_value_px(_path, _width.get_adjustment(), "width", [=](double w){ _path->setVisibleWidth(w); });
         });
         _height.get_adjustment()->signal_value_changed().connect([=](){
-            // change_value_px(_path, _height.get_adjustment(), "height", [=](double h){ _path->setVisibleHeight(h); });
         });
-        _rx.get_adjustment()->signal_value_changed().connect([=](){
-            // change_value_px(_path, _rx.get_adjustment(), "rx", [=](double rx){ _path->setVisibleRx(rx); });
+        _x.get_adjustment()->signal_value_changed().connect([=](){
         });
-        _ry.get_adjustment()->signal_value_changed().connect([=](){
-            // change_value_px(_path, _ry.get_adjustment(), "ry", [=](double ry){ _path->setVisibleRy(ry); });
+        _y.get_adjustment()->signal_value_changed().connect([=](){
         });
-        get_widget<Gtk::Button>(builder, "rect-round").signal_clicked().connect([=](){
-            auto [changed, x, y] = round_values(_width, _height);
-            if (changed) {
-                _width.get_adjustment()->set_value(x);
-                _height.get_adjustment()->set_value(y);
-            }
-        });
-        // _sharp.signal_clicked().connect([=](){
-        //     if (!_rect) return;
+        */
+        auto pref_path = dlg_pref_path + "path-panel/";
 
-        //     // remove rounded corners if LPE is there (first one found)
-        //     remove_lpeffect(_rect, LivePathEffect::FILLET_CHAMFER);
-        //     _rx.get_adjustment()->set_value(0);
-        //     _ry.get_adjustment()->set_value(0);
-        // });
-        // _round.signal_clicked().connect([=](){
-        //     if (!_rect || !_desktop) return;
+        auto theme = Inkscape::Preferences::get()->getString("/theme/syntax-color-theme", "-none-");
+        _svgd_edit->setStyle(theme);
+        _data.set_wrap_mode(Gtk::WrapMode::WRAP_WORD);
 
-        //     // switch to node tool to show handles
-        //     set_active_tool(_desktop, "Node");
-        //     // rx/ry need to be reset first, LPE doesn't handle them too well
-        //     _rx.get_adjustment()->set_value(0);
-        //     _ry.get_adjustment()->set_value(0);
-        //     // add flexible corners effect if not yet present
-        //     if (!find_lpeffect(_rect, LivePathEffect::FILLET_CHAMFER)) {
-        //         LivePathEffect::Effect::createAndApply("fillet_chamfer", _rect->document, _rect);
-        //         DocumentUndo::done(_rect->document, _("Add fillet/chamfer effect"), INKSCAPE_ICON("dialog-path-effects"));
-        //     }
-        // });
-        _data.signal_focus_in_event().connect([=](GdkEventFocus*){
-            // path editing popup
-            return false; // propagate
+        Controller::add_key<&PathPanel::on_key_pressed>(_data, *this);
+        auto& wnd = get_widget<Gtk::ScrolledWindow>(builder, "path-data-wnd");
+        wnd.remove();
+        wnd.add(_data);
+        wnd.show_all();
+
+        auto set_precision = [=](int const n) {
+            _precision = n;
+            auto& menu_button = get_widget<Gtk::MenuButton>(builder, "path-menu");
+            auto const menu = menu_button.get_menu_model();
+            auto const section = menu->get_item_link(0, Gio::MENU_LINK_SECTION);
+            auto const type = Glib::VariantType{g_variant_type_new("s")};
+            auto const variant = section->get_item_attribute(n, Gio::MENU_ATTRIBUTE_LABEL, type);
+            auto const label = ' ' + static_cast<Glib::Variant<Glib::ustring> const &>(variant).get();
+            get_widget<Gtk::Label>(builder, "path-precision").set_label(label);
+            Inkscape::Preferences::get()->setInt(pref_path + "precision", n);
+            menu_button.set_active(false);
+        };
+
+        const int N = 5;
+        _precision = Inkscape::Preferences::get()->getIntLimited(pref_path + "precision", 2, 0, N);
+        set_precision(_precision);
+        auto group = Gio::SimpleActionGroup::create();
+        auto action = group->add_action_radio_integer("precision", _precision);
+        action->property_state().signal_changed().connect([=, this]{ int n; action->get_state(n);
+                                                                    set_precision(n); });
+        _main.insert_action_group("attrdialog", std::move(group));
+        UI::menuize_popover(*get_widget<Gtk::MenuButton>(builder, "path-menu").get_popover());
+
+        get_widget<Gtk::Button>(builder, "path-data-round").signal_clicked().connect([this]{
+            truncate_digits(_data.get_buffer(), _precision);
+            commit_d();
         });
+        get_widget<Gtk::Button>(builder, "path-enter").signal_clicked().connect([=](){ commit_d(); });
     }
 
     ~PathPanel() override = default;
@@ -836,17 +862,16 @@ public:
         if (!_path) return;
 
         auto scoped(_update.block());
-        // _width.set_value(_path->width.value);
-        // _height.set_value(_path->height.value);
-        // _rx.set_value(_path->rx.value);
-        // _ry.set_value(_path->ry.value);
-        // auto lpe = find_lpeffect(_path, LivePathEffect::FILLET_CHAMFER);
-        // _sharp.set_sensitive(_rect->rx.value > 0 || _rect->ry.value > 0 || lpe);
-        // _round.set_sensitive(!lpe);
 
         auto d = _path->getAttribute("inkscape:original-d");
-        d = d && _path->hasPathEffect() ? d : _path->getAttribute("d");
-        _data.set_text(d ? d : "");
+        if (d && _path->hasPathEffect()) {
+            _original = true;
+        }
+        else {
+            _original = false;
+            d = _path->getAttribute("d");
+        }
+        _svgd_edit->setText(d ? d : "");
 
         auto curve = _path->curveBeforeLPE();
         if (!curve) curve = _path->curve();
@@ -856,21 +881,40 @@ public:
         }
         _info.set_text(_("Nodes: ") + std::to_string(node_count));
 
-        // _path->curve();
-        // _path->getP
+        //TODO: we can consider adding more stats, like perimeter, area, etc.
     }
 
 private:
+    bool on_key_pressed(const GtkEventControllerKey* controller, unsigned keyval, unsigned keycode, GdkModifierType state) {
+        switch (keyval) {
+        case GDK_KEY_Return:
+        case GDK_KEY_KP_Enter:
+            return Controller::has_flag(state, GDK_SHIFT_MASK) ? commit_d() : false;
+        }
+        return false;
+    }
+
+    bool commit_d() {
+        if (!_path || !_data.is_visible()) return false;
+
+        auto scoped(_update.block());
+        auto d = _svgd_edit->getText();
+        _path->setAttribute(_original ? "inkscape:original-d" : "d", d);
+        DocumentUndo::maybeDone(_path->document, "path-data", _("Change path"), INKSCAPE_ICON(""));
+        return true;
+    }
+
     SPPath* _path = nullptr;
+    bool _original = false;
     Gtk::Widget& _main;
     Inkscape::UI::Widget::SpinButton& _width;
     Inkscape::UI::Widget::SpinButton& _height;
-    Inkscape::UI::Widget::SpinButton& _rx;
-    Inkscape::UI::Widget::SpinButton& _ry;
-    // Gtk::Button& _sharp;
-    // Gtk::Button& _round;
-    Gtk::Entry& _data;
+    Inkscape::UI::Widget::SpinButton& _x;
+    Inkscape::UI::Widget::SpinButton& _y;
     Gtk::Label& _info;
+    std::unique_ptr<Syntax::TextEditView> _svgd_edit = Syntax::TextEditView::create(Syntax::SyntaxMode::SvgPathData);
+    Gtk::TextView& _data;
+    int _precision = 2;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -898,9 +942,7 @@ void ObjectAttributes::create_panels() {
     _panels[typeid(SPPath).name()] = std::make_unique<PathPanel>(_builder);
 }
 
-}
-}
-}
+} // namespace
 
 /*
   Local Variables:

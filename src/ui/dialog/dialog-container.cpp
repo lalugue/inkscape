@@ -49,7 +49,6 @@
 #include "ui/dialog/memory.h"
 #include "ui/dialog/messages.h"
 #include "ui/dialog/object-attributes.h"
-#include "ui/dialog/object-properties.h"
 #include "ui/dialog/objects.h"
 #include "ui/dialog/paint-servers.h"
 #include "ui/dialog/selectorsdialog.h"
@@ -138,8 +137,7 @@ std::unique_ptr<DialogBase> DialogContainer::dialog_factory(Glib::ustring const 
     else if (dialog_type == "LivePathEffect")     return std::make_unique<LivePathEffectEditor>();
     else if (dialog_type == "Memory")             return std::make_unique<Memory>();
     else if (dialog_type == "Messages")           return std::make_unique<Messages>();
-    else if (dialog_type == "ObjectAttributes")   return std::make_unique<ObjectAttributes>();
-    else if (dialog_type == "ObjectProperties")   return std::make_unique<ObjectProperties>();
+    else if (dialog_type == "ObjectProperties")   return std::make_unique<ObjectAttributes>();
     else if (dialog_type == "Objects")            return std::make_unique<ObjectsPanel>();
     else if (dialog_type == "PaintServers")       return std::make_unique<PaintServersDialog>();
     else if (dialog_type == "Preferences")        return std::make_unique<InkscapePreferences>();

@@ -39,9 +39,7 @@
 #include <gtkmm/textview.h>
 
 #include "ui/dialog/dialog-base.h"
-#include "ui/widget/scrollprotected.h"
 #include "ui/widget/color-picker.h"
-#include "ui/widget/frame.h"
 
 class SPAttributeTable;
 class SPItem;
@@ -53,7 +51,9 @@ class Grid;
 namespace Inkscape::UI::Dialog {
 
 /**
- * A dialog widget to show object properties.
+ * A subdialog widget to show object properties.
+ *
+ * Note: This component is embedded in ObjectAttributes dialog and not used on its own.
  *
  * A widget to enter an ID, label, title and description for an object.
  * In addition it allows to edit the properties of an object.
@@ -74,6 +74,7 @@ private:
     std::vector<Glib::ustring> _int_attrs;
     std::vector<Glib::ustring> _int_labels;
 
+    Gtk::Expander _exp_properties; //the expander for properties
     Gtk::Label _label_id; //the label for the object ID
     Gtk::Entry _entry_id; //the entry for the object ID
     Gtk::Label _label_label; //the label for the object label
@@ -84,9 +85,6 @@ private:
     Gtk::Label _label_color; //the label for the object highlight
     Inkscape::UI::Widget::ColorPicker _highlight_color; // color picker for the object highlight
 
-    Gtk::Label _label_image_rendering; // the label for 'image-rendering'
-    Inkscape::UI::Widget::ScrollProtected<Gtk::ComboBoxText> _combo_image_rendering; // the combo box text for 'image-rendering'
-    
     Gtk::Frame  _ft_description; //the frame for the text of the object description
     Gtk::TextView _tv_description; //the text view object showing the object description
 
@@ -107,9 +105,6 @@ private:
 
     // Callback for highlight color
     void _highlightChanged(guint rgba);
-
-    /// Callback for 'image-rendering'.
-    void _imageRenderingChanged();
 
     /// Callback for checkbox Lock.
     void _sensitivityToggled();
