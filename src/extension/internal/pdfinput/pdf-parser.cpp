@@ -685,181 +685,175 @@ void PdfParser::opSetLineWidth(Object args[], int /*numArgs*/)
 // TODO not good that numArgs is ignored but args[] is used:
 void PdfParser::opSetExtGState(Object args[], int /*numArgs*/)
 {
-  Object obj1, obj2, obj3, obj4, obj5;
-  Function *funcs[4] = {nullptr, nullptr, nullptr, nullptr};
-  GfxColor backdropColor;
-  GBool haveBackdropColor = gFalse;
-  GBool alpha = gFalse;
+    Object obj1, obj2, obj3, obj4, obj5;
+    Function *funcs[4] = {nullptr, nullptr, nullptr, nullptr};
+    GfxColor backdropColor;
+    GBool haveBackdropColor = gFalse;
+    GBool alpha = gFalse;
 
-  _POPPLER_CALL_ARGS(obj1, res->lookupGState, args[0].getName());
-  if (obj1.isNull()) {
-    return;
-  }
-  if (!obj1.isDict()) {
-    error(errSyntaxError, getPos(), "ExtGState '{0:s}' is wrong type"), args[0].getName();
-    _POPPLER_FREE(obj1);
-    return;
-  }
-  if (printCommands) {
-    printf("  gfx state dict: ");
-    obj1.print();
-    printf("\n");
-  }
-
-  // transparency support: blend mode, fill/stroke opacity
-  if (!_POPPLER_CALL_ARGS_DEREF(obj2, obj1.dictLookup, "BM").isNull()) {
-    GfxBlendMode mode = gfxBlendNormal;
-    if (state->parseBlendMode(&obj2, &mode)) {
-      state->setBlendMode(mode);
-    } else {
-      error(errSyntaxError, getPos(), "Invalid blend mode in ExtGState");
+    _POPPLER_CALL_ARGS(obj1, res->lookupGState, args[0].getName());
+    if (obj1.isNull()) {
+        return;
     }
-  }
-  _POPPLER_FREE(obj2);
-  if (_POPPLER_CALL_ARGS_DEREF(obj2, obj1.dictLookup, "ca").isNum()) {
-    state->setFillOpacity(obj2.getNum());
-  }
-  _POPPLER_FREE(obj2);
-  if (_POPPLER_CALL_ARGS_DEREF(obj2, obj1.dictLookup, "CA").isNum()) {
-    state->setStrokeOpacity(obj2.getNum());
-  }
-  _POPPLER_FREE(obj2);
-
-  // fill/stroke overprint
-  GBool haveFillOP = gFalse;
-  if ((haveFillOP = _POPPLER_CALL_ARGS_DEREF(obj2, obj1.dictLookup, "op").isBool())) {
-    state->setFillOverprint(obj2.getBool());
-  }
-  _POPPLER_FREE(obj2);
-  if (_POPPLER_CALL_ARGS_DEREF(obj2, obj1.dictLookup, "OP").isBool()) {
-    state->setStrokeOverprint(obj2.getBool());
-    if (!haveFillOP) {
-      state->setFillOverprint(obj2.getBool());
+    if (!obj1.isDict()) {
+        error(errSyntaxError, getPos(), "ExtGState '{0:s}' is wrong type"), args[0].getName();
+        _POPPLER_FREE(obj1);
+        return;
     }
-  }
-  _POPPLER_FREE(obj2);
-
-  // stroke adjust
-  if (_POPPLER_CALL_ARGS_DEREF(obj2, obj1.dictLookup, "SA").isBool()) {
-    state->setStrokeAdjust(obj2.getBool());
-  }
-  _POPPLER_FREE(obj2);
-
-  // transfer function
-  if (_POPPLER_CALL_ARGS_DEREF(obj2, obj1.dictLookup, "TR2").isNull()) {
-    _POPPLER_FREE(obj2);
-    _POPPLER_CALL_ARGS(obj2, obj1.dictLookup, "TR");
-  }
-  if (obj2.isName(const_cast<char*>("Default")) ||
-      obj2.isName(const_cast<char*>("Identity"))) {
-    funcs[0] = funcs[1] = funcs[2] = funcs[3] = nullptr;
-    state->setTransfer(funcs);
-  } else if (obj2.isArray() && obj2.arrayGetLength() == 4) {
-    int pos = 4;
-    for (int i = 0; i < 4; ++i) {
-      _POPPLER_CALL_ARGS(obj3, obj2.arrayGet, i);
-      funcs[i] = Function::parse(&obj3);
-      _POPPLER_FREE(obj3);
-      if (!funcs[i]) {
-	pos = i;
-	break;
-      }
+    if (printCommands) {
+        printf("  gfx state dict: ");
+        obj1.print();
+        printf("\n");
     }
-    if (pos == 4) {
-      state->setTransfer(funcs);
-    }
-  } else if (obj2.isName() || obj2.isDict() || obj2.isStream()) {
-    if ((funcs[0] = Function::parse(&obj2))) {
-      funcs[1] = funcs[2] = funcs[3] = nullptr;
-      state->setTransfer(funcs);
-    }
-  } else if (!obj2.isNull()) {
-    error(errSyntaxError, getPos(), "Invalid transfer function in ExtGState");
-  }
-  _POPPLER_FREE(obj2);
 
-  // soft mask
-  if (!_POPPLER_CALL_ARGS_DEREF(obj2, obj1.dictLookup, "SMask").isNull()) {
-    if (obj2.isName(const_cast<char*>("None"))) {
-        // Do nothing.
-    } else if (obj2.isDict()) {
-      if (_POPPLER_CALL_ARGS_DEREF(obj3, obj2.dictLookup, "S").isName("Alpha")) {
-	alpha = gTrue;
-      } else { // "Luminosity"
-	alpha = gFalse;
-      }
-      _POPPLER_FREE(obj3);
-      funcs[0] = nullptr;
-      if (!_POPPLER_CALL_ARGS_DEREF(obj3, obj2.dictLookup, "TR").isNull()) {
-	funcs[0] = Function::parse(&obj3);
-	if (funcs[0]->getInputSize() != 1 ||
-	    funcs[0]->getOutputSize() != 1) {
-	  error(errSyntaxError, getPos(), "Invalid transfer function in soft mask in ExtGState");
-	  delete funcs[0];
-	  funcs[0] = nullptr;
-	}
-      }
-      _POPPLER_FREE(obj3);
-      if ((haveBackdropColor = _POPPLER_CALL_ARGS_DEREF(obj3, obj2.dictLookup, "BC").isArray())) {
-	for (int & i : backdropColor.c) {
-	  i = 0;
-	}
-	for (int i = 0; i < obj3.arrayGetLength() && i < gfxColorMaxComps; ++i) {
-          _POPPLER_CALL_ARGS(obj4, obj3.arrayGet, i);
-	  if (obj4.isNum()) {
-	    backdropColor.c[i] = dblToCol(obj4.getNum());
-	  }
-	  _POPPLER_FREE(obj4);
-	}
-      }
-      _POPPLER_FREE(obj3);
-      if (_POPPLER_CALL_ARGS_DEREF(obj3, obj2.dictLookup, "G").isStream()) {
-	if (_POPPLER_CALL_ARGS_DEREF(obj4, obj3.streamGetDict()->lookup, "Group").isDict()) {
-	  GfxColorSpace *blendingColorSpace = nullptr;
-	  GBool isolated = gFalse;
-	  GBool knockout = gFalse;
-	  if (!_POPPLER_CALL_ARGS_DEREF(obj5, obj4.dictLookup, "CS").isNull()) {
-	    blendingColorSpace = GfxColorSpace::parse(nullptr, &obj5, nullptr, state);
-	  }
-          _POPPLER_FREE(obj5);
-	  if (_POPPLER_CALL_ARGS_DEREF(obj5, obj4.dictLookup, "I").isBool()) {
-	    isolated = obj5.getBool();
-	  }
-          _POPPLER_FREE(obj5);
-	  if (_POPPLER_CALL_ARGS_DEREF(obj5, obj4.dictLookup, "K").isBool()) {
-	    knockout = obj5.getBool();
-	  }
-	  _POPPLER_FREE(obj5);
-	  if (!haveBackdropColor) {
-	    if (blendingColorSpace) {
-	      blendingColorSpace->getDefaultColor(&backdropColor);
-	    } else {
-	      //~ need to get the parent or default color space (?)
-	      for (int & i : backdropColor.c) {
-		i = 0;
-	      }
-	    }
-	  }
-	  doSoftMask(&obj3, alpha, blendingColorSpace,
-		     isolated, knockout, funcs[0], &backdropColor);
-	  if (funcs[0]) {
-	    delete funcs[0];
-	  }
-	} else {
-	  error(errSyntaxError, getPos(), "Invalid soft mask in ExtGState - missing group");
-	}
-	_POPPLER_FREE(obj4);
-      } else {
-	error(errSyntaxError, getPos(), "Invalid soft mask in ExtGState - missing group");
-      }
-      _POPPLER_FREE(obj3);
+    // transparency support: blend mode, fill/stroke opacity
+    if (!_POPPLER_CALL_ARGS_DEREF(obj2, obj1.dictLookup, "BM").isNull()) {
+        GfxBlendMode mode = gfxBlendNormal;
+        if (state->parseBlendMode(&obj2, &mode)) {
+            state->setBlendMode(mode);
+        } else {
+            error(errSyntaxError, getPos(), "Invalid blend mode in ExtGState");
+        }
+    }
+    if (_POPPLER_CALL_ARGS_DEREF(obj2, obj1.dictLookup, "ca").isNum()) {
+        state->setFillOpacity(obj2.getNum());
+    }
+    if (_POPPLER_CALL_ARGS_DEREF(obj2, obj1.dictLookup, "CA").isNum()) {
+        state->setStrokeOpacity(obj2.getNum());
+    }
+
+    // fill/stroke overprint
+    GBool haveFillOP = gFalse;
+    if ((haveFillOP = _POPPLER_CALL_ARGS_DEREF(obj2, obj1.dictLookup, "op").isBool())) {
+        state->setFillOverprint(obj2.getBool());
+    }
+    if (_POPPLER_CALL_ARGS_DEREF(obj2, obj1.dictLookup, "OP").isBool()) {
+        state->setStrokeOverprint(obj2.getBool());
+        if (!haveFillOP) {
+            state->setFillOverprint(obj2.getBool());
+        }
+    }
+
+    // stroke adjust
+    if (_POPPLER_CALL_ARGS_DEREF(obj2, obj1.dictLookup, "SA").isBool()) {
+        state->setStrokeAdjust(obj2.getBool());
+    }
+
+    // Stroke width
+    if (_POPPLER_CALL_ARGS_DEREF(obj2, obj1.dictLookup, "LW").isNum()) {
+        state->setLineWidth(obj2.getNum());
+    }
+
+    // transfer function
+    if (_POPPLER_CALL_ARGS_DEREF(obj2, obj1.dictLookup, "TR2").isNull()) {
+        _POPPLER_CALL_ARGS(obj2, obj1.dictLookup, "TR");
+    }
+    if (obj2.isName(const_cast<char *>("Default")) || obj2.isName(const_cast<char *>("Identity"))) {
+        funcs[0] = funcs[1] = funcs[2] = funcs[3] = nullptr;
+        state->setTransfer(funcs);
+    } else if (obj2.isArray() && obj2.arrayGetLength() == 4) {
+        int pos = 4;
+        for (int i = 0; i < 4; ++i) {
+            _POPPLER_CALL_ARGS(obj3, obj2.arrayGet, i);
+            funcs[i] = Function::parse(&obj3);
+            if (!funcs[i]) {
+                pos = i;
+                break;
+            }
+        }
+        _POPPLER_FREE(obj3);
+        if (pos == 4) {
+            state->setTransfer(funcs);
+        }
+    } else if (obj2.isName() || obj2.isDict() || obj2.isStream()) {
+        if ((funcs[0] = Function::parse(&obj2))) {
+            funcs[1] = funcs[2] = funcs[3] = nullptr;
+            state->setTransfer(funcs);
+        }
     } else if (!obj2.isNull()) {
-      error(errSyntaxError, getPos(), "Invalid soft mask in ExtGState");
+        error(errSyntaxError, getPos(), "Invalid transfer function in ExtGState");
     }
-  }
-  _POPPLER_FREE(obj2);
 
-  _POPPLER_FREE(obj1);
+    // soft mask
+    if (!_POPPLER_CALL_ARGS_DEREF(obj2, obj1.dictLookup, "SMask").isNull()) {
+        if (obj2.isName(const_cast<char *>("None"))) {
+            // Do nothing.
+        } else if (obj2.isDict()) {
+            if (_POPPLER_CALL_ARGS_DEREF(obj3, obj2.dictLookup, "S").isName("Alpha")) {
+                alpha = gTrue;
+            } else { // "Luminosity"
+                alpha = gFalse;
+            }
+            _POPPLER_FREE(obj3);
+            funcs[0] = nullptr;
+            if (!_POPPLER_CALL_ARGS_DEREF(obj3, obj2.dictLookup, "TR").isNull()) {
+                funcs[0] = Function::parse(&obj3);
+                if (funcs[0]->getInputSize() != 1 || funcs[0]->getOutputSize() != 1) {
+                    error(errSyntaxError, getPos(), "Invalid transfer function in soft mask in ExtGState");
+                    delete funcs[0];
+                    funcs[0] = nullptr;
+                }
+            }
+            _POPPLER_FREE(obj3);
+            if ((haveBackdropColor = _POPPLER_CALL_ARGS_DEREF(obj3, obj2.dictLookup, "BC").isArray())) {
+                for (int &i : backdropColor.c) {
+                    i = 0;
+                }
+                for (int i = 0; i < obj3.arrayGetLength() && i < gfxColorMaxComps; ++i) {
+                    _POPPLER_CALL_ARGS(obj4, obj3.arrayGet, i);
+                    if (obj4.isNum()) {
+                        backdropColor.c[i] = dblToCol(obj4.getNum());
+                    }
+                    _POPPLER_FREE(obj4);
+                }
+            }
+            _POPPLER_FREE(obj3);
+            if (_POPPLER_CALL_ARGS_DEREF(obj3, obj2.dictLookup, "G").isStream()) {
+                if (_POPPLER_CALL_ARGS_DEREF(obj4, obj3.streamGetDict()->lookup, "Group").isDict()) {
+                    GfxColorSpace *blendingColorSpace = nullptr;
+                    GBool isolated = gFalse;
+                    GBool knockout = gFalse;
+                    if (!_POPPLER_CALL_ARGS_DEREF(obj5, obj4.dictLookup, "CS").isNull()) {
+                        blendingColorSpace = GfxColorSpace::parse(nullptr, &obj5, nullptr, state);
+                    }
+                    _POPPLER_FREE(obj5);
+                    if (_POPPLER_CALL_ARGS_DEREF(obj5, obj4.dictLookup, "I").isBool()) {
+                        isolated = obj5.getBool();
+                    }
+                    _POPPLER_FREE(obj5);
+                    if (_POPPLER_CALL_ARGS_DEREF(obj5, obj4.dictLookup, "K").isBool()) {
+                        knockout = obj5.getBool();
+                    }
+                    _POPPLER_FREE(obj5);
+                    if (!haveBackdropColor) {
+                        if (blendingColorSpace) {
+                            blendingColorSpace->getDefaultColor(&backdropColor);
+                        } else {
+                            //~ need to get the parent or default color space (?)
+                            for (int &i : backdropColor.c) {
+                                i = 0;
+                            }
+                        }
+                    }
+                    doSoftMask(&obj3, alpha, blendingColorSpace, isolated, knockout, funcs[0], &backdropColor);
+                    if (funcs[0]) {
+                        delete funcs[0];
+                    }
+                } else {
+                    error(errSyntaxError, getPos(), "Invalid soft mask in ExtGState - missing group");
+                }
+                _POPPLER_FREE(obj4);
+            } else {
+                error(errSyntaxError, getPos(), "Invalid soft mask in ExtGState - missing group");
+            }
+            _POPPLER_FREE(obj3);
+        } else if (!obj2.isNull()) {
+            error(errSyntaxError, getPos(), "Invalid soft mask in ExtGState");
+        }
+    }
+
+    _POPPLER_FREE(obj2);
+    _POPPLER_FREE(obj1);
 }
 
 void PdfParser::doSoftMask(Object *str, GBool alpha,
