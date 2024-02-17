@@ -695,18 +695,18 @@ void normalize_all_paths(Inkscape::XML::Node *node)
 std::vector<std::vector<Glib::ustring>> doc_svg_processing_actions =
 {
     // clang-format off
-    {"doc.set-svg-version-1",            N_("Set SVG Version to 1.1"),       "Processing", N_("Sets the Document's SVG version to 1.1") },
-    {"doc.set-svg-version-2",            N_("Set SVG Version to 2.0"),       "Processing", N_("Sets the Document's SVG version to 2.0") },
-    {"doc.prune-inkscape-namespaces",    N_("Prune Inkscape Namespaces"),    "Processing", N_("Remove any inkscape specific svg data") },
-    {"doc.prune-proprietary-namespaces", N_("Prune Proprietary Namespaces"), "Processing", N_("Remove any known proprietary svg data") },
+    {"doc.set-svg-version-1",            N_("Set SVG Version to 1.1"),       "Processing", N_("Set the document's SVG version to 1.1") },
+    {"doc.set-svg-version-2",            N_("Set SVG Version to 2.0"),       "Processing", N_("Set the document's SVG version to 2.0") },
+    {"doc.prune-inkscape-namespaces",    N_("Prune Inkscape Namespaces"),    "Processing", N_("Remove any Inkscape-specific SVG data") },
+    {"doc.prune-proprietary-namespaces", N_("Prune Proprietary Namespaces"), "Processing", N_("Remove any known proprietary SVG data") },
 
     {"doc.reverse-auto-start-markers",   N_("Reverse Auto Start Markers"),   "Processing", N_("Remove auto start positions from markers") },
-    {"doc.remove-all-transforms",        N_("Remove all transforms"),        "Processing", N_("Remove all transforms from all shapes") },
+    {"doc.remove-all-transforms",        N_("Remove All Transforms"),        "Processing", N_("Remove all transforms from all shapes") },
     {"doc.remove-marker-context-paint",  N_("Remove Marker Context Paint"),  "Processing", N_("Remove context paints from markers") },
 
     {"doc.insert-text-fallback",         N_("Insert Text Fallback"),         "Processing", N_("Replace SVG2 text with SVG1.1 text") },
-    {"doc.insert-mesh-polyfill",         N_("Insert Mesh Polyfill"),         "Processing", N_("Insert javascript for rendering meshes") },
-    {"doc.insert-hatch-polyfill",        N_("Insert Hatch Polyfill"),        "Processing", N_("Insert javascript for rendering hatches") },
+    {"doc.insert-mesh-polyfill",         N_("Insert Mesh Polyfill"),         "Processing", N_("Insert JavaScript for rendering meshes") },
+    {"doc.insert-hatch-polyfill",        N_("Insert Hatch Polyfill"),        "Processing", N_("Insert JavaScript for rendering hatches") },
 
     {"doc.all-clones-to-objects",        N_("Unlink All Clones"),            "Processing", N_("Recursively unlink all clones and symbols") },
     {"doc.all-objects-to-paths",         N_("All Objects to Paths"),         "Processing", N_("Turn all shapes recursively into path elements") },

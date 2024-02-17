@@ -288,12 +288,12 @@ std::vector<std::vector<Glib::ustring>> raw_data_canvas_transform =
     {"win.canvas-flip-reset",         N_("Reset Flipping"),      "Canvas Geometry",  N_("Reset canvas flipping")                      },
 
     {"win.canvas-zoom-absolute",      N_("Zoom Absolute"),       "Canvas Geometry",  N_("Zoom to an absolute value")                  },
-    {"win.canvas-zoom-relative",      N_("Zoom Relative"),       "Canvas Geometry",  N_("Zoom to by a relative amount")               },
+    {"win.canvas-zoom-relative",      N_("Zoom Relative"),       "Canvas Geometry",  N_("Zoom by a relative amount")               },
 
-    {"win.canvas-rotate-absolute-radians", N_("Rotate Absolute (Radians)"), "Canvas Geometry",  N_("Rotate to an absolute value (Radians)")    },
-    {"win.canvas-rotate-relative-radians", N_("Rotate Relative (Radians)"), "Canvas Geometry",  N_("Rotate to by a relative amount (Radians)") },
-    {"win.canvas-rotate-absolute-degrees", N_("Rotate Absolute (Degrees)"), "Canvas Geometry",  N_("Rotate to an absolute value (Degrees)")    },
-    {"win.canvas-rotate-relative-degrees", N_("Rotate Relative (Degrees)"), "Canvas Geometry",  N_("Rotate to by a relative amount (Degrees)") },
+    {"win.canvas-rotate-absolute-radians", N_("Rotate Absolute (Radians)"), "Canvas Geometry",  N_("Rotate to an absolute value (radians)")    },
+    {"win.canvas-rotate-relative-radians", N_("Rotate Relative (Radians)"), "Canvas Geometry",  N_("Rotate by a relative amount (radians)") },
+    {"win.canvas-rotate-absolute-degrees", N_("Rotate Absolute (Degrees)"), "Canvas Geometry",  N_("Rotate to an absolute value (degrees)")    },
+    {"win.canvas-rotate-relative-degrees", N_("Rotate Relative (Degrees)"), "Canvas Geometry",  N_("Rotate by a relative amount (degrees)") },
 
     {"win.canvas-rotate-lock",        N_("Lock Rotation"),       "Canvas Geometry",  N_("Lock canvas rotation")                       },
     // clang-format on

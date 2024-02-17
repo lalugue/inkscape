@@ -274,8 +274,8 @@ std::vector<std::vector<Glib::ustring>> raw_data_output =
     {"app.export-background-opacity", N_("Export Background Opacity"), "Export",     N_("Include background opacity in exported file")        },
     {"app.export-png-color-mode",     N_("Export PNG Color Mode"),     "Export",     N_("Set color mode for PNG export")                      },
     {"app.export-png-use-dithering",  N_("Export PNG Dithering"),      "Export",     N_("Set dithering for PNG export")                       },
-    {"app.export-png-compression",    N_("Export PNG compression"),    "Export",     N_("Set compression level for PNG export")               },
-    {"app.export-png-antialias",      N_("Export PNG antialias"),      "Export",     N_("Set antialias level for PNG export")                 },
+    {"app.export-png-compression",    N_("Export PNG Compression"),    "Export",     N_("Set compression level for PNG export")               },
+    {"app.export-png-antialias",      N_("Export PNG Antialiasing"),      "Export",     N_("Set antialiasing level for PNG export")                 },
 
     {"app.export-do",                 N_("Do Export"),                 "Export",     N_("Do export")                                          }
     // clang-format on
@@ -311,8 +311,8 @@ std::vector<std::vector<Glib::ustring>> hint_data_output =
     {"app.export-background-opacity", N_("Enter number for background opacity, either between 0.0 and 1.0, or 1 up to 255")     },
     {"app.export-png-color-mode",     N_("Enter string for PNG Color Mode, one of Gray_1/Gray_2/Gray_4/Gray_8/Gray_16/RGB_8/RGB_16/GrayAlpha_8/GrayAlpha_16/RGBA_8/RGBA_16")},
     {"app.export-png-use-dithering",  N_("Enter 1/0 for Yes/No to use dithering")          },
-    {"app.export-png-compression",    N_("Enter integer for PNG compression level (0 to 9)")},
-    {"app.export-png-antialias",      N_("Enter integer for PNG antialias level (0 to 3)")}
+    {"app.export-png-compression",    N_("Enter integer for PNG compression level (0 (none) to 9 (max))")},
+    {"app.export-png-antialias",      N_("Enter integer for PNG antialiasing level (0 (none) to 3 (best))")}
     // clang-format on
 };
 

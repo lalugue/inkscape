@@ -268,7 +268,7 @@ static const std::vector<std::vector<Glib::ustring>> raw_data_path =
 
     {"win.shape-builder-mode(0)",    N_("Shape Builder: Add"),   "Path",   N_("Add shapes by clicking or clicking and dragging")},
     {"win.shape-builder-mode(1)",    N_("Shape Builder: Delete"),"Path",   N_("Remove shapes by clicking or clicking and dragging")},
-    {"win.shape-builder-replace",    N_("Replace Objects on Commit"), "Path", N_("Remove selected objects when shape builder is completed")},
+    {"win.shape-builder-replace",    N_("Replace Objects"), "Path", N_("Remove selected objects when shape building is completed")},
 
     // clang-format on
 };
