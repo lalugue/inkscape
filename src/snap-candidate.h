@@ -85,6 +85,10 @@ public:
     inline Geom::OptRect const getTargetBBox() const {return _target_bbox;}
 
     inline bool considerForAlignment() const {return _alignment;}
+
+    inline void setPoint(const Geom::Point &pt) {_point = pt;}
+    inline void movePoint(const Geom::Point &pt) {_point += pt;}
+
 private:
     // Coordinates of the point
     Geom::Point _point;

@@ -70,6 +70,8 @@ public:
     SPItem *get_original() const;
     Geom::Affine get_parent_transform() const;
     Geom::Affine get_root_transform() const;
+    bool has_xy_offset() const;
+    Geom::Translate get_xy_offset() const;
     SPItem *trueOriginal() const;
     bool anyInChain(bool (*predicate)(SPItem const *)) const;
 

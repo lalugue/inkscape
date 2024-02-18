@@ -123,13 +123,7 @@ void Inkscape::ObjectSnapper::_collectNodes(SnapSourceType const &t,
         }
 
         for (const auto & _candidate : *_snapmanager->_obj_snapper_candidates) {
-            //Geom::Affine i2doc(Geom::identity());
             SPItem *root_item = _candidate.item;
-
-            auto use = cast<SPUse>(_candidate.item);
-            if (use) {
-                root_item = use->root();
-            }
             g_return_if_fail(root_item);
 
             //Collect all nodes so we can snap to them
@@ -350,8 +344,9 @@ void Inkscape::ObjectSnapper::_collectPaths(Geom::Point /*p*/,
                             // Snap to the text baseline
                             Text::Layout const *layout = te_get_layout(static_cast<SPItem *>(root_item));
                             if (layout != nullptr && layout->outputExists()) {
+                                Geom::Affine transform = root_item->i2dt_affine() * _candidate.additional_affine * _snapmanager->getDesktop()->doc2dt();
                                 auto pv = Geom::PathVector();
-                                pv.push_back(layout->baseline() * root_item->i2dt_affine() * _candidate.additional_affine * _snapmanager->getDesktop()->doc2dt());
+                                pv.push_back(layout->baseline() * transform);
                                 _paths_to_snap_to->push_back(SnapCandidatePath(std::move(pv), SNAPTARGET_TEXT_BASELINE, Geom::OptRect()));
                             }
                         }
@@ -368,9 +363,13 @@ void Inkscape::ObjectSnapper::_collectPaths(Geom::Point /*p*/,
                         if (!very_complex_path && root_item && _snapmanager->snapprefs.isTargetSnappable(SNAPTARGET_PATH, SNAPTARGET_PATH_INTERSECTION)) {
                             if (auto const shape = cast<SPShape>(root_item)) {
                                 if (auto const curve = shape->curve()) {
+                                    Geom::Affine transform = use ? use->get_xy_offset(): Geom::Affine(); // If we're dealing with an SPUse, then account for any X/Y offset
+                                    transform *= root_item->i2dt_affine();              // Because all snapping calculations are done in desktop coordinates
+                                    transform *= _candidate.additional_affine;          // Only used for snapping to masks or clips; see SnapManager::_findCandidates()
+                                    transform *= _snapmanager->getDesktop()->doc2dt();  // Account for inverted y-axis
                                     auto pv = curve->get_pathvector();
-                                    pv *= root_item->i2dt_affine() * _candidate.additional_affine * _snapmanager->getDesktop()->doc2dt(); // (_edit_transform * _i2d_transform);
-                                    _paths_to_snap_to->push_back(SnapCandidatePath(std::move(pv), SNAPTARGET_PATH, Geom::OptRect())); // Perhaps for speed, get a reference to the Geom::pathvector, and store the transformation besides it.
+                                    pv *= transform;
+                                    _paths_to_snap_to->push_back(SnapCandidatePath(std::move(pv), SNAPTARGET_PATH, Geom::OptRect())); // Perhaps for speed, get a reference to the Geom::pathvector, and store the transformation besides it
                                 }
                             }
                         }

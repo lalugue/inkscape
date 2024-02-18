@@ -35,6 +35,7 @@
 #include "sp-shape.h"
 #include "sp-symbol.h"
 #include "sp-text.h"
+#include "snap-candidate.h"
 #include "sp-use-reference.h"
 #include "sp-use.h"
 #include "style.h"
@@ -238,19 +239,15 @@ std::optional<Geom::PathVector> SPUse::documentExactBounds() const
 }
 
 void SPUse::print(SPPrintContext* ctx) {
-    bool translated = false;
-
-    if ((this->x._set && this->x.computed != 0) || (this->y._set && this->y.computed != 0)) {
-        Geom::Affine tp(Geom::Translate(this->x.computed, this->y.computed));
-        ctx->bind(tp, 1.0);
-        translated = true;
+    if (has_xy_offset()) {
+        ctx->bind(Geom::Translate(this->x.computed, this->y.computed), 1.0);
     }
 
     if (this->child) {
         this->child->invoke_print(ctx);
     }
 
-    if (translated) {
+    if (has_xy_offset()) {
         ctx->release();
     }
 }
@@ -466,10 +463,8 @@ Geom::Affine SPUse::get_root_transform() const
         // right-side) of the transform attribute on the generated 'g', where x and y
         // represent the values of the x and y attributes on the 'use' element." - http://www.w3.org/TR/SVG11/struct.html#UseElement
         auto *i_use = cast<SPUse>(i_tem);
-        if (i_use) {
-            if ((i_use->x._set && i_use->x.computed != 0) || (i_use->y._set && i_use->y.computed != 0)) {
-                t = t * Geom::Translate(i_use->x._set ? i_use->x.computed : 0, i_use->y._set ? i_use->y.computed : 0);
-            }
+        if (i_use && i_use->has_xy_offset()) {
+            t = t * i_use->get_xy_offset();
         }
 
         t *= i_tem->transform;
@@ -485,12 +480,20 @@ Geom::Affine SPUse::get_parent_transform() const
 {
     Geom::Affine t(Geom::identity());
 
-    if ((this->x._set && this->x.computed != 0) || (this->y._set && this->y.computed != 0)) {
-        t *= Geom::Translate(this->x._set ? this->x.computed : 0, this->y._set ? this->y.computed : 0);
+    if (has_xy_offset()) {
+        t *= get_xy_offset();
     }
 
     t *= this->transform;
     return t;
+}
+
+bool SPUse::has_xy_offset() const {
+    return (this->x._set && this->x.computed != 0) || (this->y._set && this->y.computed != 0);
+}
+
+Geom::Translate SPUse::get_xy_offset() const {
+    return Geom::Translate(this->x._set ? this->x.computed : 0, this->y._set ? this->y.computed : 0);
 }
 
 /**
@@ -832,21 +835,36 @@ SPItem *SPUse::get_original() const
 {
     SPItem *ref = nullptr;
 
-        if (this->ref){
-            ref = this->ref->getObject();
-        }
+    if (this->ref){
+        ref = this->ref->getObject();
+    }
 
     return ref;
 }
 
 void SPUse::snappoints(std::vector<Inkscape::SnapCandidatePoint> &p, Inkscape::SnapPreferences const *snapprefs) const {
-    SPItem const *root = this->root();
+    SPItem const *child = this->child;
 
-    if (!root) {
+    if (!child) {
         return;
     }
 
-    root->snappoints(p, snapprefs);
+    // Collect the candidate snap points from the original item (i.e. from the child)
+    std::vector<Inkscape::SnapCandidatePoint> vec_pts;
+    child->snappoints(vec_pts, snapprefs);
+
+    // Offset these snap candidate points if the X/Y attributes have been set for this item
+    // (see https://gitlab.com/inkscape/inkscape/-/issues/2765)
+    if (has_xy_offset()) {
+        // All snappoints are in desktop coordinates, but the item's transformation is in document coordinates
+        Geom::Point offset_dt = get_xy_offset().vector() * i2dt_affine().withoutTranslation();
+        for (auto& it: vec_pts) {
+            it.movePoint(offset_dt);
+        }
+    }
+
+    // Return the offsetted snap candidate points in vector p
+    std::move(vec_pts.begin(), vec_pts.end(), std::back_inserter(p));
 }
 
 void SPUse::getLinked(std::vector<SPObject *> &objects, LinkedObjectNature direction) const
