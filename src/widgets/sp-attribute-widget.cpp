@@ -129,9 +129,10 @@ void SPAttributeTable::set_object(SPObject * const object,
         table->attach(*ee, 1, i, 1, 1);
 
         _entries.push_back(ee);
-        g_signal_connect ( ee->gobj(), "changed",
-                           G_CALLBACK (sp_attribute_table_entry_changed),
-                           this );
+
+        ee->signal_changed().connect([ee, this](){
+            sp_attribute_table_entry_changed(ee, this);
+        });
     }
 
     table->show_all();
