@@ -158,7 +158,6 @@ SPDesktopWidget::SPDesktopWidget(InkscapeWindow *inkscape_window, SPDocument *do
 
     // restore preferences
     set_toolbar_prefs();
-    apply_ctrlbar_settings();
 
     /* Canvas Grid (canvas, rulers, scrollbars, etc.) */
     // desktop widgets owns it
@@ -228,10 +227,8 @@ void SPDesktopWidget::apply_ctrlbar_settings() {
     int max = Inkscape::UI::Toolbar::max_pixel_size;
     int size = prefs->getIntLimited(Inkscape::UI::Toolbar::ctrlbars_icon_size, min, min, max);
     Inkscape::UI::set_icon_sizes(snap_toolbar, size);
-    // Causes uncertain crashes.
-    // TODO: Fix it.
-    // Inkscape::UI::set_icon_sizes(command_toolbar, size);
-    // Inkscape::UI::set_icon_sizes(tool_toolbars, size);
+    Inkscape::UI::set_icon_sizes(command_toolbar, size);
+    Inkscape::UI::set_icon_sizes(tool_toolbars, size);
 }
 
 void
