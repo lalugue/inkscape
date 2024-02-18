@@ -682,11 +682,23 @@
           </object>
         </child>
         <child type="tab">
-          <object class="GtkLabel">
+          <object class="GtkBox">
             <property name="visible">True</property>
-            <property name="tooltip-text" translatable="yes">Export a part of document</property>
-            <property name="label" translatable="yes">Single File</property>
-            <property name="justify">right</property>
+            <child>
+              <object class="GtkImage" id="single_image_icon">
+                <property name="visible">True</property>
+                <property name="valign">center</property>
+                <property name="icon-name">export-single</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">True</property>
+                <property name="tooltip-text" translatable="yes">Export a part of document</property>
+                <property name="label" translatable="yes">Single File</property>
+                <property name="justify">right</property>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="tab-expand">True</property>
@@ -1042,10 +1054,22 @@
           </packing>
         </child>
         <child type="tab">
-          <object class="GtkLabel">
+          <object class="GtkBox">
             <property name="visible">True</property>
-            <property name="tooltip-text" translatable="yes">Export to multiple files and file formats</property>
-            <property name="label" translatable="yes">Batch Export</property>
+            <child>
+              <object class="GtkImage" id="batch_export_icon">
+                <property name="visible">True</property>
+                <property name="valign">center</property>
+                <property name="icon-name">export-multi</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">True</property>
+                <property name="tooltip-text" translatable="yes">Export to multiple files and file formats</property>
+                <property name="label" translatable="yes">Batch Export</property>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="position">2</property>
