@@ -189,6 +189,9 @@ void draw_gradient(const Cairo::RefPtr<Cairo::Context>& cr, SPGradient* gradient
 
     if (gradient) {
         auto p = gradient->create_preview_pattern(width);
+        if (!p) {
+            return;
+        }
         cairo_matrix_t m;
         cairo_matrix_init_translate(&m, -x, 0);
         cairo_pattern_set_matrix(p, &m);

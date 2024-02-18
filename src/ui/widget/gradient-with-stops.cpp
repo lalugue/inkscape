@@ -27,6 +27,7 @@
 #include "ui/controller.h"
 #include "ui/cursor-utils.h"
 #include "ui/util.h"
+#include "util/object-renderer.h"
 
 // c.f. share/ui/style.css
 // gradient's image height (multiple of checkerboard tiles, they are 6x6)
@@ -124,24 +125,6 @@ void GradientWithStops::on_style_updated() {
         _cursor_dragging =  Gdk::Cursor::create(get_display(), "grabbing");
         _cursor_insert =    Gdk::Cursor::create(get_display(), "crosshair");
         wnd->set_cursor();
-    }
-}
-
-void draw_gradient(const Cairo::RefPtr<Cairo::Context>& cr, SPGradient* gradient, int x, int width) {
-    cairo_pattern_t* check = ink_cairo_pattern_create_checkerboard();
-
-    cairo_set_source(cr->cobj(), check);
-    cr->fill_preserve();
-    cairo_pattern_destroy(check);
-
-    if (gradient) {
-        auto p = gradient->create_preview_pattern(width);
-        cairo_matrix_t m;
-        cairo_matrix_init_translate(&m, -x, 0);
-        cairo_pattern_set_matrix(p, &m);
-        cairo_set_source(cr->cobj(), p);
-        cr->fill();
-        cairo_pattern_destroy(p);
     }
 }
 

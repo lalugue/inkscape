@@ -4,6 +4,7 @@
 
 #include <cairomm/refptr.h>
 #include <cairomm/surface.h>
+#include <cairomm/context.h>
 #include <gdkmm/rgba.h>
 #include <glibmm/ustring.h>
 #include <memory>
@@ -107,6 +108,12 @@ Cairo::RefPtr<Cairo::Surface> create_marker_image(
     bool no_clip,
     double scale,
     int device_scale);
+
+/**
+ * Renders a preview of a gradient into the passed context.
+ */
+void draw_gradient(const Cairo::RefPtr<Cairo::Context>& cr, SPGradient* gradient, int x, int width);
+
 
 } // namespace
 

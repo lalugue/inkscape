@@ -93,6 +93,9 @@ sp_gradient_draw(SPGradient * const gr, int const width, int const height,
 
     if (gr) {
         cairo_pattern_t *p = gr->create_preview_pattern(width);
+        if (!p) {
+            return;
+        }
         cairo_set_source(ct, p);
         cairo_paint(ct);
         cairo_pattern_destroy(p);

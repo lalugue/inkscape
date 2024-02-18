@@ -1185,16 +1185,13 @@ SPGradient::create_preview_pattern(double width)
             cairo_pattern_add_color_stop_rgba(pat, stop.offset,
               stop.color.v.c[0], stop.color.v.c[1], stop.color.v.c[2], stop.opacity);
         }
-    } else {
-
+    } else if (unsigned const num_columns = array.patch_columns()) {
         // For the moment, use the top row of nodes for preview.
-        unsigned columns = array.patch_columns();
-
-        double offset = 1.0/double(columns);
+        double offset = 1.0/double(num_columns);
 
         pat = cairo_pattern_create_linear(0, 0, width, 0);
 
-        for (unsigned i = 0; i < columns+1; ++i) {
+        for (unsigned i = 0; i < num_columns + 1; ++i) {
             SPMeshNode* node = array.node( 0, i*3 );
             cairo_pattern_add_color_stop_rgba(pat, i*offset,
               node->color.v.c[0], node->color.v.c[1], node->color.v.c[2], node->opacity);
