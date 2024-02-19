@@ -464,8 +464,9 @@ void SwatchesPanel::update_fillstroke_indicators()
                 auto [r, g, b] = c.rgb;
                 palette.colors.push_back({r / 255.0, g / 255.0, b / 255.0});
             },
-            [](...) {}
-        });
+            [](const PaletteFileData::SpacerItem&) {},
+            [](const PaletteFileData::GroupStart&) {}
+        }, c);
     }
     return palette;
 }
