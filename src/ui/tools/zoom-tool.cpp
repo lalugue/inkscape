@@ -125,13 +125,15 @@ bool ZoomTool::root_handler(CanvasEvent const &event)
         [&] (KeyPressEvent const &event) {
             switch (get_latin_keyval(event)) {
                 case GDK_KEY_Escape:
-                    if (!Rubberband::get(_desktop)->is_started()) {
-                        SelectionHelper::selectNone(_desktop);
-                    }
-
-                    Rubberband::get(_desktop)->stop();
                     xyp = {};
                     escaped = true;
+                    if (!Rubberband::get(_desktop)->is_started()) {
+                        // DANGER: this operation may switch tool and delete *this instance from under us!
+                        SelectionHelper::selectNone(_desktop);
+                    }
+                    else {
+                        Rubberband::get(_desktop)->stop();
+                    }
                     ret = true;
                     break;
 
