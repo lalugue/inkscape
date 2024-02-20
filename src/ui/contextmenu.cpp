@@ -122,7 +122,7 @@ ContextMenu::ContextMenu(SPDesktop *desktop, SPObject *object, bool hide_layers_
 
     // Get a list of items under the cursor, used for unhiding and unlocking.
     auto point_win = desktop->point() * desktop->d2w();
-    items_under_cursor = document->getItemsAtPoints(desktop->dkey, {point_win}, true, false);
+    items_under_cursor = document->getItemsAtPoints(desktop->dkey, {point_win}, true, false, 0, false);
     bool has_hidden_below_cursor = false;
     bool has_locked_below_cursor = false;
     for (auto item : items_under_cursor) {

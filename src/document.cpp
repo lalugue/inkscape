@@ -124,7 +124,6 @@ SPDocument::SPDocument() :
     current_persp3d(nullptr),
     current_persp3d_impl(nullptr),
     _parent_document(nullptr),
-    _node_cache_valid(false),
     _activexmltree(nullptr)
 {
     // This is kept here so that members are not accessed before they are initialized
@@ -1354,7 +1353,7 @@ void SPDocument::bindObjectToRepr(Inkscape::XML::Node *repr, SPObject *object)
         reprdef.erase(it);
     }
 
-    _node_cache_valid = false;
+    _node_cache.clear();
 }
 
 SPObject *SPDocument::getObjectByRepr(Inkscape::XML::Node *repr) const
@@ -1639,12 +1638,7 @@ SPItem *SPDocument::getItemFromListAtPointBottom(unsigned dkey, SPGroup *group, 
     return nullptr;
 }
 
-/**
-Turn the SVG DOM into a flat list of nodes that can be searched from top-down.
-The list can be persisted, which improves "find at multiple points" speed.
-*/
-// TODO: study add `gboolean with_groups = false` as parameter.
-void SPDocument::build_flat_item_list(unsigned int dkey, SPGroup *group, gboolean into_groups) const
+void _build_flat_item_list(std::deque<SPItem*> &cache, SPGroup *group, unsigned int dkey, bool into_groups, bool active_only)
 {
     for (auto& o: group->children) {
         if (!is<SPItem>(&o)) {
@@ -1652,14 +1646,28 @@ void SPDocument::build_flat_item_list(unsigned int dkey, SPGroup *group, gboolea
         }
 
         if (is<SPGroup>(&o) && (cast<SPGroup>(&o)->effectiveLayerMode(dkey) == SPGroup::LAYER || into_groups)) {
-            build_flat_item_list(dkey, cast<SPGroup>(&o), into_groups);
+            _build_flat_item_list(cache, cast<SPGroup>(&o), dkey, into_groups, active_only);
         } else {
             auto child = cast<SPItem>(&o);
-            if (child->isVisibleAndUnlocked(dkey)) {
-                _node_cache.push_front(child);
+            if (!active_only || child->isVisibleAndUnlocked(dkey)) {
+                cache.push_front(child);
             }
         }
     }
+}
+
+/**
+Turn the SVG DOM into a cached flat list of nodes that can be searched from top-down.
+The list can be persisted, which improves "find at multiple points" speed.
+*/
+std::deque<SPItem*> const &SPDocument::get_flat_item_list(unsigned int dkey, bool into_groups, bool active_only) const
+{
+    // Build a caching key from our inputs
+    unsigned long key = ((unsigned long)dkey << 2) | (into_groups << 1) | (active_only);
+    if (!_node_cache.count(key)) {
+        _build_flat_item_list(_node_cache[key], this->root, dkey, into_groups, active_only);
+    }
+    return _node_cache[key];
 }
 
 /**
@@ -1776,7 +1784,7 @@ std::vector<SPItem*> SPDocument::getItemsPartiallyInBox(unsigned int dkey, Geom:
     return find_items_in_area(x, this->root, dkey, box, overlaps, take_hidden, take_insensitive, take_groups, enter_groups, enter_layers);
 }
 
-std::vector<SPItem*> SPDocument::getItemsAtPoints(unsigned const key, std::vector<Geom::Point> points, bool all_layers, bool topmost_only, size_t limit) const
+std::vector<SPItem*> SPDocument::getItemsAtPoints(unsigned const key, std::vector<Geom::Point> points, bool all_layers, bool topmost_only, size_t limit, bool active_only) const
 {
     std::vector<SPItem*> result;
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
@@ -1787,12 +1795,8 @@ std::vector<SPItem*> SPDocument::getItemsAtPoints(unsigned const key, std::vecto
     gdouble saved_delta = prefs->getDouble("/options/cursortolerance/value", 1.0);
     prefs->setDouble("/options/cursortolerance/value", 0.25);
 
-    // Cache a flattened SVG DOM to speed up selection.
-    if(!_node_cache_valid){
-        _node_cache.clear();
-        build_flat_item_list(key, this->root, true);
-        _node_cache_valid=true;
-    }
+    auto &node_cache = get_flat_item_list(key, true, active_only);
+
     SPObject *current_layer = nullptr;
     SPDesktop *desktop = SP_ACTIVE_DESKTOP;
     if(desktop){
@@ -1800,7 +1804,7 @@ std::vector<SPItem*> SPDocument::getItemsAtPoints(unsigned const key, std::vecto
     }
     size_t item_counter = 0;
     for(auto point : points) {
-        std::vector<SPItem*> items = find_items_at_point(_node_cache, key, point, topmost_only);
+        std::vector<SPItem*> items = find_items_at_point(node_cache, key, point, topmost_only);
         for (SPItem *item : items) {
             if (item && result.end()==find(result.begin(), result.end(), item))
                 if(all_layers || (desktop && desktop->layerManager().layerForObject(item) == current_layer)){
@@ -1824,23 +1828,7 @@ std::vector<SPItem*> SPDocument::getItemsAtPoints(unsigned const key, std::vecto
 SPItem *SPDocument::getItemAtPoint( unsigned const key, Geom::Point const &p,
                                     bool const into_groups, SPItem *upto) const
 {
-    // Build a flattened SVG DOM for find_item_at_point.
-    decltype(_node_cache) bak;
-    if(!into_groups){
-        bak = std::move(_node_cache);
-        _node_cache.clear();
-        build_flat_item_list(key, this->root, into_groups);
-    }
-    if(!_node_cache_valid && into_groups){
-        _node_cache.clear();
-        build_flat_item_list(key, this->root, true);
-        _node_cache_valid=true;
-    }
-
-    SPItem *res = find_item_at_point(_node_cache, key, p, upto);
-    if(!into_groups)
-        _node_cache = std::move(bak);
-    return res;
+    return find_item_at_point(get_flat_item_list(key, into_groups, true), key, p, upto);
 }
 
 SPItem *SPDocument::getGroupAtPoint(unsigned int key, Geom::Point const &p) const
@@ -2285,7 +2273,7 @@ void SPDocument::_emitModified() {
     static guint const flags = SP_OBJECT_MODIFIED_FLAG | SP_OBJECT_CHILD_MODIFIED_FLAG | SP_OBJECT_PARENT_MODIFIED_FLAG;
     root->emitModified(0);
     modified_signal.emit(flags);
-    _node_cache_valid=false;
+    _node_cache.clear();
 }
 
 void

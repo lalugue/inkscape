@@ -185,6 +185,9 @@ private:
 
     std::queue<GQuark> pending_resource_changes;
 
+    // Find items by geometry --------------------
+    std::deque<SPItem*> const &get_flat_item_list(unsigned int dkey, bool into_groups, bool active_only) const;
+
 public:
     void importDefs(SPDocument *source);
 
@@ -319,13 +322,10 @@ public:
         SPDocument* _parent;
     };
 
-    // Find items by geometry --------------------
-    void build_flat_item_list(unsigned int dkey, SPGroup *group, gboolean into_groups) const;
-
     std::vector<SPItem*> getItemsInBox         (unsigned int dkey, Geom::Rect const &box, bool take_hidden = false, bool take_insensitive = false, bool take_groups = true, bool enter_groups = false, bool enter_layers = true) const;
     std::vector<SPItem*> getItemsPartiallyInBox(unsigned int dkey, Geom::Rect const &box, bool take_hidden = false, bool take_insensitive = false, bool take_groups = true, bool enter_groups = false, bool enter_layers = true) const;
     SPItem *getItemAtPoint(unsigned int key, Geom::Point const &p, bool into_groups, SPItem *upto = nullptr) const;
-    std::vector<SPItem*> getItemsAtPoints(unsigned const key, std::vector<Geom::Point> points, bool all_layers = true, bool topmost_only = true, size_t limit = 0) const;
+    std::vector<SPItem*> getItemsAtPoints(unsigned const key, std::vector<Geom::Point> points, bool all_layers = true, bool topmost_only = true, size_t limit = 0, bool active_only = true) const;
     SPItem *getGroupAtPoint(unsigned int key,  Geom::Point const &p) const;
 
     /**
@@ -416,8 +416,7 @@ private:
     std::map<Inkscape::XML::Node *, SPObject *> reprdef;
 
     // Find items by geometry --------------------
-    mutable std::deque<SPItem*> _node_cache; // Used to speed up search.
-    mutable bool _node_cache_valid;
+    mutable std::map<unsigned long, std::deque<SPItem*>> _node_cache; // Used to speed up search.
 
     // Box tool ----------------------------
     Persp3D *current_persp3d; /**< Currently 'active' perspective (to which, e.g., newly created boxes are attached) */
