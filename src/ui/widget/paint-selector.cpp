@@ -177,7 +177,7 @@ PaintSelector::PaintSelector(FillOrStroke kind)
     /* Fillrule */
     {
         _fillrulebox = Gtk::make_managed<Gtk::Box>();
-        UI::pack_end(*_style, *_fillrulebox, false, false);
+        UI::pack_end(*_style, *_fillrulebox, true, false);
 
         _evenodd = Gtk::make_managed<FillRuleRadioButton>();
         _evenodd->set_relief(Gtk::RELIEF_NONE);
