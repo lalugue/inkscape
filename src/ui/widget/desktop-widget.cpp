@@ -46,6 +46,7 @@
 #include "inkscape-window.h"
 #include "object/sp-image.h"
 #include "object/sp-namedview.h"
+#include "selection.h"
 #include "ui/builder-utils.h"
 #include "ui/dialog/dialog-container.h"
 #include "ui/dialog/dialog-multipaned.h"
@@ -164,8 +165,9 @@ SPDesktopWidget::SPDesktopWidget(InkscapeWindow *inkscape_window, SPDocument *do
     set_toolbar_prefs();
 
     /* Canvas Grid (canvas, rulers, scrollbars, etc.) */
-    // desktop widgets owns it
-    _canvas_grid = std::make_unique<Inkscape::UI::Widget::CanvasGrid>(this);
+    // DialogMultipaned owns it
+    auto cg = std::make_unique<Inkscape::UI::Widget::CanvasGrid>(this);
+    _canvas_grid = cg.get();
 
     /* Canvas */
     _canvas = _canvas_grid->GetCanvas();
@@ -183,7 +185,7 @@ SPDesktopWidget::SPDesktopWidget(InkscapeWindow *inkscape_window, SPDocument *do
 
     _canvas_grid->set_hexpand(true);
     _canvas_grid->set_vexpand(true);
-    _columns->append(*_canvas_grid.get());
+    _columns->append(std::move(cg));
 
     // ------------------ Finish Up -------------------- //
     _canvas_grid->ShowCommandPalette(false);
@@ -260,12 +262,12 @@ SPDesktopWidget::on_unrealize()
 
         _panels->setDesktop(nullptr);
 
-        _container.reset(); // will unrealize _canvas
-
         INKSCAPE.remove_desktop(_desktop.get()); // clears selection and event_context
         modified_connection.disconnect();
         _desktop->destroy();
         _desktop.reset();
+
+        _container.reset(); // will delete _canvas
     }
 
     parent_type::on_unrealize();

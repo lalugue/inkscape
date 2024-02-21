@@ -47,15 +47,15 @@ public:
     DialogMultipaned(Gtk::Orientation orientation = Gtk::Orientation::HORIZONTAL);
     ~DialogMultipaned() final;
 
-    void prepend(Gtk::Widget &child);
-    void append (Gtk::Widget &child);
+    void prepend(std::unique_ptr<Gtk::Widget> child);
+    void append (std::unique_ptr<Gtk::Widget> child);
     void remove (Gtk::Widget &child);
 
     // Getters and setters
     Gtk::Widget *get_first_widget();
     Gtk::Widget *get_last_widget ();
     void get_children() = delete; ///< We manage our own child list. Call get_multipaned_children()
-    std::vector<Gtk::Widget *> const &get_multipaned_children() const { return children; }
+    std::vector<std::unique_ptr<Gtk::Widget>> const &get_multipaned_children() const { return children; }
     void set_drop_gtypes(std::vector<GType> const &gtypes);
     bool has_empty_widget() const { return static_cast<bool>(_empty_widget); }
 
@@ -89,7 +89,7 @@ private:
     sigc::signal<void ()> _signal_now_empty;
 
     // We must manage children ourselves.
-    std::vector<Gtk::Widget *> children;
+    std::vector<std::unique_ptr<Gtk::Widget>> children;
 
     Glib::RefPtr<Gtk::DropTarget> const _drop_target;
 
@@ -119,7 +119,7 @@ private:
     // Others
     Gtk::Widget *_empty_widget; // placeholder in an empty container
     void unparent_children();
-    void insert(int pos, Gtk::Widget &child);
+    void insert(int pos, std::unique_ptr<Gtk::Widget> child);
     void add_empty_widget();
     void remove_empty_widget();
     std::vector<auto_connection> _connections;

@@ -259,9 +259,6 @@ void SPDesktop::destroy()
 {
     _destroy_signal.emit(this);
 
-    canvas->set_drawing(nullptr); // Ensures deactivation
-    canvas->set_desktop(nullptr); // Todo: Remove desktop dependency.
-
     delete_then_null(_tool);
     _snapindicator.reset();
     _temporary_item_list.reset();

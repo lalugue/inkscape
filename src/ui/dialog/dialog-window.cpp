@@ -101,12 +101,14 @@ DialogWindow::DialogWindow(InkscapeWindow *inkscape_window, Gtk::Widget *page)
     // If there is no page, create an empty Dialogwindow to be populated later
     if (page) {
         // ============= Initial Column =============
-        DialogMultipaned *column = _container->create_column();
-        columns->append(*column);
+        auto col = _container->create_column();
+        auto const column = col.get();
+        columns->append(std::move(col));
 
         // ============== New Notebook ==============
-        auto const dialog_notebook = Gtk::make_managed<DialogNotebook>(_container);
-        column->append(*dialog_notebook);
+        auto nb = std::make_unique<DialogNotebook>(_container);
+        auto const dialog_notebook = nb.get();
+        column->append(std::move(nb));
         column->set_dropzone_sizes(drop_size, drop_size);
         dialog_notebook->move_page(*page);
 

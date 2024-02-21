@@ -192,8 +192,6 @@ DialogNotebook::DialogNotebook(DialogContainer *container)
     set_visible(true);
 
     _instances.push_back(this);
-
-    signal_destroy().connect([this] { _menutabs.unparent(); });
 }
 
 DialogNotebook::~DialogNotebook()
@@ -211,6 +209,8 @@ DialogNotebook::~DialogNotebook()
     }
 
     _instances.remove(this);
+
+    _menutabs.unparent();
 }
 
 void DialogNotebook::add_highlight_header()
@@ -392,9 +392,7 @@ void DialogNotebook::close_notebook_callback()
         multipaned->remove(*this);
     } else if (get_parent()) {
         std::cerr << "DialogNotebook::close_notebook_callback: Unexpected parent!" << std::endl;
-        unparent();
     }
-    delete this;
 }
 
 /**

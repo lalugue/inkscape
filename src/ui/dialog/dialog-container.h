@@ -53,7 +53,7 @@ public:
 
     // Columns-related functions
     DialogMultipaned *get_columns() { return columns.get(); }
-    DialogMultipaned *create_column();
+    std::unique_ptr<DialogMultipaned> create_column();
 
     // Dialog-related functions
     void new_dialog(const Glib::ustring& dialog_type);
@@ -108,8 +108,8 @@ private:
 
     // Handlers
     void on_unrealize() override;
-    DialogNotebook *prepare_drop(Glib::ValueBase const &value);
-    using PrependOrAppend = void (DialogMultipaned::*)(Gtk::Widget &child);
+    std::unique_ptr<DialogNotebook> prepare_drop(Glib::ValueBase const &value);
+    using PrependOrAppend = void (DialogMultipaned::*)(std::unique_ptr<Gtk::Widget> child);
     bool take_drop              (PrependOrAppend prepend_or_append,
                                  Glib::ValueBase const &value, DialogMultipaned *column);
     bool prepend_drop           (Glib::ValueBase const &value, DialogMultipaned *column);

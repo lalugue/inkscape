@@ -98,7 +98,7 @@ public:
     SPDesktopWidget(InkscapeWindow *inkscape_window, SPDocument *document);
     ~SPDesktopWidget() final;
 
-    Inkscape::UI::Widget::CanvasGrid *get_canvas_grid()  { return _canvas_grid.get(); }  // Temp, I hope!
+    Inkscape::UI::Widget::CanvasGrid *get_canvas_grid()  { return _canvas_grid; }  // Temp, I hope!
     Inkscape::UI::Widget::Canvas     *get_canvas()       { return _canvas; }
     SPDesktop                        *get_desktop()      { return _desktop.get(); }
     InkscapeWindow             const *get_window() const { return _window; }
@@ -131,7 +131,7 @@ private:
     Inkscape::UI::Dialog::SwatchesPanel *_panels;
 
     /** A grid to display the canvas, rulers, and scrollbars. */
-    std::unique_ptr<Inkscape::UI::Widget::CanvasGrid> _canvas_grid;
+    Inkscape::UI::Widget::CanvasGrid *_canvas_grid = nullptr;
 
     unsigned int _interaction_disabled_counter = 0;
     double _dt2r;
