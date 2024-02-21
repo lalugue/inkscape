@@ -670,7 +670,9 @@ bool ToolBase::root_handler(CanvasEvent const &event)
 
         case GDK_KEY_W:
         case GDK_KEY_w:
+#ifndef __APPLE__
         case GDK_KEY_F4:
+#endif
             // Close view
             if (mod_ctrl_only(event)) {
                 sp_ui_close_view();
@@ -760,7 +762,7 @@ bool ToolBase::root_handler(CanvasEvent const &event)
         case GDK_KEY_R:
             if (mod_alt_only(event)) {
                 _desktop->rotate_grab_focus();
-                ret = true;
+                ret = false; // don't steal key events, so keyboard shortcut works, if defined
             }
             break;
 
@@ -768,7 +770,7 @@ bool ToolBase::root_handler(CanvasEvent const &event)
         case GDK_KEY_Z:
             if (mod_alt_only(event)) {
                 _desktop->zoom_grab_focus();
-                ret = true;
+                ret = false; // don't steal key events, so keyboard shortcut works, if defined
             }
             break;
 
