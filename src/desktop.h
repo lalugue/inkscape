@@ -551,9 +551,9 @@ private:
     DesktopAffine _current_affine;
     std::list<DesktopAffine> transforms_past;
     std::list<DesktopAffine> transforms_future;
-    bool _split_canvas;
-    bool _xray;
-    bool _quick_zoom_enabled; ///< Signifies that currently we're in quick zoom mode
+    bool _split_canvas = false;
+    bool _xray = false;
+    bool _quick_zoom_enabled = false; ///< Signifies that currently we're in quick zoom mode
     DesktopAffine _quick_zoom_affine;  ///< The transform of the screen before quick zoom
 
     bool _overlays_visible = true; ///< Whether the overlays are temporarily hidden
