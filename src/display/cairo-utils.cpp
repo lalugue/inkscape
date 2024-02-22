@@ -1823,6 +1823,21 @@ guint32 rgba_from_argb32(guint32 c)
     return o;
 }
 
+static constexpr uint16_t get_luminance(uint32_t r, uint32_t g, uint32_t b)
+{
+    return ((1063 * r + 3576 * g + 361 * b) * 257 + 2500) / 5000;
+}
+
+static_assert(
+    [] {
+        for (int x = 0; x < 256; x++) {
+            const uint16_t hex = 0x101 * x;
+            assert(get_luminance(x, x, x) == hex);
+        }
+        return true;
+    }(),
+    "get_luminance function doesn't produce expected luminance values");
+
 /**
  * Converts a pixbuf to a PNG data structure.
  * For 8-but RGBA png, this is like copying.
@@ -1859,9 +1874,9 @@ const guchar* pixbuf_to_png(guchar const**rows, guchar* px, int num_rows, int nu
                 a = pix0;
             }
 
-            // One of possible rgb to greyscale formulas. This one is called "luminance", "luminosity" or "luma" 
-            guint16 gray = (guint16)((guint32)((0.2126*(r<<24) + 0.7152*(g<<24) + 0.0722*(b<<24)))>>16); 
-            
+            // One of possible rgb to greyscale formulas. This one is called "luminance", "luminosity" or "luma"
+            uint16_t const gray = get_luminance(r, g, b);
+
             if (color_type & 2) { // RGB or RGBA
                 // for 8bit->16bit transition, I take the FF -> FFFF convention (multiplication by 0x101). 
                 // If you prefer FF -> FF00 (multiplication by 0x100), remove the <<8, <<24, <<40 and <<56
