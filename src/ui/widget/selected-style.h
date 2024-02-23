@@ -117,6 +117,7 @@ private:
 class SelectedStyle : public Gtk::Box
 {
 public:
+    bool dragging;
     SelectedStyle(bool layout = true);
 
     void setDesktop(SPDesktop *desktop);

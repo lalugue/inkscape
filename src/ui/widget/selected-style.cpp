@@ -131,6 +131,7 @@ static Dialog::FillAndStroke *get_fill_and_stroke_panel(SPDesktop *desktop);
 
 SelectedStyle::SelectedStyle(bool /*layout*/)
     : Gtk::Box(Gtk::ORIENTATION_HORIZONTAL)
+    , dragging(false)
 {
     set_name("SelectedStyle");
     set_size_request (SELECTED_STYLE_WIDTH, -1);
@@ -565,12 +566,11 @@ void SelectedStyle::on_stroke_edit() {
         fs->showPageStrokePaint();
 }
 
-Gtk::EventSequenceState
-SelectedStyle::on_fill_click(Gtk::GestureMultiPress const &click,
-                             int /*n_press*/, double /*x*/, double /*y*/)
+Gtk::EventSequenceState SelectedStyle::on_fill_click(Gtk::GestureMultiPress const &click, int n_press, double /*x*/,
+                                                     double /*y*/)
 {
     auto const button = click.get_current_button();
-    if (button == 1) { // click, open fill&stroke
+    if (button == 1 && !dragging) { // click, open fill&stroke
         if (Dialog::FillAndStroke *fs = get_fill_and_stroke_panel(_desktop))
             fs->showPageFill();
     } else if (button == 3) { // right-click, popup menu
@@ -585,12 +585,11 @@ SelectedStyle::on_fill_click(Gtk::GestureMultiPress const &click,
     return Gtk::EVENT_SEQUENCE_CLAIMED;
 }
 
-Gtk::EventSequenceState
-SelectedStyle::on_stroke_click(Gtk::GestureMultiPress const &click,
-                               int /*n_press*/, double /*x*/, double /*y*/)
+Gtk::EventSequenceState SelectedStyle::on_stroke_click(Gtk::GestureMultiPress const &click, int n_press, double /*x*/,
+                                                       double /*y*/)
 {
     auto const button = click.get_current_button();
-    if (button == 1) { // click, open fill&stroke
+    if (button == 1 && !dragging) { // click, open fill&stroke
         if (Dialog::FillAndStroke *fs = get_fill_and_stroke_panel(_desktop))
             fs->showPageStrokePaint();
     } else if (button == 3) { // right-click, popup menu
@@ -605,12 +604,11 @@ SelectedStyle::on_stroke_click(Gtk::GestureMultiPress const &click,
     return Gtk::EVENT_SEQUENCE_CLAIMED;
 }
 
-Gtk::EventSequenceState
-SelectedStyle::on_sw_click(Gtk::GestureMultiPress const &click,
-                           int /*n_press*/, double /*x*/, double /*y*/)
+Gtk::EventSequenceState SelectedStyle::on_sw_click(Gtk::GestureMultiPress const &click, int n_press, double /*x*/,
+                                                   double /*y*/)
 {
     auto const button = click.get_current_button();
-    if (button == 1) { // click, open fill&stroke
+    if (button == 1 && !dragging) { // click, open fill&stroke
         if (Dialog::FillAndStroke *fs = get_fill_and_stroke_panel(_desktop))
             fs->showPageStrokeStyle();
     } else if (button == 3) { // right-click, popup menu
@@ -1124,12 +1122,12 @@ RotateableSwatch::color_adjust(float *hsla, double by, guint32 cc, guint modifie
     return diff;
 }
 
-void
-RotateableSwatch::do_motion(double by, guint modifier) {
-
+void RotateableSwatch::do_motion(double by, guint modifier)
+{
     if (parent->_mode[fillstroke] != SS_COLOR) {
         return;
     }
+    parent->dragging = true;
 
     if (!scrolling && modifier != cursor_state) {
         std::string cursor_filename = "adjust_hue.svg";
@@ -1195,18 +1193,18 @@ RotateableSwatch::do_motion(double by, guint modifier) {
     }
 }
 
-
-void
-RotateableSwatch::do_scroll(double by, guint modifier) {
+void RotateableSwatch::do_scroll(double by, guint modifier)
+{
     do_motion(by/30.0, modifier);
     do_release(by/30.0, modifier);
 }
 
-void
-RotateableSwatch::do_release(double by, guint modifier) {
+void RotateableSwatch::do_release(double by, guint modifier)
+{
     if (parent->_mode[fillstroke] != SS_COLOR)
         return;
 
+    parent->dragging = false;
     float hsla[4];
     color_adjust(hsla, by, startcolor, modifier);
 
@@ -1275,9 +1273,8 @@ RotateableStrokeWidth::value_adjust(double current, double by, guint /*modifier*
     return newval - current;
 }
 
-void
-RotateableStrokeWidth::do_motion(double by, guint modifier) {
-
+void RotateableStrokeWidth::do_motion(double by, guint modifier)
+{
     // if this is the first motion after a mouse grab, remember the current width
     if (!startvalue_set) {
         startvalue = parent->current_stroke_width;
@@ -1287,6 +1284,7 @@ RotateableStrokeWidth::do_motion(double by, guint modifier) {
             startvalue = 1;
         startvalue_set = true;
     }
+    parent->dragging = true;
 
     if (modifier == 3) { // Alt, do nothing
     } else {
@@ -1296,8 +1294,9 @@ RotateableStrokeWidth::do_motion(double by, guint modifier) {
     }
 }
 
-void
-RotateableStrokeWidth::do_release(double by, guint modifier) {
+void RotateableStrokeWidth::do_release(double by, guint modifier)
+{
+    parent->dragging = false;
 
     if (modifier == 3) { // do nothing
 
@@ -1315,9 +1314,10 @@ RotateableStrokeWidth::do_release(double by, guint modifier) {
     parent->getDesktop()->getTool()->message_context->clear();
 }
 
-void
-RotateableStrokeWidth::do_scroll(double by, guint modifier) {
+void RotateableStrokeWidth::do_scroll(double by, guint modifier)
+{
     do_motion(by/10.0, modifier);
+    do_release(by / 10.0, modifier);
     startvalue_set = false;
 }
 
