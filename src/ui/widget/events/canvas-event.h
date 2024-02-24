@@ -364,7 +364,13 @@ inline bool mod_alt_only(KeyEvent const &event) { return mod_alt_only(event.modi
  */
 
 /// All modifiers used by Inkscape.
+#if __APPLE__
+    // all four modifiers used on macOS: shift | ctrl | alt | cmd
+inline constexpr auto INK_GDK_MODIFIER_MASK_HELD = GDK_SHIFT_MASK | GDK_CONTROL_MASK | GDK_MOD1_MASK | GDK_MOD2_MASK;
+#else
+    // otherwise: shift | ctrl | alt
 inline constexpr auto INK_GDK_MODIFIER_MASK_HELD = GDK_SHIFT_MASK | GDK_CONTROL_MASK | GDK_MOD1_MASK;
+#endif
 
 inline bool state_held_shift(unsigned state) { return state & GDK_SHIFT_MASK; }
 inline bool state_held_ctrl(unsigned state) { return state & GDK_CONTROL_MASK; }
