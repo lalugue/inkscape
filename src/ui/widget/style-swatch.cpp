@@ -58,32 +58,32 @@ void style_obs_callback(StyleSwatch &_style_swatch, Preferences::Entry const &va
  */
 void tool_obs_callback(StyleSwatch &_style_swatch, Preferences::Entry const &val)
 {
-    bool usecurrent = val.getBool();
-
-    _style_swatch._style_obs.reset();
-
+    auto const prefs = Preferences::get();
     Glib::ustring path;
-    auto callback = sigc::bind<0>(&style_obs_callback, std::ref(_style_swatch));
+    SPCSSAttr *css = nullptr;
 
+    bool usecurrent = val.getBool();
     if (usecurrent) {
-        // If desktop's last-set style is empty, a tool uses its own fixed style even if set to use
-        // last-set (so long as it's empty). To correctly show this, we get the tool's style
-        // if the desktop's style is empty.
-        auto const prefs = Preferences::get();
-        SPCSSAttr *css = prefs->getStyle("/desktop/style");
-        const auto & al = css->attributeList();
-        if (al.empty()) {
-            SPCSSAttr *css2 = prefs->getInheritedStyle(_style_swatch._tool_path + "/style");
-            _style_swatch.setStyle(css2);
-            sp_repr_css_attr_unref(css2);
-        }
-        sp_repr_css_attr_unref(css);
-
         path = "/desktop/style";
-    } else {
-        path = _style_swatch._tool_path + "/style";
+        css = prefs->getStyle(path);
+        const auto &al = css->attributeList();
+        if (al.empty()) {
+            // Fallback to own style if desktop style empty (does this ever happen?).
+            sp_repr_css_attr_unref(css);
+            css = nullptr;
+        }
     }
 
+    if (!css) {
+        path = _style_swatch._tool_path + "/style";
+        css = prefs->getInheritedStyle(path);
+    }
+
+    // Set style at least once.
+    _style_swatch.setStyle(css);
+    sp_repr_css_attr_unref(css);
+
+    auto callback = sigc::bind<0>(&style_obs_callback, std::ref(_style_swatch));
     _style_swatch._style_obs = StyleSwatch::PrefObs::create(std::move(path), std::move(callback));
 }
 
