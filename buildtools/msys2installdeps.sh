@@ -137,33 +137,4 @@ for arch in $(eval echo $ARCH); do
 done
 
 
-# gettext hack - to remove once gettext has the match
-function hack_libintl(){
-f=/$1/include/libintl.h
-sed -i '/^extern int sprintf/a #ifdef __cplusplus\nnamespace std { using ::libintl_sprintf; }\n#endif' $f
-cat $f
-}
-
-case "$MSYSTEM" in
-  MINGW32)
-    hack_libintl mingw32
-    ;;
-  MINGW64)
-    hack_libintl mingw64
-    ;;
-  UCRT64)
-    hack_libintl ucrt64
-    ;;
-  CLANG64)
-    hack_libintl clang64
-    ;;
-  CLANGARM64)
-    hack_libintl clangarm64
-    ;;
-  *)
-    hack_libintl mingw32
-    hack_libintl mingw64
-    ;;
-esac
-
 echo "Done :-)"
