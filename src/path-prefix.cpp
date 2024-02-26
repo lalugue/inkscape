@@ -49,17 +49,19 @@ static std::string _get_bundle_prefix_dir()
     char const *program_dir = get_program_dir();
     auto prefix = Glib::path_get_dirname(program_dir);
 
+#if defined(__APPLE__)
     if (g_str_has_suffix(program_dir, "Contents/MacOS")) {
         // macOS
         prefix += "/Resources";
-    } else if (Glib::path_get_basename(program_dir) == "bin") {
-        // Windows, Linux
-    } else if (Glib::path_get_basename(prefix) == "lib") {
-        // AppImage
-        // program_dir=appdir/lib/x86_64-linux-gnu
-        // prefix_dir=appdir/usr
-        prefix = Glib::build_filename(Glib::path_get_dirname(prefix), "usr");
     }
+#elif defined(__linux__)
+    if (g_str_has_suffix(program_dir, "/lib64")) {
+        // AppImage
+        // program_dir=appdir/lib64
+        // prefix_dir=appdir/usr
+        prefix = Glib::build_filename(prefix, "usr");
+    }
+#endif
 
     return prefix;
 }
