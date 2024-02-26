@@ -1663,11 +1663,14 @@ The list can be persisted, which improves "find at multiple points" speed.
 std::deque<SPItem*> const &SPDocument::get_flat_item_list(unsigned int dkey, bool into_groups, bool active_only) const
 {
     // Build a caching key from our inputs
-    unsigned long key = ((unsigned long)dkey << 2) | (into_groups << 1) | (active_only);
-    if (!_node_cache.count(key)) {
-        _build_flat_item_list(_node_cache[key], this->root, dkey, into_groups, active_only);
+    using key_t = decltype(_node_cache)::key_type;
+    auto const key = (key_t{dkey} << 2) | (into_groups << 1) | active_only;
+
+    auto const [it, inserted] = _node_cache.try_emplace(key);
+    if (inserted) {
+        _build_flat_item_list(it->second, root, dkey, into_groups, active_only);
     }
-    return _node_cache[key];
+    return it->second;
 }
 
 /**
