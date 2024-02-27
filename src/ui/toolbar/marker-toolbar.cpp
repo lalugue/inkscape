@@ -13,11 +13,17 @@
 
 #include "marker-toolbar.h"
 
+#include <gtkmm/box.h>
+
+#include "ui/builder-utils.h"
+
 namespace Inkscape::UI::Toolbar {
 
 MarkerToolbar::MarkerToolbar(SPDesktop *desktop)
     : Toolbar(desktop)
+    , _builder(create_builder("toolbar-marker.ui"))
 {
+    _toolbar = &get_widget<Gtk::Box>(_builder, "marker-toolbar");
 }
 
 } // namespace Inkscape::UI::Toolbar

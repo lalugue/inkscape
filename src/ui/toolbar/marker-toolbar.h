@@ -14,6 +14,8 @@
 #ifndef SEEN_MARKER_TOOLBAR_H
 #define SEEN_MARKER_TOOLBAR_H
 
+#include <gtkmm/builder.h>
+
 #include "toolbar.h"
 
 namespace Inkscape::UI::Toolbar {
@@ -22,6 +24,9 @@ class MarkerToolbar final : public Toolbar
 {
 public:
     MarkerToolbar(SPDesktop *desktop);
+
+private:
+    Glib::RefPtr<Gtk::Builder> _builder;
 };
 
 } // namespace Inkscape::UI::Toolbar
