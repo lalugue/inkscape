@@ -18,14 +18,12 @@
 #include <algorithm>
 #include <glibmm/i18n.h>
 
-#include "bad-uri-exception.h"
 #include "helper/geom.h"
+#include "path/path-util.h"
 #include "svg/svg.h"
 #include "svg/svg-color.h"
 #include "print.h"
-#include "display/curve.h"
 #include "display/drawing-item.h"
-#include "display/drawing-pattern.h"
 #include "attributes.h"
 #include "document.h"
 
@@ -38,7 +36,6 @@
 #include "filter-chemistry.h"
 
 #include "sp-clippath.h"
-#include "sp-defs.h"
 #include "sp-desc.h"
 #include "sp-guide.h"
 #include "sp-hatch.h"
@@ -104,6 +101,63 @@ SPItem::~SPItem() = default;
 SPClipPath *SPItem::getClipObject() const
 {
     return clip_ref ? clip_ref->getObject() : nullptr;
+}
+
+/**
+ * Return the path vector of the clipping region.
+ *
+ * @return The clip, or none if no clip.
+ */
+std::optional<Geom::PathVector> SPItem::getClipPathVector() const
+{
+    if (auto clip = getClipObject()) {
+        return clip->getPathVector(Geom::identity());
+    } else {
+        return {};
+    }
+}
+
+/**
+ * Return the path vector of the clipping region, combined with the clipping
+ * regions of all groups containing this object up to and including \a root.
+ *
+ * @arg root The root to combine clipping regions from.
+ * @return The clip, or none if no clip.
+*/
+std::optional<Geom::PathVector> SPItem::getClipPathVector(SPItem const *root) const
+{
+    auto intersection = getClipPathVector();
+
+    auto cumulative_transform = transform.inverse();
+
+    // Traverse ancestors from parent to root inclusive.
+    for (auto anc = parent; ; anc = anc->parent) {
+        if (!anc) {
+            std::cerr << "SPItem::getClipPathVector: precondition violation: root specified but not an ancestor" << std::endl;
+            break;
+        }
+
+        // Bail out if fully clipped.
+        if (intersection && intersection->empty()) {
+            return intersection;
+        }
+
+        auto const anc_item = cast<SPItem>(anc);
+        assert(anc_item);
+
+        // Combine with clip of ancestor.
+        if (auto clip = anc_item->getClipObject()) {
+            intersection = intersect_clips(std::move(intersection), clip->getPathVector(cumulative_transform));
+        }
+
+        if (anc == root) {
+            break;
+        }
+
+        cumulative_transform = anc_item->transform.inverse() * cumulative_transform;
+    }
+
+    return intersection;
 }
 
 SPMask *SPItem::getMaskObject() const

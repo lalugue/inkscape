@@ -17,7 +17,6 @@
 #include <2geom/affine.h>
 #include <2geom/rect.h>
 #include <2geom/transforms.h>
-#include "helper/geom.h"
 
 extern "C" {
 typedef struct _cairo cairo_t;

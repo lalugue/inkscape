@@ -16,9 +16,7 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include <memory>
 #include <vector>
-#include <cstdio>
 #include <2geom/rect.h>
 
 #include "object-view.h"

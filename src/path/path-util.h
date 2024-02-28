@@ -143,6 +143,11 @@ std::optional<Path::cut_position> get_nearest_position_on_Path(Path *path, Geom:
  */
 Geom::Point get_point_on_Path(Path *path, int piece, double t);
 
+/**
+ * Intersect two clips, treating empty optionals as no clip.
+ */
+std::optional<Geom::PathVector> intersect_clips(std::optional<Geom::PathVector> &&a, std::optional<Geom::PathVector> &&b);
+
 #endif // PATH_UTIL_H
 
 /*

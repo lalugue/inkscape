@@ -43,21 +43,23 @@ BooleanBuilder::BooleanBuilder(ObjectSet *set, bool flatten)
     // Current state of all the items
     _work_items = (flatten ? SubItem::build_flatten : SubItem::build_mosaic)(set->items_vector());
 
-    auto root = _set->desktop()->getCanvas()->get_canvas_item_root();
-    _group = make_canvasitem<CanvasItemGroup>(root);
+    if (_set->desktop()) {
+        auto root = _set->desktop()->getCanvas()->get_canvas_item_root();
+        _group = make_canvasitem<CanvasItemGroup>(root);
 
-    // Build some image screen items
-    for (auto &subitem : _work_items) {
-        if (!subitem->is_image())
-            continue;
-        // Somehow show the image to the user.
-    }
+        // Build some image screen items
+        for (auto &subitem : _work_items) {
+            if (!subitem->is_image())
+                continue;
+            // Somehow show the image to the user.
+        }
 
-    auto nv = _set->desktop()->getNamedView();
-    desk_modified_connection = nv->connectModified([=](SPObject *obj, guint flags) {
+        auto nv = _set->desktop()->getNamedView();
+        desk_modified_connection = nv->connectModified([=](SPObject *obj, guint flags) {
+            redraw_items();
+        });
         redraw_items();
-    });
-    redraw_items();
+    }
 }
 
 BooleanBuilder::~BooleanBuilder() = default;
@@ -83,6 +85,10 @@ void BooleanBuilder::redraw_item(CanvasItemBpath &bpath, bool selected, TaskType
  */
 void BooleanBuilder::redraw_items()
 {
+    if (!_set->desktop()) {
+        return;
+    }
+
     auto nv = _set->desktop()->getNamedView();
     _dark = SP_RGBA32_LUMINANCE(nv->desk_color) < 100;
 
@@ -256,6 +262,10 @@ std::vector<SPObject *> BooleanBuilder::shape_commit(bool all, bool replace)
             continue;
         }
         auto parent = cast<SPItem>(root->parent);
+        if (!parent) {
+            g_warning("Can't generate top-most object in boolean-builder.");
+            continue;
+        }
 
         Inkscape::XML::Node *repr = xml_doc->createElement("svg:path");
         repr->setAttribute("d", sp_svg_write_path(subitem->get_pathv() * parent->dt2i_affine()));
