@@ -111,6 +111,10 @@ $ARCH-python-chardet \
 $ARCH-python-certifi \
 $ARCH-python-requests
 
+# install packages for testing Inkscape
+eval pacman -S $PACMAN_OPTIONS \
+$ARCH-gtest
+
 # install Python modules not provided as MSYS2/MinGW packages
 PACKAGES=""
 for arch in $(eval echo $ARCH); do
