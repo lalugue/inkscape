@@ -59,6 +59,7 @@
 #include "object/sp-grid.h"
 #include "object/sp-root.h"
 #include "object/sp-script.h"
+#include "streq.h"
 #include "ui/dialog/filedialog.h"
 #include "ui/icon-loader.h"
 #include "ui/icon-names.h"
@@ -1091,6 +1092,9 @@ void DocumentProperties::build_metadata()
     label->set_halign(Gtk::ALIGN_START);
     label->set_valign(Gtk::ALIGN_CENTER);
     _page_metadata1->table().attach (*label, 0,0,2,1);
+    // allow grid to stretch
+    _page_metadata1->table().set_valign(Gtk::ALIGN_FILL);
+    _page_metadata1->table().set_vexpand_set(false);
 
      /* add generic metadata entry areas */
     int row = 1;
@@ -1104,6 +1108,11 @@ void DocumentProperties::build_metadata()
 
             w->_packable->set_hexpand();
             w->_packable->set_valign(Gtk::ALIGN_CENTER);
+            if (streq(entity->name, "description")) {
+                // expand description edit box if there is space
+                w->_packable->set_valign(Gtk::ALIGN_FILL);
+                w->_packable->set_vexpand();
+            }
             _page_metadata1->table().attach(*w->_packable, 1, row, 1, 1);
 
             _rdflist.push_back(std::move(w));
@@ -1119,6 +1128,8 @@ void DocumentProperties::build_metadata()
     UI::pack_end(*box_buttons, *button_save, true, true, 6);
     UI::pack_end(*box_buttons, *button_load, true, true, 6);
     UI::pack_end(*_page_metadata1, *box_buttons, false, false);
+    box_buttons->set_halign(Gtk::ALIGN_END);
+    box_buttons->set_homogeneous();
 
     button_save->signal_clicked().connect(sigc::mem_fun(*this, &DocumentProperties::save_default_metadata));
     button_load->signal_clicked().connect(sigc::mem_fun(*this, &DocumentProperties::load_default_metadata));
