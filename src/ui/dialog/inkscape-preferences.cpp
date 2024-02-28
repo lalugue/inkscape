@@ -2060,6 +2060,7 @@ void InkscapePreferences::initPageUI()
             auto path = picker.visibility_path;
             btn->set_active(prefs->getBool(path));
             btn->add(*box);
+            btn->set_relief(Gtk::RELIEF_NONE);
 
             btn->signal_toggled().connect([=, path = std::move(path)]() {
                 prefs->setBool(path, btn->get_active());
