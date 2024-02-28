@@ -18,12 +18,14 @@
 #ifndef SEEN_FILE_DIALOG_IMPL_GTKMM_H
 #define SEEN_FILE_DIALOG_IMPL_GTKMM_H
 
+#include <gtkmm/checkbutton.h>
 #include <vector>
 #include <giomm/file.h>
 #include <glibmm/ustring.h>
 #include <gtkmm/filechooserdialog.h>
 
 #include "filedialog.h"
+#include "ui/dialog/svg-preview.h"
 
 namespace Gtk {
 class Entry;
@@ -119,6 +121,12 @@ private:
      *  Create a filter menu for this type of dialog
      */
     void createFilterMenu();
+
+#if true // for v1.4
+    void updatePreviewCallback();
+    SVGPreview _preview;
+    Gtk::CheckButton previewCheckbox;
+#endif
 };
 
 //########################################################################

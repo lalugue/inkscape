@@ -25,6 +25,7 @@
 #include <glibmm/i18n.h>
 #include <glibmm/miscutils.h>
 #include <glibmm/stringutils.h>
+#include <glibmm/ustring.h>
 
 #include "extension/db.h"
 #include "extension/input.h"
@@ -146,7 +147,59 @@ FileOpenDialogImplGtk::FileOpenDialogImplGtk(Gtk::Window &parentWindow, const st
         add_shortcut_folder(examplesdir);
         // add_shortcut_folder(Gio::File::create_for_path(examplesdir)); // Gtk4
     }
+
+#if true // for v1.4
+    // Open executable file dialogs don't need the preview panel
+    if (_dialogType != EXE_TYPES) {
+        Glib::ustring preferenceBase = "/dialogs/file-open";
+        Inkscape::Preferences *prefs = Inkscape::Preferences::get();
+        bool enablePreview   = prefs->getBool(preferenceBase + "/enable_preview", true);
+
+        previewCheckbox.set_label(Glib::ustring(_("Enable preview")));
+        previewCheckbox.set_active(enablePreview);
+        set_extra_widget(previewCheckbox);
+
+        previewCheckbox.signal_toggled().connect([=,this](){
+            updatePreviewCallback();
+            prefs->setBool(preferenceBase + "/enable_preview", previewCheckbox.get_active());
+        });
+
+        // Catch selection-changed events, so we can adjust the text widget
+        signal_update_preview().connect([this](){
+            updatePreviewCallback();
+        });
+
+        //###### Add a preview widget
+        set_preview_widget(_preview);
+        set_preview_widget_active(enablePreview);
+        set_use_preview_label(false);
+    }
+#endif
 }
+
+#if true // for v1.4
+/**
+ * Callback for checking if the preview needs to be redrawn
+ */
+void FileOpenDialogImplGtk::updatePreviewCallback() {
+    bool enabled = previewCheckbox.get_active();
+
+    set_preview_widget_active(enabled);
+
+    if (!enabled) return;
+
+    Glib::ustring fileName = get_preview_filename();
+    if (fileName.empty()) {
+        fileName = get_preview_uri();
+    }
+
+    if (!fileName.empty()) {
+        _preview.set(fileName, _dialogType);
+    } else {
+        _preview.showNoPreview();
+    }
+}
+#endif
 
 void FileOpenDialogImplGtk::createFilterMenu()
 {

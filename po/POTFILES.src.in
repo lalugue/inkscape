@@ -323,6 +323,7 @@ ${_build_dir}/share/templates/templates.h
 ../src/ui/dialog/startup.cpp
 ../src/ui/dialog/styledialog.cpp
 ../src/ui/dialog/svg-fonts-dialog.cpp
+../src/ui/dialog/svg-preview.cpp
 ../src/ui/dialog/swatches.cpp
 ../src/ui/dialog/symbols.cpp
 ../src/ui/dialog/text-edit.cpp

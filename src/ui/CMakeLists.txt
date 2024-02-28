@@ -163,6 +163,7 @@ set(ui_SRC
 	dialog/startup.cpp
 	dialog/styledialog.cpp
 	dialog/svg-fonts-dialog.cpp
+	dialog/svg-preview.cpp
 	dialog/swatches.cpp
 	dialog/symbols.cpp
 	dialog/paint-servers.cpp
@@ -362,6 +363,7 @@ set(ui_SRC
 	dialog/startup.h
 	dialog/styledialog.h
 	dialog/svg-fonts-dialog.h
+	dialog/svg-preview.h
 	dialog/swatches.h
 	dialog/symbols.h
 	dialog/paint-servers.h
