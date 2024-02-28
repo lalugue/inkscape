@@ -270,7 +270,7 @@ ExtensionsGallery::ExtensionsGallery(ExtensionsGallery::Type type) :
     _image_cache(1000), // arbitrary limit for how many rendered thumbnails to keep around
     _type(type)
 {
-    _run_label = _type == Effects ? _run.get_label() : _("_Apply");
+    _run_label = _type == Effects ? get_widget<Gtk::Label>(_builder, "run-label").get_label() : _("_Apply");
     if (_type == Filters) {
         get_widget<Gtk::Label>(_builder, "header").set_label(_("Select filter to apply:"));
     }
