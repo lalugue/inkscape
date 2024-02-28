@@ -12,6 +12,7 @@
  */
 
 #include "path-util.h"
+#include "path/path-boolop.h"
 #include "text-editing.h"
 #include "livarot/Path.h"
 #include "display/curve.h"
@@ -119,6 +120,15 @@ Geom::Point get_point_on_Path(Path *path, int piece, double t)
     Geom::Point p;
     path->PointAt(piece, t, p);
     return p;
+}
+
+std::optional<Geom::PathVector> intersect_clips(std::optional<Geom::PathVector> &&a, std::optional<Geom::PathVector> &&b)
+{
+    if (!a) return std::move(b);
+    if (!b) return std::move(a);
+    if (a->empty()) return std::move(a);
+    if (b->empty()) return std::move(b);
+    return sp_pathvector_boolop(*a, *b, bool_op_inters, fill_nonZero, fill_nonZero, true);
 }
 
 /*

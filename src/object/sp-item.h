@@ -143,6 +143,9 @@ public:
     SPClipPathReference &getClipRef();
     SPMaskReference &getMaskRef();
 
+    std::optional<Geom::PathVector> getClipPathVector() const;
+    std::optional<Geom::PathVector> getClipPathVector(SPItem const *root) const;
+
     SPAvoidRef &getAvoidRef();
     std::vector<std::pair <Glib::ustring, Glib::ustring> > rootsatellites;
 

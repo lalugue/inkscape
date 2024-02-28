@@ -90,9 +90,9 @@ static void extract_pathvectors_recursive(SPItem *root, SPItem *item, Pathvector
             }
         }
     } else if (auto img = cast<SPImage>(item)) {
-        if (auto clip = img->getClipObject()) {
-            // This needs to consume the clipping region because get_curse is empty in this case
-            result.emplace_back(clip->getPathVector(transform), root, item);
+        if (auto clip = img->getClipPathVector(root)) {
+            // This needs to use the clipping region because get_curve is empty in this case
+            result.emplace_back(*clip * transform, root, item);
         } else {
             result.emplace_back(img->get_curve()->get_pathvector() * transform, root, item);
         }
@@ -103,10 +103,10 @@ static void extract_pathvectors_recursive(SPItem *root, SPItem *item, Pathvector
     } else if (auto text = cast<SPText>(item)) {
         result.emplace_back(text->getNormalizedBpath().get_pathvector() * transform, root, item);
     } else if (auto use = cast<SPUse>(item)) {
-        auto clip = use->getClipObject();
+        auto clip = use->getClipPathVector(root);
         if (clip && is<SPImage>(use->get_original())) {
             // A clipped clone of an image is consumed as a single object
-            result.emplace_back(clip->getPathVector(transform), root, item);
+            result.emplace_back(*clip * transform, root, item);
         } else if (use->child) {
             extract_pathvectors_recursive(root, use->child, result, use->child->transform * Geom::Translate(use->x.computed, use->y.computed) * transform);
         }

@@ -71,6 +71,7 @@ set(TEST_SOURCES
     color-profile-test
     dir-util-test
     oklab-color-test
+    sp-item-test
     sp-object-test
     sp-object-tags-test
     object-links-test
