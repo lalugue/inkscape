@@ -207,7 +207,7 @@ bool ArcTool::root_handler(CanvasEvent const &event)
                         sp_event_show_modifier_tip(defaultMessageContext(), event,
                                                    _("<b>Ctrl</b>: make circle or integer-ratio ellipse, snap arc/segment angle"),
                                                    _("<b>Shift</b>: draw around the starting point"),
-                                                   nullptr);
+                                                   _("<b>Alt</b>: snap ellipse to mouse pointer"));
                     }
                     break;
 
@@ -301,6 +301,7 @@ void ArcTool::drag(Geom::Point const &pt, unsigned state)
     auto confine = Modifiers::Modifier::get(Modifiers::Type::TRANS_CONFINE)->active(state);
     // Third is weirdly wrong, surely incrememnts should do something else.
     auto circle_edge = Modifiers::Modifier::get(Modifiers::Type::TRANS_INCREMENT)->active(state);
+    auto off_center = Modifiers::Modifier::get(Modifiers::Type::TRANS_OFF_CENTER)->active(state);
 
     Geom::Rect r = Inkscape::snap_rectangular_box(_desktop, arc.get(), pt, this->center, state);
 
@@ -320,11 +321,17 @@ void ArcTool::drag(Geom::Point const &pt, unsigned state)
                 r = Geom::Rect (c - lambda*dir, c + lambda*dir);
             }
         } else {
-            /* with Alt+Ctrl (without Shift) we generate a perfect circle
-               with diameter click point <--> mouse pointer */
-                double l = dir.length();
-                Geom::Point d (l, l);
-                r = Geom::Rect (c - d, c + d);
+            /* with Alt+Ctrl we generate a perfect circle, shift decides if initial click is centre or end of diameter */
+            if (off_center) {
+                r = Geom::Rect((2 * center) - pt, pt);
+            } else {
+                r = Geom::Rect(center, pt);
+            }
+            dir = r.dimensions()/2;
+            c = r.midpoint();
+            double l = dir.length();
+            Geom::Point d (l, l);
+            r = Geom::Rect (c - d, c + d);
         }
     }
 

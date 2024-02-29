@@ -223,7 +223,7 @@ bool RectTool::root_handler(CanvasEvent const &event)
                         sp_event_show_modifier_tip(defaultMessageContext(), event,
                                                    _("<b>Ctrl</b>: make square or integer-ratio rect, lock a rounded corner circular"),
                                                    _("<b>Shift</b>: draw around the starting point"),
-                                                   nullptr);
+                                                   _("<b>Alt</b>: use with Ctrl to make square"));
                     }
                     break;
                 case GDK_KEY_x:
