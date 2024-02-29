@@ -194,6 +194,7 @@ private:
     bool select_row( Glib::RefPtr<Gtk::TreeModel> const & model, Gtk::TreeModel::Path const & path, bool b );
 
     void drag_end_impl();
+    Glib::RefPtr<Gdk::ContentProvider> on_prepare(Gtk::DragSource const &controller, double x, double y);
     void on_drag_begin(Gtk::DragSource const &controller, Glib::RefPtr<Gdk::Drag> const &drag);
     void on_drag_end  (Gtk::DragSource const &controller, Glib::RefPtr<Gdk::Drag> const &drag,
                        bool delete_data);
@@ -218,6 +219,9 @@ private:
     std::map<SPBlendMode, Gtk::CheckButton *> _blend_items;
     std::map<SPBlendMode, Glib::ustring> _blend_mode_names;
     Inkscape::UI::Widget::ImageToggler* _item_state_toggler;
+
+    // Need to save as controllers are 'const' in callbacks.
+    Gtk::DragSource* drag_source = nullptr;
 
     // Special column dragging mode
     Gtk::TreeViewColumn* _drag_column = nullptr;
