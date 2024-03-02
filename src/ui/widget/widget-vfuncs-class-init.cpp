@@ -124,7 +124,7 @@ gboolean WidgetVfuncsClassInit::_focus(GtkWidget * const widget,
     // If it returns, itʼs more complex. Use nullopt for ‘donʼt really override’
     // – avoiding sublasses having to state whether they override for each vfunc
     if (self) {
-        if (auto const optional = self->focus(Gtk::DirectionType{direction})) {
+        if (auto const optional = self->focus(static_cast<Gtk::DirectionType>(direction))) {
             return *optional;
         }
     }

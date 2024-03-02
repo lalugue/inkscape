@@ -15,6 +15,7 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#include <gdkmm/enums.h>
 #include <utility>
 #include <gdk/gdk.h>
 #include <sigc++/functors/mem_fun.h>
@@ -159,7 +160,7 @@ InkScale::on_motion_motion(GtkEventControllerMotion const * const motion, double
     }
 
     auto const cstate = gtk_event_controller_get_current_event_state(GTK_EVENT_CONTROLLER(motion));
-    auto const state = Gdk::ModifierType{cstate};
+    auto const state = Gdk::ModifierType{static_cast<Gdk::ModifierType>(cstate)};
     if (!Controller::has_flag(state, Gdk::ModifierType::ALT_MASK)) {
         // Absolute change
         auto const constrained = get_constrained(state);
