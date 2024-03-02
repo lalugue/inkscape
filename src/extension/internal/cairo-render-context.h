@@ -34,13 +34,11 @@ typedef struct _PangoLayout PangoLayout;
 namespace Inkscape {
 class Pixbuf;
 
-namespace Extension {
-namespace Internal {
+namespace Extension::Internal {
 
 class CairoRenderer;
 class CairoRenderContext;
 struct CairoRenderState;
-struct CairoGlyphInfo;
 
 // Holds info for rendering a glyph
 struct CairoGlyphInfo {
@@ -50,43 +48,40 @@ struct CairoGlyphInfo {
 };
 
 struct CairoRenderState {
-    unsigned int merge_opacity : 1;     // whether fill/stroke opacity can be mul'd with item opacity
-    unsigned int need_layer : 1;        // whether object is masked, clipped, and/or has a non-zero opacity
-    unsigned int has_overflow : 1;
-    unsigned int parent_has_userspace : 1;  // whether the parent's ctm should be applied
-    float opacity;
-    bool has_filtereffect;
-    Geom::Affine item_transform;     // this item's item->transform, for correct clipping
+    unsigned merge_opacity        : 1 = true;   ///< whether fill/stroke opacity can be mul'd with item opacity
+    unsigned need_layer           : 1 = false;  ///< whether object is masked, clipped, and/or has a non-zero opacity
+    unsigned has_overflow         : 1 = false;
+    unsigned parent_has_userspace : 1 = false;  ///< whether the parent's ctm should be applied
+    unsigned has_filtereffect     : 1 = false;
 
-    SPClipPath *clip_path;
-    SPMask* mask;
+    float opacity = 1.0;
+    Geom::Affine item_transform;  ///< this item's item->transform, for correct clipping
 
-    Geom::Affine transform;     // the CTM
-};
+    SPClipPath *clip_path = nullptr;
+    SPMask* mask = nullptr;
 
-// Metadata to set on the cairo surface (if the surface supports it)
-struct CairoRenderContextMetadata {
-    Glib::ustring title = "";
-    Glib::ustring author = "";
-    Glib::ustring subject = "";
-    Glib::ustring keywords = "";
-    Glib::ustring copyright = "";
-    Glib::ustring creator = "";
-    Glib::ustring cdate = ""; // currently unused
-    Glib::ustring mdate = ""; // currently unused
+    Geom::Affine transform;  /// the current transform matrix
 };
 
 class CairoRenderContext {
     friend class CairoRenderer;
 public:
-    CairoRenderContext *cloneMe() const;
-    CairoRenderContext *cloneMe(double width, double height) const;
-    bool finish(bool finish_surface = true);
-    bool finishPage();
-    bool nextPage(double width, double height, char const *label);
+    // Constructor is private: only a CairoRenderer can create a new context.
+    ~CairoRenderContext();
 
-    CairoRenderer *getRenderer() const;
-    cairo_t *getCairoContext() const;
+    CairoRenderContext(CairoRenderContext const &other) = delete; // We hold a FILE handle
+    CairoRenderContext(CairoRenderContext &&other);
+
+    CairoRenderContext &operator=(CairoRenderContext const &other) = delete;
+    CairoRenderContext &operator=(CairoRenderContext &&other);
+
+    /* Rendering methods */
+    enum CairoPaintOrder {
+        STROKE_OVER_FILL,
+        FILL_OVER_STROKE,
+        FILL_ONLY,
+        STROKE_ONLY
+    };
 
     enum CairoRenderMode {
         RENDER_MODE_NORMAL,
@@ -98,24 +93,31 @@ public:
         CLIP_MODE_MASK
     };
 
+    CairoRenderContext createSimilar(double width, double height) const;
+    bool finish(bool finish_surface = true);
+    bool finishPage();
+    bool nextPage(double width, double height, char const *label);
+
+    CairoRenderer *getRenderer() const { return _renderer; }
+
     bool setImageTarget(cairo_format_t format);
     bool setPdfTarget(gchar const *utf8_fn);
     bool setPsTarget(gchar const *utf8_fn);
     /** Set the cairo_surface_t from an external source */
     bool setSurfaceTarget(cairo_surface_t *surface, bool is_vector, cairo_matrix_t *ctm=nullptr);
 
+    /// Extract metadata from the document and store it in the context.
+    void setMetadata(SPDocument const &document);
+
     void setPSLevel(unsigned int level);
-    void setEPS(bool eps);
-    unsigned int getPSLevel();
+    void setEPS(bool eps) { _eps = eps; }
     void setPDFLevel(unsigned int level);
-    void setTextToPath(bool texttopath);
-    bool getTextToPath();
-    void setOmitText(bool omittext);
-    bool getOmitText();
-    void setFilterToBitmap(bool filtertobitmap);
-    bool getFilterToBitmap();
-    void setBitmapResolution(int resolution);
-    int getBitmapResolution();
+    void setTextToPath(bool texttopath) { _is_texttopath = texttopath; }
+    void setOmitText(bool omittext) { _is_omittext = omittext; }
+    void setFilterToBitmap(bool filtertobitmap) { _is_filtertobitmap = filtertobitmap; }
+    bool getFilterToBitmap() { return _is_filtertobitmap; }
+    void setBitmapResolution(unsigned resolution) { _bitmapresolution = resolution; }
+    unsigned getBitmapResolution() { return _bitmapresolution; }
 
     /** Creates the cairo_surface_t for the context with the
     given width, height and with the currently set target
@@ -132,9 +134,9 @@ public:
 
     /* Render/clip mode setting/query */
     void setRenderMode(CairoRenderMode mode);
-    CairoRenderMode getRenderMode() const;
+    CairoRenderMode getRenderMode() const { return _render_mode; }
     void setClipMode(CairoClipMode mode);
-    CairoClipMode getClipMode() const;
+    CairoClipMode getClipMode() const { return _clip_mode; }
 
     void addPathVector(Geom::PathVector const &pv);
     void setPathVector(Geom::PathVector const &pv);
@@ -150,26 +152,22 @@ public:
     /* Graphics state manipulation */
     void pushState();
     void popState();
-    CairoRenderState *getCurrentState() const;
-    CairoRenderState *getParentState() const;
+    const CairoRenderState *getCurrentState() const { return &_state_stack.back(); }
+    const CairoRenderState *getParentState() const;
     void setStateForStyle(SPStyle const *style);
+    void setStateForItem(SPItem const *item);
+    void setStateNeedsLayer(bool state_needs_layer) { _state_stack.back().need_layer = state_needs_layer; }
+    void setStateMergeOpacity(bool state_merge_opacity) { _state_stack.back().merge_opacity = state_merge_opacity; }
 
     void transform(Geom::Affine const &transform);
     void setTransform(Geom::Affine const &transform);
+    void setItemTransform(Geom::Affine const &transform);
     Geom::Affine getTransform() const;
     Geom::Affine getParentTransform() const;
 
     /* Clipping methods */
     void addClipPath(Geom::PathVector const &pv, SPIEnum<SPWindRule> const *fill_rule);
     void addClippingRect(double x, double y, double width, double height);
-
-    /* Rendering methods */
-    enum CairoPaintOrder {
-        STROKE_OVER_FILL,
-        FILL_OVER_STROKE,
-        FILL_ONLY,
-        STROKE_ONLY
-    };
 
     bool renderPathVector(Geom::PathVector const &pathv, SPStyle const *style, Geom::OptRect const &pbox, CairoPaintOrder order = STROKE_OVER_FILL);
     bool renderImage(Inkscape::Pixbuf const *pb,
@@ -180,56 +178,61 @@ public:
 
     /* More general rendering methods will have to be added (like fill, stroke) */
 
-protected:
+private:
     CairoRenderContext(CairoRenderer *renderer);
-    virtual ~CairoRenderContext();
-
-    enum CairoOmitTextPageState {
+    enum class OmitTextPageState {
         EMPTY,
         GRAPHIC_ON_TOP,
         NEW_PAGE_ON_GRAPHIC
     };
 
-    float _width;
-    float _height;
-    unsigned short _dpi;
-    unsigned int _pdf_level;
-    unsigned int _ps_level;
-    bool _eps;
-    bool _is_texttopath;
-    bool _is_omittext;
-    bool _is_filtertobitmap;
-    bool _is_show_page;
+    float _width = 0.0;
+    float _height = 0.0;
+    unsigned _dpi = 72;
+    unsigned int _pdf_level = 1;
+    unsigned int _ps_level = 1;
+    unsigned _bitmapresolution = 72;
+
+    bool _is_valid          : 1 = false;
+    bool _eps               : 1 = false;
+    bool _is_texttopath     : 1 = false;
+    bool _is_omittext       : 1 = false;
+    bool _is_show_page      : 1 = false;
+    bool _is_filtertobitmap : 1 = false;
     // If both ps and pdf are false, then we are printing.
-    bool _is_pdf;
-    bool _is_ps;
-    int _bitmapresolution;
-
-    FILE *_stream;
-
-    unsigned int _is_valid : 1;
-    unsigned int _vector_based_target : 1;
-
-    cairo_t *_cr; // Cairo context
-    cairo_surface_t *_surface;
-    cairo_surface_type_t _target;
-    cairo_format_t _target_format;
-    PangoLayout *_layout;
+    bool _is_pdf : 1 = false;
+    bool _is_ps  : 1 = false;
 
     unsigned int _clip_rule : 8;
     unsigned int _clip_winding_failed : 1;
+    unsigned int _vector_based_target : 1 = false;
+    OmitTextPageState _omittext_state = OmitTextPageState::EMPTY;
 
-    std::vector<CairoRenderState *> _state_stack;
-    CairoRenderState *_state;    // the current state
+    FILE *_stream = nullptr;
 
+    cairo_t *_cr = nullptr; // Cairo context
+    cairo_surface_t *_surface = nullptr;
+    cairo_surface_type_t _target = CAIRO_SURFACE_TYPE_IMAGE;
+    cairo_format_t _target_format = CAIRO_FORMAT_ARGB32;
+
+    PangoLayout *_layout = nullptr;
+    std::vector<CairoRenderState> _state_stack;
     CairoRenderer *_renderer;
 
-    CairoRenderMode _render_mode;
-    CairoClipMode _clip_mode;
+    CairoRenderMode _render_mode = RENDER_MODE_NORMAL;
+    CairoClipMode _clip_mode = CLIP_MODE_MASK;
 
-    CairoOmitTextPageState _omittext_state;
-
-    CairoRenderContextMetadata _metadata;
+    // Metadata to set on the cairo surface (if the surface supports it)
+    struct CairoRenderContextMetadata {
+        Glib::ustring title;
+        Glib::ustring author;
+        Glib::ustring subject;
+        Glib::ustring keywords;
+        Glib::ustring copyright;
+        Glib::ustring creator;
+        Glib::ustring cdate; // currently unused
+        Glib::ustring mdate; // currently unused
+    } _metadata;
 
     cairo_pattern_t *_createPatternForPaintServer(SPPaintServer const *const paintserver,
                                                   Geom::OptRect const &pbox, float alpha);
@@ -243,25 +246,29 @@ protected:
 
     void _setFillStyle(SPStyle const *style, Geom::OptRect const &pbox);
     void _setStrokeStyle(SPStyle const *style, Geom::OptRect const &pbox);
+    float _mergedOpacity(float source_opacity) const;
 
-    void _initCairoMatrix(cairo_matrix_t *matrix, Geom::Affine const &transform);
     void _concatTransform(cairo_t *cr, double xx, double yx, double xy, double yy, double x0, double y0);
     void _concatTransform(cairo_t *cr, Geom::Affine const &transform);
 
     void _prepareRenderGraphic();
     void _prepareRenderText();
 
-    std::map<gpointer, cairo_font_face_t *> font_table;
+    void _freeResources();
+
+    template <cairo_surface_type_t type>
+    bool _setVectorTarget(gchar const *utf8_fn);
+
+    std::map<gpointer, cairo_font_face_t *> _font_table;
     static void font_data_free(gpointer data);
 
-    CairoRenderState *_createState();
+    CairoRenderState *_addState() { return &_state_stack.emplace_back(); }
 };
 
-}  /* namespace Internal */
-}  /* namespace Extension */
-}  /* namespace Inkscape */
+}  // namespace Extension::Internal
+}  // namespace Inkscape
 
-#endif /* !EXTENSION_INTERNAL_CAIRO_RENDER_CONTEXT_H_SEEN */
+#endif  // !EXTENSION_INTERNAL_CAIRO_RENDER_CONTEXT_H_SEEN
 
 /*
   Local Variables:

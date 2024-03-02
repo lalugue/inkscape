@@ -219,45 +219,37 @@ void Print::draw_page(const Glib::RefPtr<Gtk::PrintContext>& context, int page_n
         else {
             g_warning("%s", _("Could not open temporary PNG for bitmap printing"));
         }
-    }
-    else {
+    } else {
         // Render as vectors
         prefs->setBool("/dialogs/printing/asbitmap", false);
-        Inkscape::Extension::Internal::CairoRenderer renderer;
-        Inkscape::Extension::Internal::CairoRenderContext *ctx = renderer.createContext();
+        Extension::Internal::CairoRenderer renderer;
+        auto ctx = renderer.createContext();
 
-        // ctx->setPSLevel(CAIRO_PS_LEVEL_3);
-        ctx->setTextToPath(false);
-        ctx->setFilterToBitmap(true);
-        ctx->setBitmapResolution(72);
+        ctx.setTextToPath(false);
+        ctx.setFilterToBitmap(true);
+        ctx.setBitmapResolution(72);
 
         auto cr = context->get_cairo_context();
         auto surface = cr->get_target();
         auto ctm = cr->get_matrix();
 
-        bool ret = ctx->setSurfaceTarget(surface->cobj(), true, &ctm);
+        bool ret = ctx.setSurfaceTarget(surface->cobj(), true, &ctm);
         if (ret) {
-            ret = renderer.setupDocument (ctx, _workaround._doc);
+            ret = renderer.setupDocument(&ctx, _workaround._doc);
             if (ret) {
                 if (auto page = pm.getPage(page_nr)) {
-                    renderer.renderPage(ctx, _workaround._doc, page, false);
+                    renderer.renderPage(&ctx, _workaround._doc, page, false);
                 } else {
-                    renderer.renderItem(ctx, _workaround._base);
+                    renderer.renderItem(&ctx, _workaround._base);
                 }
-                ctx->finish(false);  // do not finish the cairo_surface_t - it's owned by our GtkPrintContext!
-            }
-            else {
+                ctx.finish(false);  // do not finish the cairo_surface_t - it's owned by our GtkPrintContext!
+            } else {
                 g_warning("%s", _("Could not set up Document"));
             }
-        }
-        else {
+        } else {
             g_warning("%s", _("Failed to set CairoRenderContext"));
         }
-
-        // Clean up
-        renderer.destroyContext(ctx);
     }
-
 }
 
 Gtk::Widget *Print::create_custom_widget()

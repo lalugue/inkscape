@@ -38,12 +38,9 @@ class CairoRenderContext;
 class CairoRenderer {
 public:
     CairoRenderer();
-    virtual ~CairoRenderer();
+    ~CairoRenderer();
 
-    CairoRenderContext *createContext();
-    void destroyContext(CairoRenderContext *ctx);
-
-    void setStateForItem(CairoRenderContext *ctx, SPItem const *item);
+    CairoRenderContext createContext();
 
     void applyClipPath(CairoRenderContext *ctx, SPClipPath const *cp);
     void applyMask(CairoRenderContext *ctx, SPMask const *mask);
@@ -61,9 +58,6 @@ public:
     bool renderPage(CairoRenderContext *ctx, SPDocument *doc, SPPage const *page, bool stretch_to_fit);
 
 private:
-    /** Extract metadata from doc and set it on ctx. */
-    void setMetadata(CairoRenderContext *ctx, SPDocument *doc);
-
     /** Decide whether the given item should be rendered as a bitmap. */
     static bool _shouldRasterize(CairoRenderContext *ctx, SPItem const *item);
 

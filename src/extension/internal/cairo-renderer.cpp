@@ -29,7 +29,6 @@
 #include <csignal>
 #include <cerrno>
 
-
 #include <2geom/transforms.h>
 #include <2geom/pathvector.h>
 #include <2geom/point.h>
@@ -49,15 +48,12 @@
 #include "cairo-render-context.h"
 #include "cairo-renderer.h"
 #include "document.h"
-#include "inkscape-version.h"
-#include "rdf.h"
 #include "style-internal.h"
 #include "display/cairo-utils.h"
 #include "display/curve.h"
 #include "filter-chemistry.h"
 #include "helper/pixbuf-ops.h"
 #include "helper/png-write.h"
-#include "include/source_date_epoch.h"
 #include "libnrtype/Layout-TNG.h"
 
 #include "object/sp-anchor.h"
@@ -89,8 +85,7 @@ namespace Inkscape {
 namespace Extension {
 namespace Internal {
 
-CairoRenderer::CairoRenderer(void)
-= default;
+CairoRenderer::CairoRenderer() = default;
 
 CairoRenderer::~CairoRenderer()
 {
@@ -98,38 +93,12 @@ CairoRenderer::~CairoRenderer()
 #if !defined(_WIN32) && !defined(__WIN32__)
     (void) signal(SIGPIPE, SIG_DFL);
 #endif
-
-    return;
 }
 
-CairoRenderContext*
-CairoRenderer::createContext()
+CairoRenderContext CairoRenderer::createContext()
 {
-    CairoRenderContext *new_context = new CairoRenderContext(this);
-    g_assert( new_context != nullptr );
-
-    new_context->_state = nullptr;
-
-    // create initial render state
-    CairoRenderState *state = new_context->_createState();
-    state->transform = Geom::identity();
-    new_context->_state_stack.push_back(state);
-    new_context->_state = state;
-
-    return new_context;
+    return CairoRenderContext{this};
 }
-
-void
-CairoRenderer::destroyContext(CairoRenderContext *ctx)
-{
-    delete ctx;
-}
-
-/*
-
-Here comes the rendering part which could be put into the 'render' methods of SPItems'
-
-*/
 
 /* The below functions are copy&pasted plus slightly modified from *_invoke_print functions. */
 static void sp_item_invoke_render(SPItem const *item, CairoRenderContext *ctx, SPItem const *origin = nullptr, SPPage const *page = nullptr);
@@ -525,13 +494,12 @@ static void sp_symbol_render(SPSymbol const *symbol, CairoRenderContext *ctx, SP
 
 static void sp_root_render(SPRoot const *root, CairoRenderContext *ctx)
 {
-    CairoRenderer *renderer = ctx->getRenderer();
-
-    if (!ctx->getCurrentState()->has_overflow && root->parent)
-        ctx->addClippingRect(root->x.computed, root->y.computed, root->width.computed, root->height.computed);
-
+    if (!ctx->getCurrentState()->has_overflow && root->parent) {
+        ctx->addClippingRect(root->x.computed, root->y.computed, root->width.computed,
+                             root->height.computed);
+    }
     ctx->pushState();
-    renderer->setStateForItem(ctx, root);
+    ctx->setStateForItem(root);
     ctx->transform(root->c2p);
     sp_group_render(root, ctx);
     ctx->popState();
@@ -649,27 +617,6 @@ static void sp_item_invoke_render(SPItem const *item, CairoRenderContext *ctx, S
         ctx->destEnd();
 }
 
-void
-CairoRenderer::setStateForItem(CairoRenderContext *ctx, SPItem const *item)
-{
-    ctx->setStateForStyle(item->style);
-
-    CairoRenderState *state = ctx->getCurrentState();
-    state->clip_path = item->getClipObject();
-    state->mask = item->getMaskObject();
-    state->item_transform = item->transform;
-
-    // If parent_has_userspace is true the parent state's transform
-    // has to be used for the mask's/clippath's context.
-    // This is so because we use the image's/(flow)text's transform for positioning
-    // instead of explicitly specifying it and letting the renderer do the
-    // transformation before rendering the item.
-    if (is<SPText>(item) || is<SPFlowtext>(item) || is<SPImage>(item)) {
-        state->parent_has_userspace = TRUE;
-    }
-    TRACE(("setStateForItem opacity: %f\n", state->opacity));
-}
-
 bool CairoRenderer::_shouldRasterize(CairoRenderContext *ctx, SPItem const *item)
 {
     // rasterize filtered items as per user setting
@@ -703,20 +650,21 @@ void CairoRenderer::_doRender(SPItem const *item, CairoRenderContext *ctx, SPIte
 void CairoRenderer::renderItem(CairoRenderContext *ctx, SPItem const *item, SPItem const *origin, SPPage const *page)
 {
     ctx->pushState();
-    setStateForItem(ctx, item);
+    ctx->setStateForItem(item);
 
-    CairoRenderState *state = ctx->getCurrentState();
-    state->need_layer = ( state->mask || state->clip_path || state->opacity != 1.0 );
+    auto *state = ctx->getCurrentState();
+    ctx->setStateNeedsLayer(state->mask || state->clip_path || state->opacity != 1.0);
     SPStyle* style = item->style;
     auto group = cast<SPGroup>(item);
     bool blend = false;
     if (group && style->mix_blend_mode.set && style->mix_blend_mode.value != SP_CSS_BLEND_NORMAL) {
-        state->need_layer = true;
+        // Force the creation of a new layer
+        ctx->setStateNeedsLayer(true);
         blend = true;
     }
     // Draw item on a temporary surface so a mask, clip-path, or opacity can be applied to it.
     if (state->need_layer) {
-        state->merge_opacity = FALSE;
+        ctx->setStateMergeOpacity(false);
         ctx->pushLayer();
     }
 
@@ -724,7 +672,7 @@ void CairoRenderer::renderItem(CairoRenderContext *ctx, SPItem const *item, SPIt
 
     _doRender(item, ctx, origin, page);
 
-    if (state->need_layer) {
+    if (ctx->getCurrentState()->need_layer) {
         if (blend) {
             ctx->popLayer(ink_css_blend_to_cairo_operator(style->mix_blend_mode.value)); // This applies clipping/masking
         } else {
@@ -748,56 +696,10 @@ void CairoRenderer::renderHatchPath(CairoRenderContext *ctx, SPHatchPath const &
     ctx->popState();
 }
 
-void CairoRenderer::setMetadata(CairoRenderContext *ctx, SPDocument *doc) {
-    // title
-    const gchar *title = rdf_get_work_entity(doc, rdf_find_entity("title"));
-    if (title) {
-        ctx->_metadata.title = title;
-    }
-
-    // author
-    const gchar *author = rdf_get_work_entity(doc, rdf_find_entity("creator"));
-    if (author) {
-        ctx->_metadata.author = author;
-    }
-
-    // subject
-    const gchar *subject = rdf_get_work_entity(doc, rdf_find_entity("description"));
-    if (subject) {
-        ctx->_metadata.subject = subject;
-    }
-
-    // keywords
-    const gchar *keywords = rdf_get_work_entity(doc, rdf_find_entity("subject"));
-    if (keywords) {
-        ctx->_metadata.keywords = keywords;
-    }
-
-    // copyright
-    const gchar *copyright = rdf_get_work_entity(doc, rdf_find_entity("rights"));
-    if (copyright) {
-        ctx->_metadata.copyright = copyright;
-    }
-
-    // creator
-    ctx->_metadata.creator = Glib::ustring::compose("Inkscape %1 (https://inkscape.org)",
-                                                    Inkscape::version_string_without_revision);
-
-    // cdate (only used for for reproducible builds hack)
-    Glib::ustring cdate = ReproducibleBuilds::now_iso_8601();
-    if (!cdate.empty()) {
-        ctx->_metadata.cdate = cdate;
-    }
-
-    // mdate (currently unused)
-}
-
-bool
-CairoRenderer::setupDocument(CairoRenderContext *ctx, SPDocument *doc, SPItem const *base)
+bool CairoRenderer::setupDocument(CairoRenderContext *ctx, SPDocument *doc, SPItem const *base)
 {
 // PLEASE note when making changes to the boundingbox and transform calculation, corresponding changes should be made to LaTeXTextRenderer::setupDocument !!!
-
-    g_assert( ctx != nullptr );
+    g_assert(ctx);
 
     if (!base) {
         base = doc->getRoot();
@@ -814,7 +716,7 @@ CairoRenderer::setupDocument(CairoRenderContext *ctx, SPDocument *doc, SPItem co
     auto width = d.width() * px_to_ctx_units;
     auto height = d.height() * px_to_ctx_units;
 
-    setMetadata(ctx, doc);
+    ctx->setMetadata(*doc);
 
     TRACE(("setupDocument: %f x %f\n", width, height));
     return ctx->setupSurface(width, height);
@@ -928,14 +830,13 @@ CairoRenderer::applyClipPath(CairoRenderContext *ctx, SPClipPath const *cp)
     for (auto& child: co->children) {
         SPItem const *item = cast<SPItem>(&child);
         if (item) {
-
             // combine transform of the item in clippath and the item using clippath:
             Geom::Affine tempmat = item->transform * ctx->getCurrentState()->item_transform;
 
             // render this item in clippath
             ctx->pushState();
             ctx->transform(tempmat);
-            setStateForItem(ctx, item);
+            ctx->setStateForItem(item);
             _doRender(item, ctx);
             ctx->popState();
         }

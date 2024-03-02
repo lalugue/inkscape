@@ -85,31 +85,27 @@ ps_print_document_to_file(SPDocument *doc, gchar const *filename, unsigned int l
     root->invoke_show(drawing, dkey, SP_ITEM_SHOW_DISPLAY);
 
     /* Create renderer and context */
-    CairoRenderer *renderer = new CairoRenderer();
-    CairoRenderContext *ctx = renderer->createContext();
-    ctx->setPSLevel(level);
-    ctx->setEPS(eps);
-    ctx->setTextToPath(texttopath);
-    ctx->setOmitText(omittext);
-    ctx->setFilterToBitmap(filtertobitmap);
-    ctx->setBitmapResolution(resolution);
+    CairoRenderer renderer;
+    CairoRenderContext ctx = renderer.createContext();
+    ctx.setPSLevel(level);
+    ctx.setEPS(eps);
+    ctx.setTextToPath(texttopath);
+    ctx.setOmitText(omittext);
+    ctx.setFilterToBitmap(filtertobitmap);
+    ctx.setBitmapResolution(resolution);
 
-    bool ret = ctx->setPsTarget(filename);
-    if(ret) {
+    bool ret = ctx.setPsTarget(filename);
+    if (ret) {
         /* Render document */
-        ret = renderer->setupDocument(ctx, doc, root);
+        ret = renderer.setupDocument(&ctx, doc, root);
         if (ret) {
             /* Render multiple pages */
-            ret = renderer->renderPages(ctx, doc, false);
-            ctx->finish();
+            ret = renderer.renderPages(&ctx, doc, false);
+            ctx.finish();
         }
     }
 
     root->invoke_hide(dkey);
-
-    renderer->destroyContext(ctx);
-    delete renderer;
-
     return ret;
 }
 

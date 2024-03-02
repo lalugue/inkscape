@@ -84,30 +84,22 @@ pdf_render_document_to_file(SPDocument *doc, gchar const *filename, unsigned int
     drawing.setExact();
 
     /* Create renderer and context */
-    CairoRenderer *renderer = new CairoRenderer();
-    CairoRenderContext *ctx = renderer->createContext();
-    ctx->setPDFLevel(level);
-    ctx->setTextToPath(flags.text_to_path);
-    ctx->setOmitText(flags.text_to_latex);
-    ctx->setFilterToBitmap(flags.rasterize_filters);
-    ctx->setBitmapResolution(resolution);
+    CairoRenderer renderer;
+    CairoRenderContext ctx = renderer.createContext();
+    ctx.setPDFLevel(level);
+    ctx.setTextToPath(flags.text_to_path);
+    ctx.setOmitText(flags.text_to_latex);
+    ctx.setFilterToBitmap(flags.rasterize_filters);
+    ctx.setBitmapResolution(resolution);
 
-    bool ret = ctx->setPdfTarget (filename);
-    if(ret) {
-        /* Render document */
-        ret = renderer->setupDocument(ctx, doc, root);
-        if (ret) {
-            /* Render multiple pages */
-            ret = renderer->renderPages(ctx, doc, flags.stretch_to_fit);
-            ctx->finish();
-        }
+    bool ret = ctx.setPdfTarget(filename)
+               && renderer.setupDocument(&ctx, doc, root)
+               && renderer.renderPages(&ctx, doc, flags.stretch_to_fit);
+    if (ret) {
+        ctx.finish();
     }
 
     root->invoke_hide(dkey);
-
-    renderer->destroyContext(ctx);
-    delete renderer;
-
     return ret;
 }
 
