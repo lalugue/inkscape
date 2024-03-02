@@ -164,18 +164,28 @@ Geom::Rect SPPage::getDesktopMargin() const
 }
 
 /**
- * Get document rect, plus the bleed amounts.
+ * Get page rect enlarged by bleed amounts
  */
-Geom::Rect SPPage::getDocumentBleed() const
+Geom::Rect SPPage::getBleed() const
 {
     auto rect = getRect();
     rect.setTop(rect.top() - bleed.top().computed);
     rect.setLeft(rect.left() - bleed.left().computed);
     rect.setBottom(rect.bottom() + bleed.bottom().computed);
     rect.setRight(rect.right() + bleed.right().computed);
-    if (rect.hasZeroArea())
-        return getDocumentRect(); // Cancel!
-    return rect * document->getDocumentScale();
+
+    if (rect.hasZeroArea()) {
+        return getRect();
+    }
+    return rect;
+}
+
+/**
+ * Get document rect, plus the bleed amounts.
+ */
+Geom::Rect SPPage::getDocumentBleed() const
+{
+    return getBleed() * document->getDocumentScale();
 }
 
 Geom::Rect SPPage::getDesktopBleed() const
@@ -640,14 +650,14 @@ std::string SPPage::getSizeLabel() const
  */
 void SPPage::copyFrom(SPPage *page)
 {
-    this->_size_label = page->_size_label;
-    if (auto margin = page->getMargin()) {
-        this->margin.read(margin.write(), document->getDocumentScale());
+    _size_label = page->_size_label;
+    if (auto const &margin_box = page->getMarginBox()) {
+        margin.read(margin_box.write(), document->getDocumentScale());
     }
-    if (auto bleed = page->getBleed()) {
-        this->bleed.read(bleed.write(), document->getDocumentScale());
+    if (auto const &bleed_box = page->getBleedBox()) {
+        bleed.read(bleed_box.write(), document->getDocumentScale());
     }
-    this->updateRepr();
+    updateRepr();
 }
 
 void SPPage::set_guides_visible(bool show) {

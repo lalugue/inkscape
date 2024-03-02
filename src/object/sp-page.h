@@ -4,7 +4,7 @@
  *//*
  * Authors:
  *   Martin Owens 2021
- * 
+ *
  * Copyright (C) 2021 Martin Owens
  *
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
@@ -46,7 +46,7 @@ public:
     void set_guides_visible(bool show);
 
     double getMarginSide(int side);
-    const SVGBox &getMargin() const { return margin; }
+    const SVGBox &getMarginBox() const { return margin; }
     void setMargin(const std::string &value);
     void setMarginSide(int pos, double value, bool confine = false);
     void setMarginSide(int side, const std::string &value, bool confine = false);
@@ -54,7 +54,7 @@ public:
 
     double getBleedSide(int side);
     void setBleedSide(int side, double value);
-    const SVGBox &getBleed() const { return bleed; }
+    const SVGBox &getBleedBox() const { return bleed; }
     void setBleed(const std::string &value);
     std::string getBleedLabel() const;
 
@@ -82,15 +82,21 @@ public:
 
     Geom::Rect getRect() const;
     Geom::Rect getDesktopRect() const;
-    Geom::Rect getDesktopMargin() const;
-    Geom::Rect getDesktopBleed() const;
     Geom::Rect getDocumentRect() const;
+
+    Geom::Rect getDesktopMargin() const;
     Geom::Rect getDocumentMargin() const;
+
+    Geom::Rect getBleed() const;
+    Geom::Rect getDesktopBleed() const;
     Geom::Rect getDocumentBleed() const;
+
     Geom::Rect getSensitiveRect() const;
+
     void setRect(Geom::Rect rect);
-    void setDocumentRect(Geom::Rect rect, bool add_margins = false);
     void setDesktopRect(Geom::Rect rect);
+    void setDocumentRect(Geom::Rect rect, bool add_margins = false);
+
     void setSize(double width, double height);
     std::vector<SPItem *> getExclusiveItems(bool hidden = true, bool in_bleed = false, bool in_layers = true) const;
     std::vector<SPItem *> getOverlappingItems(bool hidden = true, bool in_bleed = false, bool in_layers = true) const;

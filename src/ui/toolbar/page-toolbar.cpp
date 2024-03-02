@@ -114,7 +114,7 @@ PageToolbar::PageToolbar(SPDesktop *desktop)
     _text_page_margins.signal_activate().connect(sigc::mem_fun(*this, &PageToolbar::marginsEdited));
     _text_page_margins.signal_icon_press().connect([=](Gtk::EntryIconPosition, const GdkEventButton *) {
         if (auto page = _document->getPageManager().getSelected()) {
-            auto margin = page->getMargin();
+            auto const &margin = page->getMarginBox();
             auto unit = _document->getDisplayUnit()->abbr;
             auto scale = _document->getDocumentScale();
             _margin_top.set_value(margin.top().toValue(unit) * scale[Geom::Y]);
