@@ -49,6 +49,7 @@
 #include "object/sp-mask.h"
 #include "object/sp-clippath.h"
 
+#include "util/source_date_epoch.h"
 #include "util/units.h"
 
 #include "cairo-renderer.h"

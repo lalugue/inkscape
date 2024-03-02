@@ -12,6 +12,7 @@ set(util_SRC
     object-renderer.cpp
 	paper.cpp
 	preview.cpp
+	source_date_epoch.cpp
 	statics.cpp
     recently-used-fonts.cpp
 	units.cpp
@@ -48,6 +49,7 @@ set(util_SRC
 	scope_exit.h
 	share.h
 	signal-blocker.h
+	source_date_epoch.h
 	statics.h
 	trim.h
 	units.h
