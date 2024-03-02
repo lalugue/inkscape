@@ -32,6 +32,8 @@
 
 #include <2geom/transforms.h>
 #include <2geom/pathvector.h>
+#include <2geom/point.h>
+#include <2geom/rect.h>
 #include <cairo.h>
 #include <glib.h>
 #include <glibmm/i18n.h>
@@ -150,6 +152,26 @@ static void sp_shape_render_invoke_marker_rendering(SPMarker *marker, Geom::Affi
         ctx->getRenderer()->renderItem(ctx, marker_item, origin);
         marker_item->transform = old_tr;
     }
+}
+
+/** Compute the final page dimensions in the resulting PS or PDF.
+ *
+ * Cairo PS and PDF surfaces only work with integer dimensions, taking ceil() of the doubles
+ * passed as arguments. To work around this limitation, we want to "lie" about page dimensions.
+ *
+ * -> If the page dimension is very very slightly larger than an integer (within an epsilon),
+ *    we snap it to that integer. This can happen due to rounding errors in transforms.
+ * -> Otherwise, we round the page dimension up to the next integer.
+ */
+static Geom::Point compute_final_page_dimensions(Geom::Rect const &page_rect) {
+    Geom::Point result;
+    auto const dims = page_rect.dimensions();
+
+    for (auto const axis : {Geom::X, Geom::Y}) {
+        double const floor_size = std::floor(dims[axis]);
+        result[axis] = (dims[axis] > floor_size + Geom::EPSILON) ? floor_size + 1.0 : floor_size;
+    }
+    return result;
 }
 
 /** A helper RAII class to manage the temporary rewriting of styles
@@ -833,21 +855,19 @@ bool
 CairoRenderer::renderPage(CairoRenderContext *ctx, SPDocument *doc, SPPage const *page, bool stretch_to_fit)
 {
     // Calculate exact page rectangle in PostScript points:
-    auto scale = doc->getDocumentScale();
+    auto const scale = doc->getDocumentScale();
     auto const unit_conversion = Geom::Scale(Inkscape::Util::Quantity::convert(1, "px", "pt"));
 
-    auto rect = page->getDocumentBleed() * scale.inverse();
-    auto exact_rect = rect * scale * unit_conversion;
-
-    // Round page size up to the nearest integer:
-    auto page_rect = exact_rect.roundOutwards();
+    auto const rect = page->getBleed();
+    auto const exact_rect = rect * scale * unit_conversion;
+    auto const [final_width, final_height] = compute_final_page_dimensions(exact_rect);
 
     if (stretch_to_fit) {
         // Calculate distortion from rounding (only really matters for small paper sizes):
-        auto distortion = Geom::Scale(page_rect.width() / exact_rect.width(),
-                                      page_rect.height() / exact_rect.height());
+        auto distortion = Geom::Scale(final_width / exact_rect.width(),
+                                      final_height / exact_rect.height());
 
-        // Make the drawing a little bit larger so that it still fills the rounded-up page:
+        // Scale the drawing a tiny bit so that it still fills the rounded page:
         ctx->transform(scale * distortion);
     } else {
         ctx->transform(scale);
@@ -855,7 +875,7 @@ CairoRenderer::renderPage(CairoRenderContext *ctx, SPDocument *doc, SPPage const
 
     SPRoot *root = doc->getRoot();
     ctx->transform(root->transform);
-    ctx->nextPage(page_rect.width(), page_rect.height(), page->label());
+    ctx->nextPage(final_width, final_height, page->label());
 
     // Set up page transformation which pushes objects back into the 0,0 location
     ctx->transform(Geom::Translate(rect.corner(0)).inverse());
