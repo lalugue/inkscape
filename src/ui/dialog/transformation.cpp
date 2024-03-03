@@ -82,6 +82,13 @@ Transformation::Transformation()
       resetButton{Gtk::make_managed<Gtk::Button>()},
       applyButton{Gtk::make_managed<Gtk::Button>(_("_Apply"))}
 {
+    _scalar_move_horizontal.getLabel()->set_hexpand();
+    _scalar_move_vertical.getLabel()->set_hexpand();
+    _scalar_scale_horizontal.getLabel()->set_hexpand();
+    _scalar_scale_vertical.getLabel()->set_hexpand();
+    _scalar_skew_horizontal.getLabel()->set_hexpand();
+    _scalar_skew_vertical.getLabel()->set_hexpand();
+
     _check_move_relative.set_use_underline();
     _check_move_relative.set_tooltip_text(_("Add the specified relative displacement to the current position; otherwise, edit the current absolute position directly"));
 
