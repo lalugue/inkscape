@@ -123,7 +123,8 @@ void ColorNotebook::_initUI(bool no_alpha)
 
     _label = Gtk::make_managed<Gtk::Label>();
     _label->set_visible();
-    UI::pack_start(*_buttonbox, *_label, false, true);
+    _label->set_xalign(0);
+    UI::pack_start(*_buttonbox, *_label, true, true);
     UI::pack_end(*_buttonbox, *_combo, false, false);
     _combo->signal_changed().connect([=](){ _setCurrentPage(_combo->get_active_row_id(), false); });
 
