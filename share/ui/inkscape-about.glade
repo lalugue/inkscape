@@ -23,19 +23,18 @@
                   <object class="GtkAspectFrame" id="aspect-frame">
                     <property name="width-request">750</property>
                     <property name="height-request">625</property>
-                    <property name="label-xalign">0</property>
                     <property name="yalign">0</property>
                     <property name="ratio">1.2000000476837158</property>
                     <property name="child">
                       <object class="GtkOverlay" id="overlay">
                         <property name="child">
-                          <object class="GtkImage" id="viewer1">
+                          <object class="GtkPicture" id="viewer1">
                             <property name="width-request">725</property>
                             <property name="height-request">625</property>
                           </object>
                         </property>
                         <child type="overlay">
-                          <object class="GtkImage" id="viewer2">
+                          <object class="GtkPicture" id="viewer2">
                             <property name="width-request">750</property>
                             <property name="height-request">625</property>
                           </object>

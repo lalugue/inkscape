@@ -71,38 +71,30 @@ public:
             return;
         }
 
-        builder->get_widget("viewer1", _viewer1);
-        builder->get_widget("viewer2", _viewer2);
-
-        builder->get_widget("aspect-frame", _frame);
-        _frame->unset_label();
-        Gtk::Overlay* overlay;
-        builder->get_widget("overlay", overlay);
-        _frame->show_all();
-
-        builder->get_widget("dialog-footer", _footer);
+        _viewer1 = &get_widget<Gtk::Picture>(builder, "viewer1");
+        _viewer2 = &get_widget<Gtk::Picture>(builder, "viewer2");
+        _frame = &get_widget<Gtk::AspectFrame>(builder, "aspect-frame");
+        _footer = &get_widget<Gtk::Box>(builder, "dialog-footer");
     }
 
     void show_window() {
-        _refresh = Glib::signal_timeout().connect_seconds([=](){
+        _refresh = Glib::signal_timeout().connect_seconds([this] {
             transition();
             return true;
         }, SLIDESHOW_DELAY_sec);
 
         // reset the stage
-        _viewer1->clear();
-        _viewer2->clear();
+        _viewer1->set_paintable({});
+        _viewer2->set_paintable({});
         _about_index = 0;
         _tick = false;
         auto ctx = _viewer2->get_style_context();
         ctx->remove_class("fade-out");
         ctx->remove_class("fade-in");
 
-        set_visible(true);
+        present();
         transition();
     }
-
-    ~AboutWindow() override = default;
 
 private:
     std::vector<std::string> _about_screens;
@@ -111,8 +103,8 @@ private:
     Gtk::Box* _footer;
     Glib::RefPtr<Gtk::CssProvider> _footer_style;
     Glib::RefPtr<Glib::TimeoutSource> _timer;
-    Gtk::Image* _viewer1;
-    Gtk::Image* _viewer2;
+    Gtk::Picture *_viewer1;
+    Gtk::Picture *_viewer2;
     auto_connection _refresh;
     Gtk::AspectFrame* _frame = nullptr;
 
@@ -127,7 +119,7 @@ private:
         std::sort(_about_screens.begin(), _about_screens.end());
     }
 
-    Cairo::RefPtr<Cairo::ImageSurface> load_next(Gtk::Image* viewer, const Glib::ustring& fname, int device_scale) {
+    Cairo::RefPtr<Cairo::ImageSurface> load_next(Gtk::Picture *viewer, const Glib::ustring& fname, int device_scale) {
         svg_renderer renderer(fname.c_str());
         auto surface = renderer.render_surface(device_scale);
         if (surface) {
@@ -136,11 +128,12 @@ private:
             _frame->property_ratio() = width / height;
             viewer->set_size_request(width, height);
         }
-        viewer->set(surface);
+        viewer->set_paintable(to_texture(surface));
         return surface;
     }
 
-    void set_footer_matching_color(Cairo::RefPtr<Cairo::ImageSurface>& image) {
+    void set_footer_matching_color(Cairo::RefPtr<Cairo::ImageSurface> const &image)
+    {
         if (!image) return;
 
         auto scale = get_scale_factor();
@@ -248,8 +241,8 @@ void show_about()
 {
     // Load builder file here
     auto builder = create_builder("inkscape-about.glade");
-    auto window            = &get_derived_widget<AboutWindow>(builder, "about-screen-window");
-    auto tabs              = &get_widget<Gtk::Notebook>(builder, "tabs");
+    auto window       = &get_derived_widget<AboutWindow>(builder, "about-screen-window");
+    auto tabs         = &get_widget<Gtk::Notebook>(builder, "tabs");
     auto version      = &get_widget<Gtk::Button>  (builder, "version");
     auto label        = &get_widget<Gtk::Label>   (builder, "version-copied");
     auto debug_info   = &get_widget<Gtk::Button>  (builder, "debug_info");
@@ -258,9 +251,6 @@ void show_about()
     auto authors      = &get_widget<Gtk::TextView>(builder, "credits-authors");
     auto translators  = &get_widget<Gtk::TextView>(builder, "credits-translators");
     auto license      = &get_widget<Gtk::Label>   (builder, "license-text");
-
-    // Automatic signal handling (requires -rdynamic compile flag)
-    //gtk_builder_connect_signals(builder->gobj(), NULL);
 
     auto text = Inkscape::inkscape_version();
     version->set_label(text);
@@ -302,20 +292,13 @@ void show_about()
     gtk_widget_add_controller(window->Gtk::Widget::gobj(), controller);
     g_signal_connect(controller, "key-pressed", G_CALLBACK(on_key_pressed), window);
 
-    if (window) {
-        // dispose of about dialog when it gets closed
-        window->signal_delete_event().connect([=](GdkEventAny*){
-            delete window;
-            return false;
-        });
-        if (auto top = SP_ACTIVE_DESKTOP ? SP_ACTIVE_DESKTOP->getInkscapeWindow() : nullptr) {
-            window->set_transient_for(*top);
-        }
-        tabs->set_current_page(0);
-        window->show_window();
-    } else {
-        g_error("About screen window couldn't be loaded. Missing window id in glade file.");
+    if (auto top = SP_ACTIVE_DESKTOP ? SP_ACTIVE_DESKTOP->getInkscapeWindow() : nullptr) {
+        window->set_transient_for(*top);
     }
+    tabs->set_current_page(0);
+    window->show_window();
+
+    Gtk::manage(window); // will self-destruct
 }
 
 } // namespace Inkscape::UI::Dialog
