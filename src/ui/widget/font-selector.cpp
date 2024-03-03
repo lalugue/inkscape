@@ -285,7 +285,7 @@ void FontSelector::update_font()
     Gtk::TreeModel::iterator match;
     auto local_style_list_store = Gtk::ListStore::create(font_lister->font_style_list);
     for (auto const &s : *styles) {
-        auto &srow = *local_style_list_store->append();
+        auto srow = *local_style_list_store->append();
         srow[font_lister->font_style_list.cssStyle] = s.css_name;
         srow[font_lister->font_style_list.displayStyle] = s.display_name;
         if (style == s.css_name) {
@@ -450,7 +450,7 @@ FontSelector::on_family_changed() {
 
     // Build list and find best match.
     for (auto const &s : *styles) {
-        auto &srow = *local_style_list_store->append();
+        auto srow = *local_style_list_store->append();
         srow[FontStyleList.cssStyle] = s.css_name;
         srow[FontStyleList.displayStyle] = s.display_name;
         if (best == s.css_name) {
