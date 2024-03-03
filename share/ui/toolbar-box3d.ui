@@ -25,6 +25,7 @@
     <property name="halign">start</property>
     <property name="valign">center</property>
     <property name="spacing">3</property>
+    <property name="hexpand">True</property>
     <child>
       <object class="GtkBox" id="angle_x_box">
         <property name="visible">True</property>

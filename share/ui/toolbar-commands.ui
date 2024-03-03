@@ -97,7 +97,6 @@
   </object>
   <object class="GtkBox" id="commands-toolbar">
     <property name="visible">True</property>
-    <property name="can-focus">False</property>
     <property name="halign">center</property>
     <property name="valign">start</property>
     <property name="orientation">vertical</property>

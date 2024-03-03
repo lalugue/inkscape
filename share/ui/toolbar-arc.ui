@@ -57,10 +57,10 @@
   </object>
   <object class="GtkBox" id="arc-toolbar">
     <property name="visible">True</property>
-    <property name="can-focus">False</property>
     <property name="halign">start</property>
     <property name="valign">center</property>
     <property name="spacing">3</property>
+    <property name="hexpand">True</property>
     <child>
       <object class="GtkLabel" id="_mode_item">
         <property name="visible">True</property>
