@@ -892,6 +892,7 @@ CloneTiler::CloneTiler()
                 auto const table = Gtk::make_managed<Gtk::Grid>();
                 table->set_row_spacing(4);
                 table->set_column_spacing(6);
+                table->set_halign(Gtk::ALIGN_START);
                 table->property_margin().set_value(4);
                 frame->add(*table);
 
@@ -1158,6 +1159,7 @@ CloneTiler::CloneTiler()
             { // buttons which are enabled only when there are tiled clones
                 auto const sb = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL, 4);
                 UI::pack_end(*hb, *sb, false, false);
+                sb->set_hexpand();
 
                 _buttons_on_tiles = sb;
 
@@ -2670,7 +2672,7 @@ Gtk::Grid * CloneTiler::table_x_y_rand(int values)
     auto const table = Gtk::make_managed<Gtk::Grid>();
     table->set_row_spacing(6);
     table->set_column_spacing(8);
-
+    table->set_halign(Gtk::ALIGN_START);
     table->property_margin().set_value(VB_MARGIN);
 
     {
