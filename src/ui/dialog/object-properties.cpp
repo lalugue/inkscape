@@ -30,6 +30,7 @@
 #include "object-properties.h"
 
 #include <glibmm/i18n.h>
+#include <gtkmm/adjustment.h>
 #include <gtkmm/box.h>
 #include <gtkmm/enums.h>
 #include <gtkmm/expander.h>
@@ -41,6 +42,7 @@
 #include "document-undo.h"
 #include "document.h"
 #include "inkscape.h"
+#include "object/sp-item.h"
 #include "preferences.h"
 #include "selection.h"
 #include "object/sp-image.h"
@@ -196,13 +198,17 @@ void ObjectProperties::_init()
     _tv_description.add_mnemonic_label(*label_desc);
 
     /* Create the label for the object title */
-    _label_dpi.set_label(_label_dpi.get_label() + " ");
     _label_dpi.set_halign(Gtk::ALIGN_START);
     _label_dpi.set_valign(Gtk::ALIGN_CENTER);
 
     /* Create the entry box for the SVG DPI */
     _spin_dpi.set_digits(2);
-    _spin_dpi.set_range(1, 1200);
+    _spin_dpi.set_range(1, 2400);
+    auto adj = Gtk::Adjustment::create(96, 1, 2400);
+    adj->set_step_increment(10);
+    adj->set_page_increment(100);
+    _spin_dpi.set_adjustment(adj);
+    _spin_dpi.set_tooltip_text(_("Set resolution for vector images (press Enter to see change in rendering quality)"));
 
     _label_dpi.set_mnemonic_widget(_spin_dpi);
     // pressing enter in the label field is the same as clicking Set:
@@ -326,8 +332,20 @@ void ObjectProperties::update_entries()
     _cb_hide.set_active(item && item->isExplicitlyHidden()); /* Hidden */
     _highlight_color.setRgba32(item ? item->highlight_color() : 0x0);
     _highlight_color.closeWindow();
-    // hide aspect ratio checkbox for an image element, images have their own panel in object attributes
-    _cb_aspect_ratio.set_visible(item && !is<SPImage>(item));
+    // hide aspect ratio checkbox for an image element, images have their own panel in object attributes;
+    // apart from <image> only <marker>, <patten>, and <view> support this attribute, but we don't handle them
+    // in this dialog today; I'm leaving the code, as we may handle them in the future
+    _cb_aspect_ratio.set_visible(item && false);
+
+    // image-only SVG DPI attribute:
+    bool show_dpi = is<SPImage>(item);
+    _label_dpi.set_visible(show_dpi);
+    _spin_dpi.set_visible(show_dpi);
+    if (show_dpi && item->getRepr()) {
+        // update DPI
+        auto dpi = item->getRepr()->getAttributeDouble("inkscape:svg-dpi", 96);
+        _spin_dpi.set_value(dpi);
+    }
 
     if (item && item->cloned) {
         /* ID */
