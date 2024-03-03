@@ -125,11 +125,17 @@ Find::Find()
       hboxbutton_row(Gtk::ORIENTATION_HORIZONTAL)
 {
     auto const label1 = entry_find.getLabel();
+    entry_find.getEntry()->set_hexpand();
+    entry_find.getEntry()->set_halign(Gtk::ALIGN_FILL);
     label_group->add_widget(*label1);
     label1->set_xalign(0);
+    label1->set_hexpand(false);
     auto const label2 = entry_replace.getLabel();
+    entry_replace.getEntry()->set_hexpand();
+    entry_replace.getEntry()->set_halign(Gtk::ALIGN_FILL);
     label_group->add_widget(*label2);
     label2->set_xalign(0);
+    label2->set_hexpand(false);
 
     static constexpr int MARGIN = 4;
     set_margin_start(MARGIN);
