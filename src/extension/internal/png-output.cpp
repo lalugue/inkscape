@@ -82,7 +82,7 @@ void PngOutput::init()
             "<output raster=\"true\" priority=\"1\">\n"
                 "<extension>.png</extension>\n"
                 "<mimetype>image/png</mimetype>\n"
-                "<filetypename>" N_("Portable Network Graphic (*.png)") "</filetypename>\n"
+                "<filetypename>" N_("PNG (*.png)") "</filetypename>\n"
                 "<filetypetooltip>" N_("Default raster graphic export") "</filetypetooltip>\n"
             "</output>\n"
         "</inkscape-extension>",

@@ -245,7 +245,7 @@ CairoRendererPdfOutput::init ()
             "<output is_exported='true' priority='5'>\n"
                 "<extension>.pdf</extension>\n"
                 "<mimetype>application/pdf</mimetype>\n"
-                "<filetypename>Portable Document Format (*.pdf)</filetypename>\n"
+                "<filetypename>PDF (*.pdf)</filetypename>\n"
                 "<filetypetooltip>PDF File</filetypetooltip>\n"
             "</output>\n"
         "</inkscape-extension>", std::make_unique<CairoRendererPdfOutput>());

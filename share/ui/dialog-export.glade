@@ -49,6 +49,8 @@
                                 <property name="visible">True</property>
                                 <property name="valign">start</property>
                                 <property name="margin-top">5</property>
+                                <property name="column-spacing">4</property>
+                                <property name="column-homogeneous">True</property>
                                 <child>
                                   <object class="GtkRadioButton" id="si_s_selection">
                                     <property name="label" translatable="yes">Selection</property>
@@ -570,6 +572,7 @@
                   <object class="GtkGrid" id="si_buttons">
                     <property name="visible">True</property>
                     <property name="row-spacing">5</property>
+                    <property name="column-spacing">4</property>
                     <child>
                       <object class="GtkEntry" id="si_filename">
                         <property name="visible">True</property>
@@ -578,6 +581,7 @@
                         <property name="secondary-icon-name">folder-open</property>
                         <property name="secondary-icon-tooltip-text" translatable="yes">Browse export directory</property>
                         <property name="placeholder-text" translatable="yes">Filename</property>
+                        <property name="width-chars">0</property>
                       </object>
                       <packing>
                         <property name="left-attach">0</property>
@@ -589,7 +593,6 @@
                         <property name="visible">True</property>
                         <property name="tooltip-text" translatable="yes">Select export format</property>
                         <property name="valign">center</property>
-                        <property name="margin-start">5</property>
                         <property name="active">0</property>
                       </object>
                       <packing>
@@ -606,7 +609,7 @@
                       <packing>
                         <property name="left-attach">0</property>
                         <property name="top-attach">1</property>
-                        <property name="width">4</property>
+                        <property name="width">3</property>
                       </packing>
                     </child>
                     <child>
@@ -771,6 +774,8 @@
                               <object class="GtkBox">
                                 <property name="visible">True</property>
                                 <property name="hexpand">True</property>
+                                <property name="spacing">4</property>
+                                <property name="homogeneous">True</property>
                                 <child>
                                   <object class="GtkRadioButton" id="b_s_selection">
                                     <property name="label" translatable="yes">Selection</property>
@@ -885,8 +890,6 @@
                             <child>
                               <object class="GtkGrid" id="b_export_list">
                                 <property name="visible">True</property>
-                                <property name="margin-start">5</property>
-                                <property name="margin-end">5</property>
                                 <property name="margin-top">5</property>
                                 <property name="margin-bottom">5</property>
                                 <property name="row-spacing">10</property>
@@ -932,7 +935,7 @@
                     <property name="visible">True</property>
                     <property name="margin-top">5</property>
                     <property name="row-spacing">5</property>
-                    <property name="column-spacing">10</property>
+                    <property name="column-spacing">4</property>
                     <child>
                       <object class="GtkEntry" id="b_name">
                         <property name="visible">True</property>
