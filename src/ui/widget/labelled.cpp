@@ -11,6 +11,7 @@
 
 #include "labelled.h"
 
+#include <gtkmm/enums.h>
 #include <gtkmm/image.h>
 #include <gtkmm/label.h>
 
@@ -38,6 +39,7 @@ Labelled::Labelled(Glib::ustring const &label, Glib::ustring const &tooltip,
     }
 
     UI::pack_start(*this, *_label, UI::PackOptions::shrink);
+    _label->set_halign(Gtk::ALIGN_START);
     UI::pack_start(*this, *Gtk::manage(_widget), UI::PackOptions::shrink);
 
     if (mnemonic) {
