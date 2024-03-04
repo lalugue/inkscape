@@ -32,7 +32,7 @@
    \endverbatim
  *
  * @param s String which starts with "url("
- * @param[out] endptr points to \c s + N, where N is the number of characters parsed
+ * @param[out] endptr points to \c s + N, where N is the number of characters parsed or to a nullptr when an invalid URL is found
  * @return URL string, or empty string on failure
  */
 std::string extract_uri(char const *s, char const **endptr = nullptr);

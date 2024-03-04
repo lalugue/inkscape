@@ -1514,7 +1514,12 @@ SPIPaint::read( gchar const *str ) {
             // FIXME: THE FOLLOWING CODE SHOULD BE PUT IN A PRIVATE FUNCTION FOR REUSE
             auto uri = extract_uri(str, &str); // std::string
             if(uri.empty()) {
-                std::cerr << "SPIPaint::read: url is empty or invalid" << std::endl;
+                if (!str) {
+                    std::cerr << "SPIPaint::read: url is invalid" << std::endl;
+                    return;
+                } else {
+                    std::cerr << "SPIPaint::read: url is empty" << std::endl;
+                }
             } else if (!style ) {
                 std::cerr << "SPIPaint::read: url with empty SPStyle pointer" << std::endl;
             } else {
