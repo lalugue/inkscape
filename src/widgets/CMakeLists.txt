@@ -3,14 +3,12 @@
 set(widgets_SRC
 	paintdef.cpp
 	sp-attribute-widget.cpp
-	sp-xmlview-tree.cpp
 	spw-utilities.cpp
 
 	# -------
 	# Headers
 	paintdef.h
 	sp-attribute-widget.h
-	sp-xmlview-tree.h
 	spw-utilities.h
 	widget-sizes.h
 )

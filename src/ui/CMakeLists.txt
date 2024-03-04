@@ -274,6 +274,7 @@ set(ui_SRC
 	widget/unit-menu.cpp
 	widget/unit-tracker.cpp
 	widget/widget-vfuncs-class-init.cpp
+        widget/xml-treeview.cpp
 
 	view/svg-view-widget.cpp
 
@@ -566,6 +567,7 @@ set(ui_SRC
 	widget/unit-menu.h
 	widget/unit-tracker.h
 	widget/widget-vfuncs-class-init.h
+        widget/xml-treeview.h
 
 	view/svg-view-widget.h
 )

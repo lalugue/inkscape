@@ -49,6 +49,10 @@ class MessageContext;
 
 namespace XML { class Node; }
 
+namespace UI::Widget {
+class XmlTreeView;
+} // namespace UI::Widget
+
 namespace UI::Dialog {
 
 /**
@@ -70,14 +74,9 @@ private:
     void desktopReplaced() final;
 
     /**
-     * Select a node in the xml tree
-     */
-    void set_tree_repr(Inkscape::XML::Node *repr);
-
-    /**
      * Is the selected tree node editable
      */
-    gboolean xml_tree_node_mutable(GtkTreeIter *node);
+    bool xml_tree_node_mutable(Inkscape::XML::Node *node);
 
     /**
      * Select a node in the xml tree
@@ -111,7 +110,7 @@ private:
     /**
       * Enable widgets based on current selections
       */
-    void on_tree_select_row_enable(GtkTreeIter *node);
+    void on_tree_select_row_enable(Inkscape::XML::Node *node);
     void on_tree_unselect_row_disable();
     void on_tree_unselect_row_hide();
     void on_attr_unselect_row_disable();
@@ -154,8 +153,7 @@ private:
     Inkscape::XML::Node *selected_repr = nullptr;
 
     /* XmlTree Widgets */
-    SPXMLViewTree *tree = nullptr;
-    Gtk::TreeView* _treemm = nullptr;
+    Inkscape::UI::Widget::XmlTreeView *_xml_treeview = nullptr;
     AttrDialog *attributes;
     Gtk::Box *_attrbox;
 
