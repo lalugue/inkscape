@@ -14,6 +14,16 @@
 
 #include <glib/poppler-features.h>
 
+#if POPPLER_CHECK_VERSION(24, 3, 0)
+#define _POPPLER_FUNCTION_TYPE_SAMPLED Function::Type::Sampled
+#define _POPPLER_FUNCTION_TYPE_EXPONENTIAL Function::Type::Exponential
+#define _POPPLER_FUNCTION_TYPE_STITCHING Function::Type::Stitching
+#else
+#define _POPPLER_FUNCTION_TYPE_SAMPLED 0
+#define _POPPLER_FUNCTION_TYPE_EXPONENTIAL 2
+#define _POPPLER_FUNCTION_TYPE_STITCHING 3
+#endif
+
 #if POPPLER_CHECK_VERSION(22, 4, 0)
 #define _POPPLER_FONTPTR_TO_GFX8(font_ptr) ((Gfx8BitFont *)font_ptr.get())
 #else
