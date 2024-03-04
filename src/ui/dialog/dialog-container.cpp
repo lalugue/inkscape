@@ -1026,6 +1026,12 @@ void DialogContainer::on_unrealize() {
     parent_type::on_unrealize();
 }
 
+
+#ifdef __APPLE__
+DialogNotebook* DialogContainer::new_nb = 0;
+Gtk::Widget* DialogContainer::page_move = 0;
+#endif
+
 // Create a new notebook and move page.
 DialogNotebook *DialogContainer::prepare_drop(Gtk::SelectionData const &selection_data)
 {
@@ -1046,7 +1052,13 @@ DialogNotebook *DialogContainer::prepare_drop(Gtk::SelectionData const &selectio
 
     // Create new notebook and move page.
     auto const new_notebook = Gtk::make_managed<DialogNotebook>(this);
+#ifdef __APPLE__
+    // moving current page during d&d is a sure way to crash on macos
+    new_nb = new_notebook;
+    page_move = page;
+#else
     new_notebook->move_page(*page);
+#endif
 
     // move_page() takes care of updating dialog lists.
     INKSCAPE.themecontext->getChangeThemeSignal().emit();

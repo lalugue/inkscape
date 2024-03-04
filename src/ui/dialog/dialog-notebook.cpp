@@ -456,7 +456,20 @@ void DialogNotebook::on_drag_end(const Glib::RefPtr<Gdk::DragContext> &context)
         instance->remove_highlight_header();
     }
 
-    bool const set_floating = should_set_floating(context);
+    bool set_floating = should_set_floating(context);
+
+#ifdef __APPLE__
+    auto page_to_move = DialogContainer::page_move;
+    auto new_nb = DialogContainer::new_nb;
+    if (page_to_move && new_nb) {
+        // On macOS, it's only save to move the page from drag_end handler here
+        new_nb->move_page(*page_to_move);
+        DialogContainer::page_move = 0;
+        DialogContainer::new_nb = 0;
+        set_floating = false;
+    }
+#endif
+
     if (set_floating) {
         // Find page
         if (auto const page = _notebook.get_nth_page(_notebook.get_current_page())) {
@@ -491,6 +504,10 @@ void DialogNotebook::on_drag_end(const Glib::RefPtr<Gdk::DragContext> &context)
 
 void DialogNotebook::on_drag_begin(const Glib::RefPtr<Gdk::DragContext> &context)
 {
+#ifdef __APPLE__
+    DialogContainer::page_move = 0;
+    DialogContainer::new_nb = 0;
+#endif
     DialogMultipaned::add_drop_zone_highlight_instances();
     for (auto instance : _instances) {
         instance->add_highlight_header();
