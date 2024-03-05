@@ -93,10 +93,15 @@ CanvasGrid::CanvasGrid(SPDesktopWidget *dtw)
 
     // Guide Lock
     _guide_lock.set_name("LockGuides");
-    _guide_lock.add(*Gtk::make_managed<Gtk::Image>("object-locked", Gtk::ICON_SIZE_MENU));
-    _guide_lock.show_all_children();
+    auto set_lock_icon = [this](){
+        _guide_lock.set_image_from_icon_name(_guide_lock.get_active() ? "object-locked" : "object-unlocked");
+    };
     // To be replaced by Gio::Action:
-    _guide_lock.signal_toggled().connect(sigc::mem_fun(*_dtw, &SPDesktopWidget::update_guides_lock));
+    _guide_lock.signal_toggled().connect([=,this](){
+        set_lock_icon();
+        _dtw->update_guides_lock();
+    });
+    set_lock_icon();
     _guide_lock.set_tooltip_text(_("Toggle lock of all guides in the document"));
 
     // Subgrid
