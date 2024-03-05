@@ -49,13 +49,11 @@ MessageParam::param_update_default(const gchar * default_message)
     defmessage = default_message;
 }
 
-bool
-MessageParam::param_readSVGValue(const gchar * strvalue)
+bool MessageParam::param_readSVGValue(const gchar *strvalue)
 {
     if (g_strcmp0(strvalue, "")) {
         param_setValue(strvalue);
-    }
-    else {
+    } else {
         // do nothing if the strvalue is empty, stick to default value
     }
     return true;
