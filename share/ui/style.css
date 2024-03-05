@@ -374,17 +374,22 @@ SPCanvas {
     -GtkComboBox-appears-as-list: true;
 }
 
-#QuickActions,
-#StickyZoom ,#StickyZoom *,
-#LockGuides, #LockGuides *,
-#PreviewMode,#PreviewMode  *,
-#CMS_Adjust, #CMS_Adjust * {
+/* Those are three buttons in canvas corners; their size dictates how large scrollbars are */
+#QuickActions, #LockGuides, #CMS_Adjust {
     padding: 0;
-    min-height:3px;
-    font-size:16px;
+    margin: 0;
+    outline: none;
+    border-radius: 0;
+    border-width: 0px;
+    min-width: 22px;
+    min-height: 22px;
 }
-#QuickActions {
-    padding: 2px 0;
+/* Don't let images inside those buttons inflate their sizes */
+#QuickActions *, #LockGuides *, #CMS_Adjust * {
+    padding: 0;
+}
+#QuickActions image {
+    margin-top: 1px;
 }
 
 /* Keep palette scrollbar from generating warnings. */
@@ -1250,22 +1255,6 @@ popover.menu.menuize > stack > box > modelbutton:first-child > * /* Affect child
     min-height: 256px;
 }
 
-#CanvasGrid button {
-    min-width:16px;
-    min-height:16px;
-    outline:none;
-    border-radius:0;
-    border-width:0px;
-    padding: 0;
-}
-
-#CanvasGrid #QuickActions image{
-    padding: 4px 0 0 0;
-}
-
-#CanvasGrid button:checked * {
-    background-color:alpha(@theme_selected_bg_color,0.9);
-}
 
 /* IconPreview */
 button.icon-preview {

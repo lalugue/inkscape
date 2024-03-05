@@ -549,7 +549,7 @@
         <child>
           <object class="GtkImage" id="image17">
             <property name="visible">True</property>
-            <property name="icon-name">object-locked</property>
+            <property name="icon-name">object-unlocked</property>
           </object>
         </child>
       </object>
