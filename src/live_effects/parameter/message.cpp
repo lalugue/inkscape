@@ -107,15 +107,13 @@ MessageParam::param_newWidget()
     return frame;
 }
 
-void
-MessageParam::param_setValue(const gchar * strvalue)
+void MessageParam::param_setValue(const gchar *strvalue)
 {
     if (g_strcmp0(strvalue, defmessage.c_str())) {
         param_effect->refresh_widgets = true;
     }
     defmessage = strvalue;
 }
-
 
 } /* namespace LivePathEffect */
 
