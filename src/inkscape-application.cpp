@@ -1428,7 +1428,8 @@ void InkscapeApplication::redirect_output()
 
     bool noout = true;
     for (auto child = doc->root()->firstChild(); child; child = child->next()) {
-        auto res = child->firstChild()->content();
+        auto grandchild = child->firstChild();
+        auto res = grandchild ? grandchild->content() : nullptr;
         if (res) {
             if (!g_strcmp0(child->name(), "cerr")) {
                 std::cerr << res << std::endl;
