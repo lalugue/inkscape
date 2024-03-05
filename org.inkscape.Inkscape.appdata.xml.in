@@ -187,6 +187,6 @@
     <control>tablet</control>
   </supports>
   <recommends>
-    <display_length compare="ge">medium</display_length>
+    <display_length compare="ge">768</display_length>
   </recommends>
 </component>
