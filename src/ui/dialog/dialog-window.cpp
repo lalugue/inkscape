@@ -56,6 +56,8 @@ DialogWindow::DialogWindow(InkscapeWindow *inkscape_window, Gtk::Widget *page)
     // Setting the window type
     set_type_hint(Gdk::WINDOW_TYPE_HINT_DIALOG);
     set_transient_for(*inkscape_window);
+    // default position if no persisted state is available
+    set_position(Gtk::WIN_POS_CENTER_ON_PARENT);
 
     // Add the dialog window to our app
     _app->gtk_app()->add_window(*this);
