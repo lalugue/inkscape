@@ -70,7 +70,7 @@
                 <child>
                   <object class="GtkFlowBox" id="flowbox">
                     <property name="visible">True</property>
-                    <property name="can-focus">True</property>
+                    <property name="can-focus">False</property>
                     <property name="halign">start</property>
                     <property name="valign">start</property>
                     <property name="min-children-per-line">8</property>
@@ -348,6 +348,7 @@
               <object class="GtkButton" id="edit-marker">
                 <property name="label" translatable="yes">Edit on canvas</property>
                 <property name="visible">True</property>
+                <property name="can-focus">False</property>
                 <property name="focus-on-click">False</property>
                 <property name="receives-default">True</property>
                 <property name="halign">center</property>
@@ -400,6 +401,7 @@
               <object class="GtkButton" id="link-scale">
                 <property name="name">LockGuides</property>
                 <property name="visible">True</property>
+                <property name="can-focus">False</property>
                 <property name="focus-on-click">False</property>
                 <property name="receives-default">True</property>
                 <property name="halign">end</property>

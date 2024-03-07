@@ -149,6 +149,9 @@ MarkerComboBox::MarkerComboBox(Glib::ustring id, int l) :
         }
         _widgets_to_markers[image] = item;
         box->set_size_request(item->width, item->height);
+        // removing ability to focus from all items to prevent crash when user edits "Offset Y" and presses tab key
+        // to move to the next widget; not ideal, as it limits navigation, but lesser evil
+        box->set_can_focus(false);
         return box;
     });
 
