@@ -336,7 +336,7 @@ StartScreen::enlist_recent_files()
             // This uri is a GVFS uri, so parse it with that or it will fail.
             auto file = Gio::File::create_for_uri(item->get_uri());
             std::string path = file->get_path();
-            if (!path.empty() && Glib::file_test(path, Glib::FILE_TEST_IS_REGULAR)
+            if (!path.empty()
                 && item->get_mime_type() == "image/svg+xml") {
                 Gtk::TreeModel::Row row = *(store->append());
                 row[cols.col_name] = item->get_display_name();

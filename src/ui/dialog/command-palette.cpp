@@ -112,8 +112,6 @@ CommandPalette::CommandPalette()
                                   recent_file->has_application("inkscape") or
                                   recent_file->has_application("inkscape.exe");
 
-                valid_file = valid_file and recent_file->exists();
-
                 if (not valid_file) {
                     continue;
                 }
@@ -206,7 +204,7 @@ void CommandPalette::append_recent_file_operation(const Glib::ustring &path, boo
     auto &CPDescription      (get_widget<Gtk::Label> (operation_builder, "CPDescription"));
 
     const auto file = Gio::File::create_for_path(path);
-    if (file->query_exists()) {
+    if (true) {
         const Glib::ustring file_name = file->get_basename();
 
         if (is_import) {
@@ -228,16 +226,6 @@ void CommandPalette::append_recent_file_operation(const Glib::ustring &path, boo
         CPDescription.set_text(path);
         CPDescription.set_tooltip_text(path);
 
-        {
-            Glib::DateTime mod_time;
-#if GLIBMM_CHECK_VERSION(2, 62, 0)
-            mod_time = file->query_info()->get_modification_date_time();
-            // Using this to reduce instead of ActionFullName widget because fullname is searched
-#else
-            mod_time.create_now_local(file->query_info()->modification_time());
-#endif
-            CPShortcut.set_text(mod_time.format("%d %b %R"));
-        }
         // Add to suggestions
         if (is_suggestion) {
             _CPSuggestions.append(CPOperation);
@@ -282,15 +270,15 @@ bool CommandPalette::generate_action_operation(const ActionPtrName &action_ptr_n
 
     CPActionFullLabel.set_text(action_ptr_name.second);
 
-    if (not show_full_action_name) {
+        if (not show_full_action_name) {
         CPActionFullButton.set_no_show_all();
         CPActionFullButton.set_visible(false);
-    } else {
+        } else {
         CPActionFullButton.signal_clicked().connect(
             sigc::bind(sigc::mem_fun(*this, &CommandPalette::on_action_fullname_clicked),
-                                      action_ptr_name.second),
-            false);
-    }
+                                          action_ptr_name.second),
+                false);
+        }
 
     {
         std::vector<Glib::ustring> accels = gapp->get_accels_for_action(action_ptr_name.second);
@@ -393,8 +381,8 @@ void CommandPalette::on_window_focus(Gtk::Widget const * const focus)
     // TODO: GTK4: EventControllerFocus.property_contains_focus() should make this slightly nicer?
     if (!focus || !is_descendant_of(*focus, _CPBase)) {
         close();
-    }
-}
+        }
+        }
 
 void CommandPalette::on_activate_cpfilter()
 {
@@ -421,7 +409,7 @@ bool CommandPalette::on_focus_cpfilter(Gtk::DirectionType const direction)
     if (direction == Gtk::DIR_DOWN) {
         // Unselect so we go to 1st row
         _CPSuggestions.unselect_all();
-    }
+}
 
     return false;
 }
@@ -1087,8 +1075,8 @@ static void set_sensitive(Gtk::Entry &entry, bool const sensitive)
 void CommandPalette::set_mode(CPMode mode)
 {
     if (_mode == mode) {
-        return;
-    }
+                return;
+            }
 
     switch (mode) {
         case CPMode::SEARCH:
@@ -1177,7 +1165,7 @@ void CommandPalette::set_mode(CPMode mode)
                 adjustment->set_value(adjustment->get_upper());
             });
         }
-    }
+            }
 
     _mode = mode;
 }
@@ -1327,13 +1315,13 @@ std::pair<Gtk::Label *, Gtk::Label *> CommandPalette::get_name_desc(Gtk::ListBox
         // FIXME: When structure of Gladefile of CPOperation changes, refactor this
         auto const box_children = UI::get_children(*box);
         auto CPNameBox = dynamic_cast<Gtk::Box *>(box_children.at(0));
-        if (CPNameBox) {
+            if (CPNameBox) {
             auto const name_children = UI::get_children(*CPNameBox);
             auto CPName = dynamic_cast<Gtk::Label *>(name_children.at(0));
             auto CPDescription = dynamic_cast<Gtk::Label *>(name_children.at(1));
-            return std::pair(CPName, CPDescription);
+                return std::pair(CPName, CPDescription);
+            }
         }
-    }
     return std::pair(nullptr, nullptr);
 }
 
@@ -1343,15 +1331,15 @@ Gtk::Label *CommandPalette::get_full_action_name(Gtk::ListBoxRow *child)
     if (box && (box->get_name() == "CPOperation")) {
         auto const box_children = UI::get_children(*box);
         auto CPActionFullButton = dynamic_cast<Gtk::Button *>(box_children.at(1));
-        if (CPActionFullButton) {
+            if (CPActionFullButton) {
             auto const synapse_button = UI::get_children(*CPActionFullButton);
             auto CPSynapseButtonBox = dynamic_cast<Gtk::Box *>(synapse_button.at(0));
             if (CPSynapseButtonBox) {
                 auto const synapse_button_content = UI::get_children(*CPSynapseButtonBox);
                 return dynamic_cast<Gtk::Label *>(synapse_button_content.at(1));
+                }
             }
         }
-    }
     return nullptr;
 }
 
