@@ -157,9 +157,6 @@ build_menu()
 #endif
                                 ;
 
-                // this is potentially expensive: local FS access (remote files are not checked)
-                valid_file = valid_file && recent_file->exists();
-
                 if (!valid_file) {
                     continue;
                 }

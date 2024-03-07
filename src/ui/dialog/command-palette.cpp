@@ -134,8 +134,6 @@ CommandPalette::CommandPalette()
                                   recent_file->has_application("inkscape") or
                                   recent_file->has_application("inkscape.exe");
 
-                valid_file = valid_file and recent_file->exists();
-
                 if (not valid_file) {
                     continue;
                 }
@@ -247,7 +245,7 @@ void CommandPalette::append_recent_file_operation(const Glib::ustring &path, boo
     operation_builder->get_widget("CPDescription", CPDescription);
 
     const auto file = Gio::File::create_for_path(path);
-    if (file->query_exists()) {
+    if (true) {
         const Glib::ustring file_name = file->get_basename();
 
         if (is_import) {
@@ -269,16 +267,6 @@ void CommandPalette::append_recent_file_operation(const Glib::ustring &path, boo
         CPDescription->set_text(path);
         CPDescription->set_tooltip_text(path);
 
-        {
-            Glib::DateTime mod_time;
-#if GLIBMM_CHECK_VERSION(2, 62, 0)
-            mod_time = file->query_info()->get_modification_date_time();
-            // Using this to reduce instead of ActionFullName widget because fullname is searched
-#else
-            mod_time.create_now_local(file->query_info()->modification_time());
-#endif
-            CPShortcut->set_text(mod_time.format("%d %b %R"));
-        }
         // Add to suggestions
         if (is_suggestion) {
             _CPSuggestions->append(*CPOperation);
