@@ -341,8 +341,8 @@ StartScreen::enlist_recent_files()
             // This uri is a GVFS uri, so parse it with that or it will fail.
             auto file = Gio::File::create_for_uri(item->get_uri());
             std::string path = file->get_path();
-            if (!path.empty() && Glib::file_test(path, Glib::FileTest::IS_REGULAR)
-                && item->get_mime_type() == "image/svg+xml") {
+            // Note: Do not check if the file exists, to avoid long delays. See https://gitlab.com/inkscape/inkscape/-/issues/2348 .
+            if (!path.empty() && item->get_mime_type() == "image/svg+xml") {
                 Gtk::TreeModel::Row row = *(store->append());
                 row[cols.col_name] = item->get_display_name();
                 row[cols.col_id] = item->get_uri();

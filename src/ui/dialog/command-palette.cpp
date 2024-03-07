@@ -119,7 +119,7 @@ CommandPalette::CommandPalette()
                                   recent_file->has_application("inkscape") or
                                   recent_file->has_application("inkscape.exe");
 
-                valid_file = valid_file and recent_file->exists();
+                // Note: Do not check if the file exists, to avoid long delays. See https://gitlab.com/inkscape/inkscape/-/issues/2348 .
 
                 if (not valid_file) {
                     continue;
@@ -213,43 +213,31 @@ void CommandPalette::append_recent_file_operation(const Glib::ustring &path, boo
     auto &CPDescription      (get_widget<Gtk::Label> (operation_builder, "CPDescription"));
 
     const auto file = Gio::File::create_for_path(path);
-    if (file->query_exists()) {
-        const Glib::ustring file_name = file->get_basename();
+    const Glib::ustring file_name = file->get_basename();
 
-        if (is_import) {
-            // Used for Activate row signal of listbox and not
-            CPGroup.set_text("import");
-            CPActionFullLabel.set_text("import"); // For filtering only
+    if (is_import) {
+        // Used for Activate row signal of listbox and not
+        CPGroup.set_text("import");
+        CPActionFullLabel.set_text("import"); // For filtering only
 
-        } else {
-            CPGroup.set_text("open");
-            CPActionFullLabel.set_text("open"); // For filtering only
-        }
+    } else {
+        CPGroup.set_text("open");
+        CPActionFullLabel.set_text("open"); // For filtering only
+    }
 
-        // Hide for recent_file, not required
-        CPActionFullButton.set_visible(false);
+    // Hide for recent_file, not required
+    CPActionFullButton.set_visible(false);
 
-        CPName.set_text((is_import ? _("Import") : _("Open")) + (": " + file_name));
-        CPName.set_tooltip_text((is_import ? ("Import") : ("Open")) + (": " + file_name)); // Tooltip_text are not translatable
-        CPDescription.set_text(path);
-        CPDescription.set_tooltip_text(path);
+    CPName.set_text((is_import ? _("Import") : _("Open")) + (": " + file_name));
+    CPName.set_tooltip_text((is_import ? ("Import") : ("Open")) + (": " + file_name)); // Tooltip_text are not translatable
+    CPDescription.set_text(path);
+    CPDescription.set_tooltip_text(path);
 
-        {
-            Glib::DateTime mod_time;
-#if GLIBMM_CHECK_VERSION(2, 62, 0)
-            mod_time = file->query_info()->get_modification_date_time();
-            // Using this to reduce instead of ActionFullName widget because fullname is searched
-#else
-            mod_time.create_now_local(file->query_info()->modification_time());
-#endif
-            CPShortcut.set_text(mod_time.format("%d %b %R"));
-        }
-        // Add to suggestions
-        if (is_suggestion) {
-            _CPSuggestions.append(CPOperation);
-        } else {
-            _CPHistory.append(CPOperation);
-        }
+    // Add to suggestions
+    if (is_suggestion) {
+        _CPSuggestions.append(CPOperation);
+    } else {
+        _CPHistory.append(CPOperation);
     }
 }
 

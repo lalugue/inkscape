@@ -161,8 +161,7 @@ build_menu()
 #endif
                             ;
 
-            // this is potentially expensive: local FS access (remote files are not checked)
-            valid_file = valid_file && recent_file->exists();
+            // Note: Do not check if the file exists, to avoid long delays. See https://gitlab.com/inkscape/inkscape/-/issues/2348 .
 
             if (!valid_file) {
                 continue;
