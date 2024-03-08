@@ -20,7 +20,7 @@ void ModifierTracker::event(CanvasEvent const &event)
 {
     inspect_event(event,
     [&] (KeyPressEvent const &event) {
-        switch (shortcut_key(event)) {
+        switch (event.keyval) {
         case GDK_KEY_Shift_L:
             _left_shift = true;
             break;
@@ -42,7 +42,7 @@ void ModifierTracker::event(CanvasEvent const &event)
         }
     },
     [&] (KeyReleaseEvent const &event) {
-        switch (shortcut_key(event)) {
+        switch (event.keyval) {
         case GDK_KEY_Shift_L:
             _left_shift = false;
             break;

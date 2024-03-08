@@ -339,7 +339,7 @@ bool Handle::_eventHandler(Tools::ToolBase *event_context, CanvasEvent const &ev
 
     inspect_event(event,
     [&] (KeyPressEvent const &event) {
-        switch (shortcut_key(event)) {
+        switch (event.keyval) {
         case GDK_KEY_s:
         case GDK_KEY_S:
             /* if Shift+S is pressed while hovering over a cusp node handle,
@@ -1151,7 +1151,7 @@ bool Node::_eventHandler(Tools::ToolBase *event_context, CanvasEvent const &even
     },
     [&] (KeyPressEvent const &event) {
         state = event.modifiers;
-        switch (shortcut_key(event)) {
+        switch (event.keyval) {
         case GDK_KEY_Page_Up:
             dir = 1;
             break;

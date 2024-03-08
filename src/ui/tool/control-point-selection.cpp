@@ -518,7 +518,7 @@ void ControlPointSelection::_updateTransformHandles(bool preserve_center)
 bool ControlPointSelection::_keyboardMove(KeyPressEvent const &event, Geom::Point const &dir)
 {
     if (held_ctrl(event)) return false;
-    unsigned num = 1 + Tools::gobble_key_events(shortcut_key(event), 0);
+    unsigned num = 1 + Tools::gobble_key_events(event.keyval, 0);
 
     auto prefs = Preferences::get();
 
@@ -687,7 +687,7 @@ bool ControlPointSelection::event(Inkscape::UI::Tools::ToolBase *, CanvasEvent c
 
     auto &keyevent = static_cast<KeyPressEvent const &>(event);
 
-    switch (shortcut_key(keyevent)) {
+    switch (keyevent.keyval) {
         // moves
         case GDK_KEY_Up:
         case GDK_KEY_KP_Up:

@@ -264,7 +264,7 @@ static double accelerate_scroll(KeyEvent const &event, double acceleration)
 bool ToolBase::_keyboardMove(KeyEvent const &event, Geom::Point const &dir)
 {
     if (mod_ctrl(event)) return false;
-    unsigned num = 1 + gobble_key_events(shortcut_key(event), 0);
+    unsigned num = 1 + gobble_key_events(event.keyval, 0);
 
     auto prefs = Preferences::get();
 

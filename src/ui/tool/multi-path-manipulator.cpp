@@ -584,7 +584,7 @@ bool MultiPathManipulator::event(Inkscape::UI::Tools::ToolBase *tool, CanvasEven
     _tracker.event(event);
     unsigned key = 0;
     if (event.type() == EventType::KEY_PRESS) {
-        key = shortcut_key(static_cast<KeyPressEvent const &>(event));
+        key = static_cast<KeyPressEvent const &>(event).keyval;
     }
 
     // Single handle adjustments go here.

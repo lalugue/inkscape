@@ -100,6 +100,7 @@ struct ButtonEvent : CanvasEvent
 
     /// Location of the cursor, in world coordinates.
     Geom::Point pos;
+
     /// Location of the cursor, in GDK event / canvas widget coordinates.
     Geom::Point orig_pos;
 
@@ -371,18 +372,6 @@ inline bool held_no_modifiers(CanvasEvent const &event) { return state_held_no_m
 
 template <unsigned button>
 inline bool held_button(CanvasEvent const &event) { return state_held_button<button>(event.modifiers); }
-
-/*
- * Shortcut key handling
- */
-inline unsigned shortcut_key(KeyEvent const &event)
-{
-    // Even in GTK3, “`GdkEventKey` already contains the translated keyval, so
-    // this function isn’t as useful as you might think.” – which we were using
-    // here, but which is gone in GTK4. Since it doesnʼt therefore seem to have
-    // been doing anything, now we just directly use GdKeyEvent→KeyEvent→keyval.
-    return event.keyval;
-}
 
 } // namespace Inkscape
 
