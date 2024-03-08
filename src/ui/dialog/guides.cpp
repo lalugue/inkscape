@@ -244,10 +244,19 @@ void GuidelinePropertiesDialog::_setup() {
     _spin_button_x.setIncrements(1.0, 10.0);
     _spin_button_x.setRange(-1e6, 1e6);
     _spin_button_y.setDigits(minimumexponent);
-    
     _spin_button_y.setAlignment(1.0);
     _spin_button_y.setIncrements(1.0, 10.0);
     _spin_button_y.setRange(-1e6, 1e6);
+
+    _spin_button_x.setWidthChars(12);
+    _spin_button_y.setWidthChars(12);
+    _spin_angle.setWidthChars(12);
+
+    _row_labels = Gtk::SizeGroup::create(Gtk::SIZE_GROUP_HORIZONTAL);
+    for (auto label : {_label_entry.getLabel(), _spin_button_x.getLabel(), _spin_button_y.getLabel(), _spin_angle.getLabel()}) {
+        _row_labels->add_widget(*label);
+        label->set_xalign(0);
+    }
 
     _spin_button_x.set_halign(Gtk::ALIGN_FILL);
     _spin_button_x.set_valign(Gtk::ALIGN_FILL);

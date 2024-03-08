@@ -12,11 +12,13 @@
 #ifndef INKSCAPE_DIALOG_GUIDELINE_H
 #define INKSCAPE_DIALOG_GUIDELINE_H
 
+#include <glibmm/refptr.h>
 #include <gtkmm/checkbutton.h>
 #include <gtkmm/colorbutton.h>
 #include <gtkmm/dialog.h>
 #include <gtkmm/grid.h>
 #include <gtkmm/label.h>
+#include <gtkmm/sizegroup.h>
 
 #include "ui/widget/unit-menu.h"
 #include "ui/widget/scalar-unit.h"
@@ -82,6 +84,7 @@ private:
     bool _mode;
     Geom::Point _oldpos;
     gdouble _oldangle;
+    Glib::RefPtr<Gtk::SizeGroup> _row_labels;
 
     void on_sb_activate();
 };
