@@ -126,10 +126,14 @@ CanvasGrid::CanvasGrid(SPDesktopWidget *dtw)
 
     // CMS Adjust (To be replaced by Gio::Action)
     _cms_adjust.set_name("CMS_Adjust");
-    _cms_adjust.add(*Gtk::make_managed<Gtk::Image>("color-management", Gtk::ICON_SIZE_MENU));
     // Can't access via C++ API, fixed in Gtk4.
     gtk_actionable_set_action_name( GTK_ACTIONABLE(_cms_adjust.gobj()), "win.canvas-color-manage");
     _cms_adjust.set_tooltip_text(_("Toggle color-managed display for this document window"));
+    auto set_cms_icon = [this](){
+        _cms_adjust.set_image_from_icon_name(_cms_adjust.get_active() ? "color-management" : "color-management-off");
+    };
+    set_cms_icon();
+    _cms_adjust.signal_toggled().connect([=,this](){ set_cms_icon(); });
 
     // popover with some common display mode related options
     _builder_display_popup = create_builder("display-popup.glade");
