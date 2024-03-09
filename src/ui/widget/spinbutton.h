@@ -68,20 +68,21 @@ public:
 
     void defocus();
 
+    // set key up/down increment to override spin button adjustment step setting
+    void set_increment(double delta);
+
 private:
     UnitMenu    *_unit_menu    = nullptr; ///< Linked unit menu for unit conversion in entered expressions.
     UnitTracker *_unit_tracker = nullptr; ///< Linked unit tracker for unit conversion in entered expressions.
     double _on_focus_in_value  = 0.;
     Gtk::Widget *_defocus_widget = nullptr; ///< Widget that should grab focus when the spinbutton defocuses
-
     bool _zeroable = false; ///< Reset-value should be zero
     bool _oneable  = false; ///< Reset-value should be one
-
     bool _stay = false; ///< Whether to ignore defocusing
     bool _dont_evaluate = false; ///< Don't attempt to evaluate expressions
-
     NumericMenuData _custom_menu_data;
     bool _custom_popup = false;
+    double _increment = 0.0;    // if > 0, key up/down will increment/decrement current value by this amount
 
     void construct();
 

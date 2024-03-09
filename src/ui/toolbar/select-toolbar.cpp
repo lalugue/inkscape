@@ -180,6 +180,8 @@ void SelectToolbar::setup_derived_spin_button(Inkscape::UI::Widget::SpinButton &
 
     btn.addUnitTracker(_tracker.get());
     btn.set_defocus_widget(_desktop->getCanvas());
+    // select toolbar spin buttons increment by 1.0 with key up/down, and 0.1 with spinner buttons
+    btn.set_increment(1.0);
 }
 
 void SelectToolbar::any_value_changed(Glib::RefPtr<Gtk::Adjustment> &adj)

@@ -101,6 +101,18 @@ bool SpinButton::on_key_pressed(GtkEventControllerKey const * const controller,
                                 unsigned const keyval, unsigned const keycode,
                                 GdkModifierType const state)
 {
+    bool inc = false;
+    double val = 0;
+
+    if (_increment > 0) {
+        constexpr auto modifiers = GDK_SHIFT_MASK | GDK_CONTROL_MASK | GDK_MOD1_MASK | GDK_MOD2_MASK | GDK_SUPER_MASK | GDK_HYPER_MASK | GDK_META_MASK;
+        // no modifiers pressed?
+        if ((state & modifiers) == 0) {
+            inc = true;
+            val = get_value();
+        }
+    }
+
     switch (Inkscape::UI::Tools::get_latin_keyval(controller, keyval, keycode, state)) {
         case GDK_KEY_Escape: // defocus
             undo();
@@ -124,6 +136,22 @@ bool SpinButton::on_key_pressed(GtkEventControllerKey const * const controller,
                 _stay = true;
                 undo();
                 return true; // I consumed the event
+            }
+            break;
+
+        case GDK_KEY_Up:
+        case GDK_KEY_KP_Up:
+            if (inc) {
+                set_value(val + _increment);
+                return true;
+            }
+            break;
+
+        case GDK_KEY_Down:
+        case GDK_KEY_KP_Down:
+            if (inc) {
+                set_value(val - _increment);
+                return true;
             }
             break;
 
@@ -213,6 +241,10 @@ void SpinButton::set_custom_numeric_menu_data(NumericMenuData &&custom_menu_data
 {
     _custom_popup = true;
     _custom_menu_data = std::move(custom_menu_data);
+}
+
+void SpinButton::set_increment(double delta) {
+    _increment = delta;
 }
 
 } // namespace Inkscape::UI::Widget
