@@ -10,9 +10,7 @@
 
 #include "graphics.h"
 
-namespace Inkscape {
-namespace UI {
-namespace Widget {
+namespace Inkscape::UI::Widget {
 
 struct CairoFragment
 {
@@ -62,9 +60,7 @@ private:
     uint32_t page, desk, border;
 };
 
-} // namespace Widget
-} // namespace UI
-} // namespace Inkscape
+} // namespace Inkscape::UI::Widget
 
 #endif // INKSCAPE_UI_WIDGET_CANVAS_CAIROGRAPHICS_H
 

@@ -784,157 +784,93 @@ bool ToolBase::root_handler(CanvasEvent const &event)
     },
 
     [&] (ScrollEvent const &event) {
-        int constexpr WHEEL_SCROLL_DEFAULT = 40;
-        
-        // previously we did two wheel_scrolls for each mouse scroll
-        int const wheel_scroll = prefs->getIntLimited( "/options/wheelscroll/value", WHEEL_SCROLL_DEFAULT, 0, 1000) * 2;
-
-        // Size of smooth-scrolls (only used in GTK+ 3)
-        Geom::Point delta;
+        // Factor of 2 for legacy reasons: previously we did two wheel_scrolls for each mouse scroll.
+        auto get_scroll_inc = [&] { return prefs->getIntLimited("/options/wheelscroll/value", 40, 0, 1000) * 2; };
 
         using Modifiers::Type;
         using Modifiers::Triggers;
-        Type action = Modifiers::Modifier::which(Triggers::CANVAS | Triggers::SCROLL, event.modifiers);
+        auto const action = Modifiers::Modifier::which(Triggers::CANVAS | Triggers::SCROLL, event.modifiers);
 
         if (action == Type::CANVAS_ROTATE) {
+            // Rotate by the amount vertically scrolled.
+
             if (_desktop->get_rotation_lock()) {
-                return; // Do nothing, Donʼt warn to console, as it is expected that we do nothing!
+                return;
             }
 
-            double rotate_inc = prefs->getDoubleLimited("/options/rotateincrement/value", 15, 1, 90, "°");
-            rotate_inc *= M_PI / 180.0;
-
-            switch (event.direction) {
-            case Gdk::ScrollDirection::UP:
-                // Do nothing
-                break;
-
-            case Gdk::ScrollDirection::DOWN:
-                rotate_inc = -rotate_inc;
-                break;
-
-            case Gdk::ScrollDirection::SMOOTH: {
-                delta = event.delta;
-#ifdef GDK_WINDOWING_QUARTZ
-                // MacBook trackpad scroll event gives pixel delta
-                delta.y() /= WHEEL_SCROLL_DEFAULT;
-#endif
-                double delta_y_clamped = std::clamp(delta.y(), -1.0, 1.0); // values > 1 result in excessive rotating
-                rotate_inc = rotate_inc * -delta_y_clamped;
-                break;
+            double const delta_y = event.delta.y();
+            if (delta_y == 0) {
+                return;
             }
 
-            default:
-                rotate_inc = 0.0;
+            double angle;
+            if (event.unit == Gdk::ScrollUnit::WHEEL) {
+                double rotate_inc = prefs->getDoubleLimited("/options/rotateincrement/value", 15, 1, 90, "°");
+                rotate_inc = Geom::rad_from_deg(rotate_inc);
+                angle = delta_y * rotate_inc;
+            } else {
+                angle = delta_y * (Geom::rad_from_deg(15) / 10.0); // logical pixels to radians, arbitrary
+                angle = std::clamp(angle, -1.0, 1.0); // values > 1 result in excessive rotating
             }
 
-            if (rotate_inc != 0.0) {
-                auto const scroll_dt = _desktop->point();
-                _desktop->rotate_relative_keep_point(scroll_dt, rotate_inc);
-                ret = true;
-            }
+            _desktop->rotate_relative_keep_point(_desktop->point(), -angle);
+            ret = true;
 
         } else if (action == Type::CANVAS_PAN_X) {
-           /* shift + wheel, pan left--right */
+            // Scroll horizontally by the amount vertically scrolled.
 
-            switch (event.direction) {
-            case Gdk::ScrollDirection::UP:
-            case Gdk::ScrollDirection::LEFT:
-                _desktop->scroll_relative(Geom::Point(wheel_scroll, 0));
-                ret = true;
-                break;
-
-            case Gdk::ScrollDirection::DOWN:
-            case Gdk::ScrollDirection::RIGHT:
-                _desktop->scroll_relative(Geom::Point(-wheel_scroll, 0));
-                ret = true;
-                break;
-
-            case Gdk::ScrollDirection::SMOOTH: {
-                delta = event.delta;
-#ifdef GDK_WINDOWING_QUARTZ
-                // MacBook trackpad scroll event gives pixel delta
-                delta.y() /= WHEEL_SCROLL_DEFAULT;
-#endif
-                _desktop->scroll_relative(Geom::Point(wheel_scroll * -delta.y(), 0));
-                ret = true;
-                break;
+            double delta_y = event.delta.y();
+            if (delta_y == 0) {
+                return;
             }
 
-            default:
-                break;
+            if (event.unit == Gdk::ScrollUnit::WHEEL) {
+                delta_y *= get_scroll_inc();
+            } else {
+                delta_y *= 8; // subjective factor
             }
+
+            _desktop->scroll_relative({-delta_y, 0});
+            ret = true;
 
         } else if (action == Type::CANVAS_ZOOM) {
-            /* ctrl + wheel, zoom in--out */
-            double rel_zoom;
-            double const zoom_inc = prefs->getDoubleLimited("/options/zoomincrement/value", M_SQRT2, 1.01, 10);
+            // Zoom by the amount vertically scrolled.
 
-            switch (event.direction) {
-            case Gdk::ScrollDirection::UP:
-                rel_zoom = zoom_inc;
-                break;
-
-            case Gdk::ScrollDirection::DOWN:
-                rel_zoom = 1 / zoom_inc;
-                break;
-
-            case Gdk::ScrollDirection::SMOOTH: {
-                delta = event.delta;
-#ifdef GDK_WINDOWING_QUARTZ
-                // MacBook trackpad scroll event gives pixel delta
-                delta.y() /= WHEEL_SCROLL_DEFAULT;
-#endif
-                double delta_y_clamped = std::clamp(std::abs(delta.y()), 0.0, 1.0); // values > 1 result in excessive zooming
-                double zoom_inc_scaled = (zoom_inc - 1) * delta_y_clamped + 1;
-                if (delta.y() < 0) {
-                    rel_zoom = zoom_inc_scaled;
-                } else {
-                    rel_zoom = 1 / zoom_inc_scaled;
-                }
-                break;
+            double const delta_y = event.delta.y();
+            if (delta_y == 0) {
+                return;
             }
 
-            default:
-                rel_zoom = 0.0;
-                break;
+            double scale;
+            if (event.unit == Gdk::ScrollUnit::WHEEL) {
+                double const zoom_inc = prefs->getDoubleLimited("/options/zoomincrement/value", M_SQRT2, 1.01, 10);
+                scale = std::pow(zoom_inc, delta_y);
+            } else {
+                scale = delta_y / 10; // logical pixels to scale, arbitrary
+                scale = std::clamp(scale, -1.0, 1.0); // values > 1 result in excessive zooming
+                scale = std::pow(M_SQRT2, scale);
             }
 
-            if (rel_zoom != 0.0) {
-                auto scroll_dt = _desktop->point();
-                _desktop->zoom_relative(scroll_dt, rel_zoom);
-                ret = true;
-            }
-
-            /* no modifier, pan up--down (left--right on multiwheel mice?) */
-        } else if (action == Type::CANVAS_PAN_Y) {
-            switch (event.direction) {
-            case Gdk::ScrollDirection::UP:
-                _desktop->scroll_relative(Geom::Point(0, wheel_scroll));
-                break;
-
-            case Gdk::ScrollDirection::DOWN:
-                _desktop->scroll_relative(Geom::Point(0, -wheel_scroll));
-                break;
-
-            case Gdk::ScrollDirection::LEFT:
-                _desktop->scroll_relative(Geom::Point(wheel_scroll, 0));
-                break;
-
-            case Gdk::ScrollDirection::RIGHT:
-                _desktop->scroll_relative(Geom::Point(-wheel_scroll, 0));
-                break;
-
-            case Gdk::ScrollDirection::SMOOTH:
-                delta = event.delta;
-#ifdef GDK_WINDOWING_QUARTZ
-                // MacBook trackpad scroll event gives pixel delta
-                delta /= WHEEL_SCROLL_DEFAULT;
-#endif
-                _desktop->scroll_relative(delta * -wheel_scroll);
-                break;
-            }
+            _desktop->zoom_relative(_desktop->point(), 1.0 / scale);
             ret = true;
+
+        } else if (action == Type::CANVAS_PAN_Y) {
+            // Scroll both horizontally and vertically.
+
+            auto delta = event.delta;
+            if (delta == Geom::Point(0, 0)) {
+                return;
+            }
+
+            if (event.unit == Gdk::ScrollUnit::WHEEL) {
+                delta *= get_scroll_inc();
+            } else {
+                delta *= 8; // subjective factor
+            }
+
+            _desktop->scroll_relative(-delta);
+            ret = true;
+
         } else {
             g_warning("unhandled scroll event with scroll.state=0x%x", event.modifiers);
         }

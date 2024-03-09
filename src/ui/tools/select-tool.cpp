@@ -338,8 +338,7 @@ void SelectTool::sp_select_context_cycle_through_items(Selection *selection, Scr
 
     std::vector<SPItem *>::iterator next = cycling_items.end();
 
-    if ((scroll_event.direction == Gdk::ScrollDirection::UP) ||
-        (scroll_event.direction == Gdk::ScrollDirection::SMOOTH && scroll_event.delta.y() < 0)) {
+    if (scroll_event.delta.y() < 0) {
         if (! cycling_cur_item) {
             next = cycling_items.begin();
         } else {
@@ -354,7 +353,7 @@ void SelectTool::sp_select_context_cycle_through_items(Selection *selection, Scr
                 }
             }
         }
-    } else { 
+    } else if (scroll_event.delta.y() > 0) {
         if (! cycling_cur_item) {
             next = cycling_items.end();
             --next;

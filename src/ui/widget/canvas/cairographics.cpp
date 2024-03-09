@@ -1,16 +1,13 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 #include <2geom/parallelogram.h>
 #include "ui/util.h"
-#include "helper/geom.h"
 #include "cairographics.h"
 #include "stores.h"
 #include "prefs.h"
 #include "util.h"
 #include "framecheck.h"
 
-namespace Inkscape {
-namespace UI {
-namespace Widget {
+namespace Inkscape::UI::Widget {
 
 CairoGraphics::CairoGraphics(Prefs const &prefs, Stores const &stores, PageInfo const &pi)
     : prefs(prefs)
@@ -407,9 +404,7 @@ void CairoGraphics::paint_widget(Fragment const &view, PaintArgs const &a, Cairo
     }
 }
 
-} // namespace Widget
-} // namespace UI
-} // namespace Inkscape
+} // namespace Inkscape::UI::Widget
 
 /*
   Local Variables:

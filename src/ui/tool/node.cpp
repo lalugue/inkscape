@@ -1141,13 +1141,7 @@ bool Node::_eventHandler(Tools::ToolBase *event_context, CanvasEvent const &even
     inspect_event(event,
     [&] (ScrollEvent const &event) {
         state = event.modifiers;
-        if (event.direction == Gdk::ScrollDirection::UP) {
-            dir = 1;
-        } else if (event.direction == Gdk::ScrollDirection::DOWN) {
-            dir = -1;
-        } else if (event.direction == Gdk::ScrollDirection::SMOOTH) {
-            dir = event.delta.y() > 0 ? -1 : 1;
-        }
+        dir = Geom::sgn(event.delta.y());
     },
     [&] (KeyPressEvent const &event) {
         state = event.modifiers;

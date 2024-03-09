@@ -11,9 +11,7 @@
 #include <memory>
 #include "texture.h"
 
-namespace Inkscape {
-namespace UI {
-namespace Widget {
+namespace Inkscape::UI::Widget {
 
 class TextureCache
 {
@@ -34,9 +32,7 @@ public:
     virtual void finish(Texture tex) = 0;
 };
 
-} // namespace Widget
-} // namespace UI
-} // namespace Inkscape
+} // namespace Inkscape::UI::Widget
 
 #endif // INKSCAPE_UI_WIDGET_CANVAS_TEXTURECACHE_H
 

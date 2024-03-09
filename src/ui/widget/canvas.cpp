@@ -877,8 +877,6 @@ void CanvasPrivate::autoscroll_begin(Geom::IntPoint const &to)
             return false;
         }
 
-        q->queue_draw();
-
         return true;
     });
 }
@@ -913,7 +911,7 @@ bool Canvas::on_scroll(GtkEventControllerScroll const *controller_c, double dx, 
     event.modifiers = _state;
     event.device = controller->get_current_event_device();
     event.delta = { dx, dy };
-    event.direction = gdkevent->get_direction();
+    event.unit = controller->get_unit();
     event.extinput = extinput_from_gdkevent(*gdkevent);
 
     return d->process_event(event);

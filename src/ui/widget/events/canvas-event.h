@@ -247,8 +247,8 @@ struct ScrollEvent final : CanvasEvent
     /// The amount scrolled.
     Geom::Point delta;
 
-    /// The direction to scroll.
-    Gdk::ScrollDirection direction = Gdk::ScrollDirection::SMOOTH;
+    /// The units of the scroll delta.
+    Gdk::ScrollUnit unit = Gdk::ScrollUnit::SURFACE;
 
     /// Extended input data for graphics tablet input. Fields may be empty.
     ExtendedInput extinput;

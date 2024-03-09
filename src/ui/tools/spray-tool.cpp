@@ -1326,26 +1326,16 @@ bool SprayTool::root_handler(CanvasEvent const &event)
                 _desktop->setToolboxAdjustmentValue("spray-population", population * 100);
                 Geom::Point const scroll_dt = _desktop->point();;
 
-                switch (event.direction) {
-                    case Gdk::ScrollDirection::DOWN:
-                    case Gdk::ScrollDirection::UP:
-                    case Gdk::ScrollDirection::SMOOTH:
-                        if (Inkscape::have_viable_layer(_desktop, defaultMessageContext())) {
-                            last_push = _desktop->dt2doc(scroll_dt);
-                            sp_spray_extinput(this, event.extinput);
-                            if(is_dilating) {
-                                sp_spray_dilate(this, _desktop->dt2doc(scroll_dt), Geom::Point(0, 0), false);
-                            }
-                            population = temp;
-                            _desktop->setToolboxAdjustmentValue("spray-population", population * 100);
+                if (event.delta.y() != 0 && Inkscape::have_viable_layer(_desktop, defaultMessageContext())) {
+                    last_push = _desktop->dt2doc(scroll_dt);
+                    sp_spray_extinput(this, event.extinput);
+                    if(is_dilating) {
+                        sp_spray_dilate(this, _desktop->dt2doc(scroll_dt), Geom::Point(0, 0), false);
+                    }
+                    population = temp;
+                    _desktop->setToolboxAdjustmentValue("spray-population", population * 100);
 
-                            ret = true;
-                        }
-                        break;
-                    case Gdk::ScrollDirection::RIGHT:
-                       break;
-                    case Gdk::ScrollDirection::LEFT:
-                       break;
+                    ret = true;
                 }
             }
         },
