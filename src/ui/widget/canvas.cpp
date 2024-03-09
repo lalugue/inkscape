@@ -1910,6 +1910,8 @@ Glib::RefPtr<Gdk::GLContext> Canvas::create_context()
         return {};
     }
 
+    result->set_allowed_apis(Gdk::GLApi::GL);
+
     try {
         result->realize();
     } catch (const Glib::Error &e) {
