@@ -74,7 +74,7 @@
         <property name="visible">True</property>
         <property name="can-focus">True</property>
         <property name="can-default">True</property>
-        <property name="tooltip-text" translatable="yes">"Select all objects</property>
+        <property name="tooltip-text" translatable="yes">Select all objects</property>
         <property name="action-name">win.select-all</property>
         <property name="relief">none</property>
         <style>
@@ -95,7 +95,7 @@
       <object class="GtkButton">
         <property name="visible">True</property>
         <property name="can-focus">True</property>
-        <property name="tooltip-text" translatable="yes">Select All in All La_yers</property>
+        <property name="tooltip-text" translatable="yes">Select all in all layers</property>
         <property name="action-name">win.select-all-layers</property>
         <property name="relief">none</property>
         <style>
@@ -138,7 +138,7 @@
       <object class="GtkToggleButton" id="_select_touch_btn">
         <property name="visible">True</property>
         <property name="can-focus">True</property>
-        <property name="tooltip-text" translatable="yes">Toggle selection box to select all touched objects.</property>
+        <property name="tooltip-text" translatable="yes">Toggle selection box to select all touched objects</property>
         <property name="relief">none</property>
         <style>
           <class name="tag1"/>
