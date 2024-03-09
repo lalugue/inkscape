@@ -1043,6 +1043,13 @@ void ink_matrix_to_cairo(cairo_matrix_t &cm, Geom::Affine const &m)
     cm.y0 = m[5];
 }
 
+Geom::Affine ink_matrix_to_2geom(cairo_matrix_t const &cairo_matrix)
+{
+    Geom::Affine result;
+    ink_matrix_to_2geom(result, cairo_matrix);
+    return result;
+}
+
 void
 ink_cairo_transform(cairo_t *ct, Geom::Affine const &m)
 {

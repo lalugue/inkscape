@@ -106,6 +106,7 @@ void ink_cairo_set_hairline(cairo_t *ct);
 void ink_cairo_pattern_set_dither(cairo_pattern_t *pattern, bool enabled);
 
 void ink_matrix_to_2geom(Geom::Affine &, cairo_matrix_t const &);
+Geom::Affine ink_matrix_to_2geom(cairo_matrix_t const &cairo_matrix);
 void ink_matrix_to_cairo(cairo_matrix_t &, Geom::Affine const &);
 cairo_operator_t ink_css_blend_to_cairo_operator(SPBlendMode blend_mode);
 SPBlendMode ink_cairo_operator_to_css_blend(cairo_operator_t cairo_operator);
