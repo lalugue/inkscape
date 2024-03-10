@@ -11,7 +11,7 @@
 #
 
 # toolset release to build Inkscape
-VERSION=0.78
+VERSION=0.79
 
 # directory convenience handles
 SELF_DIR=$(dirname "${BASH_SOURCE[0]}")
