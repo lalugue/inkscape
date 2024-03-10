@@ -29,7 +29,9 @@ if git -C "$MIBAP_DIR" checkout v"$VERSION"; then
     # install build dependencies and Inkscape
     "$MIBAP_DIR"/install_toolset.sh restore_overlay
     # run the test suite
-    if ! "$MIBAP_DIR"/310-inkscape_test.sh; then
+    if "$MIBAP_DIR"/310-inkscape_test.sh; then
+      "$MIBAP_DIR"/uninstall_toolset.sh
+    else
       # save testfiles only on failure
       "$MIBAP_DIR"/uninstall_toolset.sh save_testfiles
       exit 1
