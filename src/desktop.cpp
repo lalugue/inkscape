@@ -244,8 +244,6 @@ SPDesktop::init (SPNamedView *nv, Inkscape::UI::Widget::Canvas *acanvas, SPDeskt
     // display rect and zoom are now handled in sp_desktop_widget_realize()
 
     // pinch zoom
-    Inkscape::UI::Controller::add_motion<&SPDesktop::on_motion, &SPDesktop::on_motion, &SPDesktop::on_leave>
-                                        (*canvas, *this);
     Inkscape::UI::Controller::add_zoom<&SPDesktop::on_zoom_begin, &SPDesktop::on_zoom_scale, &SPDesktop::on_zoom_end>
                                       (*canvas, *this, Gtk::PHASE_CAPTURE);
 
@@ -1523,19 +1521,6 @@ void SPDesktop::emit_text_cursor_moved(void* sender, Inkscape::UI::Tools::TextTo
 * * pinch zoom
  */
 
-void SPDesktop::on_motion(GtkEventControllerMotion const * /*motion*/,
-                          double const x, double const y)
-{
-    _motion_x = x;
-    _motion_y = y;
-}
-
-void SPDesktop::on_leave(GtkEventControllerMotion const * /*motion*/)
-{
-    _motion_x.reset();
-    _motion_y.reset();
-}
-
 void SPDesktop::on_zoom_begin(GtkGesture const * /*zoom*/, GdkEventSequence const * /*sequence*/)
 {
     _begin_zoom = current_zoom();
@@ -1543,9 +1528,13 @@ void SPDesktop::on_zoom_begin(GtkGesture const * /*zoom*/, GdkEventSequence cons
 
 void SPDesktop::on_zoom_scale(GtkGestureZoom const * /*zoom*/, double const scale)
 {
-    Geom::Point const widget_point{_motion_x.value(), _motion_y.value()};
-    auto const world_point = getCanvas()->canvas_to_world(widget_point);
-    zoom_absolute(w2d(world_point), _begin_zoom.value() * scale);
+    if (!_begin_zoom) {
+        std::cerr << "on_zoom_scale: Missed on_zoom_begin event" << std::endl;
+        return;
+    }
+    auto const widget_point = canvas->get_last_mouse().value_or(canvas->get_dimensions() / 2);
+    auto const world_point = canvas->canvas_to_world(widget_point);
+    zoom_absolute(w2d(world_point), *_begin_zoom * scale);
 }
 
 void SPDesktop::on_zoom_end(GtkGesture const * /*zoom*/, GdkEventSequence const * /*sequence*/)

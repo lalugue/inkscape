@@ -140,27 +140,16 @@ public:
     void enable_autoscroll();
 
 private:
-    // EventControllerScroll
-    bool on_scroll(GtkEventControllerScroll const *controller,
-                   double dx, double dy);
-
-    // GtkGestureMultiPress
-    Gtk::EventSequenceState on_button_pressed (Gtk::GestureMultiPress const &controller,
-                                               int n_press, double x, double y);
-    Gtk::EventSequenceState on_button_released(Gtk::GestureMultiPress const &controller,
-                                               int n_press, double x, double y);
-
-    // EventControllerMotion
-    void on_motion(GtkEventControllerMotion const *controller, double x, double y);
-    void on_enter (GtkEventControllerMotion const *controller, double x, double y);
-    void on_leave (GtkEventControllerMotion const *controller);
-
-    // EventControllerKey
-    void on_focus_in    (GtkEventControllerKey const *controller);
-    bool on_key_pressed (GtkEventControllerKey const *controller,
-                         unsigned keyval, unsigned keycode, GdkModifierType state);
-    bool on_key_released(GtkEventControllerKey const *controller,
-                         unsigned keyval, unsigned keycode, GdkModifierType state);
+    // Event handlers
+    bool on_scroll_event        (GdkEventScroll*  ) override;
+    bool on_button_press_event  (GdkEventButton*  ) override;
+    bool on_button_release_event(GdkEventButton*  ) override;
+    bool on_enter_notify_event  (GdkEventCrossing*) override;
+    bool on_leave_notify_event  (GdkEventCrossing*) override;
+    bool on_focus_in_event      (GdkEventFocus*   ) override;
+    bool on_key_press_event     (GdkEventKey*     ) override;
+    bool on_key_release_event   (GdkEventKey*     ) override;
+    bool on_motion_notify_event (GdkEventMotion*  ) override;
 
     void on_realize() final;
     void on_unrealize() final;
