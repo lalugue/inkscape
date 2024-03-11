@@ -1318,7 +1318,6 @@ bool SprayTool::root_handler(CanvasEvent const &event)
         },
         [&] (ScrollEvent const &event) {
             if (event.modifiers == GDK_BUTTON1_MASK) {
-                std::cout << "SCROLL" << std::endl;
                 /* Spray with the scroll */
                 double temp ;
                 temp = population;
@@ -1499,6 +1498,7 @@ bool SprayTool::root_handler(CanvasEvent const &event)
                     message_context->clear();
                     break;
                 default:
+                    // Why is this called here?
                     sp_spray_switch_mode (this, prefs->getInt("/tools/spray/mode"), mod_shift(event));
                     break;
             }

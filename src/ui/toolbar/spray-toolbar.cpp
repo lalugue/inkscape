@@ -364,6 +364,7 @@ void SprayToolbar::on_pref_toggled(bool active, const Glib::ustring &path)
 void SprayToolbar::set_mode(int mode)
 {
     _mode_buttons[mode]->set_active();
+    mode_changed(mode); // Gtk4: set_active() does not trigger callback, call it here.
 }
 
 } // namespace Inkscape::UI::Toolbar
