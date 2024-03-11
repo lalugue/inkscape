@@ -606,17 +606,22 @@ void SPDesktopWidget::layoutWidgets()
     Inkscape::UI::resize_widget_children(_top_toolbars);
 }
 
-Gtk::Box *SPDesktopWidget::get_toolbar_by_name(const Glib::ustring &name)
+Gtk::Widget *SPDesktopWidget::get_toolbar_by_name(const Glib::ustring &name)
 {
     // The name is actually attached to the GtkGrid that contains
     // the toolbar, so we need to get the grid first
     auto widget = Inkscape::UI::find_widget_by_name(*tool_toolbars, name);
     auto grid = dynamic_cast<Gtk::Grid*>(widget);
 
-    if (!grid) return nullptr;
+    if (!grid) {
+        std::cerr << "SPDesktopWidget::get_toolbar_by_name: failed to find: " << name << std::endl;
+        return nullptr;
+    }
 
-    auto child = grid->get_child_at(0,0);
-    auto tb = dynamic_cast<Gtk::Box *>(child);
+    auto tb = grid->get_child_at(0,0);
+    if (!tb) {
+        std::cerr << "SPDesktopWidget::get_toolbar_by_name: toolbar not at grid origin: " << name << std::endl;
+    }
 
     return tb;
 }

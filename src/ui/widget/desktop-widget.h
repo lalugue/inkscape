@@ -149,7 +149,7 @@ public:
     void presentWindow();
     void showInfoDialog(Glib::ustring const &message);
     bool warnDialog (Glib::ustring const &text);
-    Gtk::Box *get_toolbar_by_name(const Glib::ustring &name);
+    Gtk::Widget *get_toolbar_by_name(const Glib::ustring &name);
     void setToolboxFocusTo(char const *);
     void setToolboxAdjustmentValue(char const *id, double value);
     bool isToolboxButtonActive(char const *id) const;

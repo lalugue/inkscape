@@ -1246,7 +1246,7 @@ SPDesktop::setToolboxAdjustmentValue(char const * const id, double const val)
     _widget->setToolboxAdjustmentValue (id, val);
 }
 
-Gtk::Box *SPDesktop::get_toolbar_by_name(const Glib::ustring &name)
+Gtk::Widget *SPDesktop::get_toolbar_by_name(const Glib::ustring &name)
 {
     return _widget->get_toolbar_by_name(name);
 }
