@@ -118,8 +118,11 @@ PageToolbar::PageToolbar(SPDesktop *desktop)
 
     _text_page_bleeds.signal_activate().connect(sigc::mem_fun(*this, &PageToolbar::bleedsEdited));
     _text_page_margins.signal_activate().connect(sigc::mem_fun(*this, &PageToolbar::marginsEdited));
-    _margin_popover.set_parent(*this);  // Must unparent in destructor!
+
     _margin_popover.set_name("MarginPopover");
+    _margin_popover.set_parent(*this);
+    signal_destroy().connect([this] { _margin_popover.unparent(); }); // Unparenting in destructor is too late.
+
     _text_page_margins.signal_icon_press().connect([&](Gtk::Entry::IconPosition) {
         if (auto page = _document->getPageManager().getSelected()) {
             auto const &margin = page->getMarginBox();
@@ -220,7 +223,6 @@ void PageToolbar::populate_sizes()
 PageToolbar::~PageToolbar()
 {
     toolChanged(nullptr, nullptr);
-    _margin_popover.unparent();
 }
 
 void PageToolbar::toolChanged(SPDesktop *desktop, Inkscape::UI::Tools::ToolBase *tool)
