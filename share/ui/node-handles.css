@@ -13,6 +13,26 @@ All available properties:
     fill-opacity: value or percentage;
     stroke-opacity: value or percentage;
     outline-opacity: value or percentage;
+    scale: factor; -> scaling factor applied to requested "handle size" preference setting
+    size-extra: 1px; -> extra space to fine-tune handle size with relation to other handles
+    stroke-scale: 0.10; -> factor for scaling stroke with handle size or 0 to disable scaling
+
+Where 'shape' is one of: 
+    'square'
+    'diamond'
+    'circle'
+    'triangle'
+    'triangle-angled'
+    'cross'
+    'plus'
+    'plus'
+    'pivot'
+    'arrow'
+    'skew-arrow'
+    'curved-arrow'
+    'side-align'
+    'corner-align'
+    'middle-align'
 
 All available selectors:
     * (all handles)
@@ -81,8 +101,8 @@ Notes:
 
 
 .inkscape-node-cusp,
-.inkscape-shaper,
-.inkscape-lpe {
+.inkscape-shaper, /* box 3d, connector tool, gradient stops */
+.inkscape-lpe { /* several path effects */
     shape: "diamond";
     scale: 2.828427; /* 2 * sqrt(2) */
     size-extra: 2px;
@@ -90,20 +110,21 @@ Notes:
 
 .inkscape-node-smooth,
 .inkscape-node-symmetrical,
-.inkscape-anchor,
+.inkscape-anchor, /* various drawing tools */
 .inkscape-sizer {
     shape: "square";
     size-extra: 2px;
 }
 
 .inkscape-node-auto,
-.inkscape-margin,
-.inkscape-move {
+.inkscape-margin, /* page tool */
+.inkscape-move { /* LPE chamfer fillet */
     shape: "circle";
     scale: 2.256758; /* 4 / sqrt(PI) */
     size-extra: 2px;
 }
 
+/* snap indicators, measure tool handles */
 .inkscape-point {
     shape: "circle";
     stroke-width: 0px;
@@ -209,6 +230,7 @@ Notes:
     outline-width: 0px;
 }
 
+/* corners LPE adjustment handles */
 .inkscape-pointer {
     shape: "triangle-angled";
     scale: 5.0; /* angled triangle occupies half of the image, so it needs larger scale */
