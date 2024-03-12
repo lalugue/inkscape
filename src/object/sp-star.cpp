@@ -251,7 +251,7 @@ Returns a unit-length vector at 90 degrees to the direction from o to n
 static Geom::Point
 rot90_rel (Geom::Point o, Geom::Point n)
 {
-    return ((1/Geom::L2(n - o)) * Geom::Point ((n - o)[Geom::Y],  (o - n)[Geom::X]));
+    return (n-o).ccw().normalized();
 }
 
 /**
