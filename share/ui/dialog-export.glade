@@ -421,11 +421,10 @@
                                         <property name="valign">center</property>
                                         <property name="orientation">vertical</property>
                                         <child>
-                                          <object class="GtkImage" id="si_preview">
+                                          <object class="GtkPicture" id="si_preview">
                                             <property name="name">export_preview_single</property>
                                             <property name="halign">center</property>
                                             <property name="valign">center</property>
-                                            <property name="icon-name">image-missing</property>
                                           </object>
                                         </child>
                                       </object>

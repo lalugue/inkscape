@@ -79,7 +79,7 @@ bool PreviewDrawing::render(ExportPreview *widget, uint32_t bg, SPItem const *it
 {
     if (!_drawing || _to_destruct) {
         if (!_construct_idle.connected()) {
-            _construct_idle = Glib::signal_timeout().connect([=]() {
+            _construct_idle = Glib::signal_timeout().connect([this]() {
                 _to_destruct = false;
                 destruct();
                 construct();
@@ -119,7 +119,6 @@ void PreviewDrawing::set_shown_items(std::vector<SPItem const *> &&list)
 
 void ExportPreview::resetPixels(bool new_size)
 {
-    clear();
     // An icon to use when the preview hasn't loaded yet
     static Glib::RefPtr<Gdk::Pixbuf> preview_loading;
     if (!preview_loading || new_size) {
@@ -129,7 +128,7 @@ void ExportPreview::resetPixels(bool new_size)
         preview_loading = Gdk::Pixbuf::create_from_file(path, size, size);
     }
     if (preview_loading) {
-        set(preview_loading);
+        set_pixbuf(preview_loading);
     }
     set_visible(true);
 }
@@ -176,7 +175,7 @@ void ExportPreview::queueRefresh()
     if (!_drawing || _render_idle.connected())
         return;
 
-    _render_idle = Glib::signal_timeout().connect([=]() {
+    _render_idle = Glib::signal_timeout().connect([this]() {
         return !_drawing->render(this, _bg_color, _item, size, _dbox);
     }, 100);
 }
@@ -187,7 +186,7 @@ void ExportPreview::queueRefresh()
 void ExportPreview::setPreview(Cairo::RefPtr<Cairo::ImageSurface> surface)
 {
     if (surface) {
-        set(Gdk::Pixbuf::create(surface, 0, 0, surface->get_width(), surface->get_height()));
+        set_pixbuf(Gdk::Pixbuf::create(surface, 0, 0, surface->get_width(), surface->get_height()));
         set_visible(true);
     }
 }

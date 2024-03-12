@@ -15,7 +15,7 @@
 #include <vector>
 #include <2geom/rect.h>
 #include <glibmm/refptr.h>
-#include <gtkmm/image.h>
+#include <gtkmm/picture.h>
 
 #include "async/channel.h"
 #include "display/drawing.h"
@@ -59,11 +59,11 @@ private:
     Inkscape::auto_connection _construct_idle;
 };
 
-class ExportPreview final : public Gtk::Image
+class ExportPreview final : public Gtk::Picture
 {
 public:
     ExportPreview() = default;
-    ExportPreview(BaseObjectType *cobj, Glib::RefPtr<Gtk::Builder> const &) : Gtk::Image(cobj) {}
+    ExportPreview(BaseObjectType *cobj, Glib::RefPtr<Gtk::Builder> const &) : Gtk::Picture(cobj) {}
 
     ~ExportPreview() override;
 
