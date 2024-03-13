@@ -419,7 +419,7 @@ static int fmt_number(const _GMatchInfo* match, _GString* ret, void* prec) {
 
 Glib::ustring round_numbers(const Glib::ustring& text, int precision) {
     // match floating point number followed by something else (not a number); repeat
-    static const auto numbers = Glib::Regex::create("([-+]?(?:(?:\\d+\\.?\\d*)|(?:\\.\\d+))(?:[eE][-+]?\\d*)?)([^+\\-0-9]*)", Glib::REGEX_MULTILINE);
+    static const auto numbers = Glib::Regex::create("([-+]?(?:(?:\\d+\\.?\\d*)|(?:\\.\\d+))(?:[eE][-+]?\\d*)?)([^+\\-0-9]*)", Glib::Regex::CompileFlags::MULTILINE);
 
     return numbers->replace_eval(text, text.size(), 0, Glib::Regex::MatchFlags::NOTEMPTY, &fmt_number, &precision);
 }

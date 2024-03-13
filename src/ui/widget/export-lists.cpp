@@ -66,7 +66,7 @@ void ExtensionList::init()
     // limit size of the combobox
     auto cell_renderer = dynamic_cast<Gtk::CellRendererText*>(get_first_cell());
     cell_renderer->set_fixed_size(125, -1);
-    cell_renderer->property_wrap_mode().set_value(Pango::WRAP_WORD);
+    cell_renderer->property_wrap_mode().set_value(Pango::WrapMode::WORD);
     cell_renderer->property_wrap_width().set_value(5);
 }
 

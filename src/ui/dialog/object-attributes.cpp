@@ -105,14 +105,12 @@ ObjectAttributes::ObjectAttributes()
     _obj_properties(*Gtk::make_managed<ObjectProperties>())
 {
     auto& main = get_widget<Gtk::Box>(_builder, "main-widget");
-    main.add(_obj_properties);
+    main.append(_obj_properties);
 
     _obj_title.set_text("");
     _style_swatch.set_hexpand(false);
     _style_swatch.set_valign(Gtk::Align::CENTER);
-    UI::pack_end(get_widget<Gtk::Box>(_builder, "main-header"), _style_swatch, false, true);
-    auto& box = get_widget<Gtk::Box>(_builder, "main-header");
-    box.child_property_pack_type(_style_swatch).set_value(Gtk::PACK_END);
+    get_widget<Gtk::Box>(_builder, "main-header").append(_style_swatch);
     append(main);
     create_panels();
     _style_swatch.set_visible(false);
@@ -819,17 +817,15 @@ public:
 
         Controller::add_key<&PathPanel::on_key_pressed>(_data, *this);
         auto& wnd = get_widget<Gtk::ScrolledWindow>(builder, "path-data-wnd");
-        wnd.remove();
-        wnd.add(_data);
-        wnd.show_all();
+        wnd.set_child(_data);
 
         auto set_precision = [=](int const n) {
             _precision = n;
             auto& menu_button = get_widget<Gtk::MenuButton>(builder, "path-menu");
             auto const menu = menu_button.get_menu_model();
-            auto const section = menu->get_item_link(0, Gio::MENU_LINK_SECTION);
+            auto const section = menu->get_item_link(0, Gio::MenuModel::Link::SECTION);
             auto const type = Glib::VariantType{g_variant_type_new("s")};
-            auto const variant = section->get_item_attribute(n, Gio::MENU_ATTRIBUTE_LABEL, type);
+            auto const variant = section->get_item_attribute(n, Gio::MenuModel::Attribute::LABEL, type);
             auto const label = ' ' + static_cast<Glib::Variant<Glib::ustring> const &>(variant).get();
             get_widget<Gtk::Label>(builder, "path-precision").set_label(label);
             Inkscape::Preferences::get()->setInt(pref_path + "precision", n);

@@ -800,9 +800,6 @@
       <placeholder/>
     </child>
   </object>
-  <object class="GtkImage" id="image1">
-    <property name="icon-name">enter</property>
-  </object>
   <object class="GtkGrid" id="path-main">
     <property name="row-spacing">4</property>
     <property name="column-spacing">4</property>
@@ -1042,7 +1039,7 @@
             <property name="receives-default">True</property>
             <property name="tooltip-text" translatable="yes">Press Shift+Return to commit editing changes</property>
             <property name="halign">end</property>
-            <property name="image">image1</property>
+            <property name="icon-name">enter</property>
           </object>
         </child>
         <layout>

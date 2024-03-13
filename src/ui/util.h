@@ -47,6 +47,7 @@ class ustring;
 
 namespace Gtk {
 class Label;
+class TextBuffer;
 class Widget;
 } // namespace Gtk
 

@@ -38,6 +38,7 @@
 #include <gtkmm/label.h>
 #include <gtkmm/object.h>
 #include <gtkmm/separator.h>
+#include <gtkmm/version.h>
 
 #include "document-undo.h"
 #include "document.h"
@@ -122,7 +123,7 @@ void ObjectProperties::_init()
     grid_top->set_column_spacing(spacing);
 
     _exp_properties.set_label(_("Properties"));
-    _exp_properties.add(*grid_top);
+    _exp_properties.set_child(*grid_top);
     UI::pack_start(*this, _exp_properties, false, false);
 
     /* Create the label for the object id */
@@ -195,7 +196,7 @@ void ObjectProperties::_init()
 
     _tv_description.set_wrap_mode(Gtk::WrapMode::WORD);
     _tv_description.get_buffer()->set_text("");
-    _ft_description.add(_tv_description);
+    _ft_description.set_child(_tv_description);
     _tv_description.add_mnemonic_label(*label_desc);
 
     /* Create the label for the object title */
@@ -281,9 +282,9 @@ void ObjectProperties::_init()
     js->set_ellipsize(Pango::EllipsizeMode::END);
     js->set_xalign(0.0);
     vbox->set_spacing(spacing);
-    vbox->add(*_attr_table);
-    vbox->add(*js);
-    _exp_interactivity.add(*vbox);
+    vbox->append(*_attr_table);
+    vbox->append(*js);
+    _exp_interactivity.set_child(*vbox);
 
     auto sep = Gtk::make_managed<Gtk::Separator>(Gtk::Orientation::HORIZONTAL);
     UI::pack_start(*this, *sep, false, false);

@@ -68,7 +68,7 @@ void SPAttributeTable::create(const std::vector<Glib::ustring>& labels, const st
     _entries.reserve(attributes.size());
 
     table = std::make_unique<Gtk::Grid>();
-    add(*table);
+    append(*table);
 
     auto theme = Inkscape::Preferences::get()->getString("/theme/syntax-color-theme", "-none-");
 
@@ -95,7 +95,7 @@ void SPAttributeTable::create(const std::vector<Glib::ustring>& labels, const st
             wnd->set_margin_start(XPAD);
             wnd->set_margin_top(YPAD);
             wnd->set_margin_bottom(YPAD);
-            wnd->add(tv);
+            wnd->set_child(tv);
             wnd->set_has_frame(true);
             wnd->set_policy(Gtk::PolicyType::NEVER, Gtk::PolicyType::AUTOMATIC);
             table->attach(*wnd, 1, i, 1, 1);
