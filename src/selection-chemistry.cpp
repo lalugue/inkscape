@@ -324,6 +324,9 @@ static std::vector<Inkscape::XML::Node *> sp_selection_paste_impl(SPDocument *do
             item_t *= local.inverse();
             // (we're dealing with unattached repr, so we write to its attr instead of using sp_item_set_transform)
             copy->setAttributeOrRemoveIfEmpty("transform", sp_svg_transform_write(item_t));
+            if (copy->attribute("inkscape:original-d") != NULL) {
+                copy->setAttribute("d", copy->attribute("inkscape:original-d"));
+            }
         }
 
         parent->getRepr()->addChild(copy, after);
