@@ -1352,8 +1352,7 @@ void SPDocument::bindObjectToRepr(Inkscape::XML::Node *repr, SPObject *object)
         g_assert(it != reprdef.end());
         reprdef.erase(it);
     }
-
-    _node_cache.clear();
+    clearNodeCache();
 }
 
 SPObject *SPDocument::getObjectByRepr(Inkscape::XML::Node *repr) const
@@ -2276,7 +2275,7 @@ void SPDocument::_emitModified() {
     static guint const flags = SP_OBJECT_MODIFIED_FLAG | SP_OBJECT_CHILD_MODIFIED_FLAG | SP_OBJECT_PARENT_MODIFIED_FLAG;
     root->emitModified(0);
     modified_signal.emit(flags);
-    _node_cache.clear();
+    clearNodeCache();
 }
 
 void

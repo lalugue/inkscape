@@ -186,6 +186,9 @@ void LayerManager::setCurrentLayer(SPObject *object, bool clear) {
         g_return_if_fail(is<SPGroup>(object));
         _layer_hierarchy->setBottom(object);
 
+        // Reset cache in document for collections of layers
+        _document->clearNodeCache();
+
         Inkscape::Preferences *prefs = Inkscape::Preferences::get();
         if (clear && prefs->getBool("/options/selection/layerdeselect", true)) {
             _desktop->getSelection()->clear();

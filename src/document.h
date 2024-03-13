@@ -189,6 +189,7 @@ private:
     std::deque<SPItem*> const &get_flat_item_list(unsigned int dkey, bool into_groups, bool active_only) const;
 
 public:
+    void clearNodeCache() { _node_cache.clear(); }
     void importDefs(SPDocument *source);
 
     unsigned int vacuumDocument();
