@@ -177,6 +177,58 @@ void PopoverMenu::set_scrolled_window_size()
     _scrolled_window.set_max_content_height(window.get_height() - 2 * padding);
 }
 
+bool PopoverMenu::activate(Glib::ustring const &search) {
+    bool match = false;
+    Gtk::Widget *fallback_match = nullptr; 
+    for (auto item : _items) {
+        if (!_active_search) {
+            if (auto container = dynamic_cast<Gtk::Container *>(item->get_parent())) {
+                _active_search = Gtk::make_managed<Gtk::Label>(search);
+                _active_search->get_style_context()->add_class("menu_search");
+                _active_search->set_xalign(0.1);
+                container->add(*_active_search);
+            }
+        }
+        for (auto const widg : UI::get_children(*item)) {
+            item->unset_state_flags(Gtk::STATE_FLAG_FOCUSED | Gtk::STATE_FLAG_PRELIGHT);
+            if (!search.empty()) {
+                 for (auto const mi : UI::get_children(*widg)) {
+                    if (auto label = dynamic_cast<Gtk::Label *>(mi)) {
+                        auto text_data = label->get_text();
+                        // if not matched and search == begining of label
+                        if (!match && text_data.size() >= search.size()) {
+                            if (text_data.substr(0, search.size()).lowercase() == search.lowercase()) {
+                                match = true;
+                                item->grab_focus();
+                                break;
+                            }
+                            if (!fallback_match && text_data.lowercase().find(search.lowercase()) != Glib::ustring::npos) {
+                                fallback_match = item;
+                            }
+                        }
+                    }   
+                }
+            }
+        }
+    }
+    if (!match && fallback_match) {
+        match = true;
+        fallback_match->grab_focus();
+    }
+    if (_active_search) {
+        if (search.empty()) {
+            _active_search->hide();
+        } else {
+            auto searchstring = !pango_version_check(1, 50, 0) ?
+                "<span size=\"x-large\" line_height=\"0.7\">⌕</span><small> %1</small>" :
+                "<span size=\"large\">⌕</span><small> %1</small>";
+            _active_search->set_markup(Glib::ustring::compose(searchstring, search));
+            _active_search->show();
+        }
+    }
+    return match;
+}
+
 void PopoverMenu::unset_items_focus_hover(Gtk::Widget * const except_active)
 {
     for (auto const item : _items) {
