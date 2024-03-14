@@ -3,6 +3,8 @@
 #ifndef ICON_COMBO_BOX_SEEN_
 #define ICON_COMBO_BOX_SEEN_
 
+#include <cairomm/refptr.h>
+#include <cairomm/surface.h>
 #include <gtkmm/combobox.h>
 #include <gtkmm/liststore.h>
 #include <gtkmm/treemodelfilter.h>
@@ -14,13 +16,18 @@ namespace Widget {
 class IconComboBox : public Gtk::ComboBox
 {
 public:
-    IconComboBox() {
+    IconComboBox(bool use_icons = true) {
         _model = Gtk::ListStore::create(_columns);
 
         pack_start(_renderer, false);
         _renderer.set_property("stock_size", Gtk::ICON_SIZE_BUTTON);
         _renderer.set_padding(2, 0);
-        add_attribute(_renderer, "icon_name", _columns.icon_name);
+        if (use_icons) {
+            add_attribute(_renderer, "icon_name", _columns.icon_name);
+        }
+        else {
+            add_attribute(_renderer, "surface", _columns.image);
+        }
 
         pack_start(_columns.label);
 
@@ -34,6 +41,14 @@ public:
         row[_columns.id] = id;
         row[_columns.icon_name] = icon_name;
         row[_columns.label] = ' ' + label;
+        row[_columns.is_visible] = true;
+    }
+
+    void add_row(Cairo::RefPtr<Cairo::Surface> image, const Glib::ustring& label, int id) {
+        Gtk::TreeModel::Row row = *_model->append();
+        row[_columns.id] = id;
+        row[_columns.image] = image;
+        if (!label.empty()) row[_columns.label] = ' ' + label;
         row[_columns.is_visible] = true;
     }
 
@@ -83,12 +98,14 @@ private:
             add(label);
             add(id);
             add(is_visible);
+            add(image);
         }
 
         Gtk::TreeModelColumn<Glib::ustring> icon_name;
         Gtk::TreeModelColumn<Glib::ustring> label;
         Gtk::TreeModelColumn<int> id;
         Gtk::TreeModelColumn<bool> is_visible;
+        Gtk::TreeModelColumn<Cairo::RefPtr<Cairo::Surface>> image;
     };
 
     Columns _columns;

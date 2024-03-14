@@ -48,6 +48,15 @@
 #include <gtkmm/togglebutton.h>
 #include <sigc++/adaptors/bind.h>
 #include <sigc++/functors/mem_fun.h>
+#include <cairomm/matrix.h>
+#include <cairomm/surface.h>
+#include <cmath>
+#include <glibmm/refptr.h>
+#include <gtkmm/comboboxtext.h>
+#include <gtkmm/object.h>
+#include "display/control/ctrl-handle-manager.h"
+#include "ui/widget/icon-combobox.h"
+#include "ui/widget/handle-preview.h"
 
 #if WITH_GSOURCEVIEW
 #   include <gtksourceview/gtksource.h>
@@ -1503,6 +1512,23 @@ void InkscapePreferences::symbolicThemeCheck()
     }
 }
 
+static Cairo::RefPtr<Cairo::Surface> draw_color_preview(unsigned int rgb, unsigned int frame_rgb, int device_scale) {
+    int size = 16;
+    auto surface = Cairo::ImageSurface::create(Cairo::FORMAT_ARGB32, size * device_scale, size * device_scale);
+    cairo_surface_set_device_scale(surface->cobj(), device_scale, device_scale);
+    auto ctx = Cairo::Context::create(surface);
+    ctx->arc(size / 2, size / 2, size / 2, 0.0, 2 * M_PI);
+    ctx->set_source_rgb((frame_rgb >> 16 & 0xff) / 255.0, (frame_rgb >> 8 & 0xff) / 255.0, (frame_rgb & 0xff) / 255.0);
+    ctx->fill();
+    size -= 2;
+    ctx->set_matrix(Cairo::translation_matrix(1, 1));
+    ctx->arc(size / 2, size / 2, size / 2, 0.0, 2 * M_PI);
+    ctx->set_source_rgb((rgb >> 16 & 0xff) / 255.0, (rgb >> 8 & 0xff) / 255.0, (rgb & 0xff) / 255.0);
+    ctx->fill();
+    return surface;
+}
+
+// create a preview of few selected handles
 void InkscapePreferences::initPageUI()
 {
     Gtk::TreeModel::iterator iter_ui = this->AddPage(_page_ui, _("Interface"), PREFS_PAGE_UI);
@@ -1592,10 +1618,10 @@ void InkscapePreferences::initPageUI()
     auto const reset_recent = Gtk::make_managed<Gtk::Button>(_("Clear list"));
     reset_recent->signal_clicked().connect(sigc::mem_fun(*this, &InkscapePreferences::on_reset_open_recent_clicked));
 
-    _page_ui.add_line( false, _("Maximum documents in Open _Recent:"), _misc_recent, "",
+    _page_ui.add_line( false, _("Maximum documents\n in Open _Recent:"), _misc_recent, "",
                               _("Set the maximum length of the Open Recent list in the File menu, or clear the list"), false, reset_recent);
 
-    _page_ui.add_group_header(_("_Zoom correction factor (in %)"));
+    _page_ui.add_group_header(_("_Zoom correction factor (in %)"), 2);
     _page_ui.add_group_note(_("Adjust the slider until the length of the ruler on your screen matches its real length. This information is used when zooming to 1:1, 1:2, etc., to display objects in their true sizes"));
     _ui_zoom_correction.init(300, 30, 0.01, 500.0, 1.0, 10.0, 1.0);
     _page_ui.add_line( true, "", _ui_zoom_correction, "", "", true);
@@ -1617,14 +1643,39 @@ void InkscapePreferences::initPageUI()
     _ui_rulersel.init( _("Show selection in ruler"), "/options/ruler/show_bbox", true);
     _page_ui.add_line( false, "", _ui_rulersel, "", _("Shows a blue line in the ruler where the selection is."));
 
-    _page_ui.add_group_header(_("User Interface"));
+    _page_ui.add_group_header(_("User Interface"), 2);
     // _page_ui.add_group_header(_("Handle size"));
     _mouse_grabsize.init("/options/grabsize/value", 1, 15, 1, 2, 3, 0);
     _page_ui.add_line(true, _("Handle size"), _mouse_grabsize, "", _("Set the relative size of node handles"), true);
+    {
+        auto box = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL);
+        auto img = Gtk::make_managed<Gtk::Image>();
+        img->set(draw_handles_preview(get_scale_factor()));
+        box->pack_start(*img, true, true);
+        auto cb = Gtk::make_managed<Inkscape::UI::Widget::IconComboBox>(false);
+        cb->set_valign(Gtk::ALIGN_CENTER);
+        auto& mgr = Handles::Manager::get();
+        int i = 0;
+        for (auto theme : mgr.get_handle_themes()) {
+            unsigned int frame = theme.positive ? 0x000000 : 0xffffff; // black or white
+            cb->add_row(draw_color_preview(theme.rgb_accent_color, frame, get_scale_factor()), theme.title, i++);
+        }
+        cb->set_active_by_id(mgr.get_selected_theme());
+        cb->signal_changed().connect([=,this](){
+            Handles::Manager::get().select_theme(cb->get_active_row_id());
+            img->set(draw_handles_preview(get_scale_factor()));
+        });
+        box->pack_start(*cb, false, true);
+        box->show_all_children();
+        _handle_size = Preferences::PreferencesObserver::create("/options/grabsize/value", [=](const Preferences::Entry&){
+            img->set(draw_handles_preview(get_scale_factor()));
+        });
+        _page_ui.add_line(true, _("Handle colors"), *box, "", "Select handle color scheme.");
+    }
     _narrow_spinbutton.init(_("Use narrow number entry boxes"), "/theme/narrowSpinButton", false);
     _page_ui.add_line(false, "", _narrow_spinbutton, "", _("Make number editing boxes smaller by limiting padding"), false);
 
-    _page_ui.add_group_header(_("Status bar"));
+    _page_ui.add_group_header(_("Status bar"), 2);
     auto const sb_style = Gtk::make_managed<UI::Widget::PrefCheckButton>();
     sb_style->init(_("Show current style"), "/statusbar/visibility/style", true);
     _page_ui.add_line(false, "", *sb_style, "", _("Control visibility of current fill, stroke and opacity in status bar."), true);
@@ -1638,7 +1689,7 @@ void InkscapePreferences::initPageUI()
     sb_rotate->init(_("Show canvas rotation"), "/statusbar/visibility/rotation", true);
     _page_ui.add_line(false, "", *sb_rotate, "", _("Control visibility of canvas rotation in status bar."), true);
 
-    _page_ui.add_group_header(_("Mouse cursors"));
+    _page_ui.add_group_header(_("Mouse cursors"), 2);
     _ui_cursorscaling.init(_("Enable scaling"), "/options/cursorscaling", true);
     _page_ui.add_line(false, "", _ui_cursorscaling, "", _("When off, cursor scaling is disabled. Cursor scaling may be broken when fractional scaling is enabled."), true);
     _ui_cursor_shadow.init(_("Show drop shadow"), "/options/cursor-drop-shadow", true);

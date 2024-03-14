@@ -1,0 +1,13 @@
+@import url("node-handles.css");
+
+/* To customize handles look and feel, copy this file to your local folder
+ * ~/.config/inkscape/ui/handle-theme-custom.css
+ * and redefine desired selectors from node-handles.css.
+ *
+ * Example:
+
+    *:selected {
+       fill: #ff1a5e !important;
+    }
+
+*/

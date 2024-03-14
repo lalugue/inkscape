@@ -213,6 +213,7 @@ protected:
     UI::Widget::PrefSlider      _mouse_grabsize;
     UI::Widget::PrefCheckButton _mouse_use_ext_input;
     UI::Widget::PrefCheckButton _mouse_switch_on_ext_input;
+    std::unique_ptr<Preferences::PreferencesObserver> _handle_size;
 
     UI::Widget::PrefSpinButton _scroll_wheel;
     UI::Widget::PrefSpinButton _scroll_arrow_px;

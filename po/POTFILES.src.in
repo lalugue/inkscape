@@ -47,6 +47,7 @@ ${_build_dir}/share/templates/templates.h
 ../src/desktop-style.cpp
 ../src/desktop.cpp
 ../src/display/control/canvas-item-text.cpp
+../src/display/control/ctrl-handle-manager.cpp
 ../src/display/control/ctrl-handle-styling.cpp
 ../src/display/control/snap-indicator.cpp
 ../src/document.cpp

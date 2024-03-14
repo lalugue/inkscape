@@ -16,6 +16,7 @@
 #include <compare>
 #include <cstdint>
 #include <functional> // std::hash
+#include <string>
 #include <unordered_map>
 
 #include "canvas-item-enums.h"
@@ -120,7 +121,7 @@ struct Css
     std::unordered_map<TypeState, Style> style_map;
 };
 
-Css parse_css();
+Css parse_css(const std::string& css_file_name);
 
 } // namespace Inkscape::Handles
 

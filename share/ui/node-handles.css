@@ -90,13 +90,13 @@ Notes:
     stroke-scale: 0.10; /* factor for scaling stroke with handle size or 0 to disable scaling */
 }
 
-*:selected {
+*:selected,
+*:click {
     fill: #2a7fff;
 }
 
-*:hover,
-*:click {
-    fill: #0066ff;
+*:hover {
+    fill: #4d92f8;
 }
 
 

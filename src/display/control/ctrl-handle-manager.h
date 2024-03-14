@@ -11,12 +11,21 @@
  */
 
 #include <memory>
+#include <string>
+#include <vector>
 #include <sigc++/connection.h>
 #include <sigc++/slot.h>
 
 namespace Inkscape::Handles {
 
 class Css;
+
+struct ColorTheme {
+    std::string file_name;  // CSS file to load
+    std::string title;      // display name
+    bool positive;          // normal (true), inverted colors (false)
+    unsigned int rgb_accent_color; // dominant color
+};
 
 class Manager
 {
@@ -27,8 +36,15 @@ public:
 
     sigc::connection connectCssUpdated(sigc::slot<void()> &&slot);
 
+    void select_theme(int index);
+
+    int get_selected_theme() const { return current_theme; }
+
+    const std::vector<ColorTheme>& get_handle_themes() const;
+
 protected:
     ~Manager() = default;
+    int current_theme = 0;
 };
 
 } // namespace Inkscape::Handles

@@ -367,7 +367,7 @@ uint32_t Style::getOutline() const
     return combine_rgb_a(outline(), outline_opacity() * opacity());
 }
 
-Css parse_css()
+Css parse_css(const std::string& css_file_name)
 {
     Css result;
 
@@ -389,13 +389,27 @@ Css parse_css()
     sac->end_selector = clear_selectors;
 
     auto parse = [&] (IO::Resource::Domain domain) {
-        auto const css_path = IO::Resource::get_path_string(domain, IO::Resource::UIS, "node-handles.css");
+        auto const css_path = IO::Resource::get_path_string(domain, IO::Resource::UIS, css_file_name.c_str());
         if (Glib::file_test(css_path, Glib::FILE_TEST_EXISTS)) {
             auto parser = delete_with<cr_parser_destroy>(cr_parser_new_from_file(reinterpret_cast<unsigned char const *>(css_path.c_str()), CR_UTF_8));
             cr_parser_set_sac_handler(parser.get(), sac.get());
             cr_parser_parse(parser.get());
         }
     };
+
+    auto import = +[](CRDocHandler* a_handler, GList* a_media_list, CRString* a_uri, CRString* a_uri_default_ns, CRParsingLocation* a_location){
+        g_return_if_fail(a_handler && a_uri && a_uri->stryng && a_uri->stryng->str);
+        auto domain = IO::Resource::SYSTEM; // import files form installation folder
+        auto fname = a_uri->stryng->str;
+        auto const css_path = IO::Resource::get_path_string(domain, IO::Resource::UIS, fname);
+        if (Glib::file_test(css_path, Glib::FILE_TEST_EXISTS)) {
+            auto parser = delete_with<cr_parser_destroy>(cr_parser_new_from_file(reinterpret_cast<unsigned char const *>(css_path.c_str()), CR_UTF_8));
+            cr_parser_set_sac_handler(parser.get(), a_handler);
+            cr_parser_parse(parser.get());
+        }
+    };
+
+    sac->import_style = import;
 
     sac->start_selector = set_selectors<false>;
     parse(IO::Resource::SYSTEM);
