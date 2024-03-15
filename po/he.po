@@ -6,22 +6,23 @@
 # Translators:
 # Yaron Shahrabani <sh.yaron@gmail.com>, 2024
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: inkscape-translator@lists.inkscape.org\n"
 "POT-Creation-Date: 2023-06-10 06:54-0700\n"
-"PO-Revision-Date: 2024-03-11 23:04+0200\n"
-"Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
-"Language-Team: Hebrew (https://app.transifex.com/yaron/teams/108782/he/)\n"
+"PO-Revision-Date: 2024-03-15 06:36+0000\n"
+"Last-Translator: Yaron Shahrabani <yaron@users.noreply.translate.codeberg."
+"org>\n"
+"Language-Team: Hebrew <https://translate.codeberg.org/projects/inkscape/"
+"inkscape-application/he/>\n"
 "Language: he\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : n==2 ? 1 : n>10 && n%10==0 ? 2 : "
-"3);\n"
-"X-Generator: Poedit 3.4.2\n"
+"Plural-Forms: nplurals=4; plural=(n == 1) ? 0 : ((n == 2) ? 1 : ((n > 10 && "
+"n % 10 == 0) ? 2 : 3));\n"
+"X-Generator: Weblate 5.4.2\n"
 
 #: ../build/share/filters/filters.svg.h:2
 msgid "Fast Crop"
@@ -1578,7 +1579,7 @@ msgstr ""
 
 #: ../build/share/filters/filters.svg.h:594
 msgid "Pixellize"
-msgstr ""
+msgstr "פיקסול"
 
 #: ../build/share/filters/filters.svg.h:595
 msgid "Pixel Tools"
@@ -2126,7 +2127,7 @@ msgstr ""
 
 #: ../build/share/markers/markers.svg.h:15
 msgid "Dot"
-msgstr ""
+msgstr "נקודה"
 
 #: ../build/share/markers/markers.svg.h:16
 #: ../src/live_effects/lpe-jointype.cpp:52
@@ -2139,7 +2140,7 @@ msgstr "ריבוע"
 #: ../build/share/markers/markers.svg.h:17
 #: ../share/extensions/other/templates/template_shape_prefab.inx:13
 msgid "Diamond"
-msgstr ""
+msgstr "יהלום"
 
 #: ../build/share/markers/markers.svg.h:18
 msgid "Colored dot"
@@ -2155,7 +2156,7 @@ msgstr ""
 
 #: ../build/share/markers/markers.svg.h:21
 msgid "Stop"
-msgstr ""
+msgstr "עצירה"
 
 #: ../build/share/markers/markers.svg.h:22
 #: ../src/extension/internal/filter/color.h:1326
@@ -2185,7 +2186,7 @@ msgstr "מספריים"
 
 #: ../build/share/markers/markers.svg.h:27
 msgid "Club"
-msgstr ""
+msgstr "עלה"
 
 #: ../build/share/markers/markers.svg.h:28
 msgid "Razor wire"
@@ -3229,7 +3230,7 @@ msgstr ""
 
 #: ../build/share/paint/patterns.svg.h:1
 msgid "Bricks"
-msgstr ""
+msgstr "לבנים"
 
 #: ../build/share/paint/patterns.svg.h:1
 msgid "Alternating chevron"
@@ -3504,11 +3505,11 @@ msgstr "לוח דמקה"
 
 #: ../build/share/paint/patterns.svg.h:1
 msgid "Wavy"
-msgstr ""
+msgstr "גלי"
 
 #: ../build/share/paint/patterns.svg.h:1
 msgid "Camouflage"
-msgstr ""
+msgstr "הסוואה"
 
 #: ../build/share/paint/patterns.svg.h:1 ../src/extension/internal/grid.cpp:194
 #: ../share/extensions/path_mesh_m2p.inx:11
@@ -3629,7 +3630,7 @@ msgstr ""
 
 #: ../build/share/paint/patterns.svg.h:1
 msgid "Noise"
-msgstr ""
+msgstr "רעש"
 
 #: ../build/share/symbols/symbols.h:2
 msgctxt "Symbol"
@@ -4140,7 +4141,7 @@ msgstr "איסוף"
 #: ../build/share/symbols/symbols.h:166
 msgctxt "Symbol"
 msgid "Comment/Annotation"
-msgstr ""
+msgstr "הערה/הסבר"
 
 #: ../build/share/symbols/symbols.h:167
 msgctxt "Symbol"
@@ -4415,7 +4416,7 @@ msgstr "אתר קרוונים"
 #: ../build/share/symbols/symbols.h:257 ../build/share/symbols/symbols.h:258
 msgctxt "Symbol"
 msgid "Restrooms"
-msgstr ""
+msgstr "שירותים"
 
 #: ../build/share/symbols/symbols.h:259 ../build/share/symbols/symbols.h:260
 #: ../build/share/symbols/symbols.h:663 ../build/share/symbols/symbols.h:691
@@ -4442,7 +4443,7 @@ msgstr ""
 #: ../build/share/symbols/symbols.h:304 ../build/share/symbols/symbols.h:318
 msgctxt "Symbol"
 msgid "Shelter"
-msgstr ""
+msgstr "מקלט"
 
 #: ../build/share/symbols/symbols.h:269 ../build/share/symbols/symbols.h:270
 msgctxt "Symbol"
@@ -4462,7 +4463,7 @@ msgstr ""
 #: ../build/share/symbols/symbols.h:275 ../build/share/symbols/symbols.h:276
 msgctxt "Symbol"
 msgid "Stable"
-msgstr ""
+msgstr "יציב"
 
 #: ../build/share/symbols/symbols.h:277 ../build/share/symbols/symbols.h:278
 msgctxt "Symbol"
@@ -4497,7 +4498,7 @@ msgstr "גלישת רוח"
 #: ../build/share/symbols/symbols.h:291
 msgctxt "Symbol"
 msgid "Blank"
-msgstr ""
+msgstr "ריק"
 
 #: ../build/share/symbols/symbols.h:292
 msgctxt "Symbol"
@@ -4522,7 +4523,7 @@ msgstr ""
 #: ../build/share/symbols/symbols.h:296 ../build/share/symbols/symbols.h:310
 msgctxt "Symbol"
 msgid "Camping"
-msgstr ""
+msgstr "מחנאות"
 
 #: ../build/share/symbols/symbols.h:297 ../build/share/symbols/symbols.h:311
 msgctxt "Symbol"
@@ -4532,7 +4533,7 @@ msgstr ""
 #: ../build/share/symbols/symbols.h:298 ../build/share/symbols/symbols.h:312
 msgctxt "Symbol"
 msgid "Chalet"
-msgstr ""
+msgstr "בקתה אלפינית"
 
 #: ../build/share/symbols/symbols.h:299 ../build/share/symbols/symbols.h:313
 msgctxt "Symbol"
@@ -4542,12 +4543,12 @@ msgstr ""
 #: ../build/share/symbols/symbols.h:300 ../build/share/symbols/symbols.h:314
 msgctxt "Symbol"
 msgid "Hostel"
-msgstr ""
+msgstr "מלונית"
 
 #: ../build/share/symbols/symbols.h:301 ../build/share/symbols/symbols.h:315
 msgctxt "Symbol"
 msgid "Hotel"
-msgstr ""
+msgstr "מלון"
 
 #: ../build/share/symbols/symbols.h:302 ../build/share/symbols/symbols.h:316
 msgctxt "Symbol"
@@ -4557,7 +4558,7 @@ msgstr ""
 #: ../build/share/symbols/symbols.h:303 ../build/share/symbols/symbols.h:317
 msgctxt "Symbol"
 msgid "Motel"
-msgstr ""
+msgstr "מלון דרכים"
 
 #: ../build/share/symbols/symbols.h:305 ../build/share/symbols/symbols.h:319
 msgctxt "Symbol"
@@ -4577,12 +4578,12 @@ msgstr ""
 #: ../build/share/symbols/symbols.h:322 ../build/share/symbols/symbols.h:349
 msgctxt "Symbol"
 msgid "Bench"
-msgstr ""
+msgstr "ספסל"
 
 #: ../build/share/symbols/symbols.h:323 ../build/share/symbols/symbols.h:350
 msgctxt "Symbol"
 msgid "Court"
-msgstr ""
+msgstr "זירה"
 
 #: ../build/share/symbols/symbols.h:324 ../build/share/symbols/symbols.h:351
 msgctxt "Symbol"
@@ -4603,7 +4604,7 @@ msgstr ""
 #: ../build/share/symbols/symbols.h:716 ../build/share/symbols/symbols.h:748
 msgctxt "Symbol"
 msgid "Fountain"
-msgstr ""
+msgstr "מזרקה"
 
 #: ../build/share/symbols/symbols.h:328 ../build/share/symbols/symbols.h:355
 msgctxt "Symbol"
@@ -4613,7 +4614,7 @@ msgstr ""
 #: ../build/share/symbols/symbols.h:329 ../build/share/symbols/symbols.h:356
 msgctxt "Symbol"
 msgid "Library"
-msgstr ""
+msgstr "ספרייה"
 
 #: ../build/share/symbols/symbols.h:330 ../build/share/symbols/symbols.h:357
 msgctxt "Symbol"
@@ -4624,12 +4625,12 @@ msgstr ""
 #: ../build/share/symbols/symbols.h:662 ../build/share/symbols/symbols.h:690
 msgctxt "Symbol"
 msgid "Playground"
-msgstr ""
+msgstr "מגרש משחקים"
 
 #: ../build/share/symbols/symbols.h:332 ../build/share/symbols/symbols.h:359
 msgctxt "Symbol"
 msgid "Police"
-msgstr ""
+msgstr "משטרה"
 
 #: ../build/share/symbols/symbols.h:333 ../build/share/symbols/symbols.h:360
 msgctxt "Symbol"
@@ -4649,7 +4650,7 @@ msgstr ""
 #: ../build/share/symbols/symbols.h:336 ../build/share/symbols/symbols.h:363
 msgctxt "Symbol"
 msgid "Prison"
-msgstr ""
+msgstr "בית כלא"
 
 #: ../build/share/symbols/symbols.h:337 ../build/share/symbols/symbols.h:364
 msgctxt "Symbol"
@@ -4704,12 +4705,12 @@ msgstr ""
 #: ../build/share/symbols/symbols.h:377 ../build/share/symbols/symbols.h:389
 msgctxt "Symbol"
 msgid "Blocks"
-msgstr ""
+msgstr "לבנים"
 
 #: ../build/share/symbols/symbols.h:378 ../build/share/symbols/symbols.h:390
 msgctxt "Symbol"
 msgid "Bollard"
-msgstr ""
+msgstr "בולרד"
 
 #: ../build/share/symbols/symbols.h:379 ../build/share/symbols/symbols.h:391
 msgctxt "Symbol"
@@ -4724,12 +4725,12 @@ msgstr ""
 #: ../build/share/symbols/symbols.h:381 ../build/share/symbols/symbols.h:393
 msgctxt "Symbol"
 msgid "Entrance"
-msgstr ""
+msgstr "כניסה"
 
 #: ../build/share/symbols/symbols.h:383 ../build/share/symbols/symbols.h:395
 msgctxt "Symbol"
 msgid "Gate"
-msgstr ""
+msgstr "שער"
 
 #: ../build/share/symbols/symbols.h:384 ../build/share/symbols/symbols.h:396
 msgctxt "Symbol"
@@ -4744,7 +4745,7 @@ msgstr ""
 #: ../build/share/symbols/symbols.h:386 ../build/share/symbols/symbols.h:398
 msgctxt "Symbol"
 msgid "Steps"
-msgstr ""
+msgstr "מדרגות"
 
 #: ../build/share/symbols/symbols.h:387 ../build/share/symbols/symbols.h:399
 msgctxt "Symbol"
@@ -36498,7 +36499,7 @@ msgid ""
 "<b>Welcome to Inkscape!</b> Use shape or freehand tools to create objects; use "
 "selector (arrow) to move or transform them."
 msgstr ""
-"<b> ברוך בואך לאינקסקייפ! </b> ניתן להשתמש בכלי הצורה או היד־החופשית  כדי "
+"<b> ברוך בואך לאינקסקייפ! </b> ניתן להשתמש בכלי הצורה או היד־החופשית כדי "
 "ליצור פריטים; ובכלי הבחירה (חץ) כדי להזיז או לשנות את צורתם."
 
 #: ../src/widgets/desktop-widget.cpp:340 ../share/ui/dialog-symbols.glade:94
