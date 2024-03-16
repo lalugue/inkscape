@@ -26,6 +26,7 @@
 #include "object/sp-clippath.h"
 #include "object/sp-image.h"
 #include "object/sp-rect.h"
+#include "object/sp-use.h"
 #include "object/uri.h"
 #include "preferences.h"
 #include "selection.h"            // Selection
@@ -68,6 +69,10 @@ void image_edit(InkscapeApplication *app)
     }
 
     for (auto item : selection->items()) {
+        // In the case of a clone of an image, edit the original image.
+        if (auto const *clone = cast<SPUse>(item)) {
+            item = clone->trueOriginal();
+        }
         if (!is<SPImage>(item)) {
             continue;
         }

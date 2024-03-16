@@ -45,6 +45,7 @@
 #include "object/sp-page.h"
 #include "object/sp-shape.h"
 #include "object/sp-text.h"
+#include "object/sp-use.h"
 #include "ui/desktop/menu-set-tooltips-shift-icons.h"
 #include "ui/menuize.h"
 #include "ui/util.h"
@@ -99,6 +100,15 @@ void show_all_images(Gtk::Widget &parent)
         }
         return Inkscape::UI::ForEachResult::_continue;
     });
+}
+
+/// Check if the item is a clone of an image.
+bool is_clone_of_image(SPItem const *item)
+{
+    if (auto const *clone = cast<SPUse>(item)) {
+        return is<SPImage>(clone->trueOriginal());
+    }
+    return false;
 }
 
 ContextMenu::ContextMenu(SPDesktop *desktop, SPObject *object, bool hide_layers_and_objects_menu_item)
@@ -215,6 +225,11 @@ ContextMenu::ContextMenu(SPDesktop *desktop, SPObject *object, bool hide_layers_
                     AppendItemFromAction( gmenu_dialogs, "app.org.inkscape.filter.selected.embed-image", _("Embed Image"),           ""                      );
                     AppendItemFromAction( gmenu_dialogs, "app.element-image-edit",                       _("Edit Externally..."),    ""                      );
                 }
+            }
+
+            // A clone of an image supports "Edit Externally" as well
+            if (is_clone_of_image(item)) {
+                AppendItemFromAction(gmenu_dialogs, "app.element-image-edit", _("Edit Externally..."), "");
             }
 
             // Text dialogs.
