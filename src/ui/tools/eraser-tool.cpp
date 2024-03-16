@@ -788,9 +788,9 @@ bool EraserTool::_booleanErase(EraseTarget target, bool store_survivers)
         operands.pathUnion(true, true);
     }
     operands.add(target.item);
+    _handleStrokeStyle(target.item);
     operands.removeLPESRecursive(true);
 
-    _handleStrokeStyle(target.item);
 
     if (nowidth) {
         operands.pathCut(true, true);
