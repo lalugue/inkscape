@@ -11,8 +11,6 @@
 #include "actions-element-image.h"
 #include "actions-helper.h"
 
-#include <iostream>
-
 #include <giomm.h>  // Not <gtkmm.h>! To eventually allow a headless version!
 #include <glibmm/i18n.h>
 #include <gtkmm.h>  // OK, we lied. We pop-up an message dialog if external editor not found and if we have a GUI.
@@ -22,7 +20,6 @@
 #include "document-undo.h"
 #include "inkscape-application.h"
 #include "inkscape-window.h"
-#include "message-stack.h"
 #include "object/sp-clippath.h"
 #include "object/sp-image.h"
 #include "object/sp-rect.h"
@@ -86,13 +83,12 @@ void image_edit(InkscapeApplication *app)
         auto const uri = Inkscape::URI(href, get_base_path_uri(*selection->document()));
         if (uri.hasScheme("data")) {
             // data URL scheme, see https://www.ietf.org/rfc/rfc2397.txt
-            std::cerr << "image_edit: cannot edit embedded image" << std::endl;
+            g_warning("Edit Externally: Editing embedded images (data URL) is not supported");
             continue;
         }
         if (const char *other_scheme = uri.getScheme(); other_scheme && !uri.hasScheme("file")) {
             // any other scheme than 'file'
-            std::cerr << "image_edit: cannot edit image (scheme '" << other_scheme << "' not supported)"
-                      << std::endl;
+            g_warning("Edit Externally: Cannot edit image (scheme '%s' not supported)", other_scheme);
             continue;
         }
 
@@ -111,14 +107,13 @@ void image_edit(InkscapeApplication *app)
                 dialog->set_name("SetEditorDialog");
                 dialog->set_title(_("External Edit Image:"));
                 dialog->set_secondary_text(
-                    Glib::ustring::compose(_("System error message: %1"), error.what().raw()));
+                    Glib::ustring::compose(_("System error message: %1"), error.what()));
                 Inkscape::UI::dialog_show_modal_and_selfdestruct(std::move(dialog));
             } else {
                 show_output(Glib::ustring("image_edit: ") + message);
             }
         } catch (Glib::ShellError &error) {
-            std::cerr << "image_edit: " << message << "\n"
-                      << Glib::ustring::compose(_("System error message: %1"), error.what()) << std::endl;
+            g_error("Edit Externally: %s\n%s %s", message, _("System error message:"), error.what());
         }
     }
 }
