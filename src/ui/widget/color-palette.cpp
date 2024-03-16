@@ -159,6 +159,12 @@ ColorPalette::ColorPalette():
         _allocation = a;
         set_up_scrolling();
     });
+
+    if (auto vert_scrollbar = _scroll.get_vscrollbar()) {
+        vert_scrollbar->get_adjustment()->signal_value_changed().connect([this] {
+            update_scroll_arrows_sensitivity();
+        });
+    }
 }
 
 ColorPalette::~ColorPalette() {
@@ -188,6 +194,19 @@ void ColorPalette::do_scroll(int dx, int dy) {
 std::pair<double, double> get_range(Gtk::Scrollbar& sb) {
     auto adj = sb.get_adjustment();
     return std::make_pair(adj->get_lower(), adj->get_upper() - adj->get_page_size());
+}
+
+void ColorPalette::update_scroll_arrows_sensitivity() {
+    if (auto vert = _scroll.get_vscrollbar()) {
+        double value = vert->get_adjustment()->get_value();
+        auto [min_value, max_value] = get_range(*vert);
+
+        bool at_top = value <= min_value;
+        bool at_bottom = value >= max_value;
+
+        _scroll_up.set_sensitive(!at_top);
+        _scroll_down.set_sensitive(!at_bottom);
+    }
 }
 
 gboolean ColorPalette::scroll_cb(gpointer self) {
@@ -503,7 +522,7 @@ void ColorPalette::set_up_scrolling() {
         // 'always' allocates space for scrollbar
         _scroll.set_policy(Gtk::PolicyType::NEVER, Gtk::PolicyType::ALWAYS);
     }
-
+    update_scroll_arrows_sensitivity();
     resize();
 }
 

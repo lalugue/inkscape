@@ -94,6 +94,7 @@ public:
 private:
     void resize();
     void set_up_scrolling();
+    void update_scroll_arrows_sensitivity();
     void scroll(int dx, int dy, double snap, bool smooth);
     void do_scroll(int dx, int dy);
     static gboolean scroll_cb(gpointer self);
