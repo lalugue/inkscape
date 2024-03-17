@@ -110,6 +110,16 @@ bool is_clone_of_image(SPItem const *item)
     return false;
 }
 
+static bool childrenIncludedInSelection(SPItem *item, Inkscape::Selection &selection)
+{
+    return std::any_of(item->children.begin(), item->children.end(), [&selection](auto &child) {
+        if (auto childItem = cast<SPItem>(&child)) {
+            return selection.includes(childItem) || childrenIncludedInSelection(childItem, selection);
+        }
+        return false;
+    });
+}
+
 ContextMenu::ContextMenu(SPDesktop *desktop, SPObject *object, bool hide_layers_and_objects_menu_item)
 {
     set_name("ContextMenu");
@@ -173,11 +183,12 @@ ContextMenu::ContextMenu(SPDesktop *desktop, SPObject *object, bool hide_layers_
         // "item" is the object that was under the mouse when right-clicked. It determines what is shown
         // in the menu thus it makes the most sense that it is either selected or part of the current
         // selection.
-        auto selection = desktop->getSelection();
-        bool selection_under_cursor = std::any_of(items_under_cursor.begin(), items_under_cursor.end(),
-                [selection](auto item) { return selection->includes(item); });
-        if (object && !selection_under_cursor) {
-            selection->set(object);
+        auto &selection = *desktop->getSelection();
+
+        // Do not include this object in the selection if any of its
+        // children have been selected separately.
+        if (object && !selection.includes(object) && item && !childrenIncludedInSelection(item, selection)) {
+            selection.set(object);
         }
 
         if (!item) {
@@ -275,7 +286,7 @@ ContextMenu::ContextMenu(SPDesktop *desktop, SPObject *object, bool hide_layers_
 
                 // Clipping and Masking
                 gmenu_section = Gio::Menu::create();
-                if (selection->size() > 1) {
+                if (selection.size() > 1) {
                     AppendItemFromAction( gmenu_section, "app.object-set-clip",                 _("Set Cl_ip"),             ""                                );
                 }
                 if (item->getClipObject()) {
@@ -283,7 +294,7 @@ ContextMenu::ContextMenu(SPDesktop *desktop, SPObject *object, bool hide_layers_
                 } else {
                     AppendItemFromAction( gmenu_section, "app.object-set-clip-group",           _("Set Clip G_roup"),       ""                                );
                 }
-                if (selection->size() > 1) {
+                if (selection.size() > 1) {
                     AppendItemFromAction( gmenu_section, "app.object-set-mask",                 _("Set Mask"),              ""                                );
                 }
                 if (item->getMaskObject()) {
