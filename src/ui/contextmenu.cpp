@@ -45,6 +45,7 @@
 #include "object/sp-page.h"
 #include "object/sp-shape.h"
 #include "object/sp-text.h"
+#include "object/sp-use.h"
 #include "ui/desktop/menu-set-tooltips-shift-icons.h"
 #include "ui/menuize.h"
 #include "ui/util.h"
@@ -98,6 +99,25 @@ void show_all_images(Gtk::Widget &parent)
             image->set_visible(true);
         }
         return Inkscape::UI::ForEachResult::_continue;
+    });
+}
+
+/// Check if the item is a clone of an image.
+bool is_clone_of_image(SPItem const *item)
+{
+    if (auto const *clone = cast<SPUse>(item)) {
+        return is<SPImage>(clone->trueOriginal());
+    }
+    return false;
+}
+
+static bool childrenIncludedInSelection(SPItem *item, Inkscape::Selection &selection)
+{
+    return std::any_of(item->children.begin(), item->children.end(), [&selection](auto &child) {
+        if (auto childItem = cast<SPItem>(&child)) {
+            return selection.includes(childItem) || childrenIncludedInSelection(childItem, selection);
+        }
+        return false;
     });
 }
 
@@ -168,7 +188,7 @@ ContextMenu::ContextMenu(SPDesktop *desktop, SPObject *object, std::vector<SPIte
 
         // Do not include this object in the selection if any of its
         // children have been selected separately.
-        if (object && !selection.includesDescendant(object)) {
+        if (object && !selection.includesDescendant(object) && item && !childrenIncludedInSelection(item, selection)) {
             selection.set(object);
         }
 
