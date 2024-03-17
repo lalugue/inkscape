@@ -694,7 +694,7 @@
     <property name="page-increment">5</property>
   </object>
   <object class="GtkAdjustment" id="adjustment-star-ratio">
-    <property name="lower">0.01</property>
+    <property name="lower">0</property>
     <property name="upper">1</property>
     <property name="step-increment">0.01</property>
     <property name="page-increment">0.10</property>
@@ -702,7 +702,7 @@
   <object class="GtkAdjustment" id="adjustment-star-rnd">
     <property name="lower">-10</property>
     <property name="upper">10</property>
-    <property name="step-increment">0.010000000000000002</property>
+    <property name="step-increment">0.01</property>
     <property name="page-increment">0.10</property>
   </object>
   <object class="GtkAdjustment" id="adjustment-star-rounded">
