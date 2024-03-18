@@ -22,6 +22,7 @@ class ustring;
 } // namespace Glib
 
 namespace Gtk {
+class Label;
 class ScrolledWindow;
 } // namespace Gtk
 

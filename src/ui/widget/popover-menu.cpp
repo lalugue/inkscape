@@ -183,12 +183,10 @@ bool PopoverMenu::activate(Glib::ustring const &search) {
     Gtk::Widget *fallback_match = nullptr; 
     for (auto item : _items) {
         if (!_active_search) {
-            if (auto container = dynamic_cast<Gtk::Container *>(item->get_parent())) {
-                _active_search = Gtk::make_managed<Gtk::Label>(search);
-                _active_search->get_style_context()->add_class("menu_search");
-                _active_search->set_xalign(0.1);
-                container->add(*_active_search);
-            }
+            _active_search = Gtk::make_managed<Gtk::Label>(search);
+            _active_search->get_style_context()->add_class("menu_search");
+            _active_search->set_xalign(0.1);
+            _grid.attach_next_to(*_active_search, Gtk::PositionType::BOTTOM);
         }
         for (auto const widg : UI::get_children(*item)) {
             item->unset_state_flags(Gtk::StateFlags::FOCUSED | Gtk::StateFlags::PRELIGHT);

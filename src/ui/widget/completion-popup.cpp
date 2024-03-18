@@ -68,7 +68,7 @@ CompletionPopup::CompletionPopup() :
         clear();
         _menu_search.clear();
         _popover_menu.activate({});
-    }, false);
+    });
 
     _search.signal_stop_search().connect([this](){
         clear();
