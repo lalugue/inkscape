@@ -19,6 +19,7 @@
 #include "ui/pack.h"
 #include "ui/tools/node-tool.h"
 #include "ui/util.h"
+#include "ui/widget/spinbutton.h"
 
 namespace Inkscape::LivePathEffect {
 
@@ -123,11 +124,8 @@ LPESimplify::newWidget()
         if (param->param_key == "simplify_individual_paths") {
             UI::pack_start(*buttons, *widg, true, true, 2);
         } else {
-            auto &horizontal_box = dynamic_cast<Gtk::Box &>(*widg);
-            auto const child_list = UI::get_children(horizontal_box);
-            auto &entry = dynamic_cast<Gtk::Entry &>(*child_list.at(1));
-            entry.set_width_chars(8);
-
+            auto &scalar = dynamic_cast<UI::Widget::Scalar &>(*widg);
+            scalar.getSpinButton().set_width_chars(8);
             UI::pack_start(*vbox, *widg, true, true, 2);
         }
 

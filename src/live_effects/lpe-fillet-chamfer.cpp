@@ -23,6 +23,7 @@
 #include "ui/pack.h"
 #include "ui/tools/tool-base.h"
 #include "ui/util.h"
+#include "ui/widget/spinbutton.h"
 
 // TODO due to internal breakage in glibmm headers, this must be last:
 #include <glibmm/i18n.h>
@@ -154,13 +155,6 @@ void LPEFilletChamfer::doOnApply(SPLPEItem const *lpeItem)
     nodesatellites_param.setPathVectorNodeSatellites(_pathvector_nodesatellites);
 }
 
-static void set_entry_width_chars(UI::Widget::Scalar &scalar, int const width_chars)
-{
-    auto const childList = UI::get_children(scalar);
-    auto &entry = dynamic_cast<Gtk::Entry &>(*childList.at(1));
-    entry.set_width_chars(width_chars);
-}
-
 Gtk::Widget *LPEFilletChamfer::newWidget()
 {
     // use manage here, because after deletion of Effect object, others might
@@ -178,12 +172,12 @@ Gtk::Widget *LPEFilletChamfer::newWidget()
             auto &scalar = dynamic_cast<UI::Widget::Scalar &>(*widg);
             scalar.signal_value_changed().connect(
                 sigc::mem_fun(*this, &LPEFilletChamfer::updateAmount));
-            set_entry_width_chars(scalar, 6);
+            scalar.getSpinButton().set_width_chars(6);
         } else if (param->param_key == "chamfer_steps") {
             auto &scalar = dynamic_cast<UI::Widget::Scalar &>(*widg);
             scalar.signal_value_changed().connect(
                 sigc::mem_fun(*this, &LPEFilletChamfer::updateChamferSteps));
-            set_entry_width_chars(scalar, 3);
+            scalar.getSpinButton().set_width_chars(3);
         }
 
         UI::pack_start(*vbox, *widg, true, true, 2);

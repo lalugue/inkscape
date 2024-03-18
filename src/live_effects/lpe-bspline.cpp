@@ -19,6 +19,7 @@
 #include "ui/pack.h"
 #include "ui/util.h"
 #include "ui/widget/scalar.h"
+#include "ui/widget/spinbutton.h"
 
 namespace Inkscape::LivePathEffect {
 
@@ -116,10 +117,7 @@ Gtk::Widget *LPEBSpline::newWidget()
         if (param->param_key == "weight" || param->param_key == "steps") {
             auto &scalar = dynamic_cast<UI::Widget::Scalar &>(*widg);
             scalar.signal_value_changed().connect(sigc::mem_fun(*this, &LPEBSpline::toWeight));
-
-            auto const childList = UI::get_children(scalar);
-            auto &entry = dynamic_cast<Gtk::Entry &>(*childList.at(1));
-            entry.set_width_chars(9);
+            scalar.getSpinButton().set_width_chars(9);
         }
 
         UI::pack_start(*vbox, *widg, true, true, 2);
