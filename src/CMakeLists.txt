@@ -410,6 +410,15 @@ set(INKSCAPE_TARGET_LIBS
 # Build everything except main and inkview.c in a shared library.
 add_library(inkscape_base ${inkscape_SRC} ${sp_SRC})
 set_target_properties(inkscape_base PROPERTIES SOVERSION "${INKSCAPE_VERSION_MAJOR}.${INKSCAPE_VERSION_MINOR}.${INKSCAPE_VERSION_PATCH}.0")
+if(NOT GTKMM4_FOUND)
+    add_dependencies(util_LIB gtkmm)
+    add_dependencies(util_LIB glibmm)
+    add_dependencies(depixelize_LIB gtkmm)
+    add_dependencies(depixelize_LIB glibmm)
+    target_link_directories(inkscape_base PUBLIC ${CMAKE_BINARY_DIR}/deps/lib)
+    SET(CMAKE_EXE_LINKER_FLAGS "-Wl,--disable-new-dtags")
+endif()
+
 
 # added so that locally installed inkscape can find lib2geom if it's not installed systemwide
 if(NOT APPLE)

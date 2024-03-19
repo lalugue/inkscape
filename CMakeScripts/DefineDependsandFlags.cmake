@@ -259,18 +259,58 @@ endif()
 # Include dependencies:
 
 pkg_check_modules(
-    GTK4
-    REQUIRED
-    glibmm-2.68>=2.78.1
-    gtkmm-4.0>=4.13.3
-    gtk4
+    MM REQUIRED
     cairomm-1.16
     pangomm-2.48
+    gdk-pixbuf-2.0
+    graphene-1.0
     )
-list(APPEND INKSCAPE_CXX_FLAGS ${GTK4_CFLAGS_OTHER})
-list(APPEND INKSCAPE_INCS_SYS ${GTK4_INCLUDE_DIRS})
-list(APPEND INKSCAPE_LIBS ${GTK4_LIBRARIES})
-link_directories(${GTK4_LIBRARY_DIRS})
+list(APPEND INKSCAPE_CXX_FLAGS ${MM_CFLAGS_OTHER})
+list(APPEND INKSCAPE_INCS_SYS ${MM_INCLUDE_DIRS})
+list(APPEND INKSCAPE_LIBS ${MM_LIBRARIES})
+link_directories(${MM_LIBRARY_DIRS})
+
+pkg_check_modules(
+    GTKMM4
+    glibmm-2.68>=2.78.1
+    gtk4
+    gtkmm-4.0>=4.13.3
+    )
+    list(APPEND INKSCAPE_CXX_FLAGS ${GTKMM4_CFLAGS_OTHER})
+    list(APPEND INKSCAPE_INCS_SYS ${GTKMM4_INCLUDE_DIRS})
+    list(APPEND INKSCAPE_LIBS ${GTKMM4_LIBRARIES})
+    link_directories(${GTKMM4_LIBRARY_DIRS})
+
+if(NOT GTKMM4_FOUND)
+    message("GTKMM too old, gtkmm 4.14.0 and glibmm 2.78.1 will be compiled from source")
+    include(ExternalProject)
+    ExternalProject_Add(gtkmm
+        URL https://download.gnome.org/sources/gtkmm/4.14/gtkmm-4.14.0.tar.xz
+        URL_HASH SHA256=9350a0444b744ca3dc69586ebd1b6707520922b6d9f4f232103ce603a271ecda
+        DOWNLOAD_EXTRACT_TIMESTAMP TRUE
+        CONFIGURE_COMMAND meson setup --libdir lib . ../gtkmm --prefix=${CMAKE_CURRENT_BINARY_DIR}/deps
+        BUILD_COMMAND meson compile
+        INSTALL_COMMAND meson install
+        )
+    ExternalProject_Add(glibmm
+        URL https://download.gnome.org/sources/glibmm/2.78/glibmm-2.78.1.tar.xz
+        URL_HASH SHA256=f473f2975d26c3409e112ed11ed36406fb3843fa975df575c22d4cb843085f61
+        DOWNLOAD_EXTRACT_TIMESTAMP TRUE
+        CONFIGURE_COMMAND meson setup --libdir lib . ../glibmm --prefix=${CMAKE_CURRENT_BINARY_DIR}/deps
+        BUILD_COMMAND meson compile
+        INSTALL_COMMAND meson install
+        )
+    include_directories(${CMAKE_CURRENT_BINARY_DIR}/deps/include/gtkmm-4.0 ${CMAKE_CURRENT_BINARY_DIR}/deps/include/glibmm-2.68/ ${CMAKE_CURRENT_BINARY_DIR}/deps/lib/gtkmm-4.0/include ${CMAKE_CURRENT_BINARY_DIR}/deps/lib/glibmm-2.68/include ${CMAKE_CURRENT_BINARY_DIR}/deps/include/gtk-4.0/ ${CMAKE_CURRENT_BINARY_DIR}/deps/include/giomm-2.68/ ${CMAKE_CURRENT_BINARY_DIR}/deps/lib/giomm-2.68/include)
+    link_directories(${CMAKE_CURRENT_BINARY_DIR}/deps/lib)
+    list(APPEND INKSCAPE_LIBS -lgtkmm-4.0 -lglibmm-2.68)
+    set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_RPATH}:${CMAKE_BINARY_DIR}/deps/lib")
+
+    # check we can actually build it
+    message("To build gtkmm4, you need the packages glslc, mm-common, and libgstreamer-plugins-bad1.0-dev")
+    find_program(glslc glslc REQUIRED)
+    find_program(mmcp mm-common-prepare REQUIRED)
+    pkg_check_modules(TMP-gtkmm-gstreamer gstreamer-player-1.0 REQUIRED)
+endif()
 
 if(WITH_GSOURCEVIEW)
     pkg_check_modules(GSOURCEVIEW gtksourceview-5)
