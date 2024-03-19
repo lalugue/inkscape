@@ -1704,6 +1704,11 @@ void ObjectsPanel::_handleEdited(const Glib::ustring& path, const Glib::ustring&
     if (auto row = *_store->get_iter(path)) {
         if (auto item = getItem(row)) {
             if (!new_text.empty() && (!item->label() || new_text != item->label())) {
+                auto obj = cast<SPGroup>(item);
+                if (obj && obj->layerMode() == SPGroup::LAYER && !obj->isHighlightSet()) {
+                    guint32 color = obj->highlight_color();
+                    obj->setHighlight(color);
+                }
                 item->setLabel(new_text.c_str());
                 DocumentUndo::done(getDocument(), _("Rename object"), "");
             }

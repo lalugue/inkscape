@@ -180,6 +180,13 @@ void LayerPropertiesDialog::_doRename()
         return;
     }
     LayerManager &layman = _desktop->layerManager();
+    
+    SPGroup *activeLayer = layman.currentLayer();
+    if (activeLayer && !activeLayer->isHighlightSet()) {
+        guint32 color = activeLayer->highlight_color();
+        activeLayer->setHighlight(color);
+    }
+    
     layman.renameLayer(layman.currentLayer(), name.c_str(), false);
 
     DocumentUndo::done(_desktop->getDocument(), _("Rename layer"), INKSCAPE_ICON("layer-rename"));
