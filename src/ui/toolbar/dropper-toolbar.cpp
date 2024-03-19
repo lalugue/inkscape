@@ -70,6 +70,7 @@ DropperToolbar::DropperToolbar(SPDesktop *desktop)
     _toolbar = &get_widget<Gtk::Box>(_builder, "dropper-toolbar");
 
     set_child(*_toolbar);
+    init_menu_btns();
 
     auto prefs = Preferences::get();
 

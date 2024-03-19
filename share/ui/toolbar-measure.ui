@@ -27,26 +27,9 @@
     <property name="step-increment">1</property>
     <property name="page-increment">4</property>
   </object>
-  <object class="GtkPopover" id="popover1">
-    <property name="child">
-      <object class="GtkBox" id="popover_box1">
-        <property name="valign">center</property>
-        <property name="spacing">3</property>
-      </object>
-    </property>
-  </object>
-  <object class="GtkPopover" id="popover2">
-    <property name="child">
-      <object class="GtkBox" id="popover_box2">
-        <property name="valign">center</property>
-        <property name="spacing">3</property>
-      </object>
-    </property>
-  </object>
   <object class="GtkBox" id="measure-toolbar">
     <property name="halign">start</property>
     <property name="valign">center</property>
-    <property name="spacing">3</property>
     <property name="hexpand">True</property>
     <child>
       <object class="GtkBox" id="font_size_box">
@@ -90,6 +73,9 @@
     <child>
       <object class="GtkBox" id="scale_box">
         <property name="tooltip-text" translatable="yes">Scale the results</property>
+        <style>
+            <class name="priority1"/>
+        </style>
         <child>
           <object class="GtkLabel">
             <property name="label" translatable="yes">Scale %:</property>
@@ -108,6 +94,9 @@
     </child>
     <child>
       <object class="GtkBox" id="unit_menu_box">
+        <style>
+            <class name="priority1"/>
+        </style>
         <child>
           <object class="GtkLabel">
             <property name="label" translatable="yes">Units:</property>
@@ -121,28 +110,11 @@
       </object>
     </child>
     <child>
-      <object class="GtkMenuButton" id="menu_btn1">
-        <property name="focusable">True</property>
-        <property name="focus-on-click">False</property>
-        <property name="receives-default">True</property>
-        <property name="has-frame">False</property>
-        <property name="popover">popover1</property>
-        <child>
-          <object class="GtkImage" id="image18">
-            <property name="icon-name">go-down</property>
-          </object>
-        </child>
-      </object>
-    </child>
-    <child>
       <object class="GtkToggleButton" id="_only_selected_btn">
         <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Measure only selected</property>
         <property name="has-frame">False</property>
-        <style>
-          <class name="tag1"/>
-        </style>
         <child>
           <object class="GtkImage" id="image1">
             <property name="icon-name">snap-bounding-box-center</property>
@@ -156,9 +128,6 @@
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Ignore first and last</property>
         <property name="has-frame">False</property>
-        <style>
-          <class name="tag1"/>
-        </style>
         <child>
           <object class="GtkImage" id="image2">
             <property name="icon-name">draw-geometry-line-segment</property>
@@ -172,9 +141,6 @@
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Show measures between items</property>
         <property name="has-frame">False</property>
-        <style>
-          <class name="tag1"/>
-        </style>
         <child>
           <object class="GtkImage" id="image3">
             <property name="icon-name">distribute-randomize</property>
@@ -188,9 +154,6 @@
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Show hidden intersections</property>
         <property name="has-frame">False</property>
-        <style>
-          <class name="tag1"/>
-        </style>
         <child>
           <object class="GtkImage" id="image4">
             <property name="icon-name">object-hidden</property>
@@ -204,9 +167,6 @@
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Measure all layers</property>
         <property name="has-frame">False</property>
-        <style>
-          <class name="tag1"/>
-        </style>
         <child>
           <object class="GtkImage" id="image5">
             <property name="icon-name">dialog-layers</property>
@@ -219,27 +179,13 @@
       </object>
     </child>
     <child>
-      <object class="GtkMenuButton" id="menu_btn2">
-        <property name="focusable">True</property>
-        <property name="focus-on-click">False</property>
-        <property name="receives-default">True</property>
-        <property name="has-frame">False</property>
-        <property name="popover">popover2</property>
-        <child>
-          <object class="GtkImage" id="image11">
-            <property name="icon-name">go-down</property>
-          </object>
-        </child>
-      </object>
-    </child>
-    <child>
       <object class="GtkButton" id="reverse_btn">
         <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Reverse measure</property>
         <property name="has-frame">False</property>
         <style>
-          <class name="tag2"/>
+            <class name="priority1"/>
         </style>
         <child>
           <object class="GtkImage" id="image6">
@@ -255,7 +201,7 @@
         <property name="tooltip-text" translatable="yes">Phantom measure</property>
         <property name="has-frame">False</property>
         <style>
-          <class name="tag2"/>
+            <class name="priority1"/>
         </style>
         <child>
           <object class="GtkImage" id="image7">
@@ -272,7 +218,7 @@
         <property name="tooltip-text" translatable="yes">To guides</property>
         <property name="has-frame">False</property>
         <style>
-          <class name="tag2"/>
+            <class name="priority1"/>
         </style>
         <child>
           <object class="GtkImage" id="image8">
@@ -288,7 +234,7 @@
         <property name="tooltip-text" translatable="yes">Convert to item</property>
         <property name="has-frame">False</property>
         <style>
-          <class name="tag2"/>
+            <class name="priority1"/>
         </style>
         <child>
           <object class="GtkImage" id="image9">
@@ -304,7 +250,7 @@
         <property name="tooltip-text" translatable="yes">Mark Dimension</property>
         <property name="has-frame">False</property>
         <style>
-          <class name="tag2"/>
+            <class name="priority1"/>
         </style>
         <child>
           <object class="GtkImage" id="image10">
@@ -316,6 +262,9 @@
     <child>
       <object class="GtkBox" id="offset_box">
         <property name="tooltip-text" translatable="yes">Mark dimension offset</property>
+        <style>
+            <class name="priority1"/>
+        </style>
         <child>
           <object class="GtkLabel">
             <property name="label" translatable="yes">Offset:</property>
@@ -334,7 +283,7 @@
       </object>
     </child>
     <style>
-      <class name="toolbar"/>
+      <class name="inkscape-toolbar"/>
     </style>
   </object>
 </interface>

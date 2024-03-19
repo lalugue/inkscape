@@ -33,26 +33,9 @@
       </item>
     </section>
   </menu>
-  <object class="GtkPopover" id="popover1">
-    <property name="child">
-      <object class="GtkBox" id="popover_box1">
-        <property name="valign">center</property>
-        <property name="spacing">3</property>
-      </object>
-    </property>
-  </object>
-  <object class="GtkPopover" id="popover2">
-    <property name="child">
-      <object class="GtkBox" id="popover_box2">
-        <property name="valign">center</property>
-        <property name="spacing">3</property>
-      </object>
-    </property>
-  </object>
   <object class="GtkBox" id="node-toolbar">
     <property name="halign">start</property>
     <property name="valign">center</property>
-    <property name="spacing">3</property>
     <property name="hexpand">True</property>
     <child>
       <object class="GtkButton" id="insert_node_btn">
@@ -101,6 +84,9 @@
         <property name="focusable">True</property>
         <property name="tooltip-text" translatable="yes">Join selected nodes</property>
         <property name="has-frame">False</property>
+        <style>
+            <class name="priority2"/>
+        </style>
         <child>
           <object class="GtkImage" id="image2">
             <property name="icon-name">node-join</property>
@@ -113,6 +99,9 @@
         <property name="focusable">True</property>
         <property name="tooltip-text" translatable="yes">Break path at selected nodes</property>
         <property name="has-frame">False</property>
+        <style>
+            <class name="priority2"/>
+        </style>
         <child>
           <object class="GtkImage" id="image3">
             <property name="icon-name">node-break</property>
@@ -122,6 +111,9 @@
     </child>
     <child>
       <object class="GtkSeparator">
+        <style>
+            <class name="priority2"/>
+        </style>
       </object>
     </child>
     <child>
@@ -130,6 +122,9 @@
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Join selected endnodes with a new segment</property>
         <property name="has-frame">False</property>
+        <style>
+            <class name="priority2"/>
+        </style>
         <child>
           <object class="GtkImage" id="image4">
             <property name="icon-name">node-join-segment</property>
@@ -143,6 +138,9 @@
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Delete segment between two non-endpoint nodes</property>
         <property name="has-frame">False</property>
+        <style>
+            <class name="priority2"/>
+        </style>
         <child>
           <object class="GtkImage" id="image5">
             <property name="icon-name">node-delete-segment</property>
@@ -152,20 +150,9 @@
     </child>
     <child>
       <object class="GtkSeparator">
-      </object>
-    </child>
-    <child>
-      <object class="GtkMenuButton" id="menu_btn1">
-        <property name="focusable">True</property>
-        <property name="focus-on-click">False</property>
-        <property name="receives-default">True</property>
-        <property name="has-frame">False</property>
-        <property name="popover">popover1</property>
-        <child>
-          <object class="GtkImage" id="image17">
-            <property name="icon-name">go-down</property>
-          </object>
-        </child>
+        <style>
+            <class name="priority2"/>
+        </style>
       </object>
     </child>
     <child>
@@ -173,14 +160,14 @@
         <property name="focusable">True</property>
         <property name="tooltip-text" translatable="yes">Make selected nodes corner</property>
         <property name="has-frame">False</property>
+        <style>
+            <class name="priority2"/>
+        </style>
         <child>
           <object class="GtkImage" id="image6">
             <property name="icon-name">node-type-cusp</property>
           </object>
         </child>
-        <style>
-          <class name="tag1"/>
-        </style>
       </object>
     </child>
     <child>
@@ -188,14 +175,14 @@
         <property name="focusable">True</property>
         <property name="tooltip-text" translatable="yes">Make selected nodes smooth</property>
         <property name="has-frame">False</property>
+        <style>
+            <class name="priority2"/>
+        </style>
         <child>
           <object class="GtkImage" id="image7">
             <property name="icon-name">node-type-smooth</property>
           </object>
         </child>
-        <style>
-          <class name="tag1"/>
-        </style>
       </object>
     </child>
     <child>
@@ -203,14 +190,14 @@
         <property name="focusable">True</property>
         <property name="tooltip-text" translatable="yes">Make selected nodes symmetric</property>
         <property name="has-frame">False</property>
+        <style>
+            <class name="priority2"/>
+        </style>
         <child>
           <object class="GtkImage" id="image8">
             <property name="icon-name">node-type-symmetric</property>
           </object>
         </child>
-        <style>
-          <class name="tag1"/>
-        </style>
       </object>
     </child>
     <child>
@@ -218,18 +205,21 @@
         <property name="focusable">True</property>
         <property name="tooltip-text" translatable="yes">Make selected nodes auto-smooth</property>
         <property name="has-frame">False</property>
+        <style>
+            <class name="priority2"/>
+        </style>
         <child>
           <object class="GtkImage" id="image9">
             <property name="icon-name">node-type-auto-smooth</property>
           </object>
         </child>
-        <style>
-          <class name="tag1"/>
-        </style>
       </object>
     </child>
     <child>
       <object class="GtkSeparator">
+        <style>
+            <class name="priority2"/>
+        </style>
       </object>
     </child>
     <child>
@@ -237,6 +227,9 @@
         <property name="focusable">True</property>
         <property name="tooltip-text" translatable="yes">Straighten lines</property>
         <property name="has-frame">False</property>
+        <style>
+            <class name="priority2"/>
+        </style>
         <child>
           <object class="GtkImage" id="image10">
             <property name="icon-name">node-segment-line</property>
@@ -249,6 +242,9 @@
         <property name="focusable">True</property>
         <property name="tooltip-text" translatable="yes">Add curve handles</property>
         <property name="has-frame">False</property>
+        <style>
+            <class name="priority2"/>
+        </style>
         <child>
           <object class="GtkImage" id="image11">
             <property name="icon-name">node-segment-curve</property>
@@ -258,6 +254,9 @@
     </child>
     <child>
       <object class="GtkSeparator">
+        <style>
+            <class name="priority2"/>
+        </style>
       </object>
     </child>
     <child>
@@ -266,6 +265,9 @@
         <property name="tooltip-text" translatable="yes">Add corners live path effect</property>
         <property name="action-name">app.object-add-corners-lpe</property>
         <property name="has-frame">False</property>
+        <style>
+            <class name="priority2"/>
+        </style>
         <child>
           <object class="GtkImage" id="image12">
             <property name="icon-name">corners</property>
@@ -275,6 +277,9 @@
     </child>
     <child>
       <object class="GtkSeparator">
+        <style>
+            <class name="priority2"/>
+        </style>
       </object>
     </child>
     <child>
@@ -283,6 +288,9 @@
         <property name="tooltip-text" translatable="yes">Convert selected object to path</property>
         <property name="action-name">app.object-to-path</property>
         <property name="has-frame">False</property>
+        <style>
+            <class name="priority2"/>
+        </style>
         <child>
           <object class="GtkImage" id="image20">
             <property name="icon-name">object-to-path</property>
@@ -296,6 +304,9 @@
         <property name="tooltip-text" translatable="yes">Convert selected object's stroke to paths</property>
         <property name="action-name">app.object-stroke-to-path</property>
         <property name="has-frame">False</property>
+        <style>
+            <class name="priority2"/>
+        </style>
         <child>
           <object class="GtkImage" id="image21">
             <property name="icon-name">stroke-to-path</property>
@@ -368,6 +379,9 @@
         <property name="tooltip-text" translatable="yes">Show next editable path effect parameter</property>
         <property name="action-name">win.path-effect-parameter-next</property>
         <property name="has-frame">False</property>
+        <style>
+            <class name="priority1"/>
+        </style>
         <child>
           <object class="GtkImage" id="image22">
             <property name="icon-name">path-effect-parameter-next</property>
@@ -377,20 +391,9 @@
     </child>
     <child>
       <object class="GtkSeparator">
-      </object>
-    </child>
-    <child>
-      <object class="GtkMenuButton" id="menu_btn2">
-        <property name="focusable">True</property>
-        <property name="focus-on-click">False</property>
-        <property name="receives-default">True</property>
-        <property name="has-frame">False</property>
-        <property name="popover">popover2</property>
-        <child>
-          <object class="GtkImage" id="image23">
-            <property name="icon-name">go-down</property>
-          </object>
-        </child>
+        <style>
+            <class name="priority1"/>
+        </style>
       </object>
     </child>
     <child>
@@ -399,7 +402,7 @@
         <property name="tooltip-text" translatable="yes">Show path outline (without path effects)</property>
         <property name="has-frame">False</property>
         <style>
-          <class name="tag2"/>
+            <class name="priority1"/>
         </style>
         <child>
           <object class="GtkImage" id="image19">
@@ -414,7 +417,7 @@
         <property name="tooltip-text" translatable="yes">Show Bezier handles of selected nodes</property>
         <property name="has-frame">False</property>
         <style>
-          <class name="tag2"/>
+            <class name="priority1"/>
         </style>
         <child>
           <object class="GtkImage" id="image16">
@@ -429,7 +432,7 @@
         <property name="tooltip-text" translatable="yes">Show transformation handles for selected nodes</property>
         <property name="has-frame">False</property>
         <style>
-          <class name="tag2"/>
+            <class name="priority1"/>
         </style>
         <child>
           <object class="GtkImage" id="image15">
@@ -444,7 +447,7 @@
         <property name="tooltip-text" translatable="yes">Show mask(s) of selected object(s)</property>
         <property name="has-frame">False</property>
         <style>
-          <class name="tag2"/>
+            <class name="priority1"/>
         </style>
         <child>
           <object class="GtkImage" id="image14">
@@ -459,7 +462,7 @@
         <property name="tooltip-text" translatable="yes">Show clipping path(s) of selected object(s)</property>
         <property name="has-frame">False</property>
         <style>
-          <class name="tag2"/>
+            <class name="priority1"/>
         </style>
         <child>
           <object class="GtkImage" id="image13">
@@ -469,7 +472,7 @@
       </object>
     </child>
     <style>
-      <class name="toolbar"/>
+      <class name="inkscape-toolbar"/>
     </style>
   </object>
 </interface>

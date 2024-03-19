@@ -16,8 +16,6 @@
 
 #include "select-toolbar.h"
 
-#include <iostream>
-
 #include <2geom/rect.h>
 #include <glibmm/i18n.h>
 #include <glibmm/main.h>
@@ -41,7 +39,6 @@
 #include "ui/widget/canvas.h" // Focus widget
 #include "ui/widget/combo-tool-item.h"
 #include "ui/widget/spinbutton.h"
-#include "ui/widget/toolbar-menu-button.h"
 #include "ui/widget/unit-tracker.h"
 #include "widgets/widget-sizes.h"
 
@@ -81,27 +78,8 @@ SelectToolbar::SelectToolbar(SPDesktop *desktop)
     auto unit_menu = _tracker->create_tool_item(_("Units"), (""));
     get_widget<Gtk::Box>(_builder, "unit_menu_box").append(*unit_menu);
 
-    // Fetch all the ToolbarMenuButtons at once from the UI file
-    // Menu Button #1
-    auto popover_box1 = &get_widget<Gtk::Box>(_builder, "popover_box1");
-    auto menu_btn1 = &get_derived_widget<UI::Widget::ToolbarMenuButton>(_builder, "menu_btn1");
-
-    // Menu Button #2
-    auto popover_box2 = &get_widget<Gtk::Box>(_builder, "popover_box2");
-    auto menu_btn2 = &get_derived_widget<UI::Widget::ToolbarMenuButton>(_builder, "menu_btn2");
-
-    // Initialize all the ToolbarMenuButtons only after all the children of the
-    // toolbar have been fetched. Otherwise, the children to be moved in the
-    // popover will get mapped to a different position and it will probably
-    // cause segfault.
-    auto children = UI::get_children(*_toolbar);
-
-    menu_btn1->init(1, "tag1", popover_box1, children);
-    addCollapsibleButton(menu_btn1);
-    menu_btn2->init(2, "tag2", popover_box2, children);
-    addCollapsibleButton(menu_btn2);
-
     set_child(*_toolbar);
+    init_menu_btns();
 
     _select_touch_btn.set_active(prefs->getBool("/tools/select/touch_box", false));
     _select_touch_btn.signal_toggled().connect(sigc::mem_fun(*this, &SelectToolbar::toggle_touch));
@@ -110,7 +88,7 @@ SelectToolbar::SelectToolbar(SPDesktop *desktop)
     _tracker->setActiveUnit(desktop->getNamedView()->display_units);
 
     // Use StyleContext to check if the child is a context item (an item that is disabled if there is no selection).
-    children = UI::get_children(*_toolbar);
+    auto children = UI::get_children(*_toolbar);
     for (auto const child : children) {
         bool const is_context_item = child->has_css_class("context_item");
         if (is_context_item) {

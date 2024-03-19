@@ -42,7 +42,6 @@
 #include "ui/util.h"
 #include "ui/widget/canvas.h"
 #include "ui/widget/spinbutton.h"
-#include "ui/widget/toolbar-menu-button.h"
 
 // Disabled in 0.91 because of Bug #1274831 (crash, spraying an object
 // with the mode: spray object in single path)
@@ -174,46 +173,11 @@ SprayToolbar::SprayToolbar(SPDesktop *desktop)
     _pick_center_btn.signal_toggled().connect(sigc::bind(sigc::mem_fun(*this, &SprayToolbar::on_pref_toggled),
                                                          _pick_center_btn.get_active(), "/tools/spray/pick_center"));
 
-    // Fetch all the ToolbarMenuButtons at once from the UI file
-    // Menu Button #1
-    auto popover_box1 = &get_widget<Gtk::Box>(_builder, "popover_box1");
-    auto menu_btn1 = &get_derived_widget<UI::Widget::ToolbarMenuButton>(_builder, "menu_btn1");
-
-    // Menu Button #2
-    auto popover_box2 = &get_widget<Gtk::Box>(_builder, "popover_box2");
-    auto menu_btn2 = &get_derived_widget<UI::Widget::ToolbarMenuButton>(_builder, "menu_btn2");
-
-    // Menu Button #3
-    auto popover_box3 = &get_widget<Gtk::Box>(_builder, "popover_box3");
-    auto menu_btn3 = &get_derived_widget<UI::Widget::ToolbarMenuButton>(_builder, "menu_btn3");
-
-    // Menu Button #4
-    auto popover_box4 = &get_widget<Gtk::Box>(_builder, "popover_box4");
-    auto menu_btn4 = &get_derived_widget<UI::Widget::ToolbarMenuButton>(_builder, "menu_btn4");
-
-    // Initialize all the ToolbarMenuButtons only after all the children of the
-    // toolbar have been fetched. Otherwise, the children to be moved in the
-    // popover will get mapped to a different position and it will probably
-    // cause segfault.
-    auto children = UI::get_children(*_toolbar);
-
-    menu_btn1->init(1, "tag1", popover_box1, children);
-    addCollapsibleButton(menu_btn1);
-
-    menu_btn2->init(2, "tag2", popover_box2, children);
-    addCollapsibleButton(menu_btn2);
-
-    menu_btn3->init(3, "tag3", popover_box3, children);
-    addCollapsibleButton(menu_btn3);
-
-    menu_btn4->init(4, "tag4", popover_box4, children);
-    addCollapsibleButton(menu_btn4);
-
     set_child(*_toolbar);
+    init_menu_btns();
 
     int mode = prefs->getIntLimited("/tools/spray/mode", 1, 0, _mode_buttons.size() - 1);
     _mode_buttons[mode]->set_active();
-    init();
 }
 
 SprayToolbar::~SprayToolbar() = default;

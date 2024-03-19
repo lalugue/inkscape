@@ -46,7 +46,6 @@
 #include "ui/widget/canvas.h"
 #include "ui/widget/combo-tool-item.h"
 #include "ui/widget/spinbutton.h"
-#include "ui/widget/toolbar-menu-button.h"
 #include "ui/widget/unit-tracker.h"
 #include "widgets/widget-sizes.h"
 
@@ -92,28 +91,6 @@ ArcToolbar::ArcToolbar(SPDesktop *desktop)
         btn->signal_clicked().connect(sigc::bind(sigc::mem_fun(*this, &ArcToolbar::type_changed), btn_index++));
     }
 
-    // TODO: Get rid of pointers.
-    // Fetch all the ToolbarMenuButtons at once from the UI file
-    // Menu Button #1
-    auto popover_box1 = &get_widget<Gtk::Box>(_builder, "popover_box1");
-    auto menu_btn1 = &get_derived_widget<UI::Widget::ToolbarMenuButton>(_builder, "menu_btn1");
-
-    // Menu Button #2
-    auto popover_box2 = &get_widget<Gtk::Box>(_builder, "popover_box2");
-    auto menu_btn2 = &get_derived_widget<UI::Widget::ToolbarMenuButton>(_builder, "menu_btn2");
-
-    // Initialize all the ToolbarMenuButtons only after all the children of the
-    // toolbar have been fetched. Otherwise, the children to be moved in the
-    // popover will get mapped to a different position and it will probably
-    // cause segfault.
-    auto children = UI::get_children(*_toolbar);
-
-    menu_btn1->init(1, "tag1", popover_box1, children);
-    addCollapsibleButton(menu_btn1);
-
-    menu_btn2->init(2, "tag2", popover_box2, children);
-    addCollapsibleButton(menu_btn2);
-
     set_child(*_toolbar);
 
     _make_whole.signal_clicked().connect(sigc::mem_fun(*this, &ArcToolbar::defaults));
@@ -124,6 +101,7 @@ ArcToolbar::ArcToolbar(SPDesktop *desktop)
     sensitivize(_start_item.get_adjustment()->get_value(), _end_item.get_adjustment()->get_value());
 
     desktop->connectEventContextChanged(sigc::mem_fun(*this, &ArcToolbar::check_ec));
+    init_menu_btns();
 }
 
 void ArcToolbar::setup_derived_spin_button(UI::Widget::SpinButton &btn, Glib::ustring const &name)

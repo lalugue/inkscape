@@ -21,7 +21,9 @@
 
 class SPDesktop;
 
-namespace Inkscape::UI::Widget { class ToolbarMenuButton; }
+namespace Gtk {
+class MenuButton;
+}
 
 namespace Inkscape::UI::Toolbar {
 
@@ -36,23 +38,46 @@ protected:
     SPDesktop *const _desktop;
     Gtk::Box *_toolbar = nullptr;
 
-    void addCollapsibleButton(UI::Widget::ToolbarMenuButton *button);
-
     void measure_vfunc(Gtk::Orientation orientation, int for_size, int &min, int &nat, int &min_baseline, int &nat_baseline) const override;
     void on_size_allocate(int width, int height, int baseline) override;
+    void insert_menu_btn(const int priority, int group_size,
+                         std::stack<std::pair<Gtk::Widget *, Gtk::Widget *>> toolbar_children);
 
 private:
-    struct CollapsedButton
+    struct ToolbarMenuButton
     {
-        UI::Widget::ToolbarMenuButton *button;
-        int change;
+        // Constructor to initialize data members
+        ToolbarMenuButton(int priority, int group_size, Gtk::MenuButton *menu_btn,
+                          const std::stack<std::pair<Gtk::Widget *, Gtk::Widget *>> &popover_children,
+                          const std::stack<std::pair<Gtk::Widget *, Gtk::Widget *>> &toolbar_children)
+            : priority(priority)
+            , group_size(group_size)
+            , menu_btn(menu_btn)
+            , popover_children(popover_children)
+            , toolbar_children(toolbar_children)
+        {}
+
+        // Data members
+        int priority;
+        int group_size;
+        Gtk::MenuButton *menu_btn;
+        std::stack<std::pair<Gtk::Widget *, Gtk::Widget *>> popover_children;
+        std::stack<std::pair<Gtk::Widget *, Gtk::Widget *>> toolbar_children;
     };
 
-    std::stack<UI::Widget::ToolbarMenuButton *> _expanded_menu_btns;
-    std::stack<CollapsedButton> _collapsed_menu_btns;
+    std::vector<ToolbarMenuButton *> _menu_btns;
+    std::stack<int> _size_needed;
+    int _active_mb_index = -1;
+    bool _resizing = false;
 
     void _resize_handler(int width, int height);
-    void _move_children(Gtk::Box *src, Gtk::Box *dest, std::vector<std::pair<int, Gtk::Widget *>> const &children, bool is_expanding = false);
+    void _update_menu_btn_image(Gtk::Widget *child);
+    void _move_children(Gtk::Box *src, Gtk::Box *dest, std::stack<std::pair<Gtk::Widget *, Gtk::Widget *>> &tb_children,
+                        std::stack<std::pair<Gtk::Widget *, Gtk::Widget *>> &popover_children, int group_size,
+                        bool is_expanding = false);
+
+public:
+    void init_menu_btns();
 };
 
 } // namespace Inkscape::UI::Toolbar

@@ -16,12 +16,11 @@
 
 #include "gradient-toolbar.h"
 
-#include <map>
-
 #include <glibmm/i18n.h>
 #include <gtkmm/button.h>
 #include <gtkmm/comboboxtext.h>
 #include <gtkmm/togglebutton.h>
+#include <map>
 
 #include "desktop.h"
 #include "document-undo.h"
@@ -43,7 +42,6 @@
 #include "ui/widget/gradient-image.h"
 #include "ui/widget/gradient-vector-selector.h"
 #include "ui/widget/spinbutton.h"
-#include "ui/widget/toolbar-menu-button.h"
 
 using Inkscape::DocumentUndo;
 using Inkscape::UI::Tools::ToolBase;
@@ -475,21 +473,8 @@ GradientToolbar::GradientToolbar(SPDesktop *desktop)
     _stops_delete_btn.signal_clicked().connect(sigc::mem_fun(*this, &GradientToolbar::remove_stop));
     _stops_delete_btn.set_sensitive(false);
 
-    // Fetch all the ToolbarMenuButtons at once from the UI file
-    // Menu Button #1
-    auto popover_box1 = &get_widget<Gtk::Box>(_builder, "popover_box1");
-    auto menu_btn1 = &get_derived_widget<UI::Widget::ToolbarMenuButton>(_builder, "menu_btn1");
-
-    // Initialize all the ToolbarMenuButtons only after all the children of the
-    // toolbar have been fetched. Otherwise, the children to be moved in the
-    // popover will get mapped to a different position and it will probably
-    // cause segfault.
-    auto children = UI::get_children(*_toolbar);
-
-    menu_btn1->init(1, "tag1", popover_box1, children);
-    addCollapsibleButton(menu_btn1);
-
     set_child(*_toolbar);
+    init_menu_btns();
 
     // Signals.
     desktop->connectEventContextChanged(sigc::mem_fun(*this, &GradientToolbar::check_ec));

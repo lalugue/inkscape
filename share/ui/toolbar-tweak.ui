@@ -19,43 +19,13 @@
     <property name="step-increment">1</property>
     <property name="page-increment">10</property>
   </object>
-  <object class="GtkPopover" id="popover1">
-    <property name="child">
-      <object class="GtkBox" id="popover_box1">
-        <property name="valign">center</property>
-        <property name="spacing">3</property>
-      </object>
-    </property>
-  </object>
-  <object class="GtkPopover" id="popover2">
-    <property name="child">
-      <object class="GtkBox" id="popover_box2">
-        <property name="valign">center</property>
-        <property name="spacing">3</property>
-      </object>
-    </property>
-  </object>
   <object class="GtkBox" id="tweak-toolbar">
     <property name="halign">start</property>
     <property name="valign">center</property>
-    <property name="spacing">3</property>
     <property name="hexpand">True</property>
-    <child>
-      <object class="GtkMenuButton" id="menu_btn1">
-        <property name="focusable">True</property>
-        <property name="focus-on-click">False</property>
-        <property name="receives-default">True</property>
-        <property name="has-frame">False</property>
-        <property name="popover">popover1</property>
-        <property name="icon-name">go-down</property>
-      </object>
-    </child>
     <child>
       <object class="GtkLabel">
         <property name="label" translatable="yes">Mode:</property>
-        <style>
-          <class name="tag1"/>
-        </style>
       </object>
     </child>
     <child>
@@ -178,9 +148,6 @@
             <property name="icon-name">object-tweak-blur</property>
           </object>
         </child>
-        <style>
-          <class name="tag1"/>
-        </style>
       </object>
     </child>
     <child>
@@ -190,6 +157,9 @@
     <child>
       <object class="GtkBox" id="width_box">
         <property name="tooltip-text" translatable="yes">The width of the tweak area (relative to the visible canvas area)</property>
+        <style>
+            <class name="priority1"/>
+        </style>
         <child>
           <object class="GtkLabel">
             <property name="label" translatable="yes">Width:</property>
@@ -210,6 +180,9 @@
     <child>
       <object class="GtkBox" id="force_box">
         <property name="tooltip-text" translatable="yes">The force of the tweak action</property>
+        <style>
+            <class name="priority1"/>
+        </style>
         <child>
           <object class="GtkLabel">
             <property name="label" translatable="yes">Force:</property>
@@ -234,11 +207,17 @@
         <property name="tooltip-text" translatable="yes">Use the pressure of the input device to alter the force of tweak action</property>
         <property name="has-frame">False</property>
         <property name="icon-name">draw-use-pressure</property>
+        <style>
+            <class name="priority1"/>
+        </style>
       </object>
     </child>
     <child>
       <object class="GtkBox" id="_fidelity_box">
         <property name="tooltip-text" translatable="yes">Low fidelity simplifies paths; high fidelity preserves path features but may generate a lot of new nodes</property>
+        <style>
+            <class name="priority1"/>
+        </style>
         <child>
           <object class="GtkLabel">
             <property name="label" translatable="yes">Fidelity:</property>
@@ -257,20 +236,16 @@
     </child>
     <child>
       <object class="GtkSeparator">
-      </object>
-    </child>
-    <child>
-      <object class="GtkMenuButton" id="menu_btn2">
-        <property name="focusable">True</property>
-        <property name="focus-on-click">False</property>
-        <property name="receives-default">True</property>
-        <property name="has-frame">False</property>
-        <property name="popover">popover2</property>
-        <property name="icon-name">go-down</property>
+        <style>
+            <class name="priority1"/>
+        </style>
       </object>
     </child>
     <child>
       <object class="GtkBox" id="_channels_box">
+        <style>
+            <class name="priority1"/>
+        </style>
         <child>
           <object class="GtkLabel">
             <property name="label" translatable="yes">Channels:</property>
@@ -313,13 +288,10 @@
             <property name="has-frame">False</property>
           </object>
         </child>
-        <style>
-          <class name="tag2"/>
-        </style>
       </object>
     </child>
     <style>
-      <class name="toolbar"/>
+      <class name="inkscape-toolbar"/>
     </style>
   </object>
 </interface>

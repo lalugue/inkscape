@@ -50,7 +50,6 @@
 #include "ui/widget/canvas.h"
 #include "ui/widget/combo-tool-item.h"
 #include "ui/widget/spinbutton.h"
-#include "ui/widget/toolbar-menu-button.h"
 
 namespace Inkscape {
 namespace UI {
@@ -123,21 +122,8 @@ PencilToolbar::PencilToolbar(SPDesktop *desktop, bool pencil_mode)
     // Setup the spin buttons.
     setup_derived_spin_button(_shapescale_item, "shapescale", 2.0, &PencilToolbar::shapewidth_value_changed);
 
-    // Fetch all the ToolbarMenuButtons at once from the UI file
-    // Menu Button #1
-    auto popover_box1 = &get_widget<Gtk::Box>(_builder, "popover_box1");
-    auto menu_btn1 = &get_derived_widget<UI::Widget::ToolbarMenuButton>(_builder, "menu_btn1");
-
-    // Initialize all the ToolbarMenuButtons only after all the children of the
-    // toolbar have been fetched. Otherwise, the children to be moved in the
-    // popover will get mapped to a different position and it will probably
-    // cause segfault.
-    auto children = UI::get_children(*_toolbar);
-
-    menu_btn1->init(1, "tag1", popover_box1, children);
-    addCollapsibleButton(menu_btn1);
-
     set_child(*_toolbar);
+    init_menu_btns();
 
     hide_extra_widgets();
 }

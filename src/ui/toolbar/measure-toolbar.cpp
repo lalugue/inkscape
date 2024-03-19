@@ -42,7 +42,6 @@
 #include "ui/widget/canvas.h"
 #include "ui/widget/combo-tool-item.h"
 #include "ui/widget/spinbutton.h"
-#include "ui/widget/toolbar-menu-button.h"
 #include "ui/widget/unit-tracker.h"
 
 using Inkscape::UI::Widget::UnitTracker;
@@ -89,26 +88,6 @@ MeasureToolbar::MeasureToolbar(SPDesktop *desktop)
     setup_derived_spin_button(_scale_item, "scale", 100.0, &MeasureToolbar::scale_value_changed);
     setup_derived_spin_button(_offset_item, "offset", 5.0, &MeasureToolbar::offset_value_changed);
 
-    // Fetch all the ToolbarMenuButtons at once from the UI file
-    // Menu Button #1
-    auto popover_box1 = &get_widget<Gtk::Box>(_builder, "popover_box1");
-    auto menu_btn1 = &get_derived_widget<UI::Widget::ToolbarMenuButton>(_builder, "menu_btn1");
-
-    // Menu Button #2
-    auto popover_box2 = &get_widget<Gtk::Box>(_builder, "popover_box2");
-    auto menu_btn2 = &get_derived_widget<UI::Widget::ToolbarMenuButton>(_builder, "menu_btn2");
-
-    // Initialize all the ToolbarMenuButtons only after all the children of the
-    // toolbar have been fetched. Otherwise, the children to be moved in the
-    // popover will get mapped to a different position and it will probably
-    // cause segfault.
-    auto children = UI::get_children(*_toolbar);
-
-    menu_btn1->init(1, "tag1", popover_box1, children);
-    menu_btn2->init(2, "tag2", popover_box2, children);
-    addCollapsibleButton(menu_btn1);
-    addCollapsibleButton(menu_btn2);
-
     // Signals.
     _only_selected_btn.set_active(prefs->getBool("/tools/measure/only_selected", false));
     _only_selected_btn.signal_toggled().connect(sigc::mem_fun(*this, &MeasureToolbar::toggle_only_selected));
@@ -147,6 +126,7 @@ MeasureToolbar::MeasureToolbar(SPDesktop *desktop)
         .connect(sigc::mem_fun(*this, &MeasureToolbar::to_mark_dimension));
 
     set_child(*_toolbar);
+    init_menu_btns();
 }
 
 MeasureToolbar::~MeasureToolbar() = default;

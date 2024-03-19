@@ -70,6 +70,7 @@ ConnectorToolbar::ConnectorToolbar(SPDesktop *desktop)
 
     _toolbar = &get_widget<Gtk::Box>(_builder, "connector-toolbar");
     set_child(*_toolbar);
+    init_menu_btns();
 
     // Orthogonal connectors toggle button
     bool tbuttonstate = prefs->getBool("/tools/connector/orthogonal");

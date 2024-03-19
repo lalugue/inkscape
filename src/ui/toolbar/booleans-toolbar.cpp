@@ -52,6 +52,7 @@ BooleansToolbar::BooleansToolbar(SPDesktop *desktop)
         prefs->setDouble("/tools/booleans/opacity", value);
         tool->set_opacity(value);
     });
+    init_menu_btns();
 }
 
 BooleansToolbar::~BooleansToolbar() = default;

@@ -100,7 +100,9 @@ ComboBoxEntryToolItem::ComboBoxEntryToolItem(Glib::ustring name,
         _combobox.set_size_request(req.get_width() + _extra_width, -1);
     }
 
-    _entry = dynamic_cast<Gtk::Entry *>(_combobox.get_first_child());
+    // Entry is the first child of the box parented by the combo box.
+    auto const box = dynamic_cast<Gtk::Box *>(_combobox.get_first_child());
+    _entry = dynamic_cast<Gtk::Entry *>(box->get_first_child());
     if (_entry) {
         _entry->set_name(name + "_entry"); // Name it so we can muck with it using an RC file
 

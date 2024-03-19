@@ -39,60 +39,14 @@
     <property name="step-increment">1</property>
     <property name="page-increment">10</property>
   </object>
-  <object class="GtkPopover" id="popover1">
-    <property name="child">
-      <object class="GtkBox" id="popover_box1">
-        <property name="valign">center</property>
-        <property name="spacing">3</property>
-      </object>
-    </property>
-  </object>
-  <object class="GtkPopover" id="popover2">
-    <property name="child">
-      <object class="GtkBox" id="popover_box2">
-        <property name="valign">center</property>
-        <property name="spacing">3</property>
-      </object>
-    </property>
-  </object>
-  <object class="GtkPopover" id="popover3">
-    <property name="child">
-      <object class="GtkBox" id="popover_box3">
-        <property name="valign">center</property>
-        <property name="spacing">3</property>
-      </object>
-    </property>
-  </object>
-  <object class="GtkPopover" id="popover4">
-    <property name="child">
-      <object class="GtkBox" id="popover_box4">
-        <property name="valign">center</property>
-        <property name="spacing">3</property>
-      </object>
-    </property>
-  </object>
   <object class="GtkBox" id="spray-toolbar">
     <property name="halign">start</property>
     <property name="valign">center</property>
-    <property name="spacing">3</property>
     <property name="hexpand">True</property>
-    <child>
-      <object class="GtkMenuButton" id="menu_btn1">
-        <property name="focusable">True</property>
-        <property name="focus-on-click">False</property>
-        <property name="receives-default">True</property>
-        <property name="has-frame">False</property>
-        <property name="popover">popover1</property>
-        <property name="icon-name">go-down</property>
-      </object>
-    </child>
     <child>
       <object class="GtkLabel">
         <property name="margin-start">3</property>
         <property name="label" translatable="yes">Mode:</property>
-        <style>
-          <class name="tag1"/>
-        </style>
       </object>
     </child>
     <child>
@@ -133,23 +87,10 @@
             <property name="icon-name">draw-eraser</property>
           </object>
         </child>
-        <style>
-          <class name="tag1"/>
-        </style>
       </object>
     </child>
     <child>
       <object class="GtkSeparator">
-      </object>
-    </child>
-    <child>
-      <object class="GtkMenuButton" id="menu_btn2">
-        <property name="focusable">True</property>
-        <property name="focus-on-click">False</property>
-        <property name="receives-default">True</property>
-        <property name="has-frame">False</property>
-        <property name="popover">popover2</property>
-        <property name="icon-name">go-down</property>
       </object>
     </child>
     <child>
@@ -170,9 +111,6 @@
             <property name="climb-rate">1</property>
           </object>
         </child>
-        <style>
-          <class name="tag2"/>
-        </style>
       </object>
     </child>
     <child>
@@ -182,9 +120,6 @@
         <property name="tooltip-text" translatable="yes">Use the pressure of the input device to alter the width of spray area</property>
         <property name="has-frame">False</property>
         <property name="icon-name">draw-use-pressure</property>
-        <style>
-          <class name="tag2"/>
-        </style>
       </object>
     </child>
     <child>
@@ -205,9 +140,6 @@
             <property name="climb-rate">1</property>
           </object>
         </child>
-        <style>
-          <class name="tag2"/>
-        </style>
       </object>
     </child>
     <child>
@@ -217,9 +149,6 @@
         <property name="tooltip-text" translatable="yes">Use the pressure of the input device to alter the width of spray area</property>
         <property name="has-frame">False</property>
         <property name="icon-name">draw-use-pressure</property>
-        <style>
-          <class name="tag2"/>
-        </style>
       </object>
     </child>
     <child>
@@ -229,6 +158,9 @@
     <child>
       <object class="GtkBox" id="_rotation_box">
         <property name="tooltip-text" translatable="yes">Variation of the rotation of the sprayed objects; 0% for the same rotation than the original object</property>
+        <style>
+            <class name="priority1"/>
+        </style>
         <child>
           <object class="GtkLabel">
             <property name="label" translatable="yes">Rotation:</property>
@@ -248,6 +180,9 @@
     <child>
       <object class="GtkBox" id="scale_box">
         <property name="tooltip-text" translatable="yes">Variation in the scale of the sprayed objects; 0% for the same scale than the original object</property>
+        <style>
+            <class name="priority1"/>
+        </style>
         <child>
           <object class="GtkLabel">
             <property name="label" translatable="yes">Scale:</property>
@@ -271,15 +206,24 @@
         <property name="tooltip-text" translatable="yes">Use the pressure of the input device to alter the scale of new items</property>
         <property name="has-frame">False</property>
         <property name="icon-name">draw-use-pressure</property>
+        <style>
+            <class name="priority1"/>
+        </style>
       </object>
     </child>
     <child>
       <object class="GtkSeparator">
+        <style>
+            <class name="priority1"/>
+        </style>
       </object>
     </child>
     <child>
       <object class="GtkBox" id="sd_box">
         <property name="tooltip-text" translatable="yes">Increase to scatter sprayed objects</property>
+        <style>
+            <class name="priority1"/>
+        </style>
         <child>
           <object class="GtkLabel">
             <property name="label" translatable="yes">Scatter:</property>
@@ -299,6 +243,9 @@
     <child>
       <object class="GtkBox" id="mean_box">
         <property name="tooltip-text" translatable="yes">0 to spray a spot; increase to enlarge the ring radius</property>
+        <style>
+            <class name="priority1"/>
+        </style>
         <child>
           <object class="GtkLabel">
             <property name="label" translatable="yes">Focus:</property>
@@ -317,16 +264,9 @@
     </child>
     <child>
       <object class="GtkSeparator">
-      </object>
-    </child>
-    <child>
-      <object class="GtkMenuButton" id="menu_btn3">
-        <property name="focusable">True</property>
-        <property name="focus-on-click">False</property>
-        <property name="receives-default">True</property>
-        <property name="has-frame">False</property>
-        <property name="popover">popover3</property>
-        <property name="icon-name">go-down</property>
+        <style>
+            <class name="priority1"/>
+        </style>
       </object>
     </child>
     <child>
@@ -337,7 +277,7 @@
         <property name="has-frame">False</property>
         <property name="icon-name">object-visible</property>
         <style>
-          <class name="tag3"/>
+            <class name="priority1"/>
         </style>
       </object>
     </child>
@@ -349,7 +289,7 @@
         <property name="has-frame">False</property>
         <property name="icon-name">object-hidden</property>
         <style>
-          <class name="tag3"/>
+            <class name="priority1"/>
         </style>
       </object>
     </child>
@@ -361,7 +301,7 @@
         <property name="has-frame">False</property>
         <property name="icon-name">symbol-bigger</property>
         <style>
-          <class name="tag3"/>
+            <class name="priority1"/>
         </style>
       </object>
     </child>
@@ -373,13 +313,16 @@
         <property name="has-frame">False</property>
         <property name="icon-name">distribute-randomize</property>
         <style>
-          <class name="tag3"/>
+            <class name="priority1"/>
         </style>
       </object>
     </child>
     <child>
       <object class="GtkBox" id="_offset_box">
         <property name="tooltip-text" translatable="yes">Increase to segregate objects more (value in percent)</property>
+        <style>
+            <class name="priority1"/>
+        </style>
         <child>
           <object class="GtkLabel">
             <property name="label" translatable="yes">Offset:</property>
@@ -398,16 +341,9 @@
     </child>
     <child>
       <object class="GtkSeparator">
-      </object>
-    </child>
-    <child>
-      <object class="GtkMenuButton" id="menu_btn4">
-        <property name="focusable">True</property>
-        <property name="focus-on-click">False</property>
-        <property name="receives-default">True</property>
-        <property name="has-frame">False</property>
-        <property name="popover">popover4</property>
-        <property name="icon-name">go-down</property>
+        <style>
+            <class name="priority1"/>
+        </style>
       </object>
     </child>
     <child>
@@ -416,10 +352,10 @@
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Pick color from the drawing. You can use clonetiler trace dialog for advanced effects. In clone mode original fill or stroke colors must be unset.</property>
         <property name="has-frame">False</property>
-        <style>
-          <class name="tag4"/>
-        </style>
         <property name="icon-name">color-picker</property>
+        <style>
+            <class name="priority1"/>
+        </style>
       </object>
     </child>
     <child>
@@ -430,7 +366,7 @@
         <property name="has-frame">False</property>
         <property name="icon-name">paint-solid</property>
         <style>
-          <class name="tag4"/>
+            <class name="priority1"/>
         </style>
       </object>
     </child>
@@ -442,7 +378,7 @@
         <property name="has-frame">False</property>
         <property name="icon-name">no-marker</property>
         <style>
-          <class name="tag4"/>
+            <class name="priority1"/>
         </style>
       </object>
     </child>
@@ -454,7 +390,7 @@
         <property name="has-frame">False</property>
         <property name="icon-name">object-tweak-shrink</property>
         <style>
-          <class name="tag4"/>
+            <class name="priority1"/>
         </style>
       </object>
     </child>
@@ -466,12 +402,12 @@
         <property name="has-frame">False</property>
         <property name="icon-name">snap-bounding-box-center</property>
         <style>
-          <class name="tag4"/>
+            <class name="priority1"/>
         </style>
       </object>
     </child>
     <style>
-      <class name="toolbar"/>
+      <class name="inkscape-toolbar"/>
     </style>
   </object>
 </interface>

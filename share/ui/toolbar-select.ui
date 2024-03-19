@@ -25,42 +25,10 @@
     <property name="step-increment">0.10</property>
     <property name="page-increment">5</property>
   </object>
-  <object class="GtkPopover" id="popover1">
-    <property name="child">
-      <object class="GtkBox" id="popover_box1">
-        <property name="valign">center</property>
-        <property name="spacing">3</property>
-      </object>
-    </property>
-  </object>
-  <object class="GtkPopover" id="popover2">
-    <property name="child">
-      <object class="GtkBox" id="popover_box2">
-        <property name="valign">center</property>
-        <property name="spacing">3</property>
-      </object>
-    </property>
-  </object>
   <object class="GtkBox" id="select-toolbar">
     <property name="halign">start</property>
     <property name="valign">center</property>
-    <property name="spacing">3</property>
     <property name="hexpand">True</property>
-    <child>
-      <object class="GtkMenuButton" id="menu_btn1">
-        <property name="focusable">True</property>
-        <property name="focus-on-click">False</property>
-        <property name="receives-default">True</property>
-        <property name="margin-start">3</property>
-        <property name="has-frame">False</property>
-        <property name="popover">popover1</property>
-        <child>
-          <object class="GtkImage" id="image18">
-            <property name="icon-name">go-down</property>
-          </object>
-        </child>
-      </object>
-    </child>
     <child>
       <object class="GtkButton">
         <property name="focusable">True</property>
@@ -68,7 +36,7 @@
         <property name="action-name">win.select-all</property>
         <property name="has-frame">False</property>
         <style>
-          <class name="tag1"/>
+            <class name="priority1"/>
         </style>
         <child>
           <object class="GtkImage" id="image1">
@@ -84,7 +52,7 @@
         <property name="action-name">win.select-all-layers</property>
         <property name="has-frame">False</property>
         <style>
-          <class name="tag1"/>
+            <class name="priority1"/>
         </style>
         <child>
           <object class="GtkImage" id="image2">
@@ -100,8 +68,7 @@
         <property name="action-name">win.select-none</property>
         <property name="has-frame">False</property>
         <style>
-          <class name="context_item"/>
-          <class name="tag1"/>
+            <class name="priority1"/>
         </style>
         <child>
           <object class="GtkImage" id="image3">
@@ -116,7 +83,7 @@
         <property name="tooltip-text" translatable="yes">Toggle selection box to select all touched objects</property>
         <property name="has-frame">False</property>
         <style>
-          <class name="tag1"/>
+            <class name="priority1"/>
         </style>
         <child>
           <object class="GtkImage" id="image4">
@@ -127,6 +94,9 @@
     </child>
     <child>
       <object class="GtkSeparator">
+        <style>
+            <class name="priority1"/>
+        </style>
       </object>
     </child>
     <child>
@@ -135,6 +105,9 @@
         <property name="tooltip-text" translatable="yes">Rotate selection 90\xc2\xb0 counter-clockwise</property>
         <property name="action-name">app.object-rotate-90-ccw</property>
         <property name="has-frame">False</property>
+        <style>
+            <class name="priority1"/>
+        </style>
         <style>
           <class name="context_item"/>
         </style>
@@ -152,6 +125,9 @@
         <property name="action-name">app.object-rotate-90-cw</property>
         <property name="has-frame">False</property>
         <style>
+            <class name="priority1"/>
+        </style>
+        <style>
           <class name="context_item"/>
         </style>
         <child>
@@ -167,6 +143,9 @@
         <property name="tooltip-text" translatable="yes">Flip selected objects horizontally</property>
         <property name="action-name">app.object-flip-horizontal</property>
         <property name="has-frame">False</property>
+        <style>
+            <class name="priority1"/>
+        </style>
         <style>
           <class name="context_item"/>
         </style>
@@ -184,6 +163,9 @@
         <property name="action-name">app.object-flip-vertical</property>
         <property name="has-frame">False</property>
         <style>
+            <class name="priority1"/>
+        </style>
+        <style>
           <class name="context_item"/>
         </style>
         <child>
@@ -195,20 +177,9 @@
     </child>
     <child>
       <object class="GtkSeparator">
-      </object>
-    </child>
-    <child>
-      <object class="GtkMenuButton" id="menu_btn2">
-        <property name="focusable">True</property>
-        <property name="focus-on-click">False</property>
-        <property name="receives-default">True</property>
-        <property name="has-frame">False</property>
-        <property name="popover">popover2</property>
-        <child>
-          <object class="GtkImage" id="image19">
-            <property name="icon-name">go-down</property>
-          </object>
-        </child>
+        <style>
+            <class name="priority1"/>
+        </style>
       </object>
     </child>
     <child>
@@ -218,8 +189,7 @@
         <property name="action-name">app.selection-top</property>
         <property name="has-frame">False</property>
         <style>
-          <class name="context_item"/>
-          <class name="tag2"/>
+            <class name="priority1"/>
         </style>
         <child>
           <object class="GtkImage" id="image9">
@@ -235,8 +205,7 @@
         <property name="action-name">app.selection-raise</property>
         <property name="has-frame">False</property>
         <style>
-          <class name="context_item"/>
-          <class name="tag2"/>
+            <class name="priority1"/>
         </style>
         <child>
           <object class="GtkImage" id="image10">
@@ -252,8 +221,7 @@
         <property name="action-name">app.selection-lower</property>
         <property name="has-frame">False</property>
         <style>
-          <class name="context_item"/>
-          <class name="tag2"/>
+            <class name="priority1"/>
         </style>
         <child>
           <object class="GtkImage" id="image11">
@@ -269,8 +237,7 @@
         <property name="action-name">app.selection-bottom</property>
         <property name="has-frame">False</property>
         <style>
-          <class name="context_item"/>
-          <class name="tag2"/>
+            <class name="priority1"/>
         </style>
         <child>
           <object class="GtkImage" id="image12">
@@ -281,6 +248,9 @@
     </child>
     <child>
       <object class="GtkSeparator">
+        <style>
+            <class name="priority1"/>
+        </style>
       </object>
     </child>
     <child>
@@ -288,6 +258,9 @@
         <property name="focusable">True</property>
         <property name="tooltip-text" translatable="yes">When scaling objects, scale the stroke width by the same proportion</property>
         <property name="has-frame">False</property>
+        <style>
+            <class name="priority1"/>
+        </style>
         <child>
           <object class="GtkImage" id="image13">
             <property name="icon-name">transform-affect-stroke</property>
@@ -300,6 +273,9 @@
         <property name="focusable">True</property>
         <property name="tooltip-text" translatable="yes">When scaling rectangles, scale the radii of rounded corners</property>
         <property name="has-frame">False</property>
+        <style>
+            <class name="priority1"/>
+        </style>
         <child>
           <object class="GtkImage" id="image14">
             <property name="icon-name">transform-affect-rounded-corners</property>
@@ -312,6 +288,9 @@
         <property name="focusable">True</property>
         <property name="tooltip-text" translatable="yes">Move gradients (in fill or stroke) along with the objects</property>
         <property name="has-frame">False</property>
+        <style>
+            <class name="priority1"/>
+        </style>
         <child>
           <object class="GtkImage" id="image15">
             <property name="icon-name">transform-affect-gradient</property>
@@ -324,6 +303,9 @@
         <property name="focusable">True</property>
         <property name="tooltip-text" translatable="yes">Move patterns (in fill or stroke) along with the objects</property>
         <property name="has-frame">False</property>
+        <style>
+            <class name="priority1"/>
+        </style>
         <child>
           <object class="GtkImage" id="image16">
             <property name="icon-name">transform-affect-pattern</property>
@@ -442,7 +424,7 @@
       </object>
     </child>
     <style>
-      <class name="toolbar"/>
+      <class name="inkscape-toolbar"/>
     </style>
   </object>
 </interface>

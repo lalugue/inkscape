@@ -158,7 +158,6 @@ notebook.blink > header > tabs > tab:checked {
   animation: 0.5s blink_background 0.1s ease 1;
 }
 
-
 .inverted :not(menuitem):not(.rawstyle):not(overshoot):not(undershoot):not(selection),
 .bright .forcedark :not(menuitem):not(.rawstyle):not(overshoot):not(undershoot):not(selection),
 .dark .forcebright :not(menuitem):not(.rawstyle):not(overshoot):not(undershoot):not(selection) {
@@ -723,32 +722,32 @@ button.square-button image {
     font-size: smaller;
 }
 
-.toolbar {
+.inkscape-toolbar {
     margin-top: 4px;
     margin-bottom: 4px;
 }
 
-.toolbar > * {
+.inkscape-toolbar > * {
     margin-right: 2px;
 }
 
-.toolbar > * > * {
+.inkscape-toolbar > * > * {
     margin-right: 2px;
 }
 
-.toolbar > * > *:last-child {
+.inkscape-toolbar > * > *:last-child {
     margin-right: 0;
 }
 
-popover > box {
+.inkscape-toolbar > popover > box {
     margin: 4px 3px;
 }
 
-popover > box > * {
+.inkscape-toolbar > popover > box > * {
     margin-right: 3px;
 }
 
-popover > box > *:last-child {
+.inkscape-toolbar > popover > box > *:last-child {
     margin-right: 0;
 }
 

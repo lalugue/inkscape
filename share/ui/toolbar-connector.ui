@@ -20,7 +20,6 @@
   <object class="GtkBox" id="connector-toolbar">
     <property name="halign">start</property>
     <property name="valign">center</property>
-    <property name="spacing">3</property>
     <property name="hexpand">True</property>
     <child>
       <object class="GtkButton" id="avoid_btn">
@@ -110,6 +109,9 @@
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Nicely arrange selected connector network</property>
         <property name="has-frame">False</property>
+        <style>
+            <class name="priority1"/>
+        </style>
         <child>
           <object class="GtkImage" id="image4">
             <property name="icon-name">distribute-graph</property>
@@ -120,6 +122,9 @@
     <child>
       <object class="GtkBox" id="length_box">
         <property name="tooltip-text" translatable="yes">Ideal length for connectors when layout is applied</property>
+        <style>
+            <class name="priority1"/>
+        </style>
         <child>
           <object class="GtkLabel">
             <property name="label" translatable="yes">Length:</property>
@@ -142,6 +147,9 @@
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Make connectors with end-markers (arrows) point downwards</property>
         <property name="has-frame">False</property>
+        <style>
+            <class name="priority1"/>
+        </style>
         <child>
           <object class="GtkImage" id="image5">
             <property name="icon-name">distribute-graph-directed</property>
@@ -155,6 +163,9 @@
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Do not allow overlapping shapes</property>
         <property name="has-frame">False</property>
+        <style>
+            <class name="priority1"/>
+        </style>
         <child>
           <object class="GtkImage" id="image6">
             <property name="icon-name">distribute-remove-overlaps</property>
@@ -163,7 +174,7 @@
       </object>
     </child>
     <style>
-      <class name="toolbar"/>
+      <class name="inkscape-toolbar"/>
     </style>
   </object>
 </interface>

@@ -25,6 +25,7 @@ MarkerToolbar::MarkerToolbar(SPDesktop *desktop)
 {
     _toolbar = &get_widget<Gtk::Box>(_builder, "marker-toolbar");
     set_child(*_toolbar);
+    init_menu_btns();
 }
 
 } // namespace Inkscape::UI::Toolbar

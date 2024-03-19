@@ -55,18 +55,9 @@
     <property name="step-increment">1</property>
     <property name="page-increment">10</property>
   </object>
-  <object class="GtkPopover" id="popover1">
-    <property name="child">
-      <object class="GtkBox" id="popover_box1">
-        <property name="valign">center</property>
-        <property name="spacing">3</property>
-      </object>
-    </property>
-  </object>
   <object class="GtkBox" id="page-toolbar">
     <property name="halign">start</property>
     <property name="valign">center</property>
-    <property name="spacing">3</property>
     <property name="hexpand">True</property>
     <child>
       <object class="GtkButton" id="page_new">
@@ -115,24 +106,16 @@
         <property name="tooltip-text" translatable="yes">Page Margins</property>
         <property name="primary-icon-name">view-restore</property>
         <property name="placeholder-text" translatable="yes">Margins</property>
+        <style>
+            <class name="priority1"/>
+        </style>
       </object>
     </child>
     <child>
       <object class="GtkSeparator">
-      </object>
-    </child>
-    <child>
-      <object class="GtkMenuButton" id="menu_btn1">
-        <property name="focusable">True</property>
-        <property name="focus-on-click">False</property>
-        <property name="receives-default">True</property>
-        <property name="has-frame">False</property>
-        <property name="popover">popover1</property>
-        <child>
-          <object class="GtkImage" id="image18">
-            <property name="icon-name">go-down</property>
-          </object>
-        </child>
+        <style>
+            <class name="priority1"/>
+        </style>
       </object>
     </child>
     <child>
@@ -143,7 +126,7 @@
         <property name="action-name">doc.page-move-backward</property>
         <property name="has-frame">False</property>
         <style>
-          <class name="tag1"/>
+            <class name="priority1"/>
         </style>
         <child>
           <object class="GtkImage" id="image2">
@@ -156,7 +139,7 @@
       <object class="GtkLabel" id="_label_page_pos">
         <property name="label" translatable="yes">1/-</property>
         <style>
-          <class name="tag1"/>
+            <class name="priority1"/>
         </style>
       </object>
     </child>
@@ -168,7 +151,7 @@
         <property name="action-name">doc.page-move-forward</property>
         <property name="has-frame">False</property>
         <style>
-          <class name="tag1"/>
+            <class name="priority1"/>
         </style>
         <child>
           <object class="GtkImage" id="image3">
@@ -181,6 +164,9 @@
       <object class="GtkEntry" id="_text_page_label">
         <property name="focusable">True</property>
         <property name="placeholder-text" translatable="yes">Page Label</property>
+        <style>
+            <class name="priority1"/>
+        </style>
       </object>
     </child>
     <child>
@@ -190,6 +176,9 @@
         <property name="tooltip-text" translatable="yes">Make corners sharp</property>
         <property name="action-name">win.page-delete</property>
         <property name="has-frame">False</property>
+        <style>
+            <class name="priority1"/>
+        </style>
         <child>
           <object class="GtkImage" id="image4">
             <property name="icon-name">pages-remove</property>
@@ -199,6 +188,9 @@
     </child>
     <child>
       <object class="GtkSeparator" id="_sep1">
+        <style>
+            <class name="priority1"/>
+        </style>
       </object>
     </child>
     <child>
@@ -206,6 +198,9 @@
         <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="action-name">doc.page-move-objects</property>
+        <style>
+            <class name="priority1"/>
+        </style>
         <child>
           <object class="GtkImage" id="image5">
             <property name="icon-name">pages-move-toggle</property>
@@ -214,7 +209,7 @@
       </object>
     </child>
     <style>
-      <class name="toolbar"/>
+      <class name="inkscape-toolbar"/>
     </style>
   </object>
   <object class="GtkPopover" id="margin_popover">

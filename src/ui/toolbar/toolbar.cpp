@@ -10,8 +10,16 @@
 
 #include "toolbar.h"
 
+#include <algorithm>
+#include <glibmm/main.h>
+#include <gtkmm/button.h>
+#include <gtkmm/image.h>
+#include <gtkmm/menubutton.h>
+#include <gtkmm/popover.h>
+#include <map>
+#include <vector>
+
 #include "ui/util.h"
-#include "ui/widget/toolbar-menu-button.h"
 
 namespace Inkscape::UI::Toolbar {
 
@@ -19,9 +27,116 @@ Toolbar::Toolbar(SPDesktop *desktop)
     : _desktop(desktop)
 {}
 
-void Toolbar::addCollapsibleButton(UI::Widget::ToolbarMenuButton *button)
+static bool isMatchingPattern(const std::string &str, const std::string &pattern)
 {
-    _expanded_menu_btns.emplace(button);
+    // Early exit if string length is less than pattern length (guaranteed mismatch)
+    if (str.size() < pattern.size()) {
+        return false;
+    }
+
+    for (size_t i = 0; i < pattern.size(); ++i) {
+        if (tolower(str[i]) != tolower(pattern[i])) {
+            return false; // Mismatch found, stop comparing
+        }
+    }
+
+    // All characters matched
+    return true;
+}
+
+void Toolbar::init_menu_btns()
+{
+    std::map<std::string, std::pair<int, std::stack<std::pair<Gtk::Widget *, Gtk::Widget *>>>> menu_btn_groups;
+    auto children = UI::get_children(*_toolbar);
+    int position = 0;
+
+    // Iterate over all the children of this toolbar.
+    for (auto child : children) {
+        // Find out the CSS classes associated with each child.
+        auto css_classes = child->get_css_classes();
+        int group_size = 1;
+
+        // Iterate over all the CSS classes and find out
+        // the movable children by searching for classes
+        // which contains the "priority" prefix(case-insensitive).
+        for (const auto &c : css_classes) {
+            if (isMatchingPattern(c, "priority")) {
+                // Check if the group_size is also defined.
+                bool group_size_defined = false;
+                for (const auto &cl : css_classes) {
+                    if (isMatchingPattern(cl, "groupsize")) {
+                        group_size = cl[cl.size() - 1] - '0';
+                        group_size_defined = true;
+                    }
+                }
+
+                // Store this child in the map.
+                Gtk::Widget *prev_child = (position == 0) ? nullptr : children[position - 1];
+                auto it = menu_btn_groups.find(c);
+
+                if (it != menu_btn_groups.end()) {
+                    // This group already exists.
+                    // Push this child in the vector.
+                    it->second.second.emplace(prev_child, child);
+                    if (group_size_defined) {
+                        it->second.first = group_size;
+                    }
+                } else {
+                    std::stack<std::pair<Gtk::Widget *, Gtk::Widget *>> toolbar_children;
+                    toolbar_children.emplace(prev_child, child);
+                    menu_btn_groups.insert({c, {group_size, toolbar_children}});
+                }
+            }
+        }
+        position++;
+    }
+
+    // Now, start inserting menu buttons in the toolbar.
+    for (auto [key, value] : menu_btn_groups) {
+        // The map is lexicographically sorted on the basis of priorities.
+        // Step 1: Find out the priority of this group.
+        // Assumption: The last character of the class name stores the
+        // value of the priority.
+        auto priority = key[key.size() - 1] - '0';
+
+        // Add this menu button to the _menu_btns vector.
+        insert_menu_btn(priority, value.first, value.second);
+
+        // The menu button added at the end would be the first to
+        // collapse or expand.
+        _active_mb_index = _menu_btns.size() - 1;
+    }
+
+    // Insert a very large value to prevent the toolbar
+    // from expanding when all the menu buttons are in the
+    // expanded state.
+    _size_needed.push(10000);
+}
+
+void Toolbar::insert_menu_btn(const int priority, int group_size,
+                              std::stack<std::pair<Gtk::Widget *, Gtk::Widget *>> toolbar_children)
+{
+    auto menu_btn = Gtk::make_managed<Gtk::MenuButton>();
+    auto popover = Gtk::make_managed<Gtk::Popover>();
+    auto box = Gtk::make_managed<Gtk::Box>(_toolbar->get_orientation(), 4);
+
+    // Special treatment for the commands toolbar.
+    if (_toolbar->get_orientation() == Gtk::Orientation::VERTICAL) {
+        menu_btn->set_direction(Gtk::ArrowType::LEFT);
+    }
+
+    popover->set_child(*box);
+    menu_btn->set_popover(*popover);
+
+    // Insert this menu button right next to it's topmost toolbar child.
+    _toolbar->insert_child_after(*menu_btn, *toolbar_children.top().second);
+    menu_btn->set_visible(false);
+
+    // Add this menu button to the _menu_btns vector.
+    std::stack<std::pair<Gtk::Widget *, Gtk::Widget *>> popover_children;
+    ToolbarMenuButton *mb_ptr =
+        new ToolbarMenuButton(priority, group_size, menu_btn, std::move(popover_children), std::move(toolbar_children));
+    _menu_btns.push_back(mb_ptr);
 }
 
 void Toolbar::measure_vfunc(Gtk::Orientation orientation, int for_size, int &min, int &nat, int &min_baseline, int &nat_baseline) const
@@ -50,7 +165,7 @@ static int min_dimension(Gtk::Widget const *widget, Gtk::Orientation const orien
 
 void Toolbar::_resize_handler(int width, int height)
 {
-    if (!_toolbar) {
+    if (!_toolbar || _resizing || _active_mb_index < 0) {
         return;
     }
 
@@ -58,34 +173,66 @@ void Toolbar::_resize_handler(int width, int height)
     auto const allocated_size = orientation == Gtk::Orientation::VERTICAL ? height : width;
     int min_size = min_dimension(_toolbar, orientation);
 
+    _resizing = true;
     if (allocated_size < min_size) {
         // Shrinkage required.
+        while (allocated_size < min_size) {
+            if (_menu_btns[_active_mb_index]->toolbar_children.empty()) {
+                // This menu button can no longer be collapsed. Switch to the next
+                // menu button (towards the left of the vector).
+                if (_active_mb_index > 0) {
+                    _active_mb_index -= 1;
+                    continue;
+                } else {
+                    // Reaching this point indicates that the toolbar cannot be shrunk any further.
+                    _resizing = false;
+                    return;
+                }
+            }
 
-        // While there are still expanded buttons to collapse...
-        while (allocated_size < min_size && !_expanded_menu_btns.empty()) {
-            // Collapse the topmost expanded button.
-            auto menu_btn = _expanded_menu_btns.top();
-            _move_children(_toolbar, menu_btn->get_popover_box(), menu_btn->get_children());
-            menu_btn->set_visible(true);
+            // Now, move the toolbar_children of this menu button to the popover.
+            auto mb = _menu_btns[_active_mb_index];
+            auto popover_box = dynamic_cast<Gtk::Box *>(mb->menu_btn->get_popover()->get_child());
+            _move_children(_toolbar, popover_box, mb->toolbar_children, mb->popover_children, mb->group_size);
+            mb->menu_btn->set_visible(true);
 
             int old = min_size;
             min_size = min_dimension(_toolbar, orientation);
             int change = old - min_size;
-
-            _expanded_menu_btns.pop();
-            _collapsed_menu_btns.push({menu_btn, change});
+            _size_needed.push(change);
         }
-
     } else if (allocated_size > min_size) {
         // Once the allocated size of the toolbar is greater than its
         // minimum size, try to re-insert a group of elements back
         // into the toolbar.
+        if (!(allocated_size > min_size + _size_needed.top())) {
+            // Not enough space, skip.
+            _resizing = false;
+            return;
+        }
 
-        // While there are collapsed buttons to expand...
-        while (!_collapsed_menu_btns.empty()) {
+        // Expand until there are children left in the popovers.
+        while (_active_mb_index < _menu_btns.size()) {
+            // Check if the currently active menu button is expandable or not.
+            if (_menu_btns[_active_mb_index]->popover_children.empty()) {
+                // This menu button can no longer be expanded. Switch to the next
+                // menu button (towards the right of the vector).
+                if (_active_mb_index < _menu_btns.size() - 1) {
+                    _active_mb_index += 1;
+                    continue;
+                } else {
+                    // Reaching this point indicates that the toolbar cannot be expanded any further.
+                    // Set this menu button invisible and return.
+                    // _menu_btns[_active_mb_index]->set_visible(false);
+                    _resizing = false;
+                    return;
+                }
+            }
+
+            auto mb = _menu_btns[_active_mb_index];
+
             // See if we have enough space to expand the topmost collapsed button.
-            auto [menu_btn, change] = _collapsed_menu_btns.top();
-            int req_size = min_size + change;
+            int req_size = min_size + _size_needed.top();
 
             if (req_size > allocated_size) {
                 // Not enough space - stop.
@@ -93,33 +240,84 @@ void Toolbar::_resize_handler(int width, int height)
             }
 
             // Move a group of widgets back into the toolbar.
-            _move_children(menu_btn->get_popover_box(), _toolbar, menu_btn->get_children(), true);
-            menu_btn->set_visible(false);
+            auto popover_box = dynamic_cast<Gtk::Box *>(mb->menu_btn->get_popover()->get_child());
+            _move_children(popover_box, _toolbar, mb->toolbar_children, mb->popover_children, mb->group_size, true);
+            _size_needed.pop();
 
-            _collapsed_menu_btns.pop();
-            _expanded_menu_btns.push(menu_btn);
+            if (mb->popover_children.empty()) {
+                // Set it invisible only if all the children have moved to the toolbar.
+                mb->menu_btn->set_visible(false);
+            }
 
             min_size = min_dimension(_toolbar, orientation);
         }
     }
+    _resizing = false;
 }
 
-void Toolbar::_move_children(Gtk::Box *src, Gtk::Box *dest, std::vector<std::pair<int, Gtk::Widget *>> const &children, bool is_expanding)
+void Toolbar::_update_menu_btn_image(Gtk::Widget *child)
 {
-    for (auto [pos, child] : children) {
+    Glib::ustring icon_name = "go-down";
+
+    if (auto btn = dynamic_cast<Gtk::Button *>(child)) {
+        // Find the icon name from the child image.
+        if (auto image = dynamic_cast<Gtk::Image *>(btn->get_child())) {
+            auto icon = image->get_icon_name();
+            if (icon != "") {
+                icon_name = icon;
+            }
+        } else {
+            // Find the icon name from the button itself.
+            auto icon = btn->get_icon_name();
+            if (icon != "") {
+                icon_name = icon;
+            }
+        }
+    }
+
+    auto menu_btn = _menu_btns[_active_mb_index]->menu_btn;
+    menu_btn->set_always_show_arrow(!(icon_name == "go-down"));
+    menu_btn->set_icon_name(icon_name.c_str());
+}
+
+void Toolbar::_move_children(Gtk::Box *src, Gtk::Box *dest,
+                             std::stack<std::pair<Gtk::Widget *, Gtk::Widget *>> &tb_children,
+                             std::stack<std::pair<Gtk::Widget *, Gtk::Widget *>> &popover_children, int group_size,
+                             bool is_expanding)
+{
+    while (group_size--) {
+        Gtk::Widget *child;
+        Gtk::Widget *prev_child;
+
+        if (is_expanding) {
+            // Use std::tie for unpacking
+            std::tie(prev_child, child) = popover_children.top();
+            popover_children.pop();
+            tb_children.emplace(prev_child, child);
+        } else {
+            std::tie(prev_child, child) = tb_children.top();
+            tb_children.pop();
+            popover_children.emplace(prev_child, child);
+        }
+
         src->remove(*child);
 
         // is_expanding will be true when the children are being put back into
         // the toolbar. In that case, insert the children at their previous
         // positions.
         if (is_expanding) {
-            if (pos == 0) {
+            if (!prev_child) {
                 dest->insert_child_at_start(*child);
             } else {
-                dest->insert_child_after(*child, UI::get_nth_child(*dest, pos - 1));
+                dest->insert_child_after(*child, *prev_child);
+            }
+
+            if (!popover_children.empty()) {
+                _update_menu_btn_image(popover_children.top().second);
             }
         } else {
-            dest->append(*child);
+            dest->prepend(*child);
+            _update_menu_btn_image(child);
         }
     }
 }

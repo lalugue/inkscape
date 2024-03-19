@@ -38,16 +38,14 @@
 #include <gtkmm/grid.h>
 #include <gtkmm/listbox.h>
 #include <gtkmm/menubutton.h>
-#include <gtkmm/togglebutton.h>
 #include <gtkmm/separator.h>
+#include <gtkmm/togglebutton.h>
 
 #include "desktop-style.h"
 #include "desktop.h"
 #include "document-undo.h"
 #include "document.h"
 #include "inkscape.h"
-#include "selection.h"
-#include "selection-chemistry.h"
 #include "libnrtype/font-lister.h"
 #include "object/sp-flowdiv.h"
 #include "object/sp-flowtext.h"
@@ -55,6 +53,8 @@
 #include "object/sp-string.h"
 #include "object/sp-text.h"
 #include "object/sp-tspan.h"
+#include "selection-chemistry.h"
+#include "selection.h"
 #include "svg/css-ostringstream.h"
 #include "ui/builder-utils.h"
 #include "ui/dialog/dialog-container.h"
@@ -66,10 +66,9 @@
 #include "ui/widget/combo-box-entry-tool-item.h"
 #include "ui/widget/combo-tool-item.h"
 #include "ui/widget/spinbutton.h"
-#include "ui/widget/toolbar-menu-button.h"
 #include "ui/widget/unit-tracker.h"
-#include "util/font-collections.h"
 #include "util-string/ustring-format.h"
+#include "util/font-collections.h"
 #include "widgets/style-utils.h"
 
 using Inkscape::DocumentUndo;
@@ -306,18 +305,15 @@ TextToolbar::TextToolbar(SPDesktop *desktop)
             desktop->getCanvas() // Focus widget
         );
 
-        _font_family_item->popup_enable(); // Enable entry completion
-
+        _font_family_item->popup_enable();                                       // Enable entry completion
         _font_family_item->set_info(_("Select all text with this font-family")); // Show selection icon
         _font_family_item->set_info_cb(&sp_text_toolbox_select_cb);
-
         _font_family_item->set_warning(_("Font not found on system")); // Show icon w/ tooltip if font missing
         _font_family_item->set_warning_cb(&sp_text_toolbox_select_cb);
-
-        _font_family_item->connectChanged([this](){ fontfamily_value_changed(); });
-        get_widget<Gtk::Box>(_builder, "font_list_box").append(*_font_family_item);
-
         _font_family_item->focus_on_click(false);
+        _font_family_item->connectChanged([this]() { fontfamily_value_changed(); });
+
+        get_widget<Gtk::Box>(_builder, "font_list_box").append(*_font_family_item);
     }
 
     // Font styles
@@ -339,6 +335,7 @@ TextToolbar::TextToolbar(SPDesktop *desktop)
 
         _font_style_item->connectChanged([this] { fontstyle_value_changed(); });
         _font_style_item->focus_on_click(false);
+
         get_widget<Gtk::Box>(_builder, "styles_list_box").append(*_font_style_item);
     }
 
@@ -364,6 +361,7 @@ TextToolbar::TextToolbar(SPDesktop *desktop)
 
         _font_size_item->connectChanged([this] { fontsize_value_changed(); });
         _font_size_item->focus_on_click(false);
+
         get_widget<Gtk::Box>(_builder, "font_size_box").append(*_font_size_item);
     }
 
@@ -393,56 +391,8 @@ TextToolbar::TextToolbar(SPDesktop *desktop)
 
     _subscript_btn.set_active(prefs->getBool("/tools/text/sub", false));
 
-    // Fetch all the ToolbarMenuButtons at once from the UI file
-    // Menu Button #1
-    auto popover_box1 = &get_widget<Gtk::Box>(_builder, "popover_box1");
-    auto menu_btn1 = &get_derived_widget<UI::Widget::ToolbarMenuButton>(_builder, "menu_btn1");
-
-    // Menu Button #2
-    auto popover_box2 = &get_widget<Gtk::Box>(_builder, "popover_box2");
-    auto menu_btn2 = &get_derived_widget<UI::Widget::ToolbarMenuButton>(_builder, "menu_btn2");
-
-    // Menu Button #3
-    auto popover_box3 = &get_widget<Gtk::Box>(_builder, "popover_box3");
-    auto menu_btn3 = &get_derived_widget<UI::Widget::ToolbarMenuButton>(_builder, "menu_btn3");
-
-    // Menu Button #4
-    auto popover_box4 = &get_widget<Gtk::Box>(_builder, "popover_box4");
-    auto menu_btn4 = &get_derived_widget<UI::Widget::ToolbarMenuButton>(_builder, "menu_btn4");
-
-    // Menu Button #5
-    auto popover_box5 = &get_widget<Gtk::Box>(_builder, "popover_box5");
-    auto menu_btn5 = &get_derived_widget<UI::Widget::ToolbarMenuButton>(_builder, "menu_btn5");
-
-    // Menu Button #4
-    auto popover_box6 = &get_widget<Gtk::Box>(_builder, "popover_box6");
-    auto menu_btn6 = &get_derived_widget<UI::Widget::ToolbarMenuButton>(_builder, "menu_btn6");
-
-    // Initialize all the ToolbarMenuButtons only after all the children of the
-    // toolbar have been fetched. Otherwise, the children to be moved in the
-    // popover will get mapped to a different position and it will probably
-    // cause segfault.
-    auto children = UI::get_children(*_toolbar);
-
-    menu_btn1->init(1, "tag1", popover_box1, children);
-    addCollapsibleButton(menu_btn1);
-
-    menu_btn2->init(2, "tag2", popover_box2, children);
-    addCollapsibleButton(menu_btn2);
-
-    menu_btn3->init(3, "tag3", popover_box3, children);
-    addCollapsibleButton(menu_btn3);
-
-    menu_btn4->init(4, "tag4", popover_box4, children);
-    addCollapsibleButton(menu_btn4);
-
-    menu_btn5->init(5, "tag5", popover_box5, children);
-    addCollapsibleButton(menu_btn5);
-
-    menu_btn6->init(6, "tag6", popover_box6, children);
-    addCollapsibleButton(menu_btn6);
-
     set_child(*_toolbar);
+    init_menu_btns();
 
     // Font collections signals.
     auto *font_collections = Inkscape::FontCollections::get();

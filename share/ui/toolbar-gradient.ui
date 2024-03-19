@@ -6,18 +6,9 @@
     <property name="step-increment">0.01</property>
     <property name="page-increment">0.10</property>
   </object>
-  <object class="GtkPopover" id="popover1">
-    <property name="child">
-      <object class="GtkBox" id="popover_box1">
-        <property name="valign">center</property>
-        <property name="spacing">3</property>
-      </object>
-    </property>
-  </object>
   <object class="GtkBox" id="gradient-toolbar">
     <property name="halign">start</property>
     <property name="valign">center</property>
-    <property name="spacing">3</property>
     <property name="hexpand">True</property>
     <child>
       <object class="GtkLabel">
@@ -75,20 +66,7 @@
       </object>
     </child>
     <child>
-      <object class="GtkMenuButton" id="menu_btn1">
-        <property name="focusable">True</property>
-        <property name="focus-on-click">False</property>
-        <property name="receives-default">True</property>
-        <property name="has-frame">False</property>
-        <property name="popover">popover1</property>
-        <property name="icon-name">go-down</property>
-      </object>
-    </child>
-    <child>
       <object class="GtkBox" id="select_box">
-        <style>
-          <class name="tag1"/>
-        </style>
       </object>
     </child>
     <child>
@@ -98,9 +76,6 @@
         <property name="tooltip-text" translatable="yes">Link gradients to change all related gradients</property>
         <property name="has-frame">False</property>
         <property name="icon-name">object-unlocked</property>
-        <style>
-          <class name="tag1"/>
-        </style>
       </object>
     </child>
     <child>
@@ -110,16 +85,10 @@
         <property name="tooltip-text" translatable="yes">Reverse the direction of the gradient</property>
         <property name="has-frame">False</property>
         <property name="icon-name">object-flip-horizontal</property>
-        <style>
-          <class name="tag1"/>
-        </style>
       </object>
     </child>
     <child>
       <object class="GtkBox" id="spread_box">
-        <style>
-          <class name="tag1"/>
-        </style>
       </object>
     </child>
     <child>
@@ -128,11 +97,17 @@
     </child>
     <child>
       <object class="GtkBox" id="stop_box">
+        <style>
+            <class name="priority1"/>
+        </style>
       </object>
     </child>
     <child>
       <object class="GtkBox" id="offset_box">
         <property name="tooltip-text" translatable="yes">Offset of selected stop</property>
+        <style>
+            <class name="priority1"/>
+        </style>
         <child>
           <object class="GtkLabel">
             <property name="label" translatable="yes">Offset:</property>
@@ -158,6 +133,9 @@
         <property name="tooltip-text" translatable="yes">Insert new stop</property>
         <property name="has-frame">False</property>
         <property name="icon-name">node-add</property>
+        <style>
+            <class name="priority1"/>
+        </style>
       </object>
     </child>
     <child>
@@ -167,10 +145,13 @@
         <property name="tooltip-text" translatable="yes">Delete stop</property>
         <property name="has-frame">False</property>
         <property name="icon-name">node-delete</property>
+        <style>
+            <class name="priority1"/>
+        </style>
       </object>
     </child>
     <style>
-      <class name="toolbar"/>
+      <class name="inkscape-toolbar"/>
     </style>
   </object>
 </interface>

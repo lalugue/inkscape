@@ -37,7 +37,6 @@
 #include "ui/tools/lpe-tool.h"
 #include "ui/util.h"
 #include "ui/widget/combo-tool-item.h"
-#include "ui/widget/toolbar-menu-button.h"
 #include "ui/widget/unit-tracker.h"
 
 using Inkscape::UI::Widget::UnitTracker;
@@ -124,20 +123,6 @@ LPEToolbar::LPEToolbar(SPDesktop *desktop)
     _measuring_btn.set_active(prefs->getBool("/tools/lpetool/show_measuring_info", true));
     _open_lpe_dialog_btn.set_active(false);
 
-    // Fetch all the ToolbarMenuButtons at once from the UI file
-    // Menu Button #1
-    auto popover_box1 = &get_widget<Gtk::Box>(_builder, "popover_box1");
-    auto menu_btn1 = &get_derived_widget<UI::Widget::ToolbarMenuButton>(_builder, "menu_btn1");
-
-    // Initialize all the ToolbarMenuButtons only after all the children of the
-    // toolbar have been fetched. Otherwise, the children to be moved in the
-    // popover will get mapped to a different position and it will probably
-    // cause segfault.
-    auto children = UI::get_children(*_toolbar);
-
-    menu_btn1->init(1, "tag1", popover_box1, children);
-    addCollapsibleButton(menu_btn1);
-
     // Signals.
     _show_bbox_btn.signal_toggled().connect(sigc::mem_fun(*this, &LPEToolbar::toggle_show_bbox));
     _bbox_from_selection_btn.signal_toggled().connect(sigc::mem_fun(*this, &LPEToolbar::toggle_set_bbox));
@@ -147,6 +132,7 @@ LPEToolbar::LPEToolbar(SPDesktop *desktop)
     desktop->connectEventContextChanged(sigc::mem_fun(*this, &LPEToolbar::watch_ec));
 
     set_child(*_toolbar);
+    init_menu_btns();
 }
 
 LPEToolbar::~LPEToolbar() = default;
