@@ -1031,8 +1031,7 @@ static bool sp_spray_recursive(SPDesktop *desktop,
 
                     // Union
                     // only works if no groups in selection
-                    ObjectSet object_set_tmp = *desktop->getSelection();
-                    object_set_tmp.clear();
+                    auto object_set_tmp = ObjectSet{desktop};
                     object_set_tmp.add(item_copied);
                     object_set_tmp.removeLPESRecursive(true);
                     if (is<SPUse>(object_set_tmp.objects().front())) {
@@ -1047,7 +1046,6 @@ static bool sp_spray_recursive(SPDesktop *desktop,
                         auto repr = item->getRepr();
                         repr->setAttribute("inkscape:spray-origin", spray_origin);
                     }
-                    object_set_tmp.clear();
                     Inkscape::GC::release(copy);
                     did = true;
                 }
@@ -1211,7 +1209,9 @@ bool SprayTool::root_handler(CanvasEvent const &event)
                     is_dilating = true;
                     has_dilated = false;
                     is_drawing = false;
-                    object_set = *_desktop->getSelection();
+                    object_set.clear();
+                    auto const selected_objects = _desktop->getSelection()->objects();
+                    object_set.add(selected_objects.begin(), selected_objects.end());
                     if (mode == SPRAY_MODE_SINGLE_PATH) {
                         single_path_output = nullptr;
                     }
@@ -1234,7 +1234,9 @@ bool SprayTool::root_handler(CanvasEvent const &event)
             if (!has_dilated && items.empty() && mode != SPRAY_MODE_SINGLE_PATH) {
                 _desktop->getSelection()->restoreBackup();
                 update_cursor(true);
-                object_set = *_desktop->getSelection();
+                object_set.clear();
+                auto const selected_objects = _desktop->getSelection()->objects();
+                object_set.add(selected_objects.begin(), selected_objects.end());
                 if (!object_set.isEmpty()) {
                     _desktop->getSelection()->clear();
                     items.clear();
