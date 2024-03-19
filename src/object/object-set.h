@@ -139,6 +139,9 @@ public:
     ObjectSet(SPDocument* doc): _desktop(nullptr), _document(doc) {};
     ObjectSet(): _desktop(nullptr), _document(nullptr) {}; // Used in spray-tool.h.
     virtual ~ObjectSet();
+
+    ObjectSet(ObjectSet const &) = delete;
+    ObjectSet &operator=(ObjectSet const &) = delete;
     
     void setDocument(SPDocument* doc){
         _document = doc;
