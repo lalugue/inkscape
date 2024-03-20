@@ -45,6 +45,7 @@
 #include <gtkmm/image.h>
 #include <gtkmm/label.h>
 #include <gtkmm/messagedialog.h>
+#include <gtkmm/picture.h>
 #include <gtkmm/recentmanager.h>
 #include <gtkmm/revealer.h>
 #include <gtkmm/scale.h>
@@ -55,7 +56,6 @@
 #include <sigc++/functors/mem_fun.h>
 #include <cairomm/matrix.h>
 #include <cairomm/surface.h>
-#include <cmath>
 #include <glibmm/refptr.h>
 #include <gtkmm/comboboxtext.h>
 #include <gtkmm/object.h>
@@ -1662,9 +1662,10 @@ void InkscapePreferences::initPageUI()
     _page_ui.add_line(true, _("Handle size"), _mouse_grabsize, "", _("Set the relative size of node handles"), true);
     {
         auto box = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL);
-        auto img = Gtk::make_managed<Gtk::Image>();
-        img->set(draw_handles_preview(get_scale_factor()));
-        box->pack_start(*img, true, true);
+        auto img = Gtk::make_managed<Gtk::Picture>();
+        img->set_paintable(to_texture(draw_handles_preview(get_scale_factor())));
+        img->set_hexpand();
+        box->append(*img);
         auto cb = Gtk::make_managed<Inkscape::UI::Widget::IconComboBox>(false);
         cb->set_valign(Gtk::Align::CENTER);
         auto& mgr = Handles::Manager::get();
@@ -1676,12 +1677,11 @@ void InkscapePreferences::initPageUI()
         cb->set_active_by_id(mgr.get_selected_theme());
         cb->signal_changed().connect([=,this](){
             Handles::Manager::get().select_theme(cb->get_active_row_id());
-            img->set(draw_handles_preview(get_scale_factor()));
+            img->set_paintable(to_texture(draw_handles_preview(get_scale_factor())));
         });
-        box->pack_start(*cb, false, true);
-        box->show_all_children();
+        box->append(*cb);
         _handle_size = Preferences::PreferencesObserver::create("/options/grabsize/value", [=](const Preferences::Entry&){
-            img->set(draw_handles_preview(get_scale_factor()));
+            img->set_paintable(to_texture(draw_handles_preview(get_scale_factor())));
         });
         _page_ui.add_line(true, _("Handle colors"), *box, "", "Select handle color scheme.");
     }
