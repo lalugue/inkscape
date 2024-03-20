@@ -1075,11 +1075,6 @@ sp_group_perform_patheffect(SPGroup *group, SPGroup *top_group, Inkscape::LivePa
                             g_message("sp_group_perform_patheffect writes 'd' attribute");
 #endif
                         }
-                    } else {
-                        // LPE was unsuccessful or doeffect stack return null. Read the old 'd'-attribute.
-                        if (gchar const * value = repr->attribute("d")) {
-                            sub_shape->setCurve(SPCurve(sp_svg_read_pathv(value)));
-                        }
                     }
                 }
             }

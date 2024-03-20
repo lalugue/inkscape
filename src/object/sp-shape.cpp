@@ -884,7 +884,9 @@ void SPShape::update_patheffect(bool write)
                 repr->setAttribute("d", sp_svg_write_path(c_lpe.get_pathvector()));
             }
         }
-        requestDisplayUpdate(SP_OBJECT_MODIFIED_FLAG);
+        if (success) {
+            requestDisplayUpdate(SP_OBJECT_MODIFIED_FLAG);
+        }
     }
 }
 
