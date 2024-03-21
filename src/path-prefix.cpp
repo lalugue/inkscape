@@ -13,7 +13,6 @@
 #endif
 
 #ifdef _WIN32
-#define NOGDI
 #include <libloaderapi.h> // for GetModuleFileNameW
 #endif
 

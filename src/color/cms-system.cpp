@@ -25,6 +25,7 @@
 #include "object/color-profile.h"
 
 #ifdef _WIN32
+#undef NOGDI
 #include <windows.h>
 #include <icm.h>
 #endif

@@ -24,8 +24,6 @@
 #include <thread>
 #include <utility>
 #include <vector>
-#define NOGDI
-#define _NO_W32_PSEUDO_MODIFIERS
 #include <boost/asio/thread_pool.hpp>
 #include <boost/asio/post.hpp>
 #include <gtkmm/eventcontrollerfocus.h>

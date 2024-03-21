@@ -15,6 +15,7 @@
 #include <glib.h>                         // for g_free, guchar, g_utf8_case...
 
 #ifdef _WIN32
+#undef NOGDI
 #include <windows.h>
 #include <icm.h>
 #endif

@@ -31,6 +31,7 @@
 #include "util/numeric/converters.h"
 
 #if (defined (_WIN32) || defined (_WIN64))
+#undef NOGDI
 #include <gdk/win32/gdkwin32.h>
 #include <dwmapi.h>
 /* For Windows 10 version 1809, 1903, 1909. */

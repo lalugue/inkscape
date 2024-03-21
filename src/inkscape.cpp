@@ -19,8 +19,6 @@
 
 #include <fstream>
 #include <map>
-#define NOGDI
-#define _NO_W32_PSEUDO_MODIFIERS
 #include <boost/stacktrace.hpp>
 #undef near
 #undef IGNORE

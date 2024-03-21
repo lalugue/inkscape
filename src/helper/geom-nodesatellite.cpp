@@ -19,7 +19,6 @@
 #include <optional>
 // log cache
 #ifdef _WIN32
-#define NOGDI
 #include <Windows.h>
 #else
 #include <sys/time.h>

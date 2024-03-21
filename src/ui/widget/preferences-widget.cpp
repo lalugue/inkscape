@@ -39,7 +39,6 @@
 #include "ui/widget/preferences-widget.h"
 
 #ifdef _WIN32
-#define NOGDI
 #include <windows.h>
 #endif
 

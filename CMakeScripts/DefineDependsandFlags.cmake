@@ -117,6 +117,10 @@ if(WIN32)
     else()
         list(APPEND INKSCAPE_CXX_FLAGS "-m32")
     endif()
+
+    # Fixes for windows.h and GTK4
+    add_definitions(-DNOGDI)
+    add_definitions(-D_NO_W32_PSEUDO_MODIFIERS)
 endif()
 
 find_package(PkgConfig REQUIRED)

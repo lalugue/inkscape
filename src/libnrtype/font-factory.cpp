@@ -38,6 +38,7 @@
 #include "util/statics.h"
 
 #ifdef _WIN32
+#undef NOGDI
 #include <glibmm.h>
 #include <windows.h>
 #endif

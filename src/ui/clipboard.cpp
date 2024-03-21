@@ -95,6 +95,7 @@
 #include "xml/sp-css-attr.h"
 
 #ifdef _WIN32
+#undef NOGDI
 #include <windows.h>
 #endif
 
