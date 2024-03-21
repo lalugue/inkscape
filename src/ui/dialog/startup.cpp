@@ -499,7 +499,7 @@ StartScreen::on_response(int response_id)
 void
 StartScreen::show_toggle()
 {
-    auto &button = get_widget<Gtk::ToggleButton>(builder, "show_toggle");
+    auto &button = get_widget<Gtk::CheckButton>(builder, "show_toggle");
     auto prefs = Inkscape::Preferences::get();
     prefs->setBool("/options/boot/enabled", button.get_active());
 
