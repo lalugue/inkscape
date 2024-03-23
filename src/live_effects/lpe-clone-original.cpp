@@ -408,7 +408,7 @@ void
 LPECloneOriginal::doEffect (SPCurve * curve)
 {
     SPCurve const *current_curve_before = current_shape->curveBeforeLPE();
-    if (!current_curve_before || current_curve_before->get_pathvector() == sp_svg_read_pathv("M 0 0")) {
+    if (!current_curve_before) {
         syncOriginal();
     }
     if (method != CLM_NONE) {

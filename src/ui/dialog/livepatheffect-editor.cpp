@@ -965,7 +965,8 @@ LivePathEffectEditor::removeEffect(Gtk::Expander * expander) {
             _current_use = nullptr;
         } 
     }
-    if (current_lpeitem) {
+    // Check if current_lpeitem detached during clean up
+    if (current_lpeitem && current_lpeitem->getParentGroup() != nullptr) {
         if (reload) {
             current_lpeitem->setCurrentPathEffect(current_lperef_tmp.second);
         }
