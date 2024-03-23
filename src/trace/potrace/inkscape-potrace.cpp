@@ -36,7 +36,7 @@ using potrace_bitmap_uniqptr = std::unique_ptr<potrace_bitmap_t, potrace_bitmap_
 
 Glib::ustring twohex(int value)
 {
-    return Inkscape::ustring::format_classic(std::hex, std::setfill(L'0'), std::setw(2), value);
+    return Inkscape::ustring::format_classic(std::hex, std::setfill('0'), std::setw(2), value);
 }
 
 } // namespace

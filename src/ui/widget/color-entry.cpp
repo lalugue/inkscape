@@ -138,7 +138,7 @@ void ColorEntry::_onColorChanged()
 
     _lastcolor = color.toRGBA32(alpha);
 
-    auto text = Inkscape::ustring::format_classic(std::hex, std::setw(8), std::setfill(L'0'), _lastcolor);
+    auto text = Inkscape::ustring::format_classic(std::hex, std::setw(8), std::setfill('0'), _lastcolor);
 
     Glib::ustring old_text = get_text();
     if (old_text != text) {
