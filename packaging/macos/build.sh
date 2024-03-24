@@ -7,11 +7,11 @@
 #
 # This script is CI-only, you will encounter errors if you run it on your
 # local machine. If you want to build Inkscape locally, see
-# https://gitlab.com/inkscape/devel/mibap
+# https://gitlab.com/inkscape/deps/macos
 #
 
 # toolset release to build Inkscape
-VERSION=0.79
+VERSION=1.0
 
 # directory convenience handles
 SELF_DIR=$(dirname "${BASH_SOURCE[0]}")
