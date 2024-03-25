@@ -57,7 +57,6 @@
 #include "ui/dialog/inkscape-preferences.h"
 #include "ui/icon-loader.h"
 #include "ui/icon-names.h"
-#include "ui/menuize.h"
 #include "ui/pack.h"
 #include "ui/popup-menu.h"
 #include "ui/syntax.h"
@@ -235,7 +234,6 @@ AttrDialog::AttrDialog()
     action->property_state().signal_changed().connect([=, this]{ int n; action->get_state(n);
                                                                  setPrecision(n); });
     insert_action_group("attrdialog", std::move(group));
-    UI::menuize_popover(*get_widget<Gtk::MenuButton>(_builder, "btn-menu").get_popover());
 
     attr_reset_context(0);
     UI::pack_start(*this, get_widget<Gtk::Box>(_builder, "main-box"), UI::PackOptions::expand_widget);
@@ -279,13 +277,6 @@ void AttrDialog::adjust_popup_edit_size()
     } else {
         _scrolled_text_view.set_min_content_height(MAX_POPOVER_HEIGHT);
     }
-}
-
-void AttrDialog::size_allocate_vfunc(int const width, int const height, int const baseline)
-{
-    DialogBase::size_allocate_vfunc(width, height, baseline);
-
-    _popover->present();
 }
 
 bool AttrDialog::onPopoverKeyPressed(GtkEventControllerKey const * /*controller*/,

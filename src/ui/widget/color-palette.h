@@ -20,7 +20,6 @@
 #include <sigc++/signal.h>
 #include <2geom/int-point.h>
 
-#include "helper/auto-connection.h"
 #include "ui/widget/palette_t.h"
 #include "ui/widget/bin.h"
 
@@ -105,7 +104,6 @@ private:
     void _enable_scrollbar(bool show);
     void _enable_stretch(bool enable);
     void _set_large_pinned_panel(bool large);
-    static gboolean check_scrollbar(gpointer self);
     void update_checkbox();
     void update_stretch();
     int get_tile_size(bool horz) const;
@@ -148,7 +146,6 @@ private:
     bool _show_labels = false;
     int _page_size = 0;
     Geom::IntPoint _allocation;
-    auto_connection _idle_resize;
 };
 
 } // namespace Widget

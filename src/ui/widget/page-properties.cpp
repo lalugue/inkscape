@@ -41,7 +41,6 @@
 
 #include "page-size-preview.h"
 #include "ui/builder-utils.h"
-#include "ui/menuize.h"
 #include "ui/operation-blocker.h"
 #include "ui/util.h"
 #include "ui/widget/color-picker.h"
@@ -120,7 +119,7 @@ class PagePropertiesBox final : public PageProperties {
         }
         menu->append(_("Custom"), get_detailed_action(_page_sizes.size())); // sentinel
         _templates_popover.set_menu_model(std::move(menu));
-        UI::menuize_popover(_templates_popover);
+        _templates_popover.set_flags(Gtk::PopoverMenu::Flags::NESTED);
     }
 
 public:

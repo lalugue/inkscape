@@ -26,6 +26,7 @@
 
 #include "display/control/canvas-item-ptr.h"
 #include "helper/auto-connection.h"
+#include "ui/widget/popover-bin.h"
 
 namespace Gtk {
 class Adjustment;
@@ -58,13 +59,13 @@ class Ruler;
  * A Gtk::Grid widget that contains rulers, scrollbars, buttons, and, of course, the canvas.
  * Canvas has an overlay to let us put stuff on the canvas.
  */
-class CanvasGrid final : public Gtk::Grid
+class CanvasGrid : public Gtk::Grid
 {
     using parent_type = Gtk::Grid;
 
 public:
     CanvasGrid(SPDesktopWidget *dtw);
-    ~CanvasGrid() final;
+    ~CanvasGrid() override;
 
     void ShowScrollbars(bool state = true);
     void ToggleScrollbars();
@@ -77,6 +78,8 @@ public:
     void ToggleCommandPalette();
 
     void showNotice(Glib::ustring const &msg, unsigned timeout = 0);
+
+    void setPopover(Gtk::Popover *popover) { _popoverbin.setPopover(popover); }
 
     Inkscape::UI::Widget::Canvas *GetCanvas() { return _canvas.get(); };
 
@@ -98,10 +101,11 @@ public:
 
 private:
     // Signal callbacks
-    void size_allocate_vfunc(int width, int height, int baseline) final;
-    void on_realize() final;
+    void size_allocate_vfunc(int width, int height, int baseline) override;
+    void on_realize() override;
 
     // The widgets
+    Inkscape::UI::Widget::PopoverBin _popoverbin;
     std::unique_ptr<Inkscape::UI::Widget::Canvas> _canvas;
     std::unique_ptr<Dialog::CommandPalette> _command_palette;
     CanvasNotice *_notice;

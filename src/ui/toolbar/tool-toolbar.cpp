@@ -5,7 +5,7 @@
  */
 /* Authors:
  *   Mike Kowalski (Popovers)
- *   Matrin Owens (Tool button catagories)
+ *   Martin Owens (Tool button categories)
  *   Jonathon Neuhauser (Open tool preferences)
  *   Tavmjong Bah
  *
@@ -14,7 +14,6 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include <iostream>
 #include <utility>
 #include <glibmm/i18n.h>
 #include <giomm/menu.h>
@@ -33,7 +32,6 @@
 #include "inkscape-window.h"
 #include "ui/builder-utils.h"
 #include "ui/controller.h"
-#include "ui/pack.h"
 #include "ui/util.h"
 #include "ui/widget/popover-menu.h"
 #include "ui/widget/popover-menu-item.h"
@@ -51,7 +49,9 @@ ToolToolbar::ToolToolbar(InkscapeWindow *window)
 
     attachHandlers(builder, window);
 
-    UI::pack_start(*this, tool_toolbar, true, true);
+    _popoverbin.setChild(&tool_toolbar);
+    _popoverbin.setPopover(_context_menu.get());
+    append(_popoverbin);
 
     // Hide/show buttons based on preferences.
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
@@ -106,7 +106,7 @@ void ToolToolbar::set_visible_buttons(Gtk::ScrolledWindow &tool_toolbar)
 }
 
 // We should avoid passing in the window in Gtk4 by turning "tool_preferences()" into an action.
-std::unique_ptr<UI::Widget::PopoverMenu> ToolToolbar::makeContextMenu(InkscapeWindow * const window)
+std::unique_ptr<UI::Widget::PopoverMenu> ToolToolbar::makeContextMenu(InkscapeWindow *window)
 {
     Glib::ustring icon_name;
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
@@ -114,21 +114,18 @@ std::unique_ptr<UI::Widget::PopoverMenu> ToolToolbar::makeContextMenu(InkscapeWi
         icon_name = "preferences-system";
     }
 
-    auto &item = *Gtk::make_managed<UI::Widget::PopoverMenuItem>(_("Open tool preferences"), false,
-                                                                 icon_name);
-    item.signal_activate().connect([=, this]
-    {
+    auto &item = *Gtk::make_managed<UI::Widget::PopoverMenuItem>(_("Open tool preferences"), false, icon_name);
+    item.signal_activate().connect([=, this] {
         tool_preferences(_context_menu_tool_name, window);
         _context_menu_tool_name.clear();
     });
 
-    auto menu = std::make_unique<UI::Widget::PopoverMenu>(*this, Gtk::PositionType::BOTTOM);
+    auto menu = std::make_unique<UI::Widget::PopoverMenu>(Gtk::PositionType::BOTTOM);
     menu->append(item);
     return menu;
 }
 
-void ToolToolbar::showContextMenu(InkscapeWindow * const window,
-                                  Gtk::Button &button, Glib::ustring const &tool_name)
+void ToolToolbar::showContextMenu(InkscapeWindow *window, Gtk::Button &button, Glib::ustring const &tool_name)
 {
     _context_menu_tool_name = tool_name;
     _context_menu->popup_at_center(button);

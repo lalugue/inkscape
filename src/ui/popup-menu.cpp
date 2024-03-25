@@ -43,34 +43,28 @@ static bool on_key_pressed(unsigned const keyval, unsigned /*keycode*/, Gdk::Mod
     return false;
 }
 
-static Gtk::EventSequenceState on_click_pressed(Gtk::GestureClick const &click,
-                                                int const n_press, double const x, double const y,
-                                                PopupMenuSlot const &slot)
+static void on_click_pressed(int n_press, double x, double y, Gtk::GestureClick &click, PopupMenuSlot const &slot)
 {
     auto const event = click.get_current_event();
-    g_return_val_if_fail(event, Gtk::EventSequenceState::NONE);
-
     if (event->triggers_context_menu()) {
-        auto const click = PopupMenuClick{n_press, x, y};
-        if (slot(click)) return Gtk::EventSequenceState::CLAIMED;
+        auto const mc = PopupMenuClick{n_press, x, y};
+        if (slot(mc)) {
+            click.set_state(Gtk::EventSequenceState::CLAIMED);
+        }
     }
-
-    return Gtk::EventSequenceState::NONE;
 }
 
 void on_popup_menu(Gtk::Widget &widget, PopupMenuSlot slot)
 {
     auto key = Gtk::EventControllerKey::create();
     key->signal_key_pressed().connect(sigc::bind(&on_key_pressed, slot), true); // after
-    widget.add_controller(std::move(key));
+    widget.add_controller(key);
 
-    Controller::add_click(widget, sigc::bind(&on_click_pressed, std::move(slot)), {},
-                          Controller::Button::any, Gtk::PropagationPhase::TARGET); // ←beat Entry popup handler
-}
-
-sigc::connection on_hide_reset(std::shared_ptr<Gtk::Widget> widget)
-{
-    return widget->signal_hide().connect( [widget = std::move(widget)]() mutable { widget.reset(); });
+    auto click = Gtk::GestureClick::create();
+    click->set_button(0);
+    click->set_propagation_phase(Gtk::PropagationPhase::CAPTURE); // before GTK's popup handler
+    click->signal_pressed().connect(sigc::bind(&on_click_pressed, std::ref(*click), std::move(slot)));
+    widget.add_controller(click);
 }
 
 static void popup_at(Gtk::Popover &popover, Gtk::Widget &widget,

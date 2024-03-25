@@ -59,22 +59,19 @@ public:
     void add_track_widget(Gtk::Widget& widget);
 
 private:
-    void size_allocate_vfunc(int width, int height, int baseline) final;
-    void unparent_children();
-
     std::pair<int, int> get_drawing_size();
     bool draw_scale(const Cairo::RefPtr<::Cairo::Context>& cr);
     void draw_marker(const Cairo::RefPtr<::Cairo::Context>& cr);
     Cairo::RectangleInt marker_rect();
     void draw_func(Cairo::RefPtr<Cairo::Context> const &cr, int width, int height);
-    void css_changed(GtkCssStyleChange *) final;
+    void css_changed(GtkCssStyleChange *) override;
     void on_prefs_changed();
 
     void on_motion(GtkEventControllerMotion const *motion, double x, double y);
     Gtk::EventSequenceState on_click_pressed(Gtk::GestureClick const &click,
                                              int n_press, double x, double y);
 
-    [[nodiscard]] std::unique_ptr<Gtk::Popover> create_context_menu();
+    std::unique_ptr<Gtk::Popover> create_context_menu();
     Cairo::RefPtr<Cairo::Surface> draw_label(Cairo::RefPtr<Cairo::Surface> const &surface_in, int label_value);
 
     Inkscape::PrefObserver _watch_prefs;

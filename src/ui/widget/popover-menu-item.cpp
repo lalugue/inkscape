@@ -20,7 +20,6 @@
 #include <gtkmm/label.h>
 #include <gtkmm/tooltip.h>
 
-#include "ui/menuize.h"
 #include "ui/util.h"
 #include "ui/widget/popover-menu.h"
 
@@ -69,8 +68,6 @@ PopoverMenuItem::PopoverMenuItem(Glib::ustring const &text,
             }
         });
     }
-
-    UI::menuize(*this);
 }
 
 Glib::SignalProxy<void ()> PopoverMenuItem::signal_activate()

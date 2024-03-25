@@ -20,12 +20,12 @@
 #include <gtkmm/grid.h>
 #include <gtkmm/label.h>
 #include <gtkmm/popover.h>
+#include <gtkmm/popovermenu.h>
 #include <2geom/point.h>
 #include <2geom/angle.h>  // deg_from_rad
 
 #include "desktop.h"
 #include "ui/builder-utils.h"
-#include "ui/menuize.h"
 #include "ui/pack.h"
 #include "ui/util.h"
 #include "ui/widget/canvas.h"
@@ -77,7 +77,8 @@ StatusBar::StatusBar()
         zoom_menu->prepend_item(menu_item); // In reverse order.
     }
 
-    zoom_popover = make_menuized_popover(zoom_menu, *zoom);
+    zoom_popover = std::make_unique<Gtk::PopoverMenu>(zoom_menu, Gtk::PopoverMenu::Flags::NESTED);
+    zoom_popover->set_parent(*zoom);
 
     zoom_value->signal_input().connect(sigc::mem_fun(*this, &StatusBar::zoom_input), true);
     zoom_value->signal_output().connect(sigc::mem_fun(*this, &StatusBar::zoom_output), true);
@@ -113,7 +114,8 @@ StatusBar::StatusBar()
         rotate_menu->prepend_item(menu_item); // In reverse order.
     }
 
-    rotate_popover = make_menuized_popover(rotate_menu, *rotate);
+    rotate_popover = std::make_unique<Gtk::PopoverMenu>(rotate_menu, Gtk::PopoverMenu::Flags::NESTED);
+    rotate_popover->set_parent(*rotate);
 
     rotate_value->signal_output().connect(sigc::mem_fun(*this, &StatusBar::rotate_output), true);
     rotate_value->signal_value_changed().connect(sigc::mem_fun(*this, &StatusBar::rotate_value_changed));

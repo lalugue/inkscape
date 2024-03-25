@@ -17,6 +17,7 @@
 #include <gtkmm/box.h>
 
 #include "preferences.h"
+#include "ui/widget/popover-bin.h"
 
 namespace Gtk {
 class Builder;
@@ -54,6 +55,7 @@ private:
 
     std::unique_ptr<UI::Widget::PopoverMenu> _context_menu;
     Glib::ustring _context_menu_tool_name;
+    UI::Widget::PopoverBin _popoverbin;
 
     Inkscape::PrefObserver buttons_pref_observer;
 };

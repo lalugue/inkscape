@@ -25,6 +25,7 @@
 #include "rotateable.h"
 #include "ui/popup-menu.h"
 #include "ui/widget/spinbutton.h"
+#include "ui/widget/popover-bin.h"
 
 namespace Gtk {
 class Adjustment;
@@ -114,11 +115,11 @@ private:
 /**
  * Selected style indicator (fill, stroke, opacity).
  */
-class SelectedStyle : public Gtk::Box
+class SelectedStyle : public UI::Widget::PopoverBin
 {
 public:
-    bool dragging;
-    SelectedStyle(bool layout = true);
+    bool dragging = false;
+    SelectedStyle();
 
     void setDesktop(SPDesktop *desktop);
     SPDesktop *getDesktop() {return _desktop;}

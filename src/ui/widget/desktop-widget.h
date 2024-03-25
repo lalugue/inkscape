@@ -90,13 +90,13 @@ class StatusBar;
 } // namespace Inkscape::UI
 
 /// A GtkBox on an SPDesktop.
-class SPDesktopWidget final : public Gtk::Box
+class SPDesktopWidget : public Gtk::Box
 {
     using parent_type = Gtk::Box;
 
 public:
     SPDesktopWidget(InkscapeWindow *inkscape_window, SPDocument *document);
-    ~SPDesktopWidget() final;
+    ~SPDesktopWidget() override;
 
     Inkscape::UI::Widget::CanvasGrid *get_canvas_grid()  { return _canvas_grid; }  // Temp, I hope!
     Inkscape::UI::Widget::Canvas     *get_canvas()       { return _canvas; }
@@ -109,8 +109,8 @@ public:
 
     Gio::ActionMap *get_action_map();
 
-    void on_realize() final;
-    void on_unrealize() final;
+    void on_realize() override;
+    void on_unrealize() override;
 
 private:
     Inkscape::auto_connection modified_connection;
@@ -118,16 +118,13 @@ private:
     std::unique_ptr<SPDesktop> _desktop;
     InkscapeWindow *_window = nullptr;
 
-    // The root vbox of the window layout.
-    Gtk::Box *_vbox;
-
     Gtk::Paned *_tbbox = nullptr;
     Gtk::Box *_hbox = nullptr;
     std::unique_ptr<Inkscape::UI::Dialog::DialogContainer> _container;
     Inkscape::UI::Dialog::DialogMultipaned *_columns = nullptr;
     Gtk::Grid* _top_toolbars = nullptr;
 
-    Inkscape::UI::Widget::StatusBar    *_statusbar = nullptr;
+    Inkscape::UI::Widget::StatusBar *_statusbar = nullptr;
     Inkscape::UI::Dialog::SwatchesPanel *_panels;
 
     /** A grid to display the canvas, rulers, and scrollbars. */

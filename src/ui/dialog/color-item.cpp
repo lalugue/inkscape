@@ -28,16 +28,17 @@
 #include <gdkmm/general.h>
 #include <gdkmm/pixbuf.h>
 #include <gdkmm/texture.h>
+#include <gtkmm/binlayout.h>
 #include <gtkmm/dragsource.h>
 #include <gtkmm/gestureclick.h>
 #include <gtkmm/popover.h>
+#include <gtkmm/popovermenu.h>
 #include <sigc++/functors/mem_fun.h>
 
 #include "desktop-style.h"
 #include "document.h"
 #include "document-undo.h"
 #include "hsluv.h"
-#include "inkscape-preferences.h"
 #include "message-context.h"
 #include "preferences.h"
 #include "selection.h"
@@ -45,34 +46,41 @@
 #include "display/cairo-utils.h"
 #include "helper/sigc-track-obj.h"
 #include "io/resource.h"
-#include "io/sys.h"
 #include "object/sp-gradient.h"
 #include "object/tags.h"
 #include "svg/svg-color.h"
+#include "ui/containerize.h"
 #include "ui/controller.h"
 #include "ui/dialog/dialog-base.h"
 #include "ui/dialog/dialog-container.h"
 #include "ui/icon-names.h"
-#include "ui/menuize.h"
 #include "ui/util.h"
 
-[[nodiscard]] static auto const &get_removecolor()
-{
-    // The "remove-color" image.
-    static Glib::RefPtr<Gdk::Pixbuf> pixbuf;
-    if (pixbuf) return pixbuf;
+namespace Inkscape::UI::Dialog {
+namespace {
 
-    auto path_utf8 = (Glib::ustring)Inkscape::IO::Resource::get_path(Inkscape::IO::Resource::SYSTEM,
-        Inkscape::IO::Resource::UIS, "resources", "remove-color.png");
-    auto path = Glib::filename_from_utf8(path_utf8);
-    pixbuf = Gdk::Pixbuf::create_from_file(path);
-    if (!pixbuf) {
-        g_warning("Null pixbuf for %p [%s]", path.c_str(), path.c_str());
-    }
-    return pixbuf;
+// Return the result of executing a lambda, and cache the result for future calls.
+template <typename F>
+auto &staticify(F &&f)
+{
+    static auto result = std::forward<F>(f)();
+    return result;
 }
 
-namespace Inkscape::UI::Dialog {
+// Get the "remove-color" image.
+Glib::RefPtr<Gdk::Pixbuf> get_removecolor()
+{
+    return staticify([] {
+        auto path = IO::Resource::get_path(IO::Resource::SYSTEM, IO::Resource::UIS, "resources", "remove-color.png");
+        auto pixbuf = Gdk::Pixbuf::create_from_file(path.pointer());
+        if (!pixbuf) {
+            std::cerr << "Null pixbuf for " << Glib::filename_to_utf8(path.pointer()) << std::endl;
+        }
+        return pixbuf;
+    });
+}
+
+} // namespace
 
 ColorItem::ColorItem(PaintDef const &paintdef, DialogBase *dialog)
     : dialog(dialog)
@@ -120,7 +128,9 @@ ColorItem::ColorItem(SPGradient *gradient, DialogBase *dialog)
     common_setup();
 }
 
-ColorItem::ColorItem(Glib::ustring name) : description(std::move(name)) {
+ColorItem::ColorItem(Glib::ustring name)
+    : description(std::move(name))
+{
     bool group = !description.empty();
     set_name("ColorItem");
     set_tooltip_text(description);
@@ -140,8 +150,11 @@ bool ColorItem::is_filler() const {
 
 void ColorItem::common_setup()
 {
+    containerize(*this);
+    set_layout_manager(Gtk::BinLayout::create());
     set_name("ColorItem");
     set_tooltip_text(description + (tooltip.empty() ? tooltip : "\n" + tooltip));
+
     set_draw_func(sigc::mem_fun(*this, &ColorItem::draw_func));
 
     Controller::add_drag_source(*this, {
@@ -267,7 +280,7 @@ void ColorItem::draw_func(Cairo::RefPtr<Cairo::Context> const &cr, int const w, 
     }
 }
 
-void ColorItem::size_allocate_vfunc(int const width, int const height, int const baseline)
+void ColorItem::size_allocate_vfunc(int width, int height, int baseline)
 {
     Gtk::DrawingArea::size_allocate_vfunc(width, height, baseline);
 
@@ -413,10 +426,15 @@ void ColorItem::on_rightclick()
         menu->append_section(section);
     }
 
-    // static to only create/show 1 menu over all items & avoid lifetime hassles
-    static std::unique_ptr<Gtk::Popover> popover;
-    popover = UI::make_menuized_popover(std::move(menu), *this);
-    popover->popup();
+
+    if (_popover) {
+        _popover->unparent();
+    }
+
+    _popover = std::make_unique<Gtk::PopoverMenu>(menu, Gtk::PopoverMenu::Flags::NESTED);
+    _popover->set_parent(*this);
+
+    _popover->popup();
 }
 
 void ColorItem::action_set_fill()

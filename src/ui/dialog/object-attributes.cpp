@@ -58,7 +58,6 @@
 #include "ui/controller.h"
 #include "ui/dialog/object-attributes.h"
 #include "ui/icon-names.h"
-#include "ui/menuize.h"
 #include "ui/pack.h"
 #include "ui/tools/object-picker-tool.h"
 #include "ui/syntax.h"
@@ -840,7 +839,6 @@ public:
         action->property_state().signal_changed().connect([=, this]{ int n; action->get_state(n);
                                                                     set_precision(n); });
         _main.insert_action_group("attrdialog", std::move(group));
-        UI::menuize_popover(*get_widget<Gtk::MenuButton>(builder, "path-menu").get_popover());
 
         get_widget<Gtk::Button>(builder, "path-data-round").signal_clicked().connect([this]{
             truncate_digits(_data.get_buffer(), _precision);

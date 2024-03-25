@@ -154,7 +154,6 @@ private:
     auto_connection _close_popup;
     int _rounding_precision = 0;
 
-    void size_allocate_vfunc(int width, int height, int baseline) final;
     bool onPopoverKeyPressed(GtkEventControllerKey const *controller,
                              unsigned keyval, unsigned keycode, GdkModifierType state);
 

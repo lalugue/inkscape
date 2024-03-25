@@ -263,7 +263,7 @@ Gtk::Box* SvgFontsDialog::AttrCombo(gchar* lbl, const SPAttr /*attr*/){
 }
 
 GlyphMenuButton::GlyphMenuButton()
-    : _menu{std::make_unique<UI::Widget::PopoverMenu>(*this, Gtk::PositionType::BOTTOM)}
+    : _menu{std::make_unique<UI::Widget::PopoverMenu>(Gtk::PositionType::BOTTOM)}
 {
     _label.set_width_chars(2);
 
@@ -284,7 +284,7 @@ void GlyphMenuButton::update(SPFont const * const spfont)
 {
     set_sensitive(false);
     _label.set_label({});
-    _menu->delete_all();
+    _menu->remove_all();
 
     if (!spfont) return;
 

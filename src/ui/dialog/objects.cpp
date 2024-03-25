@@ -13,7 +13,6 @@
  */
 
 #include <cmath>
-#include <iomanip>
 #include <string>
 #include <glibmm/i18n.h>
 #include <glibmm/main.h>
@@ -23,12 +22,16 @@
 #include <gtkmm/button.h>
 #include <gtkmm/cellrenderer.h>
 #include <gtkmm/checkbutton.h>
+#include <gtkmm/dragsource.h>
 #include <gtkmm/enums.h>
+#include <gtkmm/gestureclick.h>
 #include <gtkmm/icontheme.h>
 #include <gtkmm/popover.h>
 #include <gtkmm/scale.h>
 #include <gtkmm/searchentry2.h>
+#include <gtkmm/separator.h>
 #include <gtkmm/togglebutton.h>
+#include <gtkmm/treestore.h>
 #include <gtkmm/treeview.h>
 
 #include "objects.h"
@@ -39,15 +42,10 @@
 #include "document.h"
 #include "document-undo.h"
 #include "filter-chemistry.h"
-#include "include/gtkmm_version.h"
 #include "inkscape.h"
 #include "inkscape-window.h"
 #include "layer-manager.h"
 #include "message-stack.h"
-#include "object/filters/blend.h"
-#include "object/filters/gaussian-blur.h"
-#include "object/sp-clippath.h"
-#include "object/sp-mask.h"
 #include "object/sp-root.h"
 #include "object/sp-shape.h"
 #include "style-enums.h"
@@ -56,12 +54,10 @@
 #include "ui/builder-utils.h"
 #include "ui/contextmenu.h"
 #include "ui/controller.h"
-#include "ui/dialog-events.h"
 #include "ui/icon-loader.h"
 #include "ui/icon-names.h"
 #include "ui/pack.h"
 #include "ui/popup-menu.h"
-#include "ui/selected-color.h"
 #include "ui/shortcuts.h"
 #include "ui/tools/node-tool.h"
 #include "ui/util.h"
@@ -121,9 +117,8 @@ private:
 class ObjectWatcher : public Inkscape::XML::NodeObserver
 {
 public:
-    ObjectWatcher() = delete;
     ObjectWatcher(ObjectsPanel *panel, SPItem *, Gtk::TreeRow *row, bool is_filtered);
-    ~ObjectWatcher() final;
+    ~ObjectWatcher() override;
 
     void initRowInfo();
     void updateRowInfo();
@@ -799,7 +794,6 @@ ObjectsPanel::ObjectsPanel()
         return true;
     }, false); // before
 
-    _object_menu.set_parent(*this);
     _object_menu.signal_closed().connect([this]{
         _item_state_toggler->set_force_visible(false);
         _tree.queue_draw();
@@ -970,12 +964,9 @@ ObjectsPanel::ObjectsPanel()
         .end     = sigc::mem_fun(*this, &ObjectsPanel::on_drag_end  )
         },         Gtk::PropagationPhase::CAPTURE);
 
-    std::vector<GType> types;
-    types.emplace_back(Glib::Value<Glib::ustring>::value_type());
-
     Controller::add_drop_target(_tree, {
         .actions = Gdk::DragAction::MOVE,
-        .types   = types,
+        .types   = { Glib::Value<Glib::ustring>::value_type() },
         .motion  = sigc::mem_fun(*this, &ObjectsPanel::on_drag_motion),
         .drop    = sigc::mem_fun(*this, &ObjectsPanel::on_drag_drop  )
         },         Gtk::PropagationPhase::CAPTURE);
@@ -989,6 +980,7 @@ ObjectsPanel::ObjectsPanel()
     _scroller.set_child(_tree);
     _scroller.set_policy( Gtk::PolicyType::AUTOMATIC, Gtk::PolicyType::AUTOMATIC );
     _scroller.set_has_frame(true);
+    _scroller.set_vexpand();
     Gtk::Requisition sreq;
     Gtk::Requisition sreq_natural;
     _scroller.get_preferred_size(sreq_natural, sreq);
@@ -998,12 +990,15 @@ ObjectsPanel::ObjectsPanel()
         _scroller.set_size_request(sreq.get_width(), minHeight);
     }
 
-    UI::pack_start(_page, header, false, true);
-    UI::pack_end(_page, _scroller, UI::PackOptions::expand_widget);
-    UI::pack_start(*this, _page, UI::PackOptions::expand_widget);
+    _page.append(header);
+    _page.append(_scroller);
+    _popoverbin.setChild(&_page);
+    _popoverbin.set_expand();
+    append(_popoverbin);
 
-    auto const set_selection_color = [&]
-        { selection_color = get_color_with_class(_tree, "theme_selected_bg_color"); };
+    auto const set_selection_color = [&] {
+        selection_color = get_color_with_class(_tree, "theme_selected_bg_color");
+    };
     set_selection_color();
 
     auto enter_layer_label_editing_mode = [this]() {
@@ -1034,13 +1029,6 @@ ObjectsPanel::ObjectsPanel()
 }
 
 ObjectsPanel::~ObjectsPanel() = default;
-
-void ObjectsPanel::size_allocate_vfunc(int const width, int const height, int const baseline)
-{
-    parent_type::size_allocate_vfunc(width, height, baseline);
-
-    _object_menu.present();
-}
 
 void ObjectsPanel::desktopReplaced()
 {
@@ -1307,6 +1295,7 @@ bool ObjectsPanel::blendModePopup(int const x, int const y, Gtk::TreeModel::Row 
 
     _item_state_toggler->set_force_visible(true);
 
+    _popoverbin.setPopover(&_object_menu);
     UI::popup_at(_object_menu, _tree, x, y);
     return true;
 }
@@ -1685,10 +1674,10 @@ Gtk::EventSequenceState ObjectsPanel::on_click(Gtk::GestureClick const &gesture,
             }
 
             // true == hide menu item for opening this dialog!
-            auto menu = std::make_shared<ContextMenu>(getDesktop(), item, true);
+            auto menu = Gtk::make_managed<ContextMenu>(getDesktop(), item, true);
             // popup context menu pointing to the clicked tree row:
+            _popoverbin.setPopover(menu);
             UI::popup_at(*menu, _tree, ex, ey);
-            UI::on_hide_reset(std::move(menu));
         } else if (should_set_current_layer()) {
             getDesktop()->layerManager().setCurrentLayer(item, true);
         } else {

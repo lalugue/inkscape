@@ -20,7 +20,6 @@
 #include <gtkmm/separator.h>
 #include <gtkmm/window.h>
 
-#include "ui/menuize.h"
 #include "ui/popup-menu.h"
 #include "ui/util.h"
 #include "ui/widget/css-name-class-init.h"
@@ -45,11 +44,7 @@ public:
     }
 };
 
-PopoverMenu::PopoverMenu(Gtk::Widget &parent, Gtk::PositionType const position)
-: PopoverMenu{&parent, position}
-{}
-
-PopoverMenu::PopoverMenu(Gtk::Widget *const parent, Gtk::PositionType const position)
+PopoverMenu::PopoverMenu(Gtk::PositionType const position)
     : Glib::ObjectBase{"PopoverMenu"}
     , Gtk::Popover{}
     , _scrolled_window{*Gtk::make_managed<Gtk::ScrolledWindow>()}
@@ -58,7 +53,6 @@ PopoverMenu::PopoverMenu(Gtk::Widget *const parent, Gtk::PositionType const posi
     add_css_class("popover-menu");
     add_css_class("menu");
 
-    if (parent) set_parent(*parent);
     set_position(position);
 
     _scrolled_window.set_propagate_natural_width (true);
@@ -78,9 +72,6 @@ PopoverMenu::PopoverMenu(Gtk::Widget *const parent, Gtk::PositionType const posi
         // This is also nicer for menus with only 1 item, like the ToolToolbar popup
         Glib::signal_idle().connect_once( [this]{ unset_items_focus_hover(nullptr); });
     });
-
-    // Temporarily hide tooltip of relative-to widget to avoid it covering us up
-    UI::autohide_tooltip(*this);
 }
 
 void PopoverMenu::attach(Gtk::Widget &item,
@@ -119,16 +110,6 @@ void PopoverMenu::remove(Gtk::Widget &item)
 
     _grid.remove(item);
     _items.erase(it);
-}
-
-void PopoverMenu::remove_all()
-{
-    remove_all(false);
-}
-
-void PopoverMenu::delete_all()
-{
-    remove_all(true);
 }
 
 void PopoverMenu::append_section_label(Glib::ustring const &markup)
@@ -237,14 +218,10 @@ void PopoverMenu::unset_items_focus_hover(Gtk::Widget * const except_active)
     }
 }
 
-void PopoverMenu::remove_all(bool const and_delete)
+void PopoverMenu::remove_all()
 {
-    for (auto const item: _items) {
+    for (auto item : _items) {
         _grid.remove(*item);
-        if (and_delete) {
-            g_assert(item->is_managed_()); // "Private API", but sanity check for us
-            delete item; // This is not ideal, but gtkmm/object.cc says should be OK
-        }
     }
     _items.clear();
 }

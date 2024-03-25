@@ -119,7 +119,6 @@ void Toolbars::create_toolbars(SPDesktop *desktop)
             auto const sub_toolbox = Gtk::manage(aux_toolboxes[i].create(desktop).release());
             sub_toolbox->set_name("SubToolBox");
             sub_toolbox->set_hexpand();
-            sub_toolbox->set_overflow(Gtk::Overflow::HIDDEN);
 
             // Use a grid to wrap the toolbar and a possible swatch.
             auto const grid = Gtk::make_managed<Gtk::Grid>();

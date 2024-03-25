@@ -54,8 +54,8 @@ std::list<DialogNotebook *> DialogNotebook::_instances;
 DialogNotebook::DialogNotebook(DialogContainer *container)
     : Gtk::ScrolledWindow()
     , _container(container)
-    , _menu    {nullptr, Gtk::PositionType::BOTTOM}
-    , _menutabs{*this  , Gtk::PositionType::BOTTOM}
+    , _menu{Gtk::PositionType::BOTTOM}
+    , _menutabs{Gtk::PositionType::BOTTOM}
     , _labels_auto(true)
     , _detaching_duplicate(false)
     , _selected_page(nullptr)
@@ -145,8 +145,7 @@ DialogNotebook::DialogNotebook(DialogContainer *container)
         return a.order < b.order;
     });
 
-    auto builder = ColumnMenuBuilder<DialogData::Category>{_menu, 2, Gtk::IconSize::NORMAL,
-                                                           row};
+    auto builder = ColumnMenuBuilder<DialogData::Category>{_menu, 2, Gtk::IconSize::NORMAL, row};
     for (auto const &data : all_dialogs) {
         auto callback = [key = data.key]{
             // get desktop's container, it may be different than current '_container'!
@@ -156,8 +155,7 @@ DialogNotebook::DialogNotebook(DialogContainer *container)
                 }
             }
         };
-        builder.add_item(data.label, data.category, {}, data.icon_name, true, false,
-                         std::move(callback));
+        builder.add_item(data.label, data.category, {}, data.icon_name, true, false, std::move(callback));
         if (builder.new_section()) {
             builder.set_section(gettext(dialog_categories[data.category]));
         }
@@ -188,8 +186,9 @@ DialogNotebook::DialogNotebook(DialogContainer *container)
 
     // ============= Finish setup ===============
     _reload_context = true;
-    set_child(_notebook);
-    set_visible(true);
+    _popoverbin.setChild(&_notebook);
+    _popoverbin.setPopover(&_menutabs);
+    set_child(_popoverbin);
 
     _instances.push_back(this);
 }
@@ -209,8 +208,6 @@ DialogNotebook::~DialogNotebook()
     }
 
     _instances.remove(this);
-
-    _menutabs.unparent();
 }
 
 void DialogNotebook::add_highlight_header()
@@ -589,7 +586,7 @@ void DialogNotebook::on_size_allocate_scroll(int const width)
     // magic number
     static constexpr int MIN_HEIGHT = 60;
     //  set or unset scrollbars to completely hide a notebook
-    // because we have a "blocking" scroll per tab we need to loop to aboid
+    // because we have a "blocking" scroll per tab we need to loop to avoid
     // other page stop out scroll
     for_each_page(_notebook, [this](Gtk::Widget &page){
         if (!provide_scroll(page)) {
@@ -772,7 +769,7 @@ void DialogNotebook::reload_tab_menu()
 
         _connmenu.clear();
 
-        _menutabs.delete_all();
+        _menutabs.remove_all();
 
         auto prefs = Inkscape::Preferences::get();
         bool symbolic = false;

@@ -34,7 +34,7 @@
 #include <gtkmm/popover.h>
 #include <gtkmm/spinbutton.h>
 #include <iterator>
-#include <numbers>
+
 #include <optional>
 #include <set>
 #include <string>
@@ -143,7 +143,7 @@ static void docprops_style_button(Gtk::Button& btn, char const* iconName)
 }
 
 static bool do_remove_popup_menu(PopupMenuOptionalClick const click,
-                                 Gtk::TreeView &tree_view, sigc::slot<void ()> const &slot)
+                                 Gtk::TreeView &tree_view, UI::Widget::PopoverBin &pb, sigc::slot<void ()> const &slot)
 {
     auto const selection = tree_view.get_selection();
     if (!selection) return false;
@@ -153,9 +153,10 @@ static bool do_remove_popup_menu(PopupMenuOptionalClick const click,
 
     auto const mi = Gtk::make_managed<UI::Widget::PopoverMenuItem>(_("_Remove"), true);
     mi->signal_activate().connect(slot);
-    auto const menu = std::make_shared<UI::Widget::PopoverMenu>(tree_view, Gtk::PositionType::BOTTOM);
+    auto const menu = Gtk::make_managed<UI::Widget::PopoverMenu>(Gtk::PositionType::BOTTOM);
     menu->append(*mi);
-    UI::on_hide_reset(menu);
+
+    pb.setPopover(menu);
 
     if (click) {
         menu->popup_at(tree_view, click->x, click->y);
@@ -171,10 +172,9 @@ static bool do_remove_popup_menu(PopupMenuOptionalClick const click,
     return true;
 }
 
-static void connect_remove_popup_menu(Gtk::TreeView &tree_view, sigc::slot<void ()> slot)
+static void connect_remove_popup_menu(Gtk::TreeView &tree_view, UI::Widget::PopoverBin &pb, sigc::slot<void ()> slot)
 {
-    UI::on_popup_menu(tree_view, sigc::bind(&do_remove_popup_menu,
-                                            std::ref(tree_view), std::move(slot)));
+    UI::on_popup_menu(tree_view, sigc::bind(&do_remove_popup_menu, std::ref(tree_view), std::ref(pb), std::move(slot)));
 }
 
 DocumentProperties::DocumentProperties()
@@ -206,7 +206,8 @@ DocumentProperties::DocumentProperties()
     , _namedview_connection(this)
     , _root_connection(this)
 {
-    UI::pack_start(*this, _notebook, true, true);
+    append(_popoverbin);
+    _popoverbin.setChild(&_notebook);
 
     _notebook.append_page(*_page_page,      _("Display"));
     _notebook.append_page(*_page_guides,    _("Guides"));
@@ -878,7 +879,7 @@ void DocumentProperties::build_cms()
 
     _LinkedProfilesList.get_selection()->signal_changed().connect( sigc::mem_fun(*this, &DocumentProperties::onColorProfileSelectRow) );
 
-    connect_remove_popup_menu(_LinkedProfilesList, sigc::mem_fun(*this, &DocumentProperties::removeSelectedProfile));
+    connect_remove_popup_menu(_LinkedProfilesList, _popoverbin, sigc::mem_fun(*this, &DocumentProperties::removeSelectedProfile));
 
     if (auto document = getDocument()) {
         std::vector<SPObject *> current = document->getResourceList( "defs" );
@@ -1049,8 +1050,8 @@ void DocumentProperties::build_scripting()
     _external_remove_btn.signal_clicked().connect(sigc::mem_fun(*this, &DocumentProperties::removeExternalScript));
     _embed_remove_btn.signal_clicked().connect(sigc::mem_fun(*this, &DocumentProperties::removeEmbeddedScript));
 
-    connect_remove_popup_menu(_ExternalScriptsList, sigc::mem_fun(*this, &DocumentProperties::removeExternalScript));
-    connect_remove_popup_menu(_EmbeddedScriptsList, sigc::mem_fun(*this, &DocumentProperties::removeEmbeddedScript));
+    connect_remove_popup_menu(_ExternalScriptsList, _popoverbin, sigc::mem_fun(*this, &DocumentProperties::removeExternalScript));
+    connect_remove_popup_menu(_EmbeddedScriptsList, _popoverbin, sigc::mem_fun(*this, &DocumentProperties::removeEmbeddedScript));
 
     //TODO: review this observers code:
     if (auto document = getDocument()) {

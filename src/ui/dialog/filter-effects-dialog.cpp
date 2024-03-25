@@ -17,7 +17,6 @@
 
 #include "filter-effects-dialog.h"
 
-#include <cmath>
 #include <map>
 #include <set>
 #include <string>
@@ -102,6 +101,8 @@ using Inkscape::UI::Widget::DualSpinScale;
 using Inkscape::UI::Widget::SpinScale;
 
 constexpr int max_convolution_kernel_size = 10;
+
+static Glib::ustring const prefs_path = "/dialogs/filters";
 
 // Returns the number of inputs available for the filter primitive type
 static int input_count(const SPFilterPrimitive* prim)
@@ -1301,7 +1302,7 @@ static std::unique_ptr<UI::Widget::PopoverMenu> create_popup_menu(Gtk::Widget &p
                                                                   sigc::slot<void ()> dup,
                                                                   sigc::slot<void ()> rem)
 {
-    auto menu = std::make_unique<UI::Widget::PopoverMenu>(parent, Gtk::PositionType::RIGHT);
+    auto menu = std::make_unique<UI::Widget::PopoverMenu>(Gtk::PositionType::RIGHT);
 
     auto mi = Gtk::make_managed<UI::Widget::PopoverMenuItem>(_("_Duplicate"), true);
     mi->signal_activate().connect(std::move(dup));
@@ -1413,7 +1414,7 @@ void FilterEffectsDialog::FilterModifier::update_selection(Selection *sel)
 
 std::unique_ptr<UI::Widget::PopoverMenu> FilterEffectsDialog::FilterModifier::create_menu()
 {
-    auto menu = std::make_unique<UI::Widget::PopoverMenu>(*this, Gtk::PositionType::BOTTOM);
+    auto menu = std::make_unique<UI::Widget::PopoverMenu>(Gtk::PositionType::BOTTOM);
     auto append = [&](Glib::ustring const &text, auto const mem_fun)
     {
         auto &item = *Gtk::make_managed<UI::Widget::PopoverMenuItem>(text, true);
@@ -1604,6 +1605,7 @@ FilterEffectsDialog::FilterModifier::filter_list_click_released(Gtk::GestureClic
     items.at(0)->set_sensitive(sensitive);
     items.at(1)->set_sensitive(sensitive);
     items.at(3)->set_sensitive(sensitive);
+    _dialog._popoverbin.setPopover(_menu.get());
     _menu->popup_at(_list, x, y);
     return Gtk::EventSequenceState::CLAIMED;
 }
@@ -1761,9 +1763,12 @@ void FilterEffectsDialog::CellRendererConnection::get_preferred_height_for_width
 
 /*** PrimitiveList ***/
 FilterEffectsDialog::PrimitiveList::PrimitiveList(FilterEffectsDialog& d)
-    : _dialog(d),
-      _in_drag(0),
-      _observer(std::make_unique<Inkscape::XML::SignalObserver>())
+    : Glib::ObjectBase{"FilterEffectsDialogPrimitiveList"}
+    , WidgetVfuncsClassInit{}
+    , Gtk::TreeView{}
+    , _dialog(d)
+    , _in_drag(0)
+    , _observer(std::make_unique<Inkscape::XML::SignalObserver>())
 {
     _inputs_count = FPInputConverter._length;
 
@@ -1797,7 +1802,12 @@ FilterEffectsDialog::PrimitiveList::PrimitiveList(FilterEffectsDialog& d)
     int cols_count = append_column(_("Connections"), _connection_cell);
     Gtk::TreeViewColumn* col = get_column(cols_count - 1);
     if(col)
-       col->add_attribute(_connection_cell.property_primitive(), _columns.primitive);
+        col->add_attribute(_connection_cell.property_primitive(), _columns.primitive);
+}
+
+void FilterEffectsDialog::PrimitiveList::css_changed(GtkCssStyleChange *)
+{
+    bg_color = get_color_with_class(*this, "theme_bg_color");
 }
 
 // Sets up a vertical Pango context/layout, and returns the largest
@@ -1894,11 +1904,9 @@ void FilterEffectsDialog::PrimitiveList::update()
     }
 }
 
-void FilterEffectsDialog::PrimitiveList::set_menu(Gtk::Widget &parent,
-                                                  sigc::slot<void ()> dup,
-                                                  sigc::slot<void ()> rem)
+void FilterEffectsDialog::PrimitiveList::set_menu(sigc::slot<void ()> dup, sigc::slot<void ()> rem)
 {
-    _primitive_menu = create_popup_menu(parent, std::move(dup), std::move(rem));
+    _primitive_menu = create_popup_menu(_dialog, std::move(dup), std::move(rem));
 }
 
 SPFilterPrimitive* FilterEffectsDialog::PrimitiveList::get_selected()
@@ -1956,7 +1964,6 @@ void FilterEffectsDialog::PrimitiveList::snapshot_vfunc(Glib::RefPtr<Gtk::Snapsh
     cr->translate(x_origin, y_origin);
 
     auto const fg_color = get_color();
-    auto const bg_color = get_color_with_class(*this, "theme_bg_color");
     auto bar_color = mix_colors(bg_color, fg_color, 0.06);
      // color of connector arrow heads and effect separator lines
     auto mid_color = mix_colors(bg_color, fg_color, 0.16);
@@ -2488,6 +2495,7 @@ FilterEffectsDialog::PrimitiveList::on_click_released(Gtk::GestureClick const &c
     if (click.get_current_button() == 3) {
         bool const sensitive = prim != nullptr;
         _primitive_menu->set_sensitive(sensitive);
+        _dialog._popoverbin.setPopover(_primitive_menu.get());
         _primitive_menu->popup_at(*this, wx + 4, wy);
         return Gtk::EventSequenceState::CLAIMED;
     }
@@ -2712,7 +2720,7 @@ void FilterEffectsDialog::add_effects(Inkscape::UI::Widget::CompletionPopup& pop
                                                effect.icon_name, true, true,
                                                [=, this]{ add_filter_primitive(type); });
         auto const id = static_cast<int>(type);
-        menuitem->signal_query_tooltip().connect([=](int x, int y, bool kbd, const Glib::RefPtr<Gtk::Tooltip>& tooltipw){
+        menuitem->signal_query_tooltip().connect([=, this] (int x, int y, bool kbd, const Glib::RefPtr<Gtk::Tooltip>& tooltipw) {
             return sp_query_custom_tooltip(this, x, y, kbd, tooltipw, id, effect.tooltip, effect.icon_name);
         }, false); // before
         if (builder.new_section()) {
@@ -2836,14 +2844,14 @@ FilterEffectsDialog::FilterEffectsDialog()
     });
 
     _add_primitive.signal_clicked().connect(sigc::mem_fun(*this, &FilterEffectsDialog::add_primitive));
-    _primitive_list.set_menu(*this,
-                             sigc::mem_fun(*this, &FilterEffectsDialog::duplicate_primitive),
+    _primitive_list.set_menu(sigc::mem_fun(*this, &FilterEffectsDialog::duplicate_primitive),
                              sigc::mem_fun(_primitive_list, &PrimitiveList::remove_selected));
 
     get_widget<Gtk::Button>(_builder, "new-filter").signal_clicked().connect([this]{ _filter_modifier.add_filter(); });
     append(_bin);
-    _bin.set_child(_main_grid);
     _bin.set_expand(true);
+    _bin.set_child(_popoverbin);
+    _popoverbin.setChild(&_main_grid);
 
     get_widget<Gtk::Button>(_builder, "dup-btn").signal_clicked().connect([this]{ duplicate_primitive(); });
     get_widget<Gtk::Button>(_builder, "del-btn").signal_clicked().connect([this]{ _primitive_list.remove_selected(); });
@@ -2856,18 +2864,18 @@ FilterEffectsDialog::FilterEffectsDialog()
         // full rebuild: this is what it takes to make cell renderer new min width into account to adjust scrollbar
         _primitive_list.update();
     };
-    auto show_all_sources = Inkscape::Preferences::get()->getBool(_prefs + "/dialogs/filters/showAllSources", false);
+    auto show_all_sources = Inkscape::Preferences::get()->getBool(prefs_path + "/dialogs/filters/showAllSources", false);
     _show_sources->set_active(show_all_sources);
     set_inputs(show_all_sources);
     _show_sources->signal_toggled().connect([=, this]{
         bool const show_all = _show_sources->get_active();
         set_inputs(show_all);
-        Inkscape::Preferences::get()->setBool(_prefs + "/dialogs/filters/showAllSources", show_all);
+        Inkscape::Preferences::get()->setBool(prefs_path + "/dialogs/filters/showAllSources", show_all);
     });
 
-    _paned.set_position(Inkscape::Preferences::get()->getIntLimited(_prefs + "/handlePos", 200, 10, 9999));
+    _paned.set_position(Inkscape::Preferences::get()->getIntLimited(prefs_path + "/handlePos", 200, 10, 9999));
     _paned.property_position().signal_changed().connect([this]{
-        Inkscape::Preferences::get()->setInt(_prefs + "/handlePos", _paned.get_position());
+        Inkscape::Preferences::get()->setInt(prefs_path + "/handlePos", _paned.get_position());
     });
 
     _primitive_list.update();
@@ -3287,7 +3295,6 @@ void FilterEffectsDialog::update_automatic_region(Gtk::CheckButton *btn)
     bool automatic = btn->get_active();
     _region_pos->set_sensitive(!automatic);
     _region_size->set_sensitive(!automatic);
-
 }
 
 } // namespace Inkscape::UI::Dialog

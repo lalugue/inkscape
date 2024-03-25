@@ -19,11 +19,13 @@
 #include <giomm/menu.h>
 #include <giomm/menuitem.h>
 #include <gdkmm/general.h>
+#include <gtkmm/binlayout.h>
 #include <gtkmm/drawingarea.h>
 #include <gtkmm/popovermenu.h>
 
 #include "ink-ruler.h"
 #include "inkscape.h"
+#include "ui/containerize.h"
 #include "ui/controller.h"
 #include "ui/popup-menu.h"
 #include "ui/themes.h"
@@ -32,8 +34,8 @@
 
 struct SPRulerMetric
 {
-  gdouble ruler_scale[16];
-  gint    subdivide[5];
+    double ruler_scale[16];
+    int    subdivide[5];
 };
 
 // Ruler metric for general use.
@@ -70,27 +72,22 @@ Ruler::Ruler(Gtk::Orientation orientation)
 {
     set_name("InkRuler");
     add_css_class(_orientation == Gtk::Orientation::HORIZONTAL ? "horz" : "vert");
+    containerize(*this);
+    set_layout_manager(Gtk::BinLayout::create());
 
     set_draw_func(sigc::mem_fun(*this, &Ruler::draw_func));
 
     Controller::add_motion<nullptr, &Ruler::on_motion, nullptr>(*this, *this);
     Controller::add_click(*this, sigc::mem_fun(*this, &Ruler::on_click_pressed), {}, Controller::Button::right);
 
-    set_visible(false);
-
     auto prefs = Inkscape::Preferences::get();
     _watch_prefs = prefs->createObserver("/options/ruler/show_bbox", sigc::mem_fun(*this, &Ruler::on_prefs_changed));
     on_prefs_changed();
 
     INKSCAPE.themecontext->getChangeThemeSignal().connect([this]{ css_changed(nullptr); });
-
-    signal_destroy().connect([this]{ unparent_children(); });
 }
 
-Ruler::~Ruler()
-{
-    unparent_children();
-}
+Ruler::~Ruler() = default;
 
 void Ruler::on_prefs_changed()
 {
@@ -168,12 +165,6 @@ Ruler::add_track_widget(Gtk::Widget& widget)
         Gtk::PropagationPhase::TARGET, Controller::When::before); // We connected 1st to event, so continue
 }
 
-void
-Ruler::size_allocate_vfunc(int const width, int const height, int const baseline)
-{
-    _popover->present();
-}
-
 // Draws marker in response to motion events from canvas.  Position is defined in ruler pixel
 // coordinates. The routine assumes that the ruler is the same width (height) as the canvas. If
 // not, one could use Gtk::Widget::translate_coordinates() to convert the coordinates.
@@ -198,9 +189,7 @@ Ruler::on_motion(GtkEventControllerMotion const * motion, double const x, double
     queue_draw();
 }
 
-Gtk::EventSequenceState
-Ruler::on_click_pressed(Gtk::GestureClick const & /*click*/,
-                        int /*n_press*/, double const x, double const y)
+Gtk::EventSequenceState Ruler::on_click_pressed(Gtk::GestureClick const &, int, double x, double y)
 {
     UI::popup_at(*_popover, *this, x, y);
     return Gtk::EventSequenceState::CLAIMED;
@@ -555,11 +544,6 @@ std::unique_ptr<Gtk::Popover> Ruler::create_context_menu()
     popover->set_parent(*this);
     popover->set_autohide(true);
     return popover;
-}
-
-void Ruler::unparent_children()
-{
-    _popover->unparent();
 }
 
 } // namespace Inkscape::UI::Widget

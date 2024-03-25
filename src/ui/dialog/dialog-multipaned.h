@@ -118,7 +118,6 @@ private:
 
     // Others
     Gtk::Widget *_empty_widget; // placeholder in an empty container
-    void unparent_children();
     void insert(int pos, std::unique_ptr<Gtk::Widget> child);
     void add_empty_widget();
     void remove_empty_widget();

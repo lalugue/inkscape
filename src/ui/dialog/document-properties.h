@@ -42,6 +42,7 @@
 
 #include "object/sp-grid.h"
 #include "ui/dialog/dialog-base.h"
+#include "ui/widget/popover-bin.h"
 #include "ui/widget/licensor.h"
 #include "ui/widget/registered-widget.h"
 #include "ui/widget/registry.h"
@@ -129,7 +130,8 @@ protected:
     void set_viewbox_size(SPDesktop* desktop, double width, double height);
 
     Inkscape::XML::SignalObserver _emb_profiles_observer, _scripts_observer;
-    Gtk::Notebook  _notebook;
+    UI::Widget::PopoverBin _popoverbin;
+    Gtk::Notebook _notebook;
 
     UI::Widget::NotebookPage   *_page_page;
     UI::Widget::NotebookPage   *_page_guides;

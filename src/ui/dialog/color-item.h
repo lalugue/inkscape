@@ -34,6 +34,7 @@ class Drag;
 namespace Gtk {
 class DragSource;
 class GestureClick;
+class Popover;
 } // namespace Gtk
 
 class SPGradient;
@@ -47,18 +48,18 @@ class DialogBase;
  *
  * Note: This widget must be outlived by its parent dialog, passed in the constructor.
  */
-class ColorItem final : public Gtk::DrawingArea
+class ColorItem : public Gtk::DrawingArea
 {
 public:
     /// Create a static color from a paintdef.
     ColorItem(PaintDef const&, DialogBase*);
     /// Add new group or filler element.
     ColorItem(Glib::ustring name);
-    ~ColorItem() final;
+    ~ColorItem() override;
 
     // Returns true if this is group heading rather than a color
     bool is_group() const;
-    // Returns true if this is alignmet filler item, not a color
+    // Returns true if this is alignment filler item, not a color
     bool is_filler() const;
     // Is paint "None"?
     bool is_paint_none() const;
@@ -86,23 +87,19 @@ public:
 
 private:
     void draw_func(Cairo::RefPtr<Cairo::Context> const&, int width, int height);
-    void size_allocate_vfunc(int width, int height, int baseline) final;
+    void size_allocate_vfunc(int width, int height, int baseline) override;
 
-    Glib::RefPtr<Gdk::ContentProvider> on_drag_prepare(Gtk::DragSource const &source,
-                                                       double x, double y);
+    Glib::RefPtr<Gdk::ContentProvider> on_drag_prepare(Gtk::DragSource const &source, double x, double y);
     void on_drag_begin(Gtk::DragSource &source, Glib::RefPtr<Gdk::Drag> const &drag);
 
     // Common post-construction setup.
     void common_setup();
 
-    void on_motion_enter(GtkEventControllerMotion const *motion,
-                         double x, double y);
+    void on_motion_enter(GtkEventControllerMotion const *motion, double x, double y);
     void on_motion_leave(GtkEventControllerMotion const *motion);
 
-    Gtk::EventSequenceState on_click_pressed (Gtk::GestureClick const &click,
-                                              int n_press, double x, double y);
-    Gtk::EventSequenceState on_click_released(Gtk::GestureClick const &click,
-                                              int n_press, double x, double y);
+    Gtk::EventSequenceState on_click_pressed (Gtk::GestureClick const &click, int n_press, double x, double y);
+    Gtk::EventSequenceState on_click_released(Gtk::GestureClick const &click, int n_press, double x, double y);
 
     // Perform the on-click action of setting the fill or stroke.
     void on_click(bool stroke);
@@ -137,10 +134,10 @@ private:
     bool pinned_default = false;
 
     // The color.
+    struct Undefined {};
+    struct PaintNone {};
     struct RGBData { std::array<unsigned, 3> rgb; };
     struct GradientData { SPGradient *gradient; };
-    enum Undefined {};
-    enum PaintNone {};
     std::variant<Undefined, PaintNone, RGBData, GradientData> data;
 
     // The dialog this widget belongs to. Used for determining what desktop to take action on.
@@ -153,6 +150,7 @@ private:
     // A cache of the widget contents, if necessary.
     Cairo::RefPtr<Cairo::ImageSurface> cache;
     bool cache_dirty = true;
+
     bool was_grad_pinned = false;
 
     // For ensuring that clicks that release outside the widget don't count.
@@ -160,6 +158,8 @@ private:
 
     sigc::signal<void ()> _signal_modified;
     sigc::signal<void ()> _signal_pinned;
+
+    std::unique_ptr<Gtk::Popover> _popover;
 };
 
 } // namespace Inkscape::UI::Dialog

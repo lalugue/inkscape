@@ -44,6 +44,8 @@
 #include "ui/widget/bin.h"
 #include "ui/widget/combo-enums.h"
 #include "ui/widget/completion-popup.h"
+#include "ui/widget/popover-bin.h"
+#include "ui/widget/widget-vfuncs-class-init.h"
 #include "xml/helper-observer.h"
 
 namespace Gdk {
@@ -218,7 +220,9 @@ private:
         Glib::Property<void*> _primitive;
     };
 
-    class PrimitiveList : public Gtk::TreeView
+    class PrimitiveList
+        : public UI::Widget::WidgetVfuncsClassInit
+        , public Gtk::TreeView
     {
         using parent_type = Gtk::TreeView;
 
@@ -228,9 +232,7 @@ private:
         sigc::signal<void ()>& signal_primitive_changed();
 
         void update();
-        void set_menu(Gtk::Widget &parent,
-                      sigc::slot<void ()>  dup,
-                      sigc::slot<void ()>  rem);
+        void set_menu(sigc::slot<void ()> dup, sigc::slot<void ()> rem);
 
         SPFilterPrimitive* get_selected();
         void select(SPFilterPrimitive *prim);
@@ -241,7 +243,8 @@ private:
         int get_inputs_count() const;
 
     private:
-        void snapshot_vfunc(Glib::RefPtr<Gtk::Snapshot> const &snapshot) final;
+        void snapshot_vfunc(Glib::RefPtr<Gtk::Snapshot> const &snapshot) override;
+        void css_changed(GtkCssStyleChange *change) override;
 
         void on_drag_end(Gtk::DragSource const &source,
                          Glib::RefPtr<Gdk::Drag> const &drag, bool delete_data);
@@ -284,7 +287,8 @@ private:
         std::unique_ptr<Inkscape::XML::SignalObserver> _observer;
         int _input_type_width {};
         int _input_type_height{};
-        int _inputs_count     {};
+        int _inputs_count{};
+        Gdk::RGBA bg_color{};
     };
 
     void init_settings_widgets();
@@ -311,7 +315,7 @@ private:
 
     Glib::RefPtr<Gtk::Builder> _builder;
     UI::Widget::Bin _bin;
-    Glib::ustring _prefs = "/dialogs/filters";
+    UI::Widget::PopoverBin _popoverbin;
     Gtk::Paned& _paned;
     Gtk::Grid& _main_grid;
     Gtk::Box& _params_box;

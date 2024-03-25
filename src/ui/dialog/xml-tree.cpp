@@ -20,8 +20,6 @@
 
 #include "xml-tree.h"
 
-#include <initializer_list>
-#include <memory>
 #include <glibmm/i18n.h>
 #include <glibmm/ustring.h>
 #include <glibmm/variant.h>
@@ -42,17 +40,13 @@
 #include "document-undo.h"
 #include "inkscape.h"
 #include "layer-manager.h"
-#include "message-context.h"
-#include "message-stack.h"
 #include "selection.h"
 #include "preferences.h"
 #include "object/sp-root.h"
-#include "object/sp-string.h"
 #include "ui/builder-utils.h"
 #include "ui/dialog-events.h"
 #include "ui/icon-loader.h"
 #include "ui/icon-names.h"
-#include "ui/menuize.h"
 #include "ui/pack.h"
 #include "ui/syntax.h"
 #include "ui/tools/tool-base.h"
@@ -198,7 +192,6 @@ XmlTree::XmlTree()
         tooltip->set_text(tip);
         return true;
     }, true);
-    UI::menuize_popover(*popup.get_popover());
 
     auto set_layout = [=, this] (DialogLayout layout) {
         Glib::ustring icon = "layout-auto";

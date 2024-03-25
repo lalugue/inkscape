@@ -60,7 +60,6 @@
 #include "ui/controller.h"
 #include "ui/icon-loader.h"
 #include "ui/icon-names.h"
-#include "ui/menuize.h"
 #include "ui/pack.h"
 #include "ui/tools/node-tool.h"
 #include "ui/util.h"
@@ -331,11 +330,11 @@ void LivePathEffectEditor::add_lpes(Inkscape::UI::Widget::CompletionPopup &popup
 
     // 3-column menu
     // Due to when we rebuild, itʼs not so easy to only populate when the MenuButton is clicked, so
-    // we remove existing children. We also want to free them, BUT theyʼre Gtk::managed()d, so… h4x
-    // TODO: GTK4: Use MenuButton.set_create_popup_func() to create new menu every time, on demand?
+    // we remove existing children.
+    // TODO: Use MenuButton.set_create_popup_func() to create new menu every time, on demand?
 
     auto &menu = popup.get_menu();
-    menu.delete_all();
+    menu.remove_all();
 
     ColumnMenuBuilder<LivePathEffect::LPECategory> builder{menu, 3, Gtk::IconSize::LARGE};
     auto const tie = [](LPEMetadata const &lpe){ return std::tie(lpe.category, lpe.label); };
@@ -795,8 +794,6 @@ LivePathEffectEditor::effect_list_reload(SPLPEItem *lpeitem)
         // Add actions used by LPEEffectMenuButton
         add_item_actions(lperef, untranslated_label, *LPEEffect,
                          counter == 0, counter == total - 1);
-        // & make it act more like ye olde GtkMenu
-        UI::menuize_popover(*get_widget<Gtk::MenuButton>(builder, "LPEEffectMenuButton").get_popover());
 
         if (total > 1) {
             auto &source = Controller::add_drag_source(*LPEDrag, {.actions = Gdk::DragAction::MOVE});

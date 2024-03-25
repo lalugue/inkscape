@@ -55,7 +55,6 @@
 #include "util/units.cpp"
 #include "util-string/ustring-format.h"
 #include "widgets/paintdef.h"
-#include "widgets/spw-utilities.h"
 
 static constexpr int SELECTED_STYLE_SB_WIDTH     =  48;
 static constexpr int SELECTED_STYLE_PLACE_WIDTH  =  50;
@@ -127,9 +126,7 @@ enum ui_drop_target_info {
 /* convenience function */
 static Dialog::FillAndStroke *get_fill_and_stroke_panel(SPDesktop *desktop);
 
-SelectedStyle::SelectedStyle(bool /*layout*/)
-    : Gtk::Box(Gtk::Orientation::HORIZONTAL)
-    , dragging(false)
+SelectedStyle::SelectedStyle()
 {
     set_name("SelectedStyle");
     set_size_request (SELECTED_STYLE_WIDTH, -1);
@@ -240,10 +237,10 @@ SelectedStyle::SelectedStyle(bool /*layout*/)
     opacity_sb->signal_value_changed().connect(sigc::mem_fun(*this, &SelectedStyle::on_opacity_changed));
 
     grid->attach(*opacity_label, 4, 0, 1, 2);
-    grid->attach(*opacity_sb,       5, 0, 1, 2);
+    grid->attach(*opacity_sb,    5, 0, 1, 2);
 
     grid->set_column_spacing(4);
-    append(*grid);
+    setChild(grid);
 
     make_popup_units();
 }
@@ -545,6 +542,7 @@ Gtk::EventSequenceState SelectedStyle::on_fill_click(Gtk::GestureClick const &cl
         if (Dialog::FillAndStroke *fs = get_fill_and_stroke_panel(_desktop))
             fs->showPageFill();
     } else if (button == 3) { // right-click, popup menu
+        setPopover(_popup[SS_FILL].get());
         _popup[SS_FILL]->popup_at_center(*swatch[SS_FILL]);
     } else if (button == 2) { // middle click, toggle none/lastcolor
         if (_mode[SS_FILL] == SS_NONE) {
@@ -564,6 +562,7 @@ Gtk::EventSequenceState SelectedStyle::on_stroke_click(Gtk::GestureClick const &
         if (Dialog::FillAndStroke *fs = get_fill_and_stroke_panel(_desktop))
             fs->showPageStrokePaint();
     } else if (button == 3) { // right-click, popup menu
+        setPopover(_popup[SS_STROKE].get());
         _popup[SS_STROKE]->popup_at_center(*swatch[SS_STROKE]);
     } else if (button == 2) { // middle click, toggle none/lastcolor
         if (_mode[SS_STROKE] == SS_NONE) {
@@ -575,18 +574,19 @@ Gtk::EventSequenceState SelectedStyle::on_stroke_click(Gtk::GestureClick const &
     return Gtk::EventSequenceState::CLAIMED;
 }
 
-Gtk::EventSequenceState SelectedStyle::on_sw_click(Gtk::GestureClick const &click, int n_press, double /*x*/,
-                                                   double /*y*/)
+Gtk::EventSequenceState SelectedStyle::on_sw_click(Gtk::GestureClick const &click, int n_press, double, double)
 {
     auto const button = click.get_current_button();
     if (button == 1 && !dragging) { // click, open fill&stroke
         if (Dialog::FillAndStroke *fs = get_fill_and_stroke_panel(_desktop))
             fs->showPageStrokeStyle();
     } else if (button == 3) { // right-click, popup menu
-        auto const it = std::find_if(_unit_mis.cbegin(), _unit_mis.cend(),
-                                     [=](auto const mi){ return mi->get_label() == _sw_unit->abbr; });
+        auto const it = std::find_if(_unit_mis.cbegin(), _unit_mis.cend(), [this] (auto mi) {
+            return mi->get_label() == _sw_unit->abbr;
+        });
         if (it != _unit_mis.cend()) (*it)->set_active(true);
 
+        setPopover(_popup_sw.get());
         _popup_sw->popup_at_center(*stroke_width);
     } else if (button == 2) { // middle click, toggle none/lastwidth?
         //
@@ -619,8 +619,7 @@ static UI::Widget::PopoverMenuItem *make_menu_item(Glib::ustring const &label, S
 
 void SelectedStyle::make_popup(FillOrStroke const i)
 {
-    _popup[i] = std::make_unique<UI::Widget::PopoverMenu>(*this, Gtk::PositionType::TOP);
-
+    _popup[i] = std::make_unique<UI::Widget::PopoverMenu>(Gtk::PositionType::TOP);
 
     auto const add_item = [&](Glib::ustring const &  fill_label, auto const   fill_method,
                               Glib::ustring const &stroke_label, auto const stroke_method)
@@ -680,7 +679,7 @@ void SelectedStyle::make_popup(FillOrStroke const i)
 
 void SelectedStyle::make_popup_units()
 {
-    _popup_sw = std::make_unique<UI::Widget::PopoverMenu>(*this, Gtk::PositionType::TOP);
+    _popup_sw = std::make_unique<UI::Widget::PopoverMenu>(Gtk::PositionType::TOP);
 
     _popup_sw->append_section_label(_("<b>Stroke Width</b>"));
 
@@ -976,9 +975,10 @@ void SelectedStyle::opacity_1()   {opacity_sb->set_value(100);}
 
 void SelectedStyle::make_popup_opacity()
 {
-    _popup_opacity = std::make_unique<UI::Widget::PopoverMenu>(*this, Gtk::PositionType::TOP);
-    auto const add_item = [&](Glib::ustring const &label, auto const method)
-                          { _popup_opacity->append(*make_menu_item(label, sigc::mem_fun(*this, method))); };
+    _popup_opacity = std::make_unique<UI::Widget::PopoverMenu>(Gtk::PositionType::TOP);
+    auto const add_item = [&] (Glib::ustring const &label, auto method) {
+        _popup_opacity->append(*make_menu_item(label, sigc::mem_fun(*this, method)));
+    };
     add_item(_("0 (Transparent)"), &SelectedStyle::opacity_0  );
     add_item(_("25%"            ), &SelectedStyle::opacity_025);
     add_item(_("50%"            ), &SelectedStyle::opacity_05 );
@@ -988,6 +988,7 @@ void SelectedStyle::make_popup_opacity()
 
 bool SelectedStyle::on_opacity_popup(PopupMenuOptionalClick)
 {
+    setPopover(_popup_opacity.get());
     _popup_opacity->popup_at_center(*opacity_sb);
     return true;
 }

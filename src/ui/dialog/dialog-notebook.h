@@ -25,6 +25,7 @@
 
 #include "helper/auto-connection.h"
 #include "ui/widget/popover-menu.h"
+#include "ui/widget/popover-bin.h"
 
 namespace Glib {
 class ValueBase;
@@ -85,6 +86,7 @@ private:
     UI::Widget::PopoverMenu _menu;
     UI::Widget::PopoverMenu _menutabs;
     Gtk::Notebook _notebook;
+    UI::Widget::PopoverBin _popoverbin;
 
     // State variables
     bool _label_visible;

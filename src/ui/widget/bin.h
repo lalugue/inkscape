@@ -14,6 +14,7 @@
 #define INKSCAPE_UI_WIDGET_BIN_H
 
 #include <gtkmm/widget.h>
+#include "ui/containerize.h"
 
 namespace Gtk { class Builder; }
 
@@ -31,7 +32,6 @@ class Bin : public Gtk::Widget
 public:
     Bin(Gtk::Widget *child = nullptr);
     Bin(BaseObjectType *cobject, Glib::RefPtr<Gtk::Builder> const &);
-    ~Bin() override;
 
     /// Gets the child widget, or nullptr if none.
     Gtk::Widget *get_child() { return _child; }
@@ -42,10 +42,10 @@ public:
     /// Sets (parents) the child widget, or unsets (unparents) it if @a child is null.
     void set_child(Gtk::Widget *child);
 
-    /// Sets (parents) the child widget.
+    /// Convenience function: Sets (parents) the child widget.
     void set_child(Gtk::Widget &child) { set_child(&child); }
 
-    /// Unsets (unparents) the child widget.
+    /// Convenience function: Unsets (unparents) the child widget.
     void unset_child() { set_child(nullptr); }
 
     /// Register a handler to run immediately before a resize operation.
@@ -65,12 +65,12 @@ protected:
     virtual void on_size_allocate(int width, int height, int baseline);
 
 private:
+    void _construct();
+
     Gtk::Widget *_child = nullptr;
 
     sigc::signal<void (int, int, int)> _signal_before_resize;
     sigc::signal<void (int, int, int)> _signal_after_resize;
-
-    void _connectDestroy();
 
     Gtk::SizeRequestMode get_request_mode_vfunc() const override;
 

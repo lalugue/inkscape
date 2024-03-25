@@ -58,6 +58,7 @@
 #include "ui/tools/select-tool.h"
 #include "ui/widget/canvas.h"
 #include "ui/widget/canvas-grid.h"
+#include "ui/widget/desktop-widget.h"
 #include "ui/widget/events/canvas-event.h"
 #include "ui/widget/events/debug.h"
 
@@ -1239,19 +1240,18 @@ void ToolBase::menu_popup(CanvasEvent const &event, SPObject *obj)
         }
     }
 
-    auto const popup = [&](auto const &event)
-    {
-        auto menu = std::make_shared<ContextMenu>(_desktop, obj);
-        UI::popup_at(*menu, *_desktop->getCanvas(), event.orig_pos);
-        UI::on_hide_reset(std::move(menu));
+    auto const popup = [&] (std::optional<Geom::Point> const &pos) {
+        auto menu = Gtk::make_managed<ContextMenu>(_desktop, obj);
+        _desktop->getDesktopWidget()->get_canvas_grid()->setPopover(menu);
+        UI::popup_at(*menu, *_desktop->getCanvas(), pos);
     };
 
     inspect_event(event,
         [&] (ButtonPressEvent const &event) {
-            popup(event);
+            popup(event.orig_pos);
         },
         [&] (KeyPressEvent const &event) {
-            popup(event);
+            popup(event.orig_pos);
         },
         [&] (CanvasEvent const &event) {}
     );

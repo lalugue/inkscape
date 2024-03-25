@@ -47,7 +47,6 @@
 #include "object/sp-text.h"
 #include "object/sp-use.h"
 #include "ui/desktop/menu-set-tooltips-shift-icons.h"
-#include "ui/menuize.h"
 #include "ui/util.h"
 #include "ui/widget/desktop-widget.h"
 
@@ -347,14 +346,11 @@ ContextMenu::ContextMenu(SPDesktop *desktop, SPObject *object, bool hide_layers_
     }
     // clang-format on
 
-    auto const widget = desktop->getDesktopWidget();
-    g_assert(widget);
-    set_parent(*widget);
     set_menu_model(gmenu);
     set_position(Gtk::PositionType::BOTTOM);
     set_has_arrow(false);
     show_all_images(*this);
-    Inkscape::UI::menuize_popover(*this);
+    set_flags(Gtk::PopoverMenu::Flags::NESTED);
 
     // Do not install this CSS provider; it messes up menus with icons (like popup menu with all dialogs).
     // It doesn't work well with context menu either, introducing disturbing visual glitch 

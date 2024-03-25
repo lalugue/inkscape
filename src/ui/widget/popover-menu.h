@@ -40,10 +40,8 @@ class PopoverMenuItem;
 /// for Menus, including grid and activation functionality.
 class PopoverMenu final : public Gtk::Popover {
 public:
-    /// Create popover with CSS classes `.menu` & `.popover-menu`,
-    /// positioned as requested vs. relative-to/popup_at() widget.
-    [[nodiscard]] PopoverMenu(Gtk::Widget *parent, Gtk::PositionType const position);
-    [[nodiscard]] PopoverMenu(Gtk::Widget &parent, Gtk::PositionType const position);
+    /// Create popover with CSS classes `.menu` & `.popover-menu`, positioned as requested.
+    PopoverMenu(Gtk::PositionType position);
 
     /// Add child at pos as per Gtk::Menu::attach()
     void attach(Gtk::Widget &child,
@@ -53,12 +51,10 @@ public:
     void append(Gtk::Widget &child);
     /// Add new row containing child, at end/bottom
     void prepend(Gtk::Widget &child);
-    /// Remove/unparent added child.
+    /// Remove added child.
     void remove(Gtk::Widget &child);
-    /// Remove/unparent all items. If they were Gtk::manage()d, theyʼll regain floating references.
+    /// Remove all items.
     void remove_all();
-    /// Remove/unparent all items, also calling `delete` on each assuming they were Gtk::manage()d.
-    void delete_all();
 
     /// Append label, w/ markup & the .dim-label style class.
     void append_section_label(Glib::ustring const &markup);
@@ -97,8 +93,6 @@ private:
     friend class PopoverMenuItem;
     friend class CompletionPopup;
     void unset_items_focus_hover(Gtk::Widget *except_active);
-
-    void remove_all(bool and_delete);
 };
 
 } // namespace Inkscape::UI::Widget

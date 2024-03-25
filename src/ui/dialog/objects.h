@@ -29,13 +29,13 @@
 #include <gtkmm/treerowreference.h>
 #include <gtkmm/treeview.h>
 
-#include "color-rgba.h"
 #include "helper/auto-connection.h"
 #include "preferences.h"
 #include "selection.h"
 #include "style-enums.h"
 #include "ui/dialog/dialog-base.h"
 #include "ui/widget/color-picker.h"
+#include "ui/widget/popover-bin.h"
 #include "ui/widget/preferences-widget.h"
 #include "xml/node-observer.h"
 
@@ -84,23 +84,19 @@ enum SelectionStates : SelectionState {
 /**
  * A panel that displays objects.
  */
-class ObjectsPanel final : public DialogBase
+class ObjectsPanel : public DialogBase
 {
-    using parent_type = DialogBase;
-
 public:
     ObjectsPanel();
-    ~ObjectsPanel() final;
+    ~ObjectsPanel() override;
 
     class ModelColumns;
 
 private:
-    void size_allocate_vfunc(int width, int height, int baseline) final;
-
-    void desktopReplaced() final;
-    void documentReplaced() final;
+    void desktopReplaced() override;
+    void documentReplaced() override;
     void layerChanged(SPObject *obj);
-    void selectionChanged(Selection *selected) final;
+    void selectionChanged(Selection *selected) override;
     ObjectWatcher *unpackToObject(SPObject *item);
 
     // Accessed by ObjectWatcher directly (friend class)
@@ -159,6 +155,7 @@ private:
     Inkscape::auto_connection _tree_style;
     Inkscape::UI::Widget::ColorPicker _color_picker;
     Gtk::TreeRow _clicked_item_row;
+    UI::Widget::PopoverBin _popoverbin;
 
     Gtk::Button *_addBarButton(char const* iconName, char const* tooltip, char const *action_name);
 

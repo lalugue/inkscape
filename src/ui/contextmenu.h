@@ -40,6 +40,7 @@ private:
     std::vector<SPItem *> items_under_cursor;
     void unhide_or_unlock(SPDocument* document, bool unhide);
 };
+
 #endif // SEEN_CONTEXT_MENU_H
 
 /*

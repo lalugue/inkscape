@@ -75,22 +75,22 @@ CanvasGrid::CanvasGrid(SPDesktopWidget *dtw)
     _notice = CanvasNotice::create();
 
     // Canvas overlay
-    _canvas_overlay.set_child(*_canvas);
+    _popoverbin.setChild(_canvas.get());
+    _canvas_overlay.set_child(_popoverbin);
     _canvas_overlay.add_overlay(_command_palette->get_base_widget());
     _canvas_overlay.add_overlay(*_notice);
+    _canvas_overlay.set_expand();
 
     // Horizontal Ruler
     _hruler = std::make_unique<Inkscape::UI::Widget::Ruler>(Gtk::Orientation::HORIZONTAL);
     _hruler->add_track_widget(*_canvas);
     _hruler->set_hexpand(true);
-    _hruler->set_visible(true);
     // Tooltip/Unit set elsewhere
 
     // Vertical Ruler
     _vruler = std::make_unique<Inkscape::UI::Widget::Ruler>(Gtk::Orientation::VERTICAL);
     _vruler->add_track_widget(*_canvas);
     _vruler->set_vexpand(true);
-    _vruler->set_visible(true);
     // Tooltip/Unit set elsewhere.
 
     // Guide Lock
@@ -111,6 +111,7 @@ CanvasGrid::CanvasGrid(SPDesktopWidget *dtw)
     _subgrid.attach(*_vruler,        0, 1, 1, 1);
     _subgrid.attach(*_hruler,        1, 0, 1, 1);
     _subgrid.attach(_canvas_overlay, 1, 1, 1, 1);
+    _subgrid.set_expand();
 
     // Horizontal Scrollbar
     _hadj = Gtk::Adjustment::create(0.0, -4000.0, 4000.0, 10.0, 100.0, 4.0);

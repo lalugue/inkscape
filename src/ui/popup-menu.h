@@ -33,12 +33,10 @@ class Popover;
 class Widget;
 } // namespace Gtk
 
-namespace Inkscape {
-
-namespace UI {
+namespace Inkscape::UI {
 
 /// Information from a GestureClick if a popup menu was opened by click
-struct PopupMenuClick final { int const n_press{}; double const x{}, y{}; };
+struct PopupMenuClick { int n_press{}; double x{}, y{}; };
 /// Optional: not present if popup wasnʼt triggered by click.
 using PopupMenuOptionalClick = std::optional<PopupMenuClick>;
 
@@ -50,10 +48,6 @@ using PopupMenuSlot = sigc::slot<bool (PopupMenuOptionalClick)>;
 /// * The keys used by GTK3ʼs signal Widget::popup-menu: the Menu key, or the Shift+F10 combination
 /// * The right mouse button or other platform convention, as per gtk_event_triggers_context_menu()
 void on_popup_menu(Gtk::Widget &widget, PopupMenuSlot slot);
-
-/// Connects ::hide of widget to reset() the shared_ptr i.e. to ‘self-destruct’.
-/// @returns A connection that can be used to disconnect & prevent self-destruct
-sigc::connection on_hide_reset(std::shared_ptr<Gtk::Widget> widget);
 
 /// Replace Gtk::Menu::popup_at_pointer. If x or y
 /// offsets != 0, :pointing-to is set to {x,y,1,1}
@@ -73,9 +67,7 @@ void popup_at_center(Gtk::Popover &popover, Gtk::Widget &widget);
 /// @a rect must be valid within the coords of @widget, & @awidget must be a descendant of @parent.
 void popup_at(Gtk::Popover &popover, Gtk::Widget &widget, Gdk::Rectangle const &rect);
 
-} // namespace UI
-
-} // namespace Inkscape
+} // namespace Inkscape::UI
 
 #endif // SEEN_UI_POPUP_MENU_H
 

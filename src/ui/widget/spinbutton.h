@@ -59,6 +59,8 @@ public:
         : Gtk::SpinButton(cobject)
     { _construct(); }
 
+    ~SpinButton() override;
+
     void setUnitMenu(UnitMenu* unit_menu) { _unit_menu = unit_menu; };
     void addUnitTracker(UnitTracker* ut) { _unit_tracker = ut; };
 
@@ -86,6 +88,7 @@ private:
     NumericMenuData _custom_menu_data;
     bool _custom_popup = false;
     double _increment = 0.0;    // if > 0, key up/down will increment/decrement current value by this amount
+    std::unique_ptr<UI::Widget::PopoverMenu> _popover_menu;
 
     void _construct();
 
@@ -113,13 +116,15 @@ private:
                         unsigned keyval, unsigned keycode, GdkModifierType state);
 
     bool on_popup_menu(PopupMenuOptionalClick);
-    std::shared_ptr<UI::Widget::PopoverMenu> get_popover_menu();
+    void create_popover_menu();
     void on_numeric_menu_item_activate(double value);
 
     /**
      * Undo the editing, by resetting the value upon when the spinbutton got focus.
      */
     void undo();
+
+    void _unparentChildren();
 
 public:
     inline void set_defocus_widget(const decltype(_defocus_widget) widget) { _defocus_widget = widget; }

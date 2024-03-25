@@ -74,8 +74,7 @@ SwatchesPanel::SwatchesPanel(bool compact, char const *prefsPath)
     _grid_btn(get_widget<Gtk::ToggleButton>(_builder, "grid")),
     _selector(get_widget<Gtk::MenuButton>(_builder, "selector")),
     _selector_label(get_widget<Gtk::Label>(_builder, "selector-label")),
-    _selector_menu{compact ? nullptr
-                   : std::make_unique<UI::Widget::PopoverMenu>(_selector, Gtk::PositionType::BOTTOM)},
+    _selector_menu{compact ? nullptr : std::make_unique<UI::Widget::PopoverMenu>(Gtk::PositionType::BOTTOM)},
     _new_btn(get_widget<Gtk::Button>(_builder, "new")),
     _edit_btn(get_widget<Gtk::Button>(_builder, "edit")),
     _delete_btn(get_widget<Gtk::Button>(_builder, "delete"))
@@ -662,7 +661,7 @@ void SwatchesPanel::update_selector_menu()
 
     _selector.set_sensitive(false);
     _selector_label.set_label({});
-    _selector_menu->delete_all();
+    _selector_menu->remove_all();
 
     if (_palettes.empty()) return;
 

@@ -490,16 +490,9 @@ DialogMultipaned::DialogMultipaned(Gtk::Orientation orientation)
 
     // add empty widget to initiate the container
     add_empty_widget();
-
-    signal_destroy().connect([this]{ unparent_children(); });
 }
 
 DialogMultipaned::~DialogMultipaned()
-{
-    unparent_children();
-}
-
-void DialogMultipaned::unparent_children()
 {
     // Remove widgets that require special logic to remove.
     // TODO: Understand why this is necessary.

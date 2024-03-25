@@ -25,7 +25,7 @@ CompletionPopup::CompletionPopup() :
     _builder(create_builder("completion-box.glade")),
     _search(get_widget<Gtk::SearchEntry2>(_builder, "search")),
     _button(get_widget<Gtk::MenuButton>(_builder, "menu-btn")),
-    _popover_menu{nullptr, Gtk::PositionType::BOTTOM},
+    _popover_menu{Gtk::PositionType::BOTTOM},
     _completion(get_object<Gtk::EntryCompletion>(_builder, "completion"))
 {
     Controller::add_key<&CompletionPopup::onPopoverKeyPressed>(_popover_menu, *this, Gtk::PropagationPhase::CAPTURE);

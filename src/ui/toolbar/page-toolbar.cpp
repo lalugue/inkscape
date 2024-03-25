@@ -121,7 +121,6 @@ PageToolbar::PageToolbar(SPDesktop *desktop)
 
     _margin_popover.set_name("MarginPopover");
     _margin_popover.set_parent(*this);
-    signal_destroy().connect([this] { _margin_popover.unparent(); }); // Unparenting in destructor is too late.
 
     _text_page_margins.signal_icon_press().connect([&](Gtk::Entry::IconPosition) {
         if (auto page = _document->getPageManager().getSelected()) {

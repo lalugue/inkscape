@@ -20,7 +20,6 @@
 
 #include "scroll-utils.h"
 #include "ui/controller.h"
-#include "ui/menuize.h"
 #include "ui/tools/tool-base.h"
 #include "ui/widget/popover-menu-item.h"
 #include "ui/widget/popover-menu.h"
@@ -54,11 +53,12 @@ void SpinButton::_construct()
 {
     Controller::add_key<&SpinButton::on_key_pressed>(*this, *this);
 
-    property_has_focus().signal_changed().connect(
-        sigc::mem_fun(*this, &SpinButton::on_has_focus_changed));
+    property_has_focus().signal_changed().connect(sigc::mem_fun(*this, &SpinButton::on_has_focus_changed));
     UI::on_popup_menu(*this, sigc::mem_fun(*this, &SpinButton::on_popup_menu));
 
     signal_input().connect(sigc::mem_fun(*this, &SpinButton::on_input), true);
+
+    signal_destroy().connect([this] { _unparentChildren(); });
 }
 
 int SpinButton::on_input(double &newvalue)
@@ -176,12 +176,12 @@ bool SpinButton::on_popup_menu(PopupMenuOptionalClick)
     if (!_custom_popup) {
         return false;
     }
-    auto popover_menu = get_popover_menu();
-    popover_menu->popup_at_center(*this);
+    create_popover_menu();
+    _popover_menu->popup_at_center(*this);
     return true;
 }
 
-std::shared_ptr<UI::Widget::PopoverMenu> SpinButton::get_popover_menu()
+void SpinButton::create_popover_menu()
 {
     auto adj = get_adjustment();
     auto adj_value = adj->get_value();
@@ -201,8 +201,12 @@ std::shared_ptr<UI::Widget::PopoverMenu> SpinButton::get_popover_menu()
     values.emplace(std::fmin(adj_value + page, upper), "");
     values.emplace(std::fmax(adj_value - page, lower), "");
 
-    static auto popover_menu = std::make_shared<UI::Widget::PopoverMenu>(*this, Gtk::PositionType::BOTTOM);
-    popover_menu->delete_all();
+    if (!_popover_menu) {
+        _popover_menu = std::make_unique<UI::Widget::PopoverMenu>(Gtk::PositionType::BOTTOM);
+        _popover_menu->set_parent(*this);
+    } else {
+        _popover_menu->remove_all();
+    }
     Gtk::CheckButton *group = nullptr;
 
     for (auto const &value : values) {
@@ -219,17 +223,26 @@ std::shared_ptr<UI::Widget::PopoverMenu> SpinButton::get_popover_menu()
 
         auto const item = Gtk::make_managed<UI::Widget::PopoverMenuItem>();
         item->set_child(*radio_button);
-        item->signal_activate().connect(
-            sigc::bind(sigc::mem_fun(*this, &SpinButton::on_numeric_menu_item_activate), value.first));
-        popover_menu->append(*item);
+        item->signal_activate().connect(sigc::bind(sigc::mem_fun(*this, &SpinButton::on_numeric_menu_item_activate), value.first));
+        _popover_menu->append(*item);
     }
-
-    return popover_menu;
 }
 
 void SpinButton::undo()
 {
     set_value(_on_focus_in_value);
+}
+
+void SpinButton::_unparentChildren()
+{
+    if (_popover_menu) {
+        _popover_menu->unparent();
+    }
+}
+
+SpinButton::~SpinButton()
+{
+    _unparentChildren();
 }
 
 void SpinButton::defocus()

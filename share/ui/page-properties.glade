@@ -148,12 +148,12 @@
                 <property name="margin-end">5</property>
                 <property name="active">True</property>
                 <property name="group">page-portrait</property>
-                <child>
+                <property name="child">
                   <object class="GtkImage" id="image2">
                     <property name="pixel-size">20</property>
                     <property name="icon-name">page-landscape-symbolic</property>
                   </object>
-                </child>
+                </property>
               </object>
             </child>
             <child>
@@ -161,12 +161,12 @@
                 <property name="focusable">True</property>
                 <property name="margin-end">5</property>
                 <property name="active">True</property>
-                <child>
+                <property name="child">
                   <object class="GtkImage" id="image1">
                     <property name="pixel-size">20</property>
                     <property name="icon-name">page-portrait-symbolic</property>
                   </object>
-                </child>
+                </property>
               </object>
             </child>
             <layout>
