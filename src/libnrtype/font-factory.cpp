@@ -653,12 +653,18 @@ void FontFactory::AddFontFilesWin32(char const *directory_path)
     std::vector<std::string> files;
     Inkscape::IO::Resource::get_filenames_from_path(files, directory_path, allowed_ext, {});
     for (auto const &file : files) {
-        int result = AddFontResourceExA(file.c_str(), FR_PRIVATE, 0);
+        wchar_t *file_utf16 = (wchar_t*) g_utf8_to_utf16 (file.c_str(), -1, NULL, NULL, NULL);
+        if (!file_utf16) {
+            g_warning("Cannot convert path %s to UTF16", file.c_str());
+            continue;
+        }
+        int result = AddFontResourceExW(file_utf16, FR_PRIVATE, 0);
         if (result != 0) {
             g_info("Font File: %s added sucessfully.", file.c_str());
         } else {
             g_warning("Font File: %s wasn't added sucessfully", file.c_str());
         }
+        g_free(file_utf16);
     }
 }
 # endif
@@ -677,6 +683,13 @@ void FontFactory::AddFontsDir(char const *utf8dir)
 # else
     dir = g_filename_from_utf8(utf8dir, -1, nullptr, nullptr, nullptr);
 # endif
+    if (!dir) {
+# ifdef _WIN32
+        g_warning ("Could not retrieve ACP path for '%s'", utf8dir);
+# else
+        g_warning ("Could not retrieve FS-encoded path for '%s'", utf8dir);
+# endif
+    }
 
     FcConfig *conf = nullptr;
     conf = pango_fc_font_map_get_config(PANGO_FC_FONT_MAP(fontServer));
