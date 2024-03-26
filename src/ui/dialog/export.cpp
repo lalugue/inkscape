@@ -449,6 +449,10 @@ std::string Export::prependDirectory(Glib::ustring name, const std::string &orig
     std::string directory;
 
     if (!orig.empty()) {
+        if (name.size() < orig.size() && std::equal(name.rbegin(), name.rend(), orig.rbegin())) {
+            // Original string ends with requested name, return as it's not different
+            return orig;
+        }
         directory = Glib::path_get_dirname(orig);
     }
 
