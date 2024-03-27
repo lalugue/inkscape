@@ -24,9 +24,9 @@ sed -i -e 's|^Icon=.*|Icon=org.inkscape.Inkscape|g' ./appdir/usr/share/applicati
 # Generate AppImage
 ########################################################################
 
-goappimage="appimagetool-817-x86_64.AppImage"
+goappimage="appimagetool-823-x86_64.AppImage"
 wget "https://github.com/probonopd/go-appimage/releases/download/continuous/$goappimage"
-echo 9e105293cfcea52d11b3e541ce78eb5998c96dca63e486f23da18adce04d6c95 "$goappimage" | sha256sum -c
+echo 46de8381cfbd142da0ac8af24f34aa8b7e1435857bac2edff3427751047e4bcb "$goappimage" | sha256sum -c
 chmod +x "$goappimage"
 
 # Can't use goappimage for second step since internal copy of appstreamcli is too old
