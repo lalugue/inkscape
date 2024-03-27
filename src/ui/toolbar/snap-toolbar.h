@@ -18,7 +18,7 @@
 
 namespace Gtk {
 class Box;
-class Button;
+class MenuButton;
 class ScrolledWindow;
 } // namespace Gtk
 
@@ -50,8 +50,8 @@ private:
     // The widgets to show/hide depending on mode.
     Glib::RefPtr<Gtk::Builder> builder;
     Gtk::Box    &snap_toolbar;
-    Gtk::Button &btn_simple;
-    Gtk::Button &btn_advanced;
+    Gtk::MenuButton &btn_simple;
+    Gtk::MenuButton &btn_advanced;
     Gtk::ScrolledWindow &scroll_permanent;
     Gtk::Box    &box_permanent;
 };

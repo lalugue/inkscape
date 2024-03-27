@@ -14,29 +14,26 @@
 
 #include "snap-toolbar.h"
 
-#include <iostream>
 #include <glibmm/i18n.h>
 #include <gtkmm/box.h>
-#include <gtkmm/button.h>
 #include <gtkmm/linkbutton.h>
 #include <gtkmm/menubutton.h>
 #include <gtkmm/scrolledwindow.h>
 
-#include "actions/actions-canvas-snapping.h"  // transition_to_xxx
+#include "actions/actions-canvas-snapping.h" // transition_to_xxx
 #include "ui/builder-utils.h"
 #include "ui/pack.h"
-
 
 namespace Inkscape::UI::Toolbar {
 
 SnapToolbar::SnapToolbar()
     : Gtk::Box()
     , builder(UI::create_builder("toolbar-snap.ui"))
-    , snap_toolbar     (UI::get_widget<Gtk::Box>           (builder, "snap-toolbar"))
-    , btn_simple       (UI::get_widget<Gtk::Button>        (builder, "btn-simple"))
-    , btn_advanced     (UI::get_widget<Gtk::Button>        (builder, "btn-advanced"))
-    , scroll_permanent (UI::get_widget<Gtk::ScrolledWindow>(builder, "scroll-permanent"))
-    , box_permanent    (UI::get_widget<Gtk::Box>           (builder, "box-permanent"))
+    , snap_toolbar(UI::get_widget<Gtk::Box>(builder, "snap-toolbar"))
+    , btn_simple(UI::get_widget<Gtk::MenuButton>(builder, "btn-simple"))
+    , btn_advanced(UI::get_widget<Gtk::MenuButton>(builder, "btn-advanced"))
+    , scroll_permanent(UI::get_widget<Gtk::ScrolledWindow>(builder, "scroll-permanent"))
+    , box_permanent(UI::get_widget<Gtk::Box>(builder, "box-permanent"))
 {
     set_name("SnapToolbar");
 
