@@ -67,8 +67,7 @@ $ARCH-libxslt \
 $ARCH-boost \
 $ARCH-gtk4 \
 $ARCH-gtk-doc \
-$ARCH-gtkmm4 \
-$ARCH-libsoup
+$ARCH-gtkmm4
 
 # install Inkscape dependencies (optional)
 eval pacman -S $PACMAN_OPTIONS \

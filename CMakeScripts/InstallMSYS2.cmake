@@ -102,7 +102,6 @@ if(WIN32)
     ${MINGW_BIN}/librsvg-2-[0-9]*.dll
     ${MINGW_BIN}/libsharpyuv-0.dll
     ${MINGW_BIN}/libsigc-2.0-[0-9]*.dll
-    ${MINGW_BIN}/libsoup-2.4-[0-9]*.dll
     ${MINGW_BIN}/libsqlite3-[0-9]*.dll
     ${MINGW_BIN}/libssh2-[0-9]*.dll
     ${MINGW_BIN}/libssl-1_[0-9]*.dll
@@ -394,5 +393,5 @@ if(WIN32)
     "packaging/win32/Run Inkscape !.bat"
     "packaging/win32/Run Inkscape with GTK Inspector.bat"
     DESTINATION .)
-  
+
 endif()
