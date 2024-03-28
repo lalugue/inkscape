@@ -389,7 +389,7 @@ void Preferences::setPoint(Glib::ustring const &pref_path, Geom::Point value)
  */
 void Preferences::setInt(Glib::ustring const &pref_path, int value)
 {
-    _setRawValue(pref_path, Glib::ustring::compose("%1",value));
+    _setRawValue(pref_path, Inkscape::ustring::format_classic(value));
 }
 
 /**
@@ -400,7 +400,7 @@ void Preferences::setInt(Glib::ustring const &pref_path, int value)
  */
 void Preferences::setUInt(Glib::ustring const &pref_path, unsigned int value)
 {
-    _setRawValue(pref_path, Glib::ustring::compose("%1",value));
+    _setRawValue(pref_path, Inkscape::ustring::format_classic(value));
 }
 
 /**

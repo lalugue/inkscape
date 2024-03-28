@@ -54,6 +54,27 @@ TEST_F(PreferencesTest, testOverwrite)
     ASSERT_EQ(prefs->getInt("/test/intvalue"), 321);
 }
 
+TEST_F(PreferencesTest, testIntFormat)
+{
+    // test to catch thousand separators (wrong locale applied)
+    prefs->setInt("/test/intvalue", 1'000'000);
+    ASSERT_EQ(prefs->getInt("/test/intvalue"), 1'000'000);
+}
+
+TEST_F(PreferencesTest, testUIntFormat)
+{
+    prefs->setUInt("/test/uintvalue", 1'000'000u);
+    ASSERT_EQ(prefs->getUInt("/test/uintvalue"), 1'000'000u);
+}
+
+TEST_F(PreferencesTest, testDblPrecision)
+{
+    const double VAL = 9.123456789; // 10 digits
+    prefs->setDouble("/test/dblvalue", VAL);
+    auto ret = prefs->getDouble("/test/dblvalue");
+    ASSERT_NEAR(VAL, ret, 1e-9);
+}
+
 TEST_F(PreferencesTest, testDefaultReturn)
 {
     ASSERT_EQ(prefs->getInt("/this/path/does/not/exist", 123), 123);
