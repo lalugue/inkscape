@@ -295,7 +295,7 @@
        patternTransform="translate(200,604.5) scale(2)"
        style="fill:#000000"
        id="pills"
-       inkscape:label="Pills">
+       inkscape:label="Pills vertical">
       <path
          id="rect15756"
          style="opacity:1;stroke-width:4.8561;stroke-linecap:square;paint-order:stroke markers fill;stop-color:#000000"
@@ -425,7 +425,7 @@
        style="fill:#000000"
        patternTransform="translate(165,570)"
        id="pattern11378"
-       inkscape:label="Circle fill 1">
+       inkscape:label="Circle horizontal fill 1">
       <path
          style="stroke:none;stroke-width:4.8561;stroke-linecap:square;paint-order:stroke markers fill;stop-color:#000000"
          d="M 0,6 V 0 H 10 V 6 C 10,3 8,1 5,1 2,1 0,3 0,6 Z"
@@ -542,7 +542,7 @@
        style="fill:#000000"
        preserveAspectRatio="xMidYMid"
        id="semicircles-2"
-       inkscape:label="Semicircles 2">
+       inkscape:label="Semicircles horizontal">
       <path
          id="path3"
          style="opacity:1;stroke-width:4.8561;stroke-linecap:square;paint-order:stroke markers fill;stop-color:#000000"
@@ -726,7 +726,7 @@
        patternTransform="translate(43,80)"
        preserveAspectRatio="xMidYMid"
        id="pattern3-5"
-       inkscape:label="Rain drops">
+       inkscape:label="Rain drops vertical">
       <path
          id="path2-6"
          style="fill-rule:evenodd;stroke-width:4.8561;stroke-linecap:square;paint-order:stroke markers fill;stop-color:#000000"
@@ -751,7 +751,7 @@
        preserveAspectRatio="xMidYMid"
        style="fill:#000000"
        id="pattern12-9"
-       inkscape:label="Circle fill 2">
+       inkscape:label="Circle diagonal fill 2">
       <path
          style="stroke-width:4.8561;stroke-linecap:square;paint-order:stroke markers fill;stop-color:#000000"
          d="M 0,0 V 10 H 10 C 5,10 0,5 0,0 Z"
@@ -772,7 +772,7 @@
        preserveAspectRatio="xMidYMid"
        style="fill:#000000"
        id="pattern13-3"
-       inkscape:label="Circle fill 3">
+       inkscape:label="Circle vertical fill 3">
       <path
          style="stroke-width:4.8561;stroke-linecap:square;paint-order:stroke markers fill;stop-color:#000000"
          d="M 0,0 V 10 H 10 C 5,10 0,5 0,0 Z M 10,10 V 0 H 20 C 15,0 10,5 10,10 Z M 0,20 V 10 H 10 C 5,10 0,15 0,20 Z M 10,10 V 20 H 20 C 15,20 10,15 10,10 Z"
@@ -816,7 +816,7 @@
        preserveAspectRatio="xMidYMid"
        style="fill:#000000"
        id="rain-2"
-       inkscape:label="Rain drops 2">
+       inkscape:label="Rain drops horizontal">
       <path
          id="path14-9"
          style="fill-rule:nonzero;stroke-width:4.8561;stroke-linecap:square;paint-order:stroke markers fill;stop-color:#000000"
@@ -891,7 +891,7 @@
        preserveAspectRatio="xMidYMid"
        style="fill:#000000"
        id="pattern23-1"
-       inkscape:label="Pills 2">
+       inkscape:label="Pills diagonal">
       <path
          d="M 14.12308,0 C 11.77918,0 9.73077,1.163596 8.42351,2.904608 L 0,14.123079 h 14.12308 c 3.89997,0 7.06154,-3.161571 7.06154,-7.06154 C 21.18462,3.161564 18.02305,0 14.12308,0 Z M 7.06154,28.246159 c 2.3439,0 4.39231,-1.1636 5.69957,-2.90461 l 8.42351,-11.21847 H 7.06154 C 3.16157,14.123079 0,17.284649 0,21.184619 c 0,3.89997 3.16157,7.06154 7.06154,7.06154 z"
          style="fill-rule:nonzero;stroke-width:4.85611;stroke-linecap:square;paint-order:stroke markers fill;stop-color:#000000"
@@ -993,7 +993,7 @@
        preserveAspectRatio="xMidYMid"
        style="fill:#000000"
        id="pattern36-8"
-       inkscape:label="Arrow fill">
+       inkscape:label="Arrow horizontal fill">
       <path
          style="opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-dasharray:none;paint-order:stroke markers fill;stop-color:#000000"
          d="M 5,0 0,5 5,10 H 15 L 10,5 15,0 Z"
@@ -1017,7 +1017,7 @@
        preserveAspectRatio="xMidYMid"
        style="fill:#000000"
        id="semicircles 1"
-       inkscape:label="Semicircles 1">
+       inkscape:label="Semicircles">
       <path
          id="path1-2"
          style="stroke-width:4.8561;stroke-linecap:square;paint-order:stroke markers fill;stop-color:#000000"
