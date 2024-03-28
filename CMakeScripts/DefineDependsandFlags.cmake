@@ -126,7 +126,6 @@ pkg_check_modules(INKSCAPE_DEP REQUIRED
                   fontconfig
                   gsl
                   gmodule-2.0
-                  libsoup-2.4>=2.42
                   #double-conversion
                   bdw-gc #boehm-demers-weiser gc
                   lcms2)
