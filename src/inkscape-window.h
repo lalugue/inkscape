@@ -18,6 +18,7 @@
 #define INKSCAPE_WINDOW_H
 
 #include <gtkmm/applicationwindow.h>
+#include "helper/auto-connection.h"
 
 namespace Gtk { class Box; }
 
@@ -42,6 +43,9 @@ private:
     SPDesktop*           _desktop = nullptr;
     SPDesktopWidget*     _desktop_widget = nullptr;
     Gtk::Box*      _mainbox = nullptr;
+    bool _resized = false;
+    Inkscape::auto_connection _resize;
+    Inkscape::auto_connection _alloc;
 
     void setup_view();
     void add_document_actions();

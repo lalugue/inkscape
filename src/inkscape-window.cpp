@@ -15,6 +15,8 @@
 
 #include "inkscape-window.h"
 
+#include <glibmm/main.h>
+#include <glibmm/priorities.h>
 #include <iostream>
 #include <gtkmm/box.h>
 #include <gtkmm/menubar.h>
@@ -55,12 +57,6 @@
 using Inkscape::UI::Dialog::DialogManager;
 using Inkscape::UI::Dialog::DialogContainer;
 using Inkscape::UI::Dialog::DialogWindow;
-
-static gboolean _resize_children(Gtk::Window *win)
-{
-    Inkscape::UI::resize_widget_children(win);
-    return false;
-}
 
 InkscapeWindow::InkscapeWindow(SPDocument* document)
     : _document(document)
@@ -134,13 +130,24 @@ InkscapeWindow::InkscapeWindow(SPDocument* document)
     // ================ Window Options ===============
     setup_view();
 
-    // Show dialogs after the main window, otherwise dialogs may be associated as the main window of the program.
-    // Restore short-lived floating dialogs state if this is the first window being opened
     bool include_short_lived = _app->get_number_of_windows() == 0;
-    DialogManager::singleton().restore_dialogs_state(_desktop->getContainer(), include_short_lived);
+    // delay restoring dialogs until after main window has its size established, or else vertical sizes 
+    // of stacked docked dialogs will not be correctly restored
+    _alloc = signal_size_allocate().connect([=, this](Gtk::Allocation& a){
+        if (_resized) return;
 
-    // This pokes the window to request the right size for the dialogs once loaded.
-    g_idle_add(GSourceFunc(&_resize_children), this);
+        _resized = true;
+        // we cannot make any resizing from inside of size allocate notification; postpone it
+        _resize = Glib::signal_idle().connect([=, this](){
+            // This pokes the window to request the right size for the dialogs once loaded.
+            Inkscape::UI::resize_widget_children(this);
+            // Show dialogs after the main window, otherwise dialogs may be associated as the main window of the program.
+            // Restore short-lived floating dialogs state if this is the first window being opened
+            DialogManager::singleton().restore_dialogs_state(_desktop->getContainer(), include_short_lived);
+            _alloc.disconnect();
+            return false;
+        }, Glib::PRIORITY_HIGH);
+    });
 
     // ================= Shift Icons =================
     // Note: The menu is defined at the app level but shifting icons requires actual widgets and
