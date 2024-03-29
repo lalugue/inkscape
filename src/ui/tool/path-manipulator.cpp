@@ -721,14 +721,13 @@ unsigned PathManipulator::_deleteStretch(NodeList::iterator start, NodeList::ite
     }
 
     // set surrounding node types to cusp if:
-    // 1. keep_shape is off, or
-    // 2. we are deleting at the end or beginning of an open path
-    if ((!keep_shape || !end) && start.prev()) {
+    // we are deleting at the end or beginning of an open path
+    if (!end && start.prev()) {
         auto p = start.prev();
         p->setType(NODE_CUSP, false);
         p->front()->retract();
     }
-    if ((!keep_shape || !start.prev()) && end) {
+    if (!start.prev() && end) {
         end->setType(NODE_CUSP, false);
         end->back()->retract();
     }
