@@ -235,8 +235,7 @@ void OKWheel::_redrawDisc()
         // disc is the unit disc and the y-axis points up.
         double const normalized_y = inverse_radius * (radius - y);
         for (int x = 0; x < size; x++) {
-            auto const pt = Geom::Point(inverse_radius * (x - radius), normalized_y);
-            *pos++ = _discColor(pt);
+            *pos++ = _discColor({inverse_radius * (x - radius), normalized_y});
         }
     }
 }
