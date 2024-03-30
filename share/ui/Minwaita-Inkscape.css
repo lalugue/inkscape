@@ -1,17 +1,61 @@
 /* Minwaita-Inkscape SPECIFIC STYLE */
 
-
 /*
  * Keep as small as possible
  */
 
-toolbar toolbutton > button:disabled, toolbar toolbutton > button:backdrop:disabled, .toolbar toolbutton > button:disabled, .toolbar toolbutton > button:backdrop:disabled {
-    -gtk-icon-effect: dim;
+/* Those tweaks will be applied on top the default Adwaita theme */
+/* This is an attempt to mirror Minwaita style sizes from gtk3 */
+
+button {
+    padding: 1px 2px;
+    min-height: 20px;
+    min-width: 20px;
+    border-radius: 2px;
 }
 
-scrollbar {
-  margin: -1px;
+entry {
+    min-height: 22px;
+    border-radius: 2px;
 }
+
+spinbutton {
+    min-height: 20px;
+    border-radius: 2px;
+}
+
+tab {
+    min-height: 20px;
+}
+
+frame {
+    border-radius: 0;
+}
+
+/* combo boxes with text: */
+
+popover.menu {
+    margin-top: 1px;
+}
+
+popover.menu > contents {
+    padding: 0;
+    border-radius: 0;
+}
+
+popover.menu modelbutton {
+    border-radius: 0;
+    min-height: 25px;
+}
+
+popover.menu modelbutton:selected {
+    background-color: @theme_selected_bg_color;
+    color: @theme_selected_fg_color;
+}
+
+/* scrollbar {
+  margin: -1px;
+} 
 
 filechooser #pathbarbox button {
    color: #2e3436;
@@ -80,6 +124,7 @@ filechooser #pathbarbox button:backdrop:disabled {
 filechooser #pathbarbox button:backdrop:disabled label, filechooser #pathbarbox button:backdrop:disabled {
   color: #566164;
 }
+*/
 
 button.titlebutton {
   color:inherit;
@@ -99,9 +144,9 @@ viewport.frame > list.tweak-categories label:backdrop {
   color: #313739;
 }
 
-.primary-toolbar button.raised {
+/* .primary-toolbar button.raised {
   margin: 0px;
-}
+} */
 
 scrolledwindow undershoot.top,scrolledwindow undershoot.bottom,scrolledwindow undershoot.left,scrolledwindow undershoot.right {
     background-image: none;
@@ -115,21 +160,14 @@ notebook notebook header label {
     font-weight:normal;
 }
 
-notebook notebook header image {
+/* notebook notebook header image {
     -gtk-icon-transform:scale(0.75);
     margin:-1px 0 -1px -3px;
-}
-/* checked buttons: light theme version */
-button.radio:checked,
-button.toggle:checked {
-    background-color: transparent;
-    background-image: image(linear-gradient(rgba(0,0,0,0.16), rgba(0,0,0,0.04)));
-}
+} */
 
 /* checked buttons: dark theme version */
 .dark button.radio:checked,
 .dark button.toggle:checked {
-    background-color: transparent;
     background-image: image(@theme_selected_bg_color);
 }
 
