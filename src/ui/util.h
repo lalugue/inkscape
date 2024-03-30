@@ -22,6 +22,7 @@
 #include <gdkmm/rgba.h>
 #include <gtkmm/cellrenderer.h>
 #include <gtkmm/enums.h>
+#include <gtkmm/notebook.h>
 #include <gtkmm/widget.h>
 
 #include <2geom/affine.h>
@@ -128,6 +129,22 @@ Gtk::Widget *for_each_parent(Gtk::Widget &widget, Func &&func)
             return parent;
         }
     }
+    return nullptr;
+}
+
+/// Similar to for_each_child, but only iterates over pages in a notebook
+template <typename Func>
+Gtk::Widget* for_each_page(Gtk::Notebook& notebook, Func&& func) {
+    static_assert(std::is_invocable_r_v<ForEachResult, Func, Gtk::Widget&>);
+
+    const int page_number = notebook.get_n_pages();
+    for (int page_index = 0; page_index < page_number; ++page_index) {
+        auto page = notebook.get_nth_page(page_index);
+        if (!page) continue;
+
+        if (func(*page) == ForEachResult::_break) return page;
+    }
+
     return nullptr;
 }
 

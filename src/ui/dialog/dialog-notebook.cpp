@@ -591,7 +591,7 @@ void DialogNotebook::on_size_allocate_scroll(int const width)
     //  set or unset scrollbars to completely hide a notebook
     // because we have a "blocking" scroll per tab we need to loop to aboid
     // other page stop out scroll
-    for_each_child(_notebook, [this](Gtk::Widget &page){
+    for_each_page(_notebook, [this](Gtk::Widget &page){
         if (!provide_scroll(page)) {
             auto const scrolledwindow = get_scrolledwindow(page);
             if (scrolledwindow) {
@@ -650,7 +650,7 @@ void DialogNotebook::on_size_allocate_notebook(int const alloc_width)
     }
 
     auto const initial_width = measure_min_width(_notebook);
-    for_each_child(_notebook, [this](Gtk::Widget &page){
+    for_each_page(_notebook, [this](Gtk::Widget &page){
         auto const tab = dynamic_cast<Gtk::Box *>(_notebook.get_tab_label(page));
         if (tab) tab->set_visible(true);
         return ForEachResult::_continue;
@@ -780,7 +780,7 @@ void DialogNotebook::reload_tab_menu()
             symbolic = true;
         }
 
-        for_each_child(_notebook, [=, this](Gtk::Widget &page){
+        for_each_page(_notebook, [=, this](Gtk::Widget &page){
             auto const children = get_cover_box_children(_notebook.get_tab_label(page));
             if (!children) {
                 return ForEachResult::_continue;
@@ -828,24 +828,21 @@ void DialogNotebook::toggle_tab_labels_callback(bool show)
 {
     _label_visible = show;
 
-    for_each_child(_notebook, [=, this](Gtk::Widget &page){
+    const auto current_page = _notebook.get_nth_page(_notebook.get_current_page());
+
+    for_each_page(_notebook, [=, this](Gtk::Widget &page){
         auto const children = get_cover_box_children(_notebook.get_tab_label(page));
         if (!children) {
             return ForEachResult::_continue;
         }
 
         auto const &[icon, label, close] = *children;
-        int n = _notebook.get_current_page();
         if (close && label) {
-            if (&page != _notebook.get_nth_page(n)) {
-                show ? close->set_visible(true) : close->set_visible(false);
-                show ? label->set_visible(true) : label->set_visible(false);
+            if (&page != current_page) {
+                close->set_visible(show);
+                label->set_visible(show);
             } else if (tabstatus == TabsStatus::NONE || _labels_off) {
-                if (&page != _notebook.get_nth_page(n)) {
-                    close->set_visible(false);
-                } else {
-                    close->set_visible(true);
-                }
+                close->set_visible(&page == current_page);
                 label->set_visible(false);
             } else {
                 close->set_visible(true);
@@ -867,7 +864,7 @@ void DialogNotebook::toggle_tab_labels_callback(bool show)
 
 void DialogNotebook::on_page_switch(Gtk::Widget *curr_page, guint)
 {
-    for_each_child(_notebook, [=, this](Gtk::Widget &page){
+    for_each_page(_notebook, [=, this](Gtk::Widget &page){
         if (auto const dialogbase = dynamic_cast<DialogBase *>(&page)) {
             if (auto const widgs = UI::get_children(*dialogbase); !widgs.empty()) {
                 widgs[0]->set_visible(curr_page == &page);
