@@ -70,7 +70,11 @@ protected:
 private:
     void selectionChanged (Selection *selection                ) final;
     void selectionModified(Selection *selection, unsigned flags) final;
-
+    int npage = 0;
+    bool page_changed = false;
+    bool changed_fill = true;
+    bool changed_stroke = true;
+    bool changed_stroke_style = true;
     UI::Widget::FillNStroke *fillWdgt        = nullptr;
     UI::Widget::FillNStroke *strokeWdgt      = nullptr;
     UI::Widget::StrokeStyle *strokeStyleWdgt = nullptr;

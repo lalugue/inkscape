@@ -22,6 +22,7 @@
 #include <gtkmm/grid.h>
 #include <gtkmm/label.h>
 
+#include "desktop.h"
 #include "desktop-style.h"
 #include "preferences.h"
 #include "ui/icon-loader.h"
@@ -80,32 +81,43 @@ FillAndStroke::~FillAndStroke()
 
 void FillAndStroke::selectionChanged(Selection *selection)
 {
-    if (fillWdgt) {
+    if (!page_changed) {
+        changed_fill = true;
+        changed_stroke = true;
+        changed_stroke_style = true;
+    }
+    if (fillWdgt && npage == 0) {
         fillWdgt->performUpdate();
     }
-    if (strokeWdgt) {
+    if (strokeWdgt && npage == 1) {
         strokeWdgt->performUpdate();
     }
-    if (strokeStyleWdgt) {
+    if (strokeStyleWdgt && npage == 2) {
         strokeStyleWdgt->selectionChangedCB();
     }
 }
 
 void FillAndStroke::selectionModified(Selection *selection, guint flags)
 {
-    if (fillWdgt) {
+    changed_fill = true;
+    changed_stroke = true;
+    changed_stroke_style = true;
+    if (fillWdgt && npage == 0) {
         fillWdgt->selectionModifiedCB(flags);
     }
-    if (strokeWdgt) {
+    if (strokeWdgt && npage == 1) {
         strokeWdgt->selectionModifiedCB(flags);
     }
-    if (strokeStyleWdgt) {
+    if (strokeStyleWdgt && npage == 2) {
         strokeStyleWdgt->selectionModifiedCB(flags);
     }
 }
 
 void FillAndStroke::desktopReplaced()
 {
+    changed_fill = true;
+    changed_stroke = true;
+    changed_stroke_style = true;
     if (fillWdgt) {
         fillWdgt->setDesktop(getDesktop());
     }
@@ -118,8 +130,27 @@ void FillAndStroke::desktopReplaced()
     _subject.setDesktop(getDesktop());
 }
 
-void FillAndStroke::_onSwitchPage(Gtk::Widget * /*page*/, guint pagenum)
+void FillAndStroke::_onSwitchPage(Gtk::Widget * page, guint pagenum)
 {
+    npage = pagenum;
+    if (page->is_visible()) {
+        bool update = false;
+        if (npage == 0 && changed_fill) {
+            update = true;
+            changed_fill = false;
+        } else if (npage == 1 && changed_stroke) {
+            update = true;
+            changed_stroke = false;
+        } else if (npage == 2 && changed_stroke_style) {
+            update = true;
+            changed_stroke_style = false;
+        }
+        if (update) {
+            page_changed = true;
+            selectionChanged(getDesktop()->getSelection());
+            page_changed = false;
+        }
+    }
     _savePagePref(pagenum);
 }
 
