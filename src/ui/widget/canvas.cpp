@@ -338,6 +338,7 @@ Canvas::Canvas()
     add_controller(focus);
     focus->signal_enter().connect([this] { on_focus_in(); });
     focus->signal_leave().connect([this] { on_focus_out(); });
+    _focus_controller = focus;
 
     // Updater
     d->updater = Updater::create(pref_to_updater(d->prefs.update_strategy));
@@ -498,6 +499,8 @@ Canvas::~Canvas()
 {
     // Remove entire CanvasItem tree.
     d->canvasitem_ctx.reset();
+
+    remove_controller(_focus_controller);
 }
 
 void Canvas::set_drawing(Drawing *drawing)

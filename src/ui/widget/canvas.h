@@ -21,6 +21,7 @@
 #include <2geom/rect.h>
 #include <glibmm/refptr.h>
 #include <gtk/gtk.h> // GtkEventController*
+#include <gtkmm/eventcontrollerfocus.h>
 #include <gtkmm/gesture.h> // Gtk::EventSequenceState
 #include <sigc++/signal.h>
 
@@ -226,6 +227,7 @@ private:
     sigc::signal<void ()> _signal_pre_draw;
     sigc::signal<void ()> _signal_focus_in;
     sigc::signal<void ()> _signal_focus_out;
+    Glib::RefPtr<Gtk::EventControllerFocus> _focus_controller;
 
     void update_cursor();
 
