@@ -204,7 +204,7 @@ void ColorScales<MODE>::_initUI(bool no_alpha)
         /* Signal */
         _wheel->connect_color_changed([this](){ _wheelChanged(); });
 
-        /* Expander */
+        /* Expander */   
         // Label icon
         auto const expander_icon = Gtk::manage(
                 sp_get_icon_image("color-wheel", Gtk::IconSize::NORMAL)
@@ -228,8 +228,8 @@ void ColorScales<MODE>::_initUI(bool no_alpha)
         wheel_frame->set_margin_end(XPAD);
         wheel_frame->set_margin_top(2 * YPAD);
         wheel_frame->set_margin_bottom(2 * YPAD);
-        wheel_frame->set_halign(Gtk::Align::FILL);
-        wheel_frame->set_valign(Gtk::Align::FILL);
+        wheel_frame->set_halign(Gtk::Align::START);
+        wheel_frame->set_valign(Gtk::Align::START);
         wheel_frame->set_hexpand(true);
         wheel_frame->set_vexpand(false);
         wheel_frame->set_label_widget(*expander_box);
