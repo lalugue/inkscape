@@ -170,6 +170,7 @@ private:
     std::unique_ptr<Inkscape::MessageContext> _tips_message_context;
 
     Inkscape::auto_connection _message_changed_connection;
+    Inkscape::auto_connection _message_idle_connection;
     Inkscape::auto_connection _document_uri_set_connection;
     // End Formerly in View::View ^^^^^^^^^^^^^^^^^^
 

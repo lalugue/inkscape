@@ -110,7 +110,10 @@ SPDesktop::SPDesktop()
     _tips_message_context = std::make_unique<Inkscape::MessageContext>(_message_stack);
 
     _message_changed_connection = _message_stack->connectChanged([this](auto const type, auto const message) {
-        onStatusMessage(type, message);
+        _message_idle_connection = Glib::signal_idle().connect([=, this](){
+            onStatusMessage(type, message);
+            return false;
+        }, Glib::PRIORITY_HIGH);
     });
 
 }
