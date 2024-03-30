@@ -50,6 +50,7 @@ bool OKWheel::setRgb(double r, double g, double b,
     if (changed_lightness) {
         _updateChromaBounds();
         _redrawDisc();
+        queue_drawing_area_draw();
     }
 
     bool const changed = changed_hue || changed_saturation || changed_lightness;
@@ -218,13 +219,17 @@ void OKWheel::on_drawing_area_draw(Cairo::RefPtr<Cairo::Context> const &cr, int,
 void OKWheel::_redrawDisc()
 {
     int const size = std::ceil(2.0 * _disc_radius);
-    _pixbuf.resize(4 * size * size);
-
     double const radius = 0.5 * size;
     double const inverse_radius = 1.0 / radius;
 
+    if (!_disc || _disc->get_height() != size) {
+        _disc = Cairo::ImageSurface::create(Cairo::Surface::Format::RGB24, size, size);
+    }
+
     // Fill buffer with (<don't care>, R, G, B) values.
-    uint32_t *pos = (uint32_t *)(_pixbuf.data());
+    uint32_t *pos = reinterpret_cast<uint32_t *>(_disc->get_data());
+    g_assert(pos);
+
     for (int y = 0; y < size; y++) {
         // Convert (x, y) to a coordinate system where the
         // disc is the unit disc and the y-axis points up.
@@ -234,9 +239,6 @@ void OKWheel::_redrawDisc()
             *pos++ = _discColor(pt);
         }
     }
-
-    int const stride = Cairo::ImageSurface::format_stride_for_width(Cairo::Surface::Format::RGB24, size);
-    _disc = Cairo::ImageSurface::create(_pixbuf.data(), Cairo::Surface::Format::RGB24, size, size, stride);
 }
 
 /** @brief Convert widget (event) coordinates to an abstract coordinate system

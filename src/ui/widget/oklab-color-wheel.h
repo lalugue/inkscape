@@ -68,7 +68,6 @@ private:
     double _disc_radius = 1.0;
     Geom::Point _margin;
     Cairo::RefPtr<Cairo::ImageSurface> _disc;
-    std::vector<uint8_t> _pixbuf;
     std::array<double, CHROMA_BOUND_SAMPLES> _bounds;
 };
 
