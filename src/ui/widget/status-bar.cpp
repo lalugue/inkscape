@@ -168,18 +168,17 @@ StatusBar::set_desktop(SPDesktop* desktop_in)
 void
 StatusBar::set_message(const Inkscape::MessageType type, const char* message)
 {
+    Glib::ustring pattern = "%1";
+#ifndef _WIN32
 #if PANGO_VERSION_CHECK(1,50,0)
-    auto const msg = Glib::ustring::compose("<span line_height='0.9'>%1</span>", message ? message : "");
-    selection->set_markup(msg.c_str());
-#else
-     selection->set_markup(message ? message : "");
+    // line height give delays on windows so better uset, also is not necesary label is well placed without
+    pattern = "<span line_height='0.8'>%1</span>";
+#endif
 #endif
 
-    // Display important messages immediately!
-    if (type == Inkscape::IMMEDIATE_MESSAGE && selection->get_is_drawable()) {
-        selection->queue_draw();
-    }
-
+    Glib::ustring const &msg = Glib::ustring::compose(pattern, message ? message : "");
+    selection->set_markup(msg);
+    // we not use Inkscape::MessageType because previus quewe draw is not need, is called on allocation and is overrided by next message sent anyway
     // Allow user to view the entire message even if it doesn't fit into label (after removing markup).
     selection->set_tooltip_text(selection->get_text());
 }
