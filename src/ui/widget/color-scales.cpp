@@ -237,7 +237,7 @@ void ColorScales<MODE>::_initUI(bool no_alpha)
         wheel_frame->set_label_widget(*expander_box);
 
         // Signal
-        wheel_frame->property_expanded().signal_changed().connect([=](){
+        wheel_frame->property_expanded().signal_changed().connect([this, wheel_frame]() {
             bool visible = wheel_frame->get_expanded();
             wheel_frame->set_vexpand(visible);
 
