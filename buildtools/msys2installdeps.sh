@@ -80,7 +80,8 @@ $ARCH-aspell \
 $ARCH-aspell-en \
 $ARCH-gtksourceview5 \
 $ARCH-graphicsmagick \
-$ARCH-libjxl
+$ARCH-libjxl \
+$ARCH-enchant
 
 # install Python and modules used by Inkscape
 eval pacman -S $PACMAN_OPTIONS \
@@ -133,6 +134,5 @@ for arch in $(eval echo $ARCH); do
       ;;
   esac
 done
-
 
 echo "Done :-)"

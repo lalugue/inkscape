@@ -14,8 +14,6 @@ if(WIN32)
     ${MINGW_BIN}/libLerc.dll
     ${MINGW_BIN}/libaom.dll
     ${MINGW_BIN}/libaspell-[0-9]*.dll
-    ${MINGW_BIN}/libatk-1.0-[0-9]*.dll
-    ${MINGW_BIN}/libatkmm-1.6-[0-9]*.dll
     ${MINGW_BIN}/libboost_filesystem-mt.dll
     ${MINGW_BIN}/libbrotlicommon.dll
     ${MINGW_BIN}/libbrotlidec.dll
@@ -235,7 +233,8 @@ if(WIN32)
     PATTERN "*.cache")
 
   install(DIRECTORY ${MINGW_PATH}/etc/gtk-4.0
-    DESTINATION etc)
+    DESTINATION etc
+    OPTIONAL)
 
   install(DIRECTORY ${MINGW_LIB}/gdk-pixbuf-2.0
     DESTINATION lib
@@ -246,7 +245,6 @@ if(WIN32)
   # Typelibs for gtk, pango, cairo -> can be used in Python extensions
   # ToDo: Automate the creation of this collection!
   install (FILES
-    ${MINGW_LIB}/girepository-1.0/Atk-1.0.typelib
     ${MINGW_LIB}/girepository-1.0/cairo-1.0.typelib
     ${MINGW_LIB}/girepository-1.0/GdkPixbuf-2.0.typelib
     ${MINGW_LIB}/girepository-1.0/Gio-2.0.typelib
