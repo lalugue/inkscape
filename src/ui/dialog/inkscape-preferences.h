@@ -363,7 +363,6 @@ protected:
     UI::Widget::PrefCheckButton _canvas_developer_mode_enabled;
     UI::Widget::PrefSpinButton  _canvas_tile_size;
     UI::Widget::PrefSpinButton  _canvas_render_time_limit;
-    UI::Widget::PrefCheckButton _canvas_block_updates;
     UI::Widget::PrefCombo       _canvas_pixelstreamer_method;
     UI::Widget::PrefSpinButton  _canvas_padding;
     UI::Widget::PrefSpinButton  _canvas_prerender;

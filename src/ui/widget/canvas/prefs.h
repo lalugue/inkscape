@@ -35,7 +35,6 @@ public:
     // Devmode preferences
     Pref<int>    tile_size                = { "/options/rendering/tile_size", 300, 1, 10000 };
     Pref<int>    render_time_limit        = { "/options/rendering/render_time_limit", 80, 1, 5000 };
-    Pref<bool>   block_updates            = { "/options/rendering/block_updates", true };
     Pref<int>    pixelstreamer_method     = { "/options/rendering/pixelstreamer_method", 1, 1, 4 };
     Pref<int>    padding                  = { "/options/rendering/padding", 350, 0, 1000 };
     Pref<int>    prerender                = { "/options/rendering/prerender", 100, 0, 1000 };

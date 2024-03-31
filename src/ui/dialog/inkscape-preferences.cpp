@@ -3025,8 +3025,6 @@ void InkscapePreferences::initPageRendering()
     add_devmode_line(_("Tile size"), _canvas_tile_size, "", _("Halve rendering tile rectangles until their largest dimension is this small"));
     _canvas_render_time_limit.init("/options/rendering/render_time_limit", 1.0, 5000.0, 1.0, 0.0, 80.0, true, false);
     add_devmode_line(_("Render time limit"), _canvas_render_time_limit, C_("millisecond abbreviation", "ms"), _("The maximum time allowed for a rendering time slice"));
-    _canvas_block_updates.init("", "/options/rendering/block_updates", true);
-    add_devmode_line(_("Use block updates"), _canvas_block_updates, "", _("Update the dragged region as a single block"));
     {
         constexpr int values[] = { 1, 2, 3, 4 };
         Glib::ustring const labels[] = { _("Auto"), _("Persistent"), _("Asynchronous"), _("Synchronous") };

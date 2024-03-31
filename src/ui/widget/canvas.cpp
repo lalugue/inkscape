@@ -20,7 +20,6 @@
 #include <iostream> // Logging
 #include <mutex>
 #include <set> // Coarsener
-#include <stdexcept>
 #include <thread>
 #include <utility>
 #include <vector>
@@ -155,7 +154,6 @@ struct RedrawData
     Fragment store;
     bool decoupled_mode;
     Cairo::RefPtr<Cairo::Region> snapshot_drawn;
-    Geom::OptIntRect grabbed;
     std::shared_ptr<Colors::CMS::Transform> cms_transform;
 
     // Saved prefs
@@ -267,7 +265,6 @@ public:
     bool clip_to_page = false; // Whether to enable clip-to-page mode.
     PageInfo pi; // The list of page rectangles.
     std::optional<Geom::PathVector> calc_page_clip() const; // Union of the page rectangles if in clip-to-page mode, otherwise no clip.
-    bool is_point_on_page(const Geom::Point &point) const;
 
     int scale_factor = 1; // The device scale the stores are drawn at.
 
@@ -345,16 +342,16 @@ Canvas::Canvas()
     d->invalidated = Cairo::Region::create();
 
     // Preferences
-    d->prefs.grabsize.action = [=] { d->canvasitem_ctx->root()->update_canvas_item_ctrl_sizes(d->prefs.grabsize); };
-    d->prefs.debug_show_unclean.action = [=] { queue_draw(); };
-    d->prefs.debug_show_clean.action = [=] { queue_draw(); };
-    d->prefs.debug_disable_redraw.action = [=] { d->schedule_redraw(); };
-    d->prefs.debug_sticky_decoupled.action = [=] { d->schedule_redraw(); };
-    d->prefs.debug_animate.action = [=] { queue_draw(); };
-    d->prefs.outline_overlay_opacity.action = [=] { queue_draw(); };
-    d->prefs.softproof.action = [=] { set_cms_transform(); redraw_all(); };
-    d->prefs.displayprofile.action = [=] { set_cms_transform(); redraw_all(); };
-    d->prefs.request_opengl.action = [=] {
+    d->prefs.grabsize.action = [this] { d->canvasitem_ctx->root()->update_canvas_item_ctrl_sizes(d->prefs.grabsize); };
+    d->prefs.debug_show_unclean.action = [this] { queue_draw(); };
+    d->prefs.debug_show_clean.action = [this] { queue_draw(); };
+    d->prefs.debug_disable_redraw.action = [this] { d->schedule_redraw(); };
+    d->prefs.debug_sticky_decoupled.action = [this] { d->schedule_redraw(); };
+    d->prefs.debug_animate.action = [this] { queue_draw(); };
+    d->prefs.outline_overlay_opacity.action = [this] { queue_draw(); };
+    d->prefs.softproof.action = [this] { set_cms_transform(); redraw_all(); };
+    d->prefs.displayprofile.action = [this] { set_cms_transform(); redraw_all(); };
+    d->prefs.request_opengl.action = [this] {
         if (get_realized()) {
             d->deactivate();
             d->deactivate_graphics();
@@ -364,7 +361,7 @@ Canvas::Canvas()
             d->activate();
         }
     };
-    d->prefs.pixelstreamer_method.action = [=] {
+    d->prefs.pixelstreamer_method.action = [this] {
         if (get_realized() && get_opengl_enabled()) {
             d->deactivate();
             d->deactivate_graphics();
@@ -372,7 +369,7 @@ Canvas::Canvas()
             d->activate();
         }
     };
-    d->prefs.numthreads.action = [=] {
+    d->prefs.numthreads.action = [this] {
         if (!d->active) return;
         int const new_numthreads = d->get_numthreads();
         if (d->numthreads == new_numthreads) return;
@@ -689,7 +686,6 @@ void CanvasPrivate::launch_redraw()
     rd.debug_show_redraw = prefs.debug_show_redraw;
 
     rd.snapshot_drawn = stores.snapshot().drawn ? stores.snapshot().drawn->copy() : Cairo::RefPtr<Cairo::Region>();
-    rd.grabbed = q->_grabbed_canvas_item && prefs.block_updates ? (roundedOutwards(q->_grabbed_canvas_item->get_bounds()) & rd.visible & rd.store.rect).regularized() : Geom::OptIntRect();
     rd.cms_transform = q->_cms_active ? q->_cms_transform : nullptr;
 
     abort_flags.store((int)AbortFlags::None, std::memory_order_relaxed);
@@ -1808,16 +1804,6 @@ std::optional<Geom::PathVector> CanvasPrivate::calc_page_clip() const
     return pv;
 }
 
-bool CanvasPrivate::is_point_on_page(const Geom::Point &point) const
-{
-    for (auto &rect : pi.pages) {
-        if (rect.contains(point)) {
-            return true;
-        }
-    }
-    return false;
-}
-
 // Set the cms transform
 void Canvas::set_cms_transform()
 {
@@ -2132,7 +2118,7 @@ void CanvasPrivate::init_tiler()
     rd.numactive = rd.numthreads;
 
     for (int i = 0; i < rd.numthreads - 1; i++) {
-        boost::asio::post(*pool, [=] { render_tile(i); });
+        boost::asio::post(*pool, [=, this] { render_tile(i); });
     }
 
     render_tile(rd.numthreads - 1);
@@ -2155,16 +2141,6 @@ bool CanvasPrivate::init_redraw()
             }
 
         case 1:
-            // Another high priority to redraw is the grabbed canvas item, if the user has requested block updates.
-            if (rd.grabbed) {
-                process_redraw(*rd.grabbed, updater->clean_region, false, false); // non-interruptible, non-preemptible
-                return true;
-            } else {
-                rd.phase++;
-                // fallthrough
-            }
-
-        case 2:
             if (rd.vis_store) {
                 // The main priority to redraw, and the bread and butter of Inkscape's painting, is the visible content that is not clean.
                 // This may be done over several cycles, at the direction of the Updater, each outwards from the mouse.
@@ -2175,7 +2151,7 @@ bool CanvasPrivate::init_redraw()
                 // fallthrough
             }
 
-        case 3: {
+        case 2: {
             // The lowest priority to redraw is the prerender margin around the visible rectangle.
             // (This is in addition to any opportunistic prerendering that may have already occurred in the above steps.)
             auto prerender = expandedBy(rd.visible, rd.margin);
@@ -2345,18 +2321,12 @@ bool CanvasPrivate::end_redraw()
             return init_redraw();
 
         case 1:
-            rd.phase++;
-            // Reset timeout to leave the normal amount of time for clearing up artifacts.
-            rd.start_time = g_get_monotonic_time();
-            return init_redraw();
-
-        case 2:
             if (!updater->report_finished()) {
                 rd.phase++;
             }
             return init_redraw();
 
-        case 3:
+        case 2:
             return false;
 
         default:

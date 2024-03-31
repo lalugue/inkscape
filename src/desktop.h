@@ -577,9 +577,7 @@ private:
     Inkscape::auto_connection _schedule_zoom_from_document_connection;
 
     // pinch zoom
-    std::optional<double> _motion_x, _motion_y, _begin_zoom;
-    void on_motion(GtkEventControllerMotion const *motion, double x, double y);
-    void on_leave (GtkEventControllerMotion const *motion);
+    std::optional<double> _begin_zoom;
     void on_zoom_begin(GtkGesture     const *zoom, GdkEventSequence const *sequence);
     void on_zoom_scale(GtkGestureZoom const *zoom, double                  scale   );
     void on_zoom_end  (GtkGesture     const *zoom, GdkEventSequence const *sequence);

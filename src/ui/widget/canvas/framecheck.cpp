@@ -14,7 +14,9 @@ void Event::write()
     static auto logfile = [] {
         auto path = fs::temp_directory_path() / "framecheck.txt";
         auto mode = std::ios_base::out | std::ios_base::app | std::ios_base::binary;
-        return std::ofstream(path.string(), mode);
+        auto f = std::ofstream(path.string(), mode);
+        f.imbue(std::locale::classic());
+        return f;
     }();
 
     auto lock = std::lock_guard(mutex);
