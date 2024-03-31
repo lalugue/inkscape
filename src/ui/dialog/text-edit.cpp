@@ -130,8 +130,7 @@ TextEdit::TextEdit()
     auto &text_view_container = get_widget<Gtk::ScrolledWindow>(builder, "text_view_container");
     text_view_container.set_child(*text_view);
 
-    UI::pack_start(*font_box, font_selector, true, true);
-    font_box->reorder_child_after(font_selector, *font_box->get_first_child()->get_next_sibling());
+    font_box->insert_child_after(font_selector, font_count_label);
     UI::pack_start(*feat_box, font_features, true, true);
     feat_box->reorder_child_after(font_features, *feat_box->get_first_child());
 
@@ -142,7 +141,6 @@ TextEdit::TextEdit()
     }, false);
 
     filter_menu_button.set_icon_name(INKSCAPE_ICON("font_collections"));
-    filter_menu_button.set_label(_("Collections"));
 
 #ifdef WITH_LIBSPELLING
     // TODO: Use computed xml:lang attribute of relevant element, if present, to specify the language.
@@ -316,7 +314,7 @@ void TextEdit::setPreviewText (Glib::ustring const &font_spec, Glib::ustring con
             sp_style_css_size_units_to_px(font_selector.get_fontsize(), unit), "px", "pt");
     pt_size = std::min(pt_size, 100.0);
     // Pango font size is in 1024ths of a point
-    auto const size = static_cast<int>(pt_size * PANGO_SCALE);
+    auto const size = std::to_string(static_cast<int>(pt_size * PANGO_SCALE));
 
     auto font_features_attr = Glib::ustring{};
     if (!font_features.empty()) {

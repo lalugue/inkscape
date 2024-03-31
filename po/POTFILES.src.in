@@ -402,7 +402,6 @@ ${_build_dir}/share/templates/templates.h
 ../src/ui/widget/fill-style.cpp
 ../src/ui/widget/filter-effect-chooser.cpp
 ../src/ui/widget/font-collection-selector.cpp
-../src/ui/widget/font-selector-toolbar.cpp
 ../src/ui/widget/font-selector.cpp
 ../src/ui/widget/font-variants.cpp
 ../src/ui/widget/gradient-editor.cpp

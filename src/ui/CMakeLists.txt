@@ -215,7 +215,6 @@ set(ui_SRC
 	widget/font-button.cpp
 	widget/font-collection-selector.cpp
 	widget/font-selector.cpp
-	widget/font-selector-toolbar.cpp
 	widget/font-variants.cpp
 	widget/font-variations.cpp
 	widget/frame.cpp
@@ -509,7 +508,6 @@ set(ui_SRC
 	widget/font-button.h
 	widget/font-collection-selector.h
 	widget/font-selector.h
-	widget/font-selector-toolbar.h
 	widget/font-variants.h
 	widget/font-variations.h
 	widget/frame.h

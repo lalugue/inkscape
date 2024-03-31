@@ -10,20 +10,20 @@
 
 #include "font-selector.h"
 
-#include <iostream>
-#include <stdexcept>
-#include <string>
-#include <vector>
+#include <gdkmm/contentprovider.h>
 #include <glibmm/i18n.h>
 #include <glibmm/markup.h>
 #include <glibmm/value.h>
-#include <gdkmm/contentprovider.h>
 #include <gtkmm/dragsource.h>
+#include <gtkmm/grid.h>
 #include <sigc++/functors/mem_fun.h>
+#include <stdexcept>
+#include <string>
+#include <vector>
 
-#include "libnrtype/font-lister.h"
-#include "libnrtype/font-instance.h"
 #include "libnrtype/font-factory.h"
+#include "libnrtype/font-instance.h"
+#include "libnrtype/font-lister.h"
 // For updating from selection
 #include "inkscape.h"
 #include "desktop.h"
@@ -33,14 +33,14 @@
 
 namespace Inkscape::UI::Widget {
 
-FontSelector::FontSelector (bool with_size, bool with_variations)
-    : Gtk::Grid ()
-    , family_frame (_("Font family"))
-    , style_frame (C_("Font selector", "Style"))
-    , size_label   (_("Font size"))
-    , size_combobox (true)   // With entry
-    , signal_block (false)
-    , font_size (18)
+FontSelector::FontSelector(bool with_size, bool with_variations)
+    : Gtk::Box(Gtk::Orientation::VERTICAL)
+    , family_frame(_("Font family"))
+    , style_frame(C_("Font selector", "Style"))
+    , size_label(_("Font size"))
+    , size_combobox(true) // With entry
+    , signal_block(false)
+    , font_size(18)
 {
     Inkscape::FontLister* font_lister = Inkscape::FontLister::get_instance();
     Glib::RefPtr<Gtk::TreeModel> model = font_lister->get_font_list();
@@ -55,7 +55,7 @@ FontSelector::FontSelector (bool with_size, bool with_variations)
                     "and Cairo is limiting the size of widgets you can draw.\n"
                     "Your preview cell height is capped to %d.",
                     total, height);
-        // hope we dont need a forced height because now pango line height 
+        // hope we dont need a forced height because now pango line height
         // not add data outside parent rendered expanding it so no naturall cells become over 30 height
         family_cell.set_fixed_size(-1, height);
     } else {
@@ -63,8 +63,8 @@ FontSelector::FontSelector (bool with_size, bool with_variations)
     family_cell.set_fixed_size(-1, height);
 #endif
     }
-    family_treecolumn.set_fixed_width (120); // limit minimal width to keep entire dialog narrow; column can still grow
     family_treecolumn.add_attribute (family_cell, "text", 0);
+    family_treecolumn.set_fixed_width(160); // limit minimal width to keep entire dialog narrow; column can still grow
     family_treecolumn.set_cell_data_func (family_cell, &font_lister_cell_data_func_markup);
     family_treeview.set_row_separator_func (&font_lister_separator_func);
     family_treeview.set_model(model);
@@ -116,20 +116,27 @@ FontSelector::FontSelector (bool with_size, bool with_variations)
 
     // Grid
     set_name ("FontSelectorGrid");
-    set_row_spacing(4);
-    set_column_spacing(4);
-    // Add extra columns to the "family frame" to change space distribution
-    // by prioritizing font family over styles
-    const int extra = 4;
-    attach (family_frame,  0, 0, 1 + extra, 2);
-    attach (style_frame,   1 + extra, 0, 2, 1);
+    set_spacing(4);
+
+    auto const grid = Gtk::make_managed<Gtk::Grid>();
+    grid->set_column_homogeneous(true);
+    grid->set_column_spacing(4);
+    grid->attach(family_frame, 0, 0, 1, 1);
+    grid->attach(style_frame, 1, 0, 1, 1);
+    append(*grid);
+
     if (with_size) { // Glyph panel does not use size.
-        attach (size_label,    1 + extra, 1, 1, 1);
-        attach (size_combobox, 2 + extra, 1, 1, 1);
+        auto const size_grid = Gtk::make_managed<Gtk::Grid>();
+        size_grid->set_column_spacing(4);
+        size_grid->attach(size_label, 0, 0, 1, 1);
+        size_grid->attach(size_combobox, 1, 0, 1, 1);
+        append(*size_grid);
     }
     if (with_variations) { // Glyphs panel does not use variations.
-        attach (font_variations_scroll, 0, 2, 3 + extra, 1);
+        append(font_variations_scroll);
     }
+
+    update_variations(font_lister->get_fontspec());
 
     // For drag and drop.
     Controller::add_drag_source(family_treeview, {
@@ -188,13 +195,8 @@ void FontSelector::on_drag_begin(Gtk::DragSource &source,
 Glib::RefPtr<Gdk::ContentProvider> FontSelector::on_drag_prepare(Gtk::DragSource const &/*source*/,
                                                                  double /*x*/, double /*y*/)
 {
-    // std::cout << "FontSelector::on_drag_data_get()" << std::endl;
-    Inkscape::FontLister* font_lister = Inkscape::FontLister::get_instance();
-
-    // std::cout << font_lister->get_font_family_row() << ", " << font_lister->get_treeview_selection() << std::endl;
-
+    Inkscape::FontLister *font_lister = Inkscape::FontLister::get_instance();
     Glib::ustring family_name = font_lister->get_dragging_family();
-    // std::cout << "Family: " << family_name << std::endl;
 
     Glib::Value<Glib::ustring> value;
     value.init(G_TYPE_STRING);
@@ -389,8 +391,6 @@ FontSelector::style_cell_data_func(Gtk::CellRenderer * const renderer,
 
     markup = "<span font='" + font_desc + "'>" + style_escaped + "</span>";
 
-    // std::cout << "  markup: " << markup << "  (" << name << ")" << std::endl;
-
     renderer->set_property("markup", markup);
 }
 
@@ -532,7 +532,7 @@ void FontSelector::update_variations(const Glib::ustring& fontspec) {
 
     // Check if there are any variations available; if not, don't expand font_variations_scroll
     bool hasContent = font_variations.variations_present();
-    font_variations_scroll.set_vexpand(hasContent);
+    font_variations_scroll.set_visible(hasContent);
 }
 
 } // namespace Inkscape::UI::Widget

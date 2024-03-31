@@ -32,10 +32,10 @@
 #define INKSCAPE_UI_WIDGET_FONT_SELECTOR_H
 
 #include <glibmm/refptr.h>
+#include <gtkmm/box.h>
 #include <gtkmm/cellrenderertext.h>
 #include <gtkmm/comboboxtext.h>
 #include <gtkmm/frame.h>
-#include <gtkmm/grid.h>
 #include <gtkmm/label.h>
 #include <gtkmm/scrolledwindow.h>
 #include <gtkmm/treemodel.h>
@@ -70,7 +70,7 @@ namespace Inkscape::UI::Widget {
  *     best match to the original font style (as not all fonts have the same style options).
  *   Emit a signal when any change is made to a child widget.
  */
-class FontSelector : public Gtk::Grid
+class FontSelector : public Gtk::Box
 {
 public:
 
