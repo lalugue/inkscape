@@ -39,7 +39,7 @@ popover.menu {
 }
 
 popover.menu > contents {
-    padding: 0;
+    padding: 1px 0;
     border-radius: 0;
 }
 

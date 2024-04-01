@@ -61,6 +61,7 @@ public:
 
             auto const sep = Gtk::make_managed<Widget::PopoverMenuItem>();
             sep->add_css_class("menu-category");
+            sep->remove_css_class("regular-item");
             sep->set_sensitive(false);
             sep->set_halign(Gtk::Align::START);
             _menu.attach(*sep, 0, _columns, _row, _row + 1);

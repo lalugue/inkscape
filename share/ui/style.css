@@ -581,6 +581,7 @@ stackswitcher button {
 .color-palette-main-box button.small {
     padding: 1px;
     margin: 0;
+    min-width: 16px;
 }
 .color-palette-main-box flowbox,
 .color-palette-main-box scrolledwindow {
@@ -1123,39 +1124,58 @@ padding:3px 3px 10px 3px;
 
 /* Gtk::PopoverMenu and Inkscape::UI::Widget::PopoverMenu */
 /* Make it look basically like GtkMenu; see comments @ original merge request */
-popover.menu.menuize, /* GTK sets .menu/make_menuized_popover() sets .menuize */
+popover.menu, /* GTK sets .menu/make_menuized_popover() sets .menuize */
 popover.popover-menu { /* Inkscape::UI::Widget::PopoverMenu */
     /* Rounded corners can glitch in GTK3 with submenus, and GtkMenu was square anyway = emulate */
     border-radius: 0;
     border-color: @borders;
-
     padding: 0;
+}
+popover.popover-menu contents {
+    padding: 1px 0;
 }
 popover.popover-menu menu {
     background: none;
     border: none;
 }
-popover.menu.menuize modelbutton,
-popover.popover-menu menuitem {
+popover.popover-menu .menu-category {
+    min-height: 16px;
+    padding: 2px 10px;
+}
+/* popover.menu modelbutton, */
+popover.popover-menu .regular-item {
     border-radius: 0;
     outline-style: none;
+    min-height: 23px;
+    padding: 2px 10px;
+}
+popover.popover-menu menuitem:hover {
+    background-color: @theme_selected_bg_color;
+    color: @theme_selected_fg_color;
+}
+popover.popover-menu menuitem:hover image {
+    background-color: @theme_selected_bg_color;
+    color: @theme_selected_fg_color;
+}
+popover.popover-menu separator {
+    margin: 1px 0;
 }
 /* Defeat defaulting to having more spacing between RadioButtons than GtkMenu */
 popover.popover-menu radiobutton {
     padding: 0;
 }
 /* Emulate GtkMenu theming in absence of ability to change CSS node name, unlike our PopoverMenu */
-popover.menu.menuize modelbutton:focus,
-popover.menu.menuize modelbutton:hover {
+/* popover.menu modelbutton:focus,
+popover.menu modelbutton:hover {
     background-color: @theme_selected_bg_color;
     color: @theme_selected_fg_color;
-}
+} */
 /* UGH! GtkMenuSectionBox has Widget:margin = 10px. Counteract to look like popover.popover-menu */
-popover.menu.menuize > stack > box {
+popover.menu > stack > box {
     margin: -2px -6px;
 }
 /* Detect submenu headings & replicate GTK .dim-label, looks nicer than leaving normal fg colour */
-popover.menu.menuize > stack > box > modelbutton:first-child > * /* Affect children not bgcolour */
+popover.menu > stack > box > modelbutton:first-child > * /* Affect children not bgcolour */
 {
     opacity: 0.55;
 }

@@ -54,6 +54,7 @@ PopoverMenu::PopoverMenu(Gtk::PositionType const position)
     add_css_class("menu");
 
     set_position(position);
+    set_has_arrow(false);
 
     _scrolled_window.set_propagate_natural_width (true);
     _scrolled_window.set_propagate_natural_height(true);
