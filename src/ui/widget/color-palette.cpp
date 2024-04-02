@@ -9,6 +9,7 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#include <gtkmm/enums.h>
 #include <utility>
 #include <glibmm/i18n.h>
 #include <glibmm/main.h>
@@ -76,6 +77,7 @@ ColorPalette::ColorPalette():
     _menu = std::move(menu);
     auto& btn_menu = get_widget<Gtk::MenuButton>(_builder, "btn-menu");
     btn_menu.set_popover(*_menu);
+    _menu->set_position(Gtk::PositionType::TOP);
     auto& dlg = get_settings_popover();
     config.signal_activate().connect([&, this] {
         dlg.popup();
@@ -439,6 +441,8 @@ void ColorPalette::set_up_scrolling() {
 
     if (_compact) {
         box.set_orientation(Gtk::Orientation::HORIZONTAL);
+        box.set_valign(Gtk::Align::START);
+        box.set_vexpand(false);
         btn_menu.set_margin_bottom(0);
         btn_menu.set_margin_end(0);
         // in compact mode scrollbars are hidden; they take up too much space
@@ -482,6 +486,8 @@ void ColorPalette::set_up_scrolling() {
     }
     else {
         box.set_orientation(Gtk::Orientation::VERTICAL);
+        box.set_valign(Gtk::Align::FILL);
+        box.set_vexpand(true);
         btn_menu.set_margin_bottom(2);
         btn_menu.set_margin_end(2);
         // in normal mode use regular full-size scrollbars

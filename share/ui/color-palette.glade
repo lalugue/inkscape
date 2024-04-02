@@ -27,7 +27,8 @@
     <property name="page-increment">2</property>
   </object>
   <object class="GtkBox" id="palette-box">
-    <property name="valign">start</property>
+    <property name="hexpand">True</property>
+    <property name="vexpand">True</property>
     <child>
       <object class="GtkFlowBox" id="pinned">
         <property name="halign">start</property>

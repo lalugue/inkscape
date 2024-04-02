@@ -90,6 +90,7 @@ SwatchesPanel::SwatchesPanel(bool compact, char const *prefsPath)
         append(*_palette);
     } else {
         get_widget<Gtk::Box>(_builder, "content").append(*_palette);
+        _palette->set_expand();
 
         _palette->set_settings_visibility(false);
 
