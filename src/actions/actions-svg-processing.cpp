@@ -701,7 +701,7 @@ std::vector<std::vector<Glib::ustring>> doc_svg_processing_actions =
     {"doc.prune-proprietary-namespaces", N_("Prune Proprietary Namespaces"), "Processing", N_("Remove any known proprietary SVG data") },
 
     {"doc.reverse-auto-start-markers",   N_("Reverse Auto Start Markers"),   "Processing", N_("Remove auto start positions from markers") },
-    {"doc.remove-all-transforms",        N_("Remove All Transforms"),        "Processing", N_("Remove all transforms from all shapes") },
+    {"doc.remove-all-transforms",        N_("Try to Remove All Transforms"), "Processing", N_("Attempt to remove all transforms from all shapes") },
     {"doc.remove-marker-context-paint",  N_("Remove Marker Context Paint"),  "Processing", N_("Remove context paints from markers") },
 
     {"doc.insert-text-fallback",         N_("Insert Text Fallback"),         "Processing", N_("Replace SVG2 text with SVG1.1 text") },
@@ -713,8 +713,8 @@ std::vector<std::vector<Glib::ustring>> doc_svg_processing_actions =
     {"doc.add-strokes-to-paths",         N_("All Strokes to Paths"),         "Processing", N_("Turn all strokes recursively into fill only paths") },
     {"doc.normalize-all-paths",          N_("Normalize Path Data"),          "Processing", N_("Make all paths absolute and predictable") },
 
-    {"doc.insert-bounding-boxes",        N_("Insert Bounding Box Info"),     "Processing", N_("Add bounding box information to all shapes") },
-    {"doc.insert-path-data",             N_("Insert Shape Path Data"),       "Processing", N_("Add shape path information to all shapes") },
+    {"doc.insert-bounding-boxes",        N_("Annotate all Bounding Boxes"),  "Processing", N_("Annotate every shape and group with its current bounding box (not kept up to date)") },
+    {"doc.insert-path-data",             N_("Annotate all Shape Paths"),     "Processing", N_("Annotate every non-path shape with their equivalent path string (not kept up to date)") },
 
     {"doc.vacuum-defs",                  N_("Clean up Document"),            "Processing", N_("Remove unused definitions (gradients, etc.)") },
     // clang-format on
