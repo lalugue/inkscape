@@ -32,6 +32,13 @@ frame {
     border-radius: 0;
 }
 
+/* regular popovers */
+
+popover > contents {
+    /* baked-in padding, mimicking what's in Adwaita, so our popups use consistent padding */
+    padding: 8px;
+}
+
 /* combo boxes with text: */
 
 popover.menu {
