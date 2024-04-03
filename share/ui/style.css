@@ -690,8 +690,12 @@ button.square-button image {
     font-style: italic;
 }
 
-#StyleSwatch label {
+#StyleSwatch {
     font-size: smaller;
+    line-height: 1;
+    /* Extra height for text descenders (?) makes style swatch bounding box too tall enlarging toolbars;
+    counter combined height of two lines of text that not even line-height can defeat with negative margin. */
+    margin-bottom: -2px;
 }
 
 #DocumentProperties #NotebookPage {
