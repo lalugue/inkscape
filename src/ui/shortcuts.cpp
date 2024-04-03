@@ -146,7 +146,14 @@ bool
 Shortcuts::add_user_shortcut(Glib::ustring const &detailed_action_name,const Gtk::AccelKey& trigger)
 {
     // Add shortcut, if successful, save to file.
-    if (_add_shortcut(detailed_action_name, trigger.get_abbrev(), true)) {  // Always user.
+    // Performance is not critical here. This is only called from the preferences dialog.
+
+    if (_add_shortcut(
+                detailed_action_name,
+                trigger.get_abbrev(),
+                true /* user shortcut */,
+                false /* do not cache action-names */
+            )) {
         _changed.emit();
 
         // Save
@@ -746,6 +753,7 @@ Shortcuts::_read(Glib::RefPtr<Gio::File> const &file, bool const user_set)
 void
 Shortcuts::_read(XML::Node const &keysnode, bool user_set)
 {
+    bool cache_action_list = false; // see below
     XML::NodeConstSiblingIterator iter {keysnode.firstChild()};
     for ( ; iter ; ++iter ) {
         if (strcmp(iter->name(), "modifier") == 0) {
@@ -812,7 +820,12 @@ Shortcuts::_read(XML::Node const &keysnode, bool user_set)
 
             // Set one shortcut at a time so we can check if it has been previously used.
             for (auto const &key : key_vector) {
-                _add_shortcut(gaction, key, user_set);
+                // Within this function,
+                // cache_action_list is false for the first call to _add_action,
+                // then true for all further calls until we return.
+                _add_shortcut(gaction, key, user_set,
+                              cache_action_list /* on first call, invalidate action list cache */);
+                cache_action_list = true;
             }
 
             // Uncomment to see what the cat dragged in.
@@ -901,10 +914,13 @@ Shortcuts::_write(Glib::RefPtr<Gio::File> const &file, What const what)
  * Add a shortcut. Other shortcuts may already exist for the same action.
  * For user shortcut, all other shortcuts for actions should have been removed.
  * If shortcut added, return true.
+ *
+ * cache_action_names: Skip recomputing the list of action names.
+ *   Set to false, except if you are certain that the list hasn't changed.
+ *   For details see the "cached" parameter in _list_action_names().
  */
-bool
-Shortcuts::_add_shortcut(Glib::ustring const &detailed_action_name,
-                         Glib::ustring const &trigger_string, bool user)
+bool Shortcuts::_add_shortcut(Glib::ustring const &detailed_action_name, Glib::ustring const &trigger_string, bool user,
+                              bool cache_action_names)
 {
     // Format has changed between Gtk3 and Gtk4. Pass through xxx to standardize form.
     Gtk::AccelKey key(trigger_string);
@@ -915,19 +931,7 @@ Shortcuts::_add_shortcut(Glib::ustring const &detailed_action_name,
     Glib::VariantBase target;
     Gio::SimpleAction::parse_detailed_name_variant(detailed_action_name, action_name, target);
 
-    bool found = false;
-    for (auto const &action : list_all_detailed_action_names()) {
-        Glib::ustring action_name_old;
-        Glib::VariantBase target_old;
-        Gio::SimpleAction::parse_detailed_name_variant(action, action_name_old, target_old);
-
-        if (action_name == action_name_old) {
-            found = true;
-            break;
-        }
-    }
-
-    if (!found) {
+    if (!_list_action_names(cache_action_names).contains(action_name.raw())) {
         // Oops, not an action!
         std::cerr << "Shortcuts::_add_shortcut: No Action for " << detailed_action_name.raw() << std::endl;
         return false;
@@ -974,10 +978,7 @@ Shortcuts::_remove_shortcut_trigger(Glib::ustring const& trigger)
 {
     bool changed = false;
     for (auto it = _shortcuts.begin(); it != _shortcuts.end(); ) {
-        Gtk::AccelKey key1(trigger);
-        Gtk::AccelKey key2(it->second.trigger_string);
-        if (it->second.trigger_string == trigger) {
-
+        if (it->second.trigger_string.raw() == trigger.raw()) {
             // Liststores are ugly!
             auto shortcut = it->second.shortcut;
             for (int i = 0; i < _liststore->get_n_items(); ++i) {
@@ -1029,6 +1030,34 @@ Shortcuts::_remove_shortcuts(Glib::ustring const &detailed_action_name)
     }
 
     return removed;
+}
+/**
+ * Get a sorted list of the non-detailed names of all actions.
+ *
+ * "Non-detailed" means that they have been preprocessed with Gio::SimpleAction::parse_detailed_name_variant().
+ *
+ * cached: Remember the last result
+ *   If true, the function returns a copy of the previous result, without checking if that result is still up to date.
+ *
+ *   Set to false if you are unsure. This will have a slight performance penalty (ca. 20ms per function call).
+ *   Set to true if you are absolutely sure that the list hasn't changed since the last call.
+ *
+ *   If you call this function repeatedly, without doing anything else inbetween that could add or remove actions
+ *   (e.g., installing an extension), then please set this to true for the second and following calls.
+ */
+const std::set<std::string> &Shortcuts::_list_action_names(bool cached)
+{
+    if (!cached) {
+        // std::cerr << "Shortcuts::_list_action_names: invalidating cache." << std::endl;
+        _list_action_names_cache.clear();
+        for (auto const &action_name_detailed : list_all_detailed_action_names()) {
+            Glib::ustring action_name_short;
+            Glib::VariantBase unused;
+            Gio::SimpleAction::parse_detailed_name_variant(action_name_detailed, action_name_short, unused);
+            _list_action_names_cache.insert(action_name_short.raw());
+        }
+    }
+    return _list_action_names_cache;
 }
 
 /**

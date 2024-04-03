@@ -10,18 +10,18 @@
 #ifndef INK_SHORTCUTS_H
 #define INK_SHORTCUTS_H
 
-#include <string>
-#include <unordered_map>
-#include <utility>
-#include <vector>
-
 #include <giomm/liststore.h>
 #include <glibmm/refptr.h>
 #include <glibmm/ustring.h>
 #include <gtk/gtk.h> // GtkEventControllerKey
 #include <gtkmm/accelkey.h>
+#include <set>
 #include <sigc++/connection.h>
 #include <sigc++/signal.h>
+#include <string>
+#include <unordered_map>
+#include <utility>
+#include <vector>
 
 namespace Gio {
 class File;
@@ -130,17 +130,24 @@ private:
     bool _write(Glib::RefPtr<Gio::File> const &file, What what     = User );
 
     // Add/remove shortcuts
-    bool _add_shortcut(Glib::ustring const &detailed_action_name,
-                       Glib::ustring const &trigger_string, bool user);
+    bool _add_shortcut(Glib::ustring const &detailed_action_name, Glib::ustring const &trigger_string, bool user,
+                       bool cache_action_names);
     bool _remove_shortcuts(Glib::ustring const &detailed_action_name);
     bool _remove_shortcut_trigger(Glib::ustring const& trigger);
     void _clear();
+
+    // Helpers
+    const std::set<std::string> &_list_action_names(bool cached);
 
     // Debug
     void _dump();
     void _dump_all_recursive(Gtk::Widget* widget);
 
     // --- Variables ----
+
+    // Cached sorted list of action names.
+    // Only for use within _list_action_names().
+    std::set<std::string> _list_action_names_cache;
 
     // There can be more than one shortcut for each action. Using Gtk::ShortcutControllers,
     // we need to add each shortcut by itself (or we are limited to two shortcuts).
