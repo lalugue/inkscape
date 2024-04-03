@@ -207,6 +207,7 @@ DocumentProperties::DocumentProperties()
     , _root_connection(this)
 {
     append(_popoverbin);
+    _popoverbin.set_expand();
     _popoverbin.setChild(&_notebook);
 
     _notebook.append_page(*_page_page,      _("Display"));
