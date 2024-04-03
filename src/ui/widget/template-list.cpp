@@ -108,13 +108,20 @@ void TemplateList::init(Inkscape::Extension::TemplateShow mode)
  */
 Glib::RefPtr<Gdk::Pixbuf> TemplateList::icon_to_pixbuf(std::string const &path)
 {
-    // TODO: Add some caching here.
-    if (!path.empty()) {
-        Inkscape::svg_renderer renderer(path.c_str());
-        return renderer.render(1.0);
+    // TODO: cache to filesystem. This function is a major bottleneck for startup time (ca. 1 second)!
+    // The current memory-based caching only catches the case where multiple templates share the same icon.
+    static std::map<std::string, Glib::RefPtr<Gdk::Pixbuf>> cache;
+    if (path.empty()) {
+        Glib::RefPtr<Gdk::Pixbuf> no_image;
+        return no_image;
     }
-    Glib::RefPtr<Gdk::Pixbuf> no_image;
-    return no_image;
+    if (cache.contains(path)) {
+        return cache[path];
+    }
+    Inkscape::svg_renderer renderer(path.c_str());
+    auto result = renderer.render(1.0);
+    cache[path] = result;
+    return result;
 }
 
 /**
