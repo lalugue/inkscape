@@ -17,7 +17,6 @@
 #include "display/control/canvas-item-enums.h"
 #include "live_effects/effect.h"
 #include "ui/tools/freehand-base.h"
-#include "util/action-accel.h"
 
 #define SP_PEN_CONTEXT(obj) (dynamic_cast<Inkscape::UI::Tools::PenTool*>((Inkscape::UI::Tools::ToolBase*)obj))
 #define SP_IS_PEN_CONTEXT(obj) (dynamic_cast<const Inkscape::UI::Tools::PenTool*>((const Inkscape::UI::Tools::ToolBase*)obj) != NULL)
@@ -158,11 +157,14 @@ private:
     void _cancel();
 
     sigc::connection _desktop_destroy;
-    Util::ActionAccel _undo, _redo; ///< Keep track of Undo and Redo keybindings
     // NOTE: undoing work in progress always deletes the last added point,
     // so there's no need for an undo stack.
     std::vector<Geom::PathVector> _redo_stack; ///< History of undone events
     bool _did_redo = false;
+
+    Util::ActionAccel _acc_to_line;
+    Util::ActionAccel _acc_to_curve;
+    Util::ActionAccel _acc_to_guides;
 };
 
 } // namespace Inkscape:UI::Tools

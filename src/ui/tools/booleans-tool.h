@@ -38,9 +38,6 @@ public:
     // Preferences set
     void set(Preferences::Entry const &val) override;
 
-    // Undo/redo catching
-    bool catch_undo(bool redo) override;
-
     // Catch empty selections
     bool is_ready() const override;
 

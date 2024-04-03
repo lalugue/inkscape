@@ -101,6 +101,11 @@ ToolBase::ToolBase(SPDesktop *desktop, std::string &&prefs_path, std::string &&c
     , _cursor_default(std::move(cursor_filename))
     , _uses_snap(uses_snap)
     , _desktop(desktop)
+    , _acc_undo{"doc.undo"}
+    , _acc_redo{"doc.redo"}
+    , _acc_quick_preview{"tool.all.quick-preview"}
+    , _acc_quick_zoom{"tool.all.quick-zoom"}
+    , _acc_quick_pan{"tool.all.quick-pan"}
 {
     pref_observer = Inkscape::Preferences::PreferencesObserver::create(_prefs_path, [this] (auto &val) { set(val); });
     set_cursor(_cursor_default);
@@ -631,6 +636,23 @@ bool ToolBase::root_handler(CanvasEvent const &event)
         double const acceleration = prefs->getDoubleLimited("/options/scrollingacceleration/value", 0, 0, 6);
         int const key_scroll = prefs->getIntLimited("/options/keyscroll/value", 10, 0, 1000);
 
+        if (_acc_quick_preview.isTriggeredBy(event)) {
+            _desktop->quick_preview(true);
+            ret = true;
+        }
+        if (_acc_quick_zoom.isTriggeredBy(event)) {
+            _desktop->zoom_quick(true);
+            ret = true;
+        }
+        if (_acc_quick_pan.isTriggeredBy(event) && allow_panning) {
+            xyp = {};
+            within_tolerance = true;
+            panning = PANNING_SPACE;
+            message_context->set(Inkscape::INFORMATION_MESSAGE, _("<b>Space+mouse move</b> to pan canvas"));
+            ret = true;
+        }
+
+
         switch (get_latin_keyval(event)) {
         // GDK insists on stealing these keys (F1 for no idea what, tab for cycling widgets
         // in the editing window). So we resteal them back and run our regular shortcut
@@ -646,26 +668,6 @@ bool ToolBase::root_handler(CanvasEvent const &event)
         case GDK_KEY_ISO_Left_Tab:
             sp_selection_item_prev(_desktop);
             ret = true;
-            break;
-
-        // TODO: make these keys customizable
-        case GDK_KEY_F:
-        case GDK_KEY_f:
-            if (!mod_shift(event) && !mod_ctrl(event) && !mod_alt(event)) {
-                _desktop->quick_preview(true);
-                ret = true;
-            }
-            break;
-
-        case GDK_KEY_Q:
-        case GDK_KEY_q:
-            if (_desktop->quick_zoomed()) {
-                ret = true;
-            }
-            if (!mod_shift(event) && !mod_ctrl(event) && !mod_alt(event)) {
-                _desktop->zoom_quick(true);
-                ret = true;
-            }
             break;
 
         case GDK_KEY_W:
@@ -748,16 +750,6 @@ bool ToolBase::root_handler(CanvasEvent const &event)
             }
             break;
 
-        case GDK_KEY_space:
-            within_tolerance = true;
-            xyp = {};
-            if (!allow_panning) break;
-            panning = PANNING_SPACE;
-            message_context->set(Inkscape::INFORMATION_MESSAGE, _("<b>Space+mouse move</b> to pan canvas"));
-
-            ret = true;
-            break;
-
         case GDK_KEY_r:
         case GDK_KEY_R:
             if (mod_alt_only(event)) {
@@ -797,6 +789,15 @@ bool ToolBase::root_handler(CanvasEvent const &event)
             _desktop->getCanvas()->get_window()->set_cursor(_cursor);
         }
 
+        if (_acc_quick_preview.isTriggeredBy(event)) {
+            _desktop->quick_preview(false);
+            ret = true;
+        }
+        if (_acc_quick_zoom.isTriggeredBy(event) && _desktop->quick_zoomed()) {
+            _desktop->zoom_quick(false);
+            ret = true;
+        }
+
         switch (get_latin_keyval(event)) {
         case GDK_KEY_space:
             if (within_tolerance) {
@@ -807,21 +808,6 @@ bool ToolBase::root_handler(CanvasEvent const &event)
                 // Thus, make sure we return immediately.
                 ret = true;
                 return;
-            }
-            break;
-
-        // TODO: make these keys customizable
-        case GDK_KEY_F:
-        case GDK_KEY_f:
-            _desktop->quick_preview(false);
-            ret = true;
-            break;
-
-        case GDK_KEY_Q:
-        case GDK_KEY_q:
-            if (_desktop->quick_zoomed()) {
-                _desktop->zoom_quick(false);
-                ret = true;
             }
             break;
 

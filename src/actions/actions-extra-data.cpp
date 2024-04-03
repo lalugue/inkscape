@@ -15,6 +15,7 @@
 #include "actions-extra-data.h"
 
 #include <glibmm/i18n.h>
+#include <glibmm/regex.h>
 
 std::vector<Glib::ustring> InkActionExtraData::get_actions()
 {
@@ -74,6 +75,31 @@ void InkActionExtraData::add_data(std::vector<std::vector<Glib::ustring>> const 
     for (auto const &raw : raw_data) {
         data.emplace(raw[0], InkActionExtraDatum{ raw[1], raw[2], raw[3] });
     }
+}
+
+/**
+ * Return true if the action/shortcut context is the same.
+ *
+ * @arg action_one - The action name for the first action to compare.
+ * @arg action_two - The action name for the second action to compare.
+ *
+ * @returns Almost always true, except for tool shortcuts which have their own contexts. Also returns true
+ *          if either of the action names are empty.
+ */
+bool InkActionExtraData::isSameContext(Glib::ustring const &action_one, Glib::ustring const &action_two) const
+{
+    if (action_one.empty() || action_two.empty())
+        return true;
+
+    std::vector<Glib::ustring> ones = Glib::Regex::split_simple("." , action_one);
+    std::vector<Glib::ustring> twos = Glib::Regex::split_simple("." , action_two);
+
+    // Only tool shortcuts have a context at the moment
+    if (ones.size() < 2 || ones[0] != "tool" || twos.size() < 2 || twos[0] != "tool") {
+        return true;
+    }
+    // The same tool means the same context, or if the tool is all tools (i.e. tool-base)
+    return ones[1] == twos[1] || ones[1] == "all" || twos[1] == "all";
 }
 
 /*

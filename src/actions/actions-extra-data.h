@@ -50,6 +50,7 @@ public:
                                          bool translated = true          ,
                                          bool expanded   = false         ) const;
 
+    bool isSameContext(Glib::ustring const &action_one, Glib::ustring const &action_two) const;
 private:
     // TODO: Once we require new enough glibmm, #include <glibmm/ustring_hash.h> & make key ustring
     std::unordered_map<std::string, InkActionExtraDatum> data;

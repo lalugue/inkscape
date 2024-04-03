@@ -72,8 +72,9 @@ static bool pen_within_tolerance = false;
 
 PenTool::PenTool(SPDesktop *desktop, std::string &&prefs_path, std::string &&cursor_filename)
     : FreehandBase(desktop, std::move(prefs_path), std::move(cursor_filename))
-    , _undo{"doc.undo"}
-    , _redo{"doc.redo"}
+    , _acc_to_line{"tool.pen.to-line"}
+    , _acc_to_curve{"tool.pen.to-curve"}
+    , _acc_to_guides{"tool.pen.to-guides"}
 {
     tablet_enabled = false;
 
@@ -965,10 +966,21 @@ bool PenTool::_handleKeyPress(KeyPressEvent const &event)
     double const nudge = prefs->getDoubleLimited("/options/nudgedistance/value", 2, 0, 1000, "px"); // in px
 
     // Check for undo/redo.
-    if (npoints > 0 && _undo.isTriggeredBy(event)) {
+    if (npoints > 0 && _acc_undo.isTriggeredBy(event)) {
         return _undoLastPoint(true);
-    } else if (_redo.isTriggeredBy(event)) {
+    } else if (_acc_redo.isTriggeredBy(event)) {
         return _redoLastPoint();
+    }
+    if (_acc_to_line.isTriggeredBy(event)) {
+        this->_lastpointToLine();
+        ret = true;
+    } else if (_acc_to_curve.isTriggeredBy(event)) {
+        this->_lastpointToCurve();
+        ret = true;
+    }
+    if (_acc_to_guides.isTriggeredBy(event)) {
+        _desktop->getSelection()->toGuides();
+        ret = true;
     }
 
     switch (get_latin_keyval(event)) {
@@ -1095,21 +1107,6 @@ bool PenTool::_handleKeyPress(KeyPressEvent const &event)
             break;
 */
 
-        case GDK_KEY_U:
-        case GDK_KEY_u:
-            if (mod_shift_only(event)) {
-                this->_lastpointToCurve();
-                ret = true;
-            }
-            break;
-        case GDK_KEY_L:
-        case GDK_KEY_l:
-            if (mod_shift_only(event)) {
-                this->_lastpointToLine();
-                ret = true;
-            }
-            break;
-
         case GDK_KEY_Return:
         case GDK_KEY_KP_Enter:
             if (this->npoints != 0) {
@@ -1133,13 +1130,6 @@ bool PenTool::_handleKeyPress(KeyPressEvent const &event)
             if (this->npoints != 0) {
                 // if drawing, cancel, otherwise pass it up for deselecting
                 this->_cancel ();
-                ret = true;
-            }
-            break;
-        case GDK_KEY_g:
-        case GDK_KEY_G:
-            if (mod_shift_only(event)) {
-                _desktop->getSelection()->toGuides();
                 ret = true;
             }
             break;

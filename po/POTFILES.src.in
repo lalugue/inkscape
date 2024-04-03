@@ -381,6 +381,7 @@ ${_build_dir}/share/templates/templates.h
 ../src/ui/tools/pencil-tool.cpp
 ../src/ui/tools/rect-tool.cpp
 ../src/ui/tools/select-tool.cpp
+../src/ui/tools/shortcuts.cpp
 ../src/ui/tools/spiral-tool.cpp
 ../src/ui/tools/spray-tool.cpp
 ../src/ui/tools/star-tool.cpp
