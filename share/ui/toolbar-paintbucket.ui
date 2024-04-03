@@ -29,6 +29,7 @@
         <property name="tooltip-text" translatable="yes">The maximum allowed difference between the clicked pixel and the neighboring pixels to be counted in the fill</property>
         <child>
           <object class="GtkLabel">
+            <property name="margin-start">5</property>
             <property name="label" translatable="yes">Threshold:</property>
           </object>
         </child>
@@ -48,6 +49,7 @@
         <property name="tooltip-text" translatable="yes">The amount to grow (positive) or shrink (negative) the created fill path</property>
         <child>
           <object class="GtkLabel">
+            <property name="margin-start">5</property>
             <property name="label" translatable="yes">Grow/shrink by:</property>
           </object>
         </child>
@@ -73,6 +75,7 @@
     </child>
     <child>
       <object class="GtkBox" id="autogap_box">
+        <property name="margin-start">5</property>
         <style>
             <class name="priority1"/>
         </style>
@@ -87,6 +90,7 @@
     </child>
     <child>
       <object class="GtkButton" id="reset_btn">
+        <property name="valign">center</property>
         <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Reset paint bucket parameters to defaults (use Inkscape Preferences &gt; Tools to change defaults)</property>

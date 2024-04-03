@@ -26,7 +26,6 @@
     <child>
       <object class="GtkBox" id="angle_x_box">
         <property name="tooltip-text" translatable="yes">Angle of PLs in X direction</property>
-        <property name="margin-start">3</property>
         <child>
           <object class="GtkLabel">
             <property name="label" translatable="yes">Angle X:</property>
@@ -46,6 +45,7 @@
     </child>
     <child>
       <object class="GtkToggleButton" id="_vp_x_state_btn">
+        <property name="valign">center</property>
         <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Toggle VP in X direction between 'finite' and 'infinite' (=parallel)</property>
@@ -79,6 +79,7 @@
     </child>
     <child>
       <object class="GtkToggleButton" id="_vp_y_state_btn">
+        <property name="valign">center</property>
         <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="has-frame">False</property>
@@ -111,6 +112,7 @@
     </child>
     <child>
       <object class="GtkToggleButton" id="_vp_z_state_btn">
+        <property name="valign">center</property>
         <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="has-frame">False</property>

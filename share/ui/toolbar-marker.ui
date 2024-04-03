@@ -5,7 +5,9 @@
     <property name="halign">start</property>
     <property name="valign">center</property>
     <child>
-      <placeholder/>
+        <object class="GtkLabel">
+            <property name="label" translatable="yes">Edit marker on canvas.</property>
+        </object>
     </child>
     <style>
       <class name="inkscape-toolbar"/>

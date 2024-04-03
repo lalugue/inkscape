@@ -33,6 +33,7 @@
         <property name="name">mode_group_box</property>
         <child>
           <object class="GtkToggleButton" id="mode_move_btn">
+            <property name="valign">center</property>
             <property name="focusable">True</property>
             <property name="tooltip-text" translatable="yes">Move objects in any direction</property>
             <property name="has-frame">False</property>
@@ -42,6 +43,7 @@
         </child>
         <child>
           <object class="GtkToggleButton" id="mode_inout_btn">
+            <property name="valign">center</property>
             <property name="focusable">True</property>
             <property name="tooltip-text" translatable="yes">Move objects towards cursor; with Shift from cursor</property>
             <property name="has-frame">False</property>
@@ -51,6 +53,7 @@
         </child>
         <child>
           <object class="GtkToggleButton" id="mode_jitter_btn">
+            <property name="valign">center</property>
             <property name="focusable">True</property>
             <property name="tooltip-text" translatable="yes">Move objects in random directions</property>
             <property name="has-frame">False</property>
@@ -60,6 +63,7 @@
         </child>
         <child>
           <object class="GtkToggleButton" id="mode_scale_btn">
+            <property name="valign">center</property>
             <property name="focusable">True</property>
             <property name="tooltip-text" translatable="yes">Shrink objects, with Shift enlarge</property>
             <property name="has-frame">False</property>
@@ -69,6 +73,7 @@
         </child>
         <child>
           <object class="GtkToggleButton" id="mode_rotate_btn">
+            <property name="valign">center</property>
             <property name="focusable">True</property>
             <property name="tooltip-text" translatable="yes">Rotate objects, with Shift counterclockwise</property>
             <property name="has-frame">False</property>
@@ -78,6 +83,7 @@
         </child>
         <child>
           <object class="GtkToggleButton" id="mode_dupdel_btn">
+            <property name="valign">center</property>
             <property name="focusable">True</property>
             <property name="tooltip-text" translatable="yes">Duplicate objects, with Shift delete</property>
             <property name="has-frame">False</property>
@@ -87,6 +93,7 @@
         </child>
         <child>
           <object class="GtkToggleButton" id="mode_push_btn">
+            <property name="valign">center</property>
             <property name="focusable">True</property>
             <property name="tooltip-text" translatable="yes">Push parts of paths in any direction</property>
             <property name="has-frame">False</property>
@@ -96,6 +103,7 @@
         </child>
         <child>
           <object class="GtkToggleButton" id="mode_shrinkgrow_btn">
+            <property name="valign">center</property>
             <property name="focusable">True</property>
             <property name="tooltip-text" translatable="yes">Shrink (inset) parts of paths; with Shift grow (outset)</property>
             <property name="has-frame">False</property>
@@ -105,6 +113,7 @@
         </child>
         <child>
           <object class="GtkToggleButton" id="mode_attrep_btn">
+            <property name="valign">center</property>
             <property name="focusable">True</property>
             <property name="tooltip-text" translatable="yes">Attract parts of paths towards cursor; with Shift from cursor</property>
             <property name="has-frame">False</property>
@@ -114,6 +123,7 @@
         </child>
         <child>
           <object class="GtkToggleButton" id="mode_roughen_btn">
+            <property name="valign">center</property>
             <property name="focusable">True</property>
             <property name="tooltip-text" translatable="yes">Roughen parts of paths</property>
             <property name="has-frame">False</property>
@@ -123,6 +133,7 @@
         </child>
         <child>
           <object class="GtkToggleButton" id="mode_colpaint_btn">
+            <property name="valign">center</property>
             <property name="focusable">True</property>
             <property name="tooltip-text" translatable="yes">Paint the tool's color upon selected objects</property>
             <property name="has-frame">False</property>
@@ -132,6 +143,7 @@
         </child>
         <child>
           <object class="GtkToggleButton" id="mode_coljitter_btn">
+            <property name="valign">center</property>
             <property name="focusable">True</property>
             <property name="tooltip-text" translatable="yes">Jitter the colors of selected objects</property>
             <property name="has-frame">False</property>
@@ -141,6 +153,7 @@
         </child>
         <child>
           <object class="GtkToggleButton" id="mode_blur_btn">
+            <property name="valign">center</property>
             <property name="focusable">True</property>
             <property name="tooltip-text" translatable="yes">Blur selected objects more; with Shift, blur less</property>
             <property name="has-frame">False</property>
@@ -162,6 +175,7 @@
         </style>
         <child>
           <object class="GtkLabel">
+            <property name="margin-start">5</property>
             <property name="label" translatable="yes">Width:</property>
           </object>
         </child>
@@ -185,6 +199,7 @@
         </style>
         <child>
           <object class="GtkLabel">
+            <property name="margin-start">5</property>
             <property name="label" translatable="yes">Force:</property>
           </object>
         </child>
@@ -202,6 +217,7 @@
     </child>
     <child>
       <object class="GtkToggleButton" id="_pressure_btn">
+        <property name="valign">center</property>
         <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Use the pressure of the input device to alter the force of tweak action</property>
@@ -220,6 +236,7 @@
         </style>
         <child>
           <object class="GtkLabel">
+            <property name="margin-start">5</property>
             <property name="label" translatable="yes">Fidelity:</property>
           </object>
         </child>
@@ -254,6 +271,7 @@
         </child>
         <child>
           <object class="GtkToggleButton" id="_doh_btn">
+            <property name="valign">center</property>
             <property name="label" translatable="yes">H</property>
             <property name="focusable">True</property>
             <property name="receives-default">True</property>
@@ -263,6 +281,7 @@
         </child>
         <child>
           <object class="GtkToggleButton" id="_dos_btn">
+            <property name="valign">center</property>
             <property name="label" translatable="yes">S</property>
             <property name="focusable">True</property>
             <property name="receives-default">True</property>
@@ -272,6 +291,7 @@
         </child>
         <child>
           <object class="GtkToggleButton" id="_dol_btn">
+            <property name="valign">center</property>
             <property name="label" translatable="yes">L</property>
             <property name="focusable">True</property>
             <property name="receives-default">True</property>
@@ -281,6 +301,7 @@
         </child>
         <child>
           <object class="GtkToggleButton" id="_doo_btn">
+            <property name="valign">center</property>
             <property name="label" translatable="yes">O</property>
             <property name="focusable">True</property>
             <property name="receives-default">True</property>

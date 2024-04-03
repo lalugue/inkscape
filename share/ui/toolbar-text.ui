@@ -64,6 +64,7 @@
         </child>
         <child>
           <object class="GtkButton" id="fc_dialog_btn">
+            <property name="valign">center</property>
             <property name="label" translatable="yes">Open Collections Editor</property>
             <property name="focusable">True</property>
             <property name="receives-default">True</property>
@@ -80,6 +81,7 @@
     <property name="hexpand">True</property>
     <child>
       <object class="GtkMenuButton">
+        <property name="valign">center</property>
         <property name="focusable">True</property>
         <property name="focus-on-click">False</property>
         <property name="receives-default">True</property>
@@ -91,6 +93,7 @@
     </child>
     <child>
       <object class="GtkButton" id="reset_btn">
+        <property name="valign">center</property>
         <property name="focusable">True</property>
         <property name="focus-on-click">False</property>
         <property name="tooltip-text" translatable="yes">Reset the font list (Deselects all the font collections and clears search results)</property>
@@ -166,6 +169,7 @@
         </style>
         <child>
           <object class="GtkToggleButton" id="alignment_mode_group">
+            <property name="valign">center</property>
             <property name="focusable">True</property>
             <property name="focus-on-click">False</property>
             <property name="tooltip-text" translatable="yes">Align left</property>
@@ -175,6 +179,7 @@
         </child>
         <child>
           <object class="GtkToggleButton">
+            <property name="valign">center</property>
             <property name="focusable">True</property>
             <property name="focus-on-click">False</property>
             <property name="tooltip-text" translatable="yes">Align center</property>
@@ -185,6 +190,7 @@
         </child>
         <child>
           <object class="GtkToggleButton">
+            <property name="valign">center</property>
             <property name="focusable">True</property>
             <property name="focus-on-click">False</property>
             <property name="tooltip-text" translatable="yes">Align right</property>
@@ -195,6 +201,7 @@
         </child>
         <child>
           <object class="GtkToggleButton">
+            <property name="valign">center</property>
             <property name="focusable">True</property>
             <property name="focus-on-click">False</property>
             <property name="tooltip-text" translatable="yes">Justify (only flowed text)</property>
@@ -214,6 +221,7 @@
     </child>
     <child>
       <object class="GtkToggleButton" id="_superscript_btn">
+        <property name="valign">center</property>
         <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Toggle superscript</property>
@@ -226,6 +234,7 @@
     </child>
     <child>
       <object class="GtkToggleButton" id="_subscript_btn">
+        <property name="valign">center</property>
         <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Toggle subscript</property>
@@ -252,6 +261,7 @@
         </style>
         <child>
           <object class="GtkToggleButton" id="writing_buttons_mode_group">
+            <property name="valign">center</property>
             <property name="focusable">True</property>
             <property name="focus-on-click">False</property>
             <property name="tooltip-text" translatable="yes">Horizontal text</property>
@@ -261,6 +271,7 @@
         </child>
         <child>
           <object class="GtkToggleButton">
+            <property name="valign">center</property>
             <property name="focusable">True</property>
             <property name="focus-on-click">False</property>
             <property name="tooltip-text" translatable="yes">Vertical text — lines: right to left</property>
@@ -271,6 +282,7 @@
         </child>
         <child>
           <object class="GtkToggleButton">
+            <property name="valign">center</property>
             <property name="focusable">True</property>
             <property name="focus-on-click">False</property>
             <property name="tooltip-text" translatable="yes">Vertical text — lines: left to right</property>
@@ -297,6 +309,7 @@
         </style>
         <child>
           <object class="GtkToggleButton" id="orientation_buttons_mode_group">
+            <property name="valign">center</property>
             <property name="focusable">True</property>
             <property name="focus-on-click">False</property>
             <property name="tooltip-text" translatable="yes">Auto glyph orientation</property>
@@ -306,6 +319,7 @@
         </child>
         <child>
           <object class="GtkToggleButton">
+            <property name="valign">center</property>
             <property name="focusable">True</property>
             <property name="focus-on-click">False</property>
             <property name="tooltip-text" translatable="yes">Upright glyph orientation</property>
@@ -316,6 +330,7 @@
         </child>
         <child>
           <object class="GtkToggleButton">
+            <property name="valign">center</property>
             <property name="focusable">True</property>
             <property name="focus-on-click">False</property>
             <property name="tooltip-text" translatable="yes">Sideways glyph orientation</property>
@@ -342,6 +357,7 @@
         </style>
         <child>
           <object class="GtkToggleButton" id="direction_buttons_mode_group">
+            <property name="valign">center</property>
             <property name="focusable">True</property>
             <property name="focus-on-click">False</property>
             <property name="tooltip-text" translatable="yes">Left to right text</property>
@@ -351,6 +367,7 @@
         </child>
         <child>
           <object class="GtkToggleButton">
+            <property name="valign">center</property>
             <property name="focusable">True</property>
             <property name="focus-on-click">False</property>
             <property name="tooltip-text" translatable="yes">Right to left text</property>

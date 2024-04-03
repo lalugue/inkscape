@@ -22,6 +22,7 @@
 #include <gtkmm/label.h>
 #include <gtkmm/messagedialog.h>
 #include <gtkmm/revealer.h>
+#include <gtkmm/spinbutton.h>
 #include <gtkmm/textview.h>
 #include <gtkmm/tooltip.h>
 #include <gtkmm/widget.h>
@@ -105,6 +106,10 @@ void set_icon_sizes(Gtk::Widget *parent, int pixel_size)
 {
     if (!parent) return;
     for_each_descendant(*parent, [=](Gtk::Widget &widget) {
+        if (dynamic_cast<Gtk::SpinButton*>(&widget)) {
+            // do not descend into spinbuttons; it will impact +/- icons too
+            return ForEachResult::_skip;
+        }
         if (auto const ico = dynamic_cast<Gtk::Image *>(&widget)) {
             ico->set_from_icon_name(ico->get_icon_name());
             ico->set_pixel_size(pixel_size);

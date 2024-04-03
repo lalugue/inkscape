@@ -31,6 +31,7 @@
     <property name="hexpand">True</property>
     <child>
       <object class="GtkButton">
+        <property name="valign">center</property>
         <property name="focusable">True</property>
         <property name="tooltip-text" translatable="yes">Select all objects</property>
         <property name="action-name">win.select-all</property>
@@ -47,6 +48,7 @@
     </child>
     <child>
       <object class="GtkButton">
+        <property name="valign">center</property>
         <property name="focusable">True</property>
         <property name="tooltip-text" translatable="yes">Select all in all layers</property>
         <property name="action-name">win.select-all-layers</property>
@@ -63,6 +65,7 @@
     </child>
     <child>
       <object class="GtkButton" id="deselect_btn">
+        <property name="valign">center</property>
         <property name="focusable">True</property>
         <property name="tooltip-text" translatable="yes">Deselect any selected objects</property>
         <property name="action-name">win.select-none</property>
@@ -79,6 +82,7 @@
     </child>
     <child>
       <object class="GtkToggleButton" id="_select_touch_btn">
+        <property name="valign">center</property>
         <property name="focusable">True</property>
         <property name="tooltip-text" translatable="yes">Toggle selection box to select all touched objects</property>
         <property name="has-frame">False</property>
@@ -101,6 +105,7 @@
     </child>
     <child>
       <object class="GtkButton" id="rotate_left_btn">
+        <property name="valign">center</property>
         <property name="focusable">True</property>
         <property name="tooltip-text" translatable="yes">Rotate selection 90\xc2\xb0 counter-clockwise</property>
         <property name="action-name">app.object-rotate-90-ccw</property>
@@ -120,6 +125,7 @@
     </child>
     <child>
       <object class="GtkButton" id="rotate_right_btn">
+        <property name="valign">center</property>
         <property name="focusable">True</property>
         <property name="tooltip-text" translatable="yes">Rotate selection 90\xc2\xb0 clockwise</property>
         <property name="action-name">app.object-rotate-90-cw</property>
@@ -139,6 +145,7 @@
     </child>
     <child>
       <object class="GtkButton" id="flip_horizontal_btn">
+        <property name="valign">center</property>
         <property name="focusable">True</property>
         <property name="tooltip-text" translatable="yes">Flip selected objects horizontally</property>
         <property name="action-name">app.object-flip-horizontal</property>
@@ -158,6 +165,7 @@
     </child>
     <child>
       <object class="GtkButton" id="flip_vertical_btn">
+        <property name="valign">center</property>
         <property name="focusable">True</property>
         <property name="tooltip-text" translatable="yes">Flip selected objects vertically</property>
         <property name="action-name">app.object-flip-vertical</property>
@@ -184,6 +192,7 @@
     </child>
     <child>
       <object class="GtkButton" id="raise_to_top_btn">
+        <property name="valign">center</property>
         <property name="focusable">True</property>
         <property name="tooltip-text" translatable="yes">Raise selection to top</property>
         <property name="action-name">app.selection-top</property>
@@ -200,6 +209,7 @@
     </child>
     <child>
       <object class="GtkButton" id="raise_one_step_btn">
+        <property name="valign">center</property>
         <property name="focusable">True</property>
         <property name="tooltip-text" translatable="yes">Raise selection one step</property>
         <property name="action-name">app.selection-raise</property>
@@ -216,6 +226,7 @@
     </child>
     <child>
       <object class="GtkButton" id="lower_one_step_btn">
+        <property name="valign">center</property>
         <property name="focusable">True</property>
         <property name="tooltip-text" translatable="yes">Lower selection one step</property>
         <property name="action-name">app.selection-lower</property>
@@ -232,6 +243,7 @@
     </child>
     <child>
       <object class="GtkButton" id="lower_to_bottom_btn">
+        <property name="valign">center</property>
         <property name="focusable">True</property>
         <property name="tooltip-text" translatable="yes">Lower selection to bottom</property>
         <property name="action-name">app.selection-bottom</property>
@@ -255,6 +267,7 @@
     </child>
     <child>
       <object class="GtkToggleButton" id="_transform_stroke_btn">
+        <property name="valign">center</property>
         <property name="focusable">True</property>
         <property name="tooltip-text" translatable="yes">When scaling objects, scale the stroke width by the same proportion</property>
         <property name="has-frame">False</property>
@@ -270,6 +283,7 @@
     </child>
     <child>
       <object class="GtkToggleButton" id="_transform_corners_btn">
+        <property name="valign">center</property>
         <property name="focusable">True</property>
         <property name="tooltip-text" translatable="yes">When scaling rectangles, scale the radii of rounded corners</property>
         <property name="has-frame">False</property>
@@ -285,6 +299,7 @@
     </child>
     <child>
       <object class="GtkToggleButton" id="_transform_gradient_btn">
+        <property name="valign">center</property>
         <property name="focusable">True</property>
         <property name="tooltip-text" translatable="yes">Move gradients (in fill or stroke) along with the objects</property>
         <property name="has-frame">False</property>
@@ -300,6 +315,7 @@
     </child>
     <child>
       <object class="GtkToggleButton" id="_transform_pattern_btn">
+        <property name="valign">center</property>
         <property name="focusable">True</property>
         <property name="tooltip-text" translatable="yes">Move patterns (in fill or stroke) along with the objects</property>
         <property name="has-frame">False</property>
@@ -321,6 +337,7 @@
       <object class="GtkBox" id="x_box">
         <child>
           <object class="GtkLabel">
+            <property name="margin-start">5</property>
             <property name="label" translatable="yes">X:</property>
           </object>
         </child>
@@ -343,6 +360,7 @@
       <object class="GtkBox" id="y_box">
         <child>
           <object class="GtkLabel">
+            <property name="margin-start">5</property>
             <property name="label" translatable="yes">Y:</property>
           </object>
         </child>
@@ -366,6 +384,7 @@
       <object class="GtkBox" id="w_box">
         <child>
           <object class="GtkLabel">
+            <property name="margin-start">5</property>
             <property name="label" translatable="yes">W:</property>
           </object>
         </child>
@@ -387,6 +406,7 @@
     </child>
     <child>
       <object class="GtkToggleButton" id="_lock_btn">
+        <property name="valign">center</property>
         <property name="tooltip-text" translatable="yes">When scaling objects, scale the stroke width by the same proportion</property>
         <property name="has-frame">False</property>
         <child>
@@ -400,6 +420,7 @@
       <object class="GtkBox" id="h_box">
         <child>
           <object class="GtkLabel">
+            <property name="margin-start">5</property>
             <property name="label" translatable="yes" context="Abbreviation of Height">H:</property>
           </object>
         </child>

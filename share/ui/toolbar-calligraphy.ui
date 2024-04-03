@@ -57,6 +57,7 @@
     </child>
     <child>
       <object class="GtkButton" id="profile_edit_btn">
+        <property name="valign">center</property>
         <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Add or edit calligraphic profile</property>
@@ -99,6 +100,7 @@
     </child>
     <child>
       <object class="GtkToggleButton" id="usepressure_btn">
+        <property name="valign">center</property>
         <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Use the pressure of the input device to alter the width of the pen</property>
@@ -115,6 +117,7 @@
     </child>
     <child>
       <object class="GtkToggleButton" id="tracebackground_btn">
+        <property name="valign">center</property>
         <property name="focusable">True</property>
         <property name="tooltip-text" translatable="yes">Trace the lightness of the background by the width of the pen (white - minimum width, black - maximum width)</property>
         <property name="has-frame">False</property>
@@ -207,6 +210,7 @@
     </child>
     <child>
       <object class="GtkToggleButton" id="_usetilt_btn">
+        <property name="valign">center</property>
         <property name="focusable">True</property>
         <property name="tooltip-text" translatable="yes">Use the tilt of the input device to alter the angle of the pen's nib</property>
         <property name="margin-end">3</property>

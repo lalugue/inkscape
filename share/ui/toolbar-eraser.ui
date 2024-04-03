@@ -33,7 +33,6 @@
     <property name="hexpand">True</property>
     <child>
       <object class="GtkLabel">
-        <property name="margin-start">3</property>
         <property name="label" translatable="yes">Mode:</property>
       </object>
     </child>
@@ -42,6 +41,7 @@
         <property name="spacing">3</property>
         <child>
           <object class="GtkToggleButton" id="mode_buttons_group">
+            <property name="valign">center</property>
             <property name="focusable">True</property>
             <property name="tooltip-text" translatable="yes">Delete objects touched by eraser</property>
             <property name="has-frame">False</property>
@@ -50,6 +50,7 @@
         </child>
         <child>
           <object class="GtkToggleButton">
+            <property name="valign">center</property>
             <property name="focusable">True</property>
             <property name="tooltip-text" translatable="yes">Cut out from paths and shapes</property>
             <property name="has-frame">False</property>
@@ -59,6 +60,7 @@
         </child>
         <child>
           <object class="GtkToggleButton">
+            <property name="valign">center</property>
             <property name="focusable">True</property>
             <property name="tooltip-text" translatable="yes">Clip from objects</property>
             <property name="has-frame">False</property>
@@ -80,6 +82,7 @@
         </style>
         <child>
           <object class="GtkLabel">
+            <property name="margin-start">5</property>
             <property name="label" translatable="yes">Width:</property>
           </object>
         </child>
@@ -97,6 +100,7 @@
     </child>
     <child>
       <object class="GtkToggleButton" id="_usepressure_btn">
+        <property name="valign">center</property>
         <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Use the pressure of the input device to alter the width of the pen</property>
@@ -115,6 +119,7 @@
         </style>
         <child>
           <object class="GtkLabel">
+            <property name="margin-start">5</property>
             <property name="label" translatable="yes">Thinning:</property>
           </object>
         </child>
@@ -137,6 +142,7 @@
         </style>
         <child>
           <object class="GtkLabel">
+            <property name="margin-start">5</property>
             <property name="label" translatable="yes">Caps:</property>
           </object>
         </child>
@@ -159,6 +165,7 @@
         </style>
         <child>
           <object class="GtkLabel">
+            <property name="margin-start">5</property>
             <property name="label" translatable="yes">Tremor:</property>
           </object>
         </child>
@@ -181,6 +188,7 @@
         </style>
         <child>
           <object class="GtkLabel">
+            <property name="margin-start">5</property>
             <property name="label" translatable="yes">Mass:</property>
           </object>
         </child>
@@ -204,6 +212,7 @@
     </child>
     <child>
       <object class="GtkToggleButton" id="_split_btn">
+        <property name="valign">center</property>
         <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Break apart cut items</property>

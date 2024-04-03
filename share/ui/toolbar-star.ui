@@ -24,6 +24,7 @@
     <property name="page-increment">0.10</property>
   </object>
   <object class="GtkToggleButton" id="flat_button_group">
+    <property name="valign">center</property>
     <property name="label" translatable="yes">radiobutton</property>
     <property name="focusable">True</property>
     <property name="active">True</property>
@@ -34,7 +35,6 @@
     <property name="hexpand">True</property>
     <child>
       <object class="GtkLabel" id="_mode_item">
-        <property name="margin-start">3</property>
         <property name="label" translatable="yes">&lt;b&gt;New:&lt;/b&gt;</property>
         <property name="use-markup">True</property>
       </object>
@@ -44,6 +44,7 @@
         <property name="spacing">3</property>
         <child>
           <object class="GtkToggleButton" id="flat_polygon_button">
+            <property name="valign">center</property>
             <property name="focusable">True</property>
             <property name="tooltip-text" translatable="yes">Regular polygon (with one handle) instead of a star</property>
             <property name="has-frame">False</property>
@@ -58,6 +59,7 @@
         </child>
         <child>
           <object class="GtkToggleButton" id="flat_star_button">
+            <property name="valign">center</property>
             <property name="focusable">True</property>
             <property name="tooltip-text" translatable="yes">Star instead of a regular polygon (with one handle)</property>
             <property name="has-frame">False</property>
@@ -83,6 +85,7 @@
         </style>
         <child>
           <object class="GtkLabel">
+            <property name="margin-start">5</property>
             <property name="label" translatable="yes">Corners:</property>
           </object>
         </child>
@@ -105,6 +108,7 @@
         </style>
         <child>
           <object class="GtkLabel">
+            <property name="margin-start">5</property>
             <property name="label" translatable="yes">Spoke Ratio:</property>
           </object>
         </child>
@@ -128,6 +132,7 @@
         </style>
         <child>
           <object class="GtkLabel">
+            <property name="margin-start">5</property>
             <property name="label" translatable="yes">Rounded:</property>
           </object>
         </child>
@@ -150,6 +155,7 @@
         </style>
         <child>
           <object class="GtkLabel">
+            <property name="margin-start">5</property>
             <property name="label" translatable="yes">Randomized:</property>
           </object>
         </child>
@@ -174,6 +180,7 @@
     </child>
     <child>
       <object class="GtkButton" id="reset_btn">
+        <property name="valign">center</property>
         <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Make corners sharp</property>

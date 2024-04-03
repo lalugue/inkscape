@@ -692,10 +692,10 @@ button.square-button image {
 
 #StyleSwatch {
     font-size: smaller;
-    line-height: 1;
+    line-height: 0.8;
     /* Extra height for text descenders (?) makes style swatch bounding box too tall enlarging toolbars;
     counter combined height of two lines of text that not even line-height can defeat with negative margin. */
-    margin-bottom: -2px;
+    margin-bottom: -3px;
 }
 
 #DocumentProperties #NotebookPage {
@@ -728,16 +728,17 @@ button.square-button image {
 }
 
 .inkscape-toolbar {
-    margin-top: 4px;
-    margin-bottom: 4px;
+    margin: 4px 2px;
 }
 
 .inkscape-toolbar > * {
     margin-right: 2px;
+    margin-left: 1px;
 }
 
 .inkscape-toolbar > * > * {
     margin-right: 2px;
+    margin-left: 1px;
 }
 
 .inkscape-toolbar > * > *:last-child {
@@ -1197,6 +1198,9 @@ popover.menu > stack > box > modelbutton:first-child > * /* Affect children not 
 #tool-toolbar button {
     margin-left: 1px;
     margin-right: 1px;
+}
+#tool-toolbar {
+    margin: 1px;    /* toolbar box itself, so it has some breathing space; other toolbars have much larger margins */
 }
 
 /* used @ ui/themes to get correct foreground color; get_color() can be wrong */

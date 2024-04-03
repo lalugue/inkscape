@@ -10,6 +10,7 @@
         <property name="name">mode_group_box</property>
         <child>
           <object class="GtkToggleButton" id="mode_buttons_group">
+            <property name="valign">center</property>
             <property name="focusable">True</property>
             <property name="tooltip-text" translatable="yes">No geometric tool is active</property>
             <property name="has-frame">False</property>
@@ -19,6 +20,7 @@
         </child>
         <child>
           <object class="GtkToggleButton">
+            <property name="valign">center</property>
             <property name="focusable">True</property>
             <property name="tooltip-text" translatable="yes">Line Segment</property>
             <property name="has-frame">False</property>
@@ -28,6 +30,7 @@
         </child>
         <child>
           <object class="GtkToggleButton">
+            <property name="valign">center</property>
             <property name="focusable">True</property>
             <property name="tooltip-text" translatable="yes">Circle by 3 points</property>
             <property name="has-frame">False</property>
@@ -37,6 +40,7 @@
         </child>
         <child>
           <object class="GtkToggleButton">
+            <property name="valign">center</property>
             <property name="focusable">True</property>
             <property name="tooltip-text" translatable="yes">Circle</property>
             <property name="has-frame">False</property>
@@ -46,6 +50,7 @@
         </child>
         <child>
           <object class="GtkToggleButton">
+            <property name="valign">center</property>
             <property name="focusable">True</property>
             <property name="tooltip-text" translatable="yes">Parallel</property>
             <property name="has-frame">False</property>
@@ -55,6 +60,7 @@
         </child>
         <child>
           <object class="GtkToggleButton">
+            <property name="valign">center</property>
             <property name="focusable">True</property>
             <property name="tooltip-text" translatable="yes">Perpendicular bisector</property>
             <property name="has-frame">False</property>
@@ -64,6 +70,7 @@
         </child>
         <child>
           <object class="GtkToggleButton">
+            <property name="valign">center</property>
             <property name="focusable">True</property>
             <property name="tooltip-text" translatable="yes">Angle Bisector</property>
             <property name="has-frame">False</property>
@@ -73,6 +80,7 @@
         </child>
         <child>
           <object class="GtkToggleButton">
+            <property name="valign">center</property>
             <property name="focusable">True</property>
             <property name="tooltip-text" translatable="yes">Mirror symmetry</property>
             <property name="has-frame">False</property>
@@ -88,6 +96,7 @@
     </child>
     <child>
       <object class="GtkToggleButton" id="_show_bbox_btn">
+        <property name="valign">center</property>
         <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Show bounding box (used to cut infinite lines)</property>
@@ -97,6 +106,7 @@
     </child>
     <child>
       <object class="GtkToggleButton" id="_bbox_from_selection_btn">
+        <property name="valign">center</property>
         <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Set limiting bounding box (used to cut infinite lines) to the bounding box of current selection</property>
@@ -119,6 +129,7 @@
     </child>
     <child>
       <object class="GtkToggleButton" id="_measuring_btn">
+        <property name="valign">center</property>
         <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Display measuring info for selected items</property>
@@ -146,6 +157,7 @@
     </child>
     <child>
       <object class="GtkToggleButton" id="_open_lpe_dialog_btn">
+        <property name="valign">center</property>
         <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Open LPE dialog (to adapt parameters numerically)</property>

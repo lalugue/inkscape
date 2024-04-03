@@ -23,6 +23,7 @@
     <property name="hexpand">True</property>
     <child>
       <object class="GtkButton" id="avoid_btn">
+        <property name="valign">center</property>
         <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Make connectors avoid selected objects</property>
@@ -36,6 +37,7 @@
     </child>
     <child>
       <object class="GtkButton" id="ignore_btn">
+        <property name="valign">center</property>
         <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Make connectors ignore selected objects</property>
@@ -49,6 +51,7 @@
     </child>
     <child>
       <object class="GtkToggleButton" id="_orthogonal_btn">
+        <property name="valign">center</property>
         <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Make connector orthogonal or polyline</property>
@@ -69,6 +72,7 @@
         <property name="tooltip-text" translatable="yes">The amount of connectors curvature</property>
         <child>
           <object class="GtkLabel">
+            <property name="margin-start">5</property>
             <property name="label" translatable="yes">Curvature:</property>
           </object>
         </child>
@@ -88,6 +92,7 @@
         <property name="tooltip-text" translatable="yes">The amount of space left around objects by auto-routing connectors</property>
         <child>
           <object class="GtkLabel">
+            <property name="margin-start">5</property>
             <property name="label" translatable="yes">Spacing:</property>
           </object>
         </child>
@@ -105,6 +110,7 @@
     </child>
     <child>
       <object class="GtkButton" id="graph_btn">
+        <property name="valign">center</property>
         <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Nicely arrange selected connector network</property>
@@ -127,6 +133,7 @@
         </style>
         <child>
           <object class="GtkLabel">
+            <property name="margin-start">5</property>
             <property name="label" translatable="yes">Length:</property>
           </object>
         </child>
@@ -143,6 +150,7 @@
     </child>
     <child>
       <object class="GtkToggleButton" id="_directed_btn">
+        <property name="valign">center</property>
         <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Make connectors with end-markers (arrows) point downwards</property>
@@ -159,6 +167,7 @@
     </child>
     <child>
       <object class="GtkToggleButton" id="_overlap_btn">
+        <property name="valign">center</property>
         <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Do not allow overlapping shapes</property>

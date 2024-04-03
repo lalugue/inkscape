@@ -61,6 +61,7 @@
     <property name="hexpand">True</property>
     <child>
       <object class="GtkButton" id="page_new">
+        <property name="valign">center</property>
         <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Make corners sharp</property>
@@ -120,6 +121,7 @@
     </child>
     <child>
       <object class="GtkButton" id="_btn_page_backward">
+        <property name="valign">center</property>
         <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Make corners sharp</property>
@@ -145,6 +147,7 @@
     </child>
     <child>
       <object class="GtkButton" id="_btn_page_foreward">
+        <property name="valign">center</property>
         <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Make corners sharp</property>
@@ -171,6 +174,7 @@
     </child>
     <child>
       <object class="GtkButton" id="_btn_page_delete">
+        <property name="valign">center</property>
         <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Make corners sharp</property>
@@ -195,6 +199,7 @@
     </child>
     <child>
       <object class="GtkToggleButton" id="_btn_move_toggle">
+        <property name="valign">center</property>
         <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="action-name">doc.page-move-objects</property>

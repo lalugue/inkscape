@@ -70,7 +70,11 @@ void resize_widget_children(Gtk::Widget *widget);
 void gui_warning(const std::string &msg, Gtk::Window * parent_window = nullptr);
 
 /// Whether for_each_*() will continue or stop after calling Func per child.
-enum class ForEachResult {_continue, _break};
+enum class ForEachResult {
+    _continue, // go on to the next widget
+    _break,    // stop here, return current widget
+    _skip      // do not recurse into current widget, go to the next one
+};
 
 /// Get a vector of the widgetʼs children, from get_first_child() through each get_next_sibling().
 std::vector<Gtk::Widget *> get_children(Gtk::Widget &widget);
@@ -98,7 +102,14 @@ Gtk::Widget *for_each_child(Gtk::Widget &widget, Func &&func,
 {
     static_assert(std::is_invocable_r_v<ForEachResult, Func, Gtk::Widget &>);
 
-    if (plus_self && func(widget) == ForEachResult::_break) return &widget;
+    if (plus_self) {
+        auto ret = func(widget);
+        if (ret == ForEachResult::_break) return &widget;
+
+        // skip this widget?
+        if (ret == ForEachResult::_skip) return nullptr;
+    }
+
     if (!recurse && level > 0) return nullptr;
 
     for (auto const child: get_children(widget)) {
