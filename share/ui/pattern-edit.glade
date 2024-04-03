@@ -149,11 +149,11 @@
   </object>
   <object class="GtkImage" id="image-linked">
     <property name="icon-name">entries-linked-symbolic</property>
-    <property name="icon-size">large</property>
+    <property name="icon-size">normal</property>
   </object>
   <object class="GtkImage" id="image-unlinked">
     <property name="icon-name">entries-unlinked-symbolic</property>
-    <property name="icon-size">large</property>
+    <property name="icon-size">normal</property>
   </object>
   <object class="GtkBox" id="main-box">
     <property name="orientation">vertical</property>
