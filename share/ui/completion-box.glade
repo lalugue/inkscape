@@ -32,6 +32,7 @@
     </child>
   </object>
   <object class="GtkBox" id="main-box">
+    <property name="name">CompletionPopup</property>
     <property name="valign">center</property>
     <child>
       <object class="GtkSearchEntry" id="search">

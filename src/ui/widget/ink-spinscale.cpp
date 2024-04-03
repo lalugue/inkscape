@@ -232,7 +232,7 @@ InkSpinScale::InkSpinScale(double value, double lower,
                                            page_size)}
 {
     // TODO: Why does the ctor from doubles do this stuff but the other doesnʼt?
-    _spinbutton->set_valign(Gtk::Align::CENTER);
+    _spinbutton->set_valign(Gtk::Align::FILL);
     Controller::add_key<nullptr, &InkSpinScale::on_key_released>(*this, *this); // phase?
 }
 

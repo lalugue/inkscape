@@ -481,6 +481,15 @@ SPCanvas {
     padding: 2px 4px;
 }
 
+#CompletionPopup entry {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+#CompletionPopup button {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
 /* GtkTreeView: clarify drop locations (especially important for XML editor) */
 treeview.view:drop(active) {
     border-style: solid;
@@ -547,11 +556,15 @@ button.link:hover image {
     -gtk-icon-filter: opacity(0.5);
 }
 
-.marker-item.box {
-    padding: 4px;
+.marker-item-box {
+    padding: 0;
 }
 .marker-separator {
     padding: 0;
+}
+menubutton.marker-menu-button > button {
+    padding-top: 0;
+    padding-bottom: 0;
 }
 
 .tight-button {
@@ -692,6 +705,8 @@ button.square-button image {
 
 #StyleSwatch {
     font-size: smaller;
+}
+#StyleSwatch.vertical {
     line-height: 0.8;
     /* Extra height for text descenders (?) makes style swatch bounding box too tall enlarging toolbars;
     counter combined height of two lines of text that not even line-height can defeat with negative margin. */
@@ -772,11 +787,10 @@ button.menu-btn-tight {
 }
 
 #DialogMenuButton {
-    padding: 3px;
+    padding: 0px;
     border: none;
     opacity: 0.5;
 }
-
 #DialogMenuButton:hover {
     opacity: 1;
 }

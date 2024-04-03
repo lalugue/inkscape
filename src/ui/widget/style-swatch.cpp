@@ -15,6 +15,7 @@
 #include "style-swatch.h"
 
 #include <functional>
+#include <gtkmm/enums.h>
 #include <utility>
 #include <glibmm/i18n.h>
 #include <gtkmm/grid.h>
@@ -97,6 +98,7 @@ StyleSwatch::StyleSwatch(SPCSSAttr *css, gchar const *main_tip, Gtk::Orientation
       _stroke(Gtk::Orientation::HORIZONTAL)
 {
     set_name("StyleSwatch");
+    add_css_class(orient == Gtk::Orientation::HORIZONTAL ? "horizontal" : "vertical");
     _label[SS_FILL].set_markup(_("Fill:"));
     _label[SS_STROKE].set_markup(_("Stroke:"));
 

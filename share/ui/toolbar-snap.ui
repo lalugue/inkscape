@@ -6,9 +6,9 @@
       <object class="GtkGrid">
         <property name="halign">start</property>
         <property name="valign">start</property>
-        <property name="margin-start">8</property>
-        <property name="margin-top">8</property>
-        <property name="margin-bottom">8</property>
+        <property name="margin-start">1</property>
+        <property name="margin-top">1</property>
+        <property name="margin-bottom">1</property>
         <child>
           <object class="GtkCheckButton" id="snap-toggle">
             <property name="label" translatable="yes">Enable snapping</property>
@@ -694,9 +694,9 @@
       <object class="GtkGrid">
         <property name="halign">start</property>
         <property name="valign">start</property>
-        <property name="margin-start">8</property>
-        <property name="margin-top">8</property>
-        <property name="margin-bottom">8</property>
+        <property name="margin-start">1</property>
+        <property name="margin-top">1</property>
+        <property name="margin-bottom">1</property>
         <property name="row-spacing">4</property>
         <property name="column-spacing">4</property>
         <child>

@@ -161,7 +161,7 @@ StrokeStyle::StrokeStyleButton::StrokeStyleButton(Gtk::ToggleButton    *&grp,
     }
     set_visible(true);
 
-    auto px = Gtk::manage(sp_get_icon_image(icon, Gtk::IconSize::LARGE));
+    auto px = Gtk::manage(sp_get_icon_image(icon, Gtk::IconSize::NORMAL));
     g_assert(px != nullptr);
     px->set_visible(true);
     set_child(*px);

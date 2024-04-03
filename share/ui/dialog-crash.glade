@@ -3,9 +3,11 @@
   <requires lib="gtk" version="4.0"/>
   <object class="GtkTextBuffer" id="stacktrace"/>
   <object class="GtkWindow" id="crash_dialog">
+    <property name="title" translatable="yes">Crash Report</property>
     <property name="modal">True</property>
     <property name="resizable">True</property>
-    <property name="default-height">300</property>
+    <property name="default-height">550</property>
+    <property name="default-width">800</property>
     <property name="child">
       <object class="GtkBox">
         <property name="margin-start">10</property>
@@ -14,7 +16,9 @@
         <property name="spacing">2</property>
         <child>
           <object class="GtkLabel">
-            <property name="label" translatable="yes">Inkscape has crashed and will now close.</property>
+            <property name="margin-top">2</property>
+            <property name="label" translatable="yes">&lt;b&gt;Inkscape has crashed and will now close.&lt;/b&gt;</property>
+            <property name="use-markup">True</property>
           </object>
         </child>
         <child>
@@ -59,7 +63,9 @@
         <child>
           <object class="GtkButton" id="button_ok">
             <property name="label" translatable="yes">OK</property>
-            <property name="halign">end</property>
+            <property name="margin-bottom">2</property>
+            <property name="width-request">100</property>
+            <property name="halign">center</property>
             <property name="receives_default">True</property>
           </object>
         </child>

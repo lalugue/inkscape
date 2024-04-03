@@ -18,6 +18,7 @@
 #include "document-check.h"
 
 #include <glibmm/i18n.h>  // Internationalization
+#include <glibmm/ustring.h>
 #include <gtkmm/messagedialog.h>
 
 #include "document.h"
@@ -32,7 +33,8 @@
 static int run_dialog(Gtk::Window &window, char const * const save_text,
                       char const * const format, char const * const document_name)
 {
-    auto const message = g_markup_printf_escaped(format, document_name);
+    auto fmt = '\n' + Glib::ustring(format);
+    auto const message = g_markup_printf_escaped(fmt.c_str(), document_name);
     auto dialog = Gtk::MessageDialog{window, message, true, Gtk::MessageType::WARNING,
                                      Gtk::ButtonsType::NONE};
     g_free(message);
@@ -45,6 +47,7 @@ static int run_dialog(Gtk::Window &window, char const * const save_text,
     auto const ma_labels = Inkscape::UI::get_children(*ma);
     ma_labels.at(0)->set_focusable(false);
 
+    dialog.set_title(_("Save Document"));
     dialog.add_button(_("Close _without saving"), Gtk::ResponseType::NO);
     dialog.add_button(_("_Cancel"),               Gtk::ResponseType::CANCEL);
     dialog.add_button(_(save_text),               Gtk::ResponseType::YES);

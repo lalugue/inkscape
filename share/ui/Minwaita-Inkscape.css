@@ -17,6 +17,9 @@ button { /* compact square button by default */
     min-width: 18px;
     border-radius: 2px;
 }
+button.text-button > label { /* margins for text in buttons */
+    margin: 0 3px;
+}
 
 entry { /* some min height, so it doesn't collapse */
     min-height: 22px;
@@ -49,7 +52,8 @@ frame { /* rectangular frame to match older Inkscape style and stop cutting corn
 /* regular popovers */
 popover > contents {
     /* baked-in padding, mimicking what's in Adwaita, so our popups use consistent padding */
-    padding: 8px;
+    padding: 6px;
+    border-radius: 5px;
 }
 
 /* those are comboboxes with text and their popup list */
@@ -78,6 +82,17 @@ popover.menu modelbutton { /* this is selectable item in a combobox popup list *
 popover.menu modelbutton:selected {
     background-color: @theme_selected_bg_color;
     color: @theme_selected_fg_color;
+}
+
+/* button breathing space, so they are not hugging window edge and get clipped by window's rounded corners */
+.dialog-action-area > button {
+    margin: 4px 4px 8px 4px;
+}
+.dialog-action-area > button:first-child {
+    margin-left: 8px;
+}
+.dialog-action-area > button:last-child {
+    margin-right: 8px;
 }
 
 /* scrollbar {

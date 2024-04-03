@@ -119,6 +119,8 @@ DashSelector::DashSelector()
     gridview->signal_activate().connect(sigc::bind<0>(sigc::mem_fun(*this, &DashSelector::activate), gridview));
 
     popover = Gtk::make_managed<Gtk::Popover>();
+    popover->set_has_arrow(false);
+    popover->add_css_class("menu");
     popover->set_child(*gridview);
 
     // Menubutton

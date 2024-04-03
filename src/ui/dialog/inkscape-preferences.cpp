@@ -1988,6 +1988,7 @@ void InkscapePreferences::initPageUI()
             auto const slider = Gtk::make_managed<UI::Widget::PrefSlider>(false);
             slider->init(tbox.prefs, min, max, 1, 4, min, 0);
             slider->getSlider()->set_format_value_func(format_value);
+            slider->getSlider()->set_draw_value();
             slider->getSlider()->add_css_class("small-marks");
             for (int i = min; i <= max; i += 8) {
                 auto const markup = (i % min == 0) ? format_value(i) : Glib::ustring{};

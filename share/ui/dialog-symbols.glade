@@ -13,14 +13,15 @@
     <property name="page-increment">1</property>
   </object>
   <object class="GtkPopover" id="settings-popover">
+    <property name="halign">end</property>
     <property name="child">
       <object class="GtkGrid">
         <property name="halign">start</property>
         <property name="valign">start</property>
-        <property name="margin-start">8</property>
-        <property name="margin-end">8</property>
-        <property name="margin-top">8</property>
-        <property name="margin-bottom">8</property>
+        <property name="margin-start">1</property>
+        <property name="margin-end">1</property>
+        <property name="margin-top">1</property>
+        <property name="margin-bottom">1</property>
         <property name="row-spacing">2</property>
         <property name="column-spacing">4</property>
         <child>
@@ -130,6 +131,7 @@
         </child>
         <child>
           <object class="GtkSearchEntry" id="set-search">
+            <property name="max-width-chars">6</property>
             <property name="focusable">True</property>
             <property name="tooltip-text" translatable="yes">Search for symbol set</property>
             <layout>
@@ -208,6 +210,7 @@
         </child>
         <child>
           <object class="GtkSearchEntry" id="search">
+            <property name="max-width-chars">6</property>
             <property name="focusable">True</property>
             <property name="tooltip-text" translatable="yes">Search for symbol</property>
             <property name="width-chars">15</property>
@@ -278,6 +281,8 @@
           <object class="GtkMenuButton" id="settings">
             <property name="focusable">True</property>
             <property name="focus-on-click">False</property>
+            <property name="halign">end</property>
+            <property name="hexpand">True</property>
             <property name="receives-default">True</property>
             <property name="has-frame">False</property>
             <property name="direction">up</property>

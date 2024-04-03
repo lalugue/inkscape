@@ -45,6 +45,7 @@
     <property name="active">True</property>
   </object>
   <object class="GtkPopover" id="popover">
+    <property name="has-arrow">False</property>
     <property name="child">
       <object class="GtkBox">
         <property name="width-request">378</property>
@@ -54,13 +55,14 @@
           <object class="GtkScrolledWindow">
             <property name="focusable">True</property>
             <property name="vexpand">True</property>
+            <property name="valign">fill</property>
             <property name="hscrollbar-policy">never</property>
             <property name="child">
               <object class="GtkViewport">
                 <property name="vscroll-policy">natural</property>
                 <property name="child">
                   <object class="GtkFlowBox" id="flowbox">
-                    <property name="halign">start</property>
+                    <property name="halign">fill</property>
                     <property name="valign">start</property>
                     <property name="min-children-per-line">8</property>
                     <property name="max-children-per-line">8</property>
@@ -77,6 +79,8 @@
         </child>
         <child>
           <object class="GtkGrid" id="input-grid">
+            <property name="valign">end</property>
+            <property name="vexpand">False</property>
             <property name="margin-end">4</property>
             <property name="margin-bottom">4</property>
             <property name="row-spacing">4</property>
@@ -311,17 +315,6 @@
                 <property name="hexpand">True</property>
                 <property name="orientation">vertical</property>
                 <child>
-                  <object class="GtkWidget" id="preview-bin">
-                    <child>
-                      <object class="GtkPicture" id="preview">
-                      </object>
-                    </child>
-                    <property name="vexpand">True</property>
-                    <property name="margin-end">4</property>
-                    <property name="hexpand">True</property>
-                  </object>
-                </child>
-                <child>
                   <object class="GtkLabel" id="marker-id">
                     <property name="margin-start">4</property>
                     <property name="margin-end">4</property>
@@ -330,6 +323,17 @@
                     <property name="label" translatable="yes">ID</property>
                     <property name="use-markup">True</property>
                     <property name="ellipsize">middle</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkWidget" id="preview-bin">
+                    <child>
+                      <object class="GtkImage" id="preview">
+                      </object>
+                    </child>
+                    <property name="vexpand">True</property>
+                    <property name="margin-end">4</property>
+                    <property name="hexpand">True</property>
                   </object>
                 </child>
                 <layout>
@@ -375,10 +379,15 @@
     <property name="focus-on-click">False</property>
     <property name="receives-default">True</property>
     <property name="popover">popover</property>
+    <style>
+        <class name="marker-menu-button"/>
+    </style>
     <child>
       <object class="GtkBox" id="btn-box">
         <child>
           <object class="GtkImage" id="current-img">
+            <property name="width-request">50</property>
+            <property name="height-request">36</property>
             <property name="hexpand">True</property>
             <property name="icon-name">image-missing</property>
           </object>

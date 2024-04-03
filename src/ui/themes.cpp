@@ -400,7 +400,8 @@ void ThemeContext::add_gtk_css(bool only_providers, bool cached)
             g_critical("CSSProviderError::load_from_path(): failed to load '%s'\n(%s)", style.c_str(),
                        ex.what());
         }
-        Gtk::StyleProvider::add_provider_for_display(display, _styleprovider, GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+        // note: priority higher than that of the theme, so we can override styles that not even higher specificity can patch
+        Gtk::StyleProvider::add_provider_for_display(display, _styleprovider, GTK_STYLE_PROVIDER_PRIORITY_APPLICATION + 1);
     }
     // load small CSS snippet to style spinbuttons by removing excessive padding
     if (!_spinbuttonprovider) {

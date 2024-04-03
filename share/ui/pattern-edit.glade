@@ -66,10 +66,10 @@
     <property name="width-request">260</property>
     <property name="child">
       <object class="GtkBox" id="options">
-        <property name="margin-start">8</property>
-        <property name="margin-end">8</property>
-        <property name="margin-top">8</property>
-        <property name="margin-bottom">8</property>
+        <property name="margin-start">1</property>
+        <property name="margin-end">1</property>
+        <property name="margin-top">1</property>
+        <property name="margin-bottom">1</property>
         <property name="orientation">vertical</property>
         <child>
           <object class="GtkCheckButton" id="show-names">
@@ -168,18 +168,12 @@
           </object>
         </child>
         <child>
-          <object class="GtkSearchEntry" id="search">
-            <property name="focusable">True</property>
-            <property name="halign">end</property>
-            <property name="width-chars">16</property>
-          </object>
-        </child>
-        <child>
           <object class="GtkMenuButton">
             <property name="focusable">True</property>
             <property name="focus-on-click">False</property>
             <property name="receives-default">True</property>
-            <property name="halign">center</property>
+            <property name="halign">end</property>
+            <property name="hexpand">True</property>
             <property name="has-frame">False</property>
             <property name="popover">popover-options</property>
             <child>
@@ -190,6 +184,13 @@
             <style>
               <class name="square-button"/>
             </style>
+          </object>
+        </child>
+        <child>
+          <object class="GtkSearchEntry" id="search">
+            <property name="focusable">True</property>
+            <property name="halign">end</property>
+            <property name="max-width-chars">10</property>
           </object>
         </child>
       </object>
@@ -380,7 +381,7 @@
         </child>
         <child>
           <object class="GtkScale" id="orient">
-            <property name="draw-value">True</property>
+            <property name="draw-value">False</property>
             <property name="focusable">True</property>
             <property name="round-digits">0</property>
             <property name="has-origin">False</property>

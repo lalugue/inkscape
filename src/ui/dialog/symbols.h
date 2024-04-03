@@ -181,6 +181,7 @@ private:
     auto_connection _defs_modified;
     auto_connection _doc_resource_changed;
     auto_connection _idle_refresh;
+    auto_connection _selection_changed;
     boost::compute::detail::lru_cache<std::string, Cairo::RefPtr<Cairo::Surface>> _image_cache;
 };
 

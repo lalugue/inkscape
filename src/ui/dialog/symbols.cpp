@@ -240,7 +240,7 @@ SymbolsDialog::SymbolsDialog(const char* prefsPath)
         return false;
     };
 
-    _symbol_sets_view.signal_selection_changed().connect([=, this](){
+    _selection_changed = _symbol_sets_view.signal_selection_changed().connect([=, this](){
         if (select_set({})) {
             get_widget<Gtk::Popover>(_builder, "set-popover").set_visible(false);
         }
