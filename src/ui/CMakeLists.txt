@@ -101,6 +101,7 @@ set(ui_SRC
 	tools/booleans-builder.cpp
 	tools/booleans-tool.cpp
 	tools/booleans-subitems.cpp
+	tools/shortcuts.cpp
 	tools/spiral-tool.cpp
 	tools/spray-tool.cpp
 	tools/star-tool.cpp
@@ -448,6 +449,7 @@ set(ui_SRC
 	tools/booleans-builder.h
 	tools/booleans-tool.h
 	tools/booleans-subitems.h
+	tools/shortcuts.h
 	tools/spiral-tool.h
 	tools/spray-tool.h
 	tools/star-tool.h

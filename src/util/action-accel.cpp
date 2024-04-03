@@ -22,7 +22,9 @@ namespace Inkscape::Util {
 ActionAccel::ActionAccel(Glib::ustring action_name)
     : _action{std::move(action_name)}
 {
-    auto &shortcuts = Shortcuts::getInstance();
+    // We don't need shortcuts to be initalized in order to use the signals
+    // and initalizing them too early will cause errors.
+    auto &shortcuts = Shortcuts::getInstance(false);
     _query();
     _prefs_changed = shortcuts.connect_changed([this]() { _onShortcutsModified(); });
 }

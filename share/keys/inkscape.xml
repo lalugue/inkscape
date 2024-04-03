@@ -47,6 +47,15 @@ override) the bindings in the main default.xml.
   <modifier action="trans-off-center" modifiers="Shift"/>
   <modifier action="trans-snapping" modifiers="Shift"/>
 
+<!-- TOOL SHORTCUTS -->
+  <bind gaction="tool.all.quick-preview" keys="f" />
+  <bind gaction="tool.all.quick-zoom" keys="q" />
+  <bind gaction="tool.all.quick-pan" keys="space" />
+
+  <bind gaction="tool.pen.to-line" keys="&lt;shift&gt;l" />
+  <bind gaction="tool.pen.to-curve" keys="&lt;shift&gt;u" />
+  <bind gaction="tool.pen.to-guides" keys="&lt;shift&gt;g" />
+
 <!-- ACTIONS -->
 
   <!-- Base -->

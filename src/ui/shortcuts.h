@@ -62,11 +62,11 @@ public:
         User
     };
         
-    static Shortcuts& getInstance()
+    static Shortcuts& getInstance(bool init = true)
     {
         static Shortcuts instance;
 
-        if (!instance.initialized) {
+        if (!instance.initialized && init) {
             instance.init();
         }
 

@@ -3394,17 +3394,28 @@ void InkscapePreferences::onKBTreeEdited (const Glib::ustring& path, guint accel
         return;
     }
 
+    auto iapp = InkscapeApplication::instance();
+    InkActionExtraData& action_data = iapp->get_action_extra_data();
+
     // Check if there is currently an actions assigned to this shortcut; if yes ask if the shortcut should be reassigned
     Glib::ustring action_name;
     Glib::ustring accel = Gtk::Accelerator::name(accel_key, accel_mods);
     auto const &actions = shortcuts.get_actions(accel);
-    if (!actions.empty()) {
-        action_name = actions[0];
+
+    for (auto possible_action : actions) {
+        if (action_data.isSameContext(id, possible_action)) {
+            // TODO: Reformat the data attached here so it's compatible with action_data
+            action_name = possible_action;
+            break;
+        }
     }
+
     if (!action_name.empty()) {
+        auto action_label = action_data.get_label_for_action(action_name);
+
         Glib::ustring message =
             Glib::ustring::compose(_("Keyboard shortcut \"%1\"\nis already assigned to \"%2\""),
-                                   shortcuts.get_label(new_shortcut_key), action_name);
+                                   shortcuts.get_label(new_shortcut_key), action_label.empty() ? action_name : action_label);
         Gtk::MessageDialog dialog(message, false, Gtk::MessageType::QUESTION, Gtk::ButtonsType::YES_NO, true);
         dialog.set_title(_("Reassign shortcut?"));
         dialog.set_secondary_text(_("Are you sure you want to reassign this shortcut?"));

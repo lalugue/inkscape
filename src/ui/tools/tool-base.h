@@ -29,6 +29,7 @@
 #include "helper/auto-connection.h"
 #include "preferences.h"
 #include "ui/widget/events/enums.h"
+#include "util/action-accel.h"
 
 namespace Gtk {
 class Widget;
@@ -111,7 +112,6 @@ public:
     virtual bool root_handler(CanvasEvent const &event);
     virtual bool item_handler(SPItem *item, CanvasEvent const &event);
     virtual void menu_popup(CanvasEvent const &event, SPObject *obj = nullptr);
-    virtual bool catch_undo(bool redo = false) { return false; }
     virtual bool can_undo(bool redo = false) { return false; }
     virtual bool is_ready() const { return true; }
     virtual void switching_away(std::string const &new_tool) {}
@@ -218,6 +218,12 @@ protected:
 
     SPDesktop *_desktop = nullptr;
 
+    // Tool based shortcuts
+    Util::ActionAccel _acc_undo;
+    Util::ActionAccel _acc_redo;
+    Util::ActionAccel _acc_quick_preview;
+    Util::ActionAccel _acc_quick_zoom;
+    Util::ActionAccel _acc_quick_pan;
 private:
     void _filterEventForSnapping(SPItem *item, CanvasEvent const &event, DelayedSnapEvent::Origin origin);
     bool _keyboardMove(KeyEvent const &event, Geom::Point const &dir);

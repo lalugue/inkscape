@@ -102,6 +102,7 @@
 #include "ui/dialog/font-substitution.h"  // Warn user about font substitution.
 #include "ui/dialog/startup.h"
 #include "ui/interface.h"                 // sp_ui_error_dialog
+#include "ui/tools/shortcuts.h"
 #include "ui/widget/desktop-widget.h"
 #include "util/scope_exit.h"
 
@@ -1023,6 +1024,9 @@ InkscapeApplication::on_startup()
     // build_menu(); // Builds and adds menu to app. Used by all Inkscape windows. This can be done
                      // before all actions defined. * For the moment done by each window so we can add
                      // window action info to menu_label_to_tooltip map.
+
+    // Add tool based shortcut meta-data
+    init_tool_shortcuts(this);
 }
 
 // Open document window with default document or pipe. Either this or on_open() is called.
