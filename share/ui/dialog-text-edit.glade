@@ -39,7 +39,6 @@
       </object>
     </property>
   </object>
-  <object class="GtkTextBuffer" id="text_buffer"/>
   <object class="GtkBox" id="contents">
     <property name="name">TextEdit Dialog Box</property>
     <property name="orientation">vertical</property>
@@ -148,17 +147,9 @@
           <object class="GtkNotebookPage">
             <property name="position">2</property>
             <property name="child">
-              <object class="GtkScrolledWindow">
+              <object class="GtkScrolledWindow" id="text_view_container">
                 <property name="focusable">True</property>
                 <property name="has-frame">True</property>
-                <property name="child">
-                  <object class="GtkTextView" id="text_view">
-                    <property name="height-request">64</property>
-                    <property name="focusable">True</property>
-                    <property name="wrap-mode">word</property>
-                    <property name="buffer">text_buffer</property>
-                  </object>
-                </property>
               </object>
             </property>
             <property name="tab">

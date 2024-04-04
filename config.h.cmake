@@ -69,7 +69,7 @@
 #cmakedefine HAVE_STRUCT_MALLINFO_USMBLKS 1
 
 /* enable gtk spelling widget and built-in spellchecker */
-#cmakedefine WITH_GSPELL 1
+#cmakedefine WITH_LIBSPELLING 1
 
 /* enable gtk syntax coloring text view widget */
 #cmakedefine WITH_GSOURCEVIEW 1

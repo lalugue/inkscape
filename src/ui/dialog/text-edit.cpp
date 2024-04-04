@@ -24,7 +24,6 @@
 #include "text-edit.h"
 
 #include <algorithm>
-#include <initializer_list>
 #include <string>
 
 #include <glibmm/i18n.h>
@@ -42,8 +41,8 @@
 #include <gtkmm/separator.h>
 #include <gtkmm/textbuffer.h>
 #include <gtkmm/textview.h>
-#ifdef WITH_GSPELL
-# include <gspell/gspell.h>
+#ifdef WITH_LIBSPELLING
+#include <libspelling.h>
 #endif
 #include <sigc++/functors/mem_fun.h>
 
@@ -56,7 +55,6 @@
 #include "style.h"
 #include "text-editing.h"
 
-#include "io/resource.h"
 #include "libnrtype/font-factory.h"
 #include "libnrtype/font-lister.h"
 #include "object/sp-flowtext.h"
@@ -68,11 +66,13 @@
 #include "ui/pack.h"
 #include "ui/util.h"
 #include "util/font-collections.h"
+#include "util/gobjectptr.h"
 #include "util/units.h"
 
 namespace Inkscape::UI::Dialog {
+namespace {
 
-static Glib::ustring const &getSamplePhrase()
+Glib::ustring const &getSamplePhrase()
 {
     /* TRANSLATORS: Test string used in text and font dialog (when no
      * text has been entered) to get a preview of the font. Choose
@@ -81,6 +81,34 @@ static Glib::ustring const &getSamplePhrase()
     static auto const samplephrase = Glib::ustring{_("AaBbCcIiPpQq12369$\342\202\254\302\242?.;/()")};
     return samplephrase;
 }
+
+#ifdef WITH_LIBSPELLING
+
+// libspelling API wrapping
+
+auto spelling_text_buffer_adapter_create(GtkSourceBuffer *buffer, SpellingChecker *checker)
+{
+    return Util::GObjectPtr(spelling_text_buffer_adapter_new(buffer, checker));
+}
+
+auto get_menu_model(SpellingTextBufferAdapter &adapter)
+{
+    return Glib::wrap(spelling_text_buffer_adapter_get_menu_model(&adapter), true);
+}
+
+auto as_action_group(SpellingTextBufferAdapter &adapter)
+{
+    return Glib::wrap(G_ACTION_GROUP(&adapter), true);
+}
+
+void set_enabled(SpellingTextBufferAdapter &adapter, bool enabled)
+{
+    spelling_text_buffer_adapter_set_enabled(&adapter, enabled);
+}
+
+#endif // WITH_LIBSPELLING
+
+} // namespace
 
 TextEdit::TextEdit()
     : DialogBase("/dialogs/textandfont", "Text")
@@ -99,8 +127,6 @@ TextEdit::TextEdit()
     , collection_editor_button (get_widget<Gtk::Button>     (builder, "collection_editor_button"))
     , collections_list         (get_widget<Gtk::ListBox>    (builder, "collections_list"))
     , preview_label            (get_widget<Gtk::Label>      (builder, "preview_label"))
-      // Text
-    , text_view                (get_widget<Gtk::TextView>   (builder, "text_view"))
       // Features
     , preview_label2           (get_widget<Gtk::Label>      (builder, "preview_label2"))
       // Shared
@@ -119,8 +145,17 @@ TextEdit::TextEdit()
     auto font_box = &get_widget<Gtk::Box>     (builder, "font_box");
     auto feat_box = &get_widget<Gtk::Box>     (builder, "feat_box");
 
-    text_buffer = std::dynamic_pointer_cast<Gtk::TextBuffer>(builder->get_object("text_buffer"));
-    g_assert(text_buffer);
+#ifdef WITH_LIBSPELLING
+    text_view = Gtk::manage(Glib::wrap(GTK_TEXT_VIEW(gtk_source_view_new())));
+#else
+    text_view = Gtk::make_managed<Gtk::TextView>();
+#endif
+    text_buffer = text_view->get_buffer();
+    text_view->property_height_request().set_value(64);
+    text_view->set_focusable();
+    text_view->set_wrap_mode(Gtk::WrapMode::WORD);
+    auto &text_view_container = get_widget<Gtk::ScrolledWindow>(builder, "text_view_container");
+    text_view_container.set_child(*text_view);
 
     UI::pack_start(*font_box, font_selector, true, true);
     font_box->reorder_child_after(font_selector, *font_box->get_first_child()->get_next_sibling());
@@ -128,7 +163,7 @@ TextEdit::TextEdit()
     feat_box->reorder_child_after(font_features, *feat_box->get_first_child());
 
     // filter_popover->set_modal(false); // Stay open until button clicked again.
-    filter_popover.signal_show().connect([=](){
+    filter_popover.signal_show().connect([this] {
         // update font collections checkboxes
         display_font_collections();
     }, false);
@@ -136,33 +171,31 @@ TextEdit::TextEdit()
     filter_menu_button.set_icon_name(INKSCAPE_ICON("font_collections"));
     filter_menu_button.set_label(_("Collections"));
 
-#ifdef WITH_GSPELL
-    /*
-       TODO: Use computed xml:lang attribute of relevant element, if present, to specify the
-       language (either as 2nd arg of gtkspell_new_attach, or with explicit
-       gtkspell_set_language call in; see advanced.c example in gtkspell docs).
-       onReadSelection looks like a suitable place.
-    */
-    GspellTextView *gspell_view = gspell_text_view_get_from_gtk_text_view(text_view.gobj());
-    gspell_text_view_basic_setup(gspell_view);
+#ifdef WITH_LIBSPELLING
+    // TODO: Use computed xml:lang attribute of relevant element, if present, to specify the language.
+    // onReadSelection() looks like a suitable place.
+    auto adapter = spelling_text_buffer_adapter_create(GTK_SOURCE_BUFFER(text_view->get_buffer()->gobj()), spelling_checker_get_default());
+    text_view->set_extra_menu(get_menu_model(*adapter));
+    text_view->insert_action_group("spelling", as_action_group(*adapter));
+    set_enabled(*adapter, true);
 #endif
 
     append(*contents);
 
     /* Signal handlers */
-    Controller::add_key<&TextEdit::captureUndo, nullptr>(text_view, *this);
-    text_buffer->signal_changed().connect([=](){ onChange(); });
-    setasdefault_button.signal_clicked().connect([=](){ onSetDefault(); });
-    apply_button.signal_clicked().connect([=](){ onApply(); });
+    Controller::add_key<&TextEdit::captureUndo, nullptr>(*text_view, *this);
+    text_buffer->signal_changed().connect([this] { onChange(); });
+    setasdefault_button.signal_clicked().connect([this] { onSetDefault(); });
+    apply_button.signal_clicked().connect([this] { onApply(); });
     fontChangedConn = font_selector.connectChanged(sigc::mem_fun(*this, &TextEdit::onFontChange));
-    fontFeaturesChangedConn = font_features.connectChanged([=](){ onChange(); });
+    fontFeaturesChangedConn = font_features.connectChanged([this] { onChange(); });
     notebook->signal_switch_page().connect(sigc::mem_fun(*this, &TextEdit::onFontFeatures));
-    search_entry.signal_search_changed().connect([=](){ on_search_entry_changed(); });
-    reset_button.signal_clicked().connect([=](){ on_reset_button_pressed(); });
-    collection_editor_button.signal_clicked().connect([=](){ on_fcm_button_clicked(); });
+    search_entry.signal_search_changed().connect([this] { on_search_entry_changed(); });
+    reset_button.signal_clicked().connect([this] { on_reset_button_pressed(); });
+    collection_editor_button.signal_clicked().connect([this] { on_fcm_button_clicked(); });
     Inkscape::FontLister::get_instance()->connectUpdate(sigc::mem_fun(*this, &TextEdit::change_font_count_label));
-    fontCollectionsUpdate = font_collections->connect_update([=]() { display_font_collections(); });
-    fontCollectionsChangedSelection = font_collections->connect_selection_update([=]() { display_font_collections(); });
+    fontCollectionsUpdate = font_collections->connect_update([this]  { display_font_collections(); });
+    fontCollectionsChangedSelection = font_collections->connect_selection_update([this]  { display_font_collections(); });
 
     font_selector.set_name("TextEdit");
     change_font_count_label();
@@ -203,7 +236,7 @@ void TextEdit::onReadSelection ( bool dostyle, bool /*docontent*/ )
     {
         guint items = getSelectedTextCount ();
         bool has_one_item = items == 1;
-        text_view.set_sensitive(has_one_item);
+        text_view->set_sensitive(has_one_item);
         apply_button.set_sensitive(false);
         setasdefault_button.set_sensitive(true);
 
@@ -221,7 +254,7 @@ void TextEdit::onReadSelection ( bool dostyle, bool /*docontent*/ )
 
         text->getRepr(); // was being called but result ignored. Check this.
     } else {
-        text_view.set_sensitive(false);
+        text_view->set_sensitive(false);
         apply_button.set_sensitive(false);
         setasdefault_button.set_sensitive(false);
     }

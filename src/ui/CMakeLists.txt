@@ -579,6 +579,6 @@ set ( ui_spellcheck_SRC
 	dialog/spellcheck.h
 )
 
-if ("${WITH_GSPELL}")
+if ("${WITH_LIBSPELLING}")
 	add_inkscape_source("${ui_spellcheck_SRC}")
 endif()

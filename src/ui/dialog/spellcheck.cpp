@@ -13,15 +13,7 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#ifdef HAVE_CONFIG_H
-# include "config.h"  // only include where actually required!
-#endif
-
 #include "spellcheck.h"
-
-#ifdef _WIN32
-#include <windows.h>
-#endif
 
 #include <glibmm/i18n.h>
 
@@ -29,7 +21,6 @@
 #include "document-undo.h"
 #include "document.h"
 #include "inkscape.h"
-#include "message-stack.h"
 #include "layer-manager.h"
 #include "selection.h"
 #include "selection-chemistry.h"
@@ -41,46 +32,38 @@
 #include "object/sp-root.h"
 #include "object/sp-string.h"
 #include "object/sp-text.h"
-#include "object/sp-tref.h"
 #include "ui/dialog/dialog-container.h"
 #include "ui/dialog/inkscape-preferences.h" // for PREFS_PAGE_SPELLCHECK
 #include "ui/icon-names.h"
 #include "ui/pack.h"
 #include "ui/tools/text-tool.h"
+#include "util/delete-with.h"
 
+namespace Inkscape::UI::Dialog {
+namespace {
 
-namespace Inkscape {
-namespace UI {
-namespace Dialog {
-
-/**
- * Get the list of installed dictionaries/languages
- */
-std::vector<LanguagePair> SpellCheck::get_available_langs()
+auto list_languages(SpellingProvider *provider)
 {
-    std::vector<LanguagePair> langs;
-
-#if WITH_GSPELL
-    // TODO: write a gspellmm library.
-    // TODO: why is this not const?
-    GList *list = const_cast<GList *>(gspell_language_get_available());
-    g_list_foreach(list, [](gpointer data, gpointer user_data) {
-        GspellLanguage *language = reinterpret_cast<GspellLanguage*>(data);
-        std::vector<LanguagePair> *langs = reinterpret_cast<std::vector<LanguagePair>*>(user_data);
-        const gchar *name = gspell_language_get_name(language);
-        const gchar *code = gspell_language_get_code(language);
-        langs->emplace_back(name, code);
-    }, &langs);
-#endif
-
-    return langs;
+    return Util::delete_with<g_ptr_array_unref>(spelling_provider_list_languages(provider));
 }
 
-static void show_spellcheck_preferences_dialog()
+template <typename T, typename F>
+void foreach(GPtrArray *arr, F &&f)
+{
+    g_ptr_array_foreach(arr, +[] (void *ptr, void *data) {
+        auto t = reinterpret_cast<T *>(ptr);
+        auto f = reinterpret_cast<F *>(data);
+        f->operator()(t);
+    }, &f);
+}
+
+void show_spellcheck_preferences_dialog()
 {
     Inkscape::Preferences::get()->setInt("/dialogs/preferences/page", PREFS_PAGE_SPELLCHECK);
     SP_ACTIVE_DESKTOP->getContainer()->new_dialog("Spellcheck");
 }
+
+} // namespace
 
 SpellCheck::SpellCheck()
     : DialogBase("/dialogs/spellcheck/", "Spellcheck")
@@ -106,12 +89,16 @@ SpellCheck::SpellCheck()
 
     banner_hbox.set_child(banner_label);
 
-    if (_langs.empty()) {
-        _langs = get_available_langs();
+    _provider = spelling_provider_get_default();
+    foreach<SpellingLanguageInfo>(list_languages(_provider).get(), [&] (SpellingLanguageInfo *l) {
+        _langs.push_back({
+            spelling_language_info_get_name(l),
+            spelling_language_info_get_code(l)
+        });
+    });
 
-        if (_langs.empty()) {
-            banner_label.set_markup(Glib::ustring::compose("<i>%1</i>", _("No dictionaries installed")));
-        }
+    if (_langs.empty()) {
+        banner_label.set_markup(Glib::ustring::compose("<i>%1</i>", _("No dictionaries installed")));
     }
 
     scrolled_window.set_policy(Gtk::PolicyType::AUTOMATIC, Gtk::PolicyType::AUTOMATIC);
@@ -124,8 +111,8 @@ SpellCheck::SpellCheck()
     tree_view.append_column(_("Suggestions:"), tree_columns.suggestions);
 
     if (!_langs.empty()) {
-        for (const LanguagePair &pair : _langs) {
-            dictionary_combo.append(pair.second, pair.first);
+        for (auto const &pair : _langs) {
+            dictionary_combo.append(pair.code, pair.name);
         }
         // Set previously set language (or the first item)
         if(!dictionary_combo.set_active_id(_prefs->getString("/dialogs/spellcheck/lang"))) {
@@ -302,21 +289,16 @@ SpellCheck::nextText()
     _word.clear();
 }
 
-void SpellCheck::deleteSpeller() {
-}
+bool SpellCheck::updateSpeller()
+{
+    _checker.reset();
 
-bool SpellCheck::updateSpeller() {
-#if WITH_GSPELL
     auto lang = dictionary_combo.get_active_id();
     if (!lang.empty()) {
-        const GspellLanguage *language = gspell_language_lookup(lang.c_str());
-        _checker = gspell_checker_new(language);
+        _checker = GObjectPtr(spelling_checker_new(_provider, lang.c_str()));
     }
 
-    return _checker != nullptr;
-#else
-    return false;
-#endif
+    return (bool)_checker;
 }
 
 void SpellCheck::onStart()
@@ -349,8 +331,6 @@ void SpellCheck::onStart()
 void
 SpellCheck::finished ()
 {
-    deleteSpeller();
-
     clearRects();
     disconnect();
 
@@ -460,12 +440,9 @@ SpellCheck::nextWord()
 
     int have = 0;
 
-#if WITH_GSPELL
     if (_checker) {
-        GError *error = nullptr;
-        have += gspell_checker_check_word(_checker, _word.c_str(), -1, &error);
+        have += spelling_checker_check_word(_checker.get(), _word.c_str(), _word.length());
     }
-#endif  /* WITH_GSPELL */
 
     if (have == 0) { // not found in any!
         _stops ++;
@@ -543,29 +520,23 @@ SpellCheck::nextWord()
             }
         }
 
-#if WITH_GSPELL
         // get suggestions
         model = Gtk::ListStore::create(tree_columns);
         tree_view.set_model(model);
         unsigned n_sugg = 0;
 
         if (_checker) {
-            GSList *list = gspell_checker_get_suggestions(_checker, _word.c_str(), -1);
-            std::vector<std::string> suggs;
+            auto corrections = Util::delete_with<g_strfreev>(spelling_checker_list_corrections(_checker.get(), _word.c_str()));
 
-            // TODO: use a better API for that, or figure out how to make gspellmm.
-            g_slist_foreach(list, [](gpointer data, gpointer user_data) {
-                const gchar *suggestion = reinterpret_cast<const gchar*>(data);
-                std::vector<std::string> *suggs = reinterpret_cast<std::vector<std::string>*>(user_data);
-                suggs->push_back(suggestion);
-            }, &suggs);
-            g_slist_free_full(list, g_free);
+            for (int i = 0; ; i++) {
+                auto correction = corrections.get()[i];
+                if (!correction) {
+                    break;
+                }
 
-            Gtk::TreeModel::iterator iter;
-            for (auto const &sugg : suggs) {
-                iter = model->append();
+                auto iter = model->append();
                 Gtk::TreeModel::Row row = *iter;
-                row[tree_columns.suggestions] = sugg;
+                row[tree_columns.suggestions] = correction;
 
                 // select first suggestion
                 if (++n_sugg == 1) {
@@ -575,8 +546,6 @@ SpellCheck::nextWord()
         }
 
         accept_button.set_sensitive(n_sugg > 0);
-
-#endif  /* WITH_GSPELL */
 
         return true;
     }
@@ -671,43 +640,35 @@ void SpellCheck::onAccept ()
     doSpellcheck();
 }
 
-void
-SpellCheck::onIgnore ()
+void SpellCheck::onIgnore()
 {
-#if WITH_GSPELL
     if (_checker) {
-        gspell_checker_add_word_to_session(_checker, _word.c_str(), -1);
+        spelling_checker_ignore_word(_checker.get(), _word.c_str());
     }
-#endif  /* WITH_GSPELL */
 
     deleteLastRect();
     doSpellcheck();
 }
 
-void
-SpellCheck::onIgnoreOnce ()
+void SpellCheck::onIgnoreOnce()
 {
     deleteLastRect();
     doSpellcheck();
 }
 
-void
-SpellCheck::onAdd ()
+void SpellCheck::onAdd()
 {
     _adds++;
 
-#if WITH_GSPELL
     if (_checker) {
-        gspell_checker_add_word_to_personal(_checker, _word.c_str(), -1);
+        spelling_checker_add_word(_checker.get(), _word.c_str());
     }
-#endif  /* WITH_GSPELL */
 
     deleteLastRect();
     doSpellcheck();
 }
 
-void
-SpellCheck::onStop ()
+void SpellCheck::onStop()
 {
     finished();
 }
@@ -732,9 +693,8 @@ void SpellCheck::onLanguageChanged()
     deleteLastRect();
     doSpellcheck();
 }
-}
-}
-}
+
+} // namespace Inkscape::UI::Dialog
 
 /*
   Local Variables:

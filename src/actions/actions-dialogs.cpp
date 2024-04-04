@@ -14,7 +14,7 @@
 #include <giomm.h>  // Not <gtkmm.h>! To eventually allow a headless version!
 #include <glibmm/i18n.h>
 
-#include "config.h"  // #ifdef WITH_GSPELL
+#include "config.h" // #ifdef WITH_LIBSPELLING
 
 #include "actions-dialogs.h"
 #include "actions-helper.h"
@@ -63,7 +63,7 @@ static const std::vector<std::vector<Glib::ustring>> raw_data_dialogs =
     {"win.dialog-open('UndoHistory')",        N_("Open Undo History"),         "Dialog",  N_("Undo History")                                                                           },
     {"win.dialog-open('XMLEditor')",          N_("Open XML Editor"),           "Dialog",  N_("View and edit the XML tree of the document")                                             },
     {"app.preferences",                       N_("Open Preferences"),          "Dialog",  N_("Edit global Inkscape preferences")                                                       },
-#if WITH_GSPELL
+#if WITH_LIBSPELLING
     {"win.dialog-open('Spellcheck')",         N_("Open Spellcheck"),           "Dialog",  N_("Check spelling of text in document")                                                     },
 #endif
 #if DEBUG

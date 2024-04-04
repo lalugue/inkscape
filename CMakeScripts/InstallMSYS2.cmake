@@ -58,6 +58,7 @@ if(WIN32)
     ${MINGW_BIN}/libgslcblas-[0-9]*.dll
     ${MINGW_BIN}/libgtk-4-[0-9]*.dll
     ${MINGW_BIN}/libgtkmm-4.0-[0-9]*.dll
+    ${MINGW_BIN}/libspelling-1-[0-9]*.dll
     ${MINGW_BIN}/libgtksourceview-5-[0-9]*.dll
     ${MINGW_BIN}/libharfbuzz-[0-9]*.dll
     ${MINGW_BIN}/libheif.dll
@@ -192,7 +193,8 @@ if(WIN32)
       COMPONENT translations.${language_code_escaped}
       FILES_MATCHING
       PATTERN "*glib20.mo"
-      PATTERN "*gtk40.mo")
+      PATTERN "*gtk40.mo"
+      PATTERN "*libspelling-1.mo")
   endforeach()
 
   install(DIRECTORY ${MINGW_PATH}/share/poppler

@@ -5,7 +5,7 @@
 #include <glibmm/i18n.h>
 #include <glibmm/ustring.h>
 
-#include "config.h" // Needed for WITH_GSPELL
+#include "config.h" // Needed for WITH_LIBSPELLING
 
 #include "ui/dialog/dialog-data.h"
 #include "ui/icon-names.h"  // INKSCAPE_ICON macro
@@ -57,7 +57,7 @@ std::map<std::string, DialogData> const &get_dialog_data()
     {"Transform",          {_("Transfor_m"),            INKSCAPE_ICON("dialog-transform"),            DialogData::Basic,          ScrollProvider::NOPROVIDE }},
     {"UndoHistory",        {_("Undo _History"),         INKSCAPE_ICON("edit-undo-history"),           DialogData::Basic,          ScrollProvider::NOPROVIDE }},
     {"XMLEditor",          {_("_XML Editor"),           INKSCAPE_ICON("dialog-xml-editor"),           DialogData::Advanced,       ScrollProvider::NOPROVIDE }},
-#if WITH_GSPELL
+#if WITH_LIBSPELLING
     {"Spellcheck",         {_("Check Spellin_g"),       INKSCAPE_ICON("tools-check-spelling"),        DialogData::Basic,          ScrollProvider::NOPROVIDE }},
 #endif
 #if DEBUG

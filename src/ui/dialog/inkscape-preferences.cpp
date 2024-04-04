@@ -108,13 +108,6 @@
 #include "util-string/ustring-format.h"
 #include "widgets/spw-utilities.h"
 
-#if WITH_GSPELL
-# include "ui/dialog/spellcheck.h" // for get_available_langs
-# ifdef _WIN32
-#  include <windows.h>
-# endif
-#endif
-
 namespace Inkscape::UI::Dialog {
 
 using Inkscape::UI::Widget::DialogPage;
@@ -3707,17 +3700,14 @@ void InkscapePreferences::onKBListKeyboardShortcuts()
 
 void InkscapePreferences::initPageSpellcheck()
 {
-#if WITH_GSPELL
+#if WITH_LIBSPELLING
+    _spell_ignorenumbers.init(_("Ignore words with digits"), "/dialogs/spellcheck/ignorenumbers", true);
+    _page_spellcheck.add_line(false, "", _spell_ignorenumbers, "", _("Ignore words containing digits, such as \"R2D2\""), true);
 
-    _spell_ignorenumbers.init( _("Ignore words with digits"), "/dialogs/spellcheck/ignorenumbers", true);
-    _page_spellcheck.add_line( false, "", _spell_ignorenumbers, "",
-                           _("Ignore words containing digits, such as \"R2D2\""), true);
+    _spell_ignoreallcaps.init(_("Ignore words in ALL CAPITALS"), "/dialogs/spellcheck/ignoreallcaps", false);
+    _page_spellcheck.add_line(false, "", _spell_ignoreallcaps, "", _("Ignore words in all capitals, such as \"IUPAC\""), true);
 
-    _spell_ignoreallcaps.init( _("Ignore words in ALL CAPITALS"), "/dialogs/spellcheck/ignoreallcaps", false);
-    _page_spellcheck.add_line( false, "", _spell_ignoreallcaps, "",
-                           _("Ignore words in all capitals, such as \"IUPAC\""), true);
-
-    this->AddPage(_page_spellcheck, _("Spellcheck"), PREFS_PAGE_SPELLCHECK);
+    AddPage(_page_spellcheck, _("Spellcheck"), PREFS_PAGE_SPELLCHECK);
 #endif
 }
 

@@ -13,10 +13,6 @@
 #ifndef SEEN_SPELLCHECK_H
 #define SEEN_SPELLCHECK_H
 
-#ifdef HAVE_CONFIG_H
-# include "config.h"  // only include where actually required!
-#endif
-
 #include <gtkmm/box.h>
 #include <gtkmm/button.h>
 #include <gtkmm/comboboxtext.h>
@@ -31,10 +27,9 @@
 #include "text-editing.h"
 #include "ui/dialog/dialog-base.h"
 #include "display/control/canvas-item-ptr.h"
+#include "util/gobjectptr.h"
 
-#if WITH_GSPELL
-#include <gspell/gspell.h>
-#endif  /* WITH_GSPELL */
+#include <libspelling.h>
 
 class SPObject;
 class SPItem;
@@ -47,7 +42,11 @@ class CanvasItemRect;
 namespace UI {
 namespace Dialog {
 
-using LanguagePair = std::pair<std::string, std::string>;
+struct LanguagePair
+{
+    std::string name;
+    std::string code;
+};
 
 /**
  *
@@ -60,8 +59,6 @@ class SpellCheck : public DialogBase
 public:
     SpellCheck();
     ~SpellCheck() override;
-
-    static std::vector<LanguagePair> get_available_langs();
 
 private:
     void documentReplaced() override;
@@ -110,7 +107,6 @@ private:
      * @return true if update was successful
      */
     bool updateSpeller();
-    void deleteSpeller();
 
     /**
      * Accept button clicked
@@ -164,9 +160,8 @@ private:
 
     SPObject *_root;
 
-#if WITH_GSPELL
-    GspellChecker *_checker = nullptr;
-#endif  /* WITH_GSPELL */
+    SpellingProvider *_provider;
+    Util::GObjectPtr<SpellingChecker> _checker;
 
     /**
      * list of canvasitems (currently just rects) that mark misspelled things on canvas

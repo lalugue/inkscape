@@ -176,7 +176,7 @@ private:
     Inkscape::UI::Widget::FontVariations font_variations;
 
     // Tab 2: Text ---------------------- //
-    Gtk::TextView &text_view;
+    Gtk::TextView *text_view;
     Glib::RefPtr<Gtk::TextBuffer> text_buffer;
 
     // Tab 3: Features  ----------------- //

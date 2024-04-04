@@ -51,7 +51,7 @@
 #include "ui/dialog/objects.h"
 #include "ui/dialog/paint-servers.h"
 #include "ui/dialog/selectorsdialog.h"
-#if WITH_GSPELL
+#if WITH_LIBSPELLING
 #include "ui/dialog/spellcheck.h"
 #endif
 #include "ui/dialog/svg-fonts-dialog.h"
@@ -142,7 +142,7 @@ std::unique_ptr<DialogBase> DialogContainer::dialog_factory(Glib::ustring const 
     else if (dialog_type == "Transform")          return std::make_unique<Transformation>();
     else if (dialog_type == "UndoHistory")        return std::make_unique<UndoHistory>();
     else if (dialog_type == "XMLEditor")          return std::make_unique<XmlTree>();
-#if WITH_GSPELL
+#if WITH_LIBSPELLING
     else if (dialog_type == "Spellcheck")         return std::make_unique<SpellCheck>();
 #endif
 #ifdef DEBUG
