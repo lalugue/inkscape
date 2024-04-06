@@ -20,6 +20,7 @@ if(WIN32)
     ${MINGW_BIN}/libbz2-[0-9]*.dll
     ${MINGW_BIN}/libcairo-[0-9]*.dll
     ${MINGW_BIN}/libcairo-gobject-[0-9]*.dll
+    ${MINGW_BIN}/libcairo-script-interpreter-[0-9].dll
     ${MINGW_BIN}/libcairomm-1.16-[0-9]*.dll
     ${MINGW_BIN}/libcdr-0.[0-9]*.dll
     ${MINGW_BIN}/libcrypto-1_[0-9]*.dll
@@ -52,6 +53,7 @@ if(WIN32)
     ${MINGW_BIN}/libgobject-2.0-[0-9]*.dll
     ${MINGW_BIN}/libgomp-[0-9]*.dll
     ${MINGW_BIN}/libgraphite[0-9]*.dll
+    ${MINGW_BIN}/libgraphene-1.0-[0-9].dll
     ${MINGW_BIN}/libgsl-[0-9]*.dll
     ${MINGW_BIN}/libgslcblas-[0-9]*.dll
     ${MINGW_BIN}/libgtk-4-[0-9]*.dll
@@ -70,6 +72,7 @@ if(WIN32)
     ${MINGW_BIN}/liblcms2-[0-9]*.dll
     ${MINGW_BIN}/liblqr-1-[0-9]*.dll
     ${MINGW_BIN}/liblzma-[0-9]*.dll
+    ${MINGW_BIN}/liblzo2-[0-9].dll
     ${MINGW_BIN}/libmpdec-[0-9]*.dll
     ${MINGW_BIN}/libmpfr-[0-9]*.dll
     ${MINGW_BIN}/libncursesw6.dll
@@ -99,7 +102,7 @@ if(WIN32)
     ${MINGW_BIN}/librevenge-stream-0.[0-9]*.dll
     ${MINGW_BIN}/librsvg-2-[0-9]*.dll
     ${MINGW_BIN}/libsharpyuv-0.dll
-    ${MINGW_BIN}/libsigc-2.0-[0-9]*.dll
+    ${MINGW_BIN}/libsigc-3.0-[0-9]*.dll
     ${MINGW_BIN}/libsqlite3-[0-9]*.dll
     ${MINGW_BIN}/libssh2-[0-9]*.dll
     ${MINGW_BIN}/libssl-1_[0-9]*.dll
