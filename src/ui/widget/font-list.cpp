@@ -138,7 +138,7 @@ Glib::ustring get_font_name(Gtk::TreeIter& iter) {
     return name;
 }
 
-void get_cell_data_func(Gtk::CellRenderer* cell_renderer, Gtk::TreeModel::Row row) {
+void get_cell_data_func(Gtk::CellRenderer* cell_renderer, Gtk::TreeModel::Row row, double ui_font_size) {
     auto& renderer = get_renderer(*cell_renderer);
 
     const Inkscape::FontInfo& font = row[g_column_model.font];
@@ -151,10 +151,20 @@ void get_cell_data_func(Gtk::CellRenderer* cell_renderer, Gtk::TreeModel::Row ro
     // if no sample text given, then render font name
     auto text = renderer._sample_text.empty() ? name : renderer._sample_text;
 
+    auto font_size = renderer._font_size / 100.0 * ui_font_size;
+    // font percent size and point size is only supported by Pango >= 1.50
+    auto static percent_size = !pango_version_check(1, 50, 0);
+    CSSOStringStream os;
+    if (percent_size) {
+        os.precision(2);
+        os << font_size << "pt";
+    }
+    else {
+        os << static_cast<int>(font_size * PANGO_SCALE);
+    }
     auto font_desc = Glib::Markup::escape_text(
         present ? Inkscape::get_font_description(font.ff, font.face).to_string() : (alt.empty() ? "sans-serif" : alt));
-    auto markup = Glib::ustring::format("<span allow_breaks='false' size='", renderer._font_size, "%' font='", font_desc, "'>", text, "</span>");
-
+    auto markup = Glib::ustring::format("<span allow_breaks='false' size='", os.str().c_str(), "' font='", font_desc, "'>", text, "</span>");
     if (renderer._show_font_name) {
         renderer._name = name;
     }
@@ -237,9 +247,10 @@ const char* get_sort_icon(Inkscape::FontOrder order) {
     return icon;
 }
 
-void set_grid_cell_size(Gtk::CellRendererText* renderer, int font_size_percent) {
-    // TODO: use pango layout to calc sizes
-    int size = 20 * font_size_percent / 100;
+void set_grid_cell_size(Gtk::CellRendererText* renderer, int font_size_percent, double ui_font_size) {
+    // UI font size in points to pixels times fudge factor for extra space
+    auto fs = ui_font_size * 96.0 / 72.0 * 1.5;
+    int size = fs * font_size_percent / 100;
     renderer->set_fixed_size(size * 4 / 3, size);
 };
 
@@ -324,10 +335,19 @@ FontList::FontList(Glib::ustring preferences_path) :
     auto search = &get_widget<Gtk::SearchEntry>(_builder, "font-search");
     search->signal_changed().connect([=](){ filter(); });
 
+    // font size in points
+    auto get_font_size = [this]() {
+        auto font = get_style_context()->get_font();
+        double font_size = font.get_size_is_absolute() ? font.get_size() : font.get_size() / PANGO_SCALE;
+        return font_size;
+    };
+    _ui_font_size = get_font_size();
+
     auto set_row_height = [=](int font_size_percent) {
         font_renderer->_font_size = font_size_percent;
-        // TODO: use pango layout to calc sizes
-        int hh = (font_renderer->_show_font_name ? 10 : 0) + 18 * font_renderer->_font_size / 100;
+        auto fs = _ui_font_size * 96.0 / 72.0;
+        // fudge factor of 1.2 to give font some extra space
+        int hh = (font_renderer->_show_font_name ? 10 : 0) + 1.2 * fs * font_renderer->_font_size / 100;
         font_renderer->set_fixed_size(-1, hh);
         // resize rows
         _font_list.set_fixed_height_mode(false);
@@ -335,7 +355,7 @@ FontList::FontList(Glib::ustring preferences_path) :
     };
     auto set_grid_size = [=](int font_size_percent) {
         grid_renderer->_font_size = font_size_percent;
-        set_grid_cell_size(grid_renderer, font_size_percent);
+        set_grid_cell_size(grid_renderer, font_size_percent, _ui_font_size);
     };
 
     font_renderer->_font_size = Inkscape::Preferences::get()->getIntLimited(_prefs + "/preview-size", 200, 100, 800);
@@ -413,7 +433,7 @@ FontList::FontList(Glib::ustring preferences_path) :
     _text_column.set_fixed_width(100); // limit minimal width to keep entire dialog narrow; column can still grow
     _text_column.set_cell_data_func(*_cell_renderer, [=](Gtk::CellRenderer* r, const Gtk::TreeModel::iterator& it) {
         Gtk::TreeModel::Row row = *it;
-        get_cell_data_func(r, row);
+        get_cell_data_func(r, row, _ui_font_size);
     });
     _text_column.set_expand();
     _font_list.append_column(_text_column);
@@ -431,7 +451,7 @@ FontList::FontList(Glib::ustring preferences_path) :
     // grid_renderer->_sample_text = "Aa";
     _font_grid.set_cell_data_func(*grid_renderer, [=](const Gtk::TreeModel::const_iterator& it) {
         Gtk::TreeModel::Row row = *it;
-        get_cell_data_func(grid_renderer, row);
+        get_cell_data_func(grid_renderer, row, _ui_font_size);
     });
     // show font name in a grid tooltip
     _font_grid.signal_query_tooltip().connect([=](int x, int y, bool kbd, const Glib::RefPtr<Gtk::Tooltip>& tt){
@@ -445,6 +465,17 @@ FontList::FontList(Glib::ustring preferences_path) :
         return !name.empty();
     });
     _font_grid.property_has_tooltip() = true;
+
+    // react to text scaling changes; also update us after font-list gets attached to a window and inherits apps styles
+    signal_style_updated().connect([=, this](){
+        auto fs = get_font_size();
+        if (_ui_font_size != fs) {
+            _ui_font_size = fs;
+            set_row_height(font_renderer->_font_size);
+            set_grid_size(grid_renderer->_font_size);
+            filter(); // resize
+        }
+    });
 
     auto font_selected = [=](const FontInfo& font) {
         if (_update.pending()) return;

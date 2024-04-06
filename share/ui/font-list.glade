@@ -529,6 +529,7 @@
                 <property name="image">image-list</property>
                 <property name="draw-indicator">False</property>
                 <property name="group">view-grid</property>
+                <property name="tooltip-text" translatable="yes">Show all fonts in a flat list</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -545,6 +546,7 @@
                 <property name="image">image-grid</property>
                 <property name="draw-indicator">False</property>
                 <property name="group">view-list</property>
+                <property name="tooltip-text" translatable="yes">Arrange all fonts in a compact grid display</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -561,6 +563,7 @@
                 <property name="width-chars">6</property>
                 <property name="text" translatable="yes">Aa</property>
                 <property name="caps-lock-warning">False</property>
+                <property name="tooltip-text" translatable="yes">Sample text to show in a font grid display</property>
               </object>
               <packing>
                 <property name="expand">False</property>
