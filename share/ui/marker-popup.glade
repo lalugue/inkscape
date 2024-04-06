@@ -326,14 +326,14 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkWidget" id="preview-bin">
-                    <child>
-                      <object class="GtkImage" id="preview">
-                      </object>
-                    </child>
-                    <property name="vexpand">True</property>
-                    <property name="margin-end">4</property>
+                  <object class="GtkPicture" id="preview">
+                    <property name="content-fit">scale-down</property>
                     <property name="hexpand">True</property>
+                    <property name="vexpand">True</property>
+                    <property name="margin-start">4</property>
+                    <property name="margin-end">12</property>
+                    <property name="margin-top">4</property>
+                    <property name="margin-bottom">4</property>
                   </object>
                 </child>
                 <layout>
@@ -373,27 +373,35 @@
         </child>
       </object>
     </property>
+    <style>
+        <class name="popup-menu"/>
+    </style>
   </object>
   <object class="GtkMenuButton" id="menu-btn">
     <property name="focusable">True</property>
     <property name="focus-on-click">False</property>
     <property name="receives-default">True</property>
     <property name="popover">popover</property>
+    <property name="hexpand">True</property>
     <style>
         <class name="marker-menu-button"/>
     </style>
     <child>
       <object class="GtkBox" id="btn-box">
+        <property name="valign">center</property>
         <child>
-          <object class="GtkImage" id="current-img">
-            <property name="width-request">50</property>
-            <property name="height-request">36</property>
+          <object class="GtkPicture" id="current-img">
+            <property name="content-fit">scale-down</property>
+            <property name="width-request">40</property>
+            <property name="height-request">32</property>
             <property name="hexpand">True</property>
-            <property name="icon-name">image-missing</property>
+            <property name="halign">center</property>
+            <property name="valign">center</property>
           </object>
         </child>
         <child>
           <object class="GtkImage">
+            <property name="halign">end</property>
             <property name="icon-name">pan-down-symbolic</property>
             <style>
               <class name="arrow"/>

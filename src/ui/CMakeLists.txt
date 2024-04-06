@@ -554,6 +554,7 @@ set(ui_SRC
 	widget/scroll-utils.h
 	widget/selected-style.h
 	widget/shapeicon.h
+	widget/size-reporter.h
 	widget/spin-scale.h
 	widget/spinbutton.h
 	widget/status-bar.h

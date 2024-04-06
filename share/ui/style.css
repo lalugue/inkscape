@@ -557,18 +557,15 @@ button.link:hover image {
 }
 
 .marker-item-box {
-    padding: 0;
+    padding: 1px;
 }
 .marker-separator {
     padding: 0;
 }
-menubutton.marker-menu-button > button {
-    padding-top: 0;
-    padding-bottom: 0;
-}
 
 .tight-button {
-    padding: 5px 3px;
+    padding-left: 3px;
+    padding-right: 3px;
 }
 
 .small-button {
@@ -1197,6 +1194,11 @@ popover.menu > stack > box {
 popover.menu > stack > box > modelbutton:first-child > * /* Affect children not bgcolour */
 {
     opacity: 0.55;
+}
+
+/* regular popover that has no arrow and pretends to be a dropdown menu */
+popover.popup-menu contents {
+    margin-top: 1px; /* distance from the bottom of the button above this menu */
 }
 
 /* darker background for extensions gallery due to fixed-color thumbnails (white background + drop shadow) */
