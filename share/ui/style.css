@@ -753,10 +753,6 @@ button.square-button image {
     margin-left: 1px;
 }
 
-.inkscape-toolbar > * > *:last-child {
-    margin-right: 0;
-}
-
 .inkscape-toolbar > popover > box {
     margin: 4px 3px;
 }
