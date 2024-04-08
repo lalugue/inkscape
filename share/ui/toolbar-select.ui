@@ -544,12 +544,12 @@
       <object class="GtkToggleButton" id="_lock_btn">
         <property name="visible">True</property>
         <property name="can-focus">False</property>
-        <property name="tooltip-text" translatable="yes">When scaling objects, scale the stroke width by the same proportion</property>
+        <property name="tooltip-text" translatable="yes">When locked, change width and height by the same proportion</property>
         <property name="relief">none</property>
         <child>
           <object class="GtkImage" id="image17">
             <property name="visible">True</property>
-            <property name="icon-name">object-locked</property>
+            <property name="icon-name">object-unlocked</property>
           </object>
         </child>
       </object>

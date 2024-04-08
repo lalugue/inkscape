@@ -414,20 +414,18 @@ char const *SelectToolbar::get_action_key(double mh, double sh, double mv, doubl
 void SelectToolbar::toggle_lock()
 {
     // use this roundabout way of changing image to make sure its size is preserved
-    auto btn = static_cast<Gtk::ToggleButton *>(_lock_btn.get_child());
-    auto image = static_cast<Gtk::Image *>(btn->get_child());
-    if (!image) {
+    if (auto image = static_cast<Gtk::Image *>(_lock_btn.get_child())) {
+        auto size = image->get_pixel_size();
+        if (_lock_btn.get_active()) {
+            image->set_from_icon_name("object-locked", Gtk::ICON_SIZE_BUTTON);
+        } else {
+            image->set_from_icon_name("object-unlocked", Gtk::ICON_SIZE_BUTTON);
+        }
+        image->set_pixel_size(size);
+    } else {
         g_warning("No GTK image in toolbar button 'lock'");
         return;
     }
-    auto size = image->get_pixel_size();
-
-    if (_lock_btn.get_active()) {
-        image->set_from_icon_name("object-locked", Gtk::ICON_SIZE_BUTTON);
-    } else {
-        image->set_from_icon_name("object-unlocked", Gtk::ICON_SIZE_BUTTON);
-    }
-    image->set_pixel_size(size);
 }
 
 void SelectToolbar::toggle_touch()
