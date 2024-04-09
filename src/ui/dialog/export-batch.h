@@ -60,6 +60,9 @@ class ColorPicker;
 namespace Dialog {
 
 class ExportList;
+class BatchItem;
+
+typedef std::map<std::string, std::unique_ptr<BatchItem>> BatchItems;
 
 class BatchItem final : public Gtk::FlowBoxChild
 {
@@ -80,6 +83,7 @@ public:
     void set_selected(bool selected);
     void update_selected();
 
+    static void syncItems(BatchItems &items, std::map<std::string, SPObject*> const &objects, Gtk::FlowBox &container, std::shared_ptr<PreviewDrawing> preview);
 private:
     void init(std::shared_ptr<PreviewDrawing> drawing);
     void update_label();
@@ -185,6 +189,7 @@ private:
     // SVG Signals
     auto_connection _pages_changed_connection;
 };
+
 
 } // namespace Dialog
 } // namespace UI

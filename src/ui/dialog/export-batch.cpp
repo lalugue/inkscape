@@ -252,6 +252,53 @@ void BatchItem::setDrawing(std::shared_ptr<PreviewDrawing> drawing)
     _preview.setDrawing(std::move(drawing));
 }
 
+/**
+ * Add and remove batch items and their previews carefully and insert new ones into the container FlowBox
+ */
+void BatchItem::syncItems(BatchItems &items, std::map<std::string, SPObject*> const &objects, Gtk::FlowBox &container, std::shared_ptr<PreviewDrawing> preview)
+{
+    // Remove any items not in objects
+    for (auto it = items.begin(); it != items.end();) {
+        if (!objects.contains(it->first)) {
+            container.remove(*it->second);
+            it = items.erase(it);
+        } else {
+            ++it;
+        }
+    }
+
+    // A special container for pages allows them to be sorted correctly
+    std::set<SPPage *, SPPage::PageIndexOrder> pages;
+
+    // Add any objects not in items
+    for (auto &[id, obj] : objects) {
+        if (auto page = cast<SPPage>(obj)) {
+            if (!items[id] || items[id]->getPage() != page)
+                pages.insert(page);
+            continue;
+        }
+
+        auto item = cast<SPItem>(obj);
+
+        // If an Item or Page with same Id is already present, Skip
+        if (items[id] && items[id]->getItem() == item)
+            continue;
+
+        // Add new item to the end of list
+        items[id] = std::make_unique<BatchItem>(item, preview);
+        container.insert(*items[id], -1);
+        items[id]->set_selected(true);
+    }
+
+    for (auto &page : pages) {
+        if (auto id = page->getId()) {
+            items[id] = std::make_unique<BatchItem>(page, preview);
+            container.insert(*items[id], -1);
+            items[id]->set_selected(true);
+        }
+    }
+}
+
 BatchExport::BatchExport(BaseObjectType * const cobject, Glib::RefPtr<Gtk::Builder> const &builder)
     : Gtk::Box{cobject}
     , preview_container(get_widget<Gtk::FlowBox>      (builder, "b_preview_box"))
@@ -373,41 +420,37 @@ void BatchExport::refreshItems()
     if (!_desktop || !_document) return;
 
     // Create New List of Items
-    std::set<SPItem *> itemsList;
-    std::set<SPPage *, SPPage::PageIndexOrder> pageList;
-    std::set<SPPage *> pageUnsorted;
+    std::map<std::string, SPObject*> objects;
 
     char *num_str = nullptr;
     switch (current_key) {
         case SELECTION_SELECTION: {
-            auto items = _desktop->getSelection()->items();
-            for (auto i = items.begin(); i != items.end(); ++i) {
-                if (SPItem *item = *i) {
-                    // Ignore empty items (empty groups, other bad items)
-                    if (item->visualBounds()) {
-                        itemsList.insert(item);
-                    }
+            for (auto item : _desktop->getSelection()->items()) {
+                // Ignore empty items (empty groups, other bad items)
+                if (item && item->visualBounds() && item->getId()) {
+                    objects[item->getId()] = item;
                 }
             }
-            num_str = g_strdup_printf(ngettext("%d Item", "%d Items", itemsList.size()), (int)itemsList.size());
+            num_str = g_strdup_printf(ngettext("%d Item", "%d Items", objects.size()), (int)objects.size());
             break;
         }
         case SELECTION_LAYER: {
             for (auto layer : _desktop->layerManager().getAllLayers()) {
                 // Ignore empty layers, they have no size.
-                if (layer->geometricBounds()) {
-                    itemsList.insert(layer);
+                if (layer->geometricBounds() && layer->getId()) {
+                    objects[layer->getId()] = layer;
                 }
             }
-            num_str = g_strdup_printf(ngettext("%d Layer", "%d Layers", itemsList.size()), (int)itemsList.size());
+            num_str = g_strdup_printf(ngettext("%d Layer", "%d Layers", objects.size()), (int)objects.size());
             break;
         }
         case SELECTION_PAGE: {
             for (auto page : _desktop->getDocument()->getPageManager().getPages()) {
-                pageList.insert(page);
-                pageUnsorted.insert(page);
+                if (auto id = page->getId()) {
+                    objects[id] = page;
+                }
             }
-            num_str = g_strdup_printf(ngettext("%d Page", "%d Pages", pageList.size()), (int)pageList.size());
+            num_str = g_strdup_printf(ngettext("%d Page", "%d Pages", objects.size()), (int)objects.size());
             break;
         }
         default:
@@ -418,58 +461,11 @@ void BatchExport::refreshItems()
         g_free(num_str);
     }
 
-    // Create a list of items which are already present but will be removed as they are not present anymore
-    std::vector<std::string> toRemove;
-    for (auto &[key, val] : current_items) {
-        if (SPItem *item = val->getItem()) {
-            // if item is not present in itemList add it to remove list so that we can remove it
-            auto itemItr = itemsList.find(item);
-            if (itemItr == itemsList.end() || !(*itemItr)->getId() || (*itemItr)->getId() != key) {
-                toRemove.push_back(key);
-            }
-        }
-        if (SPPage *page = val->getPage()) {
-            auto pageItr = pageUnsorted.find(page);
-            if (pageItr == pageUnsorted.end() || !(*pageItr)->getId() || (*pageItr)->getId() != key) {
-                toRemove.push_back(key);
-            }
-        }
-    }
-
-    // now remove all the items
-    for (auto const &key : toRemove) {
-        if (current_items[key]) {
-            preview_container.remove(*current_items[key]);
-            current_items.erase(key);
-        }
-    }
-
-    // now add which were are new
-    for (auto &item : itemsList) {
-        if (auto id = item->getId()) {
-            // If an Item with same Id is already present, Skip
-            if (current_items[id] && current_items[id]->getItem() == item) {
-                continue;
-            }
-            // Add new item to the end of list
-            current_items[id] = std::make_unique<BatchItem>(item, _preview_drawing);
-            preview_container.insert(*current_items[id], -1);
-            current_items[id]->set_selected(true);
-        }
-    }
-    for (auto &page : pageList) {
-        if (auto id = page->getId()) {
-            if (current_items[id] && current_items[id]->getPage() == page) {
-                continue;
-            }
-            current_items[id] = std::make_unique<BatchItem>(page, _preview_drawing);
-            preview_container.insert(*current_items[id], -1);
-            current_items[id]->set_selected(true);
-        }
-    }
+    BatchItem::syncItems(current_items, objects, preview_container, _preview_drawing);
 
     refreshPreview();
 }
+
 
 void BatchExport::refreshPreview()
 {
