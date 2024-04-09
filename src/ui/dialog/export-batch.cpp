@@ -726,17 +726,17 @@ void BatchExport::onExport()
                 continue;
             }
 
-            std::string item_filename = Glib::build_filename(path, name);
+            std::string item_name = name;
             if (!name.empty()) {
                 std::string::value_type last_char = name.at(name.length() - 1);
                 if (last_char != '/' && last_char != '\\') {
-                    item_filename += "_";
+                    item_name += "_";
                 }
             }
             if (id.at(0) == '#' && batchItem->getItem() && !batchItem->getItem()->label()) {
-                item_filename += id.substr(1);
+                item_name += id.substr(1);
             } else {
-                item_filename += id;
+                item_name += id;
             }
 
             if (!suffix.empty()) {
@@ -744,9 +744,16 @@ void BatchExport::onExport()
                     // Put the dpi in at the user's requested location.
                     suffix = std::regex_replace(suffix.c_str(), std::regex("\\{dpi\\}"), std::to_string((int)dpi));
                 }
-                item_filename = item_filename + "_" + suffix;
+                item_name += "_" + suffix;
             }
 
+            if (item_name.empty()) {
+                g_error("Empty item name in batch export, refusing to export.");
+                continue;
+            }
+
+            // Add the path last so item_name has a chance to be filled without path confusion
+            std::string item_filename = Glib::build_filename(path, item_name);
             if (!ow) {
                 if (!Export::unConflictFilename(_document, item_filename, ext->get_extension())) {
                     continue;
