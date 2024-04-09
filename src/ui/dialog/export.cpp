@@ -468,7 +468,8 @@ std::string Export::prependDirectory(Glib::ustring name, const std::string &orig
         directory = Inkscape::IO::Resource::homedir_path();
     }
 
-    return Glib::canonicalize_filename(Glib::build_filename(directory, Glib::filename_from_utf8(name)), orig);
+    auto fname = Glib::build_filename(directory, Glib::filename_from_utf8(name));
+    return orig.empty() ? fname : Glib::canonicalize_filename(fname, orig);
 }
 
 std::string Export::defaultFilename(SPDocument *doc, std::string &filename_entry_text, std::string extension)
