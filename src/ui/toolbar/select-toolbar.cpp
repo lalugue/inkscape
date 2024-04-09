@@ -130,6 +130,7 @@ SelectToolbar::SelectToolbar(SPDesktop *desktop)
     _transform_pattern_btn.signal_toggled().connect(sigc::mem_fun(*this, &SelectToolbar::toggle_pattern));
 
     _lock_btn.signal_toggled().connect(sigc::mem_fun(*this, &SelectToolbar::toggle_lock));
+    _lock_btn.set_active(prefs->getBool("/tools/select/lock_aspect_ratio", false));
 
     assert(desktop);
     auto *selection = desktop->getSelection();
@@ -413,6 +414,8 @@ char const *SelectToolbar::get_action_key(double mh, double sh, double mv, doubl
 
 void SelectToolbar::toggle_lock()
 {
+    Inkscape::Preferences::get()->setBool("/tools/select/lock_aspect_ratio", _lock_btn.get_active());
+
     // use this roundabout way of changing image to make sure its size is preserved
     if (auto image = static_cast<Gtk::Image *>(_lock_btn.get_child())) {
         auto size = image->get_pixel_size();

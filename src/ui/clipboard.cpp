@@ -1785,7 +1785,7 @@ Geom::Scale ClipboardManagerImpl::_getScale(SPDesktop *desktop, Geom::Point cons
     }
     // If the "lock aspect ratio" button is pressed and we paste only a single coordinate,
     // resize the second one by the same ratio too
-    if (desktop && desktop->isToolboxButtonActive("lock")) {
+    if (desktop && Inkscape::Preferences::get()->getBool("/tools/select/lock_aspect_ratio", false)) {
         if (apply_x && !apply_y) {
             scale_y = scale_x;
         }
