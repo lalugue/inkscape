@@ -47,7 +47,6 @@
 #include "object/sp-page.h"
 #include "object/sp-root.h"
 #include "ui/builder-utils.h"
-#include "ui/dialog/export-batch.h"
 #include "ui/dialog/export.h"
 #include "ui/dialog/filedialog.h"
 #include "ui/icon-names.h"
@@ -357,38 +356,27 @@ std::vector<SPPage const *> SingleExport::getSelectedPages() const
     return pages;
 }
 
-/**
- * Clear all page preview widgets and halting any in-progress updates.
- */
-void SingleExport::clearPagePreviews()
-{
-    _pages_list_changed.block();
-
-    UI::remove_all_children(pages_list);
-
-    _pages_list_changed.unblock();
-}
-
 void SingleExport::onPagesChanged()
 {
-    clearPagePreviews();
-    if (!_document)
-        return;
+    std::map<std::string, SPObject*> itemsList;
 
-    _pages_list_changed.block();
-
-    auto &pm = _document->getPageManager();
-    if (pm.getPageCount() > 1) {
-        for (auto page : pm.getPages()) {
-            auto const item = Gtk::make_managed<BatchItem>(page, _preview_drawing);
-            pages_list.insert(*item, -1);
+    if (_document) {
+        auto &pm = _document->getPageManager();
+        if (pm.getPageCount() > 1) {
+            for (auto page : pm.getPages()) {
+                if (auto id = page->getId()) {
+                    itemsList[id] = page;
+                }
+            }
         }
     }
+
+    _pages_list_changed.block();
+    BatchItem::syncItems(current_items, itemsList, pages_list, _preview_drawing);
     refreshPage();
     if (auto ext = si_extension_cb.getExtension()) {
         setPagesMode(!ext->is_raster());
     }
-
     _pages_list_changed.unblock();
 }
 
@@ -1056,13 +1044,12 @@ void SingleExport::setDocument(SPDocument *document)
         preview.setDrawing(_preview_drawing);
 
         // Refresh values to sync them with defaults.
-        onPagesChanged();
         refreshArea();
         loadExportHints();
     } else {
         _preview_drawing.reset();
-        clearPagePreviews();
     }
+    onPagesChanged();
 }
 
 SingleExport::~SingleExport() = default;
