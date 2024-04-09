@@ -407,7 +407,7 @@
     <child>
       <object class="GtkToggleButton" id="_lock_btn">
         <property name="valign">center</property>
-        <property name="tooltip-text" translatable="yes">When scaling objects, scale the stroke width by the same proportion</property>
+        <property name="tooltip-text" translatable="yes">When locked, change width and height by the same proportion</property>
         <property name="has-frame">False</property>
         <child>
           <object class="GtkImage" id="image17">

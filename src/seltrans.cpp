@@ -1088,7 +1088,7 @@ gboolean Inkscape::SelTrans::scaleRequest(Geom::Point &pt, guint state)
         Inkscape::PureScale  *bb, *sn;
 
         auto confine = Modifiers::Modifier::get(Modifiers::Type::TRANS_CONFINE)->active(state);
-        if (confine || _desktop->isToolboxButtonActive ("lock")) {
+        if (confine || Inkscape::Preferences::get()->getBool("/tools/select/lock_aspect_ratio", false)) {
             // Scale is locked to a 1:1 aspect ratio, so that s[X] must be made to equal s[Y].
             //
             // The aspect-ratio must be locked before snapping

@@ -109,6 +109,7 @@ SelectToolbar::SelectToolbar(SPDesktop *desktop)
     _transform_pattern_btn.signal_toggled().connect(sigc::mem_fun(*this, &SelectToolbar::toggle_pattern));
 
     _lock_btn.signal_toggled().connect(sigc::mem_fun(*this, &SelectToolbar::toggle_lock));
+    _lock_btn.set_active(prefs->getBool("/tools/select/lock_aspect_ratio", false));
     toggle_lock();
 }
 
@@ -392,6 +393,8 @@ char const *SelectToolbar::get_action_key(double mh, double sh, double mv, doubl
 
 void SelectToolbar::toggle_lock()
 {
+    Inkscape::Preferences::get()->setBool("/tools/select/lock_aspect_ratio", _lock_btn.get_active());
+
     _lock_btn.set_image_from_icon_name(_lock_btn.get_active() ? "object-locked" : "object-unlocked");
 }
 
