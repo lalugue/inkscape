@@ -134,7 +134,7 @@ Here comes the rendering part which could be put into the 'render' methods of SP
 /* The below functions are copy&pasted plus slightly modified from *_invoke_print functions. */
 static void sp_item_invoke_render(SPItem const *item, CairoRenderContext *ctx, SPItem const *origin = nullptr, SPPage const *page = nullptr);
 static void sp_group_render(SPGroup const *group, CairoRenderContext *ctx, SPItem const *origin = nullptr, SPPage const *page = nullptr);
-static void sp_anchor_render(SPAnchor const *a, CairoRenderContext *ctx);
+static void sp_anchor_render(SPAnchor const *a, CairoRenderContext *ctx, SPItem const *origin, SPPage const *page);
 static void sp_use_render(SPUse const *use, CairoRenderContext *ctx, SPPage const *page = nullptr);
 static void sp_shape_render(SPShape const *shape, CairoRenderContext *ctx, SPItem const *origin = nullptr);
 static void sp_text_render(SPText const *text, CairoRenderContext *ctx);
@@ -457,7 +457,7 @@ static void sp_image_render(SPImage const *image, CairoRenderContext *ctx)
     ctx->renderImage(image->pixbuf.get(), transform, image->style);
 }
 
-static void sp_anchor_render(SPAnchor const *a, CairoRenderContext *ctx)
+static void sp_anchor_render(SPAnchor const *a, CairoRenderContext *ctx, SPItem const *origin, SPPage const *page)
 {
     if (a->href) {
         // Raw linking, whatever the user said they wanted
@@ -476,7 +476,7 @@ static void sp_anchor_render(SPAnchor const *a, CairoRenderContext *ctx)
     CairoRenderer *renderer = ctx->getRenderer();
     for (auto const &object : a->children) {
         if (auto item = cast<SPItem>(&object)) {
-            renderer->renderItem(ctx, item);
+            renderer->renderItem(ctx, item, origin, page);
         }
     }
     if (a->href)
@@ -610,6 +610,10 @@ static void sp_item_invoke_render(SPItem const *item, CairoRenderContext *ctx, S
         is_linked |= is<SPAnchor>(link);
     }
 
+    // Test to see if the objects would be invisible on this page and hide them if so.
+    if (page && !origin && !page->itemOnPage(item, false, false))
+        return;
+
     if (is_linked)
         ctx->destBegin(item->getId());
 
@@ -621,7 +625,7 @@ static void sp_item_invoke_render(SPItem const *item, CairoRenderContext *ctx, S
         sp_symbol_render(symbol, ctx, origin, page);
     } else if (auto anchor = cast<SPAnchor>(item)) {
         TRACE(("<a>\n"));
-        sp_anchor_render(anchor, ctx);
+        sp_anchor_render(anchor, ctx, origin, page);
     } else if (auto shape = cast<SPShape>(item)) {
         TRACE(("shape\n"));
         sp_shape_render(shape, ctx, origin);

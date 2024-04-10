@@ -383,9 +383,23 @@ std::vector<SPItem *> SPPage::getOverlappingItems(bool hidden, bool in_bleed, bo
 
 /**
  * Return true if this item is contained within the page boundary.
+ *
+ * @param item - The SPItem to check for page intersection or containment
+ * @param contains - If true the test will be if the shape is entirely contained,
+                     rather than just partly overlaps.
+ * @param groups - If true, groups will be tested as a whole object instead of one
+ *                 object at a time.
  */
-bool SPPage::itemOnPage(SPItem *item, bool contains) const
+bool SPPage::itemOnPage(SPItem const *item, bool contains, bool groups) const
 {
+    if (!groups && is<SPGroup>(item)) {
+        return std::any_of(item->children.begin(),
+                   item->children.end(),
+                   [this](auto const &obj) {
+                       auto const *as_item = cast<SPItem>(&obj);
+                       return as_item && itemOnPage(as_item);
+                   });
+    }
     if (auto box = item->desktopGeometricBounds()) {
         if (contains) {
             return getDesktopRect().contains(*box);
