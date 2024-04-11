@@ -1958,10 +1958,11 @@ int InkscapeApplication::get_number_of_windows() const {
 */
 void action_effect(Inkscape::Extension::Effect* effect, bool show_prefs) {
     auto desktop = InkscapeApplication::instance()->get_active_desktop();
-    if (effect->_workingDialog && show_prefs) {
+    if (effect->_workingDialog && show_prefs && desktop) {
         effect->prefs(desktop);
     } else {
-        effect->effect(desktop);
+        auto document = InkscapeApplication::instance()->get_active_document();
+        effect->effect(desktop, document);
     }
 }
 
