@@ -401,7 +401,7 @@ bool SPPage::itemOnPage(SPItem *item, bool contains) const
 bool SPPage::isViewportPage() const
 {
     auto rect = document->preferredBounds();
-    return getDocumentRect().corner(0) == rect->corner(0);
+    return getDocumentRect().corner(0).floor() == rect->corner(0).floor();
 }
 
 /**
