@@ -41,52 +41,10 @@
 #include "ui/dialog/inkscape-preferences.h" // for PREFS_PAGE_SPELLCHECK
 #include "ui/icon-names.h"
 #include "ui/tools/text-tool.h"
-#include "util/delete-with.h"
+#include "ui/libspelling-wrapper.h"
 
 namespace Inkscape::UI::Dialog {
 namespace {
-
-template <typename T, typename F>
-void foreach(GPtrArray *arr, F &&f)
-{
-    g_ptr_array_foreach(arr, +[] (void *ptr, void *data) {
-        auto t = reinterpret_cast<T *>(ptr);
-        auto f = reinterpret_cast<F *>(data);
-        f->operator()(t);
-    }, &f);
-}
-
-template <typename F>
-void foreach(char **strs, F &&f)
-{
-    if (!strs) {
-        return;
-    }
-    for (int i = 0; strs[i]; i++) {
-        f(strs[i]);
-    }
-}
-
-auto list_languages(SpellingProvider *provider)
-{
-    return Util::delete_with<g_ptr_array_unref>(spelling_provider_list_languages(provider));
-}
-
-auto list_corrections_c(SpellingChecker *checker, char const *word)
-{
-    return Util::delete_with<g_strfreev>(spelling_checker_list_corrections(checker, word));
-}
-
-auto list_corrections(SpellingChecker *checker, char const *word)
-{
-    std::vector<Glib::ustring> result;
-
-    foreach(list_corrections_c(checker, word).get(), [&] (auto correction) {
-        result.emplace_back(correction);
-    });
-
-    return result;
-}
 
 void show_spellcheck_preferences_dialog()
 {

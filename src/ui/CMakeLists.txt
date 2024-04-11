@@ -577,6 +577,7 @@ add_inkscape_source("${ui_SRC}")
 set ( ui_spellcheck_SRC
 	dialog/spellcheck.cpp
 	dialog/spellcheck.h
+	libspelling-wrapper.h
 )
 
 if ("${WITH_LIBSPELLING}")

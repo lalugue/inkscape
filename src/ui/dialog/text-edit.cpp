@@ -42,7 +42,7 @@
 #include <gtkmm/textbuffer.h>
 #include <gtkmm/textview.h>
 #ifdef WITH_LIBSPELLING
-#include <libspelling.h>
+#include "ui/libspelling-wrapper.h"
 #endif
 #include <sigc++/functors/mem_fun.h>
 
@@ -66,7 +66,6 @@
 #include "ui/pack.h"
 #include "ui/util.h"
 #include "util/font-collections.h"
-#include "util/gobjectptr.h"
 #include "util/units.h"
 
 namespace Inkscape::UI::Dialog {
@@ -81,32 +80,6 @@ Glib::ustring const &getSamplePhrase()
     static auto const samplephrase = Glib::ustring{_("AaBbCcIiPpQq12369$\342\202\254\302\242?.;/()")};
     return samplephrase;
 }
-
-#ifdef WITH_LIBSPELLING
-
-// libspelling API wrapping
-
-auto spelling_text_buffer_adapter_create(GtkSourceBuffer *buffer, SpellingChecker *checker)
-{
-    return Util::GObjectPtr(spelling_text_buffer_adapter_new(buffer, checker));
-}
-
-auto get_menu_model(SpellingTextBufferAdapter &adapter)
-{
-    return Glib::wrap(spelling_text_buffer_adapter_get_menu_model(&adapter), true);
-}
-
-auto as_action_group(SpellingTextBufferAdapter &adapter)
-{
-    return Glib::wrap(G_ACTION_GROUP(&adapter), true);
-}
-
-void set_enabled(SpellingTextBufferAdapter &adapter, bool enabled)
-{
-    spelling_text_buffer_adapter_set_enabled(&adapter, enabled);
-}
-
-#endif // WITH_LIBSPELLING
 
 } // namespace
 
