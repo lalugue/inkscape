@@ -663,7 +663,7 @@ void SingleExport::onExport()
             auto pages = getSelectedPages();
             // A single page won't have a selection UI, so emplace it
             if (page_manager.getPageCount() == 1) {
-                pages.emplace_back(page_manager.getViewportPage());
+                pages.emplace_back(page_manager.getPage(0));
             }
             exportSuccessful = Export::exportVector(omod, copy_doc.get(), filename, false, items, pages);
         } else {
