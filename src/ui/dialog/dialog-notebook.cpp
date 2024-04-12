@@ -25,6 +25,7 @@
 #include <gtkmm/gestureclick.h>
 #include <gtkmm/scrollbar.h>
 #include <gtkmm/separator.h>
+#include <gtkmm/eventcontrollerscroll.h>
 
 #include "dialog-notebook.h"
 #include "enums.h"
@@ -82,6 +83,14 @@ DialogNotebook::DialogNotebook(DialogContainer *container)
     _notebook.set_show_border(false);
     _notebook.set_group_name("InkscapeDialogGroup");
     _notebook.set_scrollable(true);
+
+    auto box = dynamic_cast<Gtk::Box*>(_notebook.get_first_child());
+    if (box) {
+        auto scroll_controller = Gtk::EventControllerScroll::create();
+        scroll_controller->set_flags(Gtk::EventControllerScroll::Flags::VERTICAL | Gtk::EventControllerScroll::Flags::DISCRETE);
+        box->add_controller(scroll_controller);
+        scroll_controller->signal_scroll().connect(sigc::mem_fun(*this, &DialogNotebook::on_scroll_event), false);
+    }
 
     UI::Widget::PopoverMenuItem *new_menu_item = nullptr;
 
@@ -924,6 +933,26 @@ void DialogNotebook::on_page_switch(Gtk::Widget *curr_page, guint)
             }
         }
     }
+}
+
+bool DialogNotebook::on_scroll_event(double dx, double dy)
+{
+    if (_notebook.get_n_pages() <= 1) {
+        return false;
+    }
+
+    if (dy < 0) {
+        auto current_page = _notebook.get_current_page();
+        if (current_page > 0) {
+            _notebook.set_current_page(current_page - 1);
+        }
+    } else if (dy > 0) {
+        auto current_page = _notebook.get_current_page();
+        if (current_page < _notebook.get_n_pages() - 1) {
+            _notebook.set_current_page(current_page + 1);
+        }
+    }
+    return true;
 }
 
 /**
