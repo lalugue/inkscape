@@ -219,9 +219,17 @@ SelectedStyle::SelectedStyle(bool /*layout*/)
     opacity_sb->set_adjustment(opacity_adjustment);
     opacity_sb->set_size_request(SELECTED_STYLE_SB_WIDTH);
     opacity_sb->set_sensitive(false);
-    Controller::add_click(*opacity_sb, {},
-                      sigc::mem_fun(*this, &SelectedStyle::on_opacity_click),
-                      Controller::Button::middle);
+
+    Controller::add_click(
+        *opacity_sb,
+        [this](Gtk::GestureMultiPress const &, int, double, double) {
+            // Hack to keep the clipboard contents from being pasted
+            // into the spinbutton.
+            opacity_sb->set_editable(false);
+            return Gtk::EVENT_SEQUENCE_NONE;
+        },
+        sigc::mem_fun(*this, &SelectedStyle::on_opacity_click), Controller::Button::middle);
+
     on_popup_menu(*opacity_sb, sigc::mem_fun(*this, &SelectedStyle::on_opacity_popup));
     opacity_sb->signal_value_changed().connect(sigc::mem_fun(*this, &SelectedStyle::on_opacity_changed));
 
@@ -943,7 +951,7 @@ SelectedStyle::update()
     case QUERY_STYLE_SINGLE:
     case QUERY_STYLE_MULTIPLE_AVERAGED:
     case QUERY_STYLE_MULTIPLE_SAME:
-        opacity_sb->set_tooltip_text(_("Opacity (%)"));
+        opacity_sb->set_tooltip_markup(_("<b>Opacity (%)</b>\nMiddle-click cycles through 0%, 50%, 100%"));
 
         if (_opacity_blocked) break;
 
