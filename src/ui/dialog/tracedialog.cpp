@@ -37,6 +37,7 @@
 #include <gtkmm/stack.h>
 
 #include "desktop.h"
+#include "helper/auto-connection.h"
 #include "selection.h"
 #include "trace/autotrace/inkscape-autotrace.h"
 #include "trace/depixelize/inkscape-depixelize.h"
@@ -126,6 +127,7 @@ private:
     Gtk::Stack &stack;
     Gtk::ProgressBar &progressbar;
     Gtk::Box &boxchild1, &boxchild2;
+    auto_connection _page_switched;
 };
 
 enum class Page
@@ -420,7 +422,7 @@ TraceDialogImpl::TraceDialogImpl()
     for (auto combo : {&CBT_SS, &CBT_MS}) {
         combo->property_selected().signal_changed().connect([this] { updatePreview(); });
     }
-    choice_tab.signal_switch_page().connect([this] (Gtk::Widget *, unsigned) { updatePreview(); });
+    _page_switched = choice_tab.signal_switch_page().connect([this] (Gtk::Widget *, unsigned) { updatePreview(); });
 
     auto focus = Gtk::EventControllerFocus::create();
     focus->set_propagation_phase(Gtk::PropagationPhase::BUBBLE);
