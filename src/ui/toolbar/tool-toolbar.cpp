@@ -46,11 +46,13 @@ ToolToolbar::ToolToolbar(InkscapeWindow *window)
 
     auto builder = Inkscape::UI::create_builder("toolbar-tool.ui");
     auto &tool_toolbar = UI::get_widget<Gtk::ScrolledWindow>(builder, "tool-toolbar");
+    tool_toolbar.set_halign(Gtk::Align::FILL);
 
     attachHandlers(builder, window);
 
     _popoverbin.setChild(&tool_toolbar);
     _popoverbin.setPopover(_context_menu.get());
+    _popoverbin.set_hexpand(true);
     append(_popoverbin);
 
     // Hide/show buttons based on preferences.
