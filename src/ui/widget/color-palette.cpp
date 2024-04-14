@@ -153,7 +153,7 @@ ColorPalette::ColorPalette():
     set_vexpand_set(true);
     set_up_scrolling();
 
-    connectBeforeResize([this] (int w, int h, int) {
+    connectAfterResize([this] (int w, int h, int) {
         auto const a = Geom::IntPoint{w, h};
         if (_allocation == a) return;
         _allocation = a;
