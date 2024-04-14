@@ -1414,6 +1414,15 @@ bool ObjectsPanel::on_tree_key_pressed(GtkEventControllerKey const * const contr
                 _activateAction("layer-lower", "selection-stack-down");
                 return true;
             }
+        case GDK_KEY_Return:
+            if (auto item = getSelection()->singleItem()) {
+                if (auto watcher = getWatcher(item->getRepr())) {
+                    auto item_path = watcher->getTreePath();
+                    _tree.set_cursor(item_path, *_tree.get_column(0), true /* start_editing */);
+                    _is_editing = true;
+                    return true;
+                }
+            }
     }
 
     return false;
