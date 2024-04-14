@@ -41,8 +41,15 @@ spinbutton text { /* don't let text inside inflate spinbox height */
     padding-bottom: 0;
 }
 
-tab { /* limiting size of tabs in a notebook, to match Inkscape v1.4 */
+notebook header tabs tab { /* limiting size of tabs in a notebook, to match Inkscape v1.4 */
     min-height: 20px;
+    margin: 0;
+}
+notebook header tabs { /* ditto */
+    margin-left: 1px;
+    margin-right: 1px;
+    padding-left: 0;
+    padding-right: 0;
 }
 
 frame { /* rectangular frame to match older Inkscape style and stop cutting corners of its content */
@@ -80,6 +87,20 @@ popover.menu modelbutton { /* this is selectable item in a combobox popup list *
     min-height: 25px;
 }
 popover.menu modelbutton:selected {
+    background-color: @theme_selected_bg_color;
+    color: @theme_selected_fg_color;
+}
+
+dropdown popover listview { /* DropDown widget's popup menu container */
+    margin: 0;
+}
+dropdown popover listview row {
+    margin: 0;
+    border-radius: 0;
+    padding-top: 6px;
+    padding-bottom: 6px;
+}
+dropdown popover listview row:selected {
     background-color: @theme_selected_bg_color;
     color: @theme_selected_fg_color;
 }
