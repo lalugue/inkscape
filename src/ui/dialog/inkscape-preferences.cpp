@@ -33,6 +33,7 @@
 #include <glibmm/regex.h>
 #include <glibmm/ustring.h>
 #include <giomm/themedicon.h>
+#include <gtkmm/binlayout.h>
 #include <gdkmm/display.h>
 #include <gtkmm/accelerator.h>
 #include <gtkmm/box.h>
@@ -1526,7 +1527,7 @@ void InkscapePreferences::symbolicThemeCheck()
 }
 
 static Cairo::RefPtr<Cairo::Surface> draw_color_preview(unsigned int rgb, unsigned int frame_rgb, int device_scale) {
-    int size = 16;
+    int size = Widget::IconComboBox::get_image_size();
     auto surface = Cairo::ImageSurface::create(Cairo::Surface::Format::ARGB32, size * device_scale, size * device_scale);
     cairo_surface_set_device_scale(surface->cobj(), device_scale, device_scale);
     auto ctx = Cairo::Context::create(surface);
@@ -1663,8 +1664,13 @@ void InkscapePreferences::initPageUI()
     {
         auto box = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL);
         auto img = Gtk::make_managed<Gtk::Picture>();
-        img->set_paintable(to_texture(draw_handles_preview(get_scale_factor())));
+        auto scale = get_scale_factor();
+        auto surface = draw_handles_preview(scale);
+        img->set_layout_manager(Gtk::BinLayout::create());
+        img->set_size_request(surface->get_width() / scale, surface->get_height() / scale);
+        img->set_paintable(to_texture(surface));
         img->set_hexpand();
+        img->set_halign(Gtk::Align::CENTER);
         box->append(*img);
         auto cb = Gtk::make_managed<Inkscape::UI::Widget::IconComboBox>(false);
         cb->set_valign(Gtk::Align::CENTER);
@@ -1674,9 +1680,10 @@ void InkscapePreferences::initPageUI()
             unsigned int frame = theme.positive ? 0x000000 : 0xffffff; // black or white
             cb->add_row(draw_color_preview(theme.rgb_accent_color, frame, get_scale_factor()), theme.title, i++);
         }
+        cb->refilter();
         cb->set_active_by_id(mgr.get_selected_theme());
-        cb->signal_changed().connect([=,this](){
-            Handles::Manager::get().select_theme(cb->get_active_row_id());
+        cb->signal_changed().connect([=,this](int id) {
+            Handles::Manager::get().select_theme(id);
             img->set_paintable(to_texture(draw_handles_preview(get_scale_factor())));
         });
         box->append(*cb);

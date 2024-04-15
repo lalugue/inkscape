@@ -123,7 +123,7 @@ void ColorNotebook::_initUI(bool no_alpha)
     _label->set_xalign(0);
     UI::pack_start(*_buttonbox, *_label, true, true);
     UI::pack_end(*_buttonbox, *_combo, false, false);
-    _combo->signal_changed().connect([=](){ _setCurrentPage(_combo->get_active_row_id(), false); });
+    _combo->signal_changed().connect([this](int id){ _setCurrentPage(id, false); });
 
     _buttonbox->set_margin_start(XPAD);
     _buttonbox->set_margin_end(XPAD);

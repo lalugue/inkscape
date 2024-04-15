@@ -8,6 +8,6 @@
 
 namespace Inkscape {
 
-Cairo::RefPtr<Cairo::Surface> draw_handles_preview(int device_scale);
+Cairo::RefPtr<Cairo::ImageSurface> draw_handles_preview(int device_scale);
 
 }

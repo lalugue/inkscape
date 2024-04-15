@@ -10,7 +10,7 @@
 
 namespace Inkscape {
 
-Cairo::RefPtr<Cairo::Surface> draw_handles_preview(int device_scale) {
+Cairo::RefPtr<Cairo::ImageSurface> draw_handles_preview(int device_scale) {
     constexpr int step = 34; // selected to make handles fit at highest size
     constexpr auto types = std::to_array({
         CANVAS_ITEM_CTRL_TYPE_ADJ_SKEW,

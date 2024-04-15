@@ -527,6 +527,7 @@ ZoomCorrRulerSlider::init(int ruler_width, int ruler_height, double lower, doubl
     _sb->set_increments (step_increment, 0);
     _sb->set_value (value);
     _sb->set_digits(2);
+    _sb->set_max_width_chars(5);    // to fit "100.00"
     _sb->set_halign(Gtk::Align::CENTER);
     _sb->set_valign(Gtk::Align::END);
 
@@ -607,7 +608,7 @@ PrefSlider::init(Glib::ustring const &prefs_path,
         _sb->set_value (value);
         _sb->set_digits(digits);
         _sb->set_halign(Gtk::Align::CENTER);
-        _sb->set_valign(Gtk::Align::END);
+        _sb->set_valign(Gtk::Align::CENTER);
     }
 
     auto const table = Gtk::make_managed<Gtk::Grid>();
