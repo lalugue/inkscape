@@ -242,11 +242,21 @@ static Glib::ustring getTimestr()
 }
 #endif // ICON_VERBOSE
 
-void IconPreviewPanel::selectionModified(Selection *selection, guint flags)
+void IconPreviewPanel::queueRefreshIfAutoRefreshEnabled()
 {
     if (getDesktop() && Inkscape::Preferences::get()->getBool("/iconpreview/autoRefresh", true)) {
         queueRefresh();
     }
+}
+
+void IconPreviewPanel::selectionModified(Selection *selection, guint flags)
+{
+    queueRefreshIfAutoRefreshEnabled();
+}
+
+void IconPreviewPanel::selectionChanged(Selection *selection)
+{
+    queueRefreshIfAutoRefreshEnabled();
 }
 
 void IconPreviewPanel::documentReplaced()
