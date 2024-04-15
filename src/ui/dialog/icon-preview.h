@@ -53,6 +53,8 @@ public:
     IconPreviewPanel();
     ~IconPreviewPanel() final;
 
+    void queueRefreshIfAutoRefreshEnabled();
+    void selectionChanged(Selection *selection) override;
     void selectionModified(Selection *selection, guint flags) override;
     void documentReplaced() override;
 
