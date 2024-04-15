@@ -94,8 +94,8 @@ NodeToolbar::NodeToolbar(SPDesktop *desktop)
     _toolbar = &get_widget<Gtk::Box>(_builder, "node-toolbar");
 
     // Setup the derived spin buttons.
-    setup_derived_spin_button(_nodes_x_item, "Xcoord");
-    setup_derived_spin_button(_nodes_y_item, "Ycoord");
+    setup_derived_spin_button(_nodes_x_item, "x");
+    setup_derived_spin_button(_nodes_y_item, "y");
 
     auto unit_menu = _tracker->create_tool_item(_("Units"), (""));
     get_widget<Gtk::Box>(_builder, "unit_menu_box").append(*unit_menu);
@@ -181,11 +181,10 @@ NodeToolbar::~NodeToolbar() = default;
 
 void NodeToolbar::setup_derived_spin_button(Inkscape::UI::Widget::SpinButton &btn, Glib::ustring const &name)
 {
-    const Glib::ustring path = "/tools/nodes/" + name;
-    auto const val = Preferences::get()->getDouble(path, 0);
     auto adj = btn.get_adjustment();
-    adj->set_value(val);
-    adj->signal_value_changed().connect(sigc::bind(sigc::mem_fun(*this, &NodeToolbar::value_changed), Geom::X));
+    adj->set_value(0);
+    adj->signal_value_changed().connect(
+        sigc::bind(sigc::mem_fun(*this, &NodeToolbar::value_changed), name == "x" ? Geom::X : Geom::Y));
 
     _tracker->addAdjustment(adj->gobj());
     btn.addUnitTracker(_tracker.get());
@@ -217,11 +216,6 @@ void NodeToolbar::value_changed(Geom::Dim2 d)
     }
 
     Unit const *unit = _tracker->getActiveUnit();
-
-    if (DocumentUndo::getUndoSensitive(_desktop->getDocument())) {
-        prefs->setDouble(Glib::ustring("/tools/nodes/") + (d == Geom::X ? "x" : "y"),
-            Quantity::convert(adj->get_value(), unit, "px"));
-    }
 
     // quit if run by the attr_changed listener
     if (_freeze || _tracker->isUpdating()) {
