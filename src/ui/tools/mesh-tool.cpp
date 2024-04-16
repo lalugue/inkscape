@@ -417,6 +417,26 @@ void MeshTool::fit_mesh_in_bbox()
     }
 }
 
+// Helper function to determine if an item has a mesh or not.
+static bool has_mesh(SPItem *item)
+{
+    if (!item) {
+        return false;
+    }
+
+    auto fill_or_stroke_pref =
+        static_cast<Inkscape::PaintTarget>(Inkscape::Preferences::get()->getInt("/tools/mesh/newfillorstroke"));
+
+    if (auto style = item->style) {
+        auto server =
+            (fill_or_stroke_pref == Inkscape::FOR_FILL) ? style->getFillPaintServer() : style->getStrokePaintServer();
+        if (is<SPMeshGradient>(server)) {
+            return true;
+        }
+    }
+
+    return false;
+}
 
 /**
 Handles all keyboard and mouse input for meshs.
@@ -429,11 +449,12 @@ bool MeshTool::root_handler(CanvasEvent const &event)
 
     tolerance = prefs->getIntLimited("/options/dragtolerance/value", 0, 0, 100);
 
-    bool ret = false;
+    bool contains_mesh = false;
+    if (!selection->isEmpty()) {
+        contains_mesh = has_mesh(selection->items().front());
+    }
 
-    // Get value of fill or stroke preference
-    Inkscape::PaintTarget fill_or_stroke_pref =
-        static_cast<Inkscape::PaintTarget>(prefs->getInt("/tools/mesh/newfillorstroke"));
+    bool ret = false;
 
     g_assert(_grdrag);
 
@@ -452,31 +473,16 @@ bool MeshTool::root_handler(CanvasEvent const &event)
                 // Are we over a mesh line? (Should replace by CanvasItem event.)
                 auto over_curve = this->over_curve(event.pos);
 
-                if (!over_curve.empty()) {
+                if (!over_curve.empty() && contains_mesh) {
                     // We take the first item in selection, because with doubleclick, the first click
                     // always resets selection to the single object under cursor
                     split_near_point(selection->items().front(), mousepoint_doc);
-                } else {
+                } else if (!contains_mesh) {
                     // Create a new gradient with default coordinates.
 
                     // Check if object already has mesh... if it does,
                     // don't create new mesh with click-drag.
-                    bool has_mesh = false;
-                    if (!selection->isEmpty()) {
-                        SPStyle *style = selection->items().front()->style;
-                        if (style) {
-                            SPPaintServer *server =
-                                (fill_or_stroke_pref == Inkscape::FOR_FILL) ?
-                                style->getFillPaintServer():
-                                style->getStrokePaintServer();
-                            if (server && is<SPMeshGradient>(server))
-                                has_mesh = true;
-                        }
-                    }
-
-                    if (!has_mesh) {
-                        new_default();
-                    }
+                    new_default();
                 }
 
                 ret = true;
@@ -495,7 +501,7 @@ bool MeshTool::root_handler(CanvasEvent const &event)
                 // Are we over a mesh curve?
                 auto over_curve = this->over_curve(event.pos, false);
 
-                if (!over_curve.empty()) {
+                if (!over_curve.empty() && contains_mesh) {
                     for (auto it : over_curve) {
                         Inkscape::PaintTarget fill_or_stroke = it->is_fill ? Inkscape::FOR_FILL : Inkscape::FOR_STROKE;
                         GrDragger *dragger0 = _grdrag->getDraggerFor(it->item, POINT_MG_CORNER, it->corner0, fill_or_stroke);
@@ -511,7 +517,6 @@ bool MeshTool::root_handler(CanvasEvent const &event)
                     ret = true;
 
                 } else {
-
                     Geom::Point button_w(event.pos);
 
                     // Save drag origin
@@ -522,20 +527,7 @@ bool MeshTool::root_handler(CanvasEvent const &event)
                     Geom::Point button_dt = _desktop->w2d(button_w);
                     // Check if object already has mesh... if it does,
                     // don't create new mesh with click-drag.
-                    bool has_mesh = false;
-                    if (!selection->isEmpty()) {
-                        SPStyle *style = selection->items().front()->style;
-                        if (style) {
-                            SPPaintServer *server =
-                                (fill_or_stroke_pref == Inkscape::FOR_FILL) ?
-                                style->getFillPaintServer():
-                                style->getStrokePaintServer();
-                            if (server && is<SPMeshGradient>(server)) 
-                                has_mesh = true;
-                        }
-                    }
-
-                    if (has_mesh && !(event.modifiers & GDK_CONTROL_MASK)) {
+                    if (contains_mesh && !(event.modifiers & GDK_CONTROL_MASK)) {
                         Inkscape::Rubberband::get(_desktop)->start(_desktop, button_dt);
                     }
 
@@ -609,7 +601,7 @@ bool MeshTool::root_handler(CanvasEvent const &event)
                 if (cursor_addnode && over_curve.empty()) {
                     set_cursor("mesh.svg");
                     cursor_addnode = false;
-                } else if (!cursor_addnode && !over_curve.empty()) {
+                } else if (!cursor_addnode && !over_curve.empty() && contains_mesh) {
                     set_cursor("mesh-add.svg");
                     cursor_addnode = true;
                 }
@@ -627,7 +619,7 @@ bool MeshTool::root_handler(CanvasEvent const &event)
                 auto over_curve = this->over_curve(event.pos);
 
                 if ( (event.modifiers & GDK_CONTROL_MASK) && (event.modifiers & GDK_MOD1_MASK ) ) {
-                    if (!over_curve.empty()) {
+                    if (!over_curve.empty() && has_mesh(over_curve[0]->item)) {
                         split_near_point(over_curve[0]->item, mousepoint_doc);
                         ret = true;
                     }
@@ -644,20 +636,7 @@ bool MeshTool::root_handler(CanvasEvent const &event)
 
                             // Check if object already has mesh... if it does,
                             // don't create new mesh with click-drag.
-                            bool has_mesh = false;
-                            if (!selection->isEmpty()) {
-                                SPStyle *style = selection->items().front()->style;
-                                if (style) {
-                                    SPPaintServer *server =
-                                        (fill_or_stroke_pref == Inkscape::FOR_FILL) ?
-                                        style->getFillPaintServer():
-                                        style->getStrokePaintServer();
-                                    if (server && is<SPMeshGradient>(server)) 
-                                        has_mesh = true;
-                                }
-                            }
-
-                            if (!has_mesh) {
+                            if (!contains_mesh) {
                                 new_default();
                             } else {
 
