@@ -64,13 +64,10 @@ static gboolean _resize_children(Gtk::Window *win)
     return false;
 }
 
-InkscapeWindow::InkscapeWindow(SPDocument* document)
+InkscapeWindow::InkscapeWindow(SPDocument *document)
     : _document(document)
 {
-    if (!_document) {
-        std::cerr << "InkscapeWindow::InkscapeWindow: null document!" << std::endl;
-        return;
-    }
+    assert(_document);
 
     set_name("InkscapeWindow");
     set_show_menubar(true);

@@ -300,6 +300,7 @@ set(ui_SRC
 	shape-editor.h
 	simple-pref-pusher.h
 	shortcuts.h
+	svg-renderer.h
 	syntax.h
 	themes.h
 	tool-factory.h

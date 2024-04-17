@@ -32,8 +32,7 @@ namespace Inkscape::Extension::Internal {
 class CdrInput : public Inkscape::Extension::Implementation::Implementation {
 public:
     CdrInput() = default;
-    SPDocument *open(Inkscape::Extension::Input *mod,
-                     const gchar *uri) override;
+    std::unique_ptr<SPDocument> open(Inkscape::Extension::Input *mod, char const *uri) override;
     static void init();
 };
 

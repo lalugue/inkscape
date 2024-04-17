@@ -15,7 +15,6 @@
 
 #include <exception>
 #include <vector>
-#include <span>
 #include <gtest/gtest.h>
 #include <string>
 
@@ -47,7 +46,7 @@ TestWithSvgObjectPairs::TestWithSvgObjectPairs(char const *const svg_path, size_
 
 void TestWithSvgObjectPairs::SetUp()
 {
-    _doc.reset(SPDocument::createNewDoc(_filename.c_str(), false));
+    _doc = SPDocument::createNewDoc(_filename.c_str(), false);
     if (!_doc) {
         throw SVGTestError(std::string("Could not open test file \"") + _filename + "\"!");
     }

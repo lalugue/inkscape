@@ -18,13 +18,13 @@
 #include <gtkmm/scrolledwindow.h>
 #include <gtkmm/treemodel.h>
 
+#include "document.h"
 #include "extension/db.h"
 #include "extension/template.h"
 #include "inkscape-application.h"
 #include "io/resource.h"
 #include "ui/builder-utils.h"
 #include "ui/util.h"
-#include "ui/icon-loader.h"
 #include "ui/svg-renderer.h"
 
 using namespace Inkscape::IO::Resource;
@@ -178,8 +178,7 @@ SPDocument *TemplateList::new_document()
     if (auto preset = get_selected_preset()) {
         if (auto doc = preset->new_from_template()) {
             // TODO: Add memory to remember this preset for next time.
-            app->document_add(doc);
-            return doc;
+            return app->document_add(std::move(doc));
         } else {
             // Cancel pressed in options box.
             return nullptr;

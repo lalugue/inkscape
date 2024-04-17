@@ -56,10 +56,10 @@ public:
     void unload(Inkscape::Extension::Extension *module) override;
     bool check(Inkscape::Extension::Extension *module) override;
 
-    SPDocument *new_from_template(Inkscape::Extension::Template *module) override;
+    std::unique_ptr<SPDocument> new_from_template(Inkscape::Extension::Template *module) override;
     void resize_to_template(Inkscape::Extension::Template *tmod, SPDocument *doc, SPPage *page) override;
 
-    SPDocument *open(Inkscape::Extension::Input *module, gchar const *filename) override;
+    std::unique_ptr<SPDocument> open(Inkscape::Extension::Input *module, char const *filename) override;
     void save(Inkscape::Extension::Output *module, SPDocument *doc, gchar const *filename) override;
     void export_raster(Inkscape::Extension::Output *module,
             const SPDocument *doc, std::string const &png_file, gchar const *filename) override;

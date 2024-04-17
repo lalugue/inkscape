@@ -104,7 +104,7 @@ private:
     SPDocument* get_symbol_document(const std::optional<Gtk::TreeModel::iterator>& it) const;
     void onDragStart();
     void addSymbol(SPSymbol* symbol, Glib::ustring doc_title, SPDocument* document);
-    SPDocument* symbolsPreviewDoc();
+    static std::unique_ptr<SPDocument> symbolsPreviewDoc();
     void useInDoc(SPObject *r, std::vector<SPUse*> &l);
     std::vector<SPUse*> useInDoc( SPDocument* document);
     void addSymbols();
@@ -157,7 +157,7 @@ private:
     Gtk::CheckButton* fit_symbol;
     Gtk::CellRendererPixbuf _renderer;
     Gtk::CellRendererPixbuf _renderer2;
-    SPDocument *preview_document = nullptr; /* Document to render single symbol */
+    std::unique_ptr<SPDocument> preview_document; // Document to render single symbol
     Glib::RefPtr<Gtk::ListStore> _symbol_sets;
 
     struct Store {

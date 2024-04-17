@@ -21,14 +21,16 @@
 #include "extension/input.h"
 #include "extension/internal/svg.h"
 #include "object/sp-text.h"
-#include "object/sp-tspan.h"
+#include "preferences.h"
 
 using namespace Inkscape;
 using namespace Inkscape::Extension;
 using namespace Inkscape::Extension::Internal;
+using namespace std::literals;
 
-class SvgExtensionTest : public ::testing::Test {
-  public:
+class SvgExtensionTest : public ::testing::Test
+{
+public:
     static std::string create_file(const std::string &filename, const std::string &content)
     {
         std::stringstream path_builder;
@@ -48,7 +50,7 @@ class SvgExtensionTest : public ::testing::Test {
 
     static std::set<std::string> _files;
 
-  protected:
+protected:
     void SetUp() override
     {
         // setup hidden dependency
@@ -86,7 +88,7 @@ TEST_F(SvgExtensionTest, openingAsLinkInImageASizelessSvgFileReturnsNull)
 
 TEST_F(SvgExtensionTest, hiddenSvg2TextIsSaved)
 {
-    char const *docString = R"""(
+    constexpr auto docString = R"""(
 <svg width="100" height="200">
   <defs>
     <rect id="rect1" x="0" y="0"   width="100" height="100" />
@@ -101,8 +103,8 @@ TEST_F(SvgExtensionTest, hiddenSvg2TextIsSaved)
     </text>
   </g>
 </svg>
-)""";
-    SPDocument *doc = SPDocument::createNewDocFromMem(docString, static_cast<int>(strlen(docString)), false);
+)"""sv;
+    auto doc = SPDocument::createNewDocFromMem(docString, false);
     ASSERT_TRUE(doc);
 
     std::map<std::string,std::string> textMap;
@@ -119,7 +121,7 @@ TEST_F(SvgExtensionTest, hiddenSvg2TextIsSaved)
     Inkscape::XML::Document *rdoc = doc->getReprDoc();
     ASSERT_TRUE(rdoc);
 
-    insert_text_fallback(rdoc->root(), doc);
+    insert_text_fallback(rdoc->root(), doc.get());
 
     for(const auto& kv : textMap) {
         auto textElement = doc->getObjectById(kv.first);

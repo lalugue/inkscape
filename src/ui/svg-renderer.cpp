@@ -13,7 +13,6 @@
 #include "svg-renderer.h"
 
 #include <stdexcept>
-#include <utility>
 #include <vector>
 
 #include <cairomm/surface.h>
@@ -61,28 +60,30 @@ Glib::ustring double_to_css_value(double value) {
     return Glib::ustring(buffer);
 }
 
-std::shared_ptr<SPDocument> load_document(const char* svg_file_path) {
-    auto file = Gio::File::create_for_path(svg_file_path);
-    return std::shared_ptr<SPDocument>(ink_file_open(file, nullptr));
-}
-
-svg_renderer::svg_renderer(const char * const svg_file_path)
-: svg_renderer(load_document(svg_file_path))
+template <typename T>
+static auto ensure_nonnull(T &&t, char const *message)
 {
-}
-
-svg_renderer::svg_renderer(std::shared_ptr<SPDocument> document)
-    : _document{std::move(document)}
-{
-    if (_document) {
-        _root = _document->getRoot();
+    if (!t) {
+        throw std::runtime_error{message};
     }
-
-    if (!_root) throw std::runtime_error("Cannot find root element in svg document");
+    return std::forward<T>(t);
 }
+
+svg_renderer::svg_renderer(SPDocument &document)
+    : _document{document}
+    , _root{*ensure_nonnull(_document.getRoot(), "Cannot find root element in svg document")}
+{}
+
+svg_renderer::svg_renderer(char const *path)
+    : _optional_storage{ensure_nonnull(ink_file_open(Gio::File::create_for_path(path)), "Cannot load svg document")}
+    , _document{*_optional_storage}
+    , _root{*ensure_nonnull(_document.getRoot(), "Cannot find root element in svg document")}
+{}
+
+svg_renderer::~svg_renderer() = default;
 
 size_t svg_renderer::set_style(const Glib::ustring& selector, const char* name, const Glib::ustring& value) {
-    auto objects = _document->getObjectsBySelector(selector);
+    auto objects = _document.getObjectsBySelector(selector);
     for (auto el : objects) {
         if (SPCSSAttr* css = sp_repr_css_attr(el->getRepr(), "style")) {
             sp_repr_css_set_property(css, name, value.c_str());
@@ -94,26 +95,24 @@ size_t svg_renderer::set_style(const Glib::ustring& selector, const char* name, 
 }
 
 double svg_renderer::get_width_px() const {
-    return _document->getWidth().value("px");
+    return _document.getWidth().value("px");
 }
 
 double svg_renderer::get_height_px() const {
-    return _document->getHeight().value("px");
+    return _document.getHeight().value("px");
 }
 
 Inkscape::Pixbuf* svg_renderer::do_render(double device_scale) {
-    if (!_document) return nullptr;
-
     auto dpi = 96 * device_scale * _scale;
-    auto area = *(_document->preferredBounds());
+    auto area = *_document.preferredBounds();
 
     auto checkerboard_ptr = _checkerboard ? &*_checkerboard : nullptr;
-    return sp_generate_internal_bitmap(_document.get(), area, dpi, {}, false, checkerboard_ptr, device_scale);
+    return sp_generate_internal_bitmap(&_document, area, dpi, {}, false, checkerboard_ptr, device_scale);
 }
 
 Glib::RefPtr<Gdk::Pixbuf> svg_renderer::render(double scale) {
     auto pixbuf = do_render(scale);
-    if (!pixbuf) return Glib::RefPtr<Gdk::Pixbuf>();
+    if (!pixbuf) return {};
 
     // ref it
     auto raw = Glib::wrap(pixbuf->getPixbufRaw(), true);
@@ -129,10 +128,6 @@ Cairo::RefPtr<Cairo::ImageSurface> svg_renderer::render_surface(double scale) {
     auto surface = Cairo::RefPtr<Cairo::ImageSurface>(new Cairo::ImageSurface(pixbuf->getSurfaceRaw(), false));
     delete pixbuf;
     return surface;
-}
-
-void svg_renderer::set_checkerboard_color(unsigned int rgba) {
-    _checkerboard.emplace(rgba);
 }
 
 void svg_renderer::set_scale(double scale) {

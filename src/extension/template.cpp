@@ -147,7 +147,7 @@ void TemplatePreset::_add_prefs(const TemplatePrefs &prefs)
  *
  * Sets the preferences and then calls back to it's parent extension.
  */
-SPDocument *TemplatePreset::new_from_template(const TemplatePrefs &others)
+std::unique_ptr<SPDocument> TemplatePreset::new_from_template(TemplatePrefs const &others)
 {
     if (setup_prefs(others)) {
         return _mod->new_from_template();
@@ -271,7 +271,7 @@ bool Template::check()
 
     This function acts as the first step in creating a new document.
 */
-SPDocument *Template::new_from_template()
+std::unique_ptr<SPDocument> Template::new_from_template()
 {
     if (!loaded()) {
         set_state(Extension::STATE_LOADED);
@@ -280,8 +280,8 @@ SPDocument *Template::new_from_template()
         return nullptr;
     }
 
-    SPDocument *const doc = imp->new_from_template(this);
-    DocumentUndo::clearUndo(doc);
+    auto doc = imp->new_from_template(this);
+    DocumentUndo::clearUndo(doc.get());
     doc->setModifiedSinceSave(false);
     return doc;
 }
@@ -404,7 +404,7 @@ Glib::RefPtr<Gio::File> Template::get_template_filename() const
 /**
  * Get the raw document svg for this template (pre-processing).
  */
-SPDocument *Template::get_template_document() const
+std::unique_ptr<SPDocument> Template::get_template_document() const
 {
     if (auto file = get_template_filename()) {
         return ink_file_new(file->get_path());

@@ -65,8 +65,6 @@
 #include "ui/dialog-events.h"
 #include "ui/dialog-run.h"
 #include "ui/pack.h"
-#include "ui/widget/frame.h"
-#include "ui/widget/spinbutton.h"
 #include "util/gobjectptr.h"
 #include "util/parse-int-range.h"
 #include "util/units.h"
@@ -159,8 +157,8 @@ PdfImportDialog::PdfImportDialog(std::shared_ptr<PDFDoc> doc, const gchar * /*ur
     _render_thumb = false;
 
     // Connect signals
-    _next_page.signal_clicked().connect([=] { _setPreviewPage(_preview_page + 1); });
-    _prev_page.signal_clicked().connect([=] { _setPreviewPage(_preview_page - 1); });
+    _next_page.signal_clicked().connect([this] { _setPreviewPage(_preview_page + 1); });
+    _prev_page.signal_clicked().connect([this] { _setPreviewPage(_preview_page - 1); });
     _preview_area.set_draw_func(sigc::mem_fun(*this, &PdfImportDialog::_drawFunc));
     _page_numbers.signal_changed().connect(sigc::mem_fun(*this, &PdfImportDialog::_onPageNumberChanged));
     _mesh_slider.get_adjustment()->signal_value_changed().connect(
@@ -200,7 +198,7 @@ PdfImportDialog::PdfImportDialog(std::shared_ptr<PDFDoc> doc, const gchar * /*ur
     set_focus(*okbutton);
 
     auto &font_strat = UI::get_object_raw<Gtk::CellRendererCombo>(_builder, "cell-strat");
-    font_strat.signal_changed().connect([=](const Glib::ustring &path, const Gtk::TreeModel::iterator &source) {
+    font_strat.signal_changed().connect([this](const Glib::ustring &path, const Gtk::TreeModel::iterator &source) {
         if (auto target = _font_model->get_iter(path)) {
             (*target)[_font_col->proc_id] = int((*source)[_font_col->id]);
             (*target)[_font_col->proc_label] = Glib::ustring((*source)[_font_col->family]);
@@ -572,14 +570,12 @@ static cairo_status_t
 /**
  * Parses the selected page of the given PDF document using PdfParser.
  */
-SPDocument *
-PdfInput::open(::Inkscape::Extension::Input * /*mod*/, const gchar * uri) {
-
+std::unique_ptr<SPDocument> PdfInput::open(Inkscape::Extension::Input *, char const *uri)
+{
     // Initialize the globalParams variable for poppler
     if (!globalParams) {
         globalParams = _POPPLER_NEW_GLOBAL_PARAMS();
     }
-
 
     // Open the file using poppler
     // PDFDoc is from poppler. PDFDoc is used for preview and for native import.
@@ -651,13 +647,13 @@ PdfInput::open(::Inkscape::Extension::Input * /*mod*/, const gchar * uri) {
     }
 
     // Create Inkscape document from file
-    SPDocument *doc = nullptr;
+    std::unique_ptr<SPDocument> doc;
     bool saved = false;
     if (import_method == PdfImportType::PDF_IMPORT_INTERNAL) {
         // Create document
         doc = SPDocument::createNewDoc(nullptr, true, true);
-        saved = DocumentUndo::getUndoSensitive(doc);
-        DocumentUndo::setUndoSensitive(doc, false); // No need to undo in this temporary document
+        saved = DocumentUndo::getUndoSensitive(doc.get());
+        DocumentUndo::setUndoSensitive(doc.get(), false); // No need to undo in this temporary document
 
         // Create builder
         gchar *docname = g_path_get_basename(uri);
@@ -665,7 +661,7 @@ PdfInput::open(::Inkscape::Extension::Input * /*mod*/, const gchar * uri) {
         if (dot) {
             *dot = 0;
         }
-        SvgBuilder *builder = new SvgBuilder(doc, docname, pdf_doc->getXRef());
+        SvgBuilder *builder = new SvgBuilder(doc.get(), docname, pdf_doc->getXRef());
         builder->setFontStrategies(font_strats);
 
         // Get preferences
@@ -675,7 +671,7 @@ PdfInput::open(::Inkscape::Extension::Input * /*mod*/, const gchar * uri) {
 
         for (auto p : pages) {
             // And then add each of the pages
-            add_builder_page(pdf_doc, builder, doc, p);
+            add_builder_page(pdf_doc, builder, doc.get(), p);
         }
 
         delete builder;
@@ -727,7 +723,7 @@ PdfInput::open(::Inkscape::Extension::Input * /*mod*/, const gchar * uri) {
             cairo_destroy(cr);
             cairo_surface_destroy(surface);
 
-            doc = SPDocument::createNewDocFromMem(output.c_str(), output.length(), TRUE);
+            doc = SPDocument::createNewDocFromMem(output.raw(), true);
 
             g_object_unref(G_OBJECT(page));
         } else if (document) {
@@ -739,8 +735,8 @@ PdfInput::open(::Inkscape::Extension::Input * /*mod*/, const gchar * uri) {
             return nullptr;
         }
 
-        saved = DocumentUndo::getUndoSensitive(doc);
-        DocumentUndo::setUndoSensitive(doc, false); // No need to undo in this temporary document
+        saved = DocumentUndo::getUndoSensitive(doc.get());
+        DocumentUndo::setUndoSensitive(doc.get(), false); // No need to undo in this temporary document
 #endif
     }
 
@@ -750,7 +746,7 @@ PdfInput::open(::Inkscape::Extension::Input * /*mod*/, const gchar * uri) {
     }
 
     // Restore undo
-    DocumentUndo::setUndoSensitive(doc, saved);
+    DocumentUndo::setUndoSensitive(doc.get(), saved);
 
     return doc;
 }

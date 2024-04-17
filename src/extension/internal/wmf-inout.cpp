@@ -33,7 +33,7 @@
 #include "clear-n_.h"
 #include "document.h"
 #include "print.h"
-#include "wmf-print.h"
+#include "metafile-print.h"
 
 #include "display/drawing.h"
 #include "extension/db.h"
@@ -3101,11 +3101,9 @@ void Wmf::free_wmf_strings(WMF_STRINGS name){
     name.size = 0;
 }
 
-SPDocument *
-Wmf::open( Inkscape::Extension::Input * /*mod*/, const gchar *uri )
+std::unique_ptr<SPDocument> Wmf::open(Inkscape::Extension::Input *, char const *uri)
 {
-
-    if (uri == nullptr) {
+    if (!uri) {
         return nullptr;
     }
 
@@ -3167,9 +3165,9 @@ Wmf::open( Inkscape::Extension::Input * /*mod*/, const gchar *uri )
 
 //    std::cout << "SVG Output: " << std::endl << d.outsvg << std::endl;
 
-    SPDocument *doc = nullptr;
+    std::unique_ptr<SPDocument> doc;
     if (good) {
-        doc = SPDocument::createNewDocFromMem(d.outsvg.c_str(), strlen(d.outsvg.c_str()), TRUE);
+        doc = SPDocument::createNewDocFromMem(d.outsvg.raw(), true);
     }
 
     free_wmf_strings(d.hatches);
@@ -3200,9 +3198,7 @@ Wmf::open( Inkscape::Extension::Input * /*mod*/, const gchar *uri )
     return doc;
 }
 
-
-void
-Wmf::init ()
+void Wmf::init()
 {
     // clang-format off
     /* WMF in */

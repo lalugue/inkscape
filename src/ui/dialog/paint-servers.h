@@ -129,7 +129,7 @@ private:
     Glib::ustring current_store;
     std::vector<std::unique_ptr<SPDocument>> _stock_documents;
     std::map<Glib::ustring, SPDocument *> document_map;
-    SPDocument *preview_document = nullptr;
+    std::unique_ptr<SPDocument> preview_document;
     Inkscape::Drawing renderDrawing;
     Gtk::ComboBoxText *dropdown = nullptr;
     Gtk::IconView *icon_view = nullptr;

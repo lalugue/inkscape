@@ -28,11 +28,10 @@ class GimpGrad : public Inkscape::Extension::Implementation::Implementation
 public:
     bool load(Inkscape::Extension::Extension *module) override;
     void unload(Inkscape::Extension::Extension *module) override;
-    SPDocument *open(Inkscape::Extension::Input *module, gchar const *filename) override;
+    std::unique_ptr<SPDocument> open(Inkscape::Extension::Input *module, char const *filename) override;
 
     static void init();
 };
-
 
 } // namespace Internal
 } // namespace Extension

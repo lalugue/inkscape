@@ -39,7 +39,7 @@ class TemplateFromFile : public Inkscape::Extension::Implementation::Implementat
 public:
     static void init();
     bool check(Inkscape::Extension::Extension *module) override { return true; };
-    SPDocument *new_from_template(Inkscape::Extension::Template *tmod) override;
+    std::unique_ptr<SPDocument> new_from_template(Inkscape::Extension::Template *tmod) override;
 
     void get_template_presets(const Template *tmod, TemplatePresets &presets) const override;
 private:

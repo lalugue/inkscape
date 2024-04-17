@@ -11,13 +11,10 @@
  */
 
 #include <gtest/gtest.h>
-#include <testfiles/lpespaths-test.h>
-#include <src/inkscape.h>
+#include "testfiles/lpespaths-test.h"
 
-using namespace Inkscape;
-using namespace Inkscape::LivePathEffect;
-
-class LPE64Test : public LPESPathsTest {
+class LPE64Test : public LPESPathsTest
+{
 public:
     void run() {
         testDoc(svg);

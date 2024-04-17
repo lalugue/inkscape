@@ -52,6 +52,7 @@ set(util_SRC
 	source_date_epoch.h
 	statics.h
 	trim.h
+	smart_ptr_keys.h
 	units.h
     variant-visitor.h
 	ziptool.h

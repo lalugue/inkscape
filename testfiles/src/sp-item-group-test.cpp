@@ -19,9 +19,11 @@
 
 using namespace Inkscape;
 using namespace Inkscape::LivePathEffect;
+using namespace std::literals;
 
-class SPGroupTest : public ::testing::Test {
-  protected:
+class SPGroupTest : public ::testing::Test
+{
+protected:
     void SetUp() override
     {
         // setup hidden dependency
@@ -31,18 +33,18 @@ class SPGroupTest : public ::testing::Test {
 
 TEST_F(SPGroupTest, applyingPowerClipEffectToGroupWithoutClipIsIgnored)
 {
-    std::string svg("\
-<svg width='100' height='100'>\
-    <g id='group1'>\
-        <rect id='rect1' width='100' height='50' />\
-        <rect id='rect2' y='50' width='100' height='50' />\
-    </g>\
-</svg>");
+    constexpr auto svg = R"A(
+<svg width='100' height='100'>
+    <g id='group1'>
+        <rect id='rect1' width='100' height='50' />
+        <rect id='rect2' y='50' width='100' height='50' />
+    </g>
+</svg>)A"sv;
 
-    SPDocument *doc = SPDocument::createNewDocFromMem(svg.c_str(), svg.size(), true);
+    auto doc = SPDocument::createNewDocFromMem(svg, true);
 
     auto group = cast<SPGroup>(doc->getObjectById("group1"));
-    Effect::createAndApply(POWERCLIP, doc, group);
+    Effect::createAndApply(POWERCLIP, doc.get(), group);
 
     ASSERT_FALSE(group->hasPathEffect());
 }

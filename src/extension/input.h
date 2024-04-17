@@ -46,7 +46,7 @@ public:
 
     bool check() override;
 
-    SPDocument *  open                 (gchar const *uri);
+    std::unique_ptr<SPDocument> open(char const *uri);
     gchar const * get_mimetype         () const;
     gchar const * get_extension        () const;
     const char *  get_filetypename     (bool translated=false) const;

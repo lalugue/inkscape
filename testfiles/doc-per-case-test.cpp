@@ -14,23 +14,17 @@
 
 #include "inkscape.h"
 
-std::unique_ptr<SPDocument> DocPerCaseTest::_doc = nullptr;
-
-DocPerCaseTest::DocPerCaseTest() :
-    ::testing::Test()
-{
-}
+std::unique_ptr<SPDocument> DocPerCaseTest::_doc;
 
 void DocPerCaseTest::SetUpTestCase()
 {
-    if ( !Inkscape::Application::exists() )
-    {
+    if (!Inkscape::Application::exists()) {
         // Create the global inkscape object.
         Inkscape::Application::create(false);
     }
 
-    _doc.reset(SPDocument::createNewDoc( NULL, TRUE, true ));
-    ASSERT_TRUE(bool(_doc));
+    _doc = SPDocument::createNewDoc(nullptr, true, true);
+    ASSERT_TRUE(_doc);
 }
 
 void DocPerCaseTest::TearDownTestCase()

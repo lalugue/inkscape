@@ -14,19 +14,14 @@
 
 #include "document.h"
 
-
 /**
  * Simple fixture that creates a single SPDocument to be shared between all tests
  * in this test case.
  */
 class DocPerCaseTest : public ::testing::Test
 {
-public:
-    DocPerCaseTest();
-
 protected:
     static void SetUpTestCase();
-
     static void TearDownTestCase();
 
     static std::unique_ptr<SPDocument> _doc;

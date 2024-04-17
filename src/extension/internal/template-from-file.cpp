@@ -19,6 +19,7 @@
 #include <glibmm/miscutils.h>                       // for path_get_basename
 #include <glibmm/ustring.h>                         // for ustring
 
+#include "document.h"
 #include "extension/extension.h"                    // for INKSCAPE_EXTENSIO...
 #include "extension/internal/clear-n_.h"            // for N_, NC_
 #include "extension/internal/template-from-file.h"  // for TemplatePresetFile
@@ -94,7 +95,7 @@ void TemplatePresetFile::_load_data(const Inkscape::XML::Node *root)
 }
 
 
-SPDocument *TemplateFromFile::new_from_template(Inkscape::Extension::Template *tmod)
+std::unique_ptr<SPDocument> TemplateFromFile::new_from_template(Inkscape::Extension::Template *tmod)
 {
     auto filename = tmod->get_param_string("filename", "");
     if (Inkscape::IO::file_test(filename, (GFileTest)(G_FILE_TEST_EXISTS))) {

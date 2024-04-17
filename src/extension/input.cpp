@@ -16,7 +16,7 @@
 
 #include "xml/attribute-record.h"
 #include "xml/node.h"
-
+#include "document.h"
 
 /* Inkscape::Extension::Input */
 
@@ -142,8 +142,7 @@ Input::check ()
     file actually exists.  If it doesn't, a NULL is returned.  If the
     file exits, then it is opened using the implementation of this extension.
 */
-SPDocument *
-Input::open (const gchar *uri)
+std::unique_ptr<SPDocument> Input::open(char const *uri)
 {
     if (!loaded()) {
         set_state(Extension::STATE_LOADED);
@@ -153,9 +152,7 @@ Input::open (const gchar *uri)
     }
     timer->touch();
 
-    SPDocument *const doc = imp->open(this, uri);
-
-    return doc;
+    return imp->open(this, uri);
 }
 
 /**

@@ -51,7 +51,7 @@ InkviewWindow::InkviewWindow(Gio::Application::type_vec_files files,
         throw NoValidFilesException();
     }
 
-    _documents.resize(_files.size(), nullptr); // We keep _documents and _files in sync.
+    _documents.resize(_files.size()); // We keep _documents and _files in sync.
 
     // Callbacks
     Inkscape::UI::Controller::add_key<&InkviewWindow::key_press>(*this, *this);
@@ -162,15 +162,11 @@ bool InkviewWindow::show_document(SPDocument *document)
 // Load document, if fail, remove entry from lists.
 SPDocument *InkviewWindow::load_document()
 {
-    auto document = _documents[_index];
+    auto &document = _documents[_index];
 
     if (!document) {
         // We need to load document. ToDo: Pass Gio::File. Is get_base_name() better?
         document = SPDocument::createNewDoc(_files[_index]->get_parse_name().c_str(), true, false);
-        if (document) {
-            // We've successfully loaded it!
-            _documents[_index] = document;
-        }
     }
 
     if (!document) {
@@ -179,7 +175,7 @@ SPDocument *InkviewWindow::load_document()
         _files    .erase(std::next(_files    .begin(), _index));
     }
 
-    return document;
+    return document.get();
 }
 
 void InkviewWindow::preload_documents()
@@ -187,7 +183,7 @@ void InkviewWindow::preload_documents()
     for (auto it =_files.begin(); it != _files.end(); ) {
         auto document = SPDocument::createNewDoc((*it)->get_parse_name().c_str(), true, false);
         if (document) {
-            _documents.push_back(document);
+            _documents.emplace_back(std::move(document));
             ++it;
         } else {
             it = _files.erase(it);

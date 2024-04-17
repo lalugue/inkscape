@@ -20,6 +20,7 @@
 using namespace Inkscape;
 using namespace Inkscape::XML;
 using Nature = SPObject::LinkedObjectNature;
+using namespace std::literals;
 
 class ObjectLinksTest : public ::testing::Test {
 public:
@@ -28,7 +29,7 @@ public:
     }
 
     void SetUp() override {
-        char const *docString = R"A(<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+        constexpr auto docString = R"A(<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg version="1.1" id="svg2" width="245" height="110" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">
   <g id="holder" style="fill:#a51d2d">
     <rect style="stroke:none;stroke-width:7.62315;stroke-linecap:round;stroke-linejoin:round" id="blueberry" width="50" height="50" x="10" y="10" />
@@ -40,15 +41,12 @@ public:
     <a id="boat" href="#linked_to"><rect id="linked_from"/></a>
     <rect id="linked_to"/>
   </g>
-</svg>
-        )A";
-        doc.reset(SPDocument::createNewDocFromMem(docString, static_cast<int>(strlen(docString)), false));
+</svg>)A"sv;
+        doc = SPDocument::createNewDocFromMem(docString, false);
 
-        ASSERT_TRUE(doc != nullptr);
-        ASSERT_TRUE(doc->getRoot() != nullptr);
+        ASSERT_TRUE(doc);
+        ASSERT_TRUE(doc->getRoot());
     }
-
-    ~ObjectLinksTest() override = default;
 
     std::vector<SPObject *> getObjects(std::vector<std::string> const &lst) {
         std::vector<SPObject *> ret;
@@ -187,4 +185,3 @@ TEST_F(ObjectLinksTest, cropToObject)
     ASSERT_FALSE(doc->getObjectById("textpath"));
     ASSERT_FALSE(doc->getObjectById("boxedtext"));
 }
-

@@ -11,6 +11,7 @@
 #define INKSCAPE_APPLICATION_H
 
 #include <map>
+#include <span>
 #include <string>
 #include <utility>
 #include <vector>
@@ -23,6 +24,7 @@
 #include "actions/actions-hint-data.h"
 #include "io/file-export-cmd.h"   // File export (non-verb)
 #include "extension/internal/pdfinput/enums.h"
+#include "util/smart_ptr_keys.h"
 
 namespace Gio {
 class File;
@@ -93,11 +95,11 @@ public:
 
     /****** Document ******/
     /* These should not require a GUI! */
-    void                  document_add(SPDocument* document);
+    SPDocument *document_add(std::unique_ptr<SPDocument> document);
 
-    SPDocument*           document_new(const std::string &Template = "");
-    SPDocument*           document_open(const Glib::RefPtr<Gio::File>& file, bool *cancelled = nullptr);
-    SPDocument*           document_open(const std::string& data);
+    SPDocument *document_new(std::string const &template_filename = {});
+    SPDocument *document_open(Glib::RefPtr<Gio::File> const &file, bool *cancelled = nullptr);
+    SPDocument *document_open(std::span<char const> buffer);
     bool                  document_swap(InkscapeWindow* window, SPDocument* document);
     bool                  document_revert(SPDocument* document);
     void                  document_close(SPDocument* document);
@@ -127,12 +129,6 @@ public:
     /******* Debug ********/
     void                  dump();
 
-    // These are needed to cast Glib::RefPtr<Gtk::Application> to Glib::RefPtr<InkscapeApplication>,
-    // Presumably, Gtk/Gio::Application takes care of ref counting in ConcreteInkscapeApplication
-    // so we just provide dummies (and there is only one application in the application!).
-    // void reference()   { /*printf("reference()\n"  );*/ }
-    // void unreference() { /*printf("unreference()\n");*/ }
-
     int get_number_of_windows() const;
 
 protected:
@@ -147,8 +143,15 @@ protected:
     Glib::ustring _pages;
 
     // Documents are owned by the application which is responsible for opening/saving/exporting. WIP
-    // std::vector<SPDocument*> _documents;   For a true headless version
-    std::map<SPDocument*, std::vector<InkscapeWindow*> > _documents;
+    // std::vector<std::unique_ptr<SPDocument>> _documents;   For a true headless version
+    // Not supported by Apple Clang yet:
+    // std::unordered_map<std::unique_ptr<SPDocument>,
+    //                    std::vector<std::unique_ptr<InkscapeWindow>>,
+    //                    TransparentPtrHash<SPDocument>,
+    //                    TransparentPtrEqual<SPDocument>> _documents;
+    std::map<std::unique_ptr<SPDocument>,
+             std::vector<std::unique_ptr<InkscapeWindow>>,
+             TransparentPtrLess<SPDocument>> _documents;
 
     // We keep track of these things so we don't need a window to find them (for headless operation).
     SPDocument*               _active_document   = nullptr;

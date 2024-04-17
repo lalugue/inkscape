@@ -141,8 +141,7 @@ load_svg_cursor(Gtk::Widget &widget,
     }
 
     bool cancelled = false;
-    std::unique_ptr<SPDocument> document;
-    document.reset(ink_file_open(file, &cancelled));
+    auto document = ink_file_open(file, &cancelled);
 
     if (!document) {
         std::cerr << "load_svg_cursor: Could not open document: " << full_file_path << std::endl;
@@ -222,8 +221,6 @@ load_svg_cursor(Gtk::Widget &widget,
     } else {
         std::cerr << "load_svg_cursor: failed to create pixbuf for: " << full_file_path << std::endl;
     }
-
-    document.reset();
 
     if (cache_enabled) {
         cursor_cache[std::move(cursor_key)] = cursor;

@@ -85,7 +85,14 @@ private:
     const std::vector<RVNGString> &_vec; // Document to be imported
     unsigned _current_page;              // Current selected page
     bool _spinning;                      // whether SpinButton is pressed (i.e. we're "spinning")
+
+    std::unique_ptr<SPDocument> _doc;
 };
+
+static std::span<char const> as_span(RVNGString const &str)
+{
+    return {str.cstr(), str.size()};
+}
 
 CdrImportDialog::CdrImportDialog(const std::vector<RVNGString> &vec)
     : _previewArea(nullptr)
@@ -206,37 +213,37 @@ void CdrImportDialog::_setPreviewPage()
        return;
     }
 
-    SPDocument *doc = SPDocument::createNewDocFromMem(_vec[_current_page-1].cstr(), strlen(_vec[_current_page-1].cstr()), false);
-    if(!doc) {
+    _doc = SPDocument::createNewDocFromMem(as_span(_vec[_current_page - 1]), false);
+    if (!_doc) {
        g_warning("CDR import: Could not create preview for page %d", _current_page);
-       gchar const *no_preview_template = R"A(
+       auto no_preview_template = R"A(
            <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'>
-              <path d='M 82,10 18,74 m 0,-64 64,64' style='fill:none;stroke:#ff0000;stroke-width:2px;'/>
-              <rect x='18' y='10' width='64' height='64' style='fill:none;stroke:#000000;stroke-width:1.5px;'/>
-              <text x='50' y='92' style='font-size:10px;text-anchor:middle;font-family:sans-serif;'>%s</text>
+               <path d='M 82,10 18,74 m 0,-64 64,64' style='fill:none;stroke:#ff0000;stroke-width:2px;'/>
+               <rect x='18' y='10' width='64' height='64' style='fill:none;stroke:#000000;stroke-width:1.5px;'/>
+               <text x='50' y='92' style='font-size:10px;text-anchor:middle;font-family:sans-serif;'>%s</text>
            </svg>
        )A";
-       gchar * no_preview = g_strdup_printf(no_preview_template, _("No preview"));
-       doc = SPDocument::createNewDocFromMem(no_preview, strlen(no_preview), false);
+       auto no_preview = g_strdup_printf(no_preview_template, _("No preview"));
+       _doc = SPDocument::createNewDocFromMem(std::string_view{no_preview}, false);
        g_free(no_preview);
     }
 
-    if (!doc) {
+    if (!_doc) {
        std::cerr << "CdrImportDialog::_setPreviewPage: No document!" << std::endl;
        return;
     }
 
     if (_previewArea) {
-       _previewArea->setDocument(doc);
+        _previewArea->setDocument(_doc.get());
     } else {
-       _previewArea = Gtk::make_managed<Inkscape::UI::View::SVGViewWidget>(doc);
-       UI::pack_start(*vbox1, *_previewArea, UI::PackOptions::expand_widget, 0);
+        _previewArea = Gtk::make_managed<Inkscape::UI::View::SVGViewWidget>(_doc.get());
+        UI::pack_start(*vbox1, *_previewArea, UI::PackOptions::expand_widget, 0);
     }
 
     _previewArea->setResize(400, 400);
 }
 
-SPDocument *CdrInput::open(Inkscape::Extension::Input * /*mod*/, const gchar * uri)
+std::unique_ptr<SPDocument> CdrInput::open(Inkscape::Extension::Input *, char const *uri)
 {
     #ifdef _WIN32
         // RVNGFileStream uses fopen() internally which unfortunately only uses ANSI encoding on Windows
@@ -294,7 +301,7 @@ SPDocument *CdrInput::open(Inkscape::Extension::Input * /*mod*/, const gchar * u
         }
     }
 
-    SPDocument * doc = SPDocument::createNewDocFromMem(tmpSVGOutput[page_num-1].cstr(), strlen(tmpSVGOutput[page_num-1].cstr()), TRUE);
+    auto doc = SPDocument::createNewDocFromMem(as_span(tmpSVGOutput[page_num - 1]), true);
 
     if (doc && !doc->getRoot()->viewBox_set) {
         // Scales the document to account for 72dpi scaling in librevenge(<=0.0.4)

@@ -813,15 +813,12 @@ file_import(SPDocument *in_doc, const std::string &path, Inkscape::Extension::Ex
     auto pointer_location = desktop->point();
 
     //DEBUG_MESSAGE( fileImport, "file_import( in_doc:%p uri:[%s], key:%p", in_doc, uri, key );
-    SPDocument *doc;
+    std::unique_ptr<SPDocument> doc;
     try {
         doc = Inkscape::Extension::open(key, path.c_str());
     } catch (Inkscape::Extension::Input::no_extension_found &e) {
-        doc = nullptr;
     } catch (Inkscape::Extension::Input::open_failed &e) {
-        doc = nullptr;
     } catch (Inkscape::Extension::Input::open_cancelled &e) {
-        doc = nullptr;
         cancelled = true;
     }
 
@@ -829,22 +826,22 @@ file_import(SPDocument *in_doc, const std::string &path, Inkscape::Extension::Ex
         // Opened instead of imported (onimport set to false in Svg::open)
         prefs->setBool("/options/onimport", true);
         return nullptr;
-    } else if (doc != nullptr) {
+    } else if (doc) {
         // Always preserve any imported text kerning / formatting
         auto root_repr = in_doc->getReprRoot();
         root_repr->setAttribute("xml:space", "preserve");
 
-        Inkscape::XML::rebase_hrefs(doc, in_doc->getDocumentBase(), false);
+        Inkscape::XML::rebase_hrefs(doc.get(), in_doc->getDocumentBase(), false);
         Inkscape::XML::Document *xml_in_doc = in_doc->getReprDoc();
-        prevent_id_clashes(doc, in_doc, true);
-        sp_file_fix_lpe(doc);
+        prevent_id_clashes(doc.get(), in_doc, true);
+        sp_file_fix_lpe(doc.get());
 
-        in_doc->importDefs(doc);
+        in_doc->importDefs(doc.get());
 
         // The extension should set it's pages enabled or disabled when opening
         // in order to indicate if pages are being imported or if objects are.
         if (doc->getPageManager().hasPages()) {
-            file_import_pages(in_doc, doc);
+            file_import_pages(in_doc, doc.get());
             DocumentUndo::done(in_doc, _("Import Pages"), INKSCAPE_ICON("document-import"));
             // This return is only used by dbus in document-interface.cpp (now removed).
             return nullptr;

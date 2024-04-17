@@ -46,8 +46,8 @@ enum FileSaveMethod {
     FILE_SAVE_METHOD_TEMPORARY,
 };
 
-SPDocument *open(Extension *key, gchar const *filename);
-void save(Extension *key, SPDocument *doc, gchar const *filename,
+std::unique_ptr<SPDocument> open(Extension *key, char const *filename);
+void save(Extension *key, SPDocument *doc, char const *filename,
           bool check_overwrite, bool official,
           Inkscape::Extension::FileSaveMethod save_method);
 Print *get_print(gchar const *key);

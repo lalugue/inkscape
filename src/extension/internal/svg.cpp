@@ -33,12 +33,9 @@
 #include "display/cairo-utils.h"
 #include "extension/system.h"
 #include "extension/output.h"
-#include "xml/attribute-record.h"
-#include "xml/simple-document.h"
 
 #include "object/sp-image.h"
 #include "object/sp-root.h"
-#include "object/sp-text.h"
 
 #include "util/units.h"
 #include "util-string/ustring-format.h"
@@ -144,10 +141,9 @@ Svg::init()
 
     Most of the import code was copied from gdkpixpuf-input.cpp.
 */
-SPDocument *
-Svg::open (Inkscape::Extension::Input *mod, const gchar *uri)
+std::unique_ptr<SPDocument> Svg::open(Inkscape::Extension::Input *mod, char const *uri)
 {
-    g_assert(mod != nullptr);
+    g_assert(mod);
 
     // This is only used at the end... but it should go here once uri stuff is fixed.
     auto file = Gio::File::create_for_commandline_arg(uri);
@@ -205,11 +201,10 @@ Svg::open (Inkscape::Extension::Input *mod, const gchar *uri)
         // We import!
 
         // New wrapper document.
-        SPDocument * doc = SPDocument::createNewDoc (nullptr, true, true);
+        auto doc = SPDocument::createNewDoc(nullptr, true, true);
 
         // Imported document
-        // SPDocument * ret = SPDocument::createNewDoc(file->get_uri().c_str(), true);
-        SPDocument * ret = SPDocument::createNewDoc(uri, true);
+        auto ret = SPDocument::createNewDoc(uri, true);
 
         if (!ret) {
             return nullptr;
@@ -273,7 +268,7 @@ Svg::open (Inkscape::Extension::Input *mod, const gchar *uri)
         layer_node->appendChild(image_node);
         Inkscape::GC::release(image_node);
         Inkscape::GC::release(layer_node);
-        fit_canvas_to_drawing(doc);
+        fit_canvas_to_drawing(doc.get());
 
         // Set viewBox if it doesn't exist. What is display unit doing here?
         if (!doc->getRoot()->viewBox_set) {
@@ -291,7 +286,7 @@ Svg::open (Inkscape::Extension::Input *mod, const gchar *uri)
                 char *contents;
                 gsize length;
                 file->load_contents(contents, length);
-                return SPDocument::createNewDocFromMem(contents, length, true);
+                return SPDocument::createNewDocFromMem({contents, length}, true);
             } catch (Gio::Error &e) {
                 g_warning("Could not load contents of non-local URI %s\n", uri);
                 return nullptr;
@@ -302,7 +297,7 @@ Svg::open (Inkscape::Extension::Input *mod, const gchar *uri)
         }
     }
 
-    SPDocument *doc = SPDocument::createNewDoc(uri, true);
+    auto doc = SPDocument::createNewDoc(uri, true);
 
     // Page selection is achieved by removing any page not in the found list, the exports
     // Can later figure out how they'd like to process the remaining pages.

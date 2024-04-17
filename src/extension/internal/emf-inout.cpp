@@ -39,11 +39,9 @@
 #include "extension/output.h"
 #include "extension/print.h"
 #include "extension/system.h"
-#include "object/sp-path.h"
 #include "object/sp-root.h"
 #include "path/path-boolop.h"
 #include "print.h"
-#include "svg/css-ostringstream.h"
 #include "svg/svg.h"
 #include "util/safe-printf.h"
 #include "util/units.h"
@@ -63,18 +61,6 @@ namespace Internal {
 static uint32_t ICMmode = 0;  // not used yet, but code to read it from EMF implemented
 static uint32_t BLTmode = 0;
 float           faraway = 10000000; // used in "exclude" clips, hopefully well outside any real drawing!
-
-Emf::Emf () // The null constructor
-{
-    return;
-}
-
-
-Emf::~Emf () //The destructor
-{
-    return;
-}
-
 
 bool
 Emf::check (Inkscape::Extension::Extension * /*module*/)
@@ -3544,10 +3530,9 @@ void Emf::free_emf_strings(EMF_STRINGS name){
     name.size = 0;
 }
 
-SPDocument *
-Emf::open( Inkscape::Extension::Input * /*mod*/, const gchar *uri )
+std::unique_ptr<SPDocument> Emf::open(Inkscape::Extension::Input *, char const *uri)
 {
-    if (uri == nullptr) {
+    if (!uri) {
         return nullptr;
     }
 
@@ -3592,9 +3577,9 @@ Emf::open( Inkscape::Extension::Input * /*mod*/, const gchar *uri )
 
 //    std::cout << "SVG Output: " << std::endl << d.outsvg << std::endl;
 
-    SPDocument *doc = nullptr;
+    std::unique_ptr<SPDocument> doc;
     if (good) {
-        doc = SPDocument::createNewDocFromMem(d.outsvg.c_str(), strlen(d.outsvg.c_str()), TRUE);
+        doc = SPDocument::createNewDocFromMem(d.outsvg.raw(), true);
     }
 
     free_emf_strings(d.hatches);

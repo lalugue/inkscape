@@ -93,18 +93,16 @@ using Inkscape::DocumentUndo;
 using Inkscape::Util::UnitTable;
 
 // Higher number means lower priority.
-#define SP_DOCUMENT_UPDATE_PRIORITY (G_PRIORITY_HIGH_IDLE - 2)
+constexpr auto SP_DOCUMENT_UPDATE_PRIORITY = G_PRIORITY_HIGH_IDLE - 2;
 
 // Should have a lower priority than SP_DOCUMENT_UPDATE_PRIORITY,
 // since we want it to happen when there are no more updates.
-#define SP_DOCUMENT_REROUTING_PRIORITY (G_PRIORITY_HIGH_IDLE - 1)
+constexpr auto SP_DOCUMENT_REROUTING_PRIORITY = G_PRIORITY_HIGH_IDLE - 1;
 
 bool sp_no_convert_text_baseline_spacing = false;
 
-//gboolean sp_document_resource_list_free(gpointer key, gpointer value, gpointer data);
-
-static gint doc_count = 0;
-static gint doc_mem_count = 0;
+static int doc_count = 0;
+static int doc_mem_count = 0;
 
 static unsigned long next_serial = 0;
 
@@ -231,7 +229,8 @@ SPDocument::~SPDocument() {
     collectOrphans();
 }
 
-gint SPDocument::get_new_doc_number() {
+int SPDocument::get_new_doc_number()
+{
     return ++doc_count;
 }
 
@@ -351,14 +350,15 @@ void SPDocument::collectOrphans() {
     }
 }
 
-SPDocument *SPDocument::createDoc(Inkscape::XML::Document *rdoc,
-                                  gchar const *filename,
-                                  gchar const *document_base,
-                                  gchar const *document_name,
-                                  bool keepalive,
-                                  SPDocument *parent)
+std::unique_ptr<SPDocument> SPDocument::createDoc(
+    Inkscape::XML::Document *rdoc,
+    char const *filename,
+    char const *document_base,
+    char const *document_name,
+    bool keepalive,
+    SPDocument *parent)
 {
-    SPDocument *document = new SPDocument();
+    auto document = std::unique_ptr<SPDocument>(new SPDocument());
 
     Inkscape::XML::Node *rroot = rdoc->root();
 
@@ -366,10 +366,7 @@ SPDocument *SPDocument::createDoc(Inkscape::XML::Document *rdoc,
 
     document->rdoc = rdoc;
     document->rroot = rroot;
-    if (parent) {
-        document->_parent_document = parent;
-        parent->_child_documents.push_back(document);
-    }
+    document->_parent_document = parent;
 
     if (document->document_filename){
         g_free(document->document_filename);
@@ -414,7 +411,7 @@ SPDocument *SPDocument::createDoc(Inkscape::XML::Document *rdoc,
     }
 
     // Recursively build object tree
-    document->root->invoke_build(document, rroot, false);
+    document->root->invoke_build(document.get(), rroot, false);
 
     /* Eliminate obsolete sodipodi:docbase, for privacy reasons */
     rroot->removeAttribute("sodipodi:docbase");
@@ -451,7 +448,7 @@ SPDocument *SPDocument::createDoc(Inkscape::XML::Document *rdoc,
     }
 
     /* Default RDF */
-    rdf_set_defaults( document );
+    rdf_set_defaults(document.get());
 
     if (keepalive) {
         inkscape_ref(INKSCAPE);
@@ -459,14 +456,14 @@ SPDocument *SPDocument::createDoc(Inkscape::XML::Document *rdoc,
 
     // Check if the document already has a perspective (e.g., when opening an existing
     // document). If not, create a new one and set it as the current perspective.
-    document->setCurrentPersp3D(Persp3D::document_first_persp(document));
+    document->setCurrentPersp3D(Persp3D::document_first_persp(document.get()));
     if (!document->getCurrentPersp3D()) {
         //document->setCurrentPersp3D(Persp3D::create_xml_element (document));
         Persp3DImpl *persp_impl = new Persp3DImpl();
         document->setCurrentPersp3DImpl(persp_impl);
     }
 
-    DocumentUndo::setUndoSensitive(document, true);
+    DocumentUndo::setUndoSensitive(document.get(), true);
 
     // ************* Fix Document **************
     // Move to separate function?
@@ -474,17 +471,17 @@ SPDocument *SPDocument::createDoc(Inkscape::XML::Document *rdoc,
     /** Fix baseline spacing (pre-92 files) **/
     if ( (!sp_no_convert_text_baseline_spacing)
          && sp_version_inside_range( document->root->version.inkscape, 0, 1, 0, 92 ) ) {
-        sp_file_convert_text_baseline_spacing(document);
+        sp_file_convert_text_baseline_spacing(document.get());
     }
 
     /** Fix font names in legacy documents (pre-92 files) **/
     if ( sp_version_inside_range( document->root->version.inkscape, 0, 1, 0, 92 ) ) {
-        sp_file_convert_font_name(document);
+        sp_file_convert_font_name(document.get());
     }
 
     /** Fix first line spacing in legacy documents (pre-1.0 files) **/
     if (sp_version_inside_range(document->root->version.inkscape, 0, 1, 1, 0)) {
-        sp_file_fix_empty_lines(document);
+        sp_file_fix_empty_lines(document.get());
     }
 
     /** Fix OSB (pre-1.1 files) **/
@@ -507,7 +504,7 @@ SPDocument *SPDocument::createDoc(Inkscape::XML::Document *rdoc,
     }
     /** Fix dpi (pre-92 files). With GUI fixed in Inkscape::Application::fix_document. **/
     if ( !(INKSCAPE.use_gui()) && sp_version_inside_range( document->root->version.inkscape, 0, 1, 0, 92 ) ) {
-        sp_file_convert_dpi(document);
+        sp_file_convert_dpi(document.get());
     }
 
     // Update document level action settings
@@ -537,10 +534,10 @@ std::unique_ptr<SPDocument> SPDocument::copy() const
         }
     }
 
-    auto doc = createDoc(new_rdoc, document_filename, document_base, document_name, keepalive, nullptr);
+    auto doc = createDoc(new_rdoc, document_filename, document_base, document_name, keepalive);
     doc->_original_document = this;
 
-    return std::unique_ptr<SPDocument>(doc);
+    return doc;
 }
 
 /*
@@ -632,38 +629,42 @@ void SPDocument::rebase(bool keep_namedview)
  */
 SPDocument *SPDocument::createChildDoc(std::string const &filename)
 {
-    SPDocument *parent = this;
-    SPDocument *document = nullptr;
-
-    while(parent != nullptr && parent->getDocumentFilename() != nullptr && document == nullptr) {
-        // Check myself and any parents in the chain
-        if(filename == parent->getDocumentFilename()) {
-            document = parent;
-            break;
+    SPDocument *avoid = nullptr;
+    // Walk up the parent chain, starting from this document.
+    for (auto doc = this; doc; doc = doc->_parent_document) {
+        // Check doc and its children for matching filename, avoiding previously searched child.
+        if (auto ret = doc->_searchForChild(filename, avoid)) {
+            return ret;
         }
-        // Then check children of those.
-        boost::ptr_list<SPDocument>::iterator iter;
-        for (iter = parent->_child_documents.begin();
-          iter != parent->_child_documents.end(); ++iter) {
-            if(filename == iter->getDocumentFilename()) {
-                document = &*iter;
-                break;
-            }
-        }
-        parent = parent->_parent_document;
+        avoid = doc;
     }
 
     // Load a fresh document from the svg source.
-    if(!document) {
-        std::string path;
-        if (Glib::path_is_absolute(filename)) {
-            path = filename;
-        } else {
-            path = this->getDocumentBase() + filename;
-        }
-        document = createNewDoc(path.c_str(), false, false, this);
+    auto const path = Glib::path_is_absolute(filename)
+                    ? filename
+                    : document_base + filename;
+
+    auto doc = createNewDoc(path.c_str(), false, false, this);
+    return _child_documents.emplace_back(std::move(doc)).get();
+}
+
+SPDocument *SPDocument::_searchForChild(std::string const &filename, SPDocument const *avoid)
+{
+    if (this == avoid) {
+        return nullptr;
     }
-    return document;
+
+    if (document_filename && document_filename == filename) {
+        return this;
+    }
+
+    for (auto &c : _child_documents) {
+        if (auto ret = c->_searchForChild(filename, avoid)) {
+            return ret;
+        }
+    }
+
+    return nullptr;
 }
 
 void SPDocument::update_lpobjs() {
@@ -675,7 +676,7 @@ void SPDocument::update_lpobjs() {
  * Fetches document from filename, or creates new, if NULL; public document
  * appears in document list.
  */
-SPDocument *SPDocument::createNewDoc(gchar const *filename, bool keepalive, bool make_new, SPDocument *parent)
+std::unique_ptr<SPDocument> SPDocument::createNewDoc(char const *filename, bool keepalive, bool make_new, SPDocument *parent)
 {
     Inkscape::XML::Document *rdoc = nullptr;
     gchar *document_base = nullptr;
@@ -717,7 +718,7 @@ SPDocument *SPDocument::createNewDoc(gchar const *filename, bool keepalive, bool
     //# These should be set by now
     g_assert(document_name);
 
-    SPDocument *doc = createDoc(rdoc, filename, document_base, document_name, keepalive, parent);
+    auto doc = createDoc(rdoc, filename, document_base, document_name, keepalive, parent);
 
     g_free(document_base);
     g_free(document_name);
@@ -725,39 +726,26 @@ SPDocument *SPDocument::createNewDoc(gchar const *filename, bool keepalive, bool
     return doc;
 }
 
-SPDocument *SPDocument::createNewDocFromMem(gchar const *buffer, gint length, bool keepalive,
-                                            Glib::ustring const &filename)
+std::unique_ptr<SPDocument> SPDocument::createNewDocFromMem(std::span<char const> buffer, bool keepalive, std::string const &filename)
 {
-    SPDocument *doc = nullptr;
-
-    Inkscape::XML::Document *rdoc = sp_repr_read_mem(buffer, length, SP_SVG_NS_URI);
-    if ( rdoc ) {
-        // Only continue to create a non-null doc if it could be loaded
-        Inkscape::XML::Node *rroot = rdoc->root();
-        if ( strcmp(rroot->name(), "svg:svg") != 0 ) {
-            // If xml file is not svg, return NULL without warning
-            // TODO fixme: destroy document
-        } else {
-            Glib::ustring document_base = g_path_get_dirname(filename.c_str());
-            if (document_base == ".")
-                document_base = "";
-
-            Glib::ustring document_name = Glib::ustring::compose( _("Memory document %1"), ++doc_mem_count );
-            doc = createDoc(rdoc, filename.c_str(), document_base.c_str(), document_name.c_str(), keepalive, nullptr);
-        }
+    auto rdoc = sp_repr_read_mem(buffer.data(), buffer.size(), SP_SVG_NS_URI);
+    if (!rdoc) {
+        return {};
     }
 
-    return doc;
-}
+    if (std::strcmp(rdoc->root()->name(), "svg:svg") != 0) {
+        Inkscape::GC::release(rdoc);
+        return {};
+    }
 
-std::unique_ptr<SPDocument> SPDocument::doRef()
-{
-    Inkscape::GC::anchor(this);
-    return std::unique_ptr<SPDocument>(this);
-}
-std::unique_ptr<SPDocument const> SPDocument::doRef() const
-{
-    return const_cast<SPDocument*>(this)->doRef();
+    auto document_base = Glib::path_get_dirname(filename);
+    if (document_base == ".") {
+        document_base = "";
+    }
+
+    auto document_name = Glib::ustring::compose(_("Memory document %1"), ++doc_mem_count);
+
+    return createDoc(rdoc, filename.c_str(), document_base.c_str(), document_name.c_str(), keepalive);
 }
 
 /// guaranteed not to return nullptr

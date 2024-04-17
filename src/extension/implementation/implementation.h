@@ -100,14 +100,13 @@ public:
     virtual void commitDocument () {}
 
     // ---- Template and Page functions -----
-    virtual SPDocument *new_from_template(Inkscape::Extension::Template *) { return nullptr; }
+    virtual std::unique_ptr<SPDocument> new_from_template(Inkscape::Extension::Template *);
     virtual void get_template_presets(const Template *tmod, TemplatePresets &presets) const {};
     virtual void resize_to_template(Inkscape::Extension::Template *tmod, SPDocument *doc, SPPage *page){};
     virtual bool match_template_size(Inkscape::Extension::Template *tmod, double width, double height){ return false; }
 
     // ----- Input functions -----
-    virtual SPDocument *open(Inkscape::Extension::Input * /*module*/,
-                             gchar const * /*filename*/) { return nullptr; }
+    virtual std::unique_ptr<SPDocument> open(Inkscape::Extension::Input *module, char const *filename);
 
     // ----- Output functions -----
     /** Find out information about the file. */

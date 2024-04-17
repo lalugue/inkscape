@@ -14,10 +14,10 @@
 
 namespace Inkscape::Extension::Internal {
 
-class GdkpixbufInput : public Inkscape::Extension::Implementation::Implementation {
+class GdkpixbufInput : public Inkscape::Extension::Implementation::Implementation
+{
 public:
-    SPDocument *open(Inkscape::Extension::Input *mod,
-                     char const *uri) override;
+    std::unique_ptr<SPDocument> open(Inkscape::Extension::Input *mod, char const *uri) override;
     static void init();
 };
 

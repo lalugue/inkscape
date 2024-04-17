@@ -20,6 +20,7 @@
 #include "object/sp-object.h"
 
 using namespace Inkscape::XML;
+using namespace std::literals;
 
 #ifdef _WIN32
 #define BASE_DIR_DIFFERENT_ROOT "D:\\foo\\bar"
@@ -31,7 +32,7 @@ using namespace Inkscape::XML;
 #define BASE_URL "file://" BASE_DIR
 #endif
 
-static char const *const docString = R"""(
+constexpr auto docString = R"""(
 <svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
 
 <image id="img01" xlink:href=")""" BASE_URL R"""(/a.png" />
@@ -52,14 +53,12 @@ static char const *const docString = R"""(
 <a id="a02" xlink:href="http://host/other.svg"></a>
 
 </svg>
-)""";
+)"""sv;
 
 class ObjectTest : public DocPerCaseTest
 {
 public:
-    std::unique_ptr<SPDocument> doc;
-
-    ObjectTest() { doc.reset(SPDocument::createNewDocFromMem(docString, strlen(docString), false)); }
+    std::unique_ptr<SPDocument> doc = SPDocument::createNewDocFromMem(docString, false);
 
     void assert_nonfile_unchanged() const
     {

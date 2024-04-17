@@ -522,20 +522,16 @@ MarkerComboBox::init_combo()
 {
     if (_update.pending()) return;
 
-    static SPDocument *markers_doc = nullptr;
-
-    // find and load markers.svg
-    if (markers_doc == nullptr) {
+    static auto const markers_doc = [] () -> std::unique_ptr<SPDocument> {
+        // find and load markers.svg
         using namespace Inkscape::IO::Resource;
         auto markers_source = get_path_string(SYSTEM, MARKERS, "markers.svg");
-        if (Glib::file_test(markers_source, Glib::FileTest::IS_REGULAR)) {
-            markers_doc = SPDocument::createNewDoc(markers_source.c_str(), false);
-        }
-    }
+        return SPDocument::createNewDoc(markers_source.c_str(), false);
+    }();
 
     // load markers from markers.svg
     if (markers_doc) {
-        marker_list_from_doc(markers_doc, false);
+        marker_list_from_doc(markers_doc.get(), false);
     }
 
     refresh_after_markers_modified();

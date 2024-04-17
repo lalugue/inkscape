@@ -14,6 +14,8 @@
 #include <glibmm/refptr.h>
 #include <glibmm/ustring.h>
 #include <string>
+#include <memory>
+#include <span>
 
 namespace Gio {
 class File;
@@ -21,9 +23,9 @@ class File;
 
 class SPDocument;
 
-SPDocument *ink_file_new(const std::string &Template = "");
-SPDocument *ink_file_open(std::string const &data);
-SPDocument *ink_file_open(const Glib::RefPtr<Gio::File>& file, bool *cancelled = nullptr);
+std::unique_ptr<SPDocument> ink_file_new(std::string const &Template = "");
+std::unique_ptr<SPDocument> ink_file_open(std::span<char const> buffer);
+std::unique_ptr<SPDocument> ink_file_open(Glib::RefPtr<Gio::File> const &file, bool *cancelled = nullptr);
 
 namespace Inkscape::IO {
 

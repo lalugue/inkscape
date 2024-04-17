@@ -20,27 +20,26 @@
 
 using namespace Inkscape;
 using namespace Inkscape::XML;
+using namespace std::literals;
 
 class ObjectTest: public DocPerCaseTest {
 public:
     ObjectTest() {
-        char const *docString = "\
-<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>\
-<style id='style01'>\
-rect { fill: red; opacity:0.5; }\
-#id1, #id2 { fill: red; stroke: #c0c0c0; }\
-.cls1 { fill: red; opacity:1.0; }\
-</style>\
-<style id='style02'>\
-rect { fill: green; opacity:1.0; }\
-#id3, #id4 { fill: green; stroke: #606060; }\
-.cls2 { fill: green; opacity:0.5; }\
-</style>\
-</svg>";
-        doc.reset(SPDocument::createNewDocFromMem(docString, static_cast<int>(strlen(docString)), false));
+        constexpr auto docString = R"A(
+<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+<style id='style01'>
+rect { fill: red; opacity:0.5; }
+#id1, #id2 { fill: red; stroke: #c0c0c0; }
+.cls1 { fill: red; opacity:1.0; }
+</style>
+<style id='style02'>
+rect { fill: green; opacity:1.0; }
+#id3, #id4 { fill: green; stroke: #606060; }
+.cls2 { fill: green; opacity:0.5; }
+</style>
+</svg>)A"sv;
+        doc = SPDocument::createNewDocFromMem(docString, false);
     }
-
-    ~ObjectTest() override = default;
 
     std::unique_ptr<SPDocument> doc;
 };
@@ -49,21 +48,21 @@ rect { fill: green; opacity:1.0; }\
  * Test sp-style-element objects created in document.
  */
 TEST_F(ObjectTest, StyleElems) {
-    ASSERT_TRUE(doc != nullptr);
-    ASSERT_TRUE(doc->getRoot() != nullptr);
+    ASSERT_TRUE(doc);
+    ASSERT_TRUE(doc->getRoot());
 
     SPRoot *root = doc->getRoot();
-    ASSERT_TRUE(root->getRepr() != nullptr);
+    ASSERT_TRUE(root->getRepr());
 
     auto one = cast<SPStyleElem>(doc->getObjectById("style01"));
-    ASSERT_TRUE(one != nullptr);
+    ASSERT_TRUE(one);
 
     for (auto &style : one->get_styles()) {
         EXPECT_EQ(style->fill.get_value(), Glib::ustring("#ff0000"));
     }
 
     auto two = cast<SPStyleElem>(doc->getObjectById("style02"));
-    ASSERT_TRUE(one != nullptr);
+    ASSERT_TRUE(one);
 
     for (auto &style : two->get_styles()) {
         EXPECT_EQ(style->fill.get_value(), Glib::ustring("#008000"));

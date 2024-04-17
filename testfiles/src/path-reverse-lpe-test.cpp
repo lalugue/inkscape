@@ -17,8 +17,9 @@
 #include <src/object/sp-shape.h>
 
 using namespace Inkscape;
+using namespace std::literals;
 
-static char const *const docString = R"""(<?xml version="1.0"?>
+constexpr auto docString = R"""(<?xml version="1.0"?>
 <svg xmlns="http://www.w3.org/2000/svg"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape">
   <defs>
@@ -30,11 +31,11 @@ static char const *const docString = R"""(<?xml version="1.0"?>
      inkscape:original-d="M 5,10 H 15"
      d="M 5,5 10,10 5,15 M 10,5 15,10 10,15" />
 </svg>
-)""";
+)"""sv;
 
 TEST_F(DocPerCaseTest, PathReverse)
 {
-    auto doc = std::unique_ptr<SPDocument>(SPDocument::createNewDocFromMem(docString, strlen(docString), false));
+    auto doc = SPDocument::createNewDocFromMem(docString, false);
     doc->ensureUpToDate();
 
     auto path1 = cast<SPShape>(doc->getObjectById("path1"));

@@ -16,12 +16,13 @@
 #include "ui/svg-renderer.h"
 
 using Inkscape::UI::Widget::PatternItem;
+using namespace std::literals;
 
 namespace Inkscape {
 
 // pattern preview for UI list, with light gray background and border
-std::shared_ptr<SPDocument> get_preview_document() {
-char const* buffer = R"A(
+std::unique_ptr<SPDocument> get_preview_document() {
+    constexpr auto buffer = R"A(
 <svg width="40" height="40" viewBox="0 0 40 40"
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns="http://www.w3.org/2000/svg">
@@ -38,13 +39,13 @@ char const* buffer = R"A(
        width="100%" height="100%" x="0" y="0" />
   </g>
 </svg>
-)A";
-    return std::shared_ptr<SPDocument>(SPDocument::createNewDocFromMem(buffer, strlen(buffer), false));
+)A"sv;
+    return SPDocument::createNewDocFromMem(buffer, false);
 }
 
 // pattern preview document without background
-std::shared_ptr<SPDocument> get_big_preview_document() {
-char const* buffer = R"A(
+std::unique_ptr<SPDocument> get_big_preview_document() {
+    constexpr auto buffer = R"A(
 <svg width="100" height="100"
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns="http://www.w3.org/2000/svg">
@@ -56,8 +57,8 @@ char const* buffer = R"A(
        width="100%" height="100%" x="0" y="0" />
   </g>
 </svg>
-)A";
-    return std::shared_ptr<SPDocument>(SPDocument::createNewDocFromMem(buffer, strlen(buffer), false));
+)A"sv;
+    return SPDocument::createNewDocFromMem(buffer, false);
 }
 
 PatternManager& PatternManager::get() {
@@ -119,31 +120,31 @@ PatternManager::PatternManager() {
     _model = model;
 }
 
-Cairo::RefPtr<Cairo::Surface> create_pattern_image(std::shared_ptr<SPDocument>& sandbox,
-    char const* name, SPDocument* source, double scale,
-    std::optional<unsigned int> checkerboard = std::optional<unsigned int>()) {
-
+static Cairo::RefPtr<Cairo::Surface> create_pattern_image(SPDocument &sandbox,
+    char const* name, SPDocument &source, double scale,
+    std::optional<uint32_t> checkerboard = {})
+{
     // Retrieve the pattern named 'name' from the source SVG document
-    SPObject const* pattern = source->getObjectById(name);
+    SPObject const* pattern = source.getObjectById(name);
     if (pattern == nullptr) {
         g_warning("bad name: %s", name);
         return Cairo::RefPtr<Cairo::Surface>();
     }
 
-    auto list = sandbox->getDefs()->childList(true);
+    auto list = sandbox.getDefs()->childList(true);
     for (auto obj : list) {
         obj->deleteObject();
         sp_object_unref(obj);
     }
 
-    SPDocument::install_reference_document scoped(sandbox.get(), source);
+    SPDocument::install_reference_document scoped(&sandbox, &source);
 
     // Create a copy of the pattern, name it "sample"
-    auto copy = sp_copy_resource(pattern, sandbox.get());
+    auto copy = sp_copy_resource(pattern, &sandbox);
     copy->getRepr()->setAttribute("id", "sample");
 
-    sandbox->getRoot()->requestDisplayUpdate(SP_OBJECT_MODIFIED_FLAG);
-    sandbox->ensureUpToDate();
+    sandbox.getRoot()->requestDisplayUpdate(SP_OBJECT_MODIFIED_FLAG);
+    sandbox.ensureUpToDate();
 
     svg_renderer renderer(sandbox);
     if (checkerboard.has_value()) {
@@ -155,7 +156,7 @@ Cairo::RefPtr<Cairo::Surface> create_pattern_image(std::shared_ptr<SPDocument>& 
     }
 
     // delete sample to relese href to the original pattern, if any has been referenced by 'copy'
-    SPObject* oldpattern = sandbox->getObjectById("sample");
+    SPObject* oldpattern = sandbox.getObjectById("sample");
     if (oldpattern) {
         oldpattern->deleteObject(false);
     }
@@ -200,7 +201,7 @@ Glib::RefPtr<PatternItem> create_pattern_item(std::shared_ptr<SPDocument>& sandb
 
     if (sandbox) {
         // generate preview
-        item->pix = create_pattern_image(sandbox, link_pattern->getId(), link_pattern->document, scale);
+        item->pix = create_pattern_image(*sandbox, link_pattern->getId(), *link_pattern->document, scale);
     }
 
     // which collection stock pattern comes from
@@ -214,7 +215,7 @@ Cairo::RefPtr<Cairo::Surface> PatternManager::get_image(SPPattern* pattern, int 
 
     _preview_doc->setWidth(Inkscape::Util::Quantity(width, "px"));
     _preview_doc->setHeight(Inkscape::Util::Quantity(height, "px"));
-    return create_pattern_image(_preview_doc, pattern->getId(), pattern->document, device_scale);
+    return create_pattern_image(*_preview_doc, pattern->getId(), *pattern->document, device_scale);
 }
 
 Cairo::RefPtr<Cairo::Surface> PatternManager::get_preview(SPPattern* pattern, int width, int height, unsigned int rgba_background, double device_scale) {
@@ -223,7 +224,7 @@ Cairo::RefPtr<Cairo::Surface> PatternManager::get_preview(SPPattern* pattern, in
     _big_preview_doc->setWidth(Inkscape::Util::Quantity(width, "px"));
     _big_preview_doc->setHeight(Inkscape::Util::Quantity(height, "px"));
 
-    return create_pattern_image(_big_preview_doc, pattern->getId(), pattern->document, device_scale, rgba_background);
+    return create_pattern_image(*_big_preview_doc, pattern->getId(), *pattern->document, device_scale, rgba_background);
 }
 
 Glib::RefPtr<Inkscape::UI::Widget::PatternItem> PatternManager::get_item(SPPattern* pattern) {

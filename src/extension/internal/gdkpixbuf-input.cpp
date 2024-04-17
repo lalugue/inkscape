@@ -8,8 +8,6 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include <set>
-
 #include <gdk-pixbuf/gdk-pixbuf.h>
 #include <gdkmm/pixbuf.h>
 #include <gdkmm/pixbufformat.h>
@@ -28,8 +26,6 @@
 #include "extension/input.h"
 #include "extension/system.h"
 
-#include "io/dir-util.h"
-
 #include "object/sp-image.h"
 #include "object/sp-root.h"
 
@@ -40,8 +36,7 @@ namespace Inkscape {
 namespace Extension {
 namespace Internal {
 
-SPDocument *
-GdkpixbufInput::open(Inkscape::Extension::Input *mod, char const *uri)
+std::unique_ptr<SPDocument> GdkpixbufInput::open(Inkscape::Extension::Input *mod, char const *uri)
 {
     // Determine whether the image should be embedded
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
@@ -65,15 +60,15 @@ GdkpixbufInput::open(Inkscape::Extension::Input *mod, char const *uri)
 
     bool embed = (link == "embed");
  
-    SPDocument *doc = nullptr;
+    std::unique_ptr<SPDocument> doc;
     std::unique_ptr<Inkscape::Pixbuf> pb(Inkscape::Pixbuf::create_from_file(uri));
 
     // TODO: the pixbuf is created again from the base64-encoded attribute in SPImage.
     // Find a way to create the pixbuf only once.
 
     if (pb) {
-        doc = SPDocument::createNewDoc(nullptr, TRUE, TRUE);
-        DocumentUndo::ScopedInsensitive _no_undo(doc);
+        doc = SPDocument::createNewDoc(nullptr, true, true);
+        DocumentUndo::ScopedInsensitive _no_undo(doc.get());
 
         double width = pb->width();
         double height = pb->height();
@@ -143,7 +138,7 @@ GdkpixbufInput::open(Inkscape::Extension::Input *mod, char const *uri)
         layer_node->appendChild(image_node);
         Inkscape::GC::release(image_node);
         Inkscape::GC::release(layer_node);
-        fit_canvas_to_drawing(doc);
+        fit_canvas_to_drawing(doc.get());
         
         // Set viewBox if it doesn't exist
         if (!doc->getRoot()->viewBox_set) {

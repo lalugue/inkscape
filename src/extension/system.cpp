@@ -63,11 +63,11 @@ namespace Extension {
  *
  * Lastly, the open function is called in the module itself.
  */
-SPDocument *open(Extension *key, gchar const *filename)
+std::unique_ptr<SPDocument> open(Extension *key, char const *filename)
 {
     Input *imod = nullptr;
 
-    if (key == nullptr) {
+    if (!key) {
         DB::InputList o;
         for (auto mod : db.get_input_list(o)) {
             if (mod->can_open_filename(filename)) {
@@ -80,12 +80,12 @@ SPDocument *open(Extension *key, gchar const *filename)
     }
 
     bool last_chance_svg = false;
-    if (key == nullptr && imod == nullptr) {
+    if (!key && !imod) {
         last_chance_svg = true;
         imod = dynamic_cast<Input *>(db.get(SP_MODULE_KEY_INPUT_SVG));
     }
 
-    if (imod == nullptr) {
+    if (!imod) {
         throw Input::no_extension_found();
     }
 
@@ -93,7 +93,7 @@ SPDocument *open(Extension *key, gchar const *filename)
     //g_warning("Extension: %s", imod->get_id());
 
     bool show = true;
-    if (strlen(imod->get_id()) > 21) {
+    if (std::strlen(imod->get_id()) > 21) {
         Inkscape::Preferences *prefs = Inkscape::Preferences::get();
         bool ask = prefs->getBool("/dialogs/import/ask");
         bool ask_svg = prefs->getBool("/dialogs/import/ask_svg");
@@ -124,7 +124,7 @@ SPDocument *open(Extension *key, gchar const *filename)
         throw Input::open_cancelled();
     }
 
-    SPDocument *doc = imod->open(filename);
+    auto doc = imod->open(filename);
 
     if (!doc) {
         if (last_chance_svg) {

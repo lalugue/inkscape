@@ -168,25 +168,16 @@ using PEMF_CALLBACK_DATA = EMF_CALLBACK_DATA *;
 
 class Emf :  public Metafile 
 { 
-
 public:
-
-    Emf(); // Empty constructor
-
-    ~Emf() override;//Destructor
-
     bool check(Inkscape::Extension::Extension *module) override; //Can this module load (always yes for now)
 
     void save(Inkscape::Extension::Output *mod, // Save the given document to the given filename
               SPDocument *doc,
               gchar const *filename) override;
 
-    SPDocument *open( Inkscape::Extension::Input *mod,
-                                const gchar *uri ) override;
+    std::unique_ptr<SPDocument> open(Inkscape::Extension::Input *mod, char const *uri) override;
 
     static void init();//Initialize the class
-
-private:
 
 protected:
     static void        print_document_to_file(SPDocument *doc, const gchar *filename);

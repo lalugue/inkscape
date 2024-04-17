@@ -55,7 +55,7 @@ private:
     bool   _preload;
 
     int _index = -1;
-    std::vector<SPDocument*> _documents;
+    std::vector<std::unique_ptr<SPDocument>> _documents;
 
     Inkscape::UI::View::SVGViewWidget *_view = nullptr;
     Gtk::Window *_controlwindow = nullptr;

@@ -37,6 +37,7 @@
 #include "util/scope_exit.h"
 #include "ui/cache/svg_preview_cache.h"
 #include "xml/href-attribute-helper.h"
+using namespace std::literals;
 
 namespace Inkscape {
 
@@ -81,17 +82,17 @@ const char* style_from_use_element(const char* id, SPDocument* document) {
     return style;
 }
 
-
-SPDocument* symbols_preview_doc() {
-    auto buffer = R"A(
+static std::unique_ptr<SPDocument> symbols_preview_doc()
+{
+    constexpr auto buffer = R"A(
 <svg xmlns="http://www.w3.org/2000/svg"
     xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
     xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
     xmlns:xlink="http://www.w3.org/1999/xlink">
   <use id="the_use" xlink:href="#the_symbol"/>
 </svg>
-)A";
-    return SPDocument::createNewDocFromMem(buffer, strlen(buffer), false);
+)A"sv;
+    return SPDocument::createNewDocFromMem(buffer, false);
 }
 
 Cairo::RefPtr<Cairo::Surface> draw_symbol(SPObject& symbol, double box_w, double box_h, double device_scale, SPDocument* preview_document, bool style_from_use) {
@@ -241,7 +242,7 @@ Cairo::RefPtr<Cairo::Surface> draw_gradient(SPGradient* gradient, double width, 
 
 std::unique_ptr<SPDocument> ink_markers_preview_doc(const Glib::ustring& group_id)
 {
-gchar const *buffer = R"A(
+    constexpr auto buffer = R"A(
     <svg xmlns="http://www.w3.org/2000/svg"
          xmlns:xlink="http://www.w3.org/1999/xlink"
          id="MarkerSample">
@@ -298,9 +299,9 @@ gchar const *buffer = R"A(
     </g>
 
   </svg>
-)A";
+)A"sv;
 
-    auto document = std::unique_ptr<SPDocument>(SPDocument::createNewDocFromMem(buffer, strlen(buffer), false));
+    auto document = SPDocument::createNewDocFromMem(buffer, false);
     // only leave requested group, so nothing else gets rendered
     for (auto&& group : document->getObjectsByClass("group")) {
         assert(group->getId());
@@ -604,7 +605,7 @@ Cairo::RefPtr<Cairo::Surface> object_renderer::render(SPObject& object, double w
 
     if (is<SPSymbol>(&object)) {
         if (!_symbol_document) {
-            _symbol_document.reset(symbols_preview_doc());
+            _symbol_document = symbols_preview_doc();
         }
         surface = draw_symbol(object, width, height, device_scale, _symbol_document.get(), opt._symbol_style_from_use);
     }

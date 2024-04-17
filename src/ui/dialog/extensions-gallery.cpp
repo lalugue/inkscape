@@ -192,7 +192,7 @@ Cairo::RefPtr<Cairo::Surface> render_icon(Extension::Effect* effect, std::string
             if (auto item = cast<SPItem>(doc->getObjectById("test-object"))) {
                 effect->apply_filter(item);
             }
-            svg_renderer r(doc);
+            svg_renderer r(*doc);
             auto w = r.get_width_px();
             auto h = r.get_height_px();
             if (w > 0 && h > 0) {

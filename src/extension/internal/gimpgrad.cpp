@@ -125,8 +125,7 @@ static Glib::ustring stop_svg(ColorRGBA const in_color, double const location)
     document using the \c sp_document_from_mem.  That is then returned
     to Inkscape.
 */
-SPDocument *
-GimpGrad::open (Inkscape::Extension::Input */*module*/, gchar const *filename)
+std::unique_ptr<SPDocument> GimpGrad::open(Inkscape::Extension::Input *, char const *filename)
 {
     Inkscape::IO::dump_fopen_call(filename, "I");
     FILE *gradient = Inkscape::IO::fopen_utf8name(filename, "r");
@@ -252,7 +251,7 @@ GimpGrad::open (Inkscape::Extension::Input */*module*/, gchar const *filename)
 
         fclose(gradient);
 
-        return SPDocument::createNewDocFromMem(outsvg.c_str(), outsvg.length(), TRUE);
+        return SPDocument::createNewDocFromMem(outsvg.raw(), true);
     }
 
 error:

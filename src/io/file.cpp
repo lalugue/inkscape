@@ -10,7 +10,6 @@
 
 #include "io/file.h"
 
-#include <initializer_list>
 #include <iostream>
 #include <memory>
 #include <unistd.h>
@@ -32,10 +31,9 @@
  * Create a blank document, remove any template data.
  * Input: Empty string or template file name.
  */
-SPDocument *
-ink_file_new(const std::string &Template)
+std::unique_ptr<SPDocument> ink_file_new(std::string const &Template)
 {
-    SPDocument *doc = SPDocument::createNewDoc ((Template.empty() ? nullptr : Template.c_str()), true, true );
+    auto doc = SPDocument::createNewDoc(Template.empty() ? nullptr : Template.c_str(), true, true);
 
     if (!doc) {
         std::cerr << "ink_file_new: Did not create new document!" << std::endl;
@@ -48,7 +46,7 @@ ink_file_new(const std::string &Template)
                            "inkscape:_templateinfo"}) // backwards-compatibility
     {
         if (auto node = std::unique_ptr<Inkscape::XML::Node>{sp_repr_lookup_name(myRoot, name)}) {
-            Inkscape::DocumentUndo::ScopedInsensitive no_undo(doc);
+            Inkscape::DocumentUndo::ScopedInsensitive no_undo(doc.get());
             sp_repr_unparent(node.get());
         }
     }
@@ -59,12 +57,11 @@ ink_file_new(const std::string &Template)
 /**
  * Open a document from memory.
  */
-SPDocument *
-ink_file_open(std::string const &data)
+std::unique_ptr<SPDocument> ink_file_open(std::span<char const> buffer)
 {
-    SPDocument *doc = SPDocument::createNewDocFromMem (data.c_str(), data.length(), true);
+    auto doc = SPDocument::createNewDocFromMem(buffer, true);
 
-    if (doc == nullptr) {
+    if (!doc) {
         std::cerr << "ink_file_open: cannot open file in memory (pipe?)" << std::endl;
         return nullptr;
     }
@@ -79,11 +76,10 @@ ink_file_open(std::string const &data)
 /**
  * Open a document.
  */
-SPDocument *
-ink_file_open(const Glib::RefPtr<Gio::File>& file, bool *cancelled_param)
+std::unique_ptr<SPDocument> ink_file_open(Glib::RefPtr<Gio::File> const &file, bool *cancelled_param)
 {
     bool cancelled = false;
-    SPDocument *doc = nullptr;
+    std::unique_ptr<SPDocument> doc;
     std::string path = file->get_path();
 
     // TODO: It's useless to catch these exceptions here (and below) unless we do something with them.

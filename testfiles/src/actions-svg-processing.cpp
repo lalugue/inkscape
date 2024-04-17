@@ -19,6 +19,7 @@
 
 using namespace Inkscape;
 using namespace Inkscape::XML;
+using namespace std::literals;
 
 class ObjectLinksTest : public ::testing::Test {
 public:
@@ -27,7 +28,7 @@ public:
     }
 
     void SetUp() override {
-        char const *docString = R"A(<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+        constexpr auto docString = R"A(<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg width="62.256149mm" height="55.27673mm" viewBox="0 0 62.256149 55.27673" version="1.1" id="svg1" inkscape:version="1.3.2 (1:1.3.2+202311252150+091e20ef0f)" sodipodi:docname="g.svg" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
   <sodipodi:namedview id="namedview1" pagecolor="#ffffff" bordercolor="#000000" borderopacity="0.25" inkscape:showpageshadow="2" inkscape:pageopacity="0.0" inkscape:pagecheckerboard="0" inkscape:deskcolor="#d1d1d1" inkscape:document-units="mm" inkscape:zoom="2.7086912" inkscape:cx="246.79816" inkscape:cy="174.62308" inkscape:window-width="2560" inkscape:window-height="1295" inkscape:window-x="0" inkscape:window-y="32" inkscape:window-maximized="1" inkscape:current-layer="layer1" />
   <defs id="defs1">
@@ -55,14 +56,12 @@ public:
       </g>
     </g>
   </g>
-</svg>)A";
-        doc.reset(SPDocument::createNewDocFromMem(docString, static_cast<int>(strlen(docString)), false));
+</svg>)A"sv;
+        doc = SPDocument::createNewDocFromMem(docString, false);
 
-        ASSERT_TRUE(doc != nullptr);
-        ASSERT_TRUE(doc->getRoot() != nullptr);
+        ASSERT_TRUE(doc);
+        ASSERT_TRUE(doc->getRoot());
     }
-
-    ~ObjectLinksTest() override = default;
 
     std::vector<SPObject *> getObjects(std::vector<std::string> const &lst) {
         std::vector<SPObject *> ret;
@@ -126,5 +125,3 @@ TEST_F(ObjectLinksTest, removeTransforms)
         EXPECT_TRUE(RectNear(id + ".old_box", id + ".new_box", old_box, *new_box, 0.01));
     }
 }
-
-

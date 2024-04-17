@@ -66,7 +66,7 @@ public:
             || ((_visibility & (int)mode) == (int)mode));
     }
 
-    SPDocument *new_from_template(const TemplatePrefs &others = {});
+    std::unique_ptr<SPDocument> new_from_template(TemplatePrefs const &others = {});
     void resize_to_template(SPDocument *doc, SPPage *page, const TemplatePrefs &others = {});
     bool match_size(double width, double height, const TemplatePrefs &others = {});
 
@@ -107,7 +107,7 @@ public:
 
     bool check() override;
 
-    SPDocument *new_from_template();
+    std::unique_ptr<SPDocument> new_from_template();
     void resize_to_template(SPDocument *doc, SPPage *page);
 
     std::string get_icon() const { return _icon; }
@@ -125,7 +125,7 @@ public:
     static std::shared_ptr<TemplatePreset> get_any_preset(double width, double height);
 
     Glib::RefPtr<Gio::File> get_template_filename() const;
-    SPDocument *get_template_document() const;
+    std::unique_ptr<SPDocument> get_template_document() const;
 
 protected:
     friend class TemplatePreset;

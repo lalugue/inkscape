@@ -133,13 +133,12 @@ private:
 #endif
 };
 
-    
-class PdfInput final: public Inkscape::Extension::Implementation::Implementation {
+class PdfInput : public Inkscape::Extension::Implementation::Implementation
+{
 public:
-    PdfInput() = default;
-    SPDocument *open(Inkscape::Extension::Input *mod,
-                     const gchar *uri) final;
-    static void         init( );
+    std::unique_ptr<SPDocument> open(Inkscape::Extension::Input *mod, char const *uri) override;
+    static void init();
+
 private:
     void add_builder_page(
         std::shared_ptr<PDFDoc> pdf_doc,

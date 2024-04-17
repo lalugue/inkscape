@@ -288,7 +288,7 @@ bool Script::check(Inkscape::Extension::Extension *module)
 /**
  * Create a new document based on the given template.
  */
-SPDocument *Script::new_from_template(Inkscape::Extension::Template *module)
+std::unique_ptr<SPDocument> Script::new_from_template(Inkscape::Extension::Template *module)
 {
     std::list<std::string> params;
     module->paramListString(params);
@@ -300,8 +300,8 @@ SPDocument *Script::new_from_template(Inkscape::Extension::Template *module)
         auto svg = fileout.string();
         auto rdoc = sp_repr_read_mem(svg.c_str(), svg.length(), SP_SVG_NS_URI);
         if (rdoc) {
-            auto name = g_strdup_printf(_("New document %d"), SPDocument::get_new_doc_number());
-            return SPDocument::createDoc(rdoc, nullptr, nullptr, name, false, nullptr);
+            auto name = Glib::ustring::compose(_("New document %1"), SPDocument::get_new_doc_number());
+            return SPDocument::createDoc(rdoc, nullptr, nullptr, name.c_str(), false);
         }
     }
 
@@ -348,8 +348,7 @@ void Script::resize_to_template(Inkscape::Extension::Template *tmod, SPDocument 
     the incoming filename (so that it's not the temporary filename).
     That document is then returned from this function.
 */
-SPDocument *Script::open(Inkscape::Extension::Input *module,
-             const gchar *filenameArg)
+std::unique_ptr<SPDocument> Script::open(Inkscape::Extension::Input *module, char const *filenameArg)
 {
     std::list<std::string> params;
     module->paramListString(params);
@@ -370,7 +369,7 @@ SPDocument *Script::open(Inkscape::Extension::Input *module,
     int data_read = execute(command, params, lfilename, fileout);
     fileout.toFile(tempfilename_out);
 
-    SPDocument * mydoc = nullptr;
+    std::unique_ptr<SPDocument> mydoc;
     if (data_read > 10) {
         if (helper_extension.size()==0) {
             mydoc = Inkscape::Extension::open(
@@ -383,7 +382,7 @@ SPDocument *Script::open(Inkscape::Extension::Input *module,
         }
     } // data_read
 
-    if (mydoc != nullptr) {
+    if (mydoc) {
         mydoc->setDocumentBase(nullptr);
         mydoc->changeFilenameAndHrefs(filenameArg);
     }

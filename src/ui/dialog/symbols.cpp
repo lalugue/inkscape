@@ -16,9 +16,9 @@
 #include <cmath>
 #include <fstream>
 #include <iostream>
-#include <locale>
 #include <regex>
 #include <sstream>
+using namespace std::literals;
 
 #include <2geom/point.h>
 
@@ -106,8 +106,8 @@ struct SymbolSet {
     Glib::ustring title;
 };
 
-SPDocument* load_symbol_set(std::string filename);
-void scan_all_symbol_sets(std::map<std::string, SymbolSet>& symbol_sets);
+SPDocument *load_symbol_set(std::string const &filename);
+void scan_all_symbol_sets(std::map<std::string, SymbolSet> &symbol_sets);
 
 // key: symbol set full file name
 // value: symbol set
@@ -437,12 +437,7 @@ SymbolsDialog::SymbolsDialog(const char* prefsPath)
     });
 }
 
-SymbolsDialog::~SymbolsDialog()
-{
-    Inkscape::GC::release(preview_document);
-    assert(preview_document->_anchored_refcount() == 0);
-    delete preview_document;
-}
+SymbolsDialog::~SymbolsDialog() = default;
 
 void collect_symbols(SPObject* object, std::vector<SPSymbol*>& symbols) {
     if (!object) return;
@@ -866,15 +861,16 @@ class REVENGE_API RVNGSVGDrawingGenerator_WithTitle : public RVNGSVGDrawingGener
 };
 
 // Read Visio stencil files
-SPDocument* read_vss(std::string filename, std::string name) {
-  gchar *fullname;
+static std::unique_ptr<SPDocument> read_vss(std::string filename, std::string name)
+{
+  char *fullname;
   #ifdef _WIN32
     // RVNGFileStream uses fopen() internally which unfortunately only uses ANSI encoding on Windows
     // therefore attempt to convert uri to the system codepage
     // even if this is not possible the alternate short (8.3) file name will be used if available
     fullname = g_win32_locale_filename_from_utf8(filename.c_str());
   #else
-    fullname = strdup(filename.c_str());
+    fullname = g_strdup(filename.c_str());
   #endif
 
   RVNGFileStream input(fullname);
@@ -942,13 +938,13 @@ SPDocument* read_vss(std::string filename, std::string name) {
 
   tmpSVGOutput += "  </defs>\n";
   tmpSVGOutput += "</svg>\n";
-    return SPDocument::createNewDocFromMem(tmpSVGOutput.c_str(), tmpSVGOutput.size(), false);
+  return SPDocument::createNewDocFromMem(tmpSVGOutput.raw(), false);
 }
 #endif
 
 /* Hunts preference directories for symbol files */
-void scan_all_symbol_sets(std::map<std::string, SymbolSet>& symbol_sets) {
-
+void scan_all_symbol_sets(std::map<std::string, SymbolSet> &symbol_sets)
+{
     using namespace Inkscape::IO::Resource;
     std::regex matchtitle(".*?<title.*?>(.*?)<(/| /)");
 
@@ -990,9 +986,9 @@ void scan_all_symbol_sets(std::map<std::string, SymbolSet>& symbol_sets) {
 }
 
 // Load SVG or VSS document and create SPDocument
-SPDocument* load_symbol_set(std::string filename)
+SPDocument *load_symbol_set(std::string const &filename)
 {
-    SPDocument* symbol_doc = nullptr;
+    std::unique_ptr<SPDocument> symbol_doc;
     if (auto doc = symbol_sets[filename].document) {
         return doc;
     }
@@ -1003,13 +999,13 @@ SPDocument* load_symbol_set(std::string filename)
         symbol_doc = read_vss(filename, symbol_sets[filename].title);
 #endif
     } else if (Glib::str_has_suffix(filename, ".svg")) {
-        symbol_doc = SPDocument::createNewDoc(filename.c_str(), FALSE);
+        symbol_doc = SPDocument::createNewDoc(filename.c_str(), false);
     }
 
     if (symbol_doc) {
-        symbol_sets[filename].document = symbol_doc;
+        symbol_sets[filename].document = symbol_doc.get();
     }
-    return symbol_doc;
+    return symbol_doc.release();
 }
 
 void SymbolsDialog::useInDoc (SPObject *r, std::vector<SPUse*> &l)
@@ -1222,8 +1218,8 @@ Cairo::RefPtr<Cairo::Surface> SymbolsDialog::drawSymbol(SPSymbol *symbol)
   
     // This is for display in Symbols dialog only
     if (style) repr->setAttribute( "style", style );
-  
-    SPDocument::install_reference_document scoped(preview_document, symbol->document);
+
+    SPDocument::install_reference_document scoped(preview_document.get(), symbol->document);
     preview_document->getDefs()->getRepr()->appendChild(repr);
     Inkscape::GC::release(repr);
   
@@ -1283,17 +1279,18 @@ Cairo::RefPtr<Cairo::Surface> SymbolsDialog::drawSymbol(SPSymbol *symbol)
  * Symbols are by default not rendered so a <use> element is
  * provided.
  */
-SPDocument* SymbolsDialog::symbolsPreviewDoc()
+std::unique_ptr<SPDocument> SymbolsDialog::symbolsPreviewDoc()
 {
-  // BUG: <symbol> must be inside <defs>
-    const char buffer[] =
-"<svg xmlns=\"http://www.w3.org/2000/svg\""
-"     xmlns:sodipodi=\"http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd\""
-"     xmlns:inkscape=\"http://www.inkscape.org/namespaces/inkscape\""
-"     xmlns:xlink=\"http://www.w3.org/1999/xlink\">"
-"  <use id=\"the_use\" xlink:href=\"#the_symbol\"/>"
-"</svg>";
-    return SPDocument::createNewDocFromMem(buffer, strlen(buffer), false);
+    // BUG: <symbol> must be inside <defs>
+    constexpr auto buffer = R"A(
+<svg xmlns="http://www.w3.org/2000/svg"
+     xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+     xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+     xmlns:xlink="http://www.w3.org/1999/xlink">
+  <use id="the_use" xlink:href="#the_symbol"/>
+</svg>
+)A"sv;
+    return SPDocument::createNewDocFromMem(buffer, false);
 }
 
 void SymbolsDialog::get_cell_data_func(Gtk::CellRenderer* cell_renderer, Gtk::TreeModel::Row row, bool visible)

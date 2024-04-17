@@ -17,6 +17,7 @@
 
 using namespace Inkscape;
 using namespace Inkscape::XML;
+using namespace std::literals;
 
 class ObjectTest: public DocPerCaseTest {
 public:
@@ -40,7 +41,7 @@ public:
         // svg:polyline
         // svg:image
         // svg:line
-        char const *docString = R"A(
+        constexpr auto docString = R"A(
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
   <!-- just a comment -->
   <title id="title">SVG test</title>
@@ -69,34 +70,32 @@ public:
     <line id="L" x1="20" y1="100" x2="100" y2="20" stroke="black" stroke-width="2"/>
   </g>
 </svg>
-        )A";
-        doc.reset(SPDocument::createNewDocFromMem(docString, static_cast<int>(strlen(docString)), false));
+        )A"sv;
+        doc = SPDocument::createNewDocFromMem(docString, false);
     }
-
-    ~ObjectTest() override = default;
 
     std::unique_ptr<SPDocument> doc;
 };
 
 TEST_F(ObjectTest, Clones) {
-    ASSERT_TRUE(doc != nullptr);
-    ASSERT_TRUE(doc->getRoot() != nullptr);
+    ASSERT_TRUE(doc);
+    ASSERT_TRUE(doc->getRoot());
 
     SPRoot *root = doc->getRoot();
-    ASSERT_TRUE(root->getRepr() != nullptr);
+    ASSERT_TRUE(root->getRepr());
     ASSERT_TRUE(root->hasChildren());
 
     auto path = cast<SPPath>(doc->getObjectById("P"));
-    ASSERT_TRUE(path != nullptr);
+    ASSERT_TRUE(path);
 
     Node *node = path->getRepr();
-    ASSERT_TRUE(node != nullptr);
+    ASSERT_TRUE(node);
 
     Document *xml_doc = node->document();
-    ASSERT_TRUE(xml_doc != nullptr);
+    ASSERT_TRUE(xml_doc);
 
     Node *parent = node->parent();
-    ASSERT_TRUE(parent != nullptr);
+    ASSERT_TRUE(parent);
 
     const size_t num_clones = 1000;
     std::string href = std::string("#") + std::string(path->getId());
@@ -118,22 +117,22 @@ TEST_F(ObjectTest, Clones) {
 }
 
 TEST_F(ObjectTest, Grouping) {
-    ASSERT_TRUE(doc != nullptr);
-    ASSERT_TRUE(doc->getRoot() != nullptr);
+    ASSERT_TRUE(doc);
+    ASSERT_TRUE(doc->getRoot());
 
     SPRoot *root = doc->getRoot();
-    ASSERT_TRUE(root->getRepr() != nullptr);
+    ASSERT_TRUE(root->getRepr());
     ASSERT_TRUE(root->hasChildren());
 
     auto group = cast<SPGroup>(doc->getObjectById("G"));
 
-    ASSERT_TRUE(group != nullptr);
+    ASSERT_TRUE(group);
 
     Node *node = group->getRepr();
-    ASSERT_TRUE(node != nullptr);
+    ASSERT_TRUE(node);
 
     Document *xml_doc = node->document();
-    ASSERT_TRUE(xml_doc != nullptr);
+    ASSERT_TRUE(xml_doc);
 
     const size_t num_elements = 1000;
 
@@ -154,7 +153,7 @@ TEST_F(ObjectTest, Grouping) {
     }
 
     auto n_group = cast<SPGroup>(group->get_child_by_repr(new_group));
-    ASSERT_TRUE(n_group != nullptr);
+    ASSERT_TRUE(n_group);
 
     std::vector<SPItem*> ch;
     sp_item_group_ungroup(n_group, ch);
@@ -167,19 +166,19 @@ TEST_F(ObjectTest, Grouping) {
 }
 
 TEST_F(ObjectTest, Objects) {
-    ASSERT_TRUE(doc != nullptr);
-    ASSERT_TRUE(doc->getRoot() != nullptr);
+    ASSERT_TRUE(doc);
+    ASSERT_TRUE(doc->getRoot());
 
     SPRoot *root = doc->getRoot();
-    ASSERT_TRUE(root->getRepr() != nullptr);
+    ASSERT_TRUE(root->getRepr());
     ASSERT_TRUE(root->hasChildren());
 
     auto path = cast<SPPath>(doc->getObjectById("P"));
-    ASSERT_TRUE(path != nullptr);
+    ASSERT_TRUE(path);
 
     // Test parent behavior
     SPObject *child = root->firstChild();
-    ASSERT_TRUE(child != nullptr);
+    ASSERT_TRUE(child);
 
     EXPECT_EQ(root, child->parent);
     EXPECT_EQ(doc.get(), child->document);
@@ -192,7 +191,7 @@ TEST_F(ObjectTest, Objects) {
 
     prev = next;
     next = next->getNext();
-    while (next != nullptr) {
+    while (next) {
         // Walk the list
         EXPECT_EQ(prev, next->getPrev());
         prev = next;

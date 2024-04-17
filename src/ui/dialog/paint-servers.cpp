@@ -16,6 +16,7 @@
 #include <algorithm>
 #include <cstddef>
 #include <stdexcept>
+using namespace std::literals;
 
 #include <giomm/listmodel.h>
 #include <glibmm/i18n.h>
@@ -43,13 +44,13 @@
 
 namespace Inkscape::UI::Dialog {
 
-static Glib::ustring const wrapper = R"=====(
+constexpr auto wrapper = R"=====(
 <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100">
   <defs id="Defs"/>
   <rect id="Back" x="0" y="0" width="100px" height="100px" fill="lightgray"/>
   <rect id="Rect" x="0" y="0" width="100px" height="100px" stroke="black"/>
 </svg>
-)=====";
+)====="sv;
 
 const char *ALLDOCS = N_("All paint servers");
 const char *CURRENTDOC = N_("Current document");
@@ -63,7 +64,7 @@ PaintServersDialog::PaintServersDialog()
     store[ALLDOCS] = Gtk::ListStore::create(columns);
 
     // Get wrapper document (rectangle to fill with paint server).
-    preview_document = SPDocument::createNewDocFromMem(wrapper.c_str(), wrapper.length(), true);
+    preview_document = SPDocument::createNewDocFromMem(wrapper, true);
     SPObject *rect = preview_document->getObjectById("Rect");
     SPObject *defs = preview_document->getObjectById("Defs");
     if (!rect || !defs) {
@@ -220,7 +221,7 @@ void PaintServersDialog::_loadStockPaints()
     // Extract out paints from files in share/paint.
     for (auto const &path : get_filenames(Inkscape::IO::Resource::PAINT, {".svg"})) {
         try { // createNewDoc throws
-            auto doc = std::unique_ptr<SPDocument>(SPDocument::createNewDoc(path.c_str(), false));
+            auto doc = SPDocument::createNewDoc(path.c_str(), false);
             if (!doc) {
                 throw std::exception();
             }

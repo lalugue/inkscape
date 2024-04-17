@@ -1701,7 +1701,7 @@ void ClipboardManagerImpl::_retrieveClipboard(Glib::ustring best_target)
     }
 
     try {
-        _clipboardSPDoc.reset((*in)->open(filename.c_str()));
+        _clipboardSPDoc = (*in)->open(filename.c_str());
     } catch (...) {
     }
 }
@@ -1806,7 +1806,7 @@ void ClipboardManagerImpl::_onGet(char const *mime_type, Glib::RefPtr<Gio::Outpu
  */
 void ClipboardManagerImpl::_createInternalClipboard()
 {
-    _clipboardSPDoc.reset(SPDocument::createNewDoc(nullptr, false, true));
+    _clipboardSPDoc = SPDocument::createNewDoc(nullptr, false, true);
     assert(_clipboardSPDoc);
     _defs = _clipboardSPDoc->getDefs()->getRepr();
     _doc = _clipboardSPDoc->getReprDoc();

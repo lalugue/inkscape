@@ -19,6 +19,7 @@
 #include "svg/svg.h"
 
 using namespace Inkscape;
+using namespace std::literals;
 
 class SPItemTest : public ::testing::Test
 {
@@ -32,7 +33,7 @@ protected:
 
 TEST_F(SPItemTest, getClipPathVector)
 {
-    std::string svg(R"""(<?xml version="1.0"?>
+    constexpr auto svg = R"""(<?xml version="1.0"?>
 <svg width="100" height="100">
   <defs id="defs1">
     <clipPath clipPathUnits="userSpaceOnUse" id="clipPath1">
@@ -53,9 +54,9 @@ TEST_F(SPItemTest, getClipPathVector)
   <g id="group3" transform="translate(-10,-10)" clip-path="url(#clipPath1)">
     <rect id="rect2" x="0" y="0" width="50" height="50" style="fill: red" />
   </g>
-</svg>)""");
+</svg>)"""sv;
 
-    auto doc = SPDocument::createNewDocFromMem(svg.c_str(), svg.size(), true);
+    auto doc = SPDocument::createNewDocFromMem(svg, true);
 
     // This has to be run or all the path vectors are empty.
     doc->ensureUpToDate();

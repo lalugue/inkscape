@@ -20,36 +20,35 @@
 
 using namespace Inkscape;
 using namespace Inkscape::XML;
+using namespace std::literals;
 
 class ObjectTest: public DocPerCaseTest {
 public:
     ObjectTest() {
-        char const *docString = "\
-<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>\
-<style>\
-rect { fill: #808080; opacity:0.5; }\
-.extra { opacity:1.0; }\
-.overload { fill: #d0d0d0 !important; stroke: #c0c0c0 !important; }\
-.font { font: italic bold 12px/30px Georgia, serif; }\
-.exsize { stroke-width: 1ex; }\
-.fosize { font-size: 15px; }\
-</style>\
-<g style='fill:blue; stroke-width:2px;font-size: 14px;'>\
-  <rect id='one' style='fill:red; stroke:green;'/>\
-  <rect id='two' style='stroke:green; stroke-width:4px;'/>\
-  <rect id='three' class='extra' style='fill: #cccccc;'/>\
-  <rect id='four' class='overload' style='fill:green;stroke:red !important;'/>\
-  <rect id='five' class='font' style='font: 15px arial, sans-serif;'/>/\
-  <rect id='six' style='stroke-width:1em;'/>\
-  <rect id='seven' class='exsize'/>\
-  <rect id='eight' class='fosize' style='stroke-width: 50%;'/>\
-</g>\
-</svg>";
-        doc.reset(SPDocument::createNewDocFromMem(docString, static_cast<int>(strlen(docString)), false));
+        constexpr auto docString = R"A(
+<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+<style>
+rect { fill: #808080; opacity:0.5; }
+.extra { opacity:1.0; }
+.overload { fill: #d0d0d0 !important; stroke: #c0c0c0 !important; }
+.font { font: italic bold 12px/30px Georgia, serif; }
+.exsize { stroke-width: 1ex; }
+.fosize { font-size: 15px; }
+</style>
+<g style='fill:blue; stroke-width:2px;font-size: 14px;'>
+  <rect id='one' style='fill:red; stroke:green;'/>
+  <rect id='two' style='stroke:green; stroke-width:4px;'/>
+  <rect id='three' class='extra' style='fill: #cccccc;'/>
+  <rect id='four' class='overload' style='fill:green;stroke:red !important;'/>
+  <rect id='five' class='font' style='font: 15px arial, sans-serif;'/>/
+  <rect id='six' style='stroke-width:1em;'/>
+  <rect id='seven' class='exsize'/>
+  <rect id='eight' class='fosize' style='stroke-width: 50%;'/>
+</g>
+</svg>)A"sv;
+        doc = SPDocument::createNewDocFromMem(docString, false);
         doc->ensureUpToDate();
     }
-
-    ~ObjectTest() override = default;
 
     std::unique_ptr<SPDocument> doc;
 };

@@ -23,6 +23,7 @@
 #include <map>                                 // for map
 #include <memory>                              // for unique_ptr, default_de...
 #include <queue>                               // for queue
+#include <span>
 #include <string>                              // for string
 #include <vector>                              // for vector
 
@@ -40,9 +41,6 @@
 #include <2geom/transforms.h>                  // for Scale
 
 #include "3rdparty/libcroco/src/cr-cascade.h"  // for CRCascade
-
-#include "gc-anchored.h"
-#include "gc-finalized.h"
 
 #include "inkgc/gc-managed.h"
 
@@ -100,39 +98,38 @@ namespace Inkscape {
 } // namespace Inkscape
 
 /// Typed SVG document implementation.
-class SPDocument : public Inkscape::GC::Managed<>,
-                   public Inkscape::GC::Finalized,
-                   public Inkscape::GC::Anchored
+class SPDocument : public Inkscape::GC::Managed<Inkscape::GC::SCANNED, Inkscape::GC::MANUAL>
 {
 
 public:
     /// For sanity check in SPObject::requestDisplayUpdate
     unsigned update_in_progress = 0;
 
-    /************ Functions *****************/
-
-    // Fundamental ------------------------
+protected:
+    // Protect against allocation of SPDocument in non-GC-scanned memory.
+    // Necessary while SPDocument still contains GC-managed pointers.
     SPDocument();
-    ~SPDocument() override;
-    SPDocument(SPDocument const &) = delete; // no copy
-    void operator=(SPDocument const &) = delete; // no assign
+
+public:
+    ~SPDocument();
+    SPDocument(SPDocument const &) = delete;
+    SPDocument &operator=(SPDocument const &) = delete;
 
     static gint get_new_doc_number();
 
     // Document creation ------------------
-    static SPDocument *createDoc(Inkscape::XML::Document *rdoc, char const *filename,
-            char const *base, char const *name, bool keepalive,
-            SPDocument *parent);
-    static SPDocument *createNewDoc(char const *filename, bool keepalive,
-            bool make_new = false, SPDocument *parent=nullptr );
-    static SPDocument *createNewDocFromMem(char const *buffer, int length, bool keepalive,
-                                           Glib::ustring const &filename = "");
+    static std::unique_ptr<SPDocument> createDoc(Inkscape::XML::Document *rdoc, char const *filename,
+            char const *base, char const *name, bool keepalive, SPDocument *parent = nullptr);
+    static std::unique_ptr<SPDocument> createNewDoc(char const *filename, bool keepalive,
+            bool make_new = false, SPDocument *parent = nullptr);
+    static std::unique_ptr<SPDocument> createNewDocFromMem(std::span<char const> buffer, bool keepalive,
+            std::string const &filename = "");
     SPDocument *createChildDoc(std::string const &filename);
 
     void setPages(bool enabled);
     void prunePages(const std::string &page_nums, bool invert = false);
 
-    // Make a copy, you are responsible for the copy.
+    // Make a deep copy.
     std::unique_ptr<SPDocument> copy() const;
     // Substitute doc root
     void rebase(Inkscape::XML::Document * new_xmldoc, bool keep_namedview = true);
@@ -144,10 +141,6 @@ public:
     void setVirgin(bool Virgin) { virgin = Virgin; }
     bool getVirgin() { return virgin; }
     const SPDocument *getOriginalDocument() const { return _original_document; }
-
-    //! Increment reference count by one and return a self-dereferencing pointer.
-    std::unique_ptr<SPDocument> doRef();
-    std::unique_ptr<SPDocument const> doRef() const;
 
     bool isModifiedSinceSave() const { return modified_since_save; }
     bool isModifiedSinceAutoSave() const { return modified_since_autosave; }
@@ -187,6 +180,8 @@ private:
 
     // Find items by geometry --------------------
     std::deque<SPItem*> const &get_flat_item_list(unsigned int dkey, bool into_groups, bool active_only) const;
+
+    SPDocument *_searchForChild(std::string const &filename, SPDocument const *avoid = nullptr);
 
 public:
     void clearNodeCache() { _node_cache.clear(); }
@@ -393,7 +388,7 @@ private:
     SPRoot *root;             ///< Our SPRoot
 
     // A list of svg documents being used or shown within this document
-    boost::ptr_list<SPDocument> _child_documents;
+    std::vector<std::unique_ptr<SPDocument>> _child_documents;
     // Conversely this is a parent document because this is a child.
     SPDocument *_parent_document;
     // When copying documents, this can refer to its original
@@ -507,21 +502,6 @@ public:
     void emitReconstructionStart();
     void emitReconstructionFinish();
 };
-
-namespace std {
-template <>
-struct default_delete<SPDocument> {
-    void operator()(SPDocument *ptr) const {
-        Inkscape::GC::release(ptr);
-        if (ptr->_anchored_refcount() == 0) {
-            // Explicit delete required to free SPDocument
-            // see https://gitlab.com/inkscape/inkscape/-/issues/2723
-            delete ptr;
-        }
-    }
-};
-
-}; // namespace std
 
 /*
  * Ideas: How to overcome style invalidation nightmare

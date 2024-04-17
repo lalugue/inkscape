@@ -30,11 +30,11 @@ class SPDocument;
 class SPDesktop;
 class SPDesktopWidget;
 
-class InkscapeWindow final : public Gtk::ApplicationWindow
+class InkscapeWindow : public Gtk::ApplicationWindow
 {
 public:
-    InkscapeWindow(SPDocument* document);
-    ~InkscapeWindow() final;
+    InkscapeWindow(SPDocument *document);
+    ~InkscapeWindow() override;
 
     SPDocument*      get_document()       { return _document; }
     SPDesktop*       get_desktop()        { return _desktop; }

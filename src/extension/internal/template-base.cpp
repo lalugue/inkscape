@@ -15,7 +15,7 @@
 #include "document.h"
 #include "extension/prefdialog/parameter.h"
 #include "page-manager.h"
-#include "template-paper.h"
+#include "template-base.h"
 #include "object/sp-page.h"
 
 namespace Inkscape {
@@ -60,7 +60,7 @@ const Util::Unit *TemplateBase::get_template_unit(Inkscape::Extension::Template 
     }
 }
 
-SPDocument *TemplateBase::new_from_template(Inkscape::Extension::Template *tmod)
+std::unique_ptr<SPDocument> TemplateBase::new_from_template(Inkscape::Extension::Template *tmod)
 {
     auto unit = this->get_template_unit(tmod);
     auto size = this->get_template_size(tmod);
@@ -68,7 +68,7 @@ SPDocument *TemplateBase::new_from_template(Inkscape::Extension::Template *tmod)
     auto height = Util::Quantity((double)size.y(), unit);
 
     // If it was a template file, modify the document according to user's input.
-    SPDocument *doc = tmod->get_template_document();
+    auto doc = tmod->get_template_document();
     auto nv = doc->getNamedView();
 
     // Set the width, height and default display units for the selected template

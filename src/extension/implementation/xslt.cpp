@@ -27,7 +27,6 @@
 #include "extension/extension.h"
 #include "extension/output.h"
 #include "extension/input.h"
-#include "io/resource.h"
 #include "xml/node.h"
 #include "xml/repr.h"
 
@@ -83,11 +82,12 @@ void XSLT::unload(Inkscape::Extension::Extension *module)
     // No need to use xmlfreedoc(_parsedDoc), it's handled by xsltFreeStylesheet(_stylesheet);
 }
 
-SPDocument * XSLT::open(Inkscape::Extension::Input */*module*/,
-                        char const *filename)
+std::unique_ptr<SPDocument> XSLT::open(Inkscape::Extension::Input *, char const *filename)
 {
     xmlDocPtr filein = xmlParseFile(filename);
-    if (filein == nullptr) { return nullptr; }
+    if (!filein) {
+        return nullptr;
+    }
 
     char const *params[1] = {nullptr};
     std::string const oldlocale = std::setlocale(LC_NUMERIC, nullptr);
@@ -125,9 +125,10 @@ SPDocument * XSLT::open(Inkscape::Extension::Input */*module*/,
     }
     g_free(s);
 
-    SPDocument * doc = SPDocument::createDoc(rdoc, filename, base, name, true, nullptr);
+    auto doc = SPDocument::createDoc(rdoc, filename, base, name, true);
 
-    g_free(base); g_free(name);
+    g_free(base);
+    g_free(name);
 
     return doc;
 }

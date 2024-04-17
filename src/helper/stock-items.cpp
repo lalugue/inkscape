@@ -79,16 +79,14 @@ std::vector<std::shared_ptr<SPDocument>> sp_get_paint_documents(const std::funct
     return out;
 }
 
-static SPDocument *load_paint_doc(char const *basename,
-                                  Inkscape::IO::Resource::Type type = Inkscape::IO::Resource::PAINT)
+static std::unique_ptr<SPDocument> load_paint_doc(char const *basename, Inkscape::IO::Resource::Type type = Inkscape::IO::Resource::PAINT)
 {
     using namespace Inkscape::IO::Resource;
 
     for (Domain const domain : {SYSTEM, CREATE}) {
         auto const filename = get_path_string(domain, type, basename);
         if (Glib::file_test(filename, Glib::FileTest::IS_REGULAR)) {
-            auto doc = SPDocument::createNewDoc(filename.c_str(), false);
-            if (doc) {
+            if (auto doc = SPDocument::createNewDoc(filename.c_str(), false)) {
                 doc->ensureUpToDate();
                 return doc;
             }
@@ -109,7 +107,7 @@ static SPObject * sp_marker_load_from_svg(gchar const *name, SPDocument *current
         return nullptr;
     }
     /* Try to load from document */
-    static SPDocument *doc = load_paint_doc("markers.svg", Inkscape::IO::Resource::MARKERS);
+    static auto const doc = load_paint_doc("markers.svg", Inkscape::IO::Resource::MARKERS);
 
     if (doc) {
         /* Get the marker we want */
@@ -148,7 +146,7 @@ sp_gradient_load_from_svg(gchar const *name, SPDocument *current_doc)
         return nullptr;
     }
     /* Try to load from document */
-    static SPDocument *doc = load_paint_doc("gradients.svg");
+    static auto const doc = load_paint_doc("gradients.svg");
 
     if (doc) {
         /* Get the gradient we want */

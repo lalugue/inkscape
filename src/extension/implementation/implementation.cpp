@@ -19,11 +19,21 @@
 
 #include "selection.h"
 #include "desktop.h"
-
+#include "document.h"
 
 namespace Inkscape {
 namespace Extension {
 namespace Implementation {
+
+std::unique_ptr<SPDocument> Implementation::new_from_template(Template *)
+{
+    return {};
+}
+
+std::unique_ptr<SPDocument> Implementation::open(Input *module, char const *filename)
+{
+    return {};
+}
 
 Gtk::Widget *Implementation::prefs_effect(Inkscape::Extension::Effect *module, SPDesktop *desktop, sigc::signal<void ()> * changeSignal, ImplementationDocumentCache * /*docCache*/)
 {

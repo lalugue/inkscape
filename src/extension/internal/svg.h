@@ -50,9 +50,8 @@ public:
     void        save( Inkscape::Extension::Output *mod,
                                SPDocument *doc,
                                gchar const *filename ) override;
-    SPDocument *open( Inkscape::Extension::Input *mod,
-                                const gchar *uri ) override;
-    static void         init( );
+    std::unique_ptr<SPDocument> open(Inkscape::Extension::Input *mod, char const *uri) override;
+    static void init();
 };
 
 } } }  /* namespace Inkscape, Extension, Implementation */

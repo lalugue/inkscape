@@ -57,8 +57,8 @@ private:
     std::vector<std::shared_ptr<SPDocument>> _documents;
     std::vector<Glib::RefPtr<Category>> _categories;
     std::unordered_map<SPPattern*, Glib::RefPtr<Inkscape::UI::Widget::PatternItem>> _cache;
-    std::shared_ptr<SPDocument> _preview_doc;
-    std::shared_ptr<SPDocument> _big_preview_doc;
+    std::unique_ptr<SPDocument> _preview_doc;
+    std::unique_ptr<SPDocument> _big_preview_doc;
 };
 
 } // namespace
