@@ -83,8 +83,8 @@ Notes:
     stroke: black;
     outline: white;
     stroke-width: 1.0px;
-    outline-width: 1.0px;
-    outline-opacity: 60%;
+    outline-width: 1.45px;
+    outline-opacity: 75%;
     scale: 2.0;
     size-extra: 1px; /* extra space to fine-tune handle size */
     stroke-scale: 0.10; /* factor for scaling stroke with handle size or 0 to disable scaling */
@@ -92,11 +92,11 @@ Notes:
 
 *:selected,
 *:click {
-    fill: #2a7fff;
+    fill: #308aff;
 }
 
 *:hover {
-    fill: #4d92f8;
+    fill: #0a60e0;
 }
 
 
@@ -200,13 +200,13 @@ Notes:
 .inkscape-center {
     shape: "plus";
     stroke-width: 1px;
-    size-extra: 1px;
+    size-extra: 2px;
     stroke-scale: 0.08; /* make stroke heavier more slowly */
 }
 
 .inkscape-marker {
     shape: "cross";
-    stroke-width: 1px;
+    stroke-width: 1.13px;
     size-extra: -1px;
     stroke-scale: 0.08;
 }
