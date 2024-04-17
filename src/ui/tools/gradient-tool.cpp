@@ -270,9 +270,16 @@ void GradientTool::add_stops_between_selected_stops()
                 // To avoid creating 2 separate stops, ignore this draggable point type
                 continue;
             }
+
+            // Mark the second-to-last stop as the current stop if the last gradient point is
+            // selected to insert a stop.
+            auto const point_i =
+                d->point_type == POINT_LG_END || d->point_type == POINT_RG_R1 || d->point_type == POINT_RG_R2
+                    ? d->point_i - 1
+                    : d->point_i;
             auto gradient = getGradient(d->item, d->fill_or_stroke);
             auto vector = sp_gradient_get_forked_vector_if_necessary(gradient, false);
-            if (auto this_stop = sp_get_stop_i(vector, d->point_i)) {
+            if (auto this_stop = sp_get_stop_i(vector, point_i)) {
                 if (auto next_stop = this_stop->getNextStop()) {
                     ret.these_stops.emplace_back(this_stop);
                     ret.next_stops.emplace_back(next_stop);
