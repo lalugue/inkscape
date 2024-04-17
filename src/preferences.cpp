@@ -39,10 +39,6 @@ static void migrateDetails( Inkscape::XML::Document *from, Inkscape::XML::Docume
 
 static Inkscape::XML::Document *migrateFromDoc = nullptr;
 
-// cachedRawValue prefixes for encoding nullptr
-static Glib::ustring const RAWCACHE_CODE_NULL {"N"};
-static Glib::ustring const RAWCACHE_CODE_VALUE {"V"};
-
 // private inner class definition
 
 /**
@@ -348,9 +344,7 @@ std::vector<Glib::ustring> Preferences::getAllDirs(Glib::ustring const &path)
 
 Preferences::Entry const Preferences::getEntry(Glib::ustring const &pref_path)
 {
-    gchar const *v;
-    _getRawValue(pref_path, v);
-    return Entry(pref_path, v);
+    return Entry(pref_path, _getRawValueCached(pref_path));
 }
 
 // setter methods
@@ -471,8 +465,7 @@ void Preferences::mergeStyle(Glib::ustring const &pref_path, SPCSSAttr *style)
  */
 void Preferences::remove(Glib::ustring const &pref_path)
 {
-    auto it = cachedRawValue.find(pref_path.c_str());
-    if (it != cachedRawValue.end()) cachedRawValue.erase(it);
+    cachedRawValue.erase(pref_path);
 
     Inkscape::XML::Node *node = _getNode(pref_path, false);
     if (node && node->parent()) {
@@ -706,21 +699,54 @@ Inkscape::XML::Node *Preferences::_getNode(Glib::ustring const &pref_key, bool c
     return node;
 }
 
-void Preferences::_getRawValue(Glib::ustring const &path, gchar const *&result)
+/** Get a string-pointer to the requested preference value
+ *  (or null pointer if it doesn't exist).
+ *  The memory is owned by the preferences XML node or by the preferences cache.
+ *  The caller must not use the pointer after any write operation to the preferences.
+ *
+ * TODO for future refactoring: Once Preferences::Entry is changed to C++ types,
+ * we can also get rid of pointers here.
+ */
+gchar const * Preferences::_getRawValueCached(Glib::ustring const &path)
 {
-    // will return empty string if `path` was not in the cache yet
-    auto& cacheref = cachedRawValue[path.c_str()];
+    // We implement caching also for the negative case, where no preference exists.
+    // For standard GUI preferences, the negative case is usually not needed
+    // because they should have their default value in preferences_skeleton.h.
+    // However, for preferences of extensions (i.e., the options that the user can select in the
+    // Extension dialog), this case is quite common (ca. 1000 times on Inkscape startup).
 
-    // check in cache first
-    if (_initialized && !cacheref.empty()) {
-        if (cacheref == RAWCACHE_CODE_NULL) {
-            result = nullptr;
-        } else {
-            result = cacheref.c_str() + RAWCACHE_CODE_VALUE.length();
+    if (_initialized) {
+        // get cached value, if it exists
+        auto it = cachedRawValue.find(path.raw());
+        if (it != cachedRawValue.end()) {
+            auto const & cacheResult = it->second;
+            if (cacheResult.has_value()) {
+                return cacheResult.value().c_str();
+            } else {
+                // Found negative cache entry: We remember that no such preference exists
+                return nullptr;
+            }
         }
-        return;
     }
 
+    gchar const * result = _getRawValueNonCached(path);
+
+    if (_initialized) {
+        // write to cache
+        if (result != nullptr) {
+            cachedRawValue[path.raw()] = result;
+        } else {
+            // Write negative cache entry
+            cachedRawValue[path.raw()] = std::nullopt;
+        }
+    }
+    return result;
+}
+
+/** Same as _getRawValueCached(), but skipping the cache.
+ */
+gchar const * Preferences::_getRawValueNonCached(Glib::ustring const &path)
+{
     // create node and attribute keys
     Glib::ustring node_key, attr_key;
     _keySplit(path, node_key, attr_key);
@@ -728,21 +754,13 @@ void Preferences::_getRawValue(Glib::ustring const &path, gchar const *&result)
     // retrieve the attribute
     Inkscape::XML::Node *node = _getNode(node_key, false);
     if ( node == nullptr ) {
-        result = nullptr;
-    } else {
-        gchar const *attr = node->attribute(attr_key.c_str());
-        if ( attr == nullptr ) {
-            result = nullptr;
-        } else {
-            result = attr;
-        }
+        return nullptr;
     }
-
-    if (_initialized && result) {
-        cacheref = RAWCACHE_CODE_VALUE;
-        cacheref += result;
+    gchar const *attr = node->attribute(attr_key.c_str());
+    if ( attr == nullptr ) {
+        return nullptr;
     } else {
-        cacheref = RAWCACHE_CODE_NULL;
+        return attr;
     }
 }
 
@@ -755,7 +773,7 @@ void Preferences::_setRawValue(Glib::ustring const &path, Glib::ustring const &v
     // update cache first, so by the time notification change fires and observers are called,
     // they have access to current settings even if they watch a group
     if (_initialized) {
-        cachedRawValue[path.c_str()] = RAWCACHE_CODE_VALUE + value;
+        cachedRawValue[path.raw()] = value;
     }
 
     // set the attribute

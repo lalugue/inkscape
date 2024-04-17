@@ -52,7 +52,7 @@ public:
                                          bool expanded   = false         ) const;
 
 private:
-    std::unordered_map<Glib::ustring, InkActionExtraDatum> data;
+    std::unordered_map<std::string, InkActionExtraDatum> data;
 };
 
 #endif // INK_ACTIONS_EXTRA_DATA_H

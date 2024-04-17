@@ -80,7 +80,7 @@ set_tooltips_and_shift_icons(Gtk::Widget &menu, bool const shift_icons)
 
         // Set tooltip.
         Glib::ustring label;
-        if (child.get_name() == "GtkModelButton") {
+        if (child.get_name().raw() == "GtkModelButton") {
             label = find_label(child);
         }
 

@@ -157,7 +157,8 @@ public:
         /**
          * Check whether the received entry is valid.
          *
-         * @return If false, the default value will be returned by the getters.
+         * @return False if the entry is invalid.
+         * Invalid means that the get...() functions will return the default value.
          */
         bool isValid() const { return _value != nullptr; }
 
@@ -663,7 +664,8 @@ private:
     ~Preferences();
     void _loadDefaults();
     void _load();
-    void _getRawValue(Glib::ustring const &path, gchar const *&result);
+    gchar const * _getRawValueCached(Glib::ustring const &path);
+    gchar const * _getRawValueNonCached(Glib::ustring const &path);
     void _setRawValue(Glib::ustring const &path, Glib::ustring const &value);
     void _reportError(Glib::ustring const &, Glib::ustring const &);
     void _keySplit(Glib::ustring const &pref_path, Glib::ustring &node_key, Glib::ustring &attr_key);
@@ -678,7 +680,8 @@ private:
     bool _writable = false; ///< Will the preferences be saved at exit?
     bool _hasError = false; ///< Indication that some error has occurred;
     bool _initialized = false; ///< Is this instance fully initialized? Caching should be avoided before.
-    std::unordered_map<std::string, Glib::ustring> cachedRawValue;
+    // cache key has type std::string because Glib::ustring is slower for equality checks
+    std::unordered_map<std::string, std::optional<Glib::ustring>> cachedRawValue;
 
     /// Wrapper class for XML node observers
     class PrefNodeObserver;

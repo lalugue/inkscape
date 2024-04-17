@@ -86,7 +86,7 @@ build_menu()
             std::cerr << "build_menu(): Couldn't find Extensions menu entry!" << std::endl;
         }
 
-        std::map<Glib::ustring, Glib::RefPtr<Gio::Menu>> submenus;
+        std::map<std::string, Glib::RefPtr<Gio::Menu>> submenus;
 
         for (auto &&entry : app->get_action_effect_data().give_all_data()) {
             auto const &submenu_name_list = entry.submenu;
@@ -94,13 +94,13 @@ build_menu()
 
             // Effect data is used for both filters menu and extensions menu... we need to
             // add to correct menu.
-            Glib::ustring path; // Only used as index to map of submenus.
+            std::string path; // Only used as index to map of submenus.
             auto top_menu = filters_menu;
             if (!entry.is_filter) {
                 top_menu = effects_menu;
-                path += "Effects";
+                path = "Effects";
             } else {
-                path += "Filters";
+                path = "Filters";
             }
 
             if (!top_menu) { // It's possible that the menu doesn't exist (Kid's Inkscape?)

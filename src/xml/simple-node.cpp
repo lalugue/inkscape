@@ -324,7 +324,8 @@ SimpleNode::setAttributeImpl(gchar const *name, gchar const *value)
     gchar* cleaned_value = g_strdup( value );
 
     // Only check elements in SVG name space and don't block setting attribute to NULL.
-    if( element.substr(0,4) == "svg:" && value != nullptr) {
+    // .raw() is only for performance reasons because Glib::ustring.== is slow
+    if (value != nullptr && element.raw().starts_with("svg:")) {
 
         Inkscape::Preferences *prefs = Inkscape::Preferences::get();
         if( prefs->getBool("/options/svgoutput/check_on_editing") ) {

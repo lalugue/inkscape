@@ -38,14 +38,15 @@ bool InkActionEffectData::datum::operator < (const datum& b) const {
     auto a_it = a_list.begin();
     auto b_it = b_list.begin();
     while (a_it != a_list.end() && b_it != b_list.end()) {
-        if (*a_it < *b_it) return true;
-        if (*a_it > *b_it) return false;
+        // Note: .raw() is only for performance reasons because Glib::ustring::operator < is slow
+        if (a_it->raw() < b_it->raw()) return true;
+        if (a_it->raw() > b_it->raw()) return false;
         a_it++;
         b_it++;
     }
-    if (a_it != a_list.end()) return *a_it < b.effect_name;  // Compare menu name with effect name.
-    if (b_it != b_list.end()) return *b_it > a.effect_name;  // Compare menu name with effect name.
-    return a.effect_name < b.effect_name; // Same menu, order by effect name.
+    if (a_it != a_list.end()) return a_it->raw() < b.effect_name.raw();  // Compare menu name with effect name.
+    if (b_it != b_list.end()) return b_it->raw() > a.effect_name.raw();  // Compare menu name with effect name.
+    return a.effect_name.raw() < b.effect_name.raw(); // Same menu, order by effect name.
 }
 
 void InkActionEffectData::add_data(
