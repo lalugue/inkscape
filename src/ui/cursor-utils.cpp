@@ -140,8 +140,7 @@ load_svg_cursor(Gtk::Widget &widget,
         return cursor;
     }
 
-    bool cancelled = false;
-    auto document = ink_file_open(file, &cancelled);
+    auto document = ink_file_open(file).first;
 
     if (!document) {
         std::cerr << "load_svg_cursor: Could not open document: " << full_file_path << std::endl;

@@ -15,18 +15,14 @@
 
 #include "extension/internal/template-base.h"
 
-namespace Inkscape {
-namespace Extension {
-namespace Internal {
+namespace Inkscape::Extension::Internal {
 
 class TemplateSocial : public TemplateBase
 {
 public:
-    TemplateSocial(){};
     static void init();
 };
 
-} // namespace Internal
-} // namespace Extension
-} // namespace Inkscape
+} // namespace Inkscape::Extension::Internal {
+
 #endif /* EXTENSION_INTERNAL_TEMPLATE_SOCIAL_H */

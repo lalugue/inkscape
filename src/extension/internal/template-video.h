@@ -15,18 +15,14 @@
 
 #include "extension/internal/template-base.h"
 
-namespace Inkscape {
-namespace Extension {
-namespace Internal {
+namespace Inkscape::Extension::Internal {
 
 class TemplateVideo : public TemplateBase
 {
 public:
-    TemplateVideo(){};
     static void init();
 };
 
-} // namespace Internal
-} // namespace Extension
-} // namespace Inkscape
+} // namespace Inkscape::Extension::Internal
+
 #endif /* EXTENSION_INTERNAL_TEMPLATE_VIDEO_H */

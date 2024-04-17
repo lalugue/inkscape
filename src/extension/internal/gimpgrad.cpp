@@ -25,29 +25,15 @@
 #include "document.h"
 #include "extension/extension.h"
 
-namespace Inkscape {
-namespace Extension {
-namespace Internal {
+namespace Inkscape::Extension::Internal {
 
-/**
-    \brief  A function to allocate anything -- just an example here
-    \param  module  Unused
-    \return Whether the load was successful
-*/
-bool GimpGrad::load (Inkscape::Extension::Extension */*module*/)
+bool GimpGrad::load(Inkscape::Extension::Extension *)
 {
-    // std::cout << "Hey, I'm loading!\n" << std::endl;
-    return TRUE;
+    return true;
 }
 
-/**
-    \brief  A function to remove what was allocated
-    \param  module  Unused
-    \return None
-*/
-void GimpGrad::unload (Inkscape::Extension::Extension */*module*/)
+void GimpGrad::unload(Inkscape::Extension::Extension *)
 {
-    // std::cout << "Nooo! I'm being unloaded!" << std::endl;
     return;
 }
 
@@ -261,7 +247,7 @@ error:
 
 #include "clear-n_.h"
 
-void GimpGrad::init ()
+void GimpGrad::init()
 {
     // clang-format off
     Inkscape::Extension::build_from_mem(
@@ -279,7 +265,7 @@ void GimpGrad::init ()
     return;
 }
 
-} } }  /* namespace Internal; Extension; Inkscape */
+} // namespace Inkscape::Extension::Internal
 
 /*
   Local Variables:

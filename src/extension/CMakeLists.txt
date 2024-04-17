@@ -207,6 +207,13 @@ if(WITH_LIBWPG)
 	)
 endif()
 
+if(WITH_LIBCDR OR WITH_LIBVISIO)
+	list(APPEND extension_SRC
+		internal/rvng-import-dialog.cpp
+		internal/rvng-import-dialog.h
+	)
+endif()
+
 if(WITH_MAGICK)
 	list(APPEND extension_SRC
 		internal/bitmap/adaptiveThreshold.cpp

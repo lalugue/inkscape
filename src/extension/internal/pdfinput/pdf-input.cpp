@@ -614,10 +614,9 @@ std::unique_ptr<SPDocument> PdfInput::open(Inkscape::Extension::Input *, char co
         return nullptr;
     }
 
-
-    std::unique_ptr<PdfImportDialog> dlg;
+    std::optional<PdfImportDialog> dlg;
     if (INKSCAPE.use_gui()) {
-        dlg = std::make_unique<PdfImportDialog>(pdf_doc, uri);
+        dlg.emplace(pdf_doc, uri);
         if (!dlg->showDialog()) {
             throw Input::open_cancelled();
         }

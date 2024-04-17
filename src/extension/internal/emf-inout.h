@@ -21,9 +21,7 @@
 #include "style.h"
 #include "text_reassemble.h"
 
-namespace Inkscape {
-namespace Extension {
-namespace Internal {
+namespace Inkscape::Extension::Internal {
 
 #define DIRTY_NONE   0x00
 #define DIRTY_TEXT   0x01
@@ -35,16 +33,15 @@ struct EMF_OBJECT {
     int level = 0;
     char *lpEMFR = nullptr;
 };
-using PEMF_OBJECT = EMF_OBJECT *;
 
 struct EMF_STRINGS {
     int size = 0;               // number of slots allocated in strings
     int count = 0;              // number of slots used in strings
     char **strings = nullptr;   // place to store strings
 };
-using PEMF_STRINGS = EMF_STRINGS *;
 
-struct EMF_DEVICE_CONTEXT {
+struct EMF_DEVICE_CONTEXT
+{
     EMF_DEVICE_CONTEXT() :
         // SPStyle: class with constructor
         font_name(nullptr),
@@ -73,7 +70,8 @@ struct EMF_DEVICE_CONTEXT {
         worldTransform.eDx = 0.0;
         worldTransform.eDy = 0.0;
         cur = point32_set( 0, 0 );
-    };        
+    }
+
     SPStyle         style;
     char           *font_name;
     int             clip_id;      // 0 if none, else 1 + index into clips
@@ -99,12 +97,11 @@ struct EMF_DEVICE_CONTEXT {
     U_XFORM         worldTransform;
     U_POINTL        cur;
 };
-using PEMF_DEVICE_CONTEXT = EMF_DEVICE_CONTEXT *;
 
-#define EMF_MAX_DC 128
+inline constexpr auto EMF_MAX_DC = 128;
 
-struct EMF_CALLBACK_DATA {
-
+struct EMF_CALLBACK_DATA
+{
     EMF_CALLBACK_DATA() :
         // dc: array, structure w/ constructor
         level(0),
@@ -125,7 +122,7 @@ struct EMF_CALLBACK_DATA {
         tri(nullptr),
         n_obj(0)
         // emf_obj;
-    {};
+    {}
 
     Glib::ustring outsvg;
     Glib::ustring path;
@@ -160,24 +157,23 @@ struct EMF_CALLBACK_DATA {
     EMF_STRINGS clips;        // hold clipping paths, referred to be the slot where the clipping path lives
     TR_INFO    *tri;          // Text Reassembly data structure
 
-
     int n_obj;
-    PEMF_OBJECT emf_obj;
+    EMF_OBJECT *emf_obj;
 };
 using PEMF_CALLBACK_DATA = EMF_CALLBACK_DATA *;
 
-class Emf :  public Metafile 
+class Emf : public Metafile
 { 
 public:
     bool check(Inkscape::Extension::Extension *module) override; //Can this module load (always yes for now)
 
     void save(Inkscape::Extension::Output *mod, // Save the given document to the given filename
               SPDocument *doc,
-              gchar const *filename) override;
+              char const *filename) override;
 
     std::unique_ptr<SPDocument> open(Inkscape::Extension::Input *mod, char const *uri) override;
 
-    static void init();//Initialize the class
+    static void init();
 
 protected:
     static void        print_document_to_file(SPDocument *doc, const gchar *filename);
@@ -223,8 +219,7 @@ protected:
 
 };
 
-} } }  /* namespace Inkscape, Extension, Implementation */
-
+} // namespace Inkscape::Extension::Internal
 
 #endif /* EXTENSION_INTERNAL_EMF_H */
 

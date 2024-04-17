@@ -123,13 +123,14 @@ private:
     void onPaintClicked(const Gtk::TreeModel::Path &path);
     void onPaintSourceDocumentChanged();
     void selectionChanged(Selection *selection) final;
-
-    bool _targetting_fill; ///< whether setting fill (true) or stroke (false)
+    
+    bool _targeting_fill = true; ///< whether setting fill (true) or stroke (false)
     std::map<Glib::ustring, Glib::RefPtr<Gtk::ListStore>> store;
     Glib::ustring current_store;
     std::vector<std::unique_ptr<SPDocument>> _stock_documents;
     std::map<Glib::ustring, SPDocument *> document_map;
     std::unique_ptr<SPDocument> preview_document;
+    unsigned _display_key;
     Inkscape::Drawing renderDrawing;
     Gtk::ComboBoxText *dropdown = nullptr;
     Gtk::IconView *icon_view = nullptr;

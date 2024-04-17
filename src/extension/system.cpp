@@ -40,8 +40,7 @@
 #include "ui/interface.h"
 #include "xml/rebase-hrefs.h"
 
-namespace Inkscape {
-namespace Extension {
+namespace Inkscape::Extension {
 
 /**
  * \return   A new document created from the filename passed in
@@ -602,7 +601,7 @@ store_save_path_in_prefs (Glib::ustring path, FileSaveMethod method) {
     }
 }
 
-} } /* namespace Inkscape::Extension */
+} // namespace Inkscape::Extension
 
 /*
   Local Variables:

@@ -16,7 +16,7 @@
 #ifndef SEEN_EXTENSION_INTERNAL_SVG_H
 #define SEEN_EXTENSION_INTERNAL_SVG_H
 
-#include "../implementation/implementation.h"
+#include "extension/implementation/implementation.h"
 
 // clang-format off
 #define SVG_COMMON_INPUT_PARAMS \
@@ -36,25 +36,23 @@
             "<param name=\"do_not_ask\" gui-description='" N_("Hide the dialog next time and always apply the same actions.") "' gui-text=\"" N_("Don't ask again") "\" type=\"bool\" >false</param>\n"
 // clang-format on
 
+namespace Inkscape::Extension::Internal {
 
-namespace Inkscape {
-namespace Extension {
-namespace Internal {
-
-class Svg : public Inkscape::Extension::Implementation::Implementation {
-    bool m_detachbase = false;
-
+class Svg : public Inkscape::Extension::Implementation::Implementation
+{
 public:
-    void        setDetachBase(bool detach) override { m_detachbase = detach; }
+    void setDetachBase(bool detach) override { m_detachbase = detach; }
 
-    void        save( Inkscape::Extension::Output *mod,
-                               SPDocument *doc,
-                               gchar const *filename ) override;
+    void save(Inkscape::Extension::Output *mod, SPDocument *doc, char const *filename) override;
     std::unique_ptr<SPDocument> open(Inkscape::Extension::Input *mod, char const *uri) override;
     static void init();
+
+private:
+    bool m_detachbase = false;
 };
 
-} } }  /* namespace Inkscape, Extension, Implementation */
+} // namespace Inkscape::Extension::Internal
+
 #endif // SEEN_EXTENSION_INTERNAL_SVG_H
 
 /*

@@ -18,9 +18,7 @@
 #include "style.h"
 #include "text_reassemble.h"
 
-namespace Inkscape {
-namespace Extension {
-namespace Internal {
+namespace Inkscape::Extension::Internal {
 
 #define DIRTY_NONE   0x00
 #define DIRTY_TEXT   0x01
@@ -32,14 +30,12 @@ struct WMF_OBJECT {
     int level = 0;
     char *record = nullptr;
 };
-using PWMF_OBJECT = WMF_OBJECT *;
 
 struct WMF_STRINGS {
     int size = 0;               // number of slots allocated in strings
     int count = 0;              // number of slots used in strings
     char **strings = nullptr;   // place to store strings
 };
-using PWMF_STRINGS = WMF_STRINGS *;
 
 struct WMF_DEVICE_CONTEXT {
     WMF_DEVICE_CONTEXT() :
@@ -93,10 +89,8 @@ struct WMF_DEVICE_CONTEXT {
     uint16_t        textAlign;
     U_POINT16       cur;
 };
-using PWMF_DEVICE_CONTEXT = WMF_DEVICE_CONTEXT *;
 
-#define WMF_MAX_DC 128
-
+inline constexpr auto WMF_MAX_DC = 128;
 
 // like this causes a mysterious crash on the return from Wmf::open
 //typedef struct emf_callback_data {
@@ -156,29 +150,23 @@ struct WMF_CALLBACK_DATA {
 
     int n_obj;
     int low_water;            // first object slot which _might_ be unoccupied.  Everything below is filled.
-    PWMF_OBJECT wmf_obj;
+    WMF_OBJECT *wmf_obj;
 };
 using PWMF_CALLBACK_DATA = WMF_CALLBACK_DATA *;
 
 class Wmf : public Metafile
 {
-
 public:
-    Wmf(); // Empty constructor
-
-    ~Wmf() override;//Destructor
-
     bool check(Inkscape::Extension::Extension *module) override; //Can this module load (always yes for now)
 
     void save(Inkscape::Extension::Output *mod, // Save the given document to the given filename
               SPDocument *doc,
-              gchar const *filename) override;
+              char const *filename) override;
 
     std::unique_ptr<SPDocument> open(Inkscape::Extension::Input *mod, char const *uri) override;
 
-    static void init();//Initialize the class
+    static void init();
 
-private:
 protected:
    static void        print_document_to_file(SPDocument *doc, const gchar *filename);
    static double      current_scale(PWMF_CALLBACK_DATA d);
@@ -216,11 +204,9 @@ protected:
                          double dx, double dy, double dw, double dh, int sx, int sy, int sw, int sh);
    static int         myMetaFileProc(const char *contents, unsigned int length, PWMF_CALLBACK_DATA d);
    static void        free_wmf_strings(WMF_STRINGS name);
-
 };
 
-} } }  /* namespace Inkscape, Extension, Implementation */
-
+} // namespace Inkscape::Extension::Internal
 
 #endif /* EXTENSION_INTERNAL_WMF_H */
 

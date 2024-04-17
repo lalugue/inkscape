@@ -31,10 +31,7 @@
 
 #include "util/units.h"
 
-namespace Inkscape {
-
-namespace Extension {
-namespace Internal {
+namespace Inkscape::Extension::Internal {
 
 std::unique_ptr<SPDocument> GdkpixbufInput::open(Inkscape::Extension::Input *mod, char const *uri)
 {
@@ -74,22 +71,20 @@ std::unique_ptr<SPDocument> GdkpixbufInput::open(Inkscape::Extension::Input *mod
         double height = pb->height();
         double defaultxdpi = prefs->getDouble("/dialogs/import/defaultxdpi/value", Inkscape::Util::Quantity::convert(1, "in", "px"));
 
-        ImageResolution *ir = nullptr;
         double xscale = 1;
         double yscale = 1;
 
-
-        if (!ir && !forcexdpi) {
-            ir = new ImageResolution(uri);
-        }
-        if (ir && ir->ok()) {
-            xscale = 960.0 / round(10.*ir->x());  // round-off to 0.1 dpi
-            yscale = 960.0 / round(10.*ir->y());
-            // prevent crash on image with too small dpi (bug 1479193)
-            if (ir->x() <= .05)
-                xscale = 960.0;
-            if (ir->y() <= .05)
-                yscale = 960.0;
+        if (!forcexdpi) {
+            auto ir = ImageResolution{uri};
+            if (ir.ok()) {
+                xscale = 960.0 / std::round(10.0 * ir.x()); // round-off to 0.1 dpi
+                yscale = 960.0 / std::round(10.0 * ir.y());
+                // prevent crash on image with too small dpi (bug 1479193)
+                if (ir.x() <= .05)
+                    xscale = 960.0;
+                if (ir.y() <= .05)
+                    yscale = 960.0;
+            }
         } else {
             xscale = 96.0 / defaultxdpi;
             yscale = 96.0 / defaultxdpi;
@@ -97,8 +92,6 @@ std::unique_ptr<SPDocument> GdkpixbufInput::open(Inkscape::Extension::Input *mod
 
         width *= xscale;
         height *= yscale;
-
-        delete ir; // deleting NULL is safe
 
         // Create image node
         Inkscape::XML::Document *xml_doc = doc->getReprDoc();
@@ -234,7 +227,7 @@ GdkpixbufInput::init()
     }
 }
 
-} } }  /* namespace Inkscape, Extension, Implementation */
+} // namespace Inkscape::Extension::Internal
 
 /*
   Local Variables:

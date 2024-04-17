@@ -13,26 +13,17 @@
 #ifndef EXTENSION_INTERNAL_TEMPLATE_BASE_H
 #define EXTENSION_INTERNAL_TEMPLATE_BASE_H
 
-#include <glib.h>
-
-#include "2geom/point.h"
-#include "extension/extension.h"
+#include <2geom/point.h>
 #include "extension/implementation/implementation.h"
-#include "extension/system.h"
-#include "extension/template.h"
-#include "util/units.h"
 
-class SPDocument;
-class SPPage;
+namespace Inkscape::Util { class Unit; }
 
-namespace Inkscape {
-namespace Extension {
-namespace Internal {
+namespace Inkscape::Extension::Internal {
 
 class TemplateBase : public Inkscape::Extension::Implementation::Implementation
 {
 public:
-    bool check(Inkscape::Extension::Extension *module) override { return true; };
+    bool check(Inkscape::Extension::Extension *module) override { return true; }
 
     std::unique_ptr<SPDocument> new_from_template(Inkscape::Extension::Template *tmod) override;
     void resize_to_template(Inkscape::Extension::Template *tmod, SPDocument *doc, SPPage *page) override;
@@ -42,11 +33,8 @@ protected:
     virtual Geom::Point get_template_size(Inkscape::Extension::Template *tmod) const;
     virtual Geom::Point get_template_size(Inkscape::Extension::Template *tmod, const Util::Unit *unit) const;
     virtual const Util::Unit *get_template_unit(Inkscape::Extension::Template *tmod) const;
-
-private:
 };
 
-} // namespace Internal
-} // namespace Extension
-} // namespace Inkscape
+} // namespace Inkscape::Extension::Internal
+
 #endif /* EXTENSION_INTERNAL_TEMPLATE_BASE_H */

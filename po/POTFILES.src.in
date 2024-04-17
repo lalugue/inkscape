@@ -122,6 +122,7 @@ ${_build_dir}/share/templates/templates.h
 ../src/extension/internal/pdfinput/pdf-input.cpp
 ../src/extension/internal/png-output.cpp
 ../src/extension/internal/pov-out.cpp
+../src/extension/internal/rvng-import-dialog.cpp
 ../src/extension/internal/svg.cpp
 ../src/extension/internal/svg.h
 ../src/extension/internal/svgz.cpp

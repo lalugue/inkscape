@@ -69,20 +69,6 @@ ImageResolution::ImageResolution(char const *fn) {
     }
 }
 
-bool ImageResolution::ok() const {
-    return ok_;
-}
-
-double ImageResolution::x() const {
-    return x_;
-}
-
-double ImageResolution::y() const {
-    return y_;
-}
-
-  
-  
 #if IR_TRY_PNG
   
 static bool haspngheader(FILE *fp) {

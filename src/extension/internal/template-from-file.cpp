@@ -98,7 +98,7 @@ void TemplatePresetFile::_load_data(const Inkscape::XML::Node *root)
 std::unique_ptr<SPDocument> TemplateFromFile::new_from_template(Inkscape::Extension::Template *tmod)
 {
     auto filename = tmod->get_param_string("filename", "");
-    if (Inkscape::IO::file_test(filename, (GFileTest)(G_FILE_TEST_EXISTS))) {
+    if (Inkscape::IO::file_test(filename, G_FILE_TEST_EXISTS)) {
         return ink_file_new(filename);
     }
     // Default template

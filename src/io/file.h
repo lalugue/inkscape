@@ -25,7 +25,7 @@ class SPDocument;
 
 std::unique_ptr<SPDocument> ink_file_new(std::string const &Template = "");
 std::unique_ptr<SPDocument> ink_file_open(std::span<char const> buffer);
-std::unique_ptr<SPDocument> ink_file_open(Glib::RefPtr<Gio::File> const &file, bool *cancelled = nullptr);
+std::pair<std::unique_ptr<SPDocument>, bool /*cancelled*/> ink_file_open(Glib::RefPtr<Gio::File> const &file);
 
 namespace Inkscape::IO {
 

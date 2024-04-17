@@ -30,7 +30,7 @@ namespace Gio {
 class File;
 } // namespace Gio
 
-typedef std::vector<std::pair<std::string, Glib::VariantBase> > action_vector_t;
+using action_vector_t = std::vector<std::pair<std::string, Glib::VariantBase>>;
 
 class InkscapeWindow;
 class SPDocument;
@@ -40,7 +40,7 @@ namespace Inkscape {
 class Selection;
 } // namespace Inkscape
 
-class InkscapeApplication final
+class InkscapeApplication
 {
     Glib::RefPtr<Gio::Application> _gio_application;
 
@@ -64,7 +64,6 @@ public:
     void print_action_list();
     void print_input_type_list() const;
 
-    void on_startup2();
     InkFileExportCmd *file_export() { return &_file_export; }
     int on_handle_local_options(const Glib::RefPtr<Glib::VariantDict> &options);
     void on_new();
@@ -98,7 +97,7 @@ public:
     SPDocument *document_add(std::unique_ptr<SPDocument> document);
 
     SPDocument *document_new(std::string const &template_filename = {});
-    SPDocument *document_open(Glib::RefPtr<Gio::File> const &file, bool *cancelled = nullptr);
+    std::pair<SPDocument *, bool /*cancelled*/> document_open(Glib::RefPtr<Gio::File> const &file);
     SPDocument *document_open(std::span<char const> buffer);
     bool                  document_swap(InkscapeWindow* window, SPDocument* document);
     bool                  document_revert(SPDocument* document);

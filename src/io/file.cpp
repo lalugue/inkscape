@@ -76,55 +76,44 @@ std::unique_ptr<SPDocument> ink_file_open(std::span<char const> buffer)
 /**
  * Open a document.
  */
-std::unique_ptr<SPDocument> ink_file_open(Glib::RefPtr<Gio::File> const &file, bool *cancelled_param)
+std::pair<std::unique_ptr<SPDocument>, bool> ink_file_open(Glib::RefPtr<Gio::File> const &file)
 {
-    bool cancelled = false;
     std::unique_ptr<SPDocument> doc;
     std::string path = file->get_path();
 
     // TODO: It's useless to catch these exceptions here (and below) unless we do something with them.
     //       If we can't properly handle them (e.g. by showing a user-visible message) don't catch them!
-    // TODO: Why do we reset `doc` to nullptr? Surely if open() throws, we will never assign to it?
     try {
         doc = Inkscape::Extension::open(nullptr, path.c_str());
-    } catch (Inkscape::Extension::Input::no_extension_found &e) {
-        doc = nullptr;
-    } catch (Inkscape::Extension::Input::open_failed &e) {
-        doc = nullptr;
-    } catch (Inkscape::Extension::Input::open_cancelled &e) {
-        cancelled = true;
-        doc = nullptr;
+    } catch (Inkscape::Extension::Input::no_extension_found const &) {
+    } catch (Inkscape::Extension::Input::open_failed const &) {
+    } catch (Inkscape::Extension::Input::open_cancelled const &) {
+        return {nullptr, true};
     }
 
     // Try to open explicitly as SVG.
     // TODO: Why is this necessary? Shouldn't this be handled by the first call already?
-    if (doc == nullptr && !cancelled) {
+    if (!doc) {
         try {
             doc = Inkscape::Extension::open(Inkscape::Extension::db.get(SP_MODULE_KEY_INPUT_SVG), path.c_str());
-        } catch (Inkscape::Extension::Input::no_extension_found &e) {
-            doc = nullptr;
-        } catch (Inkscape::Extension::Input::open_failed &e) {
-            doc = nullptr;
-        } catch (Inkscape::Extension::Input::open_cancelled &e) {
-            cancelled = true;
-            doc = nullptr;
+        } catch (Inkscape::Extension::Input::no_extension_found const &) {
+        } catch (Inkscape::Extension::Input::open_failed const &) {
+        } catch (Inkscape::Extension::Input::open_cancelled const &) {
+            return {nullptr, true};
         }
     }
 
-    if (doc != nullptr) {
-        // This is the only place original values should be set.
-        SPRoot *root = doc->getRoot();
-        root->original.inkscape = root->version.inkscape;
-        root->original.svg      = root->version.svg;
-    } else if (!cancelled) {
+    if (!doc) {
         std::cerr << "ink_file_open: '" << path << "' cannot be opened!" << std::endl;
+        return {nullptr, false};
     }
 
-    if (cancelled_param) {
-        *cancelled_param = cancelled;
-    }
+    // This is the only place original values should be set.
+    auto root = doc->getRoot();
+    root->original.inkscape = root->version.inkscape;
+    root->original.svg = root->version.svg;
 
-    return doc;
+    return {std::move(doc), false};
 }
 
 namespace Inkscape::IO {

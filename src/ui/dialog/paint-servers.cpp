@@ -57,8 +57,6 @@ const char *CURRENTDOC = N_("Current document");
 
 PaintServersDialog::PaintServersDialog()
     : DialogBase("/dialogs/paint", "PaintServers")
-    , _targetting_fill(true)
-    , columns()
 {
     current_store = ALLDOCS;
     store[ALLDOCS] = Gtk::ListStore::create(columns);
@@ -71,16 +69,19 @@ PaintServersDialog::PaintServersDialog()
         g_warn_message("Inkscape", __FILE__, __LINE__, __func__,
                        "Failed to get wrapper defs or rectangle for preview document!");
     }
-    unsigned key = SPItem::display_key_new(1);
+    _display_key = SPItem::display_key_new(1);
     preview_document->getRoot()->requestDisplayUpdate(SP_OBJECT_MODIFIED_FLAG);
     preview_document->ensureUpToDate();
-    renderDrawing.setRoot(preview_document->getRoot()->invoke_show(renderDrawing, key, SP_ITEM_SHOW_DISPLAY));
+    renderDrawing.setRoot(preview_document->getRoot()->invoke_show(renderDrawing, _display_key, SP_ITEM_SHOW_DISPLAY));
 
     _buildDialogWindow("dialog-paint-servers.glade");
     _loadStockPaints();
 }
 
-PaintServersDialog::~PaintServersDialog() = default;
+PaintServersDialog::~PaintServersDialog()
+{
+    preview_document->getRoot()->invoke_hide(_display_key);
+}
 
 /** Handles the replacement of the document that we edit */
 void PaintServersDialog::documentReplaced()
@@ -97,12 +98,12 @@ void PaintServersDialog::documentReplaced()
     _regenerateAll();
 
     if (auto const defs = document->getDefs()) {
-        _defs_changed = defs->connectModified([=](SPObject *, unsigned) -> void {
+        _defs_changed = defs->connectModified([this] (SPObject *, unsigned) -> void {
             _loadFromCurrentDocument();
             _regenerateAll();
         });
     }
-    _document_closed = document->connectDestroy([=]() { _documentClosed(); });
+    _document_closed = document->connectDestroy([this] { _documentClosed(); });
 }
 
 /** Builds the dialog window from a Glade file and attaches event handlers */
@@ -119,19 +120,19 @@ void PaintServersDialog::_buildDialogWindow(char const *const glade_file)
     dropdown = &get_widget<Gtk::ComboBoxText>(builder, "ServersDropdown");
     dropdown->append(ALLDOCS, _(ALLDOCS));
     dropdown->set_active_id(ALLDOCS);
-    dropdown->signal_changed().connect([=]() { onPaintSourceDocumentChanged(); });
+    dropdown->signal_changed().connect([this] { onPaintSourceDocumentChanged(); });
 
     icon_view = &get_widget<Gtk::IconView>(builder, "PaintIcons");
     icon_view->set_model(static_cast<Glib::RefPtr<Gtk::TreeModel>>(store[current_store]));
     icon_view->set_tooltip_column(columns.id.index());
     icon_view->set_pixbuf_column(columns.pixbuf.index());
-    _item_activated = icon_view->signal_item_activated().connect([=](Gtk::TreeModel::Path const &p) {
+    _item_activated = icon_view->signal_item_activated().connect([this] (Gtk::TreeModel::Path const &p) {
         onPaintClicked(p);
     });
 
     auto fill_radio = &get_widget<Gtk::CheckButton>(builder, "TargetRadioFill");
-    fill_radio->signal_toggled().connect([=]() {
-        _targetting_fill = fill_radio->get_active();
+    fill_radio->signal_toggled().connect([=, this] {
+        _targeting_fill = fill_radio->get_active();
         _updateActiveItem();
     });
 }
@@ -364,7 +365,7 @@ void PaintServersDialog::_generateBitmapPreview(PaintDescription &paint)
     SPObject *rect = preview_document->getObjectById("Rect");
     SPObject *defs = preview_document->getObjectById("Defs");
 
-    paint.bitmap = Glib::RefPtr<Gdk::Pixbuf>(nullptr);
+    paint.bitmap = {};
     if (paint.url.empty()) {
         return;
     }
@@ -515,7 +516,7 @@ void PaintServersDialog::onPaintClicked(Gtk::TreeModel::Path const &path)
     }
 
     for (auto item : items) {
-        item->style->getFillOrStroke(_targetting_fill)->read(paint.c_str());
+        item->style->getFillOrStroke(_targeting_fill)->read(paint.c_str());
         item->updateRepr();
     }
 
@@ -583,7 +584,7 @@ std::vector<SPObject *> PaintServersDialog::_unpackSelection(Selection *selectio
 void PaintServersDialog::_updateActiveItem()
 {
     _item_activated.block();
-    MaybeString &common = (_targetting_fill ? _common_fill : _common_stroke);
+    MaybeString &common = _targeting_fill ? _common_fill : _common_stroke;
     if (common) {
         bool found = false;
         store[current_store]->foreach(

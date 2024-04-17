@@ -47,40 +47,21 @@
 #include "util/safe-printf.h"
 #include "util/units.h"
 
-#define PRINT_WMF "org.inkscape.print.wmf"
+constexpr auto PRINT_WMF = "org.inkscape.print.wmf";
 
 #ifndef U_PS_JOIN_MASK
 #define U_PS_JOIN_MASK (U_PS_JOIN_BEVEL|U_PS_JOIN_MITER|U_PS_JOIN_ROUND)
 #endif
 
-namespace Inkscape {
-namespace Extension {
-namespace Internal {
-
+namespace Inkscape::Extension::Internal {
 
 static bool clipset = false;
-static uint32_t BLTmode=0;
+static uint32_t BLTmode = 0;
 
-Wmf::Wmf () // The null constructor
+bool Wmf::check(Inkscape::Extension::Extension *)
 {
-    return;
+    return Inkscape::Extension::db.get(PRINT_WMF);
 }
-
-
-Wmf::~Wmf () //The destructor
-{
-    return;
-}
-
-
-bool
-Wmf::check (Inkscape::Extension::Extension * /*module*/)
-{
-    if (nullptr == Inkscape::Extension::db.get(PRINT_WMF))
-        return FALSE;
-    return TRUE;
-}
-
 
 void
 Wmf::print_document_to_file(SPDocument *doc, const gchar *filename)
@@ -3236,12 +3217,9 @@ void Wmf::init()
             "</output>\n"
         "</inkscape-extension>", std::make_unique<Wmf>());
     // clang-format on
-
-    return;
 }
 
-
-} } }  /* namespace Inkscape, Extension, Implementation */
+} // namespace Inkscape::Extension::Internal
 
 /*
   Local Variables:

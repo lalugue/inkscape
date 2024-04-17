@@ -42,7 +42,7 @@ namespace View {
 class SVGViewWidget : public UI::Widget::Bin
 {
 public:
-    SVGViewWidget(SPDocument *document);
+    SVGViewWidget(SPDocument *document = nullptr);
     ~SVGViewWidget() override;
 
     void setDocument(SPDocument *document);

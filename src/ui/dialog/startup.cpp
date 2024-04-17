@@ -427,10 +427,9 @@ StartScreen::load_document()
             }
 
             // Now we have file, open document.
-            bool canceled = false;
-            _document = app->document_open(file, &canceled);
+            _document = app->document_open(file).first;
 
-            if (!canceled && _document) {
+            if (_document) {
                 // We're done, hand back to app.
                 response(GTK_RESPONSE_OK);
             }

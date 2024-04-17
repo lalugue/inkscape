@@ -816,9 +816,9 @@ file_import(SPDocument *in_doc, const std::string &path, Inkscape::Extension::Ex
     std::unique_ptr<SPDocument> doc;
     try {
         doc = Inkscape::Extension::open(key, path.c_str());
-    } catch (Inkscape::Extension::Input::no_extension_found &e) {
-    } catch (Inkscape::Extension::Input::open_failed &e) {
-    } catch (Inkscape::Extension::Input::open_cancelled &e) {
+    } catch (Inkscape::Extension::Input::no_extension_found const &) {
+    } catch (Inkscape::Extension::Input::open_failed const &) {
+    } catch (Inkscape::Extension::Input::open_cancelled const &) {
         cancelled = true;
     }
 
@@ -921,9 +921,9 @@ file_import(SPDocument *in_doc, const std::string &path, Inkscape::Extension::Ex
         if (style) sp_repr_css_attr_unref(style);
 
         // select and move the imported item
-        if (new_obj && is<SPItem>(new_obj)) {
+        if (auto new_item = cast<SPItem>(new_obj)) {
             Inkscape::Selection *selection = desktop->getSelection();
-            selection->set(cast<SPItem>(new_obj));
+            selection->set(new_item);
 
             // preserve parent and viewBox transformations
             // c2p is identity matrix at this point unless ensureUpToDate is called
@@ -932,13 +932,10 @@ file_import(SPDocument *in_doc, const std::string &path, Inkscape::Extension::Ex
             selection->applyAffine(desktop->dt2doc() * affine * desktop->doc2dt(), true, false, false);
 
             // move to mouse pointer
-            {
-                desktop->getDocument()->ensureUpToDate();
-                Geom::OptRect sel_bbox = selection->visualBounds();
-                if (sel_bbox) {
-                    Geom::Point m(pointer_location.round() - sel_bbox->midpoint());
-                    selection->moveRelative(m, false);
-                }
+            desktop->getDocument()->ensureUpToDate();
+            if (auto sel_bbox = selection->visualBounds()) {
+                auto m = pointer_location.round() - sel_bbox->midpoint();
+                selection->moveRelative(m, false);
             }
         }
         

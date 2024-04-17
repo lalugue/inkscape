@@ -173,7 +173,8 @@ private:
         void refilter() {
             if (_filtered) _filtered->refilter();
         }
-    } _symbols, _sets;
+    };
+    Store _symbols, _sets;
 
     /* For rendering the template drawing */
     unsigned key;

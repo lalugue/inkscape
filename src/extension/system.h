@@ -21,15 +21,11 @@
 
 class SPDocument;
 
-namespace Inkscape {
+namespace Inkscape::Extension {
 
-namespace Extension {
 class Extension;
 class Print;
-
-namespace Implementation {
-class Implementation;
-}
+namespace Implementation { class Implementation; }
 
 /**
  * Used to distinguish between the various invocations of the save dialogs (and thus to determine
@@ -50,9 +46,9 @@ std::unique_ptr<SPDocument> open(Extension *key, char const *filename);
 void save(Extension *key, SPDocument *doc, char const *filename,
           bool check_overwrite, bool official,
           Inkscape::Extension::FileSaveMethod save_method);
-Print *get_print(gchar const *key);
-void build_from_file(gchar const *filename);
-void build_from_mem(gchar const *buffer, std::unique_ptr<Implementation::Implementation> in_imp);
+Print *get_print(char const *key);
+void build_from_file(char const *filename);
+void build_from_mem(char const *buffer, std::unique_ptr<Implementation::Implementation> in_imp);
 
 /**
  * Determine the desired default file extension depending on the given file save method.
@@ -89,7 +85,7 @@ void store_file_extension_in_prefs (Glib::ustring extension, FileSaveMethod meth
  */
 void store_save_path_in_prefs (Glib::ustring path, FileSaveMethod method);
 
-} } /* namespace Inkscape::Extension */
+} // namespace Inkscape::Extension
 
 #endif /* INKSCAPE_EXTENSION_SYSTEM_H__ */
 

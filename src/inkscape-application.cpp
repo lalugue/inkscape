@@ -162,23 +162,16 @@ SPDocument *InkscapeApplication::document_new(std::string const &template_filena
 }
 
 // Open a document, add it to app.
-SPDocument *InkscapeApplication::document_open(Glib::RefPtr<Gio::File> const &file, bool *cancelled)
+std::pair<SPDocument *, bool> InkscapeApplication::document_open(Glib::RefPtr<Gio::File> const &file)
 {
     // Open file
-    bool local_cancelled;
-    auto document = ink_file_open(file, &local_cancelled);
-
+    auto [document, cancelled] = ink_file_open(file);
     if (cancelled) {
-        *cancelled = local_cancelled;
+        return {nullptr, true};
     }
-
-    if (local_cancelled) {
-        return nullptr;
-    }
-
     if (!document) {
         std::cerr << "InkscapeApplication::document_open: Failed to open: " << file->get_parse_name().raw() << std::endl;
-        return nullptr;
+        return {nullptr, false};
     }
 
     document->setVirgin(false); // Prevents replacing document in same window during file open.
@@ -209,7 +202,7 @@ SPDocument *InkscapeApplication::document_open(Glib::RefPtr<Gio::File> const &fi
         }
     }
 
-    return document_add(std::move(document));
+    return {document_add(std::move(document)), false};
 }
 
 // Open a document, add it to app.
@@ -294,9 +287,11 @@ bool InkscapeApplication::document_revert(SPDocument *document)
 
     // Open saved document.
     auto file = Gio::File::create_for_path(document->getDocumentFilename());
-    auto new_document = document_open(file);
+    auto [new_document, cancelled] = document_open(file);
     if (!new_document) {
-        std::cerr << "InkscapeApplication::revert_document: Cannot open saved document!" << std::endl;
+        if (!cancelled) {
+            std::cerr << "InkscapeApplication::revert_document: Cannot open saved document!" << std::endl;
+        }
         return false;
     }
 
@@ -349,7 +344,7 @@ void InkscapeApplication::document_close(SPDocument *document)
         return;
     }
 
-    if (it->second.size() != 0) {
+    if (!it->second.empty()) {
         std::cerr << "InkscapeApplication::close_document: Window vector not empty!" << std::endl;
     }
 
@@ -842,7 +837,7 @@ void InkscapeApplication::create_window(Glib::RefPtr<Gio::File> const &file)
 
     if (file) {
         startup_close();
-        document = document_open(file, &cancelled);
+        std::tie(document, cancelled) = document_open(file);
         if (document) {
             // Remember document so much that we'll add it to recent documents
             auto recentmanager = Gtk::RecentManager::get_default();
@@ -854,7 +849,7 @@ void InkscapeApplication::create_window(Glib::RefPtr<Gio::File> const &file)
             window = create_window(document, replace);
             document_fix(window);
         } else if (!cancelled) {
-            std::cerr << "InkscapeApplication<T>::create_window: Failed to load: "
+            std::cerr << "InkscapeApplication::create_window: Failed to load: "
                       << file->get_parse_name().raw() << std::endl;
 
             gchar *text = g_strdup_printf(_("Failed to load the requested file %s"), file->get_parse_name().c_str());
@@ -863,11 +858,11 @@ void InkscapeApplication::create_window(Glib::RefPtr<Gio::File> const &file)
         }
 
     } else {
-        document = document_new ();
+        document = document_new();
         if (document) {
             window = window_open(document);
         } else {
-            std::cerr << "InkscapeApplication<T>::create_window: Failed to open default document!" << std::endl;
+            std::cerr << "InkscapeApplication::create_window: Failed to open default document!" << std::endl;
         }
     }
 
@@ -926,7 +921,7 @@ InkscapeApplication::destroy_window(InkscapeWindow* window, bool keep_alive)
         }
 
     } else {
-        std::cerr << "InkscapeApplication<Gtk::Application>::destroy_window: Could not find document!" << std::endl;
+        std::cerr << "InkscapeApplication::destroy_window: Could not find document!" << std::endl;
     }
 
     // Debug
@@ -1049,7 +1044,7 @@ InkscapeApplication::on_activate()
         // Create document from pipe in.
         std::istreambuf_iterator<char> begin(std::cin), end;
         std::string s(begin, end);
-        document = document_open (s);
+        document = document_open(s);
         output = "-";
 
     } else if(prefs->getBool("/options/boot/enabled", true)
@@ -1110,7 +1105,7 @@ InkscapeApplication::on_open(const Gio::Application::type_vec_files& files, cons
     INKSCAPE.set_pdf_font_strategy((int)_pdf_font_strategy);
 
     if (files.size() > 1 && !_file_export.export_filename.empty()) {
-        std::cerr << "InkscapeApplication<Gtk::Application>::on_open: "
+        std::cerr << "InkscapeApplication::on_open: "
                      "Can't use '--export-filename' with multiple input files "
                      "(output file would be overwritten for each input file). "
                      "Please use '--export-type' instead and rename manually."
@@ -1122,14 +1117,16 @@ InkscapeApplication::on_open(const Gio::Application::type_vec_files& files, cons
     for (auto file : files) {
 
         // Open file
-        SPDocument *document = document_open (file);
+        auto [document, cancelled] = document_open(file);
         if (!document) {
-            std::cerr << "InkscapeApplication::on_open: failed to create document!" << std::endl;
+            if (!cancelled) {
+                std::cerr << "InkscapeApplication::on_open: failed to create document!" << std::endl;
+            }
             continue;
         }
 
         // Process document (command line actions, shell, create window)
-        process_document (document, file->get_path());
+        process_document(document, file->get_path());
     }
 
     if (_batch_process) {

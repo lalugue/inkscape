@@ -10,24 +10,24 @@
 
 
 #ifndef IMAGE_RESOLUTION_H
-
 #define IMAGE_RESOLUTION_H
 
-namespace Inkscape {
-namespace Extension {
-namespace Internal {
+namespace Inkscape::Extension::Internal {
 
-class ImageResolution {
+class ImageResolution
+{
 public:
-    ImageResolution(char const *fn);
-    bool ok() const;
-    double x() const;
-    double y() const;
+    explicit ImageResolution(char const *fn);
+
+    bool ok() const { return ok_; }
+    double x() const { return x_; }
+    double y() const { return y_; }
+
 private:
     bool ok_;
     double x_;
     double y_;
-private:
+
     void readpng(char const *fn);
     void readexif(char const *fn);
     void readexiv(char const *fn);
@@ -35,8 +35,6 @@ private:
     void readmagick(char const *fn);
 };
 
-}
-}
-}
+} // namespace Inkscape::Extension::Internal
 
-#endif
+#endif // IMAGE_RESOLUTION_H

@@ -186,7 +186,7 @@ Cairo::RefPtr<Cairo::Surface> render_icon(Extension::Effect* effect, std::string
         // render icon
         try {
             auto file = Gio::File::create_for_path(icon);
-            auto doc = std::shared_ptr<SPDocument>(ink_file_open(file, nullptr));
+            auto doc = std::shared_ptr<SPDocument>(ink_file_open(file).first);
             if (!doc) return image;
 
             if (auto item = cast<SPItem>(doc->getObjectById("test-object"))) {

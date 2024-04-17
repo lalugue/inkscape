@@ -14,10 +14,10 @@
 #include "template-screen.h"
 
 #include "clear-n_.h"
+#include "extension/extension.h"
+#include "extension/system.h"
 
-namespace Inkscape {
-namespace Extension {
-namespace Internal {
+namespace Inkscape::Extension::Internal {
 
 void TemplateScreen::init()
 {
@@ -52,9 +52,7 @@ void TemplateScreen::init()
     // clang-format on
 }
 
-} // namespace Internal
-} // namespace Extension
-} // namespace Inkscape
+} // namespace Inkscape::Extension::Internal
 
 /*
   Local Variables:

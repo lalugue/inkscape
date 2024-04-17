@@ -7,17 +7,13 @@
  *
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
-// TODO add include guard
-#include <glibmm/ustring.h>
+
+#ifndef INKSCAPE_EXTENSION_INTERNAL_GIMPGRAD_H
+#define INKSCAPE_EXTENSION_INTERNAL_GIMPGRAD_H
 
 #include "extension/implementation/implementation.h"
 
-namespace Inkscape {
-namespace Extension {
-
-class Extension;
-
-namespace Internal {
+namespace Inkscape::Extension::Internal {
 
 /**
  * Implementation class of the GIMP gradient plugin.
@@ -33,9 +29,9 @@ public:
     static void init();
 };
 
-} // namespace Internal
-} // namespace Extension
-} // namespace Inkscape
+} // namespace Inkscape::Extension::Internal
+
+#endif // INKSCAPE_EXTENSION_INTERNAL_GIMPGRAD_H
 
 /*
   Local Variables:

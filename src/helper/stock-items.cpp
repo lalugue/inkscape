@@ -22,7 +22,6 @@
 
 #include "document.h"
 #include "inkscape.h"
-#include "path-prefix.h"
 
 #include "io/resource.h"
 #include "libnrtype/font-factory.h"
@@ -101,30 +100,33 @@ static std::unique_ptr<SPDocument> load_paint_doc(char const *basename, Inkscape
 // take the dir to look in, and the file to check for, and cache
 // against that, rather than the existing copy/paste code seen here.
 
-static SPObject * sp_marker_load_from_svg(gchar const *name, SPDocument *current_doc)
+static SPObject *sp_marker_load_from_svg(char const *name, SPDocument *current_doc)
 {
     if (!current_doc) {
         return nullptr;
     }
-    /* Try to load from document */
+
+    // Try to load from document.
     static auto const doc = load_paint_doc("markers.svg", Inkscape::IO::Resource::MARKERS);
-
-    if (doc) {
-        /* Get the marker we want */
-        SPObject *object = doc->getObjectById(name);
-        if (object && is<SPMarker>(object)) {
-            SPDefs *defs = current_doc->getDefs();
-            Inkscape::XML::Document *xml_doc = current_doc->getReprDoc();
-            Inkscape::XML::Node *mark_repr = object->getRepr()->duplicate(xml_doc);
-            defs->getRepr()->addChild(mark_repr, nullptr);
-            SPObject *cloned_item = current_doc->getObjectByRepr(mark_repr);
-            Inkscape::GC::release(mark_repr);
-            return cloned_item;
-        }
+    if (!doc) {
+        return nullptr;
     }
-    return nullptr;
-}
 
+    // Get the object we want.
+    auto obj = doc->getObjectById(name);
+    if (!is<SPMarker>(obj)) {
+        return nullptr;
+    }
+
+    auto defs = current_doc->getDefs();
+    auto xml_doc = current_doc->getReprDoc();
+    auto repr = obj->getRepr()->duplicate(xml_doc);
+    defs->getRepr()->addChild(repr, nullptr);
+    auto copied = current_doc->getObjectByRepr(repr);
+    Inkscape::GC::release(repr);
+
+    return copied;
+}
 
 static SPObject* sp_pattern_load_from_svg(gchar const *name, SPDocument *current_doc, SPDocument* source_doc) {
     if (!current_doc || !source_doc) {
@@ -138,29 +140,32 @@ static SPObject* sp_pattern_load_from_svg(gchar const *name, SPDocument *current
     return nullptr;
 }
 
-
-static SPObject *
-sp_gradient_load_from_svg(gchar const *name, SPDocument *current_doc)
+static SPObject *sp_gradient_load_from_svg(char const *name, SPDocument *current_doc)
 {
     if (!current_doc) {
         return nullptr;
     }
-    /* Try to load from document */
-    static auto const doc = load_paint_doc("gradients.svg");
 
-    if (doc) {
-        /* Get the gradient we want */
-        SPObject *object = doc->getObjectById(name);
-        if (object && is<SPGradient>(object)) {
-            SPDefs *defs = current_doc->getDefs();
-            Inkscape::XML::Document *xml_doc = current_doc->getReprDoc();
-            Inkscape::XML::Node *pat_repr = object->getRepr()->duplicate(xml_doc);
-            defs->getRepr()->addChild(pat_repr, nullptr);
-            Inkscape::GC::release(pat_repr);
-            return object;
-        }
+    // Try to load from document.
+    static auto const doc = load_paint_doc("gradients.svg");
+    if (!doc) {
+        return nullptr;
     }
-    return nullptr;
+
+    // Get the object we want.
+    auto obj = doc->getObjectById(name);
+    if (!is<SPGradient>(obj)) {
+        return nullptr;
+    }
+
+    auto defs = current_doc->getDefs();
+    auto xml_doc = current_doc->getReprDoc();
+    auto repr = obj->getRepr()->duplicate(xml_doc);
+    defs->getRepr()->addChild(repr, nullptr);
+    auto copied = current_doc->getObjectByRepr(repr);
+    Inkscape::GC::release(repr);
+
+    return copied;
 }
 
 // get_stock_item returns a pointer to an instance of the desired stock object in the current doc

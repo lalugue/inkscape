@@ -100,7 +100,6 @@ namespace Inkscape {
 /// Typed SVG document implementation.
 class SPDocument : public Inkscape::GC::Managed<Inkscape::GC::SCANNED, Inkscape::GC::MANUAL>
 {
-
 public:
     /// For sanity check in SPObject::requestDisplayUpdate
     unsigned update_in_progress = 0;
@@ -115,7 +114,7 @@ public:
     SPDocument(SPDocument const &) = delete;
     SPDocument &operator=(SPDocument const &) = delete;
 
-    static gint get_new_doc_number();
+    static int get_new_doc_number();
 
     // Document creation ------------------
     static std::unique_ptr<SPDocument> createDoc(Inkscape::XML::Document *rdoc, char const *filename,
@@ -390,11 +389,11 @@ private:
     // A list of svg documents being used or shown within this document
     std::vector<std::unique_ptr<SPDocument>> _child_documents;
     // Conversely this is a parent document because this is a child.
-    SPDocument *_parent_document;
+    SPDocument *_parent_document = nullptr;
     // When copying documents, this can refer to its original
-    SPDocument const *_original_document;
+    SPDocument const *_original_document = nullptr;
     // Reference document to fall back to when getObjectById cannot find element in '*this' document
-    SPDocument* _ref_document = nullptr;
+    SPDocument *_ref_document = nullptr;
 
     // Styling
     CRCascade *style_cascade;

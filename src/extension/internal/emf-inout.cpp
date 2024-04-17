@@ -48,28 +48,22 @@
 
 #include "emf-print.h"
 
-#define PRINT_EMF "org.inkscape.print.emf"
+constexpr auto PRINT_EMF = "org.inkscape.print.emf";
 
 #ifndef U_PS_JOIN_MASK
 #define U_PS_JOIN_MASK (U_PS_JOIN_BEVEL|U_PS_JOIN_MITER|U_PS_JOIN_ROUND)
 #endif
 
-namespace Inkscape {
-namespace Extension {
-namespace Internal {
+namespace Inkscape::Extension::Internal {
 
 static uint32_t ICMmode = 0;  // not used yet, but code to read it from EMF implemented
 static uint32_t BLTmode = 0;
-float           faraway = 10000000; // used in "exclude" clips, hopefully well outside any real drawing!
+constexpr float faraway = 10000000; // used in "exclude" clips, hopefully well outside any real drawing!
 
-bool
-Emf::check (Inkscape::Extension::Extension * /*module*/)
+bool Emf::check(Inkscape::Extension::Extension *)
 {
-    if (nullptr == Inkscape::Extension::db.get(PRINT_EMF))
-        return FALSE;
-    return TRUE;
+    return Inkscape::Extension::db.get(PRINT_EMF);
 }
-
 
 void
 Emf::print_document_to_file(SPDocument *doc, const gchar *filename)
@@ -3611,9 +3605,7 @@ std::unique_ptr<SPDocument> Emf::open(Inkscape::Extension::Input *, char const *
     return doc;
 }
 
-
-void
-Emf::init ()
+void Emf::init()
 {
     /* EMF in */
     // clang-format off
@@ -3655,12 +3647,9 @@ Emf::init ()
             "</output>\n"
         "</inkscape-extension>", std::make_unique<Emf>());
     // clang-format on
-
-    return;
 }
 
-
-} } }  /* namespace Inkscape, Extension, Implementation */
+} // namespace Inkscape::Extension::Internal
 
 /*
   Local Variables:

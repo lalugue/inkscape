@@ -336,9 +336,8 @@ Canvas::Canvas()
     auto focus = Gtk::EventControllerFocus::create();
     focus->set_propagation_phase(Gtk::PropagationPhase::BUBBLE);
     add_controller(focus);
-    focus->signal_enter().connect([this] { on_focus_in(); });
-    focus->signal_leave().connect([this] { on_focus_out(); });
-    _focus_controller = focus;
+    focus->signal_enter().connect(sigc::mem_fun(*this, &Canvas::on_focus_in));
+    focus->signal_leave().connect(sigc::mem_fun(*this, &Canvas::on_focus_out));
 
     // Updater
     d->updater = Updater::create(pref_to_updater(d->prefs.update_strategy));
@@ -497,10 +496,12 @@ void CanvasPrivate::deactivate_graphics()
 
 Canvas::~Canvas()
 {
+    // Handle missed unrealisation due to new GTK4 lifetimes allowing C object to persist.
+    if (d->active) d->deactivate();
+    if (d->graphics) d->deactivate_graphics();
+
     // Remove entire CanvasItem tree.
     d->canvasitem_ctx.reset();
-
-    remove_controller(_focus_controller);
 }
 
 void Canvas::set_drawing(Drawing *drawing)

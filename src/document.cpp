@@ -33,9 +33,6 @@
  * the 'modified' signal, as well.
  */
 
-#define noSP_DOCUMENT_DEBUG_IDLE
-#define noSP_DOCUMENT_DEBUG_UNDO
-
 #include "document.h"
 
 #include <vector>
@@ -121,7 +118,6 @@ SPDocument::SPDocument() :
     _router(std::make_unique<Avoid::Router>(Avoid::PolyLineRouting|Avoid::OrthogonalRouting)),
     current_persp3d(nullptr),
     current_persp3d_impl(nullptr),
-    _parent_document(nullptr),
     _activexmltree(nullptr)
 {
     // This is kept here so that members are not accessed before they are initialized

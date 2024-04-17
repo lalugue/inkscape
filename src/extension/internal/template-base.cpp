@@ -14,13 +14,12 @@
 #include "clear-n_.h"
 #include "document.h"
 #include "extension/prefdialog/parameter.h"
+#include "extension/template.h"
 #include "page-manager.h"
 #include "template-base.h"
 #include "object/sp-page.h"
 
-namespace Inkscape {
-namespace Extension {
-namespace Internal {
+namespace Inkscape::Extension::Internal {
 
 /**
  * Return the width and height of the new page, the default is a fixed orientation.
@@ -96,9 +95,7 @@ bool TemplateBase::match_template_size(Inkscape::Extension::Template *tmod, doub
     return Geom::are_near(temp_size, page_size, 0.5) || Geom::are_near(temp_size, rota_size, 0.5);
 }
 
-} // namespace Internal
-} // namespace Extension
-} // namespace Inkscape
+} // namespace Inkscape::Extension::Internal
 
 /*
   Local Variables:

@@ -14,29 +14,20 @@
 #ifndef SEEN_EXTENSION_INTERNAL_WPGOUTPUT_H
 #define SEEN_EXTENSION_INTERNAL_WPGOUTPUT_H
 
-#ifdef HAVE_CONFIG_H
-# include "config.h"  // only include where actually required!
-#endif
+#include "extension/implementation/implementation.h"
 
-#ifdef WITH_LIBWPG
+namespace Inkscape::Extension::Internal {
 
-#include "../implementation/implementation.h"
-
-namespace Inkscape {
-namespace Extension {
-namespace Internal {
-
-class WpgInput : public Inkscape::Extension::Implementation::Implementation {
+class WpgInput : public Inkscape::Extension::Implementation::Implementation
+{
 public:
     std::unique_ptr<SPDocument> open(Inkscape::Extension::Input *mod, char const *uri) override;
     static void init();
 };
 
-} } }  /* namespace Inkscape, Extension, Implementation */
+} // namespace Inkscape::Extension::Internal
 
-#endif // WITH_LIBWPG
 #endif // SEEN_EXTENSION_INTERNAL_WPGOUTPUT_H
-
 
 /*
   Local Variables:

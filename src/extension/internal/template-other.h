@@ -15,21 +15,17 @@
 
 #include "extension/internal/template-base.h"
 
-namespace Inkscape {
-namespace Extension {
-namespace Internal {
+namespace Inkscape::Extension::Internal {
 
 class TemplateOther : public TemplateBase
 {
 public:
-    TemplateOther(){};
     static void init();
 
 protected:
     Geom::Point get_template_size(Inkscape::Extension::Template *tmod) const override;
 };
 
-} // namespace Internal
-} // namespace Extension
-} // namespace Inkscape
+} // namespace Inkscape::Extension::Internal {
+
 #endif /* EXTENSION_INTERNAL_TEMPLATE_OTHER_H */

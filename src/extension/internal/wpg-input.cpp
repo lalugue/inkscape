@@ -40,23 +40,14 @@
  * Corel Corporation or Corel Corporation Limited."
  */
 
-#ifdef HAVE_CONFIG_H
-# include "config.h"  // only include where actually required!
-#endif
-
-#include <cstdio>
-
-#ifdef WITH_LIBWPG
-
 #include "wpg-input.h"
 #include "extension/system.h"
 #include "extension/input.h"
 #include "document.h"
 #include "object/sp-root.h"
 #include "util/units.h"
-#include <cstring>
 
-#include "libwpg/libwpg.h"
+#include <libwpg/libwpg.h>
 #include <librevenge-stream/librevenge-stream.h>
 
 using librevenge::RVNGString;
@@ -65,9 +56,7 @@ using librevenge::RVNGInputStream;
 
 using namespace libwpg;
 
-namespace Inkscape {
-namespace Extension {
-namespace Internal {
+namespace Inkscape::Extension::Internal {
 
 static std::span<char const> as_span(RVNGString const &str)
 {
@@ -141,10 +130,9 @@ void WpgInput::init() {
             "</input>\n"
         "</inkscape-extension>", std::make_unique<WpgInput>());
     // clang-format on
-} // init
+}
 
-} } }  /* namespace Inkscape, Extension, Implementation */
-#endif /* WITH_LIBWPG */
+} // namespace Inkscape::Extension::Internal
 
 /*
   Local Variables:

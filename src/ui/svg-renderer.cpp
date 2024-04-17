@@ -75,7 +75,7 @@ svg_renderer::svg_renderer(SPDocument &document)
 {}
 
 svg_renderer::svg_renderer(char const *path)
-    : _optional_storage{ensure_nonnull(ink_file_open(Gio::File::create_for_path(path)), "Cannot load svg document")}
+    : _optional_storage{ensure_nonnull(ink_file_open(Gio::File::create_for_path(path)).first, "Cannot load svg document")}
     , _document{*_optional_storage}
     , _root{*ensure_nonnull(_document.getRoot(), "Cannot find root element in svg document")}
 {}

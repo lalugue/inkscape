@@ -20,9 +20,9 @@ namespace Inkscape::Extension::Internal {
 class TemplateScreen : public TemplateBase
 {
 public:
-    TemplateScreen(){};
     static void init();
 };
 
 } // namespace Inkscape::Extension::Internal
+
 #endif /* EXTENSION_INTERNAL_TEMPLATE_SCREEN_H */

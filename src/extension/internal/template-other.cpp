@@ -14,10 +14,10 @@
 #include "template-other.h"
 
 #include "clear-n_.h"
+#include "extension/system.h"
+#include "extension/template.h"
 
-namespace Inkscape {
-namespace Extension {
-namespace Internal {
+namespace Inkscape::Extension::Internal {
 
 /**
  * Return the width and height of the new page, the default is a fixed orientation.
@@ -54,9 +54,7 @@ void TemplateOther::init()
     // clang-format on
 }
 
-} // namespace Internal
-} // namespace Extension
-} // namespace Inkscape
+} // namespace Inkscape::Extension::Internal
 
 /*
   Local Variables:

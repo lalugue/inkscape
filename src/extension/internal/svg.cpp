@@ -45,9 +45,7 @@
 // TODO due to internal breakage in glibmm headers, this must be last:
 #include <glibmm/i18n.h>
 
-namespace Inkscape {
-namespace Extension {
-namespace Internal {
+namespace Inkscape::Extension::Internal {
 
 #include "clear-n_.h"
 
@@ -336,7 +334,7 @@ Svg::save(Inkscape::Extension::Output *mod, SPDocument *doc, gchar const *filena
     }
 }
 
-} } }  /* namespace inkscape, module, implementation */
+} // namespace Inkscape::Extension::Internal
 
 /*
   Local Variables:

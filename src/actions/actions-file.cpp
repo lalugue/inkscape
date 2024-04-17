@@ -34,7 +34,7 @@ file_open(const Glib::VariantBase& value, InkscapeApplication *app)
         show_output(Glib::ustring("file_open: file '") + s.get().raw() + "' does not exist.");
         return;
     }
-    SPDocument *document = app->document_open(file);
+    SPDocument *document = app->document_open(file).first;
     INKSCAPE.add_document(document);
 
     app->set_active_document(document);

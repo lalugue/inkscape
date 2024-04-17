@@ -19,17 +19,15 @@
 #include "extension/template.h"                       // for Template (ptr o...
 
 class SPDocument;
-
-namespace Inkscape::XML {
-class Node;
-} // namespace Inkscape::XML
+namespace Inkscape::XML { class Node; }
 
 namespace Inkscape::Extension::Internal {
 
 class TemplatePresetFile : public TemplatePreset
 {
 public:
-    TemplatePresetFile(Template *mod, const std::string &filename);
+    TemplatePresetFile(Template *mod, std::string const &filename);
+
 private:
     void _load_data(const Inkscape::XML::Node *root);
 };
@@ -42,7 +40,6 @@ public:
     std::unique_ptr<SPDocument> new_from_template(Inkscape::Extension::Template *tmod) override;
 
     void get_template_presets(const Template *tmod, TemplatePresets &presets) const override;
-private:
 };
 
 } // namespace Inkscape::Extension::Internal

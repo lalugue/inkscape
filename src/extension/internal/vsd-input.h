@@ -20,26 +20,18 @@
 #ifndef SEEN_EXTENSION_INTERNAL_VSDINPUT_H
 #define SEEN_EXTENSION_INTERNAL_VSDINPUT_H
 
-#ifdef HAVE_CONFIG_H
-# include "config.h"  // only include where actually required!
-#endif
-
-#ifdef WITH_LIBVISIO
-
-#include "../implementation/implementation.h"
+#include "extension/implementation/implementation.h"
 
 namespace Inkscape::Extension::Internal {
 
-class VsdInput : public Inkscape::Extension::Implementation::Implementation {
+class VsdInput : public Inkscape::Extension::Implementation::Implementation
+{
 public:
-    VsdInput() = default;
     std::unique_ptr<SPDocument> open(Inkscape::Extension::Input *mod, char const *uri) override;
     static void init();
 };
 
 } // namespace Inkscape::Extension::Internal
-
-#endif /* WITH_LIBVISIO */
 
 #endif /* SEEN_EXTENSION_INTERNAL_VSDINPUT_H */
 
