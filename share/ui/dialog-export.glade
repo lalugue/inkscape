@@ -659,7 +659,7 @@
                                         <property name="name">export_selection</property>
                                         <property name="hexpand">True</property>
                                         <property name="tooltip-text" translatable="yes">Export layers as separate files</property>
-                                        <property name="active">True</property>
+                                        <property name="active">False</property>
                                         <property name="group">b_s_selection</property>
                                       </object>
                                     </child>
@@ -669,7 +669,7 @@
                                         <property name="name">export_selection</property>
                                         <property name="hexpand">True</property>
                                         <property name="tooltip-text" translatable="yes">Export pages as separate files</property>
-                                        <property name="active">True</property>
+                                        <property name="active">False</property>
                                         <property name="group">b_s_selection</property>
                                       </object>
                                     </child>
