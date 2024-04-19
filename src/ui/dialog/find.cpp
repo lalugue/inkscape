@@ -150,12 +150,14 @@ Find::Find()
     button_replace.set_tooltip_text(_("Replace all matches"));
     check_scope_all.set_use_underline();
     check_scope_all.set_tooltip_text(_("Search in all layers"));
+    check_scope_all.set_active(true);
     check_scope_layer.set_use_underline();
     check_scope_layer.set_tooltip_text(_("Limit search to the current layer"));
     check_scope_selection.set_use_underline();
     check_scope_selection.set_tooltip_text(_("Limit search to the current selection"));
     check_searchin_text.set_use_underline();
     check_searchin_text.set_tooltip_text(_("Search in text objects"));
+    check_searchin_text.set_active(true);
     check_searchin_property.set_use_underline();
     check_searchin_property.set_tooltip_text(_("Search in object properties, styles, attributes and IDs"));
     check_case_sensitive.set_use_underline();
