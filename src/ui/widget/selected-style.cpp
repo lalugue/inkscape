@@ -504,7 +504,7 @@ void SelectedStyle::_on_paste_callback(Glib::RefPtr<Gio::AsyncResult>& result, G
         sp_repr_css_set_property (css, typepaste.c_str(), text.c_str());
         sp_desktop_set_style (_desktop, css);
         sp_repr_css_attr_unref (css);
-        DocumentUndo::done(_desktop->getDocument(), typepaste.c_str() == "fill" ? _("Paste fill") : _("Paste stroke"), INKSCAPE_ICON("dialog-fill-and-stroke"));
+        DocumentUndo::done(_desktop->getDocument(), typepaste == "fill" ? _("Paste fill") : _("Paste stroke"), INKSCAPE_ICON("dialog-fill-and-stroke"));
     }
 }
 
