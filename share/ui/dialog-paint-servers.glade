@@ -54,7 +54,7 @@
             <property name="label" translatable="yes">Stroke</property>
             <property name="focusable">True</property>
             <property name="tooltip-text" translatable="yes">Apply the paint to the stroke of objects</property>
-            <property name="active">True</property>
+            <property name="active">False</property>
             <property name="group">TargetRadioFill</property>
           </object>
         </child>

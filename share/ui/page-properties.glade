@@ -146,7 +146,7 @@
               <object class="GtkCheckButton" id="page-landscape">
                 <property name="focusable">True</property>
                 <property name="margin-end">5</property>
-                <property name="active">True</property>
+                <property name="active">False</property>
                 <property name="group">page-portrait</property>
                 <property name="child">
                   <object class="GtkImage" id="image2">
