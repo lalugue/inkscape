@@ -1635,6 +1635,8 @@ Gtk::EventSequenceState ObjectsPanel::on_click(Gtk::GestureMultiPress const &ges
             UI::on_hide_reset(std::move(menu));
         } else if (should_set_current_layer()) {
             getDesktop()->layerManager().setCurrentLayer(item, true);
+            selection->set(item);
+            _initial_path = path;
         } else {
             selectCursorItem(state);
         }
@@ -1869,6 +1871,43 @@ void ObjectsPanel::on_drag_end(const Glib::RefPtr<Gdk::DragContext> &context)
     current_item = nullptr;
 }
 
+void ObjectsPanel::selectRange(Gtk::TreeModel::Path start, Gtk::TreeModel::Path end)
+{
+    if (!start || !end) {
+        return;
+    }
+
+    if (gtk_tree_path_compare(start.gobj(), end.gobj()) > 0) {
+        std::swap(start, end);
+    }
+
+    auto selection = getSelection();
+
+    if (!_start_new_range) {
+        // Deselect previous selection of this range first and then proceed.
+        for (auto obj : _prev_range) {
+            selection->remove(obj);
+        }
+    }
+
+    _prev_range.clear();
+
+    // Select everything between the initial selection and currently selected item.
+    _store->foreach ([&](Gtk::TreeModel::Path const &p, Gtk::TreeModel::const_iterator const &it) {
+        if ((gtk_tree_path_compare(start.gobj(), p.gobj()) <= 0) &&
+            (gtk_tree_path_compare(end.gobj(), p.gobj()) >= 0)) {
+            auto obj = getItem(*it);
+            if (obj) {
+                _prev_range.push_back(obj);
+                selection->add(obj, false, true);
+            }
+        }
+        return false;
+    });
+
+    _start_new_range = false;
+}
+
 /**
  * Select the object currently under the list-cursor (keyboard or mouse)
  */
@@ -1897,20 +1936,33 @@ bool ObjectsPanel::selectCursorItem(unsigned int state)
         auto item = getItem(row);
         auto group = cast<SPGroup>(item);
         _scroll_lock = true; // Clicking to select shouldn't scroll the treeview.
+
         if (state & GDK_SHIFT_MASK && !selection->isEmpty()) {
-            // Select everything between this row and the last selected item
-            selection->setBetween(item);
+            // Shift + Click or Shift + Ctrl + Click
+            // TODO: Fix layers expand unexpectedly on range selection.
+            selectRange(_initial_path, path);
         } else if (state & GDK_CONTROL_MASK) {
-            selection->toggle(item);
+            if (selection->includes(item)) {
+                selection->remove(item);
+            } else {
+                selection->add(item, false, true);
+                _initial_path = path;
+                _start_new_range = true;
+            }
         } else if (group && selection->includes(item) && !group->isLayer()) {
             // Clicking off a group (second click) will enter the group
             layers.setCurrentLayer(item, true);
         } else {
+            // Just Click
             if (layers.currentLayer() == item || group) {
                 layers.setCurrentLayer(item->parent);
             }
+
             selection->set(item);
+            _initial_path = path;
+            _start_new_range = true;
         }
+
         return true;
     }
     return false;
