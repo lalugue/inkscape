@@ -589,7 +589,12 @@ text_to_glyphs()
         auto const &layout = text->layout;
         auto iter = layout.end();
         while (iter != layout.begin()) {
-            iter.prevCharacter();
+
+            // Glyph index may not be zero leading to an infinite loop
+            // if we don't test this here... (see issue #4767).
+            if (!iter.prevCharacter()) {
+                break;
+            }
 
             if (layout.isWhitespace(iter))
                 continue;
