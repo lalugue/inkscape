@@ -144,7 +144,7 @@ public:
      * @param obj the SPObject to add
      * @param nosignal true if no signals should be sent
      */
-    bool add(SPObject* object, bool nosignal = false);
+    bool add(SPObject *object, bool nosignal = false, bool skipHierarchyChecks = false);
 
     /**
      * Add an XML node's SPObject to the set of selected objects.
@@ -302,18 +302,6 @@ public:
         _clear();
         addList(objs);
     }
-    
-    /**
-     * Attempt to select all the items between two child items. Must have the same parent.
-     *
-     * @param obj_a - The first item, doesn't have to appear first in the list.
-     * @param obj_b - The last item, doesn't have to appear last in the list (optional)
-     *                If selection already contains one item, will select from-to that.
-     *                If not set, will use the lastItem selected in the list.
-     *
-     * @returns the number of items added.
-     */
-    int setBetween(SPObject *obj_a, SPObject *obj_b = nullptr);
 
     /**
      * Selects the objects with the same IDs as those in `list`.

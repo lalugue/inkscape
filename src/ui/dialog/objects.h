@@ -123,6 +123,9 @@ private:
     Inkscape::PrefObserver _watch_object_mode;
     std::unique_ptr<ObjectWatcher> root_watcher;
     SPItem *current_item = nullptr;
+    Gtk::TreeModel::Path _initial_path;
+    bool _start_new_range = true;
+    std::vector<SPObject *> _prev_range;
 
     Inkscape::auto_connection layer_changed;
     SPObject *_layer;
@@ -201,6 +204,7 @@ private:
                                    Glib::ValueBase const &value,
                                    double x, double y);
 
+    void selectRange(Gtk::TreeModel::Path start, Gtk::TreeModel::Path end);
     bool selectCursorItem(Gdk::ModifierType state);
     SPItem *_getCursorItem(Gtk::TreeViewColumn *column);
 
