@@ -424,7 +424,7 @@ endif()
 if(NOT APPLE)
     set_target_properties(inkscape_base PROPERTIES INSTALL_RPATH "$ORIGIN/..:${CMAKE_INSTALL_RPATH}")
 else()
-    set_target_properties(inkscape_base PROPERTIES INSTALL_RPATH "@loader_path/..:${CMAKE_INSTALL_RPATH}")
+    set_target_properties(inkscape_base PROPERTIES INSTALL_RPATH "@loader_path/..")
 endif()
 
 target_link_libraries(inkscape_base PUBLIC Boost::filesystem)
