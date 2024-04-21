@@ -1466,9 +1466,22 @@ void DocumentProperties::build_gridspage()
         {C_("Grid", "Axonometric"), GridType::AXONOMETRIC, "grid-axonometric"},
         {C_("Grid", "Modular"), GridType::MODULAR, "grid-modular"}
     }) {
-        auto const btn = Gtk::make_managed<Gtk::Button>(label, false);
-        btn->set_image_from_icon_name(icon, Gtk::IconSize::NORMAL);
+        auto btn = Gtk::make_managed<Gtk::Button>();
+        auto hbox = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 5);
+        hbox->set_halign(Gtk::Align::CENTER);
+        hbox->set_valign(Gtk::Align::CENTER);
+
+        auto icon_image = Gtk::make_managed<Gtk::Image>();
+        icon_image->set_from_icon_name(icon);
+        icon_image->set_icon_size(Gtk::IconSize::NORMAL);
+        hbox->append(*icon_image);
+
+        auto btn_label = Gtk::make_managed<Gtk::Label>(label);
+        hbox->append(*btn_label);
+
+        btn->set_child(*hbox);
         btn_size->add_widget(*btn);
+
         UI::pack_start(_grids_hbox_crea, *btn, false, true);
         btn->signal_clicked().connect([this, type = type]{ onNewGrid(type); });
     }
