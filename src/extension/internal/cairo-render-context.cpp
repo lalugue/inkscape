@@ -867,7 +867,7 @@ CairoRenderContext::_setSurfaceMetadata(cairo_surface_t *surface)
             break;
 #endif
         default:
-            g_warning("unsupported target %d\n", _target);
+            break;
     }
 }
 
