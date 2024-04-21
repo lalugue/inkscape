@@ -38,7 +38,7 @@ NewFromTemplate::NewFromTemplate()
 
     _create_template_button.set_halign(Gtk::Align::END);
     _create_template_button.set_valign(Gtk::Align::END);
-    _create_template_button.set_margin_end(15);
+    _create_template_button.set_margin(8);
 
     UI::pack_end(*get_content_area(), _create_template_button, UI::PackOptions::shrink);
     

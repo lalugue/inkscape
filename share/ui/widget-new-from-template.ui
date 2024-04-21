@@ -1,63 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk" version="4.0"/>
-  <object class="GtkListStore" id="liststore">
-    <columns>
-      <column type="gchararray"/>
-      <column type="gchararray"/>
-      <column type="gchararray"/>
-      <column type="GdkPixbuf"/>
-      <column type="gchararray"/>
-      <column type="gint"/>
-    </columns>
-    <data>
-      <row>
-        <col id="0">Example Item</col>
-        <col id="1">Label</col>
-        <col id="2">Tooltip</col>
-      </row>
-    </data>
-  </object>
   <object class="GtkScrolledWindow" id="container">
     <property name="focusable">True</property>
-    <property name="has-frame">True</property>
+    <property name="has-frame">False</property>
     <property name="child">
-      <object class="GtkIconView" id="iconview">
+      <object class="GtkGridView" id="iconview">
         <property name="focusable">True</property>
-        <property name="model">liststore</property>
-        <property name="spacing">1</property>
-        <property name="tooltip-column">2</property>
-        <child>
-          <object class="GtkCellRendererPixbuf">
-            <property name="xpad">6</property>
-            <property name="ypad">6</property>
-          </object>
-          <attributes>
-            <attribute name="pixbuf">3</attribute>
-          </attributes>
-        </child>
-        <child>
-          <object class="GtkCellRendererText">
-            <property name="alignment">center</property>
-            <property name="wrap-mode">word</property>
-            <property name="wrap-width">16</property>
-          </object>
-          <attributes>
-            <attribute name="text">0</attribute>
-          </attributes>
-        </child>
-        <child>
-          <object class="GtkCellRendererText">
-            <property name="alignment">center</property>
-            <property name="scale">0.90</property>
-            <property name="wrap-mode">word</property>
-            <property name="wrap-width">32</property>
-            <property name="foreground-rgba">rgb(136,138,133)</property>
-          </object>
-          <attributes>
-            <attribute name="text">1</attribute>
-          </attributes>
-        </child>
+        <style>
+          <class name="grid-view-small"/>
+        </style>
       </object>
     </property>
   </object>

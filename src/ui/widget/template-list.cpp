@@ -9,14 +9,24 @@
 
 #include "template-list.h"
 
+#include <cairomm/surface.h>
+#include <giomm/liststore.h>
+#include <glibmm/markup.h>
+#include <glibmm/refptr.h>
+#include <gtkmm/expression.h>
+#include <gtkmm/gridview.h>
 #include <map>
 #include <glib/gi18n.h>
 #include <gdkmm/pixbuf.h>
 #include <gtkmm/builder.h>
 #include <gtkmm/iconview.h>
 #include <gtkmm/liststore.h>
+#include <gtkmm/numericsorter.h>
 #include <gtkmm/scrolledwindow.h>
 #include <gtkmm/treemodel.h>
+#include <gtkmm/sortlistmodel.h>
+#include <gtkmm/singleselection.h>
+#include <memory>
 
 #include "document.h"
 #include "extension/db.h"
@@ -24,6 +34,7 @@
 #include "inkscape-application.h"
 #include "io/resource.h"
 #include "ui/builder-utils.h"
+#include "ui/iconview-item-factory.h"
 #include "ui/util.h"
 #include "ui/svg-renderer.h"
 
@@ -32,27 +43,30 @@ using Inkscape::Extension::TemplatePreset;
 
 namespace Inkscape::UI::Widget {
 
-class TemplateCols final : public Gtk::TreeModel::ColumnRecord
-{
-public:
-    // These types must match those for the model in the .glade file
-    TemplateCols()
-    {
-        this->add(this->name);
-        this->add(this->label);
-        this->add(this->tooltip);
-        this->add(this->icon);
-        this->add(this->key);
-        this->add(this->priority);
-    }
+struct TemplateList::TemplateItem : public Glib::Object {
+    Glib::ustring name;
+    Glib::ustring label;
+    Glib::ustring tooltip;
+    Glib::RefPtr<Gdk::Texture> icon;
+    Glib::ustring key;
+    int priority;
 
-    Gtk::TreeModelColumn<Glib::ustring> name;
-    Gtk::TreeModelColumn<Glib::ustring> label;
-    Gtk::TreeModelColumn<Glib::ustring> tooltip;
-    Gtk::TreeModelColumn<Glib::RefPtr<Gdk::Pixbuf>> icon;
-    Gtk::TreeModelColumn<Glib::ustring> key;
-    Gtk::TreeModelColumn<int> priority;
+    static Glib::RefPtr<TemplateItem> create(const Glib::ustring& name, const Glib::ustring& label, const Glib::ustring& tooltip, 
+        Glib::RefPtr<Gdk::Texture> icon, Glib::ustring key, int priority) {
+
+        auto item = Glib::make_refptr_for_instance<TemplateItem>(new TemplateItem());
+        item->name = name;
+        item->label = label;
+        item->tooltip = tooltip;
+        item->icon = icon;
+        item->key = key;
+        item->priority = priority;
+        return item;
+    }
+private:
+    TemplateItem() = default;
 };
+
 
 TemplateList::TemplateList(BaseObjectType *cobject, const Glib::RefPtr<Gtk::Builder> &refGlade)
     : Gtk::Notebook(cobject)
@@ -64,8 +78,7 @@ TemplateList::TemplateList(BaseObjectType *cobject, const Glib::RefPtr<Gtk::Buil
  */
 void TemplateList::init(Inkscape::Extension::TemplateShow mode)
 {
-    TemplateCols cols;
-    std::map<std::string, Glib::RefPtr<Gtk::ListStore>> stores;
+    std::map<std::string, Glib::RefPtr<Gio::ListStore<TemplateItem>>> stores;
 
     Inkscape::Extension::DB::TemplateList extensions;
     Inkscape::Extension::db.get_template_list(extensions);
@@ -79,24 +92,26 @@ void TemplateList::init(Inkscape::Extension::TemplateShow mode)
             {
                 try {
                     it = stores.emplace_hint(it, cat, generate_category(cat));
-                    it->second->clear();
-                    it->second->set_sort_column(cols.priority, Gtk::SortType::ASCENDING);
-                } catch (UIBuilderError const & /*error*/) {
+                    it->second->remove_all();
+                } catch (UIBuilderError const& error) {
+                    g_error("Error building templates %s\n", error.what());
                     return;
                 }
             }
 
-            auto const &name = preset->get_name();
-            auto const &label = preset->get_label();
-            auto const &desc = preset->get_description();
+            auto& name = preset->get_name();
+            auto& desc = preset->get_description();
+            auto& label = preset->get_label();
+            auto tooltip = _(desc.empty() ? name.c_str() : desc.c_str());
+            auto trans_label = label.empty() ? "" : _(label.c_str());
+            auto icon = to_texture(icon_to_pixbuf(preset->get_icon_path(), get_scale_factor()));
 
-            Gtk::TreeModel::Row row = *stores[cat]->append();
-            row[cols.name] = _(name.c_str());
-            row[cols.label] = label.empty() ? "" : _(label.c_str());
-            row[cols.tooltip] = _(desc.empty() ? name.c_str() : desc.c_str());
-            row[cols.icon] = icon_to_pixbuf(preset->get_icon_path());
-            row[cols.key] = preset->get_key();
-            row[cols.priority] = preset->get_sort_priority();
+            stores[cat]->append(TemplateItem::create(
+                Glib::Markup::escape_text(name),
+                Glib::Markup::escape_text(trans_label),
+                Glib::Markup::escape_text(tooltip),
+                icon, preset->get_key(), preset->get_sort_priority()
+            ));
         }
     }
 
@@ -106,20 +121,19 @@ void TemplateList::init(Inkscape::Extension::TemplateShow mode)
 /**
  * Turn the requested template icon name into a pixbuf
  */
-Glib::RefPtr<Gdk::Pixbuf> TemplateList::icon_to_pixbuf(std::string const &path)
+Cairo::RefPtr<Cairo::ImageSurface> TemplateList::icon_to_pixbuf(std::string const &path, int scale)
 {
     // TODO: cache to filesystem. This function is a major bottleneck for startup time (ca. 1 second)!
     // The current memory-based caching only catches the case where multiple templates share the same icon.
-    static std::map<std::string, Glib::RefPtr<Gdk::Pixbuf>> cache;
+    static std::map<std::string, Cairo::RefPtr<Cairo::ImageSurface>> cache;
     if (path.empty()) {
-        Glib::RefPtr<Gdk::Pixbuf> no_image;
-        return no_image;
+        return {};
     }
     if (cache.contains(path)) {
         return cache[path];
     }
     Inkscape::svg_renderer renderer(path.c_str());
-    auto result = renderer.render(1.0);
+    auto result = renderer.render_surface(scale);
     cache[path] = result;
     return result;
 }
@@ -127,19 +141,42 @@ Glib::RefPtr<Gdk::Pixbuf> TemplateList::icon_to_pixbuf(std::string const &path)
 /**
  * Generate a new category with the given label and return it's list store.
  */
-Glib::RefPtr<Gtk::ListStore> TemplateList::generate_category(std::string const &label)
+Glib::RefPtr<Gio::ListStore<TemplateList::TemplateItem>> TemplateList::generate_category(std::string const &label)
 {
     auto builder = create_builder("widget-new-from-template.ui");
     auto container = &get_widget<Gtk::ScrolledWindow>(builder, "container");
-    auto icons     = &get_widget<Gtk::IconView>      (builder, "iconview");
+    auto icons     = &get_widget<Gtk::GridView>      (builder, "iconview");
+
+    auto store = Gio::ListStore<TemplateItem>::create();
+    auto sorter = Gtk::NumericSorter<int>::create(Gtk::ClosureExpression<int>::create([this](auto& item){
+        auto ptr = std::dynamic_pointer_cast<TemplateList::TemplateItem>(item);
+        return ptr ? ptr->priority : 0;
+    }));
+    auto model = Gtk::SortListModel::create(store, sorter);
+    auto selection_model = Gtk::SingleSelection::create(model);
+    selection_model->set_can_unselect();
+    auto factory = IconViewItemFactory::create([](auto& ptr) -> IconViewItemFactory::ItemData {
+        auto tmpl = std::dynamic_pointer_cast<TemplateItem>(ptr);
+        if (!tmpl) return {};
+
+        auto label = tmpl->name + "\n<small><span alpha=\"60%\" line_height=\"1.75\">" + tmpl->label + "</span></small>";
+        return { .label_markup = label, .image = tmpl->icon, .tooltip = tmpl->tooltip };
+    });
+    icons->set_factory(factory->get_factory());
+    icons->set_model(selection_model);
 
     // This packing keeps the Gtk widget alive, beyond the builder's lifetime
     append_page(*container, g_dpgettext2(nullptr, "TemplateCategory", label.c_str()));
 
-    icons->signal_selection_changed().connect([this]() { _item_selected_signal.emit(); });
-    icons->signal_item_activated().connect([this](const Gtk::TreeModel::Path) { _item_activated_signal.emit(); });
+    selection_model->signal_selection_changed().connect([this](auto pos, auto count){
+        _item_selected_signal.emit();
+    });
+    icons->signal_activate().connect([this](auto pos){
+        _item_activated_signal.emit();
+    });
 
-    return std::dynamic_pointer_cast<Gtk::ListStore>(icons->get_model());
+    _factory.emplace_back(std::move(factory));
+    return store;
 }
 
 /**
@@ -155,15 +192,11 @@ bool TemplateList::has_selected_preset()
  */
 std::shared_ptr<TemplatePreset> TemplateList::get_selected_preset()
 {
-    TemplateCols cols;
     if (auto iconview = get_iconview(get_nth_page(get_current_page()))) {
-        auto items = iconview->get_selected_items();
-        if (!items.empty()) {
-            auto iter = iconview->get_model()->get_iter(items[0]);
-            if (Gtk::TreeModel::Row row = *iter) {
-                Glib::ustring key = row[cols.key];
-                return Extension::Template::get_any_preset(key);
-            }
+        auto sel = std::dynamic_pointer_cast<Gtk::SingleSelection>(iconview->get_model());
+        auto ptr = sel->get_selected_item();
+        if (auto item = std::dynamic_pointer_cast<TemplateList::TemplateItem>(ptr)) {
+            return Extension::Template::get_any_preset(item->key);
         }
     }
     return nullptr;
@@ -196,7 +229,8 @@ void TemplateList::reset_selection()
     // TODO: Add memory here for the new document default (see new_document).
     for (auto const widget : UI::get_children(*this)) {
         if (auto iconview = get_iconview(widget)) {
-            iconview->unselect_all();
+            auto sel = std::dynamic_pointer_cast<Gtk::SingleSelection>(iconview->get_model());
+            sel->unselect_all();
         }
     }
 }
@@ -204,7 +238,7 @@ void TemplateList::reset_selection()
 /**
  * Returns the internal iconview for the given widget.
  */
-Gtk::IconView *TemplateList::get_iconview(Gtk::Widget *widget)
+Gtk::GridView *TemplateList::get_iconview(Gtk::Widget *widget)
 {
     if (!widget) return nullptr;
 
@@ -214,7 +248,7 @@ Gtk::IconView *TemplateList::get_iconview(Gtk::Widget *widget)
         }
     }
 
-    return dynamic_cast<Gtk::IconView *>(widget);
+    return dynamic_cast<Gtk::GridView *>(widget);
 }
 
 } // namespace Inkscape::UI::Widget

@@ -10,13 +10,17 @@
 #ifndef WIDGET_TEMPLATE_LIST_H
 #define WIDGET_TEMPLATE_LIST_H
 
+#include <giomm/liststore.h>
+#include <gtkmm/gridview.h>
 #include <memory>
 #include <string>
 #include <glibmm/refptr.h>
 #include <gtkmm/notebook.h>
 #include <sigc++/signal.h>
+#include <vector>
 
 #include "extension/template.h"
+#include "ui/iconview-item-factory.h"
 
 namespace Gdk {
 class Pixbuf;
@@ -48,12 +52,14 @@ public:
     sigc::connection connectItemActivated(const sigc::slot<void ()> &slot) { return _item_activated_signal.connect(slot); }
 
 private:
-    Glib::RefPtr<Gtk::ListStore> generate_category(std::string const &label);
-    Glib::RefPtr<Gdk::Pixbuf> icon_to_pixbuf(std::string const &name);
-    Gtk::IconView *get_iconview(Gtk::Widget *widget);
+    struct TemplateItem;
+    Glib::RefPtr<Gio::ListStore<TemplateItem>> generate_category(std::string const &label);
+    Cairo::RefPtr<Cairo::ImageSurface> icon_to_pixbuf(std::string const &name, int scale);
+    Gtk::GridView *get_iconview(Gtk::Widget *widget);
 
     sigc::signal<void ()> _item_selected_signal;
     sigc::signal<void ()> _item_activated_signal;
+    std::vector<std::unique_ptr<IconViewItemFactory>> _factory;
 };
 
 } // namespace Inkscape::UI::Widget
