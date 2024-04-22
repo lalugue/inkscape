@@ -44,7 +44,18 @@
     </screenshot>
   </screenshots>
   <releases>
-    <release version="1.3-alpha" date="2023-03-29">
+    <release version="1.4-beta" date="2024-04-24">
+      <description>
+        <p>Inkscape 1.4</p>
+        <ul>
+          <li>Extension Gallery</li>
+          <li>Experimental unified font browser</li>
+          <li>Customizable handles</li>
+        </ul>
+      </description>
+      <url>http://wiki.inkscape.org/wiki/index.php/Release_notes/1.4</url>
+    </release>
+    <release version="1.3" date="2023-07-21">
       <description>
         <p>Inkscape 1.3</p>
         <ul>
