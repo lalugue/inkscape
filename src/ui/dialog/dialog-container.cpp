@@ -195,7 +195,7 @@ DialogMultipaned* get_dialog_parent(DialogBase* dialog) {
     if (!dialog) return nullptr;
 
     // dialogs are nested inside Gtk::Notebook
-    if (auto notebook = dynamic_cast<Gtk::Notebook*>(dialog->get_parent())) {
+    if (auto notebook = dynamic_cast<Gtk::Notebook*>(dialog->get_parent()->get_parent())) {
         // notebooks are inside viewport, inside scrolled window
         if (auto viewport = dynamic_cast<Gtk::Viewport*>(notebook->get_parent())) {
             if (auto scroll = dynamic_cast<Gtk::ScrolledWindow*>(viewport->get_parent())) {

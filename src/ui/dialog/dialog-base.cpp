@@ -127,7 +127,7 @@ bool DialogBase::on_window_key_pressed(GtkEventControllerKey const * const contr
  */
 void DialogBase::blink()
 {
-    Gtk::Notebook *notebook = dynamic_cast<Gtk::Notebook *>(get_parent());
+    Gtk::Notebook *notebook = dynamic_cast<Gtk::Notebook *>(get_parent()->get_parent());
     if (notebook) {
         // Switch notebook to this dialog.
         notebook->set_current_page(notebook->page_num(*this));
@@ -172,7 +172,7 @@ void DialogBase::defocus_dialog() {
  */
 bool DialogBase::blink_off()
 {
-    Gtk::Notebook *notebook = dynamic_cast<Gtk::Notebook *>(get_parent());
+    Gtk::Notebook *notebook = dynamic_cast<Gtk::Notebook *>(get_parent()->get_parent());
     if (notebook) {
         notebook->remove_css_class("blink");
     }
