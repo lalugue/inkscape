@@ -873,7 +873,7 @@ SPStop* sp_gradient_add_stop_at(SPGradient* gradient, double offset) {
 void sp_set_gradient_stop_color(SPDocument* document, SPStop* stop, Color const &color) {
    sp_repr_set_css_double(stop->getRepr(), "offset", stop->offset);
    stop->setColor(color);
-   DocumentUndo::done(document, _("Change gradient stop color"), INKSCAPE_ICON("color-gradient"));
+   DocumentUndo::maybeDone(document, "gradient:stop:color", _("Change gradient stop color"), INKSCAPE_ICON("color-gradient"));
 }
 
 SPStop* sp_item_gradient_get_stop(SPItem *item, GrPointType point_type, guint point_i, Inkscape::PaintTarget fill_or_stroke) {
