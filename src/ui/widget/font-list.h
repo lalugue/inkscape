@@ -25,6 +25,7 @@
 #include <gtkmm/liststore.h>
 #include <gtkmm/scale.h>
 #include "helper/auto-connection.h"
+#include "preferences.h"
 #include "ui/widget/font-variations.h"
 #include "ui/operation-blocker.h"
 #include "util/font-discovery.h"
@@ -112,6 +113,7 @@ private:
     auto_connection _font_stream;
     std::size_t _initializing = 0;
     double _ui_font_size = 0;
+    Pref<double> _scale_correction;
 };
 
 } // namespaces

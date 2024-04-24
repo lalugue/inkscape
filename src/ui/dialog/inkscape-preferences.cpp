@@ -1084,6 +1084,9 @@ void InkscapePreferences::initPageTools()
             { _("Unified font browser"), 1, _("Show all font styles in a single list") }
         };
         _page_text.add_line(true, _("Font selector"), *Gtk::make_managed<PrefRadioButtons>(lister, "/options/font/browser"), "", "", false, reset_icon());
+        auto factor = Gtk::make_managed<PrefSpinButton>();
+        factor->init("/options/font/scale_factor", 100.0, 500.0, 10.0, 20.0, 100.0, false, true);
+        _page_text.add_line(true, "Unified font scale factor", *factor, "", "Correction multiplier to scale up font previews in unified browser", false);
     }
 
     //_page_text.add_group_header( _("Text units"));

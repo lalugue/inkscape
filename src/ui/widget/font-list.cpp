@@ -266,7 +266,8 @@ FontList::FontList(Glib::ustring preferences_path) :
     _tag_box(get_widget<Gtk::Box>(_builder, "tag-box")),
     _info_box(get_widget<Gtk::Box>(_builder, "info-box")),
     _progress_box(get_widget<Gtk::Box>(_builder, "progress-box")),
-    _font_tags(Inkscape::FontTags::get())
+    _font_tags(Inkscape::FontTags::get()),
+    _scale_correction("/options/font/scale_factor", 100, 100, 500)
 {
     _cell_renderer = std::make_unique<CellFontRenderer>();
     auto font_renderer = static_cast<CellFontRenderer*>(_cell_renderer.get());
@@ -347,12 +348,19 @@ FontList::FontList(Glib::ustring preferences_path) :
         font_renderer->_font_size = font_size_percent;
         auto fs = _ui_font_size * 96.0 / 72.0;
         // fudge factor of 1.2 to give font some extra space
-        int hh = (font_renderer->_show_font_name ? 10 : 0) + 1.2 * fs * font_renderer->_font_size / 100;
+        int hh = (font_renderer->_show_font_name ? 10 : 0) + 1.2 * fs * font_renderer->_font_size / 100 * _scale_correction / 100;
+        // TODO: use pango layout to calc sizes
         font_renderer->set_fixed_size(-1, hh);
         // resize rows
         _font_list.set_fixed_height_mode(false);
         _font_list.set_fixed_height_mode();
     };
+    _scale_correction.action = [=](){
+        set_row_height(font_renderer->_font_size);
+        // resize
+        filter();
+    };
+
     auto set_grid_size = [=](int font_size_percent) {
         grid_renderer->_font_size = font_size_percent;
         set_grid_cell_size(grid_renderer, font_size_percent, _ui_font_size);
