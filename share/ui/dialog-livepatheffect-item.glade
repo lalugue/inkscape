@@ -114,7 +114,6 @@
                 <property name="name">LPEActionButtons</property>
                 <property name="halign">end</property>
                 <property name="valign">start</property>
-                <property name="can-target">0</property>
                 <child>
                   <object class="GtkBox">
                     <child>
