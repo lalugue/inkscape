@@ -512,7 +512,6 @@ std::vector<Glib::RefPtr<PatternItem>> create_pattern_items(PatternManager& mana
 // populate store with document patterns if list has changed, minimize amount of work by using cached previews
 std::vector<Glib::RefPtr<PatternItem>> PatternEditor::update_doc_pattern_list(SPDocument* document) {
     auto list = sp_get_pattern_list(document);
-    std::shared_ptr<SPDocument> nil;
     const double device_scale = get_scale_factor();
     // create pattern items (cheap), but skip preview generation (expansive)
     auto patterns = create_pattern_items(_manager, list, 0, 0);

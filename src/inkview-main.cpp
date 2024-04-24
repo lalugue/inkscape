@@ -21,6 +21,7 @@
 #endif
 
 #include "inkview-application.h"
+#include "util/statics.h"
 
 int main(int argc, char *argv[])
 {
@@ -36,6 +37,8 @@ int main(int argc, char *argv[])
 #endif
 
     auto ret = InkviewApplication().run(argc, argv);
+
+    Inkscape::Util::StaticsBin::get().destroy();
 
 #ifdef _WIN32
     // switch back to initial console encoding

@@ -11,7 +11,6 @@
 #include "object/sp-pattern.h"
 #include "object/sp-defs.h"
 #include "object/sp-root.h"
-#include "util/statics.h"
 #include "util/units.h"
 #include "ui/svg-renderer.h"
 
@@ -61,12 +60,6 @@ std::unique_ptr<SPDocument> get_big_preview_document() {
     return SPDocument::createNewDocFromMem(buffer, false);
 }
 
-PatternManager& PatternManager::get() {
-    struct ConstructiblePatternManager : PatternManager {};
-    static auto factory = Inkscape::Util::Static<ConstructiblePatternManager>();
-    return factory.get();
-}
-
 PatternManager::PatternManager() {
     _preview_doc = get_preview_document();
     if (!_preview_doc.get() || !_preview_doc->getReprDoc()) {
@@ -80,17 +73,15 @@ PatternManager::PatternManager() {
 
     auto model = Gtk::ListStore::create(columns);
 
-    _documents = sp_get_stock_patterns();
     std::vector<SPPattern*> all;
 
-    for (auto& doc : _documents) {
-        auto patterns = sp_get_pattern_list(doc.get());
+    for (auto doc : sp_get_stock_patterns()) {
+        auto patterns = sp_get_pattern_list(doc);
         all.insert(all.end(), patterns.begin(), patterns.end());
 
         Glib::ustring name = doc->getDocumentName();
         name = name.substr(0, name.rfind(".svg"));
-        auto category = Glib::RefPtr<Category>(new Category(name, std::move(patterns), false));
-        _categories.push_back(category);
+        _categories.push_back(std::make_shared<Category>(Category{name, std::move(patterns), false}));
     }
 
     for (auto pat : all) {
@@ -99,11 +90,10 @@ PatternManager::PatternManager() {
     }
 
     // special "all patterns" category
-    auto all_patterns = Glib::RefPtr<Category>(new Category(_("All patterns"), std::move(all), true));
-    _categories.push_back(all_patterns);
+    _categories.push_back(std::make_shared<Category>(Category{_("All patterns"), std::move(all), true}));
 
     // sort by name, keep "all patterns" category first
-    std::sort(_categories.begin(), _categories.end(), [](const Glib::RefPtr<Category>& a, const Glib::RefPtr<Category>& b){
+    std::sort(_categories.begin(), _categories.end(), [] (auto const &a, auto const &b) {
         if (a->all != b->all) {
             return a->all;
         }
@@ -165,7 +155,7 @@ static Cairo::RefPtr<Cairo::Surface> create_pattern_image(SPDocument &sandbox,
 
 // given a pattern, create a PatternItem instance that describes it;
 // input pattern can be a link or a root pattern
-Glib::RefPtr<PatternItem> create_pattern_item(std::shared_ptr<SPDocument>& sandbox, SPPattern* pattern, bool stock_pattern, double scale) {
+Glib::RefPtr<PatternItem> create_pattern_item(SPDocument *sandbox, SPPattern* pattern, bool stock_pattern, double scale) {
     if (!pattern) return {};
 
     auto item = PatternItem::create();
@@ -236,8 +226,7 @@ Glib::RefPtr<Inkscape::UI::Widget::PatternItem> PatternManager::get_item(SPPatte
     bool stock = it != _cache.end();
     if (!stock || !it->second) {
         // generate item
-        std::shared_ptr<SPDocument> nil;
-        item = create_pattern_item(nil, pattern, stock, 0);
+        item = create_pattern_item(nullptr, pattern, stock, 0);
 
         if (stock) {
             _cache[pattern] = item;

@@ -29,7 +29,6 @@
 #include "include/glibmm_version.h"
 #include "inkgc/gc-core.h"        // Garbage Collecting init
 #include "inkview-window.h"
-#include "util/statics.h"
 #include "ui/dialog-run.h"
 
 #ifdef ENABLE_NLS
@@ -90,10 +89,7 @@ InkviewApplication::InkviewApplication()
     register_application();
 }
 
-InkviewApplication::~InkviewApplication()
-{
-    Inkscape::Util::StaticsBin::get().destroy();
-}
+InkviewApplication::~InkviewApplication() = default;
 
 void
 InkviewApplication::on_startup()

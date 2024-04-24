@@ -6,25 +6,23 @@
 #include <gtkmm/treemodel.h>
 #include <vector>
 #include <unordered_map>
+#include "helper/stock-items.h"
 #include "ui/widget/pattern-store.h"
+#include "util/statics.h"
 
 class SPPattern;
 class SPDocument;
 
 namespace Inkscape {
 
-class PatternManager {
+class PatternManager
+    : public Util::EnableSingleton<PatternManager, Util::Depends<StockPaintDocuments>>
+{
 public:
-    static PatternManager& get();
-    ~PatternManager() = default;
-
-    struct Category : Glib::Object {
+    struct Category {
         const Glib::ustring name;
         const std::vector<SPPattern*> patterns;
         const bool all;
-
-        Category(Glib::ustring name, std::vector<SPPattern*> patterns, bool all)
-            : name(std::move(name)), patterns(std::move(patterns)), all(all) {}
     };
 
     class PatternCategoryColumns : public Gtk::TreeModel::ColumnRecord {
@@ -35,9 +33,10 @@ public:
             add(all_patterns);
         }
         Gtk::TreeModelColumn<Glib::ustring> name;
-        Gtk::TreeModelColumn<Glib::RefPtr<Category>> category;
+        Gtk::TreeModelColumn<std::shared_ptr<Category>> category;
         Gtk::TreeModelColumn<bool> all_patterns;
-    } columns;
+    };
+    PatternCategoryColumns columns;
 
     // get all stock pattern categories
     Glib::RefPtr<Gtk::TreeModel> get_categories();
@@ -51,11 +50,12 @@ public:
     // get pattern image on checkerboard background for use as a larger preview
     Cairo::RefPtr<Cairo::Surface> get_preview(SPPattern* pattern, int width, int height, unsigned int rgba_background, double device_scale);
 
-private:
+protected:
     PatternManager();
+
+private:
     Glib::RefPtr<Gtk::TreeModel> _model;
-    std::vector<std::shared_ptr<SPDocument>> _documents;
-    std::vector<Glib::RefPtr<Category>> _categories;
+    std::vector<std::shared_ptr<Category>> _categories;
     std::unordered_map<SPPattern*, Glib::RefPtr<Inkscape::UI::Widget::PatternItem>> _cache;
     std::unique_ptr<SPDocument> _preview_doc;
     std::unique_ptr<SPDocument> _big_preview_doc;

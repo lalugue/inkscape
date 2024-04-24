@@ -10,14 +10,13 @@
 #ifndef LIBNRTYPE_FONT_FACTORY_H
 #define LIBNRTYPE_FONT_FACTORY_H
 
-#include <functional>
-#include <algorithm>
 #include <utility>
 #include <memory>
 #include <map>
 
 #include <pango/pango.h>
 #include "style.h"
+#include "util/statics.h"
 
 #include <pango/pangoft2.h>
 #include <ft2build.h>
@@ -52,14 +51,14 @@ struct StyleNames
 };
 
 class FontFactory
+    /*
+     * Using statics.h to ensure destruction before main() exits, otherwise Harfbuzz's internal
+     * FreeType instance will come before us in the static destruction order and our destructor will crash.
+     * Related - https://gitlab.com/inkscape/inkscape/-/issues/3765.
+     */
+    : public Inkscape::Util::EnableSingleton<FontFactory>
 {
-    FontFactory();
-    ~FontFactory();
-
 public:
-    /// Returns the static instance.
-    static FontFactory &get();
-
     // Refresh pango font configuration
     void refreshConfig();
 
@@ -103,6 +102,11 @@ public:
 
     PangoContext *get_font_context() const { return fontContext; }
     PangoFontDescription *parsePostscriptName(std::string const &name, bool substitute);
+
+protected:
+    FontFactory();
+    ~FontFactory();
+
 private:
     // Pango data. Backend-specific structures are cast to these opaque types.
     PangoFontMap *fontServer;

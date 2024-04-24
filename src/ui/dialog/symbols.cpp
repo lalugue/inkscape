@@ -18,6 +18,7 @@
 #include <iostream>
 #include <regex>
 #include <sstream>
+#include "libnrtype/font-factory.h"
 using namespace std::literals;
 
 #include <2geom/point.h>
@@ -78,6 +79,7 @@ using namespace std::literals;
 #include "ui/drag-and-drop.h"
 #include "ui/icon-loader.h"
 #include "ui/pack.h"
+#include "util/statics.h"
 #include "xml/href-attribute-helper.h"
 
 #ifdef WITH_LIBVISIO
@@ -112,9 +114,12 @@ struct SymbolSetView
     Glib::ustring title;
 };
 
-// key: symbol set full file name
-// value: symbol set
-std::map<std::string, SymbolSet> symbol_sets;
+struct SymbolSets : Util::EnableSingleton<SymbolSets, Util::Depends<FontFactory>>
+{
+    // key: symbol set full file name
+    // value: symbol set
+    std::map<std::string, SymbolSet> map;
+};
 
 struct SymbolColumns : public Gtk::TreeModel::ColumnRecord {
     Gtk::TreeModelColumn<std::string> cache_key;
@@ -418,7 +423,7 @@ SymbolsDialog::SymbolsDialog(const char* prefsPath)
 
     scan_all_symbol_sets();
 
-    for (auto const &it : symbol_sets) {
+    for (auto const &it : SymbolSets::get().map) {
         auto row = _symbol_sets->append();
         auto& set = it.second;
         (*row)[g_set_columns.set_id] = it.first;
@@ -962,6 +967,8 @@ void scan_all_symbol_sets()
     using namespace Inkscape::IO::Resource;
     std::regex matchtitle(".*?<title.*?>(.*?)<(/| /)");
 
+    auto &symbol_sets = SymbolSets::get().map;
+
     for (auto const &filename : get_filenames(SYMBOLS, {".svg", ".vss", "vssx", "vsdx"})) {
         if (symbol_sets.contains(filename)) continue;
 
@@ -1002,6 +1009,8 @@ void scan_all_symbol_sets()
 // Load SVG or VSS document and create SPDocument
 SPDocument *load_symbol_set(std::string const &filename)
 {
+    auto &symbol_sets = SymbolSets::get().map;
+
     if (auto doc = symbol_sets[filename].document.get()) {
         return doc;
     }

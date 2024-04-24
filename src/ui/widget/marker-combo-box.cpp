@@ -47,6 +47,7 @@
 #include "ui/svg-renderer.h"
 #include "ui/util.h"
 #include "util/object-renderer.h"
+#include "util/static-doc.h"
 
 #define noTIMING_INFO 1;
 
@@ -522,16 +523,16 @@ MarkerComboBox::init_combo()
 {
     if (_update.pending()) return;
 
-    static auto const markers_doc = [] () -> std::unique_ptr<SPDocument> {
+    auto const markers_doc = Util::cache_static_doc([] {
         // find and load markers.svg
         using namespace Inkscape::IO::Resource;
         auto markers_source = get_path_string(SYSTEM, MARKERS, "markers.svg");
         return SPDocument::createNewDoc(markers_source.c_str(), false);
-    }();
+    });
 
     // load markers from markers.svg
     if (markers_doc) {
-        marker_list_from_doc(markers_doc.get(), false);
+        marker_list_from_doc(markers_doc, false);
     }
 
     refresh_after_markers_modified();

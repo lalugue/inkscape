@@ -10,8 +10,9 @@
 class SPDocument;
 class SPPattern;
 
-// Find and load stock patterns if not yet loaded and return them
-std::vector<std::shared_ptr<SPDocument>> sp_get_stock_patterns();
+// Find and load stock patterns if not yet loaded and return them.
+// Their lifetime is bound to StockPaintDocuments.
+std::vector<SPDocument *> sp_get_stock_patterns();
 
 // Returns a list of "root" patterns in the defs of the given source document
 // Note: root pattern is the one with elements that are rendered; other patterns

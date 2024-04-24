@@ -7,12 +7,10 @@
 #include "color.h"
 #include "helper/stock-items.h"
 #include "object/sp-pattern.h"
-#include "io/resource.h"
 #include "xml/repr.h"
 
-
-std::vector<std::shared_ptr<SPDocument>> sp_get_stock_patterns() {
-    auto patterns = sp_get_paint_documents([](SPDocument* doc){
+std::vector<SPDocument *> sp_get_stock_patterns() {
+    auto patterns = StockPaintDocuments::get().get_paint_documents([](SPDocument* doc){
         return !sp_get_pattern_list(doc).empty();
     });
     if (patterns.empty()) {

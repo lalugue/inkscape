@@ -193,18 +193,6 @@ static void FactorySubstituteFunc(FcPattern *pattern, gpointer /*data*/)
     //printf("subst_f on %s\n",fam);
 }
 
-FontFactory &FontFactory::get()
-{
-    /*
-     * Using Static<FontFactory> to ensure destruction before main() exits, otherwise Harfbuzz's internal
-     * FreeType instance will come before us in the static destruction order and our destructor will crash.
-     * Related - https://gitlab.com/inkscape/inkscape/-/issues/3765.
-     */
-    struct ConstructibleFontFactory : FontFactory {};
-    static auto factory = Inkscape::Util::Static<ConstructibleFontFactory>();
-    return factory.get();
-}
-
 FontFactory::FontFactory()
     : fontServer(pango_ft2_font_map_new())
     , fontContext(pango_font_map_create_context(fontServer))

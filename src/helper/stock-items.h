@@ -15,12 +15,25 @@
 #include <functional>
 #include <memory>
 #include <vector>
+#include "libnrtype/font-factory.h"
 
 class SPObject;
 class SPDocument;
 
-SPObject *get_stock_item(char const *urn, bool stock = false, SPDocument* stock_doc = nullptr);
+// Stock objects kept in documents with controlled life time
+class StockPaintDocuments
+    : public Inkscape::Util::EnableSingleton<StockPaintDocuments, Inkscape::Util::Depends<FontFactory>>
+{
+public:
+    std::vector<SPDocument *> get_paint_documents(std::function<bool (SPDocument *)> const &filter);
 
-std::vector<std::shared_ptr<SPDocument>> sp_get_paint_documents(const std::function<bool (SPDocument*)>& filter);
+protected:
+    StockPaintDocuments();
+
+private:
+    std::vector<std::unique_ptr<SPDocument>> documents;
+};
+
+SPObject *get_stock_item(char const *urn, bool stock = false, SPDocument* stock_doc = nullptr);
 
 #endif // SEEN_INK_STOCK_ITEMS_H

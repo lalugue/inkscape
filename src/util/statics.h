@@ -6,16 +6,16 @@
 #define INKSCAPE_UTIL_STATICS_BIN_H
 
 #include <optional>
-#include <cassert>
 
-namespace Inkscape {
-namespace Util {
+namespace Inkscape::Util {
 
-class StaticBase;
+class StaticHolderBase;
 
 /**
- * The following system provides a framework for resolving gnarly issues to do with threads, statics, and libraries at program exit.
- * Instead of the function-local static initialisation idiom
+ * The following system provides a way of dealing with statics/singletons with unusual lifetime requirements,
+ * specifically the requirement that they be destroyed before the end of main().
+ *
+ * This isn't guaranteed by the usual static initialisation idiom
  *
  *     X &get()
  *     {
@@ -23,33 +23,34 @@ class StaticBase;
  *         return x;
  *     }
  *
- * you instead write
+ * because X will be destroyed just *after* main() exits. And sometimes that's a deal-breaker!
  *
- *     X &get()
- *     {
- *         static Static<X> x;
- *         return x.get();
- *     }
+ *  - To use the system with a singleton class X, derive it from EnableSingleton<X>:
  *
- * Similarities:
- *     - Both allow creation of singleton objects which are destroyed in the reverse order of constructor completion.
- *     - Both allow dependency registration and automatically prevent dependency loops.
+ *        class X : public EnableSingleton<X> { ...
  *
- * Differences:
- *     - The second kind are destructed before the end of main(), the first kind after.
- *     - Only the second supports on-demand destruction and re-initialisation - necessary if you want to write isolated tests.
- *     - Only the first supports thread-safe initialisation; the second must be initialised in the main thread.
- *     - Only the first supports automatic destruction; the second must be destroyed manually with StaticsBin::get().destroy().
+ *    This endows it with a ::get() method that initialises and returns the static instance.
  *
- * Rationale examples:
- *     - FontFactory depends on Harfbuzz depends on FreeType, but Harfbuzz doesn't register the dependency so FreeType fails
- *       to outlive both FontFactory and Harfbuzz. (We say X depends on Y if the lifetime of X must be contained in Y; such
- *       a situation can be guaranteed by having X::X call Y::get.) FreeType is inaccessible, so we cannot register the
- *       dependency ourselves without fragile hacks. Therefore, FontFactory must be destroyed before the end of main().
+ *    Warning: ::get() is not safe against concurrent initialisation, unlike the idiom above.
+ *    So only use it in single-threaded code.
  *
- *     - Background threads can access statics of the first kind. If they run past end of main(), they may find them destructed.
- *       Therefore either the static that joins all threads must be destructed before the end of main(), or must register a
- *       dependency on every static that any background thread might use, which is infeasible and error-prone.
+ *  - To ensure that X is outlived by another singleton Y, pass in the dependency using Depends:
+ *
+ *        class X : public EnableSingleton<X, Depends<Y>> { ...
+ *
+ *    Multiple dependencies can be specified. Then Y will be destructed after X.
+ *
+ *    Note: Y will still be lazily-initialised, for startup efficiency. So X's lifetime isn't
+ *    necessarily completely contained in Y's lifetime.
+ *
+ *    Note: As with the above idiom, dependency loops are detected at runtime on glibc.
+ *
+ *  - To destruct all singletons at any time, call
+ *
+ *        StaticsBin::get().destroy();
+ *
+ *    They will be recreated again if re-accessed. This function should be called at the end of main().
+ *    If it isn't, it will be detected at runtime by an assertion in StaticsBin::~StaticsBin().
  */
 
 /**
@@ -60,48 +61,110 @@ class StaticsBin
 {
 public:
     static StaticsBin &get();
+
     void destroy();
-    ~StaticsBin();
 
 private:
-    StaticBase *head = nullptr;
+    ~StaticsBin();
 
-    template <typename T>
-    friend class Static;
+    StaticHolderBase *head = nullptr;
+
+    friend class StaticHolderBase;
 };
 
-/// Base class for statics, allowing type-erased destruction.
-class StaticBase
-{
-protected:
-    StaticBase *next;
-    ~StaticBase() = default;
-    virtual void destroy() = 0;
-    friend class StaticsBin;
-};
-
-/// Wrapper for a static of type T.
-template <typename T>
-class Static final : public StaticBase
+class StaticHolderBase
 {
 public:
-    T &get()
+    StaticHolderBase(StaticHolderBase const &) = delete;
+    StaticHolderBase &operator=(StaticHolderBase const &) = delete;
+
+protected:
+    StaticHolderBase();
+
+    virtual void destroy() = 0;
+    virtual bool active() const = 0;
+
+private:
+    StaticHolderBase *const next;
+
+    StaticHolderBase(StaticsBin &bin);
+
+    friend StaticsBin;
+};
+
+template <typename... Ts>
+struct Depends;
+
+template <typename Deps>
+struct DependencyRegisterer {};
+
+template <typename T, typename... Ts>
+struct DependencyRegisterer<Depends<T, Ts...>> : DependencyRegisterer<Depends<Ts...>>
+{
+    DependencyRegisterer()
     {
-        if (!opt) {
-            opt.emplace();
-            auto &bin = StaticsBin::get();
-            next = bin.head;
-            bin.head = this;
+        T::getStaticHolder();
+    }
+};
+
+template <typename T, typename Deps = Depends<>>
+class StaticHolder
+    : private DependencyRegisterer<Deps>
+    , private StaticHolderBase
+{
+public:
+    template <typename... Args>
+    T &get(Args&&... args)
+    {
+        [[unlikely]] if (!opt) {
+            opt.emplace(std::forward<Args>(args)...);
         }
         return *opt;
     }
 
+protected:
+    void destroy() override
+    {
+        opt.reset();
+    }
+
+    bool active() const override
+    {
+        return opt.has_value();
+    }
+
 private:
-    std::optional<T> opt;
-    void destroy() override { opt.reset(); }
+    struct ConstructibleT : T
+    {
+        using T::T;
+    };
+
+    std::optional<ConstructibleT> opt;
 };
 
-} // namespace Util
-} // namespace Inkscape
+template <typename T, typename Deps = Depends<>>
+class EnableSingleton
+{
+public:
+    EnableSingleton(EnableSingleton const &) = delete;
+    EnableSingleton &operator=(EnableSingleton const &) = delete;
+
+    template <typename... Args>
+    static T &get(Args&&... args)
+    {
+        return getStaticHolder().get(std::forward<Args>(args)...);
+    }
+
+    static StaticHolder<T, Deps> &getStaticHolder()
+    {
+        static StaticHolder<T, Deps> instance;
+        return instance;
+    }
+
+protected:
+    EnableSingleton() = default;
+};
+
+} // namespace Inkscape::Util
 
 #endif // INKSCAPE_UTIL_STATICS_BIN_H

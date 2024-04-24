@@ -91,7 +91,6 @@
 #include "extension/effect.h"
 #include "extension/init.h"
 #include "extension/input.h"
-#include "include/glibmm_version.h"
 #include "inkgc/gc-core.h"          // Garbage Collecting init
 #include "io/file.h"                // File open (command line).
 #include "io/fix-broken-links.h"    // Fix up references.
@@ -105,8 +104,6 @@
 #include "ui/interface.h"                 // sp_ui_error_dialog
 #include "ui/widget/desktop-widget.h"
 #include "util/scope_exit.h"
-#include "util/statics.h"
-#include "util/units.h"           // Redimension window
 
 #ifdef ENABLE_NLS
 // Native Language Support - shouldn't this always be used?
@@ -784,7 +781,6 @@ InkscapeApplication::InkscapeApplication()
 InkscapeApplication::~InkscapeApplication()
 {
     _instance = nullptr;
-    Inkscape::Util::StaticsBin::get().destroy();
 }
 
 /** Create a window given a document. This is used internally in InkscapeApplication.

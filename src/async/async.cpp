@@ -6,6 +6,7 @@
 #include "async.h"
 #include "util/statics.h"
 
+namespace Inkscape::Async::detail {
 namespace {
 
 // Todo: Replace when C++ gets an .is_ready().
@@ -16,18 +17,13 @@ bool is_ready(std::future<void> const &future)
 
 // Holds on to asyncs and waits for them to finish at program exit.
 class AsyncBin
+    /*
+     * Using statics.h to ensure destruction before main() exits, so that lifetimes
+     * of background threads are synchronized with the destruction of ordinary statics.
+     */
+    : public Util::EnableSingleton<AsyncBin const>
 {
 public:
-    static auto const &get()
-    {
-        /*
-         * Using Static<AsyncBin> to ensure destruction before main() exits, so that lifetimes
-         * of background threads are synchronized with the destruction of statics.
-         */
-        static Inkscape::Util::Static<AsyncBin const> instance;
-        return instance.get();
-    }
-
     void add(std::future<void> &&future) const
     {
         auto g = std::lock_guard(mutables);
@@ -56,12 +52,6 @@ private:
 
 } // namespace
 
-namespace Inkscape {
-namespace Async {
-namespace detail {
-
 void extend(std::future<void> &&future) { AsyncBin::get().add(std::move(future)); }
 
-} // namespace detail
-} // namespace Async
-} // namespace Inkscape
+} // namespace Inkscape::Async::detail

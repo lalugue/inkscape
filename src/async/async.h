@@ -14,8 +14,7 @@
 #include <future>
 #include <utility>
 
-namespace Inkscape {
-namespace Async {
+namespace Inkscape::Async {
 namespace detail {
 
 void extend(std::future<void> &&future);
@@ -31,7 +30,6 @@ inline void fire_and_forget(F &&f)
     detail::extend(std::async(std::launch::async, std::forward<F>(f)));
 }
 
-} // namespace Async
-} // namespace Inkscape
+} // namespace Inkscape::Async
 
 #endif // INKSCAPE_ASYNC_H

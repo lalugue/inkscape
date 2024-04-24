@@ -24,56 +24,42 @@
 #include "inkscape.h"
 
 #include "io/resource.h"
-#include "libnrtype/font-factory.h"
 #include "manipulation/copy-resource.h"
 #include "object/sp-gradient.h"
 #include "object/sp-pattern.h"
 #include "object/sp-marker.h"
 #include "object/sp-defs.h"
-#include "util/statics.h"
+#include "util/static-doc.h"
 
-// Stock objects kept in documents with controlled life time
-struct Documents {
-    static Documents& get();
-    std::vector<std::shared_ptr<SPDocument>> documents;
-};
-
-Documents& Documents::get() {
-    // make sure font factory is initialized first, that way Documents will be destructed before it
-    FontFactory::get();
-
-    static auto factory = Inkscape::Util::Static<Documents>();
-    return factory.get();
-}
-
-std::vector<std::shared_ptr<SPDocument>> sp_get_paint_documents(const std::function<bool (SPDocument*)>& filter) {
-    auto& storage = Documents::get();
-
-    if (storage.documents.empty()) {
-        using namespace Inkscape::IO::Resource;
-        auto files = get_filenames(SYSTEM, PAINT, {".svg"});
-        auto share = get_filenames(SHARED, PAINT, {".svg"});
-        auto user  = get_filenames(USER,   PAINT, {".svg"});
-        files.insert(files.end(), user.begin(), user.end());
-        files.insert(files.end(), share.begin(), share.end());
-        for (auto&& file : files) {
-            if (Glib::file_test(file, Glib::FileTest::IS_REGULAR)) {
-                std::shared_ptr<SPDocument> doc(SPDocument::createNewDoc(file.c_str(), false));
-                if (doc) {
-                    doc->ensureUpToDate(); // update, so patterns referencing clippaths render properly
-                    storage.documents.push_back(std::move(doc));
-                }
-                else {
-                    g_warning("File %s not loaded.", file.c_str());
-                }
+StockPaintDocuments::StockPaintDocuments()
+{
+    using namespace Inkscape::IO::Resource;
+    auto files = get_filenames(SYSTEM, PAINT, {".svg"});
+    auto share = get_filenames(SHARED, PAINT, {".svg"});
+    auto user  = get_filenames(USER,   PAINT, {".svg"});
+    files.insert(files.end(), user.begin(), user.end());
+    files.insert(files.end(), share.begin(), share.end());
+    for (auto const &file : files) {
+        if (Glib::file_test(file, Glib::FileTest::IS_REGULAR)) {
+            if (auto doc = SPDocument::createNewDoc(file.c_str(), false)) {
+                doc->ensureUpToDate(); // update, so patterns referencing clippaths render properly
+                documents.push_back(std::move(doc));
+            } else {
+                g_warning("File %s not loaded.", file.c_str());
             }
         }
     }
+}
 
-    std::vector<std::shared_ptr<SPDocument>> out;
-    std::copy_if(storage.documents.begin(), storage.documents.end(), std::back_inserter(out), [=](const std::shared_ptr<SPDocument>& doc) {
-        return filter(doc.get());
-    });
+std::vector<SPDocument *> StockPaintDocuments::get_paint_documents(std::function<bool (SPDocument *)> const &filter)
+{
+    std::vector<SPDocument *> out;
+
+    for (auto const &doc : documents) {
+        if (filter(doc.get())) {
+            out.push_back(doc.get());
+        }
+    }
 
     return out;
 }
@@ -107,7 +93,7 @@ static SPObject *sp_marker_load_from_svg(char const *name, SPDocument *current_d
     }
 
     // Try to load from document.
-    static auto const doc = load_paint_doc("markers.svg", Inkscape::IO::Resource::MARKERS);
+    auto const doc = Inkscape::Util::cache_static_doc([] { return load_paint_doc("markers.svg", Inkscape::IO::Resource::MARKERS); });
     if (!doc) {
         return nullptr;
     }
@@ -147,7 +133,7 @@ static SPObject *sp_gradient_load_from_svg(char const *name, SPDocument *current
     }
 
     // Try to load from document.
-    static auto const doc = load_paint_doc("gradients.svg");
+    auto const doc = Inkscape::Util::cache_static_doc([] { return load_paint_doc("gradients.svg"); });
     if (!doc) {
         return nullptr;
     }

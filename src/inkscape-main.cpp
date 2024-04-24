@@ -22,8 +22,8 @@
 
 #include "inkscape-application.h"
 #include "path-prefix.h"
-
 #include "io/resource.h"
+#include "util/statics.h"
 
 static void set_extensions_env()
 {
@@ -211,6 +211,8 @@ int main(int argc, char *argv[])
     set_extensions_env();
 
     auto ret = InkscapeApplication().gio_app()->run(argc, argv);
+
+    Inkscape::Util::StaticsBin::get().destroy();
 
 #ifdef _WIN32
     // switch back to initial console encoding
