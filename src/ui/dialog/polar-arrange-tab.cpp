@@ -45,6 +45,7 @@ PolarArrangeTab::PolarArrangeTab(ArrangeDialog *parent_)
     anchorBoundingBoxRadio.set_label(C_("Polar arrange tab", "Objects' bounding boxes:"));
     anchorBoundingBoxRadio.signal_toggled().connect(sigc::mem_fun(*this, &PolarArrangeTab::on_anchor_radio_changed));
     anchorBoundingBoxRadio.set_margin_start(4);
+    anchorBoundingBoxRadio.set_active(true);
     UI::pack_start(*this, anchorBoundingBoxRadio, false, false);
 
     anchorSelector.set_margin_start(16);
@@ -65,6 +66,7 @@ PolarArrangeTab::PolarArrangeTab(ArrangeDialog *parent_)
     arrangeOnFirstCircleRadio.set_label(C_("Polar arrange tab", "First selected circle/ellipse/arc"));
     arrangeOnFirstCircleRadio.signal_toggled().connect(sigc::mem_fun(*this, &PolarArrangeTab::on_arrange_radio_changed));
     arrangeOnFirstCircleRadio.set_margin_start(4);
+    arrangeOnFirstCircleRadio.set_active(true);
     UI::pack_start(*this, arrangeOnFirstCircleRadio, false, false);
 
     arrangeOnLastCircleRadio.set_label(C_("Polar arrange tab", "Last selected circle/ellipse/arc"));
