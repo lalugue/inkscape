@@ -3,7 +3,7 @@
 # Copyright (C) 2006 Free Software Foundation, Inc.
 # Vital Khilko <dojlid@mova.org>, 2003
 # Hleb Valoshka <375gnu@gmail.com>, 2008-2009
-# Ubuntu Belarusian Translators Team <btt4ubuntu@pm.me>, 2023
+# Ubuntu Belarusian Translators Team <ubuntu@i18n.be>, 2023
 #
 #
 # Пераклад Inkscape будзе працягнуты ў праекце перакладу Ubuntu з выкарыстаннем
@@ -23,8 +23,8 @@ msgstr ""
 "Project-Id-Version: inkscape 0.47+devel\n"
 "Report-Msgid-Bugs-To: inkscape-translator@lists.inkscape.org\n"
 "POT-Creation-Date: 2023-09-21 12:10+0000\n"
-"PO-Revision-Date: 2023-09-23 15:49\n"
-"Last-Translator: Ubuntu Belarusian Translators Team <btt4ubuntu@pm.me>\n"
+"PO-Revision-Date: 2024-04-24 15:49\n"
+"Last-Translator: Ubuntu Belarusian Translators Team <ubuntu@i18n.be>\n"
 "Language-Team: Belarusian <i18n@mova.org>\n"
 "Language: be\n"
 "MIME-Version: 1.0\n"
@@ -942,7 +942,7 @@ msgstr "Такое ж, як і HSL рэльефнасць, але з празр�
 
 #: ../build/share/filters/filters.svg.h:314
 msgid "Bubbly Bumps Alpha"
-msgstr "Выпукласці як бурбалкі з празрыстасцю"
+msgstr "Пухірыстыя выпукласці з альфа"
 
 #: ../build/share/filters/filters.svg.h:316
 msgid "Same as Bubbly Bumps but with transparent highlights"
@@ -1032,7 +1032,7 @@ msgstr "Эфект рэльефу: трохмерны рэльеф, дзе бе�
 
 #: ../build/share/filters/filters.svg.h:354
 msgid "Bubbly Bumps Matte"
-msgstr "Выпукласці як бурбалкі матавыя"
+msgstr "Матавыя пухірыстыя выпукласці"
 
 #: ../build/share/filters/filters.svg.h:356
 msgid ""
@@ -1152,7 +1152,7 @@ msgstr "Тэкстура трохмернай скрыўленай, пералі
 
 #: ../build/share/filters/filters.svg.h:410
 msgid "Tiger Fur"
-msgstr "Футра тыгра"
+msgstr "Тыгровая скура"
 
 #: ../build/share/filters/filters.svg.h:412
 msgid "Tiger fur pattern with folds and bevel around the edges"
@@ -1293,7 +1293,7 @@ msgstr "Коміксавы шэйдэр з хвалепадобнай крэма
 
 #: ../build/share/filters/filters.svg.h:434
 msgid "Chewing Gum"
-msgstr "Жавальная гумка"
+msgstr "Жвачка"
 
 #: ../build/share/filters/filters.svg.h:436
 msgid ""
@@ -1336,7 +1336,8 @@ msgstr "Старая паштоўка"
 #: ../build/share/filters/filters.svg.h:452
 msgid "Slightly posterize and draw edges like on old printed postcards"
 msgstr ""
-"Злёгку пастэрызаваць і нарысаваць краі як на старой друкаванай паштоўцы"
+"Зрабіць лёгкі эфект плаката і нарысаваць краі як на старой друкаванай "
+"паштоўцы"
 
 #: ../build/share/filters/filters.svg.h:454
 msgid "Dots Transparency"
@@ -1616,37 +1617,36 @@ msgstr ""
 
 #: ../build/share/filters/filters.svg.h:578
 msgid "Soft Colors"
-msgstr ""
+msgstr "Мяккія колеры"
 
 #: ../build/share/filters/filters.svg.h:580
 msgid "Adds a colorizable edges glow inside objects and pictures"
-msgstr ""
-"Дадае ўнутры абʼектаў і відарысаў сьвячэньне краёў, якое можна разфарбоўваць"
+msgstr "Дадае каляровае свячэнне краёў унутры аб'ектаў і відарысаў"
 
 #: ../build/share/filters/filters.svg.h:582
 msgid "Relief Print"
-msgstr ""
+msgstr "Рэльефны друк"
 
 #: ../build/share/filters/filters.svg.h:584
 msgid "Bumps effect with a bevel, color flood and complex lighting"
 msgstr ""
-"Эфэкт пухлін са скосам, запаўненьнем колерам і складаным асьветленьнем"
+"Эфект рэльефнасці з скосам, запаўненнем колерам і складаным асвятленнем"
 
 #: ../build/share/filters/filters.svg.h:586
 msgid "Growing Cells"
-msgstr ""
+msgstr "Вырачаныя клеткі"
 
 #: ../build/share/filters/filters.svg.h:588
 msgid "Random rounded living cells like fill"
-msgstr "Запаўненьне нібы адвольна закругленыя жывыя клеткі"
+msgstr "Запаўненне выпадковымі круглымі аб'ектамі як жывымі клеткамі"
 
 #: ../build/share/filters/filters.svg.h:590
 msgid "Fluorescence"
-msgstr "Сьвецень"
+msgstr "Флюарэсцэнцыя"
 
 #: ../build/share/filters/filters.svg.h:592
 msgid "Oversaturate colors which can be fluorescent in real world"
-msgstr "Перанасыціць колеры, якія могуць сьвяціцца ў сапраўдным сьвеце"
+msgstr "Перанасыціць колеры, якія могуць свяціцца ў сапраўдным жыцці"
 
 #: ../build/share/filters/filters.svg.h:594
 msgid "Pixellize"
@@ -1654,35 +1654,35 @@ msgstr "Пікселізаваць"
 
 #: ../build/share/filters/filters.svg.h:595
 msgid "Pixel Tools"
-msgstr "Параметры пікселя"
+msgstr "Інструменты для працы з пікселем"
 
 #: ../build/share/filters/filters.svg.h:596
 msgid "Reduce or remove antialiasing around shapes"
-msgstr "Паменшыць або выдаліць згладжванне вакол формаў"
+msgstr "Паменшыць або выдаліць згладжванне вакол фігур"
 
 #: ../build/share/filters/filters.svg.h:598
 msgid "Basic Diffuse Bump"
-msgstr ""
+msgstr "Базавы рассейваючы рэльеф"
 
 #: ../build/share/filters/filters.svg.h:600
 msgid "Matte emboss effect"
-msgstr ""
+msgstr "Эфект матавага рэльефу"
 
 #: ../build/share/filters/filters.svg.h:602
 msgid "Basic Specular Bump"
-msgstr ""
+msgstr "Базавы адлюстроўваючы рэльеф"
 
 #: ../build/share/filters/filters.svg.h:604
 msgid "Specular emboss effect"
-msgstr ""
+msgstr "Эфект адлюстроўваючага рэльефу"
 
 #: ../build/share/filters/filters.svg.h:606
 msgid "Basic Two Lights Bump"
-msgstr ""
+msgstr "Базавы рэльеф з двума крыніцамі святла"
 
 #: ../build/share/filters/filters.svg.h:608
 msgid "Two types of lighting emboss effect"
-msgstr ""
+msgstr "Два тыпы святла ў эфекту рэльефу"
 
 #: ../build/share/filters/filters.svg.h:610
 msgid "Linen Canvas"
@@ -1691,51 +1691,51 @@ msgstr "Ільняное палатно"
 #: ../build/share/filters/filters.svg.h:612
 #: ../build/share/filters/filters.svg.h:620
 msgid "Painting canvas emboss effect"
-msgstr ""
+msgstr "Намаляваць эфект рэльефу палатна"
 
 #: ../build/share/filters/filters.svg.h:614
 msgid "Plasticine"
-msgstr ""
+msgstr "Пластылін"
 
 #: ../build/share/filters/filters.svg.h:616
 msgid "Matte modeling paste emboss effect"
-msgstr ""
+msgstr "Эфект мадэлявання рэльефу матавым пластылінам"
 
 #: ../build/share/filters/filters.svg.h:618
 msgid "Rough Canvas Painting"
-msgstr ""
+msgstr "Маляванне грубага палатна"
 
 #: ../build/share/filters/filters.svg.h:622
 msgid "Paper Bump"
-msgstr ""
+msgstr "Рэльеф паперы"
 
 #: ../build/share/filters/filters.svg.h:624
 msgid "Paper like emboss effect"
-msgstr ""
+msgstr "Эфект рэльефу паперы"
 
 #: ../build/share/filters/filters.svg.h:626
 msgid "Jelly Bump"
-msgstr ""
+msgstr "Рэльеф жэле"
 
 #: ../build/share/filters/filters.svg.h:628
 msgid "Convert pictures to thick jelly"
-msgstr ""
+msgstr "Пераўтварыць відарыс у тоўсты слой жэле"
 
 #: ../build/share/filters/filters.svg.h:630
 msgid "Blend Opposites"
-msgstr ""
+msgstr "Змяшаць супрацьлегласці"
 
 #: ../build/share/filters/filters.svg.h:632
 msgid "Blend an image with its hue opposite"
-msgstr ""
+msgstr "Змяшаць відарыс з яго супрацьлеглым адценнем"
 
 #: ../build/share/filters/filters.svg.h:634
 msgid "Hue to White"
-msgstr ""
+msgstr "Адценне ў белы колер"
 
 #: ../build/share/filters/filters.svg.h:636
 msgid "Fades hue progressively to white"
-msgstr ""
+msgstr "Паступова ператварыць адценне ў белы колер"
 
 #: ../build/share/filters/filters.svg.h:638
 #: ../src/extension/internal/bitmap/swirl.cpp:39
@@ -1746,22 +1746,24 @@ msgstr "Вір"
 msgid ""
 "Paint objects with a transparent turbulence which wraps around color edges"
 msgstr ""
+"Замаляваць аб'екты празрыстай турбулентнасцю якая абгортваецца вакол краёў з"
+" колерам"
 
 #: ../build/share/filters/filters.svg.h:642
 msgid "Pointillism"
-msgstr ""
+msgstr "Пуантылізм"
 
 #: ../build/share/filters/filters.svg.h:644
 msgid "Gives a turbulent pointillist HSL sensitive transparency"
-msgstr ""
+msgstr "Дадае турбулентную пуантылісцкую празрыстасць, адчувальную да HSL"
 
 #: ../build/share/filters/filters.svg.h:646
 msgid "Silhouette Marbled"
-msgstr ""
+msgstr "Мармуровы сілуэт"
 
 #: ../build/share/filters/filters.svg.h:648
 msgid "Basic noise transparency texture"
-msgstr "Простая тэкстура зашумленай празрыстасьці"
+msgstr "Простая празрыстая тэкстура шуму"
 
 #: ../build/share/filters/filters.svg.h:650
 msgid "Fill Background"
@@ -1769,74 +1771,80 @@ msgstr "Запоўніць фон"
 
 #: ../build/share/filters/filters.svg.h:652
 msgid "Adds a colorizable opaque background"
-msgstr ""
+msgstr "Дадаць каляровы непразрысты фон"
 
 #: ../build/share/filters/filters.svg.h:654
 msgid "Flatten Transparency"
-msgstr ""
+msgstr "Выканаць звядзенне празрыстасці"
 
 #: ../build/share/filters/filters.svg.h:656
 msgid "Adds a white opaque background"
-msgstr ""
+msgstr "Дадаць белы непразрысты фон"
 
 #: ../build/share/filters/filters.svg.h:658
 msgid "Blur Double"
-msgstr ""
+msgstr "Падвойная размытасць"
 
 #: ../build/share/filters/filters.svg.h:660
 msgid ""
 "Overlays two copies with different blur amounts and modifiable blend and "
 "composite"
 msgstr ""
+"Накладвае дзве копіі відарыса з рознай велічынёй размытасці і пераменным "
+"змешваннем"
 
 #: ../build/share/filters/filters.svg.h:662
 msgid "Image Drawing Basic"
-msgstr ""
+msgstr "Намаляваць асноўныя элементы відарыса"
 
 #: ../build/share/filters/filters.svg.h:664
 msgid "Enhance and redraw color edges in 1 bit black and white"
 msgstr ""
+"Павялічыць і перамаляваць каляровыя краі ў 1 біт чорнага ці белага колеру"
 
 #: ../build/share/filters/filters.svg.h:666
 msgid "Poster Draw"
-msgstr ""
+msgstr "Маляваць плакат"
 
 #: ../build/share/filters/filters.svg.h:668
 msgid "Enhance and redraw edges around posterized areas"
 msgstr ""
+"Павялічыць і перамаляваць каляровыя краі вакол абласцей з эфектам колеру "
+"плаката"
 
 #: ../build/share/filters/filters.svg.h:670
 msgid "Cross Noise Poster"
-msgstr ""
+msgstr "Нерэгулярны шум плаката"
 
 #: ../build/share/filters/filters.svg.h:672
 msgid "Overlay with a small scale screen like noise"
-msgstr ""
+msgstr "Накласці шум як шум на малога памеру экрану"
 
 #: ../build/share/filters/filters.svg.h:674
 msgid "Cross Noise Poster B"
-msgstr ""
+msgstr "Нерэгулярны шум плаката Б"
 
 #: ../build/share/filters/filters.svg.h:676
 msgid "Adds a small scale screen like noise locally"
-msgstr ""
+msgstr "Дадаць месцамі малога маштабу шум як на экране"
 
 #: ../build/share/filters/filters.svg.h:678
 #: ../build/share/filters/filters.svg.h:680
 msgid "Poster Color Fun"
-msgstr ""
+msgstr "Вясёлыя колеры плаката"
 
 #: ../build/share/filters/filters.svg.h:682
 msgid "Poster Rough"
-msgstr ""
+msgstr "Грубы плакат"
 
 #: ../build/share/filters/filters.svg.h:684
 msgid "Adds roughness to one of the two channels of the Poster paint filter"
 msgstr ""
+"Дадае шурпатасць да аднаго ці да двух каналаў да фільтра «Маляванне плаката»"
 
 #: ../build/share/filters/filters.svg.h:686
 msgid "Alpha Monochrome Cracked"
-msgstr ""
+msgstr "Трэснутая манахромная альфа"
 
 #: ../build/share/filters/filters.svg.h:688
 #: ../build/share/filters/filters.svg.h:692
@@ -1845,75 +1853,75 @@ msgstr ""
 #: ../build/share/filters/filters.svg.h:712
 #: ../build/share/filters/filters.svg.h:716
 msgid "Basic noise fill texture; adjust color in Flood"
-msgstr "Простая тэкстура зашумленага запаўненьня, папраў колер у «Заліваньні»"
+msgstr "Простая тэкстура запаўнення шумам; рэгулюе колер у «Запаўненне»"
 
 #: ../build/share/filters/filters.svg.h:690
 msgid "Alpha Turbulent"
-msgstr ""
+msgstr "Турбулентнасць альфа"
 
 #: ../build/share/filters/filters.svg.h:694
 msgid "Colorize Turbulent"
-msgstr ""
+msgstr "Каляровая турбулентнасць"
 
 #: ../build/share/filters/filters.svg.h:698
 msgid "Cross Noise B"
-msgstr ""
+msgstr "Нерэгулярны шум Б"
 
 #: ../build/share/filters/filters.svg.h:700
 msgid "Adds a small scale crossy graininess"
-msgstr ""
+msgstr "Дадаць малога маштабу зярністасць"
 
 #: ../build/share/filters/filters.svg.h:702
 msgid "Cross Noise"
-msgstr ""
+msgstr "Нерэгулярны шум"
 
 #: ../build/share/filters/filters.svg.h:704
 msgid "Adds a small scale screen like graininess"
-msgstr ""
+msgstr "Дадаць малога маштабу зярністасць як на экране"
 
 #: ../build/share/filters/filters.svg.h:706
 msgid "Duotone Turbulent"
-msgstr ""
+msgstr "Двухтонавая турбулентнасць"
 
 #: ../build/share/filters/filters.svg.h:710
 msgid "Light Eraser Cracked"
-msgstr ""
+msgstr "Гумка асвятлення з трэшчынамі"
 
 #: ../build/share/filters/filters.svg.h:714
 msgid "Poster Turbulent"
-msgstr ""
+msgstr "Турбулентнасць плаката"
 
 #: ../build/share/filters/filters.svg.h:718
 msgid "Tartan Smart"
-msgstr ""
+msgstr "Палепшаная шатландка"
 
 #: ../build/share/filters/filters.svg.h:720
 msgid "Highly configurable checkered tartan pattern"
-msgstr ""
+msgstr "Клятчатая шатландка з магчымасцю канфігурацыі"
 
 #: ../build/share/filters/filters.svg.h:722
 msgid "Light Contour"
-msgstr ""
+msgstr "Светлы контур"
 
 #: ../build/share/filters/filters.svg.h:724
 msgid "Uses vertical specular light to draw lines"
-msgstr ""
+msgstr "Выкарыстоўваць вертыкальна адлюстраваны свет для малявання ліній"
 
 #: ../build/share/filters/filters.svg.h:726
 msgid "Liquid"
-msgstr "Вадкасьць"
+msgstr "Вадкасць"
 
 #: ../build/share/filters/filters.svg.h:728
 msgid "Colorizable filling with liquid transparency"
-msgstr "Зпаўненьне вадкай празрыстасьцю, прыдатнай да расфарбоўваньня"
+msgstr "Запаўненне празрыстасцю як у вадкасці"
 
 #: ../build/share/filters/filters.svg.h:730
 msgid "Aluminium"
-msgstr "Алюмінь"
+msgstr "Алюміній"
 
 #: ../build/share/filters/filters.svg.h:732
 msgid "Aluminium effect with sharp brushed reflections"
-msgstr ""
+msgstr "Эфект алюмінію з рэзка намалёванымі адлюстраваннем"
 
 #: ../build/share/filters/filters.svg.h:734
 msgid "Comics"
@@ -1921,40 +1929,40 @@ msgstr "Коміксы"
 
 #: ../build/share/filters/filters.svg.h:736
 msgid "Comics cartoon drawing effect"
-msgstr "Коміксавы эфект малявання мультфільмаў"
+msgstr "Эфект малявання комікса"
 
 #: ../build/share/filters/filters.svg.h:738
 msgid "Comics Draft"
-msgstr "Комікс Накід"
+msgstr "Чарнавік комікса"
 
 #: ../build/share/filters/filters.svg.h:740
 #: ../build/share/filters/filters.svg.h:772
 msgid "Draft painted cartoon shading with a glassy look"
-msgstr "Рэтушаваньне пад чарнавік комікса са шклопадобным выглядам"
+msgstr "Чарнавік намалёваных мультыплікацыйных ценяў, падобных на шкло"
 
 #: ../build/share/filters/filters.svg.h:742
 msgid "Comics Fading"
-msgstr "Комікс Згасанне"
+msgstr "Комікс са згасаннем"
 
 #: ../build/share/filters/filters.svg.h:744
 msgid "Cartoon paint style with some fading at the edges"
-msgstr "Коміксавы стыль рысаваньня крыху са зьнікненьнем па краях"
+msgstr "Стыль малявання мультыплікацыі з згасаннем па краях"
 
 #: ../build/share/filters/filters.svg.h:746
 msgid "Brushed Metal"
-msgstr ""
+msgstr "Ашліфаваны метал"
 
 #: ../build/share/filters/filters.svg.h:748
 msgid "Satiny metal surface effect"
-msgstr ""
+msgstr "Эфект атласнай металічнай паверхні"
 
 #: ../build/share/filters/filters.svg.h:750
 msgid "Opaline"
-msgstr ""
+msgstr "Апалін"
 
 #: ../build/share/filters/filters.svg.h:752
 msgid "Contouring version of smooth shader"
-msgstr "Контурная вэрсія гладкага рэтушаваньня"
+msgstr "Контурная версія гладкага шэйдара"
 
 #: ../build/share/filters/filters.svg.h:754
 msgid "Chrome"
@@ -1962,247 +1970,249 @@ msgstr "Хром"
 
 #: ../build/share/filters/filters.svg.h:756
 msgid "Bright chrome effect"
-msgstr ""
+msgstr "Яркі эфект хрому"
 
 #: ../build/share/filters/filters.svg.h:758
 msgid "Deep Chrome"
-msgstr ""
+msgstr "Насычаны хром"
 
 #: ../build/share/filters/filters.svg.h:760
 msgid "Dark chrome effect"
-msgstr ""
+msgstr "Эфект цёмнага хрому"
 
 #: ../build/share/filters/filters.svg.h:762
 msgid "Emboss Shader"
-msgstr ""
+msgstr "Шэйдар рэльефу"
 
 #: ../build/share/filters/filters.svg.h:764
 msgid "Combination of satiny and emboss effect"
-msgstr ""
+msgstr "Камбінацыя эфектаў атласа і рэльефу"
 
 #: ../build/share/filters/filters.svg.h:766
 msgid "Sharp Metal"
-msgstr ""
+msgstr "Востры метал"
 
 #: ../build/share/filters/filters.svg.h:768
 msgid "Chrome effect with darkened edges"
-msgstr ""
+msgstr "Эфект хрому з зацямнёнымі краямі"
 
 #: ../build/share/filters/filters.svg.h:770
 msgid "Brush Draw"
-msgstr ""
+msgstr "Маляванне пэндзлям"
 
 #: ../build/share/filters/filters.svg.h:774
 msgid "Chrome Emboss"
-msgstr ""
+msgstr "Рэльеф з хрому"
 
 #: ../build/share/filters/filters.svg.h:776
 msgid "Embossed chrome effect"
-msgstr ""
+msgstr "Рэльефны эфект хрому"
 
 #: ../build/share/filters/filters.svg.h:778
 msgid "Contour Emboss"
-msgstr ""
+msgstr "Контурны рэльеф"
 
 #: ../build/share/filters/filters.svg.h:780
 msgid "Satiny and embossed contour effect"
-msgstr ""
+msgstr "Эфект атласных і рэльефных контураў"
 
 #: ../build/share/filters/filters.svg.h:782
 msgid "Sharp Deco"
-msgstr ""
+msgstr "Рэзкі Дэко"
 
 #: ../build/share/filters/filters.svg.h:784
 msgid "Unrealistic reflections with sharp edges"
-msgstr ""
+msgstr "Нерэалістычнае адлюстраванне з рэзкімі краямі"
 
 #: ../build/share/filters/filters.svg.h:786
 msgid "Deep Metal"
-msgstr ""
+msgstr "Насычаны метал"
 
 #: ../build/share/filters/filters.svg.h:788
 msgid "Deep and dark metal shading"
-msgstr ""
+msgstr "Насычаныя і цёмныя металічныя цені"
 
 #: ../build/share/filters/filters.svg.h:790
 msgid "Aluminium Emboss"
-msgstr ""
+msgstr "Алюмініевы рэльеф"
 
 #: ../build/share/filters/filters.svg.h:792
 msgid "Satiny aluminium effect with embossing"
-msgstr ""
+msgstr "Атласны алюмініевы эфект з рэльефам"
 
 #: ../build/share/filters/filters.svg.h:794
 msgid "Refractive Glass"
-msgstr ""
+msgstr "Праламляльнае шкло"
 
 #: ../build/share/filters/filters.svg.h:796
 msgid "Double reflection through glass with some refraction"
-msgstr ""
+msgstr "Двайное адлюстраванне праз шкло з некаторай праламляльнасцю"
 
 #: ../build/share/filters/filters.svg.h:798
 msgid "Frosted Glass"
-msgstr ""
+msgstr "Матавае шкло"
 
 #: ../build/share/filters/filters.svg.h:800
 msgid "Satiny glass effect"
-msgstr ""
+msgstr "Эфект атласнага шкла"
 
 #: ../build/share/filters/filters.svg.h:802
 msgid "Bump Engraving"
-msgstr ""
+msgstr "Рэльеф гравіроўкі"
 
 #: ../build/share/filters/filters.svg.h:804
 msgid "Carving emboss effect"
-msgstr ""
+msgstr "Эфект выразанага рэльефу"
 
 #: ../build/share/filters/filters.svg.h:806
 msgid "Chromolitho Alternate"
-msgstr ""
+msgstr "Альтэрнатыўная хромалітаграфія"
 
 #: ../build/share/filters/filters.svg.h:808
 msgid "Old chromolithographic effect"
-msgstr ""
+msgstr "Стары эфект хромалітаграфіі"
 
 #: ../build/share/filters/filters.svg.h:810
 msgid "Convoluted Bump"
-msgstr ""
+msgstr "Заблытаны рэльеф"
 
 #: ../build/share/filters/filters.svg.h:812
 msgid "Convoluted emboss effect"
-msgstr ""
+msgstr "Эфект заблытанага рэльефу"
 
 #: ../build/share/filters/filters.svg.h:814
 msgid "Emergence"
-msgstr ""
+msgstr "З'яўленне"
 
 #: ../build/share/filters/filters.svg.h:816
 msgid "Cut out, add inner shadow and colorize some parts of an image"
 msgstr ""
+"Выразаць, дадаць унутраны цень і расфарбаваць некаторыя часткі відарыса"
 
 #: ../build/share/filters/filters.svg.h:818
 msgid "Litho"
-msgstr ""
+msgstr "Літаграфія"
 
 #: ../build/share/filters/filters.svg.h:820
 msgid "Create a two colors lithographic effect"
-msgstr ""
+msgstr "Стварыць двухкаляровы эфект літаграфіі"
 
 #: ../build/share/filters/filters.svg.h:822
 msgid "Paint Channels"
-msgstr ""
+msgstr "Маляваць каналы"
 
 #: ../build/share/filters/filters.svg.h:824
 msgid "Colorize separately the three color channels"
-msgstr ""
+msgstr "Расфарбаваць асобна тры каналы колераў"
 
 #: ../build/share/filters/filters.svg.h:826
 msgid "Posterized Light Eraser"
-msgstr ""
+msgstr "Гумка асвятлення колерамі як на плакаце"
 
 #: ../build/share/filters/filters.svg.h:828
 msgid "Create a semi transparent posterized image"
-msgstr ""
+msgstr "Стварыць паўпразрысты відарыс з колерамі плаката"
 
 #: ../build/share/filters/filters.svg.h:830
 msgid "Trichrome"
-msgstr ""
+msgstr "Трохкаляровы"
 
 #: ../build/share/filters/filters.svg.h:832
 msgid "Like Duochrome but with three colors"
-msgstr ""
+msgstr "Як «Двухкаляровы» але з трыма колерамі"
 
 #: ../build/share/filters/filters.svg.h:834
 msgid "Simulate CMY"
-msgstr ""
+msgstr "Імітаваць CMY"
 
 #: ../build/share/filters/filters.svg.h:836
 msgid "Render Cyan, Magenta and Yellow channels with a colorizable background"
 msgstr ""
+"Адмалёўка блакітнага, пурпурнага і жоўтага каналаў з расфарбаваным фонам"
 
 # варта пераправерыць усе пераклады гэтага пашыральніка, тое-сёе глядзеў на
 # вікіпэдыі
 #: ../build/share/filters/filters.svg.h:838
 msgid "Contouring Table"
-msgstr ""
+msgstr "Табліца контураў"
 
 #: ../build/share/filters/filters.svg.h:840
 msgid "Blurred multiple contours for objects"
-msgstr ""
+msgstr "Некалькі размытых контураў аб'ектаў"
 
 #: ../build/share/filters/filters.svg.h:842
 msgid "Posterized Blur"
-msgstr ""
+msgstr "Размытасць колерамі плаката"
 
 #: ../build/share/filters/filters.svg.h:844
 msgid "Converts blurred contour to posterized steps"
-msgstr ""
+msgstr "Ператварыць размытыя контуры ў крокі змянення колераў плаката"
 
 #: ../build/share/filters/filters.svg.h:846
 msgid "Contouring Discrete"
-msgstr ""
+msgstr "Дыскрэтныя контуры"
 
 #: ../build/share/filters/filters.svg.h:848
 msgid "Sharp multiple contour for objects"
-msgstr ""
+msgstr "Шматлікія вострыя контуры для аб'ектаў"
 
 #: ../build/share/markers/markers.svg.h:2
 msgid "Wide arrow"
-msgstr ""
+msgstr "Шырокая стрэлка"
 
 #: ../build/share/markers/markers.svg.h:3
 msgid "Wide, rounded arrow"
-msgstr ""
+msgstr "Шырокая, закругленая стрэлка"
 
 #: ../build/share/markers/markers.svg.h:4
 msgid "Wide, heavy arrow"
-msgstr ""
+msgstr "Шырокая, тоўстая стрэлка"
 
 #: ../build/share/markers/markers.svg.h:5
 msgid "Triangle arrow"
-msgstr ""
+msgstr "Трохвугольная стрэлка"
 
 #: ../build/share/markers/markers.svg.h:6
 msgid "Stylized triangle arrow"
-msgstr ""
+msgstr "Стылізаваная трохвугольная стрэлка"
 
 #: ../build/share/markers/markers.svg.h:7
 msgid "Colored triangle"
-msgstr ""
+msgstr "Каляровы трохвугольнікі"
 
 #: ../build/share/markers/markers.svg.h:8
 msgid "Dart arrow"
-msgstr ""
+msgstr "Стрэлка-дроцік"
 
 # варта пераправерыць усе пераклады гэтага пашыральніка, тое-сёе глядзеў на
 # вікіпэдыі
 #: ../build/share/markers/markers.svg.h:9
 msgid "Concave triangle arrow"
-msgstr ""
+msgstr "Увагнутая трохвугольная стрэлка"
 
 #: ../build/share/markers/markers.svg.h:10
 msgid "Rounded arrow"
-msgstr ""
+msgstr "Закругленая стрэлка"
 
 #: ../build/share/markers/markers.svg.h:11
 msgid "Sketched arrow"
-msgstr ""
+msgstr "Намалёваная стрэлка"
 
 #: ../build/share/markers/markers.svg.h:12
 msgid "Arrow tail"
-msgstr ""
+msgstr "Хвост стрэлкі"
 
 #: ../build/share/markers/markers.svg.h:13
 msgid "Distance start"
-msgstr ""
+msgstr "Пачатак вымярэння адлегласці"
 
 #: ../build/share/markers/markers.svg.h:14
 msgid "Distance end"
-msgstr ""
+msgstr "Канец вымярэння адлегласці"
 
 #: ../build/share/markers/markers.svg.h:15
 msgid "Dot"
-msgstr ""
+msgstr "Кропка"
 
 #: ../build/share/markers/markers.svg.h:16
 #: ../src/live_effects/lpe-jointype.cpp:52
@@ -2215,23 +2225,23 @@ msgstr "Квадрат"
 #: ../build/share/markers/markers.svg.h:17
 #: ../share/extensions/other/templates/template_shape_prefab.inx:13
 msgid "Diamond"
-msgstr ""
+msgstr "Ромб"
 
 #: ../build/share/markers/markers.svg.h:18
 msgid "Colored dot"
-msgstr ""
+msgstr "Каляровая кропка"
 
 #: ../build/share/markers/markers.svg.h:19
 msgid "Colored square"
-msgstr ""
+msgstr "Каляровы квадрат"
 
 #: ../build/share/markers/markers.svg.h:20
 msgid "Colored diamond"
-msgstr ""
+msgstr "Каляровы ромб"
 
 #: ../build/share/markers/markers.svg.h:21
 msgid "Stop"
-msgstr "Спыніць"
+msgstr "Стоп"
 
 #: ../build/share/markers/markers.svg.h:22
 #: ../src/extension/internal/filter/color.h:1326
@@ -2241,19 +2251,19 @@ msgstr "Спыніць"
 #: ../src/extension/internal/filter/color.h:1445
 #: ../src/extension/internal/filter/color.h:1448
 msgid "X"
-msgstr ""
+msgstr "X"
 
 #: ../build/share/markers/markers.svg.h:23
 msgid "Filled semicircle"
-msgstr ""
+msgstr "Запоўнены паўкруг"
 
 #: ../build/share/markers/markers.svg.h:24
 msgid "Empty semicircle"
-msgstr ""
+msgstr "Пусты паўкруг"
 
 #: ../build/share/markers/markers.svg.h:25
 msgid "Curvy cross"
-msgstr ""
+msgstr "Перасячэнне крывых"
 
 #: ../build/share/markers/markers.svg.h:26
 msgid "Scissors"
@@ -2261,50 +2271,50 @@ msgstr "Нажніцы"
 
 #: ../build/share/markers/markers.svg.h:27
 msgid "Club"
-msgstr ""
+msgstr "Трэфы"
 
 #: ../build/share/markers/markers.svg.h:28
 msgid "Razor wire"
-msgstr ""
+msgstr "Калючы дрот"
 
 #: ../build/share/markers/markers.svg.h:29
 msgid "Ellipsis"
-msgstr "Эліпсіс"
+msgstr "Кропкі"
 
 #: ../build/share/markers/markers.svg.h:30
 msgid "Torso"
-msgstr ""
+msgstr "Тулава"
 
 #: ../build/share/markers/markers.svg.h:31
 msgid "Legs"
-msgstr ""
+msgstr "Ногі"
 
 #: ../build/share/markers/markers.svg.h:32
 msgid "Red pin"
-msgstr ""
+msgstr "Чырвоная шпілька"
 
 #: ../build/share/markers/markers.svg.h:34
 msgid "Triangle cap"
-msgstr ""
+msgstr "Трохвугольная заглушка"
 
 #: ../build/share/markers/markers.svg.h:35
 msgid "Ribbon cap"
-msgstr ""
+msgstr "Заглушка стужкі"
 
 #: ../build/share/markers/markers.svg.h:36
 msgid "Ribbon cap, rounded"
-msgstr ""
+msgstr "Заглушка стужкі, закругленая"
 
 #. TRANSLATORS: Butt cap: the line shape does not extend beyond the end point
 #. of the line; the ends of the line are square
 #: ../build/share/markers/markers.svg.h:37
 #: ../src/ui/widget/stroke-style.cpp:386
 msgid "Butt cap"
-msgstr "Абрэзаныя"
+msgstr "Абрэзаная заглушка"
 
 #: ../build/share/markers/markers.svg.h:38
 msgid "Serif cap"
-msgstr ""
+msgstr "Заглушка з засечкай"
 
 #: ../build/share/palettes/palettes.h:2
 msgctxt "Palette"
@@ -2469,7 +2479,7 @@ msgstr "светла-шэры (#D3D3D3)"
 #: ../build/share/palettes/palettes.h:34
 msgctxt "Palette"
 msgid "gainsboro (#DCDCDC)"
-msgstr ""
+msgstr "гейнсбара (#DCDCDC)"
 
 #: ../build/share/palettes/palettes.h:35
 msgctxt "Palette"
@@ -3194,47 +3204,47 @@ msgstr ""
 #: ../build/share/palettes/palettes.h:179
 msgctxt "Palette"
 msgid "Plum 1"
-msgstr ""
+msgstr "Слівавы 1"
 
 #: ../build/share/palettes/palettes.h:180
 msgctxt "Palette"
 msgid "Plum 2"
-msgstr ""
+msgstr "Слівавы 2"
 
 #: ../build/share/palettes/palettes.h:181
 msgctxt "Palette"
 msgid "Plum 3"
-msgstr ""
+msgstr "Слівавы 3"
 
 #: ../build/share/palettes/palettes.h:182
 msgctxt "Palette"
 msgid "Chocolate 1"
-msgstr ""
+msgstr "Шакаладны 1"
 
 #: ../build/share/palettes/palettes.h:183
 msgctxt "Palette"
 msgid "Chocolate 2"
-msgstr ""
+msgstr "Шакаладны 2"
 
 #: ../build/share/palettes/palettes.h:184
 msgctxt "Palette"
 msgid "Chocolate 3"
-msgstr ""
+msgstr "Шакаладны 3"
 
 #: ../build/share/palettes/palettes.h:185
 msgctxt "Palette"
 msgid "Scarlet Red 1"
-msgstr ""
+msgstr "Ярка чырвоны 1"
 
 #: ../build/share/palettes/palettes.h:186
 msgctxt "Palette"
 msgid "Scarlet Red 2"
-msgstr ""
+msgstr "Ярка чырвоны 2"
 
 #: ../build/share/palettes/palettes.h:187
 msgctxt "Palette"
 msgid "Scarlet Red 3"
-msgstr ""
+msgstr "Ярка чырвоны 3"
 
 #: ../build/share/palettes/palettes.h:188
 msgctxt "Palette"
@@ -4543,12 +4553,12 @@ msgstr ""
 #: ../build/share/symbols/symbols.h:277 ../build/share/symbols/symbols.h:278
 msgctxt "Symbol"
 msgid "Store"
-msgstr ""
+msgstr "Крама"
 
 #: ../build/share/symbols/symbols.h:279 ../build/share/symbols/symbols.h:280
 msgctxt "Symbol"
 msgid "Swimming"
-msgstr ""
+msgstr "Плаванне"
 
 #: ../build/share/symbols/symbols.h:283 ../build/share/symbols/symbols.h:284
 msgctxt "Symbol"
@@ -5380,7 +5390,7 @@ msgstr ""
 #: ../build/share/symbols/symbols.h:613 ../build/share/symbols/symbols.h:625
 msgctxt "Symbol"
 msgid "Entrance"
-msgstr ""
+msgstr "Уваход"
 
 #: ../build/share/symbols/symbols.h:615 ../build/share/symbols/symbols.h:627
 msgctxt "Symbol"
@@ -6731,7 +6741,7 @@ msgstr ""
 
 #: ../src/actions/actions-base.cpp:209
 msgid "Debug Info"
-msgstr ""
+msgstr "Інфармацыя аб адладцы"
 
 #: ../src/actions/actions-base.cpp:209
 msgid "Print debugging information and exit"
@@ -6922,15 +6932,15 @@ msgstr ""
 
 #: ../src/actions/actions-canvas-mode.cpp:277
 msgid "Split Mode: Normal"
-msgstr ""
+msgstr "Рэжым раздзялення: Звычайны"
 
 #: ../src/actions/actions-canvas-mode.cpp:277
 msgid "Do not split canvas"
-msgstr ""
+msgstr "Не раздзяляць палатно"
 
 #: ../src/actions/actions-canvas-mode.cpp:278
 msgid "Split Mode: Split"
-msgstr ""
+msgstr "Рэжым раздзялення: Раздзяліць"
 
 #: ../src/actions/actions-canvas-mode.cpp:278
 msgid "Render part of the canvas in outline mode"
@@ -6938,7 +6948,7 @@ msgstr ""
 
 #: ../src/actions/actions-canvas-mode.cpp:279
 msgid "Split Mode: X-Ray"
-msgstr ""
+msgstr "Рэжым раздзялення: Рэнтген"
 
 #: ../src/actions/actions-canvas-mode.cpp:279
 msgid "Render a circular area in outline mode"
@@ -7202,31 +7212,31 @@ msgstr ""
 
 #: ../src/actions/actions-canvas-transform.cpp:269
 msgid "Zoom In"
-msgstr "Наблізіць"
+msgstr "Павялічыць"
 
 #: ../src/actions/actions-canvas-transform.cpp:269 ../share/ui/menus.ui:367
 msgid "Zoom in"
-msgstr "Набліжэньне"
+msgstr "Павялічыць"
 
 #: ../src/actions/actions-canvas-transform.cpp:270
 msgid "Zoom Out"
-msgstr "Аддаліць"
+msgstr "Паменшыць"
 
 #: ../src/actions/actions-canvas-transform.cpp:270 ../share/ui/menus.ui:372
 msgid "Zoom out"
-msgstr "Аддаленьне"
+msgstr "Паменшыць"
 
 #: ../src/actions/actions-canvas-transform.cpp:271
 msgid "Zoom 1:1"
-msgstr ""
+msgstr "Маштаб 1:1"
 
 #: ../src/actions/actions-canvas-transform.cpp:271 ../share/ui/menus.ui:379
 msgid "Zoom to 1:1"
-msgstr "Маштабаваньне 1:1"
+msgstr "Маштаб да 1:1"
 
 #: ../src/actions/actions-canvas-transform.cpp:272
 msgid "Zoom 1:2"
-msgstr ""
+msgstr "Маштаб 1:2"
 
 #: ../src/actions/actions-canvas-transform.cpp:272 ../share/ui/menus.ui:384
 msgid "Zoom to 1:2"
@@ -7234,143 +7244,143 @@ msgstr "Маштабаваньне 1:2"
 
 #: ../src/actions/actions-canvas-transform.cpp:273
 msgid "Zoom 2:1"
-msgstr ""
+msgstr "Маштаб 2:1"
 
 #: ../src/actions/actions-canvas-transform.cpp:273 ../share/ui/menus.ui:389
 msgid "Zoom to 2:1"
-msgstr "Маштабаваньне 2:1"
+msgstr "Маштаб да 2:1"
 
 #: ../src/actions/actions-canvas-transform.cpp:274 ../share/ui/menus.ui:396
 #: ../share/ui/statusbar.ui:13
 msgid "Zoom Selection"
-msgstr ""
+msgstr "Выбар маштабу"
 
 #: ../src/actions/actions-canvas-transform.cpp:274
 msgid "Zoom to fit selection in window"
-msgstr "Зьмяніць маштаб, каб вылучэньне цалкам зьмяшчалася ў вакне"
+msgstr "Маштабаваць вылучанае да памеру акна"
 
 #: ../src/actions/actions-canvas-transform.cpp:275 ../share/ui/menus.ui:401
 #: ../share/ui/statusbar.ui:18
 msgid "Zoom Drawing"
-msgstr ""
+msgstr "Маштабаваць малюнак"
 
 #: ../src/actions/actions-canvas-transform.cpp:275
 msgid "Zoom to fit drawing in window"
-msgstr "Зьмяніць маштаб, каб рысунак цалкам зьмяшчаўся ў вакне"
+msgstr "Маштабаваць малюнак да памеру акна"
 
 #: ../src/actions/actions-canvas-transform.cpp:276 ../share/ui/menus.ui:406
 #: ../share/ui/statusbar.ui:23
 msgid "Zoom Page"
-msgstr ""
+msgstr "Маштабаваць старонку"
 
 #: ../src/actions/actions-canvas-transform.cpp:276
 msgid "Zoom to fit page in window"
-msgstr "Такі маштаб, што старонка цалкам зьмяшчаецца ў вакне"
+msgstr "Маштабаваць старонку да памеру акна"
 
 #: ../src/actions/actions-canvas-transform.cpp:277 ../share/ui/menus.ui:411
 #: ../share/ui/statusbar.ui:28
 msgid "Zoom Page Width"
-msgstr ""
+msgstr "Маштабаваць шырыню старонкі"
 
 #: ../src/actions/actions-canvas-transform.cpp:277
 msgid "Zoom to fit page width in window"
-msgstr "Зьмяніць маштаб, каб старонка па шырыні цалкам зьмяшчалася ў вакне"
+msgstr "Маштабаваць шырыню старонкі да памеру акна"
 
 #: ../src/actions/actions-canvas-transform.cpp:278
 msgid "Zoom Center Page"
-msgstr ""
+msgstr "Маштабаваць цэнтр старонкі"
 
 #: ../src/actions/actions-canvas-transform.cpp:278
 msgid "Center page in window"
-msgstr ""
+msgstr "Цэнтраваць старонку ў акне"
 
 #: ../src/actions/actions-canvas-transform.cpp:279
 msgid "Zoom Prev"
-msgstr ""
+msgstr "Папярэдні маштаб"
 
 #: ../src/actions/actions-canvas-transform.cpp:279
 msgid "Go back to previous zoom (from the history of zooms)"
-msgstr ""
+msgstr "Вярнуцца назад да папярэдняга маштабу (з гісторыі маштабавання)"
 
 #: ../src/actions/actions-canvas-transform.cpp:280 ../share/ui/menus.ui:428
 msgid "Zoom Next"
-msgstr ""
+msgstr "Наступны маштаб"
 
 #: ../src/actions/actions-canvas-transform.cpp:280
 msgid "Go to next zoom (from the history of zooms)"
-msgstr ""
+msgstr "Перайсці да наступнага маштабу (з гісторыі маштабавання)"
 
 #: ../src/actions/actions-canvas-transform.cpp:282 ../share/ui/menus.ui:438
 msgid "Rotate Clockwise"
-msgstr ""
+msgstr "Павярнуць па гадзіннікавай стрэлцы"
 
 #: ../src/actions/actions-canvas-transform.cpp:282
 msgid "Rotate canvas clockwise"
-msgstr ""
+msgstr "Павярнуць палатно па гадзіннікавай стрэлцы"
 
 #: ../src/actions/actions-canvas-transform.cpp:283
 msgid "Rotate Counter-CW"
-msgstr ""
+msgstr "Павярнуць супраць гадзіннікавай стрэлцы"
 
 #: ../src/actions/actions-canvas-transform.cpp:283
 msgid "Rotate canvas counter-clockwise"
-msgstr ""
+msgstr "Павярнуць палатно супраць гадзіннікавай стрэлцы"
 
 #: ../src/actions/actions-canvas-transform.cpp:284 ../share/ui/menus.ui:446
 msgid "Reset Rotation"
-msgstr ""
+msgstr "Скінуць паварот"
 
 #: ../src/actions/actions-canvas-transform.cpp:284
 msgid "Reset canvas rotation"
-msgstr ""
+msgstr "Скінуць паварот палатна"
 
 #: ../src/actions/actions-canvas-transform.cpp:286
 msgid "Flip Horizontal"
-msgstr ""
+msgstr "Адлюстраваць гарызантальна"
 
 #: ../src/actions/actions-canvas-transform.cpp:286
 msgid "Flip canvas horizontally"
-msgstr ""
+msgstr "Адлюстраваць палатно гарызантальна"
 
 #: ../src/actions/actions-canvas-transform.cpp:287
 msgid "Flip Vertical"
-msgstr ""
+msgstr "Адлюстраваць вертыкальна"
 
 #: ../src/actions/actions-canvas-transform.cpp:287
 msgid "Flip canvas vertically"
-msgstr ""
+msgstr "Адлюстраваць палатно вертыкальна"
 
 #: ../src/actions/actions-canvas-transform.cpp:288 ../share/ui/menus.ui:464
 msgid "Reset Flipping"
-msgstr ""
+msgstr "Скінуць адлюстраванне"
 
 #: ../src/actions/actions-canvas-transform.cpp:288
 msgid "Reset canvas flipping"
-msgstr ""
+msgstr "Скінуць адлюстраванне палатна"
 
 #: ../src/actions/actions-canvas-transform.cpp:290
 msgid "Zoom Absolute"
-msgstr ""
+msgstr "Абсалютны маштаб"
 
 #: ../src/actions/actions-canvas-transform.cpp:290
 msgid "Zoom to an absolute value"
-msgstr ""
+msgstr "Маштабаваць да абсалютнага значэння"
 
 #: ../src/actions/actions-canvas-transform.cpp:291
 msgid "Zoom Relative"
-msgstr ""
+msgstr "Адносны маштаб"
 
 #: ../src/actions/actions-canvas-transform.cpp:291
 msgid "Zoom to by a relative amount"
-msgstr ""
+msgstr "Маштаб на адносную велічыню"
 
 #: ../src/actions/actions-canvas-transform.cpp:293
 msgid "Rotate Absolute (Radians)"
-msgstr ""
+msgstr "Павярнуць абсалютна (Радыяны)"
 
 #: ../src/actions/actions-canvas-transform.cpp:293
 msgid "Rotate to an absolute value (Radians)"
-msgstr ""
+msgstr "Павярнуць да абсалютнага значэння (Радыяны)"
 
 #: ../src/actions/actions-canvas-transform.cpp:294
 msgid "Rotate Relative (Radians)"
@@ -9828,7 +9838,7 @@ msgstr ""
 #: ../src/actions/actions-selection-object.cpp:152
 #: ../src/selection-chemistry.cpp:958
 msgid "Ungroup"
-msgstr "Разґрупаваць"
+msgstr "Разгрупаваць"
 
 #: ../src/actions/actions-selection-object.cpp:73
 #: ../src/ui/dialog/object-attributes.cpp:345
@@ -10725,7 +10735,7 @@ msgstr ""
 #: ../src/ui/dialog/transformation.cpp:800
 #: ../share/extensions/interp_att_g.inx:10
 msgid "Scale"
-msgstr "Зьмена памеру"
+msgstr "Маштаб"
 
 #: ../src/actions/actions-transform.cpp:133
 msgid "Scale selected objects by scale factor"
@@ -11604,11 +11614,11 @@ msgstr "Раўнамерны шум"
 
 #: ../src/extension/internal/bitmap/addNoise.cpp:51
 msgid "Gaussian Noise"
-msgstr "Ґаўсаўскі шум"
+msgstr "Шум Гаўса"
 
 #: ../src/extension/internal/bitmap/addNoise.cpp:52
 msgid "Multiplicative Gaussian Noise"
-msgstr "Мультыплікатыўны ґаўсаўскі шум"
+msgstr "Мультыплікатыўны шум Гаўса"
 
 #: ../src/extension/internal/bitmap/addNoise.cpp:53
 msgid "Impulse Noise"
@@ -11616,15 +11626,15 @@ msgstr "Імпульсны шум"
 
 #: ../src/extension/internal/bitmap/addNoise.cpp:54
 msgid "Laplacian Noise"
-msgstr "Ляплясаўскі шум"
+msgstr "Шум Лапласа"
 
 #: ../src/extension/internal/bitmap/addNoise.cpp:55
 msgid "Poisson Noise"
-msgstr "Пуасонаўскі шум"
+msgstr "Шум Пуасона"
 
 #: ../src/extension/internal/bitmap/addNoise.cpp:62
 msgid "Add random noise to selected bitmap(s)"
-msgstr ""
+msgstr "Дадаць выпадковы шум да выбраных растравых відарысаў"
 
 #: ../src/extension/internal/bitmap/blur.cpp:40
 #: ../src/extension/internal/filter/blurs.h:56
@@ -11983,7 +11993,7 @@ msgstr ""
 
 #: ../src/extension/internal/bitmap/reduceNoise.cpp:42
 msgid "Reduce Noise"
-msgstr "Зьменшыць шум"
+msgstr "Зменшыць шум"
 
 #. TRANSLATORS: Paint order determines the order the 'fill', 'stroke', and
 #. 'markers are painted.
@@ -12849,7 +12859,7 @@ msgstr "Вышыня"
 #: ../src/ui/widget/color-scales.cpp:724 ../src/ui/widget/color-scales.cpp:725
 #: ../src/ui/widget/color-scales.cpp:764 ../src/ui/widget/color-scales.cpp:765
 msgid "Lightness"
-msgstr "Сьветласьць"
+msgstr "Асвятленне"
 
 #: ../src/extension/internal/filter/bumps.h:102
 #: ../src/extension/internal/filter/bumps.h:337
@@ -13281,7 +13291,7 @@ msgstr ""
 
 #: ../src/extension/internal/filter/color.h:933
 msgid "Greyscale"
-msgstr ""
+msgstr "Градацыі шэрага"
 
 #: ../src/extension/internal/filter/color.h:939
 #: ../src/extension/internal/filter/paint.h:85
@@ -13328,7 +13338,7 @@ msgstr "Інвертаваць адценне"
 
 #: ../src/extension/internal/filter/color.h:1034
 msgid "Invert lightness"
-msgstr ""
+msgstr "Інвертаваць асветленасць"
 
 #: ../src/extension/internal/filter/color.h:1035
 msgid "Invert transparency"
@@ -13352,7 +13362,7 @@ msgstr ""
 
 #: ../src/extension/internal/filter/color.h:1238
 msgid "Lightness-Contrast"
-msgstr "Сьветласьць і кантраст"
+msgstr "Асветленасць-кантраст"
 
 #: ../src/extension/internal/filter/color.h:1249
 msgid "Modify lightness and contrast separately"
@@ -13472,7 +13482,7 @@ msgstr ""
 #: ../src/ui/widget/color-scales.cpp:715 ../src/ui/widget/color-scales.cpp:716
 #: ../src/ui/widget/color-scales.cpp:755 ../src/ui/widget/color-scales.cpp:756
 msgid "Hue"
-msgstr "Адценьне"
+msgstr "Адценне"
 
 #: ../src/extension/internal/filter/color.h:1661
 msgid "Simple blend filter"
@@ -13580,7 +13590,7 @@ msgstr ""
 #: ../src/extension/internal/filter/overlays.h:63
 #: ../src/extension/internal/filter/paint.h:714
 msgid "Fractal noise"
-msgstr ""
+msgstr "Фрактальны шум"
 
 #: ../src/extension/internal/filter/distort.h:87
 #: ../src/extension/internal/filter/distort.h:200
@@ -13815,7 +13825,7 @@ msgstr ""
 
 #: ../src/extension/internal/filter/overlays.h:58
 msgid "Noise Fill"
-msgstr ""
+msgstr "Запаўненне шумам"
 
 #: ../src/extension/internal/filter/overlays.h:61
 #: ../src/extension/internal/filter/paint.h:712
@@ -13883,11 +13893,11 @@ msgstr ""
 
 #: ../src/extension/internal/filter/overlays.h:74
 msgid "Noise color"
-msgstr ""
+msgstr "Колер шума"
 
 #: ../src/extension/internal/filter/overlays.h:85
 msgid "Basic noise fill and transparency texture"
-msgstr ""
+msgstr "Простая празрыстая тэкстура шуму"
 
 #: ../src/extension/internal/filter/paint.h:73
 msgid "Chromolitho"
@@ -13909,7 +13919,7 @@ msgstr ""
 #: ../src/extension/internal/filter/paint.h:90
 #: ../src/extension/internal/filter/paint.h:721
 msgid "Noise reduction"
-msgstr ""
+msgstr "Шумападаўленне"
 
 #: ../src/extension/internal/filter/paint.h:93
 msgid "Grain"
@@ -14034,6 +14044,8 @@ msgstr ""
 #: ../src/extension/internal/filter/paint.h:623
 msgid "Posterize and draw smooth lines around color shapes"
 msgstr ""
+"Зрабіць эфект колераў плаката і намаляваць згладжаныя лінія вакол каляровых "
+"фігур"
 
 #: ../src/extension/internal/filter/paint.h:709
 msgid "Point Engraving"
@@ -14041,7 +14053,7 @@ msgstr ""
 
 #: ../src/extension/internal/filter/paint.h:722
 msgid "Noise blend:"
-msgstr ""
+msgstr "Змешванне шуму:"
 
 #: ../src/extension/internal/filter/paint.h:730
 msgid "Grain lightness"
@@ -14061,7 +14073,7 @@ msgstr ""
 
 #: ../src/extension/internal/filter/paint.h:876
 msgid "Poster Paint"
-msgstr ""
+msgstr "Маляванне плаката"
 
 #: ../src/extension/internal/filter/paint.h:882
 msgid "Transfer type:"
@@ -14069,7 +14081,7 @@ msgstr ""
 
 #: ../src/extension/internal/filter/paint.h:883
 msgid "Poster"
-msgstr ""
+msgstr "Плакат"
 
 #: ../src/extension/internal/filter/paint.h:884
 msgid "Painting"
@@ -14097,15 +14109,15 @@ msgstr ""
 
 #: ../src/extension/internal/filter/paint.h:906
 msgid "Poster and painting effects"
-msgstr ""
+msgstr "Эфекты плаката і малявання"
 
 #: ../src/extension/internal/filter/paint.h:1003
 msgid "Posterize Basic"
-msgstr ""
+msgstr "Базавы эфект колеру плаката"
 
 #: ../src/extension/internal/filter/paint.h:1014
 msgid "Simple posterizing effect"
-msgstr ""
+msgstr "Просты эфект колераў плаката"
 
 #: ../src/extension/internal/filter/protrusions.h:50
 msgid "Snow Crest"
@@ -14263,7 +14275,7 @@ msgstr ""
 
 #: ../src/extension/internal/filter/transparency.h:215
 msgid "Light Eraser"
-msgstr ""
+msgstr "Гумка асвятлення"
 
 #: ../src/extension/internal/filter/transparency.h:219
 #: ../src/extension/internal/filter/transparency.h:297
@@ -15661,7 +15673,7 @@ msgstr "Мапа зрушэньня"
 
 #: ../src/filter-enums.cpp:30
 msgid "Flood"
-msgstr "Заліваньне"
+msgstr "Запаўненне"
 
 #: ../src/filter-enums.cpp:33 ../share/extensions/text_merge.inx:3
 msgid "Merge"
@@ -16977,7 +16989,7 @@ msgstr ""
 #: ../src/live_effects/effect.cpp:855
 msgctxt "path effect"
 msgid "Path length"
-msgstr ""
+msgstr "Даўжыня контуру"
 
 #: ../src/live_effects/effect.cpp:858
 msgid "Display the total length of a (curved) path"
@@ -17028,7 +17040,7 @@ msgstr ""
 
 #: ../src/live_effects/effect.cpp:1144
 msgid "LPE version"
-msgstr ""
+msgstr "Версія LPE"
 
 #: ../src/live_effects/effect.cpp:1177
 msgid "No effect"
@@ -17080,7 +17092,7 @@ msgstr ""
 
 #: ../src/live_effects/lpe-attach-path.cpp:26
 msgid "Start path:"
-msgstr ""
+msgstr "Пачатковы контур:"
 
 #: ../src/live_effects/lpe-attach-path.cpp:26
 msgid "Path to attach to the start of this path"
@@ -17304,7 +17316,7 @@ msgstr ""
 
 #: ../src/live_effects/lpe-bspline.cpp:33
 msgid "Helper size"
-msgstr ""
+msgstr "Дапаможныя памеры"
 
 #: ../src/live_effects/lpe-bspline.cpp:34
 msgid "Apply changes if weight = 0%"
@@ -17565,7 +17577,7 @@ msgstr ""
 #: ../src/live_effects/lpe-copy_rotate.cpp:69
 #: ../src/live_effects/lpe-mirror_symmetry.cpp:72
 msgid "Link styles on split mode"
-msgstr ""
+msgstr "Стылі спасылак у рэжыме раздзялення"
 
 #: ../src/live_effects/lpe-curvestitch.cpp:37
 msgid "Stitch path:"
@@ -20486,6 +20498,8 @@ msgstr ""
 #: ../src/live_effects/lpe-tiling.cpp:110
 msgid "Link styles in split mode, can also be used to reset style of copies"
 msgstr ""
+"Стылі спасылак у рэжыме раздзялення, таксама могуць быць выкарыстаны для "
+"скіду стылю копій"
 
 #: ../src/live_effects/lpe-tiling.cpp:111
 msgid "Random gaps X"
@@ -21790,7 +21804,7 @@ msgstr "Вылучы <b>абʼект(ы)</b> для падвойваньня."
 #: ../src/selection-chemistry.cpp:607
 #, c-format
 msgid "%s copy"
-msgstr "копія %s"
+msgstr "Копія %s"
 
 #: ../src/selection-chemistry.cpp:633
 msgid "Delete all"
@@ -22004,7 +22018,7 @@ msgstr "Пасунуць па гарызанталі"
 #: ../src/selection-chemistry.cpp:2399 ../src/selection-chemistry.cpp:2444
 #: ../src/seltrans.cpp:489 ../src/ui/dialog/transformation.cpp:738
 msgid "Move"
-msgstr "Пасунуць"
+msgstr "Перамясціць"
 
 #: ../src/selection-chemistry.cpp:2440
 msgid "Move vertically by pixels"
@@ -23855,7 +23869,7 @@ msgstr ""
 #: ../share/extensions/jessyink_transitions.inx:6
 #: ../share/extensions/jessyink_view.inx:6
 msgid "Settings"
-msgstr "Настройкі"
+msgstr "Налады"
 
 #: ../src/ui/dialog/dialog-data.h:38
 msgid "Diagnostic"
@@ -24706,7 +24720,7 @@ msgstr ""
 
 #: ../src/ui/dialog/filter-effects-dialog.cpp:1068
 msgid "Exponent"
-msgstr ""
+msgstr "Паказчык ступені"
 
 #: ../src/ui/dialog/filter-effects-dialog.cpp:1072
 #: ../src/ui/dialog/filter-effects-dialog.cpp:1075
@@ -29433,9 +29447,10 @@ msgid ""
 "closest transformation (when set to 0), or prefer the node that was "
 "initially the closest to the pointer (when set to 1)"
 msgstr ""
-"Калі ёсьць некалькі спосабаў прыцягваньня, то Inkscape можа або аддаць "
-"перавагу найбліжэйшаму ператварэньню (зададзены 0), або аддаць перавагу "
-"вузлу, які з самага пачатку быў найбліжэйшы да курсора (зададзеная 1)"
+"Калі знойдзена некалькі спосабаў прывязкі, тады Inkscape можа або аддаць "
+"перавагу найбліжэйшаму пераўтварэнню (калі зададзена 0), або аддаць перавагу"
+" вузлу, які з самага пачатку быў найбліжэйшы да ўказальніка (калі зададзена "
+"1)"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2638
 msgid "Snap the mouse pointer when dragging a constrained knot"
@@ -33482,7 +33497,7 @@ msgstr "(гладкая лінія)"
 #: ../src/ui/toolbar/calligraphy-toolbar.cpp:247
 #: ../src/ui/toolbar/eraser-toolbar.cpp:161
 msgid "(slight tremor)"
-msgstr "(нязначнае дрыжэньне)"
+msgstr "(нязначнае дрыжэнне)"
 
 #: ../src/ui/toolbar/calligraphy-toolbar.cpp:247
 #: ../src/ui/toolbar/eraser-toolbar.cpp:161
@@ -36032,11 +36047,11 @@ msgstr ""
 
 #: ../src/ui/tools/flood-tool.cpp:1013 ../src/ui/tools/flood-tool.cpp:1138
 msgid "Fill bounded area"
-msgstr "Запоўніць абмежаваную вобласьць"
+msgstr "Запоўніць абмежаваную вобласць"
 
 #: ../src/ui/tools/flood-tool.cpp:1030
 msgid "Set style on object"
-msgstr "Задаць стыль абʼекта"
+msgstr "Задаць стыль аб'екта"
 
 #: ../src/ui/tools/flood-tool.cpp:1070
 msgid "<b>Draw over</b> areas to add to fill, hold <b>Alt</b> for touch fill"
@@ -37163,7 +37178,7 @@ msgstr ""
 
 #: ../src/ui/widget/desktop-widget.cpp:318
 msgid "grayscale"
-msgstr ""
+msgstr "градацыі шэрага"
 
 #: ../src/ui/widget/desktop-widget.cpp:320
 msgid "print colors preview"
@@ -38026,7 +38041,7 @@ msgstr ""
 #: ../src/ui/widget/selected-style.cpp:70
 #: ../src/ui/widget/selected-style.cpp:71
 msgid "N/A"
-msgstr "Н/Н"
+msgstr "Н/Д"
 
 #: ../src/ui/widget/selected-style.cpp:72
 msgctxt "Fill"
@@ -38141,7 +38156,7 @@ msgstr ""
 #: ../src/ui/widget/selected-style.cpp:144
 #: ../src/ui/widget/style-swatch.cpp:100
 msgid "Fill:"
-msgstr "Нутро:"
+msgstr "Запаўненне:"
 
 #: ../src/ui/widget/selected-style.cpp:216
 msgid "O:"
@@ -39908,7 +39923,7 @@ msgstr ""
 #: ../share/extensions/color_grayscale.inx:3
 #: ../share/extensions/webslicer_create_rect.inx:27
 msgid "Grayscale"
-msgstr "Адценьні шэрага"
+msgstr "Градацыі шэрага"
 
 #: ../share/ui/inkscape-start.glade:220
 msgid "Classic Symbolic"
@@ -40598,7 +40613,7 @@ msgstr ""
 
 #: ../share/ui/menus.ui:510
 msgid "_Split Mode"
-msgstr ""
+msgstr "Рэжым па_дзелу"
 
 #: ../share/ui/menus.ui:518
 msgid "Split"
@@ -40610,7 +40625,7 @@ msgstr ""
 
 #: ../share/ui/menus.ui:531
 msgid "Gray Scale"
-msgstr ""
+msgstr "Градацыі шэрага"
 
 #: ../share/ui/menus.ui:535
 msgid "Color Management"
@@ -42320,7 +42335,7 @@ msgstr ""
 
 #: ../share/extensions/color_hsl_adjust.inx:14
 msgid "Lightness (%)"
-msgstr ""
+msgstr "Асвятленне (%)"
 
 #: ../share/extensions/color_hsl_adjust.inx:14
 msgid "add/subtract percentage to/from lightness (min=-100, max=100)."
@@ -42328,7 +42343,7 @@ msgstr ""
 
 #: ../share/extensions/color_hsl_adjust.inx:15
 msgid "Random lightness"
-msgstr ""
+msgstr "Выпадковае асвятленне"
 
 #: ../share/extensions/color_hsl_adjust.inx:18
 msgid ""
@@ -42379,7 +42394,7 @@ msgstr ""
 
 #: ../share/extensions/color_randomize.inx:9
 msgid "Lightness range (%)"
-msgstr ""
+msgstr "Дыяпазон асветленасці (%)"
 
 #: ../share/extensions/color_randomize.inx:10
 msgid "Opacity range (%)"
@@ -42951,7 +42966,7 @@ msgstr ""
 
 #: ../share/extensions/dxf_outlines.inx:30
 msgid "All (default)"
-msgstr ""
+msgstr "Усе (прадвызначана)"
 
 #: ../share/extensions/dxf_outlines.inx:31
 msgid "Visible only"
