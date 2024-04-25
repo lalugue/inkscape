@@ -1896,6 +1896,14 @@ void Canvas::paint_widget(Cairo::RefPtr<Cairo::Context> const &cr)
         return;
     }
 
+    // If launch_redraw() has been scheduled but not yet called, call it now so there's no
+    // possibility of it getting blocked indefinitely by a busy idle loop.
+    if (d->schedule_redraw_conn.connected()) {
+        // Note: This also works around the bug https://gitlab.com/inkscape/inkscape/-/issues/4696.
+        d->launch_redraw();
+        d->schedule_redraw_conn.disconnect();
+    }
+
     // Commit pending tiles in case GTK called on_draw even though after_redraw() is scheduled at higher priority.
     if (!d->redraw_active) {
         d->commit_tiles();
