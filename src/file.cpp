@@ -775,11 +775,9 @@ void sp_import_document(SPDesktop *desktop, SPDocument *clipdoc, bool in_place, 
             m.setup(desktop);
             desktop->getTool()->discard_delayed_snap_event();
 
-            // get offset from mouse pointer to bbox center, snap to grid if enabled
-            Geom::Point mouse_offset = desktop->point() - sel_bbox->midpoint();
+            // Get offset from mouse pointer rounded to the pixel to bbox center, snap to grid if enabled
+            Geom::Point mouse_offset = (desktop->point() - sel_bbox->midpoint()).round();
             offset = m.multipleOfGridPitch(mouse_offset - offset, sel_bbox->midpoint() + offset) + offset;
-            // Integer align for mouse pasting
-            offset = offset.round();
             m.unSetup();
         } else if (on_page && from_page && to_page) {
             // Moving to the same location on a different page requires us to remove the original page translation
