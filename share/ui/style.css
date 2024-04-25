@@ -1192,7 +1192,7 @@ popover.menu.menuize > stack > box > modelbutton:first-child > * /* Affect child
     opacity: 0.55;
 }
 
-/* darker background for extensions gallery due to fixed-color thumbnails (white background + drop shadow) */
+/* darker background for extension gallery due to fixed-color thumbnails (white background + drop shadow) */
 .darker-background {
     background-image: image(alpha(#000, 0.05));
 }

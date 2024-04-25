@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 /** @file
- * @brief Extensions gallery
+ * @brief Extension gallery
  */
 /* Authors:
  *   Mike Kowalski
