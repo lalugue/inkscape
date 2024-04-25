@@ -2072,7 +2072,7 @@ bool ObjectsPanel::selectCursorItem(Gdk::ModifierType const state)
             layers.setCurrentLayer(item, true);
         } else {
             // Just Click
-            if (layers.currentLayer() == item) {
+            if (layers.currentLayer() == item || group) {
                 layers.setCurrentLayer(item->parent);
             }
 
