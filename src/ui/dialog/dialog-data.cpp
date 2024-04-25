@@ -33,7 +33,7 @@ std::map<std::string, DialogData> const &get_dialog_data()
     {"DocumentProperties", {_("_Document Properties"),  INKSCAPE_ICON("document-properties"),         DialogData::Settings,       ScrollProvider::PROVIDE }},
     {"DocumentResources",  {_("_Document Resources"),   INKSCAPE_ICON("document-resources"),          DialogData::Advanced,       ScrollProvider::NOPROVIDE }},
     {"Export",             {_("_Export"),               INKSCAPE_ICON("document-export"),             DialogData::Basic,          ScrollProvider::PROVIDE   }},
-    {"ExtensionsGallery",  {_("_Extensions Gallery"),   INKSCAPE_ICON("dialog-extensions"),           DialogData::Basic,          ScrollProvider::NOPROVIDE }},
+    {"ExtensionsGallery",  {_("_Extension Gallery"),   INKSCAPE_ICON("dialog-extensions"),           DialogData::Basic,          ScrollProvider::NOPROVIDE }},
     {"FillStroke",         {_("_Fill and Stroke"),      INKSCAPE_ICON("dialog-fill-and-stroke"),      DialogData::Basic,          ScrollProvider::NOPROVIDE }},
     {"FilterEffects",      {_("Filter _Editor"),        INKSCAPE_ICON("dialog-filters"),              DialogData::Advanced,       ScrollProvider::NOPROVIDE }},
     {"FilterGallery",      {_("Filter Gallery"),        INKSCAPE_ICON("color-filters"),               DialogData::Advanced,       ScrollProvider::NOPROVIDE }},
