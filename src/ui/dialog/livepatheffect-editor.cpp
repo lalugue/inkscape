@@ -793,7 +793,7 @@ LivePathEffectEditor::effect_list_reload(SPLPEItem *lpeitem)
         }, false); // before
 
         // Add actions used by LPEEffectMenuButton
-        add_item_actions(lperef, untranslated_label, *LPEEffect,
+        add_item_actions(lperef, untranslated_label, get_widget<Gtk::MenuButton>(builder, "LPEEffectMenuButton"),
                          counter == 0, counter == total - 1);
 
         if (total > 1) {
