@@ -1896,7 +1896,7 @@ bool ObjectsPanel::selectCursorItem(unsigned int state)
             // Clicking off a group (second click) will enter the group
             layers.setCurrentLayer(item, true);
         } else {
-            if (layers.currentLayer() == item) {
+            if (layers.currentLayer() == item || group) {
                 layers.setCurrentLayer(item->parent);
             }
             selection->set(item);
