@@ -14,6 +14,7 @@
 #include <stack>
 #include <utility>
 #include <vector>
+#include <memory>
 
 #include <gtkmm/box.h>
 
@@ -65,7 +66,7 @@ private:
         std::stack<std::pair<Gtk::Widget *, Gtk::Widget *>> toolbar_children;
     };
 
-    std::vector<ToolbarMenuButton *> _menu_btns;
+    std::vector<std::unique_ptr<ToolbarMenuButton>> _menu_btns;
     std::stack<int> _size_needed;
     int _active_mb_index = -1;
     bool _resizing = false;

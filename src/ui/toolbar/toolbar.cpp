@@ -17,7 +17,6 @@
 #include <gtkmm/menubutton.h>
 #include <gtkmm/popover.h>
 #include <map>
-#include <vector>
 
 #include "ui/util.h"
 
@@ -134,9 +133,9 @@ void Toolbar::insert_menu_btn(const int priority, int group_size,
 
     // Add this menu button to the _menu_btns vector.
     std::stack<std::pair<Gtk::Widget *, Gtk::Widget *>> popover_children;
-    ToolbarMenuButton *mb_ptr =
-        new ToolbarMenuButton(priority, group_size, menu_btn, std::move(popover_children), std::move(toolbar_children));
-    _menu_btns.push_back(mb_ptr);
+    auto mb_ptr =
+        std::make_unique<ToolbarMenuButton>(priority, group_size, menu_btn, std::move(popover_children), std::move(toolbar_children));
+    _menu_btns.push_back(std::move(mb_ptr));
 }
 
 void Toolbar::measure_vfunc(Gtk::Orientation orientation, int for_size, int &min, int &nat, int &min_baseline, int &nat_baseline) const
@@ -191,7 +190,7 @@ void Toolbar::_resize_handler(int width, int height)
             }
 
             // Now, move the toolbar_children of this menu button to the popover.
-            auto mb = _menu_btns[_active_mb_index];
+            auto mb = _menu_btns[_active_mb_index].get();
             auto popover_box = dynamic_cast<Gtk::Box *>(mb->menu_btn->get_popover()->get_child());
             _move_children(_toolbar, popover_box, mb->toolbar_children, mb->popover_children, mb->group_size);
             mb->menu_btn->set_visible(true);
@@ -229,7 +228,7 @@ void Toolbar::_resize_handler(int width, int height)
                 }
             }
 
-            auto mb = _menu_btns[_active_mb_index];
+            auto mb = _menu_btns[_active_mb_index].get();
 
             // See if we have enough space to expand the topmost collapsed button.
             int req_size = min_size + _size_needed.top();
