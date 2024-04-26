@@ -1434,13 +1434,17 @@ void DocumentProperties::add_grid_widget(SPGrid *grid, bool select)
 void DocumentProperties::remove_grid_widget(XML::Node &node)
 {
     // The SPObject is already gone, so we're working from the xml node directly.
-    for (auto const child : UI::get_children(_grids_notebook)) {
-        if (auto widget = dynamic_cast<Inkscape::UI::Widget::GridWidget *>(child)) {
+    auto widget_to_remove = for_each_page(_grids_notebook, [&node](auto& page) {
+        if (auto widget = dynamic_cast<Inkscape::UI::Widget::GridWidget *>(&page)) {
             if (&node == widget->getGridRepr()) {
-                _grids_notebook.remove_page(*child);
-                break;
+                return ForEachResult::_break;
             }
         }
+        return ForEachResult::_continue;
+    });
+
+    if (widget_to_remove) {
+        _grids_notebook.remove_page(*widget_to_remove);
     }
 
     _grids_button_remove.set_sensitive(_grids_notebook.get_n_pages() > 0);
