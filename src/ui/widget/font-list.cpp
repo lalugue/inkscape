@@ -149,7 +149,7 @@ void get_cell_data_func(Gtk::CellRenderer* cell_renderer, Gtk::TreeModel::Row ro
 
     auto name = Glib::Markup::escape_text(present ? get_full_name(font) : get_alt_name(alt));
     // if no sample text given, then render font name
-    auto text = renderer._sample_text.empty() ? name : renderer._sample_text;
+    auto text = Glib::Markup::escape_text(renderer._sample_text.empty() ? name : renderer._sample_text);
 
     auto font_size = renderer._font_size / 100.0 * ui_font_size;
     // font percent size and point size is only supported by Pango >= 1.50
