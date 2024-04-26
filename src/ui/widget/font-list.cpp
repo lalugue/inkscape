@@ -155,7 +155,7 @@ void get_cell_data_func(Gtk::CellRenderer* cell_renderer, Gtk::TreeModel::ConstR
 
     auto name = Glib::Markup::escape_text(present ? get_full_name(font) : get_alt_name(alt));
     // if no sample text given, then render font name
-    auto text = renderer._sample_text.empty() ? name : renderer._sample_text;
+    auto text = Glib::Markup::escape_text(renderer._sample_text.empty() ? name : renderer._sample_text);
 
     auto font_desc = Glib::Markup::escape_text(
         present ? Inkscape::get_font_description(font.ff, font.face).to_string() : (alt.empty() ? "sans-serif" : alt));
