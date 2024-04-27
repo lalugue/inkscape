@@ -1836,7 +1836,7 @@ GridWidget::GridWidget(SPGrid *grid)
     // TRANSLATORS: Axonometric grid looks like a pattern of parallelograms. Their width to height proportions
     // can be manipulated by changing angles in the axonometric grid. This DX/DY ratio does just that.
     // Pressing "Set" button will calculate grid angles to produce parallelograms with requested widh to height ratio.
-    apply->set_tooltip_text(_("Set grid angles to make grid parallelograms width to height\nproportion match given aspect ratio"));
+    apply->set_tooltip_text(_("Automatically calculate angles from width to height ratio\nof a single grid parallelogram"));
     apply->signal_clicked().connect([=, this](){
         auto text = _aspect_ratio->get_text();
         try {
