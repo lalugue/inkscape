@@ -124,7 +124,7 @@ CanvasItemCtrlShape parse_shape(CRTerm const *term)
     auto const str = get_string(term);
     auto const it = ctrl_shape_map.find(str);
     if (it == ctrl_shape_map.end()) {
-        throw Exception{Glib::ustring::compose(_("Unrecognized shape %1"), str)};
+        throw Exception{Glib::ustring::compose(_("Unrecognized shape '%1'"), str)};
     }
     return it->second;
 }
