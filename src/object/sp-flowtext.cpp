@@ -12,7 +12,6 @@
 
 #include <glibmm/i18n.h>
 #include <cstring>
-#include <string>
 
 #include "attributes.h"
 #include "desktop-style.h"
@@ -338,10 +337,8 @@ void SPFlowtext::hide(unsigned key)
     }
 }
 
-/*
- *
- */
-void SPFlowtext::_buildLayoutInput(SPObject *root, Shape const *exclusion_shape, std::list<Shape> *shapes, SPObject **pending_line_break_object)
+void SPFlowtext::_buildLayoutInput(SPObject *root, std::unique_ptr<Shape> exclusion_shape,
+                                   SPObject **pending_line_break_object)
 {
     Inkscape::Text::Layout::OptionalTextTagAttrs pi;
     bool with_indent = false;
@@ -414,22 +411,20 @@ void SPFlowtext::_buildLayoutInput(SPObject *root, Shape const *exclusion_shape,
                 layout.appendText(str->string, root->style, &child);
             }
         } else {
-            auto region = cast<SPFlowregion>(&child);
-            if (region) {
-                std::vector<Shape*> const &computed = region->computed;
-                for (auto it : computed) {
-                    shapes->push_back(Shape());
+            if (auto region = cast<SPFlowregion>(&child)) {
+                for (auto &it : region->computed) {
+                    auto shape = std::make_unique<Shape>();
                     if (exclusion_shape->hasEdges()) {
-                        shapes->back().Booleen(it, const_cast<Shape*>(exclusion_shape), bool_op_diff);
+                        shape->Booleen(it.get(), exclusion_shape.get(), bool_op_diff);
                     } else {
-                        shapes->back().Copy(it);
+                        shape->Copy(it.get());
                     }
-                    layout.appendWrapShape(&shapes->back());
+                    layout.appendWrapShape(std::move(shape));
                 }
             }
-            //Xml Tree is being directly used while it shouldn't be.
+            // Xml Tree is being directly used while it shouldn't be.
             else if (!is<SPFlowregionExclude>(&child) && !sp_repr_is_meta_element(child.getRepr())) {
-                _buildLayoutInput(&child, exclusion_shape, shapes, pending_line_break_object);
+                _buildLayoutInput(&child, std::move(exclusion_shape), pending_line_break_object);
             }
         }
     }
@@ -442,38 +437,34 @@ void SPFlowtext::_buildLayoutInput(SPObject *root, Shape const *exclusion_shape,
     }
 }
 
-Shape* SPFlowtext::_buildExclusionShape() const
+std::unique_ptr<Shape> SPFlowtext::_buildExclusionShape() const
 {
-    Shape *shape = new Shape();
-    Shape *shape_temp = new Shape();
+    auto shape = std::make_unique<Shape>();
+    auto shape_temp = std::make_unique<Shape>();
 
-    for (auto& child: children) {
+    for (auto &child : children) {
         // RH: is it right that this shouldn't be recursive?
         auto c_child = cast<SPFlowregionExclude>(const_cast<SPObject*>(&child));
-        if ( c_child && c_child->computed && c_child->computed->hasEdges() ) {
+        if (!c_child) {
+            continue;
+        }
+        if (auto computed = c_child->getComputed(); computed && computed->hasEdges()) {
             if (shape->hasEdges()) {
-                shape_temp->Booleen(shape, c_child->computed, bool_op_union);
+                shape_temp->Booleen(shape.get(), computed, bool_op_union);
                 std::swap(shape, shape_temp);
             } else {
-                shape->Copy(c_child->computed);
+                shape->Copy(computed);
             }
         }
     }
-
-    delete shape_temp;
-
     return shape;
 }
 
 void SPFlowtext::rebuildLayout()
 {
-    std::list<Shape> shapes;
-
     layout.clear();
-    Shape *exclusion_shape = _buildExclusionShape();
     SPObject *pending_line_break_object = nullptr;
-    _buildLayoutInput(this, exclusion_shape, &shapes, &pending_line_break_object);
-    delete exclusion_shape;
+    _buildLayoutInput(this, _buildExclusionShape(), &pending_line_break_object);
     layout.calculateFlow();
 #if DEBUG_TEXTLAYOUT_DUMPASTEXT
     g_print("%s", layout.dumpAsText().c_str());

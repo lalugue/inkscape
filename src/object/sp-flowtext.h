@@ -71,11 +71,12 @@ public:
 
 private:
     /** Recursively walks the xml tree adding tags and their contents. */
-    void _buildLayoutInput(SPObject *root, Shape const *exclusion_shape, std::list<Shape> *shapes, SPObject **pending_line_break_object);
+    void _buildLayoutInput(SPObject *root, std::unique_ptr<Shape> exclusion_shape,
+                           SPObject **pending_line_break_object);
 
     /** calculates the union of all the \<flowregionexclude\> children
     of this flowroot. */
-    Shape* _buildExclusionShape() const;
+    std::unique_ptr<Shape> _buildExclusionShape() const;
 
 public:
 	void build(SPDocument* doc, Inkscape::XML::Node* repr) override;

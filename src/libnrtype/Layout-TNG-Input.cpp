@@ -120,11 +120,9 @@ void Layout::appendControlCode(TextControlCode code, SPObject *source, double wi
 }
 
 // more saving of the parameters
-void Layout::appendWrapShape(Shape const *shape, DisplayAlign display_align)
+void Layout::appendWrapShape(std::unique_ptr<Shape> shape, DisplayAlign display_align)
 {
-    _input_wrap_shapes.emplace_back();
-    _input_wrap_shapes.back().shape = shape;
-    _input_wrap_shapes.back().display_align = display_align;
+    _input_wrap_shapes.push_back({.shape = std::move(shape), .display_align = display_align});
 }
 
 Layout::Direction Layout::InputStreamTextSource::styleGetBlockProgression() const

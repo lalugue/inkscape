@@ -10,51 +10,50 @@
 #ifndef SEEN_SP_ITEM_FLOWREGION_H
 #define SEEN_SP_ITEM_FLOWREGION_H
 
-/*
- */
-
+#include "livarot/Shape.h"
 #include "sp-item.h"
 
-class Path;
-class Shape;
-class flow_dest;
-
-class SPFlowregion final : public SPItem {
+class SPFlowregion final : public SPItem
+{
 public:
-	SPFlowregion();
-	~SPFlowregion() override;
+    SPFlowregion() = default;
+    ~SPFlowregion() override = default;
     int tag() const override { return tag_of<decltype(*this)>; }
 
-	std::vector<Shape*>     computed;
-	
-	void             UpdateComputed();
+    std::vector<std::unique_ptr<Shape>> computed;
 
-	void child_added(Inkscape::XML::Node* child, Inkscape::XML::Node* ref) override;
-	void remove_child(Inkscape::XML::Node *child) override;
-	void update(SPCtx *ctx, unsigned int flags) override;
-	void modified(guint flags) override;
-	Inkscape::XML::Node* write(Inkscape::XML::Document *xml_doc, Inkscape::XML::Node *repr, unsigned int flags) override;
-	const char* typeName() const override;
-	const char* displayName() const override;
+    void updateComputed();
+
+    void child_added(Inkscape::XML::Node *child, Inkscape::XML::Node *ref) override;
+    void remove_child(Inkscape::XML::Node *child) override;
+    void update(SPCtx *ctx, unsigned int flags) override;
+    void modified(guint flags) override;
+    Inkscape::XML::Node *write(Inkscape::XML::Document *xml_doc, Inkscape::XML::Node *repr,
+                               unsigned int flags) override;
+    const char *typeName() const override;
+    const char *displayName() const override;
 };
 
-class SPFlowregionExclude final : public SPItem {
+class SPFlowregionExclude final : public SPItem
+{
 public:
-	SPFlowregionExclude();
-	~SPFlowregionExclude() override;
+    SPFlowregionExclude() = default;
+    ~SPFlowregionExclude() override = default;
     int tag() const override { return tag_of<decltype(*this)>; }
 
-	Shape            *computed;
-	
-	void             UpdateComputed();
+    void child_added(Inkscape::XML::Node *child, Inkscape::XML::Node *ref) override;
+    void remove_child(Inkscape::XML::Node *child) override;
+    void update(SPCtx *ctx, unsigned int flags) override;
+    void modified(guint flags) override;
+    Inkscape::XML::Node *write(Inkscape::XML::Document *xml_doc, Inkscape::XML::Node *repr,
+                               unsigned int flags) override;
+    const char *typeName() const override;
+    const char *displayName() const override;
+    Shape *getComputed() { return _computed.get(); }
 
-	void child_added(Inkscape::XML::Node* child, Inkscape::XML::Node* ref) override;
-	void remove_child(Inkscape::XML::Node *child) override;
-	void update(SPCtx *ctx, unsigned int flags) override;
-	void modified(guint flags) override;
-	Inkscape::XML::Node* write(Inkscape::XML::Document *xml_doc, Inkscape::XML::Node *repr, unsigned int flags) override;
-	const char* typeName() const override;
-	const char* displayName() const override;
+private:
+    std::unique_ptr<Shape> _computed;
+    void _updateComputed();
 };
 
 #endif

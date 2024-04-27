@@ -1196,7 +1196,8 @@ void Layout::Calculator::_createFirstScanlineMaker()
         TRACE(("  wrapping disabled\n"));
     }
     else {
-        _scanline_maker = new ShapeScanlineMaker(_flow._input_wrap_shapes[_current_shape_index].shape, _block_progression);
+        _scanline_maker =
+            new ShapeScanlineMaker(_flow._input_wrap_shapes[_current_shape_index].shape.get(), _block_progression);
         TRACE(("  begin wrap shape 0\n"));
 
         // 'inline-size' uses an infinitely high (wide) shape. We must set initial y. (We only need to do it here as there is only one shape.)
@@ -1791,7 +1792,8 @@ bool Layout::Calculator::_goToNextWrapShape()
     _scanline_maker = nullptr;
 
     if (_current_shape_index < _flow._input_wrap_shapes.size()) {
-        _scanline_maker = new ShapeScanlineMaker(_flow._input_wrap_shapes[_current_shape_index].shape, _block_progression);
+        _scanline_maker =
+            new ShapeScanlineMaker(_flow._input_wrap_shapes[_current_shape_index].shape.get(), _block_progression);
         TRACE(("begin wrap shape %u\n", _current_shape_index));
         return true;
     } else {
@@ -2361,7 +2363,7 @@ void Layout::_calculateCursorShapeForEmpty()
         _empty_cursor_shape.position = Geom::Point(x, y);
     } else {
         Direction block_progression = text_source->styleGetBlockProgression();
-        ShapeScanlineMaker scanline_maker(_input_wrap_shapes.front().shape, block_progression);
+        ShapeScanlineMaker scanline_maker(_input_wrap_shapes.front().shape.get(), block_progression);
         std::vector<ScanlineMaker::ScanRun> scan_runs = scanline_maker.makeScanline(line_height);
         if (!scan_runs.empty()) {
             if (block_progression == LEFT_TO_RIGHT || block_progression == RIGHT_TO_LEFT) {

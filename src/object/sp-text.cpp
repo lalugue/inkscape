@@ -520,8 +520,8 @@ void SPText::_buildLayoutInit()
         // To do: follow SPItem clip_ref/mask_ref code
         if (style->shape_inside.set ) {
             layout.wrap_mode = Inkscape::Text::Layout::WRAP_SHAPE_INSIDE;
-            for (auto const *wrap_shape : makeEffectiveShapes()) {
-                layout.appendWrapShape(wrap_shape);
+            for (auto &&wrap_shape : makeEffectiveShapes()) {
+                layout.appendWrapShape(std::move(wrap_shape));
             }
         } else if (has_inline_size()) {
 
@@ -536,23 +536,19 @@ void SPText::_buildLayoutInit()
             Geom::OptRect opt_frame = get_frame();
             Geom::Rect frame = *opt_frame;
 
-            Shape *shape = new Shape;
-            shape->Reset();
-            int v0 = shape->AddPoint(frame.corner(0));
-            int v1 = shape->AddPoint(frame.corner(1));
-            int v2 = shape->AddPoint(frame.corner(2));
-            int v3 = shape->AddPoint(frame.corner(3));
-            shape->AddEdge(v0, v1);
-            shape->AddEdge(v1, v2);
-            shape->AddEdge(v2, v3);
-            shape->AddEdge(v3, v0);
-            Shape *uncross = new Shape;
-            uncross->ConvertToShape( shape );
+            Shape shape;
+            int v0 = shape.AddPoint(frame.corner(0));
+            int v1 = shape.AddPoint(frame.corner(1));
+            int v2 = shape.AddPoint(frame.corner(2));
+            int v3 = shape.AddPoint(frame.corner(3));
+            shape.AddEdge(v0, v1);
+            shape.AddEdge(v1, v2);
+            shape.AddEdge(v2, v3);
+            shape.AddEdge(v3, v0);
 
-            layout.appendWrapShape( uncross );
-
-            delete shape;
-
+            auto uncross = std::make_unique<Shape>();
+            uncross->ConvertToShape(&shape);
+            layout.appendWrapShape(std::move(uncross));
         } else if (style->white_space.value == SP_CSS_WHITE_SPACE_PRE     ||
                    style->white_space.value == SP_CSS_WHITE_SPACE_PREWRAP ||
                    style->white_space.value == SP_CSS_WHITE_SPACE_PRELINE ) {
@@ -760,17 +756,17 @@ std::unique_ptr<Shape> SPText::getExclusionShape() const
     return result;
 }
 
-Shape* SPText::getInclusionShape(SPShape *shape) const
+std::unique_ptr<Shape> SPText::getInclusionShape(SPShape *shape) const
 {
     if (!shape) {
-        return nullptr;
+        return {};
     }
     if (!shape->curve()) {
         shape->set_shape();
     }
     auto curve = shape->curve();
     if (!curve) {
-        return nullptr;
+        return {};
     }
 
     bool padding = style->shape_padding.set;
@@ -788,33 +784,30 @@ Shape* SPText::getInclusionShape(SPShape *shape) const
     auto temp_path = std::make_unique<Path>();
     temp_path->LoadPathVector(pathvector, shape->transform, true);
 
-    auto const make_nice_shape = [](std::unique_ptr<Path> const &contour) -> Shape * {
+    auto const make_nice_shape = [](std::unique_ptr<Path> const &contour) -> std::unique_ptr<Shape> {
         auto temp = std::make_unique<Shape>();
         contour->ConvertWithBackData(1.0);
         contour->Fill(temp.get(), 0);
-        Shape *result = new Shape;
+        auto result = std::make_unique<Shape>();
         result->ConvertToShape(temp.get());
         return result;
     };
 
-    Shape *result = nullptr;
     if (padding) {
         auto outline = std::make_unique<Path>();
         temp_path->Outline(outline.get(), style->shape_padding.computed, join_round, butt_straight, 20.0);
 
-        std::unique_ptr<Shape> inclusion_shape{make_nice_shape(temp_path)};
-        std::unique_ptr<Shape> thickened_border{make_nice_shape(outline)};
+        auto inclusion_shape = make_nice_shape(temp_path);
+        auto thickened_border = make_nice_shape(outline);
 
-        result = new Shape;
+        auto result = std::make_unique<Shape>();
         result->Booleen(inclusion_shape.get(), thickened_border.get(), bool_op_diff);
-    } else {
-        result = make_nice_shape(temp_path);
+        return result;
     }
-
-    return result;
+    return make_nice_shape(temp_path);
 }
 
-std::vector<Shape *> SPText::makeEffectiveShapes() const
+std::vector<std::unique_ptr<Shape>> SPText::makeEffectiveShapes() const
 {
     // Find union of all exclusion shapes
     std::unique_ptr<Shape> exclusion_shape;
@@ -823,19 +816,18 @@ std::vector<Shape *> SPText::makeEffectiveShapes() const
     }
     bool const has_exclusion = exclusion_shape && exclusion_shape->hasEdges();
 
-    std::vector<Shape *> result;
+    std::vector<std::unique_ptr<Shape>> result;
     // Find inside shape curves
     for (auto *href : style->shape_inside.hrefs) {
         auto obj = href->getObject();
-        if (Shape *textarea_shape = getInclusionShape(obj)) {
+        if (auto textarea_shape = getInclusionShape(obj)) {
             if (has_exclusion) {
                 // Subtract exclusion shape
-                Shape *copy = new Shape;
-                copy->Booleen(textarea_shape, exclusion_shape.get(), bool_op_diff);
-                delete textarea_shape;
-                textarea_shape = copy;
+                auto copy = std::make_unique<Shape>();
+                copy->Booleen(textarea_shape.get(), exclusion_shape.get(), bool_op_diff);
+                textarea_shape = std::move(copy);
             }
-            result.push_back(textarea_shape);
+            result.push_back(std::move(textarea_shape));
         } else {
             std::cerr << __FUNCTION__ <<  ": Failed to get curve." << std::endl;
         }

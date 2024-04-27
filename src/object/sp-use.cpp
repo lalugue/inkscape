@@ -189,15 +189,11 @@ Inkscape::XML::Node* SPUse::write(Inkscape::XML::Document *xml_doc, Inkscape::XM
         auto text = cast<SPText>(child);
         if (text) {
             text->rebuildLayout(); // refresh Layout, LP Bug 1339305
-        } else {
-            auto flowtext = cast<SPFlowtext>(child);
-            if (flowtext) {
-                auto flowregion = cast<SPFlowregion>(flowtext->firstChild());
-                if (flowregion) {
-                    flowregion->UpdateComputed();
-                }
-                flowtext->rebuildLayout();
+        } else if (auto flowtext = cast<SPFlowtext>(child)) {
+            if (auto flowregion = cast<SPFlowregion>(flowtext->firstChild())) {
+                flowregion->updateComputed();
             }
+            flowtext->rebuildLayout();
         }
     }
 

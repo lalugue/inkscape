@@ -29,22 +29,14 @@
 class SPDesc;
 class SPTitle;
 
-static void         GetDest(SPObject* child,Shape **computed);
+static std::unique_ptr<Shape> shape_union(std::unique_ptr<Shape> base_shape, std::unique_ptr<Shape> add_shape);
+static std::unique_ptr<Shape> extract_shape(SPItem *item);
 
+void SPFlowregion::child_added(Inkscape::XML::Node *child, Inkscape::XML::Node *ref)
+{
+    SPItem::child_added(child, ref);
 
-SPFlowregion::SPFlowregion() : SPItem() {
-}
-
-SPFlowregion::~SPFlowregion() {
-	for (auto & it : this->computed) {
-        delete it;
-	}
-}
-
-void SPFlowregion::child_added(Inkscape::XML::Node *child, Inkscape::XML::Node *ref) {
-	SPItem::child_added(child, ref);
-
-	this->requestModified(SP_OBJECT_MODIFIED_FLAG);
+    this->requestModified(SP_OBJECT_MODIFIED_FLAG);
 }
 
 /* fixme: hide (Lauris) */
@@ -93,20 +85,16 @@ void SPFlowregion::update(SPCtx *ctx, unsigned int flags) {
 
     SPItem::update(ctx, flags);
 
-    this->UpdateComputed();
+    updateComputed();
 }
 
-void SPFlowregion::UpdateComputed()
+void SPFlowregion::updateComputed()
 {
-    for (auto & it : computed) {
-        delete it;
-    }
     computed.clear();
-
-    for (auto& child: children) {
-        Shape *shape = nullptr;
-        GetDest(&child, &shape);
-        computed.push_back(shape);
+    for (auto &child : children) {
+        if (auto item = cast<SPItem>(&child)) {
+            computed.push_back(extract_shape(item));
+        }
     }
 }
 
@@ -166,7 +154,7 @@ Inkscape::XML::Node *SPFlowregion::write(Inkscape::XML::Document *xml_doc, Inksc
 
     SPItem::write(xml_doc, repr, flags);
 
-    this->UpdateComputed();  // copied from update(), see LP Bug 1339305
+    updateComputed(); // copied from update(), see LP Bug 1339305
 
     return repr;
 }
@@ -178,17 +166,6 @@ const char* SPFlowregion::typeName() const {
 const char* SPFlowregion::displayName() const {
     // TRANSLATORS: "Flow region" is an area where text is allowed to flow
     return _("Flow Region");
-}
-
-SPFlowregionExclude::SPFlowregionExclude() : SPItem() {
-	this->computed = nullptr;
-}
-
-SPFlowregionExclude::~SPFlowregionExclude() {
-    if (this->computed) {
-        delete this->computed;
-        this->computed = nullptr;
-    }
 }
 
 void SPFlowregionExclude::child_added(Inkscape::XML::Node *child, Inkscape::XML::Node *ref) {
@@ -243,19 +220,16 @@ void SPFlowregionExclude::update(SPCtx *ctx, unsigned int flags) {
         sp_object_unref(child);
     }
 
-    this->UpdateComputed();
+    _updateComputed();
 }
 
-
-void SPFlowregionExclude::UpdateComputed()
+void SPFlowregionExclude::_updateComputed()
 {
-    if (computed) {
-        delete computed;
-        computed = nullptr;
-    }
-
-    for (auto& child: children) {
-        GetDest(&child, &computed);
+    _computed.reset();
+    for (auto &child : children) {
+        if (auto *item = cast<SPItem>(&child)) {
+            _computed = shape_union(std::move(_computed), extract_shape(item));
+        }
     }
 }
 
@@ -328,69 +302,57 @@ const char* SPFlowregionExclude::displayName() const {
 	return _("Flow Excluded Region");
 }
 
-static void UnionShape(Shape *&base_shape, Shape const *add_shape)
+static std::unique_ptr<Shape> shape_union(std::unique_ptr<Shape> base_shape, std::unique_ptr<Shape> add_shape)
 {
-    if (base_shape == nullptr)
-        base_shape = new Shape;
-
-    if (base_shape->hasEdges() == false) {
-        base_shape->Copy(const_cast<Shape *>(add_shape));
-    } else if (add_shape->hasEdges()) {
-        Shape *temp = new Shape;
-        temp->Booleen(const_cast<Shape *>(add_shape), base_shape, bool_op_union);
-        delete base_shape;
-        base_shape = temp;
+    if (!base_shape) {
+        base_shape = std::make_unique<Shape>();
     }
+    if (!base_shape->hasEdges()) {
+        base_shape->Copy(add_shape.get());
+    } else if (add_shape && add_shape->hasEdges()) {
+        auto temp = std::make_unique<Shape>();
+        temp->Booleen(add_shape.get(), base_shape.get(), bool_op_union);
+        base_shape = std::move(temp);
+    }
+    return base_shape;
 }
 
-static void         GetDest(SPObject* child,Shape **computed)
+static std::unique_ptr<Shape> extract_shape(SPItem *item)
 {
-    auto item = cast<SPItem>(child);
-    if (item == nullptr)
-        return;
-
-    std::optional<SPCurve> curve;
     Geom::Affine tr_mat;
-
-    SPObject* u_child = child;
-    auto use = cast<SPUse>(item);
-    if ( use ) {
-        u_child = use->child;
-        tr_mat = use->getRelativeTransform(child->parent);
+    auto *shape_source = item;
+    if (auto use = cast<SPUse>(item)) {
+        shape_source = use->child;
+        tr_mat = use->getRelativeTransform(item->parent);
     } else {
         tr_mat = item->transform;
     }
-    auto shape = cast<SPShape>(u_child);
-    if ( shape ) {
+
+    std::optional<SPCurve> curve;
+    if (auto shape = cast<SPShape>(shape_source)) {
         if (!shape->curve()) {
             shape->set_shape();
         }
         curve = SPCurve::ptr_to_opt(shape->curve());
-    } else {
-        auto text = cast<SPText>(u_child);
-        if ( text ) {
-            curve = text->getNormalizedBpath();
-        }
+    } else if (auto text = cast<SPText>(shape_source)) {
+        curve = text->getNormalizedBpath();
     }
 
-	if ( curve ) {
-		Path*   temp=new Path;
-        temp->LoadPathVector(curve->get_pathvector(), tr_mat, true);
-		Shape*  n_shp=new Shape;
-		temp->Convert(0.25);
-		temp->Fill(n_shp,0);
-		Shape*  uncross=new Shape;
-		SPStyle* style = u_child->style;
-		if ( style && style->fill_rule.computed == SP_WIND_RULE_EVENODD ) {
-			uncross->ConvertToShape(n_shp,fill_oddEven);
-		} else {
-			uncross->ConvertToShape(n_shp,fill_nonZero);
-		}
-		UnionShape(*computed, uncross);
-		delete uncross;
-		delete n_shp;
-		delete temp;
-	}
+    if (!curve) {
+        return {};
+    }
+    Path temp;
+    temp.LoadPathVector(curve->get_pathvector(), tr_mat, true);
+    temp.Convert(0.25);
+
+    Shape n_shp;
+    temp.Fill(&n_shp, 0);
+
+    auto result = std::make_unique<Shape>();
+    SPStyle *style = shape_source->style;
+    result->ConvertToShape(&n_shp,
+                           (style && style->fill_rule.computed == SP_WIND_RULE_EVENODD) ? fill_oddEven : fill_nonZero);
+    return result;
 }
 
 /*

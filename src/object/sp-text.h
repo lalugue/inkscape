@@ -75,14 +75,14 @@ public:
     /** Union all exclusion shapes. */
     std::unique_ptr<Shape> getExclusionShape() const;
     /** Add a single inclusion shape with padding */
-    Shape* getInclusionShape(SPShape *shape) const;
+    std::unique_ptr<Shape> getInclusionShape(SPShape *shape) const;
     /** Compute the final effective shapes:
      *  All inclusion shapes shrunk by the padding,
      *  from which we subtract the exclusion shapes expanded by their padding.
      *
-     *  @return A vector of pointers to a newly allocated Shape objects which must be eventually freed manually.
+     *  @return A vector of owning pointers to the effective shapes.
      */
-    std::vector<Shape *> makeEffectiveShapes() const;
+    std::vector<std::unique_ptr<Shape>> makeEffectiveShapes() const;
 
     std::optional<Geom::Point> getBaselinePoint() const;
 

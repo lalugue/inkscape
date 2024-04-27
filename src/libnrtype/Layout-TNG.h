@@ -14,25 +14,23 @@
 
 //#define DEBUG_TEXTLAYOUT_DUMPASTEXT
 
-#include <2geom/d2.h>
 #include <2geom/affine.h>
+#include <2geom/d2.h>
+#include <algorithm>
 #include <glibmm/ustring.h>
 #include <memory>
-#include <pango/pango-break.h>
-#include <algorithm>
-#include <vector>
 #include <optional>
+#include <pango/pango-break.h>
 #include <svg/svg-length.h>
-#include "helper/auto-connection.h"
-#include "style-enums.h"
-#include "display/curve.h"
+#include <vector>
 
-namespace Inkscape {
-        namespace Extension {
-                namespace Internal {
-                        class CairoRenderContext;
-                }
-        }
+#include "display/curve.h"
+#include "helper/auto-connection.h"
+#include "livarot/Shape.h"
+#include "style-enums.h"
+
+namespace Inkscape::Extension::Internal {
+class CairoRenderContext;
 }
 
 using Inkscape::Extension::Internal::CairoRenderContext;
@@ -287,15 +285,13 @@ public:
     shapes in sequence, like with frames in a DTP package. If the text flows
     past the end of the last shape all remaining text is ignored.
 
-      \param shape  The Shape to use next in the flow. The storage for this
-                    is managed by the caller, and need only be valid for
-                    the duration of the call to calculateFlow().
+      \param shape  The Shape to use next in the flow.
       \param display_align   The vertical alignment of the text within this
                     shape. See XSL1.0 section 7.13.4. The behaviour of
                     settings other than DISPLAY_ALIGN_BEFORE when using
                     non-rectangular shapes is undefined.
     */
-    void appendWrapShape(Shape const *shape, DisplayAlign display_align = DISPLAY_ALIGN_BEFORE);
+    void appendWrapShape(std::unique_ptr<Shape> shape, DisplayAlign display_align = DISPLAY_ALIGN_BEFORE);
 
     // ************************** textLength and friends *************************
 
@@ -790,8 +786,8 @@ private:
     // ******************* input shapes
 
     struct InputWrapShape {
-        Shape const *shape;        /// as passed to Layout::appendWrapShape()
-        DisplayAlign display_align;   /// as passed to Layout::appendWrapShape()
+        std::unique_ptr<Shape> shape; ///< as passed to Layout::appendWrapShape()
+        DisplayAlign display_align;   ///< as passed to Layout::appendWrapShape()
     };
     std::vector<InputWrapShape> _input_wrap_shapes;
 
