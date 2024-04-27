@@ -825,7 +825,7 @@
         <property name="tooltip-text" translatable="yes">Path vertical position</property>
         <property name="hexpand">True</property>
         <property name="width-chars">6</property>
-        <property name="text" translatable="yes">0.000</property>
+        <property name="text">0.000</property>
         <property name="adjustment">adjustment-rect-ry</property>
         <property name="digits">3</property>
         <layout>
@@ -850,7 +850,7 @@
         <property name="tooltip-text" translatable="yes">Path horizontal position</property>
         <property name="hexpand">True</property>
         <property name="width-chars">6</property>
-        <property name="text" translatable="yes">0.000</property>
+        <property name="text">0.000</property>
         <property name="adjustment">adjustment-rect-rx</property>
         <property name="digits">3</property>
         <layout>
@@ -907,7 +907,7 @@
         <property name="tooltip-text" translatable="yes">Width of path shape</property>
         <property name="hexpand">True</property>
         <property name="width-chars">6</property>
-        <property name="text" translatable="yes">0.000</property>
+        <property name="text">0.000</property>
         <property name="adjustment">adjustment-rect-width</property>
         <property name="digits">3</property>
         <layout>
@@ -932,7 +932,7 @@
         <property name="tooltip-text" translatable="yes">Height of path shape</property>
         <property name="hexpand">True</property>
         <property name="width-chars">6</property>
-        <property name="text" translatable="yes">0.000</property>
+        <property name="text">0.000</property>
         <property name="adjustment">adjustment-rect-height</property>
         <property name="digits">3</property>
         <layout>
@@ -1037,7 +1037,7 @@
           <object class="GtkButton" id="path-enter">
             <property name="focusable">True</property>
             <property name="receives-default">True</property>
-            <property name="tooltip-text" translatable="yes">Press Shift+Return to commit editing changes</property>
+            <property name="tooltip-text" translatable="yes">Press Shift+Enter to commit editing changes</property>
             <property name="halign">end</property>
             <property name="icon-name">enter</property>
           </object>

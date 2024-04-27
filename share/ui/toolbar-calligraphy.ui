@@ -86,7 +86,7 @@
             <property name="name">calligraphy-width</property>
             <property name="focusable">True</property>
             <property name="width-chars">6</property>
-            <property name="text" translatable="yes">0.000</property>
+            <property name="text">0.000</property>
             <property name="adjustment">_width_adj</property>
             <property name="climb-rate">1</property>
             <property name="digits">3</property>
@@ -146,7 +146,7 @@
           <object class="GtkSpinButton" id="_thinning_item">
             <property name="focusable">True</property>
             <property name="width-chars">1</property>
-            <property name="text" translatable="yes">0.001</property>
+            <property name="text">0.001</property>
             <property name="adjustment">_thinning_adj</property>
             <property name="climb-rate">1</property>
           </object>
@@ -168,7 +168,7 @@
           <object class="GtkSpinButton" id="_mass_item">
             <property name="focusable">True</property>
             <property name="width-chars">1</property>
-            <property name="text" translatable="yes">0.001</property>
+            <property name="text">0.001</property>
             <property name="adjustment">_mass_adj</property>
             <property name="climb-rate">1</property>
             <property name="value">0.001</property>

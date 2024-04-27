@@ -80,7 +80,7 @@
           <object class="GtkSpinButton" id="_curvature_item">
             <property name="focusable">True</property>
             <property name="width-chars">5</property>
-            <property name="text" translatable="yes">0.000</property>
+            <property name="text">0.000</property>
             <property name="adjustment">_curvature_adj</property>
             <property name="climb-rate">0.10</property>
           </object>

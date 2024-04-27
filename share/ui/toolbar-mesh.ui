@@ -84,7 +84,7 @@
           <object class="GtkSpinButton" id="_row_item">
             <property name="focusable">True</property>
             <property name="width-chars">2</property>
-            <property name="text" translatable="yes">0.000</property>
+            <property name="text">0.000</property>
             <property name="adjustment">_row_adj</property>
             <property name="climb-rate">1</property>
           </object>
@@ -104,7 +104,7 @@
           <object class="GtkSpinButton" id="_col_item">
             <property name="focusable">True</property>
             <property name="width-chars">2</property>
-            <property name="text" translatable="yes">0.000</property>
+            <property name="text">0.000</property>
             <property name="adjustment">_col_adj</property>
             <property name="climb-rate">0.10</property>
           </object>

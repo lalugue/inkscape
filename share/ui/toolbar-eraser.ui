@@ -91,7 +91,7 @@
             <property name="name">eraser-width</property>
             <property name="focusable">True</property>
             <property name="width-chars">2</property>
-            <property name="text" translatable="yes">0.000</property>
+            <property name="text">0.000</property>
             <property name="adjustment">_width_adj</property>
             <property name="climb-rate">1</property>
           </object>
@@ -127,7 +127,7 @@
           <object class="GtkSpinButton" id="_thinning_item">
             <property name="focusable">True</property>
             <property name="width-chars">2</property>
-            <property name="text" translatable="yes">0.000</property>
+            <property name="text">0.000</property>
             <property name="adjustment">_thinning_adj</property>
             <property name="climb-rate">0.10</property>
           </object>
@@ -173,7 +173,7 @@
           <object class="GtkSpinButton" id="_tremor_item">
             <property name="focusable">True</property>
             <property name="width-chars">5</property>
-            <property name="text" translatable="yes">0.000</property>
+            <property name="text">0.000</property>
             <property name="adjustment">_tremor_adj</property>
             <property name="climb-rate">1</property>
           </object>

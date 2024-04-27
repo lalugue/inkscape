@@ -40,7 +40,7 @@
           <object class="GtkSpinButton" id="_revolution_item">
             <property name="focusable">True</property>
             <property name="width-chars">5</property>
-            <property name="text" translatable="yes">0.000</property>
+            <property name="text">0.000</property>
             <property name="adjustment">_revolution_adj</property>
             <property name="climb-rate">0.10</property>
             <property name="digits">2</property>
@@ -61,7 +61,7 @@
           <object class="GtkSpinButton" id="_expansion_item">
             <property name="focusable">True</property>
             <property name="width-chars">5</property>
-            <property name="text" translatable="yes">0.000</property>
+            <property name="text">0.000</property>
             <property name="adjustment">_expansion_adj</property>
             <property name="climb-rate">0.10</property>
             <property name="digits">3</property>
@@ -82,7 +82,7 @@
           <object class="GtkSpinButton" id="_t0_item">
             <property name="focusable">True</property>
             <property name="width-chars">5</property>
-            <property name="text" translatable="yes">0.000</property>
+            <property name="text">0.000</property>
             <property name="adjustment">_t0_adj</property>
             <property name="climb-rate">0.10</property>
             <property name="digits">3</property>

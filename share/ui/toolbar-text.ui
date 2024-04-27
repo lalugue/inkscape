@@ -139,7 +139,7 @@
           <object class="GtkSpinButton" id="_line_height_item">
             <property name="focusable">True</property>
             <property name="width-chars">1</property>
-            <property name="text" translatable="yes">0.000</property>
+            <property name="text">0.000</property>
             <property name="adjustment">_line_height_adj</property>
             <property name="climb-rate">0.10</property>
             <property name="digits">2</property>
@@ -423,7 +423,7 @@
           <object class="GtkSpinButton" id="_word_spacing_item">
             <property name="focusable">True</property>
             <property name="width-chars">5</property>
-            <property name="text" translatable="yes">0.00</property>
+            <property name="text">0.00</property>
             <property name="adjustment">_word_spacing_adj</property>
             <property name="climb-rate">0.10</property>
             <property name="digits">2</property>
@@ -446,7 +446,7 @@
           <object class="GtkSpinButton" id="_dx_item">
             <property name="focusable">True</property>
             <property name="width-chars">5</property>
-            <property name="text" translatable="yes">0.00</property>
+            <property name="text">0.00</property>
             <property name="adjustment">_dx_adj</property>
             <property name="climb-rate">0.10</property>
             <property name="digits">2</property>
@@ -469,7 +469,7 @@
           <object class="GtkSpinButton" id="_dy_item">
             <property name="focusable">True</property>
             <property name="width-chars">5</property>
-            <property name="text" translatable="yes">0.00</property>
+            <property name="text">0.00</property>
             <property name="adjustment">_dy_adj</property>
             <property name="climb-rate">0.10</property>
             <property name="digits">2</property>
@@ -492,7 +492,7 @@
           <object class="GtkSpinButton" id="_rotation_item">
             <property name="focusable">True</property>
             <property name="width-chars">5</property>
-            <property name="text" translatable="yes">0.00</property>
+            <property name="text">0.00</property>
             <property name="adjustment">_rotation_adj</property>
             <property name="climb-rate">0.10</property>
             <property name="digits">2</property>

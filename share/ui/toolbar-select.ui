@@ -369,7 +369,7 @@
             <property name="focusable">True</property>
             <property name="tooltip-text" translatable="yes">Vertical coordinate of selection</property>
             <property name="width-chars">7</property>
-            <property name="text" translatable="yes">0.000</property>
+            <property name="text">0.000</property>
             <property name="adjustment">_y_adj</property>
             <property name="climb-rate">1.0</property>
             <property name="digits">3</property>
@@ -393,7 +393,7 @@
             <property name="focusable">True</property>
             <property name="tooltip-text" translatable="yes">Width of selection</property>
             <property name="width-chars">7</property>
-            <property name="text" translatable="yes">0.000</property>
+            <property name="text">0.000</property>
             <property name="adjustment">_w_adj</property>
             <property name="climb-rate">1.0</property>
             <property name="digits">3</property>
@@ -429,7 +429,7 @@
             <property name="focusable">True</property>
             <property name="tooltip-text" translatable="yes">Height of selection</property>
             <property name="width-chars">7</property>
-            <property name="text" translatable="yes">0.000</property>
+            <property name="text">0.000</property>
             <property name="adjustment">_h_adj</property>
             <property name="climb-rate">1.0</property>
             <property name="digits">3</property>
