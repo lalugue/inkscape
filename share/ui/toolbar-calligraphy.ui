@@ -186,7 +186,7 @@
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="width-chars">6</property>
-            <property name="text" translatable="yes">0.000</property>
+            <property name="text">0.000</property>
             <property name="adjustment">_width_adj</property>
             <property name="climb-rate">1</property>
             <property name="digits">3</property>
@@ -289,7 +289,7 @@
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="width-chars">5</property>
-            <property name="text" translatable="yes">0.001</property>
+            <property name="text">0.001</property>
             <property name="adjustment">_thinning_adj</property>
             <property name="climb-rate">1</property>
           </object>
@@ -320,7 +320,7 @@
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="width-chars">5</property>
-            <property name="text" translatable="yes">0.001</property>
+            <property name="text">0.001</property>
             <property name="adjustment">_mass_adj</property>
             <property name="climb-rate">1</property>
             <property name="value">0.001</property>

@@ -76,7 +76,7 @@
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="width-chars">5</property>
-            <property name="text" translatable="yes">0.000</property>
+            <property name="text">0.000</property>
             <property name="adjustment">_threshold_adj</property>
             <property name="climb-rate">0.10</property>
           </object>
@@ -107,7 +107,7 @@
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="width-chars">5</property>
-            <property name="text" translatable="yes">0.000</property>
+            <property name="text">0.000</property>
             <property name="adjustment">_offset_adj</property>
             <property name="climb-rate">1</property>
             <property name="digits">2</property>

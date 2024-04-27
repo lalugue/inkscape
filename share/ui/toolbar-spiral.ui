@@ -47,7 +47,7 @@
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="width-chars">10</property>
-            <property name="text" translatable="yes">0.000</property>
+            <property name="text">0.000</property>
             <property name="adjustment">_revolution_adj</property>
             <property name="climb-rate">0.10</property>
             <property name="digits">2</property>
@@ -76,7 +76,7 @@
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="width-chars">10</property>
-            <property name="text" translatable="yes">0.000</property>
+            <property name="text">0.000</property>
             <property name="adjustment">_expansion_adj</property>
             <property name="climb-rate">0.10</property>
             <property name="digits">3</property>
@@ -105,7 +105,7 @@
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="width-chars">10</property>
-            <property name="text" translatable="yes">0.000</property>
+            <property name="text">0.000</property>
             <property name="adjustment">_t0_adj</property>
             <property name="climb-rate">0.10</property>
             <property name="digits">3</property>
