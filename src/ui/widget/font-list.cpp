@@ -419,17 +419,29 @@ FontList::FontList(Glib::ustring preferences_path) :
         sample->set_text("");
     });
 
-    std::pair<const char*, const char*> samples[5] = {
-        {"id-alphanum", "AbcdEfgh1234"},
-        {"id-digits", "1234567890"},
-        {"id-lowercase", "abcdefghijklmnopqrstuvwxyz"},
-        {"id-uppercase", "ABCDEFGHIJKLMNOPQRSTUVWXYZ"},
-        {"id-fox", "The quick brown fox jumps over the lazy dog."}
+    const char* sample_ids[] = {
+        "id-alphanum", "id-digits", "id-lowercase", "id-uppercase", "id-fox", "id-international"
     };
-    for (auto&& el : samples) {
-        auto& item = get_widget<Gtk::MenuItem>(_builder, el.first);
+    auto truncate = [](const Glib::ustring& text) {
+        int N = 20; // limit number of characters in label
+        if (text.length() <= N) return text;
+
+        auto substr = text.substr(0, N);
+        auto pos = substr.rfind(' ');
+        // do we have a space somewhere close to the limit of N chars?
+        if (pos != Glib::ustring::npos && pos > N - N/4) {
+            // if so, truncate at space
+            substr = substr.substr(0, pos);
+        }
+        substr += "\u2026"; // add ellipsis to truncated content
+        return substr;
+    };
+    for (auto id : sample_ids) {
+        auto& item = get_widget<Gtk::MenuItem>(_builder, id);
+        auto text = item.get_label();
+        item.set_label(truncate(text));    // truncate label, it can be quite long
         item.signal_activate().connect([=](){
-            sample->set_text(el.second);
+            sample->set_text(text);
         });
     }
 

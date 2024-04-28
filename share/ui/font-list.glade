@@ -148,7 +148,7 @@
       <object class="GtkMenuItem" id="id-alphanum">
         <property name="visible">True</property>
         <property name="can-focus">False</property>
-        <property name="label" translatable="yes">AbcdEfgh1234</property>
+        <property name="label" translatable="yes" context="font-sample-text" comments="A few alphanumeric characters to see what font glyphs look like">AbcdEfgh1234</property>
         <property name="use-underline">True</property>
       </object>
     </child>
@@ -156,7 +156,7 @@
       <object class="GtkMenuItem" id="id-digits">
         <property name="visible">True</property>
         <property name="can-focus">False</property>
-        <property name="label" translatable="yes">1234567890</property>
+        <property name="label" translatable="yes" context="font-sample-text" comments="Sample text consisting of Arabic numerals">1234567890</property>
         <property name="use-underline">True</property>
       </object>
     </child>
@@ -164,7 +164,7 @@
       <object class="GtkMenuItem" id="id-lowercase">
         <property name="visible">True</property>
         <property name="can-focus">False</property>
-        <property name="label" translatable="yes">abcdefgh...</property>
+        <property name="label" translatable="yes" context="font-sample-text" comments="Sample text of lowercase Latin letters. Feel free to add diacritics, if your language uses Latin script.">abcdefghijklmnopqrstuvwxyz</property>
         <property name="use-underline">True</property>
       </object>
     </child>
@@ -172,7 +172,7 @@
       <object class="GtkMenuItem" id="id-uppercase">
         <property name="visible">True</property>
         <property name="can-focus">False</property>
-        <property name="label" translatable="yes">ABCDEFGH...</property>
+        <property name="label" translatable="yes" context="font-sample-text" comments="Sample text of uppercase Latin letters. Feel free to add diacritics if your language uses Latin script.">ABCDEFGHIJKLMNOPQRSTUVWXYZ</property>
         <property name="use-underline">True</property>
       </object>
     </child>
@@ -180,7 +180,15 @@
       <object class="GtkMenuItem" id="id-fox">
         <property name="visible">True</property>
         <property name="can-focus">False</property>
-        <property name="label" translatable="yes">The quick brown fox...</property>
+        <property name="label" translatable="yes" context="font-sample-text" comments="Provide a sentence in your language that uses every letter in your alphabet. If your language uses logographs, you may want to include a few to give a glimpse of what selected font looks like.&#10;&#10;https://en.wikipedia.org/wiki/The_quick_brown_fox_jumps_over_the_lazy_dog">The quick brown fox jumps over the lazy dog.</property>
+        <property name="use-underline">True</property>
+      </object>
+    </child>
+    <child>
+      <object class="GtkMenuItem" id="id-international">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <property name="label" translatable="yes" context="font-sample-text" comments="Sample text using diacritical marks and special characters. Add diacritics if your alphabet supports them, or other character variants that may be of interest to speakers of your language, like currency sign, etc. The idea is to test if selected font defines those variants.">Yélløw ťüřtle fröm Áłphårettä íś čōmiñġ fôr ďïññęr tòđây.</property>
         <property name="use-underline">True</property>
       </object>
     </child>
