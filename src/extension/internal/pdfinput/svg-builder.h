@@ -110,6 +110,7 @@ public:
         return _preferences;
     }
     void pushPage(const std::string &label, GfxState *state);
+    void setPageMode(bool as_pages) { _as_pages = as_pages; }
 
     // Path adding
     bool shouldMergePath(bool is_fill, const std::string &path);
@@ -266,6 +267,7 @@ private:
     double _width;       // Document size in px
     double _height;       // Document size in px
 
+    bool _as_pages = true; // If set to false, page objects are not created
     Inkscape::XML::Node *_page = nullptr; // XML Page definition
     int _page_num = 0; // Are we on a page
     double _page_left = 0 ; // Move to the left for more pages

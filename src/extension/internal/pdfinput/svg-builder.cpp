@@ -121,7 +121,7 @@ void SvgBuilder::_init() {
 void SvgBuilder::pushPage(const std::string &label, GfxState *state)
 {
     // Move page over by the last page width
-    if (_page && this->_width) {
+    if (_page_offset && this->_width) {
         int gap = 20;
         _page_left += this->_width + gap;
         // TODO: A more interesting page layout could be implemented here.
@@ -132,9 +132,18 @@ void SvgBuilder::pushPage(const std::string &label, GfxState *state)
     if (_page) {
         Inkscape::GC::release(_page);
     }
-    _page = _xml_doc->createElement("inkscape:page");
-    _page->setAttributeSvgDouble("x", _page_left);
-    _page->setAttributeSvgDouble("y", _page_top);
+
+    if (_as_pages) {
+        _page = _xml_doc->createElement("inkscape:page");
+        _page->setAttributeSvgDouble("x", _page_left);
+        _page->setAttributeSvgDouble("y", _page_top);
+
+        if (!label.empty()) {
+            _page->setAttribute("inkscape:label", label);
+        }
+        auto _nv = _doc->getNamedView()->getRepr();
+        _nv->appendChild(_page);
+    }
 
     // Page translation is somehow lost in the way we're using poppler and the state management
     // Applying the state directly doesn't work as many of the flips/rotates are baked in already.
@@ -153,12 +162,6 @@ void SvgBuilder::pushPage(const std::string &label, GfxState *state)
     // Please use an example pdf which produces a non-zero translation in order to change this code!
     _page_affine = Geom::Translate(tr).inverse() * Geom::Translate(_page_left, _page_top);
 
-    if (!label.empty()) {
-        _page->setAttribute("inkscape:label", label);
-    }
-    auto _nv = _doc->getNamedView()->getRepr();
-    _nv->appendChild(_page);
-
     // No OptionalContentGroups means no layers, so make a default layer for this page.
     if (_ocgs.empty()) {
         // Reset to root
@@ -174,7 +177,11 @@ void SvgBuilder::setDocumentSize(double width, double height) {
     this->_width = width;
     this->_height = height;
 
-    if (_page_num < 2) {
+    // Build the document size to include all page widths together.
+    if (!_as_pages) {
+        width += _page_left;
+    }
+    if (_page_num < 2 || !_as_pages) {
         _root->setAttributeSvgDouble("width", width);
         _root->setAttributeSvgDouble("height", height);
     }
@@ -214,7 +221,7 @@ void SvgBuilder::setMargins(const Geom::Rect &page, const Geom::Rect &margins, c
         _page_affine *= Geom::Translate(-page.left(), -page.top());
         setDocumentSize(page.width(), page.height());
     }
-    if (page != margins) {
+    if (_as_pages && page != margins) {
         if (!_page) {
             g_warning("Can not store PDF margins in bare document.");
             return;
@@ -227,7 +234,7 @@ void SvgBuilder::setMargins(const Geom::Rect &page, const Geom::Rect &margins, c
             << margins.left() - page.left();
         _page->setAttribute("margin", val.str());
     }
-    if (page != bleed) {
+    if (_as_pages && page != bleed) {
         if (!_page) {
             g_warning("Can not store PDF bleed in bare document.");
             return;

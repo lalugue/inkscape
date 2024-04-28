@@ -290,6 +290,19 @@
                   </object>
                 </child>
                 <child>
+                  <object class="GtkCheckButton" id="import-pages">
+                    <property name="label" translatable="yes">Import Pages</property>
+                    <property name="can-focus">True</property>
+                    <property name="margin-start">8</property>
+                    <property name="active">True</property>
+                    <layout>
+                      <property name="column">0</property>
+                      <property name="row">8</property>
+                      <property name="column-span">2</property>
+                    </layout>
+                  </object>
+                </child>
+                <child>
                   <object class="GtkLabel">
                     <property name="halign">start</property>
                     <property name="margin-start">8</property>
@@ -380,7 +393,7 @@
                     <property name="focusable">True</property>
                     <property name="tooltip-text" translatable="yes">Type in the page range you want to import using the format 1-4 or 1,2,3,4 or the keyword 'all' to specifiy all pages.</property>
                     <property name="hexpand">True</property>
-                    <property name="text" translatable="yes">all</property>
+                    <property name="text" translatable="no">all</property>
                     <layout>
                       <property name="column">1</property>
                       <property name="row">1</property>
