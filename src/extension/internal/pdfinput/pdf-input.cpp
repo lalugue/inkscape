@@ -129,6 +129,7 @@ PdfImportDialog::PdfImportDialog(std::shared_ptr<PDFDoc> doc, const gchar * /*ur
     , _page_numbers(UI::get_widget<Gtk::Entry>(_builder, "page-numbers"))
     , _preview_area(UI::get_widget<Gtk::DrawingArea>(_builder, "preview-area"))
     , _embed_images(UI::get_widget<Gtk::CheckButton>(_builder, "embed-images"))
+    , _import_pages(UI::get_widget<Gtk::CheckButton>(_builder, "import-pages"))
     , _mesh_slider(UI::get_widget<Gtk::Scale>(_builder, "mesh-slider"))
     , _mesh_label(UI::get_widget<Gtk::Label>(_builder, "mesh-label"))
     , _next_page(UI::get_widget<Gtk::Button>(_builder, "next-page"))
@@ -236,7 +237,13 @@ bool PdfImportDialog::showDialog() {
     }
 }
 
-std::string PdfImportDialog::getSelectedPages() {
+bool PdfImportDialog::getImportPages()
+{
+    return _import_pages.get_active();
+}
+
+std::string PdfImportDialog::getSelectedPages()
+{
     if (_page_numbers.get_sensitive()) {
         return _current_pages;
     }
@@ -631,11 +638,13 @@ PdfInput::open(::Inkscape::Extension::Input * /*mod*/, const gchar * uri) {
     }
 
     // Get options
+    bool import_pages = true;
     std::string page_nums = "1";
     PdfImportType import_method = PdfImportType::PDF_IMPORT_INTERNAL;
     FontStrategies font_strats;
     if (dlg) {
         page_nums = dlg->getSelectedPages();
+        import_pages = dlg->getImportPages();
         import_method = dlg->getImportMethod();
         font_strats = dlg->getFontStrategies();
     } else {
@@ -648,6 +657,7 @@ PdfInput::open(::Inkscape::Extension::Input * /*mod*/, const gchar * uri) {
     }
     // Both poppler and poppler+cairo can get page num info from poppler.
     auto pages = parseIntRange(page_nums, 1, pdf_doc->getCatalog()->getNumPages());
+
     if (pages.empty()) {
         g_warning("No pages selected, getting first page only.");
         pages.insert(1);
@@ -670,6 +680,7 @@ PdfInput::open(::Inkscape::Extension::Input * /*mod*/, const gchar * uri) {
         }
         SvgBuilder *builder = new SvgBuilder(doc, docname, pdf_doc->getXRef());
         builder->setFontStrategies(font_strats);
+        builder->setPageMode(import_pages);
 
         // Get preferences
         Inkscape::XML::Node *prefs = builder->getPreferences();
