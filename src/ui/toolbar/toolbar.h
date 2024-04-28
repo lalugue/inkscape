@@ -49,13 +49,11 @@ private:
     {
         // Constructor to initialize data members
         ToolbarMenuButton(int priority, int group_size, Gtk::MenuButton *menu_btn,
-                          const std::stack<std::pair<Gtk::Widget *, Gtk::Widget *>> &popover_children,
-                          const std::stack<std::pair<Gtk::Widget *, Gtk::Widget *>> &toolbar_children)
+                          std::stack<std::pair<Gtk::Widget *, Gtk::Widget *>> toolbar_children)
             : priority(priority)
             , group_size(group_size)
             , menu_btn(menu_btn)
-            , popover_children(popover_children)
-            , toolbar_children(toolbar_children)
+            , toolbar_children(std::move(toolbar_children))
         {}
 
         // Data members
