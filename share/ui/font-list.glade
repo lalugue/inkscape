@@ -16,16 +16,16 @@
     <items>
       <item translatable="yes" context="font-sample-text" comments="A few alphanumeric characters to see what font glyphs look like">AbcdEfgh1234</item>
       <item translatable="yes" context="font-sample-text" comments="Sample text consisting of Arabic numerals">1234567890</item>
-      <item translatable="yes" context="font-sample-text" comments="Sample text of lowercase Latin letters. Feel free to add diacritics, if your language uses Latin script.">abcdefghijklmnopqrstuvwxyz</item>
+      <item translatable="yes" context="font-sample-text" comments="Sample text of lowercase Latin letters. Feel free to add diacritics if your language uses Latin script.">abcdefghijklmnopqrstuvwxyz</item>
       <item translatable="yes" context="font-sample-text" comments="Sample text of uppercase Latin letters. Feel free to add diacritics if your language uses Latin script.">ABCDEFGHIJKLMNOPQRSTUVWXYZ</item>
       <item translatable="yes" context="font-sample-text" comments="Provide a sentence in your language that uses every letter in your alphabet. If your language uses logographs, you may want to include a few to give a glimpse of what selected font looks like.&#10;&#10;https://en.wikipedia.org/wiki/The_quick_brown_fox_jumps_over_the_lazy_dog">The quick brown fox jumps over the lazy dog.</item>
-      <item translatable="yes" context="font-sample-text" comments="Sample text using diacritical marks and special characters. Add diacritics if your alphabet supports them, or other character variants that may be of interest to speakers of your language, like currency sign, etc. The idea is to test if selected font defines those variants.">Yélløw ťüřtle fröm Áłphårettä íś čōmiñġ fôr ďïññęr tòđây.</item>
+      <item translatable="yes" context="font-sample-text" comments="Sample text using diacritical marks and special characters. Add diacritics if your alphabet supports them, or other character variants that may be of interest to speakers of your language, like currency sign, etc. The idea is to test if selected font defines those variants.">Yélløw ťüřtle fröm Áłphårettä íś čōmińġ fôr ďïññęr tòđây.</item>
     </items>
   </object>
   <menu id="samples-menu">
     <section>
       <item>
-        <attribute name="label" translatable="yes">Font name</attribute>
+        <attribute name="label" translatable="yes" comments="This is an option to select to show font name as a font preview in font browser">Font name</attribute>
         <attribute name="action">win.set-sample</attribute>
         <attribute name="target"></attribute>
       </item>
@@ -362,7 +362,7 @@
                 <property name="margin-start">5</property>
                 <property name="max-length">10</property>
                 <property name="width-chars">6</property>
-                <property name="text" translatable="yes">Aa</property>
+                <property name="text" translatable="yes" context="font-sample-text" comments="A short text sample for when fonts are arranged in grid">Aa</property>
               </object>
             </child>
             <layout>
@@ -459,7 +459,7 @@
             <property name="hexpand">True</property>
             <child>
               <object class="GtkLabel">
-                <property name="label" translatable="yes">Initializing</property>
+                <property name="label" translatable="yes" context="loading-fonts">Initializing</property>
                 <property name="use-markup">True</property>
                 <style>
                   <class name="secondary"/>

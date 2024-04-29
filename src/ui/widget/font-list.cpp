@@ -394,7 +394,7 @@ FontList::FontList(Glib::ustring preferences_path) :
     auto samples_stringlist = get_object<Gtk::StringList>(_builder, "samples-stringlist");
 
     auto truncate = [] (Glib::ustring const &text) {
-        constexpr int N = 20; // limit number of characters in label
+        constexpr int N = 30; // limit number of characters in label
         if (text.length() <= N) {
             return text;
         }
@@ -773,7 +773,7 @@ void FontList::update_font_count() {
     auto count = _font_list_store->children().size();
     auto total = _fonts.size();
     // count could be larger than total if we insert "missing" font(s)
-    auto label = count >= total ? _("All fonts") : Glib::ustring::format(count, ' ', _("of"), ' ', total, ' ', _("fonts"));
+    auto label = count >= total ? C_("N-of-fonts", "All fonts") : Glib::ustring::format(count, ' ', C_("N-of-fonts", "of"), ' ', total, ' ', C_("N-of-fonts", "fonts"));
     font_count.set_text(label);
 }
 
