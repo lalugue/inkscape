@@ -423,7 +423,7 @@ FontList::FontList(Glib::ustring preferences_path) :
         "id-alphanum", "id-digits", "id-lowercase", "id-uppercase", "id-fox", "id-international"
     };
     auto truncate = [](const Glib::ustring& text) {
-        int N = 20; // limit number of characters in label
+        int N = 30; // limit number of characters in label
         if (text.length() <= N) return text;
 
         auto substr = text.substr(0, N);
@@ -805,7 +805,7 @@ void FontList::update_font_count() {
     auto count = _font_list_store->children().size();
     auto total = _fonts.size();
     // count could be larger than total if we insert "missing" font(s)
-    auto label = count >= total ? _("All fonts") : Glib::ustring::format(count, ' ', _("of"), ' ', total, ' ', _("fonts"));
+    auto label = count >= total ? C_("N-of-fonts", "All fonts") : Glib::ustring::format(count, ' ', C_("N-of-fonts", "of"), ' ', total, ' ', C_("N-of-fonts", "fonts"));
     font_count.set_text(label);
 }
 

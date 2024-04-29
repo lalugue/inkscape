@@ -130,11 +130,12 @@
   <object class="GtkMenu" id="sample-menu">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
+    <property name="reserve-toggle-size">False</property>
     <child>
       <object class="GtkMenuItem" id="id-font-names">
         <property name="visible">True</property>
         <property name="can-focus">False</property>
-        <property name="label" translatable="yes">Font name</property>
+        <property name="label" translatable="yes" comments="This is an option to select to show font name as a font preview in font browser">Font name</property>
         <property name="use-underline">True</property>
       </object>
     </child>
@@ -164,7 +165,7 @@
       <object class="GtkMenuItem" id="id-lowercase">
         <property name="visible">True</property>
         <property name="can-focus">False</property>
-        <property name="label" translatable="yes" context="font-sample-text" comments="Sample text of lowercase Latin letters. Feel free to add diacritics, if your language uses Latin script.">abcdefghijklmnopqrstuvwxyz</property>
+        <property name="label" translatable="yes" context="font-sample-text" comments="Sample text of lowercase Latin letters. Feel free to add diacritics if your language uses Latin script.">abcdefghijklmnopqrstuvwxyz</property>
         <property name="use-underline">True</property>
       </object>
     </child>
@@ -188,7 +189,7 @@
       <object class="GtkMenuItem" id="id-international">
         <property name="visible">True</property>
         <property name="can-focus">False</property>
-        <property name="label" translatable="yes" context="font-sample-text" comments="Sample text using diacritical marks and special characters. Add diacritics if your alphabet supports them, or other character variants that may be of interest to speakers of your language, like currency sign, etc. The idea is to test if selected font defines those variants.">Yélløw ťüřtle fröm Áłphårettä íś čōmiñġ fôr ďïññęr tòđây.</property>
+        <property name="label" translatable="yes" context="font-sample-text" comments="Sample text using diacritical marks and special characters. Add diacritics if your alphabet supports them, or other character variants that may be of interest to speakers of your language, like currency sign, etc. The idea is to test if selected font defines those variants.">Yélløw ťüřtle fröm Áłphårettä íś čōmińġ fôr ďïññęr tòđây.</property>
         <property name="use-underline">True</property>
       </object>
     </child>
@@ -569,7 +570,7 @@
                 <property name="margin-start">5</property>
                 <property name="max-length">10</property>
                 <property name="width-chars">6</property>
-                <property name="text" translatable="yes">Aa</property>
+                <property name="text" translatable="yes" context="font-sample-text" comments="A short text sample for when fonts are arranged in grid">Aa</property>
                 <property name="caps-lock-warning">False</property>
                 <property name="tooltip-text" translatable="yes">Sample text to show in a font grid display</property>
               </object>
@@ -650,7 +651,7 @@
                 <property name="activates-default">True</property>
                 <property name="width-chars">6</property>
                 <property name="max-width-chars">6</property>
-                <property name="text" translatable="yes">8</property>
+                <property name="text" translatable="no">8</property>
                 <property name="truncate-multiline">True</property>
                 <property name="caps-lock-warning">False</property>
               </object>
@@ -711,7 +712,7 @@
               <object class="GtkLabel">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
-                <property name="label" translatable="yes">Initializing</property>
+                <property name="label" translatable="yes" context="loading-fonts">Initializing</property>
                 <property name="use-markup">True</property>
                 <style>
                   <class name="secondary"/>
