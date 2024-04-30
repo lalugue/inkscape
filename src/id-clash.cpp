@@ -493,7 +493,26 @@ change_def_references(SPObject *from_obj, SPObject *to_obj)
     }
 }
 
+// Supposedly this is a list of valid XML 1.0 ID characters
+// TODO: find link to some reference page
 const char valid_id_chars[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_.:";
+
+Glib::ustring sanitize_id(const Glib::ustring& input_id) {
+    if (input_id.empty()) return input_id;
+
+    auto id = input_id;
+    for (auto pos = id.find_first_not_of(valid_id_chars);
+            pos != Glib::ustring::npos;
+            pos = id.find_first_not_of(valid_id_chars, pos)) {
+        id.replace(pos, 1, "_");
+    }
+    // ID cannot start with a digit, period, or minus (https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/id)
+    auto c = id[0];
+    if (isdigit(c) || c == '.' || c == '-') {
+        id.insert(0, "x");
+    }
+    return id;
+}
 
 /**
  * Modify 'base_name' to create a new ID that is not used in the 'document'
@@ -505,14 +524,7 @@ Glib::ustring generate_similar_unique_id(SPDocument* document, const Glib::ustri
         id = "id-0";
     }
     else {
-        for (auto pos = id.find_first_not_of(valid_id_chars);
-                  pos != Glib::ustring::npos;
-                  pos = id.find_first_not_of(valid_id_chars, pos)) {
-            id.replace(pos, 1, "_");
-        }
-        if (!isalnum(id[0])) {
-            id.insert(0, "x");
-        }
+        id = sanitize_id(base_name);
     }
 
     if (!document) {

@@ -803,8 +803,12 @@ void SymbolsDialog::sendToClipboard(const Gtk::TreeModel::iterator& symbol_iter,
     auto symbol_id = getSymbolId(symbol_iter);
     if (symbol_id.empty()) return;
 
+    const char* doc_name = nullptr;
     auto symbol_document = get_symbol_document(symbol_iter);
-    if (!symbol_document) {
+    if (symbol_document) {
+        doc_name = symbol_document->getDocumentName();
+    }
+    else {
         //we are in global search so get the original symbol document by title
         symbol_document = getDocument();
     }
@@ -823,7 +827,7 @@ void SymbolsDialog::sendToClipboard(const Gtk::TreeModel::iterator& symbol_iter,
                 style = symbol_document->getReprRoot()->attribute("style");
             }
         }
-        ClipboardManager::get()->copySymbol(symbol->getRepr(), style, symbol_document, bbox);
+        ClipboardManager::get()->copySymbol(symbol->getRepr(), style, symbol_document, doc_name, bbox);
     }
 }
 
