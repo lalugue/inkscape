@@ -162,8 +162,8 @@ PdfImportDialog::PdfImportDialog(std::shared_ptr<PDFDoc> doc, const gchar * /*ur
     _render_thumb = false;
 
     // Connect signals
-    _next_page.signal_clicked().connect([=] { _setPreviewPage(_preview_page + 1); });
-    _prev_page.signal_clicked().connect([=] { _setPreviewPage(_preview_page - 1); });
+    _next_page.signal_clicked().connect([this] { _setPreviewPage(_preview_page + 1); });
+    _prev_page.signal_clicked().connect([this] { _setPreviewPage(_preview_page - 1); });
     _preview_area.signal_draw().connect(sigc::mem_fun(*this, &PdfImportDialog::_onDraw));
     _page_numbers.signal_changed().connect(sigc::mem_fun(*this, &PdfImportDialog::_onPageNumberChanged));
     _mesh_slider.get_adjustment()->signal_value_changed().connect(
@@ -204,7 +204,7 @@ PdfImportDialog::PdfImportDialog(std::shared_ptr<PDFDoc> doc, const gchar * /*ur
     set_focus(*okbutton);
 
     auto &font_strat = UI::get_object_raw<Gtk::CellRendererCombo>(_builder, "cell-strat");
-    font_strat.signal_changed().connect([=](const Glib::ustring &path, const Gtk::TreeModel::iterator &source) {
+    font_strat.signal_changed().connect([this](const Glib::ustring &path, const Gtk::TreeModel::iterator &source) {
         if (auto target = _font_model->get_iter(path)) {
             (*target)[_font_col->proc_id] = int((*source)[_font_col->id]);
             (*target)[_font_col->proc_label] = Glib::ustring((*source)[_font_col->family]);
@@ -540,7 +540,7 @@ void PdfImportDialog::_setPreviewPage(int page) {
             cairo_scale(cr, scale_factor, scale_factor);   // Use Cairo for resizing the image
             poppler_page_render(poppler_page.get(), cr);
             cairo_destroy(cr);
-            channel.run([=] {
+            channel.run([dialog, page] {
                 dialog->_preview_rendering_in_progress = false;
                 dialog->_preview_area.queue_draw();
                 if (dialog->_preview_page != page) {
