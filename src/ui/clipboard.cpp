@@ -191,7 +191,7 @@ class ClipboardManagerImpl : public ClipboardManager
 public:
     void copy(ObjectSet *set) override;
     void copyPathParameter(Inkscape::LivePathEffect::PathParam *) override;
-    void copySymbol(Inkscape::XML::Node* symbol, gchar const* style, SPDocument *source, Geom::Rect const &bbox) override;
+    void copySymbol(Inkscape::XML::Node* symbol, gchar const* style, SPDocument *source, const char* symbol_set, Geom::Rect const &bbox) override;
     void insertSymbol(SPDesktop *desktop, Geom::Point const &shift_dt) override;
     bool paste(SPDesktop *desktop, bool in_place, bool on_page) override;
     bool pasteStyle(ObjectSet *set) override;
@@ -378,7 +378,7 @@ void ClipboardManagerImpl::copyPathParameter(Inkscape::LivePathEffect::PathParam
  * @param source The source document of the symbol.
  * @param bbox The bounding box of the symbol, in desktop coordinates.
  */
-void ClipboardManagerImpl::copySymbol(Inkscape::XML::Node* symbol, gchar const* style, SPDocument *source,
+void ClipboardManagerImpl::copySymbol(Inkscape::XML::Node* symbol, gchar const* style, SPDocument *source, const char* symbol_set,
                                       Geom::Rect const &bbox)
 {
     if (!symbol)
@@ -392,8 +392,14 @@ void ClipboardManagerImpl::copySymbol(Inkscape::XML::Node* symbol, gchar const* 
     auto original = cast<SPItem>(source->getObjectByRepr(symbol));
     _copyUsedDefs(original);
     Inkscape::XML::Node *repr = symbol->duplicate(_doc);
-    Glib::ustring symbol_name = repr->attribute("id");
-
+    Glib::ustring symbol_name;
+    // disambiguate symbols from various symbol sets
+    if (symbol_set && *symbol_set) {
+        symbol_name = symbol_set;
+        symbol_name += ":";
+        symbol_name = sanitize_id(symbol_name);
+    }
+    symbol_name += repr->attribute("id");
     symbol_name += "_inkscape_duplicate";
     repr->setAttribute("id", symbol_name);
     _defs->appendChild(repr);
