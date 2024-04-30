@@ -32,16 +32,12 @@ public:
     double complexity(Geom::Affine const &ctm) const override;
     bool uses_background()  const override { return false; }
     
-    void set_opacity(double o);
     void set_color(guint32 c);
-    void set_icc(SVGICCColor const &icc_) { icc = icc_; }
 
     Glib::ustring name() const override { return Glib::ustring("Flood"); }
 
 private:
-    double opacity;
     guint32 color;
-    std::optional<SVGICCColor> icc;
 };
 
 } // namespace Filters

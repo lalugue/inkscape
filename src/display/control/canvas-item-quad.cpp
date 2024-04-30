@@ -18,7 +18,7 @@
 
 #include "canvas-item-quad.h"
 
-#include "color.h" // SP_RGBA_x_F
+#include "display/cairo-utils.h"
 #include "helper/geom.h"
 
 namespace Inkscape {
@@ -134,13 +134,11 @@ void CanvasItemQuad::_render(Inkscape::CanvasItemBuffer &buf) const
         cairo_set_operator(buf.cr->cobj(), CAIRO_OPERATOR_DIFFERENCE);
     }
 
-    buf.cr->set_source_rgba(SP_RGBA32_R_F(_fill), SP_RGBA32_G_F(_fill),
-                            SP_RGBA32_B_F(_fill), SP_RGBA32_A_F(_fill));
+    ink_cairo_set_source_rgba32(buf.cr, _fill);
     buf.cr->fill_preserve();
 
     buf.cr->set_line_width(1);
-    buf.cr->set_source_rgba(SP_RGBA32_R_F(_stroke), SP_RGBA32_G_F(_stroke),
-                            SP_RGBA32_B_F(_stroke), SP_RGBA32_A_F(_stroke));
+    ink_cairo_set_source_rgba32(buf.cr, _stroke);
     buf.cr->stroke_preserve();
     buf.cr->begin_new_path();
 

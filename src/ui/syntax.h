@@ -19,8 +19,6 @@
 #include <glibmm.h>
 #include <glibmm/ustring.h>
 
-#include "color.h"
-
 namespace Inkscape::UI::Syntax {
 
 /** The style of a single element in a (Pango markup)-enabled widget. */

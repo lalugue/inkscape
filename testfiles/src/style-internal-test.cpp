@@ -70,6 +70,16 @@ TEST(StyleInternalTest, testSPIDashArrayValidity)
     // EXPECT_FALSE(array23.is_valid()); // negative total: invalid and removed by 'read'
 }
 
+TEST(StyleInternalTest, testSPIPaint)
+{
+    SPIPaint paint;
+    EXPECT_EQ(paint.get_value(), "");
+    paint.read("red");
+    EXPECT_EQ(paint.get_value(), "red");
+    paint.clear();
+    EXPECT_EQ(paint.get_value(), "");
+}
+
 /*
   Local Variables:
   mode:c++

@@ -36,8 +36,8 @@ private:
     BoolParam hide_mask;
     BoolParam background;
     ColorPickerParam background_color;
+    std::optional<Colors::Color> previous_color;
     Geom::Path mask_box;
-    guint32 previous_color;
 };
 
 void sp_remove_powermask(Inkscape::Selection *sel);

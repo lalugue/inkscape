@@ -52,6 +52,10 @@ class TextBuffer;
 class Widget;
 } // namespace Gtk
 
+namespace Inkscape::Colors {
+class Color;
+} // namespace Inkscape::Colors
+
 Glib::ustring ink_ellipsize_text(Glib::ustring const &src, std::size_t maxlen);
 
 void reveal_widget(Gtk::Widget *widget, bool show);
@@ -190,7 +194,12 @@ double get_luminance(const Gdk::RGBA &color);
 Gdk::RGBA get_color_with_class(Gtk::Widget &widget,
                                Glib::ustring const &css_class);
 
+// Convert a Gdk color to a hex code for css injection.
+Glib::ustring gdk_to_css_color(const Gdk::RGBA& color);
+Gdk::RGBA css_color_to_gdk(const char *value);
+
 guint32 to_guint32(Gdk::RGBA const &rgba);
+Gdk::RGBA color_to_rgba(Inkscape::Colors::Color const &color);
 Gdk::RGBA to_rgba(guint32 const u32);
 
 // convert Gdk::RGBA into 32-bit rrggbbaa color, optionally replacing alpha, if specified
@@ -216,6 +225,7 @@ Cairo::RefPtr<Cairo::LinearGradient> create_cubic_gradient(
 
 // If on Windows, get the native window & set it to DWMA_USE_IMMERSIVE_DARK_MODE
 void set_dark_titlebar(Glib::RefPtr<Gdk::Surface> const &surface, bool is_dark);
+unsigned int get_color_value(const Glib::ustring color);
 
 // Cover for Glib::wrap not passing through const.
 template <typename T>

@@ -265,14 +265,15 @@ void StyleSwatch::setStyle(SPStyle *query)
                 place->set_tooltip_text((i == SS_FILL)? (_("Pattern (fill)")) : (_("Pattern (stroke)")));
             }
         } else if (paint->set && paint->isColor()) {
-            guint32 color = paint->value.color.toRGBA32( SP_SCALE24_TO_FLOAT ((i == SS_FILL)? query->fill_opacity.value : query->stroke_opacity.value) );
-            _color_preview[i]->setRgba32(color);
+            auto color = paint->getColor();
+            color.addOpacity(i == SS_FILL ? query->fill_opacity : query->stroke_opacity);
+            _color_preview[i]->setRgba32(color.toRGBA());
             place->append(*_color_preview[i]);
             gchar *tip;
             if (i == SS_FILL) {
-                tip = g_strdup_printf (_("Fill: %06x/%.3g"), color >> 8, SP_RGBA32_A_F(color));
+                tip = g_strdup_printf (_("Fill: %s"), color.toString().c_str());
             } else {
-                tip = g_strdup_printf (_("Stroke: %06x/%.3g"), color >> 8, SP_RGBA32_A_F(color));
+                tip = g_strdup_printf (_("Stroke: %s"), color.toString().c_str());
             }
             place->set_tooltip_text(tip);
             g_free (tip);

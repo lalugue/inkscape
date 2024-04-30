@@ -35,7 +35,7 @@ LPEPowerMask::LPEPowerMask(LivePathEffectObject *lpeobject)
     //wrap(_("Wrap mask data"), _("Wrap mask data allowing previous filters"), "wrap", &wr, this, false),
     hide_mask(_("Hide mask"), _("Hide mask"), "hide_mask", &wr, this, false),
     background(_("Add background to mask"), _("Add background to mask"), "background", &wr, this, false),
-    background_color(_("Background color and opacity"), _("Set color and opacity of the background"), "background_color", &wr, this, 0xffffffff)
+    background_color(_("Background color and opacity"), _("Set color and opacity of the background"), "background_color", &wr, this, Colors::Color(0xffffffff))
 {
     registerParameter(&uri);
     registerParameter(&invert);
@@ -115,8 +115,8 @@ LPEPowerMask::doBeforeEffect (SPLPEItem const* lpeitem){
     }
     mask = sp_lpe_item->getMaskObject();
     if (mask) {
-        if (previous_color != background_color.get_value()) {
-            previous_color = background_color.get_value();
+        if (previous_color != *background_color.get_value()) {
+            previous_color = *background_color.get_value();
             setMask();
         } else {
             uri.param_setValue(Glib::ustring(extract_uri(sp_lpe_item->getAttribute("mask"))), true);
@@ -237,16 +237,12 @@ LPEPowerMask::setMask(){
             box->setAttribute("id", box_id);
             exist = false;
         }
-        Glib::ustring style;
-        gchar c[32];
-        unsigned const rgb24 = background_color.get_value() >> 8;
-        safeprintf(c, "#%06x", rgb24);
-        style = Glib::ustring("fill:") + Glib::ustring(c);
-        Inkscape::SVGOStringStream os;
-        os << SP_RGBA32_A_F(background_color.get_value());
-        style = style + Glib::ustring(";fill-opacity:") + Glib::ustring(os.str());
-        SPCSSAttr *css = sp_repr_css_attr_new();
-        sp_repr_css_attr_add_from_string(css, style.c_str());
+
+        auto const css = sp_repr_css_attr_new();
+        sp_repr_css_set_property_string(css, "fill", background_color.get_value()->toString(false));
+        sp_repr_css_set_property_double(css, "fill-opacity", background_color.get_value()->getOpacity());
+        sp_repr_css_set_property_string(css, "stroke", "none");
+
         char const* filter = sp_repr_css_property (css, "filter", nullptr);
         if(!filter || !strcmp(filter, filter_uri.c_str())) {
             if (invert && is_visible) {
@@ -254,11 +250,9 @@ LPEPowerMask::setMask(){
             } else {
                 sp_repr_css_set_property (css, "filter", nullptr);
             }
-            
         }
-        Glib::ustring css_str;
-        sp_repr_css_write_string(css, css_str);
-        box->setAttributeOrRemoveIfEmpty("style", css_str);
+        sp_repr_css_change(box, css, "style");
+        sp_repr_css_attr_unref(css);
         box->setAttribute("d", sp_svg_write_path(mask_box));
         if (!exist) {
             elemref = mask->appendChildRepr(box);

@@ -30,7 +30,6 @@
 #include <2geom/pathvector.h>
 
 #include "async/progress.h"
-#include "color.h"
 #include "context-fns.h"
 #include "desktop-style.h"
 #include "desktop.h"
@@ -69,6 +68,8 @@ using Inkscape::DocumentUndo;
 using Inkscape::Display::ExtractARGB32;
 using Inkscape::Display::ExtractRGB32;
 using Inkscape::Display::AssembleARGB32;
+
+using namespace Inkscape::Colors;
 
 namespace Inkscape::UI::Tools {
 
@@ -192,8 +193,6 @@ static bool compare_uint32(uint32_t a, uint32_t b, uint32_t d)
  */
 static bool compare_pixels(uint32_t check, uint32_t orig, uint32_t merged_orig_pixel, uint32_t dtc, int threshold, PaintBucketChannels method)
 {
-    float hsl_check[3] = {0,0,0}, hsl_orig[3] = {0,0,0};
-
     uint32_t ac = 0, rc = 0, gc = 0, bc = 0;
     ExtractARGB32(check, ac, rc, gc, bc);
 
@@ -206,13 +205,16 @@ static bool compare_pixels(uint32_t check, uint32_t orig, uint32_t merged_orig_p
     uint32_t amop = 0, rmop = 0, gmop = 0, bmop = 0;
     ExtractARGB32(merged_orig_pixel, amop, rmop, gmop, bmop);
 
+    auto hsl_orig = Color(Space::Type::HSL, {0, 0, 0});
+    auto hsl_check = hsl_orig;
+
     if ((method == FLOOD_CHANNELS_H) ||
         (method == FLOOD_CHANNELS_S) ||
         (method == FLOOD_CHANNELS_L)) {
-        double dac = ac;
         double dao = ao;
-        SPColor::rgb_to_hsl_floatv(hsl_check, rc / dac, gc / dac, bc / dac);
-        SPColor::rgb_to_hsl_floatv(hsl_orig, ro / dao, go / dao, bo / dao);
+        double dac = ac;
+        hsl_orig.set(Color(Space::Type::RGB, {ro / dao, go / dao, bo / dao}), true);
+        hsl_check.set(Color(Space::Type::RGB, {rc / dac, gc / dac, bc / dac}), true);
     }
     
     switch (method) {
@@ -720,7 +722,7 @@ static void sp_flood_do_flood_fill(SPDesktop *desktop, Geom::Point const &cursor
     auto const stride = Cairo::ImageSurface::format_stride_for_width(Cairo::Surface::Format::ARGB32, width);
     // TODO: C++20: *once* Apple+AppImage support it: Use std::make_unique_for_overwrite()
     auto const px = std::make_unique<unsigned char[]>(stride * height);
-    uint32_t bgcolor, dtc;
+    uint32_t dtc;
 
     // Draw image into data block px
     { // this block limits the lifetime of Drawing and DrawingContext
@@ -738,12 +740,11 @@ static void sp_flood_do_flood_fill(SPDesktop *desktop, Geom::Point const &cursor
         auto dc = DrawingContext(surf->cobj(), Geom::Point());
         // cairo_translate not necessary here - surface origin is at 0,0
 
-        bgcolor = document->getPageManager().background_color;
-        bgcolor &= 0xffffff00; // make color transparent for 'alpha' flood mode to work
-        // bgcolor is 0xrrggbbaa, we need 0xaarrggbb
-        dtc = bgcolor >> 8; // keep color transparent; page color doesn't support transparency anymore
+        // make color transparent for 'alpha' flood mode to work
+        auto bgcolor = document->getPageManager().getBackgroundColor();
+        bgcolor.setOpacity(0.0);
 
-        dc.setSource(bgcolor);
+        dc.setSource(bgcolor.toARGB());
         dc.setOperator(CAIRO_OPERATOR_SOURCE);
         dc.paint();
         dc.setOperator(CAIRO_OPERATOR_OVER);

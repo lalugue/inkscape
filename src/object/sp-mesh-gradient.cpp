@@ -216,12 +216,12 @@ std::unique_ptr<Inkscape::DrawingPaintServer> SPMeshGradient::create_drawing_pai
                     //          << " calculated as " << t << "." << std::endl;
                 }
 
-                auto color = patch.getColor(k);
+                // Does this data really need RGB at this stage?
+                auto color = *patch.getColor(k)->converted(Colors::Space::Type::RGB);
                 for (int r = 0; r < 3; r++) {
-                    data.color[k][r] = color.v.c[r];
+                    data.color[k][r] = color[r];
                 }
-
-                data.opacity[k] = patch.getOpacity(k);
+                data.opacity[k] = color.getOpacity();
             }
         }
     }

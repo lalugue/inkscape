@@ -141,6 +141,7 @@ private:
     Gtk::ProgressBar &_prog_batch;
     ExportList &export_list;
     Gtk::Box &progress_box;
+    Inkscape::UI::Widget::ColorPicker &_background_color;
 
     // Store all items to be displayed in flowbox
     std::map<std::string, std::unique_ptr<BatchItem>> current_items;
@@ -183,8 +184,6 @@ private:
     auto_connection refresh_items_conn;
     // SVG Signals
     auto_connection _pages_changed_connection;
-
-    std::unique_ptr<Inkscape::UI::Widget::ColorPicker> _bgnd_color_picker;
 };
 
 } // namespace Dialog

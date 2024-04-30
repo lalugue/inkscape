@@ -58,11 +58,15 @@ namespace Widget {
 FillNStroke::FillNStroke(FillOrStroke k)
     : Gtk::Box(Gtk::Orientation::VERTICAL)
     , kind(k)
+    , _solid_colors(std::make_shared<Colors::ColorSet>())
     , subselChangedConn()
     , eventContextConn()
 {
+    // Single fallback color
+    _solid_colors->set(Color(0x000000ff));
+
     // Add and connect up the paint selector widget:
-    _psel = Gtk::make_managed<UI::Widget::PaintSelector>(kind);
+    _psel = Gtk::make_managed<UI::Widget::PaintSelector>(kind, _solid_colors);
     _psel->set_visible(true);
     append(*_psel);
     _psel->signal_mode_changed().connect(sigc::mem_fun(*this, &FillNStroke::paintModeChangeCB));
@@ -189,7 +193,7 @@ void FillNStroke::performUpdate()
        }
     }
     SPIPaint &targPaint = *query.getFillOrStroke(kind == FILL);
-    SPIScale24 &targOpacity = *(kind == FILL ? query.fill_opacity.upcast() : query.stroke_opacity.upcast());
+    double targOpacity = kind == FILL ? query.fill_opacity : query.stroke_opacity;
 
     switch (result) {
         case QUERY_STYLE_NOTHING: {
@@ -212,7 +216,10 @@ void FillNStroke::performUpdate()
             }
 
             if (targPaint.set && targPaint.isColor()) {
-                _psel->setColorAlpha(targPaint.value.color, SP_SCALE24_TO_FLOAT(targOpacity.value));
+                // This is terrible, future refactoring has been written
+                auto color = targPaint.getColor();
+                color.addOpacity(targOpacity);
+                _solid_colors->set(color);
             } else if (targPaint.set && targPaint.isPaintserver()) {
                 SPPaintServer* server = (kind == FILL) ? query.getFillPaintServer() : query.getStrokePaintServer();
 
@@ -349,9 +356,9 @@ void FillNStroke::dragFromPaint()
         case UI::Widget::PaintSelector::MODE_SOLID_COLOR: {
             // local change, do not update from selection
             _drag_id = g_timeout_add_full(G_PRIORITY_DEFAULT, 100, dragDelayCB, this, nullptr);
-            _psel->setFlatColor(_desktop,
-                                (kind == FILL) ? "fill" : "stroke",
-                                (kind == FILL) ? "fill-opacity" : "stroke-opacity");
+
+            sp_desktop_set_color(_desktop, _solid_colors->getAverage(), false, kind == FILL);
+
             DocumentUndo::maybeDone(_desktop->doc(), (kind == FILL) ? undo_F_label : undo_S_label,
                                     (kind == FILL) ? _("Set fill color") : _("Set stroke color"),
                                     INKSCAPE_ICON("dialog-fill-and-stroke"));
@@ -428,8 +435,9 @@ void FillNStroke::updateFromPaint(bool switch_style)
         }
 
         case UI::Widget::PaintSelector::MODE_SOLID_COLOR: {
-            _psel->setFlatColor(_desktop, (kind == FILL) ? "fill" : "stroke",
-                                (kind == FILL) ? "fill-opacity" : "stroke-opacity");
+
+            sp_desktop_set_color(_desktop, _solid_colors->getAverage(), false, kind == FILL);
+
             DocumentUndo::maybeDone(_desktop->getDocument(), (kind == FILL) ? undo_F_label : undo_S_label,
                                     (kind == FILL) ? _("Set fill color") : _("Set stroke color"),
                                     INKSCAPE_ICON("dialog-fill-and-stroke"));
@@ -462,11 +470,12 @@ void FillNStroke::updateFromPaint(bool switch_style)
                     int result = objects_query_fillstroke(items, &query, kind == FILL);
                     if (result == QUERY_STYLE_MULTIPLE_SAME) {
                         SPIPaint &targPaint = *query.getFillOrStroke(kind == FILL);
-                        SPColor common;
+                        Inkscape::Colors::Color common(0x000000ff);
                         if (!targPaint.isColor()) {
-                            common = sp_desktop_get_color(_desktop, kind == FILL);
+                            if (auto color = sp_desktop_get_color(_desktop, kind == FILL))
+                                common = *color;
                         } else {
-                            common = targPaint.value.color;
+                            common = targPaint.getColor();
                         }
                         vector = sp_document_default_gradient_vector(document, common, 1.0, createSwatch);
                     }

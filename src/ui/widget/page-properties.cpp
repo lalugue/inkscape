@@ -157,27 +157,16 @@ public:
       , _linked_viewbox_scale (get_widget<Gtk::Image>            (_builder, "linked-scale-img"))
       , _display_units        (get_derived_widget<UnitMenu>      (_builder, "display-units"))
       , _page_units           (get_derived_widget<UnitMenu>      (_builder, "page-units"))
+      , _backgnd_color_picker (get_derived_widget<ColorPicker>   (_builder, "background-color", _("Background color"), false))
+      , _border_color_picker  (get_derived_widget<ColorPicker>   (_builder, "border-color", _("Border and shadow color"), true))
+      , _desk_color_picker    (get_derived_widget<ColorPicker>   (_builder, "desk-color", _("Desk color"), false))
       // clang-format-on
     {
-        _backgnd_color_picker = std::make_unique<ColorPicker>(
-            _("Background color"), "", 0xffffff00, true,
-            &get_widget<Gtk::Button>(_builder, "background-color"));
-        _backgnd_color_picker->use_transparency(false);
-
-        _border_color_picker = std::make_unique<ColorPicker>(
-            _("Border and shadow color"), "", 0x0000001f, true,
-            &get_widget<Gtk::Button>(_builder, "border-color"));
-
-        _desk_color_picker = std::make_unique<ColorPicker>(
-            _("Desk color"), "", 0xd0d0d0ff, true,
-            &get_widget<Gtk::Button>(_builder, "desk-color"));
-        _desk_color_picker->use_transparency(false);
-
         for (auto element : {Color::Background, Color::Border, Color::Desk}) {
-            get_color_picker(element).connectChanged([=](unsigned const rgba) {
-                update_preview_color(element, rgba);
+            get_color_picker(element).connectChanged([=](Colors::Color const &color) {
+                update_preview_color(element, color);
                 if (_update.pending()) return;
-                _signal_color_changed.emit(rgba, element);
+                _signal_color_changed.emit(color, element);
             });
         }
 
@@ -275,11 +264,11 @@ private:
         }
     }
 
-    void update_preview_color(Color const element, unsigned const rgba) {
+    void update_preview_color(Color const element, Colors::Color const &color) {
         switch (element) {
-            case Color::Desk: _preview->set_desk_color(rgba); break;
-            case Color::Border: _preview->set_border_color(rgba); break;
-            case Color::Background: _preview->set_page_color(rgba); break;
+            case Color::Desk: _preview->set_desk_color(color.toRGBA()); break;
+            case Color::Border: _preview->set_border_color(color.toRGBA()); break;
+            case Color::Background: _preview->set_page_color(color.toRGBA()); break;
         }
     }
 
@@ -423,10 +412,10 @@ private:
         _signal_unit_changed.emit(new_unit, Units::Document);
     }
 
-    void set_color(Color element, unsigned int color) override {
+    void set_color(Color element, Colors::Color const &color) override {
         auto scoped(_update.block());
 
-        get_color_picker(element).setRgba32(color);
+        get_color_picker(element).setColor(color);
         update_preview_color(element, color);
     }
 
@@ -481,9 +470,9 @@ private:
 
     ColorPicker& get_color_picker(Color element) {
         switch (element) {
-            case Color::Background: return *_backgnd_color_picker;
-            case Color::Desk: return *_desk_color_picker;
-            case Color::Border: return *_border_color_picker;
+            case Color::Background: return _backgnd_color_picker;
+            case Color::Desk: return _desk_color_picker;
+            case Color::Border: return _border_color_picker;
 
             default:
                 throw std::runtime_error("missing case in get_color_picker");
@@ -566,9 +555,9 @@ private:
     MathSpinButton &_viewbox_y;
     MathSpinButton &_viewbox_width;
     MathSpinButton &_viewbox_height;
-    std::unique_ptr<ColorPicker> _backgnd_color_picker;
-    std::unique_ptr<ColorPicker> _border_color_picker;
-    std::unique_ptr<ColorPicker> _desk_color_picker;
+    ColorPicker &_backgnd_color_picker;
+    ColorPicker &_border_color_picker;
+    ColorPicker &_desk_color_picker;
     std::vector<PaperSize> _page_sizes;
     Glib::RefPtr<Gio::SimpleAction> _template_action;
     Gtk::MenuButton &_templates_menu_button;

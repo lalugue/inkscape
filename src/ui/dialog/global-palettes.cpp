@@ -33,14 +33,17 @@
 #include <utility>
 #include <vector>
 
-#include "color/cmyk-conv.h"
+#include "colors/manager.h"
+#include "colors/spaces/enum.h"
+
 #include "helper/choose-file.h"
-#include "hsluv.h"
+#include "colors/spaces/lab.h"
 #include "io/resource.h"
 #include "io/sys.h"
 #include "util/delete-with.h"
-using Inkscape::Util::delete_with;
 #include "util-string/ustring-format.h"
+using Inkscape::Util::delete_with;
+using namespace Inkscape::Colors;
 
 namespace {
 
@@ -143,29 +146,6 @@ void load_acb_palette(PaletteFileData& palette, std::string const &fname) {
     palette.columns = read_value<uint16_t>(stream);
     palette.page_offset = read_value<uint16_t>(stream);
     auto cs = read_value<uint16_t>(stream);
-    int components = 0;
-    PaletteFileData::ColorSpace color_space;
-
-	switch (cs) {
-    case 0: // RGB
-        components = 3;
-        color_space = PaletteFileData::Rgb255;
-        break;
-    case 2: // CMYK
-        components = 4;
-        color_space = PaletteFileData::Cmyk100;
-        break;
-    case 7: // LAB
-        components = 3;
-        color_space = PaletteFileData::Lab100;
-        break;
-    case 8: // Grayscale
-        components = 1;
-        color_space = PaletteFileData::Rgb255; // using RGB for grayscale
-        break;
-    default:
-        throw std::runtime_error(_("ACB file color space not supported."));
-    }
 
     auto ext = get_extension(ttl);
     if (ext == ".acb") {
@@ -183,73 +163,46 @@ void load_acb_palette(PaletteFileData& palette, std::string const &fname) {
     }
 
     palette.colors.reserve(color_count);
-    // simple CMYK converter here; original palette colors are kept for later use
-    Inkscape::CmykConverter convert;
+
+    auto &cm = Manager::get();
+    std::shared_ptr<Space::AnySpace> space;
+
+    switch (cs) {
+        case 0: // RGB
+            space = cm.find(Space::Type::RGB);
+            break;
+        case 2: // CMYK
+            space = cm.find(Space::Type::CMYK);
+            break;
+        case 7: // LAB
+            space = cm.find(Space::Type::LAB);
+            break;
+        case 8: // Grayscale
+            space = cm.find(Space::Type::Gray);
+            break;
+        default:
+            throw std::runtime_error(_("ACB file color space not supported."));
+    }
 
     for (int index = 0; index < color_count; ++index) {
 
         auto name = read_pstring(stream);
         if (name.substr(0, 3) == "$$$") name = extract(name);
         auto code = read_string(stream, 6);
-        auto channels = read_data(stream, components);
-        PaletteFileData::Color color;
         std::ostringstream ost;
         ost.precision(3);
 
-        switch (color_space) {
-            case PaletteFileData::Lab100: {
-                auto l = std::floor(channels[0] / 2.55f + 0.5f);
-                auto a = channels[1] - 128.0f;
-                auto b = channels[2] - 128.0f;
-                auto rgb = Hsluv::lab_to_rgb(l, a, b);
-                unsigned ur = rgb[0] * 255;
-                unsigned ug = rgb[1] * 255;
-                unsigned ub = rgb[2] * 255;
-                color = {{l, a, b, 0}, color_space, {ur, ug, ub}};
-                ost << "L: " << l << " a: " << a << " b: " << b;
-            }
-            break;
-
-            case PaletteFileData::Cmyk100: {
-                // 0% - 100%
-                auto c = std::floor((255 - channels[0]) / 2.55f + 0.5f);
-                auto m = std::floor((255 - channels[1]) / 2.55f + 0.5f);
-                auto y = std::floor((255 - channels[2]) / 2.55f + 0.5f);
-                auto k = std::floor((255 - channels[3]) / 2.55f + 0.5f);
-                auto [r, g, b] = convert.cmyk_to_rgb(c, m, y, k);
-                color = {{c, m, y, k}, color_space, {r, g, b}};
-                ost << "C: " << c << "% M: " << m << "% Y: " << y << "% K: " << k << '%';
-            }
-            break;
-
-            case PaletteFileData::Rgb255: {
-                float r = channels[0];
-                float g = cs == 1 ? r : channels[1];
-                float b = cs == 1 ? r : channels[2];
-                unsigned ur = r;
-                unsigned ug = g;
-                unsigned ub = b;
-                color = {{r, g, b, 0}, color_space, {ur, ug, ub}};
-                if (cs == 1) {
-                    // grayscale
-                    ost << "R: " << ur << " G: " << ug << " B: " << ub;
-                }
-                else {
-                    ost << "R: " << ur << " G: " << ug << " B: " << ub;
-                }
-            }
-            break;
-
-            default:
-                throw std::runtime_error(_("Palette color space unexpected."));
+        std::vector<double> data;
+        for (auto channel : read_data(stream, space->getComponentCount())) {
+            data.emplace_back(channel / 255.0);
         }
+        auto color = Color(space, data);
 
         if (name.empty()) {
             palette.colors.emplace_back(PaletteFileData::SpacerItem());
         }
         else {
-            color.name = prefix + name + suffix;
-            color.definition = ost.str();
+            color.setName(prefix + name + suffix);
             palette.colors.emplace_back(std::move(color));
         }
     }
@@ -269,13 +222,13 @@ void load_ase_swatches(PaletteFileData& palette, std::string const &fname) {
     }
 
     auto block_count = read_value<uint32_t>(stream);
-    Inkscape::CmykConverter convert;
-    auto to_mode = [](int type){
-        switch (type) {
-            case 0:  return PaletteFileData::Global;
-            case 1:  return PaletteFileData::Spot;
-            default: return PaletteFileData::Normal;
-        }
+    auto &cm = Manager::get();
+
+    static std::map<std::string, Space::Type> name_map = {
+        {"RGB ", Space::Type::RGB},
+        {"LAB ", Space::Type::LAB},
+        {"CMYK", Space::Type::CMYK},
+        {"GRAY", Space::Type::Gray}
     };
 
     for (uint32_t block = 0; block < block_count; ++block) {
@@ -289,60 +242,26 @@ void load_ase_swatches(PaletteFileData& palette, std::string const &fname) {
         }
         else if (block_type == 0x0001) { // color entry
             auto color_name = read_pstring(stream, true);
-            auto mode = read_string(stream, 4);
-            if (mode == "CMYK") {
-                auto c = read_float(stream) * 100;
-                auto m = read_float(stream) * 100;
-                auto y = read_float(stream) * 100;
-                auto k = read_float(stream) * 100;
-                auto type = read_value<uint16_t>(stream);
-                auto mode = to_mode(type);
-                auto [r, g, b] = convert.cmyk_to_rgb(c, m, y, k);
-                ost << "C: " << c << "% M: " << m << "% Y: " << y << "% K: " << k << '%';
-                palette.colors.emplace_back(
-                    PaletteFileData::Color {{c, m, y, k}, PaletteFileData::Cmyk100, {r, g, b}, color_name, ost.str(), mode}
-                );
-            }
-            else if (mode == "RGB ") {
-                auto r = read_float(stream) * 255;
-                auto g = read_float(stream) * 255;
-                auto b = read_float(stream) * 255;
-                auto type = read_value<uint16_t>(stream);
-                auto mode = to_mode(type);
-                palette.colors.emplace_back(
-                    PaletteFileData::Color {{r, g, b, 0}, PaletteFileData::Rgb255, {(unsigned)r, (unsigned)g, (unsigned)b}, color_name, "", mode}
-                );
-            }
-            else if (mode == "LAB ") {
-                //TODO - verify scale
-                auto l = read_float(stream) * 100;
-                auto a = read_float(stream) * 100;
-                auto b = read_float(stream) * 100;
-                auto type = read_value<uint16_t>(stream);
-                auto mode = to_mode(type);
-                auto rgb = Hsluv::lab_to_rgb(l, a, b);
-                unsigned ur = rgb[0] * 255;
-                unsigned ug = rgb[1] * 255;
-                unsigned ub = rgb[2] * 255;
-                ost << "L: " << l << " a: " << a << " b: " << b;
-                palette.colors.emplace_back(
-                    PaletteFileData::Color {{l, a, b, 0}, PaletteFileData::Lab100, {ur, ug, ub}, color_name, ost.str(), mode}
-                );
-            }
-            else if (mode == "Gray") {
-                auto g = read_float(stream) * 255;
-                auto type = read_value<uint16_t>(stream);
-                auto mode = to_mode(type);
-                palette.colors.emplace_back(
-                    PaletteFileData::Color {{g, g, g, 0}, PaletteFileData::Rgb255, {(unsigned)g, (unsigned)g, (unsigned)g}, color_name, "", mode}
-                );
-            }
-            else {
+            auto space_name = read_string(stream, 4);
+            
+            auto it = name_map.find(space_name);
+            if (it == name_map.end()) {
                 std::ostringstream ost;
-                ost << _("ASE color mode not recognized:") << " '" << mode << "'.";
+                ost << _("ASE color mode not recognized:") << " '" << space_name << "'.";
                 throw std::runtime_error(ost.str());
             }
-           
+            auto space = cm.find(it->second);
+            std::vector<double> data;
+            for (unsigned i = 0; i < space->getComponentCount(); i++) {
+                data.emplace_back(read_float(stream));
+            }
+            auto color = Color(space, data);
+
+            read_value<uint16_t>(stream); // type uint16, ignored for now
+            // auto mode = to_mode(type); Is this used? 0, Global, 1, Spot, else Normal
+
+            color.setName(color_name);
+            palette.colors.emplace_back(color);
         }
         else if (block_type == 0xc002) { // group end
         }
@@ -375,30 +294,25 @@ void load_gimp_palette(PaletteFileData& palette, std::string const &path)
     static auto const regex_cols  = Glib::Regex::create("\\s*Columns:\\s*(.*\\S)", Glib::Regex::CompileFlags::OPTIMIZE | Glib::Regex::CompileFlags::ANCHORED);
     static auto const regex_blank = Glib::Regex::create("\\s*(?:$|#)", Glib::Regex::CompileFlags::OPTIMIZE | Glib::Regex::CompileFlags::ANCHORED);
 
+    auto &cm = Manager::get();
+    auto space = cm.find(Space::Type::RGB);
+
     while (std::fgets(buf, sizeof(buf), f.get())) {
         auto line = Glib::ustring(buf); // Unnecessary copy required until using a glibmm with support for string views. TODO: Fix when possible.
         Glib::MatchInfo match;
         if (regex_rgb->match(line, match)) { // ::regex_match(line, match, boost::regex(), boost::regex_constants::match_continuous)) {
             // RGB color, followed by an optional name.
-            PaletteFileData::Color color;
-            for (int i = 0; i < 3; i++) {
-                color.rgb[i] = std::clamp(std::stoi(match.fetch(i + 1)), 0, 255);
-                color.channels[i] = color.rgb[i];
-            }
-            color.channels[3] = 0;
-            color.space = PaletteFileData::Rgb255;
-            color.name = match.fetch(4);
 
-            if (!color.name.empty()) {
+            std::vector<double> data;
+            for (unsigned i = 0; i < space->getComponentCount(); i++) {
+                data.emplace_back(std::stoi(match.fetch(i+1)) / 255.0);
+            }
+            auto color = Color(space, data);
+            color.setName(match.fetch(4));
+
+            if (!color.getName().empty()) {
                 // Translate the name if present.
-                color.name = g_dpgettext2(nullptr, "Palette", color.name.c_str());
-            } else {
-                // Otherwise, set the name to be the hex value.
-                color.name = Glib::ustring::compose("#%1%2%3",
-                                 Inkscape::ustring::format_classic(std::hex, std::setw(2), std::setfill('0'), color.rgb[0]),
-                                 Inkscape::ustring::format_classic(std::hex, std::setw(2), std::setfill('0'), color.rgb[1]),
-                                 Inkscape::ustring::format_classic(std::hex, std::setw(2), std::setfill('0'), color.rgb[2])
-                             ).uppercase();
+                color.setName(g_dpgettext2(nullptr, "Palette", color.getName().c_str()));
             }
 
             palette.colors.emplace_back(std::move(color));

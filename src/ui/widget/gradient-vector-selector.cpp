@@ -35,10 +35,7 @@
 #include "object/sp-defs.h"
 #include "object/sp-stop.h"
 
-#include "ui/selected-color.h"
 #include "ui/widget/gradient-image.h"
-
-using Inkscape::UI::SelectedColor;
 
 void gr_get_usage_counts(SPDocument *doc, std::map<SPGradient *, gint> *mapUsageCount );
 unsigned long sp_gradient_to_hhssll(SPGradient *gr);
@@ -251,11 +248,8 @@ Glib::ustring gr_ellipsize_text(Glib::ustring const &src, size_t maxlen)
  */
 unsigned long sp_gradient_to_hhssll(SPGradient *gr)
 {
-    SPStop *stop = gr->getFirstStop();
-    unsigned long rgba = stop->get_rgba32();
-    float hsl[3];
-    SPColor::rgb_to_hsl_floatv (hsl, SP_RGBA32_R_F(rgba), SP_RGBA32_G_F(rgba), SP_RGBA32_B_F(rgba));
-
+    auto hsl = gr->getFirstStop()->getColor();
+    hsl.convert(Inkscape::Colors::Space::Type::HSL);
     return ((int)(hsl[0]*100 * 10000)) + ((int)(hsl[1]*100 * 100)) + ((int)(hsl[2]*100 * 1));
 }
 

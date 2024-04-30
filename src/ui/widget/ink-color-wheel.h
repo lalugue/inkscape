@@ -28,14 +28,17 @@
 #include <gtkmm/aspectframe.h>
 #include <gtkmm/gesture.h> // Gtk::EventSequenceState
 
-#include "hsluv.h"
-
+#include "colors/color.h"
 #include "ui/widget/widget-vfuncs-class-init.h" // for focus
 
 namespace Gtk {
 class DrawingArea;
 class GestureClick;
 } // namespace Gtk
+
+namespace Inkscape::Colors {
+class Color;
+} // namespace Inkscape::Colors
 
 namespace Inkscape::UI::Widget {
 
@@ -44,25 +47,15 @@ class Bin;
 struct ColorPoint final
 {
     ColorPoint();
-    ColorPoint(double x, double y, double r, double g, double b);
+    ColorPoint(double x, double y, Colors::Color color);
     ColorPoint(double x, double y, guint color);
 
-    guint32 get_color() const;
-    std::pair<double const &, double const &> get_xy() const;
-
-    void set_color(Hsluv::Triplet const &rgb)
-    {
-        r = rgb[0];
-        g = rgb[1];
-        b = rgb[2];
-    }
+    std::pair<double const &, double const &> get_xy() const { return {x, y}; }
 
     // eurgh!
     double x;
     double y;
-    double r;
-    double g;
-    double b;
+    Colors::Color color;
 };
 
 /**
@@ -72,38 +65,23 @@ struct ColorPoint final
 class ColorWheel : public Gtk::AspectFrame
 {
 public:
-    ColorWheel();
+    ColorWheel(Colors::Space::Type type, std::vector<double> initial_color);
 
     /// Set the RGB of the wheel. If @a emit is true & hue changes, we call color_changed() for you
-    /// @param r the red component, from 0.0 to 1.0
-    /// @param g the green component, from 0.0 to 1.0
-    /// @param b the blue component, from 0.0 to 1.0
     /// @param overrideHue whether to set hue to 0 if min==max(r,g,b) – only used by ColorwheelHSL…
     /// @param emit false if you want to manually call color_changed() e.g. to avoid multiple emits
     /// @return whether or not the value actually changed, to enable avoiding redraw if it does not
-    virtual bool setRgb(double r, double g, double b,
+    virtual bool setColor(Colors::Color const &color,
                         bool overrideHue = true, bool emit = true) = 0;
-    virtual void getRgb(double *r, double *g, double *b) const = 0;
-    virtual void getRgbV(double *rgb) const = 0;
-    virtual guint32 getRgb() const = 0;
+    virtual Colors::Color getColor() const { return _values; }
 
-    /// Set the hue of the wheel. If @a emit is true & hue changes, we call color_changed() for you
-    /// @param emit false if you want to manually call color_changed() e.g. to avoid multiple emits
-    /// @return whether or not the value actually changed, to enable avoiding redraw if it does not
-    virtual bool setHue       (double h, bool emit = true);
-    /// Ditto setHue(), but changes the saturation instead.
-    virtual bool setSaturation(double s, bool emit = true);
-    /// Ditto setHue(), but changes the lightness instead.
-    virtual bool setLightness (double l, bool emit = true);
-
-    void getValues(double *a, double *b, double *c) const;
     bool isAdjusting() const { return _adjusting; }
 
     /// Connect a slot to be called after the color has changed.
     sigc::connection connect_color_changed(sigc::slot<void ()>);
 
 protected:
-    std::array<double, 3> _values = {};
+    Colors::Color _values;
     bool _adjusting = false;
 
     /// Call when color has changed! Emits signal_color_changed & calls _drawing_area->queue_draw()
@@ -143,18 +121,9 @@ class ColorWheelHSL
     , public ColorWheel
 {
 public:
-    ColorWheelHSL()
-        : Glib::ObjectBase{"ColorWheelHSL"}
-        , WidgetVfuncsClassInit{} {}
-    bool setHue       (double h, bool emit = true) final;
-    bool setSaturation(double s, bool emit = true) final;
-    bool setLightness (double l, bool emit = true) final;
-    bool setRgb(double r, double g, double b,
+    ColorWheelHSL();
+    bool setColor(Colors::Color const &color,
                 bool overrideHue = true, bool emit = true) override;
-    void getRgb(double *r, double *g, double *b) const override;
-    void getRgbV(double *rgb) const override;
-    guint32 getRgb() const override;
-    void getHsl(double *h, double *s, double *l) const;
 
 private:
     void on_drawing_area_size(int width, int height, int baseline) override;
@@ -202,6 +171,16 @@ private:
 };
 
 /**
+ * Used to represent the in RGB gamut colors polygon of the HSLuv color wheel.
+ */
+struct PickerGeometry {
+    std::vector<Geom::Point> vertices; ///< Vertices, in counter-clockwise order.
+    double outer_circle_radius; ///< Smallest circle with center at origin such that polygon fits inside.
+    double inner_circle_radius; ///< Largest circle with center at origin such that it fits inside polygon.
+};
+
+
+/**
  * @class ColorWheelHSLuv
  */
 class ColorWheelHSLuv : public ColorWheel
@@ -210,16 +189,9 @@ public:
     ColorWheelHSLuv();
 
     /// See base doc & N.B. that overrideHue is unused by this class
-    bool setRgb(double r, double g, double b,
+    bool setColor(Colors::Color const &color,
                 bool overrideHue = true, bool emit = true) override;
-    void getRgb(double *r, double *g, double *b) const override;
-    void getRgbV(double *rgb) const override;
-    guint32 getRgb() const override;
 
-    bool setHsluv(double h, double s, double l);
-    bool setLightness(double l, bool emit) final;
-
-    void getHsluv(double *h, double *s, double *l) const;
     void updateGeometry();
 
 private:
@@ -239,7 +211,7 @@ private:
                         unsigned keyval, unsigned keycode, GdkModifierType state) final;
 
     double _scale = 1.0;
-    std::unique_ptr<Hsluv::PickerGeometry> _picker_geometry;
+    std::unique_ptr<PickerGeometry> _picker_geometry;
     std::vector<guint32> _buffer_polygon;
     Cairo::RefPtr<::Cairo::ImageSurface> _surface_polygon;
     Geom::IntPoint _cache_size;

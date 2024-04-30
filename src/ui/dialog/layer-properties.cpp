@@ -183,8 +183,7 @@ void LayerPropertiesDialog::_doRename()
     
     SPGroup *activeLayer = layman.currentLayer();
     if (activeLayer && !activeLayer->isHighlightSet()) {
-        guint32 color = activeLayer->highlight_color();
-        activeLayer->setHighlight(color);
+        activeLayer->setHighlight(activeLayer->highlight_color());
     }
     
     layman.renameLayer(layman.currentLayer(), name.c_str(), false);

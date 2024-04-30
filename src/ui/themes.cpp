@@ -36,10 +36,10 @@
 #include "desktop.h"
 #include "inkscape.h"
 #include "preferences.h"
+#include "colors/utils.h"
 #include "io/resource.h"
 #include "object/sp-item-group.h"  // set_default_highlight_colors
 #include "svg/css-ostringstream.h"
-#include "svg/svg-color.h"
 #include "ui/dialog/dialog-manager.h"
 #include "ui/dialog/dialog-window.h"
 #include "ui/util.h"
@@ -149,11 +149,6 @@ Glib::ustring
 ThemeContext::get_symbolic_colors()
 {
     Glib::ustring css_str;
-    gchar colornamed[64];
-    gchar colornamedsuccess[64];
-    gchar colornamedwarning[64];
-    gchar colornamederror[64];
-    gchar colornamed_inverse[64];
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
     Glib::ustring themeiconname = prefs->getString("/theme/iconTheme", prefs->getString("/theme/defaultIconTheme", ""));
     guint32 colorsetbase = 0x2E3436ff;
@@ -165,15 +160,10 @@ ThemeContext::get_symbolic_colors()
     colorsetsuccess = prefs->getUInt("/theme/" + themeiconname + "/symbolicSuccessColor", colorsetsuccess);
     colorsetwarning = prefs->getUInt("/theme/" + themeiconname + "/symbolicWarningColor", colorsetwarning);
     colorseterror = prefs->getUInt("/theme/" + themeiconname + "/symbolicErrorColor", colorseterror);
-    sp_svg_write_color(colornamed, sizeof(colornamed), colorsetbase);
-    sp_svg_write_color(colornamedsuccess, sizeof(colornamedsuccess), colorsetsuccess);
-    sp_svg_write_color(colornamedwarning, sizeof(colornamedwarning), colorsetwarning);
-    sp_svg_write_color(colornamederror, sizeof(colornamederror), colorseterror);
     colorsetbase_inverse = colorsetbase ^ 0xffffff00;
-    sp_svg_write_color(colornamed_inverse, sizeof(colornamed_inverse), colorsetbase_inverse);
-    css_str += "@define-color warning_color " + Glib::ustring(colornamedwarning) + ";\n";
-    css_str += "@define-color error_color " + Glib::ustring(colornamederror) + ";\n";
-    css_str += "@define-color success_color " + Glib::ustring(colornamedsuccess) + ";\n";
+    css_str += "@define-color warning_color " + Inkscape::Colors::rgba_to_hex(colorsetwarning) + ";\n";
+    css_str += "@define-color error_color " + Inkscape::Colors::rgba_to_hex(colorseterror) + ";\n";
+    css_str += "@define-color success_color " + Inkscape::Colors::rgba_to_hex(colorsetsuccess) + ";\n";
     /* ":not(.rawstyle) > image" works only on images in first level of widget container
     if in the future we use a complex widget with more levels and we dont want to tweak the color
     here, retaining default we can add more lines like ":not(.rawstyle) > > image" 
@@ -184,7 +174,7 @@ ThemeContext::get_symbolic_colors()
         css_str += ":not(.rawstyle) > image:not(.arrow),";
         css_str += ":not(.rawstyle) treeview.image";
         css_str += "{color:";
-        css_str += colornamed;
+        css_str += Inkscape::Colors::rgba_to_hex(colorsetbase);
         css_str += ";}";
     }
     css_str += ".dark .forcebright :not(.rawstyle) > image,";
@@ -199,7 +189,7 @@ ThemeContext::get_symbolic_colors()
     css_str += ".inverse image:not(.rawstyle)";
     css_str += "{color:";
     if (overridebasecolor) {
-        css_str += colornamed_inverse;
+        css_str += Inkscape::Colors::rgba_to_hex(colorsetbase_inverse);
     } else {
         // we override base color in this special cases using inverse color
         css_str += "@theme_bg_color";

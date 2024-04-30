@@ -44,6 +44,9 @@ class SPRadialGradient;
 class SPStop;
 
 namespace Inkscape {
+namespace Colors {
+class Color;
+}
 class Selection;
 class CanvasItemCurve;
 struct KeyPressEvent;
@@ -177,7 +180,7 @@ public: // FIXME: make more of this private!
 
     void deleteSelected(bool just_one = false);
 
-    guint32 getColor();
+    Inkscape::Colors::Color getColor();
 
     bool keep_selection;
 

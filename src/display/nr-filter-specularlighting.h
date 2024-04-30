@@ -34,7 +34,6 @@ public:
     ~FilterSpecularLighting() override;
 
     void render_cairo(FilterSlot &slot) const override;
-    void set_icc(SVGICCColor const &icc_) { icc = icc_; }
     void area_enlarge(Geom::IntRect &area, Geom::Affine const &trans) const override;
     double complexity(Geom::Affine const &ctm) const override;
 
@@ -51,9 +50,6 @@ public:
     guint32 lighting_color;
 
     Glib::ustring name() const override { return Glib::ustring("Specular Lighting"); }
-
-private:
-    std::optional<SVGICCColor> icc;
 };
 
 } // namespace Filters

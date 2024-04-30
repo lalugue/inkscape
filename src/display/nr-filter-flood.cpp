@@ -18,9 +18,6 @@
 #include "display/cairo-utils.h"
 #include "display/nr-filter-flood.h"
 #include "display/nr-filter-slot.h"
-#include "svg/svg-icc-color.h"
-#include "svg/svg-color.h"
-#include "color.h"
 
 namespace Inkscape {
 namespace Filters {
@@ -36,15 +33,7 @@ void FilterFlood::render_cairo(FilterSlot &slot) const
     double r = SP_RGBA32_R_F(color);
     double g = SP_RGBA32_G_F(color);
     double b = SP_RGBA32_B_F(color);
-    double a = opacity;
-
-    if (icc) {
-        unsigned char ru, gu, bu;
-        icc_color_to_sRGB(&*icc, &ru, &gu, &bu);
-        r = SP_COLOR_U_TO_F(ru);
-        g = SP_COLOR_U_TO_F(gu);
-        b = SP_COLOR_U_TO_F(bu);
-    }
+    double a = SP_RGBA32_A_F(color);
 
     cairo_surface_t *out = ink_cairo_surface_create_same_size(input, CAIRO_CONTENT_COLOR_ALPHA);
 
@@ -97,11 +86,6 @@ bool FilterFlood::can_handle_affine(Geom::Affine const &) const
 void FilterFlood::set_color(guint32 c)
 {
     color = c;
-}
-
-void FilterFlood::set_opacity(double o)
-{
-    opacity = o;
 }
 
 double FilterFlood::complexity(Geom::Affine const &) const

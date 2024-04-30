@@ -29,13 +29,10 @@ public:
 
     /** @brief Set the displayed color to the specified gamma-compressed sRGB color. */
     /// See base doc & N.B. that overrideHue is unused by this class
-    bool setRgb(double r, double g, double b,
+    bool setColor(Colors::Color const &color,
                 bool overrideHue = true, bool emit = true) override;
 
-    /** @brief Get the gamma-compressed sRGB color from the picker wheel. */
-    void getRgb(double *r, double *g, double *b) const override;
-    void getRgbV(double *rgb) const override { getRgb(rgb, rgb + 1, rgb + 2); }
-    guint32 getRgb() const override;
+    Colors::Color getColor() const override;
 
 private:
     void on_drawing_area_draw(Cairo::RefPtr<Cairo::Context> const &cr, int, int) override;

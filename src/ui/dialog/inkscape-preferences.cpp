@@ -82,13 +82,15 @@
 #include "selection.h"
 #include "style.h"
 
-#include "color/cms-system.h"
+#include "colors/cms/system.h"
+#include "colors/cms/profile.h"
+#include "colors/manager.h"
+#include "colors/spaces/base.h"
 #include "display/control/canvas-item-grid.h"
 #include "display/nr-filter-gaussian.h"
 #include "extension/internal/gdkpixbuf-input.h"
 #include "helper/auto-connection.h"
 #include "io/resource.h"
-#include "svg/svg-color.h"
 #include "ui/builder-utils.h"
 #include "ui/controller.h"
 #include "ui/desktop/menubar.h"
@@ -118,7 +120,6 @@ using Inkscape::UI::Widget::PrefItem;
 using Inkscape::UI::Widget::PrefRadioButtons;
 using Inkscape::UI::Widget::PrefSpinButton;
 using Inkscape::UI::Widget::StyleSwatch;
-using Inkscape::CMSSystem;
 using Inkscape::IO::Resource::get_filename;
 using Inkscape::IO::Resource::UIS;
 
@@ -985,7 +986,7 @@ void InkscapePreferences::initPageTools()
     AddLayerChangeCheckbox(_page_node, "/tools/nodes", false);
 
     _page_node.add_group_header( _("Path outline"));
-    _t_node_pathoutline_color.init(_("Path outline color"), "/tools/nodes/highlight_color", 0xff0000ff);
+    _t_node_pathoutline_color.init(_("Path outline color"), "/tools/nodes/highlight_color", "#ff0000ff");
     _page_node.add_line( false, "", _t_node_pathoutline_color, "", _("Selects the color used for showing the path outline"), false);
     _t_node_show_outline.init(_("Always show outline"), "/tools/nodes/show_outline", false);
     _page_node.add_line( true, "", _t_node_show_outline, "", _("Show outlines for all paths, not only invisible paths"));
@@ -1172,9 +1173,7 @@ void InkscapePreferences::get_highlight_colors(guint32 &colorsetbase, guint32 &c
             size_t endposin = result.find(";");
             result = result.substr(startposin + 5, endposin - (startposin + 5));
             Util::trim(result);
-            Gdk::RGBA base_color = Gdk::RGBA(result);
-            SPColor base_color_sp(base_color.get_red(), base_color.get_green(), base_color.get_blue());
-            colorsetbase = base_color_sp.toRGBA32(base_color.get_alpha());
+            colorsetbase = to_guint32(Gdk::RGBA(result));
         }
         content.erase(0, endpos + 1);
         startpos = content.find(prefix + ".success");
@@ -1185,9 +1184,7 @@ void InkscapePreferences::get_highlight_colors(guint32 &colorsetbase, guint32 &c
             size_t endposin = result.find(";");
             result = result.substr(startposin + 5, endposin - (startposin + 5));
             Util::trim(result);
-            Gdk::RGBA success_color = Gdk::RGBA(result);
-            SPColor success_color_sp(success_color.get_red(), success_color.get_green(), success_color.get_blue());
-            colorsetsuccess = success_color_sp.toRGBA32(success_color.get_alpha());
+            colorsetsuccess = to_guint32(Gdk::RGBA(result));
         }
         content.erase(0, endpos + 1);
         startpos = content.find(prefix + ".warning");
@@ -1198,9 +1195,7 @@ void InkscapePreferences::get_highlight_colors(guint32 &colorsetbase, guint32 &c
             size_t endposin = result.find(";");
             result = result.substr(startposin + 5, endposin - (startposin + 5));
             Util::trim(result);
-            Gdk::RGBA warning_color = Gdk::RGBA(result);
-            SPColor warning_color_sp(warning_color.get_red(), warning_color.get_green(), warning_color.get_blue());
-            colorsetwarning = warning_color_sp.toRGBA32(warning_color.get_alpha());
+            colorsetwarning = to_guint32(Gdk::RGBA(result));
         }
         content.erase(0, endpos + 1);
         startpos = content.find(prefix + ".error");
@@ -1211,9 +1206,7 @@ void InkscapePreferences::get_highlight_colors(guint32 &colorsetbase, guint32 &c
             size_t endposin = result.find(";");
             result = result.substr(startposin + 5, endposin - (startposin + 5));
             Util::trim(result);
-            Gdk::RGBA error_color = Gdk::RGBA(result);
-            SPColor error_color_sp(error_color.get_red(), error_color.get_green(), error_color.get_blue());
-            colorseterror = error_color_sp.toRGBA32(error_color.get_alpha());
+            colorseterror = to_guint32(Gdk::RGBA(result));
         }
     }
 }
@@ -1227,10 +1220,10 @@ void InkscapePreferences::resetIconsColors(bool themechange)
     if (!prefs->getBool("/theme/symbolicIcons", false)) {
         _symbolic_base_colors.set_sensitive(false);
         _symbolic_highlight_colors.set_sensitive(false);
-        _symbolic_base_color.setSensitive(false);
-        _symbolic_success_color.setSensitive(false);
-        _symbolic_warning_color.setSensitive(false);
-        _symbolic_error_color.setSensitive(false);
+        _symbolic_base_color.set_sensitive(false);
+        _symbolic_success_color.set_sensitive(false);
+        _symbolic_warning_color.set_sensitive(false);
+        _symbolic_error_color.set_sensitive(false);
         return;
     }
 
@@ -1246,22 +1239,20 @@ void InkscapePreferences::resetIconsColors(bool themechange)
         // This is a hack to fix a problematic style which isn't updated fast enough on
         // change from dark to bright themes
         if (themechange) {
-            base_color = to_rgba(_symbolic_base_color.get_current_color());
+            base_color = to_rgba(_symbolic_base_color.get_current_color().toRGBA());
         }
-        // This colors are set on style.css of inkscape
-        SPColor base_color_sp(base_color.get_red(), base_color.get_green(), base_color.get_blue());
-        //we copy highlight to not use
-        guint32 colorsetbase = base_color_sp.toRGBA32(base_color.get_alpha());
+        // This colors are set on style.css of inkscape, we copy highlight to not use
+        guint32 colorsetbase = to_guint32(base_color);
         guint32 colorsetsuccess = colorsetbase;
         guint32 colorsetwarning = colorsetbase;
         guint32 colorseterror = colorsetbase;
         get_highlight_colors(colorsetbase, colorsetsuccess, colorsetwarning, colorseterror);
-        _symbolic_base_color.setRgba32(colorsetbase);
+        _symbolic_base_color.setColor(Colors::Color(colorsetbase));
         prefs->setUInt("/theme/" + themeiconname + "/symbolicBaseColor", colorsetbase);
-        _symbolic_base_color.setSensitive(false);
+        _symbolic_base_color.set_sensitive(false);
         doChangeIconsColors = true;
     } else {
-        _symbolic_base_color.setSensitive(true);
+        _symbolic_base_color.set_sensitive(true);
     }
 
     if (prefs->getBool("/theme/symbolicDefaultHighColors", true)) {
@@ -1272,29 +1263,26 @@ void InkscapePreferences::resetIconsColors(bool themechange)
         auto const success_color = _symbolic_success_color.get_color();
         auto const warning_color = _symbolic_warning_color.get_color();
         auto const error_color   = _symbolic_error_color  .get_color();
-        SPColor success_color_sp(success_color.get_red(), success_color.get_green(), success_color.get_blue());
-        SPColor warning_color_sp(warning_color.get_red(), warning_color.get_green(), warning_color.get_blue());
-        SPColor error_color_sp(error_color.get_red(), error_color.get_green(), error_color.get_blue());
         //we copy base to not use
-        guint32 colorsetbase = success_color_sp.toRGBA32(success_color.get_alpha());
-        guint32 colorsetsuccess = success_color_sp.toRGBA32(success_color.get_alpha());
-        guint32 colorsetwarning = warning_color_sp.toRGBA32(warning_color.get_alpha());
-        guint32 colorseterror = error_color_sp.toRGBA32(error_color.get_alpha());
+        guint32 colorsetbase = to_guint32(success_color);
+        guint32 colorsetsuccess = to_guint32(success_color);
+        guint32 colorsetwarning = to_guint32(warning_color);
+        guint32 colorseterror = to_guint32(error_color);
         get_highlight_colors(colorsetbase, colorsetsuccess, colorsetwarning, colorseterror);
-        _symbolic_success_color.setRgba32(colorsetsuccess);
-        _symbolic_warning_color.setRgba32(colorsetwarning);
-        _symbolic_error_color.setRgba32(colorseterror);
+        _symbolic_success_color.setColor(Colors::Color(colorsetsuccess));
+        _symbolic_warning_color.setColor(Colors::Color(colorsetwarning));
+        _symbolic_error_color.setColor(Colors::Color(colorseterror));
         prefs->setUInt("/theme/" + themeiconname + "/symbolicSuccessColor", colorsetsuccess);
         prefs->setUInt("/theme/" + themeiconname + "/symbolicWarningColor", colorsetwarning);
         prefs->setUInt("/theme/" + themeiconname + "/symbolicErrorColor", colorseterror);
-        _symbolic_success_color.setSensitive(false);
-        _symbolic_warning_color.setSensitive(false);
-        _symbolic_error_color.setSensitive(false);
+        _symbolic_success_color.set_sensitive(false);
+        _symbolic_warning_color.set_sensitive(false);
+        _symbolic_error_color.set_sensitive(false);
         doChangeIconsColors = true;
     } else {
-        _symbolic_success_color.setSensitive(true);
-        _symbolic_warning_color.setSensitive(true);
-        _symbolic_error_color.setSensitive(true);
+        _symbolic_success_color.set_sensitive(true);
+        _symbolic_warning_color.set_sensitive(true);
+        _symbolic_error_color.set_sensitive(true);
     }
 
     if (doChangeIconsColors) {
@@ -1312,10 +1300,10 @@ void InkscapePreferences::changeIconsColors()
     guint32 colorsetsuccess = prefs->getUInt("/theme/" + themeiconname + "/symbolicSuccessColor", 0x4AD589ff);
     guint32 colorsetwarning = prefs->getUInt("/theme/" + themeiconname + "/symbolicWarningColor", 0xF57900ff);
     guint32 colorseterror = prefs->getUInt("/theme/" + themeiconname + "/symbolicErrorColor", 0xCC0000ff);
-    _symbolic_base_color.setRgba32(colorsetbase);
-    _symbolic_success_color.setRgba32(colorsetsuccess);
-    _symbolic_warning_color.setRgba32(colorsetwarning);
-    _symbolic_error_color.setRgba32(colorseterror);
+    _symbolic_base_color.setColor(Colors::Color(colorsetbase));
+    _symbolic_success_color.setColor(Colors::Color(colorsetsuccess));
+    _symbolic_warning_color.setColor(Colors::Color(colorsetwarning));
+    _symbolic_error_color.setColor(Colors::Color(colorseterror));
 
     auto const &colorize_provider = INKSCAPE.themecontext->getColorizeProvider();
     if (!colorize_provider) return;
@@ -1507,18 +1495,18 @@ void InkscapePreferences::symbolicThemeCheck()
         } else {
             changeIconsColors();
         }
-        guint32 colorsetbase = prefs->getUInt("/theme/" + themeiconname + "/symbolicBaseColor", 0x2E3436ff);
-        guint32 colorsetsuccess = prefs->getUInt("/theme/" + themeiconname + "/symbolicSuccessColor", 0x4AD589ff);
-        guint32 colorsetwarning = prefs->getUInt("/theme/" + themeiconname + "/symbolicWarningColor", 0xF57900ff);
-        guint32 colorseterror = prefs->getUInt("/theme/" + themeiconname + "/symbolicErrorColor", 0xCC0000ff);
+        auto colorsetbase = prefs->getColor("/theme/" + themeiconname + "/symbolicBaseColor", "#2E3436ff");
+        auto colorsetsuccess = prefs->getColor("/theme/" + themeiconname + "/symbolicSuccessColor", "#4AD589ff");
+        auto colorsetwarning = prefs->getColor("/theme/" + themeiconname + "/symbolicWarningColor", "#F57900ff");
+        auto colorseterror = prefs->getColor("/theme/" + themeiconname + "/symbolicErrorColor", "#CC0000ff");
         _symbolic_base_color.init(_("Color for symbolic icons:"), "/theme/" + themeiconname + "/symbolicBaseColor",
-                                  colorsetbase);
+                                  colorsetbase.toString());
         _symbolic_success_color.init(_("Color for symbolic success icons:"),
-                                     "/theme/" + themeiconname + "/symbolicSuccessColor", colorsetsuccess);
+                                     "/theme/" + themeiconname + "/symbolicSuccessColor", colorsetsuccess.toString());
         _symbolic_warning_color.init(_("Color for symbolic warning icons:"),
-                                     "/theme/" + themeiconname + "/symbolicWarningColor", colorsetwarning);
+                                     "/theme/" + themeiconname + "/symbolicWarningColor", colorsetwarning.toString());
         _symbolic_error_color.init(_("Color for symbolic error icons:"),
-                                   "/theme/" + themeiconname + "/symbolicErrorColor", colorseterror);
+                                   "/theme/" + themeiconname + "/symbolicErrorColor", colorseterror.toString());
     }
 }
 
@@ -1846,13 +1834,13 @@ void InkscapePreferences::initPageUI()
     _symbolic_highlight_colors.signal_toggled().connect(sigc::mem_fun(*this, &InkscapePreferences::resetIconsColorsWrapper));
     _page_theme.add_line(true, "", _symbolic_highlight_colors, "", "", true);
     _symbolic_base_color.init(_("Color for symbolic icons:"), "/theme/" + themeiconname + "/symbolicBaseColor",
-                              0x2E3436ff);
+                              "#2E3436ff");
     _symbolic_success_color.init(_("Color for symbolic success icons:"),
-                                 "/theme/" + themeiconname + "/symbolicSuccessColor", 0x4AD589ff);
+                                 "/theme/" + themeiconname + "/symbolicSuccessColor", "#4AD589ff");
     _symbolic_warning_color.init(_("Color for symbolic warning icons:"),
-                                 "/theme/" + themeiconname + "/symbolicWarningColor", 0xF57900ff);
+                                 "/theme/" + themeiconname + "/symbolicWarningColor", "#F57900ff");
     _symbolic_error_color.init(_("Color for symbolic error icons:"), "/theme/" + themeiconname + "/symbolicErrorColor",
-                               0xCC0000ff);
+                               "#CC0000ff");
     _symbolic_base_color.add_css_class("system_base_color");
     _symbolic_success_color.add_css_class("system_success_color");
     _symbolic_warning_color.add_css_class("system_warning_color");
@@ -2110,6 +2098,11 @@ void InkscapePreferences::initPageUI()
 
     this->AddPage(_page_windows, _("Windows"), iter_ui, PREFS_PAGE_UI_WINDOWS);
 
+    // default colors in RGBA
+    static auto GRID_DEFAULT_MAJOR_COLOR = "#0099e54d";
+    static auto GRID_DEFAULT_MINOR_COLOR = "#0099e526";
+    static auto GRID_DEFAULT_BLOCK_COLOR = "#0047cb4d";
+
     // Color pickers
     _compact_colorselector.init(_("Use compact color selector mode switch"), "/colorselector/switcher", true);
     _page_color_pickers.add_line(false, "", _compact_colorselector, "", _("Use compact combo box for selecting color modes"), false);
@@ -2275,10 +2268,9 @@ static void profileComboChanged( Gtk::ComboBoxText* combo )
     } else {
         Glib::ustring active = combo->get_active_text();
 
-        auto cms_system = Inkscape::CMSSystem::get();
-        Glib::ustring path = cms_system->get_path_for_profile(active);
-        if ( !path.empty() ) {
-            prefs->setString("/options/displayprofile/uri", path);
+        auto &cms_system = Inkscape::Colors::CMS::System::get();
+        if (auto profile = cms_system.getProfile(active)) {
+            prefs->setString("/options/displayprofile/uri", profile->getPath());
         }
     }
 }
@@ -2286,12 +2278,10 @@ static void profileComboChanged( Gtk::ComboBoxText* combo )
 static void proofComboChanged( Gtk::ComboBoxText* combo )
 {
     Glib::ustring active = combo->get_active_text();
-    auto cms_system = Inkscape::CMSSystem::get();
-    Glib::ustring path = cms_system->get_path_for_profile(active);
-
-    if ( !path.empty() ) {
+    auto &cms_system = Inkscape::Colors::CMS::System::get();
+    if (auto profile = cms_system.getProfile(active)) {
         Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-        prefs->setString("/options/softproof/uri", path);
+        prefs->setString("/options/softproof/uri", profile->getPath());
     }
 }
 
@@ -2442,7 +2432,7 @@ void InkscapePreferences::initPageIO()
     _page_cms.add_group_header( _("Display adjustment"));
 
     Glib::ustring tmpStr;
-    for (auto const &path : Inkscape::CMSSystem::get_directory_paths()) {
+    for (auto const &path : Inkscape::Colors::CMS::System::get().getDirectoryPaths()) {
         tmpStr += "\n";
         tmpStr += path.first;
     }
@@ -2491,16 +2481,14 @@ void InkscapePreferences::initPageIO()
                         _("Enables black point compensation"), false);
 
     {
-        auto cms_system = Inkscape::CMSSystem::get();
-        std::vector<Glib::ustring> names = cms_system->get_monitor_profile_names();
-        Glib::ustring current = prefs->getString( "/options/displayprofile/uri" );
+        auto &cms_system = Inkscape::Colors::CMS::System::get();
+        std::string current = prefs->getString( "/options/displayprofile/uri" );
         gint index = 0;
         _cms_display_profile.append(_("<none>"));
         index++;
-        for (auto const &name : names) {
-            _cms_display_profile.append( name );
-            Glib::ustring path = cms_system->get_path_for_profile(name);
-            if ( !path.empty() && path == current ) {
+        for (auto profile : cms_system.getDisplayProfiles()) {
+            _cms_display_profile.append(profile->getName());
+            if (profile->getPath() == current) {
                 _cms_display_profile.set_active(index);
             }
             index++;
@@ -2509,13 +2497,11 @@ void InkscapePreferences::initPageIO()
             _cms_display_profile.set_active(0);
         }
 
-        names = cms_system->get_softproof_profile_names();
         current = prefs->getString("/options/softproof/uri");
         index = 0;
-        for (auto const &name : names) {
-            _cms_proof_profile.append( name );
-            Glib::ustring path = cms_system->get_path_for_profile(name);
-            if ( !path.empty() && path == current ) {
+        for (auto profile : cms_system.getOutputProfiles()) {
+            _cms_proof_profile.append(profile->getName());
+            if (profile->getPath() == current) {
                 _cms_proof_profile.set_active(index);
             }
             index++;

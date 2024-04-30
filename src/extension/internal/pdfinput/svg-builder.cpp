@@ -29,16 +29,15 @@
 #include "GfxState.h"
 #include "Page.h"
 #include "Stream.h"
-#include "color.h"
 #include "document.h"
 #include "extract-uri.h"
 #include "pdf-parser.h"
 #include "pdf-utils.h"
 #include "png.h"
 #include "poppler-cairo-font-engine.h"
-#include "profile-manager.h"
 
-#include "color/cms-util.h"
+#include "colors/cms/profile.h"
+#include "colors/document-cms.h"
 #include "display/cairo-utils.h"
 #include "display/nr-filter-utils.h"
 #include "object/sp-defs.h"
@@ -920,30 +919,23 @@ std::string SvgBuilder::_getColorProfile(cmsHPROFILE hp)
     if (_icc_profiles.find(hp) != _icc_profiles.end())
         return _icc_profiles[hp];
 
-    std::string name = get_color_profile_name(hp);
+    auto profile = Colors::CMS::Profile::create(hp);
+    std::string name = profile->getName();
 
     // Find the named profile in the document (if already added)
-    if (_doc->getProfileManager().find(name.c_str()))
+    if (_doc->getDocumentCMS().getSpace(name))
         return name;
 
     // Add the profile, we've never seen it before.
-    cmsUInt32Number len = 0;
-    cmsSaveProfileToMem(hp, nullptr, &len);
-    auto buf = (unsigned char *)malloc(len * sizeof(unsigned char));
-    cmsSaveProfileToMem(hp, buf, &len);
-
     Inkscape::XML::Node *icc_node = _xml_doc->createElement("svg:color-profile");
     icc_node->setAttribute("inkscape:label", name);
     icc_node->setAttribute("name", name);
 
-    auto *base64String = g_base64_encode(buf, len);
-    auto icc_data = std::string("data:application/vnd.iccprofile;base64,") + base64String;
-    g_free(base64String);
+    auto icc_data = std::string("data:application/vnd.iccprofile;base64,") + profile->dumpBase64();
     icc_node->setAttributeOrRemoveIfEmpty("xlink:href", icc_data);
     _doc->getDefs()->getRepr()->appendChild(icc_node);
     Inkscape::GC::release(icc_node);
 
-    free(buf);
     _icc_profiles[hp] = name;
     return name;
 }

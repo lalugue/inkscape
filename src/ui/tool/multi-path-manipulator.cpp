@@ -182,7 +182,7 @@ void MultiPathManipulator::setItems(std::set<ShapeRecord> const &s)
         auto lpobj = cast<LivePathEffectObject>(r.object);
         if (!is<SPPath>(r.object) && !lpobj) continue;
         std::shared_ptr<PathManipulator> newpm(new PathManipulator(*this, (SPPath*) r.object,
-            r.edit_transform, _getOutlineColor(r.role, r.object), r.lpe_key));
+            r.edit_transform, _getOutlineColor(r.role, r.object).toRGBA(), r.lpe_key));
         newpm->showHandles(_show_handles);
         // always show outlines for clips and masks
         newpm->showOutline(_show_outline || r.role != SHAPE_ROLE_NORMAL);
@@ -889,19 +889,19 @@ void MultiPathManipulator::_doneWithCleanup(gchar const *reason, bool alert_LPE)
 }
 
 /** Get an outline color based on the shape's role (normal, mask, LPE parameter, etc.). */
-guint32 MultiPathManipulator::_getOutlineColor(ShapeRole role, SPObject *object)
+Colors::Color MultiPathManipulator::_getOutlineColor(ShapeRole role, SPObject *object)
 {
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
     switch(role) {
     case SHAPE_ROLE_CLIPPING_PATH:
-        return prefs->getColor("/tools/nodes/clipping_path_color", 0x00ff00ff);
+        return prefs->getColor("/tools/nodes/clipping_path_color", "#00ff00ff");
     case SHAPE_ROLE_MASK:
-        return prefs->getColor("/tools/nodes/mask_color", 0x0000ffff);
+        return prefs->getColor("/tools/nodes/mask_color", "#0000ffff");
     case SHAPE_ROLE_LPE_PARAM:
-        return prefs->getColor("/tools/nodes/lpe_param_color", 0x009000ff);
+        return prefs->getColor("/tools/nodes/lpe_param_color", "#009000ff");
     case SHAPE_ROLE_NORMAL:
     default:
-        return prefs->getColor("/tools/nodes/highlight_color", 0xff0000ff);;
+        return prefs->getColor("/tools/nodes/highlight_color", "#ff0000ff");;
     }
 }
 

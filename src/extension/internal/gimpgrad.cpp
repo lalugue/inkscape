@@ -13,17 +13,19 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include <color-rgba.h>
 #include "io/sys.h"
 #include "extension/system.h"
 #include "svg/css-ostringstream.h"
-#include "svg/svg-color.h"
 
+#include "colors/color.h"
+#include "colors/manager.h"
 #include "gimpgrad.h"
 #include "streq.h"
 #include "strneq.h"
 #include "document.h"
 #include "extension/extension.h"
+
+using namespace Inkscape::Colors;
 
 namespace Inkscape::Extension::Internal {
 
@@ -50,24 +52,22 @@ static void append_css_num(Glib::ustring &str, double const num)
     \param  location  Where the stop is placed in the gradient
     \return The text that is the stop.  Full SVG containing the element.
 
-    This function encapsulates all of the translation of the ColorRGBA
+    This function encapsulates all of the translation of the Color
     and the location into the gradient.  It is really pretty simple except
-    that the ColorRGBA is in floats that are 0 to 1 and the SVG wants
+    that the Color is in floats that are 0 to 1 and the SVG wants
     hex values from 0 to 255 for color.  Otherwise mostly this is just
     turning the values into strings and returning it.
 */
-static Glib::ustring stop_svg(ColorRGBA const in_color, double const location)
+static Glib::ustring stop_svg(Color const &in_color, double const location)
 {
     Glib::ustring ret("<stop stop-color=\"");
 
-    char stop_color_css[16];
-    sp_svg_write_color(stop_color_css, sizeof(stop_color_css), in_color.getIntValue());
-    ret += stop_color_css;
+    ret += in_color.converted(Space::Type::RGB)->toString(false);
     ret += '"';
 
     if (in_color[3] != 1) {
         ret += " stop-opacity=\"";
-        append_css_num(ret, in_color[3]);
+        append_css_num(ret, in_color.getOpacity());
         ret += '"';
     }
     ret += " offset=\"";
@@ -161,7 +161,7 @@ std::unique_ptr<SPDocument> GimpGrad::open(Inkscape::Extension::Input *, char co
             goto error;
         }
 
-        ColorRGBA prev_color(-1.0, -1.0, -1.0, -1.0);
+        Color prev_color(0x0);
         Glib::ustring outsvg("<svg><defs><linearGradient>\n");
         long n_segs_found = 0;
         double prev_right = 0.0;
@@ -194,9 +194,9 @@ std::unique_ptr<SPDocument> GimpGrad::open(Inkscape::Extension::Input *, char co
                 goto error;
             }
 
-            ColorRGBA const leftcolor(dbls[3], dbls[4], dbls[5], dbls[6]);
-            ColorRGBA const rightcolor(dbls[7], dbls[8], dbls[9], dbls[10]);
             g_assert(11 == G_N_ELEMENTS(dbls));
+            auto leftcolor = Color(Space::Type::RGB, {dbls[3], dbls[4], dbls[5], dbls[6]});
+            auto rightcolor = Color(Space::Type::RGB, {dbls[7], dbls[8], dbls[9], dbls[10]});
 
             /* Interpolation enums: curve shape and colour space. */
             {
@@ -215,7 +215,7 @@ std::unique_ptr<SPDocument> GimpGrad::open(Inkscape::Extension::Input *, char co
                 outsvg += stop_svg(leftcolor, left);
             }
             if (fabs(middle - .5 * (left + right)) > 1e-4) {
-                outsvg += stop_svg(leftcolor.average(rightcolor), middle);
+                outsvg += stop_svg(leftcolor.averaged(rightcolor), middle);
             }
             outsvg += stop_svg(rightcolor, right);
 

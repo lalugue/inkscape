@@ -93,12 +93,12 @@ private:
     ScalarParam angle_projection;
     BoolParam avoid_overlapping;
     MessageParam helpdata;
+    Colors::Color color;
     bool legacy = false;
     double fontsize;
     double prevfontsize = 0;
     double anotation_width;
     double previous_size;
-    guint32 rgb32;
     Glib::ustring prevunit = "";
     double arrow_gap;
     guint pagenumber;

@@ -46,13 +46,14 @@
 #include "style.h"
 
 #include "svg/svg.h"
-#include "svg/svg-color.h"
 #include "svg/css-ostringstream.h"
 
 #include "ui/icon-names.h"
 #include "ui/tools/tool-base.h"
 #include "ui/widget/gradient-vector-selector.h"
 #include "xml/href-attribute-helper.h"
+
+#include "colors/color.h"
 
 #define noSP_GR_VERBOSE
 
@@ -705,16 +706,6 @@ SPStop *sp_get_stop_i(SPGradient *gradient, guint stop_i)
     return stop;
 }
 
-guint32 average_color(guint32 c1, guint32 c2, gdouble p)
-{
-    guint32 r = static_cast<guint32>(SP_RGBA32_R_U (c1) * (1 - p) + SP_RGBA32_R_U (c2) * p);
-    guint32 g = static_cast<guint32>(SP_RGBA32_G_U (c1) * (1 - p) + SP_RGBA32_G_U (c2) * p);
-    guint32 b = static_cast<guint32>(SP_RGBA32_B_U (c1) * (1 - p) + SP_RGBA32_B_U (c2) * p);
-    guint32 a = static_cast<guint32>(SP_RGBA32_A_U (c1) * (1 - p) + SP_RGBA32_A_U (c2) * p);
-
-    return SP_RGBA32_U_COMPOSE(r, g, b, a);
-}
-
 void sp_repr_set_css_double(Inkscape::XML::Node* node, const char* key, double value) {
     if (node) {
         node->setAttributeCssDouble(key, value);
@@ -731,7 +722,7 @@ SPStop *sp_vector_add_stop(SPGradient *vector, SPStop* prev_stop, SPStop* next_s
     if (!prev_stop && !next_stop) return newstop;
 
     // This function completely breaks CMYK gradients.
-    guint cnew = 0; // new color
+    Color cnew(0x000000ff); // new color
     Inkscape::XML::Node *new_stop_repr = nullptr;
 
     if (!prev_stop || !next_stop) {
@@ -741,23 +732,19 @@ SPStop *sp_vector_add_stop(SPGradient *vector, SPStop* prev_stop, SPStop* next_s
        new_stop_repr = repr->duplicate(vector->getRepr()->document());
        vector->getRepr()->addChild(new_stop_repr, prev_stop ? repr : nullptr);
 
-       cnew = stop->get_rgba32();
+       cnew = stop->getColor();
     }
     else {
         auto repr = prev_stop->getRepr();
         new_stop_repr = repr->duplicate(vector->getRepr()->document());
         vector->getRepr()->addChild(new_stop_repr, repr);
-
-        guint32 const c1 = prev_stop->get_rgba32();
-        guint32 const c2 = next_stop->get_rgba32();
-        cnew = average_color (c1, c2, (offset - prev_stop->offset) / (next_stop->offset - prev_stop->offset));
+        cnew = prev_stop->getColor().averaged(next_stop->getColor(), (offset - prev_stop->offset) / (next_stop->offset - prev_stop->offset));
     }
 
     newstop = reinterpret_cast<SPStop *>(vector->document->getObjectByRepr(new_stop_repr));
     newstop->offset = offset;
     newstop->getRepr()->setAttributeCssDouble("offset", (double)offset);
-    // XXX This is removing icc color information
-    newstop->setColor({cnew}, SP_RGBA32_A_F(cnew));
+    newstop->setColor(cnew);
     Inkscape::GC::release(new_stop_repr);
 
     return newstop;
@@ -797,13 +784,13 @@ static bool verify_grad(SPGradient* gradient) {
 
         child = xml_doc->createElement("svg:stop");
         sp_repr_set_css_double(child, "offset", 0.0);
-        SPStop::setColorRepr(child, {0, 0, 0}, 1.0);
+        SPStop::setColorRepr(child, Colors::Color(0x000000ff));
         gradient->getRepr()->addChild(child, nullptr);
         Inkscape::GC::release(child);
 
         child = xml_doc->createElement("svg:stop");
         sp_repr_set_css_double(child, "offset", 1.0);
-        SPStop::setColorRepr(child, {0, 0, 0}, 1.0);
+        SPStop::setColorRepr(child, Colors::Color(0x000000ff));
         gradient->getRepr()->addChild(child, nullptr);
         Inkscape::GC::release(child);
         modified = true;
@@ -854,11 +841,7 @@ SPStop* sp_gradient_add_stop(SPGradient* gradient, SPStop* current) {
 
     newstop->offset = (stop->offset + next->offset) * 0.5 ;
 
-    guint32 const c1 = stop->get_rgba32();
-    guint32 const c2 = next->get_rgba32();
-    guint32 cnew = average_color(c1, c2);
-
-    newstop->setColor({cnew}, SP_RGBA32_A_F(cnew));
+    newstop->setColor(stop->getColor().averaged(next->getColor()));
     sp_repr_set_css_double(newstop->getRepr(), "offset", (double)newstop->offset);
     Inkscape::GC::release(new_stop_repr);
     DocumentUndo::done(gradient->document, _("Add gradient stop"), INKSCAPE_ICON("color-gradient"));
@@ -887,9 +870,9 @@ SPStop* sp_gradient_add_stop_at(SPGradient* gradient, double offset) {
     }
 }
 
-void sp_set_gradient_stop_color(SPDocument* document, SPStop* stop, SPColor color, double opacity) {
+void sp_set_gradient_stop_color(SPDocument* document, SPStop* stop, Color const &color) {
    sp_repr_set_css_double(stop->getRepr(), "offset", stop->offset);
-   stop->setColor(color, opacity);
+   stop->setColor(color);
    DocumentUndo::done(document, _("Change gradient stop color"), INKSCAPE_ICON("color-gradient"));
 }
 
@@ -931,20 +914,19 @@ SPStop* sp_item_gradient_get_stop(SPItem *item, GrPointType point_type, guint po
     return nullptr;
 }
 
-guint32 sp_item_gradient_stop_query_style(SPItem *item, GrPointType point_type, guint point_i, Inkscape::PaintTarget fill_or_stroke)
+Color sp_item_gradient_stop_query_style(SPItem *item, GrPointType point_type, guint point_i, Inkscape::PaintTarget fill_or_stroke)
 {
     SPGradient *gradient = getGradient(item, fill_or_stroke);
 
-    if (!gradient) {
-        return 0;
-    }
+    if (!gradient)
+        return Colors::Color(0x000000ff);
 
     if (is<SPLinearGradient>(gradient) || is<SPRadialGradient>(gradient) ) {
 
         SPGradient *vector = gradient->getVector();
 
         if (!vector) // orphan!
-            return 0; // what else to do?
+            return Colors::Color(0x000000ff);
 
         switch (point_type) {
             case POINT_LG_BEGIN:
@@ -953,7 +935,7 @@ guint32 sp_item_gradient_stop_query_style(SPItem *item, GrPointType point_type, 
             {
                 SPStop *first = vector->getFirstStop();
                 if (first) {
-                    return first->get_rgba32();
+                    return first->getColor();
                 }
             }
             break;
@@ -964,7 +946,7 @@ guint32 sp_item_gradient_stop_query_style(SPItem *item, GrPointType point_type, 
             {
                 SPStop *last = sp_last_stop (vector);
                 if (last) {
-                    return last->get_rgba32();
+                    return last->getColor();
                 }
             }
             break;
@@ -975,7 +957,7 @@ guint32 sp_item_gradient_stop_query_style(SPItem *item, GrPointType point_type, 
             {
                 SPStop *stopi = sp_get_stop_i (vector, point_i);
                 if (stopi) {
-                    return stopi->get_rgba32();
+                    return stopi->getColor();
                 }
             }
             break;
@@ -984,7 +966,6 @@ guint32 sp_item_gradient_stop_query_style(SPItem *item, GrPointType point_type, 
                 g_warning( "Bad linear/radial gradient handle type" );
                 break;
         }
-        return 0;
     } else if (is<SPMeshGradient>(gradient)) {
 
         // Mesh gradient
@@ -993,16 +974,12 @@ guint32 sp_item_gradient_stop_query_style(SPItem *item, GrPointType point_type, 
         switch (point_type) {
             case POINT_MG_CORNER: {
                 if (point_i >= mg->array.corners.size()) {
-                    return 0;
+                    return Colors::Color(0x000000ff);
                 }
                 SPMeshNode const* cornerpoint = mg->array.corners[ point_i ];
 
                 if (cornerpoint) {
-                    SPColor color  = cornerpoint->color;
-                    double opacity = cornerpoint->opacity;
-                    return  color.toRGBA32( opacity );
-                } else {
-                    return 0;
+                    return *cornerpoint->color;
                 }
                 break;
             }
@@ -1017,10 +994,8 @@ guint32 sp_item_gradient_stop_query_style(SPItem *item, GrPointType point_type, 
             default:
                 g_warning( "Bad mesh handle type" );
         }
-        return 0;
     }
-
-    return 0;
+    return Colors::Color(0x000000ff);
 }
 
 void sp_item_gradient_stop_set_style(SPItem *item, GrPointType point_type, guint point_i, Inkscape::PaintTarget fill_or_stroke, SPCSSAttr *stop)
@@ -1088,37 +1063,22 @@ void sp_item_gradient_stop_set_style(SPItem *item, GrPointType point_type, guint
         // Mesh gradient
         auto mg = cast<SPMeshGradient>(gradient);
 
-        bool changed = false;
         switch (point_type) {
             case POINT_MG_CORNER: {
 
                 // Update mesh array (which is not updated automatically when stop is changed?)
-                gchar const* color_str = sp_repr_css_property( stop, "stop-color", nullptr );
-                if( color_str ) {
-                    SPColor color( 0 );
-                    SPIPaint paint;
-                    paint.read( color_str );
-                    if( paint.isColor() ) {
-                        color = paint.value.color;
-                    }
-                    mg->array.corners[ point_i ]->color = color;
-                    changed = true;
-                }
-                gchar const* opacity_str = sp_repr_css_property( stop, "stop-opacity", nullptr );
-                if( opacity_str ) {
-                    std::stringstream os( opacity_str );
-                    double opacity = 1.0;
-                    os >> opacity;
-                    mg->array.corners[ point_i ]->opacity = opacity;
-                    changed = true;
-                }
-                // Update stop
-                if( changed ) {
-                    SPStop *stopi = mg->array.corners[ point_i ]->stop;
-                    if (stopi) {
-                        sp_repr_css_change(stopi->getRepr(), stop, "style");
-                    } else {
-                        std::cerr << "sp_item_gradient_stop_set_style: null stopi" << std::endl;
+                gchar const* color_str = sp_repr_css_property(stop, "stop-color", nullptr);
+                if (auto color = Color::parse(color_str)) {
+                    color->addOpacity(sp_repr_css_double_property(stop, "stop-opacity", 1.0));
+                    if (*color != mg->array.corners[point_i]->color) {
+                        mg->array.corners[ point_i ]->color = *color;
+                        // Update stop
+                        SPStop *stopi = mg->array.corners[ point_i ]->stop;
+                        if (stopi) {
+                            sp_repr_css_change(stopi->getRepr(), stop, "style");
+                        } else {
+                            std::cerr << "sp_item_gradient_stop_set_style: null stopi" << std::endl;
+                        }
                     }
                 }
                 break;
@@ -1209,16 +1169,9 @@ void sp_item_gradient_invert_vector_color(SPItem *item, Inkscape::PaintTarget fi
 
     for (auto &child: vector->children) {
         if (auto stop = cast<SPStop>(&child)) {
-            // XXX This breaks icc / cmyk colors!
-            guint32 color = stop->get_rgba32();
-            //g_message("Stop color %d", color);
-            color = SP_RGBA32_U_COMPOSE(
-                (255 - SP_RGBA32_R_U(color)),
-                (255 - SP_RGBA32_G_U(color)),
-                (255 - SP_RGBA32_B_U(color)),
-                SP_RGBA32_A_U(color)
-            );
-            stop->setColor({color}, SP_RGBA32_A_U(color));
+            auto color = stop->getColor();
+            color.invert();
+            stop->setColor(color);
         }
     }
 }
@@ -1723,14 +1676,17 @@ static void sp_gradient_repr_set_link(Inkscape::XML::Node *repr, SPGradient *lin
 }
 
 
-static void addStop(Inkscape::XML::Node *parent, SPColor color, double opacity, gchar const *offset)
+static void addStop(Inkscape::XML::Node *parent, Color const &color, double opacity, gchar const *offset)
 {
 #ifdef SP_GR_VERBOSE
     g_message("addStop(%p, %s, %d, %s)", parent, color.c_str(), opacity, offset);
 #endif
     auto doc = parent->document();
     Inkscape::XML::Node *repr = doc->createElement("svg:stop");
-    SPStop::setColorRepr(repr, color, opacity);
+    
+    Color copy = color;
+    copy.addOpacity(opacity);
+    SPStop::setColorRepr(repr, copy);
     repr->setAttribute( "offset", offset );
     parent->appendChild(repr);
     Inkscape::GC::release(repr);
@@ -1739,7 +1695,7 @@ static void addStop(Inkscape::XML::Node *parent, SPColor color, double opacity, 
 /*
  * Get default normalized gradient vector of document, create if there is none
  */
-SPGradient *sp_document_default_gradient_vector( SPDocument *document, SPColor const &color, double opacity, bool singleStop )
+SPGradient *sp_document_default_gradient_vector( SPDocument *document, Color const &color, double opacity, bool singleStop )
 {
     SPDefs *defs = document->getDefs();
 
@@ -1783,9 +1739,13 @@ SPGradient *sp_document_default_gradient_vector( SPDocument *document, SPColor c
 SPGradient *sp_gradient_vector_for_object( SPDocument *const doc, SPDesktop *const desktop,
                                            SPObject *const o, Inkscape::PaintTarget const fill_or_stroke, bool singleStop )
 {
-    SPColor color;
+    Color color(0x000000ff);
     double opacity = 1.0;
     bool for_fill = fill_or_stroke == Inkscape::FOR_FILL;
+
+    // if not o or o doesn't use flat color, then take current color of the desktop.
+    if (auto tmp = sp_desktop_get_color(desktop, for_fill))
+        color = *tmp;
 
     if (o && o->style) {
         // take the color of the object
@@ -1797,15 +1757,11 @@ SPGradient *sp_gradient_vector_for_object( SPDocument *const doc, SPDesktop *con
                 return cast<SPGradient>(server)->getVector(true);
             }
         } else if (paint.isColor()) {
-            color = paint.value.color;
-            opacity = SP_SCALE24_TO_FLOAT(for_fill ? style.fill_opacity.value : style.stroke_opacity.value);
+            color = paint.getColor();
+            opacity = for_fill ? style.fill_opacity : style.stroke_opacity;
         }
     }
 
-    if (!color) {
-        // if not o or o doesn't use flat color, then take current color of the desktop.
-        color = sp_desktop_get_color(desktop, for_fill);
-    }
     return sp_document_default_gradient_vector(doc, color, opacity, singleStop);
 }
 

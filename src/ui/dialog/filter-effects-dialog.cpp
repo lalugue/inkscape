@@ -74,7 +74,6 @@
 #include "object/filters/pointlight.h"
 #include "object/filters/spotlight.h"
 #include "selection-chemistry.h"
-#include "svg/svg-color.h"
 #include "ui/builder-utils.h"
 #include "ui/column-menu-builder.h"
 #include "ui/controller.h"
@@ -312,42 +311,29 @@ class ColorButton : public Widget::ColorPicker, public AttrWidget
 {
 public:
     ColorButton(unsigned int def, const SPAttr a, char* tip_text)
-        : ColorPicker(_("Select color"), tip_text ? tip_text : "", 0x000000ff, false),
+        : ColorPicker(_("Select color"), tip_text ? tip_text : "", Colors::Color(0x000000ff), false, false),
           AttrWidget(a, def)
     {
-        use_transparency(false);
-        connectChanged([this](unsigned const rgba){ signal_attr_changed().emit(); });
+        connectChanged([this](Colors::Color const &color){ signal_attr_changed().emit(); });
         if (tip_text) {
             set_tooltip_text(tip_text);
         }
-        setRgba32(0xffffffff);
+        setColor(Colors::Color(0xffffffff));
     }
 
-    // Returns the color in 'rgb(r,g,b)' form.
     Glib::ustring get_as_attribute() const override
     {
-        // no doubles here, so we can use the standard string stream.
-        std::ostringstream os;
-
-        const auto c = get_current_color();
-        int r = SP_RGBA32_R_U(c);
-        int g = SP_RGBA32_G_U(c);
-        int b = SP_RGBA32_B_U(c);
-        os << "rgb(" << r << "," << g << "," << b << ")";
-        return os.str();
+        return get_current_color().toString(false);
     }
-
 
     void set_from_attribute(SPObject* o) override
     {
         const gchar* val = attribute_value(o);
-        guint32 i = 0;
-        if(val) {
-            i = sp_svg_read_color(val, 0xFFFFFFFF);
+        if (auto color = Colors::Color::parse(val)) {
+            setColor(*color);
         } else {
-            i = (guint32) get_default()->as_uint();
+            setColor(Colors::Color(get_default()->as_uint()));
         }
-        setRgba32(i);
     }
 };
 

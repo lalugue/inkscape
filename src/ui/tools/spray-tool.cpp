@@ -30,6 +30,7 @@
 
 #include <2geom/circle.h>
 
+#include "colors/utils.h"
 #include "context-fns.h"
 #include "desktop-style.h"
 #include "desktop.h"
@@ -46,8 +47,6 @@
 #include "object/box3d.h"
 #include "object/sp-shape.h"
 #include "object/sp-use.h"
-
-#include "svg/svg-color.h"
 
 #include "ui/icon-names.h"
 #include "ui/toolbar/spray-toolbar.h"
@@ -602,17 +601,16 @@ static bool fit_item(SPDesktop *desktop,
         }
         double opacity = 1.0;
         gchar color_string[32]; *color_string = 0;
-        float r = SP_RGBA32_R_F(rgba);
-        float g = SP_RGBA32_G_F(rgba);
-        float b = SP_RGBA32_B_F(rgba);
-        float a = SP_RGBA32_A_F(rgba);
-        if(!over_transparent && (a == 0 || a < 1e-6)){
+        auto color = Colors::Color(rgba);
+        bool invisible = color.getOpacity() < 1e-6;
+
+        if(!over_transparent && invisible){
             if(!no_overlap && (picker || over_transparent || over_no_transparent)){
                 showHidden(items_down);
             }
             return false;
         }
-        if(!over_no_transparent && a > 0){
+        if(!over_no_transparent && !invisible){
             if(!no_overlap && (picker || over_transparent || over_no_transparent)){
                 showHidden(items_down);
             }
@@ -620,8 +618,7 @@ static bool fit_item(SPDesktop *desktop,
         }
 
         if(picker && do_trace){
-            float hsl[3];
-            SPColor::rgb_to_hsl_floatv (hsl, r, g, b);
+            auto hsl = *color.converted(Colors::Space::Type::HSL);
 
             gdouble val = 0;
             switch (pick) {
@@ -629,16 +626,16 @@ static bool fit_item(SPDesktop *desktop,
                 val = 1 - hsl[2]; // inverse lightness; to match other picks where black = max
                 break;
             case PICK_OPACITY:
-                val = a;
+                val = color.getOpacity();
                 break;
             case PICK_R:
-                val = r;
+                val = color[0];
                 break;
             case PICK_G:
-                val = g;
+                val = color[1];
                 break;
             case PICK_B:
-                val = b;
+                val = color[2];
                 break;
             case PICK_H:
                 val = hsl[0];
@@ -655,9 +652,9 @@ static bool fit_item(SPDesktop *desktop,
 
             if (rand_picked > 0) {
                 val = randomize01 (val, rand_picked);
-                r = randomize01 (r, rand_picked);
-                g = randomize01 (g, rand_picked);
-                b = randomize01 (b, rand_picked);
+                for (auto i = 0; i < 3; i++) {
+                    color.set(i, randomize01(color[i], rand_picked));
+                }
             }
 
             if (gamma_picked != 0) {
@@ -668,25 +665,19 @@ static bool fit_item(SPDesktop *desktop,
                     power = 1 + fabs(gamma_picked);
 
                 val = pow (val, power);
-                r = pow ((double)r, (double)power);
-                g = pow ((double)g, (double)power);
-                b = pow ((double)b, (double)power);
+                for (auto i = 0; i < 3; i++) {
+                    color.set(i, pow(color[i], (double)power));
+                }
             }
 
             if (invert_picked) {
                 val = 1 - val;
-                r = 1 - r;
-                g = 1 - g;
-                b = 1 - b;
+                color.invert();
             }
 
             val = CLAMP (val, 0, 1);
-            r = CLAMP (r, 0, 1);
-            g = CLAMP (g, 0, 1);
-            b = CLAMP (b, 0, 1);
+            color.normalize();
 
-            // recompose tweaked color
-            rgba = SP_RGBA32_F_COMPOSE(r, g, b, a);
             if (pick_to_size) {
                 if(!trace_scale){
                     if(pick_inverse_value) {
@@ -760,13 +751,7 @@ static bool fit_item(SPDesktop *desktop,
                 }
             }
             if (pick_to_color) {
-                sp_svg_write_color(color_string, sizeof(color_string), rgba);
-                if(pick_fill){
-                    sp_repr_css_set_property(css, "fill", color_string);
-                }
-                if(pick_stroke){
-                    sp_repr_css_set_property(css, "stroke", color_string);
-                }
+                sp_repr_css_set_property_string(css, pick_fill ? "fill" : "stroke", Inkscape::Colors::rgba_to_hex(rgba));
             }
             if (opacity < 1e-6) { // invisibly transparent, skip
                 if(!no_overlap && (picker || over_transparent || over_no_transparent)){
@@ -779,23 +764,11 @@ static bool fit_item(SPDesktop *desktop,
             if(!pick_center){
                 rgba = rgba2;
             }
+            auto color = Colors::Color(rgba);
             if (pick_inverse_value) {
-                r = 1 - SP_RGBA32_R_F(rgba);
-                g = 1 - SP_RGBA32_G_F(rgba);
-                b = 1 - SP_RGBA32_B_F(rgba);
-            } else {
-                r = SP_RGBA32_R_F(rgba);
-                g = SP_RGBA32_G_F(rgba);
-                b = SP_RGBA32_B_F(rgba);
+                color.invert();
             }
-            rgba = SP_RGBA32_F_COMPOSE(r, g, b, a);
-            sp_svg_write_color(color_string, sizeof(color_string), rgba);
-            if(pick_fill){
-                sp_repr_css_set_property(css, "fill", color_string);
-            }
-            if(pick_stroke){
-                sp_repr_css_set_property(css, "stroke", color_string);
-            }
+            sp_repr_css_set_property_string(css, pick_fill ? "fill" : "stroke", color.toString());
         }
         if(!no_overlap && (picker || over_transparent || over_no_transparent)){
             showHidden(items_down);

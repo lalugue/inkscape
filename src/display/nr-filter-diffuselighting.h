@@ -19,12 +19,10 @@
 #include "display/nr-filter-primitive.h"
 #include "display/nr-filter-slot.h"
 #include "display/nr-filter-units.h"
-#include "svg/svg-icc-color.h"
 
 class SPFeDistantLight;
 class SPFePointLight;
 class SPFeSpotLight;
-struct SVGICCColor;
 
 namespace Inkscape {
 namespace Filters {
@@ -36,7 +34,6 @@ public:
     ~FilterDiffuseLighting() override;
 
     void render_cairo(FilterSlot &slot) const override;
-    void set_icc(SVGICCColor const &icc_) { icc = icc_; }
     void area_enlarge(Geom::IntRect &area, Geom::Affine const &trans) const override;
     double complexity(Geom::Affine const &ctm) const override;
 
@@ -51,9 +48,6 @@ public:
     guint32 lighting_color;
 
     Glib::ustring name() const override { return "Diffuse Lighting"; }
-
-private:
-    std::optional<SVGICCColor> icc;
 };
 
 } // namespace Filters

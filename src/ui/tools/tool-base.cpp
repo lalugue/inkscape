@@ -162,14 +162,16 @@ void ToolBase::set_cursor(std::string filename)
  */
 Glib::RefPtr<Gdk::Cursor> ToolBase::get_cursor(Gtk::Widget &widget, std::string const &filename) const
 {
-    bool fillHasColor   = false;
-    bool strokeHasColor = false;
-    guint32 fillColor = sp_desktop_get_color_tool(_desktop, getPrefsPath(), true, &fillHasColor);
-    guint32 strokeColor = sp_desktop_get_color_tool(_desktop, getPrefsPath(), false, &strokeHasColor);
-    double fillOpacity = fillHasColor ? sp_desktop_get_opacity_tool(_desktop, getPrefsPath(), true) : 1.0;
-    double strokeOpacity = strokeHasColor ? sp_desktop_get_opacity_tool(_desktop, getPrefsPath(), false) : 1.0;
-    return load_svg_cursor(widget, filename,
-                           fillColor, strokeColor, fillOpacity, strokeOpacity);
+    auto fillColor = sp_desktop_get_color_tool(_desktop, getPrefsPath(), true);
+    if (fillColor) {
+        fillColor->addOpacity(sp_desktop_get_opacity_tool(_desktop, getPrefsPath(), true));
+    }
+
+    auto strokeColor = sp_desktop_get_color_tool(_desktop, getPrefsPath(), false);
+    if (strokeColor) {
+        strokeColor->addOpacity(sp_desktop_get_opacity_tool(_desktop, getPrefsPath(), false));
+    }
+    return load_svg_cursor(widget, filename, fillColor, strokeColor);
 }
 
 /**

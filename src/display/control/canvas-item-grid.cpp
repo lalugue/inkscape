@@ -14,8 +14,8 @@
 #include <cairomm/enums.h>
 #include <cmath>
 
+#include "colors/color.h"
 #include "canvas-item-grid.h"
-#include "color.h"
 #include "helper/geom.h"
 
 enum Dim3 { X, Y, Z };
@@ -45,8 +45,8 @@ CanvasItemGrid::CanvasItemGrid(CanvasItemGroup *group)
     : CanvasItem(group)
     , _origin(0, 0)
     , _spacing(1, 1)
-    , _minor_color(GRID_DEFAULT_MINOR_COLOR)
-    , _major_color(GRID_DEFAULT_MAJOR_COLOR)
+    , _minor_color(0x0)
+    , _major_color(0x0)
     , _major_line_interval(5)
     , _dotted(false)
 {

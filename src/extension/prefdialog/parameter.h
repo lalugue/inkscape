@@ -21,6 +21,10 @@ namespace Glib {
 class ustring;
 } // namespace Glib
 
+namespace Inkscape::Colors {
+class Color;
+}
+
 namespace Inkscape::Extension {
 
 /**
@@ -55,7 +59,7 @@ public:
     bool get_optiongroup_contains(const char *value) const;
 
     /** Wrapper to cast to the object and use it's function. */
-    unsigned int get_color() const;
+    Inkscape::Colors::Color get_color() const;
 
     /** Wrapper to cast to the object and use it's function. */
     bool set_bool(bool in);
@@ -73,7 +77,7 @@ public:
     const char *set_optiongroup(const char *in);
 
     /** Wrapper to cast to the object and use it's function. */
-    unsigned int set_color(unsigned int in);
+    void set_color(Inkscape::Colors::Color const &in);
 
     char const *name() const { return _name; }
 

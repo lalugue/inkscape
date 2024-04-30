@@ -36,6 +36,7 @@ namespace Widget {
 class FillNStroke : public Gtk::Box {
   private:
     FillOrStroke kind;
+    std::shared_ptr<Colors::ColorSet> _solid_colors;
     SPDesktop     *_desktop   = nullptr;
     PaintSelector *_psel      = nullptr;
     guint32        _last_drag = 0;

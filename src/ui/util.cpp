@@ -18,6 +18,7 @@
 #include <cairomm/pattern.h>
 #include <glibmm/i18n.h>
 #include <glibmm/regex.h>
+#include <gtkmm/adjustment.h>
 #include <gtkmm/image.h>
 #include <gtkmm/label.h>
 #include <gtkmm/messagedialog.h>
@@ -29,6 +30,9 @@
 #include <pangomm/context.h>
 #include <pangomm/fontdescription.h>
 #include <pangomm/layout.h>
+
+#include "colors/color.h"
+#include "colors/utils.h" // color to hex string
 #include "util/numeric/converters.h"
 
 #if (defined (_WIN32) || defined (_WIN64))
@@ -254,6 +258,19 @@ void ellipsize(Gtk::Label &label, int const max_width_chars, Pango::EllipsizeMod
 
 } // namespace Inkscape::UI
 
+/**
+ * Color is store as a string in the form #RRGGBBAA, '0' means "unset"
+ *
+ * @param color - The string color from glade.
+ */
+unsigned int get_color_value(const Glib::ustring color)
+{
+    Gdk::RGBA gdk_color = Gdk::RGBA(color);
+    return SP_RGBA32_F_COMPOSE(gdk_color.get_red(), gdk_color.get_green(),
+                               gdk_color.get_blue(), gdk_color.get_alpha());
+}
+
+
 Gdk::RGBA mix_colors(const Gdk::RGBA& a, const Gdk::RGBA& b, float ratio) {
     auto lerp = [](double v0, double v1, double t){ return (1.0 - t) * v0 + t * v1; };
     Gdk::RGBA result;
@@ -291,6 +308,11 @@ guint32 to_guint32(Gdk::RGBA const &rgba)
                static_cast<guint32>(0xFF * rgba.get_alpha() + 0.5);
 }
 
+Gdk::RGBA color_to_rgba(Inkscape::Colors::Color const &color)
+{
+    return to_rgba(color.toRGBA());
+}
+
 Gdk::RGBA to_rgba(guint32 const u32)
 {
     auto rgba = Gdk::RGBA{};
@@ -299,6 +321,22 @@ Gdk::RGBA to_rgba(guint32 const u32)
     rgba.set_blue (((u32 & 0x0000FF00) >>  8) / 255.0);
     rgba.set_alpha(((u32 & 0x000000FF)      ) / 255.0);
     return rgba;
+}
+
+/**
+ * These GUI related color conversions allow us to convert from
+ * SVG xml attributes to Gdk colors, without needing the entire CMS
+ * framework, which would be excessive for widget painting.
+ */
+Glib::ustring gdk_to_css_color(const Gdk::RGBA& color) {
+    return Inkscape::Colors::rgba_to_hex(to_guint32(color), true);
+}
+Gdk::RGBA css_color_to_gdk(const char *value) {
+    try {
+        return to_rgba(value ? Inkscape::Colors::hex_to_rgba(value) : 0x0);
+    } catch (Inkscape::Colors::ColorError &e) {
+        return {};
+    }
 }
 
 // 2Geom <-> Cairo

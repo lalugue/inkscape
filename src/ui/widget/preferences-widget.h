@@ -284,15 +284,15 @@ private:
 class PrefColorPicker : public ColorPicker
 {
 public:
-    PrefColorPicker() : ColorPicker("", "", 0, false) {};
+    PrefColorPicker() : ColorPicker("", "", Colors::Color(0x000000ff), false) {};
     ~PrefColorPicker() override = default;;
 
     void init(Glib::ustring const &abel, Glib::ustring const &prefs_path,
-              std::uint32_t default_rgba);
+              std::string const &default_color);
 
 private:
     Glib::ustring _prefs_path;
-    void on_changed(std::uint32_t rgba) override;
+    void on_changed(Inkscape::Colors::Color const &color) override;
 };
 
 class PrefUnit : public UnitMenu

@@ -18,7 +18,6 @@
 #include <gtkmm/snapshot.h>
 #include <gtkmm/widget.h>
 
-#include "color.h"
 #include "ui/icon-loader.h"
 #include "ui/util.h"
 

@@ -21,7 +21,6 @@
 #include "display/nr-filter-flood.h"             // for FilterFlood
 #include "object/filters/sp-filter-primitive.h"  // for SPFilterPrimitive
 #include "object/sp-object.h"                    // for SP_OBJECT_MODIFIED_FLAG
-#include "svg/svg-color.h"                       // for sp_svg_read_color
 
 class SPDocument;
 
@@ -47,34 +46,9 @@ void SPFeFlood::set(SPAttr key, char const *value)
 {
     switch (key) {
         case SPAttr::FLOOD_COLOR: {
-            char const *end_ptr = nullptr;
-            uint32_t n_color = sp_svg_read_color(value, &end_ptr, 0x0);
 
-            bool modified = false;
-            if (n_color != color) {
-                color = n_color;
-                modified = true;
-            }
-
-            if (end_ptr) {
-                while (g_ascii_isspace(*end_ptr)) {
-                    ++end_ptr;
-                }
-
-                if (std::strncmp(end_ptr, "icc-color(", 10) == 0) {
-                    icc.emplace();
-
-                    if (!sp_svg_read_icc_color(end_ptr, &*icc)) {
-                        icc.reset();
-                    }
-
-                    modified = true;
-                }
-            }
-
-            if (modified) {
-                requestModified(SP_OBJECT_MODIFIED_FLAG);
-            }
+            flood_color = Inkscape::Colors::Color::parse(value);
+            requestModified(SP_OBJECT_MODIFIED_FLAG);
             break;
         }
         case SPAttr::FLOOD_OPACITY: {
@@ -107,13 +81,7 @@ std::unique_ptr<Inkscape::Filters::FilterPrimitive> SPFeFlood::build_renderer(In
 {
     auto flood = std::make_unique<Inkscape::Filters::FilterFlood>();
     build_renderer_common(flood.get());
-    
-    flood->set_opacity(opacity);
-    flood->set_color(color);
-    if (icc) {
-        flood->set_icc(*icc);
-    }
-
+    flood->set_color(flood_color ? flood_color->toRGBA(opacity) : 0x0);
     return flood;
 }
 

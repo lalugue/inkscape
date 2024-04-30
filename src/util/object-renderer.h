@@ -2,6 +2,7 @@
 #ifndef SEEN_OBJECT_RENDERER_H
 #define SEEN_OBJECT_RENDERER_H
 
+#include <cairomm/context.h>
 #include <cairomm/refptr.h>
 #include <cairomm/surface.h>
 #include <cairomm/context.h>
@@ -14,6 +15,9 @@
 #include "document.h"
 
 namespace Inkscape {
+    namespace Colors {
+        class Color;
+    };
 
 class object_renderer {
 public:
@@ -116,5 +120,7 @@ void draw_gradient(const Cairo::RefPtr<Cairo::Context>& cr, SPGradient* gradient
 
 
 } // namespace
+
+void set_source_inkscape_color(Cairo::RefPtr<Cairo::Context> context, Inkscape::Colors::Color const &color, double opacity);
 
 #endif // SEEN_OBJECT_RENDERER_H

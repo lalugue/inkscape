@@ -21,7 +21,6 @@
 #include <giomm/themedicon.h>
 
 #include "object/sp-root.h"
-#include "svg/svg-color.h"
 #include "svg/stringstream.h"
 #include "util/safe-printf.h"
 
@@ -403,7 +402,7 @@ RegisteredColorPicker::RegisteredColorPicker(Glib::ustring const &label,
                                              Registry &wr,
                                              Inkscape::XML::Node *repr_in,
                                              SPDocument *doc_in)
-    : RegisteredWidget<LabelledColorPicker>{label, title, tip, 0u, true}
+    : RegisteredWidget<LabelledColorPicker>{label, title, tip, Colors::Color(0x000000ff), true}
 {
     init_parent("", wr, repr_in, doc_in);
 
@@ -413,9 +412,9 @@ RegisteredColorPicker::RegisteredColorPicker(Glib::ustring const &label,
 }
 
 void
-RegisteredColorPicker::setRgba32(std::uint32_t const rgba)
+RegisteredColorPicker::setColor(Colors::Color const &color)
 {
-    LabelledColorPicker::setRgba32(rgba);
+    LabelledColorPicker::setColor(color);
 }
 
 void
@@ -425,7 +424,7 @@ RegisteredColorPicker::closeWindow()
 }
 
 void
-RegisteredColorPicker::on_changed(std::uint32_t const rgba)
+RegisteredColorPicker::on_changed(Colors::Color const &color)
 {
     if (_wr->isUpdating())
         return;
@@ -445,21 +444,13 @@ RegisteredColorPicker::on_changed(std::uint32_t const rgba)
         local_repr = dt->getNamedView()->getRepr();
         local_doc = dt->getDocument();
     }
-    gchar c[32];
-    if (_akey == _ckey + "_opacity_LPE") { //For LPE parameter we want stored with alpha
-        safeprintf(c, "#%08x", rgba);
-    } else {
-        sp_svg_write_color(c, sizeof(c), rgba);
-    }
+    bool alpha = _akey == _ckey + "_opacity_LPE"; //For LPE parameter we want stored with alpha
+    auto c = color.toString(alpha);
+
     {
         DocumentUndo::ScopedInsensitive _no_undo(local_doc);
-        if (_setter) {
-            _setter(local_repr, rgba);
-        }
-        else {
-            local_repr->setAttribute(_ckey, c);
-            local_repr->setAttributeCssDouble(_akey.c_str(), (rgba & 0xff) / 255.0);
-        }
+        local_repr->setAttribute(_ckey, c);
+        local_repr->setAttributeCssDouble(_akey.c_str(), color.getOpacity());
     }
     local_doc->setModifiedSinceSave();
     DocumentUndo::done(local_doc, "registered-widget.cpp: RegisteredColorPicker::on_changed", ""); // TODO Fix description.

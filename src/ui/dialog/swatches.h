@@ -23,6 +23,7 @@
 #include <glibmm/ustring.h>
 #include <gtkmm/widget.h>
 
+#include "colors/color.h"
 #include "preferences.h"  // PrefObserver
 #include "ui/dialog/dialog-base.h"
 #include "ui/dialog/global-palettes.h"
@@ -37,6 +38,11 @@ class ToggleButton;
 } // namespace Gtk
 
 class SPGradient;
+
+// Allow boost to map with colors
+namespace Inkscape::Colors {
+    std::size_t hash_value(Color const& b);
+} // namespace Inkscape::Colors
 
 namespace Inkscape::UI {
 
@@ -90,7 +96,7 @@ private:
     Glib::ustring _current_palette_id;
     void set_palette(const Glib::ustring& id);
     void select_palette(const Glib::ustring& id);
-    const PaletteFileData* get_palette(const Glib::ustring& id);
+    const PaletteFileData *get_palette(const Glib::ustring& id);
 
     // Asynchronous update mechanism.
     sigc::connection conn_gradients;
@@ -108,7 +114,7 @@ private:
 
     // A map from colors to their respective widgets. Used to quickly find the widgets corresponding
     // to the current fill/stroke color, in order to update their fill/stroke indicators.
-    using ColorKey = std::variant<std::monostate, std::array<unsigned, 3>, SPGradient *>;
+    using ColorKey = std::variant<std::monostate, Colors::Color, SPGradient *>;
     boost::unordered_multimap<ColorKey, ColorItem*> widgetmap; // need boost for array hash
     std::vector<ColorItem*> current_fill;
     std::vector<ColorItem*> current_stroke;

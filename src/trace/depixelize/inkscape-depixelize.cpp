@@ -20,10 +20,9 @@
 
 #include "inkscape-depixelize.h"
 
-#include "color.h"
+#include "colors/utils.h"
 #include "preferences.h"
 #include "async/progress.h"
-#include "svg/svg-color.h"
 #include "svg/css-ostringstream.h"
 
 namespace Inkscape {
@@ -65,17 +64,14 @@ TraceResult DepixelizeTracingEngine::trace(Glib::RefPtr<Gdk::Pixbuf> const &pixb
         throttled.report_or_throw((double)i / num_splines);
         i++;
 
-        char b[64];
-        sp_svg_write_color(b, sizeof(b),
+        auto hex = Inkscape::Colors::rgba_to_hex(
                            SP_RGBA32_U_COMPOSE(unsigned(it.rgba[0]),
                                                unsigned(it.rgba[1]),
                                                unsigned(it.rgba[2]),
                                                unsigned(it.rgba[3])));
-        Inkscape::CSSOStringStream osalpha;
-        osalpha << it.rgba[3] / 255.0f;
-        char *style = g_strdup_printf("fill:%s;fill-opacity:%s;", b, osalpha.str().c_str());
-        res.emplace_back(style, std::move(it.pathVector));
-        g_free(style);
+        Inkscape::CSSOStringStream ss;
+        ss << "fill:" << hex.c_str() << ";fill-opacity:" << (it.rgba[3] / 255.0f) << ";";
+        res.emplace_back(ss.str(), std::move(it.pathVector));
     }
 
     return res;

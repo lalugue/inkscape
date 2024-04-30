@@ -373,7 +373,11 @@ void Drawing::averageColor(Geom::IntRect const &area, double &R, double &G, doub
     auto dc = Inkscape::DrawingContext(surface->cobj(), area.min());
     render(dc, area);
 
-    ink_cairo_surface_average_color_premul(surface->cobj(), R, G, B, A);
+    auto color = ink_cairo_surface_average_color_premul(surface->cobj());
+    R = color[0];
+    G = color[1];
+    B = color[2];
+    A = color.getOpacity();
 }
 
 /*

@@ -1568,12 +1568,10 @@ void TextToolbar::selection_changed(Inkscape::Selection *selection) // don't bot
             std::vector<SPItem *> qactive{ this->_sub_active_item };
             auto parent = cast<SPItem>(this->_sub_active_item->parent);
             std::vector<SPItem *> qparent{ parent };
-            result_numbers =
-                sp_desktop_query_style_from_list(qactive, &query, QUERY_STYLE_PROPERTY_FONTNUMBERS);
-            result_numbers_fallback =
-                sp_desktop_query_style_from_list(qparent, &query_fallback, QUERY_STYLE_PROPERTY_FONTNUMBERS);
+            result_numbers = objects_query_fontnumbers(qactive, &query);
+            result_numbers_fallback = objects_query_fontnumbers(qparent, &query_fallback);
         } else if (_outer) {
-            result_numbers = sp_desktop_query_style_from_list(to_work, &query, QUERY_STYLE_PROPERTY_FONTNUMBERS);
+            result_numbers = objects_query_fontnumbers(to_work, &query);
         } else {
             result_numbers = sp_desktop_query_style(desktop, &query, QUERY_STYLE_PROPERTY_FONTNUMBERS);
         }

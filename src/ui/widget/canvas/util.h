@@ -6,7 +6,9 @@
 #include <2geom/int-rect.h>
 #include <2geom/affine.h>
 #include <cairomm/cairomm.h>
-#include "color.h"
+
+#include "colors/color.h"
+#include "colors/utils.h"
 
 namespace Inkscape {
 namespace UI {
@@ -50,11 +52,12 @@ inline auto premultiplied(std::array<float, 4> arr)
     return arr;
 }
 
-std::array<float, 3> checkerboard_darken(std::array<float, 3> const &rgb, float amount = 1.0f);
+Colors::Color checkerboard_darken(Colors::Color color);
 
-inline auto checkerboard_darken(uint32_t rgba)
+inline std::array<float, 3> checkerboard_darken(uint32_t rgba)
 {
-    return checkerboard_darken(rgb_to_array(rgba), 1.0f - SP_RGBA32_A_U(rgba) / 255.0f);
+    auto const color = checkerboard_darken(Colors::Color{rgba});
+    return {(float)color[0], (float)color[1], (float)color[2]};
 }
 
 } // namespace Widget

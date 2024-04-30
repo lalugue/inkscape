@@ -18,12 +18,6 @@
 #include "canvas-item.h"
 #include "preferences.h"
 
-// default colors in RGBA
-uint32_t constexpr GRID_DEFAULT_MAJOR_COLOR = 0x0099e5'4d;
-uint32_t constexpr GRID_DEFAULT_MINOR_COLOR = 0x0099e5'26;
-uint32_t constexpr GRID_DEFAULT_BLOCK_COLOR = 0x0047cb'4d;
-uint32_t constexpr GRID_DEFAULT_MINOR_BLOCK_COLOR = 0x0047cb'26;
-
 namespace Inkscape {
 
 class CanvasItemGrid : public CanvasItem

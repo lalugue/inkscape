@@ -25,8 +25,6 @@
 #include "attributes.h"
 #include "style-enums.h"
 
-#include "color.h"
-
 #include "object/sp-marker-loc.h"
 #include "object/sp-filter.h"
 #include "object/sp-filter-reference.h"
@@ -35,13 +33,20 @@
 
 #include "object/uri.h"
 
-#include "svg/svg-icc-color.h"
+// TODO: Remove include when we figure out how to store Color without the full class
+#include "colors/color.h"
 
 #include "xml/repr.h"
 
 namespace Inkscape {
 class ObjectSet;
+namespace Colors {
+class Color;
+class DocumentCMS;
+}
 };
+
+using namespace Inkscape;
 
 static const unsigned SP_STYLE_FLAG_ALWAYS (1 << 2);
 static const unsigned SP_STYLE_FLAG_IFSET  (1 << 0);
@@ -307,11 +312,17 @@ public:
     ~SPIScale24() override
     = default;
 
+    operator double() const { return SP_SCALE24_TO_FLOAT(value); }
+
     void read( gchar const *str ) override;
     const Glib::ustring get_value() const override;
     void clear() override {
         SPIBase::clear();
         value = get_default();
+    }
+    void set_double(const double& other) {
+        value = SP_SCALE24_FROM_FLOAT(other);
+        set = true;
     }
 
     void cascade( const SPIBase* const parent ) override;
@@ -320,7 +331,6 @@ public:
     SPIScale24& operator=(const SPIScale24& rhs) = default;
 
     bool equals(const SPIBase& rhs) const override;
-
 
   // To do: make private
 public:
@@ -661,58 +671,39 @@ public:
     bool containsAnyShape(Inkscape::ObjectSet *set);
 };
 
-/// Color type internal to SPStyle, FIXME Add string value to store SVG named color.
 class SPIColor : public SPIBase
 {
 
 public:
-    SPIColor(bool inherits = true)
-        : SPIBase(inherits)
-        , currentcolor(false)
-    {
-        value.color.set(0);
-    }
+    SPIColor(bool inherits = true);
+    ~SPIColor() override = default;
 
-    ~SPIColor() override
-    = default;
+    void read(gchar const *str) override;
+    void read(gchar const *str, SPStyle &style);
 
-    void read( gchar const *str ) override;
     const Glib::ustring get_value() const override;
     void clear() override {
         SPIBase::clear();
-        value.color.set(0);
+        _color.reset();
     }
 
     void cascade( const SPIBase* const parent ) override;
     void merge(   const SPIBase* const parent ) override;
 
-    SPIColor& operator=(const SPIColor& rhs) {
-        SPIBase::operator=(rhs);
-        currentcolor = rhs.currentcolor;
-        value.color  = rhs.value.color;
-        return *this;
-    }
+    SPIColor& operator=(const SPIColor& rhs);
+    SPIColor& operator=(const Colors::Color &rhs);
 
     bool equals(const SPIBase& rhs) const override;
 
-    void setColor( float r, float g, float b ) {
-        value.color.set( r, g, b );
-    }
+    void setColor(Colors::Color const &other);
+    Colors::Color const &getColor() const;
 
-    void setColor( guint32 val ) {
-        value.color.set( val );
-    }
-
-    void setColor( SPColor const& color ) {
-        value.color = color;
-    }
-
+    bool canHaveCMS() const;
+    Colors::DocumentCMS const &getCMS() const;
 public:
-    bool currentcolor : 1;
-    // FIXME: remove structure and derive SPIPaint from this class.
-    struct {
-         SPColor color;
-    } value;
+    bool currentcolor = false;
+private:
+    std::optional<Colors::Color> _color;
 };
 
 
@@ -734,11 +725,9 @@ class SPIPaint : public SPIBase
 {
 
 public:
-    SPIPaint() { clear(); }
-
+    SPIPaint();
     ~SPIPaint() override = default;
-    void read( gchar const *str ) override;
-    virtual void read( gchar const *str, SPStyle &style, SPDocument *document = nullptr);
+    void read(gchar const *str) override;
     const Glib::ustring get_value() const override;
     void clear() override;
     virtual void reset( bool init ); // Used internally when reading or cascading
@@ -747,18 +736,17 @@ public:
 
     SPIPaint& operator=(const SPIPaint& rhs) {
         SPIBase::operator=(rhs);
-        paintOrigin     = rhs.paintOrigin;
-        colorSet        = rhs.colorSet;
-        noneSet         = rhs.noneSet;
-        value.color     = rhs.value.color;
-        value.href      = rhs.value.href;
+        paintOrigin = rhs.paintOrigin;
+        noneSet     = rhs.noneSet;
+        _color      = rhs._color;
+        href        = rhs.href;
         return *this;
     }
 
     bool equals(const SPIBase& rhs) const override;
 
     bool isSameType( SPIPaint const & other ) const {
-        return (isPaintserver() == other.isPaintserver()) && (colorSet == other.colorSet) && (paintOrigin == other.paintOrigin);
+        return (isPaintserver() == other.isPaintserver()) && (isColor() == other.isColor()) && (paintOrigin == other.paintOrigin);
     }
 
     bool isNoneSet() const {
@@ -766,44 +754,38 @@ public:
     }
 
     bool isNone() const {
-        return !colorSet && !isPaintserver() && (paintOrigin == SP_CSS_PAINT_ORIGIN_NORMAL);
-    } // TODO refine
+        return !_color && !isPaintserver() && (paintOrigin == SP_CSS_PAINT_ORIGIN_NORMAL);
+    }
 
     bool isColor() const {
-        return colorSet && !isPaintserver();
+        return _color && !isPaintserver();
     }
 
     bool isPaintserver() const {
-        return value.href && value.href->getObject() != nullptr;
+        return href && href->getObject() != nullptr;
     }
 
-    void setColor( float r, float g, float b ) {
-        value.color.set( r, g, b ); colorSet = true;
+    void setNone() {
+        noneSet = true;
+        _color.reset();
     }
-
-    void setColor( guint32 val ) {
-        value.color.set( val ); colorSet = true;
-    }
-
-    void setColor( SPColor const& color ) {
-        value.color = color; colorSet = true;
-    }
-
-    void setNone() {noneSet = true; colorSet=false;}
 
     void setTag(SPObject* tag) { this->tag = tag; }
     SPObject* getTag() { return tag; }
 
+    void setColor(Colors::Color const &other);
+    Colors::Color const &getColor() const;
+
+    bool canHaveCMS() const;
+    Colors::DocumentCMS const &getCMS() const;
   // To do: make private
 public:
     SPPaintOrigin paintOrigin : 2;
-    bool colorSet : 1;
     bool noneSet : 1;
-    struct {
-         std::shared_ptr<SPPaintServerReference> href;
-         SPColor color;
-    } value;
+    std::shared_ptr<SPPaintServerReference> href;
     SPObject *tag = nullptr;
+private:
+    std::optional<Colors::Color> _color;
 };
 
 

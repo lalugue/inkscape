@@ -25,7 +25,6 @@
 
 class SPDesktop;
 class SPDocument;
-struct SPColor;
 
 namespace Inkscape {
 
@@ -139,7 +138,6 @@ public:
     
     // these are orphaned signals (nothing emits them and nothing connects to them)
     sigc::signal<void (SPDocument *)> signal_destroy_document;
-    sigc::signal<void (SPColor *, double /*opacity*/)> signal_color_set;
     
     // inkscape is quitting
     sigc::signal<void ()> signal_shut_down;

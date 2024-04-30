@@ -28,7 +28,6 @@
 #include "display/nr-light-types.h"              // for SpotLightData, Light...
 #include "object/filters/sp-filter-primitive.h"  // for SPFilterPrimitive
 #include "object/sp-object.h"                    // for SP_OBJECT_MODIFIED_FLAG
-#include "svg/svg-color.h"                       // for sp_svg_read_color
 #include "xml/node.h"                            // for Node
 
 class SPDocument;
@@ -104,28 +103,7 @@ void SPFeDiffuseLighting::set(SPAttr key, char const *value)
             requestModified(SP_OBJECT_MODIFIED_FLAG);
             break;
         case SPAttr::LIGHTING_COLOR: {
-            char const *end_ptr = nullptr;
-            lighting_color = sp_svg_read_color(value, &end_ptr, 0xffffffff);
-
-            // if a value was read
-            if (end_ptr) {
-                while (g_ascii_isspace(*end_ptr)) {
-                    ++end_ptr;
-                }
-
-                if (std::strncmp(end_ptr, "icc-color(", 10) == 0) {
-                    icc.emplace();
-                    if (!sp_svg_read_icc_color(end_ptr, &*icc)) {
-                        icc.reset();
-                    }
-                }
-
-                lighting_color_set = true;
-            } else {
-                // lighting_color already contains the default value
-                lighting_color_set = false;
-            }
-
+            lighting_color = Inkscape::Colors::Color::parse(value);
             requestModified(SP_OBJECT_MODIFIED_FLAG);
             break;
         }
@@ -168,12 +146,8 @@ Inkscape::XML::Node *SPFeDiffuseLighting::write(Inkscape::XML::Document *doc, In
     }
 
     /*TODO kernelUnits */
-    if (lighting_color_set) {
-        char c[64];
-        sp_svg_write_color(c, sizeof(c), lighting_color);
-        repr->setAttribute("lighting-color", c);
-    } else {
-        repr->removeAttribute("lighting-color");
+    if (lighting_color) {
+        repr->setAttributeOrRemoveIfEmpty("lighting-color", lighting_color->toString());
     }
         
     SPFilterPrimitive::write(doc, repr, flags);
@@ -206,10 +180,7 @@ std::unique_ptr<Inkscape::Filters::FilterPrimitive> SPFeDiffuseLighting::build_r
 
     diffuselighting->diffuseConstant = diffuseConstant;
     diffuselighting->surfaceScale = surfaceScale;
-    diffuselighting->lighting_color = lighting_color;
-    if (icc) {
-        diffuselighting->set_icc(*icc);
-    }
+    diffuselighting->lighting_color = lighting_color ? lighting_color->toRGBA() : 0x0;
 
     // We assume there is at most one child
     diffuselighting->light_type = Inkscape::Filters::NO_LIGHT;

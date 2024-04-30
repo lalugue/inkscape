@@ -27,6 +27,8 @@
 #include <2geom/affine.h>
 #include <2geom/rect.h>
 
+#include "colors/color.h"
+
 #include "sp-object.h"
 #include "sp-marker-loc.h"
 #include "display/drawing-item-ptr.h"
@@ -172,9 +174,9 @@ public:
         return sensitive;
     };
 
-    void setHighlight(uint32_t color);
+    void setHighlight(Inkscape::Colors::Color color);
     bool isHighlightSet() const;
-    virtual uint32_t highlight_color() const;
+    virtual Inkscape::Colors::Color highlight_color() const;
 
     //====================
 
@@ -402,7 +404,7 @@ public:
      */
     Geom::Affine dt2i_affine() const;
 
-    uint32_t _highlightColor;
+    std::optional<Inkscape::Colors::Color> _highlightColor;
 
     bool isExpanded() const { return _is_expanded; }
     void setExpanded(bool expand) { _is_expanded = expand; }

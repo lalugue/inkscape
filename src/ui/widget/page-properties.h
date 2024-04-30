@@ -20,6 +20,7 @@
 
 namespace Inkscape {
 
+namespace Colors { class Color; }
 namespace Util { class Unit; }
 
 namespace UI::Widget {
@@ -29,7 +30,7 @@ public:
     static PageProperties* create();
 
     enum class Color { Background, Desk, Border };
-    virtual void set_color(Color element, unsigned int rgba) = 0;
+    virtual void set_color(Color element, Colors::Color const &) = 0;
 
     enum class Check { Checkerboard, Border, Shadow, BorderOnTop, AntiAlias, NonuniformScale,
                        DisabledScale, UnsupportedSize, ClipToPage, PageLabelStyle };
@@ -48,7 +49,7 @@ public:
     auto signal_resize_to_fit    () { return _signal_resize_to_fit    ; }
 
 protected:
-    sigc::signal<void (unsigned int, Color)> _signal_color_changed;
+    sigc::signal<void (Colors::Color const &, Color)> _signal_color_changed;
     sigc::signal<void (bool, Check)> _signal_check_toggled;
     sigc::signal<void (double, double, const Util::Unit*, Dimension)> _signal_dimension_changed;
     sigc::signal<void (const Util::Unit*, Units)> _signal_unit_changed;

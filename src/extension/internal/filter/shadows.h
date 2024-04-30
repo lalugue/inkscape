@@ -104,14 +104,8 @@ gchar const *ColorizableDropShadow::get_filter_text(Inkscape::Extension::Extensi
 
     // Style parameters
 
+    auto color = ext->get_param_color("color");
     float blur_std = ext->get_param_float("blur");
-
-    guint32 color = ext->get_param_color("color");
-    float flood_a = (color & 0xff) / 255.0F;
-    int flood_r = ((color >> 24) & 0xff);
-    int flood_g = ((color >> 16) & 0xff);
-    int flood_b = ((color >> 8) & 0xff);
-
     float offset_x = ext->get_param_float("xoffset");
     float offset_y = ext->get_param_float("yoffset");
 
@@ -168,14 +162,14 @@ gchar const *ColorizableDropShadow::get_filter_text(Inkscape::Extension::Extensi
     auto old = std::locale::global(std::locale::classic());
     _filter = g_strdup_printf(
         "<filter xmlns:inkscape=\"http://www.inkscape.org/namespaces/inkscape\" style=\"color-interpolation-filters:sRGB;\" inkscape:label=\"Drop Shadow\">\n"
-            "<feFlood result=\"flood\" in=\"SourceGraphic\" flood-opacity=\"%f\" flood-color=\"rgb(%d,%d,%d)\"/>\n"
+            "<feFlood result=\"flood\" in=\"SourceGraphic\" flood-opacity=\"%f\" flood-color=\"%s\"/>\n"
             "<feGaussianBlur result=\"blur\" in=\"SourceGraphic\" stdDeviation=\"%f\"/>\n"
             "<feOffset result=\"offset\" in=\"blur\" dx=\"%f\" dy=\"%f\"/>\n"
             "<feComposite result=\"comp1\" operator=\"%s\" in=\"%s\" in2=\"%s\"/>\n"
             "<feComposite result=\"comp2\" operator=\"%s\" in=\"%s\" in2=\"%s\"/>\n"
         "</filter>\n",
 
-        flood_a, flood_r, flood_g, flood_b,
+        color.getOpacity(), color.toString(false).c_str(),
         blur_std,
         offset_x, offset_y,
 

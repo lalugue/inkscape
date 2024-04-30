@@ -784,7 +784,7 @@ Extension::get_param_optiongroup_contains(char const *name, char const *value) c
 
     Look up in the parameters list, const then execute the function on that found parameter.
 */
-std::uint32_t
+Colors::Color
 Extension::get_param_color(char const *name) const
 {
     const InxParameter *param;
@@ -880,12 +880,12 @@ Extension::set_param_optiongroup(char const *name, char const *value)
 
 Look up in the parameters list, const then execute the function on that found parameter.
 */
-std::uint32_t
-Extension::set_param_color(char const *name, const std::uint32_t color)
+void
+Extension::set_param_color(char const *name, Inkscape::Colors::Color const &color)
 {
     InxParameter *param;
     param = get_param(name);
-    return param->set_color(color);
+    param->set_color(color);
 }
 
 /**

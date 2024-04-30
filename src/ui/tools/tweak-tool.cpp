@@ -585,71 +585,27 @@ sp_tweak_dilate_recursive (Inkscape::Selection *selection, SPItem *item, Geom::P
     return did;
 }
 
-    static void
-tweak_colorpaint (float *color, guint32 goal, double force, bool do_h, bool do_s, bool do_l)
+static Color tweak_color(guint mode, Color const &color, Color const &goal, double force, bool do_h, bool do_s, bool do_l)
 {
-    float rgb_g[3];
-
-    if (!do_h || !do_s || !do_l) {
-        float hsl_g[3];
-        SPColor::rgb_to_hsl_floatv (hsl_g, SP_RGBA32_R_F(goal), SP_RGBA32_G_F(goal), SP_RGBA32_B_F(goal));
-        float hsl_c[3];
-        SPColor::rgb_to_hsl_floatv (hsl_c, color[0], color[1], color[2]);
-        if (!do_h) {
-            hsl_g[0] = hsl_c[0];
+    // Tweak colors are entirely based on HSL values;
+    if (auto hsl = color.converted(Colors::Space::Type::HSL)) {
+        unsigned int pin = (do_h * 1) + (do_s * 2) + (do_l * 4);
+        if (mode == TWEAK_MODE_COLORPAINT) {
+            hsl->average(goal, force, pin);
+        } else if (mode == TWEAK_MODE_COLORJITTER) {
+            hsl->jitter(force, pin);
         }
-        if (!do_s) {
-            hsl_g[1] = hsl_c[1];
-        }
-        if (!do_l) {
-            hsl_g[2] = hsl_c[2];
-        }
-        SPColor::hsl_to_rgb_floatv (rgb_g, hsl_g[0], hsl_g[1], hsl_g[2]);
-    } else {
-        rgb_g[0] = SP_RGBA32_R_F(goal);
-        rgb_g[1] = SP_RGBA32_G_F(goal);
-        rgb_g[2] = SP_RGBA32_B_F(goal);
+        if (auto copy = hsl->converted(color.getSpace()))
+            return *copy;
     }
-
-    for (int i = 0; i < 3; i++) {
-        double d = rgb_g[i] - color[i];
-        color[i] += d * force;
-    }
+    return color; // Bad conversion
 }
 
-    static void
-tweak_colorjitter (float *color, double force, bool do_h, bool do_s, bool do_l)
+static void tweak_stop_color(guint mode, SPStop *stop, Color const &goal, double force, bool do_h, bool do_s, bool do_l)
 {
-    float hsl_c[3];
-    SPColor::rgb_to_hsl_floatv (hsl_c, color[0], color[1], color[2]);
-
-    if (do_h) {
-        hsl_c[0] += g_random_double_range(-0.5, 0.5) * force;
-        if (hsl_c[0] > 1) {
-            hsl_c[0] -= 1;
-        }
-        if (hsl_c[0] < 0) {
-            hsl_c[0] += 1;
-        }
-    }
-    if (do_s) {
-        hsl_c[1] += g_random_double_range(-hsl_c[1], 1 - hsl_c[1]) * force;
-    }
-    if (do_l) {
-        hsl_c[2] += g_random_double_range(-hsl_c[2], 1 - hsl_c[2]) * force;
-    }
-
-    SPColor::hsl_to_rgb_floatv (color, hsl_c[0], hsl_c[1], hsl_c[2]);
-}
-
-    static void
-tweak_color (guint mode, float *color, guint32 goal, double force, bool do_h, bool do_s, bool do_l)
-{
-    if (mode == TWEAK_MODE_COLORPAINT) {
-        tweak_colorpaint (color, goal, force, do_h, do_s, do_l);
-    } else if (mode == TWEAK_MODE_COLORJITTER) {
-        tweak_colorjitter (color, force, do_h, do_s, do_l);
-    }
+    auto copy = stop->getColor();
+    tweak_color(mode, copy, goal, force, do_h, do_s, do_l);
+    stop->setColor(copy);
 }
 
     static void
@@ -686,7 +642,7 @@ tweak_profile (double dist, double radius)
 }
 
 static void tweak_colors_in_gradient(SPItem *item, Inkscape::PaintTarget fill_or_stroke,
-    guint32 const rgb_goal, Geom::Point p_w, double radius, double force, guint mode,
+    Color const &goal, Geom::Point p_w, double radius, double force, guint mode,
     bool do_h, bool do_s, bool do_l, bool /*do_o*/)
 {
     SPGradient *gradient = getGradient(item, fill_or_stroke);
@@ -778,10 +734,10 @@ static void tweak_colors_in_gradient(SPItem *item, Inkscape::PaintTarget fill_or
                     // so it only affects the ends of this interstop;
                     // distribute the force between the two endstops so that they
                     // get all the painting even if they are not touched by the brush
-                    tweak_color (mode, stop->getColor().v.c, rgb_goal,
+                    tweak_stop_color(mode, stop, goal,
                         force * (pos_e - offset_l) / (offset_h - offset_l),
                         do_h, do_s, do_l);
-                    tweak_color(mode, prevStop->getColor().v.c, rgb_goal,
+                    tweak_stop_color(mode, prevStop, goal,
                         force * (offset_h - pos_e) / (offset_h - offset_l),
                         do_h, do_s, do_l);
                     stop->updateRepr();
@@ -791,14 +747,14 @@ static void tweak_colors_in_gradient(SPItem *item, Inkscape::PaintTarget fill_or
                     // wide brush, may affect more than 2 stops,
                     // paint each stop by the force from the profile curve
                     if (offset_l <= pos_e && offset_l > pos_e - r) {
-                        tweak_color(mode, prevStop->getColor().v.c, rgb_goal,
+                        tweak_stop_color(mode, prevStop, goal,
                             force * tweak_profile (fabs (pos_e - offset_l), r),
                             do_h, do_s, do_l);
                         child_prev->updateRepr();
                     }
 
                     if (offset_h >= pos_e && offset_h < pos_e + r) {
-                        tweak_color (mode, stop->getColor().v.c, rgb_goal,
+                        tweak_stop_color(mode, prevStop, goal,
                             force * tweak_profile (fabs (pos_e - offset_h), r),
                             do_h, do_s, do_l);
                         stop->updateRepr();
@@ -820,7 +776,7 @@ static void tweak_colors_in_gradient(SPItem *item, Inkscape::PaintTarget fill_or
                 for( unsigned j=0; j < array->nodes[i].size(); j+=3 ) {
                     SPStop *stop = array->nodes[i][j]->stop;
                     double distance = Geom::L2(Geom::Point(p - array->nodes[i][j]->p)); 
-                    tweak_color (mode, stop->getColor().v.c, rgb_goal,
+                    tweak_stop_color(mode, stop, goal,
                         force * tweak_profile (distance, radius), do_h, do_s, do_l);
                     stop->updateRepr();
                 }
@@ -829,10 +785,9 @@ static void tweak_colors_in_gradient(SPItem *item, Inkscape::PaintTarget fill_or
     }
 }
 
-    static bool
+static bool
 sp_tweak_color_recursive (guint mode, SPItem *item, SPItem *item_at_point,
-    guint32 fill_goal, bool do_fill,
-    guint32 stroke_goal, bool do_stroke,
+    std::optional<Color> &fill_goal, std::optional<Color> &stroke_goal,
     float opacity_goal, bool do_opacity,
     bool do_blur, bool reverse,
     Geom::Point p, double radius, double force,
@@ -845,8 +800,7 @@ sp_tweak_color_recursive (guint mode, SPItem *item, SPItem *item_at_point,
             auto childItem = cast<SPItem>(&child);
             if (childItem) {
                 if (sp_tweak_color_recursive (mode, childItem, item_at_point,
-                        fill_goal, do_fill,
-                        stroke_goal, do_stroke,
+                        fill_goal, stroke_goal,
                         opacity_goal, do_opacity,
                         do_blur, reverse,
                         p, radius, force, do_h, do_s, do_l, do_o)) {
@@ -932,22 +886,22 @@ sp_tweak_color_recursive (guint mode, SPItem *item, SPItem *item_at_point,
             return true; // do not do colors, blur is a separate mode
         }
 
-        if (do_fill) {
+        if (fill_goal) {
             if (style->fill.isPaintserver()) {
-                tweak_colors_in_gradient(item, Inkscape::FOR_FILL, fill_goal, p, radius, this_force, mode, do_h, do_s, do_l, do_o);
+                tweak_colors_in_gradient(item, Inkscape::FOR_FILL, *fill_goal, p, radius, this_force, mode, do_h, do_s, do_l, do_o);
                 did = true;
             } else if (style->fill.isColor()) {
-                tweak_color (mode, style->fill.value.color.v.c, fill_goal, this_force, do_h, do_s, do_l);
+                style->fill.setColor(tweak_color(mode, style->fill.getColor(), *fill_goal, this_force, do_h, do_s, do_l));
                 item->updateRepr();
                 did = true;
             }
         }
-        if (do_stroke) {
+        if (stroke_goal) {
             if (style->stroke.isPaintserver()) {
-                tweak_colors_in_gradient(item, Inkscape::FOR_STROKE, stroke_goal, p, radius, this_force, mode, do_h, do_s, do_l, do_o);
+                tweak_colors_in_gradient(item, Inkscape::FOR_STROKE, *stroke_goal, p, radius, this_force, mode, do_h, do_s, do_l, do_o);
                 did = true;
             } else if (style->stroke.isColor()) {
-                tweak_color (mode, style->stroke.value.color.v.c, stroke_goal, this_force, do_h, do_s, do_l);
+                style->stroke.setColor(tweak_color(mode, style->stroke.getColor(), *stroke_goal, this_force, do_h, do_s, do_l));
                 item->updateRepr();
                 did = true;
             }
@@ -977,40 +931,15 @@ sp_tweak_dilate (TweakTool *tc, Geom::Point event_p, Geom::Point p, Geom::Point 
 
     SPItem *item_at_point = tc->getDesktop()->getItemAtPoint(event_p, true);
 
-    bool do_fill = false, do_stroke = false, do_opacity = false;
-    guint32 fill_goal = sp_desktop_get_color_tool(desktop, "/tools/tweak", true, &do_fill);
-    guint32 stroke_goal = sp_desktop_get_color_tool(desktop, "/tools/tweak", false, &do_stroke);
+    bool do_opacity = false;
+    auto fill_goal = sp_desktop_get_color_tool(desktop, "/tools/tweak", true);
+    auto stroke_goal = sp_desktop_get_color_tool(desktop, "/tools/tweak", false);
     double opacity_goal = sp_desktop_get_master_opacity_tool(desktop, "/tools/tweak", &do_opacity);
     if (reverse) {
-#if 0
-        // HSL inversion 
-        float hsv[3];
-        float rgb[3];
-        SPColor::rgb_to_hsv_floatv (hsv, 
-            SP_RGBA32_R_F(fill_goal),
-            SP_RGBA32_G_F(fill_goal),
-            SP_RGBA32_B_F(fill_goal));
-        SPColor::hsv_to_rgb_floatv (rgb, hsv[0]<.5? hsv[0]+.5 : hsv[0]-.5, 1 - hsv[1], 1 - hsv[2]);
-        fill_goal = SP_RGBA32_F_COMPOSE(rgb[0], rgb[1], rgb[2], 1);
-        SPColor::rgb_to_hsv_floatv (hsv, 
-            SP_RGBA32_R_F(stroke_goal),
-            SP_RGBA32_G_F(stroke_goal),
-            SP_RGBA32_B_F(stroke_goal));
-        SPColor::hsv_to_rgb_floatv (rgb, hsv[0]<.5? hsv[0]+.5 : hsv[0]-.5, 1 - hsv[1], 1 - hsv[2]);
-        stroke_goal = SP_RGBA32_F_COMPOSE(rgb[0], rgb[1], rgb[2], 1);
-#else
-        // RGB inversion 
-        fill_goal = SP_RGBA32_U_COMPOSE(
-            (255 - SP_RGBA32_R_U(fill_goal)),
-            (255 - SP_RGBA32_G_U(fill_goal)),
-            (255 - SP_RGBA32_B_U(fill_goal)),
-            (255 - SP_RGBA32_A_U(fill_goal)));
-        stroke_goal = SP_RGBA32_U_COMPOSE(
-            (255 - SP_RGBA32_R_U(stroke_goal)),
-            (255 - SP_RGBA32_G_U(stroke_goal)),
-            (255 - SP_RGBA32_B_U(stroke_goal)),
-            (255 - SP_RGBA32_A_U(stroke_goal)));
-#endif
+        if (fill_goal)
+            fill_goal->invert();
+        if (stroke_goal)
+            stroke_goal->invert();
         opacity_goal = 1 - opacity_goal;
     }
 
@@ -1025,10 +954,9 @@ sp_tweak_dilate (TweakTool *tc, Geom::Point event_p, Geom::Point p, Geom::Point 
     std::vector<SPItem*> items(selection->items().begin(), selection->items().end());
     for(auto item : items){
         if (is_color_mode (tc->mode)) {
-            if (do_fill || do_stroke || do_opacity) {
+            if (fill_goal || stroke_goal || do_opacity) {
                 if (sp_tweak_color_recursive (tc->mode, item, item_at_point,
-                        fill_goal, do_fill,
-                        stroke_goal, do_stroke,
+                        fill_goal, stroke_goal,
                         opacity_goal, do_opacity,
                         tc->mode == TWEAK_MODE_BLUR, reverse,
                         p, radius, color_force, tc->do_h, tc->do_s, tc->do_l, tc->do_o)) {

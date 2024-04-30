@@ -31,11 +31,11 @@
 
 #include "attributes.h"
 #include "bad-uri-exception.h"
+#include "colors/manager.h"
 #include "document.h"
 #include "preferences.h"
 
 #include "3rdparty/libcroco/src/cr-sel-eng.h"
-
 #include "object/sp-paint-server.h"
 #include "object/uri.h"
 
@@ -400,7 +400,7 @@ SPStyle::SPStyle(SPDocument *document_in, SPObject *object_in) :
     //     std::cout << "       SPIPaint: " << sizeof(SPIPaint) << std::endl;
     //     std::cout << "  SPITextDecorationLine" << sizeof(SPITextDecorationLine) << std::endl;
     //     std::cout << "   Glib::ustring:" << sizeof(Glib::ustring) << std::endl;
-    //     std::cout << "        SPColor: " << sizeof(SPColor) << std::endl;
+    //     std::cout << "          Color: " << sizeof(Color) << std::endl;
     //     first = false;
     // }
 
@@ -476,11 +476,11 @@ SPStyle::~SPStyle() {
     filter_changed_connection.disconnect();
 
     // The following should be moved into SPIPaint and SPIFilter
-    if (fill.value.href) {
+    if (fill.href) {
         fill_ps_modified_connection.disconnect();
     }
 
-    if (stroke.value.href) {
+    if (stroke.href) {
         stroke_ps_modified_connection.disconnect();
     }
 
@@ -525,11 +525,11 @@ SPStyle::clear() {
         filter.href = new SPFilterReference(document);
         filter_changed_connection = filter.href->changedSignal().connect(sigc::bind(sigc::ptr_fun(sp_style_filter_ref_changed), this));
 
-        fill.value.href = std::make_shared<SPPaintServerReference>(document);
-        fill_ps_changed_connection = fill.value.href->changedSignal().connect(sigc::bind(sigc::ptr_fun(sp_style_fill_paint_server_ref_changed), this));
+        fill.href = std::make_shared<SPPaintServerReference>(document);
+        fill_ps_changed_connection = fill.href->changedSignal().connect(sigc::bind(sigc::ptr_fun(sp_style_fill_paint_server_ref_changed), this));
 
-        stroke.value.href = std::make_shared<SPPaintServerReference>(document);
-        stroke_ps_changed_connection = stroke.value.href->changedSignal().connect(sigc::bind(sigc::ptr_fun(sp_style_stroke_paint_server_ref_changed), this));
+        stroke.href = std::make_shared<SPPaintServerReference>(document);
+        stroke_ps_changed_connection = stroke.href->changedSignal().connect(sigc::bind(sigc::ptr_fun(sp_style_stroke_paint_server_ref_changed), this));
     }
 
     cloned = false;
@@ -554,6 +554,10 @@ SPStyle::read( SPObject *object, Inkscape::XML::Node *repr ) {
     // delete temp;
 
     clear(); // FIXME, If this isn't here, EVERYTHING stops working! Why?
+
+    if (!document && object) {
+        document = object->document;
+    }
 
     if (object && object->cloned) {
         cloned = true;
@@ -588,7 +592,7 @@ SPStyle::read( SPObject *object, Inkscape::XML::Node *repr ) {
         }
     } else if( repr->parent() ) { // When does this happen?
         // std::cout << "SPStyle::read(): reading via repr->parent()" << std::endl;
-        SPStyle *parent = new SPStyle();
+        SPStyle *parent = new SPStyle(document);
         parent->read( nullptr, repr->parent() );
         cascade( parent );
         delete parent;
@@ -1246,36 +1250,36 @@ sp_repr_sel_eng()
 void
 sp_style_set_ipaint_to_uri(SPStyle *style, SPIPaint *paint, const Inkscape::URI *uri, SPDocument *document)
 {
-    if (!paint->value.href) {
+    if (!paint->href) {
 
         if (style->object) {
             // Should not happen as href should have been created in SPIPaint. (TODO: Removed code duplication.)
-            paint->value.href = std::make_shared<SPPaintServerReference>(style->object);
+            paint->href = std::make_shared<SPPaintServerReference>(style->object);
         } else if (document || style->document) {
             // Used by desktop style (no object to attach to!).
-            paint->value.href = std::make_shared<SPPaintServerReference>(document ? document : style->document);
+            paint->href = std::make_shared<SPPaintServerReference>(document ? document : style->document);
         } else {
             std::cerr << "sp_style_set_ipaint_to_uri: No valid object or document!" << std::endl;
             return;
         }
 
         if (paint == &style->fill) {
-            style->fill_ps_changed_connection = paint->value.href->changedSignal().connect(sigc::bind(sigc::ptr_fun(sp_style_fill_paint_server_ref_changed), style));
+            style->fill_ps_changed_connection = paint->href->changedSignal().connect(sigc::bind(sigc::ptr_fun(sp_style_fill_paint_server_ref_changed), style));
         } else {
-            style->stroke_ps_changed_connection = paint->value.href->changedSignal().connect(sigc::bind(sigc::ptr_fun(sp_style_stroke_paint_server_ref_changed), style));
+            style->stroke_ps_changed_connection = paint->href->changedSignal().connect(sigc::bind(sigc::ptr_fun(sp_style_stroke_paint_server_ref_changed), style));
         }
     }
 
-    if (paint->value.href){
-        if (paint->value.href->getObject()){
-            paint->value.href->detach();
+    if (paint->href){
+        if (paint->href->getObject()){
+            paint->href->detach();
         }
 
         try {
-            paint->value.href->attach(*uri);
+            paint->href->attach(*uri);
         } catch (Inkscape::BadURIException &e) {
             g_warning("%s", e.what());
-            paint->value.href->detach();
+            paint->href->detach();
         }
     }
 }

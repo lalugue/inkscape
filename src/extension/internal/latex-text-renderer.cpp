@@ -28,6 +28,8 @@
 #include <2geom/transforms.h>
 #include <2geom/rect.h>
 
+#include "colors/color.h"
+#include "colors/manager.h"
 #include "object/sp-item.h"
 #include "object/sp-item-group.h"
 #include "object/sp-root.h"
@@ -281,25 +283,15 @@ void LaTeXTextRenderer::sp_text_render(SPText *textobj)
         g_warning("LaTeXTextRenderer::sp_text_render: baselineAnchorPoint unset, text position will be wrong. Please report the issue.");
     }
 
-    // determine color and transparency (for now, use rgb color model as it is most native to Inkscape)
-    bool has_color = false; // if the item has no color set, don't force black color
-    bool has_transparency = false;
-    // TODO: how to handle ICC colors?
-    // give priority to fill color
-    guint32 rgba = 0;
-    float opacity = SP_SCALE24_TO_FLOAT(style->opacity.value);
+    Inkscape::Colors::Color color(0x0);
     if (style->fill.set && style->fill.isColor()) {
-        has_color = true;
-        rgba = style->fill.value.color.toRGBA32(1.);
-        opacity *= SP_SCALE24_TO_FLOAT(style->fill_opacity.value);
+        color = style->fill.getColor();
+        color.addOpacity(style->fill_opacity);
     } else if (style->stroke.set && style->stroke.isColor()) {
-        has_color = true;
-        rgba = style->stroke.value.color.toRGBA32(1.);
-        opacity *= SP_SCALE24_TO_FLOAT(style->stroke_opacity.value);
+        color = style->stroke.getColor();
+        color.addOpacity(style->stroke_opacity);
     }
-    if (opacity < 1.0) {
-        has_transparency = true;
-    }
+    color.addOpacity(style->opacity);
 
     // get rotation
     Geom::Affine i2doc = textobj->i2doc_affine();
@@ -322,11 +314,10 @@ void LaTeXTextRenderer::sp_text_render(SPText *textobj)
     os.setf(std::ios::fixed); // don't use scientific notation
 
     os << "    \\put(" << anchor[Geom::X] << "," << anchor[Geom::Y] << "){";
-    if (has_color) {
-        os << "\\color[rgb]{" << SP_RGBA32_R_F(rgba) << "," << SP_RGBA32_G_F(rgba) << "," << SP_RGBA32_B_F(rgba) << "}";
-    }
-    if (_pdflatex && has_transparency) {
-        os << "\\transparent{" << opacity << "}";
+    color.convert(Colors::Space::Type::RGB);
+    os << "\\color[rgb]{" << color[0] << "," << color[1] << "," << color[2] << "}";
+    if (_pdflatex && color.getOpacity() < 1.0) {
+        os << "\\transparent{" << color.getOpacity() << "}";
     }
     if (has_rotation) {
         os << "\\rotatebox{" << degrees << "}{";
@@ -475,11 +466,11 @@ Flowing in rectangle is possible, not in arb shape.
     float opacity = SP_SCALE24_TO_FLOAT(style->opacity.value);
     if (style->fill.set && style->fill.isColor()) {
         has_color = true;
-        rgba = style->fill.value.color.toRGBA32(1.);
+        rgba = style->fill.getColor().toRGBA();
         opacity *= SP_SCALE24_TO_FLOAT(style->fill_opacity.value);
     } else if (style->stroke.set && style->stroke.isColor()) {
         has_color = true;
-        rgba = style->stroke.value.color.toRGBA32(1.);
+        rgba = style->stroke.getColor().toRGBA();
         opacity *= SP_SCALE24_TO_FLOAT(style->stroke_opacity.value);
     }
     if (opacity < 1.0) {

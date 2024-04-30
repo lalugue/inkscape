@@ -18,8 +18,7 @@
 
 #include "canvas-item-curve.h"
 
-#include "color.h" // SP_RGBA_x_F
-
+#include "display/cairo-utils.h"
 #include "helper/geom.h"
 #include "ui/widget/canvas.h"
 
@@ -178,7 +177,7 @@ void CanvasItemCurve::_render(Inkscape::CanvasItemBuffer &buf) const
     buf.cr->set_line_width(background_width);
     buf.cr->stroke_preserve();
 
-    buf.cr->set_source_rgba(SP_RGBA32_R_F(_stroke), SP_RGBA32_G_F(_stroke), SP_RGBA32_B_F(_stroke), SP_RGBA32_A_F(_stroke));
+    ink_cairo_set_source_rgba32(buf.cr, _stroke);
     buf.cr->set_line_width(_width);
     buf.cr->stroke();
 

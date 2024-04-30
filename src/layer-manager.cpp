@@ -85,6 +85,8 @@ void LayerManager::_layer_activated(SPObject *layer)
 
 void LayerManager::_layer_deactivated(SPObject *layer)
 {
+    if (!_document)
+        return; // happens on destruction
     if (auto group = cast<SPGroup>(layer)) {
         group->setLayerDisplayMode(_desktop->dkey, SPGroup::GROUP);
     }

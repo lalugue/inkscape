@@ -34,6 +34,7 @@
 #include <glib.h>
 #include <glibmm/i18n.h>
 
+#include "colors/color.h"
 #include "display/drawing.h"
 #include "display/cairo-utils.h"
 #include "display/drawing-paintserver.h"
@@ -1262,9 +1263,7 @@ CairoRenderContext::_createPatternForPaintServer(SPPaintServer const *const pain
 
             // add stops
             for (gint i = 0; unsigned(i) < lg->vector.stops.size(); i++) {
-                float rgb[3];
-                lg->vector.stops[i].color.get_rgb_floatv(rgb);
-                cairo_pattern_add_color_stop_rgba(pattern, lg->vector.stops[i].offset, rgb[0], rgb[1], rgb[2], lg->vector.stops[i].opacity * alpha);
+                ink_cairo_pattern_add_color_stop(pattern, lg->vector.stops[i].offset, *lg->vector.stops[i].color, alpha);
             }
     } else if (auto rg = cast<SPRadialGradient>(paintserver_mutable)) {
 
@@ -1282,9 +1281,7 @@ CairoRenderContext::_createPatternForPaintServer(SPPaintServer const *const pain
 
         // add stops
         for (gint i = 0; unsigned(i) < rg->vector.stops.size(); i++) {
-            float rgb[3];
-            rg->vector.stops[i].color.get_rgb_floatv(rgb);
-            cairo_pattern_add_color_stop_rgba(pattern, rg->vector.stops[i].offset, rgb[0], rgb[1], rgb[2], rg->vector.stops[i].opacity * alpha);
+            ink_cairo_pattern_add_color_stop(pattern, rg->vector.stops[i].offset, *rg->vector.stops[i].color, alpha);
         }
     } else if (auto mg = cast<SPMeshGradient>(paintserver_mutable)) {
         pattern = mg->create_drawing_paintserver()->create_pattern(_cr, pbox, 1.0);
@@ -1368,12 +1365,8 @@ void CairoRenderContext::_setFillStyle(SPStyle const *const style, Geom::OptRect
             cairo_set_source(_cr, pattern);
             cairo_pattern_destroy(pattern);
         }
-    } else if (style->fill.colorSet) {
-        float rgb[3];
-        style->fill.value.color.get_rgb_floatv(rgb);
-
-        cairo_set_source_rgba(_cr, rgb[0], rgb[1], rgb[2], alpha);
-
+    } else if (style->fill.isColor()) {
+        ink_cairo_set_source_color(_cr, style->fill.getColor(), alpha);
     } else { // unset fill is black
         g_assert(!style->fill.set
                 || (paint_server && !paint_server->isValid()));
@@ -1386,10 +1379,7 @@ void CairoRenderContext::_setStrokeStyle(SPStyle const *style, Geom::OptRect con
 {
     float const alpha = _mergedOpacity(SP_SCALE24_TO_FLOAT(style->stroke_opacity.value));
     if (style->stroke.isColor() || (style->stroke.isPaintserver() && !style->getStrokePaintServer()->isValid())) {
-        float rgb[3];
-        style->stroke.value.color.get_rgb_floatv(rgb);
-
-        cairo_set_source_rgba(_cr, rgb[0], rgb[1], rgb[2], alpha);
+        ink_cairo_set_source_color(_cr, style->stroke.getColor(), alpha);
     } else {
         g_assert( style->stroke.isPaintserver()
                   || is<SPGradient>(SP_STYLE_STROKE_SERVER(style))

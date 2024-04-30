@@ -85,7 +85,7 @@ std::vector<StyleRead> getStyleData()
         StyleRead("overflow:visible"), // SPIEnum
         StyleRead("overflow:auto"),    // SPIEnum
 
-        StyleRead("color:#ff0000"), StyleRead("color:blue", "color:#0000ff"),
+        StyleRead("color:#ff0000"), StyleRead("color:blue", "color:blue"),
         // StyleRead("color:currentColor"),  SVG 1.1 does not allow color value 'currentColor'
 
         // Font shorthand
@@ -343,7 +343,7 @@ std::vector<StyleMatch> getStyleMatchData()
     // SPIColor
     StyleMatch("color:blue",              "color:blue",               true ),
     StyleMatch("color:blue",              "color:red",                false),
-    StyleMatch("color:red",               "color:#ff0000",            true ),
+    StyleMatch("color:red",               "color:#ff0000",            false),
 
     // SPIPaint
     StyleMatch("fill:blue",               "fill:blue",               true ),

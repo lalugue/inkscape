@@ -230,6 +230,14 @@ void sp_repr_css_set_property_double(SPCSSAttr *css, gchar const *name, double v
 }
 
 /**
+ * Set a style property to a standard string.
+ */
+void sp_repr_css_set_property_string(SPCSSAttr *css, char const *name, std::string const &value)
+{
+    sp_repr_css_set_property(css, name, value.c_str());
+}
+
+/**
  * Write a style attribute string from a list of properties stored in an SPCSAttr object.
  */
 void sp_repr_css_write_string(SPCSSAttr *css, Glib::ustring &str)

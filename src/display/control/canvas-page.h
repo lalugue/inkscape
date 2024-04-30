@@ -17,9 +17,12 @@
 #include <vector>
 
 #include "canvas-item-ptr.h"
+#include "colors/color.h"
 
 namespace Inkscape {
 namespace UI::Widget { class Canvas; }
+
+using Colors::Color;
 
 class CanvasItemGroup;
 class CanvasItemText;
@@ -39,7 +42,7 @@ public:
 
     bool setOnTop(bool on_top);
     bool setShadow(int shadow);
-    bool setPageColor(uint32_t border, uint32_t bg, uint32_t canvas, uint32_t margin, uint32_t bleed);
+    bool setPageColor(Color const &border, Color const &bg, Color const &canvas, Color const &margin, Color const &bleed);
     bool setLabelStyle(const std::string &style);
 
     bool is_selected = false;
@@ -53,11 +56,11 @@ private:
 
     int _shadow_size = 0;
     bool _border_on_top = true;
-    uint32_t _background_color = 0xffffffff;
-    uint32_t _border_color = 0x00000040;
-    uint32_t _canvas_color = 0xffffffff;
-    uint32_t _margin_color = 0x1699d771; // Blue'ish
-    uint32_t _bleed_color = 0xbe310e62; // Red'ish
+    Color _background_color {0xffffffff};
+    Color _border_color {0x00000040};
+    Color _canvas_color {0xffffffff};
+    Color _margin_color {0x1699d771};
+    Color _bleed_color {0xbe310e62};
 
     std::string _label_style = "default";
 };

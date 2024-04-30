@@ -19,9 +19,9 @@
 #include <gtkmm/box.h>
 #include <gtkmm/treemodelcolumn.h>
 
+#include "colors/color-set.h"
 #include "object/sp-gradient.h"
 #include "object/sp-stop.h"
-#include "ui/selected-color.h"
 #include "spin-scale.h"
 #include "gradient-with-stops.h"
 #include "gradient-selector-interface.h"
@@ -86,7 +86,7 @@ private:
     void set_repeat_icon(SPGradientSpread mode);
     void reverse_gradient();
     void turn_gradient(double angle, bool relative);
-    void set_stop_color(SPColor color, float opacity);
+    void set_stop_color(Colors::Color const &color);
     std::optional<Gtk::TreeRow> current_stop();
     SPStop* get_nth_stop(size_t index);
     SPStop* get_current_stop();
@@ -97,7 +97,7 @@ private:
 
     Glib::RefPtr<Gtk::Builder> _builder;
     GradientSelector* _selector;
-    Inkscape::UI::SelectedColor _selected_color;
+    std::shared_ptr<Colors::ColorSet> _colors;
     std::unique_ptr<UI::Widget::PopoverMenu> _repeat_popover;
     Gtk::Image& _repeat_icon;
     GradientWithStops _gradient_image;

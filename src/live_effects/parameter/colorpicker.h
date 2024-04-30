@@ -22,7 +22,7 @@ public:
                const Glib::ustring& key,
                Inkscape::UI::Widget::Registry* wr,
                Effect* effect,
-               const guint32 default_color = 0x000000ff);
+               std::optional<Colors::Color> = {});
     ~ColorPickerParam() override = default;
 
     Gtk::Widget * param_newWidget() override;
@@ -31,18 +31,18 @@ public:
     Glib::ustring param_getSVGValue() const override;
     Glib::ustring param_getDefaultSVGValue() const override;
 
-    void param_setValue(guint32 newvalue);
+    void param_setValue(std::optional<Colors::Color> newvalue);
     
     void param_set_default() override;
 
-    guint32 get_value() const { return value; };
+    std::optional<Colors::Color> get_value() const { return value; };
     ParamType paramType() const override { return ParamType::COLOR_PICKER; };
 
 private:
     ColorPickerParam(const ColorPickerParam&) = delete;
     ColorPickerParam& operator=(const ColorPickerParam&) = delete;
-    guint32 value;
-    guint32 defvalue;
+    std::optional<Colors::Color> value;
+    std::optional<Colors::Color> defvalue;
 };
 
 } //namespace LivePathEffect

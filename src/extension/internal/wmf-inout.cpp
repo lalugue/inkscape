@@ -680,10 +680,8 @@ Wmf::output_style(PWMF_CALLBACK_DATA d)
     SVGOStringStream tmp_style;
     char tmp[1024] = {0};
 
-    float fill_rgb[3];
-    d->dc[d->level].style.fill.value.color.get_rgb_floatv(fill_rgb);
-    float stroke_rgb[3];
-    d->dc[d->level].style.stroke.value.color.get_rgb_floatv(stroke_rgb);
+    auto fill = d->dc[d->level].style.fill.getColor();
+    auto stroke = d->dc[d->level].style.stroke.getColor();
 
     // for U_WMR_BITBLT with no image, try to approximate some of these operations/
     // Assume src color is "white"
@@ -695,13 +693,13 @@ Wmf::output_style(PWMF_CALLBACK_DATA d)
             case U_BLACKNESS:
             case U_SRCERASE:
             case U_NOTSRCCOPY:
-                fill_rgb[0]=fill_rgb[1]=fill_rgb[2]=0.0;
+                fill.set("black");
                 break;
             case U_SRCCOPY:    // treat all of these as white
             case U_NOTSRCERASE:
             case U_PATCOPY:
             case U_WHITENESS:
-                fill_rgb[0]=fill_rgb[1]=fill_rgb[2]=1.0;
+                fill.set("white");
                 break;
             case U_SRCPAINT:  // use the existing color
             case U_SRCAND:
@@ -720,19 +718,15 @@ Wmf::output_style(PWMF_CALLBACK_DATA d)
     // pen color through.
     switch(d->dwRop2){
         case U_R2_BLACK:
-            fill_rgb[0]  = fill_rgb[1]  = fill_rgb[2]   = 0.0;
-            stroke_rgb[0]= stroke_rgb[1]= stroke_rgb[2] = 0.0;
+            fill.set("black");
+            stroke.set("black");
             break;
         case U_R2_NOTMERGEPEN:
         case U_R2_MASKNOTPEN:
             break;
         case U_R2_NOTCOPYPEN:
-            fill_rgb[0]    =  1.0 - fill_rgb[0];
-            fill_rgb[1]    =  1.0 - fill_rgb[1];
-            fill_rgb[2]    =  1.0 - fill_rgb[2];
-            stroke_rgb[0]  =  1.0 - stroke_rgb[0];
-            stroke_rgb[1]  =  1.0 - stroke_rgb[1];
-            stroke_rgb[2]  =  1.0 - stroke_rgb[2];
+            fill.invert();
+            stroke.invert();
             break;
         case U_R2_MASKPENNOT:
         case U_R2_NOT:
@@ -747,8 +741,8 @@ Wmf::output_style(PWMF_CALLBACK_DATA d)
         case U_R2_MERGEPEN:
             break;
         case U_R2_WHITE:
-            fill_rgb[0]  = fill_rgb[1]  = fill_rgb[2]   = 1.0;
-            stroke_rgb[0]= stroke_rgb[1]= stroke_rgb[2] = 1.0;
+            fill.set("white");
+            stroke.set("white");
             break;
         default:
             break;
@@ -773,14 +767,8 @@ Wmf::output_style(PWMF_CALLBACK_DATA d)
                 break;
             case DRAW_PAINT:
             default:  // <--  this should never happen, but just in case...
-                snprintf(
-                    tmp, 1023,
-                    "fill:#%02x%02x%02x;",
-                    SP_COLOR_F_TO_U(fill_rgb[0]),
-                    SP_COLOR_F_TO_U(fill_rgb[1]),
-                    SP_COLOR_F_TO_U(fill_rgb[2])
-                );
-                tmp_style << tmp;
+                fill.convert(Colors::Space::Type::RGB);
+                tmp_style << "fill:" << fill.toString(false).c_str() << ";";
                 break;
         }
         snprintf(
@@ -799,11 +787,7 @@ Wmf::output_style(PWMF_CALLBACK_DATA d)
             (d->dc[d->level].fill_mode == d->dc[d->level].stroke_mode)  &&
             (
                 (d->dc[d->level].fill_mode != DRAW_PAINT)               ||
-                (
-                    (fill_rgb[0]==stroke_rgb[0])                        &&
-                    (fill_rgb[1]==stroke_rgb[1])                        &&
-                    (fill_rgb[2]==stroke_rgb[2])
-                )
+                fill == stroke
             )
         ){
             d->dc[d->level].stroke_set = false;
@@ -825,14 +809,8 @@ Wmf::output_style(PWMF_CALLBACK_DATA d)
                 break;
             case DRAW_PAINT:
             default:  // <--  this should never happen, but just in case...
-                snprintf(
-                    tmp, 1023,
-                    "stroke:#%02x%02x%02x;",
-                    SP_COLOR_F_TO_U(stroke_rgb[0]),
-                    SP_COLOR_F_TO_U(stroke_rgb[1]),
-                    SP_COLOR_F_TO_U(stroke_rgb[2])
-                );
-                tmp_style << tmp;
+                stroke.convert(Colors::Space::Type::RGB);
+                tmp_style << "stroke:" << stroke.toString(false).c_str() << ";";
                 break;
         }
         if(d->dc[d->level].style.stroke_width.value){
@@ -1028,12 +1006,7 @@ Wmf::select_pen(PWMF_CALLBACK_DATA d, int index)
         d->level = cur_level;
     }
     d->dc[d->level].style.stroke_width.value = pen_width;
-
-    double r, g, b;
-    r = SP_COLOR_U_TO_F( U_RGBAGetR(up.Color) );
-    g = SP_COLOR_U_TO_F( U_RGBAGetG(up.Color) );
-    b = SP_COLOR_U_TO_F( U_RGBAGetB(up.Color) );
-    d->dc[d->level].style.stroke.value.color.set( r, g, b );
+    d->dc[d->level].style.stroke.setColor(Colors::Color(U_RGB_COMPOSE(up.Color), false));
 }
 
 
@@ -1055,11 +1028,7 @@ Wmf::select_brush(PWMF_CALLBACK_DATA d, int index)
         (void) U_WMRCREATEBRUSHINDIRECT_get(record, &membrush);
         memcpy(&lb, membrush, U_SIZE_WLOGBRUSH);
         if(lb.Style == U_BS_SOLID){
-            double r, g, b;
-            r = SP_COLOR_U_TO_F( U_RGBAGetR(lb.Color) );
-            g = SP_COLOR_U_TO_F( U_RGBAGetG(lb.Color) );
-            b = SP_COLOR_U_TO_F( U_RGBAGetB(lb.Color) );
-            d->dc[d->level].style.fill.value.color.set( r, g, b );
+            d->dc[d->level].style.fill.setColor(Colors::Color(U_RGB_COMPOSE(lb.Color)));
             d->dc[d->level].fill_mode    = DRAW_PAINT;
             d->dc[d->level].fill_set     = true;
         }
@@ -1091,11 +1060,7 @@ Wmf::select_brush(PWMF_CALLBACK_DATA d, int index)
                 tidx = add_bm16_image(d, Bm16, px);
             }
             if(tidx == U_WMR_INVALID){  // Problem with the image, for instance, an unsupported bitmap16 type
-                double r, g, b;
-                r = SP_COLOR_U_TO_F( U_RGBAGetR(d->dc[d->level].textColor));
-                g = SP_COLOR_U_TO_F( U_RGBAGetG(d->dc[d->level].textColor));
-                b = SP_COLOR_U_TO_F( U_RGBAGetB(d->dc[d->level].textColor));
-                d->dc[d->level].style.fill.value.color.set( r, g, b );
+                d->dc[d->level].style.fill.setColor(Colors::Color(U_RGB_COMPOSE(d->dc[d->level].textColor), false));
                 d->dc[d->level].fill_mode = DRAW_PAINT;
             }
             else {
@@ -1116,11 +1081,7 @@ Wmf::select_brush(PWMF_CALLBACK_DATA d, int index)
         if(U_WMRCREATEPATTERNBRUSH_get(record, &Bm16h, &cbPx, &px)){
             tidx = add_bm16_image(d, Bm16h, px);
             if(tidx == 0xFFFFFFFF){  // Problem with the image, for instance, an unsupported bitmap16 type
-                double r, g, b;
-                r = SP_COLOR_U_TO_F( U_RGBAGetR(d->dc[d->level].textColor));
-                g = SP_COLOR_U_TO_F( U_RGBAGetG(d->dc[d->level].textColor));
-                b = SP_COLOR_U_TO_F( U_RGBAGetB(d->dc[d->level].textColor));
-                d->dc[d->level].style.fill.value.color.set( r, g, b );
+                d->dc[d->level].style.fill.setColor(Colors::Color(U_RGB_COMPOSE(d->dc[d->level].textColor), false));
                 d->dc[d->level].fill_mode = DRAW_PAINT;
             }
             else {
@@ -1222,7 +1183,7 @@ Wmf::delete_object(PWMF_CALLBACK_DATA d, int index)
             d->dc[d->level].style.stroke_linejoin.computed = SP_STROKE_LINEJOIN_MITER; // U_PS_JOIN_MITER;
             d->dc[d->level].stroke_set                     = true;
             d->dc[d->level].style.stroke_width.value       = 1.0;
-            d->dc[d->level].style.stroke.value.color.set( 0, 0, 0 );
+            d->dc[d->level].style.stroke.setColor(Colors::Color(0x000000ff));
         }
         else if(index == d->dc[d->level].active_brush){
             d->dc[d->level].active_brush                   = -1;
@@ -3111,7 +3072,7 @@ std::unique_ptr<SPDocument> Wmf::open(Inkscape::Extension::Input *, char const *
     d.dc[0].style.stroke_linecap.computed      = SP_STROKE_LINECAP_SQUARE; // U_PS_ENDCAP_SQUARE;
     d.dc[0].style.stroke_linejoin.computed     = SP_STROKE_LINEJOIN_MITER; // U_PS_JOIN_MITER;
     d.dc[0].style.stroke_width.value           = 1.0; // will be reset to something reasonable once WMF drawing size is known
-    d.dc[0].style.stroke.value.color.set( 0, 0, 0 );
+    d.dc[0].style.stroke.setColor(Colors::Color(0x000000ff));
     d.dc[0].stroke_set                         = true;
 
     // Default brush is none - no fill. WMF files that do not specify a brush are unlikely to look very good!

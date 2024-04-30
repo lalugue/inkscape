@@ -157,14 +157,14 @@ void LayerSelector::_layerModified()
 
     if (active) {
         _layer_label.set_text(_layer->defaultLabel());
-        color_str = SPColor(_layer->highlight_color()).toString();
+        color_str = _layer->highlight_color().converted(Colors::Space::Type::RGB)->toString(false);
     } else {
         _layer_label.set_markup(_layer ? "<i>[root]</i>" : "<i>nothing</i>");
     }
+    auto css = Glib::ustring::compose("#%1.%2 label { border-color: %3; }", cssName, getThisCssClass(), color_str);
 
     // Other border properties are set in share/ui/style.css
-    _label_style->load_from_data(Glib::ustring::compose("#%1.%2 label { border-color: %3; }",
-                                                        cssName, getThisCssClass(), color_str));
+    _label_style->load_from_data(css);
 
     _hide_layer_connection.block();
     _lock_layer_connection.block();

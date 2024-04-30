@@ -11,7 +11,7 @@
 #define SEEN_SP_GRADIENT_VECTOR_H
 
 #include <vector>
-#include "color.h"
+#include "colors/color.h"
 
 /**
  * Differs from SPStop in that SPStop mirrors the \<stop\> element in the document, whereas
@@ -22,9 +22,8 @@
  * copying from SPStop to SPGradientStop.
  */
 struct SPGradientStop {
+    std::optional<Inkscape::Colors::Color> color;
     double offset;
-    SPColor color;
-    float opacity;
 };
 
 /**

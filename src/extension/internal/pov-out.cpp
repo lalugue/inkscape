@@ -290,25 +290,17 @@ bool PovOutput::doCurve(SPItem *item, const String &id)
     SPStyle *style = shape->style;
     /* fixme: Handle other fill types, even if this means translating gradients to a single
            flat colour. */
-    if (style)
-        {
-        if (style->fill.isColor())
-            {
-            // see color.h for how to parse SPColor
-            float rgb[3];
-            style->fill.value.color.get_rgb_floatv(rgb);
-            double const dopacity = ( SP_SCALE24_TO_FLOAT(style->fill_opacity.value)
-                                      * effective_opacity(shape) );
-            //gchar *str = g_strdup_printf("rgbf < %1.3f, %1.3f, %1.3f %1.3f>",
-            //                             rgb[0], rgb[1], rgb[2], 1.0 - dopacity);
-            String rgbf = "rgbf <";
-            rgbf.append(dstr(rgb[0]));         rgbf.append(", ");
-            rgbf.append(dstr(rgb[1]));         rgbf.append(", ");
-            rgbf.append(dstr(rgb[2]));         rgbf.append(", ");
-            rgbf.append(dstr(1.0 - dopacity)); rgbf.append(">");
-            shapeInfo.color += rgbf;
-            }
-        }
+    if (style && style->fill.isColor()) {
+        auto rgba = *style->fill.getColor().converted(Colors::Space::Type::RGB);
+        rgba.addOpacity(style->fill_opacity);
+        rgba.addOpacity(effective_opacity(shape));
+        String rgbf = "rgbf <";
+        rgbf.append(dstr(rgba[0]));         rgbf.append(", ");
+        rgbf.append(dstr(rgba[1]));         rgbf.append(", ");
+        rgbf.append(dstr(rgba[2]));         rgbf.append(", ");
+        rgbf.append(dstr(1.0 - rgba[3])); rgbf.append(">");
+        shapeInfo.color += rgbf;
+    }
 
     povShapes.push_back(shapeInfo); //passed all tests.  save the info
 

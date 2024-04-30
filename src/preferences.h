@@ -32,6 +32,9 @@ class SPCSSAttr;
 typedef unsigned int guint32;
 
 namespace Inkscape {
+namespace Colors {
+class Color;
+}
 
 class ErrorReporter {
 public:
@@ -230,9 +233,9 @@ public:
         inline Glib::ustring getUnit() const;
 
         /**
-         * Interpret the preference as an RGBA color value.
+         * Interpret the preference as a css color value.
          */
-        inline guint32 getColor(guint32 def) const;
+        inline Colors::Color getColor(std::string const &def) const;
 
         /**
          * Interpret the preference as a CSS style.
@@ -276,7 +279,6 @@ public:
         mutable unsigned int value_uint = 0;
         mutable double value_double = 0.;
         mutable Glib::ustring value_unit;
-        mutable guint32 value_color = 0;
         mutable SPCSSAttr* value_style = nullptr;
 
         mutable bool cached_bool = false;
@@ -458,9 +460,7 @@ public:
         return getEntry(pref_path).getUnit();
     }
 
-    guint32 getColor(Glib::ustring const &pref_path, guint32 def=0x000000ff) {
-        return getEntry(pref_path).getColor(def);
-    }
+    Colors::Color getColor(Glib::ustring const &pref_path, std::string const &def = "black");
 
     /**
      * Retrieve a CSS style.
@@ -541,7 +541,7 @@ public:
     /**
      * Set an RGBA color value.
      */
-    void setColor(Glib::ustring const &pref_path, guint32 value);
+    void setColor(Glib::ustring const &pref_path, Colors::Color const &color);
 
     /**
      * Set a CSS style.
@@ -655,7 +655,6 @@ protected:
     double _extractDouble(Entry const &v, Glib::ustring const &requested_unit);
     Glib::ustring _extractString(Entry const &v);
     Glib::ustring _extractUnit(Entry const &v);
-    guint32 _extractColor(Entry const &v);
     SPCSSAttr *_extractStyle(Entry const &v);
     SPCSSAttr *_extractInheritedStyle(Entry const &v);
 
@@ -789,15 +788,6 @@ inline Glib::ustring Preferences::Entry::getUnit() const
         return "";
     } else {
         return Inkscape::Preferences::get()->_extractUnit(*this);
-    }
-}
-
-inline guint32 Preferences::Entry::getColor(guint32 def) const
-{
-    if (!this->isValid()) {
-        return def;
-    } else {
-        return Inkscape::Preferences::get()->_extractColor(*this);
     }
 }
 

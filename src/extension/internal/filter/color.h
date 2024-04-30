@@ -197,10 +197,6 @@ ChannelPaint::get_filter_text (Inkscape::Extension::Extension * ext)
     std::ostringstream blue;
     std::ostringstream alpha;
     std::ostringstream invert;
-    std::ostringstream floodRed;
-    std::ostringstream floodGreen;
-    std::ostringstream floodBlue;
-    std::ostringstream floodAlpha;
 
     saturation << ext->get_param_float("saturation");
     red << ext->get_param_float("red");
@@ -208,11 +204,7 @@ ChannelPaint::get_filter_text (Inkscape::Extension::Extension * ext)
     blue << ext->get_param_float("blue");
     alpha << ext->get_param_float("alpha");
 
-    guint32 color = ext->get_param_color("color");
-    floodRed << ((color >> 24) & 0xff);
-    floodGreen << ((color >> 16) & 0xff);
-    floodBlue << ((color >>  8) & 0xff);
-    floodAlpha << (color & 0xff) / 255.0F;
+    auto flood = ext->get_param_color("color");
 
     if (ext->get_param_bool("invert")) {
         invert << "in";
@@ -225,7 +217,7 @@ ChannelPaint::get_filter_text (Inkscape::Extension::Extension * ext)
         "<filter xmlns:inkscape=\"http://www.inkscape.org/namespaces/inkscape\" style=\"color-interpolation-filters:sRGB;\" inkscape:label=\"Channel Painting\">\n"
           "<feColorMatrix values=\"%s\" type=\"saturate\" result=\"colormatrix1\" />\n"
           "<feColorMatrix values=\"1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 %s %s %s %s 0 \" in=\"SourceGraphic\" result=\"colormatrix2\" />\n"
-          "<feFlood flood-color=\"rgb(%s,%s,%s)\" flood-opacity=\"%s\" result=\"flood\" />\n"
+          "<feFlood flood-color=\"%s\" flood-opacity=\"%f\" result=\"flood\" />\n"
           "<feComposite in2=\"colormatrix2\" operator=\"%s\" result=\"composite1\" />\n"
           "<feMerge result=\"merge\">\n"
             "<feMergeNode in=\"colormatrix1\" />\n"
@@ -233,8 +225,8 @@ ChannelPaint::get_filter_text (Inkscape::Extension::Extension * ext)
           "</feMerge>\n"
           "<feComposite in=\"merge\" in2=\"SourceGraphic\" operator=\"in\" result=\"composite2\" />\n"
         "</filter>\n", saturation.str().c_str(), red.str().c_str(), green.str().c_str(),
-                       blue.str().c_str(), alpha.str().c_str(), floodRed.str().c_str(),
-                       floodGreen.str().c_str(), floodBlue.str().c_str(), floodAlpha.str().c_str(),
+                       blue.str().c_str(), alpha.str().c_str(),
+                       flood.toString(false).c_str(), flood.getOpacity(),
                        invert.str().c_str() );
     // clang-format on
 
@@ -454,22 +446,13 @@ Colorize::get_filter_text (Inkscape::Extension::Extension * ext)
 {
     if (_filter != nullptr) g_free((void *)_filter);
 
-    std::ostringstream a;
-    std::ostringstream r;
-    std::ostringstream g;
-    std::ostringstream b;
     std::ostringstream hlight;
     std::ostringstream nlight;
     std::ostringstream duotone;
     std::ostringstream blend1;
     std::ostringstream blend2;
 
-    guint32 color = ext->get_param_color("color");
-    r << ((color >> 24) & 0xff);
-    g << ((color >> 16) & 0xff);
-    b << ((color >>  8) & 0xff);
-    a << (color & 0xff) / 255.0F;
-
+    auto color = ext->get_param_color("color");
     hlight << ext->get_param_float("hlight");
     nlight << ext->get_param_float("nlight");
     blend1 << ext->get_param_optiongroup("blend1");
@@ -485,13 +468,13 @@ Colorize::get_filter_text (Inkscape::Extension::Extension * ext)
         "<filter xmlns:inkscape=\"http://www.inkscape.org/namespaces/inkscape\" style=\"color-interpolation-filters:sRGB;\" inkscape:label=\"Colorize\">\n"
           "<feComposite in2=\"SourceGraphic\" operator=\"arithmetic\" k1=\"%s\" k2=\"%s\" result=\"composite1\" />\n"
           "<feColorMatrix in=\"composite1\" values=\"%s\" type=\"saturate\" result=\"colormatrix1\" />\n"
-          "<feFlood flood-opacity=\"%s\" flood-color=\"rgb(%s,%s,%s)\" result=\"flood1\" />\n"
+          "<feFlood flood-opacity=\"%f\" flood-color=\"%s\" result=\"flood1\" />\n"
           "<feBlend in=\"flood1\" in2=\"colormatrix1\" mode=\"%s\" result=\"blend1\" />\n"
           "<feBlend in2=\"blend1\" mode=\"%s\" result=\"blend2\" />\n"
           "<feColorMatrix in=\"blend2\" values=\"1\" type=\"saturate\" result=\"colormatrix2\" />\n"
           "<feComposite in=\"colormatrix2\" in2=\"SourceGraphic\" operator=\"in\" k2=\"1\" result=\"composite2\" />\n"
         "</filter>\n", hlight.str().c_str(), nlight.str().c_str(), duotone.str().c_str(),
-                       a.str().c_str(), r.str().c_str(), g.str().c_str(), b.str().c_str(),
+                       color.getOpacity(), color.toString(false).c_str(),
                        blend1.str().c_str(), blend2.str().c_str() );
     // clang-format on
 
@@ -647,67 +630,51 @@ Duochrome::get_filter_text (Inkscape::Extension::Extension * ext)
 {
     if (_filter != nullptr) g_free((void *)_filter);
 
-    std::ostringstream a1;
-    std::ostringstream r1;
-    std::ostringstream g1;
-    std::ostringstream b1;
-    std::ostringstream a2;
-    std::ostringstream r2;
-    std::ostringstream g2;
-    std::ostringstream b2;
+    bool swapa = false;
     std::ostringstream fluo;
     std::ostringstream swap1;
     std::ostringstream swap2;
-    guint32 color1 = ext->get_param_color("color1");
-    guint32 color2 = ext->get_param_color("color2");
+    auto color1 = ext->get_param_color("color1");
+    auto color2 = ext->get_param_color("color2");
     double fluorescence = ext->get_param_float("fluo");
     const gchar *swaptype = ext->get_param_optiongroup("swap");
 
-    r1 << ((color1 >> 24) & 0xff);
-    g1 << ((color1 >> 16) & 0xff);
-    b1 << ((color1 >>  8) & 0xff);
-    r2 << ((color2 >> 24) & 0xff);
-    g2 << ((color2 >> 16) & 0xff);
-    b2 << ((color2 >>  8) & 0xff);
     fluo << fluorescence;
 
     if ((g_ascii_strcasecmp("full", swaptype) == 0)) {
         swap1 << "in";
         swap2 << "out";
-        a1 << (color1 & 0xff) / 255.0F;
-        a2 << (color2 & 0xff) / 255.0F;
     } else if ((g_ascii_strcasecmp("color", swaptype) == 0)) {
         swap1 << "in";
         swap2 << "out";
-        a1 << (color2 & 0xff) / 255.0F;
-        a2 << (color1 & 0xff) / 255.0F;
+        swapa = true;
     } else if ((g_ascii_strcasecmp("alpha", swaptype) == 0)) {
         swap1 << "out";
         swap2 << "in";
-        a1 << (color2 & 0xff) / 255.0F;
-        a2 << (color1 & 0xff) / 255.0F;
+        swapa = true;
     } else {
         swap1 << "out";
         swap2 << "in";
-        a1 << (color1 & 0xff) / 255.0F;
-        a2 << (color2 & 0xff) / 255.0F;
     }
+
+    double a1 = swapa ? color2.getOpacity() : color1.getOpacity();
+    double a2 = swapa ? color1.getOpacity() : color2.getOpacity();
 
     // clang-format off
     _filter = g_strdup_printf(
         "<filter xmlns:inkscape=\"http://www.inkscape.org/namespaces/inkscape\" style=\"color-interpolation-filters:sRGB;\" inkscape:label=\"Duochrome\">\n"
           "<feColorMatrix type=\"luminanceToAlpha\" result=\"colormatrix1\" />\n"
-          "<feFlood flood-opacity=\"%s\" flood-color=\"rgb(%s,%s,%s)\" result=\"flood1\" />\n"
+          "<feFlood flood-opacity=\"%f\" flood-color=\"%s\" result=\"flood1\" />\n"
           "<feComposite in2=\"colormatrix1\" operator=\"%s\" result=\"composite1\" />\n"
-          "<feFlood flood-opacity=\"%s\" flood-color=\"rgb(%s,%s,%s)\" result=\"flood2\" />\n"
+          "<feFlood flood-opacity=\"%f\" flood-color=\"%s\" result=\"flood2\" />\n"
           "<feComposite in2=\"colormatrix1\" result=\"composite2\" operator=\"%s\" />\n"
           "<feComposite in=\"composite2\" in2=\"composite1\" k2=\"1\"  k3=\"1\" operator=\"arithmetic\" result=\"composite3\" />\n"
           "<feColorMatrix in=\"composite3\" type=\"matrix\" values=\"2 -1 0 0 0 0 2 -1 0 0 -1 0 2 0 0 0 0 0 1 0 \" result=\"colormatrix2\" />\n"
           "<feComposite in=\"colormatrix2\" in2=\"composite3\" operator=\"arithmetic\" k2=\"%s\" result=\"composite4\" />\n"
           "<feBlend in=\"composite4\" in2=\"composite3\" mode=\"normal\" result=\"blend\" />\n"
           "<feComposite in2=\"SourceGraphic\" operator=\"in\" />\n"
-        "</filter>\n", a1.str().c_str(), r1.str().c_str(), g1.str().c_str(), b1.str().c_str(), swap1.str().c_str(),
-                       a2.str().c_str(), r2.str().c_str(), g2.str().c_str(), b2.str().c_str(), swap2.str().c_str(),
+        "</filter>\n", a1, color1.toString(false).c_str(), swap1.str().c_str(),
+                       a2, color2.toString(false).c_str(), swap2.str().c_str(),
                        fluo.str().c_str() );
     // clang-format on
 
@@ -1362,11 +1329,6 @@ NudgeRGB::get_filter_text (Inkscape::Extension::Extension * ext)
     std::ostringstream bx;
     std::ostringstream by;
 
-    std::ostringstream a;
-    std::ostringstream r;
-    std::ostringstream g;
-    std::ostringstream b;
-
     rx << ext->get_param_float("rx");
     ry << ext->get_param_float("ry");
     gx << ext->get_param_float("gx");
@@ -1374,16 +1336,12 @@ NudgeRGB::get_filter_text (Inkscape::Extension::Extension * ext)
     bx << ext->get_param_float("bx");
     by << ext->get_param_float("by");
 
-    guint32 color = ext->get_param_color("color");
-    r << ((color >> 24) & 0xff);
-    g << ((color >> 16) & 0xff);
-    b << ((color >>  8) & 0xff);
-    a << (color & 0xff) / 255.0F;
+    auto color = ext->get_param_color("color");
     
     // clang-format off
     _filter = g_strdup_printf(
         "<filter xmlns:inkscape=\"http://www.inkscape.org/namespaces/inkscape\" style=\"color-interpolation-filters:sRGB;\" inkscape:label=\"Nudge RGB\">\n"
-          "<feFlood flood-opacity=\"%s\" flood-color=\"rgb(%s,%s,%s)\" result=\"flood\" />\n"
+          "<feFlood flood-opacity=\"%f\" flood-color=\"%s\" result=\"flood\" />\n"
           "<feColorMatrix in=\"SourceGraphic\" values=\"0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 \" result=\"colormatrix1\" />\n"
           "<feOffset dy=\"%s\" dx=\"%s\" result=\"offset1\" />\n"
           "<feBlend in2=\"flood\" mode=\"screen\" result=\"blend1\" />\n"
@@ -1393,7 +1351,7 @@ NudgeRGB::get_filter_text (Inkscape::Extension::Extension * ext)
           "<feOffset dy=\"%s\" dx=\"%s\" result=\"offset3\" />\n"
           "<feColorMatrix in=\"SourceGraphic\" values=\"0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 1 0 0 \" result=\"colormatrix3\" />\n"
           "<feBlend in2=\"offset3\" mode=\"screen\" result=\"blend3\" />\n"
-        "</filter>\n", a.str().c_str(), r.str().c_str(), g.str().c_str(), b.str().c_str(),
+        "</filter>\n", color.getOpacity(), color.toString(false).c_str(),
                        rx.str().c_str(), ry.str().c_str(),
                        gx.str().c_str(), gy.str().c_str(),
                        bx.str().c_str(), by.str().c_str() );
@@ -1478,11 +1436,6 @@ NudgeCMY::get_filter_text (Inkscape::Extension::Extension * ext)
     std::ostringstream yx;
     std::ostringstream yy;
 
-    std::ostringstream a;
-    std::ostringstream r;
-    std::ostringstream g;
-    std::ostringstream b;
-
     cx << ext->get_param_float("cx");
     cy << ext->get_param_float("cy");
     mx << ext->get_param_float("mx");
@@ -1490,16 +1443,12 @@ NudgeCMY::get_filter_text (Inkscape::Extension::Extension * ext)
     yx << ext->get_param_float("yx");
     yy << ext->get_param_float("yy");
 
-    guint32 color = ext->get_param_color("color");
-    r << ((color >> 24) & 0xff);
-    g << ((color >> 16) & 0xff);
-    b << ((color >>  8) & 0xff);
-    a << (color & 0xff) / 255.0F;
+    auto color = ext->get_param_color("color");
     
     // clang-format off
     _filter = g_strdup_printf(
         "<filter xmlns:inkscape=\"http://www.inkscape.org/namespaces/inkscape\" style=\"color-interpolation-filters:sRGB;\" inkscape:label=\"Nudge CMY\">\n"
-          "<feFlood flood-opacity=\"%s\" flood-color=\"rgb(%s,%s,%s)\" result=\"flood\" />\n"
+          "<feFlood flood-opacity=\"%f\" flood-color=\"%s\" result=\"flood\" />\n"
           "<feColorMatrix in=\"SourceGraphic\" values=\"0 0 0 0 0 0 0 0 0 1 0 0 0 0 1 -1 0 0 1 0 \" result=\"colormatrix1\" />\n"
           "<feOffset dy=\"%s\" dx=\"%s\" result=\"offset1\" />\n"
           "<feBlend in2=\"flood\" mode=\"multiply\" result=\"blend1\" />\n"
@@ -1509,7 +1458,7 @@ NudgeCMY::get_filter_text (Inkscape::Extension::Extension * ext)
           "<feOffset dy=\"%s\" dx=\"%s\" result=\"offset3\" />\n"
           "<feColorMatrix in=\"SourceGraphic\" values=\"0 0 0 0 1 0 0 0 0 1 0 0 0 0 0 0 0 -1 1 0 \" result=\"colormatrix3\" />\n"
           "<feBlend in2=\"offset3\" mode=\"multiply\" result=\"blend3\" />\n"
-        "</filter>\n", a.str().c_str(), r.str().c_str(), g.str().c_str(), b.str().c_str(),
+        "</filter>\n", color.getOpacity(), color.toString(false).c_str(),
                        cx.str().c_str(), cy.str().c_str(),
                        mx.str().c_str(), my.str().c_str(),
                        yx.str().c_str(), yy.str().c_str() );
@@ -1670,27 +1619,19 @@ SimpleBlend::get_filter_text (Inkscape::Extension::Extension * ext)
 {
     if (_filter != nullptr) g_free((void *)_filter);
 
-    std::ostringstream a;
-    std::ostringstream r;
-    std::ostringstream g;
-    std::ostringstream b;
     std::ostringstream blend;
 
-    guint32 color = ext->get_param_color("color");
-    r << ((color >> 24) & 0xff);
-    g << ((color >> 16) & 0xff);
-    b << ((color >>  8) & 0xff);
-    a << (color & 0xff) / 255.0F;
+    auto color = ext->get_param_color("color");
     blend << ext->get_param_optiongroup("blendmode");
 
     // clang-format off
     _filter = g_strdup_printf(
         "<filter xmlns:inkscape=\"http://www.inkscape.org/namespaces/inkscape\" style=\"color-interpolation-filters:sRGB;\" inkscape:label=\"Simple blend\">\n"
-          "<feFlood result=\"flood1\" flood-color=\"rgb(%s,%s,%s)\" flood-opacity=\"%s\" />\n"
+          "<feFlood result=\"flood1\" flood-color=\"%s\" flood-opacity=\"%f\" />\n"
           "<feBlend result=\"blend1\" in=\"flood1\" in2=\"SourceGraphic\" mode=\"%s\" />\n"
           "<feComposite operator=\"in\" in=\"blend1\" in2=\"SourceGraphic\" />\n"
-        "</filter>\n", r.str().c_str(), g.str().c_str(), b.str().c_str(),
-                       a.str().c_str(), blend.str().c_str());
+        "</filter>\n", color.toString(false).c_str(),
+                       color.getOpacity(), blend.str().c_str());
     // clang-format on
 
     return _filter;
@@ -1864,10 +1805,6 @@ Tritone::get_filter_text (Inkscape::Extension::Extension * ext)
     if (_filter != nullptr) g_free((void *)_filter);
     
     std::ostringstream dist;
-    std::ostringstream a;
-    std::ostringstream r;
-    std::ostringstream g;
-    std::ostringstream b;
     std::ostringstream globalblend;
     std::ostringstream glow;
     std::ostringstream glowblend;
@@ -1878,11 +1815,7 @@ Tritone::get_filter_text (Inkscape::Extension::Extension * ext)
     std::ostringstream c2in2;
     std::ostringstream b6in2;
     
-    guint32 color = ext->get_param_color("color");
-    r << ((color >> 24) & 0xff);
-    g << ((color >> 16) & 0xff);
-    b << ((color >>  8) & 0xff);
-    a << (color & 0xff) / 255.0F;
+    auto color = ext->get_param_color("color");
     globalblend << ext->get_param_optiongroup("globalblend");
     dist << ext->get_param_int("dist");
     glow << ext->get_param_float("glow");
@@ -1939,14 +1872,14 @@ Tritone::get_filter_text (Inkscape::Extension::Extension * ext)
           "</feComponentTransfer>\n"
           "<feBlend in=\"blend2\" in2=\"componentTransfer\" mode=\"%s\" result=\"blend5\" />\n"
           "<feColorMatrix in=\"blend5\" type=\"matrix\" values=\"-1 1 0 0 0 -1 1 0 0 0 -1 1 0 0 0 0 0 0 0 1 \" result=\"colormatrix5\" />\n"
-          "<feFlood flood-opacity=\"%s\" flood-color=\"rgb(%s,%s,%s)\" result=\"flood\" />\n"
+          "<feFlood flood-opacity=\"%f\" flood-color=\"%s\" result=\"flood\" />\n"
           "<feComposite in=\"colormatrix5\" in2=\"%s\" operator=\"arithmetic\" k1=\"1\" result=\"composite1\" />\n"
           "<feGaussianBlur stdDeviation=\"%s\" result=\"blur\" />\n"
           "<feBlend in2=\"%s\" mode=\"%s\" result=\"blend6\" />\n"
           "<feComposite in=\"%s\" in2=\"%s\" operator=\"arithmetic\" k1=\"%s\" k2=\"1\" k3=\"%s\" k4=\"0\" result=\"composite2\" />\n"
           "<feComposite in2=\"SourceGraphic\" operator=\"in\" result=\"composite3\" />\n"
         "</filter>\n", dist.str().c_str(), globalblend.str().c_str(),
-                       a.str().c_str(), r.str().c_str(), g.str().c_str(), b.str().c_str(),
+                       color.getOpacity(), color.toString(false).c_str(),
                        c1in2.str().c_str(), glow.str().c_str(), b6in2.str().c_str(), glowblend.str().c_str(),
                        c2in.str().c_str(), c2in2.str().c_str(), llight.str().c_str(), glight.str().c_str() );
     // clang-format on

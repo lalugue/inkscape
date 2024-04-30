@@ -21,6 +21,7 @@
 #include <gtkmm/styleprovider.h>
 #include <gtkmm/window.h>
 
+#include "colors/color.h"
 #include "desktop.h"
 #include "inkscape.h"
 
@@ -57,18 +58,19 @@ namespace Inkscape::UI {
     auto &color_class = color_classes[rgba_color];
     if (!color_class.empty()) return color_class;
 
+    auto color = Colors::Color(rgba_color);
+
     // The CSS class is .icon-color-RRGGBBAA
-    std::string hex(9, '\0');
-    std::snprintf(hex.data(), 9, "%08X", rgba_color);
-    color_class = Glib::ustring::compose("icon-color-%1", hex);
-    // GTK CSS does not support #RRGGBBAA, so we split it
-    hex.resize(6);
-    auto const opacity = (rgba_color & 0xFF) / 255.0;
+    auto rgba_str = color.toString();
+    rgba_str.erase(0, 1);
+    color_class = Glib::ustring::compose("icon-color-%1", rgba_str);
+
     // Add a persistent CSS provider for that class+color
     auto const css_provider = Gtk::CssProvider::create();
     auto const data = Glib::ustring::compose(
-        ".symbolic .%1, .regular .%1 { -gtk-icon-style: symbolic; color: #%2; opacity: %3; }",
-        color_class, hex, opacity);
+        ".symbolic .%1, .regular .%1 { -gtk-icon-style: symbolic; color: %2; opacity: %3; }",
+        color_class, color.toString(false), color.getOpacity());
+
     css_provider->load_from_data(data);
     // Add it with the needed priority = higher than themes.cpp _colorizeprovider
     static constexpr auto priority = GTK_STYLE_PROVIDER_PRIORITY_APPLICATION + 1;

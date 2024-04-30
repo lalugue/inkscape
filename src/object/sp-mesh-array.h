@@ -45,7 +45,7 @@
 #include <vector>
 #include <2geom/point.h>
 
-#include "color.h"
+#include "colors/color.h"
 // For color picking
 #include "sp-item.h"
 
@@ -94,7 +94,7 @@ class SPStop;
 
 class SPMeshNode {
 public:
-  SPMeshNode() {}
+  SPMeshNode() = default;
 
   NodeType node_type = MG_NODE_TYPE_UNKNOWN;
   unsigned node_edge = MG_NODE_EDGE_NONE;
@@ -102,8 +102,7 @@ public:
   Geom::Point p;
   unsigned draggable = -1;  // index of on-screen node
   char path_type = 'u';
-  SPColor color{0, 0, 0}; // Default black
-  double opacity = 0.0;
+  std::optional<Inkscape::Colors::Color> color;
   SPStop *stop = nullptr; // Stop corresponding to node.
 };
 
@@ -128,10 +127,8 @@ public:
   bool tensorIsSet( unsigned i );
   Geom::Point coonsTensorPoint( unsigned i );
   void    updateNodes();
-  SPColor getColor( unsigned i );
-  void    setColor( unsigned i, SPColor c );
-  double  getOpacity( unsigned i );
-  void    setOpacity( unsigned i, double o );
+  std::optional<Inkscape::Colors::Color> getColor(unsigned i);
+  void    setColor(unsigned i, Inkscape::Colors::Color const &c);
   SPStop* getStopPtr( unsigned i );
   void    setStopPtr( unsigned i, SPStop* );
 };

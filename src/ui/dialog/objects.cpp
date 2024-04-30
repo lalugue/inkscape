@@ -353,7 +353,7 @@ void ObjectWatcher::updateRowHighlight() {
 
     if (auto item = cast<SPItem>(panel->getObject(node))) {
         auto row = *panel->_store->get_iter(row_ref.get_path());
-        auto new_color = item->highlight_color();
+        auto new_color = item->highlight_color().toRGBA();
         if (new_color != row[panel->_model->_colIconColor]) {
             row[panel->_model->_colIconColor] = new_color;
             updateRowBg(new_color);
@@ -695,7 +695,7 @@ ObjectsPanel::ObjectsPanel()
     , _layer(nullptr)
     , _is_editing(false)
     , _page(Gtk::Orientation::VERTICAL)
-    , _color_picker(_("Highlight color"), "", 0, true)
+    , _color_picker(_("Highlight color"), "", Colors::Color(0x000000ff), true)
     , _builder(create_builder("dialog-objects.glade"))
     , _settings_menu(get_widget<Gtk::Popover>(_builder, "settings-menu"))
     , _object_menu(get_widget<Gtk::Popover>(_builder, "object-menu"))
@@ -905,14 +905,14 @@ ObjectsPanel::ObjectsPanel()
         _clicked_item_row = *_store->get_iter(path);
         if (auto item = getItem(_clicked_item_row)) {
             // find object's color
-            _color_picker.setRgba32(item->highlight_color());
+            _color_picker.setColor(item->highlight_color());
             _color_picker.open();
         }
     });
 
-    _color_picker.connectChanged([this](guint rgba) {
+    _color_picker.connectChanged([this](Colors::Color const &color) {
         if (auto item = getItem(_clicked_item_row)) {
-            item->setHighlight(rgba);
+            item->setHighlight(color);
             DocumentUndo::maybeDone(getDocument(), "highlight-color", _("Set item highlight color"), INKSCAPE_ICON("dialog-object-properties"));
         }
     });
@@ -1706,8 +1706,7 @@ void ObjectsPanel::_handleEdited(const Glib::ustring& path, const Glib::ustring&
             if (!new_text.empty() && (!item->label() || new_text != item->label())) {
                 auto obj = cast<SPGroup>(item);
                 if (obj && obj->layerMode() == SPGroup::LAYER && !obj->isHighlightSet()) {
-                    guint32 color = obj->highlight_color();
-                    obj->setHighlight(color);
+                    obj->setHighlight(obj->highlight_color());
                 }
                 item->setLabel(new_text.c_str());
                 DocumentUndo::done(getDocument(), _("Rename object"), "");

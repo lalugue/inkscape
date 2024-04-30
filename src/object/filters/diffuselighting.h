@@ -16,10 +16,7 @@
 #include <optional>
 #include <cstdint>
 #include "sp-filter-primitive.h"
-#include "svg/svg-icc-color.h"
 #include "number-opt-number.h"
-
-struct SVGICCColor;
 
 namespace Inkscape {
 namespace Filters {
@@ -36,14 +33,13 @@ public:
 private:
     float surfaceScale = 1.0f;
     float diffuseConstant = 1.0f;
-    uint32_t lighting_color = 0xffffffff;
+
+    std::optional<Inkscape::Colors::Color> lighting_color;
 
     bool surfaceScale_set = false;
     bool diffuseConstant_set = false;
-    bool lighting_color_set = false;
 
     NumberOptNumber kernelUnitLength; // TODO
-    std::optional<SVGICCColor> icc;
 
 protected:
     void build(SPDocument *doc, Inkscape::XML::Node *repr) override;

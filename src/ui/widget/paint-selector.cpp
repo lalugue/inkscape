@@ -62,12 +62,6 @@
 #include "xml/repr.h"
 
 #ifdef SP_PS_VERBOSE
-#include "svg/svg-icc-color.h"
-#endif // SP_PS_VERBOSE
-
-using Inkscape::UI::SelectedColor;
-
-#ifdef SP_PS_VERBOSE
 static gchar const *modeStrings[] = {
     "MODE_EMPTY",
     "MODE_MULTIPLE",
@@ -139,7 +133,8 @@ GradientSelectorInterface *PaintSelector::getGradientFromData() const
 #define XPAD 4
 #define YPAD 1
 
-PaintSelector::PaintSelector(FillOrStroke kind)
+PaintSelector::PaintSelector(FillOrStroke kind, std::shared_ptr<Colors::ColorSet> colors)
+    : _selected_colors(std::move(colors))
 {
     set_orientation(Gtk::Orientation::VERTICAL);
 
@@ -206,14 +201,9 @@ PaintSelector::PaintSelector(FillOrStroke kind)
     _frame->set_visible(true);
     UI::pack_start(*this, *_frame, true, true);
 
-    /* Last used color */
-    _selected_color = std::make_unique<SelectedColor>();
-    _updating_color = false;
-
-    _selected_color->signal_grabbed.connect(sigc::mem_fun(*this, &PaintSelector::onSelectedColorGrabbed));
-    _selected_color->signal_dragged.connect(sigc::mem_fun(*this, &PaintSelector::onSelectedColorDragged));
-    _selected_color->signal_released.connect(sigc::mem_fun(*this, &PaintSelector::onSelectedColorReleased));
-    _selected_color->signal_changed.connect(sigc::mem_fun(*this, &PaintSelector::onSelectedColorChanged));
+    _selected_colors->signal_grabbed.connect(sigc::mem_fun(*this, &PaintSelector::onSelectedColorGrabbed));
+    _selected_colors->signal_released.connect(sigc::mem_fun(*this, &PaintSelector::onSelectedColorReleased));
+    _selected_colors->signal_changed.connect(sigc::mem_fun(*this, &PaintSelector::onSelectedColorChanged));
 
     // from _new function
     setMode(PaintSelector::MODE_MULTIPLE);
@@ -275,7 +265,7 @@ void PaintSelector::set_mode_ex(Mode mode, bool switch_style) {
                 set_mode_none();
                 break;
             case MODE_SOLID_COLOR:
-                set_mode_color(mode);
+                set_mode_color();
                 break;
             case MODE_GRADIENT_LINEAR:
             case MODE_GRADIENT_RADIAL:
@@ -315,20 +305,6 @@ void PaintSelector::setFillrule(FillRule fillrule)
         _evenodd->set_active(fillrule == FILLRULE_EVENODD);
         _nonzero->set_active(fillrule == FILLRULE_NONZERO);
     }
-}
-
-void PaintSelector::setColorAlpha(SPColor const &color, float alpha)
-{
-    g_return_if_fail((0.0 <= alpha) && (alpha <= 1.0));
-    {
-#ifdef SP_PS_VERBOSE
-        g_print("PaintSelector set RGBA\n");
-#endif
-        setMode(MODE_SOLID_COLOR);
-    }
-    _updating_color = true;
-    _selected_color->setColorAlpha(color, alpha);
-    _updating_color = false;
 }
 
 void PaintSelector::setSwatch(SPGradient *vector)
@@ -407,16 +383,6 @@ void PaintSelector::getGradientProperties(SPGradientUnits &units, SPGradientSpre
 }
 
 
-/**
- * \post (alpha == NULL) || (*alpha in [0.0, 1.0]).
- */
-void PaintSelector::getColorAlpha(SPColor &color, gfloat &alpha) const
-{
-    _selected_color->colorAlpha(color, alpha);
-
-    g_assert((0.0 <= alpha) && (alpha <= 1.0));
-}
-
 SPGradient *PaintSelector::getGradientVector()
 {
     SPGradient *vect = nullptr;
@@ -494,32 +460,25 @@ void PaintSelector::set_mode_none()
 /* Color paint */
 
 void PaintSelector::onSelectedColorGrabbed() { _signal_grabbed.emit(); }
-
-void PaintSelector::onSelectedColorDragged()
-{
-    if (_updating_color) {
-        return;
-    }
-
-    _signal_dragged.emit();
-}
-
 void PaintSelector::onSelectedColorReleased() { _signal_released.emit(); }
 
 void PaintSelector::onSelectedColorChanged()
 {
-    if (_updating_color) {
+    if (_updating_color)
         return;
-    }
 
     if (_mode == MODE_SOLID_COLOR) {
-        _signal_changed.emit();
+        if (_selected_colors->isGrabbed()) {
+            _signal_dragged.emit();
+        } else {
+            _signal_changed.emit();
+        }
     } else {
         g_warning("PaintSelector::onSelectedColorChanged(): selected color changed while not in color selection mode");
     }
 }
 
-void PaintSelector::set_mode_color(PaintSelector::Mode /*mode*/)
+void PaintSelector::set_mode_color()
 {
     using Inkscape::UI::Widget::ColorNotebook;
 
@@ -530,9 +489,10 @@ void PaintSelector::set_mode_color(PaintSelector::Mode /*mode*/)
 
             // Gradient can be null if object paint is changed externally (ie. with a color picker tool)
             if (gradient) {
-                SPColor color = gradient->getFirstStop()->getColor();
-                float alpha = gradient->getFirstStop()->getOpacity();
-                _selected_color->setColorAlpha(color, alpha, false);
+                _selected_colors->block();
+                _selected_colors->clear();
+                _selected_colors->set(gradient->getFirstStop()->getId(), gradient->getFirstStop()->getColor());
+                _selected_colors->unblock();
             }
         }
     }
@@ -552,7 +512,7 @@ void PaintSelector::set_mode_color(PaintSelector::Mode /*mode*/)
             _selector_solid_color = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 4);
 
             /* Color selector */
-            auto const color_selector = Gtk::make_managed<ColorNotebook>(*_selected_color);
+            auto const color_selector = Gtk::make_managed<ColorNotebook>(_selected_colors);
             color_selector->set_visible(true);
             UI::pack_start(*_selector_solid_color, *color_selector, true, true);
             /* Pack everything to frame */
@@ -989,7 +949,7 @@ void PaintSelector::set_mode_pattern(PaintSelector::Mode mode)
         if (!_selector_pattern) {
             _selector_pattern = Gtk::make_managed<PatternEditor>("/pattern-edit", PatternManager::get());
             _selector_pattern->signal_changed().connect([=](){ _signal_changed.emit(); });
-            _selector_pattern->signal_color_changed().connect([=](unsigned){ _signal_changed.emit(); });
+            _selector_pattern->signal_color_changed().connect([=](Colors::Color const &){ _signal_changed.emit(); });
             _selector_pattern->signal_edit().connect([=](){ _signal_edit_pattern.emit(); });
             _frame->append(*_selector_pattern);
         }
@@ -1031,8 +991,8 @@ gboolean PaintSelector::isSeparator(GtkTreeModel *model, GtkTreeIter *iter, gpoi
     return sep;
 }
 
-std::optional<unsigned int> PaintSelector::get_pattern_color() {
-    if (!_selector_pattern) return 0;
+std::optional<Colors::Color> PaintSelector::get_pattern_color() {
+    if (!_selector_pattern) return Colors::Color(0x000000ff);
 
     return _selector_pattern->get_selected_color();
 }
@@ -1131,33 +1091,6 @@ void PaintSelector::set_mode_swatch(PaintSelector::Mode mode)
 #ifdef SP_PS_VERBOSE
     g_print("Swatch req\n");
 #endif
-}
-
-// TODO this seems very bad to be taking in a desktop pointer to muck with. Logic probably belongs elsewhere
-void PaintSelector::setFlatColor(SPDesktop *desktop, gchar const *color_property, gchar const *opacity_property)
-{
-    SPCSSAttr *css = sp_repr_css_attr_new();
-
-    SPColor color;
-    gfloat alpha = 0;
-    getColorAlpha(color, alpha);
-
-    std::string colorStr = color.toString();
-
-#ifdef SP_PS_VERBOSE
-    guint32 rgba = color.toRGBA32(alpha);
-    g_message("sp_paint_selector_set_flat_color() to '%s' from 0x%08x::%s", colorStr.c_str(), rgba,
-              (color.icc ? color.icc->colorProfile.c_str() : "<null>"));
-#endif // SP_PS_VERBOSE
-
-    sp_repr_css_set_property(css, color_property, colorStr.c_str());
-    Inkscape::CSSOStringStream osalpha;
-    osalpha << alpha;
-    sp_repr_css_set_property(css, opacity_property, osalpha.str().c_str());
-
-    sp_desktop_set_style(desktop, css);
-
-    sp_repr_css_attr_unref(css);
 }
 
 PaintSelector::Mode PaintSelector::getModeForStyle(SPStyle const &style, FillOrStroke kind)

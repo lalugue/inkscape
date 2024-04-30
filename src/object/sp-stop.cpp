@@ -20,7 +20,6 @@
 #include "attributes.h"
 #include "streq.h"
 #include "svg/svg.h"
-#include "svg/svg-color.h"
 #include "svg/css-ostringstream.h"
 
 SPStop::SPStop() : SPObject() {
@@ -128,43 +127,31 @@ SPStop* SPStop::getPrevStop() {
     return result;
 }
 
-SPColor SPStop::getColor() const
+Inkscape::Colors::Color SPStop::getColor() const
 {
-    if (style->stop_color.currentcolor) {
-        return style->color.value.color;
-    }
-    return style->stop_color.value.color;
-}
-
-gfloat SPStop::getOpacity() const
-{
-    return SP_SCALE24_TO_FLOAT(style->stop_opacity.value);
+    // Copy color from the right place
+    Inkscape::Colors::Color color = style->stop_color.currentcolor ? style->color.getColor() : style->stop_color.getColor();
+    // Bundle stop opacity into the color
+    color.addOpacity(style->stop_opacity);
+    return color;
 }
 
 /**
  * Sets the stop color and stop opacity in the style attribute.
  */
-void SPStop::setColor(SPColor color, double opacity)
+void SPStop::setColor(Inkscape::Colors::Color const &color)
 {
-    setColorRepr(getRepr(), color, opacity);
+    setColorRepr(getRepr(), color);
 }
 
 /**
  * Set the color and opacity directly into the given xml repr.
  */
-void SPStop::setColorRepr(Inkscape::XML::Node *node, SPColor color, double opacity)
+void SPStop::setColorRepr(Inkscape::XML::Node *node, Inkscape::Colors::Color const &color)
 {
     Inkscape::CSSOStringStream os;
-    os << "stop-color:" << color.toString() << ";stop-opacity:" << opacity <<";";
+    os << "stop-color:" << color.toString(false) << ";stop-opacity:" << color.getOpacity() <<";";
     node->setAttribute("style", os.str());
-}
-
-/**
- * Return stop's color as 32bit value.
- */
-guint32 SPStop::get_rgba32() const
-{
-    return getColor().toRGBA32(getOpacity());
 }
 
 /*

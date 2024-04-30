@@ -918,20 +918,19 @@ void PrefMultiEntry::on_changed()
 }
 
 void PrefColorPicker::init(Glib::ustring const &label, Glib::ustring const &prefs_path,
-                           std::uint32_t const default_rgba)
+                           std::string const &default_color)
 {
     _prefs_path = prefs_path;
     _title = label;
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-    this->setRgba32( prefs->getInt(_prefs_path, (int)default_rgba) );
+    this->setColor(prefs->getColor(_prefs_path, default_color));
 }
 
-void PrefColorPicker::on_changed(std::uint32_t const rgba)
+void PrefColorPicker::on_changed(Inkscape::Colors::Color const &color)
 {
-    if (this->get_visible()) //only take action if the user toggled it
-    {
+    if (this->get_visible()) { //only take action if the user toggled it
         Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-        prefs->setInt(_prefs_path, static_cast<int>(rgba));
+        prefs->setColor(_prefs_path, color);
     }
 }
 

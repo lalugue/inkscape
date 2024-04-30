@@ -481,6 +481,7 @@ LivePathEffectEditor::selection_info()
     SPItem * selected = nullptr;
     _LPESelectionInfo.set_visible(false);
     if (selection && (selected = selection->singleItem()) ) {
+        auto highlight = selected->highlight_color().toRGBA();
         if (is<SPText>(selected) || is<SPFlowtext>(selected)) {
             _LPESelectionInfo.set_text(_("Text objects do not support Live Path Effects"));
             _LPESelectionInfo.set_visible(true);
@@ -489,7 +490,7 @@ LivePathEffectEditor::selection_info()
             auto const selectbutton = Gtk::make_managed<Gtk::Button>();
             auto const boxc = Gtk::make_managed<Gtk::Box>();
             auto const lbl = Gtk::make_managed<Gtk::Label>(labeltext);
-            auto const type = get_shape_image("group", selected->highlight_color());
+            auto const type = get_shape_image("group", highlight);
             UI::pack_start(*boxc, *type, false, false);
             UI::pack_start(*boxc, *lbl, false, false);
             type->set_margin_start(4);
@@ -504,7 +505,7 @@ LivePathEffectEditor::selection_info()
             auto const selectbutton2 = Gtk::make_managed<Gtk::Button>();
             auto const boxc2 = Gtk::make_managed<Gtk::Box>();
             auto const lbl2 = Gtk::make_managed<Gtk::Label>(labeltext2);
-            auto const type2 = get_shape_image("clone", selected->highlight_color());
+            auto const type2 = get_shape_image("clone", highlight);
             UI::pack_start(*boxc2, *type2, false, false);
             UI::pack_start(*boxc2, *lbl2, false, false);
             type2->set_margin_start(4);
@@ -523,7 +524,7 @@ LivePathEffectEditor::selection_info()
                 auto const boxc = Gtk::make_managed<Gtk::Box>();
                 auto const lbl = Gtk::make_managed<Gtk::Label>(labeltext);
                 lbl->set_ellipsize(Pango::EllipsizeMode::END);
-                auto const type = get_shape_image(selected->typeName(), selected->highlight_color());
+                auto const type = get_shape_image(selected->typeName(), highlight);
                 UI::pack_start(*boxc, *type, false, false);
                 UI::pack_start(*boxc, *lbl, false, false);
                 _LPECurrentItem.append(*boxc);
@@ -546,7 +547,7 @@ LivePathEffectEditor::selection_info()
                         auto const selectbutton = Gtk::make_managed<Gtk::Button>();
                         auto const boxc = Gtk::make_managed<Gtk::Box>();
                         auto const lbl = Gtk::make_managed<Gtk::Label>(labeltext);
-                        auto const type = get_shape_image(selected->typeName(), selected->highlight_color());
+                        auto const type = get_shape_image(selected->typeName(), highlight);
                         UI::pack_start(*boxc, *type, false, false);
                         UI::pack_start(*boxc, *lbl, false, false);
                         type->set_margin_start(4);

@@ -26,8 +26,6 @@
 #include "document.h"
 #include "inkscape.h"
 #include "preferences.h"
-#include "profile-manager.h"
-#include "color/cms-system.h"
 #include "object/color-profile.h"
 #include "ui/dialog-events.h"
 #include "ui/icon-loader.h"
@@ -38,22 +36,20 @@
 #include "ui/widget/color-scales.h"
 #include "ui/widget/icon-combobox.h"
 
-using Inkscape::CMSSystem;
-
 static constexpr int XPAD = 2;
 static constexpr int YPAD = 1;
 
 namespace Inkscape::UI::Widget {
 
-ColorNotebook::ColorNotebook(SelectedColor &color, bool no_alpha)
-    : _selected_color(color)
+ColorNotebook::ColorNotebook(SelectedColor color)
+    : _selected_color(std::move(color))
 {
+    assert(_selected_color);
     set_name("ColorNotebook");
 
-    _initUI(no_alpha);
+    _initUI(!_selected_color->getAlphaConstraint().value_or(true));
 
-    _selected_color.signal_changed.connect(sigc::mem_fun(*this, &ColorNotebook::_onSelectedColorChanged));
-    _selected_color.signal_dragged.connect(sigc::mem_fun(*this, &ColorNotebook::_onSelectedColorChanged));
+    //_selected_color.signal_changed.connect(sigc::mem_fun(*this, &ColorNotebook::_onSelectedColorChanged));
 
     auto desktop = SP_ACTIVE_DESKTOP;
     _doc_replaced_connection = desktop->connectDocumentReplaced(sigc::hide<0>(sigc::mem_fun(*this, &ColorNotebook::setDocument)));
@@ -76,12 +72,12 @@ ColorNotebook::Page::Page(std::unique_ptr<Inkscape::UI::ColorSelectorFactory> se
 void ColorNotebook::setDocument(SPDocument *document)
 {
     _document = document;
-    _icc_changed_connection.disconnect();
+    /*_icc_changed_connection.disconnect();
     if (document) {
         _icc_changed_connection = document->connectResourcesChanged("iccprofile", [this]() {
             _selected_color.emitIccChanged();
         });
-    }
+    }*/
 }
 
 void ColorNotebook::set_label(const Glib::ustring& label) {
@@ -230,20 +226,18 @@ void ColorNotebook::_onPickerClicked(GtkWidget * /*widget*/, ColorNotebook *colo
         Inkscape::UI::Tools::sp_toggle_dropper(SP_ACTIVE_DESKTOP);
         auto tool = dynamic_cast<Inkscape::UI::Tools::DropperTool *>(SP_ACTIVE_DESKTOP->getTool());
         if (tool) {
-            colorbook->_onetimepick = tool->onetimepick_signal.connect(sigc::mem_fun(*colorbook, &ColorNotebook::_pickColor));
+            colorbook->_onetimepick = tool->onetimepick_signal.connect([colorbook](Colors::Color const &color) {
+                // Set color to color notebook here.
+                colorbook->_selected_color->setAll(color);
+                //_onSelectedColorChanged();
+            });
         }
     }
 }
 
-void ColorNotebook::_pickColor(ColorRGBA *color) {
-    // Set color to color notebook here.
-    _selected_color.setValue(color->getIntValue());
-    _onSelectedColorChanged();
-}
+//void ColorNotebook::_onSelectedColorChanged() { _updateICCButtons(); }
 
-void ColorNotebook::_onSelectedColorChanged() { _updateICCButtons(); }
-
-void ColorNotebook::_updateICCButtons()
+/*void ColorNotebook::_updateICCButtons()
 {
     if (!_document) {
         return;
@@ -254,7 +248,6 @@ void ColorNotebook::_updateICCButtons()
 
     g_return_if_fail((0.0 <= alpha) && (alpha <= 1.0));
 
-    /* update color management icon*/
     gtk_widget_set_sensitive(_colormanaged, color.hasColorProfile());
     gtk_widget_set_sensitive(_toomuchink, false);
     gtk_widget_set_sensitive(_outofgamut, false);
@@ -265,13 +258,11 @@ void ColorNotebook::_updateICCButtons()
         // Set notebook page to cms if icc profile being used.
         _setCurrentPage(getPageIndex("CMS"), true);
 
-        /* update out-of-gamut icon */
         Inkscape::ColorProfile *target_profile =
             _document->getProfileManager().find(name.c_str());
         if (target_profile)
             gtk_widget_set_sensitive(_outofgamut, target_profile->GamutCheck(color));
 
-        /* update too-much-ink icon */
         Inkscape::ColorProfile *prof = _document->getProfileManager().find(name.c_str());
         if (prof && prof->isPrintColorSpace()) {
             gtk_widget_set_visible(_toomuchink, true);
@@ -280,9 +271,6 @@ void ColorNotebook::_updateICCButtons()
                 ink_sum += i;
             }
 
-            /* Some literature states that when the sum of paint values exceed 320%, it is considered to be a satured color,
-                which means the paper can get too wet due to an excessive amount of ink. This may lead to several issues
-                such as misalignment and poor quality of printing in general.*/
             if (ink_sum > 3.2)
                 gtk_widget_set_sensitive(_toomuchink, true);
         }
@@ -294,7 +282,7 @@ void ColorNotebook::_updateICCButtons()
         auto page = prefs->getString("/colorselector/page");
         _setCurrentPage(getPageIndex(page), true);
     }
-}
+}*/
 
 int ColorNotebook::getPageIndex(const Glib::ustring &name)
 {

@@ -1042,13 +1042,13 @@ void CalligraphicTool::fit_and_split(bool release)
         if (!release) {
             g_assert(!currentcurve.is_empty());
 
-            guint32 fillColor = sp_desktop_get_color_tool(_desktop, "/tools/calligraphic", true);
+            auto fillColor = sp_desktop_get_color_tool(_desktop, "/tools/calligraphic", true);
             double opacity = sp_desktop_get_master_opacity_tool(_desktop, "/tools/calligraphic");
             double fillOpacity = sp_desktop_get_opacity_tool(_desktop, "/tools/calligraphic", true);
-            guint fill = (fillColor & 0xffffff00) | SP_COLOR_F_TO_U(opacity*fillOpacity);
 
+            // TODO: This removes color space information.
             auto cbp = new Inkscape::CanvasItemBpath(_desktop->getCanvasSketch(), currentcurve.get_pathvector(), true);
-            cbp->set_fill(fill, SP_WIND_RULE_EVENODD);
+            cbp->set_fill(fillColor ? fillColor->toRGBA(opacity * fillOpacity) : 0x0, SP_WIND_RULE_EVENODD);
             cbp->set_stroke(0x0);
 
             /* fixme: Cannot we cascade it to root more clearly? */

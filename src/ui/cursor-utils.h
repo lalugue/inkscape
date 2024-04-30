@@ -14,6 +14,9 @@
 #include <cstdint>
 #include <string>
 #include <glibmm/refptr.h>
+#include <optional>
+
+#include "colors/color.h"
 
 namespace Gdk {
 class Cursor;
@@ -27,17 +30,13 @@ namespace Inkscape {
 
 Glib::RefPtr<Gdk::Cursor> load_svg_cursor(Gtk::Widget &widget,
                                           std::string const &file_name,
-                                          std::uint32_t fill = 0xffffffff,
-                                          std::uint32_t stroke = 0x000000ff,
-                                          double fill_opacity = 1.0,
-                                          double stroke_opacity = 1.0);
+                                          std::optional<Colors::Color> fill = {},
+                                          std::optional<Colors::Color> stroke = {});
 
 void set_svg_cursor(Gtk::Widget &widget,
                     std::string const &file_name,
-                    std::uint32_t fill = 0xffffffff,
-                    std::uint32_t stroke = 0x000000ff,
-                    double fill_opacity = 1.0,
-                    double stroke_opacity = 1.0);
+                    std::optional<Colors::Color> fill = {},
+                    std::optional<Colors::Color> stroke = {});
 
 } // namespace Inkscape
 

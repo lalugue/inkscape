@@ -80,6 +80,7 @@ SingleExport::SingleExport(BaseObjectType *cobject, const Glib::RefPtr<Gtk::Buil
     , progress_bar      (get_widget<Gtk::ProgressBar>     (builder, "si_progress"))
     , cancel_button     (get_widget<Gtk::Button>          (builder, "si_cancel"))
     , progress_box      (get_widget<Gtk::Box>             (builder, "si_inprogress"))
+    , _background_color (get_derived_widget<UI::Widget::ColorPicker>(builder, "si_backgnd", _("Background color"), true))
 {
     prefs = Inkscape::Preferences::get();
 
@@ -112,10 +113,6 @@ SingleExport::SingleExport(BaseObjectType *cobject, const Glib::RefPtr<Gtk::Buil
 
     auto &pref_button_box = get_widget<Gtk::Box>(builder, "si_prefs");
     pref_button_box.append(*si_extension_cb.getPrefButton());
-
-    auto &button = get_widget<Gtk::Button>(builder, "si_backgnd");
-    _bgnd_color_picker = std::make_unique<Inkscape::UI::Widget::ColorPicker>(
-        _("Background color"), _("Color used to fill background"), 0xffffff00, true, &button);
 
     setup();
 }
@@ -206,7 +203,7 @@ void SingleExport::setup()
     si_filename_entry.signal_activate().connect(sigc::mem_fun(*this, &SingleExport::onExport));
     si_show_preview.signal_toggled().connect(sigc::mem_fun(*this, &SingleExport::refreshPreview));
     si_hide_all.signal_toggled().connect(sigc::mem_fun(*this, &SingleExport::refreshPreview));
-    _bgnd_color_picker->connectChanged([=, this](guint32 color){
+    _background_color.connectChanged([=, this](Colors::Color const &color){
         if (_desktop) {
             Inkscape::UI::Dialog::set_export_bg_color(_desktop->getNamedView(), color);
         }
@@ -647,7 +644,7 @@ void SingleExport::onExport()
         std::vector<SPItem const *> selected(selection->items().begin(), selection->items().end());
 
         exportSuccessful = Export::exportRaster(
-            area, width, height, dpi, _bgnd_color_picker->get_current_color(),
+            area, width, height, dpi, _background_color.get_current_color().toRGBA(),
             filename, false, onProgressCallback, this,
             omod, selected_only ? &selected : nullptr);
 
@@ -1006,7 +1003,7 @@ void SingleExport::refreshPreview()
         bool have_pages = false;
         for (auto const child : UI::get_children(pages_list)) {
             if (auto bi = dynamic_cast<BatchItem *>(child)) {
-                bi->refresh(!show, _bgnd_color_picker->get_current_color());
+                bi->refresh(!show, _background_color.get_current_color().toRGBA());
                 have_pages = true;
             }
         }
@@ -1023,7 +1020,7 @@ void SingleExport::refreshPreview()
     float y0 = unit->convert(spin_buttons[SPIN_Y0]->get_value(), "px");
     float y1 = unit->convert(spin_buttons[SPIN_Y1]->get_value(), "px");
     preview.setBox(Geom::Rect(x0, y0, x1, y1) * _document->dt2doc());
-    preview.setBackgroundColor(_bgnd_color_picker->get_current_color());
+    preview.setBackgroundColor(_background_color.get_current_color().toRGBA());
     preview.queueRefresh();
 }
 
@@ -1051,8 +1048,7 @@ void SingleExport::setDocument(SPDocument *document)
         _page_selected_connection = pm.connectPageSelected(sigc::mem_fun(*this, &SingleExport::onPagesSelected));
         _page_modified_connection = pm.connectPageModified(sigc::mem_fun(*this, &SingleExport::onPagesModified));
         _page_changed_connection = pm.connectPagesChanged(sigc::mem_fun(*this, &SingleExport::onPagesChanged));
-        auto bg_color = get_export_bg_color(document->getNamedView(), 0xffffff00);
-        _bgnd_color_picker->setRgba32(bg_color);
+        _background_color.setColor(get_export_bg_color(document->getNamedView(), Colors::Color(0xffffff00)));
         _preview_drawing = std::make_shared<PreviewDrawing>(document);
         preview.setDrawing(_preview_drawing);
 

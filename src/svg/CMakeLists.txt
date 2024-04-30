@@ -9,7 +9,6 @@ set(svg_SRC
 	svg-affine.cpp
 	svg-affine-parser.cpp
 	svg-box.cpp
-	svg-color.cpp
 	svg-angle.cpp
 	svg-length.cpp
 	svg-bool.cpp
@@ -23,8 +22,6 @@ set(svg_SRC
 	stringstream.h
 	strip-trailing-zeros.h
 	svg-box.h
-	svg-color.h
-	svg-icc-color.h
 	svg-angle.h
 	svg-length.h
 	svg-bool.h

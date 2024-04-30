@@ -27,6 +27,7 @@
 #include "ui/controller.h"
 #include "ui/cursor-utils.h"
 #include "ui/util.h"
+#include "util/numeric/converters.h"
 #include "util/object-renderer.h"
 
 // c.f. share/ui/style.css
@@ -92,7 +93,7 @@ void GradientWithStops::modified() {
         SPStop* stop = _gradient->getFirstStop();
         while (stop) {
             _stops.push_back(stop_t {
-                .offset = stop->offset, .color = stop->getColor(), .opacity = stop->getOpacity()
+                .offset = stop->offset, .color = stop->getColor()
             });
             stop = stop->getNextStop();
         }
@@ -451,9 +452,9 @@ void GradientWithStops::draw_func(Cairo::RefPtr<Cairo::Context> const &cr,
     auto const &bg = _background_color;
 
     // stop handle outlines and selection indicator use theme colors:
-    _template.set_style(".outer", "fill", rgba_to_css_color(fg));
-    _template.set_style(".inner", "stroke", rgba_to_css_color(bg));
-    _template.set_style(".hole", "fill", rgba_to_css_color(bg));
+    _template.set_style(".outer", "fill", gdk_to_css_color(fg));
+    _template.set_style(".inner", "stroke", gdk_to_css_color(bg));
+    _template.set_style(".hole", "fill", gdk_to_css_color(bg));
 
     auto tip = _tip_template.render(scale);
 
@@ -461,12 +462,12 @@ void GradientWithStops::draw_func(Cairo::RefPtr<Cairo::Context> const &cr,
         const auto& stop = _stops[i];
 
         // stop handle shows stop color and opacity:
-        _template.set_style(".color", "fill", rgba_to_css_color(stop.color));
-        _template.set_style(".opacity", "opacity", double_to_css_value(stop.opacity));
+        _template.set_style(".color", "fill", stop.color.toString(false));
+        _template.set_style(".opacity", "opacity", Util::format_number(stop.opacity));
 
         // show/hide selection indicator
         const auto is_selected = _focused_stop == static_cast<int>(i);
-        _template.set_style(".selected", "opacity", double_to_css_value(is_selected ? 1 : 0));
+        _template.set_style(".selected", "opacity", Util::format_number(is_selected ? 1 : 0));
 
         // render stop handle
         auto pix = _template.render(scale);

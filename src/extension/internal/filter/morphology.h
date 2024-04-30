@@ -229,10 +229,6 @@ Outline::get_filter_text (Inkscape::Extension::Extension * ext)
     std::ostringstream dilat2;
     std::ostringstream erosion2;
     std::ostringstream antialias;
-    std::ostringstream r;
-    std::ostringstream g;
-    std::ostringstream b;
-    std::ostringstream a;
     std::ostringstream fopacity;
     std::ostringstream sopacity;
     std::ostringstream smooth;
@@ -252,11 +248,7 @@ Outline::get_filter_text (Inkscape::Extension::Extension * ext)
     dilat2 << ext->get_param_float("dilat2");
     erosion2 << (- ext->get_param_float("erosion2"));
     antialias << ext->get_param_float("antialias");
-    guint32 color = ext->get_param_color("color");
-    r << ((color >> 24) & 0xff);
-    g << ((color >> 16) & 0xff);
-    b << ((color >>  8) & 0xff);
-    a << (color & 0xff) / 255.0F;
+    auto color = ext->get_param_color("color");
 
     fopacity << ext->get_param_float("fopacity");
     sopacity << ext->get_param_float("sopacity");
@@ -310,7 +302,7 @@ Outline::get_filter_text (Inkscape::Extension::Extension * ext)
           "<feColorMatrix values=\"1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 %s %s \" result=\"colormatrix2\" />\n"
           "<feGaussianBlur stdDeviation=\"%s\" result=\"blur3\" />\n"
           "<feColorMatrix values=\"1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 %s \" result=\"colormatrix3\" />\n"
-          "<feFlood flood-opacity=\"%s\" flood-color=\"rgb(%s,%s,%s)\" result=\"flood\" />\n"
+          "<feFlood flood-opacity=\"%f\" flood-color=\"%s\" result=\"flood\" />\n"
           "<feComposite in=\"flood\" in2=\"colormatrix3\" k2=\"1\" operator=\"in\" result=\"composite3\" />\n"
           "<feComposite in=\"%s\" in2=\"colormatrix3\" operator=\"out\" result=\"composite4\" />\n"
           "<feComposite in=\"composite4\" in2=\"composite3\" k2=\"%s\" k3=\"%s\" operator=\"arithmetic\" result=\"composite5\" />\n"
@@ -318,7 +310,7 @@ Outline::get_filter_text (Inkscape::Extension::Extension * ext)
                        dilat1.str().c_str(), erosion1.str().c_str(),
                        width2.str().c_str(), c2in.str().c_str(), c2op.str().c_str(),
                        dilat2.str().c_str(), erosion2.str().c_str(), antialias.str().c_str(), smooth.str().c_str(),
-                       a.str().c_str(), r.str().c_str(), g.str().c_str(), b.str().c_str(),
+                       color.getOpacity(), color.toString(false).c_str(),
                        c4in.str().c_str(), fopacity.str().c_str(), sopacity.str().c_str() );
     // clang-format on
 

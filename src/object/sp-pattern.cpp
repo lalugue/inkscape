@@ -541,7 +541,7 @@ char const *SPPattern::produce(std::vector<Inkscape::XML::Node*> const &reprs, G
         // if some elements have undefined color or solid black, then their fill color is customizable
         if (copy->style && copy->style->isSet(SPAttr::FILL)) {
             if (auto paint = copy->style->getFillOrStroke(true)) {
-                if (paint->isColor() && paint->value.color.toRGBA32(255) == 255) { // black color set?
+                if (paint->isColor() && paint->getColor().toRGBA() == 255) { // black color set?
                     can_colorize = true;
                     // remove black fill, it will be inherited from pattern
                     paint->clear();

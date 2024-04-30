@@ -19,6 +19,8 @@
 #include <vector>
 #include <glibmm/ustring.h>
 
+#include "colors/color.h"
+
 namespace Gtk {
 class Window;
 } // namespace Gtk
@@ -42,56 +44,6 @@ struct PaletteFileData
     /// We can use this info to organize colors in columns in multiples of this value.
     int columns;
 
-    /// Color space of all colors in this palette. Original definitions are kept in "Color.channels"
-    /// for use with ICC profiles. Preview sRGB colors are inside "Color.rgb"
-    enum ColorSpace {
-        Undefined, // not a valid color definition
-        Rgb255, // RGB 0..255
-        Lab100, // Cie*Lab, L 0..100, a, b -128..127
-        Cmyk100 // CMYK 0%..100%
-    };
-
-    enum ColorMode: uint8_t {
-        Normal,
-        Global,
-        Spot,
-    };
-
-    struct Color
-    {
-        /// Original color definition (Lab, Cmyk, Rgb); unused channels 0.0
-        std::array<float, 4> channels;
-
-        /// Color space of this color.
-        ColorSpace space = Undefined;
-
-        /// RGB color.
-        std::array<unsigned, 3> rgb;
-
-        /// Name of the color, either specified in the file or generated from the rgb.
-        Glib::ustring name;
-
-        /// Color as defined in a palette, for informational purposes.
-        Glib::ustring definition;
-
-        /// Mode (not used currently, for informational purposes only)
-        ColorMode mode = Normal;
-
-#ifdef false // not currently used
-        bool operator < (const Color& c) const {
-            for (int i = 0; i < rgb.size(); ++i) {
-                if (rgb[i] < c.rgb[i]) return true;
-                if (rgb[i] > c.rgb[i]) return false;
-            }
-            for (int i = 0; i < channels.size(); ++i) {
-                if (channels[i] < c.channels[i]) return true;
-                if (channels[i] > c.channels[i]) return false;
-            }
-            return name < c.name;
-        }
-#endif
-    };
-
     // dummy item used for aligning color tiles in a palette
     enum SpacerItem {};
 
@@ -100,7 +52,7 @@ struct PaletteFileData
         Glib::ustring name;
     };
 
-    using ColorItem = std::variant<Color, SpacerItem, GroupStart>;
+    using ColorItem = std::variant<Colors::Color, SpacerItem, GroupStart>;
 
     /// The list of colors in the palette.
     std::vector<ColorItem> colors;

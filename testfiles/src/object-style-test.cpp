@@ -67,9 +67,8 @@ TEST_F(ObjectTest, Styles) {
     auto one = cast<SPRect>(doc->getObjectById("one"));
     ASSERT_TRUE(one != nullptr);
 
-    // TODO: Fix when Inkscape preserves colour names (i.e. 'red')
-    EXPECT_EQ(one->style->fill.get_value(), Glib::ustring("#ff0000"));
-    EXPECT_EQ(one->style->stroke.get_value(), Glib::ustring("#008000"));
+    EXPECT_EQ(one->style->fill.get_value(), Glib::ustring("red"));
+    EXPECT_EQ(one->style->stroke.get_value(), Glib::ustring("green"));
     EXPECT_EQ(one->style->opacity.get_value(), Glib::ustring("0.5"));
     EXPECT_EQ(one->style->stroke_width.get_value(), Glib::ustring("2px"));
 
@@ -77,7 +76,7 @@ TEST_F(ObjectTest, Styles) {
     ASSERT_TRUE(two != nullptr);
 
     EXPECT_EQ(two->style->fill.get_value(), Glib::ustring("#808080"));
-    EXPECT_EQ(two->style->stroke.get_value(), Glib::ustring("#008000"));
+    EXPECT_EQ(two->style->stroke.get_value(), Glib::ustring("green"));
     EXPECT_EQ(two->style->opacity.get_value(), Glib::ustring("0.5"));
     EXPECT_EQ(two->style->stroke_width.get_value(), Glib::ustring("4px"));
 
@@ -93,7 +92,7 @@ TEST_F(ObjectTest, Styles) {
     ASSERT_TRUE(four != nullptr);
 
     EXPECT_EQ(four->style->fill.get_value(), Glib::ustring("#d0d0d0"));
-    EXPECT_EQ(four->style->stroke.get_value(), Glib::ustring("#ff0000"));
+    EXPECT_EQ(four->style->stroke.get_value(), Glib::ustring("red"));
     EXPECT_EQ(four->style->opacity.get_value(), Glib::ustring("0.5"));
     EXPECT_EQ(four->style->stroke_width.get_value(), Glib::ustring("2px"));
 }

@@ -21,6 +21,8 @@
 #include <glib/gstdio.h>
 
 #include "attribute-rel-util.h"
+#include "colors/color.h"
+#include "colors/manager.h"
 #include "preferences.h"
 #include "preferences-skeleton.h"
 #include "io/resource.h"
@@ -423,11 +425,9 @@ void Preferences::setDoubleUnit(Glib::ustring const &pref_path, double value, Gl
     _setRawValue(pref_path, str);
 }
 
-void Preferences::setColor(Glib::ustring const &pref_path, guint32 value)
+void Preferences::setColor(Glib::ustring const &pref_path, Colors::Color const &color)
 {
-    gchar buf[16];
-    g_snprintf(buf, 16, "#%08x", value);
-    _setRawValue(pref_path, buf);
+    _setRawValue(pref_path, color.toString());
 }
 
 /**
@@ -898,23 +898,6 @@ Glib::ustring Preferences::_extractUnit(Entry const &v)
     }
 }
 
-guint32 Preferences::_extractColor(Entry const &v)
-{
-    if (v.cached_color) return v.value_color;
-    v.cached_color = true;
-    gchar const *s = static_cast<gchar const *>(v._value);
-    std::istringstream hr(s);
-    guint32 color;
-    if (s[0] == '#') {
-        hr.ignore(1);
-        hr >> std::hex >> color;
-    } else {
-        hr >> color;
-    }
-    v.value_color = color;
-    return color;
-}
-
 SPCSSAttr *Preferences::_extractStyle(Entry const &v)
 {
     if (v.cached_style) return v.value_style;
@@ -1015,6 +998,26 @@ PrefObserver Preferences::createObserver(Glib::ustring path, std::function<void 
 
 PrefObserver Preferences::createObserver(Glib::ustring path, std::function<void ()> callback) {
     return createObserver(std::move(path), [=](const Entry&) { callback(); });
+}
+
+Colors::Color Preferences::getColor(Glib::ustring const &pref_path, std::string const &def)
+{
+    return getEntry(pref_path).getColor(def);
+}
+
+Colors::Color Preferences::Entry::getColor(std::string const &def) const
+{
+    if (isValid()) {
+        // Skip caching this value
+        if (auto res = Colors::Color::parse(static_cast<char const *>(_value))) {
+            return *res;
+        }
+    }
+    if (auto res = Colors::Color::parse(def)) {
+        return *res;
+    }
+    // Transparent black is the default's default
+    return Colors::Color(0x00000000);
 }
 
 } // namespace Inkscape

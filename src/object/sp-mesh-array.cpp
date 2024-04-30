@@ -49,11 +49,12 @@
 #include <2geom/line.h>
 
 // For color picking
+#include "colors/color.h"
+#include "colors/utils.h"
 #include "display/drawing.h"
 #include "display/drawing-context.h"
 #include "display/cairo-utils.h"
 #include "document.h"
-#include "gradient-chemistry.h" // average_color()
 #include "sp-root.h"
 #include "sp-mesh-gradient.h"
 #include "sp-mesh-row.h"
@@ -66,11 +67,9 @@
 #include "sp-ellipse.h"
 #include "sp-star.h"
 
-// For writing color/opacity to style
-#include "svg/css-ostringstream.h"
-
 // For default color
 #include "style.h"
+#include "svg/css-ostringstream.h"
 
 #include "xml/document.h"                            // for Document
 #include "xml/node.h"                                // for Node
@@ -470,34 +469,27 @@ void SPMeshPatchI::updateNodes() {
 /**
    Return color for corner of patch.
 */
-SPColor SPMeshPatchI::getColor(unsigned const i)
+std::optional<Inkscape::Colors::Color> SPMeshPatchI::getColor(unsigned const i)
 {
     assert( i < 4 );
 
-    SPColor color;
     switch ( i ) {
         case 0:
-            color = (*nodes)[ row   ][ col   ]->color;
-            break;
+            return (*nodes)[ row   ][ col   ]->color;
         case 1:
-            color = (*nodes)[ row   ][ col+3 ]->color;
-            break;
+            return (*nodes)[ row   ][ col+3 ]->color;
         case 2:
-            color = (*nodes)[ row+3 ][ col+3 ]->color;
-            break;
+            return (*nodes)[ row+3 ][ col+3 ]->color;
         case 3:
-            color = (*nodes)[ row+3 ][ col   ]->color;
-            break;
-
+            return (*nodes)[ row+3 ][ col   ]->color;
     }
-
-    return color;
+    return {};
 }
 
 /**
    Set color for corner of patch.
 */
-void SPMeshPatchI::setColor(unsigned const i, SPColor const color)
+void SPMeshPatchI::setColor(unsigned const i, Inkscape::Colors::Color const &color)
 {
     assert( i < 4 );
 
@@ -514,57 +506,6 @@ void SPMeshPatchI::setColor(unsigned const i, SPColor const color)
         case 3:                          
             (*nodes)[ row+3 ][ col   ]->color = color;
             break;
-    }
-}
-
-/**
-   Return opacity for corner of patch.
-*/
-double SPMeshPatchI::getOpacity(unsigned const i)
-{
-    assert( i < 4 );
-
-    double opacity = 0.0;
-    switch ( i ) {
-        case 0:
-            opacity = (*nodes)[ row   ][ col   ]->opacity;
-            break;
-        case 1:
-            opacity = (*nodes)[ row   ][ col+3 ]->opacity;
-            break;
-        case 2:
-            opacity = (*nodes)[ row+3 ][ col+3 ]->opacity;
-            break;
-        case 3:
-            opacity = (*nodes)[ row+3 ][ col   ]->opacity;
-            break;
-    }
-
-    return opacity;
-}
-
-/**
-   Set opacity for corner of patch.
-*/
-void SPMeshPatchI::setOpacity(unsigned const i, double const opacity)
-{
-
-    assert( i < 4 );
-
-    switch ( i ) {
-        case 0:
-            (*nodes)[ row   ][ col   ]->opacity = opacity;
-            break;                         
-        case 1:                            
-            (*nodes)[ row   ][ col+3 ]->opacity = opacity;
-            break;                         
-        case 2:                            
-            (*nodes)[ row+3 ][ col+3 ]->opacity = opacity;
-            break;                         
-        case 3:                            
-            (*nodes)[ row+3 ][ col   ]->opacity = opacity;
-            break;
-
     }
 }
 
@@ -836,10 +777,8 @@ bool SPMeshNodeArray::read(SPMeshGradient *mg_in)
                             if( (istop == 0 && irow == 0 && icolumn > 0) || (istop == 1 && irow > 0 ) ) {
                                 // skip 
                             } else {
-                                SPColor color   = stop->getColor();
-                                double opacity  = stop->getOpacity();
+                                auto color = stop->getColor();
                                 new_patch.setColor( istop, color );
-                                new_patch.setOpacity( istop, opacity );
                                 new_patch.setStopPtr( istop, stop );
                             }
                             ++istop;
@@ -1038,13 +977,12 @@ void SPMeshNodeArray::write( SPMeshGradient *mg )
                     ( k == 2                     ) ||
                     ( k == 3 &&           j == 0 ) ) {
 
-                    // Why are we setting attribute and not style?
-                    //stop->setAttribute("stop-color",   patchi.getColor(k).toString() );
-                    //stop->setAttribute("stop-opacity", patchi.getOpacity(k) );
-
-                    Inkscape::CSSOStringStream os;
-                    os << "stop-color:" << patchi.getColor(k).toString() << ";stop-opacity:" << patchi.getOpacity(k);
-                    stop->setAttribute("style", os.str());
+                    auto color = patchi.getColor(k);
+                    SPCSSAttr *color_css = sp_repr_css_attr_new();
+                    sp_repr_css_set_property_string(color_css, "stop-color", color->toString(false));
+                    sp_repr_css_set_property_double(color_css, "stop-opacity", color->getOpacity());
+                    sp_repr_css_set(stop, color_css, "style");
+                    sp_repr_css_attr_unref(color_css);
                 }
                 patch->appendChild( stop );
             }
@@ -1055,38 +993,33 @@ void SPMeshNodeArray::write( SPMeshGradient *mg )
 /**
  * Find default color based on colors in existing fill.
  */
-static SPColor default_color( SPItem *item ) {
-
-    SPColor color( 0.5, 0.0, 0.5 );
-
+static Inkscape::Colors::Color default_color(SPItem *item)
+{
     if ( item->style ) {
         SPIPaint const &paint = ( item->style->fill ); // Could pick between style.fill/style.stroke
-        if ( paint.isColor() ) {
-            color = paint.value.color;
+        if (paint.isColor()) {
+            return paint.getColor();
         } else if ( paint.isPaintserver() ) {
             auto *server = item->style->getFillPaintServer();
             auto gradient = cast<SPGradient>(server);
             if (gradient && gradient->getVector()) {
                 SPStop *firstStop = gradient->getVector()->getFirstStop();
                 if ( firstStop ) {
-                    color = firstStop->getColor();
+                    return firstStop->getColor();
                 }
             }
         }
     } else {
         std::cerr << " SPMeshNodeArray: default_color(): No style" << std::endl;
     }
-
-    return color;
+    return Inkscape::Colors::Color(0x800080ff);
 }
 
 /**
    Create a default mesh.
 */
-void SPMeshNodeArray::create( SPMeshGradient *mg, SPItem *item, Geom::OptRect bbox ) {
-
-    // std::cout << "SPMeshNodeArray::create: Entrance" << std::endl;
-
+void SPMeshNodeArray::create( SPMeshGradient *mg, SPItem *item, Geom::OptRect bbox )
+{
     if( !bbox ) {
         // Set default size to bounding box if size not given.
         std::cerr << "SPMeshNodeArray::create(): bbox empty" << std::endl;
@@ -1119,13 +1052,13 @@ void SPMeshNodeArray::create( SPMeshGradient *mg, SPItem *item, Geom::OptRect bb
     repr->setAttribute("gradientUnits", "userSpaceOnUse");
 
     // Get default color
-    SPColor color = default_color( item );
+    Inkscape::Colors::Color color = default_color( item );
 
     // Set some corners to white so we can see the mesh.
-    SPColor white( 1.0, 1.0, 1.0 );
+    auto white = Inkscape::Colors::Color(0xffffffff);
     if (color == white) {
         // If default color is white, set other color to black.
-        white = SPColor( 0.0, 0.0, 0.0 );
+        white.set("black");
     }
 
     // Get preferences
@@ -1214,7 +1147,6 @@ void SPMeshNodeArray::create( SPMeshGradient *mg, SPItem *item, Geom::OptRect bb
             for( unsigned k = 0; k < 4; ++k ) {
                 patch.setPathType( k, 'l' );
                 patch.setColor( k, (i+k)%2 ? color : white );
-                patch.setOpacity( k, 1.0 );
             }
             patch.setPathType( 0, 'c' );
 
@@ -1270,7 +1202,6 @@ void SPMeshNodeArray::create( SPMeshGradient *mg, SPItem *item, Geom::OptRect bb
                 patch.setPathType( i, 'c' );
 
                 patch.setColor( i, i%2 ? color : white );
-                patch.setOpacity( i, 1.0 );
             }
 
             // Fill out tensor points
@@ -1311,7 +1242,6 @@ void SPMeshNodeArray::create( SPMeshGradient *mg, SPItem *item, Geom::OptRect bb
                     for( unsigned s = 0; s < 4; ++s ) {
                         patch.setPathType( s, 'l' );
                         patch.setColor( s, (i+s)%2 ? color : white );
-                        patch.setOpacity( s, 1.0 );
                     }
 
                     // Set handle and tensor nodes.
@@ -1339,10 +1269,8 @@ void SPMeshNodeArray::create( SPMeshGradient *mg, SPItem *item, Geom::OptRect bb
                     for( unsigned s = 0; s < 4; ++s ) {
                         patch0.setPathType( s, 'l' );
                         patch0.setColor( s, s%2 ? color : white );
-                        patch0.setOpacity( s, 1.0 );
                         patch1.setPathType( s, 'l' );
                         patch1.setColor( s, s%2 ? white : color );
-                        patch1.setOpacity( s, 1.0 );
                     }
 
                     // Set handle and tensor nodes.
@@ -1392,7 +1320,6 @@ void SPMeshNodeArray::create( SPMeshGradient *mg, SPItem *item, Geom::OptRect bb
                             node->node_type = MG_NODE_TYPE_CORNER;
                             node->set = true;
                             node->color = (i+j)%2 ? color : white;
-                            node->opacity = 1.0;
 
                         } else {
                             // Side
@@ -1633,11 +1560,11 @@ void SPMeshNodeArray::bicubic(SPMeshNodeArray * const smooth, SPMeshType const t
     for( unsigned i = 0; i < d.size(); ++i ) {
         d[i].resize( smooth->patch_columns() + 1 );
         for( unsigned j = 0; j < d[i].size(); ++j ) {
-            float rgb_color[3];
-            this->nodes[ i*3 ][ j*3 ]->color.get_rgb_floatv(rgb_color);
-            d[i][j].g[0][0] =  rgb_color[ 0 ];
-            d[i][j].g[1][0] =  rgb_color[ 1 ];
-            d[i][j].g[2][0] =  rgb_color[ 2 ];
+            // Note: Conversion to RGB happens here
+            auto rgb_color = this->nodes[i * 3][j * 3]->color->converted(Colors::Space::Type::RGB);
+            d[i][j].g[0][0] =  rgb_color->get(0);
+            d[i][j].g[1][0] =  rgb_color->get(1);
+            d[i][j].g[2][0] =  rgb_color->get(2);
             d[i][j].p = this->nodes[ i*3 ][ j*3 ]->p;
         }
     }
@@ -1784,8 +1711,12 @@ void SPMeshNodeArray::bicubic(SPMeshNodeArray * const smooth, SPMeshType const t
 
             for( unsigned k = 0; k < 9; ++k ) {
                 for( unsigned l = 0; l < 9; ++l ) {
+                    // We're not sure why opacity isn't smoothed, it's just sort of, retained without explaination
+                    auto op = smooth->nodes[(i*8+k)*3 ][(j*8+l)*3]->color->getOpacity();
                     // Every third node is a corner node
-                    smooth->nodes[ (i*8+k)*3 ][(j*8+l)*3 ]->color.set( r[0][k][l], r[1][k][l], r[2][k][l] );
+                    smooth->nodes[(i*8+k)*3 ][(j*8+l)*3]->color->set(
+                        Colors::Color(SP_RGBA32_F_COMPOSE(r[0][k][l], r[1][k][l], r[2][k][l], op))
+                    );
                 }
             }
         }
@@ -2158,9 +2089,9 @@ unsigned SPMeshNodeArray::color_smooth(std::vector<unsigned> const &corners)
                 double slope_diff[3];
 
                 // Color of corners
-                SPColor color0 = n[0]->color;
-                SPColor color3 = n[3]->color;
-                SPColor color6 = n[6]->color;
+                auto &color0 = n[0]->color;
+                auto &color3 = n[3]->color;
+                auto &color6 = n[6]->color;
                 
                 // Distance nodes from selected corner
                 Geom::Point d[7];
@@ -2173,17 +2104,17 @@ unsigned SPMeshNodeArray::color_smooth(std::vector<unsigned> const &corners)
                 unsigned cdm = 0; // Color Diff Max  (Which color has the maximum difference in slopes)
                 for( unsigned c = 0; c < 3; ++c ) {
                     if( d[2].length() != 0.0 ) {
-                        slope[0][c] = (color3.v.c[c] - color0.v.c[c]) / d[2].length();
+                        slope[0][c] = (color3->get(c) - color0->get(c)) / d[2].length();
                     } 
                     if( d[4].length() != 0.0 ) {
-                        slope[1][c] = (color6.v.c[c] - color3.v.c[c]) / d[4].length();
+                        slope[1][c] = (color6->get(c) - color3->get(c)) / d[4].length();
                     }
                     slope_ave[c]  = (slope[0][c]+slope[1][c]) / 2.0;
                     slope_diff[c] = (slope[0][c]-slope[1][c]);
                     // std::cout << "  color: " << c << " :"
-                    //           << color0.v.c[c] << " "
-                    //           << color3.v.c[c] << " "
-                    //           << color6.v.c[c]
+                    //           << color0[c] << " "
+                    //           << color3[c] << " "
+                    //           << color6[c]
                     //           << "  slope: "
                     //           << slope[0][c] << " "
                     //           << slope[1][c]
@@ -2203,8 +2134,8 @@ unsigned SPMeshNodeArray::color_smooth(std::vector<unsigned> const &corners)
                 double length_left  = d[0].length();
                 double length_right = d[6].length();
                 if( slope_ave[ cdm ] != 0.0 ) {
-                    length_left  = std::abs( (color3.v.c[cdm] - color0.v.c[cdm]) / slope_ave[ cdm ] );
-                    length_right = std::abs( (color6.v.c[cdm] - color3.v.c[cdm]) / slope_ave[ cdm ] );
+                    length_left  = std::abs( (color3->get(cdm) - color0->get(cdm)) / slope_ave[ cdm ] );
+                    length_right = std::abs( (color6->get(cdm) - color3->get(cdm)) / slope_ave[ cdm ] );
                 }
 
                 // Move closest handle a maximum of mid point... but don't shorten
@@ -2342,17 +2273,8 @@ unsigned SPMeshNodeArray::color_pick(std::vector<unsigned> const &icorners, SPIt
 
         /* Render copy and pick color */
         pick_drawing->render(dc, ibox);
-        double R = 0, G = 0, B = 0, A = 0;
-        ink_cairo_surface_average_color(s, R, G, B, A);
+        n->color = ink_cairo_surface_average_color(s);
         cairo_surface_destroy(s);
-
-        // std::cout << " p: " << p
-        //           << " box: " << ibox
-        //           << " R: " << R
-        //           << " G: " << G
-        //           << " B: " << B
-        //           << std::endl;
-        n->color.set( R, G, B );
     }
 
     pick_doc->getRoot()->invoke_hide(pick_visionkey);
@@ -2878,14 +2800,7 @@ void SPMeshNodeArray::split_row( unsigned int row, double coord ) {
             nodes[i+5][j]->node_type = MG_NODE_TYPE_HANDLE;
 
             // Color stored in corners
-            unsigned c0 = nodes[i  ][j]->color.toRGBA32( 1.0 );
-            unsigned c1 = nodes[i+6][j]->color.toRGBA32( 1.0 );
-            double o0 = nodes[i  ][j]->opacity;
-            double o1 = nodes[i+6][j]->opacity;
-            unsigned cnew = average_color( c0, c1, coord );
-            double onew = o0 * (1.0 - coord) + o1 * coord;
-            nodes[i+3][j]->color.set( cnew );
-            nodes[i+3][j]->opacity = onew;
+            nodes[i+3][j]->color = nodes[i][j]->color->averaged(*nodes[i+6][j]->color, coord);
             nodes[i+3][j]->node_type = MG_NODE_TYPE_CORNER;
             nodes[i+3][j]->set = true;
 
@@ -2991,14 +2906,7 @@ void SPMeshNodeArray::split_column( unsigned int col, double coord ) {
             nodes[i][j+5]->node_type = MG_NODE_TYPE_HANDLE;
 
             // Color stored in corners
-            unsigned c0 = nodes[i][j  ]->color.toRGBA32( 1.0 );
-            unsigned c1 = nodes[i][j+6]->color.toRGBA32( 1.0 );
-            double o0 = nodes[i][j  ]->opacity;
-            double o1 = nodes[i][j+6]->opacity;
-            unsigned cnew = average_color( c0, c1, coord );
-            double onew = o0 * (1.0 - coord) + o1 * coord;
-            nodes[i][j+3]->color.set( cnew );
-            nodes[i][j+3]->opacity = onew;
+            nodes[i][j+3]->color = nodes[i][j]->color->averaged(*nodes[i][j+6]->color, coord);
             nodes[i][j+3]->node_type = MG_NODE_TYPE_CORNER;
             nodes[i][j+3]->set = true;
 

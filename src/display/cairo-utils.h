@@ -17,12 +17,14 @@
 #include <cairomm/cairomm.h>
 #include "style.h"
 
-struct SPColor;
 typedef struct _GdkPixbuf GdkPixbuf;
 
 void ink_cairo_pixbuf_cleanup(unsigned char *, void *);
 
 namespace Inkscape {
+namespace Colors {
+class Color;
+}
 
 /** Class to hold image data for raster images.
  * Allows easy interoperation with GdkPixbuf and Cairo. */
@@ -98,8 +100,13 @@ void set_cairo_surface_ci(cairo_surface_t *surface, SPColorInterpolation cif);
 void copy_cairo_surface_ci(cairo_surface_t *in, cairo_surface_t *out);
 void convert_cairo_surface_ci(cairo_surface_t *surface, SPColorInterpolation cif);
 
-void ink_cairo_set_source_color(cairo_t *ct, SPColor const &color, double opacity);
-void ink_cairo_set_source_rgba32(cairo_t *ct, guint32 rgba);
+cairo_pattern_t *ink_cairo_pattern_create(Inkscape::Colors::Color const &color, double opacity = 1.0);
+void ink_cairo_pattern_add_color_stop(cairo_pattern_t *ptn, double offset, Inkscape::Colors::Color const &color, double opacity = 1.0);
+void ink_cairo_set_source_color(Cairo::RefPtr<Cairo::Context> ctx, Inkscape::Colors::Color const &color, double opacity = 1.0);
+void ink_cairo_set_source_color(cairo_t *ctx, Inkscape::Colors::Color const &c, double opacity = 1.0);
+void ink_cairo_set_source_rgba32(Cairo::RefPtr<Cairo::Context> ctx, guint32 rgba);
+void ink_cairo_set_source_rgba32(Cairo::Context &ctx, guint32 rgba);
+void ink_cairo_set_source_rgba32(cairo_t *ctx, guint32 rgba);
 void ink_cairo_transform(cairo_t *ct, Geom::Affine const &m);
 void ink_cairo_pattern_set_matrix(cairo_pattern_t *cp, Geom::Affine const &m);
 void ink_cairo_set_hairline(cairo_t *ct);
@@ -119,10 +126,9 @@ cairo_surface_t *ink_cairo_surface_create_output(cairo_surface_t *image, cairo_s
 void ink_cairo_surface_blit(cairo_surface_t *src, cairo_surface_t *dest);
 int ink_cairo_surface_get_width(cairo_surface_t *surface);
 int ink_cairo_surface_get_height(cairo_surface_t *surface);
-guint32 ink_cairo_surface_average_color(cairo_surface_t *surface);
 guint32 ink_cairo_pattern_get_argb32(cairo_pattern_t *pattern);
-void ink_cairo_surface_average_color(cairo_surface_t *surface, double &r, double &g, double &b, double &a);
-void ink_cairo_surface_average_color_premul(cairo_surface_t *surface, double &r, double &g, double &b, double &a);
+Colors::Color ink_cairo_surface_average_color(cairo_surface_t *surface);
+Colors::Color ink_cairo_surface_average_color_premul(cairo_surface_t *surface);
 
 double srgb_to_linear( const double c );
 int ink_cairo_surface_srgb_to_linear(cairo_surface_t *surface);

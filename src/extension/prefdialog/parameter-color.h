@@ -13,8 +13,11 @@
 #include <memory>
 #include <string>
 #include <sigc++/signal.h>
+#include <sigc++/connection.h>
+
+#include "colors/color.h"
+#include "colors/color-set.h"
 #include "parameter.h"
-#include "ui/selected-color.h"
 
 namespace Gtk {
 class ColorButton;
@@ -38,14 +41,10 @@ public:
     ParamColor(Inkscape::XML::Node *xml, Inkscape::Extension::Extension *ext);
     ~ParamColor() override;
 
-    /** Returns \c _value, with a \i const to protect it. */
-    unsigned int get() const { return _color.value(); }
-    unsigned int set(unsigned int in);
+    Colors::Color get() const { return _colors->getAverage(); } // copy
+    void set(Colors::Color const &color) { _colors->set(color); }
 
     Gtk::Widget *get_widget(sigc::signal<void ()> *changeSignal) override;
-
-    std::string value_to_string() const override;
-    void string_to_value(const std::string &in) override;
 
     std::unique_ptr<sigc::signal<void ()>> _changeSignal;
 
@@ -54,10 +53,9 @@ private:
     void _onColorButtonChanged();
 
     /** Internal value of this parameter */
-    Inkscape::UI::SelectedColor _color;
+    std::shared_ptr<Colors::ColorSet> _colors;
 
     sigc::connection _color_changed;
-    sigc::connection _color_released;
 
     Gtk::ColorButton *_color_button;
 

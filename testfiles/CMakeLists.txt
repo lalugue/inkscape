@@ -93,7 +93,6 @@ set(TEST_SOURCES
     extract-uri-test
     attributes-test
     dir-util-test
-    oklab-color-test
     sp-item-test
     sp-object-test
     sp-object-tags-test
@@ -110,7 +109,6 @@ set(TEST_SOURCES
     style-test
     svg-affine-test
     svg-box-test
-    svg-color-test
     svg-length-test
     svg-stringstream-test
     sp-gradient-test
@@ -128,6 +126,7 @@ set(TEST_SOURCES
     sp-item-group-test
     store-test
     lpe-test
+    ui-util-test
     ${LPE_TESTS_64bit}
     )
 

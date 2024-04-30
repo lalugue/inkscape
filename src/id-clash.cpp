@@ -306,8 +306,8 @@ static void find_references(SPObject *elem, refmap_type &refmap, bool from_clipb
     for (unsigned i = 0; i < NUM_SPIPAINT_PROPERTIES; ++i) {
         const SPIPaint SPStyle::*prop = SPIPaint_members[i];
         const SPIPaint *paint = &(style->*prop);
-        if (paint->isPaintserver() && paint->value.href) {
-            const SPObject *obj = paint->value.href->getObject();
+        if (paint->isPaintserver() && paint->href) {
+            const SPObject *obj = paint->href->getObject();
             if (obj) {
                 const gchar *id = obj->getId();
                 IdReference idref = { REF_STYLE, elem, SPIPaint_properties[i] };

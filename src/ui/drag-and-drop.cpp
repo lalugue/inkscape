@@ -13,6 +13,7 @@
 
 #include "drag-and-drop.h"
 
+#include <span>
 #include <glibmm/i18n.h>
 #include <glibmm/value.h>
 #include <glibmm/miscutils.h>
@@ -29,6 +30,7 @@
 #include "style.h"
 #include "layer-manager.h"
 
+#include "colors/dragndrop.h"
 #include "extension/find_extension_by_mime.h"
 
 #include "object/sp-shape.h"
@@ -37,15 +39,11 @@
 
 #include "path/path-util.h"
 
-#include "svg/svg-color.h" // write color
-
 #include "ui/clipboard.h"
 #include "ui/interface.h"
 #include "ui/tools/tool-base.h"
 #include "ui/widget/canvas.h"  // Target, canvas to world transform.
 #include "ui/widget/desktop-widget.h"
-
-#include "widgets/paintdef.h"
 
 using Inkscape::DocumentUndo;
 
@@ -196,19 +194,19 @@ GValue from_bytes<DnDSvg>(Glib::RefPtr<Glib::Bytes> &&bytes, char const *)
 }
 
 template <>
-GValue from_bytes<PaintDef>(Glib::RefPtr<Glib::Bytes> &&bytes, char const *mime_type)
+GValue from_bytes<Colors::Paint>(Glib::RefPtr<Glib::Bytes> &&bytes, char const *mime_type)
 {
-    PaintDef result;
-    if (!result.fromMIMEData(mime_type, get_span(bytes))) {
-        throw Glib::Error(G_FILE_ERROR, 0, "Failed to parse colour");
+    try {
+        return make_value(Colors::fromMIMEData(get_span(bytes), mime_type));
+    } catch (Colors::ColorError const &c) {
+        throw Glib::Error(G_FILE_ERROR, 0, c.what());
     }
-    return make_value(std::move(result));
 }
 
 template <>
-Glib::RefPtr<Glib::Bytes> to_bytes<PaintDef>(PaintDef const &paintdef, char const *mime_type)
+Glib::RefPtr<Glib::Bytes> to_bytes<Colors::Paint>(Colors::Paint const &paint, char const *mime_type)
 {
-    return make_bytes(paintdef.getMIMEData(mime_type));
+    return make_bytes(getMIMEData(paint, mime_type));
 }
 
 template <>
@@ -224,18 +222,18 @@ std::vector<GType> const &get_drop_types()
             register_deserializer<DnDSvg>(mime_type);
         }
 
-        for (auto mime_type : {mimeOSWB_COLOR, mimeX_COLOR}) {
-            register_deserializer<PaintDef>(mime_type);
+        for (auto mime_type : {Colors::mimeOSWB_COLOR, Colors::mimeX_COLOR}) {
+            register_deserializer<Colors::Paint>(mime_type);
         }
 
-        for (auto mime_type : {mimeOSWB_COLOR, mimeX_COLOR, mimeTEXT}) {
-            register_serializer<PaintDef>(mime_type);
+        for (auto mime_type : {Colors::mimeOSWB_COLOR, Colors::mimeX_COLOR, Colors::mimeTEXT}) {
+            register_serializer<Colors::Paint>(mime_type);
         }
 
         register_serializer<DnDSymbol>("text/plain");
 
         return {
-            Glib::Value<PaintDef>::value_type(),
+            Glib::Value<Colors::Paint>::value_type(),
             Glib::Value<DnDSvg>::value_type(),
             GDK_TYPE_FILE_LIST,
             Glib::Value<DnDSymbol>::value_type(),
@@ -257,16 +255,17 @@ bool on_drop(Glib::ValueBase const &value, double x, double y, SPDesktopWidget *
     auto const world_pos = canvas->canvas_to_world(canvas_pos);
     auto const dt_pos = desktop->w2d(world_pos);
 
-    if (auto const paintdef = get<PaintDef>(value)) {
+    if (auto const ptr = get<Colors::Paint>(value)) {
+        auto paint = *ptr;
         auto const item = desktop->getItemAtPoint(world_pos, true);
         if (!item) {
             return false;
         }
 
-        auto find_gradient = [&] () -> SPGradient * {
+        auto find_gradient = [&] (Colors::Color const &color) -> SPGradient * {
             for (auto obj : doc->getResourceList("gradient")) {
                 auto const grad = cast_unsafe<SPGradient>(obj);
-                if (grad->hasStops() && grad->getId() == paintdef->get_description()) {
+                if (grad->hasStops() && grad->getId() == color.getName()) {
                     return grad;
                 }
             }
@@ -274,16 +273,14 @@ bool on_drop(Glib::ValueBase const &value, double x, double y, SPDesktopWidget *
         };
 
         std::string colorspec;
-        if (paintdef->get_type() == PaintDef::NONE) {
+        if (std::holds_alternative<Colors::NoColor>(paint)) {
             colorspec = "none";
         } else {
-            if (auto const grad = find_gradient()) {
+            auto &color = std::get<Colors::Color>(paint);
+            if (auto const grad = find_gradient(color)) {
                 colorspec = std::string{"url(#"} + grad->getId() + ")";
             } else {
-                auto const [r, g, b] = paintdef->get_rgb();
-                colorspec.resize(63);
-                sp_svg_write_color(colorspec.data(), colorspec.size() + 1, SP_RGBA32_U_COMPOSE(r, g, b, 0xff));
-                colorspec.resize(std::strlen(colorspec.c_str()));
+                colorspec.resize(std::strlen(color.toString().c_str()));
             }
         }
 
@@ -324,7 +321,7 @@ bool on_drop(Glib::ValueBase const &value, double x, double y, SPDesktopWidget *
         }
 
         auto const css = sp_repr_css_attr_new();
-        sp_repr_css_set_property(css, fillnotstroke ? "fill" : "stroke", colorspec.c_str());
+        sp_repr_css_set_property_string(css, fillnotstroke ? "fill" : "stroke", colorspec);
         sp_desktop_apply_css_recursive(item, css, true);
         sp_repr_css_attr_unref(css);
 

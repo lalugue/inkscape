@@ -13,6 +13,7 @@
 #include "display/nr-style.h"
 #include "style.h"
 
+#include "colors/manager.h"
 #include "display/cairo-utils.h"
 #include "display/drawing-context.h"
 #include "display/drawing-pattern.h"
@@ -28,7 +29,7 @@ void NRStyleData::Paint::clear()
     type = PaintType::NONE;
 }
 
-void NRStyleData::Paint::set(SPColor const &c)
+void NRStyleData::Paint::set(Colors::Color const &c)
 {
     clear();
     type = PaintType::COLOR;
@@ -47,16 +48,16 @@ void NRStyleData::Paint::set(SPPaintServer *ps)
 void NRStyleData::Paint::set(SPIPaint const *paint)
 {
     if (paint->isPaintserver()) {
-        SPPaintServer* server = paint->value.href->getObject();
+        SPPaintServer* server = paint->href->getObject();
         if (server && server->isValid()) {
             set(server);
-        } else if (paint->colorSet) {
-            set(paint->value.color);
+        } else if (paint->isColor()) {
+            set(paint->getColor());
         } else {
             clear();
         }
     } else if (paint->isColor()) {
-        set(paint->value.color);
+        set(paint->getColor());
     } else if (paint->isNone()) {
         clear();
     } else if (paint->paintOrigin == SP_CSS_PAINT_ORIGIN_CONTEXT_FILL ||
@@ -259,7 +260,7 @@ NRStyleData::NRStyleData(SPStyle const *style, SPStyle const *context_style)
     } else if (style_td->text_decoration_color.set) {
         if(style->fill.isPaintserver() || style->fill.isColor()) {
             // SVG sets color specifically
-            text_decoration_fill.set(style->text_decoration_color.value.color);
+            text_decoration_fill.set(style->text_decoration_color.getColor());
         } else {
             // No decoration fill because no text fill
             text_decoration_fill.clear();
@@ -274,7 +275,7 @@ NRStyleData::NRStyleData(SPStyle const *style, SPStyle const *context_style)
     } else if (style_td->text_decoration_color.set) {
         if(style->stroke.isPaintserver() || style->stroke.isColor()) {
             // SVG sets color specifically
-            text_decoration_stroke.set(style->text_decoration_color.value.color);
+            text_decoration_stroke.set(style->text_decoration_color.getColor());
         } else {
             // No decoration stroke because no text stroke
             text_decoration_stroke.clear();
@@ -323,8 +324,7 @@ auto NRStyle::preparePaint(Inkscape::DrawingContext &dc, Inkscape::RenderContext
                 }
                 break;
             case NRStyleData::PaintType::COLOR: {
-                auto const &c = paint.color.v.c;
-                cp.pattern = CairoPatternUniqPtr(cairo_pattern_create_rgba(c[0], c[1], c[2], paint.opacity));
+                cp.pattern = CairoPatternUniqPtr(ink_cairo_pattern_create(*paint.color, paint.opacity));
                 break;
             }
             default:

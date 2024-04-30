@@ -11,8 +11,8 @@
 #define SEEN_INKSCAPE_PAGE_MANAGER_H
 
 #include <vector>
+#include <optional>
 
-#include "color-rgba.h"
 #include "document.h"
 #include "object/sp-namedview.h"
 #include "svg/svg-bool.h"
@@ -29,6 +29,9 @@ namespace Dialog {
 class DocumentProperties;
 }
 } // namespace UI
+namespace Colors {
+class Color;
+}
 
 class PageManager
 {
@@ -75,7 +78,7 @@ public:
     bool hasNextPage() const { return getSelectedPageIndex() + 1 < pages.size(); }
     bool hasPrevPage() const { return getSelectedPageIndex() - 1 >= 0; }
 
-    ColorRGBA getDefaultBackgroundColor() const { return ColorRGBA(background_color); }
+    Colors::Color const &getDefaultBackgroundColor() const { return background_color; }
 
     // TODO: move these functions out of here and into the Canvas or InkscapeWindow
     void zoomToPage(SPDesktop *desktop, SPPage *page, bool width_only = false);
@@ -121,10 +124,10 @@ public:
         return _pages_changed_signal.connect(slot);
     }
 
-    // Access from export.cpp and others for the guint32
-    guint32 background_color = 0xffffff00;
-    guint32 margin_color = 0x1699d751;
-    guint32 bleed_color = 0xbe310e31;
+    Colors::Color const &getBackgroundColor() const { return background_color; }
+    Colors::Color const &getMarginColor() const { return margin_color; }
+    Colors::Color const &getBleedColor() const { return bleed_color; }
+    Colors::Color const &getBorderColor() const { return border_color; }
 
     void movePages(Geom::Affine tr);
     std::vector<SPItem *> getOverlappingItems(SPDesktop *desktop, SPPage *page, bool hidden = true, bool in_bleed = false, bool in_layers = true);
@@ -138,7 +141,6 @@ protected:
     SVGBool shadow_show;
     SVGBool checkerboard;
 
-    guint32 border_color = 0x0000003f;
     std::string label_style = "default";
 
 private:
@@ -151,6 +153,11 @@ private:
     sigc::signal<void ()> _pages_changed_signal;
 
     sigc::connection _page_modified_connection;
+
+    Colors::Color background_color;
+    Colors::Color margin_color;
+    Colors::Color bleed_color;
+    Colors::Color border_color;
 };
 
 } // namespace Inkscape

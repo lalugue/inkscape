@@ -89,8 +89,7 @@ void BooleanBuilder::redraw_items()
         return;
     }
 
-    auto nv = _set->desktop()->getNamedView();
-    _dark = SP_RGBA32_LUMINANCE(nv->desk_color) < 100;
+    _dark = Colors::get_perceptual_lightness(_set->desktop()->getNamedView()->getDeskColor()) < 0.5;
 
     _screen_items.clear();
 

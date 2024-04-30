@@ -179,7 +179,7 @@ Glib::RefPtr<PatternItem> create_pattern_item(SPDocument *sandbox, SPPattern* pa
 
     // reading color style form "root" pattern; linked one won't have any effect, as it's not a parrent
     if (root_pattern->style && root_pattern->style->isSet(SPAttr::FILL) && root_pattern->style->fill.isColor()) {
-        item->color.emplace(SPColor(root_pattern->style->fill.value.color));
+        item->color.emplace(root_pattern->style->fill.getColor());
     }
     // uniform scaling?
     if (link_pattern->aspect_set) {

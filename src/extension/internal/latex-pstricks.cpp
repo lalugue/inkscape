@@ -19,6 +19,7 @@
 #include "util/units.h"
 #include "helper/geom-curves.h"
 
+#include "colors/color.h"
 #include "extension/print.h"
 #include "extension/system.h"
 #include "inkscape-version.h"
@@ -173,13 +174,12 @@ unsigned int PrintLatex::fill(Inkscape::Extension::Print * /*mod*/,
 
     if (style->fill.isColor()) {
         Inkscape::SVGOStringStream os;
-        float rgb[3];
         float fill_opacity;
 
         os.setf(std::ios::fixed);
 
         fill_opacity=SP_SCALE24_TO_FLOAT(style->fill_opacity.value);
-        style->fill.value.color.get_rgb_floatv(rgb);
+        auto rgb = *style->fill.getColor().converted(Colors::Space::Type::RGB);
         os << "{\n\\newrgbcolor{curcolor}{" << rgb[0] << " " << rgb[1] << " " << rgb[2] << "}\n";
         os << "\\pscustom[linestyle=none,fillstyle=solid,fillcolor=curcolor";
         if (fill_opacity!=1.0) {
@@ -208,14 +208,12 @@ unsigned int PrintLatex::stroke(Inkscape::Extension::Print * /*mod*/,
 
     if (style->stroke.isColor()) {
         Inkscape::SVGOStringStream os;
-        float rgb[3];
-        float stroke_opacity;
         Geom::Affine tr_stack = m_tr_stack.top();
         double const scale = tr_stack.descrim();
         os.setf(std::ios::fixed);
 
-        stroke_opacity=SP_SCALE24_TO_FLOAT(style->stroke_opacity.value);
-        style->stroke.value.color.get_rgb_floatv(rgb);
+        double stroke_opacity = style->stroke_opacity;
+        auto rgb = *style->stroke.getColor().converted(Colors::Space::Type::RGB);
         os << "{\n\\newrgbcolor{curcolor}{" << rgb[0] << " " << rgb[1] << " " << rgb[2] << "}\n";
 
         os << "\\pscustom[linewidth=" << style->stroke_width.computed*scale<< ",linecolor=curcolor";

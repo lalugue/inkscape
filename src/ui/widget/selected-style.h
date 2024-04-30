@@ -21,6 +21,7 @@
 #include <gtkmm/grid.h>
 #include <gtkmm/label.h>
 
+#include "colors/color.h"
 #include "helper/auto-connection.h"
 #include "rotateable.h"
 #include "ui/popup-menu.h"
@@ -74,7 +75,7 @@ class RotateableSwatch : public Rotateable {
     RotateableSwatch(SelectedStyle *parent, guint mode);
     ~RotateableSwatch() override;
 
-    double color_adjust (float *hsl, double by, guint32 cc, guint state);
+    std::pair<double, double> color_adjust(Colors::Color const &cc, double by, guint state);
 
     void do_motion (double by, guint state) override;
     void do_release (double by, guint state) override;
@@ -85,8 +86,7 @@ private:
 
     SelectedStyle *parent;
 
-    guint32 startcolor = 0;
-    bool startcolor_set = false;
+    std::optional<Colors::Color> startcolor;
 
     gchar const *undokey = "ssrot1";
 
@@ -125,8 +125,8 @@ public:
     SPDesktop *getDesktop() {return _desktop;}
     void update();
 
-    guint32 _lastselected[2];
-    guint32 _thisselected[2];
+    std::optional<Colors::Color> _lastselected[2];
+    std::optional<Colors::Color> _thisselected[2];
 
     guint _mode[2];
 

@@ -31,6 +31,7 @@
 #include "emf-inout.h"
 
 #include "clear-n_.h"
+#include "colors/color.h"
 #include "display/drawing-item.h"
 #include "display/drawing.h"
 #include "document.h"
@@ -773,31 +774,27 @@ Emf::output_style(PEMF_CALLBACK_DATA d, int iType)
     SVGOStringStream tmp_style;
     char tmp[1024] = {0};
 
-    float fill_rgb[3];
-    d->dc[d->level].style.fill.value.color.get_rgb_floatv(fill_rgb);
-    float stroke_rgb[3];
-    d->dc[d->level].style.stroke.value.color.get_rgb_floatv(stroke_rgb);
+    auto fill = d->dc[d->level].style.fill.getColor();
+    auto stroke = d->dc[d->level].style.stroke.getColor();
 
     // for U_EMR_BITBLT with no image, try to approximate some of these operations/
     // Assume src color is "white"
     if(d->dwRop3){
         switch(d->dwRop3){
             case U_PATINVERT: // invert pattern
-                fill_rgb[0] = 1.0 - fill_rgb[0];
-                fill_rgb[1] = 1.0 - fill_rgb[1];
-                fill_rgb[2] = 1.0 - fill_rgb[2];
+                fill.set("black");
                 break;
             case U_SRCINVERT: // treat all of these as black
             case U_DSTINVERT:
             case U_BLACKNESS:
             case U_SRCERASE:
             case U_NOTSRCCOPY:
-                fill_rgb[0]=fill_rgb[1]=fill_rgb[2]=0.0;
+                fill.set("black");
                 break;
             case U_SRCCOPY:    // treat all of these as white
             case U_NOTSRCERASE:
             case U_WHITENESS:
-                fill_rgb[0]=fill_rgb[1]=fill_rgb[2]=1.0;
+                fill.set("white");
                 break;
             case U_SRCPAINT:  // use the existing color
             case U_SRCAND:
@@ -817,19 +814,15 @@ Emf::output_style(PEMF_CALLBACK_DATA d, int iType)
     // pen color through.
     switch(d->dwRop2){
         case U_R2_BLACK:
-            fill_rgb[0]  = fill_rgb[1]  = fill_rgb[2]   = 0.0;
-            stroke_rgb[0]= stroke_rgb[1]= stroke_rgb[2] = 0.0;
+            fill.set("black");
+            stroke.set("black");
             break;
         case U_R2_NOTMERGEPEN:
         case U_R2_MASKNOTPEN:
             break;
         case U_R2_NOTCOPYPEN:
-            fill_rgb[0]    =  1.0 - fill_rgb[0];
-            fill_rgb[1]    =  1.0 - fill_rgb[1];
-            fill_rgb[2]    =  1.0 - fill_rgb[2];
-            stroke_rgb[0]  =  1.0 - stroke_rgb[0];
-            stroke_rgb[1]  =  1.0 - stroke_rgb[1];
-            stroke_rgb[2]  =  1.0 - stroke_rgb[2];
+            fill.invert();
+            stroke.invert();
             break;
         case U_R2_MASKPENNOT:
         case U_R2_NOT:
@@ -844,8 +837,8 @@ Emf::output_style(PEMF_CALLBACK_DATA d, int iType)
         case U_R2_MERGEPEN:
             break;
         case U_R2_WHITE:
-            fill_rgb[0]  = fill_rgb[1]  = fill_rgb[2]   = 1.0;
-            stroke_rgb[0]= stroke_rgb[1]= stroke_rgb[2] = 1.0;
+            fill.set("white");
+            stroke.set("white");
             break;
         default:
             break;
@@ -871,14 +864,8 @@ Emf::output_style(PEMF_CALLBACK_DATA d, int iType)
             case DRAW_LINEAR_GRADIENT:
             case DRAW_PAINT:
             default:  // <--  this should never happen, but just in case...
-                snprintf(
-                    tmp, 1023,
-                    "fill:#%02x%02x%02x;",
-                    SP_COLOR_F_TO_U(fill_rgb[0]),
-                    SP_COLOR_F_TO_U(fill_rgb[1]),
-                    SP_COLOR_F_TO_U(fill_rgb[2])
-                );
-                tmp_style << tmp;
+                fill.convert(Colors::Space::Type::RGB);
+                tmp_style << "fill:" << fill.toString(false).c_str() << ";";
                 break;
         }
         snprintf(
@@ -897,11 +884,7 @@ Emf::output_style(PEMF_CALLBACK_DATA d, int iType)
             (d->dc[d->level].fill_mode == d->dc[d->level].stroke_mode)  &&
             (
                 (d->dc[d->level].fill_mode != DRAW_PAINT)               ||
-                (
-                    (fill_rgb[0]==stroke_rgb[0])                        &&
-                    (fill_rgb[1]==stroke_rgb[1])                        &&
-                    (fill_rgb[2]==stroke_rgb[2])
-                )
+                fill == stroke
             )
         ){
             d->dc[d->level].stroke_set = false;
@@ -924,14 +907,8 @@ Emf::output_style(PEMF_CALLBACK_DATA d, int iType)
             case DRAW_LINEAR_GRADIENT:
             case DRAW_PAINT:
             default:  // <--  this should never happen, but just in case...
-                snprintf(
-                    tmp, 1023,
-                    "stroke:#%02x%02x%02x;",
-                    SP_COLOR_F_TO_U(stroke_rgb[0]),
-                    SP_COLOR_F_TO_U(stroke_rgb[1]),
-                    SP_COLOR_F_TO_U(stroke_rgb[2])
-                );
-                tmp_style << tmp;
+                stroke.convert(Colors::Space::Type::RGB);
+                tmp_style << "stroke:" << stroke.toString(false).c_str() << ";";
                 break;
         }
         tmp_style << "stroke-width:" <<
@@ -1140,14 +1117,8 @@ Emf::select_pen(PEMF_CALLBACK_DATA d, int index)
         d->level = cur_level;
         d->dc[d->level].style.stroke_width.value = pen_width;
     }
-
-    double r, g, b;
-    r = SP_COLOR_U_TO_F( U_RGBAGetR(pEmr->lopn.lopnColor) );
-    g = SP_COLOR_U_TO_F( U_RGBAGetG(pEmr->lopn.lopnColor) );
-    b = SP_COLOR_U_TO_F( U_RGBAGetB(pEmr->lopn.lopnColor) );
-    d->dc[d->level].style.stroke.value.color.set( r, g, b );
+    d->dc[d->level].style.stroke.setColor(Colors::Color(U_RGB_COMPOSE(pEmr->lopn.lopnColor), false));
 }
-
 
 void
 Emf::select_extpen(PEMF_CALLBACK_DATA d, int index)
@@ -1267,11 +1238,7 @@ Emf::select_extpen(PEMF_CALLBACK_DATA d, int index)
     d->dc[d->level].stroke_set = true;
 
     if (pEmr->elp.elpPenStyle == U_PS_NULL) { // draw nothing, but fill out all the values with something
-        double r, g, b;
-        r = SP_COLOR_U_TO_F( U_RGBAGetR(d->dc[d->level].textColor));
-        g = SP_COLOR_U_TO_F( U_RGBAGetG(d->dc[d->level].textColor));
-        b = SP_COLOR_U_TO_F( U_RGBAGetB(d->dc[d->level].textColor));
-        d->dc[d->level].style.stroke.value.color.set( r, g, b );
+        d->dc[d->level].style.stroke.setColor(Colors::Color(U_RGB_COMPOSE(d->dc[d->level].textColor), false));
         d->dc[d->level].style.stroke_width.value = 0;
         d->dc[d->level].stroke_set = false;
         d->dc[d->level].stroke_mode = DRAW_PAINT;
@@ -1293,11 +1260,7 @@ Emf::select_extpen(PEMF_CALLBACK_DATA d, int index)
         }
 
         if(     pEmr->elp.elpBrushStyle == U_BS_SOLID){
-            double r, g, b;
-            r = SP_COLOR_U_TO_F( U_RGBAGetR(pEmr->elp.elpColor) );
-            g = SP_COLOR_U_TO_F( U_RGBAGetG(pEmr->elp.elpColor) );
-            b = SP_COLOR_U_TO_F( U_RGBAGetB(pEmr->elp.elpColor) );
-            d->dc[d->level].style.stroke.value.color.set( r, g, b );
+            d->dc[d->level].style.stroke.setColor(Colors::Color(U_RGB_COMPOSE(pEmr->elp.elpColor), false));
             d->dc[d->level].stroke_mode = DRAW_PAINT;
             d->dc[d->level].stroke_set  = true;
         }
@@ -1313,11 +1276,7 @@ Emf::select_extpen(PEMF_CALLBACK_DATA d, int index)
             d->dc[d->level].stroke_set  = true;
         }
         else { // U_BS_PATTERN and anything strange that falls in, stroke is solid textColor
-            double r, g, b;
-            r = SP_COLOR_U_TO_F( U_RGBAGetR(d->dc[d->level].textColor));
-            g = SP_COLOR_U_TO_F( U_RGBAGetG(d->dc[d->level].textColor));
-            b = SP_COLOR_U_TO_F( U_RGBAGetB(d->dc[d->level].textColor));
-            d->dc[d->level].style.stroke.value.color.set( r, g, b );
+            d->dc[d->level].style.stroke.setColor(Colors::Color(U_RGB_COMPOSE(d->dc[d->level].textColor)));
             d->dc[d->level].stroke_mode = DRAW_PAINT;
             d->dc[d->level].stroke_set  = true;
         }
@@ -1336,11 +1295,7 @@ Emf::select_brush(PEMF_CALLBACK_DATA d, int index)
         if(iType == U_EMR_CREATEBRUSHINDIRECT){
             PU_EMRCREATEBRUSHINDIRECT pEmr = (PU_EMRCREATEBRUSHINDIRECT) d->emf_obj[index].lpEMFR;
             if(     pEmr->lb.lbStyle == U_BS_SOLID){
-                double r, g, b;
-                r = SP_COLOR_U_TO_F( U_RGBAGetR(pEmr->lb.lbColor) );
-                g = SP_COLOR_U_TO_F( U_RGBAGetG(pEmr->lb.lbColor) );
-                b = SP_COLOR_U_TO_F( U_RGBAGetB(pEmr->lb.lbColor) );
-                d->dc[d->level].style.fill.value.color.set( r, g, b );
+                d->dc[d->level].style.fill.setColor(Colors::Color(U_RGB_COMPOSE(pEmr->lb.lbColor), false));
                 d->dc[d->level].fill_mode    = DRAW_PAINT;
                 d->dc[d->level].fill_set     = true;
             }
@@ -1355,11 +1310,7 @@ Emf::select_brush(PEMF_CALLBACK_DATA d, int index)
             PU_EMRCREATEDIBPATTERNBRUSHPT pEmr = (PU_EMRCREATEDIBPATTERNBRUSHPT) d->emf_obj[index].lpEMFR;
             tidx = add_image(d, (void *) pEmr, pEmr->cbBits, pEmr->cbBmi, pEmr->iUsage, pEmr->offBits, pEmr->offBmi);
             if(tidx == U_EMR_INVALID){  // This happens if createmonobrush has a DIB that isn't monochrome
-                double r, g, b;
-                r = SP_COLOR_U_TO_F( U_RGBAGetR(d->dc[d->level].textColor));
-                g = SP_COLOR_U_TO_F( U_RGBAGetG(d->dc[d->level].textColor));
-                b = SP_COLOR_U_TO_F( U_RGBAGetB(d->dc[d->level].textColor));
-                d->dc[d->level].style.fill.value.color.set( r, g, b );
+                d->dc[d->level].style.fill.setColor(Colors::Color(U_RGB_COMPOSE(d->dc[d->level].textColor), false));
                 d->dc[d->level].fill_mode = DRAW_PAINT;
             }
             else {
@@ -2509,8 +2460,7 @@ std::cout << "BEFORE DRAW"
                                 val = 255.0 / 255.0;
                                 break;
                         }
-                        d->dc[d->level].style.fill.value.color.set( val, val, val );
-
+                        d->dc[d->level].style.fill.setColor(Colors::Color(SP_RGBA32_F_COMPOSE(val, val, val, 1.0), false));
                         d->dc[d->level].fill_mode = DRAW_PAINT;
                         d->dc[d->level].fill_set = true;
                         break;
@@ -2525,7 +2475,7 @@ std::cout << "BEFORE DRAW"
                         float val = index == U_BLACK_PEN ? 0 : 1;
                         d->dc[d->level].style.stroke_dasharray.set = false;
                         d->dc[d->level].style.stroke_width.value = 1.0;
-                        d->dc[d->level].style.stroke.value.color.set( val, val, val );
+                        d->dc[d->level].style.stroke.setColor(Colors::Color(SP_RGBA32_F_COMPOSE(val, val, val, 1.0), false));
 
                         d->dc[d->level].stroke_mode = DRAW_PAINT;
                         d->dc[d->level].stroke_set = true;

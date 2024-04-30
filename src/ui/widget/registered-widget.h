@@ -287,15 +287,15 @@ public:
                           Inkscape::XML::Node *repr_in = nullptr,
                           SPDocument *doc_in = nullptr);
 
-    void setRgba32(std::uint32_t);
+    void setColor(Colors::Color const &);
     void closeWindow();
-    void setCustomSetter(std::function<void (Inkscape::XML::Node*, std::uint32_t)> setter) { _setter = std::move(setter); }
+    void setCustomSetter(std::function<void (Inkscape::XML::Node*, Colors::Color)> setter) { _setter = std::move(setter); }
 
 private:
     Glib::ustring _ckey, _akey;
     auto_connection _changed_connection;
-    std::function<void (Inkscape::XML::Node*, std::uint32_t)> _setter;
-    void on_changed(std::uint32_t);
+    std::function<void (Inkscape::XML::Node*, Colors::Color)> _setter;
+    void on_changed(Colors::Color const &);
 };
 
 class RegisteredInteger : public RegisteredWidget<Scalar> {

@@ -24,6 +24,8 @@
 #include <glibmm/regex.h>
 #include <png.h> // PNG export
 
+#include "colors/color.h"
+#include "colors/manager.h"
 #include "document.h"
 #include "extension/db.h"
 #include "extension/extension.h"
@@ -42,7 +44,6 @@
 #include "page-manager.h"
 #include "path-chemistry.h"      // sp_item_list_to_curves
 #include "selection-chemistry.h" // fit_canvas_to_drawing
-#include "svg/svg-color.h"       // Background color
 #include "text-editing.h"        // te_update_layout_now_recursive
 #include "util/units.h"
 #include "util/parse-int-range.h"
@@ -439,10 +440,12 @@ int InkFileExportCmd::do_export_vector(SPDocument *doc, std::string const &expor
 }
 
 guint32 InkFileExportCmd::get_bgcolor(SPDocument *doc) {
-    guint32 bgcolor = 0x00000000;
+    Inkscape::Colors::Color bgcolor(0xffffffff);
     if (!export_background.empty()) {
         // override the page color
-        bgcolor = sp_svg_read_color(export_background.c_str(), 0xffffff00);
+        if (auto c = Color::parse(export_background)) {
+            bgcolor = *c;
+        }
         // default is opaque if a color is given on commandline
         if (export_background_opacity < -.5 ) {
             export_background_opacity = 255;
@@ -451,26 +454,27 @@ guint32 InkFileExportCmd::get_bgcolor(SPDocument *doc) {
         // read from namedview
         Inkscape::XML::Node *nv = doc->getReprNamedView();
         if (nv && nv->attribute("pagecolor")){
-            bgcolor = sp_svg_read_color(nv->attribute("pagecolor"), 0xffffff00);
+            if (auto c = Color::parse(nv->attribute("pagecolor"))) {
+                bgcolor = *c;
+            }
         }
     }
 
     if (export_background_opacity > -.5) { // if the value is manually set
         if (export_background_opacity > 1.0) {
             float value = CLAMP (export_background_opacity, 1.0f, 255.0f);
-            bgcolor |= (guint32) floor(value);
+            bgcolor.addOpacity(floor(value) / 255.0);
         } else {
             float value = CLAMP (export_background_opacity, 0.0f, 1.0f);
-            bgcolor |= SP_COLOR_F_TO_U(value);
+            bgcolor.addOpacity(value);
         }
     } else {
         Inkscape::XML::Node *nv = doc->getReprNamedView();
         if (nv && nv->attribute("inkscape:pageopacity")){
-            double opacity = nv->getAttributeDouble("inkscape:pageopacity", 1.0);
-            bgcolor |= SP_COLOR_F_TO_U(opacity);
+            bgcolor.addOpacity(nv->getAttributeDouble("inkscape:pageopacity", 1.0));
         } // else it's transparent
     }
-    return bgcolor;
+    return bgcolor.toRGBA();
 }
 
 /**

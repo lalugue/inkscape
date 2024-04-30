@@ -20,7 +20,7 @@
 #include <gtkmm/drawingarea.h>
 #include <gtkmm/gesture.h> // Gtk::EventSequenceState
 
-#include "widgets/paintdef.h"
+#include "colors/color.h"
 
 namespace Cairo {
 class Context;
@@ -51,8 +51,10 @@ class DialogBase;
 class ColorItem : public Gtk::DrawingArea
 {
 public:
-    /// Create a static color from a paintdef.
-    ColorItem(PaintDef const&, DialogBase*);
+    // No fill option
+    ColorItem(DialogBase*);
+    /// Create a static color
+    ColorItem(Colors::Color, DialogBase*);
     /// Add new group or filler element.
     ColorItem(Glib::ustring name);
     ~ColorItem() override;
@@ -118,11 +120,8 @@ private:
     // Draw the color only (i.e. no indicators) to a Cairo context. Used for drawing both the widget and the drag/drop icon.
     void draw_color(Cairo::RefPtr<Cairo::Context> const &cr, int w, int h) const;
 
-    // Construct an equivalent paintdef for use during drag/drop.
-    PaintDef to_paintdef() const;
-
     // Return the color (or average if a gradient), for choosing the color of the fill/stroke indicators.
-    std::array<double, 3> average_color() const;
+    Colors::Color getColor() const;
 
     // Description of the color, shown in help text.
     Glib::ustring description;
@@ -136,9 +135,8 @@ private:
     // The color.
     struct Undefined {};
     struct PaintNone {};
-    struct RGBData { std::array<unsigned, 3> rgb; };
     struct GradientData { SPGradient *gradient; };
-    std::variant<Undefined, PaintNone, RGBData, GradientData> data;
+    std::variant<Undefined, PaintNone, Colors::Color, GradientData> data;
 
     // The dialog this widget belongs to. Used for determining what desktop to take action on.
     DialogBase *dialog = nullptr;

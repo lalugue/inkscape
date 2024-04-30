@@ -14,11 +14,12 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#include <memory>
 #include <vector>
+#include <optional>
 
 #include <glib.h>
 
-class ColorRGBA;
 class SPCSSAttr;
 class SPDesktop;
 class SPObject;
@@ -29,8 +30,14 @@ class ObjectSet;
 namespace XML {
 class Node;
 }
+namespace Colors {
+class Color;
+class ColorSet;
+}
 }
 namespace Glib { class ustring; }
+
+using Inkscape::Colors::Color;
 
 enum { // what kind of a style the query is returning
     QUERY_STYLE_NOTHING,   // nothing was queried - e.g. no selection
@@ -65,14 +72,14 @@ enum { // which property was queried (add when you need more)
 };
 
 void sp_desktop_apply_css_recursive(SPObject *o, SPCSSAttr *css, bool skip_lines);
-void sp_desktop_set_color(SPDesktop *desktop, ColorRGBA const &color, bool is_relative, bool fill);
+void sp_desktop_set_color(SPDesktop *desktop, Color const &color, bool is_relative, bool fill);
 void sp_desktop_set_style(Inkscape::ObjectSet *set, SPDesktop *desktop, SPCSSAttr *css, bool change = true, bool write_current = true, bool switch_style = false);
 void sp_desktop_set_style(SPDesktop *desktop, SPCSSAttr *css, bool change = true, bool write_current = true, bool switch_style = false);
 SPCSSAttr *sp_desktop_get_style(SPDesktop *desktop, bool with_text);
-guint32 sp_desktop_get_color (SPDesktop *desktop, bool is_fill);
 double sp_desktop_get_master_opacity_tool(SPDesktop *desktop, Glib::ustring const &tool, bool* has_opacity = nullptr);
 double sp_desktop_get_opacity_tool(SPDesktop *desktop, Glib::ustring const &tool, bool is_fill);
-guint32 sp_desktop_get_color_tool(SPDesktop *desktop, Glib::ustring const &tool, bool is_fill, bool* has_color = nullptr);
+std::optional<Color> sp_desktop_get_color (SPDesktop *desktop, bool is_fill);
+std::optional<Color> sp_desktop_get_color_tool(SPDesktop *desktop, Glib::ustring const &tool, bool is_fill);
 double sp_desktop_get_font_size_tool (SPDesktop *desktop);
 void sp_desktop_apply_style_tool(SPDesktop *desktop, Inkscape::XML::Node *repr, Glib::ustring const &tool, bool with_text);
 

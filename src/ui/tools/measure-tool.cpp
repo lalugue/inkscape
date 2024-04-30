@@ -22,6 +22,7 @@
 #include <2geom/line.h>
 #include <2geom/path-intersection.h>
 
+#include "colors/utils.h"
 #include "desktop-style.h"
 #include "desktop.h"
 #include "document-undo.h"
@@ -44,7 +45,6 @@
 #include "object/sp-shape.h"
 #include "object/sp-text.h"
 
-#include "svg/svg-color.h"
 #include "svg/svg.h"
 
 #include "ui/dialog/knot-properties.h"
@@ -854,10 +854,8 @@ void MeasureTool::setLabelText(Glib::ustring const &value, Geom::Point pos, doub
         /* Create <rect> */
         Inkscape::XML::Node *rrect = xml_doc->createElement("svg:rect");
         SPCSSAttr *css = sp_repr_css_attr_new ();
-        gchar color_line[64];
-        sp_svg_write_color (color_line, sizeof(color_line), background);
-        sp_repr_css_set_property (css, "fill", color_line);
-        sp_repr_css_set_property (css, "fill-opacity", "0.5");
+        sp_repr_css_set_property_string(css, "fill", Inkscape::Colors::rgba_to_hex(background));
+        sp_repr_css_set_property_double(css, "fill-opacity", 0.5);
         sp_repr_css_set_property (css, "stroke-width", "0");
         Glib::ustring css_str;
         sp_repr_css_write_string(css,css_str);
@@ -1331,13 +1329,7 @@ void MeasureTool::setMeasureItem(Geom::PathVector pathv, bool is_curve, bool mar
     }
     sp_repr_css_set_property (css, "stroke-width", stroke_width.str().c_str());
     sp_repr_css_set_property (css, "fill", "none");
-    if(color) {
-        char color_line[64];
-        sp_svg_write_color (color_line, sizeof(color_line), color);
-        sp_repr_css_set_property (css, "stroke", color_line);
-    } else {
-        sp_repr_css_set_property (css, "stroke", "#ff0000");
-    }
+    sp_repr_css_set_property_string(css, "stroke", color ? Inkscape::Colors::rgba_to_hex(color) : "#ff0000");
     char const * stroke_linecap = is_curve ? "butt" : "square";
     sp_repr_css_set_property (css, "stroke-linecap", stroke_linecap);
     sp_repr_css_set_property (css, "stroke-linejoin", "miter");

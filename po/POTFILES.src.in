@@ -41,7 +41,6 @@ ${_build_dir}/share/templates/templates.h
 ../src/actions/actions-view-window.cpp
 ../src/actions/actions-window.cpp
 ../src/auto-save.cpp
-../src/color/cms-util.cpp
 ../src/colors/spaces/components.cpp
 ../src/context-fns.cpp
 ../src/desktop-events.cpp
@@ -392,7 +391,6 @@ ${_build_dir}/share/templates/templates.h
 ../src/ui/util.cpp
 ../src/ui/widget/canvas-grid.cpp
 ../src/ui/widget/color-entry.cpp
-../src/ui/widget/color-icc-selector.cpp
 ../src/ui/widget/color-notebook.cpp
 ../src/ui/widget/color-palette.cpp
 ../src/ui/widget/color-scales.cpp
@@ -432,5 +430,4 @@ ${_build_dir}/share/templates/templates.h
 ../src/util/font-collections.h
 ../src/util/paper.cpp
 ../src/vanishing-point.cpp
-../src/widgets/paintdef.cpp
 ../src/widgets/sp-attribute-widget.cpp

@@ -17,7 +17,8 @@
 #include <gtkmm/drawingarea.h>
 
 #include "display/cairo-utils.h"
-#include "hsluv.h"
+#include "colors/color.h"
+#include "colors/spaces/enum.h"
 
 namespace Inkscape::UI::Widget {
 
@@ -62,14 +63,12 @@ void ColorPreview::draw_func(Cairo::RefPtr<Cairo::Context> const &cr,
     cairo_pattern_t *checkers = ink_cairo_pattern_create_checkerboard();
     cairo_set_source(cr->cobj(), checkers);
     cr->fill_preserve();
-    auto color = _rgba;
+    auto color = Colors::Color(_rgba);
     // if preview is disabled render colors in gray
     if (!_enabled) {
-        auto l = Hsluv::rgb_to_perceptual_lightness(Hsluv::Triplet{SP_RGBA32_R_F(color), SP_RGBA32_G_F(color), SP_RGBA32_B_F(color)});
-        l = Hsluv::from_linear(l);
-        color = SP_RGBA32_F_COMPOSE(l, l, l, (color & 0xff) / 255.0);
+        color.convert(Colors::Space::Type::Gray);
     }
-    ink_cairo_set_source_rgba32(cr->cobj(), color);
+    ink_cairo_set_source_color(cr, color);
     cr->fill();
     cairo_pattern_destroy(checkers);
 
@@ -81,7 +80,8 @@ void ColorPreview::draw_func(Cairo::RefPtr<Cairo::Context> const &cr,
     cairo_line_to(cr->cobj(), x, height);
     cairo_line_to(cr->cobj(), x, y);
     cairo_close_path (cr->cobj());
-    ink_cairo_set_source_rgba32(cr->cobj(), color | 0xff);
+    color.enableOpacity(false);
+    ink_cairo_set_source_color(cr, color);
     cr->fill();
 }
 

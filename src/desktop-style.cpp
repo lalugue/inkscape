@@ -20,7 +20,8 @@
 
 #include "desktop-style.h"
 
-#include "color-rgba.h"
+#include "colors/color.h"
+#include "colors/color-set.h"
 #include "desktop.h"
 #include "filter-chemistry.h"
 #include "inkscape.h"
@@ -47,7 +48,6 @@
 #include "style.h"
 
 #include "svg/css-ostringstream.h"
-#include "svg/svg-color.h"
 #include "svg/svg.h"
 
 #include "ui/tools/tool-base.h"
@@ -72,7 +72,7 @@ static bool isTextualItem(SPObject const *obj)
  * Set color on selection on desktop.
  */
 void
-sp_desktop_set_color(SPDesktop *desktop, ColorRGBA const &color, bool is_relative, bool fill)
+sp_desktop_set_color(SPDesktop *desktop, Color const &color, bool is_relative, bool fill)
 {
     /// \todo relative color setting
     if (is_relative) {
@@ -80,22 +80,9 @@ sp_desktop_set_color(SPDesktop *desktop, ColorRGBA const &color, bool is_relativ
         return;
     }
 
-    guint32 rgba = SP_RGBA32_F_COMPOSE(color[0], color[1], color[2], color[3]);
-    gchar b[64];
-    sp_svg_write_color(b, sizeof(b), rgba);
     SPCSSAttr *css = sp_repr_css_attr_new();
-    if (fill) {
-        sp_repr_css_set_property(css, "fill", b);
-        Inkscape::CSSOStringStream osalpha;
-        osalpha << color[3];
-        sp_repr_css_set_property(css, "fill-opacity", osalpha.str().c_str());
-    } else {
-        sp_repr_css_set_property(css, "stroke", b);
-        Inkscape::CSSOStringStream osalpha;
-        osalpha << color[3];
-        sp_repr_css_set_property(css, "stroke-opacity", osalpha.str().c_str());
-    }
-
+    sp_repr_css_set_property_string(css, fill ? "fill" : "stroke", color.toString(false));
+    sp_repr_css_set_property_double(css, fill ? "fill-opacity" : "stroke-opacity", color.getOpacity());
     sp_desktop_set_style(desktop, css);
 
     sp_repr_css_attr_unref(css);
@@ -286,22 +273,15 @@ sp_desktop_get_style(SPDesktop *desktop, bool with_text)
 /**
  * Return the desktop's current color.
  */
-guint32
+std::optional<Color>
 sp_desktop_get_color(SPDesktop *desktop, bool is_fill)
 {
-    guint32 r = 0; // if there's no color, return black
     gchar const *property = sp_repr_css_property(desktop->current,
                                                  is_fill ? "fill" : "stroke",
                                                  "#000");
 
-    if (desktop->current && property) { // if there is style and the property in it,
-        if (strncmp(property, "url", 3)) { // and if it's not url,
-            // read it
-            r = sp_svg_read_color(property, r);
-        }
-    }
-
-    return r;
+    // if there is style and the property in it,
+    return Color::parse(desktop->current ? property : nullptr);
 }
 
 double
@@ -362,14 +342,11 @@ sp_desktop_get_opacity_tool(SPDesktop *desktop, Glib::ustring const &tool, bool 
     return value;
 }
 
-guint32
-sp_desktop_get_color_tool(SPDesktop *desktop, Glib::ustring const &tool, bool is_fill, bool *has_color)
+std::optional<Color>
+sp_desktop_get_color_tool(SPDesktop *desktop, Glib::ustring const &tool, bool is_fill)
 {
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
     SPCSSAttr *css = nullptr;
-    guint32 r = 0; // if there's no color, return black
-    if (has_color)
-        *has_color = false;
     bool styleFromCurrent = prefs->getBool(tool + "/usecurrent");
     if (styleFromCurrent) {
         css = sp_desktop_get_style(desktop, true);
@@ -378,22 +355,14 @@ sp_desktop_get_color_tool(SPDesktop *desktop, Glib::ustring const &tool, bool is
         Inkscape::GC::anchor(css);
     }
 
+    std::optional<Color> ret;
     if (css) {
         gchar const *property = sp_repr_css_property(css, is_fill ? "fill" : "stroke", "#000");
-
-        if (desktop->current && property) { // if there is style and the property in it,
-            if (strncmp(property, "url", 3) && strncmp(property, "none", 4)) { // and if it's not url or none,
-                // read it
-                r = sp_svg_read_color(property, r);
-                if (has_color)
-                    *has_color = true;
-            }
-        }
-
+        // if there is style and the property in it,
+        ret = Color::parse(desktop->current ? property : nullptr);
         sp_repr_css_attr_unref(css);
     }
-
-    return r | 0xff;
+    return ret;
 }
 
 /**
@@ -496,19 +465,10 @@ objects_query_fillstroke (const std::vector<SPItem*> &objects, SPStyle *style_re
     }
 
     SPIPaint *paint_res = style_res->getFillOrStroke(isfill);
-    bool paintImpossible = true;
     paint_res->set = true;
 
-    std::optional<SPColor> iccColor;
-
-    bool iccSeen = false;
-    gfloat c[4];
-    c[0] = c[1] = c[2] = c[3] = 0.0;
-    gint num = 0;
-
-    gfloat prev[3];
-    prev[0] = prev[1] = prev[2] = 0.0;
-    bool same_color = true;
+    bool paintImpossible = true;
+    Colors::ColorSet colors;
 
     for (auto obj : objects) {
         if (!obj) {
@@ -598,44 +558,18 @@ objects_query_fillstroke (const std::vector<SPItem*> &objects, SPStyle *style_re
         }
 
         // 2. Sum color, copy server from paint to paint_res
+        if (paint_res->set && paint->isColor()) {
+            auto copy = paint->getColor();
+            copy.addOpacity(isfill ? style->fill_opacity : style->stroke_opacity);
 
-        if (paint_res->set && paint_effectively_set && paint->isColor()) {
-            gfloat d[3];
-            paint->value.color.get_rgb_floatv(d);
-
-            // Check if this color is the same as previous
-            if (paintImpossible) {
-                prev[0] = d[0];
-                prev[1] = d[1];
-                prev[2] = d[2];
-                paint_res->setColor(d[0], d[1], d[2]);
-                if (paint->value.color.hasColors()) {
-                    iccColor.emplace(paint->value.color);
-                    iccSeen = true;
-                }
-            } else {
-                if (same_color && (prev[0] != d[0] || prev[1] != d[1] || prev[2] != d[2])) {
-                    same_color = false;
-                    iccColor.reset();
-                }
-                if (iccSeen && iccColor && *iccColor != paint->value.color) {
-                    // We can't yet blend together two icc based colors.
-                    same_color = false;
-                    iccColor.reset();
-                }
+            if (colors.isEmpty()) {
+                paint_res->setColor(copy);
             }
-
-            // average color
-            c[0] += d[0];
-            c[1] += d[1];
-            c[2] += d[2];
-            c[3] += SP_SCALE24_TO_FLOAT (isfill? style->fill_opacity.value : style->stroke_opacity.value);
-
-            num ++;
+            // Remove colors from this list somehow?
+            colors.set(obj->getId(), copy);
         }
 
        paintImpossible = false;
-       paint_res->colorSet = paint->colorSet;
        paint_res->paintOrigin = paint->paintOrigin;
        if (paint_res->set && paint_effectively_set && paint->isPaintserver()) { // copy the server
            if (isfill) {
@@ -648,27 +582,17 @@ objects_query_fillstroke (const std::vector<SPItem*> &objects, SPStyle *style_re
        style_res->fill_rule.computed = style->fill_rule.computed; // no averaging on this, just use the last one
     }
 
-    // After all objects processed, divide the color if necessary and return
-    if (paint_res->set && paint_res->isColor()) { // set the color
-        g_assert (num >= 1);
-
-        c[0] /= num;
-        c[1] /= num;
-        c[2] /= num;
-        c[3] /= num;
-        paint_res->setColor(c[0], c[1], c[2]);
+    if (paint_res->set && paint_res->isColor() && !colors.isEmpty()) {
+        auto color = colors.getAverage();
         if (isfill) {
-            style_res->fill_opacity.value = SP_SCALE24_FROM_FLOAT (c[3]);
+            style_res->fill_opacity.set_double(color.stealOpacity());
         } else {
-            style_res->stroke_opacity.value = SP_SCALE24_FROM_FLOAT (c[3]);
+            style_res->stroke_opacity.set_double(color.stealOpacity());
         }
+        paint_res->setColor(color);
 
-        if (iccSeen && iccColor) {
-            paint_res->value.color.copyColors(*iccColor);
-        }
-
-        if (num > 1) {
-            if (same_color)
+        if (colors.size() > 1) {
+            if (colors.isSame())
                 return QUERY_STYLE_MULTIPLE_SAME;
             else
                 return QUERY_STYLE_MULTIPLE_AVERAGED;

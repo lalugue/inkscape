@@ -11,11 +11,11 @@
 #define SEEN_SP_SWATCH_SELECTOR_H
 
 #include <gtkmm/box.h>
-#include "ui/selected-color.h"
+
+#include "colors/color-set.h"
 
 class SPDocument;
 class SPGradient;
-struct SPColorSelector;
 
 namespace Inkscape {
 namespace UI {
@@ -35,7 +35,7 @@ private:
     void _changedCb();
 
     GradientSelector *_gsel = nullptr;
-    Inkscape::UI::SelectedColor _selected_color;
+    std::shared_ptr<Colors::ColorSet> _colors;
     bool _updating_color = false;
 };
 

@@ -13,12 +13,11 @@
 #include "canvas-page.h"
 #include "canvas-item-rect.h"
 #include "canvas-item-text.h"
-#include "color.h"
+#include "colors/utils.h"
 
 namespace Inkscape {
 
 CanvasPage::CanvasPage() = default;
-
 CanvasPage::~CanvasPage() = default;
 
 /**
@@ -47,7 +46,7 @@ void CanvasPage::add(Geom::Rect size, CanvasItemGroup *background_group, CanvasI
         item->set_name("margin");
         item->set_dashed(false);
         item->set_inverted(false);
-        item->set_stroke(_margin_color);
+        item->set_stroke(_margin_color.toRGBA());
         canvas_items.emplace_back(item);
     }
 
@@ -55,7 +54,7 @@ void CanvasPage::add(Geom::Rect size, CanvasItemGroup *background_group, CanvasI
         item->set_name("bleed");
         item->set_dashed(false);
         item->set_inverted(false);
-        item->set_stroke(_bleed_color);
+        item->set_stroke(_bleed_color.toRGBA());
         canvas_items.emplace_back(item);
     }
 
@@ -112,11 +111,11 @@ void CanvasPage::update(Geom::Rect size, Geom::OptRect margin, Geom::OptRect ble
 {
     // Put these in the preferences?
     bool border_on_top = _border_on_top;
-    guint32 shadow_color = _border_color; // there's no separate shadow color in the UI, border color is used
+    guint32 shadow_color = _border_color.toRGBA(); // there's no separate shadow color in the UI, border color is used
     guint32 select_color = 0x000000cc;
-    guint32 border_color = _border_color;
-    guint32 margin_color = _margin_color;
-    guint32 bleed_color = _bleed_color;
+    guint32 border_color = _border_color.toRGBA();
+    guint32 margin_color = _margin_color.toRGBA();
+    guint32 bleed_color = _bleed_color.toRGBA();
 
     // This is used when showing the viewport as *not a page* it's mostly
     // never used as the first page is normally the viewport too.
@@ -171,7 +170,7 @@ void CanvasPage::update(Geom::Rect size, Geom::OptRect margin, Geom::OptRect ble
                     rect->set_background(_background_color | 0xff);
                 }
 */
-                rect->set_fill(_background_color);
+                rect->set_fill(_background_color.toRGBA());
                 rect->set_shadow(shadow_color, _shadow_size);
             } else {
                 rect->set_fill(0x0);
@@ -198,8 +197,7 @@ void CanvasPage::_updateTextItem(CanvasItemText *label, Geom::Rect page, std::st
     double radius = 0.2;
 
     // Change the colors for whiter/lighter backgrounds
-    unsigned char luminance = SP_RGBA32_LUMINANCE(_canvas_color);
-    if (luminance < 0x88) {
+    if (Colors::get_perceptual_lightness(_canvas_color) < 0.5) {
         foreground = 0x000000ff;
         background = 0xffffff99;
         selected = 0x50afe7ff;
@@ -246,9 +244,9 @@ bool CanvasPage::setShadow(int shadow)
     return false;
 }
 
-bool CanvasPage::setPageColor(uint32_t border, uint32_t bg, uint32_t canvas, uint32_t margin, uint32_t bleed)
+bool CanvasPage::setPageColor(Color const &border, Color const &bg, Color const &canvas, Color const &margin, Color const &bleed)
 {
-    if (border != _border_color || bg != _background_color || canvas != _canvas_color) {
+    if (std::tie(border, bg, canvas, margin, bleed) != std::tie(_border_color, _background_color, _canvas_color, _margin_color, _bleed_color)) {
         _border_color = border;
         _background_color = bg;
         _canvas_color = canvas;

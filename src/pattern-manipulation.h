@@ -10,6 +10,10 @@
 class SPDocument;
 class SPPattern;
 
+namespace Inkscape::Colors {
+class Color;
+}
+
 // Find and load stock patterns if not yet loaded and return them.
 // Their lifetime is bound to StockPaintDocuments.
 std::vector<SPDocument *> sp_get_stock_patterns();
@@ -22,7 +26,7 @@ std::vector<SPPattern*> sp_get_pattern_list(SPDocument* source);
 // Set fill color for a pattern.
 // If elements comprising pattern have no fill, they will inherit it.
 // Some patterns may not be affected at all if not designed to support color change.
-void sp_pattern_set_color(SPPattern* pattern, unsigned int color);
+void sp_pattern_set_color(SPPattern* pattern, Inkscape::Colors::Color const &color);
 
 // Set 'patternTransform' attribute
 void sp_pattern_set_transform(SPPattern* pattern, const Geom::Affine& transform);

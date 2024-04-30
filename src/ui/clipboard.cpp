@@ -34,6 +34,7 @@
 
 // TODO: reduce header bloat if possible
 
+#include "colors/manager.h"
 #include "context-fns.h"
 #include "desktop-style.h" // for sp_desktop_set_style, used in _pasteStyle
 #include "desktop.h"
@@ -82,7 +83,6 @@
 #include "object/sp-textpath.h"
 #include "object/sp-use.h"
 #include "svg/css-ostringstream.h" // used in copy
-#include "svg/svg-color.h"
 #include "svg/svg.h" // for sp_svg_transform_write, used in _copySelection
 #include "text-chemistry.h"
 #include "ui/tool/control-point-selection.h"
@@ -234,7 +234,7 @@ private:
     Glib::ustring _getBestTarget(SPDesktop *desktop = nullptr);
     void _registerSerializers();
     void _setClipboardTargets();
-    void _setClipboardColor(uint32_t);
+    void _setClipboardColor(Colors::Color const &color);
     void _userWarn(SPDesktop *, char const *);
 
     // private properties
@@ -281,7 +281,7 @@ void ClipboardManagerImpl::copy(ObjectSet *set)
         if (auto const drag = desktop->getTool()->get_drag();
             drag && drag->hasSelection())
         {
-            guint32 col = drag->getColor();
+            Color col = drag->getColor();
 
             // set the color as clipboard content (text in RRGGBBAA format)
             _setClipboardColor(col);
@@ -294,16 +294,8 @@ void ClipboardManagerImpl::copy(ObjectSet *set)
             }
             _text_style = sp_repr_css_attr_new();
             // print and set properties
-            gchar color_str[16];
-            g_snprintf(color_str, 16, "#%06x", col >> 8);
-            sp_repr_css_set_property(_text_style, "fill", color_str);
-            float opacity = SP_RGBA32_A_F(col);
-            if (opacity > 1.0) {
-                opacity = 1.0; // safeguard
-            }
-            Inkscape::CSSOStringStream opcss;
-            opcss << opacity;
-            sp_repr_css_set_property(_text_style, "opacity", opcss.str().data());
+            sp_repr_css_set_property_string(_text_style, "fill", col.toString(false));
+            sp_repr_css_set_property_double(_text_style, "opacity", col.getOpacity());
 
             _discardInternalClipboard();
             return;
@@ -311,7 +303,7 @@ void ClipboardManagerImpl::copy(ObjectSet *set)
 
         // Special case for when the color picker ("dropper") is active - copies color under cursor
         if (auto const dt = dynamic_cast<Tools::DropperTool const *>(desktop->getTool())) {
-            _setClipboardColor(dt->get_color(false, true));
+            _setClipboardColor(*dt->get_color(false, true));
             _discardInternalClipboard();
             return;
         }
@@ -1547,12 +1539,10 @@ bool ClipboardManagerImpl::_pasteText(SPDesktop *desktop)
 
     if (clip_text.length() < 30) {
         // Zero makes it impossible to paste a 100% transparent black, but it's useful.
-        auto const rgb0 = sp_svg_read_color(clip_text.c_str(), 0x0);
-        if (rgb0) {
+        if (auto color = Colors::Color::parse(clip_text)) {
             auto color_css = sp_repr_css_attr_new();
-            sp_repr_css_set_property(color_css, "fill", SPColor(rgb0).toString().c_str());
-            // In the future this could parse opacity, but sp_svg_read_color lacks this.
-            sp_repr_css_set_property(color_css, "fill-opacity", "1.0");
+            sp_repr_css_set_property_string(color_css, "fill", color->toString(false));
+            sp_repr_css_set_property_double(color_css, "fill-opacity", color->getOpacity());
             sp_desktop_set_style(desktop, color_css);
             sp_repr_css_attr_unref(color_css);
             return true;
@@ -1769,14 +1759,6 @@ void ClipboardManagerImpl::_onGet(char const *mime_type, Glib::RefPtr<Gio::Outpu
             auto height = static_cast<unsigned long>(area.height() + 0.5);
 
             // read from namedview
-            Inkscape::XML::Node *nv = _clipboardSPDoc->getReprNamedView();
-            if (nv && nv->attribute("pagecolor")) {
-                bgcolor = sp_svg_read_color(nv->attribute("pagecolor"), 0xffffff00);
-            }
-            if (nv && nv->attribute("inkscape:pageopacity")) {
-                double opacity = nv->getAttributeDouble("inkscape:pageopacity", 1.0);
-                bgcolor |= SP_COLOR_F_TO_U(opacity);
-            }
             auto const raster_file = get_tmp_filename("inkscape-clipboard-export-raster");
             sp_export_png_file(_clipboardSPDoc.get(), raster_file.c_str(), area, width, height, dpi, dpi, bgcolor, nullptr, nullptr, true, {});
             (*out)->export_raster(_clipboardSPDoc.get(), raster_file.c_str(), filename.c_str(), true);
@@ -2034,11 +2016,9 @@ void ClipboardManagerImpl::_setClipboardTargets()
 /**
  * Set the string representation of a 32-bit RGBA color as the clipboard contents.
  */
-void ClipboardManagerImpl::_setClipboardColor(uint32_t color)
+void ClipboardManagerImpl::_setClipboardColor(Colors::Color const &color)
 {
-    char colorstr[16];
-    g_snprintf(colorstr, 16, "%08x", color);
-    _clipboard->set_text(colorstr);
+    _clipboard->set_text(color.toString());
 }
 
 /**

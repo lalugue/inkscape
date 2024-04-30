@@ -3,8 +3,8 @@
 #include <glibmm/fileutils.h>
 #include <glibmm/i18n.h>
 #include "pattern-manipulation.h"
+#include "colors/color.h"
 #include "document.h"
-#include "color.h"
 #include "helper/stock-items.h"
 #include "object/sp-pattern.h"
 #include "xml/repr.h"
@@ -34,12 +34,12 @@ std::vector<SPPattern*> sp_get_pattern_list(SPDocument* source) {
     return list;
 }
 
-void sp_pattern_set_color(SPPattern* pattern, unsigned int color) {
+void sp_pattern_set_color(SPPattern* pattern, Inkscape::Colors::Color const &c)
+{
     if (!pattern) return;
 
-    SPColor c(color);
     SPCSSAttr* css = sp_repr_css_attr_new();
-    sp_repr_css_set_property(css, "fill", c.toString().c_str());
+    sp_repr_css_set_property_string(css, "fill", c.toString());
     pattern->changeCSS(css, "style");
     sp_repr_css_attr_unref(css);
 }

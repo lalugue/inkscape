@@ -10,9 +10,9 @@
 
 #include <optional>
 #include <2geom/transforms.h>
+#include "colors/color.h"
 #include <giomm/liststore.h>
 #include <gtkmm/widget.h>
-#include "color.h"
 #include "ui/filtered-store.h"
 
 class SPDocument;
@@ -32,7 +32,7 @@ public:
     bool uniform_scale = false;
     Geom::Affine transform;
     Geom::Point offset;
-    std::optional<SPColor> color;
+    std::optional<Inkscape::Colors::Color> color;
     Geom::Scale gap;
     SPDocument* collection = nullptr;
 

@@ -60,7 +60,8 @@
 #include <memory>
 #include <string>
 
-#include "color.h"
+#include "colors/color.h"
+#include "colors/color-set.h"
 #include "desktop.h"
 #include "document-undo.h"
 #include "helper/choose-file.h"
@@ -629,27 +630,24 @@ Cairo::RefPtr<Cairo::Surface> render_color(uint32_t rgb, double size, double rad
     return add_background_to_image(nul, rgb, size / 2, radius, device_scale, 0x7f7f7f00);
 }
 
-void collect_object_colors(SPObject& obj, std::map<std::string, SPColor>& colors) {
+void collect_object_colors(SPObject& obj, Colors::ColorSet &colors) {
     auto style = obj.style;
 
-    if (style->stroke.set && style->stroke.colorSet) {
-        const auto& c = style->stroke.value.color;
-        colors[c.toString()] = c;
-    }
+    auto add = [&colors](Colors::Color const &c) {
+        colors.set(c.toString(), c);
+    };
 
+    if (style->stroke.set && style->stroke.isColor()) {
+        add(style->stroke.getColor());
+    }
     if (style->color.set) {
-        const auto& c = style->color.value.color;
-        colors[c.toString()] = c;
+        add(style->color.getColor());
     }
-
     if (style->fill.set) {
-        const auto& c = style->fill.value.color;
-        colors[c.toString()] = c;
+        add(style->fill.getColor());
     }
-
     if (style->solid_color.set) {
-        const auto& c = style->solid_color.value.color;
-        colors[c.toString()] = c;
+        add(style->solid_color.getColor());
     }
 }
 
@@ -666,12 +664,10 @@ void apply_visitor(SPObject& object, V&& visitor) {
     }
 }
 
-std::map<std::string, SPColor> collect_colors(SPObject* object) {
-    std::map<std::string, SPColor> colors;
+void collect_colors(SPObject* object, Colors::ColorSet &colors) {
     if (object) {
         apply_visitor(*object, [&](SPObject& obj){ collect_object_colors(obj, colors); });
     }
-    return colors;
 }
 
 void collect_used_fonts(SPObject& object, std::set<std::string>& fonts) {
@@ -758,7 +754,7 @@ details::Statistics collect_statistics(SPObject* root) {
         return stats;
     }
 
-    std::map<std::string, SPColor> colors;
+    Colors::ColorSet colors;
     std::set<std::string> fonts;
 
     apply_visitor(*root, [&](SPObject& obj){
@@ -929,12 +925,12 @@ void DocumentResources::selectionModified(Inkscape::Selection* selection, unsign
 auto get_id = [](const SPObject* object) { auto id = object->getId(); return id ? id : ""; };
 auto label_fmt = [](const char* label, const Glib::ustring& id) { return label && *label ? label : '#' + id; };
 
-void add_colors(Glib::RefPtr<Gio::ListStoreBase>& item_store, const std::map<std::string, SPColor>& colors, int device_scale) {
+void add_colors(Glib::RefPtr<Gio::ListStoreBase>& item_store, Colors::ColorSet const &colors, int device_scale) {
     for (auto&& it : colors) {
         const auto& color = it.second;
 
         Glib::ustring name = color.toString();
-        auto rgba32 = color.toRGBA32(0xff);
+        auto rgba32 = color.toRGBA(0xff);
         auto rgb24 = rgba32 >> 8;
 
         int size = 20;
@@ -1124,12 +1120,15 @@ void DocumentResources::refresh_page(const Glib::ustring& id) {
 
     switch (rsrc) {
     case Colors:
-        add_colors(_item_store, collect_colors(root), device_scale);
-        item_width = 70;
-        items_selectable = false; // to do: make selectable?
-        can_extract = true;
-        break;
-
+        {
+            Colors::ColorSet colors;
+            collect_colors(root, colors);
+            add_colors(_item_store, colors, device_scale);
+            item_width = 70;
+            items_selectable = false; // to do: make selectable?
+            can_extract = true;
+            break;
+        }
     case Symbols:
         {
             auto opt = object_renderer::options();

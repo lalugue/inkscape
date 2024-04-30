@@ -20,17 +20,16 @@ namespace Inkscape {
 namespace UI {
 namespace Widget {
 
-ColorEntry::ColorEntry(SelectedColor &color)
-    : _color(color)
+ColorEntry::ColorEntry(std::shared_ptr<Colors::ColorSet> colors)
+    : _colors(std::move(colors))
     , _updating(false)
     , _updatingrgba(false)
     , _prevpos(0)
-    , _lastcolor(0)
+    , _lastcolor()
 {
     set_name("ColorEntry");
 
-    _color_changed_connection = color.signal_changed.connect(sigc::mem_fun(*this, &ColorEntry::_onColorChanged));
-    _color_dragged_connection = color.signal_dragged.connect(sigc::mem_fun(*this, &ColorEntry::_onColorChanged));
+    _color_changed_connection = _colors->signal_changed.connect(sigc::mem_fun(*this, &ColorEntry::_onColorChanged));
     signal_activate().connect(sigc::mem_fun(*this, &ColorEntry::_onColorChanged));
     get_buffer()->signal_inserted_text().connect(sigc::mem_fun(*this, &ColorEntry::_inputCheck));
     _onColorChanged();
@@ -44,7 +43,6 @@ ColorEntry::ColorEntry(SelectedColor &color)
 ColorEntry::~ColorEntry()
 {
     _color_changed_connection.disconnect();
-    _color_dragged_connection.disconnect();
 }
 
 void ColorEntry::_inputCheck(guint pos, const gchar * /*chars*/, guint n_chars)
@@ -56,74 +54,17 @@ void ColorEntry::_inputCheck(guint pos, const gchar * /*chars*/, guint n_chars)
 
 void ColorEntry::on_changed()
 {
-    if (_updating) {
+    if (_updating || _updatingrgba) {
         return;
     }
-    if (_updatingrgba) {
-        return;  // Typing text into entry box
-    }
 
-    Glib::ustring text = get_text();
-    bool changed = false;
-
-    // Coerce the value format to hexadecimal
-    for (auto it = text.begin(); it != text.end(); /*++it*/) {
-        if (!g_ascii_isxdigit(*it)) {
-            text.erase(it);
-            changed = true;
-        } else {
-            ++it;
-        }
-    }
-
-    if (text.size() > 8) {
-        text.erase(_prevpos, 1);
-        changed = true;
-    }
-
-    // autofill rules
-    gchar *str = g_strdup(text.c_str());
-    gchar *end = nullptr;
-    guint64 rgba = g_ascii_strtoull(str, &end, 16);
-    ptrdiff_t len = end - str;
-    if (len < 8) {
-        if (len == 0) {
-            rgba = _lastcolor;
-        } else if (len <= 2) {
-            if (len == 1) {
-                rgba *= 17;
-            }
-            rgba = (rgba << 24) + (rgba << 16) + (rgba << 8);
-        } else if (len <= 4) {
-            // display as rrggbbaa
-            rgba = rgba << (4 * (4 - len));
-            guint64 r = rgba & 0xf000;
-            guint64 g = rgba & 0x0f00;
-            guint64 b = rgba & 0x00f0;
-            guint64 a = rgba & 0x000f;
-            rgba = 17 * ((r << 12) + (g << 8) + (b << 4) + a);
-        } else {
-            rgba = rgba << (4 * (8 - len));
-        }
-
-        if (len == 7) {
-            rgba = (rgba & 0xfffffff0) + (_lastcolor & 0x00f);
-        } else if (len == 5) {
-            rgba = (rgba & 0xfffff000) + (_lastcolor & 0xfff);
-        } else if (len != 4 && len != 8) {
-            rgba = (rgba & 0xffffff00) + (_lastcolor & 0x0ff);
-        }
-    }
+    auto new_color = Colors::Color::parse(get_text());
 
     _updatingrgba = true;
-    if (changed) {
-        set_text(str);
+    if (new_color) {
+        _colors->setAll(*new_color);
     }
-    SPColor color(rgba);
-    _color.setColorAlpha(color, SP_RGBA32_A_F(rgba));
     _updatingrgba = false;
-
-    g_free(str);
 }
 
 
@@ -133,14 +74,15 @@ void ColorEntry::_onColorChanged()
         return;
     }
 
-    SPColor color = _color.color();
-    gdouble alpha = _color.alpha();
+    if (_colors->isEmpty()) {
+        set_text(_("N/A"));
+        return;
+    }
 
-    _lastcolor = color.toRGBA32(alpha);
+    _lastcolor = _colors->getAverage();;
+    auto text = _lastcolor->toString();
 
-    auto text = Inkscape::ustring::format_classic(std::hex, std::setw(8), std::setfill('0'), _lastcolor);
-
-    Glib::ustring old_text = get_text();
+    std::string old_text = get_text();
     if (old_text != text) {
         _updating = true;
         set_text(text);

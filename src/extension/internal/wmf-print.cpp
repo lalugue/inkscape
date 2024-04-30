@@ -235,7 +235,7 @@ unsigned int PrintWmf::begin(Inkscape::Extension::Print *mod, SPDocument *doc)
         return -1;
     }
 
-    htextcolor_rgb[0] = htextcolor_rgb[1] = htextcolor_rgb[2] = 0.0;
+    htextcolor_rgb.reset();
     rec = U_WMRSETTEXTCOLOR_set(U_RGB(0, 0, 0));
     if (!rec || wmf_append((U_METARECORD *)rec, wt, U_REC_FREE)) {
         g_warning("Failed in PrintWmf::begin at U_WMRSETTEXTCOLOR_set");
@@ -327,7 +327,6 @@ unsigned int PrintWmf::finish(Inkscape::Extension::Print * /*mod*/)
 // fcolor is defined when gradients are being expanded, it is the color of one stripe or ring.
 int PrintWmf::create_brush(SPStyle const *style, U_COLORREF *fcolor)
 {
-    float         rgb[3];
     char         *rec;
     U_WLOGBRUSH   lb;
     uint32_t      brush, fmode;
@@ -365,12 +364,11 @@ int PrintWmf::create_brush(SPStyle const *style, U_COLORREF *fcolor)
                 opacity = 0.0;    // basically the same as no fill
             }
             */
-            style->fill.value.color.get_rgb_floatv(rgb);
-            hatchColor = U_RGB(255 * rgb[0], 255 * rgb[1], 255 * rgb[2]);
+            hatchColor = toColorRef(style->fill.getColor());
 
             fmode = style->fill_rule.computed == 0 ? U_WINDING : (style->fill_rule.computed == 2 ? U_ALTERNATE : U_ALTERNATE);
         } else if (is<SPPattern>(SP_STYLE_FILL_SERVER(style))) { // must be paint-server
-            SPPaintServer *paintserver = style->fill.value.href->getObject();
+            SPPaintServer *paintserver = style->fill.href->getObject();
             auto pat = cast<SPPattern>(paintserver);
             double dwidth  = pat->width();
             double dheight = pat->height();
@@ -396,7 +394,7 @@ int PrintWmf::create_brush(SPStyle const *style, U_COLORREF *fcolor)
             brushStyle = U_BS_HATCHED;
         } else if (is<SPGradient>(SP_STYLE_FILL_SERVER(style))) { // must be a gradient
             // currently we do not do anything with gradients, the code below just sets the color to the average of the stops
-            SPPaintServer *paintserver = style->fill.value.href->getObject();
+            SPPaintServer *paintserver = style->fill.href->getObject();
             SPLinearGradient *lg = nullptr;
             SPRadialGradient *rg = nullptr;
 
@@ -536,11 +534,9 @@ int PrintWmf::create_pen(SPStyle const *style, const Geom::Affine &transform)
     uint32_t linewidth = 1;
 
     if (style) {  // override some or all of the preceding
-        float rgb[3];
 
         // WMF does not support hatched, bitmap, or gradient pens, just set the color.
-        style->stroke.value.color.get_rgb_floatv(rgb);
-        penColor = U_RGB(255 * rgb[0], 255 * rgb[1], 255 * rgb[2]);
+        penColor = toColorRef(style->stroke.getColor());
 
         using Geom::X;
         using Geom::Y;
@@ -685,23 +681,17 @@ unsigned int PrintWmf::fill(
         */
         destroy_pen();  //this sets the NULL_PEN, otherwise gradient slices may display with boundaries, see longer explanation below
         Geom::Path cutter;
-        float      rgb[3];
         U_COLORREF wc, c1, c2;
         FillRule   frb = SPWR_to_LVFR((SPWindRule) style->fill_rule.computed);
         double     doff, doff_base, doff_range;
         double     divisions = 128.0;
         int        nstops;
         int        istop =     1;
-        float      opa;                     // opacity at stop
 
         SPRadialGradient *tg = (SPRadialGradient *)(gv.grad);   // linear/radial are the same here
         nstops = tg->vector.stops.size();
-        tg->vector.stops[0].color.get_rgb_floatv(rgb);
-        opa    = tg->vector.stops[0].opacity;
-        c1     = U_RGBA(255 * rgb[0], 255 * rgb[1], 255 * rgb[2], 255 * opa);
-        tg->vector.stops[nstops - 1].color.get_rgb_floatv(rgb);
-        opa    = tg->vector.stops[nstops - 1].opacity;
-        c2     = U_RGBA(255 * rgb[0], 255 * rgb[1], 255 * rgb[2], 255 * opa);
+        c1 = toColorRef(tg->vector.stops[0].color);
+        c2 = toColorRef(tg->vector.stops[nstops - 1].color);
 
         doff       = 0.0;
         doff_base  = 0.0;
@@ -729,9 +719,7 @@ unsigned int PrintWmf::fill(
             (void) create_brush(style, &wc);
             print_pathv(pathvr, fill_transform);
 
-            tg->vector.stops[istop].color.get_rgb_floatv(rgb);
-            opa = tg->vector.stops[istop].opacity;
-            c2 = U_RGBA(255 * rgb[0], 255 * rgb[1], 255 * rgb[2], 255 * opa);
+            c2 = toColorRef(tg->vector.stops[istop].color);
 
             for (start = 0.0; start < range; start += step, doff += 1. / divisions) {
                 stop = start + step + overlap;
@@ -754,9 +742,7 @@ unsigned int PrintWmf::fill(
                     doff_base  = doff_range;
                     doff_range = tg->vector.stops[istop].offset;  // next or last stop
                     c1 = c2;
-                    tg->vector.stops[istop].color.get_rgb_floatv(rgb);
-                    opa = tg->vector.stops[istop].opacity;
-                    c2 = U_RGBA(255 * rgb[0], 255 * rgb[1], 255 * rgb[2], 255 * opa);
+                    c2 = toColorRef(tg->vector.stops[istop].color);
                 }
             }
         } else if (gv.mode == DRAW_LINEAR_GRADIENT) {
@@ -783,9 +769,7 @@ unsigned int PrintWmf::fill(
             pathvr = sp_pathvector_boolop(pathvc, pathv, bool_op_inters, (FillRule) fill_nonZero, frb);
             print_pathv(pathvr, fill_transform);
 
-            tg->vector.stops[istop].color.get_rgb_floatv(rgb);
-            opa = tg->vector.stops[istop].opacity;
-            c2 = U_RGBA(255 * rgb[0], 255 * rgb[1], 255 * rgb[2], 255 * opa);
+            c2 = toColorRef(tg->vector.stops[istop].color);
 
             for (start = 0.0; start < range; start += step, doff += 1. / divisions) {
                 stop = start + step + overlap;
@@ -807,9 +791,7 @@ unsigned int PrintWmf::fill(
                     doff_base  = doff_range;
                     doff_range = tg->vector.stops[istop].offset;  // next or last stop
                     c1 = c2;
-                    tg->vector.stops[istop].color.get_rgb_floatv(rgb);
-                    opa = tg->vector.stops[istop].opacity;
-                    c2 = U_RGBA(255 * rgb[0], 255 * rgb[1], 255 * rgb[2], 255 * opa);
+                    c2 = toColorRef(tg->vector.stops[istop].color);
                 }
             }
         } else {
@@ -1476,12 +1458,11 @@ unsigned int PrintWmf::text(Inkscape::Extension::Print * /*mod*/, char const *te
         g_error("Fatal programming error in PrintWmf::text at wselectobject_set");
     }
 
-    float rgb[3];
-    style->fill.value.color.get_rgb_floatv(rgb);
+    auto rgb = style->fill.getColor();
     // only change the text color when it needs to be changed
-    if (memcmp(htextcolor_rgb, rgb, 3 * sizeof(float))) {
-        memcpy(htextcolor_rgb, rgb, 3 * sizeof(float));
-        rec = U_WMRSETTEXTCOLOR_set(U_RGB(255 * rgb[0], 255 * rgb[1], 255 * rgb[2]));
+    if (htextcolor_rgb != rgb) {
+        htextcolor_rgb = rgb;
+        rec = U_WMRSETTEXTCOLOR_set(toColorRef(rgb));
         if (!rec || wmf_append((U_METARECORD *)rec, wt, U_REC_FREE)) {
             g_error("Fatal programming error in PrintWmf::text at U_WMRSETTEXTCOLOR_set");
         }

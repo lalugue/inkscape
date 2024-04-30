@@ -396,15 +396,7 @@ Drawing::get_filter_text (Inkscape::Extension::Extension * ext)
     std::ostringstream blur;
     std::ostringstream bdilat;
     std::ostringstream berosion;
-    std::ostringstream strokea;
-    std::ostringstream stroker;
-    std::ostringstream strokeg;
-    std::ostringstream strokeb;
     std::ostringstream ios;
-    std::ostringstream filla;
-    std::ostringstream fillr;
-    std::ostringstream fillg;
-    std::ostringstream fillb;
     std::ostringstream iof;
 
     simply << ext->get_param_float("simply");
@@ -423,21 +415,13 @@ Drawing::get_filter_text (Inkscape::Extension::Extension * ext)
     bdilat << ext->get_param_float("bdilat");
     berosion << (- ext->get_param_float("berosion"));
 
-    guint32 fcolor = ext->get_param_color("fcolor");
-    fillr << ((fcolor >> 24) & 0xff);
-    fillg << ((fcolor >> 16) & 0xff);
-    fillb << ((fcolor >>  8) & 0xff);
-    filla << (fcolor & 0xff) / 255.0F;
+    auto fcolor = ext->get_param_color("fcolor");
     if (ext->get_param_bool("iof"))
         iof << "SourceGraphic";
     else
         iof << "flood3";
 
-    guint32 scolor = ext->get_param_color("scolor");
-    stroker << ((scolor >> 24) & 0xff);
-    strokeg << ((scolor >> 16) & 0xff);
-    strokeb << ((scolor >>  8) & 0xff);
-    strokea << (scolor & 0xff) / 255.0F;
+    auto scolor = ext->get_param_color("scolor");
     if (ext->get_param_bool("ios"))
         ios << "SourceGraphic";
     else
@@ -462,20 +446,20 @@ Drawing::get_filter_text (Inkscape::Extension::Extension * ext)
         "<feGaussianBlur stdDeviation=\"%s\" result=\"blur3\" />\n"
         "<feColorMatrix in=\"blur3\" values=\"0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -0.2125 -0.7154 -0.0721 1 0 \" result=\"color3\" />\n"
         "<feColorMatrix values=\"1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 %s %s \" result=\"color4\" />\n"
-        "<feFlood flood-color=\"rgb(%s,%s,%s)\" result=\"flood2\" />\n"
+        "<feFlood flood-color=\"%s\" result=\"flood2\" />\n"
         "<feComposite in=\"%s\" in2=\"color4\" operator=\"in\" result=\"composite2\" />\n"
-        "<feComposite in=\"composite2\" in2=\"composite2\" operator=\"arithmetic\" k2=\"%s\" result=\"composite3\" />\n"
+        "<feComposite in=\"composite2\" in2=\"composite2\" operator=\"arithmetic\" k2=\"%f\" result=\"composite3\" />\n"
         "<feOffset dx=\"%s\" dy=\"%s\" result=\"offset1\" />\n"
-        "<feFlood in=\"color4\" flood-color=\"rgb(%s,%s,%s)\" result=\"flood3\" />\n"
+        "<feFlood in=\"color4\" flood-color=\"%s\" result=\"flood3\" />\n"
         "<feComposite in=\"%s\" in2=\"color4\" operator=\"out\" result=\"composite4\" />\n"
-        "<feComposite in=\"composite4\" in2=\"composite4\" operator=\"arithmetic\" k2=\"%s\" result=\"composite5\" />\n"
+        "<feComposite in=\"composite4\" in2=\"composite4\" operator=\"arithmetic\" k2=\"%f\" result=\"composite5\" />\n"
         "<feMerge result=\"merge1\">\n"
           "<feMergeNode in=\"composite5\" />\n"
           "<feMergeNode in=\"offset1\" />\n"
         "</feMerge>\n"
         "<feColorMatrix values=\"1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 1.3 0 \" result=\"color5\" flood-opacity=\"0.56\" />\n"
         "<feComposite in=\"%s\" in2=\"SourceGraphic\" operator=\"in\" result=\"composite8\" />\n"
-        "</filter>\n", simply.str().c_str(), clean.str().c_str(), erase.str().c_str(), smooth.str().c_str(), dilat.str().c_str(), erosion.str().c_str(),  blur.str().c_str(), bdilat.str().c_str(), berosion.str().c_str(), stroker.str().c_str(), strokeg.str().c_str(), strokeb.str().c_str(), ios.str().c_str(), strokea.str().c_str(), offset.str().c_str(), offset.str().c_str(), fillr.str().c_str(), fillg.str().c_str(), fillb.str().c_str(), iof.str().c_str(), filla.str().c_str(), translucent.str().c_str());
+        "</filter>\n", simply.str().c_str(), clean.str().c_str(), erase.str().c_str(), smooth.str().c_str(), dilat.str().c_str(), erosion.str().c_str(),  blur.str().c_str(), bdilat.str().c_str(), berosion.str().c_str(), scolor.toString(false).c_str(), ios.str().c_str(), scolor.getOpacity(), offset.str().c_str(), offset.str().c_str(), fcolor.toString(false).c_str(), iof.str().c_str(), fcolor.getOpacity(), translucent.str().c_str());
     // clang-format on
 
     return _filter;
@@ -771,14 +755,6 @@ PointEngraving::get_filter_text (Inkscape::Extension::Extension * ext)
     std::ostringstream grain;
     std::ostringstream erase;
     std::ostringstream blur;
-    std::ostringstream r;
-    std::ostringstream g;
-    std::ostringstream b;
-    std::ostringstream a;
-    std::ostringstream br;
-    std::ostringstream bg;
-    std::ostringstream bb;
-    std::ostringstream ba;
     std::ostringstream iof;
     std::ostringstream iop;
 
@@ -794,17 +770,8 @@ PointEngraving::get_filter_text (Inkscape::Extension::Extension * ext)
     erase << ext->get_param_float("erase");
     blur << ext->get_param_float("blur");
     
-    guint32 fcolor = ext->get_param_color("fcolor");
-    r << ((fcolor >> 24) & 0xff);
-    g << ((fcolor >> 16) & 0xff);
-    b << ((fcolor >>  8) & 0xff);
-    a << (fcolor & 0xff) / 255.0F; 
-    
-    guint32 pcolor = ext->get_param_color("pcolor");
-    br << ((pcolor >> 24) & 0xff);
-    bg << ((pcolor >> 16) & 0xff);
-    bb << ((pcolor >>  8) & 0xff);
-    ba << (pcolor & 0xff) / 255.0F; 
+    auto fcolor = ext->get_param_color("fcolor");
+    auto pcolor = ext->get_param_color("pcolor");
 
     if (ext->get_param_bool("iof"))
         iof << "SourceGraphic";
@@ -826,18 +793,18 @@ PointEngraving::get_filter_text (Inkscape::Extension::Extension * ext)
           "<feComposite in=\"turbulence\" in2=\"colormatrix1\" k1=\"%s\" k2=\"%s\" k4=\"%s\" operator=\"arithmetic\" result=\"composite1\" />\n"
           "<feColorMatrix in=\"composite1\" values=\"1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 10 -9 \" result=\"colormatrix2\" />\n"
           "<feGaussianBlur stdDeviation=\"%s\" result=\"blur\" />\n"
-          "<feFlood flood-color=\"rgb(%s,%s,%s)\" flood-opacity=\"%s\" result=\"flood1\" />\n"
+          "<feFlood flood-color=\"%s\" flood-opacity=\"%f\" result=\"flood1\" />\n"
           "<feComposite in=\"%s\" in2=\"blur\" operator=\"out\" result=\"composite2\" />\n"
-          "<feFlood flood-color=\"rgb(%s,%s,%s)\" flood-opacity=\"%s\" result=\"flood2\" />\n"
+          "<feFlood flood-color=\"%s\" flood-opacity=\"%f\" result=\"flood2\" />\n"
           "<feComposite in=\"%s\" in2=\"blur\" operator=\"in\" result=\"composite3\" />\n"
-          "<feComposite in=\"composite3\" in2=\"composite2\" k2=\"%s\" k3=\"%s\"  operator=\"arithmetic\" result=\"composite4\" />\n"
+          "<feComposite in=\"composite3\" in2=\"composite2\" k2=\"%f\" k3=\"%f\"  operator=\"arithmetic\" result=\"composite4\" />\n"
           "<feComposite in2=\"SourceGraphic\" operator=\"in\" result=\"composite5\" />\n"
         "</filter>\n", reduction.str().c_str(), blend.str().c_str(),
                        type.str().c_str(), hfreq.str().c_str(), vfreq.str().c_str(), complexity.str().c_str(), variation.str().c_str(),
                        lightness.str().c_str(), grain.str().c_str(), erase.str().c_str(), blur.str().c_str(),
-                       br.str().c_str(), bg.str().c_str(), bb.str().c_str(), ba.str().c_str(), iop.str().c_str(),
-                       r.str().c_str(), g.str().c_str(), b.str().c_str(), a.str().c_str(), iof.str().c_str(),
-                       a.str().c_str(), ba.str().c_str() );
+                       pcolor.toString(false).c_str(), pcolor.getOpacity(), iop.str().c_str(),
+                       fcolor.toString(false).c_str(), fcolor.getOpacity(), iof.str().c_str(),
+                       fcolor.getOpacity(), pcolor.getOpacity());
     // clang-format on
 
     return _filter;

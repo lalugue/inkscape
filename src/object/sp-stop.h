@@ -19,10 +19,13 @@
 
 #include <glibmm/ustring.h>
 
-#include "color.h"
 #include "sp-object.h"
 
 typedef unsigned int guint32;
+
+namespace Inkscape::Colors {
+    class Color;
+}
 
 /** Gradient stop. */
 class SPStop final : public SPObject {
@@ -39,12 +42,10 @@ public:
     SPStop* getNextStop();
     SPStop* getPrevStop();
 
-    SPColor getColor() const;
-    gfloat getOpacity() const;
-    guint32 get_rgba32() const;
-    void setColor(SPColor color, double opacity);
+    Inkscape::Colors::Color getColor() const;
+    void setColor(Inkscape::Colors::Color const &color);
 
-    static void setColorRepr(Inkscape::XML::Node *node, SPColor color, double opacity);
+    static void setColorRepr(Inkscape::XML::Node *node, Inkscape::Colors::Color const &color);
 
 protected:
     void build(SPDocument* doc, Inkscape::XML::Node* repr) override;

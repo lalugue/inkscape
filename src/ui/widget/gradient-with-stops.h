@@ -21,6 +21,7 @@
 #include <gtkmm/gesture.h> // Gtk::EventSequenceState
 #include <sigc++/signal.h>
 
+#include "colors/color.h"
 #include "helper/auto-connection.h"
 #include "ui/svg-renderer.h"
 #include "ui/widget/widget-vfuncs-class-init.h"
@@ -116,7 +117,7 @@ private:
 
     struct stop_t {
         double offset;
-        SPColor color;
+        Inkscape::Colors::Color color;
         double opacity;
     };
     std::vector<stop_t> _stops;

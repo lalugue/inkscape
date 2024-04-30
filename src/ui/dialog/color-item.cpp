@@ -35,10 +35,10 @@
 #include <gtkmm/popovermenu.h>
 #include <sigc++/functors/mem_fun.h>
 
+#include "colors/dragndrop.h"
 #include "desktop-style.h"
 #include "document.h"
 #include "document-undo.h"
-#include "hsluv.h"
 #include "message-context.h"
 #include "preferences.h"
 #include "selection.h"
@@ -48,7 +48,6 @@
 #include "io/resource.h"
 #include "object/sp-gradient.h"
 #include "object/tags.h"
-#include "svg/svg-color.h"
 #include "ui/containerize.h"
 #include "ui/controller.h"
 #include "ui/dialog/dialog-base.h"
@@ -82,21 +81,23 @@ Glib::RefPtr<Gdk::Pixbuf> get_removecolor()
 
 } // namespace
 
-ColorItem::ColorItem(PaintDef const &paintdef, DialogBase *dialog)
+ColorItem::ColorItem(DialogBase *dialog)
     : dialog(dialog)
 {
-    if (paintdef.get_type() == PaintDef::RGB) {
-        pinned_default = false;
-        data = RGBData{paintdef.get_rgb()};
-    } else {
-        pinned_default = true;
-        data = PaintNone{};
-        add_css_class("paint-none");
-    }
-    description = paintdef.get_description();
-    color_id = paintdef.get_color_id();
-    tooltip = paintdef.get_tooltip();
+    data = PaintNone();
+    pinned_default = true;
+    add_css_class("paint-none");
+    description = C_("Paint", "None");
+    color_id = "none";
+    common_setup();
+}
 
+ColorItem::ColorItem(Colors::Color color, DialogBase *dialog)
+    : dialog(dialog)
+{
+    description = color.getName();
+    color_id = color_to_id(color);
+    data = std::move(color);
     common_setup();
 }
 
@@ -202,9 +203,8 @@ void ColorItem::draw_color(Cairo::RefPtr<Cairo::Context> const &cr, int w, int h
             cr->paint();
             cr->restore();
         }
-    } else if (auto const rgbdata = std::get_if<RGBData>(&data)) {
-        auto [r, g, b] = rgbdata->rgb;
-        cr->set_source_rgb(r / 255.0, g / 255.0, b / 255.0);
+    } else if (auto const color = std::get_if<Colors::Color>(&data)) {
+        ink_cairo_set_source_color(cr, *color);
         cr->paint();
         // there's no way to query background color to check if color item stands out,
         // so we apply faint outline to let users make out color shapes blending with background
@@ -256,8 +256,8 @@ void ColorItem::draw_func(Cairo::RefPtr<Cairo::Context> const &cr, int const w, 
 
     // Draw fill/stroke indicators.
     if (is_fill || is_stroke) {
-        double const lightness = Hsluv::rgb_to_perceptual_lightness(average_color());
-        auto [gray, alpha] = Hsluv::get_contrasting_color(lightness);
+        double const lightness = Colors::get_perceptual_lightness(getColor());
+        auto [gray, alpha] = Colors::get_contrasting_color(lightness);
         cr->set_source_rgba(gray, gray, gray, alpha);
 
         // Scale so that the square -1...1 is the biggest possible square centred in the widget.
@@ -351,12 +351,8 @@ void ColorItem::on_click(bool stroke)
     if (is_paint_none()) {
         sp_repr_css_set_property(css.get(), attr_name, "none");
         descr = stroke ? _("Set stroke color to none") : _("Set fill color to none");
-    } else if (auto const rgbdata = std::get_if<RGBData>(&data)) {
-        auto [r, g, b] = rgbdata->rgb;
-        std::uint32_t rgba = (r << 24) | (g << 16) | (b << 8) | 0xff;
-        char buf[64];
-        sp_svg_write_color(buf, sizeof(buf), rgba);
-        sp_repr_css_set_property(css.get(), attr_name, buf);
+    } else if (auto const color = std::get_if<Colors::Color>(&data)) {
+        sp_repr_css_set_property_string(css.get(), attr_name, color->toString());
         descr = stroke ? _("Set stroke color from swatch") : _("Set fill color from swatch");
     } else if (auto const graddata = std::get_if<GradientData>(&data)) {
         auto grad = graddata->gradient;
@@ -511,30 +507,13 @@ void ColorItem::action_convert(Glib::ustring const &name)
     DocumentUndo::done(doc, _("Add gradient stop"), INKSCAPE_ICON("color-gradient"));
 }
 
-PaintDef ColorItem::to_paintdef() const
-{
-    if (is_paint_none()) {
-        return PaintDef();
-    } else if (auto const rgbdata = std::get_if<RGBData>(&data)) {
-        return PaintDef(rgbdata->rgb, description, "");
-    } else if (auto const graddata = std::get_if<GradientData>(&data)) {
-        auto const grad = graddata->gradient;
-        assert(grad != nullptr);
-        return PaintDef({0, 0, 0}, grad->getId(), "");
-    }
-
-    // unreachable
-    assert(false);
-    return {};
-}
-
 Glib::RefPtr<Gdk::ContentProvider> ColorItem::on_drag_prepare(Gtk::DragSource const &, double, double)
 {
     if (!dialog) return {};
 
-    Glib::Value<PaintDef> value;
+    Glib::Value<std::optional<Colors::Color>> value;
     value.init(value.value_type());
-    value.set(to_paintdef());
+    value.set(getColor());
     return Gdk::ContentProvider::create(value);
 }
 
@@ -572,13 +551,16 @@ bool ColorItem::is_pinned() const
     }
 }
 
-std::array<double, 3> ColorItem::average_color() const
+/**
+ * Return the average color for this color item. If none, returns whit
+ * but if a gradient an average of the gradient in RGB is returned.
+ */
+Colors::Color ColorItem::getColor() const
 {
     if (is_paint_none()) {
-        return {1.0, 1.0, 1.0};
-    } else if (auto const rgbdata = std::get_if<RGBData>(&data)) {
-        auto [r, g, b] = rgbdata->rgb;
-        return {r / 255.0, g / 255.0, b / 255.0};
+        return Colors::Color(0xffffffff);
+    } else if (auto const color = std::get_if<Colors::Color>(&data)) {
+        return *color;
     } else if (auto const graddata = std::get_if<GradientData>(&data)) {
         auto grad = graddata->gradient;
         auto pat = Cairo::RefPtr<Cairo::Pattern>(new Cairo::Pattern(grad->create_preview_pattern(1), true));
@@ -589,12 +571,12 @@ std::array<double, 3> ColorItem::average_color() const
         cr->set_source(pat);
         cr->paint();
         auto rgb = img->get_data();
-        return {rgb[0] / 255.0, rgb[1] / 255.0, rgb[2] / 255.0};
+        return Colors::Color(Colors::Space::Type::RGB, {rgb[0] / 255.0, rgb[1] / 255.0, rgb[2] / 255.0});
     }
 
     // unreachable
     assert(false);
-    return {1.0, 1.0, 1.0};
+    return Colors::Color(0xffffffff);
 }
 
 bool ColorItem::is_paint_none() const {

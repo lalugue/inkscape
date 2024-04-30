@@ -105,7 +105,7 @@ private:
     void _labelChanged();
 
     // Callback for highlight color
-    void _highlightChanged(guint rgba);
+    void _highlightChanged(Colors::Color const &color);
 
     /// Callback for checkbox Lock.
     void _sensitivityToggled();

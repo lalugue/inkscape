@@ -45,7 +45,6 @@
 
 //# Inkscape includes
 #include "attributes.h"                   // for SPAttr
-#include "color.h"                        // for SPColor
 #include "document.h"                     // for SPDocument
 #include "preferences.h"                  // for guint32
 #include "style-internal.h"               // for SPIPaint, SPIScale24, SPILe...
@@ -1291,7 +1290,7 @@ bool OdfOutput::processStyle(SPItem *item, const Glib::ustring &id, const Glib::
     // FILL
     if (style->fill.isColor())
     {
-        guint32 fillCol = style->fill.value.color.toRGBA32( 0 );
+        guint32 fillCol = style->fill.getColor().toRGBA();
         char buf[16];
         int r = (fillCol >> 24) & 0xff;
         int g = (fillCol >> 16) & 0xff;
@@ -1316,7 +1315,7 @@ bool OdfOutput::processStyle(SPItem *item, const Glib::ustring &id, const Glib::
     // STROKE
     if (style->stroke.isColor())
     {
-        guint32 strokeCol = style->stroke.value.color.toRGBA32( 0 );
+        guint32 strokeCol = style->stroke.getColor().toRGBA();
         char buf[16];
         int r = (strokeCol >> 24) & 0xff;
         int g = (strokeCol >> 16) & 0xff;
@@ -1431,10 +1430,10 @@ bool OdfOutput::processGradient(SPItem *item,
     for (SPStop *stop = grvec->getFirstStop();
          stop ; stop = stop->getNextStop())
     {
-        unsigned long rgba = stop->get_rgba32();
-        unsigned long rgb  = (rgba >> 8) & 0xffffff;
-        double opacity     = (static_cast<double>(rgba & 0xff)) / 256.0;
-        GradientStop gs(rgb, opacity);
+        // TODO: Replace these with a color object to support more than RGB
+        auto color = stop->getColor().toRGBA(false);
+        auto opacity = stop->getColor().getOpacity();
+        GradientStop gs(color, opacity);
         gi.stops.push_back(gs);
     }
 

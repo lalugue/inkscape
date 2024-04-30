@@ -18,7 +18,6 @@
 
 #include <2geom/point.h>
 #include <2geom/transforms.h>
-#include "color.h"
 #include "object/sp-pattern.h"
 #include "pattern-manager.h"
 #include "spin-scale.h"
@@ -47,6 +46,10 @@ class Viewport;
 class SPDocument;
 class ColorPicker;
 
+namespace Inkscape::Colors {
+class Color;
+}
+
 namespace Inkscape::UI::Widget {
 
 class PatternEditor : public Gtk::Box {
@@ -60,7 +63,7 @@ public:
     // selected pattern ID if any plus stock pattern collection document (or null)
     std::pair<std::string, SPDocument*> get_selected();
     // and its color
-    std::optional<unsigned int> get_selected_color();
+    std::optional<Colors::Color> get_selected_color();
     // return combined scale and rotation
     Geom::Affine get_selected_transform();
     // return pattern offset
@@ -74,7 +77,7 @@ public:
 
 private:
     sigc::signal<void ()> _signal_changed;
-    sigc::signal<void (unsigned)> _signal_color_changed;
+    sigc::signal<void (Colors::Color const &)> _signal_color_changed;
     sigc::signal<void ()> _signal_edit;
 
 public:
@@ -114,7 +117,6 @@ private:
     bool _precise_gap_control = false;
     Gtk::Button& _edit_btn;
     Gtk::Label& _color_label;
-    Gtk::Button& _color_btn;
     Gtk::Button& _link_scale;
     Gtk::Picture& _preview_img;
     Gtk::Viewport& _preview;
@@ -130,7 +132,7 @@ private:
     Glib::ustring _prefs;
     PatternStore _doc_pattern_store;
     PatternStore _stock_pattern_store;
-    std::unique_ptr<ColorPicker> _color_picker;
+    ColorPicker& _color_picker;
     OperationBlocker _update;
     std::unordered_map<std::string, Glib::RefPtr<PatternItem>> _cached_items; // cached current document patterns
     Inkscape::PatternManager& _manager;

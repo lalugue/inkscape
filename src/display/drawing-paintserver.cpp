@@ -1,14 +1,21 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 #include "drawing-paintserver.h"
+
+#include <utility>
+
 #include "cairo-utils.h"
+#include "colors/color.h"
 
 namespace Inkscape {
 
 DrawingPaintServer::~DrawingPaintServer() = default;
 
+DrawingSolidColor::DrawingSolidColor(Colors::Color color)
+    : color(std::move(color)) {}
+
 cairo_pattern_t *DrawingSolidColor::create_pattern(cairo_t *, Geom::OptRect const &, double opacity) const
 {
-    return cairo_pattern_create_rgba(c[0], c[1], c[2], alpha * opacity);
+    return ink_cairo_pattern_create(color, opacity);
 }
 
 void DrawingGradient::common_setup(cairo_pattern_t *pat, Geom::OptRect const &bbox, double opacity) const
@@ -45,7 +52,7 @@ cairo_pattern_t *DrawingLinearGradient::create_pattern(cairo_t *, Geom::OptRect 
     // add stops
     for (auto &stop : stops) {
         // multiply stop opacity by paint opacity
-        cairo_pattern_add_color_stop_rgba(pat, stop.offset, stop.color.v.c[0], stop.color.v.c[1], stop.color.v.c[2], stop.opacity * opacity);
+        ink_cairo_pattern_add_color_stop(pat, stop.offset, *stop.color, opacity);
     }
 
     return pat;
@@ -103,7 +110,7 @@ cairo_pattern_t *DrawingRadialGradient::create_pattern(cairo_t *ct, Geom::OptRec
     // add stops
     for (auto &stop : stops) {
         // multiply stop opacity by paint opacity
-        cairo_pattern_add_color_stop_rgba(pat, stop.offset, stop.color.v.c[0], stop.color.v.c[1], stop.color.v.c[2], stop.opacity * opacity);
+        ink_cairo_pattern_add_color_stop(pat, stop.offset, *stop.color, opacity);
     }
 
     return pat;

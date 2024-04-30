@@ -23,6 +23,9 @@
 class SPGradient;
 
 namespace Inkscape {
+namespace Colors {
+class Color;
+}
 
 /**
  * A DrawingPaintServer is a lightweight copy of the resources needed to paint using a paint server.
@@ -56,15 +59,11 @@ class DrawingSolidColor final
     : public DrawingPaintServer
 {
 public:
-    DrawingSolidColor(float *c, double alpha)
-        : c({c[0], c[1], c[2]})
-        , alpha(alpha) {}
-
+    DrawingSolidColor(Colors::Color color);
     cairo_pattern_t *create_pattern(cairo_t *, Geom::OptRect const &, double opacity) const override;
 
 private:
-    std::array<float, 3> c; ///< RGB color components.
-    double alpha;
+    Colors::Color color;
 };
 
 /**

@@ -91,7 +91,7 @@ public:
 
     void update_patheffect(bool write) override;
 
-    guint32 highlight_color() const override;
+    Inkscape::Colors::Color highlight_color() const override;
 
     void removeTransformsRecursively(SPObject const *root) override;
 

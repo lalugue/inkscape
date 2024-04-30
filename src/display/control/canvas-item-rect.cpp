@@ -18,7 +18,6 @@
 
 #include <cairo/cairo.h>
 
-#include "color.h"    // SP_RGBA_x_F
 #include "desktop.h"
 #include "display/cairo-utils.h"
 #include "helper/geom.h"

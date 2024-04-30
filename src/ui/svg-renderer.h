@@ -10,7 +10,7 @@
 #include <cairomm/surface.h>
 #include <glibmm/refptr.h>
 
-#include "color.h"
+#include "colors/color.h"
 
 class SPDocument;
 class SPRoot;
@@ -25,18 +25,9 @@ class ustring;
 
 namespace Gdk {
 class Pixbuf;
-class RGBA;
 } // namespace Gdk
 
 namespace Inkscape {
-
-// utilities for set_style: 
-// Gdk color to CSS rgb (no alpha)
-Glib::ustring rgba_to_css_color(const Gdk::RGBA& color);
-Glib::ustring rgba_to_css_color(const SPColor& color);
-Glib::ustring rgba_to_css_color(double r, double g, double b);
-// double to low precision string
-Glib::ustring double_to_css_value(double value);
 
 class Pixbuf;
 

@@ -25,6 +25,7 @@
 #include <gtkmm/window.h>
 
 #include "attributes.h"
+#include "colors/manager.h"
 #include "conn-avoid-ref.h" // for defaultConnSpacing.
 #include "desktop.h"
 #include "document-undo.h"
@@ -42,7 +43,6 @@
 
 #include "actions/actions-canvas-snapping.h"
 #include "display/control/canvas-page.h"
-#include "svg/svg-color.h"
 #include "ui/monitor.h"
 #include "ui/widget/canvas.h"
 #include "ui/widget/canvas-grid.h"
@@ -51,10 +51,6 @@
 
 using Inkscape::DocumentUndo;
 using Inkscape::Util::UnitTable;
-
-#define DEFAULTGUIDECOLOR   0x0086e599
-#define DEFAULTGUIDEHICOLOR 0xff00007f
-#define DEFAULTDESKCOLOR 0xd1d1d1ff
 
 SPNamedView::SPNamedView()
     : SPObjectGroup()
@@ -66,8 +62,6 @@ SPNamedView::SPNamedView()
     , desk_checkerboard(false)
 {
     this->zoom = 0;
-    this->guidecolor = 0;
-    this->guidehicolor = 0;
     this->views.clear();
     // this->page_size_units = nullptr;
     this->window_x = 0;
@@ -80,7 +74,6 @@ SPNamedView::SPNamedView()
     this->window_width = 0;
     this->window_height = 0;
     this->window_maximized = 0;
-    this->desk_color = DEFAULTDESKCOLOR;
 
     this->editable = TRUE;
     this->viewcount = 0;
@@ -144,9 +137,8 @@ void SPNamedView::build(SPDocument *document, Inkscape::XML::Node *repr) {
     for (auto &child : children) {
         if (auto guide = cast<SPGuide>(&child)) {
             this->guides.push_back(guide);
-            //g_object_set(G_OBJECT(g), "color", nv->guidecolor, "hicolor", nv->guidehicolor, NULL);
-            guide->setColor(this->guidecolor);
-            guide->setHiColor(this->guidehicolor);
+            guide->setColor(getGuideColor().toRGBA());
+            guide->setHiColor(getGuideHiColor().toRGBA());
             guide->readAttr(SPAttr::INKSCAPE_COLOR);
         }
         if (auto page = cast<SPPage>(&child)) {
@@ -171,14 +163,35 @@ void SPNamedView::set_clip_to_page(SPDesktop* desktop, bool enable) {
     }
 }
 
+static auto const default_desk_color = Inkscape::Colors::Color{0xd1d1d1, false};
+static auto const default_guide_color = Inkscape::Colors::Color{0x0086e5, false};
+static auto const default_guide_hi_color = Inkscape::Colors::Color{0xff0000, false};
+
+Inkscape::Colors::Color SPNamedView::getDeskColor() const
+{
+    return _desk_color.value_or(default_desk_color);
+}
+
+Inkscape::Colors::Color SPNamedView::getGuideColor() const
+{
+    auto copy = _guide_color.value_or(default_guide_color);
+    copy.addOpacity(_guide_opacity);
+    return copy;
+}
+
+Inkscape::Colors::Color SPNamedView::getGuideHiColor() const
+{
+    auto copy = _guide_hi_color.value_or(default_guide_hi_color);
+    copy.addOpacity(_guide_hi_opacity);
+    return copy;
+}
+
 void SPNamedView::set_desk_color(SPDesktop* desktop) {
     if (desktop) {
-        if (desk_checkerboard) {
-            desktop->getCanvas()->set_desk(desk_color);
-        } else {
-            desktop->getCanvas()->set_desk(desk_color | 0xff);
-        }
-        // Update pages, who's colours sometimes change whe the desk color changes.
+        auto dkcolor = getDeskColor();
+        dkcolor.setOpacity(desk_checkerboard ? 0.0 : 1.0);
+        desktop->getCanvas()->set_desk(dkcolor.toRGBA());
+        // Update pages, whose colours sometimes change whe the desk color changes.
         document->getPageManager().setDefaultAttributes(_viewport);
     }
 }
@@ -275,6 +288,14 @@ void SPNamedView::set(SPAttr key, const gchar* value) {
         return;
     }
 
+    auto update_guides = [this]() {
+        for(auto guide : guides) {
+            guide->setColor(getGuideColor().toRGBA());
+            guide->setHiColor(getGuideHiColor().toRGBA());
+            guide->readAttr(SPAttr::INKSCAPE_COLOR);
+        }
+    };
+
     switch (key) {
     case SPAttr::VIEWONLY:
         this->editable = (!value);
@@ -305,41 +326,23 @@ void SPNamedView::set(SPAttr key, const gchar* value) {
         this->snap_manager.snapprefs.setDistributionTolerance(value ? g_ascii_strtod(value, nullptr) : 5);
         break;
     case SPAttr::GUIDECOLOR:
-        this->guidecolor = (this->guidecolor & 0xff) | (DEFAULTGUIDECOLOR & 0xffffff00);
-        if (value) {
-            this->guidecolor = (this->guidecolor & 0xff) | sp_svg_read_color(value, this->guidecolor);
-        }
-        for(auto guide : this->guides) {
-            guide->setColor(this->guidecolor);
-            guide->readAttr(SPAttr::INKSCAPE_COLOR);
-        }
+        _guide_color = Inkscape::Colors::Color::parse(value);
+        update_guides();
         break;
     case SPAttr::GUIDEOPACITY:
-        sp_ink_read_opacity(value, &this->guidecolor, DEFAULTGUIDECOLOR);
-        for (auto guide : this->guides) {
-            guide->setColor(this->guidecolor);
-            guide->readAttr(SPAttr::INKSCAPE_COLOR);
-        }
+        _guide_opacity = value ? g_ascii_strtod(value, nullptr) : 0.6;
+        update_guides();
         break;
     case SPAttr::GUIDEHICOLOR:
-        this->guidehicolor = (this->guidehicolor & 0xff) | (DEFAULTGUIDEHICOLOR & 0xffffff00);
-        if (value) {
-            this->guidehicolor = (this->guidehicolor & 0xff) | sp_svg_read_color(value, this->guidehicolor);
-        }
-        for(auto guide : this->guides) {
-            guide->setHiColor(this->guidehicolor);
-        }
+        _guide_hi_color = Inkscape::Colors::Color::parse(value);
+        update_guides();
         break;
     case SPAttr::GUIDEHIOPACITY:
-        sp_ink_read_opacity(value, &this->guidehicolor, DEFAULTGUIDEHICOLOR);
-        for (auto guide : this->guides) {
-            guide->setHiColor(this->guidehicolor);
-        }
+        _guide_hi_opacity = value ? g_ascii_strtod(value, nullptr) : 0.5;
+        update_guides();
         break;
     case SPAttr::INKSCAPE_DESK_COLOR:
-        if (value) {
-            desk_color = sp_svg_read_color(value, desk_color);
-        }
+        _desk_color = Inkscape::Colors::Color::parse(value);
         break;
     case SPAttr::INKSCAPE_DESK_CHECKERBOARD:
         this->desk_checkerboard.readOrUnset(value);
@@ -460,8 +463,8 @@ void SPNamedView::child_added(Inkscape::XML::Node *child, Inkscape::XML::Node *r
             this->guides.push_back(g);
 
             //g_object_set(G_OBJECT(g), "color", this->guidecolor, "hicolor", this->guidehicolor, NULL);
-            g->setColor(this->guidecolor);
-            g->setHiColor(this->guidehicolor);
+            g->setColor(getGuideColor().toRGBA());
+            g->setHiColor(getGuideHiColor().toRGBA());
             g->readAttr(SPAttr::INKSCAPE_COLOR);
 
             if (this->editable) {
@@ -978,14 +981,10 @@ void SPNamedView::scrollAllDesktops(double dx, double dy) {
     }
 }
 
-void SPNamedView::change_color(unsigned int rgba, SPAttr color_key, SPAttr opacity_key /*= SPAttr::INVALID*/) {
-    gchar buf[32];
-    sp_svg_write_color(buf, sizeof(buf), rgba);
-    getRepr()->setAttribute(sp_attribute_name(color_key), buf);
-
-    if (opacity_key != SPAttr::INVALID) {
-        getRepr()->setAttributeCssDouble(sp_attribute_name(opacity_key), (rgba & 0xff) / 255.0);
-    }
+void SPNamedView::change_color(SPAttr color_key, SPAttr opacity_key, Inkscape::Colors::Color const &color) {
+    if (color.hasOpacity())
+        getRepr()->setAttributeCssDouble(sp_attribute_name(opacity_key), color.getOpacity());
+    getRepr()->setAttribute(sp_attribute_name(color_key), color.toString(false));
 }
 
 void SPNamedView::change_bool_setting(SPAttr key, bool value) {

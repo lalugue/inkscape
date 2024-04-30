@@ -18,6 +18,7 @@
 #include <gtkmm/drawingarea.h>
 #include <gtkmm/gestureclick.h>
 
+#include "colors/color.h"
 #include "ui/widget/color-slider.h"
 #include "preferences.h"
 #include "ui/controller.h"
@@ -52,10 +53,10 @@ ColorSlider::ColorSlider(Glib::RefPtr<Gtk::Adjustment> adjustment)
     _cm[2] = 0x00;
     _cm[3] = 0xff;
 
-    _c0[0] = 0xff;
-    _c0[1] = 0xff;
-    _c0[2] = 0xff;
-    _c0[3] = 0xff;
+    _c1[0] = 0xff;
+    _c1[1] = 0xff;
+    _c1[2] = 0xff;
+    _c1[3] = 0xff;
 
     _b0 = 0x5f;
     _b1 = 0xa0;

@@ -20,6 +20,7 @@
 #include <2geom/affine.h>
 #include <2geom/pathvector.h>
 
+#include "colors/color.h"
 #include "extension/implementation/implementation.h"
 
 #include "style-enums.h"          // Fill rule
@@ -34,6 +35,7 @@ class Pixbuf;
 namespace Extension {
 namespace Internal {
 
+U_COLORREF toColorRef(std::optional<Colors::Color> color);
 enum MFDrawMode {DRAW_PAINT, DRAW_PATTERN, DRAW_IMAGE, DRAW_LINEAR_GRADIENT, DRAW_RADIAL_GRADIENT};
 
 struct FontfixParams {
@@ -73,7 +75,7 @@ protected:
 
     uint32_t htextalignment;
     uint32_t hpolyfillmode;             // used to minimize redundant records that set this
-    float    htextcolor_rgb[3];         // used to minimize redundant records that set this
+    std::optional<Inkscape::Colors::Color> htextcolor_rgb; // used to minimize redundant records that set this
 
     std::stack<Geom::Affine> m_tr_stack;
     Geom::PathVector fill_pathv;

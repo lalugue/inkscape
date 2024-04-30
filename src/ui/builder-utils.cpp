@@ -45,6 +45,16 @@ Glib::RefPtr<Gtk::Builder> create_builder(const char* filename) {
     }
 }
 
+bool hide_widget(const Glib::RefPtr<Gtk::Builder> &builder, std::string const &id)
+{
+    auto widget = builder->get_widget<Gtk::Widget>(id);
+    if (widget) {
+        widget->set_visible(false);
+        return true;
+    }
+    return false;
+}
+
 } } // namespace Inkscape::UI
 
 /*

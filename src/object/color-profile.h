@@ -10,10 +10,6 @@
 #ifndef SEEN_COLOR_PROFILE_H
 #define SEEN_COLOR_PROFILE_H
 
-#include <lcms2.h> // XXX Remove during refactoring!
-
-#include "color.h"                 // XXX Remove during refactoring!
-#include "color/cms-color-types.h" // XXX Remove as well
 #include "colors/cms/system.h"
 #include "colors/spaces/enum.h" // RenderingIntent
 #include "sp-object.h"
@@ -62,33 +58,6 @@ private:
     Colors::RenderingIntent _intent;
 
     std::unique_ptr<Inkscape::URI> _uri;
-
-public:
-    // XXX Compatability code which will be removed in the main refactoring step, never populated
-    char *name = nullptr;
-    char *href = nullptr;
-    unsigned int rendering_intent;
-
-    ColorSpaceSig getColorSpace() const { return {0}; };
-    ColorProfileClassSig getProfileClass() const { return {0}; }
-    cmsHTRANSFORM getTransfToSRGB8() { return nullptr; }
-    cmsHTRANSFORM getTransfFromSRGB8() { return nullptr; }
-    cmsHTRANSFORM getTransfGamutCheck() { return nullptr; };
-    bool GamutCheck(SPColor color) { return false; }
-    int getChannelCount() const { return 4; }
-    bool isPrintColorSpace() { return false; }
-    cmsHPROFILE getHandle() { return nullptr; }
-};
-
-// XXX Delete!!!
-enum
-{
-    RENDERING_INTENT_UNKNOWN = 0,
-    RENDERING_INTENT_AUTO = 1,
-    RENDERING_INTENT_PERCEPTUAL = 2,
-    RENDERING_INTENT_RELATIVE_COLORIMETRIC = 3,
-    RENDERING_INTENT_SATURATION = 4,
-    RENDERING_INTENT_ABSOLUTE_COLORIMETRIC = 5
 };
 
 } // namespace Inkscape

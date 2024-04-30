@@ -15,7 +15,7 @@
 
 #include <2geom/point.h>
 
-#include "color-rgba.h"
+#include "colors/color.h"
 #include "display/control/canvas-item-ptr.h"
 #include "ui/tools/tool-base.h"
 
@@ -28,26 +28,19 @@ public:
     DropperTool(SPDesktop *desktop);
     ~DropperTool() override;
 
-    uint32_t get_color(bool invert = false, bool non_dropping = false) const;
-
-    sigc::signal<void (ColorRGBA *)> onetimepick_signal;
+    std::optional<Colors::Color> get_color(bool invert = false, bool non_dropping = false) const;
+    sigc::signal<void (Colors::Color const &)> onetimepick_signal;
 
 protected:
     bool root_handler(CanvasEvent const &event) override;
 
 private:
     // Stored color.
-    double R = 0.0;
-    double G = 0.0;
-    double B = 0.0;
-    double alpha = 0.0;
+    std::optional<Colors::Color> stored_color;
 
     // Stored color taken from canvas. Used by clipboard.
-    // Identical to R, G, B, alpha if dropping disabled.
-    double non_dropping_R = 0.0;
-    double non_dropping_G = 0.0;
-    double non_dropping_B = 0.0;
-    double non_dropping_A = 0.0;
+    // Identical to stored_color if dropping disabled.
+    std::optional<Colors::Color> non_dropping_color;
 
     bool invert = false;   ///< Set color to inverse rgb value
     bool stroke = false;   ///< Set to stroke color. In dropping mode, set from stroke color

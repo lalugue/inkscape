@@ -130,7 +130,7 @@ static SPStyleProp const props[] = {
     {SPAttr::INKSCAPE_DOCUMENT_UNITS, "inkscape:document-units"},  // This setting sets the Display units, *not* the units used in SVG
     {SPAttr::INKSCAPE_LOCKGUIDES, "inkscape:lockguides"},
     {SPAttr::UNITS, "units"},
-    /* SPColorProfile */
+    /* ColorProfile */
     {SPAttr::LOCAL, "local"},
     {SPAttr::NAME, "name"},
     {SPAttr::RENDERING_INTENT, "rendering-intent"},

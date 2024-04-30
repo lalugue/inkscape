@@ -17,66 +17,36 @@
 #include <cmath>
 #include <gtkmm/gestureclick.h>
 
+#include "colors/spaces/enum.h"
+#include "colors/spaces/oklch.h"
+#include "colors/utils.h"
 #include "display/cairo-utils.h"
-#include "oklab.h"
+
+using namespace Inkscape::Colors;
 
 namespace Inkscape::UI::Widget {
 
 OKWheel::OKWheel()
-{
-    // Set to black
-    _values[H] = 0;
-    _values[S] = 0;
-    _values[L] = 0;
-}
+    : ColorWheel(Space::Type::OKHSL, {0, 0, 0, 1})
+{}
 
-bool OKWheel::setRgb(double r, double g, double b,
+bool OKWheel::setColor(Color const &color,
                      bool /*overrideHue*/, bool const emit)
 {
-    using namespace Oklab;
-
-    auto [h, s, l] = oklab_to_okhsl(rgb_to_oklab({ r, g, b }));
-
-    auto const h2 = h * 2.0 * M_PI;
-    bool const changed_hue = _values[H] != h2;
-    _values[H] = h2;
-
-    bool const changed_saturation = _values[S] != s;
-    _values[S] = s;
-
-    bool const changed_lightness = _values[L] != l;
-    _values[L] = l;
-
-    if (changed_lightness) {
+    if (_values.set(color, true)) {
         _updateChromaBounds();
         _redrawDisc();
         queue_drawing_area_draw();
+        if (emit)
+            color_changed();
+        return true;
     }
-
-    bool const changed = changed_hue || changed_saturation || changed_lightness;
-    if (changed && emit) color_changed();
-    return changed;
+    return false;
 }
 
-void OKWheel::getRgb(double *red, double *green, double *blue) const
+Color OKWheel::getColor() const
 {
-    using namespace Oklab;
-    auto [r, g, b] = oklab_to_rgb(okhsl_to_oklab({ _values[H] / (2.0 * M_PI), _values[S], _values[L] }));
-    *red   = r;
-    *green = g;
-    *blue  = b;
-}
-
-guint32 OKWheel::getRgb() const
-{
-    guint32 result = 0x0;
-    double rgb[3];
-    getRgbV(rgb);
-    for (auto component : rgb) {
-        result <<= 8;
-        result |= SP_COLOR_F_TO_U(component);
-    }
-    return result;
+    return _values;
 }
 
 /** @brief Compute the chroma bounds around the picker disc.
@@ -90,7 +60,7 @@ void OKWheel::_updateChromaBounds()
     double const angle_step = 360.0 / CHROMA_BOUND_SAMPLES;
     double hue_angle_deg = 0.0;
     for (unsigned i = 0; i < CHROMA_BOUND_SAMPLES; i++) {
-        _bounds[i] = Oklab::max_chroma(_values[L], hue_angle_deg);
+        _bounds[i] = Space::OkLch::max_chroma(_values[L], hue_angle_deg);
         hue_angle_deg += angle_step;
     }
 }
@@ -127,13 +97,9 @@ bool OKWheel::_updateDimensions()
  */
 uint32_t OKWheel::_discColor(Geom::Point const &point) const
 {
-    using namespace Oklab;
-    using Display::AssembleARGB32;
-
     double saturation = point.length();
     if (saturation == 0.0) {
-        auto [r, g, b] = oklab_to_rgb({ _values[L], 0.0, 0.0 });
-        return AssembleARGB32(0xFF, (guint)(r * 255.5), (guint)(g * 255.5), (guint)(b * 255.5));
+        return Color(Space::Type::OKLCH, {_values[L], 0, 0}).toARGB();
     } else if (saturation > 1.0) {
         saturation = 1.0;
     }
@@ -152,8 +118,7 @@ uint32_t OKWheel::_discColor(Geom::Point const &point) const
     double const chroma_bound_estimate = Geom::lerp(t, _bounds[previous_sample], _bounds[next_sample]);
     double const absolute_chroma = chroma_bound_estimate * saturation;
 
-    auto [r, g, b] = oklab_to_rgb(oklch_radians_to_oklab({ _values[L], absolute_chroma, hue_radians }));
-    return AssembleARGB32(0xFF, (guint)(r * 255.5), (guint)(g * 255.5), (guint)(b * 255.5));
+    return Color(Space::Type::OKLCH, {_values[L], absolute_chroma, Geom::deg_from_rad(hue_radians) / 360}).toARGB();
 }
 
 /** @brief Returns the position of the current color in the coordinates
@@ -165,7 +130,7 @@ uint32_t OKWheel::_discColor(Geom::Point const &point) const
 Geom::Point OKWheel::_curColorWheelCoords() const
 {
     Geom::Point result;
-    Geom::sincos(_values[H], result.y(), result.x());
+    Geom::sincos(Geom::Angle::from_degrees(_values[H] * 360), result.y(), result.x());
     result *= _values[S];
     return result * Geom::Scale(_disc_radius, -_disc_radius);
 }
@@ -198,15 +163,13 @@ void OKWheel::on_drawing_area_draw(Cairo::RefPtr<Cairo::Context> const &cr, int,
         cr->close_path();
         // Fill the halo with the current color.
         {
-            double r, g, b;
-            getRgb(&r, &g, &b);
-            cr->set_source_rgba(r, g, b, 1.0);
+            ink_cairo_set_source_color(cr, getColor());
         }
         cr->fill_preserve();
 
         // Stroke the border of the halo.
         {
-            auto [gray, alpha] = Hsluv::get_contrasting_color(_values[L]);
+            auto [gray, alpha] = get_contrasting_color(_values[L]);
             cr->set_source_rgba(gray, gray, gray, alpha);
         }
         cr->set_line_width(HALO_STROKE);
@@ -257,18 +220,17 @@ Geom::Point OKWheel::_event2abstract(Geom::Point const &event_pt) const
  */
 bool OKWheel::_setColor(Geom::Point const &pt, bool const emit)
 {
-    auto const s = std::clamp(pt.length(), 0.0, 1.0);
-
     Geom::Angle clicked_hue = _values[S] ? Geom::atan2(pt) : 0.0;
-    auto const h = clicked_hue.radians0();
 
-    bool const changed = _values[S] != s || _values[H] != h;
-    if (changed) {
-        _values[S] = s;
-        _values[H] = h;
-        if (emit) color_changed();
+    bool s = _values.set(S, pt.length());
+    bool h = _values.set(H, Geom::deg_from_rad(clicked_hue.radians0()) / 360);
+    if (s || h) {
+        _values.normalize();
+        if (emit)
+            color_changed();
+        return true;
     }
-    return changed;
+    return false;
 }
 
 /** @brief Handle a left mouse click on the widget.

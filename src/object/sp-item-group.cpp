@@ -1095,13 +1095,13 @@ std::vector<guint32> default_highlights;
 /**
  * Generate a highlight colour if one isn't set and return it.
  */
-guint32 SPGroup::highlight_color() const {
+Inkscape::Colors::Color SPGroup::highlight_color() const {
     // Parent must not be a layer (root, or similar) and this group must also be a layer
     if (!_highlightColor && !SP_IS_LAYER(parent) && this->_layer_mode == SPGroup::LAYER && !default_highlights.empty()) {
         char const * oid = defaultLabel();
         if (oid && *oid) {
             // Color based on the last few bits of the label or object id.
-            return default_highlights[oid[(strlen(oid) - 1)] % default_highlights.size()];
+            return Inkscape::Colors::Color(default_highlights[oid[(strlen(oid) - 1)] % default_highlights.size()]);
         }
     }
     return SPItem::highlight_color();

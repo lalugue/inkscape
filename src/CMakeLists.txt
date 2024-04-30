@@ -12,8 +12,6 @@ set(inkscape_SRC
   attributes.cpp
   auto-save.cpp
   axis-manip.cpp
-  hsluv.cpp
-  color.cpp
   composite-undo-stack-observer.cpp
   conditions.cpp
   conn-avoid-ref.cpp
@@ -50,14 +48,12 @@ set(inkscape_SRC
   mod360.cpp
   object-hierarchy.cpp
   object-snapper.cpp
-  oklab.cpp
   page-manager.cpp
   path-chemistry.cpp
   path-prefix.cpp
   perspective-line.cpp
   preferences.cpp
   print.cpp
-  profile-manager.cpp
   proj_pt.cpp
   pure-transform.cpp
   rdf.cpp
@@ -94,10 +90,6 @@ set(inkscape_SRC
   auto-save.h
   axis-manip.h
   bad-uri-exception.h
-  color-rgba.h
-  hsluv.h
-  color.h
-  colorspace.h
   composite-undo-stack-observer.h
   conditions.h
   conn-avoid-ref.h
@@ -139,7 +131,6 @@ set(inkscape_SRC
   number-opt-number.h
   object-hierarchy.h
   object-snapper.h
-  oklab.h
   page-manager.h
   path-chemistry.h
   path-prefix.h
@@ -151,7 +142,6 @@ set(inkscape_SRC
   preferences-skeleton.h
   preferences.h
   print.h
-  profile-manager.h
   proj_pt.h
   pure-transform.h
   rdf.h
@@ -309,7 +299,6 @@ list(APPEND inkscape_SRC
 # these call add_inkscape_source
 add_subdirectory(actions)
 add_subdirectory(async)
-add_subdirectory(color)
 add_subdirectory(colors)
 add_subdirectory(debug)
 add_subdirectory(display)

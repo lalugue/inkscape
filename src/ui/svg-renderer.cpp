@@ -33,33 +33,6 @@
 
 namespace Inkscape {
 
-Glib::ustring rgba_to_css_color(double r, double g, double b) {
-    char buffer[16];
-    safeprintf(buffer, "#%02x%02x%02x",
-        static_cast<int>(r * 0xff + 0.5),
-        static_cast<int>(g * 0xff + 0.5),
-        static_cast<int>(b * 0xff + 0.5)
-    );
-    return Glib::ustring(buffer);
-}
-
-Glib::ustring rgba_to_css_color(const Gdk::RGBA& color) {
-    return rgba_to_css_color(color.get_red(), color.get_green(), color.get_blue());
-}
-
-Glib::ustring rgba_to_css_color(const SPColor& color) {
-    float rgb[3];
-    color.get_rgb_floatv(rgb);
-    return rgba_to_css_color(rgb[0], rgb[1], rgb[2]);
-}
-
-Glib::ustring double_to_css_value(double value) {
-    char buffer[32];
-    // arbitrarily chosen precision
-    safeprintf(buffer, "%.4f", value);
-    return Glib::ustring(buffer);
-}
-
 template <typename T>
 static auto ensure_nonnull(T &&t, char const *message)
 {

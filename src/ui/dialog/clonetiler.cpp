@@ -44,7 +44,6 @@
 #include "object/sp-namedview.h"
 #include "object/sp-root.h"
 #include "object/sp-use.h"
-#include "svg/svg-color.h"
 #include "svg/svg.h"
 #include "ui/icon-loader.h"
 #include "ui/icon-names.h"
@@ -671,10 +670,10 @@ CloneTiler::CloneTiler()
                 auto const l = Gtk::make_managed<Gtk::Label>(_("Initial color: "));
                 UI::pack_start(*hb, *l, false, false);
 
-                guint32 rgba = 0x000000ff | sp_svg_read_color (prefs->getString(prefs_path + "initial_color").data(), 0x000000ff);
+                auto color = prefs->getColor(prefs_path + "initial_color", "#000000ff");
                 color_picker = Gtk::make_managed<UI::Widget::ColorPicker>(_("Initial color of tiled clones"),
                         _("Initial color for clones (works only if the original has unset fill or stroke or on spray tool in copy mode)"),
-                        rgba, false);
+                        color, false);
                 color_changed_connection = color_picker->connectChanged(sigc::mem_fun(*this, &CloneTiler::on_picker_color_changed));
 
                 UI::pack_start(*hb, *color_picker, false, false);
@@ -1218,19 +1217,15 @@ CloneTiler::~CloneTiler ()
     color_changed_connection.disconnect();
 }
 
-void CloneTiler::on_picker_color_changed(guint rgba)
+void CloneTiler::on_picker_color_changed(Colors::Color const &color)
 {
     static bool is_updating = false;
     if (is_updating || !SP_ACTIVE_DESKTOP)
         return;
 
     is_updating = true;
-
-    gchar c[32];
-    sp_svg_write_color(c, sizeof(c), rgba);
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-    prefs->setString(prefs_path + "initial_color", c);
-
+    prefs->setColor(prefs_path + "initial_color", color);
     is_updating = false;
 }
 
@@ -1947,11 +1942,9 @@ guint32 CloneTiler::trace_pick(Geom::Rect box)
     Inkscape::DrawingContext dc(s, ibox.min());
     /* Render */
     trace_drawing->render(dc, ibox);
-    double R = 0, G = 0, B = 0, A = 0;
-    ink_cairo_surface_average_color(s, R, G, B, A);
+    auto color = ink_cairo_surface_average_color(s);
     cairo_surface_destroy(s);
-
-    return SP_RGBA32_F_COMPOSE (R, G, B, A);
+    return color.toRGBA();
 }
 
 void CloneTiler::trace_finish()
@@ -2166,7 +2159,7 @@ void CloneTiler::apply()
     bool   opacity_alternatej =   prefs->getBool(prefs_path + "opacity_alternatej");
     double opacity_rand =  0.01 * prefs->getDoubleLimited(prefs_path + "opacity_rand", 0, 0, 100);
 
-    Glib::ustring initial_color =    prefs->getString(prefs_path + "initial_color");
+    auto initial_color = prefs->getColor(prefs_path + "initial_color");
     double hue_per_j =        0.01 * prefs->getDoubleLimited(prefs_path + "hue_per_j", 0, -100, 100);
     double hue_per_i =        0.01 * prefs->getDoubleLimited(prefs_path + "hue_per_i", 0, -100, 100);
     double hue_rand  =        0.01 * prefs->getDoubleLimited(prefs_path + "hue_rand", 0, 0, 100);
@@ -2298,29 +2291,20 @@ void CloneTiler::apply()
                 }
             }
 
-            gchar color_string[32]; *color_string = 0;
+            std::string color_string;
 
             // Color tab
-            if (!initial_color.empty()) {
-                guint32 rgba = sp_svg_read_color (initial_color.data(), 0x000000ff);
-                float hsl[3];
-                SPColor::rgb_to_hsl_floatv (hsl, SP_RGBA32_R_F(rgba), SP_RGBA32_G_F(rgba), SP_RGBA32_B_F(rgba));
+            double eff_i = (color_alternatei? (i%2) : (i));
+            double eff_j = (color_alternatej? (j%2) : (j));
 
-                double eff_i = (color_alternatei? (i%2) : (i));
-                double eff_j = (color_alternatej? (j%2) : (j));
+            auto hsl = *initial_color.converted(Colors::Space::Type::HSL);
+            hsl.set(0, hsl[0] + hue_per_i * eff_i + hue_per_j * eff_j + hue_rand * g_random_double_range (-1, 1));
+            hsl.set(1, hsl[1] + saturation_per_i * eff_i + saturation_per_j * eff_j + saturation_rand * g_random_double_range (-1, 1));
+            hsl.set(2, hsl[2] + lightness_per_i * eff_i + lightness_per_j * eff_j + lightness_rand * g_random_double_range (-1, 1));
+            hsl.normalize();
 
-                hsl[0] += hue_per_i * eff_i + hue_per_j * eff_j + hue_rand * g_random_double_range (-1, 1);
-                double notused;
-                hsl[0] = modf( hsl[0], &notused ); // Restrict to 0-1
-                hsl[1] += saturation_per_i * eff_i + saturation_per_j * eff_j + saturation_rand * g_random_double_range (-1, 1);
-                hsl[1] = CLAMP (hsl[1], 0, 1);
-                hsl[2] += lightness_per_i * eff_i + lightness_per_j * eff_j + lightness_rand * g_random_double_range (-1, 1);
-                hsl[2] = CLAMP (hsl[2], 0, 1);
-
-                float rgb[3];
-                SPColor::hsl_to_rgb_floatv (rgb, hsl[0], hsl[1], hsl[2]);
-                sp_svg_write_color(color_string, sizeof(color_string), SP_RGBA32_F_COMPOSE(rgb[0], rgb[1], rgb[2], 1.0));
-            }
+            // We could convert to RGB here, but we shouldn't actually need to.
+            color_string = hsl.toString();
 
             // Blur
             double blur = 0.0;
@@ -2344,14 +2328,8 @@ void CloneTiler::apply()
             if (dotrace) {
                 Geom::Rect bbox_t = transform_rect (bbox_original, t*Geom::Scale(1.0/scale_units));
 
-                guint32 rgba = trace_pick (bbox_t);
-                float r = SP_RGBA32_R_F(rgba);
-                float g = SP_RGBA32_G_F(rgba);
-                float b = SP_RGBA32_B_F(rgba);
-                float a = SP_RGBA32_A_F(rgba);
-
-                float hsl[3];
-                SPColor::rgb_to_hsl_floatv (hsl, r, g, b);
+                auto rgba = Colors::Color(trace_pick(bbox_t));
+                auto hsl = *rgba.converted(Colors::Space::Type::HSL);
 
                 gdouble val = 0;
                 switch (pick) {
@@ -2359,16 +2337,16 @@ void CloneTiler::apply()
                     val = 1 - hsl[2]; // inverse lightness; to match other picks where black = max
                     break;
                 case PICK_OPACITY:
-                    val = a;
+                    val = rgba.getOpacity();
                     break;
                 case PICK_R:
-                    val = r;
+                    val = rgba[0];
                     break;
                 case PICK_G:
-                    val = g;
+                    val = rgba[1];
                     break;
                 case PICK_B:
-                    val = b;
+                    val = rgba[2];
                     break;
                 case PICK_H:
                     val = hsl[0];
@@ -2385,9 +2363,8 @@ void CloneTiler::apply()
 
                 if (rand_picked > 0) {
                     val = randomize01 (val, rand_picked);
-                    r = randomize01 (r, rand_picked);
-                    g = randomize01 (g, rand_picked);
-                    b = randomize01 (b, rand_picked);
+                    for (auto i = 0; i < 3; i++)
+                        rgba.set(i, randomize01(rgba[i], rand_picked));
                 }
 
                 if (gamma_picked != 0) {
@@ -2398,25 +2375,17 @@ void CloneTiler::apply()
                         power = 1 + fabs(gamma_picked);
 
                     val = pow (val, power);
-                    r = pow (r, power);
-                    g = pow (g, power);
-                    b = pow (b, power);
+                    for (auto i = 0; i < 3; i++)
+                        rgba.set(i, pow(rgba[i], power));
                 }
 
                 if (invert_picked) {
                     val = 1 - val;
-                    r = 1 - r;
-                    g = 1 - g;
-                    b = 1 - b;
+                    rgba.invert();
                 }
 
                 val = CLAMP (val, 0, 1);
-                r = CLAMP (r, 0, 1);
-                g = CLAMP (g, 0, 1);
-                b = CLAMP (b, 0, 1);
-
-                // recompose tweaked color
-                rgba = SP_RGBA32_F_COMPOSE(r, g, b, a);
+                rgba.normalize();
 
                 if (pick_to_presence) {
                     if (g_random_double_range (0, 1) > val) {
@@ -2432,7 +2401,7 @@ void CloneTiler::apply()
                     opacity *= val;
                 }
                 if (pick_to_color) {
-                    sp_svg_write_color(color_string, sizeof(color_string), rgba);
+                    color_string = rgba.toString();
                 }
             }
 
@@ -2464,7 +2433,7 @@ void CloneTiler::apply()
                 clone->setAttributeCssDouble("opacity", opacity);
             }
 
-            if (*color_string) {
+            if (!color_string.empty()) {
                 clone->setAttribute("fill", color_string);
                 clone->setAttribute("stroke", color_string);
             }

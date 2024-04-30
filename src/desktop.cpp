@@ -30,7 +30,6 @@
 #include <sigc++/adaptors/bind.h>
 
 #include "desktop.h"
-#include "color.h"
 #include "desktop-events.h"
 #include "desktop-style.h"
 #include "document-undo.h"

@@ -129,12 +129,14 @@ sp_gradstop_to_pixbuf_ref (SPStop *stop, int width, int height)
     if (stop) {
         /* Alpha area */
         cairo_rectangle(ct, 0, 0, width/2, height);
-        ink_cairo_set_source_rgba32(ct, stop->get_rgba32());
+        ink_cairo_set_source_color(ct, stop->getColor());
         cairo_fill(ct);
 
         /* Solid area */
+        auto no_alpha = stop->getColor();
+        no_alpha.enableOpacity(false);
         cairo_rectangle(ct, width/2, 0, width, height);
-        ink_cairo_set_source_rgba32(ct, stop->get_rgba32() | 0xff);
+        ink_cairo_set_source_color(ct, no_alpha);
         cairo_fill(ct);
     }
 

@@ -17,7 +17,7 @@
 #include "object/filters/distantlight.h"
 #include "object/filters/pointlight.h"
 #include "object/filters/spotlight.h"
-#include "color.h"
+#include "colors/color.h"
 
 namespace Inkscape {
 namespace Filters {

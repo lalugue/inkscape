@@ -55,6 +55,8 @@ template<class Ob> Glib::RefPtr<Ob> get_object(Glib::RefPtr<Gtk::Builder>& build
     return object;
 }
 
+bool hide_widget(const Glib::RefPtr<Gtk::Builder>& builder, std::string const &id);
+
 /**
  * This version of get_object is needed for Gtk::CellRenderer objects which can not be
  * put into Glib::RefPtr by the compiler, but are somehow passed to us as RefPtrs anyway.

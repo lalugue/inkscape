@@ -18,6 +18,7 @@
 #ifndef SEEN_SP_GRID_H_
 #define SEEN_SP_GRID_H_
 
+#include "colors/color.h"
 #include "display/control/canvas-item-ptr.h"
 #include "object/sp-object.h"
 #include "svg/svg-bool.h"
@@ -69,11 +70,11 @@ public:
     bool getSnapToVisibleOnly() const { return _snap_to_visible_only; }
     void setSnapToVisibleOnly(bool v);
 
-    guint32 getMajorColor() const { return _major_color; }
-    void setMajorColor(const guint32 color);
+    Inkscape::Colors::Color const &getMajorColor() const { return _major_color; }
+    void setMajorColor(Inkscape::Colors::Color const &color);
 
-    guint32 getMinorColor() const { return _minor_color; }
-    void setMinorColor(const guint32 color);
+    Inkscape::Colors::Color const &getMinorColor() const { return _minor_color; }
+    void setMinorColor(Inkscape::Colors::Color const &color);
 
     Geom::Point getOrigin() const;
     void setOrigin(Geom::Point const &new_origin);
@@ -144,8 +145,8 @@ private:
 
     guint32 _major_line_interval = 0;
 
-    guint32 _major_color = 0;
-    guint32 _minor_color = 0;
+    Inkscape::Colors::Color _major_color;
+    Inkscape::Colors::Color _minor_color;
 
     bool _pixel;        // is in user units
     bool _legacy;       // a grid from versions prior to inkscape 0.98

@@ -132,6 +132,7 @@ private:
     Gtk::ProgressBar &progress_bar;
     Gtk::Widget &progress_box;
     Gtk::Button &cancel_button;
+    UI::Widget::ColorPicker &_background_color;
 
     bool filename_modified = false;
     Glib::ustring original_name;
@@ -210,8 +211,6 @@ private:
     auto_connection _page_selected_connection;
     auto_connection _page_modified_connection;
     auto_connection _page_changed_connection;
-
-    std::unique_ptr<Inkscape::UI::Widget::ColorPicker> _bgnd_color_picker;
 };
 
 } // namespace Dialog

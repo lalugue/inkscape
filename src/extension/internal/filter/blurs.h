@@ -387,10 +387,6 @@ ImageBlur::get_filter_text (Inkscape::Extension::Extension * ext)
     std::ostringstream dilat;
     std::ostringstream erosion;
     std::ostringstream opacity;
-    std::ostringstream r;
-    std::ostringstream g;
-    std::ostringstream b;
-    std::ostringstream a;
     std::ostringstream blend;
     std::ostringstream background;
 
@@ -400,11 +396,7 @@ ImageBlur::get_filter_text (Inkscape::Extension::Extension * ext)
     erosion << -ext->get_param_float("erosion");
     opacity << ext->get_param_float("opacity");
 
-    guint32 color = ext->get_param_color("color");
-    r << ((color >> 24) & 0xff);
-    g << ((color >> 16) & 0xff);
-    b << ((color >>  8) & 0xff);
-    a << (color & 0xff) / 255.0F;
+    auto color = ext->get_param_color("color");
     blend << ext->get_param_optiongroup("blend");
 
     if (ext->get_param_bool("background")) {
@@ -416,14 +408,14 @@ ImageBlur::get_filter_text (Inkscape::Extension::Extension * ext)
     // clang-format off
     _filter = g_strdup_printf(
         "<filter xmlns:inkscape=\"http://www.inkscape.org/namespaces/inkscape\" style=\"color-interpolation-filters:sRGB;\" inkscape:label=\"Out of Focus\">\n"
-          "<feFlood flood-opacity=\"%s\" flood-color=\"rgb(%s,%s,%s)\" result=\"flood\" />\n"
+          "<feFlood flood-opacity=\"%f\" flood-color=\"%s\" result=\"flood\" />\n"
           "<feColorMatrix in=\"SourceGraphic\" values=\"1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 -0.2125 -0.7154 -0.0721 1 0 \" result=\"colormatrix1\" />\n"
           "<feGaussianBlur in=\"colormatrix1\" stdDeviation=\"%s %s\" result=\"blur\" />\n"
           "<feColorMatrix in=\"blur\" values=\"1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 %s %s \" result=\"colormatrix2\" />\n"
           "<feBlend in=\"colormatrix2\" in2=\"%s\" mode=\"%s\" result=\"blend\" />\n"
           "<feComposite in=\"blend\" in2=\"blend\" operator=\"arithmetic\" k2=\"%s\" result=\"composite1\" />\n"
           "<feComposite in2=\"SourceGraphic\" operator=\"in\" />\n"
-        "</filter>\n", a.str().c_str(), r.str().c_str(), g.str().c_str(), b.str().c_str(),
+        "</filter>\n", color.getOpacity(), color.toString(false).c_str(),
                        hblur.str().c_str(), vblur.str().c_str(), dilat.str().c_str(), erosion.str().c_str(),
                        background.str().c_str(), blend.str().c_str(), opacity.str().c_str());
     // clang-format on

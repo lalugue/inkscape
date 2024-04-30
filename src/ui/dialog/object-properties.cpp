@@ -65,7 +65,7 @@ ObjectProperties::ObjectProperties()
     , _label_title(_("_Title:"), true)
     , _label_dpi(_("_DPI SVG:"), true)
     , _label_color(_("Highlight Color:"), true)
-    , _highlight_color(_("Highlight Color"), "", 0xff0000ff, true)
+    , _highlight_color(_("Highlight Color"), "", Colors::Color(0xff0000ff), true)
     , _cb_hide(_("_Hide"), true)
     , _cb_lock(_("L_ock"), true)
     , _cb_aspect_ratio(_("Preserve Ratio"), true)
@@ -334,7 +334,7 @@ void ObjectProperties::update_entries()
     _cb_aspect_ratio.set_active(item && g_strcmp0(item->getAttribute("preserveAspectRatio"), "none") != 0);
     _cb_lock.set_active(item && item->isLocked());           /* Sensitive */
     _cb_hide.set_active(item && item->isExplicitlyHidden()); /* Hidden */
-    _highlight_color.setRgba32(item ? item->highlight_color() : 0x0);
+    _highlight_color.setColor(item ? item->highlight_color() : Colors::Color(0x000000ff));
     _highlight_color.closeWindow();
     // hide aspect ratio checkbox for an image element, images have their own panel in object attributes;
     // apart from <image> only <marker>, <patten>, and <view> support this attribute, but we don't handle them
@@ -471,13 +471,13 @@ void ObjectProperties::_labelChanged()
     _blocked = false;
 }
 
-void ObjectProperties::_highlightChanged(guint rgba)
+void ObjectProperties::_highlightChanged(Colors::Color const &color)
 {
     if (_blocked)
         return;
     
     if (auto item = getSelection()->singleItem()) {
-        item->setHighlight(rgba);
+        item->setHighlight(color);
         DocumentUndo::done(getDocument(), _("Set item highlight color"), INKSCAPE_ICON("dialog-object-properties"));
     }
 }

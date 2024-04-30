@@ -77,7 +77,7 @@ void set_icon(Gtk::Button &btn, char const *pixmap)
 }
 
 // draw solid color circle with black outline; right side is to show checkerboard if color's alpha is > 0
-Glib::RefPtr<Gdk::Pixbuf> draw_circle(int size, guint32 rgba) {
+Glib::RefPtr<Gdk::Pixbuf> draw_circle(int size, Colors::Color color) {
     int width = size;
     int height = size;
     gint w2 = width / 2;
@@ -104,7 +104,8 @@ Glib::RefPtr<Gdk::Pixbuf> draw_circle(int size, guint32 rgba) {
     cairo_close_path(cr);
 
     // solid part
-    ink_cairo_set_source_rgba32(cr, rgba | 0xff);
+    auto opacity = color.stealOpacity();
+    ink_cairo_set_source_color(cr, color);
     cairo_fill(cr);
 
     x = w2;
@@ -115,13 +116,14 @@ Glib::RefPtr<Gdk::Pixbuf> draw_circle(int size, guint32 rgba) {
     cairo_close_path(cr);
 
     // (semi)transparent part
-    if ((rgba & 0xff) != 0xff) {
+    if (opacity < 1.0) {
         cairo_pattern_t* checkers = ink_cairo_pattern_create_checkerboard();
         cairo_set_source(cr, checkers);
         cairo_fill_preserve(cr);
         cairo_pattern_destroy(checkers);
     }
-    ink_cairo_set_source_rgba32(cr, rgba);
+    color.addOpacity(opacity);
+    ink_cairo_set_source_color(cr, color);
     cairo_fill(cr);
     
     cairo_destroy(cr);
@@ -134,7 +136,7 @@ Glib::RefPtr<Gdk::Pixbuf> draw_circle(int size, guint32 rgba) {
 
 Glib::RefPtr<Gdk::Pixbuf> get_stop_pixmap(SPStop* stop) {
     const int size = 30;
-    return draw_circle(size, stop->getColor().toRGBA32(stop->getOpacity()));
+    return draw_circle(size, stop->getColor());
 }
 
 Glib::ustring get_repeat_icon(SPGradientSpread mode) {
@@ -156,9 +158,10 @@ Glib::ustring get_repeat_icon(SPGradientSpread mode) {
     return ico;
 }
 
-GradientEditor::GradientEditor(const char* prefs) :
+GradientEditor::GradientEditor(const char* prefs):
     _builder(Inkscape::UI::create_builder("gradient-edit.glade")),
     _selector(Gtk::make_managed<GradientSelector>()),
+    _colors(new Colors::ColorSet()),
     _repeat_popover{std::make_unique<UI::Widget::PopoverMenu>(Gtk::PositionType::BOTTOM)},
     _repeat_icon(get_widget<Gtk::Image>(_builder, "repeatIco")),
     _stop_tree(get_widget<Gtk::TreeView>(_builder, "stopList")),
@@ -211,7 +214,7 @@ GradientEditor::GradientEditor(const char* prefs) :
     gradBox.append(_gradient_image);
 
     // add color selector
-    auto const color_selector = Gtk::make_managed<ColorNotebook>(_selected_color);
+    auto const color_selector = Gtk::make_managed<ColorNotebook>(_colors);
     color_selector->set_label(_("Stop color"));
     color_selector->set_visible(true);
     _colors_box.append(*color_selector);
@@ -289,11 +292,8 @@ GradientEditor::GradientEditor(const char* prefs) :
     get_widget<Gtk::MenuButton>(_builder, "repeatMode").set_popover(*_repeat_popover);
     set_repeat_icon(SP_GRADIENT_SPREAD_PAD);
     
-    _selected_color.signal_changed.connect([=]() {
-        set_stop_color(_selected_color.color(), _selected_color.alpha());
-    });
-    _selected_color.signal_dragged.connect([=]() {
-        set_stop_color(_selected_color.color(), _selected_color.alpha());
+    _colors->signal_changed.connect([=]() {
+        set_stop_color(_colors->getAverage());
     });
 
     _offset_btn.signal_changed().connect([=]() {
@@ -315,7 +315,8 @@ GradientEditor::GradientEditor(const char* prefs) :
 GradientEditor::~GradientEditor() noexcept {
 }
 
-void GradientEditor::set_stop_color(SPColor color, float opacity) {
+void GradientEditor::set_stop_color(Inkscape::Colors::Color const &color)
+{
     if (_update.pending()) return;
 
     SPGradient* vector = get_gradient_vector();
@@ -330,7 +331,7 @@ void GradientEditor::set_stop_color(SPColor color, float opacity) {
             // update list view too
             row->set_value(_stop_color, get_stop_pixmap(stop));
 
-            sp_set_gradient_stop_color(_document, stop, color, opacity);
+            sp_set_gradient_stop_color(_document, stop, color);
         }
     }
 }
@@ -355,13 +356,13 @@ SPStop* GradientEditor::get_nth_stop(size_t index) {
 
 // stop has been selected in a list view
 void GradientEditor::stop_selected() {
+    _colors->clear();
     if (auto row = current_stop()) {
         SPStop* stop = row->get_value(_stopObj);
         if (stop) {
             auto scoped(_update.block());
 
-            _selected_color.setColor(stop->getColor());
-            _selected_color.setAlpha(stop->getOpacity());
+            _colors->set(stop->getId(), stop->getColor());
 
             auto stops = sp_get_before_after_stops(stop);
             if (stops.first && stops.second) {
@@ -380,9 +381,6 @@ void GradientEditor::stop_selected() {
     else {
         // no selection
         auto scoped(_update.block());
-
-        _selected_color.setColor(SPColor());
-
         _offset_btn.set_range(0, 0);
         _offset_btn.set_value(0);
         _offset_btn.set_sensitive(false);

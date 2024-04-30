@@ -83,7 +83,6 @@
 #include "path-chemistry.h"
 #include "selection.h"
 #include "style.h"
-#include "svg/svg-color.h"
 #include "svg/svg.h"
 #include "text-chemistry.h"
 #include "text-editing.h"
@@ -2085,8 +2084,8 @@ std::vector<SPItem*> sp_get_same_fill_or_stroke_color(SPItem *sel, std::vector<S
         if (iter) {
             SPIPaint *iter_paint = iter->style->getFillOrStroke(type == SP_FILL_COLOR);
             match = false;
-            if (sel_paint->isColor() && iter_paint->isColor() // color == color comparison doesn't seem to work here.
-                && (sel_paint->value.color.toRGBA32(1.0) == iter_paint->value.color.toRGBA32(1.0))) {
+            if (sel_paint->isColor() && iter_paint->isColor()
+                && (sel_paint->getColor().isSimilar(iter_paint->getColor()))) {
                 match = true;
             } else if (sel_paint->isPaintserver() && iter_paint->isPaintserver()) {
 
@@ -4168,10 +4167,9 @@ void ObjectSet::swapFillStroke()
         if (paint->set && paint->isNone())
             sp_repr_css_set_property (css, "stroke", "none");
         else if (paint->set && paint->isColor()) {
-            guint32 color = paint->value.color.toRGBA32(SP_SCALE24_TO_FLOAT (item->style->fill_opacity.value));
-            gchar c[64];
-            sp_svg_write_color (c, sizeof(c), color);
-            sp_repr_css_set_property (css, "stroke", c);
+            auto color = paint->getColor();
+            color.addOpacity(item->style->fill_opacity);
+            sp_repr_css_set_property_string(css, "stroke", color.toString());
         }
         else if (!paint->set)
             sp_repr_css_unset_property (css, "stroke");
@@ -4191,10 +4189,9 @@ void ObjectSet::swapFillStroke()
         if (paint->set && paint->isNone())
             sp_repr_css_set_property (css, "fill", "none");
         else if (paint->set && paint->isColor()) {
-            guint32 color = paint->value.color.toRGBA32(SP_SCALE24_TO_FLOAT (item->style->stroke_opacity.value));
-            gchar c[64];
-            sp_svg_write_color (c, sizeof(c), color);
-            sp_repr_css_set_property (css, "fill", c);
+            auto color = paint->getColor();
+            color.addOpacity(item->style->stroke_opacity);
+            sp_repr_css_set_property_string(css, "fill", color.toString());
         }
         else if (!paint->set)
             sp_repr_css_unset_property (css, "fill");

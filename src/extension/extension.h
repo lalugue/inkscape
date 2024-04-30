@@ -29,6 +29,9 @@
 
 #include "util/hybrid-pointer.h"
 
+// Push color headers to all extensions
+#include "colors/color.h"
+
 namespace Glib {
 class ustring;
 } // namespace Glib
@@ -262,7 +265,8 @@ public:
     char const *get_param_string        (char const *name) const;
     char const *get_param_optiongroup   (char const *name, char const *alt) const;
     char const *get_param_optiongroup   (char const *name) const;
-    std::uint32_t get_param_color       (char const *name) const;
+
+    Colors::Color get_param_color(char const *name) const;
 
     bool get_param_optiongroup_contains (char const *name, char const   *value) const;
 
@@ -271,7 +275,7 @@ public:
     double      set_param_float         (char const *name, double  value);
     char const *set_param_string        (char const *name, char const   *value);
     char const *set_param_optiongroup   (char const *name, char const   *value);
-    std::uint32_t set_param_color       (char const *name, std::uint32_t color);
+    void        set_param_color         (char const *name, Colors::Color const &color);
     void set_param_any(char const *name, std::string const &value);
     void set_param_hidden(char const *name, bool hidden);
 

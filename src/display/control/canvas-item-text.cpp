@@ -20,8 +20,7 @@
 #include <utility> // std::move
 #include <glibmm/i18n.h>
 
-#include "color.h" // SP_RGBA_x_F
-
+#include "display/cairo-utils.h"
 #include "ui/util.h"
 
 namespace Inkscape {
@@ -150,8 +149,7 @@ void CanvasItemText::_render(Inkscape::CanvasItemBuffer &buf) const
             buf.cr->arc(x + radius, y + radius, radius, M_PI, 3*M_PI_2);
         }
         buf.cr->set_line_width(2);
-        buf.cr->set_source_rgba(SP_RGBA32_R_F(_background), SP_RGBA32_G_F(_background),
-                                SP_RGBA32_B_F(_background), SP_RGBA32_A_F(_background));
+        ink_cairo_set_source_rgba32(buf.cr, _background);
         buf.cr->fill();
     }
 
@@ -164,8 +162,8 @@ void CanvasItemText::_render(Inkscape::CanvasItemBuffer &buf) const
     buf.cr->select_font_face(_fontname, Cairo::ToyFontFace::Slant::NORMAL, Cairo::ToyFontFace::Weight::NORMAL);
     buf.cr->set_font_size(_fontsize);
     buf.cr->text_path(_text);
-    buf.cr->set_source_rgba(SP_RGBA32_R_F(_fill), SP_RGBA32_G_F(_fill),
-                            SP_RGBA32_B_F(_fill), SP_RGBA32_A_F(_fill));
+
+    ink_cairo_set_source_rgba32(buf.cr, _fill);
     buf.cr->fill();
     buf.cr->restore();
 }

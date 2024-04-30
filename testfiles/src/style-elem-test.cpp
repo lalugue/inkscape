@@ -58,13 +58,13 @@ TEST_F(ObjectTest, StyleElems) {
     ASSERT_TRUE(one);
 
     for (auto &style : one->get_styles()) {
-        EXPECT_EQ(style->fill.get_value(), Glib::ustring("#ff0000"));
+        EXPECT_EQ(style->fill.get_value(), Glib::ustring("red"));
     }
 
     auto two = cast<SPStyleElem>(doc->getObjectById("style02"));
     ASSERT_TRUE(one);
 
     for (auto &style : two->get_styles()) {
-        EXPECT_EQ(style->fill.get_value(), Glib::ustring("#008000"));
+        EXPECT_EQ(style->fill.get_value(), Glib::ustring("green"));
     }
 }

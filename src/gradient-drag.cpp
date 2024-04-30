@@ -20,6 +20,9 @@
 
 #include <glibmm/i18n.h>
 
+#include "colors/utils.h"
+#include "colors/color-set.h"
+
 #include "desktop-style.h"
 #include "desktop.h"
 #include "document-undo.h"
@@ -125,12 +128,9 @@ static int gr_drag_style_query(SPStyle *style, int property, gpointer data)
         return QUERY_STYLE_NOTHING;
     } else {
         int ret = QUERY_STYLE_NOTHING;
-
-        float cf[4];
-        cf[0] = cf[1] = cf[2] = cf[3] = 0;
+        auto colors = Colors::ColorSet();
 
         SPStop* selected = nullptr;
-        int count = 0;
         for(auto d : drag->selected) { //for all selected draggers
             for(auto draggable : d->draggables) { //for all draggables of dragger
                 if (ret == QUERY_STYLE_NOTHING) {
@@ -140,39 +140,32 @@ static int gr_drag_style_query(SPStyle *style, int property, gpointer data)
                     ret = QUERY_STYLE_MULTIPLE_AVERAGED;
                 }
 
-                guint32 c = sp_item_gradient_stop_query_style (draggable->item, draggable->point_type, draggable->point_i, draggable->fill_or_stroke);
-                cf[0] += SP_RGBA32_R_F (c);
-                cf[1] += SP_RGBA32_G_F (c);
-                cf[2] += SP_RGBA32_B_F (c);
-                cf[3] += SP_RGBA32_A_F (c);
-
-                count ++;
+                colors.set(
+                    draggable->item->getId(),
+                    sp_item_gradient_stop_query_style (draggable->item, draggable->point_type, draggable->point_i, draggable->fill_or_stroke)
+                );
             }
         }
 
-        if (count) {
-            cf[0] /= count;
-            cf[1] /= count;
-            cf[2] /= count;
-            cf[3] /= count;
+        if (!colors.isEmpty()) {
+            auto avg = colors.getAverage();
+            auto opacity = avg.stealOpacity();
 
             // set both fill and stroke with our stop-color and stop-opacity
             style->fill.clear();
-            style->fill.setColor( cf[0], cf[1], cf[2] );
+            style->fill.setColor(avg);
             style->fill.set = TRUE;
             style->fill.setTag(selected);
             style->stroke.clear();
-            style->stroke.setColor( cf[0], cf[1], cf[2] );
+            style->stroke.setColor(avg);
             style->stroke.set = TRUE;
             style->stroke.setTag(selected);
 
-            style->fill_opacity.value = SP_SCALE24_FROM_FLOAT (cf[3]);
-            style->fill_opacity.set = TRUE;
-            style->stroke_opacity.value = SP_SCALE24_FROM_FLOAT (cf[3]);
-            style->stroke_opacity.set = TRUE;
+            style->fill_opacity.set_double(opacity);
+            style->stroke_opacity.set_double(opacity);
 
-            style->opacity.value = SP_SCALE24_FROM_FLOAT (cf[3]);
-            style->opacity.set = TRUE;
+            // This seems wrong, it duplicates the opacity
+            style->opacity.set_double(opacity);
         }
 
         return ret;
@@ -304,35 +297,20 @@ bool GrDrag::styleSet( const SPCSSAttr *css, bool switch_style)
     return local_change; // true if handled
 }
 
-guint32 GrDrag::getColor()
+Inkscape::Colors::Color GrDrag::getColor()
 {
-    if (selected.empty()) return 0;
+    if (selected.empty())
+        return Color(0x000000ff);
 
-    float cf[4];
-    cf[0] = cf[1] = cf[2] = cf[3] = 0;
-
-    int count = 0;
-
+    Inkscape::Colors::ColorSet colors;
     for(auto d : selected) { //for all selected draggers
         for(auto draggable : d->draggables) { //for all draggables of dragger
-            guint32 c = sp_item_gradient_stop_query_style (draggable->item, draggable->point_type, draggable->point_i, draggable->fill_or_stroke);
-            cf[0] += SP_RGBA32_R_F (c);
-            cf[1] += SP_RGBA32_G_F (c);
-            cf[2] += SP_RGBA32_B_F (c);
-            cf[3] += SP_RGBA32_A_F (c);
-
-            count ++;
+            colors.set(
+                draggable->item->getId(),
+                sp_item_gradient_stop_query_style (draggable->item, draggable->point_type, draggable->point_i, draggable->fill_or_stroke));
         }
     }
-
-    if (count) {
-        cf[0] /= count;
-        cf[1] /= count;
-        cf[2] /= count;
-        cf[3] /= count;
-    }
-
-    return SP_RGBA32_F_COMPOSE(cf[0], cf[1], cf[2], cf[3]);
+    return colors.getAverage();
 }
 
 // TODO refactor early returns

@@ -42,6 +42,8 @@
 #include <sigc++/adaptors/bind.h>
 #include <sigc++/functors/mem_fun.h>
 
+#include "colors/manager.h"
+#include "colors/color.h"
 #include "attribute-rel-svg.h"
 #include "attributes.h"
 #include "document.h"
@@ -54,7 +56,6 @@
 
 #include "io/resource.h"
 #include "object/sp-object.h"
-#include "svg/svg-color.h"
 #include "ui/builder-utils.h"
 #include "ui/controller.h"
 #include "ui/icon-loader.h"
@@ -735,11 +736,10 @@ void StyleDialog::readStyleElement()
                     break;
                 }
             }
-            guint32 r1 = 0; // if there's no color, return black
-            r1 = sp_svg_read_color(value.c_str(), r1);
-            guint32 r2 = 0; // if there's no color, return black
-            r2 = sp_svg_read_color(val.c_str(), r2);
-            if ((r1 == 0 || r1 != r2) && value != val || attr_prop.count(name)) {
+
+            auto r1 = Colors::Color::parse(value);
+            auto r2 = Colors::Color::parse(val);
+            if (((!r1 || *r1 != *r2) && value != val) || attr_prop.count(name)) {
                 row[_mColumns._colStrike] = true;
             } else {
                 row[_mColumns._colOwner] = _("Current value");

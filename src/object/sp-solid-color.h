@@ -12,7 +12,6 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include "color.h"
 #include "sp-paint-server.h"
 
 typedef struct _cairo cairo_t;

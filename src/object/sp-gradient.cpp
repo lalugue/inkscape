@@ -138,8 +138,7 @@ bool SPGradient::isEquivalent(SPGradient *that)
 
         bool effective = true;
         while (effective && (as && bs)) {
-            if (!as->getColor().isClose(bs->getColor(), 0.001) ||
-                    as->offset != bs->offset || as->getOpacity() != bs->getOpacity() ) {
+            if (!as->getColor().isClose(bs->getColor(), 0.001) || as->offset != bs->offset) {
                 effective = false;
                 break;
             } 
@@ -922,7 +921,8 @@ SPGradient::repr_write_vector()
         /* strictly speaking, offset an SVG <number> rather than a CSS one, but exponents make no
          * sense for offset proportions. */
         auto obj = cast<SPStop>(document->getObjectByRepr(child));
-        obj->setColor(stop.color, stop.opacity);
+        if (auto color = stop.color)
+            obj->setColor(*color);
         /* Order will be reversed here */
         l.push_back(child);
     }
@@ -1020,10 +1020,7 @@ void SPGradient::rebuildVector()
             // 0%. Gradient offset values greater than 1 (or greater than 100%) are rounded
             // down to 100%."
             gstop.offset = CLAMP(gstop.offset, 0, 1);
-
             gstop.color = stop->getColor();
-            gstop.opacity = stop->getOpacity();
-
             vector.stops.push_back(gstop);
         }
     }
@@ -1036,15 +1033,11 @@ void SPGradient::rebuildVector()
         {
             SPGradientStop gstop;
             gstop.offset = 0.0;
-            gstop.color.set( 0x00000000 );
-            gstop.opacity = 0.0;
             vector.stops.push_back(gstop);
         }
         {
             SPGradientStop gstop;
             gstop.offset = 1.0;
-            gstop.color.set( 0x00000000 );
-            gstop.opacity = 0.0;
             vector.stops.push_back(gstop);
         }
     } else {
@@ -1056,7 +1049,6 @@ void SPGradient::rebuildVector()
             SPGradientStop gstop;
             gstop.offset = 0.0;
             gstop.color = vector.stops.front().color;
-            gstop.opacity = vector.stops.front().opacity;
             vector.stops.insert(vector.stops.begin(), gstop);
         }
         if (vector.stops.back().offset < 1.0) {
@@ -1064,7 +1056,6 @@ void SPGradient::rebuildVector()
             SPGradientStop gstop;
             gstop.offset = 1.0;
             gstop.color = vector.stops.back().color;
-            gstop.opacity = vector.stops.back().opacity;
             vector.stops.push_back(gstop);
         }
     }
@@ -1153,11 +1144,9 @@ sp_gradient_pattern_common_setup(cairo_pattern_t *cp,
 
     // add stops
     if (!is<SPMeshGradient>(gr)) {
-        for (auto & stop : gr->vector.stops)
-        {
+        for (auto & stop : gr->vector.stops) {
             // multiply stop opacity by paint opacity
-            cairo_pattern_add_color_stop_rgba(cp, stop.offset,
-                                              stop.color.v.c[0], stop.color.v.c[1], stop.color.v.c[2], stop.opacity * opacity);
+            ink_cairo_pattern_add_color_stop(cp, stop.offset, *stop.color, opacity);
         }
     }
 
@@ -1180,10 +1169,8 @@ SPGradient::create_preview_pattern(double width)
 
         pat = cairo_pattern_create_linear(0, 0, width, 0);
 
-        for (auto & stop : vector.stops)
-        {
-            cairo_pattern_add_color_stop_rgba(pat, stop.offset,
-              stop.color.v.c[0], stop.color.v.c[1], stop.color.v.c[2], stop.opacity);
+        for (auto & stop : vector.stops) {
+            ink_cairo_pattern_add_color_stop(pat, stop.offset, *stop.color);
         }
     } else if (unsigned const num_columns = array.patch_columns()) {
         // For the moment, use the top row of nodes for preview.
@@ -1193,8 +1180,7 @@ SPGradient::create_preview_pattern(double width)
 
         for (unsigned i = 0; i < num_columns + 1; ++i) {
             SPMeshNode* node = array.node( 0, i*3 );
-            cairo_pattern_add_color_stop_rgba(pat, i*offset,
-              node->color.v.c[0], node->color.v.c[1], node->color.v.c[2], node->opacity);
+            ink_cairo_pattern_add_color_stop(pat, i * offset, *node->color);
         }
     }
 

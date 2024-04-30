@@ -21,12 +21,11 @@
 #include <2geom/forward.h>
 #include <gtkmm/box.h>
 
-#include "color.h"
+#include "colors/color-set.h"
 #include "fill-or-stroke.h"
 #include "gradient-selector-interface.h"
 #include "object/sp-gradient-spread.h"
 #include "object/sp-gradient-units.h"
-#include "ui/selected-color.h"
 #include "ui/widget/gradient-selector.h"
 #include "ui/widget/swatch-selector.h"
 
@@ -112,10 +111,8 @@ class PaintSelector : public Gtk::Box {
     bool _meshmenu_update = false;
 #endif
 
-    std::unique_ptr<Inkscape::UI::SelectedColor> _selected_color;
-    bool _updating_color;
-
-    void getColorAlpha(SPColor &color, gfloat &alpha) const;
+    std::shared_ptr<Colors::ColorSet> _selected_colors;
+    bool _updating_color = false;
 
     static gboolean isSeparator(GtkTreeModel *model, GtkTreeIter *iter, gpointer data);
 
@@ -133,7 +130,6 @@ class PaintSelector : public Gtk::Box {
     void style_button_toggled(StyleToggleButton *tb);
     void fillrule_toggled(FillRuleRadioButton *tb);
     void onSelectedColorGrabbed();
-    void onSelectedColorDragged();
     void onSelectedColorReleased();
     void onSelectedColorChanged();
     void set_mode_empty();
@@ -143,7 +139,7 @@ class PaintSelector : public Gtk::Box {
     GradientSelectorInterface *getGradientFromData() const;
     void clear_frame();
     void set_mode_unset();
-    void set_mode_color(PaintSelector::Mode mode);
+    void set_mode_color();
     void set_mode_gradient(PaintSelector::Mode mode);
 #ifdef WITH_MESH
     void set_mode_mesh(PaintSelector::Mode mode);
@@ -165,7 +161,7 @@ class PaintSelector : public Gtk::Box {
     static void pattern_destroy(GtkWidget *widget, PaintSelector *psel);
 
   public:
-    PaintSelector(FillOrStroke kind);
+    PaintSelector(FillOrStroke kind, std::shared_ptr<Colors::ColorSet> colors);
 
     inline decltype(_signal_fillrule_changed) signal_fillrule_changed() const { return _signal_fillrule_changed; }
     inline decltype(_signal_dragged) signal_dragged() const { return _signal_dragged; }
@@ -179,7 +175,6 @@ class PaintSelector : public Gtk::Box {
     void setMode(Mode mode);
     static Mode getModeForStyle(SPStyle const &style, FillOrStroke kind);
     void setFillrule(FillRule fillrule);
-    void setColorAlpha(SPColor const &color, float alpha);
     void setSwatch(SPGradient *vector);
     void setGradientLinear(SPGradient *vector, SPLinearGradient* gradient, SPStop* selected);
     void setGradientRadial(SPGradient *vector, SPRadialGradient* gradient, SPStop* selected);
@@ -197,13 +192,10 @@ class PaintSelector : public Gtk::Box {
     void updatePatternList(SPPattern *pat);
     inline decltype(_mode) get_mode() const { return _mode; }
 
-    // TODO move this elsewhere:
-    void setFlatColor(SPDesktop *desktop, const gchar *color_property, const gchar *opacity_property);
-
     SPGradient *getGradientVector();
     void pushAttrsToGradient(SPGradient *gr) const;
     SPPattern *getPattern();
-    std::optional<unsigned int> get_pattern_color();
+    std::optional<Colors::Color> get_pattern_color();
     Geom::Affine get_pattern_transform();
     Geom::Point get_pattern_offset();
     Geom::Scale get_pattern_gap();

@@ -163,7 +163,7 @@ bool InxParameter::get_optiongroup_contains(const char *value) const
     return param->contains(value);
 }
 
-unsigned int InxParameter::get_color() const
+Inkscape::Colors::Color InxParameter::get_color() const
 {
     ParamColor const *param = dynamic_cast<ParamColor const *>(this);
     if (!param) {
@@ -214,12 +214,12 @@ const char *InxParameter::set_optiongroup(const char *in)
     return param->set(in).c_str();
 }
 
-unsigned int InxParameter::set_color(unsigned int in)
+void InxParameter::set_color(Inkscape::Colors::Color const &in)
 {
     ParamColor*param = dynamic_cast<ParamColor *>(this);
     if (param == nullptr)
         throw param_not_color_param();
-    return param->set(in);
+    param->set(in);
 }
 
 

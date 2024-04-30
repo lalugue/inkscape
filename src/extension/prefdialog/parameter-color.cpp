@@ -17,10 +17,11 @@
 
 #include "parameter-color.h"
 
-#include "color.h"
+#include "colors/manager.h"
 #include "extension/extension.h"
 #include "preferences.h"
 #include "ui/pack.h"
+#include "ui/util.h"
 #include "ui/widget/color-notebook.h"
 #include "xml/node.h"
 
@@ -28,24 +29,19 @@ namespace Inkscape::Extension {
 
 ParamColor::ParamColor(Inkscape::XML::Node *xml, Inkscape::Extension::Extension *ext)
     : InxParameter(xml, ext)
+    , _colors(std::make_shared<Colors::ColorSet>())
 {
-    // get value
-    unsigned int _value = 0x000000ff; // default to black
     if (xml->firstChild()) {
-        const char *value = xml->firstChild()->content();
-        if (value)
-            string_to_value(value);
-        _value = _color.value();
+        if (auto parsed = Colors::Color::parse(xml->firstChild()->content())) {
+            _colors->set(*parsed);
+        }
+    }
+    if (_colors->isEmpty()) {
+        auto prefs = Preferences::get();
+        _colors->set(prefs->getColor(pref_name()));
     }
 
-    Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-    _value = prefs->getUInt(pref_name(), _value);
-
-    _color.setValue(_value);
-
-    _color_changed = _color.signal_changed.connect(sigc::mem_fun(*this, &ParamColor::_onColorChanged));
-    // TODO: SelectedColor does not properly emit signal_changed after dragging, so we also need the following
-    _color_released = _color.signal_released.connect(sigc::mem_fun(*this, &ParamColor::_onColorChanged));
+    _color_changed = _colors->signal_changed.connect(sigc::mem_fun(*this, &ParamColor::_onColorChanged));
 
     // parse appearance
     if (_appearance) {
@@ -61,14 +57,6 @@ ParamColor::ParamColor(Inkscape::XML::Node *xml, Inkscape::Extension::Extension 
 ParamColor::~ParamColor()
 {
     _color_changed.disconnect();
-    _color_released.disconnect();
-}
-
-unsigned int ParamColor::set(unsigned int in)
-{
-    _color.setValue(in);
-
-    return in;
 }
 
 Gtk::Widget *ParamColor::get_widget(sigc::signal<void ()> *changeSignal)
@@ -87,15 +75,12 @@ Gtk::Widget *ParamColor::get_widget(sigc::signal<void ()> *changeSignal)
         label->set_visible(true);
         UI::pack_start(*hbox, *label, true, true);
 
-        Gdk::RGBA rgba;
-        rgba.set_red_u  (((_color.value() >> 24) & 255) << 8);
-        rgba.set_green_u(((_color.value() >> 16) & 255) << 8);
-        rgba.set_blue_u (((_color.value() >>  8) & 255) << 8);
-        rgba.set_alpha_u(((_color.value() >>  0) & 255) << 8);
-
         // TODO: It would be nicer to have a custom Gtk::ColorButton() implementation here,
         //       that wraps an Inkscape::UI::Widget::ColorNotebook into a new dialog
-        _color_button = Gtk::make_managed<Gtk::ColorButton>(rgba);
+        auto color = _colors->get();
+        if (!color)
+            color = Colors::Color::parse("magenta");
+        _color_button = Gtk::make_managed<Gtk::ColorButton>(color_to_rgba(*color));
         _color_button->set_title(_text);
         _color_button->set_use_alpha();
         _color_button->set_visible(true);
@@ -103,7 +88,7 @@ Gtk::Widget *ParamColor::get_widget(sigc::signal<void ()> *changeSignal)
 
         _color_button->signal_color_set().connect(sigc::mem_fun(*this, &ParamColor::_onColorButtonChanged));
     } else {
-        Gtk::Widget *selector = Gtk::make_managed<Inkscape::UI::Widget::ColorNotebook>(_color);
+        Gtk::Widget *selector = Gtk::make_managed<Inkscape::UI::Widget::ColorNotebook>(_colors);
         UI::pack_start(*hbox, *selector, true, true);
         selector->set_visible(true);
     }
@@ -116,31 +101,17 @@ Gtk::Widget *ParamColor::get_widget(sigc::signal<void ()> *changeSignal)
 void ParamColor::_onColorChanged()
 {
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-    prefs->setUInt(pref_name(), _color.value());
+    if (auto color = _colors->get()) {
+        prefs->setColor(pref_name(), *color);
 
-    if (_changeSignal)
-        _changeSignal->emit();
+        if (_changeSignal)
+            _changeSignal->emit();
+    }
 }
 
 void ParamColor::_onColorButtonChanged()
 {
-    Gdk::RGBA rgba = _color_button->get_rgba();
-    unsigned int value = ((rgba.get_red_u()   >> 8) << 24) +
-                         ((rgba.get_green_u() >> 8) << 16) +
-                         ((rgba.get_blue_u()  >> 8) <<  8) +
-                         ((rgba.get_alpha_u() >> 8) <<  0);
-    set(value);
-}
-
-std::string ParamColor::value_to_string() const
-{
-    return std::to_string(_color.value());
-}
-
-void ParamColor::string_to_value(const std::string &in)
-{
-    // If we canʼt convert this will return 0 or ULONG_MAX
-    _color.setValue(std::strtoul(in.c_str(), nullptr, 0));
+    set(Colors::Color(to_guint32(_color_button->get_rgba())));
 }
 
 } // namespace Inkscape::Extension

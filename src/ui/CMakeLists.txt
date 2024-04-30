@@ -14,7 +14,6 @@ set(ui_SRC
 	monitor.cpp
 	pack.cpp
 	popup-menu.cpp
-	selected-color.cpp
 	shape-editor.cpp
 	shape-editor-knotholders.cpp
 	simple-pref-pusher.cpp
@@ -192,7 +191,6 @@ set(ui_SRC
 	widget/canvas-grid.cpp
 	widget/canvas-notice.cpp
 	widget/color-entry.cpp
-	widget/color-icc-selector.cpp
 	widget/color-notebook.cpp
 	widget/color-palette.cpp
 	widget/color-palette-preview.cpp
@@ -296,7 +294,6 @@ set(ui_SRC
 	monitor.h
 	pack.h
 	popup-menu.h
-	selected-color.h
 	shape-editor.h
 	simple-pref-pusher.h
 	shortcuts.h
@@ -482,7 +479,6 @@ set(ui_SRC
 	widget/canvas-notice.h
 	widget/completion-popup.h
 	widget/color-entry.h
-	widget/color-icc-selector.h
 	widget/color-notebook.h
 	widget/color-palette.h
 	widget/color-palette-preview.h

@@ -10,8 +10,8 @@
 #include <cairomm/context.h>
 #include <2geom/point.h>
 
-#include "color.h"
 #include "display/control/canvas-item-enums.h"
+#include "display/cairo-utils.h"
 
 namespace Inkscape::Handles {
 namespace {
@@ -424,13 +424,6 @@ void draw_cairo_path(CanvasItemCtrlShape shape, Cairo::Context &cr, double size,
 std::unordered_map<RenderParams, std::shared_ptr<Cairo::ImageSurface const>> cache;
 std::mutex mutex;
 
-void set_source_rgba32(Cairo::Context &cr, uint32_t rgba)
-{
-    cr.set_source_rgba(SP_RGBA32_R_F(rgba),
-                       SP_RGBA32_G_F(rgba),
-                       SP_RGBA32_B_F(rgba),
-                       SP_RGBA32_A_F(rgba));
-}
 
 std::shared_ptr<Cairo::ImageSurface const> draw_uncached(RenderParams const &p)
 {
@@ -470,16 +463,16 @@ std::shared_ptr<Cairo::ImageSurface const> draw_uncached(RenderParams const &p)
     draw_cairo_path(p.shape, cr, p.size * scale, grid_fit);
 
     // Outline.
-    set_source_rgba32(cr, p.outline);
+    ink_cairo_set_source_rgba32(cr, p.outline);
     cr.set_line_width(effective_outline * scale);
     cr.stroke_preserve();
 
     // Fill.
-    set_source_rgba32(cr, p.fill);;
+    ink_cairo_set_source_rgba32(cr, p.fill);;
     cr.fill_preserve();
 
     // Stroke.
-    set_source_rgba32(cr, p.stroke);
+    ink_cairo_set_source_rgba32(cr, p.stroke);
     cr.set_line_width(p.stroke_width * scale);
     cr.stroke();
 

@@ -13,20 +13,29 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include <algorithm>
-#include <cstring>
+#include "ui/widget/ink-color-wheel.h"
+
 #include <2geom/angle.h>
 #include <2geom/coord.h>
-#include <sigc++/functors/mem_fun.h>
+#include <algorithm>
+#include <cstring>
 #include <gdkmm/display.h>
 #include <gdkmm/general.h>
 #include <gtkmm/drawingarea.h>
+#include <sigc++/functors/mem_fun.h>
+#include <utility>
 
+#include "colors/spaces/enum.h"
+#include "colors/spaces/hsluv.h"
+#include "colors/utils.h"
 #include "ui/controller.h"
 #include "ui/dialog/color-item.h"
 #include "ui/util.h"
 #include "ui/widget/bin.h"
-#include "ui/widget/ink-color-wheel.h"
+
+using namespace Inkscape::Colors;
+using Inkscape::Colors::Space::Luv;
+using Inkscape::Colors::Space::Type;
 
 namespace Inkscape::UI::Widget {
 
@@ -73,8 +82,7 @@ struct Intersection final
 
 static double lerp(double v0, double v1, double t0, double t1, double t);
 static ColorPoint lerp(ColorPoint const &v0, ColorPoint const &v1, double t0, double t1, double t);
-static guint32 hsv_to_rgb(double h, double s, double v);
-static double luminance(guint32 color);
+static double luminance(Color const &color);
 static Geom::Point to_pixel_coordinate(Geom::Point const &point, double scale, double resize);
 static Geom::Point from_pixel_coordinate(Geom::Point const &point, double scale, double resize);
 static std::vector<Geom::Point> to_pixel_coordinate(std::vector<Geom::Point> const &points, double scale,
@@ -84,9 +92,10 @@ static void draw_vertical_padding(ColorPoint p0, ColorPoint p1, int padding, boo
 
 /* Base Color Wheel */
 
-ColorWheel::ColorWheel()
+ColorWheel::ColorWheel(Type type, std::vector<double> initial_color)
     : Gtk::AspectFrame(0.5, 0.5, 1.0, false)
     , _bin{Gtk::make_managed<UI::Widget::Bin>()}
+    , _values{type, std::move(initial_color)}
     , _drawing_area{Gtk::make_managed<Gtk::DrawingArea>()}
 {
     set_name("ColorWheel");
@@ -106,37 +115,6 @@ ColorWheel::ColorWheel()
                           (*_drawing_area, *this);
     Controller::add_key<&ColorWheel::on_key_pressed, &ColorWheel::on_key_released>
                        (*_drawing_area, *this);
-}
-
-bool ColorWheel::setHue(double h, bool const emit)
-{
-    h = std::clamp(h, MIN_HUE, MAX_HUE);
-    bool const changed = std::exchange(_values[0], h) != h;
-    if (changed && emit) color_changed();
-    return changed;
-}
-
-bool ColorWheel::setSaturation(double s, bool const emit)
-{
-    s = std::clamp(s, MIN_SATURATION, MAX_SATURATION);
-    bool const changed = std::exchange(_values[1], s) != s;
-    if (changed && emit) color_changed();
-    return changed;
-}
-
-bool ColorWheel::setLightness(double l, bool const emit)
-{
-    l = std::clamp(l, MIN_LIGHTNESS, MAX_LIGHTNESS);
-    bool const changed = std::exchange(_values[2], l) != l;
-    if (changed && emit) color_changed();
-    return changed;
-}
-
-void ColorWheel::getValues(double *a, double *b, double *c) const
-{
-    if (a) *a = _values[0];
-    if (b) *b = _values[1];
-    if (c) *c = _values[2];
 }
 
 sigc::connection ColorWheel::connect_color_changed(sigc::slot<void ()> slot)
@@ -202,99 +180,19 @@ bool ColorWheel::on_key_released(GtkEventControllerKey const * /*controller*/,
 
 /* HSL Color Wheel */
 
-bool ColorWheelHSL::setRgb(double r, double g, double b,
-                           bool const overrideHue, bool const emit)
+bool ColorWheelHSL::setColor(Color const &color,
+                           bool const /*overrideHue*/, bool const emit)
 {
-    auto const old_values = _values;
-    auto const [min, max] = std::minmax({r, g, b});
-
-    _values[2] = max;
-
-    if (min == max) {
-        if (overrideHue) {
-            _values[0] = 0.0;
-        }
-    } else {
-        if (max == r) {
-            _values[0] = ((g - b) / (max - min)    ) / 6.0;
-        } else if (max == g) {
-            _values[0] = ((b - r) / (max - min) + 2) / 6.0;
-        } else {
-            _values[0] = ((r - g) / (max - min) + 4) / 6.0;
-        }
-
-        if (_values[0] < 0.0) {
-            _values[0] += 1.0;
-        }
-    }
-
-    if (max == 0) {
-        _values[1] = 0;
-    } else {
-        _values[1] = (max - min) / max;
-    }
-
-    bool changed = false;
-
-    if (_values[0] != old_values[0]) {
-        changed = true;
+    if (_values.set(color, true)) {
         _triangle_corners.reset();
-    }
-
-    if (_values[1] != old_values[1] || _values[2] != old_values[2]) {
-        changed = true;
         _marker_point.reset();
+        if (emit)
+            color_changed();
+        else
+            queue_drawing_area_draw();
+        return true;
     }
-
-    if (changed && emit) color_changed();
-    return changed;
-}
-
-void ColorWheelHSL::getRgb(double *r, double *g, double *b) const
-{
-    guint32 color = getRgb();
-    *r = ((color & 0x00ff0000) >> 16) / 255.0;
-    *g = ((color & 0x0000ff00) >>  8) / 255.0;
-    *b = ((color & 0x000000ff)      ) / 255.0;
-}
-
-void ColorWheelHSL::getRgbV(double *rgb) const
-{
-    guint32 color = getRgb();
-    rgb[0] = ((color & 0x00ff0000) >> 16) / 255.0;
-    rgb[1] = ((color & 0x0000ff00) >>  8) / 255.0;
-    rgb[2] = ((color & 0x000000ff)      ) / 255.0;
-}
-
-guint32 ColorWheelHSL::getRgb() const
-{
-    return hsv_to_rgb(_values[0], _values[1], _values[2]);
-}
-
-bool ColorWheelHSL::setHue(double const h, bool const emit)
-{
-    bool const changed = ColorWheel::setHue(h, emit);
-    if (changed) _triangle_corners.reset();
-    return changed;
-}
-
-bool ColorWheelHSL::setSaturation(double const s, bool const emit)
-{
-    bool const changed = ColorWheel::setSaturation(s, emit);
-    if (changed) _marker_point.reset();
-    return changed;
-}
-
-bool ColorWheelHSL::setLightness(double const l, bool const emit)
-{
-    bool const changed = ColorWheel::setLightness(l, emit);
-    if (changed) _marker_point.reset();
-    return changed;
-}
-
-void ColorWheelHSL::getHsl(double *h, double *s, double *l) const
-{
-    getValues(h, s, l);
+    return false;
 }
 
 void ColorWheelHSL::update_ring_source()
@@ -327,7 +225,7 @@ void ColorWheelHSL::update_ring_source()
                     angle += 2.0 * M_PI;
                 }
                 double hue = angle/(2.0 * M_PI);
-                *p++ = hsv_to_rgb(hue, 1.0, 1.0);
+                *p++ = Color(Type::HSV, {hue, 1.0, 1.0}).toARGB();
             }
         }
     }
@@ -391,13 +289,13 @@ ColorWheelHSL::update_triangle_source()
             auto p = _buffer_triangle.data() + y * (stride / 4);
             int x = 0;
             for (; x <= x_start; ++x) {
-                *p++ = side0.get_color();
+                *p++ = side0.color.toARGB();
             }
             for (; x < x_end; ++x) {
-                *p++ = lerp(side0, side1, side0.x, side1.x, x).get_color();
+                *p++ = lerp(side0, side1, side0.x, side1.x, x).color.toARGB();
             }
             for (; x < width; ++x) {
-                *p++ = side1.get_color();
+                *p++ = side1.color.toARGB();
             }
         }
     }
@@ -454,9 +352,8 @@ void ColorWheelHSL::on_drawing_area_draw(Cairo::RefPtr<Cairo::Context> const &cr
     cr->stroke();
     cr->restore();
     // Paint line on ring
-    double l = 0.0;
-    guint32 color_on_ring = hsv_to_rgb(_values[0], 1.0, 1.0);
-    if (luminance(color_on_ring) < 0.5) l = 1.0;
+    auto color_on_ring = Color(Type::HSV, {_values[0], 1.0, 1.0});
+    double l = luminance(color_on_ring) < 0.5 ? 1.0 : 0.0;
     cr->save();
     cr->set_source_rgb(l, l, l);
     cr->move_to(cx + cos(_values[0] * M_PI * 2.0) * (r_min + 1),
@@ -478,9 +375,7 @@ void ColorWheelHSL::on_drawing_area_draw(Cairo::RefPtr<Cairo::Context> const &cr
 
     // Draw marker
     auto const &[mx, my] = get_marker_point();
-    double a = 0.0;
-    guint32 color_at_marker = getRgb();
-    if (luminance(color_at_marker) < 0.5) a = 1.0;
+    double a = luminance(getColor()) < 0.5 ? 1.0 : 0.0;
     cr->set_source_rgb(a, a, a);
     cr->begin_new_path();
     cr->arc(mx, my, marker_radius, 0, 2 * M_PI);
@@ -567,10 +462,11 @@ bool ColorWheelHSL::_set_from_xy(double const x, double const y)
     double yt = lerp(0.0, 1.0, -dy, dy, yp);
     yt = std::clamp(yt, 0.0, 1.0);
 
-    ColorPoint c0(0, 0, yt, yt, yt);                    // Grey point along base.
-    ColorPoint c1(0, 0, hsv_to_rgb(_values[0], 1, 1));  // Hue point at apex
+    ColorPoint c0(0, 0, Color(Type::RGB, {yt, yt, yt}));      // Grey point along base.
+    ColorPoint c1(0, 0, Color(Type::HSV, {_values[0], 1, 1})); // Hue point at apex
     ColorPoint c = lerp(c0, c1, 0, 1, xt);
-    return setRgb(c.r, c.g, c.b, false); // Don't override previous hue.
+    c.color.setOpacity(_values.getOpacity()); // Remember opacity
+    return setColor(c.color, false); // Don't override previous hue.
 }
 
 bool ColorWheelHSL::set_from_xy_delta(double const dx, double const dy)
@@ -625,8 +521,7 @@ void ColorWheelHSL::_update_ring_color(double x, double y)
     }
     angle /= 2.0 * M_PI;
 
-    bool const changed = std::exchange(_values[0], angle) != angle;
-    if (changed) {
+    if (_values.set(0, angle)) {
         _triangle_corners.reset();
         color_changed();
     }
@@ -689,7 +584,6 @@ bool ColorWheelHSL::on_key_pressed(GtkEventControllerKey const * /*controller*/,
                               nullptr);
 
     static constexpr double delta_hue = 2.0 / MAX_HUE;
-    auto const old_hue = _values[0];
     auto dx = 0.0, dy = 0.0;
 
     switch (key) {
@@ -717,21 +611,12 @@ bool ColorWheelHSL::on_key_pressed(GtkEventControllerKey const * /*controller*/,
 
     bool changed = false;
     if (_focus_on_ring) {
-        _values[0] += -(dx != 0 ? dx : dy) * delta_hue;
+        changed = _values.set(0, _values[0] - ((dx != 0 ? dx : dy) * delta_hue));
     } else {
         changed = set_from_xy_delta(dx, dy);
     }
 
-    if (_values[0] >= 1.0) {
-        _values[0] -= 1.0;
-    } else if (_values[0] <  0.0) {
-        _values[0] += 1.0;
-    }
-
-    if (_values[0] != old_hue) {
-        _triangle_corners.reset();
-        changed = true;
-    }
+    _values.normalize();
 
     if (changed) {
         color_changed();
@@ -780,9 +665,9 @@ std::array<ColorPoint, 3> const &ColorWheelHSL::get_triangle_corners()
     auto const y1 = cy - std::sin(angle2) * r_min;
     auto const x2 = cx + std::cos(angle4) * r_min;
     auto const y2 = cy - std::sin(angle4) * r_min;
-    p0 = {x0, y0, hsv_to_rgb(_values[0], 1.0, 1.0)};
-    p1 = {x1, y1, hsv_to_rgb(_values[0], 1.0, 0.0)};
-    p2 = {x2, y2, hsv_to_rgb(_values[0], 0.0, 1.0)};
+    p0 = {x0, y0, Color(Type::HSV, {_values[0], 1.0, 1.0})};
+    p1 = {x1, y1, Color(Type::HSV, {_values[0], 1.0, 0.0})};
+    p2 = {x2, y2, Color(Type::HSV, {_values[0], 0.0, 1.0})};
     return *_triangle_corners;
 }
 
@@ -803,61 +688,36 @@ Geom::Point const &ColorWheelHSL::get_marker_point()
     return *_marker_point;
 }
 
+ColorWheelHSL::ColorWheelHSL()
+    : Glib::ObjectBase{"ColorWheelHSL"}
+    , WidgetVfuncsClassInit{}
+    // All the calculations are based on HSV, not HSL
+    , ColorWheel(Type::HSV, {0, 0, 0, 1})
+{}
 
 /* HSLuv Color Wheel */
 
 ColorWheelHSLuv::ColorWheelHSLuv()
+    : ColorWheel(Type::HSLUV, {0, 1, 0.5, 1})
 {
-    _picker_geometry = std::make_unique<Hsluv::PickerGeometry>();
-    setHsluv(MIN_HUE, MAX_SATURATION, 0.5 * MAX_LIGHTNESS);
+    _picker_geometry = std::make_unique<PickerGeometry>();
 }
 
-bool ColorWheelHSLuv::setRgb(double r, double g, double b,
+bool ColorWheelHSLuv::setColor(Color const &color,
                              bool /*overrideHue*/, bool const emit)
 {
-    auto hsl = Hsluv::rgb_to_hsluv(r, g, b);
-    bool changed = false;
-    changed |= setHue       (hsl[0], false);
-    changed |= setSaturation(hsl[1], false);
-    changed |= setLightness (hsl[2], false);
-    if (changed && emit) color_changed();
-    return changed;
-}
-
-void ColorWheelHSLuv::getRgb(double *r, double *g, double *b) const
-{
-    auto rgb = Hsluv::hsluv_to_rgb(_values[0], _values[1], _values[2]);
-    *r = rgb[0];
-    *g = rgb[1];
-    *b = rgb[2];
-}
-
-void ColorWheelHSLuv::getRgbV(double *rgb) const
-{
-    auto converted = Hsluv::hsluv_to_rgb(_values[0], _values[1], _values[2]);
-    for (size_t i : {0, 1, 2}) {
-        rgb[i] = converted[i];
+    if (_values.set(color, true)) {
+        assert(_values.getSpace()->getType() == Type::HSLUV);
+        updateGeometry();
+        _scale = OUTER_CIRCLE_RADIUS / _picker_geometry->outer_circle_radius;
+        _updatePolygon();
+        if (emit)
+            color_changed();
+        else
+            queue_drawing_area_draw();
+        return true;
     }
-}
-
-guint32 ColorWheelHSLuv::getRgb() const
-{
-    auto rgb = Hsluv::hsluv_to_rgb(_values[0], _values[1], _values[2]);
-    return (
-        (static_cast<guint32>(rgb[0] * 255.0) << 16) |
-        (static_cast<guint32>(rgb[1] * 255.0) <<  8) |
-        (static_cast<guint32>(rgb[2] * 255.0)      )
-    );
-}
-
-bool ColorWheelHSLuv::setHsluv(double h, double s, double l)
-{
-    bool changed = false;
-    changed |= setHue       (h, false);
-    changed |= setSaturation(s, false);
-    changed |= setLightness (l, false);
-    if (changed) color_changed();
-    return changed;
+    return false;
 }
 
 /**
@@ -866,10 +726,10 @@ bool ColorWheelHSLuv::setHsluv(double h, double s, double l)
 void ColorWheelHSLuv::updateGeometry()
 {
     // Separate from the extremes to avoid overlapping intersections
-    double lightness = std::clamp(_values[2] + 0.01, 0.1, 99.9);
+    double lightness = std::clamp((_values[2] * 100) + 0.01, 0.1, 99.9);
 
     // Find the lines bounding the gamut polygon
-    auto const lines = Hsluv::get_bounds(lightness);
+    auto const lines = Space::HSLuv::get_bounds(lightness);
 
     // Find the line closest to origin
     Geom::Line const *closest_line = nullptr;
@@ -929,22 +789,6 @@ void ColorWheelHSLuv::updateGeometry()
     _picker_geometry->inner_circle_radius = closest_distance;
 }
 
-bool ColorWheelHSLuv::setLightness(double const l, bool const emit)
-{
-    bool const changed = ColorWheel::setLightness(l, emit);
-    if (changed) {
-        updateGeometry();
-        _scale = OUTER_CIRCLE_RADIUS / _picker_geometry->outer_circle_radius;
-        _updatePolygon();
-    }
-    return changed;
-}
-
-void ColorWheelHSLuv::getHsluv(double *h, double *s, double *l) const
-{
-    getValues(h, s, l);
-}
-
 static Geom::IntPoint _getMargin(Gtk::Allocation const &allocation)
 {
     int const width = allocation.get_width();
@@ -967,7 +811,7 @@ inline static int _getAllocationSize(Gtk::Allocation const &allocation)
 /// Detect whether we're at the top or bottom vertex of the color space.
 bool ColorWheelHSLuv::_vertex() const
 {
-    return _values[2] < VERTEX_EPSILON || _values[2] > MAX_LIGHTNESS - VERTEX_EPSILON;
+    return _values[2] < VERTEX_EPSILON || _values[2] > 1.0 - VERTEX_EPSILON;
 }
 
 void ColorWheelHSLuv::on_drawing_area_draw(::Cairo::RefPtr<::Cairo::Context> const &cr, int, int)
@@ -1027,7 +871,7 @@ void ColorWheelHSLuv::on_drawing_area_draw(::Cairo::RefPtr<::Cairo::Context> con
     cr->unset_dash();
 
     // Contrast
-    auto [gray, alpha] = Hsluv::get_contrasting_color(Hsluv::perceptual_lightness(_values[2]));
+    auto [gray, alpha] = get_contrasting_color(perceptual_lightness(_values[2]));
     cr->set_source_rgba(gray, gray, gray, alpha);
 
     // Draw inscribed circle
@@ -1044,7 +888,7 @@ void ColorWheelHSLuv::on_drawing_area_draw(::Cairo::RefPtr<::Cairo::Context> con
     cr->fill();
 
     // Draw marker
-    auto luv = Hsluv::hsluv_to_luv(_values.data());
+    auto luv = Luv::toCoordinates(_values.converted(Type::LUV)->getValues());
     auto mp = to_pixel_coordinate({luv[1], luv[2]}, _scale, resize) + margin;
 
     cr->set_line_width(inner_stroke_width);
@@ -1072,12 +916,11 @@ bool ColorWheelHSLuv::_set_from_xy(double const x, double const y)
     double const resize = std::min(width, height) / static_cast<double>(SIZE);
     auto const p = from_pixel_coordinate(Geom::Point(x, y) - _getMargin(allocation), _scale, resize);
 
-    auto hsluv = Hsluv::luv_to_hsluv(_values[2], p[Geom::X], p[Geom::Y]);
-    bool changed = false;
-    changed |= setHue       (hsluv[0], false);
-    changed |= setSaturation(hsluv[1], false);
-    if (changed) color_changed();
-    return changed;
+    if (_values.set(Color(Type::LUV, Luv::fromCoordinates({_values[2] * 100, p[Geom::X], p[Geom::Y]})), true)) {
+        color_changed();
+        return true;
+    }
+    return false;
 }
 
 void ColorWheelHSLuv::_updatePolygon()
@@ -1115,21 +958,21 @@ void ColorWheelHSLuv::_updatePolygon()
     _buffer_polygon.resize(_cache_size.y() * stride / 4);
     std::vector<guint32> buffer_line(stride / 4);
 
-    ColorPoint clr;
     auto const square_center = Geom::IntPoint(_square_size / 2, _square_size / 2);
+    std::vector<double> color_vals = {_values[2] * 100, 0, 0};
 
     // Set the color of each pixel/square
     for (int y = bounding_min[Geom::Y]; y < bounding_max[Geom::Y]; y++) {
         for (int x = bounding_min[Geom::X]; x < bounding_max[Geom::X]; x++) {
             auto pos = Geom::IntPoint(x * _square_size, y * _square_size);
             auto point = from_pixel_coordinate(pos + square_center - margin, _scale, resize);
+            color_vals[1] = point[Geom::X];
+            color_vals[2] = point[Geom::Y];
 
-            auto rgb = Hsluv::luv_to_rgb(_values[2], point[Geom::X], point[Geom::Y]); // safe with _values[2] == 0
-            clr.set_color(rgb);
-
+            auto color = Color(Type::LUV, Luv::fromCoordinates(color_vals));
             guint32 *p = buffer_line.data() + (x * _square_size);
             for (int i = 0; i < _square_size; i++) {
-                p[i] = clr.get_color();
+                p[i] = color.toARGB();
             }
         }
 
@@ -1195,29 +1038,29 @@ bool ColorWheelHSLuv::on_key_pressed(GtkEventControllerKey const * /*controller*
                               nullptr);
 
     // Get current point
-    auto luv = Hsluv::hsluv_to_luv(_values.data());
+    auto luv = *_values.converted(Type::LUV);
 
     double const marker_move = 1.0 / _scale;
 
     switch (key) {
         case GDK_KEY_Up:
         case GDK_KEY_KP_Up:
-            luv[2] += marker_move;
+            luv.set(2, luv[2] + marker_move);
             consumed = true;
             break;
         case GDK_KEY_Down:
         case GDK_KEY_KP_Down:
-            luv[2] -= marker_move;
+            luv.set(2, luv[2] - marker_move);
             consumed = true;
             break;
         case GDK_KEY_Left:
         case GDK_KEY_KP_Left:
-            luv[1] -= marker_move;
+            luv.set(1, luv[1] - marker_move);
             consumed = true;
             break;
         case GDK_KEY_Right:
         case GDK_KEY_KP_Right:
-            luv[1] += marker_move;
+            luv.set(1, luv[1] + marker_move);
             consumed = true;
     }
 
@@ -1225,44 +1068,30 @@ bool ColorWheelHSLuv::on_key_pressed(GtkEventControllerKey const * /*controller*
 
     _adjusting = true;
 
-    auto const hsluv = Hsluv::luv_to_hsluv(luv[0], luv[1], luv[2]);
-    bool changed = false;
-    changed |= setHue       (hsluv[0], false);
-    changed |= setSaturation(hsluv[1], false);
-    if (changed) color_changed();
+    if (_values.set(luv, true))
+        color_changed();
 
     return true;
 }
 
 /* ColorPoint */
 ColorPoint::ColorPoint()
-    : x(0), y(0), r(0), g(0), b(0)
+    : x(0)
+    , y(0)
+    , color(0x0)
 {}
 
-ColorPoint::ColorPoint(double x, double y, double r, double g, double b)
-    : x(x), y(y), r(r), g(g), b(b)
-{}
-
-ColorPoint::ColorPoint(double x, double y, guint color)
+ColorPoint::ColorPoint(double x, double y, Color c)
     : x(x)
     , y(y)
-    , r(((color & 0xff0000) >> 16) / 255.0)
-    , g(((color & 0x00ff00) >>  8) / 255.0)
-    , b(((color & 0x0000ff)      ) / 255.0)
+    , color(std::move(c))
 {}
 
-guint32 ColorPoint::get_color() const
-{
-    return (static_cast<int>(r * 255) << 16 |
-            static_cast<int>(g * 255) <<  8 |
-            static_cast<int>(b * 255)
-    );
-};
-
-std::pair<double const &, double const &> ColorPoint::get_xy() const
-{
-    return {x, y};
-}
+ColorPoint::ColorPoint(double x, double y, guint c)
+    : x(x)
+    , y(y)
+    , color(c)
+{}
 
 static double lerp(double v0, double v1, double t0, double t1, double t)
 {
@@ -1275,61 +1104,21 @@ static ColorPoint lerp(ColorPoint const &v0, ColorPoint const &v1, double t0, do
 {
     double x = lerp(v0.x, v1.x, t0, t1, t);
     double y = lerp(v0.y, v1.y, t0, t1, t);
-    double r = lerp(v0.r, v1.r, t0, t1, t);
-    double g = lerp(v0.g, v1.g, t0, t1, t);
-    double b = lerp(v0.b, v1.b, t0, t1, t);
 
-    return ColorPoint(x, y, r, g, b);
+    auto r0 = *v0.color.converted(Type::RGB);
+    auto r1 = *v1.color.converted(Type::RGB);
+    double r = lerp(r0[0], r1[0], t0, t1, t);
+    double g = lerp(r0[1], r1[1], t0, t1, t);
+    double b = lerp(r0[2], r1[2], t0, t1, t);
+
+    return ColorPoint(x, y, Color(Type::RGB, {r, g, b}));
 }
 
-/**
- * @param h Hue. Between 0 and 1.
- * @param s Saturation. Between 0 and 1.
- * @param v Value. Between 0 and 1.
- */
-static guint32 hsv_to_rgb(double h, double s, double v)
+// N.B. We also have Color:get_perceptual_lightness(), but that uses different weightings..!
+double luminance(Color const &color)
 {
-    h = std::clamp(h, 0.0, 1.0);
-    s = std::clamp(s, 0.0, 1.0);
-    v = std::clamp(v, 0.0, 1.0);
-
-    double r = v;
-    double g = v;
-    double b = v;
-
-    if (s != 0.0) {
-        if (h == 1.0) h = 0.0;
-        h *= 6.0;
-
-        double f = h - (int)h;
-        double p = v * (1.0 - s);
-        double q = v * (1.0 - s * f);
-        double t = v * (1.0 - s * (1.0 - f));
-
-        switch (static_cast<int>(h)) {
-            case 0:     r = v;  g = t;  b = p;  break;
-            case 1:     r = q;  g = v;  b = p;  break;
-            case 2:     r = p;  g = v;  b = t;  break;
-            case 3:     r = p;  g = q;  b = v;  break;
-            case 4:     r = t;  g = p;  b = v;  break;
-            case 5:     r = v;  g = p;  b = q;  break;
-            default:    g_assert_not_reached();
-        }
-    }
-
-    guint32 rgb = (static_cast<int>(floor(r * 255 + 0.5)) << 16) |
-                  (static_cast<int>(floor(g * 255 + 0.5)) <<  8) |
-                  (static_cast<int>(floor(b * 255 + 0.5))      );
-    return rgb;
-}
-
-// N.B. We also have util:get_luminance(), but that uses different weightings..!
-double luminance(guint32 color)
-{
-    double r = ((color & 0xff0000) >> 16) / 255.0;
-    double g = ((color &   0xff00) >>  8) / 255.0;
-    double b = ((color &     0xff)      ) / 255.0;
-    return (r * 0.2125 + g * 0.7154 + b * 0.0721);
+    auto c = *color.converted(Type::RGB);
+    return (c[0] * 0.2125 + c[1] * 0.7154 + c[2] * 0.0721);
 }
 
 /**
@@ -1427,9 +1216,9 @@ void draw_vertical_padding(ColorPoint p0, ColorPoint p1, int padding, bool pad_u
             // paint the padding vertically above or below this point
             for (int offset = 0; offset <= padding; ++offset) {
                 if (pad_upwards && (point.y - offset) >= 0) {
-                    *(p - (offset * stride)) = point.get_color();
+                    *(p - (offset * stride)) = point.color.toARGB();
                 } else if (!pad_upwards && (point.y + offset) < height) {
-                    *(p + (offset * stride)) = point.get_color();
+                    *(p + (offset * stride)) = point.color.toARGB();
                 }
             }
             ++p;

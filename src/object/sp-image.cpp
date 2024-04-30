@@ -24,7 +24,6 @@
 #include <glib/gstdio.h>
 #include <glibmm/i18n.h>
 
-#include <lcms2.h>
 #include <2geom/rect.h>
 #include <2geom/transforms.h>
 
@@ -42,8 +41,9 @@
 #include "xml/quote.h"
 #include "xml/href-attribute-helper.h"
 
-#include "color/cms-system.h"
-#include "color-profile.h"
+#include "colors/cms/system.h"
+#include "colors/manager.h"
+#include "colors/document-cms.h"
 
 //#define DEBUG_LCMS
 #ifdef DEBUG_LCMS
@@ -238,74 +238,6 @@ void SPImage::set(SPAttr key, const gchar* value) {
 }
 
 // BLIP
-void SPImage::apply_profile(Inkscape::Pixbuf *pixbuf) {
-
-    // TODO: this will prevent using MIME data when exporting.
-    // Integrate color correction into loading.
-    pixbuf->ensurePixelFormat(Inkscape::Pixbuf::PF_GDK);
-    int imagewidth = pixbuf->width();
-    int imageheight = pixbuf->height();
-    int rowstride = pixbuf->rowstride();
-    guchar* px = pixbuf->pixels();
-
-    if ( px ) {
-        DEBUG_MESSAGE( lcmsFive, "in <image>'s sp_image_update. About to call get_document_profile()");
-
-        guint profIntent = Inkscape::RENDERING_INTENT_UNKNOWN;
-        cmsHPROFILE prof = Inkscape::CMSSystem::get_document_profile(document,
-                                                                     &profIntent,
-                                                                     color_profile );
-        if ( prof ) {
-            cmsProfileClassSignature profileClass = cmsGetDeviceClass( prof );
-            if ( profileClass != cmsSigNamedColorClass ) {
-                int intent = INTENT_PERCEPTUAL;
-                                
-                switch ( profIntent ) {
-                    case Inkscape::RENDERING_INTENT_RELATIVE_COLORIMETRIC:
-                        intent = INTENT_RELATIVE_COLORIMETRIC;
-                        break;
-                    case Inkscape::RENDERING_INTENT_SATURATION:
-                        intent = INTENT_SATURATION;
-                        break;
-                    case Inkscape::RENDERING_INTENT_ABSOLUTE_COLORIMETRIC:
-                        intent = INTENT_ABSOLUTE_COLORIMETRIC;
-                        break;
-                    case Inkscape::RENDERING_INTENT_PERCEPTUAL:
-                    case Inkscape::RENDERING_INTENT_UNKNOWN:
-                    case Inkscape::RENDERING_INTENT_AUTO:
-                    default:
-                        intent = INTENT_PERCEPTUAL;
-                }
-                                
-                cmsHPROFILE destProf = cmsCreate_sRGBProfile();
-                cmsHTRANSFORM transf = cmsCreateTransform( prof,
-                                                           TYPE_RGBA_8,
-                                                           destProf,
-                                                           TYPE_RGBA_8,
-                                                           intent, 0 );
-                if ( transf ) {
-                    guchar* currLine = px;
-                    for ( int y = 0; y < imageheight; y++ ) {
-                        // Since the types are the same size, we can do the transformation in-place
-                        cmsDoTransform( transf, currLine, currLine, imagewidth );
-                        currLine += rowstride;
-                    }
-
-                    cmsDeleteTransform( transf );
-                } else {
-                    DEBUG_MESSAGE( lcmsSix, "in <image>'s sp_image_update. Unable to create LCMS transform." );
-                }
-
-                cmsCloseProfile( destProf );
-            } else {
-                DEBUG_MESSAGE( lcmsSeven, "in <image>'s sp_image_update. Profile type is named color. Can't transform." );
-            }
-        } else {
-            DEBUG_MESSAGE( lcmsEight, "in <image>'s sp_image_update. No profile found." );
-        }
-    }
-}
-
 void SPImage::update(SPCtx *ctx, unsigned int flags) {
     SPItem::update(ctx, flags);
 
@@ -333,7 +265,12 @@ void SPImage::update(SPCtx *ctx, unsigned int flags) {
             }
 
             if (pb) {
-                if (color_profile) apply_profile(pb);
+                if (color_profile) {
+                    if (auto cp = document->getDocumentCMS().getSpace(color_profile)) {
+                        pb->ensurePixelFormat(Inkscape::Pixbuf::PF_GDK);
+                        // XXX TODO cp->transformToRGB(pb);
+                    }
+                }
                 pb->ensurePixelFormat(Inkscape::Pixbuf::PF_CAIRO); // Expected by rendering code, so convert now before making immutable.
                 pixbuf = std::shared_ptr<Inkscape::Pixbuf>(pb);
             }

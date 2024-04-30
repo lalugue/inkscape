@@ -21,10 +21,10 @@
 #include <gtkmm/widget.h>       // for GtkWidget, Widget (ptr only)
 #include <sigc++/connection.h>  // for connection
 
+#include "colors/color-set.h"
+#include "color-scales.h"
 #include "preferences.h"        // for PrefObserver
-#include "ui/selected-color.h"  // for ColorSelectorFactory, SelectedColor (...
 
-class ColorRGBA;
 class SPDocument;
 
 namespace Gtk {
@@ -42,7 +42,7 @@ class ColorNotebook
     : public Gtk::Grid
 {
 public:
-    ColorNotebook(SelectedColor &color, bool no_alpha = false);
+    ColorNotebook(SelectedColor color);
     ~ColorNotebook() override;
 
     void set_label(const Glib::ustring& label);
@@ -59,16 +59,14 @@ protected:
     void _addPage(Page &page, bool no_alpha, const Glib::ustring vpath);
     void setDocument(SPDocument *document);
 
-    void _pickColor(ColorRGBA *color);
     static void _onPickerClicked(GtkWidget *widget, ColorNotebook *colorbook);
-    virtual void _onSelectedColorChanged();
+    //virtual void _onSelectedColorChanged();
     int getPageIndex(const Glib::ustring &name);
     int getPageIndex(Gtk::Widget *widget);
 
     void _updateICCButtons();
     void _setCurrentPage(int i, bool sync_combo);
 
-    Inkscape::UI::SelectedColor &_selected_color;
     unsigned long _entryId = 0;
     Gtk::Stack* _book = nullptr;
     Gtk::StackSwitcher* _switcher = nullptr;
@@ -89,7 +87,7 @@ private:
 
     SPDocument *_document = nullptr;
     sigc::connection _doc_replaced_connection;
-    sigc::connection _icc_changed_connection;
+    SelectedColor _selected_color;
 };
 
 } // namespace Inkscape::UI::Widget

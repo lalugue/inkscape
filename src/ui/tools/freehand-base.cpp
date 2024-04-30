@@ -36,7 +36,6 @@
 #include "object/sp-rect.h"
 #include "object/sp-use.h"
 
-#include "svg/svg-color.h"
 #include "svg/svg.h"
 
 #include "ui/clipboard.h"
@@ -169,11 +168,9 @@ void spdc_apply_style(SPObject *obj)
                 sp_repr_css_set_property(css, "fill", str.c_str());
             }
         } else if (obj->style->stroke.isColor()) {
-            gchar c[64];
-            sp_svg_write_color(
-                c, sizeof(c),
-                obj->style->stroke.value.color.toRGBA32(SP_SCALE24_TO_FLOAT(obj->style->stroke_opacity.value)));
-            sp_repr_css_set_property(css, "fill", c);
+            auto color = obj->style->stroke.getColor();
+            color.addOpacity(obj->style->stroke_opacity);
+            sp_repr_css_set_property_string(css, "fill", color.toString());
         } else {
             sp_repr_css_set_property(css, "fill", "none");
         }
@@ -899,11 +896,15 @@ void spdc_create_single_dot(ToolBase *tool, Geom::Point const &pt, char const *p
     }
 
     // unset stroke and set fill color to former stroke color
-    auto str = strcmp(path, "/tools/calligraphic")
-             ? g_strdup_printf("fill:#%06x;stroke:none;", sp_desktop_get_color_tool(desktop, path, false) >> 8)
-             : g_strdup_printf("fill:#%06x;stroke:#%06x;", sp_desktop_get_color_tool(desktop, path, true) >> 8, sp_desktop_get_color_tool(desktop, path, false) >> 8);
-    repr->setAttribute("style", str);
-    g_free(str);
+    bool cali = strcmp(path, "/tools/calligraphic");
+    auto fill = sp_desktop_get_color_tool(desktop, path, cali);
+    auto stroke = sp_desktop_get_color_tool(desktop, path, false);
+
+    SPCSSAttr *css = sp_repr_css_attr_new();
+    sp_repr_css_set_property_string(css, "fill", fill ? fill->toString() : "none");
+    sp_repr_css_set_property_string(css, "stroke", !cali && stroke ? stroke->toString() : "none");
+    sp_repr_css_set(repr, css, "style");
+    sp_repr_css_attr_unref(css);
 
     // put the circle where the mouse click occurred and set the diameter to the
     // current stroke width, multiplied by the amount specified in the preferences

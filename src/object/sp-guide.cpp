@@ -30,9 +30,10 @@
 #include "sp-namedview.h"
 #include "sp-root.h"
 
+#include "colors/color.h"
+#include "colors/manager.h"
 #include "display/control/canvas-item-guideline.h"
 #include "object/sp-page.h"
-#include "svg/svg-color.h"
 #include "svg/svg.h"
 #include "util/numeric/converters.h"
 #include "util/units.h"
@@ -88,8 +89,10 @@ void SPGuide::release()
 void SPGuide::set(SPAttr key, const gchar *value) {
     switch (key) {
     case SPAttr::INKSCAPE_COLOR:
-        if (value) {
-            this->setColor(sp_svg_read_color(value, 0x0000ff00) | 0x7f);
+        if (auto c = Inkscape::Colors::Color::parse(value)) {
+            if (!c->hasOpacity())
+                c->addOpacity(0.5);
+            color = c->toRGBA();
         }
         break;
     case SPAttr::INKSCAPE_LABEL:

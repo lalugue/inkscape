@@ -83,9 +83,8 @@ namespace Inkscape {
     class Event;
     class EventLog;
     class PageManager;
-    class ProfileManager;
     namespace Colors {
-    class Tracker;
+        class DocumentCMS;
     }
     class Selection;
     class UndoStackObserver;
@@ -171,15 +170,15 @@ public:
     Inkscape::PageManager& getPageManager() { return *_page_manager; }
     const Inkscape::PageManager& getPageManager() const { return *_page_manager; }
 
-    Inkscape::Colors::Tracker &getColorTracker() { return *_color_tracker; }
-    const Inkscape::Colors::Tracker &getColorTracker() const { return *_color_tracker; }
+    Inkscape::Colors::DocumentCMS &getDocumentCMS() { return *_cms_manager; }
+    const Inkscape::Colors::DocumentCMS &getDocumentCMS() const { return *_cms_manager; }
 
 private:
     void _importDefsNode(SPDocument *source, Inkscape::XML::Node *defs, Inkscape::XML::Node *target_defs);
     SPObject *_activexmltree;
 
     std::unique_ptr<Inkscape::PageManager> _page_manager;
-    std::unique_ptr<Inkscape::Colors::Tracker> _color_tracker;
+    std::unique_ptr<Inkscape::Colors::DocumentCMS> _cms_manager;
 
     std::queue<GQuark> pending_resource_changes;
 
@@ -197,9 +196,7 @@ public:
     /******** Getters and Setters **********/
 
     // Document structure -----------------
-    Inkscape::ProfileManager &getProfileManager() const { return *_profileManager; }
     Avoid::Router* getRouter() const { return _router.get(); }
-
     
     /** Returns our SPRoot */
     SPRoot *getRoot() { return root; }
@@ -373,7 +370,6 @@ public:
 private:
 
     // Document ------------------------------
-    std::unique_ptr<Inkscape::ProfileManager> _profileManager;   // Color profile.
     std::unique_ptr<Avoid::Router> _router; // Instance of the connector router
     std::unique_ptr<Inkscape::Selection> _selection;
 

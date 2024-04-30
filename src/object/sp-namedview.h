@@ -21,6 +21,7 @@
 #include "snap.h"
 #include "sp-object-group.h"
 
+#include "colors/color.h"
 #include "svg/svg-bool.h"
 
 namespace Inkscape {
@@ -28,7 +29,12 @@ namespace Inkscape {
     namespace Util {
         class Unit;
     }
+    namespace Colors {
+        class Color;
+    }
 }
+
+using namespace Inkscape;
 
 class SPGrid;
 
@@ -53,7 +59,6 @@ public:
     SVGBool grids_visible;
     SVGBool clip_to_page; // if true, clip rendered content to pages' boundaries
     SVGBool antialias_rendering = true;
-    guint32 desk_color;
     SVGBool desk_checkerboard;
 
     double zoom;
@@ -74,9 +79,6 @@ public:
     GQuark default_layer_id;
 
     double connector_spacing;
-
-    guint32 guidecolor;
-    guint32 guidehicolor;
 
     std::vector<SPGuide *> guides;
     std::vector<SPGrid *> grids;
@@ -115,7 +117,7 @@ public:
     void newGridCreated();
 
     // page background, border, desk colors
-    void change_color(unsigned int rgba, SPAttr color_key, SPAttr opacity_key = SPAttr::INVALID);
+    void change_color(SPAttr color_key, SPAttr opacity_key,Colors::Color const &color);
     // show border, border on top, anti-aliasing, ...
     void change_bool_setting(SPAttr key, bool value);
     // sync desk colors
@@ -127,6 +129,9 @@ public:
 
     SPGrid *getFirstEnabledGrid();
 
+    Colors::Color getDeskColor() const;
+    Colors::Color getGuideColor() const;
+    Colors::Color getGuideHiColor() const;
 private:
     void updateGuides();
     void updateGrids();
@@ -137,6 +142,12 @@ private:
 
     Inkscape::CanvasPage *_viewport = nullptr;
     bool _sync_grids = true;
+
+    std::optional<Colors::Color> _desk_color;
+    std::optional<Colors::Color> _guide_color;
+    std::optional<Colors::Color> _guide_hi_color;
+    double _guide_opacity = 0.6;
+    double _guide_hi_opacity = 0.5;
 
 protected:
     void build(SPDocument *document, Inkscape::XML::Node *repr) override;

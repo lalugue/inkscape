@@ -11,6 +11,7 @@
 
 #include <glibmm/i18n.h>
 #include "attributes.h"
+#include "colors/manager.h"
 #include "desktop.h"
 #include "display/control/canvas-page.h"
 #include "document.h"
@@ -21,11 +22,15 @@
 #include "object/sp-page.h"
 #include "object/sp-root.h"
 #include "selection-chemistry.h"
-#include "svg/svg-color.h"
 #include "util/parse-int-range.h"
 #include "util/numeric/converters.h"
 
 namespace Inkscape {
+
+static auto const default_background_color = Colors::Color{0xffffff00};
+static auto const default_margin_color = Colors::Color{0x1699d751};
+static auto const default_bleed_color = Colors::Color{0xbe310e31};
+static auto const default_border_color = Colors::Color{0x0000003f};
 
 bool PageManager::move_objects()
 {
@@ -38,6 +43,10 @@ PageManager::PageManager(SPDocument *document)
     , border_on_top(true)
     , shadow_show(true)
     , checkerboard(false)
+    , background_color{default_background_color}
+    , margin_color{default_margin_color}
+    , bleed_color{default_bleed_color}
+    , border_color{default_border_color}
 {
     _document = document;
 }
@@ -675,19 +684,17 @@ bool PageManager::subset(SPAttr key, const gchar *value)
         case SPAttr::BORDERLAYER:
             this->border_on_top.readOrUnset(value);
             break;
-        case SPAttr::BORDERCOLOR:
-            this->border_color = this->border_color & 0xff;
-            if (value) {
-                this->border_color = this->border_color | sp_svg_read_color(value, this->border_color);
-            }
+        case SPAttr::BORDERCOLOR: {
+            auto const old_opacity = border_color.getOpacity();
+            border_color = Colors::Color::parse(value).value_or(default_border_color);
+            border_color.setOpacity(old_opacity);
             break;
+        }
         case SPAttr::BORDEROPACITY:
-            sp_ink_read_opacity(value, &this->border_color, 0x000000ff);
+            border_color.setOpacity(value ? g_ascii_strtod(value, nullptr) : 1.0);
             break;
         case SPAttr::PAGECOLOR:
-            if (value) {
-                this->background_color = sp_svg_read_color(value, this->background_color) | 0xff;
-            }
+            background_color = Colors::Color::parse(value).value_or(default_background_color);
             break;
         case SPAttr::SHOWPAGESHADOW: // Deprecated
             this->shadow_show.readOrUnset(value);
@@ -714,14 +721,28 @@ bool PageManager::subset(SPAttr key, const gchar *value)
  */
 bool PageManager::setDefaultAttributes(Inkscape::CanvasPage *item)
 {
+    auto bdcolor = getBorderColor();
+
+    if (!border_show) {
+        bdcolor.setOpacity(0.0);
+    }
+
+    auto bgcolor = getBackgroundColor();
+
     // note: page background color doesn't have configurable transparency; it is considered to be opaque;
     // here alpha gets manipulated to reveal checkerboard pattern, if needed
-    auto bgcolor = checkerboard ? background_color & ~0xff : background_color | 0xff;
-    auto dkcolor = _document->getNamedView()->desk_color;
+    if (checkerboard) {
+        bgcolor.setOpacity(0.0);
+    } else {
+        bgcolor.setOpacity(1.0);
+    }
+
+    auto dkcolor = _document->getNamedView()->getDeskColor();
+
     bool ret = item->setOnTop(border_on_top);
     // fixed shadow size, not configurable; shadow changes size with zoom
     ret |= item->setShadow(border_show && shadow_show ? 2 : 0);
-    ret |= item->setPageColor(border_show ? border_color : 0x0, bgcolor, dkcolor, margin_color, bleed_color);
+    ret |= item->setPageColor(bdcolor, bgcolor, dkcolor, getMarginColor(), getBleedColor());
     ret |= item->setLabelStyle(label_style);
     return ret;
 }

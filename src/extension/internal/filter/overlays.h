@@ -102,10 +102,6 @@ NoiseFill::get_filter_text (Inkscape::Extension::Extension * ext)
     std::ostringstream variation;
     std::ostringstream dilat;
     std::ostringstream erosion;
-    std::ostringstream r;
-    std::ostringstream g;
-    std::ostringstream b;
-    std::ostringstream a;
     std::ostringstream inverted;
 
     type << ext->get_param_optiongroup("type");
@@ -115,11 +111,7 @@ NoiseFill::get_filter_text (Inkscape::Extension::Extension * ext)
     variation << ext->get_param_int("variation");
     dilat << ext->get_param_float("dilat");
     erosion << (- ext->get_param_float("erosion"));
-    guint32 color = ext->get_param_color("color");
-    r << ((color >> 24) & 0xff);
-    g << ((color >> 16) & 0xff);
-    b << ((color >>  8) & 0xff);
-    a << (color & 0xff) / 255.0F;
+    auto color = ext->get_param_color("color");
     if (ext->get_param_bool("inverted"))
         inverted << "out";
     else
@@ -130,13 +122,14 @@ NoiseFill::get_filter_text (Inkscape::Extension::Extension * ext)
           "<feTurbulence type=\"%s\" baseFrequency=\"%s %s\" numOctaves=\"%s\" seed=\"%s\" result=\"turbulence\"/>\n"
           "<feComposite in=\"SourceGraphic\" in2=\"turbulence\" operator=\"%s\" result=\"composite1\" />\n"
           "<feColorMatrix values=\"1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 %s %s \" result=\"color\" />\n"
-          "<feFlood flood-opacity=\"%s\" flood-color=\"rgb(%s,%s,%s)\" result=\"flood\" />\n"
+          "<feFlood flood-opacity=\"%f\" flood-color=\"%s\" result=\"flood\" />\n"
           "<feMerge result=\"merge\">\n"
             "<feMergeNode in=\"flood\" />\n"
             "<feMergeNode in=\"color\" />\n"
           "</feMerge>\n"
           "<feComposite in2=\"SourceGraphic\" operator=\"in\" result=\"composite2\" />\n"
-        "</filter>\n", type.str().c_str(), hfreq.str().c_str(), vfreq.str().c_str(), complexity.str().c_str(), variation.str().c_str(), inverted.str().c_str(), dilat.str().c_str(), erosion.str().c_str(), a.str().c_str(), r.str().c_str(), g.str().c_str(), b.str().c_str());
+        "</filter>\n", type.str().c_str(), hfreq.str().c_str(), vfreq.str().c_str(), complexity.str().c_str(), variation.str().c_str(), inverted.str().c_str(), dilat.str().c_str(), erosion.str().c_str(),
+        color.getOpacity(), color.toString(false).c_str());
 
     return _filter;
 }; /* NoiseFill filter */

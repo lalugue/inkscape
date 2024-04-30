@@ -42,7 +42,6 @@
 #include "desktop.h"
 #include "display/cairo-utils.h"
 #include "helper/auto-connection.h"
-#include "hsluv.h"
 #include "inkscape-version-info.h"
 #include "inkscape.h"
 #include "inkscape-window.h"
@@ -147,24 +146,14 @@ private:
         auto ctx = Cairo::Context::create(surface);
         ctx->set_source(image, 0, -y);
         ctx->paint();
-        double r,g,b,a;
-        ink_cairo_surface_average_color_premul(surface->cobj(), r, g, b, a);
 
         // calculate footer color: light/dark depending on a theme
         bool dark = INKSCAPE.themecontext->isCurrentThemeDark(this);
-        // color of the image strip to HSL, so we can manipulate its lightness
-        auto [h, s, l] = Hsluv::rgb_to_hsluv(r, g, b);
-        // for a dark theme come up with a darker shade, for a light time - with a lighter one
-        l = dark ? l * 0.7 : l + (100 - l) * 0.5;
-        // clip them to remove extremes
-        l = dark ? std::min(l, 30.0) : std::max(l, 80.0);
-        // limit saturation to improve contrast with some artwork
-        s = dark ? std::min(s, 80.0) : s;
-        auto rgb = Hsluv::hsluv_to_rgb(h, s, l);
+        auto foot = Colors::make_theme_color(ink_cairo_surface_average_color_premul(surface->cobj()), dark);
+
         auto style_context = _footer->get_style_context();
         _footer_style = Gtk::CssProvider::create();
-        auto color_str = rgba_to_css_color(rgb[0], rgb[1], rgb[2]);
-        _footer_style->load_from_data("box {background-color:" + color_str + ";}");
+        _footer_style->load_from_data("box {background-color:" + foot.toString() + ";}");
         if (_footer_style) style_context->remove_provider(_footer_style);
         style_context->add_provider(_footer_style, GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
     }

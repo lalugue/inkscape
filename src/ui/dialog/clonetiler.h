@@ -90,7 +90,7 @@ protected:
     void table_attach(Gtk::Grid *table, Gtk::Widget *widget, float align, int row, int col);
 
     void       symgroup_changed(Gtk::ComboBox *cb);
-    void       on_picker_color_changed(guint rgba);
+    void       on_picker_color_changed(Colors::Color const &rgba);
     void       trace_hide_tiled_clones_recursively(SPObject *from);
     guint      number_of_clones(SPObject *obj);
     void       trace_setup(SPDocument *doc, gdouble zoom, SPItem *original);

@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 /** @file
- * TODO: insert short description here
+ * The color profile tag in an svg document
  *//*
  * Authors: see git history
  *
@@ -14,7 +14,6 @@
 #include <giomm/error.h>
 
 #include "attributes.h"
-#include "color/color-profile-cms-fns.h" // XXX REMOVE!
 #include "colors/cms/profile.h"
 #include "document.h"
 #include "inkscape.h"

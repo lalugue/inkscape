@@ -40,7 +40,6 @@
 #include "object/sp-stop.h"
 #include "object/sp-text.h"
 #include "svg/css-ostringstream.h"
-#include "svg/svg-color.h"
 #include "ui/icon-loader.h"
 #include "ui/icon-names.h"
 #include "ui/pack.h"

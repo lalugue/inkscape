@@ -57,7 +57,9 @@
 #include "rdf.h"
 #include "page-manager.h"
 #include "selection.h"
-#include "color/cms-system.h"
+
+#include "colors/cms/profile.h"
+#include "colors/document-cms.h"
 #include "helper/auto-connection.h"
 #include "io/sys.h"
 #include "object/color-profile.h"
@@ -65,7 +67,6 @@
 #include "object/sp-root.h"
 #include "object/sp-script.h"
 #include "streq.h"
-#include "svg/svg-color.h"
 #include "ui/dialog/filedialog.h"
 #include "ui/icon-loader.h"
 #include "ui/icon-names.h"
@@ -295,11 +296,10 @@ void set_namedview_bool(SPDesktop* desktop, const Glib::ustring& operation, SPAt
     DocumentUndo::done(desktop->getDocument(), operation, "");
 }
 
-void set_color(SPDesktop* desktop, Glib::ustring operation, unsigned int rgba, SPAttr color_key, SPAttr opacity_key = SPAttr::INVALID) {
+void set_color(SPDesktop* desktop, Glib::ustring operation, SPAttr color_key, SPAttr opacity_key, Colors::Color const &color) {
     if (!desktop || !desktop->getDocument()) return;
 
-    desktop->getNamedView()->change_color(rgba, color_key, opacity_key);
-
+    desktop->getNamedView()->change_color(color_key, opacity_key, color);
     desktop->getDocument()->setModifiedSinceSave();
     DocumentUndo::maybeDone(desktop->getDocument(), ("document-color-" + operation).c_str(), operation, "");
 }
@@ -476,19 +476,19 @@ void DocumentProperties::build_page()
     _page = Gtk::manage(PageProperties::create());
     _page_page->table().attach(*_page, 0, 0);
 
-    _page->signal_color_changed().connect([this](unsigned const color, PageProperties::Color const element){
+    _page->signal_color_changed().connect([this](Colors::Color const &color, PageProperties::Color const element){
         if (_wr.isUpdating() || !_wr.desktop()) return;
 
         _wr.setUpdating(true);
         switch (element) {
             case PageProperties::Color::Desk:
-                set_color(_wr.desktop(), _("Desk color"), color, SPAttr::INKSCAPE_DESK_COLOR);
+                set_color(_wr.desktop(), _("Desk color"), SPAttr::INKSCAPE_DESK_COLOR, SPAttr::INKSCAPE_DESK_OPACITY, color);
                 break;
             case PageProperties::Color::Background:
-                set_color(_wr.desktop(), _("Background color"), color, SPAttr::PAGECOLOR);
+                set_color(_wr.desktop(), _("Background color"), SPAttr::PAGECOLOR, SPAttr::INKSCAPE_PAGEOPACITY, color);
                 break;
             case PageProperties::Color::Border:
-                set_color(_wr.desktop(), _("Border color"), color, SPAttr::BORDERCOLOR, SPAttr::BORDEROPACITY);
+                set_color(_wr.desktop(), _("Border color"), SPAttr::BORDERCOLOR, SPAttr::BORDEROPACITY, color);
                 break;
         }
         _wr.setUpdating(false);
@@ -621,24 +621,24 @@ void DocumentProperties::populate_available_profiles(){
     // Iterate through the list of profiles and add the name to the combo box.
     bool home = true; // initial value doesn't matter, it's just to avoid a compiler warning
     bool first = true;
-    auto cms_system = Inkscape::CMSSystem::get();
-    for (auto const &info: cms_system->get_system_profile_infos()) {
+    auto &cms_system = Inkscape::Colors::CMS::System::get();
+    for (auto const &profile: cms_system.getProfiles()) {
         Gtk::TreeModel::Row row;
 
         // add a separator between profiles from the user's home directory and system profiles
-        if (!first && info.in_home() != home)
+        if (!first && profile->inHome() != home)
         {
           row = *(_AvailableProfilesListStore->append());
           row[_AvailableProfilesListColumns.fileColumn] = "<separator>";
           row[_AvailableProfilesListColumns.nameColumn] = "<separator>";
           row[_AvailableProfilesListColumns.separatorColumn] = true;
         }
-        home = info.in_home();
+        home = profile->inHome();
         first = false;
 
         row = *(_AvailableProfilesListStore->append());
-        row[_AvailableProfilesListColumns.fileColumn] = info.get_path();
-        row[_AvailableProfilesListColumns.nameColumn] = info.get_name();
+        row[_AvailableProfilesListColumns.fileColumn] = profile->getPath();
+        row[_AvailableProfilesListColumns.nameColumn] = profile->getName();
         row[_AvailableProfilesListColumns.separatorColumn] = false;
     }
 }
@@ -694,53 +694,14 @@ void DocumentProperties::linkSelectedProfile()
         Glib::ustring file = (*iter)[_AvailableProfilesListColumns.fileColumn];
         Glib::ustring name = (*iter)[_AvailableProfilesListColumns.nameColumn];
 
-        std::vector<SPObject *> current = document->getResourceList( "iccprofile" );
-        for (auto obj : current) {
-            Inkscape::ColorProfile* prof = reinterpret_cast<Inkscape::ColorProfile*>(obj);
-            if (!strcmp(prof->href, file.c_str()))
-                return;
-        }
-        Inkscape::XML::Document *xml_doc = document->getReprDoc();
-        Inkscape::XML::Node *cprofRepr = xml_doc->createElement("svg:color-profile");
-        std::string nameStr = name.empty() ? "profile" : name; // TODO add some auto-numbering to avoid collisions
-        sanitizeName(nameStr);
-        cprofRepr->setAttribute("name", nameStr);
-        cprofRepr->setAttribute("xlink:href", Glib::filename_to_uri(Glib::filename_from_utf8(file)));
-        cprofRepr->setAttribute("id", file);
-
-        // Checks whether there is a defs element. Creates it when needed
-        Inkscape::XML::Node *defsRepr = sp_repr_lookup_name(xml_doc, "svg:defs");
-        if (!defsRepr) {
-            defsRepr = xml_doc->createElement("svg:defs");
-            xml_doc->root()->addChild(defsRepr, nullptr);
-        }
-
-        g_assert(document->getDefs());
-        defsRepr->addChild(cprofRepr, nullptr);
-
-        // TODO check if this next line was sometimes needed. It being there caused an assertion.
-        //Inkscape::GC::release(defsRepr);
-
+        auto filename = Glib::filename_to_uri(Glib::filename_from_utf8(file));
+        document->getDocumentCMS().attachProfileToDoc(filename, ColorProfileStorage::HREF_FILE, Colors::RenderingIntent::AUTO, name);
         // inform the document, so we can undo
         DocumentUndo::done(document, _("Link Color Profile"), "");
 
         populate_linked_profiles_box();
     }
 }
-
-struct _cmp {
-  bool operator()(const SPObject * const & a, const SPObject * const & b)
-  {
-    const Inkscape::ColorProfile &a_prof = reinterpret_cast<const Inkscape::ColorProfile &>(*a);
-    const Inkscape::ColorProfile &b_prof = reinterpret_cast<const Inkscape::ColorProfile &>(*b);
-    auto const a_name_casefold = g_utf8_casefold(a_prof.name, -1);
-    auto const b_name_casefold = g_utf8_casefold(b_prof.name, -1);
-    int result = g_strcmp0(a_name_casefold, b_name_casefold);
-    g_free(a_name_casefold);
-    g_free(b_name_casefold);
-    return result < 0;
-  }
-};
 
 template <typename From, typename To>
 struct static_caster { To * operator () (From * value) const { return static_cast<To *>(value); } };
@@ -750,9 +711,6 @@ void DocumentProperties::populate_linked_profiles_box()
     _LinkedProfilesListStore->clear();
     if (auto document = getDocument()) {
         std::vector<SPObject *> current = document->getResourceList( "iccprofile" );
-        if (! current.empty()) {
-            _emb_profiles_observer.set((*(current.begin()))->parent);
-        }
 
         std::set<Inkscape::ColorProfile *> _current;
         std::transform(current.begin(),
@@ -762,7 +720,7 @@ void DocumentProperties::populate_linked_profiles_box()
 
         for (auto const &profile: _current) {
             Gtk::TreeModel::Row row = *(_LinkedProfilesListStore->append());
-            row[_LinkedProfilesListColumns.nameColumn] = profile->name;
+            row[_LinkedProfilesListColumns.nameColumn] = profile->getName();
         }
     }
 }
@@ -787,14 +745,9 @@ void DocumentProperties::removeSelectedProfile(){
         }
     }
     if (auto document = getDocument()) {
-        std::vector<SPObject *> current = document->getResourceList( "iccprofile" );
-        for (auto obj : current) {
-            Inkscape::ColorProfile* prof = reinterpret_cast<Inkscape::ColorProfile*>(obj);
-            if (!name.compare(prof->name)){
-                prof->deleteObject(true, false);
-                DocumentUndo::done(document, _("Remove linked color profile"), "");
-                break; // removing the color profile likely invalidates part of the traversed list, stop traversing here.
-            }
+        if (auto colorprofile = document->getDocumentCMS().getColorProfileForSpace(name)) {
+            colorprofile->deleteObject(true, false);
+            DocumentUndo::done(document, _("Remove linked color profile"), "");
         }
     }
 
@@ -885,15 +838,6 @@ void DocumentProperties::build_cms()
     _LinkedProfilesList.get_selection()->signal_changed().connect( sigc::mem_fun(*this, &DocumentProperties::onColorProfileSelectRow) );
 
     connect_remove_popup_menu(_LinkedProfilesList, _popoverbin, sigc::mem_fun(*this, &DocumentProperties::removeSelectedProfile));
-
-    if (auto document = getDocument()) {
-        std::vector<SPObject *> current = document->getResourceList( "defs" );
-        if (!current.empty()) {
-            _emb_profiles_observer.set((*(current.begin()))->parent);
-        }
-        _emb_profiles_observer.signal_changed().connect(sigc::mem_fun(*this, &DocumentProperties::populate_linked_profiles_box));
-        onColorProfileSelectRow();
-    }
 }
 
 void DocumentProperties::build_scripting()
@@ -1574,11 +1518,11 @@ void DocumentProperties::update_widgets()
         _page->set_unit(PageProperties::Units::Display, nv->display_units->abbr);
     }
     _page->set_check(PageProperties::Check::Checkerboard, nv->desk_checkerboard);
-    _page->set_color(PageProperties::Color::Desk, nv->desk_color);
-    _page->set_color(PageProperties::Color::Background, page_manager.background_color);
+    _page->set_color(PageProperties::Color::Desk, nv->getDeskColor());
+    _page->set_color(PageProperties::Color::Background, page_manager.getBackgroundColor());
     _page->set_check(PageProperties::Check::Border, page_manager.border_show);
     _page->set_check(PageProperties::Check::BorderOnTop, page_manager.border_on_top);
-    _page->set_color(PageProperties::Color::Border, page_manager.border_color);
+    _page->set_color(PageProperties::Color::Border, page_manager.getBorderColor());
     _page->set_check(PageProperties::Check::Shadow, page_manager.shadow_show);
     _page->set_check(PageProperties::Check::PageLabelStyle, page_manager.label_style != "default");
     _page->set_check(PageProperties::Check::AntiAlias, nv->antialias_rendering);
@@ -1588,12 +1532,8 @@ void DocumentProperties::update_widgets()
 
     _rcb_sgui.setActive (nv->getShowGuides());
     _rcb_lgui.setActive (nv->getLockGuides());
-    _rcp_gui.setRgba32 (nv->guidecolor);
-    _rcp_hgui.setRgba32 (nv->guidehicolor);
-
-    //------------------------------------------------Color Management page
-
-    populate_linked_profiles_box();
+    _rcp_gui.setColor(nv->getGuideColor());
+    _rcp_hgui.setColor(nv->getGuideHiColor());
 
     //-----------------------------------------------------------meta pages
     // update the RDF entities; note that this may modify document, maybe doc-undo should be called?
@@ -1676,12 +1616,14 @@ void DocumentProperties::documentReplaced()
 {
     _root_connection.disconnect();
     _namedview_connection.disconnect();
+    _cms_connection.disconnect();
 
     if (auto desktop = getDesktop()) {
         _wr.setDesktop(desktop);
         _namedview_connection.connect(desktop->getNamedView()->getRepr());
         if (auto document = desktop->getDocument()) {
             _root_connection.connect(document->getRoot()->getRepr());
+            _cms_connection = document->getDocumentCMS().connectChanged(sigc::mem_fun(*this, &DocumentProperties::populate_linked_profiles_box));
         }
         populate_linked_profiles_box();
         update_widgets();
@@ -1899,17 +1841,15 @@ GridWidget::GridWidget(SPGrid *grid)
                 "", _("Grid color"),
                 _("Color of the grid lines"),
                 "empcolor", "empopacity", _wr, repr, doc);
-    _grid_color->setCustomSetter([](Inkscape::XML::Node* node, std::uint32_t rgba) {
-        char buf[32];
+    _grid_color->setCustomSetter([](Inkscape::XML::Node* node, Colors::Color color) {
         // major color
-        sp_svg_write_color(buf, sizeof(buf), rgba);
-        node->setAttribute("empcolor", buf);
-        node->setAttributeCssDouble("empopacity", (rgba & 0xff) / 255.0);
+        node->setAttribute("empcolor", color.toString(false));
+        node->setAttributeSvgDouble("empopacity", color.getOpacity());
+
         // minor color at half opacity
-        rgba = (rgba & ~0xff) | ((rgba & 0xff) / 2);
-        sp_svg_write_color(buf, sizeof(buf), rgba);
-        node->setAttribute("color", buf);
-        node->setAttributeCssDouble("opacity", (rgba & 0xff) / 255.0);
+        color.addOpacity(0.5);
+        node->setAttribute("color", color.toString(false));
+        node->setAttributeCssDouble("opacity", color.getOpacity());
     });
     _grid_color->set_spacing(0);
     _no_of_lines = Gtk::make_managed<RegisteredInteger>(
@@ -2119,7 +2059,7 @@ void GridWidget::update()
         _margin_y->setValueKeepUnit(margin.y(), "px");
     }
 
-    _grid_color->setRgba32 (_grid->getMajorColor());
+    _grid_color->setColor(_grid->getMajorColor());
 
     show(_no_of_lines, !modular);
     _no_of_lines->setValue(_grid->getMajorLineInterval());

@@ -46,7 +46,6 @@
 #include "object/sp-shape.h"
 #include "object/sp-text.h"
 #include "svg/stringstream.h"
-#include "svg/svg-color.h"
 #include "svg/svg.h"
 #include "text-editing.h"
 #include "ui/pack.h"
@@ -73,7 +72,7 @@ LPEMeasureSegments::LPEMeasureSegments(LivePathEffectObject *lpeobject) :
     Effect(lpeobject),
     unit(_("Unit"), _("Unit of measurement"), "unit", &wr, this, "mm"),
     orientation(_("Orientation"), _("Orientation of the line and labels"), "orientation", OMConverter, &wr, this, OM_PARALLEL, false),
-    coloropacity(_("Color and opacity"), _("Set color and opacity of the dimensions"), "coloropacity", &wr, this, 0x000000ff),
+    coloropacity(_("Color and opacity"), _("Set color and opacity of the dimensions"), "coloropacity", &wr, this, Colors::Color(0x000000ff)),
     fontbutton(_("Font"), _("Select font for labels"), "fontbutton", &wr, this),
     precision(_("Precision"), _("Number of digits after the decimal point"), "precision", &wr, this, 2),
     fix_overlaps(_("Merge overlaps °"), _("Minimum angle at which overlapping dimension lines are merged into one, use 180° to disable merging"), "fix_overlaps", &wr, this, 0),
@@ -108,6 +107,7 @@ LPEMeasureSegments::LPEMeasureSegments(LivePathEffectObject *lpeobject) :
     centers(_("Add object center"), _("Add the projected object center"), "centers", &wr, this, false),
     maxmin(_("Only max and min"), _("Compute only max/min projection values"), "maxmin", &wr, this, false),
     helpdata(_("Help"), _("Measure segments help"), "helpdata", &wr, this, "", "")
+    , color(0x000000ff)
 {
     //set to true the parameters you want to be changed his default values
     registerParameter(&unit);
@@ -192,7 +192,6 @@ LPEMeasureSegments::LPEMeasureSegments(LivePathEffectObject *lpeobject) :
     pagenumber = 0;
     anotation_width = 0;
     fontsize = 0;
-    rgb32 = 0;
     arrow_gap = 0;
 }
 
@@ -290,12 +289,12 @@ LPEMeasureSegments::createArrowMarker(Glib::ustring mode)
     }
     Glib::ustring lpobjid = this->lpeobj->getId();
     Glib::ustring itemid  = sp_lpe_item->getId();
-    Glib::ustring style;
-    style = Glib::ustring("fill:context-stroke;");
-    Inkscape::SVGOStringStream os;
-    os << SP_RGBA32_A_F(coloropacity.get_value());
-    style = style + Glib::ustring(";fill-opacity:") + Glib::ustring(os.str());
-    style = style + Glib::ustring(";stroke:none");
+
+    auto const css = sp_repr_css_attr_new();
+    sp_repr_css_set_property_string(css, "fill", "context-stroke");
+    sp_repr_css_set_property_double(css, "fill-opacity", coloropacity.get_value()->getOpacity());
+    sp_repr_css_set_property_string(css, "stroke", "none");
+
     Inkscape::XML::Document *xml_doc = document->getReprDoc();
     SPObject *elemref = nullptr;
     Inkscape::XML::Node *arrow = nullptr;
@@ -307,7 +306,7 @@ LPEMeasureSegments::createArrowMarker(Glib::ustring mode)
             Inkscape::XML::Node *arrow_data = arrow->firstChild();
             if (arrow_data) {
                 arrow_data->removeAttribute("transform");
-                arrow_data->setAttribute("style", style);
+                sp_repr_css_change(arrow_data, css, "style");
             }
         }
     } else {
@@ -342,12 +341,13 @@ LPEMeasureSegments::createArrowMarker(Glib::ustring mode)
         arrow_path->setAttributeOrRemoveIfEmpty("class", classarrowpath);
         Glib::ustring arrowpath = mode + Glib::ustring("_path");
         arrow_path->setAttribute("id", arrowpath);
-        arrow_path->setAttribute("style", style);
+        sp_repr_css_change(arrow_path, css, "style");
         arrow->addChild(arrow_path, nullptr);
         Inkscape::GC::release(arrow_path);
         elemref = document->getDefs()->appendChildRepr(arrow);
         Inkscape::GC::release(arrow);
     }
+    sp_repr_css_attr_unref(css);
     items.push_back(mode);
 }
 
@@ -418,21 +418,15 @@ LPEMeasureSegments::createTextLabel(Geom::Point &pos, size_t counter, double len
     setlocale (LC_NUMERIC, "C");
     font_size <<  fontsize << "px";
     setlocale (LC_NUMERIC, locale_base);           
-    gchar c[32];
-    safeprintf(c, "#%06x", rgb32 >> 8);
-    sp_repr_css_set_property (css, "fill",c);
-    Inkscape::SVGOStringStream os;
-    os << SP_RGBA32_A_F(coloropacity.get_value());
-    sp_repr_css_set_property (css, "fill-opacity",os.str().c_str());
+    sp_repr_css_set_property_string(css, "fill", color.toString(false));
+    sp_repr_css_set_property_double(css, "fill-opacity", color.getOpacity());
     sp_repr_css_set_property (css, "font-size",font_size.str().c_str());
     sp_repr_css_unset_property (css, "-inkscape-font-specification");
     if (remove) {
         sp_repr_css_set_property (css, "display","none");
     }
-    Glib::ustring css_str;
-    sp_repr_css_write_string(css,css_str);
-    rtext->setAttributeOrRemoveIfEmpty("style", css_str);
-    rtspan->setAttributeOrRemoveIfEmpty("style", css_str);
+    sp_repr_css_change(rtext, css, "style");
+    sp_repr_css_change(rtspan, css, "style");
     rtspan->removeAttribute("transform");
     sp_repr_css_attr_unref (css);
     if (legacy) {
@@ -605,23 +599,18 @@ LPEMeasureSegments::createLine(Geom::Point start,Geom::Point end, Glib::ustring 
     setlocale (LC_NUMERIC, locale_base);
     style  += "stroke-width:";
     style  += stroke_w.str();
-    gchar c[32];
-    safeprintf(c, "#%06x", rgb32 >> 8);
-    style += ";stroke:";
-    style += Glib::ustring(c);
-    Inkscape::SVGOStringStream os;
-    os << SP_RGBA32_A_F(coloropacity.get_value());
-    style = style + Glib::ustring(";stroke-opacity:") + Glib::ustring(os.str());
+
     SPCSSAttr *css = sp_repr_css_attr_new();
     sp_repr_css_attr_add_from_string(css, style.c_str());
-    Glib::ustring css_str;
-    sp_repr_css_write_string(css,css_str);
-    line->setAttributeOrRemoveIfEmpty("style", css_str);
+    sp_repr_css_set_property_string(css, "stroke", color.toString(false));
+    sp_repr_css_set_property_double(css, "stroke-opacity", color.getOpacity());
+    sp_repr_css_change(line, css, "style");
+    sp_repr_css_attr_unref (css);
+
     if (!elemref) {
         elemref = document->getRoot()->appendChildRepr(line);
         Inkscape::GC::release(line);
     }
-    sp_repr_css_attr_unref (css);
 }
 
 void
@@ -965,12 +954,12 @@ LPEMeasureSegments::doBeforeEffect (SPLPEItem const* lpeitem)
     //end projection prepare
     auto shape = cast<SPShape>(splpeitem);
     if (shape) {
-        guint32 color32 = coloropacity.get_value();
+        auto opacity = coloropacity.get_value();
         bool colorchanged = false;
-        if (color32 != rgb32) {
+        if (opacity != color) {
             colorchanged = true;
         }
-        rgb32 = std::move(color32);
+        color = *opacity;
         bool unitchanged = false;
         Glib::ustring currentunit = unit.get_abbreviation();
         if (currentunit != prevunit) {

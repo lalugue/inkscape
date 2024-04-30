@@ -1139,12 +1139,15 @@ void PencilTool::_fitAndSplit() {
         /// \todo fixme:
 
         auto layer = _desktop->layerManager().currentLayer();
-        this->highlight_color = layer->highlight_color();
-        if((unsigned int)prefs->getInt("/tools/nodes/highlight_color", 0xff0000ff) == this->highlight_color){
-            this->green_color = 0x00ff007f;
+        auto highlight = layer->highlight_color();
+        auto other = prefs->getColor("/tools/nodes/highlight_color", "#ff0000ff");
+
+        if(other == highlight) {
+            green_color = 0x00ff007f;
         } else {
-            this->green_color = this->highlight_color;
+            green_color = highlight.toRGBA();
         }
+        highlight_color = highlight.toRGBA();
 
         auto cshape = new Inkscape::CanvasItemBpath(_desktop->getCanvasSketch(), red_curve.get_pathvector(), true);
         cshape->set_stroke(green_color);

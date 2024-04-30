@@ -447,7 +447,7 @@ void CanvasGrid::_createGuideItem(Geom::Point const &pos, bool horiz)
     }
 
     _active_guide = make_canvasitem<CanvasItemGuideLine>(desktop->getCanvasGuides(), Glib::ustring(), Geom::Point(), Geom::Point());
-    _active_guide->set_stroke(desktop->getNamedView()->guidehicolor);
+    _active_guide->set_stroke(desktop->getNamedView()->getGuideHiColor().toRGBA());
 }
 
 void CanvasGrid::_rulerMotion(GtkEventControllerMotion const *controller_c, double x, double y, bool horiz)

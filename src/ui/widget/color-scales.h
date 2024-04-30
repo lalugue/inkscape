@@ -19,13 +19,28 @@
 #include <vector>
 #include <gtkmm/box.h>
 
+#include "colors/color-set.h"
 #include "helper/auto-connection.h"
-#include "ui/selected-color.h"
 
 namespace Gtk {
 class Label;
 class SpinButton;
 } // namespace Gtk
+
+
+// TODO: Replace this later, originally ui/selected-color.h
+namespace Inkscape::UI {
+
+typedef std::shared_ptr<Colors::ColorSet> SelectedColor;
+
+class ColorSelectorFactory {
+public:
+    virtual ~ColorSelectorFactory() = default;
+
+    virtual Gtk::Widget* createWidget(SelectedColor colors, bool no_alpha) const = 0;
+    virtual Glib::ustring modeName() const = 0;
+};
+}
 
 namespace Inkscape::UI::Widget {
 
@@ -53,7 +68,7 @@ public:
     static double getScaled(Glib::RefPtr<Gtk::Adjustment> const &a);
     static void setScaled(Glib::RefPtr<Gtk::Adjustment> &a, double v, bool constrained = false);
 
-    ColorScales(SelectedColor &color, bool no_alpha);
+    ColorScales(SelectedColor color, bool no_alpha);
 
     void setupMode(bool no_alpha);
     SPColorScalesMode getMode() const;
@@ -77,8 +92,7 @@ protected:
     void _adjustmentChanged(int channel);
     void _wheelChanged();
 
-    void _getRgbaFloatv(gfloat *rgba);
-    void _getCmykaFloatv(gfloat *cmyka);
+    Colors::Color _getColor();
     guint32 _getRgba32();
     void _updateSliders(guint channels);
     void _recalcColor();
@@ -86,7 +100,7 @@ protected:
 
     void _setRangeLimit(gdouble upper);
 
-    SelectedColor &_color;
+    SelectedColor _color;
     gdouble _range_limit;
     gboolean _updating : 1;
     gboolean _dragging : 1;
@@ -115,7 +129,7 @@ class ColorScalesFactory : public Inkscape::UI::ColorSelectorFactory
 public:
     ColorScalesFactory();
 
-    Gtk::Widget *createWidget(Inkscape::UI::SelectedColor &color, bool no_alpha) const override;
+    Gtk::Widget *createWidget(Inkscape::UI::SelectedColor color, bool no_alpha) const override;
     Glib::ustring modeName() const override;
 };
 

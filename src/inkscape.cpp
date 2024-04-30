@@ -43,7 +43,6 @@
 #include "path-prefix.h"
 #include "selection.h"
 
-#include "color/cms-system.h"
 #include "debug/simple-event.h"
 #include "debug/event-tracker.h"
 #include "io/resource.h"
@@ -296,7 +295,6 @@ Application::~Application()
     }
 
     Inkscape::Preferences::unload();
-    Inkscape::CMSSystem::unload();
 
     _S_inst = nullptr; // this will probably break things
 

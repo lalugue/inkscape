@@ -31,6 +31,14 @@ namespace Inkscape {
 namespace Extension {
 namespace Internal {
 
+U_COLORREF toColorRef(std::optional<Colors::Color> color)
+{
+    // Make sure it's RGB first, if wmf can support other color formats, this can be changed.
+    auto c = color ? *color->converted(Colors::Space::Type::RGB) : Colors::Color(0x000000ff);
+    return U_RGBA(255 * c[0], 255 * c[1], 255 * c[2], 255 * c[3]);
+}
+
+
 PrintMetafile::~PrintMetafile()
 {
 #ifndef G_OS_WIN32
@@ -146,20 +154,14 @@ U_COLORREF PrintMetafile::avg_stop_color(SPGradient *gr)
     U_COLORREF cr;
     int last = gr->vector.stops.size() - 1;
     if (last >= 1) {
-        float rgbs[3];
-        float rgbe[3];
-        float ops, ope;
-
-        ops = gr->vector.stops[0   ].opacity;
-        ope = gr->vector.stops[last].opacity;
-        gr->vector.stops[0   ].color.get_rgb_floatv(rgbs);
-        gr->vector.stops[last].color.get_rgb_floatv(rgbe);
+        auto rgbs = *gr->vector.stops[0   ].color->converted(Colors::Space::Type::RGB);
+        auto rgbe = *gr->vector.stops[last].color->converted(Colors::Space::Type::RGB);
 
         /* Replace opacity at start & stop with that fraction background color, then average those two for final color. */
         cr =    U_RGB(
-                    255 * ((opweight(rgbs[0], gv.rgb[0], ops)   +   opweight(rgbe[0], gv.rgb[0], ope)) / 2.0),
-                    255 * ((opweight(rgbs[1], gv.rgb[1], ops)   +   opweight(rgbe[1], gv.rgb[1], ope)) / 2.0),
-                    255 * ((opweight(rgbs[2], gv.rgb[2], ops)   +   opweight(rgbe[2], gv.rgb[2], ope)) / 2.0)
+                    255 * ((opweight(rgbs[0], gv.rgb[0], rgbs[3])   +   opweight(rgbe[0], gv.rgb[0], rgbe[3])) / 2.0),
+                    255 * ((opweight(rgbs[1], gv.rgb[1], rgbs[3])   +   opweight(rgbe[1], gv.rgb[1], rgbe[3])) / 2.0),
+                    255 * ((opweight(rgbs[2], gv.rgb[2], rgbs[3])   +   opweight(rgbe[2], gv.rgb[2], rgbe[3])) / 2.0)
                 );
     } else {
         cr = U_RGB(0, 0, 0);  // The default fill

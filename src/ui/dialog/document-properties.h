@@ -127,7 +127,7 @@ private:
     void set_viewbox_pos(SPDesktop* desktop, double x, double y);
     void set_viewbox_size(SPDesktop* desktop, double width, double height);
 
-    Inkscape::XML::SignalObserver _emb_profiles_observer, _scripts_observer;
+    Inkscape::XML::SignalObserver _scripts_observer;
     UI::Widget::PopoverBin _popoverbin;
     Gtk::Notebook _notebook;
 
@@ -265,6 +265,8 @@ private:
     // nodes connected to listeners
     WatchConnection _namedview_connection;
     WatchConnection _root_connection;
+
+    auto_connection _cms_connection;
 };
 
 } // namespace Dialog

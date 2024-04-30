@@ -346,18 +346,9 @@ void GradientTool::simplify(double tolerance)
                 }
 
                 // compare color of stop1 to the average color of stop0 and stop2
-                uint32_t const c0 = stop0->get_rgba32();
-                uint32_t const c2 = stop2->get_rgba32();
-                uint32_t const c1r = stop1->get_rgba32();
-                uint32_t const c1 = average_color(c0, c2, (stop1->offset - stop0->offset) / (stop2->offset - stop0->offset));
-
-                double diff =
-                    Geom::sqr(SP_RGBA32_R_F(c1) - SP_RGBA32_R_F(c1r)) +
-                    Geom::sqr(SP_RGBA32_G_F(c1) - SP_RGBA32_G_F(c1r)) +
-                    Geom::sqr(SP_RGBA32_B_F(c1) - SP_RGBA32_B_F(c1r)) +
-                    Geom::sqr(SP_RGBA32_A_F(c1) - SP_RGBA32_A_F(c1r));
-
-                if (diff < tolerance) {
+                auto coord = (stop1->offset - stop0->offset) / (stop2->offset - stop0->offset);
+                auto avg = stop0->getColor().averaged(stop2->getColor(), coord);
+                if (avg.difference(stop1->getColor()) < tolerance) {
                     todel.emplace(stop1);
                 }
             }

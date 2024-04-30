@@ -336,13 +336,13 @@ public:
     SPFilter const      *getFilter()    const { return (filter.href) ? filter.href->getObject() : nullptr; }
     Inkscape::URI const *getFilterURI() const { return (filter.href) ? filter.href->getURI()    : nullptr; }
 
-    SPPaintServer       *getFillPaintServer()         { return (fill.value.href) ? fill.value.href->getObject() : nullptr; }
-    SPPaintServer const *getFillPaintServer()   const { return (fill.value.href) ? fill.value.href->getObject() : nullptr; }
-    Inkscape::URI const *getFillURI()           const { return (fill.value.href) ? fill.value.href->getURI()    : nullptr; }
+    SPPaintServer       *getFillPaintServer()         { return (fill.href) ? fill.href->getObject() : nullptr; }
+    SPPaintServer const *getFillPaintServer()   const { return (fill.href) ? fill.href->getObject() : nullptr; }
+    Inkscape::URI const *getFillURI()           const { return (fill.href) ? fill.href->getURI()    : nullptr; }
 
-    SPPaintServer       *getStrokePaintServer()       { return (stroke.value.href) ? stroke.value.href->getObject() : nullptr; }
-    SPPaintServer const *getStrokePaintServer() const { return (stroke.value.href) ? stroke.value.href->getObject() : nullptr; }
-    Inkscape::URI const *getStrokeURI()         const { return (stroke.value.href) ? stroke.value.href->getURI()    : nullptr; }
+    SPPaintServer       *getStrokePaintServer()       { return (stroke.href) ? stroke.href->getObject() : nullptr; }
+    SPPaintServer const *getStrokePaintServer() const { return (stroke.href) ? stroke.href->getObject() : nullptr; }
+    Inkscape::URI const *getStrokeURI()         const { return (stroke.href) ? stroke.href->getURI()    : nullptr; }
 
     /**
      * Return a font feature string useful for Pango.

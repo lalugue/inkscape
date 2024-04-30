@@ -63,7 +63,9 @@ Inkscape::XML::Node* SPSolidColor::write(Inkscape::XML::Document* xml_doc, Inksc
 
 std::unique_ptr<Inkscape::DrawingPaintServer> SPSolidColor::create_drawing_paintserver()
 {
-    return std::make_unique<Inkscape::DrawingSolidColor>(style->solid_color.value.color.v.c, SP_SCALE24_TO_FLOAT(style->solid_opacity.value));
+    auto color = style->solid_color.getColor();
+    color.addOpacity(style->solid_opacity);
+    return std::make_unique<Inkscape::DrawingSolidColor>(color);
 }
 
 /*

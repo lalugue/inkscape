@@ -16,7 +16,6 @@
 #include <optional>
 #include <cstdint>
 #include "sp-filter-primitive.h"
-#include "svg/svg-icc-color.h"
 
 class SPFeFlood final
     : public SPFilterPrimitive
@@ -25,9 +24,9 @@ public:
     int tag() const override { return tag_of<decltype(*this)>; }
 
 private:
-    uint32_t color = 0x0;
+
+    std::optional<Inkscape::Colors::Color> flood_color;
     double opacity = 1.0;
-    std::optional<SVGICCColor> icc;
 
 protected:
     void build(SPDocument *doc, Inkscape::XML::Node *repr) override;

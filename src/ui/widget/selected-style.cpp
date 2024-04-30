@@ -24,6 +24,8 @@
 
 #include "selected-style.h"
 
+#include "colors/dragndrop.h"
+#include "colors/manager.h"
 #include "desktop-style.h"
 #include "document-undo.h"
 #include "gradient-chemistry.h"
@@ -38,7 +40,6 @@
 #include "object/sp-pattern.h"
 #include "object/sp-radial-gradient.h"
 #include "svg/css-ostringstream.h"
-#include "svg/svg-color.h"
 #include "ui/controller.h"
 #include "ui/clipboard.h"
 #include "ui/cursor-utils.h"
@@ -54,7 +55,6 @@
 #include "util/safe-printf.h"
 #include "util/units.cpp"
 #include "util-string/ustring-format.h"
-#include "widgets/paintdef.h"
 
 static constexpr int SELECTED_STYLE_SB_WIDTH     =  48;
 static constexpr int SELECTED_STYLE_PLACE_WIDTH  =  50;
@@ -171,28 +171,18 @@ SelectedStyle::SelectedStyle()
         drop[i] = std::make_unique<SelectedStyleDropTracker>();
         drop[i]->parent = this;
         drop[i]->item = i;
-        auto target = Gtk::DropTarget::create(Glib::Value<PaintDef>::value_type(), Gdk::DragAction::COPY | Gdk::DragAction::MOVE);
+        auto target = Gtk::DropTarget::create(Glib::Value<std::optional<Colors::Color>>::value_type(), Gdk::DragAction::COPY | Gdk::DragAction::MOVE);
         target->signal_drop().connect([this, i] (Glib::ValueBase const &value, double, double) {
             if (!dropEnabled[i]) {
                 return false;
             }
 
             auto const &tracker = *drop[i];
-            auto const &paintdef = *reinterpret_cast<PaintDef *>(g_value_get_boxed(value.gobj()));
-
-            // copied from drag-and-drop.cpp, case PaintDef
-            std::string colorspec;
-            if (paintdef.get_type() == PaintDef::NONE) {
-                colorspec = "none";
-            } else {
-                auto const [r, g, b] = paintdef.get_rgb();
-                colorspec.resize(63);
-                sp_svg_write_color(colorspec.data(), colorspec.size() + 1, SP_RGBA32_U_COMPOSE(r, g, b, 0xff));
-                colorspec.resize(std::strlen(colorspec.c_str()));
-            }
+            auto const &color = *reinterpret_cast<std::optional<Colors::Color>*>(g_value_get_boxed(value.gobj()));
+            std::string colorspec = color ? color->toString(false) : "none";
 
             auto const css = sp_repr_css_attr_new();
-            sp_repr_css_set_property(css, tracker.item == SS_FILL ? "fill" : "stroke", colorspec.c_str());
+            sp_repr_css_set_property_string(css, tracker.item == SS_FILL ? "fill" : "stroke", colorspec);
             sp_desktop_set_style(tracker.parent->_desktop, css);
             sp_repr_css_attr_unref(css);
 
@@ -325,10 +315,8 @@ void SelectedStyle::on_stroke_opaque() {
 
 void SelectedStyle::on_fill_lastused() {
     SPCSSAttr *css = sp_repr_css_attr_new ();
-    guint32 color = sp_desktop_get_color(_desktop, true);
-    gchar c[64];
-    sp_svg_write_color (c, sizeof(c), color);
-    sp_repr_css_set_property (css, "fill", c);
+    auto color = sp_desktop_get_color(_desktop, true);
+    sp_repr_css_set_property_string(css, "fill", color ? color->toString() : "none");
     sp_desktop_set_style (_desktop, css);
     sp_repr_css_attr_unref (css);
     DocumentUndo::done(_desktop->getDocument(), _("Apply last set color to fill"), INKSCAPE_ICON("dialog-fill-and-stroke"));
@@ -336,10 +324,8 @@ void SelectedStyle::on_fill_lastused() {
 
 void SelectedStyle::on_stroke_lastused() {
     SPCSSAttr *css = sp_repr_css_attr_new ();
-    guint32 color = sp_desktop_get_color(_desktop, false);
-    gchar c[64];
-    sp_svg_write_color (c, sizeof(c), color);
-    sp_repr_css_set_property (css, "stroke", c);
+    auto color = sp_desktop_get_color(_desktop, false);
+    sp_repr_css_set_property_string(css, "fill", color ? color->toString() : "none");
     sp_desktop_set_style (_desktop, css);
     sp_repr_css_attr_unref (css);
     DocumentUndo::done(_desktop->getDocument(), _("Apply last set color to stroke"), INKSCAPE_ICON("dialog-fill-and-stroke"));
@@ -347,9 +333,7 @@ void SelectedStyle::on_stroke_lastused() {
 
 void SelectedStyle::on_fill_lastselected() {
     SPCSSAttr *css = sp_repr_css_attr_new ();
-    gchar c[64];
-    sp_svg_write_color (c, sizeof(c), _lastselected[SS_FILL]);
-    sp_repr_css_set_property (css, "fill", c);
+    sp_repr_css_set_property_string(css, "fill", _lastselected[SS_FILL] ? _lastselected[SS_FILL]->toString() : "");
     sp_desktop_set_style (_desktop, css);
     sp_repr_css_attr_unref (css);
     DocumentUndo::done(_desktop->getDocument(), _("Apply last selected color to fill"), INKSCAPE_ICON("dialog-fill-and-stroke"));
@@ -357,9 +341,7 @@ void SelectedStyle::on_fill_lastselected() {
 
 void SelectedStyle::on_stroke_lastselected() {
     SPCSSAttr *css = sp_repr_css_attr_new ();
-    gchar c[64];
-    sp_svg_write_color (c, sizeof(c), _lastselected[SS_STROKE]);
-    sp_repr_css_set_property (css, "stroke", c);
+    sp_repr_css_set_property_string(css, "stroke", _lastselected[SS_STROKE] ? _lastselected[SS_STROKE]->toString() : "");
     sp_desktop_set_style (_desktop, css);
     sp_repr_css_attr_unref (css);
     DocumentUndo::done(_desktop->getDocument(), _("Apply last selected color to stroke"), INKSCAPE_ICON("dialog-fill-and-stroke"));
@@ -367,8 +349,7 @@ void SelectedStyle::on_stroke_lastselected() {
 
 void SelectedStyle::on_fill_invert() {
     SPCSSAttr *css = sp_repr_css_attr_new ();
-    guint32 color = _thisselected[SS_FILL];
-    gchar c[64];
+    auto color = _thisselected[SS_FILL];
     if (_mode[SS_FILL] == SS_LGRADIENT || _mode[SS_FILL] == SS_RGRADIENT) {
         sp_gradient_invert_selected_gradients(_desktop, Inkscape::FOR_FILL);
         return;
@@ -376,15 +357,8 @@ void SelectedStyle::on_fill_invert() {
     }
 
     if (_mode[SS_FILL] != SS_COLOR) return;
-    sp_svg_write_color (c, sizeof(c),
-        SP_RGBA32_U_COMPOSE(
-                (255 - SP_RGBA32_R_U(color)),
-                (255 - SP_RGBA32_G_U(color)),
-                (255 - SP_RGBA32_B_U(color)),
-                SP_RGBA32_A_U(color)
-        )
-    );
-    sp_repr_css_set_property (css, "fill", c);
+    color->invert();
+    sp_repr_css_set_property_string(css, "fill", color->toString());
     sp_desktop_set_style (_desktop, css);
     sp_repr_css_attr_unref (css);
     DocumentUndo::done(_desktop->getDocument(), _("Invert fill"), INKSCAPE_ICON("dialog-fill-and-stroke"));
@@ -392,22 +366,14 @@ void SelectedStyle::on_fill_invert() {
 
 void SelectedStyle::on_stroke_invert() {
     SPCSSAttr *css = sp_repr_css_attr_new ();
-    guint32 color = _thisselected[SS_STROKE];
-    gchar c[64];
+    auto color = _thisselected[SS_STROKE];
     if (_mode[SS_STROKE] == SS_LGRADIENT || _mode[SS_STROKE] == SS_RGRADIENT) {
         sp_gradient_invert_selected_gradients(_desktop, Inkscape::FOR_STROKE);
         return;
     }
     if (_mode[SS_STROKE] != SS_COLOR) return;
-    sp_svg_write_color (c, sizeof(c),
-        SP_RGBA32_U_COMPOSE(
-                (255 - SP_RGBA32_R_U(color)),
-                (255 - SP_RGBA32_G_U(color)),
-                (255 - SP_RGBA32_B_U(color)),
-                SP_RGBA32_A_U(color)
-        )
-    );
-    sp_repr_css_set_property (css, "stroke", c);
+    color->invert();
+    sp_repr_css_set_property_string(css, "stroke", color->toString());
     sp_desktop_set_style (_desktop, css);
     sp_repr_css_attr_unref (css);
     DocumentUndo::done(_desktop->getDocument(), _("Invert stroke"), INKSCAPE_ICON("dialog-fill-and-stroke"));
@@ -415,9 +381,7 @@ void SelectedStyle::on_stroke_invert() {
 
 void SelectedStyle::on_fill_white() {
     SPCSSAttr *css = sp_repr_css_attr_new ();
-    gchar c[64];
-    sp_svg_write_color (c, sizeof(c), 0xffffffff);
-    sp_repr_css_set_property (css, "fill", c);
+    sp_repr_css_set_property (css, "fill", "#ffffff");
     sp_repr_css_set_property (css, "fill-opacity", "1");
     sp_desktop_set_style (_desktop, css);
     sp_repr_css_attr_unref (css);
@@ -426,9 +390,7 @@ void SelectedStyle::on_fill_white() {
 
 void SelectedStyle::on_stroke_white() {
     SPCSSAttr *css = sp_repr_css_attr_new ();
-    gchar c[64];
-    sp_svg_write_color (c, sizeof(c), 0xffffffff);
-    sp_repr_css_set_property (css, "stroke", c);
+    sp_repr_css_set_property (css, "stroke", "#ffffff");
     sp_repr_css_set_property (css, "stroke-opacity", "1");
     sp_desktop_set_style (_desktop, css);
     sp_repr_css_attr_unref (css);
@@ -437,9 +399,7 @@ void SelectedStyle::on_stroke_white() {
 
 void SelectedStyle::on_fill_black() {
     SPCSSAttr *css = sp_repr_css_attr_new ();
-    gchar c[64];
-    sp_svg_write_color (c, sizeof(c), 0x000000ff);
-    sp_repr_css_set_property (css, "fill", c);
+    sp_repr_css_set_property (css, "fill", "#000000");
     sp_repr_css_set_property (css, "fill-opacity", "1.0");
     sp_desktop_set_style (_desktop, css);
     sp_repr_css_attr_unref (css);
@@ -448,9 +408,7 @@ void SelectedStyle::on_fill_black() {
 
 void SelectedStyle::on_stroke_black() {
     SPCSSAttr *css = sp_repr_css_attr_new ();
-    gchar c[64];
-    sp_svg_write_color (c, sizeof(c), 0x000000ff);
-    sp_repr_css_set_property (css, "stroke", c);
+    sp_repr_css_set_property (css, "stroke", "#000000");
     sp_repr_css_set_property (css, "stroke-opacity", "1.0");
     sp_desktop_set_style (_desktop, css);
     sp_repr_css_attr_unref (css);
@@ -459,10 +417,7 @@ void SelectedStyle::on_stroke_black() {
 
 void SelectedStyle::on_fill_copy() {
     if (_mode[SS_FILL] == SS_COLOR) {
-        gchar c[64];
-        sp_svg_write_color (c, sizeof(c), _thisselected[SS_FILL]);
-        Glib::ustring text;
-        text += c;
+        auto text = _thisselected[SS_FILL]->toString();
         if (!text.empty()) {
             auto const display = Gdk::Display::get_default();
             display->get_primary_clipboard()->set_text(text);
@@ -472,10 +427,7 @@ void SelectedStyle::on_fill_copy() {
 
 void SelectedStyle::on_stroke_copy() {
     if (_mode[SS_STROKE] == SS_COLOR) {
-        gchar c[64];
-        sp_svg_write_color (c, sizeof(c), _thisselected[SS_STROKE]);
-        Glib::ustring text;
-        text += c;
+        auto text = _thisselected[SS_STROKE]->toString();
         if (!text.empty()) {
             auto const display = Gdk::Display::get_default();
             display->get_primary_clipboard()->set_text(text);
@@ -495,13 +447,9 @@ void SelectedStyle::_on_paste_callback(Glib::RefPtr<Gio::AsyncResult>& result, G
         std::cout << "Pasting text failed: " << err.what() << std::endl;
         return;
     }
-    if (!text.empty()) {
-        guint32 color = sp_svg_read_color(text.c_str(), 0x000000ff); // impossible value, as SVG color cannot have opacity
-        if (color == 0x000000ff) // failed to parse color string
-            return;
-
+    if (auto color = Inkscape::Colors::Color::parse(text)) {
         SPCSSAttr *css = sp_repr_css_attr_new ();
-        sp_repr_css_set_property (css, typepaste.c_str(), text.c_str());
+        sp_repr_css_set_property_string(css, "fill", color->toString());
         sp_desktop_set_style (_desktop, css);
         sp_repr_css_attr_unref (css);
         DocumentUndo::done(_desktop->getDocument(), typepaste == "fill" ? _("Paste fill") : _("Paste stroke"), INKSCAPE_ICON("dialog-fill-and-stroke"));
@@ -785,6 +733,7 @@ SelectedStyle::update()
             dropEnabled[i] = true;
 
             auto paint = i == SS_FILL ? query.fill.upcast() : query.stroke.upcast();
+            double opacity = i == SS_FILL ? query.fill_opacity : query.stroke_opacity;
             if (paint->set && paint->isPaintserver()) {
                 SPPaintServer *server = (i == SS_FILL)? SP_STYLE_FILL_SERVER (&query) : SP_STYLE_STROKE_SERVER (&query);
                 if ( server ) {
@@ -835,21 +784,17 @@ SelectedStyle::update()
                     g_warning ("file %s: line %d: Unknown paint server", __FILE__, __LINE__);
                 }
             } else if (paint->set && paint->isColor()) {
-                guint32 color = paint->value.color.toRGBA32(
-                                     SP_SCALE24_TO_FLOAT ((i == SS_FILL) ?
-                                                          query.fill_opacity.value :
-                                                          query.stroke_opacity.value));
+                auto color = paint->getColor();
+                color.addOpacity(opacity);
+
                 _lastselected[i] = _thisselected[i];
                 _thisselected[i] = color; // include opacity
 
-                gchar c_string[64];
-                safeprintf (c_string, "%06x/%.3g", color >> 8, SP_RGBA32_A_F(color));
-
                 // No type_label.
-                swatch[i]->set_tooltip_text(type_strings[SS_COLOR][i][1] + ": " + c_string +
+                swatch[i]->set_tooltip_text(type_strings[SS_COLOR][i][1] + ": " + color.toString() +
                                             _(", drag to adjust, middle-click to remove"));
                 type_label[i]->set_visible(false);
-                color_preview[i]->setRgba32(color);
+                color_preview[i]->setRgba32(color.toRGBA());
                 color_preview[i]->show();
 
                 _mode[i] = SS_COLOR;
@@ -1021,72 +966,27 @@ RotateableSwatch::RotateableSwatch(SelectedStyle *parent, guint mode)
 
 RotateableSwatch::~RotateableSwatch() = default;
 
-double
-RotateableSwatch::color_adjust(float *hsla, double by, guint32 cc, guint modifier)
+std::pair<double, double> RotateableSwatch::color_adjust(Colors::Color const &cc, double by, guint modifier)
 {
-    SPColor::rgb_to_hsl_floatv (hsla, SP_RGBA32_R_F(cc), SP_RGBA32_G_F(cc), SP_RGBA32_B_F(cc));
-    hsla[3] = SP_RGBA32_A_F(cc);
-    double diff = 0;
-    if (modifier == 2) { // saturation
-        double old = hsla[1];
-        if (by > 0) {
-            hsla[1] += by * (1 - hsla[1]);
-        } else {
-            hsla[1] += by * (hsla[1]);
-        }
-        diff = hsla[1] - old;
-    } else if (modifier == 1) { // lightness
-        double old = hsla[2];
-        if (by > 0) {
-            hsla[2] += by * (1 - hsla[2]);
-        } else {
-            hsla[2] += by * (hsla[2]);
-        }
-        diff = hsla[2] - old;
-    } else if (modifier == 3) { // alpha
-        double old = hsla[3];
-        hsla[3] += by/2;
-        if (hsla[3] < 0) {
-            hsla[3] = 0;
-        } else if (hsla[3] > 1) {
-            hsla[3] = 1;
-        }
-        diff = hsla[3] - old;
-    } else { // hue
-        double old = hsla[0];
-        hsla[0] += by/2;
-        while (hsla[0] < 0)
-            hsla[0] += 1;
-        while (hsla[0] > 1)
-            hsla[0] -= 1;
-        diff = hsla[0] - old;
-    }
+    static int map[4] = {0,2,1,3};
+    auto hsl = *cc.converted(Colors::Space::Type::HSL);
+    int ch = map[modifier];
+    double old = hsl[ch];
 
-    float rgb[3];
-    SPColor::hsl_to_rgb_floatv (rgb, hsla[0], hsla[1], hsla[2]);
-
-    gchar c[64];
-    sp_svg_write_color (c, sizeof(c),
-        SP_RGBA32_U_COMPOSE(
-                (SP_COLOR_F_TO_U(rgb[0])),
-                (SP_COLOR_F_TO_U(rgb[1])),
-                (SP_COLOR_F_TO_U(rgb[2])),
-                0xff
-        )
-    );
+    hsl.set(ch, old + by * (by > 0 ? (1 - hsl[ch]) : hsl[ch]));
+    hsl.normalize();
+    double diff = hsl[ch] - old;
+    hsl.convert(cc.getSpace());
 
     SPCSSAttr *css = sp_repr_css_attr_new ();
-
     if (modifier == 3) { // alpha
-        Inkscape::CSSOStringStream osalpha;
-        osalpha << hsla[3];
-        sp_repr_css_set_property(css, (fillstroke == SS_FILL) ? "fill-opacity" : "stroke-opacity", osalpha.str().c_str());
+        sp_repr_css_set_property_double(css, (fillstroke == SS_FILL) ? "fill-opacity" : "stroke-opacity", hsl.getOpacity());
     } else {
-        sp_repr_css_set_property (css, (fillstroke == SS_FILL) ? "fill" : "stroke", c);
+        sp_repr_css_set_property_string(css, (fillstroke == SS_FILL) ? "fill" : "stroke", hsl.toString(false));
     }
     sp_desktop_set_style (parent->getDesktop(), css);
     sp_repr_css_attr_unref (css);
-    return diff;
+    return {old, diff};
 }
 
 void RotateableSwatch::do_motion(double by, guint modifier)
@@ -1110,50 +1010,39 @@ void RotateableSwatch::do_motion(double by, guint modifier)
         cursor_state = modifier;
     }
 
-    guint32 cc;
-    if (!startcolor_set) {
-        cc = startcolor = parent->_thisselected[fillstroke];
-        startcolor_set = true;
-    } else {
-        cc = startcolor;
+    if (!startcolor) {
+        startcolor = parent->_thisselected[fillstroke];
     }
 
-    float hsla[4];
-    double diff = 0;
-
-    diff = color_adjust(hsla, by, cc, modifier);
+    auto ret = color_adjust(*startcolor, by, modifier);
 
     if (modifier == 3) { // alpha
         DocumentUndo::maybeDone(parent->getDesktop()->getDocument(), undokey, (_("Adjust alpha")), INKSCAPE_ICON("dialog-fill-and-stroke"));
-        double ch = hsla[3];
         parent->getDesktop()->getTool()->message_context->setF(
             Inkscape::IMMEDIATE_MESSAGE,
             _("Adjusting <b>alpha</b>: was %.3g, now <b>%.3g</b> (diff %.3g); with <b>Ctrl</b> to adjust lightness, with <b>Shift</b> to adjust saturation, without modifiers to adjust hue"),
-            ch - diff, ch, diff);
+            ret.first - ret.second, ret.first, ret.second);
 
     } else if (modifier == 2) { // saturation
         DocumentUndo::maybeDone(parent->getDesktop()->getDocument(), undokey, (_("Adjust saturation")), INKSCAPE_ICON("dialog-fill-and-stroke"));
-        double ch = hsla[1];
         parent->getDesktop()->getTool()->message_context->setF(
             Inkscape::IMMEDIATE_MESSAGE,
             _("Adjusting <b>saturation</b>: was %.3g, now <b>%.3g</b> (diff %.3g); with <b>Ctrl</b> to adjust lightness, with <b>Alt</b> to adjust alpha, without modifiers to adjust hue"),
-            ch - diff, ch, diff);
+            ret.first - ret.second, ret.first, ret.second);
 
     } else if (modifier == 1) { // lightness
         DocumentUndo::maybeDone(parent->getDesktop()->getDocument(), undokey, (_("Adjust lightness")), INKSCAPE_ICON("dialog-fill-and-stroke"));
-        double ch = hsla[2];
         parent->getDesktop()->getTool()->message_context->setF(
             Inkscape::IMMEDIATE_MESSAGE,
             _("Adjusting <b>lightness</b>: was %.3g, now <b>%.3g</b> (diff %.3g); with <b>Shift</b> to adjust saturation, with <b>Alt</b> to adjust alpha, without modifiers to adjust hue"),
-            ch - diff, ch, diff);
+            ret.first - ret.second, ret.first, ret.second);
 
     } else { // hue
         DocumentUndo::maybeDone(parent->getDesktop()->getDocument(), undokey, (_("Adjust hue")), INKSCAPE_ICON("dialog-fill-and-stroke"));
-        double ch = hsla[0];
         parent->getDesktop()->getTool()->message_context->setF(
             Inkscape::IMMEDIATE_MESSAGE,
             _("Adjusting <b>hue</b>: was %.3g, now <b>%.3g</b> (diff %.3g); with <b>Shift</b> to adjust saturation, with <b>Alt</b> to adjust alpha, with <b>Ctrl</b> to adjust lightness"),
-            ch - diff, ch, diff);
+            ret.first - ret.second, ret.first, ret.second);
     }
 }
 
@@ -1169,8 +1058,7 @@ void RotateableSwatch::do_release(double by, guint modifier)
         return;
 
     parent->dragging = false;
-    float hsla[4];
-    color_adjust(hsla, by, startcolor, modifier);
+    color_adjust(*startcolor, by, modifier);
 
     if (cursor_state != -1) {
         if (auto window = dynamic_cast<Gtk::Window *>(get_root())) {
@@ -1199,7 +1087,7 @@ void RotateableSwatch::do_release(double by, guint modifier)
     }
 
     parent->getDesktop()->getTool()->message_context->clear();
-    startcolor_set = false;
+    startcolor.reset();
 }
 
 /* =============================================  RotateableStrokeWidth  */

@@ -34,8 +34,6 @@
 
 #include "object/sp-namedview.h"
 
-#include "svg/svg-color.h"
-
 #include "ui/cursor-utils.h"
 #include "ui/icon-names.h"
 #include "ui/tools/dropper-tool.h"
@@ -89,7 +87,7 @@ DropperTool::~DropperTool()
  * @param invert If true, invert the rgb value
  * @param non_dropping If true, use color from canvas, even in dropping mode.
  */
-uint32_t DropperTool::get_color(bool invert, bool non_dropping) const
+std::optional<Colors::Color> DropperTool::get_color(bool invert, bool non_dropping) const
 {
     auto prefs = Preferences::get();
 
@@ -98,16 +96,15 @@ uint32_t DropperTool::get_color(bool invert, bool non_dropping) const
 
     // non_dropping ignores dropping mode and always uses color from canvas.
     // Used by the clipboard
-    double r = non_dropping ? non_dropping_R : R;
-    double g = non_dropping ? non_dropping_G : G;
-    double b = non_dropping ? non_dropping_B : B;
-    double a = non_dropping ? non_dropping_A : alpha;
+    auto color = non_dropping ? non_dropping_color : stored_color;
 
-    return SP_RGBA32_F_COMPOSE(
-        std::abs(invert - r),
-        std::abs(invert - g),
-        std::abs(invert - b),
-        (pick == PICK_ACTUAL && setalpha) ? a : 1.0);
+    if (color && invert)
+        color->invert();
+
+    if (color && (pick != PICK_ACTUAL || !setalpha))
+        color->enableOpacity(false);
+
+    return color;
 }
 
 bool DropperTool::root_handler(CanvasEvent const &event)
@@ -128,29 +125,21 @@ bool DropperTool::root_handler(CanvasEvent const &event)
         auto selection = _desktop->getSelection();
         g_assert(selection);
 
-        std::optional<uint32_t> apply_color;
+        std::optional<Inkscape::Colors::Color> apply_color;
         for (auto const &obj: selection->objects()) {
             if (obj->style) {
-                double opacity = 1.0;
                 if (!stroke && obj->style->fill.set) {
-                    if (obj->style->fill_opacity.set) {
-                        opacity = SP_SCALE24_TO_FLOAT(obj->style->fill_opacity.value);
-                    }
-                    apply_color = obj->style->fill.value.color.toRGBA32(opacity);
+                    apply_color = obj->style->fill.getColor();
+                    apply_color->addOpacity(obj->style->fill_opacity);
                 } else if (stroke && obj->style->stroke.set) {
-                    if (obj->style->stroke_opacity.set) {
-                        opacity = SP_SCALE24_TO_FLOAT(obj->style->stroke_opacity.value);
-                    }
-                    apply_color = obj->style->stroke.value.color.toRGBA32(opacity);
+                    apply_color = obj->style->stroke.getColor();
+                    apply_color->addOpacity(obj->style->stroke_opacity);
                 }
             }
         }
 
         if (apply_color) {
-            R = SP_RGBA32_R_F(*apply_color);
-            G = SP_RGBA32_G_F(*apply_color);
-            B = SP_RGBA32_B_F(*apply_color);
-            alpha = SP_RGBA32_A_F(*apply_color);
+            stored_color = apply_color;
         } else {
             // This means that having no selection or some other error
             // we will default back to normal dropper mode.
@@ -223,7 +212,7 @@ bool DropperTool::root_handler(CanvasEvent const &event)
             auto canvas_item_drawing = _desktop->getCanvasDrawing();
             auto drawing = canvas_item_drawing->get_drawing();
 
-            // Get average color
+            // Get average color of on screen pixels (sRGB)
             double R2, G2, B2, A2;
             drawing->averageColor(pick_area, R2, G2, B2, A2);
 
@@ -249,19 +238,12 @@ bool DropperTool::root_handler(CanvasEvent const &event)
 
             // Remember color
             if (!dropping) {
-                R = R2;
-                G = G2;
-                B = B2;
-                alpha = A2;
+                stored_color = Colors::Color(SP_RGBA32_F_COMPOSE(R2, G2, B2, A2));
             }
 
             // Remember color from canvas, even in dropping mode.
             // These values are used by the clipboard.
-            non_dropping_R = R2;
-            non_dropping_G = G2;
-            non_dropping_B = B2;
-            non_dropping_A = A2;
-
+            non_dropping_color = Colors::Color(SP_RGBA32_F_COMPOSE(R2, G2, B2, A2));
             ret = true;
         },
 
@@ -291,11 +273,11 @@ bool DropperTool::root_handler(CanvasEvent const &event)
                 }
             }
 
-            auto picked_color = ColorRGBA(get_color(invert));
+            auto picked_color = get_color(invert);
 
             // One time pick has active signal, call them all and clear.
             if (!onetimepick_signal.empty()) {
-                onetimepick_signal.emit(&picked_color);
+                onetimepick_signal.emit(*picked_color);
                 onetimepick_signal.clear();
                 // Do this last as it destroys the picker tool.
                 sp_toggle_dropper(_desktop);
@@ -304,7 +286,7 @@ bool DropperTool::root_handler(CanvasEvent const &event)
             }
 
             // do the actual color setting
-            sp_desktop_set_color(_desktop, picked_color, false, !stroke);
+            sp_desktop_set_color(_desktop, *picked_color, false, !stroke);
 
             // REJON: set aux. toolbar input to hex color!
             if (!_desktop->getSelection()->isEmpty()) {
@@ -345,31 +327,32 @@ bool DropperTool::root_handler(CanvasEvent const &event)
     }
 
     // set the status message to the right text.
-    char c[64];
-    sp_svg_write_color(c, sizeof(c), get_color(invert));
+    auto color = get_color(invert);
 
-    // alpha of color under cursor, to show in the statusbar
-    // locale-sensitive printf is OK, since this goes to the UI, not into SVG
-    auto alphastr = g_strdup_printf(_(" alpha %.3g"), alpha);
-    // where the color is picked, to show in the statusbar
-    auto where = dragging ? g_strdup_printf(_(", averaged with radius %d"), (int)radius) : g_strdup_printf("%s", _(" under cursor"));
-    // message, to show in the statusbar
-    auto message = dragging ? _("<b>Release mouse</b> to set color.") : _("<b>Click</b> to set fill, <b>Shift+click</b> to set stroke; <b>drag</b> to average color in area; with <b>Alt</b> to pick inverse color; <b>Ctrl+C</b> to copy the color under mouse to clipboard");
+    if (color) {
+        // alpha of color under cursor, to show in the statusbar
+        // locale-sensitive printf is OK, since this goes to the UI, not into SVG
+        auto alphastr = g_strdup_printf(_(" alpha %.3g"), color->getOpacity());
+        // where the color is picked, to show in the statusbar
+        auto where = dragging ? g_strdup_printf(_(", averaged with radius %d"), (int)radius) : g_strdup_printf("%s", _(" under cursor"));
+        // message, to show in the statusbar
+        auto message = dragging ? _("<b>Release mouse</b> to set color.") : _("<b>Click</b> to set fill, <b>Shift+click</b> to set stroke; <b>drag</b> to average color in area; with <b>Alt</b> to pick inverse color; <b>Ctrl+C</b> to copy the color under mouse to clipboard");
 
-    defaultMessageContext()->setF(
-        Inkscape::NORMAL_MESSAGE,
-        "<b>%s%s</b>%s. %s", c,
-        pick == PICK_VISIBLE ? "" : alphastr, where, message);
+        defaultMessageContext()->setF(
+            Inkscape::NORMAL_MESSAGE,
+            "<b>%s%s</b>%s. %s", color->toString(false).c_str(),
+            pick == PICK_VISIBLE ? "" : alphastr, where, message);
 
-    g_free(where);
-    g_free(alphastr);
+        g_free(where);
+        g_free(alphastr);
+    }
 
     // Set the right cursor for the mode and apply the special Fill color
     _cursor_filename = dropping ? (stroke ? "dropper-drop-stroke.svg" : "dropper-drop-fill.svg")
                                 : (stroke ? "dropper-pick-stroke.svg" : "dropper-pick-fill.svg");
 
     // We do this ourselves to get color correct.
-    set_svg_cursor(*_desktop->getCanvas(), _cursor_filename, get_color(invert));
+    set_svg_cursor(*_desktop->getCanvas(), _cursor_filename, color);
 
     if (!ret) {
         ret = ToolBase::root_handler(event);

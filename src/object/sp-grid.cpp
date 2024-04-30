@@ -19,6 +19,7 @@
 #include "sp-grid.h"
 #include "sp-namedview.h"
 
+#include "colors/manager.h"
 #include "display/control/canvas-item-grid.h"
 #include "display/control/canvas-item-ptr.h"
 
@@ -28,7 +29,6 @@
 #include "grid-snapper.h"
 #include "page-manager.h"
 #include "snapper.h"
-#include "svg/svg-color.h"
 #include "svg/svg-length.h"
 #include "util/units.h"
 
@@ -38,12 +38,18 @@
 
 using Inkscape::Util::UnitTable;
 
+// default colors
+static auto const GRID_DEFAULT_MAJOR_COLOR = Inkscape::Colors::Color{0x0099e54d};
+static auto const GRID_DEFAULT_MINOR_COLOR = Inkscape::Colors::Color{0x0099e526};
+
 SPGrid::SPGrid()
     : _visible(true)
     , _enabled(true)
     , _dotted(false)
     , _snap_to_visible_only(true)
     , _legacy(false)
+    , _major_color{GRID_DEFAULT_MAJOR_COLOR}
+    , _minor_color{GRID_DEFAULT_MINOR_COLOR}
     , _pixel(true)
     , _grid_type(GridType::RECTANGULAR)
 { }
@@ -95,8 +101,6 @@ void SPGrid::build(SPDocument *doc, Inkscape::XML::Node *repr)
     readAttr(SPAttr::EMPCOLOR);
     readAttr(SPAttr::VISIBLE);
     readAttr(SPAttr::ENABLED);
-    readAttr(SPAttr::OPACITY);
-    readAttr(SPAttr::EMPOPACITY);
     readAttr(SPAttr::MAJOR_LINE_INTERVAL);
     readAttr(SPAttr::DOTTED);
     readAttr(SPAttr::SNAP_TO_VISIBLE_ONLY);
@@ -199,14 +203,20 @@ void SPGrid::set(SPAttr key, const gchar* value)
             _margin_y.read(value);
             requestDisplayUpdate(SP_OBJECT_MODIFIED_FLAG);
             break;
-        case SPAttr::COLOR:
-            _minor_color = (_minor_color & 0xff) | sp_svg_read_color(value, GRID_DEFAULT_MINOR_COLOR);
+        case SPAttr::COLOR: {
+            auto const old_opacity = _minor_color.getOpacity();
+            _minor_color = Inkscape::Colors::Color::parse(value).value_or(GRID_DEFAULT_MINOR_COLOR);
+            _minor_color.setOpacity(old_opacity);
             requestDisplayUpdate(SP_OBJECT_MODIFIED_FLAG);
             break;
-        case SPAttr::EMPCOLOR:
-            _major_color = (_major_color & 0xff) | sp_svg_read_color(value, GRID_DEFAULT_MAJOR_COLOR);
+        }
+        case SPAttr::EMPCOLOR: {
+            auto const old_opacity = _major_color.getOpacity();
+            _major_color = Inkscape::Colors::Color::parse(value).value_or(GRID_DEFAULT_MAJOR_COLOR);
+            _major_color.setOpacity(old_opacity);
             requestDisplayUpdate(SP_OBJECT_MODIFIED_FLAG);
             break;
+        }
         case SPAttr::VISIBLE:
             _visible.read(value);
             requestDisplayUpdate(SP_OBJECT_MODIFIED_FLAG);
@@ -217,11 +227,11 @@ void SPGrid::set(SPAttr key, const gchar* value)
             requestDisplayUpdate(SP_OBJECT_MODIFIED_FLAG);
             break;
         case SPAttr::OPACITY:
-            sp_ink_read_opacity(value, &_minor_color, GRID_DEFAULT_MINOR_COLOR);
+            _minor_color.setOpacity(value ? g_ascii_strtod(value, nullptr) : 1.0);
             requestDisplayUpdate(SP_OBJECT_MODIFIED_FLAG);
             break;
         case SPAttr::EMPOPACITY:
-            sp_ink_read_opacity(value, &_major_color, GRID_DEFAULT_MAJOR_COLOR);
+            _major_color.setOpacity(value ? g_ascii_strtod(value, nullptr) : 1.0);
             requestDisplayUpdate(SP_OBJECT_MODIFIED_FLAG);
             break;
         case SPAttr::MAJOR_LINE_INTERVAL:
@@ -409,8 +419,8 @@ void SPGrid::setPrefValues()
                 Quantity::convert(prefs->getDouble(prefix + "/spacing_x", default_spacing), _display_unit, "px"),
                 Quantity::convert(prefs->getDouble(prefix + "/spacing_y", default_spacing), _display_unit, "px")) * scale);
 
-    setMajorColor(prefs->getColor(prefix + "/empcolor", modular ? GRID_DEFAULT_BLOCK_COLOR : GRID_DEFAULT_MAJOR_COLOR));
-    setMinorColor(prefs->getColor(prefix + "/color", modular ? GRID_DEFAULT_MINOR_BLOCK_COLOR : GRID_DEFAULT_MINOR_COLOR));
+    setMajorColor(prefs->getColor(prefix + "/empcolor", modular ? "#0047cb4d" : "#0099e54d"));
+    setMinorColor(prefs->getColor(prefix + "/color", modular ? "#0047cb26" : "#0099e526"));
     setMajorLineInterval(prefs->getInt(prefix + "/empspacing"));
 
     // these prefs are bound specifically to one type of grid
@@ -478,8 +488,8 @@ void SPGrid::update(SPCtx *ctx, unsigned int flags)
         if (_enabled) {
             view->set_origin(origin);
             view->set_spacing(spacing);
-            view->set_major_color(_major_color);
-            view->set_minor_color(_minor_color);
+            view->set_major_color(getMajorColor().toRGBA());
+            view->set_minor_color(getMinorColor().toRGBA());
             view->set_dotted(_dotted);
             view->set_major_line_interval(_major_line_interval);
 
@@ -687,30 +697,17 @@ void SPGrid::setOrigin(Geom::Point const &new_origin)
     requestDisplayUpdate(SP_OBJECT_MODIFIED_FLAG);
 }
 
-void SPGrid::setMajorColor(const guint32 color)
+void SPGrid::setMajorColor(Inkscape::Colors::Color const &color)
 {
-    char color_str[16];
-    sp_svg_write_color(color_str, 16, color);
-
-    getRepr()->setAttribute("empcolor", color_str);
-
-    double opacity = (color & 0xff) / 255.0; // convert to value between [0.0, 1.0]
-    getRepr()->setAttributeSvgDouble("empopacity", opacity);
-
+    getRepr()->setAttribute("empcolor", color.toString(false));
+    getRepr()->setAttributeSvgDouble("empopacity", color.getOpacity());
     requestDisplayUpdate(SP_OBJECT_MODIFIED_FLAG);
 }
 
-void SPGrid::setMinorColor(const guint32 color)
+void SPGrid::setMinorColor(Inkscape::Colors::Color const &color)
 {
-    char color_str[16];
-    sp_svg_write_color(color_str, 16, color);
-
-
-    getRepr()->setAttribute("color", color_str);
-
-    double opacity = (color & 0xff) / 255.0; // convert to value between [0.0, 1.0]
-    getRepr()->setAttributeSvgDouble("opacity", opacity);
-
+    getRepr()->setAttribute("color", color.toString(false));
+    getRepr()->setAttributeSvgDouble("opacity", color.getOpacity());
     requestDisplayUpdate(SP_OBJECT_MODIFIED_FLAG);
 }
 

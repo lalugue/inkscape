@@ -19,7 +19,6 @@
 #include "object/sp-shape.h"
 #include "object/sp-defs.h"
 #include "object/sp-paint-server.h"
-#include "svg/svg-color.h"
 #include "svg/css-ostringstream.h"
 #include "style.h"
 #include "util/units.h"
@@ -81,26 +80,23 @@ static SPObject *get_linked_fill(SPObject *source)
 
 static void convert_fill_color(SPCSSAttr *css, SPObject *source)
 {
-    char c[64];
-
-    sp_svg_write_color(c, sizeof(c), source->style->fill.value.color.toRGBA32(SP_SCALE24_TO_FLOAT(source->style->fill_opacity.value)));
-    sp_repr_css_set_property(css, "fill", c);
+    auto color = source->style->fill.getColor();
+    color.addOpacity(source->style->fill_opacity.value);
+    sp_repr_css_set_property_string(css, "fill", color.toString());
 }
 
 static void convert_stroke_color(SPCSSAttr *css, SPObject *source)
 {
-    char c[64];
-
-    sp_svg_write_color(c, sizeof(c), source->style->stroke.value.color.toRGBA32(SP_SCALE24_TO_FLOAT(source->style->stroke_opacity.value)));
-    sp_repr_css_set_property(css, "fill", c);
+    auto color = source->style->stroke.getColor();
+    color.addOpacity(source->style->stroke_opacity.value);
+    sp_repr_css_set_property_string(css, "fill", color.toString());
 }
 
 static void revert_stroke_color(SPCSSAttr *css, SPObject *source)
 {
-    char c[64];
-
-    sp_svg_write_color(c, sizeof(c), source->style->fill.value.color.toRGBA32(SP_SCALE24_TO_FLOAT(source->style->fill_opacity.value)));
-    sp_repr_css_set_property(css, "stroke", c);
+    auto color = source->style->fill.getColor();
+    color.addOpacity(source->style->fill_opacity.value);
+    sp_repr_css_set_property_string(css, "stroke", color.toString());
 }
 
 static void convert_fill_server(SPCSSAttr *css, SPObject *source)

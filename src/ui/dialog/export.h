@@ -35,6 +35,9 @@ class SPPage;
 namespace Inkscape {
 
 class Preferences;
+namespace Colors {
+class Color;
+}
 
 namespace Extension {
 class Output;
@@ -51,8 +54,8 @@ enum notebook_page
     BATCH_EXPORT
 };
 
-void set_export_bg_color(SPObject* object, guint32 color);
-guint32 get_export_bg_color(SPObject* object, guint32 default_color);
+void set_export_bg_color(SPObject* object, Inkscape::Colors::Color const &color);
+Inkscape::Colors::Color get_export_bg_color(SPObject* object, Inkscape::Colors::Color const &default_color);
 
 class Export final : public DialogBase
 {

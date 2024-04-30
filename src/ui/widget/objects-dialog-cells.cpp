@@ -9,11 +9,12 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
+#include "colors/color.h"
+#include "display/cairo-utils.h"
 #include "ui/widget/objects-dialog-cells.h"
 
 #include <gtkmm/snapshot.h>
 
-#include "color-rgba.h"
 #include "preferences.h"
 
 namespace Inkscape::UI::Widget {
@@ -46,8 +47,8 @@ void ColorTagRenderer::snapshot_vfunc(Glib::RefPtr<Gtk::Snapshot> const &snapsho
 {
     auto const cr = snapshot->append_cairo(cell_area);
     cr->rectangle(cell_area.get_x(), cell_area.get_y(), cell_area.get_width(), cell_area.get_height());
-    ColorRGBA color(_property_color.get_value());
-    cr->set_source_rgb(color[0], color[1], color[2]);
+    auto  color = Colors::Color(_property_color.get_value()); // RGBA
+    ink_cairo_set_source_color(cr, color);
     cr->fill();
 
     if (_property_hover.get_value()) {

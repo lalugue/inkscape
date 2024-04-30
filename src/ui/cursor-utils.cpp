@@ -44,7 +44,7 @@ using Inkscape::IO::Resource::ICONS;
 namespace Inkscape {
 
 // SVG cursor unique ID/key
-typedef std::tuple<std::string, std::string, std::string, std::uint32_t, std::uint32_t, double, double, bool, int> Key;
+typedef std::tuple<std::string, std::string, std::string, std::uint32_t, std::uint32_t, bool, int> Key;
 
 struct KeyHasher {
     std::size_t operator () (const Key& k) const { return boost::hash_value(k); }
@@ -58,16 +58,16 @@ struct KeyHasher {
 Glib::RefPtr<Gdk::Cursor>
 load_svg_cursor(Gtk::Widget &widget,
                 std::string const &file_name,
-                std::uint32_t const fill,
-                std::uint32_t const stroke,
-                double fill_opacity,
-                double stroke_opacity)
+                std::optional<Colors::Color> maybe_fill,
+                std::optional<Colors::Color> maybe_stroke)
 {
     // GTK puts cursors in a "cursors" subdirectory of icon themes. We'll do the same... but
     // note that we cannot use the normal GTK method for loading cursors as GTK knows nothing
     // about scalable SVG cursors. We must locate and load the files ourselves. (Even if
     // GTK could handle scalable cursors, we would need to load the files ourselves inorder
     // to modify CSS 'fill' and 'stroke' properties.)
+    Colors::Color fill = maybe_fill.value_or(Colors::Color(0xffffffff));
+    Colors::Color stroke = maybe_stroke.value_or(Colors::Color(0x000000ff));
 
     Glib::RefPtr<Gdk::Cursor> cursor;
 
@@ -89,8 +89,8 @@ load_svg_cursor(Gtk::Widget &widget,
     theme_names.emplace_back("hicolor");
 
     // quantize opacity to limit number of cursor variations we generate
-    fill_opacity   = std::floor(std::clamp(fill_opacity,   0.0, 1.0) * 100) / 100;
-    stroke_opacity = std::floor(std::clamp(stroke_opacity, 0.0, 1.0) * 100) / 100;
+    fill.setOpacity(std::floor(std::clamp(fill.getOpacity(), 0.0, 1.0) * 100) / 100);
+    stroke.setOpacity(std::floor(std::clamp(stroke.getOpacity(), 0.0, 1.0) * 100) / 100);
 
     const auto enable_drop_shadow = prefs->getBool("/options/cursor-drop-shadow", true);
 
@@ -109,7 +109,7 @@ load_svg_cursor(Gtk::Widget &widget,
     if (cache_enabled) {
         // construct a key
         cursor_key = std::tuple{theme_names[0], theme_names[1], file_name,
-                                fill, stroke, fill_opacity, stroke_opacity,
+                                fill.toRGBA(), stroke.toRGBA(),
                                 enable_drop_shadow, scale};
         if (auto const it = cursor_cache.find(cursor_key); it != cursor_cache.end()) {
             return it->second;
@@ -155,20 +155,10 @@ load_svg_cursor(Gtk::Widget &widget,
 
     // Set the CSS 'fill' and 'stroke' properties on the SVG element (for cascading).
     SPCSSAttr *css = sp_repr_css_attr(root->getRepr(), "style");
-
-    std::stringstream fill_stream;
-    fill_stream << "#"
-                << std::setfill ('0') << std::setw(6)
-                << std::hex << (fill >> 8);
-    std::stringstream stroke_stream;
-    stroke_stream << "#"
-                  << std::setfill ('0') << std::setw(6)
-                  << std::hex << (stroke >> 8);
-
-    sp_repr_css_set_property(css, "fill",   fill_stream.str().c_str());
-    sp_repr_css_set_property(css, "stroke", stroke_stream.str().c_str());
-    sp_repr_css_set_property_double(css, "fill-opacity",   fill_opacity);
-    sp_repr_css_set_property_double(css, "stroke-opacity", stroke_opacity);
+    sp_repr_css_set_property_string(css, "fill", fill.toString(false));
+    sp_repr_css_set_property_string(css, "stroke", stroke.toString(false));
+    sp_repr_css_set_property_double(css, "fill-opacity",   fill.getOpacity());
+    sp_repr_css_set_property_double(css, "stroke-opacity", stroke.getOpacity());
     root->changeCSS(css, "style");
     sp_repr_css_attr_unref(css);
 
@@ -235,12 +225,10 @@ load_svg_cursor(Gtk::Widget &widget,
 void
 set_svg_cursor(Gtk::Widget &widget,
                 std::string const &file_name,
-                std::uint32_t const fill,
-                std::uint32_t const stroke,
-                double fill_opacity,
-                double stroke_opacity)
+                std::optional<Colors::Color> fill,
+                std::optional<Colors::Color> stroke)
 {
-    auto cursor = load_svg_cursor(widget, file_name, fill, stroke, fill_opacity, stroke_opacity);
+    auto cursor = load_svg_cursor(widget, file_name, fill, stroke);
     widget.set_cursor(std::move(cursor));
 }
 

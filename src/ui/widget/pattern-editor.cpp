@@ -91,7 +91,6 @@ PatternEditor::PatternEditor(const char* prefs, Inkscape::PatternManager& manage
     _edit_btn(get_widget<Gtk::Button>(_builder, "edit-pattern")),
     _preview_img(get_widget<Gtk::Picture>(_builder, "preview")),
     _preview(get_widget<Gtk::Viewport>(_builder, "preview-box")),
-    _color_btn(get_widget<Gtk::Button>(_builder, "color-btn")),
     _color_label(get_widget<Gtk::Label>(_builder, "color-label")),
     _paned(get_widget<Gtk::Paned>(_builder, "paned")),
     _main_grid(get_widget<Gtk::Box>(_builder, "main-box")),
@@ -104,13 +103,10 @@ PatternEditor::PatternEditor(const char* prefs, Inkscape::PatternManager& manage
     _search_box(get_widget<Gtk::SearchEntry2>(_builder, "search")),
     _tile_slider(get_widget<Gtk::Scale>(_builder, "tile-slider")),
     _show_names(get_widget<Gtk::CheckButton>(_builder, "show-names")),
+    _color_picker(get_derived_widget<ColorPicker>(_builder, "color-btn", _("Pattern color"), false)),
     _prefs(prefs)
 {
-    _color_picker = std::make_unique<ColorPicker>(
-        _("Pattern color"), "", 0x7f7f7f00, true,
-        &get_widget<Gtk::Button>(_builder, "color-btn"));
-    _color_picker->use_transparency(false);
-    _color_picker->connectChanged([=](guint color){
+    _color_picker.connectChanged([=](Colors::Color const &color){
         if (_update.pending()) return;
         _signal_color_changed.emit(color);
     });
@@ -396,15 +392,15 @@ void PatternEditor::update_widgets_from_pattern(Glib::RefPtr<PatternItem>& patte
     _gap_y_spin.set_value(item.gap[Geom::Y]);
 
     if (item.color.has_value()) {
-        _color_picker->setRgba32(item.color->toRGBA32(1.0));
-        _color_btn.set_sensitive();
+        _color_picker.setColor(*item.color);
+        _color_picker.set_sensitive();
         _color_label.set_opacity(1.0); // hack: sensitivity doesn't change appearance, so using opacity directly
     }
     else {
-        _color_picker->setRgba32(0);
-        _color_btn.set_sensitive(false);
+        _color_picker.setColor(Colors::Color(0x0));
+        _color_picker.set_sensitive(false);
         _color_label.set_opacity(0.6);
-        _color_picker->closeWindow();
+        _color_picker.closeWindow();
     }
 }
 
@@ -656,12 +652,12 @@ std::pair<std::string, SPDocument*> PatternEditor::get_selected() {
     }
 }
 
-std::optional<unsigned int> PatternEditor::get_selected_color() {
+std::optional<Colors::Color> PatternEditor::get_selected_color() {
     auto pat = get_active();
     if (pat.first && pat.first->color.has_value()) {
-        return _color_picker->get_current_color();
+        return _color_picker.get_current_color();
     }
-    return std::optional<unsigned int>(); // color not supported
+    return {}; // color not supported
 }
 
 Geom::Point PatternEditor::get_selected_offset() {

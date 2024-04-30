@@ -169,13 +169,7 @@ Bump::get_filter_text (Inkscape::Extension::Extension * ext)
     std::ostringstream lightStart;
     std::ostringstream lightOptions;
     std::ostringstream lightEnd;
-    
-    std::ostringstream floodRed;
-    std::ostringstream floodGreen;
-    std::ostringstream floodBlue;
-    std::ostringstream floodAlpha;
     std::ostringstream colorize;
-
     
     simplifyImage << ext->get_param_float("simplifyImage");
     simplifyBump << ext->get_param_float("simplifyBump");
@@ -185,8 +179,8 @@ Bump::get_filter_text (Inkscape::Extension::Extension * ext)
     crop << ext->get_param_float("crop");
     blend << ext->get_param_optiongroup("blend");
     
-    guint32 lightingColor = ext->get_param_color("lightingColor");
-    guint32 imageColor = ext->get_param_color("imageColor");
+    auto lightingColor = ext->get_param_color("lightingColor");
+    auto imageColor = ext->get_param_color("imageColor");
     
     if (ext->get_param_bool("background")) {
         bumpSource << "BackgroundImage" ;
@@ -197,15 +191,13 @@ Bump::get_filter_text (Inkscape::Extension::Extension * ext)
     const gchar *lightType = ext->get_param_optiongroup("lightType");
     if ((g_ascii_strcasecmp("specular", lightType) == 0)) {
     // Specular
-        lightStart << "<feSpecularLighting lighting-color=\"rgb(" << ((lightingColor >> 24) & 0xff) << ","
-                   << ((lightingColor >> 16) & 0xff) << "," << ((lightingColor >>  8) & 0xff) << ")\" surfaceScale=\""
+        lightStart << "<feSpecularLighting lighting-color=\"" << lightingColor.toString(false).c_str() << "\" surfaceScale=\""
                    << ext->get_param_float("height") << "\" specularConstant=\"" << ext->get_param_float("lightness")
                    << "\" specularExponent=\"" << ext->get_param_int("precision") << "\" result=\"lighting\">";
         lightEnd << "</feSpecularLighting>";
     } else {
     // Diffuse
-        lightStart << "<feDiffuseLighting lighting-color=\"rgb(" << ((lightingColor >> 24) & 0xff) << ","
-                   << ((lightingColor >> 16) & 0xff) << "," << ((lightingColor >>  8) & 0xff) << ")\" surfaceScale=\""
+        lightStart << "<feDiffuseLighting lighting-color=\"" << lightingColor.toString(false).c_str() << "\" surfaceScale=\""
                    << ext->get_param_float("height") << "\" diffuseConstant=\"" << ext->get_param_float("lightness")
                    << "\" result=\"lighting\">";
         lightEnd << "</feDiffuseLighting>";
@@ -230,11 +222,6 @@ Bump::get_filter_text (Inkscape::Extension::Extension * ext)
                  << "\" />";
     }
 
-    floodRed << ((imageColor >> 24) & 0xff);
-    floodGreen << ((imageColor >> 16) & 0xff);
-    floodBlue << ((imageColor >>  8) & 0xff);
-    floodAlpha << (imageColor & 0xff) / 255.0F;
-    
     if (ext->get_param_bool("colorize")) {
         colorize << "flood" ;
     } else {
@@ -252,14 +239,14 @@ Bump::get_filter_text (Inkscape::Extension::Extension * ext)
         "%s\n"
           "%s\n"
         "%s\n"
-        "<feFlood flood-color=\"rgb(%s,%s,%s)\" flood-opacity=\"%s\" result=\"flood\" />\n"
+        "<feFlood flood-color=\"%s\" flood-opacity=\"%f\" result=\"flood\" />\n"
         "<feComposite in=\"lighting\" in2=\"%s\" operator=\"arithmetic\" k3=\"1\" k2=\"1\" result=\"composite2\" />\n"
         "<feBlend in2=\"SourceGraphic\" mode=\"%s\" result=\"blend\" />\n"
         "<feComposite in=\"blend\" in2=\"SourceGraphic\" operator=\"in\" k2=\"1\" result=\"composite3\" />\n"
         "</filter>\n", simplifyImage.str().c_str(), bumpSource.str().c_str(), red.str().c_str(), green.str().c_str(), blue.str().c_str(),
                        crop.str().c_str(), simplifyBump.str().c_str(),
                        lightStart.str().c_str(), lightOptions.str().c_str(), lightEnd.str().c_str(),
-                       floodRed.str().c_str(), floodGreen.str().c_str(), floodBlue.str().c_str(), floodAlpha.str().c_str(),
+                       imageColor.toString(false).c_str(), imageColor.getOpacity(),
                        colorize.str().c_str(), blend.str().c_str());
     // clang-format on
 
@@ -397,16 +384,6 @@ WaxBump::get_filter_text (Inkscape::Extension::Extension * ext)
     std::ostringstream precision;
     std::ostringstream distantAzimuth;
     std::ostringstream distantElevation;
-    
-    std::ostringstream lightRed;
-    std::ostringstream lightGreen;
-    std::ostringstream lightBlue;
-
-    std::ostringstream floodRed;
-    std::ostringstream floodGreen;
-    std::ostringstream floodBlue;
-    std::ostringstream floodAlpha;
-
     std::ostringstream revert;
     std::ostringstream lightingblend;
     std::ostringstream highlightblend;
@@ -429,16 +406,8 @@ WaxBump::get_filter_text (Inkscape::Extension::Extension * ext)
     distantAzimuth << ext->get_param_int("distantAzimuth");
     distantElevation << ext->get_param_int("distantElevation");
 
-    guint32 lightingColor = ext->get_param_color("lightingColor");
-    lightRed << ((lightingColor >> 24) & 0xff);
-    lightGreen << ((lightingColor >> 16) & 0xff);
-    lightBlue << ((lightingColor >>  8) & 0xff);
-
-    guint32 imageColor = ext->get_param_color("imageColor");
-    floodRed << ((imageColor >> 24) & 0xff);
-    floodGreen << ((imageColor >> 16) & 0xff);
-    floodBlue << ((imageColor >>  8) & 0xff);
-    floodAlpha << (imageColor & 0xff) / 255.0F;
+    auto lightingColor = ext->get_param_color("lightingColor");
+    auto imageColor = ext->get_param_color("imageColor");
     
     if (ext->get_param_bool("revert")) {
         revert << "in" ;
@@ -457,10 +426,10 @@ WaxBump::get_filter_text (Inkscape::Extension::Extension * ext)
           "<feFlood flood-opacity=\"1\" flood-color=\"rgb(255,255,255)\" result=\"flood1\" />\n"
           "<feColorMatrix in=\"%s\" values=\"1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0 %s \" result=\"colormatrix1\" />\n"
           "<feColorMatrix in=\"blur1\" values=\"0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 %s %s %s %s 0 \" result=\"colormatrix2\" />\n"
-          "<feFlood flood-color=\"rgb(%s,%s,%s)\" flood-opacity=\"%s\" result=\"flood2\" />\n"
+          "<feFlood flood-color=\"%s\" flood-opacity=\"%f\" result=\"flood2\" />\n"
           "<feComposite in=\"flood2\" in2=\"colormatrix2\" operator=\"%s\" result=\"composite1\" />\n"
           "<feGaussianBlur in=\"composite1\" stdDeviation=\"%s\" result=\"blur2\" />\n"
-          "<feSpecularLighting in=\"blur2\" lighting-color=\"rgb(%s,%s,%s)\" specularConstant=\"%s\" surfaceScale=\"%s\" specularExponent=\"%s\" result=\"specular\">\n"
+          "<feSpecularLighting in=\"blur2\" lighting-color=\"%s\" specularConstant=\"%s\" surfaceScale=\"%s\" specularExponent=\"%s\" result=\"specular\">\n"
             "<feDistantLight elevation=\"%s\" azimuth=\"%s\" />\n"
           "</feSpecularLighting>\n"
           "<feBlend in=\"specular\" in2=\"blur2\" specularConstant=\"1\" mode=\"%s\" result=\"blend1\" />\n"
@@ -473,9 +442,9 @@ WaxBump::get_filter_text (Inkscape::Extension::Extension * ext)
           "<feComposite in=\"blend2\" in2=\"SourceGraphic\" operator=\"in\" result=\"composite3\" />\n"
         "</filter>\n", simplifyImage.str().c_str(), background.str().c_str(), bgopacity.str().c_str(),
                        red.str().c_str(), green.str().c_str(), blue.str().c_str(), crop.str().c_str(),
-                       floodRed.str().c_str(), floodGreen.str().c_str(), floodBlue.str().c_str(), floodAlpha.str().c_str(),
+                       imageColor.toString(false).c_str(), imageColor.getOpacity(),
                        revert.str().c_str(), simplifyBump.str().c_str(),
-                       lightRed.str().c_str(), lightGreen.str().c_str(), lightBlue.str().c_str(),
+                       lightingColor.toString(false).c_str(),
                        lightness.str().c_str(), height.str().c_str(), precision.str().c_str(),
                        distantElevation.str().c_str(), distantAzimuth.str().c_str(),
                        lightingblend.str().c_str(), transparency.str().c_str(), highlightblend.str().c_str() );

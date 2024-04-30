@@ -491,7 +491,7 @@ bool NodeTool::root_handler(CanvasEvent const &event)
             auto c = shape->curveForEdit()->transformed(over_item->i2dt_affine());
 
             auto flash = new Inkscape::CanvasItemBpath(_desktop->getCanvasTemp(), c.get_pathvector(), true);
-            flash->set_stroke(over_item->highlight_color());
+            flash->set_stroke(over_item->highlight_color().toRGBA());
             flash->set_fill(0x0, SP_WIND_RULE_NONZERO); // No fill.
             flash_tempitem =
                 _desktop->add_temporary_canvasitem(flash, prefs->getInt("/tools/nodes/pathflash_timeout", 500));

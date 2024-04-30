@@ -29,7 +29,8 @@
 #include <stdexcept>
 
 #include "cairo-templates.h"
-#include "color.h"
+#include "colors/manager.h"
+#include "colors/utils.h"
 #include "document.h"
 #include "helper/pixbuf-ops.h"
 #include "preferences.h"
@@ -1015,12 +1016,38 @@ ink_cairo_set_source_rgba32(cairo_t *ct, guint32 rgba)
 {
     cairo_set_source_rgba(ct, SP_RGBA32_R_F(rgba), SP_RGBA32_G_F(rgba), SP_RGBA32_B_F(rgba), SP_RGBA32_A_F(rgba));
 }
-
-void
-ink_cairo_set_source_color(cairo_t *ct, SPColor const &c, double opacity)
+void ink_cairo_set_source_rgba32(Cairo::RefPtr<Cairo::Context> ctx, guint32 rgba)
 {
-    cairo_set_source_rgba(ct, c.v.c[0], c.v.c[1], c.v.c[2], opacity);
+    ctx->set_source_rgba(SP_RGBA32_R_F(rgba), SP_RGBA32_G_F(rgba), SP_RGBA32_B_F(rgba), SP_RGBA32_A_F(rgba));
 }
+void ink_cairo_set_source_rgba32(Cairo::Context &ctx, guint32 rgba)
+{
+    ctx.set_source_rgba(SP_RGBA32_R_F(rgba), SP_RGBA32_G_F(rgba), SP_RGBA32_B_F(rgba), SP_RGBA32_A_F(rgba));
+}
+
+/**
+ * The following functions interact between Inkscape color model, and cairo surface rendering.
+ * for compatability we only convert to RGB and use that directly.
+ */
+void ink_cairo_set_source_color(Cairo::RefPtr<Cairo::Context> ctx, Inkscape::Colors::Color const &color, double opacity)
+{
+    ink_cairo_set_source_rgba32(ctx, color.toRGBA(opacity));
+}
+void ink_cairo_set_source_color(cairo_t *ctx, Inkscape::Colors::Color const &color, double opacity)
+{
+    ink_cairo_set_source_rgba32(ctx, color.toRGBA(opacity));
+}
+void ink_cairo_pattern_add_color_stop(cairo_pattern_t *ptn, double offset, Inkscape::Colors::Color const &color, double opacity)
+{
+    auto c = color.toRGBA(opacity);
+    cairo_pattern_add_color_stop_rgba(ptn, offset, SP_RGBA32_R_F(c), SP_RGBA32_G_F(c), SP_RGBA32_B_F(c), SP_RGBA32_A_F(c));
+}
+cairo_pattern_t *ink_cairo_pattern_create(Inkscape::Colors::Color const &color, double opacity)
+{
+    auto c = color.toRGBA(opacity);
+    return cairo_pattern_create_rgba(SP_RGBA32_R_F(c), SP_RGBA32_G_F(c), SP_RGBA32_B_F(c), SP_RGBA32_A_F(c));
+}
+
 
 void ink_matrix_to_2geom(Geom::Affine &m, cairo_matrix_t const &cm)
 {
@@ -1270,17 +1297,6 @@ static int ink_cairo_surface_average_color_internal(cairo_surface_t *surface, do
     return width * height;
 }
 
-guint32 ink_cairo_surface_average_color(cairo_surface_t *surface)
-{
-    double rf,gf,bf,af;
-    ink_cairo_surface_average_color_premul(surface, rf,gf,bf,af);
-    guint32 r = round(rf * 255);
-    guint32 g = round(gf * 255);
-    guint32 b = round(bf * 255);
-    guint32 a = round(af * 255);
-    ASSEMBLE_ARGB32(px, a,r,g,b);
-    return px;
-}
 // We extract colors from pattern background, if we need to extract sometimes from a gradient we can add
 // a extra parameter with the spot number and use cairo_pattern_get_color_stop_rgba
 // also if the pattern is a image we can pass a boolean like solid = false to get the color by image average ink_cairo_surface_average_color
@@ -1306,34 +1322,22 @@ guint32 ink_cairo_pattern_get_argb32(cairo_pattern_t *pattern)
     return 0;
 }
 
-void ink_cairo_surface_average_color(cairo_surface_t *surface, double &r, double &g, double &b, double &a)
+Colors::Color ink_cairo_surface_average_color(cairo_surface_t *surface)
 {
-    int count = ink_cairo_surface_average_color_internal(surface, r,g,b,a);
-
-    r /= a;
-    g /= a;
-    b /= a;
-    a /= count;
-
-    r = CLAMP(r, 0.0, 1.0);
-    g = CLAMP(g, 0.0, 1.0);
-    b = CLAMP(b, 0.0, 1.0);
-    a = CLAMP(a, 0.0, 1.0);
+    double r, g, b, a = 0.0;
+    int count = ink_cairo_surface_average_color_internal(surface, r, g, b, a);
+    auto color = Colors::Color(Colors::Space::Type::RGB, {r / a, g / a, b / a, a / count});
+    color.normalize();
+    return color;
 }
 
-void ink_cairo_surface_average_color_premul(cairo_surface_t *surface, double &r, double &g, double &b, double &a)
+Colors::Color ink_cairo_surface_average_color_premul(cairo_surface_t *surface)
 {
-    int count = ink_cairo_surface_average_color_internal(surface, r,g,b,a);
-
-    r /= count;
-    g /= count;
-    b /= count;
-    a /= count;
-
-    r = CLAMP(r, 0.0, 1.0);
-    g = CLAMP(g, 0.0, 1.0);
-    b = CLAMP(b, 0.0, 1.0);
-    a = CLAMP(a, 0.0, 1.0);
+    double r, g, b, a = 0.0;
+    int count = ink_cairo_surface_average_color_internal(surface, r, g, b, a);
+    auto color = Colors::Color(Colors::Space::Type::RGB, {r / count, g / count, b / count, a / count});
+    color.normalize();
+    return color;
 }
 
 static guint32 srgb_to_linear( const guint32 c, const guint32 a ) {
@@ -1513,37 +1517,21 @@ ink_cairo_pattern_create_checkerboard(guint32 rgba, bool use_alpha)
     int const w = 6;
     int const h = 6;
 
-    double r = SP_RGBA32_R_F(rgba);
-    double g = SP_RGBA32_G_F(rgba);
-    double b = SP_RGBA32_B_F(rgba);
-
-    float hsl[3];
-    SPColor::rgb_to_hsl_floatv(hsl, r, g, b);    
-    hsl[2] += hsl[2] < 0.08 ? 0.08 : -0.08; // 0.08 = 0.77-0.69, the original checkerboard colors.
-
-    float rgb2[3];
-    SPColor::hsl_to_rgb_floatv(rgb2, hsl[0], hsl[1], hsl[2]);
+    auto color_a = Colors::Color(rgba, use_alpha);
+    auto color_b = Inkscape::Colors::make_contrasted_color(color_a, 1.0);
+    // Once the second color is generated, the original doesn't need alpha
+    color_a.enableOpacity(false);
 
     cairo_surface_t *s = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, 2*w, 2*h);
 
     cairo_t *ct = cairo_create(s);
     cairo_set_operator(ct, CAIRO_OPERATOR_SOURCE);
-    cairo_set_source_rgb(ct, r, g, b);
+    ink_cairo_set_source_color(ct, color_a);
     cairo_paint(ct);
-    cairo_set_source_rgb(ct, rgb2[0], rgb2[1], rgb2[2]);
+    ink_cairo_set_source_color(ct, color_b);
     cairo_rectangle(ct, 0, 0, w, h);
     cairo_rectangle(ct, w, h, w, h);
     cairo_fill(ct);
-    if (use_alpha) {
-        // use alpha to show opacity cover checkerboard
-        double a = SP_RGBA32_A_F(rgba);
-        if (a > 0.0) {
-            cairo_set_operator(ct, CAIRO_OPERATOR_OVER);
-            cairo_rectangle(ct, 0, 0, 2 * w, 2 * h);
-            cairo_set_source_rgba(ct, r, g, b, a);
-            cairo_fill(ct);
-        }
-    }
     cairo_destroy(ct);
 
     cairo_pattern_t *p = cairo_pattern_create_for_surface(s);

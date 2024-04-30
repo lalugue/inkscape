@@ -26,6 +26,10 @@ class SPItem;
 class SPGradient;
 class SPDesktop;
 
+namespace Inkscape::Colors {
+class Color;
+}
+using Inkscape::Colors::Color;
 
 /**
  * Either normalizes given gradient to vector, or returns fresh normalized
@@ -46,7 +50,7 @@ SPGradient *sp_item_set_gradient(SPItem *item, SPGradient *gr, SPGradientType ty
 /*
  * Get default normalized gradient vector of document, create if there is none
  */
-SPGradient *sp_document_default_gradient_vector( SPDocument *document, SPColor const &color, double opacity, bool singleStop );
+SPGradient *sp_document_default_gradient_vector( SPDocument *document, Color const &color, double opacity, bool singleStop );
 
 /**
  * Return the preferred vector for \a o, made from (in order of preference) its current vector,
@@ -72,14 +76,12 @@ std::pair<SPStop*, SPStop*> sp_get_before_after_stops(SPStop* stop);
 unsigned int sp_number_of_stops(SPGradient const *gradient);
 unsigned int sp_number_of_stops_before_stop(SPGradient* gradient, SPStop *target);
 
-guint32 average_color(guint32 c1, guint32 c2, double p = 0.5);
-
 SPStop *sp_vector_add_stop(SPGradient *vector, SPStop* prev_stop, SPStop* next_stop, gfloat offset);
 
 void sp_gradient_delete_stop(SPGradient* gradient, SPStop* stop);
 SPStop* sp_gradient_add_stop(SPGradient* gradient, SPStop* current);
 SPStop* sp_gradient_add_stop_at(SPGradient* gradient, double offset);
-void sp_set_gradient_stop_color(SPDocument* document, SPStop* stop, SPColor color, double opacity);
+void sp_set_gradient_stop_color(SPDocument* document, SPStop* stop, Color const &color);
 
 void sp_gradient_transform_multiply(SPGradient *gradient, Geom::Affine postmul, bool set);
 
@@ -120,7 +122,7 @@ SPGradientSpread sp_item_gradient_get_spread(SPItem *item, Inkscape::PaintTarget
 SPStop* sp_item_gradient_get_stop(SPItem *item, GrPointType point_type, guint point_i, Inkscape::PaintTarget fill_or_stroke);
 
 void sp_item_gradient_stop_set_style(SPItem *item, GrPointType point_type, unsigned int point_i, Inkscape::PaintTarget fill_or_stroke, SPCSSAttr *stop);
-guint32 sp_item_gradient_stop_query_style(SPItem *item, GrPointType point_type, unsigned int point_i, Inkscape::PaintTarget fill_or_stroke);
+Color sp_item_gradient_stop_query_style(SPItem *item, GrPointType point_type, unsigned int point_i, Inkscape::PaintTarget fill_or_stroke);
 void sp_item_gradient_reverse_vector(SPItem *item, Inkscape::PaintTarget fill_or_stroke);
 void sp_item_gradient_invert_vector_color(SPItem *item, Inkscape::PaintTarget fill_or_stroke);
 

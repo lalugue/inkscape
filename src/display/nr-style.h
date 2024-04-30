@@ -18,7 +18,6 @@
 #include <array>
 #include <cairo.h>
 #include <2geom/rect.h>
-#include "color.h"
 #include "drawing-paintserver.h"
 #include "initlock.h"
 
@@ -55,12 +54,12 @@ struct NRStyleData
     struct Paint
     {
         PaintType type = PaintType::NONE;
-        SPColor color = 0;
+        std::optional<Colors::Color> color;
         std::unique_ptr<DrawingPaintServer> server;
         float opacity = 1.0;
 
         void clear();
-        void set(SPColor const &c);
+        void set(Colors::Color const &c);
         void set(SPPaintServer *ps);
         void set(SPIPaint const *paint);
         bool ditherable() const;
@@ -147,7 +146,7 @@ public:
     void applyTextDecorationStroke(DrawingContext &dc, CairoPatternUniqPtr const &cp) const;
     void invalidate();
 
-    NRStyleData data;
+   NRStyleData data;
 
 private:
     struct CachedPattern

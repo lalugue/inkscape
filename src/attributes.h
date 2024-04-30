@@ -129,7 +129,7 @@ enum class SPAttr {
     INKSCAPE_DOCUMENT_UNITS,
     INKSCAPE_LOCKGUIDES,
     UNITS,
-    /* SPColorProfile */
+    /* ColorProfile */
     LOCAL,
     NAME,
     RENDERING_INTENT,

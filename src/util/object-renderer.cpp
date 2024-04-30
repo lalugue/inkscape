@@ -15,7 +15,7 @@
 #include <gdkmm/rgba.h>
 #include <glibmm/ustring.h>
 #include <optional>
-#include "color.h"
+#include "colors/color.h"
 #include "display/cairo-utils.h"
 #include "document.h"
 #include "gradient-chemistry.h"
@@ -36,6 +36,7 @@
 #include "display/drawing.h"
 #include "util/scope_exit.h"
 #include "ui/cache/svg_preview_cache.h"
+#include "ui/util.h"
 #include "xml/href-attribute-helper.h"
 using namespace std::literals;
 
@@ -229,7 +230,7 @@ Cairo::RefPtr<Cairo::Surface> draw_gradient(SPGradient* gradient, double width, 
             double py = h + 2 * radius;
             double px = std::round(stop.offset * width);
             ctx->arc(px, py, radius, 0, 2 * M_PI);
-            ctx->set_source_rgba(stop.color.v.c[0], stop.color.v.c[1], stop.color.v.c[2], stop.opacity);
+            ink_cairo_set_source_color(ctx, *stop.color);
             ctx->fill_preserve();
             ctx->set_source_rgb(0.5, 0.5, 0.5);
             ctx->stroke();
@@ -238,7 +239,6 @@ Cairo::RefPtr<Cairo::Surface> draw_gradient(SPGradient* gradient, double width, 
 
     return surface;
 }
-
 
 std::unique_ptr<SPDocument> ink_markers_preview_doc(const Glib::ustring& group_id)
 {
@@ -406,11 +406,11 @@ Cairo::RefPtr<Cairo::Surface> create_marker_image(
     }
 
     Gdk::RGBA fg = marker_color;
-    auto fgcolor = rgba_to_css_color(fg);
+    auto fgcolor = gdk_to_css_color(fg);
     fg.set_red(1 - fg.get_red());
     fg.set_green(1 - fg.get_green());
     fg.set_blue(1 - fg.get_blue());
-    auto bgcolor = rgba_to_css_color(fg);
+    auto bgcolor = gdk_to_css_color(fg);
     auto objects = _sandbox->getObjectsBySelector(".colors");
     for (auto el : objects) {
         if (SPCSSAttr* css = sp_repr_css_attr(el->getRepr(), "style")) {

@@ -268,6 +268,7 @@ BatchExport::BatchExport(BaseObjectType * const cobject, Glib::RefPtr<Gtk::Build
     , _prog            (get_widget<Gtk::ProgressBar>  (builder, "b_progress"))
     , _prog_batch      (get_widget<Gtk::ProgressBar>  (builder, "b_progress_batch"))
     , export_list      (get_derived_widget<ExportList>(builder, "b_export_list"))
+    , _background_color(get_derived_widget<UI::Widget::ColorPicker>(builder, "b_backgnd", _("Background color"), true))
 {
     prefs = Inkscape::Preferences::get();
 
@@ -278,10 +279,6 @@ BatchExport::BatchExport(BaseObjectType * const cobject, Glib::RefPtr<Gtk::Build
     selection_buttons[SELECTION_SELECTION] = &get_widget<Gtk::ToggleButton>(builder, "b_s_selection");
     selection_buttons[SELECTION_LAYER]     = &get_widget<Gtk::ToggleButton>(builder, "b_s_layers");
     selection_buttons[SELECTION_PAGE]      = &get_widget<Gtk::ToggleButton>(builder, "b_s_pages");
-
-    auto &button = get_widget<Gtk::Button>(builder, "b_backgnd");
-    _bgnd_color_picker = std::make_unique<Inkscape::UI::Widget::ColorPicker>(
-        _("Background color"), _("Color used to fill the image background"), 0xffffff00, true, &button);
 
     path_chooser.signal_clicked().connect([this] { pickBatchPath(); });
 
@@ -363,7 +360,7 @@ void BatchExport::setup()
     export_conn = export_btn.signal_clicked().connect(sigc::mem_fun(*this, &BatchExport::onExport));
     cancel_conn = cancel_btn.signal_clicked().connect(sigc::mem_fun(*this, &BatchExport::onCancel));
     hide_all.signal_toggled().connect(sigc::mem_fun(*this, &BatchExport::refreshPreview));
-    _bgnd_color_picker->connectChanged([=, this](guint32 color){
+    _background_color.connectChanged([=, this](Colors::Color const &color){
         if (_desktop) {
             Inkscape::UI::Dialog::set_export_bg_color(_desktop->getNamedView(), color);
         }
@@ -501,7 +498,7 @@ void BatchExport::refreshPreview()
         _preview_drawing->set_shown_items(std::move(selected));
 
         for (auto &[key, val] : current_items) {
-            val->refresh(!preview, _bgnd_color_picker->get_current_color());
+            val->refresh(!preview, _background_color.get_current_color().toRGBA());
         }
     }
 }
@@ -772,7 +769,7 @@ void BatchExport::onExport()
                 unsigned long int height = (int)(area.height() * dpi / DPI_BASE + 0.5);
 
                 Export::exportRaster(
-                    area, width, height, dpi, _bgnd_color_picker->get_current_color(),
+                    area, width, height, dpi, _background_color.get_current_color().toRGBA(),
                     item_filename, true, onProgressCallback, this, ext, hide ? &show_only : nullptr);
             } else {
                 auto copy_doc = _document->copy();
@@ -866,9 +863,7 @@ void BatchExport::setDocument(SPDocument *document)
     if (document) {
         // when the page selected is changed, update the export area
         _pages_changed_connection = document->getPageManager().connectPagesChanged([this]() { pagesChanged(); });
-
-        auto bg_color = get_export_bg_color(document->getNamedView(), 0xffffff00);
-        _bgnd_color_picker->setRgba32(bg_color);
+        _background_color.setColor(get_export_bg_color(document->getNamedView(), Colors::Color(0xffffff00)));
         _preview_drawing = std::make_shared<PreviewDrawing>(document);
     } else {
         _preview_drawing.reset();

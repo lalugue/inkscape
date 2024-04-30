@@ -381,18 +381,10 @@ Silhouette::get_filter_text (Inkscape::Extension::Extension * ext)
 {
     if (_filter != nullptr) g_free((void *)_filter);
 
-    std::ostringstream a;
-    std::ostringstream r;
-    std::ostringstream g;
-    std::ostringstream b;
     std::ostringstream cutout;
     std::ostringstream blur;
 
-    guint32 color = ext->get_param_color("color");
-    r << ((color >> 24) & 0xff);
-    g << ((color >> 16) & 0xff);
-    b << ((color >>  8) & 0xff);
-    a << (color & 0xff) / 255.0F;
+    auto color = ext->get_param_color("color");
     if (ext->get_param_bool("cutout"))
         cutout << "out";
     else
@@ -402,10 +394,10 @@ Silhouette::get_filter_text (Inkscape::Extension::Extension * ext)
     // clang-format off
     _filter = g_strdup_printf(
         "<filter xmlns:inkscape=\"http://www.inkscape.org/namespaces/inkscape\" style=\"color-interpolation-filters:sRGB;\" inkscape:label=\"Silhouette\">\n"
-          "<feFlood flood-opacity=\"%s\" flood-color=\"rgb(%s,%s,%s)\" result=\"flood\" />\n"
+          "<feFlood flood-opacity=\"%f\" flood-color=\"%s\" result=\"flood\" />\n"
           "<feComposite in=\"flood\" in2=\"SourceGraphic\" operator=\"%s\" result=\"composite\" />\n"
           "<feGaussianBlur stdDeviation=\"%s\" />\n"
-        "</filter>\n", a.str().c_str(), r.str().c_str(), g.str().c_str(), b.str().c_str(), cutout.str().c_str(), blur.str().c_str());
+        "</filter>\n", color.getOpacity(), color.toString(false).c_str(), cutout.str().c_str(), blur.str().c_str());
     // clang-format on
 
     return _filter;

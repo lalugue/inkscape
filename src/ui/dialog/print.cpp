@@ -26,10 +26,11 @@
 #include "document.h"
 #include "object/sp-page.h"
 
+#include "colors/manager.h"
+#include "colors/color.h"
 #include "util/units.h"
 #include "helper/png-write.h"
 #include "page-manager.h"
-#include "svg/svg-color.h"
 
 #include <glibmm/i18n.h>
 
@@ -181,7 +182,10 @@ void Print::draw_page(const Glib::RefPtr<Gtk::PrintContext>& context, int page_n
             guint32 bgcolor = 0x00000000;
             Inkscape::XML::Node *nv = _workaround._doc->getReprNamedView();
             if (nv && nv->attribute("pagecolor")){
-                bgcolor = sp_svg_read_color(nv->attribute("pagecolor"), 0xffffff00);
+                if (auto c = Colors::Color::parse(nv->attribute("pagecolor"))) {
+                    // TODO allow page color to be any color space, not just RGB
+                    bgcolor = c->toRGBA();
+                }
             }
             if (nv && nv->attribute("inkscape:pageopacity")){
                 double opacity = nv->getAttributeDouble("inkscape:pageopacity", 1.0);

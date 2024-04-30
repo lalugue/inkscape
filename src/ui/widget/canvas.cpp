@@ -42,8 +42,8 @@
 #include "canvas/stores.h"
 #include "canvas/synchronizer.h"
 #include "canvas/util.h"
-#include "color/cms-system.h"     // Color correction
-#include "color.h"          // Background color
+#include "colors/cms/transform.h"
+#include "colors/cms/system.h"
 #include "desktop.h"
 #include "display/control/canvas-item-drawing.h"
 #include "display/control/canvas-item-group.h"
@@ -156,7 +156,7 @@ struct RedrawData
     bool decoupled_mode;
     Cairo::RefPtr<Cairo::Region> snapshot_drawn;
     Geom::OptIntRect grabbed;
-    std::shared_ptr<CMSTransform const> cms_transform;
+    std::shared_ptr<Colors::CMS::Transform> cms_transform;
 
     // Saved prefs
     int coarsener_min_size;
@@ -1830,8 +1830,7 @@ void Canvas::set_cms_transform()
     // auto surface = get_surface();
     // auto the_monitor = display->get_monitor_at_surface(surface);
 
-    auto cms_system = CMSSystem::get();
-    _cms_transform = cms_system->get_cms_transform( /* monitor */ );
+    _cms_transform = Colors::CMS::System::get().getDisplayTransform();
 }
 
 // Change cursor
@@ -2431,16 +2430,11 @@ void CanvasPrivate::paint_single_buffer(Cairo::RefPtr<Cairo::ImageSurface> const
     auto buf = CanvasItemBuffer{ rect, scale_factor, cr, outline_pass };
     canvasitem_ctx->root()->render(buf);
 
-    // Apply CMS transform.
+    // Apply CMS transform for the screen. This rarely is used by modern desktops, but sometimes
+    // the user will apply an RGB transform to color correct their screen. This happens now, so the
+    // drawing plus all other canvas items (selection boxes, handles, etc) are also color corrected.
     if (rd.cms_transform) {
-        surface->flush();
-        auto px = surface->get_data();
-        int stride = surface->get_stride();
-        for (int i = 0; i < surface->get_height(); i++) {
-                auto row = px + i * stride;
-                Inkscape::CMSSystem::do_transform(rd.cms_transform->getHandle(), row, row, surface->get_width());
-        }
-        surface->mark_dirty();
+        rd.cms_transform->do_transform(surface->cobj(), surface->cobj());
     }
 
     // Paint over newly drawn content with a translucent random colour.

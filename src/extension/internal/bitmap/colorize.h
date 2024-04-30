@@ -11,20 +11,25 @@
 
 #include "imagemagick.h"
 
+#include "colors/color.h"
+
 namespace Inkscape {
 namespace Extension {
 namespace Internal {
 namespace Bitmap {
 
-class Colorize : public ImageMagick {
-private:
-	guint32 _color;	
 
+class Colorize : public ImageMagick {
 public:
+    Colorize();
+
     void applyEffect(Magick::Image *image) override;
 	void refreshParameters(Inkscape::Extension::Effect *module) override;
 
     static void init ();
+
+private:
+    Colors::Color _color;
 };
 
 }; /* namespace Bitmap */

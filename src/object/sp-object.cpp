@@ -734,8 +734,8 @@ void SPObject::release() {
     debug("id=%p, typename=%s", object, g_type_name_from_instance((GTypeInstance*)object));
 
     style->filter.clear();
-    style->fill.value.href.reset();
-    style->stroke.value.href.reset();
+    style->fill.href.reset();
+    style->stroke.href.reset();
     style->shape_inside.clear();
     style->shape_subtract.clear();
 

@@ -16,7 +16,6 @@
 
 #include "canvas-item-bpath.h"
 
-#include "color.h" // SP_RGBA_x_F
 #include "display/curve.h"
 #include "display/cairo-utils.h"
 #include "helper/geom.h" // bounds_exact_transformed()

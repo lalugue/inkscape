@@ -65,6 +65,8 @@
 
 #include "util/units.h"
 
+using namespace Inkscape::Colors;
+
 namespace Inkscape {
 namespace Extension {
 namespace Internal {
@@ -280,7 +282,7 @@ unsigned int PrintEmf::begin(Inkscape::Extension::Print *mod, SPDocument *doc)
         g_error("Fatal programming error in PrintEmf::begin at U_EMRSETTEXTALIGN_set");
     }
 
-    htextcolor_rgb[0] = htextcolor_rgb[1] = htextcolor_rgb[2] = 0.0;
+    htextcolor_rgb = Color(0x000000ff);
     rec = U_EMRSETTEXTCOLOR_set(U_RGB(0, 0, 0));
     if (!rec || emf_append((PU_ENHMETARECORD)rec, et, U_REC_FREE)) {
         g_error("Fatal programming error in PrintEmf::begin at U_EMRSETTEXTCOLOR_set");
@@ -322,7 +324,6 @@ unsigned int PrintEmf::finish(Inkscape::Extension::Print * /*mod*/)
 // fcolor is defined when gradients are being expanded, it is the color of one stripe or ring.
 int PrintEmf::create_brush(SPStyle const *style, PU_COLORREF fcolor)
 {
-    float         rgb[3];
     char         *rec;
     U_LOGBRUSH    lb;
     uint32_t      brush, fmode;
@@ -361,12 +362,12 @@ int PrintEmf::create_brush(SPStyle const *style, PU_COLORREF fcolor)
                 opacity = 0.0;    // basically the same as no fill
             }
 #endif
-            style->fill.value.color.get_rgb_floatv(rgb);
+            auto rgb = *style->fill.getColor().converted(Space::Type::RGB);
             hatchColor = U_RGB(255 * rgb[0], 255 * rgb[1], 255 * rgb[2]);
 
             fmode = style->fill_rule.computed == 0 ? U_WINDING : (style->fill_rule.computed == 2 ? U_ALTERNATE : U_ALTERNATE);
         } else if (is<SPPattern>(SP_STYLE_FILL_SERVER(style))) { // must be paint-server
-            SPPaintServer *paintserver = style->fill.value.href->getObject();
+            SPPaintServer *paintserver = style->fill.href->getObject();
             auto pat = cast<SPPattern>(paintserver);
             double dwidth  = pat->width();
             double dheight = pat->height();
@@ -392,7 +393,7 @@ int PrintEmf::create_brush(SPStyle const *style, PU_COLORREF fcolor)
             brushStyle = U_BS_HATCHED;
         } else if (is<SPGradient>(SP_STYLE_FILL_SERVER(style))) { // must be a gradient
             // currently we do not do anything with gradients, the code below just sets the color to the average of the stops
-            SPPaintServer *paintserver = style->fill.value.href->getObject();
+            SPPaintServer *paintserver = style->fill.href->getObject();
             SPLinearGradient *lg = nullptr;
             SPRadialGradient *rg = nullptr;
 
@@ -548,10 +549,8 @@ int PrintEmf::create_pen(SPStyle const *style, const Geom::Affine &transform)
     bkColor    = U_RGB(0, 0, 0);
 
     if (style) {
-        float rgb[3];
-
         if (is<SPPattern>(SP_STYLE_STROKE_SERVER(style))) { // must be paint-server
-            SPPaintServer *paintserver = style->stroke.value.href->getObject();
+            SPPaintServer *paintserver = style->stroke.href->getObject();
             auto pat = cast<SPPattern>(paintserver);
             double dwidth  = pat->width();
             double dheight = pat->height();
@@ -594,7 +593,7 @@ int PrintEmf::create_pen(SPStyle const *style, const Geom::Affine &transform)
         } else if (is<SPGradient>(SP_STYLE_STROKE_SERVER(style))) { // must be a gradient
             // currently we do not do anything with gradients, the code below has no net effect.
 
-            SPPaintServer *paintserver = style->stroke.value.href->getObject();
+            SPPaintServer *paintserver = style->stroke.href->getObject();
             if (is<SPLinearGradient>(paintserver)) {
                 auto lg = cast<SPLinearGradient>(paintserver);
 
@@ -629,7 +628,7 @@ int PrintEmf::create_pen(SPStyle const *style, const Geom::Affine &transform)
                 // default fill
             }
         } else if (style->stroke.isColor()) { // test last, always seems to be set, even for other types above
-            style->stroke.value.color.get_rgb_floatv(rgb);
+            auto rgb = *style->stroke.getColor().converted(Space::Type::RGB);
             brushStyle = U_BS_SOLID;
             hatchColor = U_RGB(255 * rgb[0], 255 * rgb[1], 255 * rgb[2]);
             hatchType  = U_HS_SOLIDCLR;
@@ -1151,23 +1150,17 @@ unsigned int PrintEmf::fill(
         */
         destroy_pen();  //this sets the NULL_PEN, otherwise gradient slices may display with boundaries, see longer explanation below
         Geom::Path cutter;
-        float      rgb[3];
         U_COLORREF wc, c1, c2;
         FillRule   frb = SPWR_to_LVFR((SPWindRule) style->fill_rule.computed);
         double     doff, doff_base, doff_range;
         double     divisions = 128.0;
         int        nstops;
         int        istop =     1;
-        float      opa;                     // opacity at stop
 
         SPRadialGradient *tg = (SPRadialGradient *)(gv.grad);   // linear/radial are the same here
         nstops = tg->vector.stops.size();
-        tg->vector.stops[0].color.get_rgb_floatv(rgb);
-        opa    = tg->vector.stops[0].opacity;  // first stop
-        c1     = U_RGBA(255 * rgb[0], 255 * rgb[1], 255 * rgb[2], 255 * opa);
-        tg->vector.stops[nstops - 1].color.get_rgb_floatv(rgb);
-        opa    = tg->vector.stops[nstops - 1].opacity;  // last stop
-        c2     = U_RGBA(255 * rgb[0], 255 * rgb[1], 255 * rgb[2], 255 * opa);
+        c1 = toColorRef(tg->vector.stops[0].color);
+        c2 = toColorRef(tg->vector.stops[nstops - 1].color);
 
         doff       = 0.0;
         doff_base  = 0.0;
@@ -1195,9 +1188,7 @@ unsigned int PrintEmf::fill(
             (void) create_brush(style, &wc);
             print_pathv(pathvr, fill_transform);
 
-            tg->vector.stops[istop].color.get_rgb_floatv(rgb);
-            opa = tg->vector.stops[istop].opacity;
-            c2 = U_RGBA(255 * rgb[0], 255 * rgb[1], 255 * rgb[2], 255 * opa);
+            c2 = toColorRef(tg->vector.stops[istop].color);
 
             for (start = 0.0; start < range; start += step, doff += 1. / divisions) {
                 stop = start + step + overlap;
@@ -1221,9 +1212,7 @@ unsigned int PrintEmf::fill(
                     doff_base  = doff_range;
                     doff_range = tg->vector.stops[istop].offset;  // next or last stop
                     c1 = c2;
-                    tg->vector.stops[istop].color.get_rgb_floatv(rgb);
-                    opa = tg->vector.stops[istop].opacity;
-                    c2 = U_RGBA(255 * rgb[0], 255 * rgb[1], 255 * rgb[2], 255 * opa);
+                    c2 = toColorRef(tg->vector.stops[istop].color);
                 }
             }
         } else if (gv.mode == DRAW_LINEAR_GRADIENT) {
@@ -1287,9 +1276,7 @@ unsigned int PrintEmf::fill(
                      rcb.top    = round(outUL[Y]);
                      rcb.right  = round(outLR[X]);
                      rcb.bottom = round(outLR[Y]);
-                     tg->vector.stops[istop].color.get_rgb_floatv(rgb);
-                     opa = tg->vector.stops[istop].opacity;
-                     c2 = U_RGBA(255 * rgb[0], 255 * rgb[1], 255 * rgb[2], 255 * opa);
+                     c2 = toColorRef(tg->vector.stops[istop].color);
 
                      if(rectDir == 2 || rectDir == 4){ // gradient is reversed, so swap colors
                          ut[0] = make_trivertex(outUL, c2);
@@ -1337,9 +1324,7 @@ unsigned int PrintEmf::fill(
                 pathvr = sp_pathvector_boolop(pathvc, pathv, bool_op_inters, (FillRule) fill_nonZero, frb);
                 print_pathv(pathvr, fill_transform);
 
-                tg->vector.stops[istop].color.get_rgb_floatv(rgb);
-                opa = tg->vector.stops[istop].opacity;
-                c2 = U_RGBA(255 * rgb[0], 255 * rgb[1], 255 * rgb[2], 255 * opa);
+                c2 = toColorRef(tg->vector.stops[istop].color);
 
                 for (start = 0.0; start < range; start += step, doff += 1. / divisions) {
                     stop = start + step + overlap;
@@ -1362,9 +1347,7 @@ unsigned int PrintEmf::fill(
                         doff_base  = doff_range;
                         doff_range = tg->vector.stops[istop].offset;  // next or last stop
                         c1 = c2;
-                        tg->vector.stops[istop].color.get_rgb_floatv(rgb);
-                        opa = tg->vector.stops[istop].opacity;
-                        c2 = U_RGBA(255 * rgb[0], 255 * rgb[1], 255 * rgb[2], 255 * opa);
+                        c2 = toColorRef(tg->vector.stops[istop].color);
                     }
                 }
             }
@@ -2082,12 +2065,11 @@ unsigned int PrintEmf::text(Inkscape::Extension::Print * /*mod*/, char const *te
         g_error("Fatal programming error in PrintEmf::text at selectobject_set");
     }
 
-    float rgb[3];
-    style->fill.value.color.get_rgb_floatv(rgb);
+    auto rgb = style->fill.getColor();
     // only change the text color when it needs to be changed
-    if (memcmp(htextcolor_rgb, rgb, 3 * sizeof(float))) {
-        memcpy(htextcolor_rgb, rgb, 3 * sizeof(float));
-        rec = U_EMRSETTEXTCOLOR_set(U_RGB(255 * rgb[0], 255 * rgb[1], 255 * rgb[2]));
+    if (htextcolor_rgb != rgb) {
+        htextcolor_rgb = rgb;
+        rec = U_EMRSETTEXTCOLOR_set(toColorRef(rgb));
         if (!rec || emf_append((PU_ENHMETARECORD)rec, et, U_REC_FREE)) {
             g_error("Fatal programming error in PrintEmf::text at U_EMRSETTEXTCOLOR_set");
         }

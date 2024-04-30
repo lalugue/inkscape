@@ -13,7 +13,9 @@
 #define SEEN_COLOR_ENTRY_H
 
 #include <gtkmm/entry.h>
-#include "ui/selected-color.h"
+
+#include "colors/color.h"
+#include "colors/color-set.h"
 
 namespace Inkscape {
 namespace UI {
@@ -22,7 +24,7 @@ namespace Widget {
 class ColorEntry : public Gtk::Entry
 {
 public:
-    ColorEntry(SelectedColor &color);
+    ColorEntry(std::shared_ptr<Colors::ColorSet> color);
     ~ColorEntry() override;
 
 protected:
@@ -32,13 +34,13 @@ private:
     void _onColorChanged();
     void _inputCheck(guint pos, const gchar * /*chars*/, guint /*n_chars*/);
 
-    SelectedColor &_color;
-    sigc::connection _color_changed_connection;
-    sigc::connection _color_dragged_connection;
+    std::shared_ptr<Colors::ColorSet> _colors;
     bool _updating;
     bool _updatingrgba;
-    guint32 _lastcolor;
     int _prevpos;
+    std::optional<Colors::Color> _lastcolor;
+
+    sigc::connection _color_changed_connection;
 };
 
 }

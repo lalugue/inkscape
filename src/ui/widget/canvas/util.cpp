@@ -42,16 +42,10 @@ Cairo::RefPtr<Cairo::Region> shrink_region(Cairo::RefPtr<Cairo::Region> const &r
     return reg2;
 }
 
-std::array<float, 3> checkerboard_darken(std::array<float, 3> const &rgb, float amount)
+Colors::Color checkerboard_darken(Colors::Color color)
 {
-    std::array<float, 3> hsl;
-    SPColor::rgb_to_hsl_floatv(&hsl[0], rgb[0], rgb[1], rgb[2]);
-    hsl[2] += (hsl[2] < 0.08 ? 0.08 : -0.08) * amount;
-
-    std::array<float, 3> rgb2;
-    SPColor::hsl_to_rgb_floatv(&rgb2[0], hsl[0], hsl[1], hsl[2]);
-
-    return rgb2;
+    auto opacity = color.stealOpacity();
+    return Colors::make_contrasted_color(color, 1.0 - opacity);
 }
 
 } // namespace Widget

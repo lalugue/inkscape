@@ -25,6 +25,16 @@
 #include <2geom/pathvector.h>
 
 #include "extension/implementation/implementation.h"
+#include "colors/utils.h"
+
+constexpr uint32_t U_RGB_COMPOSE(U_COLORREF c)
+{
+    return SP_RGBA32_U_COMPOSE(U_RGBAGetR(c), U_RGBAGetG(c), U_RGBAGetB(c), 0xff);
+}
+constexpr uint32_t U_RGBA_COMPOSE(U_COLORREF c)
+{
+    return SP_RGBA32_U_COMPOSE(U_RGBAGetR(c), U_RGBAGetG(c), U_RGBAGetB(c), U_RGBAGetA(c));
+}
 
 class SPObject;
 

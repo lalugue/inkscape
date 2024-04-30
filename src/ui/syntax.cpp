@@ -18,7 +18,6 @@
 #include <stdexcept>
 #include <string>
 
-#include "color.h"
 #include "config.h"
 #include "io/resource.h"
 #include "object/sp-factory.h"

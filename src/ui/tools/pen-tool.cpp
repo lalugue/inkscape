@@ -1222,12 +1222,14 @@ void PenTool::_setAngleDistanceStatusMessage(Geom::Point const p, int pc_point_t
 void PenTool::_bsplineSpiroColor()
 {
     static Inkscape::Preferences *prefs = Inkscape::Preferences::get();
+    auto highlight = currentLayer()->highlight_color();
+    auto other = prefs->getColor("/tools/nodes/highlight_color", "#ff0000ff");
     if (this->spiro){
         this->red_color = 0xff000000;
         this->green_color = 0x00ff0000;
     } else if(this->bspline) {
-        this->highlight_color = currentLayer()->highlight_color();
-        if((unsigned int)prefs->getInt("/tools/nodes/highlight_color", 0xff0000ff) == this->highlight_color){
+        highlight_color = highlight.toRGBA();
+        if(other == highlight) {
             this->green_color = 0xff00007f;
             this->red_color = 0xff00007f;
         } else {
@@ -1235,9 +1237,9 @@ void PenTool::_bsplineSpiroColor()
             this->red_color = this->highlight_color;
         }
     } else {
-        this->highlight_color = currentLayer()->highlight_color();
+        highlight_color = highlight.toRGBA();
         this->red_color = 0xff00007f;
-        if((unsigned int)prefs->getInt("/tools/nodes/highlight_color", 0xff0000ff) == this->highlight_color){
+        if(other == highlight) {
             this->green_color = 0x00ff007f;
         } else {
             this->green_color = this->highlight_color;

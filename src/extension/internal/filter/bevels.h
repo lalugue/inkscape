@@ -81,30 +81,21 @@ DiffuseLight::get_filter_text (Inkscape::Extension::Extension * ext)
     std::ostringstream smooth;
     std::ostringstream elevation;
     std::ostringstream azimuth;
-    std::ostringstream r;
-    std::ostringstream g;
-    std::ostringstream b;
-    std::ostringstream a;
 
     smooth << ext->get_param_float("smooth");
     elevation << ext->get_param_int("elevation");
     azimuth << ext->get_param_int("azimuth");
-    guint32 color = ext->get_param_color("color");
-
-    r << ((color >> 24) & 0xff);
-    g << ((color >> 16) & 0xff);
-    b << ((color >>  8) & 0xff);
-    a << (color & 0xff) / 255.0F;
+    auto color = ext->get_param_color("color");
     
     _filter = g_strdup_printf(
         "<filter xmlns:inkscape=\"http://www.inkscape.org/namespaces/inkscape\" style=\"color-interpolation-filters:sRGB;\" inkscape:label=\"Diffuse Light\">\n"
           "<feGaussianBlur in=\"SourceGraphic\" stdDeviation=\"%s\" result=\"blur\" />\n"
-          "<feDiffuseLighting diffuseConstant=\"1\" surfaceScale=\"10\" lighting-color=\"rgb(%s,%s,%s)\" result=\"diffuse\">\n"
+          "<feDiffuseLighting diffuseConstant=\"1\" surfaceScale=\"10\" lighting-color=\"%s\" result=\"diffuse\">\n"
             "<feDistantLight elevation=\"%s\" azimuth=\"%s\" />\n"
           "</feDiffuseLighting>\n"
           "<feComposite in=\"diffuse\" in2=\"diffuse\" operator=\"arithmetic\" k1=\"1\" result=\"composite1\" />\n"
-          "<feComposite in=\"composite1\" in2=\"SourceGraphic\" k1=\"%s\" operator=\"arithmetic\" k3=\"1\" result=\"composite2\" />\n"
-        "</filter>\n", smooth.str().c_str(), r.str().c_str(), g.str().c_str(), b.str().c_str(), elevation.str().c_str(), azimuth.str().c_str(), a.str().c_str());
+          "<feComposite in=\"composite1\" in2=\"SourceGraphic\" k1=\"%f\" operator=\"arithmetic\" k3=\"1\" result=\"composite2\" />\n"
+        "</filter>\n", smooth.str().c_str(), color.toString(false).c_str(), elevation.str().c_str(), azimuth.str().c_str(), color.getOpacity());
 
     return _filter;
 }; /* DiffuseLight filter */
@@ -165,32 +156,23 @@ MatteJelly::get_filter_text (Inkscape::Extension::Extension * ext)
     std::ostringstream bright;
     std::ostringstream elevation;
     std::ostringstream azimuth;
-    std::ostringstream r;
-    std::ostringstream g;
-    std::ostringstream b;
-    std::ostringstream a;
 
     smooth << ext->get_param_float("smooth");
     bright << ext->get_param_float("bright");
     elevation << ext->get_param_int("elevation");
     azimuth << ext->get_param_int("azimuth");
-    guint32 color = ext->get_param_color("color");
-
-    r << ((color >> 24) & 0xff);
-    g << ((color >> 16) & 0xff);
-    b << ((color >>  8) & 0xff);
-    a << (color & 0xff) / 255.0F;
+    auto color = ext->get_param_color("color");
     
     _filter = g_strdup_printf(
         "<filter xmlns:inkscape=\"http://www.inkscape.org/namespaces/inkscape\" style=\"color-interpolation-filters:sRGB;\" inkscape:label=\"Matte Jelly\">\n"
           "<feColorMatrix values=\"1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.85 0\" result=\"color\" in=\"SourceGraphic\" />\n"
           "<feGaussianBlur in=\"SourceAlpha\" stdDeviation=\"%s\" result=\"blur\" />\n"
-          "<feSpecularLighting in=\"blur\" specularExponent=\"25\" specularConstant=\"%s\" surfaceScale=\"5\" lighting-color=\"rgb(%s,%s,%s)\" result=\"specular\">\n"
+          "<feSpecularLighting in=\"blur\" specularExponent=\"25\" specularConstant=\"%s\" surfaceScale=\"5\" lighting-color=\"%s\" result=\"specular\">\n"
             "<feDistantLight elevation=\"%s\" azimuth=\"%s\" />\n"
           "</feSpecularLighting>\n"
-          "<feComposite in=\"specular\" in2=\"SourceGraphic\" k3=\"1\" k2=\"%s\" operator=\"arithmetic\" result=\"composite1\" />\n"
+          "<feComposite in=\"specular\" in2=\"SourceGraphic\" k3=\"1\" k2=\"%f\" operator=\"arithmetic\" result=\"composite1\" />\n"
           "<feComposite in=\"composite1\" in2=\"color\" operator=\"atop\" result=\"composite2\" />\n"
-        "</filter>\n", smooth.str().c_str(), bright.str().c_str(), r.str().c_str(), g.str().c_str(), b.str().c_str(), elevation.str().c_str(), azimuth.str().c_str(), a.str().c_str());
+        "</filter>\n", smooth.str().c_str(), bright.str().c_str(), color.toString().c_str(), elevation.str().c_str(), azimuth.str().c_str(), color.getOpacity());
 
     return _filter;
 }; /* MatteJelly filter */
@@ -251,31 +233,22 @@ SpecularLight::get_filter_text (Inkscape::Extension::Extension * ext)
     std::ostringstream bright;
     std::ostringstream elevation;
     std::ostringstream azimuth;
-    std::ostringstream r;
-    std::ostringstream g;
-    std::ostringstream b;
-    std::ostringstream a;
 
     smooth << ext->get_param_float("smooth");
     bright << ext->get_param_float("bright");
     elevation << ext->get_param_int("elevation");
     azimuth << ext->get_param_int("azimuth");
-    guint32 color = ext->get_param_color("color");
+    auto color = ext->get_param_color("color");
 
-    r << ((color >> 24) & 0xff);
-    g << ((color >> 16) & 0xff);
-    b << ((color >>  8) & 0xff);
-    a << (color & 0xff) / 255.0F;
-    
     _filter = g_strdup_printf(
         "<filter xmlns:inkscape=\"http://www.inkscape.org/namespaces/inkscape\" style=\"color-interpolation-filters:sRGB;\" inkscape:label=\"Specular Light\">\n"
           "<feGaussianBlur in=\"SourceAlpha\" stdDeviation=\"%s\" result=\"blur\" />\n"
-          "<feSpecularLighting in=\"blur\" specularExponent=\"25\" specularConstant=\"%s\" surfaceScale=\"10\" lighting-color=\"rgb(%s,%s,%s)\" result=\"specular\">\n"
+          "<feSpecularLighting in=\"blur\" specularExponent=\"25\" specularConstant=\"%s\" surfaceScale=\"10\" lighting-color=\"%s\" result=\"specular\">\n"
             "<feDistantLight elevation=\"%s\" azimuth=\"%s\" />\n"
           "</feSpecularLighting>\n"
-          "<feComposite in=\"specular\" in2=\"SourceGraphic\" k3=\"1\" k2=\"%s\" operator=\"arithmetic\" result=\"composite1\" />\n"
+          "<feComposite in=\"specular\" in2=\"SourceGraphic\" k3=\"1\" k2=\"%f\" operator=\"arithmetic\" result=\"composite1\" />\n"
           "<feComposite in=\"composite1\" in2=\"SourceAlpha\" operator=\"in\" result=\"composite2\" />\n"
-        "</filter>\n", smooth.str().c_str(), bright.str().c_str(), r.str().c_str(), g.str().c_str(), b.str().c_str(), elevation.str().c_str(), azimuth.str().c_str(), a.str().c_str());
+        "</filter>\n", smooth.str().c_str(), bright.str().c_str(), color.toString(false).c_str(), elevation.str().c_str(), azimuth.str().c_str(), color.getOpacity());
 
     return _filter;
 }; /* SpecularLight filter */

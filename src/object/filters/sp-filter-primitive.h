@@ -19,6 +19,9 @@
 #include <memory>
 #include <string>
 #include "2geom/rect.h"
+#include "colors/color.h"
+#include "colors/manager.h"
+#include "document.h"
 #include "object/sp-object.h"
 #include "object/sp-dimensions.h"
 #include "display/nr-filter-types.h"

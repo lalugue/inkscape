@@ -26,8 +26,6 @@
 #include "display/nr-filter-units.h"
 #include "display/nr-filter-utils.h"
 #include "display/nr-light.h"
-#include "svg/svg-icc-color.h"
-#include "svg/svg-color.h"
 
 namespace Inkscape {
 namespace Filters {
@@ -153,14 +151,6 @@ void FilterSpecularLighting::render_cairo(FilterSlot &slot) const
     double r = SP_RGBA32_R_F(lighting_color);
     double g = SP_RGBA32_G_F(lighting_color);
     double b = SP_RGBA32_B_F(lighting_color);
-
-    if (icc) {
-        unsigned char ru, gu, bu;
-        icc_color_to_sRGB(&*icc, &ru, &gu, &bu);
-        r = SP_COLOR_U_TO_F(ru);
-        g = SP_COLOR_U_TO_F(gu);
-        b = SP_COLOR_U_TO_F(bu);
-    }
 
     // Only alpha channel of input is used, no need to check input color_interpolation_filter value.
     // Lighting color is always defined in terms of sRGB, preconvert to linearRGB
