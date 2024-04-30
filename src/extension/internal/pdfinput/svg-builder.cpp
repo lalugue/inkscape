@@ -5,8 +5,10 @@
  * Authors:
  *   miklos erdelyi
  *   Jon A. Cruz <jon@joncruz.org>
+ *   Tavmjong Bah
  *
  * Copyright (C) 2007 Authors
+ *               2024 Tavmjong Bah
  *
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  *
@@ -18,6 +20,7 @@
 # include "config.h"  // only include where actually required!
 #endif
 
+#include <iomanip>
 #include <string>
 #include <locale>
 #include <codecvt>
@@ -104,7 +107,6 @@ SvgBuilder::~SvgBuilder()
 void SvgBuilder::_init() {
     _clip_history = new ClipHistoryEntry();
     _css_font = nullptr;
-    _font_specification = nullptr;
     _in_text_object = false;
     _invalidated_style = true;
     _width = 0;
@@ -1247,6 +1249,7 @@ void SvgBuilder::updateFont(GfxState *state, std::shared_ptr<CairoFont> cairo_fo
         _css_font_size = new_font_size;
         _invalidated_style = true;
     }
+
     bool was_css_font = (bool)_css_font;
     // Clean up any previous css font
     if (_css_font) {
@@ -1260,11 +1263,14 @@ void SvgBuilder::updateFont(GfxState *state, std::shared_ptr<CairoFont> cairo_fo
     }
 
     if (font_strategy == FontFallback::DELETE_TEXT) {
-        _invalidated_strategy = true;
+        // Delete all text when font is missing.
+        _invalidated_strategy = true; // Flush any text in buffer.
         _cairo_font = nullptr;
         return;
     }
+
     if (font_strategy == FontFallback::AS_SHAPES) {
+        // Render text as paths when font is missing.
         _invalidated_strategy = _invalidated_strategy || was_css_font;
         _invalidated_style = (_cairo_font != cairo_font);
         _cairo_font = cairo_font;
@@ -1272,9 +1278,15 @@ void SvgBuilder::updateFont(GfxState *state, std::shared_ptr<CairoFont> cairo_fo
     }
 
     auto font_data = FontData(font);
-    _font_specification = font_data.getSpecification().c_str();
-    _invalidated_strategy = (bool)_cairo_font;
-    _invalidated_style = true;
+    auto new_font_specification = font_data.getSpecification();
+    TRACE(("FontSpecification: %s\n", new_font_specification.c_str()));
+    if (_font_specification != new_font_specification) {
+        // If any font property changes, we need a new <tspan> or <path>.
+        _font_specification = new_font_specification;
+        _invalidated_strategy = false; // We don't need to flush text which creates a <text> element,
+                                       // we will just create new <tspan>.
+        _invalidated_style = true; // Changed style
+    }
 
     // Font family
     _cairo_font = nullptr;
@@ -1288,7 +1300,7 @@ void SvgBuilder::updateFont(GfxState *state, std::shared_ptr<CairoFont> cairo_fo
         sp_repr_css_set_property(_css_font, "font-family", keep_name.c_str());
     }
 
-    // Set the font data
+    // Set the font data (are these really necessary if they have default values?).
     sp_repr_css_set_property(_css_font, "font-style", font_data.style.c_str());
     sp_repr_css_set_property(_css_font, "font-weight", font_data.weight.c_str());
     sp_repr_css_set_property(_css_font, "font-stretch", font_data.stretch.c_str());
@@ -1338,7 +1350,9 @@ void SvgBuilder::updateTextMatrix(GfxState *state, bool flip) {
 /**
  * \brief Notifies the svg builder the state will change
  *
- * Used to flushText if we are in text object
+ * Used to flushText if we are in text object.
+ * This is necessary as the state stored in glyphs is only a pointer to the current state,
+ * thus changing the state changes a glyphs every glyph style. This needs fixing!
 */
 void SvgBuilder::beforeStateChange(GfxState *old_state) {
     if (_in_text_object) {
@@ -1347,14 +1361,267 @@ void SvgBuilder::beforeStateChange(GfxState *old_state) {
 }
 
 /**
- * \brief Writes the buffered characters to the SVG document
+ * Create text node for text.
+ */
+Inkscape::XML::Node* SvgBuilder::_flushTextText(GfxState *state, double text_scale, const Geom::Affine& text_transform)
+{
+    auto text_node = _addToContainer("svg:text");
+    assert (text_node);
+
+    // We preserve spaces in the text objects we create, this applies to any descendant.
+    text_node->setAttribute("xml:space", "preserve");
+
+    // Text direction is a property of the <text> element.
+    auto font = state->getFont();
+    if (font->getWMode() == 1) {
+        // Only set if vertical.
+        auto css_text = sp_repr_css_attr_new();
+        sp_repr_css_set_property(css_text, "writing-mode", "tb");
+        sp_repr_css_change(text_node, css_text, "style");
+        sp_repr_css_attr_unref(css_text);
+    }
+
+    // Prepare to loop over all glyphs in buffer.
+    unsigned int glyphs_in_tspan = 0;
+    Glib::ustring text_buffer;
+
+    // SVG attributes, only spaces and digits.
+    std::string x_coords;
+    std::string y_coords;
+    std::string dx_coords;
+    std::string dy_coords;
+
+    auto first_glyph = _glyphs.front();
+    auto prev_glyph  = _glyphs.front();
+    for (auto it = _glyphs.begin(); it != _glyphs.end();  ++it ) {
+
+        // Add glyph
+        auto glyph = *it;
+
+        // Absolute position (used to position tspan, only on first character).
+        if (glyphs_in_tspan == 0) {
+            //first_glyph = glyph;
+            prev_glyph = glyph; // So dx and dy for first glyph in tspan are both zero.
+            Geom::Point delta_pos(glyph.text_position - first_glyph.text_position);
+            delta_pos[1] += glyph.rise;
+            delta_pos[1] *= -1.0;   // flip it
+            delta_pos *= Geom::Scale(text_scale);
+            delta_pos += glyph.origin; // Corrects vertical text position.
+
+            Inkscape::CSSOStringStream os_x;
+            os_x << delta_pos[0];
+            x_coords.append(os_x.str());
+
+            Inkscape::CSSOStringStream os_y;
+            os_y << delta_pos[1];
+            y_coords.append(os_y.str());
+        }
+
+        // Relative position (used to position characters within tspan).
+        Geom::Point delta_dpos;
+        if (glyphs_in_tspan != 0) {
+            // Subtract off previous glyph position and advance.
+            delta_dpos = glyph.text_position - prev_glyph.text_position - prev_glyph.delta;
+        }
+
+        // Eliminate small rounding errors.
+        if (std::abs(delta_dpos[0]) < 0.005) {
+            delta_dpos[0] = 0.0;
+        }
+        if (std::abs(delta_dpos[1]) < 0.005) {
+            delta_dpos[1] = 0.0;
+        }
+
+        delta_dpos[1] += glyph.rise;
+        delta_dpos[1] *= -1.0;   // flip it
+        delta_dpos *= Geom::Scale(text_scale);
+
+
+        Inkscape::CSSOStringStream os_dx;
+        os_dx << delta_dpos[0] << " ";
+        dx_coords.append(os_dx.str());
+
+        Inkscape::CSSOStringStream os_dy;
+        os_dy << delta_dpos[1] << " ";
+        dy_coords.append(os_dy.str());
+
+        // Add Unicode points to buffer.
+        // There may be a glyph to many Unicode point mapping (e.g. a ligature).
+        for (int i = 0; i < glyph.code.size(); i++) {
+            text_buffer.append(1, glyph.code[i]);
+            if (i != 0) {
+                dx_coords.append("0 ");
+                dy_coords.append("0 ");
+            }
+        }
+
+        // Check to see if we need to output <tspan>.
+        // We output if:
+        //  1. Last glyph.
+        //  2. Next glyph has different style.
+        //  3. Next glyph on new line. TODO: remove this as we can have multiline text now without <tspan>s.
+
+        auto writing_mode = state->getFont()->getWMode(); // Horizontal or vertical text.
+        auto next_it = it + 1;
+        bool output_tspan =
+            next_it == _glyphs.end() ||
+            next_it->style_changed   ||
+            (writing_mode == 0 && std::abs(glyph.text_position[1] - next_it->text_position[1]) > 0.1) ||
+            (writing_mode == 1 && std::abs(glyph.text_position[0] - next_it->text_position[0]) > 0.1);
+
+        if (output_tspan) {
+
+            // Create and add new <tspan> to <text>.
+            auto tspan_node = _xml_doc->createElement("svg:tspan");
+            text_node->appendChild(tspan_node);
+            Inkscape::GC::release(tspan_node);
+
+            // Create and add text content node to <tspan>.
+            Inkscape::XML::Node *text_content = _xml_doc->createTextNode(text_buffer.c_str());
+            tspan_node->appendChild(text_content);
+            Inkscape::GC::release(text_content);
+
+            // Set style.
+            double text_size = text_scale * glyph.text_size;
+            sp_repr_css_set_property_double(glyph.css_font, "font-size", text_size);
+            _setTextStyle(tspan_node, glyph.state, glyph.css_font, text_transform);
+
+            // Unref SPCSSAttr if it won't be needed.
+            // TODO: Remove 'if' wraper once we don't use <tspans> for new lines.
+            // (Style is the same for all glyphs in a tspan.)
+            if (next_it == _glyphs.end() ||
+                next_it->style_changed  ) {
+                sp_repr_css_attr_unref(glyph.css_font);
+            }
+
+            // Remove ' 0's at end.
+            while (dx_coords.ends_with("0 ")) {
+                dx_coords.erase(dx_coords.length() - 2);
+            }
+            while (dy_coords.ends_with("0 ")) {
+                dy_coords.erase(dy_coords.length() - 2);
+            }
+
+            // Remove space at end.
+            if (dx_coords.length() > 0) {
+                dx_coords.pop_back();
+            }
+            if (dy_coords.length() > 0) {
+                dy_coords.pop_back();
+            }
+
+            tspan_node->setAttributeOrRemoveIfEmpty("x", x_coords);
+            tspan_node->setAttributeOrRemoveIfEmpty("dx", dx_coords);
+
+            tspan_node->setAttributeOrRemoveIfEmpty("y", y_coords);
+            tspan_node->setAttributeOrRemoveIfEmpty("dy", dy_coords);
+
+            // Reset.
+            x_coords.clear();
+            y_coords.clear();
+            dx_coords.clear();
+            dy_coords.clear();
+            text_buffer.clear();
+            glyphs_in_tspan = 0;
+
+            TRACE(("tspan content: %s\n", text_buffer.c_str()));
+        } else {
+            glyphs_in_tspan++;
+        }
+        prev_glyph = glyph;
+    }
+
+    return text_node;
+}
+
+/**
+ * Create path node(s) for text.
+ */
+Inkscape::XML::Node* SvgBuilder::_flushTextPath(GfxState *state, double text_scale, const Geom::Affine& text_transform)
+{
+    auto cairo_glyphs = (cairo_glyph_t *)gmallocn(_glyphs.size(), sizeof(cairo_glyph_t));
+    unsigned int cairo_glyph_count = 0;
+
+    Inkscape::XML::Node *node = nullptr;
+    Inkscape::XML::Node *text_group = nullptr;  // Used to wrap paths if more that one path needed due
+                                                // to style changes.
+
+    auto first_glyph = _glyphs.front();
+    for (auto it = _glyphs.begin(); it != _glyphs.end();  ++it ) {
+
+        auto glyph = *it;
+
+        // Append the coordinates to their respective strings
+        Geom::Point delta_pos(glyph.text_position - first_glyph.text_position);
+        delta_pos[1] += glyph.rise;
+        delta_pos[1] *= -1.0;   // flip it
+        delta_pos *= Geom::Scale(text_scale);
+
+        // Push the data into the cairo glyph list for later rendering.
+        cairo_glyphs[cairo_glyph_count].index = glyph.cairo_index;
+        cairo_glyphs[cairo_glyph_count].x = delta_pos[Geom::X];
+        cairo_glyphs[cairo_glyph_count].y = delta_pos[Geom::Y];
+        cairo_glyph_count++;
+
+        bool is_last_glyph = (it + 1) == _glyphs.end();
+        bool flush_text = is_last_glyph ? true : (it+1)->style_changed;
+
+        if (flush_text) {
+            if (!is_last_glyph && !text_group) {
+                text_group = _pushGroup(); // Create <g> wrapper if we have a style change mid-stream.
+            }
+
+            double text_size = text_scale * glyph.text_size;
+
+            // Set to 'node' because if the style does NOT change, we won't have a group
+            // but still need to set this text's position and blend modes.
+            node = _renderText(glyph.cairo_font, text_size, text_transform, cairo_glyphs, cairo_glyph_count);
+            assert (node);
+            _setTextStyle(node, glyph.state, nullptr, text_transform);
+
+            if (text_group) {
+                // Handled by _renderText
+                // text_group->appendChild(node);
+                // Inkscape::GC::release(node);
+            }
+
+            cairo_glyph_count = 0;
+
+            if (is_last_glyph) {
+                break;
+            }
+        }
+    }
+
+    // Clean up
+    gfree(cairo_glyphs);
+    cairo_glyphs = nullptr;
+
+    if (text_group) {
+        node = text_group;
+        _popGroup();
+    }
+
+    node->setAttribute("aria-label", _aria_label);
+    _aria_label = "";
+
+    return node;
+}
+
+/**
+ * \brief Writes the buffered characters to the SVG document.
  *
  * This is a dual path function that can produce either a text element
  * or a group of path elements depending on the font handling mode.
  */
 void SvgBuilder::_flushText(GfxState *state)
 {
-    // Set up a clipPath group
+    // Ignore empty strings
+    if (_glyphs.empty()) {
+        return;
+    }
+
+    // Set up a clipPath group (if required).
     if (state->getRender() & 4 && !_clip_text_group) {
         auto defs = _doc->getDefs()->getRepr();
         _clip_text_group = _pushContainer("svg:clipPath");
@@ -1363,222 +1630,42 @@ void SvgBuilder::_flushText(GfxState *state)
         Inkscape::GC::release(_clip_text_group);
     }
 
-    // Ignore empty strings
-    if (_glyphs.empty()) {
+    // Ignore invisible characters.
+    if (state->getRender() == 3) {
+        std::cerr << "SVGBuilder::_flushText: Invisible pdf glyphs removed!" << std::endl;
         _glyphs.clear();
         return;
-    }
-    std::vector<SvgGlyph>::iterator i = _glyphs.begin();
-    const SvgGlyph& first_glyph = (*i);
-
-    // Ignore invisible characters
-    if (first_glyph.state->getRender() == 3) {
-        _glyphs.clear();
-        return;
-    }
-
-    // If cairo, then no text node is needed.
-    Inkscape::XML::Node *text_group = nullptr;
-    Inkscape::XML::Node *text_node = nullptr;
-    cairo_glyph_t *cairo_glyphs = nullptr;
-    unsigned int cairo_glyph_count = 0;
-
-    if (!first_glyph.cairo_font) {
-        // we preserve spaces in the text objects we create, this applies to any descendant
-        text_node = _addToContainer("svg:text");
-        text_node->setAttribute("xml:space", "preserve");
     }
 
     // Strip out text size from text_matrix and remove from text_transform
     double text_scale = _text_matrix.expansionX();
     Geom::Affine tr = stateToAffine(state);
     Geom::Affine text_transform = _text_matrix * tr * Geom::Scale(text_scale).inverse();
+    std::vector<SvgGlyph>::iterator i = _glyphs.begin();
+    const SvgGlyph& first_glyph = (*i);
+
     // The glyph position must be moved by the document scale without flipping
     // the text object itself. This is why the text affine is applied to the
     // translation point and not simply used in the text element directly.
     auto pos = first_glyph.position * tr;
     text_transform.setTranslation(pos);
+
     // Cache the text transform when clipping
     if (_clip_text_group) {
         svgSetTransform(_clip_text_group, text_transform);
     }
 
-    bool new_tspan = true;
-    bool same_coords[2] = {true, true};
-    Geom::Point last_delta_pos;
-    unsigned int glyphs_in_a_row = 0;
-    Inkscape::XML::Node *tspan_node = nullptr;
-    Glib::ustring x_coords;
-    Glib::ustring y_coords;
-    Glib::ustring text_buffer;
-
-    // Output all buffered glyphs
-    while (true) {
-        const SvgGlyph& glyph = (*i);
-        auto prev_iterator = (i == _glyphs.begin()) ? _glyphs.end() : (i-1);
-        // Check if we need to make a new tspan
-        if (glyph.style_changed) {
-            new_tspan = true;
-        } else if ( i != _glyphs.begin() ) {
-            const SvgGlyph& prev_glyph = (*prev_iterator);
-            if (!((glyph.delta[Geom::Y] == 0.0 && prev_glyph.delta[Geom::Y] == 0.0 &&
-                   glyph.text_position[1] == prev_glyph.text_position[1]) ||
-                  (glyph.delta[Geom::X] == 0.0 && prev_glyph.delta[Geom::X] == 0.0 &&
-                   glyph.text_position[0] == prev_glyph.text_position[0]))) {
-                new_tspan = true;
-            }
-        }
-
-        // Create tspan node if needed
-        if (!first_glyph.cairo_font && text_node && (new_tspan || i == _glyphs.end())) {
-            if (tspan_node) {
-                // Set the x and y coordinate arrays
-                if (same_coords[0]) {
-                    tspan_node->setAttributeSvgDouble("x", last_delta_pos[0]);
-                } else {
-                    tspan_node->setAttributeOrRemoveIfEmpty("x", x_coords);
-                }
-                if (same_coords[1]) {
-                    tspan_node->setAttributeSvgDouble("y", last_delta_pos[1]);
-                } else {
-                    tspan_node->setAttributeOrRemoveIfEmpty("y", y_coords);
-                }
-                TRACE(("tspan content: %s\n", text_buffer.c_str()));
-                if ( glyphs_in_a_row > 1 ) {
-                    tspan_node->setAttribute("sodipodi:role", "line");
-                }
-                // Add text content node to tspan
-                Inkscape::XML::Node *text_content = _xml_doc->createTextNode(text_buffer.c_str());
-                tspan_node->appendChild(text_content);
-                Inkscape::GC::release(text_content);
-                text_node->appendChild(tspan_node);
-                // Clear temporary buffers
-                x_coords.clear();
-                y_coords.clear();
-                text_buffer.clear();
-                Inkscape::GC::release(tspan_node);
-                glyphs_in_a_row = 0;
-            }
-            if ( i == _glyphs.end() ) {
-                sp_repr_css_attr_unref((*prev_iterator).css_font);
-                break;
-            } else {
-                tspan_node = _xml_doc->createElement("svg:tspan");
-
-                // Set style and unref SPCSSAttr if it won't be needed anymore
-                // assume all <tspan> nodes in a <text> node share the same style
-                double text_size = text_scale * glyph.text_size;
-                sp_repr_css_set_property_double(glyph.css_font, "font-size", text_size);
-                _setTextStyle(tspan_node, glyph.state, glyph.css_font, text_transform);
-                if ( glyph.style_changed && i != _glyphs.begin() ) {    // Free previous style
-                    sp_repr_css_attr_unref((*prev_iterator).css_font);
-                }
-            }
-            new_tspan = false;
-        }
-        if ( glyphs_in_a_row > 0 && i != _glyphs.begin() ) {
-            x_coords.append(" ");
-            y_coords.append(" ");
-            // Check if we have the same coordinates
-            const SvgGlyph& prev_glyph = (*prev_iterator);
-            for ( int p = 0 ; p < 2 ; p++ ) {
-                if ( glyph.text_position[p] != prev_glyph.text_position[p] ) {
-                    same_coords[p] = false;
-                }
-            }
-        }
-        // Append the coordinates to their respective strings
-        Geom::Point delta_pos(glyph.text_position - first_glyph.text_position);
-        delta_pos[1] += glyph.rise;
-        delta_pos[1] *= -1.0;   // flip it
-        delta_pos *= Geom::Scale(text_scale);
-        Inkscape::CSSOStringStream os_x;
-        os_x << delta_pos[0];
-        x_coords.append(os_x.str());
-        Inkscape::CSSOStringStream os_y;
-        os_y << delta_pos[1];
-        y_coords.append(os_y.str());
-        last_delta_pos = delta_pos;
-
-        if (first_glyph.cairo_font) {
-            if (!cairo_glyphs) {
-                cairo_glyphs = (cairo_glyph_t *)gmallocn(_glyphs.size(), sizeof(cairo_glyph_t));
-            }
-            bool is_last_glyph = i + 1 == _glyphs.end();
-
-            // Push the data into the cairo glyph list for later rendering.
-            cairo_glyphs[cairo_glyph_count].index = glyph.cairo_index;
-            cairo_glyphs[cairo_glyph_count].x = delta_pos[Geom::X];
-            cairo_glyphs[cairo_glyph_count].y = delta_pos[Geom::Y];
-            cairo_glyph_count++;
-
-            bool style_will_change = is_last_glyph ? true : (i+1)->style_changed;
-            if (style_will_change) {
-                if (style_will_change && !is_last_glyph && !text_group) {
-                    // We create a group, so each style can be contained within the resulting path.
-                    text_group = _pushGroup();
-                }
-
-                // Render and set the style for this drawn text.
-                double text_size = text_scale * glyph.text_size;
-
-                // Set to 'text_node' because if the style does NOT change, we won't have a group
-                // but still need to set this text's position and blend modes.
-                text_node = _renderText(glyph.cairo_font, text_size, text_transform, cairo_glyphs, cairo_glyph_count);
-                if (text_node) {
-                    _setTextStyle(text_node, glyph.state, nullptr, text_transform);
-                }
-
-                // Free up the used glyph stack.
-                gfree(cairo_glyphs);
-                cairo_glyphs = nullptr;
-                cairo_glyph_count = 0;
-
-                if (is_last_glyph) {
-                    // Stop drawing text now, we have cleaned up.
-                    break;
-                }
-            }
-        } else {
-            // Append the character to the text buffer
-            if (!glyph.code.empty()) {
-                text_buffer.append(1, glyph.code[0]);
-            }
-
-            /* Append any utf8 conversion doublets and request a new tspan.
-             *
-             * This is a fix for the unusual situation in some PDF files that use
-             * certain fonts where two ascii letters have been bolted together into
-             * one Unicode position and our conversion to UTF8 produces extra glyphs
-             * which if we don't add will be missing and if we add without ending the
-             * tspan will cause the rest of the glyph-positions to be off by one.
-             */
-            for (int j = 1; j < glyph.code.size(); j++) {
-                text_buffer.append(1, glyph.code[j]);
-                new_tspan = true;
-            }
-        }
-
-        glyphs_in_a_row++;
-        ++i;
+    Inkscape::XML::Node *text_node = nullptr; // The text node or the path node.
+    if (first_glyph.cairo_font) {
+        text_node = _flushTextPath(state, text_scale, text_transform);
+    } else {
+        text_node = _flushTextText(state, text_scale, text_transform);
     }
-    if (text_group) {
-        // Pop the group so the clip and transform can be applied to it.
-        text_node = text_group;
-        _popGroup();
-    }
+    assert(text_node);
 
-    if (text_node) {
-        if (first_glyph.cairo_font) {
-            // Save aria-label for any rendered text blocks
-            text_node->setAttribute("aria-label", _aria_label);
-        }
-
-        // Set the text matrix which sits under the page's position
-        _setBlendMode(text_node, state);
-        svgSetTransform(text_node, text_transform * _page_affine);
-        _setClipPath(text_node);
-    }
+    _setBlendMode(text_node, state);
+    svgSetTransform(text_node, text_transform * _page_affine);
+    _setClipPath(text_node);
 
     _aria_label = "";
     _glyphs.clear();
@@ -1597,6 +1684,7 @@ void SvgBuilder::_setTextStyle(Inkscape::XML::Node *node, GfxState *state, SPCSS
     state = state->save();
     state->setCTM(ta[0], ta[1], ta[2], ta[3], ta[4], ta[5]);
     auto style = _setStyle(state, has_fill, has_stroke);
+    sp_repr_css_change(node, style, "style");
     state = state->restore();
     if (font_style) {
         sp_repr_css_merge(style, font_style);
@@ -1677,13 +1765,21 @@ void SvgBuilder::endString(GfxState *state)
  * \brief Adds the specified character to the text buffer
  * Takes care of converting it to UTF-8 and generates a new style repr if style
  * has changed since the last call.
+ *
+ * x, y:    Position of glyph.
+ * dx, dy:  Advance of glyph.
+ * originX, originY
+ * code: 8-bit char code, 16 bit CID, or Unicode of glyph.
+ * u: Unicode mapping of character.
  */
 void SvgBuilder::addChar(GfxState *state, double x, double y, double dx, double dy, double originX, double originY,
                          CharCode code, int /*nBytes*/, Unicode const *u, int uLen)
 {
+    assert (state);
+
     if (_aria_space && !_glyphs.empty()) {
         const SvgGlyph& prev_glyph = _glyphs.back();
-        // This helps reconstruct the aria text, though it could be made better
+        // This helps reconstruct the aria text, though it could be made better.
         if (prev_glyph.position[Geom::Y] != (y - originY)) {
             _aria_label += "\n";
         }
@@ -1708,33 +1804,35 @@ void SvgBuilder::addChar(GfxState *state, double x, double y, double dx, double 
         return;
     }
 
+    Geom::Point delta(dx, dy);
+
     bool is_space = ( uLen == 1 && u[0] == 32 );
     // Skip beginning space
     if ( is_space && _glyphs.empty()) {
-        Geom::Point delta(dx, dy);
          _text_position += delta;
          return;
     }
-    // Allow only one space in a row
+    // Allow only one space in a row  WHY??
     if ( is_space && (_glyphs[_glyphs.size() - 1].code.size() == 1) &&
          (_glyphs[_glyphs.size() - 1].code[0] == 32) ) {
-        Geom::Point delta(dx, dy);
         _text_position += delta;
         return;
     }
 
     SvgGlyph new_glyph;
     new_glyph.is_space = is_space;
-    new_glyph.delta = Geom::Point(dx, dy);
+    new_glyph.delta = delta;
     new_glyph.position = Geom::Point( x - originX, y - originY );
+    new_glyph.origin = Geom::Point(originX, -originY);
     new_glyph.text_position = _text_position;
     new_glyph.text_size = _css_font_size;
     new_glyph.state = state;
     if (_cairo_font) {
+        // We are rendering text as a path.
         new_glyph.cairo_font = _cairo_font;
         new_glyph.cairo_index = _cairo_font->getGlyph(code, u, uLen);
     }
-    _text_position += new_glyph.delta;
+    _text_position += delta;
 
     // Convert the character to UTF-8 since that's our SVG document's encoding
     {
@@ -1771,6 +1869,20 @@ void SvgBuilder::addChar(GfxState *state, double x, double y, double dx, double 
     new_glyph.rise = state->getRise();
 
     _glyphs.push_back(new_glyph);
+
+    IFTRACE(
+    std::cout << "SVGBuilder::addChar:  " << new_glyph.code
+              << "  style changed: " << std::boolalpha << new_glyph.style_changed
+              << std::setprecision(4)
+              << "  position: " << new_glyph.position
+              << "  delta: "    << new_glyph.delta
+              << "  x,y: (" << x << ", " << y << ") "
+              << "  origin: ("   << originX << ", " << originY << ") "
+              << "  rise: "          << new_glyph.rise
+              << "  text_position: " << new_glyph.text_position
+              << "  state: " << (void*)new_glyph.state
+              << std::endl;
+        );
 }
 
 /**

@@ -2217,7 +2217,7 @@ void PdfParser::opShowSpaceText(Object args[], int /*numArgs*/)
 {
   Array *a = nullptr;
   Object obj;
-  int wMode = 0;
+  int wMode = 0; // Writing mode (horizontal/vertical).
 
   if (!state->getFont()) {
     error(errSyntaxError, getPos(), "No font in show/space");
@@ -2248,28 +2248,17 @@ void PdfParser::opShowSpaceText(Object args[], int /*numArgs*/)
   }
 }
 
+/*
+ * This adds a string from a PDF file that is contained in one command ('Tj', ''', '"')
+ * or is one string in ShowSpacetext ('TJ').
+ */
 #if POPPLER_CHECK_VERSION(0,64,0)
 void PdfParser::doShowText(const GooString *s) {
 #else
 void PdfParser::doShowText(GooString *s) {
 #endif
-    int wMode;
-    double riseX, riseY;
-    CharCode code;
-    Unicode _POPPLER_CONST_82 *u = nullptr;
-    double dx, dy, tdx, tdy;
-    double originX, originY, tOriginX, tOriginY;
-    Object charProc;
-#if POPPLER_CHECK_VERSION(0,64,0)
-    const char *p;
-#else
-    char *p;
-#endif
-
-    int len, n, uLen;
-
     auto font = state->getFont();
-    wMode = font->getWMode();
+    int wMode = font->getWMode(); // Vertical/Horizontal/Invalid
 
     builder->beginString(state, s->getLength());
 
@@ -2278,20 +2267,32 @@ void PdfParser::doShowText(GooString *s) {
         g_warning("PDF fontType3 information ignored.");
     }
 
+    double riseX, riseY;
     state->textTransformDelta(0, state->getRise(), &riseX, &riseY);
-    p = s->getCString();
-    len = s->getLength();
-    while (len > 0) {
-        /* TODO: This looks like a memory leak for u. */
-        n = font->getNextChar(p, len, &code, &u, &uLen, &dx, &dy, &originX, &originY);
 
-        if (wMode) {
+    auto p = s->getCString(); // char* or const char*
+    int len = s->getLength();
+
+    while (len > 0) {
+
+        CharCode code;                          // Font code (8-bit char code, 16 bit CID, etc.).
+        Unicode _POPPLER_CONST_82 *u = nullptr; // Unicode mapping of 'code' (if toUnicode table exists).
+        int uLen;
+        double dx, dy;           // Displacement vector (e.g. advance).
+        double originX, originY; // Origin offset.
+
+        // Get next unicode character, returning number of bytes used.
+        int n = font->getNextChar(p, len, &code, &u, &uLen, &dx, &dy, &originX, &originY);
+
+        if (wMode != 0) {
+            // Vertical text (or invalid value).
             dx *= state->getFontSize();
             dy = dy * state->getFontSize() + state->getCharSpace();
             if (n == 1 && *p == ' ') {
                 dy += state->getWordSpace();
             }
         } else {
+            // Horizontal text.
             dx = dx * state->getFontSize() + state->getCharSpace();
             if (n == 1 && *p == ' ') {
                 dx += state->getWordSpace();
@@ -2299,17 +2300,26 @@ void PdfParser::doShowText(GooString *s) {
             dx *= state->getHorizScaling();
             dy *= state->getFontSize();
         }
+
+        double tdx, tdy;
         state->textTransformDelta(dx, dy, &tdx, &tdy);
+
         originX *= state->getFontSize();
         originY *= state->getFontSize();
+
+        double tOriginX, tOriginY;
         state->textTransformDelta(originX, originY, &tOriginX, &tOriginY);
+
         // In Gfx.cc this is drawChar(...)
-        builder->addChar(state, state->getCurX() + riseX, state->getCurY() + riseY, dx, dy, tOriginX, tOriginY, code, n,
-                         u, uLen);
+        builder->addChar(state, state->getCurX() + riseX, state->getCurY() + riseY,
+                         dx, dy, tOriginX, tOriginY, code, n, u, uLen);
+
+        // Move onto next unicode character.
         state->shift(tdx, tdy);
         p += n;
         len -= n;
     }
+
     builder->endString(state);
 }
 

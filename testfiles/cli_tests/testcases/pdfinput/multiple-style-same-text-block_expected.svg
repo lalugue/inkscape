@@ -41,20 +41,20 @@
        id="text1"
        xml:space="preserve"
        transform="matrix(1.3333333,0,0,1.3333333,79.369333,101.43733)"><tspan
+         id="tspan1"
          style="font-variant:normal;font-weight:normal;font-size:33.873px;font-family:'Latin Modern Sans';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
-         x="0 17.698631 32.971958 68.812958 86.511589 101.78492 127.02367 152.26244 159.80255 176.1937 192.12077 203.62404 219.5511"
-         y="0"
-         sodipodi:role="line"
-         id="tspan1">SamSammington</tspan></text>
+         x="0"
+         dx="0 0 0 10.602242"
+         y="0">SamSammington</tspan></text>
     <text
        id="text2"
        xml:space="preserve"
        transform="matrix(1.3333333,0,0,1.3333333,79.369333,145.908)"><tspan
+         id="tspan2"
          style="font-style:oblique;font-variant:normal;font-weight:normal;font-size:17.2154px;font-family:'Latin Modern Sans';writing-mode:lr-tb;fill:#737373;fill-opacity:1;fill-rule:nonzero;stroke:none"
-         x="0 10.343037 18.673588 24.187693 29.701799 33.533955 40.728287 49.058838 52.890995 61.221546 79.437202 90.188248 94.020401 99.866768 107.62921"
-         y="0"
-         sodipodi:role="line"
-         id="tspan2">CurriculumVitae</tspan></text>
+         x="0"
+         dx="0 0 0 0 0 0 0 0 0 0 5.3884325"
+         y="0">CurriculumVitae</tspan></text>
     <path
        id="path2"
        d="M 0,0 H 83.34 V 4.606 H 0 Z"
@@ -64,28 +64,26 @@
        id="text3"
        xml:space="preserve"
        transform="matrix(1.3333333,0,0,1.3333333,206.36,198.728)"><tspan
+         id="tspan3"
          style="font-variant:normal;font-weight:normal;font-size:14.3462px;font-family:'Latin Modern Sans';writing-mode:lr-tb;fill:#3873b3;fill-opacity:1;fill-rule:nonzero;stroke:none"
-         x="0 8.3681383 15.574235 22.780331 29.023798 35.74786 40.820679 44.124607 51.148506"
-         y="0"
-         sodipodi:role="line"
-         id="tspan3">Education</tspan></text>
+         x="0"
+         y="0">Education</tspan></text>
     <text
        id="text4"
        xml:space="preserve"
        transform="matrix(1.3333333,0,0,1.3333333,161.39867,224.58667)"><tspan
+         id="tspan4"
          style="font-variant:normal;font-weight:normal;font-size:10.9091px;font-family:'Latin Modern Sans';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
-         x="0 5.454545 10.90909 16.363634"
-         y="0"
-         sodipodi:role="line"
-         id="tspan4">2023</tspan></text>
+         x="0"
+         y="0">2023</tspan></text>
     <text
        id="text5"
        xml:space="preserve"
        transform="matrix(1.3333333,0,0,1.3333333,206.36,224.58667)"><tspan
+         id="tspan5"
          style="font-variant:normal;font-weight:normal;font-size:10.9091px;font-family:'Latin Modern Sans';writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
-         x="0 3.0305452 8.6672716 14.000726 18.18218 23.031271 28.273088 34.204361 42.697086 46.87854 51.727631 57.364357 63.113449 68.567993 74.81781 80.272354 87.237808 92.874535 97.723625 101.90508 104.51126 109.96581"
-         y="0"
-         sodipodi:role="line"
-         id="tspan5">Inkscapeschoolofdesign</tspan></text>
+         x="0"
+         dx="0 0 0 0 0 0 0 0.29454544 3.643636 0 0 0 0.29454544 0 3.643636 0 3.6327269"
+         y="0">Inkscapeschoolofdesign</tspan></text>
   </g>
 </svg>

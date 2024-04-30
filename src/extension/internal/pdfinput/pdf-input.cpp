@@ -539,7 +539,7 @@ void PdfImportDialog::_setPreviewPage(int page) {
             cairo_scale(cr, scale_factor, scale_factor);   // Use Cairo for resizing the image
             poppler_page_render(poppler_page.get(), cr);
             cairo_destroy(cr);
-            channel.run([=] {
+            channel.run([dialog, page] {
                 dialog->_preview_rendering_in_progress = false;
                 dialog->_preview_area.queue_draw();
                 if (dialog->_preview_page != page) {

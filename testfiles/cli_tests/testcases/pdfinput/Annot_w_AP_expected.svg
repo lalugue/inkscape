@@ -484,9 +484,8 @@
          clip-path="url(#clipPath15)"
          id="text20"><tspan
            style="font-variant:normal;font-weight:normal;font-size:9px;font-family:Helvetica;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
-           x="0 5.0040002 7.506 12.51 17.514 20.017 27.514"
+           x="0"
            y="0"
-           sodipodi:role="line"
            id="tspan20">2,00 mm</tspan></text>
       <path
          d="m 229.7797,368.6044 h -20 m 25.6701,0 h 20"
@@ -527,9 +526,8 @@
          clip-path="url(#clipPath26)"
          id="text31"><tspan
            style="font-variant:normal;font-weight:normal;font-size:9px;font-family:Helvetica;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
-           x="0 5.0040002 7.506 12.51 17.514 20.017 27.514"
+           x="0"
            y="0"
-           sodipodi:role="line"
            id="tspan31">3,00 mm</tspan></text>
       <path
          d="m 174.5412,349.1612 h -20 m 28.5037,0 h 20"
@@ -570,9 +568,8 @@
          clip-path="url(#clipPath37)"
          id="text43"><tspan
            style="font-variant:normal;font-weight:normal;font-size:9px;font-family:Helvetica;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
-           x="0 5.0040002 10.008 15.012 17.514 22.518 27.521999 30.028 37.525002"
+           x="0"
            y="0"
-           sodipodi:role="line"
            id="tspan43">135,00 mm</tspan></text>
       <path
          d="M 23.8507,666.4702 H 190.678"
@@ -619,9 +616,8 @@
          clip-path="url(#clipPath50)"
          id="text56"><tspan
            style="font-variant:normal;font-weight:normal;font-size:9px;font-family:Helvetica;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
-           x="0 5.0040002 10.008 15.012 17.514 22.518 27.521999 30.028 37.525002"
+           x="0"
            y="0"
-           sodipodi:role="line"
            id="tspan56">217,00 mm</tspan></text>
       <path
          d="M -292.5947,349.1612 H -9.5471"
@@ -668,9 +664,8 @@
          clip-path="url(#clipPath63)"
          id="text69"><tspan
            style="font-variant:normal;font-weight:normal;font-size:9px;font-family:Helvetica;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
-           x="0 5.0040002 10.008 12.51 17.514 22.518 25.021999 32.519001"
+           x="0"
            y="0"
-           sodipodi:role="line"
            id="tspan69">60,00 mm</tspan></text>
       <path
          d="M 236.4498,607.2856 H 299.481"
@@ -723,9 +718,8 @@
          clip-path="url(#clipPath77)"
          id="text83"><tspan
            style="font-variant:normal;font-weight:normal;font-size:9px;font-family:Helvetica;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
-           x="0 5.0040002 10.008 12.51 17.514 22.518 25.021999 32.519001"
+           x="0"
            y="0"
-           sodipodi:role="line"
            id="tspan83">73,00 mm</tspan></text>
       <path
          d="m 23.8507,605.9557 h 204.929"
@@ -766,9 +760,8 @@
          clip-path="url(#clipPath89)"
          id="text95"><tspan
            style="font-variant:normal;font-weight:normal;font-size:9px;font-family:Helvetica;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
-           x="0 5.0040002 10.008 15.012 17.514 22.518 27.521999 30.028 37.525002"
+           x="0"
            y="0"
-           sodipodi:role="line"
            id="tspan95">107,00 mm</tspan></text>
       <path
          d="M 200.8911,505.0666 H 328.0334"
