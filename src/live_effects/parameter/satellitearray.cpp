@@ -257,11 +257,13 @@ void SatelliteArrayParam::move_up_down(int const delta, Glib::ustring const &wor
 
 void SatelliteArrayParam::on_up_button_click()
 {
+    // TRANSLATORS: This belongs into the sentence 'Move item up'
     move_up_down(-1, _("up"));
 }
 
 void SatelliteArrayParam::on_down_button_click()
 {
+    // TRANSLATORS: This belongs into the sentence 'Move item down'
     move_up_down(+1, _("down"));
 }
 
