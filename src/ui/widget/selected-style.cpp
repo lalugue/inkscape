@@ -925,9 +925,9 @@ void SelectedStyle::make_popup_opacity()
         _popup_opacity->append(*make_menu_item(label, sigc::mem_fun(*this, method)));
     };
     add_item(_("0 (Transparent)"), &SelectedStyle::opacity_0  );
-    add_item(_("25%"            ), &SelectedStyle::opacity_025);
-    add_item(_("50%"            ), &SelectedStyle::opacity_05 );
-    add_item(_("75%"            ), &SelectedStyle::opacity_075);
+    add_item("25%", &SelectedStyle::opacity_025);
+    add_item("50%", &SelectedStyle::opacity_05 );
+    add_item("75%", &SelectedStyle::opacity_075);
     add_item(_("100% (Opaque)"  ), &SelectedStyle::opacity_1  );
 }
 
