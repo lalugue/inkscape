@@ -67,7 +67,7 @@ static std::tuple<int, Glib::ustring, std::string> get_sorter(PaperSize const &p
 
     std::string const &abbr = page.unit->abbr, &name = page.name;
 
-    // Translators: "US" is an abbreviation for United States.
+    // TRANSLATORS: "US" is an abbreviation for United States.
     if (static auto const us = _("US"); abbr == "in" && name.find(us) != name.npos) {
         return {0, us, abbr};
     }
@@ -75,7 +75,7 @@ static std::tuple<int, Glib::ustring, std::string> get_sorter(PaperSize const &p
     if (abbr == "mm" && name.size() >= 2 && name[0] >= 'A' && name[0] <= 'E' &&
                                             name[1] >= '0' && name[1] <= '9')
     {
-        // Translators: %1 is a paper size class, e.g. 'A' or 'B' – as in "A4".
+        // TRANSLATORS: %1 is a paper size class, e.g. 'A' or 'B' – as in "A4".
         static auto const format = _("ISO %1");
         return {1, Glib::ustring::compose(format, name[0]), abbr};
     }

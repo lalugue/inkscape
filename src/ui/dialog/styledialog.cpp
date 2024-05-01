@@ -742,7 +742,7 @@ void StyleDialog::readStyleElement()
                 row[_mColumns._colStrike] = true;
             } else {
                 row[_mColumns._colOwner] = _("Current value");
-                // Translators: %1 is a CSS selector.
+                // TRANSLATORS: %1 is a CSS selector.
                 _addOwnerStyle(name, Glib::ustring::compose(_("Used in %1"), selector));
             }
         }
