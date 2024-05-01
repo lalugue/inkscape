@@ -81,7 +81,7 @@ TweakToolbar::TweakToolbar(SPDesktop *desktop)
     _mode_buttons[mode]->set_active();
 
     // Configure channel buttons.
-    // Translators: H, S, L, and O stands for:
+    // TRANSLATORS: H, S, L, and O stands for:
     // Hue, Saturation, Lighting and Opacity respectively.
     _doh_btn.signal_toggled().connect(sigc::mem_fun(*this, &TweakToolbar::toggle_doh));
     _doh_btn.set_active(prefs->getBool("/tools/tweak/doh", true));

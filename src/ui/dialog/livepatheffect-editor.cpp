@@ -378,7 +378,7 @@ Glib::ustring LivePathEffectEditor::get_tooltip(LivePathEffect::EffectType const
 {
     Glib::ustring tooltip = _(converter.get_description(type).c_str());
     if (tooltip != untranslated_label) {
-        // Translators: %1 is the untranslated label. %2 is the effect type description.
+        // TRANSLATORS: %1 is the untranslated label. %2 is the effect type description.
         tooltip = Glib::ustring::compose("[%1] %2", untranslated_label, tooltip);
     }
     return tooltip;

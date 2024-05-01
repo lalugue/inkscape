@@ -250,7 +250,7 @@ void SatelliteArrayParam::move_up_down(int const delta, Glib::ustring const &wor
         }
     }
 
-    // Translators: %1 is the translated version of "up" or "down".
+    // TRANSLATORS: %1 is the translated version of "up" or "down".
     param_effect->makeUndoDone(Glib::ustring::compose(_("Move item %1"), word));
     _store->foreach_iter(sigc::bind(sigc::mem_fun(*this, &SatelliteArrayParam::_selectIndex), &i));
 }
