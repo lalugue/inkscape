@@ -33,6 +33,8 @@ public:
 
     Glib::RefPtr<Gtk::ListItemFactory> get_factory() { return _factory; }
 
+    void set_use_tooltip_markup(bool use_markup = true) { _use_markup = use_markup; }
+
 private:
     IconViewItemFactory(std::function<ItemData (Glib::RefPtr<Glib::ObjectBase>&)> get_item):
         _get_item_data(std::move(get_item)) {
@@ -94,12 +96,17 @@ private:
             label->set_justify(Gtk::Justification::CENTER);
             label->set_valign(Gtk::Align::START);
 
-            box->set_tooltip_text(item_data.tooltip);
+            if (_use_markup) {
+                box->set_tooltip_markup(item_data.tooltip);
+            } else {
+                box->set_tooltip_text(item_data.tooltip);
+            }
         });
     }
 
     std::function<ItemData (Glib::RefPtr<Glib::ObjectBase>&)> _get_item_data;
     Glib::RefPtr<Gtk::SignalListItemFactory> _factory;
+    bool _use_markup = false;
 };
 
 } // namespace

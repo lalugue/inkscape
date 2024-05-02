@@ -250,10 +250,16 @@ void add_effects(Gio::ListStore<EffectItem>& item_store, const std::vector<Inksc
             icon = Inkscape::IO::Resource::get_path_string(IO::Resource::SYSTEM, IO::Resource::UIS, "resources", root ? "missing-icon.svg" : "filter-test.svg");
         }
 
+        auto tooltip = "<small>" + access.str() + "</small>";
+        if (!description.empty()) {
+            tooltip += "\n\n";
+            tooltip += translated(description.c_str());
+        }
+
         item_store.append(EffectItem::create(
             id,
             name,
-            description.empty() ? access.str().c_str() : translated(description.c_str()),
+            std::move(tooltip),
             translated(description.c_str()),
             access.str(),
             order.str(),
@@ -380,6 +386,7 @@ ExtensionsGallery::ExtensionsGallery(ExtensionsGallery::Type type) :
         auto name = Glib::Markup::escape_text(effect->name);
         return { .label_markup = name, .image = tex, .tooltip = effect->tooltip };
     });
+    _factory->set_use_tooltip_markup();
     _gridview.set_min_columns(1);
     // max columns impacts number of prerendered items requested by gridview (= maxcol * 32 + 1),
     // so it needs to be artificially kept low to prevent gridview from rendering all items up front
