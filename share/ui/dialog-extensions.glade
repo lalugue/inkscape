@@ -85,7 +85,6 @@
                 <object class="GtkToggleButton" id="toggle">
                     <property name="focusable">True</property>
                     <property name="receives-default">True</property>
-                    <property name="tooltip-text" translatable="yes">Toggle list of effect categories</property>
                     <property name="halign">start</property>
                     <property name="valign">center</property>
                     <property name="margin-end">5</property>
@@ -99,7 +98,7 @@
             </child>
             <child>
                 <object class="GtkLabel" id="header">
-                    <property name="label" translatable="yes">Select extension to run:</property>
+                    <property name="label" translatable="no">Select extension to run:</property>
                 </object>
             </child>
             </object>
@@ -214,7 +213,7 @@
                 </child>
                 <child>
                   <object class="GtkLabel" id="run-label">
-                    <property name="label" translatable="yes">_Run</property>
+                    <property name="label" translatable="yes" context="run-extension" comments="This verb is used to execute an extension. If extension accepts input parameters, then ellipsis will be appended to this word -> _Run...">_Run</property>
                     <property name="use-underline">True</property>
                     <property name="valign">center</property>
                   </object>
