@@ -241,7 +241,7 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkLabel">
+                  <object class="GtkLabel" id="run-label">
                     <property name="label" translatable="yes">_Run</property>
                     <property name="visible">True</property>
                   </object>

@@ -212,7 +212,12 @@ void add_effects(Glib::RefPtr<Gtk::ListStore>& item_store, const std::vector<Ink
         auto description = effect->get_menu_tip();
         row[g_effect_columns.id] = id;
         row[g_effect_columns.name] = name;
-        row[g_effect_columns.tooltip] = description.empty() ? access.str().c_str() : translated(description.c_str());
+        auto tooltip = "<small>" + access.str() + "</small>";
+        if (!description.empty()) {
+            tooltip += "\n\n";
+            tooltip += translated(description.c_str());
+        }
+        row[g_effect_columns.tooltip] = tooltip;
         row[g_effect_columns.description] = translated(description.c_str());
         row[g_effect_columns.access] = access.str();
         row[g_effect_columns.order] = order.str();
@@ -270,7 +275,7 @@ ExtensionsGallery::ExtensionsGallery(ExtensionsGallery::Type type) :
     _image_cache(1000), // arbitrary limit for how many rendered thumbnails to keep around
     _type(type)
 {
-    _run_label = _type == Effects ? _run.get_label() : _("_Apply");
+    _run_label = _type == Effects ? get_widget<Gtk::Label>(_builder, "run-label").get_label() : _("_Apply");
     if (_type == Filters) {
         get_widget<Gtk::Label>(_builder, "header").set_label(_("Select filter to apply:"));
     }
