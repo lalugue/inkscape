@@ -235,7 +235,7 @@ void add_effects(Glib::RefPtr<Gtk::ListStore>& item_store, const std::vector<Ink
     }
 }
 
-std::set<std::string> add_categories(Glib::RefPtr<Gtk::ListStore>& store, const std::vector<Inkscape::Extension::Effect*>& effects) {
+std::set<std::string> add_categories(Glib::RefPtr<Gtk::ListStore>& store, const std::vector<Inkscape::Extension::Effect*>& effects, bool effect) {
     std::set<std::string> categories;
 
     // collect categories
@@ -249,7 +249,7 @@ std::set<std::string> add_categories(Glib::RefPtr<Gtk::ListStore>& store, const 
 
     auto row = *store->append();
     row[g_categories_columns.id] = "all";
-    row[g_categories_columns.name] = _("All Effects");
+    row[g_categories_columns.name] = effect ? _("All Effects") : _("All Filters");
 
     row = *store->append();
     row[g_categories_columns.id] = "-";
@@ -275,10 +275,14 @@ ExtensionsGallery::ExtensionsGallery(ExtensionsGallery::Type type) :
     _image_cache(1000), // arbitrary limit for how many rendered thumbnails to keep around
     _type(type)
 {
-    _run_label = _type == Effects ? get_widget<Gtk::Label>(_builder, "run-label").get_label() : _("_Apply");
-    if (_type == Filters) {
-        get_widget<Gtk::Label>(_builder, "header").set_label(_("Select filter to apply:"));
-    }
+    _run_label = _type == Effects ?
+        get_widget<Gtk::Label>(_builder, "run-label").get_label() :
+        C_("apply-filter", "_Apply");
+
+    auto& header = get_widget<Gtk::Label>(_builder, "header");
+    header.set_label(_type == Effects ?
+        _("Select extension to run:") :
+        _("Select filter to apply:"));
 
     auto prefs = Preferences::get();
     // last selected effect
@@ -301,6 +305,9 @@ ExtensionsGallery::ExtensionsGallery(ExtensionsGallery::Type type) :
 
     // show/hide categories
     auto toggle = &get_widget<Gtk::ToggleButton>(_builder, "toggle");
+    toggle->set_tooltip_text(_type == Effects ?
+        _("Toggle list of effect categories") :
+        _("Toggle list of filter categories"));
     toggle->set_active(show_list);
     toggle->signal_toggled().connect([=](){
         auto visible = toggle->get_active();
@@ -327,7 +334,7 @@ ExtensionsGallery::ExtensionsGallery(ExtensionsGallery::Type type) :
     add_effects(_store, effects, _type == Effects);
     model->set_sort_column(g_effect_columns.order.index(), Gtk::SORT_ASCENDING);
 
-    auto categories = add_categories(_categories, effects);
+    auto categories = add_categories(_categories, effects, _type == Effects);
     if (!categories.count(_current_category.raw())) {
         _current_category = "all";
     }
@@ -449,7 +456,7 @@ void ExtensionsGallery::update_name() {
         _run.set_sensitive();
         // add ellipsis if extension takes input
         auto& effect = *row[g_effect_columns.effect];
-        _run.set_label(_run_label + (effect.takes_input() ? _("...") : ""));
+        _run.set_label(_run_label + (effect.takes_input() ? C_("take-input", "...") : ""));
         // info: extension description
         Glib::ustring desc = row[g_effect_columns.description];
         info.set_markup("<i>" + Glib::Markup::escape_text(desc) + "</i>");
