@@ -490,7 +490,7 @@ void PageToolbar::selectionChanged(SPPage *page)
             selectionChanged(nullptr);
         });
     }
-    if (!page_manager.hasPrevPage() && !page_manager.hasNextPage() && !page) {
+    if (!page_manager.hasPrevPage() && !page_manager.hasNextPage()) {
         _sep1.set_visible(false);
         _label_page_pos.set_visible(false);
         _btn_page_backward.set_visible(false);
