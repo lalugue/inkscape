@@ -1095,7 +1095,7 @@ void CommandPalette::set_mode(CPMode mode)
             set_sensitive(_CPFilter, true);
             _CPFilter.set_text("");
             _CPFilter.set_icon_from_icon_name("edit-find-symbolic");
-            set_hint_texts(_CPFilter, _("Search operation..."));
+            set_hint_texts(_CPFilter, _("Enter search term to search for a command"));
 
             show_suggestions();
 
