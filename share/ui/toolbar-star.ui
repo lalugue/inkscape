@@ -183,7 +183,7 @@
         <property name="valign">center</property>
         <property name="focusable">True</property>
         <property name="receives-default">True</property>
-        <property name="tooltip-text" translatable="yes">Make corners sharp</property>
+        <property name="tooltip-text" translatable="yes">Reset all parameters to their default values</property>
         <property name="has-frame">False</property>
         <style>
             <class name="priority1"/>
