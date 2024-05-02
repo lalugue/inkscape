@@ -1918,13 +1918,13 @@ GridWidget::GridWidget(SPGrid *grid)
 
     // All of these undo settings are the same, refactor this later if possible.
     _rumg->set_undo_parameters(_("Change grid units"), "show-grid", "grid-settings");
-    _rsu_ax->set_undo_parameters(_("Change grid dimentions"), "show-grid", "grid-settings");
-    _rsu_az->set_undo_parameters(_("Change grid dimentions"), "show-grid", "grid-settings");
+    _rsu_ax->set_undo_parameters(_("Change grid dimensions"), "show-grid", "grid-settings");
+    _rsu_az->set_undo_parameters(_("Change grid dimensions"), "show-grid", "grid-settings");
     _rcp_gcol->set_undo_parameters(_("Change grid color"), "show-grid", "grid-settings");
     _rcp_gmcol->set_undo_parameters(_("Change grid color"), "show-grid", "grid-settings");
     _rsi->set_undo_parameters(_("Change grid number of lines"), "show-grid", "grid-settings");
     for (auto widget : {_rsu_ox, _rsu_oy, _rsu_sx, _rsu_sy, _rsu_gx, _rsu_gy, _rsu_mx, _rsu_my}) {
-        widget->set_undo_parameters(_("Change grid dimentions"), "show-grid", "grid-settings");
+        widget->set_undo_parameters(_("Change grid dimensions"), "show-grid", "grid-settings");
     }
 
     for (auto labelled : std::to_array<Labelled*>(
