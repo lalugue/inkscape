@@ -212,13 +212,13 @@ void SprayTool::update_cursor(bool /*with_shift*/) {
 
     switch (this->mode) {
         case SPRAY_MODE_COPY:
-            this->message_context->setF(Inkscape::NORMAL_MESSAGE, _("%s. Drag, click or click and scroll to spray <b>copies</b> of the initial selection. Right click + Move to update single click item."), sel_message);
+            this->message_context->setF(Inkscape::NORMAL_MESSAGE, _("%s. Drag, click or click and scroll to spray <b>copies</b> of the initial selection. Right-click + move to update single click item."), sel_message);
             break;
         case SPRAY_MODE_CLONE:
-            this->message_context->setF(Inkscape::NORMAL_MESSAGE, _("%s. Drag, click or click and scroll to spray <b>clones</b> of the initial selection. Right click + Move to update single click item."), sel_message);
+            this->message_context->setF(Inkscape::NORMAL_MESSAGE, _("%s. Drag, click or click and scroll to spray <b>clones</b> of the initial selection. Right-click + move to update single click item."), sel_message);
             break;
         case SPRAY_MODE_SINGLE_PATH:
-            this->message_context->setF(Inkscape::NORMAL_MESSAGE, _("%s. Drag, click or click and scroll to spray in a <b>single path</b> of the initial selection. Right click + Move to update single click item.."), sel_message);
+            this->message_context->setF(Inkscape::NORMAL_MESSAGE, _("%s. Drag, click or click and scroll to spray in a <b>single path</b> of the initial selection. Right-click + move to update single click item.."), sel_message);
             break;
         default:
             break;

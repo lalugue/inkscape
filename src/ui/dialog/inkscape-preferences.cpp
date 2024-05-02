@@ -2445,7 +2445,7 @@ void InkscapePreferences::initPageIO()
 
     _cms_from_user.init( _("Use profile from user"), "/options/displayprofile/use_user_profile", false);
     _page_cms.add_line( true, "", _cms_from_user, "",
-                        _("Use a user specified ICC profile for monitor color correction. Warning: System wide color correction should be disabled."), false);
+                        _("Use a user-specified ICC profile for monitor color correction. Warning: System wide color correction should be disabled."), false);
 
     _cms_intent.init("/options/displayprofile/intent", intentLabels, intentValues, 0);
     _page_cms.add_line( true, _("Display rendering intent:"), _cms_intent, "",
