@@ -769,14 +769,14 @@ void InkscapePreferences::AddLayerChangeCheckbox(DialogPage &p, Glib::ustring co
 {
     auto const cb = Gtk::make_managed<PrefCheckButton>();
     cb->init ( _("Change layer on selection"), prefs_path + "/changelayer", def_value);
-    p.add_line( false, "", *cb, "", _("Whether changing the selected objects changes the selected layer"));
+    p.add_line( false, "", *cb, "", _("Whether selecting objects in another layer changes the active layer"));
 }
 
 void InkscapePreferences::AddPageChangeCheckbox(DialogPage &p, Glib::ustring const &prefs_path, bool def_value)
 {
     auto const cb = Gtk::make_managed<PrefCheckButton>();
     cb->init ( _("Change page on selection"), prefs_path + "/changepage", def_value);
-    p.add_line( false, "", *cb, "", _("Whether changing the selected objects changes the selected page"));
+    p.add_line( false, "", *cb, "", _("Whether selecting objects on another page changes the current page"));
 }
 
 void InkscapePreferences::AddConvertGuidesCheckbox(DialogPage &p, Glib::ustring const &prefs_path, bool def_value) {

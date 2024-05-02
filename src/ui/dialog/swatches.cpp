@@ -474,6 +474,7 @@ void SwatchesPanel::update_palettes(bool compact) {
 
     // The first palette in the list is always the "Auto" palette. Although this
     // will contain colors when selected, the preview we show for it is empty.
+    // TRANSLATORS: A list of swatches in the document
     palettes.push_back({_("Document swatches"), auto_id, {}});
 
     // The remaining palettes in the list are the global palettes.

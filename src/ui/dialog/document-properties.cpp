@@ -1858,12 +1858,12 @@ GridWidget::GridWidget(SPGrid *grid)
 
     // All of these undo settings are the same, refactor this later if possible.
     _units->set_undo_parameters(_("Change grid units"), "show-grid", "grid-settings");
-    _angle_x->set_undo_parameters(_("Change grid dimentions"), "show-grid", "grid-settings");
-    _angle_z->set_undo_parameters(_("Change grid dimentions"), "show-grid", "grid-settings");
+    _angle_x->set_undo_parameters(_("Change grid dimensions"), "show-grid", "grid-settings");
+    _angle_z->set_undo_parameters(_("Change grid dimensions"), "show-grid", "grid-settings");
     _grid_color->set_undo_parameters(_("Change grid color"), "show-grid", "grid-settings");
     _no_of_lines->set_undo_parameters(_("Change grid number of lines"), "show-grid", "grid-settings");
     for (auto widget : {_origin_x, _origin_y, _spacing_x, _spacing_y, _gap_x, _gap_y, _margin_x, _margin_y}) {
-        widget->set_undo_parameters(_("Change grid dimentions"), "show-grid", "grid-settings");
+        widget->set_undo_parameters(_("Change grid dimensions"), "show-grid", "grid-settings");
     }
 
     for (auto labelled : std::to_array<Labelled*>(
