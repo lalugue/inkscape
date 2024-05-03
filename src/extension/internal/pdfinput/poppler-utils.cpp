@@ -12,6 +12,8 @@
 
 #include "poppler-utils.h"
 
+#include <poppler/UTF.h>
+
 #include "2geom/affine.h"
 #include "GfxFont.h"
 #include "GfxState.h"
@@ -563,10 +565,10 @@ std::string getDictString(Dict *dict, const char *key)
  */
 std::string getString(const GooString *value)
 {
-    if (value->hasUnicodeMarker()) {
+    if (_POPPLER_HAS_UNICODE_BOM(value)) {
         return g_convert(value->getCString () + 2, value->getLength () - 2,
                          "UTF-8", "UTF-16BE", NULL, NULL, NULL);
-    } else if (value->hasUnicodeMarkerLE()) {
+    } else if (_POPPLER_HAS_UNICODE_BOMLE(value)) {
         return g_convert(value->getCString () + 2, value->getLength () - 2,
                          "UTF-8", "UTF-16LE", NULL, NULL, NULL);
     }
