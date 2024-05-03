@@ -121,7 +121,7 @@
             </child>
             <child>
               <object class="GtkCheckButton" id="gap-slider">
-                <property name="label" translatable="yes">Mouse friendly</property>
+                <property name="label" translatable="yes">Mouse-friendly</property>
                 <property name="focusable">True</property>
                 <property name="active">True</property>
                 <property name="group">gap-spin</property>
