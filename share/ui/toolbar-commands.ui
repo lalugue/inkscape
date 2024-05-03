@@ -721,7 +721,7 @@
         <property name="visible">True</property>
         <property name="can-focus">True</property>
         <property name="receives-default">True</property>
-        <property name="tooltip-text" translatable="yes">Group</property>
+        <property name="tooltip-text" translatable="yes" context="Verb">Group</property>
         <property name="action-name">app.selection-group</property>
         <property name="relief">none</property>
         <child>

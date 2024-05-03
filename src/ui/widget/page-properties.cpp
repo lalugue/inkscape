@@ -80,6 +80,7 @@ static std::tuple<int, Glib::ustring, std::string> get_sorter(PaperSize const &p
         return {1, Glib::ustring::compose(format, name[0]), abbr};
     }
 
+    // TRANSLATORS: This refers to page sizes
     static auto const others = _("Others");
     return {2, others, abbr};
 }

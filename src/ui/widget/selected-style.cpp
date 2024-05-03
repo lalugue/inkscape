@@ -1021,7 +1021,7 @@ void SelectedStyle::make_popup_opacity()
     _popup_opacity = std::make_unique<UI::Widget::PopoverMenu>(*this, Gtk::POS_TOP);
     auto const add_item = [&](Glib::ustring const &label, auto const method)
                           { _popup_opacity->append(*make_menu_item(label, sigc::mem_fun(*this, method))); };
-    add_item(_("0 (Transparent)"), &SelectedStyle::opacity_0);
+    add_item(_("0% (Transparent)"), &SelectedStyle::opacity_0);
     add_item("25%", &SelectedStyle::opacity_025);
     add_item("50%", &SelectedStyle::opacity_05 );
     add_item("75%", &SelectedStyle::opacity_075);
