@@ -15,7 +15,6 @@
 #include <string>
 #include <utility>
 #include <vector>
-#include <glibmm/i18n.h>
 #include <gtkmm/applicationwindow.h>
 #include <gtkmm/grid.h>
 #include <gtkmm/label.h>
