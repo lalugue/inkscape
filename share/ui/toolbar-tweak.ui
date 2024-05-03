@@ -272,7 +272,7 @@
         <child>
           <object class="GtkToggleButton" id="_doh_btn">
             <property name="valign">center</property>
-            <property name="label" translatable="yes">H</property>
+            <property name="label" translatable="yes" context="Hue">H</property>
             <property name="focusable">True</property>
             <property name="receives-default">True</property>
             <property name="tooltip-text" translatable="yes">In color mode, act on object's hue</property>
@@ -282,7 +282,7 @@
         <child>
           <object class="GtkToggleButton" id="_dos_btn">
             <property name="valign">center</property>
-            <property name="label" translatable="yes">S</property>
+            <property name="label" translatable="yes" context="Saturation">S</property>
             <property name="focusable">True</property>
             <property name="receives-default">True</property>
             <property name="tooltip-text" translatable="yes">In color mode, act on object's saturation</property>
@@ -292,7 +292,7 @@
         <child>
           <object class="GtkToggleButton" id="_dol_btn">
             <property name="valign">center</property>
-            <property name="label" translatable="yes">L</property>
+            <property name="label" translatable="yes" context="Lightness">L</property>
             <property name="focusable">True</property>
             <property name="receives-default">True</property>
             <property name="tooltip-text" translatable="yes">In color mode, act on object's lightness</property>
@@ -302,7 +302,7 @@
         <child>
           <object class="GtkToggleButton" id="_doo_btn">
             <property name="valign">center</property>
-            <property name="label" translatable="yes">O</property>
+            <property name="label" translatable="yes" context="Opacity">O</property>
             <property name="focusable">True</property>
             <property name="receives-default">True</property>
             <property name="tooltip-text" translatable="yes">In color mode, act on object's opacity</property>
