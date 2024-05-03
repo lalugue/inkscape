@@ -25,7 +25,7 @@
     <property name="hexpand">True</property>
     <child>
       <object class="GtkBox" id="angle_x_box">
-        <property name="tooltip-text" translatable="yes">Angle of PLs in X direction</property>
+        <property name="tooltip-text" translatable="yes">Angle of perspective lines in x-direction</property>
         <child>
           <object class="GtkLabel">
             <property name="label" translatable="yes">Angle X:</property>
@@ -48,7 +48,7 @@
         <property name="valign">center</property>
         <property name="focusable">True</property>
         <property name="receives-default">True</property>
-        <property name="tooltip-text" translatable="yes">Toggle VP in X direction between 'finite' and 'infinite' (=parallel)</property>
+        <property name="tooltip-text" translatable="yes">Toggle vanishing point in x-direction between 'finite' and 'infinite' (= parallel)</property>
         <property name="has-frame">False</property>
         <child>
           <object class="GtkImage" id="image1">
@@ -59,10 +59,10 @@
     </child>
     <child>
       <object class="GtkBox" id="angle_y_box">
-        <property name="tooltip-text" translatable="yes">Angle of PLs in Y direction</property>
+        <property name="tooltip-text" translatable="yes">Angle of perspective lines in y-direction</property>
         <child>
           <object class="GtkLabel">
-            <property name="label" translatable="yes">Angle X:</property>
+            <property name="label" translatable="yes">Angle Y:</property>
           </object>
         </child>
         <child>
@@ -83,6 +83,7 @@
         <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="has-frame">False</property>
+        <property name="tooltip-text" translatable="yes">Toggle vanishing point in y-direction between 'finite' and 'infinite' (= parallel)</property>
         <child>
           <object class="GtkImage" id="image2">
             <property name="icon-name">perspective-parallel</property>
@@ -92,10 +93,10 @@
     </child>
     <child>
       <object class="GtkBox" id="angle_z_box">
-        <property name="tooltip-text" translatable="yes">Angle of PLs in Z direction</property>
+        <property name="tooltip-text" translatable="yes">Angle of perspective lines in z-direction</property>
         <child>
           <object class="GtkLabel">
-            <property name="label" translatable="yes">Angle X:</property>
+            <property name="label" translatable="yes">Angle Z:</property>
           </object>
         </child>
         <child>
@@ -116,6 +117,7 @@
         <property name="focusable">True</property>
         <property name="receives-default">True</property>
         <property name="has-frame">False</property>
+        <property name="tooltip-text" translatable="yes">Toggle vanishing point in z-direction between 'finite' and 'infinite' (= parallel)</property>
         <child>
           <object class="GtkImage" id="image3">
             <property name="icon-name">perspective-parallel</property>
