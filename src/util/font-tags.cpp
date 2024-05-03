@@ -11,15 +11,15 @@ FontTags& FontTags::get() {
     static FontTags ft;
     if (init) {
         init = false;
-        // ft.add_tag(FontTag{"favorites",  _("Favorites")});
-        ft.add_tag(FontTag{"sans",       _("Sans Serif")});
-        ft.add_tag(FontTag{"serif",      _("Serif")});
-        ft.add_tag(FontTag{"script",     _("Script")});
-        // ft.add_tag(FontTag{"decorative", _("Decorative")});
-        ft.add_tag(FontTag{"symbols",    _("Symbols")});
-        ft.add_tag(FontTag{"monospace",  _("Monospace")});
-        ft.add_tag(FontTag{"variable",   _("Variable")});
-        ft.add_tag(FontTag{"oblique",    _("Oblique")});
+        // ft.add_tag(FontTag{"favorites",  C_("Font category", "Favorites")});
+        ft.add_tag(FontTag{"sans",       C_("Font category", "Sans Serif")});
+        ft.add_tag(FontTag{"serif",      C_("Font category", "Serif")});
+        ft.add_tag(FontTag{"script",     C_("Font category", "Script")});
+        // ft.add_tag(FontTag{"decorative", C_("Font category", "Decorative")});
+        ft.add_tag(FontTag{"symbols",    C_("Font category", "Symbols")});
+        ft.add_tag(FontTag{"monospace",  C_("Font category", "Monospace")});
+        ft.add_tag(FontTag{"variable",   C_("Font category", "Variable")});
+        ft.add_tag(FontTag{"oblique",    C_("Font category", "Oblique")});
     }
     return ft;
 }

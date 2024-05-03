@@ -49,81 +49,81 @@ std::pair<Glib::ustring, Glib::ustring> get_axis_name(const std::string& tag, co
     static std::map<std::string, std::pair<Glib::ustring, Glib::ustring>> map = {
         // “Grade” (GRAD in CSS) is an axis that can be used to alter stroke thicknesses (or other forms)
         // without affecting the type's overall width, inter-letter spacing, or kerning — unlike altering weight.
-        {"GRAD", std::make_pair(_("Grade"),         _("Alter stroke thicknesses (or other forms) without affecting the type’s overall width"))},
+        {"GRAD", std::make_pair(C_("Variable font axis", "Grade"),         _("Alter stroke thicknesses (or other forms) without affecting the type’s overall width"))},
         // “Parametric Thick Stroke”, XOPQ, is a reference to its logical name, “X Opaque”,
         // which describes how it alters the opaque stroke forms of glyphs typically in the X dimension
-        {"XOPQ", std::make_pair(_("X opaque"),      _("Alter the opaque stroke forms of glyphs in the X dimension"))},
+        {"XOPQ", std::make_pair(C_("Variable font axis", "X opaque"),      _("Alter the opaque stroke forms of glyphs in the X dimension"))},
         // “Parametric Thin Stroke”, YOPQ, is a reference to its logical name, “Y Opaque”,
         // which describes how it alters the opaque stroke forms of glyphs typically in the Y dimension 
-        {"YOPQ", std::make_pair(_("Y opaque"),      _("Alter the opaque stroke forms of glyphs in the Y dimension"))},
+        {"YOPQ", std::make_pair(C_("Variable font axis", "Y opaque"),      _("Alter the opaque stroke forms of glyphs in the Y dimension"))},
         // “Parametric Counter Width”, XTRA, is a reference to its logical name, “X-Transparent,”
         // which describes how it alters a font’s transparent spaces (also known as negative shapes)
         // inside and around all glyphs along the X dimension
-        {"XTRA", std::make_pair(_("X transparent"), _("Alter the transparent spaces inside and around all glyphs along the X dimension"))},
-        {"YTRA", std::make_pair(_("Y transparent"), _("Alter the transparent spaces inside and around all glyphs along the Y dimension"))},
+        {"XTRA", std::make_pair(C_("Variable font axis", "X transparent"), _("Alter the transparent spaces inside and around all glyphs along the X dimension"))},
+        {"YTRA", std::make_pair(C_("Variable font axis", "Y transparent"), _("Alter the transparent spaces inside and around all glyphs along the Y dimension"))},
         // Width/height of Chinese glyphs
-        {"XTCH", std::make_pair(_("X transparent Chinese"), _("Alter the width of Chinese glyphs"))},
-        {"YTCH", std::make_pair(_("Y transparent Chinese"), _("Alter the height of Chinese glyphs"))},
+        {"XTCH", std::make_pair(C_("Variable font axis", "X transparent Chinese"), _("Alter the width of Chinese glyphs"))},
+        {"YTCH", std::make_pair(C_("Variable font axis", "Y transparent Chinese"), _("Alter the height of Chinese glyphs"))},
         // “Parametric Lowercase Height”
-        {"YTLC", std::make_pair(_("Lowercase height"), _("Vary the height of counters and other spaces between the baseline and x-height"))},
+        {"YTLC", std::make_pair(C_("Variable font axis", "Lowercase height"), _("Vary the height of counters and other spaces between the baseline and x-height"))},
         // “Parametric Uppercase Counter Height”
-        {"YTUC", std::make_pair(_("Uppercase height"), _("Vary the height of uppercase letterforms"))},
+        {"YTUC", std::make_pair(C_("Variable font axis", "Uppercase height"), _("Vary the height of uppercase letterforms"))},
         // “Parametric Ascender Height”
-        {"YTAS", std::make_pair(_("Ascender height"),  _("Vary the height of lowercase ascenders"))},
+        {"YTAS", std::make_pair(C_("Variable font axis", "Ascender height"),  _("Vary the height of lowercase ascenders"))},
         // “Parametric Descender Depth”
-        {"YTDE", std::make_pair(_("Descender depth"),  _("Vary the depth of lowercase descenders"))},
+        {"YTDE", std::make_pair(C_("Variable font axis", "Descender depth"),  _("Vary the depth of lowercase descenders"))},
         // “Parametric Figure Height”
-        {"YTFI", std::make_pair(_("Figure height"), _("Vary the height of figures"))},
+        {"YTFI", std::make_pair(C_("Variable font axis", "Figure height"), _("Vary the height of figures"))},
         // "Serif rise" - found in the wild (https://github.com/googlefonts/amstelvar)
-        {"YTSE", std::make_pair(_("Serif rise"),  _("Vary the shape of the serifs"))},
+        {"YTSE", std::make_pair(C_("Variable font axis", "Serif rise"),  _("Vary the shape of the serifs"))},
         // Flare - flaring of the stems
-        {"FLAR", std::make_pair(_("Flare"),         _("Controls the flaring of the stems"))},
+        {"FLAR", std::make_pair(C_("Variable font axis", "Flare"),         _("Controls the flaring of the stems"))},
         // Volume - The volume axis works only in combination with the Flare axis. It transforms the serifs
         // and adds a little more edge to details.
-        {"VOLM", std::make_pair(_("Volume"),        _("Volume works in combination with flare to transform serifs"))},
+        {"VOLM", std::make_pair(C_("Variable font axis", "Volume"),        _("Volume works in combination with flare to transform serifs"))},
         // Softness
-        {"SOFT", std::make_pair(_("Softness"),      _("Softness makes letterforms more soft and rounded"))},
+        {"SOFT", std::make_pair(C_("Variable font axis", "Softness"),      _("Softness makes letterforms more soft and rounded"))},
         // Casual
-        {"CASL", std::make_pair(_("Casual"),        _("Adjust the letterforms from a more serious style to a more casual style"))},
+        {"CASL", std::make_pair(C_("Variable font axis", "Casual"),        _("Adjust the letterforms from a more serious style to a more casual style"))},
         // Cursive
-        {"CRSV", std::make_pair(_("Cursive"),       _("Control the substitution of cursive forms"))},
+        {"CRSV", std::make_pair(C_("Variable font axis", "Cursive"),       _("Control the substitution of cursive forms"))},
         // Fill
-        {"FILL", std::make_pair(_("Fill"),          _("Fill can turn transparent forms opaque"))},
+        {"FILL", std::make_pair(C_("Variable font axis", "Fill"),          _("Fill can turn transparent forms opaque"))},
         // Monospace
-        {"MONO", std::make_pair(_("Monospace"),     _("Adjust the glyphs from a proportional width to a fixed width"))},
+        {"MONO", std::make_pair(C_("Variable font axis", "Monospace"),     _("Adjust the glyphs from a proportional width to a fixed width"))},
         // Wonky
-        {"WONK", std::make_pair(_("Wonky"),         _("Binary switch used to control substitution of “wonky” forms"))},
+        {"WONK", std::make_pair(C_("Variable font axis", "Wonky"),         _("Binary switch used to control substitution of “wonky” forms"))},
         // Element shape
-        {"ESHP", std::make_pair(_("Element shape"), _("Selection of the base element glyphs are composed of"))},
+        {"ESHP", std::make_pair(C_("Variable font axis", "Element shape"), _("Selection of the base element glyphs are composed of"))},
         // Element grid
-        {"EGRD", std::make_pair(_("Element grid"),  _("Controls how many elements are used per one grid unit"))},
+        {"EGRD", std::make_pair(C_("Variable font axis", "Element grid"),  _("Controls how many elements are used per one grid unit"))},
         // “Optical Size”
         // Optical sizes in a variable font are different versions of a typeface optimized for use at singular specific sizes,
         // such as 14 pt or 144 pt. Small (or body) optical sizes tend to have less stroke contrast, more open and wider spacing,
         // and a taller x-height than those of their large (or display) counterparts.
-        {"opsz", std::make_pair(_("Optical size"),  _("Optimize the typeface for use at specific size"))},
+        {"opsz", std::make_pair(C_("Variable font axis", "Optical size"),  _("Optimize the typeface for use at specific size"))},
         // Slant controls the font file’s slant parameter for oblique styles.
-        {"slnt", std::make_pair(_("Slant"),         _("Controls the font file’s slant parameter for oblique styles"))},
+        {"slnt", std::make_pair(C_("Variable font axis", "Slant"),         _("Controls the font file’s slant parameter for oblique styles"))},
         // Italic
-        {"ital", std::make_pair(_("Italic"),        _("Turns on the font’s italic forms"))},
+        {"ital", std::make_pair(C_("Variable font axis", "Italic"),        _("Turns on the font’s italic forms"))},
         // Weight controls the font file’s weight parameter. 
-        {"wght", std::make_pair(_("Weight"),        _("Controls the font file’s weight parameter"))},
+        {"wght", std::make_pair(C_("Variable font axis", "Weight"),        _("Controls the font file’s weight parameter"))},
         // Width controls the font file’s width parameter.
-        {"wdth", std::make_pair(_("Width"),         _("Controls the font file’s width parameter"))},
+        {"wdth", std::make_pair(C_("Variable font axis", "Width"),         _("Controls the font file’s width parameter"))},
         //
-        {"xtab", std::make_pair(_("Tabular width"), _("Controls the tabular width"))},
-        {"udln", std::make_pair(_("Underline"),     _("Controls the weight of an underline"))},
-        {"shdw", std::make_pair(_("Shadow"),        _("Controls the depth of a shadow"))},
-        {"refl", std::make_pair(_("Reflection"),    _("Controls the Y reflection"))},
-        {"otln", std::make_pair(_("Outline"),       _("Controls the weight of a font’s outline"))},
-        {"engr", std::make_pair(_("Engrave"),       _("Controls the width of an engraving"))},
-        {"embo", std::make_pair(_("Emboss"),        _("Controls the depth of an emboss"))},
-        {"rxad", std::make_pair(_("Relative X advance"), _("Controls the relative X advance - horizontal motion of the glyph"))},
-        {"ryad", std::make_pair(_("Relative Y advance"), _("Controls the relative Y advance - vertical motion of the glyph"))},
-        {"rsec", std::make_pair(_("Relative second"),    _("Controls the relative second value - as in one second of animation time"))},
-        {"vrot", std::make_pair(_("Rotation"),      _("Controls the rotation of the glyph in degrees"))},
-        {"vuid", std::make_pair(_("Unicode variation"),  _("Controls the glyph’s unicode ID"))},
-        {"votf", std::make_pair(_("Feature variation"),  _("Controls the glyph’s feature variation"))},
+        {"xtab", std::make_pair(C_("Variable font axis", "Tabular width"), _("Controls the tabular width"))},
+        {"udln", std::make_pair(C_("Variable font axis", "Underline"),     _("Controls the weight of an underline"))},
+        {"shdw", std::make_pair(C_("Variable font axis", "Shadow"),        _("Controls the depth of a shadow"))},
+        {"refl", std::make_pair(C_("Variable font axis", "Reflection"),    _("Controls the Y reflection"))},
+        {"otln", std::make_pair(C_("Variable font axis", "Outline"),       _("Controls the weight of a font’s outline"))},
+        {"engr", std::make_pair(C_("Variable font axis", "Engrave"),       _("Controls the width of an engraving"))},
+        {"embo", std::make_pair(C_("Variable font axis", "Emboss"),        _("Controls the depth of an emboss"))},
+        {"rxad", std::make_pair(C_("Variable font axis", "Relative X advance"), _("Controls the relative X advance - horizontal motion of the glyph"))},
+        {"ryad", std::make_pair(C_("Variable font axis", "Relative Y advance"), _("Controls the relative Y advance - vertical motion of the glyph"))},
+        {"rsec", std::make_pair(C_("Variable font axis", "Relative second"),    _("Controls the relative second value - as in one second of animation time"))},
+        {"vrot", std::make_pair(C_("Variable font axis", "Rotation"),      _("Controls the rotation of the glyph in degrees"))},
+        {"vuid", std::make_pair(C_("Variable font axis", "Unicode variation"),  _("Controls the glyph’s unicode ID"))},
+        {"votf", std::make_pair(C_("Variable font axis", "Feature variation"),  _("Controls the glyph’s feature variation"))},
     };
 
     auto it = map.find(tag);
