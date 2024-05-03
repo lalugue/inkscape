@@ -2214,8 +2214,8 @@ void InkscapePreferences::initPageUI()
         grid_modular.add_line( false, _("Block height:"), *block_height, "", _("Height of grid modules"), false);
         grid_modular.add_line(false, _("Gap X:"), *gap_x, "", _("Horizontal distance between blocks"), false);
         grid_modular.add_line(false, _("Gap Y:"), *gap_y, "", _("Vertical distance between blocks"), false);
-        grid_modular.add_line(false, _("Margin X:"), *margin_x, "", _("Horizontal block margin"), false);
-        grid_modular.add_line(false, _("Margin Y:"), *margin_y, "", _("Vertical block margin"), false);
+        grid_modular.add_line(false, _("Margin X:"), *margin_x, "", _("Right and left margins"), false);
+        grid_modular.add_line(false, _("Margin Y:"), *margin_y, "", _("Top and bottom margins"), false);
         grid_modular.add_line( false, _("Grid color:"), *color_major, "", _("Color used for grid blocks"), false);
 
         for (auto [spin, path] : (std::tuple<PrefSpinButton*, const char*>[]) {
@@ -2688,24 +2688,24 @@ void InkscapePreferences::initPageBehavior()
     _page_snapping.add_line( true, _("Delay (in seconds):"), _snap_delay, "",
                              _("Postpone snapping as long as the mouse is moving, and then wait an additional fraction of a second. This additional delay is specified here. When set to zero or to a very small number, snapping will be immediate."), true);
 
-    _page_snapping.add_group_header( _("Always Snap"));
+    _page_snapping.add_group_header( _("Restrict Snap Targets"));
 
-    _snap_always_grid.init(_("Always snap to grid"), "/options/snap/grid/always", false);
-    _page_snapping.add_line(true, "", _snap_always_grid, "", _("Always snap to a grid, ignoring thresholds."));
+    _snap_always_grid.init(_("Always snap to grids"), "/options/snap/grid/always", false);
+    _page_snapping.add_line(true, "", _snap_always_grid, "", _("When a grid is visible, and snapping to grids is active, other snap targets will be ignored, unless explicitly allowed below."));
 
     _snap_always_guide.init(_("Always snap to guides"), "/options/snap/guide/always", false);
-    _page_snapping.add_line(true, "", _snap_always_guide, "", _("Always snap to guidelines, ignoring thresholds."));
+    _page_snapping.add_line(true, "", _snap_always_guide, "", _("When there are any guidelines in the current viewport, and snapping to guides is active, other snap targets will be ignored, unless explicitly allowed below."));
 
-    _page_snapping.add_group_header( _("Also Snap while Always Snapping"));
+    _page_snapping.add_group_header( _("While Always Snapping to Grid/Guides"));
 
-    _snap_always_object.init(_("Allow object snapping"), "/options/snap/object/always", false);
-    _page_snapping.add_line(true, "", _snap_always_object, "", _("Allow object snapping while always snapping to grid or guides, if object is closer."));
+    _snap_always_object.init(_("Allow snapping to objects"), "/options/snap/object/always", false);
+    _page_snapping.add_line(true, "", _snap_always_object, "", _("Allow snapping to objects while 'Always snap to grids / guides' is active, if an object is closer."));
 
-    _snap_always_align.init(_("Allow alignment"), "/options/snap/alignment/always", false);
-    _page_snapping.add_line(true, "", _snap_always_align, "", _("Allow alignment snapping while always snapping to grid or guides, if alignment is closer."));
+    _snap_always_align.init(_("Allow alignment snapping"), "/options/snap/alignment/always", false);
+    _page_snapping.add_line(true, "", _snap_always_align, "", _("Allow alignment snapping while 'Always snap to grids / guides' is active, if an alignment snap target is closer."));
 
-    _snap_always_dist.init(_("Allow distribution"), "/options/snap/distribution/always", false);
-    _page_snapping.add_line(true, "", _snap_always_dist, "", _("Allow distribution snapping while always snapping to grid or guides, if distribution is closer."));
+    _snap_always_dist.init(_("Allow distribution snapping"), "/options/snap/distribution/always", false);
+    _page_snapping.add_line(true, "", _snap_always_dist, "", _("Allow distribution snapping while 'Always snap to grids / guides' is active, if a distribution snap target is closer."));
 
     this->AddPage(_page_snapping, _("Snapping"), iter_behavior, PREFS_PAGE_BEHAVIOR_SNAPPING);
 
@@ -2759,7 +2759,7 @@ void InkscapePreferences::initPageBehavior()
 
     _move_rotated.init ( _("Arrow keys move object relative to screen"), "/options/moverotated/value", true);
     _page_steps.add_line( false, "", _move_rotated, "",
-                            _("When on, arrow keys move objects relative to screen. If workspace is rotated the translation doesn't follow its coordinate system but the screen one."));
+                            _("When on, arrow keys move objects relative to screen. When the canvas is rotated, the selection will then still be moved horizontally and vertically relative to the screen, not to the rotated document."));
 
     this->AddPage(_page_steps, _("Steps"), iter_behavior, PREFS_PAGE_BEHAVIOR_STEPS);
 

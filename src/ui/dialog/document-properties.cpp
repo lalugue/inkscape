@@ -1827,10 +1827,10 @@ GridWidget::GridWidget(SPGrid *grid)
                 _("Gap _Y:"), _("Vertical distance between blocks"), "gapy",
                 *_units, _wr, repr, doc, RSU_y);
     _margin_x = Gtk::make_managed<RegisteredScalarUnit>(
-                _("_Margin X:"), _("Horizontal block margin"), "marginx",
+                _("_Margin X:"), _("Right and left margins"), "marginx",
                 *_units, _wr, repr, doc, RSU_x);
     _margin_y = Gtk::make_managed<RegisteredScalarUnit>(
-                _("M_argin Y:"), _("Vertical block margin"), "marginy",
+                _("M_argin Y:"), _("Top and bottom margins"), "marginy",
                 *_units, _wr, repr, doc, RSU_y);
 
     _angle_x = Gtk::make_managed<RegisteredScalar>(
