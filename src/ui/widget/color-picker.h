@@ -86,7 +86,12 @@ public:
                                       Glib::ustring const &tip,
                                       std::uint32_t rgba,
                                       bool undo)
-        : Labelled(label, tip, new ColorPicker(title, tip, rgba, undo)) {}
+        : Labelled(label, tip, new ColorPicker(title, tip, rgba, undo)) {
+
+        property_sensitive().signal_changed().connect([this](){
+            getWidget()->set_sensitive(is_sensitive());
+        });
+    }
 
     void setRgba32(std::uint32_t const rgba)
     {

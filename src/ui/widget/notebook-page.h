@@ -27,11 +27,13 @@ namespace Widget {
 class NotebookPage : public Gtk::Box
 {
 public:
+    // This class is used by document properties, "fill and stroke", and transformation dialogs.
+    // Consider removing it. It exposes box and grid, which makes it problematic. Box is an impl detail.
 
     /**
      * Construct a NotebookPage.
      */
-    NotebookPage(int n_rows, int n_columns, bool expand=false, bool fill=false, guint padding=0);
+    NotebookPage(int n_rows, int n_columns, bool add_scroll_wnd = false);
 
     Gtk::Grid& table() { return *_table; }
 

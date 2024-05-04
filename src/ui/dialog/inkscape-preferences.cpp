@@ -2179,10 +2179,8 @@ void InkscapePreferences::initPageUI()
         _grids_xy.add_line( false, _("Spacing X:"), _grids_xy_spacing_x, "", _("Distance between vertical grid lines"), false);
         _grids_xy.add_line( false, _("Spacing Y:"), _grids_xy_spacing_y, "", _("Distance between horizontal grid lines"), false);
 
-        _grids_xy_color.init(_("Minor grid line color:"), "/options/grids/xy/color", GRID_DEFAULT_MINOR_COLOR);
-        _grids_xy.add_line( false, _("Minor grid line color:"), _grids_xy_color, "", _("Color used for normal grid lines"), false);
-        _grids_xy_empcolor.init(_("Major grid line color:"), "/options/grids/xy/empcolor", GRID_DEFAULT_MAJOR_COLOR);
-        _grids_xy.add_line( false, _("Major grid line color:"), _grids_xy_empcolor, "", _("Color used for major (highlighted) grid lines"), false);
+        _grids_xy_empcolor.init(_("Grid color:"), "/options/grids/xy/empcolor", GRID_DEFAULT_MAJOR_COLOR);
+        _grids_xy.add_line( false, _("Grid color:"), _grids_xy_empcolor, "", _("Color used for grid lines"), false);
         _grids_xy_empspacing.init("/options/grids/xy/empspacing", 1.0, 1000.0, 1.0, 5.0, 5.0, true, false);
         _grids_xy.add_line( false, _("Major grid line every:"), _grids_xy_empspacing, "", "", false);
         _grids_xy_dotted.init( _("Show dots instead of lines"), "/options/grids/xy/dotted", false);
@@ -2198,10 +2196,8 @@ void InkscapePreferences::initPageUI()
         _grids_axonom_angle_z.init("/options/grids/axonom/angle_z", -360.0, 360.0, 1.0, 10.0, 30.0, false, false);
         _grids_axonom.add_line( false, _("Angle X:"), _grids_axonom_angle_x, "", _("Angle of x-axis"), false);
         _grids_axonom.add_line( false, _("Angle Z:"), _grids_axonom_angle_z, "", _("Angle of z-axis"), false);
-        _grids_axonom_color.init(_("Minor grid line color:"), "/options/grids/axonom/color", GRID_DEFAULT_MINOR_COLOR);
-        _grids_axonom.add_line( false, _("Minor grid line color:"), _grids_axonom_color, "", _("Color used for normal grid lines"), false);
-        _grids_axonom_empcolor.init(_("Major grid line color:"), "/options/grids/axonom/empcolor", GRID_DEFAULT_MAJOR_COLOR);
-        _grids_axonom.add_line( false, _("Major grid line color:"), _grids_axonom_empcolor, "", _("Color used for major (highlighted) grid lines"), false);
+        _grids_axonom_empcolor.init(_("Grid color:"), "/options/grids/axonom/empcolor", GRID_DEFAULT_MAJOR_COLOR);
+        _grids_axonom.add_line( false, _("Grid color:"), _grids_axonom_empcolor, "", _("Color used for grid lines"), false);
         _grids_axonom_empspacing.init("/options/grids/axonom/empspacing", 1.0, 1000.0, 1.0, 5.0, 5.0, true, false);
         _grids_axonom.add_line( false, _("Major grid line every:"), _grids_axonom_empspacing, "", "", false);
     // Modular grid
@@ -2216,9 +2212,7 @@ void InkscapePreferences::initPageUI()
         auto const margin_x = Gtk::make_managed<UI::Widget::PrefSpinButton>();
         auto const margin_y = Gtk::make_managed<UI::Widget::PrefSpinButton>();
         auto const color_major = Gtk::make_managed<UI::Widget::PrefColorPicker>();
-        auto const color_minor = Gtk::make_managed<UI::Widget::PrefColorPicker>();
-        color_minor->init(_("Minor grid line color:"), "/options/grids/modular/color", GRID_DEFAULT_MAJOR_COLOR);
-        color_major->init(_("Major grid line color:"), "/options/grids/modular/empcolor", GRID_DEFAULT_BLOCK_COLOR);
+        color_major->init(_("Grid color:"), "/options/grids/modular/empcolor", GRID_DEFAULT_BLOCK_COLOR);
 
         grid_modular.add_line(false, _("Grid units:"), *units, "", "", false);
         grid_modular.add_line(false, _("Origin X:"), *origin_x, "", _("X coordinate of grid origin"), false);
@@ -2229,8 +2223,7 @@ void InkscapePreferences::initPageUI()
         grid_modular.add_line(false, _("Gap Y:"), *gap_y, "", _("Vertical distance between blocks"), false);
         grid_modular.add_line(false, _("Margin X:"), *margin_x, "", _("Horizontal block margin"), false);
         grid_modular.add_line(false, _("Margin Y:"), *margin_y, "", _("Vertical block margin"), false);
-        grid_modular.add_line( false, _("Minor grid line color:"), *color_minor, "", _("Color used for block margins"), false);
-        grid_modular.add_line( false, _("Major grid line color:"), *color_major, "", _("Color used for grid blocks"), false);
+        grid_modular.add_line( false, _("Grid color:"), *color_major, "", _("Color used for grid blocks"), false);
 
         for (auto [spin, path] : (std::tuple<PrefSpinButton*, const char*>[]) {
             {&_grids_xy_origin_x,  "/options/grids/xy/origin_x"},

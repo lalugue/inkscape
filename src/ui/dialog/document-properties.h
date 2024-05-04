@@ -22,12 +22,15 @@
 #ifndef INKSCAPE_UI_DIALOG_DOCUMENT_PREFERENCES_H
 #define INKSCAPE_UI_DIALOG_DOCUMENT_PREFERENCES_H
 
+#include "ui/widget/icon-combobox.h"
 #ifdef HAVE_CONFIG_H
 #include "config.h" // only include where actually required!
 #endif
 
 #include <memory>
 #include <vector>
+#include <gtkmm/listbox.h>
+#include <gtkmm/sizegroup.h>
 #include <glibmm/refptr.h>
 #include <gtkmm/box.h>
 #include <gtkmm/button.h>
@@ -39,7 +42,7 @@
 #include <gtkmm/treemodel.h>
 #include <gtkmm/textview.h>
 #include <gtkmm/treeview.h>
-
+#include "helper/auto-connection.h"
 #include "object/sp-grid.h"
 #include "ui/dialog/dialog-base.h"
 #include "ui/widget/popover-bin.h"
@@ -86,29 +89,24 @@ public:
     void update() override;
     void rebuild_gridspage();
 
-protected:
+private:
     void  build_page();
     void  build_grid();
     void  build_guides();
     void  build_snap();
     void  build_gridspage();
-
     void  build_cms();
     void  build_scripting();
     void  build_metadata();
-
-    void add_grid_widget(SPGrid *grid, bool select = false);
+    void add_grid_widget(SPGrid *grid);
     void remove_grid_widget(XML::Node &node);
-
+    void update_grid_placeholder();
     virtual void  on_response (int);
-
     void  populate_available_profiles();
     void  populate_linked_profiles_box();
     void  linkSelectedProfile();
     void  removeSelectedProfile();
-
     void  onColorProfileSelectRow();
-
     void  populate_script_lists();
     void  addExternalScript();
     void  browseExternalScript();
@@ -194,20 +192,20 @@ protected:
     Gtk::Box            _embed_button_box;
 
     class ExternalScriptsColumns : public Gtk::TreeModel::ColumnRecord
-        {
-        public:
-            ExternalScriptsColumns()
-               { add(filenameColumn); }
-            Gtk::TreeModelColumn<Glib::ustring> filenameColumn;
-        };
+    {
+    public:
+        ExternalScriptsColumns()
+        { add(filenameColumn); }
+        Gtk::TreeModelColumn<Glib::ustring> filenameColumn;
+    };
     ExternalScriptsColumns _ExternalScriptsListColumns;
     class EmbeddedScriptsColumns : public Gtk::TreeModel::ColumnRecord
-        {
-        public:
-            EmbeddedScriptsColumns()
-               { add(idColumn); }
-            Gtk::TreeModelColumn<Glib::ustring> idColumn;
-        };
+    {
+    public:
+        EmbeddedScriptsColumns()
+        { add(idColumn); }
+        Gtk::TreeModelColumn<Glib::ustring> idColumn;
+    };
     EmbeddedScriptsColumns _EmbeddedScriptsListColumns;
     Glib::RefPtr<Gtk::ListStore> _ExternalScriptsListStore;
     Glib::RefPtr<Gtk::ListStore> _EmbeddedScriptsListStore;
@@ -219,12 +217,14 @@ protected:
     Gtk::TextView _EmbeddedContent;
     Gtk::ScrolledWindow _EmbeddedContentScroller;
     //---------------------------------------------------------------
-
-    Gtk::Notebook   _grids_notebook;
-    Gtk::Box        _grids_hbox_crea;
-    Gtk::Label      _grids_label_crea;
-    Gtk::Button     _grids_button_remove;
-    Gtk::Label      _grids_label_def;
+    Gtk::ScrolledWindow _grids_wnd;
+    Gtk::ListBox _grids_list;
+    Glib::RefPtr<Gtk::SizeGroup> _grids_unified_size = Gtk::SizeGroup::create(Gtk::SizeGroup::Mode::HORIZONTAL);
+    Gtk::Label _no_grids;
+    Gtk::Box   _grids_hbox_crea;
+    Gtk::Label _grids_label_def;
+    auto_connection _on_idle_scroll;
+    Inkscape::UI::Widget::IconComboBox _grid_type;
     //---------------------------------------------------------------
 
     using RDFList = std::vector<std::unique_ptr<UI::Widget::EntityEntry>>;
@@ -236,7 +236,6 @@ protected:
 private:
     // callback methods for buttons on grids page.
     void onNewGrid(GridType type);
-    void onRemoveGrid();
 
     // callback for display unit change
     void display_unit_change(const Inkscape::Util::Unit* unit);

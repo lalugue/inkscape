@@ -17,6 +17,7 @@
 #ifndef SEEN_INKSCAPE_UI_WIDGET_REGISTERED_WIDGET_H
 #define SEEN_INKSCAPE_UI_WIDGET_REGISTERED_WIDGET_H
 
+#include <gtkmm/switch.h>
 #include <utility>
 #include <vector>
 #include <glibmm/ustring.h>
@@ -157,7 +158,7 @@ public:
     RegisteredToggleButton(Glib::ustring const &label, Glib::ustring const &tip,
                            Glib::ustring const &key, Registry &wr, bool right = true,
                            Inkscape::XML::Node *repr_in = nullptr, SPDocument *doc_in = nullptr,
-                           char const *icon_active = "true", char const *icon_inactive = "false");
+                           char const *icon_active = "", char const *icon_inactive = "");
 
     void setActive(bool);
 
@@ -172,8 +173,28 @@ public:
 
 private:
     std::vector<Gtk::Widget *> _subordinate_widgets;
+    Glib::ustring _on_icon, _off_icon;
 
     void on_toggled() final;
+};
+
+class RegisteredSwitchButton : public RegisteredWidget<Gtk::Switch> {
+public:
+    RegisteredSwitchButton(Glib::ustring const &label, Glib::ustring const &tip,
+                           Glib::ustring const &key, Registry &wr, bool right = true,
+                           Inkscape::XML::Node *repr_in = nullptr, SPDocument *doc_in = nullptr);
+
+    // a subordinate button is only sensitive when the main button is active
+    // i.e. a subordinate button is greyed-out when the main button is not checked
+    void setSubordinateWidgets(std::vector<Gtk::Widget *> btns) {
+        _subordinate_widgets = std::move(btns);
+    }
+
+    bool setProgrammatically = false; // true if the value was set by setActive, not changed by the user;
+                              // if a callback checks it, it must reset it back to false
+
+private:
+    std::vector<Gtk::Widget *> _subordinate_widgets;
 };
 
 class RegisteredUnitMenu : public RegisteredWidget<Labelled> {
@@ -268,11 +289,12 @@ public:
 
     void setRgba32(std::uint32_t);
     void closeWindow();
+    void setCustomSetter(std::function<void (Inkscape::XML::Node*, std::uint32_t)> setter) { _setter = std::move(setter); }
 
 private:
     Glib::ustring _ckey, _akey;
     auto_connection _changed_connection;
-
+    std::function<void (Inkscape::XML::Node*, std::uint32_t)> _setter;
     void on_changed(std::uint32_t);
 };
 

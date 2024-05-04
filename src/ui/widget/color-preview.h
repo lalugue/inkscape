@@ -31,8 +31,10 @@ public:
     ColorPreview  (std::uint32_t rgba);
     void setRgba32(std::uint32_t rgba);
 
+    void setEnabled(bool enable);
 private:
     std::uint32_t _rgba;
+    bool _enabled = true;
 
     void draw_func(Cairo::RefPtr<Cairo::Context> const &cr, int width, int height);
 };

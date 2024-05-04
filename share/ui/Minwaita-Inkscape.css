@@ -18,7 +18,10 @@ button { /* compact square button by default */
     border-radius: 2px;
 }
 button.text-button > label { /* margins for text in buttons */
-    margin: 0 3px;
+    margin: 0 4px;
+}
+button.text-button > box > label { /* margins for text in buttons with label and image in a box */
+    margin: 0 4px;
 }
 
 entry { /* some min height, so it doesn't collapse */
@@ -261,4 +264,14 @@ expander combobox arrow:dir(rtl) {
 
 expander combobox arrow:checked {
   -gtk-icon-source: -gtk-icontheme("pan-down-symbolic");
+}
+
+/* Smaller version of the switch widget */
+switch.small {
+    border-radius: 9px;
+    min-height: 14px;
+}
+switch.small slider {
+    min-height: 14px;
+    min-width: 14px;
 }

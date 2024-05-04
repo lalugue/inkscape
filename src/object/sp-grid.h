@@ -115,6 +115,7 @@ public:
 
     std::vector<CanvasItemPtr<Inkscape::CanvasItemGrid>> views;
 
+    void setType(GridType type);
 protected:
     void build(SPDocument *doc, Inkscape::XML::Node *repr) override;
     void set(SPAttr key, const char *value) override;

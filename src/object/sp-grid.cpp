@@ -57,6 +57,9 @@ void SPGrid::create_new(SPDocument *document, Inkscape::XML::Node *parent, GridT
     else if (type == GridType::MODULAR) {
         new_node->setAttribute("type", "modular");
     }
+    else {
+        new_node->setAttribute("type", "xygrid");
+    }
 
     parent->appendChild(new_node);
 
@@ -407,7 +410,7 @@ void SPGrid::setPrefValues()
                 Quantity::convert(prefs->getDouble(prefix + "/spacing_y", default_spacing), _display_unit, "px")) * scale);
 
     setMajorColor(prefs->getColor(prefix + "/empcolor", modular ? GRID_DEFAULT_BLOCK_COLOR : GRID_DEFAULT_MAJOR_COLOR));
-    setMinorColor(prefs->getColor(prefix + "/color", GRID_DEFAULT_MINOR_COLOR));
+    setMinorColor(prefs->getColor(prefix + "/color", modular ? GRID_DEFAULT_MINOR_BLOCK_COLOR : GRID_DEFAULT_MINOR_COLOR));
     setMajorLineInterval(prefs->getInt(prefix + "/empspacing"));
 
     // these prefs are bound specifically to one type of grid
@@ -783,5 +786,23 @@ void SPGrid::setUnit(const Glib::ustring &units)
 
     getRepr()->setAttribute("units", units.c_str());
 
+    requestDisplayUpdate(SP_OBJECT_MODIFIED_FLAG);
+}
+
+void SPGrid::setType(GridType type) {
+    if (_grid_type == type) return;
+
+    auto node = getRepr();
+    if (type == GridType::AXONOMETRIC) {
+        node->setAttribute("type", "axonomgrid");
+    }
+    else if (type == GridType::MODULAR) {
+        node->setAttribute("type", "modular");
+    }
+    else {
+        node->setAttribute("type", "xygrid");
+    }
+
+    setPrefValues();
     requestDisplayUpdate(SP_OBJECT_MODIFIED_FLAG);
 }

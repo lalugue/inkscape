@@ -715,6 +715,10 @@ button.square-button image {
     margin-right: 4px;
 }
 
+.informational-text {
+    font-style: italic;
+}
+
 .dialog-heading {
     font-weight: bold;
 }
@@ -1359,4 +1363,7 @@ listview.list-view-small > row > box.item-box.separator {
 }
 /* <<<<<<<<<<<<<<<<<<<<<<<< About screen slide show transitions */
 
-
+/* Grid definition panel/box in document properties dialog */
+.grid-row-definition {
+    margin: 4px 6px;
+}

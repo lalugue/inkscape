@@ -18,6 +18,7 @@
 
 #include <glibmm/i18n.h>
 #include <gtkmm/label.h>
+#include <giomm/themedicon.h>
 
 #include "object/sp-root.h"
 #include "svg/svg-color.h"
@@ -98,11 +99,12 @@ RegisteredCheckButton::on_toggled()
  */
 
 RegisteredToggleButton::RegisteredToggleButton(
-    Glib::ustring const &/*label*/,
+    Glib::ustring const &label,
     Glib::ustring const &tip, Glib::ustring const &key, Registry &wr, bool right,
     Inkscape::XML::Node * const repr_in, SPDocument * const doc_in,
     char const * const icon_active, char const * const icon_inactive)
-: RegisteredWidget<Gtk::ToggleButton>()
+: RegisteredWidget<Gtk::ToggleButton>(label),
+  _on_icon(icon_active), _off_icon(icon_inactive)
 {
     init_parent(key, wr, repr_in, doc_in);
 
@@ -112,6 +114,16 @@ RegisteredToggleButton::RegisteredToggleButton(
 
     set_halign(right ? Gtk::Align::END : Gtk::Align::START);
     set_valign(Gtk::Align::CENTER);
+
+    if (!_on_icon.empty()) {
+        set_child(*Gtk::make_managed<Gtk::Image>(Gio::ThemedIcon::create(_on_icon)));
+    }
+
+    if (!_on_icon.empty() && !_off_icon.empty()) {
+        property_active().signal_changed().connect([this](){
+            set_child(*Gtk::make_managed<Gtk::Image>(Gio::ThemedIcon::create(get_active() ? _on_icon : _off_icon)));
+        });
+    }
 }
 
 void
@@ -153,6 +165,41 @@ RegisteredToggleButton::on_toggled()
     _wr->setUpdating(false);
 }
 
+RegisteredSwitchButton::RegisteredSwitchButton(Glib::ustring const &label, Glib::ustring const &tip,
+                           Glib::ustring const &key, Registry &wr, bool right,
+                           Inkscape::XML::Node *repr_in, SPDocument *doc_in)
+: RegisteredWidget<Gtk::Switch>() {
+
+    init_parent(key, wr, repr_in, doc_in);
+
+    set_tooltip_text(tip);
+    add_css_class("small");
+    set_halign(right ? Gtk::Align::END : Gtk::Align::START);
+    set_valign(Gtk::Align::CENTER);
+
+    property_state().signal_changed().connect([=](){
+        if (setProgrammatically) {
+            setProgrammatically = false;
+            return;
+        }
+
+        if (_wr->isUpdating())
+            return;
+
+        _wr->setUpdating(true);
+
+        auto const active = get_active();
+        write_to_xml(active ? "true" : "false");
+
+        //The subordinate button is greyed out if the main button is untoggled
+        for (auto const subordinate: _subordinate_widgets) {
+            subordinate->set_sensitive(active);
+        }
+
+        _wr->setUpdating(false);
+    });
+}
+
 /*#########################################
  * Registered UNITMENU
  */
@@ -165,6 +212,13 @@ RegisteredUnitMenu::RegisteredUnitMenu(Glib::ustring const &label, Glib::ustring
     init_parent(key, wr, repr_in, doc_in);
 
     getUnitMenu()->setUnitType(UNIT_TYPE_LINEAR);
+    if (doc_in) {
+        // select document's unit as a starting point, so registered scalars using this instance
+        // will have a chance to establish appropriate steps for their spin buttons, based on correct display unit
+        if (auto units = doc_in->getDisplayUnit()) {
+            getUnitMenu()->setUnit(units->abbr);
+        }
+    }
     _changed_connection = getUnitMenu()->signal_changed().connect(sigc::mem_fun (*this, &RegisteredUnitMenu::on_changed));
 }
 
@@ -399,8 +453,13 @@ RegisteredColorPicker::on_changed(std::uint32_t const rgba)
     }
     {
         DocumentUndo::ScopedInsensitive _no_undo(local_doc);
-        local_repr->setAttribute(_ckey, c);
-        local_repr->setAttributeCssDouble(_akey.c_str(), (rgba & 0xff) / 255.0);
+        if (_setter) {
+            _setter(local_repr, rgba);
+        }
+        else {
+            local_repr->setAttribute(_ckey, c);
+            local_repr->setAttributeCssDouble(_akey.c_str(), (rgba & 0xff) / 255.0);
+        }
     }
     local_doc->setModifiedSinceSave();
     DocumentUndo::done(local_doc, "registered-widget.cpp: RegisteredColorPicker::on_changed", ""); // TODO Fix description.

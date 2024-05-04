@@ -24,22 +24,28 @@
 #include <algorithm>
 #include <array>
 #include <cmath>
+#include <giomm/themedicon.h>
+#include <glibmm/main.h>
 #include <gtkmm/adjustment.h>
+#include <gtkmm/box.h>
 #include <gtkmm/button.h>
 #include <gtkmm/entry.h>
 #include <gtkmm/enums.h>
 #include <gtkmm/grid.h>
+#include <gtkmm/label.h>
+#include <gtkmm/listboxrow.h>
 #include <gtkmm/menubutton.h>
 #include <gtkmm/object.h>
 #include <gtkmm/popover.h>
+#include <gtkmm/popovermenu.h>
 #include <gtkmm/spinbutton.h>
+#include <gtkmm/togglebutton.h>
+#include <gtkmm/widget.h>
 #include <iterator>
-
 #include <optional>
 #include <set>
 #include <string>
 #include <tuple>
-
 #include <glibmm/convert.h>
 #include <gtkmm/image.h>
 #include <gtkmm/liststore.h>
@@ -51,7 +57,6 @@
 #include "rdf.h"
 #include "page-manager.h"
 #include "selection.h"
-
 #include "color/cms-system.h"
 #include "helper/auto-connection.h"
 #include "io/sys.h"
@@ -60,6 +65,7 @@
 #include "object/sp-root.h"
 #include "object/sp-script.h"
 #include "streq.h"
+#include "svg/svg-color.h"
 #include "ui/dialog/filedialog.h"
 #include "ui/icon-loader.h"
 #include "ui/icon-names.h"
@@ -75,6 +81,7 @@
 #include "ui/widget/popover-menu-item.h"
 #include "ui/widget/scalar.h"
 #include "util/expression-evaluator.h"
+#include "ui/widget/icon-combobox.h"
 
 namespace Inkscape::UI {
 
@@ -87,41 +94,42 @@ public:
 
     void update();
     SPGrid *getGrid() { return _grid; }
-    XML::Node *getGridRepr() { return repr; }
-    Gtk::Box *getTabWidget() { return _tab; }
+    XML::Node *getGridRepr() { return _repr; }
 
 private:
     SPGrid *_grid = nullptr;
-    XML::Node *repr = nullptr;
+    XML::Node *_repr = nullptr;
 
-    Gtk::Box *_tab = nullptr;
-    Gtk::Image *_tab_img = nullptr;
-    Gtk::Label *_tab_lbl = nullptr;
-
-    Gtk::Label *_name_label = nullptr;
+    Gtk::Button* _delete = Gtk::make_managed<Gtk::Button>();
+    Gtk::MenuButton* _options = Gtk::make_managed<Gtk::MenuButton>();
+    Gtk::Popover* _opt_items = Gtk::make_managed<Gtk::Popover>();
+    Gtk::Image* _icon = Gtk::make_managed<Gtk::Image>();
+    Gtk::Label* _id = Gtk::make_managed<Gtk::Label>();
+    Gtk::MenuButton* _align = Gtk::make_managed<Gtk::MenuButton>();
+    Gtk::Popover* _align_popup = Gtk::make_managed<Gtk::Popover>();
 
     UI::Widget::Registry _wr;
-    RegisteredCheckButton *_grid_rcb_enabled = nullptr;
-    RegisteredCheckButton *_grid_rcb_snap_visible_only = nullptr;
-    RegisteredCheckButton *_grid_rcb_visible = nullptr;
-    RegisteredCheckButton *_grid_rcb_dotted = nullptr;
-    AlignmentSelector     *_grid_as_alignment = nullptr;
+    Inkscape::UI::Widget::IconComboBox _grid_type;
+    RegisteredSwitchButton *_enabled = nullptr;
+    RegisteredCheckButton *_snap_visible_only = nullptr;
+    RegisteredToggleButton *_visible = nullptr;
+    RegisteredCheckButton *_dotted = nullptr;
+    AlignmentSelector *_alignment = nullptr;
 
-    RegisteredUnitMenu *_rumg = nullptr;
-    RegisteredScalarUnit *_rsu_ox = nullptr;
-    RegisteredScalarUnit *_rsu_oy = nullptr;
-    RegisteredScalarUnit *_rsu_sx = nullptr;
-    RegisteredScalarUnit *_rsu_sy = nullptr;
-    RegisteredScalar *_rsu_ax = nullptr;
-    RegisteredScalar *_rsu_az = nullptr;
-    RegisteredColorPicker *_rcp_gcol = nullptr;
-    RegisteredColorPicker *_rcp_gmcol = nullptr;
-    RegisteredInteger *_rsi = nullptr;
-    RegisteredScalarUnit* _rsu_gx = nullptr;
-    RegisteredScalarUnit* _rsu_gy = nullptr;
-    RegisteredScalarUnit* _rsu_mx = nullptr;
-    RegisteredScalarUnit* _rsu_my = nullptr;
-    Gtk::MenuButton* _angle_popup = nullptr;
+    RegisteredUnitMenu *_units = nullptr;
+    RegisteredScalarUnit *_origin_x = nullptr;
+    RegisteredScalarUnit *_origin_y = nullptr;
+    RegisteredScalarUnit *_spacing_x = nullptr;
+    RegisteredScalarUnit *_spacing_y = nullptr;
+    RegisteredScalar *_angle_x = nullptr;
+    RegisteredScalar *_angle_z = nullptr;
+    RegisteredColorPicker *_grid_color = nullptr;
+    RegisteredInteger *_no_of_lines = nullptr;
+    RegisteredScalarUnit* _gap_x = nullptr;
+    RegisteredScalarUnit* _gap_y = nullptr;
+    RegisteredScalarUnit* _margin_x = nullptr;
+    RegisteredScalarUnit* _margin_y = nullptr;
+    Gtk::MenuButton* _angle_popup = Gtk::make_managed<Gtk::MenuButton>();
     Gtk::Entry* _aspect_ratio = nullptr;
 
     Inkscape::auto_connection _modified_signal;
@@ -179,14 +187,14 @@ static void connect_remove_popup_menu(Gtk::TreeView &tree_view, UI::Widget::Popo
 
 DocumentProperties::DocumentProperties()
     : DialogBase("/dialogs/documentoptions", "DocumentProperties")
-    , _page_page(Gtk::make_managed<UI::Widget::NotebookPage>(1, 1, false, true))
-    , _page_guides(Gtk::make_managed<UI::Widget::NotebookPage>(1, 1))
-    , _page_cms(Gtk::make_managed<UI::Widget::NotebookPage>(1, 1))
-    , _page_scripting(Gtk::make_managed<UI::Widget::NotebookPage>(1, 1))
+    , _page_page(Gtk::make_managed<UI::Widget::NotebookPage>(1, 1, true))
+    , _page_guides(Gtk::make_managed<UI::Widget::NotebookPage>(1, 1, true))
+    , _page_cms(Gtk::make_managed<UI::Widget::NotebookPage>(1, 1, true))
+    , _page_scripting(Gtk::make_managed<UI::Widget::NotebookPage>(1, 1, true))
     , _page_external_scripts(Gtk::make_managed<UI::Widget::NotebookPage>(1, 1))
     , _page_embedded_scripts(Gtk::make_managed<UI::Widget::NotebookPage>(1, 1))
-    , _page_metadata1(Gtk::make_managed<UI::Widget::NotebookPage>(1, 1))
-    , _page_metadata2(Gtk::make_managed<UI::Widget::NotebookPage>(1, 1))
+    , _page_metadata1(Gtk::make_managed<UI::Widget::NotebookPage>(1, 1, true))
+    , _page_metadata2(Gtk::make_managed<UI::Widget::NotebookPage>(1, 1, true))
     //---------------------------------------------------------------
     // General guide options
     , _rcb_sgui(_("Show _guides"), _("Show or hide guides"), "showguides", _wr)
@@ -197,8 +205,6 @@ DocumentProperties::DocumentProperties()
     , _create_guides_btn(_("Create guides around the current page"))
     , _delete_guides_btn(_("Delete all guides"))
     //---------------------------------------------------------------
-    , _grids_label_crea("", Gtk::Align::START)
-    , _grids_button_remove(C_("Grid", "_Remove"), _("Remove selected grid."))
     , _grids_label_def("", Gtk::Align::START)
     , _grids_vbox(Gtk::Orientation::VERTICAL)
     , _grids_hbox_crea(Gtk::Orientation::HORIZONTAL)
@@ -234,8 +240,6 @@ DocumentProperties::DocumentProperties()
     build_scripting();
     build_metadata();
     _wr.setUpdating (false);
-
-    _grids_button_remove.signal_clicked().connect([this]{ onRemoveGrid(); });
 }
 
 //========================================================================
@@ -1075,9 +1079,6 @@ void DocumentProperties::build_metadata()
     label->set_halign(Gtk::Align::START);
     label->set_valign(Gtk::Align::CENTER);
     _page_metadata1->table().attach (*label, 0,0,2,1);
-    // allow grid to stretch
-    _page_metadata1->table().set_valign(Gtk::Align::FILL);
-    _page_metadata1->table().set_vexpand_set(false);
 
      /* add generic metadata entry areas */
     int row = 1;
@@ -1110,7 +1111,7 @@ void DocumentProperties::build_metadata()
     auto const box_buttons = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 4);
     UI::pack_end(*box_buttons, *button_save, true, true, 6);
     UI::pack_end(*box_buttons, *button_load, true, true, 6);
-    UI::pack_end(*_page_metadata1, *box_buttons, false, false);
+    _page_metadata1->table().attach(*box_buttons, 0, row++, 2);
     box_buttons->set_halign(Gtk::Align::END);
     box_buttons->set_homogeneous();
 
@@ -1131,6 +1132,7 @@ void DocumentProperties::build_metadata()
     _licensor.set_hexpand();
     _licensor.set_valign(Gtk::Align::CENTER);
     _page_metadata2->table().attach(_licensor, 0, row, 2, 1);
+    _page_metadata2->table().set_valign(Gtk::Align::START);
 }
 
 void DocumentProperties::addExternalScript(){
@@ -1411,43 +1413,51 @@ void DocumentProperties::populate_script_lists(){
 */
 void DocumentProperties::rebuild_gridspage()
 {
-    while (_grids_notebook.get_n_pages() != 0) {
-        _grids_notebook.remove_page(-1); // this also deletes the page.
+    _grids_list.remove_all();
+    for (auto w : _grids_unified_size->get_widgets()) {
+        _grids_unified_size->remove_widget(*w);
     }
+
     for (auto grid : getDesktop()->getNamedView()->grids) {
         add_grid_widget(grid);
     }
-    _grids_button_remove.set_sensitive(_grids_notebook.get_n_pages() > 0);
+
+    update_grid_placeholder();
 }
 
-void DocumentProperties::add_grid_widget(SPGrid *grid, bool select)
+void DocumentProperties::update_grid_placeholder() {
+    _no_grids.set_visible(_grids_list.get_first_child() == nullptr);
+}
+
+void DocumentProperties::add_grid_widget(SPGrid *grid)
 {
     auto const widget = Gtk::make_managed<Inkscape::UI::Widget::GridWidget>(grid);
-    _grids_notebook.append_page(*widget, *widget->getTabWidget());
-
-    _grids_button_remove.set_sensitive(true);
-    if (select) {
-        _grids_notebook.set_current_page(_grids_notebook.get_n_pages() - 1);
+    _grids_list.append(*widget);
+    _grids_unified_size->add_widget(*widget);
+    // get rid of row highlight - they are not selectable (we just need to change the last one, but there's no API for that)
+    int index = 0;
+    for (auto row = _grids_list.get_row_at_index(index); row; row = _grids_list.get_row_at_index(++index)) {
+        row->property_activatable() = false;
     }
+
+    update_grid_placeholder();
 }
 
 void DocumentProperties::remove_grid_widget(XML::Node &node)
 {
     // The SPObject is already gone, so we're working from the xml node directly.
-    auto widget_to_remove = for_each_page(_grids_notebook, [&node](auto& page) {
-        if (auto widget = dynamic_cast<Inkscape::UI::Widget::GridWidget *>(&page)) {
+    int index = 0;
+    for (auto row = _grids_list.get_row_at_index(index); row; row = _grids_list.get_row_at_index(++index)) {
+        if (auto widget = dynamic_cast<Inkscape::UI::Widget::GridWidget*>(row->get_child())) {
             if (&node == widget->getGridRepr()) {
-                return ForEachResult::_break;
+                _grids_unified_size->remove_widget(*widget);
+                _grids_list.remove(*row);
+                break;
             }
         }
-        return ForEachResult::_continue;
-    });
-
-    if (widget_to_remove) {
-        _grids_notebook.remove_page(*widget_to_remove);
     }
 
-    _grids_button_remove.set_sensitive(_grids_notebook.get_n_pages() > 0);
+    update_grid_placeholder();
 }
 
 /**
@@ -1458,47 +1468,45 @@ void DocumentProperties::build_gridspage()
     /// \todo FIXME: gray out snapping when grid is off.
     /// Dissenting view: you want snapping without grid.
 
-    _grids_label_crea.set_markup(_("<b>Creation</b>"));
-    _grids_label_crea.add_css_class("heading");
-    _grids_label_def.set_markup(_("<b>Defined grids</b>"));
-    _grids_label_def.add_css_class("heading");
     _grids_hbox_crea.set_spacing(5);
-    UI::pack_start(_grids_hbox_crea, *Gtk::make_managed<Gtk::Label>("Add grid:"), false, true);
-    auto const btn_size = Gtk::SizeGroup::create(Gtk::SizeGroup::Mode::HORIZONTAL);
-    for (auto const &[label, type, icon]: {std::tuple
-        {C_("Grid", "Rectangular"), GridType::RECTANGULAR, "grid-rectangular"},
-        {C_("Grid", "Axonometric"), GridType::AXONOMETRIC, "grid-axonometric"},
-        {C_("Grid", "Modular"), GridType::MODULAR, "grid-modular"}
-    }) {
+    _grids_hbox_crea.set_margin(8);
+    _grids_hbox_crea.set_halign(Gtk::Align::CENTER);
+
+    {
         auto btn = Gtk::make_managed<Gtk::Button>();
+        btn->set_size_request(120); // make it easier to hit
         auto hbox = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 5);
         hbox->set_halign(Gtk::Align::CENTER);
         hbox->set_valign(Gtk::Align::CENTER);
 
         auto icon_image = Gtk::make_managed<Gtk::Image>();
-        icon_image->set_from_icon_name(icon);
+        icon_image->set_from_icon_name("plus");
         icon_image->set_icon_size(Gtk::IconSize::NORMAL);
         hbox->append(*icon_image);
 
-        auto btn_label = Gtk::make_managed<Gtk::Label>(label);
+        auto btn_label = Gtk::make_managed<Gtk::Label>(_("New Grid"));
+        btn_label->set_valign(Gtk::Align::CENTER);
         hbox->append(*btn_label);
 
         btn->set_child(*hbox);
-        btn_size->add_widget(*btn);
 
         UI::pack_start(_grids_hbox_crea, *btn, false, true);
-        btn->signal_clicked().connect([this, type = type]{ onNewGrid(type); });
+        btn->signal_clicked().connect([this]{ onNewGrid(GridType::RECTANGULAR); });
     }
 
-    _grids_vbox.set_name("NotebookPage");
-    _grids_vbox.set_margin(4);
-    _grids_vbox.set_spacing(4);
-    UI::pack_start(_grids_vbox, _grids_label_crea, false, false);
     UI::pack_start(_grids_vbox, _grids_hbox_crea, false, false);
-    UI::pack_start(_grids_vbox, _grids_label_def, false, false);
-    UI::pack_start(_grids_vbox, _grids_notebook, false, false);
-    _grids_notebook.set_scrollable();
-    UI::pack_start(_grids_vbox, _grids_button_remove, false, false);
+    _no_grids.set_text(_("There are no grids defined."));
+    _no_grids.set_halign(Gtk::Align::CENTER);
+    _no_grids.set_hexpand();
+    _no_grids.set_margin_top(40);
+    _no_grids.add_css_class("informational-text");
+    UI::pack_start(_grids_vbox, _no_grids, false, false);
+    UI::pack_start(_grids_vbox, _grids_wnd, true, true);
+    _grids_wnd.set_child(_grids_list);
+    _grids_list.set_show_separators();
+    _grids_list.set_selection_mode(Gtk::SelectionMode::NONE);
+    _grids_wnd.set_policy(Gtk::PolicyType::NEVER, Gtk::PolicyType::AUTOMATIC);
+    _grids_wnd.set_has_frame(false);
 }
 
 void DocumentProperties::update_viewbox(SPDesktop* desktop) {
@@ -1650,7 +1658,7 @@ void DocumentProperties::WatchConnection::disconnect() {
 void DocumentProperties::WatchConnection::notifyChildAdded(XML::Node&, XML::Node &child, XML::Node*)
 {
     if (auto grid = cast<SPGrid>(_dialog->getDocument()->getObjectByRepr(&child))) {
-        _dialog->add_grid_widget(grid, true);
+        _dialog->add_grid_widget(grid);
     }
 }
 
@@ -1702,20 +1710,15 @@ void DocumentProperties::onNewGrid(GridType grid_type)
     desktop->getNamedView()->newGridCreated();
 
     DocumentUndo::done(document, _("Create new grid"), INKSCAPE_ICON("document-properties"));
-}
 
-void DocumentProperties::onRemoveGrid()
-{
-    int pagenum = _grids_notebook.get_current_page();
-    if (pagenum == -1) // no pages
-      return;
-
-    if (auto widget = dynamic_cast<Inkscape::UI::Widget::GridWidget *>(_grids_notebook.get_nth_page(pagenum))) {
-        widget->getGrid()->deleteObject();
-        DocumentUndo::done(getDocument(), _("Remove grid"), INKSCAPE_ICON("document-properties"));
-    } else {
-        g_warning("Can't find GridWidget for currently selected grid.");
-    }
+    // scroll to the last (newly added) grid, so we can see it; postponed till idle time, since scrolling
+    // range is not yet updated, despite new grid UI being in place already
+    _on_idle_scroll = Glib::signal_idle().connect([this](){
+        if (auto adj = _grids_wnd.get_vadjustment()) {
+            adj->set_value(adj->get_upper());
+        }
+        return false;
+    });
 }
 
 /* This should not effect anything in the SVG tree (other than "inkscape:document-units").
@@ -1740,48 +1743,50 @@ void DocumentProperties::display_unit_change(const Inkscape::Util::Unit* doc_uni
 
 namespace Widget {
 
+static const auto grid_types = std::to_array({std::tuple
+    {C_("Grid", "Rectangular"), GridType::RECTANGULAR, "grid-rectangular"},
+    {C_("Grid", "Axonometric"), GridType::AXONOMETRIC, "grid-axonometric"},
+    {C_("Grid", "Modular"), GridType::MODULAR, "grid-modular"}
+});
+
 GridWidget::GridWidget(SPGrid *grid)
     : Gtk::Box(Gtk::Orientation::VERTICAL)
     , _grid(grid)
-    , repr(grid->getRepr())
+    , _repr(grid->getRepr())
 {
+    set_halign(Gtk::Align::CENTER);
+    add_css_class("grid-row-definition");
+
     Inkscape::XML::Node *repr = grid->getRepr();
     auto doc = grid->document;
 
-    // Tab label is constructed here and passed back to parent widget for display to
-    // reduce the number of watchers that have to keep tabs on the properties
-    _tab = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 4);
-    _tab->set_halign(Gtk::Align::START);
-    _tab->set_hexpand(false);
-    _tab_img = Gtk::make_managed<Gtk::Image>();
-    _tab_lbl = Gtk::make_managed<Gtk::Label>("-", true);
-    UI::pack_start(*_tab, *_tab_img);
-    UI::pack_start(*_tab, *_tab_lbl);
-
-    _name_label = Gtk::make_managed<Gtk::Label>("", Gtk::Align::CENTER);
-    _name_label->set_margin_bottom(4);
-    _name_label->add_css_class("heading");
-    _name_label->add_css_class("heading");
-    UI::pack_start(*this, *_name_label, false, false);
+    constexpr int SPACE = 4;
+    constexpr int POPUP_MARGIN = 8;
 
     _wr.setUpdating(true);
-    _grid_rcb_enabled = Gtk::make_managed<Inkscape::UI::Widget::RegisteredCheckButton>(
-            _("_Enabled"),
+
+    for (auto const &[label, type, icon]: grid_types) {
+        _grid_type.add_row(icon, label, static_cast<int>(type));
+    }
+    _grid_type.refilter();
+
+    _enabled = Gtk::make_managed<Inkscape::UI::Widget::RegisteredSwitchButton>("",
             _("Makes the grid available for working with on the canvas."),
             "enabled", _wr, false, repr, doc);
 
-    _grid_rcb_snap_visible_only = Gtk::make_managed<Inkscape::UI::Widget::RegisteredCheckButton>(
+    _snap_visible_only = Gtk::make_managed<Inkscape::UI::Widget::RegisteredCheckButton>(
             _("Snap to visible _grid lines only"),
             _("When zoomed out, not all grid lines will be displayed. Only the visible ones will be snapped to"),
             "snapvisiblegridlinesonly", _wr, false, repr, doc);
 
-    _grid_rcb_visible = Gtk::make_managed<Inkscape::UI::Widget::RegisteredCheckButton>(
-            _("_Visible"),
+    _visible = Gtk::make_managed<Inkscape::UI::Widget::RegisteredToggleButton>("",
             _("Determines whether the grid is displayed or not. Objects are still snapped to invisible grids."),
-            "visible", _wr, false, repr, doc);
+            "visible", _wr, false, repr, doc,
+            "object-visible", "object-hidden");
+    _visible->set_child(*Gtk::make_managed<Gtk::Image>(Gio::ThemedIcon::create("object-visible")));
 
-    _grid_as_alignment = Gtk::make_managed<Inkscape::UI::Widget::AlignmentSelector>();
-    _grid_as_alignment->connectAlignmentClicked([this, grid](int const align) {
+    _alignment = Gtk::make_managed<Inkscape::UI::Widget::AlignmentSelector>();
+    _alignment->connectAlignmentClicked([this, grid](int const align) {
         auto dimensions = grid->document->getDimensions();
         dimensions[Geom::X] *= align % 3 * 0.5;
         dimensions[Geom::Y] *= align / 3 * 0.5;
@@ -1789,38 +1794,28 @@ GridWidget::GridWidget(SPGrid *grid)
         grid->setOrigin(dimensions);
     });
 
-    auto const left = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, 4);
-    UI::pack_start(*left, *_grid_rcb_enabled, false, false);
-    UI::pack_start(*left, *_grid_rcb_visible, false, false);
-    UI::pack_start(*left, *_grid_rcb_snap_visible_only, false, false);
-    if (auto label = dynamic_cast<Gtk::Label*>(_grid_rcb_snap_visible_only->get_child())) {
-        label->set_wrap();
-    }
-
-    _grid_rcb_dotted = Gtk::make_managed<Inkscape::UI::Widget::RegisteredCheckButton>(
+    _dotted = Gtk::make_managed<Inkscape::UI::Widget::RegisteredCheckButton>(
             _("_Show dots instead of lines"), _("If set, displays dots at gridpoints instead of gridlines"),
             "dotted", _wr, false, repr, doc );
-    UI::pack_start(*left, *_grid_rcb_dotted, false, false);
 
+    auto vbox = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL, SPACE);
     auto align = Gtk::make_managed<Gtk::Label>(_("Align to page:"));
     align->set_margin_top(8);
-    UI::pack_start(*left, *align, false, false);
-    UI::pack_start(*left, *_grid_as_alignment, false, false);
+    vbox->append(*align);
+    vbox->append(*_alignment);
+    _align_popup->set_child(*vbox);
 
-    _angle_popup = Gtk::make_managed<Gtk::MenuButton>();
     auto angle_popover = Gtk::make_managed<Gtk::Popover>();
+    angle_popover->set_has_arrow(false);
     _angle_popup->set_popover(*angle_popover);
-    _angle_popup->set_valign(Gtk::Align::CENTER);
+    _angle_popup->set_valign(Gtk::Align::FILL);
     // set grid angles from given width to height ratio
     auto angle = Gtk::make_managed<Gtk::Label>(_("Set angle from aspect ratio:"));
     angle->set_xalign(0);
     auto subgrid = Gtk::make_managed<Gtk::Grid>();
-    subgrid->set_margin_top(8);
-    subgrid->set_margin_bottom(8);
-    subgrid->set_margin_start(8);
-    subgrid->set_margin_end(8);
-    subgrid->set_row_spacing(4);
-    subgrid->set_column_spacing(4);
+    subgrid->set_margin(POPUP_MARGIN);
+    subgrid->set_row_spacing(SPACE);
+    subgrid->set_column_spacing(SPACE);
     _aspect_ratio = Gtk::make_managed<Gtk::Entry>();
     _aspect_ratio->set_max_width_chars(9);
     subgrid->attach(*angle, 0, 0);
@@ -1842,8 +1837,8 @@ GridWidget::GridWidget(SPGrid *grid)
 
             auto angle = Geom::deg_from_rad(std::atan(1.0 / result.value));
             if (angle > 0.0 && angle < 90.0) {
-                _rsu_ax->setValue(angle, false);
-                _rsu_az->setValue(angle, false);
+                _angle_x->setValue(angle, false);
+                _angle_z->setValue(angle, false);
             }
         }
         catch (EvaluatorException& e) {
@@ -1868,104 +1863,205 @@ GridWidget::GridWidget(SPGrid *grid)
         }
     });
 
-    _rumg = Gtk::make_managed<RegisteredUnitMenu>(
+    _units = Gtk::make_managed<RegisteredUnitMenu>(
                 _("Grid _units:"), "units", _wr, repr, doc);
-    _rsu_ox = Gtk::make_managed<RegisteredScalarUnit>(
+    _origin_x = Gtk::make_managed<RegisteredScalarUnit>(
                 _("_Origin X:"), _("X coordinate of grid origin"), "originx",
-                *_rumg, _wr, repr, doc, RSU_x);
-    _rsu_oy = Gtk::make_managed<RegisteredScalarUnit>(
+                *_units, _wr, repr, doc, RSU_x);
+    _origin_y = Gtk::make_managed<RegisteredScalarUnit>(
                 _("O_rigin Y:"), _("Y coordinate of grid origin"), "originy",
-                *_rumg, _wr, repr, doc, RSU_y);
-    _rsu_sx = Gtk::make_managed<RegisteredScalarUnit>(
+                *_units, _wr, repr, doc, RSU_y);
+    _spacing_x = Gtk::make_managed<RegisteredScalarUnit>(
                 "-", _("Distance between horizontal grid lines"), "spacingx",
-                *_rumg, _wr, repr, doc, RSU_x);
-    _rsu_sy = Gtk::make_managed<RegisteredScalarUnit>(
+                *_units, _wr, repr, doc, RSU_x);
+    _spacing_y = Gtk::make_managed<RegisteredScalarUnit>(
                 "-", _("Distance between vertical grid lines"), "spacingy",
-                *_rumg, _wr, repr, doc, RSU_y);
+                *_units, _wr, repr, doc, RSU_y);
 
-    _rsu_gx = Gtk::make_managed<RegisteredScalarUnit>(
+    _gap_x = Gtk::make_managed<RegisteredScalarUnit>(
                 _("Gap _X:"), _("Horizontal distance between blocks"), "gapx",
-                *_rumg, _wr, repr, doc, RSU_x);
-    _rsu_gy = Gtk::make_managed<RegisteredScalarUnit>(
+                *_units, _wr, repr, doc, RSU_x);
+    _gap_y = Gtk::make_managed<RegisteredScalarUnit>(
                 _("Gap _Y:"), _("Vertical distance between blocks"), "gapy",
-                *_rumg, _wr, repr, doc, RSU_y);
-    _rsu_mx = Gtk::make_managed<RegisteredScalarUnit>(
+                *_units, _wr, repr, doc, RSU_y);
+    _margin_x = Gtk::make_managed<RegisteredScalarUnit>(
                 _("_Margin X:"), _("Horizontal block margin"), "marginx",
-                *_rumg, _wr, repr, doc, RSU_x);
-    _rsu_my = Gtk::make_managed<RegisteredScalarUnit>(
+                *_units, _wr, repr, doc, RSU_x);
+    _margin_y = Gtk::make_managed<RegisteredScalarUnit>(
                 _("M_argin Y:"), _("Vertical block margin"), "marginy",
-                *_rumg, _wr, repr, doc, RSU_y);
+                *_units, _wr, repr, doc, RSU_y);
 
-    _rsu_ax = Gtk::make_managed<RegisteredScalar>(
+    _angle_x = Gtk::make_managed<RegisteredScalar>(
                 _("An_gle X:"), _("Angle of x-axis"), "gridanglex", _wr, repr, doc);
-    _rsu_az = Gtk::make_managed<RegisteredScalar>(
+    _angle_z = Gtk::make_managed<RegisteredScalar>(
                 _("Ang_le Z:"), _("Angle of z-axis"), "gridanglez", _wr, repr, doc);
-    _rcp_gcol = Gtk::make_managed<RegisteredColorPicker>(
-                _("Minor grid line _color:"), _("Minor grid line color"), _("Color of the minor grid lines"),
-                "color", "opacity", _wr, repr, doc);
-    _rcp_gmcol = Gtk::make_managed<RegisteredColorPicker>(
-                _("Ma_jor grid line color:"), _("Major grid line color"),
-                _("Color of the major (highlighted) grid lines"),
+    _grid_color = Gtk::make_managed<RegisteredColorPicker>(
+                "", _("Grid color"),
+                _("Color of the grid lines"),
                 "empcolor", "empopacity", _wr, repr, doc);
-    _rsi = Gtk::make_managed<RegisteredInteger>(
+    _grid_color->setCustomSetter([](Inkscape::XML::Node* node, std::uint32_t rgba) {
+        char buf[32];
+        // major color
+        sp_svg_write_color(buf, sizeof(buf), rgba);
+        node->setAttribute("empcolor", buf);
+        node->setAttributeCssDouble("empopacity", (rgba & 0xff) / 255.0);
+        // minor color at half opacity
+        rgba = (rgba & ~0xff) | ((rgba & 0xff) / 2);
+        sp_svg_write_color(buf, sizeof(buf), rgba);
+        node->setAttribute("color", buf);
+        node->setAttributeCssDouble("opacity", (rgba & 0xff) / 255.0);
+    });
+    _grid_color->set_spacing(0);
+    _no_of_lines = Gtk::make_managed<RegisteredInteger>(
                 _("Major grid line e_very:"), _("Number of lines"),
                 "empspacing", _wr, repr, doc);
 
     for (auto labelled : std::to_array<Labelled*>(
-        {_rumg, _rsu_ox, _rsu_oy, _rsu_sx, _rsu_sy, _rsu_gx, _rsu_gy, _rsu_mx, _rsu_my,
-            _rsu_ax, _rsu_az, _rcp_gcol, _rcp_gmcol, _rsi})) {
+        {_units, _origin_x, _origin_y, _spacing_x, _spacing_y, _gap_x, _gap_y, _margin_x, _margin_y,
+            _angle_x, _angle_z, _no_of_lines})) {
         labelled->getLabel()->set_hexpand();
     }
 
-    _rumg->set_hexpand();
-    _rsu_ax->set_hexpand();
-    _rsu_az->set_hexpand();
-    _rcp_gcol->set_hexpand();
-    _rcp_gmcol->set_hexpand();
-    _rsi->set_hexpand();
-    _rsi->setWidthChars(5);
+    _units->set_hexpand();
+    _angle_x->set_hexpand();
+    _angle_z->set_hexpand();
+    _no_of_lines->set_hexpand();
+    _no_of_lines->setWidthChars(5);
 
-    _rsu_ox->setProgrammatically = false;
-    _rsu_oy->setProgrammatically = false;
+    _origin_x->setProgrammatically = false;
+    _origin_y->setProgrammatically = false;
 
-    auto const column = Gtk::make_managed<Gtk::Grid>();
-    column->set_row_spacing(4);
-    column->set_column_spacing(4);
-    int row = 0;
-    column->attach(*_rumg, 0, row++);
+    auto main_grid = Gtk::make_managed<Gtk::Grid>();
+    main_grid->set_column_homogeneous();
+    main_grid->set_column_spacing(4 * SPACE);
 
-    int angle_row = 0;
-    for (auto rs : std::to_array<Scalar*>({_rsu_ox, _rsu_oy, _rsu_sx, _rsu_sy, _rsu_ax, _rsu_az, _rsu_gx, _rsu_gy, _rsu_mx, _rsu_my})) {
-        rs->setDigits(6);
-        rs->setIncrements(0.1, 1.0);
-        rs->set_hexpand();
-        rs->setWidthChars(12);
-        if (rs == _rsu_ax) angle_row = row;
-        column->attach(*rs, 0, row++);
+    auto buttons = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL);
+    buttons->set_spacing(SPACE);
+    buttons->append(*_visible);
+    buttons->append(*_grid_color);
+    _delete->set_child(*Gtk::make_managed<Gtk::Image>(Gio::ThemedIcon::create("edit-delete")));
+    _delete->set_tooltip_text(_("Delete this grid"));
+    _delete->signal_clicked().connect([this](){
+        auto doc = getGrid()->document;
+        getGrid()->deleteObject();
+        DocumentUndo::done(doc, _("Remove grid"), INKSCAPE_ICON("document-properties"));
+    });
+    _delete->set_hexpand();
+    _delete->set_halign(Gtk::Align::END);
+    buttons->append(*_delete);
+    buttons->append(*_options);
+    _options->set_popover(*_opt_items);
+    auto items = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL);
+    items->set_spacing(SPACE);
+    items->set_margin(POPUP_MARGIN);
+    items->append(*_snap_visible_only);
+    items->append(*_dotted);
+    _opt_items->set_child(*items);
+    _opt_items->set_has_arrow(false);
+
+    _align->set_label(C_("popup-align-grid-origin", "Align"));
+    _align_popup->set_has_arrow(false);
+    _align->set_popover(*_align_popup);
+
+    auto left_col = Gtk::make_managed<Gtk::Grid>();
+    main_grid->attach(*left_col, 0, 1);
+
+    auto right_col = Gtk::make_managed<Gtk::Grid>();
+    main_grid->attach(*right_col, 1, 1);
+
+    for (auto grid : {left_col, right_col}) {
+        grid->set_column_spacing(SPACE);
+        grid->set_row_spacing(SPACE);
     }
 
-    column->attach(*_rcp_gcol, 0, row++);
-    column->attach(*_rcp_gmcol, 0, row++);
-    column->attach(*_rsi, 0, row++);
-    column->attach(*_angle_popup, 1, angle_row, 1, 2);
+    auto first_row_height = Gtk::SizeGroup::create(Gtk::SizeGroup::Mode::VERTICAL);
+    int row = 0;
+    auto box = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL);
+    box->set_spacing(SPACE);
+    box->append(*_enabled);
+    _id->set_ellipsize(Pango::EllipsizeMode::END);
+    box->append(*_id);
+    _grid_type.set_hexpand();
+    _grid_type.set_halign(Gtk::Align::END);
+    _grid_type.signal_changed().connect([&,this](int index){
+        // change grid type
+        if (index < 0) return;
+
+        // create grid of required type
+        _grid->setType(std::get<1>(grid_types[index]));
+    });
+    box->append(_grid_type);
+    left_col->attach(*box, 0, row, 2);
+    right_col->attach(*buttons, 0, row, 2);
+    ++row;
+    first_row_height->add_widget(*box);
+    first_row_height->add_widget(*buttons);
+    // add "separators"
+    {
+        auto lbox = Gtk::make_managed<Gtk::Box>();
+        lbox->set_size_request(0, SPACE);
+        left_col->attach(*lbox, 0, row);
+        auto rbox = Gtk::make_managed<Gtk::Box>();
+        rbox->set_size_request(0, SPACE);
+        right_col->attach(*rbox, 0, row++);
+    }
+
+    int first_row = row;
+    left_col->attach(*_units, 0, row++, 2);
+
+    int angle_row = 0;
+    auto left_side = true;
+    auto cur_grid = left_col;
+    for (auto rs : std::to_array<Scalar*>({
+            // left
+            _spacing_x, _spacing_y, _angle_x, _angle_z, _gap_x, _gap_y,
+            // right
+            _origin_x, _origin_y, _margin_x, _margin_y})) {
+        rs->setDigits(6);
+        rs->set_hexpand();
+        rs->setWidthChars(12);
+        int width = 2;
+        if (rs == _origin_x) {
+            cur_grid = right_col;
+            row = first_row;
+            // attach "align" popup
+            cur_grid->attach(*_align, 0, row++, width);
+            _align->set_halign(Gtk::Align::END);
+        }
+        if (rs == _angle_x) {
+            cur_grid->attach(*_angle_popup, 1, row, 1, 2);
+        }
+        if (rs == _angle_x || rs == _angle_z) {
+            rs->setWidthChars(8);
+            width = 1;
+        }
+        cur_grid->attach(*rs, 0, row++, width);
+    }
+
+    left_col->attach(*_no_of_lines, 0, row++, 2);
 
     _modified_signal = grid->connectModified([this, grid](SPObject const * /*obj*/, unsigned /*flags*/) {
         update();
     });
     update();
 
-    column->set_hexpand(false);
+    UI::pack_start(*this, *main_grid, false, false);
 
-    auto const inner = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL, 4);
-    UI::pack_start(*inner, *left, true, true);
-    UI::pack_start(*inner, *column, false, false);
-    UI::pack_start(*this, *inner, false, false);
-    set_margin(4);
+    std::vector<Gtk::Widget*> widgets;
+    for_each_descendant(*main_grid, [&](Gtk::Widget& w){
+        if (dynamic_cast<Gtk::SpinButton*>(&w) ||
+            dynamic_cast<Gtk::ToggleButton*>(&w) ||
+            dynamic_cast<Gtk::MenuButton*>(&w) ||
+            dynamic_cast<Gtk::Label*>(&w) ||
+            dynamic_cast<LabelledColorPicker*>(&w)
+            ) {
+            widgets.push_back(&w);
+            return ForEachResult::_skip;
+        }
 
-    auto widgets = UI::get_children(*left);
-    widgets.erase(std::remove(widgets.begin(), widgets.end(), _grid_rcb_enabled), widgets.end());
-    widgets.push_back(column);
-    _grid_rcb_enabled->setSubordinateWidgets(std::move(widgets));
+        return ForEachResult::_continue;
+    });
+    _enabled->setSubordinateWidgets(std::move(widgets));
 
     _wr.setUpdating(false);
 }
@@ -1982,68 +2078,67 @@ void GridWidget::update()
     const auto axonometric = _grid->getType() == GridType::AXONOMETRIC;
     const auto rectangular = _grid->getType() == GridType::RECTANGULAR;
 
-    _rumg->setUnit(_grid->getUnit()->abbr);
+    _units->setUnit(_grid->getUnit()->abbr);
 
     // Doc to px so unit is conserved in RegisteredScalerUnit
     auto origin = _grid->getOrigin() * scale;
-    _rsu_ox->setValueKeepUnit(origin[Geom::X], "px");
-    _rsu_oy->setValueKeepUnit(origin[Geom::Y], "px");
+    _origin_x->setValueKeepUnit(origin[Geom::X], "px");
+    _origin_y->setValueKeepUnit(origin[Geom::Y], "px");
 
     auto spacing = _grid->getSpacing() * scale;
-    _rsu_sx->setValueKeepUnit(spacing[Geom::X], "px");
-    _rsu_sy->setValueKeepUnit(spacing[Geom::Y], "px");
-    _rsu_sx->getLabel()->set_markup_with_mnemonic(modular ? _("Block _width:") : _("Spacing _X:"));
-    _rsu_sy->getLabel()->set_markup_with_mnemonic(modular ? _("Block _height:") : _("Spacing _Y:"));
+    _spacing_x->setValueKeepUnit(spacing[Geom::X], "px");
+    _spacing_y->setValueKeepUnit(spacing[Geom::Y], "px");
+    _spacing_x->getLabel()->set_markup_with_mnemonic(modular ? _("Block _width:") : _("Spacing _X:"));
+    _spacing_y->getLabel()->set_markup_with_mnemonic(modular ? _("Block _height:") : _("Spacing _Y:"));
 
     auto show = [](Gtk::Widget* w, bool do_show){
         w->set_visible(do_show);
     };
 
-    show(_rsu_ax, axonometric);
-    show(_rsu_az, axonometric);
+    show(_angle_x, axonometric);
+    show(_angle_z, axonometric);
     show(_angle_popup, axonometric);
     if (axonometric) {
-        _rsu_ax->setValue(_grid->getAngleX());
-        _rsu_az->setValue(_grid->getAngleZ());
+        _angle_x->setValue(_grid->getAngleX());
+        _angle_z->setValue(_grid->getAngleZ());
     }
 
-    show(_rsu_gx, modular);
-    show(_rsu_gy, modular);
-    show(_rsu_mx, modular);
-    show(_rsu_my, modular);
+    show(_gap_x, modular);
+    show(_gap_y, modular);
+    show(_margin_x, modular);
+    show(_margin_y, modular);
     if (modular) {
         auto gap = _grid->get_gap() * scale;
         auto margin = _grid->get_margin() * scale;
-        _rsu_gx->setValueKeepUnit(gap.x(), "px");
-        _rsu_gy->setValueKeepUnit(gap.y(), "px");
-        _rsu_mx->setValueKeepUnit(margin.x(), "px");
-        _rsu_my->setValueKeepUnit(margin.y(), "px");
+        _gap_x->setValueKeepUnit(gap.x(), "px");
+        _gap_y->setValueKeepUnit(gap.y(), "px");
+        _margin_x->setValueKeepUnit(margin.x(), "px");
+        _margin_y->setValueKeepUnit(margin.y(), "px");
     }
 
-    _rcp_gcol->setRgba32 (_grid->getMinorColor());
-    _rcp_gmcol->setRgba32 (_grid->getMajorColor());
+    _grid_color->setRgba32 (_grid->getMajorColor());
 
-    show(_rsi, !modular);
-    _rsi->setValue(_grid->getMajorLineInterval());
+    show(_no_of_lines, !modular);
+    _no_of_lines->setValue(_grid->getMajorLineInterval());
 
-    _grid_rcb_enabled->setActive(_grid->isEnabled());
-    _grid_rcb_visible->setActive(_grid->isVisible());
+    _enabled->set_active(_grid->isEnabled());
+    _visible->setActive(_grid->isVisible());
 
-    if (_grid_rcb_dotted)
-        _grid_rcb_dotted->setActive(_grid->isDotted());
+    if (_dotted)
+        _dotted->setActive(_grid->isDotted());
 
-    show(_grid_rcb_snap_visible_only, !modular);
-    _grid_rcb_snap_visible_only->setActive(_grid->getSnapToVisibleOnly());
+    _snap_visible_only->setActive(_grid->getSnapToVisibleOnly());
     // which condition to use to call setActive?
     // _grid_rcb_snap_visible_only->setActive(grid->snapper()->getSnapVisibleOnly());
-    _grid_rcb_enabled->setActive(_grid->snapper()->getEnabled());
+    _enabled->set_active(_grid->snapper()->getEnabled());
 
-    show(_grid_rcb_dotted, rectangular);
-    show(_rsu_sx, !axonometric);
+    show(_dotted, rectangular);
+    show(_spacing_x, !axonometric);
 
-    _name_label->set_markup(Glib::ustring("<b>") + _grid->displayName() + "</b>");
-    _tab_lbl->set_label(_grid->getId() ? _grid->getId() : "-");
-    _tab_img->set_from_icon_name(_grid->typeName());
+    _icon->set_from_icon_name(_grid->typeName());
+    auto id = _grid->getId() ? _grid->getId() : "-";
+    _id->set_label(id);
+    _id->set_tooltip_text(id);
 
     _wr.setUpdating (false);
 }

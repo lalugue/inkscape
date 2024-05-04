@@ -51,6 +51,10 @@ ColorPicker::ColorPicker(Glib::ustring const &title,
     sp_transientize(_colorSelectorDialog);
     _colorSelectorDialog.set_title(title);
     _colorSelectorDialog.set_hide_on_close();
+
+    property_sensitive().signal_changed().connect([this](){
+        _preview->setEnabled(is_sensitive());
+    });
 }
 
 ColorPicker::~ColorPicker() = default;

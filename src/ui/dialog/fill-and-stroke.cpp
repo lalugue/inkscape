@@ -35,9 +35,9 @@ namespace Inkscape::UI::Dialog {
 
 FillAndStroke::FillAndStroke()
     : DialogBase("/dialogs/fillstroke", "FillStroke")
-    , _page_fill(Gtk::make_managed<UI::Widget::NotebookPage>(1, 1, true, true))
-    , _page_stroke_paint(Gtk::make_managed<UI::Widget::NotebookPage>(1, 1, true, true))
-    , _page_stroke_style(Gtk::make_managed<UI::Widget::NotebookPage>(1, 1, true, true))
+    , _page_fill(Gtk::make_managed<UI::Widget::NotebookPage>(1, 1))
+    , _page_stroke_paint(Gtk::make_managed<UI::Widget::NotebookPage>(1, 1))
+    , _page_stroke_style(Gtk::make_managed<UI::Widget::NotebookPage>(1, 1))
     , _composite_settings(INKSCAPE_ICON("dialog-fill-and-stroke"),
                           "fillstroke",
                           UI::Widget::SimpleFilterModifier::ISOLATION |
