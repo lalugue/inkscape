@@ -144,11 +144,10 @@ build_menu()
 
         auto recent_files = recent_manager->get_items(); // all recent files not necessarily inkscape only
         // sort by "last modified" time, which puts the most recently opened files first
-        std::sort(begin(recent_files), end(recent_files),
-            [](auto const &a, auto const &b) -> bool {
-                return a->get_modified().compare(b->get_modified()) < 0;
-            }
-        );
+        std::sort(std::begin(recent_files), std::end(recent_files), [](auto const &a, auto const &b) -> bool {
+            // a should precede b if a->get_modified() is later than b->get_modified()
+            return a->get_modified().compare(b->get_modified()) > 0;
+        });
 
         unsigned inserted_entries = 0;
         for (auto const &recent_file : recent_files) {
