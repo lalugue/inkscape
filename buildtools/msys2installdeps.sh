@@ -76,7 +76,6 @@ $ARCH-potrace \
 $ARCH-libcdr \
 $ARCH-libvisio \
 $ARCH-libwpg \
-$ARCH-libspelling \
 $ARCH-gtksourceview5 \
 $ARCH-graphicsmagick \
 $ARCH-libjxl \
