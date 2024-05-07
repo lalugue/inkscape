@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: inkscape 0.91\n"
 "Report-Msgid-Bugs-To: inkscape-translator@lists.inkscape.org\n"
 "POT-Creation-Date: 2023-10-27 18:24+0000\n"
-"PO-Revision-Date: 2023-10-29 11:00+0100\n"
+"PO-Revision-Date: 2023-11-11 05:01+0100\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
 "Language: eu\n"
@@ -3700,9 +3700,8 @@ msgid "Noise"
 msgstr "Zarata"
 
 #: ../build/share/paint/patterns.svg.h:1
-#, fuzzy
 msgid "Hatches"
-msgstr "Adabakiak"
+msgstr "Marradurak"
 
 #: ../build/share/symbols/symbols.h:2
 msgctxt "Symbol"
@@ -5388,12 +5387,12 @@ msgstr "Langa"
 #: ../build/share/symbols/symbols.h:616 ../build/share/symbols/symbols.h:628
 msgctxt "Symbol"
 msgid "Kissing gate"
-msgstr ""
+msgstr "Ate-muxu"
 
 #: ../build/share/symbols/symbols.h:617 ../build/share/symbols/symbols.h:629
 msgctxt "Symbol"
 msgid "Lift gate"
-msgstr ""
+msgstr "Ate altxagarria"
 
 #: ../build/share/symbols/symbols.h:618 ../build/share/symbols/symbols.h:630
 msgctxt "Symbol"
@@ -5568,17 +5567,17 @@ msgstr "SJJB mapako ikonoak [Lurraren erabilera multzoa]"
 #: ../build/share/symbols/symbols.h:697 ../build/share/symbols/symbols.h:705
 msgctxt "Symbol"
 msgid "Coniferous"
-msgstr ""
+msgstr "Koniferoak"
 
 #: ../build/share/symbols/symbols.h:698 ../build/share/symbols/symbols.h:706
 msgctxt "Symbol"
 msgid "Coniferous and deciduous"
-msgstr ""
+msgstr "Koniferoak eta hostoerorkorrak"
 
 #: ../build/share/symbols/symbols.h:699 ../build/share/symbols/symbols.h:707
 msgctxt "Symbol"
 msgid "Deciduous"
-msgstr ""
+msgstr "Hostoerorkorrak"
 
 #: ../build/share/symbols/symbols.h:700 ../build/share/symbols/symbols.h:708
 msgctxt "Symbol"
@@ -5733,7 +5732,7 @@ msgstr "Irrati-dorrea"
 #: ../build/share/symbols/symbols.h:743 ../build/share/symbols/symbols.h:764
 msgctxt "Symbol"
 msgid "Lookout"
-msgstr ""
+msgstr "Talaia"
 
 #: ../build/share/symbols/symbols.h:744 ../build/share/symbols/symbols.h:765
 msgctxt "Symbol"
@@ -5858,15 +5857,14 @@ msgid "Computer"
 msgstr "Ordenagailua"
 
 #: ../build/share/symbols/symbols.h:799 ../build/share/symbols/symbols.h:843
-#, fuzzy
 msgctxt "Symbol"
 msgid "Confectionery"
-msgstr "_Lotura-marrak"
+msgstr "Gozogintza"
 
 #: ../build/share/symbols/symbols.h:800 ../build/share/symbols/symbols.h:844
 msgctxt "Symbol"
 msgid "Convenience"
-msgstr ""
+msgstr "Auzoko janari denda"
 
 #: ../build/share/symbols/symbols.h:801 ../build/share/symbols/symbols.h:845
 msgctxt "Symbol"
@@ -5874,10 +5872,9 @@ msgid "Copy shop"
 msgstr "Kopia-denda"
 
 #: ../build/share/symbols/symbols.h:802 ../build/share/symbols/symbols.h:846
-#, fuzzy
 msgctxt "Symbol"
 msgid "Department store"
-msgstr "Trazu desberdinak"
+msgstr "Saltoki handiak"
 
 #: ../build/share/symbols/symbols.h:803 ../build/share/symbols/symbols.h:847
 msgctxt "Symbol"
@@ -5910,10 +5907,9 @@ msgid "Florist"
 msgstr "Lore-saltzailea"
 
 #: ../build/share/symbols/symbols.h:809 ../build/share/symbols/symbols.h:853
-#, fuzzy
 msgctxt "Symbol"
 msgid "Garden center"
-msgstr "Orriaren zentroa"
+msgstr "Lorategi-zentroa"
 
 #: ../build/share/symbols/symbols.h:810 ../build/share/symbols/symbols.h:854
 msgctxt "Symbol"
@@ -5921,10 +5917,9 @@ msgid "Gift"
 msgstr "Oparia"
 
 #: ../build/share/symbols/symbols.h:811 ../build/share/symbols/symbols.h:855
-#, fuzzy
 msgctxt "Symbol"
 msgid "Greengrocer"
-msgstr "Berdea"
+msgstr "Barazki-saltzailea"
 
 #: ../build/share/symbols/symbols.h:812 ../build/share/symbols/symbols.h:856
 msgctxt "Symbol"
@@ -5932,10 +5927,9 @@ msgid "Hairdresser"
 msgstr "Ile-apaintzailea"
 
 #: ../build/share/symbols/symbols.h:813 ../build/share/symbols/symbols.h:857
-#, fuzzy
 msgctxt "Symbol"
 msgid "Hearing aids"
-msgstr "Irteerako hegaldiak"
+msgstr "Audiofonoa"
 
 #: ../build/share/symbols/symbols.h:814 ../build/share/symbols/symbols.h:858
 msgctxt "Symbol"
@@ -6190,7 +6184,7 @@ msgstr "Arte-galeria 2"
 #: ../build/share/symbols/symbols.h:939 ../build/share/symbols/symbols.h:971
 msgctxt "Symbol"
 msgid "Attraction"
-msgstr ""
+msgstr "Erakargarria"
 
 #: ../build/share/symbols/symbols.h:940 ../build/share/symbols/symbols.h:972
 msgctxt "Symbol"
@@ -6233,10 +6227,9 @@ msgid "Clock"
 msgstr "Ordularia"
 
 #: ../build/share/symbols/symbols.h:949 ../build/share/symbols/symbols.h:981
-#, fuzzy
 msgctxt "Symbol"
 msgid "Guidepost"
-msgstr "Gidak"
+msgstr "Bide-seinalea"
 
 #: ../build/share/symbols/symbols.h:951 ../build/share/symbols/symbols.h:983
 msgctxt "Symbol"
@@ -6294,15 +6287,14 @@ msgid "Water wheel"
 msgstr "Ur-gurpila"
 
 #: ../build/share/symbols/symbols.h:962 ../build/share/symbols/symbols.h:994
-#, fuzzy
 msgctxt "Symbol"
 msgid "Wayside cross"
-msgstr "Gezi zabala"
+msgstr "Bide alboko gurutza"
 
 #: ../build/share/symbols/symbols.h:963 ../build/share/symbols/symbols.h:995
 msgctxt "Symbol"
 msgid "Wayside shrine"
-msgstr ""
+msgstr "Bide alboko santutegia"
 
 #: ../build/share/symbols/symbols.h:964 ../build/share/symbols/symbols.h:996
 msgctxt "Symbol"
@@ -6312,7 +6304,7 @@ msgstr "Haize-errota"
 #: ../build/share/symbols/symbols.h:965 ../build/share/symbols/symbols.h:997
 msgctxt "Symbol"
 msgid "Wreck"
-msgstr ""
+msgstr "Ontzi-hondarra"
 
 #: ../build/share/symbols/symbols.h:966 ../build/share/symbols/symbols.h:998
 msgctxt "Symbol"
@@ -6377,7 +6369,7 @@ msgstr "Larrialdirako telefonoa"
 #: ../build/share/symbols/symbols.h:1011 ../build/share/symbols/symbols.h:1055
 msgctxt "Symbol"
 msgid "Ford"
-msgstr ""
+msgstr "Ibia"
 
 #: ../build/share/symbols/symbols.h:1012 ../build/share/symbols/symbols.h:1056
 msgctxt "Symbol"
@@ -6477,12 +6469,12 @@ msgstr "Biribilgunea (erloju-orratzen noranzkoa)"
 #: ../build/share/symbols/symbols.h:1033 ../build/share/symbols/symbols.h:1077
 msgctxt "Symbol"
 msgid "Slipway"
-msgstr ""
+msgstr "Itsasbidea"
 
 #: ../build/share/symbols/symbols.h:1034 ../build/share/symbols/symbols.h:1078
 msgctxt "Symbol"
 msgid "Speed bump"
-msgstr ""
+msgstr "Balaztatze-banda"
 
 #: ../build/share/symbols/symbols.h:1035 ../build/share/symbols/symbols.h:1079
 msgctxt "Symbol"
@@ -6490,10 +6482,9 @@ msgid "Subway"
 msgstr "Metroa"
 
 #: ../build/share/symbols/symbols.h:1036 ../build/share/symbols/symbols.h:1080
-#, fuzzy
 msgctxt "Symbol"
 msgid "Taxi rank"
-msgstr "Taxia"
+msgstr "Taxi geralekua"
 
 #: ../build/share/symbols/symbols.h:1037 ../build/share/symbols/symbols.h:1081
 msgctxt "Symbol"
@@ -6513,19 +6504,17 @@ msgstr "Tren geltokia 2"
 #: ../build/share/symbols/symbols.h:1040 ../build/share/symbols/symbols.h:1084
 msgctxt "Symbol"
 msgid "Tram stop"
-msgstr ""
+msgstr "Tranbia geltokia"
 
 #: ../build/share/symbols/symbols.h:1041 ../build/share/symbols/symbols.h:1085
-#, fuzzy
 msgctxt "Symbol"
 msgid "Turning circle"
-msgstr "Zirkunferentzia inskribatu"
+msgstr "Biraketa zirkulua"
 
 #: ../build/share/symbols/symbols.h:1042 ../build/share/symbols/symbols.h:1086
-#, fuzzy
 msgctxt "Symbol"
 msgid "Walking"
-msgstr "Aparkalekua"
+msgstr "Oinez"
 
 #: ../build/share/symbols/symbols.h:1043 ../build/share/symbols/symbols.h:1087
 msgctxt "Symbol"
@@ -6545,7 +6534,7 @@ msgstr "Presa"
 #: ../build/share/symbols/symbols.h:1091 ../build/share/symbols/symbols.h:1094
 msgctxt "Symbol"
 msgid "Weir"
-msgstr ""
+msgstr "Urtegia"
 
 #: ../build/share/symbols/symbols.h:1095
 msgctxt "Symbol"
@@ -6555,12 +6544,12 @@ msgstr "SJJB mapako ikonoak [Gurtze leku multzoa]"
 #: ../build/share/symbols/symbols.h:1096 ../build/share/symbols/symbols.h:1116
 msgctxt "Symbol"
 msgid "Bahai"
-msgstr ""
+msgstr "Bahaista"
 
 #: ../build/share/symbols/symbols.h:1097 ../build/share/symbols/symbols.h:1117
 msgctxt "Symbol"
 msgid "Bahai 2"
-msgstr ""
+msgstr "Bahaista 2"
 
 #: ../build/share/symbols/symbols.h:1098 ../build/share/symbols/symbols.h:1118
 msgctxt "Symbol"
@@ -6605,12 +6594,12 @@ msgstr "Musulmana 2"
 #: ../build/share/symbols/symbols.h:1106 ../build/share/symbols/symbols.h:1126
 msgctxt "Symbol"
 msgid "Jain"
-msgstr ""
+msgstr "Jainista"
 
 #: ../build/share/symbols/symbols.h:1107 ../build/share/symbols/symbols.h:1127
 msgctxt "Symbol"
 msgid "Jain 2"
-msgstr ""
+msgstr "Jainista 2"
 
 #: ../build/share/symbols/symbols.h:1108 ../build/share/symbols/symbols.h:1128
 msgctxt "Symbol"
@@ -6625,22 +6614,22 @@ msgstr "Judua 2"
 #: ../build/share/symbols/symbols.h:1110 ../build/share/symbols/symbols.h:1130
 msgctxt "Symbol"
 msgid "Shinto"
-msgstr ""
+msgstr "Sintoista"
 
 #: ../build/share/symbols/symbols.h:1111 ../build/share/symbols/symbols.h:1131
 msgctxt "Symbol"
 msgid "Shinto 2"
-msgstr ""
+msgstr "Sintoista 2"
 
 #: ../build/share/symbols/symbols.h:1112 ../build/share/symbols/symbols.h:1132
 msgctxt "Symbol"
 msgid "Sikh"
-msgstr ""
+msgstr "Sikh"
 
 #: ../build/share/symbols/symbols.h:1113 ../build/share/symbols/symbols.h:1133
 msgctxt "Symbol"
 msgid "Sikh 2"
-msgstr ""
+msgstr "Sikh 2"
 
 #: ../build/share/symbols/symbols.h:1114 ../build/share/symbols/symbols.h:1134
 msgctxt "Symbol"
@@ -6728,20 +6717,19 @@ msgstr "Inprimatu Inkscape bertsioa eta irten"
 
 #: ../src/actions/actions-base.cpp:207
 msgid "Active Window: Start Call"
-msgstr ""
+msgstr "Leiho aktiboa: Hasi deia"
 
 #: ../src/actions/actions-base.cpp:207
-#, fuzzy
 msgid "Start execution in active window"
-msgstr "Pilatu hautapena urrats bat beherantz"
+msgstr "Hasi exekuzioa leiho aktiboan"
 
 #: ../src/actions/actions-base.cpp:208
 msgid "Active Window: End Call"
-msgstr ""
+msgstr "Leiho aktiboa: Bukatu deia"
 
 #: ../src/actions/actions-base.cpp:208
 msgid "End execution in active window"
-msgstr ""
+msgstr "Bukatu exekuzioa leiho aktiboan"
 
 #: ../src/actions/actions-base.cpp:209
 msgid "Debug Info"
@@ -6891,9 +6879,8 @@ msgid "Do not render filters (for speed)"
 msgstr "Ez errendatu iragazkiak (abiadurarako)"
 
 #: ../src/actions/actions-canvas-mode.cpp:271
-#, fuzzy
 msgid "Display Mode: Enhance Thin Lines"
-msgstr "Bistaratze modua: Ile-lerroak"
+msgstr "Bistaratze modua: Lerro meheak hobetzea"
 
 #: ../src/actions/actions-canvas-mode.cpp:271
 #: ../share/ui/display-popup.glade:95
@@ -6912,29 +6899,28 @@ msgid ""
 "Show objects as outlines, and the actual drawing below them with reduced "
 "opacity"
 msgstr ""
+"Erakutsi objektuak ingerada gisa, eta benetako marrazkia haien azpian "
+"opakutasuna murriztuta"
 
 #: ../src/actions/actions-canvas-mode.cpp:273
-#, fuzzy
 msgid "Display Mode: Cycle"
-msgstr "Bistaratze moduen zikloa"
+msgstr "Bistaratze modua: Zikloa"
 
 #: ../src/actions/actions-canvas-mode.cpp:273
 msgid "Cycle through display modes"
 msgstr "Aldatu bistaratze moduen artean"
 
 #: ../src/actions/actions-canvas-mode.cpp:274
-#, fuzzy
 msgid "Display Mode: Toggle"
-msgstr "Bistaratze moduen txandakatzea"
+msgstr "Bistaratze modua: Txandakatu"
 
 #: ../src/actions/actions-canvas-mode.cpp:274
 msgid "Toggle between normal and last non-normal mode"
 msgstr "Txandakatu modu normala eta azken modu ez normala"
 
 #: ../src/actions/actions-canvas-mode.cpp:275
-#, fuzzy
 msgid "Display Mode: Toggle Preview"
-msgstr "Bistaratze moduaren txandakatzearen aurrebista"
+msgstr "Bistaratze modua: Txandakatu aurrebista"
 
 #: ../src/actions/actions-canvas-mode.cpp:275
 msgid "Toggle between preview and previous mode"
@@ -7161,14 +7147,12 @@ msgid "Toggle snapping to page border"
 msgstr "Txandakatu orri-ertzari atxikitzea"
 
 #: ../src/actions/actions-canvas-snapping.cpp:272
-#, fuzzy
 msgid "Snap Page Margin"
-msgstr "Orriaren marjinak"
+msgstr "Atxiki orriaren marjina"
 
 #: ../src/actions/actions-canvas-snapping.cpp:272
-#, fuzzy
 msgid "Toggle snapping to page margin"
-msgstr "Txandakatu orri-ertzari atxikitzea"
+msgstr "Txandakatu orriaren marjina atxikitzea"
 
 #: ../src/actions/actions-canvas-snapping.cpp:273
 msgid "Snap Grids"
@@ -7179,14 +7163,12 @@ msgid "Toggle snapping to grids"
 msgstr "Txandakatu saretei atxikitzea"
 
 #: ../src/actions/actions-canvas-snapping.cpp:274
-#, fuzzy
 msgid "Snap Grid Lines"
-msgstr "Atxiki gida-lerroei"
+msgstr "Atxiki gida-lerroak"
 
 #: ../src/actions/actions-canvas-snapping.cpp:274
-#, fuzzy
 msgid "Toggle snapping to grid lines"
-msgstr "Txandakatu gida-lerroei atxikitzea"
+msgstr "Txandakatu gida-lerroetara atxikitzea"
 
 #: ../src/actions/actions-canvas-snapping.cpp:275
 msgid "Snap Guide Lines"
@@ -7388,59 +7370,52 @@ msgid "Reset canvas flipping"
 msgstr "Berrezarri oihalaren iraultzea"
 
 #: ../src/actions/actions-canvas-transform.cpp:290
-#, fuzzy
 msgid "Zoom Absolute"
-msgstr "Absolutua"
+msgstr "Zoom absolutua"
 
 #: ../src/actions/actions-canvas-transform.cpp:290
-#, fuzzy
 msgid "Zoom to an absolute value"
-msgstr "Botoaren balio konstantea"
+msgstr "Egin zoom balio absolutu batera"
 
 #: ../src/actions/actions-canvas-transform.cpp:291
-#, fuzzy
 msgid "Zoom Relative"
-msgstr "Erlatiboa"
+msgstr "Zoom erlatiboa"
 
 #: ../src/actions/actions-canvas-transform.cpp:291
 msgid "Zoom to by a relative amount"
-msgstr ""
+msgstr "Egin zoom kopuru erlatibo batean"
 
 #: ../src/actions/actions-canvas-transform.cpp:293
 msgid "Rotate Absolute (Radians)"
-msgstr ""
+msgstr "Biratu absolutua (Radianak)"
 
 #: ../src/actions/actions-canvas-transform.cpp:293
 msgid "Rotate to an absolute value (Radians)"
-msgstr ""
+msgstr "Biratu balio absolutu batera (Radianak)"
 
 #: ../src/actions/actions-canvas-transform.cpp:294
 msgid "Rotate Relative (Radians)"
-msgstr ""
+msgstr "Biratu erlatiboa (Radianak)"
 
 #: ../src/actions/actions-canvas-transform.cpp:294
-#, fuzzy
 msgid "Rotate to by a relative amount (Radians)"
-msgstr "Biratu lauzak gradu kopuru honen arabera"
+msgstr "Biratu kopuru erlatibo batean (Radianak)"
 
 #: ../src/actions/actions-canvas-transform.cpp:295
-#, fuzzy
 msgid "Rotate Absolute (Degrees)"
-msgstr "Biratu hautatutako objektuak graduetan"
+msgstr "Biratu absolutua (Graduak)"
 
 #: ../src/actions/actions-canvas-transform.cpp:295
 msgid "Rotate to an absolute value (Degrees)"
-msgstr ""
+msgstr "Biratu balio absolutu batera (Graduak)"
 
 #: ../src/actions/actions-canvas-transform.cpp:296
-#, fuzzy
 msgid "Rotate Relative (Degrees)"
-msgstr "Biratu hautatutako objektuak graduetan"
+msgstr "Biratu erlatiboa (graduak)"
 
 #: ../src/actions/actions-canvas-transform.cpp:296
-#, fuzzy
 msgid "Rotate to by a relative amount (Degrees)"
-msgstr "Biratu lauzak gradu kopuru honen arabera"
+msgstr "Biratu kopuru erlatibo batean (Graduak)"
 
 #: ../src/actions/actions-canvas-transform.cpp:298 ../share/ui/menus.ui:450
 msgid "Lock Rotation"
@@ -7479,23 +7454,20 @@ msgid "Edit properties of this document (to be saved with the document)"
 msgstr "Editatu dokumentuaren propietateak (dokumentuarekin gordetzeko)"
 
 #: ../src/actions/actions-dialogs.cpp:37
-#, fuzzy
 msgid "Open Document Resources"
-msgstr "Ireki dokumentuaren propietatek"
+msgstr "Ireki dokumentuaren baliabideak"
 
 #: ../src/actions/actions-dialogs.cpp:37
 msgid "Show document overview and resources"
-msgstr ""
+msgstr "Erakutsi dokumentuaren ikuspegi orokorra eta baliabideak"
 
 #: ../src/actions/actions-dialogs.cpp:38
-#, fuzzy
 msgid "Open Extensions Gallery"
-msgstr "Ireki hedapenen karpeta"
+msgstr "Ireki hedapenen galeria"
 
 #: ../src/actions/actions-dialogs.cpp:38
-#, fuzzy
 msgid "Show and run available extensions"
-msgstr "Zerrendatu ekintza erabilgarri guztiak"
+msgstr "Erakutsi eta exekutatu hedapen erabilgarriak"
 
 #: ../src/actions/actions-dialogs.cpp:39
 msgid "Open Export"
@@ -7526,14 +7498,12 @@ msgid "Manage, edit, and apply SVG filters"
 msgstr "Kudeatu, editatu eta aplikatu SVG iragazkiak"
 
 #: ../src/actions/actions-dialogs.cpp:42
-#, fuzzy
 msgid "Open Filter Gallery"
-msgstr "Ireki LPE elkarrizketa-koadroa"
+msgstr "Ireki iragazki galeria"
 
 #: ../src/actions/actions-dialogs.cpp:42
-#, fuzzy
 msgid "Show and apply available filters"
-msgstr "Zerrendatu ekintza erabilgarri guztiak"
+msgstr "Erakutsi eta aplikatu iragazki erabilgarriak"
 
 #: ../src/actions/actions-dialogs.cpp:43
 msgid "Open Find"
@@ -7544,14 +7514,12 @@ msgid "Find objects in document"
 msgstr "Bilatu objektuak dokumentuan"
 
 #: ../src/actions/actions-dialogs.cpp:44
-#, fuzzy
 msgid "Open Font Collections"
-msgstr "Letra-tipoaren lizentzia irekia"
+msgstr "Ireki letra-tipo bilduma"
 
 #: ../src/actions/actions-dialogs.cpp:44
-#, fuzzy
 msgid "Manage Font Collections"
-msgstr "Proiekzioaren angelua"
+msgstr "Kudeatu letra-tipo bildumak"
 
 #: ../src/actions/actions-dialogs.cpp:45
 msgid "Open Glyphs"
@@ -7756,19 +7724,16 @@ msgstr "Bistaratze-unitate lehenetsia aldatu da"
 
 #: ../src/actions/actions-edit-document.cpp:79
 #: ../share/ui/page-properties.glade:820
-#, fuzzy
 msgid "Clip to page"
-msgstr "Lerrokatu orrialdera:"
+msgstr "Moztu orrialdera"
 
 #: ../src/actions/actions-edit-document.cpp:90 ../src/object/sp-guide.cpp:276
-#, fuzzy
 msgid "Create Guides Around the Current Page"
-msgstr "Sortu gidak orriaren inguruan"
+msgstr "Sortu gidak uneko orrialdearen inguruan"
 
 #: ../src/actions/actions-edit-document.cpp:90
-#, fuzzy
 msgid "Create four guides aligned with the page borders of the current page"
-msgstr "Sortu lau gida orrialdeko ertzetara lerrokatuta"
+msgstr "Sortu lau gida uneko orrialdeko ertzekin lerrokatuta"
 
 #: ../src/actions/actions-edit-document.cpp:91 ../share/ui/menus.ui:334
 msgid "Lock All Guides"
@@ -7802,24 +7767,20 @@ msgid "Fit the page to the drawing"
 msgstr "Doitu orria marrazkira"
 
 #: ../src/actions/actions-edit-document.cpp:95
-#, fuzzy
 msgid "Toggle Clip to Page"
-msgstr "Txandakatu orri-ertzari atxikitzea"
+msgstr "Txandakatu orrira moztea"
 
 #: ../src/actions/actions-edit-document.cpp:95
-#, fuzzy
 msgid "Toggle between clipped to page and complete rendering"
-msgstr "Txandakatu hautatze-tresna eta erabilitako azken tresna"
+msgstr "Txandakatu orrira moztua eta eta errendatze osoaren artean"
 
 #: ../src/actions/actions-edit-document.cpp:96
-#, fuzzy
 msgid "Show Grids"
-msgstr "Erakutsi _gidak"
+msgstr "Erakutsi saretak"
 
 #: ../src/actions/actions-edit-document.cpp:96
-#, fuzzy
 msgid "Toggle the visibility of grids"
-msgstr "Txandakatu elementuen ikusgaitasuna"
+msgstr "Txandakatu sareten ikusgaitasuna"
 
 #: ../src/actions/actions-edit-window.cpp:63
 #: ../src/selection-chemistry.cpp:1319 ../share/ui/toolbar-commands.ui:448
@@ -7980,10 +7941,8 @@ msgid "Duplicate Selected Objects"
 msgstr "Bikoiztu hautatutako objektuak"
 
 #: ../src/actions/actions-edit.cpp:305
-#, fuzzy
 msgid "Duplicate selected objects and reapply last transformation"
-msgstr ""
-"Bikoiztu hautatutako objektuak eta aplikatu berriro azken transformazioa"
+msgstr "Bikoiztu hautatutako objektuak eta berriz aplikatu azken eraldatzea"
 
 #: ../src/actions/actions-edit.cpp:306 ../share/ui/toolbar-commands.ui:664
 msgid "Create Clone"
@@ -8139,44 +8098,43 @@ msgid "External Edit Image:"
 msgstr "Irudiaren kanpoko edizioa:"
 
 #: ../src/actions/actions-element-image.cpp:150
-#, fuzzy
 msgid "Nothing selected."
-msgstr "Ez da ezer hautatu"
+msgstr "Ez da ezer hautatu."
 
 #: ../src/actions/actions-element-image.cpp:193
-#, fuzzy, c-format
+#, c-format
 msgid "<b>%d</b> image cropped"
 msgid_plural "<b>%d</b> images cropped"
-msgstr[0] "<b>%d</b> bide soilduta."
-msgstr[1] "<b>%d</b> bide soilduta."
+msgstr[0] "Irudi <b>%d</b> moztuta"
+msgstr[1] "<b>%d</b> irudi moztuta"
 
-#
 # File: ../share/extensions/inkex/deprecated.py, line: 148
 #: ../src/actions/actions-element-image.cpp:195
-#, fuzzy, c-format
+#, c-format
 msgid "%s byte removed"
 msgid_plural "%s bytes removed"
-msgstr[0] "{} kendu egin da"
-msgstr[1] "{} kendu egin da"
+msgstr[0] "Byte %s kendu da"
+msgstr[1] "%s byte kendu dira"
 
 #: ../src/actions/actions-element-image.cpp:197
 #, c-format
 msgid "%s byte added!"
 msgid_plural "%s bytes added!"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Byte %s gehitu da!"
+msgstr[1] "%s byte gehitu dira!"
 
 #: ../src/actions/actions-element-image.cpp:203
 msgid "No images cropped!"
-msgstr ""
+msgstr "Ez da irudirik moztu!"
 
 #: ../src/actions/actions-element-image.cpp:210
+#, fuzzy
 msgid "Crop image to clip"
-msgstr ""
+msgstr "Moztu, ebaki beharreko irudia"
 
 #: ../src/actions/actions-element-image.cpp:210
 msgid "Remove parts of the image outside the applied clipping area."
-msgstr ""
+msgstr "Kendu aplikatutako ebaketa eremutik kanpoko irudiaren zatiak."
 
 #: ../src/actions/actions-element-image.cpp:211
 msgid "Edit externally"
@@ -8281,13 +8239,12 @@ msgid "Clean Up Document"
 msgstr "Garbitu dokumentua"
 
 #: ../src/actions/actions-file-window.cpp:127
-#, fuzzy
 msgid ""
 "Remove unused definitions (such as gradients or clipping paths) from the "
 "document"
 msgstr ""
-"Kendu dokumentuko <defs> etiketatik erabiltzen ez diren definizioak "
-"(gradienteak edo mozketa bideak bezalakoak)"
+"Kendu dokumentutik erabili gabeko definizioak (gradienteak edo kliparen "
+"bideak)"
 
 #: ../src/actions/actions-file-window.cpp:128
 #: ../src/live_effects/lpe-fill-between-many.cpp:37
@@ -8300,9 +8257,8 @@ msgid "Close window (unless last window)"
 msgstr "Itxi leihoa (azken leihoa salbu)"
 
 #: ../src/actions/actions-file.cpp:83
-#, fuzzy
 msgid "Replace file contents"
-msgstr "Ordeztu letra-tipoa"
+msgstr "Ordeztu fitxategiaren edukia"
 
 #: ../src/actions/actions-file.cpp:108
 msgid "File Open"
@@ -8338,7 +8294,7 @@ msgstr "Ireki fitxategi-leihoa"
 
 #: ../src/actions/actions-file.cpp:112
 msgid "File Contents Replace"
-msgstr ""
+msgstr "Fitxategiaren edukia ordeztea"
 
 #: ../src/actions/actions-file.cpp:112
 msgid "Replace current document's contents by contents of another file"
@@ -8351,7 +8307,7 @@ msgstr "Sartu fitxategi-izena"
 
 #: ../src/actions/actions-file.cpp:122
 msgid "Namedview; Update=1, Replace=0"
-msgstr ""
+msgstr "Izendun ikuspegia; Eguneratu=1, Ordeztu=0"
 
 #: ../src/actions/actions-help-url.cpp:114 ../share/ui/menus.ui:1235
 msgid "Ask Us a Question"
@@ -8617,9 +8573,8 @@ msgid "Group already layer."
 msgstr "Taldea jadanik geruza da."
 
 #: ../src/actions/actions-layer.cpp:421
-#, fuzzy
 msgid "Selection is not a group."
-msgstr "Hautapena <b>ez dago talde batean</b>."
+msgstr "Hautapena ez da talde bat."
 
 #: ../src/actions/actions-layer.cpp:462
 #: ../src/ui/dialog/layer-properties.cpp:196
@@ -8803,9 +8758,8 @@ msgstr "Banatu nodoak horizontalean"
 
 #: ../src/actions/actions-node-align.cpp:94
 #: ../share/ui/align-and-distribute.ui:1072
-#, fuzzy
 msgid "Distribute selected nodes horizontally"
-msgstr "Banatu hautatutako nodoak horizontalean."
+msgstr "Hautatutako nodoak horizontalki banatu"
 
 #: ../src/actions/actions-node-align.cpp:95
 msgid "Distribute nodes vertically"
@@ -8813,9 +8767,8 @@ msgstr "Banatu nodoak bertikalean"
 
 #: ../src/actions/actions-node-align.cpp:95
 #: ../share/ui/align-and-distribute.ui:1093
-#, fuzzy
 msgid "Distribute selected nodes vertically"
-msgstr "Banatu hautatutako nodoak bertikalean."
+msgstr "Hautatutako nodoak bertikalki banatu"
 
 #: ../src/actions/actions-object-align.cpp:267
 #: ../src/actions/actions-object-align.cpp:566
@@ -8868,76 +8821,68 @@ msgid "Align to left edge"
 msgstr "Lerrokatu ezkerreko ertzean"
 
 #: ../src/actions/actions-object-align.cpp:773
-#, fuzzy
 msgid "Align selection horizontally to left edge"
-msgstr "Lerrokatu hautapena horizontalean ezkerreko ertzean."
+msgstr "Lerrokatu hautapena horizontalki ezkerreko ertzean"
 
 #: ../src/actions/actions-object-align.cpp:774
 msgid "Align to horizontal center"
 msgstr "Lerrokatu erdigune horizontalean"
 
 #: ../src/actions/actions-object-align.cpp:774
-#, fuzzy
 msgid "Align selection horizontally to the center"
-msgstr "Lerrokatu hautapena horizontalean erdigunean."
+msgstr "Lerrokatu hautapena horizontalki erdigunean"
 
 #: ../src/actions/actions-object-align.cpp:775
 msgid "Align to right edge"
 msgstr "Lerrokatu eskuineko ertzean"
 
 #: ../src/actions/actions-object-align.cpp:775
-#, fuzzy
 msgid "Align selection horizontally to right edge"
-msgstr "Lerrokatu hautapena horizontalean eskuineko ertzean."
+msgstr "Lerrokatu hautapena horizontalki eskuineko ertzean"
 
 #: ../src/actions/actions-object-align.cpp:776
 msgid "Align to top edge"
 msgstr "Lerrokatu goiko ertzean"
 
 #: ../src/actions/actions-object-align.cpp:776
-#, fuzzy
 msgid "Align selection vertically to top edge"
-msgstr "Lerrokatu hautapena bertikalean goiko ertzean."
+msgstr "Lerrokatu hautapena bertikalki goiko ertzean"
 
 #: ../src/actions/actions-object-align.cpp:777
 msgid "Align to bottom edge"
 msgstr "Lerrokatu beheko ertzean"
 
 #: ../src/actions/actions-object-align.cpp:777
-#, fuzzy
 msgid "Align selection vertically to bottom edge"
-msgstr "Lerrokatu hautapena bertikalean beheko ertzean."
+msgstr "Lerrokatu hautapena bertikalki beheko ertzean"
 
 #: ../src/actions/actions-object-align.cpp:778
 msgid "Align to vertical center"
 msgstr "Lerrokatu erdigune bertikalean"
 
 #: ../src/actions/actions-object-align.cpp:778
-#, fuzzy
 msgid "Align selection vertically to the center"
-msgstr "Lerrokatu hautapena bertikalean erdigunean."
+msgstr "Lerrokatu hautapena bertikalki erdigunean"
 
 #: ../src/actions/actions-object-align.cpp:779
 msgid "Align to center"
 msgstr "Lerrokatu erdigunean"
 
 #: ../src/actions/actions-object-align.cpp:779
-#, fuzzy
 msgid "Align selection to the center"
-msgstr "Lerrokatu hautapena erdigunean."
+msgstr "Lerrokatu hautapena erdigunean"
 
 #: ../src/actions/actions-object-align.cpp:780
 msgid "Align text objects"
 msgstr "Lerrokatu testu-objektuak"
 
 #: ../src/actions/actions-object-align.cpp:780
-#, fuzzy
 msgid ""
 "Align selected text anchors; usage: [[vertical | horizontal] [last|first|"
 "biggest|smallest|page|drawing|selection]?"
 msgstr ""
-"Lerrokatu hautatutako testuaren lerrokatze-puntuak; erabilera: [[vertical | "
-"horizontal] [last|first|biggest|smallest|page|drawing|selection]?"
+"Lerrokatu hautatutako testu-aingurak; erabilera: [[vertical | horizontal] "
+"[last|first|biggest|smallest|page|drawing|selection]?"
 
 #: ../src/actions/actions-object-align.cpp:782
 msgid "Distribute objects"
@@ -8957,9 +8902,8 @@ msgstr "Berdindu tarte horizontalak"
 
 #: ../src/actions/actions-object-align.cpp:783
 #: ../share/ui/align-and-distribute.ui:551
-#, fuzzy
 msgid "Distribute horizontally with even horizontal gaps"
-msgstr "Banatu horizontalean tarte horizontal berdinak utzita."
+msgstr "Banatu horizontalki tarte horizontal berdinak utzita"
 
 #: ../src/actions/actions-object-align.cpp:784
 msgid "Even left edges"
@@ -8967,9 +8911,8 @@ msgstr "Berdindu ezkerreko ertzak"
 
 #: ../src/actions/actions-object-align.cpp:784
 #: ../share/ui/align-and-distribute.ui:485
-#, fuzzy
 msgid "Distribute horizontally with even spacing between left edges"
-msgstr "Banatu horizontalean ezkerreko ertzen artean tarte berdinak utzita."
+msgstr "Banatu horizontalki ezkerreko ertzen artean tarte berdinak utzita"
 
 #: ../src/actions/actions-object-align.cpp:785
 msgid "Even horizontal centers"
@@ -8977,9 +8920,8 @@ msgstr "Berdindu erdigune horizontalak"
 
 #: ../src/actions/actions-object-align.cpp:785
 #: ../share/ui/align-and-distribute.ui:507
-#, fuzzy
 msgid "Distribute horizontally with even spacing between centers"
-msgstr "Banatu horizontalean erdiguneen artean tarte berdinak utzita."
+msgstr "Banatu horizontalki erdiguneen artean tarte berdinak utzita"
 
 #: ../src/actions/actions-object-align.cpp:786
 msgid "Even right edges"
@@ -8987,9 +8929,8 @@ msgstr "Berdindu eskuineko ertzak"
 
 #: ../src/actions/actions-object-align.cpp:786
 #: ../share/ui/align-and-distribute.ui:529
-#, fuzzy
 msgid "Distribute horizontally with even spacing between right edges"
-msgstr "Banatu horizontalean eskuineko ertzen artean tarte berdinak utzita."
+msgstr "Banatu horizontalki eskuineko ertzen artean tarte berdinak utzita"
 
 #: ../src/actions/actions-object-align.cpp:787
 msgid "Even vertical gaps"
@@ -8997,9 +8938,8 @@ msgstr "Berdindu tarte bertikalak"
 
 #: ../src/actions/actions-object-align.cpp:787
 #: ../share/ui/align-and-distribute.ui:661
-#, fuzzy
 msgid "Distribute vertically with even vertical gaps"
-msgstr "Banatu bertikalean tarte bertikal berdinak utzita."
+msgstr "Banatu bertikalki tarte bertikal berdinak utzita"
 
 #: ../src/actions/actions-object-align.cpp:788
 msgid "Even top edges"
@@ -9007,9 +8947,8 @@ msgstr "Berdindu goiko ertzak"
 
 #: ../src/actions/actions-object-align.cpp:788
 #: ../share/ui/align-and-distribute.ui:595
-#, fuzzy
 msgid "Distribute vertically with even spacing between top edges"
-msgstr "Banatu bertikalean goiko ertzen artean tarte berdinak utzita."
+msgstr "Banatu bertikalki goiko ertzen artean tarte berdinak utzita"
 
 #: ../src/actions/actions-object-align.cpp:789
 msgid "Even vertical centers"
@@ -9017,9 +8956,8 @@ msgstr "Berdindu erdigune bertikalak"
 
 #: ../src/actions/actions-object-align.cpp:789
 #: ../share/ui/align-and-distribute.ui:617
-#, fuzzy
 msgid "Distribute vertically with even spacing between centers"
-msgstr "Banatu bertikalean erdiguneen artean tarte berdinak utzita."
+msgstr "Banatu bertikalki erdiguneen artean tarte berdinak utzita"
 
 #: ../src/actions/actions-object-align.cpp:790
 msgid "Even bottom edges"
@@ -9027,9 +8965,8 @@ msgstr "Berdindu beheko ertzak"
 
 #: ../src/actions/actions-object-align.cpp:790
 #: ../share/ui/align-and-distribute.ui:639
-#, fuzzy
 msgid "Distribute vertically with even spacing between bottom edges"
-msgstr "Banatu bertikalean beheko ertzen artean tarte berdinak utzita."
+msgstr "Banatu bertikalki beheko ertzen artean tarte berdinak utzita"
 
 #: ../src/actions/actions-object-align.cpp:792
 #: ../src/actions/actions-object-align.cpp:793
@@ -9038,21 +8975,18 @@ msgid "Distribute text objects"
 msgstr "Banatu testu-objektuak"
 
 #: ../src/actions/actions-object-align.cpp:792
-#, fuzzy
 msgid "Distribute text anchors; usage [vertical | horizontal]"
-msgstr "Banatu testuen lerrokatze-puntuak; erabilera [vertical | horizontal]"
+msgstr "Banatu testu-aingurak; erabilera [bertikala | horizontala]"
 
 #: ../src/actions/actions-object-align.cpp:793
 #: ../share/ui/align-and-distribute.ui:573
-#, fuzzy
 msgid "Distribute text anchors horizontally"
-msgstr "Banatu nodoak horizontalean"
+msgstr "Banatu testu-aingurak horizontalki"
 
 #: ../src/actions/actions-object-align.cpp:794
 #: ../share/ui/align-and-distribute.ui:683
-#, fuzzy
 msgid "Distribute text anchors vertically"
-msgstr "Banatu nodoak bertikalean"
+msgstr "Banatu testu-aingurak bertikalki"
 
 #: ../src/actions/actions-object-align.cpp:796
 msgid "Rearrange objects"
@@ -9081,9 +9015,8 @@ msgstr "Trukatu hautapen-ordenan"
 
 #: ../src/actions/actions-object-align.cpp:798
 #: ../share/ui/align-and-distribute.ui:753
-#, fuzzy
 msgid "Exchange positions of selected objects - selection order"
-msgstr "Trukatu hautatutako objektuen posizioak hautapen-ordenan."
+msgstr "Trukatu hautatutako objektuen kokapenak - hautapen-ordena"
 
 #: ../src/actions/actions-object-align.cpp:799
 msgid "Exchange in z-order"
@@ -9091,9 +9024,8 @@ msgstr "Trukatu Z ordenan"
 
 #: ../src/actions/actions-object-align.cpp:799
 #: ../share/ui/align-and-distribute.ui:775
-#, fuzzy
 msgid "Exchange positions of selected objects - stacking order"
-msgstr "Trukatu hautatutako objektuen posizioak pilatze-ordenan."
+msgstr "Trukatu hautatutako objektuen kokapenak - pilatze-ordena"
 
 #: ../src/actions/actions-object-align.cpp:800
 msgid "Exchange around center"
@@ -9101,9 +9033,9 @@ msgstr "Trukatu erdigunearen inguruan"
 
 #: ../src/actions/actions-object-align.cpp:800
 #: ../share/ui/align-and-distribute.ui:797
-#, fuzzy
 msgid "Exchange positions of selected objects - rotate around center point"
-msgstr "Trukatu hautatutako objektuen posizioak, biratu erdigunearen inguruan."
+msgstr ""
+"Trukatu hautatutako objektuen kokapenak - biratu erdigune-puntuaren inguruan"
 
 #: ../src/actions/actions-object-align.cpp:801
 msgid "Random exchange"
@@ -9111,9 +9043,8 @@ msgstr "Trukatu ausaz"
 
 #: ../src/actions/actions-object-align.cpp:801
 #: ../share/ui/align-and-distribute.ui:819
-#, fuzzy
 msgid "Randomize centers in both dimensions"
-msgstr "Ausaz aldatu erdiguneak bi dimentsioetan."
+msgstr "Erdiguneak bi dimentsioetan ausazko egin"
 
 #: ../src/actions/actions-object-align.cpp:802
 msgid "Unclump"
@@ -9127,7 +9058,6 @@ msgstr ""
 "Sakabanatu objektuak: saiatu ertzetik ertzerako distantziak berdintzen."
 
 #: ../src/actions/actions-object-align.cpp:804
-#, fuzzy
 msgid ""
 "Remove overlaps between objects: requires two comma separated numbers "
 "(horizontal and vertical gaps)"
@@ -9249,9 +9179,8 @@ msgid "Convert shapes to paths"
 msgstr "Bihurtu formak bide"
 
 #: ../src/actions/actions-object.cpp:307
-#, fuzzy
 msgid "Add Corners LPE"
-msgstr "Izkinak"
+msgstr "Gehitu LPE izkinak"
 
 #: ../src/actions/actions-object.cpp:307
 #, fuzzy
@@ -9558,24 +9487,20 @@ msgid "Set dithering for PNG export"
 msgstr "Ezarri bilbatzea PNG esportaziorako"
 
 #: ../src/actions/actions-output.cpp:277
-#, fuzzy
 msgid "Export PNG compression"
-msgstr "Esportazioaren PDF bertsioa"
+msgstr "PNG esportatzeko konpresioa"
 
 #: ../src/actions/actions-output.cpp:277
-#, fuzzy
 msgid "Set compression level for PNG export"
-msgstr "Ezarri kolore modua PNG esportazioan"
+msgstr "Ezarri PNG esportatzeko konpresio maila"
 
 #: ../src/actions/actions-output.cpp:278
-#, fuzzy
 msgid "Export PNG antialias"
-msgstr "Esportatu PNG bilbatzea"
+msgstr "PNG esportatzeko ertzak-leuntzea"
 
 #: ../src/actions/actions-output.cpp:278
-#, fuzzy
 msgid "Set antialias level for PNG export"
-msgstr "Ezarri kolore modua PNG esportazioan"
+msgstr "Ezarri PNG esportatzeko ertzak-leuntzeko maila"
 
 #: ../src/actions/actions-output.cpp:280
 msgid "Do Export"
@@ -9699,11 +9624,11 @@ msgstr "Sartu 1/0 balioa Bai/Ez erantzuteko, bilbatzea erabiltzeko"
 
 #: ../src/actions/actions-output.cpp:314
 msgid "Enter integer for PNG compression level (0 to 9)"
-msgstr ""
+msgstr "Sartu PNG konpresio mailarako zenbaki osoa (0...9)"
 
 #: ../src/actions/actions-output.cpp:315
 msgid "Enter integer for PNG antialias level (0 to 3)"
-msgstr ""
+msgstr "Sartu PNG ertzak-leuntzeko mailarako zenbaki osoa (0...3)"
 
 #: ../src/actions/actions-pages.cpp:94 ../src/actions/actions-pages.cpp:125
 msgid "New Page"
@@ -9726,9 +9651,8 @@ msgid "Move Objects with Page"
 msgstr "Aldatu lekuz objektuak orriarekin"
 
 #: ../src/actions/actions-pages.cpp:96
-#, fuzzy
 msgid "Move overlapping objects as the page is moved"
-msgstr "Aldatu lekuz gainjarritako objektuak orria mugitzen denean."
+msgstr "Mugitu gainjarritako objektuak orria mugitzen den heinean"
 
 #: ../src/actions/actions-pages.cpp:97
 msgid "Move Before Previous"
@@ -9747,14 +9671,13 @@ msgid "Move page forwards in the page order"
 msgstr "Eraman orria aurrerantz orri-ordenan"
 
 #: ../src/actions/actions-pages.cpp:125
-#, fuzzy
 msgid "Create a new page and center view on it"
-msgstr "Sortu orri berria"
+msgstr "Sortu orrialde berria eta erdiratu ikuspegia horretan"
 
 #: ../src/actions/actions-pages.cpp:126
-#, fuzzy
 msgid "Delete the selected page and center view on next page"
-msgstr "Ezabatu hautatutako orria"
+msgstr ""
+"Ezabatu hautatutako orrialdea eta erdiratu ikuspegia hurrengo orrialdean"
 
 #: ../src/actions/actions-paths.cpp:246 ../src/path/path-boolop.cpp:48
 msgid "Union"
@@ -9834,23 +9757,23 @@ msgid "Split selected paths into non-overlapping sections"
 msgstr "Zatitu hautatutako bideak gainjartzen ez diren ataletan"
 
 #: ../src/actions/actions-paths.cpp:255
-#, fuzzy
 msgid "Fracture"
-msgstr "_Ezaugarriak"
+msgstr "Haustura"
 
 #: ../src/actions/actions-paths.cpp:255
 msgid "Fracture one or more overlapping objects into all possible segments"
 msgstr ""
+"Gainjarritako objektu bat edo gehiago ahal den segmentu guztietan "
+"hausten du"
 
 #: ../src/actions/actions-paths.cpp:256
-#, fuzzy
 msgctxt "Path flatten"
 msgid "Flatten"
-msgstr "Lautu klipa"
+msgstr "Lautu"
 
 #: ../src/actions/actions-paths.cpp:256
 msgid "Flatten one or more overlapping objects into their visible parts"
-msgstr ""
+msgstr "Lautu objektu bat edo gehiago ikusgai dauden zatietan"
 
 #: ../src/actions/actions-paths.cpp:257 ../share/ui/menus.ui:1064
 msgid "Fill between paths"
@@ -9942,7 +9865,7 @@ msgstr "Forma eraikitzailea: Gehitu"
 
 #: ../src/actions/actions-paths.cpp:268
 msgid "Add shapes by clicking or clicking and dragging"
-msgstr ""
+msgstr "Gehitu formak klik eginez edo klik egin eta arrastatuz"
 
 #: ../src/actions/actions-paths.cpp:269
 msgid "Shape Builder: Delete"
@@ -9950,7 +9873,7 @@ msgstr "Forma eraikitzailea: Ezabatu"
 
 #: ../src/actions/actions-paths.cpp:269
 msgid "Remove shapes by clicking or clicking and dragging"
-msgstr ""
+msgstr "Kendu formak klik eginez edo klik egin eta arrastatuz"
 
 #: ../src/actions/actions-paths.cpp:270
 #, fuzzy
@@ -10000,10 +9923,9 @@ msgid "Pop selected objects out of group"
 msgstr "Atera hautatutako objektuak taldetik"
 
 #: ../src/actions/actions-selection-object.cpp:150
-#, fuzzy
 msgctxt "Hyperlink|Verb"
 msgid "Link"
-msgstr "Esteka"
+msgstr "Estekatu"
 
 #: ../src/actions/actions-selection-object.cpp:150
 msgid "Add an anchor to selected objects"
@@ -10256,69 +10178,60 @@ msgid "Print a list of objects in current selection"
 msgstr "Inprimatu uneko hautapenean dauden objektuen zerrenda"
 
 #: ../src/actions/actions-selection.cpp:284
-#, fuzzy
 msgid "Set selection backup"
-msgstr "Erakutsi hautapen-heldulekua"
+msgstr "Ezarri hautapenaren babeskopia"
 
 #: ../src/actions/actions-selection.cpp:284
-#, fuzzy
 msgid "Set backup of current selection of objects or nodes"
-msgstr "Desautatu hautatutako objektuak edo nodoak"
+msgstr "Ezarri objektuen edo nodoen uneko hautapenaren babeskopia"
 
 #: ../src/actions/actions-selection.cpp:285
-#, fuzzy
 msgid "Restore selection backup"
-msgstr "Erakutsi hautapen-heldulekua"
+msgstr "Leheneratu hautapenaren babeskopia"
 
 #: ../src/actions/actions-selection.cpp:285
-#, fuzzy
 msgid "Restore backup of stored selection of objects or nodes"
-msgstr "Desautatu hautatutako objektuak edo nodoak"
+msgstr "Leheneratu objektuen edo nodoen uneko hautapenaren babeskopia"
 
 #: ../src/actions/actions-selection.cpp:286
-#, fuzzy
 msgid "Empty selection backup"
-msgstr "Tratatu hautapena talde gisa"
+msgstr "Hustu hautapenaren babeskopia"
 
 #: ../src/actions/actions-selection.cpp:286
-#, fuzzy
 msgid "Empty stored backup of selection of objects or nodes"
-msgstr "Desautatu hautatutako objektuak edo nodoak"
+msgstr "Hustu hautatutako objektuen edo nodoen hautapenaren babeskopia"
 
 #: ../src/actions/actions-svg-processing.cpp:698
-#, fuzzy
 msgid "Set SVG Version to 1.1"
-msgstr "Ezarri SVG letra-tipoaren izena"
+msgstr "Ezarri SVGren bertsioa 1.1ean"
 
 #: ../src/actions/actions-svg-processing.cpp:698
 msgid "Sets the Document's SVG version to 1.1"
-msgstr ""
+msgstr "Dokumentuaren SVG bertsioa 1.1ean ezartzen du"
 
 #: ../src/actions/actions-svg-processing.cpp:699
-#, fuzzy
 msgid "Set SVG Version to 2.0"
-msgstr "Ezarri SVG letra-tipoaren izena"
+msgstr "Ezarri SVGren bertsioa 2.0ean"
 
 #: ../src/actions/actions-svg-processing.cpp:699
 msgid "Sets the Document's SVG version to 2.0"
-msgstr ""
+msgstr "Dokumentuaren SVG bertsioa 2.0n ezartzen du"
 
 #: ../src/actions/actions-svg-processing.cpp:700
-#, fuzzy
 msgid "Prune Inkscape Namespaces"
-msgstr "Inprimatu Inkscapen bertsioa"
+msgstr "Inausi «Inkscape»ren izenen espazioa"
 
 #: ../src/actions/actions-svg-processing.cpp:700
 msgid "Remove any inkscape specific svg data"
-msgstr ""
+msgstr "Kendu «inkscape»ren berariazko SVG data oro"
 
 #: ../src/actions/actions-svg-processing.cpp:701
 msgid "Prune Proprietary Namespaces"
-msgstr ""
+msgstr "Inausi izenen espazio jabeduna"
 
 #: ../src/actions/actions-svg-processing.cpp:701
 msgid "Remove any known proprietary svg data"
-msgstr ""
+msgstr "Ezabatu SVG jabedun datu ezagun oro"
 
 #: ../src/actions/actions-svg-processing.cpp:703
 #, fuzzy
@@ -10345,7 +10258,7 @@ msgstr ""
 
 #: ../src/actions/actions-svg-processing.cpp:706
 msgid "Replace SVG2 text with SVG1.1 text"
-msgstr ""
+msgstr "Ordeztu SVG2 testua SVG1.1 testuarekin"
 
 #: ../src/actions/actions-svg-processing.cpp:707
 #, fuzzy
@@ -10379,31 +10292,29 @@ msgid "Recursively unlink all clones and symbols"
 msgstr "Askatu klonak eta ikurrak"
 
 #: ../src/actions/actions-svg-processing.cpp:711
-#, fuzzy
 msgid "All Objects to Paths"
-msgstr "_Objektua bide"
+msgstr "Objektu guztiak bide"
 
 #: ../src/actions/actions-svg-processing.cpp:711
 msgid "Turn all shapes recursively into a path elements"
-msgstr ""
+msgstr "Forma guztiak errekurtsiboki bide elementu-bihurtzea "
+
+#: ../src/actions/actions-svg-processing.cpp:712
+msgid "All Strokes to Paths"
+msgstr "Trazua guztiak bide"
 
 #: ../src/actions/actions-svg-processing.cpp:712
 #, fuzzy
-msgid "All Strokes to Paths"
-msgstr "Trazua bide"
-
-#: ../src/actions/actions-svg-processing.cpp:712
 msgid "Turn all strokes recursively into fill only paths"
-msgstr ""
+msgstr "Trazu guztiak errekurtsiboki soilik betetako bide bihurtzea"
 
 #: ../src/actions/actions-svg-processing.cpp:713
-#, fuzzy
 msgid "Normalize Path Data"
-msgstr "Normalizatu"
+msgstr "Normalizatu bide-datuak"
 
 #: ../src/actions/actions-svg-processing.cpp:713
 msgid "Make all paths absolute and predictable"
-msgstr ""
+msgstr "Egin bide guztiak absolutu eta aurreikusteko moduko"
 
 #: ../src/actions/actions-svg-processing.cpp:715
 #, fuzzy
@@ -10415,13 +10326,12 @@ msgid "Add bounding box information to all shapes"
 msgstr ""
 
 #: ../src/actions/actions-svg-processing.cpp:716
-#, fuzzy
 msgid "Insert Shape Path Data"
-msgstr "Laburtu bideak"
+msgstr "Sartu formaren bide-datuak"
 
 #: ../src/actions/actions-svg-processing.cpp:716
 msgid "Add shape path information to all shapes"
-msgstr ""
+msgstr "Gehitu formaren bide informazioa forma guztietarako"
 
 #: ../src/actions/actions-text.cpp:73
 msgid "Put on Path"
@@ -10480,14 +10390,12 @@ msgid "Convert flowed text to regular text object (preserves appearance)"
 msgstr "Bihurtu testu mugikorra testu-objektu arruntean (itxura mantentzen du)"
 
 #: ../src/actions/actions-text.cpp:79
-#, fuzzy
 msgid "Convert to Glyphs"
-msgstr "Bihurtu testuak bide"
+msgstr "Bihurtu glifo"
 
 #: ../src/actions/actions-text.cpp:79
-#, fuzzy
 msgid "Convert text into individual glyphs"
-msgstr "Bihurtu testuak bide"
+msgstr "Bihurtu testua banakako glifo"
 
 #: ../src/actions/actions-text.cpp:80
 msgid "Remove Manual Kerns"
@@ -10512,7 +10420,7 @@ msgstr "Aldatu hautatutako bideko puntuak (nodoak) zuzenean."
 
 #: ../src/actions/actions-tools.cpp:95
 msgid "Construct shapes with the interactive Boolean tool."
-msgstr ""
+msgstr "Eraiki formak tresna Boolear elkarreragilearekin."
 
 #: ../src/actions/actions-tools.cpp:96
 msgid ""
@@ -10678,7 +10586,6 @@ msgid "Create and manage pages."
 msgstr "Sortu eta kudeatu orriak."
 
 #: ../src/actions/actions-tools.cpp:361
-#, fuzzy
 msgid "Selector Tool"
 msgstr "Hautatzeko tresna"
 
@@ -10700,7 +10607,7 @@ msgstr "Forma eraikitzaile tresna"
 
 #: ../src/actions/actions-tools.cpp:363
 msgid "Build shapes with the Boolean tool"
-msgstr ""
+msgstr "Eraiki formak tresna Boolearrarekin"
 
 #: ../src/actions/actions-tools.cpp:365
 msgid "Rectangle Tool"
@@ -10879,24 +10786,21 @@ msgid "Create and edit document pages"
 msgstr "Sortu eta editatu dokumentu-orriak"
 
 #: ../src/actions/actions-tools.cpp:392
-#, fuzzy
 msgid "Toggle Selector Tool"
-msgstr "Txandakatzeko tresna"
+msgstr "Txandakatu hautatzeko tresna"
 
 #: ../src/actions/actions-tools.cpp:392
-#, fuzzy
 msgid "Toggle between Selector tool and last used tool"
-msgstr "Txandakatu hautatze-tresna eta erabilitako azken tresna"
+msgstr "Txandakatu hautatzeko tresna eta erabilitako azken tresnaren artean"
 
 #: ../src/actions/actions-tools.cpp:393
-#, fuzzy
 msgid "Toggle Dropper"
-msgstr "Tanta-kontagailua"
+msgstr "Txandakatu tantak-zenbatzekoa"
 
 #: ../src/actions/actions-tools.cpp:393
-#, fuzzy
 msgid "Toggle between Dropper tool and last used tool"
-msgstr "Txandakatu hautatze-tresna eta erabilitako azken tresna"
+msgstr ""
+"Txandakatu Tanta-zenbatzeko tresna eta erabilitako azken tresnaren artean"
 
 #: ../src/actions/actions-transform.cpp:114
 #: ../src/actions/actions-transform.cpp:136
@@ -10971,14 +10875,12 @@ msgid "Reapply the last transformation to the selection"
 msgstr "Aplikatu berriro azken transformazioa hautapenari"
 
 #: ../src/actions/actions-transform.cpp:137
-#, fuzzy
 msgid "Rotate Page 90°"
-msgstr "Biratu 90° EN"
+msgstr "Biratu orrialdea 90°"
 
 #: ../src/actions/actions-transform.cpp:137
-#, fuzzy
 msgid "Rotate page by 90-degree rotation steps"
-msgstr "Biratu ñabardura graduen arabera (inguratu)"
+msgstr "Biratu orrialdea 90ºko biraketa urratsetan"
 
 #: ../src/actions/actions-transform.cpp:144
 msgid "Enter two comma-separated numbers, e.g. 50,-2.5"
@@ -11014,7 +10916,7 @@ msgstr ""
 
 #: ../src/actions/actions-transform.cpp:150
 msgid "Enter number of 90-degree rotation steps"
-msgstr ""
+msgstr "Sartu 90ºko biraketa urratsen kopurua"
 
 #. TRANSLATORS: Please don't translate link unless the page exists in your language. Add your language code to
 #. the link this way: https://inkscape.org/[lang]/learn/tutorials/
@@ -11258,9 +11160,8 @@ msgid "Switch to the next document window"
 msgstr "Aldatu hurrengo dokumentuaren leihora"
 
 #: ../src/actions/actions-window.cpp:99
-#, fuzzy
 msgid "Enter comma-separated string for x, y, width, height"
-msgstr "Sartu komaz bereizitako katea atributu-izenerako, atributu-baliorako"
+msgstr "Sartu komaz bereizitako katea ondokoetarako, x, y, zabalera, altuera"
 
 #: ../src/actions/actions-window.cpp:106
 msgid "Window Open"
@@ -11279,31 +11180,29 @@ msgid "Close the active window, does not check for data loss"
 msgstr "Itxi leiho aktiboa, ez du datu-galerarik dagoen egiaztatzen"
 
 #: ../src/actions/actions-window.cpp:108
-#, fuzzy
 msgid "Window Query Geometry"
-msgstr "Windows - Greziera"
+msgstr "Leihoa itaundu geometria"
 
 #: ../src/actions/actions-window.cpp:108
 msgid "Query the active window's location and size"
-msgstr ""
+msgstr "Itaundu leiho aktiboaren kokalekua eta tamaina"
 
 #: ../src/actions/actions-window.cpp:109
-#, fuzzy
 msgid "Window Set Geometry"
-msgstr "Windows - Greziera"
+msgstr "Leihoa ezarri geometria"
 
 #: ../src/actions/actions-window.cpp:109
 msgid "Set the active window's location and size (x, y, width, height)"
 msgstr ""
+"Ezarri leiho aktiboaren kokalekua eta tamaina (x, y, zabalera, altuera)"
 
 #: ../src/actions/actions-window.cpp:110
-#, fuzzy
 msgid "Force Crash"
-msgstr "Arrastatze behartua"
+msgstr "Behartu kraskatzea"
 
 #: ../src/actions/actions-window.cpp:110
 msgid "Force Inkscape to crash, useful for testing."
-msgstr ""
+msgstr "Inkscape kraskatzera behartu, erabilgarria probatarako."
 
 #: ../src/auto-save.cpp:155
 msgid "Autosave failed! Could not find inkscape extension to save document."
@@ -11318,9 +11217,8 @@ msgstr ""
 "Huts egin du automatikoki gordetzean. %s fitxategia ezin izan da gorde."
 
 #: ../src/color/cms-util.cpp:105
-#, fuzzy
 msgid "(Unnamed)"
-msgstr "Izengabea"
+msgstr "(Izengabea)"
 
 #: ../src/context-fns.cpp:48 ../src/context-fns.cpp:77
 msgid "<b>Current layer is hidden</b>. Unhide it to be able to draw on it."
@@ -11347,7 +11245,7 @@ msgstr "<b>Gida-lerroa</b>: %s"
 
 #: ../src/desktop-style.cpp:247
 msgid "<b>Locked</b> object(s) cannot be modified."
-msgstr ""
+msgstr "<b>Giltzatuta</b> objektua(k) ezin d(ir)a aldatu."
 
 #: ../src/desktop.cpp:470
 msgid "No previous transform."
@@ -11557,19 +11455,16 @@ msgid "page center"
 msgstr "orriaren zentroa"
 
 #: ../src/display/control/snap-indicator.cpp:95
-#, fuzzy
 msgid "page margin border"
-msgstr "orriaren ertza"
+msgstr "orrialdearen marjinaren ertza"
 
 #: ../src/display/control/snap-indicator.cpp:96
-#, fuzzy
 msgid "page margin corner"
-msgstr "orriaren izkina"
+msgstr "orrialdearen marjinaren izkina"
 
 #: ../src/display/control/snap-indicator.cpp:97
-#, fuzzy
 msgid "page margin center"
-msgstr "orriaren zentroa"
+msgstr "orrialdearen marjinaren erdigunea"
 
 #: ../src/display/control/snap-indicator.cpp:98
 #, fuzzy
@@ -11655,7 +11550,7 @@ msgstr "  azalpena: "
 #: ../src/extension/execution-env.cpp:127
 #, c-format
 msgid "'%s' complete, loading result..."
-msgstr ""
+msgstr "'%s' osatu da, emaitzak kargatzen..."
 
 #: ../src/extension/extension.cpp:285
 msgid ""
@@ -12435,12 +12330,15 @@ msgid ""
 "When exporting from the Export dialog, you can choose objects to export. "
 "'Save a copy' / 'Save as' will export all pages."
 msgstr ""
+"Esportatzeko elkarrizketa-koadrotik esportatzean, esportatu beharreko "
+"objektuak aukera ditzakezu. 'Gorde kopia bat' / 'Gorde honela' orrialde "
+"guztiak esportatuko ditu."
 
 #: ../src/extension/internal/cairo-ps-out.cpp:301
 #: ../src/extension/internal/cairo-ps-out.cpp:345
 #: ../src/extension/internal/cairo-renderer-pdf-out.cpp:243
 msgid "The page bleed can be set with the Page tool."
-msgstr ""
+msgstr "Orrialdearen koska Orrialdea tresna bidez ezar daiteke."
 
 #: ../src/extension/internal/cairo-ps-out.cpp:306
 #: ../share/extensions/ps_input.inx:16
@@ -12480,9 +12378,8 @@ msgid "PDF 1.4"
 msgstr "PDF 1.4"
 
 #: ../src/extension/internal/cairo-renderer-pdf-out.cpp:234
-#, fuzzy
 msgid "Rounding compensation:"
-msgstr "Puntu-beltzaren konpentsazioa"
+msgstr "Biribiltze bidezko konpentsazioa:"
 
 #: ../src/extension/internal/cairo-renderer-pdf-out.cpp:235
 msgid ""
@@ -12494,7 +12391,7 @@ msgstr ""
 
 #: ../src/extension/internal/cairo-renderer-pdf-out.cpp:237
 msgid "Compensate for rounding (recommended)"
-msgstr ""
+msgstr "Biribiltzea konpentsatu (gomendatua)"
 
 #: ../src/extension/internal/cairo-renderer-pdf-out.cpp:238
 msgid "Do not compensate"
@@ -15316,27 +15213,27 @@ msgstr "AEB gutun-azala 10 zk."
 
 #: ../src/extension/internal/template-paper.cpp:112
 msgid "Arch A"
-msgstr ""
+msgstr "Arch A"
 
 #: ../src/extension/internal/template-paper.cpp:113
 msgid "Arch B"
-msgstr ""
+msgstr "Arch B"
 
 #: ../src/extension/internal/template-paper.cpp:114
 msgid "Arch C"
-msgstr ""
+msgstr "Arch C"
 
 #: ../src/extension/internal/template-paper.cpp:115
 msgid "Arch D"
-msgstr ""
+msgstr "Arch D"
 
 #: ../src/extension/internal/template-paper.cpp:116
 msgid "Arch E"
-msgstr ""
+msgstr "Arch E"
 
 #: ../src/extension/internal/template-paper.cpp:117
 msgid "Arch E1"
-msgstr ""
+msgstr "Arch E1"
 
 #: ../src/extension/internal/template-screen.cpp:28
 msgid "Screen Sizes"
@@ -16020,7 +15917,7 @@ msgstr "Aritmetikoa"
 
 #: ../src/filter-enums.cpp:84
 msgid "Table Lookup"
-msgstr ""
+msgstr "Taula bilaketa"
 
 #: ../src/filter-enums.cpp:85
 msgid "Discrete Values"
@@ -16315,6 +16212,8 @@ msgstr "Irakurri sarrerako fitxategia sarrera estandarretik (stdin)"
 #: ../src/inkscape-application.cpp:725
 msgid "Page numbers to import from multi-page document, i.e. PDF"
 msgstr ""
+"orri anitzeko dokumentuetatik inportatu beharreko orrialde zenbakiak, "
+"adib. PDF"
 
 #: ../src/inkscape-application.cpp:725
 msgid "PAGE[,PAGE]"
@@ -16463,13 +16362,12 @@ msgid "Export options"
 msgstr "Esportazio-aukerak"
 
 #: ../src/inkscape-application.cpp:751
-#, fuzzy
 msgid "Page number to export"
-msgstr "Inportatuko den PDF orrialdea"
+msgstr "Esportatu beharreko orrialde zenbakia"
 
 #: ../src/inkscape-application.cpp:751
 msgid "all|n[,a-b]"
-msgstr ""
+msgstr "dena|n[,a-b]"
 
 #: ../src/inkscape-application.cpp:752
 msgid "ID(s) of object(s) to export"
@@ -16564,14 +16462,12 @@ msgid "Force dithering or disables it"
 msgstr "Behartu bilbatzea edo desgaitu hura"
 
 #: ../src/inkscape-application.cpp:767
-#, fuzzy
 msgid "Compression level for PNG export (0 to 9); default is 6"
-msgstr "Postscript maila (2 edo 3), lehenetsia 3 da"
+msgstr "PNG esportatzeko konpresio maila (0...9); lehenetsia 6 da"
 
 #: ../src/inkscape-application.cpp:769
-#, fuzzy
 msgid "Antialias level for PNG export (0 to 3); default is 2"
-msgstr "Postscript maila (2 edo 3), lehenetsia 3 da"
+msgstr "PNG esportatzeko ertzak-leuntzeko maila (0...3); lehenetsia 2"
 
 #
 # File: ../src/inkscape-application.cpp, line: 579
@@ -16640,9 +16536,8 @@ msgid "List all available actions"
 msgstr "Zerrendatu ekintza erabilgarri guztiak"
 
 #: ../src/inkscape-application.cpp:789
-#, fuzzy
 msgid "Use a file to input actions list"
-msgstr "Erabili tartea bi ebakidura-elementuetan"
+msgstr "Erabili fitxategi bat ekintzen zerrenda sartzeko"
 
 #: ../src/inkscape-application.cpp:792
 #: ../src/ui/dialog/inkscape-preferences.cpp:1508
@@ -16668,7 +16563,7 @@ msgstr "Abiarazi Inkscape komando-lerro elkarreragileko moduan"
 
 #: ../src/inkscape-application.cpp:797
 msgid "Use active window from commandline"
-msgstr ""
+msgstr "Erabili leiho aktiboa komando-lerrotik"
 
 #: ../src/inkscape-application.cpp:1988 ../src/inkscape-application.cpp:1993
 msgid "(No preferences)"
@@ -16765,14 +16660,12 @@ msgstr ""
 "dezakeena."
 
 #: ../src/libnrtype/font-lister.cpp:172
-#, fuzzy
 msgid "All Fonts"
-msgstr "Letra-tipoa"
+msgstr "Letra-tipo guztiak"
 
 #: ../src/libnrtype/font-lister.cpp:174
-#, fuzzy
 msgid "Fonts "
-msgstr "Letra-tipoa"
+msgstr "Letra-tipoak"
 
 #: ../src/live_effects/effect.cpp:102
 msgctxt "path effect"
@@ -17132,7 +17025,6 @@ msgstr ""
 "beste zenbait konfigurazio-aukera ezarrita."
 
 #: ../src/live_effects/effect.cpp:556
-#, fuzzy
 msgctxt "path effect"
 msgid "Corners"
 msgstr "Izkinak"
@@ -17244,7 +17136,6 @@ msgstr ""
 "Marraztu bidearen lehen hiru nodoen arteko angelua erdibitzen duen marra bat."
 
 #: ../src/live_effects/effect.cpp:699
-#, fuzzy
 msgctxt "path effect"
 msgid "Circle"
 msgstr "Zirkulua"
@@ -17800,13 +17691,12 @@ msgid "Attributes"
 msgstr "Atributuak"
 
 #: ../src/live_effects/lpe-clone-original.cpp:54
-#, fuzzy
 msgid ""
 "Attributes of the original that the clone should copy, written as a comma-"
 "separated list; e.g. 'transform, style, clip-path, X, Y'."
 msgstr ""
-"Jatorrizkoaren atributuak, klonak kopiatu behar lituzkeenak, komaz "
-"bereizitako balioen zerrenda gisa; adibidez 'transform, X, Y'."
+"Jatorrizkoaren atributuak, klonak kopiatu beharko lituzkeenak, komaz "
+"bereizitako balio zerrenda gisa; adib. 'transform, style, clip-path, X, Y'."
 
 #: ../src/live_effects/lpe-clone-original.cpp:56
 msgid "CSS Properties"
@@ -19110,9 +19000,8 @@ msgid "Distance of the perpendicular lines' ends from the dimension line"
 msgstr "Lerro elkarzuten amaieren distantziak kota-lerrotik"
 
 #: ../src/live_effects/lpe-measure-segments.cpp:83
-#, fuzzy
 msgid "Dimension line width in mm. DIN standard: 0.25 or 0.35 mm"
-msgstr "Kota-lerroaren zabalera. DIN estandarra: 0,25 edo 0,35 mm"
+msgstr "Kota-lerroaren zabalera mm-tan. DIN estandarra: 0,25 edo 0,35 mm"
 
 #: ../src/live_effects/lpe-measure-segments.cpp:84
 msgid "Scaling factor"
@@ -19246,9 +19135,8 @@ msgid "Distance"
 msgstr "Distantzia"
 
 #: ../src/live_effects/lpe-measure-segments.cpp:101
-#, fuzzy
 msgid "Distance of the dimension lines from the outermost node (mm)"
-msgstr "Kota-lerroen distantzia kanporago dagoen nodotik"
+msgstr "Kota-lerroen distantzia kanporago dagoen nodotik (mm)"
 
 #: ../src/live_effects/lpe-measure-segments.cpp:102
 msgid "Angle of projection"
@@ -19422,6 +19310,10 @@ msgid ""
 "We keep your settings but advice you to remove and re-add to get better "
 "meassuring\n"
 msgstr ""
+"<b><big>GARRANTZITSUA</big></b>\n"
+"LPE hori LPE zahar batekin gehitu da\n"
+"Zure ezarpenak mantenduko ditugu, baina neurketa hobea lortzeko "
+"kentzea eta berriz gehitzea gomendatzen dizugu\n"
 
 #: ../src/live_effects/lpe-mirror_symmetry.cpp:49
 msgid "Vertical page center"
@@ -19539,15 +19431,13 @@ msgstr "Erdigune horizontala"
 
 #: ../src/live_effects/lpe-mirror_symmetry.cpp:198
 #: ../src/live_effects/lpe-slice.cpp:153
-#, fuzzy
 msgid "Center Vertical"
-msgstr "Zentratu bertikalean"
+msgstr "Erdiratze bertikala"
 
 #: ../src/live_effects/lpe-mirror_symmetry.cpp:204
 #: ../src/live_effects/lpe-slice.cpp:159
-#, fuzzy
 msgid "Center Horizontal"
-msgstr "Zentratu horizontalean"
+msgstr "Erdiratze horizontala"
 
 #: ../src/live_effects/lpe-offset.cpp:78
 msgid "Live update"
@@ -19844,9 +19734,8 @@ msgstr ""
 "Ordenatu desplazamenduaren puntuak kurbako beraien denbora-balioaren arabera"
 
 #: ../src/live_effects/lpe-powerstroke.cpp:158
-#, fuzzy
 msgid "Smoothing type"
-msgstr "Leuntze mota:"
+msgstr "Leuntze mota"
 
 #: ../src/live_effects/lpe-powerstroke.cpp:159
 #: ../share/extensions/fractalize.inx:6
@@ -19862,9 +19751,8 @@ msgstr ""
 "interpolazio lineala; 1 = leuna"
 
 #: ../src/live_effects/lpe-powerstroke.cpp:160
-#, fuzzy
 msgid "Width multiplier"
-msgstr "Biderkatzailea"
+msgstr "Zabalera biderkatzailea"
 
 #: ../src/live_effects/lpe-powerstroke.cpp:160
 msgid "Scale the stroke's width uniformly along the whole path"
@@ -19879,14 +19767,12 @@ msgid "Determines the shape of the path's start"
 msgstr "Bidearen hasierako forma zehazten du"
 
 #: ../src/live_effects/lpe-powerstroke.cpp:162
-#, fuzzy
 msgid "Join"
-msgstr "Elkartu:"
+msgstr "Elkartu"
 
 #: ../src/live_effects/lpe-powerstroke.cpp:163
-#, fuzzy
 msgid "Miter limit"
-msgstr "Ingletearen muga:"
+msgstr "Inglete-muga"
 
 #: ../src/live_effects/lpe-powerstroke.cpp:163
 #: ../src/ui/widget/stroke-style.cpp:363
@@ -19894,22 +19780,20 @@ msgid "Maximum length of the miter (in units of stroke width)"
 msgstr "Angeluaren gehieneko luzera (trazu-zabaleraren unitatean)"
 
 #: ../src/live_effects/lpe-powerstroke.cpp:164
-#, fuzzy
 msgid "End cap"
-msgstr "Amaieraren estalkia:"
+msgstr "Muturraren bukaera"
 
 #: ../src/live_effects/lpe-powerstroke.cpp:164
 msgid "Determines the shape of the path's end"
 msgstr "Bidearen amaierako forma zehazten du"
 
 #: ../src/live_effects/lpe-powerstroke.cpp:165
-#, fuzzy
 msgid "Add new thickness control point"
-msgstr "Gehitu beste kontroleko eten bat gradientean"
+msgstr "Gehitu lodiera agintzeko puntua"
 
 #: ../src/live_effects/lpe-powerstroke.cpp:165
 msgid "<b>Ctrl + click</b> on existing node and move it"
-msgstr ""
+msgstr "<b>Ktrl + klik</b> dagoen puntuan eta hura mugitu"
 
 #: ../src/live_effects/lpe-powerstroke.h:30
 #: ../src/ui/toolbar/pencil-toolbar.cpp:154
@@ -20053,9 +19937,8 @@ msgid "Show the original source path"
 msgstr "Erakutsi jatorrizko iturburu-bidea"
 
 #: ../src/live_effects/lpe-rough-hatches.cpp:214
-#, fuzzy
 msgid "Randomness"
-msgstr "Ausazko argitasuna"
+msgstr "Ausazkotasuna"
 
 #: ../src/live_effects/lpe-rough-hatches.cpp:214
 #, fuzzy
@@ -20063,9 +19946,8 @@ msgid "Global variation of distance between hatches, in %."
 msgstr "Itzaleztaduren arteko distantziaren aldakuntza (%)."
 
 #: ../src/live_effects/lpe-rough-hatches.cpp:215
-#, fuzzy
 msgid "Growth"
-msgstr "Hazkundea:"
+msgstr "Hazkundea"
 
 #: ../src/live_effects/lpe-rough-hatches.cpp:215
 msgid "Growth of distance between hatches."
@@ -20073,7 +19955,7 @@ msgstr "Itzaleztaduren arteko distantziaren hazkundea."
 
 #: ../src/live_effects/lpe-rough-hatches.cpp:218
 msgid "Smooth: Bottom ←"
-msgstr ""
+msgstr "Leuna: Behean ←"
 
 #: ../src/live_effects/lpe-rough-hatches.cpp:218
 msgid ""
@@ -20085,7 +19967,7 @@ msgstr ""
 
 #: ../src/live_effects/lpe-rough-hatches.cpp:219
 msgid "Smooth: Bottom →"
-msgstr ""
+msgstr "Leuna: Behean →"
 
 #: ../src/live_effects/lpe-rough-hatches.cpp:219
 msgid ""
@@ -20096,9 +19978,8 @@ msgstr ""
 "ateratzean. 0=zorrotza, 1=lehenetsia"
 
 #: ../src/live_effects/lpe-rough-hatches.cpp:220
-#, fuzzy
 msgid "Smooth: Top ←"
-msgstr "Leundu: harroa"
+msgstr "Leuna: Behean ←"
 
 #: ../src/live_effects/lpe-rough-hatches.cpp:220
 msgid ""
@@ -20109,9 +19990,8 @@ msgstr ""
 "0=zorrotza, 1=lehenetsia"
 
 #: ../src/live_effects/lpe-rough-hatches.cpp:221
-#, fuzzy
 msgid "Smooth: Top →"
-msgstr "Leundu: harroa"
+msgstr "Leuna: Goian →"
 
 #: ../src/live_effects/lpe-rough-hatches.cpp:221
 msgid ""
@@ -20122,9 +20002,8 @@ msgstr ""
 "0=zorrotza, 1=lehenetsia"
 
 #: ../src/live_effects/lpe-rough-hatches.cpp:222
-#, fuzzy
 msgid "↑↓ Random: Bottom"
-msgstr "Ausazko biraketa"
+msgstr "↑↓ Ausaz: Behean"
 
 #: ../src/live_effects/lpe-rough-hatches.cpp:222
 #, fuzzy
@@ -20136,7 +20015,7 @@ msgstr ""
 
 #: ../src/live_effects/lpe-rough-hatches.cpp:223
 msgid "↑↓ Random: Top"
-msgstr ""
+msgstr "↑↓ Ausaz: Goian"
 
 #: ../src/live_effects/lpe-rough-hatches.cpp:223
 #, fuzzy
@@ -20146,9 +20025,8 @@ msgstr ""
 "Mugitu ausaz 'goiko' biraketa erdiak magnitudearen aldakuntza sortzeko."
 
 #: ../src/live_effects/lpe-rough-hatches.cpp:224
-#, fuzzy
 msgid "←→ Random: Bottom"
-msgstr "Ausazko biraketa"
+msgstr "←→ Ausaz: Behean"
 
 #: ../src/live_effects/lpe-rough-hatches.cpp:224
 msgid ""
@@ -20160,7 +20038,7 @@ msgstr ""
 
 #: ../src/live_effects/lpe-rough-hatches.cpp:225
 msgid "←→ Random: Top"
-msgstr ""
+msgstr "←→ Ausaz: Goian"
 
 #: ../src/live_effects/lpe-rough-hatches.cpp:225
 msgid ""
@@ -20172,7 +20050,7 @@ msgstr ""
 
 #: ../src/live_effects/lpe-rough-hatches.cpp:226
 msgid "Rand. Smooth: Bottom"
-msgstr ""
+msgstr "Ausaz leuna: Behean"
 
 #: ../src/live_effects/lpe-rough-hatches.cpp:226
 #, fuzzy
@@ -20180,9 +20058,8 @@ msgid "Randomness of 'bottom' half-turns' smoothness"
 msgstr "Leuntasunaren ausazko 'beheko' biraketa erdiak"
 
 #: ../src/live_effects/lpe-rough-hatches.cpp:227
-#, fuzzy
 msgid "Rand. Smooth: Top"
-msgstr "Atxiki nodo leunei"
+msgstr "Ausaz leuna: Goian"
 
 #: ../src/live_effects/lpe-rough-hatches.cpp:227
 #, fuzzy
@@ -20190,9 +20067,8 @@ msgid "Randomness of 'top' half-turns' smoothness"
 msgstr "Leuntasunaren ausazko 'goiko' biraketa erdiak"
 
 #: ../src/live_effects/lpe-rough-hatches.cpp:229
-#, fuzzy
 msgid "Vary stroke width"
-msgstr "Eskalatu trazu-zabalera"
+msgstr "Aldatu trazu-zabalera"
 
 #: ../src/live_effects/lpe-rough-hatches.cpp:229
 msgid "Simulate a stroke of varying width"
@@ -20208,42 +20084,36 @@ msgid "Add a global bending to the hatches (slower)"
 msgstr "Gehitu okerdura globala itzaleztadurei (motelagoa)"
 
 #: ../src/live_effects/lpe-rough-hatches.cpp:231
-#, fuzzy
 msgid "↓ Width"
-msgstr "Zabalera"
+msgstr "↓ Zabalera"
 
 #: ../src/live_effects/lpe-rough-hatches.cpp:231
 msgid "Width at 'bottom' half-turns"
 msgstr "Zabalera 'beheko' biraketa erdietan"
 
 #: ../src/live_effects/lpe-rough-hatches.cpp:232
-#, fuzzy
 msgid "↑ Width"
-msgstr "Zabalera"
+msgstr "↑ Zabalera"
 
 #: ../src/live_effects/lpe-rough-hatches.cpp:232
 msgid "Width at 'top' half-turns"
 msgstr "Zabalera 'goiko' biraketa erdietan"
 
 #: ../src/live_effects/lpe-rough-hatches.cpp:234
-#, fuzzy
 msgid "← Width"
-msgstr "Zabalera"
+msgstr "← Zabalera"
 
 #: ../src/live_effects/lpe-rough-hatches.cpp:234
-#, fuzzy
 msgid "Width of line from 'top' to 'bottom'"
-msgstr "Zabalera 'goitik' 'behera'"
+msgstr "Lerroaren zabalera 'goitik' 'behera'"
 
 #: ../src/live_effects/lpe-rough-hatches.cpp:235
-#, fuzzy
 msgid "→ Width"
-msgstr "Zabalera"
+msgstr "→ Zabalera"
 
 #: ../src/live_effects/lpe-rough-hatches.cpp:235
-#, fuzzy
 msgid "Width of line from 'bottom' to 'top'"
-msgstr "Zabalera 'behetik' 'gora'"
+msgstr "Lerroaren zabalera 'behetik' 'gora'"
 
 #: ../src/live_effects/lpe-rough-hatches.cpp:237
 msgid "Hatches width and dir"
@@ -20272,9 +20142,8 @@ msgstr "Segumentu kopurua"
 
 #: ../src/live_effects/lpe-roughen.cpp:36
 #: ../src/live_effects/lpe-roughen.cpp:51
-#, fuzzy
 msgid "Segment size"
-msgstr "Segmentuaren tamaina maximoa"
+msgstr "Segmentuaren tamaina"
 
 #: ../src/live_effects/lpe-roughen.cpp:41
 msgid "Along nodes"
@@ -20314,21 +20183,19 @@ msgstr ""
 
 #: ../src/live_effects/lpe-roughen.cpp:53
 msgid "Displace ←→"
-msgstr ""
+msgstr "Desplazatu ←→"
 
 #: ../src/live_effects/lpe-roughen.cpp:53
-#, fuzzy
 msgid "Maximal displacement in x direction"
-msgstr "Desplazamendu maximoa Xean"
+msgstr "Gehieneko desplazamendua X norabidean"
 
 #: ../src/live_effects/lpe-roughen.cpp:54
 msgid "Displace ↑↓"
-msgstr ""
+msgstr "Desplazatu ↑↓"
 
 #: ../src/live_effects/lpe-roughen.cpp:54
-#, fuzzy
 msgid "Maximal displacement in y direction"
-msgstr "Desplazamendu maximoa Xean"
+msgstr "Gehieneko desplazamendua Y norabidean"
 
 #: ../src/live_effects/lpe-roughen.cpp:55
 msgid "Global randomize"
@@ -20345,9 +20212,8 @@ msgid "Options for handle direction"
 msgstr "Delaunay triangelaketaren aukerak"
 
 #: ../src/live_effects/lpe-roughen.cpp:57
-#, fuzzy
 msgid "Apply displacement"
-msgstr "X desplazamendua:"
+msgstr "Aplikatu desplazamendua"
 
 #: ../src/live_effects/lpe-roughen.cpp:57
 msgid ""
@@ -20368,19 +20234,16 @@ msgid "Spray Tool friendly"
 msgstr "Zipriztinen tresnaren laguna"
 
 #: ../src/live_effects/lpe-roughen.cpp:60
-#, fuzzy
 msgid "For use with Spray Tool in copy mode"
 msgstr "Zipriztinen tresnarekin kopiatzeko moduan erabiltzeko"
 
 #: ../src/live_effects/lpe-roughen.cpp:150
-#, fuzzy
 msgid "<b>Resolution</b>"
-msgstr "<b>Sortzea</b>"
+msgstr "<b>Bereizmena</b>"
 
 #: ../src/live_effects/lpe-roughen.cpp:158
-#, fuzzy
 msgid "<b>Options</b>"
-msgstr "<b>Sortzea</b>"
+msgstr "<b>Aukerak</b>"
 
 #: ../src/live_effects/lpe-ruler.cpp:24
 #: ../src/live_effects/lpe-taperstroke.cpp:95
@@ -20546,7 +20409,7 @@ msgstr ""
 
 #: ../src/live_effects/lpe-simplify.cpp:28
 msgid "Drag slider to set the amount of simplification"
-msgstr ""
+msgstr "Arrastatu graduatzailea sinplifikazio-maila ezartzeko"
 
 #: ../src/live_effects/lpe-simplify.cpp:29
 #, fuzzy
@@ -20580,9 +20443,8 @@ msgid "Simplify just coalesce"
 msgstr "Soildu eta fusionatu"
 
 #: ../src/live_effects/lpe-sketch.cpp:34
-#, fuzzy
 msgid "Strokes"
-msgstr "Trazuak:"
+msgstr "Trazuak"
 
 #: ../src/live_effects/lpe-sketch.cpp:34
 msgid "Draw that many approximating strokes"
@@ -20593,27 +20455,24 @@ msgid "Average distance each stroke is away from the original path"
 msgstr "Trazu bakoitzak jatorrizko bidera arte duen batez besteko distantzia"
 
 #: ../src/live_effects/lpe-sketch.cpp:37
-#, fuzzy
 msgid "Stroke length max."
-msgstr "Trazuaren luzeraren aldakuntza:"
+msgstr "Trazuaren gehieneko luzera"
 
 #: ../src/live_effects/lpe-sketch.cpp:38
 msgid "Maximum length of approximating strokes"
 msgstr "Trazu hurbilduen gehieneko luzera"
 
 #: ../src/live_effects/lpe-sketch.cpp:39
-#, fuzzy
 msgid "Stroke length"
-msgstr "Gehien. trazu-luzera:"
+msgstr "Trazu-luzera"
 
 #: ../src/live_effects/lpe-sketch.cpp:40
 msgid "Random variation of stroke length (relative to maximum length)"
 msgstr "Trazuaren luzeraren ausazko aldaera (gehieneko luzerarekiko erlatiboa)"
 
 #: ../src/live_effects/lpe-sketch.cpp:41
-#, fuzzy
 msgid "Overlap max."
-msgstr "Gainjarri"
+msgstr "Gehieneko gainjartzea"
 
 #: ../src/live_effects/lpe-sketch.cpp:42
 msgid "How much successive strokes should overlap (relative to maximum length)"
@@ -20622,7 +20481,6 @@ msgstr ""
 "erlatiboa)"
 
 #: ../src/live_effects/lpe-sketch.cpp:43
-#, fuzzy
 msgid "Overlap"
 msgstr "Gainjarri"
 
@@ -20631,9 +20489,8 @@ msgid "Random variation of overlap (relative to maximum overlap)"
 msgstr "Teilakatzearen ausazko aldaera (gehieneko luzerarekiko erlatiboa)"
 
 #: ../src/live_effects/lpe-sketch.cpp:45
-#, fuzzy
 msgid "Ending"
-msgstr "Amaierako kurba"
+msgstr "Bukaera"
 
 #: ../src/live_effects/lpe-sketch.cpp:46
 msgid ""
@@ -20644,27 +20501,24 @@ msgstr ""
 "(gehieneko luzerarekiko erlatiboa)"
 
 #: ../src/live_effects/lpe-sketch.cpp:47
-#, fuzzy
 msgid "Displacement size"
-msgstr "Desplazamendua:"
+msgstr "Desplazamenduaren tamaina"
 
 #: ../src/live_effects/lpe-sketch.cpp:48
 msgid "Maximum tremble magnitude"
 msgstr "Dardararen gehieneko magnitudea"
 
 #: ../src/live_effects/lpe-sketch.cpp:49
-#, fuzzy
 msgid "Displacement details"
-msgstr "Desplazamendu-mapa"
+msgstr "Desplazamendu-xehetasunak"
 
 #: ../src/live_effects/lpe-sketch.cpp:50
 msgid "Average number of tremble periods in a stroke"
 msgstr "Dardararen periodoaren batez besteko kopurua trazu batean"
 
 #: ../src/live_effects/lpe-sketch.cpp:53
-#, fuzzy
 msgid "Add extra lines"
-msgstr "Gehitu muturreko nodoak"
+msgstr "Gehitu leiho gehigarriak"
 
 #: ../src/live_effects/lpe-sketch.cpp:54
 msgid "How many construction lines (tangents) to draw"
@@ -20679,9 +20533,8 @@ msgstr ""
 "5*desplazamendua)"
 
 #: ../src/live_effects/lpe-sketch.cpp:57
-#, fuzzy
 msgid "Length max."
-msgstr "Luzera"
+msgstr "Gehieneko luzera"
 
 #: ../src/live_effects/lpe-sketch.cpp:58
 msgid "Maximum length of construction lines"
@@ -20692,9 +20545,8 @@ msgid "Random variation of the length of construction lines"
 msgstr "Eraikitze-marren luzeraren ausazko aldakuntza"
 
 #: ../src/live_effects/lpe-sketch.cpp:61
-#, fuzzy
 msgid "Placement"
-msgstr "Horzdun gurpilaren kokalekua:"
+msgstr "Kokapena"
 
 #: ../src/live_effects/lpe-sketch.cpp:62
 msgid "0: evenly distributed construction lines, 1: purely random placement"
@@ -20815,13 +20667,12 @@ msgid "Clamp"
 msgstr ""
 
 #: ../src/live_effects/lpe-taperstroke.cpp:105
-#, fuzzy
 msgid "Select subpath:"
-msgstr "Hautatu orrialdea:"
+msgstr "Hautatu azpi-bidea:"
 
 #: ../src/live_effects/lpe-taperstroke.cpp:105
 msgid "Select the subpath you want to modify"
-msgstr ""
+msgstr "Hautatu aldatu nahi duzun azpi-bidea"
 
 #: ../src/live_effects/lpe-taperstroke.cpp:106
 #: ../share/extensions/inset_shadow.inx:8 ../share/extensions/nicechart.inx:61
@@ -21601,19 +21452,16 @@ msgid "Active switched"
 msgstr "Aktiboa trukatuta"
 
 #: ../src/live_effects/parameter/satellitearray.cpp:254
-#, fuzzy
 msgid "Move item %1"
-msgstr "Mugitu elementua gora"
+msgstr "Mugitu %1 elementua"
 
 #: ../src/live_effects/parameter/satellitearray.cpp:260
-#, fuzzy
 msgid "up"
-msgstr "Erliebea"
+msgstr "gora"
 
 #: ../src/live_effects/parameter/satellitearray.cpp:265
-#, fuzzy
 msgid "down"
-msgstr "Karaktere-tartea behera"
+msgstr "behera"
 
 #: ../src/live_effects/parameter/satellitearray.cpp:274
 msgid "Remove item"
@@ -21657,7 +21505,6 @@ msgid "Toggle multiple vanishing points"
 msgstr "Txandakatu hainbat ihespuntu"
 
 #: ../src/object/sp-anchor.cpp:142
-#, fuzzy
 msgctxt "Hyperlink|Noun"
 msgid "Link"
 msgstr "Esteka"
@@ -21722,19 +21569,16 @@ msgstr[0] "(karaktere %d %s)"
 msgstr[1] "(%d karaktere %s)"
 
 #: ../src/object/sp-grid.cpp:611 ../src/ui/dialog/inkscape-preferences.cpp:2101
-#, fuzzy
 msgid "Rectangular Grid"
 msgstr "Sareta laukizuzena"
 
 #: ../src/object/sp-grid.cpp:612 ../src/ui/dialog/inkscape-preferences.cpp:2102
-#, fuzzy
 msgid "Axonometric Grid"
 msgstr "Sareta axonometrikoa"
 
 #: ../src/object/sp-grid.cpp:613 ../src/ui/dialog/inkscape-preferences.cpp:2103
-#, fuzzy
 msgid "Modular Grid"
-msgstr "Sareta polarra"
+msgstr "Sareta modularra"
 
 #: ../src/object/sp-guide.cpp:479
 msgid "Deleted"
@@ -21792,17 +21636,16 @@ msgid "Mask Helper"
 msgstr "Maskara-laguntzailea"
 
 #: ../src/object/sp-item-group.cpp:313
-#, fuzzy
 msgctxt "Noun"
 msgid "Group"
-msgstr "Elkartu"
+msgstr "Taldea"
 
 #: ../src/object/sp-item-group.cpp:320 ../src/object/sp-switch.cpp:74
-#, fuzzy, c-format
+#, c-format
 msgid "of <b>%d</b> object"
 msgid_plural "of <b>%d</b> objects"
-msgstr[0] "Objektu <b>%d</b>etik"
-msgstr[1] "Objektu <b>%d</b>etik"
+msgstr[0] "objektu <b>%d</b>etik"
+msgstr[1] "<b>%d</b> objektutatik"
 
 #: ../src/object/sp-item.cpp:1109
 msgid "Object"
@@ -22158,9 +22001,8 @@ msgid "<b>No paths</b> to inset/outset in the selection."
 msgstr "<b>Ez dago</b> laburtu/luzatu beharreko <b>biderik</b> hautapenean."
 
 #: ../src/pattern-manager.cpp:101
-#, fuzzy
 msgid "All patterns"
-msgstr "Dena txikitxoa"
+msgstr "Eredu guztiak"
 
 #: ../src/preferences-skeleton.h:552
 msgid "Dip pen"
@@ -23104,14 +22946,12 @@ msgid "Unflow flowed text"
 msgstr "Askatu testua mugikorretik"
 
 #: ../src/text-chemistry.cpp:640
-#, fuzzy
 msgid "Select <b>text(s)</b> to convert to glyphs."
-msgstr "Hautatu <b>objektuak</b> bide bihurtzeko."
+msgstr "Hautatu <b>objektua(k)</b> glifo bihurtzeko."
 
 #: ../src/text-chemistry.cpp:642
-#, fuzzy
 msgid "Convert text to glyphs"
-msgstr "Bihurtu testuak bide"
+msgstr "Testua glifo bihurtzea"
 
 #: ../src/text-chemistry.cpp:656
 msgid "Select <b>flowed text(s)</b> to convert."
@@ -23174,9 +23014,8 @@ msgid "Trace bitmap"
 msgstr "Bektorizatu bit-mapa"
 
 #: ../src/trace/trace.cpp:527
-#, fuzzy
 msgid "Trace: Done. %1 node(s) created"
-msgstr "Bektorizatu: eginda. %ld nodo sortuta"
+msgstr "Bektorizatu: Eginda. %1 nodo sortuta d(ir)a"
 
 #: ../src/ui/clipboard.cpp:470
 msgid "Can't paste text outside of the text tool."
@@ -23248,18 +23087,16 @@ msgid "Move Page _Forward"
 msgstr "Eraman orria a_urrerantz"
 
 #: ../src/ui/contextmenu.cpp:180 ../share/ui/toolbar-commands.ui:991
-#, fuzzy
 msgid "Document Properties..."
-msgstr "_Dokumentuaren propietateak..."
+msgstr "Dokumentuaren propietateak..."
 
 #: ../src/ui/contextmenu.cpp:187 ../share/ui/menus.ui:212
 msgid "Duplic_ate"
 msgstr "Bi_koiztu"
 
 #: ../src/ui/contextmenu.cpp:188
-#, fuzzy
 msgid "_Clone"
-msgstr "Klonatu"
+msgstr "_Klonatu"
 
 #: ../src/ui/contextmenu.cpp:189
 #: ../src/ui/dialog/calligraphic-profile-rename.cpp:58
@@ -23289,8 +23126,9 @@ msgid "_Trace Bitmap..."
 msgstr "_Bektorizatu bit-mapa..."
 
 #: ../src/ui/contextmenu.cpp:209
+#, fuzzy
 msgid "Crop Image to Clip"
-msgstr ""
+msgstr "Moztu ebaki beharreko irudia"
 
 #: ../src/ui/contextmenu.cpp:213
 msgid "Extract Image..."
@@ -23341,9 +23179,8 @@ msgid "_Move to Layer..."
 msgstr "_Eraman geruzara..."
 
 #: ../src/ui/contextmenu.cpp:245
-#, fuzzy
 msgid "Create Anchor (Hyperlink)"
-msgstr "Sortu aingura (hiperesteka)"
+msgstr "Sortu aingura (Hiperesteka)"
 
 #: ../src/ui/contextmenu.cpp:246 ../share/ui/menus.ui:795
 msgid "_Group"
@@ -23354,18 +23191,16 @@ msgid "_Ungroup"
 msgstr "_Banandu"
 
 #: ../src/ui/contextmenu.cpp:249
-#, fuzzy
 msgid "Enter Group %1"
-msgstr "Sartu %1 taldean"
+msgstr "Sartu %1 taldea"
 
 #: ../src/ui/contextmenu.cpp:253
 msgid "Group to Layer"
 msgstr "Taldea geruzara"
 
 #: ../src/ui/contextmenu.cpp:259
-#, fuzzy
 msgid "_Pop Selection out of Group"
-msgstr "A_tera hautatutako objektuak taldetik"
+msgstr "A_tera hautapena taldetik"
 
 #: ../src/ui/contextmenu.cpp:266
 msgid "Set Cl_ip"
@@ -23400,9 +23235,8 @@ msgid "Link _Properties..."
 msgstr "Estekaren _propietateak..."
 
 #: ../src/ui/contextmenu.cpp:291
-#, fuzzy
 msgid "_Open Link in Browser"
-msgstr "_Ireki esteka nabigatzailean"
+msgstr "_Ireki esteka arakatzailean"
 
 #: ../src/ui/contextmenu.cpp:292
 msgid "_Remove Link"
@@ -23445,34 +23279,28 @@ msgid "_Lower Layer"
 msgstr "_Jaitsi geruza"
 
 #: ../src/ui/contextmenu.cpp:324
-#, fuzzy
 msgid "_Hide/Show Other Layers"
 msgstr "E_zkutatu/erakutsi beste geruzak"
 
 #: ../src/ui/contextmenu.cpp:325
-#, fuzzy
 msgid "_Hide All Layers"
 msgstr "E_zkutatu geruza guztiak"
 
 #: ../src/ui/contextmenu.cpp:326
-#, fuzzy
 msgid "_Show All Layers"
-msgstr "_Erakutsi geruza guztiak"
+msgstr "Erakut_si geruza guztiak"
 
 #: ../src/ui/contextmenu.cpp:330
-#, fuzzy
 msgid "_Lock/Unlock Other Layers"
-msgstr "_Blokeatu/desblokeatu beste geruzak"
+msgstr "B_lokeatu/desblokeatu beste geruzak"
 
 #: ../src/ui/contextmenu.cpp:331
-#, fuzzy
 msgid "_Lock All Layers"
-msgstr "_Blokeatu geruza guztiak"
+msgstr "B_lokeatu geruza guztiak"
 
 #: ../src/ui/contextmenu.cpp:332
-#, fuzzy
 msgid "_Unlock All Layers"
-msgstr "_Desblokeatu geruza guztiak"
+msgstr "Desblokeat_u geruza guztiak"
 
 #: ../src/ui/contextmenu.cpp:383
 msgid "Unhid objects"
@@ -24334,12 +24162,10 @@ msgstr "Ezarri betegarriaren kolorea paletatik"
 
 #. TRANSLATORS: An item in context menu on a colour in the swatches
 #: ../src/ui/dialog/color-item.cpp:401
-#, fuzzy
 msgid "Set Fill"
 msgstr "Ezarri betegarria"
 
 #: ../src/ui/dialog/color-item.cpp:402
-#, fuzzy
 msgid "Set Stroke"
 msgstr "Ezarri trazua"
 
@@ -24348,14 +24174,12 @@ msgid "Edit..."
 msgstr "Editatu..."
 
 #: ../src/ui/dialog/color-item.cpp:415
-#, fuzzy
 msgid "Unpin Color"
-msgstr "Kolorea"
+msgstr "Koloreari iltzea kendu"
 
 #: ../src/ui/dialog/color-item.cpp:415
-#, fuzzy
 msgid "Pin Color"
-msgstr "Puntuen kolorea"
+msgstr "Iltzatu kolorea"
 
 #: ../src/ui/dialog/color-item.cpp:438
 #: ../src/ui/dialog/livepatheffect-editor.cpp:309
@@ -24363,53 +24187,44 @@ msgid "Convert"
 msgstr "Bihurtu"
 
 #: ../src/ui/dialog/color-item.cpp:500
-#, fuzzy
 msgid "Pin swatch"
-msgstr "Kolore-laginak"
+msgstr "Iltzatu lagina"
 
 #: ../src/ui/dialog/color-item.cpp:500
-#, fuzzy
 msgid "Unpin swatch"
-msgstr "Ireki itzaleztadurak"
+msgstr "Laginari itzea kendu"
 
 #: ../src/ui/dialog/command-palette.cpp:564
 msgid "boolean"
-msgstr ""
+msgstr "boolearra"
 
 #: ../src/ui/dialog/command-palette.cpp:567
-#, fuzzy
 msgid "whole number"
-msgstr "Diapositibaren zenbakia"
+msgstr "zenbaki osoa"
 
 #: ../src/ui/dialog/command-palette.cpp:570
-#, fuzzy
 msgid "decimal number"
-msgstr "Diapositibaren zenbakia"
+msgstr "zenbakien hamartarra"
 
 #: ../src/ui/dialog/command-palette.cpp:573
-#, fuzzy
 msgid "text string"
-msgstr "katea"
+msgstr "testu katea"
 
 #: ../src/ui/dialog/command-palette.cpp:576
-#, fuzzy
 msgid "pair of decimal numbers"
-msgstr "Sarrera baliogabea. Sartu zenbaki dezimal bat."
+msgstr "zenbaki hamartar parea"
 
 #: ../src/ui/dialog/command-palette.cpp:590
-#, fuzzy
 msgid "Enter a %1..."
-msgstr "Sartu %1 taldean"
+msgstr "Sartu %1 bat..."
 
 #: ../src/ui/dialog/command-palette.cpp:1098
-#, fuzzy
 msgid "Search operation..."
-msgstr "Bilatzen..."
+msgstr "Bilaketa eragiketa..."
 
 #: ../src/ui/dialog/command-palette.cpp:1131
-#, fuzzy
 msgid "Enter action argument"
-msgstr "Interpolazio metodoa:"
+msgstr "Sartu ekintza argumentua"
 
 #: ../src/ui/dialog/command-palette.cpp:1159
 msgid "History mode"
@@ -24444,18 +24259,16 @@ msgid "_Document Properties"
 msgstr "_Dokumentu-propietateak"
 
 #: ../src/ui/dialog/dialog-data.cpp:34
-#, fuzzy
 msgid "_Document Resources"
-msgstr "_Dokumentu-propietateak"
+msgstr "_Dokumentu baliabideak"
 
 #: ../src/ui/dialog/dialog-data.cpp:35
 msgid "_Export"
 msgstr "_Esportatu"
 
 #: ../src/ui/dialog/dialog-data.cpp:36
-#, fuzzy
 msgid "_Extensions Gallery"
-msgstr "Hedapenak"
+msgstr "_Hedapen galeria"
 
 #: ../src/ui/dialog/dialog-data.cpp:37
 msgid "_Fill and Stroke"
@@ -24466,18 +24279,16 @@ msgid "Filter _Editor"
 msgstr "Iragazkien _editorea"
 
 #: ../src/ui/dialog/dialog-data.cpp:39
-#, fuzzy
 msgid "Filter Gallery"
-msgstr "Ireki LPE elkarrizketa-koadroa"
+msgstr "Iragazki galeria"
 
 #: ../src/ui/dialog/dialog-data.cpp:40
 msgid "_Find/Replace"
 msgstr "_Bilatu/ordeztu"
 
 #: ../src/ui/dialog/dialog-data.cpp:41 ../share/ui/dialog-text-edit.glade:29
-#, fuzzy
 msgid "_Font Collections"
-msgstr "Hautapenetik"
+msgstr "_Letra-tipo bildumak"
 
 #: ../src/ui/dialog/dialog-data.cpp:42
 msgid "_Unicode Characters"
@@ -24500,7 +24311,6 @@ msgid "_Messages"
 msgstr "_Mezuak"
 
 #: ../src/ui/dialog/dialog-data.cpp:47
-#, fuzzy
 msgid "_Object Attributes"
 msgstr "_Objektu-atributuak"
 
@@ -24651,9 +24461,8 @@ msgid "Color of a guideline when it is under mouse"
 msgstr "Gida-lerroaren kolorea saguaren azpian dagoenean"
 
 #: ../src/ui/dialog/document-properties.cpp:178
-#, fuzzy
 msgid "Create guides around the current page"
-msgstr "Sortu gidak orriaren inguruan"
+msgstr "Sortu gidak uneko orrialdearen inguruan"
 
 #: ../src/ui/dialog/document-properties.cpp:179
 msgid "Delete all guides"
@@ -24744,9 +24553,8 @@ msgid "Toggle clip to page mode"
 msgstr "Txandakatu orri-ertzari atxikitzea"
 
 #: ../src/ui/dialog/document-properties.cpp:507
-#, fuzzy
 msgid "Toggle page label style"
-msgstr "Txandakatu orri-ertza"
+msgstr "Txandakatu orrialde etiketa estiloa"
 
 #: ../src/ui/dialog/document-properties.cpp:543
 msgid "<b>Guides</b>"
@@ -24866,21 +24674,19 @@ msgid "<b>Defined grids</b>"
 msgstr "<b>Definitutako saretak</b>"
 
 #: ../src/ui/dialog/document-properties.cpp:1428
-#, fuzzy
 msgctxt "Grid"
 msgid "Rectangular"
-msgstr "Sareta laukizuzena"
+msgstr "Laukizuzena"
 
 #: ../src/ui/dialog/document-properties.cpp:1429
-#, fuzzy
 msgctxt "Grid"
 msgid "Axonometric"
-msgstr "Sareta axonometrikoa"
+msgstr "Axonometrikoa"
 
 #: ../src/ui/dialog/document-properties.cpp:1430
 msgctxt "Grid"
 msgid "Modular"
-msgstr ""
+msgstr "Modularra"
 
 #: ../src/ui/dialog/document-properties.cpp:1651
 msgid "Create new grid"
@@ -24971,53 +24777,44 @@ msgid "Distance between vertical grid lines"
 msgstr "Saretako marra bertikalen arteko distantzia"
 
 #: ../src/ui/dialog/document-properties.cpp:1769
-#, fuzzy
 msgid "Gap _X:"
-msgstr "X tartea"
+msgstr "_X tartea:"
 
 #: ../src/ui/dialog/document-properties.cpp:1769
 #: ../src/ui/dialog/inkscape-preferences.cpp:2159
-#, fuzzy
 msgid "Horizontal distance between blocks"
-msgstr "Zutabeen arteko tarte horizontala."
+msgstr "Blokeen arteko distantzia horizontala"
 
 #: ../src/ui/dialog/document-properties.cpp:1772
-#, fuzzy
 msgid "Gap _Y:"
-msgstr "Y tartea"
+msgstr "_Y tartea:"
 
 #: ../src/ui/dialog/document-properties.cpp:1772
 #: ../src/ui/dialog/inkscape-preferences.cpp:2160
-#, fuzzy
 msgid "Vertical distance between blocks"
-msgstr "Errenkaden arteko tarte bertikala."
+msgstr "Blokeen arteko distantzia bertikala"
 
 #: ../src/ui/dialog/document-properties.cpp:1775
-#, fuzzy
 msgid "_Margin X:"
-msgstr "_X iturburua:"
+msgstr "_X marjna:"
 
 #: ../src/ui/dialog/document-properties.cpp:1775
 #: ../src/ui/dialog/inkscape-preferences.cpp:2161
-#, fuzzy
 msgid "Horizontal block margin"
-msgstr "Jatorri horizontala X:"
+msgstr "Blokearen marjina horizontala"
 
 #: ../src/ui/dialog/document-properties.cpp:1778
-#, fuzzy
 msgid "M_argin Y:"
-msgstr "_Y iturburua:"
+msgstr "Y m_arjina:"
 
 #: ../src/ui/dialog/document-properties.cpp:1778
 #: ../src/ui/dialog/inkscape-preferences.cpp:2162
-#, fuzzy
 msgid "Vertical block margin"
-msgstr "Lauso bertikala"
+msgstr "Blokearen marjina bertikala"
 
 #: ../src/ui/dialog/document-properties.cpp:1782
-#, fuzzy
 msgid "An_gle X:"
-msgstr "X angelua:"
+msgstr "X an_gelua:"
 
 #: ../src/ui/dialog/document-properties.cpp:1782
 #: ../src/ui/dialog/inkscape-preferences.cpp:2130
@@ -25025,9 +24822,8 @@ msgid "Angle of x-axis"
 msgstr "X ardatzaren angelua"
 
 #: ../src/ui/dialog/document-properties.cpp:1784
-#, fuzzy
 msgid "Ang_le Z:"
-msgstr "Z angelua:"
+msgstr "Z ange_lua:"
 
 #: ../src/ui/dialog/document-properties.cpp:1784
 #: ../src/ui/dialog/inkscape-preferences.cpp:2131
@@ -25061,47 +24857,40 @@ msgid "Color of the major (highlighted) grid lines"
 msgstr "Sareta nagusiaren kolorea (nabarmendua)"
 
 #: ../src/ui/dialog/document-properties.cpp:1793
-#, fuzzy
 msgid "Major grid line e_very:"
-msgstr "Sareta nagusiko tartea:"
+msgstr "Sareta-lerro nagusiko _hainbatero:"
 
 #: ../src/ui/dialog/document-properties.cpp:1793
-#, fuzzy
 msgid "Number of lines"
-msgstr "Diapositiba kopurua"
+msgstr "Lerro kopurua"
 
 #: ../src/ui/dialog/document-properties.cpp:1868
-#, fuzzy
 msgid "Block _width:"
-msgstr "Lausoaren zabalera:"
+msgstr "Blokearen _zabalera:"
 
 #: ../src/ui/dialog/document-properties.cpp:1868
 msgid "Spacing _X:"
 msgstr "_X tartea:"
 
 #: ../src/ui/dialog/document-properties.cpp:1869
-#, fuzzy
 msgid "Block _height:"
-msgstr "Lausoaren altuera:"
+msgstr "Blokearen _altuera:"
 
 #: ../src/ui/dialog/document-properties.cpp:1869
 msgid "Spacing _Y:"
 msgstr "_Y tartea:"
 
 #: ../src/ui/dialog/document-resources.cpp:221
-#, fuzzy
 msgid "Export Color Palette"
-msgstr "Esportatu GIMPen paleta gisa"
+msgstr "Esportatu kolore paleta"
 
 #: ../src/ui/dialog/document-resources.cpp:236
-#, fuzzy
 msgid "Delete pattern"
-msgstr "Ezabatu geruza"
+msgstr "Ezabatu eredua"
 
 #: ../src/ui/dialog/document-resources.cpp:241
-#, fuzzy
 msgid "Delete gradient"
-msgstr "Ezabatu gradientearen etena"
+msgstr "Ezabatu gradientea"
 
 #: ../src/ui/dialog/document-resources.cpp:889
 #: ../share/ui/dialog-export.glade:71 ../share/extensions/doc_ai_convert.inx:33
@@ -25115,21 +24904,18 @@ msgid "Document"
 msgstr "Dokumentua"
 
 #: ../src/ui/dialog/document-resources.cpp:891
-#, fuzzy
 msgctxt "Adjective for Metadata status"
 msgid "Present"
-msgstr "Aurrezarpenak"
+msgstr "Dago"
 
 #: ../src/ui/dialog/document-resources.cpp:901
-#, fuzzy
 msgid "Color profiles"
-msgstr "Estekatu kolore-profila"
+msgstr "Kolore-profilak"
 
 #: ../src/ui/dialog/document-resources.cpp:902
 #: ../share/ui/dialog-document-resources.glade:90
-#, fuzzy
 msgid "Swatches"
-msgstr "_Laginak"
+msgstr "Laginak"
 
 #: ../src/ui/dialog/document-resources.cpp:903
 #: ../share/ui/dialog-document-resources.glade:48
@@ -25139,9 +24925,8 @@ msgstr "Letra-tipoa"
 
 #: ../src/ui/dialog/document-resources.cpp:904
 #: ../share/ui/dialog-document-resources.glade:54
-#, fuzzy
 msgid "Gradients"
-msgstr "Gradientea"
+msgstr "Gradienteak"
 
 #: ../src/ui/dialog/document-resources.cpp:905
 msgid "Mesh gradients"
@@ -25170,9 +24955,8 @@ msgid "Images"
 msgstr "Irudiak"
 
 #: ../src/ui/dialog/document-resources.cpp:911
-#, fuzzy
 msgid "SVG fonts"
-msgstr "Editatu SVG letra-tipoak"
+msgstr "SVG letra-tipoak"
 
 #: ../src/ui/dialog/document-resources.cpp:912
 #: ../share/ui/dialog-export.glade:775
@@ -25180,9 +24964,8 @@ msgid "Layers"
 msgstr "Geruzak"
 
 #: ../src/ui/dialog/document-resources.cpp:913
-#, fuzzy
 msgid "Total elements"
-msgstr "Kalkulatu elementu guztiak."
+msgstr "Elementuak guztira"
 
 #: ../src/ui/dialog/document-resources.cpp:914 ../src/ui/dialog/find.cpp:94
 msgid "Groups"
@@ -25194,24 +24977,20 @@ msgid "Paths"
 msgstr "Bideak"
 
 #: ../src/ui/dialog/document-resources.cpp:916
-#, fuzzy
 msgid "External URIs"
-msgstr "Kanpokoa"
+msgstr "Kanpoko URIak"
 
 #: ../src/ui/dialog/document-resources.cpp:971
-#, fuzzy
 msgid "Style "
-msgstr "Formatua"
+msgstr "Estiloa"
 
 #: ../src/ui/dialog/document-resources.cpp:1179
-#, fuzzy
 msgid "Edit object title"
-msgstr "Ezarri objektuaren titulua"
+msgstr "Editatu objektuaren titulua"
 
 #: ../src/ui/dialog/export-batch.cpp:290
-#, fuzzy
 msgid "Color used to fill the image background"
-msgstr "Atzeko planoa betetzeko erabilitako kolorea"
+msgstr "Irudiaren atzeko planoa betetzeko erabilitako kolorea"
 
 #: ../src/ui/dialog/export-batch.cpp:401
 #, c-format
@@ -25243,9 +25022,8 @@ msgid "Exporting %1"
 msgstr "%1 esportatzen"
 
 #: ../src/ui/dialog/export-batch.cpp:674
-#, fuzzy
 msgid "Format %1, Selection %2"
-msgstr "Zooma hautapenera"
+msgstr "Formatu %1, Hautapena %2"
 
 #: ../src/ui/dialog/export-batch.cpp:708 ../src/ui/dialog/export-single.cpp:727
 msgid "Select a filename for exporting"
@@ -25256,9 +25034,8 @@ msgid "Color used to fill background"
 msgstr "Atzeko planoa betetzeko erabilitako kolorea"
 
 #: ../src/ui/dialog/export-single.cpp:623
-#, fuzzy
 msgid "Exporting"
-msgstr "%1 esportatzen"
+msgstr "Esportatzen"
 
 #: ../src/ui/dialog/export-single.cpp:638
 msgid "Exporting %1 (%2 x %3)"
@@ -25269,11 +25046,9 @@ msgid "Set Export Options"
 msgstr "Ezarri esportazio-aukerak"
 
 #: ../src/ui/dialog/export.cpp:187
-#, fuzzy, c-format
+#, c-format
 msgid "Directory <b>%s</b> does not exist and can't be created.\n"
-msgstr ""
-"<b>%s</b> direktorioa ez dago edo ez da direktorio bat.\n"
-"\n"
+msgstr "<b>%s</b> direktorioa ez dago eta ezin da sortu.\n"
 
 #: ../src/ui/dialog/export.cpp:208
 msgid "The chosen area to be exported is invalid."
@@ -25335,14 +25110,12 @@ msgid "bitmap"
 msgstr "bit-mapa"
 
 #: ../src/ui/dialog/extensions-gallery.cpp:247
-#, fuzzy
 msgid "All Effects"
-msgstr "Efektuak"
+msgstr "Efektuak guztiak"
 
 #: ../src/ui/dialog/extensions-gallery.cpp:275
-#, fuzzy
 msgid "Select filter to apply:"
-msgstr "Hautatu ireki beharreko fitxategia"
+msgstr "Hautatu aplikatu beharreko iragazkia:"
 
 #: ../src/ui/dialog/filedialogimpl-gtkmm.cpp:214
 msgid "_Open"
@@ -25414,9 +25187,8 @@ msgid "Stroke st_yle"
 msgstr "Trazuaren e_stiloa"
 
 #: ../src/ui/dialog/filter-effects-dialog.cpp:315
-#, fuzzy
 msgid "Select color"
-msgstr "Hautatzailea"
+msgstr "Hautatu kolorea"
 
 #. TRANSLATORS: this dialog is accessible via menu Filters - Filter editor
 #: ../src/ui/dialog/filter-effects-dialog.cpp:523
@@ -25439,19 +25211,16 @@ msgid "None"
 msgstr "Bat ere ez"
 
 #: ../src/ui/dialog/filter-effects-dialog.cpp:657
-#, fuzzy
 msgid "Choose image file"
-msgstr "Aukeratu fitxategi-izena"
+msgstr "Aukeratu fitxategi-irudia"
 
 #: ../src/ui/dialog/filter-effects-dialog.cpp:660
-#, fuzzy
 msgid "SVG Element"
-msgstr "Hautatutako SVG elementua"
+msgstr "SVG elementua"
 
 #: ../src/ui/dialog/filter-effects-dialog.cpp:661
-#, fuzzy
 msgid "Use selected SVG element"
-msgstr "Hautatutako SVG elementua"
+msgstr "Erabili hautatutako SVG elementua"
 
 #: ../src/ui/dialog/filter-effects-dialog.cpp:726
 msgid "Select an image to be used as input."
@@ -25485,7 +25254,7 @@ msgstr "Balioak"
 
 #: ../src/ui/dialog/filter-effects-dialog.cpp:1046
 msgid "List of stops with interpolated output"
-msgstr ""
+msgstr "Irteera interpolatua duten geralekuen zerrenda"
 
 #: ../src/ui/dialog/filter-effects-dialog.cpp:1049
 msgid "List of discrete values for a step function"
@@ -25572,16 +25341,15 @@ msgstr "_Iragazkia"
 
 #: ../src/ui/dialog/filter-effects-dialog.cpp:1359
 msgid "Used"
-msgstr ""
+msgstr "Erabilita"
 
 #: ../src/ui/dialog/filter-effects-dialog.cpp:1442
 msgid "R_ename"
 msgstr "Aldatu _izena"
 
 #: ../src/ui/dialog/filter-effects-dialog.cpp:1443
-#, fuzzy
 msgid "Select Filter Elements"
-msgstr "Zatitu elementuak"
+msgstr "Hautatu iragazki elementuak"
 
 #: ../src/ui/dialog/filter-effects-dialog.cpp:1458
 msgid "Rename filter"
@@ -25625,24 +25393,20 @@ msgid "Reorder filter primitive"
 msgstr "Berrantolatu iragazkiaren primitiba"
 
 #: ../src/ui/dialog/filter-effects-dialog.cpp:2633
-#, fuzzy
 msgid "Effect"
-msgstr "_Efektua"
+msgstr "Efektua"
 
 #: ../src/ui/dialog/filter-effects-dialog.cpp:2634
-#, fuzzy
 msgid "Compositing"
-msgstr "Konposaketa"
+msgstr "Konposatzea"
 
 #: ../src/ui/dialog/filter-effects-dialog.cpp:2635
-#, fuzzy
 msgid "Color editing"
-msgstr "Koloredun triangelua"
+msgstr "Kolorea editatzea"
 
 #: ../src/ui/dialog/filter-effects-dialog.cpp:2636
-#, fuzzy
 msgid "Generating"
-msgstr "Bidea sortzen:"
+msgstr "Sortzen"
 
 #: ../src/ui/dialog/filter-effects-dialog.cpp:2650
 msgid ""
@@ -25781,9 +25545,8 @@ msgid "No filter selected"
 msgstr "Ez da iragazkirik hautatu"
 
 #: ../src/ui/dialog/filter-effects-dialog.cpp:2780
-#, fuzzy
 msgid "Add effect"
-msgstr "Gehitu efektua:"
+msgstr "Gehitu efektua"
 
 #: ../src/ui/dialog/filter-effects-dialog.cpp:2998
 msgid "Automatic Region"
@@ -26064,9 +25827,8 @@ msgid "Color component that controls the displacement in the Y direction"
 msgstr "Y norabidean desplazamendua kontrolatzen duen kolorearen osagaia"
 
 #: ../src/ui/dialog/filter-effects-dialog.cpp:3053
-#, fuzzy
 msgid "Color:"
-msgstr "Kolorea"
+msgstr "Kolorea:"
 
 #: ../src/ui/dialog/filter-effects-dialog.cpp:3053
 msgid "The whole filter region will be filled with this color."
@@ -26096,9 +25858,8 @@ msgstr "X kokalekua:"
 
 #: ../src/ui/dialog/filter-effects-dialog.cpp:3068
 #: ../src/ui/dialog/filter-effects-dialog.cpp:3094
-#, fuzzy
 msgid "Position X"
-msgstr "X kokalekua:"
+msgstr "X kokalekua"
 
 #: ../src/ui/dialog/filter-effects-dialog.cpp:3072
 #: ../src/ui/dialog/filter-effects-dialog.cpp:3095
@@ -26108,9 +25869,8 @@ msgstr "Y kokalekua:"
 
 #: ../src/ui/dialog/filter-effects-dialog.cpp:3072
 #: ../src/ui/dialog/filter-effects-dialog.cpp:3095
-#, fuzzy
 msgid "Position Y"
-msgstr "Y kokalekua:"
+msgstr "Y kokalekua"
 
 #: ../src/ui/dialog/filter-effects-dialog.cpp:3079
 msgid "Delta X:"
@@ -26150,9 +25910,8 @@ msgstr ""
 "duen adierazten du."
 
 #: ../src/ui/dialog/filter-effects-dialog.cpp:3103
-#, fuzzy
 msgid "Detail:"
-msgstr "Xehetasunak:"
+msgstr "Xehetasuna:"
 
 #: ../src/ui/dialog/filter-effects-dialog.cpp:3104
 msgid "Seed:"
@@ -26175,19 +25934,16 @@ msgid "Set filter primitive attribute"
 msgstr "Ezarri iragazkiaren primitibaren atributua"
 
 #: ../src/ui/dialog/filter-effects-dialog.cpp:3266
-#, fuzzy
 msgid "Add effect from the search bar"
-msgstr "Ez dago efekturik arbelean."
+msgstr "Gehitu efektua bilaketa-barratik"
 
 #: ../src/ui/dialog/filter-effects-dialog.cpp:3269
-#, fuzzy
 msgid "Select a filter"
-msgstr "Hautatu fitxategia inportatzeko"
+msgstr "Hautatu iragazki bat"
 
 #: ../src/ui/dialog/filter-effects-dialog.cpp:3272
-#, fuzzy
 msgid "No filters in the document"
-msgstr "Ez dago gradienterik dokumentuan"
+msgstr "Dokumentuan ez dago iragazkirik"
 
 #: ../src/ui/dialog/find.cpp:59
 msgid "F_ind:"
@@ -26502,16 +26258,12 @@ msgstr "Hautatu propietatea"
 
 #: ../src/ui/dialog/font-collections-manager.cpp:54
 #: ../share/ui/dialog-text-edit.glade:103 ../share/ui/toolbar-text.ui:77
-#, fuzzy
 msgid "Font Collections"
-msgstr "_Lotura-marrak"
+msgstr "Letra-tipo bildumak"
 
 #: ../src/ui/dialog/font-substitution.cpp:46
-#, fuzzy
 msgid "Some fonts are not available and have been substituted."
-msgstr ""
-"\n"
-"Letra-tipo batzuk ez daude erabilgarri edo ordeztu egin dira."
+msgstr "Letra-tipo batzuk ez daude erabilgarri eta ordeztu egin dira."
 
 #: ../src/ui/dialog/font-substitution.cpp:49
 msgid "Font substitution"
@@ -26531,73 +26283,66 @@ msgstr "'%1' letra-tipoa '%2'-rekin ordeztuta"
 
 #: ../src/ui/dialog/global-palettes.cpp:115
 msgid "ACB file header not recognized."
-msgstr ""
+msgstr "ACB fitxategiaren goiburua ez da ezagutzen."
 
 #: ../src/ui/dialog/global-palettes.cpp:164
-#, fuzzy
 msgid "ACB file color space not supported."
-msgstr "Konexio paraleloak (LPT) ez daude onartuta."
+msgstr "ACB fitxategiaren kolore-eremua ez da onartzen."
 
 #: ../src/ui/dialog/global-palettes.cpp:241
 msgid "Palette color space unexpected."
-msgstr ""
+msgstr "Paletaren ezusteko kolore-eremua."
 
 #: ../src/ui/dialog/global-palettes.cpp:259
 msgid "ASE file header not recognized."
-msgstr ""
+msgstr "ASE fitxategiaren goiburua ez da ezagutzen."
 
 #: ../src/ui/dialog/global-palettes.cpp:339
 msgid "ASE color mode not recognized:"
-msgstr ""
+msgstr "ASE kolore-eremua ez da ezagutzen:"
 
 #: ../src/ui/dialog/global-palettes.cpp:363
-#, fuzzy
 msgid "Failed to open file"
-msgstr "Huts egin du inprimagailu lehenetsia irekitzean"
+msgstr "Fitxategia irekitzea huts egin du"
 
 #: ../src/ui/dialog/global-palettes.cpp:366
-#, fuzzy
 msgid "File is empty"
-msgstr "Fitxategiaren inportazioa"
+msgstr "Fitxategia hutsik dago"
 
 #: ../src/ui/dialog/global-palettes.cpp:367
-#, fuzzy
 msgid "First line is wrong"
-msgstr "Lehen lerroak izenburuak ditu"
+msgstr "Lehenengo lerroa gaizki dago"
 
 #: ../src/ui/dialog/global-palettes.cpp:411
-#, fuzzy
 msgctxt "Palette"
 msgid "Invalid line "
-msgstr "Ikur-tamaina baliogabea"
+msgstr "Lerro baliogabea"
 
 #: ../src/ui/dialog/global-palettes.cpp:440
 #: ../src/ui/dialog/global-palettes.cpp:442
 #: ../src/ui/dialog/global-palettes.cpp:445
 msgid "Error loading palette %1: %2"
-msgstr ""
+msgstr "Errorea %1 paleta kargatzean: %2"
 
 #: ../src/ui/dialog/global-palettes.cpp:448
 msgid "Unknown error loading palette %"
-msgstr ""
+msgstr "Errore ezezaguna % paleta kargatzean"
 
 #: ../src/ui/dialog/global-palettes.cpp:492
-#, fuzzy
 msgid "Gimp Color Palette"
-msgstr "Esportatu GIMPen paleta gisa"
+msgstr "GIMPen kolore-paleta"
 
 #: ../src/ui/dialog/global-palettes.cpp:493
 msgid "Adobe Color Book"
-msgstr ""
+msgstr "Adoberen kolore-liburua"
 
 #: ../src/ui/dialog/global-palettes.cpp:494
 msgid "Adobe Swatch Exchange"
-msgstr ""
+msgstr "Adoberen lagin trukea"
 
 #: ../src/ui/dialog/global-palettes.cpp:496
-#, fuzzy
 msgid "Load color palette"
-msgstr "Esportatu GIMPen paleta gisa"
+msgstr "Kargatu kolore-paleta"
 
 #: ../src/ui/dialog/glyphs.cpp:47 ../src/ui/dialog/glyphs.cpp:214
 #: ../share/ui/extension-pdfinput.glade:414
@@ -27576,9 +27321,8 @@ msgid "X:"
 msgstr "X:"
 
 #: ../src/ui/dialog/grid-arrange-tab.cpp:470
-#, fuzzy
 msgid "Horizontal spacing between columns"
-msgstr "Zutabeen arteko tarte horizontala."
+msgstr "Zutabeen arteko tarte horizontala"
 
 #: ../src/ui/dialog/grid-arrange-tab.cpp:471
 #: ../src/ui/widget/registered-widget.cpp:665
@@ -27588,9 +27332,8 @@ msgid "Y:"
 msgstr "Y:"
 
 #: ../src/ui/dialog/grid-arrange-tab.cpp:471
-#, fuzzy
 msgid "Vertical spacing between rows"
-msgstr "Errenkaden arteko tarte bertikala."
+msgstr "Errenkaden arteko tarte bertikala"
 
 #: ../src/ui/dialog/grid-arrange-tab.cpp:489
 msgid "_Rows:"
@@ -27619,9 +27362,8 @@ msgstr ""
 "Ez bada ezartzen, zutabe bakoitzak objektu zabalenaren zabalera izango du"
 
 #: ../src/ui/dialog/grid-arrange-tab.cpp:561
-#, fuzzy
 msgid "<b>Alignment:</b>"
-msgstr "<b>Edukia</b>"
+msgstr "<b>Lerrokatzea:</b>"
 
 #: ../src/ui/dialog/grid-arrange-tab.cpp:574
 msgid "_Fit into selection box"
@@ -27732,24 +27474,20 @@ msgid "Whether selected objects display gradient editing controls"
 msgstr "Hautatutako objektuek editatzeko kontrolak bistaratuko duten ala ez"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:763
-#, fuzzy
 msgid "Change layer on selection"
-msgstr "Aldatu hautapeneko irudi guztiak"
+msgstr "Aldatu geruza hautatzean"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:764
-#, fuzzy
 msgid "Whether changing the selected objects changes the selected layer"
-msgstr "Klip talde bat sortzen du hautatutako objektuak oinarri gisa erabilita"
+msgstr "Hautatutako objektuak aldatzea hautatutako geruza aldatzen duen"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:770
-#, fuzzy
 msgid "Change page on selection"
-msgstr "Aldatu hautapeneko irudi guztiak"
+msgstr "Aldatu orrialdea hautatzean"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:771
-#, fuzzy
 msgid "Whether changing the selected objects changes the selected page"
-msgstr "Klip talde bat sortzen du hautatutako objektuak oinarri gisa erabilita"
+msgstr "Hautatutako objektuak aldatzea hautatutako orrialdea aldatzen duen"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:776
 msgid "Conversion to guides uses edges instead of bounding box"
@@ -28151,11 +27889,11 @@ msgstr ""
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:1075
 msgid "Fonts in 'Recently used' collection:"
-msgstr ""
+msgstr "'Berriki erabilitako' bildumako letra-tipoak:"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:1076
 msgid "Maximum number of fonts in the 'Recently used' font collection"
-msgstr ""
+msgstr "'Berriki erabilitako' letra-tipo bildumako letra-tipo kopurua gehienez"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:1086
 msgid "Font directories"
@@ -28666,7 +28404,7 @@ msgstr "Zoomaren ehunekoa unitate fisikoetan edo pixeletan adierazi daiteke."
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:1606
 msgid "Origin always on current page"
-msgstr ""
+msgstr "Jatorria beti uneko orrialdean"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:1607
 msgid ""
@@ -28698,13 +28436,12 @@ msgstr ""
 "biraketarako sagu-ekintzak desgaituz"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:1617
-#, fuzzy
 msgid "Show selection in ruler"
-msgstr "Erakutsi hautapen-heldulekua"
+msgstr "Erakutsi hautapen erregelan"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:1618
 msgid "Shows a blue line in the ruler where the selection is."
-msgstr ""
+msgstr "Erakutsi lerro urdin bat erregelan, hautapena dagoen lekuan."
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:1620
 msgid "User Interface"
@@ -28934,53 +28671,45 @@ msgstr ""
 "ikonoak menuan bistaratuko diren ala ez."
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:1822
-#, fuzzy
 msgid "Shift icons in menus"
-msgstr "Erakutsi ikonoak menuetan:"
+msgstr "Ikonoak menuan lekuz aldatu"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:1824
-#, fuzzy
 msgid "This preference fixes icon positions in menus."
-msgstr "Hobespenen %s fitxategia ezin izan da irakurri."
+msgstr "Hobespen horrek ikonoen menuko kokapena finkatzen du."
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:1826
 #: ../share/ui/toolbar-commands.ui:880
-#, fuzzy
 msgid "XML Editor"
-msgstr "_XML editorea"
+msgstr "XML editorea"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:1846
-#, fuzzy
 msgid "Color theme:"
-msgstr "Kolore-eskema:"
+msgstr "Kolore-gaia:"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:1846
 msgid "Syntax coloring for XML Editor"
-msgstr ""
+msgstr "XML editorerako sintaxia koloreztatzea"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:1875
-#, fuzzy
 msgid "Monospaced font:"
-msgstr "Hilabetearen letra-tipoa:"
+msgstr "Zabalera-finkoko letra-tipoa:"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:1875
-#, fuzzy
 msgid "Select fixed-width font"
-msgstr "Hautatu koadroarekin"
+msgstr "Hautatu zabalera-finkoko letra-tipoa"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:1878
-#, fuzzy
 msgid "Use monospaced font"
-msgstr "Ordeztu letra-tipoa"
+msgstr "Erabili zabalera-finkoko letra-tipoa"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:1879
-#, fuzzy
 msgid "XML tree:"
-msgstr "Arrastatu XML azpizuhaitza"
+msgstr "XML zuhaitza:"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:1879
 msgid "Use fixed-width font in XML Editor"
-msgstr ""
+msgstr "Erabili zabalera finkoko letra-tipoa XML editorean"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:1884
 msgid "Theming"
@@ -29273,19 +29002,16 @@ msgid "Use compact combo box for selecting color modes"
 msgstr "Erabili konbinazio-koadro trinkoa kolore moduak hautatzeko"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2048
-#, fuzzy
 msgid "Visible color pickers"
-msgstr "Kolore ikusgaiak"
+msgstr "Kolore ikusgaien hautatzaileak"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2081
-#, fuzzy
 msgid "Select color pickers"
-msgstr "Hautatu jatorrizko elementua"
+msgstr "Hautatu kolore hautatzaileak"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2084
-#, fuzzy
 msgid "Color Selector"
-msgstr "Garbitu hautapena"
+msgstr "Kolore-hautatzailea"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2088
 msgid "Line color when zooming out"
@@ -29386,56 +29112,46 @@ msgid "Angle Z:"
 msgstr "Z angelua:"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2157
-#, fuzzy
 msgid "Block width:"
-msgstr "Lausoaren zabalera:"
+msgstr "Blokeatu zabalera:"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2157
-#, fuzzy
 msgid "Width of grid modules"
-msgstr "Aldatu indize-modura:"
+msgstr "Sareta moduluen zabalera"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2158
-#, fuzzy
 msgid "Block height:"
-msgstr "Lausoaren altuera:"
+msgstr "Blokeatu altuera:"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2158
-#, fuzzy
 msgid "Height of grid modules"
-msgstr "Laukizuzenaren altuera"
+msgstr "Sareta moduluen altuera"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2159
 #: ../share/ui/pattern-edit.glade:514
-#, fuzzy
 msgid "Gap X:"
-msgstr "X tartea"
+msgstr "X tartea:"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2160
 #: ../share/ui/pattern-edit.glade:526
-#, fuzzy
 msgid "Gap Y:"
-msgstr "Y tartea"
+msgstr "Y tartea:"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2161
-#, fuzzy
 msgid "Margin X:"
-msgstr "X iturburua:"
+msgstr "X marjina:"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2162
-#, fuzzy
 msgid "Margin Y:"
-msgstr "Y iturburua:"
+msgstr "Y marjina:"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2163
-#, fuzzy
 msgid "Color used for block margins"
-msgstr "Saretako marra normaletan erabiliko den kolorea"
+msgstr "Blokeen marjinetarako erabilitako kolorea"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2164
-#, fuzzy
 msgid "Color used for grid blocks"
-msgstr "Saretako marra normaletan erabiliko den kolorea"
+msgstr "Sareta blokeetarako erabilitako kolorea"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2192
 msgid "Display Options"
@@ -29875,20 +29591,21 @@ msgstr ""
 "Bilatutako direktorioak: %s"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2389
-#, fuzzy
 msgid "User monitor profile:"
-msgstr "Estekatu kolore-profila"
+msgstr "Erabiltzailearen monitore-profila:"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2394
-#, fuzzy
 msgid "Use profile from user"
-msgstr "Eskuratu profila pantailatik"
+msgstr "Erabili erabiltzailearen profila"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2396
 msgid ""
 "Use a user specified ICC profile for monitor color correction. Warning: "
 "System wide color correction should be disabled."
 msgstr ""
+"Erabili erabiltzaileak adierazitako ICC profila monitorearen kolorea"
+" zuzentzeko. "
+"Abisua: Sistemaren kolore-zuzenketa ezgaitu beharko litzateke."
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2399
 msgid "Display rendering intent:"
@@ -30078,9 +29795,8 @@ msgid "Select the topmost items only when in touch selection mode"
 msgstr "Hautatu elementu gorenak ukitzeko hautapen moduan soilik"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2518
-#, fuzzy
 msgid "Select transparent objects, strokes, and fills"
-msgstr "Hautatu hurrengo objektu edo nodoa"
+msgstr "Hautatu objektuak, trazuak eta betegarriak gardenak"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2521
 msgid ""
@@ -30095,6 +29811,8 @@ msgid ""
 "Check to make objects, strokes, and fills which are completely transparent "
 "selectable even if not in outline mode"
 msgstr ""
+"Markatu, erabat gardenak diren objektuak, trazuak, eta betegarriak ingerada "
+"moduan egon gabe ere hautagarri egiteko"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2527
 msgid ""
@@ -30417,66 +30135,64 @@ msgstr ""
 "da. Zero balioarekin (edo balio oso baxu batekin) ezartzean, atxiki berehala."
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2643
-#, fuzzy
 msgid "Always Snap"
-msgstr "Beti gainean"
+msgstr "Atxiki beti"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2645
-#, fuzzy
 msgid "Always snap to grid"
-msgstr "Beti gainean"
+msgstr "Atxiki beti saretara"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2646
-#, fuzzy
 msgid "Always snap to a grid, ignoring thresholds."
-msgstr "Atxiki beti saretari, distantzia kontutan izan gabe"
+msgstr "Atxiki beti saretara, atalaseak kontutan izan gabe."
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2648
-#, fuzzy
 msgid "Always snap to guides"
-msgstr "Erakutsi beti eskema"
+msgstr "Atxiki beti gidetara"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2649
-#, fuzzy
 msgid "Always snap to guidelines, ignoring thresholds."
-msgstr "Atxiki beti gidei, distantzia kontutan izan gabe"
+msgstr "Atxiki beti gidetara, atalaseak kontutan izan gabe."
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2651
 msgid "Also Snap while Always Snapping"
-msgstr ""
+msgstr "Atxiki ere Atxiki beti dagoen bitartean"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2653
-#, fuzzy
 msgid "Allow object snapping"
-msgstr "Atxikitzerik ez lekuz aldatzean"
+msgstr "Baimendu objektuak atxikitzea"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2654
 msgid ""
 "Allow object snapping while always snapping to grid or guides, if object is "
 "closer."
 msgstr ""
+"Baimendu objektu atxikitzea, atxiki beti saretara edo gidetara dagoen "
+"bitartean, objektua gertuago badago."
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2656
-#, fuzzy
 msgid "Allow alignment"
-msgstr "Lerrokatzea"
+msgstr "Baimendu lerrokatzea"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2657
 msgid ""
 "Allow alignment snapping while always snapping to grid or guides, if "
 "alignment is closer."
 msgstr ""
+"Baimendu lerrokatze atxikitzea, atxiki beti saretara edo gidetara dagoen "
+"bitartean, objektua gertuago badago."
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2659
-#, fuzzy
 msgid "Allow distribution"
-msgstr "Ñabarduraren banaketa (°)"
+msgstr "Baimendu banaketa"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2660
 msgid ""
 "Allow distribution snapping while always snapping to grid or guides, if "
 "distribuition is closer."
 msgstr ""
+"Baimendu banaketa atxikitzea, atxiki beti saretara edo gidetara dagoen "
+"bitartean, objektua gertuago badago."
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2668
 msgid "_Arrow keys move by:"
@@ -30585,7 +30301,6 @@ msgstr ""
 "sakatzeak zoom egiten du."
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2706
-#, fuzzy
 msgid "Canvas rotation"
 msgstr "Oihalaren biraketa"
 
@@ -30600,15 +30315,19 @@ msgstr ""
 "arabera."
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2712
-#, fuzzy
 msgid "Arrow keys move object relative to screen"
-msgstr "Txikitu hautatutako objektuak pantailarekiko"
+msgstr "Gezi-teklek objektua pantailarekiko erlatibo mugitzen dute"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2714
 msgid ""
 "When on, arrow keys move objects relative to screen. If workspace is rotated "
 "the translation doesn't follow its coordinate system but the screen one."
 msgstr ""
+"Emanda dagoenean, gezi-teklek objektuak pantailarekiko erlatibo mugitzen"
+" dituzte. "
+"Langunea biratuta badago, itzulpenak ez du haren koordenatu sistema"
+" jarraitzen "
+"pantailarena baizik."
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2716
 msgid "Steps"
@@ -30703,12 +30422,15 @@ msgstr ""
 #: ../src/ui/dialog/inkscape-preferences.cpp:2753
 msgid "'Object to Path' only unlinks (keeps LPEs, shapes)"
 msgstr ""
+"'Objektua bide' soilik deskonektatzen du (LPEak, formak mantentzen ditu)"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2755
 msgid ""
 "'Object to path' only unlinks clones when they are converted to paths, but "
 "preserves any LPEs and shapes within the clones."
 msgstr ""
+"'Objektua bide' klonak deskonektatzen ditu bakarrik bide bihurtuta daudenean, "
+"baina klonetako LPEak eta formak mantentzen ditu."
 
 #. TRANSLATORS: Heading for the Inkscape Preferences "Clones" Page
 #: ../src/ui/dialog/inkscape-preferences.cpp:2757
@@ -30812,33 +30534,36 @@ msgstr ""
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2805
 msgid "Copy computed style"
-msgstr ""
+msgstr "Kopiatu kalkulatutako estiloa"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2806
 msgid "Copy class and style attributes verbatim"
-msgstr ""
+msgstr "Kopiatu klase eta estiloen atributuak hitzez hitz"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2809
-#, fuzzy
 msgid "Copying objects to the clipboard"
-msgstr "Ez dago efekturik arbelean."
+msgstr "Objektuak arbelera kopiatzen"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2811
 msgid ""
 "The object's 'style' attribute will be set to the computed style, preserving "
 "the object's appearance as in previous Inkscape versions"
 msgstr ""
+"Objektuaren 'estiloa' atributua kalkulatutako estilora ezarriko da,"
+" objektuaren "
+"itxura Inkscape-ren aurreko bertsioetan bezala mantenduz"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2815
 msgid ""
 "The object's 'style' and 'class' values will be copied verbatim, and will "
 "replace those of the target object when using 'Paste style'"
 msgstr ""
+"Objektuaren 'estiloa' eta 'klasea' balioak hitzez hitz kopiatuko dira, eta "
+"jomugako objektuarenak ordezkatuko ditu 'Itsatsi estiloa' erabiltzean"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2817
-#, fuzzy
 msgid "Clipboard"
-msgstr "Arbeletik"
+msgstr "Arbela"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2820
 msgid "Document cleanup"
@@ -30855,9 +30580,8 @@ msgstr "Garbitu"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2826
 #: ../src/ui/dialog/inkscape-preferences.cpp:2828
-#, fuzzy
 msgid "Show experimental effects"
-msgstr "Erakutsi esperimentala"
+msgstr "Erakutsi efektu esperimentalak"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2829
 msgid "Tiling"
@@ -30886,12 +30610,13 @@ msgid "Number of _Threads:"
 msgstr "_Harien kopurua:"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2840
-#, fuzzy
 msgid ""
 "Configure number of threads to use when rendering. The default value of zero "
 "means choose automatically."
 msgstr ""
-"Konfiguratu prozesadore/hari kopurua iragazkiak errendatzean erabiltzeko"
+"Konfiguratu errendatzean erabili beharreko hari kopurua. Zero balio"
+" lehenetsiaren "
+"esanahia automatikoki aukeratu esan nahi du."
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2844
 msgid "Rendering _cache size:"
@@ -30953,9 +30678,8 @@ msgstr ""
 "bezain azkar birmarraztu"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2863
-#, fuzzy
 msgid "Enable OpenGL"
-msgstr "Gaitu OpenGL:"
+msgstr "Gaitu OpenGL"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2864
 msgid ""
@@ -31032,14 +30756,12 @@ msgid "Use dithering"
 msgstr "Erabili bilbatzea"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2916
-#, fuzzy
 msgid ""
 "Makes gradients smoother. This can significantly impact the size of "
 "generated PNG files."
 msgstr ""
-"Gradienteak leunagoak izan daitezen eragiten du. Horrek sortutako PNG "
-"fitxategien tamainan inpaktu handia izan dezake. Aukera hori aldatu ondoren "
-"bistaratzea eguneratzeko, egin zoom."
+"Gradienteak leunagoak egiten ditu. Horrek sortutako PNG fitxategien "
+"tamainan nabarmen eragin dezake."
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2927
 msgid "Enable developer mode"
@@ -31061,9 +30783,8 @@ msgstr "Maila baxuko moldatze-aukerak"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2969
 #: ../share/ui/dialog-symbols.glade:33
-#, fuzzy
 msgid "Tile size"
-msgstr "Lauza-tamaina:"
+msgstr "Lauzaren tamaina"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2969
 msgid ""
@@ -31077,23 +30798,21 @@ msgid "Render time limit"
 msgstr "Errendatzearen denbora-muga"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2971
-#, fuzzy
 msgctxt "millisecond abbreviation"
 msgid "ms"
-msgstr "m"
+msgstr "ms"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2971
 msgid "The maximum time allowed for a rendering time slice"
 msgstr "Errendatzearen denbora zati baterako onartutako gehieneko denbora"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2973
-#, fuzzy
 msgid "Use block updates"
-msgstr "Zuzeneko eguneratzeak"
+msgstr "Erabili bloke-eguneratzeak"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2973
 msgid "Update the dragged region as a single block"
-msgstr ""
+msgstr "Eguneratu arrastatutako eskualdea bloke bakarra bailitzan"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2976
 msgid "Persistent"
@@ -31214,18 +30933,16 @@ msgid "Log certain events to the console"
 msgstr "Erregistratu gertaera batzuk kontsolan"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2999
-#, fuzzy
 msgid "Delay redraw"
-msgstr "Birmarrazte osoa"
+msgstr "Atzeratu birmarrazte"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2999
 msgid "Introduce a fixed delay for each tile"
 msgstr "Sartu atzerapen finkoa lauza bakoitzerako"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:3001
-#, fuzzy
 msgid "Delay redraw time"
-msgstr "Birmarrazte-denbora motela"
+msgstr "Atzeratu birmarrazte-denbora"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:3001
 msgctxt "microsecond abbreviation"
@@ -31604,7 +31321,7 @@ msgstr "Ortografia"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:3689
 msgid "Shared default resources folder:"
-msgstr ""
+msgstr "lehenetsitako baliabideen karpeta partekatua:"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:3690
 msgid ""
@@ -31886,17 +31603,15 @@ msgstr "Aktibatu bidearen efektua"
 
 #: ../src/ui/dialog/livepatheffect-editor.cpp:305
 msgid "Favorites"
-msgstr ""
+msgstr "Gogokoak"
 
 #: ../src/ui/dialog/livepatheffect-editor.cpp:306
-#, fuzzy
 msgid "Edit/Tools"
-msgstr "Tresnak"
+msgstr "Editatu/Tresnak"
 
 #: ../src/ui/dialog/livepatheffect-editor.cpp:308
-#, fuzzy
 msgid "Generate"
-msgstr "Orokorra"
+msgstr "Sortu"
 
 #: ../src/ui/dialog/livepatheffect-editor.cpp:310
 msgid "Experimental"
@@ -31908,41 +31623,36 @@ msgstr ""
 
 #: ../src/ui/dialog/livepatheffect-editor.cpp:518
 #: ../src/ui/dialog/livepatheffect-editor.cpp:568
-#, fuzzy
 msgid "Select a path, shape, clone or group"
-msgstr "Hautatu bidea edo forma"
+msgstr "Hautatu bide, forma, klon edo talde bat"
 
 #: ../src/ui/dialog/livepatheffect-editor.cpp:542
-#, fuzzy
 msgid "Select %1 with %2 LPE"
-msgstr "Hautatu koadroarekin"
+msgstr "Hautatu %1 %2 LPErekin"
 
 #: ../src/ui/dialog/livepatheffect-editor.cpp:571
 msgid "Select only one path, shape, clone or group"
-msgstr ""
+msgstr "Hautatu bide, forma, klon edo talde bakar bat"
 
 #: ../src/ui/dialog/livepatheffect-editor.cpp:645
-#, fuzzy
 msgid "<small>Without parameters</small>"
-msgstr "<small>Txandakatu:</small>"
+msgstr "<small>Parametrorik gabe</small>"
 
 #: ../src/ui/dialog/livepatheffect-editor.cpp:788
 msgid "Drag to change position in path effects stack"
 msgstr ""
 
 #: ../src/ui/dialog/livepatheffect-editor.cpp:999
-#, fuzzy
 msgid "Flatten path effect(s)"
-msgstr "Desaktibatu bidearen efektua"
+msgstr "Lautu bide efektua(k)"
 
 #: ../src/ui/dialog/livepatheffect-editor.cpp:1020
 msgid "Remove path effect"
 msgstr "Kendu bidearen efektua"
 
 #: ../src/ui/dialog/livepatheffect-editor.cpp:1116
-#, fuzzy
 msgid "Duplicate path effect"
-msgstr "Desaktibatu bidearen efektua"
+msgstr "Bikoiztu bidearen efektua"
 
 #: ../src/ui/dialog/livepatheffect-editor.cpp:1118
 msgid "Move path effect up"
@@ -32079,24 +31789,21 @@ msgstr "Eragin:"
 
 #: ../src/ui/dialog/object-attributes.cpp:93
 msgid "Item's fill, stroke and opacity"
-msgstr ""
+msgstr "Elementuaren betegarria, trazua eta opakutasuna"
 
 #: ../src/ui/dialog/object-attributes.cpp:131
-#, fuzzy
 msgid "Multiple objects selected"
-msgstr "Objektu <b>%i</b> hautatu da"
+msgstr "Hainbat objektu hautatu dira"
 
 #: ../src/ui/dialog/object-attributes.cpp:221
-#, fuzzy
 msgid "Removed live path effect"
-msgstr "Kendu zuzeneko bide-efektua"
+msgstr "Zuzeneko bide-efektua kendu da"
 
 #: ../src/ui/dialog/object-attributes.cpp:293
 #: ../src/ui/dialog/object-attributes.cpp:304
 #: ../src/ui/dialog/object-attributes.cpp:315
-#, fuzzy
 msgid "Change object attribute"
-msgstr "_Objektu-atributuak"
+msgstr "Aldatu objektu-atributua"
 
 #: ../src/ui/dialog/object-attributes.cpp:432
 #, fuzzy
@@ -32104,9 +31811,8 @@ msgid "Add fillet/chamfer effect"
 msgstr "Gehitu bidearen efektua"
 
 #: ../src/ui/dialog/object-attributes.cpp:575
-#, fuzzy
 msgid "Change arc type"
-msgstr "Arkua: Aldatu arku mota"
+msgstr "Aldatu arku mota"
 
 #: ../src/ui/dialog/object-properties.cpp:52
 #: ../src/ui/dialog/object-properties.cpp:332
@@ -32281,9 +31987,8 @@ msgid "Change opacity"
 msgstr "Aldatu opakotasuna"
 
 #: ../src/ui/dialog/objects.cpp:831
-#, fuzzy
 msgid "Change blend mode"
-msgstr "Aldatu lausotze/nahaste iragazkia"
+msgstr "Aldatu nahaste modua"
 
 #: ../src/ui/dialog/objects.cpp:1213 ../src/ui/dialog/objects.cpp:1471
 msgid "Toggle item visibility"
@@ -32306,9 +32011,8 @@ msgid "Rename object"
 msgstr "Aldatu objektuaren izena"
 
 #: ../src/ui/dialog/objects.cpp:1831
-#, fuzzy
 msgid "Move items"
-msgstr "Mugitu elementua gora"
+msgstr "Mugitu elementua"
 
 #: ../src/ui/dialog/paint-servers.cpp:54
 msgid "All paint servers"
@@ -32349,10 +32053,9 @@ msgid "Starting angle"
 msgstr "Hasierako angelua"
 
 #: ../src/ui/dialog/polar-arrange-tab.cpp:45
-#, fuzzy
 msgctxt "Polar arrange tab"
 msgid "<b>Anchor point:</b>"
-msgstr "Aingura-puntua:"
+msgstr "<b>Aingura-puntua:</b>"
 
 #: ../src/ui/dialog/polar-arrange-tab.cpp:49
 msgctxt "Polar arrange tab"
@@ -32560,14 +32263,12 @@ msgid "Current value"
 msgstr "Uneko balioa"
 
 #: ../src/ui/dialog/styledialog.cpp:544
-#, fuzzy
 msgid "Used in style attribute"
-msgstr "Ezabatu atributua"
+msgstr "Estilo atributuan erabilia"
 
 #: ../src/ui/dialog/styledialog.cpp:720
-#, fuzzy
 msgid "Stylesheet value"
-msgstr "Estilo-orria"
+msgstr "Estilo-orria balioa"
 
 #
 # File: ../src/ui/dialog/styledialog.cpp, line: 698
@@ -32582,9 +32283,8 @@ msgid "Used in %1"
 msgstr "Hemen erabilia: %1"
 
 #: ../src/ui/dialog/styledialog.cpp:840
-#, fuzzy
 msgid "Used in inline attributes"
-msgstr "Lerro barneko atributuak"
+msgstr "Lerro barneko atributuetan erabilia"
 
 #: ../src/ui/dialog/svg-fonts-dialog.cpp:177
 #: ../src/ui/dialog/svg-fonts-dialog.cpp:247
@@ -32821,14 +32521,12 @@ msgid "Switch to a layer with the same name as current glyph"
 msgstr "Joan uneko glifoaren izen bera duen geruza batera"
 
 #: ../src/ui/dialog/svg-fonts-dialog.cpp:1385
-#, fuzzy
 msgid "Sort glyphs"
-msgstr "_Ordenatu glifoak"
+msgstr "Ordenatu glifoak"
 
 #: ../src/ui/dialog/svg-fonts-dialog.cpp:1386
-#, fuzzy
 msgid "Sort glyphs in Unicode order"
-msgstr "Ezarri glifoaren unicodea"
+msgstr "Ordenatu glifoaren Unicode hurrenkeran"
 
 #: ../src/ui/dialog/svg-fonts-dialog.cpp:1391
 msgid "Add new glyph"
@@ -32921,9 +32619,8 @@ msgid "Too large for preview"
 msgstr "Handiegia aurrebistarako"
 
 #: ../src/ui/dialog/swatches.cpp:474
-#, fuzzy
 msgid "Document swatches"
-msgstr "Dokumentua gorde da."
+msgstr "Dokumentua laginak"
 
 #: ../src/ui/dialog/symbols.cpp:158
 msgid "All symbol sets"
@@ -32968,9 +32665,8 @@ msgid "AaBbCcIiPpQq12369$€¢?.;/()"
 msgstr "AaBbCcIiPpQqÑñ12369$€¢?.;/()"
 
 #: ../src/ui/dialog/text-edit.cpp:136
-#, fuzzy
 msgid "Collections"
-msgstr "_Lotura-marrak"
+msgstr "Bildumak"
 
 #: ../src/ui/dialog/text-edit.cpp:487 ../src/ui/tools/text-tool.cpp:1409
 msgid "Set text style"
@@ -33189,71 +32885,62 @@ msgid "Drag to reorder nodes"
 msgstr "Arrastatu nodoak berrantolatzeko"
 
 #: ../src/ui/dialog/xml-tree.cpp:137
-#, fuzzy
 msgctxt "Undo History / XML Editor"
 msgid "Drag XML subtree"
-msgstr "Arrastatu XML azpizuhaitza"
+msgstr "Arrastatu XML azpi-zuhaitza"
 
 #: ../src/ui/dialog/xml-tree.cpp:196
 msgid ""
 "Automatic panel layout:\n"
 "changes with dialog size"
 msgstr ""
+"Panelen antolaera automatikoa:\n"
+"Elkarrizketa-koadroaren tamainarekin aldatzen da"
 
 #: ../src/ui/dialog/xml-tree.cpp:198
-#, fuzzy
 msgid "Horizontal panel layout"
-msgstr "Desplazamendu horizontala"
+msgstr "Panel horizontaleko antolaera"
 
 #: ../src/ui/dialog/xml-tree.cpp:200
-#, fuzzy
 msgid "Vertical panel layout"
-msgstr "Desplazamendu bertikala"
+msgstr "Panel bertikaleko antolaera"
 
 #: ../src/ui/dialog/xml-tree.cpp:712
-#, fuzzy
 msgctxt "Undo History / XML Editor"
 msgid "Create new element node"
 msgstr "Sortu elementu-nodo berria"
 
 #: ../src/ui/dialog/xml-tree.cpp:727
-#, fuzzy
 msgctxt "Undo History / XML Editor"
 msgid "Create new text node"
 msgstr "Sortu testu-nodo berria"
 
 #: ../src/ui/dialog/xml-tree.cpp:745
-#, fuzzy
 msgctxt "Undo History / XML Editor"
 msgid "Duplicate node"
 msgstr "Bikoiztu nodoa"
 
 #: ../src/ui/dialog/xml-tree.cpp:776
-#, fuzzy
 msgctxt "Undo History / XML Editor"
 msgid "Delete node"
 msgstr "Ezabatu nodoa"
 
 #: ../src/ui/dialog/xml-tree.cpp:800
-#, fuzzy
 msgctxt "Undo History / XML Editor"
 msgid "Raise node"
 msgstr "Goratu nodoa"
 
 #: ../src/ui/dialog/xml-tree.cpp:821
-#, fuzzy
 msgctxt "Undo History / XML Editor"
 msgid "Lower node"
 msgstr "Beheratu nodoa"
 
 #: ../src/ui/dialog/xml-tree.cpp:855
-#, fuzzy
 msgctxt "Undo History / XML Editor"
 msgid "Indent node"
 msgstr "Koskatu nodoa"
 
 #: ../src/ui/dialog/xml-tree.cpp:880
-#, fuzzy
 msgctxt "Undo History / XML Editor"
 msgid "Unindent node"
 msgstr "Kendu koska nodoari"
@@ -33284,18 +32971,17 @@ msgid "Drop bitmap image"
 msgstr "Jaregin bit-mapa irudia"
 
 #: ../src/ui/interface.cpp:117
-#, fuzzy
 msgid ""
 "<span weight=\"bold\" size=\"larger\">A file named \"%1\" already exists. Do "
 "you want to replace it?</span>\n"
 "\n"
 "The file already exists in \"%2\". Replacing it will overwrite its contents."
 msgstr ""
-"<span weight=\"bold\" size=\"larger\">\"%s\" izeneko fitxategia badago "
+"<span weight=\"bold\" size=\"larger\">\"%s\" izeneko fitxategi bat badago "
 "lehendik ere. Ordeztea nahi duzu?</span>\n"
 "\n"
-"Fitxategia jadanik \"%s\"-(e)n existitzen da. Hau ordeztean bere eduki "
-"guztia gainidatziko da."
+"Fitxategia jada \"%2\"(e)(a)n existitzen da. Hura ordeztea bere edukia "
+"gainidatziko du."
 
 #: ../src/ui/interface.cpp:124 ../share/extensions/web_set_att.inx:25
 #: ../share/extensions/web_transmit_att.inx:23
@@ -33532,9 +33218,8 @@ msgid "Disable snapping when transforming object."
 msgstr "Desgaitu atxikitzea objektua eraldatzean."
 
 #: ../src/ui/modifiers.cpp:56
-#, fuzzy
 msgid "Switch mode"
-msgstr "Zirrimarraren modua"
+msgstr "Aldatu modua"
 
 #: ../src/ui/modifiers.cpp:56
 msgid "Change shape builder mode temporarily by holding a modifier key."
@@ -33542,9 +33227,8 @@ msgstr ""
 "Aldatu forma eraikitzailearen modua aldi baterako tekla aldarazle bat eutsiz."
 
 #: ../src/ui/modifiers.cpp:58
-#, fuzzy
 msgid "Linear node selection"
-msgstr "Ezkutatu hautapena"
+msgstr "Nodo linealaren hautapena"
 
 #: ../src/ui/modifiers.cpp:58
 #, fuzzy
@@ -33552,13 +33236,12 @@ msgid "Select the next nodes with scroll wheel or keyboard"
 msgstr "Biratu oihala korritze-gurpilarekin"
 
 #: ../src/ui/modifiers.cpp:59
-#, fuzzy
 msgid "Spatial node selection"
-msgstr "Ezkutatu hautapena"
+msgstr "Nodo espazialaren hautapena"
 
 #: ../src/ui/modifiers.cpp:59
 msgid "Select more nodes with scroll wheel or keyboard"
-msgstr ""
+msgstr "Aukeratu nodo gehiago kiribiltzeko gurpila edo teklatua erabiliz"
 
 #: ../src/ui/modifiers.cpp:63
 msgid "No Category"
@@ -34010,22 +33693,19 @@ msgid "<b>Shift</b>: move handle"
 msgstr "<b>Shift</b>: mugitu heldulekua"
 
 #: ../src/ui/tool/node.cpp:673
-#, fuzzy
 msgctxt "Status line hint"
 msgid "Shift, Ctrl, Alt"
-msgstr "Shift, Ctrl, Alt"
+msgstr "Maius, Ktrl, Alt"
 
 #: ../src/ui/tool/node.cpp:677
-#, fuzzy
 msgctxt "Status line hint"
 msgid "Shift, Ctrl"
-msgstr "Shift, Ctrl, Alt"
+msgstr "Maius, Ktrl"
 
 #: ../src/ui/tool/node.cpp:681
-#, fuzzy
 msgctxt "Status line hint"
 msgid "Ctrl, Alt"
-msgstr "Ctrl, Alt"
+msgstr "Ktrl, Alt"
 
 #: ../src/ui/tool/node.cpp:686
 #, fuzzy, c-format
@@ -34068,16 +33748,15 @@ msgstr ""
 "bihurtzeko (gehiago: %s)"
 
 #: ../src/ui/tool/node.cpp:721
-#, fuzzy, c-format
+#, c-format
 msgctxt "Status line hint"
 msgid "<b>%s</b>: drag to shape the path. (more: %s)"
-msgstr "<b>%s</b>: Arrastatu segmentuari forma emateko (gehiago: %s)"
+msgstr "<b>%s</b>: Arrastatu bideari forma emateko (gehiago: %s)"
 
 #: ../src/ui/tool/node.cpp:728
-#, fuzzy
 msgctxt "Status line hint"
 msgid "<b>unknown node handle</b>"
-msgstr "<b>nodo-helduleku ezezaguna</b>"
+msgstr "<b>nodo helduleku ezezaguna</b>"
 
 #: ../src/ui/tool/node.cpp:751
 #, fuzzy, c-format
@@ -34103,13 +33782,12 @@ msgid "<b>Shift</b>: click to toggle selection"
 msgstr "<b>Shift</b>: egin klik hautapena txandakatzeko"
 
 #: ../src/ui/tool/node.cpp:1606
-#, fuzzy
 msgctxt "Path node tip"
 msgid ""
 "<b>Ctrl+Alt</b>: move along handle lines or line segment, click to delete "
 "node"
 msgstr ""
-"<b>Ctrl+Alt</b>: mugitu heldulekuen marren inguruan, egin klik nodoa "
+"<b>Ktrl+Alt</b>: mugitu helduleku marretan zehar, egin klik nodoa "
 "ezabatzeko"
 
 #: ../src/ui/tool/node.cpp:1610
@@ -34356,7 +34034,6 @@ msgid "Arc: Change start/end"
 msgstr "Arkua: Aldatu hasiera/amaiera"
 
 #: ../src/ui/toolbar/arc-toolbar.cpp:322
-#, fuzzy
 msgid "Arc: Change arc type"
 msgstr "Arkua: Aldatu arku mota"
 
@@ -34593,15 +34270,13 @@ msgid "Relabel Page"
 msgstr "Aldatu orriaren etiketa"
 
 #: ../src/ui/toolbar/page-toolbar.cpp:257
-#, fuzzy
 msgid "Edit page bleed"
-msgstr "Ezarri orriaren eskala"
+msgstr "Editatu orrialdearen koska"
 
 #: ../src/ui/toolbar/page-toolbar.cpp:272
 #: ../src/ui/toolbar/page-toolbar.cpp:301
-#, fuzzy
 msgid "Edit page margin"
-msgstr "Orriaren marjinak"
+msgstr "Editatu orrialdearen marjina"
 
 #: ../src/ui/toolbar/page-toolbar.cpp:460
 msgid "Page label"
@@ -34764,9 +34439,8 @@ msgid "Star: Change randomization"
 msgstr "Izarra: aldatu ausazkoa"
 
 #: ../src/ui/toolbar/star-toolbar.cpp:340
-#, fuzzy
 msgid "Star: Reset to defaults"
-msgstr "Ezarri _lehenetsi gisa"
+msgstr "Izarra: Berrezarri lehenespenetara"
 
 #: ../src/ui/toolbar/text-toolbar.cpp:283
 msgid "Font Family"
@@ -34863,9 +34537,8 @@ msgid "Text: Change rotate"
 msgstr "Testua: aldatu biraketa"
 
 #: ../src/ui/toolbar/tool-toolbar.cpp:124
-#, fuzzy
 msgid "Open tool preferences"
-msgstr "Ireki hobespenak"
+msgstr "Ireki tresna hobespenak"
 
 #: ../src/ui/toolbar/toolbars.cpp:77
 msgid "Style of new rectangles"
@@ -35436,11 +35109,10 @@ msgid "<b>Shift</b>: drag to add nodes to the selection"
 msgstr "<b>Shift</b>: arrastatu nodoak hautapenari gehitzeko"
 
 #: ../src/ui/tools/node-tool.cpp:695
-#, fuzzy
 msgid "<b>%1 of %2</b> node selected."
 msgid_plural "<b>%1 of %2</b> nodes selected."
-msgstr[0] "<b>%u / %u</b> nodo hautatuta."
-msgstr[1] "<b>%u / %u</b> nodo hautatuta."
+msgstr[0] "<b>%1/ %2</b> nodo hautatuta."
+msgstr[1] "<b>%1 / %2</b> nodo hautatuta."
 
 #. TRANSLATORS: %1 is an angle in degrees, formatted with two decimal places.
 #: ../src/ui/tools/node-tool.cpp:713
@@ -35488,9 +35160,8 @@ msgid "Resize page"
 msgstr "Aldatu orriaren tamaina"
 
 #: ../src/ui/tools/pages-tool.cpp:67
-#, fuzzy
 msgid "Set page margin"
-msgstr "Orriaren marjinak"
+msgstr "Ezarri orrialdearen marjina"
 
 #: ../src/ui/tools/pen-tool.cpp:155 ../src/ui/tools/pencil-tool.cpp:506
 msgid "Drawing cancelled"
@@ -36138,7 +35809,6 @@ msgid "Toggle color-managed display for this document window"
 msgstr "Dokumentuaren leiho honen kolore-kudeaketaren ikuspegia txandakatu"
 
 #: ../src/ui/widget/canvas-grid.cpp:139
-#, fuzzy
 msgid "Display options"
 msgstr "Bistaratze-aukerak"
 
@@ -36301,7 +35971,7 @@ msgstr "HSLuv"
 
 #: ../src/ui/widget/color-scales.cpp:77 ../src/ui/widget/color-scales.cpp:135
 msgid "OKHSL"
-msgstr ""
+msgstr "OKHSL"
 
 #: ../src/ui/widget/color-scales.cpp:217
 msgid "Color Wheel"
@@ -36325,15 +35995,15 @@ msgstr "_L*:"
 
 #: ../src/ui/widget/color-scales.cpp:756
 msgid "_H<sub>OK</sub>:"
-msgstr ""
+msgstr "_H<sub>OK</sub>:"
 
 #: ../src/ui/widget/color-scales.cpp:761
 msgid "_S<sub>OK</sub>:"
-msgstr ""
+msgstr "_S<sub>OK</sub>:"
 
 #: ../src/ui/widget/color-scales.cpp:765
 msgid "_L<sub>OK</sub>:"
-msgstr ""
+msgstr "_L<sub>OK</sub>:"
 
 #: ../src/ui/widget/dash-selector.cpp:53
 msgid "Dash pattern"
@@ -36352,9 +36022,8 @@ msgid "no filters"
 msgstr "iragazkirik ez"
 
 #: ../src/ui/widget/desktop-widget.cpp:310
-#, fuzzy
 msgid "enhance thin lines"
-msgstr "Hobetutako metafitxategiak"
+msgstr "Lerro finak areagotu"
 
 #: ../src/ui/widget/desktop-widget.cpp:312
 msgid "outline overlay"
@@ -36449,19 +36118,16 @@ msgid "Unset stroke"
 msgstr "Kendu trazua"
 
 #: ../src/ui/widget/filter-effect-chooser.cpp:26
-#, fuzzy
 msgctxt "BlendMode"
 msgid "Normal"
 msgstr "Normala"
 
 #: ../src/ui/widget/filter-effect-chooser.cpp:28
-#, fuzzy
 msgctxt "BlendMode"
 msgid "Darken"
 msgstr "Ilundu"
 
 #: ../src/ui/widget/filter-effect-chooser.cpp:29
-#, fuzzy
 msgctxt "BlendMode"
 msgid "Multiply"
 msgstr "Biderkatu"
@@ -36473,7 +36139,6 @@ msgid "Color Burn"
 msgstr "Belztu"
 
 #: ../src/ui/widget/filter-effect-chooser.cpp:32
-#, fuzzy
 msgctxt "BlendMode"
 msgid "Lighten"
 msgstr "Argitu"
@@ -36496,10 +36161,9 @@ msgid "Overlay"
 msgstr "Gainjarri"
 
 #: ../src/ui/widget/filter-effect-chooser.cpp:37
-#, fuzzy
 msgctxt "BlendMode"
 msgid "Soft Light"
-msgstr "Argi suabea"
+msgstr "Argi leuna"
 
 #: ../src/ui/widget/filter-effect-chooser.cpp:38
 #, fuzzy
@@ -36508,37 +36172,31 @@ msgid "Hard Light"
 msgstr "Argi bizia"
 
 #: ../src/ui/widget/filter-effect-chooser.cpp:40
-#, fuzzy
 msgctxt "BlendMode"
 msgid "Difference"
 msgstr "Diferentzia"
 
 #: ../src/ui/widget/filter-effect-chooser.cpp:41
-#, fuzzy
 msgctxt "BlendMode"
 msgid "Exclusion"
 msgstr "Esklusioa"
 
 #: ../src/ui/widget/filter-effect-chooser.cpp:43
-#, fuzzy
 msgctxt "BlendMode"
 msgid "Hue"
 msgstr "Ñabardura"
 
 #: ../src/ui/widget/filter-effect-chooser.cpp:44
-#, fuzzy
 msgctxt "BlendMode"
 msgid "Saturation"
-msgstr "Saturazioa"
+msgstr "Asetasuna"
 
 #: ../src/ui/widget/filter-effect-chooser.cpp:45
-#, fuzzy
 msgctxt "BlendMode"
 msgid "Color"
 msgstr "Kolorea"
 
 #: ../src/ui/widget/filter-effect-chooser.cpp:46
-#, fuzzy
 msgctxt "BlendMode"
 msgid "Luminosity"
 msgstr "Argitasuna"
@@ -36552,12 +36210,10 @@ msgstr "Lausotzea (%)"
 msgid "Opacity (%)"
 msgstr "Opakutasuna (%)"
 
-#
 # File: ../src/ui/dialog/inkscape-preferences.cpp, line: 2153
 #: ../src/ui/widget/font-collection-selector.cpp:477
-#, fuzzy
 msgid "Are you sure want to delete the \"%1\" font collection?\n"
-msgstr "Ziur zaude lasterbide hau aldatu nahi duzula?"
+msgstr "Ziur zaude \"%1\" letra-tipo bilduma ezabatu nahi duzula?\n"
 
 #: ../src/ui/widget/font-selector-toolbar.cpp:151
 msgid "Select all text with this text family"
@@ -36997,44 +36653,36 @@ msgid "No gradient selected"
 msgstr "Ez da gradienterik hautatu"
 
 #: ../src/ui/widget/image-properties.cpp:66
-#, fuzzy
 msgid "Change Image"
-msgstr "Aldatu maiuskulak/minuskulak"
+msgstr "Aldatu irudia"
 
 #: ../src/ui/widget/image-properties.cpp:84
-#, fuzzy
 msgid "Change image"
-msgstr "Aldatu maiuskulak/minuskulak"
+msgstr "Aldatu irudia"
 
 #: ../src/ui/widget/image-properties.cpp:106
-#, fuzzy
 msgid "Preserve image aspect ratio"
-msgstr "Mantendu aspektu-erlazioa"
+msgstr "Mantendu irudiaren itxura proportzioa"
 
 #: ../src/ui/widget/image-properties.cpp:153
-#, fuzzy
 msgid "Embed image"
-msgstr "Kapsulatu irudiak"
+msgstr "Kapsulatu irudia"
 
 #: ../src/ui/widget/image-properties.cpp:210
-#, fuzzy
 msgid "Embedded"
-msgstr "kapsulatuta"
+msgstr "Kapsulatuta"
 
 #: ../src/ui/widget/image-properties.cpp:214
-#, fuzzy
 msgid "Linked"
-msgstr "Esteka"
+msgstr "Estekatuta"
 
 #: ../src/ui/widget/image-properties.cpp:219
-#, fuzzy
 msgid "Color profile:"
-msgstr "Estekatu kolore-profila"
+msgstr "Kolore-profila:"
 
 #: ../src/ui/widget/image-properties.cpp:223
-#, fuzzy
 msgid "Missing image"
-msgstr "Glifoa falta da"
+msgstr "Irudi galdua"
 
 #: ../src/ui/widget/layer-selector.cpp:89
 msgid "Current layer"
@@ -37086,16 +36734,14 @@ msgid "Change isolation"
 msgstr "Aldatu isolamendua"
 
 #: ../src/ui/widget/page-properties.cpp:69
-#, fuzzy
 msgid "US"
-msgstr "S"
+msgstr "AEB"
 
 #: ../src/ui/widget/page-properties.cpp:77
 msgid "ISO %1"
-msgstr ""
+msgstr "ISO %1"
 
 #: ../src/ui/widget/page-properties.cpp:81
-#, fuzzy
 msgid "Others"
 msgstr "Bestelakoak"
 
@@ -37198,9 +36844,8 @@ msgid "<b>Swatch fill</b>"
 msgstr "<b>Paletaren betegarria</b>"
 
 #: ../src/ui/widget/pattern-editor.cpp:114
-#, fuzzy
 msgid "Pattern color"
-msgstr "Itsatsi kolorea"
+msgstr "Eredu-kolorea"
 
 #: ../src/ui/widget/preferences-widget.cpp:747
 msgid "_Browse..."
@@ -37363,9 +37008,8 @@ msgstr "Sare-gradientea (trazua)"
 
 #: ../src/ui/widget/selected-style.cpp:89
 #: ../src/ui/widget/selected-style.cpp:90
-#, fuzzy
 msgid "<b>C</b>"
-msgstr "<b>L</b>"
+msgstr "<b>C</b>"
 
 #: ../src/ui/widget/selected-style.cpp:89
 msgid "Flat color (fill)"
@@ -37438,49 +37082,40 @@ msgid "Paste stroke"
 msgstr "Itsatsi trazua"
 
 #: ../src/ui/widget/selected-style.cpp:668
-#, fuzzy
 msgid "Edit Fill..."
 msgstr "Editatu betegarria..."
 
 #: ../src/ui/widget/selected-style.cpp:669
-#, fuzzy
 msgid "Edit Stroke..."
 msgstr "Editatu trazua..."
 
 #: ../src/ui/widget/selected-style.cpp:674
-#, fuzzy
 msgid "Last Set Color"
 msgstr "Ezarritako azken kolorea"
 
 #: ../src/ui/widget/selected-style.cpp:676
-#, fuzzy
 msgid "Last Selected Color"
 msgstr "Hautatutako azken kolorea"
 
 #: ../src/ui/widget/selected-style.cpp:694
-#, fuzzy
 msgid "Copy Color"
 msgstr "Kopiatu kolorea"
 
 #: ../src/ui/widget/selected-style.cpp:698
-#, fuzzy
 msgid "Paste Color"
-msgstr "Igeltsu-kolorea"
+msgstr "Itsatsi kolorea"
 
 #: ../src/ui/widget/selected-style.cpp:700
-#, fuzzy
 msgid "Swap Fill and Stroke"
 msgstr "Trukatu betegarria eta trazua"
 
 #: ../src/ui/widget/selected-style.cpp:705
-#, fuzzy
 msgid "Make Fill Opaque"
-msgstr "Egin betegarria opako"
+msgstr "Betegarria opaku egin"
 
 #: ../src/ui/widget/selected-style.cpp:706
-#, fuzzy
 msgid "Make Stroke Opaque"
-msgstr "Egin trazua opako"
+msgstr "Trazua opaku egin"
 
 #. TRANSLATORS COMMENT: unset is a verb here
 #: ../src/ui/widget/selected-style.cpp:708
@@ -37494,20 +37129,17 @@ msgid "Unset Stroke"
 msgstr "Kendu trazua"
 
 #: ../src/ui/widget/selected-style.cpp:710
-#, fuzzy
 msgid "Remove Fill"
 msgstr "Kendu betegarria"
 
 #: ../src/ui/widget/selected-style.cpp:711
 #: ../src/ui/widget/selected-style.cpp:747
-#, fuzzy
 msgid "Remove Stroke"
 msgstr "Kendu trazua"
 
 #: ../src/ui/widget/selected-style.cpp:720
-#, fuzzy
 msgid "<b>Stroke Width</b>"
-msgstr "Trazu-zabalera"
+msgstr "<b>Trazu-zabalera</b>"
 
 #: ../src/ui/widget/selected-style.cpp:772
 msgid "Change stroke width"
@@ -37542,9 +37174,8 @@ msgid "Hairline"
 msgstr "Ile-lerroa"
 
 #: ../src/ui/widget/selected-style.cpp:973
-#, fuzzy
 msgid "Stroke width: Hairline"
-msgstr "Trazu-zabalera:"
+msgstr "Trazu-zabalera: "
 
 #: ../src/ui/widget/selected-style.cpp:992
 #, c-format
@@ -37556,26 +37187,24 @@ msgid " (averaged)"
 msgstr " (batez bestekoa)"
 
 #: ../src/ui/widget/selected-style.cpp:1019
-#, fuzzy
 msgid "0 (Transparent)"
 msgstr "0 (gardena)"
 
 #: ../src/ui/widget/selected-style.cpp:1020
 msgid "25%"
-msgstr ""
+msgstr "% 25"
 
 #: ../src/ui/widget/selected-style.cpp:1021 ../src/ui/widget/status-bar.cpp:66
 msgid "50%"
-msgstr ""
+msgstr "% 50"
 
 #: ../src/ui/widget/selected-style.cpp:1022
 msgid "75%"
-msgstr ""
+msgstr "% 75"
 
 #: ../src/ui/widget/selected-style.cpp:1023
-#, fuzzy
 msgid "100% (Opaque)"
-msgstr "%100 (opakoa)"
+msgstr "%100 (Opakua)"
 
 #: ../src/ui/widget/selected-style.cpp:1166
 msgid "Adjust alpha"
@@ -37650,59 +37279,59 @@ msgstr ""
 
 #: ../src/ui/widget/status-bar.cpp:64
 msgid "10%"
-msgstr ""
+msgstr "% 10"
 
 #: ../src/ui/widget/status-bar.cpp:65
 msgid "20%"
-msgstr ""
+msgstr "% 20"
 
 #: ../src/ui/widget/status-bar.cpp:67
 msgid "100%"
-msgstr ""
+msgstr "% 100"
 
 #: ../src/ui/widget/status-bar.cpp:68
 msgid "200%"
-msgstr ""
+msgstr "% 200"
 
 #: ../src/ui/widget/status-bar.cpp:69
 msgid "500%"
-msgstr ""
+msgstr "% 500"
 
 #: ../src/ui/widget/status-bar.cpp:70
 msgid "1000%"
-msgstr ""
+msgstr "% 1000"
 
 #: ../src/ui/widget/status-bar.cpp:99
 msgid "180°"
-msgstr ""
+msgstr "180°"
 
 #: ../src/ui/widget/status-bar.cpp:100
 msgid "135°"
-msgstr ""
+msgstr "135°"
 
 #: ../src/ui/widget/status-bar.cpp:101
 msgid "90°"
-msgstr ""
+msgstr "90°"
 
 #: ../src/ui/widget/status-bar.cpp:102
 msgid "45°"
-msgstr ""
+msgstr "45°"
 
 #: ../src/ui/widget/status-bar.cpp:103
 msgid "0°"
-msgstr ""
+msgstr "0°"
 
 #: ../src/ui/widget/status-bar.cpp:104
 msgid "-45°"
-msgstr ""
+msgstr "-45°"
 
 #: ../src/ui/widget/status-bar.cpp:105
 msgid "-90°"
-msgstr ""
+msgstr "-90°"
 
 #: ../src/ui/widget/status-bar.cpp:106
 msgid "-135°"
-msgstr ""
+msgstr "-135°"
 
 #: ../src/ui/widget/stroke-style.cpp:221
 msgid "Stroke width"
@@ -37899,12 +37528,11 @@ msgstr "Aldatu kolore-laginaren kolorea"
 
 #: ../src/util/font-collections.h:35
 msgid "Recently Used Fonts"
-msgstr ""
+msgstr "Berriki erabilitako letra-tipoak"
 
 #: ../src/util/font-collections.h:36
-#, fuzzy
 msgid "Document Fonts"
-msgstr "Dokumentuaren aukerak"
+msgstr "Dokumentuko letra-tipoak"
 
 #: ../src/util/paper.cpp:35
 msgid "Failed to create the page file."
@@ -37960,7 +37588,6 @@ msgstr[1] ""
 "<b>⇧</b> sakatuta banatzeko"
 
 #: ../src/widgets/paintdef.cpp:55
-#, fuzzy
 msgctxt "Paint"
 msgid "None"
 msgstr "Bat ere ez"
@@ -37971,50 +37598,47 @@ msgstr "Ezarri atributua"
 
 #. This symbolizes precision of 0 digits after the decimal separator.
 #: ../share/ui/attribute-edit-component.glade:75
-#, fuzzy
 msgctxt "Precision"
 msgid "N"
-msgstr "Ez"
+msgstr "Z"
 
 #. This symbolizes precision of 1 digit after the decimal separator. Please adjust to your language's number format (e.g. N,N).
 #: ../share/ui/attribute-edit-component.glade:80
 msgctxt "Precision"
 msgid "N.N"
-msgstr ""
+msgstr "Z,Z"
 
 #. This symbolizes precision of 2 digits after the decimal separator. Please adjust to your language's number format (e.g. N,NN).
 #: ../share/ui/attribute-edit-component.glade:85
 msgctxt "Precision"
 msgid "N.NN"
-msgstr ""
+msgstr "Z,ZZ"
 
 #. This symbolizes precision of 3 digits after the decimal separator. Please adjust to your language's number format (e.g. N,NNN).
 #: ../share/ui/attribute-edit-component.glade:90
 msgctxt "Precision"
 msgid "N.NNN"
-msgstr ""
+msgstr "Z,ZZZ"
 
 #. This symbolizes precision of 4 digits after the decimal separator. Please adjust to your language's number format (e.g. N,NNNN).
 #: ../share/ui/attribute-edit-component.glade:95
 msgctxt "Precision"
 msgid "N.NNNN"
-msgstr ""
+msgstr "Z,ZZZZ"
 
 #. This symbolizes precision of 5 digits after the decimal separator. Please adjust to your language's number format (e.g. N,NNNNN).
 #: ../share/ui/attribute-edit-component.glade:100
 msgctxt "Precision"
 msgid "N.NNNNN"
-msgstr ""
+msgstr "Z,ZZZZZ"
 
 #: ../share/ui/attribute-edit-component.glade:143
-#, fuzzy
 msgid "Round selected numbers to n digits"
-msgstr "Biribildu balio guztiak 4 digituetara"
+msgstr "Biribildu hautatutako zenbakiak n digitura"
 
 #: ../share/ui/attribute-edit-component.glade:201
-#, fuzzy
 msgid "Shift+Return to close"
-msgstr "⇧+Enter lerro berrirako"
+msgstr "Maius.⇧+Sartu ixteko"
 
 #: ../share/ui/color-palette.glade:250 ../share/ui/pattern-edit.glade:85
 msgid "Tile size:"
@@ -38049,23 +37673,20 @@ msgid "Enlarge pinned colors"
 msgstr "Ezarri izendatutako koloreak"
 
 #: ../share/ui/color-palette.glade:395
-#, fuzzy
 msgid "Show color labels"
-msgstr "Laburtu koloreen balioak"
+msgstr "Erakutsi koloreen etiketak"
 
 #: ../share/ui/command-palette-operation.glade:43
 msgid "Click to Copy"
 msgstr "Egin klik kopiatzeko"
 
 #: ../share/ui/completion-box.glade:53
-#, fuzzy
 msgid "Add item"
-msgstr "Gehitu iragazkia"
+msgstr "Gehitu elementua"
 
 #: ../share/ui/dialog-crash.glade:10
-#, fuzzy
 msgid "Inkscape has crashed and will now close."
-msgstr "Inkscapek barne-errore bat aurkitu du eta itxi egingo da.\n"
+msgstr "Inkscape kraskatu egin da eta orain itxi egingo da."
 
 #: ../share/ui/dialog-crash.glade:11
 msgid ""
@@ -38078,9 +37699,8 @@ msgid "Selector"
 msgstr "Hautatzailea"
 
 #: ../share/ui/dialog-document-resources.glade:18
-#, fuzzy
 msgid "Overview"
-msgstr "Zuzeneko aurrebista"
+msgstr "Ikuspegi orokorra"
 
 #: ../share/ui/dialog-document-resources.glade:84
 #: ../share/extensions/interp_att_g.inx:51
@@ -38089,14 +37709,12 @@ msgstr "Zuzeneko aurrebista"
 #: ../share/extensions/path_mesh_m2p.inx:27
 #: ../share/extensions/path_mesh_p2m.inx:22
 #: ../share/extensions/voronoi_fill.inx:20
-#, fuzzy
 msgid "Styles"
-msgstr "Formatua"
+msgstr "Estiloak"
 
 #: ../share/ui/dialog-document-resources.glade:127
-#, fuzzy
 msgid "Edit label"
-msgstr "Editatu betegarria"
+msgstr "Editatu etiketa"
 
 #: ../share/ui/dialog-document-resources.glade:145
 msgid ""
@@ -38105,34 +37723,28 @@ msgid ""
 msgstr ""
 
 #: ../share/ui/dialog-document-resources.glade:163
-#, fuzzy
 msgid "Delete selected item from the document"
-msgstr "Ezabatu hautatutako elementuak, nodoak edo testua."
+msgstr "Ezabatu dokumentuan hautatutako elementua"
 
 #: ../share/ui/dialog-document-resources.glade:213
-#, fuzzy
 msgid "Remove unused definitions"
-msgstr "Kendu erabili gabeko definizioak (gradienteak, etab.)"
+msgstr "Kendu erabili gabeko definizioak"
 
 #: ../share/ui/dialog-document-resources.glade:327
-#, fuzzy
 msgid "Property"
-msgstr "propietatea"
+msgstr "Propietatea"
 
 #: ../share/ui/dialog-document-resources.glade:340
-#, fuzzy
 msgid "Count"
-msgstr "Kopurua:"
+msgstr "Kopurua"
 
 #: ../share/ui/dialog-export-prefs.glade:21
-#, fuzzy
 msgid "Export Format Options"
-msgstr "Esportazio-aukerak"
+msgstr "Esportatzeko formatuaren aukerak"
 
 #: ../share/ui/dialog-export-prefs.glade:54
-#, fuzzy
 msgid "View export format options"
-msgstr "Esportazio-aukerak"
+msgstr "Ikusi esportatzeko formatuaren aukerak"
 
 #: ../share/ui/dialog-export.glade:59
 msgid "Export selected objects"
@@ -38193,7 +37805,6 @@ msgid "Export Selected Only"
 msgstr "Esportatu hautatutakoa soilik"
 
 #: ../share/ui/dialog-export.glade:536 ../share/ui/dialog-export.glade:853
-#, fuzzy
 msgid "Background Color"
 msgstr "Atzeko planoaren kolorea"
 
@@ -38206,18 +37817,16 @@ msgid "Select export format"
 msgstr "Hautatu esportazio-formatua"
 
 #: ../share/ui/dialog-export.glade:669 ../share/ui/dialog-export.glade:995
-#, fuzzy
 msgid "Cancel Export"
-msgstr "Sortakako esportazioa"
+msgstr "Utzi esportatzea"
 
 #: ../share/ui/dialog-export.glade:687
 msgid "Export a part of document"
 msgstr "Esportatu dokumentu baten zati bat"
 
 #: ../share/ui/dialog-export.glade:688
-#, fuzzy
 msgid "Single File"
-msgstr "Bakuna"
+msgstr "Fitxategi bakarra"
 
 #: ../share/ui/dialog-export.glade:768
 msgid "Export selected objects to separate files"
@@ -38244,14 +37853,12 @@ msgid "Batch Export"
 msgstr "Sortakako esportazioa"
 
 #: ../share/ui/dialog-extensions.glade:22
-#, fuzzy
 msgid "Thumbnail size:"
-msgstr "Lauza-tamaina:"
+msgstr "Koadro txikien tamaina:"
 
 #: ../share/ui/dialog-extensions.glade:72
-#, fuzzy
 msgid "Toggle list of effect categories"
-msgstr "Txandakatu uneko geruzaren ikusgaitasuna"
+msgstr "Txandakatu efektu-zerrenda kategoriak"
 
 #: ../share/ui/dialog-extensions.glade:88
 #, fuzzy
@@ -38259,34 +37866,29 @@ msgid "Select extension to run:"
 msgstr "Hautatu lehendik dagoen karpeta"
 
 #: ../share/ui/dialog-extensions.glade:168
-#, fuzzy
 msgid "column"
-msgstr "Zutabeak"
+msgstr "zutabea"
 
 #: ../share/ui/dialog-extensions.glade:245
 msgid "_Run"
-msgstr ""
+msgstr "E_xekutatu"
 
 #: ../share/ui/dialog-filter-editor.glade:50
 #: ../share/ui/dialog-filter-editor.glade:291
-#, fuzzy
 msgid "Create a new filter"
-msgstr "Sortu geruza berria"
+msgstr "Sortu iragazki berri bat"
 
 #: ../share/ui/dialog-filter-editor.glade:65
-#, fuzzy
 msgid "Duplicate current filter"
-msgstr "Bikoiztu uneko geruza"
+msgstr "Bikoiztu uneko iragazkia"
 
 #: ../share/ui/dialog-filter-editor.glade:83
-#, fuzzy
 msgid "Delete current filter"
-msgstr "Ezabatu uneko geruza"
+msgstr "Ezabatu uneko iragazkia"
 
 #: ../share/ui/dialog-filter-editor.glade:109
-#, fuzzy
 msgid "Select objects that use this filter"
-msgstr "Hautatu hautapenaren irizpidearekin bat datozen objektu guztiak"
+msgstr "Hautatu iragazki hori erabiltzen duten objektuak"
 
 #: ../share/ui/dialog-filter-editor.glade:131
 #, fuzzy
@@ -38294,72 +37896,60 @@ msgid "Add stock filter"
 msgstr "Gehitu iragazkia"
 
 #: ../share/ui/dialog-filter-editor.glade:225
-#, fuzzy
 msgid "Filter"
-msgstr "Iragazkiak"
+msgstr "Iragazi"
 
 #: ../share/ui/dialog-filter-editor.glade:227
-#, fuzzy
 msgid "Apply filter to selection"
-msgstr "Aplikatu eraldaketa hautapenari"
+msgstr "Aplikatu iragazkia hautapenari"
 
 #: ../share/ui/dialog-filter-editor.glade:249
 msgid "-"
-msgstr ""
+msgstr "-"
 
 #: ../share/ui/dialog-filter-editor.glade:307
-#, fuzzy
 msgid "General filter parameters"
-msgstr "Papererako tamainak"
+msgstr "Iragazki orokorraren parametroak"
 
 #: ../share/ui/dialog-filter-editor.glade:375
-#, fuzzy
 msgid "label"
-msgstr "Etiketak"
+msgstr "etiketa"
 
 #: ../share/ui/dialog-filter-editor.glade:409
-#, fuzzy
 msgid "Duplicate effect"
-msgstr "Bikoiztu iragazkia"
+msgstr "Bikoiztu efektua"
 
 #: ../share/ui/dialog-filter-editor.glade:427
-#, fuzzy
 msgid "Remove effect"
-msgstr "Kendu efektuak"
+msgstr "Kendu efektua"
 
 #: ../share/ui/dialog-filter-editor.glade:490
 msgid "Show all filter input sources"
 msgstr ""
 
 #: ../share/ui/dialog-font-collections.glade:17
-#, fuzzy
 msgid "Search fonts present in the font list"
-msgstr "Erakutsi letra-tipoen laginak goitibeherako zerrendan"
+msgstr "Bilatu letra-tipo zerrendako letra-tipoak"
 
 #: ../share/ui/dialog-font-collections.glade:28
-#, fuzzy
 msgid "Reset the font list"
-msgstr "Hautatu lehena"
+msgstr "Berrezarri letra-tipo zerrenda"
 
 #: ../share/ui/dialog-font-collections.glade:78
-#, fuzzy
 msgid "Create new collection"
-msgstr "Lotura-marra berria sortzen"
+msgstr "Sortu bilduma berria"
 
 #: ../share/ui/dialog-font-collections.glade:86
-#, fuzzy
 msgid "Edit selected collection"
-msgstr "Hautatutako azken kolorea"
+msgstr "Editatu hautatutako bilduma"
 
 #: ../share/ui/dialog-font-collections.glade:98
-#, fuzzy
 msgid "Delete selected item"
-msgstr "Ezabatu hautatutako elementuak"
+msgstr "Ezabatu hautatutako elementua"
 
 #: ../share/ui/dialog-livepatheffect-item.glade:22
-#, fuzzy
 msgid "Flatten"
-msgstr "Lautu klipa"
+msgstr "Lautu"
 
 #: ../share/ui/dialog-livepatheffect-item.glade:26
 msgid "Set Custom Defaults"
@@ -38370,14 +37960,12 @@ msgid "Forget Custom Defaults"
 msgstr "Ahaztu lehenespen pertsonalizatuak"
 
 #: ../share/ui/dialog-livepatheffect-item.glade:36
-#, fuzzy
 msgid "Set Favorite"
-msgstr "Ezarri atributua"
+msgstr "Ezarri gogokoa"
 
 #: ../share/ui/dialog-livepatheffect-item.glade:41
-#, fuzzy
 msgid "Unset Favorite"
-msgstr "Kendu trazua"
+msgstr "Kendu gogokoa"
 
 #: ../share/ui/dialog-livepatheffect-item.glade:140
 #, fuzzy
@@ -38399,24 +37987,20 @@ msgid "Reorder this Live Path Effect"
 msgstr "Kendu bide-efektua"
 
 #: ../share/ui/dialog-objects.glade:45
-#, fuzzy
 msgid "Blend mode"
-msgstr "Nahaste modua:"
+msgstr "Nahaste modua"
 
 #: ../share/ui/dialog-objects.glade:70
-#, fuzzy
 msgid "Only show layers"
-msgstr "Erakutsi geruza guztiak"
+msgstr "Erakutsi geruzak bakarrik"
 
 #: ../share/ui/dialog-objects.glade:79
-#, fuzzy
 msgid "Expand to display selection"
-msgstr "Gehitu hautapenari"
+msgstr "Zabaldu hautapena azaltzeko"
 
 #: ../share/ui/dialog-objects.glade:172
-#, fuzzy
 msgid "Layers and Objects dialog settings"
-msgstr "_Geruzak eta objektuak"
+msgstr "Geruzak eta objektuak elkarrizketa ezarpenak"
 
 #: ../share/ui/dialog-paint-servers.glade:16
 msgid "Server:"
@@ -38466,44 +38050,36 @@ msgid "Set as default template"
 msgstr "Ezarri txantiloi lehenetsi gisa"
 
 #: ../share/ui/dialog-swatches.glade:55
-#, fuzzy
 msgid "Search colors by their name"
-msgstr "Bilatu atributuaren izena"
+msgstr "Bilatu koloreak izenaren arabera"
 
 #: ../share/ui/dialog-swatches.glade:102
-#, fuzzy
 msgid "Load palette of colors or swatches"
-msgstr "Ezarri betegarriaren kolorea paletatik"
+msgstr "Kargatu kolore-paleta edo laginak"
 
 #: ../share/ui/dialog-swatches.glade:118
-#, fuzzy
 msgid "New swatch"
-msgstr "Kolore-laginak"
+msgstr "Lagin berria"
 
 #: ../share/ui/dialog-swatches.glade:134
-#, fuzzy
 msgid "Edit swatch"
-msgstr "Kolore-laginak"
+msgstr "Editatu lagina"
 
 #: ../share/ui/dialog-swatches.glade:170
-#, fuzzy
 msgid "Show colors with names"
-msgstr "Laburtu koloreen balioak"
+msgstr "Erakutsi koloreak izenekin"
 
 #: ../share/ui/dialog-swatches.glade:188
-#, fuzzy
 msgid "Show colors in a grid"
-msgstr "Erakutsi edo ezkutatu orriaren sareta"
+msgstr "Erakutsi koloreak sareta batean"
 
 #: ../share/ui/dialog-symbols.glade:58 ../share/ui/pattern-edit.glade:69
-#, fuzzy
 msgid "Show names"
-msgstr "Erakutsi nodoak"
+msgstr "Erakutsi izenak"
 
 #: ../share/ui/dialog-symbols.glade:72
-#, fuzzy
 msgid "Zoom to fit"
-msgstr "Txikiagotu"
+msgstr "Zoom egokitzeko"
 
 #: ../share/ui/dialog-symbols.glade:88
 msgid "Zoom"
@@ -38514,38 +38090,36 @@ msgid "Symbol set"
 msgstr "Ikurren multzoa"
 
 #: ../share/ui/dialog-symbols.glade:150
-#, fuzzy
 msgid "Search for symbol set"
-msgstr "Bilatu ikur multzo guztietan..."
+msgstr "Bilatu ikur-multzoa"
 
 #: ../share/ui/dialog-symbols.glade:248
-#, fuzzy
 msgid "Search for symbol"
-msgstr "Bilatu letra-tipoak"
+msgstr "Bilatu ikurra"
 
 #: ../share/ui/dialog-symbols.glade:314
-#, fuzzy
 msgid "Convert selected object(s) to symbol"
-msgstr "Bihurtu hautatutako objektua bide"
+msgstr "Bihurtu hautatutako objektua(k) ikur"
 
 #: ../share/ui/dialog-symbols.glade:328
 msgid ""
 "Convert selected symbol to object, and all symbols of this type to clones of "
 "this object"
 msgstr ""
+"Bihurtu hautatutako ikurra objektu, eta mota horretako ikur guztiak "
+"objektu horren klon"
 
 #: ../share/ui/dialog-text-edit.glade:37 ../share/ui/toolbar-text.ui:84
-#, fuzzy
 msgid "Open Collections Editor"
-msgstr "Ireki XML editorea"
+msgstr "Ireki bildumen editorea"
 
 #: ../share/ui/dialog-text-edit.glade:41
 msgid "Open the Font Collections Manager dialogue"
-msgstr ""
+msgstr "Ireki letra-tipo bilduma kudeatzeko elkarrizketa"
 
 #: ../share/ui/dialog-text-edit.glade:84
 msgid "Reset filters and show all available fonts"
-msgstr ""
+msgstr "Berrezarri iragazkiak eta erakutsi letra-tipo erabilgarri guztiak"
 
 #: ../share/ui/dialog-text-edit.glade:142
 msgid "_Font"
@@ -38867,19 +38441,16 @@ msgid "Abort trace operation"
 msgstr "Abortatu trazatze-eragiketa"
 
 #: ../share/ui/dialog-xml.glade:9
-#, fuzzy
 msgid "Automatic Layout"
-msgstr "Automatikoa"
+msgstr "Antolaera automatikoa"
 
 #: ../share/ui/dialog-xml.glade:14
-#, fuzzy
 msgid "Horizontal Layout"
-msgstr "Inkrustazio horizontala:"
+msgstr "Antolaera horizontala"
 
 #: ../share/ui/dialog-xml.glade:19
-#, fuzzy
 msgid "Vertical Layout"
-msgstr "Inkrustazio bertikala:"
+msgstr "Antolaera bertikala"
 
 #: ../share/ui/dialog-xml.glade:38
 msgid "New element node"
@@ -38910,9 +38481,8 @@ msgid "Lower node"
 msgstr "Beheratu nodoa"
 
 #: ../share/ui/display-popup.glade:24
-#, fuzzy
 msgid "Display mode:"
-msgstr "_Bistaratze modua"
+msgstr "Bistaratze modua:"
 
 #: ../share/ui/display-popup.glade:80
 #, fuzzy
@@ -38920,24 +38490,20 @@ msgid "Outline overlay"
 msgstr "eskema-gainjartzea"
 
 #: ../share/ui/display-popup.glade:99
-#, fuzzy
 msgid "Enhance thin lines"
-msgstr "Hobetutako metafitxategiak"
+msgstr "Areagotu lerro finak"
 
 #: ../share/ui/display-popup.glade:119
-#, fuzzy
 msgid "No filters"
-msgstr "iragazkirik ez"
+msgstr "Iragazkirik ez"
 
 #: ../share/ui/display-popup.glade:131
-#, fuzzy
 msgid "Quick zoom:"
-msgstr "Aukeratu koloreak:"
+msgstr "Zoom bizkorra:"
 
 #: ../share/ui/display-popup.glade:142
-#, fuzzy
 msgid "Quick preview:"
-msgstr "Zuzeneko aurrebista"
+msgstr "Aurrebista bizkorra:"
 
 #: ../share/ui/display-popup.glade:175
 #, fuzzy
@@ -38945,27 +38511,24 @@ msgid "Zoom with window size"
 msgstr "Egokitu zooma leihoa tamainaz aldatzean"
 
 #: ../share/ui/display-popup.glade:178
-#, fuzzy
 msgid "Zoom drawing when window size changes"
-msgstr "Doitu marrazkia leihoaren tamaina aldatzen bada"
+msgstr "Zoom marrazkiari leihoaren aldatzen denean"
 
 #: ../share/ui/display-popup.glade:190
 msgid "Hold this key to activate quick zoom"
-msgstr ""
+msgstr "Eutsi tekla horri zoom bizkorra aktibatzeko"
 
 #: ../share/ui/display-popup.glade:194
-#, fuzzy
 msgid "<b>Q</b>"
-msgstr "<b>L</b>"
+msgstr "<b>Q</b>"
 
 #: ../share/ui/display-popup.glade:210
 msgid "Hold this key for document preview, hiding grids, guides, handles etc."
 msgstr ""
 
 #: ../share/ui/display-popup.glade:214
-#, fuzzy
 msgid "<b>F</b>"
-msgstr "<b>L</b>"
+msgstr "<b>F</b>"
 
 #: ../share/ui/extension-pdfinput.glade:19
 #, fuzzy
@@ -38998,28 +38561,24 @@ msgid "Draw missing fonts"
 msgstr "Marrazketa amaituta"
 
 #: ../share/ui/extension-pdfinput.glade:99
-#, fuzzy
 msgid "Substitute missing fonts"
-msgstr "Zatitu ihespuntuak"
+msgstr "Ordezkatu galdu diren letra-tipoak"
 
 #: ../share/ui/extension-pdfinput.glade:103
 msgid "Keep missing fonts' names"
-msgstr ""
+msgstr "Mantendu galdutako letra-tipoaren izenak"
 
 #: ../share/ui/extension-pdfinput.glade:107
-#, fuzzy
 msgid "Delete missing font text"
-msgstr "Ezabatu testua"
+msgstr "Ezabatu galdutako letra-tipoen testua"
 
 #: ../share/ui/extension-pdfinput.glade:111
-#, fuzzy
 msgid "Draw all text"
-msgstr "_Marraztu sorrera guztiak"
+msgstr "Marraztu testu guztia"
 
 #: ../share/ui/extension-pdfinput.glade:115
-#, fuzzy
 msgid "Delete all text"
-msgstr "Ezabatu testua"
+msgstr "Ezabatu testu guztia"
 
 #: ../share/ui/extension-pdfinput.glade:136
 #, fuzzy
@@ -39027,16 +38586,14 @@ msgid "Draw to Shapes"
 msgstr "Fluxu-diagramen formak"
 
 #: ../share/ui/extension-pdfinput.glade:140
-#, fuzzy
 msgid "Use Substitute Font"
-msgstr "Letra-tipoa ordeztea"
+msgstr "Erabili ordezko letra-tipoa"
 
 #: ../share/ui/extension-pdfinput.glade:144
 msgid "Keep Original Font Name"
-msgstr ""
+msgstr "Mantendu letra-tipoaren jatorrizko izena"
 
 #: ../share/ui/extension-pdfinput.glade:148
-#, fuzzy
 msgid "Delete Text"
 msgstr "Ezabatu testua"
 
@@ -39048,9 +38605,8 @@ msgid ""
 msgstr ""
 
 #: ../share/ui/extension-pdfinput.glade:215
-#, fuzzy
 msgid "Family Name"
-msgstr "Familia-izena:"
+msgstr "Familia-izena"
 
 #: ../share/ui/extension-pdfinput.glade:233
 #: ../share/extensions/interp_att_g.inx:27
@@ -39059,19 +38615,16 @@ msgid "Style"
 msgstr "Formatua"
 
 #: ../share/ui/extension-pdfinput.glade:245
-#, fuzzy
 msgid "Weight"
-msgstr "Altuera"
+msgstr "Pisua"
 
 #: ../share/ui/extension-pdfinput.glade:269
-#, fuzzy
 msgid "Strategy"
-msgstr "Saturatu"
+msgstr "Estrategia"
 
 #: ../share/ui/extension-pdfinput.glade:291
-#, fuzzy
 msgid "List of all PDF Fonts"
-msgstr "Zerrendatu letra-tipo guztiak"
+msgstr "PDF letra-tipo guztien zerrenda"
 
 #: ../share/ui/extension-pdfinput.glade:304
 #: ../share/extensions/image_embed.inx:3
@@ -39087,14 +38640,12 @@ msgid "rough"
 msgstr "latza"
 
 #: ../share/ui/extension-pdfinput.glade:385
-#, fuzzy
 msgid "Fonts:"
-msgstr "Letra-tipoa"
+msgstr "Letra-tipoak:"
 
 #: ../share/ui/extension-pdfinput.glade:399
-#, fuzzy
 msgid "Pages:"
-msgstr "Orriak"
+msgstr "Orrialdeak:"
 
 #: ../share/ui/extension-pdfinput.glade:412
 msgid ""
@@ -39107,9 +38658,8 @@ msgid "Clip to:"
 msgstr "Klipatu hona:"
 
 #: ../share/ui/extension-pdfinput.glade:460
-#, fuzzy
 msgid "<b>Internal import</b>"
-msgstr "Barneko inportazioa"
+msgstr "<b>Barneko inportatzea</b>"
 
 #: ../share/ui/extension-pdfinput.glade:477
 #, fuzzy
@@ -39124,18 +38674,16 @@ msgstr ""
 "errendatuko da."
 
 #: ../share/ui/extension-pdfinput.glade:490
-#, fuzzy
 msgid "<b>Cairo import</b>"
-msgstr "<b>Sortzea</b>"
+msgstr "<b>Cairo inportatzea</b>"
 
 #: ../share/ui/gradient-edit.glade:70 ../share/ui/toolbar-gradient.ui:205
 msgid "Reverse the direction of the gradient"
 msgstr "Alderantzikatu gradientearen noranzkoa"
 
 #: ../share/ui/gradient-edit.glade:83
-#, fuzzy
 msgid "Rotate gradient 90 degrees"
-msgstr "Biratu hautatutako objektuak graduetan"
+msgstr "Biratu gradientea 90 graduz"
 
 #: ../share/ui/gradient-edit.glade:140
 msgid "Stop Offset:"
@@ -39159,9 +38707,8 @@ msgid "Orientation:"
 msgstr "Orientazioa:"
 
 #: ../share/ui/gradient-edit.glade:283
-#, fuzzy
 msgid "Adjust angle of the gradient"
-msgstr "Doitu biraketaren jatorria"
+msgstr "Doitu gradientearen angelua"
 
 #: ../share/ui/gradient-edit.glade:299
 msgid "Repeat:"
@@ -39176,9 +38723,8 @@ msgid "Gradient library"
 msgstr "Gradiente-liburutegia"
 
 #: ../share/ui/image-properties.glade:14
-#, fuzzy
 msgid "<b>Image</b>"
-msgstr "<b>Irudi-tamaina</b>"
+msgstr "<b>Irudia</b>"
 
 #: ../share/ui/image-properties.glade:55
 msgid ""
@@ -39186,60 +38732,53 @@ msgid ""
 "RGBA\n"
 "Linked</small>"
 msgstr ""
+"<small>123 x 345 px\n"
+"RGBA\n"
+"Estekatua</small>"
 
 #: ../share/ui/image-properties.glade:77
 msgid "URL:"
 msgstr "URLa:"
 
 #: ../share/ui/image-properties.glade:100
-#, fuzzy
 msgid "Change image..."
-msgstr "Aldatu maiuskulak/minuskulak"
+msgstr "Aldatu irudia..."
 
 #: ../share/ui/image-properties.glade:122
-#, fuzzy
 msgid "Embed image in the document"
-msgstr "Aldatu dokumentuko irudi guztiak"
+msgstr "Kapsulatu irudia dokumentuan"
 
 #: ../share/ui/image-properties.glade:146
-#, fuzzy
 msgid "Save a copy of this image to a file"
-msgstr "Gorde dokumentuaren kopia bat txantiloi gisa"
+msgstr "Gorde irudi horren kopia bat fitxategi batean"
 
 #: ../share/ui/image-properties.glade:157
-#, fuzzy
 msgid "Save copy..."
-msgstr "Gorde _kopia..."
+msgstr "Gorde kopia..."
 
 #: ../share/ui/image-properties.glade:179
-#, fuzzy
 msgid "Aspect ratio:"
-msgstr "Mantendu aspektu-erlazioa"
+msgstr "Itxura proportzioa:"
 
 #: ../share/ui/image-properties.glade:194
-#, fuzzy
 msgid "Preserve"
-msgstr "Mantenduta"
+msgstr "Mantendu"
 
 #: ../share/ui/image-properties.glade:203
-#, fuzzy
 msgid "Stretch image"
-msgstr "Bilatu irudiak"
+msgstr "Luzatu irudia"
 
 #: ../share/ui/image-properties.glade:225
-#, fuzzy
 msgid "Rendering:"
-msgstr "Errendatzea"
+msgstr "Errendatzea:"
 
 #: ../share/ui/image-properties.glade:238
-#, fuzzy
 msgid "Optimize speed"
-msgstr "Optimizatuta"
+msgstr "Optimizatu abiadura"
 
 #: ../share/ui/image-properties.glade:239
-#, fuzzy
 msgid "Optimize quality"
-msgstr "Optimizatu"
+msgstr "Optimizatu kalitatea"
 
 #: ../share/ui/image-properties.glade:240
 #, fuzzy
@@ -39247,9 +38786,8 @@ msgid "Crisp edges"
 msgstr "Erretako ertzak"
 
 #: ../share/ui/image-properties.glade:241
-#, fuzzy
 msgid "Pixelated"
-msgstr "Pixelatutako artea"
+msgstr "Pixelatuta"
 
 #: ../share/ui/inkscape-about.glade:7
 msgid "Inkscape. Draw freely."
@@ -39537,9 +39075,8 @@ msgid "W:"
 msgstr "Z:"
 
 #: ../share/ui/object-attributes.glade:110
-#, fuzzy
 msgid "Width of rectangle (without stroke)"
-msgstr "Laukizuzenaren zabalera"
+msgstr "Laukizuzenaren zabalera (trazurik gabe)"
 
 #: ../share/ui/object-attributes.glade:125
 #: ../share/ui/align-and-distribute.ui:886 ../share/ui/toolbar-rect.ui:84
@@ -39548,14 +39085,12 @@ msgid "H:"
 msgstr "H:"
 
 #: ../share/ui/object-attributes.glade:136
-#, fuzzy
 msgid "Height of rectangle (without stroke)"
-msgstr "Laukizuzenaren altuera"
+msgstr "Laukizuzenaren altuera (trazurik gabe)"
 
 #: ../share/ui/object-attributes.glade:152
-#, fuzzy
 msgid "Corner radius"
-msgstr "Izkina-erradioa"
+msgstr "Izkinaren erradioa"
 
 #: ../share/ui/object-attributes.glade:164
 #: ../share/ui/object-attributes.glade:586 ../share/ui/toolbar-arc.ui:87
@@ -39585,19 +39120,17 @@ msgid "Make corners sharp"
 msgstr "Sortu izkin zorrotzak"
 
 #: ../share/ui/object-attributes.glade:248
-#, fuzzy
 msgid "Make corners independent (path effect)"
-msgstr "Goratu uneko bidearen efektua"
+msgstr "Izkinak independenteak egiten ditu (bide efektua)"
 
 #: ../share/ui/object-attributes.glade:272
 #: ../share/ui/object-attributes.glade:795
 msgid "Round numbers to nearest integer"
-msgstr ""
+msgstr "Biribildu zenbakiak gertueneko osora"
 
 #: ../share/ui/object-attributes.glade:310
-#, fuzzy
 msgid "Corner:"
-msgstr "Izkinak:"
+msgstr "Izkina:"
 
 #: ../share/ui/object-attributes.glade:321 ../share/ui/toolbar-star.ui:196
 msgid "Rounded:"
@@ -39642,9 +39175,8 @@ msgid "Base radius to tip radius ratio"
 msgstr "Barne-erradioa eta kanpo-erradioaren arteko erlazioa"
 
 #: ../share/ui/object-attributes.glade:574
-#, fuzzy
 msgid "Radii"
-msgstr "Erradioa"
+msgstr "Erradioak"
 
 #: ../share/ui/object-attributes.glade:597 ../share/ui/toolbar-arc.ui:82
 msgid "Horizontal radius of the circle, ellipse, or arc"
@@ -39655,9 +39187,8 @@ msgid "Vertical radius of the circle, ellipse, or arc"
 msgstr "Zirkuluaren, elipsearen edo arkuaren erradio bertikala"
 
 #: ../share/ui/object-attributes.glade:639
-#, fuzzy
 msgid "Angles"
-msgstr "Angelua:"
+msgstr "Angeluak"
 
 #: ../share/ui/object-attributes.glade:651 ../share/ui/toolbar-arc.ui:210
 msgid "Start:"
@@ -39833,24 +39364,20 @@ msgid "Pattern fill"
 msgstr "Eredua (betegarria)"
 
 #: ../share/ui/pattern-edit.glade:337
-#, fuzzy
 msgid "Scale X:"
-msgstr "X eskala"
+msgstr "X eskala:"
 
 #: ../share/ui/pattern-edit.glade:362
-#, fuzzy
 msgid "Scale Y:"
-msgstr "Eskalatu %:"
+msgstr "Y eskala:"
 
 #: ../share/ui/pattern-edit.glade:628
-#, fuzzy
 msgid "Color: "
-msgstr "1. kolorea"
+msgstr "Kolorea: "
 
 #: ../share/ui/pattern-edit.glade:635
-#, fuzzy
 msgid "Apply color to the current pattern"
-msgstr "Uneko geruza soilik"
+msgstr "Aplikatu kolorea uneko ereduari"
 
 #: ../share/ui/align-and-distribute.ui:14
 #: ../share/ui/align-and-distribute.ui:44
@@ -39924,9 +39451,8 @@ msgid "Align left edges of objects to the right edge of anchor"
 msgstr "Lerrokatu objektuen ezkerreko ertzak ainguraren eskuineko ertzean"
 
 #: ../share/ui/align-and-distribute.ui:315
-#, fuzzy
 msgid "Align text anchors horizontally"
-msgstr "Banatu nodoak horizontalean"
+msgstr "Lerrokatu testu-aingurak horizontalki"
 
 #: ../share/ui/align-and-distribute.ui:335
 msgid "Align bottom edges of objects to the top edge of anchor"
@@ -39949,9 +39475,8 @@ msgid "Align top edges of objects to bottom edge of anchor"
 msgstr "Lerrokatu objektuen goiko ertzak ainguraren beheko ertzean"
 
 #: ../share/ui/align-and-distribute.ui:435
-#, fuzzy
 msgid "Align text anchors vertically"
-msgstr "Banatu nodoak bertikalean"
+msgstr "Lerrokatu testu-aingurak bertikalki"
 
 #: ../share/ui/align-and-distribute.ui:895
 msgid "Minimum horizontal gap (in pixel units) between bounding boxes"
@@ -40045,9 +39570,8 @@ msgid "Clean _Up Document"
 msgstr "_Garbitu dokumentua"
 
 #: ../share/ui/menus.ui:84
-#, fuzzy
 msgid "Document Resources"
-msgstr "_Dokumentu-propietateak"
+msgstr "Dokumentuaren baliabideak"
 
 #: ../share/ui/menus.ui:92
 msgid "_Document Properties..."
@@ -40074,49 +39598,40 @@ msgid "Undo _History..."
 msgstr "Desegin _historia..."
 
 #: ../share/ui/menus.ui:150
-#, fuzzy
 msgid "P_aste..."
-msgstr "Itsatsi"
+msgstr "It_satsi..."
 
 #: ../share/ui/menus.ui:153
-#, fuzzy
 msgid "_In Place"
-msgstr "Itsatsi _lekuan"
+msgstr "_Lekuan"
 
 #: ../share/ui/menus.ui:158
-#, fuzzy
 msgid "_On Page"
-msgstr "_Orri berria"
+msgstr "_Orrialdean"
 
 #: ../share/ui/menus.ui:169
-#, fuzzy
 msgid "Si_ze"
-msgstr "Itsatsi ta_maina"
+msgstr "_Tamaina"
 
 #: ../share/ui/menus.ui:174
-#, fuzzy
 msgid "_Width"
-msgstr "_Zabalera:"
+msgstr "_Zabalera"
 
 #: ../share/ui/menus.ui:179
-#, fuzzy
 msgid "_Height"
-msgstr "_Altuera:"
+msgstr "_Altuera"
 
 #: ../share/ui/menus.ui:186
-#, fuzzy
 msgid "Size Separately"
-msgstr "Itsatsi tamaina bereizita"
+msgstr "Tamaina bereizita"
 
 #: ../share/ui/menus.ui:191
-#, fuzzy
 msgid "Width Separately"
-msgstr "Itsatsi zabalera bereizita"
+msgstr "Zabalera bereizita"
 
 #: ../share/ui/menus.ui:196
-#, fuzzy
 msgid "Height Separately"
-msgstr "Itsatsi altuera bereizita"
+msgstr "Altuera bereizita"
 
 #: ../share/ui/menus.ui:204
 msgid "_Find/Replace..."
@@ -40171,9 +39686,8 @@ msgid "_Resize Page to Selection"
 msgstr "Do_itu orria hautapenera"
 
 #: ../share/ui/menus.ui:330
-#, fuzzy
 msgid "Create _Guides Around the Current Page"
-msgstr "Sortu _gidak orriaren inguruan"
+msgstr "Sortu _gidak orrialdearen inguruan"
 
 #: ../share/ui/menus.ui:344
 msgid "_XML Editor..."
@@ -40221,9 +39735,8 @@ msgid "Outline Overlay"
 msgstr "Eskema-gainjartzea"
 
 #: ../share/ui/menus.ui:488
-#, fuzzy
 msgid "Enhance Thin Lines"
-msgstr "Nabarmendu ñabardura"
+msgstr "Lerro finak areagotu"
 
 #: ../share/ui/menus.ui:493
 msgid "No Filters"
@@ -40616,9 +40129,8 @@ msgid "Remove Manual _Kerns"
 msgstr "Kendu eskuzko karaktere-tarteak"
 
 #: ../share/ui/menus.ui:1160
-#, fuzzy
 msgid "Text to Glyphs"
-msgstr "Ireki glifoak"
+msgstr "Testutik glifoetara"
 
 #: ../share/ui/menus.ui:1174
 msgid "Filter_s"
@@ -40717,22 +40229,18 @@ msgid "Cursor coordinates"
 msgstr "Kurtsorearen koordenatuak"
 
 #: ../share/ui/statusbar.ui:172
-#, fuzzy
 msgid "Zoom (also Ctrl+scroll)"
-msgstr "Biraketa. (Baita Ctrl+Shift+korritzea ere)"
+msgstr "Zoom (Ktrl+kiribildu ere)"
 
 #: ../share/ui/statusbar.ui:178
-#, fuzzy
 msgid "Z:"
 msgstr "Z:"
 
 #: ../share/ui/statusbar.ui:200
-#, fuzzy
 msgid "Rotation (also Ctrl+Shift+scroll)"
-msgstr "Biraketa. (Baita Ctrl+Shift+korritzea ere)"
+msgstr "Biraketa. (Ktrl+Maius+kiribiltzea ere)"
 
 #: ../share/ui/statusbar.ui:206
-#, fuzzy
 msgid "R:"
 msgstr "R:"
 
@@ -40755,17 +40263,15 @@ msgstr "R:"
 #: ../share/ui/toolbar-star.ui:156 ../share/ui/toolbar-star.ui:235
 #: ../share/ui/toolbar-text.ui:282
 msgid "0.000"
-msgstr ""
+msgstr "0,000"
 
 #: ../share/ui/toolbar-booleans.ui:33
-#, fuzzy
 msgid "Add to the Shape"
-msgstr "Konoaern amaierako puntua"
+msgstr "Gehitu formari"
 
 #: ../share/ui/toolbar-booleans.ui:51
-#, fuzzy
 msgid "Remove from Shape"
-msgstr "Kendu bidetik"
+msgstr "Kendu formatik"
 
 #: ../share/ui/toolbar-booleans.ui:81
 #, fuzzy
@@ -40773,9 +40279,8 @@ msgid "Finish:"
 msgstr "Finlandiera (fi)"
 
 #: ../share/ui/toolbar-booleans.ui:93
-#, fuzzy
 msgid "Accept"
-msgstr "_Onartu"
+msgstr "Onartu"
 
 #: ../share/ui/toolbar-box3d.ui:31
 msgid "Angle of PLs in X direction"
@@ -40835,7 +40340,7 @@ msgstr "Mehetzea:"
 #: ../share/ui/toolbar-calligraphy.ui:291
 #: ../share/ui/toolbar-calligraphy.ui:322
 msgid "0.001"
-msgstr ""
+msgstr "0,001"
 
 #: ../share/ui/toolbar-calligraphy.ui:310
 msgid "Increase to make the pen drag behind, as if slowed by inertia"
@@ -40867,7 +40372,7 @@ msgstr ""
 #: ../share/ui/toolbar-text.ui:783 ../share/ui/toolbar-tweak.ui:367
 #: ../share/ui/toolbar-tweak.ui:396 ../share/ui/toolbar-tweak.ui:442
 msgid "0"
-msgstr ""
+msgstr "0"
 
 #: ../share/ui/toolbar-calligraphy.ui:404
 msgid "Use the tilt of the input device to alter the angle of the pen's nib"
@@ -40916,24 +40421,20 @@ msgid "Wiggle:"
 msgstr "Kulunkatu:"
 
 #: ../share/ui/toolbar-commands.ui:132
-#, fuzzy
 msgid "Open..."
-msgstr "_Ireki..."
+msgstr "Ireki..."
 
 #: ../share/ui/toolbar-commands.ui:176
-#, fuzzy
 msgid "Print..."
-msgstr "I_nprimatu..."
+msgstr "Inprimatu..."
 
 #: ../share/ui/toolbar-commands.ui:231
-#, fuzzy
 msgid "Import..."
-msgstr "_Inportatu..."
+msgstr "Inportatu..."
 
 #: ../share/ui/toolbar-commands.ui:256
-#, fuzzy
 msgid "Export..."
-msgstr "_Esportatu..."
+msgstr "Esportatu..."
 
 #: ../share/ui/toolbar-commands.ui:725
 #, fuzzy
@@ -40941,29 +40442,24 @@ msgid "Group"
 msgstr "Elkartu"
 
 #: ../share/ui/toolbar-commands.ui:828
-#, fuzzy
 msgid "Text and Font"
-msgstr "_Testua eta letra-tipoa"
+msgstr "Testua eta letra-tipoa"
 
 #: ../share/ui/toolbar-commands.ui:854
-#, fuzzy
 msgid "Layers and Objects"
-msgstr "_Geruzak eta objektuak"
+msgstr "Geruzak eta objektuak"
 
 #: ../share/ui/toolbar-commands.ui:906
-#, fuzzy
 msgid "Selectors and CSS..."
-msgstr "_Hautatzaileak eta CSS..."
+msgstr "Hautatzaileak eta CSS..."
 
 #: ../share/ui/toolbar-commands.ui:932
-#, fuzzy
 msgid "Align and Distribute..."
-msgstr "_Lerrokatu eta banatu..."
+msgstr "Lerrokatu eta banatu..."
 
 #: ../share/ui/toolbar-commands.ui:1017
-#, fuzzy
 msgid "Preferences..."
-msgstr "_Hobespenak..."
+msgstr "Hobespenak..."
 
 #: ../share/ui/toolbar-connector.ui:64
 msgid "Make connector orthogonal or polyline"
@@ -41075,7 +40571,6 @@ msgid "Link gradients to change all related gradients"
 msgstr "Estekatu gradienteak erlazionatutako gradiente guztiak aldatzeko"
 
 #: ../share/ui/toolbar-gradient.ui:262 ../share/ui/toolbar-select.ui:523
-#, fuzzy
 msgid "Width of selection"
 msgstr "Hautapenaren zabalera"
 
@@ -41084,9 +40579,8 @@ msgid "No geometric tool is active"
 msgstr "Ez dago geometria-tresnarik aktibo"
 
 #: ../share/ui/toolbar-lpe.ui:68
-#, fuzzy
 msgid "Line Segment"
-msgstr "Marra segmentua"
+msgstr "Lerro-segmentua"
 
 #: ../share/ui/toolbar-lpe.ui:87
 #, fuzzy
@@ -41094,19 +40588,16 @@ msgid "Circle by 3 points"
 msgstr "Zirkulua (3 puntu)"
 
 #: ../share/ui/toolbar-lpe.ui:144
-#, fuzzy
 msgid "Perpendicular bisector"
-msgstr "Erdikari perpendikularra"
+msgstr "Erdikari elkarzuta"
 
 #: ../share/ui/toolbar-lpe.ui:163
-#, fuzzy
 msgid "Angle Bisector"
-msgstr "Angeluaren erdikariak"
+msgstr "Angelu-erdikaria"
 
 #: ../share/ui/toolbar-lpe.ui:182
-#, fuzzy
 msgid "Mirror symmetry"
-msgstr "Ispilu-simetria"
+msgstr "Ispiluaren simetria"
 
 #: ../share/ui/toolbar-lpe.ui:218
 msgid "Show bounding box (used to cut infinite lines)"
@@ -41310,14 +40801,12 @@ msgid "Make selected nodes auto-smooth"
 msgstr "Egin hautatutako nodoak leuntze-automatiko"
 
 #: ../share/ui/toolbar-node.ui:317
-#, fuzzy
 msgid "Straighten lines"
-msgstr "marra zuzena"
+msgstr "Zuzendu lerroak"
 
 #: ../share/ui/toolbar-node.ui:334
-#, fuzzy
 msgid "Add curve handles"
-msgstr "Aldatu lekuz heldulekua"
+msgstr "Gehitu kurba-heldulekuak"
 
 #: ../share/ui/toolbar-node.ui:359
 #, fuzzy
@@ -41361,9 +40850,8 @@ msgid "Show clipping path(s) of selected object(s)"
 msgstr "Editatu hautatutako objektuen kliparen bideak"
 
 #: ../share/ui/toolbar-page.ui:131
-#, fuzzy
 msgid "Page Margins"
-msgstr "Orriaren marjinak"
+msgstr "Orrialdearen marjinak"
 
 #: ../share/ui/toolbar-page.ui:133 ../share/ui/toolbar-page.ui:298
 #: ../share/extensions/guides_creator.inx:23
@@ -41376,12 +40864,11 @@ msgstr "Orri-etiketa"
 
 #: ../share/ui/toolbar-page.ui:387
 msgid "e.g. 1.2mm 2mm"
-msgstr ""
+msgstr "adib. 1.2mm 2mm"
 
 #: ../share/ui/toolbar-page.ui:393
-#, fuzzy
 msgid "Page Bleed"
-msgstr "%d orria"
+msgstr "Orrialde-koska"
 
 #: ../share/ui/toolbar-paintbucket.ui:66
 msgid ""
@@ -41487,9 +40974,8 @@ msgid "Height of rectangle"
 msgstr "Laukizuzenaren altuera"
 
 #: ../share/ui/toolbar-select.ui:76
-#, fuzzy
 msgid "\"Select all objects"
-msgstr "Hautatu objektu guztiak"
+msgstr "\"Hautatu objektu guztiak"
 
 #: ../share/ui/toolbar-select.ui:118
 msgid "Deselect any selected objects"
@@ -41500,27 +40986,22 @@ msgid "Toggle selection box to select all touched objects."
 msgstr "Txandakatu hautapen-koadroa ukitutako objektu guztiak hautatzeko."
 
 #: ../share/ui/toolbar-select.ui:168
-#, fuzzy
 msgid "Rotate selection 90\\xc2\\xb0 counter-clockwise"
-msgstr "Biratu hautapena 90° erlojuaren noranzkoaren aurka"
+msgstr "Biratu hautapena 90\\xc2\\xb0 erlojuaren aurkako noranzkoan"
 
 #: ../share/ui/toolbar-select.ui:189
-#, fuzzy
 msgid "Rotate selection 90\\xc2\\xb0 clockwise"
-msgstr "Biratu hautapena 90° erlojuaren noranzkoan"
+msgstr "Biratu hautapena 90\\xc2\\xb0 erlojuaren noranzkoan"
 
 #: ../share/ui/toolbar-select.ui:460
-#, fuzzy
 msgid "Horizontal coordinate of selection"
-msgstr "Hautapeneko koordenatu horizontala"
+msgstr "Hautapenaren koordenatu horizontala"
 
 #: ../share/ui/toolbar-select.ui:491
-#, fuzzy
 msgid "Vertical coordinate of selection"
-msgstr "Hautapeneko koordenatu bertikala"
+msgstr "Hautapenaren koordenatu bertikala"
 
 #: ../share/ui/toolbar-select.ui:572
-#, fuzzy
 msgid "Height of selection"
 msgstr "Hautapenaren altuera"
 
@@ -41629,9 +41110,8 @@ msgid "Page margins"
 msgstr "Orriaren marjinak"
 
 #: ../share/ui/toolbar-snap.ui:755
-#, fuzzy
 msgid "Grid Lines"
-msgstr "Gida-lerroak"
+msgstr "Sareta-lerroak"
 
 #: ../share/ui/toolbar-snap.ui:912
 msgid "Advanced mode"
@@ -41650,18 +41130,16 @@ msgid "How much denser/sparser are outer revolutions; 1 = uniform"
 msgstr "Zenbat aldiz sarriagoak/bakanagoak dira kanpoko birak; 1 = uniformea"
 
 #: ../share/ui/toolbar-spiral.ui:70
-#, fuzzy
 msgid "Divergence"
-msgstr "Dibergentzia:"
+msgstr "Dibergentzia"
 
 #: ../share/ui/toolbar-spiral.ui:95
 msgid "Radius of the innermost revolution (relative to the spiral size)"
 msgstr "Barruragoko biraren erradioa (espiralaren tamainari dagokiona)"
 
 #: ../share/ui/toolbar-spiral.ui:99
-#, fuzzy
 msgid "Inner Radius:"
-msgstr "Barruko erradioa:"
+msgstr "Barneko erradioa:"
 
 #: ../share/ui/toolbar-spiral.ui:134
 msgid ""
@@ -41730,9 +41208,8 @@ msgid "Increase to scatter sprayed objects"
 msgstr "Handiagotu zipriztindutako objektuak sakabanatzeko"
 
 #: ../share/ui/toolbar-spray.ui:439
-#, fuzzy
 msgid "Scatter:"
-msgstr "Sakabanatzea:"
+msgstr "Barreiatu:"
 
 #: ../share/ui/toolbar-spray.ui:463
 msgid "0 to spray a spot; increase to enlarge the ring radius"
@@ -41790,9 +41267,8 @@ msgid "Pick from center instead of average area."
 msgstr "Aukeratu erdigunetik, arearen batezbestekotik ordez."
 
 #: ../share/ui/toolbar-star.ui:28
-#, fuzzy
 msgid "radiobutton"
-msgstr "Tradizionala"
+msgstr "aukera-botoia"
 
 #: ../share/ui/toolbar-star.ui:120
 msgid "Corners:"
@@ -41804,20 +41280,20 @@ msgid "Spoke Ratio:"
 msgstr "Erradio-tasa:"
 
 #: ../share/ui/toolbar-text.ui:88
-#, fuzzy
 msgid "Open the Font Collections dialog"
-msgstr "Letra-tipoaren lizentzia irekia"
+msgstr "Ireki letra-tipo bildumen elkarrizketa-koadroa"
 
 #: ../share/ui/toolbar-text.ui:179
-#, fuzzy
 msgid "Select Font Collections"
-msgstr "Hautatu etiketen letra-tipoa"
+msgstr "Hautatu letra-tipo bildumak"
 
 #: ../share/ui/toolbar-text.ui:195
 msgid ""
 "Reset the font list (Deselects all the font collections and clears search "
 "results)"
 msgstr ""
+"Berrezarri letra-tipo zerrenda (letra-tipo bilduma denak desautatu eta "
+"bilaketa emaitzak garbitzen ditu)"
 
 #: ../share/ui/toolbar-text.ui:270
 msgid "Spacing between baselines"
@@ -41902,7 +41378,7 @@ msgstr "Hitzen arteko tartea (px)"
 #: ../share/ui/toolbar-text.ui:815 ../share/ui/toolbar-text.ui:847
 #: ../share/ui/toolbar-text.ui:879 ../share/ui/toolbar-text.ui:911
 msgid "0.00"
-msgstr ""
+msgstr "0.00"
 
 #: ../share/ui/toolbar-text.ui:835
 msgid "Horizontal kerning (px)"
@@ -42027,7 +41503,6 @@ msgid "Channels:"
 msgstr "Kanalak:"
 
 #: ../share/ui/toolbar-tweak.ui:494
-#, fuzzy
 msgid "H"
 msgstr "H"
 
@@ -42036,7 +41511,6 @@ msgid "In color mode, act on object's hue"
 msgstr "Kolore moduan, objektuaren ñabarduran landu"
 
 #: ../share/ui/toolbar-tweak.ui:507
-#, fuzzy
 msgid "S"
 msgstr "S"
 
@@ -42045,7 +41519,6 @@ msgid "In color mode, act on object's saturation"
 msgstr "Kolore moduan, objektuaren saturazioan landu"
 
 #: ../share/ui/toolbar-tweak.ui:520
-#, fuzzy
 msgid "L"
 msgstr "L"
 
@@ -42055,7 +41528,6 @@ msgstr "Kolore moduan, objektuaren argitasunean landu"
 
 # Opacity
 #: ../share/ui/toolbar-tweak.ui:533
-#, fuzzy
 msgid "O"
 msgstr "O"
 
@@ -42064,19 +41536,16 @@ msgid "In color mode, act on object's opacity"
 msgstr "Kolore moduan, objektuaren opakotasunean landu"
 
 #: ../share/ui/toolbar-zoom.ui:52
-#, fuzzy
 msgid "Zoom 1-1"
-msgstr "Zooma 1:1"
+msgstr "Zooma 1-1"
 
 #: ../share/ui/toolbar-zoom.ui:69
-#, fuzzy
 msgid "Zoom 1-2"
-msgstr "Zooma 1:2"
+msgstr "Zooma 1-2"
 
 #: ../share/ui/toolbar-zoom.ui:86
-#, fuzzy
 msgid "Zoom 2-1"
-msgstr "Zooma 2:1"
+msgstr "Zooma 2-1"
 
 #: ../share/extensions/barcode/Base.py:49
 msgid "Error encoding '{}' as {} barcode: {}\n"
@@ -42298,11 +41767,14 @@ msgid "Warning: unable to load SVG stroke fonts."
 msgstr "Abisua: Ezin dira SVG trazu-letrak kargatu."
 
 #: ../share/extensions/hershey.py:2012
+#, fuzzy
 msgid ""
 "Warning: unable to render text.\n"
 "Please use Text > Remove Manual Kerns to remove kerning prior to using this "
 "extension."
 msgstr ""
+"Abisua: ez da testua errendatzeko gai.\n"
+"Mesedez, erabili Testua > Kendu "
 
 #: ../share/extensions/hershey.py:2020
 msgid ""
@@ -42317,11 +41789,11 @@ msgstr ""
 #: ../share/extensions/hpgl2_input.py:98
 msgid "Unsupported commands encountered. The following commands were ignored:"
 msgstr ""
+"Onartzen ez diren komandoak aurkitu dira. Ondoko komandoei ezikusi egin zaie:"
 
 #: ../share/extensions/hpgl_output.py:79
-#, fuzzy
 msgid "No convertible objects were found"
-msgstr "Ez da objekturik aurkitu"
+msgstr "Ez da objektu bihurgarririk aurkitu"
 
 #: ../share/extensions/image_embed.py:71
 msgid "Attribute \"xlink:href\" not set on node {}."
@@ -42561,7 +42033,7 @@ msgstr ""
 
 #: ../share/extensions/inkex/elements/_parser.py:108
 msgid "{}. Line {}, column {}"
-msgstr ""
+msgstr "{}. Lerro {}, zutabe {}"
 
 #: ../share/extensions/inkex/elements/_parser.py:114
 msgid ""
@@ -42823,13 +42295,14 @@ msgid "No data to render into a chart."
 msgstr "Ez dago diagrama honetan errendatuko den daturik."
 
 #: ../share/extensions/other/extension-xaml/inkxaml/svg2xaml.py:198
+#, fuzzy
 msgid ""
 "You enabled \"Layers as resources\", but there are visual elements that are "
 "not part of a layer and instead contained in the root element directly. "
 "These elements will be missing in the export. \n"
 "\n"
 "Consider moving them to a layer or disabling this option."
-msgstr ""
+msgstr "'Geruzak baliabide gisa'"
 
 #: ../share/extensions/output_scour.py:15
 msgid ""
@@ -43455,9 +42928,8 @@ msgid "RGB Barrel"
 msgstr "RGB gurpila"
 
 #: ../share/extensions/construct_from_triangle.inx:3
-#, fuzzy
 msgid "Construct from Triangle"
-msgstr "Ukitze-triangelua"
+msgstr "Eraiki triangelutik"
 
 #: ../share/extensions/construct_from_triangle.inx:6
 msgid "Common Objects"
@@ -43984,9 +43456,8 @@ msgid ""
 msgstr ""
 
 #: ../share/extensions/dxf_outlines.inx:13
-#, fuzzy
 msgid "Use Document unit as base unit"
-msgstr "Erabili dokumentuko orriaren tamaina"
+msgstr "Dokumentuko unitatea oinarri-unitate gisa erabiltzea"
 
 #: ../share/extensions/dxf_outlines.inx:14
 msgid "Base unit:"
@@ -44000,7 +43471,7 @@ msgstr ""
 
 #: ../share/extensions/dxf_outlines.inx:15
 msgid "px (unitless)"
-msgstr ""
+msgstr "px (unitaterik gabe)"
 
 #: ../share/extensions/dxf_outlines.inx:16
 msgid "ft"
@@ -44755,9 +44226,8 @@ msgid "Minor Angular Division Thickness (px):"
 msgstr "Zatiketa angeluar lagungarriaren lodiera (px):"
 
 #: ../share/extensions/guides_creator.inx:3
-#, fuzzy
 msgid "Guides Creator"
-msgstr "Giden sortzailea"
+msgstr "Gida sortzailea"
 
 #: ../share/extensions/guides_creator.inx:6
 msgid "Apply to pages"
@@ -45101,48 +44571,40 @@ msgstr ""
 "kapsulatutako kredituak.\n"
 
 #: ../share/extensions/hpgl_input.inx:3
-#, fuzzy
 msgid "HPGL2 Input"
-msgstr "HPGL sarrera"
+msgstr "HPGL2 sarrera"
 
 #: ../share/extensions/hpgl_input.inx:7
-#, fuzzy
 msgid "Resolution (dpi):"
-msgstr "X bereizmena (dpi):"
+msgstr "Bereizmena (dpi):"
 
 #: ../share/extensions/hpgl_input.inx:7
-#, fuzzy
 msgid ""
 "The number of steps (plotter units) the plotter moves if it moves by 1 inch "
 "(Default: 1016.0)"
 msgstr ""
-"Marrazlea mugitzen den urrats kopurua 1 hazbete mugitzean X ardatzean "
-"(lehenetsia: 1016.0)"
+"Marrazlea mugitzen den urrats (marrazle unitatea) kopurua hazbete 1 "
+"mugitzen bada (lehenetsia: 1016.0)"
 
 #: ../share/extensions/hpgl_input.inx:8
-#, fuzzy
 msgid "Width (in):"
-msgstr "Zabaleraren unitatea:"
+msgstr "Zabalera (in):"
 
 #: ../share/extensions/hpgl_input.inx:8
-#, fuzzy
 msgid "Width of the PCL picture frame"
-msgstr "Ereduaren zabalera"
+msgstr "PCL irudi markoaren zabalera"
 
 #: ../share/extensions/hpgl_input.inx:9
-#, fuzzy
 msgid "Height (in):"
-msgstr "Altueraren unitatea:"
+msgstr "Altuera (in):"
 
 #: ../share/extensions/hpgl_input.inx:9
-#, fuzzy
 msgid "Height of the PCL picture frame"
-msgstr "Laukizuzenaren altuera"
+msgstr "PCL irudi markoaren altuera"
 
 #: ../share/extensions/hpgl_input.inx:11
-#, fuzzy
 msgid "Bake transforms"
-msgstr "Eraldaketak"
+msgstr "Eraldaketak labean egin"
 
 #: ../share/extensions/hpgl_input.inx:11
 msgid ""
@@ -45152,9 +44614,8 @@ msgid ""
 msgstr ""
 
 #: ../share/extensions/hpgl_input.inx:12
-#, fuzzy
 msgid "Break apart subpaths"
-msgstr "Bideak banatzea..."
+msgstr "Deskonposatu azpibideak"
 
 #: ../share/extensions/hpgl_input.inx:17 ../share/extensions/hpgl_output.inx:39
 msgid "HP Graphics Language file (*.hpgl)"
@@ -45536,9 +44997,8 @@ msgid "Follow Link"
 msgstr "Jarraitu estekari"
 
 #: ../share/extensions/inset_shadow.inx:3
-#, fuzzy
 msgid "Inset Shadow"
-msgstr "Laburtu bideak"
+msgstr "Txertatu itzala"
 
 #: ../share/extensions/inset_shadow.inx:5
 msgid "Illumination Angle:"
@@ -45565,9 +45025,8 @@ msgid "Blur height:"
 msgstr "Lausoaren altuera:"
 
 #: ../share/extensions/interp.inx:3
-#, fuzzy
 msgid "Interpolate Between Paths"
-msgstr "Interpolatu azpibideak"
+msgstr "Bideen artean interpolatu"
 
 #: ../share/extensions/interp.inx:6
 msgid "Interpolation steps:"
@@ -45615,9 +45074,8 @@ msgstr ""
 "hautapen ordenarako"
 
 #: ../share/extensions/interp_att_g.inx:3
-#, fuzzy
 msgid "Interpolate Attribute in a Group"
-msgstr "Interpolatu atributua taldean"
+msgstr "talde bateko atributua interpolatu"
 
 #: ../share/extensions/interp_att_g.inx:7
 msgid "Attribute to Interpolate:"
@@ -46204,7 +45662,6 @@ msgstr ""
 "xehetasun gehiagorako."
 
 #: ../share/extensions/jitternodes.inx:3
-#, fuzzy
 msgid "Jitter Nodes"
 msgstr "Astindu nodoak"
 
@@ -46509,9 +45966,8 @@ msgstr ""
 "esportazio karratu bat sortuko du.\n"
 
 #: ../share/extensions/long_shadow.inx:3
-#, fuzzy
 msgid "Long Shadow"
-msgstr "Jaregin itzala"
+msgstr "Itzal luzea"
 
 #: ../share/extensions/long_shadow.inx:5
 msgid "Length (document units):"
@@ -46523,9 +45979,8 @@ msgstr ""
 "Bete itzala hautatutako objektu(ar)en trazu-kolorearekin, ezarrita badago"
 
 #: ../share/extensions/lorem_ipsum.inx:3
-#, fuzzy
 msgid "Lorem Ipsum"
-msgstr "Lorem ipsum"
+msgstr "Lorem Ipsum"
 
 #: ../share/extensions/lorem_ipsum.inx:7
 msgid "Number of paragraphs:"
@@ -46791,7 +46246,6 @@ msgid "Unicode character:"
 msgstr "Unicode karakterea:"
 
 #: ../share/extensions/next_glyph_layer.inx:3
-#, fuzzy
 msgid "View next Glyph"
 msgstr "Ikusi hurrengo glifoa"
 
@@ -46965,14 +46419,12 @@ msgid "XAML Output"
 msgstr "XAML irteera"
 
 #: ../share/extensions/other/extension-xaml/inkxaml/svg2xaml.inx:5
-#, fuzzy
 msgid "Export framework:"
-msgstr "Esportazio-area"
+msgstr "Esportatu armazoia:"
 
 #: ../share/extensions/other/extension-xaml/inkxaml/svg2xaml.inx:9
-#, fuzzy
 msgid "Export mode:"
-msgstr "SVG inportatzeko modua:"
+msgstr "Esportatzeko modua:"
 
 #: ../share/extensions/other/extension-xaml/inkxaml/svg2xaml.inx:13
 msgid ""
@@ -46981,11 +46433,15 @@ msgid ""
 "animated. Canvas is more suitable for complex drawings where individual "
 "elements should be animated, or user controls be added into."
 msgstr ""
+"«DrawingGroup»ek (marrazki-taldea) konplexutasun txikiagoko SVG ezaugarrien "
+"euskarria du, baina orokorrean errendimendu hobea du, ikono-hiztegietarako "
+"aproposa egiten du horrek. Primitiboak ezin dira animatu. «Canvas» (ohila) "
+"aproposagoa da marrazki konplexuagoetarako, banakako elementuak animatu "
+"behar direnean edo erabiltzailearen aginteak gehitu behar zaizkienean."
 
 #: ../share/extensions/other/extension-xaml/inkxaml/svg2xaml.inx:17
-#, fuzzy
 msgid "Referencing type:"
-msgstr "Marrazte mota:"
+msgstr "Erreferentzia mota:"
 
 #: ../share/extensions/other/extension-xaml/inkxaml/svg2xaml.inx:17
 msgid ""
@@ -46993,6 +46449,10 @@ msgid ""
 "layer if 'Layers as Resources' is enabled, the entire drawing otherwise) to "
 "facilitate using the drawing as Image source or Brush."
 msgstr ""
+"Mota horretako elementu bat gehituko da goi-mailako marrazki bakoitzeko "
+"(hots, geruza bakoitzeko 'Geruzak baliabide gisa' gaituta badago, marrazki "
+"osorako bestela), marrazkia irudi-iturri gisa edo pintzel gisa erabiltzea "
+"errazteko."
 
 #: ../share/extensions/other/extension-xaml/inkxaml/svg2xaml.inx:25
 msgid ""
@@ -47000,11 +46460,13 @@ msgid ""
 "Span elements for WPF Canvas mode. Texts are always converted to path in "
 "DrawingGroup mode or when targeting Avalonia."
 msgstr ""
+"Testu gehienetarako, «WPF Canvas» modurako «TextBlock» (editagarri) / "
+"«Span» elementu gisa esportatzeko euskarria dago. Testuak beti bide "
+"bihurtzen dira «DrawingGroup» moduan edo jomuga «Avatonia» denean."
 
 #: ../share/extensions/other/extension-xaml/inkxaml/svg2xaml.inx:30
-#, fuzzy
 msgid "Export layers as separate top-level resources"
-msgstr "Esportatu geruza bakoitza fitxategi banara"
+msgstr "Esportatu geruzak goi-mailako baliabide bereizi gisa"
 
 #: ../share/extensions/other/extension-xaml/inkxaml/svg2xaml.inx:30
 msgid ""
@@ -47012,14 +46474,19 @@ msgid ""
 "(independent of visibility) will be a separate DrawingGroup (DrawingImage) / "
 "Canvas (wrapped in a ViewBox). The layer name will be used as x:Key."
 msgstr ""
+"Aukera hori, erabiltzeko prest dauden ikono-liburutegiak esportatzeko erabil "
+"daiteke. Geruza bakoitza (ikusgaitasunarekiko independente) «DrawingGroup» "
+"(«DrawingImage») / «Canvas» (ikuspegi-koadro batean bildua) bereizi bat"
+" izango "
+"da. Geruzaren izena x:Gakoa bezala erabiliko da."
 
 #: ../share/extensions/other/extension-xaml/inkxaml/svg2xaml.inx:31
 msgid "Treat solid swatches as"
-msgstr ""
+msgstr "Lagin solidoak honela tratatu,"
 
 #: ../share/extensions/other/extension-xaml/inkxaml/svg2xaml.inx:36
 msgid "Number of spaces per indentation level:"
-msgstr ""
+msgstr "Koska-mailako zuriune kopurua:"
 
 #: ../share/extensions/other/extension-xaml/inkxaml/svg2xaml.inx:40
 #: ../share/extensions/other/extension-xaml/inkxaml/xaml2svg.inx:8
@@ -47724,7 +47191,6 @@ msgstr ""
 "        "
 
 #: ../share/extensions/other/gcodetools/gcodetools_orientation_points.inx:4
-#, fuzzy
 msgid "Orientation Points"
 msgstr "Orientazio-puntuak"
 
@@ -47799,9 +47265,8 @@ msgstr ""
 "      "
 
 #: ../share/extensions/other/gcodetools/gcodetools_prepare_path_for_plasma.inx:4
-#, fuzzy
 msgid "Prepare Path for Plasma"
-msgstr "Prestatu bidea plasmarentzako"
+msgstr "Prestatu bidea plasmarako"
 
 #: ../share/extensions/other/gcodetools/gcodetools_prepare_path_for_plasma.inx:8
 msgid "Prepare path for plasma or laser cutters"
@@ -47860,7 +47325,6 @@ msgid "Maximum angle for corner (0-180 deg):"
 msgstr "Izkinaren geh. angelua (0-180 gradu):"
 
 #: ../share/extensions/other/gcodetools/gcodetools_tools_library.inx:4
-#, fuzzy
 msgid "Tools Library"
 msgstr "Tresnen liburutegia"
 
@@ -47974,83 +47438,72 @@ msgid "Shape Builder"
 msgstr "Forma eraikitzailea"
 
 #: ../share/extensions/other/templates/template_shape_prefab.inx:9
-#, fuzzy
 msgid "Template:"
-msgstr "Gorde txantiloia"
+msgstr "Txantiloia:"
 
 #: ../share/extensions/other/templates/template_shape_prefab.inx:12
 msgid "Trellis"
-msgstr ""
+msgstr "Landare-sarea"
 
 #: ../share/extensions/other/templates/template_shape_prefab.inx:14
-#, fuzzy
 msgid "Cross"
-msgstr "Lauso gurutzatua"
+msgstr "Gurutzatua"
 
 #: ../share/extensions/other/templates/template_shape_prefab.inx:15
-#, fuzzy
 msgid "Very Cross"
-msgstr "Gurutze makotua"
+msgstr "Oso gurutzatua"
 
 #: ../share/extensions/other/templates/template_shape_prefab.inx:16
-#, fuzzy
 msgid "Target"
-msgstr "Helburua:"
+msgstr "Jomuga"
 
 #: ../share/extensions/other/templates/template_shape_prefab.inx:17
 msgid "Hive"
-msgstr ""
+msgstr "Erlauntza"
 
 #: ../share/extensions/other/templates/template_shape_prefab.inx:18
-#, fuzzy
 msgid "Double Vision"
-msgstr "_Bikoiztu tamaina"
+msgstr "Ikuspegi bikoitza"
 
 #: ../share/extensions/other/templates/template_shape_prefab.inx:19
-#, fuzzy
 msgid "Celtic Flower"
-msgstr "Kolore anitzekoa"
+msgstr "Zelta lorea"
 
 #: ../share/extensions/other/templates/template_shape_prefab.inx:20
-#, fuzzy
 msgid "Celtic Knot"
-msgstr "Azken korapiloa"
+msgstr "Zelta korapiloa"
 
 #: ../share/extensions/other/templates/template_shape_prefab.inx:21
 msgid "Kitchen Tile"
-msgstr ""
+msgstr "Sukaldeko baldosa"
 
 #: ../share/extensions/other/templates/template_shape_prefab.inx:22
 msgid "Rose"
-msgstr ""
+msgstr "Arrosa"
 
 #: ../share/extensions/other/templates/template_shape_prefab.inx:23
 msgid "Lily"
-msgstr ""
+msgstr "Lirioa"
 
 #: ../share/extensions/other/templates/template_shape_prefab.inx:24
 msgid "Crown"
-msgstr ""
+msgstr "Koroa"
 
 #: ../share/extensions/other/templates/template_shape_prefab.inx:25
-#, fuzzy
 msgid "Diamond Target"
-msgstr "Diamantea"
+msgstr "Diamante helburua"
 
 #: ../share/extensions/other/templates/template_shape_prefab.inx:26
-#, fuzzy
 msgid "TV Test Pattern"
-msgstr "Objektuak eredu"
+msgstr "TB proba eredua"
 
 #: ../share/extensions/other/templates/template_shape_prefab.inx:27
-#, fuzzy
 msgid "Explosion"
-msgstr "Esklusioa"
+msgstr "Eztanda"
 
 #: ../share/extensions/other/templates/template_shape_prefab.inx:28
-#, fuzzy
 msgid "Droplet"
-msgstr "Tanta-kontagailua"
+msgstr "Tantatxoa"
 
 #: ../share/extensions/output_scour.inx:3
 msgid "Optimized SVG Output"
@@ -51108,9 +50561,8 @@ msgid "Slicer"
 msgstr "Zatitzailea"
 
 #: ../share/extensions/webslicer_create_rect.inx:3
-#, fuzzy
 msgid "Create a Slicer Rectangle"
-msgstr "Sortu laukizuzen zatitzailea"
+msgstr "Sortu laukizuzen zatitzaile bat"
 
 #: ../share/extensions/webslicer_create_rect.inx:12
 msgid "DPI:"
