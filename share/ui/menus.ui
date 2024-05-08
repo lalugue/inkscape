@@ -1227,88 +1227,103 @@
           <attribute name="label" translatable="yes">Inkscape Manual</attribute>
           <attribute name="action">win.help-url-manual</attribute>
         </item>
-        <item>
-          <attribute name="label" translatable="yes">Keys and Mouse Reference</attribute>
-          <attribute name="action">win.help-url-keys</attribute>
-        </item>
-        <item>
-          <attribute name="label" translatable="yes">Ask Us a Question</attribute>
-          <attribute name="action">win.help-url-ask-question</attribute>
-        </item>
-        <submenu id="tutiorial">
+        <submenu id="tutorial">
           <attribute name="label" translatable="yes">Tutorials</attribute>
-          <item>
-            <attribute name="label" translatable="yes">Inkscape: _Basic</attribute>
-            <attribute name="action">app.tutorial-basic</attribute>
-          </item>
-          <item>
-            <attribute name="label" translatable="yes">Inkscape: _Shapes</attribute>
-            <attribute name="action">app.tutorial-shapes</attribute>
-          </item>
-          <item>
-            <attribute name="label" translatable="yes">Inkscape: _Advanced</attribute>
-            <attribute name="action">app.tutorial-advanced</attribute>
-          </item>
-          <item>
-            <attribute name="label" translatable="yes">Inkscape: T_racing</attribute>
-            <attribute name="action">app.tutorial-tracing</attribute>
-          </item>
-          <item>
-            <attribute name="label" translatable="yes">Inkscape: Tracing Pixel Art</attribute>
-            <attribute name="action">app.tutorial-tracing-pixelart</attribute>
-          </item>
-          <item>
-            <attribute name="label" translatable="yes">Inkscape: _Calligraphy</attribute>
-            <attribute name="action">app.tutorial-calligraphy</attribute>
-          </item>
-          <item>
-            <attribute name="label" translatable="yes">Inkscape: _Interpolate</attribute>
-            <attribute name="action">app.tutorial-interpolate</attribute>
-          </item>
-          <item>
-            <attribute name="label" translatable="yes">_Elements of Design</attribute>
-            <attribute name="action">app.tutorial-design</attribute>
-          </item>
-          <item>
-            <attribute name="label" translatable="yes">_Tips and Tricks</attribute>
-            <attribute name="action">app.tutorial-tips</attribute>
-          </item>
+	  <section>
+            <item>
+              <attribute name="label" translatable="yes">Beginner's Guide</attribute>
+              <attribute name="action">win.help-url-beginners-guide</attribute>
+            </item>
+	  </section>
+	  <section>
+	    <item>
+              <attribute name="label" translatable="yes">Inkscape: _Basic</attribute>
+              <attribute name="action">app.tutorial-basic</attribute>
+            </item>
+            <item>
+              <attribute name="label" translatable="yes">Inkscape: _Shapes</attribute>
+              <attribute name="action">app.tutorial-shapes</attribute>
+            </item>
+            <item>
+              <attribute name="label" translatable="yes">Inkscape: _Advanced</attribute>
+              <attribute name="action">app.tutorial-advanced</attribute>
+            </item>
+            <item>
+              <attribute name="label" translatable="yes">Inkscape: T_racing</attribute>
+              <attribute name="action">app.tutorial-tracing</attribute>
+            </item>
+            <item>
+              <attribute name="label" translatable="yes">Inkscape: Tracing Pixel Art</attribute>
+              <attribute name="action">app.tutorial-tracing-pixelart</attribute>
+            </item>
+            <item>
+              <attribute name="label" translatable="yes">Inkscape: _Calligraphy</attribute>
+              <attribute name="action">app.tutorial-calligraphy</attribute>
+            </item>
+            <item>
+              <attribute name="label" translatable="yes">Inkscape: _Interpolate</attribute>
+              <attribute name="action">app.tutorial-interpolate</attribute>
+            </item>
+            <item>
+              <attribute name="label" translatable="yes">_Elements of Design</attribute>
+              <attribute name="action">app.tutorial-design</attribute>
+            </item>
+            <item>
+              <attribute name="label" translatable="yes">_Tips and Tricks</attribute>
+              <attribute name="action">app.tutorial-tips</attribute>
+            </item>
+	  </section>
         </submenu>
-        <item>
-          <attribute name="label" translatable="yes">Command Line Options</attribute>
-          <attribute name="action">win.help-url-man</attribute>
-        </item>
-        <item>
-          <attribute name="label" translatable="yes">FAQ</attribute>
-          <attribute name="action">win.help-url-faq</attribute>
-        </item>
+	<submenu id="learn-more">
+          <attribute name="label" translatable="yes">Learn more</attribute>
+	  <section>
+            <item>
+              <attribute name="label" translatable="yes">Keys and Mouse Reference</attribute>
+              <attribute name="action">win.help-url-keys</attribute>
+            </item>
+            <item>
+              <attribute name="label" translatable="yes">Command Line Options</attribute>
+              <attribute name="action">win.help-url-man</attribute>
+            </item>
+          </section>
+	  <section>
+            <item>
+              <attribute name="label" translatable="yes">Extension Development Guide</attribute>
+              <attribute name="action">win.help-url-inkex</attribute>
+            </item>
+            <item>
+              <attribute name="label" translatable="yes">SVG 1.1 Specification</attribute>
+              <attribute name="action">win.help-url-svg11-spec</attribute>
+            </item>
+            <item>
+              <attribute name="label" translatable="yes">SVG 2 Specification</attribute>
+              <attribute name="action">win.help-url-svg2-spec</attribute>
+            </item>
+          </section>
+	  <section>
+            <item>
+              <attribute name="label" translatable="yes">FAQ</attribute>
+              <attribute name="action">win.help-url-faq</attribute>
+            </item>
+            <item>
+              <attribute name="label" translatable="yes">Ask Us a Question</attribute>
+              <attribute name="action">win.help-url-ask-question</attribute>
+            </item>
+            <item>
+              <attribute name="label" translatable="yes">Report a Bug</attribute>
+              <attribute name="action">win.help-url-report-bug</attribute>
+            </item>
+          </section>
+        </submenu>
+      </section>
+      <section>
         <item>
           <attribute name="label" translatable="yes">New in This Version</attribute>
           <attribute name="action">win.help-url-release-notes</attribute>
         </item>
         <item>
-          <attribute name="label" translatable="yes">Report a Bug</attribute>
-          <attribute name="action">win.help-url-report-bug</attribute>
-        </item>
-        <item>
           <attribute name="label" translatable="yes">Donate</attribute>
           <attribute name="action">win.help-url-donate</attribute>
-        </item>
-        <item>
-          <attribute name="label" translatable="yes">SVG 1.1 Specification</attribute>
-          <attribute name="action">win.help-url-svg11-spec</attribute>
-        </item>
-        <item>
-          <attribute name="label" translatable="yes">SVG 2 Specification</attribute>
-          <attribute name="action">win.help-url-svg2-spec</attribute>
-        </item>
-      </section>
-      <section>
-        <item>
-          <attribute name="label" translatable="yes">About _Memory</attribute>
-          <attribute name="action">win.dialog-open</attribute>
-          <attribute name="target">Memory</attribute>
-          <attribute name="icon">dialog-memory</attribute>
         </item>
         <item>
           <attribute name="label" translatable="yes">_About Inkscape</attribute>

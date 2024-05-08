@@ -347,5 +347,9 @@ See "inkscape.xml" for information about file structure.
 
   <!-- Help -->
   <bind gaction="app.about" />
+  <bind gaction="win.help-url-manual" />
+  <bind gaction="win.help-url-beginners-guide" />
+  <bind gaction="win.help-url-keys" />
+  <bind gaction="win.help-url-inkex" />
 
 </keys>
