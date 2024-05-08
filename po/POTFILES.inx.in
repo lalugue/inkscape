@@ -159,6 +159,7 @@
 ../share/extensions/text_uppercase.inx
 ../share/extensions/triangle.inx
 ../share/extensions/twirl.inx
+../share/extensions/typst_formula.inx
 ../share/extensions/ungroup_deep.inx
 ../share/extensions/voronoi_diagram.inx
 ../share/extensions/voronoi_fill.inx
