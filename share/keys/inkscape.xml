@@ -384,6 +384,8 @@ override) the bindings in the main default.xml.
   <!-- Help -->
   <bind gaction="app.about" />
   <bind gaction="win.help-url-manual" />
+  <bind gaction="win.help-url-beginners-guide" />
   <bind gaction="win.help-url-keys" />
+  <bind gaction="win.help-url-inkex" />
 
 </keys>
