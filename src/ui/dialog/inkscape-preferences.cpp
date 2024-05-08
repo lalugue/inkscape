@@ -15,6 +15,7 @@
  */
 
 #include "inkscape-preferences.h"
+#include "helper/sigc-track-obj.h"
 
 #ifdef HAVE_CONFIG_H
 # include "config.h"  // only include where actually required!
@@ -1675,10 +1676,14 @@ void InkscapePreferences::initPageUI()
         }
         cb->refilter();
         cb->set_active_by_id(mgr.get_selected_theme());
-        cb->signal_changed().connect([=,this](int id) {
+
+        // Update on auto-reload or theme change
+        mgr.connectCssUpdated(SIGC_TRACKING_ADAPTOR(
+            [=, this]() { img->set_paintable(to_texture(draw_handles_preview(get_scale_factor()))); }, *this));
+        cb->signal_changed().connect([=, this](int id) {
             Handles::Manager::get().select_theme(id);
-            img->set_paintable(to_texture(draw_handles_preview(get_scale_factor())));
         });
+
         box->append(*cb);
         _handle_size = Preferences::PreferencesObserver::create("/options/grabsize/value", [=](const Preferences::Entry&){
             img->set_paintable(to_texture(draw_handles_preview(get_scale_factor())));

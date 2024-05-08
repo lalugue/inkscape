@@ -33,6 +33,7 @@ private:
     sigc::signal<void()> signal_css_updated;
 
     void updateCss();
+    void monitor_file(std::string const& file_name);
 
     friend Manager;
 };
@@ -44,8 +45,20 @@ ManagerImpl::ManagerImpl()
     // Set the initial css.
     updateCss();
 
-    // Monitor the user css path for changes. We use a timeout to compress multiple events into one.
-    auto const path = IO::Resource::get_path_string(IO::Resource::USER, IO::Resource::UIS, "node-handles.css");
+    // During application startup, we check to see if the user has selected custom css
+    // in preferences. We don't want to monitor shipped css files, only user defined
+    // custom css.
+    if (get_handle_themes().at(current_theme).file_name == USER_CUSTOM_CSS_FILE_NAME) {
+        monitor_file(USER_CUSTOM_CSS_FILE_NAME);
+    }
+}
+
+/**
+ * Monitor a css file for changes. We use a timeout to compress multiple events into one.
+ */
+void ManagerImpl::monitor_file(std::string const& file_name)
+{
+    auto const path = IO::Resource::get_path_string(IO::Resource::USER, IO::Resource::UIS, file_name.c_str());
     auto file = Gio::File::create_for_path(path);
     monitor = file->monitor_file();
     monitor->signal_changed().connect([this] (Glib::RefPtr<Gio::File> const &, Glib::RefPtr<Gio::File> const &, Gio::FileMonitor::Event) {
@@ -103,7 +116,7 @@ const std::vector<ColorTheme>& Manager::get_handle_themes() const {
         // a "negative" version
         {"handle-theme-negative.css", C_(translation_context, "Negative"), false, 0xa0a0b0},
         // reserved for user custom style
-        {"handle-theme-custom.css",   C_(translation_context, "Custom"), true, 0x808080},
+        {USER_CUSTOM_CSS_FILE_NAME,   C_(translation_context, "Custom"), true, 0x808080},
     };
     return themes;
 #undef translation_context
@@ -120,6 +133,14 @@ void Manager::select_theme(int index) {
     auto &d = static_cast<ManagerImpl&>(*this);
     d.updateCss();
     d.signal_css_updated.emit();
+
+    // A user might cycle through the available themes, if they switch from
+    // custom we clear any existing handler, if they eventually land
+    // on custom, we want to start monitoring it again.
+    d.monitor.reset();
+    if (d.get_handle_themes().at(current_theme).file_name == USER_CUSTOM_CSS_FILE_NAME) {
+        d.monitor_file(USER_CUSTOM_CSS_FILE_NAME);
+    }
 }
 
 } // namespace Inkscape::Handles

@@ -123,6 +123,8 @@ struct Css
 
 Css parse_css(const std::string& css_file_name);
 
+inline constexpr auto USER_CUSTOM_CSS_FILE_NAME{"handle-theme-custom.css"};
+
 } // namespace Inkscape::Handles
 
 #endif // INKSCAPE_DISPLAY_CONTROL_CTRL_HANDLE_STYLING_H
