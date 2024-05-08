@@ -77,6 +77,7 @@ public:
 
     ColorRGBA getDefaultBackgroundColor() const { return ColorRGBA(background_color); }
 
+    // TODO: move these functions out of here and into the Canvas or InkscapeWindow
     void zoomToPage(SPDesktop *desktop, SPPage *page, bool width_only = false);
     void zoomToSelectedPage(SPDesktop *desktop, bool width_only = false) { zoomToPage(desktop, _selected_page, width_only); };
     void centerToPage(SPDesktop *desktop, SPPage *page);

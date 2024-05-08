@@ -30,11 +30,13 @@ void page_new(SPDocument *document)
     Inkscape::DocumentUndo::done(document, "New Automatic Page", INKSCAPE_ICON("tool-pages"));
 }
 
-void page_new_and_center(SPDesktop *desktop)
+void page_new_and_center(InkscapeWindow *window)
 {
-    if (auto document = desktop->getDocument()) {
-        page_new(document);
-        document->getPageManager().centerToSelectedPage(desktop);
+    if (auto desktop = window->get_desktop()) {
+        if (auto document = desktop->getDocument()) {
+            page_new(document);
+            document->getPageManager().centerToSelectedPage(desktop);
+        }
     }
 }
 
@@ -45,11 +47,13 @@ void page_delete(SPDocument *document)
     Inkscape::DocumentUndo::done(document, "Delete Page", INKSCAPE_ICON("tool-pages"));
 }
 
-void page_delete_and_center(SPDesktop *desktop)
+void page_delete_and_center(InkscapeWindow *window)
 {
-    if (auto document = desktop->getDocument()) {
-        page_delete(document);
-        document->getPageManager().centerToSelectedPage(desktop);
+    if (auto desktop = window->get_desktop()) {
+        if (auto document = desktop->getDocument()) {
+            page_delete(document);
+            document->getPageManager().centerToSelectedPage(desktop);
+        }
     }
 }
 
@@ -129,10 +133,8 @@ std::vector<std::vector<Glib::ustring>> win_page_actions =
 
 void add_actions_page_tools(InkscapeWindow* win)
 {
-    auto desktop = win->get_desktop();
-
-    win->add_action("page-new", sigc::bind(sigc::ptr_fun(&page_new_and_center), desktop));
-    win->add_action("page-delete", sigc::bind(sigc::ptr_fun(&page_delete_and_center), desktop));
+    win->add_action("page-new", sigc::bind(sigc::ptr_fun(&page_new_and_center), win));
+    win->add_action("page-delete", sigc::bind(sigc::ptr_fun(&page_delete_and_center), win));
 
     auto app = InkscapeApplication::instance();
     app->get_action_extra_data().add_data(win_page_actions);
