@@ -2116,11 +2116,18 @@ void FilterEffectsDialog::PrimitiveList::draw_connection(const Cairo::RefPtr<Cai
     cr->save();
 
     int src_id = 0;
-    Gtk::TreeModel::iterator res = find_result(input, attr, src_id, pos);
+    Gtk::TreeModel::iterator res = find_result(input, attr, src_id, pos); 
 
     const bool is_first = input == get_model()->children().begin();
+    const bool is_selected = input == get_selection()->get_selected();
     const bool is_merge = is<SPFeMerge>((SPFilterPrimitive*)(*input)[_columns.primitive]);
     const bool use_default = !res && !is_merge;
+    int arc_radius = 4;
+
+    if (is_selected) {
+        cr->set_line_width(2.5);
+        arc_radius = 6;
+    }
 
     if(res == input || (use_default && is_first)) {
         // Draw straight connection to a standard input
@@ -2139,7 +2146,7 @@ void FilterEffectsDialog::PrimitiveList::draw_connection(const Cairo::RefPtr<Cai
         cr->move_to(x1, y1);
         cr->line_to(end_x, y1);
         cr->stroke();
-        cr->arc(end_x, y1, 4, M_PI / 2, M_PI * 1.5);
+        cr->arc(end_x, y1, arc_radius, M_PI / 2, M_PI * 1.5);
         cr->fill();
     }
     else {
