@@ -28,7 +28,7 @@ default:
 
 #speedup git on runners
 variables:
-  GIT_DEPTH: "10"
+  GIT_DEPTH: "50"
   GIT_SUBMODULE_STRATEGY: recursive
 
 #reusable templates
