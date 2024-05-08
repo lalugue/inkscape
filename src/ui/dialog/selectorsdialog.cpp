@@ -321,6 +321,7 @@ void SelectorsDialog::_showWidgets()
     _paned.pack1(*_style_dialog, Gtk::SHRINK);
     _paned.pack2(_selectors_box, true, true);
     _paned.set_wide_handle(true);
+    _paned.set_size_request(320, -1);
 
     auto const contents = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_VERTICAL);
     UI::pack_start(*contents, _paned, UI::PackOptions::expand_widget);
@@ -334,7 +335,6 @@ void SelectorsDialog::_showWidgets()
     _paned.property_position() = 200;
     _updating = false;
 
-    set_size_request(320, -1);
     set_name("SelectorsAndStyleDialog");
 }
 
