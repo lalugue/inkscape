@@ -84,6 +84,10 @@ void PageManager::removePage(Inkscape::XML::Node *child)
         if (page->getRepr() == child) {
             pages.erase(it);
 
+            if (hasPages() && page->isViewportPage()) {
+                _document->fitToRect(getFirstPage()->getDesktopRect(), {});
+            }
+
             // Reselect because this page is gone.
             if (_selected_page == page) {
                 if (auto next = page->getNextPage()) {
