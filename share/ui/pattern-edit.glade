@@ -549,7 +549,8 @@
               </object>
             </child>
             <child>
-              <object class="GtkButton" id="color-btn">
+              <object class="GtkMenuButton" id="color-btn">
+                <property name="valign">center</property>
                 <property name="receives-default">True</property>
                 <property name="tooltip-text" translatable="yes">Apply color to the current pattern</property>
               </object>

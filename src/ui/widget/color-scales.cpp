@@ -305,6 +305,10 @@ void ColorScales<MODE>::_initUI(bool no_alpha)
         wheel_frame->set_expanded(visible);
         wheel_frame->set_vexpand(visible);
     }
+
+    if (!_color->isEmpty()) {
+        _updateDisplay();
+    }
 }
 
 template <SPColorScalesMode MODE>

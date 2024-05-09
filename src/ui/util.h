@@ -163,7 +163,7 @@ Gtk::Widget* for_each_page(Gtk::Notebook& notebook, Func&& func) {
     return nullptr;
 }
 
-[[nodiscard]] Gtk::Widget *find_widget_by_name(Gtk::Widget &parent, Glib::ustring const &name);
+[[nodiscard]] Gtk::Widget *find_widget_by_name(Gtk::Widget &parent, Glib::ustring const &name, bool visible_only);
 [[nodiscard]] Gtk::Widget *find_focusable_widget(Gtk::Widget &parent);
 [[nodiscard]] bool is_descendant_of(Gtk::Widget const &descendant, Gtk::Widget const &ancestor);
 [[nodiscard]] bool contains_focus(Gtk::Widget &widget);
@@ -249,6 +249,10 @@ void truncate_digits(const Glib::RefPtr<Gtk::TextBuffer>& buffer, int precision)
  * The texture shares data with the surface, so the surface shouldn't modified afterwards.
  */
 Glib::RefPtr<Gdk::Texture> to_texture(Cairo::RefPtr<Cairo::Surface> const &surface);
+
+// Restrict widget's min size (min-width & min-height) to specified minimum to keep it square (when it's centered).
+// Widget has to have a name given with set_name.
+void restrict_minsize_to_square(Gtk::Widget& widget, int min_size_px);
 
 #endif // UI_UTIL_SEEN
 

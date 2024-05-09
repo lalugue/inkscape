@@ -91,6 +91,7 @@ void ColorNotebook::_initUI(bool no_alpha)
     _book = Gtk::make_managed<Gtk::Stack>();
     _book->set_transition_type(Gtk::StackTransitionType::CROSSFADE);
     _book->set_transition_duration(130);
+    _book->set_vhomogeneous(false);
 
     // mode selection switcher widget shows all buttons for color mode selection, side by side
     _switcher = Gtk::make_managed<Gtk::StackSwitcher>();
@@ -117,6 +118,7 @@ void ColorNotebook::_initUI(bool no_alpha)
     _label = Gtk::make_managed<Gtk::Label>();
     _label->set_visible();
     _label->set_xalign(0);
+    _label->set_margin_end(XPAD);
     UI::pack_start(*_buttonbox, *_label, true, true);
     UI::pack_end(*_buttonbox, *_combo, false, false);
     _combo->signal_changed().connect([this](int id){ _setCurrentPage(id, false); });
@@ -131,8 +133,6 @@ void ColorNotebook::_initUI(bool no_alpha)
 
     row++;
 
-    _book->set_margin_start(XPAD);
-    _book->set_margin_end(XPAD);
     _book->set_margin_top(YPAD);
     _book->set_margin_bottom(YPAD);
     _book->set_hexpand();
@@ -185,6 +185,7 @@ void ColorNotebook::_initUI(bool no_alpha)
     gtk_box_append(rgbabox_box, _rgbal);
 
     auto const rgba_entry = Gtk::make_managed<ColorEntry>(_selected_color);
+    rgba_entry->set_max_width_chars(8);
     auto const rgba_entry_widget = rgba_entry->Gtk::Widget::gobj();
     sp_dialog_defocus_on_enter(rgba_entry);
     gtk_box_append(rgbabox_box, rgba_entry_widget);

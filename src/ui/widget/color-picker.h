@@ -15,14 +15,17 @@
 #define SEEN_INKSCAPE_COLOR_PICKER_H
 
 #include "labelled.h"
-
 #include <cstdint>
+#include <glibmm/ustring.h>
+#include <gtkmm/builder.h>
+#include <gtkmm/popover.h>
+#include <gtkmm/widget.h>
 #include <utility>
 
 #include "colors/color.h"
 #include "colors/color-set.h"
 #include "ui/widget/color-preview.h"
-#include <gtkmm/button.h>
+#include <gtkmm/menubutton.h>
 #include <gtkmm/dialog.h>
 #include <sigc++/signal.h>
 
@@ -34,7 +37,7 @@ namespace Inkscape::UI::Widget {
 
 class ColorNotebook;
 
-class ColorPicker : public Gtk::Button {
+class ColorPicker : public Gtk::MenuButton {
 public:
     [[nodiscard]] ColorPicker(Glib::ustring title,
                               Glib::ustring const &tip,
@@ -49,7 +52,8 @@ public:
 
     void setColor(Colors::Color const &);
     void open();
-    void closeWindow();
+    void close();
+    void setTitle(Glib::ustring title);
 
     sigc::connection connectChanged(sigc::slot<void (Colors::Color const &)> slot)
     {
@@ -62,26 +66,20 @@ public:
         return _colors->getAverage();
     }
 
-protected:
+private:
     void _onSelectedColorChanged();
-    void on_clicked() override;
     virtual void on_changed(Colors::Color const &);
+    void _construct();
+    void set_preview(std::uint32_t rgba);
 
-    ColorPreview *_preview = nullptr;
-
+    ColorPreview* _preview = nullptr;
     Glib::ustring _title;
     sigc::signal<void (Colors::Color const &)> _changed_signal;
     bool          _undo     = false;
     bool          _updating = false;
-
-    void setupDialog(Glib::ustring const &title);
-    Gtk::Dialog _colorSelectorDialog;
-
     std::shared_ptr<Colors::ColorSet> _colors;
-
-private:
-    void _construct();
-    void set_preview(std::uint32_t rgba);
+    Gtk::Popover _popup;
+    ColorNotebook* _color_selector = nullptr;
 };
 
 
@@ -105,7 +103,7 @@ public:
 
     void closeWindow()
     {
-        static_cast<ColorPicker *>(getWidget())->closeWindow();
+        static_cast<ColorPicker *>(getWidget())->close();
     }
 
     sigc::connection connectChanged(sigc::slot<void (Colors::Color const &)> slot)

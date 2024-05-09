@@ -604,7 +604,7 @@ Gtk::Widget *SPDesktopWidget::get_toolbar_by_name(const Glib::ustring &name)
 {
     // The name is actually attached to the GtkGrid that contains
     // the toolbar, so we need to get the grid first
-    auto widget = Inkscape::UI::find_widget_by_name(*tool_toolbars, name);
+    auto widget = Inkscape::UI::find_widget_by_name(*tool_toolbars, name, false);
     auto grid = dynamic_cast<Gtk::Grid*>(widget);
 
     if (!grid) {
@@ -624,7 +624,7 @@ void
 SPDesktopWidget::setToolboxFocusTo (const gchar* label)
 {
     // Look for a named widget
-    auto hb = Inkscape::UI::find_widget_by_name(*tool_toolbars, label);
+    auto hb = Inkscape::UI::find_widget_by_name(*tool_toolbars, label, true);
     if (hb) {
         hb->grab_focus();
     }
@@ -634,7 +634,7 @@ void
 SPDesktopWidget::setToolboxAdjustmentValue (gchar const *id, double value)
 {
     // Look for a named widget
-    auto hb = Inkscape::UI::find_widget_by_name(*tool_toolbars, id);
+    auto hb = Inkscape::UI::find_widget_by_name(*tool_toolbars, id, true);
     if (hb) {
         auto sb = dynamic_cast<Inkscape::UI::Widget::SpinButton *>(hb);
         auto a = sb->get_adjustment();
@@ -649,7 +649,7 @@ bool
 SPDesktopWidget::isToolboxButtonActive(char const * const id) const
 {
     auto const widget = const_cast<Gtk::Widget const *>(
-        Inkscape::UI::find_widget_by_name(*tool_toolbars, id));
+        Inkscape::UI::find_widget_by_name(*tool_toolbars, id, true));
 
     if (!widget) {
         //g_message( "Unable to locate item for {%s}", id );
@@ -740,7 +740,7 @@ void SPDesktopWidget::namedviewModified(SPObject *obj, guint flags)
                 continue;
 
             auto const tracker = dynamic_cast<Inkscape::UI::Widget::ComboToolItem*>
-                                             (Inkscape::UI::find_widget_by_name(*j, "unit-tracker"));
+                                             (Inkscape::UI::find_widget_by_name(*j, "unit-tracker", false));
             if (tracker) { // it's null when inkscape is first opened
                 if (auto ptr = static_cast<UnitTracker*>(tracker->get_data(Glib::Quark("unit-tracker")))) {
                     ptr->setActiveUnit(nv->display_units);

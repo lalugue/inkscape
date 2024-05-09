@@ -335,7 +335,7 @@ void ObjectProperties::update_entries()
     _cb_lock.set_active(item && item->isLocked());           /* Sensitive */
     _cb_hide.set_active(item && item->isExplicitlyHidden()); /* Hidden */
     _highlight_color.setColor(item ? item->highlight_color() : Colors::Color(0x000000ff));
-    _highlight_color.closeWindow();
+    _highlight_color.close();
     // hide aspect ratio checkbox for an image element, images have their own panel in object attributes;
     // apart from <image> only <marker>, <patten>, and <view> support this attribute, but we don't handle them
     // in this dialog today; I'm leaving the code, as we may handle them in the future

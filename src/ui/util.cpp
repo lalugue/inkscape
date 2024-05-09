@@ -19,6 +19,7 @@
 #include <glibmm/i18n.h>
 #include <glibmm/regex.h>
 #include <gtkmm/adjustment.h>
+#include <gtkmm/cssprovider.h>
 #include <gtkmm/image.h>
 #include <gtkmm/label.h>
 #include <gtkmm/messagedialog.h>
@@ -175,10 +176,13 @@ Gtk::Widget &get_nth_child(Gtk::Widget &widget, std::size_t const index)
  *
  * \return The specified child widget, or nullptr if it cannot be found
  */
-Gtk::Widget *find_widget_by_name(Gtk::Widget &parent, Glib::ustring const &name)
+Gtk::Widget *find_widget_by_name(Gtk::Widget &parent, Glib::ustring const &name, bool visible_only)
 {
-    return for_each_descendant(parent, [&](auto const &widget)
-          { return widget.get_name() == name ? ForEachResult::_break : ForEachResult::_continue; });
+    return for_each_descendant(parent, [&](auto const &widget) {
+        if (visible_only && !widget.get_visible()) return ForEachResult::_skip;
+
+        return widget.get_name().raw() == name.raw() ? ForEachResult::_break : ForEachResult::_continue;
+    });
 }
 
 /**
@@ -523,6 +527,18 @@ Glib::RefPtr<Gdk::Texture> to_texture(Cairo::RefPtr<Cairo::Surface> const &surfa
     g_bytes_unref(bytes);
 
     return Glib::wrap(texture);
+}
+
+void restrict_minsize_to_square(Gtk::Widget& widget, int min_size_px) {
+    auto name = widget.get_name();
+    assert(!name.empty());
+    auto css = Gtk::CssProvider::create();
+    std::ostringstream ost;
+    ost << "#" << name << " {min-width:" << min_size_px << "px; min-height:" << min_size_px << "px;}";
+    css->load_from_string(ost.str());
+    auto style_context = widget.get_style_context();
+    // load with a priority higher than that of the "style.css"
+    style_context->add_provider(css, GTK_STYLE_PROVIDER_PRIORITY_APPLICATION + 2);
 }
 
 /*

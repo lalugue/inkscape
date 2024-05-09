@@ -450,7 +450,7 @@
                                           <object class="GtkBox">
                                             <property name="valign">center</property>
                                             <child>
-                                              <object class="GtkButton" id="si_backgnd">
+                                              <object class="GtkMenuButton" id="si_backgnd">
                                                 <property name="focusable">True</property>
                                                 <property name="halign">start</property>
                                               </object>
@@ -726,7 +726,7 @@
                                       </object>
                                     </child>
                                     <child>
-                                      <object class="GtkButton" id="b_backgnd">
+                                      <object class="GtkMenuButton" id="b_backgnd">
                                         <property name="focusable">True</property>
                                         <property name="halign">start</property>
                                       </object>

@@ -555,9 +555,9 @@ private:
     MathSpinButton &_viewbox_y;
     MathSpinButton &_viewbox_width;
     MathSpinButton &_viewbox_height;
-    ColorPicker &_backgnd_color_picker;
-    ColorPicker &_border_color_picker;
-    ColorPicker &_desk_color_picker;
+    ColorPicker& _backgnd_color_picker;
+    ColorPicker& _border_color_picker;
+    ColorPicker& _desk_color_picker;
     std::vector<PaperSize> _page_sizes;
     Glib::RefPtr<Gio::SimpleAction> _template_action;
     Gtk::MenuButton &_templates_menu_button;

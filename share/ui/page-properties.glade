@@ -144,8 +144,10 @@
             </child>
             <child>
               <object class="GtkCheckButton" id="page-landscape">
+                <property name="halign">end</property>
+                <property name="hexpand">True</property>
                 <property name="focusable">True</property>
-                <property name="margin-end">5</property>
+                <property name="margin-end">10</property>
                 <property name="active">False</property>
                 <property name="group">page-portrait</property>
                 <property name="child">
@@ -159,7 +161,7 @@
             <child>
               <object class="GtkCheckButton" id="page-portrait">
                 <property name="focusable">True</property>
-                <property name="margin-end">5</property>
+                <property name="margin-end">0</property>
                 <property name="active">True</property>
                 <property name="child">
                   <object class="GtkImage" id="image1">
@@ -626,7 +628,7 @@ SVG element positions are expressed in user units.</property>
             <property name="column-spacing">4</property>
             <property name="column-homogeneous">True</property>
             <child>
-              <object class="GtkButton" id="background-color">
+              <object class="GtkMenuButton" id="background-color">
                 <property name="focusable">True</property>
                 <property name="receives-default">True</property>
                 <property name="tooltip-text" translatable="yes">Page background color used during editing and exporting</property>
@@ -638,7 +640,7 @@ SVG element positions are expressed in user units.</property>
               </object>
             </child>
             <child>
-              <object class="GtkButton" id="border-color">
+              <object class="GtkMenuButton" id="border-color">
                 <property name="focusable">True</property>
                 <property name="receives-default">True</property>
                 <property name="tooltip-text" translatable="yes">Page border and drop shadow color</property>
@@ -650,7 +652,7 @@ SVG element positions are expressed in user units.</property>
               </object>
             </child>
             <child>
-              <object class="GtkButton" id="desk-color">
+              <object class="GtkMenuButton" id="desk-color">
                 <property name="focusable">True</property>
                 <property name="receives-default">True</property>
                 <property name="tooltip-text" translatable="yes">Desk background color surrounding pages</property>

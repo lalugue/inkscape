@@ -400,7 +400,7 @@ void PatternEditor::update_widgets_from_pattern(Glib::RefPtr<PatternItem>& patte
         _color_picker.setColor(Colors::Color(0x0));
         _color_picker.set_sensitive(false);
         _color_label.set_opacity(0.6);
-        _color_picker.closeWindow();
+        _color_picker.close();
     }
 }
 

@@ -1250,10 +1250,32 @@ popover.popup-menu contents {
     min-height:  8px;
 }
 
+#ColorPicker {
+    padding: 0;
+    min-width: 24px;
+    min-height: 24px;
+}
+#ColorPicker > button {
+    border-width: 0;
+    padding: 0;
+}
+#ColorPicker > .toggle {
+    border-width: 0;
+    padding: 0;
+}
+
 /* ColorPreview */
 #ColorPreview {
+    min-width : 16px;
+    min-height: 16px;
+}
+#ColorPreview.simple {
     min-width : 32px;
     min-height: 12px;
+}
+#ColorPreview:hover:not(.simple) {
+    border-radius: 3px;
+    border: solid @theme_selected_bg_color 1px;
 }
 
 /* GradientImage */

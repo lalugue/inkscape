@@ -921,9 +921,9 @@ void PrefColorPicker::init(Glib::ustring const &label, Glib::ustring const &pref
                            std::string const &default_color)
 {
     _prefs_path = prefs_path;
-    _title = label;
+    setTitle(label);
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-    this->setColor(prefs->getColor(_prefs_path, default_color));
+    setColor(prefs->getColor(_prefs_path, default_color));
 }
 
 void PrefColorPicker::on_changed(Inkscape::Colors::Color const &color)
