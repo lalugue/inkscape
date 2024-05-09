@@ -487,11 +487,23 @@ SPStop *GrDrag::addStopNearPoint(SPItem *item, Geom::Point mouse_p, double toler
                 next_stop = next_stop->getNextStop();
                 i++;
             }
-            if (!next_stop) {
+            if (vector->getStopCount() == 1) {
+                // Handle single stop vectors separately.
+                auto newstop = sp_gradient_add_stop_at(vector, new_stop_offset);
+                gradient->ensureVector();
+                updateDraggers();
+
+                // so that it does not automatically update draggers in idle loop, as this would deselect
+                local_change = true;
+
+                // select the newly created stop
+                selectByStop(newstop);
+
+                return newstop;
+            } else if (!next_stop) {
                 // logical error: the endstop should have offset 1 and should always be more than this offset here
                 return nullptr;
             }
-
 
             SPStop *newstop = sp_vector_add_stop (vector, prev_stop, next_stop, new_stop_offset);
             gradient->ensureVector();
@@ -1136,8 +1148,33 @@ static void gr_knot_doubleclicked_handler(SPKnot */*knot*/, guint /*state*/, gpo
 
     dragger->point_original = dragger->point;
 
-    if (dragger->draggables.empty())
+    if (dragger->draggables.empty()) {
         return;
+    } else {
+        auto drag = dragger->parent;
+        auto draggable = dragger->draggables[0];
+        auto gradient = getGradient(draggable->item, draggable->fill_or_stroke);
+        auto vector = sp_gradient_get_forked_vector_if_necessary(gradient, false);
+
+        // Treat single stop gradients separately.
+        if (vector->getStopCount() == 1) {
+            auto first_stop = vector->getFirstStop();
+            bool is_offset_zero = first_stop->offset < 1e-4;
+            bool is_first_dragger = dragger == drag->draggers[0];
+
+            // Do not add new stop if the double clicked dragger already has a stop.
+            if ((is_offset_zero && is_first_dragger) || (!is_offset_zero && !is_first_dragger)) {
+                return;
+            }
+
+            auto newstop = sp_gradient_add_stop(vector, first_stop);
+            gradient->ensureVector();
+            drag->updateDraggers();
+            drag->local_change = true;
+            drag->selectByStop(newstop);
+            DocumentUndo::done(gradient->document, _("Add gradient stop"), INKSCAPE_ICON("color-gradient"));
+        }
+    }
 }
 
 /**

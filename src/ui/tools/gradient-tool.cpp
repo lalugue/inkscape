@@ -259,6 +259,24 @@ static auto get_stop_intervals(GrDrag *drag)
 
 void GradientTool::add_stops_between_selected_stops()
 {
+    if (_grdrag->hasSelection()) {
+        auto dragger = *_grdrag->selected.begin();
+        auto draggable = dragger->draggables[0];
+        auto gradient = getGradient(draggable->item, draggable->fill_or_stroke);
+        auto vector = sp_gradient_get_forked_vector_if_necessary(gradient, false);
+
+        // Treat single stop gradients separately.
+        if (vector->getStopCount() == 1) {
+            auto newstop = sp_gradient_add_stop(vector, vector->getFirstStop());
+            gradient->ensureVector();
+            _grdrag->updateDraggers();
+            _grdrag->local_change = true;
+            _grdrag->selectByStop(newstop);
+            DocumentUndo::done(gradient->document, _("Add gradient stop"), INKSCAPE_ICON("color-gradient"));
+            return;
+        }
+    }
+
     auto ret = get_stop_intervals(_grdrag);
 
     if (ret.these_stops.empty() && _grdrag->numSelected() == 1) {
