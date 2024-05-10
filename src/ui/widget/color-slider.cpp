@@ -87,7 +87,6 @@ static bool get_constrained(Gdk::ModifierType const state)
 
 static double get_value_at(Gtk::Widget const &self, double const x, double const y)
 {
-
     constexpr auto cx = 0; // formerly held CSS padding, now Box handles that
     auto const cw = self.get_width() - 2 * cx;
     return CLAMP((x - cx) / cw, 0.0, 1.0);
@@ -222,13 +221,23 @@ void ColorSlider::setBackground(guint dark, guint light, guint size)
 void ColorSlider::draw_func(Cairo::RefPtr<Cairo::Context> const &cr,
                             int const width, int const height)
 {
-    // padding/carea are no longer used/useful, just kept to minimise code diff
-    static Gtk::Border const padding{};
     auto const scale = get_scale_factor();
     Gdk::Rectangle const carea{0, 0, width * scale, height * scale};
 
-    // changing scale to draw pixmap at display resolution
+    // save before applying clipping
     cr->save();
+    {
+        // round rect clipping path
+        double x = 0, y = 0, w = width, h = height;
+        double radius = 3;
+        cr->arc(x + w - radius, y + radius, radius, -M_PI_2, 0);
+        cr->arc(x + w - radius, y + h - radius, radius, 0, M_PI_2);
+        cr->arc(x + radius, y + h - radius, radius, M_PI_2, M_PI);
+        cr->arc(x + radius, y + radius, radius, M_PI, 3*M_PI_2);
+        cr->clip();
+    }
+
+    // changing scale to draw pixmap at display resolution
     cr->scale(1.0 / scale, 1.0 / scale);
 
     if (_map) {
@@ -291,30 +300,39 @@ void ColorSlider::draw_func(Cairo::RefPtr<Cairo::Context> const &cr,
             }
         }
     }
-
+    // unclip, unscale
     cr->restore();
 
     /* Draw arrow */
     gint x = (int)(_value * (carea.get_width() / scale) - ARROW_SIZE / 2 + carea.get_x() / scale);
-    gint y1 = carea.get_y() / scale;
-    gint y2 = carea.get_y() / scale + carea.get_height() / scale - 1;
-    cr->set_line_width(2.0);
+    gint y1 = carea.get_y() / scale - 1;
+    gint y2 = carea.get_y() / scale + carea.get_height() / scale;
 
     // Define top arrow
-    cr->move_to(x - 0.5, y1 + 0.5);
-    cr->line_to(x + ARROW_SIZE - 0.5, y1 + 0.5);
-    cr->line_to(x + (ARROW_SIZE - 1) / 2.0, y1 + ARROW_SIZE / 2.0 + 0.5);
-    cr->close_path();
+    auto top = [&](double dx){
+        cr->move_to(x - 0.5 - dx, y1 + 0.5);
+        cr->line_to(x + ARROW_SIZE - 0.5 + dx, y1 + 0.5);
+        cr->line_to(x + (ARROW_SIZE - 1) / 2.0, y1 + ARROW_SIZE / 2.0 + 0.5 + dx);
+        cr->close_path();
+    };
+    top(1.5);
+    cr->set_source_rgb(0.0, 0.0, 0.0);
+    cr->fill();
+    top(0);
+    cr->set_source_rgb(1.0, 1.0, 1.0);
+    cr->fill();
 
     // Define bottom arrow
-    cr->move_to(x - 0.5, y2 + 0.5);
-    cr->line_to(x + ARROW_SIZE - 0.5, y2 + 0.5);
-    cr->line_to(x + (ARROW_SIZE - 1) / 2.0, y2 - ARROW_SIZE / 2.0 + 0.5);
-    cr->close_path();
-
-    // Render both arrows
+    auto down = [&](double dx){
+        cr->move_to(x - 0.5 - dx, y2 + 0.5);
+        cr->line_to(x + ARROW_SIZE - 0.5 + dx, y2 + 0.5);
+        cr->line_to(x + (ARROW_SIZE - 1) / 2.0, y2 - ARROW_SIZE / 2.0 + 0.5 - dx);
+        cr->close_path();
+    };
+    down(1.5);
     cr->set_source_rgb(0.0, 0.0, 0.0);
-    cr->stroke_preserve();
+    cr->fill();
+    down(0);
     cr->set_source_rgb(1.0, 1.0, 1.0);
     cr->fill();
 }
