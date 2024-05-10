@@ -666,7 +666,7 @@
                                     <property name="sensitive">False</property>
                                     <property name="alignment">right</property>
                                     <property name="scale">0.90</property>
-                                    <property name="text">Emergency Save</property>
+                                    <property name="text" translatable="yes" context="Welcome dialog">Emergency Save</property>
                                   </object>
                                   <attributes>
                                     <attribute name="visible">3</attribute>
