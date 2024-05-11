@@ -104,7 +104,7 @@ StarToolbar::StarToolbar(SPDesktop *desktop)
         .signal_clicked()
         .connect(sigc::mem_fun(*this, &StarToolbar::defaults));
 
-    _spoke_item.set_visible(!is_flat_sided);
+    _spoke_box.set_visible(!is_flat_sided);
 }
 
 void StarToolbar::setup_derived_spin_button(UI::Widget::SpinButton &btn, Glib::ustring const &name,
@@ -324,7 +324,7 @@ void StarToolbar::defaults()
 
     _flat_item_buttons[flat ? 0 : 1]->set_active();
 
-    _spoke_item.set_visible(!flat);
+    _spoke_box.set_visible(!flat);
 
     if (_magnitude_item.get_adjustment()->get_value() == mag) {
         // Ensure handler runs even if value not changed, to reset inner handle.
@@ -404,7 +404,7 @@ void StarToolbar::notifyAttributeChanged(Inkscape::XML::Node &repr, GQuark name_
 
     bool isFlatSided = Preferences::get()->getBool("/tools/shapes/star/isflatsided", false);
     auto mag_adj = _magnitude_item.get_adjustment();
-    auto spoke_adj = _magnitude_item.get_adjustment();
+    auto spoke_adj = _spoke_item.get_adjustment();
 
     if (!strcmp(name, "inkscape:randomized")) {
         double randomized = repr.getAttributeDouble("inkscape:randomized", 0.0);
@@ -416,11 +416,11 @@ void StarToolbar::notifyAttributeChanged(Inkscape::XML::Node &repr, GQuark name_
         char const *flatsides = repr.attribute("inkscape:flatsided");
         if (flatsides && !strcmp(flatsides,"false")) {
             _flat_item_buttons[1]->set_active();
-            _spoke_item.set_visible(true);
+            _spoke_box.set_visible(true);
             mag_adj->set_lower(2);
         } else {
             _flat_item_buttons[0]->set_active();
-            _spoke_item.set_visible(false);
+            _spoke_box.set_visible(false);
             mag_adj->set_lower(3);
         }
     } else if (!strcmp(name, "sodipodi:r1") || !strcmp(name, "sodipodi:r2") && !isFlatSided) {
