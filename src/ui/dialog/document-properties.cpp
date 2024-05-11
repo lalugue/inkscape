@@ -1951,6 +1951,7 @@ GridWidget::GridWidget(SPGrid *grid)
     buttons->append(*_delete);
     buttons->append(*_options);
     _options->set_popover(*_opt_items);
+    _options->set_icon_name("gear");
     auto items = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::VERTICAL);
     items->set_spacing(SPACE);
     items->set_margin(POPUP_MARGIN);
