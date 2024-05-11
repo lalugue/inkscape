@@ -760,8 +760,7 @@ button.square-button image {
 }
 
 .toolbar {
-    margin-top: 4px;
-    margin-bottom: 4px;
+    margin: 4px;
 }
 
 .toolbar > * {
