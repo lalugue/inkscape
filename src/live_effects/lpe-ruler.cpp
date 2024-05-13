@@ -41,8 +41,14 @@ LPERuler::LPERuler(LivePathEffectObject *lpeobject) :
     unit(_("Unit:"), _("Unit"), "unit", &wr, this),
     mark_length(_("Ma_jor length:"), _("Length of major ruler marks"), "mark_length", &wr, this, 14.0),
     minor_mark_length(_("Mino_r length:"), _("Length of minor ruler marks"), "minor_mark_length", &wr, this, 7.0),
-    minor_mark_gap(_("Minor mark _gap:"), _("Space between path and minor ruler mark, % of mark length"), "minor_mark_gap", &wr, this, 0.0),
-    major_mark_gap(_("Major mar_k gap:"), _("Space between path and major ruler mark, % of mark length"), "major_mark_gap", &wr, this, 0.0),
+    minor_mark_gap(_("Minor mark _gap:"),
+                   // xgettext:no-c-format
+                   _("Space between path and minor ruler mark, % of mark length"),
+                   "minor_mark_gap", &wr, this, 0.0),
+    major_mark_gap(_("Major mar_k gap:"),
+                   // xgettext:no-c-format
+                   _("Space between path and major ruler mark, % of mark length"),
+                   "major_mark_gap", &wr, this, 0.0),
     major_mark_steps(_("Major steps_:"), _("Draw a major mark every ... steps"), "major_mark_steps", &wr, this, 5),
     mark_angle(_("Mark angle:"), _("Rotate marks (-180° to 180°)"), "mark_angle", &wr, this, 0.0),
     shift(_("Shift marks _by:"), _("Shift marks by this many steps"), "shift", &wr, this, 0),
