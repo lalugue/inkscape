@@ -923,7 +923,20 @@ bool Shortcuts::_add_shortcut(Glib::ustring const &detailed_action_name, Glib::u
                               bool cache_action_names)
 {
     // Format has changed between Gtk3 and Gtk4. Pass through xxx to standardize form.
-    Gtk::AccelKey key(trigger_string);
+    auto str = trigger_string.raw();
+
+#ifdef __APPLE__
+    // map <primary> modifier to <command> modifier on macOS, as gtk4 backend does not do that for us;
+    // this will restore predefined Inkscape shortcuts, so they work like they used to in older versions
+    static std::string const primary = "<primary>";
+    auto const pos = str.find(primary);
+    if (pos != std::string::npos) {
+        str.replace(pos, pos + primary.length(), "<meta>");
+    }
+#endif
+
+    Gtk::AccelKey key(str);
+
     auto trigger_normalized = key.get_abbrev();
 
     // Check if action actually exists. Need to compare action names without values...
