@@ -129,7 +129,7 @@ TextEdit::TextEdit()
     if (_use_browser) {
         // hide settings and filter box
         settings_and_filters_box.set_visible(false);
-        font_count_label.set_track_visited_links(false);
+        font_count_label.set_visible(false);
         preview_label.set_visible(false);
     }
 
