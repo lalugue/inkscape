@@ -58,13 +58,23 @@
         <property name="can-focus">True</property>
         <property name="focus-on-click">False</property>
         <property name="receives-default">True</property>
-        <property name="relief">none</property>
         <property name="popover">popover1</property>
         <child>
-          <object class="GtkImage" id="image18">
-            <property name="visible">True</property>
-            <property name="icon-name">go-down</property>
-          </object>
+	  <object class="GtkBox">
+	    <property name="visible">True</property>
+	    <child>
+              <object class="GtkImage">
+		<property name="visible">True</property>
+		<property name="icon-name">edit-select-all</property>
+              </object>
+	    </child>
+	    <child>
+              <object class="GtkImage">
+		<property name="visible">True</property>
+		<property name="icon-name">pan-down</property>
+              </object>
+	    </child>
+	  </object>
         </child>
       </object>
     </child>
@@ -86,9 +96,6 @@
           </object>
         </child>
       </object>
-      <packing>
-        <property name="position">1</property>
-      </packing>
     </child>
     <child>
       <object class="GtkButton">
@@ -107,9 +114,6 @@
           </object>
         </child>
       </object>
-      <packing>
-        <property name="position">2</property>
-      </packing>
     </child>
     <child>
       <object class="GtkButton" id="deselect_btn">
@@ -129,9 +133,6 @@
           </object>
         </child>
       </object>
-      <packing>
-        <property name="position">3</property>
-      </packing>
     </child>
     <child>
       <object class="GtkToggleButton" id="_select_touch_btn">
@@ -149,17 +150,11 @@
           </object>
         </child>
       </object>
-      <packing>
-        <property name="position">4</property>
-      </packing>
     </child>
     <child>
       <object class="GtkSeparator">
         <property name="visible">True</property>
       </object>
-      <packing>
-        <property name="position">5</property>
-      </packing>
     </child>
     <child>
       <object class="GtkButton" id="rotate_left_btn">
@@ -178,9 +173,6 @@
           </object>
         </child>
       </object>
-      <packing>
-        <property name="position">6</property>
-      </packing>
     </child>
     <child>
       <object class="GtkButton" id="rotate_right_btn">
@@ -199,9 +191,6 @@
           </object>
         </child>
       </object>
-      <packing>
-        <property name="position">7</property>
-      </packing>
     </child>
     <child>
       <object class="GtkButton" id="flip_horizontal_btn">
@@ -220,9 +209,6 @@
           </object>
         </child>
       </object>
-      <packing>
-        <property name="position">8</property>
-      </packing>
     </child>
     <child>
       <object class="GtkButton" id="flip_vertical_btn">
@@ -241,17 +227,11 @@
           </object>
         </child>
       </object>
-      <packing>
-        <property name="position">9</property>
-      </packing>
     </child>
     <child>
       <object class="GtkSeparator">
         <property name="visible">True</property>
       </object>
-      <packing>
-        <property name="position">10</property>
-      </packing>
     </child>
     <child>
       <object class="GtkMenuButton" id="menu_btn2">
@@ -259,18 +239,25 @@
         <property name="can-focus">True</property>
         <property name="focus-on-click">False</property>
         <property name="receives-default">True</property>
-        <property name="relief">none</property>
         <property name="popover">popover2</property>
         <child>
-          <object class="GtkImage" id="image19">
-            <property name="visible">True</property>
-            <property name="icon-name">go-down</property>
-          </object>
+	  <object class="GtkBox">
+	    <property name="visible">True</property>
+	    <child>
+              <object class="GtkImage">
+		<property name="visible">True</property>
+		<property name="icon-name">selection-top</property>
+              </object>
+	    </child>
+	    <child>
+              <object class="GtkImage">
+		<property name="visible">True</property>
+		<property name="icon-name">pan-down</property>
+              </object>
+	    </child>
+	  </object>
         </child>
       </object>
-      <packing>
-        <property name="position">11</property>
-      </packing>
     </child>
     <child>
       <object class="GtkButton" id="raise_to_top_btn">
@@ -290,9 +277,6 @@
           </object>
         </child>
       </object>
-      <packing>
-        <property name="position">12</property>
-      </packing>
     </child>
     <child>
       <object class="GtkButton" id="raise_one_step_btn">
@@ -312,9 +296,6 @@
           </object>
         </child>
       </object>
-      <packing>
-        <property name="position">13</property>
-      </packing>
     </child>
     <child>
       <object class="GtkButton" id="lower_one_step_btn">
@@ -334,9 +315,6 @@
           </object>
         </child>
       </object>
-      <packing>
-        <property name="position">14</property>
-      </packing>
     </child>
     <child>
       <object class="GtkButton" id="lower_to_bottom_btn">
@@ -356,93 +334,11 @@
           </object>
         </child>
       </object>
-      <packing>
-        <property name="position">15</property>
-      </packing>
     </child>
     <child>
       <object class="GtkSeparator">
         <property name="visible">True</property>
       </object>
-      <packing>
-        <property name="position">16</property>
-      </packing>
-    </child>
-    <child>
-      <object class="GtkToggleButton" id="_transform_stroke_btn">
-        <property name="visible">True</property>
-        <property name="can-focus">True</property>
-        <property name="tooltip-text" translatable="yes">When scaling objects, scale the stroke width by the same proportion</property>
-        <property name="relief">none</property>
-        <child>
-          <object class="GtkImage" id="image13">
-            <property name="visible">True</property>
-            <property name="icon-name">transform-affect-stroke</property>
-          </object>
-        </child>
-      </object>
-      <packing>
-        <property name="position">17</property>
-      </packing>
-    </child>
-    <child>
-      <object class="GtkToggleButton" id="_transform_corners_btn">
-        <property name="visible">True</property>
-        <property name="can-focus">True</property>
-        <property name="tooltip-text" translatable="yes">When scaling rectangles, scale the radii of rounded corners</property>
-        <property name="relief">none</property>
-        <child>
-          <object class="GtkImage" id="image14">
-            <property name="visible">True</property>
-            <property name="icon-name">transform-affect-rounded-corners</property>
-          </object>
-        </child>
-      </object>
-      <packing>
-        <property name="position">18</property>
-      </packing>
-    </child>
-    <child>
-      <object class="GtkToggleButton" id="_transform_gradient_btn">
-        <property name="visible">True</property>
-        <property name="can-focus">True</property>
-        <property name="tooltip-text" translatable="yes">Move gradients (in fill or stroke) along with the objects</property>
-        <property name="relief">none</property>
-        <child>
-          <object class="GtkImage" id="image15">
-            <property name="visible">True</property>
-            <property name="icon-name">transform-affect-gradient</property>
-          </object>
-        </child>
-      </object>
-      <packing>
-        <property name="position">19</property>
-      </packing>
-    </child>
-    <child>
-      <object class="GtkToggleButton" id="_transform_pattern_btn">
-        <property name="visible">True</property>
-        <property name="can-focus">True</property>
-        <property name="tooltip-text" translatable="yes">Move patterns (in fill or stroke) along with the objects</property>
-        <property name="relief">none</property>
-        <child>
-          <object class="GtkImage" id="image16">
-            <property name="visible">True</property>
-            <property name="icon-name">transform-affect-pattern</property>
-          </object>
-        </child>
-      </object>
-      <packing>
-        <property name="position">20</property>
-      </packing>
-    </child>
-    <child>
-      <object class="GtkSeparator">
-        <property name="visible">True</property>
-      </object>
-      <packing>
-        <property name="position">21</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="x_box">
@@ -463,17 +359,11 @@
             <property name="climb-rate">1.0</property>
             <property name="digits">3</property>
           </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
         </child>
         <style>
           <class name="context_item"/>
         </style>
       </object>
-      <packing>
-        <property name="position">22</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="y_box">
@@ -495,17 +385,11 @@
             <property name="climb-rate">1.0</property>
             <property name="digits">3</property>
           </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
         </child>
         <style>
           <class name="context_item"/>
         </style>
       </object>
-      <packing>
-        <property name="position">23</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="w_box">
@@ -527,17 +411,11 @@
             <property name="climb-rate">1.0</property>
             <property name="digits">3</property>
           </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
         </child>
         <style>
           <class name="context_item"/>
         </style>
       </object>
-      <packing>
-        <property name="position">24</property>
-      </packing>
     </child>
     <child>
       <object class="GtkToggleButton" id="_lock_btn">
@@ -552,9 +430,6 @@
           </object>
         </child>
       </object>
-      <packing>
-        <property name="position">25</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="h_box">
@@ -576,25 +451,77 @@
             <property name="climb-rate">1.0</property>
             <property name="digits">3</property>
           </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
         </child>
         <style>
           <class name="context_item"/>
         </style>
       </object>
-      <packing>
-        <property name="position">26</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="unit_menu_box">
         <property name="visible">True</property>
       </object>
-      <packing>
-        <property name="position">27</property>
-      </packing>
+    </child>
+    <child>
+      <object class="GtkSeparator">
+        <property name="visible">True</property>
+      </object>
+    </child>
+    <child>
+      <object class="GtkToggleButton" id="_transform_stroke_btn">
+        <property name="visible">True</property>
+        <property name="can-focus">True</property>
+        <property name="tooltip-text" translatable="yes">When scaling objects, scale the stroke width by the same proportion</property>
+        <property name="relief">none</property>
+        <child>
+          <object class="GtkImage" id="image13">
+            <property name="visible">True</property>
+            <property name="icon-name">transform-affect-stroke</property>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="GtkToggleButton" id="_transform_corners_btn">
+        <property name="visible">True</property>
+        <property name="can-focus">True</property>
+        <property name="tooltip-text" translatable="yes">When scaling rectangles, scale the radii of rounded corners</property>
+        <property name="relief">none</property>
+        <child>
+          <object class="GtkImage" id="image14">
+            <property name="visible">True</property>
+            <property name="icon-name">transform-affect-rounded-corners</property>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="GtkToggleButton" id="_transform_gradient_btn">
+        <property name="visible">True</property>
+        <property name="can-focus">True</property>
+        <property name="tooltip-text" translatable="yes">Move gradients (in fill or stroke) along with the objects</property>
+        <property name="relief">none</property>
+        <child>
+          <object class="GtkImage" id="image15">
+            <property name="visible">True</property>
+            <property name="icon-name">transform-affect-gradient</property>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="GtkToggleButton" id="_transform_pattern_btn">
+        <property name="visible">True</property>
+        <property name="can-focus">True</property>
+        <property name="tooltip-text" translatable="yes">Move patterns (in fill or stroke) along with the objects</property>
+        <property name="relief">none</property>
+        <child>
+          <object class="GtkImage" id="image16">
+            <property name="visible">True</property>
+            <property name="icon-name">transform-affect-pattern</property>
+          </object>
+        </child>
+      </object>
     </child>
     <style>
       <class name="toolbar"/>

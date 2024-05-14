@@ -98,13 +98,23 @@
         <property name="can-focus">True</property>
         <property name="focus-on-click">False</property>
         <property name="receives-default">True</property>
-        <property name="relief">none</property>
         <property name="popover">popover1</property>
         <child>
-          <object class="GtkImage" id="image5">
-            <property name="visible">True</property>
-            <property name="icon-name">go-down</property>
-          </object>
+	  <object class="GtkBox">
+	    <property name="visible">True</property>
+	    <child>
+              <object class="GtkLabel">
+		<property name="visible">True</property>
+		<property name="label" translatable="yes">Options</property>
+              </object>
+	    </child>
+	    <child>
+              <object class="GtkImage">
+		<property name="visible">True</property>
+		<property name="icon-name">pan-down</property>
+              </object>
+	    </child>
+	  </object>
         </child>
       </object>
     </child>
@@ -117,9 +127,6 @@
           <class name="tag1"/>
         </style>
       </object>
-      <packing>
-        <property name="position">1</property>
-      </packing>
     </child>
     <child>
       <object class="GtkButton" id="profile_edit_btn">
@@ -138,36 +145,11 @@
           </object>
         </child>
       </object>
-      <packing>
-        <property name="position">2</property>
-      </packing>
     </child>
     <child>
       <object class="GtkSeparator">
         <property name="visible">True</property>
       </object>
-      <packing>
-        <property name="position">3</property>
-      </packing>
-    </child>
-    <child>
-      <object class="GtkMenuButton" id="menu_btn2">
-        <property name="visible">True</property>
-        <property name="can-focus">True</property>
-        <property name="focus-on-click">False</property>
-        <property name="receives-default">True</property>
-        <property name="relief">none</property>
-        <property name="popover">popover2</property>
-        <child>
-          <object class="GtkImage" id="image6">
-            <property name="visible">True</property>
-            <property name="icon-name">go-down</property>
-          </object>
-        </child>
-      </object>
-      <packing>
-        <property name="position">4</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="width_box">
@@ -184,34 +166,19 @@
             <property name="name">calligraphy-width</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
-            <property name="width-chars">6</property>
+            <property name="width-chars">7</property>
             <property name="text">0.000</property>
             <property name="adjustment">_width_adj</property>
             <property name="climb-rate">1</property>
             <property name="digits">3</property>
           </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
         </child>
-        <style>
-          <class name="tag2"/>
-        </style>
       </object>
-      <packing>
-        <property name="position">5</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="unit_menu_box">
         <property name="visible">True</property>
-        <style>
-          <class name="tag2"/>
-        </style>
       </object>
-      <packing>
-        <property name="position">6</property>
-      </packing>
     </child>
     <child>
       <object class="GtkToggleButton" id="usepressure_btn">
@@ -220,9 +187,6 @@
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Use the pressure of the input device to alter the width of the pen</property>
         <property name="relief">none</property>
-        <style>
-          <class name="tag2"/>
-        </style>
         <child>
           <object class="GtkImage" id="image2">
             <property name="visible">True</property>
@@ -230,9 +194,6 @@
           </object>
         </child>
       </object>
-      <packing>
-        <property name="position">7</property>
-      </packing>
     </child>
     <child>
       <object class="GtkToggleButton" id="tracebackground_btn">
@@ -240,9 +201,6 @@
         <property name="can-focus">True</property>
         <property name="tooltip-text" translatable="yes">Trace the lightness of the background by the width of the pen (white - minimum width, black - maximum width)</property>
         <property name="relief">none</property>
-        <style>
-          <class name="tag2"/>
-        </style>
         <child>
           <object class="GtkImage" id="image3">
             <property name="visible">True</property>
@@ -250,28 +208,32 @@
           </object>
         </child>
       </object>
-      <packing>
-        <property name="position">8</property>
-      </packing>
     </child>
     <child>
-      <object class="GtkMenuButton" id="menu_btn3">
+      <object class="GtkMenuButton" id="menu_btn2">
         <property name="visible">True</property>
         <property name="can-focus">True</property>
         <property name="focus-on-click">False</property>
         <property name="receives-default">True</property>
-        <property name="relief">none</property>
-        <property name="popover">popover3</property>
+        <property name="popover">popover2</property>
         <child>
-          <object class="GtkImage" id="image7">
-            <property name="visible">True</property>
-            <property name="icon-name">go-down</property>
-          </object>
+	  <object class="GtkBox">
+	    <property name="visible">True</property>
+	    <child>
+              <object class="GtkLabel">
+		<property name="visible">True</property>
+		<property name="label" translatable="yes">Parameters</property>
+              </object>
+	    </child>
+	    <child>
+              <object class="GtkImage">
+		<property name="visible">True</property>
+		<property name="icon-name">pan-down</property>
+              </object>
+	    </child>
+	  </object>
         </child>
       </object>
-      <packing>
-        <property name="position">9</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="thinning_box">
@@ -287,22 +249,16 @@
           <object class="GtkSpinButton" id="_thinning_item">
             <property name="visible">True</property>
             <property name="can-focus">True</property>
-            <property name="width-chars">5</property>
-            <property name="text">0.001</property>
+            <property name="width-chars">3</property>
+            <property name="text">0</property>
             <property name="adjustment">_thinning_adj</property>
             <property name="climb-rate">1</property>
           </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
         </child>
         <style>
-          <class name="tag3"/>
+          <class name="tag2"/>
         </style>
       </object>
-      <packing>
-        <property name="position">10</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="mass_box">
@@ -318,50 +274,48 @@
           <object class="GtkSpinButton" id="_mass_item">
             <property name="visible">True</property>
             <property name="can-focus">True</property>
-            <property name="width-chars">5</property>
-            <property name="text">0.001</property>
+            <property name="width-chars">3</property>
+            <property name="text">0</property>
             <property name="adjustment">_mass_adj</property>
             <property name="climb-rate">1</property>
             <property name="value">0.001</property>
           </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
         </child>
         <style>
-          <class name="tag3"/>
+          <class name="tag2"/>
         </style>
       </object>
-      <packing>
-        <property name="position">11</property>
-      </packing>
     </child>
     <child>
       <object class="GtkSeparator">
         <property name="visible">True</property>
       </object>
-      <packing>
-        <property name="position">12</property>
-      </packing>
     </child>
     <child>
-      <object class="GtkMenuButton" id="menu_btn4">
+      <object class="GtkMenuButton" id="menu_btn3">
         <property name="visible">True</property>
         <property name="can-focus">True</property>
         <property name="focus-on-click">False</property>
         <property name="receives-default">True</property>
-        <property name="relief">none</property>
-        <property name="popover">popover4</property>
+        <property name="popover">popover3</property>
         <child>
-          <object class="GtkImage" id="image8">
-            <property name="visible">True</property>
-            <property name="icon-name">go-down</property>
-          </object>
+	  <object class="GtkBox">
+	    <property name="visible">True</property>
+	    <child>
+              <object class="GtkLabel">
+		<property name="visible">True</property>
+		<property name="label" translatable="yes">Parameters</property>
+              </object>
+	    </child>
+	    <child>
+              <object class="GtkImage">
+		<property name="visible">True</property>
+		<property name="icon-name">pan-down</property>
+              </object>
+	    </child>
+	  </object>
         </child>
       </object>
-      <packing>
-        <property name="position">13</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="angle_box">
@@ -379,23 +333,17 @@
             <property name="name">calligraphy-angle</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
-            <property name="width-chars">5</property>
+            <property name="width-chars">3</property>
             <property name="text" translatable="yes">0</property>
             <property name="adjustment">_angle_adj</property>
             <property name="climb-rate">1</property>
             <property name="value">0.001</property>
           </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
         </child>
         <style>
-          <class name="tag4"/>
+          <class name="tag3"/>
         </style>
       </object>
-      <packing>
-        <property name="position">14</property>
-      </packing>
     </child>
     <child>
       <object class="GtkToggleButton" id="_usetilt_btn">
@@ -405,7 +353,7 @@
         <property name="margin-end">3</property>
         <property name="relief">none</property>
         <style>
-          <class name="tag4"/>
+          <class name="tag3"/>
         </style>
         <child>
           <object class="GtkImage" id="image4">
@@ -414,9 +362,6 @@
           </object>
         </child>
       </object>
-      <packing>
-        <property name="position">15</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="flatness_box">
@@ -434,31 +379,49 @@
           <object class="GtkSpinButton" id="_flatness_item">
             <property name="visible">True</property>
             <property name="can-focus">True</property>
-            <property name="width-chars">5</property>
+            <property name="width-chars">4</property>
             <property name="text" translatable="yes">0</property>
             <property name="adjustment">_flatness_adj</property>
             <property name="climb-rate">1</property>
           </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
         </child>
         <style>
-          <class name="tag4"/>
+          <class name="tag3"/>
         </style>
       </object>
-      <packing>
-        <property name="position">16</property>
-      </packing>
     </child>
     <child>
       <object class="GtkSeparator">
         <property name="visible">True</property>
         <property name="margin-end">3</property>
       </object>
-      <packing>
-        <property name="position">17</property>
-      </packing>
+    </child>
+    <child>
+      <object class="GtkMenuButton" id="menu_btn4">
+        <property name="visible">True</property>
+        <property name="can-focus">True</property>
+        <property name="focus-on-click">False</property>
+        <property name="receives-default">True</property>
+        <property name="relief">none</property>
+        <property name="popover">popover4</property>
+        <child>
+	  <object class="GtkBox">
+	    <property name="visible">True</property>
+	    <child>
+              <object class="GtkLabel">
+		<property name="visible">True</property>
+		<property name="label" translatable="yes">Parameters</property>
+              </object>
+	    </child>
+	    <child>
+              <object class="GtkImage">
+		<property name="visible">True</property>
+		<property name="icon-name">pan-down</property>
+              </object>
+	    </child>
+	  </object>
+        </child>
+      </object>
     </child>
     <child>
       <object class="GtkBox" id="cap_rounding_box">
@@ -483,23 +446,17 @@
             <property name="digits">2</property>
             <property name="value">0.001</property>
           </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
         </child>
+        <style>
+          <class name="tag4"/>
+        </style>
       </object>
-      <packing>
-        <property name="position">18</property>
-      </packing>
     </child>
     <child>
       <object class="GtkSeparator">
         <property name="visible">True</property>
         <property name="margin-end">3</property>
       </object>
-      <packing>
-        <property name="position">19</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="tremor_box">
@@ -517,23 +474,17 @@
           <object class="GtkSpinButton" id="_tremor_item">
             <property name="visible">True</property>
             <property name="can-focus">True</property>
-            <property name="width-chars">5</property>
+            <property name="width-chars">3</property>
             <property name="text" translatable="yes">0</property>
             <property name="adjustment">_tremor_adj</property>
             <property name="climb-rate">1</property>
             <property name="value">0.001</property>
           </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
         </child>
         <style>
-          <class name="tag3"/>
+          <class name="tag4"/>
         </style>
       </object>
-      <packing>
-        <property name="position">20</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="wiggle_box">
@@ -549,20 +500,17 @@
           <object class="GtkSpinButton" id="_wiggle_item">
             <property name="visible">True</property>
             <property name="can-focus">True</property>
-            <property name="width-chars">5</property>
+            <property name="width-chars">3</property>
             <property name="text" translatable="yes">0</property>
             <property name="adjustment">_wiggle_adj</property>
             <property name="climb-rate">1</property>
             <property name="value">0.001</property>
           </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
         </child>
+        <style>
+          <class name="tag4"/>
+        </style>
       </object>
-      <packing>
-        <property name="position">21</property>
-      </packing>
     </child>
     <style>
       <class name="toolbar"/>

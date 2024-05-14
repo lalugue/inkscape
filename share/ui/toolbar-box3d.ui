@@ -41,7 +41,7 @@
           <object class="GtkSpinButton" id="_angle_x_item">
             <property name="visible">True</property>
             <property name="can-focus">True</property>
-            <property name="width-chars">10</property>
+            <property name="width-chars">8</property>
             <property name="text">0.000</property>
             <property name="adjustment">_angle_x_adj</property>
             <property name="climb-rate">0.10</property>
@@ -85,7 +85,7 @@
           <object class="GtkSpinButton" id="_angle_y_item">
             <property name="visible">True</property>
             <property name="can-focus">True</property>
-            <property name="width-chars">10</property>
+            <property name="width-chars">8</property>
             <property name="text">0.000</property>
             <property name="adjustment">_angle_y_adj</property>
             <property name="climb-rate">0.10</property>
@@ -132,7 +132,7 @@
           <object class="GtkSpinButton" id="_angle_z_item">
             <property name="visible">True</property>
             <property name="can-focus">True</property>
-            <property name="width-chars">10</property>
+            <property name="width-chars">8</property>
             <property name="text">0.000</property>
             <property name="adjustment">_angle_z_adj</property>
             <property name="climb-rate">0.10</property>

@@ -160,7 +160,7 @@
           <object class="GtkSpinButton" id="_row_item">
             <property name="visible">True</property>
             <property name="can-focus">True</property>
-            <property name="width-chars">5</property>
+            <property name="width-chars">3</property>
             <property name="text">0.000</property>
             <property name="adjustment">_row_adj</property>
             <property name="climb-rate">1</property>
@@ -188,7 +188,7 @@
           <object class="GtkSpinButton" id="_col_item">
             <property name="visible">True</property>
             <property name="can-focus">True</property>
-            <property name="width-chars">5</property>
+            <property name="width-chars">3</property>
             <property name="text">0.000</property>
             <property name="adjustment">_col_adj</property>
             <property name="climb-rate">0.10</property>
@@ -262,13 +262,23 @@
         <property name="can-focus">True</property>
         <property name="focus-on-click">False</property>
         <property name="receives-default">True</property>
-        <property name="relief">none</property>
         <property name="popover">popover1</property>
         <child>
-          <object class="GtkImage" id="image5">
-            <property name="visible">True</property>
-            <property name="icon-name">go-down</property>
-          </object>
+	  <object class="GtkBox">
+	    <property name="visible">True</property>
+	    <child>
+              <object class="GtkLabel">
+		<property name="visible">True</property>
+		<property name="label" translatable="yes">Options</property>
+              </object>
+	    </child>
+	    <child>
+              <object class="GtkImage">
+		<property name="visible">True</property>
+		<property name="icon-name">pan-down</property>
+              </object>
+	    </child>
+	  </object>
         </child>
       </object>
       <packing>
