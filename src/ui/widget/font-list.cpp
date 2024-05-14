@@ -31,7 +31,6 @@
 #include <libnrtype/font-factory.h>
 #include <libnrtype/font-instance.h>
 #include <vector>
-
 #include "font-list.h"
 #include "preferences.h"
 #include "ui/builder-utils.h"
@@ -366,7 +365,9 @@ FontList::FontList(Glib::ustring preferences_path) :
         set_grid_cell_size(grid_renderer, font_size_percent, _ui_font_size);
     };
 
-    font_renderer->_font_size = Inkscape::Preferences::get()->getIntLimited(_prefs + "/preview-size", 200, 100, 800);
+    auto prefs = Inkscape::Preferences::get();
+    
+    font_renderer->_font_size = prefs->getIntLimited(_prefs + "/preview-size", 200, 100, 800);
     auto size = &get_widget<Gtk::Scale>(_builder, "preview-font-size");
     size->signal_format_value().connect([](double val){
         return Glib::ustring::format(std::fixed, std::setprecision(0), val) + "%";
@@ -376,42 +377,48 @@ FontList::FontList(Glib::ustring preferences_path) :
         auto font_size = size->get_value();
         set_row_height(font_size);
         set_grid_size(font_size);
-        Inkscape::Preferences::get()->setInt(_prefs + "/preview-size", font_size);
+        prefs->setInt(_prefs + "/preview-size", font_size);
         // resize
         filter();
     });
 
     auto show_names = &get_widget<Gtk::CheckButton>(_builder, "show-font-name");
-    show_names->signal_toggled().connect([=](){
-        bool show = show_names->get_active();
-        //TODO: refactor to fn
+    auto set_show_names = [=](bool show) {
         font_renderer->_show_font_name = show;
+        prefs->setBool(_prefs + "/show-font-names", show);
         set_row_height(font_renderer->_font_size);
         _font_list.set_grid_lines(show ? Gtk::TREE_VIEW_GRID_LINES_HORIZONTAL : Gtk::TREE_VIEW_GRID_LINES_NONE);
         // resize
         filter();
+    };
+    auto show = prefs->getBool(_prefs + "/show-font-names", true);
+    set_show_names(show);
+    show_names->set_active(show);
+    show_names->signal_toggled().connect([=](){
+        bool show = show_names->get_active();
+        set_show_names(show);
     });
 
     // sample text to show for each font; empty to show font name
     auto sample = &get_widget<Gtk::Entry>(_builder, "sample-text");
-    auto sample_text = Inkscape::Preferences::get()->getString(_prefs + "/sample-text");
+    auto sample_text = prefs->getString(_prefs + "/sample-text");
     sample->set_text(sample_text);
     font_renderer->_sample_text = sample_text;
     sample->signal_changed().connect([=](){
         auto text = sample->get_text();
         font_renderer->_sample_text = text;
-        Inkscape::Preferences::get()->setString(_prefs + "/sample-text", text);
+        prefs->setString(_prefs + "/sample-text", text);
         _font_list.queue_draw();
     });
     // sample text for grid
     auto grid_sample = &get_widget<Gtk::Entry>(_builder, "grid-sample");
-    auto sample_grid_text = Inkscape::Preferences::get()->getString(_prefs + "/grid-text", "Aa");
+    auto sample_grid_text = prefs->getString(_prefs + "/grid-text", "Aa");
     grid_sample->set_text(sample_grid_text);
     grid_renderer->_sample_text = sample_grid_text;
     grid_sample->signal_changed().connect([=](){
         auto text = grid_sample->get_text();
         grid_renderer->_sample_text = text.empty() ? "?" : text;
-        Inkscape::Preferences::get()->setString(_prefs + "/grid-text", text);
+        prefs->setString(_prefs + "/grid-text", text);
         _font_grid.queue_draw();
     });
 
@@ -537,9 +544,9 @@ FontList::FontList(Glib::ustring preferences_path) :
             grid.set_visible();
         }
         _view_mode_list = show_list;
-        Inkscape::Preferences::get()->setBool(_prefs + "/list-view-mode", show_list);
+        prefs->setBool(_prefs + "/list-view-mode", show_list);
     };
-    auto list_mode = Inkscape::Preferences::get()->getBool(_prefs + "/list-view-mode", true);
+    auto list_mode = prefs->getBool(_prefs + "/list-view-mode", true);
     if (list_mode) show_list->set_active(); else show_grid->set_active();
     set_list_view_mode(list_mode);
     show_list->signal_toggled().connect([=]() { set_list_view_mode(true); });
