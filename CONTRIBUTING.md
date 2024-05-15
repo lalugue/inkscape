@@ -126,7 +126,7 @@ See: http://wiki.inkscape.org/wiki/index.php/CMake#Using_CMake_to_run_tests
 General Guidelines for developers
 ----------------------------------
 
-* If you are new, fork the inkscape project (https://gitlab.com/inkscape/inkscape) and create a new branch for each bug/feature you want to work on. Try to Set the CI time to a high value like 2 hour (Go to your fork > Settings > General Pipelines > Timeout)
+* If you are new, fork the inkscape project (https://gitlab.com/inkscape/inkscape) and create a new branch for each bug/feature you want to work on. Try to Set the CI time to a high value like 2 hour (Go to your fork > Settings > CI/CD > General Pipelines > Timeout)
 * Merge requests (MR) are encouraged for the smallest of contributions. This helps other developers review the code you've written and check for the mistakes that may have slipped by you.
 * Before working on anything big, be sure to discuss your idea with us ([IRC](irc://irc.freenode.org/#inkscape) or [RocketChat](https://chat.inkscape.org/)). Someone else might already have plans you can build upon and we will try to guide you !
 * Adopt the coding style (indentation, bracket placement, reference/pointer placement, variable naming etc. - developer's common sense required!) of existing source so that your changes and code doesn't stand out/feel foreign.
