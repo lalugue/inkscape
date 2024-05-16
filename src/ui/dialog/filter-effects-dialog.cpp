@@ -2771,8 +2771,10 @@ FilterEffectsDialog::FilterEffectsDialog()
         [this](int const id){ add_filter_primitive(static_cast<FilterPrimitiveType>(id)); });
     UI::pack_start(_search_box, _effects_popup);
 
-    UI::pack_end(_params_box, _settings_effect);
+    _settings_effect.set_valign(Gtk::Align::FILL);
+    _params_box.append(_settings_effect);
 
+    _settings_filter.set_margin(5);
     get_widget<Gtk::Popover>(_builder, "gen-settings").set_child(_settings_filter);
 
     get_widget<Gtk::Popover>(_builder, "info-popover").signal_show().connect([this]{
