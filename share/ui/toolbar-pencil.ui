@@ -149,7 +149,7 @@
             <child>
               <object class="GtkSpinButton" id="_maxpressure_item">
                 <property name="focusable">True</property>
-                <property name="width-chars">5</property>
+                <property name="width-chars">1</property>
                 <property name="text" translatable="yes">0</property>
                 <property name="adjustment">_maxpressure_adj</property>
                 <property name="climb-rate">1</property>
@@ -178,7 +178,7 @@
             <child>
               <object class="GtkSpinButton" id="_tolerance_item">
                 <property name="focusable">True</property>
-                <property name="width-chars">5</property>
+                <property name="width-chars">2</property>
                 <property name="text" translatable="yes">0</property>
                 <property name="adjustment">_tolerance_adj</property>
                 <property name="climb-rate">1</property>
@@ -235,7 +235,7 @@
         <child>
           <object class="GtkSpinButton" id="_shapescale_item">
             <property name="focusable">True</property>
-            <property name="width-chars">6</property>
+            <property name="width-chars">1</property>
             <property name="text" translatable="yes">0</property>
             <property name="adjustment">_shapescale_adj</property>
             <property name="climb-rate">1</property>

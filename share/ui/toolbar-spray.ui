@@ -109,7 +109,7 @@
           <object class="GtkSpinButton" id="_width_item">
             <property name="name">spray-width</property>
             <property name="focusable">True</property>
-            <property name="width-chars">3</property>
+            <property name="width-chars">1</property>
             <property name="text" translatable="yes">0.000</property>
             <property name="adjustment">_width_adj</property>
             <property name="climb-rate">1</property>
@@ -140,7 +140,7 @@
           <object class="GtkSpinButton" id="_population_item">
             <property name="name">spray-population</property>
             <property name="focusable">True</property>
-            <property name="width-chars">3</property>
+            <property name="width-chars">1</property>
             <property name="text" translatable="yes">0</property>
             <property name="adjustment">_population_adj</property>
             <property name="climb-rate">1</property>
@@ -177,7 +177,7 @@
         <child>
           <object class="GtkSpinButton" id="_rotation_item">
             <property name="focusable">True</property>
-            <property name="width-chars">3</property>
+            <property name="width-chars">1</property>
             <property name="text" translatable="yes">0.000</property>
             <property name="adjustment">_rotation_adj</property>
             <property name="climb-rate">0.10</property>
@@ -243,7 +243,7 @@
         <child>
           <object class="GtkSpinButton" id="_sd_item">
             <property name="focusable">True</property>
-            <property name="width-chars">3</property>
+            <property name="width-chars">1</property>
             <property name="text" translatable="yes">0.000</property>
             <property name="adjustment">_sd_adj</property>
             <property name="climb-rate">1</property>
@@ -266,7 +266,7 @@
         <child>
           <object class="GtkSpinButton" id="_mean_item">
             <property name="focusable">True</property>
-            <property name="width-chars">5</property>
+            <property name="width-chars">1</property>
             <property name="text" translatable="yes">0</property>
             <property name="adjustment">_mean_adj</property>
             <property name="climb-rate">1</property>
@@ -348,7 +348,7 @@
         <child>
           <object class="GtkSpinButton" id="_offset_item">
             <property name="focusable">True</property>
-            <property name="width-chars">5</property>
+            <property name="width-chars">1</property>
             <property name="text" translatable="yes">0</property>
             <property name="adjustment">_mean_adj</property>
             <property name="climb-rate">1</property>

@@ -138,7 +138,7 @@
         <child>
           <object class="GtkSpinButton" id="_line_height_item">
             <property name="focusable">True</property>
-            <property name="width-chars">5</property>
+            <property name="width-chars">1</property>
             <property name="text" translatable="yes">0.000</property>
             <property name="adjustment">_line_height_adj</property>
             <property name="climb-rate">0.10</property>

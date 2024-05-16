@@ -346,7 +346,7 @@
           <object class="GtkSpinButton" id="_nodes_x_item">
             <property name="focusable">True</property>
             <property name="tooltip-text" translatable="yes">X coordinate of selected node(s)</property>
-            <property name="width-chars">10</property>
+            <property name="width-chars">7</property>
             <property name="adjustment">_nodes_x_adj</property>
             <property name="climb-rate">0.10</property>
             <property name="digits">3</property>
@@ -369,7 +369,7 @@
           <object class="GtkSpinButton" id="_nodes_y_item">
             <property name="focusable">True</property>
             <property name="tooltip-text" translatable="yes">Y coordinate of selected node(s)</property>
-            <property name="width-chars">10</property>
+            <property name="width-chars">7</property>
             <property name="text" translatable="yes">0.000</property>
             <property name="adjustment">_nodes_y_adj</property>
             <property name="climb-rate">0.10</property>

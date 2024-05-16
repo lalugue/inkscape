@@ -148,7 +148,7 @@
             <property name="name">StatusbarZoomValue</property>
             <property name="focusable">True</property>
             <property name="adjustment">statusbar-zoom-adjustment</property>
-            <property name="width-chars">6</property>
+            <property name="width-chars">1</property>
             <property name="width-request">57</property>
             <property name="value">100</property>
           </object>
@@ -172,7 +172,7 @@
             <property name="name">StatusbarRotateValue</property>
             <property name="focusable">True</property>
             <property name="adjustment">statusbar-rotate-adjustment</property>
-            <property name="width-chars">7</property>
+            <property name="width-chars">1</property>
             <property name="width-request">57</property>
           </object>
         </child>

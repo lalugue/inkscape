@@ -123,7 +123,7 @@
           <object class="GtkSpinButton" id="_offset_item">
             <property name="focusable">True</property>
             <property name="tooltip-text" translatable="yes">Width of selection</property>
-            <property name="width-chars">5</property>
+            <property name="width-chars">2</property>
             <property name="text" translatable="yes">0.000</property>
             <property name="adjustment">_offset_adj</property>
             <property name="climb-rate">0.10</property>
