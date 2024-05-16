@@ -20,6 +20,10 @@
 #include <gtkmm/enums.h> // Gtk::IconSize
 #include "ui/widget/css-name-class-init.h"
 
+namespace Gtk {
+class Label;
+} // namespace Gtk
+
 namespace Inkscape::UI::Widget {
 
 class PopoverMenu;
@@ -31,6 +35,8 @@ class PopoverMenuItem
     , public Gtk::Button
 {
 public:
+    void set_label(Glib::ustring const &name);
+
     // Construct a flat Button with CSS name `menuitem` and class `.menuitem`.
     // If text & icon_name are present, we add a Box containing a Image & Label.
     // If only 1 of text or icon_name are present, we add only a Label or Image.
@@ -45,6 +51,8 @@ public:
     [[nodiscard]] Glib::SignalProxy<void ()> signal_activate();
 
 private:
+    Gtk::Label *_label = nullptr;
+
     [[nodiscard]] PopoverMenu *get_menu();
 
     void on_motion(GtkEventControllerMotion const *motion, double x, double y);
