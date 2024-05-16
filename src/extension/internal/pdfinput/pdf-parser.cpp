@@ -945,7 +945,7 @@ GfxColorSpace *PdfParser::lookupColorSpaceCopy(Object &arg)
     GfxColorSpace *colorSpace = nullptr;
 
     if (char const *name = arg.isName() ? arg.getName() : nullptr) {
-        auto const cache_name = std::to_string(formDepth) + "-" += name;
+        auto const cache_name = std::to_string(formDepth) + "-" + name;
         if ((colorSpace = colorSpacesCache[cache_name].get())) {
             return colorSpace->copy();
         }
