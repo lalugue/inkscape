@@ -2782,9 +2782,11 @@ FilterEffectsDialog::FilterEffectsDialog()
     _filter_modifier.show_all();
 
     _settings_effect.show_all();
-    UI::pack_end(_params_box, _settings_effect);
+    _settings_effect.set_valign(Gtk::ALIGN_FILL);
+    _params_box.add(_settings_effect);
 
     _settings_filter.show_all();
+    _settings_filter.property_margin().set_value(5);
     get_widget<Gtk::Popover>(_builder, "gen-settings").add(_settings_filter);
 
     get_widget<Gtk::Popover>(_builder, "info-popover").signal_show().connect([this]{
