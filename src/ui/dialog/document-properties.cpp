@@ -1479,7 +1479,7 @@ void DocumentProperties::build_gridspage()
     _grids_label_def.set_markup(_("<b>Defined grids</b>"));
     _grids_label_def.get_style_context()->add_class("heading");
     _grids_hbox_crea.set_spacing(5);
-    UI::pack_start(_grids_hbox_crea, *Gtk::make_managed<Gtk::Label>("Add grid:"), false, true);
+    UI::pack_start(_grids_hbox_crea, *Gtk::make_managed<Gtk::Label>(_("Add grid:")), false, true);
     auto btn_size = Gtk::SizeGroup::create(Gtk::SizeGroupMode::SIZE_GROUP_HORIZONTAL);
     for (auto const &[label, type, icon]: {std::tuple
         {C_("Grid", "Rectangular"), GridType::RECTANGULAR, "grid-rectangular"},
