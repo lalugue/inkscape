@@ -11,13 +11,13 @@
 #
 
 # toolset release to build Inkscape
-VERSION=0.79
+VERSION=0.80
 
 # directory convenience handles
 SELF_DIR=$(dirname "${BASH_SOURCE[0]}")
 MIBAP_DIR=$SELF_DIR/mibap
 
-git clone --single-branch https://gitlab.com/inkscape/deps/macos "$MIBAP_DIR"
+git clone https://gitlab.com/inkscape/deps/macos "$MIBAP_DIR"
 
 if git -C "$MIBAP_DIR" checkout v"$VERSION"; then
   git -C "$MIBAP_DIR" submodule update --init --recursive
