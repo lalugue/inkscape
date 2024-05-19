@@ -36,6 +36,25 @@
             <property name="margin-top">4</property>
           </object>
         </child>
+        <child>
+          <object class="GtkButton" id="reset_button">
+            <property name="label" translatable="yes">Clear all filters</property>
+            FIXME ^^^
+            <property name="focusable">True</property>
+            <property name="receives-default">True</property>
+            <property name="tooltip-text" translatable="yes">Reset filters and show all available fonts</property>
+            <property name="margin-top">4</property>
+            <property name="hexpand">False</property>
+            <property name="vexpand">False</property>
+            <property name="halign">fill</property>
+            <property name="valign">fill</property>
+            <child>
+              <object class="GtkImage" id="reset_image">
+                <property name="icon-name">view-refresh</property>
+              </object>
+            </child>
+          </object>
+        </child>
       </object>
     </property>
   </object>
@@ -64,19 +83,6 @@
                         <property name="focusable">True</property>
                         <property name="tooltip-text" translatable="yes">Search fonts</property>
                         <property name="hexpand">True</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkButton" id="reset_button">
-                        <property name="focusable">True</property>
-                        <property name="receives-default">True</property>
-                        <property name="tooltip-text" translatable="yes">Reset filters and show all available fonts</property>
-                        <property name="margin-start">2</property>
-                        <child>
-                          <object class="GtkImage" id="reset_image">
-                            <property name="icon-name">view-refresh</property>
-                          </object>
-                        </child>
                       </object>
                     </child>
                     <child>

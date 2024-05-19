@@ -49,7 +49,13 @@ class IconRenderer;
 class FontCollectionSelector final : public Gtk::Grid
 {
 public:
-    enum {TEXT_COLUMN, ICON_COLUMN, N_COLUMNS};
+    enum
+    {
+        TEXT_COLUMN,
+        FONT_COUNT_COLUMN,
+        ICON_COLUMN,
+        N_COLUMNS
+    };
     enum SelectionStates {SYSTEM_COLLECTION = -1, USER_COLLECTION, USER_COLLECTION_FONT};
 
     FontCollectionSelector();
@@ -65,6 +71,7 @@ public:
     // Custom renderers.
     void text_cell_data_func        (Gtk::CellRenderer *renderer,
                                      Gtk::TreeModel::const_iterator const &iter);
+    void font_count_cell_data_func(Gtk::CellRenderer *renderer, Gtk::TreeModel::const_iterator const &iter);
     void icon_cell_data_func        (Gtk::CellRenderer *renderer,
                                      Gtk::TreeModel::const_iterator const &iter);
     void check_button_cell_data_func(Gtk::CellRenderer *renderer,
@@ -74,17 +81,13 @@ public:
 
     void populate_collections();
 
-    void populate_system_collections();
-    void populate_document_fonts();
-    void populate_recently_used_fonts();
-
     void populate_user_collections();
     void populate_fonts(const Glib::ustring&);
 
     // Signal handlers
     void on_delete_icon_clicked(Glib::ustring const&);
     void on_create_collection();
-    void on_rename_collection(const Glib::ustring&, const Glib::ustring&);
+    bool on_rename_collection(const Glib::ustring &, const Glib::ustring &);
     void on_delete_button_pressed();
     void on_edit_button_pressed();
 
@@ -115,11 +118,13 @@ private:
     {
     public:
         Gtk::TreeModelColumn<Glib::ustring> name;
+        Gtk::TreeModelColumn<int> font_count;
         Gtk::TreeModelColumn<bool> is_editable;
 
         FontCollectionClass()
         {
             add(name);
+            add(font_count);
             add(is_editable);
         }
     };
@@ -129,11 +134,14 @@ private:
     Gtk::Frame frame;
     Gtk::ScrolledWindow scroll;
     Gtk::TreeViewColumn text_column;
+    Gtk::TreeViewColumn font_count_column;
     Gtk::TreeViewColumn del_icon_column;
     Gtk::CellRendererText *cell_text = nullptr;
+    Gtk::CellRendererText *cell_font_count = nullptr;
     UI::Widget::IconRenderer *del_icon_renderer = nullptr;
 
     Glib::RefPtr<Gtk::TreeStore> store;
+    bool new_entry = false;
 
     sigc::signal <void (int)> signal_changed;
 };

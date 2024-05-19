@@ -111,6 +111,7 @@ private:
     bool _view_mode_list = true;
     auto_connection _font_stream;
     std::size_t _initializing = 0;
+    auto_connection font_collections_update;
 };
 
 } // namespaces
