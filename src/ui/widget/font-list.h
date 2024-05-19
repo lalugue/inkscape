@@ -114,6 +114,7 @@ private:
     std::size_t _initializing = 0;
     double _ui_font_size = 0;
     Pref<double> _scale_correction;
+    auto_connection font_collections_update;
 };
 
 } // namespaces

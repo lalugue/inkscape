@@ -183,8 +183,8 @@ void FontSelector::hide_others()
     size_combobox.set_no_show_all();
     size_combobox.set_visible(false);
     font_variations.set_no_show_all();
-    font_variations_scroll.set_visible(false);
     font_variations_scroll.set_vexpand(false);
+    font_variations_scroll.set_visible(false);
 }
 
 // TODO:
@@ -551,7 +551,7 @@ void FontSelector::update_variations(const Glib::ustring& fontspec) {
 
     // Check if there are any variations available; if not, don't expand font_variations_scroll
     bool hasContent = font_variations.variations_present();
-    font_variations_scroll.set_vexpand(hasContent);
+    font_variations_scroll.set_visible(hasContent);
 }
 
 } // namespace Inkscape::UI::Widget

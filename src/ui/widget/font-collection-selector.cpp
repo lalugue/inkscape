@@ -20,6 +20,7 @@
 #include <gtkmm/messagedialog.h>
 #include <gtkmm/targetentry.h>
 #include <gtkmm/treestore.h>
+#include <set>
 #include <sigc++/functors/mem_fun.h>
 
 #include "libnrtype/font-lister.h"
@@ -60,6 +61,7 @@ FontCollectionSelector::~FontCollectionSelector() = default;
 void FontCollectionSelector::setup_tree_view(Gtk::TreeView *tv)
 {
     cell_text = Gtk::make_managed<Gtk::CellRendererText>();
+    cell_font_count = Gtk::make_managed<Gtk::CellRendererText>();
     del_icon_renderer = Gtk::make_managed<IconRenderer>();
     del_icon_renderer->add_icon("edit-delete");
 
@@ -67,10 +69,10 @@ void FontCollectionSelector::setup_tree_view(Gtk::TreeView *tv)
     text_column.add_attribute (*cell_text, "text", TEXT_COLUMN);
     text_column.set_expand(true);
 
-    del_icon_column.pack_start (*del_icon_renderer, false);
+    font_count_column.pack_start(*cell_font_count, true);
+    font_count_column.add_attribute(*cell_font_count, "text", FONT_COUNT_COLUMN);
 
-    // Attach the cell data functions.
-    text_column.set_cell_data_func(*cell_text, sigc::mem_fun(*this, &FontCollectionSelector::text_cell_data_func));
+    del_icon_column.pack_start(*del_icon_renderer, false);
 
     treeview->set_headers_visible (false);
     treeview->enable_model_drag_dest (Gdk::ACTION_MOVE);
@@ -78,6 +80,7 @@ void FontCollectionSelector::setup_tree_view(Gtk::TreeView *tv)
 
     // Append the columns to the treeview.
     treeview->append_column(text_column);
+    treeview->append_column(font_count_column);
     treeview->append_column(del_icon_column);
 
     scroll.set_policy (Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
@@ -104,11 +107,71 @@ void FontCollectionSelector::change_frame_name(const Glib::ustring& name)
 
 void FontCollectionSelector::setup_signals()
 {
-    cell_text->signal_edited().connect(sigc::mem_fun(*this, &FontCollectionSelector::on_rename_collection));
+    cell_text->signal_edited().connect([this](const Glib::ustring &current_path, const Glib::ustring &new_text) {
+        // Store the expanded collections in a map.
+        std::set<Glib::ustring> expanded_collections;
+
+        store->foreach ([&](Gtk::TreeModel::Path const &path, Gtk::TreeModel::const_iterator const &it) {
+            auto collection = it->get_value(FontCollection.name);
+            if (treeview->row_expanded(path)) {
+                expanded_collections.insert(collection);
+            }
+            return false;
+        });
+
+        bool current_collection_expanded = false;
+        if (auto iter = store->get_iter(current_path)) {
+            auto path = store->get_path(iter);
+            if (treeview->row_expanded(path)) {
+                current_collection_expanded = true;
+            }
+        }
+
+        bool updated = on_rename_collection(current_path, new_text);
+        Gtk::TreeModel::Path updated_path;
+        if (updated && current_collection_expanded) {
+            expanded_collections.insert(new_text);
+        } else if (!updated && new_entry) {
+            // Delete this row if the new collection couldn't be created.
+            if (auto iter = store->get_iter(current_path)) {
+                store->erase(iter);
+            }
+        }
+
+        // Now start expanding the collections to restore the state as before.
+        store->foreach ([&](Gtk::TreeModel::Path const &path, Gtk::TreeModel::const_iterator const &it) {
+            auto collection = it->get_value(FontCollection.name);
+
+            if (expanded_collections.contains(collection)) {
+                treeview->expand_row(path, false);
+            }
+
+            if (updated && (collection == new_text)) {
+                updated_path = path;
+            }
+
+            return false;
+        });
+
+        auto tree_sel = treeview->get_selection();
+        if (updated && updated_path) {
+            // tree_sel->select_path(updated_path);
+            gtk_tree_selection_select_path(tree_sel->gobj(), updated_path.gobj());
+            // treeview->scroll_to_row(updated_path);
+        }
+
+        new_entry = false;
+    });
+
+    treeview->set_row_separator_func(sigc::mem_fun(*this, &FontCollectionSelector::row_separator_func));
+    text_column.set_cell_data_func(*cell_text, sigc::mem_fun(*this, &FontCollectionSelector::text_cell_data_func));
+    font_count_column.set_cell_data_func(*cell_font_count,
+                                         sigc::mem_fun(*this, &FontCollectionSelector::font_count_cell_data_func));
+    del_icon_column.set_cell_data_func(*del_icon_renderer,
+                                       sigc::mem_fun(*this, &FontCollectionSelector::icon_cell_data_func));
+
     del_icon_renderer->signal_activated().connect(sigc::mem_fun(*this, &FontCollectionSelector::on_delete_icon_clicked));
     Controller::add_key<&FontCollectionSelector::on_key_pressed>(*treeview, *this);
-    treeview->set_row_separator_func(sigc::mem_fun(*this, &FontCollectionSelector::row_separator_func));
-    treeview->get_column(ICON_COLUMN)->set_cell_data_func(*del_icon_renderer, sigc::mem_fun(*this, &FontCollectionSelector::icon_cell_data_func));
 
     // Signals for drag and drop.
     treeview->signal_drag_motion().connect(sigc::mem_fun(*this, &FontCollectionSelector::on_drag_motion), false);
@@ -118,33 +181,26 @@ void FontCollectionSelector::setup_signals()
     treeview->signal_drag_leave().connect(sigc::mem_fun(*this, &FontCollectionSelector::on_drag_leave), false);
     treeview->signal_drag_end().connect(sigc::mem_fun(*this, &FontCollectionSelector::on_drag_end), false);
     treeview->get_selection()->signal_changed().connect([this]{ on_selection_changed(); });
-    Inkscape::RecentlyUsedFonts::get()->connectUpdate(sigc::mem_fun(*this, &FontCollectionSelector::populate_system_collections));
 }
 
-// To distinguish the collection name and the font name.
-Glib::ustring FontCollectionSelector::get_text_cell_markup(Gtk::TreeModel::const_iterator const &iter)
-{
-    Glib::ustring markup;
-    if (auto const parent = iter->parent()) {
-        // It is a font.
-        markup = "<span alpha='50%'>";
-        markup += (*iter)[FontCollection.name];
-        markup += "</span>";
-    } else {
-        // It is a collection.
-        markup = "<span>";
-        markup += (*iter)[FontCollection.name];
-        markup += "</span>";
-    }
-    return markup;
-}
-
-// This function will TURN OFF the visibility of the delete icon for system collections.
-void FontCollectionSelector::text_cell_data_func(Gtk::CellRenderer * const renderer,
+// This function manages the visibility of the font count column.
+void FontCollectionSelector::text_cell_data_func(Gtk::CellRenderer *const renderer,
                                                  Gtk::TreeModel::const_iterator const &iter)
 {
-    // Add the delete icon only if the collection is editable(user-collection).
-    Glib::ustring markup = get_text_cell_markup(iter);
+    // Only font collections should have a font count next to their names.
+    bool const is_collection = !iter->parent();
+    cell_text->property_editable() = is_collection ? true : false;
+}
+
+// This function manages the visibility of the font count column.
+void FontCollectionSelector::font_count_cell_data_func(Gtk::CellRenderer *const renderer,
+                                                       Gtk::TreeModel::const_iterator const &iter)
+{
+    // Only font collections should have a font count next to their names.
+    bool const is_collection = !iter->parent();
+    cell_font_count->set_visible(is_collection);
+
+    Glib::ustring const markup = "<span alpha='50%'>" + std::to_string((*iter)[FontCollection.font_count]) + "</span>";
     renderer->set_property("markup", markup);
 }
 
@@ -157,15 +213,12 @@ void FontCollectionSelector::icon_cell_data_func(Gtk::CellRenderer * const rende
         // Case: It is a font.
         bool is_user = (*parent)[FontCollection.is_editable];
         del_icon_renderer->set_visible(is_user);
-        cell_text->property_editable() = false;
     } else if((*iter)[FontCollection.is_editable]) {
         // Case: User font collection.
         del_icon_renderer->set_visible(true);
-        cell_text->property_editable() = true;
     } else {
         // Case: System font collection.
         del_icon_renderer->set_visible(false);
-        cell_text->property_editable() = false;
     }
 }
 
@@ -197,93 +250,15 @@ bool FontCollectionSelector::row_separator_func(Glib::RefPtr<Gtk::TreeModel> con
 void FontCollectionSelector::populate_collections()
 {
     store->clear();
-    populate_system_collections();
     populate_user_collections();
-}
-
-// This function will keep the populate the system collections and their fonts.
-void FontCollectionSelector::populate_system_collections()
-{
-    FontCollections *font_collections = Inkscape::FontCollections::get();
-    std::vector <Glib::ustring> system_collections = font_collections->get_collections(true);
-
-    // Erase the previous collections.
-    store->freeze_notify();
-    Gtk::TreePath path;
-    path.push_back(0);
-    Gtk::TreeModel::iterator iter;
-    bool row_0 = false, row_1 = false;
-
-    for(int i = 0; i < 3; i++) {
-        iter = store->get_iter(path);
-        if(iter) {
-            if(treeview->row_expanded(path)) {
-                if(i == 0) {
-                    row_0 = true;
-                } else if(i == 1) {
-                    row_1 = true;
-                }
-            }
-            store->erase(iter);
-        }
-    }
-
-    // Insert a separator.
-    iter = store->prepend();
-    (*iter)[FontCollection.name] = "#";
-    (*iter)[FontCollection.is_editable] = false;
-
-    for(auto const &col: system_collections) {
-        iter = store->prepend();
-        (*iter)[FontCollection.name] = col;
-        (*iter)[FontCollection.is_editable] = false;
-    }
-
-    populate_document_fonts();
-    populate_recently_used_fonts();
-    store->thaw_notify();
-
-    if(row_0) {
-        treeview->expand_row(Gtk::TreePath("0"), true);
-    }
-    if(row_1) {
-        treeview->expand_row(Gtk::TreePath("1"), true);
-    }
-}
-
-void FontCollectionSelector::populate_document_fonts()
-{
-    // The position of the recently used collection is hardcoded for now.
-    Gtk::TreePath path;
-    path.push_back(1);
-    Gtk::TreeModel::iterator iter = store->get_iter(path);
-
-    for(auto const& font: Inkscape::DocumentFonts::get()->get_fonts()) {
-        Gtk::TreeModel::iterator child = store->append((*iter).children());
-        (*child)[FontCollection.name] = font;
-        (*child)[FontCollection.is_editable] = false;
-    }
-}
-
-void FontCollectionSelector::populate_recently_used_fonts()
-{
-    // The position of the recently used collection is hardcoded for now.
-    Gtk::TreePath path;
-    path.push_back(0);
-    Gtk::TreeModel::iterator iter = store->get_iter(path);
-
-    for(auto const& font: Inkscape::RecentlyUsedFonts::get()->get_fonts()) {
-        Gtk::TreeModel::iterator child = store->append((*iter).children());
-        (*child)[FontCollection.name] = font;
-        (*child)[FontCollection.is_editable] = false;
-    }
 }
 
 // This function will keep the collections_list updated after any event.
 void FontCollectionSelector::populate_user_collections()
 {
     // Get the list of all the user collections.
-    auto collections = Inkscape::FontCollections::get()->get_collections();
+    FontCollections *font_collections = Inkscape::FontCollections::get();
+    auto collections = font_collections->get_collections();
 
     // Now insert these collections one by one into the treeview.
     store->freeze_notify();
@@ -309,8 +284,7 @@ void FontCollectionSelector::populate_fonts(const Glib::ustring& collection_name
     std::set <Glib::ustring> fonts = font_collections->get_fonts(collection_name);
 
     // First find the location of this collection_name in the map.
-    // +1 for the separator.
-    int index = font_collections->get_user_collection_location(collection_name) + 1;
+    int index = font_collections->get_user_collection_location(collection_name);
 
     store->freeze_notify();
 
@@ -318,6 +292,14 @@ void FontCollectionSelector::populate_fonts(const Glib::ustring& collection_name
     Gtk::TreePath path;
     path.push_back(index);
     Gtk::TreeModel::iterator iter = store->get_iter(path);
+
+    if (!iter) {
+        store->thaw_notify();
+        return;
+    }
+
+    // Update the font count.
+    (*iter)[FontCollection.font_count] = fonts.size();
 
     // auto child_iter = iter->children();
     auto size = iter->children().size();
@@ -342,8 +324,15 @@ void FontCollectionSelector::on_delete_icon_clicked(Glib::ustring const &path)
     auto collections = Inkscape::FontCollections::get();
     auto iter = store->get_iter(path);
     if (auto const parent = iter->parent()) {
-        // It is a collection.
+        // It is a font.
+        collections->remove_font((*parent)[FontCollection.name], (*iter)[FontCollection.name]);
 
+        // Update the font count of the parent iter.
+        (*parent)[FontCollection.font_count] = (*parent)[FontCollection.font_count] - 1;
+
+        store->erase(iter);
+    } else {
+        // It is a collection.
         // No need to confirm in case of empty collections.
         if (collections->get_fonts((*iter)[FontCollection.name]).empty()) {
             collections->remove_collection((*iter)[FontCollection.name]);
@@ -360,24 +349,21 @@ void FontCollectionSelector::on_delete_icon_clicked(Glib::ustring const &path)
             }
         });
     }
-    else {
-        // It is a font.
-        collections->remove_font((*parent)[FontCollection.name], (*iter)[FontCollection.name]);
-        store->erase(iter);
-    }
 }
 
 void FontCollectionSelector::on_create_collection()
 {
+    new_entry = true;
     Gtk::TreeModel::iterator iter = store->append();
     (*iter)[FontCollection.is_editable] = true;
+    (*iter)[FontCollection.font_count] = 0;
 
     Gtk::TreeModel::Path path = (Gtk::TreeModel::Path)iter;
     treeview->set_cursor(path, text_column, true);
     grab_focus();
 }
 
-void FontCollectionSelector::on_rename_collection(const Glib::ustring& path, const Glib::ustring& new_text)
+bool FontCollectionSelector::on_rename_collection(const Glib::ustring &path, const Glib::ustring &new_text)
 {
     // Fetch the collections.
     FontCollections *collections = Inkscape::FontCollections::get();
@@ -389,14 +375,14 @@ void FontCollectionSelector::on_rename_collection(const Glib::ustring& path, con
     // Return if the new name is empty.
     // Do not allow user collections to be named as system collections.
     if (new_text == "" || is_system || is_user) {
-        return;
+        return false;
     }
 
     Gtk::TreeModel::iterator iter = store->get_iter(path);
 
     // Return if it is not a valid iter.
     if(!iter) {
-        return;
+        return false;
     }
 
     // To check if it's a font-collection or a font.
@@ -409,6 +395,8 @@ void FontCollectionSelector::on_rename_collection(const Glib::ustring& path, con
 
     (*iter)[FontCollection.name] = new_text;
     populate_collections();
+
+    return true;
 }
 
 void FontCollectionSelector::on_delete_button_pressed()
@@ -504,13 +492,21 @@ bool FontCollectionSelector::on_drag_motion(const Glib::RefPtr<Gdk::DragContext>
     treeview->get_dest_row_at_pos(x, y, path, pos);
     treeview->drag_unhighlight();
 
+    context->drop_reply(bool(path), time);
+
+    auto tree_sel = treeview->get_selection()->gobj();
     if (path) {
-        context->drag_status(Gdk::ACTION_COPY, time);
-        return false;
+        if (auto iter = store->get_iter(path)) {
+            if (auto parent = iter->parent()) {
+                gtk_tree_selection_select_iter(tree_sel, parent.gobj());
+            } else {
+                gtk_tree_selection_select_iter(tree_sel, iter.gobj());
+            }
+        }
+    } else {
+        gtk_tree_selection_unselect_all(tree_sel);
     }
 
-    // remove drop highlight
-    context->drag_refuse(time);
     return true;
 }
 

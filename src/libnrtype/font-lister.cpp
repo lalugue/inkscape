@@ -491,8 +491,6 @@ int FontLister::add_document_fonts_at_top(SPDocument *document)
     // For document fonts.
     auto document_fonts = Inkscape::DocumentFonts::get();
     document_fonts->update_document_fonts(font_data);
-    auto recently_used = Inkscape::RecentlyUsedFonts::get();
-    recently_used->prepend_to_list(current_family);
 
     return font_data.size();
 }
@@ -853,8 +851,6 @@ std::pair<Glib::ustring, Glib::ustring> FontLister::set_font_family(Glib::ustrin
     std::pair<Glib::ustring, Glib::ustring> ui = new_font_family(new_family, check_style);
     current_family = ui.first;
     current_style = ui.second;
-    RecentlyUsedFonts *recently_used = Inkscape::RecentlyUsedFonts::get();
-    recently_used->prepend_to_list(current_family);
 
 #ifdef DEBUG_FONT
     std::cout << "   family_row:           :" << current_family_row << ":" << std::endl;

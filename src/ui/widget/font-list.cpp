@@ -669,6 +669,9 @@ FontList::FontList(Glib::ustring preferences_path) :
         // update tag checkboxes
         add_categories(_font_tags.get_tags());
     }, false);
+
+    font_collections_update =
+        Inkscape::FontCollections::get()->connect_update([=]() { add_categories(_font_tags.get_tags()); });
 }
 
 void FontList::sort_fonts(Inkscape::FontOrder order) {
