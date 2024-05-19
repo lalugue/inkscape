@@ -570,7 +570,8 @@ void Inkscape::DistributionSnapper::freeSnap(IntermSnapResults &isr,
     }
 
     // toggle checks
-    if (!_snap_enabled || !_snapmanager->snapprefs.isTargetSnappable(SNAPTARGET_DISTRIBUTION_CATEGORY))
+    if (!_snap_enabled || !_snapmanager->snapprefs.isTargetSnappable(SNAPTARGET_DISTRIBUTION_CATEGORY) ||
+        !_snapmanager->snapprefs.isTargetSnappable(SNAPTARGET_ALIGNMENT_CATEGORY))
         return;
 
     if (p.getSourceNum() <= 0) {
@@ -592,7 +593,8 @@ void Inkscape::DistributionSnapper::constrainedSnap(IntermSnapResults &isr,
         return;
 
     // toggle checks
-    if (!_snap_enabled || !_snapmanager->snapprefs.isTargetSnappable(SNAPTARGET_DISTRIBUTION_CATEGORY))
+    if (!_snap_enabled || !_snapmanager->snapprefs.isTargetSnappable(SNAPTARGET_DISTRIBUTION_CATEGORY) ||
+        !_snapmanager->snapprefs.isTargetSnappable(SNAPTARGET_ALIGNMENT_CATEGORY))
         return;
 
     // project the mouse pointer onto the constraint. Only the projected point will be considered for snapping
