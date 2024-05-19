@@ -1017,7 +1017,7 @@ void SPGroup::update_patheffect(bool write) {
     // must be set also to non effect items (satellites or parents)
     lpe_initialized = true;
     if (hasPathEffect() && pathEffectsEnabled()) {
-        if (!sp_version_inside_range(document->getRoot()->version.inkscape, 0, 1, 0, 92)) {
+        if (!document->getRoot()->inkscape.getVersion().isInsideRangeInclusive({0, 1}, {0, 92})) {
             resetClipPathAndMaskLPE();
         }
         PathEffectList path_effect_list(*this->path_effect_list);

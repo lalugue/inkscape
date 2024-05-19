@@ -6,6 +6,7 @@
  *   MenTaLguY <mental@rydia.net>
  *   Jon A. Cruz <jon@joncruz.org>
  *   Kris De Gussem <Kris.DeGussem@gmail.com>
+ *   Rafał Siejakowski <rs@rs-math.net>
  *
  * Copyright (C) 2003 MenTaLguY
  * Copyright (C) 2012 Kris De Gussem
@@ -13,65 +14,63 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include <glib.h>
 #include <sstream>
 #include "version.h"
 
-bool sp_version_from_string(const char *string, Inkscape::Version *version)
+namespace Inkscape {
+Version::Version()
+    : _string_representation{"0.0"}
+{}
+
+Version::Version(unsigned major_version, unsigned minor_version, std::string_view suffix)
+    : _major{major_version}
+    , _minor{minor_version}
+    , _suffix{suffix}
+{}
+
+Version::Version(unsigned major_version, unsigned minor_version)
+    : Version(major_version, minor_version, "")
+{}
+
+std::optional<Version> Version::from_string(char const *version_string)
 {
-    if (!string) {
-        return false;
+    if (!version_string) {
+        return {};
     }
 
-    try
-    {
-        std::stringstream ss;
+    try {
+        std::istringstream ss{version_string};
 
-        // Throw exception if error.
+        // Throw an exception if an error occurs when parsing the major and minor numbers.
         ss.exceptions(std::ios::failbit | std::ios::badbit);
-        ss << string;
-        ss >> version->_major;
-        char tmp=0;
+        unsigned major, minor;
+        std::string suffix;
+
+        ss >> major;
+        char tmp = 0;
         ss >> tmp;
-        ss >>version->_minor;
+        if (tmp != '.') {
+            return {};
+        }
+        ss >> minor;
 
-        // Don't throw exception if failbit gets set (empty string OK).
+        // Don't throw exception if failbit gets set (empty string is OK).
         ss.exceptions(std::ios::goodbit);
-        getline(ss, version->_tail);
-        return true;
-    }
-    catch(...)
-    {
-        version->_major = 0;
-        version->_minor = 0;
-        version->_tail.clear();
-        return false;
+        ss >> suffix;
+        return Version{major, minor, suffix};
+    } catch (...) {
+        return {};
     }
 }
 
-char *sp_version_to_string(Inkscape::Version version)
+std::string const &Version::str() const
 {
-    return g_strdup_printf("%u.%u%s", version._major, version._minor, version._tail.c_str());
-}
-
-bool sp_version_inside_range(Inkscape::Version version,
-                             unsigned major_min, unsigned minor_min,
-                             unsigned major_max, unsigned minor_max)
-{
-    if ( version._major < major_min || version._major > major_max ) {
-        return false;
-    } else if ( version._major == major_min &&
-                version._minor <= minor_min )
-    {
-        return false;
-    } else if ( version._major == major_max &&
-                version._minor >= minor_max )
-    {
-        return false;
-    } else {
-        return true;
+    if (_string_representation.empty()) {
+        _string_representation = std::to_string(_major) + '.' + std::to_string(_minor) + _suffix;
     }
+    return _string_representation;
 }
+} // namespace Inkscape
 
 /*
   Local Variables:

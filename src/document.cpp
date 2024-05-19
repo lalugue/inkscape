@@ -465,33 +465,34 @@ std::unique_ptr<SPDocument> SPDocument::createDoc(
     // Move to separate function?
 
     /** Fix baseline spacing (pre-92 files) **/
-    if ( (!sp_no_convert_text_baseline_spacing)
-         && sp_version_inside_range( document->root->version.inkscape, 0, 1, 0, 92 ) ) {
+    Inkscape::Version const lowest_version{0, 1};
+    if (!sp_no_convert_text_baseline_spacing &&
+        document->root->inkscape.getVersion().isInsideRangeInclusive(lowest_version, {0, 92})) {
         sp_file_convert_text_baseline_spacing(document.get());
     }
 
     /** Fix font names in legacy documents (pre-92 files) **/
-    if ( sp_version_inside_range( document->root->version.inkscape, 0, 1, 0, 92 ) ) {
+    if (document->root->inkscape.getVersion().isInsideRangeInclusive(lowest_version, {0, 92})) {
         sp_file_convert_font_name(document.get());
     }
 
     /** Fix first line spacing in legacy documents (pre-1.0 files) **/
-    if (sp_version_inside_range(document->root->version.inkscape, 0, 1, 1, 0)) {
+    if (document->root->inkscape.getVersion().isInsideRangeInclusive(lowest_version, {1, 0})) {
         sp_file_fix_empty_lines(document.get());
     }
 
     /** Fix OSB (pre-1.1 files) **/
-    if (sp_version_inside_range(document->root->version.inkscape, 0, 1, 1, 1)) {
+    if (document->root->inkscape.getVersion().isInsideRangeInclusive(lowest_version, {1, 1})) {
         sp_file_fix_osb(document->getRoot());
     }
 
     /** Fix feComposite (pre-1.2 files) **/
-    if (sp_version_inside_range(document->root->version.inkscape, 0, 1, 1, 2)) {
+    if (document->root->inkscape.getVersion().isInsideRangeInclusive(lowest_version, {1, 2})) {
         sp_file_fix_feComposite(document->getRoot());
     }
 
     /** Fix d missing on shapes (1.3.1 files) **/
-    std::string version = sp_version_to_string(document->root->version.inkscape);
+    std::string version = document->root->inkscape.getVersion().str();
     if (version.size() > 4) {
         version.erase(5);
         if (version == "1.3.1") {
@@ -499,7 +500,8 @@ std::unique_ptr<SPDocument> SPDocument::createDoc(
         }
     }
     /** Fix dpi (pre-92 files). With GUI fixed in Inkscape::Application::fix_document. **/
-    if ( !(INKSCAPE.use_gui()) && sp_version_inside_range( document->root->version.inkscape, 0, 1, 0, 92 ) ) {
+    if (!(INKSCAPE.use_gui()) &&
+        document->root->inkscape.getVersion().isInsideRangeInclusive(lowest_version, {0, 92})) {
         sp_file_convert_dpi(document.get());
     }
 

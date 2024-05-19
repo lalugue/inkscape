@@ -15,14 +15,15 @@
 #ifndef SP_ROOT_H_SEEN
 #define SP_ROOT_H_SEEN
 
-#include "sp-dimensions.h"         // for SPDimensions
-#include "sp-item-group.h"         // for SPGroup
-#include "version.h"               // for Version
-#include "viewbox.h"               // for SPViewBox
+#include <optional>
 
-#include "display/drawing-item.h"  // for DrawingItem
-#include "util/cast.h"             // for tag_of
-#include "xml/node.h"              // for Node
+#include "display/drawing-item.h" // for DrawingItem
+#include "sp-dimensions.h"        // for SPDimensions
+#include "sp-item-group.h"        // for SPGroup
+#include "util/cast.h"            // for tag_of
+#include "version.h"              // for Version
+#include "viewbox.h"              // for SPViewBox
+#include "xml/node.h"             // for Node
 
 class SPDefs;
 class SPDocument;
@@ -35,10 +36,12 @@ public:
 	~SPRoot() override;
     int tag() const override { return tag_of<decltype(*this)>; }
 
-    struct {
-        Inkscape::Version svg;
-        Inkscape::Version inkscape;
-    } version, original;
+    struct
+    {
+        std::optional<Inkscape::Version> version;
+        Inkscape::Version original;
+        Inkscape::Version const &getVersion() const { return version ? *version : original; }
+    } inkscape, svg;
 
     char *onload;
 

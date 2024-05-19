@@ -44,14 +44,6 @@ SPRoot::SPRoot() : SPGroup(), SPViewBox()
 {
     this->onload = nullptr;
 
-    static Inkscape::Version const zero_version(0, 0);
-
-    sp_version_from_string(SVG_VERSION, &this->original.svg);
-    this->version.svg = zero_version;
-    this->original.svg = zero_version;
-    this->version.inkscape = zero_version;
-    this->original.inkscape = zero_version;
-
     this->unset_x_and_y();
     this->width.unset(SVGLength::PERCENT, 1.0, 1.0);
     this->height.unset(SVGLength::PERCENT, 1.0, 1.0);
@@ -112,15 +104,11 @@ void SPRoot::set(SPAttr key, const gchar *value)
 {
     switch (key) {
     case SPAttr::VERSION:
-        if (!sp_version_from_string(value, &this->version.svg)) {
-            this->version.svg = this->original.svg;
-        }
+        svg.version = Inkscape::Version::from_string(value);
         break;
 
     case SPAttr::INKSCAPE_VERSION:
-        if (!sp_version_from_string(value, &this->version.inkscape)) {
-            this->version.inkscape = this->original.inkscape;
-        }
+        inkscape.version = Inkscape::Version::from_string(value);
         break;
 
     case SPAttr::X:
@@ -319,16 +307,8 @@ Inkscape::XML::Node *SPRoot::write(Inkscape::XML::Document *xml_doc, Inkscape::X
         repr = xml_doc->createElement("svg:svg");
     }
 
-    /* Only update version string on successful write to file. This is handled by 'file_save()'.
-     * if (flags & SP_OBJECT_WRITE_EXT) {
-     *   repr->setAttribute("inkscape:version", Inkscape::version_string);
-     * }
-     */
-
     if (!repr->attribute("version")) {
-        gchar *myversion = sp_version_to_string(this->version.svg);
-        repr->setAttribute("version", myversion);
-        g_free(myversion);
+        repr->setAttribute("version", svg.getVersion().str());
     }
 
     if (fabs(this->x.computed) > 1e-9) {

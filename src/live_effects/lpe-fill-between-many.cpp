@@ -254,10 +254,9 @@ LPEFillBetweenMany::doEffect (SPCurve * curve)
                         linked_path *= itemnear->getRelativeTransform(sp_lpe_item);
                     }
                     if (!res_pathv.empty() && join) {
-                        if (!sp_version_inside_range( getSPDoc()->getRoot()->version.inkscape, 0, 1, 1, 1 ) && // not in tests
-                            Geom::distance(res_pathv.front().finalPoint(), linked_path.initialPoint()) > 
-                            Geom::distance(res_pathv.front().finalPoint(), linked_path.finalPoint())) 
-                        {
+                        if (!getSPDoc()->getRoot()->inkscape.getVersion().isInsideRangeInclusive({0, 1}, {1, 1}) &&
+                            Geom::distance(res_pathv.front().finalPoint(), linked_path.initialPoint()) >
+                                Geom::distance(res_pathv.front().finalPoint(), linked_path.finalPoint())) {
                             linked_path = linked_path.reversed();
                         }
                         if (!are_near(res_pathv.front().finalPoint(), linked_path.initialPoint(), 0.1)) {

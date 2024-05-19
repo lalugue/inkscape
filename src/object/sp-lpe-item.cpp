@@ -1245,7 +1245,7 @@ SPLPEItem::applyToClipPathOrMask(SPItem *clip_mask, SPItem* to, Inkscape::LivePa
             applyToClipPathOrMask(subitem, to, lpe);
         }
     } else if (shape) {
-        if (sp_version_inside_range(root->version.inkscape, 0, 1, 0, 92)) {
+        if (root->inkscape.getVersion().isInsideRangeInclusive({0, 1}, {0, 92})) {
             shape->removeAttribute("inkscape:original-d");
         } else {
             if (shape->curve()) {

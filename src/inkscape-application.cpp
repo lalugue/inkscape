@@ -384,7 +384,7 @@ InkscapeApplication::document_fix(InkscapeWindow* window)
         }
 
         // Fix dpi (pre-92 files).
-        if ( sp_version_inside_range( document->getRoot()->version.inkscape, 0, 1, 0, 92 ) ) {
+        if (document->getRoot()->inkscape.getVersion().isInsideRangeInclusive({0, 1}, {0, 92})) {
             sp_file_convert_dpi(document);
         }
         /** Update LPE and Fix legacy LPE system **/

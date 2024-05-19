@@ -121,6 +121,8 @@ foreach(test_source ${TEST_SOURCES})
 endforeach()
 include(${CMAKE_SOURCE_DIR}/CMakeScripts/UnitTest.cmake)
 
+### Unit tests
+add_unit_test(version-test SOURCES version.cpp)
 
 ### CLI rendering tests and LPE
 add_subdirectory(cli_tests)

@@ -3,6 +3,7 @@
  * Authors:
  *   MenTaLguY <mental@rydia.net>
  *   Jon A. Cruz <jon@joncruz.org>
+ *   Rafał Siejakowski <rs@rs-math.net>
  *
  * Copyright (C) 2003 MenTaLguY
  *
@@ -14,50 +15,43 @@
 
 #define SVG_VERSION "1.1"
 
+#include <compare>
+#include <optional>
 #include <string>
+#include <string_view>
 
 namespace Inkscape {
 
 class Version {
 public:
-
-    Version() : _major(0), _minor(0) {}
+    Version();
 
     // Note: somebody pollutes our namespace with major() and minor()
-    Version(unsigned mj, unsigned mn) : _major(mj), _minor(mn) {}
+    Version(unsigned major_version, unsigned minor_version);
+    Version(unsigned major_version, unsigned minor_version, std::string_view suffix);
 
-    bool operator>(Version const &other) const {
-        return _major > other._major ||
-            ( _major == other._major && _minor > other._minor );
+    /// Build a Version form a string, returning an empty optional in case of error.
+    static std::optional<Version> from_string(const char *version_string);
+
+    std::partial_ordering operator<=>(Version const &other) const
+    {
+        return _major == other._major ? _minor <=> other._minor : _major <=> other._major;
     }
+    bool operator==(Version const &other) const { return _major == other._major && _minor == other._minor; }
 
-    bool operator==(Version const &other) const {
-        return _major == other._major && _minor == other._minor;
+    bool isInsideRangeInclusive(Version const &min_version, Version const &max_version) const
+    {
+        return min_version <= *this && *this <= max_version;
     }
+    std::string const &str() const;
 
-    bool operator!=(Version const &other) const {
-        return _major != other._major || _minor != other._minor;
-    }
-
-    bool operator<(Version const &other) const {
-        return _major < other._major ||
-            ( _major == other._major && _minor < other._minor );
-    }
-
-    unsigned int _major;
-    unsigned int _minor;
-    std::string _tail; // Development version
+private:
+    unsigned int _major = 0;
+    unsigned int _minor = 0;
+    std::string _suffix; ///< For example, for development version
+    std::string mutable _string_representation;
 };
-
-}
-
-bool sp_version_from_string(const char *string, Inkscape::Version *version);
-
-char *sp_version_to_string(Inkscape::Version version);
-
-bool sp_version_inside_range(Inkscape::Version version,
-                             unsigned major_min, unsigned minor_min,
-                             unsigned major_max, unsigned minor_max);
+} // namespace Inkscape
 
 #endif // SEEN_INKSCAPE_VERSION_H
 /*
