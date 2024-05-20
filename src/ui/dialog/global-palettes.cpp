@@ -451,7 +451,7 @@ PaletteResult load_palette(std::string const &path)
     } catch (Glib::Error const &e) {
         return {{}, compose_error(e.what())};
     } catch (...) {
-        return {{}, Glib::ustring::compose(_("Unknown error loading palette %"), utf8path)};
+        return {{}, Glib::ustring::compose(_("Unknown error loading palette %1"), utf8path)};
     }
 }
 
