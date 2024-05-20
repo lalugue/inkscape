@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 /*
- * Unit test main.
+ * Inkscape integration test main.
  *
  * Author:
  *   Jon A. Cruz <jon@joncruz.org>

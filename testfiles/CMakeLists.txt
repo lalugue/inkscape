@@ -5,10 +5,9 @@
 file(TO_NATIVE_PATH "/" _separator)
 ADD_DEFINITIONS(-DINKSCAPE_TESTS_DIR="${CMAKE_SOURCE_DIR}/testfiles")
 add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure
-                        DEPENDS tests
+                        DEPENDS tests unit_tests
                         WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
 add_dependencies(check inkscape)
-
 
 # create symlink "inkscape_datadir" to use as INKSCAPE_DATADIR
 # - ensures tests can be run without installing the project
@@ -44,8 +43,6 @@ set(INKSCAPE_TEST_PROFILE_DIR ${CMAKE_CURRENT_BINARY_DIR}/test_profile_dir)
 set(INKSCAPE_TEST_PROFILE_DIR_ENV INKSCAPE_PROFILE_DIR=${INKSCAPE_TEST_PROFILE_DIR})
 configure_file(CTestCustom.cmake.in ${CMAKE_BINARY_DIR}/CTestCustom.cmake)
 
-
-
 ### tests using gtest
 include_directories("${CMAKE_SOURCE_DIR}/src/3rdparty/adaptagrams") # TODO: remove this hack
 
@@ -57,6 +54,7 @@ if(${CMAKE_SIZEOF_VOID_P} EQUAL 8)
     )
 endif()
 
+# Integration tests (linking all of Inkscape)
 set(TEST_SOURCES
     actions-svg-processing
     async_channel-test
@@ -108,7 +106,7 @@ set(TEST_SOURCES
     ${LPE_TESTS_64bit}
     )
 
-add_library(cpp_test_static_library SHARED unittest.cpp doc-per-case-test.cpp compare-paths-test.h lpespaths-test.h store-integrity-test.h test-with-svg-object-pairs.cpp)
+add_library(cpp_test_static_library SHARED inkscape-test.cpp doc-per-case-test.cpp compare-paths-test.h lpespaths-test.h store-integrity-test.h test-with-svg-object-pairs.cpp)
 target_link_libraries(cpp_test_static_library PUBLIC ${GTEST_LIBRARIES} inkscape_base)
 
 add_custom_target(tests)
@@ -121,6 +119,7 @@ foreach(test_source ${TEST_SOURCES})
     set_tests_properties(${testname} PROPERTIES ENVIRONMENT "${INKSCAPE_TEST_PROFILE_DIR_ENV}/${testname};${CMAKE_CTEST_ENV}")
     add_dependencies(tests ${testname})
 endforeach()
+include(${CMAKE_SOURCE_DIR}/CMakeScripts/UnitTest.cmake)
 
 
 ### CLI rendering tests and LPE
