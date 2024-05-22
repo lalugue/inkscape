@@ -213,12 +213,19 @@ SelectedStyle::SelectedStyle(bool /*layout*/)
 
     // Opacity
     make_popup_opacity();
-    opacity_label = Gtk::make_managed<Gtk::Label>(_("O:"));
+    opacity_btn = Gtk::make_managed<Gtk::Button>(_("O:"), true);
+    opacity_btn->set_focus_on_click(false);
+    opacity_btn->set_relief(Gtk::RELIEF_NONE);
+    opacity_btn->get_style_context()->remove_class("text-button");
+    opacity_btn->get_style_context()->add_class("OpacityButton");
     opacity_adjustment = Gtk::Adjustment::create(100, 0.0, 100, 1.0, 10.0);
     opacity_sb = Gtk::make_managed<Inkscape::UI::Widget::SpinButton>(0.02, 0);
     opacity_sb->set_adjustment(opacity_adjustment);
     opacity_sb->set_size_request(SELECTED_STYLE_SB_WIDTH);
     opacity_sb->set_sensitive(false);
+
+    Controller::add_click(*opacity_btn, {}, sigc::mem_fun(*this, &SelectedStyle::on_opacity_click),
+                          Controller::Button::middle);
 
     Controller::add_click(
         *opacity_sb,
@@ -233,7 +240,7 @@ SelectedStyle::SelectedStyle(bool /*layout*/)
     on_popup_menu(*opacity_sb, sigc::mem_fun(*this, &SelectedStyle::on_opacity_popup));
     opacity_sb->signal_value_changed().connect(sigc::mem_fun(*this, &SelectedStyle::on_opacity_changed));
 
-    grid->attach(*opacity_label, 4, 0, 1, 2);
+    grid->attach(*opacity_btn, 4, 0, 1, 2);
     grid->attach(*opacity_sb,       5, 0, 1, 2);
 
     grid->set_column_spacing(4);

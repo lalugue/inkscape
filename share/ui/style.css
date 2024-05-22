@@ -812,6 +812,13 @@ button.menu-btn-tight {
     opacity: 1;
 }
 
+.OpacityButton {
+    border: none;
+    border-radius: 0px;
+    margin: 0;
+    padding: 0;
+}
+
 #DesktopStatusBar {
     margin-right: 1em;
 }
