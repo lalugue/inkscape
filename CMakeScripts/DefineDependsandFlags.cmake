@@ -273,10 +273,16 @@ list(APPEND INKSCAPE_INCS_SYS ${MM_INCLUDE_DIRS})
 list(APPEND INKSCAPE_LIBS ${MM_LIBRARIES})
 link_directories(${MM_LIBRARY_DIRS})
 
+# if system's gtk4 is new enough for gtkmm, pick it, otherwise ignore it and gtkmm build will build it
+pkg_check_modules(G4 gtk4>=4.14.0)
+list(APPEND INKSCAPE_CXX_FLAGS ${G4_CFLAGS_OTHER})
+list(APPEND INKSCAPE_INCS_SYS ${G4_INCLUDE_DIRS})
+list(APPEND INKSCAPE_LIBS ${G4_LIBRARIES})
+link_directories(${G4_LIBRARY_DIRS})
+
 pkg_check_modules(
     GTKMM4
     glibmm-2.68>=2.78.1
-    gtk4
     gtkmm-4.0>=4.13.3
     )
     list(APPEND INKSCAPE_CXX_FLAGS ${GTKMM4_CFLAGS_OTHER})
