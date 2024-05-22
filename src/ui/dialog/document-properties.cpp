@@ -1961,6 +1961,7 @@ GridWidget::GridWidget(SPGrid *grid)
     _opt_items->set_has_arrow(false);
 
     _align->set_label(C_("popup-align-grid-origin", "Align"));
+    _align->set_tooltip_text(_("Align grid origin relative to active page."));
     _align_popup->set_has_arrow(false);
     _align->set_popover(*_align_popup);
 
@@ -1991,6 +1992,7 @@ GridWidget::GridWidget(SPGrid *grid)
         // create grid of required type
         _grid->setType(std::get<1>(grid_types[index]));
     });
+    _grid_type.set_tooltip_text(_("Change to a different grid type."));
     box->append(_grid_type);
     left_col->attach(*box, 0, row, 2);
     right_col->attach(*buttons, 0, row, 2);
