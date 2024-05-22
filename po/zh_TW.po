@@ -10532,7 +10532,7 @@ msgstr "全螢幕 & 專注模式"
 
 #: ../src/actions/actions-view-mode.cpp:279
 msgid "Focus Mode"
-msgstr "切換專注模式"
+msgstr "專注模式"
 
 #: ../src/actions/actions-view-mode.cpp:279
 msgid "Remove excess toolbars to focus on drawing"
