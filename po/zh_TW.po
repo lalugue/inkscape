@@ -19265,22 +19265,26 @@ msgid ""
 "<b>Segment size:</b> add nodes to path evenly; <b>Number of segments:</b> "
 "add nodes between existing nodes"
 msgstr ""
+"<b>線段長度：</b>在路徑上均勻地加入節點；<b>線段數量：</b>"
+"在現有的節點中間加入節點"
 
 #: ../src/live_effects/lpe-roughen.cpp:51
 msgid ""
 "Add nodes to path evenly. Choose <b>Segment size</b> method from the "
 "dropdown to use this subdivision method."
 msgstr ""
+"在路徑上均勻地加入節點。在下拉式選單中選取<b>線段長度</b>來使用這個等分法。"
 
 #: ../src/live_effects/lpe-roughen.cpp:52
 msgid ""
 "Add nodes between existing nodes. Choose <b>Number of segments</b> method "
 "from the dropdown to use this subdivision method."
 msgstr ""
+"在現有的節點中間加入節點。在下拉式選單中選取<b>線段數量</b>來使用這個等分法。"
 
 #: ../src/live_effects/lpe-roughen.cpp:53
 msgid "Displace ←→"
-msgstr ""
+msgstr "移位 ←→"
 
 #: ../src/live_effects/lpe-roughen.cpp:53
 #: ../src/live_effects/lpe-roughen.cpp:58
@@ -19297,7 +19301,7 @@ msgstr "讓物件適用於複製模式中使用噴灑工具"
 
 #: ../src/live_effects/lpe-roughen.cpp:150
 msgid "<b>Resolution</b>"
-msgstr "<b></b>"
+msgstr "<b>解析度</b>"
 
 #: ../src/live_effects/lpe-roughen.cpp:158
 msgid "<b>Options</b>"
@@ -19463,11 +19467,11 @@ msgstr "重複"
 msgid ""
 "Change number of repeats of simplifying operation. Useful for complex paths "
 "that need to be significantly simplified. "
-msgstr ""
+msgstr "更改重複簡化的次數。適用於需要大量簡化的複雜路徑。"
 
 #: ../src/live_effects/lpe-simplify.cpp:28
 msgid "Drag slider to set the amount of simplification"
-msgstr ""
+msgstr "拖曳滑桿來設定簡化量"
 
 #: ../src/live_effects/lpe-simplify.cpp:29
 msgid "Max degree difference on handles to perform smoothing"
@@ -19710,7 +19714,7 @@ msgstr "中心點"
 
 #: ../src/live_effects/lpe-taperstroke.cpp:97
 msgid "Clamp"
-msgstr ""
+msgstr "固定"
 
 #: ../src/live_effects/lpe-taperstroke.cpp:105
 msgid "Select subpath:"
@@ -24424,6 +24428,8 @@ msgid ""
 "Composites two images using one of the Porter-Duff blending modes or the "
 "arithmetic mode described in SVG standard."
 msgstr ""
+"合成兩個影像，使用其中一種波特-達夫 (Porter-Duff) 混合模式，或是在 SVG 標準中"
+"定義的運算模式。"
 
 #: ../src/ui/dialog/filter-effects-dialog.cpp:2661
 msgid ""
@@ -24444,7 +24450,7 @@ msgstr ""
 msgid ""
 "Modifies pixel colors based on a transformation matrix. Useful for adjusting "
 "color hue and saturation."
-msgstr ""
+msgstr "基於變換矩陣修改像素顏色。適合用來調整顏色色相與飽和度。"
 
 #: ../src/ui/dialog/filter-effects-dialog.cpp:2667
 msgid ""
@@ -24484,6 +24490,7 @@ msgid ""
 "Renders Perlin noise, which is useful to generate textures such as clouds, "
 "fire, smoke, marble or granite."
 msgstr ""
+"繪算 Perlin 噪聲，適合用來產生雲朵、火光、煙霧、大理石或花崗岩等材質。"
 
 #: ../src/ui/dialog/filter-effects-dialog.cpp:2750
 msgid "Add Effect:"
@@ -25300,7 +25307,7 @@ msgstr "切羅基文"
 
 #: ../src/ui/dialog/glyphs.cpp:55 ../src/ui/dialog/glyphs.cpp:307
 msgid "Coptic"
-msgstr "古埃及文"
+msgstr "科普特字母"
 
 #: ../src/ui/dialog/glyphs.cpp:56 ../src/ui/dialog/glyphs.cpp:226
 msgid "Cyrillic"
@@ -25308,23 +25315,23 @@ msgstr "西里爾字母"
 
 #: ../src/ui/dialog/glyphs.cpp:57
 msgid "Deseret"
-msgstr "猶他大學音標"
+msgstr "德瑟雷特字母"
 
 #: ../src/ui/dialog/glyphs.cpp:58 ../src/ui/dialog/glyphs.cpp:236
 msgid "Devanagari"
-msgstr "天城體梵文字母"
+msgstr "天城文"
 
 #: ../src/ui/dialog/glyphs.cpp:59 ../src/ui/dialog/glyphs.cpp:252
 msgid "Ethiopic"
-msgstr "衣索比亞文"
+msgstr "衣索比亞字母"
 
 #: ../src/ui/dialog/glyphs.cpp:60 ../src/ui/dialog/glyphs.cpp:250
 msgid "Georgian"
-msgstr "喬治亞文"
+msgstr "喬治亞字母"
 
 #: ../src/ui/dialog/glyphs.cpp:61
 msgid "Gothic"
-msgstr "哥德文"
+msgstr "哥德字母"
 
 #: ../src/ui/dialog/glyphs.cpp:62
 msgid "Greek"
@@ -25592,19 +25599,19 @@ msgstr "巴姆穆文"
 
 #: ../src/ui/dialog/glyphs.cpp:128
 msgid "Egyptian Hieroglpyhs"
-msgstr ""
+msgstr "埃及聖書體"
 
 #: ../src/ui/dialog/glyphs.cpp:129
 msgid "Imperial Aramaic"
-msgstr ""
+msgstr "帝國亞拉姆文"
 
 #: ../src/ui/dialog/glyphs.cpp:130
 msgid "Inscriptional Pahlavi"
-msgstr ""
+msgstr "碑刻巴列維文"
 
 #: ../src/ui/dialog/glyphs.cpp:131
 msgid "Inscriptional Parthian"
-msgstr ""
+msgstr "碑刻帕提亞文"
 
 #: ../src/ui/dialog/glyphs.cpp:132 ../src/ui/dialog/glyphs.cpp:346
 msgid "Javanese"
@@ -25612,7 +25619,7 @@ msgstr "爪哇文"
 
 #: ../src/ui/dialog/glyphs.cpp:133
 msgid "Kaithi"
-msgstr ""
+msgstr "凱提文"
 
 #: ../src/ui/dialog/glyphs.cpp:134 ../src/ui/dialog/glyphs.cpp:332
 msgid "Lisu"
@@ -25620,207 +25627,195 @@ msgstr "傈僳文"
 
 #: ../src/ui/dialog/glyphs.cpp:135 ../src/ui/dialog/glyphs.cpp:350
 msgid "Meetei Mayek"
-msgstr "曼尼普爾文"
+msgstr "梅泰文"
 
 #: ../src/ui/dialog/glyphs.cpp:136
 msgid "Old South Arabian"
-msgstr ""
+msgstr "古南阿拉伯字母"
 
 #: ../src/ui/dialog/glyphs.cpp:137
-#, fuzzy
 msgid "Old Turkic"
-msgstr "古義大利文"
+msgstr "古突厥文"
 
 #: ../src/ui/dialog/glyphs.cpp:138 ../src/ui/dialog/glyphs.cpp:235
 msgid "Samaritan"
-msgstr "撒瑪麗亞文"
+msgstr "撒瑪利亞字母"
 
 #: ../src/ui/dialog/glyphs.cpp:139 ../src/ui/dialog/glyphs.cpp:270
 msgid "Tai Tham"
-msgstr "老傣仂文"
+msgstr "老傣文"
 
 #: ../src/ui/dialog/glyphs.cpp:140 ../src/ui/dialog/glyphs.cpp:349
 msgid "Tai Viet"
-msgstr "越南傣文"
+msgstr "傣越文"
 
 #: ../src/ui/dialog/glyphs.cpp:141
-#, fuzzy
 msgid "Batak"
-msgstr "片假名"
+msgstr "巴塔克字母"
 
 #: ../src/ui/dialog/glyphs.cpp:142
 msgid "Brahmi"
-msgstr ""
+msgstr "婆羅米文"
 
 #: ../src/ui/dialog/glyphs.cpp:143
 msgid "Mandaic"
-msgstr ""
+msgstr "曼達安字母"
 
 #: ../src/ui/dialog/glyphs.cpp:144
 msgid "Chakma"
-msgstr ""
+msgstr "查克馬文"
 
 #: ../src/ui/dialog/glyphs.cpp:145
-#, fuzzy
 msgid "Meroitic Cursive"
-msgstr "參數曲線"
+msgstr "麥羅埃文草書體"
 
 #: ../src/ui/dialog/glyphs.cpp:146
 msgid "Meroitic Hieroglyphs"
-msgstr ""
+msgstr "麥羅埃文聖書體"
 
 #: ../src/ui/dialog/glyphs.cpp:147
 msgid "Miao"
-msgstr ""
+msgstr "柏格理苗文"
 
 #: ../src/ui/dialog/glyphs.cpp:148
-#, fuzzy
 msgid "Sharada"
-msgstr "銳利"
+msgstr "夏拉達文"
 
 #: ../src/ui/dialog/glyphs.cpp:149
 msgid "Sora Sompeng"
-msgstr ""
+msgstr "索拉僧平字母"
 
 #: ../src/ui/dialog/glyphs.cpp:150
 msgid "Takri"
-msgstr ""
+msgstr "塔克里文"
 
 #: ../src/ui/dialog/glyphs.cpp:151
 msgid "Bassa"
-msgstr ""
+msgstr "巴薩文"
 
 #: ../src/ui/dialog/glyphs.cpp:152
 msgid "Caucasian Albanian"
-msgstr ""
+msgstr "高加索阿爾巴尼亞字母"
 
 #: ../src/ui/dialog/glyphs.cpp:153
 msgid "Duployan"
-msgstr ""
+msgstr "迪普盧瓦耶速記"
 
 #: ../src/ui/dialog/glyphs.cpp:154
 msgid "Elbasan"
-msgstr ""
+msgstr "愛爾巴桑字母"
 
 #: ../src/ui/dialog/glyphs.cpp:155
 msgid "Grantha"
-msgstr ""
+msgstr "古蘭塔文"
 
 #: ../src/ui/dialog/glyphs.cpp:156
 msgid "Khojki"
-msgstr ""
+msgstr "可吉文"
 
 #: ../src/ui/dialog/glyphs.cpp:157
 msgid "Khudawadi, Sindhi"
-msgstr ""
+msgstr "庫達瓦迪文"
 
 #: ../src/ui/dialog/glyphs.cpp:158
-#, fuzzy
 msgid "Linear A"
-msgstr "線性 B"
+msgstr "線形文字 A"
 
 #: ../src/ui/dialog/glyphs.cpp:159
 msgid "Mahajani"
-msgstr ""
+msgstr "馬哈賈尼文"
 
 #: ../src/ui/dialog/glyphs.cpp:160
 msgid "Manichaean"
-msgstr ""
+msgstr "摩尼字母"
 
 #: ../src/ui/dialog/glyphs.cpp:161
 msgid "Mende Kikakui"
-msgstr ""
+msgstr "門德基卡庫文"
 
 #: ../src/ui/dialog/glyphs.cpp:162
-#, fuzzy
 msgid "Modi"
-msgstr "修改(_M)"
+msgstr "莫迪文"
 
 #: ../src/ui/dialog/glyphs.cpp:163
 msgid "Mro"
-msgstr ""
+msgstr "默祿文"
 
 #: ../src/ui/dialog/glyphs.cpp:164
 msgid "Nabataean"
-msgstr ""
+msgstr "納巴泰字母"
 
 #: ../src/ui/dialog/glyphs.cpp:165
 msgid "Old North Arabian"
-msgstr ""
+msgstr "古北阿拉伯字母"
 
 #: ../src/ui/dialog/glyphs.cpp:166
-#, fuzzy
 msgid "Old Permic"
-msgstr "古波斯文"
+msgstr "古彼爾姆文"
 
 #: ../src/ui/dialog/glyphs.cpp:167
 msgid "Pahawh Hmong"
-msgstr ""
+msgstr "救世苗文"
 
 #: ../src/ui/dialog/glyphs.cpp:168
 msgid "Palmyrene"
-msgstr ""
+msgstr "帕爾邁拉字母"
 
 #: ../src/ui/dialog/glyphs.cpp:169
 msgid "Pau Cin Hau"
-msgstr ""
+msgstr "包欽豪文"
 
 #: ../src/ui/dialog/glyphs.cpp:170
-#, fuzzy
 msgid "Psalter Pahlavi"
-msgstr "海報筆觸"
+msgstr "詩篇巴列維文"
 
 #: ../src/ui/dialog/glyphs.cpp:171
 msgid "Siddham"
-msgstr ""
+msgstr "悉曇文"
 
 #: ../src/ui/dialog/glyphs.cpp:172
 msgid "Tirhuta"
-msgstr ""
+msgstr "底羅仆多文"
 
 #: ../src/ui/dialog/glyphs.cpp:173
 msgid "Warang Citi"
-msgstr ""
+msgstr "瓦蘭齊地文"
 
 #: ../src/ui/dialog/glyphs.cpp:174
 msgid "Ahom"
-msgstr ""
+msgstr "阿洪姆文"
 
 #: ../src/ui/dialog/glyphs.cpp:175
 msgid "Anatolian Hieroglyphs"
-msgstr ""
+msgstr "安納托利亞象形文字"
 
 #: ../src/ui/dialog/glyphs.cpp:176
 msgid "Hatran"
-msgstr ""
+msgstr "哈特拉文"
 
 #: ../src/ui/dialog/glyphs.cpp:177
-#, fuzzy
 msgid "Multani"
-msgstr "色彩增值"
+msgstr "穆爾塔尼文"
 
 #: ../src/ui/dialog/glyphs.cpp:178
-#, fuzzy
 msgid "Old Hungarian"
-msgstr "匈牙利語 (hu)"
+msgstr "古匈牙利字母"
 
 #: ../src/ui/dialog/glyphs.cpp:179
-#, fuzzy
 msgid "Signwriting"
-msgstr "指令稿"
+msgstr "薩頓書寫符號"
 
 #: ../src/ui/dialog/glyphs.cpp:215
-#, fuzzy
 msgid "Basic Plane"
-msgstr "基本拉丁字母"
+msgstr "基本多文種平面"
 
 #: ../src/ui/dialog/glyphs.cpp:216
 msgid "Extended Multilingual Plane"
-msgstr ""
+msgstr "多文種補充平面"
 
 #: ../src/ui/dialog/glyphs.cpp:217
 msgid "Supplementary Ideographic Plane"
-msgstr ""
+msgstr "表意文字補充平面"
 
 #: ../src/ui/dialog/glyphs.cpp:218
 msgid "Basic Latin"
@@ -26187,58 +26182,52 @@ msgid "Specials"
 msgstr "特殊字元"
 
 #: ../src/ui/dialog/glyphs.cpp:369
-#, fuzzy
 msgid "Miscellaneous Symbols and Pictographs"
-msgstr "其他符號和箭頭符號"
+msgstr "雜項符號和象形文字"
 
 #: ../src/ui/dialog/glyphs.cpp:370
-#, fuzzy
 msgid "Emoticons"
-msgstr "空白圖示"
+msgstr "表情符號"
 
 #: ../src/ui/dialog/glyphs.cpp:371
 msgid "Ornamental Dingbats"
-msgstr ""
+msgstr "裝飾符號"
 
 #: ../src/ui/dialog/glyphs.cpp:372
 msgid "Transport and Map Symbols"
-msgstr ""
+msgstr "交通和地圖符號"
 
 #: ../src/ui/dialog/glyphs.cpp:373
-#, fuzzy
 msgid "Alchemical Symbols"
-msgstr "高棉符號"
+msgstr "鍊金術符號"
 
 #: ../src/ui/dialog/glyphs.cpp:374
-#, fuzzy
 msgid "Geometric Shapes Extended"
-msgstr "幾何形狀"
+msgstr "幾何形狀擴展"
 
 #: ../src/ui/dialog/glyphs.cpp:375
-#, fuzzy
 msgid "Supplemental Arrows-C"
-msgstr "補充性箭頭符號 A"
+msgstr "補充性箭頭符號 C"
 
 #: ../src/ui/dialog/glyphs.cpp:376
 msgid "Supplemental Symbols and Pictographs"
-msgstr ""
+msgstr "補充符號和象形文字"
 
 #: ../src/ui/dialog/glyphs.cpp:377
-#, fuzzy
 msgid "Chess Symbols"
-msgstr "高棉符號"
+msgstr "棋類符號"
 
 #: ../src/ui/dialog/glyphs.cpp:378
 msgid "Symbols and Pictographs Extended-A"
-msgstr ""
+msgstr "符號和象形文字擴充-A"
 
 #: ../src/ui/dialog/glyphs.cpp:432
 msgid "Script: "
-msgstr "書寫體： "
+msgstr "書寫體："
 
 #: ../src/ui/dialog/glyphs.cpp:456
 msgid "Range: "
-msgstr "範圍： "
+msgstr "範圍："
 
 #: ../src/ui/dialog/glyphs.cpp:523
 msgid "Append"
@@ -26440,7 +26429,7 @@ msgstr ""
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:784
 msgid "Ctrl+click _dot size:"
-msgstr "「Ctrl+點擊」點尺寸(_D)："
+msgstr "Ctrl+點擊產生的圓點大小(_D)："
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:784
 msgid "times current stroke width"
@@ -26448,7 +26437,7 @@ msgstr "乘以目前邊框寬度"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:785
 msgid "Size of dots created with Ctrl+click (relative to current stroke width)"
-msgstr "用 Ctrl+點擊所建立的點大小 (相對於目前的邊框寬度)"
+msgstr "用 Ctrl+點擊所建立的圓點大小 (相對於目前的邊框寬度)"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:793
 msgid "Base simplify:"
@@ -26517,7 +26506,7 @@ msgstr "形狀"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:928
 msgid "Bounding box to use"
-msgstr "要使用的邊界框"
+msgstr "邊界框使用"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:929
 msgid "Visual bounding box"
@@ -26537,7 +26526,7 @@ msgstr "這種邊界框只包含最基本的路徑"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:936
 msgid "Conversion to guides"
-msgstr "轉成參考線"
+msgstr "參考線轉換"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:937
 msgid "Keep objects after conversion to guides"
@@ -26547,7 +26536,7 @@ msgstr "轉換成參考線之後仍保留物件"
 msgid ""
 "When converting an object to guides, don't delete the object after the "
 "conversion"
-msgstr "將物件轉換成參考線時，轉換之後不要刪除物件"
+msgstr "將物件轉換成參考線後，不要刪除物件"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:940
 msgid "Treat groups as a single object"
@@ -26557,7 +26546,7 @@ msgstr "將群組視為單一物件"
 msgid ""
 "Treat groups as a single object during conversion to guides rather than "
 "converting each child separately"
-msgstr "轉換成參考線期間將群組視為單一物件，而不是個別地轉換每個子集合"
+msgstr "轉換成參考線時將群組視為單一物件，而不是個別地轉換每個子物件"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:944
 msgid "Average all sketches"
@@ -26593,7 +26582,7 @@ msgstr "移動或變形時只顯示物件外框"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:963
 msgid "Per-object selection cue"
-msgstr "每個物件選取提示"
+msgstr "各物件選取提示"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:964
 msgctxt "Selection cue"
@@ -26682,11 +26671,11 @@ msgstr "游標停留在路徑上方時，短暫地閃爍路徑的輪廓"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:992
 msgid "Show temporary outline for selected paths"
-msgstr "顯示選取路徑路徑的暫時輪廓"
+msgstr "顯示選取路徑的暫時輪廓"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:993
 msgid "Show temporary outline even when a path is selected for editing"
-msgstr "顯示暫時輪廓，即使正在編輯選擇的路徑"
+msgstr "即使正在編輯選擇的路徑，依然顯示暫時輪廓"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:995
 msgid "_Flash time:"
@@ -26749,13 +26738,13 @@ msgid ""
 "If on, the sketch result will be the normal average of all sketches made, "
 "instead of averaging the old result with the new sketch"
 msgstr ""
-"若開啟，該草圖結果是全部草圖製作的普通平均值，而不是用新草圖平均之前的結果"
+"若開啟，草圖結果會是所有草圖的標準化平均值，而不是用新草圖與之前的結果平均"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:1055
 msgid ""
 "If on, each newly created object will be selected (deselecting previous "
 "selection)"
-msgstr "若開啟，每個新建立的物件都會被選取 (取消上一個選取)"
+msgstr "若開啟，每個新建立的物件都會被選取（同時取消上一個選取）"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:1062
 msgid "Show font samples in the drop-down list"
@@ -26768,7 +26757,7 @@ msgstr "在文字列的下拉式清單裡字型名稱旁邊顯示字型預覽"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:1065
 msgid "Show font substitution warning dialog"
-msgstr "顯示字型替代警告對話窗"
+msgstr "顯示字型替代的警告對話窗"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:1066
 msgid ""
@@ -26868,8 +26857,9 @@ msgid ""
 "uncheck to allow sharing of gradient definitions so that editing one object "
 "may affect other objects using the same gradient"
 msgstr ""
-"開啟時，改變共用的漸層定義時會自動分開；取消勾選會允許共用漸層定義以造成編輯"
-"一個物件可能會影響到另一個使用相同樣漸層的物件"
+"開啟時，共用的漸層定義在漸層改變時會自動分開、產生新的定義；"
+"取消勾選來允許共用漸層定義，讓漸層在一個物件上被編輯時，套用到其他使用同樣漸層"
+"的物件"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:1125
 msgid "Linear gradient _angle:"
@@ -27024,7 +27014,7 @@ msgstr "英語 (en)"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:1526
 msgid "English/Australia (en_AU)"
-msgstr "英語/澳大利亞 (en_AU)"
+msgstr "英語 / 澳大利亞 (en_AU)"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:1526
 msgid "English/Canada (en_CA)"
@@ -27288,7 +27278,7 @@ msgstr "清除清單"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:1605
 msgid "Maximum documents in Open _Recent:"
-msgstr "最近開啟的最多文件數(_R)："
+msgstr "「最近開啟」選單的文件數量最大值(_R)："
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:1606
 msgid ""
@@ -27692,7 +27682,7 @@ msgstr "顯示歡迎對話窗"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:1969
 msgid "Dialogs are hidden in taskbar"
-msgstr "對話窗隱藏在任務欄裡"
+msgstr "在系統工作列中隱藏對話窗"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:1970
 msgid "Save and restore documents viewport"
@@ -29220,13 +29210,15 @@ msgstr ""
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2764
 msgid "'Object to Path' only unlinks (keeps LPEs, shapes)"
-msgstr ""
+msgstr "「物件轉成路徑」只會取消連結（保留即時路徑特效、形狀）"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2766
 msgid ""
 "'Object to path' only unlinks clones when they are converted to paths, but "
 "preserves any LPEs and shapes within the clones."
 msgstr ""
+"「物件轉成路徑」只會在仿製物件轉換為路徑時取消連結該物件，但將保留所有"
+"在仿製物件當中的即時路徑特效與形狀。"
 
 #. TRANSLATORS: Heading for the Inkscape Preferences "Clones" Page
 #: ../src/ui/dialog/inkscape-preferences.cpp:2768
@@ -29245,11 +29237,11 @@ msgstr "取消勾選這選項會使用底層的選取物件作為剪裁路徑或
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2774
 msgid "When ungrouping, clips/masks are preserved in children"
-msgstr ""
+msgstr "解散群組時，將剪裁 / 遮罩套用到子物件上"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2776
 msgid "Uncheck this to remove clip/mask on ungroup"
-msgstr ""
+msgstr "取消勾選來在解散群組時移除裁剪 / 遮罩"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2777
 msgid "Remove clippath/mask object after applying"
@@ -29333,12 +29325,15 @@ msgid ""
 "The object's 'style' attribute will be set to the computed style, preserving "
 "the object's appearance as in previous Inkscape versions"
 msgstr ""
+"物件的「style」特性會設定為運算後的樣式，保留物件的外觀，"
+"與舊版 Inkscape 相同"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2826
 msgid ""
 "The object's 'style' and 'class' values will be copied verbatim, and will "
 "replace those of the target object when using 'Paste style'"
 msgstr ""
+"使用「貼上樣式」時，物件的「style」與「class」值會被逐字複製，並取代目標物件的值"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2828
 msgid "Clipboard"
@@ -29853,6 +29848,10 @@ msgid ""
 "disk. Note that this will expose your directory structure in the file's "
 "source code, which can include personal information like your username."
 msgstr ""
+"預設情況下，影像連結會盡可能用相對路徑儲存。開啟這個選項後，Inkscape 會額外新增"
+"絕對路徑（「sodipodi:absref」特性）到影像中。這樣可以在 SVG 檔案被移動的情況下，"
+"做為找尋影像位置的備案。要注意，這個功能會在檔案的原始碼中暴露您的資料夾架構，"
+"其中可能包含使用者名稱等個人資料。"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:3074
 msgid "Bitmap import/open mode:"
@@ -29877,7 +29876,7 @@ msgstr "圖片縮放 (影像繪算)："
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:3093
 msgid "Default _import resolution:"
-msgstr "預設匯出解析度(_I)："
+msgstr "預設匯入解析度(_I)："
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:3094
 msgid "Default import resolution (in dots per inch) for bitmap and SVG import"
@@ -30017,11 +30016,11 @@ msgstr "你確定要重新指定此快捷鍵？"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:3583 ../src/ui/shortcuts.cpp:680
 msgid "Numpad"
-msgstr ""
+msgstr "數字鍵"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:3682
 msgid "Ignore words with digits"
-msgstr "忽略數字"
+msgstr "忽略有數字的單字"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:3684
 msgid "Ignore words containing digits, such as \"R2D2\""
@@ -30041,7 +30040,7 @@ msgstr "拼寫檢查"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:3711
 msgid "Shared default resources folder:"
-msgstr ""
+msgstr "共用預設資源資料夾："
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:3712
 msgid ""
@@ -30052,6 +30051,9 @@ msgid ""
 "access to that folder (on the same computer or in the network). Requires a "
 "restart of Inkscape to work when changed."
 msgstr ""
+"一個資料夾，架構與使用者的 Inkscape 偏好設定資料夾相同。這可以讓可以存取資料夾的"
+"多個使用者共用同一套資源，如擴充功能、字型、圖示主題、快速鍵、圖樣/剖面線、符號、"
+"範本、主題與使用者介面定義檔案。更動後需重啟 Inkscape 方能生效。"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:3713
 msgid "System info"
@@ -30548,7 +30550,7 @@ msgstr "標題(_T)："
 
 #: ../src/ui/dialog/object-properties.cpp:64
 msgid "_DPI SVG:"
-msgstr "_DPI SVG:"
+msgstr "_DPI SVG："
 
 #: ../src/ui/dialog/object-properties.cpp:65
 msgid "Highlight Color:"
@@ -30577,7 +30579,7 @@ msgstr "互動(_I)"
 #: ../src/ui/dialog/object-properties.cpp:133
 msgid ""
 "The id= attribute (only letters, digits, and the characters .-_: allowed)"
-msgstr "屬性 id= (只有字母﹑數字以及字元，可以包含 .-_: )"
+msgstr "id= 特性（只能包含字母﹑數字以及「.-_:」字元）"
 
 #: ../src/ui/dialog/object-properties.cpp:151
 msgid "A freeform label for the object"
@@ -30591,7 +30593,7 @@ msgstr "描述(_D)："
 msgid ""
 "Set resolution for vector images (press Enter to see change in rendering "
 "quality)"
-msgstr ""
+msgstr "設定向量圖形的解析度（按下 Enter 來檢視繪算品質的改變）"
 
 #: ../src/ui/dialog/object-properties.cpp:229
 msgid "Check to make the object invisible"
@@ -30615,6 +30617,8 @@ msgid ""
 "<small><i>Enter JavaScript code for interactive behavior in a browser.</i></"
 "small>"
 msgstr ""
+"<small><i>輸入 JavaScript 程式碼以利在瀏覽器中互動。</i></"
+"small>"
 
 #: ../src/ui/dialog/object-properties.cpp:354
 #: ../src/ui/dialog/object-properties.cpp:359
@@ -30874,7 +30878,7 @@ msgstr "開始(_S)"
 
 #: ../src/ui/dialog/spellcheck.cpp:113
 msgid "No dictionaries installed"
-msgstr ""
+msgstr "未安裝字典"
 
 #: ../src/ui/dialog/spellcheck.cpp:124
 msgid "Suggestions:"
@@ -31565,6 +31569,8 @@ msgid ""
 "Automatic panel layout:\n"
 "changes with dialog size"
 msgstr ""
+"自動工作列佈局：\n"
+"與對話窗大小一同改變"
 
 #: ../src/ui/dialog/xml-tree.cpp:198
 msgid "Horizontal panel layout"
@@ -31722,6 +31728,8 @@ msgid ""
 "makes x equal to y; <b>Shift</b>+<b>Ctrl</b>+<b>Drag</b> scales blur "
 "proportionately "
 msgstr ""
+"<b>拖曳</b>來調整 X 軸方向的模糊程度；<b>按住 Ctrl 並拖曳</b>來讓 X 與 Y 相等"
+"；<b>按住 Shift+Ctrl 並拖曳</b>來等比例縮放模糊效果"
 
 #: ../src/ui/knot/knot-holder.cpp:473
 msgid ""
@@ -31729,6 +31737,8 @@ msgid ""
 "makes y equal to x; <b>Shift</b>+<b>Ctrl</b>+<b>Drag</b> scales blur "
 "proportionately "
 msgstr ""
+"<b>拖曳</b>來調整 Y 軸方向的模糊程度；<b>按住 Ctrl 並拖曳</b>來讓 Y 與 X 相等"
+"；<b>按住 Shift+Ctrl 並拖曳</b>來等比例縮放模糊效果"
 
 #: ../src/ui/knot/knot.cpp:278
 msgid "Node or handle drag canceled."
@@ -32908,7 +32918,7 @@ msgstr "頁面標籤"
 #. TRANSLATORS: "%1" is replaced with the page we are on, and "%2" is the total number of pages.
 #: ../src/ui/toolbar/page-toolbar.cpp:477
 msgid "%1/%2"
-msgstr ""
+msgstr "%1/%2"
 
 #: ../src/ui/toolbar/page-toolbar.cpp:491
 msgid "Single Page Document"
@@ -32916,11 +32926,11 @@ msgstr "單頁文件"
 
 #: ../src/ui/toolbar/page-toolbar.cpp:492 ../share/ui/toolbar-page.ui:192
 msgid "1/-"
-msgstr ""
+msgstr "1/-"
 
 #: ../src/ui/toolbar/paintbucket-toolbar.cpp:77
 msgid "Fill by"
-msgstr "填充"
+msgstr "填充使用"
 
 #: ../src/ui/toolbar/paintbucket-toolbar.cpp:106
 msgid "Close gaps"
@@ -32937,7 +32947,7 @@ msgstr "線端"
 
 #: ../src/ui/toolbar/pencil-toolbar.cpp:163 ../share/ui/toolbar-pencil.ui:298
 msgid "Line endings when drawing with pressure-sensitive PowerPencil"
-msgstr ""
+msgstr "在使用感壓畫筆時的線條末端"
 
 #: ../src/ui/toolbar/pencil-toolbar.cpp:182
 msgctxt "Freehand shape"
@@ -33333,7 +33343,7 @@ msgstr "完成連接線"
 
 #: ../src/ui/tools/connector-tool.cpp:917
 msgid "Click to join at this point"
-msgstr ""
+msgstr "點擊以在此處接合"
 
 #: ../src/ui/tools/connector-tool.cpp:1120
 msgid "<b>Connector endpoint</b>: drag to reroute or connect to new shapes"
@@ -33882,7 +33892,7 @@ msgstr "<b>Ctrl</b>：建立正方形或整數比例縮放的矩形，鎖定圓�
 
 #: ../src/ui/tools/rect-tool.cpp:226
 msgid "<b>Alt</b>: use with Ctrl to make square"
-msgstr ""
+msgstr "<b>Alt</b>：與 Ctrl 一同使用來製作正方形"
 
 #: ../src/ui/tools/rect-tool.cpp:368
 #, c-format
@@ -34534,11 +34544,11 @@ msgstr "HSV"
 
 #: ../src/ui/widget/color-scales.cpp:77 ../src/ui/widget/color-scales.cpp:135
 msgid "HSLuv"
-msgstr ""
+msgstr "HSLuv"
 
 #: ../src/ui/widget/color-scales.cpp:77 ../src/ui/widget/color-scales.cpp:135
 msgid "OKHSL"
-msgstr ""
+msgstr "OKHSL"
 
 #: ../src/ui/widget/color-scales.cpp:217
 msgid "Color Wheel"
@@ -34546,31 +34556,31 @@ msgstr "色環"
 
 #: ../src/ui/widget/color-scales.cpp:651
 msgid "_V:"
-msgstr "_V："
+msgstr "數值(_V)："
 
 #: ../src/ui/widget/color-scales.cpp:716
 msgid "_H*:"
-msgstr ""
+msgstr "色相*(_H)："
 
 #: ../src/ui/widget/color-scales.cpp:721
 msgid "_S*:"
-msgstr ""
+msgstr "飽和度*(_S)："
 
 #: ../src/ui/widget/color-scales.cpp:725
 msgid "_L*:"
-msgstr ""
+msgstr "明度*(_L)："
 
 #: ../src/ui/widget/color-scales.cpp:756
 msgid "_H<sub>OK</sub>:"
-msgstr ""
+msgstr "色相<sub>OK</sub>(_H)："
 
 #: ../src/ui/widget/color-scales.cpp:761
 msgid "_S<sub>OK</sub>:"
-msgstr ""
+msgstr "飽和度<sub>OK</sub>(_S)："
 
 #: ../src/ui/widget/color-scales.cpp:765
 msgid "_L<sub>OK</sub>:"
-msgstr ""
+msgstr "明度<sub>OK</sub>(_L)："
 
 #: ../src/ui/widget/dash-selector.cpp:52
 msgid "Dash pattern"
@@ -34778,7 +34788,7 @@ msgstr "你確定要刪除「%1」字型收藏集？\n"
 
 #: ../src/ui/widget/font-list.cpp:106
 msgid "Sans Serif"
-msgstr ""
+msgstr "非襯線體"
 
 #: ../src/ui/widget/font-list.cpp:808
 msgctxt "N-of-fonts"
@@ -35174,7 +35184,7 @@ msgstr "CSS 表單中的特性設定值 (例如「wxyz」或「wxyz」3)。"
 #: ../src/ui/widget/font-variations.cpp:52
 msgctxt "Variable font axis"
 msgid "Grade"
-msgstr "粗細變化"
+msgstr "粗細變化 (GRAD)"
 
 #: ../src/ui/widget/font-variations.cpp:52
 msgid ""
@@ -35185,25 +35195,25 @@ msgstr "更動筆畫寬度（或是其他造型）但不影響字體的整體寬
 #: ../src/ui/widget/font-variations.cpp:55
 msgctxt "Variable font axis"
 msgid "X opaque"
-msgstr "X 不透明"
+msgstr "豎筆粗細 (XOPQ)"
 
 #: ../src/ui/widget/font-variations.cpp:55
 msgid "Alter the opaque stroke forms of glyphs in the X dimension"
-msgstr "更動 X 軸方向的字符筆畫不透明度"
+msgstr "更動 X 軸方向的字符筆畫粗細（「不透明度」）"
 
 #: ../src/ui/widget/font-variations.cpp:58
 msgctxt "Variable font axis"
 msgid "Y opaque"
-msgstr "Y 不透明"
+msgstr "橫筆粗細 (YOPQ)"
 
 #: ../src/ui/widget/font-variations.cpp:58
 msgid "Alter the opaque stroke forms of glyphs in the Y dimension"
-msgstr "更動 Y 軸方向的字符筆畫不透明度"
+msgstr "更動 Y 軸方向的字符筆畫粗細（「不透明度」）"
 
 #: ../src/ui/widget/font-variations.cpp:62
 msgctxt "Variable font axis"
 msgid "X transparent"
-msgstr "X 留白"
+msgstr "橫向留白 (XTRA)"
 
 #: ../src/ui/widget/font-variations.cpp:62
 msgid ""
@@ -35214,7 +35224,7 @@ msgstr "更動字符內外 X 軸方向的留白空間"
 #: ../src/ui/widget/font-variations.cpp:63
 msgctxt "Variable font axis"
 msgid "Y transparent"
-msgstr "Y 留白"
+msgstr "縱向留白 (YTRA)"
 
 #: ../src/ui/widget/font-variations.cpp:63
 msgid ""
@@ -35225,7 +35235,7 @@ msgstr "更動字符內外 Y 軸方向的留白空間"
 #: ../src/ui/widget/font-variations.cpp:65
 msgctxt "Variable font axis"
 msgid "X transparent Chinese"
-msgstr "X 中文留白"
+msgstr "橫向中文留白 (XTCH)"
 
 #: ../src/ui/widget/font-variations.cpp:65
 msgid "Alter the width of Chinese glyphs"
@@ -35234,7 +35244,7 @@ msgstr "更動中文字符的寬度"
 #: ../src/ui/widget/font-variations.cpp:66
 msgctxt "Variable font axis"
 msgid "Y transparent Chinese"
-msgstr "Y 中文留白"
+msgstr "縱向中文留白 (YTCH)"
 
 #: ../src/ui/widget/font-variations.cpp:66
 msgid "Alter the height of Chinese glyphs"
@@ -35243,346 +35253,310 @@ msgstr "更動中文字符的高度"
 #: ../src/ui/widget/font-variations.cpp:68
 msgctxt "Variable font axis"
 msgid "Lowercase height"
-msgstr "小寫字母高度"
+msgstr "小寫字母高度 (YTLC)"
 
 #: ../src/ui/widget/font-variations.cpp:68
 msgid ""
 "Vary the height of counters and other spaces between the baseline and x-"
 "height"
-msgstr ""
+msgstr "變化字腔及其他在基線與 x 字高之間的留白"
 
 #: ../src/ui/widget/font-variations.cpp:70
-#, fuzzy
 msgctxt "Variable font axis"
 msgid "Uppercase height"
-msgstr "大寫字母高度："
+msgstr "大寫字母高度 (YTUC)"
 
 #: ../src/ui/widget/font-variations.cpp:70
 msgid "Vary the height of uppercase letterforms"
-msgstr ""
+msgstr "變化大寫字母的高度"
 
 #: ../src/ui/widget/font-variations.cpp:72
-#, fuzzy
 msgctxt "Variable font axis"
 msgid "Ascender height"
-msgstr "取消設定列高"
+msgstr "上伸部高度 (YTAS)"
 
 #: ../src/ui/widget/font-variations.cpp:72
 msgid "Vary the height of lowercase ascenders"
-msgstr ""
+msgstr "變化小寫字母上伸部的高度"
 
 #: ../src/ui/widget/font-variations.cpp:74
-#, fuzzy
 msgctxt "Variable font axis"
 msgid "Descender depth"
-msgstr "下伸線："
+msgstr "下伸部深度 (YTDE)"
 
 #: ../src/ui/widget/font-variations.cpp:74
 msgid "Vary the depth of lowercase descenders"
-msgstr ""
+msgstr "變化小寫字母下伸部的深度"
 
 #: ../src/ui/widget/font-variations.cpp:76
-#, fuzzy
 msgctxt "Variable font axis"
 msgid "Figure height"
-msgstr "模糊高度："
+msgstr "數字高度 (YTFI)"
 
 #: ../src/ui/widget/font-variations.cpp:76
 msgid "Vary the height of figures"
-msgstr ""
+msgstr "變化數字（figures）的高度"
 
 #: ../src/ui/widget/font-variations.cpp:78
-#, fuzzy
 msgctxt "Variable font axis"
 msgid "Serif rise"
-msgstr "襯線體端點"
+msgstr "襯線寬度 (YTSE)"
 
 #: ../src/ui/widget/font-variations.cpp:78
-#, fuzzy
 msgid "Vary the shape of the serifs"
-msgstr "決定路徑轉角的形狀"
+msgstr "變化襯線的形狀"
 
 #: ../src/ui/widget/font-variations.cpp:80
 msgctxt "Variable font axis"
 msgid "Flare"
-msgstr ""
+msgstr "喇叭口 (FLAR)"
 
 #: ../src/ui/widget/font-variations.cpp:80
-#, fuzzy
 msgid "Controls the flaring of the stems"
-msgstr "控制工具欄項目"
+msgstr "控制字幹的喇叭口"
 
 #: ../src/ui/widget/font-variations.cpp:83
-#, fuzzy
 msgctxt "Variable font axis"
 msgid "Volume"
-msgstr "欄"
+msgstr "細節變化 (VOLM)"
 
 #: ../src/ui/widget/font-variations.cpp:83
 msgid "Volume works in combination with flare to transform serifs"
-msgstr ""
+msgstr "細節變化與喇叭口一同作用時能轉化襯線"
 
 #: ../src/ui/widget/font-variations.cpp:85
-#, fuzzy
 msgctxt "Variable font axis"
 msgid "Softness"
-msgstr "平滑度"
+msgstr "圓滑程度 (SOFT)"
 
 #: ../src/ui/widget/font-variations.cpp:85
 msgid "Softness makes letterforms more soft and rounded"
-msgstr ""
+msgstr "圓滑程度能讓軟化字母，使其更加圓潤"
 
 #: ../src/ui/widget/font-variations.cpp:87
-#, fuzzy
 msgctxt "Variable font axis"
 msgid "Casual"
-msgstr "視覺"
+msgstr "休閒程度 (CASL)"
 
 #: ../src/ui/widget/font-variations.cpp:87
 msgid "Adjust the letterforms from a more serious style to a more casual style"
-msgstr ""
+msgstr "調整字母從嚴肅的模樣過渡到休閒的模樣"
 
 #: ../src/ui/widget/font-variations.cpp:89
-#, fuzzy
 msgctxt "Variable font axis"
 msgid "Cursive"
-msgstr "游標大小"
+msgstr "草書化 (CRSV)"
 
 #: ../src/ui/widget/font-variations.cpp:89
 msgid "Control the substitution of cursive forms"
-msgstr ""
+msgstr "控制草書寫法的字元替換"
 
 #: ../src/ui/widget/font-variations.cpp:91
-#, fuzzy
 msgctxt "Variable font axis"
 msgid "Fill"
-msgstr "填充"
+msgstr "留白填充 (FILL)"
 
 #: ../src/ui/widget/font-variations.cpp:91
 msgid "Fill can turn transparent forms opaque"
-msgstr ""
+msgstr "留白填充能使留白的部分成為不透明"
 
 #: ../src/ui/widget/font-variations.cpp:93
-#, fuzzy
 msgctxt "Variable font axis"
 msgid "Monospace"
-msgstr "等寬字型："
+msgstr "等寬程度 (MONO)"
 
 #: ../src/ui/widget/font-variations.cpp:93
 msgid "Adjust the glyphs from a proportional width to a fixed width"
-msgstr ""
+msgstr "調整字符從比例式過渡到等寬式"
 
 #: ../src/ui/widget/font-variations.cpp:95
 msgctxt "Variable font axis"
 msgid "Wonky"
-msgstr ""
+msgstr "歪扭風格 (WONK)"
 
 #: ../src/ui/widget/font-variations.cpp:95
 msgid "Binary switch used to control substitution of “wonky” forms"
-msgstr ""
+msgstr "用來控制「歪扭風格」字符替換的開關"
 
 #: ../src/ui/widget/font-variations.cpp:97
-#, fuzzy
 msgctxt "Variable font axis"
 msgid "Element shape"
-msgstr "等級"
+msgstr "元素形狀 (ELSH)"
 
 #: ../src/ui/widget/font-variations.cpp:97
 msgid "Selection of the base element glyphs are composed of"
-msgstr ""
+msgstr "控制組成字符的形狀樣式"
 
 #: ../src/ui/widget/font-variations.cpp:99
-#, fuzzy
 msgctxt "Variable font axis"
 msgid "Element grid"
-msgstr "重設格線"
+msgstr "元素網格 (ELGR)"
 
 #: ../src/ui/widget/font-variations.cpp:99
 msgid "Controls how many elements are used per one grid unit"
-msgstr ""
+msgstr "控制一個網格單位要包含幾個元素"
 
 #: ../src/ui/widget/font-variations.cpp:104
-#, fuzzy
 msgctxt "Variable font axis"
 msgid "Optical size"
-msgstr "初始尺寸："
+msgstr "視覺大小 (OPSZ)"
 
 #: ../src/ui/widget/font-variations.cpp:104
-#, fuzzy
 msgid "Optimize the typeface for use at specific size"
-msgstr "在檔案大小下著手最佳化 PNG 輸出。"
+msgstr "最佳化字體使用在特定尺寸時的樣式"
 
 #: ../src/ui/widget/font-variations.cpp:106
 msgctxt "Variable font axis"
 msgid "Slant"
-msgstr ""
+msgstr "傾斜程度 (SLNT)"
 
 #: ../src/ui/widget/font-variations.cpp:106
 msgid "Controls the font file’s slant parameter for oblique styles"
-msgstr ""
+msgstr "控制字型的傾斜程度參數，達到假斜體的效果"
 
 #: ../src/ui/widget/font-variations.cpp:108
-#, fuzzy
 msgctxt "Variable font axis"
 msgid "Italic"
-msgstr "古義大利文"
+msgstr "義大利體 (ITAL)"
 
 #: ../src/ui/widget/font-variations.cpp:108
 msgid "Turns on the font’s italic forms"
-msgstr ""
+msgstr "開啟字型的義大利體字樣"
 
 #: ../src/ui/widget/font-variations.cpp:110
-#, fuzzy
 msgctxt "Variable font axis"
 msgid "Weight"
-msgstr "字重"
+msgstr "字重 (WGHT)"
 
 #: ../src/ui/widget/font-variations.cpp:110
 msgid "Controls the font file’s weight parameter"
-msgstr ""
+msgstr "控制字型的字重參數"
 
 #: ../src/ui/widget/font-variations.cpp:112
-#, fuzzy
 msgctxt "Variable font axis"
 msgid "Width"
-msgstr "寬度"
+msgstr "寬度 (WDTH)"
 
 #: ../src/ui/widget/font-variations.cpp:112
 msgid "Controls the font file’s width parameter"
-msgstr ""
+msgstr "控制字型的寬度參數"
 
 #: ../src/ui/widget/font-variations.cpp:114
-#, fuzzy
 msgctxt "Variable font axis"
 msgid "Tabular width"
-msgstr "表格式"
+msgstr "表格式字寬 (XTAB)"
 
 #: ../src/ui/widget/font-variations.cpp:114
-#, fuzzy
 msgid "Controls the tabular width"
-msgstr "交叉路徑的邊框寬度(_C)"
+msgstr "控制表格式字符的寬度"
 
 #: ../src/ui/widget/font-variations.cpp:115
-#, fuzzy
 msgctxt "Variable font axis"
 msgid "Underline"
-msgstr "參考線"
+msgstr "底線寬度 (UDLN)"
 
 #: ../src/ui/widget/font-variations.cpp:115
 msgid "Controls the weight of an underline"
-msgstr ""
+msgstr "控制底線寬度"
 
 #: ../src/ui/widget/font-variations.cpp:116
-#, fuzzy
 msgctxt "Variable font axis"
 msgid "Shadow"
-msgstr "陰影"
+msgstr "陰影深度 (SHDW)"
 
 #: ../src/ui/widget/font-variations.cpp:116
 msgid "Controls the depth of a shadow"
-msgstr ""
+msgstr "控制陰影的深度"
 
 #: ../src/ui/widget/font-variations.cpp:117
-#, fuzzy
 msgctxt "Variable font axis"
 msgid "Reflection"
-msgstr "選取範圍"
+msgstr "反射程度 (REFL)"
 
 #: ../src/ui/widget/font-variations.cpp:117
-#, fuzzy
 msgid "Controls the Y reflection"
-msgstr "轉換選取範圍："
+msgstr "控制 Y 軸方向的反射程度"
 
 #: ../src/ui/widget/font-variations.cpp:118
-#, fuzzy
 msgctxt "Variable font axis"
 msgid "Outline"
-msgstr "外框"
+msgstr "外框粗細 (OTLN)"
 
 #: ../src/ui/widget/font-variations.cpp:118
 msgid "Controls the weight of a font’s outline"
-msgstr ""
+msgstr "控制字型外框的粗細"
 
 #: ../src/ui/widget/font-variations.cpp:119
-#, fuzzy
 msgctxt "Variable font axis"
 msgid "Engrave"
-msgstr "雕刻"
+msgstr "雕刻 (ENGR)"
 
 #: ../src/ui/widget/font-variations.cpp:119
 msgid "Controls the width of an engraving"
-msgstr ""
+msgstr "控制雕刻的寬度"
 
 #: ../src/ui/widget/font-variations.cpp:120
-#, fuzzy
 msgctxt "Variable font axis"
 msgid "Emboss"
-msgstr "浮雕"
+msgstr "浮雕 (EMBO)"
 
 #: ../src/ui/widget/font-variations.cpp:120
 msgid "Controls the depth of an emboss"
-msgstr ""
+msgstr "控制浮雕的深度"
 
 #: ../src/ui/widget/font-variations.cpp:121
-#, fuzzy
 msgctxt "Variable font axis"
 msgid "Relative X advance"
-msgstr "相對改變(_T)"
+msgstr "相對橫向位移 (RXAD)"
 
 #: ../src/ui/widget/font-variations.cpp:121
 msgid "Controls the relative X advance - horizontal motion of the glyph"
-msgstr ""
+msgstr "控制相對的 X 軸方向位移 - 字符的橫向動作"
 
 #: ../src/ui/widget/font-variations.cpp:122
-#, fuzzy
 msgctxt "Variable font axis"
 msgid "Relative Y advance"
-msgstr "相對改變(_T)"
+msgstr "相對縱向位移 (RYAD)"
 
 #: ../src/ui/widget/font-variations.cpp:122
 msgid "Controls the relative Y advance - vertical motion of the glyph"
-msgstr ""
+msgstr "控制相對的 Y 軸方向位移 - 字符的縱向動作"
 
 #: ../src/ui/widget/font-variations.cpp:123
-#, fuzzy
 msgctxt "Variable font axis"
 msgid "Relative second"
-msgstr "相對於： "
+msgstr "相對秒數 (RSEC)"
 
 #: ../src/ui/widget/font-variations.cpp:123
 msgid "Controls the relative second value - as in one second of animation time"
-msgstr ""
+msgstr "控制相對秒數 - 相對於動畫時間的一秒"
 
 #: ../src/ui/widget/font-variations.cpp:124
-#, fuzzy
 msgctxt "Variable font axis"
 msgid "Rotation"
-msgstr "旋轉(_R)"
+msgstr "旋轉度數 (VROT)"
 
 #: ../src/ui/widget/font-variations.cpp:124
 msgid "Controls the rotation of the glyph in degrees"
-msgstr ""
+msgstr "以度為單位控制字符旋轉"
 
 #: ../src/ui/widget/font-variations.cpp:125
-#, fuzzy
 msgctxt "Variable font axis"
 msgid "Unicode variation"
-msgstr "萬國碼字元："
+msgstr "萬國碼變化 (VUID)"
 
 #: ../src/ui/widget/font-variations.cpp:125
-#, fuzzy
 msgid "Controls the glyph’s unicode ID"
-msgstr "設定字符萬國碼"
+msgstr "控制字符的萬國碼 ID"
 
 #: ../src/ui/widget/font-variations.cpp:126
-#, fuzzy
 msgctxt "Variable font axis"
 msgid "Feature variation"
-msgstr "長度變化量："
+msgstr "特色變化 (VOTF)"
 
 #: ../src/ui/widget/font-variations.cpp:126
 msgid "Controls the glyph’s feature variation"
-msgstr ""
+msgstr "控制字符的特色變化"
 
 #: ../src/ui/widget/gradient-editor.cpp:216
 msgid "Stop color"
@@ -36141,6 +36115,8 @@ msgid ""
 "<b>Opacity (%)</b>\n"
 "Middle-click cycles through 0%, 50%, 100%"
 msgstr ""
+"<b>透明度（%）</b>\n"
+"點擊滑鼠中鍵來循環 0%、50%、100%"
 
 #: ../src/ui/widget/selected-style.cpp:977
 #: ../src/ui/widget/stroke-style.cpp:232 ../src/ui/widget/style-swatch.cpp:301
@@ -36254,7 +36230,7 @@ msgstr "圖樣(_P)："
 
 #: ../src/ui/widget/stroke-style.cpp:267
 msgid "Repeating \"dash gap ...\" pattern"
-msgstr ""
+msgstr "重複「虛線 空白 ...」的圖樣"
 
 #. TRANSLATORS: Path markers are an SVG feature that allows you to attach arbitrary shapes
 #. (arrowheads, bullets, faces, whatever) to the start, end, or middle nodes of a path.
@@ -36653,7 +36629,7 @@ msgstr "編輯標籤"
 msgid ""
 "Select this on canvas (if applicable) or in the XML dialog (e.g. a pattern "
 "in the 'defs' section)"
-msgstr ""
+msgstr "在畫布上（如果可用）或是在 XML 對話窗中將之選取（如：在「defs」區段中的圖樣）"
 
 #: ../share/ui/dialog-document-resources.glade:163
 msgid "Delete selected item from the document"
@@ -36790,6 +36766,7 @@ msgid ""
 "When exporting each of the images in the batch, generated filenames which "
 "already exist will be overwritten without confirmation."
 msgstr ""
+"在批次匯出各個影像時，如果產生的檔名與現存檔案相同，會將其覆蓋，而不另行確認。"
 
 #: ../share/ui/dialog-export.glade:1072
 msgid "Export to multiple files and file formats"
@@ -37041,7 +37018,7 @@ msgstr "將選取物件轉換成符號"
 msgid ""
 "Convert selected symbol to object, and all symbols of this type to clones of "
 "this object"
-msgstr ""
+msgstr "將選取的符號轉換為物件，並將所有與此相同的符號轉為此物件的仿製品"
 
 #: ../share/ui/dialog-text-edit.glade:37 ../share/ui/toolbar-text.ui:84
 msgid "Open Collections Editor"
@@ -37049,7 +37026,7 @@ msgstr "開啟收藏集編輯器"
 
 #: ../share/ui/dialog-text-edit.glade:41
 msgid "Open the Font Collections Manager dialogue"
-msgstr ""
+msgstr "開啟字型收藏集管理工具對話窗"
 
 #: ../share/ui/dialog-text-edit.glade:85
 msgid "Reset filters and show all available fonts"
@@ -38152,7 +38129,7 @@ msgstr "讓此形狀變成完整橢圓形，而不是弧形或線段"
 #: ../share/ui/object-attributes.glade:635
 #: ../share/ui/object-attributes.glade:1061
 msgid "Round numbers to nearest integer"
-msgstr ""
+msgstr "將數字四捨五入至最近的整數"
 
 #: ../share/ui/object-attributes.glade:431
 #: ../share/ui/object-attributes.glade:1135 ../share/extensions/dimension.inx:3
@@ -39895,7 +39872,7 @@ msgstr "頁面標籤"
 
 #: ../share/ui/toolbar-page.ui:388
 msgid "e.g. 1.2mm 2mm"
-msgstr ""
+msgstr "例：1.2mm 2mm"
 
 #: ../share/ui/toolbar-page.ui:394
 msgid "Page Bleed"
@@ -48578,7 +48555,7 @@ msgstr "字型高度"
 
 #: ../share/ui/units.xml:89
 msgid "x-heights"
-msgstr "x 高度"
+msgstr "x 字高"
 
 #: ../share/ui/units.xml:92
 msgid "Height of letter 'x'"
