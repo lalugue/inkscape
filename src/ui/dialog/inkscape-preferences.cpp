@@ -3925,6 +3925,7 @@ void InkscapePreferences::on_pagelist_selection_changed()
         _page_frame.add(*_current_page);
         _current_page->set_visible(true);
         this->show_all_children();
+        Inkscape::UI::resize_widget_children(this);
         if (prefs->getInt("/dialogs/preferences/page", 0) == PREFS_PAGE_UI_THEME) {
             symbolicThemeCheck();
         }
