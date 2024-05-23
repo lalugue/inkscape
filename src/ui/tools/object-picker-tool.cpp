@@ -6,8 +6,8 @@
 #include "display/control/canvas-item-context.h"
 #include "display/control/canvas-item-text.h"
 #include "document.h"
-#include "point.h"
-#include "rect.h"
+#include <2geom/point.h>
+#include <2geom/rect.h>
 #include "object/sp-page.h"
 #include "page-manager.h"
 #include "ui/tools/tool-base.h"

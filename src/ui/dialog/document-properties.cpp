@@ -53,7 +53,7 @@
 #include <sigc++/adaptors/bind.h>
 #include <sigc++/functors/mem_fun.h>
 
-#include "angle.h"
+#include <2geom/angle.h>
 #include "rdf.h"
 #include "page-manager.h"
 #include "selection.h"
