@@ -63,7 +63,7 @@ static std::span<char const> as_span(RVNGString const &str)
     return {str.cstr(), str.size()};
 }
 
-std::unique_ptr<SPDocument> WpgInput::open(Inkscape::Extension::Input *, char const *uri)
+std::unique_ptr<SPDocument> WpgInput::open(Inkscape::Extension::Input *, char const *uri, bool)
 {
     std::unique_ptr<RVNGInputStream> input;
 

@@ -41,7 +41,7 @@ public:
 
     bool check(Inkscape::Extension::Extension *module) override;
 
-    std::unique_ptr<SPDocument> open(Inkscape::Extension::Input *module, char const *filename) override;
+    std::unique_ptr<SPDocument> open(Inkscape::Extension::Input *module, char const *filename, bool is_importing) override;
     void save(Inkscape::Extension::Output *module, SPDocument *doc, char const *filename) override;
 };
 

@@ -48,6 +48,7 @@ namespace Inkscape::Extension {
  *           a module (including Autodetect)
  * \param    key       Identifier of which module to use
  * \param    filename  The file that should be opened
+ * \param    is_importing Is the request an import request, for example drag & drop
  *
  * First things first, are we looking at an autodetection?  Well if that's the case then the module
  * needs to be found, and that is done with a database lookup through the module DB.  The foreach
@@ -62,7 +63,7 @@ namespace Inkscape::Extension {
  *
  * Lastly, the open function is called in the module itself.
  */
-std::unique_ptr<SPDocument> open(Extension *key, char const *filename)
+std::unique_ptr<SPDocument> open(Extension *key, char const *filename, bool is_importing)
 {
     Input *imod = nullptr;
 
@@ -98,7 +99,7 @@ std::unique_ptr<SPDocument> open(Extension *key, char const *filename)
         bool ask_svg = prefs->getBool("/dialogs/import/ask_svg");
         Glib::ustring id = Glib::ustring(imod->get_id(), 22);
         if (id.compare("org.inkscape.input.svg") == 0) {
-            if (ask_svg && prefs->getBool("/options/onimport", false)) {
+            if (ask_svg && is_importing) {
                 show = true;
                 imod->set_gui(true);
             } else {
@@ -123,7 +124,7 @@ std::unique_ptr<SPDocument> open(Extension *key, char const *filename)
         throw Input::open_cancelled();
     }
 
-    auto doc = imod->open(filename);
+    auto doc = imod->open(filename, is_importing);
 
     if (!doc) {
         if (last_chance_svg) {

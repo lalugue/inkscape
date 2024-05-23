@@ -79,11 +79,10 @@ TEST_F(SvgExtensionTest, openingAsLinkInImageASizelessSvgFileReturnsNull)
     Input *svg_input_extension(dynamic_cast<Input *>(db.get(SP_MODULE_KEY_INPUT_SVG))); 
     
     Preferences *prefs = Preferences::get();
-    prefs->setBool("/options/onimport", true);
     prefs->setBool("/dialogs/import/ask_svg", false);
     prefs->setString("/dialogs/import/import_mode_svg", "link");
 
-    ASSERT_EQ(svg_input_extension->open(sizeless_svg_file.c_str()), nullptr);
+    ASSERT_EQ(svg_input_extension->open(sizeless_svg_file.c_str(), true), nullptr);
 }
 
 TEST_F(SvgExtensionTest, hiddenSvg2TextIsSaved)

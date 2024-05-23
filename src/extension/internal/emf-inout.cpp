@@ -3474,7 +3474,7 @@ void Emf::free_emf_strings(EMF_STRINGS name){
     name.size = 0;
 }
 
-std::unique_ptr<SPDocument> Emf::open(Inkscape::Extension::Input *, char const *uri)
+std::unique_ptr<SPDocument> Emf::open(Inkscape::Extension::Input *, char const *uri, bool)
 {
     if (!uri) {
         return nullptr;

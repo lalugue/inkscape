@@ -30,7 +30,7 @@ std::unique_ptr<SPDocument> Implementation::new_from_template(Template *)
     return {};
 }
 
-std::unique_ptr<SPDocument> Implementation::open(Input *module, char const *filename)
+std::unique_ptr<SPDocument> Implementation::open(Input *module, char const *filename, bool is_importing)
 {
     return {};
 }

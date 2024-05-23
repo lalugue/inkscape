@@ -106,7 +106,7 @@ public:
     virtual bool match_template_size(Inkscape::Extension::Template *tmod, double width, double height){ return false; }
 
     // ----- Input functions -----
-    virtual std::unique_ptr<SPDocument> open(Inkscape::Extension::Input *module, char const *filename);
+    virtual std::unique_ptr<SPDocument> open(Inkscape::Extension::Input *module, char const *filename, bool is_importing);
 
     // ----- Output functions -----
     /** Find out information about the file. */

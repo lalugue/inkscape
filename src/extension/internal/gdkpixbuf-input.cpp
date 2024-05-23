@@ -33,7 +33,7 @@
 
 namespace Inkscape::Extension::Internal {
 
-std::unique_ptr<SPDocument> GdkpixbufInput::open(Inkscape::Extension::Input *mod, char const *uri)
+std::unique_ptr<SPDocument> GdkpixbufInput::open(Inkscape::Extension::Input *mod, char const *uri, bool)
 {
     // Determine whether the image should be embedded
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();

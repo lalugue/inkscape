@@ -15,21 +15,15 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include <gtkmm.h>
-
 #include <giomm/file.h>
-#include <giomm/action.h>
 
 #include "document.h"
 #include "inkscape.h"
-#include "inkscape-application.h"
 #include "preferences.h"
 #include "extension/output.h"
 #include "extension/input.h"
 #include "extension/system.h"
-#include "file.h"
 #include "svg.h"
-#include "file.h"
 #include "display/cairo-utils.h"
 #include "extension/system.h"
 #include "extension/output.h"
@@ -139,7 +133,7 @@ Svg::init()
 
     Most of the import code was copied from gdkpixpuf-input.cpp.
 */
-std::unique_ptr<SPDocument> Svg::open(Inkscape::Extension::Input *mod, char const *uri)
+std::unique_ptr<SPDocument> Svg::open(Inkscape::Extension::Input *mod, char const *uri, bool is_importing)
 {
     g_assert(mod);
 
@@ -183,19 +177,11 @@ std::unique_ptr<SPDocument> Svg::open(Inkscape::Extension::Input *mod, char cons
         prefs->setString("/dialogs/import/scale",           scale );
     }
 
-    bool import = prefs->getBool("/options/onimport", false);
-    bool import_pages = (import_mode_svg == "pages");
-    // Do we open a new svg instead of import?
-    if (uri && import && import_mode_svg == "new") {
-        prefs->setBool("/options/onimport", false); // set back to true in file_import
-        static auto gapp = InkscapeApplication::instance()->gtk_app();
-        auto action = gapp->lookup_action("file-open-window");
-        auto file_dnd = Glib::Variant<Glib::ustring>::create(uri);
-        action->activate(file_dnd);
-        return SPDocument::createNewDoc (nullptr, true, true);
-    }
+    bool const import_pages = import_mode_svg == "pages";
+    bool const import_new = import_mode_svg == "new";
+
     // Do we "import" as <image>?
-    if (import && import_mode_svg != "include" && !import_pages) {
+    if (is_importing && import_mode_svg != "include" && !import_pages && !import_new) {
         // We import!
 
         // New wrapper document.
@@ -305,7 +291,7 @@ std::unique_ptr<SPDocument> Svg::open(Inkscape::Extension::Input *mod, char cons
 
     // Convert single page docs into multi page mode, and visa-versa if
     // we are importing. We never change the mode for opening.
-    if (doc && import) {
+    if (doc && is_importing && !import_new) {
         doc->setPages(import_pages);
     }
 

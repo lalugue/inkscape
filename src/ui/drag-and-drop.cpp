@@ -329,9 +329,6 @@ bool on_drop(Glib::ValueBase const &value, double x, double y, SPDesktopWidget *
         DocumentUndo::done(doc, _("Drop color"), "");
         return true;
     } else if (auto const dndsvg = get<DnDSvg>(value)) {
-        auto prefs_scope = prefs->temporaryPreferences();
-        prefs->setBool("/options/onimport", true);
-
         auto const data = get_span(dndsvg->bytes);
         if (data.empty()) {
             return false;
@@ -373,9 +370,6 @@ bool on_drop(Glib::ValueBase const &value, double x, double y, SPDesktopWidget *
         DocumentUndo::done(doc, _("Drop SVG"), "");
         return true;
     } else if (holds(value, GDK_TYPE_FILE_LIST)) {
-        auto prefs_scope = prefs->temporaryPreferences();
-        prefs->setBool("/options/onimport", true);
-
         auto list = reinterpret_cast<GSList *>(g_value_get_boxed(value.gobj()));
         foreach<GFile>(list, [&] (GFile *f) {
             auto const path = g_file_get_path(f);

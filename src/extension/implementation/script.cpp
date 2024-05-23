@@ -348,7 +348,7 @@ void Script::resize_to_template(Inkscape::Extension::Template *tmod, SPDocument 
     the incoming filename (so that it's not the temporary filename).
     That document is then returned from this function.
 */
-std::unique_ptr<SPDocument> Script::open(Inkscape::Extension::Input *module, char const *filenameArg)
+std::unique_ptr<SPDocument> Script::open(Inkscape::Extension::Input *module, char const *filenameArg, bool)
 {
     std::list<std::string> params;
     module->paramListString(params);

@@ -137,7 +137,7 @@ private:
 class PdfInput : public Inkscape::Extension::Implementation::Implementation
 {
 public:
-    std::unique_ptr<SPDocument> open(Inkscape::Extension::Input *mod, char const *uri) override;
+    std::unique_ptr<SPDocument> open(Inkscape::Extension::Input *mod, char const *uri, bool is_importing) override;
     static void init();
 
 private:

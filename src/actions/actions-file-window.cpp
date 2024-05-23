@@ -83,9 +83,7 @@ document_import(InkscapeWindow* win)
 {
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
 
-    prefs->setBool("/options/onimport", true);
     sp_file_import(*win);
-    prefs->setBool("/options/onimport", false);
 }
 
 void

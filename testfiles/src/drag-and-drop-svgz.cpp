@@ -35,7 +35,6 @@ class SvgzImportTest : public DocPerCaseTest {
         ASSERT_TRUE(_doc->getRoot() != nullptr);
         Inkscape::Preferences *prefs = Inkscape::Preferences::get();
         prefs->setBool("/dialogs/import/ask_svg", true);
-        prefs->setBool("/options/onimport", true);
         auto ext = Inkscape::Extension::find_by_mime("image/svg+xml-compressed");
         if (!ext) {
             std::cerr << "SvgzImportTest: Failed to find mime type!" << std::endl;
@@ -47,9 +46,8 @@ class SvgzImportTest : public DocPerCaseTest {
 
         auto imod = dynamic_cast<Inkscape::Extension::Input *>(ext);
         auto svg_mod = (new Inkscape::Extension::Internal::Svg);
-        ASSERT_TRUE(svg_mod->open(imod, fn.c_str()) != nullptr);
+        ASSERT_NE(svg_mod->open(imod, fn.c_str(), true), nullptr);
     }
-    ~SvgzImportTest() override {}
 };
 
 TEST_F(SvgzImportTest, Eq)

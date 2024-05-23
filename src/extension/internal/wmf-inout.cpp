@@ -3043,7 +3043,7 @@ void Wmf::free_wmf_strings(WMF_STRINGS name){
     name.size = 0;
 }
 
-std::unique_ptr<SPDocument> Wmf::open(Inkscape::Extension::Input *, char const *uri)
+std::unique_ptr<SPDocument> Wmf::open(Inkscape::Extension::Input *, char const *uri, bool)
 {
     if (!uri) {
         return nullptr;

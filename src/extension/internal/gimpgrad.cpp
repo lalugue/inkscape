@@ -111,7 +111,7 @@ static Glib::ustring stop_svg(Color const &in_color, double const location)
     document using the \c sp_document_from_mem.  That is then returned
     to Inkscape.
 */
-std::unique_ptr<SPDocument> GimpGrad::open(Inkscape::Extension::Input *, char const *filename)
+std::unique_ptr<SPDocument> GimpGrad::open(Inkscape::Extension::Input *, char const *filename, bool)
 {
     Inkscape::IO::dump_fopen_call(filename, "I");
     FILE *gradient = Inkscape::IO::fopen_utf8name(filename, "r");

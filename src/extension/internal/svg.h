@@ -44,7 +44,7 @@ public:
     void setDetachBase(bool detach) override { m_detachbase = detach; }
 
     void save(Inkscape::Extension::Output *mod, SPDocument *doc, char const *filename) override;
-    std::unique_ptr<SPDocument> open(Inkscape::Extension::Input *mod, char const *uri) override;
+    std::unique_ptr<SPDocument> open(Inkscape::Extension::Input *mod, char const *uri, bool is_importing) override;
     static void init();
 
 private:

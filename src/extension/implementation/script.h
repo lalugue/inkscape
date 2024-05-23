@@ -59,7 +59,7 @@ public:
     std::unique_ptr<SPDocument> new_from_template(Inkscape::Extension::Template *module) override;
     void resize_to_template(Inkscape::Extension::Template *tmod, SPDocument *doc, SPPage *page) override;
 
-    std::unique_ptr<SPDocument> open(Inkscape::Extension::Input *module, char const *filename) override;
+    std::unique_ptr<SPDocument> open(Inkscape::Extension::Input *module, char const *filename, bool is_importing) override;
     void save(Inkscape::Extension::Output *module, SPDocument *doc, gchar const *filename) override;
     void export_raster(Inkscape::Extension::Output *module,
             const SPDocument *doc, std::string const &png_file, gchar const *filename) override;

@@ -26,7 +26,7 @@
 
 namespace Inkscape::Extension::Internal {
 
-std::unique_ptr<SPDocument> VsdInput::open(Inkscape::Extension::Input *, char const *uri)
+std::unique_ptr<SPDocument> VsdInput::open(Inkscape::Extension::Input *, char const *uri, bool)
 {
     return rvng_open(uri, libvisio::VisioDocument::isSupported, libvisio::VisioDocument::parse);
 }

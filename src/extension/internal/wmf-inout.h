@@ -163,7 +163,7 @@ public:
               SPDocument *doc,
               char const *filename) override;
 
-    std::unique_ptr<SPDocument> open(Inkscape::Extension::Input *mod, char const *uri) override;
+    std::unique_ptr<SPDocument> open(Inkscape::Extension::Input *mod, char const *uri, bool is_importing) override;
 
     static void init();
 

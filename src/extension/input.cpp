@@ -136,13 +136,14 @@ Input::check ()
     \return  A new document
     \brief   This function creates a document from a file
     \param   uri  The filename to create the document from
+    \param   is_importing True if the opened file is being imported
 
     This function acts as the first step in creating a new document
     from a file.  The first thing that this does is make sure that the
     file actually exists.  If it doesn't, a NULL is returned.  If the
     file exits, then it is opened using the implementation of this extension.
 */
-std::unique_ptr<SPDocument> Input::open(char const *uri)
+std::unique_ptr<SPDocument> Input::open(char const *uri, bool is_importing)
 {
     if (!loaded()) {
         set_state(Extension::STATE_LOADED);
@@ -152,7 +153,7 @@ std::unique_ptr<SPDocument> Input::open(char const *uri)
     }
     timer->touch();
 
-    return imp->open(this, uri);
+    return imp->open(this, uri, is_importing);
 }
 
 /**

@@ -82,7 +82,7 @@ void XSLT::unload(Inkscape::Extension::Extension *module)
     // No need to use xmlfreedoc(_parsedDoc), it's handled by xsltFreeStylesheet(_stylesheet);
 }
 
-std::unique_ptr<SPDocument> XSLT::open(Inkscape::Extension::Input *, char const *filename)
+std::unique_ptr<SPDocument> XSLT::open(Inkscape::Extension::Input *, char const *filename, bool)
 {
     xmlDocPtr filein = xmlParseFile(filename);
     if (!filein) {
