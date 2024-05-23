@@ -25,7 +25,7 @@ msgstr ""
 "Project-Id-Version: inkscape\n"
 "Report-Msgid-Bugs-To: inkscape-translator@lists.inkscape.org\n"
 "POT-Creation-Date: 2024-05-11 09:08+0000\n"
-"PO-Revision-Date: 2024-05-23 20:18+0200\n"
+"PO-Revision-Date: 2024-05-23 21:26+0200\n"
 "Last-Translator: Maren Hachmann <marenhachmann@yahoo.com>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
@@ -365,7 +365,7 @@ msgstr "Bild malen und zeichnen"
 
 #: ../build/share/filters/filters.svg.h:80
 msgid "Simulate oil painting style"
-msgstr "Simuliere Ölgemälde"
+msgstr "Ölgemälde simulieren"
 
 #: ../build/share/filters/filters.svg.h:82
 #: ../build/share/markers/markers.svg.h:33
@@ -779,7 +779,7 @@ msgstr "Morphologie"
 
 #: ../build/share/filters/filters.svg.h:236
 msgid "Creates a black light inside and outside"
-msgstr "Erzeugt ein Schwarzlicht innen und außen"
+msgstr "Ein Schwarzlicht innen und außen erzeugen"
 
 #: ../build/share/filters/filters.svg.h:238
 #: ../build/share/paint/patterns.svg.h:1
@@ -1080,7 +1080,7 @@ msgstr "Wasserfarben"
 
 #: ../build/share/filters/filters.svg.h:380
 msgid "Ink paint on paper with some turbulent color shift"
-msgstr "Zeichentusche auf Papier mit turbulentem Farbversatz"
+msgstr "Wasserfarben auf Papier mit turbulentem Farbversatz"
 
 #: ../build/share/filters/filters.svg.h:382
 msgid "Tinted Rainbow"
@@ -1286,7 +1286,7 @@ msgstr "Kaugummi"
 msgid ""
 "Creates colorizable blotches which smoothly flow over the edges of the lines "
 "at their crossings"
-msgstr "Erzeugt farbige Kleckse, die weich über innere Strukturen fließen"
+msgstr "Farbige Kleckse erzeugen, die weich über innere Strukturen fließen"
 
 #: ../build/share/filters/filters.svg.h:438
 msgid "Dark and Glow"
@@ -1295,8 +1295,8 @@ msgstr "Glühende Vertiefung"
 #: ../build/share/filters/filters.svg.h:440
 msgid "Darkens the edge with an inner blur and adds a flexible glow"
 msgstr ""
-"Betont die Kante mit innenliegender Unschärfe und fügt flexiblen Lichthof "
-"hinzu"
+"Kante mit innenliegender Unschärfe betonen und flexiblen Lichthof "
+"hinzufügen"
 
 #: ../build/share/filters/filters.svg.h:442
 msgid "Warped Rainbow"
@@ -1372,7 +1372,7 @@ msgid ""
 "Combine a HSL edges detection bump with a leathery or woody and colorizable "
 "texture"
 msgstr ""
-"Kombiniert Kantenerkennung im HSL-Farbraum mit einer ledrigen oder "
+"Kantenerkennung im HSL-Farbraum mit einer ledrigen oder "
 "holzähnlichen Textur"
 
 #: ../build/share/filters/filters.svg.h:478
@@ -1403,7 +1403,7 @@ msgstr "Gips"
 msgid ""
 "Combine a HSL edges detection bump with a matte and crumpled surface effect"
 msgstr ""
-"Kombiniert Kantenerkennung im HSL-Farbraum mit einem matten, knittrigen "
+"Kantenerkennung im HSL-Farbraum mit einem matten, knittrigen "
 "Oberflächeneffekt"
 
 #: ../build/share/filters/filters.svg.h:490
@@ -1412,7 +1412,7 @@ msgstr "Transparenzrauschen"
 
 #: ../build/share/filters/filters.svg.h:492
 msgid "Adds a turbulent transparency which displaces pixels at the same time"
-msgstr "Fügt turbulente Transparenz und Pixelversatz hinzu"
+msgstr "Turbulente Transparenz und Pixelversatz hinzufügen"
 
 #: ../build/share/filters/filters.svg.h:494
 msgid "Gouache"
@@ -1428,7 +1428,7 @@ msgstr "Alpha-Gravur"
 
 #: ../build/share/filters/filters.svg.h:500
 msgid "Gives a transparent engraving effect with rough line and filling"
-msgstr "Erzeugt einen transparenten Gravureffekt mit rohen Linien und Füllung."
+msgstr "Einen transparenten Gravureffekt mit rohen Linien und Füllung erzeugen"
 
 #: ../build/share/filters/filters.svg.h:502
 msgid "Alpha Draw Liquid"
@@ -1438,8 +1438,8 @@ msgstr "Alpha-Zeichnung, flüssig"
 #: ../build/share/filters/filters.svg.h:504
 msgid "Gives a transparent fluid drawing effect with rough line and filling"
 msgstr ""
-"Erzeugt einen transparenten Wassereffekt mit vergröberten Linien und "
-"Füllungen"
+"Einen transparenten Wassereffekt mit vergröberten Linien und "
+"Füllungen erzeugen"
 
 #: ../build/share/filters/filters.svg.h:506
 msgid "Liquid Drawing"
@@ -1448,8 +1448,8 @@ msgstr "Flüssige Zeichnung"
 #: ../build/share/filters/filters.svg.h:508
 msgid "Gives a fluid and wavy expressionist drawing effect to images"
 msgstr ""
-"Versieht Bilder mit einem expressionistischem Ausdruck (fließende, wellige "
-"Formen)"
+"Bilder mit einem expressionistischem Ausdruck (fließende, wellige "
+"Formen) versehen"
 
 #: ../build/share/filters/filters.svg.h:510
 msgid "Marbled Ink"
@@ -1474,7 +1474,7 @@ msgstr "Alpha-Gravur B"
 #: ../build/share/filters/filters.svg.h:520
 msgid ""
 "Gives a controllable roughness engraving effect to bitmaps and materials"
-msgstr "Erzeugt eine einstellbare raue Oberfläche auf Materialien und Bildern"
+msgstr "Eine einstellbare raue Oberfläche auf Materialien und Bildern erzeugen"
 
 #: ../build/share/filters/filters.svg.h:522
 msgid "Lapping"
@@ -1501,7 +1501,7 @@ msgid ""
 "Creates an approximative semi-transparent and colorizable image of the "
 "saturation levels"
 msgstr ""
-"Erzeugt ein ungefähr halbtransparentes einfärbbares Bild der Sättigungspegel"
+"Ein ungefähr halbtransparentes einfärbbares Bild der Sättigungspegel erzeugen"
 
 #: ../build/share/filters/filters.svg.h:534
 msgid "Riddled"
@@ -1599,7 +1599,7 @@ msgstr "Weiche Farben"
 
 #: ../build/share/filters/filters.svg.h:580
 msgid "Adds a colorizable edges glow inside objects and pictures"
-msgstr "Fügt einfärbbaren Lichthof um Kanten in Objekten und Bilder hinzu"
+msgstr "Einfärbbaren Lichthof um Kanten in Objekten und Bilder hinzufügen"
 
 #: ../build/share/filters/filters.svg.h:582
 msgid "Relief Print"
@@ -1712,7 +1712,7 @@ msgstr "Farbton zu Weiß"
 
 #: ../build/share/filters/filters.svg.h:636
 msgid "Fades hue progressively to white"
-msgstr "Blendet Farbton schrittweise zu Weiß aus"
+msgstr "Farbton schrittweise zu Weiß ausblenden"
 
 #: ../build/share/filters/filters.svg.h:638
 #: ../src/extension/internal/bitmap/swirl.cpp:39
@@ -1747,7 +1747,7 @@ msgstr "Hintergrund füllen"
 
 #: ../build/share/filters/filters.svg.h:652
 msgid "Adds a colorizable opaque background"
-msgstr "Fügt einfärbbaren deckenden Hintergrund hinzu"
+msgstr "Einfärbbaren, deckenden Hintergrund hinzufügen"
 
 #: ../build/share/filters/filters.svg.h:654
 msgid "Flatten Transparency"
@@ -1755,7 +1755,7 @@ msgstr "Weißer Hintergrund"
 
 #: ../build/share/filters/filters.svg.h:656
 msgid "Adds a white opaque background"
-msgstr "Fügt einen weißen, deckenden Hintergrund hinzu"
+msgstr "Einen weißen, deckenden Hintergrund hinzufügen"
 
 #: ../build/share/filters/filters.svg.h:658
 msgid "Blur Double"
@@ -1766,8 +1766,8 @@ msgid ""
 "Overlays two copies with different blur amounts and modifiable blend and "
 "composite"
 msgstr ""
-"Überlagert zwei Kopien mit verschiedenen Unschärfegraden und einstellbarer "
-"Mischung und Zusammensetzung"
+"Zwei Kopien mit verschiedenen Unschärfegraden und einstellbarer "
+"Mischung und Zusammensetzung überlagern"
 
 # not sure here -cm-
 #: ../build/share/filters/filters.svg.h:662
@@ -1800,7 +1800,7 @@ msgstr "Poster mit Kreuzrauschen B"
 
 #: ../build/share/filters/filters.svg.h:676
 msgid "Adds a small scale screen like noise locally"
-msgstr "Fügt stellenweise Rauschen wie von Kleinformat-Monitor hinzu"
+msgstr "Stellenweise Rauschen wie von Kleinformat-Monitor hinzufügen"
 
 #: ../build/share/filters/filters.svg.h:678
 #: ../build/share/filters/filters.svg.h:680
@@ -1813,7 +1813,7 @@ msgstr "Raues Poster"
 
 #: ../build/share/filters/filters.svg.h:684
 msgid "Adds roughness to one of the two channels of the Poster paint filter"
-msgstr "Fügt Rauigkeit einem der beiden Kanäle des Poster-Mal-Filters hinzu"
+msgstr "Einem der beiden Kanäle des Poster-Mal-Filters Rauigkeit hinzufügen"
 
 #: ../build/share/filters/filters.svg.h:686
 msgid "Alpha Monochrome Cracked"
@@ -1842,7 +1842,7 @@ msgstr "Kreuzrauschen B"
 
 #: ../build/share/filters/filters.svg.h:700
 msgid "Adds a small scale crossy graininess"
-msgstr "Fügt kleinteilige Körnung hinzu"
+msgstr "Kleinteilige Körnung hinzufügen"
 
 #: ../build/share/filters/filters.svg.h:702
 msgid "Cross Noise"
@@ -1850,7 +1850,7 @@ msgstr "Kreuzrauschen"
 
 #: ../build/share/filters/filters.svg.h:704
 msgid "Adds a small scale screen like graininess"
-msgstr "Fügt kleinteilige Körnung hinzu"
+msgstr "Kleinteilige Körnung hinzufügen, wie Bildschirmrauschen"
 
 #: ../build/share/filters/filters.svg.h:706
 msgid "Duotone Turbulent"
@@ -1878,7 +1878,7 @@ msgstr "Lichtkontur"
 
 #: ../build/share/filters/filters.svg.h:724
 msgid "Uses vertical specular light to draw lines"
-msgstr "Verwendet vertikal gerichtetes Licht, um Linien zu zeichnen"
+msgstr "Vertikal gerichtetes Licht verwenden, um Linien zu zeichnen"
 
 #: ../build/share/filters/filters.svg.h:726
 msgid "Liquid"
@@ -2069,7 +2069,7 @@ msgstr "Lithografie"
 
 #: ../build/share/filters/filters.svg.h:820
 msgid "Create a two colors lithographic effect"
-msgstr "Erstellt einen zweifarbigen lithografischen Effekt"
+msgstr "Einen zweifarbigen lithografischen Effekt erzeugen"
 
 #: ../build/share/filters/filters.svg.h:822
 msgid "Paint Channels"
@@ -2097,7 +2097,7 @@ msgstr "Wie Duochrom, jedoch mit drei Farben"
 
 #: ../build/share/filters/filters.svg.h:834
 msgid "Simulate CMY"
-msgstr "Simuliere CMY"
+msgstr "CMY simulieren"
 
 #: ../build/share/filters/filters.svg.h:836
 msgid "Render Cyan, Magenta and Yellow channels with a colorizable background"
@@ -2118,7 +2118,7 @@ msgstr "Posterisiertes Verwischen"
 
 #: ../build/share/filters/filters.svg.h:844
 msgid "Converts blurred contour to posterized steps"
-msgstr "Erzeugt eine verschwommene Kontur aus posterisierten Teilschritten"
+msgstr "Eine verschwommene Kontur aus posterisierten Teilschritten erzeugen"
 
 #: ../build/share/filters/filters.svg.h:846
 msgid "Contouring Discrete"
@@ -6358,7 +6358,7 @@ msgstr "Geteilte Ansicht: Normal"
 
 #: ../src/actions/actions-canvas-mode.cpp:277
 msgid "Do not split canvas"
-msgstr "Zeichenfläche nicht aufteilen"
+msgstr "Arbeitsfläche nicht aufteilen"
 
 #: ../src/actions/actions-canvas-mode.cpp:278
 msgid "Split Mode: Split"
@@ -6366,7 +6366,7 @@ msgstr "Geteilte Ansicht: Teilen"
 
 #: ../src/actions/actions-canvas-mode.cpp:278
 msgid "Render part of the canvas in outline mode"
-msgstr "Teile der Zeichenfläche im Umrissmodus darstellen"
+msgstr "Teile der Arbeitsfläche im Umrissmodus darstellen"
 
 #: ../src/actions/actions-canvas-mode.cpp:279
 msgid "Split Mode: X-Ray"
@@ -6667,7 +6667,7 @@ msgstr "Zoomfaktor 1:1"
 
 #: ../src/actions/actions-canvas-transform.cpp:271 ../share/ui/menus.ui:379
 msgid "Zoom to 1:1"
-msgstr "Den Zoomfaktor auf 1:1 setzen"
+msgstr "Zoomfaktor auf 1:1 setzen"
 
 #: ../src/actions/actions-canvas-transform.cpp:272
 msgid "Zoom 1:2"
@@ -6675,7 +6675,7 @@ msgstr "Zoomfaktor 1:2"
 
 #: ../src/actions/actions-canvas-transform.cpp:272 ../share/ui/menus.ui:384
 msgid "Zoom to 1:2"
-msgstr "Den Zoomfaktor auf 1:2 setzen"
+msgstr "Zoomfaktor auf 1:2 setzen"
 
 #: ../src/actions/actions-canvas-transform.cpp:273
 msgid "Zoom 2:1"
@@ -6683,7 +6683,7 @@ msgstr "Zoomfaktor 2:1"
 
 #: ../src/actions/actions-canvas-transform.cpp:273 ../share/ui/menus.ui:389
 msgid "Zoom to 2:1"
-msgstr "Den Zoomfaktor auf 2:1 setzen"
+msgstr "Zoomfaktor auf 2:1 setzen"
 
 #: ../src/actions/actions-canvas-transform.cpp:274 ../share/ui/menus.ui:396
 #: ../share/ui/statusbar.ui:13 ../share/ui/toolbar-commands.ui:505
@@ -6758,7 +6758,7 @@ msgstr "Im Uhrzeigersinn drehen"
 
 #: ../src/actions/actions-canvas-transform.cpp:282
 msgid "Rotate canvas clockwise"
-msgstr "Zeichenfläche im Uhrzeigersinn drehen"
+msgstr "Arbeitsfläche im Uhrzeigersinn drehen"
 
 #: ../src/actions/actions-canvas-transform.cpp:283
 msgid "Rotate Counter-CW"
@@ -6766,7 +6766,7 @@ msgstr "Entgegen des Uhrzeigersinns drehen"
 
 #: ../src/actions/actions-canvas-transform.cpp:283
 msgid "Rotate canvas counter-clockwise"
-msgstr "Zeichenfläche entgegen des Uhrzeigersinns drehen"
+msgstr "Arbeitsfläche entgegen des Uhrzeigersinns drehen"
 
 #: ../src/actions/actions-canvas-transform.cpp:284 ../share/ui/menus.ui:446
 msgid "Reset Rotation"
@@ -6774,7 +6774,7 @@ msgstr "Drehung zurücksetzen"
 
 #: ../src/actions/actions-canvas-transform.cpp:284
 msgid "Reset canvas rotation"
-msgstr "Drehung der Zeichenfläche zurücksetzen"
+msgstr "Drehung der Arbeitsfläche zurücksetzen"
 
 #: ../src/actions/actions-canvas-transform.cpp:286
 msgid "Flip Horizontal"
@@ -6782,7 +6782,7 @@ msgstr "Horizontal umkehren"
 
 #: ../src/actions/actions-canvas-transform.cpp:286
 msgid "Flip canvas horizontally"
-msgstr "Zeichenfläche horizontal spiegeln"
+msgstr "Arbeitsfläche horizontal spiegeln"
 
 #: ../src/actions/actions-canvas-transform.cpp:287
 msgid "Flip Vertical"
@@ -6790,7 +6790,7 @@ msgstr "Vertikal umkehren"
 
 #: ../src/actions/actions-canvas-transform.cpp:287
 msgid "Flip canvas vertically"
-msgstr "Zeichenfläche vertikal spiegeln"
+msgstr "Arbeitsfläche vertikal spiegeln"
 
 #: ../src/actions/actions-canvas-transform.cpp:288 ../share/ui/menus.ui:464
 msgid "Reset Flipping"
@@ -6798,7 +6798,7 @@ msgstr "Spiegeln zurücksetzen"
 
 #: ../src/actions/actions-canvas-transform.cpp:288
 msgid "Reset canvas flipping"
-msgstr "Zeichenfläche nicht mehr spiegeln"
+msgstr "Arbeitsfläche nicht mehr spiegeln"
 
 #: ../src/actions/actions-canvas-transform.cpp:290
 msgid "Zoom Absolute"
@@ -6834,19 +6834,19 @@ msgstr "Um einen bestimmten Winkel drehen (Radians)"
 
 #: ../src/actions/actions-canvas-transform.cpp:295
 msgid "Rotate Absolute (Degrees)"
-msgstr "Zeichenfläche drehen (Winkel in °)"
+msgstr "Arbeitsfläche drehen (Winkel in °)"
 
 #: ../src/actions/actions-canvas-transform.cpp:295
 msgid "Rotate to an absolute value (degrees)"
-msgstr "Absolute Drehung der Zeichenfläche (Grad)"
+msgstr "Absolute Drehung der Arbeitsfläche (Grad)"
 
 #: ../src/actions/actions-canvas-transform.cpp:296
 msgid "Rotate Relative (Degrees)"
-msgstr "Zeichenfläche um Winkel drehen (°)"
+msgstr "Arbeitsfläche um Winkel drehen (°)"
 
 #: ../src/actions/actions-canvas-transform.cpp:296
 msgid "Rotate by a relative amount (degrees)"
-msgstr "Die Zeichenfläche um den angebenen Betrag weiter drehen (Grad)"
+msgstr "Die Arbeitsfläche um den angebenen Betrag weiter drehen (Grad)"
 
 #: ../src/actions/actions-canvas-transform.cpp:298 ../share/ui/menus.ui:450
 msgid "Lock Rotation"
@@ -6854,7 +6854,7 @@ msgstr "Drehung sperren"
 
 #: ../src/actions/actions-canvas-transform.cpp:298
 msgid "Lock canvas rotation"
-msgstr "Drehung der Zeichenfläche verhindern"
+msgstr "Drehung der Arbeitsfläche verhindern"
 
 #: ../src/actions/actions-dialogs.cpp:34
 msgid "Open Align and Distribute"
@@ -8251,13 +8251,13 @@ msgstr "Überlappungen entfernen"
 # File: ../src/ui/dialog/align-and-distribute.cpp, line: 1107
 #: ../src/actions/actions-object-align.cpp:769
 msgid "Enable on-canvas alignment"
-msgstr "Ausrichten auf der Zeichenfläche aktivieren"
+msgstr "Ausrichten auf der Arbeitsfläche aktivieren"
 
 # File: ../src/ui/dialog/align-and-distribute.cpp, line: 1107
 #: ../src/actions/actions-object-align.cpp:769
 #: ../share/ui/align-and-distribute.ui:119
 msgid "Enable on-canvas alignment handles"
-msgstr "Anfasser für das Ausrichten auf der Zeichenfläche aktivieren"
+msgstr "Anfasser für das Ausrichten auf der Arbeitsfläche aktivieren"
 
 #: ../src/actions/actions-object-align.cpp:771
 msgid "Align objects"
@@ -9920,7 +9920,7 @@ msgstr "Ausgewählte Pfadpunkte (Knoten) direkt ändern."
 #: ../src/actions/actions-tools.cpp:89
 msgid "Construct shapes with the interactive Boolean tool."
 msgstr ""
-"Pfade konstruieren mit dem interaktiven Werkzeug für Boolesche Operationen"
+"Pfade konstruieren mit dem interaktiven Werkzeug für boolesche Operationen"
 
 #: ../src/actions/actions-tools.cpp:90
 msgid ""
@@ -10110,7 +10110,7 @@ msgstr "Formerstellungswerkzeug"
 
 #: ../src/actions/actions-tools.cpp:361
 msgid "Build shapes with the Boolean tool"
-msgstr "Pfade konstruieren mit dem Werkzeug für Boolesche Operationen"
+msgstr "Pfade konstruieren mit dem Werkzeug für boolesche Operationen"
 
 #: ../src/actions/actions-tools.cpp:363
 msgid "Rectangle Tool"
@@ -10562,7 +10562,7 @@ msgstr "Werkzeugeinstellungsleiste"
 
 #: ../src/actions/actions-view-mode.cpp:268
 msgid "Show or hide the Tool Controls bar"
-msgstr "Einstellungsleiste für das Werkzeug ein-/ausblenden"
+msgstr "Einstellungsleiste für Werkzeuge ein-/ausblenden"
 
 #: ../src/actions/actions-view-mode.cpp:269
 msgid "Toolbox"
@@ -12059,11 +12059,11 @@ msgstr ""
 
 #: ../src/extension/internal/cdr-input.cpp:354
 msgid "Corel DRAW Presentation Exchange files input"
-msgstr "Corel DRAW Presentations Exchange Datei einlesen"
+msgstr "Corel DRAW Presentation Exchange Datei einlesen"
 
 #: ../src/extension/internal/cdr-input.cpp:359
 msgid "Corel DRAW Presentation Exchange files (*.cmx)"
-msgstr "Corel DRAW Presentations Exchange Datei (.cmx)"
+msgstr "Corel DRAW Presentation Exchange Datei (.cmx)"
 
 #: ../src/extension/internal/cdr-input.cpp:360
 msgid "Open presentation exchange files saved in Corel DRAW"
@@ -12297,7 +12297,7 @@ msgstr "Stärke"
 msgid ""
 "Removes or decreases glows and jaggeries around objects edges after applying "
 "some filters"
-msgstr "Entfernt oder vermindert Dreckeffekte nach Anwendung einiger Filter"
+msgstr "Dreckeffekte nach Anwendung einiger Filter entfernen oder vermindern"
 
 #: ../src/extension/internal/filter/blurs.h:195
 msgid "Cross Blur"
@@ -12718,7 +12718,7 @@ msgstr "In"
 
 #: ../src/extension/internal/filter/bumps.h:371
 msgid "Turns an image to jelly"
-msgstr "Verändert ein Bild zu Gelee"
+msgstr "Ein Bild in Gelee verwandeln"
 
 #: ../src/extension/internal/filter/color.h:76
 msgid "Brilliance"
@@ -12815,7 +12815,7 @@ msgstr "Blaublindheit (Tritanopie)"
 
 #: ../src/extension/internal/filter/color.h:297
 msgid "Simulate color blindness"
-msgstr "Simuliere Farbenblindheit"
+msgstr "Farbenblindheit simulieren"
 
 #: ../src/extension/internal/filter/color.h:344
 msgid "Color Shift"
@@ -12853,7 +12853,7 @@ msgstr "Mischen 2:"
 
 #: ../src/extension/internal/filter/color.h:444
 msgid "Blend image or object with a flood color"
-msgstr "Mischt Bild oder Objekt mit einer Füllfarbe"
+msgstr "Bild oder Objekt mit einer Füllfarbe mischen"
 
 #: ../src/extension/internal/filter/color.h:522 ../src/filter-enums.cpp:25
 msgid "Component Transfer"
@@ -12925,7 +12925,7 @@ msgstr "Farbe 2"
 
 #: ../src/extension/internal/filter/color.h:637
 msgid "Convert luminance values to a duochrome palette"
-msgstr "Konvertiert Luminanzwerte in eine duochrome Palette"
+msgstr "Luminanzwerte in eine duochrome Palette konvertieren"
 
 #: ../src/extension/internal/filter/color.h:740
 msgid "Extract Channel"
@@ -12962,7 +12962,7 @@ msgstr "Kanal zu Alpha"
 
 #: ../src/extension/internal/filter/color.h:763
 msgid "Extract color channel as a transparent image"
-msgstr "Extrahiere Farbkanal als ein transparentes Bild"
+msgstr "Farbkanal als ein transparentes Bild extrahieren"
 
 #: ../src/extension/internal/filter/color.h:850
 msgid "Fade to Black or White"
@@ -13000,7 +13000,7 @@ msgstr "Transparent"
 
 #: ../src/extension/internal/filter/color.h:947
 msgid "Customize greyscale components"
-msgstr "Anpassen der Graustufen-Komponenten"
+msgstr "Graustufen-Komponenten anpassen"
 
 #: ../src/extension/internal/filter/color.h:1024
 #: ../src/ui/widget/selected-style.cpp:685
@@ -13252,8 +13252,8 @@ msgid ""
 "Create a custom tritone palette with additional glow, blend modes and hue "
 "moving"
 msgstr ""
-"Erstellt eine benutzerdefinierte Tritonus-Palette mit zusätzlichem Glanz, "
-"Mischmodi und Farbtonverschiebung"
+"Eine benutzerdefinierte Dreifarb-Palette mit zusätzlichem Glanz, "
+"Mischmodi und Farbtonverschiebung erzeugen"
 
 #: ../src/extension/internal/filter/distort.h:69
 msgid "Felt Feather"
@@ -13340,7 +13340,7 @@ msgstr "Intensität"
 
 #: ../src/extension/internal/filter/distort.h:101
 msgid "Blur and displace edges of shapes and pictures"
-msgstr "verwischt und versetzt Kanten von Formen und Bildern"
+msgstr "Kanten von Formen und Bildern verwischen und versetzten"
 
 #: ../src/extension/internal/filter/distort.h:196
 msgid "Roughen"
@@ -13665,7 +13665,7 @@ msgstr "Länge"
 
 #: ../src/extension/internal/filter/paint.h:253
 msgid "Convert image to an engraving made of vertical and horizontal lines"
-msgstr "Konvertiere Bild in eine Gravur aus vertikalen und horizontalen Linien"
+msgstr "Bild in eine Gravur aus vertikalen und horizontalen Linien umwandeln"
 
 # not sure here -cm-
 #: ../src/extension/internal/filter/paint.h:341
@@ -13704,7 +13704,7 @@ msgstr "Bild als Kontur"
 
 #: ../src/extension/internal/filter/paint.h:376
 msgid "Convert images to duochrome drawings"
-msgstr "Konvertiert Bilder nach Duochrom-Zeichnungen"
+msgstr "Bilder in Duochrom-Zeichnungen umwandeln"
 
 #: ../src/extension/internal/filter/paint.h:508
 msgid "Electrize"
@@ -13750,7 +13750,7 @@ msgstr "Linienstärke"
 
 #: ../src/extension/internal/filter/paint.h:623
 msgid "Posterize and draw smooth lines around color shapes"
-msgstr "Posterisiere und zeichne weiche Linien um farbige Formen herum"
+msgstr "Posterisieren und weiche Linien um farbige Formen herum zeichnen"
 
 #: ../src/extension/internal/filter/paint.h:709
 msgid "Point Engraving"
@@ -13775,7 +13775,7 @@ msgstr "Bild auf Punkten"
 
 #: ../src/extension/internal/filter/paint.h:750
 msgid "Convert image to a transparent point engraving"
-msgstr "Konvertiert das Bild in eine transparente Punkt-Gravur"
+msgstr "Das Bild in eine transparente Punkt-Gravur umwandeln"
 
 #: ../src/extension/internal/filter/paint.h:876
 msgid "Poster Paint"
@@ -13811,7 +13811,7 @@ msgstr "Nach-Sättigung"
 
 #: ../src/extension/internal/filter/paint.h:898
 msgid "Simulate antialiasing"
-msgstr "Simuliere Kantenglättung"
+msgstr "Kantenglättung simulieren"
 
 #: ../src/extension/internal/filter/paint.h:906
 msgid "Poster and painting effects"
@@ -13966,7 +13966,7 @@ msgstr "Modus:"
 
 #: ../src/extension/internal/filter/transparency.h:75
 msgid "Blend objects with background images or with themselves"
-msgstr "Mischt Objekte mit Hintergrundbildern oder mit sich selbst"
+msgstr "Objekte mit Hintergrundbildern oder mit sich selbst mischen"
 
 #: ../src/extension/internal/filter/transparency.h:136
 msgid "Channel Transparency"
@@ -13987,7 +13987,7 @@ msgstr "Globale Deckkraft"
 
 #: ../src/extension/internal/filter/transparency.h:228
 msgid "Make the lightest parts of the object progressively transparent"
-msgstr "Die hellsten Bereiche des Objekts werden fortschreitend transparenter"
+msgstr "Die hellsten Bereiche des Objekts fortschreitend transparenter machen"
 
 #: ../src/extension/internal/filter/transparency.h:305
 msgid "Set opacity and strength of opacity boundaries"
@@ -15406,7 +15406,7 @@ msgstr "Laden der gewünschten Datei %s fehlgeschlagen"
 
 #: ../src/file.cpp:1028
 msgid "Select file to import"
-msgstr "Wählen Sie die zu importierende Datei"
+msgstr "Zu importierende Datei auswählen"
 
 #: ../src/filter-enums.cpp:24
 msgid "Color Matrix"
@@ -16234,7 +16234,7 @@ msgstr "ZAHL"
 
 #: ../src/inkview-application.cpp:81
 msgid "Scale image by factor NUMBER"
-msgstr "Saklierungsfaktor"
+msgstr "Skalierungsfaktor"
 
 #: ../src/inkview-application.cpp:82
 msgid "Preload files"
@@ -16355,7 +16355,7 @@ msgid ""
 "used directly on the canvas with the Spiro mode of the drawing tools."
 msgstr ""
 "Lässt den Pfad sich mittels B-Splines wie einen Draht krümmen. Dieser Effekt "
-"wird normalerweise direkt auf der Zeichenfläche mit dem Spiro-Modus der "
+"wird normalerweise direkt auf der Arbeitsfläche mit dem Spiro-Modus der "
 "Zeichenwerkzeuge erzeugt."
 
 #: ../src/live_effects/effect.cpp:215
@@ -16424,7 +16424,7 @@ msgid ""
 msgstr ""
 "Erzeugt kalligrafische Striche, deren variable Breite und Krümmung anpassbar "
 "sind. Dieser Effekt kann auch mit einem druckempfindlichen Stift und dem "
-"Malwerkzeug auf der Zeichenfläche erzeugt werden."
+"Malwerkzeug auf der Arbeitsfläche erzeugt werden."
 
 #: ../src/live_effects/effect.cpp:300
 msgctxt "path effect"
@@ -16536,7 +16536,7 @@ msgid ""
 "used directly on the canvas with the BSpline mode of the drawing tools."
 msgstr ""
 "Erstellt eine B-Spline-Kurve, die sich in die Ecken des Pfades schmiegt. "
-"Dieser Effekt wird normalerweise direkt auf der Zeichenfläche mit dem "
+"Dieser Effekt wird normalerweise direkt auf der Arbeitsfläche mit dem "
 "BSpline-Modus der Zeichenwerkzeuge erzeugt."
 
 #: ../src/live_effects/effect.cpp:427
@@ -16670,7 +16670,7 @@ msgstr "Ausschneiden"
 #: ../src/live_effects/effect.cpp:573
 msgid "Invert, hide or flatten a clip (apply like a Boolean operation)"
 msgstr ""
-"Invertiert, verbirgt oder reduziert (wie bei einer Booleschen Operation) "
+"Invertiert, verbirgt oder reduziert (wie bei einer booleschen Operation) "
 "einen Ausschneidepfad"
 
 #: ../src/live_effects/effect.cpp:584
@@ -17145,7 +17145,7 @@ msgstr "Operand:"
 
 #: ../src/live_effects/lpe-bool.cpp:80
 msgid "Operand for the boolean operation"
-msgstr "Pfad, der bei der Booleschen Operation als Operand dient"
+msgstr "Pfad, der bei der booleschen Operation als Operand dient"
 
 #: ../src/live_effects/lpe-bool.cpp:81
 msgid "Operation:"
@@ -21652,20 +21652,20 @@ msgstr "Pfad zerschneiden"
 #: ../src/path/path-boolop.cpp:378
 msgid "Select <b>at least 1 path</b> to perform a boolean union."
 msgstr ""
-"Wählen Sie <b>mindestens 1 Pfad</b> aus, um eine boole'sche Vereinigung "
+"Wählen Sie <b>mindestens 1 Pfad</b> aus, um eine boolesche Vereinigung "
 "auszuführen."
 
 #: ../src/path/path-boolop.cpp:384
 msgid "Select <b>at least 2 paths</b> to perform a boolean operation."
 msgstr ""
-"Wählen Sie <b>mindestens 2 Pfade</b> aus, um eine boole'sche Operation "
+"Wählen Sie <b>mindestens 2 Pfade</b> aus, um eine boolesche Operation "
 "auszuführen."
 
 #: ../src/path/path-boolop.cpp:390
 msgid ""
 "One of the objects is <b>not a path</b>, cannot perform boolean operation."
 msgstr ""
-"Eines der ausgewählten Objekte ist <b>kein Pfad</b>. Boole'sche Operation "
+"Eines der ausgewählten Objekte ist <b>kein Pfad</b>. Boolesche Operation "
 "wird nicht ausgeführt."
 
 #: ../src/path/path-boolop.cpp:396
@@ -24478,7 +24478,7 @@ msgstr "Aktivi_ert"
 # File: ../src/display/canvas-grid.cpp, line: 306
 #: ../src/ui/dialog/document-properties.cpp:1774
 msgid "Makes the grid available for working with on the canvas."
-msgstr "Das Gitter wird hierdurch auf der Zeichenfläche verfügbar."
+msgstr "Das Gitter wird hierdurch auf der Arbeitsfläche verfügbar."
 
 #: ../src/ui/dialog/document-properties.cpp:1778
 msgid "Snap to visible _grid lines only"
@@ -28310,7 +28310,7 @@ msgid ""
 "page's position)."
 msgstr ""
 "Lineale und Werkzeug zeigen Positionsangaben relativ zur aktuellen Seite an, "
-"statt sich auf die gesamte Zeichenfläche zu beziehen (was der Position der "
+"statt sich auf die gesamte Arbeitsfläche zu beziehen (was der Position der "
 "ersten Seite entspricht)."
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:1619
@@ -28325,14 +28325,14 @@ msgstr ""
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:1623
 msgid "Lock canvas rotation by default"
-msgstr "Drehung der Zeichenfläche standardmäßig sperren"
+msgstr "Drehung der Arbeitsfläche standardmäßig sperren"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:1625
 msgid ""
 "Prevent accidental canvas rotation by disabling on-canvas keyboard and mouse "
 "actions for rotation"
 msgstr ""
-"Versehentliches Drehen der Zeichenfläche durch Deaktivierung von Tastatur- "
+"Versehentliches Drehen der Arbeitsfläche durch Deaktivierung von Tastatur- "
 "und Mausaktionen für die Drehung verhindern."
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:1627
@@ -28394,12 +28394,12 @@ msgstr "Sichtbarkeit der Mauskoordinaten in der Statusleiste anpassen"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:1648
 msgid "Show canvas rotation"
-msgstr "Zeichenflächendrehung anzeigen"
+msgstr "Arbeitsflächendrehung anzeigen"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:1649
 msgid "Control visibility of canvas rotation in status bar."
 msgstr ""
-"Sichtbarkeit der Einstellungen für die Drehung der Zeichenfläche in der "
+"Sichtbarkeit der Einstellungen für die Drehung der Arbeitsfläche in der "
 "Statusleiste anpassen"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:1651
@@ -29301,7 +29301,7 @@ msgstr "Unsachgemäße Attribut-Aktionen"
 #: ../src/ui/dialog/inkscape-preferences.cpp:2336
 #: ../src/ui/dialog/inkscape-preferences.cpp:2344
 msgid "Print warnings"
-msgstr "Drucke Warnungen"
+msgstr "Warnungen ausgeben"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2329
 msgid ""
@@ -30249,7 +30249,7 @@ msgstr ""
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2717
 msgid "Canvas rotation"
-msgstr "Drehung der Zeichenfläche"
+msgstr "Drehung der Arbeitsfläche"
 
 # !!! need %s
 #: ../src/ui/dialog/inkscape-preferences.cpp:2720
@@ -30258,7 +30258,7 @@ msgstr "Arbeitsfläche drehen um:"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2721
 msgid "Rotate canvas clockwise and counter-clockwise by this amount."
-msgstr "Zeichenfläche in beide Richtungen jeweils um diesen Winkel drehen."
+msgstr "Arbeitsfläche in beide Richtungen jeweils um diesen Winkel drehen."
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2723
 msgid "Arrow keys move object relative to screen"
@@ -30270,7 +30270,7 @@ msgid ""
 "rotated, the selection will then still be moved horizontally and vertically "
 "relative to the screen, not to the rotated document."
 msgstr ""
-"Wenn die Ansicht der Zeichenfläche gedreht wurde, bewirken die Pfeiltasten"
+"Wenn die Ansicht der Arbeitsfläche gedreht wurde, bewirken die Pfeiltasten"
 " weiterhin eine Bewegung relativ zum Bildschirm, und nicht zum gedrehten"
 " Dokument."
 
@@ -30364,7 +30364,7 @@ msgid ""
 "path, Boolean operations, Combine, Break apart"
 msgstr ""
 "Die folgenden Pfadoperationen heben die Verknüpfung von Klonen mit dem "
-"Original auf: Kontur in Pfad umwandeln, Objekt in Pfad umwandeln, Boolesche "
+"Original auf: Kontur in Pfad umwandeln, Objekt in Pfad umwandeln, boolesche "
 "Operationen, Kombinieren, Zerlegen"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2764
@@ -30640,7 +30640,7 @@ msgid ""
 "Request that the canvas should be painted with OpenGL rather than Cairo. If "
 "OpenGL is unsupported, it will fall back to Cairo."
 msgstr ""
-"Die Zeichenfläche wird vorzugsweise mit OpenGL statt mit Cairo gezeichnet. "
+"Die Arbeitsfläche wird vorzugsweise mit OpenGL statt mit Cairo gezeichnet. "
 "Falls OpenGL nicht unterstützt wird, wird automatisch Cairo verwendet."
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2878
@@ -32368,7 +32368,7 @@ msgstr "Platzbedarf der Unterlänge, wie beim unteren Bogen des Buchstaben 'g'"
 
 #: ../src/ui/dialog/svg-fonts-dialog.cpp:881
 msgid "Set up canvas"
-msgstr "Zeichenfläche vorbereiten"
+msgstr "Arbeitsfläche vorbereiten"
 
 #: ../src/ui/dialog/svg-fonts-dialog.cpp:1035
 msgid "Add glyph"
@@ -33031,7 +33031,7 @@ msgstr "Vertikal verschieben"
 
 #: ../src/ui/modifiers.cpp:87
 msgid "Pan/Scroll up and down"
-msgstr "Zeichenfläche nach oben / unten verschieben"
+msgstr "Arbeitsfläche nach oben / unten verschieben"
 
 #: ../src/ui/modifiers.cpp:88
 msgid "Horizontal pan"
@@ -33039,7 +33039,7 @@ msgstr "Horizontal verschieben"
 
 #: ../src/ui/modifiers.cpp:88
 msgid "Pan/Scroll left and right"
-msgstr "Zeichenfläche nach rechts/ links verschieben"
+msgstr "Arbeitsfläche nach rechts/ links verschieben"
 
 #: ../src/ui/modifiers.cpp:89
 msgid "Canvas zoom"
@@ -33051,11 +33051,11 @@ msgstr "Mit dem Mausrad zoomen"
 
 #: ../src/ui/modifiers.cpp:90
 msgid "Canvas rotate"
-msgstr "Drehen der Zeichenfläche"
+msgstr "Drehen der Arbeitsfläche"
 
 #: ../src/ui/modifiers.cpp:90
 msgid "Rotate the canvas with scroll wheel"
-msgstr "Zeichenfläche mit dem Mausrad drehen"
+msgstr "Arbeitsfläche mit dem Mausrad drehen"
 
 #: ../src/ui/modifiers.cpp:93
 msgid "Add to selection"
@@ -35418,13 +35418,13 @@ msgstr "Zoomt auf die gewählten Objekte, solange die Taste gedrückt wird."
 
 #: ../src/ui/tools/shortcuts.cpp:22
 msgid "Quick Pan Canvas"
-msgstr "Zeichenfläche verschieben"
+msgstr "Arbeitsfläche verschieben"
 
 #: ../src/ui/tools/shortcuts.cpp:22
 msgid "Pan the canvas with the mouse while the key is pressed."
 msgstr ""
 "Solange diese Taste gedrückt wird, verschieben Mausbewegungen die"
-" Zeichenfläche."
+"Arbeitsfläche."
 
 #: ../src/ui/tools/shortcuts.cpp:24
 msgid "Pen Segment To Line"
@@ -38173,7 +38173,7 @@ msgid ""
 "Select this on canvas (if applicable) or in the XML dialog (e.g. a pattern "
 "in the 'defs' section)"
 msgstr ""
-"Wählt dies auf der Zeichenfläche aus (falls anwendbar) oder im XML-Dialog (z."
+"Wählt dies auf der Arbeitsfläche aus (falls anwendbar) oder im XML-Dialog (z."
 "B. ein Muster innerhalb des 'defs'-Tags)"
 
 #: ../share/ui/dialog-document-resources.glade:163
@@ -39531,7 +39531,7 @@ msgstr "Aussehen"
 
 #: ../share/ui/inkscape-start.glade:579
 msgid "Select the default color background for the canvas"
-msgstr "Die Standardhintergrundfarbe der Zeichenfläche festlegen"
+msgstr "Die Standardhintergrundfarbe der Arbeitsfläche festlegen"
 
 #: ../share/ui/inkscape-start.glade:626
 msgid "Set to dark theme"
@@ -40902,7 +40902,7 @@ msgstr "Z:"
 
 #: ../share/ui/statusbar.ui:219
 msgid "Rotation (also Ctrl+Shift+scroll)"
-msgstr "Drehung der Zeichenfläche (auch mit Strg+Umschalt+Mausrad)"
+msgstr "Drehung der Arbeitsfläche (auch mit Strg+Umschalt+Mausrad)"
 
 #: ../share/ui/statusbar.ui:225
 msgid "R:"
@@ -42086,7 +42086,7 @@ msgstr "Andere"
 
 #: ../share/ui/toolbar-tool-prefs.ui:720
 msgid "CANVAS TOOLS"
-msgstr "Zeichenfläche"
+msgstr "Arbeitsfläche"
 
 #: ../share/ui/toolbar-tweak.ui:92
 msgid "Move objects in any direction"
@@ -49488,7 +49488,7 @@ msgstr "Dann rotiere um:"
 
 #: ../share/extensions/polyhedron_3d.inx:65
 msgid "Scaling factor:"
-msgstr "Saklierungsfaktor:"
+msgstr "Skalierungsfaktor:"
 
 #: ../share/extensions/polyhedron_3d.inx:66
 msgid "Fill color, Red:"
@@ -50198,7 +50198,7 @@ msgid ""
 msgstr ""
 "\n"
 "Diese Erweiterung verändert die Stapelordnung von Objekten in Abhängigkeit\n"
-"ihrer Position auf der Zeichenfläche oder ihrer aktuellen Stapelordnung.\n"
+"ihrer Position auf der Arbeitsfläche oder ihrer aktuellen Stapelordnung.\n"
 "Alle gewählten Objekte werden umgeschichtet.\n"
 "Gruppen werden als Objekte behandelt.Wenn Elemente, die sich innerhalb einer "
 "Gruppe befinden, gemeinsam mit\n"
@@ -51646,7 +51646,7 @@ msgstr "Formerstellungswerkzeug"
 
 #: ../org.inkscape.Inkscape.appdata.xml.in:63
 msgid "On-canvas pattern editing"
-msgstr "Muster auf der Zeichenfläche bearbeiten"
+msgstr "Muster auf der Arbeitsfläche bearbeiten"
 
 #: ../org.inkscape.Inkscape.appdata.xml.in:64
 msgid "Pattern editor"
@@ -51691,7 +51691,7 @@ msgstr "Knotenmarkierungen und Strichlinienmuster können bearbeitet werden"
 # File: ../src/ui/dialog/align-and-distribute.cpp, line: 1107
 #: ../org.inkscape.Inkscape.appdata.xml.in:81
 msgid "On-canvas alignment and snapping"
-msgstr "Ausrichten und Einrasten auf der Zeichenfläche"
+msgstr "Ausrichten und Einrasten auf der Arbeitsfläche"
 
 #: ../org.inkscape.Inkscape.appdata.xml.in:82
 msgid "Selectable origin for numerical transforms"
@@ -51790,12 +51790,12 @@ msgstr "Ursprung des Koordinatensystems standardmäßig in linker oberer Ecke"
 
 #: ../org.inkscape.Inkscape.appdata.xml.in:119
 msgid "Canvas rotation and mirroring"
-msgstr "Drehen und Spiegeln der Zeichenfläche"
+msgstr "Drehen und Spiegeln der Arbeitsfläche"
 
 # File: ../src/ui/dialog/align-and-distribute.cpp, line: 1107
 #: ../org.inkscape.Inkscape.appdata.xml.in:120
 msgid "On-Canvas alignment of objects"
-msgstr "Ausrichten von Objekte auf der Zeichenfläche"
+msgstr "Ausrichten von Objekte auf der Arbeitsfläche"
 
 #: ../org.inkscape.Inkscape.appdata.xml.in:121
 msgid "Split view and X-Ray modes"
@@ -51830,7 +51830,7 @@ msgid ""
 "New Corners (Fillet/chamfer) LPE, (lossless) Boolean Operation LPE "
 "(experimental), Offset LPE and Measure Segments LPE (and more!)"
 msgstr ""
-"Neuer Ecken-Pfadeffekt, Pfadeffekt für verlustlose Boolesche Operationen "
+"Neuer Ecken-Pfadeffekt, Pfadeffekt für verlustlose boolesche Operationen "
 "(experimentell), Versatz-Pfadeffekt, Ausmessen-Pfadeffekt (und weitere!)"
 
 #: ../org.inkscape.Inkscape.appdata.xml.in:128
