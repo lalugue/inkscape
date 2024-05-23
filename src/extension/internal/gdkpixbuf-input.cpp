@@ -41,7 +41,7 @@ namespace Extension {
 namespace Internal {
 
 SPDocument *
-GdkpixbufInput::open(Inkscape::Extension::Input *mod, char const *uri)
+GdkpixbufInput::open(Inkscape::Extension::Input *mod, char const *uri, bool /*is_importing*/)
 {
     // Determine whether the image should be embedded
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();

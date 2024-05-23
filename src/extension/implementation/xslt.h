@@ -42,7 +42,8 @@ public:
     bool check(Inkscape::Extension::Extension *module) override;
 
     SPDocument *open(Inkscape::Extension::Input *module,
-                     gchar const *filename) override;
+                     gchar const *filename,
+                     bool is_importing) override;
     void save(Inkscape::Extension::Output *module, SPDocument *doc, gchar const *filename) override;
 };
 

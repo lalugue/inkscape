@@ -3102,7 +3102,7 @@ void Wmf::free_wmf_strings(WMF_STRINGS name){
 }
 
 SPDocument *
-Wmf::open( Inkscape::Extension::Input * /*mod*/, const gchar *uri )
+Wmf::open( Inkscape::Extension::Input * /*mod*/, const gchar *uri, bool /*is_importing*/)
 {
 
     if (uri == nullptr) {

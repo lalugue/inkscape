@@ -136,6 +136,7 @@ Input::check ()
     \return  A new document
     \brief   This function creates a document from a file
     \param   uri  The filename to create the document from
+    \param   is_importing True if the opened file is being imported
 
     This function acts as the first step in creating a new document
     from a file.  The first thing that this does is make sure that the
@@ -143,7 +144,7 @@ Input::check ()
     file exits, then it is opened using the implementation of this extension.
 */
 SPDocument *
-Input::open (const gchar *uri)
+Input::open (const gchar *uri, bool is_importing)
 {
     if (!loaded()) {
         set_state(Extension::STATE_LOADED);
@@ -153,7 +154,7 @@ Input::open (const gchar *uri)
     }
     timer->touch();
 
-    SPDocument *const doc = imp->open(this, uri);
+    SPDocument *const doc = imp->open(this, uri, is_importing);
 
     return doc;
 }

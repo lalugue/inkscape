@@ -479,9 +479,7 @@ bool CommandPalette::operate_recent_file(Glib::ustring const &uri, bool const im
     }
 
     if (import) {
-        prefs->setBool("/options/onimport", true);
         file_import(SP_ACTIVE_DOCUMENT, uri, nullptr);
-        prefs->setBool("/options/onimport", true);
 
         if (write_to_history) {
             _history_xml.add_import(uri);

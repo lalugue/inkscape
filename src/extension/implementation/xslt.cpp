@@ -84,7 +84,8 @@ void XSLT::unload(Inkscape::Extension::Extension *module)
 }
 
 SPDocument * XSLT::open(Inkscape::Extension::Input */*module*/,
-                        char const *filename)
+                        char const *filename,
+                        bool /*is_importing*/)
 {
     xmlDocPtr filein = xmlParseFile(filename);
     if (filein == nullptr) { return nullptr; }

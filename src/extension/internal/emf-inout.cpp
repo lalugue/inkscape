@@ -3545,7 +3545,7 @@ void Emf::free_emf_strings(EMF_STRINGS name){
 }
 
 SPDocument *
-Emf::open( Inkscape::Extension::Input * /*mod*/, const gchar *uri )
+Emf::open( Inkscape::Extension::Input * /*mod*/, const gchar *uri, bool /*is_importing*/)
 {
     if (uri == nullptr) {
         return nullptr;

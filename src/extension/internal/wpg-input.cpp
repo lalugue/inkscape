@@ -70,7 +70,7 @@ namespace Extension {
 namespace Internal {
 
 
-SPDocument *WpgInput::open(Inkscape::Extension::Input * /*mod*/, const gchar * uri)
+SPDocument *WpgInput::open(Inkscape::Extension::Input * /*mod*/, const gchar * uri, bool /*is_importing*/)
 {
     #ifdef _WIN32
         // RVNGFileStream uses fopen() internally which unfortunately only uses ANSI encoding on Windows

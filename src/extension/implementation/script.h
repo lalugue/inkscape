@@ -59,7 +59,7 @@ public:
     SPDocument *new_from_template(Inkscape::Extension::Template *module) override;
     void resize_to_template(Inkscape::Extension::Template *tmod, SPDocument *doc, SPPage *page) override;
 
-    SPDocument *open(Inkscape::Extension::Input *module, gchar const *filename) override;
+    SPDocument *open(Inkscape::Extension::Input *module, gchar const *filename, bool is_importing) override;
     void save(Inkscape::Extension::Output *module, SPDocument *doc, gchar const *filename) override;
     void export_raster(Inkscape::Extension::Output *module,
             const SPDocument *doc, std::string const &png_file, gchar const *filename) override;

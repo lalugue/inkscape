@@ -348,7 +348,8 @@ void Script::resize_to_template(Inkscape::Extension::Template *tmod, SPDocument 
     That document is then returned from this function.
 */
 SPDocument *Script::open(Inkscape::Extension::Input *module,
-             const gchar *filenameArg)
+             const gchar *filenameArg,
+             bool /*is_importing*/)
 {
     std::list<std::string> params;
     module->paramListString(params);

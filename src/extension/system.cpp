@@ -49,6 +49,7 @@ namespace Extension {
  *           a module (including Autodetect)
  * \param    key       Identifier of which module to use
  * \param    filename  The file that should be opened
+ * \param    is_importing Is the request an import request, for example drag & drop
  *
  * First things first, are we looking at an autodetection?  Well if that's the case then the module
  * needs to be found, and that is done with a database lookup through the module DB.  The foreach
@@ -63,7 +64,7 @@ namespace Extension {
  *
  * Lastly, the open function is called in the module itself.
  */
-SPDocument *open(Extension *key, gchar const *filename)
+SPDocument *open(Extension *key, gchar const *filename, bool is_importing)
 {
     Input *imod = nullptr;
 
@@ -99,7 +100,7 @@ SPDocument *open(Extension *key, gchar const *filename)
         bool ask_svg = prefs->getBool("/dialogs/import/ask_svg");
         Glib::ustring id = Glib::ustring(imod->get_id(), 22);
         if (id.compare("org.inkscape.input.svg") == 0) {
-            if (ask_svg && prefs->getBool("/options/onimport", false)) {
+            if (ask_svg && is_importing) {
                 show = true;
                 imod->set_gui(true);
             } else {
@@ -124,7 +125,7 @@ SPDocument *open(Extension *key, gchar const *filename)
         throw Input::open_cancelled();
     }
 
-    SPDocument *doc = imod->open(filename);
+    SPDocument *doc = imod->open(filename, is_importing);
 
     if (!doc) {
         if (last_chance_svg) {

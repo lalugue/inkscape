@@ -583,7 +583,7 @@ static cairo_status_t
  * Parses the selected page of the given PDF document using PdfParser.
  */
 SPDocument *
-PdfInput::open(::Inkscape::Extension::Input * /*mod*/, const gchar * uri) {
+PdfInput::open(::Inkscape::Extension::Input * /*mod*/, const gchar * uri, bool /*is_importing*/) {
 
     // Initialize the globalParams variable for poppler
     if (!globalParams) {

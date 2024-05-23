@@ -141,7 +141,8 @@ class PdfInput final: public Inkscape::Extension::Implementation::Implementation
 public:
     PdfInput() = default;
     SPDocument *open(Inkscape::Extension::Input *mod,
-                     const gchar *uri) final;
+                     const gchar *uri,
+                     bool is_importing) final;
     static void         init( );
 private:
     void add_builder_page(

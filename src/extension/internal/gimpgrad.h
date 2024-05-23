@@ -28,7 +28,7 @@ class GimpGrad : public Inkscape::Extension::Implementation::Implementation
 public:
     bool load(Inkscape::Extension::Extension *module) override;
     void unload(Inkscape::Extension::Extension *module) override;
-    SPDocument *open(Inkscape::Extension::Input *module, gchar const *filename) override;
+    SPDocument *open(Inkscape::Extension::Input *module, gchar const *filename, bool is_importing) override;
 
     static void init();
 };
