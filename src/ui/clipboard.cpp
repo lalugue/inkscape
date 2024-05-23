@@ -1026,7 +1026,9 @@ std::vector<Glib::ustring> ClipboardManagerImpl::getElementsOfType(SPDesktop *de
     Inkscape::XML::Node *root = tempdoc->getReprRoot();
 
     // 1293979: strip out the defs of the document
-    root->removeChild(tempdoc->getDefs()->getRepr());
+    if (auto repr = tempdoc->getDefs()->getRepr()) {
+        root->removeChild(repr);
+    }
     std::vector<Inkscape::XML::Node const *> reprs;
     if (strcmp(type, "*") == 0){
         //TODO:Fill vector with all possible elements
