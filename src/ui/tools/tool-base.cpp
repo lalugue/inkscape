@@ -1229,7 +1229,10 @@ void ToolBase::menu_popup(CanvasEvent const &event, SPObject *obj)
     }
 
     auto const popup = [&] (std::optional<Geom::Point> const &pos) {
-        auto menu = Gtk::make_managed<ContextMenu>(_desktop, obj);
+        // Get a list of items under the cursor, used for unhiding and unlocking.
+        auto point_win = _desktop->point() * _desktop->d2w();
+        auto items_under_cursor = _desktop->getItemsAtPoints({point_win}, true, false, 0, false);
+        auto menu = Gtk::make_managed<ContextMenu>(_desktop, obj, items_under_cursor);
         _desktop->getDesktopWidget()->get_canvas_grid()->setPopover(menu);
         UI::popup_at(*menu, *_desktop->getCanvas(), pos);
     };

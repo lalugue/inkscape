@@ -120,7 +120,7 @@ static bool childrenIncludedInSelection(SPItem *item, Inkscape::Selection &selec
     });
 }
 
-ContextMenu::ContextMenu(SPDesktop *desktop, SPObject *object, bool hide_layers_and_objects_menu_item)
+ContextMenu::ContextMenu(SPDesktop *desktop, SPObject *object, std::vector<SPItem*> const &items, bool hide_layers_and_objects_menu_item)
 {
     set_name("ContextMenu");
 
@@ -139,9 +139,9 @@ ContextMenu::ContextMenu(SPDesktop *desktop, SPObject *object, bool hide_layers_
     auto layer = Inkscape::LayerManager::asLayer(item);  // Layers have their own context menu in the Object and Layers dialog.
     auto root = desktop->layerManager().currentRoot();
 
-    // Get a list of items under the cursor, used for unhiding and unlocking.
-    auto point_win = desktop->point() * desktop->d2w();
-    items_under_cursor = document->getItemsAtPoints(desktop->dkey, {point_win}, true, false, 0, false);
+    // Save the items in context
+    items_under_cursor = items;
+
     bool has_hidden_below_cursor = false;
     bool has_locked_below_cursor = false;
     for (auto item : items_under_cursor) {

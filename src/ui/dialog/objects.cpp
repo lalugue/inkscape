@@ -1683,7 +1683,8 @@ Gtk::EventSequenceState ObjectsPanel::on_click(Gtk::GestureClick const &gesture,
             }
 
             // true == hide menu item for opening this dialog!
-            auto menu = Gtk::make_managed<ContextMenu>(getDesktop(), item, true);
+            std::vector<SPItem *> items = {item};
+            auto menu = Gtk::make_managed<ContextMenu>(getDesktop(), item, items, true);
             // popup context menu pointing to the clicked tree row:
             _popoverbin.setPopover(menu);
             UI::popup_at(*menu, _tree, ex, ey);
