@@ -28,6 +28,7 @@ namespace Gtk {
 class Builder;
 class Button;
 class ComboBox;
+class Frame;
 class SpinButton;
 class ToggleButton;
 } // namespace Gtk
@@ -61,6 +62,7 @@ private:
 
     Gtk::Box &align_and_distribute_box;
     Gtk::Box &align_and_distribute_object;  // Hidden when node tool active.
+    Gtk::Frame &remove_overlap_frame;       // Hidden when node tool active.
     Gtk::Box &align_and_distribute_node;    // Visible when node tool active.
 
     // Align
