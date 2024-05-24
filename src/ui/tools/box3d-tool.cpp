@@ -380,8 +380,13 @@ bool Box3dTool::root_handler(CanvasEvent const &event)
             break;
 
         case GDK_KEY_Escape:
-            _desktop->getSelection()->clear();
-            //TODO: make dragging escapable by Esc
+            if (dragging) {
+                dragging = false;
+                discard_delayed_snap_event();
+                // if drawing, cancel, otherwise pass it up for deselecting
+                cancel();
+                ret = true;
+            }
             break;
 
         case GDK_KEY_space:
@@ -496,6 +501,13 @@ void Box3dTool::finishItem()
     extruded = false;
 
     if (box3d) {
+        if ((box3d->orig_corner0[Proj::X] == box3d->orig_corner7[Proj::X]) +
+                (box3d->orig_corner0[Proj::Y] == box3d->orig_corner7[Proj::Y]) +
+                (box3d->orig_corner0[Proj::Z] == box3d->orig_corner7[Proj::Z]) >=
+            2) {
+            this->cancel(); // Don't allow the creation of zero sized 3d boxes
+            return;
+        }
         auto doc = _desktop->getDocument();
 
         if (!doc || !doc->getCurrentPersp3D()) {
@@ -513,6 +525,22 @@ void Box3dTool::finishItem()
 
         box3d = nullptr;
     }
+}
+
+void Box3dTool::cancel()
+{
+    _desktop->getSelection()->clear();
+    ungrabCanvasEvents();
+
+    if (box3d) {
+        box3d->deleteObject();
+    }
+
+    this->within_tolerance = false;
+    xyp = {};
+    this->item_to_select = nullptr;
+
+    DocumentUndo::cancel(_desktop->getDocument());
 }
 
 } // namespace Inkscape::UI::Tools

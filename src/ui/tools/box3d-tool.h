@@ -75,6 +75,7 @@ private:
 
     void drag();
 	void finishItem();
+    void cancel();
 };
 
 } // namespace Inkscape::UI::Tools
