@@ -785,7 +785,7 @@
       </object>
     </child>
     <child>
-      <object class="GtkFrame">
+      <object class="GtkFrame" id="remove-overlap-frame">
         <style>
           <class name="flat"/>
         </style>

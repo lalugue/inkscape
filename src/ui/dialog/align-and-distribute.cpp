@@ -16,22 +16,23 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include "align-and-distribute.h"  // Widget
+#include "align-and-distribute.h" // Widget
 
-#include <iostream>
-#include <sigc++/adaptors/bind.h>
-#include <sigc++/functors/mem_fun.h>
 #include <giomm/application.h>
 #include <gtkmm/builder.h>
 #include <gtkmm/button.h>
 #include <gtkmm/combobox.h>
+#include <gtkmm/frame.h>
 #include <gtkmm/spinbutton.h>
 #include <gtkmm/togglebutton.h>
+#include <iostream>
+#include <sigc++/adaptors/bind.h>
+#include <sigc++/functors/mem_fun.h>
 
+#include "actions/actions-tools.h" // Tool switching.
 #include "desktop.h"               // Tool switching.
 #include "inkscape-application.h"  // Access window.
 #include "inkscape-window.h"       // Activate window action.
-#include "actions/actions-tools.h" // Tool switching.
 #include "io/resource.h"
 #include "ui/builder-utils.h"
 #include "ui/dialog/dialog-base.h" // Tool switching.
@@ -42,24 +43,25 @@ namespace Inkscape::UI::Dialog {
 using Inkscape::IO::Resource::get_filename;
 using Inkscape::IO::Resource::UIS;
 
-AlignAndDistribute::AlignAndDistribute(Inkscape::UI::Dialog::DialogBase* dlg)
+AlignAndDistribute::AlignAndDistribute(Inkscape::UI::Dialog::DialogBase *dlg)
     : Gtk::Box(Gtk::Orientation::VERTICAL)
     , builder(create_builder("align-and-distribute.ui"))
-    , align_and_distribute_box   (get_widget<Gtk::Box>         (builder, "align-and-distribute-box"))
-    , align_and_distribute_object(get_widget<Gtk::Box>         (builder, "align-and-distribute-object"))
-    , align_and_distribute_node  (get_widget<Gtk::Box>         (builder, "align-and-distribute-node"))
+    , align_and_distribute_box(get_widget<Gtk::Box>(builder, "align-and-distribute-box"))
+    , align_and_distribute_object(get_widget<Gtk::Box>(builder, "align-and-distribute-object"))
+    , remove_overlap_frame(get_widget<Gtk::Frame>(builder, "remove-overlap-frame"))
+    , align_and_distribute_node(get_widget<Gtk::Box>(builder, "align-and-distribute-node"))
 
-      // Object align
-    , align_relative_object      (get_widget<Gtk::ComboBox>    (builder, "align-relative-object"))
-    , align_move_as_group        (get_widget<Gtk::ToggleButton>(builder, "align-move-as-group"))
+    // Object align
+    , align_relative_object(get_widget<Gtk::ComboBox>(builder, "align-relative-object"))
+    , align_move_as_group(get_widget<Gtk::ToggleButton>(builder, "align-move-as-group"))
 
-      // Remove overlap
-    , remove_overlap_button      (get_widget<Gtk::Button>      (builder, "remove-overlap-button"))
-    , remove_overlap_hgap        (get_widget<Gtk::SpinButton>  (builder, "remove-overlap-hgap"))
-    , remove_overlap_vgap        (get_widget<Gtk::SpinButton>  (builder, "remove-overlap-vgap"))
+    // Remove overlap
+    , remove_overlap_button(get_widget<Gtk::Button>(builder, "remove-overlap-button"))
+    , remove_overlap_hgap(get_widget<Gtk::SpinButton>(builder, "remove-overlap-hgap"))
+    , remove_overlap_vgap(get_widget<Gtk::SpinButton>(builder, "remove-overlap-vgap"))
 
-      // Node
-    , align_relative_node        (get_widget<Gtk::ComboBox>    (builder, "align-relative-node"))
+    // Node
+    , align_relative_node(get_widget<Gtk::ComboBox>(builder, "align-relative-node"))
 
 {
     set_name("AlignAndDistribute");
@@ -159,6 +161,7 @@ AlignAndDistribute::tool_changed(SPDesktop* desktop)
     bool const is_node = get_active_tool(desktop) == "Node";
     align_and_distribute_node  .set_visible( is_node);
     align_and_distribute_object.set_visible(!is_node);
+    remove_overlap_frame.set_visible(!is_node);
 }
 
 void
