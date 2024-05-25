@@ -119,6 +119,16 @@ ObjectSet::includesAncestor(SPObject *object) {
     return nullptr;
 }
 
+bool ObjectSet::includesDescendant(SPObject *object)
+{
+    if (!object) {
+        return false;
+    }
+
+    return includes(object) || std::any_of(object->children.begin(), object->children.end(),
+                                           [this](auto &child) { return includesDescendant(&child); });
+}
+
 void ObjectSet::clear() {
     _clear();
     _emitChanged();

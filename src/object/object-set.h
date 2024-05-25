@@ -198,6 +198,11 @@ public:
     SPObject * includesAncestor(SPObject *object);
 
     /**
+     * Checks if the selection contains any descendants of the given object.
+     */
+    bool includesDescendant(SPObject *object);
+
+    /**
      * Set the selection to a single specific object.
      *
      * @param obj the object to select
