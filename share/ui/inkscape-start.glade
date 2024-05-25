@@ -999,7 +999,7 @@ Fund Inkscape</property>
                     <property name="hexpand">True</property>
                     <property name="border-width">2</property>
                     <property name="active">True</property>
-                    <property name="draw-indicator">False</property>
+                    <property name="draw-indicator">True</property>
                   </object>
                   <packing>
                     <property name="expand">False</property>
