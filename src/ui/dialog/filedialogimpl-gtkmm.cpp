@@ -446,14 +446,11 @@ void FileSaveDialogImplGtk::setExtension(Inkscape::Extension::Extension *key)
     // Save module.
     FileDialog::setExtension(key);
 
-    // Update filter.
     if (!from_filefilter_changed) {
+        // Update filter.
         set_filter(extensionFilterMap[key]);
-    }
-    from_filefilter_changed = false;
 
-    // Update filename.
-    if (!from_filename_changed) {
+        // Update filename.
         auto filename_utf8 = get_current_name(); // UTF8 encoded!
         auto output = dynamic_cast<Inkscape::Extension::Output *>(getExtension());
         if (output && get_choice("Extension") == "true") {
