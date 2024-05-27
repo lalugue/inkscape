@@ -71,6 +71,7 @@
 ../share/extensions/synfig_prepare.py
 ../share/extensions/text_split.py
 ../share/extensions/triangle.py
+../share/extensions/typst_formula.py
 ../share/extensions/voronoi_diagram.py
 ../share/extensions/voronoi_fill.py
 ../share/extensions/web_interactive_mockup.py
