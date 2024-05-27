@@ -49,6 +49,8 @@ PageSelector::PageSelector(SPDesktop *desktop)
 
     _page_model = Gtk::ListStore::create(_model_columns);
     _selector.set_model(_page_model);
+    _label_renderer.property_max_width_chars() = 15;
+    _label_renderer.property_ellipsize() = Pango::ELLIPSIZE_END;
     _selector.pack_start(_label_renderer);
     _selector.set_cell_data_func(_label_renderer, sigc::mem_fun(*this, &PageSelector::renderPageLabel));
 
