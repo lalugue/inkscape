@@ -90,7 +90,6 @@ build_menu()
 
         for (auto &&entry : app->get_action_effect_data().give_all_data()) {
             auto const &submenu_name_list = entry.submenu;
-            if (submenu_name_list.empty()) continue;
 
             // Effect data is used for both filters menu and extensions menu... we need to
             // add to correct menu.
