@@ -75,8 +75,8 @@ build_menu()
         { // Filters and Extensions
             auto effects_object = refBuilder->get_object("effect-menu-effects");
             auto filters_object = refBuilder->get_object("filter-menu-filters");
-            auto effects_menu   = Glib::RefPtr<Gio::Menu>::cast_dynamic(effects_object);
-            auto filters_menu   = Glib::RefPtr<Gio::Menu>::cast_dynamic(filters_object);
+            auto effects_menu = Glib::RefPtr<Gio::Menu>::cast_dynamic(effects_object);
+            auto filters_menu = Glib::RefPtr<Gio::Menu>::cast_dynamic(filters_object);
 
             if (!filters_menu) {
                 std::cerr << "build_menu(): Couldn't find Filters menu entry!" << std::endl;
@@ -87,42 +87,41 @@ build_menu()
 
             std::map<Glib::ustring, Glib::RefPtr<Gio::Menu>> submenus;
 
-        for (auto &&entry : app->get_action_effect_data().give_all_data()) {
-            auto const &submenu_name_list = entry.submenu;
-            if (submenu_name_list.empty()) continue;
+            for (auto &&entry : app->get_action_effect_data().give_all_data()) {
+                auto const &submenu_name_list = entry.submenu;
 
-                    // Effect data is used for both filters menu and extensions menu... we need to
-            // add to correct menu.
-                    Glib::ustring path; // Only used as index to map of submenus.
-                    auto top_menu = filters_menu;
-            if (!entry.is_filter) {
-                        top_menu = effects_menu;
-                        path += "Effects";
-                    } else {
-                        path += "Filters";
-                    }
-
-            if (!top_menu) { // It's possible that the menu doesn't exist (Kid's Inkscape?)
-                std::cerr << "build_menu(): menu doesn't exist!" << std::endl; // Warn for now.
-                continue;
-            }
-
-                        auto current_menu = top_menu;
-            for (auto const &submenu_name : submenu_name_list) {
-                path.reserve(path.size() + submenu_name.size() + 1);
-                path.append(submenu_name).append(1, '-');
-
-                auto it = submenus.lower_bound(path);
-
-                if (it == submenus.end() || it->first != path) {
-                    auto submenu = Gio::Menu::create();
-                    current_menu->append_submenu(submenu_name, submenu);
-                    it = submenus.emplace_hint(it, path, std::move(submenu));
+                // Effect data is used for both filters menu and extensions menu... we need to
+                // add to correct menu.
+                Glib::ustring path; // Only used as index to map of submenus.
+                auto top_menu = filters_menu;
+                if (!entry.is_filter) {
+                    top_menu = effects_menu;
+                    path += "Effects";
+                } else {
+                    path += "Filters";
                 }
 
-                                current_menu = it->second;
-                            }
-            current_menu->append(entry.effect_name, "app." + entry.effect_id);
+                if (!top_menu) { // It's possible that the menu doesn't exist (Kid's Inkscape?)
+                    std::cerr << "build_menu(): menu doesn't exist!" << std::endl; // Warn for now.
+                    continue;
+                }
+
+                auto current_menu = top_menu;
+                for (auto const &submenu_name : submenu_name_list) {
+                    path.reserve(path.size() + submenu_name.size() + 1);
+                    path.append(submenu_name).append(1, '-');
+
+                    auto it = submenus.lower_bound(path);
+
+                    if (it == submenus.end() || it->first != path) {
+                        auto submenu = Gio::Menu::create();
+                        current_menu->append_submenu(submenu_name, submenu);
+                        it = submenus.emplace_hint(it, path, std::move(submenu));
+                    }
+
+                    current_menu = it->second;
+                }
+                current_menu->append(entry.effect_name, "app." + entry.effect_id);
             }
         }
 
