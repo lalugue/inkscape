@@ -173,7 +173,11 @@ TextEdit::TextEdit()
     collection_editor_button.signal_clicked().connect([=](){ on_fcm_button_clicked(); });
     Inkscape::FontLister::get_instance()->connectUpdate(sigc::mem_fun(*this, &TextEdit::change_font_count_label));
     fontCollectionsUpdate = font_collections->connect_update([=]() { display_font_collections(); });
-    fontCollectionsChangedSelection = font_collections->connect_selection_update([=]() { display_font_collections(); });
+    fontCollectionsChangedSelection = font_collections->connect_selection_update([=]() {
+        display_font_collections();
+        int selected_count = font_collections->get_selected_collections_count();
+        reset_button.set_sensitive(!(selected_count == 0));
+    });
 
     change_font_count_label();
 
@@ -623,7 +627,10 @@ void TextEdit::on_reset_button_pressed()
 
 void TextEdit::change_font_count_label()
 {
-    auto label = Inkscape::FontLister::get_instance()->get_font_count_label();
+    bool all_fonts;
+    std::string label;
+    std::tie(all_fonts, label) = Inkscape::FontLister::get_instance()->get_font_count_label();
+
     font_count_label.set_label(label);
 }
 

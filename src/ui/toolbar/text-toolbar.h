@@ -39,6 +39,7 @@
 
 namespace Gtk {
 class Builder;
+class Button;
 class ListBox;
 class RadioButton;
 class ToggleButton;
@@ -85,6 +86,7 @@ private:
     std::vector<Gtk::RadioButton *> _direction_buttons;
 
     Gtk::ListBox &_font_collections_list;
+    Gtk::Button &_reset_button;
 
     UI::Widget::ComboBoxEntryToolItem *_font_family_item;
     UI::Widget::ComboBoxEntryToolItem *_font_size_item;
@@ -115,6 +117,7 @@ private:
 
     auto_connection fc_changed_selection;
     auto_connection fc_update;
+    auto_connection font_count_changed_connection;
     sigc::connection c_selection_changed;
     sigc::connection c_selection_modified;
     sigc::connection c_selection_modified_select_tool;

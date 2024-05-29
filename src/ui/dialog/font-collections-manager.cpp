@@ -126,8 +126,12 @@ void FontCollectionsManager::on_reset_button_pressed()
 
 void FontCollectionsManager::change_font_count_label()
 {
-    auto label = Inkscape::FontLister::get_instance()->get_font_count_label();
+    bool all_fonts;
+    std::string label;
+    std::tie(all_fonts, label) = Inkscape::FontLister::get_instance()->get_font_count_label();
+
     _font_count_label.set_label(label);
+    _reset_button.set_sensitive(!all_fonts);
 }
 
 // This function will set the sensitivity of the edit and delete buttons
