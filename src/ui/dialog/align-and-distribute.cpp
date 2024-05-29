@@ -25,6 +25,7 @@
 #include <gtkmm/frame.h>
 #include <gtkmm/spinbutton.h>
 #include <gtkmm/togglebutton.h>
+#include <gtkmm/treemodelfilter.h>
 #include <iostream>
 #include <sigc++/adaptors/bind.h>
 #include <sigc++/functors/mem_fun.h>
@@ -34,6 +35,7 @@
 #include "inkscape-application.h"  // Access window.
 #include "inkscape-window.h"       // Activate window action.
 #include "io/resource.h"
+#include "selection.h"
 #include "ui/builder-utils.h"
 #include "ui/dialog/dialog-base.h" // Tool switching.
 #include "ui/util.h"
@@ -73,6 +75,32 @@ AlignAndDistribute::AlignAndDistribute(Inkscape::UI::Dialog::DialogBase *dlg)
     // ------------  Object Align  -------------
 
     std::string align_to = prefs->getString("/dialogs/align/objects-align-to", "selection");
+    multi_selection_align_to = align_to;
+
+    auto filtered_store = Gtk::TreeModelFilter::create(align_relative_object.get_model());
+    filtered_store->set_visible_func([=, this](const Gtk::TreeModel::const_iterator &it) {
+        if (single_item) {
+            Glib::ustring name;
+            it->get_value(1, name);
+            return single_selection_relative_categories.contains(name);
+        }
+        return true;
+    });
+
+    if (auto win = InkscapeApplication::instance()->get_active_window()) {
+        if (auto desktop = win->get_desktop()) {
+            if (auto selection = desktop->getSelection()) {
+                sel_changed = selection->connectChanged([this, filtered_store](Inkscape::Selection *selection) {
+                    single_item = selection->singleItem();
+                    auto active_id = single_item ? single_selection_align_to : multi_selection_align_to;
+                    filtered_store->refilter();
+                    align_relative_object.set_active_id(active_id);
+                });
+            }
+        }
+    }
+
+    align_relative_object.set_model(filtered_store);
     align_relative_object.set_active_id(align_to);
     align_relative_object.signal_changed().connect(sigc::mem_fun(*this, &AlignAndDistribute::on_align_relative_object_changed));
 
@@ -183,7 +211,20 @@ void
 AlignAndDistribute::on_align_relative_object_changed()
 {
     Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-    prefs->setString("/dialogs/align/objects-align-to", align_relative_object.get_active_id());
+    auto align_to = align_relative_object.get_active_id();
+    prefs->setString("/dialogs/align/objects-align-to", align_to);
+
+    if (auto win = InkscapeApplication::instance()->get_active_window()) {
+        if (auto desktop = win->get_desktop()) {
+            if (auto selection = desktop->getSelection()) {
+                if (selection->singleItem()) {
+                    single_selection_align_to = align_to;
+                } else {
+                    multi_selection_align_to = align_to;
+                }
+            }
+        }
+    }
 }
 
 void
