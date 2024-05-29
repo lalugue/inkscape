@@ -19,9 +19,11 @@
 #ifndef INKSCAPE_UI_WIDGET_ALIGN_AND_DISTRIBUTE_H
 #define INKSCAPE_UI_WIDGET_ALIGN_AND_DISTRIBUTE_H
 
-#include <sigc++/connection.h>
 #include <gtkmm/box.h>
+#include <set>
+#include <sigc++/connection.h>
 
+#include "helper/auto-connection.h"
 #include "preferences.h"
 
 namespace Gtk {
@@ -75,6 +77,11 @@ private:
     Gtk::SpinButton   &remove_overlap_hgap;
     Gtk::SpinButton   &remove_overlap_vgap;
 
+    // Valid relative alignment entries for single selection.
+    std::set<Glib::ustring> single_selection_relative_categories = {"drawing", "page"};
+    Glib::ustring single_selection_align_to = "page";
+    Glib::ustring multi_selection_align_to;
+    bool single_item = false;
 
     // ********* Signal handlers ********** //
 
@@ -87,6 +94,7 @@ private:
     void on_align_node_clicked    (std::string const &align_to);
 
     sigc::connection tool_connection;
+    auto_connection sel_changed;
     Inkscape::PrefObserver _icon_sizes_changed;
 };
 
