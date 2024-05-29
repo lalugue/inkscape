@@ -323,7 +323,12 @@ void DialogNotebook::add_page(Gtk::Widget &page, Gtk::Widget &tab, Glib::ustring
 void DialogNotebook::move_page(Gtk::Widget &page)
 {
     // Find old notebook
-    Gtk::Notebook *old_notebook = dynamic_cast<Gtk::Notebook *>(page.get_parent());
+    auto parent = page.get_parent();
+    auto old_notebook = dynamic_cast<Gtk::Notebook*>(parent);
+    if (!old_notebook && parent) {
+        // page's parent might be a Stack
+        old_notebook = dynamic_cast<Gtk::Notebook*>(parent->get_parent());
+    }
     if (!old_notebook) {
         std::cerr << "DialogNotebook::move_page: page not in notebook!" << std::endl;
         return;
