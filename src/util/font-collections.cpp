@@ -487,6 +487,11 @@ int FontCollections::get_collections_count(bool is_system) const
     return _user_collections.size();
 }
 
+int FontCollections::get_selected_collections_count() const
+{
+    return _selected_collections.size();
+}
+
 bool FontCollections::find_collection(Glib::ustring const &collection_name, bool is_system) const
 {
     FontCollection temp_collection(collection_name, is_system);

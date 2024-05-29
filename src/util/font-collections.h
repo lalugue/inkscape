@@ -93,6 +93,7 @@ public:
     int get_user_collection_location(const Glib::ustring& collection_name);
     std::string generate_filename_from_collection(const Glib::ustring &collection_name, bool is_system);
     int get_collections_count(bool is_system = false) const;
+    int get_selected_collections_count() const;
     bool find_collection(Glib::ustring const &collection_name, bool is_system = false) const;
 
     std::vector<Glib::ustring> get_collections(bool is_system = false) const;
