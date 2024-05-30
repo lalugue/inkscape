@@ -296,7 +296,11 @@ static SPGradient *sp_gradient_fork_private_if_necessary(SPGradient *gr, SPGradi
                 Inkscape::GC::release( copy );
             }
             sp_gradient_repr_set_link(repr_new, nullptr);
-        }
+
+            // Need to generate SPObjects (which fills in node array and handle arrays).
+            gr->requestModified(SP_OBJECT_MODIFIED_FLAG);
+            gr->document->ensureUpToDate();
+       }
         return gr_new;
     } else {
         return gr;
@@ -1463,21 +1467,33 @@ void sp_item_gradient_set_coords(SPItem *item, GrPointType point_type, guint poi
         switch (point_type) {
             case POINT_MG_CORNER:
             {
-                mg->array.corners[ point_i ]->p = p;
-                // Handles are moved in gradient-drag.cpp
-                gradient->requestModified(SP_OBJECT_MODIFIED_FLAG);
+                if (point_i < mg->array.corners.size()) {
+                    mg->array.corners[ point_i ]->p = p;
+                    // Handles are moved in gradient-drag.cpp
+                    gradient->requestModified(SP_OBJECT_MODIFIED_FLAG);
+                } else {
+                    std::cerr << "sp_item_gradient_set_coords: bad point number" << std::endl;
+                }
                 break;
             }
 
             case POINT_MG_HANDLE: {
-                mg->array.handles[ point_i ]->p = p;
-                gradient->requestModified(SP_OBJECT_MODIFIED_FLAG);
+                if (point_i < mg->array.handles.size()) {
+                    mg->array.handles[ point_i ]->p = p;
+                    gradient->requestModified(SP_OBJECT_MODIFIED_FLAG);
+                } else {
+                    std::cerr << "sp_item_gradient_set_coords: bad point number" << std::endl;
+                }
                 break;
             }
 
             case POINT_MG_TENSOR: {
-                mg->array.tensors[ point_i ]->p = p;
-                gradient->requestModified(SP_OBJECT_MODIFIED_FLAG);
+                if (point_i < mg->array.tensors.size()) {
+                    mg->array.tensors[ point_i ]->p = p;
+                    gradient->requestModified(SP_OBJECT_MODIFIED_FLAG);
+                } else {
+                    std::cerr << "sp_item_gradient_set_coords: bad point number" << std::endl;
+                }
                 break;
             }
 
@@ -1727,7 +1743,7 @@ static void sp_gradient_repr_set_link(Inkscape::XML::Node *repr, SPGradient *lin
 static void addStop(Inkscape::XML::Node *parent, SPColor color, double opacity, gchar const *offset)
 {
 #ifdef SP_GR_VERBOSE
-    g_message("addStop(%p, %s, %d, %s)", parent, color.c_str(), opacity, offset);
+    g_message("addStop(%p, %s, %f, %s)", parent, color.toString().c_str(), opacity, offset);
 #endif
     auto doc = parent->document();
     Inkscape::XML::Node *repr = doc->createElement("svg:stop");
