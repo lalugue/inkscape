@@ -111,6 +111,7 @@ IconComboBox::IconComboBox(bool use_icons)
     _filtered_model = Gtk::FilterListModel::create(_store, _filter);
     _selection_model = Gtk::SingleSelection::create(_filtered_model);
     set_model(_selection_model);
+    refilter();
 
     property_selected_item().signal_changed().connect([this]() {
         auto item = current_item();
