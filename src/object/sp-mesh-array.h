@@ -144,21 +144,22 @@ public:
   std::vector< std::vector< SPMeshNode* > > nodes;
 
 public:
-  // Draggables to nodes
-  bool draggers_valid;
+  // Draggables to nodes.
   std::vector< SPMeshNode* > corners;
   std::vector< SPMeshNode* > handles;
   std::vector< SPMeshNode* > tensors;
 
   friend class SPMeshPatchI;
 
-  SPMeshNodeArray() { built = false; mg = nullptr; draggers_valid = false; };
+  SPMeshNodeArray() { built = false; mg = nullptr; };
   SPMeshNodeArray( SPMeshGradient *mg );
   SPMeshNodeArray( const SPMeshNodeArray& rhs );
   SPMeshNodeArray& operator=(const SPMeshNodeArray& rhs);
 
   ~SPMeshNodeArray() { clear(); };
   bool built;
+
+  void update_node_vectors();
 
   bool read( SPMeshGradient *mg );
   void write( SPMeshGradient *mg );

@@ -2133,9 +2133,6 @@ void GrDrag::addDraggersMesh(SPMeshGradient *mg, SPItem *item, Inkscape::PaintTa
     guint icorner = 0;
     guint ihandle = 0;
     guint itensor = 0;
-    mg->array.corners.clear();
-    mg->array.handles.clear();
-    mg->array.tensors.clear();
 
     if( (fill_or_stroke == Inkscape::FOR_FILL   && !edit_fill) ||
         (fill_or_stroke == Inkscape::FOR_STROKE && !edit_stroke) ) {
@@ -2150,7 +2147,6 @@ void GrDrag::addDraggersMesh(SPMeshGradient *mg, SPItem *item, Inkscape::PaintTa
 
                 case MG_NODE_TYPE_CORNER:
                 {
-                    mg->array.corners.push_back( j );
                     GrDraggable *corner = new GrDraggable (item, POINT_MG_CORNER, icorner, fill_or_stroke);
                     addDragger ( corner );
                     j->draggable = icorner;
@@ -2160,7 +2156,6 @@ void GrDrag::addDraggersMesh(SPMeshGradient *mg, SPItem *item, Inkscape::PaintTa
 
                 case MG_NODE_TYPE_HANDLE:
                 {
-                    mg->array.handles.push_back( j );
                     GrDraggable *handle = new GrDraggable (item, POINT_MG_HANDLE, ihandle, fill_or_stroke);
                     GrDragger* dragger = addDragger ( handle );
 
@@ -2174,7 +2169,6 @@ void GrDrag::addDraggersMesh(SPMeshGradient *mg, SPItem *item, Inkscape::PaintTa
 
                 case MG_NODE_TYPE_TENSOR:
                 {
-                    mg->array.tensors.push_back( j );
                     GrDraggable *tensor = new GrDraggable (item, POINT_MG_TENSOR, itensor, fill_or_stroke);
                     GrDragger* dragger = addDragger ( tensor );
                     if( !show_handles || !j->set ) {
@@ -2191,8 +2185,6 @@ void GrDrag::addDraggersMesh(SPMeshGradient *mg, SPItem *item, Inkscape::PaintTa
             }
         }
     }
-
-    mg->array.draggers_valid = true;
 }
 
 /**
