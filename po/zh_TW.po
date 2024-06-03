@@ -78,7 +78,7 @@ msgstr "斜角"
 
 #: ../build/share/filters/filters.svg.h:8
 msgid "Same as Matte jelly but with more controls"
-msgstr "同於霧面果凍，但有更多的控制選項"
+msgstr "與霧面果凍相同，但有更多的控制選項"
 
 #: ../build/share/filters/filters.svg.h:10
 msgid "Metal Casting"
@@ -4521,12 +4521,12 @@ msgstr "空白符號"
 #: ../build/share/symbols/symbols.h:292
 msgctxt "Symbol"
 msgid "SJJB Map Icons [Accommodation Set]"
-msgstr ""
+msgstr "SJJB 地圖符號 [住宿集]"
 
 #: ../build/share/symbols/symbols.h:293 ../build/share/symbols/symbols.h:307
 msgctxt "Symbol"
 msgid "Alpine hut"
-msgstr ""
+msgstr "山莊"
 
 #: ../build/share/symbols/symbols.h:294 ../build/share/symbols/symbols.h:308
 msgctxt "Symbol"
@@ -4541,12 +4541,12 @@ msgstr "民宿 2"
 #: ../build/share/symbols/symbols.h:296 ../build/share/symbols/symbols.h:310
 msgctxt "Symbol"
 msgid "Camping"
-msgstr "露營"
+msgstr "帳篷"
 
 #: ../build/share/symbols/symbols.h:297 ../build/share/symbols/symbols.h:311
 msgctxt "Symbol"
 msgid "Caravan park"
-msgstr ""
+msgstr "旅行拖車停車場"
 
 #: ../build/share/symbols/symbols.h:298 ../build/share/symbols/symbols.h:312
 msgctxt "Symbol"
@@ -4591,86 +4591,76 @@ msgstr "青年旅館"
 #: ../build/share/symbols/symbols.h:321
 msgctxt "Symbol"
 msgid "SJJB Map Icons [Amenity Set]"
-msgstr ""
+msgstr "SJJB 地圖符號 [福利設施]"
 
 #: ../build/share/symbols/symbols.h:322 ../build/share/symbols/symbols.h:349
 msgctxt "Symbol"
 msgid "Bench"
-msgstr ""
+msgstr "長凳"
 
 #: ../build/share/symbols/symbols.h:323 ../build/share/symbols/symbols.h:350
 msgctxt "Symbol"
 msgid "Court"
-msgstr ""
+msgstr "球場"
 
 #: ../build/share/symbols/symbols.h:324 ../build/share/symbols/symbols.h:351
-#, fuzzy
 msgctxt "Symbol"
 msgid "Fire station"
-msgstr "固定"
+msgstr "消防站"
 
 #: ../build/share/symbols/symbols.h:325 ../build/share/symbols/symbols.h:352
-#, fuzzy
 msgctxt "Symbol"
 msgid "Fire station 2"
-msgstr "擴張 2"
+msgstr "消防站 2"
 
 #: ../build/share/symbols/symbols.h:326 ../build/share/symbols/symbols.h:353
-#, fuzzy
 msgctxt "Symbol"
 msgid "Fire station 3"
-msgstr "濾鏡疊代"
+msgstr "消防站 3"
 
 #: ../build/share/symbols/symbols.h:327 ../build/share/symbols/symbols.h:354
 #: ../build/share/symbols/symbols.h:716 ../build/share/symbols/symbols.h:748
-#, fuzzy
 msgctxt "Symbol"
 msgid "Fountain"
-msgstr "飲水機"
+msgstr "噴泉"
 
 #: ../build/share/symbols/symbols.h:328 ../build/share/symbols/symbols.h:355
 msgctxt "Symbol"
 msgid "Fountain 2"
-msgstr ""
+msgstr "噴泉 2"
 
 #: ../build/share/symbols/symbols.h:329 ../build/share/symbols/symbols.h:356
-#, fuzzy
 msgctxt "Symbol"
 msgid "Library"
-msgstr "刀具庫"
+msgstr "圖書館"
 
 #: ../build/share/symbols/symbols.h:330 ../build/share/symbols/symbols.h:357
 msgctxt "Symbol"
 msgid "Library 2"
-msgstr ""
+msgstr "圖書館 2"
 
 #: ../build/share/symbols/symbols.h:331 ../build/share/symbols/symbols.h:358
 #: ../build/share/symbols/symbols.h:662 ../build/share/symbols/symbols.h:690
-#, fuzzy
 msgctxt "Symbol"
 msgid "Playground"
-msgstr "露營區"
+msgstr "遊樂場"
 
 #: ../build/share/symbols/symbols.h:332 ../build/share/symbols/symbols.h:359
-#, fuzzy
 msgctxt "Symbol"
 msgid "Police"
-msgstr "切片"
+msgstr "警察局"
 
 #: ../build/share/symbols/symbols.h:333 ../build/share/symbols/symbols.h:360
-#, fuzzy
 msgctxt "Symbol"
 msgid "Police 2"
-msgstr "切片"
+msgstr "警察局 2"
 
 #: ../build/share/symbols/symbols.h:334 ../build/share/symbols/symbols.h:361
-#, fuzzy
 msgctxt "Symbol"
 msgid "Post box"
-msgstr "插圖框"
+msgstr "郵箱"
 
 #: ../build/share/symbols/symbols.h:335 ../build/share/symbols/symbols.h:362
-#, fuzzy
 msgctxt "Symbol"
 msgid "Post office"
 msgstr "郵局"
@@ -4678,102 +4668,92 @@ msgstr "郵局"
 #: ../build/share/symbols/symbols.h:336 ../build/share/symbols/symbols.h:363
 msgctxt "Symbol"
 msgid "Prison"
-msgstr ""
+msgstr "監獄"
 
 #: ../build/share/symbols/symbols.h:337 ../build/share/symbols/symbols.h:364
 msgctxt "Symbol"
 msgid "Public building"
-msgstr ""
+msgstr "公共建築"
 
 #: ../build/share/symbols/symbols.h:338 ../build/share/symbols/symbols.h:365
 msgctxt "Symbol"
 msgid "Public building 2"
-msgstr ""
+msgstr "公共建築 2"
 
 #: ../build/share/symbols/symbols.h:340 ../build/share/symbols/symbols.h:367
-#, fuzzy
 msgctxt "Symbol"
 msgid "Survey point"
-msgstr "起始點"
+msgstr "地標指示"
 
 #: ../build/share/symbols/symbols.h:343 ../build/share/symbols/symbols.h:370
-#, fuzzy
 msgctxt "Symbol"
 msgid "Wheelchair-accessible toilets"
-msgstr "無障礙通道"
+msgstr "無障礙廁所"
 
 #: ../build/share/symbols/symbols.h:344 ../build/share/symbols/symbols.h:371
-#, fuzzy
 msgctxt "Symbol"
 msgid "Toilets (men)"
-msgstr "廁所 - 女"
+msgstr "男廁"
 
 #: ../build/share/symbols/symbols.h:345 ../build/share/symbols/symbols.h:372
-#, fuzzy
 msgctxt "Symbol"
 msgid "Toilets (women)"
-msgstr "廁所 - 女"
+msgstr "女廁"
 
 #: ../build/share/symbols/symbols.h:346 ../build/share/symbols/symbols.h:373
 msgctxt "Symbol"
 msgid "Town hall"
-msgstr ""
+msgstr "公所"
 
 #: ../build/share/symbols/symbols.h:347 ../build/share/symbols/symbols.h:374
 msgctxt "Symbol"
 msgid "Town hall 2"
-msgstr ""
+msgstr "公所 2"
 
 #: ../build/share/symbols/symbols.h:348 ../build/share/symbols/symbols.h:375
-#, fuzzy
 msgctxt "Symbol"
 msgid "Waste bin"
-msgstr "貼上尺寸"
+msgstr "垃圾桶"
 
 #: ../build/share/symbols/symbols.h:376
 msgctxt "Symbol"
 msgid "SJJB Map Icons [Barrier Set]"
-msgstr ""
+msgstr "SJJB 地圖符號 [障礙物集]"
 
 #: ../build/share/symbols/symbols.h:377 ../build/share/symbols/symbols.h:389
-#, fuzzy
 msgctxt "Symbol"
 msgid "Blocks"
-msgstr "區塊元素"
+msgstr "隔擋"
 
 #: ../build/share/symbols/symbols.h:378 ../build/share/symbols/symbols.h:390
 msgctxt "Symbol"
 msgid "Bollard"
-msgstr ""
+msgstr "擋柱"
 
 #: ../build/share/symbols/symbols.h:379 ../build/share/symbols/symbols.h:391
-#, fuzzy
 msgctxt "Symbol"
 msgid "Cattle grid"
-msgstr "建立新格線"
+msgstr "畜牧柵欄"
 
 #: ../build/share/symbols/symbols.h:380 ../build/share/symbols/symbols.h:392
 msgctxt "Symbol"
 msgid "Cycle barrier"
-msgstr ""
+msgstr "腳踏車柵欄"
 
 #: ../build/share/symbols/symbols.h:381 ../build/share/symbols/symbols.h:393
-#, fuzzy
 msgctxt "Symbol"
 msgid "Entrance"
-msgstr "加強"
+msgstr "入口"
 
 #: ../build/share/symbols/symbols.h:383 ../build/share/symbols/symbols.h:395
-#, fuzzy
 msgctxt "Symbol"
 msgid "Gate"
-msgstr "或閘 (Or 閘)"
+msgstr "閘門"
 
 #: ../build/share/symbols/symbols.h:384 ../build/share/symbols/symbols.h:396
-#, fuzzy
 msgctxt "Symbol"
 msgid "Kissing gate"
-msgstr "飲用水"
+msgstr "攔畜格柵"
 
 #: ../build/share/symbols/symbols.h:385 ../build/share/symbols/symbols.h:397
 msgctxt "Symbol"
@@ -4781,10 +4761,9 @@ msgid "Lift gate"
 msgstr ""
 
 #: ../build/share/symbols/symbols.h:386 ../build/share/symbols/symbols.h:398
-#, fuzzy
 msgctxt "Symbol"
 msgid "Steps"
-msgstr "階層數"
+msgstr "樓梯"
 
 #: ../build/share/symbols/symbols.h:387 ../build/share/symbols/symbols.h:399
 msgctxt "Symbol"
@@ -6352,7 +6331,7 @@ msgstr "顯示模式：一般"
 #: ../src/actions/actions-canvas-mode.cpp:268
 #: ../share/ui/display-popup.glade:37
 msgid "Use normal rendering mode"
-msgstr "使用一般算繪模式"
+msgstr "使用一般繪算模式"
 
 #: ../src/actions/actions-canvas-mode.cpp:269
 msgid "Display Mode: Outline"
@@ -10264,11 +10243,11 @@ msgstr "擴張/收縮選取的物件"
 
 #: ../src/actions/actions-transform.cpp:133
 msgid "Grow/Shrink Step"
-msgstr "擴張/收縮步數"
+msgstr "擴張/收縮步進值"
 
 #: ../src/actions/actions-transform.cpp:133
 msgid "Grow/shrink selected objects by multiple of step value"
-msgstr "讓選取物件依照步數的倍數擴張/收縮"
+msgstr "讓選取物件依照步進值的倍數擴張/收縮"
 
 #: ../src/actions/actions-transform.cpp:134
 msgid "Grow/Shrink Screen"
@@ -11691,7 +11670,7 @@ msgstr "光暈寬度 (px)"
 
 #: ../src/extension/internal/bluredge.cpp:136
 msgid "Number of steps:"
-msgstr "階層數："
+msgstr "步進次數："
 
 #: ../src/extension/internal/bluredge.cpp:136
 msgid "Number of inset/outset copies of the object to make"
@@ -14104,7 +14083,7 @@ msgstr "可攜式網路圖形"
 
 #: ../src/extension/internal/png-output.cpp:54
 msgid "Interlacing"
-msgstr "使用隔行掃描"
+msgstr "交錯式"
 
 #: ../src/extension/internal/png-output.cpp:55
 msgid "Bit Depth"
@@ -40751,6 +40730,8 @@ msgid ""
 "Please use Text > Remove Manual Kerns to remove kerning prior to using this "
 "extension."
 msgstr ""
+"警告：無法繪算字型。\n"
+"請在使用這個擴充功能之前先執行「文字 > 移動手動字距調整」。"
 
 #: ../share/extensions/hershey.py:2017
 msgid ""
@@ -40759,10 +40740,13 @@ msgid ""
 "If you are unable to identify the object in question, please contact "
 "technical support for help."
 msgstr ""
+"警告：無法轉換流入框架的文字。\n"
+"請在使用前先執行「文字 > 取消流動」。\n"
+"如果您無法確認是哪個物件有問題，請聯絡技術支援。"
 
 #: ../share/extensions/hpgl2_input.py:99
 msgid "Unsupported commands encountered. The following commands were ignored:"
-msgstr ""
+msgstr "偵測到不支援的指令。下列指令將予以忽略："
 
 #: ../share/extensions/hpgl_output.py:79
 msgid "No convertible objects were found"
@@ -40770,7 +40754,7 @@ msgstr "找不到可轉換的物件"
 
 #: ../share/extensions/image_embed.py:71
 msgid "Attribute \"xlink:href\" not set on node {}."
-msgstr "“xlink:href” 特性未在 {} 節點設定。"
+msgstr "「xlink:href」 特性未在 {} 節點設定。"
 
 #: ../share/extensions/image_embed.py:93 ../share/extensions/media_zip.py:106
 msgid "File not found \"{}\". Unable to embed image."
@@ -40786,7 +40770,7 @@ msgstr "%s 不是 png、jpeg、bmp、gif、tiff 或 x-icon 圖片格式"
 #: ../share/extensions/image_extract.py:124
 msgid "{} error occurred"
 msgid_plural "{} errors occurred."
-msgstr[0] ""
+msgstr[0] "發生了 {} 個錯誤。"
 
 #: ../share/extensions/image_extract.py:146
 msgid "Unable to create directory {}."
@@ -40984,21 +40968,24 @@ msgid ""
 "A parsing error occurred, which means you are likely working with a non-"
 "conformant SVG file. The following errors were found:\n"
 msgstr ""
+"解讀時發生錯誤，此檔案可能為不合規的 SVG 檔案。下列是找到的問題：\n"
 
 #: ../share/extensions/inkex/elements/_parser.py:116
 #, python-brace-format
 msgid "{error_message}. Line {line_number}, column {column_number}"
-msgstr ""
+msgstr "{error_message}。第 {line_number} 列，第 {column_number} 行"
 
 #: ../share/extensions/inkex/elements/_parser.py:125
 msgid ""
 "\n"
 "Processing will continue; however we encourage you to fix your file manually."
 msgstr ""
+"\n"
+"處理程序將繼續進行，但建議您手動修正檔案。"
 
 #: ../share/extensions/inkex/extensions.py:146
 msgid "An error occurred during document preparation"
-msgstr ""
+msgstr "在預備檔案時發生錯誤"
 
 #: ../share/extensions/interp.py:79
 msgid "At least two paths need to be selected"
@@ -41006,7 +40993,7 @@ msgstr "至少需要選取 2 個路徑"
 
 #: ../share/extensions/interp_att_g.py:140
 msgid "Unable to set attribute {} to {}"
-msgstr ""
+msgstr "無法將 {} 特性設為 {}"
 
 #: ../share/extensions/interp_att_g.py:158
 msgid "You selected 'Other'. Please enter an attribute to interpolate."
@@ -41246,6 +41233,9 @@ msgid ""
 "Please make sure it is installed (e.g. using 'pip install packaging'\n"
 "or 'sudo apt-get install python3-packaging') and try again.\n"
 msgstr ""
+"無法匯入「packaging」模組。\n"
+"請確認該模組已安裝（例如使用「pip install packaging」\n"
+"或是「sudo apt-get install python3-packaging」）後再試一次。\n"
 
 #: ../share/extensions/output_scour.py:27
 msgid ""
@@ -41253,6 +41243,9 @@ msgid ""
 "Please make sure it is installed (e.g. using 'pip install scour'\n"
 "  or 'sudo apt-get install python3-scour') and try again.\n"
 msgstr ""
+"無法匯入「scour」模組。\n"
+"請確認該模組已安裝（例如使用「pip install scour」\n"
+"或是「sudo apt-get install python3-scour」）後再試一次。\n"
 
 #: ../share/extensions/path_envelope.py:31
 msgid "You must select two objects only."
@@ -41291,14 +41284,14 @@ msgstr "第二個選取的路徑太短，請確保其中包含至少四個節點
 
 #: ../share/extensions/path_envelope.py:92
 msgid "The points for the selected envelope must not all be in a line."
-msgstr ""
+msgstr "選取封套的點不能全部在同一線上。"
 
 #: ../share/extensions/patternalongpath.py:199
 msgid ""
 "The 'stretch' option requires that the pattern must have non-zero width :\n"
 "Please edit the pattern width."
 msgstr ""
-"此「拉伸」選項必須圖樣的寬度不為零：\n"
+"「拉伸」選項必須確保圖樣的寬度不為零：\n"
 "請編輯此圖樣寬度。"
 
 #: ../share/extensions/pdflatex.py:75
@@ -41325,23 +41318,23 @@ msgstr "這個擴充功能需要第二個選取的路徑為四個節點長。"
 
 #: ../share/extensions/pixelsnap.py:175
 msgid "Selection contains non-symetric scaling"
-msgstr ""
+msgstr "選取範圍中包含非對稱縮放"
 
 #: ../share/extensions/pixelsnap.py:305
 msgid "TR: Selection contains transformations with skew/rotation"
-msgstr ""
+msgstr "TR：選取範圍包含傾斜/旋轉的變形"
 
 #: ../share/extensions/pixelsnap.py:322
 msgid "Selection contains non-symetric scaling, can't snap stroke width"
-msgstr ""
+msgstr "選取範圍中包含非對稱縮放，無法貼齊邊框寬度"
 
 #: ../share/extensions/pixelsnap.py:340
 msgid "Path: Selection contains transformations with skew/rotation"
-msgstr ""
+msgstr "路徑：選取範圍包含傾斜/旋轉的變形"
 
 #: ../share/extensions/pixelsnap.py:408
 msgid "Rect: Selection contains transformations with skew/rotation"
-msgstr ""
+msgstr "矩形：選取範圍包含傾斜/旋轉的變形"
 
 #: ../share/extensions/plotter.py:100
 msgid "No paths where found. Please convert objects to paths."
@@ -41349,16 +41342,15 @@ msgstr "找不到路徑。請將物件轉換成路徑。"
 
 #: ../share/extensions/polyhedron_3d.py:232
 msgid "Can't find wavefront object file {}"
-msgstr ""
+msgstr "找不到 Wavefront 物件檔案 {}"
 
 #: ../share/extensions/polyhedron_3d.py:347
 msgid "This extension requires the numpy library."
 msgstr "此擴充功能需要安裝 numpy 函式庫。"
 
 #: ../share/extensions/polyhedron_3d.py:420
-#, fuzzy
 msgid "Face data not found."
-msgstr "找不到圖層。"
+msgstr "找不到表層資訊。"
 
 #: ../share/extensions/print_win32_vector.py:275
 msgid "Failed to open default printer"
@@ -41377,6 +41369,8 @@ msgid ""
 "Ghostscript was unable to read the file. \n"
 "The following error message was returned:"
 msgstr ""
+"Ghostscript 無法讀取檔案。\n"
+"下列是回傳的錯誤訊息："
 
 #: ../share/extensions/raster_output_png.py:44
 msgid ""
@@ -41384,19 +41378,20 @@ msgid ""
 "compression level options. Please try to disable \"Interlaced\" or set "
 "\"Level\" to 1 or higher."
 msgstr ""
+"Optipng 指令執行失敗，可能是交錯設定與壓縮程度不合所導致。請試著停用「交錯式」"
+"或是將「等級」設為 1 或以上。"
 
 #: ../share/extensions/raster_output_png.py:51
 msgid "The optipng command failed with the following message:"
-msgstr ""
+msgstr "Optipng 指令執行失敗，並回傳下列訊息："
 
 #: ../share/extensions/render_barcode_datamatrix.py:528
-#, fuzzy
 msgid "Invalid symbol size."
-msgstr "全部符號集"
+msgstr "無效的符號大小。"
 
 #: ../share/extensions/render_barcode_datamatrix.py:536
 msgid "Please enter an input string."
-msgstr "請輸入一個輸入字串。"
+msgstr "請輸入一個字串。"
 
 #: ../share/extensions/render_barcode_datamatrix.py:582
 msgid "Invalid bit value, {}!"
@@ -41499,29 +41494,34 @@ msgid ""
 "created using Inkscape. Unsupported features are most likely to occur in SVG "
 "files written by other programs.\n"
 msgstr ""
+"SVG 檔無效或是包含不支援的功能\n"
+"\n"
+"錯誤訊息：%s\n"
+"\n"
+"SVG 至 Synfig 轉換工具適合用來處理 Inkscape 建立的 SVG 檔案。不支援的功能可能出現"
+"在其他程式建立的 SVG 檔中。\n"
 
 #: ../share/extensions/text_split.py:176
 msgid ""
 "Element {} uses a flow region that is not a rectangle. First unflow text."
-msgstr ""
+msgstr "元素 {} 使用非矩形的流動區域。請先取消流動文字。"
 
 #: ../share/extensions/triangle.py:126
 msgid "Invalid Triangle Specifications."
-msgstr ""
+msgstr "無效的三角形定義。"
 
 #: ../share/extensions/typst_formula.py:63
-#, fuzzy
 msgid "An exception occurred during typst compilation: "
-msgstr "執行路徑特效期間發生異常。"
+msgstr "執行 Typst 編譯期間發生異常："
 
 #: ../share/extensions/typst_formula.py:68
 msgid "No svg has been produced by compilation: "
-msgstr ""
+msgstr "編譯完後沒有 SVG 產生："
 
 #: ../share/extensions/typst_formula.py:69
 #, python-brace-format
 msgid "Expected file name was: {svg_file}."
-msgstr ""
+msgstr "預期的檔案名稱為：{svg_file}。"
 
 #: ../share/extensions/voronoi_diagram.py:163
 msgid "Please select objects!"
@@ -42120,7 +42120,7 @@ msgstr "仿製"
 
 #: ../share/extensions/distribute_along_path.inx:19
 msgid "If pattern is a group, pick group members"
-msgstr "若圖樣是一個群組，請挑選群組成員"
+msgstr "若圖樣是一個群組，挑選群組成員"
 
 #: ../share/extensions/distribute_along_path.inx:19
 msgid "Only for options 'moved' and 'duplicated'"
@@ -42147,6 +42147,10 @@ msgid ""
 "objects (alternating or randomly) on the path, if you select the option for "
 "picking group members."
 msgstr ""
+"這個擴充功能會在不讓物件變形的狀況下，將圖樣物件的仿製品沿著一個或以上的路徑"
+"擺放。該圖樣物件必須是單一路徑，或是由路徑、形狀或仿製物件組成的群組。同時，該物件"
+"必須位於選取範圍的最上層。所有其他的選取物件必須是路徑。如果您勾選「挑選群組成員」"
+"選項，也可以將不同的物件交錯或隨機放置在路徑上。"
 
 #: ../share/extensions/doc_ai_convert.inx:3
 #: ../share/extensions/doc_ai_convert.inx:5
@@ -42164,10 +42168,18 @@ msgid ""
 "(2) Correct document scale, if necessary.\n"
 "    (Illustrator may export SVG at 75% of correct size.)\n"
 msgstr ""
+"\n"
+"在開啟 Adobe Illustrator 匯出的 SVG 檔後執行這個\n"
+"擴充功能，用來：\n"
+"\n"
+"(1) 辨認並匯入命名的圖層。\n"
+"\n"
+"(2) 如果需要的話，修正文件縮放程度。\n"
+"（Illustrator 可能會將 SVG 的匯出大小調整為原大小的 75%。）\n"
 
 #: ../share/extensions/doc_ai_convert.inx:18
 msgid "How to export SVG from Illustrator"
-msgstr ""
+msgstr "如何從 Illustrator 匯出 SVG"
 
 #: ../share/extensions/doc_ai_convert.inx:19
 msgid ""
@@ -42182,6 +42194,16 @@ msgid ""
 "* Object IDs: Layer names\n"
 "* Minify, Responsive: Both off\n"
 msgstr ""
+"若要在 AI 匯出時獲得最佳效果：\n"
+"* 為 AI 中的圖層命名時，可以：\n"
+"    * 使用單獨的數字作為圖層名稱，或是\n"
+"    * 在圖層名稱中插入空格\n"
+"* 使用「檔案 > 匯出 > 匯出為」\n"
+"* 勾選「使用工作區域」選項\n"
+"* 選取 SVG 格式並點擊「匯出」\n"
+"* 在「樣式設定」選單中選擇「簡報屬性」\n"
+"* 「物件 ID」設為「圖層名稱」"
+"* 取消勾選「縮小」、「回應式」\n"
 
 #: ../share/extensions/docinfo.inx:3
 msgid "DOC Info"
@@ -42299,13 +42321,15 @@ msgstr "桌面裁切繪圖機 R14"
 
 #: ../share/extensions/dxf_outlines.inx:9
 msgid "ROBO-Master compatible spline output (may distort some shapes)"
-msgstr ""
+msgstr "相容 ROBO-Master 的雲行線輸出（可能會讓一些形狀變形）"
 
 #: ../share/extensions/dxf_outlines.inx:9
 msgid ""
 "Unlike Bézier curves, ROBO-Master compatible splines have zero curvature at "
 "the end points. This may lead to distorted shapes."
 msgstr ""
+"與貝茲曲線不同，相容 ROBO-Master 的雲形線在尾端節點沒有任何曲度。這可能會"
+"導致形狀變形。"
 
 #: ../share/extensions/dxf_outlines.inx:10
 msgid "Use LWPOLYLINE type of line output"
@@ -42319,7 +42343,7 @@ msgstr "弄平貝茲曲線"
 msgid ""
 "Some tools do not support curves in DXF files. Enabling this will export "
 "curves as series of straight line segments."
-msgstr ""
+msgstr "有些工具不支援 DXF 檔案中的曲線。開啟這個選項能將曲線匯出為直線線段的組合。"
 
 #: ../share/extensions/dxf_outlines.inx:13
 msgid "Use Document unit as base unit"
@@ -45591,7 +45615,6 @@ msgid "Envelope Deformation"
 msgstr "封套變形"
 
 #: ../share/extensions/path_mesh_m2p.inx:3
-#, fuzzy
 msgid "Mesh Gradient to Path"
 msgstr "網面漸層轉成路徑"
 
@@ -45614,12 +45637,10 @@ msgstr "將選取的網面漸層幾何轉成路徑資料"
 
 #: ../share/extensions/path_mesh_m2p.inx:28
 #: ../share/extensions/path_mesh_p2m.inx:23
-#, fuzzy
 msgid "Mesh Gradient"
 msgstr "網面漸層"
 
 #: ../share/extensions/path_mesh_p2m.inx:3
-#, fuzzy
 msgid "Path to Mesh Gradient"
 msgstr "路徑轉成網面漸層"
 
@@ -45632,7 +45653,6 @@ msgid "Path to mesh"
 msgstr "路徑轉成網面"
 
 #: ../share/extensions/path_mesh_p2m.inx:14
-#, fuzzy
 msgid "Convert geometry of selected path (4 corners) to a Mesh Gradient"
 msgstr "將選取的路徑 (4 頂點) 幾何轉成網面漸層"
 
@@ -45657,9 +45677,8 @@ msgid "Starting dot number:"
 msgstr "起始點編號："
 
 #: ../share/extensions/path_number_nodes.inx:12
-#, fuzzy
 msgid "First number in the sequence, assigned to the first node of the path."
-msgstr "繪製圓周經過路徑前三個節點的圓形"
+msgstr "序列中的第一個數字，指派到路徑的第一個節點。"
 
 #: ../share/extensions/path_number_nodes.inx:14
 msgid "Step:"
@@ -45678,9 +45697,8 @@ msgid ""
 msgstr "這個擴充功能需要第二個選取的路徑為四個節點長。"
 
 #: ../share/extensions/path_to_absolute.inx:3
-#, fuzzy
 msgid "To Absolute"
-msgstr "絕對"
+msgstr "轉為絕對"
 
 #: ../share/extensions/patternalongpath.inx:3
 msgid "Pattern along Path"
@@ -45755,28 +45773,24 @@ msgid ""
 msgstr ""
 
 #: ../share/extensions/pdflatex.inx:3
-#, fuzzy
 msgid "Formula (pdflatex)"
-msgstr "LaTeX (pdflatex)"
+msgstr "公式（pdflatex）"
 
 #: ../share/extensions/pdflatex.inx:8 ../share/extensions/typst_formula.inx:8
-#, fuzzy
 msgid "Basic settings"
-msgstr "頁面設定值"
+msgstr "基本設定"
 
 #: ../share/extensions/pdflatex.inx:9
 msgid "LaTeX input:"
 msgstr "LaTeX 輸入："
 
 #: ../share/extensions/pdflatex.inx:10 ../share/extensions/typst_formula.inx:10
-#, fuzzy
 msgid "Font size (pt)"
-msgstr "字型大小 (px)："
+msgstr "字型大小 (pt)"
 
 #: ../share/extensions/pdflatex.inx:12
-#, fuzzy
 msgid "Advanced settings"
-msgstr "頁面設定值"
+msgstr "進階設定"
 
 #: ../share/extensions/pdflatex.inx:17
 msgid "Use standalone document class"
@@ -46488,13 +46502,12 @@ msgid "Quality between 0 and 100"
 msgstr "介於 0 到 100 的品質等級"
 
 #: ../share/extensions/raster_output_jpg.inx:15
-#, fuzzy
 msgid "Progressive"
-msgstr "積極"
+msgstr "漸進式"
 
 #: ../share/extensions/raster_output_jpg.inx:15
 msgid "Store image as a progressive JPEG file."
-msgstr ""
+msgstr "儲存影像為漸進式 JPEG 檔案。"
 
 #: ../share/extensions/raster_output_jpg.inx:17
 msgid "Low Quality Warning"
@@ -46502,29 +46515,27 @@ msgstr "低品質警告"
 
 #: ../share/extensions/raster_output_jpg.inx:18
 msgid "Your artwork may lose quality and any transparency."
-msgstr ""
+msgstr "您的作品的品質可能會降低，並失去所有透明度。"
 
 #: ../share/extensions/raster_output_jpg.inx:20
 msgid "This is a high compression example for demonstration."
-msgstr ""
+msgstr "這是個用來舉例的高壓縮示例。"
 
 #: ../share/extensions/raster_output_jpg.inx:22
 msgid "Learn more details about JPEG:"
-msgstr "深入了解 JPEG 的資訊："
+msgstr "深入了解 JPEG 資訊："
 
 #: ../share/extensions/raster_output_jpg.inx:23
-#, fuzzy
 msgid "https://inkscape.org/learn/jpg/"
-msgstr "https://inkscape.org/learn/jpeg/"
+msgstr "https://inkscape.org/learn/jpg/"
 
 #: ../share/extensions/raster_output_jpg.inx:30
-#, fuzzy
 msgid "JPEG (*.jpg)"
-msgstr "JPEG (*.jpeg)"
+msgstr "JPEG (*.jpg)"
 
 #: ../share/extensions/raster_output_jpg.inx:31
 msgid "Render to JPEG file format"
-msgstr "算繪為 JPEG 檔案格式"
+msgstr "繪算為 JPEG 檔案格式"
 
 #: ../share/extensions/raster_output_png.inx:3
 msgid "Optimized PNG"
@@ -46532,16 +46543,15 @@ msgstr "最佳化的 PNG"
 
 #: ../share/extensions/raster_output_png.inx:7
 msgid "Optimize PNG with 'optipng'"
-msgstr "使用 “optipng” 最佳化 PNG"
+msgstr "使用「optipng」最佳化 PNG"
 
 #: ../share/extensions/raster_output_png.inx:9
 msgid "Lossless"
 msgstr "無損"
 
 #: ../share/extensions/raster_output_png.inx:10
-#, fuzzy
 msgid "Interlaced"
-msgstr "介面"
+msgstr "交錯式"
 
 #: ../share/extensions/raster_output_png.inx:12
 msgid "Level:"
@@ -46549,50 +46559,43 @@ msgstr "等級："
 
 #: ../share/extensions/raster_output_png.inx:13
 msgid "Minimal Effort"
-msgstr "最小開銷"
+msgstr "最少氣力"
 
 #: ../share/extensions/raster_output_png.inx:14
-#, fuzzy
 msgid "Single Compression Trial"
-msgstr "壓縮"
+msgstr "一次壓縮試驗"
 
 #: ../share/extensions/raster_output_png.inx:15
-#, fuzzy
 msgid "Two Compression Trials"
-msgstr "壓縮"
+msgstr "兩次壓縮試驗"
 
 #: ../share/extensions/raster_output_png.inx:16
-#, fuzzy
 msgid "Five Compression Trials"
-msgstr "壓縮"
+msgstr "五次壓縮試驗"
 
 #: ../share/extensions/raster_output_png.inx:17
-#, fuzzy
 msgid "Ten Compression Trials"
-msgstr "壓縮"
+msgstr "十次壓縮試驗"
 
 #: ../share/extensions/raster_output_png.inx:21
 msgid "Lossy Options"
 msgstr "有損選項"
 
 #: ../share/extensions/raster_output_png.inx:22
-#, fuzzy
 msgid "Allow bit depth reduction"
-msgstr "減少雜訊"
+msgstr "允許位元度減損"
 
 #: ../share/extensions/raster_output_png.inx:23
-#, fuzzy
 msgid "Allow color type reduction"
-msgstr "減少雜訊"
+msgstr "允許顏色類型減損"
 
 #: ../share/extensions/raster_output_png.inx:24
-#, fuzzy
 msgid "Allow palette reduction"
-msgstr "路徑交點"
+msgstr "允許顏色減損"
 
 #: ../share/extensions/raster_output_png.inx:31
 msgid "Optimized PNG (*.png)"
-msgstr "最佳化的 SVG (*.svg)"
+msgstr "最佳化的 PNG (*.png)"
 
 #: ../share/extensions/raster_output_png.inx:32
 msgid "Optimize PNG output for file size."
@@ -46645,7 +46648,7 @@ msgstr "TIFF (*.tiff)"
 
 #: ../share/extensions/raster_output_tiff.inx:31
 msgid "Render to TIFF file format"
-msgstr "算繪為 TIFF 檔案格式"
+msgstr "繪算為 TIFF 檔案格式"
 
 #: ../share/extensions/raster_output_webp.inx:3
 msgid "Export to WebP"
@@ -46696,9 +46699,8 @@ msgid "WebP (*.webp)"
 msgstr "WebP (*.webp)"
 
 #: ../share/extensions/raster_output_webp.inx:32
-#, fuzzy
 msgid "Export to WebP file format."
-msgstr "匯出為 webp 檔案格式。"
+msgstr "匯出為 WebP 檔案格式。"
 
 #: ../share/extensions/render_alphabetsoup.inx:3
 msgid "Alphabet Soup"
@@ -46923,7 +46925,6 @@ msgid "Unit of measurement for both circular pitch and center diameter."
 msgstr "周節與中心直徑的量測單位。"
 
 #: ../share/extensions/replace_font.inx:3
-#, fuzzy
 msgid "Replace Font"
 msgstr "取代字型"
 
@@ -47140,9 +47141,8 @@ msgid "Show color reference"
 msgstr "顯示色彩參照"
 
 #: ../share/extensions/scribus_export_pdf.inx:19
-#, fuzzy
 msgid "Rendering intent:"
-msgstr "算繪意圖："
+msgstr "繪算意圖："
 
 #: ../share/extensions/scribus_export_pdf.inx:34
 msgid "Scribus CMYK PDF (*.PDF)"
@@ -47483,18 +47483,16 @@ msgid "74mm x 52mm (A8)"
 msgstr "74mm x 52mm (A8)"
 
 #: ../share/extensions/template_business_card.inx:11
-#, fuzzy
 msgid "ISO Card (ISO 7810)"
-msgstr "識別卡 (ISO 7810)"
+msgstr "ISO 卡片 (ISO 7810)"
 
 #: ../share/extensions/template_business_card.inx:12
 msgid "85mm x 55mm (Europe)"
 msgstr "85mm x 55mm (歐洲)"
 
 #: ../share/extensions/template_business_card.inx:13
-#, fuzzy
 msgid "55mm x 55mm (Europe Square)"
-msgstr "85mm x 55mm (歐洲)"
+msgstr "55mm x 55mm (歐洲正方形)"
 
 #: ../share/extensions/template_business_card.inx:14
 msgid "90mm x 55mm (Australia, India, ...)"
@@ -47513,18 +47511,16 @@ msgid "90mm x 50mm (India, Russia, ...)"
 msgstr "90mm x 50mm (印度, 俄羅斯, ...)"
 
 #: ../share/extensions/template_business_card.inx:18
-#, fuzzy
 msgid "3.5in x 2in (US/Canada)"
-msgstr "3.5in x 2in (美國, 加拿大)"
+msgstr "3.5in x 2in (美國 / 加拿大)"
 
 #: ../share/extensions/template_business_card.inx:19
-#, fuzzy
 msgid "2in x 2in (US Square)"
-msgstr "名片 US (正方形)"
+msgstr "2in x 2in (US 正方形)"
 
 #: ../share/extensions/template_business_card.inx:23
 msgid "Various Countries"
-msgstr ""
+msgstr "各種國家"
 
 #: ../share/extensions/template_dvd_cover.inx:3
 #: ../share/extensions/template_dvd_cover.inx:19
@@ -47556,9 +47552,8 @@ msgid "DVD cover bleed (mm):"
 msgstr "DVD 封面出血 (公釐)："
 
 #: ../share/extensions/template_dvd_cover.inx:19
-#, fuzzy
 msgid "Various Sizes"
-msgstr "影片尺寸："
+msgstr "各種尺寸"
 
 #: ../share/extensions/template_seamless_pattern.inx:3
 #: ../share/extensions/template_seamless_pattern.inx:13
@@ -47574,18 +47569,16 @@ msgid "Custom Height (px):"
 msgstr "自訂高度 (px)："
 
 #: ../share/extensions/template_seamless_pattern.inx:13
-#, fuzzy
 msgid "Tiled Canvas"
-msgstr "亞麻畫布"
+msgstr "鋪排畫布"
 
 #: ../share/extensions/text_braille.inx:3
 msgid "Convert to Braille"
 msgstr "轉換成點字"
 
 #: ../share/extensions/text_extract.inx:3
-#, fuzzy
 msgid "Extract from Selection"
-msgstr "從選取範圍取得"
+msgstr "從選取範圍取出"
 
 #: ../share/extensions/text_extract.inx:5 ../share/extensions/text_merge.inx:5
 msgid "Text direction:"
@@ -47651,7 +47644,6 @@ msgid "Sentence case"
 msgstr "句首大寫"
 
 #: ../share/extensions/text_split.inx:3
-#, fuzzy
 msgid "Split Text"
 msgstr "打散文字"
 
@@ -47761,27 +47753,24 @@ msgid "From Side c and Angles a, b"
 msgstr "從邊 c 和角 a、b"
 
 #: ../share/extensions/twirl.inx:3
-#, fuzzy
 msgid "Twirl"
 msgstr "螺旋"
 
 #: ../share/extensions/twirl.inx:5
-#, fuzzy
 msgid "Amount of twirl:"
-msgstr "漩渦數量："
+msgstr "螺旋程度："
 
 #: ../share/extensions/twirl.inx:6
 msgid "Rotation is clockwise"
 msgstr "順時針旋轉"
 
 #: ../share/extensions/typst_formula.inx:3
-#, fuzzy
 msgid "Formula (typst)"
-msgstr "LaTeX (pdflatex)"
+msgstr "公式（typst）"
 
 #: ../share/extensions/typst_formula.inx:9
 msgid "typst input:"
-msgstr ""
+msgstr "Typst 輸入："
 
 #: ../share/extensions/ungroup_deep.inx:3
 msgid "Deep Ungroup"
@@ -48134,7 +48123,6 @@ msgid ""
 msgstr "如果想要傳輸多個屬性，那麼應該用空格區分開來，且只用一個空格。"
 
 #: ../share/extensions/webslicer_create_group.inx:3
-#, fuzzy
 msgid "Set a Layout Group"
 msgstr "設定版面群組"
 
@@ -48191,7 +48179,6 @@ msgid "Slicer"
 msgstr "切片"
 
 #: ../share/extensions/webslicer_create_rect.inx:3
-#, fuzzy
 msgid "Create a Slicer Rectangle"
 msgstr "建立切片矩形"
 
@@ -48327,7 +48314,6 @@ msgid "Bottom and Right"
 msgstr "右下"
 
 #: ../share/extensions/webslicer_export.inx:3
-#, fuzzy
 msgid "Export Layout Pieces and HTML+CSS code"
 msgstr "匯出版面元素和 HTML+CSS 程式碼"
 
