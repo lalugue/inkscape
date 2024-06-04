@@ -303,7 +303,10 @@ static void sp_shape_render(SPShape const *shape, CairoRenderContext *ctx, SPIte
 
     // TODO: Factor marker rendering out into a separate function; reduce code duplication.
     // START marker
+    bool has_stroke = style->stroke_width.computed > 0.0;
     for (int marker_type : {SP_MARKER_LOC, SP_MARKER_LOC_START}) {
+        if (!has_stroke)
+            continue;
         if (SPMarker *marker = shape->_marker[marker_type]) {
             Geom::Affine tr(sp_shape_marker_get_transform_at_start(pathv.begin()->front()));
             tr = marker->get_marker_transform(tr, style->stroke_width.computed, true);
@@ -313,7 +316,7 @@ static void sp_shape_render(SPShape const *shape, CairoRenderContext *ctx, SPIte
     // MID marker
     for (int marker_type : {SP_MARKER_LOC, SP_MARKER_LOC_MID}) {
         SPMarker *marker = shape->_marker[marker_type];
-        if (!marker) {
+        if (!marker || !has_stroke) {
             continue;
         }
         for(Geom::PathVector::const_iterator path_it = pathv.begin(); path_it != pathv.end(); ++path_it) {
@@ -353,6 +356,8 @@ static void sp_shape_render(SPShape const *shape, CairoRenderContext *ctx, SPIte
     }
     // END marker
     for (int marker_type : {SP_MARKER_LOC, SP_MARKER_LOC_END}) {
+        if (!has_stroke)
+            continue;
         if (SPMarker *marker = shape->_marker[marker_type]) {
             /* Get reference to last curve in the path.
              * For moveto-only path, this returns the "closing line segment". */
