@@ -261,7 +261,8 @@ void ComboBoxEntryToolItem::popup_enable()
     _entry_completion->set_inline_completion(false);
     _entry_completion->set_inline_selection(true);
 
-    _entry_completion->signal_match_selected().connect(sigc::mem_fun(*this, &ComboBoxEntryToolItem::match_selected_cb));
+    _entry_completion->signal_match_selected().connect(sigc::mem_fun(*this, &ComboBoxEntryToolItem::match_selected_cb),
+                                                       false);
 }
 
 void ComboBoxEntryToolItem::popup_disable()
