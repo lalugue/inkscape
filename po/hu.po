@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hu\n"
 "Report-Msgid-Bugs-To: inkscape-translator@lists.inkscape.org\n"
-"POT-Creation-Date: 2024-05-23 15:03+0000\n"
-"PO-Revision-Date: 2024-05-23 23:23+0000\n"
+"POT-Creation-Date: 2024-06-08 04:54+0000\n"
+"PO-Revision-Date: 2024-06-08 21:07+0000\n"
 "Last-Translator: Gyuris Gellért <jobel@ujevangelizacio.hu>, 2024\n"
 "Language-Team: Hungarian (https://app.transifex.com/fsf-hu/teams/77907/hu/)\n"
 "Language: hu\n"
@@ -6673,7 +6673,7 @@ msgid "Zoom to 2:1"
 msgstr "Nagyítás beállítása a tényleges méret kétszeresére (2:1)"
 
 #: ../src/actions/actions-canvas-transform.cpp:274 ../share/ui/menus.ui:396
-#: ../share/ui/statusbar.ui:13 ../share/ui/toolbar-commands.ui:505
+#: ../share/ui/statusbar.ui:13 ../share/ui/toolbar-commands.ui:315
 #: ../share/ui/toolbar-zoom.ui:112
 msgid "Zoom Selection"
 msgstr "Nagyítás a kijelölésre"
@@ -6685,7 +6685,7 @@ msgstr ""
 "látható az ablakban"
 
 #: ../src/actions/actions-canvas-transform.cpp:275 ../share/ui/menus.ui:401
-#: ../share/ui/statusbar.ui:18 ../share/ui/toolbar-commands.ui:530
+#: ../share/ui/statusbar.ui:18 ../share/ui/toolbar-commands.ui:337
 #: ../share/ui/toolbar-zoom.ui:129
 msgid "Zoom Drawing"
 msgstr "Nagyítás a rajzra"
@@ -6697,7 +6697,7 @@ msgstr ""
 "ablakban"
 
 #: ../src/actions/actions-canvas-transform.cpp:276 ../share/ui/menus.ui:406
-#: ../share/ui/statusbar.ui:23 ../share/ui/toolbar-commands.ui:555
+#: ../share/ui/statusbar.ui:23 ../share/ui/toolbar-commands.ui:359
 #: ../share/ui/toolbar-zoom.ui:146
 msgid "Zoom Page"
 msgstr "Nagyítás az oldalra"
@@ -6720,7 +6720,7 @@ msgstr ""
 "az ablak szélességével"
 
 #: ../src/actions/actions-canvas-transform.cpp:278
-#: ../share/ui/toolbar-commands.ui:580
+#: ../share/ui/toolbar-commands.ui:381
 msgid "Zoom Center Page"
 msgstr "Nagyítás az oldal közepére"
 
@@ -7197,7 +7197,7 @@ msgid "Toggle the visibility of grids"
 msgstr "Rácsok láthatóságának átváltása"
 
 #: ../src/actions/actions-edit-window.cpp:63
-#: ../src/selection-chemistry.cpp:1322 ../share/ui/toolbar-commands.ui:447
+#: ../src/selection-chemistry.cpp:1322 ../share/ui/toolbar-commands.ui:282
 msgid "Paste"
 msgstr "Beillesztés"
 
@@ -7221,7 +7221,7 @@ msgstr ""
 msgid "Next path effect parameter"
 msgstr "Következő útvonaleffektus-paraméter"
 
-#: ../src/actions/actions-edit-window.cpp:65 ../share/ui/toolbar-node.ui:511
+#: ../src/actions/actions-edit-window.cpp:65 ../share/ui/toolbar-node.ui:521
 msgid "Show next editable path effect parameter"
 msgstr "A következő szerkeszthető útvonaleffektus-paraméter megjelenítése"
 
@@ -7264,7 +7264,7 @@ msgid ""
 msgstr ""
 "A kijelölt objektumok átalakítása azok éleihez igazított segédvonalakká"
 
-#: ../src/actions/actions-edit.cpp:295 ../share/ui/toolbar-commands.ui:422
+#: ../src/actions/actions-edit.cpp:295 ../share/ui/toolbar-commands.ui:260
 msgid "Cut"
 msgstr "Kivágás"
 
@@ -7272,7 +7272,7 @@ msgstr "Kivágás"
 msgid "Cut selection to clipboard"
 msgstr "A kijelölés áthelyezése a vágólapra"
 
-#: ../src/actions/actions-edit.cpp:296 ../share/ui/toolbar-commands.ui:397
+#: ../src/actions/actions-edit.cpp:296 ../share/ui/toolbar-commands.ui:238
 msgid "Copy"
 msgstr "Másolás"
 
@@ -7348,7 +7348,7 @@ msgstr ""
 #: ../src/actions/actions-edit.cpp:304 ../src/filter-enums.cpp:95
 #: ../src/selection-chemistry.cpp:599 ../src/selection-chemistry.cpp:603
 #: ../share/ui/dialog-livepatheffect-item.glade:8
-#: ../share/ui/toolbar-commands.ui:638
+#: ../share/ui/toolbar-commands.ui:435
 msgid "Duplicate"
 msgstr "Kettőzés"
 
@@ -7362,7 +7362,7 @@ msgstr ""
 "A kijelölt objektumok kettőzése és az utolsó transzformáció újbóli "
 "alkalmazása"
 
-#: ../src/actions/actions-edit.cpp:306 ../share/ui/toolbar-commands.ui:663
+#: ../src/actions/actions-edit.cpp:306 ../share/ui/toolbar-commands.ui:460
 msgid "Create Clone"
 msgstr "Klón létrehozása"
 
@@ -7371,7 +7371,7 @@ msgid "Create a clone (a copy linked to the original) of selected object"
 msgstr ""
 "Klón (az eredetihez kapcsolt másolat) létrehozása a kijelölt objektumból"
 
-#: ../src/actions/actions-edit.cpp:307 ../share/ui/toolbar-commands.ui:688
+#: ../src/actions/actions-edit.cpp:307 ../share/ui/toolbar-commands.ui:485
 msgid "Unlink Clone"
 msgstr "Klón lekapcsolása"
 
@@ -7568,7 +7568,7 @@ msgstr ""
 #: ../src/actions/actions-file-window.cpp:117
 #: ../src/ui/dialog/document-properties.cpp:977
 #: ../src/ui/dialog/inkscape-preferences.cpp:3078
-#: ../share/ui/toolbar-commands.ui:109
+#: ../share/ui/toolbar-commands.ui:28
 msgid "New"
 msgstr "Új"
 
@@ -7605,7 +7605,7 @@ msgstr ""
 
 #: ../src/actions/actions-file-window.cpp:121 ../src/helper/choose-file.cpp:28
 #: ../src/ui/dialog/save-template-dialog.cpp:39
-#: ../share/ui/toolbar-commands.ui:153
+#: ../share/ui/toolbar-commands.ui:72
 msgid "Save"
 msgstr "Mentés"
 
@@ -8722,7 +8722,7 @@ msgstr ""
 msgid "Object Flip Horizontal"
 msgstr "Objektumtükrözés vízszintesen"
 
-#: ../src/actions/actions-object.cpp:395 ../share/ui/toolbar-select.ui:210
+#: ../src/actions/actions-object.cpp:395 ../share/ui/toolbar-select.ui:199
 msgid "Flip selected objects horizontally"
 msgstr "A kijelölt objektumok vízszintes tükrözése"
 
@@ -8730,7 +8730,7 @@ msgstr "A kijelölt objektumok vízszintes tükrözése"
 msgid "Object Flip Vertical"
 msgstr "Objektumtükrözés függőlegesen"
 
-#: ../src/actions/actions-object.cpp:396 ../share/ui/toolbar-select.ui:231
+#: ../src/actions/actions-object.cpp:396 ../share/ui/toolbar-select.ui:217
 msgid "Flip selected objects vertically"
 msgstr "A kijelölt objektumok függőleges tükrözése"
 
@@ -9338,14 +9338,14 @@ msgstr "A kijelölt objektumok eltávolítása az alakzatépítés befejezéseko
 
 #: ../src/actions/actions-selection-object.cpp:37
 #: ../src/actions/actions-selection-object.cpp:147
-#: ../share/ui/toolbar-commands.ui:724
+#: ../share/ui/toolbar-commands.ui:524
 msgctxt "Verb"
 msgid "Group"
 msgstr "Csoport"
 
 #: ../src/actions/actions-selection-object.cpp:46
 #: ../src/actions/actions-selection-object.cpp:148
-#: ../src/selection-chemistry.cpp:945 ../share/ui/toolbar-commands.ui:746
+#: ../src/selection-chemistry.cpp:945 ../share/ui/toolbar-commands.ui:549
 msgid "Ungroup"
 msgstr "Csoport szétbontása"
 
@@ -9389,7 +9389,7 @@ msgid "Raise to Top"
 msgstr "Felülre helyezés"
 
 #: ../src/actions/actions-selection-object.cpp:152
-#: ../share/ui/toolbar-select.ui:279
+#: ../share/ui/toolbar-select.ui:266
 msgid "Raise selection to top"
 msgstr "Kijelölt objektumok áthelyezése a többi fölé"
 
@@ -9399,7 +9399,7 @@ msgid "Raise"
 msgstr "Felemelés"
 
 #: ../src/actions/actions-selection-object.cpp:153
-#: ../share/ui/dialog-objects.glade:118 ../share/ui/toolbar-select.ui:301
+#: ../share/ui/dialog-objects.glade:118 ../share/ui/toolbar-select.ui:285
 msgid "Raise selection one step"
 msgstr "Kijelölt objektumok eggyel feljebb való helyezése"
 
@@ -9408,7 +9408,7 @@ msgid "Lower"
 msgstr "Lejjebb"
 
 #: ../src/actions/actions-selection-object.cpp:154
-#: ../share/ui/dialog-objects.glade:133 ../share/ui/toolbar-select.ui:323
+#: ../share/ui/dialog-objects.glade:133 ../share/ui/toolbar-select.ui:304
 msgid "Lower selection one step"
 msgstr "Kijelölt objektumok eggyel lejjebb való helyezése"
 
@@ -9417,7 +9417,7 @@ msgid "Lower to Bottom"
 msgstr "Alulra helyezés"
 
 #: ../src/actions/actions-selection-object.cpp:155
-#: ../share/ui/toolbar-select.ui:345
+#: ../share/ui/toolbar-select.ui:323
 msgid "Lower selection to bottom"
 msgstr "Kijelölt objektumok áthelyezése a többi alá"
 
@@ -9473,7 +9473,7 @@ msgid "Select all objects in all visible and unlocked layers"
 msgstr "Az összes objektum kijelölése az összes látható és zárolatlan rétegben"
 
 #: ../src/actions/actions-selection-window.cpp:126
-#: ../share/ui/toolbar-commands.ui:801
+#: ../share/ui/toolbar-commands.ui:588
 msgid "Fill and Stroke"
 msgstr "Kitöltés és körvonal"
 
@@ -10498,7 +10498,7 @@ msgid "Inkscape version, authors, license"
 msgstr "Az Inkscape verziója, szerzők, licenc"
 
 #: ../src/actions/actions-undo-document.cpp:93
-#: ../share/ui/toolbar-commands.ui:314
+#: ../share/ui/toolbar-commands.ui:183
 msgid "Undo"
 msgstr "Visszavonás"
 
@@ -10507,7 +10507,7 @@ msgid "Undo last action"
 msgstr "A legutóbbi művelet visszavonása"
 
 #: ../src/actions/actions-undo-document.cpp:94
-#: ../share/ui/toolbar-commands.ui:339
+#: ../share/ui/toolbar-commands.ui:205
 msgid "Redo"
 msgstr "Újra"
 
@@ -10735,11 +10735,11 @@ msgstr "<b>Segédvonal</b>: %s"
 msgid "<b>Locked</b> object(s) cannot be modified."
 msgstr "A <b>zárolt</b> objektumo(ka)t nem lehet módosítani."
 
-#: ../src/desktop.cpp:473
+#: ../src/desktop.cpp:480
 msgid "No previous transform."
 msgstr "Nincs előző transzformáció."
 
-#: ../src/desktop.cpp:494
+#: ../src/desktop.cpp:501
 msgid "No next transform."
 msgstr "Nincs következő transzformáció."
 
@@ -10823,7 +10823,7 @@ msgstr "Határoló téglalap középpontja"
 msgid "Bounding box side midpoint"
 msgstr "Határoló téglalap oldalának középpontja"
 
-#: ../src/display/control/snap-indicator.cpp:46 ../src/ui/tool/node.cpp:1674
+#: ../src/display/control/snap-indicator.cpp:46 ../src/ui/tool/node.cpp:1685
 msgid "Smooth node"
 msgstr "Íves csomópont"
 
@@ -11174,8 +11174,8 @@ msgstr "Igazodó küszöb"
 #: ../src/ui/dialog/filter-effects-dialog.cpp:3095
 #: ../src/ui/dialog/lpe-powerstroke-properties.cpp:60
 #: ../share/ui/page-properties.glade:85 ../share/ui/page-properties.glade:312
-#: ../share/ui/toolbar-calligraphy.ui:179 ../share/ui/toolbar-eraser.ui:142
-#: ../share/ui/toolbar-spray.ui:244 ../share/ui/toolbar-tweak.ui:359
+#: ../share/ui/toolbar-calligraphy.ui:161 ../share/ui/toolbar-eraser.ui:142
+#: ../share/ui/toolbar-spray.ui:217 ../share/ui/toolbar-tweak.ui:369
 #: ../share/extensions/foldablebox.inx:5
 msgid "Width:"
 msgstr "Szélesség:"
@@ -11191,8 +11191,8 @@ msgid "Height:"
 msgstr "Magasság:"
 
 #: ../src/extension/internal/bitmap/adaptiveThreshold.cpp:45
-#: ../src/live_effects/lpe-offset.cpp:74 ../share/ui/toolbar-gradient.ui:256
-#: ../share/ui/toolbar-measure.ui:426 ../share/ui/toolbar-spray.ui:607
+#: ../src/live_effects/lpe-offset.cpp:74 ../share/ui/toolbar-gradient.ui:266
+#: ../share/ui/toolbar-measure.ui:446 ../share/ui/toolbar-spray.ui:541
 #: ../share/extensions/printing_marks.inx:27
 msgid "Offset:"
 msgstr "Pozíció:"
@@ -11443,7 +11443,7 @@ msgstr "Színtérkép eltolása"
 #: ../src/extension/internal/bitmap/cycleColormap.cpp:41
 #: ../src/extension/internal/bitmap/spread.cpp:41
 #: ../src/extension/internal/bitmap/unsharpmask.cpp:47
-#: ../share/ui/toolbar-spray.ui:297
+#: ../share/ui/toolbar-spray.ui:255
 msgid "Amount:"
 msgstr "Mennyiség:"
 
@@ -11753,7 +11753,7 @@ msgstr "Küszöb"
 
 #: ../src/extension/internal/bitmap/threshold.cpp:42
 #: ../src/extension/internal/bitmap/unsharpmask.cpp:48
-#: ../share/ui/toolbar-paintbucket.ui:71
+#: ../share/ui/toolbar-paintbucket.ui:81
 msgid "Threshold:"
 msgstr "Küszöb:"
 
@@ -11965,7 +11965,7 @@ msgid "out of %i"
 msgstr "(összesen: %i)"
 
 #: ../src/extension/internal/cdr-input.cpp:143
-#: ../src/extension/internal/pdfinput/pdf-input.cpp:157
+#: ../src/extension/internal/pdfinput/pdf-input.cpp:158
 #: ../src/extension/internal/vsd-input.cpp:142
 #: ../src/extension/prefdialog/prefdialog.cpp:65
 #: ../src/ui/desktop/document-check.cpp:49
@@ -11980,7 +11980,7 @@ msgid "_Cancel"
 msgstr "_Mégsem"
 
 #: ../src/extension/internal/cdr-input.cpp:144
-#: ../src/extension/internal/pdfinput/pdf-input.cpp:144
+#: ../src/extension/internal/pdfinput/pdf-input.cpp:145
 #: ../src/extension/internal/vsd-input.cpp:143
 #: ../src/extension/prefdialog/prefdialog.cpp:66
 #: ../src/ui/dialog/guides.cpp:191
@@ -12391,7 +12391,7 @@ msgstr "Kimarás"
 #: ../src/extension/internal/filter/color.h:1336
 #: ../src/extension/internal/filter/color.h:1452
 #: ../src/ui/dialog/document-properties.cpp:491
-#: ../src/ui/dialog/export-batch.cpp:294 ../src/ui/dialog/export-single.cpp:120
+#: ../src/ui/dialog/export-batch.cpp:341 ../src/ui/dialog/export-single.cpp:119
 #: ../src/ui/widget/page-properties.cpp:164
 msgid "Background color"
 msgstr "Háttérszín"
@@ -13505,7 +13505,10 @@ msgstr "Zajjal való kitöltés"
 #: ../src/extension/internal/filter/paint.h:712
 #: ../src/extension/internal/filter/shadows.h:69
 #: ../src/live_effects/lpe-measure-segments.cpp:267
-#: ../src/ui/dialog/find.cpp:75 ../share/extensions/color_custom.inx:6
+#: ../src/ui/dialog/find.cpp:75 ../share/ui/toolbar-calligraphy.ui:108
+#: ../share/ui/toolbar-gradient.ui:163 ../share/ui/toolbar-measure.ui:175
+#: ../share/ui/toolbar-measure.ui:317 ../share/ui/toolbar-mesh.ui:272
+#: ../share/ui/toolbar-node.ui:556 ../share/extensions/color_custom.inx:6
 #: ../share/extensions/color_hsl_adjust.inx:6
 #: ../share/extensions/color_randomize.inx:6
 #: ../share/extensions/distribute_along_path.inx:7
@@ -13881,7 +13884,7 @@ msgstr "Külső"
 #: ../src/ui/widget/dash-selector.cpp:87
 #: ../src/ui/widget/page-properties.cpp:121
 #: ../src/ui/widget/page-properties.cpp:376 ../share/ui/dialog-export.glade:107
-#: ../share/ui/toolbar-page.ui:106 ../share/extensions/color_custom.inx:3
+#: ../share/ui/toolbar-page.ui:96 ../share/extensions/color_custom.inx:3
 #: ../share/extensions/markers_strokepaint.inx:15
 #: ../share/extensions/restack.inx:19
 msgid "Custom"
@@ -13923,10 +13926,10 @@ msgstr "Háttér"
 #: ../src/extension/internal/filter/transparency.h:61
 #: ../src/live_effects/lpe-fillet-chamfer.cpp:46
 #: ../src/ui/dialog/filter-effects-dialog.cpp:3003
-#: ../share/ui/toolbar-eraser.ui:58 ../share/ui/toolbar-pencil.ui:67
-#: ../share/ui/toolbar-spray.ui:116 ../share/ui/toolbar-tweak.ui:75
-#: ../share/extensions/extrude.inx:7 ../share/extensions/path_mesh_m2p.inx:9
-#: ../share/extensions/triangle.inx:11
+#: ../share/ui/toolbar-eraser.ui:58 ../share/ui/toolbar-spray.ui:109
+#: ../share/ui/toolbar-spray.ui:126 ../share/ui/toolbar-tweak.ui:69
+#: ../share/ui/toolbar-tweak.ui:85 ../share/extensions/extrude.inx:7
+#: ../share/extensions/path_mesh_m2p.inx:9 ../share/extensions/triangle.inx:11
 msgid "Mode:"
 msgstr "Mód:"
 
@@ -14162,69 +14165,69 @@ msgstr "OpenDocument-rajz (*.odg)"
 msgid "OpenDocument drawing file"
 msgstr "OpenDocument-rajzfájl"
 
-#: ../src/extension/internal/pdfinput/pdf-input.cpp:150
+#: ../src/extension/internal/pdfinput/pdf-input.cpp:151
 msgid "PDF Import Settings"
 msgstr "PDF-importálási beállítások"
 
-#: ../src/extension/internal/pdfinput/pdf-input.cpp:272
+#: ../src/extension/internal/pdfinput/pdf-input.cpp:279
 msgctxt "PDF input precision"
 msgid "rough"
 msgstr "durva"
 
-#: ../src/extension/internal/pdfinput/pdf-input.cpp:272
+#: ../src/extension/internal/pdfinput/pdf-input.cpp:279
 msgctxt "PDF input precision"
 msgid "medium"
 msgstr "közepes"
 
-#: ../src/extension/internal/pdfinput/pdf-input.cpp:273
+#: ../src/extension/internal/pdfinput/pdf-input.cpp:280
 msgctxt "PDF input precision"
 msgid "fine"
 msgstr "finom"
 
-#: ../src/extension/internal/pdfinput/pdf-input.cpp:273
+#: ../src/extension/internal/pdfinput/pdf-input.cpp:280
 msgctxt "PDF input precision"
 msgid "very fine"
 msgstr "nagyon finom"
 
-#: ../src/extension/internal/pdfinput/pdf-input.cpp:361
+#: ../src/extension/internal/pdfinput/pdf-input.cpp:368
 msgid "Convert to paths"
 msgstr "Útvonalakká alakítás"
 
-#: ../src/extension/internal/pdfinput/pdf-input.cpp:364
+#: ../src/extension/internal/pdfinput/pdf-input.cpp:371
 msgid "Keep original font name"
 msgstr "Eredeti betűkészletnév megőrzése"
 
-#: ../src/extension/internal/pdfinput/pdf-input.cpp:367
+#: ../src/extension/internal/pdfinput/pdf-input.cpp:374
 msgid "Replace by closest-named installed font"
 msgstr ""
 "Betűkészlet helyettesítése a legközelebbi nevű telepített betűkészlettel"
 
-#: ../src/extension/internal/pdfinput/pdf-input.cpp:370
+#: ../src/extension/internal/pdfinput/pdf-input.cpp:377
 #: ../src/ui/tools/text-tool.cpp:179
 msgid "Delete text"
 msgstr "Szöveg törlése"
 
-#: ../src/extension/internal/pdfinput/pdf-input.cpp:837
+#: ../src/extension/internal/pdfinput/pdf-input.cpp:848
 msgid "PDF Input"
 msgstr "PDF-bemenet"
 
-#: ../src/extension/internal/pdfinput/pdf-input.cpp:842
+#: ../src/extension/internal/pdfinput/pdf-input.cpp:853
 msgid "Portable Document Format (*.pdf)"
 msgstr "Hordozható dokumentum-formátum (*.pdf)"
 
-#: ../src/extension/internal/pdfinput/pdf-input.cpp:843
+#: ../src/extension/internal/pdfinput/pdf-input.cpp:854
 msgid "Portable Document Format"
 msgstr "Hordozható dokumentum-formátum"
 
-#: ../src/extension/internal/pdfinput/pdf-input.cpp:852
+#: ../src/extension/internal/pdfinput/pdf-input.cpp:863
 msgid "AI Input"
 msgstr "AI-bemenet"
 
-#: ../src/extension/internal/pdfinput/pdf-input.cpp:857
+#: ../src/extension/internal/pdfinput/pdf-input.cpp:868
 msgid "Adobe Illustrator 9.0 and above (*.ai)"
 msgstr "Adobe Illustrator 9.0 és újabbak (*.ai)"
 
-#: ../src/extension/internal/pdfinput/pdf-input.cpp:858
+#: ../src/extension/internal/pdfinput/pdf-input.cpp:869
 msgid "Open files saved in Adobe Illustrator 9.0 and newer versions"
 msgstr ""
 "Az Adobe Illustrator 9.0-s vagy újabb verziójával létrehozott fájlok "
@@ -15243,44 +15246,44 @@ msgstr "OK"
 msgid "Update Document"
 msgstr "Dokumentum frissítése"
 
-#: ../src/file.cpp:138
+#: ../src/file.cpp:133
 msgid "Document not saved yet.  Cannot revert."
 msgstr "A dokumentum még nem volt mentve. Visszaállítás nem végezhető."
 
-#: ../src/file.cpp:144
+#: ../src/file.cpp:139
 msgid "Changes will be lost! Are you sure you want to reload document %1?"
 msgstr ""
 "A módosítások elvesznek. Biztos, hogy újra be kívánja tölteni a "
 "dokumentumot: „%1”?"
 
-#: ../src/file.cpp:158
+#: ../src/file.cpp:153
 msgid "Document reverted."
 msgstr "A dokumentum visszaállítva."
 
-#: ../src/file.cpp:160
+#: ../src/file.cpp:155
 msgid "Document not reverted."
 msgstr "A dokumentum nem lett visszaállítva."
 
-#: ../src/file.cpp:180
+#: ../src/file.cpp:175
 msgid "Select file to open"
 msgstr "Válassza ki a megnyitandó fájlt"
 
-#: ../src/file.cpp:226
+#: ../src/file.cpp:221
 msgid "Clean up document"
 msgstr "Dokumentum tisztítása"
 
-#: ../src/file.cpp:233
+#: ../src/file.cpp:228
 #, c-format
 msgid "Removed <b>%i</b> unused definition in &lt;defs&gt;."
 msgid_plural "Removed <b>%i</b> unused definitions in &lt;defs&gt;."
 msgstr[0] "<b>%i</b> felhasználatlan &lt;defs&gt;-definíció eltávolítva."
 msgstr[1] "<b>%i</b> felhasználatlan &lt;defs&gt;-definíció eltávolítva."
 
-#: ../src/file.cpp:238
+#: ../src/file.cpp:233
 msgid "No unused definitions in &lt;defs&gt;."
 msgstr "Nincs felhasználatlan &lt;defs&gt;-definíció."
 
-#: ../src/file.cpp:276
+#: ../src/file.cpp:271
 #, c-format
 msgid ""
 "No Inkscape extension found to save document (%s).  This may have been "
@@ -15289,13 +15292,13 @@ msgstr ""
 "Nem található a dokumentum (%s) mentésére használható Inkscape-kiterjesztés. "
 "Elképzelhető, hogy a fájlkiterjesztés ismeretlen."
 
-#: ../src/file.cpp:277 ../src/file.cpp:285 ../src/file.cpp:292
-#: ../src/file.cpp:298 ../src/file.cpp:303 ../src/file.cpp:314
-#: ../src/file.cpp:322
+#: ../src/file.cpp:272 ../src/file.cpp:280 ../src/file.cpp:287
+#: ../src/file.cpp:293 ../src/file.cpp:298 ../src/file.cpp:309
+#: ../src/file.cpp:317
 msgid "Document not saved."
 msgstr "A dokumentum nem lett elmentve."
 
-#: ../src/file.cpp:284
+#: ../src/file.cpp:279
 #, c-format
 msgid ""
 "File %s is write protected. Please remove write protection and try again."
@@ -15303,12 +15306,12 @@ msgstr ""
 "A(z) „%s” fájl írásvédett. Távolítsa el az írásvédelmet, majd próbálkozzon "
 "újra."
 
-#: ../src/file.cpp:291 ../src/file.cpp:321
+#: ../src/file.cpp:286 ../src/file.cpp:316
 #, c-format
 msgid "File %s could not be saved."
 msgstr "Nem sikerült elmenteni a(z) %s fájlt."
 
-#: ../src/file.cpp:302
+#: ../src/file.cpp:297
 #, c-format
 msgid ""
 "File could not be saved:\n"
@@ -15317,7 +15320,7 @@ msgstr ""
 "A fájlt nem lehetett menteni:\n"
 "Nem található „%s” azonosítójú objektum."
 
-#: ../src/file.cpp:311
+#: ../src/file.cpp:306
 #, c-format
 msgid ""
 "File %s could not be saved.\n"
@@ -15358,7 +15361,7 @@ msgstr "Nincs elmentést igénylő módosítás."
 msgid "Saving document..."
 msgstr "Dokumentum mentése…"
 
-#: ../src/file.cpp:852
+#: ../src/file.cpp:852 ../share/ui/extension-pdfinput.glade:319
 msgid "Import Pages"
 msgstr "Oldalak importálása"
 
@@ -15504,30 +15507,30 @@ msgstr "Pontszerű fényforrás"
 msgid "Spot Light"
 msgstr "Reflektorszerű fényforrás"
 
-#: ../src/gradient-chemistry.cpp:775 ../src/gradient-drag.cpp:1235
+#: ../src/gradient-chemistry.cpp:779 ../src/gradient-drag.cpp:1235
 msgid "Delete gradient stop"
 msgstr "Színátmenet-fázis törlése"
 
-#: ../src/gradient-chemistry.cpp:864 ../src/gradient-chemistry.cpp:881
+#: ../src/gradient-chemistry.cpp:868 ../src/gradient-chemistry.cpp:885
 #: ../src/gradient-drag.cpp:1283 ../src/ui/dialog/color-item.cpp:519
 #: ../src/ui/tools/gradient-tool.cpp:275 ../src/ui/tools/gradient-tool.cpp:328
 #: ../src/ui/tools/gradient-tool.cpp:411
 msgid "Add gradient stop"
 msgstr "Színátmenet-fázis felvétele"
 
-#: ../src/gradient-chemistry.cpp:893
+#: ../src/gradient-chemistry.cpp:897
 msgid "Change gradient stop color"
 msgstr "Színátmenet-fázis színének módosítása"
 
-#: ../src/gradient-chemistry.cpp:1823
+#: ../src/gradient-chemistry.cpp:1839
 msgid "Invert gradient colors"
 msgstr "Színátmenetek invertálása"
 
-#: ../src/gradient-chemistry.cpp:1849 ../src/ui/widget/gradient-editor.cpp:488
+#: ../src/gradient-chemistry.cpp:1865 ../src/ui/widget/gradient-editor.cpp:488
 msgid "Reverse gradient"
 msgstr "Színátmenet megfordítása"
 
-#: ../src/gradient-chemistry.cpp:1862 ../src/ui/dialog/color-item.cpp:464
+#: ../src/gradient-chemistry.cpp:1878 ../src/ui/dialog/color-item.cpp:464
 #: ../src/ui/widget/gradient-selector.cpp:157
 #: ../share/ui/dialog-swatches.glade:150
 msgid "Delete swatch"
@@ -15648,15 +15651,15 @@ msgstr[1] ""
 "<b>%d</b> színátmenet közös színátmenet-pontja. Különválasztás: <b>Shift</"
 "b>+húzás."
 
-#: ../src/gradient-drag.cpp:2790
+#: ../src/gradient-drag.cpp:2782
 msgid "Move gradient handle(s)"
 msgstr "Színátmenet-fogantyúk áthelyezése"
 
-#: ../src/gradient-drag.cpp:2822
+#: ../src/gradient-drag.cpp:2814
 msgid "Move gradient mid stop(s)"
 msgstr "Színátmenet egy vagy több közbenső fázisának áthelyezése"
 
-#: ../src/gradient-drag.cpp:3175
+#: ../src/gradient-drag.cpp:3167
 msgid "Delete gradient stop(s)"
 msgstr "Színátmenet egy vagy több fázisának törlése"
 
@@ -18878,6 +18881,7 @@ msgid "Y coordinate of mirror line midpoint"
 msgstr "Tükörvonal középpontjának Y koordinátája"
 
 #: ../src/live_effects/lpe-mirror_symmetry.cpp:63
+#: ../share/ui/toolbar-pencil.ui:59 ../share/ui/toolbar-pencil.ui:77
 msgid "Mode"
 msgstr "Üzemmód"
 
@@ -19929,7 +19933,7 @@ msgstr "Legyen-e vonalzóbeosztás az útvonal elején és végén"
 msgid "Show nodes"
 msgstr "Csomópontok megjelenítése"
 
-#: ../src/live_effects/lpe-show_handles.cpp:31 ../share/ui/toolbar-mesh.ui:284
+#: ../src/live_effects/lpe-show_handles.cpp:31 ../share/ui/toolbar-mesh.ui:294
 msgid "Show handles"
 msgstr "Fogantyúk megjelenítése"
 
@@ -20169,7 +20173,7 @@ msgstr "Stílusok visszaállítása"
 
 #: ../src/live_effects/lpe-tangent_to_curve.cpp:60
 #: ../src/ui/widget/registered-widget.cpp:556
-#: ../share/ui/toolbar-calligraphy.ui:374 ../share/extensions/long_shadow.inx:6
+#: ../share/ui/toolbar-calligraphy.ui:328 ../share/extensions/long_shadow.inx:6
 #: ../share/extensions/restack.inx:20
 msgid "Angle:"
 msgstr "Szög:"
@@ -22667,7 +22671,7 @@ msgstr "Oldal _hátrébb helyezése"
 msgid "Move Page _Forward"
 msgstr "Oldal _előrébb helyezése"
 
-#: ../src/ui/contextmenu.cpp:180 ../share/ui/toolbar-commands.ui:990
+#: ../src/ui/contextmenu.cpp:180 ../share/ui/toolbar-commands.ui:758
 msgid "Document Properties..."
 msgstr "Dokumentumbeállítások…"
 
@@ -22922,7 +22926,7 @@ msgstr ""
 "\n"
 "Legyen a fájl Inkscape SVG-ként elmentve?"
 
-#: ../src/ui/desktop/menubar.cpp:187
+#: ../src/ui/desktop/menubar.cpp:186
 msgid "No items found"
 msgstr "Nincsenek talált elemek"
 
@@ -24602,40 +24606,40 @@ msgstr "Stílus"
 msgid "Edit object title"
 msgstr "Objektum címének szerkesztése"
 
-#: ../src/ui/dialog/export-batch.cpp:294
+#: ../src/ui/dialog/export-batch.cpp:341
 msgid "Color used to fill the image background"
 msgstr "Szín a kép hátterének kitöltésére"
 
-#: ../src/ui/dialog/export-batch.cpp:403
+#: ../src/ui/dialog/export-batch.cpp:445
 #, c-format
 msgid "%d Item"
 msgid_plural "%d Items"
 msgstr[0] "%d elem"
 msgstr[1] "%d elem"
 
-#: ../src/ui/dialog/export-batch.cpp:413
+#: ../src/ui/dialog/export-batch.cpp:455
 #, c-format
 msgid "%d Layer"
 msgid_plural "%d Layers"
 msgstr[0] "%d réteg"
 msgstr[1] "%d réteg"
 
-#: ../src/ui/dialog/export-batch.cpp:421
+#: ../src/ui/dialog/export-batch.cpp:464
 #, c-format
 msgid "%d Page"
 msgid_plural "%d Pages"
 msgstr[0] "%d lap"
 msgstr[1] "%d oldal"
 
-#: ../src/ui/dialog/export-batch.cpp:634
+#: ../src/ui/dialog/export-batch.cpp:630
 msgid "No items selected."
 msgstr "Nincs elem kiválasztva."
 
-#: ../src/ui/dialog/export-batch.cpp:646
+#: ../src/ui/dialog/export-batch.cpp:642
 msgid "Can not save to a directory that is actually a file."
 msgstr "Nem lehet olyan mappába menteni, amely valójában egy fájl."
 
-#: ../src/ui/dialog/export-batch.cpp:650
+#: ../src/ui/dialog/export-batch.cpp:646
 #, c-format
 msgid ""
 "<span weight=\"bold\" size=\"larger\">Directory \"%s\" doesn't exist. Create "
@@ -24644,35 +24648,35 @@ msgstr ""
 "<span weight=\"bold\" size=\"larger\">A mappa: „%s” nem létezik. Létrehozzuk?"
 "</span>"
 
-#: ../src/ui/dialog/export-batch.cpp:662
+#: ../src/ui/dialog/export-batch.cpp:658
 msgid "Set Batch Export Options"
 msgstr "Kötegelt exportálási beállítások konfigurálása"
 
-#: ../src/ui/dialog/export-batch.cpp:766 ../src/ui/dialog/export-single.cpp:652
+#: ../src/ui/dialog/export-batch.cpp:762 ../src/ui/dialog/export-single.cpp:640
 msgid "Exporting %1"
 msgstr "%1 exportálása"
 
-#: ../src/ui/dialog/export-batch.cpp:767
+#: ../src/ui/dialog/export-batch.cpp:763
 msgid "Format %1, Selection %2"
 msgstr " %1 formátum, %2 kijelölés"
 
-#: ../src/ui/dialog/export-single.cpp:120
+#: ../src/ui/dialog/export-single.cpp:119
 msgid "Color used to fill background"
 msgstr "Szín a háttér kitöltésére"
 
-#: ../src/ui/dialog/export-single.cpp:627
+#: ../src/ui/dialog/export-single.cpp:615
 msgid "Exporting"
 msgstr "Exportálás"
 
-#: ../src/ui/dialog/export-single.cpp:642
+#: ../src/ui/dialog/export-single.cpp:630
 msgid "Exporting %1 (%2 x %3)"
 msgstr "%1 exportálása %2 x %3)"
 
-#: ../src/ui/dialog/export-single.cpp:710
+#: ../src/ui/dialog/export-single.cpp:698
 msgid "Set Export Options"
 msgstr "Exportálási beállítások"
 
-#: ../src/ui/dialog/export-single.cpp:736
+#: ../src/ui/dialog/export-single.cpp:724
 msgid "Select a filename for exporting"
 msgstr "Adjon meg egy fájlnevet az exportáláshoz"
 
@@ -24809,7 +24813,7 @@ msgid "Export as SVG 1.1 per settings in Preferences dialog"
 msgstr ""
 "Exportálás SVG 1.1-ként a beállítások párbeszédablakban foglaltak szerint"
 
-#: ../src/ui/dialog/filedialogimpl-gtkmm.cpp:474
+#: ../src/ui/dialog/filedialogimpl-gtkmm.cpp:471
 msgid "Guess from extension"
 msgstr "A fájlkiterjesztés határozza meg"
 
@@ -25437,8 +25441,8 @@ msgid "This constant affects the Phong lighting model."
 msgstr "Ez a konstans a Phong világítási modellre van hatással."
 
 #: ../src/ui/dialog/filter-effects-dialog.cpp:3047
-#: ../share/ui/page-properties.glade:253 ../share/ui/toolbar-pencil.ui:410
-#: ../share/ui/toolbar-spray.ui:386
+#: ../share/ui/page-properties.glade:253 ../share/ui/toolbar-pencil.ui:420
+#: ../share/ui/toolbar-spray.ui:320
 #: ../share/extensions/render_alphabetsoup.inx:7
 msgid "Scale:"
 msgstr "Méretezés:"
@@ -25613,7 +25617,7 @@ msgstr "_Aktuális réteg"
 msgid "Sele_ction"
 msgstr "_Kijelölés"
 
-#: ../src/ui/dialog/find.cpp:66 ../share/ui/dialog-text-edit.glade:206
+#: ../src/ui/dialog/find.cpp:66 ../share/ui/dialog-text-edit.glade:203
 #: ../share/ui/menus.ui:1098
 msgid "_Text"
 msgstr "Szö_veg"
@@ -25786,7 +25790,7 @@ msgstr "Attribútum értéke"
 msgid "Search style"
 msgstr "Keresés stílusra"
 
-#: ../src/ui/dialog/find.cpp:186 ../share/ui/dialog-text-edit.glade:74
+#: ../src/ui/dialog/find.cpp:186 ../share/ui/dialog-text-edit.glade:89
 msgid "Search fonts"
 msgstr "Keresés betűkészletre"
 
@@ -25897,7 +25901,7 @@ msgid "Select a property"
 msgstr "Tulajdonság kijelölése"
 
 #: ../src/ui/dialog/font-collections-manager.cpp:54
-#: ../share/ui/dialog-text-edit.glade:104 ../share/ui/toolbar-text.ui:77
+#: ../share/ui/dialog-text-edit.glade:101 ../share/ui/toolbar-text.ui:74
 msgid "Font Collections"
 msgstr "Betűkészlet-gyűjtemények"
 
@@ -25983,7 +25987,6 @@ msgid "Load color palette"
 msgstr "Színpaletta betöltése"
 
 #: ../src/ui/dialog/glyphs.cpp:47 ../src/ui/dialog/glyphs.cpp:214
-#: ../share/ui/extension-pdfinput.glade:414
 msgid "all"
 msgstr "összes"
 
@@ -26955,7 +26958,7 @@ msgstr "Rácsra való igazítás"
 #: ../src/ui/widget/registered-widget.cpp:559
 #: ../share/ui/object-attributes.glade:1124
 #: ../share/ui/page-properties.glade:282 ../share/ui/statusbar.ui:141
-#: ../share/ui/toolbar-node.ui:433 ../share/ui/toolbar-select.ui:453
+#: ../share/ui/toolbar-node.ui:443 ../share/ui/toolbar-select.ui:349
 msgid "X:"
 msgstr "X:"
 
@@ -26967,7 +26970,7 @@ msgstr "Vízszintes helykihagyás az oszlopok közt"
 #: ../src/ui/widget/registered-widget.cpp:560
 #: ../share/ui/object-attributes.glade:1098
 #: ../share/ui/page-properties.glade:297 ../share/ui/statusbar.ui:152
-#: ../share/ui/toolbar-node.ui:464 ../share/ui/toolbar-select.ui:484
+#: ../share/ui/toolbar-node.ui:474 ../share/ui/toolbar-select.ui:374
 msgid "Y:"
 msgstr "Y:"
 
@@ -28250,7 +28253,8 @@ msgid "Reset font size to 100%"
 msgstr "Betűméret visszaállítása 100%-ra"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:1709
-#: ../share/ui/dialog-text-edit.glade:236 ../share/ui/dialog-trace.glade:1290
+#: ../share/ui/dialog-text-edit.glade:233 ../share/ui/dialog-trace.glade:1290
+#: ../share/ui/toolbar-spray.ui:449
 msgid "Apply"
 msgstr "Alkalmazás"
 
@@ -28367,7 +28371,7 @@ msgid "This preference fixes icon positions in menus."
 msgstr "Ez a beállítás helyrehozza az ikonok pozícióját a menükben."
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:1836
-#: ../share/ui/toolbar-commands.ui:879
+#: ../share/ui/toolbar-commands.ui:666
 msgid "XML Editor"
 msgstr "XML-szerkesztő"
 
@@ -29620,28 +29624,28 @@ msgid "Preserved"
 msgstr "Megőrizve"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2578
-#: ../share/ui/toolbar-select.ui:375
+#: ../share/ui/toolbar-select.ui:474
 msgid "When scaling objects, scale the stroke width by the same proportion"
 msgstr ""
 "Objektumok átméretezésekor a körvonalszélesség is legyen – azonos arányban – "
 "átméretezve"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2580
-#: ../share/ui/toolbar-select.ui:392
+#: ../share/ui/toolbar-select.ui:488
 msgid "When scaling rectangles, scale the radii of rounded corners"
 msgstr ""
 "Téglalapok átméretezésekor a lekerekített csúcsok sugarai is legyenek "
 "átméretezve"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2582
-#: ../share/ui/toolbar-select.ui:409
+#: ../share/ui/toolbar-select.ui:502
 msgid "Move gradients (in fill or stroke) along with the objects"
 msgstr ""
 "Színátmenetek áthelyezése (kitöltésben vagy körvonalban) az objektumokkal "
 "együtt"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2584
-#: ../share/ui/toolbar-select.ui:426
+#: ../share/ui/toolbar-select.ui:516
 msgid "Move patterns (in fill or stroke) along with the objects"
 msgstr ""
 "Minták áthelyezése (kitöltésben vagy körvonalban) az objektumokkal együtt"
@@ -31704,15 +31708,15 @@ msgstr "Átlátszatlanság módosítása"
 msgid "Change blend mode"
 msgstr "Színkeverési mód módosítása"
 
-#: ../src/ui/dialog/objects.cpp:1226 ../src/ui/dialog/objects.cpp:1484
+#: ../src/ui/dialog/objects.cpp:1226 ../src/ui/dialog/objects.cpp:1493
 msgid "Toggle item visibility"
 msgstr "Elem láthatóságának átváltása"
 
-#: ../src/ui/dialog/objects.cpp:1293 ../src/ui/dialog/objects.cpp:1488
+#: ../src/ui/dialog/objects.cpp:1293 ../src/ui/dialog/objects.cpp:1497
 msgid "Toggle item locking"
 msgstr "Elem zárolásának átváltása"
 
-#: ../src/ui/dialog/objects.cpp:1425
+#: ../src/ui/dialog/objects.cpp:1434
 msgid ""
 "<b>Hold ALT</b> while hovering over item to highlight, <b>hold SHIFT</b> and "
 "click to hide/lock all."
@@ -31720,11 +31724,11 @@ msgstr ""
 "<b>ALT billentyű lenyomva</b> az elem felett: kiemelés, <b>SHIFT billentyű "
 "lenyomva</b> és kattintás: összes elrejtése/zárolása."
 
-#: ../src/ui/dialog/objects.cpp:1653
+#: ../src/ui/dialog/objects.cpp:1663
 msgid "Rename object"
 msgstr "Objektum átnevezése"
 
-#: ../src/ui/dialog/objects.cpp:1814
+#: ../src/ui/dialog/objects.cpp:1824
 msgid "Move items"
 msgstr "Elemek mozgatása"
 
@@ -32377,7 +32381,7 @@ msgstr "AaÁáBbCcÉéIiÍíÓóÖöŐőPpQqÚúÜüŰű12369$€¢?.;/()"
 msgid "Collections"
 msgstr "Gyűjtemények"
 
-#: ../src/ui/dialog/text-edit.cpp:512 ../src/ui/dialog/text-edit.cpp:515
+#: ../src/ui/dialog/text-edit.cpp:521 ../src/ui/dialog/text-edit.cpp:524
 #: ../src/ui/tools/text-tool.cpp:1407
 msgid "Set text style"
 msgstr "Szövegstílus beállítása"
@@ -33493,22 +33497,22 @@ msgctxt "Status line hint"
 msgid "Move handle by %s, %s; angle %.2f°, length %s"
 msgstr "Fogantyú mozgatása ennyivel: %s, %s; szög: %.2f°, hossz: %s"
 
-#: ../src/ui/tool/node.cpp:1565
+#: ../src/ui/tool/node.cpp:1576
 msgctxt "Path node tip"
 msgid "node handle"
 msgstr "csomópont fogantyúja"
 
-#: ../src/ui/tool/node.cpp:1578
+#: ../src/ui/tool/node.cpp:1589
 msgctxt "Path node tip"
 msgid "<b>Shift</b>: drag out a handle, click to toggle selection"
 msgstr "<b>Shift</b>: fogantyú kihúzása; kijelölés átváltása: kattintással"
 
-#: ../src/ui/tool/node.cpp:1582
+#: ../src/ui/tool/node.cpp:1593
 msgctxt "Path node tip"
 msgid "<b>Shift</b>: click to toggle selection"
 msgstr "<b>Shift</b>: kijelölés átváltása kattintással"
 
-#: ../src/ui/tool/node.cpp:1589
+#: ../src/ui/tool/node.cpp:1600
 msgctxt "Path node tip"
 msgid ""
 "<b>Ctrl+Alt</b>: move along handle lines or line segment, click to delete "
@@ -33517,26 +33521,26 @@ msgstr ""
 "<b>Ctrl+Alt</b>: mozgatás a fogantyú-vonalak vagy vonalszakasz mentén; "
 "csomópontok törlése: kattintással"
 
-#: ../src/ui/tool/node.cpp:1593
+#: ../src/ui/tool/node.cpp:1604
 msgctxt "Path node tip"
 msgid "<b>Ctrl</b>: move along axes, click to change node type"
 msgstr ""
 "<b>Ctrl</b>: mozgatás a tengelyek mentén; csomópont-típus módosítása: "
 "kattintással"
 
-#: ../src/ui/tool/node.cpp:1599
+#: ../src/ui/tool/node.cpp:1610
 msgctxt "Path node tip"
 msgid "<b>Alt</b>: sculpt nodes"
 msgstr "<b>Alt</b>: csomópontok megformázása"
 
-#: ../src/ui/tool/node.cpp:1610
+#: ../src/ui/tool/node.cpp:1621
 #, c-format
 msgctxt "Path node tip"
 msgid "<b>%s</b>: drag to shape the path. (more: Shift, Ctrl, Alt)"
 msgstr ""
 "<b>%s</b>. Az útvonal alakítása: húzással. (Továbbiak: Shift, Ctrl, Alt.)"
 
-#: ../src/ui/tool/node.cpp:1617
+#: ../src/ui/tool/node.cpp:1628
 #, c-format
 msgctxt "Path node tip"
 msgid ""
@@ -33546,7 +33550,7 @@ msgstr ""
 "<b>B-spline csomópont</b> (%.3g erő). Az útvonal alakítása: húzással "
 "(továbbiak: Shift, Ctrl, Alt)."
 
-#: ../src/ui/tool/node.cpp:1625
+#: ../src/ui/tool/node.cpp:1636
 #, c-format
 msgctxt "Path node tip"
 msgid ""
@@ -33556,7 +33560,7 @@ msgstr ""
 "<b>%s</b>. Az útvonal alakítása: húzással. Méretezési/elforgatási "
 "vezérlőelemek átváltása: kattintással.(Továbbiak: Shift, Ctrl, Alt)."
 
-#: ../src/ui/tool/node.cpp:1634
+#: ../src/ui/tool/node.cpp:1645
 #, c-format
 msgctxt "Path node tip"
 msgid ""
@@ -33566,7 +33570,7 @@ msgstr ""
 "<b>%s</b>. Az útvonal alakítása: húzással. Csak ezen csomópont kijelölése: "
 "kattintással. (Továbbiak: Shift, Ctrl, Alt.)"
 
-#: ../src/ui/tool/node.cpp:1642
+#: ../src/ui/tool/node.cpp:1653
 #, c-format
 msgctxt "Path node tip"
 msgid ""
@@ -33576,21 +33580,21 @@ msgstr ""
 "<b>B-spline csomópont</b> (%.3g erő). Az útvonal alakítása: húzással. Csak "
 "ezen csomópont kijelölése: kattintással. (Továbbiak: Shift, Ctrl, Alt.)"
 
-#: ../src/ui/tool/node.cpp:1661
+#: ../src/ui/tool/node.cpp:1672
 #, c-format
 msgctxt "Path node tip"
 msgid "Move node by %s, %s"
 msgstr "Csomópont mozgatása ennyivel: %s, %s"
 
-#: ../src/ui/tool/node.cpp:1672
+#: ../src/ui/tool/node.cpp:1683
 msgid "Corner node"
 msgstr "Sarok-csomópont"
 
-#: ../src/ui/tool/node.cpp:1676
+#: ../src/ui/tool/node.cpp:1687
 msgid "Symmetric node"
 msgstr "Szimmetrikus csomópont"
 
-#: ../src/ui/tool/node.cpp:1678
+#: ../src/ui/tool/node.cpp:1689
 msgid "Auto-smooth node"
 msgstr "Automatikus íves csomópont"
 
@@ -33977,11 +33981,11 @@ msgstr ""
 msgid "Set mesh type"
 msgstr "Háló típusának módosítása"
 
-#: ../src/ui/toolbar/page-toolbar.cpp:144
+#: ../src/ui/toolbar/page-toolbar.cpp:129
 msgid "ex.: 100x100cm"
 msgstr "pl.: 100×100 cm"
 
-#: ../src/ui/toolbar/page-toolbar.cpp:145
+#: ../src/ui/toolbar/page-toolbar.cpp:130
 msgid ""
 "Type in width & height of a page. (ex.: 15x10cm, 10in x 100mm)\n"
 "or choose preset from dropdown."
@@ -33989,38 +33993,38 @@ msgstr ""
 "Írja be az oldal szélességét és magasságát (pl.: 15x10 cm, 10 in x 100 mm) "
 "vagy válasszon egy előre beállított értéket a legördülő menüből."
 
-#: ../src/ui/toolbar/page-toolbar.cpp:152
-#: ../src/ui/toolbar/page-toolbar.cpp:324
+#: ../src/ui/toolbar/page-toolbar.cpp:137
+#: ../src/ui/toolbar/page-toolbar.cpp:309
 msgid "Resize Page"
 msgstr "Oldal átméretezése"
 
-#: ../src/ui/toolbar/page-toolbar.cpp:243
+#: ../src/ui/toolbar/page-toolbar.cpp:228
 msgid "Relabel Page"
 msgstr "Oldal átcímkézése "
 
-#: ../src/ui/toolbar/page-toolbar.cpp:257
+#: ../src/ui/toolbar/page-toolbar.cpp:242
 msgid "Edit page bleed"
 msgstr "Oldalkifutó szerkesztése"
 
-#: ../src/ui/toolbar/page-toolbar.cpp:272
-#: ../src/ui/toolbar/page-toolbar.cpp:301
+#: ../src/ui/toolbar/page-toolbar.cpp:257
+#: ../src/ui/toolbar/page-toolbar.cpp:286
 msgid "Edit page margin"
 msgstr "Oldalmargó szerkesztése"
 
-#: ../src/ui/toolbar/page-toolbar.cpp:460
+#: ../src/ui/toolbar/page-toolbar.cpp:445
 msgid "Page label"
 msgstr "Oldal címkéje"
 
 #. TRANSLATORS: "%1" is replaced with the page we are on, and "%2" is the total number of pages.
-#: ../src/ui/toolbar/page-toolbar.cpp:477
+#: ../src/ui/toolbar/page-toolbar.cpp:462
 msgid "%1/%2"
 msgstr "%1/%2"
 
-#: ../src/ui/toolbar/page-toolbar.cpp:491
+#: ../src/ui/toolbar/page-toolbar.cpp:476
 msgid "Single Page Document"
 msgstr "Egyoldalas dokumentum"
 
-#: ../src/ui/toolbar/page-toolbar.cpp:492 ../share/ui/toolbar-page.ui:192
+#: ../src/ui/toolbar/page-toolbar.cpp:477 ../share/ui/toolbar-page.ui:160
 msgid "1/-"
 msgstr "1/-"
 
@@ -34041,7 +34045,7 @@ msgstr "Tompa"
 msgid "Caps"
 msgstr "Vonalvég"
 
-#: ../src/ui/toolbar/pencil-toolbar.cpp:163 ../share/ui/toolbar-pencil.ui:298
+#: ../src/ui/toolbar/pencil-toolbar.cpp:163 ../share/ui/toolbar-pencil.ui:308
 msgid "Line endings when drawing with pressure-sensitive PowerPencil"
 msgstr "Vonalvégződések nyomásérzékeny okos ceruzával való rajzoláskor"
 
@@ -34070,7 +34074,7 @@ msgstr "Hajlítás a vágólapról"
 msgid "Last applied"
 msgstr "Legutóbb alkalmazott"
 
-#: ../src/ui/toolbar/pencil-toolbar.cpp:197 ../share/ui/toolbar-pencil.ui:397
+#: ../src/ui/toolbar/pencil-toolbar.cpp:197 ../share/ui/toolbar-pencil.ui:407
 msgid "Shape of new paths drawn by this tool"
 msgstr "Az ezen eszközzel rajzolt új útvonalak alakja"
 
@@ -36021,25 +36025,25 @@ msgstr "Elmosás (%)"
 msgid "Opacity (%)"
 msgstr "Átlátszatlanság (%)"
 
-#: ../src/ui/widget/font-collection-selector.cpp:477
+#: ../src/ui/widget/font-collection-selector.cpp:465
 msgid "Are you sure want to delete the \"%1\" font collection?\n"
 msgstr "Biztosan törölni kívánja ezt a betűkészlet-gyűjteményt: „%1”?\n"
 
-#: ../src/ui/widget/font-list.cpp:106
+#: ../src/ui/widget/font-list.cpp:105
 msgid "Sans Serif"
 msgstr "Talp nélküli"
 
-#: ../src/ui/widget/font-list.cpp:808
+#: ../src/ui/widget/font-list.cpp:818
 msgctxt "N-of-fonts"
 msgid "All fonts"
 msgstr "Összes betűkészlet"
 
-#: ../src/ui/widget/font-list.cpp:808
+#: ../src/ui/widget/font-list.cpp:818
 msgctxt "N-of-fonts"
 msgid "of"
 msgstr "/"
 
-#: ../src/ui/widget/font-list.cpp:808
+#: ../src/ui/widget/font-list.cpp:818
 msgctxt "N-of-fonts"
 msgid "fonts"
 msgstr "betűkészlet"
@@ -38140,23 +38144,23 @@ msgstr "Effektus eltávolítása"
 msgid "Show all filter input sources"
 msgstr "Összes bemeneti szűrőforrás megjelenítése"
 
-#: ../share/ui/dialog-font-collections.glade:17
+#: ../share/ui/dialog-font-collections.glade:32
 msgid "Search fonts present in the font list"
 msgstr "Betűkészlet keresése a betűkészletek listájában"
 
-#: ../share/ui/dialog-font-collections.glade:28
+#: ../share/ui/dialog-font-collections.glade:48
 msgid "Reset the font list"
 msgstr "Betűkészletlista visszaállítása"
 
-#: ../share/ui/dialog-font-collections.glade:78
+#: ../share/ui/dialog-font-collections.glade:107
 msgid "Create new collection"
 msgstr "Új gyűjtemény létrehozása"
 
-#: ../share/ui/dialog-font-collections.glade:86
+#: ../share/ui/dialog-font-collections.glade:120
 msgid "Edit selected collection"
 msgstr "Kijelölt gyűjtemény szerkesztése"
 
-#: ../share/ui/dialog-font-collections.glade:98
+#: ../share/ui/dialog-font-collections.glade:134
 msgid "Delete selected item"
 msgstr "Kijelölt elem törlése"
 
@@ -38319,7 +38323,7 @@ msgstr ""
 "A kiválasztott szimbólumot objektummá, és az összes ilyen típusú szimbólumot "
 "ennek az objektumnak a klónjává alakítja"
 
-#: ../share/ui/dialog-text-edit.glade:37 ../share/ui/toolbar-text.ui:84
+#: ../share/ui/dialog-text-edit.glade:37 ../share/ui/toolbar-text.ui:81
 msgid "Open Collections Editor"
 msgstr "Gyűjteményszerkesztő megnyitása"
 
@@ -38327,19 +38331,23 @@ msgstr "Gyűjteményszerkesztő megnyitása"
 msgid "Open the Font Collections Manager dialogue"
 msgstr "Betűkészlet-gyűjtemények kezelése párbeszédablak megnyitása"
 
-#: ../share/ui/dialog-text-edit.glade:85
+#: ../share/ui/dialog-text-edit.glade:50
+msgid "Clear all filters"
+msgstr "Összes szűrő törlése"
+
+#: ../share/ui/dialog-text-edit.glade:54
 msgid "Reset filters and show all available fonts"
 msgstr "Szűrő törlése és minden elérhető betűkészlet megjelenítése"
 
-#: ../share/ui/dialog-text-edit.glade:143
+#: ../share/ui/dialog-text-edit.glade:140
 msgid "_Font"
 msgstr "_Betűkészlet"
 
-#: ../share/ui/dialog-text-edit.glade:176
+#: ../share/ui/dialog-text-edit.glade:173
 msgid "_Features"
 msgstr "Képességek"
 
-#: ../share/ui/dialog-text-edit.glade:227
+#: ../share/ui/dialog-text-edit.glade:224
 msgid "Set as _default"
 msgstr "Beállítás a_lapértelmezésnek"
 
@@ -38839,23 +38847,23 @@ msgstr "Összes PDF-betűkészlet felsorolása"
 msgid "Embed Images"
 msgstr "Képek beágyazása"
 
-#: ../share/ui/extension-pdfinput.glade:322
+#: ../share/ui/extension-pdfinput.glade:337
 msgid "Precision of approximating gradient meshes:"
 msgstr "A színátmenet-hálók közelítési pontossága:"
 
-#: ../share/ui/extension-pdfinput.glade:352
+#: ../share/ui/extension-pdfinput.glade:367
 msgid "rough"
 msgstr "durva"
 
-#: ../share/ui/extension-pdfinput.glade:385
+#: ../share/ui/extension-pdfinput.glade:400
 msgid "Fonts:"
 msgstr "Betűkészletek:"
 
-#: ../share/ui/extension-pdfinput.glade:399
+#: ../share/ui/extension-pdfinput.glade:414
 msgid "Pages:"
 msgstr "Oldalak:"
 
-#: ../share/ui/extension-pdfinput.glade:412
+#: ../share/ui/extension-pdfinput.glade:427
 msgid ""
 "Type in the page range you want to import using the format 1-4 or 1,2,3,4 or "
 "the keyword 'all' to specifiy all pages."
@@ -38863,15 +38871,15 @@ msgstr ""
 "Adja meg az importálni kívánt oldaltartományt 1-4 vagy 1,2,3,4 formátumban, "
 "vagy az „all” kulcsszót az összes oldal megadásához."
 
-#: ../share/ui/extension-pdfinput.glade:427
+#: ../share/ui/extension-pdfinput.glade:442
 msgid "Clip to:"
 msgstr "Vágás erre:"
 
-#: ../share/ui/extension-pdfinput.glade:460
+#: ../share/ui/extension-pdfinput.glade:475
 msgid "<b>Internal import</b>"
 msgstr "<b>Belső importálás</b>"
 
-#: ../share/ui/extension-pdfinput.glade:477
+#: ../share/ui/extension-pdfinput.glade:492
 msgid ""
 "<i>Import via external library. Text consists of groups containing cloned "
 "glyphs where each glyph is a path. Images are stored internally. Meshes "
@@ -38881,7 +38889,7 @@ msgstr ""
 "klónozott útvonalak csoportjaiból állnak. A képek belsőleg tárolódnak. A "
 "hálók miatt az egész dokumentum raszteres képként lesz leképezve.</i>"
 
-#: ../share/ui/extension-pdfinput.glade:490
+#: ../share/ui/extension-pdfinput.glade:505
 msgid "<b>Cairo import</b>"
 msgstr "<b>Cairo importálás</b>"
 
@@ -39002,7 +39010,7 @@ msgctxt "loading-fonts"
 msgid "Initializing"
 msgstr "Indítás"
 
-#: ../share/ui/gradient-edit.glade:70 ../share/ui/toolbar-gradient.ui:206
+#: ../share/ui/gradient-edit.glade:70 ../share/ui/toolbar-gradient.ui:216
 msgid "Reverse the direction of the gradient"
 msgstr "Színátmenet irányának megfordítása"
 
@@ -39014,15 +39022,15 @@ msgstr "Színátmenet forgatása 90°-kal"
 msgid "Stop Offset:"
 msgstr "Fáziseltolás:"
 
-#: ../share/ui/gradient-edit.glade:151 ../share/ui/toolbar-gradient.ui:252
+#: ../share/ui/gradient-edit.glade:151 ../share/ui/toolbar-gradient.ui:262
 msgid "Offset of selected stop"
 msgstr "Kijelölt fázis eltolása"
 
-#: ../share/ui/gradient-edit.glade:226 ../share/ui/toolbar-gradient.ui:284
+#: ../share/ui/gradient-edit.glade:226 ../share/ui/toolbar-gradient.ui:294
 msgid "Insert new stop"
 msgstr "Új fázis beszúrása"
 
-#: ../share/ui/gradient-edit.glade:235 ../share/ui/toolbar-gradient.ui:302
+#: ../share/ui/gradient-edit.glade:235 ../share/ui/toolbar-gradient.ui:312
 msgid "Delete stop"
 msgstr "Fázis törlése"
 
@@ -39403,7 +39411,7 @@ msgstr "Sugarak"
 
 #: ../share/ui/object-attributes.glade:119
 #: ../share/ui/object-attributes.glade:512 ../share/ui/toolbar-arc.ui:87
-#: ../share/ui/toolbar-rect.ui:133
+#: ../share/ui/toolbar-rect.ui:143
 msgid "Rx:"
 msgstr "Rx:"
 
@@ -39413,7 +39421,7 @@ msgstr "Kör, ellipszis vagy körív vízszintes sugara"
 
 #: ../share/ui/object-attributes.glade:146
 #: ../share/ui/object-attributes.glade:539 ../share/ui/toolbar-arc.ui:126
-#: ../share/ui/toolbar-rect.ui:164
+#: ../share/ui/toolbar-rect.ui:174
 msgid "Ry:"
 msgstr "Ry:"
 
@@ -39421,39 +39429,39 @@ msgstr "Ry:"
 msgid "Vertical radius of the circle, ellipse, or arc"
 msgstr "Kör, ellipszis vagy körív függőleges sugara"
 
-#: ../share/ui/object-attributes.glade:174
+#: ../share/ui/object-attributes.glade:174 ../share/ui/toolbar-arc.ui:192
 msgid "Angles"
 msgstr "Szögek"
 
-#: ../share/ui/object-attributes.glade:187 ../share/ui/toolbar-arc.ui:210
+#: ../share/ui/object-attributes.glade:187 ../share/ui/toolbar-arc.ui:219
 msgid "Start:"
 msgstr "Kezdet:"
 
-#: ../share/ui/object-attributes.glade:198 ../share/ui/toolbar-arc.ui:253
+#: ../share/ui/object-attributes.glade:198 ../share/ui/toolbar-arc.ui:262
 msgid "End:"
 msgstr "Vég:"
 
-#: ../share/ui/object-attributes.glade:209 ../share/ui/toolbar-arc.ui:205
+#: ../share/ui/object-attributes.glade:209 ../share/ui/toolbar-arc.ui:214
 msgid "The angle (in degrees) from the horizontal to the arc's start point"
 msgstr "Az ellipszisív kezdőpontjának szöge a vízszintestől számítva (fokban)"
 
-#: ../share/ui/object-attributes.glade:224 ../share/ui/toolbar-arc.ui:248
+#: ../share/ui/object-attributes.glade:224 ../share/ui/toolbar-arc.ui:257
 msgid "The angle (in degrees) from the horizontal to the arc's end point"
 msgstr "Az ellipszisív végpontjának szöge a vízszintestől számítva (fokban)"
 
-#: ../share/ui/object-attributes.glade:245 ../share/ui/toolbar-arc.ui:325
+#: ../share/ui/object-attributes.glade:245 ../share/ui/toolbar-arc.ui:343
 msgid "Switch to slice (closed shape with two radii)"
 msgstr "Váltás szeletre (zárt alakzat két sugárral)"
 
-#: ../share/ui/object-attributes.glade:266 ../share/ui/toolbar-arc.ui:351
+#: ../share/ui/object-attributes.glade:266 ../share/ui/toolbar-arc.ui:369
 msgid "Switch to arc (unclosed shape)"
 msgstr "Váltás ellipszisívre (lezáratlan alakzat)"
 
-#: ../share/ui/object-attributes.glade:288 ../share/ui/toolbar-arc.ui:377
+#: ../share/ui/object-attributes.glade:288 ../share/ui/toolbar-arc.ui:395
 msgid "Switch to chord (closed shape)"
 msgstr "Váltás húrra (zárt alakzat)"
 
-#: ../share/ui/object-attributes.glade:324 ../share/ui/toolbar-arc.ui:414
+#: ../share/ui/object-attributes.glade:324 ../share/ui/toolbar-arc.ui:432
 msgid "Make the shape a whole ellipse, not arc or segment"
 msgstr "Az alakzat teljes ellipszissé tétele (hogy ne ív illetve cikk legyen)"
 
@@ -39470,7 +39478,7 @@ msgstr "Méretek"
 
 #: ../share/ui/object-attributes.glade:444
 #: ../share/ui/object-attributes.glade:1159 ../share/ui/toolbar-rect.ui:56
-#: ../share/ui/toolbar-select.ui:516
+#: ../share/ui/toolbar-select.ui:400
 msgid "W:"
 msgstr "Sz:"
 
@@ -39480,7 +39488,7 @@ msgstr "Téglalap szélessége (körvonal nélkül)"
 
 #: ../share/ui/object-attributes.glade:471
 #: ../share/ui/object-attributes.glade:1185 ../share/ui/toolbar-rect.ui:85
-#: ../share/ui/toolbar-select.ui:565
+#: ../share/ui/toolbar-select.ui:440
 msgctxt "Abbreviation of Height"
 msgid "H:"
 msgstr "V:"
@@ -39493,17 +39501,17 @@ msgstr "Téglalap magassága (körvonal nélkül)"
 msgid "Corner radius"
 msgstr "Sarok sugara"
 
-#: ../share/ui/object-attributes.glade:523 ../share/ui/toolbar-rect.ui:129
+#: ../share/ui/object-attributes.glade:523 ../share/ui/toolbar-rect.ui:139
 msgid "Horizontal radius of rounded corners"
 msgstr "A lekerekített csúcsok vízszintes sugara"
 
-#: ../share/ui/object-attributes.glade:550 ../share/ui/toolbar-rect.ui:160
+#: ../share/ui/object-attributes.glade:550 ../share/ui/toolbar-rect.ui:170
 msgid "Vertical radius of rounded corners"
 msgstr "A lekerekített csúcsok függőleges sugara"
 
-#: ../share/ui/object-attributes.glade:571 ../share/ui/toolbar-page.ui:86
-#: ../share/ui/toolbar-page.ui:172 ../share/ui/toolbar-page.ui:206
-#: ../share/ui/toolbar-page.ui:238 ../share/ui/toolbar-rect.ui:213
+#: ../share/ui/object-attributes.glade:571 ../share/ui/toolbar-page.ui:76
+#: ../share/ui/toolbar-page.ui:143 ../share/ui/toolbar-page.ui:171
+#: ../share/ui/toolbar-page.ui:200 ../share/ui/toolbar-rect.ui:223
 msgid "Make corners sharp"
 msgstr "A csúcsok szögletessé tétele"
 
@@ -39515,11 +39523,11 @@ msgstr "Sarkon legyenek függetlenek (útvonaleffektus)"
 msgid "Corner:"
 msgstr "Sarok:"
 
-#: ../share/ui/object-attributes.glade:749 ../share/ui/toolbar-star.ui:197
+#: ../share/ui/object-attributes.glade:749 ../share/ui/toolbar-star.ui:207
 msgid "Rounded:"
 msgstr "Lekerekítettség:"
 
-#: ../share/ui/object-attributes.glade:761 ../share/ui/toolbar-star.ui:228
+#: ../share/ui/object-attributes.glade:761 ../share/ui/toolbar-star.ui:238
 msgid "Randomized:"
 msgstr "Véletlenszerűség:"
 
@@ -39527,12 +39535,12 @@ msgstr "Véletlenszerűség:"
 msgid "Number of corners of a polygon or star"
 msgstr "A sokszög illetve csillag csúcsainak száma"
 
-#: ../share/ui/object-attributes.glade:786 ../share/ui/toolbar-star.ui:193
+#: ../share/ui/object-attributes.glade:786 ../share/ui/toolbar-star.ui:203
 msgid "How rounded are the corners (0 for sharp)"
 msgstr "Mennyire lekerekítettek a sarkok (0: hegyesek)"
 
 #: ../share/ui/object-attributes.glade:801 ../share/ui/toolbar-lpe.ui:296
-#: ../share/ui/toolbar-star.ui:224
+#: ../share/ui/toolbar-star.ui:234
 msgid "Scatter randomly the corners and angles"
 msgstr "A csúcsok és a szögek véletlenszerű elrendezése"
 
@@ -40694,25 +40702,25 @@ msgid ""
 msgstr ""
 "A z irányú távlatpont átváltása „véges” és „végtelen” (azaz párhuzamos) közt"
 
-#: ../share/ui/toolbar-calligraphy.ui:114
+#: ../share/ui/toolbar-calligraphy.ui:124
 msgid "Choose a preset"
 msgstr "Válasszon előbeállítást"
 
-#: ../share/ui/toolbar-calligraphy.ui:129
+#: ../share/ui/toolbar-calligraphy.ui:136
 msgid "Add or edit calligraphic profile"
 msgstr "Művészi profil hozzáadása vagy szerkesztése"
 
-#: ../share/ui/toolbar-calligraphy.ui:175
+#: ../share/ui/toolbar-calligraphy.ui:157
 msgid "The width of the calligraphic pen (relative to the visible canvas area)"
 msgstr ""
 "A művészi toll szélessége (a látható rajzvászon-területhez viszonyítva)"
 
-#: ../share/ui/toolbar-calligraphy.ui:221 ../share/ui/toolbar-eraser.ui:169
+#: ../share/ui/toolbar-calligraphy.ui:188 ../share/ui/toolbar-eraser.ui:169
 msgid "Use the pressure of the input device to alter the width of the pen"
 msgstr ""
 "A beviteli eszköz nyomásának használata a tollszélesség változtatásához"
 
-#: ../share/ui/toolbar-calligraphy.ui:241
+#: ../share/ui/toolbar-calligraphy.ui:202
 msgid ""
 "Trace the lightness of the background by the width of the pen (white - "
 "minimum width, black - maximum width)"
@@ -40720,7 +40728,15 @@ msgstr ""
 "A háttér fényességének követése a toll szélességével (fehér: minimális "
 "szélesség, fekete: maximális szélesség)"
 
-#: ../share/ui/toolbar-calligraphy.ui:279 ../share/ui/toolbar-eraser.ui:185
+#: ../share/ui/toolbar-calligraphy.ui:225
+#: ../share/ui/toolbar-calligraphy.ui:307
+#: ../share/ui/toolbar-calligraphy.ui:413 ../share/ui/toolbar-eraser.ui:223
+#: ../share/ui/toolbar-paintbucket.ui:58 ../share/ui/toolbar-spray.ui:368
+#: ../share/ui/toolbar-star.ui:184
+msgid "Parameters"
+msgstr "Paraméterek"
+
+#: ../share/ui/toolbar-calligraphy.ui:241 ../share/ui/toolbar-eraser.ui:185
 msgid ""
 "How much velocity thins the stroke (> 0 makes fast strokes thinner, < 0 "
 "makes them broader, 0 makes width independent of velocity)"
@@ -40729,20 +40745,20 @@ msgstr ""
 "gyors vonalhúzás keskenyebb vonalat eredményez; ha 0-nál kisebb, akkor "
 "szélesebbet; 0 esetén pedig nem függ a szélesség a sebességtől)"
 
-#: ../share/ui/toolbar-calligraphy.ui:283 ../share/ui/toolbar-eraser.ui:189
+#: ../share/ui/toolbar-calligraphy.ui:245 ../share/ui/toolbar-eraser.ui:189
 msgid "Thinning:"
 msgstr "Keskenyítés:"
 
-#: ../share/ui/toolbar-calligraphy.ui:310
+#: ../share/ui/toolbar-calligraphy.ui:266
 msgid "Increase to make the pen drag behind, as if slowed by inertia"
 msgstr ""
 "Nagyobb érték esetén a toll mozgása vontatott, mintha tehetetlenség lassítaná"
 
-#: ../share/ui/toolbar-calligraphy.ui:314 ../share/ui/toolbar-eraser.ui:298
+#: ../share/ui/toolbar-calligraphy.ui:270 ../share/ui/toolbar-eraser.ui:308
 msgid "Mass:"
 msgstr "Tömeg:"
 
-#: ../share/ui/toolbar-calligraphy.ui:369
+#: ../share/ui/toolbar-calligraphy.ui:323
 msgid ""
 "The angle of the pen's nib (in degrees; 0 = horizontal; has no effect if "
 "fixation = 0)"
@@ -40750,27 +40766,27 @@ msgstr ""
 "A toll hegyének szöge (fokban; 0 fok esetén vízszintes; ha a rögzítettség "
 "értéke 0, akkor nincs hatása)"
 
+#: ../share/ui/toolbar-calligraphy.ui:337
 #: ../share/ui/toolbar-calligraphy.ui:383
-#: ../share/ui/toolbar-calligraphy.ui:438
-#: ../share/ui/toolbar-calligraphy.ui:480
-#: ../share/ui/toolbar-calligraphy.ui:521
-#: ../share/ui/toolbar-calligraphy.ui:553 ../share/ui/toolbar-connector.ui:129
-#: ../share/ui/toolbar-connector.ui:176 ../share/ui/toolbar-eraser.ui:306
-#: ../share/ui/toolbar-measure.ui:434 ../share/ui/toolbar-pencil.ui:254
-#: ../share/ui/toolbar-pencil.ui:282 ../share/ui/toolbar-pencil.ui:327
-#: ../share/ui/toolbar-pencil.ui:418 ../share/ui/toolbar-spray.ui:306
-#: ../share/ui/toolbar-spray.ui:476 ../share/ui/toolbar-spray.ui:615
-#: ../share/ui/toolbar-text.ui:784 ../share/ui/toolbar-tweak.ui:368
-#: ../share/ui/toolbar-tweak.ui:397 ../share/ui/toolbar-tweak.ui:443
+#: ../share/ui/toolbar-calligraphy.ui:443
+#: ../share/ui/toolbar-calligraphy.ui:478
+#: ../share/ui/toolbar-calligraphy.ui:504 ../share/ui/toolbar-connector.ui:129
+#: ../share/ui/toolbar-connector.ui:176 ../share/ui/toolbar-eraser.ui:316
+#: ../share/ui/toolbar-measure.ui:454 ../share/ui/toolbar-pencil.ui:264
+#: ../share/ui/toolbar-pencil.ui:292 ../share/ui/toolbar-pencil.ui:337
+#: ../share/ui/toolbar-pencil.ui:428 ../share/ui/toolbar-spray.ui:264
+#: ../share/ui/toolbar-spray.ui:421 ../share/ui/toolbar-spray.ui:549
+#: ../share/ui/toolbar-text.ui:841 ../share/ui/toolbar-tweak.ui:378
+#: ../share/ui/toolbar-tweak.ui:407 ../share/ui/toolbar-tweak.ui:453
 msgid "0"
 msgstr "0"
 
-#: ../share/ui/toolbar-calligraphy.ui:404
+#: ../share/ui/toolbar-calligraphy.ui:352
 msgid "Use the tilt of the input device to alter the angle of the pen's nib"
 msgstr ""
 "A beviteli eszköz dőlésének használata a tollhegy szögének változtatásához"
 
-#: ../share/ui/toolbar-calligraphy.ui:424
+#: ../share/ui/toolbar-calligraphy.ui:369
 msgid ""
 "Angle behavior (0 = nib always perpendicular to stroke direction, 100 = "
 "fixed angle, -100 = fixed angle in opposite direction)"
@@ -40778,11 +40794,11 @@ msgstr ""
 "A szög viselkedése (0: a tollhegy mindig merőleges a vonalhúzás irányára, "
 "100: rögzített szög, -100: rögzített szög a másik irányban)"
 
-#: ../share/ui/toolbar-calligraphy.ui:430
+#: ../share/ui/toolbar-calligraphy.ui:375
 msgid "Fixation:"
 msgstr "Rögzítettség:"
 
-#: ../share/ui/toolbar-calligraphy.ui:466
+#: ../share/ui/toolbar-calligraphy.ui:429
 msgid ""
 "Increase to make caps at the ends of strokes protrude more (0 = no caps, 1 = "
 "round caps"
@@ -40790,60 +40806,60 @@ msgstr ""
 "Nagyobb érték esetén a vonalak végei jobban kiállnak (0: nincs kiálló rész, "
 "1: lekerekített vonalvégek)"
 
-#: ../share/ui/toolbar-calligraphy.ui:472 ../share/ui/toolbar-eraser.ui:236
+#: ../share/ui/toolbar-calligraphy.ui:435 ../share/ui/toolbar-eraser.ui:246
 msgid "Caps:"
 msgstr "Vonalvég:"
 
-#: ../share/ui/toolbar-calligraphy.ui:507 ../share/ui/toolbar-eraser.ui:263
-#: ../share/ui/toolbar-eraser.ui:294
+#: ../share/ui/toolbar-calligraphy.ui:464 ../share/ui/toolbar-eraser.ui:273
+#: ../share/ui/toolbar-eraser.ui:304
 msgid "Increase to make strokes rugged and trembling"
 msgstr "Nagyobb érték esetén a vonalak egyenetlenebbek és remegőbbek"
 
-#: ../share/ui/toolbar-calligraphy.ui:513 ../share/ui/toolbar-eraser.ui:267
+#: ../share/ui/toolbar-calligraphy.ui:470 ../share/ui/toolbar-eraser.ui:277
 msgid "Tremor:"
 msgstr "Remegés:"
 
-#: ../share/ui/toolbar-calligraphy.ui:541
+#: ../share/ui/toolbar-calligraphy.ui:492
 msgid "Increase to make the pen waver and wiggle"
 msgstr "Nagyobb érték esetén a toll hullámzóbban és tekergőbben mozog"
 
-#: ../share/ui/toolbar-calligraphy.ui:545
+#: ../share/ui/toolbar-calligraphy.ui:496
 msgid "Wiggle:"
 msgstr "Tekeredés:"
 
-#: ../share/ui/toolbar-commands.ui:131
+#: ../share/ui/toolbar-commands.ui:50
 msgid "Open..."
 msgstr "Megnyitás…"
 
-#: ../share/ui/toolbar-commands.ui:175
+#: ../share/ui/toolbar-commands.ui:94
 msgid "Print..."
 msgstr "Nyomtatás…"
 
-#: ../share/ui/toolbar-commands.ui:230
+#: ../share/ui/toolbar-commands.ui:127
 msgid "Import..."
 msgstr "Importálás…"
 
-#: ../share/ui/toolbar-commands.ui:255
+#: ../share/ui/toolbar-commands.ui:149
 msgid "Export..."
 msgstr "Exportálás…"
 
-#: ../share/ui/toolbar-commands.ui:827
+#: ../share/ui/toolbar-commands.ui:614
 msgid "Text and Font"
 msgstr "Szöveg és betűtípus"
 
-#: ../share/ui/toolbar-commands.ui:853
+#: ../share/ui/toolbar-commands.ui:640
 msgid "Layers and Objects"
 msgstr "Rétegek és objektumok"
 
-#: ../share/ui/toolbar-commands.ui:905
+#: ../share/ui/toolbar-commands.ui:692
 msgid "Selectors and CSS..."
 msgstr "Kijelölők és CSS…"
 
-#: ../share/ui/toolbar-commands.ui:931
+#: ../share/ui/toolbar-commands.ui:718
 msgid "Align and Distribute..."
 msgstr "Igazítás és elrendezés…"
 
-#: ../share/ui/toolbar-commands.ui:1016
+#: ../share/ui/toolbar-commands.ui:784
 msgid "Preferences..."
 msgstr "Alapbeállítások"
 
@@ -40883,7 +40899,7 @@ msgstr "A vég-jelölőkkel rendelkező kapcsok (nyilak) mutassanak lefelé"
 msgid "Do not allow overlapping shapes"
 msgstr "Átfedő alakzatok ne legyenek engedélyezve"
 
-#: ../share/ui/toolbar-dropper.ui:41
+#: ../share/ui/toolbar-dropper.ui:41 ../share/ui/toolbar-spray.ui:574
 msgid "Pick"
 msgstr "Leolvasás"
 
@@ -40922,7 +40938,7 @@ msgstr "Kivágás az objektumokból"
 msgid "The width of the eraser pen (relative to the visible canvas area)"
 msgstr "A radír szélessége (a látható rajzvászon-területhez viszonyítva)"
 
-#: ../share/ui/toolbar-eraser.ui:232
+#: ../share/ui/toolbar-eraser.ui:242
 msgid ""
 "Increase to make caps at the ends of strokes protrude more (0 = no caps, 1 = "
 "round caps)"
@@ -40930,7 +40946,7 @@ msgstr ""
 "Nagyobb érték esetén a vonalak végei jobban kiállnak (0: nincs kiálló rész, "
 "1: lekerekített vonalvégek)"
 
-#: ../share/ui/toolbar-eraser.ui:335
+#: ../share/ui/toolbar-eraser.ui:345
 msgid "Break apart cut items"
 msgstr "Vágott elemek szétbontása"
 
@@ -40950,11 +40966,11 @@ msgstr "Színátmenet létrehozása a kitöltésben"
 msgid "Create gradient in the stroke"
 msgstr "Színátmenet létrehozása a körvonalban"
 
-#: ../share/ui/toolbar-gradient.ui:185
+#: ../share/ui/toolbar-gradient.ui:195
 msgid "Link gradients to change all related gradients"
 msgstr "Színátmenetek összekapcsolása az együttes módosításukért"
 
-#: ../share/ui/toolbar-gradient.ui:263 ../share/ui/toolbar-select.ui:523
+#: ../share/ui/toolbar-gradient.ui:273 ../share/ui/toolbar-select.ui:407
 msgid "Width of selection"
 msgstr "A kijelölés szélessége"
 
@@ -41033,47 +41049,47 @@ msgstr "Méretezési %:"
 msgid "Units:"
 msgstr "Mértékegység:"
 
-#: ../share/ui/toolbar-measure.ui:186
+#: ../share/ui/toolbar-measure.ui:196
 msgid "Measure only selected"
 msgstr "Csak a kijelöltek mérése"
 
-#: ../share/ui/toolbar-measure.ui:207
+#: ../share/ui/toolbar-measure.ui:217
 msgid "Ignore first and last"
 msgstr "Első és utolsó kizárása"
 
-#: ../share/ui/toolbar-measure.ui:228
+#: ../share/ui/toolbar-measure.ui:238
 msgid "Show measures between items"
 msgstr "Elemek közti mérések megjelenítése"
 
-#: ../share/ui/toolbar-measure.ui:249
+#: ../share/ui/toolbar-measure.ui:259
 msgid "Show hidden intersections"
 msgstr "Rejtett metszések megjelenítése"
 
-#: ../share/ui/toolbar-measure.ui:270
+#: ../share/ui/toolbar-measure.ui:280
 msgid "Measure all layers"
 msgstr "Összes réteg mérése"
 
-#: ../share/ui/toolbar-measure.ui:318
+#: ../share/ui/toolbar-measure.ui:338
 msgid "Reverse measure"
 msgstr "Fordított mérés"
 
-#: ../share/ui/toolbar-measure.ui:339
+#: ../share/ui/toolbar-measure.ui:359
 msgid "Phantom measure"
 msgstr "Szellemkép létrehozása a mérésből"
 
-#: ../share/ui/toolbar-measure.ui:361
+#: ../share/ui/toolbar-measure.ui:381
 msgid "To guides"
 msgstr "Segédvonalakká alakítás"
 
-#: ../share/ui/toolbar-measure.ui:382
+#: ../share/ui/toolbar-measure.ui:402
 msgid "Convert to item"
 msgstr "Elemmé alakítás"
 
-#: ../share/ui/toolbar-measure.ui:403
+#: ../share/ui/toolbar-measure.ui:423
 msgid "Mark Dimension"
 msgstr "Méretjelzés készítése"
 
-#: ../share/ui/toolbar-measure.ui:422
+#: ../share/ui/toolbar-measure.ui:442
 msgid "Mark dimension offset"
 msgstr "Jel eltolási mérete"
 
@@ -41106,11 +41122,11 @@ msgstr "Kitöltés hálójának szerkesztése"
 msgid "Edit stroke mesh"
 msgstr "Körvonal hálójának szerkesztése"
 
-#: ../share/ui/toolbar-mesh.ui:305
+#: ../share/ui/toolbar-mesh.ui:315
 msgid "Toggle selected sides between Beziers and lines."
 msgstr "Kijelölt oldalak átváltása Bézier-görbék és vonalak között."
 
-#: ../share/ui/toolbar-mesh.ui:326
+#: ../share/ui/toolbar-mesh.ui:336
 msgid ""
 "Make selected sides elliptical by changing length of handles. Works best if "
 "handles already approximate ellipse."
@@ -41119,15 +41135,15 @@ msgstr ""
 "módosításával. Akkor működik a legjobban, ha a fogantyúk körülbelül "
 "ellipszist formálnak."
 
-#: ../share/ui/toolbar-mesh.ui:347
+#: ../share/ui/toolbar-mesh.ui:357
 msgid "Pick colors for selected corner nodes from underneath mesh."
 msgstr "Színek leolvasása a kijelölt hálópontok számára a háló alól."
 
-#: ../share/ui/toolbar-mesh.ui:368
+#: ../share/ui/toolbar-mesh.ui:378
 msgid "Scale mesh to fit inside bounding box."
 msgstr "Háló átméretezése, hogy beleférjen a határoló téglalapba."
 
-#: ../share/ui/toolbar-mesh.ui:397
+#: ../share/ui/toolbar-mesh.ui:407
 msgid "WARNING: Mesh SVG Syntax Subject to Change"
 msgstr "FIGYELMEZTETÉS: háló SVG-szintaxisa"
 
@@ -41171,93 +41187,93 @@ msgstr "Kijelölt végpontok összekapcsolása egy új szakasszal"
 msgid "Delete segment between two non-endpoint nodes"
 msgstr "Szakasz törlése két nem végponti csomópont közt"
 
-#: ../share/ui/toolbar-node.ui:230
+#: ../share/ui/toolbar-node.ui:240
 msgid "Make selected nodes corner"
 msgstr "A kijelölt csomópontok csúccsá tétele"
 
-#: ../share/ui/toolbar-node.ui:250
+#: ../share/ui/toolbar-node.ui:260
 msgid "Make selected nodes smooth"
 msgstr "A kijelölt csomópontok ívessé tétele"
 
-#: ../share/ui/toolbar-node.ui:270
+#: ../share/ui/toolbar-node.ui:280
 msgid "Make selected nodes symmetric"
 msgstr "A kijelölt csomópontok szimmetrikussá tétele"
 
-#: ../share/ui/toolbar-node.ui:290
+#: ../share/ui/toolbar-node.ui:300
 msgid "Make selected nodes auto-smooth"
 msgstr "A kijelölt csomópontok automatikus ívessé tétele"
 
-#: ../share/ui/toolbar-node.ui:318
+#: ../share/ui/toolbar-node.ui:328
 msgid "Straighten lines"
 msgstr "Kiegyenesített vonalak"
 
-#: ../share/ui/toolbar-node.ui:335
+#: ../share/ui/toolbar-node.ui:345
 msgid "Add curve handles"
 msgstr "Ív-fogantyúk hozzáadása"
 
-#: ../share/ui/toolbar-node.ui:360
+#: ../share/ui/toolbar-node.ui:370
 msgid "Add corners live path effect"
 msgstr "Csúcsok élő útvonaleffektus hozzáadása"
 
-#: ../share/ui/toolbar-node.ui:386
+#: ../share/ui/toolbar-node.ui:396
 msgid "Convert selected object to path"
 msgstr "A kijelölt objektum útvonallá alakítása"
 
-#: ../share/ui/toolbar-node.ui:404
+#: ../share/ui/toolbar-node.ui:414
 msgid "Convert selected object's stroke to paths"
 msgstr "A kijelölt objektum körvonalának útvonalakká alakítása"
 
-#: ../share/ui/toolbar-node.ui:440
+#: ../share/ui/toolbar-node.ui:450
 msgid "X coordinate of selected node(s)"
 msgstr "A kijelölt csomópontok X koordinátája"
 
-#: ../share/ui/toolbar-node.ui:471
+#: ../share/ui/toolbar-node.ui:481
 msgid "Y coordinate of selected node(s)"
 msgstr "A kijelölt csomópontok Y koordinátája"
 
-#: ../share/ui/toolbar-node.ui:556
+#: ../share/ui/toolbar-node.ui:576
 msgid "Show path outline (without path effects)"
 msgstr "Az útvonal kontúrjának megjelenítése (útvonaleffektusok nélkül)"
 
-#: ../share/ui/toolbar-node.ui:576
+#: ../share/ui/toolbar-node.ui:596
 msgid "Show Bezier handles of selected nodes"
 msgstr "A kijelölt csomópontok Bézier-fogantyúinak megjelenítése"
 
-#: ../share/ui/toolbar-node.ui:596
+#: ../share/ui/toolbar-node.ui:616
 msgid "Show transformation handles for selected nodes"
 msgstr "A kijelölt csomópontok transzformációs fogantyúinak megjelenítése"
 
-#: ../share/ui/toolbar-node.ui:616
+#: ../share/ui/toolbar-node.ui:636
 msgid "Show mask(s) of selected object(s)"
 msgstr "A kijelölt objektumok maszkjának, illetve maszkjainak megjelenítése"
 
-#: ../share/ui/toolbar-node.ui:636
+#: ../share/ui/toolbar-node.ui:656
 msgid "Show clipping path(s) of selected object(s)"
 msgstr ""
 "A kijelölt objektumok vágóútvonalának, illetve vágóútvonalainak megjelenítése"
 
-#: ../share/ui/toolbar-page.ui:132
+#: ../share/ui/toolbar-page.ui:122
 msgid "Page Margins"
 msgstr "Oldalmargók"
 
-#: ../share/ui/toolbar-page.ui:134 ../share/ui/toolbar-page.ui:299
+#: ../share/ui/toolbar-page.ui:124 ../share/ui/toolbar-page.ui:261
 #: ../share/extensions/guides_creator.inx:23
 msgid "Margins"
 msgstr "Szegélyek"
 
-#: ../share/ui/toolbar-page.ui:227
+#: ../share/ui/toolbar-page.ui:189
 msgid "Page Label"
 msgstr "Oldal címkéje"
 
-#: ../share/ui/toolbar-page.ui:388
+#: ../share/ui/toolbar-page.ui:350
 msgid "e.g. 1.2mm 2mm"
 msgstr "pl. 1,2 mm 2 mm"
 
-#: ../share/ui/toolbar-page.ui:394
+#: ../share/ui/toolbar-page.ui:356
 msgid "Page Bleed"
 msgstr "Oldalkifutó"
 
-#: ../share/ui/toolbar-paintbucket.ui:67
+#: ../share/ui/toolbar-paintbucket.ui:77
 msgid ""
 "The maximum allowed difference between the clicked pixel and the neighboring "
 "pixels to be counted in the fill"
@@ -41265,18 +41281,18 @@ msgstr ""
 "A kitöltésbe való bekerüléshez megengedett maximális eltérés az egérmutató "
 "alatti képpont és a szomszédos képpontok közt"
 
-#: ../share/ui/toolbar-paintbucket.ui:98
+#: ../share/ui/toolbar-paintbucket.ui:108
 msgid ""
 "The amount to grow (positive) or shrink (negative) the created fill path"
 msgstr ""
 "Azon mennyiség, amellyel növelni (pozitív), illetve csökkenteni (negatív) "
 "kell a létrehozott kitöltési útvonalat"
 
-#: ../share/ui/toolbar-paintbucket.ui:102
+#: ../share/ui/toolbar-paintbucket.ui:112
 msgid "Grow/shrink by:"
 msgstr "Növelés/csökkentés:"
 
-#: ../share/ui/toolbar-paintbucket.ui:167
+#: ../share/ui/toolbar-paintbucket.ui:177
 msgid ""
 "Reset paint bucket parameters to defaults (use Inkscape Preferences > Tools "
 "to change defaults)"
@@ -41285,71 +41301,71 @@ msgstr ""
 "(az alapértelmezések módosítása az Inkscape-beállítások > Eszközök "
 "funkcióval lehetséges)"
 
-#: ../share/ui/toolbar-pencil.ui:65
+#: ../share/ui/toolbar-pencil.ui:75
 msgid "Mode of new lines drawn by this tool"
 msgstr "Az ezen eszközzel rajzolt új vonalak módja"
 
-#: ../share/ui/toolbar-pencil.ui:85
+#: ../share/ui/toolbar-pencil.ui:95
 msgid "Create regular Bezier path"
 msgstr "Normál Bézier-útvonal létrehozása"
 
-#: ../share/ui/toolbar-pencil.ui:102
+#: ../share/ui/toolbar-pencil.ui:112
 msgid "Create Spiro path"
 msgstr "Spiro-útvonal létrehozása"
 
-#: ../share/ui/toolbar-pencil.ui:122
+#: ../share/ui/toolbar-pencil.ui:132
 msgid "Create BSpline path"
 msgstr "B-spline útvonal létrehozása"
 
-#: ../share/ui/toolbar-pencil.ui:142
+#: ../share/ui/toolbar-pencil.ui:152
 msgid "Create a sequence of straight line segments"
 msgstr "Egyenes vonalszakaszok sorozatának létrehozása"
 
-#: ../share/ui/toolbar-pencil.ui:162
+#: ../share/ui/toolbar-pencil.ui:172
 msgid "Create a sequence of paraxial line segments"
 msgstr "Tengely menti vonalszakaszok sorozatának létrehozása"
 
-#: ../share/ui/toolbar-pencil.ui:199
+#: ../share/ui/toolbar-pencil.ui:209
 msgid "Flatten Spiro or BSpline LPE"
 msgstr "Lapított spiro vagy B-spline élő útvonaleffektus"
 
-#: ../share/ui/toolbar-pencil.ui:229
+#: ../share/ui/toolbar-pencil.ui:239
 msgid "Use pressure input"
 msgstr "Nyomásbevitel alkalmazása"
 
-#: ../share/ui/toolbar-pencil.ui:242
+#: ../share/ui/toolbar-pencil.ui:252
 msgid "Min percent of pressure"
 msgstr "Nyomás minimális százaléka"
 
-#: ../share/ui/toolbar-pencil.ui:246
+#: ../share/ui/toolbar-pencil.ui:256
 msgid "Min:"
 msgstr "Min.:"
 
-#: ../share/ui/toolbar-pencil.ui:270
+#: ../share/ui/toolbar-pencil.ui:280
 msgid "Max percent of pressure"
 msgstr "Nyomás maximális százaléka"
 
-#: ../share/ui/toolbar-pencil.ui:274
+#: ../share/ui/toolbar-pencil.ui:284
 msgid "Max:"
 msgstr "Max.:"
 
-#: ../share/ui/toolbar-pencil.ui:315
+#: ../share/ui/toolbar-pencil.ui:325
 msgid "How much smoothing (simplifying) is applied to the line"
 msgstr "Mekkora simítás (egyszerűsítés) van alkalmazva a vonalra"
 
-#: ../share/ui/toolbar-pencil.ui:319
+#: ../share/ui/toolbar-pencil.ui:329
 msgid "Smoothing:"
 msgstr "Simítás:"
 
-#: ../share/ui/toolbar-pencil.ui:347
+#: ../share/ui/toolbar-pencil.ui:357
 msgid "LPE based interactive simplify"
 msgstr "Élő útvonaleffektus-alapú interaktív egyszerűsítés"
 
-#: ../share/ui/toolbar-pencil.ui:365
+#: ../share/ui/toolbar-pencil.ui:375
 msgid "LPE simplify flatten"
 msgstr "Élő útvonaleffektus-alapú egyszerűsítő lapítás"
 
-#: ../share/ui/toolbar-pencil.ui:406
+#: ../share/ui/toolbar-pencil.ui:416
 msgid "Scale of the width of the power stroke shape."
 msgstr "Az okos körvonal alakzata szélességének méretezése"
 
@@ -41361,46 +41377,50 @@ msgstr "A téglalap szélessége"
 msgid "Height of rectangle"
 msgstr "A téglalap magassága"
 
-#: ../share/ui/toolbar-select.ui:76
+#: ../share/ui/toolbar-rect.ui:120 ../share/ui/toolbar-snap.ui:59
+msgid "Corners"
+msgstr "Csúcsok"
+
+#: ../share/ui/toolbar-select.ui:86
 msgid "Select all objects"
 msgstr "Összes objektum kijelölése"
 
-#: ../share/ui/toolbar-select.ui:97
+#: ../share/ui/toolbar-select.ui:104
 msgid "Select all in all layers"
 msgstr "Minden kijelölése az összes rétegen"
 
-#: ../share/ui/toolbar-select.ui:118
+#: ../share/ui/toolbar-select.ui:122
 msgid "Deselect any selected objects"
 msgstr "Az objektumok kijelölésének megszüntetése"
 
-#: ../share/ui/toolbar-select.ui:140
+#: ../share/ui/toolbar-select.ui:141
 msgid "Toggle selection box to select all touched objects"
 msgstr "Kijelölő téglalap átváltása minden érintett objektum kijelöléséhez"
 
-#: ../share/ui/toolbar-select.ui:168
+#: ../share/ui/toolbar-select.ui:163
 msgid "Rotate selection 90\\xc2\\xb0 counter-clockwise"
 msgstr ""
 "A kijelölés elforgatása az óramutató járásával ellentétes irányban 90˚-kal"
 
-#: ../share/ui/toolbar-select.ui:189
+#: ../share/ui/toolbar-select.ui:181
 msgid "Rotate selection 90\\xc2\\xb0 clockwise"
 msgstr "A kijelölés elforgatása az óramutató járásának irányában 90˚-kal"
 
-#: ../share/ui/toolbar-select.ui:460
+#: ../share/ui/toolbar-select.ui:356
 msgid "Horizontal coordinate of selection"
 msgstr "A kijelölés vízszintes koordinátája"
 
-#: ../share/ui/toolbar-select.ui:491
+#: ../share/ui/toolbar-select.ui:381
 msgid "Vertical coordinate of selection"
 msgstr "A kijelölés függőleges koordinátája"
 
-#: ../share/ui/toolbar-select.ui:546
+#: ../share/ui/toolbar-select.ui:424
 msgid "When locked, change width and height by the same proportion"
 msgstr ""
 "Zárolt állapot esetén: a szélesség és a magasság azonos arányban való "
 "módosítása"
 
-#: ../share/ui/toolbar-select.ui:572
+#: ../share/ui/toolbar-select.ui:447
 msgid "Height of selection"
 msgstr "A kijelölés magassága"
 
@@ -41415,10 +41435,6 @@ msgstr "Határoló téglalapok"
 #: ../share/ui/toolbar-snap.ui:45 ../share/extensions/polyhedron_3d.inx:78
 msgid "Edges"
 msgstr "Élek"
-
-#: ../share/ui/toolbar-snap.ui:59
-msgid "Corners"
-msgstr "Csúcsok"
 
 #: ../share/ui/toolbar-snap.ui:73
 msgid "Edge midpoints"
@@ -41550,38 +41566,38 @@ msgstr ""
 "alapértelmezések módosítása az Inkscape-beállítások > Eszközök funkcióval "
 "lehetséges)"
 
-#: ../share/ui/toolbar-spray.ui:133
+#: ../share/ui/toolbar-spray.ui:140
 msgid "Spray copies of the initial selection"
 msgstr "A kezdeti kijelölés másolatainak felfestése"
 
-#: ../share/ui/toolbar-spray.ui:149
+#: ../share/ui/toolbar-spray.ui:156
 msgid "Spray clones of the initial selection"
 msgstr "A kezdeti kijelölés klónjainak felfestése"
 
-#: ../share/ui/toolbar-spray.ui:168
+#: ../share/ui/toolbar-spray.ui:172
 msgid "Spray objects in a single path"
 msgstr "Objektumok felfestése egyetlen útvonalban"
 
-#: ../share/ui/toolbar-spray.ui:187
+#: ../share/ui/toolbar-spray.ui:188
 msgid "Delete sprayed items from selection"
 msgstr "Permetezett elemek törlése a kijelölésből"
 
-#: ../share/ui/toolbar-spray.ui:240
+#: ../share/ui/toolbar-spray.ui:213
 msgid "The width of the spray area (relative to the visible canvas area)"
 msgstr ""
 "A felfestési terület szélessége (a látható rajzvászon-területhez viszonyítva)"
 
-#: ../share/ui/toolbar-spray.ui:274 ../share/ui/toolbar-spray.ui:327
+#: ../share/ui/toolbar-spray.ui:238 ../share/ui/toolbar-spray.ui:276
 msgid "Use the pressure of the input device to alter the width of spray area"
 msgstr ""
 "A beviteli eszköz nyomásának használata a permetezési terület szélességének "
 "változtatásához"
 
-#: ../share/ui/toolbar-spray.ui:293
+#: ../share/ui/toolbar-spray.ui:251
 msgid "Adjusts the number of items sprayed per click"
 msgstr "A kattintásonként permetezett elemek számának beállítása"
 
-#: ../share/ui/toolbar-spray.ui:354
+#: ../share/ui/toolbar-spray.ui:294
 msgid ""
 "Variation of the rotation of the sprayed objects; 0% for the same rotation "
 "than the original object"
@@ -41589,11 +41605,11 @@ msgstr ""
 "A permetezett objektumok elforgatásbeli ingadozása; a 0% az eredeti "
 "objektuméval megegyező elforgatást jelent"
 
-#: ../share/ui/toolbar-spray.ui:358
+#: ../share/ui/toolbar-spray.ui:298
 msgid "Rotation:"
 msgstr "Elforgatás:"
 
-#: ../share/ui/toolbar-spray.ui:382
+#: ../share/ui/toolbar-spray.ui:316
 msgid ""
 "Variation in the scale of the sprayed objects; 0% for the same scale than "
 "the original object"
@@ -41601,49 +41617,49 @@ msgstr ""
 "A permetezett objektumok méretezési ingadozása; a 0% az eredeti objektuméval "
 "megegyező méretet jelent"
 
-#: ../share/ui/toolbar-spray.ui:412
+#: ../share/ui/toolbar-spray.ui:340
 msgid "Use the pressure of the input device to alter the scale of new items"
 msgstr ""
 "A beviteli eszköz nyomásának használata az új elemek méretezésének "
 "változtatásához"
 
-#: ../share/ui/toolbar-spray.ui:436
+#: ../share/ui/toolbar-spray.ui:384
 msgid "Increase to scatter sprayed objects"
 msgstr "A permetezett objektumok szétszórásának növelése"
 
-#: ../share/ui/toolbar-spray.ui:440
+#: ../share/ui/toolbar-spray.ui:388
 msgid "Scatter:"
 msgstr "Szétszórás:"
 
-#: ../share/ui/toolbar-spray.ui:464
+#: ../share/ui/toolbar-spray.ui:409
 msgid "0 to spray a spot; increase to enlarge the ring radius"
 msgstr "0: folt permetezése; növelés esetén nagyobb lesz a gyűrű sugara"
 
-#: ../share/ui/toolbar-spray.ui:468
+#: ../share/ui/toolbar-spray.ui:413
 msgid "Focus:"
 msgstr "Fókusz:"
 
-#: ../share/ui/toolbar-spray.ui:521
+#: ../share/ui/toolbar-spray.ui:467
 msgid "Apply over no transparent areas"
 msgstr "Alkalmazás nem átlátszó területek felett"
 
-#: ../share/ui/toolbar-spray.ui:542
+#: ../share/ui/toolbar-spray.ui:485
 msgid "Apply over transparent areas"
 msgstr "Alkalmazás átlátszó területek felett"
 
-#: ../share/ui/toolbar-spray.ui:563
+#: ../share/ui/toolbar-spray.ui:503
 msgid "No overlap between colors"
 msgstr "Színek átfedése nélkül"
 
-#: ../share/ui/toolbar-spray.ui:584
+#: ../share/ui/toolbar-spray.ui:521
 msgid "Prevent overlapping objects"
 msgstr "Objektumok átfedésének megakadályozása"
 
-#: ../share/ui/toolbar-spray.ui:603
+#: ../share/ui/toolbar-spray.ui:537
 msgid "Increase to segregate objects more (value in percent)"
 msgstr "Az objektumok elkülönülésének növelése (százalékos érték)"
 
-#: ../share/ui/toolbar-spray.ui:660
+#: ../share/ui/toolbar-spray.ui:592
 msgid ""
 "Pick color from the drawing. You can use clonetiler trace dialog for "
 "advanced effects. In clone mode original fill or stroke colors must be unset."
@@ -41652,20 +41668,20 @@ msgstr ""
 "párbeszédlak használható. A klónozási mód alkalmazásakor az eredeti kitöltés "
 "és körvonal színe beállítatlan kell maradjon."
 
-#: ../share/ui/toolbar-spray.ui:681
+#: ../share/ui/toolbar-spray.ui:610
 msgid "Apply picked color to fill"
 msgstr "Leolvasott szín alkalmazása a kitöltésre"
 
-#: ../share/ui/toolbar-spray.ui:702
+#: ../share/ui/toolbar-spray.ui:628
 msgid "Apply picked color to stroke"
 msgstr "Leolvasott szín alkalmazása a körvonalra"
 
-#: ../share/ui/toolbar-spray.ui:723
+#: ../share/ui/toolbar-spray.ui:646
 msgid "Inverted pick value, retaining color in advanced trace mode"
 msgstr ""
 "Leolvasott szín invertálása, megőrizve a színt a speciális vektorizáló módban"
 
-#: ../share/ui/toolbar-spray.ui:744
+#: ../share/ui/toolbar-spray.ui:664
 msgid "Pick from center instead of average area."
 msgstr "Leolvasás középről az átlagolt terület helyett."
 
@@ -41681,19 +41697,19 @@ msgstr "Csúcsok:"
 msgid "Spoke Ratio:"
 msgstr "Ágarány:"
 
-#: ../share/ui/toolbar-star.ui:266
+#: ../share/ui/toolbar-star.ui:276
 msgid "Reset all parameters to their default values"
 msgstr "Minden paraméter alapértelmezett értékre történő visszaállítása"
 
-#: ../share/ui/toolbar-text.ui:88
+#: ../share/ui/toolbar-text.ui:85
 msgid "Open the Font Collections dialog"
 msgstr "Betűkészlet-gyűjtemények párbeszédablak megnyitása"
 
-#: ../share/ui/toolbar-text.ui:180
+#: ../share/ui/toolbar-text.ui:177
 msgid "Select Font Collections"
 msgstr "Betűkészlet-gyűjtemények kijelölése"
 
-#: ../share/ui/toolbar-text.ui:196
+#: ../share/ui/toolbar-text.ui:193
 msgid ""
 "Reset the font list (Deselects all the font collections and clears search "
 "results)"
@@ -41701,95 +41717,95 @@ msgstr ""
 "Betűkészletlista visszaállítása (Megszünteti az összes betűkészlet "
 "kiválasztását és törli a keresési eredményeket)"
 
-#: ../share/ui/toolbar-text.ui:271
+#: ../share/ui/toolbar-text.ui:278
 msgid "Spacing between baselines"
 msgstr "Alapvonalak közötti távolság"
 
-#: ../share/ui/toolbar-text.ui:347
+#: ../share/ui/toolbar-text.ui:364
 msgid "Align left"
 msgstr "Balra igazítás"
 
-#: ../share/ui/toolbar-text.ui:364
+#: ../share/ui/toolbar-text.ui:381
 msgid "Align center"
 msgstr "Középre igazítás"
 
-#: ../share/ui/toolbar-text.ui:384
+#: ../share/ui/toolbar-text.ui:401
 msgid "Align right"
 msgstr "Jobbra igazítás"
 
-#: ../share/ui/toolbar-text.ui:404
+#: ../share/ui/toolbar-text.ui:421
 msgid "Justify (only flowed text)"
 msgstr "Sorkizárás (csak tördelt szövegre)"
 
-#: ../share/ui/toolbar-text.ui:440
+#: ../share/ui/toolbar-text.ui:457
 msgid "Toggle superscript"
 msgstr "Felső index átváltása"
 
-#: ../share/ui/toolbar-text.ui:458
+#: ../share/ui/toolbar-text.ui:475
 msgid "Toggle subscript"
 msgstr "Alsó index átváltása"
 
-#: ../share/ui/toolbar-text.ui:501
+#: ../share/ui/toolbar-text.ui:528
 msgid "Block progression"
 msgstr "Szövegblokk-haladás"
 
-#: ../share/ui/toolbar-text.ui:508
+#: ../share/ui/toolbar-text.ui:535
 msgid "Horizontal text"
 msgstr "Vízszintes szöveg"
 
-#: ../share/ui/toolbar-text.ui:525
+#: ../share/ui/toolbar-text.ui:552
 msgid "Vertical text — lines: right to left"
 msgstr "Függőleges szöveg ‒ sorok: jobbról balra"
 
-#: ../share/ui/toolbar-text.ui:545
+#: ../share/ui/toolbar-text.ui:572
 msgid "Vertical text — lines: left to right"
 msgstr "Függőleges szöveg ‒ sorok: balról jobbra"
 
-#: ../share/ui/toolbar-text.ui:598
+#: ../share/ui/toolbar-text.ui:635
 msgid "Text (glyph) orientation in vertical text."
 msgstr "Szöveg- (betűkészletjel) tájolás függőleges szövegben."
 
-#: ../share/ui/toolbar-text.ui:605
+#: ../share/ui/toolbar-text.ui:642
 msgid "Auto glyph orientation"
 msgstr "Automatikus betűkészletjel-tájolás"
 
-#: ../share/ui/toolbar-text.ui:622
+#: ../share/ui/toolbar-text.ui:659
 msgid "Upright glyph orientation"
 msgstr "Függőleges betűkészletjel-tájolás"
 
-#: ../share/ui/toolbar-text.ui:642
+#: ../share/ui/toolbar-text.ui:679
 msgid "Sideways glyph orientation"
 msgstr "Oldalirányú betűkészletjel-tájolás"
 
-#: ../share/ui/toolbar-text.ui:695
+#: ../share/ui/toolbar-text.ui:742
 msgid "Text direction for normally horizontal text."
 msgstr "A normál vízszintes szöveg iránya."
 
-#: ../share/ui/toolbar-text.ui:702
+#: ../share/ui/toolbar-text.ui:749
 msgid "Left to right text"
 msgstr "Balról jobbra irányú szöveg"
 
-#: ../share/ui/toolbar-text.ui:719
+#: ../share/ui/toolbar-text.ui:766
 msgid "Right to left text"
 msgstr "Jobbról balra irányú szöveg"
 
-#: ../share/ui/toolbar-text.ui:772
+#: ../share/ui/toolbar-text.ui:829
 msgid "Spacing between letters (px)"
 msgstr "Helykihagyás a betűk között (px)"
 
-#: ../share/ui/toolbar-text.ui:804
+#: ../share/ui/toolbar-text.ui:861
 msgid "Spacing between words (px)"
 msgstr "Helykihagyás a szavak között (px)"
 
-#: ../share/ui/toolbar-text.ui:836
+#: ../share/ui/toolbar-text.ui:893
 msgid "Horizontal kerning (px)"
 msgstr "Vízszintes alávágás (px)"
 
-#: ../share/ui/toolbar-text.ui:868
+#: ../share/ui/toolbar-text.ui:925
 msgid "Vertical kerning (px)"
 msgstr "Függőleges alávágás (px)"
 
-#: ../share/ui/toolbar-text.ui:900
+#: ../share/ui/toolbar-text.ui:957
 msgid "Character rotation (degrees)"
 msgstr "Karakter-elforgatás (fok)"
 
@@ -41817,89 +41833,89 @@ msgstr "EGYÉB"
 msgid "CANVAS TOOLS"
 msgstr "RAJZVÁSZON ESZKÖZÖK"
 
-#: ../share/ui/toolbar-tweak.ui:92
+#: ../share/ui/toolbar-tweak.ui:102
 msgid "Move objects in any direction"
 msgstr "Objektumok elmozdítása bármely irányban"
 
-#: ../share/ui/toolbar-tweak.ui:112
+#: ../share/ui/toolbar-tweak.ui:122
 msgid "Move objects towards cursor; with Shift from cursor"
 msgstr ""
 "Objektumok elmozdítása a kurzor felé; a Shift billentyű lenyomása esetén a "
 "kurzor felől"
 
-#: ../share/ui/toolbar-tweak.ui:131
+#: ../share/ui/toolbar-tweak.ui:141
 msgid "Move objects in random directions"
 msgstr "Objektumok elmozdítása véletlenszerű irányokban"
 
-#: ../share/ui/toolbar-tweak.ui:150
+#: ../share/ui/toolbar-tweak.ui:160
 msgid "Shrink objects, with Shift enlarge"
 msgstr "Objektumok csökkentése; a Shift billentyű lenyomása esetén növelés"
 
-#: ../share/ui/toolbar-tweak.ui:169
+#: ../share/ui/toolbar-tweak.ui:179
 msgid "Rotate objects, with Shift counterclockwise"
 msgstr ""
 "Objektumok elforgatása; a Shift billentyű lenyomása esetén az óramutató "
 "járásával ellentétes irányban"
 
-#: ../share/ui/toolbar-tweak.ui:188
+#: ../share/ui/toolbar-tweak.ui:198
 msgid "Duplicate objects, with Shift delete"
 msgstr "Objektumok kettőzése; a Shift billentyű lenyomása esetén törlés"
 
-#: ../share/ui/toolbar-tweak.ui:207
+#: ../share/ui/toolbar-tweak.ui:217
 msgid "Push parts of paths in any direction"
 msgstr "Útvonalak részeinek eltolása bármely irányba"
 
-#: ../share/ui/toolbar-tweak.ui:226
+#: ../share/ui/toolbar-tweak.ui:236
 msgid "Shrink (inset) parts of paths; with Shift grow (outset)"
 msgstr ""
 "Útvonalak részeinek csökkentése (zsugorítása); a Shift billentyű lenyomása "
 "esetén növelés (nyújtás)"
 
-#: ../share/ui/toolbar-tweak.ui:245
+#: ../share/ui/toolbar-tweak.ui:255
 msgid "Attract parts of paths towards cursor; with Shift from cursor"
 msgstr ""
 "Útvonalak részeinek vonzása a kurzor felé; a Shift billentyű lenyomása "
 "esetén taszítás a kurzor felől"
 
-#: ../share/ui/toolbar-tweak.ui:264
+#: ../share/ui/toolbar-tweak.ui:274
 msgid "Roughen parts of paths"
 msgstr "Útvonalak részeinek durvábbá tevése"
 
-#: ../share/ui/toolbar-tweak.ui:283
+#: ../share/ui/toolbar-tweak.ui:293
 msgid "Paint the tool's color upon selected objects"
 msgstr "Az eszköz színének festése a kijelölt objektumokra"
 
-#: ../share/ui/toolbar-tweak.ui:302
+#: ../share/ui/toolbar-tweak.ui:312
 msgid "Jitter the colors of selected objects"
 msgstr "A kijelölt objektumok színeinek véletlenszerű módosítása"
 
-#: ../share/ui/toolbar-tweak.ui:321
+#: ../share/ui/toolbar-tweak.ui:331
 msgid "Blur selected objects more; with Shift, blur less"
 msgstr ""
 "A kijelölt objektumok elmosásának növelése; a Shift billentyű lenyomása "
 "esetén az elmosás csökkentése"
 
-#: ../share/ui/toolbar-tweak.ui:355
+#: ../share/ui/toolbar-tweak.ui:365
 msgid "The width of the tweak area (relative to the visible canvas area)"
 msgstr ""
 "A manipulálási terület szélessége (a látható rajzvászon-területhez "
 "viszonyítva)"
 
-#: ../share/ui/toolbar-tweak.ui:384
+#: ../share/ui/toolbar-tweak.ui:394
 msgid "The force of the tweak action"
 msgstr "A manipulálás ereje"
 
-#: ../share/ui/toolbar-tweak.ui:388
+#: ../share/ui/toolbar-tweak.ui:398
 msgid "Force:"
 msgstr "Erő:"
 
-#: ../share/ui/toolbar-tweak.ui:415
+#: ../share/ui/toolbar-tweak.ui:425
 msgid "Use the pressure of the input device to alter the force of tweak action"
 msgstr ""
 "A beviteli eszköz nyomásának használata a manipulálás erejének "
 "változtatásához"
 
-#: ../share/ui/toolbar-tweak.ui:431
+#: ../share/ui/toolbar-tweak.ui:441
 msgid ""
 "Low fidelity simplifies paths; high fidelity preserves path features but may "
 "generate a lot of new nodes"
@@ -41907,47 +41923,47 @@ msgstr ""
 "Az alacsony pontosság egyszerűsíti az útvonalakat; a magas pontosság megőrzi "
 "az útvonal tulajdonságait, de sok új csomópontot hozhat létre"
 
-#: ../share/ui/toolbar-tweak.ui:435
+#: ../share/ui/toolbar-tweak.ui:445
 msgid "Fidelity:"
 msgstr "Pontosság:"
 
-#: ../share/ui/toolbar-tweak.ui:489
+#: ../share/ui/toolbar-tweak.ui:487 ../share/ui/toolbar-tweak.ui:509
 msgid "Channels:"
 msgstr "Csatornák:"
 
-#: ../share/ui/toolbar-tweak.ui:495
+#: ../share/ui/toolbar-tweak.ui:515
 msgctxt "Hue"
 msgid "H"
 msgstr "H"
 
-#: ../share/ui/toolbar-tweak.ui:499
+#: ../share/ui/toolbar-tweak.ui:519
 msgid "In color mode, act on object's hue"
 msgstr "Színezési mód esetén: az objektum árnyalatára legyen hatással"
 
-#: ../share/ui/toolbar-tweak.ui:508
+#: ../share/ui/toolbar-tweak.ui:528
 msgctxt "Saturation"
 msgid "S"
 msgstr "S"
 
-#: ../share/ui/toolbar-tweak.ui:512
+#: ../share/ui/toolbar-tweak.ui:532
 msgid "In color mode, act on object's saturation"
 msgstr "Színezési mód esetén: az objektum telítettségére legyen hatással"
 
-#: ../share/ui/toolbar-tweak.ui:521
+#: ../share/ui/toolbar-tweak.ui:541
 msgctxt "Lightness"
 msgid "L"
 msgstr "L"
 
-#: ../share/ui/toolbar-tweak.ui:525
+#: ../share/ui/toolbar-tweak.ui:545
 msgid "In color mode, act on object's lightness"
 msgstr "Színezési mód esetén: az objektum fényességére legyen hatással"
 
-#: ../share/ui/toolbar-tweak.ui:534
+#: ../share/ui/toolbar-tweak.ui:554
 msgctxt "Opacity"
 msgid "O"
 msgstr "Á"
 
-#: ../share/ui/toolbar-tweak.ui:538
+#: ../share/ui/toolbar-tweak.ui:558
 msgid "In color mode, act on object's opacity"
 msgstr "Színezési mód esetén: az objektum átlátszatlanságára legyen hatással"
 
