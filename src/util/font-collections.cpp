@@ -566,6 +566,15 @@ std::set<Glib::ustring> const &FontCollections::get_fonts(const Glib::ustring& c
     return empty_set;
 }
 
+bool FontCollections::is_font_in_collection(const Glib::ustring& collection_name, const Glib::ustring& font_name) const {
+    auto& set = get_fonts(collection_name);
+    return set.contains(font_name);
+}
+
+const std::set<Glib::ustring>& FontCollections::get_selected_collections() const {
+    return _selected_collections;
+}
+
 } // Namespace
 
 /*
