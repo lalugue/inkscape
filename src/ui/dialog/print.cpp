@@ -112,6 +112,7 @@ void Print::setup_page(const Glib::RefPtr<Gtk::PrintContext>& context, int page_
 void Print::set_paper_size(const Glib::RefPtr<Gtk::PageSetup> &page_setup, double page_width, double page_height)
 {
     auto p_size = Gtk::PaperSize("custom", "custom", page_width, page_height, Gtk::Unit::POINTS);
+    Gtk::PageOrientation orientation = Gtk::PageOrientation::PORTRAIT;
 
     // Some print drivers, like the EPSON's ESC/P-R CUPS driver, don't accept custom
     // page sizes, so we'll try to find a known page size.
@@ -121,9 +122,9 @@ void Print::set_paper_size(const Glib::RefPtr<Gtk::PageSetup> &page_setup, doubl
     // mode.
     // As a compromise, we'll only rotate the page if we actually find a matching paper size,
     // since laser cutter beds tend to be custom sizes.
-    Gtk::PageOrientation orientation = Gtk::PageOrientation::PORTRAIT;
+    Gtk::PageOrientation search_orientation = Gtk::PageOrientation::PORTRAIT;
     if (page_width > page_height) {
-        orientation = Gtk::PageOrientation::REVERSE_LANDSCAPE;
+        search_orientation = Gtk::PageOrientation::LANDSCAPE;
         std::swap(page_width, page_height);
     }
 
@@ -140,6 +141,7 @@ void Print::set_paper_size(const Glib::RefPtr<Gtk::PageSetup> &page_setup, doubl
         }
         // size matches
         p_size = size;
+        orientation = search_orientation;
         break;
     }
     page_setup->set_paper_size(p_size);
