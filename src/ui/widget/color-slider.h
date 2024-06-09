@@ -4,10 +4,8 @@
  *//*
  * Authors:
  *   see git history
- *   Lauris Kaplinski <lauris@kaplinski.com>
- *   bulia byak <buliabyak@users.sf.net>
  *
- * Copyright (C) 2018 Authors
+ * Copyright (C) 2018-2024 Authors
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
@@ -20,10 +18,17 @@
 #include <gtkmm/gesture.h> // Gtk::EventSequenceState
 #include <sigc++/signal.h>
 
+#include "helper/auto-connection.h"
+#include "colors/spaces/components.h"
+
 namespace Gtk {
-class Adjustment;
+class Builder;
 class GestureClick;
 } // namespace Gtk
+
+namespace Inkscape::Colors {
+class ColorSet;
+} // namespace Inkscape::Colors
 
 namespace Inkscape::UI::Widget {
 
@@ -32,19 +37,20 @@ namespace Inkscape::UI::Widget {
  */
 class ColorSlider : public Gtk::DrawingArea {
 public:
-    ColorSlider(Glib::RefPtr<Gtk::Adjustment> adjustment);
-    ~ColorSlider() override;
+    ColorSlider(
+        BaseObjectType *cobject,
+        Glib::RefPtr<Gtk::Builder> const &builder,
+        std::shared_ptr<Colors::ColorSet> color,
+        Colors::Space::Component component);
+    ~ColorSlider() override = default;
 
-    void setAdjustment(Glib::RefPtr<Gtk::Adjustment> adjustment);
-    void setColors(guint32 start, guint32 mid, guint32 end);
-    void setMap(const guchar *map);
-    void setBackground(guint dark, guint light, guint size);
+    double getScaled() const;
+    void setScaled(double value);
+protected:
+    friend class ColorPageChannel;
 
-    sigc::signal<void ()> signal_grabbed;
-    sigc::signal<void ()> signal_dragged;
-    sigc::signal<void ()> signal_released;
-    sigc::signal<void ()> signal_value_changed;
-
+    std::shared_ptr<Colors::ColorSet> _colors;
+    Colors::Space::Component _component;
 private:
     void draw_func(Cairo::RefPtr<Cairo::Context> const &cr, int width, int height);
 
@@ -53,22 +59,16 @@ private:
     Gtk::EventSequenceState on_click_released(Gtk::GestureClick const &click,
                                               int n_press, double x, double y);
     void on_motion(GtkEventControllerMotion const *motion, double x, double y);
+    void update_component(double x, double y, Gdk::ModifierType const state);
 
-    void _onAdjustmentChanged();
-    void _onAdjustmentValueChanged();
+    Inkscape::auto_connection _changed_connection;
+    sigc::signal<void ()> signal_value_changed;
 
-    bool _dragging;
+    int _arrow_x, _arrow_y = 0;
 
-    Glib::RefPtr<Gtk::Adjustment> _adjustment;
-    sigc::connection _adjustment_changed_connection;
-    sigc::connection _adjustment_value_changed_connection;
-
-    gfloat _value;
-    gfloat _oldvalue;
-    guchar _c0[4], _cm[4], _c1[4];
-    guchar _b0, _b1;
-    guchar _bmask;
-    guchar *_map;
+    // Memory buffers for the painted gradient
+    std::vector<unsigned int> _gr_buffer;
+    Glib::RefPtr<Gdk::Pixbuf> _gradient;
 };
 
 } // namespace Inkscape::UI::Widget

@@ -103,7 +103,6 @@
 #include "ui/toolbar/tool-toolbar.h"
 #include "ui/toolbar/toolbar-constants.h"
 #include "ui/util.h"
-#include "ui/widget/color-scales.h"
 #include "ui/widget/preferences-widget.h"
 #include "ui/widget/style-swatch.h"
 #include "util/recently-used-fonts.h"
@@ -2117,15 +2116,15 @@ void InkscapePreferences::initPageUI()
     {
         auto const container = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL);
         auto prefs = Inkscape::Preferences::get();
-        for (auto&& picker : Inkscape::UI::Widget::get_color_pickers()) {
+        for (auto& space : Colors::Manager::get()) {
             auto const btn = Gtk::make_managed<Gtk::ToggleButton>();
             auto const box = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL);
-            auto const label = Gtk::make_managed<Gtk::Label>(picker.label);
+            auto const label = Gtk::make_managed<Gtk::Label>(space->getName());
             label->set_valign(Gtk::Align::CENTER);
             UI::pack_start(*box, *label);
-            UI::pack_start(*box, *Gtk::make_managed<Gtk::Image>(Gio::ThemedIcon::create(picker.icon)));
+            UI::pack_start(*box, *Gtk::make_managed<Gtk::Image>(Gio::ThemedIcon::create(space->getIcon())));
             box->set_spacing(3);
-            auto path = picker.visibility_path;
+            auto path = space->getPrefsPath() + "visible";
             btn->set_active(prefs->getBool(path));
             btn->set_child(*box);
             btn->set_has_frame(false);

@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Generated with glade 3.38.2 -->
+<interface>
+  <requires lib="gtk+" version="3.24"/>
+  <!-- n-columns=3 n-rows=7 -->
+  <object class="GtkGrid" id="color-page">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="valign">start</property>
+    <property name="hexpand">True</property>
+    <property name="vexpand">True</property>
+    <property name="row-spacing">2</property>
+    <child>
+      <object class="GtkSpinButton" id="spin1">
+        <property name="visible">True</property>
+        <property name="can-focus">True</property>
+        <layout>
+          <property name="column">2</property>
+          <property name="row">1</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="GtkSpinButton" id="spin3">
+        <property name="visible">True</property>
+        <property name="can-focus">True</property>
+        <layout>
+          <property name="column">2</property>
+          <property name="row">3</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="GtkSpinButton" id="spin2">
+        <property name="visible">True</property>
+        <property name="can-focus">True</property>
+        <layout>
+          <property name="column">2</property>
+          <property name="row">2</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="GtkSpinButton" id="spin5">
+        <property name="visible">True</property>
+        <property name="can-focus">True</property>
+        <layout>
+          <property name="column">2</property>
+          <property name="row">5</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="GtkSpinButton" id="spin6">
+        <property name="visible">True</property>
+        <property name="can-focus">True</property>
+        <layout>
+          <property name="column">2</property>
+          <property name="row">6</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="GtkSpinButton" id="spin4">
+        <property name="visible">True</property>
+        <property name="can-focus">True</property>
+        <layout>
+          <property name="column">2</property>
+          <property name="row">4</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="GtkLabel" id="label1">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <property name="halign">end</property>
+        <property name="label" translatable="yes">L:</property>
+        <property name="justify">right</property>
+        <layout>
+          <property name="column">0</property>
+          <property name="row">1</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="GtkLabel" id="label2">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <property name="halign">end</property>
+        <property name="label" translatable="yes">L:</property>
+        <property name="use-markup">True</property>
+        <property name="justify">right</property>
+        <layout>
+          <property name="column">0</property>
+          <property name="row">2</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="GtkLabel" id="label3">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <property name="halign">end</property>
+        <property name="label" translatable="yes">L:</property>
+        <property name="use-markup">True</property>
+        <property name="justify">right</property>
+        <layout>
+          <property name="column">0</property>
+          <property name="row">3</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="GtkLabel" id="label5">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <property name="halign">end</property>
+        <property name="label" translatable="yes">L:</property>
+        <property name="use-markup">True</property>
+        <property name="justify">right</property>
+        <layout>
+          <property name="column">0</property>
+          <property name="row">5</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="GtkLabel" id="label4">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <property name="halign">end</property>
+        <property name="label" translatable="yes">L:</property>
+        <property name="use-markup">True</property>
+        <property name="justify">right</property>
+        <layout>
+          <property name="column">0</property>
+          <property name="row">4</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="GtkLabel" id="label6">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <property name="halign">end</property>
+        <property name="label" translatable="yes">L:</property>
+        <property name="use-markup">True</property>
+        <property name="justify">right</property>
+        <layout>
+          <property name="column">0</property>
+          <property name="row">6</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="GtkExpander">
+        <property name="visible">True</property>
+        <property name="can-focus">True</property>
+        <property name="hexpand">True</property>
+        <child>
+          <object class="GtkAspectFrame">
+            <property name="name">wheel</property>
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="hexpand">True</property>
+            <property name="vexpand">True</property>
+            <child>
+              <placeholder/>
+            </child>
+          </object>
+        </child>
+        <child type="label">
+          <object class="GtkBox">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <child>
+              <object class="GtkImage">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="margin-top">2</property>
+                <property name="margin-bottom">2</property>
+                <property name="label" translatable="yes">Color Wheel</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <layout>
+          <property name="column-span">3</property>
+          <property name="column">0</property>
+          <property name="row">0</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="GtkDrawingArea" id="slider1">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <layout>
+          <property name="column">1</property>
+          <property name="row">1</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="GtkDrawingArea" id="slider2">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <layout>
+          <property name="column">1</property>
+          <property name="row">2</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="GtkDrawingArea" id="slider3">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <layout>
+          <property name="column">1</property>
+          <property name="row">3</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="GtkDrawingArea" id="slider4">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <layout>
+          <property name="column">1</property>
+          <property name="row">4</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="GtkDrawingArea" id="slider5">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <layout>
+          <property name="column">1</property>
+          <property name="row">5</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="GtkDrawingArea" id="slider6">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <layout>
+          <property name="column">1</property>
+          <property name="row">6</property>
+        </layout>
+      </object>
+    </child>
+  </object>
+</interface>

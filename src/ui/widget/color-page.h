@@ -1,0 +1,85 @@
+// SPDX-License-Identifier: GPL-2.0-or-later
+/** @file
+ * Build a set of color sliders for a given color space
+ *//*
+ * Copyright (C) 2024 Authors
+ * Released under GNU GPL v2+, read the file 'COPYING' for more information.
+ */
+
+#ifndef SEEN_SP_COLOR_SLIDERS_H
+#define SEEN_SP_COLOR_SLIDERS_H
+
+#include <gtkmm/box.h>
+
+#include "helper/auto-connection.h"
+#include "ui/widget/color-slider.h"
+#include "ui/widget/spinbutton.h"
+
+using namespace Inkscape::Colors;
+
+namespace Inkscape::Colors {
+class Color;
+class ColorSet;
+namespace Space {
+class AnySpace;
+}
+}
+
+namespace Gtk {
+class Builder;
+}
+
+namespace Inkscape::UI::Widget {
+
+class ColorSlider;
+class ColorWheel;
+class ColorPageChannel;
+
+class ColorPage : public Gtk::Box
+{
+public:
+    ColorPage(std::shared_ptr<Space::AnySpace> space, std::shared_ptr<ColorSet> colors);
+protected:
+    Glib::RefPtr<Gtk::Builder> _builder;
+
+    std::shared_ptr<Space::AnySpace> _space;
+    std::shared_ptr<ColorSet> _selected_colors;
+    std::shared_ptr<ColorSet> _specific_colors;
+
+    std::vector<ColorPageChannel> _channels;
+private:
+    Inkscape::auto_connection _specific_changed_connection;
+    Inkscape::auto_connection _selected_changed_connection;
+};
+
+class ColorPageChannel
+{
+public:
+    ColorPageChannel(
+        Gtk::Label &label,
+        ColorSlider &slider,
+        SpinButton &spin);
+private:
+    Gtk::Label &_label;
+    ColorSlider &_slider;
+    SpinButton &_spin;
+    Glib::RefPtr<Gtk::Adjustment> _adj;
+
+    Inkscape::auto_connection _adj_changed;
+    Inkscape::auto_connection _slider_changed;
+};
+
+} // namespace Inkscape::UI::Widget
+
+#endif /* !SEEN_SP_COLOR_SLIDERS_H */
+
+/*
+  Local Variables:
+  mode:c++
+  c-file-style:"stroustrup"
+  c-file-offsets:((innamespace . 0)(inline-open . 0)(case-label . +))
+  indent-tabs-mode:nil
+  fill-column:99
+  End:
+*/
+// vim:filetype=cpp:expandtab:shiftwidth=4:tabstop=8:softtabstop=4:fileencoding=utf-8:textwidth=99:

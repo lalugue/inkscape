@@ -193,11 +193,11 @@ set(ui_SRC
 	widget/canvas-notice.cpp
 	widget/color-entry.cpp
 	widget/color-notebook.cpp
+	widget/color-page.cpp
 	widget/color-palette.cpp
 	widget/color-palette-preview.cpp
 	widget/color-picker.cpp
 	widget/color-preview.cpp
-	widget/color-scales.cpp
 	widget/color-slider.cpp
 	widget/combo-box-entry-tool-item.cpp
 	widget/combo-tool-item.cpp
@@ -483,11 +483,11 @@ set(ui_SRC
 	widget/completion-popup.h
 	widget/color-entry.h
 	widget/color-notebook.h
+	widget/color-page.h
 	widget/color-palette.h
 	widget/color-palette-preview.h
 	widget/color-picker.h
 	widget/color-preview.h
-	widget/color-scales.h
 	widget/color-slider.h
 	widget/combo-enums.h
 	widget/combo-box-entry-tool-item.h

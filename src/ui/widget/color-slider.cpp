@@ -4,65 +4,48 @@
  *//*
  * Authors:
  *   see git history
- *   Lauris Kaplinski <lauris@kaplinski.com>
- *   bulia byak <buliabyak@users.sf.net>
  *
- * Copyright (C) 2018 Authors
+ * Copyright (C) 2018-2024 Authors
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include <utility>
-#include <sigc++/functors/mem_fun.h>
+#include "color-slider.h"
+
+#include <cairomm/pattern.h>
 #include <gdkmm/general.h>
-#include <gtkmm/adjustment.h>
 #include <gtkmm/drawingarea.h>
 #include <gtkmm/gestureclick.h>
+#include <sigc++/functors/mem_fun.h>
+#include <utility>
 
 #include "colors/color.h"
-#include "ui/widget/color-slider.h"
+#include "colors/color-set.h"
+#include "colors/spaces/base.h"
+#include "colors/spaces/components.h"
 #include "preferences.h"
 #include "ui/controller.h"
-#include "ui/widget/color-scales.h"
+#include "ui/util.h"
 
 static const gint ARROW_SIZE = 8;
-
-static const guchar *sp_color_slider_render_gradient(gint x0, gint y0, gint width, gint height, gint c[], gint dc[],
-                                                     guint b0, guint b1, guint mask);
-static const guchar *sp_color_slider_render_map(gint x0, gint y0, gint width, gint height, guchar *map, gint start,
-                                                gint step, guint b0, guint b1, guint mask);
+constexpr uint32_t ERR_DARK = 0xff00ff00;    // Green
+constexpr uint32_t ERR_LIGHT = 0xffff00ff;   // Magenta
+constexpr uint32_t CHECK_DARK = 0xff5f5f5f;  // Dark gray
+constexpr uint32_t CHECK_LIGHT = 0xffa0a0a0; // Light gray
 
 namespace Inkscape::UI::Widget {
 
-ColorSlider::ColorSlider(Glib::RefPtr<Gtk::Adjustment> adjustment)
-    : _dragging(false)
-    , _value(0.0)
-    , _oldvalue(0.0)
-    , _map(nullptr)
+ColorSlider::ColorSlider(
+    BaseObjectType *cobject,
+    Glib::RefPtr<Gtk::Builder> const &builder,
+    std::shared_ptr<Colors::ColorSet> colors,
+    Colors::Space::Component component)
+    : Gtk::DrawingArea(cobject)
+    , _colors(std::move(colors))
+    , _component(std::move(component))
 {
     set_name("ColorSlider");
 
     set_draw_func(sigc::mem_fun(*this, &ColorSlider::draw_func));
-
-    _c0[0] = 0x00;
-    _c0[1] = 0x00;
-    _c0[2] = 0x00;
-    _c0[3] = 0xff;
-
-    _cm[0] = 0xff;
-    _cm[1] = 0x00;
-    _cm[2] = 0x00;
-    _cm[3] = 0xff;
-
-    _c1[0] = 0xff;
-    _c1[1] = 0xff;
-    _c1[2] = 0xff;
-    _c1[3] = 0xff;
-
-    _b0 = 0x5f;
-    _b1 = 0xa0;
-    _bmask = 0x08;
-
-    setAdjustment(std::move(adjustment));
 
     Controller::add_click(*this,
                           sigc::mem_fun(*this, &ColorSlider::on_click_pressed ),
@@ -70,381 +53,176 @@ ColorSlider::ColorSlider(Glib::RefPtr<Gtk::Adjustment> adjustment)
                           Controller::Button::left);
     Controller::add_motion<nullptr, &ColorSlider::on_motion, nullptr>
                           (*this, *this);
-}
-
-ColorSlider::~ColorSlider()
-{
-    if (_adjustment) {
-        _adjustment_changed_connection.disconnect();
-        _adjustment_value_changed_connection.disconnect();
-        _adjustment.reset();
-    }
-}
-
-static bool get_constrained(Gdk::ModifierType const state)
-{
-    return Controller::has_flag(state, Gdk::ModifierType::CONTROL_MASK);
+    _changed_connection = _colors->signal_changed.connect([this]() {
+        queue_draw();
+    });
 }
 
 static double get_value_at(Gtk::Widget const &self, double const x, double const y)
 {
-    constexpr auto cx = 0; // formerly held CSS padding, now Box handles that
-    auto const cw = self.get_width() - 2 * cx;
-    return CLAMP((x - cx) / cw, 0.0, 1.0);
+    return CLAMP(x / self.get_width(), 0.0, 1.0);
 }
 
 Gtk::EventSequenceState ColorSlider::on_click_pressed(Gtk::GestureClick const &click,
                                                       int /*n_press*/, double const x, double const y)
 {
-    signal_grabbed.emit();
-    _dragging = true;
-    _oldvalue = _value;
-    auto const value = get_value_at(*this, x, y);
-    auto const state = click.get_current_event_state();
-    auto const constrained = get_constrained(state);
-    ColorScales<>::setScaled(_adjustment, value, constrained);
-    signal_dragged.emit();
+    _colors->grab();
+    update_component(x, y, click.get_current_event_state());
     return Gtk::EventSequenceState::NONE;
 }
 
 Gtk::EventSequenceState ColorSlider::on_click_released(Gtk::GestureClick const & /*click*/,
                                                        int /*n_press*/, double /*x*/, double /*y*/)
 {
-    _dragging = false;
-    signal_released.emit();
-    if (_value != _oldvalue) {
-        signal_value_changed.emit();
-    }
+    _colors->release();
     return Gtk::EventSequenceState::NONE;
 }
 
 void ColorSlider::on_motion(GtkEventControllerMotion const * const motion,
                             double const x, double const y)
 {
-    if (_dragging) {
-        auto const value = get_value_at(*this, x, y);
+    if (_colors->isGrabbed()) {
         auto const state = gtk_event_controller_get_current_event_state(GTK_EVENT_CONTROLLER(motion));
-        auto const constrained = get_constrained((Gdk::ModifierType)state);
-        ColorScales<>::setScaled(_adjustment, value, constrained);
-        signal_dragged.emit();
+        update_component(x, y, (Gdk::ModifierType)state);
     }
 }
 
-void ColorSlider::setAdjustment(Glib::RefPtr<Gtk::Adjustment> adjustment)
+void ColorSlider::update_component(double x, double y, Gdk::ModifierType const state)
 {
-    if (!adjustment) {
-        _adjustment = Gtk::Adjustment::create(0.0, 0.0, 1.0, 0.01, 0.0, 0.0);
-    }
-    else {
-        adjustment->set_page_increment(0.0);
-        adjustment->set_page_size(0.0);
-    }
+    auto const constrained = Controller::has_flag(state, Gdk::ModifierType::CONTROL_MASK);
 
-    if (_adjustment != adjustment) {
-        if (_adjustment) {
-            _adjustment_changed_connection.disconnect();
-            _adjustment_value_changed_connection.disconnect();
-        }
-
-        _adjustment = std::move(adjustment);
-        _adjustment_changed_connection =
-            _adjustment->signal_changed().connect(sigc::mem_fun(*this, &ColorSlider::_onAdjustmentChanged));
-        _adjustment_value_changed_connection =
-            _adjustment->signal_value_changed().connect(sigc::mem_fun(*this, &ColorSlider::_onAdjustmentValueChanged));
-
-        _value = ColorScales<>::getScaled(_adjustment);
-
-        _onAdjustmentChanged();
+    // XXX We don't know how to deal with constraints yet.
+    if (_colors->setAll(_component, get_value_at(*this, x, y))) {
+        signal_value_changed.emit();
     }
 }
 
-void ColorSlider::_onAdjustmentChanged() { queue_draw(); }
-
-void ColorSlider::_onAdjustmentValueChanged()
+/**
+ * Generate a checkerboard pattern with the given colors.
+ *
+ * @arg dark - The RGBA dark color
+ * @arg light - The RGBA light color
+ * @arg scale - The scale factor of the cairo surface
+ * @arg buffer - The memory to populate with this pattern
+ *
+ * @returns A Gdk::Pixbuf of the buffer memory.
+ */
+Glib::RefPtr<Gdk::Pixbuf> _make_checkerboard(uint32_t dark, uint32_t light, unsigned scale, std::vector<uint32_t> &buffer)
 {
-    if (_value != ColorScales<>::getScaled(_adjustment)) {
-        constexpr int cx = 0, cy = 0; // formerly held CSS padding, now Box handles that
-        auto const cw = get_width();
-        if ((gint)(ColorScales<>::getScaled(_adjustment) * cw) != (gint)(_value * cw)) {
-            gint ax, ay;
-            gfloat value;
-            value = _value;
-            _value = ColorScales<>::getScaled(_adjustment);
-            ax = (int)(cx + value * cw - ARROW_SIZE / 2 - 2);
-            ay = cy;
-            queue_draw();
-        }
-        else {
-            _value = ColorScales<>::getScaled(_adjustment);
+    // A pattern of 2x2 blocks is enough for REPEAT mode to do the rest, this way we never need to recalculate the checkerboard
+    static auto block = 0x08 * scale;
+    static auto pattern = block * 2;
+
+    buffer = std::vector<uint32_t>(pattern * pattern);
+    for (auto y = 0; y < pattern; y++) {
+        for (auto x = 0; x < pattern; x++) {
+            buffer[(y * pattern) + x] = ((x / block) & 1) != ((y / block) & 1) ? dark : light;
         }
     }
-}
-
-void ColorSlider::setColors(guint32 start, guint32 mid, guint32 end)
-{
-    // Remove any map, if set
-    _map = nullptr;
-
-    _c0[0] = start >> 24;
-    _c0[1] = (start >> 16) & 0xff;
-    _c0[2] = (start >> 8) & 0xff;
-    _c0[3] = start & 0xff;
-
-    _cm[0] = mid >> 24;
-    _cm[1] = (mid >> 16) & 0xff;
-    _cm[2] = (mid >> 8) & 0xff;
-    _cm[3] = mid & 0xff;
-
-    _c1[0] = end >> 24;
-    _c1[1] = (end >> 16) & 0xff;
-    _c1[2] = (end >> 8) & 0xff;
-    _c1[3] = end & 0xff;
-
-    queue_draw();
-}
-
-void ColorSlider::setMap(const guchar *map)
-{
-    _map = const_cast<guchar *>(map);
-
-    queue_draw();
-}
-
-void ColorSlider::setBackground(guint dark, guint light, guint size)
-{
-    _b0 = dark;
-    _b1 = light;
-    _bmask = size;
-
-    queue_draw();
+    return Gdk::Pixbuf::create_from_data((guint8*)buffer.data(), Gdk::Colorspace::RGB, true, 8, pattern, pattern, pattern * 4);
 }
 
 void ColorSlider::draw_func(Cairo::RefPtr<Cairo::Context> const &cr,
                             int const width, int const height)
 {
     auto const scale = get_scale_factor();
-    Gdk::Rectangle const carea{0, 0, width * scale, height * scale};
-
-    // save before applying clipping
-    cr->save();
-    {
-        // round rect clipping path
-        double x = 0, y = 0, w = width, h = height;
-        double radius = 3;
-        cr->arc(x + w - radius, y + radius, radius, -M_PI_2, 0);
-        cr->arc(x + w - radius, y + h - radius, radius, 0, M_PI_2);
-        cr->arc(x + radius, y + h - radius, radius, M_PI_2, M_PI);
-        cr->arc(x + radius, y + radius, radius, M_PI, 3*M_PI_2);
-        cr->clip();
-    }
+    bool const is_alpha = _component.id == "a";
 
     // changing scale to draw pixmap at display resolution
+    cr->save();
     cr->scale(1.0 / scale, 1.0 / scale);
 
-    if (_map) {
-        /* Render map pixelstore */
-        gint d = (1024 << 16) / carea.get_width();
-        gint s = 0;
+    // Color set is empty, this is not allowed, show warning colors
+    if (_colors->isEmpty()) {
+        static std::vector<uint32_t> err_buffer;
+        static Glib::RefPtr<Gdk::Pixbuf> error = _make_checkerboard(ERR_DARK, ERR_LIGHT, scale, err_buffer);
 
-        const guchar *b =
-            sp_color_slider_render_map(0, 0, carea.get_width(), carea.get_height(), _map, s, d, _b0, _b1, _bmask * scale);
+        Gdk::Cairo::set_source_pixbuf(cr, error, 0, 0);
+        cr->get_source()->set_extend(Cairo::Pattern::Extend::REPEAT);
+        cr->paint();
 
-        if (b != nullptr && carea.get_width() > 0) {
-            Glib::RefPtr<Gdk::Pixbuf> pb = Gdk::Pixbuf::create_from_data(
-                b, Gdk::Colorspace::RGB, false, 8, carea.get_width(), carea.get_height(), carea.get_width() * 3);
+        // Don't try and paint any color (there isn't any)
+        cr->restore();
+        return;
+    }
 
-            Gdk::Cairo::set_source_pixbuf(cr, pb, carea.get_x(), carea.get_y());
-            cr->paint();
+    // The alpha background is a checkerboard pattern of light and dark pixels
+    if (is_alpha) {
+        static std::vector<uint32_t> bg_buffer;
+        static Glib::RefPtr<Gdk::Pixbuf> background = _make_checkerboard(CHECK_DARK, CHECK_LIGHT, scale, bg_buffer);
+
+        // Paint the alpha background
+        Gdk::Cairo::set_source_pixbuf(cr, background, 0, 0);
+        cr->get_source()->set_extend(Cairo::Pattern::Extend::REPEAT);
+        cr->paint();
+    }
+
+    if (!_gradient) {
+        // Draw row of colored pixels here
+        auto paint_color = _colors->getAverage();
+
+        if (!is_alpha) {
+            // Remove alpha channel from paint
+            paint_color.enableOpacity(false);
+        }
+
+        // When the widget is wider, we want a new color gradient buffer
+        if (_gr_buffer.size() < static_cast<size_t>(width)) {
+            _gr_buffer = std::vector<uint32_t>(width);
+            _gradient = Gdk::Pixbuf::create_from_data((guint8*)&_gr_buffer.front(), Gdk::Colorspace::RGB, true, 8, width, 1, width * 4);
+        }
+
+        for (int x = 0; x < width; x++) {
+            paint_color.set(_component.index, static_cast<double>(x) / width);
+            _gr_buffer[x] = paint_color.toABGR();
         }
     }
-    else {
-        gint c[4], dc[4];
 
-        /* Render gradient */
-
-        // part 1: from c0 to cm
-        if (carea.get_width() > 0) {
-            for (gint i = 0; i < 4; i++) {
-                c[i] = _c0[i] << 16;
-                dc[i] = ((_cm[i] << 16) - c[i]) / (carea.get_width() / 2);
-            }
-            guint wi = carea.get_width() / 2;
-            const guchar *b = sp_color_slider_render_gradient(0, 0, wi, carea.get_height(), c, dc, _b0, _b1, _bmask * scale);
-
-            /* Draw pixelstore 1 */
-            if (b != nullptr && wi > 0) {
-                Glib::RefPtr<Gdk::Pixbuf> pb =
-                    Gdk::Pixbuf::create_from_data(b, Gdk::Colorspace::RGB, false, 8, wi, carea.get_height(), wi * 3);
-
-                Gdk::Cairo::set_source_pixbuf(cr, pb, carea.get_x(), carea.get_y());
-                cr->paint();
-            }
-        }
-
-        // part 2: from cm to c1
-        if (carea.get_width() > 0) {
-            for (gint i = 0; i < 4; i++) {
-                c[i] = _cm[i] << 16;
-                dc[i] = ((_c1[i] << 16) - c[i]) / (carea.get_width() / 2);
-            }
-            guint wi = carea.get_width() / 2;
-            const guchar *b = sp_color_slider_render_gradient(carea.get_width() / 2, 0, wi, carea.get_height(), c, dc,
-                                                              _b0, _b1, _bmask * scale);
-
-            /* Draw pixelstore 2 */
-            if (b != nullptr && wi > 0) {
-                Glib::RefPtr<Gdk::Pixbuf> pb =
-                    Gdk::Pixbuf::create_from_data(b, Gdk::Colorspace::RGB, false, 8, wi, carea.get_height(), wi * 3);
-
-                Gdk::Cairo::set_source_pixbuf(cr, pb, carea.get_width() / 2 + carea.get_x(), carea.get_y());
-                cr->paint();
-            }
-        }
-    }
-    // unclip, unscale
+    Gdk::Cairo::set_source_pixbuf(cr, _gradient, 0, 0);
+    cr->get_source()->set_extend(Cairo::Pattern::Extend::REPEAT);
+    cr->paint();
     cr->restore();
 
     /* Draw arrow */
-    gint x = (int)(_value * (carea.get_width() / scale) - ARROW_SIZE / 2 + carea.get_x() / scale);
-    gint y1 = carea.get_y() / scale - 1;
-    gint y2 = carea.get_y() / scale + carea.get_height() / scale;
+    double value = _colors->getAverage(_component);
+    gint x = (int)(value * (width / scale) - ARROW_SIZE / 2);
+    gint y1 = 0;
+    gint y2 = height / scale - 1;
+    cr->set_line_width(2.0);
 
     // Define top arrow
-    auto top = [&](double dx){
-        cr->move_to(x - 0.5 - dx, y1 + 0.5);
-        cr->line_to(x + ARROW_SIZE - 0.5 + dx, y1 + 0.5);
-        cr->line_to(x + (ARROW_SIZE - 1) / 2.0, y1 + ARROW_SIZE / 2.0 + 0.5 + dx);
-        cr->close_path();
-    };
-    top(1.5);
-    cr->set_source_rgb(0.0, 0.0, 0.0);
-    cr->fill();
-    top(0);
-    cr->set_source_rgb(1.0, 1.0, 1.0);
-    cr->fill();
+    cr->move_to(x - 0.5, y1 + 0.5);
+    cr->line_to(x + ARROW_SIZE - 0.5, y1 + 0.5);
+    cr->line_to(x + (ARROW_SIZE - 1) / 2.0, y1 + ARROW_SIZE / 2.0 + 0.5);
+    cr->close_path();
 
     // Define bottom arrow
-    auto down = [&](double dx){
-        cr->move_to(x - 0.5 - dx, y2 + 0.5);
-        cr->line_to(x + ARROW_SIZE - 0.5 + dx, y2 + 0.5);
-        cr->line_to(x + (ARROW_SIZE - 1) / 2.0, y2 - ARROW_SIZE / 2.0 + 0.5 - dx);
-        cr->close_path();
-    };
-    down(1.5);
+    cr->move_to(x - 0.5, y2 + 0.5);
+    cr->line_to(x + ARROW_SIZE - 0.5, y2 + 0.5);
+    cr->line_to(x + (ARROW_SIZE - 1) / 2.0, y2 - ARROW_SIZE / 2.0 + 0.5);
+    cr->close_path();
+
+    // Render both arrows
     cr->set_source_rgb(0.0, 0.0, 0.0);
-    cr->fill();
-    down(0);
+    cr->stroke_preserve();
     cr->set_source_rgb(1.0, 1.0, 1.0);
     cr->fill();
+}
+
+double ColorSlider::getScaled() const
+{
+    if (_colors->isEmpty())
+        return 0.0;
+    return _colors->getAverage(_component) * _component.scale;
+}
+
+void ColorSlider::setScaled(double value)
+{
+    // setAll replaces every color with the same value, setAverage moves them all by the same amount.
+    _colors->setAll(_component, value / _component.scale);
 }
 
 } // namespace Inkscape::UI::Widget
-
-/* Colors are << 16 */
-
-inline bool checkerboard(gint x, gint y, guint size) {
-	return ((x / size) & 1) != ((y / size) & 1);
-}
-
-static const guchar *sp_color_slider_render_gradient(gint x0, gint y0, gint width, gint height, gint c[], gint dc[],
-                                                     guint b0, guint b1, guint mask)
-{
-    static guchar *buf = nullptr;
-    static gint bs = 0;
-    guchar *dp;
-    gint x, y;
-    guint r, g, b, a;
-
-    if (buf && (bs < width * height)) {
-        g_free(buf);
-        buf = nullptr;
-    }
-    if (!buf) {
-        buf = g_new(guchar, width * height * 3);
-        bs = width * height;
-    }
-
-    dp = buf;
-    r = c[0];
-    g = c[1];
-    b = c[2];
-    a = c[3];
-    for (x = x0; x < x0 + width; x++) {
-        gint cr, cg, cb, ca;
-        guchar *d;
-        cr = r >> 16;
-        cg = g >> 16;
-        cb = b >> 16;
-        ca = a >> 16;
-        d = dp;
-        for (y = y0; y < y0 + height; y++) {
-            guint bg, fc;
-            /* Background value */
-            bg = checkerboard(x, y, mask) ? b0 : b1;
-            fc = (cr - bg) * ca;
-            d[0] = bg + ((fc + (fc >> 8) + 0x80) >> 8);
-            fc = (cg - bg) * ca;
-            d[1] = bg + ((fc + (fc >> 8) + 0x80) >> 8);
-            fc = (cb - bg) * ca;
-            d[2] = bg + ((fc + (fc >> 8) + 0x80) >> 8);
-            d += 3 * width;
-        }
-        r += dc[0];
-        g += dc[1];
-        b += dc[2];
-        a += dc[3];
-        dp += 3;
-    }
-
-    return buf;
-}
-
-/* Positions are << 16 */
-
-static const guchar *sp_color_slider_render_map(gint x0, gint y0, gint width, gint height, guchar *map, gint start,
-                                                gint step, guint b0, guint b1, guint mask)
-{
-    static guchar *buf = nullptr;
-    static gint bs = 0;
-    guchar *dp;
-    gint x, y;
-
-    if (buf && (bs < width * height)) {
-        g_free(buf);
-        buf = nullptr;
-    }
-    if (!buf) {
-        buf = g_new(guchar, width * height * 3);
-        bs = width * height;
-    }
-
-    dp = buf;
-    for (x = x0; x < x0 + width; x++) {
-        gint cr, cg, cb, ca;
-        guchar *d = dp;
-        guchar *sp = map + 4 * (start >> 16);
-        cr = *sp++;
-        cg = *sp++;
-        cb = *sp++;
-        ca = *sp++;
-        for (y = y0; y < y0 + height; y++) {
-            guint bg, fc;
-            /* Background value */
-            bg = checkerboard(x, y, mask) ? b0 : b1;
-            fc = (cr - bg) * ca;
-            d[0] = bg + ((fc + (fc >> 8) + 0x80) >> 8);
-            fc = (cg - bg) * ca;
-            d[1] = bg + ((fc + (fc >> 8) + 0x80) >> 8);
-            fc = (cb - bg) * ca;
-            d[2] = bg + ((fc + (fc >> 8) + 0x80) >> 8);
-            d += 3 * width;
-        }
-        dp += 3;
-        start += step;
-    }
-
-    return buf;
-}
 
 /*
   Local Variables:

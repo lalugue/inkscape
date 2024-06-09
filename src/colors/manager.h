@@ -37,6 +37,9 @@ public:
         return instance;
     }
 
+    std::vector<std::shared_ptr<Space::AnySpace>>::iterator begin() { return std::begin(_spaces); }
+    std::vector<std::shared_ptr<Space::AnySpace>>::iterator end() { return std::end(_spaces); }
+
     std::shared_ptr<Space::AnySpace> find(Space::Type type) const;
     std::shared_ptr<Space::AnySpace> find(std::string const &name) const;
 
