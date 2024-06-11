@@ -13,8 +13,9 @@
 #include "page-selector.h"
 
 #include <cstring>
-#include <string>
 #include <glibmm/i18n.h>
+#include <glibmm/markup.h>
+#include <string>
 
 #include "desktop.h"
 #include "document.h"
@@ -145,15 +146,15 @@ void PageSelector::renderPageLabel(Gtk::TreeModel::const_iterator const &row)
     if (page && page->getRepr()) {
         int page_num = page->getPagePosition();
 
-        gchar *format;
+        Glib::ustring format;
         if (auto label = page->label()) {
-            format = g_strdup_printf("<span size=\"smaller\"><tt>%d.</tt>%s</span>", page_num, label);
+            auto escaped_text = Glib::Markup::escape_text(label);
+            format = Glib::ustring::compose("<span size=\"smaller\"><tt>%1.</tt>%2</span>", page_num, escaped_text);
         } else {
-            format = g_strdup_printf("<span size=\"smaller\"><i>%s</i></span>", page->getDefaultLabel().c_str());
+            format = Glib::ustring::compose("<span size=\"smaller\"><i>%1</i></span>", page->getDefaultLabel().c_str());
         }
 
         _label_renderer.property_markup() = format;
-        g_free(format);
     } else {
         _label_renderer.property_markup() = "⚠️";
     }
