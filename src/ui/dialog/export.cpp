@@ -295,6 +295,19 @@ bool Export::exportRaster(
 bool Export::exportVector(
         Inkscape::Extension::Output *extension, SPDocument *doc,
         Glib::ustring const &filename,
+        bool overwrite, Geom::Rect const &area)
+{
+    doc->ensureUpToDate();
+    doc->getPageManager().disablePages();
+    doc->fitToRect(area, false);
+    doc->getPageManager().enablePages();
+    auto page = doc->getPageManager().getFirstPage();
+    return exportVector(extension, doc, filename, overwrite, {}, {page});
+}
+
+bool Export::exportVector(
+        Inkscape::Extension::Output *extension, SPDocument *doc,
+        Glib::ustring const &filename,
         bool overwrite, const std::vector<SPItem const *> &items, SPPage const *page)
 {
     std::vector<SPPage const *> pages;
@@ -402,7 +415,7 @@ bool Export::exportVector(
         copy_doc->getRoot()->cropToObjects(objects_to_export);
 
         if (pages.empty()) {
-            object_set.fitCanvas(true, true);
+            object_set.fitCanvas(false, true);
         }
     }
 

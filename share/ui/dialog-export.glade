@@ -111,6 +111,7 @@
                                       <object class="GtkViewport">
                                         <property name="child">
                                           <object class="GtkFlowBox" id="si_pages">
+                                            <property name="valign">start</property>
                                             <property name="margin-start">5</property>
                                             <property name="margin-end">5</property>
                                             <property name="margin-start">6</property>
@@ -619,6 +620,7 @@
                                       <object class="GtkViewport">
                                         <property name="child">
                                           <object class="GtkFlowBox" id="b_preview_box">
+                                            <property name="valign">start</property>
                                             <property name="margin-start">5</property>
                                             <property name="margin-end">5</property>
                                             <property name="margin-top">5</property>

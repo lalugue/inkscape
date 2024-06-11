@@ -101,6 +101,9 @@ public:
   
     static bool exportVector(
         Inkscape::Extension::Output *extension, SPDocument *doc, Glib::ustring const &filename,
+        bool overwrite, Geom::Rect const &area);
+    static bool exportVector(
+        Inkscape::Extension::Output *extension, SPDocument *doc, Glib::ustring const &filename,
         bool overwrite, const std::vector<SPItem const *> &items, SPPage const *page);
     static bool exportVector(
         Inkscape::Extension::Output *extension, SPDocument *doc, Glib::ustring const &filename,

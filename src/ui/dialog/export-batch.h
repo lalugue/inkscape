@@ -67,7 +67,7 @@ typedef std::map<std::string, std::unique_ptr<BatchItem>> BatchItems;
 class BatchItem final : public Gtk::FlowBoxChild
 {
 public:
-    BatchItem(SPItem *item, std::shared_ptr<PreviewDrawing> drawing);
+    BatchItem(SPItem *item, bool isolate_item, std::shared_ptr<PreviewDrawing> drawing);
     BatchItem(SPPage *page, std::shared_ptr<PreviewDrawing> drawing);
     ~BatchItem() final;
 
@@ -82,8 +82,10 @@ public:
     void on_mode_changed(Gtk::SelectionMode mode);
     void set_selected(bool selected);
     void update_selected();
+    bool isolateItem() const { return _isolate_item; }
+    void setIsolateItem(bool isolate);
 
-    static void syncItems(BatchItems &items, std::map<std::string, SPObject*> const &objects, Gtk::FlowBox &container, std::shared_ptr<PreviewDrawing> preview);
+    static void syncItems(BatchItems &items, std::map<std::string, SPObject*> const &objects, Gtk::FlowBox &container, std::shared_ptr<PreviewDrawing> preview, bool isolate_items);
 private:
     void init(std::shared_ptr<PreviewDrawing> drawing);
     void update_label();
@@ -96,6 +98,7 @@ private:
     ExportPreview _preview;
     SPItem *_item = nullptr;
     SPPage *_page = nullptr;
+    bool _isolate_item = false;
     bool is_hide = false;
 
     auto_connection _selection_widget_changed_conn;

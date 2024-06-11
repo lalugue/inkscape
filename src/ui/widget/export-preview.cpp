@@ -75,7 +75,7 @@ void PreviewDrawing::construct()
 /**
   * Render the drawing into a cairo image surface.
   */
-bool PreviewDrawing::render(ExportPreview *widget, uint32_t bg, SPItem const *item, unsigned size, Geom::OptRect const &dbox)
+bool PreviewDrawing::render(ExportPreview *widget, uint32_t bg, SPItem const *item, unsigned size, Geom::OptRect const &dbox, bool only_item)
 {
     if (!_drawing || _to_destruct) {
         if (!_construct_idle.connected()) {
@@ -94,7 +94,8 @@ bool PreviewDrawing::render(ExportPreview *widget, uint32_t bg, SPItem const *it
 
     if (item) {
         bbox = item->documentVisualBounds();
-        di = item->get_arenaitem(_visionkey);
+        if (only_item)
+            di = item->get_arenaitem(_visionkey);
     } else if (!dbox)
         bbox = _document->getRoot()->documentVisualBounds();
 
@@ -144,8 +145,9 @@ ExportPreview::~ExportPreview()
     refresh_conn.disconnect();
 }
 
-void ExportPreview::setItem(SPItem const *item)
+void ExportPreview::setItem(SPItem const *item, bool is_layer)
 {
+    _is_layer = is_layer;
     _item = item;
     _dbox = {};
 }
@@ -176,7 +178,7 @@ void ExportPreview::queueRefresh()
         return;
 
     _render_idle = Glib::signal_timeout().connect([this]() {
-        return !_drawing->render(this, _bg_color, _item, size, _dbox);
+        return !_drawing->render(this, _bg_color, _item, size, _dbox, _is_layer);
     }, 100);
 }
 
