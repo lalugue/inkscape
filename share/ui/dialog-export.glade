@@ -134,6 +134,7 @@
                                     <child>
                                       <object class="GtkFlowBox" id="si_pages">
                                         <property name="visible">True</property>
+                                        <property name="valign">start</property>
                                         <property name="margin-left">5</property>
                                         <property name="margin-right">5</property>
                                         <property name="margin-start">6</property>
@@ -750,6 +751,7 @@
                                     <child>
                                       <object class="GtkFlowBox" id="b_preview_box">
                                         <property name="visible">True</property>
+                                        <property name="valign">start</property>
                                         <property name="margin-start">5</property>
                                         <property name="margin-end">5</property>
                                         <property name="margin-top">5</property>

@@ -372,7 +372,7 @@ void SingleExport::onPagesChanged()
     }
 
     _pages_list_changed.block();
-    BatchItem::syncItems(current_items, itemsList, pages_list, _preview_drawing);
+    BatchItem::syncItems(current_items, itemsList, pages_list, _preview_drawing, false);
     refreshPage();
     if (auto ext = si_extension_cb.getExtension()) {
         setPagesMode(!ext->is_raster());
@@ -1044,12 +1044,13 @@ void SingleExport::setDocument(SPDocument *document)
         preview.setDrawing(_preview_drawing);
 
         // Refresh values to sync them with defaults.
+        onPagesChanged();
         refreshArea();
         loadExportHints();
     } else {
         _preview_drawing.reset();
+        onPagesChanged();
     }
-    onPagesChanged();
 }
 
 SingleExport::~SingleExport() = default;

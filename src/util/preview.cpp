@@ -33,8 +33,9 @@ render_preview(SPDocument *doc, std::shared_ptr<Inkscape::Drawing> drawing, uint
     double sf = 1.0;
     Geom::IntRect ibox = dboxIn.roundOutwards();
     if (ibox.width() != width_in || ibox.height() != height_in) {
-        sf = std::min((double)width_in / dboxIn.width(),
-                      (double)height_in / dboxIn.height());
+        // Adjust by one pixel to fit in anti-aliasing pixels
+        sf = std::min((double)(width_in - 1) / dboxIn.width(),
+                      (double)(height_in - 1) / dboxIn.height());
         auto scaled_box = dboxIn * Geom::Scale(sf);
         ibox = scaled_box.roundOutwards();
     }
