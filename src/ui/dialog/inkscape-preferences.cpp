@@ -3239,7 +3239,7 @@ void InkscapePreferences::initKeyboardShortcuts(Gtk::TreeModel::iterator iter_ui
     _mod_tree.set_tooltip_column(2);
 
     // In order to get tooltips on header, we must create our own label.
-    auto const and_keys_header = Gtk::make_managed<Gtk::Label>(_("Modifier"));
+    auto const and_keys_header = Gtk::make_managed<Gtk::Label>(_("Tool Modifiers"));
     and_keys_header->set_tooltip_text(_("All keys specified must be held down to activate this functionality."));
     and_keys_header->set_visible(true);
     auto and_keys_column = _mod_tree.get_column(1);
@@ -3312,7 +3312,7 @@ void InkscapePreferences::initKeyboardShortcuts(Gtk::TreeModel::iterator iter_ui
     _keyboard_sizegroup->add_widget(*kb_export);
     _keyboard_sizegroup->add_widget(*kb_import);
 
-    this->AddPage(_page_keyshortcuts, _("Keyboard"), iter_ui, PREFS_PAGE_UI_KEYBOARD_SHORTCUTS);
+    this->AddPage(_page_keyshortcuts, _("Shortcuts"), iter_ui, PREFS_PAGE_UI_KEYBOARD_SHORTCUTS);
 
     _kb_shortcuts_loaded = false;
     Gtk::TreeStore::iterator iter_group = _kb_store->append();
