@@ -19,6 +19,7 @@
 #include <glibmm/miscutils.h>
 #include <gtkmm/builder.h>
 #include <gtkmm/button.h>
+#include <gtkmm/filechoosernative.h>
 #include <gtkmm/flowbox.h>
 #include <gtkmm/messagedialog.h>
 #include <gtkmm/progressbar.h>
@@ -329,7 +330,7 @@ BatchExport::BatchExport(BaseObjectType * const cobject, Glib::RefPtr<Gtk::Build
     , hide_all         (get_widget<Gtk::CheckButton>  (builder, "b_hide_all"))
     , overwrite        (get_widget<Gtk::CheckButton>  (builder, "b_overwrite"))
     , name_text        (get_widget<Gtk::Entry>        (builder, "b_name"))
-    , path_chooser     (get_widget<Gtk::FileChooserButton>(builder, "b_path"))
+    , path_text        (get_widget<Gtk::Entry>        (builder, "b_path"))
     , export_btn       (get_widget<Gtk::Button>       (builder, "b_export"))
     , cancel_btn       (get_widget<Gtk::Button>       (builder, "b_cancel"))
     , progress_box     (get_widget<Gtk::Box>          (builder, "b_inprogress"))
@@ -429,6 +430,7 @@ void BatchExport::setup()
     show_preview.signal_toggled().connect(sigc::mem_fun(*this, &BatchExport::refreshPreview));
     export_conn = export_btn.signal_clicked().connect(sigc::mem_fun(*this, &BatchExport::onExport));
     cancel_conn = cancel_btn.signal_clicked().connect(sigc::mem_fun(*this, &BatchExport::onCancel));
+    browse_conn = path_text.signal_icon_release().connect(sigc::mem_fun(*this, &BatchExport::onBrowse));
     hide_all.signal_toggled().connect(sigc::mem_fun(*this, &BatchExport::refreshItems));
     _bgnd_color_picker->connectChanged([=, this](guint32 color){
         if (_desktop) {
@@ -586,10 +588,10 @@ void BatchExport::loadExportHints(bool rename_file)
 {
     if (!_desktop) return;
 
-    auto old_path = path_chooser.get_filename();
+    auto old_path = path_text.get_text();
     if (old_path.empty()) {
         old_path = getBatchPath();
-        path_chooser.set_filename(old_path);
+        path_text.set_text(old_path);
         }
 
     auto old_name = name_text.get_text();
@@ -637,7 +639,7 @@ void BatchExport::onExport()
 
     setExporting(true);
 
-    std::string path = Glib::filename_from_utf8(path_chooser.get_filename());
+    std::string path = Glib::filename_from_utf8(path_text.get_text());
     std::string name = name_text.get_text();
 
     if (!Inkscape::IO::file_test(path.c_str(), (GFileTest)(G_FILE_TEST_IS_DIR))) {
@@ -720,7 +722,7 @@ void BatchExport::onExport()
                         continue; // Nothing to export
                 } else if (isolate_item) {
                     // Layers are isolated even when they aren't hiding other items
-                    show_only.emplace_back(item);
+                show_only.emplace_back(item);
                 }
             } else if (page) {
                 area = page->getDocumentRect();
@@ -798,6 +800,31 @@ void BatchExport::onExport()
     }
     // Do this right at the end to finish up
     setExporting(false);
+}
+
+void BatchExport::onBrowse(Gtk::EntryIconPosition pos, const GdkEventButton *ev)
+{
+    browse_conn.block();
+    std::string filename = Glib::filename_from_utf8(path_text.get_text());
+
+    auto dialog = Gtk::FileChooserNative::create(
+        _("Select where to save the exported files"),
+        Gtk::FILE_CHOOSER_ACTION_SELECT_FOLDER,
+        _("Select")
+        );
+
+    dialog->set_create_folders(true);
+
+    if (!filename.empty())
+        dialog->set_current_folder(filename);
+
+    if (dialog->run() == Gtk::ResponseType::RESPONSE_ACCEPT) {
+        auto filename_utf8 = Glib::filename_to_utf8(dialog->get_filename());
+        path_text.set_text(filename_utf8);
+        path_text.set_position(filename_utf8.length());
+    }
+
+    browse_conn.unblock();
 }
 
 void BatchExport::setDefaultSelectionMode()
@@ -893,7 +920,7 @@ void BatchExport::setDocument(SPDocument *document)
     }
 
     name_text.set_text("");
-    path_chooser.set_filename("");
+    path_text.set_text("");
     refreshItems();
 }
 

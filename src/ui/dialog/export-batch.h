@@ -23,7 +23,6 @@
 #include <gtkmm/checkbutton.h>
 #include <gtkmm/entry.h>
 #include <gtkmm/enums.h>
-#include <gtkmm/filechooserbutton.h>
 #include <gtkmm/flowboxchild.h>
 #include <gtkmm/grid.h>
 #include <gtkmm/label.h>
@@ -140,8 +139,8 @@ private:
     Gtk::CheckButton &overwrite;
     Gtk::Label &num_elements;
     Gtk::CheckButton &hide_all;
-    Gtk::FileChooserButton &path_chooser;
     Gtk::Entry &name_text;
+    Gtk::Entry &path_text;
     Gtk::Button &export_btn;
     Gtk::Button &cancel_btn;
     Gtk::ProgressBar &_prog;
@@ -165,6 +164,7 @@ private:
     void onAreaTypeToggle(selection_mode key);
     void onExport();
     void onCancel();
+    void onBrowse(Gtk::EntryIconPosition pos, const GdkEventButton *ev);
 
     void refreshPreview();
     void refreshItems();
