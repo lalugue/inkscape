@@ -3239,7 +3239,7 @@ void InkscapePreferences::initKeyboardShortcuts(Gtk::TreeModel::iterator iter_ui
     _mod_tree.set_tooltip_column(2);
 
     // In order to get tooltips on header, we must create our own label.
-    auto const and_keys_header = Gtk::make_managed<Gtk::Label>(_("Tool Modifiers"));
+    auto const and_keys_header = Gtk::make_managed<Gtk::Label>(_("Modifier"));
     and_keys_header->set_tooltip_text(_("All keys specified must be held down to activate this functionality."));
     and_keys_header->set_visible(true);
     auto and_keys_column = _mod_tree.get_column(1);
@@ -3266,7 +3266,7 @@ void InkscapePreferences::initKeyboardShortcuts(Gtk::TreeModel::iterator iter_ui
     _mod_tree.get_selection()->signal_changed().connect(sigc::mem_fun(*this, &InkscapePreferences::on_modifier_selection_changed));
     on_modifier_selection_changed();
 
-    _kb_notebook.append_page(_kb_page_modifiers, _("Modifiers"));
+    _kb_notebook.append_page(_kb_page_modifiers, _("Tools Modifiers"));
     auto const mod_scroller = Gtk::make_managed<Gtk::ScrolledWindow>();
     mod_scroller->set_child(_mod_tree);
     mod_scroller->set_hexpand();
