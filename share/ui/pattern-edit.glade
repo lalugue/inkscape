@@ -310,6 +310,7 @@
         <property name="margin-top">4</property>
         <property name="margin-bottom">4</property>
         <property name="row-spacing">4</property>
+        <property name="vexpand">False</property>
         <child>
           <object class="GtkLabel">
             <property name="halign">start</property>
@@ -471,6 +472,7 @@
             <property name="receives-default">True</property>
             <property name="halign">center</property>
             <property name="valign">center</property>
+            <property name="margin-end">4</property>
             <layout>
               <property name="column">0</property>
               <property name="row">7</property>
