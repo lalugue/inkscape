@@ -1077,16 +1077,6 @@ void InkscapePreferences::initPageTools()
         _recently_used_fonts_size.changed_signal.connect([](double new_size) {
             Inkscape::RecentlyUsedFonts* recently_used_fonts = Inkscape::RecentlyUsedFonts::get();
             recently_used_fonts->change_max_list_size(new_size); });
-
-        _page_text.add_group_header( _("Text and Font dialog"));
-        std::vector<PrefItem> lister = {
-            { _("List fonts and styles"), 0, _("List fonts and styles separately"), true },
-            { _("Unified font browser"), 1, _("Show all font styles in a single list") }
-        };
-        _page_text.add_line(true, _("Font selector"), *Gtk::make_managed<PrefRadioButtons>(lister, "/options/font/browser"), "", "", false, reset_icon());
-        auto factor = Gtk::make_managed<PrefSpinButton>();
-        factor->init("/options/font/scale_factor", 100.0, 500.0, 10.0, 20.0, 100.0, false, true);
-        _page_text.add_line(true, "Unified font scale factor", *factor, "", "Correction multiplier to scale up font previews in unified browser", false);
     }
 
     //_page_text.add_group_header( _("Text units"));
@@ -2039,6 +2029,15 @@ void InkscapePreferences::initPageUI()
     _page_windows.add_line( true, "", _win_hide_task, "",
                             _("Whether dialog windows are to be hidden in the window manager taskbar"));
 #endif
+    _page_windows.add_group_header( _("Text and Font dialog"));
+    std::vector<PrefItem> lister = {
+        { _("List fonts and styles"), 0, _("List fonts and styles separately"), true },
+        { _("Unified font browser (experimental)"), 1, _("Show all font styles in a single list") }
+    };
+    _page_windows.add_line(true, _("Font selector"), *Gtk::make_managed<PrefRadioButtons>(lister, "/options/font/browser"), "", "", false, reset_icon());
+    auto factor = Gtk::make_managed<PrefSpinButton>();
+    factor->init("/options/font/scale_factor", 100.0, 500.0, 10.0, 20.0, 100.0, false, true);
+    _page_windows.add_line(true, _("Unified font scale factor"), *factor, "", _("Correction multiplier to scale up font previews in unified browser"), false);
 
     _page_windows.add_group_header( _("Miscellaneous"));
 
