@@ -340,6 +340,15 @@ void SPItem::setCenter(Geom::Point const &object_centre) {
     }
 }
 
+bool SPItem::updateCenterIfSet(Geom::Point const &center)
+{
+    if (isCenterSet()) {
+        setCenter(center);
+        return true;
+    }
+    return false;
+}
+
 void
 SPItem::unsetCenter() {
     transform_center_x = 0;
@@ -351,8 +360,12 @@ bool SPItem::isCenterSet() const {
 }
 
 // Get the item's transformation center in desktop coordinates (i.e. in pixels)
-Geom::Point SPItem::getCenter() const {
-    document->ensureUpToDate();
+Geom::Point SPItem::getCenter(bool ensure_uptodate) const {
+    // This call is very bad as it can cascade to thousands of calls
+    // it should be removed in future refactoring as document scale should be
+    // cached and controlled properly elsewhere.
+    if (ensure_uptodate)
+        document->ensureUpToDate();
 
     // Copied from DocumentProperties::onDocUnitChange()
     gdouble viewscale = 1.0;
