@@ -9,7 +9,7 @@
 # liushuyu011 <liushuyu_011@163.com>, 2015.
 # Mingye Wang <arthur200126@gmail.com>, 2015.
 # Aron Xu <happyaron.xu@gmail.com>, 2016.
-# 驿窗 <classenu@163.com>, 2020, 2021, 2022, 2023.
+# 驿窗 <classenu@163.com>, 2020, 2021, 2022, 2023, 2024.
 # Rong "Mantle" Bao <mantlejonse@foxmail.com>, 2021.
 # Fince <fince10086@qq.com>
 # Copy2Translator <flagfox@gmail.com>
