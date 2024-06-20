@@ -5,35 +5,16 @@
   <!-- n-columns=3 n-rows=7 -->
   <object class="GtkGrid" id="color-page">
     <property name="visible">True</property>
-    <property name="can-focus">False</property>
     <property name="valign">start</property>
     <property name="hexpand">True</property>
     <property name="vexpand">True</property>
-    <property name="row-spacing">2</property>
+    <property name="row-spacing">0</property>
     <child>
-      <object class="GtkSpinButton" id="spin1">
+      <object class="GtkSeparator" id="separator2">
         <property name="visible">True</property>
-        <property name="can-focus">True</property>
-        <layout>
-          <property name="column">2</property>
-          <property name="row">1</property>
-        </layout>
-      </object>
-    </child>
-    <child>
-      <object class="GtkSpinButton" id="spin3">
-        <property name="visible">True</property>
-        <property name="can-focus">True</property>
-        <layout>
-          <property name="column">2</property>
-          <property name="row">3</property>
-        </layout>
-      </object>
-    </child>
-    <child>
-      <object class="GtkSpinButton" id="spin2">
-        <property name="visible">True</property>
-        <property name="can-focus">True</property>
+        <style>
+          <class name="faint"/>
+        </style>
         <layout>
           <property name="column">2</property>
           <property name="row">2</property>
@@ -41,19 +22,23 @@
       </object>
     </child>
     <child>
-      <object class="GtkSpinButton" id="spin5">
+      <object class="GtkSeparator" id="separator3">
         <property name="visible">True</property>
-        <property name="can-focus">True</property>
+        <style>
+          <class name="faint"/>
+        </style>
         <layout>
           <property name="column">2</property>
-          <property name="row">5</property>
+          <property name="row">4</property>
         </layout>
       </object>
     </child>
     <child>
-      <object class="GtkSpinButton" id="spin6">
+      <object class="GtkSeparator" id="separator4">
         <property name="visible">True</property>
-        <property name="can-focus">True</property>
+        <style>
+          <class name="faint"/>
+        </style>
         <layout>
           <property name="column">2</property>
           <property name="row">6</property>
@@ -61,12 +46,89 @@
       </object>
     </child>
     <child>
-      <object class="GtkSpinButton" id="spin4">
+      <object class="GtkSeparator" id="separator5">
         <property name="visible">True</property>
-        <property name="can-focus">True</property>
+        <style>
+          <class name="faint"/>
+        </style>
         <layout>
           <property name="column">2</property>
-          <property name="row">4</property>
+          <property name="row">8</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="GtkSeparator" id="separator6">
+        <property name="visible">True</property>
+        <style>
+          <class name="faint"/>
+        </style>
+        <layout>
+          <property name="column">2</property>
+          <property name="row">10</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="GtkSeparator" id="separator1">
+        <property name="visible">False</property>
+        <layout>
+          <property name="column">2</property>
+          <property name="row">12</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="GtkWidget" id="spin1">
+        <property name="visible">True</property>
+        <layout>
+          <property name="column">2</property>
+          <property name="row">1</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="GtkWidget" id="spin2">
+        <property name="visible">True</property>
+        <layout>
+          <property name="column">2</property>
+          <property name="row">3</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="GtkWidget" id="spin3">
+        <property name="visible">True</property>
+        <layout>
+          <property name="column">2</property>
+          <property name="row">5</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="GtkWidget" id="spin4">
+        <property name="visible">True</property>
+        <layout>
+          <property name="column">2</property>
+          <property name="row">7</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="GtkWidget" id="spin5">
+        <property name="visible">True</property>
+        <layout>
+          <property name="column">2</property>
+          <property name="row">9</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="GtkWidget" id="spin6">
+        <property name="visible">True</property>
+        <layout>
+          <property name="column">2</property>
+          <property name="row">11</property>
         </layout>
       </object>
     </child>
@@ -93,7 +155,7 @@
         <property name="justify">right</property>
         <layout>
           <property name="column">0</property>
-          <property name="row">2</property>
+          <property name="row">3</property>
         </layout>
       </object>
     </child>
@@ -107,7 +169,7 @@
         <property name="justify">right</property>
         <layout>
           <property name="column">0</property>
-          <property name="row">3</property>
+          <property name="row">5</property>
         </layout>
       </object>
     </child>
@@ -121,7 +183,7 @@
         <property name="justify">right</property>
         <layout>
           <property name="column">0</property>
-          <property name="row">5</property>
+          <property name="row">9</property>
         </layout>
       </object>
     </child>
@@ -135,7 +197,7 @@
         <property name="justify">right</property>
         <layout>
           <property name="column">0</property>
-          <property name="row">4</property>
+          <property name="row">7</property>
         </layout>
       </object>
     </child>
@@ -149,7 +211,7 @@
         <property name="justify">right</property>
         <layout>
           <property name="column">0</property>
-          <property name="row">6</property>
+          <property name="row">11</property>
         </layout>
       </object>
     </child>
@@ -202,6 +264,8 @@
       <object class="GtkDrawingArea" id="slider1">
         <property name="visible">True</property>
         <property name="can-focus">False</property>
+        <property name="margin-top">1</property>
+        <property name="margin-bottom">1</property>
         <layout>
           <property name="column">1</property>
           <property name="row">1</property>
@@ -212,16 +276,8 @@
       <object class="GtkDrawingArea" id="slider2">
         <property name="visible">True</property>
         <property name="can-focus">False</property>
-        <layout>
-          <property name="column">1</property>
-          <property name="row">2</property>
-        </layout>
-      </object>
-    </child>
-    <child>
-      <object class="GtkDrawingArea" id="slider3">
-        <property name="visible">True</property>
-        <property name="can-focus">False</property>
+        <property name="margin-top">1</property>
+        <property name="margin-bottom">1</property>
         <layout>
           <property name="column">1</property>
           <property name="row">3</property>
@@ -229,19 +285,11 @@
       </object>
     </child>
     <child>
-      <object class="GtkDrawingArea" id="slider4">
+      <object class="GtkDrawingArea" id="slider3">
         <property name="visible">True</property>
         <property name="can-focus">False</property>
-        <layout>
-          <property name="column">1</property>
-          <property name="row">4</property>
-        </layout>
-      </object>
-    </child>
-    <child>
-      <object class="GtkDrawingArea" id="slider5">
-        <property name="visible">True</property>
-        <property name="can-focus">False</property>
+        <property name="margin-top">1</property>
+        <property name="margin-bottom">1</property>
         <layout>
           <property name="column">1</property>
           <property name="row">5</property>
@@ -249,12 +297,38 @@
       </object>
     </child>
     <child>
+      <object class="GtkDrawingArea" id="slider4">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <property name="margin-top">1</property>
+        <property name="margin-bottom">1</property>
+        <layout>
+          <property name="column">1</property>
+          <property name="row">7</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="GtkDrawingArea" id="slider5">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <property name="margin-top">1</property>
+        <property name="margin-bottom">1</property>
+        <layout>
+          <property name="column">1</property>
+          <property name="row">9</property>
+        </layout>
+      </object>
+    </child>
+    <child>
       <object class="GtkDrawingArea" id="slider6">
         <property name="visible">True</property>
         <property name="can-focus">False</property>
+        <property name="margin-top">1</property>
+        <property name="margin-bottom">1</property>
         <layout>
           <property name="column">1</property>
-          <property name="row">6</property>
+          <property name="row">11</property>
         </layout>
       </object>
     </child>

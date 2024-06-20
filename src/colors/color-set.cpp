@@ -252,8 +252,9 @@ std::optional<Color> ColorSet::get(std::string const &id) const
  */
 unsigned ColorSet::setAll(Space::Component const &c, double value)
 {
-    if (!_space_constraint || _space_constraint->getType() != c.type)
+    if (!isValid(c)) {
         throw ColorError("Incompatible color component used in ColorSet::set.");
+    }
     unsigned changed = 0;
     for (auto &[id, color] : _colors) {
         auto was = color;
@@ -296,10 +297,10 @@ void ColorSet::setAverage(Space::Component const &c, double value)
  *
  * @returns the normalized average value for all colors in this set.
  */
-double ColorSet::getAverage(Space::Component const &c) const
-{
-    if (!_space_constraint || _space_constraint->getType() != c.type)
+double ColorSet::getAverage(Space::Component const &c) const {
+    if (!isValid(c)) {
         throw ColorError("Incompatible color component used in ColorSet::get.");
+    }
     double value = 0.0;
     for (auto const &[id, color] : _colors) {
         value += color[c.index];
@@ -316,8 +317,9 @@ double ColorSet::getAverage(Space::Component const &c) const
  */
 std::vector<double> ColorSet::getAll(Space::Component const &c) const
 {
-    if (!_space_constraint || _space_constraint->getType() != c.type)
+    if (!isValid(c)) {
         throw ColorError("Incompatible color component used in ColorSet::getAll.");
+    }
     std::vector<double> ret(_colors.size());
     std::transform(_colors.begin(), _colors.end(), ret.begin(),
                    [c](auto &iter) { return c.normalize(iter.second[c.index]); });
@@ -344,6 +346,10 @@ std::shared_ptr<Space::AnySpace> ColorSet::getBestSpace() const
         }
     }
     return ret;
+}
+
+bool ColorSet::isValid(const Space::Component& component) const {
+    return _space_constraint && _space_constraint->getType() == component.type;
 }
 
 /**

@@ -13,6 +13,9 @@
 #include <gtkmm/grid.h>
 #include <gtkmm/label.h>
 
+#include <utility>
+
+#include "ink-spin-button.h"
 #include "colors/color.h"
 #include "colors/color-set.h"
 #include "colors/spaces/base.h"
@@ -30,6 +33,7 @@ ColorPage::ColorPage(std::shared_ptr<Space::AnySpace> space, std::shared_ptr<Col
     , _selected_colors(std::move(colors))
     , _specific_colors(std::make_shared<Colors::ColorSet>(_space, true))
 {
+    set_name("ColorPage");
     append(get_widget<Gtk::Grid>(_builder, "color-page"));
 
     // Keep the selected colorset in-sync with the space specific colorset.
@@ -63,13 +67,17 @@ ColorPage::ColorPage(std::shared_ptr<Space::AnySpace> space, std::shared_ptr<Col
         _selected_changed_connection.block();
     });
 
+    // init ink spin button once before builder-derived instance is created to register its custom type first
+    // InkSpinButton dummy;
+
     for (auto &component : _specific_colors->getComponents()) {
         std::string index = std::to_string(component.index + 1);
-        _channels.emplace_back(
+        _channels.emplace_back(std::make_unique<ColorPageChannel>(
+            _specific_colors,
             get_widget<Gtk::Label>(_builder, ("label" + index).c_str()),
             get_derived_widget<ColorSlider>(_builder, ("slider" + index).c_str(), _specific_colors, component),
-            get_derived_widget<SpinButton>(_builder, ("spin" + index).c_str())
-        );
+            get_derived_widget<InkSpinButton>(_builder, ("spin" + index).c_str())
+        ));
     }
 
     // Hide unncessary channel widgets
@@ -78,32 +86,38 @@ ColorPage::ColorPage(std::shared_ptr<Space::AnySpace> space, std::shared_ptr<Col
         hide_widget(_builder, "label" + index);
         hide_widget(_builder, "slider" + index);
         hide_widget(_builder, "spin" + index);
+        hide_widget(_builder, "separator" + index);
     }
 }
 
 ColorPageChannel::ColorPageChannel(
+    std::shared_ptr<Colors::ColorSet> color,
     Gtk::Label &label,
     ColorSlider &slider,
-    SpinButton &spin)
+    InkSpinButton &spin)
     : _label(label)
     , _slider(slider)
     , _spin(spin)
-    , _adj(spin.get_adjustment())
+    , _adj(spin.get_adjustment()), _color(std::move(color))
 {
     auto &component = _slider._component;
-    _label.set_text_with_mnemonic(component.name);
+    _label.set_markup_with_mnemonic(component.name);
     _label.set_tooltip_text(component.tip);
 
-    _slider.set_tooltip_text(component.tip);
     _slider.set_hexpand(true);
-
-    _spin.set_tooltip_text(component.tip);
 
     _adj->set_lower(0.0);
     _adj->set_upper(component.scale);
     _adj->set_page_increment(0.0);
     _adj->set_page_size(0.0);
 
+    _spin.set_has_frame(false);
+
+    _color_changed = _color->signal_changed.connect([this]() {
+        if (_color->isValid(_slider._component)) {
+            _adj->set_value(_slider.getScaled());
+        }
+    });
     _adj_changed = _adj->signal_value_changed().connect([this]() {
         _slider_changed.block();
         _slider.setScaled(_adj->get_value());

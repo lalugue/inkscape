@@ -84,6 +84,7 @@ public:
     bool isSame() const;
     std::shared_ptr<Space::AnySpace> getBestSpace() const;
 
+    bool isValid(const Space::Component& component) const;
 private:
     bool _set(std::string id, Color const &color);
     void colors_changed();

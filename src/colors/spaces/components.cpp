@@ -137,7 +137,7 @@ std::map<Type, Components> _build(bool alpha)
 
     if (alpha) {
         for (auto &[key, val] : sets) {
-            val.add("a", _("_A:"), _("Alpha"), 255);
+            val.add("a", _("_A:"), _("Alpha"), 100);
         }
     }
     return sets;

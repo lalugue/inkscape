@@ -25,12 +25,13 @@
 #include "preferences.h"
 #include "ui/controller.h"
 #include "ui/util.h"
+#include "util/drawing-utils.h"
+#include "util/theme-utils.h"
 
-static const gint ARROW_SIZE = 8;
+static constexpr int THUMB_SPACE = 16;
+static constexpr int THUMB_SIZE = 10;
 constexpr uint32_t ERR_DARK = 0xff00ff00;    // Green
 constexpr uint32_t ERR_LIGHT = 0xffff00ff;   // Magenta
-constexpr uint32_t CHECK_DARK = 0xff5f5f5f;  // Dark gray
-constexpr uint32_t CHECK_LIGHT = 0xffa0a0a0; // Light gray
 
 namespace Inkscape::UI::Widget {
 
@@ -51,22 +52,32 @@ ColorSlider::ColorSlider(
                           sigc::mem_fun(*this, &ColorSlider::on_click_pressed ),
                           sigc::mem_fun(*this, &ColorSlider::on_click_released),
                           Controller::Button::left);
-    Controller::add_motion<nullptr, &ColorSlider::on_motion, nullptr>
-                          (*this, *this);
+    Controller::add_motion<nullptr, &ColorSlider::on_motion, nullptr>(*this, *this);
     _changed_connection = _colors->signal_changed.connect([this]() {
         queue_draw();
     });
 }
 
+static Geom::OptIntRect get_active_area(int full_width, int full_height) {
+    int width = full_width - THUMB_SPACE;
+    if (width <= 0) return {};
+
+    int left = THUMB_SPACE / 2;
+    int top = 0;
+    return Geom::IntRect::from_xywh(left, top, width, full_height);
+}
+
 static double get_value_at(Gtk::Widget const &self, double const x, double const y)
 {
-    return CLAMP(x / self.get_width(), 0.0, 1.0);
+    auto area = get_active_area(self.get_width(), self.get_height());
+    if (!area) return 0.0;
+    return CLAMP((x - area->left()) / area->width(), 0.0, 1.0);
 }
 
 Gtk::EventSequenceState ColorSlider::on_click_pressed(Gtk::GestureClick const &click,
                                                       int /*n_press*/, double const x, double const y)
 {
-    _colors->grab();
+    // _colors->grab();
     update_component(x, y, click.get_current_event_state());
     return Gtk::EventSequenceState::NONE;
 }
@@ -74,16 +85,18 @@ Gtk::EventSequenceState ColorSlider::on_click_pressed(Gtk::GestureClick const &c
 Gtk::EventSequenceState ColorSlider::on_click_released(Gtk::GestureClick const & /*click*/,
                                                        int /*n_press*/, double /*x*/, double /*y*/)
 {
-    _colors->release();
+    // _colors->release();
     return Gtk::EventSequenceState::NONE;
 }
 
 void ColorSlider::on_motion(GtkEventControllerMotion const * const motion,
                             double const x, double const y)
 {
-    if (_colors->isGrabbed()) {
-        auto const state = gtk_event_controller_get_current_event_state(GTK_EVENT_CONTROLLER(motion));
-        update_component(x, y, (Gdk::ModifierType)state);
+    auto const state = static_cast<Gdk::ModifierType>(gtk_event_controller_get_current_event_state(GTK_EVENT_CONTROLLER(motion)));
+    if ((state & Gdk::ModifierType::BUTTON1_MASK) == Gdk::ModifierType::BUTTON1_MASK) {
+        // only update color if user is dragging the slider;
+        // don't rely on any click/release events, as release event might be lost leading to unintended updates
+        update_component(x, y, state);
     }
 }
 
@@ -110,7 +123,7 @@ void ColorSlider::update_component(double x, double y, Gdk::ModifierType const s
 Glib::RefPtr<Gdk::Pixbuf> _make_checkerboard(uint32_t dark, uint32_t light, unsigned scale, std::vector<uint32_t> &buffer)
 {
     // A pattern of 2x2 blocks is enough for REPEAT mode to do the rest, this way we never need to recalculate the checkerboard
-    static auto block = 0x08 * scale;
+    static auto block = 0x09 * scale;
     static auto pattern = block * 2;
 
     buffer = std::vector<uint32_t>(pattern * pattern);
@@ -122,10 +135,48 @@ Glib::RefPtr<Gdk::Pixbuf> _make_checkerboard(uint32_t dark, uint32_t light, unsi
     return Gdk::Pixbuf::create_from_data((guint8*)buffer.data(), Gdk::Colorspace::RGB, true, 8, pattern, pattern, pattern * 4);
 }
 
+static void draw_slider_thumb(const Cairo::RefPtr<Cairo::Context>& ctx, const Geom::Point& location, double size, const Gdk::RGBA& fill, const Gdk::RGBA& stroke, int device_scale) {
+    auto center = location.round(); //todo - verify pix grid fit + Geom::Point(0.5, 0.5);
+    auto radius = size / 2;
+    auto alpha = 0.06 / device_scale;
+    double step = 1.0 / device_scale;
+    for (int i = 2 * device_scale; i > 0; --i) {
+        ctx->set_source_rgba(0, 0, 0, alpha);
+        alpha *= 1.5;
+        auto offset = Geom::Point{1, 1} * step * i;
+        ctx->arc(center.x() + offset.x(), center.y() + offset.y(), radius+1, 0, 2 * M_PI);
+        ctx->fill();
+    }
+    // border/outline
+    ctx->arc(center.x(), center.y(), radius+1, 0, 2 * M_PI);
+    ctx->set_source_rgb(stroke.get_red(), stroke.get_green(), stroke.get_blue());
+    ctx->fill();
+    // fill
+    ctx->arc(center.x(), center.y(), radius, 0, 2 * M_PI);
+    ctx->set_source_rgb(fill.get_red(), fill.get_green(), fill.get_blue());
+    ctx->fill();
+}
+
 void ColorSlider::draw_func(Cairo::RefPtr<Cairo::Context> const &cr,
-                            int const width, int const height)
+                            int const full_width, int const full_height)
 {
+    auto maybe_area = get_active_area(full_width, full_height);
+    if (!maybe_area) return;
+
+    auto area = *maybe_area;
+    bool dark_theme = Util::is_current_theme_dark(*this);
+
+    // expand border past active area on both sides, so slider's thumb doesn't hang at any extreme, but looks confined
+    auto border = area;
+    border.expandBy(1, 0);
+    double radius = 3;
+    Util::rounded_rectangle(cr, border, radius);
+
     auto const scale = get_scale_factor();
+    auto width = border.width() * scale;
+    // auto height = area->height() * scale;
+    auto left = border.left() * scale;
+    auto top = border.top() * scale;
     bool const is_alpha = _component.id == "a";
 
     // changing scale to draw pixmap at display resolution
@@ -137,9 +188,9 @@ void ColorSlider::draw_func(Cairo::RefPtr<Cairo::Context> const &cr,
         static std::vector<uint32_t> err_buffer;
         static Glib::RefPtr<Gdk::Pixbuf> error = _make_checkerboard(ERR_DARK, ERR_LIGHT, scale, err_buffer);
 
-        Gdk::Cairo::set_source_pixbuf(cr, error, 0, 0);
+        Gdk::Cairo::set_source_pixbuf(cr, error, left, top);
         cr->get_source()->set_extend(Cairo::Pattern::Extend::REPEAT);
-        cr->paint();
+        cr->fill();
 
         // Don't try and paint any color (there isn't any)
         cr->restore();
@@ -148,65 +199,57 @@ void ColorSlider::draw_func(Cairo::RefPtr<Cairo::Context> const &cr,
 
     // The alpha background is a checkerboard pattern of light and dark pixels
     if (is_alpha) {
-        static std::vector<uint32_t> bg_buffer;
-        static Glib::RefPtr<Gdk::Pixbuf> background = _make_checkerboard(CHECK_DARK, CHECK_LIGHT, scale, bg_buffer);
+        std::vector<uint32_t> bg_buffer;
+        auto [col1, col2] = Util::get_checkerboard_colors(*this);
+        Glib::RefPtr<Gdk::Pixbuf> background = _make_checkerboard(col1, col2, scale, bg_buffer);
 
         // Paint the alpha background
-        Gdk::Cairo::set_source_pixbuf(cr, background, 0, 0);
+        Gdk::Cairo::set_source_pixbuf(cr, background, left, top);
         cr->get_source()->set_extend(Cairo::Pattern::Extend::REPEAT);
-        cr->paint();
+        cr->fill_preserve();
     }
 
-    if (!_gradient) {
-        // Draw row of colored pixels here
-        auto paint_color = _colors->getAverage();
+    // Draw row of colored pixels here
+    auto paint_color = _colors->getAverage();
 
-        if (!is_alpha) {
-            // Remove alpha channel from paint
-            paint_color.enableOpacity(false);
-        }
-
-        // When the widget is wider, we want a new color gradient buffer
-        if (_gr_buffer.size() < static_cast<size_t>(width)) {
-            _gr_buffer = std::vector<uint32_t>(width);
-            _gradient = Gdk::Pixbuf::create_from_data((guint8*)&_gr_buffer.front(), Gdk::Colorspace::RGB, true, 8, width, 1, width * 4);
-        }
-
-        for (int x = 0; x < width; x++) {
-            paint_color.set(_component.index, static_cast<double>(x) / width);
-            _gr_buffer[x] = paint_color.toABGR();
-        }
+    if (!is_alpha) {
+        // Remove alpha channel from paint
+        paint_color.enableOpacity(false);
     }
 
-    Gdk::Cairo::set_source_pixbuf(cr, _gradient, 0, 0);
+    // When the widget is wider, we want a new color gradient buffer
+    if (!_gradient || _gr_buffer.size() < static_cast<size_t>(width)) {
+        _gr_buffer.resize(width);
+        _gradient = Gdk::Pixbuf::create_from_data((guint8*)&_gr_buffer.front(), Gdk::Colorspace::RGB, true, 8, width, 1, width * 4);
+    }
+
+    double lim = width > 1 ? width - 1.0 : 1.0;
+    for (int x = 0; x < width; x++) {
+        paint_color.set(_component.index, x / lim);
+        _gr_buffer[x] = paint_color.toABGR();
+    }
+
+    Gdk::Cairo::set_source_pixbuf(cr, _gradient, left, top);
     cr->get_source()->set_extend(Cairo::Pattern::Extend::REPEAT);
-    cr->paint();
+    cr->fill();
     cr->restore();
 
-    /* Draw arrow */
+    Util::draw_standard_border(cr, border, dark_theme, radius, scale);
+
+    // draw slider thumb
+    auto style = get_style_context();
+    auto fill = Util::lookup_background_color(style);
+    if (!dark_theme || !fill) {
+        float x = dark_theme ? 0.3f : 1.0f;
+        fill = Gdk::RGBA(x, x, x);
+    }
+    auto stroke = Util::lookup_foreground_color(style);
+    if (!stroke) {
+        float x = dark_theme ? 0.9f : 0.3f;
+        stroke = Gdk::RGBA(x, x, x);
+    }
     double value = _colors->getAverage(_component);
-    gint x = (int)(value * (width / scale) - ARROW_SIZE / 2);
-    gint y1 = 0;
-    gint y2 = height / scale - 1;
-    cr->set_line_width(2.0);
-
-    // Define top arrow
-    cr->move_to(x - 0.5, y1 + 0.5);
-    cr->line_to(x + ARROW_SIZE - 0.5, y1 + 0.5);
-    cr->line_to(x + (ARROW_SIZE - 1) / 2.0, y1 + ARROW_SIZE / 2.0 + 0.5);
-    cr->close_path();
-
-    // Define bottom arrow
-    cr->move_to(x - 0.5, y2 + 0.5);
-    cr->line_to(x + ARROW_SIZE - 0.5, y2 + 0.5);
-    cr->line_to(x + (ARROW_SIZE - 1) / 2.0, y2 - ARROW_SIZE / 2.0 + 0.5);
-    cr->close_path();
-
-    // Render both arrows
-    cr->set_source_rgb(0.0, 0.0, 0.0);
-    cr->stroke_preserve();
-    cr->set_source_rgb(1.0, 1.0, 1.0);
-    cr->fill();
+    draw_slider_thumb(cr, Geom::Point(area.left() + value * area.width(), area.midpoint().y()), THUMB_SIZE, *fill, *stroke, get_scale_factor());
 }
 
 double ColorSlider::getScaled() const

@@ -230,6 +230,7 @@ set(ui_SRC
 	widget/ink-color-wheel.cpp
 	widget/ink-ruler.cpp
 	widget/ink-spinscale.cpp
+	widget/ink-spin-button.cpp
 	widget/labelled.cpp
 	widget/layer-selector.cpp
 	widget/licensor.cpp
@@ -523,6 +524,7 @@ set(ui_SRC
 	widget/ink-color-wheel.h
 	widget/ink-ruler.h
 	widget/ink-spinscale.h
+	widget/ink-spin-button.h
 	widget/labelled.h
 	widget/layer-selector.h
 	widget/licensor.h

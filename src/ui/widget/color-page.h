@@ -30,7 +30,7 @@ class Builder;
 }
 
 namespace Inkscape::UI::Widget {
-
+class InkSpinButton;
 class ColorSlider;
 class ColorWheel;
 class ColorPageChannel;
@@ -46,7 +46,7 @@ protected:
     std::shared_ptr<ColorSet> _selected_colors;
     std::shared_ptr<ColorSet> _specific_colors;
 
-    std::vector<ColorPageChannel> _channels;
+    std::vector<std::unique_ptr<ColorPageChannel>> _channels;
 private:
     Inkscape::auto_connection _specific_changed_connection;
     Inkscape::auto_connection _selected_changed_connection;
@@ -56,17 +56,21 @@ class ColorPageChannel
 {
 public:
     ColorPageChannel(
+        std::shared_ptr<Colors::ColorSet> color,
         Gtk::Label &label,
         ColorSlider &slider,
-        SpinButton &spin);
+        InkSpinButton &spin);
+    ColorPageChannel(const ColorPageChannel&) = delete;
 private:
     Gtk::Label &_label;
     ColorSlider &_slider;
-    SpinButton &_spin;
+    InkSpinButton &_spin;
     Glib::RefPtr<Gtk::Adjustment> _adj;
+    std::shared_ptr<Colors::ColorSet> _color;
 
     Inkscape::auto_connection _adj_changed;
     Inkscape::auto_connection _slider_changed;
+    Inkscape::auto_connection _color_changed;
 };
 
 } // namespace Inkscape::UI::Widget

@@ -1415,3 +1415,17 @@ listview.list-view-small > row > box.item-box.separator {
 .grid-row-definition {
     margin: 4px 6px;
 }
+
+InkSpinButton {
+    min-height: 22px;
+}
+
+separator.faint {
+    opacity: 0.5;
+}
+
+#ColorPage separator {
+    min-height: 1px;
+    margin: 1px 0;
+    padding: 0;
+}
