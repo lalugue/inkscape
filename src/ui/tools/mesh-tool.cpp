@@ -536,7 +536,8 @@ bool MeshTool::root_handler(CanvasEvent const &event)
                     }
 
                     if (has_mesh && !(event.modifiers & GDK_CONTROL_MASK)) {
-                        Inkscape::Rubberband::get(_desktop)->start(_desktop, button_dt);
+                        auto rubberband = Inkscape::Rubberband::get(_desktop);
+                        rubberband->start(_desktop, button_dt);
                     }
 
                     // remember clicked item, disregarding groups, honoring Alt; do nothing with Crtl to
@@ -571,7 +572,7 @@ bool MeshTool::root_handler(CanvasEvent const &event)
 
                 Geom::Point const motion_dt = _desktop->w2d(event.pos);
 
-                if (Inkscape::Rubberband::get(_desktop)->is_started()) {
+                if (Inkscape::Rubberband::get(_desktop)->isStarted()) {
                     Inkscape::Rubberband::get(_desktop)->move(motion_dt);
                     this->defaultMessageContext()->set(Inkscape::NORMAL_MESSAGE, _("<b>Draw around</b> handles to select them"));
                 } else {
@@ -665,9 +666,9 @@ bool MeshTool::root_handler(CanvasEvent const &event)
                                 // or rubberband-select if we have rubberband
                                 Inkscape::Rubberband *r = Inkscape::Rubberband::get(_desktop);
 
-                                if (r->is_started() && !this->within_tolerance) {
+                                if (r->isStarted() && !this->within_tolerance) {
                                     // this was a rubberband drag
-                                    if (r->getMode() == RUBBERBAND_MODE_RECT) {
+                                    if (r->getMode() == Rubberband::Mode::RECT) {
                                         Geom::OptRect const b = r->getRectangle();
                                         if (!(event.modifiers & GDK_SHIFT_MASK)) {
                                             _grdrag->deselectAll();

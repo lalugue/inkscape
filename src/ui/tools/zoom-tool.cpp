@@ -62,7 +62,8 @@ bool ZoomTool::root_handler(CanvasEvent const &event)
 
             if (event.button == 1) {
                 saveDragOrigin(event.pos);
-                Rubberband::get(_desktop)->start(_desktop, button_dt);
+                auto rubberband = Rubberband::get(_desktop);
+                rubberband->start(_desktop, button_dt);
                 escaped = false;
                 ret = true;
             } else if (event.button == 3) {
@@ -127,7 +128,7 @@ bool ZoomTool::root_handler(CanvasEvent const &event)
                 case GDK_KEY_Escape:
                     xyp = {};
                     escaped = true;
-                    if (!Rubberband::get(_desktop)->is_started()) {
+                    if (!Rubberband::get(_desktop)->isStarted()) {
                         // DANGER: this operation may switch tool and delete *this instance from under us!
                         SelectionHelper::selectNone(_desktop);
                     }

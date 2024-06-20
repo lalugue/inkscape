@@ -408,7 +408,7 @@ bool NodeTool::root_handler(CanvasEvent const &event)
     auto prefs = Preferences::get();
     auto rband = get_rubberband();
 
-    if (!rband->is_started()) {
+    if (!rband->isStarted()) {
         if (_multipath->event(this, event) || _selected_nodes->event(this, event)) {
             return true;
         }
@@ -425,12 +425,12 @@ bool NodeTool::root_handler(CanvasEvent const &event)
         auto const motion_dt = _desktop->w2d(motion_w);
 
         if (event.modifiers & GDK_BUTTON1_MASK) {
-            if (rband->is_started()) {
+            if (rband->isStarted()) {
                 rband->move(motion_dt);
             }
   
             auto touch_path = Modifier::get(Modifiers::Type::SELECT_TOUCH_PATH)->get_label();
-            if (rband->getMode() == RUBBERBAND_MODE_TOUCHPATH) {
+            if (rband->getMode() == Rubberband::Mode::TOUCHPATH) {
                 defaultMessageContext()->setF(Inkscape::NORMAL_MESSAGE,
                     _("<b>Draw over</b> lines to select their nodes; release <b>%s</b> to switch to rubberband selection"), touch_path.c_str());
             } else {
@@ -439,7 +439,7 @@ bool NodeTool::root_handler(CanvasEvent const &event)
             }
             ret = true;
             return;
-        } else if (rband->is_moved()) {
+        } else if (rband->isMoved()) {
             // Mouse button is up, but rband is still kicking.
             rband->stop();
         }
@@ -562,11 +562,9 @@ bool NodeTool::root_handler(CanvasEvent const &event)
         if (event.num_press == 1) {
 
             if (Modifier::get(Modifiers::Type::SELECT_TOUCH_PATH)->active(event.modifiers)) {
-                rband->setMode(RUBBERBAND_MODE_TOUCHPATH);
-            } else {
-                rband->defaultMode();
+                rband->setMode(Rubberband::Mode::TOUCHPATH);
+                rband->setHandle(RUBBERBAND_TOUCHPATH);
             }
-
             rband->start(_desktop, desktop_pt, true);
             ret = true;
             return;
@@ -598,7 +596,7 @@ bool NodeTool::root_handler(CanvasEvent const &event)
             return;
         }
 
-        if (rband->is_started() && rband->is_moved()) {
+        if (rband->isStarted() && rband->isMoved()) {
             select_area(rband->getPath(), event);
         } else {
             select_point(event);

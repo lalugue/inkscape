@@ -1053,8 +1053,10 @@ bool FloodTool::root_handler(CanvasEvent const &event)
                 dragging = true;
 
                 auto const p = _desktop->w2d(event.pos);
-                Rubberband::get(_desktop)->setMode(RUBBERBAND_MODE_TOUCHPATH);
-                Rubberband::get(_desktop)->start(_desktop, p);
+                auto rubberband = Rubberband::get(_desktop);
+                rubberband->setMode(Rubberband::Mode::TOUCHPATH);
+                rubberband->setHandle(RUBBERBAND_TOUCHPATH_FLOOD);
+                rubberband->start(_desktop, p);
             }
         }
     },
@@ -1067,7 +1069,7 @@ bool FloodTool::root_handler(CanvasEvent const &event)
             
             auto const p = _desktop->w2d(event.pos);
 
-            if (Rubberband::get(_desktop)->is_started()) {
+            if (Rubberband::get(_desktop)->isStarted()) {
                 Rubberband::get(_desktop)->move(p);
                 defaultMessageContext()->set(NORMAL_MESSAGE, _("<b>Draw over</b> areas to add to fill, hold <b>Alt</b> for touch fill"));
                 gobble_motion_events(GDK_BUTTON1_MASK);
@@ -1079,7 +1081,7 @@ bool FloodTool::root_handler(CanvasEvent const &event)
         if (event.button == 1) {
             auto r = Rubberband::get(_desktop);
 
-            if (r->is_started()) {
+            if (r->isStarted()) {
                 dragging = false;
                 bool is_point_fill = within_tolerance;
                 bool is_touch_fill = event.modifiers & GDK_ALT_MASK;

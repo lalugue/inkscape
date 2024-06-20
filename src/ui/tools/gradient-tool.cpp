@@ -423,7 +423,8 @@ bool GradientTool::root_handler(CanvasEvent const &event)
 
             auto button_dt = _desktop->w2d(event.pos);
             if (event.modifiers & GDK_SHIFT_MASK && !(event.modifiers & GDK_CONTROL_MASK)) {
-                Rubberband::get(_desktop)->start(_desktop, button_dt);
+                auto rubberband = Rubberband::get(_desktop);
+                rubberband->start(_desktop, button_dt);
             } else {
                 // remember clicked item, disregarding groups, honoring Alt; do nothing with Crtl to
                 // enable Ctrl+doubleclick of exactly the selected item(s)
@@ -452,7 +453,7 @@ bool GradientTool::root_handler(CanvasEvent const &event)
 
             auto const motion_dt = _desktop->w2d(event.pos);
 
-            if (Rubberband::get(_desktop)->is_started()) {
+            if (Rubberband::get(_desktop)->isStarted()) {
                 Rubberband::get(_desktop)->move(motion_dt);
                 defaultMessageContext()->set(NORMAL_MESSAGE, _("<b>Draw around</b> handles to select them"));
             } else {
@@ -514,9 +515,9 @@ bool GradientTool::root_handler(CanvasEvent const &event)
                     // or rubberband-select if we have rubberband
                     auto r = Rubberband::get(_desktop);
 
-                    if (r->is_started() && !within_tolerance) {
+                    if (r->isStarted() && !within_tolerance) {
                         // this was a rubberband drag
-                        if (r->getMode() == RUBBERBAND_MODE_RECT) {
+                        if (r->getMode() == Rubberband::Mode::RECT) {
                             _grdrag->selectRect(*r->getRectangle());
                         }
                     }
