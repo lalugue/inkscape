@@ -174,7 +174,7 @@ StartScreen::StartScreen()
     auto prefs = Inkscape::Preferences::get();
 
     Controller::add_key<&StartScreen::on_key_pressed>(*this, *this);
-    tabs.signal_switch_page().connect(sigc::mem_fun(*this, &StartScreen::notebook_switch));
+    _tabs_switch_page_conn = tabs.signal_switch_page().connect(sigc::mem_fun(*this, &StartScreen::notebook_switch));
 
     // Setup the lists of items
     enlist_recent_files();
@@ -214,7 +214,7 @@ StartScreen::StartScreen()
     // "Time to Draw" tab
     recent_treeview.signal_row_activated().connect(sigc::hide(sigc::hide((sigc::mem_fun(*this, &StartScreen::load_document)))));
     recent_treeview.get_selection()->signal_changed().connect(sigc::mem_fun(*this, &StartScreen::on_recent_changed));
-    templates.signal_switch_page().connect(sigc::mem_fun(*this, &StartScreen::on_kind_changed));
+    _templates_switch_page_conn = templates.signal_switch_page().connect(sigc::mem_fun(*this, &StartScreen::on_kind_changed));
     load_btn.set_sensitive(true);
 
     show_toggle->signal_toggled().connect(sigc::mem_fun(*this, &StartScreen::show_toggle));
@@ -351,14 +351,9 @@ StartScreen::on_recent_changed()
 /**
  * Called when the left side tabs are changed.
  */
-void
-StartScreen::on_kind_changed(Gtk::Widget *tab, unsigned page_num)
+void StartScreen::on_kind_changed(Gtk::Widget *tab, unsigned page_num)
 {
-    if (page_num == 0) {
-        load_btn.set_visible(true);
-    } else {
-        load_btn.set_visible(false);
-    }
+    load_btn.set_visible(page_num == 0);
 }
 
 /**
