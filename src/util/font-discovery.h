@@ -9,6 +9,8 @@
 #include <pangomm.h>
 #include "async/operation-stream.h"
 #include "helper/auto-connection.h"
+#include "libnrtype/font-factory.h"
+#include "statics.h"
 
 namespace Inkscape {
 
@@ -27,17 +29,18 @@ struct FontInfo {
 
 enum class FontOrder { by_name, by_weight, by_width };
 
-class FontDiscovery {
+class FontDiscovery : public Util::EnableSingleton<FontDiscovery, Util::Depends<FontFactory>>
+{
 public:
-    static FontDiscovery& get();
-
-    typedef std::shared_ptr<const std::vector<FontInfo>> FontsPayload;
-    typedef Async::Msg::Message<FontsPayload, double, Glib::ustring, std::vector<FontInfo>> MessageType;
+    using FontsPayload = std::shared_ptr<const std::vector<FontInfo>>;
+    using MessageType = Async::Msg::Message<FontsPayload, double, Glib::ustring, std::vector<FontInfo>>;
 
     auto_connection connect_to_fonts(std::function<void (const MessageType&)> fn);
 
-private:
+protected:
     FontDiscovery();
+
+private:
     FontsPayload _fonts;
     auto_connection _connection;
     Inkscape::Async::OperationStream<FontsPayload, double, Glib::ustring, std::vector<FontInfo>> _loading;
@@ -70,4 +73,4 @@ int get_font_style_order(const Pango::FontDescription& desc);
 
 Glib::ustring get_full_font_name(Glib::RefPtr<Pango::FontFamily> ff, Glib::RefPtr<Pango::FontFace> face);
 
-} // namespace
+} // namespace Inkscape

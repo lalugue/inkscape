@@ -156,7 +156,7 @@ FontVariationAxis::FontVariationAxis(Glib::ustring name_, OTVarAxis const &axis,
     //           << " max:  " << axis.maximum
     //           << " val:  " << axis.set_val << std::endl;
 
-    set_column_spacing(3);
+    set_spacing(3);
 
     label = Gtk::make_managed<Gtk::Label>(label_ + ":");
     label->set_tooltip_text(tooltip);
@@ -165,7 +165,7 @@ FontVariationAxis::FontVariationAxis(Glib::ustring name_, OTVarAxis const &axis,
 
     edit = Gtk::make_managed<Gtk::SpinButton>();
     edit->set_max_width_chars(5);
-    edit->set_valign(Gtk::ALIGN_CENTER);
+    edit->set_valign(Gtk::Align::CENTER);
     edit->set_margin_top(2);
     edit->set_margin_bottom(2);
     edit->set_tooltip_text(tooltip);

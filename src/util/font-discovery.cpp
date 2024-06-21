@@ -1,14 +1,22 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
+/*
+ * Author:
+ *   Michael Kowalski
+ *
+ * Copyright (C) 2022-2024 Michael Kowalski
+ *
+ * Released under GNU GPL v2+, read the file 'COPYING' for more information.
+ */
 
 #include "font-discovery.h"
 #include "async/progress.h"
 #include "helper/auto-connection.h"
 #include "inkscape-application.h"
 #include "io/resource.h"
-#include "statics.h"
 
 #include <algorithm>
 #include <cairo-ft.h>
+#include <cairomm/surface.h>
 #include <glibmm/ustring.h>
 #include <iostream>
 #include <libnrtype/font-factory.h>
@@ -39,7 +47,7 @@ namespace Inkscape {
 // as Pango can instantiate correct font.
 double calculate_font_weight(Pango::FontDescription& desc, double caps_height) {
     // pixmap with enough room for a few characters; the rest will be cropped
-    auto surface = Cairo::ImageSurface::create(Cairo::FORMAT_ARGB32, 128, 64);
+    auto surface = Cairo::ImageSurface::create(Cairo::Surface::Format::ARGB32, 128, 64);
     auto context = Cairo::Context::create(surface);
     auto layout = Pango::Layout::create(context);
     const char* txt = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -71,7 +79,7 @@ double calculate_font_weight(Pango::FontDescription& desc, double caps_height) {
 
 // calculate width of a A-Z string to try to measure average character width
 double calculate_font_width(Pango::FontDescription& desc) {
-    auto surface = Cairo::ImageSurface::create(Cairo::FORMAT_ARGB32, 1, 1);
+    auto surface = Cairo::ImageSurface::create(Cairo::Surface::Format::ARGB32, 1, 1);
     auto context = Cairo::Context::create(surface);
     auto layout = Pango::Layout::create(context);
     const char* txt = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -99,10 +107,10 @@ Glib::ustring get_full_font_name(Glib::RefPtr<Pango::FontFamily> ff, Glib::RefPt
 // calculate value to order font's styles
 int get_font_style_order(const Pango::FontDescription& desc) {
     return
-        desc.get_weight()  * 1'000'000 +
-        desc.get_style()   * 10'000 +
-        desc.get_stretch() * 100 +
-        desc.get_variant();
+        static_cast<int>(desc.get_weight())  * 1'000'000 +
+        static_cast<int>(desc.get_style())   * 10'000 +
+        static_cast<int>(desc.get_stretch()) * 100 +
+        static_cast<int>(desc.get_variant());
 }
 
 // sort fonts in-place by name using lexicographical order; if 'sans_first' is true place "Sans" font first
@@ -168,8 +176,8 @@ Glib::ustring get_fontspec(const Glib::ustring& family, const Glib::ustring& fac
 
 Glib::ustring get_face_style(const Pango::FontDescription& desc) {
     Pango::FontDescription copy(desc);
-    copy.unset_fields(Pango::FONT_MASK_FAMILY);
-    copy.unset_fields(Pango::FONT_MASK_SIZE);
+    copy.unset_fields(Pango::FontMask::FAMILY);
+    copy.unset_fields(Pango::FontMask::SIZE);
     auto str = copy.to_string();
     return str;
 }
@@ -184,7 +192,7 @@ Pango::FontDescription get_font_description(const Glib::RefPtr<Pango::FontFamily
     if (!face) return Pango::FontDescription("sans serif");
 
     auto desc = face->describe();
-    desc.unset_fields(Pango::FONT_MASK_SIZE);
+    desc.unset_fields(Pango::FontMask::SIZE);
     return desc;
 }
 
@@ -202,7 +210,7 @@ enum FontCacheFlags : int {
 };
 
 void save_font_cache(const std::vector<FontInfo>& fonts) {
-    auto keyfile = std::make_unique<Glib::KeyFile>();
+    auto keyfile = Glib::KeyFile::create();
 
     keyfile->set_double(cache_header, "version", cache_version);
     Glib::ustring weight("weight");
@@ -240,7 +248,7 @@ std::unordered_map<std::string, FontInfo> load_cached_font_info() {
     std::unordered_map<std::string, FontInfo> info;
 
     try {
-        auto keyfile = std::make_unique<Glib::KeyFile>();
+        auto keyfile = Glib::KeyFile::create();
         std::string filename = Glib::build_filename(Inkscape::IO::Resource::profile_path(), font_cache);
 
 #ifdef G_OS_WIN32
@@ -285,7 +293,7 @@ std::unordered_map<std::string, FontInfo> load_cached_font_info() {
         }
     }
     catch (Glib::Error &error) {
-        std::cerr << G_STRFUNC << ": font cache not loaded - " << error.what().raw() << std::endl;
+        std::cerr << G_STRFUNC << ": font cache not loaded - " << error.what() << std::endl;
     }
 
     return info;
@@ -328,7 +336,7 @@ std::shared_ptr<const std::vector<FontInfo>> get_all_fonts(Async::Progress<doubl
             if (!synthetic_font && face->is_synthesized()) continue;
 
             auto desc = face->describe();
-            desc.unset_fields(Pango::FONT_MASK_SIZE);
+            desc.unset_fields(Pango::FontMask::SIZE);
             std::string key = desc.to_string();
             if (styles.count(key)) continue;
 
@@ -409,12 +417,6 @@ Glib::ustring get_fontspec_without_variants(const Glib::ustring& fontspec) {
         return fontspec.substr(0, at);
     }
     return fontspec;
-}
-
-FontDiscovery& FontDiscovery::get() {
-    struct ConstructibleFontDiscovery : FontDiscovery {};
-    static auto factory = Inkscape::Util::Static<ConstructibleFontDiscovery>();
-    return factory.get();
 }
 
 FontDiscovery::FontDiscovery() {
