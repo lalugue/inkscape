@@ -168,6 +168,8 @@ override) the bindings in the main default.xml.
   <bind gaction="app.delete"                             keys="Delete, KP_Delete, BackSpace" />
   <bind gaction="app.page-fit-to-selection"              keys="&lt;primary&gt;&lt;shift&gt;r" />
 
+  <bind gaction="app.swap-fill-and-stroke"               keys="&lt;Shift&gt;x" />
+
   <!-- Select -->
   <bind gaction="win.select-all"                         keys="&lt;primary&gt;a" />
   <bind gaction="win.select-all-layers"                  keys="&lt;primary&gt;&lt;alt&gt;a" />
@@ -264,10 +266,10 @@ override) the bindings in the main default.xml.
   <bind gaction="app.selection-ungroup"                  keys="&lt;primary&gt;&lt;shift&gt;g, &lt;primary&gt;u" />
   <bind gaction="app.selection-ungroup-pop" />
 
-  <bind gaction="app.object-set-clip" />
-  <bind gaction="app.object-set-inverse-clip" />
-  <bind gaction="app.object-release-clip" />
-  <bind gaction="app.object-set-mask" />
+  <bind gaction="app.object-set-clip"                    keys="&lt;primary&gt;m" /> 
+  <bind gaction="app.object-set-inverse-clip"            keys="&lt;primary&gt;alt&gt;m" /> 
+  <bind gaction="app.object-release-clip"                keys="&lt;alt&gt;m" /> 
+  <bind gaction="app.object-set-mask"/> 
   <bind gaction="app.object-set-inverse-mask" />
   <bind gaction="app.object-release-mask" />
 
@@ -294,6 +296,8 @@ override) the bindings in the main default.xml.
   <bind gaction="app.object-align('right pref')"           keys="&lt;primary&gt;&lt;alt&gt;KP_6" />
   <bind gaction="app.object-align('hcenter pref')"         keys="&lt;primary&gt;&lt;alt&gt;KP_7" />
   <bind gaction="app.object-align('top pref')"             keys="&lt;primary&gt;&lt;alt&gt;KP_8" />
+
+
 
   <!-- Object Transform -->
   <bind gaction="app.transform-remove"                   keys="&lt;shift&gt;&lt;alt&gt;t" />
