@@ -20,6 +20,9 @@
 #include <stdexcept>
 #include <string>
 #include <vector>
+#include <glibmm/i18n.h>
+#include <glibmm/main.h>         // SignalIdle
+#include <glibmm/markup.h>
 #include <memory>
 
 #include "font-selector.h"
@@ -166,15 +169,14 @@ FontSelector::FontSelector(bool with_size, bool with_variations)
 
 void FontSelector::on_realize_list() {
     family_treecolumn.set_cell_data_func (family_cell, &font_lister_cell_data_func);
-    g_idle_add(FontSelector::set_cell_markup, this);
+    _idle_connection = Glib::signal_idle().connect(sigc::mem_fun(*this, &FontSelector::set_cell_markup));
 }
 
-gboolean FontSelector::set_cell_markup(gpointer data)
+bool FontSelector::set_cell_markup()
 {
-    FontSelector *self = static_cast<FontSelector *>(data);
-    self->family_treeview.set_visible(false);
-    self->family_treecolumn.set_cell_data_func (self->family_cell, &font_lister_cell_data_func_markup);
-    self->family_treeview.set_visible(true);
+    family_treeview.set_visible(false);
+    family_treecolumn.set_cell_data_func (family_cell, &font_lister_cell_data_func_markup);
+    family_treeview.set_visible(true);
     return false;
 }
 
@@ -530,7 +532,7 @@ FontSelector::changed_emit() {
         initial = false;
         family_treecolumn.unset_cell_data_func (family_cell);
         family_treecolumn.set_cell_data_func (family_cell, &font_lister_cell_data_func);
-        g_idle_add(FontSelector::set_cell_markup, this);
+        _idle_connection = Glib::signal_idle().connect(sigc::mem_fun(*this, &FontSelector::set_cell_markup));
     }
     signal_block = false;
 }
