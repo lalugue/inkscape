@@ -12,7 +12,6 @@
 #ifndef INKSCAPE_COLORS_DRAGNDROP
 #define INKSCAPE_COLORS_DRAGNDROP
 
-#include <optional>
 #include <span>
 #include <vector>
 

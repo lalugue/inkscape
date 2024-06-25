@@ -511,9 +511,13 @@ Glib::RefPtr<Gdk::ContentProvider> ColorItem::on_drag_prepare(Gtk::DragSource co
 {
     if (!dialog) return {};
 
-    Glib::Value<std::optional<Colors::Color>> value;
+    Glib::Value<Colors::Paint> value;
     value.init(value.value_type());
-    value.set(getColor());
+    if (is_paint_none()) {
+        value.set(Colors::NoColor{});
+    } else {
+        value.set(getColor());
+    }
     return Gdk::ContentProvider::create(value);
 }
 
@@ -552,7 +556,7 @@ bool ColorItem::is_pinned() const
 }
 
 /**
- * Return the average color for this color item. If none, returns whit
+ * Return the average color for this color item. If none, returns white
  * but if a gradient an average of the gradient in RGB is returned.
  */
 Colors::Color ColorItem::getColor() const
@@ -566,12 +570,11 @@ Colors::Color ColorItem::getColor() const
         auto pat = Cairo::RefPtr<Cairo::Pattern>(new Cairo::Pattern(grad->create_preview_pattern(1), true));
         auto img = Cairo::ImageSurface::create(Cairo::Surface::Format::ARGB32, 1, 1);
         auto cr = Cairo::Context::create(img);
-        cr->set_source_rgb(196.0 / 255.0, 196.0 / 255.0, 196.0 / 255.0);
-        cr->paint();
         cr->set_source(pat);
         cr->paint();
-        auto rgb = img->get_data();
-        return Colors::Color(Colors::Space::Type::RGB, {rgb[0] / 255.0, rgb[1] / 255.0, rgb[2] / 255.0});
+        auto color = ink_cairo_surface_average_color(img->cobj());
+        color.setName(grad->getId());
+        return color;
     }
 
     // unreachable

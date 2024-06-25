@@ -280,7 +280,7 @@ bool on_drop(Glib::ValueBase const &value, double x, double y, SPDesktopWidget *
             if (auto const grad = find_gradient(color)) {
                 colorspec = std::string{"url(#"} + grad->getId() + ")";
             } else {
-                colorspec.resize(std::strlen(color.toString().c_str()));
+                colorspec = color.toString();
             }
         }
 
@@ -326,7 +326,7 @@ bool on_drop(Glib::ValueBase const &value, double x, double y, SPDesktopWidget *
         sp_repr_css_attr_unref(css);
 
         item->updateRepr();
-        DocumentUndo::done(doc,  _("Drop color"), "");
+        DocumentUndo::done(doc, _("Drop color"), "");
         return true;
     } else if (auto const dndsvg = get<DnDSvg>(value)) {
         auto prefs_scope = prefs->temporaryPreferences();
