@@ -95,6 +95,9 @@ set(CPACK_WIX_PRODUCT_ICON "${CMAKE_SOURCE_DIR}/share/branding/inkscape.ico")
 set(CPACK_WIX_UI_BANNER "${CMAKE_SOURCE_DIR}/packaging/wix/Bitmaps/banner.bmp")
 set(CPACK_WIX_UI_DIALOG "${CMAKE_SOURCE_DIR}/packaging/wix/Bitmaps/dialog.bmp")
 set(CPACK_WIX_UI_REF "WixUI_FeatureTree_NoLicense")
+# install scope should ideally be 'perMachine', but can't be due to https://gitlab.kitware.com/cmake/cmake/-/issues/26029 :-(
+# This blocks fixing https://gitlab.com/inkscape/inkscape/-/issues/1617 and https://gitlab.com/inkscape/inkscape/-/issues/1618 .
+set(CPACK_WIX_INSTALL_SCOPE NONE)
 set(CPACK_WIX_PROPERTY_ARPHELPLINK "${CPACK_PACKAGE_HOMEPAGE_URL}")
 set(CPACK_WIX_PROPERTY_ARPURLINFOABOUT "${CPACK_PACKAGE_HOMEPAGE_URL}")
 set(CPACK_WIX_PROPERTY_ARPURLUPDATEINFO "${CPACK_PACKAGE_HOMEPAGE_URL}/release")
