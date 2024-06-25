@@ -365,8 +365,6 @@ InkscapeApplication::document_close(SPDocument* document)
             std::cerr << "InkscapeApplication::close_document: Document not registered with application." << std::endl;
         }
 
-        Inkscape::GC::release(document);
-        assert(document->_anchored_refcount() == 0);
         delete document;
 
     } else {
