@@ -81,21 +81,22 @@ See default.xml for more information.
   <bind gaction="doc.show-all-guides"     keys="&lt;primary&gt;semicolon" />
   
   <!-- Toggle Snap -->
-  <bind gaction="win.snap-global-toggle" keys="&lt;primary&gt;&lt;shift&gt;quotedbl, &lt;primary&gt;&lt;alt&gt;apostrophe"/>
+  <bind gaction="win.snap-global-toggle"        keys="&lt;primary&gt;&lt;shift&gt;quotedbl, &lt;primary&gt;&lt;alt&gt;apostrophe"/>
 
   <!-- Toggle View -->
   <bind gaction="win.canvas-display-mode-cycle" keys="&lt;primary&gt;y"/>
 
 <!-- Edit -->
 
-  <bind gaction="win.paste-in-place"  keys="&lt;primary&gt;&lt;shift&gt;b" />
-  <bind gaction="win.select-none"     keys="&lt;primary&gt;&lt;shift&gt;a" />
+  <bind gaction="win.paste-in-place"             keys="&lt;primary&gt;&lt;shift&gt;f" />
+  <bind gaction="win.select-none"                keys="&lt;primary&gt;&lt;shift&gt;a" />
 
-  <bind gaction="app.selection-top"     keys="&lt;primary&gt;&lt;shift&gt;bracketright" />
-  <bind gaction="app.selection-bottom"  keys="&lt;primary&gt;&lt;shift&gt;bracketleft" />
+  <bind gaction="app.selection-top"              keys="&lt;primary&gt;&lt;shift&gt;bracketright" />
+  <bind gaction="app.selection-bottom"           keys="&lt;primary&gt;&lt;shift&gt;bracketleft" />
 
-  <bind gaction="app.selection-raise"   keys="&lt;primary&gt;bracketright" />
-  <bind gaction="app.selection-lower"   keys="&lt;primary&gt;bracketleft" />
+  <bind gaction="app.selection-raise"            keys="&lt;primary&gt;bracketright" />
+  <bind gaction="app.selection-lower"            keys="&lt;primary&gt;bracketleft" />
+
 
   <!--Object to Guides -->
   <bind gaction="app.object-to-guides"  keys="&lt;primary&gt;5" />
