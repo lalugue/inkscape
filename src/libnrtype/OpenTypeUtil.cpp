@@ -220,45 +220,55 @@ void readOpenTypeGsubTable (hb_font_t* hb_font,
 
                 // std::cout << "Table: " << table.first << std::endl;
                 // std::cout << "  Found feature, number: " << feature_index << std::endl;
-                unsigned int lookup_indexes[32]; 
-                unsigned int lookup_count = 32;
-                int count = hb_ot_layout_feature_get_lookups (hb_face, HB_OT_TAG_GSUB,
-                                                              feature_index,
-                                                              0, // Start
-                                                              &lookup_count,
-                                                              lookup_indexes );
-                // std::cout << "  Lookup count: " << count << " total: " << lookup_count << std::endl;
 
-                for (int i = 0; i < count; ++i) {
-                    HbSet glyphs_before (hb_set_create());
-                    HbSet glyphs_input  (hb_set_create());
-                    HbSet glyphs_after  (hb_set_create());
-                    HbSet glyphs_output (hb_set_create());
+                unsigned start_offset = 0;
 
-                    hb_ot_layout_lookup_collect_glyphs (hb_face, HB_OT_TAG_GSUB,
-                                                        lookup_indexes[i],
-                                                        glyphs_before.get(),
-                                                        glyphs_input.get(),
-                                                        glyphs_after.get(),
-                                                        glyphs_output.get() );
+                while (true) {
+                    unsigned lookup_indexes[32];
+                    unsigned lookup_count = 32;
+                    int count = hb_ot_layout_feature_get_lookups(hb_face, HB_OT_TAG_GSUB,
+                                                                 feature_index,
+                                                                 start_offset,
+                                                                 &lookup_count,
+                                                                 lookup_indexes);
+                    // std::cout << "  Lookup count: " << lookup_count << " total: " << count << std::endl;
 
-                    // std::cout << "  Populations: "
-                    //           << " " << hb_set_get_population (glyphs_before)
-                    //           << " " << hb_set_get_population (glyphs_input)
-                    //           << " " << hb_set_get_population (glyphs_after)
-                    //           << " " << hb_set_get_population (glyphs_output)
-                    //           << std::endl;
+                    for (unsigned i = 0; i < lookup_count; i++) {
+                        HbSet glyphs_before (hb_set_create());
+                        HbSet glyphs_input  (hb_set_create());
+                        HbSet glyphs_after  (hb_set_create());
+                        HbSet glyphs_output (hb_set_create());
 
-                    get_glyphs (glyphMap, glyphs_before, tables[table.first].before);
-                    get_glyphs (glyphMap, glyphs_input,  tables[table.first].input );
-                    get_glyphs (glyphMap, glyphs_after,  tables[table.first].after );
-                    get_glyphs (glyphMap, glyphs_output, tables[table.first].output);
+                        hb_ot_layout_lookup_collect_glyphs (hb_face, HB_OT_TAG_GSUB,
+                                                            lookup_indexes[i],
+                                                            glyphs_before.get(),
+                                                            glyphs_input.get(),
+                                                            glyphs_after.get(),
+                                                            glyphs_output.get() );
 
-                    // std::cout << "  Before: " << tables[table.first].before.c_str() << std::endl;
-                    // std::cout << "  Input:  " << tables[table.first].input.c_str() << std::endl;
-                    // std::cout << "  After:  " << tables[table.first].after.c_str() << std::endl;
-                    // std::cout << "  Output: " << tables[table.first].output.c_str() << std::endl;
-                } // End count (lookups)
+                        // std::cout << "  Populations: "
+                        //           << " " << hb_set_get_population (glyphs_before)
+                        //           << " " << hb_set_get_population (glyphs_input)
+                        //           << " " << hb_set_get_population (glyphs_after)
+                        //           << " " << hb_set_get_population (glyphs_output)
+                        //           << std::endl;
+
+                        get_glyphs (glyphMap, glyphs_before, tables[table.first].before);
+                        get_glyphs (glyphMap, glyphs_input,  tables[table.first].input );
+                        get_glyphs (glyphMap, glyphs_after,  tables[table.first].after );
+                        get_glyphs (glyphMap, glyphs_output, tables[table.first].output);
+
+                        // std::cout << "  Before: " << tables[table.first].before.c_str() << std::endl;
+                        // std::cout << "  Input:  " << tables[table.first].input.c_str() << std::endl;
+                        // std::cout << "  After:  " << tables[table.first].after.c_str() << std::endl;
+                        // std::cout << "  Output: " << tables[table.first].output.c_str() << std::endl;
+                    }
+
+                    start_offset += lookup_count;
+                    if (start_offset >= count) {
+                        break;
+                    }
+                }
 
             } else {
                 // std::cout << "  Did not find '" << table.first << "'!" << std::endl;
