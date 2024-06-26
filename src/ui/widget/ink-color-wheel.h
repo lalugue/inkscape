@@ -32,6 +32,7 @@
 #include "ui/widget/widget-vfuncs-class-init.h" // for focus
 
 namespace Gtk {
+class Builder;
 class DrawingArea;
 class GestureClick;
 } // namespace Gtk
@@ -66,6 +67,7 @@ class ColorWheel : public Gtk::AspectFrame
 {
 public:
     ColorWheel(Colors::Space::Type type, std::vector<double> initial_color);
+    ColorWheel(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& builder, Colors::Space::Type type, std::vector<double> initial_color);
 
     /// Set the RGB of the wheel. If @a emit is true & hue changes, we call color_changed() for you
     /// @param overrideHue whether to set hue to 0 if min==max(r,g,b) – only used by ColorwheelHSL…
@@ -93,6 +95,7 @@ protected:
     void focus_drawing_area();
 
 private:
+    void construct();
     sigc::signal<void ()> _signal_color_changed;
 
     UI::Widget::Bin *_bin;
@@ -103,9 +106,11 @@ private:
     /// All event controllers are connected to the DrawingArea.
     virtual Gtk::EventSequenceState on_click_pressed (Gtk::GestureClick const &click,
                                                       int n_press, double x, double y) = 0;
-    virtual Gtk::EventSequenceState on_click_released(Gtk::GestureClick const &click,
-                                                      int n_press, double x, double y) = 0;
+    virtual Gtk::EventSequenceState on_click_released(int n_press, double x, double y) = 0;
+    virtual Gtk::EventSequenceState _on_click_released(Gtk::GestureClick const &click,
+                                                      int n_press, double x, double y);
     virtual void on_motion(GtkEventControllerMotion const *motion, double x, double y) = 0;
+    void _on_motion(GtkEventControllerMotion const *motion, double x, double y);
     virtual bool on_key_pressed(GtkEventControllerKey const *key_event,
                                 unsigned keyval, unsigned keycode, GdkModifierType state)
                                { return false; }
@@ -122,6 +127,7 @@ class ColorWheelHSL
 {
 public:
     ColorWheelHSL();
+    ColorWheelHSL(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& builder);
     bool setColor(Colors::Color const &color,
                 bool overrideHue = true, bool emit = true) override;
 
@@ -148,8 +154,7 @@ private:
 
     Gtk::EventSequenceState on_click_pressed (Gtk::GestureClick const &click,
                                               int n_press, double x, double y) final;
-    Gtk::EventSequenceState on_click_released(Gtk::GestureClick const &click,
-                                              int n_press, double x, double y) final;
+    Gtk::EventSequenceState on_click_released(int n_press, double x, double y) final;
     void on_motion(GtkEventControllerMotion const *motion, double x, double y) final;
     bool on_key_pressed(GtkEventControllerKey const *key_event,
                         unsigned keyval, unsigned keycode, GdkModifierType state) final;
@@ -187,6 +192,7 @@ class ColorWheelHSLuv : public ColorWheel
 {
 public:
     ColorWheelHSLuv();
+    ColorWheelHSLuv(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& builder);
 
     /// See base doc & N.B. that overrideHue is unused by this class
     bool setColor(Colors::Color const &color,
@@ -204,8 +210,7 @@ private:
 
     Gtk::EventSequenceState on_click_pressed (Gtk::GestureClick const &click,
                                               int n_press, double x, double y) final;
-    Gtk::EventSequenceState on_click_released(Gtk::GestureClick const &click,
-                                              int n_press, double x, double y) final;
+    Gtk::EventSequenceState on_click_released(int n_press, double x, double y) final;
     void on_motion(GtkEventControllerMotion const *motion, double x, double y) final;
     bool on_key_pressed(GtkEventControllerKey const *key_event,
                         unsigned keyval, unsigned keycode, GdkModifierType state) final;

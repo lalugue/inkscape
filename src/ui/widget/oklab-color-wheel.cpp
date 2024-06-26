@@ -266,8 +266,7 @@ Gtk::EventSequenceState OKWheel::on_click_pressed(Gtk::GestureClick const &click
 }
 
 /** @brief Handle a button release event. */
-Gtk::EventSequenceState OKWheel::on_click_released(Gtk::GestureClick const & /*click*/,
-                                                   int /*n_press*/, double /*x*/, double /*y*/)
+Gtk::EventSequenceState OKWheel::on_click_released(int /*n_press*/, double /*x*/, double /*y*/)
 {
     _adjusting = false;
     return Gtk::EventSequenceState::CLAIMED;

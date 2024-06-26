@@ -17,6 +17,8 @@
 #include <string>
 #include <vector>
 
+#include "enum.h"
+
 namespace Inkscape::Colors::Space {
 
 enum class Type;
@@ -50,11 +52,14 @@ public:
     unsigned size() const { return _components.size(); }
 
     void add(std::string id, std::string name, std::string tip, unsigned scale);
-    void setType(Type type) { _type = type; }
+    void setType(Type type, Type color_wheel = Type::NONE) { _type = type; _color_wheel = color_wheel; }
+
+    Type color_wheel() const;
 
 private:
     Type _type;
     std::vector<Component> _components;
+    Type _color_wheel = Type::NONE;
 };
 
 } // namespace Inkscape::Colors::Space

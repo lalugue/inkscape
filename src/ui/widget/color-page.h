@@ -26,6 +26,7 @@ class AnySpace;
 }
 
 namespace Gtk {
+class Expander;
 class Builder;
 }
 
@@ -50,6 +51,9 @@ protected:
 private:
     Inkscape::auto_connection _specific_changed_connection;
     Inkscape::auto_connection _selected_changed_connection;
+    ColorWheel* _color_wheel = nullptr;
+    auto_connection _color_wheel_changed;
+    Gtk::Expander& _expander;
 };
 
 class ColorPageChannel
@@ -67,7 +71,6 @@ private:
     InkSpinButton &_spin;
     Glib::RefPtr<Gtk::Adjustment> _adj;
     std::shared_ptr<Colors::ColorSet> _color;
-
     Inkscape::auto_connection _adj_changed;
     Inkscape::auto_connection _slider_changed;
     Inkscape::auto_connection _color_changed;

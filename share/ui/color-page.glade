@@ -5,7 +5,7 @@
   <!-- n-columns=3 n-rows=7 -->
   <object class="GtkGrid" id="color-page">
     <property name="visible">True</property>
-    <property name="valign">start</property>
+    <property name="valign">fill</property>
     <property name="hexpand">True</property>
     <property name="vexpand">True</property>
     <property name="row-spacing">0</property>
@@ -216,30 +216,33 @@
       </object>
     </child>
     <child>
-      <object class="GtkExpander">
+      <object class="GtkExpander" id="wheel-expander">
         <property name="visible">True</property>
         <property name="can-focus">True</property>
         <property name="hexpand">True</property>
-        <child>
-          <object class="GtkAspectFrame">
-            <property name="name">wheel</property>
-            <property name="visible">True</property>
-            <property name="can-focus">False</property>
-            <property name="hexpand">True</property>
-            <property name="vexpand">True</property>
-            <child>
-              <placeholder/>
-            </child>
-          </object>
-        </child>
+        <property name="vexpand">False</property>
+<!--        <child>-->
+<!--          <object class="GtkAspectFrame" id="color-wheel">-->
+<!--            <property name="name">wheel</property>-->
+<!--            <property name="visible">True</property>-->
+<!--            <property name="can-focus">False</property>-->
+<!--            <property name="hexpand">True</property>-->
+<!--            <property name="vexpand">True</property>-->
+<!--            <child>-->
+<!--              <placeholder/>-->
+<!--            </child>-->
+<!--          </object>-->
+<!--        </child>-->
         <child type="label">
           <object class="GtkBox">
             <property name="visible">True</property>
             <property name="can-focus">False</property>
+            <property name="spacing">3</property>
             <child>
               <object class="GtkImage">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
+                <property name="icon-name">color-wheel</property>
               </object>
             </child>
             <child>

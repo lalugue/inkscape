@@ -24,6 +24,8 @@ public:
     void update();
     // Specify optional suffix to show after the value
     void set_suffix(const std::string& suffix, bool add_half_space = true);
+    // Specify optional prefix to show in front of the value
+    void set_prefix(const std::string& prefix, bool add_space = true);
     // Set to true to draw a border, false to hide it
     void set_has_frame(bool frame = true);
     // Set to true to hide insignificant zeros after decimal point
@@ -33,6 +35,8 @@ public:
     void set_defocus_widget(Gtk::Widget* widget) { _defocus_widget = widget; }
     // Suppress expression evaluator
     void set_dont_evaluate(bool flag) { _dont_evaluate = flag; }
+    // Set distance in pixels of drag travel to adjust full button range; the lower the value the more sensitive the dragging gets
+    void set_drag_sensitivity(double distance);
 
     // ----------- PROPERTIES ------------
     // Glib::PropertyProxy<int> property_digits() { return prop_digits.get_proxy(); }
@@ -48,7 +52,6 @@ private:
     Gtk::Label _value;
     Gtk::Button _plus;
     Gtk::Entry _entry;
-    Glib::RefPtr<Gdk::Cursor> _old_cursor;
 
     // ------------- CONTROLLERS -------------
     // Only Gestures are available in GTK3 (and not GestureClick).
@@ -97,16 +100,19 @@ private:
     void show_arrows(bool on = true);
     bool commit_entry();
     void change_value(double inc, Gdk::ModifierType state);
-    std::string format(double value, bool with_suffix, bool with_markup, bool trim_zeros) const;
+    void set_value(double new_value);
+    std::string format(double value, bool with_prefix_suffix, bool with_markup, bool trim_zeros) const;
     void unparent_widgets();
     void start_spinning(double steps, Gdk::ModifierType state);
     void stop_spinning();
 
     // ---------------- DATA ------------------
     double _initial_value = 0.0; // Value of adjustment at start of drag.
+    double _drag_full_travel = 300.0; // dragging sensitivity in pixels
     bool _dragged = false;      // Hack to avoid enabling entry after drag. TODO Probably not needed now.
     double _scroll_counter = 0; // Counter to control incrementing/decrementing rate
     std::string _suffix; // suffix to show after the number, if any
+    std::string _prefix; // prefix to show before the number, if any
     bool _trim_zeros = true;    // hide insignificant zeros in decimal fraction
     sigc::connection _connection;
     int _buttons_width = 0;     // width of increment/decrement button
@@ -116,6 +122,8 @@ private:
     auto_connection _spinning;
     Gtk::Widget* _defocus_widget = nullptr;
     bool _dont_evaluate = false; // turn off expression evaluator?
+    Glib::RefPtr<Gdk::Cursor> _old_cursor;
+    Glib::RefPtr<Gdk::Cursor> _current_cursor;
 
     // ----------- PROPERTIES ------------
     // Glib::Property<int> prop_digits;

@@ -61,12 +61,12 @@ std::map<Type, Components> _build(bool alpha)
     sets[Type::linearRGB].add("g", _("<sub>l</sub>_G:"), _("Linear Green"), 255);
     sets[Type::linearRGB].add("b", _("<sub>l</sub>_B:"), _("Linear Blue"), 255);
 
-    sets[Type::HSL].setType(Type::HSL);
+    sets[Type::HSL].setType(Type::HSL, Type::HSL);
     sets[Type::HSL].add("h", _("_H:"), _("Hue"), 360);
     sets[Type::HSL].add("s", _("_S:"), _("Saturation"), 100);
     sets[Type::HSL].add("l", _("_L:"), _("Lightness"), 100);
 
-    sets[Type::HSL].setType(Type::HSL);
+    sets[Type::CMYK].setType(Type::CMYK);
     sets[Type::CMYK].add("c", _("_C:"), _("Cyan"), 100);
     sets[Type::CMYK].add("m", _("_M:"), _("Magenta"), 100);
     sets[Type::CMYK].add("y", _("_Y:"), _("Yellow"), 100);
@@ -77,12 +77,12 @@ std::map<Type, Components> _build(bool alpha)
     sets[Type::CMY].add("m", _("_M:"), _("Magenta"), 100);
     sets[Type::CMY].add("y", _("_Y:"), _("Yellow"), 100);
 
-    sets[Type::HSV].setType(Type::HSV);
+    sets[Type::HSV].setType(Type::HSV, Type::HSL);
     sets[Type::HSV].add("h", _("_H:"), _("Hue"), 360);
     sets[Type::HSV].add("s", _("_S:"), _("Saturation"), 100);
     sets[Type::HSV].add("v", _("_V:"), _("Value"), 100);
 
-    sets[Type::HSLUV].setType(Type::HSLUV);
+    sets[Type::HSLUV].setType(Type::HSLUV, Type::HSLUV);
     sets[Type::HSLUV].add("h", _("_H*"), _("Hue"), 360);
     sets[Type::HSLUV].add("s", _("_S*"), _("Saturation"), 100);
     sets[Type::HSLUV].add("l", _("_L*"), _("Lightness"), 100);
@@ -97,7 +97,7 @@ std::map<Type, Components> _build(bool alpha)
     sets[Type::LCH].add("c", _("_C"), _("Chroma"), 255);
     sets[Type::LCH].add("h", _("_H"), _("Hue"), 360);
 
-    sets[Type::OKHSL].setType(Type::OKHSL);
+    sets[Type::OKHSL].setType(Type::OKHSL, Type::OKHSL);
     sets[Type::OKHSL].add("h", _("_H<sub>ok</sub>"), _("Hue"), 360);
     sets[Type::OKHSL].add("s", _("_S<sub>ok</sub>"), _("Saturation"), 100);
     sets[Type::OKHSL].add("l", _("_L<sub>ok</sub>"), _("Lightness"), 100);
@@ -107,7 +107,7 @@ std::map<Type, Components> _build(bool alpha)
     sets[Type::OKLAB].add("s", _("_A<sub>ok</sub>"), _("Component A"), 100);
     sets[Type::OKLAB].add("l", _("_B<sub>ok</sub>"), _("Component B"), 100);
 
-    sets[Type::OKLCH].setType(Type::OKLCH);
+    sets[Type::OKLCH].setType(Type::OKLCH, Type::OKHSL);
     sets[Type::OKLCH].add("l", _("_L<sub>ok</sub>"), _("Lightness"), 100);
     sets[Type::OKLCH].add("c", _("_C<sub>ok</sub>"), _("Chroma"), 100);
     sets[Type::OKLCH].add("h", _("_H<sub>ok</sub>"), _("Hue"), 360);
@@ -153,6 +153,10 @@ Components const &Components::get(Type space, bool alpha)
         return search->second;
     }
     return lookup_set[Type::NONE];
+}
+
+Type Components::color_wheel() const {
+    return _color_wheel;
 }
 
 }; // namespace Inkscape::Colors::Space

@@ -15,6 +15,8 @@
 
 #include <utility>
 
+#include "color-wheel-factory.h"
+#include "ink-color-wheel.h"
 #include "ink-spin-button.h"
 #include "colors/color.h"
 #include "colors/color-set.h"
@@ -32,26 +34,26 @@ ColorPage::ColorPage(std::shared_ptr<Space::AnySpace> space, std::shared_ptr<Col
     , _space(std::move(space))
     , _selected_colors(std::move(colors))
     , _specific_colors(std::make_shared<Colors::ColorSet>(_space, true))
+    , _expander(get_widget<Gtk::Expander>(_builder, "wheel-expander"))
 {
     set_name("ColorPage");
     append(get_widget<Gtk::Grid>(_builder, "color-page"));
 
     // Keep the selected colorset in-sync with the space specific colorset.
     _specific_changed_connection = _specific_colors->signal_changed.connect([this]() {
-        _selected_changed_connection.block();
+        auto scoped(_selected_changed_connection.block_here());
         for (auto &[id, color] : *_specific_colors) {
             _selected_colors->set(id, color);
         }
-        _selected_changed_connection.unblock();
+        if (_color_wheel) _color_wheel->setColor(_specific_colors->getAverage());
     });
 
     // Keep the child in-sync with the selected colorset.
     _selected_changed_connection = _selected_colors->signal_changed.connect([this]() {
-        _specific_changed_connection.block();
+        auto scoped(_specific_changed_connection.block_here());
         for (auto &[id, color] : *_selected_colors) {
             _specific_colors->set(id, color);
         }
-        _specific_changed_connection.unblock();
     });
 
     // Control signals when widget isn't mapped (not visible to the user)
@@ -68,6 +70,7 @@ ColorPage::ColorPage(std::shared_ptr<Space::AnySpace> space, std::shared_ptr<Col
     });
 
     // init ink spin button once before builder-derived instance is created to register its custom type first
+    //todo: not working after all...
     // InkSpinButton dummy;
 
     for (auto &component : _specific_colors->getComponents()) {
@@ -87,6 +90,30 @@ ColorPage::ColorPage(std::shared_ptr<Space::AnySpace> space, std::shared_ptr<Col
         hide_widget(_builder, "slider" + index);
         hide_widget(_builder, "spin" + index);
         hide_widget(_builder, "separator" + index);
+    }
+
+    // Color wheel
+    auto wheel_type = _specific_colors->getComponents().color_wheel();
+    // there are only few types of color wheel supported:
+    if (can_create_color_wheel(wheel_type)) {
+        _expander.property_expanded().signal_changed().connect([this, wheel_type]() {
+            auto on = _expander.property_expanded().get_value();
+            if (on && !_color_wheel) {
+                // create color wheel now
+                _color_wheel = create_managed_color_wheel(wheel_type);
+                _expander.set_child(*_color_wheel);
+                _color_wheel->setColor(_specific_colors->getAverage(), true, false);
+                _color_wheel_changed = _color_wheel->connect_color_changed([this]() {
+                    auto scoped(_color_wheel_changed.block_here());
+                    _specific_colors->setAll(_color_wheel->getColor());
+                });
+            }
+            if (_color_wheel) _color_wheel->set_expand(on);
+            _expander.set_expand(on);
+        });
+    }
+    else {
+        _expander.set_visible(false);
     }
 }
 
@@ -119,14 +146,12 @@ ColorPageChannel::ColorPageChannel(
         }
     });
     _adj_changed = _adj->signal_value_changed().connect([this]() {
-        _slider_changed.block();
+        auto scoped(_slider_changed.block_here());
         _slider.setScaled(_adj->get_value());
-        _slider_changed.unblock();
     });
     _slider_changed = _slider.signal_value_changed.connect([this]() {
-        _adj_changed.block();
+        auto scoped(_adj_changed.block_here());
         _adj->set_value(_slider.getScaled());
-        _adj_changed.unblock();
     });
 }
 

@@ -96,8 +96,11 @@ ColorWheel::ColorWheel(Type type, std::vector<double> initial_color)
     : Gtk::AspectFrame(0.5, 0.5, 1.0, false)
     , _bin{Gtk::make_managed<UI::Widget::Bin>()}
     , _values{type, std::move(initial_color)}
-    , _drawing_area{Gtk::make_managed<Gtk::DrawingArea>()}
-{
+    , _drawing_area{Gtk::make_managed<Gtk::DrawingArea>()} {
+    construct();
+}
+
+void ColorWheel::construct() {
     set_name("ColorWheel");
     add_css_class("flat");
 
@@ -110,11 +113,37 @@ ColorWheel::ColorWheel(Type type, std::vector<double> initial_color)
     set_child(*_bin);
 
     Controller::add_click(*_drawing_area, sigc::mem_fun(*this, &ColorWheel::on_click_pressed ),
-                                          sigc::mem_fun(*this, &ColorWheel::on_click_released));
-    Controller::add_motion<nullptr, &ColorWheel::on_motion, nullptr>
+                                          sigc::mem_fun(*this, &ColorWheel::_on_click_released));
+    Controller::add_motion<nullptr, &ColorWheel::_on_motion, nullptr>
                           (*_drawing_area, *this);
     Controller::add_key<&ColorWheel::on_key_pressed, &ColorWheel::on_key_released>
                        (*_drawing_area, *this);
+}
+
+ColorWheel::ColorWheel(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& builder, Type type, std::vector<double> initial_color):
+    Gtk::AspectFrame(cobject),
+    _bin(Gtk::make_managed<Bin>()),
+    _values(type, initial_color),
+    _drawing_area{Gtk::make_managed<Gtk::DrawingArea>()} {
+
+    construct();
+}
+
+Gtk::EventSequenceState ColorWheel::_on_click_released(Gtk::GestureClick const &click, int n_press, double x, double y) {
+    return on_click_released(n_press, x, y);
+}
+
+void ColorWheel::_on_motion(const GtkEventControllerMotion* motion, double const x, double const y) {
+    if (!_adjusting) return;
+
+    auto state = Controller::get_event_modifiers(motion);
+    if (!Controller::has_flag(state, GDK_BUTTON1_MASK)) {
+        // lost button release event
+        on_click_released(0, x, y);
+        return;
+    }
+
+    on_motion(motion, x, y);
 }
 
 sigc::connection ColorWheel::connect_color_changed(sigc::slot<void ()> slot)
@@ -204,6 +233,7 @@ void ColorWheelHSL::update_ring_source()
     auto const cy = height / 2.0;
 
     auto const stride = Cairo::ImageSurface::format_stride_for_width(Cairo::Surface::Format::RGB24, width);
+    _source_ring.reset();
     _buffer_ring.resize(height * stride / 4);
 
     auto const &[r_min, r_max] = get_radii();
@@ -261,6 +291,7 @@ ColorWheelHSL::update_triangle_source()
      */
     constexpr int padding = 3; // Avoid edge artifacts.
 
+    _source_triangle.reset();
     auto const [width, height] = *_cache_size;
     auto const stride = Cairo::ImageSurface::format_stride_for_width(Cairo::Surface::Format::RGB24, width);
     _buffer_triangle.resize(height * stride / 4);
@@ -328,6 +359,7 @@ void ColorWheelHSL::on_drawing_area_size(int width, int height, int baseline)
     if (size == _cache_size) return;
     _cache_size = size;
     _radii.reset();
+    _source_ring.reset();
 }
 
 void ColorWheelHSL::on_drawing_area_draw(Cairo::RefPtr<Cairo::Context> const &cr, int, int)
@@ -549,18 +581,25 @@ Gtk::EventSequenceState ColorWheelHSL::on_click_pressed(Gtk::GestureClick const 
     return Gtk::EventSequenceState::NONE;
 }
 
-Gtk::EventSequenceState ColorWheelHSL::on_click_released(Gtk::GestureClick const & /*click*/,
-                                                         int /*n_press*/, double /*x*/, double /*y*/)
+Gtk::EventSequenceState ColorWheelHSL::on_click_released(int /*n_press*/, double /*x*/, double /*y*/)
 {
     _mode = DragMode::NONE;
     _adjusting = false;
     return Gtk::EventSequenceState::CLAIMED;
 }
 
-void ColorWheelHSL::on_motion(GtkEventControllerMotion const * /*motion*/,
+void ColorWheelHSL::on_motion(const GtkEventControllerMotion* motion,
                               double const x, double const y)
 {
     if (!_adjusting) return;
+    auto state = Controller::get_event_modifiers(motion);
+ printf("motio: %x\n", state);
+    if (!Controller::has_flag(state, GDK_BUTTON1_MASK)) {
+        // lost button release event
+        _mode = DragMode::NONE;
+        _adjusting = false;
+        return;
+    }
 
     if (_mode == DragMode::HUE) {
         _update_ring_color(x, y);
@@ -695,11 +734,20 @@ ColorWheelHSL::ColorWheelHSL()
     , ColorWheel(Type::HSV, {0, 0, 0, 1})
 {}
 
+ColorWheelHSL::ColorWheelHSL(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& builder) :
+    ColorWheel(cobject, builder, Type::HSV, {0, 0, 0, 1}) {}
+
 /* HSLuv Color Wheel */
 
 ColorWheelHSLuv::ColorWheelHSLuv()
     : ColorWheel(Type::HSLUV, {0, 1, 0.5, 1})
 {
+    _picker_geometry = std::make_unique<PickerGeometry>();
+}
+
+ColorWheelHSLuv::ColorWheelHSLuv(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& builder) :
+    ColorWheel(cobject, builder, Type::HSLUV, {0, 1, 0.5, 1}) {
+
     _picker_geometry = std::make_unique<PickerGeometry>();
 }
 
@@ -832,7 +880,7 @@ void ColorWheelHSLuv::on_drawing_area_draw(::Cairo::RefPtr<::Cairo::Context> con
     bool const is_vertex = _vertex();
     cr->set_antialias(Cairo::ANTIALIAS_SUBPIXEL);
 
-    if (size > _square_size) {
+    if (size > _square_size && !polygon_vertices_px.empty()) {
         if (_cache_size != dimensions) {
             _updatePolygon();
         }
@@ -955,6 +1003,7 @@ void ColorWheelHSLuv::_updatePolygon()
 
     int const stride = Cairo::ImageSurface::format_stride_for_width(Cairo::Surface::Format::RGB24, _cache_size.x());
 
+    _surface_polygon.reset();
     _buffer_polygon.resize(_cache_size.y() * stride / 4);
     std::vector<guint32> buffer_line(stride / 4);
 
@@ -1006,8 +1055,7 @@ Gtk::EventSequenceState ColorWheelHSLuv::on_click_pressed(Gtk::GestureClick cons
     return Gtk::EventSequenceState::NONE;
 }
 
-Gtk::EventSequenceState ColorWheelHSLuv::on_click_released(Gtk::GestureClick const & /*click*/,
-                                                           int /*n_press*/, double /*x*/, double /*y*/)
+Gtk::EventSequenceState ColorWheelHSLuv::on_click_released(int /*n_press*/, double /*x*/, double /*y*/)
 {
     _adjusting = false;
     return Gtk::EventSequenceState::CLAIMED;

@@ -81,6 +81,24 @@ public:
         return con;
     }
 
+    class scoped_block {
+    public:
+        scoped_block(sigc::connection& connection): _c(connection) {
+            _c.block();
+        }
+
+        ~scoped_block() {
+            _c.unblock();
+        }
+
+    private:
+        sigc::connection& _c;
+    };
+
+    scoped_block block_here() {
+        return scoped_block{_connection};
+    }
+
 private:
     sigc::connection _connection;
 };

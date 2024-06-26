@@ -11,18 +11,36 @@
 
 namespace Inkscape::UI::Widget {
 
+// CSS styles for InkSpinButton
+// language=CSS
+auto ink_spinbutton_css = R"=====(
+@define-color border-color @unfocused_borders;
+@define-color bgnd-color alpha(@theme_base_color, 1.0);
+@define-color focus-color alpha(@theme_selected_bg_color, 0.5);
+/* :root { --border-color: lightgray; } - this is not working yet, so using nonstandard @define-color */
+#InkSpinButton { border: 0 solid @border-color; border-radius: 3px; background-color: @bgnd-color; }
+#InkSpinButton.frame { border: 1px solid @border-color; }
+#InkSpinButton:hover button { opacity: 1; }
+#InkSpinButton:focus-within { outline: 2px solid @focus-color; outline-offset: -2px; }
+#InkSpinButton button { border: 0 solid alpha(@border-color, 0.30); border-radius: 2px; padding: 1px; min-width: 6px; min-height: 8px; -gtk-icon-size: 10px; background-image: none; }
+#InkSpinButton button.left  { border-top-right-radius: 0; border-bottom-right-radius: 0; border-right-width: 1px; }
+#InkSpinButton button.right { border-top-left-radius: 0; border-bottom-left-radius: 0; border-left-width: 1px; }
+#InkSpinButton entry { border: none; border-radius: 3px; padding: 0; min-height: 13px; background-color: @bgnd-color; outline-width: 0; }
+)=====";
 constexpr int timeout_click = 500;
 constexpr int timeout_repeat = 50;
+
+static Glib::RefPtr<Gdk::Cursor> g_resizing_cursor;
 
 void InkSpinButton::construct() {
     set_name("InkSpinButton");
 
-    _minus.set_name("Ink2::SpinButton::Minus");
+    _minus.set_name("InkSpinButton-Minus");
     _minus.add_css_class("left");
-    _value.set_name("Ink2::SpinButton::Value");
-    _plus.set_name("Ink2::SpinButton::Plus");
+    _value.set_name("InkSpinButton-Value");
+    _plus.set_name("InkSpinButton-Plus");
     _plus.add_css_class("right");
-    _entry.set_name("Ink2::SpinButton::Entry");
+    _entry.set_name("InkSpinButton-Entry");
     _entry.set_alignment(0.5);
     _entry.set_max_width_chars(3); // let it shrink, we can always stretch it
 
@@ -50,23 +68,7 @@ void InkSpinButton::construct() {
     static Glib::RefPtr<Gtk::CssProvider> provider;
     if (!provider) {
         provider = Gtk::CssProvider::create();
-        // language=CSS
-        Glib::ustring css = R"=====(
-@define-color border-color @unfocused_borders;
-@define-color bgnd-color alpha(@theme_base_color, 1.0);
-@define-color focus-color alpha(@theme_selected_bg_color, 0.5);
-/* :root { --border-color: lightgray; } - this is not working, so using nonstandard @define-color */
-#InkSpinButton { border: 0 solid @border-color; border-radius: 3px; background-color: @bgnd-color; }
-#InkSpinButton.frame { border: 1px solid @border-color; }
-#InkSpinButton:hover button { opacity: 1; }
-#InkSpinButton:focus-within { outline: 2px solid @focus-color; outline-offset: -2px; }
-#InkSpinButton button { border: 0 solid alpha(@border-color, 0.30); border-radius: 2px; padding: 1px; min-width: 6px; min-height: 8px; -gtk-icon-size: 10px; background-image: none; }
-#InkSpinButton button.left  { border-top-right-radius: 0; border-bottom-right-radius: 0; border-right-width: 1px; }
-#InkSpinButton button.right { border-top-left-radius: 0; border-bottom-left-radius: 0; border-left-width: 1px; }
-#InkSpinButton entry { border: none; border-radius: 3px; padding: 0; min-height: 13px; background-color: @bgnd-color; outline-width: 0; }
-      )=====";
-        provider->load_from_data(css);
-
+        provider->load_from_data(ink_spinbutton_css);
         auto const display = Gdk::Display::get_default();
         Gtk::StyleContext::add_provider_for_display(display, provider, GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
     }
@@ -201,21 +203,22 @@ Gtk::SizeRequestMode InkSpinButton::get_request_mode_vfunc() const {
 
 void InkSpinButton::measure_vfunc(Gtk::Orientation orientation, int for_size, int& minimum, int& natural, int& minimum_baseline, int& natural_baseline) const {
 
-    auto low = format(_adjustment->get_lower(), true, false, false);
-    auto high = format(_adjustment->get_upper(), true, false, false);
+    auto delta = prop_digits > 0 ? pow(10.0, -prop_digits) : 0;
+    auto low = format(_adjustment->get_lower() + delta, true, false, true);
+    auto high = format(_adjustment->get_upper() - delta, true, false, true);
     auto text = low.size() > high.size() ? low : high;
 
     // http://developer.gnome.org/pangomm/unstable/classPango_1_1Layout.html
-    auto layout = const_cast<InkSpinButton*>(this)->create_pango_layout(" " + text + " ");
+    auto layout = const_cast<InkSpinButton*>(this)->create_pango_layout("\u2009" + text + "\u2009");
 
     int text_width = 0;
     int text_height = 0;
     // get the text dimensions
     layout->get_pixel_size(text_width, text_height);
 
-
     if (orientation == Gtk::Orientation::HORIZONTAL) {
         minimum_baseline = natural_baseline = -1;
+        // always measure, so gtk doesn't complain
         auto m = _minus.measure(orientation);
         auto p = _plus.measure(orientation);
         auto _ = _entry.measure(orientation);
@@ -287,6 +290,16 @@ int InkSpinButton::get_digits() const {
     // return prop_digits.get_value();
 }
 
+void InkSpinButton::set_prefix(const std::string& prefix, bool add_space) {
+    if (add_space && !prefix.empty()) {
+        _prefix = prefix + " ";
+    }
+    else {
+        _prefix = prefix;
+    }
+    update();
+}
+
 void InkSpinButton::set_suffix(const std::string& suffix, bool add_half_space) {
     if (add_half_space && !suffix.empty()) {
         // thin space
@@ -321,7 +334,7 @@ static void trim_zeros(std::string& ret) {
     }
 }
 
-std::string InkSpinButton::format(double value, bool with_suffix, bool with_markup, bool trim_zeros) const {
+std::string InkSpinButton::format(double value, bool with_prefix_suffix, bool with_markup, bool trim_zeros) const {
     std::stringstream ss;
     ss.imbue(std::locale("C"));
     ss << std::fixed << std::setprecision(prop_digits) << value;
@@ -330,14 +343,20 @@ std::string InkSpinButton::format(double value, bool with_suffix, bool with_mark
         UI::Widget::trim_zeros(number);
     }
 
-    if (with_suffix && !_suffix.empty()) {
+    if (with_prefix_suffix && (!_suffix.empty() || !_prefix.empty())) {
         if (with_markup) {
             std::stringstream markup;
-            markup << "<span>" << number << "</span><span alpha='55%'>" << _suffix << "</span>";
+            if (!_prefix.empty()) {
+                markup << "<span alpha='50%'>" << _prefix << "</span>";
+            }
+            markup << "<span>" << number << "</span>";
+            if (!_suffix.empty()) {
+                markup << "<span alpha='50%'>" << _suffix << "</span>";
+            }
             return markup.str();
         }
         else {
-            return number + _suffix;
+            return _prefix + number + _suffix;
         }
     }
 
@@ -350,7 +369,7 @@ void InkSpinButton::update() {
     auto value = _adjustment->get_value();
     auto text = format(value, false, false, _trim_zeros);
     _entry.set_text(text);
-    if (_suffix.empty()) {
+    if (_suffix.empty() && _prefix.empty()) {
         _value.set_text(text);
     }
     else {
@@ -387,15 +406,30 @@ void InkSpinButton::on_motion_leave() {
 
 void InkSpinButton::on_motion_enter_value(double x, double y) {
     _old_cursor = get_cursor();
-    auto new_cursor = Gdk::Cursor::create("ew-resize");
-    set_cursor(new_cursor);
+    if (!g_resizing_cursor) {
+        g_resizing_cursor = Gdk::Cursor::create("ew-resize");
+    }
+    _current_cursor = g_resizing_cursor;
+    set_cursor(_current_cursor);
 }
 
 void InkSpinButton::on_motion_leave_value() {
-    set_cursor(_old_cursor);
+    _current_cursor = _old_cursor;
+    set_cursor(_current_cursor);
 }
 
 // ---------------   DRAG VALUE  ----------------
+
+static double get_accel_factor(Gdk::ModifierType state) {
+    double scale = 1.0;
+    // Ctrl modifier slows down, Shift speeds up
+    if ((state & Gdk::ModifierType::CONTROL_MASK) == Gdk::ModifierType::CONTROL_MASK) {
+        scale = 0.1;
+    } else if ((state & Gdk::ModifierType::SHIFT_MASK) == Gdk::ModifierType::SHIFT_MASK) {
+        scale = 10.0;
+    }
+    return scale;
+}
 
 void InkSpinButton::on_drag_begin_value(Gdk::EventSequence* sequence) {
     _initial_value = _adjustment->get_value();
@@ -405,12 +439,20 @@ void InkSpinButton::on_drag_update_value(Gdk::EventSequence* sequence) {
     double dx = 0.0;
     double dy = 0.0;
     _drag_value->get_offset(dx, dy);
-    dx = std::round(dx / 10.0);
 
     // If we don't move, then it probably was a button click.
-    if (dx != 0.0) {
+    auto delta = 1; // tweak this value to reject real clicks, or else we'll change value inadvertently
+    if (std::abs(dx) > delta || std::abs(dy) > delta) {
+        auto max_dist = 300.0; // distance to travel to adjust full range
+        auto range = _adjustment->get_upper() - _adjustment->get_lower();
         auto state = _drag_value->get_current_event_state();
-        change_value(dx, state);
+        auto distance = std::hypot(dx, dy);
+        auto angle = std::atan2(dx, dy);
+        auto grow = angle > M_PI_4 || angle < -M_PI+M_PI_4;
+        if (!grow) distance = -distance;
+// printf("drag: %f, %f, angle: %f,  sin: %f,  cos: %f, mul: %f\n", dx, dy, angle, sin(angle), 0.0);
+        auto value = _initial_value + get_accel_factor(state) * distance / max_dist * range + _adjustment->get_lower();
+        set_value(value);
         _dragged = true;
     }
 }
@@ -492,6 +534,7 @@ bool InkSpinButton::defocus() {
 
 void InkSpinButton::on_scroll_begin() {
     _scroll_counter = 0;
+    set_cursor("none");
 }
 
 bool InkSpinButton::on_scroll(double dx, double dy) {
@@ -510,20 +553,18 @@ bool InkSpinButton::on_scroll(double dx, double dy) {
     return true;
 }
 
-void InkSpinButton::change_value(double inc, Gdk::ModifierType state) {
-    double scale = 1.0;
-    // Ctrl modifier slows down, Shift speeds up
-    if ((state & Gdk::ModifierType::CONTROL_MASK) == Gdk::ModifierType::CONTROL_MASK) {
-        scale = 0.1;
-    } else if ((state & Gdk::ModifierType::SHIFT_MASK) == Gdk::ModifierType::SHIFT_MASK) {
-        scale = 10.0;
-    }
- // printf("sc: %f inc: %f, \n", scale, _adjustment->get_step_increment()*scale*inc);
-    _adjustment->set_value(_adjustment->get_value() + _adjustment->get_step_increment() * scale * inc);
-}
-
 void InkSpinButton::on_scroll_end() {
     _scroll_counter = 0;
+    set_cursor(_current_cursor);
+}
+
+void InkSpinButton::set_value(double new_value) {
+    _adjustment->set_value(new_value);
+}
+
+void InkSpinButton::change_value(double inc, Gdk::ModifierType state) {
+    double scale = get_accel_factor(state);
+    set_value(_adjustment->get_value() + _adjustment->get_step_increment() * scale * inc);
 }
 
 // ------------------   KEY    ------------------
@@ -531,13 +572,12 @@ void InkSpinButton::on_scroll_end() {
 bool InkSpinButton::on_key_pressed(guint keyval, guint keycode, Gdk::ModifierType state) {
    switch (keyval) {
      case GDK_KEY_Escape: // Defocus
-     //   set_value(saved_value);
+     //   set_value(saved_value); // undo?
          return defocus();
 
-   // case GDK_KEY_Return:
-       // commit_entry();
-       // return true;
+   // case GDK_KEY_Return:  // signal "activate" uses this key
 
+       // undo?
 //   case GDK_KEY_z:
 //   case GDK_KEY_Z:
 //     if ((state & Gdk::ModifierType::CONTROL_MASK) == Gdk::ModifierType::CONTROL_MASK) {
@@ -613,6 +653,10 @@ void InkSpinButton::start_spinning(double steps, Gdk::ModifierType state) {
 
 void InkSpinButton::stop_spinning() {
     if (_spinning) _spinning.disconnect();
+}
+
+void InkSpinButton::set_drag_sensitivity(double distance) {
+    _drag_full_travel = distance;
 }
 
 } // Namespace

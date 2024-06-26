@@ -53,6 +53,10 @@ namespace Inkscape::UI::Controller {
                                    GdkModifierType const flags)
     { return (state & flags) != GdkModifierType{}; }
 
+inline GdkModifierType get_event_modifiers(const GtkEventControllerMotion* motion) {
+    return gtk_event_controller_get_current_event_state(GTK_EVENT_CONTROLLER(motion));
+}
+
 /*
 * * helpers to more easily add Controllers to Widgets
  */
