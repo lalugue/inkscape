@@ -95,6 +95,7 @@ private:
     SPAnchorType _anchor = SP_ANCHOR_CENTER;
     int _width  = 5;
     HandleSize _rel_size = HandleSize::NORMAL;
+    Geom::Point _pos;
 
     // get effective stroke width
     float get_stroke_width() const;
