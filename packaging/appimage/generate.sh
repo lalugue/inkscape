@@ -36,7 +36,11 @@ chmod +x appimagekit
 ./goappimage -s deploy ./appdir/usr/share/applications/org.inkscape.Inkscape.desktop
 sed -i -e 's|/usr/lib/x86_64-linux-gnu/gdk-pixbuf-.*/.*/loaders/||g' ./appdir/lib/x86_64-linux-gnu/gdk-pixbuf-*/*/loaders.cache
 cp ./appdir/usr/share/icons/hicolor/256x256/apps/org.inkscape.Inkscape.png ./appdir
-ARCH=x86_64 ./appimagekit ./appdir
+for i in {1..10}; do
+    ARCH=x86_64 ./appimagekit ./appdir && break
+    echo "appimagekit failed, probably due to network error; retrying in 10s"
+    sleep 10
+done
 
 sha="$(git rev-parse --short HEAD)"
 mv Inkscape*.AppImage* "../Inkscape-$sha.AppImage"
