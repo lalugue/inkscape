@@ -61,7 +61,6 @@ struct ToolBoxData
     char const *type_name; // Used by preferences
     Glib::ustring const tool_name;
     std::unique_ptr<Toolbar> (*create)(SPDesktop *desktop);
-    char const *swatch_tip;
 };
 
 template <typename T, auto... args>
@@ -70,32 +69,32 @@ auto create = [](SPDesktop *desktop) -> std::unique_ptr<Toolbar> { return std::m
 ToolBoxData const aux_toolboxes[] = {
     // If you change the tool_name for Measure or Text here, change it also in desktop-widget.cpp.
     // clang-format off
-    { "/tools/select",          "Select",       create<SelectToolbar>,        nullptr},
-    { "/tools/nodes",           "Node",         create<NodeToolbar>,          nullptr},
-    { "/tools/booleans",        "Booleans",     create<BooleansToolbar>,      nullptr},
-    { "/tools/marker",          "Marker",       create<MarkerToolbar>,        nullptr},
-    { "/tools/shapes/rect",     "Rect",         create<RectToolbar>,          N_("Style of new rectangles")},
-    { "/tools/shapes/arc",      "Arc",          create<ArcToolbar>,           N_("Style of new ellipses")},
-    { "/tools/shapes/star",     "Star",         create<StarToolbar>,          N_("Style of new stars")},
-    { "/tools/shapes/3dbox",    "3DBox",        create<Box3DToolbar>,         N_("Style of new 3D boxes")},
-    { "/tools/shapes/spiral",   "Spiral",       create<SpiralToolbar>,        N_("Style of new spirals")},
-    { "/tools/freehand/pencil", "Pencil",       create<PencilToolbar, true>,  N_("Style of new paths created by Pencil")},
-    { "/tools/freehand/pen",    "Pen",          create<PencilToolbar, false>, N_("Style of new paths created by Pen")},
-    { "/tools/calligraphic",    "Calligraphic", create<CalligraphyToolbar>,   N_("Style of new calligraphic strokes")},
-    { "/tools/text",            "Text",         create<TextToolbar>,          nullptr},
-    { "/tools/gradient",        "Gradient",     create<GradientToolbar>,      nullptr},
-    { "/tools/mesh",            "Mesh",         create<MeshToolbar>,          nullptr},
-    { "/tools/zoom",            "Zoom",         create<ZoomToolbar>,          nullptr},
-    { "/tools/measure",         "Measure",      create<MeasureToolbar>,       nullptr},
-    { "/tools/dropper",         "Dropper",      create<DropperToolbar>,       nullptr},
-    { "/tools/tweak",           "Tweak",        create<TweakToolbar>,         N_("Color/opacity used for color tweaking")},
-    { "/tools/spray",           "Spray",        create<SprayToolbar>,         nullptr},
-    { "/tools/connector",       "Connector",    create<ConnectorToolbar>,     nullptr},
-    { "/tools/pages",           "Pages",        create<PageToolbar>,          nullptr},
-    { "/tools/paintbucket",     "Paintbucket",  create<PaintbucketToolbar>,   N_("Style of Paint Bucket fill objects")},
-    { "/tools/eraser",          "Eraser",       create<EraserToolbar>,        _("TBD")},
-    { "/tools/lpetool",         "LPETool",      create<LPEToolbar>,           _("TBD")},
-    { nullptr,                  "",             nullptr,                      nullptr}
+    { "/tools/select",          "Select",       create<SelectToolbar>},
+    { "/tools/nodes",           "Node",         create<NodeToolbar>},
+    { "/tools/booleans",        "Booleans",     create<BooleansToolbar>},
+    { "/tools/marker",          "Marker",       create<MarkerToolbar>},
+    { "/tools/shapes/rect",     "Rect",         create<RectToolbar>},
+    { "/tools/shapes/arc",      "Arc",          create<ArcToolbar>},
+    { "/tools/shapes/star",     "Star",         create<StarToolbar>},
+    { "/tools/shapes/3dbox",    "3DBox",        create<Box3DToolbar>},
+    { "/tools/shapes/spiral",   "Spiral",       create<SpiralToolbar>},
+    { "/tools/freehand/pencil", "Pencil",       create<PencilToolbar, true>},
+    { "/tools/freehand/pen",    "Pen",          create<PencilToolbar, false>},
+    { "/tools/calligraphic",    "Calligraphic", create<CalligraphyToolbar>},
+    { "/tools/text",            "Text",         create<TextToolbar>},
+    { "/tools/gradient",        "Gradient",     create<GradientToolbar>},
+    { "/tools/mesh",            "Mesh",         create<MeshToolbar>},
+    { "/tools/zoom",            "Zoom",         create<ZoomToolbar>},
+    { "/tools/measure",         "Measure",      create<MeasureToolbar>},
+    { "/tools/dropper",         "Dropper",      create<DropperToolbar>},
+    { "/tools/tweak",           "Tweak",        create<TweakToolbar>},
+    { "/tools/spray",           "Spray",        create<SprayToolbar>},
+    { "/tools/connector",       "Connector",    create<ConnectorToolbar>},
+    { "/tools/pages",           "Pages",        create<PageToolbar>},
+    { "/tools/paintbucket",     "Paintbucket",  create<PaintbucketToolbar>},
+    { "/tools/eraser",          "Eraser",       create<EraserToolbar>},
+    { "/tools/lpetool",         "LPETool",      create<LPEToolbar>},
+    { nullptr,                  "",             nullptr}
     // clang-format on
 };
 
@@ -132,28 +131,7 @@ void Toolbars::create_toolbars(SPDesktop *desktop)
 
             grid->attach(*sub_toolbox, 0, 0, 1, 1);
 
-            // Add a swatch widget if swatch tooltip is defined.
-            if (aux_toolboxes[i].swatch_tip) {
-                auto const swatch =
-                    Gtk::make_managed<Inkscape::UI::Widget::StyleSwatch>(nullptr, _(aux_toolboxes[i].swatch_tip));
-                swatch->setDesktop(desktop);
-                swatch->setToolName(aux_toolboxes[i].tool_name);
-                swatch->setWatchedTool(aux_toolboxes[i].type_name, true);
-
-                //               ===== Styling =====
-                // TODO: Remove and use CSS
-                swatch->set_margin_start(7);
-                swatch->set_margin_end(7);
-                swatch->set_valign(Gtk::Align::CENTER);
-                //             ===== End Styling =====
-
-                grid->attach(*swatch, 1, 0, 1, 1);
-            }
-
             append(*grid);
-
-        } else if (aux_toolboxes[i].swatch_tip) {
-            std::cerr << "Toolbars::create_toolbars: Could not create: " << aux_toolboxes[i].tool_name << std::endl;
         }
     }
 
