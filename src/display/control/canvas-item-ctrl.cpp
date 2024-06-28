@@ -259,7 +259,7 @@ float CanvasItemCtrl::get_total_width() const {
 }
 
 int CanvasItemCtrl::get_pixmap_width(int device_scale) const {
-    return static_cast<int>(get_total_width() * device_scale + 0.5f);
+    return std::round(get_total_width() * device_scale);
 }
 
 void CanvasItemCtrl::set_size_default()
@@ -470,7 +470,7 @@ void CanvasItemCtrl::_update(bool)
     }
 
     // The location we want to place our anchor/ctrl point
-    _pos = Geom::Point(-w_half, -w_half) + Geom::Point(dx, dy) + (_position * affine());
+    _pos = Geom::Point(-w_half, -w_half) + Geom::Point(dx, dy) + _position * affine();
 
     // The bounding box we want to invalidate in cairo, rounded out to catch any stray pixels
     _bounds = Geom::Rect::from_xywh(_pos, {width, width}).roundOutwards();
@@ -492,12 +492,10 @@ void CanvasItemCtrl::_render(CanvasItemBuffer &buf) const
         return;
     }
 
-    buf.cr->save();
     // Round to the device pixel at the very last minute so we get less bluring
-    auto const [x, y] = ((_pos - buf.rect.min()) * buf.device_scale).round() / buf.device_scale;
+    auto const [x, y] = Geom::Point{(_pos * buf.device_scale).round()} / buf.device_scale - buf.rect.min();
     cairo_set_source_surface(buf.cr->cobj(), const_cast<cairo_surface_t *>(_cache->cobj()), x, y); // C API is const-incorrect.
     buf.cr->paint();
-    buf.cr->restore();
 }
 
 void CanvasItemCtrl::_invalidate_ctrl_handles()
