@@ -494,7 +494,7 @@ void CanvasItemCtrl::_render(CanvasItemBuffer &buf) const
 
     buf.cr->save();
     // Round to the device pixel at the very last minute so we get less bluring
-    auto const [x, y] = ((_pos - buf.rect.min()) * buf.device_scale).round() / buf.device_scale;
+    auto const [x, y] = Geom::Point{(_pos * buf.device_scale).round()} / buf.device_scale - buf.rect.min();
     cairo_set_source_surface(buf.cr->cobj(), const_cast<cairo_surface_t *>(_cache->cobj()), x, y); // C API is const-incorrect.
     buf.cr->paint();
     buf.cr->restore();
