@@ -45,7 +45,9 @@ ColorPage::ColorPage(std::shared_ptr<Space::AnySpace> space, std::shared_ptr<Col
         for (auto &[id, color] : *_specific_colors) {
             _selected_colors->set(id, color);
         }
-        if (_color_wheel) _color_wheel->setColor(_specific_colors->getAverage());
+        if (_color_wheel && _color_wheel->is_drawable()) {
+            _color_wheel->setColor(_specific_colors->getAverage());
+        }
     });
 
     // Keep the child in-sync with the selected colorset.
@@ -94,7 +96,7 @@ ColorPage::ColorPage(std::shared_ptr<Space::AnySpace> space, std::shared_ptr<Col
 
     // Color wheel
     auto wheel_type = _specific_colors->getComponents().color_wheel();
-    // there are only few types of color wheel supported:
+    // there are only a few types of color wheel supported:
     if (can_create_color_wheel(wheel_type)) {
         _expander.property_expanded().signal_changed().connect([this, wheel_type]() {
             auto on = _expander.property_expanded().get_value();
@@ -108,7 +110,13 @@ ColorPage::ColorPage(std::shared_ptr<Space::AnySpace> space, std::shared_ptr<Col
                     _specific_colors->setAll(_color_wheel->getColor());
                 });
             }
-            if (_color_wheel) _color_wheel->set_expand(on);
+            if (_color_wheel) {
+                _color_wheel->set_expand(on);
+                if (on) {
+                    // update, wheel may be stale if it was hidden
+                    _color_wheel->setColor(_specific_colors->getAverage());
+                }
+            }
             _expander.set_expand(on);
         });
     }
