@@ -103,7 +103,7 @@ private:
     void set_value(double new_value);
     std::string format(double value, bool with_prefix_suffix, bool with_markup, bool trim_zeros) const;
     void unparent_widgets();
-    void start_spinning(double steps, Gdk::ModifierType state);
+    void start_spinning(double steps, Gdk::ModifierType state, Glib::RefPtr<Gtk::GestureClick>& gesture);
     void stop_spinning();
 
     // ---------------- DATA ------------------

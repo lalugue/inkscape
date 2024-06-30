@@ -1,11 +1,33 @@
 //   SPDX-License-Identifier: GPL-2.0-or-later
 //
 
+#include <chrono>
 #include "color-wheel-factory.h"
+
+#include "color-plate.h"
 #include "ink-color-wheel.h"
 #include "oklab-color-wheel.h"
 
 namespace Inkscape::UI::Widget {
+
+constexpr bool TEST_TIMING = false;
+
+class FastColorWheel : public ColorPlate, public ColorWheel {
+public:
+    void set_color(const Colors::Color& color) override {
+        auto luminocity = 2; // if luma changes, color wheel needs to be rebuilt
+        auto hue = 0;   // vary hue with angle (while painting the disc)
+        auto sat = 1;   // vary saturation with distance from the center of the disc (while painting the disc)
+        set_base_color(color, luminocity, hue, sat);
+        // move color indicator to correct spot on the disc
+        move_indicator_to(color);
+    }
+    Widget& get_widget() override { return *this; }
+    sigc::connection connect_color_changed(sigc::slot<void(const Colors::Color&)> cb) override {
+        return signal_color_changed().connect(cb);
+    }
+    void redraw(const Cairo::RefPtr<Cairo::Context>& ctx) override { draw_plate(ctx); }
+};
 
 static std::pair<ColorWheel*, bool> create_color_wheel_helper(Colors::Space::Type type, bool create_widget) {
     bool can_create = true;
@@ -21,12 +43,45 @@ static std::pair<ColorWheel*, bool> create_color_wheel_helper(Colors::Space::Typ
         break;
 
     case Colors::Space::Type::OKHSL:
-        if (create_widget) wheel = new OKWheel();
+        if (create_widget) wheel = new FastColorWheel();
+        // if (create_widget) wheel = new OKWheel();
         break;
+
+    case Colors::Space::Type::HSV:
+        if (create_widget) wheel = new FastColorWheel();
+        break;
+
 
     default:
         can_create = false;
         break;
+    }
+
+    // speed test
+    if (TEST_TIMING && create_widget) {
+        // test
+        ColorWheel* w1 = new FastColorWheel();
+        ColorWheel* w2 = new OKWheel();
+
+        auto s = Cairo::ImageSurface::create(Cairo::Surface::Format::ARGB32, 1024, 1024);
+        auto ctx = Cairo::Context::create(s);
+        for (auto w : {w1, w2}) {
+            w->get_widget().size_allocate(Gtk::Allocation(0,0,500,500), 0);
+            // w->get_widget().set_size_request(500, 500);
+            auto old_time =  std::chrono::high_resolution_clock::now();
+            Colors::Color color(Colors::Space::Type::OKHSL, {0.5, 0.5, 0.5});
+            for (int i = 0; i < 100; ++i) {
+                color.set(0, i / 100.0);
+                w->set_color(color);
+                w->redraw(ctx);
+            }
+            auto current_time =  std::chrono::high_resolution_clock::now();
+            auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(current_time - old_time);
+            g_message("render time for test wheel: %d ms", static_cast<int>(elapsed.count()));
+        }
+
+        delete w1;
+        delete w2;
     }
 
     return std::make_pair(wheel, can_create);
@@ -35,7 +90,7 @@ static std::pair<ColorWheel*, bool> create_color_wheel_helper(Colors::Space::Typ
 ColorWheel* create_managed_color_wheel(Colors::Space::Type type) {
     auto [wheel, _] = create_color_wheel_helper(type, true);
     if (wheel) {
-        wheel->set_manage();
+        wheel->get_widget().set_manage();
     }
     return wheel;
 }

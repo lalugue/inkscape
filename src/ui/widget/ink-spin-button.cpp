@@ -107,12 +107,14 @@ void InkSpinButton::construct() {
     _click_minus = Gtk::GestureClick::create();
     _click_minus->signal_pressed().connect(sigc::mem_fun(*this, &InkSpinButton::on_pressed_minus));
     _click_minus->signal_released().connect([this](int, double, double){ stop_spinning(); });
+    _click_minus->signal_unpaired_release().connect([this](auto, auto, auto, auto){ stop_spinning(); });
     _click_minus->set_propagation_phase(Gtk::PropagationPhase::CAPTURE); // Steal from default handler.
     _minus.add_controller(_click_minus);
 
     _click_plus = Gtk::GestureClick::create();
     _click_plus->signal_pressed().connect(sigc::mem_fun(*this, &InkSpinButton::on_pressed_plus));
     _click_plus->signal_released().connect([this](int, double, double){ stop_spinning(); });
+    _click_plus->signal_unpaired_release().connect([this](auto, auto, auto, auto){ stop_spinning(); });
     _click_plus->set_propagation_phase(Gtk::PropagationPhase::CAPTURE); // Steal from default handler.
     _plus.add_controller(_click_plus);
 
@@ -611,14 +613,14 @@ void InkSpinButton::on_pressed_plus(int n_press, double x, double y) {
     auto state = _click_plus->get_current_event_state();
     double inc = (state & Gdk::ModifierType::BUTTON3_MASK) == Gdk::ModifierType::BUTTON3_MASK ? 5 : 1;
     change_value(inc, state);
-    start_spinning(inc, state);
+    start_spinning(inc, state, _click_plus);
 }
 
 void InkSpinButton::on_pressed_minus(int n_press, double x, double y) {
     auto state = _click_minus->get_current_event_state();
     double inc = (state & Gdk::ModifierType::BUTTON3_MASK) == Gdk::ModifierType::BUTTON3_MASK ? 5 : 1;
     change_value(-inc, state);
-    start_spinning(-inc, state);
+    start_spinning(-inc, state, _click_minus);
 }
 
 void InkSpinButton::on_activate() {
@@ -639,12 +641,16 @@ void InkSpinButton::on_activate_c(GtkEntry* entry, gpointer user_data) {
     spinbutton->on_activate();
 }
 
-void InkSpinButton::start_spinning(double steps, Gdk::ModifierType state) {
+void InkSpinButton::start_spinning(double steps, Gdk::ModifierType state, Glib::RefPtr<Gtk::GestureClick>& gesture) {
+
     _spinning = Glib::signal_timeout().connect([=,this]() {
         change_value(steps, state);
         // speed up
         _spinning = Glib::signal_timeout().connect([=,this]() {
             change_value(steps, state);
+            auto active = gesture->is_active();
+            auto btn = gesture->get_current_button();
+            if (!active || !btn) return false;
             return true;
         }, timeout_repeat);
         return false;

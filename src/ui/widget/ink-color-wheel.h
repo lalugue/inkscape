@@ -28,6 +28,7 @@
 #include <gtkmm/aspectframe.h>
 #include <gtkmm/gesture.h> // Gtk::EventSequenceState
 
+#include "color-wheel.h"
 #include "colors/color.h"
 #include "ui/widget/widget-vfuncs-class-init.h" // for focus
 
@@ -60,14 +61,14 @@ struct ColorPoint final
 };
 
 /**
- * @class ColorWheel
+ * @class ColorWheelBase
  */
 // AspectFrame because we are circular & enforcing 1:1 eases drawing without overallocating buffers
-class ColorWheel : public Gtk::AspectFrame
+class ColorWheelBase : public Gtk::AspectFrame, public ColorWheel
 {
 public:
-    ColorWheel(Colors::Space::Type type, std::vector<double> initial_color);
-    ColorWheel(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& builder, Colors::Space::Type type, std::vector<double> initial_color);
+    ColorWheelBase(Colors::Space::Type type, std::vector<double> initial_color);
+    ColorWheelBase(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& builder, Colors::Space::Type type, std::vector<double> initial_color);
 
     /// Set the RGB of the wheel. If @a emit is true & hue changes, we call color_changed() for you
     /// @param overrideHue whether to set hue to 0 if min==max(r,g,b) – only used by ColorwheelHSL…
@@ -82,6 +83,7 @@ public:
     /// Connect a slot to be called after the color has changed.
     sigc::connection connect_color_changed(sigc::slot<void ()>);
 
+    void redraw(const Cairo::RefPtr<Cairo::Context>& ctx) override { on_drawing_area_draw(ctx, 1024, 1024); }
 protected:
     Colors::Color _values;
     bool _adjusting = false;
@@ -95,6 +97,13 @@ protected:
     void focus_drawing_area();
 
 private:
+    void set_color(const Colors::Color& color) override { setColor(color, false, false); }
+    // Colors::Color get_color() const override { return getColor(); }
+    sigc::connection connect_color_changed(sigc::slot<void(const Colors::Color&)> callback) override {
+        return _signal_color_changed.connect([this, callback](){ callback(getColor()); });
+    }
+    Gtk::Widget& get_widget() override { return *this; }
+
     void construct();
     sigc::signal<void ()> _signal_color_changed;
 
@@ -123,7 +132,7 @@ private:
  */
 class ColorWheelHSL
     : public WidgetVfuncsClassInit // As Gtkmm4 doesn't wrap focus_vfunc
-    , public ColorWheel
+    , public ColorWheelBase
 {
 public:
     ColorWheelHSL();
@@ -188,7 +197,7 @@ struct PickerGeometry {
 /**
  * @class ColorWheelHSLuv
  */
-class ColorWheelHSLuv : public ColorWheel
+class ColorWheelHSLuv : public ColorWheelBase
 {
 public:
     ColorWheelHSLuv();

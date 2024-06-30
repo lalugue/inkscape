@@ -92,7 +92,7 @@ static void draw_vertical_padding(ColorPoint p0, ColorPoint p1, int padding, boo
 
 /* Base Color Wheel */
 
-ColorWheel::ColorWheel(Type type, std::vector<double> initial_color)
+ColorWheelBase::ColorWheelBase(Type type, std::vector<double> initial_color)
     : Gtk::AspectFrame(0.5, 0.5, 1.0, false)
     , _bin{Gtk::make_managed<UI::Widget::Bin>()}
     , _values{type, std::move(initial_color)}
@@ -100,27 +100,27 @@ ColorWheel::ColorWheel(Type type, std::vector<double> initial_color)
     construct();
 }
 
-void ColorWheel::construct() {
+void ColorWheelBase::construct() {
     set_name("ColorWheel");
     add_css_class("flat");
 
     _drawing_area->set_focusable(true);
     _drawing_area->set_expand(true);
-    _bin->connectAfterResize(sigc::mem_fun(*this, &ColorWheel::on_drawing_area_size));
-    _drawing_area->set_draw_func(sigc::mem_fun(*this, &ColorWheel::on_drawing_area_draw ));
+    _bin->connectAfterResize(sigc::mem_fun(*this, &ColorWheelBase::on_drawing_area_size));
+    _drawing_area->set_draw_func(sigc::mem_fun(*this, &ColorWheelBase::on_drawing_area_draw ));
     _drawing_area->property_has_focus().signal_changed().connect([this]{ _drawing_area->queue_draw(); });
     _bin->set_child(_drawing_area);
     set_child(*_bin);
 
-    Controller::add_click(*_drawing_area, sigc::mem_fun(*this, &ColorWheel::on_click_pressed ),
-                                          sigc::mem_fun(*this, &ColorWheel::_on_click_released));
-    Controller::add_motion<nullptr, &ColorWheel::_on_motion, nullptr>
+    Controller::add_click(*_drawing_area, sigc::mem_fun(*this, &ColorWheelBase::on_click_pressed ),
+                                          sigc::mem_fun(*this, &ColorWheelBase::_on_click_released));
+    Controller::add_motion<nullptr, &ColorWheelBase::_on_motion, nullptr>
                           (*_drawing_area, *this);
-    Controller::add_key<&ColorWheel::on_key_pressed, &ColorWheel::on_key_released>
+    Controller::add_key<&ColorWheelBase::on_key_pressed, &ColorWheelBase::on_key_released>
                        (*_drawing_area, *this);
 }
 
-ColorWheel::ColorWheel(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& builder, Type type, std::vector<double> initial_color):
+ColorWheelBase::ColorWheelBase(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& builder, Type type, std::vector<double> initial_color):
     Gtk::AspectFrame(cobject),
     _bin(Gtk::make_managed<Bin>()),
     _values(type, initial_color),
@@ -129,11 +129,11 @@ ColorWheel::ColorWheel(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>
     construct();
 }
 
-Gtk::EventSequenceState ColorWheel::_on_click_released(Gtk::GestureClick const &click, int n_press, double x, double y) {
+Gtk::EventSequenceState ColorWheelBase::_on_click_released(Gtk::GestureClick const &click, int n_press, double x, double y) {
     return on_click_released(n_press, x, y);
 }
 
-void ColorWheel::_on_motion(const GtkEventControllerMotion* motion, double const x, double const y) {
+void ColorWheelBase::_on_motion(const GtkEventControllerMotion* motion, double const x, double const y) {
     if (!_adjusting) return;
 
     auto state = Controller::get_event_modifiers(motion);
@@ -146,38 +146,38 @@ void ColorWheel::_on_motion(const GtkEventControllerMotion* motion, double const
     on_motion(motion, x, y);
 }
 
-sigc::connection ColorWheel::connect_color_changed(sigc::slot<void ()> slot)
+sigc::connection ColorWheelBase::connect_color_changed(sigc::slot<void ()> slot)
 {
     return _signal_color_changed.connect(std::move(slot));
 }
 
-void ColorWheel::color_changed()
+void ColorWheelBase::color_changed()
 {
     _signal_color_changed.emit();
     _drawing_area->queue_draw();
 }
 
-void ColorWheel::queue_drawing_area_draw()
+void ColorWheelBase::queue_drawing_area_draw()
 {
     _drawing_area->queue_draw();
 }
 
-Gtk::Allocation ColorWheel::get_drawing_area_allocation() const
+Gtk::Allocation ColorWheelBase::get_drawing_area_allocation() const
 {
     return _drawing_area->get_allocation();
 }
 
-bool ColorWheel::drawing_area_has_focus() const
+bool ColorWheelBase::drawing_area_has_focus() const
 {
     return _drawing_area->has_focus();
 }
 
-void ColorWheel::focus_drawing_area()
+void ColorWheelBase::focus_drawing_area()
 {
     _drawing_area->grab_focus();
 }
 
-bool ColorWheel::on_key_released(GtkEventControllerKey const * /*controller*/,
+bool ColorWheelBase::on_key_released(GtkEventControllerKey const * /*controller*/,
                                  unsigned /*keyval*/, unsigned const keycode,
                                  GdkModifierType const state)
 {
@@ -420,7 +420,7 @@ void ColorWheelHSL::on_drawing_area_draw(Cairo::RefPtr<Cairo::Context> const &cr
         cr->set_line_width(1.0);
 
         if (_focus_on_ring) {
-            auto const rgba = change_alpha(get_color(), 0.7);
+            auto const rgba = change_alpha(Widget::get_color(), 0.7);
             Gdk::Cairo::set_source_rgba(cr, rgba);
             cr->begin_new_path();
             cr->rectangle(0, 0, width, height);
@@ -593,7 +593,6 @@ void ColorWheelHSL::on_motion(const GtkEventControllerMotion* motion,
 {
     if (!_adjusting) return;
     auto state = Controller::get_event_modifiers(motion);
- printf("motio: %x\n", state);
     if (!Controller::has_flag(state, GDK_BUTTON1_MASK)) {
         // lost button release event
         _mode = DragMode::NONE;
@@ -731,22 +730,22 @@ ColorWheelHSL::ColorWheelHSL()
     : Glib::ObjectBase{"ColorWheelHSL"}
     , WidgetVfuncsClassInit{}
     // All the calculations are based on HSV, not HSL
-    , ColorWheel(Type::HSV, {0, 0, 0, 1})
+    , ColorWheelBase(Type::HSV, {0, 0, 0, 1})
 {}
 
 ColorWheelHSL::ColorWheelHSL(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& builder) :
-    ColorWheel(cobject, builder, Type::HSV, {0, 0, 0, 1}) {}
+    ColorWheelBase(cobject, builder, Type::HSV, {0, 0, 0, 1}) {}
 
 /* HSLuv Color Wheel */
 
 ColorWheelHSLuv::ColorWheelHSLuv()
-    : ColorWheel(Type::HSLUV, {0, 1, 0.5, 1})
+    : ColorWheelBase(Type::HSLUV, {0, 1, 0.5, 1})
 {
     _picker_geometry = std::make_unique<PickerGeometry>();
 }
 
 ColorWheelHSLuv::ColorWheelHSLuv(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& builder) :
-    ColorWheel(cobject, builder, Type::HSLUV, {0, 1, 0.5, 1}) {
+    ColorWheelBase(cobject, builder, Type::HSLUV, {0, 1, 0.5, 1}) {
 
     _picker_geometry = std::make_unique<PickerGeometry>();
 }

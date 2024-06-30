@@ -27,7 +27,7 @@ using namespace Inkscape::Colors;
 namespace Inkscape::UI::Widget {
 
 OKWheel::OKWheel()
-    : ColorWheel(Space::Type::OKHSL, {0, 0, 0, 1})
+    : ColorWheelBase(Space::Type::OKHSL, {0, 0, 0, 1})
 {}
 
 bool OKWheel::setColor(Color const &color,

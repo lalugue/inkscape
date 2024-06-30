@@ -197,6 +197,7 @@ set(ui_SRC
 	widget/color-palette.cpp
 	widget/color-palette-preview.cpp
 	widget/color-picker.cpp
+	widget/color-plate.cpp
 	widget/color-preview.cpp
 	widget/color-slider.cpp
 	widget/color-wheel-factory.cpp
@@ -489,8 +490,10 @@ set(ui_SRC
 	widget/color-palette.h
 	widget/color-palette-preview.h
 	widget/color-picker.h
+	widget/color-plate.h
 	widget/color-preview.h
 	widget/color-slider.h
+	widget/color-wheel.h
 	widget/color-wheel-factory.h
 	widget/combo-enums.h
 	widget/combo-box-entry-tool-item.h

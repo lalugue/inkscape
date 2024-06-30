@@ -22,7 +22,7 @@
 namespace Inkscape::UI::Widget {
 
 /** @brief The color wheel used in the OKHSL picker. */
-class OKWheel : public ColorWheel
+class OKWheel : public ColorWheelBase
 {
 public:
     OKWheel();

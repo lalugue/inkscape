@@ -31,9 +31,10 @@ class Builder;
 }
 
 namespace Inkscape::UI::Widget {
+class ColorWheel;
 class InkSpinButton;
 class ColorSlider;
-class ColorWheel;
+class ColorWheelBase;
 class ColorPageChannel;
 
 class ColorPage : public Gtk::Box

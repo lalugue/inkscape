@@ -45,8 +45,8 @@ ColorPage::ColorPage(std::shared_ptr<Space::AnySpace> space, std::shared_ptr<Col
         for (auto &[id, color] : *_specific_colors) {
             _selected_colors->set(id, color);
         }
-        if (_color_wheel && _color_wheel->is_drawable()) {
-            _color_wheel->setColor(_specific_colors->getAverage());
+        if (_color_wheel && _color_wheel->get_widget().is_drawable()) {
+            _color_wheel->set_color(_specific_colors->getAverage());
         }
     });
 
@@ -103,18 +103,18 @@ ColorPage::ColorPage(std::shared_ptr<Space::AnySpace> space, std::shared_ptr<Col
             if (on && !_color_wheel) {
                 // create color wheel now
                 _color_wheel = create_managed_color_wheel(wheel_type);
-                _expander.set_child(*_color_wheel);
-                _color_wheel->setColor(_specific_colors->getAverage(), true, false);
-                _color_wheel_changed = _color_wheel->connect_color_changed([this]() {
+                _expander.set_child(_color_wheel->get_widget());
+                _color_wheel->set_color(_specific_colors->getAverage());
+                _color_wheel_changed = _color_wheel->connect_color_changed([this](const Color& color) {
                     auto scoped(_color_wheel_changed.block_here());
-                    _specific_colors->setAll(_color_wheel->getColor());
+                    _specific_colors->setAll(color);
                 });
             }
             if (_color_wheel) {
-                _color_wheel->set_expand(on);
+                _color_wheel->get_widget().set_expand(on);
                 if (on) {
                     // update, wheel may be stale if it was hidden
-                    _color_wheel->setColor(_specific_colors->getAverage());
+                    _color_wheel->set_color(_specific_colors->getAverage());
                 }
             }
             _expander.set_expand(on);

@@ -92,11 +92,11 @@ Gtk::EventSequenceState ColorSlider::on_click_released(Gtk::GestureClick const &
 void ColorSlider::on_motion(GtkEventControllerMotion const * const motion,
                             double const x, double const y)
 {
-    auto const state = static_cast<Gdk::ModifierType>(gtk_event_controller_get_current_event_state(GTK_EVENT_CONTROLLER(motion)));
-    if ((state & Gdk::ModifierType::BUTTON1_MASK) == Gdk::ModifierType::BUTTON1_MASK) {
+    auto state = Controller::get_event_modifiers(motion);
+    if (Controller::has_flag(state, GDK_BUTTON1_MASK)) {
         // only update color if user is dragging the slider;
         // don't rely on any click/release events, as release event might be lost leading to unintended updates
-        update_component(x, y, state);
+        update_component(x, y, static_cast<Gdk::ModifierType>(state));
     }
 }
 
