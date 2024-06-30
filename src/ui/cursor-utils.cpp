@@ -34,8 +34,10 @@
 #include "helper/pixbuf-ops.h"
 #include "io/file.h"
 #include "io/resource.h"
+#include "libnrtype/font-factory.h"
 #include "object/sp-object.h"
 #include "object/sp-root.h"
+#include "util/statics.h"
 #include "util/units.h"
 
 using Inkscape::IO::Resource::SYSTEM;
@@ -48,6 +50,11 @@ typedef std::tuple<std::string, std::string, std::string, std::uint32_t, std::ui
 
 struct KeyHasher {
     std::size_t operator () (const Key& k) const { return boost::hash_value(k); }
+};
+
+
+struct CursorDocCache : public Util::EnableSingleton<CursorDocCache, Util::Depends<FontFactory>> {
+    std::unordered_map<std::string, std::unique_ptr<SPDocument>> map;
 };
 
 /**
@@ -120,38 +127,55 @@ load_svg_cursor(Gtk::Widget &widget,
     auto const icon_theme = Gtk::IconTheme::get_for_display(widget.get_display());
     auto theme_paths = icon_theme->get_search_path();
 
-    // Loop over theme names and paths, looking for file.
-    Glib::RefPtr<Gio::File> file;
-    std::string full_file_path;
-    bool file_exists = false;
-    for (auto const &theme_name : theme_names) {
-        for (auto const &theme_path : theme_paths) {
-            full_file_path = Glib::build_filename(theme_path, theme_name, "cursors", file_name);
-            // std::cout << "Checking: " << full_file_path << std::endl;
-            file = Gio::File::create_for_path(full_file_path);
-            file_exists = file->query_exists();
+    // cache cursor SVG documents too, so we can regenerate cursors (with different colors) quickly
+    auto& cursors = CursorDocCache::get().map;
+    SPRoot* root = nullptr;
+    if (cache_enabled) {
+        if (auto it = cursors.find(file_name); it != end(cursors)) {
+            root = it->second->getRoot();
+        }
+    }
+
+    if (!root) {
+        // Loop over theme names and paths, looking for file.
+        Glib::RefPtr<Gio::File> file;
+        std::string full_file_path;
+        bool file_exists = false;
+        for (auto const &theme_name : theme_names) {
+            for (auto const &theme_path : theme_paths) {
+                full_file_path = Glib::build_filename(theme_path, theme_name, "cursors", file_name);
+                // std::cout << "Checking: " << full_file_path << std::endl;
+                file = Gio::File::create_for_path(full_file_path);
+                file_exists = file->query_exists();
+                if (file_exists) break;
+            }
             if (file_exists) break;
         }
-        if (file_exists) break;
+
+        if (!file->query_exists()) {
+            std::cerr << "load_svg_cursor: Cannot locate cursor file: " << file_name << std::endl;
+            return cursor;
+        }
+
+        auto document = ink_file_open(file).first;
+
+        if (!document) {
+            std::cerr << "load_svg_cursor: Could not open document: " << full_file_path << std::endl;
+            return cursor;
+        }
+
+        root = document->getRoot();
+        if (!root) {
+            std::cerr << "load_svg_cursor: Could not find SVG element: " << full_file_path << std::endl;
+            return cursor;
+        }
+
+        if (cache_enabled) {
+            cursors[file_name] = std::move(document);
+        }
     }
 
-    if (!file->query_exists()) {
-        std::cerr << "load_svg_cursor: Cannot locate cursor file: " << file_name << std::endl;
-        return cursor;
-    }
-
-    auto document = ink_file_open(file).first;
-
-    if (!document) {
-        std::cerr << "load_svg_cursor: Could not open document: " << full_file_path << std::endl;
-        return cursor;
-    }
-
-    SPRoot *root = document->getRoot();
-    if (!root) {
-        std::cerr << "load_svg_cursor: Could not find SVG element: " << full_file_path << std::endl;
-        return cursor;
-    }
+    if (!root) return cursor;
 
     // Set the CSS 'fill' and 'stroke' properties on the SVG element (for cascading).
     SPCSSAttr *css = sp_repr_css_attr(root->getRepr(), "style");
@@ -165,7 +189,7 @@ load_svg_cursor(Gtk::Widget &widget,
     if (!enable_drop_shadow) {
         // turn off drop shadow, if any
         Glib::ustring shadow("drop-shadow");
-        auto objects = document->getObjectsByClass(shadow);
+        auto objects = root->document->getObjectsByClass(shadow);
         for (auto&& el : objects) {
             if (auto val = el->getAttribute("class")) {
                 Glib::ustring cls = val;
@@ -184,8 +208,8 @@ load_svg_cursor(Gtk::Widget &widget,
     // display->get_maximal_cursor_size(mwidth, mheight);
     // int normal_size = display->get_default_cursor_size();
 
-    auto w = document->getWidth().value("px");
-    auto h = document->getHeight().value("px");
+    auto w = root->document->getWidth().value("px");
+    auto h = root->document->getHeight().value("px");
     // Calculate the hotspot.
     int hotspot_x = root->getIntAttribute("inkscape:hotspot_x", 0); // Do not include surface scale factor!
     int hotspot_y = root->getIntAttribute("inkscape:hotspot_y", 0);
@@ -193,7 +217,7 @@ load_svg_cursor(Gtk::Widget &widget,
     Geom::Rect area(0, 0, cursor_scaling ? w * scale : w, cursor_scaling ? h * scale : h);
     int dpi = 96 * scale;
     // render document into internal bitmap; returns null on failure
-    if (auto ink_pixbuf = std::unique_ptr<Inkscape::Pixbuf>(sp_generate_internal_bitmap(document.get(), area, dpi))) {
+    if (auto ink_pixbuf = std::unique_ptr<Inkscape::Pixbuf>(sp_generate_internal_bitmap(root->document, area, dpi))) {
         auto pixbuf = Glib::wrap(ink_pixbuf->getPixbufRaw(), true);
 
         if (cursor_scaling) {
@@ -208,7 +232,7 @@ load_svg_cursor(Gtk::Widget &widget,
         auto texture = Gdk::Texture::create_for_pixbuf(std::move(pixbuf));
         cursor = Gdk::Cursor::create(std::move(texture), hotspot_x, hotspot_y);
     } else {
-        std::cerr << "load_svg_cursor: failed to create pixbuf for: " << full_file_path << std::endl;
+        std::cerr << "load_svg_cursor: failed to create pixbuf for: " << file_name << std::endl;
     }
 
     if (cache_enabled) {
