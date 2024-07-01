@@ -95,7 +95,7 @@ ColorPage::ColorPage(std::shared_ptr<Space::AnySpace> space, std::shared_ptr<Col
     }
 
     // Color wheel
-    auto wheel_type = _specific_colors->getComponents().color_wheel();
+    auto wheel_type = _specific_colors->getComponents().get_wheel_type();
     // there are only a few types of color wheel supported:
     if (can_create_color_wheel(wheel_type)) {
         _expander.property_expanded().signal_changed().connect([this, wheel_type]() {
@@ -111,13 +111,11 @@ ColorPage::ColorPage(std::shared_ptr<Space::AnySpace> space, std::shared_ptr<Col
                 });
             }
             if (_color_wheel) {
-                _color_wheel->get_widget().set_expand(on);
                 if (on) {
                     // update, wheel may be stale if it was hidden
                     _color_wheel->set_color(_specific_colors->getAverage());
                 }
             }
-            _expander.set_expand(on);
         });
     }
     else {

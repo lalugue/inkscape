@@ -2116,7 +2116,7 @@ void InkscapePreferences::initPageUI()
     {
         auto const container = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL);
         auto prefs = Inkscape::Preferences::get();
-        for (auto& space : Colors::Manager::get()) {
+        for (auto& space : Colors::Manager::get().spaces(Colors::Space::Traits::Picker)) {
             auto const btn = Gtk::make_managed<Gtk::ToggleButton>();
             auto const box = Gtk::make_managed<Gtk::Box>(Gtk::Orientation::HORIZONTAL);
             auto const label = Gtk::make_managed<Gtk::Label>(space->getName());

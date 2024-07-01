@@ -1429,3 +1429,14 @@ separator.faint {
     margin: 1px 0;
     padding: 0;
 }
+
+#ColorWheel {
+    min-height: 300px;
+}
+
+#ColorPlate.rectangular {
+    min-height: 160px;
+}
+#ColorPlate.circular {
+    min-height: 300px;
+}

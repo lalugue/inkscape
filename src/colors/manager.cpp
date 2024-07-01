@@ -33,6 +33,7 @@
 #include "spaces/oklch.h"
 #include "spaces/rgb.h"
 #include "spaces/xyz.h"
+#include "util/reference.h"
 
 namespace Inkscape::Colors {
 
@@ -76,6 +77,14 @@ std::shared_ptr<Space::AnySpace> Manager::addSpace(Space::AnySpace *space)
 bool Manager::removeSpace(std::shared_ptr<Space::AnySpace> space)
 {
     return std::erase(_spaces, space);
+}
+
+std::vector<std::shared_ptr<Space::AnySpace>> Manager::spaces(Space::Traits traits) {
+    std::vector<std::shared_ptr<Space::AnySpace>> out;
+    std::copy_if(_spaces.begin(), _spaces.end(), std::back_inserter(out), [=](auto& p) {
+        return (p->getComponents().traits() & traits) != Space::Traits::None;
+    });
+    return out;
 }
 
 /**

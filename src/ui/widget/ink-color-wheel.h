@@ -83,6 +83,7 @@ public:
     /// Connect a slot to be called after the color has changed.
     sigc::connection connect_color_changed(sigc::slot<void ()>);
 
+    // debug facility - performance testing only
     void redraw(const Cairo::RefPtr<Cairo::Context>& ctx) override { on_drawing_area_draw(ctx, 1024, 1024); }
 protected:
     Colors::Color _values;

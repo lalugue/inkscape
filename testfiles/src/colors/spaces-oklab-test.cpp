@@ -62,9 +62,9 @@ TEST(ColorsSpacesOkLAB, components)
 {
     auto c = Manager::get().find(OKLAB)->getComponents();
     ASSERT_EQ(c.size(), 3);
-    EXPECT_EQ(c[0].id, "h");
-    EXPECT_EQ(c[1].id, "s");
-    EXPECT_EQ(c[2].id, "l");
+    EXPECT_EQ(c[0].id, "l");
+    EXPECT_EQ(c[1].id, "a");
+    EXPECT_EQ(c[2].id, "b");
 }
 
 } // namespace

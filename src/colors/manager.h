@@ -15,6 +15,8 @@
 #include <optional>
 #include <vector>
 
+#include "spaces/components.h"
+
 namespace Inkscape::Colors {
 namespace Space {
 enum class Type;
@@ -37,8 +39,8 @@ public:
         return instance;
     }
 
-    std::vector<std::shared_ptr<Space::AnySpace>>::iterator begin() { return std::begin(_spaces); }
-    std::vector<std::shared_ptr<Space::AnySpace>>::iterator end() { return std::end(_spaces); }
+    // Request all color spaces with given trait(s); Ex: spaces(Traits::Picker) to list of types suitable for GUI
+    std::vector<std::shared_ptr<Space::AnySpace>> spaces(Space::Traits traits);
 
     std::shared_ptr<Space::AnySpace> find(Space::Type type) const;
     std::shared_ptr<Space::AnySpace> find(std::string const &name) const;

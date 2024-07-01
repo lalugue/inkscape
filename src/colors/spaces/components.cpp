@@ -14,17 +14,169 @@
 #include <cmath>
 #include <libintl.h> // avoid glib include
 #include <map>
-#include <utility>
+// #include <utility>
+#include <glib/gi18n.h>
+#include <glibmm/value.h>
 
 #include "enum.h"
 
-#define _(String) gettext(String)
-
 namespace Inkscape::Colors::Space {
+
+static const std::vector<Components> get_color_spaces() {
+
+static const std::vector<Components> color_spaces = {
+    {
+        Type::RGB, Type::RGB, Traits::Picker,
+        {
+            { "r", _("_R:"), _("Red"), 255 },
+            { "g", _("_G:"), _("Green"), 255 },
+            { "b", _("_B:"), _("Blue"), 255 }
+        }
+    },
+    {
+        Type::linearRGB, Type::NONE, Traits::Internal,
+        {
+            { "r", _("<sub>l</sub>_R:"), _("Linear Red"), 255 },
+            { "g", _("<sub>l</sub>_G:"), _("Linear Green"), 255 },
+            { "b", _("<sub>l</sub>_B:"), _("Linear Blue"), 255 }
+        }
+    },
+    {
+        Type::HSL, Type::HSL, Traits::Picker,
+        {
+            { "h", _("_H:"), _("Hue"), 360 },
+            { "s", _("_S:"), _("Saturation"), 100 },
+            { "l", _("_L:"), _("Lightness"), 100 }
+        }
+    },
+    {
+        Type::HSV, Type::HSV, Traits::Picker,
+        {
+            { "h", _("_H:"), _("Hue"), 360 },
+            { "s", _("_S:"), _("Saturation"), 100 },
+            { "v", _("_V:"), _("Value"), 100 }
+        }
+    },
+    {
+        Type::CMYK, Type::NONE, Traits::Picker,
+        {
+            { "c", _("_C:"), C_("CMYK", "Cyan"), 100 },
+            { "m", _("_M:"), C_("CMYK", "Magenta"), 100 },
+            { "y", _("_Y:"), C_("CMYK", "Yellow"), 100 },
+            { "k", _("_K:"), C_("CMYK", "Black"), 100 }
+        }
+    },
+    {
+        Type::CMY, Type::NONE, Traits::Picker,
+        {
+            { "c", _("_C:"), C_("CMYK", "Cyan"), 100 },
+            { "m", _("_M:"), C_("CMYK", "Magenta"), 100 },
+            { "y", _("_Y:"), C_("CMYK", "Yellow"), 100 },
+        }
+    },
+    {
+        Type::HSLUV, Type::HSLUV, Traits::Picker,
+        {
+            { "h", _("_H*:"), _("Hue"), 360 },
+            { "s", _("_S*:"), _("Saturation"), 100 },
+            { "l", _("_L*:"), _("Lightness"), 100 }
+        }
+    },
+    {
+        Type::OKHSL, Type::OKHSL, Traits::Picker,
+        {
+            { "h", _("_H<sub>ok</sub>:"), _("Hue"), 360 },
+            { "s", _("_S<sub>ok</sub>:"), _("Saturation"), 100 },
+            { "l", _("_L<sub>ok</sub>:"), _("Lightness"), 100 }
+        }
+    },
+    {
+        Type::LCH, Type::NONE, Traits::Internal,
+        {
+            { "l", _("_L"), _("Luminance"), 255 },
+            { "c", _("_C"), _("Chroma"), 255 },
+            { "h", _("_H"), _("Hue"), 360 },
+        }
+    },
+    {
+        Type::LUV, Type::NONE, Traits::Internal,
+        {
+            { "l", _("_L"), _("Luminance"), 100 },
+            { "u", _("_U"), _("Chroma U"), 100 },
+            { "v", _("_V"), _("Chroma V"), 100 },
+        }
+    },
+    {
+        Type::OKLAB, Type::NONE, Traits::Internal,
+        {
+            { "l", _("_L<sub>ok</sub>"), _("Lightness"), 100 },
+            { "a", _("_A<sub>ok</sub>"), _("Component A"), 100 },
+            { "b", _("_B<sub>ok</sub>"), _("Component B"), 100 }
+        }
+    },
+    {
+        Type::OKLCH, Type::OKHSL, Traits::Picker,
+        {
+            { "l", _("_L<sub>ok</sub>"), _("Lightness"), 100 },
+            { "c", _("_C<sub>ok</sub>"), _("Chroma"), 100 },
+            { "h", _("_H<sub>ok</sub>"), _("Hue"), 360 }
+        }
+    },
+    {
+        Type::LAB, Type::NONE, Traits::Internal,
+        {
+            { "l", _("_L"), _("Lightness"), 100 },
+            { "a", _("_A"), _("Component A"), 255 },
+            { "b", _("_B"), _("Component B"), 255 }
+        }
+    },
+    {
+        Type::YCbCr, Type::NONE, Traits::CMS,
+        {
+            { "y", _("_Y"), _("Y"), 255 },
+            { "cb", _("C_r"), _("Cb"), 255 },
+            { "cr", _("C_b"), _("Cr"), 255 }
+        }
+    },
+    {
+        Type::XYZ, Type::NONE, Traits::Internal,
+        {
+            { "x", "_X", "X", 255 },
+            { "y", "_Y", "Y", 100 },
+            { "z", "_Z", "Z", 255 }
+        }
+    },
+    {
+        Type::YXY, Type::NONE, Traits::Internal,
+        {
+            { "y1", "_Y", "Y", 255 },
+            { "x", "_x", "x", 255 },
+            { "y2", "y", "y", 255 }
+        }
+    },
+    {
+        Type::Gray, Type::NONE, Traits::Internal,
+        {
+            { "gray", _("G:"), _("Gray"), 1024 }
+        }
+    }
+};
+    return color_spaces;
+}
+
 
 Component::Component(Type type, unsigned int index, std::string id, std::string name, std::string tip, unsigned scale)
     : type(type)
     , index(index)
+    , id(std::move(id))
+    , name(std::move(name))
+    , tip(std::move(tip))
+    , scale(scale)
+{}
+
+Component::Component(std::string id, std::string name, std::string tip, unsigned scale)
+    : type(Type::NONE)
+    , index(-1)
     , id(std::move(id))
     , name(std::move(name))
     , tip(std::move(tip))
@@ -50,90 +202,16 @@ void Components::add(std::string id, std::string name, std::string tip, unsigned
 std::map<Type, Components> _build(bool alpha)
 {
     std::map<Type, Components> sets;
-
-    sets[Type::RGB].setType(Type::RGB);
-    sets[Type::RGB].add("r", _("_R:"), _("Red"), 255);
-    sets[Type::RGB].add("g", _("_G:"), _("Green"), 255);
-    sets[Type::RGB].add("b", _("_B:"), _("Blue"), 255);
-
-    sets[Type::linearRGB].setType(Type::linearRGB);
-    sets[Type::linearRGB].add("r", _("<sub>l</sub>_R:"), _("Linear Red"), 255);
-    sets[Type::linearRGB].add("g", _("<sub>l</sub>_G:"), _("Linear Green"), 255);
-    sets[Type::linearRGB].add("b", _("<sub>l</sub>_B:"), _("Linear Blue"), 255);
-
-    sets[Type::HSL].setType(Type::HSL, Type::HSL);
-    sets[Type::HSL].add("h", _("_H:"), _("Hue"), 360);
-    sets[Type::HSL].add("s", _("_S:"), _("Saturation"), 100);
-    sets[Type::HSL].add("l", _("_L:"), _("Lightness"), 100);
-
-    sets[Type::CMYK].setType(Type::CMYK);
-    sets[Type::CMYK].add("c", _("_C:"), _("Cyan"), 100);
-    sets[Type::CMYK].add("m", _("_M:"), _("Magenta"), 100);
-    sets[Type::CMYK].add("y", _("_Y:"), _("Yellow"), 100);
-    sets[Type::CMYK].add("k", _("_K:"), _("Black"), 100);
-
-    sets[Type::CMY].setType(Type::CMY);
-    sets[Type::CMY].add("c", _("_C:"), _("Cyan"), 100);
-    sets[Type::CMY].add("m", _("_M:"), _("Magenta"), 100);
-    sets[Type::CMY].add("y", _("_Y:"), _("Yellow"), 100);
-
-    sets[Type::HSV].setType(Type::HSV, Type::HSL);
-    sets[Type::HSV].add("h", _("_H:"), _("Hue"), 360);
-    sets[Type::HSV].add("s", _("_S:"), _("Saturation"), 100);
-    sets[Type::HSV].add("v", _("_V:"), _("Value"), 100);
-
-    sets[Type::HSLUV].setType(Type::HSLUV, Type::HSLUV);
-    sets[Type::HSLUV].add("h", _("_H*"), _("Hue"), 360);
-    sets[Type::HSLUV].add("s", _("_S*"), _("Saturation"), 100);
-    sets[Type::HSLUV].add("l", _("_L*"), _("Lightness"), 100);
-
-    sets[Type::LUV].setType(Type::LUV);
-    sets[Type::LUV].add("l", _("_L*"), _("Luminance"), 100);
-    sets[Type::LUV].add("u", _("_u*"), _("Chroma U"), 100);
-    sets[Type::LUV].add("v", _("_v*"), _("Chroma V"), 100);
-
-    sets[Type::LCH].setType(Type::LCH);
-    sets[Type::LCH].add("l", _("_L"), _("Luminance"), 255);
-    sets[Type::LCH].add("c", _("_C"), _("Chroma"), 255);
-    sets[Type::LCH].add("h", _("_H"), _("Hue"), 360);
-
-    sets[Type::OKHSL].setType(Type::OKHSL, Type::OKHSL);
-    sets[Type::OKHSL].add("h", _("_H<sub>ok</sub>"), _("Hue"), 360);
-    sets[Type::OKHSL].add("s", _("_S<sub>ok</sub>"), _("Saturation"), 100);
-    sets[Type::OKHSL].add("l", _("_L<sub>ok</sub>"), _("Lightness"), 100);
-
-    sets[Type::OKLAB].setType(Type::OKLAB);
-    sets[Type::OKLAB].add("h", _("_L<sub>ok</sub>"), _("Lightness"), 100);
-    sets[Type::OKLAB].add("s", _("_A<sub>ok</sub>"), _("Component A"), 100);
-    sets[Type::OKLAB].add("l", _("_B<sub>ok</sub>"), _("Component B"), 100);
-
-    sets[Type::OKLCH].setType(Type::OKLCH, Type::OKHSL);
-    sets[Type::OKLCH].add("l", _("_L<sub>ok</sub>"), _("Lightness"), 100);
-    sets[Type::OKLCH].add("c", _("_C<sub>ok</sub>"), _("Chroma"), 100);
-    sets[Type::OKLCH].add("h", _("_H<sub>ok</sub>"), _("Hue"), 360);
-
-    sets[Type::XYZ].setType(Type::XYZ);
-    sets[Type::XYZ].add("x", "_X", "X", 255);
-    sets[Type::XYZ].add("y", "_Y", "Y", 100);
-    sets[Type::XYZ].add("z", "_Z", "Z", 255);
-
-    sets[Type::YCbCr].setType(Type::YCbCr);
-    sets[Type::YCbCr].add("y", "_Y", "Y", 255);
-    sets[Type::YCbCr].add("cb", "C_b", "Cb", 255);
-    sets[Type::YCbCr].add("cr", "C_r", "Cr", 255);
-
-    sets[Type::LAB].setType(Type::LAB);
-    sets[Type::LAB].add("l", "_L", "L", 100);
-    sets[Type::LAB].add("a", "_a", "a", 256);
-    sets[Type::LAB].add("b", "_b", "b", 256);
-
-    sets[Type::YXY].setType(Type::YXY);
-    sets[Type::YXY].add("y1", "_Y", "Y", 255);
-    sets[Type::YXY].add("x", "_x", "x", 255);
-    sets[Type::YXY].add("y2", "y", "y", 255);
-
-    sets[Type::Gray].setType(Type::Gray);
-    sets[Type::Gray].add("gray", _("G:"), _("Gray"), 1024);
+    for (auto& components : get_color_spaces()) {
+        unsigned int index = 0;
+        for (auto& component : components.getAll()) {
+            // patch components
+            auto& rw = const_cast<Component&>(component);
+            rw.type = components.getType();
+            rw.index = index++;
+        }
+        sets[components.getType()] = components;
+    }
 
     if (alpha) {
         for (auto &[key, val] : sets) {
@@ -155,8 +233,8 @@ Components const &Components::get(Type space, bool alpha)
     return lookup_set[Type::NONE];
 }
 
-Type Components::color_wheel() const {
-    return _color_wheel;
+Type Components::get_wheel_type() const {
+    return _wheel_type;
 }
 
 }; // namespace Inkscape::Colors::Space

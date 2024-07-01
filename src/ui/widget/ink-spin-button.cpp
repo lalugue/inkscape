@@ -545,7 +545,16 @@ bool InkSpinButton::on_scroll(double dx, double dy) {
     _scroll_counter += delta;
     // this is a threshold to control rate at which scrolling increments/decrements current value;
     // the larger the threshold, the slower the rate; it may need to be tweaked on different platforms
+#ifdef _WIN32
+    // default for mouse wheel on windows
+    constexpr double threshold = 1.0;
+#elif defined __APPLE__
+    // scrolling is very sensitive on macOS
     constexpr double threshold = 5.0;
+#else
+    //todo: default for Linux
+    constexpr double threshold = 1.0;
+#endif
     if (std::abs(_scroll_counter) >= threshold) {
         auto inc = std::round(_scroll_counter / threshold);
         _scroll_counter = 0;
@@ -574,22 +583,12 @@ void InkSpinButton::change_value(double inc, Gdk::ModifierType state) {
 bool InkSpinButton::on_key_pressed(guint keyval, guint keycode, Gdk::ModifierType state) {
    switch (keyval) {
      case GDK_KEY_Escape: // Defocus
-     //   set_value(saved_value); // undo?
+         //todo: should Esc undo?
          return defocus();
 
-   // case GDK_KEY_Return:  // signal "activate" uses this key
-
-       // undo?
-//   case GDK_KEY_z:
-//   case GDK_KEY_Z:
-//     if ((state & Gdk::ModifierType::CONTROL_MASK) == Gdk::ModifierType::CONTROL_MASK) {
-//       m_entry->hide();
-//       m_minus->show();
-//       m_value->show();
-//       m_plus->show();
-//       return true;
-//     }
-//     break;
+   // signal "activate" uses this key, so we won't see it:
+   // case GDK_KEY_Return:
+       // break;
 
    case GDK_KEY_Up:
        change_value(1, state);
@@ -600,7 +599,6 @@ bool InkSpinButton::on_key_pressed(guint keyval, guint keycode, Gdk::ModifierTyp
        return true;
 
    default:
-// printf("key: %x %x mod %x\n", keyval, keycode, state);
      break;
    }
 
@@ -648,6 +646,7 @@ void InkSpinButton::start_spinning(double steps, Gdk::ModifierType state, Glib::
         // speed up
         _spinning = Glib::signal_timeout().connect([=,this]() {
             change_value(steps, state);
+            //TODO: find a way to read mouse button state
             auto active = gesture->is_active();
             auto btn = gesture->get_current_button();
             if (!active || !btn) return false;

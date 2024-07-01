@@ -102,7 +102,7 @@ void ColorNotebook::_initUI()
     _combo->set_tooltip_text(_("Choose style of color selection"));
 
     // Add all universal (non-document icc profile) color spaces
-    for (auto &space : Colors::Manager::get()) {
+    for (auto &space : Colors::Manager::get().spaces(Space::Traits::Picker)) {
         _addPageForSpace(space);
     }
 

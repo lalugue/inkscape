@@ -126,7 +126,6 @@ private:
     Glib::RefPtr<Gdk::Cursor> _current_cursor;
 
     // ----------- PROPERTIES ------------
-    // Glib::Property<int> prop_digits;
     int prop_digits = 0;
 };
 

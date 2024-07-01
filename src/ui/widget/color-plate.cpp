@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 
 #include "color-plate.h"
+#include <cassert>
 #include <cairo.h>
 #include <cairomm/context.h>
 #include <2geom/rect.h>
@@ -108,8 +109,7 @@ static Geom::Point get_color_coordinates(double val1, double val2, bool circular
 static void set_color_helper(Color& color, int channel1, int channel2, double x, double y, bool disc) {
     if (disc) {
         auto dist = std::hypot(x, y);
-        auto angle = atan2(x, y);
-        angle = (angle + M_PI) / (2 * M_PI); // angle to 0..1 range
+        auto angle = (atan2(x, y) + M_PI) / (2 * M_PI); // angle in 0..1 range
         color.set(channel1, angle);
         color.set(channel2, dist);
     }
@@ -150,14 +150,15 @@ static Cairo::RefPtr<Cairo::ImageSurface> create_color_plate(unsigned int resolu
         for (int iy = 0; iy <= limit; ++iy, ++row) {
             auto y = iy / limit;
             color.set(channel2, 1 - y);
-            int index = row * width;
+            auto index = static_cast<size_t>(row * width);
             for (int ix = 0; ix <= limit; ++ix) {
                 auto x = ix / limit;
                 color.set(channel1, x);
                 data[index++] = color.toARGB();
             }
         }
-        assert(index <= data.size());
+        //todo: compilation error on linux:
+        // assert(index <= data.size());
     });
 }
 
@@ -227,8 +228,9 @@ static Geom::Point local_to_screen(const Geom::Rect& active, Geom::Point point, 
 
 ColorPlate::ColorPlate() {
     set_name("ColorPlate");
+    set_disc(_disc); // add right CSS class
 
-    set_draw_func([=](const Cairo::RefPtr<Cairo::Context>& ctx, int /*width*/, int /*height*/){
+    set_draw_func([this](const Cairo::RefPtr<Cairo::Context>& ctx, int /*width*/, int /*height*/){
         draw_plate(ctx);
     });
 
@@ -294,15 +296,6 @@ void ColorPlate::set_base_color(Color color, int fixed_channel, int var_channel1
     }
 }
 
-// void ColorPlate::adjust_color(int channel, double val) {
-    // if (_base_color.get(channel) != val) {
-        // _base_color.set(channel, val);
-        // _plate.reset();
-        // queue_draw();
-        // fire_color_changed();
-    // }
-// }
-
 Geom::OptRect ColorPlate::get_area() const {
     auto alloc = get_allocation();
     auto min = 2 * _padding;
@@ -348,6 +341,14 @@ void ColorPlate::on_motion(const GtkEventControllerMotion* motion, double x, dou
 
 void ColorPlate::set_disc(bool disc) {
     _disc = disc;
+    if (disc) {
+        remove_css_class("rectangular");
+        add_css_class("circular");
+    }
+    else {
+        remove_css_class("circular");
+        add_css_class("rectangular");
+    }
     queue_draw();
 }
 

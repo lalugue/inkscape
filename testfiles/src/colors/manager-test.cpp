@@ -90,6 +90,25 @@ TEST(ColorManagerTest, addAndRemoveSpaces)
     ASSERT_TRUE(cm.find(Space::Type::RGB));
 }
 
+TEST(ColorManagerTest, getSpaces)
+{
+    auto cm = TestManager();
+
+    auto none = cm.spaces(Space::Traits::None);
+    ASSERT_EQ(none.size(), 0);
+
+    auto internal = cm.spaces(Space::Traits::Internal);
+    ASSERT_GT(internal.size(), 0);
+    ASSERT_EQ(internal[0]->getComponents().traits() & Space::Traits::Internal, Space::Traits::Internal);
+
+    auto pickers = cm.spaces(Space::Traits::Picker);
+    ASSERT_GT(pickers.size(), 0);
+    ASSERT_EQ(pickers[0]->getComponents().traits() & Space::Traits::Picker, Space::Traits::Picker);
+
+    auto mix = cm.spaces(Space::Traits::Picker | Space::Traits::Internal);
+    ASSERT_EQ(mix.size(), internal.size() + pickers.size());
+}
+
 
 } // namespace
 

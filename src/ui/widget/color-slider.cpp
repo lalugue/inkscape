@@ -77,7 +77,6 @@ static double get_value_at(Gtk::Widget const &self, double const x, double const
 Gtk::EventSequenceState ColorSlider::on_click_pressed(Gtk::GestureClick const &click,
                                                       int /*n_press*/, double const x, double const y)
 {
-    // _colors->grab();
     update_component(x, y, click.get_current_event_state());
     return Gtk::EventSequenceState::NONE;
 }
@@ -85,7 +84,6 @@ Gtk::EventSequenceState ColorSlider::on_click_pressed(Gtk::GestureClick const &c
 Gtk::EventSequenceState ColorSlider::on_click_released(Gtk::GestureClick const & /*click*/,
                                                        int /*n_press*/, double /*x*/, double /*y*/)
 {
-    // _colors->release();
     return Gtk::EventSequenceState::NONE;
 }
 
@@ -105,7 +103,7 @@ void ColorSlider::update_component(double x, double y, Gdk::ModifierType const s
     auto const constrained = Controller::has_flag(state, Gdk::ModifierType::CONTROL_MASK);
 
     // XXX We don't know how to deal with constraints yet.
-    if (_colors->setAll(_component, get_value_at(*this, x, y))) {
+    if (_colors->isValid(_component) && _colors->setAll(_component, get_value_at(*this, x, y))) {
         signal_value_changed.emit();
     }
 }
@@ -248,8 +246,10 @@ void ColorSlider::draw_func(Cairo::RefPtr<Cairo::Context> const &cr,
         float x = dark_theme ? 0.9f : 0.3f;
         stroke = Gdk::RGBA(x, x, x);
     }
-    double value = _colors->getAverage(_component);
-    draw_slider_thumb(cr, Geom::Point(area.left() + value * area.width(), area.midpoint().y()), THUMB_SIZE, *fill, *stroke, get_scale_factor());
+    if (_colors->isValid(_component)) {
+        double value = _colors->getAverage(_component);
+        draw_slider_thumb(cr, Geom::Point(area.left() + value * area.width(), area.midpoint().y()), THUMB_SIZE, *fill, *stroke, get_scale_factor());
+    }
 }
 
 double ColorSlider::getScaled() const
@@ -261,6 +261,10 @@ double ColorSlider::getScaled() const
 
 void ColorSlider::setScaled(double value)
 {
+    if (!_colors->isValid(_component)) {
+        g_message("ColorSlider - cannot set color channel, it is not valid.");
+        return;
+    }
     // setAll replaces every color with the same value, setAverage moves them all by the same amount.
     _colors->setAll(_component, value / _component.scale);
 }

@@ -7,7 +7,7 @@
     <property name="visible">True</property>
     <property name="valign">fill</property>
     <property name="hexpand">True</property>
-    <property name="vexpand">True</property>
+    <property name="vexpand">False</property>
     <property name="row-spacing">0</property>
     <child>
       <object class="GtkSeparator" id="separator2">
@@ -221,23 +221,13 @@
         <property name="can-focus">True</property>
         <property name="hexpand">True</property>
         <property name="vexpand">False</property>
-<!--        <child>-->
-<!--          <object class="GtkAspectFrame" id="color-wheel">-->
-<!--            <property name="name">wheel</property>-->
-<!--            <property name="visible">True</property>-->
-<!--            <property name="can-focus">False</property>-->
-<!--            <property name="hexpand">True</property>-->
-<!--            <property name="vexpand">True</property>-->
-<!--            <child>-->
-<!--              <placeholder/>-->
-<!--            </child>-->
-<!--          </object>-->
-<!--        </child>-->
+        <property name="margin-bottom">3</property>
         <child type="label">
-          <object class="GtkBox">
+          <object class="GtkBox" id="label-box">
             <property name="visible">True</property>
             <property name="can-focus">False</property>
             <property name="spacing">3</property>
+            <property name="halign">start</property>
             <child>
               <object class="GtkImage">
                 <property name="visible">True</property>
@@ -251,7 +241,7 @@
                 <property name="can-focus">False</property>
                 <property name="margin-top">2</property>
                 <property name="margin-bottom">2</property>
-                <property name="label" translatable="yes">Color Wheel</property>
+                <property name="label" translatable="yes">Color Picker</property>
               </object>
             </child>
           </object>
