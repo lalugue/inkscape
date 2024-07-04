@@ -152,8 +152,6 @@ TextEdit::TextEdit()
         display_font_collections();
     }, false);
 
-    filter_menu_button.set_icon_name(INKSCAPE_ICON("font_collections"));
-
 #ifdef WITH_LIBSPELLING
     // TODO: Use computed xml:lang attribute of relevant element, if present, to specify the language.
     // onReadSelection() looks like a suitable place.

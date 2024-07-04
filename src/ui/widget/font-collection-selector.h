@@ -15,7 +15,6 @@
 #ifndef INKSCAPE_UI_WIDGET_FONT_COLLECTION_SELECTOR_H
 #define INKSCAPE_UI_WIDGET_FONT_COLLECTION_SELECTOR_H
 
-#include <optional>
 #include <glibmm/refptr.h>
 #include <glibmm/ustring.h>
 #include <gdkmm/enums.h>
@@ -100,15 +99,8 @@ private:
     bool on_key_pressed(GtkEventControllerKey const * controller,
                         unsigned keyval, unsigned keycode, GdkModifierType state);
 
-    // DragSource
-    void on_drag_end(Gtk::DragSource const &source,
-                     Glib::RefPtr<Gdk::Drag> const &drag, bool delete_data);
-    // DropTarget
-    std::optional<double> _drop_motion_x, _drop_motion_y;
-    Gdk::DragAction on_drop_motion(Gtk::DropTarget const &target,
-                                   double x, double y);
-    bool on_drop_accept(Gtk::DropTarget const &target,
-                        Glib::RefPtr<Gdk::Drop> const &drop);
+    Gdk::DragAction on_drop_motion(Gtk::DropTarget const &target, double x, double y);
+    void on_drop_leave(Gtk::DropTarget const &target);
     bool on_drop_drop  (Gtk::DropTarget const &target,
                         Glib::ValueBase const &value, double x, double y);
 

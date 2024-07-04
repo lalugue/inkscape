@@ -27,9 +27,7 @@
 #include "ui/dialog-run.h"
 #include "ui/tools/tool-base.h"
 #include "ui/widget/iconrenderer.h"
-#include "util/document-fonts.h"
 #include "util/font-collections.h"
-#include "util/recently-used-fonts.h"
 
 namespace Inkscape::UI::Widget {
 
@@ -143,7 +141,7 @@ void FontCollectionSelector::setup_signals()
         auto tree_sel = treeview->get_selection();
         if (updated && updated_path) {
             // tree_sel->select_path(updated_path);
-            gtk_tree_selection_select_path(tree_sel->gobj(), updated_path.gobj());
+            tree_sel->select(updated_path);
             // treeview->scroll_to_row(updated_path);
         }
 
@@ -161,15 +159,12 @@ void FontCollectionSelector::setup_signals()
     Controller::add_key<&FontCollectionSelector::on_key_pressed>(*treeview, *this);
 
     // Signals for drag and drop.
-    Controller::add_drag_source(*treeview, {
-        .end = sigc::mem_fun(*this, &FontCollectionSelector::on_drag_end)
-    });
     Controller::add_drop_target(*treeview, {
         .actions = Gdk::DragAction::COPY,
         .types   = {G_TYPE_STRING},
         .motion  = sigc::mem_fun(*this, &FontCollectionSelector::on_drop_motion),
-        .accept  = sigc::mem_fun(*this, &FontCollectionSelector::on_drop_accept),
-        .drop    = sigc::mem_fun(*this, &FontCollectionSelector::on_drop_drop  )
+        .drop    = sigc::mem_fun(*this, &FontCollectionSelector::on_drop_drop),
+        .leave   = sigc::mem_fun(*this, &FontCollectionSelector::on_drop_leave)
     });
 
     treeview->get_selection()->signal_changed().connect([this]{ on_selection_changed(); });
@@ -473,52 +468,40 @@ bool FontCollectionSelector::on_key_pressed(GtkEventControllerKey const * const 
     return false;
 }
 
-void FontCollectionSelector::on_drag_end(Gtk::DragSource const &/*source*/,
-                                         Glib::RefPtr<Gdk::Drag> const &/*drag*/,
-                                         bool /*delete_data*/)
-{
-    treeview->unset_state_flags(Gtk::StateFlags::DROP_ACTIVE);
-}
-
-Gdk::DragAction FontCollectionSelector::on_drop_motion(Gtk::DropTarget const &/*target*/,
-                                                       double const x, double const y)
+Gdk::DragAction FontCollectionSelector::on_drop_motion(Gtk::DropTarget const &, double x, double y)
 {
     Gtk::TreeModel::Path path;
     Gtk::TreeView::DropPosition pos;
     treeview->get_dest_row_at_pos(x, y, path, pos);
     treeview->unset_state_flags(Gtk::StateFlags::DROP_ACTIVE);
 
-    _drop_motion_x = x;
-    _drop_motion_y = y;
-
-    // context->drop_reply(bool(path), time);
-
-    auto tree_sel = treeview->get_selection()->gobj();
+    auto tree_sel = treeview->get_selection();
     if (path) {
         if (auto iter = store->get_iter(path)) {
             if (auto parent = iter->parent()) {
-                gtk_tree_selection_select_iter(tree_sel, parent.gobj());
+                tree_sel->select(parent);
             } else {
-                gtk_tree_selection_select_iter(tree_sel, iter.gobj());
+                tree_sel->select(iter);
             }
+            return Gdk::DragAction::COPY;
         }
-    } else {
-        gtk_tree_selection_unselect_all(tree_sel);
     }
 
+    tree_sel->unselect_all();
     return {};
 }
 
-bool FontCollectionSelector::on_drop_accept(Gtk::DropTarget const &target,
-                                            Glib::RefPtr<Gdk::Drop> const &drop)
+void FontCollectionSelector::on_drop_leave(Gtk::DropTarget const &target)
 {
+    treeview->get_selection()->unselect_all();
+}
 
-    // std::cout << "FontCollectionSelector::on_drag_data_received()" << std::endl;
+bool FontCollectionSelector::on_drop_drop(Gtk::DropTarget const &, Glib::ValueBase const &, double x, double y)
+{
     // 1. Get the row at which the data is dropped.
     Gtk::TreePath path;
     int bx{}, by{};
-    treeview->convert_widget_to_bin_window_coords(_drop_motion_x.value(), _drop_motion_y.value(),
-                                                  bx, by);
+    treeview->convert_widget_to_bin_window_coords(x, y, bx, by);
     if (!treeview->get_path_at_pos(bx, by, path)) {
         return false;
     }
@@ -561,24 +544,6 @@ bool FontCollectionSelector::on_drop_accept(Gtk::DropTarget const &target,
         treeview->expand_to_path(path);
     }
 
-    return true;
-}
-
-bool FontCollectionSelector::on_drop_drop(Gtk::DropTarget const &/*target*/,
-                                          Glib::ValueBase const &/*value*/,
-                                          double const x, double const y)
-{
-    // std::cout << "FontCollectionSelector::on_drag_drop()" << std::endl;
-    Gtk::TreeModel::Path path;
-    Gtk::TreeView::DropPosition pos;
-    treeview->get_dest_row_at_pos(x, y, path, pos);
-
-    if (!path) {
-        // std::cout << "Not on target\n";
-        return false;
-    }
-
-    treeview->unset_state_flags(Gtk::StateFlags::DROP_ACTIVE);
     return true;
 }
 

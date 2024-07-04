@@ -44,11 +44,9 @@ FontCollectionsManager::FontCollectionsManager()
     , _delete_button        (UI::get_widget<Gtk::Button>(builder, "delete_button"))
 {
     _font_selector = Gtk::make_managed<UI::Widget::FontSelector>(false, false);
-    UI::pack_start(_font_list_box, *_font_selector, true, true);
-    // _font_list_box.reorder_child(*_font_selector, 2);
+    _font_list_box.insert_child_after(*_font_selector, _font_count_label);
 
-    UI::pack_start(_collections_box, _user_font_collections, true, true);
-    // _collections_box.reorder_child(_user_font_collections, 1);
+    _collections_box.insert_child_after(_user_font_collections, _buttons_box);
 
     _user_font_collections.populate_user_collections();
     _user_font_collections.change_frame_name(_("Font Collections"));
@@ -59,10 +57,6 @@ FontCollectionsManager::FontCollectionsManager()
     _create_button.set_image_from_icon_name(INKSCAPE_ICON("list-add"));
     _edit_button.set_image_from_icon_name(INKSCAPE_ICON("document-edit"));
     _delete_button.set_image_from_icon_name(INKSCAPE_ICON("edit-delete"));
-
-    // Paned settings.
-    _paned.set_resize_start_child(false);
-    _paned.set_resize_end_child(false);
 
     change_font_count_label();
 
