@@ -117,8 +117,11 @@ void SvgGlyphRenderer::snapshot_vfunc(
     cr->move_to(cell_area.get_x() + (_width - ext.width) / 2, cell_area.get_y() + 1);
 
     auto const selected = (flags & Gtk::CellRendererState::SELECTED) != Gtk::CellRendererState{};
-    auto const css_class = selected ? "theme_selected_bg_color" : "";
-    auto const fg = get_color_with_class(*_tree, css_class);
+    Gdk::RGBA fg;
+    if (!_tree->get_style_context()->lookup_color(selected ? "theme_selected_fg_color" : "theme_fg_color", fg)) {
+        // some themes don't have standard color names defined
+        fg = Gdk::RGBA{"#000"};
+    }
     cr->set_source_rgb(fg.get_red(), fg.get_green(), fg.get_blue());
 
     // crash on macos: https://gitlab.com/inkscape/inkscape/-/issues/266
