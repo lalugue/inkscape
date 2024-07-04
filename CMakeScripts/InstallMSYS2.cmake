@@ -78,7 +78,7 @@ if(WIN32)
     ${MINGW_BIN}/libmpdec-[0-9]*.dll
     ${MINGW_BIN}/libmpfr-[0-9]*.dll
     ${MINGW_BIN}/libncursesw6.dll
-    ${MINGW_BIN}/libnghttp2*.dll
+    ${MINGW_BIN}/libnghttp[0-9]*.dll
     ${MINGW_BIN}/libnspr[0-9]*.dll
     ${MINGW_BIN}/libopenblas.dll
     ${MINGW_BIN}/libopenjp2-[0-9]*.dll
@@ -164,6 +164,7 @@ if(WIN32)
     file(GLOB MAGICK_LIBS
       ${MINGW_BIN}/libGraphicsMagick[+-]*.dll
       ${MINGW_BIN}/libjxl.dll
+      ${MINGW_BIN}/libjxl_cms.dll
       ${MINGW_BIN}/libjxl_threads.dll
       ${MINGW_BIN}/libltdl-[0-9]*.dll
       ${MINGW_BIN}/libhwy.dll

@@ -227,13 +227,13 @@ function(filter_and_install_translated_content file_list destination)
         list(FILTER translated_files INCLUDE REGEX "${regex}")
         list(FILTER remaining_files  EXCLUDE REGEX "${regex}")
 
+        string(MAKE_C_IDENTIFIER "${language_code}" language_code_escaped)
         if(translated_files)
             if(WIN32)
                 set(COMP translations.${language_code_escaped})
             else()
                 set(COMP translations)
             endif()
-            string(MAKE_C_IDENTIFIER "${language_code}" language_code_escaped)
             install(FILES ${translated_files}
                 DESTINATION ${destination}
                 COMPONENT ${COMP})
