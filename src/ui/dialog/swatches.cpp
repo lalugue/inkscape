@@ -139,8 +139,8 @@ SwatchesPanel::SwatchesPanel(bool compact, char const *prefsPath)
     _palette->set_tile_size(prefs->getInt(_prefs_path + "/tile_size", 16));
     _palette->set_aspect(prefs->getDoubleLimited(_prefs_path + "/tile_aspect", 0.0, -2, 2));
     _palette->set_tile_border(prefs->getInt(_prefs_path + "/tile_border", 1));
-    _palette->set_rows(prefs->getInt(_prefs_path + "/rows", 1));
-    _palette->enable_stretch(prefs->getBool(_prefs_path + "/tile_stretch", false));
+    _palette->set_rows(prefs->getInt(_prefs_path + "/rows", 2));
+    _palette->enable_stretch(prefs->getBool(_prefs_path + "/tile_stretch", true));
     _palette->set_large_pinned_panel(embedded && prefs->getBool(_prefs_path + "/enlarge_pinned", true));
     _palette->enable_labels(!embedded && prefs->getBool(_prefs_path + "/show_labels", true));
 
