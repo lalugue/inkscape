@@ -56,6 +56,9 @@ void SpinButton::construct()
     property_has_focus().signal_changed().connect(
         sigc::mem_fun(*this, &SpinButton::on_has_focus_changed));
     UI::on_popup_menu(*this, sigc::mem_fun(*this, &SpinButton::on_popup_menu));
+
+    // Update the focus in value on avoid unnecessary undo on ESC.
+    signal_value_changed().connect([this] { _on_focus_in_value = get_value(); });
 }
 
 int SpinButton::on_input(double* newvalue)
