@@ -167,19 +167,19 @@ inkscape:macos:
     MSYSTEM: UCRT64
     CCACHE_DIR: $CI_PROJECT_DIR/ccache
     CCACHE_MAXSIZE: "1.0G"
-    IDW_ARCHIVE: msys64.7z
-    IDW_RELEASE_TAG: r240505.1
-    IDW_RELEASE_URL: $CI_API_V4_URL/projects/46863172/packages/generic/windows/$IDW_RELEASE_TAG/$IDW_ARCHIVE
+    IDW_VERSION: 55
+    IDW_NAME: ink$IDW_VERSION
+    IDW_RELEASE_URL: $CI_API_V4_URL/projects/46863172/packages/generic/windows/r$IDW_VERSION/$IDW_NAME.7z
   before_script:
     - wget.exe --quiet --no-check-certificate $IDW_RELEASE_URL
-    - 7z x -oC:/ $IDW_ARCHIVE
+    - 7z x -oC:/ "$Env:IDW_NAME.7z"
 
 
 inkscape:windows:build:
   extends: .windows
   retry: 2
   script:
-    - C:/msys64/msys2_shell.cmd -defterm -no-start -ucrt64 -here -c "cmake -Bbuild -G Ninja -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache"
+    - . "C:/$Env:IDW_NAME/msys2_shell.cmd" -defterm -no-start -ucrt64 -here -c "cmake -Bbuild -G Ninja -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache"
     # Kill the job before hitting runner's timeout. This way we can preserve the cache so the next retry
     # will be able to advance the build further and eventually finish (after up to two retries, 3 jobs in total).
     # Calculation is:  20 minutes for download and extraction of msys2
@@ -188,7 +188,7 @@ inkscape:windows:build:
     #                 --- --------------------------------
     #                 120 minutes runner timeout
     - Start-Job -ScriptBlock{sleep 4800; taskkill /t /F /IM "ninja.exe"}
-    - C:/msys64/msys2_shell.cmd -defterm -no-start -ucrt64 -here -c "ninja -C build"
+    - . "C:/$Env:IDW_NAME/msys2_shell.cmd" -defterm -no-start -ucrt64 -here -c "ninja -C build"
     - 7z a build.7z build
   artifacts:
     paths:
@@ -212,7 +212,7 @@ inkscape:windows:dist:
     - inkscape:windows:build
   script:
     - 7z x build.7z
-    - C:/msys64/msys2_shell.cmd -defterm -no-start -ucrt64 -here -c "ninja -C build dist-win-${DIST}"
+    - . "C:/$Env:IDW_NAME/msys2_shell.cmd" -defterm -no-start -ucrt64 -here -c "ninja -C build dist-win-${DIST}"
   artifacts:
     paths:
       - build/inkscape*.${DIST}
