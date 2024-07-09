@@ -89,11 +89,11 @@ TEST(ColorUtils, test_contrasting_color)
 
 TEST(ColorUtils, make_theme_color)
 {
-    EXPECT_EQ(make_theme_color(*Color::parse("red"), false).toRGBA(), 0x870000ff);
-    EXPECT_EQ(make_theme_color(*Color::parse("red"), true).toRGBA(), 0x010101ff);
-    EXPECT_EQ(make_theme_color(*Color::parse("white"), false).toRGBA(), 0x787878ff);
-    EXPECT_EQ(make_theme_color(*Color::parse("white"), true).toRGBA(), 0x010101ff);
-    EXPECT_EQ(make_theme_color(*Color::parse("black"), false).toRGBA(), 0x030303ff);
+    EXPECT_EQ(make_theme_color(*Color::parse("red"), false).toRGBA(), 0xffb3b3ff);
+    EXPECT_EQ(make_theme_color(*Color::parse("red"), true).toRGBA(), 0x891c1cff);
+    EXPECT_EQ(make_theme_color(*Color::parse("white"), false).toRGBA(), 0xffffffff);
+    EXPECT_EQ(make_theme_color(*Color::parse("white"), true).toRGBA(), 0x474747ff);
+    EXPECT_EQ(make_theme_color(*Color::parse("black"), false).toRGBA(), 0xc6c6c6ff);
     EXPECT_EQ(make_theme_color(*Color::parse("black"), true).toRGBA(), 0x000000ff);
 }
 

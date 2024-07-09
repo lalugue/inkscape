@@ -152,12 +152,12 @@ Color make_theme_color(Color const &orig, bool dark)
 
     if (dark) {
         // limit saturation to improve contrast with some artwork
-        color.set(1, std::min(color[1], 0.008));
+        color.set(1, std::min(color[1], 0.8));
         // make a darker shade and limit to remove extremes
-        color.set(2, std::min(color[2] * 0.7, 0.003));
+        color.set(2, std::min(color[2] * 0.7, 0.3));
     } else {
         // make a lighter shade and limit to remove extemes
-        color.set(2, std::max(color[2] + (0.01 - color[2]) * 0.5, 0.008));
+        color.set(2, std::max(color[2] + (1.0 - color[2]) * 0.5, 0.8));
     }
 
     return *color.converted(Colors::Space::Type::RGB);
