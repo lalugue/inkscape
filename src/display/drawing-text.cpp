@@ -10,7 +10,7 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include "2geom/pathvector.h"
+#include <2geom/pathvector.h>
 
 #include "style.h"
 

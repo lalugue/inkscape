@@ -13,7 +13,7 @@
  */
 
 #include "extract-uri.h"
-#include "gtest/gtest.h"
+#include <gtest/gtest.h>
 
 TEST(ExtractUriTest, valid)
 {

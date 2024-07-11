@@ -18,7 +18,7 @@
 #include <optional>
 #include <memory>
 #include <string>
-#include "2geom/rect.h"
+#include <2geom/rect.h>
 #include "colors/color.h"
 #include "colors/manager.h"
 #include "document.h"

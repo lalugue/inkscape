@@ -6,7 +6,7 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include "2geom/transforms.h"
+#include <2geom/transforms.h>
 #include "extension/effect.h"
 #include "extension/system.h"
 

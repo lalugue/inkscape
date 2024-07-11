@@ -23,7 +23,7 @@
 #include "path-prefix.h"
 #include "preferences.h"
 
-#include "gtest/gtest.h"
+#include <gtest/gtest.h>
 
 #include <iostream>
 class SvgzImportTest : public DocPerCaseTest {

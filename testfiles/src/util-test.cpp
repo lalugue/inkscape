@@ -13,7 +13,7 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include "gtest/gtest.h"
+#include <gtest/gtest.h>
 #include "util/longest-common-suffix.h"
 #include "util/parse-int-range.h"
 #include "util/delete-with.h"

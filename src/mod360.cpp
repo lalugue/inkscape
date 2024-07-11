@@ -10,7 +10,7 @@
 #include <glib.h>
 #include <cmath>
 
-#include "2geom/angle.h"
+#include <2geom/angle.h>
 #include "mod360.h"
 
 /** Returns \a x wrapped around to between 0 and less than 360,

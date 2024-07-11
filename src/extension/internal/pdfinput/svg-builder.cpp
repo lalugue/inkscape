@@ -20,23 +20,22 @@
 # include "config.h"  // only include where actually required!
 #endif
 
-#include <iomanip>
 #include <string>
 #include <locale>
 #include <codecvt>
 
 #ifdef HAVE_POPPLER
 
-#include "Function.h"
-#include "GfxFont.h"
-#include "GfxState.h"
-#include "Page.h"
-#include "Stream.h"
+#include <poppler/Function.h>
+#include <poppler/GfxFont.h>
+#include <poppler/GfxState.h>
+#include <poppler/Page.h>
+#include <poppler/Stream.h>
 #include "document.h"
 #include "extract-uri.h"
 #include "pdf-parser.h"
 #include "pdf-utils.h"
-#include "png.h"
+#include <png.h>
 #include "poppler-cairo-font-engine.h"
 
 #include "colors/cms/profile.h"
@@ -44,7 +43,6 @@
 #include "display/cairo-utils.h"
 #include "display/nr-filter-utils.h"
 #include "object/sp-defs.h"
-#include "object/sp-item-group.h"
 #include "object/sp-namedview.h"
 #include "svg/css-ostringstream.h"
 #include "svg/path-string.h"

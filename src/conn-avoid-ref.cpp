@@ -16,8 +16,8 @@
 #include <string>
 #include <iostream>
 
-#include "2geom/convex-hull.h"
-#include "2geom/line.h"
+#include <2geom/convex-hull.h>
+#include <2geom/line.h>
 
 #include "conn-avoid-ref.h"
 #include "desktop.h"

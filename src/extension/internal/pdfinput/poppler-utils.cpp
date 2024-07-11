@@ -14,10 +14,10 @@
 
 #include <poppler/UTF.h>
 
-#include "2geom/affine.h"
-#include "GfxFont.h"
-#include "GfxState.h"
-#include "PDFDoc.h"
+#include <2geom/affine.h>
+#include <poppler/GfxFont.h>
+#include <poppler/GfxState.h>
+#include <poppler/PDFDoc.h>
 #include "libnrtype/font-factory.h"
 
 /**

@@ -21,7 +21,7 @@
 #include "document.h"
 #include "layer-manager.h"
 #include "selection.h"
-#include "2geom/geom.h"
+#include <2geom/geom.h>
 
 #include "svg/path-string.h"
 

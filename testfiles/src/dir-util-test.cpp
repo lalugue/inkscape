@@ -10,7 +10,7 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include "gtest/gtest.h"
+#include <gtest/gtest.h>
 
 #include <glib.h>
 

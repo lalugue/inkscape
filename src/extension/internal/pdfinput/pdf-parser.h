@@ -34,7 +34,7 @@
 #include <2geom/affine.h>
 
 #define Operator Operator_Gfx
-#include <Gfx.h>
+#include <poppler/Gfx.h>
 #undef Operator
 
 namespace Inkscape::Extension::Internal {

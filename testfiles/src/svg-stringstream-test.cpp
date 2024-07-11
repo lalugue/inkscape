@@ -12,11 +12,11 @@
  * Released under GNU GPL v2+, read the file 'COPYING' for more information.
  */
 
-#include "2geom/point.h"
+#include <2geom/point.h>
 #include "svg/css-ostringstream.h"
 #include "svg/stringstream.h"
 
-#include "gtest/gtest.h"
+#include <gtest/gtest.h>
 #include <glibmm/ustring.h>
 
 template <typename S, typename T>

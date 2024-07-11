@@ -25,7 +25,7 @@
 #include "display/cairo-utils.h"
 #include "colors/color.h"
 #include "colors/spaces/enum.h"
-#include "rect.h"
+#include <2geom/rect.h>
 #include "ui/util.h"
 
 namespace Inkscape::UI::Widget {

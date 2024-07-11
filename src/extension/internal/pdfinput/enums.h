@@ -29,6 +29,6 @@ enum class FontFallback : unsigned char
     AS_TEXT,
     AS_SUB,
 };
-typedef std::map<int, FontFallback> FontStrategies;
+using FontStrategies = std::map<int, FontFallback>;
 
 #endif /* PDF_ENUMS_H */

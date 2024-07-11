@@ -22,7 +22,7 @@
 #include "live_effects/parameter/parameter.h"
 //#include "live_effects/parameter/path.h"
 #include "live_effects/parameter/bool.h"
-#include "2geom/crossing.h"
+#include <2geom/crossing.h>
 
 class SPLPEItem;
 

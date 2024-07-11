@@ -15,7 +15,7 @@
 
 #include "page-size-preview.h"
 #include "display/cairo-utils.h"
-#include "2geom/rect.h"
+#include <2geom/rect.h>
 
 namespace Inkscape {
 namespace UI {

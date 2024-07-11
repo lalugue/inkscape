@@ -3,9 +3,9 @@
 #include <cairomm/context.h>
 #include <cairomm/refptr.h>
 #include <gdkmm/rgba.h>
+#include <gtkmm/stylecontext.h>
 
-#include "2geom/rect.h"
-#include "ui/widget/fill-style.h"
+#include <2geom/rect.h>
 
 namespace Inkscape::Util {
 
@@ -24,5 +24,4 @@ std::optional<Gdk::RGBA> lookup_background_color(Glib::RefPtr<Gtk::StyleContext>
 // find theme foreground color; it may not be defined on some themes
 std::optional<Gdk::RGBA> lookup_foreground_color(Glib::RefPtr<Gtk::StyleContext>& style);
 
-
-}
+} // namespace Inkscape::Util

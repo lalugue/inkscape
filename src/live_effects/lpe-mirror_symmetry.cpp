@@ -24,23 +24,18 @@
 #include "path-chemistry.h"
 #include "style.h"
 
-#include "2geom/affine.h"
-#include "2geom/path-intersection.h"
+#include <2geom/affine.h>
+#include <2geom/path-intersection.h>
 
 #include "display/curve.h"
 #include "helper/geom.h"
-#include "live_effects/parameter/satellite-reference.h"
-#include "object/sp-defs.h"
 #include "object/sp-item-group.h"
 #include "object/sp-lpe-item.h"
 #include "object/sp-path.h"
 #include "object/sp-text.h"
 #include "path/path-boolop.h"
-#include "svg/path-string.h"
 #include "svg/svg.h"
 #include "ui/pack.h"
-#include "xml/sp-css-attr.h"
-
 
 namespace Inkscape {
 namespace LivePathEffect {

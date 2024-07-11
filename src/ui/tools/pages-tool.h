@@ -14,7 +14,7 @@
  */
 
 #include "ui/tools/tool-base.h"
-#include "2geom/rect.h"
+#include <2geom/rect.h>
 #include "display/control/canvas-item-ptr.h"
 
 #define SP_PAGES_CONTEXT(obj) (dynamic_cast<Inkscape::UI::Tools::PagesTool *>((Inkscape::UI::Tools::ToolBase *)obj))

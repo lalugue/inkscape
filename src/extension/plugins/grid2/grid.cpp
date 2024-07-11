@@ -21,7 +21,7 @@
 
 #include "document.h"
 #include "selection.h"
-#include "2geom/geom.h"
+#include <2geom/geom.h>
 
 #include "object/sp-object.h"
 

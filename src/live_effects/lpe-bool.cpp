@@ -14,11 +14,11 @@
 #include <cstring>
 #include <glibmm/i18n.h>
 
-#include "2geom/affine.h"
-#include "2geom/bezier-curve.h"
-#include "2geom/path-sink.h"
-#include "2geom/path.h"
-#include "2geom/svg-path-parser.h"
+#include <2geom/affine.h>
+#include <2geom/bezier-curve.h>
+#include <2geom/path-sink.h>
+#include <2geom/path.h>
+#include <2geom/svg-path-parser.h>
 
 #include "inkscape.h"
 #include "selection.h"

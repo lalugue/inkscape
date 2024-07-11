@@ -15,10 +15,8 @@
 #include <list>
 #include <memory>
 #include <string>
-#include "gtest/gtest.h"
+#include <gtest/gtest.h>
 #include "xml/repr.h"
-
-#include <list>
 
 TEST(XmlTest, nodeiter)
 {

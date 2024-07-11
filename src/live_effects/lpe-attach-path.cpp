@@ -9,7 +9,7 @@
 
 #include <cmath>
 
-#include "2geom/path-sink.h"
+#include <2geom/path-sink.h>
 
 #include "object/sp-lpe-item.h"
 #include "display/curve.h"

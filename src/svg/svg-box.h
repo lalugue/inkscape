@@ -13,8 +13,8 @@
 #include <glib.h>
 #include <optional>
 #include "svg/svg-length.h"
-#include "2geom/transforms.h"
-#include "2geom/rect.h"
+#include <2geom/transforms.h>
+#include <2geom/rect.h>
 
 enum BoxSide {
     BOX_TOP,
