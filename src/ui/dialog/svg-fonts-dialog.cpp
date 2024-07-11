@@ -114,7 +114,7 @@ void SvgGlyphRenderer::snapshot_vfunc(
     Glib::ustring glyph = _property_glyph.get_value();
     Cairo::TextExtents ext;
     cr->get_text_extents(glyph, ext);
-    cr->move_to(cell_area.get_x() + (_width - ext.width) / 2, cell_area.get_y() + 1);
+    cr->move_to(cell_area.get_x() + (cell_area.get_width() - ext.width) / 2, cell_area.get_y() + (cell_area.get_height() + ext.height) / 2);
 
     auto const selected = (flags & Gtk::CellRendererState::SELECTED) != Gtk::CellRendererState{};
     Gdk::RGBA fg;
