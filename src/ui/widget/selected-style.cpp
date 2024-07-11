@@ -221,17 +221,20 @@ SelectedStyle::SelectedStyle()
     opacity_sb->set_size_request(SELECTED_STYLE_SB_WIDTH);
     opacity_sb->set_sensitive(false);
 
+    auto opacity_box = Gtk::make_managed<Gtk::Box>();
+    opacity_box->append(*opacity_label);
+    opacity_box->append(*opacity_sb);
+
     Controller::add_click(
-        *opacity_sb,
+        *opacity_box,
         [] (Gtk::GestureClick const &, int, double, double) { return Gtk::EventSequenceState::CLAIMED; },
         sigc::mem_fun(*this, &SelectedStyle::on_opacity_click),
         Controller::Button::middle, Gtk::PropagationPhase::CAPTURE);
 
-    on_popup_menu(*opacity_sb, sigc::mem_fun(*this, &SelectedStyle::on_opacity_popup));
+    on_popup_menu(*opacity_box, sigc::mem_fun(*this, &SelectedStyle::on_opacity_popup));
     opacity_sb->signal_value_changed().connect(sigc::mem_fun(*this, &SelectedStyle::on_opacity_changed));
 
-    grid->attach(*opacity_label, 4, 0, 1, 2);
-    grid->attach(*opacity_sb,    5, 0, 1, 2);
+    grid->attach(*opacity_box, 4, 0, 1, 2);
 
     grid->set_column_spacing(4);
     setChild(grid);
