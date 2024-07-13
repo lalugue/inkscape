@@ -24,7 +24,6 @@
 
 #include <boost/range/adaptor/transformed.hpp>
 
-#include "helper/sp-marshal.h"
 #include "attributes.h"
 #include "attribute-rel-util.h"
 #include "color-profile.h"
