@@ -676,6 +676,9 @@
                             </child>
                           </object>
                         </property>
+                        <style>
+                          <class name="inkscape-start-exception"/>
+                        </style>
                       </object>
                     </property>
                     <property name="tab">
@@ -690,6 +693,8 @@
             <child>
               <object class="GtkBox">
                 <property name="spacing">4</property>
+                <property name="margin-top">4</property>
+                <property name="margin-bottom">4</property>
                 <child>
                   <object class="GtkCheckButton" id="show_toggle">
                     <property name="label" translatable="yes">Show this every time</property>
@@ -698,8 +703,6 @@
                     <property name="hexpand">True</property>
                     <property name="margin-start">2</property>
                     <property name="margin-end">2</property>
-                    <property name="margin-top">2</property>
-                    <property name="margin-bottom">2</property>
                     <property name="active">True</property>
                   </object>
                 </child>

@@ -3,7 +3,7 @@
   <requires lib="gtk" version="4.0"/>
   <object class="GtkScrolledWindow" id="container">
     <property name="focusable">True</property>
-    <property name="has-frame">False</property>
+    <property name="has-frame">True</property>
     <property name="child">
       <object class="GtkGridView" id="iconview">
         <property name="focusable">True</property>
@@ -12,5 +12,8 @@
         </style>
       </object>
     </property>
+    <style>
+      <class name="inkscape-start-exception"/>
+    </style>
   </object>
 </interface>
