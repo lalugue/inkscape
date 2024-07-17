@@ -184,11 +184,11 @@ SprayToolbar::SprayToolbar(SPDesktop *desktop)
 
     // Menu Button #3
     auto popover_box3 = &get_widget<Gtk::Box>(_builder, "popover_box3");
-    auto menu_btn3 = &get_derived_widget<UI::Widget::ToolbarMenuButton>(_builder, "menu_btn3");
+    menu_btn3 = &get_derived_widget<UI::Widget::ToolbarMenuButton>(_builder, "menu_btn3");
 
     // Menu Button #4
     auto popover_box4 = &get_widget<Gtk::Box>(_builder, "popover_box4");
-    auto menu_btn4 = &get_derived_widget<UI::Widget::ToolbarMenuButton>(_builder, "menu_btn4");
+    menu_btn4 = &get_derived_widget<UI::Widget::ToolbarMenuButton>(_builder, "menu_btn4");
 
     // Initialize all the ToolbarMenuButtons only after all the children of the
     // toolbar have been fetched. Otherwise, the children to be moved in the
@@ -258,9 +258,12 @@ void SprayToolbar::init()
 
     bool show = true;
 
-    if(mode == 3 || mode == 2){
+    if (mode == 3 || mode == 2){
         show = false;
     }
+
+    menu_btn3->set_visible(show);
+    menu_btn4->set_visible(show);
 
     _over_no_transparent_btn.set_visible(show);
     _over_transparent_btn.set_visible(show);
@@ -274,7 +277,7 @@ void SprayToolbar::init()
     _pick_center_btn.set_visible(show);
     _offset_item.set_visible(show);
 
-    if(mode == 2){
+    if (mode == 2){
         show = true;
     }
 
@@ -345,7 +348,7 @@ void SprayToolbar::toggle_picker()
     auto prefs = Inkscape::Preferences::get();
     bool active = _picker_btn.get_active();
     prefs->setBool("/tools/spray/picker", active);
-    if(active){
+    if (active) {
         prefs->setBool("/dialogs/clonetiler/dotrace", false);
         SPDesktop *dt = _desktop;
         if (Inkscape::UI::Dialog::CloneTiler *ct = get_clone_tiler_panel(dt)){

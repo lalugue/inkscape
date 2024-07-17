@@ -136,10 +136,6 @@ CalligraphyToolbar::CalligraphyToolbar(SPDesktop *desktop)
     auto popover_box3 = &get_widget<Gtk::Box>(_builder, "popover_box3");
     auto menu_btn3 = &get_derived_widget<UI::Widget::ToolbarMenuButton>(_builder, "menu_btn3");
 
-    // Menu Button #4
-    auto popover_box4 = &get_widget<Gtk::Box>(_builder, "popover_box4");
-    auto menu_btn4 = &get_derived_widget<UI::Widget::ToolbarMenuButton>(_builder, "menu_btn4");
-
     // Initialize all the ToolbarMenuButtons only after all the children of the
     // toolbar have been fetched. Otherwise, the children to be moved in the
     // popover will get mapped to a different position and it will probably
@@ -154,9 +150,6 @@ CalligraphyToolbar::CalligraphyToolbar(SPDesktop *desktop)
 
     menu_btn3->init(3, "tag3", popover_box3, children);
     addCollapsibleButton(menu_btn3);
-
-    menu_btn4->init(4, "tag4", popover_box4, children);
-    addCollapsibleButton(menu_btn4);
 
     add(*_toolbar);
 

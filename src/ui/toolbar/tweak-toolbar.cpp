@@ -61,7 +61,27 @@ TweakToolbar::TweakToolbar(SPDesktop *desktop)
     setup_derived_spin_button(_force_item, "force", 20, &TweakToolbar::force_value_changed);
     setup_derived_spin_button(_fidelity_item, "fidelity", 50, &TweakToolbar::fidelity_value_changed);
 
-    // Configure mode buttons
+    // Fetch all the ToolbarMenuButtons at once from the UI file
+    // Menu Button #1
+    auto popover_box1 = &get_widget<Gtk::Box>(_builder, "popover_box1");
+    auto menu_btn1 = &get_derived_widget<UI::Widget::ToolbarMenuButton>(_builder, "menu_btn1");
+
+    // Menu Button #2
+    auto popover_box2 = &get_widget<Gtk::Box>(_builder, "popover_box2");
+    menu_btn2 = &get_derived_widget<UI::Widget::ToolbarMenuButton>(_builder, "menu_btn2");
+
+    // Initialize all the ToolbarMenuButtons only after all the children of the
+    // toolbar have been fetched. Otherwise, the children to be moved in the
+    // popover will get mapped to a different position and it will probably
+    // cause segfault.
+    auto children = _toolbar->get_children();
+
+    menu_btn1->init(1, "tag1", popover_box1, children);
+    addCollapsibleButton(menu_btn1);
+    menu_btn2->init(2, "tag2", popover_box2, children);
+    addCollapsibleButton(menu_btn2);
+
+    // Configure mode buttons (need menu_btn2).
     int btn_index = 0;
     for_each_child(get_widget<Gtk::Box>(_builder, "mode_buttons_box"), [&](Gtk::Widget &item){
         auto &btn = dynamic_cast<Gtk::RadioButton &>(item);
@@ -93,26 +113,6 @@ TweakToolbar::TweakToolbar(SPDesktop *desktop)
     _doo_btn.signal_toggled().connect(sigc::mem_fun(*this, &TweakToolbar::toggle_doo));
     _doo_btn.set_active(prefs->getBool("/tools/tweak/doo", true));
 
-    // Fetch all the ToolbarMenuButtons at once from the UI file
-    // Menu Button #1
-    auto popover_box1 = &get_widget<Gtk::Box>(_builder, "popover_box1");
-    auto menu_btn1 = &get_derived_widget<UI::Widget::ToolbarMenuButton>(_builder, "menu_btn1");
-
-    // Menu Button #2
-    auto popover_box2 = &get_widget<Gtk::Box>(_builder, "popover_box2");
-    auto menu_btn2 = &get_derived_widget<UI::Widget::ToolbarMenuButton>(_builder, "menu_btn2");
-
-    // Initialize all the ToolbarMenuButtons only after all the children of the
-    // toolbar have been fetched. Otherwise, the children to be moved in the
-    // popover will get mapped to a different position and it will probably
-    // cause segfault.
-    auto children = _toolbar->get_children();
-
-    menu_btn1->init(1, "tag1", popover_box1, children);
-    addCollapsibleButton(menu_btn1);
-    menu_btn2->init(2, "tag2", popover_box2, children);
-    addCollapsibleButton(menu_btn2);
-
     add(*_toolbar);
 
     show_all();
@@ -122,6 +122,7 @@ TweakToolbar::TweakToolbar(SPDesktop *desktop)
         _fidelity_box.set_visible(false);
     } else {
         _channels_box.set_visible(false);
+        menu_btn2->set_visible(false);
     }
 }
 
@@ -163,6 +164,7 @@ void TweakToolbar::mode_changed(int mode)
                  (mode == Inkscape::UI::Tools::TWEAK_MODE_COLORJITTER));
 
     _channels_box.set_visible(flag);
+    menu_btn2->set_visible(flag);
 
     _fidelity_box.set_visible(!flag);
 }

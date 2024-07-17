@@ -46,6 +46,7 @@ class SimplePrefPusher;
 
 namespace Widget {
 class SpinButton;
+class ToolbarMenuButton;
 }
 
 namespace Toolbar {
@@ -88,6 +89,9 @@ private:
     Gtk::ToggleButton &_pick_stroke_btn;
     Gtk::ToggleButton &_pick_inverse_value_btn;
     Gtk::ToggleButton &_pick_center_btn;
+
+    UI::Widget::ToolbarMenuButton *menu_btn3 = nullptr;
+    UI::Widget::ToolbarMenuButton *menu_btn4 = nullptr;
 
     // TODO: Check if these can be moved to the constructor.
     std::unique_ptr<SimplePrefPusher> _use_pressure_width_pusher;
