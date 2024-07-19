@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: inkscape\n"
 "Report-Msgid-Bugs-To: inkscape-translator@lists.inkscape.org\n"
-"POT-Creation-Date: 2024-06-17 19:56+0800\n"
+"POT-Creation-Date: 2024-06-27 06:58+0800\n"
 "PO-Revision-Date: 2023-10-30 13:36+0800\n"
 "Last-Translator: ltlnx <ltlnx@disroot.org>\n"
 "Language-Team: L10N_tw <zh-l10n@lists.slat.org>\n"
@@ -3308,7 +3308,7 @@ msgstr "抽象填滿 1"
 #: ../build/share/paint/patterns.svg.h:1
 #: ../share/extensions/patternalongpath.inx:16
 msgid "Snake"
-msgstr "蜿蜒"
+msgstr "蛇形"
 
 #: ../build/share/paint/patterns.svg.h:1
 msgid "Grid 1"
@@ -6012,8 +6012,8 @@ msgid ""
 "An A4 page 3-fold Roll template with guides, print marks, and marked leaflet "
 "pages. Inner and outer page contents go into their respective Layers."
 msgstr ""
-"A4 商務三折摺頁冊範本，該範本含有參考線、列印標記和說明頁標記。內頁與外頁的內容"
-"會放置到各自的圖層。"
+"A4 商務三折摺頁冊範本，該範本含有參考線、列印標記和說明頁標記。內頁與外頁的內"
+"容會放置到各自的圖層。"
 
 #: ../build/share/templates/templates.h:1
 msgid "A4 leaflet 3-fold"
@@ -7099,11 +7099,11 @@ msgstr "切換文件中所有參考線的可見度"
 #: ../src/actions/actions-edit-document.cpp:93 ../src/object/sp-guide.cpp:288
 #: ../share/ui/menus.ui:338
 msgid "Delete All Guides"
-msgstr "刪除全部參考線"
+msgstr "刪除所有參考線"
 
 #: ../src/actions/actions-edit-document.cpp:93
 msgid "Delete all the guides in the document"
-msgstr "刪除文件中所有的參考線"
+msgstr "刪除文件中所有參考線"
 
 #: ../src/actions/actions-edit-document.cpp:94
 msgid "Fit the page to the drawing"
@@ -7457,7 +7457,7 @@ msgstr "沒有影像被裁切！"
 
 #: ../src/actions/actions-element-image.cpp:210
 msgid "Crop image to clip"
-msgstr "將影像才切到剪裁區域"
+msgstr "將影像裁切到剪裁區域"
 
 #: ../src/actions/actions-element-image.cpp:210
 msgid "Remove parts of the image outside the applied clipping area."
@@ -8482,7 +8482,7 @@ msgid ""
 "Set or update an attribute of selected objects; usage: object-set-attribute:"
 "attribute name, attribute value;"
 msgstr ""
-"設定或更新選取物件的特質；用法：object-set-attribute:<屬性名稱>, <屬性值>;"
+"設定或更新選取物件的特性；用法：object-set-attribute:<屬性名稱>, <屬性值>;"
 
 #: ../src/actions/actions-object.cpp:378
 msgid "Set Property"
@@ -9409,7 +9409,7 @@ msgstr "清除選取範圍"
 
 #: ../src/actions/actions-selection.cpp:275
 #: ../src/extension/prefdialog/parameter-path.cpp:216
-#: ../src/inkview-application.cpp:116
+#: ../src/inkview-application.cpp:116 ../src/ui/dialog/export-batch.cpp:813
 #: ../src/ui/toolbar/gradient-toolbar.cpp:383
 msgid "Select"
 msgstr "選取"
@@ -11577,7 +11577,7 @@ msgstr "要製作內縮 (外擴) 物件的複製物件數量"
 #: ../share/extensions/patternalongpath.inx:36
 #: ../share/extensions/voronoi_diagram.inx:33
 msgid "Generate from Path"
-msgstr "從路徑生成"
+msgstr "從路徑產生"
 
 #: ../src/extension/internal/cairo-ps-out.cpp:284
 #: ../share/extensions/ps_input.inx:17
@@ -12153,7 +12153,7 @@ msgstr "縮減"
 #: ../src/extension/internal/filter/color.h:1336
 #: ../src/extension/internal/filter/color.h:1452
 #: ../src/ui/dialog/document-properties.cpp:491
-#: ../src/ui/dialog/export-batch.cpp:353 ../src/ui/dialog/export-single.cpp:119
+#: ../src/ui/dialog/export-batch.cpp:354 ../src/ui/dialog/export-single.cpp:119
 #: ../src/ui/widget/page-properties.cpp:164
 msgid "Background color"
 msgstr "背景顏色"
@@ -14189,7 +14189,7 @@ msgstr "自訂"
 
 #: ../src/extension/internal/template-from-file.cpp:118
 #: ../src/ui/dialog/document-properties.cpp:968
-#: ../share/ui/dialog-export.glade:584 ../share/ui/dialog-export.glade:947
+#: ../share/ui/dialog-export.glade:584
 msgid "Filename"
 msgstr "檔名"
 
@@ -15615,7 +15615,7 @@ msgstr "隱藏全部物件除了由 export-id 選擇的 ID 物件"
 
 #: ../src/inkscape-application.cpp:762
 msgid "Remove Inkscape-specific SVG attributes/properties"
-msgstr "移除 Inkscape 專屬的 SVG 屬性值/性質"
+msgstr "移除 Inkscape 專屬的 SVG 特性/屬性"
 
 #: ../src/inkscape-application.cpp:763
 msgid "Postscript level (2 or 3); default is 3"
@@ -20631,7 +20631,7 @@ msgstr "水平翻轉標記"
 #: ../src/object/sp-offset.cpp:333
 #, c-format
 msgid "%s by %f pt"
-msgstr "以 %f pt %s"
+msgstr "%s %f pt"
 
 #: ../src/object/sp-offset.cpp:334
 msgid "outset"
@@ -23867,37 +23867,37 @@ msgstr "樣式"
 msgid "Edit object title"
 msgstr "編輯物件標題"
 
-#: ../src/ui/dialog/export-batch.cpp:353
+#: ../src/ui/dialog/export-batch.cpp:354
 msgid "Color used to fill the image background"
 msgstr "填滿背景的顏色"
 
-#: ../src/ui/dialog/export-batch.cpp:459
+#: ../src/ui/dialog/export-batch.cpp:461
 #, c-format
 msgid "%d Item"
 msgid_plural "%d Items"
 msgstr[0] "%d 個項目"
 
-#: ../src/ui/dialog/export-batch.cpp:470
+#: ../src/ui/dialog/export-batch.cpp:472
 #, c-format
 msgid "%d Layer"
 msgid_plural "%d Layers"
 msgstr[0] "%d 個圖層"
 
-#: ../src/ui/dialog/export-batch.cpp:479
+#: ../src/ui/dialog/export-batch.cpp:481
 #, c-format
 msgid "%d Page"
 msgid_plural "%d Pages"
 msgstr[0] "%d 頁"
 
-#: ../src/ui/dialog/export-batch.cpp:634
+#: ../src/ui/dialog/export-batch.cpp:636
 msgid "No items selected."
 msgstr "沒有選取項目。"
 
-#: ../src/ui/dialog/export-batch.cpp:646
+#: ../src/ui/dialog/export-batch.cpp:648
 msgid "Can not save to a directory that is actually a file."
 msgstr "無法儲存到實際上是檔案的資料夾。"
 
-#: ../src/ui/dialog/export-batch.cpp:650
+#: ../src/ui/dialog/export-batch.cpp:652
 #, c-format
 msgid ""
 "<span weight=\"bold\" size=\"larger\">Directory \"%s\" doesn't exist. Create "
@@ -23906,17 +23906,21 @@ msgstr ""
 "<span weight=\"bold\" size=\"larger\">資料夾「%s」不存在。是否建立資料夾？</"
 "span>"
 
-#: ../src/ui/dialog/export-batch.cpp:662
+#: ../src/ui/dialog/export-batch.cpp:664
 msgid "Set Batch Export Options"
 msgstr "設定批次匯出選項"
 
-#: ../src/ui/dialog/export-batch.cpp:779 ../src/ui/dialog/export-single.cpp:640
+#: ../src/ui/dialog/export-batch.cpp:781 ../src/ui/dialog/export-single.cpp:640
 msgid "Exporting %1"
 msgstr "正在匯出 %1"
 
-#: ../src/ui/dialog/export-batch.cpp:780
+#: ../src/ui/dialog/export-batch.cpp:782
 msgid "Format %1, Selection %2"
 msgstr "格式 %1，所選內容 %2"
+
+#: ../src/ui/dialog/export-batch.cpp:811
+msgid "Select where to save the exported files"
+msgstr "選取匯出檔案的儲存位置"
 
 #: ../src/ui/dialog/export-single.cpp:119
 msgid "Color used to fill background"
@@ -24785,7 +24789,7 @@ msgstr "再製濾鏡基元"
 
 #: ../src/ui/dialog/filter-effects-dialog.cpp:3209
 msgid "Set filter primitive attribute"
-msgstr "設定濾鏡基元屬性"
+msgstr "設定濾鏡基元特性"
 
 #: ../src/ui/dialog/filter-effects-dialog.cpp:3265
 msgid "Add effect from the search bar"
@@ -29089,8 +29093,8 @@ msgid ""
 "Each clone moves according to the value of its transform= attribute; for "
 "example, a rotated clone will move in a different direction than its original"
 msgstr ""
-"每個仿製物件根據它的變形= 屬性來移動；例如，旋轉過的仿製物件將會以與其原物件"
-"不同的方向移動"
+"每個仿製物件根據它的變形（transform=）特性來移動；例如，旋轉過的仿製物件將會"
+"以與其原物件不同的方向移動"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:2747
 msgid "Deleting original: clones"
@@ -29715,7 +29719,7 @@ msgstr "_SVG 編輯程式："
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:3042
 #: ../share/ui/dialog-document-resources.glade:181
-#: ../share/ui/dialog-export.glade:606 ../share/ui/dialog-export.glade:956
+#: ../share/ui/dialog-export.glade:606 ../share/ui/dialog-export.glade:954
 #: ../share/extensions/guillotine.inx:15 ../share/extensions/layer2png.inx:29
 #: ../share/extensions/plotter.inx:96
 #: ../share/extensions/print_win32_vector.inx:9
@@ -30448,7 +30452,7 @@ msgstr "已移除即時路徑特效"
 #: ../src/ui/dialog/object-attributes.cpp:333
 #: ../src/ui/dialog/object-attributes.cpp:344
 msgid "Change object attribute"
-msgstr "編輯物件特性"
+msgstr "變更物件特性"
 
 #: ../src/ui/dialog/object-attributes.cpp:498
 msgid "Add fillet/chamfer effect"
@@ -33033,7 +33037,7 @@ msgstr "字型樣式"
 
 #: ../src/ui/toolbar/text-toolbar.cpp:356
 #: ../src/ui/toolbar/text-toolbar.cpp:1701
-#: ../src/ui/widget/font-selector.cpp:51 ../src/ui/widget/font-selector.cpp:252
+#: ../src/ui/widget/font-selector.cpp:52 ../src/ui/widget/font-selector.cpp:252
 msgid "Font size"
 msgstr "字型大小"
 
@@ -34748,11 +34752,11 @@ msgstr "選擇所有屬於該字族的文字"
 msgid "Font not found on system: "
 msgstr "系統上找不到字型："
 
-#: ../src/ui/widget/font-selector.cpp:49
+#: ../src/ui/widget/font-selector.cpp:50
 msgid "Font family"
 msgstr "字族"
 
-#: ../src/ui/widget/font-selector.cpp:50
+#: ../src/ui/widget/font-selector.cpp:51
 msgctxt "Font selector"
 msgid "Style"
 msgstr "樣式"
@@ -36421,7 +36425,7 @@ msgid ""
 msgid_plural ""
 "Collection of <b>%d</b> vanishing points shared by <b>%d</b> boxes; drag "
 "with <b>Shift</b> to separate"
-msgstr[0] "在方框內共用的 <b>%d</b> 個消失點；按著 <b>Shift</b> 拖曳可分離"
+msgstr[0] "<b>%d</b> 個消逝點，共用於 <b>%d</b> 個方框內；按著 <b>Shift</b> 拖曳可分離"
 
 #: ../src/widgets/paintdef.cpp:55
 msgctxt "Paint"
@@ -36657,7 +36661,8 @@ msgstr "僅匯出選取的物件"
 msgid "Background Color"
 msgstr "背景顏色"
 
-#: ../share/ui/dialog-export.glade:583 ../share/ui/dialog-export.glade:946
+#: ../share/ui/dialog-export.glade:583 ../share/ui/dialog-export.glade:970
+#: ../share/ui/dialog-export.glade:971
 msgid "Browse export directory"
 msgstr "瀏覽匯出資料夾"
 
@@ -36665,7 +36670,7 @@ msgstr "瀏覽匯出資料夾"
 msgid "Select export format"
 msgstr "選擇匯出格式"
 
-#: ../share/ui/dialog-export.glade:673 ../share/ui/dialog-export.glade:1043
+#: ../share/ui/dialog-export.glade:673 ../share/ui/dialog-export.glade:1070
 msgid "Cancel Export"
 msgstr "取消匯出"
 
@@ -36705,11 +36710,19 @@ msgstr ""
 "在批次匯出各個影像時，如果產生的檔名與現存檔案相同，會將其覆蓋，而不另行確"
 "認。"
 
-#: ../share/ui/dialog-export.glade:1074
+#: ../share/ui/dialog-export.glade:985
+msgid "Prefix:"
+msgstr "前綴："
+
+#: ../share/ui/dialog-export.glade:999
+msgid "Directory:"
+msgstr "資料夾："
+
+#: ../share/ui/dialog-export.glade:1101
 msgid "Export to multiple files and file formats"
 msgstr "匯出為多個檔案及檔案格式"
 
-#: ../share/ui/dialog-export.glade:1075
+#: ../share/ui/dialog-export.glade:1102
 msgid "Batch Export"
 msgstr "批次匯出"
 
@@ -36966,9 +36979,8 @@ msgid "Open the Font Collections Manager dialogue"
 msgstr "開啟字型收藏集管理工具對話窗"
 
 #: ../share/ui/dialog-text-edit.glade:50
-#, fuzzy
 msgid "Clear all filters"
-msgstr "選擇濾鏡"
+msgstr "清除所有過濾器"
 
 #: ../share/ui/dialog-text-edit.glade:54
 msgid "Reset filters and show all available fonts"
@@ -41807,7 +41819,7 @@ msgstr "目標顏色"
 
 #: ../share/extensions/color_rgbbarrel.inx:3
 msgid "RGB Barrel"
-msgstr "RGB 環"
+msgstr "RGB 循環"
 
 #: ../share/extensions/construct_from_triangle.inx:3
 msgid "Construct from Triangle"
@@ -42478,8 +42490,8 @@ msgid ""
 "false, they will be inserted in newly created group. Only applies to "
 "mode=lines."
 msgstr ""
-"如果勾選此選項，連接線會放置在單一路徑中做為子路徑。如果取消勾選，它們會放置在"
-"新建的群組中。僅適用於「線段」模式。"
+"如果勾選此選項，連接線會放置在單一路徑中做為子路徑。如果取消勾選，它們會放置"
+"在新建的群組中。僅適用於「線段」模式。"
 
 #: ../share/extensions/extrude.inx:17
 msgid ""
@@ -42789,8 +42801,8 @@ msgid ""
 "Convert the first rectangular grid to a Gimp grid (note that the default "
 "Inkscape grid is very narrow when shown in Gimp)."
 msgstr ""
-"將第一個矩形網格轉換為 GIMP 網格（要留意預設的 Inkscape 網格在 GIMP 當中"
-"會看起來非常細。"
+"將第一個矩形網格轉換為 GIMP 網格（要留意預設的 Inkscape 網格在 GIMP 當中會看"
+"起來非常細。"
 
 #: ../share/extensions/gimp_xcf.inx:11
 msgid "Save Background"
@@ -43409,8 +43421,8 @@ msgid ""
 "dependent pen size for anisotropic scaling, and pattern lengths may be "
 "incorrect"
 msgstr ""
-"停用能協助除錯 IP/IR/SC 指令，但會造成非線性縮放時筆的大小取決於方向，而且圖樣"
-"長度可能會出錯"
+"停用能協助除錯 IP/IR/SC 指令，但會造成非線性縮放時筆的大小取決於方向，而且圖"
+"樣長度可能會出錯"
 
 #: ../share/extensions/hpgl_input.inx:12
 msgid "Break apart subpaths"
@@ -43723,8 +43735,8 @@ msgid ""
 "image id for the file names. The file extension will be appended "
 "automatically."
 msgstr ""
-"圖片檔案名稱前綴，後方會接著序數。如果留白，會使用圖片 ID 做為檔名。檔案副檔名"
-"會被自動加入。"
+"圖片檔案名稱前綴，後方會接著序數。如果留白，會使用圖片 ID 做為檔名。檔案副檔"
+"名會被自動加入。"
 
 #: ../share/extensions/image_extract.inx:9
 #: ../share/extensions/image_extract_selected.inx:10
@@ -43748,8 +43760,8 @@ msgid ""
 "a folder is given instead of a filename, the image id is used as filename. "
 "The file extension is appended or corrected automatically."
 msgstr ""
-"相對路徑會根據目前的檔案位置進行判斷。如果輸入的是資料夾名稱而非檔案名稱，"
-"會使用圖片 ID 做為檔名。檔案副檔名會自動被加入或修正。"
+"相對路徑會根據目前的檔案位置進行判斷。如果輸入的是資料夾名稱而非檔案名稱，會"
+"使用圖片 ID 做為檔名。檔案副檔名會自動被加入或修正。"
 
 #: ../share/extensions/ink2canvas.inx:3
 msgid "Convert to html5 canvas"
@@ -43813,6 +43825,8 @@ msgid ""
 "other path's node positions. The second option removes extra nodes of the "
 "longer path."
 msgstr ""
+"第一個選項會先讓兩條路徑的節點數量相等，再進行內插。第二個選項會移除較多節點"
+"的路徑上多出來的節點。"
 
 #: ../share/extensions/interp.inx:8
 msgid "Split paths into segments of equal lengths"
@@ -43820,7 +43834,7 @@ msgstr "將路徑分解成等長的線段"
 
 #: ../share/extensions/interp.inx:9
 msgid "Discard extra nodes of longer path"
-msgstr "丟棄較長的路徑上多餘的節點"
+msgstr "移除較長的路徑上多餘的節點"
 
 #: ../share/extensions/interp.inx:11
 msgid "Duplicate endpaths"
@@ -44671,7 +44685,6 @@ msgid "Randomize angle (%):"
 msgstr "隨機角度 (%)："
 
 #: ../share/extensions/lindenmayer.inx:17
-#, fuzzy
 msgid ""
 "\n"
 "The path is generated by applying the \n"
@@ -44697,9 +44710,9 @@ msgid ""
 "separating them with a semicolon (;).\n"
 msgstr ""
 "\n"
-"按規則的置換套用到規律、順序來生\n"
-"成此路徑。用規律和規則辨識下列的\n"
-"命令：\n"
+"這個路徑是將「規則」的取代值，套用到\n"
+"「原則」上「序數」次。下列指令可以被\n"
+"「原則」與「規則」識別：\n"
 "\n"
 "A,B,C,D,E,F：向前繪製 \n"
 "\n"
@@ -44711,9 +44724,12 @@ msgstr ""
 "\n"
 "|：轉 180 度 \n"
 "\n"
-"[：記憶點 \n"
+"[：記憶該點 \n"
 "\n"
-"] ： 回到記憶的點\n"
+"]：回到記憶的點\n"
+"\n"
+"要輸入多組指令，可以使用半形分隔號「;」\n"
+"分隔。\n"
 
 #: ../share/extensions/long_shadow.inx:3
 msgid "Long Shadow"
@@ -45150,16 +45166,15 @@ msgstr "範本："
 
 #: ../share/extensions/other/templates/template_shape_prefab.inx:12
 msgid "Trellis"
-msgstr ""
+msgstr "棚架"
 
 #: ../share/extensions/other/templates/template_shape_prefab.inx:14
-#, fuzzy
 msgid "Cross"
-msgstr "交疊模糊"
+msgstr "交錯"
 
 #: ../share/extensions/other/templates/template_shape_prefab.inx:15
 msgid "Very Cross"
-msgstr ""
+msgstr "更加交錯"
 
 #: ../share/extensions/other/templates/template_shape_prefab.inx:16
 msgid "Target"
@@ -45167,59 +45182,51 @@ msgstr "目標"
 
 #: ../share/extensions/other/templates/template_shape_prefab.inx:17
 msgid "Hive"
-msgstr ""
+msgstr "蜂巢"
 
 #: ../share/extensions/other/templates/template_shape_prefab.inx:18
-#, fuzzy
 msgid "Double Vision"
-msgstr "兩倍大小(_D)"
+msgstr "複視"
 
 #: ../share/extensions/other/templates/template_shape_prefab.inx:19
-#, fuzzy
 msgid "Celtic Flower"
-msgstr "單色"
+msgstr "凱爾特花飾"
 
 #: ../share/extensions/other/templates/template_shape_prefab.inx:20
-#, fuzzy
 msgid "Celtic Knot"
-msgstr "最後環結"
+msgstr "凱爾特環結"
 
 #: ../share/extensions/other/templates/template_shape_prefab.inx:21
-#, fuzzy
 msgid "Kitchen Tile"
-msgstr "切換開關樣式"
+msgstr "廚房磁磚"
 
 #: ../share/extensions/other/templates/template_shape_prefab.inx:22
 msgid "Rose"
-msgstr ""
+msgstr "玫瑰"
 
 #: ../share/extensions/other/templates/template_shape_prefab.inx:23
 msgid "Lily"
-msgstr ""
+msgstr "百合"
 
 #: ../share/extensions/other/templates/template_shape_prefab.inx:24
 msgid "Crown"
-msgstr ""
+msgstr "皇冠"
 
 #: ../share/extensions/other/templates/template_shape_prefab.inx:25
-#, fuzzy
 msgid "Diamond Target"
-msgstr "膨脹"
+msgstr "菱形目標物"
 
 #: ../share/extensions/other/templates/template_shape_prefab.inx:26
-#, fuzzy
 msgid "TV Test Pattern"
-msgstr "物件轉成圖樣(_N)"
+msgstr "電視測試圖樣"
 
 #: ../share/extensions/other/templates/template_shape_prefab.inx:27
-#, fuzzy
 msgid "Explosion"
-msgstr "排除"
+msgstr "爆炸"
 
 #: ../share/extensions/other/templates/template_shape_prefab.inx:28
-#, fuzzy
 msgid "Droplet"
-msgstr "滴管"
+msgstr "水滴"
 
 #: ../share/extensions/output_scour.inx:3
 msgid "Optimized SVG Output"
@@ -45660,7 +45667,7 @@ msgstr "數字節點"
 
 #: ../share/extensions/path_number_nodes.inx:8
 msgid "Size of the node number labels (20px, 12pt...)"
-msgstr ""
+msgstr "節點數字標籤大小（20px、12pt...）"
 
 #: ../share/extensions/path_number_nodes.inx:10
 msgid "Dot size:"
@@ -45668,7 +45675,7 @@ msgstr "點大小："
 
 #: ../share/extensions/path_number_nodes.inx:10
 msgid "Diameter of the dots placed at path nodes (10px, 2mm...)"
-msgstr ""
+msgstr "擺在路徑節點上的點直徑（10px、2mm...）"
 
 #: ../share/extensions/path_number_nodes.inx:12
 msgid "Starting dot number:"
@@ -45683,16 +45690,14 @@ msgid "Step:"
 msgstr "公差值："
 
 #: ../share/extensions/path_number_nodes.inx:14
-#, fuzzy
 msgid "Numbering increment between two nodes"
-msgstr "刪除兩個非末端節點之間的線段"
+msgstr "兩個節點之間的數值增減"
 
 #: ../share/extensions/path_number_nodes.inx:17
-#, fuzzy
 msgid ""
 "This extension replaces the paths in the selection with numbered dots in "
 "place of their nodes."
-msgstr "這個擴充功能需要第二個選取的路徑為四個節點長。"
+msgstr "這個擴充功能會將選取範圍中，路徑上的節點取代為標示數字的圓點。"
 
 #: ../share/extensions/path_to_absolute.inx:3
 msgid "To Absolute"
@@ -45716,6 +45721,8 @@ msgid ""
 "will rotate along with the path direction. With \"Ribbon\", the pattern will "
 "stay upright, so the result will look like a printed ribbon."
 msgstr ""
+"這裡提供兩種不同的變形模式。「蛇形」指的是圖樣會沿著路徑方向旋轉。「緞帶」模式"
+"中，圖樣會保持平正，因此套用完會看起來像是印製的緞帶。"
 
 #: ../share/extensions/patternalongpath.inx:17
 msgid "Ribbon"
@@ -45733,34 +45740,33 @@ msgstr "圖樣為垂直"
 msgid ""
 "The option \"Pattern is vertical\" rotates the pattern by 90 degrees before "
 "applying it to the path."
-msgstr ""
+msgstr "「圖樣為垂直」選項會先將圖樣旋轉 90 度，再套用到路徑上。"
 
 #: ../share/extensions/patternalongpath.inx:23
 msgid "Duplicate the pattern before deformation"
 msgstr "變形前再製圖樣"
 
 #: ../share/extensions/patternalongpath.inx:26
-#, fuzzy
 msgid ""
 "This extension bends a pattern along the curvature of selected path objects."
-msgstr "此擴充功能至少要選擇一個路徑。"
+msgstr "此擴充功能會沿著選取路徑的弧形放置圖樣。"
 
 #: ../share/extensions/patternalongpath.inx:27
-#, fuzzy
 msgid ""
 "There must only be a single pattern object. The pattern object must be the "
 "topmost object in the selection. For the pattern, groups of paths, shapes or "
 "clones are allowed. Text must be converted to path before using it as a "
 "pattern."
 msgstr ""
-"這個特效可沿著任意「骨架」路徑散佈圖案。圖案必須在選取範圍的最上層。可以是路"
-"徑、形狀、仿製物件的群組。"
+"選取範圍中只能有一個圖樣物件。該圖樣物件必須放置於選取範圍的最上層。圖樣可以"
+"是路徑組成的群組、形狀或是仿製物件。文字在作為圖樣使用前，必須先轉為路徑。"
 
 #: ../share/extensions/patternalongpath.inx:28
 msgid ""
 "The pattern can be bent along multiple paths at once, the only condition is "
 "that these must be path objects, no other object types are allowed."
 msgstr ""
+"圖樣可以沿著多條路徑擺放，但條件是它們都必須是路徑，而不是其他的物件種類。"
 
 #: ../share/extensions/patternalongpath.inx:30
 msgid ""
@@ -45769,6 +45775,9 @@ msgid ""
 "add any new nodes to your pattern objects. To avoid this, either add more "
 "nodes to your pattern objects, or convert all segments to curves beforehand."
 msgstr ""
+"如果您使用的路徑有稜角，圖樣套用的結果可能會與預期不同。這是因為擴充功能無法"
+"加入節點到路徑上。要避免這個狀況，可以在路徑上加入更多節點，或是在套用之前將"
+"所有線段轉換為曲線。"
 
 #: ../share/extensions/pdflatex.inx:3
 msgid "Formula (pdflatex)"
@@ -45792,7 +45801,7 @@ msgstr "進階設定"
 
 #: ../share/extensions/pdflatex.inx:17
 msgid "Use standalone document class"
-msgstr ""
+msgstr "使用獨立文件類別（document class）"
 
 #: ../share/extensions/pdflatex.inx:17
 msgid ""
@@ -45802,11 +45811,13 @@ msgid ""
 "by using 'standalone'. However, the required packages might not be available "
 "on all systems."
 msgstr ""
+"如果沒有使用獨立文件類別，非 10pt 的字型大小會以縮放 PDF 輸出的方法顯示。（內部"
+"使用的是「minimal」（精簡）文件類別。）要讓所有字型大小的間距更正確，可以使用「"
+"standalone」（獨立）。但要注意，需用的套件可能不存在於所有系統中。"
 
 #: ../share/extensions/pdflatex.inx:19
-#, fuzzy
 msgid "Custom preamble code"
-msgstr "自訂灰階組成"
+msgstr "自訂前置程式碼"
 
 #: ../share/extensions/perfectboundcover.inx:3
 msgid "Perfect-Bound Cover Template"
@@ -45814,7 +45825,7 @@ msgstr "理想裝訂封面範本"
 
 #: ../share/extensions/perfectboundcover.inx:5
 msgid "Book Properties"
-msgstr "書籍屬性(_P)"
+msgstr "書籍屬性"
 
 #: ../share/extensions/perfectboundcover.inx:6
 msgid "Book Width (inches):"
@@ -45952,12 +45963,11 @@ msgid "Parallel port:"
 msgstr "平行連接埠："
 
 #: ../share/extensions/plotter.inx:12
-#, fuzzy
 msgid ""
 "The port of your parallel connection, on Windows not currently supported, on "
 "Linux something like: '/dev/usb/lp2' (default: /dev/usb/lp2)"
 msgstr ""
-"你的平行連線連接埠，Windows 系統目前尚未支援，而 Linux 系統上則類似如下：「/"
+"您的平行連線連接埠，Windows 系統目前尚未支援，而 Linux 系統上則類似如下：「/"
 "dev/usb/lp2」(預設：/dev/usb/lp2)"
 
 #: ../share/extensions/plotter.inx:13
@@ -45965,12 +45975,11 @@ msgid "Serial port:"
 msgstr "序列連接埠："
 
 #: ../share/extensions/plotter.inx:13
-#, fuzzy
 msgid ""
 "The port of your serial connection, on Windows something like 'COM1', on "
 "Linux something like: '/dev/ttyUSB0' (default: COM1)"
 msgstr ""
-"你的序列連接埠，Windows 系統上格式為「COM1」之類的，Linux 系統上則像「/dev/"
+"您的序列連接埠，Windows 系統上格式為「COM1」之類的，Linux 系統上則像「/dev/"
 "ttyUSB0」(預設:「COM1」)"
 
 #: ../share/extensions/plotter.inx:14
@@ -45978,7 +45987,6 @@ msgid "Serial baud rate:"
 msgstr "序列連線鮑率："
 
 #: ../share/extensions/plotter.inx:14
-#, fuzzy
 msgid "The Baud rate of your serial connection (default: 9600)"
 msgstr "你的序列連線鮑率 (預設:「9600」)"
 
@@ -45987,7 +45995,6 @@ msgid "Serial byte size:"
 msgstr "序列位元組大小："
 
 #: ../share/extensions/plotter.inx:31
-#, fuzzy
 msgid ""
 "The Byte size of your serial connection, 99% of all plotters use the default "
 "setting (default: 8 Bits)"
@@ -45998,7 +46005,6 @@ msgid "Serial stop bits:"
 msgstr "序列停止位元："
 
 #: ../share/extensions/plotter.inx:37
-#, fuzzy
 msgid ""
 "The Stop bits of your serial connection, 99% of all plotters use the default "
 "setting (default: 1 Bit)"
@@ -46009,7 +46015,6 @@ msgid "Serial parity:"
 msgstr "序列奇偶性："
 
 #: ../share/extensions/plotter.inx:42
-#, fuzzy
 msgid ""
 "The Parity of your serial connection, 99% of all plotters use the default "
 "setting (default: None)"
@@ -46020,7 +46025,6 @@ msgid "Serial flow control:"
 msgstr "序列串流控制："
 
 #: ../share/extensions/plotter.inx:49
-#, fuzzy
 msgid ""
 "The software / hardware flow control of your serial connection (default: "
 "Software)"
@@ -46043,7 +46047,6 @@ msgid "Command language:"
 msgstr "指令語言："
 
 #: ../share/extensions/plotter.inx:55
-#, fuzzy
 msgid "The command language to use (default: HPGL)"
 msgstr "要使用的指令語言 (預設：HPGL)"
 
@@ -46065,7 +46068,7 @@ msgid ""
 "freeze. Always save your work before plotting!"
 msgstr ""
 "使用錯誤的設定值會在某種情形下導致 Inkscape 程式停止回應。請務必在繪圖前先儲"
-"存你的檔案！"
+"存您的檔案！"
 
 #: ../share/extensions/plotter.inx:62
 msgid ""
@@ -46080,28 +46083,25 @@ msgid "Parallel (LPT) connections are not supported."
 msgstr "不支援並聯連線 (LPT)。"
 
 #: ../share/extensions/plotter.inx:66
-#, fuzzy
 msgid ""
 "The number of steps the plotter moves when it moves by 1 inch on the X axis "
 "(default: 1016.0)"
-msgstr "若在 X 軸方向移動 1 英寸則繪圖機移動的步階數 (預設:「1016.0」)"
+msgstr "繪圖機在 X 軸方向移動 1 英寸時移動的步階數 (預設:「1016.0」)"
 
 #: ../share/extensions/plotter.inx:67
-#, fuzzy
 msgid ""
 "The number of steps the plotter moves when it moves by 1 inch on the Y axis "
 "(default: 1016.0)"
-msgstr "若在 Y 軸方向移動 1 英寸則繪圖機移動的步階數 (預設:「1016.0」)"
+msgstr "繪圖機在 Y 軸方向移動 1 英寸時移動的步階數 (預設:「1016.0」)"
 
 #: ../share/extensions/plotter.inx:68
-#, fuzzy
 msgid ""
 "The number of the pen (tool) to use (standard: '1'). Can also be defined in "
 "the layer name (e.g. 'Pen 1')"
-msgstr "要使用的筆號 (刀具) (標準:「1」)"
+msgstr "要使用的筆號（刀具）（標準：「1」）。在圖層名稱中也可以定義（如「Pen "
+"1」）。"
 
 #: ../share/extensions/plotter.inx:69
-#, fuzzy
 msgid ""
 "The force pushing down the pen in grams. Set to 0 to omit command; most "
 "plotters ignore this command (default: 0)"
@@ -46110,47 +46110,41 @@ msgstr ""
 "(預設：0)"
 
 #: ../share/extensions/plotter.inx:70
-#, fuzzy
 msgid ""
 "The speed the pen will move with in centimeters or millimeters per second "
 "(depending on your plotter model). Set to 0 to omit command. Most plotters "
 "ignore this command (default: 0). Can be defined in the layer name together "
 "with the pen number (e.g. 'Pen 3 Speed 10')."
 msgstr ""
-"筆移動的速度，單位為每秒多少公分或公釐 (取決於你的繪圖機)，設定為 0 表示省略"
-"指令。大多數的繪圖機會忽略該指令。(預設：0)"
+"筆移動的速度，單位為每秒多少公分或公釐（取決於您的繪圖機），設定為 0 表示省略"
+"指令。大多數的繪圖機會忽略該指令（預設：0）。在圖層名稱中可以與筆號一同定義"
+"（如「Pen 3 Speed 10」）。"
 
 #: ../share/extensions/plotter.inx:71
 msgid "Rotation (°, clockwise):"
 msgstr "旋轉 (°, 順時針)："
 
 #: ../share/extensions/plotter.inx:71
-#, fuzzy
 msgid "Rotation of the drawing (default: 0°)"
 msgstr "圖畫的旋轉角度 (預設：0°)"
 
 #: ../share/extensions/plotter.inx:77
-#, fuzzy
 msgid "Check this to mirror the X axis (default: Unchecked)"
 msgstr "勾選此項可依照 X 軸鏡射 (預設：不勾選)"
 
 #: ../share/extensions/plotter.inx:78
-#, fuzzy
 msgid "Check this to mirror the Y axis (default: Unchecked)"
 msgstr "勾選此項可依照 Y 軸鏡射 (預設：不勾選)"
 
 #: ../share/extensions/plotter.inx:79
-#, fuzzy
 msgid "Center origin"
-msgstr "複製原本路徑"
+msgstr "將原點置中"
 
 #: ../share/extensions/plotter.inx:79
-#, fuzzy
 msgid "Check this if your plotter uses a centered origin (default: Unchecked)"
-msgstr "若想要讓繪圖機將零點置中請勾選此項 (預設：不勾選)"
+msgstr "若想要讓繪圖機將原點置中請勾選此項 (預設：不勾選)"
 
 #: ../share/extensions/plotter.inx:81
-#, fuzzy
 msgid ""
 "If you want to use multiple pens and speeds with your pen plotter, create "
 "one layer for each pen number and speed value, name the layers \"Pen 1 Speed "
@@ -46158,56 +46152,51 @@ msgid ""
 "layers. This overrides the pen number and pen speed options in the menu "
 "above."
 msgstr ""
-"如果你想在筆畫機上使用多種畫筆，針對每一種畫筆建立圖層，圖層命名為「筆 1」、"
-"「筆 2」等等，並將你的圖畫放在同一圖層。此畫筆編號會取代上面的選項。"
+"如果您想在筆畫機上使用多種畫筆與速度，請為每一種畫筆與速度建立圖層，並將其"
+"命名為「Pen 1 Speed 10」、「Pen 2 Speed 20」等等，並將您的圖畫放在對應的圖層"
+"中。這些設定將會覆蓋上方的筆號與速度選項。"
 
 #: ../share/extensions/plotter.inx:84
-#, fuzzy
 msgid ""
 "The distance in mm that will be cut over the starting point of the path to "
 "prevent open paths. Set to 0.0 to omit command (default: 1.00)."
 msgstr ""
-"將會切割超過路徑起點多少距離以避免開放路徑，單位為公釐，設定為 0 表示省略指"
-"令 (預設:「1.00」)"
+"將會切割超過路徑起點多少距離以避免開放路徑，單位為公釐。設定為 0.0 表示省略指"
+"令 (預設:「1.00」)。"
 
 #: ../share/extensions/plotter.inx:85
-#, fuzzy
 msgid "Tool (knife) offset correction (mm):"
-msgstr "刀具偏移校正 (公釐)："
+msgstr "工具（刀具）偏移校正（公釐）："
 
 #: ../share/extensions/plotter.inx:85
-#, fuzzy
 msgid ""
 "The offset from the tool tip to the tool axis in mm. Set to 0.0 to omit "
 "command (default: 0.25)."
 msgstr ""
-"刀具尖端到刀具軸的偏移，單位為公釐，設定為 0 表示省略指令 (預設:「0.25」)"
+"刀具尖端到刀具軸的偏移，單位為公釐，設定為 0.0 表示省略指令 (預設:「0.25」)。"
 
 #: ../share/extensions/plotter.inx:86
-#, fuzzy
 msgid ""
 "Check this to cut a small line to correctly align the tool orientation "
 "before the real drawing starts (default: Checked)."
-msgstr "勾選此項可於真正開始繪製前先切割細線以正確地對齊刀具方向。(預設：勾選)"
+msgstr "勾選此項可於真正開始繪製前先切割細線以正確地對齊刀具方向。(預設：勾選)。"
 
 #: ../share/extensions/plotter.inx:87
-#, fuzzy
 msgid ""
 "Curves are divided into lines. This number controls how fine the curves will "
 "be reproduced, the smaller the finer (default: 1.2)."
 msgstr ""
-"曲線要細分的線段數量，此數量會控制曲線重新產生的精細程度，數值愈小則愈精細 "
-"(預設:「1.2」)"
+"曲線要細分的線段數量。此數量會控制曲線重製的精細程度，數值愈小則愈精細 "
+"(預設:「1.2」)。"
 
 #: ../share/extensions/plotter.inx:88
-#, fuzzy
 msgid ""
 "Check this to auto align the drawing to the origin (plus the tool offset if "
 "used). If unchecked, you have to make sure that all parts of your drawing "
 "are within the document border! (default: Checked)"
 msgstr ""
-"勾選此項會讓圖畫自動對齊零點 (若有設定偏移則會加上偏移值)。若不勾選你必須自己"
-"確認圖繪內容全部都在文件邊界內！(預設：勾選)"
+"勾選此項會讓圖畫自動對齊原點（若有設定偏移則會加上偏移值）。若不勾選，您必須"
+"自己確認繪圖內容全部都在文件邊界內！(預設：勾選)"
 
 #: ../share/extensions/polyhedron_3d.inx:3
 msgid "3D Polyhedron"
@@ -46426,7 +46415,7 @@ msgstr "最小"
 #: ../share/extensions/polyhedron_3d.inx:92
 #: ../share/extensions/wireframe_sphere.inx:15
 msgid "3D"
-msgstr ""
+msgstr "立體"
 
 #: ../share/extensions/previous_glyph_layer.inx:3
 msgid "View Previous Glyph"
@@ -46619,7 +46608,7 @@ msgstr "群組 4"
 
 #: ../share/extensions/raster_output_tiff.inx:13
 msgid "JPEG"
-msgstr ""
+msgstr "JPEG"
 
 #: ../share/extensions/raster_output_tiff.inx:14
 msgid "Deflate"
@@ -47040,7 +47029,6 @@ msgid "Shuffle Z-Order"
 msgstr "隨機排列順序"
 
 #: ../share/extensions/restack.inx:42
-#, fuzzy
 msgid ""
 "\n"
 "This extension changes the z-order of objects based on their position\n"
@@ -47053,9 +47041,12 @@ msgid ""
 "to the same layer).\n"
 "            "
 msgstr ""
-"此擴充功能會依照物件畫布上的位置或目前的排列順序變更物件的排列順序。選取：此"
-"擴充功能會重新排列單一選取群組內的物件，或目前圖畫層級上的多個物件選取項目 "
-"(圖層或群組)。"
+"\n"
+"這個擴充功能會依照物件在畫布上的位置或目前的排列順序變更物件的排列順序。\n"
+"此擴充功能會重新排列所有選取範圍內的物件。群組將被視為單一物件。\n"
+"如果有群組內的物件與群組外的物件一同被選取，該群組中被選取的物件會離開群組，\n"
+"並移動到其他物件的的同一層級。（不同圖層的物件會被統合到同一個圖層。）\n"
+"            "
 
 #: ../share/extensions/restack.inx:57 ../share/extensions/ungroup_deep.inx:12
 msgid "Arrange"
@@ -47664,7 +47655,7 @@ msgstr "字母"
 #: ../share/extensions/text_split.inx:12
 msgid ""
 "Threshold for separating manual kerns into words (multiples of font size)"
-msgstr ""
+msgstr "將個別字距微調分離成單字的閾值（字型大小的乘數）"
 
 #: ../share/extensions/text_split.inx:16
 msgid "This effect splits texts into different lines, words or letters."
@@ -47675,6 +47666,7 @@ msgid ""
 "Doing so leads the text to lose a lot of its semantics. Only use this effect "
 "if you know what you're doing!"
 msgstr ""
+"若這麼做，文字會失去許多原有的特質。請在使用這個效果前確認您知道自己在做什麼！"
 
 #: ../share/extensions/text_split.inx:19
 msgid ""
@@ -47682,6 +47674,8 @@ msgid ""
 "flowed text elements and manual kerns. It does not work for TextPath "
 "elements."
 msgstr ""
+"這個擴充功能可以作用在在標準的文字元素上，包含 SVG2 與 SVG1.2 流動文字元素"
+"及手動字距調整。它不支援 TextPath 元素。"
 
 #: ../share/extensions/text_split.inx:21
 msgid ""
@@ -47690,6 +47684,9 @@ msgid ""
 "processed, but will be misaligned. Automatic line breaks in legacy flowtext "
 "(flowroot elements) are ignored."
 msgstr ""
+"注意，這個擴充功能只會使用每個字詞的粗略位置。使用不同書寫方向的文字（如 tb-rl"
+"）還是會被處理，但位置會跑掉。舊版 flowtext（flowroot 元素）中的自動換行符號"
+"將被忽略。"
 
 #: ../share/extensions/text_titlecase.inx:3
 msgid "Title Case"
@@ -47895,11 +47892,11 @@ msgstr "啟用"
 
 #: ../share/extensions/web_interactive_mockup.inx:12
 msgid "press left mouse button down"
-msgstr ""
+msgstr "將滑鼠左鍵按下"
 
 #: ../share/extensions/web_interactive_mockup.inx:13
 msgid "let left mouse button go"
-msgstr ""
+msgstr "放開滑鼠左鍵"
 
 #: ../share/extensions/web_interactive_mockup.inx:14
 msgid "move cursor into object"
@@ -47918,13 +47915,12 @@ msgid "element is loaded by browser"
 msgstr "瀏覽器已載入元素"
 
 #: ../share/extensions/web_interactive_mockup.inx:21
-#, fuzzy
 msgid ""
 "This extension allows you to create interactive elements in your drawing. "
 "These will react to user actions when the file is viewed in a web browser."
 msgstr ""
-"這個特效讓您可以在您的畫作中建立互動元素。在網頁瀏覽器檢視檔案時，這些元素會"
-"根據使用者的動作變化。"
+"這個擴充功能讓您可以在您的畫作中建立互動元素。在網頁瀏覽器檢視檔案時，這些元"
+"素會根據使用者的動作變化。"
 
 #: ../share/extensions/web_interactive_mockup.inx:22
 msgid ""
@@ -47932,6 +47928,8 @@ msgid ""
 "like a button), the view will shift to another element. This is achieved by "
 "changing the viewbox of the SVG with JavaScript."
 msgstr ""
+"在觸發互動時（如點擊外觀像是按鈕的物件時），畫面會切換到另一個元素。這個功能"
+"使用 JavaScript 改變 SVG 的檢視框（viewbox）來達成。"
 
 #: ../share/extensions/web_interactive_mockup.inx:23
 msgid ""
@@ -47953,11 +47951,11 @@ msgstr "網頁"
 
 #: ../share/extensions/web_set_att.inx:3
 msgid "Set Attributes"
-msgstr "設定屬性"
+msgstr "設定特性"
 
 #: ../share/extensions/web_set_att.inx:7
 msgid "Attribute to set:"
-msgstr "設定的屬性："
+msgstr "要設定的特性："
 
 #: ../share/extensions/web_set_att.inx:8
 msgid "When should the set be done:"
@@ -48015,7 +48013,7 @@ msgstr "載入元素"
 
 #: ../share/extensions/web_set_att.inx:20
 msgid "The list of values must have the same size as the attributes list."
-msgstr "數值表必須有和屬性表相同的尺寸。"
+msgstr "數值表必須有和特性表相同的尺寸。"
 
 #: ../share/extensions/web_set_att.inx:21
 msgid "Value to set:"
@@ -48047,11 +48045,11 @@ msgstr "設定的來源和目的地："
 
 #: ../share/extensions/web_set_att.inx:29
 msgid "All selected ones set an attribute in the last one"
-msgstr "所有選擇設定一個屬性在最後一個"
+msgstr "所有選擇設定一個特性在最後一個"
 
 #: ../share/extensions/web_set_att.inx:30
 msgid "The first selected sets an attribute in all others"
-msgstr "在所有其他裡將第一次選擇設定為屬性"
+msgstr "在所有其他裡將第一次選擇設定為特性"
 
 #: ../share/extensions/web_set_att.inx:34
 #: ../share/extensions/web_transmit_att.inx:32
@@ -48067,13 +48065,13 @@ msgid ""
 "a defined event occurs on the first selected element."
 msgstr ""
 "當一個定義的事件發生在第一個選擇的元素上時，這個特效在第二個選擇的元素中設定"
-"一個或多個屬性。"
+"一個或多個特性。"
 
 #: ../share/extensions/web_set_att.inx:36
 msgid ""
 "If you want to set more than one attribute, you must separate this with a "
 "space, and only with a space."
-msgstr "如果想要設定多個屬性，必須用一個空格來區隔開，且只能用一個空格。"
+msgstr "如果想要設定多個特性，必須用一個空格來區隔開，且只能用一個空格。"
 
 #: ../share/extensions/web_set_att.inx:43
 #: ../share/extensions/web_transmit_att.inx:41
@@ -48082,11 +48080,11 @@ msgstr "JavaScript"
 
 #: ../share/extensions/web_transmit_att.inx:3
 msgid "Transmit Attributes"
-msgstr "傳輸屬性"
+msgstr "傳輸特性"
 
 #: ../share/extensions/web_transmit_att.inx:7
 msgid "Attribute to transmit:"
-msgstr "傳輸的屬性："
+msgstr "傳輸的特性："
 
 #: ../share/extensions/web_transmit_att.inx:8
 msgid "When to transmit:"
@@ -48109,13 +48107,13 @@ msgid ""
 "This effect transmits one or more attributes from the first selected element "
 "to the second when an event occurs."
 msgstr ""
-"當一個事件發生時，這個特效傳輸一個或多個屬性從第一個選擇的元素到第二個。"
+"當一個事件發生時，這個特效傳輸一個或多個特性從第一個選擇的元素到第二個。"
 
 #: ../share/extensions/web_transmit_att.inx:34
 msgid ""
 "If you want to transmit more than one attribute, you should separate this "
 "with a space, and only with a space."
-msgstr "如果想要傳輸多個屬性，那麼應該用空格區分開來，且只用一個空格。"
+msgstr "如果想要傳輸多個特性，那麼應該用空格區分開來，且只用一個空格。"
 
 #: ../share/extensions/webslicer_create_group.inx:3
 msgid "Set a Layout Group"
@@ -48124,12 +48122,12 @@ msgstr "設定版面群組"
 #: ../share/extensions/webslicer_create_group.inx:8
 #: ../share/extensions/webslicer_create_rect.inx:33
 msgid "HTML id attribute:"
-msgstr "HTML 識別 (id) 屬性："
+msgstr "HTML 識別 (id) 特性："
 
 #: ../share/extensions/webslicer_create_group.inx:9
 #: ../share/extensions/webslicer_create_rect.inx:34
 msgid "HTML class attribute:"
-msgstr "HTML 類別 (class) 屬性："
+msgstr "HTML 類別 (class) 特性："
 
 #: ../share/extensions/webslicer_create_group.inx:10
 msgid "Width unit:"
@@ -48278,7 +48276,7 @@ msgstr "左上"
 
 #: ../share/extensions/webslicer_create_rect.inx:49
 msgid "Top and Center"
-msgstr "頂端和中心"
+msgstr "頂端水平置中"
 
 #: ../share/extensions/webslicer_create_rect.inx:50
 msgid "Top and right"
@@ -48286,15 +48284,15 @@ msgstr "右下"
 
 #: ../share/extensions/webslicer_create_rect.inx:51
 msgid "Middle and Left"
-msgstr "中點和左邊"
+msgstr "左側垂直置中"
 
 #: ../share/extensions/webslicer_create_rect.inx:52
 msgid "Middle and Center"
-msgstr "中點和中心"
+msgstr "正中間"
 
 #: ../share/extensions/webslicer_create_rect.inx:53
 msgid "Middle and Right"
-msgstr "中點和右邊"
+msgstr "右側垂直置中"
 
 #: ../share/extensions/webslicer_create_rect.inx:54
 msgid "Bottom and Left"
@@ -48302,7 +48300,7 @@ msgstr "左下"
 
 #: ../share/extensions/webslicer_create_rect.inx:55
 msgid "Bottom and Center"
-msgstr "底端和中心"
+msgstr "底端水平置中"
 
 #: ../share/extensions/webslicer_create_rect.inx:56
 msgid "Bottom and Right"
@@ -48310,7 +48308,7 @@ msgstr "右下"
 
 #: ../share/extensions/webslicer_export.inx:3
 msgid "Export Layout Pieces and HTML+CSS code"
-msgstr "匯出版面元素和 HTML+CSS 程式碼"
+msgstr "匯出版面區塊和 HTML+CSS 程式碼"
 
 #: ../share/extensions/webslicer_export.inx:8
 msgid "Directory path to export:"
@@ -48351,9 +48349,8 @@ msgid "Hide lines behind the sphere"
 msgstr "隱藏球體背面的線"
 
 #: ../org.inkscape.Inkscape.appdata.xml.in:8
-#, fuzzy
 msgid "The Inkscape Community"
-msgstr "使用 Inkscape 的字型資料夾"
+msgstr "Inkscape 社群"
 
 #: ../org.inkscape.Inkscape.appdata.xml.in:11
 #: ../org.inkscape.Inkscape.desktop.template:5
@@ -48608,7 +48605,7 @@ msgstr "字型高度的一半"
 #~ msgstr "主要格線的間隔數(_M)："
 
 #~ msgid "lines"
-#~ msgstr "線"
+#~ msgstr "行"
 
 #~ msgid "All Executable Files"
 #~ msgstr "所有可執行檔"
@@ -49662,9 +49659,6 @@ msgstr "字型高度的一半"
 
 #~ msgid "Add numeric suffix to filename"
 #~ msgstr "檔名加入號碼字根"
-
-#~ msgid "Directory:"
-#~ msgstr "資料夾："
 
 #~ msgid "Z safe height for G00 move over blank:"
 #~ msgstr "G00 快速定位的 Z 安全高度："
