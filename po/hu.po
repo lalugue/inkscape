@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hu\n"
 "Report-Msgid-Bugs-To: inkscape-translator@lists.inkscape.org\n"
-"POT-Creation-Date: 2024-06-22 00:08+0000\n"
-"PO-Revision-Date: 2024-06-22 18:48+0000\n"
+"POT-Creation-Date: 2024-07-20 14:57+0000\n"
+"PO-Revision-Date: 2024-07-20 23:08+0000\n"
 "Last-Translator: Gyuris Gellért <jobel@ujevangelizacio.hu>, 2024\n"
 "Language-Team: Hungarian (https://app.transifex.com/fsf-hu/teams/77907/hu/)\n"
 "Language: hu\n"
@@ -7883,7 +7883,7 @@ msgstr "Minden kijelölt objektumban lévő elem feloldása"
 
 #: ../src/actions/actions-layer.cpp:64
 #: ../src/ui/dialog/layer-properties.cpp:168
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:506
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:510
 msgid "Add layer"
 msgstr "Réteg felvétele"
 
@@ -9561,7 +9561,7 @@ msgstr "Kijelölés törlése"
 
 #: ../src/actions/actions-selection.cpp:275
 #: ../src/extension/prefdialog/parameter-path.cpp:216
-#: ../src/inkview-application.cpp:116
+#: ../src/inkview-application.cpp:116 ../src/ui/dialog/export-batch.cpp:813
 #: ../src/ui/toolbar/gradient-toolbar.cpp:383
 msgid "Select"
 msgstr "Kijelölés"
@@ -11060,7 +11060,7 @@ msgstr "Memóriadokumentum %d"
 msgid "Memory document %1"
 msgstr "Memóriadokumentum %1"
 
-#: ../src/document.cpp:1101
+#: ../src/document.cpp:1091
 #, c-format
 msgid "Unnamed document %d"
 msgstr "Névtelen dokumentum %d"
@@ -11174,7 +11174,7 @@ msgstr "Igazodó küszöb"
 #: ../src/ui/dialog/filter-effects-dialog.cpp:3095
 #: ../src/ui/dialog/lpe-powerstroke-properties.cpp:60
 #: ../share/ui/page-properties.glade:85 ../share/ui/page-properties.glade:312
-#: ../share/ui/toolbar-calligraphy.ui:161 ../share/ui/toolbar-eraser.ui:142
+#: ../share/ui/toolbar-calligraphy.ui:119 ../share/ui/toolbar-eraser.ui:142
 #: ../share/ui/toolbar-spray.ui:217 ../share/ui/toolbar-tweak.ui:369
 #: ../share/extensions/foldablebox.inx:5
 msgid "Width:"
@@ -11192,7 +11192,7 @@ msgstr "Magasság:"
 
 #: ../src/extension/internal/bitmap/adaptiveThreshold.cpp:45
 #: ../src/live_effects/lpe-offset.cpp:74 ../share/ui/toolbar-gradient.ui:266
-#: ../share/ui/toolbar-measure.ui:446 ../share/ui/toolbar-spray.ui:541
+#: ../share/ui/toolbar-measure.ui:446 ../share/ui/toolbar-spray.ui:544
 #: ../share/extensions/printing_marks.inx:27
 msgid "Offset:"
 msgstr "Pozíció:"
@@ -12391,7 +12391,7 @@ msgstr "Kimarás"
 #: ../src/extension/internal/filter/color.h:1336
 #: ../src/extension/internal/filter/color.h:1452
 #: ../src/ui/dialog/document-properties.cpp:491
-#: ../src/ui/dialog/export-batch.cpp:353 ../src/ui/dialog/export-single.cpp:119
+#: ../src/ui/dialog/export-batch.cpp:354 ../src/ui/dialog/export-single.cpp:119
 #: ../src/ui/widget/page-properties.cpp:164
 msgid "Background color"
 msgstr "Háttérszín"
@@ -12947,12 +12947,12 @@ msgstr "Halványítás erre:"
 #: ../src/extension/internal/filter/color.h:854
 #: ../src/ui/widget/color-icc-selector.cpp:177
 #: ../src/ui/widget/color-scales.cpp:690 ../src/ui/widget/color-scales.cpp:691
-#: ../src/ui/widget/selected-style.cpp:692
+#: ../src/ui/widget/selected-style.cpp:699
 msgid "Black"
 msgstr "Fekete"
 
 #: ../src/extension/internal/filter/color.h:855
-#: ../src/ui/widget/selected-style.cpp:690
+#: ../src/ui/widget/selected-style.cpp:697
 msgid "White"
 msgstr "Fehér"
 
@@ -12975,7 +12975,7 @@ msgid "Customize greyscale components"
 msgstr "Szürkeárnyalatos komponensek módosítása"
 
 #: ../src/extension/internal/filter/color.h:1024
-#: ../src/ui/widget/selected-style.cpp:685
+#: ../src/ui/widget/selected-style.cpp:692
 msgid "Invert"
 msgstr "Invertálás"
 
@@ -13392,7 +13392,7 @@ msgstr "Nyitott (kizáró vagy)"
 #: ../src/ui/dialog/filter-effects-dialog.cpp:3073
 #: ../src/ui/dialog/filter-effects-dialog.cpp:3095
 #: ../src/ui/tools/measure-tool.cpp:1089
-#: ../src/ui/widget/selected-style.cpp:744 ../share/ui/dialog-export.glade:290
+#: ../src/ui/widget/selected-style.cpp:751 ../share/ui/dialog-export.glade:290
 #: ../share/extensions/interp_att_g.inx:8
 msgid "Width"
 msgstr "Szélesség"
@@ -13505,10 +13505,10 @@ msgstr "Zajjal való kitöltés"
 #: ../src/extension/internal/filter/paint.h:712
 #: ../src/extension/internal/filter/shadows.h:69
 #: ../src/live_effects/lpe-measure-segments.cpp:267
-#: ../src/ui/dialog/find.cpp:75 ../share/ui/toolbar-calligraphy.ui:108
-#: ../share/ui/toolbar-gradient.ui:163 ../share/ui/toolbar-measure.ui:175
-#: ../share/ui/toolbar-measure.ui:317 ../share/ui/toolbar-mesh.ui:272
-#: ../share/ui/toolbar-node.ui:556 ../share/extensions/color_custom.inx:6
+#: ../src/ui/dialog/find.cpp:75 ../share/ui/toolbar-gradient.ui:163
+#: ../share/ui/toolbar-measure.ui:175 ../share/ui/toolbar-measure.ui:317
+#: ../share/ui/toolbar-mesh.ui:272 ../share/ui/toolbar-node.ui:556
+#: ../share/extensions/color_custom.inx:6
 #: ../share/extensions/color_hsl_adjust.inx:6
 #: ../share/extensions/color_randomize.inx:6
 #: ../share/extensions/distribute_along_path.inx:7
@@ -14453,7 +14453,7 @@ msgstr "Egyéni"
 
 #: ../src/extension/internal/template-from-file.cpp:118
 #: ../src/ui/dialog/document-properties.cpp:968
-#: ../share/ui/dialog-export.glade:584 ../share/ui/dialog-export.glade:947
+#: ../share/ui/dialog-export.glade:584
 msgid "Filename"
 msgstr "Fájlnév"
 
@@ -14480,7 +14480,7 @@ msgstr "Egyéb"
 #: ../src/live_effects/lpe-measure-segments.cpp:73
 #: ../src/live_effects/lpe-offset.cpp:73 ../src/live_effects/lpe-ruler.cpp:41
 #: ../src/live_effects/lpe-tiling.cpp:91
-#: ../src/ui/widget/selected-style.cpp:728
+#: ../src/ui/widget/selected-style.cpp:735
 msgid "Unit"
 msgstr "Mértékegység"
 
@@ -15365,7 +15365,7 @@ msgstr "Dokumentum mentése…"
 msgid "Import Pages"
 msgstr "Oldalak importálása"
 
-#: ../src/file.cpp:956 ../src/inkscape-application.cpp:889
+#: ../src/file.cpp:956 ../src/inkscape-application.cpp:887
 #, c-format
 msgid "Failed to load the requested file %s"
 msgstr "Nem sikerült betölteni a kért fájlt (%s)"
@@ -15686,58 +15686,58 @@ msgstr "Minden támogatott formátum"
 msgid "Extract Image"
 msgstr "Kép kinyerése"
 
-#: ../src/inkscape-application.cpp:409
+#: ../src/inkscape-application.cpp:407
 msgid "Broken links have been changed to point to existing files."
 msgstr ""
 "A törött linkek módosítva lettek, hogy a létező fájlokra hivatkozzanak."
 
-#: ../src/inkscape-application.cpp:711
+#: ../src/inkscape-application.cpp:709
 msgid "file1 [file2 [fileN]]"
 msgstr "fájl1 [fájl2 [fájlN]]"
 
-#: ../src/inkscape-application.cpp:712
+#: ../src/inkscape-application.cpp:710
 msgid "Process (or open) one or more files."
 msgstr "Egy vagy több fájl feldolgozása (vagy megnyitása)."
 
-#: ../src/inkscape-application.cpp:713
+#: ../src/inkscape-application.cpp:711
 msgid "Examples:"
 msgstr "Példák:"
 
-#: ../src/inkscape-application.cpp:714
+#: ../src/inkscape-application.cpp:712
 msgid "Export input SVG (%1) to PDF (%2) format:"
 msgstr "Bemeneti SVG (%1) exportálása PDF (%2) formátumba:"
 
-#: ../src/inkscape-application.cpp:716
+#: ../src/inkscape-application.cpp:714
 msgid "Export input files (%1) to PNG format keeping original name (%2):"
 msgstr ""
 "Bemeneti fájlok (%1) exportálása PNG formátumba az eredeti név (%2) "
 "megtartásával"
 
-#: ../src/inkscape-application.cpp:718
+#: ../src/inkscape-application.cpp:716
 msgid "See %1 and %2 for more details."
 msgstr "További információk: %1 és %2."
 
-#: ../src/inkscape-application.cpp:723
+#: ../src/inkscape-application.cpp:721
 msgid "Print Inkscape version"
 msgstr "Inkscape verziószámának kiírása"
 
-#: ../src/inkscape-application.cpp:724
+#: ../src/inkscape-application.cpp:722
 msgid "Print debugging information"
 msgstr "Hibakeresési információ kiírása"
 
-#: ../src/inkscape-application.cpp:725
+#: ../src/inkscape-application.cpp:723
 msgid "Print system data directory"
 msgstr "Rendszeradatmappa kiírása"
 
-#: ../src/inkscape-application.cpp:726
+#: ../src/inkscape-application.cpp:724
 msgid "Print user data directory"
 msgstr "Felhasználói adatmappa kiírása"
 
-#: ../src/inkscape-application.cpp:727
+#: ../src/inkscape-application.cpp:725
 msgid "List all available input file extensions"
 msgstr "Elérhető összes bemeneti fájl kiterjesztésének felsorolása"
 
-#: ../src/inkscape-application.cpp:728
+#: ../src/inkscape-application.cpp:726
 msgid ""
 "Create a unique instance of Inkscape with the application ID 'org.inkscape."
 "Inkscape.TAG'"
@@ -15745,27 +15745,27 @@ msgstr ""
 "Egy egyedi példányt hogy létre az Inkscape-ből „org.inkscape.Inkscape.CÍMKE” "
 "alkalmazásazonosítóval."
 
-#: ../src/inkscape-application.cpp:731
+#: ../src/inkscape-application.cpp:729
 msgid "File import"
 msgstr "Fájlimportálás"
 
-#: ../src/inkscape-application.cpp:732
+#: ../src/inkscape-application.cpp:730
 msgid "Read input file from standard input (stdin)"
 msgstr "Bemeneti fájl olvasása a szabványos bemenetről (stdin)"
 
-#: ../src/inkscape-application.cpp:733
+#: ../src/inkscape-application.cpp:731
 msgid "Page numbers to import from multi-page document, i.e. PDF"
 msgstr "Oldalszámok importálása többoldalas dokumentumból, pl. PDF-ből"
 
-#: ../src/inkscape-application.cpp:733
+#: ../src/inkscape-application.cpp:731
 msgid "PAGE[,PAGE]"
 msgstr "OLDAL[,OLDAL]"
 
-#: ../src/inkscape-application.cpp:734
+#: ../src/inkscape-application.cpp:732
 msgid "Use poppler when importing via commandline"
 msgstr "Poppler alkalmazása parancssori importáláskor"
 
-#: ../src/inkscape-application.cpp:735
+#: ../src/inkscape-application.cpp:733
 msgid ""
 "How fonts are parsed in the internal PDF importer [draw-missing|draw-all|"
 "delete-missing|delete-all|substitute|keep]"
@@ -15773,11 +15773,11 @@ msgstr ""
 "Hogyan legyenek feldolgozva a betűkészletek a belső PDF-importálóban [draw-"
 "missing|draw-all|delete-missing|delete-all|substitute|keep]"
 
-#: ../src/inkscape-application.cpp:735
+#: ../src/inkscape-application.cpp:733
 msgid "STRATEGY"
 msgstr "STRATÉGIA"
 
-#: ../src/inkscape-application.cpp:736
+#: ../src/inkscape-application.cpp:734
 msgid ""
 "Method used to convert pre-0.92 document dpi, if needed: [none|scale-viewbox|"
 "scale-document]"
@@ -15785,21 +15785,21 @@ msgstr ""
 "A 0.92 előtti dokumentumok DPI-jének átalakítási módszere, ha szükség van "
 "erre: [none|scale-viewbox|scale-document]"
 
-#: ../src/inkscape-application.cpp:736
+#: ../src/inkscape-application.cpp:734
 msgid "METHOD"
 msgstr "MÓDSZER"
 
-#: ../src/inkscape-application.cpp:737
+#: ../src/inkscape-application.cpp:735
 msgid "Do not fix pre-0.92 document's text baseline spacing on opening"
 msgstr ""
 "Megnyitáskor a 0.92 előtti fájlok szövegalapvonal térközének javítása nem "
 "kerül végrehajtásra"
 
-#: ../src/inkscape-application.cpp:740
+#: ../src/inkscape-application.cpp:738
 msgid "File export"
 msgstr "Fájlexportálás"
 
-#: ../src/inkscape-application.cpp:741
+#: ../src/inkscape-application.cpp:739
 msgid ""
 "Output file name (defaults to input filename; file type is guessed from "
 "extension if present; use '-' to write to stdout)"
@@ -15808,162 +15808,162 @@ msgstr ""
 "kiterjesztésből kerül meghatározásra, ha van ilyen; „-” karakterrel lehet az "
 "stdout-ra írni)"
 
-#: ../src/inkscape-application.cpp:741 ../src/inkscape-application.cpp:797
+#: ../src/inkscape-application.cpp:739 ../src/inkscape-application.cpp:795
 msgid "FILENAME"
 msgstr "FÁJLNÉV"
 
-#: ../src/inkscape-application.cpp:742
+#: ../src/inkscape-application.cpp:740
 msgid ""
 "Overwrite input file (otherwise add '_out' suffix if type doesn't change)"
 msgstr ""
 "Bemeneti fájl felülírása (egyébként egy „_out” utótagot ad hozzá, ha a típus "
 "nem változik)"
 
-#: ../src/inkscape-application.cpp:743
+#: ../src/inkscape-application.cpp:741
 msgid "File type(s) to export: [svg,png,ps,eps,pdf,emf,wmf,xaml]"
 msgstr "Exportálandó típus(ok): [svg,png,ps,eps,pdf,emf,wmf,xaml]"
 
-#: ../src/inkscape-application.cpp:743
+#: ../src/inkscape-application.cpp:741
 msgid "TYPE[,TYPE]*"
 msgstr "TÍPUS[,TÍPUS]*"
 
-#: ../src/inkscape-application.cpp:744
+#: ../src/inkscape-application.cpp:742
 msgid "Extension ID to use for exporting"
 msgstr "Az exportáláshoz használt kiterjesztésazonosító"
 
-#: ../src/inkscape-application.cpp:744
+#: ../src/inkscape-application.cpp:742
 msgid "EXTENSION-ID"
 msgstr "KITERJESZTÉSAZONOSÍTÓ"
 
-#: ../src/inkscape-application.cpp:747
+#: ../src/inkscape-application.cpp:745
 msgid "Export geometry"
 msgstr "Exportálási geometria"
 
-#: ../src/inkscape-application.cpp:748
+#: ../src/inkscape-application.cpp:746
 msgid "Area to export is page"
 msgstr "Az exportálandó terület az oldal"
 
-#: ../src/inkscape-application.cpp:749
+#: ../src/inkscape-application.cpp:747
 msgid "Area to export is whole drawing (ignoring page size)"
 msgstr "Az exportálandó terület a rajz (oldalméret figyelmen kívül hagyása)"
 
-#: ../src/inkscape-application.cpp:750
+#: ../src/inkscape-application.cpp:748
 msgid "Area to export in SVG user units"
 msgstr "Az exportálandó terület SVG felhasználói mértékegységekkel."
 
-#: ../src/inkscape-application.cpp:750
+#: ../src/inkscape-application.cpp:748
 msgid "x0:y0:x1:y1"
 msgstr "x0:y0:x1:y1"
 
-#: ../src/inkscape-application.cpp:751
+#: ../src/inkscape-application.cpp:749
 msgid "Snap the bitmap export area outwards to the nearest integer values"
 msgstr ""
 "Az exportálandó képpontos terület illesztése kifelé a legközelebbi egész "
 "értékekhez"
 
-#: ../src/inkscape-application.cpp:752
+#: ../src/inkscape-application.cpp:750
 msgid "Resolution for bitmaps and rasterized filters; default is 96"
 msgstr ""
 "Bitképek és szűrök raszterizálására használatos felbontás (alapértelmezetten "
 "96)"
 
-#: ../src/inkscape-application.cpp:752 ../src/ui/widget/export-lists.cpp:174
+#: ../src/inkscape-application.cpp:750 ../src/ui/widget/export-lists.cpp:174
 #: ../src/ui/widget/rendering-options.cpp:32
 #: ../share/ui/dialog-export.glade:409 ../share/extensions/layer2png.inx:12
 msgid "DPI"
 msgstr "DPI"
 
-#: ../src/inkscape-application.cpp:753
+#: ../src/inkscape-application.cpp:751
 msgid "Bitmap width in pixels (overrides --export-dpi)"
 msgstr ""
 "Az exportálandó bitkép szélessége képpontban (felülbírálja az export-dpi "
 "értéket)"
 
-#: ../src/inkscape-application.cpp:753
+#: ../src/inkscape-application.cpp:751
 msgid "WIDTH"
 msgstr "SZÉLESSÉG"
 
-#: ../src/inkscape-application.cpp:754
+#: ../src/inkscape-application.cpp:752
 msgid "Bitmap height in pixels (overrides --export-dpi)"
 msgstr ""
 "Az exportálandó bitkép szélessége képpontban (felülbírálja az --export-dpi "
 "kapcsolót)"
 
-#: ../src/inkscape-application.cpp:754
+#: ../src/inkscape-application.cpp:752
 msgid "HEIGHT"
 msgstr "MAGASSÁG"
 
-#: ../src/inkscape-application.cpp:755
+#: ../src/inkscape-application.cpp:753
 msgid "Margin around export area: units of page size for SVG, mm for PS/PDF"
 msgstr ""
 "Az exportálandó terület körüli margó: SVG esetén az oldalméret mértékegysége "
 "szerint, valamint PS, PDF esetén mm-ben"
 
-#: ../src/inkscape-application.cpp:755
+#: ../src/inkscape-application.cpp:753
 msgid "MARGIN"
 msgstr "MARGÓ"
 
-#: ../src/inkscape-application.cpp:758
+#: ../src/inkscape-application.cpp:756
 msgid "Export options"
 msgstr "Exportálási beállítások"
 
-#: ../src/inkscape-application.cpp:759
+#: ../src/inkscape-application.cpp:757
 msgid "Page number to export"
 msgstr "Exportálandó oldalszám"
 
-#: ../src/inkscape-application.cpp:759
+#: ../src/inkscape-application.cpp:757
 msgid "all|n[,a-b]"
 msgstr "mind|n[,a-b]"
 
-#: ../src/inkscape-application.cpp:760
+#: ../src/inkscape-application.cpp:758
 msgid "ID(s) of object(s) to export"
 msgstr "Az exportálandó objektum(ok) azonosítója vagy azonosítói."
 
-#: ../src/inkscape-application.cpp:760
+#: ../src/inkscape-application.cpp:758
 msgid "OBJECT-ID[;OBJECT-ID]*"
 msgstr "OBJEKTUMAZONOSÍTÓ[;OBJEKTUMAZONOSÍTÓ]*"
 
-#: ../src/inkscape-application.cpp:761
+#: ../src/inkscape-application.cpp:759
 msgid "Hide all objects except object with ID selected by export-id"
 msgstr ""
 "Az export-id által kijelölt azonosítón kívüli minden objektum elrejtése"
 
-#: ../src/inkscape-application.cpp:762
+#: ../src/inkscape-application.cpp:760
 msgid "Remove Inkscape-specific SVG attributes/properties"
 msgstr "Inksape specifikus attribútumok és tulajdonságok eltávolítása"
 
-#: ../src/inkscape-application.cpp:763
+#: ../src/inkscape-application.cpp:761
 msgid "Postscript level (2 or 3); default is 3"
 msgstr "Postscript szint (2 vagy 3); alapértelmezett: 3"
 
-#: ../src/inkscape-application.cpp:763 ../src/inkscape-application.cpp:775
-#: ../src/inkscape-application.cpp:777
+#: ../src/inkscape-application.cpp:761 ../src/inkscape-application.cpp:773
+#: ../src/inkscape-application.cpp:775
 msgid "LEVEL"
 msgstr "SZINT"
 
-#: ../src/inkscape-application.cpp:764
+#: ../src/inkscape-application.cpp:762
 msgid "PDF version (1.4 or 1.5); default is 1.5"
 msgstr "PDF-verzió (1.4 vagy 1.5); 1.5 az alapértelmezett"
 
-#: ../src/inkscape-application.cpp:764
+#: ../src/inkscape-application.cpp:762
 msgid "VERSION"
 msgstr "VERZIÓ"
 
-#: ../src/inkscape-application.cpp:765
+#: ../src/inkscape-application.cpp:763
 msgid "Convert text to paths (PS/EPS/PDF/SVG)"
 msgstr "Szövegobjektum átalakítása útvonalakká (PS, EPS, PDF, SVG)"
 
-#: ../src/inkscape-application.cpp:766
+#: ../src/inkscape-application.cpp:764
 msgid "Export text separately to LaTeX file (PS/EPS/PDF)"
 msgstr "A szöveg külön exportálása LaTeX fájlba (PS/EPS/PDF) "
 
-#: ../src/inkscape-application.cpp:767
+#: ../src/inkscape-application.cpp:765
 msgid "Render objects without filters instead of rasterizing (PS/EPS/PDF)"
 msgstr ""
 "Szűrővel rendelkező objektumok leképezése szűrők nélkül raszterizálás "
 "helyett (PS, EPS, PDF)"
 
-#: ../src/inkscape-application.cpp:768
+#: ../src/inkscape-application.cpp:766
 msgid ""
 "Use stored filename and DPI hints when exporting object selected by --export-"
 "id"
@@ -15971,25 +15971,25 @@ msgstr ""
 "Tárolt fájlnév és DPI-információk használata exportáláskor (csak export-id "
 "esetén)"
 
-#: ../src/inkscape-application.cpp:769
+#: ../src/inkscape-application.cpp:767
 msgid "Background color for exported bitmaps (any SVG color string)"
 msgstr "Az exportált bitkép háttérszíne (bármilyen SVG szín szöveg)"
 
-#: ../src/inkscape-application.cpp:769
+#: ../src/inkscape-application.cpp:767
 msgid "COLOR"
 msgstr "SZÍN"
 
-#: ../src/inkscape-application.cpp:771
+#: ../src/inkscape-application.cpp:769
 msgid "Background opacity for exported bitmaps (0.0 to 1.0, or 1 to 255)"
 msgstr ""
 "Az exportált bitkép hátterének átlátszatlansága (vagy 0,0 és 1,0 közt, vagy "
 "1 és 255 közt)"
 
-#: ../src/inkscape-application.cpp:771
+#: ../src/inkscape-application.cpp:769
 msgid "VALUE"
 msgstr "ÉRTÉK"
 
-#: ../src/inkscape-application.cpp:772
+#: ../src/inkscape-application.cpp:770
 msgid ""
 "Color mode (bit depth and color type) for exported bitmaps (Gray_1/Gray_2/"
 "Gray_4/Gray_8/Gray_16/RGB_8/RGB_16/GrayAlpha_8/GrayAlpha_16/RGBA_8/RGBA_16)"
@@ -15997,122 +15997,122 @@ msgstr ""
 "Az exportálandó bitkép színmódja (bitmélység és színtípus) (Gray_1/Gray_2/"
 "Gray_4/Gray_8/Gray_16/RGB_8/RGB_16/GrayAlpha_8/GrayAlpha_16/RGBA_8/RGBA_16)"
 
-#: ../src/inkscape-application.cpp:772
+#: ../src/inkscape-application.cpp:770
 msgid "COLOR-MODE"
 msgstr "SZÍNMÓD"
 
-#: ../src/inkscape-application.cpp:773
+#: ../src/inkscape-application.cpp:771
 msgid "Force dithering or disables it"
 msgstr "Zajmoduláció kényszerítése vagy letiltása"
 
-#: ../src/inkscape-application.cpp:775
+#: ../src/inkscape-application.cpp:773
 msgid "Compression level for PNG export (0 to 9); default is 6"
 msgstr ""
 "Tömörítési szint a PNG exportáláshoz (0 és 9 között); alapértelmezett érték "
 "a 6"
 
-#: ../src/inkscape-application.cpp:777
+#: ../src/inkscape-application.cpp:775
 msgid "Antialias level for PNG export (0 to 3); default is 2"
 msgstr ""
 "Élsimítás szint a PNG exportáláshoz (0 és 3 között); alapértelmezett érték a "
 "2"
 
-#: ../src/inkscape-application.cpp:780
+#: ../src/inkscape-application.cpp:778
 msgid "Query object/document geometry"
 msgstr "Lekérdezett objektum/ dokumentum geometriája"
 
-#: ../src/inkscape-application.cpp:781
+#: ../src/inkscape-application.cpp:779
 msgid "ID(s) of object(s) to be queried"
 msgstr "A lekérdezett objektum(ok) azonosítója vagy azonosítói."
 
-#: ../src/inkscape-application.cpp:781 ../src/inkscape-application.cpp:791
+#: ../src/inkscape-application.cpp:779 ../src/inkscape-application.cpp:789
 msgid "OBJECT-ID[,OBJECT-ID]*"
 msgstr "OBJEKTUMAZONOSÍTÓ[,OBJEKTUMAZONOSÍTÓ]*"
 
-#: ../src/inkscape-application.cpp:782
+#: ../src/inkscape-application.cpp:780
 msgid "Print bounding boxes of all objects"
 msgstr "Az összes objektum határoló dobozának kiírása."
 
-#: ../src/inkscape-application.cpp:783
+#: ../src/inkscape-application.cpp:781
 msgid "X coordinate of drawing or object (if specified by --query-id)"
 msgstr ""
 "A rajz (illetve, ha az meg van adva, a --query-id opcióval megadott "
 "objektum) X koordinátája"
 
-#: ../src/inkscape-application.cpp:784
+#: ../src/inkscape-application.cpp:782
 msgid "Y coordinate of drawing or object (if specified by --query-id)"
 msgstr ""
 "A rajz (illetve, ha az meg van adva, a --query-id opcióval megadott "
 "objektum) Y koordinátája"
 
-#: ../src/inkscape-application.cpp:785
+#: ../src/inkscape-application.cpp:783
 msgid "Width of drawing or object (if specified by --query-id)"
 msgstr ""
 "A rajz (illetve, ha az meg van adva, a --query-id opcióval megadott "
 "objektum) szélessége"
 
-#: ../src/inkscape-application.cpp:786
+#: ../src/inkscape-application.cpp:784
 msgid "Height of drawing or object (if specified by --query-id)"
 msgstr ""
 "A rajz (illetve, ha az meg van adva, a --query-id opcióval megadott "
 "objektum) magassága"
 
-#: ../src/inkscape-application.cpp:789
+#: ../src/inkscape-application.cpp:787
 msgid "Advanced file processing"
 msgstr "Fejlett fájlfeldolgozás"
 
-#: ../src/inkscape-application.cpp:790
+#: ../src/inkscape-application.cpp:788
 msgid "Remove unused definitions from the <defs> section(s) of document"
 msgstr ""
 "A nem használt definíciók eltávolítása a dokumentum <defs>-szakaszából, ill. "
 "szakaszaiból"
 
-#: ../src/inkscape-application.cpp:791
+#: ../src/inkscape-application.cpp:789
 msgid "Select objects: comma-separated list of IDs"
 msgstr "Objektumok kijelölése: ID-k vesszővel elválasztott felsorolása"
 
-#: ../src/inkscape-application.cpp:795
+#: ../src/inkscape-application.cpp:793
 msgid "List of actions (with optional arguments) to execute"
 msgstr "Futtatható műveletek felsorolása (opcionális argumentumokkal)"
 
-#: ../src/inkscape-application.cpp:795
+#: ../src/inkscape-application.cpp:793
 msgid "ACTION(:ARG)[;ACTION(:ARG)]*"
 msgstr "MŰVELET(:ARGUMENTUM)[;MŰVELET(:ARGUMENTUM)]*"
 
-#: ../src/inkscape-application.cpp:796
+#: ../src/inkscape-application.cpp:794
 msgid "List all available actions"
 msgstr "Elérhető összes művelet felsorolása"
 
-#: ../src/inkscape-application.cpp:797
+#: ../src/inkscape-application.cpp:795
 msgid "Use a file to input actions list"
 msgstr "Fájl alkalmazása a műveletek listájának beviteléhez"
 
-#: ../src/inkscape-application.cpp:800
+#: ../src/inkscape-application.cpp:798
 #: ../src/ui/dialog/inkscape-preferences.cpp:1508
 msgid "Interface"
 msgstr "Felület"
 
-#: ../src/inkscape-application.cpp:801
+#: ../src/inkscape-application.cpp:799
 msgid "With graphical user interface (required by some actions)"
 msgstr "Grafikus felhasználói felülettel (egyes műveletekhez szükséges)"
 
-#: ../src/inkscape-application.cpp:802
+#: ../src/inkscape-application.cpp:800
 msgid "Close GUI after executing all actions"
 msgstr "Grafikus felület bezárása, ha minden művelet lefutott"
 
-#: ../src/inkscape-application.cpp:804
+#: ../src/inkscape-application.cpp:802
 msgid "Start Inkscape in interactive shell mode"
 msgstr "Az Inkscape indítása interaktív parancsértelmező-módban"
 
-#: ../src/inkscape-application.cpp:805
+#: ../src/inkscape-application.cpp:803
 msgid "Use active window from commandline"
 msgstr "Aktív ablak használata parancssorból"
 
-#: ../src/inkscape-application.cpp:2029 ../src/inkscape-application.cpp:2034
+#: ../src/inkscape-application.cpp:2027 ../src/inkscape-application.cpp:2032
 msgid "(No preferences)"
 msgstr "(Nincsenek beállítások)"
 
-#: ../src/inkscape-application.cpp:2050
+#: ../src/inkscape-application.cpp:2048
 #, c-format
 msgid "%s..."
 msgstr "%s…"
@@ -20173,7 +20173,7 @@ msgstr "Stílusok visszaállítása"
 
 #: ../src/live_effects/lpe-tangent_to_curve.cpp:60
 #: ../src/ui/widget/registered-widget.cpp:556
-#: ../share/ui/toolbar-calligraphy.ui:328 ../share/extensions/long_shadow.inx:6
+#: ../share/ui/toolbar-calligraphy.ui:286 ../share/extensions/long_shadow.inx:6
 #: ../share/extensions/restack.inx:20
 msgid "Angle:"
 msgstr "Szög:"
@@ -20743,7 +20743,7 @@ msgstr "Elforgatási segédméret"
 
 #: ../src/live_effects/lpe-transform_2pts.cpp:334
 #: ../src/ui/dialog/inkscape-preferences.cpp:3242
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:1327
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:1331
 #: ../src/ui/widget/preferences-widget.cpp:695
 msgid "Reset"
 msgstr "Visszaállítás"
@@ -20936,7 +20936,7 @@ msgstr "Látható"
 #: ../src/ui/dialog/attrdialog.cpp:185
 #: ../src/ui/dialog/inkscape-preferences.cpp:3140
 #: ../src/ui/dialog/inkscape-preferences.cpp:3189
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:1360
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:1364
 #: ../src/ui/widget/gradient-selector.cpp:76
 msgid "Name"
 msgstr "Név"
@@ -21213,26 +21213,26 @@ msgid_plural "of <b>%d</b> objects"
 msgstr[0] "<b>%d</b> objektumból"
 msgstr[1] "<b>%d</b> objektumból"
 
-#: ../src/object/sp-item.cpp:1163
+#: ../src/object/sp-item.cpp:1176
 msgid "Object"
 msgstr "Objektum"
 
-#: ../src/object/sp-item.cpp:1175
+#: ../src/object/sp-item.cpp:1188
 #, c-format
 msgid "%s; <i>clipped</i>"
 msgstr "%s; <i>vágott</i>"
 
-#: ../src/object/sp-item.cpp:1181
+#: ../src/object/sp-item.cpp:1194
 #, c-format
 msgid "%s; <i>masked</i>"
 msgstr "%s; <i>maszkolt</i>"
 
-#: ../src/object/sp-item.cpp:1191
+#: ../src/object/sp-item.cpp:1204
 #, c-format
 msgid "%s; <i>filtered (%s)</i>"
 msgstr "%s; <i>szűrt (%s)</i>"
 
-#: ../src/object/sp-item.cpp:1193
+#: ../src/object/sp-item.cpp:1206
 #, c-format
 msgid "%s; <i>filtered</i>"
 msgstr "%s; <i>szűrt</i>"
@@ -22261,7 +22261,7 @@ msgstr "Kapcsolt kitöltő objektum létrehozása útvonalak között"
 msgid "root"
 msgstr "gyökér"
 
-#: ../src/selection-describer.cpp:121 ../src/ui/dialog/symbols.cpp:1073
+#: ../src/selection-describer.cpp:121 ../src/ui/dialog/symbols.cpp:1071
 msgid "none"
 msgstr "nincs"
 
@@ -24251,6 +24251,10 @@ msgstr "<b>Létrehozás</b>"
 msgid "<b>Defined grids</b>"
 msgstr "<b>Létrehozott rácsok</b>"
 
+#: ../src/ui/dialog/document-properties.cpp:1482
+msgid "Add grid:"
+msgstr "Rács hozzáadása:"
+
 #: ../src/ui/dialog/document-properties.cpp:1485
 msgctxt "Grid"
 msgid "Rectangular"
@@ -24551,8 +24555,8 @@ msgid "Mesh gradients"
 msgstr "Színátmenetes-hálók"
 
 #: ../src/ui/dialog/document-resources.cpp:907
-#: ../src/ui/dialog/symbols.cpp:1070 ../src/ui/dialog/symbols.cpp:1073
-#: ../src/ui/dialog/symbols.cpp:1076
+#: ../src/ui/dialog/symbols.cpp:1068 ../src/ui/dialog/symbols.cpp:1071
+#: ../src/ui/dialog/symbols.cpp:1074
 #: ../share/ui/dialog-document-resources.glade:96
 #: ../share/extensions/render_barcode_qrcode.inx:87
 msgid "Symbols"
@@ -24606,40 +24610,40 @@ msgstr "Stílus"
 msgid "Edit object title"
 msgstr "Objektum címének szerkesztése"
 
-#: ../src/ui/dialog/export-batch.cpp:353
+#: ../src/ui/dialog/export-batch.cpp:354
 msgid "Color used to fill the image background"
 msgstr "Szín a kép hátterének kitöltésére"
 
-#: ../src/ui/dialog/export-batch.cpp:459
+#: ../src/ui/dialog/export-batch.cpp:461
 #, c-format
 msgid "%d Item"
 msgid_plural "%d Items"
 msgstr[0] "%d elem"
 msgstr[1] "%d elem"
 
-#: ../src/ui/dialog/export-batch.cpp:470
+#: ../src/ui/dialog/export-batch.cpp:472
 #, c-format
 msgid "%d Layer"
 msgid_plural "%d Layers"
 msgstr[0] "%d réteg"
 msgstr[1] "%d réteg"
 
-#: ../src/ui/dialog/export-batch.cpp:479
+#: ../src/ui/dialog/export-batch.cpp:481
 #, c-format
 msgid "%d Page"
 msgid_plural "%d Pages"
 msgstr[0] "%d lap"
 msgstr[1] "%d oldal"
 
-#: ../src/ui/dialog/export-batch.cpp:634
+#: ../src/ui/dialog/export-batch.cpp:636
 msgid "No items selected."
 msgstr "Nincs elem kiválasztva."
 
-#: ../src/ui/dialog/export-batch.cpp:646
+#: ../src/ui/dialog/export-batch.cpp:648
 msgid "Can not save to a directory that is actually a file."
 msgstr "Nem lehet olyan mappába menteni, amely valójában egy fájl."
 
-#: ../src/ui/dialog/export-batch.cpp:650
+#: ../src/ui/dialog/export-batch.cpp:652
 #, c-format
 msgid ""
 "<span weight=\"bold\" size=\"larger\">Directory \"%s\" doesn't exist. Create "
@@ -24648,17 +24652,21 @@ msgstr ""
 "<span weight=\"bold\" size=\"larger\">A mappa: „%s” nem létezik. Létrehozzuk?"
 "</span>"
 
-#: ../src/ui/dialog/export-batch.cpp:662
+#: ../src/ui/dialog/export-batch.cpp:664
 msgid "Set Batch Export Options"
 msgstr "Kötegelt exportálási beállítások konfigurálása"
 
-#: ../src/ui/dialog/export-batch.cpp:779 ../src/ui/dialog/export-single.cpp:640
+#: ../src/ui/dialog/export-batch.cpp:781 ../src/ui/dialog/export-single.cpp:640
 msgid "Exporting %1"
 msgstr "%1 exportálása"
 
-#: ../src/ui/dialog/export-batch.cpp:780
+#: ../src/ui/dialog/export-batch.cpp:782
 msgid "Format %1, Selection %2"
 msgstr " %1 formátum, %2 kijelölés"
+
+#: ../src/ui/dialog/export-batch.cpp:811
+msgid "Select where to save the exported files"
+msgstr "Adja meg az exportálandó fájlok mentésének a helyét"
 
 #: ../src/ui/dialog/export-single.cpp:119
 msgid "Color used to fill background"
@@ -30765,7 +30773,7 @@ msgid "Rendering"
 msgstr "Leképezés"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:3033
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:1380
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:1384
 msgid "Edit"
 msgstr "Szerkesztés"
 
@@ -30788,7 +30796,7 @@ msgstr "_SVG-szerkesztő:"
 
 #: ../src/ui/dialog/inkscape-preferences.cpp:3042
 #: ../share/ui/dialog-document-resources.glade:181
-#: ../share/ui/dialog-export.glade:606 ../share/ui/dialog-export.glade:956
+#: ../share/ui/dialog-export.glade:606 ../share/ui/dialog-export.glade:954
 #: ../share/extensions/guillotine.inx:15 ../share/extensions/layer2png.inx:29
 #: ../share/extensions/plotter.inx:96
 #: ../share/extensions/print_win32_vector.inx:9
@@ -31709,8 +31717,8 @@ msgstr "Kijelölési szín"
 
 #: ../src/ui/dialog/objects.cpp:796
 #: ../src/ui/widget/object-composite-settings.cpp:161
-#: ../src/ui/widget/selected-style.cpp:643
-#: ../src/ui/widget/selected-style.cpp:1050
+#: ../src/ui/widget/selected-style.cpp:650
+#: ../src/ui/widget/selected-style.cpp:1057
 msgid "Change opacity"
 msgstr "Átlátszatlanság módosítása"
 
@@ -32011,84 +32019,84 @@ msgstr "Alkalmazva itt: %1"
 msgid "Used in inline attributes"
 msgstr "Beágyazott attribútumokban alkalmazva"
 
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:177
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:247
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:181
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:251
 msgid "Set SVG Font attribute"
 msgstr "SVG-betűkészlet tulajdonságának beállítása"
 
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:330
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:334
 msgid "Adjust kerning value"
 msgstr "Alávágási érték módosítása"
 
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:780
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:784
 #: ../share/extensions/setup_typography_canvas.py:69
 msgid "ascender"
 msgstr "felnyúló szár"
 
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:781
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:785
 #: ../share/extensions/setup_typography_canvas.py:70
 msgid "caps"
 msgstr "nagybetű"
 
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:782 ../share/ui/units.xml:88
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:786 ../share/ui/units.xml:88
 msgid "x-height"
 msgstr "x-magasság"
 
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:783
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:787
 #: ../share/extensions/setup_typography_canvas.py:68
 msgid "baseline"
 msgstr "alapvonal"
 
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:784
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:788
 #: ../share/extensions/setup_typography_canvas.py:72
 msgid "descender"
 msgstr "lenyúló szár"
 
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:805
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:809
 msgid "Set up typography canvas"
 msgstr "Tipográfiai vászon beállítása"
 
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:837
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:841
 msgid "Font Attributes"
 msgstr "Betűkészlet-tulajdonság"
 
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:838
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:842
 msgid "Horizontal advance X:"
 msgstr "Vízszintes X-haladás:"
 
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:838
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:842
 msgid "Default glyph width for horizontal text"
 msgstr "Alapértelmezett betűkészletjel-szélesség vízszintes szöveg számára"
 
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:839
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:843
 msgid "Horizontal origin X:"
 msgstr "Vízszintes X-origó:"
 
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:839
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:843
 msgid "Default X-coordinate of the origin of a glyph (for horizontal text)"
 msgstr ""
 "A betűkészletjel origójának alapértelmezett X-koordinátája (vízszintes "
 "szöveg számára)"
 
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:840
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:844
 msgid "Horizontal origin Y:"
 msgstr "Vízszintes Y-origó:"
 
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:840
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:844
 msgid "Default Y-coordinate of the origin of a glyph (for horizontal text)"
 msgstr ""
 "A betűkészletjel origójának alapértelmezett Y-koordinátája (vízszintes "
 "szöveg számára)"
 
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:841
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:845
 msgid "Font face attributes"
 msgstr "Betűtípus-tulajdonságok"
 
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:842
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:846
 msgid "Family name:"
 msgstr "Család neve:"
 
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:842
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:846
 msgid ""
 "Name of the font as it appears in font selectors and css font-family "
 "properties"
@@ -32096,243 +32104,243 @@ msgstr ""
 "A betűkészlet neve, ahogy az a betűkészlet-választó listában vagy a „font-"
 "family” CSS tulajdonságban megjelenik"
 
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:843
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:847
 #: ../share/extensions/setup_typography_canvas.inx:5
 msgid "Em-size:"
 msgstr "Em-méret:"
 
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:843
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:847
 msgid ""
 "Display units per <italic>em</italic> (nominally width of 'M' character)"
 msgstr ""
 "Megjelenő egységek <italic>em</italic>-enként (az „M” karakter névleges "
 "szélessége)"
 
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:844
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:848
 #: ../share/extensions/setup_typography_canvas.inx:6
 msgid "Ascender:"
 msgstr "Felnyúló szár:"
 
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:844
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:848
 msgid ""
 "Amount of space taken up by ascenders like the tall line on the letter 'h'"
 msgstr "A „h” betű felnyúló szárához hasonló vékony vonal, ill. annak helye"
 
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:845
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:849
 msgid "Caps height:"
 msgstr "Nagybetűk magassága:"
 
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:845
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:849
 msgid ""
 "The height of a capital letter above the baseline like the letter 'H' or 'I'"
 msgstr ""
 "A nagybetű magassága az alapvonal felett a „H” és az „I” betűhöz hasonlóan"
 
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:846
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:850
 msgid "x-height:"
 msgstr "x-magasság:"
 
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:846
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:850
 msgid ""
 "The height of a lower-case letter above the baseline like the letter 'x'"
 msgstr "A kisbetű magassága az alapvonal felett az „x” betűhöz hasonlóan"
 
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:847
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:851
 #: ../share/extensions/setup_typography_canvas.inx:9
 msgid "Descender:"
 msgstr "Lenyúló szár:"
 
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:847
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:851
 msgid "Amount of space taken up by descenders like the tail on the letter 'g'"
 msgstr "A „g” betű lenyúló szárához hasonló vékony vonal, ill. annak helye"
 
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:881
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:885
 msgid "Set up canvas"
 msgstr "Vászon beállítása"
 
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:1035
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:1039
 msgid "Add glyph"
 msgstr "Betűkészletjel felvétele"
 
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:1078
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:1118
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:1082
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:1122
 msgid "Select a <b>path</b> to define the curves of a glyph"
 msgstr ""
 "Betűkészletjel íveinek meghatározásához jelöljön ki egy <b>útvonalat</b>"
 
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:1086
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:1126
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:1090
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:1130
 msgid "The selected object does not have a <b>path</b> description."
 msgstr "A kijelölt objektumnak nincs <b>útvonal</b>-leírása."
 
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:1093
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:1097
 msgid "No glyph selected in the SVGFonts dialog."
 msgstr ""
 "Nincs kijelölt betűkészletjel az SVG-betűkészletjelek párbeszédablakban."
 
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:1103
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:1138
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:1107
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:1142
 msgid "Set glyph curves"
 msgstr "Betűkészletjel-ívek beállítása"
 
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:1150
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:1154
 msgid "Reset missing-glyph"
 msgstr "Hiányzó betűkészletjel visszaállítása"
 
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:1182
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:1186
 msgid "Edit glyph name"
 msgstr "Betűkészletjel nevének szerkesztése"
 
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:1197
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:1201
 msgid "Set glyph unicode"
 msgstr "Betűkészletjel-Unicode beállítása"
 
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:1216
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:1220
 msgid "Set glyph advance"
 msgstr "Betűkészletjel speciális beállítása"
 
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:1230
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:1234
 msgid "Remove font"
 msgstr "Betűkészlet eltávolítása"
 
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:1241
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:1245
 msgid "Remove glyph"
 msgstr "Betűkészletjel eltávolítása"
 
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:1252
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:1256
 msgid "Remove kerning pair"
 msgstr "Alávágási pár eltávolítása"
 
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:1302
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:1306
 msgid "Toggle layer solo"
 msgstr "Réteg egyedüliségének átváltása"
 
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:1323
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:1327
 msgid "From selection"
 msgstr "Kijelölésből"
 
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:1337
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:1341
 msgid "Missing glyph"
 msgstr "Hiányzó betűkészletjel"
 
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:1356
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:1360
 msgid "Glyph"
 msgstr "Betűkészletjel"
 
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:1361
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:1365
 msgid "Characters"
 msgstr "Karakterek"
 
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:1362
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:1366
 msgid "Unicode"
 msgstr "Unicode"
 
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:1363
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:1367
 msgid "Advance"
 msgstr "Haladás"
 
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:1372
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:1376
 msgid "Get curves"
 msgstr "Görbék átvétele"
 
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:1374
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:1378
 msgid "Get curves from selection to replace current glyph"
 msgstr "A kijelölt görbék átvétele a jelenlegi betűkészletjel lecseréléséhez"
 
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:1382
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:1386
 msgid "Switch to a layer with the same name as current glyph"
 msgstr "Váltás a jelenlegi betűkészletjellel megegyező nevű rétegre"
 
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:1385
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:1389
 msgid "Sort glyphs"
 msgstr "Betűkészletjelek rendezése"
 
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:1386
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:1390
 msgid "Sort glyphs in Unicode order"
 msgstr "Betűkészletjelek rendezése Unicode sorrendben"
 
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:1391
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:1395
 msgid "Add new glyph"
 msgstr "Új betűkészletjel felvétele"
 
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:1396
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:1400
 msgid "Delete current glyph"
 msgstr "Aktuális betűkészletjel törlése"
 
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:1459
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:1463
 msgid "Glyph list view"
 msgstr "Betűkészletjelek listanézetben"
 
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:1465
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:1469
 msgid "Glyph grid view"
 msgstr "Betűkészletjelek rácsnézetben"
 
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:1544
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:1548
 msgid "Add kerning pair"
 msgstr "Alávágási pár felvétele"
 
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:1548
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:1552
 msgid "Add pair"
 msgstr "Pár felvétele"
 
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:1551
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:1555
 msgid "Remove pair"
 msgstr "Pár eltávolítása"
 
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:1555
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:1559
 msgid "Select glyphs:"
 msgstr "Betűkészletjelek választása:"
 
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:1562
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:1566
 msgid "First glyph"
 msgstr "Első betűkészletjel"
 
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:1563
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:1567
 msgid "Second glyph"
 msgstr "Második betűkészletjel"
 
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:1573
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:1577
 msgid "Kerning value:"
 msgstr "Alávágási érték:"
 
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:1640
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:1644
 msgid "Set font family"
 msgstr "Betűkészlet-család beállítása"
 
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:1649
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:1653
 msgid "font"
 msgstr "betűkészlet"
 
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:1663
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:1667
 msgid "Add font"
 msgstr "Betűkészlet felvétele"
 
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:1684
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:1688
 msgid "_Fonts"
 msgstr "_Betűkészletek"
 
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:1694
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:1698
 msgid "Set SVG font name"
 msgstr "SVG-betűtípus neve"
 
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:1702
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:1706
 msgid "_Global settings"
 msgstr "_Globális beállítások"
 
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:1703
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:1707
 msgid "_Glyphs"
 msgstr "_Betűkészletjelek"
 
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:1704
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:1708
 msgid "_Kerning"
 msgstr "_Alávágás"
 
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:1720
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:1721
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:1724
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:1725
 msgid "Sample text"
 msgstr "Mintaszöveg"
 
-#: ../src/ui/dialog/svg-fonts-dialog.cpp:1725
+#: ../src/ui/dialog/svg-fonts-dialog.cpp:1729
 msgid "Preview text:"
 msgstr "Előnézet-szöveg:"
 
@@ -32349,11 +32357,11 @@ msgstr "Dokumentum színmintái"
 msgid "All symbol sets"
 msgstr "Összes szimbólumgyűjtemény"
 
-#: ../src/ui/dialog/symbols.cpp:582 ../src/ui/dialog/symbols.cpp:585
+#: ../src/ui/dialog/symbols.cpp:580 ../src/ui/dialog/symbols.cpp:583
 msgid "No symbols found."
 msgstr "Nem találhatóak szimbólumok."
 
-#: ../src/ui/dialog/symbols.cpp:583
+#: ../src/ui/dialog/symbols.cpp:581
 msgid ""
 "Try a different search term,\n"
 "or switch to a different symbol set."
@@ -32361,7 +32369,7 @@ msgstr ""
 "Próbáljon ki egy másik keresési kifejezést,\n"
 "vagy váltson egy másik szimbólumgyűjteményre."
 
-#: ../src/ui/dialog/symbols.cpp:586
+#: ../src/ui/dialog/symbols.cpp:584
 msgid ""
 "No symbols in current document.\n"
 "Choose a different symbol set\n"
@@ -32371,11 +32379,11 @@ msgstr ""
 "Válasszon egy másik szimbólumgyűjteményt\n"
 "vagy adjon hozzá egy szimbólumot."
 
-#: ../src/ui/dialog/symbols.cpp:658
+#: ../src/ui/dialog/symbols.cpp:656
 msgid "Group from symbol"
 msgstr "Szimbólumból csoport"
 
-#: ../src/ui/dialog/symbols.cpp:963 ../src/ui/dialog/symbols.cpp:982
+#: ../src/ui/dialog/symbols.cpp:961 ../src/ui/dialog/symbols.cpp:980
 msgid "Unnamed Symbols"
 msgstr "Név nélküli szimbólumok"
 
@@ -32682,7 +32690,7 @@ msgid "Drop color on gradient"
 msgstr "Szín ejtése a színátmenetre"
 
 #: ../src/ui/drag-and-drop.cpp:171 ../src/ui/drag-and-drop.cpp:269
-#: ../src/ui/widget/selected-style.cpp:309
+#: ../src/ui/widget/selected-style.cpp:316
 msgid "Drop color"
 msgstr "Szín ejtése"
 
@@ -33199,64 +33207,66 @@ msgstr "Adjon meg egy fájlnevet az exportáláshoz"
 msgid "Drag curve"
 msgstr "Ív húzása"
 
-#: ../src/ui/tool/curve-drag-point.cpp:168
+#: ../src/ui/tool/curve-drag-point.cpp:175
+msgid "Remove segment"
+msgstr "Szakasz eltávolítása"
+
+#: ../src/ui/tool/curve-drag-point.cpp:179
 #: ../src/ui/tool/multi-path-manipulator.cpp:323
 msgid "Straighten segments"
 msgstr "Szakaszok egyenesítése"
 
-#: ../src/ui/tool/curve-drag-point.cpp:180
-msgid "Remove segment"
-msgstr "Szakasz eltávolítása"
-
-#: ../src/ui/tool/curve-drag-point.cpp:204
+#: ../src/ui/tool/curve-drag-point.cpp:203
 msgctxt "Path segment tip"
 msgid "<b>Shift</b>: drag to open or move BSpline handles"
 msgstr "<b>Shift</b>. B-spline-fogantyúk megnyitása vagy mozgatása: húzással."
 
-#: ../src/ui/tool/curve-drag-point.cpp:208
+#: ../src/ui/tool/curve-drag-point.cpp:207
 msgctxt "Path segment tip"
 msgid "<b>Shift</b>: click to toggle segment selection"
 msgstr ""
 "<b>Shift</b>. Szakasz kijelölése, illetve kijelölésének megszüntetése: "
 "kattintással."
 
-#: ../src/ui/tool/curve-drag-point.cpp:212
+#: ../src/ui/tool/curve-drag-point.cpp:211
 msgctxt "Path segment tip"
 msgid "<b>Ctrl+Alt</b>: click to insert a node"
 msgstr "<b>Ctrl+Alt</b>. Csomópont beszúrása: kattintással."
 
-#: ../src/ui/tool/curve-drag-point.cpp:216
+#: ../src/ui/tool/curve-drag-point.cpp:214
 msgctxt "Path segment tip"
-msgid "<b>Ctrl</b>: click to change line type"
-msgstr "<b>Ctrl</b>. vonaltípus módosítása: húzással."
+msgid "<b>Alt</b>: double click to change line type"
+msgstr "<b>Alt</b>: vonaltípus módosítása dupla kattintással"
 
-#: ../src/ui/tool/curve-drag-point.cpp:220
+#: ../src/ui/tool/curve-drag-point.cpp:217
 msgctxt "Path segment tip"
 msgid ""
 "<b>BSpline segment</b>: drag to shape the segment, doubleclick to insert "
-"node, click to select (more: Shift, Ctrl+Alt)"
+"node, click to select (more: Alt, Shift, Ctrl+Alt)"
 msgstr ""
 "<b>B-spline-szakasz</b>. A szakasz alakítása: húzással. Csomópont beszúrása: "
-"dupla kattintással. Kijelölés: kattintással. (Továbbiak: Shift, Ctrl+Alt.)"
+"dupla kattintással. Kijelölés: kattintással. (Továbbiak: Alt, Shift, "
+"Ctrl+Alt.)"
 
-#: ../src/ui/tool/curve-drag-point.cpp:225
+#: ../src/ui/tool/curve-drag-point.cpp:221
 msgctxt "Path segment tip"
 msgid ""
 "<b>Linear segment</b>: drag to convert to a Bezier segment, doubleclick to "
-"insert node, click to select (more: Shift, Ctrl+Alt)"
+"insert node, click to select (more: Alt, Shift, Ctrl+Alt)"
 msgstr ""
 "<b>Lineáris szakasz</b>. Átalakítás Bézier-szakasszá: húzással. Csomópont "
-"beszúrása: dupla kattintással. Kijelölés: kattintással. (Továbbiak: Shift, "
-"Ctrl+Alt.)"
+"beszúrása: dupla kattintással. Kijelölés: kattintással. (Továbbiak: Alt, "
+"Shift, Ctrl+Alt.)"
 
-#: ../src/ui/tool/curve-drag-point.cpp:229
+#: ../src/ui/tool/curve-drag-point.cpp:224
 msgctxt "Path segment tip"
 msgid ""
 "<b>Bezier segment</b>: drag to shape the segment, doubleclick to insert "
-"node, click to select (more: Shift, Ctrl+Alt)"
+"node, click to select (more: Alt, Shift, Ctrl+Alt)"
 msgstr ""
-"<b>Bézier-szakasz</b>. A szakasz alakítása: húzással. Csomópont beszúrása: "
-"dupla kattintással. Kijelölés: kattintással. (Továbbiak: Shift, Ctrl+Alt.)"
+"<b>Bezier-szakasz</b>. A szakasz alakítása: húzással. Csomópont beszúrása: "
+"dupla kattintással. Kijelölés: kattintással. (Továbbiak: Alt, Shift, "
+"Ctrl+Alt.)"
 
 #: ../src/ui/tool/multi-path-manipulator.cpp:315
 msgid "Retract handles"
@@ -33800,8 +33810,8 @@ msgstr "<b>Módosítás:</b>"
 msgid "3D Box: Change perspective (angle of infinite axis)"
 msgstr "3D téglatest: perspektíva módosítása (a végtelen tengely szöge)"
 
-#: ../src/ui/toolbar/calligraphy-toolbar.cpp:321
-#: ../src/ui/toolbar/calligraphy-toolbar.cpp:418
+#: ../src/ui/toolbar/calligraphy-toolbar.cpp:314
+#: ../src/ui/toolbar/calligraphy-toolbar.cpp:411
 msgid "No preset"
 msgstr "Nincs előbeállítás"
 
@@ -33835,7 +33845,7 @@ msgstr "Nincs színátmenet"
 #: ../src/ui/toolbar/gradient-toolbar.cpp:141
 #: ../src/ui/widget/selected-style.cpp:69
 #: ../src/ui/widget/selected-style.cpp:70
-#: ../src/ui/widget/selected-style.cpp:948
+#: ../src/ui/widget/selected-style.cpp:955
 msgid "Nothing selected"
 msgstr "Semmi nincs kijelölve"
 
@@ -34232,7 +34242,7 @@ msgstr "Betűstílus"
 
 #: ../src/ui/toolbar/text-toolbar.cpp:356
 #: ../src/ui/toolbar/text-toolbar.cpp:1701
-#: ../src/ui/widget/font-selector.cpp:51 ../src/ui/widget/font-selector.cpp:252
+#: ../src/ui/widget/font-selector.cpp:52 ../src/ui/widget/font-selector.cpp:252
 msgid "Font size"
 msgstr "Betűméret"
 
@@ -34950,13 +34960,13 @@ msgstr "Új útvonal létrehozása"
 msgid "Appending to selected path"
 msgstr "Hozzáfűzés a kijelölt útvonalhoz"
 
-#: ../src/ui/tools/pen-tool.cpp:560
+#: ../src/ui/tools/pen-tool.cpp:563
 msgid "<b>Click</b> or <b>click and drag</b> to close and finish the path."
 msgstr ""
 "Az útvonal lezárása és befejezése: <b>kattintással</b> vagy <b>kattintással "
 "+ húzással</b>."
 
-#: ../src/ui/tools/pen-tool.cpp:562
+#: ../src/ui/tools/pen-tool.cpp:565
 msgid ""
 "<b>Click</b> or <b>click and drag</b> to close and finish the path. "
 "Shift+Click make a cusp node"
@@ -34964,14 +34974,14 @@ msgstr ""
 "Az útvonal lezárása és befejezése: <b>kattintással</b> vagy <b>kattintással "
 "+ húzással</b>. Csúcs-csomópont létrehozása: Shift+kattintással."
 
-#: ../src/ui/tools/pen-tool.cpp:574
+#: ../src/ui/tools/pen-tool.cpp:577
 msgid ""
 "<b>Click</b> or <b>click and drag</b> to continue the path from this point."
 msgstr ""
 "Az útvonal folytatása ebből a pontból: <b>kattintással</b> vagy "
 "<b>kattintással + húzással</b>."
 
-#: ../src/ui/tools/pen-tool.cpp:576
+#: ../src/ui/tools/pen-tool.cpp:579
 msgid ""
 "<b>Click</b> or <b>click and drag</b> to continue the path from this point. "
 "Shift+Click make a cusp node"
@@ -34980,7 +34990,7 @@ msgstr ""
 "<b>kattintással + húzással</b>. Csúcs-csomópont létrehozása: "
 "Shift+kattintással."
 
-#: ../src/ui/tools/pen-tool.cpp:1692
+#: ../src/ui/tools/pen-tool.cpp:1695
 #, c-format
 msgid ""
 "<b>Curve segment</b>: angle %3.2f&#176;; <b>Shift+Click</b> creates cusp "
@@ -34990,7 +35000,7 @@ msgstr ""
 "b>, előző mozgatása: <b>Alt</b>. Befejezés: <b>Enter</b> vagy "
 "<b>Shift+Enter</b>"
 
-#: ../src/ui/tools/pen-tool.cpp:1693
+#: ../src/ui/tools/pen-tool.cpp:1696
 #, c-format
 msgid ""
 "<b>Line segment</b>: angle %3.2f&#176;; <b>Shift+Click</b> creates cusp "
@@ -35000,7 +35010,7 @@ msgstr ""
 "<b>Shift+kattintással</b>, előző mozgatása: <b>Alt</b>. Befejezés: <b>Enter</"
 "b> vagy <b>Shift+Enter</b>"
 
-#: ../src/ui/tools/pen-tool.cpp:1697
+#: ../src/ui/tools/pen-tool.cpp:1700
 #, c-format
 msgid ""
 "<b>Curve segment</b>: angle %3.2f&#176;, distance %s; with <b>Ctrl</b> to "
@@ -35009,7 +35019,7 @@ msgstr ""
 "<b>Ívszakasz</b>. Szög: %3.2f&#176;. Távolság: %s. Szöghöz való illesztés: "
 "<b>Ctrl</b>; Az útvonal befejezése: <b>Enter</b> vagy <b>Shift+Enter</b>."
 
-#: ../src/ui/tools/pen-tool.cpp:1698
+#: ../src/ui/tools/pen-tool.cpp:1701
 #, c-format
 msgid ""
 "<b>Line segment</b>: angle %3.2f&#176;, distance %s; with <b>Ctrl</b> to "
@@ -35019,7 +35029,7 @@ msgstr ""
 "illesztés: <b>Ctrl</b>. Az útvonal befejezése: <b>Enter</b> vagy "
 "<b>Shift+Enter</b>."
 
-#: ../src/ui/tools/pen-tool.cpp:1721
+#: ../src/ui/tools/pen-tool.cpp:1724
 #, c-format
 msgid ""
 "<b>Curve handle</b>: angle %3.2f&#176;, length %s; with <b>Ctrl</b> to snap "
@@ -35028,7 +35038,7 @@ msgstr ""
 "<b>Ív-fogantyú</b>. Szög: %3.2f&#176;. Hossz: %s. Szöghöz való illesztés: "
 "<b>Ctrl</b>."
 
-#: ../src/ui/tools/pen-tool.cpp:1752
+#: ../src/ui/tools/pen-tool.cpp:1755
 #, c-format
 msgid ""
 "<b>Curve handle, symmetric</b>: angle %3.2f&#176;, length %s; with <b>Ctrl</"
@@ -35037,7 +35047,7 @@ msgstr ""
 "<b>Ív-fogantyú, szimmetrikus</b>. Szög: %3.2f&#176;. Hossz: %s. Szöghöz való "
 "illesztés: <b>Ctrl</b>; csak ezen vezérlőelem áthelyezése: <b>Shift</b>."
 
-#: ../src/ui/tools/pen-tool.cpp:1753
+#: ../src/ui/tools/pen-tool.cpp:1756
 #, c-format
 msgid ""
 "<b>Curve handle</b>: angle %3.2f&#176;, length %s; with <b>Ctrl</b> to snap "
@@ -35046,7 +35056,7 @@ msgstr ""
 "<b>Ív-fogantyú</b>. Szög: %3.2f&#176;. Hossz: %s. Szöghöz való illesztés: "
 "<b>Ctrl</b>; csak ezen fogantyú áthelyezése: <b>Shift</b>."
 
-#: ../src/ui/tools/pen-tool.cpp:1927
+#: ../src/ui/tools/pen-tool.cpp:1930
 msgid "Drawing finished"
 msgstr "Rajzolás befejezve"
 
@@ -35255,18 +35265,18 @@ msgstr ""
 msgid "Create spiral"
 msgstr "Spirál létrehozása"
 
-#: ../src/ui/tools/spray-tool.cpp:209 ../src/ui/tools/tweak-tool.cpp:136
+#: ../src/ui/tools/spray-tool.cpp:199 ../src/ui/tools/tweak-tool.cpp:136
 #, c-format
 msgid "<b>%i</b> object selected"
 msgid_plural "<b>%i</b> objects selected"
 msgstr[0] "<b>%i</b> objektum kijelölve"
 msgstr[1] "<b>%i</b> objektum kijelölve"
 
-#: ../src/ui/tools/spray-tool.cpp:211 ../src/ui/tools/tweak-tool.cpp:138
+#: ../src/ui/tools/spray-tool.cpp:201 ../src/ui/tools/tweak-tool.cpp:138
 msgid "<b>Nothing</b> selected"
 msgstr "<b>Semmi</b> nincs kijelölve"
 
-#: ../src/ui/tools/spray-tool.cpp:216
+#: ../src/ui/tools/spray-tool.cpp:206
 #, c-format
 msgid ""
 "%s. Drag, click or click and scroll to spray <b>copies</b> of the initial "
@@ -35276,7 +35286,7 @@ msgstr ""
 "kattintással vagy kattintással + görgetéssel. Egykattintásos elem "
 "frissítése: jobb egérgombbal kattintás + mozgatás."
 
-#: ../src/ui/tools/spray-tool.cpp:219
+#: ../src/ui/tools/spray-tool.cpp:209
 #, c-format
 msgid ""
 "%s. Drag, click or click and scroll to spray <b>clones</b> of the initial "
@@ -35286,7 +35296,7 @@ msgstr ""
 "kattintással vagy kattintással + görgetéssel. Egykattintásos elem "
 "frissítése: jobb egérgombbal kattintás + mozgatás."
 
-#: ../src/ui/tools/spray-tool.cpp:222
+#: ../src/ui/tools/spray-tool.cpp:212
 #, c-format
 msgid ""
 "%s. Drag, click or click and scroll to spray into a <b>single path</b>. "
@@ -35296,19 +35306,19 @@ msgstr ""
 "kattintással + görgetéssel. Egykattintásos elem frissítése: jobb egérgombbal "
 "kattintás + mozgatás."
 
-#: ../src/ui/tools/spray-tool.cpp:1305
+#: ../src/ui/tools/spray-tool.cpp:1273
 msgid "<b>Nothing selected!</b> Select objects to spray."
 msgstr "<b>Semmi nincs kijelölve.</b> Jelölje ki a felfestendő objektumokat."
 
-#: ../src/ui/tools/spray-tool.cpp:1376
+#: ../src/ui/tools/spray-tool.cpp:1344
 msgid "Spray with copies"
 msgstr "Másolatok felfestése"
 
-#: ../src/ui/tools/spray-tool.cpp:1379
+#: ../src/ui/tools/spray-tool.cpp:1347
 msgid "Spray with clones"
 msgstr "Klónok felfestése"
 
-#: ../src/ui/tools/spray-tool.cpp:1382
+#: ../src/ui/tools/spray-tool.cpp:1350
 msgid "Spray in single path"
 msgstr "Egyetlen útvonal felfestése"
 
@@ -35316,7 +35326,7 @@ msgstr "Egyetlen útvonal felfestése"
 msgid "<b>Ctrl</b>: snap angle; keep rays radial"
 msgstr "<b>Ctrl</b>: szöghöz való illesztés; ágak sugárirányban való tartása"
 
-#: ../src/ui/tools/star-tool.cpp:341
+#: ../src/ui/tools/star-tool.cpp:344
 #, c-format
 msgid ""
 "<b>Polygon</b>: radius %s, angle %.2f&#176;; with <b>Ctrl</b> to snap angle"
@@ -35324,7 +35334,7 @@ msgstr ""
 "<b>Sokszög</b>. Sugár: %s, szög: %.2f&#176;. Szöghöz való illesztés: "
 "<b>Ctrl</b>."
 
-#: ../src/ui/tools/star-tool.cpp:342
+#: ../src/ui/tools/star-tool.cpp:345
 #, c-format
 msgid ""
 "<b>Star</b>: radius %s, angle %.2f&#176;; with <b>Ctrl</b> to snap angle"
@@ -35903,11 +35913,11 @@ msgstr "Kitöltési szín beállítása"
 msgid "Set stroke color"
 msgstr "Körvonalszín beállítása"
 
-#: ../src/ui/widget/fill-style.cpp:426 ../src/ui/widget/selected-style.cpp:318
+#: ../src/ui/widget/fill-style.cpp:426 ../src/ui/widget/selected-style.cpp:325
 msgid "Remove fill"
 msgstr "Kitöltés eltávolítása"
 
-#: ../src/ui/widget/fill-style.cpp:426 ../src/ui/widget/selected-style.cpp:326
+#: ../src/ui/widget/fill-style.cpp:426 ../src/ui/widget/selected-style.cpp:333
 msgid "Remove stroke"
 msgstr "Körvonal eltávolítása"
 
@@ -35936,13 +35946,13 @@ msgid "Set pattern on stroke"
 msgstr "Minta beállítása a körvonalra"
 
 #: ../src/ui/widget/fill-style.cpp:712 ../src/ui/widget/selected-style.cpp:73
-#: ../src/ui/widget/selected-style.cpp:334
+#: ../src/ui/widget/selected-style.cpp:341
 #: ../src/ui/widget/style-swatch.cpp:292
 msgid "Unset fill"
 msgstr "Definiálatlan kitöltés"
 
 #: ../src/ui/widget/fill-style.cpp:712 ../src/ui/widget/selected-style.cpp:74
-#: ../src/ui/widget/selected-style.cpp:350
+#: ../src/ui/widget/selected-style.cpp:357
 #: ../src/ui/widget/style-swatch.cpp:292
 msgid "Unset stroke"
 msgstr "Definiálatlan körvonal"
@@ -36039,21 +36049,21 @@ msgstr "Átlátszatlanság (%)"
 msgid "Are you sure want to delete the \"%1\" font collection?\n"
 msgstr "Biztosan törölni kívánja ezt a betűkészlet-gyűjteményt: „%1”?\n"
 
-#: ../src/ui/widget/font-list.cpp:105
+#: ../src/ui/widget/font-list.cpp:106
 msgid "Sans Serif"
 msgstr "Talp nélküli"
 
-#: ../src/ui/widget/font-list.cpp:818
+#: ../src/ui/widget/font-list.cpp:851
 msgctxt "N-of-fonts"
 msgid "All fonts"
 msgstr "Összes betűkészlet"
 
-#: ../src/ui/widget/font-list.cpp:818
+#: ../src/ui/widget/font-list.cpp:851
 msgctxt "N-of-fonts"
 msgid "of"
 msgstr "/"
 
-#: ../src/ui/widget/font-list.cpp:818
+#: ../src/ui/widget/font-list.cpp:851
 msgctxt "N-of-fonts"
 msgid "fonts"
 msgstr "betűkészlet"
@@ -36066,11 +36076,11 @@ msgstr "Minden szöveg kijelölése ezzel a betűkészlet-családdal"
 msgid "Font not found on system: "
 msgstr "Ilyen betűkészlet nem található a rendszeren: "
 
-#: ../src/ui/widget/font-selector.cpp:49
+#: ../src/ui/widget/font-selector.cpp:50
 msgid "Font family"
 msgstr "Betűkészlet-család"
 
-#: ../src/ui/widget/font-selector.cpp:50
+#: ../src/ui/widget/font-selector.cpp:51
 msgctxt "Font selector"
 msgid "Style"
 msgstr "Stílus"
@@ -37263,142 +37273,142 @@ msgstr "Kitöltés:"
 msgid "O:"
 msgstr "Á:"
 
-#: ../src/ui/widget/selected-style.cpp:358
-#: ../src/ui/widget/selected-style.cpp:366
+#: ../src/ui/widget/selected-style.cpp:365
+#: ../src/ui/widget/selected-style.cpp:373
 msgid "Make fill opaque"
 msgstr "Kitöltés átlátszatlanná tevése"
 
-#: ../src/ui/widget/selected-style.cpp:377
+#: ../src/ui/widget/selected-style.cpp:384
 msgid "Apply last set color to fill"
 msgstr "Legutóbb beállított szín alkalmazása a kitöltésre"
 
-#: ../src/ui/widget/selected-style.cpp:388
+#: ../src/ui/widget/selected-style.cpp:395
 msgid "Apply last set color to stroke"
 msgstr "Legutóbb beállított szín alkalmazása a körvonalra"
 
-#: ../src/ui/widget/selected-style.cpp:398
+#: ../src/ui/widget/selected-style.cpp:405
 msgid "Apply last selected color to fill"
 msgstr "Legutóbb kijelölt szín alkalmazása a kitöltésre"
 
-#: ../src/ui/widget/selected-style.cpp:408
+#: ../src/ui/widget/selected-style.cpp:415
 msgid "Apply last selected color to stroke"
 msgstr "Legutóbb kijelölt szín alkalmazása a körvonalra"
 
-#: ../src/ui/widget/selected-style.cpp:433
+#: ../src/ui/widget/selected-style.cpp:440
 msgid "Invert fill"
 msgstr "Kitöltés invertálása"
 
-#: ../src/ui/widget/selected-style.cpp:456
+#: ../src/ui/widget/selected-style.cpp:463
 msgid "Invert stroke"
 msgstr "Körvonal invertálása"
 
-#: ../src/ui/widget/selected-style.cpp:467
+#: ../src/ui/widget/selected-style.cpp:474
 msgid "White fill"
 msgstr "Fehér kitöltés"
 
-#: ../src/ui/widget/selected-style.cpp:478
+#: ../src/ui/widget/selected-style.cpp:485
 msgid "White stroke"
 msgstr "Fehér körvonal"
 
-#: ../src/ui/widget/selected-style.cpp:489
+#: ../src/ui/widget/selected-style.cpp:496
 msgid "Black fill"
 msgstr "Fekete kitöltés"
 
-#: ../src/ui/widget/selected-style.cpp:500
+#: ../src/ui/widget/selected-style.cpp:507
 msgid "Black stroke"
 msgstr "Fekete körvonal"
 
-#: ../src/ui/widget/selected-style.cpp:542
+#: ../src/ui/widget/selected-style.cpp:549
 msgid "Paste fill"
 msgstr "Kitöltés beillesztése"
 
-#: ../src/ui/widget/selected-style.cpp:559
+#: ../src/ui/widget/selected-style.cpp:566
 msgid "Paste stroke"
 msgstr "Körvonal beillesztése"
 
-#: ../src/ui/widget/selected-style.cpp:672
+#: ../src/ui/widget/selected-style.cpp:679
 msgid "Edit Fill..."
 msgstr "Kitöltés szerkesztése…"
 
-#: ../src/ui/widget/selected-style.cpp:673
+#: ../src/ui/widget/selected-style.cpp:680
 msgid "Edit Stroke..."
 msgstr "Körvonal szerkesztése…"
 
-#: ../src/ui/widget/selected-style.cpp:678
+#: ../src/ui/widget/selected-style.cpp:685
 msgid "Last Set Color"
 msgstr "Legutóbb beállított szín"
 
-#: ../src/ui/widget/selected-style.cpp:680
+#: ../src/ui/widget/selected-style.cpp:687
 msgid "Last Selected Color"
 msgstr "Legutóbb kijelölt szín"
 
-#: ../src/ui/widget/selected-style.cpp:698
+#: ../src/ui/widget/selected-style.cpp:705
 msgid "Copy Color"
 msgstr "Szín másolása"
 
-#: ../src/ui/widget/selected-style.cpp:702
+#: ../src/ui/widget/selected-style.cpp:709
 msgid "Paste Color"
 msgstr "Szín beillesztése"
 
-#: ../src/ui/widget/selected-style.cpp:704
+#: ../src/ui/widget/selected-style.cpp:711
 msgid "Swap Fill and Stroke"
 msgstr "Kitöltés és körvonal felcserélése"
 
-#: ../src/ui/widget/selected-style.cpp:709
+#: ../src/ui/widget/selected-style.cpp:716
 msgid "Make Fill Opaque"
 msgstr "Kitöltés átlátszatlanná tevése"
 
-#: ../src/ui/widget/selected-style.cpp:710
+#: ../src/ui/widget/selected-style.cpp:717
 msgid "Make Stroke Opaque"
 msgstr "Körvonal átlátszatlanná tevése"
 
 #. TRANSLATORS COMMENT: unset is a verb here
-#: ../src/ui/widget/selected-style.cpp:712
+#: ../src/ui/widget/selected-style.cpp:719
 msgid "Unset Fill"
 msgstr "Definiálatlan kitöltés"
 
-#: ../src/ui/widget/selected-style.cpp:713
+#: ../src/ui/widget/selected-style.cpp:720
 msgid "Unset Stroke"
 msgstr "Definiálatlan körvonal"
 
-#: ../src/ui/widget/selected-style.cpp:714
+#: ../src/ui/widget/selected-style.cpp:721
 msgid "Remove Fill"
 msgstr "Kitöltés eltávolítása"
 
-#: ../src/ui/widget/selected-style.cpp:715
-#: ../src/ui/widget/selected-style.cpp:752
+#: ../src/ui/widget/selected-style.cpp:722
+#: ../src/ui/widget/selected-style.cpp:759
 msgid "Remove Stroke"
 msgstr "Körvonal eltávolítása"
 
-#: ../src/ui/widget/selected-style.cpp:724
+#: ../src/ui/widget/selected-style.cpp:731
 msgid "<b>Stroke Width</b>"
 msgstr "<b>Körvonalszélesség</b>"
 
-#: ../src/ui/widget/selected-style.cpp:777
+#: ../src/ui/widget/selected-style.cpp:784
 msgid "Change stroke width"
 msgstr "Körvonalszélesség módosítása"
 
-#: ../src/ui/widget/selected-style.cpp:893
+#: ../src/ui/widget/selected-style.cpp:900
 msgid ", drag to adjust, middle-click to remove"
 msgstr ", módosítás: húzással, eltávolítás: középső kattintással"
 
-#: ../src/ui/widget/selected-style.cpp:916
+#: ../src/ui/widget/selected-style.cpp:923
 msgid "Fill is averaged over selected objects"
 msgstr "A kijelölt objektumok kitöltése átlagolva van"
 
-#: ../src/ui/widget/selected-style.cpp:917
+#: ../src/ui/widget/selected-style.cpp:924
 msgid "Stroke is averaged over selected objects"
 msgstr "A kijelölt objektumok körvonala átlagolva van"
 
-#: ../src/ui/widget/selected-style.cpp:923
+#: ../src/ui/widget/selected-style.cpp:930
 msgid "Multiple selected objects have same fill"
 msgstr "Több kijelölt objektum egyforma kitöltéssel rendelkezik"
 
-#: ../src/ui/widget/selected-style.cpp:924
+#: ../src/ui/widget/selected-style.cpp:931
 msgid "Multiple selected objects have same stroke"
 msgstr "Több kijelölt objektum egyforma körvonallal rendelkezik"
 
-#: ../src/ui/widget/selected-style.cpp:954
+#: ../src/ui/widget/selected-style.cpp:961
 msgid ""
 "<b>Opacity (%)</b>\n"
 "Middle-click cycles through 0%, 50%, 100%"
@@ -37406,38 +37416,38 @@ msgstr ""
 "<b>Átlátszatlanság (%)</b>\n"
 "Középső kattintással körbeforog a 0%, 50%, 100%"
 
-#: ../src/ui/widget/selected-style.cpp:977
+#: ../src/ui/widget/selected-style.cpp:984
 #: ../src/ui/widget/stroke-style.cpp:232 ../src/ui/widget/style-swatch.cpp:301
 #: ../src/ui/widget/style-swatch.cpp:304
 msgid "Hairline"
 msgstr "Hajszálvékony"
 
-#: ../src/ui/widget/selected-style.cpp:978
+#: ../src/ui/widget/selected-style.cpp:985
 msgid "Stroke width: Hairline"
 msgstr "Körvonalszélesség: hajszálvékony"
 
-#: ../src/ui/widget/selected-style.cpp:997
+#: ../src/ui/widget/selected-style.cpp:1004
 #, c-format
 msgid "Stroke width: %.5g%s%s"
 msgstr "Körvonalszélesség: %.5g%s%s"
 
-#: ../src/ui/widget/selected-style.cpp:1001
+#: ../src/ui/widget/selected-style.cpp:1008
 msgid " (averaged)"
 msgstr " (átlagolt)"
 
-#: ../src/ui/widget/selected-style.cpp:1024
+#: ../src/ui/widget/selected-style.cpp:1031
 msgid "0% (Transparent)"
 msgstr "0% (átlátszó)"
 
-#: ../src/ui/widget/selected-style.cpp:1028
+#: ../src/ui/widget/selected-style.cpp:1035
 msgid "100% (Opaque)"
 msgstr "100% (átlátszatlan)"
 
-#: ../src/ui/widget/selected-style.cpp:1171
+#: ../src/ui/widget/selected-style.cpp:1178
 msgid "Adjust alpha"
 msgstr "Átlátszóság módosítása"
 
-#: ../src/ui/widget/selected-style.cpp:1175
+#: ../src/ui/widget/selected-style.cpp:1182
 #, c-format
 msgid ""
 "Adjusting <b>alpha</b>: was %.3g, now <b>%.3g</b> (diff %.3g); with <b>Ctrl</"
@@ -37448,11 +37458,11 @@ msgstr ""
 "%.3g); <b>Ctrl</b>: fényesség módosítása, <b>Shift</b>: telítettség "
 "módosítása, módosítóbillentyűk nélkül: árnyalat módosítása"
 
-#: ../src/ui/widget/selected-style.cpp:1179
+#: ../src/ui/widget/selected-style.cpp:1186
 msgid "Adjust saturation"
 msgstr "Telítettség módosítása"
 
-#: ../src/ui/widget/selected-style.cpp:1183
+#: ../src/ui/widget/selected-style.cpp:1190
 #, c-format
 msgid ""
 "Adjusting <b>saturation</b>: was %.3g, now <b>%.3g</b> (diff %.3g); with "
@@ -37463,11 +37473,11 @@ msgstr ""
 "(eltérés: %.3g); <b>Ctrl</b>: fényesség módosítása, <b>Alt</b>: alfa "
 "módosítása, módosítóbillentyűk nélkül: árnyalat módosítása"
 
-#: ../src/ui/widget/selected-style.cpp:1187
+#: ../src/ui/widget/selected-style.cpp:1194
 msgid "Adjust lightness"
 msgstr "Fényesség módosítása"
 
-#: ../src/ui/widget/selected-style.cpp:1191
+#: ../src/ui/widget/selected-style.cpp:1198
 #, c-format
 msgid ""
 "Adjusting <b>lightness</b>: was %.3g, now <b>%.3g</b> (diff %.3g); with "
@@ -37478,11 +37488,11 @@ msgstr ""
 "%.3g); <b>Shift</b>: telítettség módosítása, <b>Alt</b>: alfa módosítása, "
 "módosítóbillentyűk nélkül: árnyalat módosítása"
 
-#: ../src/ui/widget/selected-style.cpp:1195
+#: ../src/ui/widget/selected-style.cpp:1202
 msgid "Adjust hue"
 msgstr "Árnyalat módosítása"
 
-#: ../src/ui/widget/selected-style.cpp:1199
+#: ../src/ui/widget/selected-style.cpp:1206
 #, c-format
 msgid ""
 "Adjusting <b>hue</b>: was %.3g, now <b>%.3g</b> (diff %.3g); with <b>Shift</"
@@ -37493,12 +37503,12 @@ msgstr ""
 "%.3g); <b>Shift</b>: telítettség módosítás, <b>Alt</b>: alfa módosítása, "
 "<b>Ctrl</b>: fényesség módosítása"
 
-#: ../src/ui/widget/selected-style.cpp:1300
-#: ../src/ui/widget/selected-style.cpp:1314
+#: ../src/ui/widget/selected-style.cpp:1307
+#: ../src/ui/widget/selected-style.cpp:1321
 msgid "Adjust stroke width"
 msgstr "Körvonalszélesség módosítása"
 
-#: ../src/ui/widget/selected-style.cpp:1301
+#: ../src/ui/widget/selected-style.cpp:1308
 #, c-format
 msgid "Adjusting <b>stroke width</b>: was %.3g, now <b>%.3g</b> (diff %.3g)"
 msgstr ""
@@ -38031,7 +38041,8 @@ msgstr "Csak kijelölt exportálása"
 msgid "Background Color"
 msgstr "Háttérszín"
 
-#: ../share/ui/dialog-export.glade:583 ../share/ui/dialog-export.glade:946
+#: ../share/ui/dialog-export.glade:583 ../share/ui/dialog-export.glade:970
+#: ../share/ui/dialog-export.glade:971
 msgid "Browse export directory"
 msgstr "Exportálási mappa böngészése"
 
@@ -38039,7 +38050,7 @@ msgstr "Exportálási mappa böngészése"
 msgid "Select export format"
 msgstr "Exportálási formátum kijelölése"
 
-#: ../share/ui/dialog-export.glade:673 ../share/ui/dialog-export.glade:1043
+#: ../share/ui/dialog-export.glade:673 ../share/ui/dialog-export.glade:1070
 msgid "Cancel Export"
 msgstr "Exportálás törlése"
 
@@ -38079,11 +38090,25 @@ msgstr ""
 "Képek kötegelt exportálása közben a generált, már létező fájlnevek "
 "megerősítés nélkül felülíródnak."
 
-#: ../share/ui/dialog-export.glade:1074
+#: ../share/ui/dialog-export.glade:985
+msgid "Prefix:"
+msgstr "Előtag:"
+
+#: ../share/ui/dialog-export.glade:999
+#: ../share/extensions/other/gcodetools/gcodetools_area.inx:80
+#: ../share/extensions/other/gcodetools/gcodetools_dxf_points.inx:27
+#: ../share/extensions/other/gcodetools/gcodetools_engraving.inx:39
+#: ../share/extensions/other/gcodetools/gcodetools_graffiti.inx:68
+#: ../share/extensions/other/gcodetools/gcodetools_lathe.inx:61
+#: ../share/extensions/other/gcodetools/gcodetools_path_to_gcode.inx:41
+msgid "Directory:"
+msgstr "Könyvtár:"
+
+#: ../share/ui/dialog-export.glade:1101
 msgid "Export to multiple files and file formats"
 msgstr "Exportálás több fájlba és fájlformátumba"
 
-#: ../share/ui/dialog-export.glade:1075
+#: ../share/ui/dialog-export.glade:1102
 msgid "Batch Export"
 msgstr "Kötegelt exportálás"
 
@@ -40712,25 +40737,25 @@ msgid ""
 msgstr ""
 "A z irányú távlatpont átváltása „véges” és „végtelen” (azaz párhuzamos) közt"
 
-#: ../share/ui/toolbar-calligraphy.ui:124
+#: ../share/ui/toolbar-calligraphy.ui:88
 msgid "Choose a preset"
 msgstr "Válasszon előbeállítást"
 
-#: ../share/ui/toolbar-calligraphy.ui:136
+#: ../share/ui/toolbar-calligraphy.ui:97
 msgid "Add or edit calligraphic profile"
 msgstr "Művészi profil hozzáadása vagy szerkesztése"
 
-#: ../share/ui/toolbar-calligraphy.ui:157
+#: ../share/ui/toolbar-calligraphy.ui:115
 msgid "The width of the calligraphic pen (relative to the visible canvas area)"
 msgstr ""
 "A művészi toll szélessége (a látható rajzvászon-területhez viszonyítva)"
 
-#: ../share/ui/toolbar-calligraphy.ui:188 ../share/ui/toolbar-eraser.ui:169
+#: ../share/ui/toolbar-calligraphy.ui:146 ../share/ui/toolbar-eraser.ui:169
 msgid "Use the pressure of the input device to alter the width of the pen"
 msgstr ""
 "A beviteli eszköz nyomásának használata a tollszélesség változtatásához"
 
-#: ../share/ui/toolbar-calligraphy.ui:202
+#: ../share/ui/toolbar-calligraphy.ui:160
 msgid ""
 "Trace the lightness of the background by the width of the pen (white - "
 "minimum width, black - maximum width)"
@@ -40738,15 +40763,15 @@ msgstr ""
 "A háttér fényességének követése a toll szélességével (fehér: minimális "
 "szélesség, fekete: maximális szélesség)"
 
-#: ../share/ui/toolbar-calligraphy.ui:225
-#: ../share/ui/toolbar-calligraphy.ui:307
-#: ../share/ui/toolbar-calligraphy.ui:413 ../share/ui/toolbar-eraser.ui:223
+#: ../share/ui/toolbar-calligraphy.ui:183
+#: ../share/ui/toolbar-calligraphy.ui:265
+#: ../share/ui/toolbar-calligraphy.ui:370 ../share/ui/toolbar-eraser.ui:223
 #: ../share/ui/toolbar-paintbucket.ui:58 ../share/ui/toolbar-spray.ui:368
 #: ../share/ui/toolbar-star.ui:184
 msgid "Parameters"
 msgstr "Paraméterek"
 
-#: ../share/ui/toolbar-calligraphy.ui:241 ../share/ui/toolbar-eraser.ui:185
+#: ../share/ui/toolbar-calligraphy.ui:199 ../share/ui/toolbar-eraser.ui:185
 msgid ""
 "How much velocity thins the stroke (> 0 makes fast strokes thinner, < 0 "
 "makes them broader, 0 makes width independent of velocity)"
@@ -40755,20 +40780,20 @@ msgstr ""
 "gyors vonalhúzás keskenyebb vonalat eredményez; ha 0-nál kisebb, akkor "
 "szélesebbet; 0 esetén pedig nem függ a szélesség a sebességtől)"
 
-#: ../share/ui/toolbar-calligraphy.ui:245 ../share/ui/toolbar-eraser.ui:189
+#: ../share/ui/toolbar-calligraphy.ui:203 ../share/ui/toolbar-eraser.ui:189
 msgid "Thinning:"
 msgstr "Keskenyítés:"
 
-#: ../share/ui/toolbar-calligraphy.ui:266
+#: ../share/ui/toolbar-calligraphy.ui:224
 msgid "Increase to make the pen drag behind, as if slowed by inertia"
 msgstr ""
 "Nagyobb érték esetén a toll mozgása vontatott, mintha tehetetlenség lassítaná"
 
-#: ../share/ui/toolbar-calligraphy.ui:270 ../share/ui/toolbar-eraser.ui:308
+#: ../share/ui/toolbar-calligraphy.ui:228 ../share/ui/toolbar-eraser.ui:308
 msgid "Mass:"
 msgstr "Tömeg:"
 
-#: ../share/ui/toolbar-calligraphy.ui:323
+#: ../share/ui/toolbar-calligraphy.ui:281
 msgid ""
 "The angle of the pen's nib (in degrees; 0 = horizontal; has no effect if "
 "fixation = 0)"
@@ -40776,27 +40801,27 @@ msgstr ""
 "A toll hegyének szöge (fokban; 0 fok esetén vízszintes; ha a rögzítettség "
 "értéke 0, akkor nincs hatása)"
 
-#: ../share/ui/toolbar-calligraphy.ui:337
-#: ../share/ui/toolbar-calligraphy.ui:383
-#: ../share/ui/toolbar-calligraphy.ui:443
-#: ../share/ui/toolbar-calligraphy.ui:478
-#: ../share/ui/toolbar-calligraphy.ui:504 ../share/ui/toolbar-connector.ui:129
+#: ../share/ui/toolbar-calligraphy.ui:295
+#: ../share/ui/toolbar-calligraphy.ui:341
+#: ../share/ui/toolbar-calligraphy.ui:400
+#: ../share/ui/toolbar-calligraphy.ui:435
+#: ../share/ui/toolbar-calligraphy.ui:461 ../share/ui/toolbar-connector.ui:129
 #: ../share/ui/toolbar-connector.ui:176 ../share/ui/toolbar-eraser.ui:316
 #: ../share/ui/toolbar-measure.ui:454 ../share/ui/toolbar-pencil.ui:264
 #: ../share/ui/toolbar-pencil.ui:292 ../share/ui/toolbar-pencil.ui:337
 #: ../share/ui/toolbar-pencil.ui:428 ../share/ui/toolbar-spray.ui:264
-#: ../share/ui/toolbar-spray.ui:421 ../share/ui/toolbar-spray.ui:549
+#: ../share/ui/toolbar-spray.ui:421 ../share/ui/toolbar-spray.ui:552
 #: ../share/ui/toolbar-text.ui:841 ../share/ui/toolbar-tweak.ui:378
 #: ../share/ui/toolbar-tweak.ui:407 ../share/ui/toolbar-tweak.ui:453
 msgid "0"
 msgstr "0"
 
-#: ../share/ui/toolbar-calligraphy.ui:352
+#: ../share/ui/toolbar-calligraphy.ui:310
 msgid "Use the tilt of the input device to alter the angle of the pen's nib"
 msgstr ""
 "A beviteli eszköz dőlésének használata a tollhegy szögének változtatásához"
 
-#: ../share/ui/toolbar-calligraphy.ui:369
+#: ../share/ui/toolbar-calligraphy.ui:327
 msgid ""
 "Angle behavior (0 = nib always perpendicular to stroke direction, 100 = "
 "fixed angle, -100 = fixed angle in opposite direction)"
@@ -40804,11 +40829,11 @@ msgstr ""
 "A szög viselkedése (0: a tollhegy mindig merőleges a vonalhúzás irányára, "
 "100: rögzített szög, -100: rögzített szög a másik irányban)"
 
-#: ../share/ui/toolbar-calligraphy.ui:375
+#: ../share/ui/toolbar-calligraphy.ui:333
 msgid "Fixation:"
 msgstr "Rögzítettség:"
 
-#: ../share/ui/toolbar-calligraphy.ui:429
+#: ../share/ui/toolbar-calligraphy.ui:386
 msgid ""
 "Increase to make caps at the ends of strokes protrude more (0 = no caps, 1 = "
 "round caps"
@@ -40816,24 +40841,24 @@ msgstr ""
 "Nagyobb érték esetén a vonalak végei jobban kiállnak (0: nincs kiálló rész, "
 "1: lekerekített vonalvégek)"
 
-#: ../share/ui/toolbar-calligraphy.ui:435 ../share/ui/toolbar-eraser.ui:246
+#: ../share/ui/toolbar-calligraphy.ui:392 ../share/ui/toolbar-eraser.ui:246
 msgid "Caps:"
 msgstr "Vonalvég:"
 
-#: ../share/ui/toolbar-calligraphy.ui:464 ../share/ui/toolbar-eraser.ui:273
+#: ../share/ui/toolbar-calligraphy.ui:421 ../share/ui/toolbar-eraser.ui:273
 #: ../share/ui/toolbar-eraser.ui:304
 msgid "Increase to make strokes rugged and trembling"
 msgstr "Nagyobb érték esetén a vonalak egyenetlenebbek és remegőbbek"
 
-#: ../share/ui/toolbar-calligraphy.ui:470 ../share/ui/toolbar-eraser.ui:277
+#: ../share/ui/toolbar-calligraphy.ui:427 ../share/ui/toolbar-eraser.ui:277
 msgid "Tremor:"
 msgstr "Remegés:"
 
-#: ../share/ui/toolbar-calligraphy.ui:492
+#: ../share/ui/toolbar-calligraphy.ui:449
 msgid "Increase to make the pen waver and wiggle"
 msgstr "Nagyobb érték esetén a toll hullámzóbban és tekergőbben mozog"
 
-#: ../share/ui/toolbar-calligraphy.ui:496
+#: ../share/ui/toolbar-calligraphy.ui:453
 msgid "Wiggle:"
 msgstr "Tekeredés:"
 
@@ -40909,7 +40934,7 @@ msgstr "A vég-jelölőkkel rendelkező kapcsok (nyilak) mutassanak lefelé"
 msgid "Do not allow overlapping shapes"
 msgstr "Átfedő alakzatok ne legyenek engedélyezve"
 
-#: ../share/ui/toolbar-dropper.ui:41 ../share/ui/toolbar-spray.ui:574
+#: ../share/ui/toolbar-dropper.ui:41 ../share/ui/toolbar-spray.ui:577
 msgid "Pick"
 msgstr "Leolvasás"
 
@@ -41669,7 +41694,7 @@ msgstr "Objektumok átfedésének megakadályozása"
 msgid "Increase to segregate objects more (value in percent)"
 msgstr "Az objektumok elkülönülésének növelése (százalékos érték)"
 
-#: ../share/ui/toolbar-spray.ui:592
+#: ../share/ui/toolbar-spray.ui:595
 msgid ""
 "Pick color from the drawing. You can use clonetiler trace dialog for "
 "advanced effects. In clone mode original fill or stroke colors must be unset."
@@ -41678,20 +41703,20 @@ msgstr ""
 "párbeszédlak használható. A klónozási mód alkalmazásakor az eredeti kitöltés "
 "és körvonal színe beállítatlan kell maradjon."
 
-#: ../share/ui/toolbar-spray.ui:610
+#: ../share/ui/toolbar-spray.ui:613
 msgid "Apply picked color to fill"
 msgstr "Leolvasott szín alkalmazása a kitöltésre"
 
-#: ../share/ui/toolbar-spray.ui:628
+#: ../share/ui/toolbar-spray.ui:631
 msgid "Apply picked color to stroke"
 msgstr "Leolvasott szín alkalmazása a körvonalra"
 
-#: ../share/ui/toolbar-spray.ui:646
+#: ../share/ui/toolbar-spray.ui:649
 msgid "Inverted pick value, retaining color in advanced trace mode"
 msgstr ""
 "Leolvasott szín invertálása, megőrizve a színt a speciális vektorizáló módban"
 
-#: ../share/ui/toolbar-spray.ui:664
+#: ../share/ui/toolbar-spray.ui:667
 msgid "Pick from center instead of average area."
 msgstr "Leolvasás középről az átlagolt terület helyett."
 
@@ -47274,15 +47299,6 @@ msgstr "További megjegyzések átvétele az objektum tulajdonságaiból"
 #: ../share/extensions/other/gcodetools/gcodetools_path_to_gcode.inx:39
 msgid "Add numeric suffix to filename"
 msgstr "Szám-toldalék hozzáadása a fájlnévhez"
-
-#: ../share/extensions/other/gcodetools/gcodetools_area.inx:80
-#: ../share/extensions/other/gcodetools/gcodetools_dxf_points.inx:27
-#: ../share/extensions/other/gcodetools/gcodetools_engraving.inx:39
-#: ../share/extensions/other/gcodetools/gcodetools_graffiti.inx:68
-#: ../share/extensions/other/gcodetools/gcodetools_lathe.inx:61
-#: ../share/extensions/other/gcodetools/gcodetools_path_to_gcode.inx:41
-msgid "Directory:"
-msgstr "Könyvtár:"
 
 #: ../share/extensions/other/gcodetools/gcodetools_area.inx:82
 #: ../share/extensions/other/gcodetools/gcodetools_dxf_points.inx:29
