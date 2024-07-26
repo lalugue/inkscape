@@ -379,10 +379,10 @@ bool CommandPalette::on_window_key_pressed(GtkEventControllerKey const * /*contr
 void CommandPalette::on_window_focus(Gtk::Widget const * const focus)
 {
     // TODO: GTK4: EventControllerFocus.property_contains_focus() should make this slightly nicer?
-    if (!focus || !is_descendant_of(*focus, _CPBase)) {
+    if (focus && !is_descendant_of(*focus, _CPBase)) {
         close();
-        }
-        }
+    }
+}
 
 void CommandPalette::on_activate_cpfilter()
 {
