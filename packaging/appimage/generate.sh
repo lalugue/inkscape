@@ -91,6 +91,7 @@ apt_bundle \
     python3-lockfile \
     python3-cssselect \
     python3-tinycss2 \
+    python3-webencodings \
     python3-distutils \
     python3-packaging \
     python3-appdirs \
