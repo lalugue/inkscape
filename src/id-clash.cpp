@@ -423,7 +423,7 @@ static void change_clashing_ids(SPDocument *imported_doc, SPDocument *current_do
             elem->setAttribute("id", new_id);
                 // Make a note of this change, if we need to fix up refs to it
             if (refmap.find(old_id) != refmap.end())
-                id_changes->push_back(id_changeitem_type(elem, old_id));
+                id_changes->emplace_back(elem, old_id);
         }
     }
 

@@ -418,7 +418,7 @@ void SPFlowtext::_buildLayoutInput(SPObject *root, Shape const *exclusion_shape,
             if (region) {
                 std::vector<Shape*> const &computed = region->computed;
                 for (auto it : computed) {
-                    shapes->push_back(Shape());
+                    shapes->emplace_back();
                     if (exclusion_shape->hasEdges()) {
                         shapes->back().Booleen(it, const_cast<Shape*>(exclusion_shape), bool_op_diff);
                     } else {

@@ -770,15 +770,15 @@ void Inkscape::getBBoxPoints(Geom::OptRect const bbox,
         // collect the corners of the bounding box
         for ( unsigned k = 0 ; k < 4 ; k++ ) {
             if (corner_src || corner_tgt) {
-                points->push_back(SnapCandidatePoint(bbox->corner(k), corner_src, -1, corner_tgt, *bbox));
+                points->emplace_back(bbox->corner(k), corner_src, -1, corner_tgt, *bbox);
             }
             // optionally, collect the midpoints of the bounding box's edges too
             if (edge_src || edge_tgt) {
-                points->push_back(SnapCandidatePoint((bbox->corner(k) + bbox->corner((k+1) % 4))/2, edge_src, -1, edge_tgt, *bbox));
+                points->emplace_back((bbox->corner(k) + bbox->corner((k+1) % 4))/2, edge_src, -1, edge_tgt, *bbox);
             }
         }
         if (mid_src || mid_tgt) {
-            points->push_back(SnapCandidatePoint(bbox->midpoint(), mid_src, -1, mid_tgt, *bbox));
+            points->emplace_back(bbox->midpoint(), mid_src, -1, mid_tgt, *bbox);
         }
     }
 }
