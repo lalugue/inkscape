@@ -334,7 +334,8 @@ if(WIN32)
   set(site_packages "lib/python${python_version}/site-packages")
   # Python packages installed via pacman
   set(packages
-      "python-lxml" "python-numpy" "python-pillow" "python-six" "python-cairo" "python-cssselect" "python-tinycss2"
+      "python-lxml" "python-numpy" "python-pillow" "python-six" "python-cairo" "python-cssselect"
+      "python-webencodings" "python-tinycss2"
       "python-gobject" "python-coverage" "python-pyserial" "python-packaging" "python-zstandard" "scour")
   foreach(package ${packages})
     list_files_pacman(${package} paths)
