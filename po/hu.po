@@ -6120,6 +6120,30 @@ msgstr "Üres lap rétegek nélkül"
 msgid "no layers empty"
 msgstr "üres, rétegek nélküli"
 
+#: ../build/share/templates/templates.h:1
+msgid "Zine Booklet (A4)"
+msgstr "Zine füzet  (A4)"
+
+#: ../build/share/templates/templates.h:1
+msgid "A foldable one page booklet (A4)"
+msgstr "Összehajtható egyoldalas füzet (A4)"
+
+#: ../build/share/templates/templates.h:1
+msgid "297 × 210 mm"
+msgstr "297 × 210 mm"
+
+#: ../build/share/templates/templates.h:1
+msgid "Zine Booklet (US)"
+msgstr "Zine füzet  (US)"
+
+#: ../build/share/templates/templates.h:1
+msgid "A foldable one page booklet (US Letter)"
+msgstr "Összehajtható egyoldalas füzet (US Letter)"
+
+#: ../build/share/templates/templates.h:1
+msgid "11 × 8.5 in"
+msgstr "11 × 8,5 in"
+
 #: ../src/actions/actions-base.cpp:195
 msgid "Inkscape Version"
 msgstr "Inkscape verziója"
@@ -8159,7 +8183,7 @@ msgstr "Csoport átalakítása réteggé"
 msgid "Convert the group to a layer"
 msgstr "A csoport átalakítása réteggé"
 
-#: ../src/actions/actions-layer.cpp:505 ../src/ui/contextmenu.cpp:292
+#: ../src/actions/actions-layer.cpp:505 ../src/ui/contextmenu.cpp:312
 msgid "Enter Group"
 msgstr "Belépés a csoportba"
 
@@ -8167,7 +8191,7 @@ msgstr "Belépés a csoportba"
 msgid "Enter group"
 msgstr "Belépés a csoportba"
 
-#: ../src/actions/actions-layer.cpp:506 ../src/ui/contextmenu.cpp:258
+#: ../src/actions/actions-layer.cpp:506 ../src/ui/contextmenu.cpp:278
 msgid "Exit Group"
 msgstr "Kilépés a csoportból"
 
@@ -8215,7 +8239,7 @@ msgid "Distribute selected nodes vertically"
 msgstr "A kijelölt csomópontok függőleges elrendezése"
 
 #: ../src/actions/actions-object-align.cpp:267
-#: ../src/actions/actions-object-align.cpp:566
+#: ../src/actions/actions-object-align.cpp:570
 #: ../share/ui/align-and-distribute.ui:458
 msgid "Align"
 msgstr "Igazítás"
@@ -8226,31 +8250,31 @@ msgstr "Igazítás"
 msgid "Distribute"
 msgstr "Elrendezés"
 
-#: ../src/actions/actions-object-align.cpp:727
+#: ../src/actions/actions-object-align.cpp:731
 #: ../share/ui/align-and-distribute.ui:862
 msgid "Rearrange"
 msgstr "Átrendezés"
 
-#: ../src/actions/actions-object-align.cpp:762
-#: ../src/actions/actions-object-align.cpp:804
+#: ../src/actions/actions-object-align.cpp:766
+#: ../src/actions/actions-object-align.cpp:808
 #: ../share/ui/align-and-distribute.ui:938
 msgid "Remove overlaps"
 msgstr "Átfedések eltávolítása"
 
-#: ../src/actions/actions-object-align.cpp:769
+#: ../src/actions/actions-object-align.cpp:773
 msgid "Enable on-canvas alignment"
 msgstr "Vásznon történő igazítás engedélyezése"
 
-#: ../src/actions/actions-object-align.cpp:769
+#: ../src/actions/actions-object-align.cpp:773
 #: ../share/ui/align-and-distribute.ui:119
 msgid "Enable on-canvas alignment handles"
 msgstr "A vásznon lévő igazítási fogantyúk engedélyezése"
 
-#: ../src/actions/actions-object-align.cpp:771
+#: ../src/actions/actions-object-align.cpp:775
 msgid "Align objects"
 msgstr "Objektumok igazítása"
 
-#: ../src/actions/actions-object-align.cpp:771
+#: ../src/actions/actions-object-align.cpp:775
 msgid ""
 "Align selected objects; usage: [[left|hcenter|right] || [top|vcenter|"
 "bottom]] [last|first|biggest|smallest|page|drawing|selection|pref]? group? "
@@ -8260,67 +8284,67 @@ msgstr ""
 "vcenter|bottom]] [last|first|biggest|smallest|page|drawing|selection|pref]? "
 "group? anchor?"
 
-#: ../src/actions/actions-object-align.cpp:773
+#: ../src/actions/actions-object-align.cpp:777
 msgid "Align to left edge"
 msgstr "Igazítás a bal élhez"
 
-#: ../src/actions/actions-object-align.cpp:773
+#: ../src/actions/actions-object-align.cpp:777
 msgid "Align selection horizontally to left edge"
 msgstr "A kijelölés vízszintes igazítása a bal élhez"
 
-#: ../src/actions/actions-object-align.cpp:774
+#: ../src/actions/actions-object-align.cpp:778
 msgid "Align to horizontal center"
 msgstr "Igazítás a vízszintes középponthoz"
 
-#: ../src/actions/actions-object-align.cpp:774
+#: ../src/actions/actions-object-align.cpp:778
 msgid "Align selection horizontally to the center"
 msgstr "A kijelölés vízszintes igazítása a középponthoz"
 
-#: ../src/actions/actions-object-align.cpp:775
+#: ../src/actions/actions-object-align.cpp:779
 msgid "Align to right edge"
 msgstr "Igazítás a jobb élhez"
 
-#: ../src/actions/actions-object-align.cpp:775
+#: ../src/actions/actions-object-align.cpp:779
 msgid "Align selection horizontally to right edge"
 msgstr "A kijelölés vízszintes igazítása a jobb élhez"
 
-#: ../src/actions/actions-object-align.cpp:776
+#: ../src/actions/actions-object-align.cpp:780
 msgid "Align to top edge"
 msgstr "Igazítás a felső élhez"
 
-#: ../src/actions/actions-object-align.cpp:776
+#: ../src/actions/actions-object-align.cpp:780
 msgid "Align selection vertically to top edge"
 msgstr "A kijelölés függőleges igazítása a felső élhez"
 
-#: ../src/actions/actions-object-align.cpp:777
+#: ../src/actions/actions-object-align.cpp:781
 msgid "Align to bottom edge"
 msgstr "Igazítás az alső élhez"
 
-#: ../src/actions/actions-object-align.cpp:777
+#: ../src/actions/actions-object-align.cpp:781
 msgid "Align selection vertically to bottom edge"
 msgstr "A kijelölés függőleges igazítása az alsó élhez"
 
-#: ../src/actions/actions-object-align.cpp:778
+#: ../src/actions/actions-object-align.cpp:782
 msgid "Align to vertical center"
 msgstr "Igazítás a függőleges középponthoz"
 
-#: ../src/actions/actions-object-align.cpp:778
+#: ../src/actions/actions-object-align.cpp:782
 msgid "Align selection vertically to the center"
 msgstr "A kijelölés függőleges igazítása a középponthoz"
 
-#: ../src/actions/actions-object-align.cpp:779
+#: ../src/actions/actions-object-align.cpp:783
 msgid "Align to center"
 msgstr "Középre igazítás"
 
-#: ../src/actions/actions-object-align.cpp:779
+#: ../src/actions/actions-object-align.cpp:783
 msgid "Align selection to the center"
 msgstr "A kijelölés igazítása a középponthoz"
 
-#: ../src/actions/actions-object-align.cpp:780
+#: ../src/actions/actions-object-align.cpp:784
 msgid "Align text objects"
 msgstr "Szövegobjektumok igazítása"
 
-#: ../src/actions/actions-object-align.cpp:780
+#: ../src/actions/actions-object-align.cpp:784
 msgid ""
 "Align selected text anchors; usage: [[vertical | horizontal] [last|first|"
 "biggest|smallest|page|drawing|selection]?"
@@ -8328,11 +8352,11 @@ msgstr ""
 "A kijelölt szöveg horgonyainak igazítása; alkalmazás: [[vertical | "
 "horizontal] [last|first|biggest|smallest|page|drawing|selection]?"
 
-#: ../src/actions/actions-object-align.cpp:782
+#: ../src/actions/actions-object-align.cpp:786
 msgid "Distribute objects"
 msgstr "Objektumok elrendezése"
 
-#: ../src/actions/actions-object-align.cpp:782
+#: ../src/actions/actions-object-align.cpp:786
 msgid ""
 "Distribute selected objects; usage: [hgap | left | hcenter | right | vgap | "
 "top | vcenter | bottom]"
@@ -8340,103 +8364,103 @@ msgstr ""
 "Kijelölt objektumok elrendezése; alkalmazás: [hgap | left | hcenter | right "
 "| vgap | top | vcenter | bottom]"
 
-#: ../src/actions/actions-object-align.cpp:783
+#: ../src/actions/actions-object-align.cpp:787
 msgid "Even horizontal gaps"
 msgstr "Egyenletes vízszintes térközök"
 
-#: ../src/actions/actions-object-align.cpp:783
+#: ../src/actions/actions-object-align.cpp:787
 #: ../share/ui/align-and-distribute.ui:551
 msgid "Distribute horizontally with even horizontal gaps"
 msgstr "Vízszintes elrendezés egyenletes vízszintes térközökkel"
 
-#: ../src/actions/actions-object-align.cpp:784
+#: ../src/actions/actions-object-align.cpp:788
 msgid "Even left edges"
 msgstr "Egyenletes bal élek"
 
-#: ../src/actions/actions-object-align.cpp:784
+#: ../src/actions/actions-object-align.cpp:788
 #: ../share/ui/align-and-distribute.ui:485
 msgid "Distribute horizontally with even spacing between left edges"
 msgstr "Vízszintes elrendezés egyenletes térközökkel a bal élek között"
 
-#: ../src/actions/actions-object-align.cpp:785
+#: ../src/actions/actions-object-align.cpp:789
 msgid "Even horizontal centers"
 msgstr "Egyenletes vízszintes középpontok"
 
-#: ../src/actions/actions-object-align.cpp:785
+#: ../src/actions/actions-object-align.cpp:789
 #: ../share/ui/align-and-distribute.ui:507
 msgid "Distribute horizontally with even spacing between centers"
 msgstr "Vízszintes elrendezés egyenletes térközökkel a középpontok között"
 
-#: ../src/actions/actions-object-align.cpp:786
+#: ../src/actions/actions-object-align.cpp:790
 msgid "Even right edges"
 msgstr "Egyenletes jobb élek"
 
-#: ../src/actions/actions-object-align.cpp:786
+#: ../src/actions/actions-object-align.cpp:790
 #: ../share/ui/align-and-distribute.ui:529
 msgid "Distribute horizontally with even spacing between right edges"
 msgstr "Vízszintes elrendezés egyenletes térközökkel a jobb élek között"
 
-#: ../src/actions/actions-object-align.cpp:787
+#: ../src/actions/actions-object-align.cpp:791
 msgid "Even vertical gaps"
 msgstr "Egyenletes függőleges térközök"
 
-#: ../src/actions/actions-object-align.cpp:787
+#: ../src/actions/actions-object-align.cpp:791
 #: ../share/ui/align-and-distribute.ui:661
 msgid "Distribute vertically with even vertical gaps"
 msgstr "Függőleges elrendezés egyenletes függőleges térközökkel"
 
-#: ../src/actions/actions-object-align.cpp:788
+#: ../src/actions/actions-object-align.cpp:792
 msgid "Even top edges"
 msgstr "Egyenletes felső élek"
 
-#: ../src/actions/actions-object-align.cpp:788
+#: ../src/actions/actions-object-align.cpp:792
 #: ../share/ui/align-and-distribute.ui:595
 msgid "Distribute vertically with even spacing between top edges"
 msgstr "Függőleges elrendezés egyenletes térközökkel a felső élek között"
 
-#: ../src/actions/actions-object-align.cpp:789
+#: ../src/actions/actions-object-align.cpp:793
 msgid "Even vertical centers"
 msgstr "Egyenletes függőleges középpontok"
 
-#: ../src/actions/actions-object-align.cpp:789
+#: ../src/actions/actions-object-align.cpp:793
 #: ../share/ui/align-and-distribute.ui:617
 msgid "Distribute vertically with even spacing between centers"
 msgstr "Függőleges elrendezés egyenletes térközökkel a középpontok között"
 
-#: ../src/actions/actions-object-align.cpp:790
+#: ../src/actions/actions-object-align.cpp:794
 msgid "Even bottom edges"
 msgstr "Egyenletes alsó élek"
 
-#: ../src/actions/actions-object-align.cpp:790
+#: ../src/actions/actions-object-align.cpp:794
 #: ../share/ui/align-and-distribute.ui:639
 msgid "Distribute vertically with even spacing between bottom edges"
 msgstr "Függőleges elrendezés egyenletes térközökkel az alsó élek között"
 
-#: ../src/actions/actions-object-align.cpp:792
-#: ../src/actions/actions-object-align.cpp:793
-#: ../src/actions/actions-object-align.cpp:794
+#: ../src/actions/actions-object-align.cpp:796
+#: ../src/actions/actions-object-align.cpp:797
+#: ../src/actions/actions-object-align.cpp:798
 msgid "Distribute text objects"
 msgstr "Szövegobjektumok elrendezése"
 
-#: ../src/actions/actions-object-align.cpp:792
+#: ../src/actions/actions-object-align.cpp:796
 msgid "Distribute text anchors; usage [vertical | horizontal]"
 msgstr "Szöveg horgonyainak elrendezése; alkalmazás: [vertical | horizontal]"
 
-#: ../src/actions/actions-object-align.cpp:793
+#: ../src/actions/actions-object-align.cpp:797
 #: ../share/ui/align-and-distribute.ui:573
 msgid "Distribute text anchors horizontally"
 msgstr "Szöveg horgonyainak vízszintes elrendezése"
 
-#: ../src/actions/actions-object-align.cpp:794
+#: ../src/actions/actions-object-align.cpp:798
 #: ../share/ui/align-and-distribute.ui:683
 msgid "Distribute text anchors vertically"
 msgstr "Szöveg horgonyainak függőleges elrendezése"
 
-#: ../src/actions/actions-object-align.cpp:796
+#: ../src/actions/actions-object-align.cpp:800
 msgid "Rearrange objects"
 msgstr "Objektumok átrendezése"
 
-#: ../src/actions/actions-object-align.cpp:796
+#: ../src/actions/actions-object-align.cpp:800
 msgid ""
 "Rearrange selected objects; usage: [graph | exchange | exchangez | rotate | "
 "randomize | unclump]"
@@ -8444,61 +8468,61 @@ msgstr ""
 "Kijelölt objektumok átrendezése; alkalmazás: [graph | exchange | exchangez | "
 "rotate | randomize | unclump]"
 
-#: ../src/actions/actions-object-align.cpp:797
+#: ../src/actions/actions-object-align.cpp:801
 msgid "Rearrange as graph"
 msgstr "Átrendezés grafikonként"
 
-#: ../src/actions/actions-object-align.cpp:797
+#: ../src/actions/actions-object-align.cpp:801
 #: ../share/ui/align-and-distribute.ui:731 ../share/ui/toolbar-connector.ui:148
 msgid "Nicely arrange selected connector network"
 msgstr "A kijelölt kapocshálózat elrendezése"
 
-#: ../src/actions/actions-object-align.cpp:798
+#: ../src/actions/actions-object-align.cpp:802
 msgid "Exchange in selection order"
 msgstr "Csere a kijelölési sorrendben"
 
-#: ../src/actions/actions-object-align.cpp:798
+#: ../src/actions/actions-object-align.cpp:802
 #: ../share/ui/align-and-distribute.ui:753
 msgid "Exchange positions of selected objects - selection order"
 msgstr "Kijelölt objektumok helyzetének cseréje ‒ kijelölési sorrend"
 
-#: ../src/actions/actions-object-align.cpp:799
+#: ../src/actions/actions-object-align.cpp:803
 msgid "Exchange in z-order"
 msgstr "Csere a z-sorrendben"
 
-#: ../src/actions/actions-object-align.cpp:799
+#: ../src/actions/actions-object-align.cpp:803
 #: ../share/ui/align-and-distribute.ui:775
 msgid "Exchange positions of selected objects - stacking order"
 msgstr "Kijelölt objektumok helyzetének cseréje ‒ halmozási sorrend"
 
-#: ../src/actions/actions-object-align.cpp:800
+#: ../src/actions/actions-object-align.cpp:804
 msgid "Exchange around center"
 msgstr "Csere a középpont körül"
 
-#: ../src/actions/actions-object-align.cpp:800
+#: ../src/actions/actions-object-align.cpp:804
 #: ../share/ui/align-and-distribute.ui:797
 msgid "Exchange positions of selected objects - rotate around center point"
 msgstr "Kijelölt objektumok helyzetének cseréje ‒ forgatás a középpont körül"
 
-#: ../src/actions/actions-object-align.cpp:801
+#: ../src/actions/actions-object-align.cpp:805
 msgid "Random exchange"
 msgstr "Véletlenszerű csere"
 
-#: ../src/actions/actions-object-align.cpp:801
+#: ../src/actions/actions-object-align.cpp:805
 #: ../share/ui/align-and-distribute.ui:819
 msgid "Randomize centers in both dimensions"
 msgstr "A közepek véletlenszerű elrendezése mindkét dimenzióban"
 
-#: ../src/actions/actions-object-align.cpp:802
+#: ../src/actions/actions-object-align.cpp:806
 msgid "Unclump"
 msgstr "Egyenletesítés"
 
-#: ../src/actions/actions-object-align.cpp:802
+#: ../src/actions/actions-object-align.cpp:806
 #: ../share/ui/align-and-distribute.ui:841
 msgid "Unclump objects: try to equalize edge-to-edge distances"
 msgstr "Objektumok egyenletesítése: az élek közti távolságok azonossá tevése"
 
-#: ../src/actions/actions-object-align.cpp:804
+#: ../src/actions/actions-object-align.cpp:808
 msgid ""
 "Remove overlaps between objects: requires two comma separated numbers "
 "(horizontal and vertical gaps)"
@@ -8506,7 +8530,7 @@ msgstr ""
 "Átfedések eltávolítása az objektumok között: két vesszővel ellátott számot "
 "igényel (vízszintes és függőleges hézag)"
 
-#: ../src/actions/actions-object-align.cpp:811
+#: ../src/actions/actions-object-align.cpp:815
 msgid ""
 "Enter anchor<space>alignment<space>optional second alignment. Possible "
 "anchors: last, first, biggest, smallest, page, drawing, selection, pref; "
@@ -8516,7 +8540,7 @@ msgstr ""
 "horgonyok: last, first, biggest, smallest, page, drawing, selection, pref; "
 "lehetséges igazítások: left, hcenter, right, top, vcenter, bottom."
 
-#: ../src/actions/actions-object-align.cpp:812
+#: ../src/actions/actions-object-align.cpp:816
 msgid ""
 "Enter distribution type. Possible values: left, hcenter, right, top, "
 "vcenter, bottom, hgap, vgap."
@@ -8524,7 +8548,7 @@ msgstr ""
 "Adja meg az elrendezés típusát. Lehetséges értékek: left, hcenter, right, "
 "top, vcenter, bottom, hgap, vgap."
 
-#: ../src/actions/actions-object-align.cpp:813
+#: ../src/actions/actions-object-align.cpp:817
 msgid ""
 "Enter arrange method. Possible values: graph, exchange, exchangez, rotate, "
 "randomize, unclump."
@@ -8532,7 +8556,7 @@ msgstr ""
 "Adja meg az átrendez módszerét. Lehetséges értékek: graph, exchange, "
 "exchangez, rotate, randomize, unclump."
 
-#: ../src/actions/actions-object-align.cpp:814
+#: ../src/actions/actions-object-align.cpp:818
 msgid "Enter two comma-separated numbers: horizontal,vertical"
 msgstr "Adjon meg két, vesszővel elválasztott számot: vízszintes,függőleges"
 
@@ -12058,42 +12082,42 @@ msgid "EMF Output"
 msgstr "EMF-kimenet"
 
 #: ../src/extension/internal/emf-inout.cpp:3654
-#: ../src/extension/internal/wmf-inout.cpp:3226
+#: ../src/extension/internal/wmf-inout.cpp:3228
 msgid "Convert texts to paths"
 msgstr "Szövegek átalakítása útvonalakká"
 
 #: ../src/extension/internal/emf-inout.cpp:3655
-#: ../src/extension/internal/wmf-inout.cpp:3227
+#: ../src/extension/internal/wmf-inout.cpp:3229
 msgid "Map Unicode to Symbol font"
 msgstr "Unicode leképezése szimbólum betűkészlet számára"
 
 #: ../src/extension/internal/emf-inout.cpp:3656
-#: ../src/extension/internal/wmf-inout.cpp:3228
+#: ../src/extension/internal/wmf-inout.cpp:3230
 msgid "Map Unicode to Wingdings"
 msgstr "Unicode leképezése a Wingdings számára"
 
 #: ../src/extension/internal/emf-inout.cpp:3657
-#: ../src/extension/internal/wmf-inout.cpp:3229
+#: ../src/extension/internal/wmf-inout.cpp:3231
 msgid "Map Unicode to Zapf Dingbats"
 msgstr "Unicode leképezése a Zapf Dingbats számára"
 
 #: ../src/extension/internal/emf-inout.cpp:3658
-#: ../src/extension/internal/wmf-inout.cpp:3230
+#: ../src/extension/internal/wmf-inout.cpp:3232
 msgid "Use MS Unicode PUA (0xF020-0xF0FF) for converted characters"
 msgstr "MS Unicode PUA (0xF020-0xF0FF) alkalmazása a karakterek átalakításához"
 
 #: ../src/extension/internal/emf-inout.cpp:3659
-#: ../src/extension/internal/wmf-inout.cpp:3231
+#: ../src/extension/internal/wmf-inout.cpp:3233
 msgid "Compensate for PPT font bug"
 msgstr "PPT betűkészlethiba kompenzálása"
 
 #: ../src/extension/internal/emf-inout.cpp:3660
-#: ../src/extension/internal/wmf-inout.cpp:3232
+#: ../src/extension/internal/wmf-inout.cpp:3234
 msgid "Convert dashed/dotted lines to single lines"
 msgstr "Szaggatott vagy pontozott vonalak sima vonallá alakítása"
 
 #: ../src/extension/internal/emf-inout.cpp:3661
-#: ../src/extension/internal/wmf-inout.cpp:3233
+#: ../src/extension/internal/wmf-inout.cpp:3235
 msgid "Convert gradients to colored polygon series"
 msgstr "Színátmenetek átalakítása színezett sokszögek sorozatává"
 
@@ -15047,31 +15071,31 @@ msgstr "VSDX bemenet"
 msgid "Microsoft Visio 2013 drawing (*.vsdx)"
 msgstr "Microsoft Visio 2013 drawing (*.vsdx)"
 
-#: ../src/extension/internal/wmf-inout.cpp:3211
+#: ../src/extension/internal/wmf-inout.cpp:3213
 msgid "WMF Input"
 msgstr "WMF-bemenet"
 
-#: ../src/extension/internal/wmf-inout.cpp:3216
+#: ../src/extension/internal/wmf-inout.cpp:3218
 msgid "Windows Metafiles (*.wmf)"
 msgstr "Windows-metafájlok (*.wmf)"
 
-#: ../src/extension/internal/wmf-inout.cpp:3217
+#: ../src/extension/internal/wmf-inout.cpp:3219
 msgid "Windows Metafiles"
 msgstr "Windows-metafájlok"
 
-#: ../src/extension/internal/wmf-inout.cpp:3224
+#: ../src/extension/internal/wmf-inout.cpp:3226
 msgid "WMF Output"
 msgstr "WMF kimenet"
 
-#: ../src/extension/internal/wmf-inout.cpp:3234
+#: ../src/extension/internal/wmf-inout.cpp:3236
 msgid "Map all fill patterns to standard WMF hatches"
 msgstr "Minden kitöltési minta leképezése szabványos WMF-vonalkákká"
 
-#: ../src/extension/internal/wmf-inout.cpp:3238
+#: ../src/extension/internal/wmf-inout.cpp:3240
 msgid "Windows Metafile (*.wmf)"
 msgstr "Windows Metafile (*.wmf)"
 
-#: ../src/extension/internal/wmf-inout.cpp:3239
+#: ../src/extension/internal/wmf-inout.cpp:3241
 msgid "Windows Metafile"
 msgstr "Windows-metafájl"
 
@@ -15507,12 +15531,12 @@ msgstr "Pontszerű fényforrás"
 msgid "Spot Light"
 msgstr "Reflektorszerű fényforrás"
 
-#: ../src/gradient-chemistry.cpp:779 ../src/gradient-drag.cpp:1235
+#: ../src/gradient-chemistry.cpp:779 ../src/gradient-drag.cpp:1233
 msgid "Delete gradient stop"
 msgstr "Színátmenet-fázis törlése"
 
 #: ../src/gradient-chemistry.cpp:868 ../src/gradient-chemistry.cpp:885
-#: ../src/gradient-drag.cpp:1283 ../src/ui/dialog/color-item.cpp:519
+#: ../src/gradient-drag.cpp:1281 ../src/ui/dialog/color-item.cpp:519
 #: ../src/ui/tools/gradient-tool.cpp:275 ../src/ui/tools/gradient-tool.cpp:328
 #: ../src/ui/tools/gradient-tool.cpp:411
 msgid "Add gradient stop"
@@ -15588,19 +15612,19 @@ msgstr "Színátmenetes háló <b>fogantyúja</b>"
 msgid "Mesh gradient <b>tensor</b>"
 msgstr "Színátmenetes-háló <b>tenzora</b>"
 
-#: ../src/gradient-drag.cpp:560
+#: ../src/gradient-drag.cpp:558
 msgid "Added patch row or column"
 msgstr "Hozzáadott sor vagy oszlop hálófolt"
 
-#: ../src/gradient-drag.cpp:866
+#: ../src/gradient-drag.cpp:864
 msgid "Merge gradient handles"
 msgstr "Színátmenet-fogantyúk összevonása"
 
-#: ../src/gradient-drag.cpp:1177
+#: ../src/gradient-drag.cpp:1175
 msgid "Move gradient handle"
 msgstr "Színátmenet-fogantyú áthelyezése"
 
-#: ../src/gradient-drag.cpp:1515
+#: ../src/gradient-drag.cpp:1513
 #, c-format
 msgid ""
 "%s %d for: %s%s; drag with <b>Ctrl</b> to snap offset; click with "
@@ -15609,17 +15633,17 @@ msgstr ""
 "%s %d ehhez: %s%s. Az eltolás illesztése: <b>Ctrl</b>+húzás. Fázis törlése: "
 "<b>Ctrl+Alt</b>+kattintás."
 
-#: ../src/gradient-drag.cpp:1519 ../src/gradient-drag.cpp:1528
-#: ../src/gradient-drag.cpp:1535
+#: ../src/gradient-drag.cpp:1517 ../src/gradient-drag.cpp:1526
+#: ../src/gradient-drag.cpp:1533
 msgid " (stroke)"
 msgstr " (körvonal)"
 
-#: ../src/gradient-drag.cpp:1525
+#: ../src/gradient-drag.cpp:1523
 #, c-format
 msgid "%s for: %s%s"
 msgstr "%s ehhez: %s%s"
 
-#: ../src/gradient-drag.cpp:1532
+#: ../src/gradient-drag.cpp:1530
 #, c-format
 msgid ""
 "%s for: %s%s; drag with <b>Ctrl</b> to snap angle, with <b>Ctrl+Alt</b> to "
@@ -15628,7 +15652,7 @@ msgstr ""
 "%s ehhez: %s%s. Szöghöz való illesztés: <b>Ctrl</b>+húzás. Szög megőrzése: "
 "<b>Ctrl+Alt</b>. Átméretezés a középpont körül: <b>Ctrl+Shift</b>."
 
-#: ../src/gradient-drag.cpp:1540
+#: ../src/gradient-drag.cpp:1538
 msgid ""
 "Radial gradient <b>center</b> and <b>focus</b>; drag with <b>Shift</b> to "
 "separate focus"
@@ -15636,7 +15660,7 @@ msgstr ""
 "Sugárirányú színátmenet <b>középpontja</b> és <b>fókusza</b>. A fókusz "
 "különválasztása: <b>Shift</b>+húzás."
 
-#: ../src/gradient-drag.cpp:1543
+#: ../src/gradient-drag.cpp:1541
 #, c-format
 msgid ""
 "Gradient point shared by <b>%d</b> gradient; drag with <b>Shift</b> to "
@@ -15651,15 +15675,15 @@ msgstr[1] ""
 "<b>%d</b> színátmenet közös színátmenet-pontja. Különválasztás: <b>Shift</"
 "b>+húzás."
 
-#: ../src/gradient-drag.cpp:2782
+#: ../src/gradient-drag.cpp:2780
 msgid "Move gradient handle(s)"
 msgstr "Színátmenet-fogantyúk áthelyezése"
 
-#: ../src/gradient-drag.cpp:2814
+#: ../src/gradient-drag.cpp:2812
 msgid "Move gradient mid stop(s)"
 msgstr "Színátmenet egy vagy több közbenső fázisának áthelyezése"
 
-#: ../src/gradient-drag.cpp:3167
+#: ../src/gradient-drag.cpp:3165
 msgid "Delete gradient stop(s)"
 msgstr "Színátmenet egy vagy több fázisának törlése"
 
@@ -16191,7 +16215,7 @@ msgstr "Hiba"
 msgid "No (valid) files to open."
 msgstr "Nincs (érvényes) megnyitható fájl."
 
-#: ../src/io/fix-broken-links.cpp:354
+#: ../src/io/fix-broken-links.cpp:352
 msgid "Fixup broken links"
 msgstr "Törött linkek javítása"
 
@@ -22643,246 +22667,246 @@ msgstr "A vágólap nem tartalmaz útvonalat."
 msgid "Clipboard does not contain any objects of type \"%1\"."
 msgstr "A vágólap nem tartalmaz ilyen típusú objektumot: „%1”."
 
-#: ../src/ui/contextmenu.cpp:80 ../share/ui/menus.ui:134
+#: ../src/ui/contextmenu.cpp:81 ../share/ui/menus.ui:134
 msgid "Cu_t"
 msgstr "_Kivágás"
 
-#: ../src/ui/contextmenu.cpp:81 ../share/ui/menus.ui:139
+#: ../src/ui/contextmenu.cpp:82 ../share/ui/menus.ui:139
 msgid "_Copy"
 msgstr "_Másolás"
 
-#: ../src/ui/contextmenu.cpp:83 ../share/ui/menus.ui:144
+#: ../src/ui/contextmenu.cpp:84 ../share/ui/menus.ui:144
 msgid "_Paste"
 msgstr "_Beillesztés"
 
-#: ../src/ui/contextmenu.cpp:154
+#: ../src/ui/contextmenu.cpp:174
 msgid "_New Page"
 msgstr "Új _oldal"
 
-#: ../src/ui/contextmenu.cpp:158
+#: ../src/ui/contextmenu.cpp:178
 msgid "_Delete Page"
 msgstr "Oldal _törlése"
 
-#: ../src/ui/contextmenu.cpp:159
+#: ../src/ui/contextmenu.cpp:179
 msgid "Move Page _Backward"
 msgstr "Oldal _hátrébb helyezése"
 
-#: ../src/ui/contextmenu.cpp:160
+#: ../src/ui/contextmenu.cpp:180
 msgid "Move Page _Forward"
 msgstr "Oldal _előrébb helyezése"
 
-#: ../src/ui/contextmenu.cpp:181 ../share/ui/toolbar-commands.ui:758
+#: ../src/ui/contextmenu.cpp:201 ../share/ui/toolbar-commands.ui:758
 msgid "Document Properties..."
 msgstr "Dokumentumbeállítások…"
 
-#: ../src/ui/contextmenu.cpp:188 ../share/ui/menus.ui:212
+#: ../src/ui/contextmenu.cpp:208 ../share/ui/menus.ui:212
 msgid "Duplic_ate"
 msgstr "Kettő_zés"
 
-#: ../src/ui/contextmenu.cpp:189
+#: ../src/ui/contextmenu.cpp:209
 msgid "_Clone"
 msgstr "_Klónozás"
 
-#: ../src/ui/contextmenu.cpp:190
+#: ../src/ui/contextmenu.cpp:210
 #: ../src/ui/dialog/calligraphic-profile-rename.cpp:58
 #: ../src/ui/dialog/guides.cpp:193 ../share/ui/menus.ui:265
 msgid "_Delete"
 msgstr "_Törlés"
 
-#: ../src/ui/contextmenu.cpp:196 ../share/ui/menus.ui:652
+#: ../src/ui/contextmenu.cpp:216 ../share/ui/menus.ui:652
 #: ../share/ui/menus.ui:757
 msgid "Layers and Objects..."
 msgstr "Rétegek és objektumok…"
 
-#: ../src/ui/contextmenu.cpp:198 ../share/ui/menus.ui:769
+#: ../src/ui/contextmenu.cpp:218 ../share/ui/menus.ui:769
 msgid "_Object Properties..."
 msgstr "_Objektumtulajdonságok…"
 
-#: ../src/ui/contextmenu.cpp:201 ../share/ui/menus.ui:763
+#: ../src/ui/contextmenu.cpp:221 ../share/ui/menus.ui:763
 msgid "_Fill and Stroke..."
 msgstr "_Kitöltés és körvonal…"
 
-#: ../src/ui/contextmenu.cpp:206 ../share/ui/menus.ui:960
+#: ../src/ui/contextmenu.cpp:226 ../share/ui/menus.ui:960
 msgid "_Trace Bitmap..."
 msgstr "Bitkép vektor_izálása…"
 
-#: ../src/ui/contextmenu.cpp:209
+#: ../src/ui/contextmenu.cpp:229
 msgid "Crop Image to Clip"
 msgstr "Kép levágása a vágásra"
 
-#: ../src/ui/contextmenu.cpp:213
+#: ../src/ui/contextmenu.cpp:233
 msgid "Extract Image..."
 msgstr "Kép kinyerése…"
 
-#: ../src/ui/contextmenu.cpp:216
+#: ../src/ui/contextmenu.cpp:236
 msgid "Embed Image"
 msgstr "Kép beágyazása"
 
-#: ../src/ui/contextmenu.cpp:217
+#: ../src/ui/contextmenu.cpp:237
 msgid "Edit Externally..."
 msgstr "Szerkesztés külső alkalmazással…"
 
-#: ../src/ui/contextmenu.cpp:223 ../share/ui/menus.ui:1101
+#: ../src/ui/contextmenu.cpp:243 ../share/ui/menus.ui:1101
 msgid "_Text and Font..."
 msgstr "_Szöveg és betűkészlet…"
 
-#: ../src/ui/contextmenu.cpp:224 ../share/ui/menus.ui:1166
+#: ../src/ui/contextmenu.cpp:244 ../share/ui/menus.ui:1166
 msgid "Check Spellin_g..."
 msgstr "_Helyesírás-ellenőrzés…"
 
-#: ../src/ui/contextmenu.cpp:234 ../share/ui/menus.ui:285
+#: ../src/ui/contextmenu.cpp:254 ../share/ui/menus.ui:285
 msgid "Fill _and Stroke"
 msgstr "Kitö_ltés és körvonal"
 
-#: ../src/ui/contextmenu.cpp:235 ../share/ui/menus.ui:290
+#: ../src/ui/contextmenu.cpp:255 ../share/ui/menus.ui:290
 msgid "_Fill Color"
 msgstr "Kitöltéss_zín"
 
-#: ../src/ui/contextmenu.cpp:236 ../share/ui/menus.ui:295
+#: ../src/ui/contextmenu.cpp:256 ../share/ui/menus.ui:295
 msgid "_Stroke Color"
 msgstr "Körvonal_szín"
 
-#: ../src/ui/contextmenu.cpp:237 ../share/ui/menus.ui:300
+#: ../src/ui/contextmenu.cpp:257 ../share/ui/menus.ui:300
 msgid "Stroke St_yle"
 msgstr "Körvonalstíl_us"
 
-#: ../src/ui/contextmenu.cpp:238 ../share/ui/menus.ui:305
+#: ../src/ui/contextmenu.cpp:258 ../share/ui/menus.ui:305
 msgid "_Object Type"
 msgstr "Objektum_típus"
 
-#: ../src/ui/contextmenu.cpp:239 ../share/ui/menus.ui:282
+#: ../src/ui/contextmenu.cpp:259 ../share/ui/menus.ui:282
 msgid "Select Sa_me"
 msgstr "_Azonosak kijelölése"
 
-#: ../src/ui/contextmenu.cpp:244
+#: ../src/ui/contextmenu.cpp:264
 msgid "_Move to Layer..."
 msgstr "_Áthelyezés rétegre…"
 
-#: ../src/ui/contextmenu.cpp:245
+#: ../src/ui/contextmenu.cpp:265
 msgid "Create Anchor (Hyperlink)"
 msgstr "Horgony létrehozása (hiperhivatkozás)"
 
-#: ../src/ui/contextmenu.cpp:246 ../share/ui/menus.ui:795
+#: ../src/ui/contextmenu.cpp:266 ../share/ui/menus.ui:795
 msgid "_Group"
 msgstr "_Csoportosítás"
 
-#: ../src/ui/contextmenu.cpp:248 ../share/ui/menus.ui:800
+#: ../src/ui/contextmenu.cpp:268 ../share/ui/menus.ui:800
 msgid "_Ungroup"
 msgstr "Cso_port szétbontása"
 
-#: ../src/ui/contextmenu.cpp:249
+#: ../src/ui/contextmenu.cpp:269
 msgid "Enter Group %1"
 msgstr "Belépés a csoportba: %1"
 
-#: ../src/ui/contextmenu.cpp:253
+#: ../src/ui/contextmenu.cpp:273
 msgid "Group to Layer"
 msgstr "Csoport átalakítása réteggé"
 
-#: ../src/ui/contextmenu.cpp:259
+#: ../src/ui/contextmenu.cpp:279
 msgid "_Pop Selection out of Group"
 msgstr "Kijelölés _kipöckölése a csoportból"
 
-#: ../src/ui/contextmenu.cpp:266
+#: ../src/ui/contextmenu.cpp:286
 msgid "Set Cl_ip"
 msgstr "_Vágás beállítása"
 
-#: ../src/ui/contextmenu.cpp:269
+#: ../src/ui/contextmenu.cpp:289
 msgid "Release C_lip"
 msgstr "Vágás _eltávolítása"
 
-#: ../src/ui/contextmenu.cpp:271
+#: ../src/ui/contextmenu.cpp:291
 msgid "Set Clip G_roup"
 msgstr "_Vágócsoport beállítása"
 
-#: ../src/ui/contextmenu.cpp:274
+#: ../src/ui/contextmenu.cpp:294
 msgid "Set Mask"
 msgstr "Maszk beállítása"
 
-#: ../src/ui/contextmenu.cpp:277
+#: ../src/ui/contextmenu.cpp:297
 msgid "Release Mask"
 msgstr "Maszk eltávolítása"
 
-#: ../src/ui/contextmenu.cpp:283
+#: ../src/ui/contextmenu.cpp:303
 msgid "Hide Selected Objects"
 msgstr "Kijelölt objektumok elrejtése"
 
-#: ../src/ui/contextmenu.cpp:284
+#: ../src/ui/contextmenu.cpp:304
 msgid "Lock Selected Objects"
 msgstr "Kijelölt objektumok zárolása"
 
-#: ../src/ui/contextmenu.cpp:290
+#: ../src/ui/contextmenu.cpp:310
 msgid "_Open Link in Browser"
 msgstr "Hivatkozás megnyitása _böngészőben"
 
-#: ../src/ui/contextmenu.cpp:291
+#: ../src/ui/contextmenu.cpp:311
 msgid "_Remove Link"
 msgstr "Hivatkozás törlé_se"
 
-#: ../src/ui/contextmenu.cpp:300
+#: ../src/ui/contextmenu.cpp:320
 msgid "Unhide Objects Below Cursor"
 msgstr "Kurzor alatt lévő objektumok felfedése"
 
-#: ../src/ui/contextmenu.cpp:303
+#: ../src/ui/contextmenu.cpp:323
 msgid "Unlock Objects Below Cursor"
 msgstr "Kurzor alatt lévő objektumok feloldása"
 
-#: ../src/ui/contextmenu.cpp:310 ../share/ui/menus.ui:660
+#: ../src/ui/contextmenu.cpp:330 ../share/ui/menus.ui:660
 msgid "_Add Layer..."
 msgstr "Réteg _felvétele…"
 
-#: ../src/ui/contextmenu.cpp:311
+#: ../src/ui/contextmenu.cpp:331
 msgid "D_uplicate Layer"
 msgstr "Réteg _kettőzése"
 
-#: ../src/ui/contextmenu.cpp:312
+#: ../src/ui/contextmenu.cpp:332
 msgid "_Delete Layer"
 msgstr "Réteg _törlése"
 
-#: ../src/ui/contextmenu.cpp:313 ../share/ui/menus.ui:665
+#: ../src/ui/contextmenu.cpp:333 ../share/ui/menus.ui:665
 msgid "Re_name Layer..."
 msgstr "Réteg át_nevezése…"
 
-#: ../src/ui/contextmenu.cpp:314
+#: ../src/ui/contextmenu.cpp:334
 msgid "Layer to _Group"
 msgstr "Réteg átalakítása _csoporttá"
 
-#: ../src/ui/contextmenu.cpp:318 ../share/ui/menus.ui:722
+#: ../src/ui/contextmenu.cpp:338 ../share/ui/menus.ui:722
 msgid "_Raise Layer"
 msgstr "Réteg fel_jebb helyezése"
 
-#: ../src/ui/contextmenu.cpp:319 ../share/ui/menus.ui:728
+#: ../src/ui/contextmenu.cpp:339 ../share/ui/menus.ui:728
 msgid "_Lower Layer"
 msgstr "Réteg _lejjebb helyezése"
 
-#: ../src/ui/contextmenu.cpp:323
+#: ../src/ui/contextmenu.cpp:343
 msgid "_Hide/Show Other Layers"
 msgstr "Tö_bbi réteg elrejtése/megjelenítése"
 
-#: ../src/ui/contextmenu.cpp:324
+#: ../src/ui/contextmenu.cpp:344
 msgid "_Hide All Layers"
 msgstr "_Minden réteg elrejtése"
 
-#: ../src/ui/contextmenu.cpp:325
+#: ../src/ui/contextmenu.cpp:345
 msgid "_Show All Layers"
 msgstr "Minden réteg meg_jelenítése"
 
-#: ../src/ui/contextmenu.cpp:329
+#: ../src/ui/contextmenu.cpp:349
 msgid "_Lock/Unlock Other Layers"
 msgstr "_Többi réteg zárolása/feloldása"
 
-#: ../src/ui/contextmenu.cpp:330
+#: ../src/ui/contextmenu.cpp:350
 msgid "_Lock All Layers"
 msgstr "Minden réteg _zárolása"
 
-#: ../src/ui/contextmenu.cpp:331
+#: ../src/ui/contextmenu.cpp:351
 msgid "_Unlock All Layers"
 msgstr "Minden réteg _feloldása"
 
-#: ../src/ui/contextmenu.cpp:382
+#: ../src/ui/contextmenu.cpp:402
 msgid "Unhid objects"
 msgstr "Felfedett objektumok"
 
-#: ../src/ui/contextmenu.cpp:382
+#: ../src/ui/contextmenu.cpp:402
 msgid "Unlocked objects"
 msgstr "Feloldott objektumok"
 
@@ -22926,7 +22950,7 @@ msgstr ""
 "\n"
 "Legyen a fájl Inkscape SVG-ként elmentve?"
 
-#: ../src/ui/desktop/menubar.cpp:186
+#: ../src/ui/desktop/menubar.cpp:293
 msgid "No items found"
 msgstr "Nincsenek talált elemek"
 
@@ -31853,15 +31877,15 @@ msgstr "Igazítás ellipszisre"
 msgid "SVG Document"
 msgstr "SVG-dokumentum"
 
-#: ../src/ui/dialog/print.cpp:220
+#: ../src/ui/dialog/print.cpp:222
 msgid "Could not open temporary PNG for bitmap printing"
 msgstr "Nem sikerült megnyitni az átmeneti PNG-fájlt bitkép-nyomtatáshoz"
 
-#: ../src/ui/dialog/print.cpp:250
+#: ../src/ui/dialog/print.cpp:252
 msgid "Could not set up Document"
 msgstr "Nem sikerült beállítani a dokumentumot"
 
-#: ../src/ui/dialog/print.cpp:254
+#: ../src/ui/dialog/print.cpp:256
 msgid "Failed to set CairoRenderContext"
 msgstr "Nem sikerült beállítani CairoRenderContext-et"
 
@@ -33310,53 +33334,53 @@ msgstr "Csomópontok szétbontása"
 msgid "Delete nodes"
 msgstr "Csomópontok törlése"
 
-#: ../src/ui/tool/multi-path-manipulator.cpp:813
+#: ../src/ui/tool/multi-path-manipulator.cpp:796
 msgid "Move nodes"
 msgstr "Csomópontok áthelyezése"
 
-#: ../src/ui/tool/multi-path-manipulator.cpp:816
+#: ../src/ui/tool/multi-path-manipulator.cpp:799
 msgid "Move nodes horizontally"
 msgstr "Csomópontok vízszintes áthelyezése"
 
-#: ../src/ui/tool/multi-path-manipulator.cpp:820
+#: ../src/ui/tool/multi-path-manipulator.cpp:803
 msgid "Move nodes vertically"
 msgstr "Csomópontok függőleges áthelyezése"
 
-#: ../src/ui/tool/multi-path-manipulator.cpp:824
-#: ../src/ui/tool/multi-path-manipulator.cpp:827
+#: ../src/ui/tool/multi-path-manipulator.cpp:807
+#: ../src/ui/tool/multi-path-manipulator.cpp:810
 msgid "Rotate nodes"
 msgstr "Csomópontok elforgatása"
 
-#: ../src/ui/tool/multi-path-manipulator.cpp:831
-#: ../src/ui/tool/multi-path-manipulator.cpp:837
+#: ../src/ui/tool/multi-path-manipulator.cpp:814
+#: ../src/ui/tool/multi-path-manipulator.cpp:820
 msgid "Scale nodes uniformly"
 msgstr "Csomópontok egyenletes átméretezése"
 
-#: ../src/ui/tool/multi-path-manipulator.cpp:834
+#: ../src/ui/tool/multi-path-manipulator.cpp:817
 msgid "Scale nodes"
 msgstr "Csomópontok átméretezése"
 
-#: ../src/ui/tool/multi-path-manipulator.cpp:841
+#: ../src/ui/tool/multi-path-manipulator.cpp:824
 msgid "Scale nodes horizontally"
 msgstr "Csomópontok vízszintes átméretezése"
 
-#: ../src/ui/tool/multi-path-manipulator.cpp:845
+#: ../src/ui/tool/multi-path-manipulator.cpp:828
 msgid "Scale nodes vertically"
 msgstr "Csomópontok függőleges átméretezése"
 
-#: ../src/ui/tool/multi-path-manipulator.cpp:849
+#: ../src/ui/tool/multi-path-manipulator.cpp:832
 msgid "Skew nodes horizontally"
 msgstr "Csomópontok vízszintes nyírása"
 
-#: ../src/ui/tool/multi-path-manipulator.cpp:853
+#: ../src/ui/tool/multi-path-manipulator.cpp:836
 msgid "Skew nodes vertically"
 msgstr "Csomópontok függőleges nyírása"
 
-#: ../src/ui/tool/multi-path-manipulator.cpp:857
+#: ../src/ui/tool/multi-path-manipulator.cpp:840
 msgid "Flip nodes horizontally"
 msgstr "Csomópontok vízszintes tükrözése"
 
-#: ../src/ui/tool/multi-path-manipulator.cpp:860
+#: ../src/ui/tool/multi-path-manipulator.cpp:843
 msgid "Flip nodes vertically"
 msgstr "Csomópontok függőleges tükrözése"
 
@@ -33622,27 +33646,27 @@ msgstr "Automatikus íves csomópont"
 msgid "Add node"
 msgstr "Csomópont felvétele"
 
-#: ../src/ui/tool/path-manipulator.cpp:935
+#: ../src/ui/tool/path-manipulator.cpp:945
 msgid "Scale handle"
 msgstr "Méretezési fogantyú"
 
-#: ../src/ui/tool/path-manipulator.cpp:959
+#: ../src/ui/tool/path-manipulator.cpp:969
 msgid "Rotate handle"
 msgstr "Forgatási fogantyú"
 
-#: ../src/ui/tool/path-manipulator.cpp:1663 ../share/ui/dialog-xml.glade:89
+#: ../src/ui/tool/path-manipulator.cpp:1673 ../share/ui/dialog-xml.glade:89
 msgid "Delete node"
 msgstr "Csomópont törlése"
 
-#: ../src/ui/tool/path-manipulator.cpp:1671
+#: ../src/ui/tool/path-manipulator.cpp:1681
 msgid "Cycle node type"
 msgstr "Csomópont-típus forgatása"
 
-#: ../src/ui/tool/path-manipulator.cpp:1686
+#: ../src/ui/tool/path-manipulator.cpp:1696
 msgid "Drag handle"
 msgstr "Húzó fogantyú"
 
-#: ../src/ui/tool/path-manipulator.cpp:1695
+#: ../src/ui/tool/path-manipulator.cpp:1705
 msgid "Retract handle"
 msgstr "Fogantyú behúzása"
 
@@ -38102,7 +38126,7 @@ msgstr "Előtag:"
 #: ../share/extensions/other/gcodetools/gcodetools_lathe.inx:61
 #: ../share/extensions/other/gcodetools/gcodetools_path_to_gcode.inx:41
 msgid "Directory:"
-msgstr "Könyvtár:"
+msgstr "Mappa:"
 
 #: ../share/ui/dialog-export.glade:1101
 msgid "Export to multiple files and file formats"
@@ -42923,7 +42947,7 @@ msgstr "Nem találhatóak az oldalak adatai."
 msgid "Failed to open default printer"
 msgstr "Nem sikerült megnyitni az alapértelmezett nyomtatót"
 
-#: ../share/extensions/printing_marks.py:239
+#: ../share/extensions/printing_marks.py:627
 msgid "Selection is empty"
 msgstr "A kijelölés üres"
 
@@ -43205,6 +43229,18 @@ msgstr "Adobe Illustrator-SVG (*.ai.svg)"
 msgid "Cleans the cruft out of Adobe Illustrator SVGs before opening"
 msgstr ""
 "A felesleg eltávolítása az Adobe Illustrator-féle SVG-kből a megnyitás előtt"
+
+#: ../share/extensions/cgm_input.inx:3
+msgid "CGM Input"
+msgstr "CGM bemenet"
+
+#: ../share/extensions/cgm_input.inx:11
+msgid "Computer Graphics Metafile (*.cgm)"
+msgstr "Computer Graphics Metafile (*.cgm)"
+
+#: ../share/extensions/cgm_input.inx:12
+msgid "Import a Computer Graphics Metafile (CGM)"
+msgstr "Computer Graphics Metafile (CGM) importálása"
 
 #: ../share/extensions/color_blackandwhite.inx:3
 msgid "Black and White"
@@ -46891,6 +46927,18 @@ msgstr "Halmozott oszlopdiagram"
 msgid "Import Web Image..."
 msgstr "Webes kép importálása…"
 
+#: ../share/extensions/other/extension-afdesign/inkaf.inx:10
+msgid "Afdesign Input"
+msgstr "Afdesign bemenet"
+
+#: ../share/extensions/other/extension-afdesign/inkaf.inx:15
+msgid "Affinity Designer file (*.afdesign)"
+msgstr "Affinity Designer fájl (*.afdesign)"
+
+#: ../share/extensions/other/extension-afdesign/inkaf.inx:16
+msgid "Import an Affinity Designer file"
+msgstr "Affinity Designer fájl importálása"
+
 #: ../share/extensions/other/extension-xaml/inkxaml/svg2xaml.inx:3
 msgid "XAML Output"
 msgstr "XAML-kimenet"
@@ -49869,7 +49917,7 @@ msgstr ""
 "mellé kerülnek (a különböző rétegeken lévő elemek ugyanarra \n"
 "a rétegre kerülnek)."
 
-#: ../share/extensions/restack.inx:57 ../share/extensions/ungroup_deep.inx:12
+#: ../share/extensions/restack.inx:57 ../share/extensions/ungroup_deep.inx:13
 msgid "Arrange"
 msgstr "Elrendezés"
 
@@ -50617,6 +50665,14 @@ msgstr "Befejező mélység (felülről)"
 #: ../share/extensions/ungroup_deep.inx:8
 msgid "Depth to Keep (from bottom)"
 msgstr "Megőrzendő mélység (alulról)"
+
+#: ../share/extensions/ungroup_deep.inx:9
+msgid "Preserve Layers"
+msgstr "Rétegek megőrzése"
+
+#: ../share/extensions/ungroup_deep.inx:9
+msgid "Do not ungroup layers"
+msgstr "Rétegcsoportok szétbontásának tiltása"
 
 #: ../share/extensions/voronoi_diagram.inx:3
 #: ../share/extensions/voronoi_diagram.inx:9
