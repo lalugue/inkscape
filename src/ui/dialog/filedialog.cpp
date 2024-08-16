@@ -22,6 +22,7 @@
 #include <glibmm/convert.h>
 
 #ifdef _WIN32
+#include "filedialogimpl-win32.h"
 #include <windows.h>
 #endif
 
@@ -137,6 +138,12 @@ FileOpenDialog *FileOpenDialog::create(Gtk::Window &parentWindow,
                                        FileDialogType fileTypes,
                                        const char *title)
 {
+#ifdef _WIN32
+    if (Inkscape::Preferences::get()->getBool( "/options/desktopintegration/value")) {
+        return new FileOpenDialogImplWin32(parentWindow, path, fileTypes, title);
+    }
+#endif
+
     return new FileOpenDialogImplGtk(parentWindow, path, fileTypes, title);
 }
 
@@ -155,6 +162,11 @@ FileSaveDialog *FileSaveDialog::create(Gtk::Window& parentWindow,
                                        const gchar *docTitle,
                                        const Inkscape::Extension::FileSaveMethod save_method)
 {
+#ifdef _WIN32
+    if (Inkscape::Preferences::get()->getBool( "/options/desktopintegration/value")) {
+        return new FileSaveDialogImplWin32(parentWindow, path, fileTypes, title, default_key, docTitle, save_method);
+    }
+#endif
     return new FileSaveDialogImplGtk(parentWindow, path, fileTypes, title, default_key, docTitle, save_method);
 }
 

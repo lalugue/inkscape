@@ -336,6 +336,7 @@ set(ui_SRC
 	dialog/extensions-gallery.h
 	dialog/filedialog.h
 	dialog/filedialogimpl-gtkmm.h
+	dialog/filedialogimpl-win32.h
 	dialog/fill-and-stroke.h
 	dialog/filter-effects-dialog.h
 	dialog/find.h
@@ -568,6 +569,12 @@ set(ui_SRC
 
 	view/svg-view-widget.h
 )
+
+if(WIN32)
+       list(APPEND ui_SRC
+               dialog/filedialogimpl-win32.cpp
+       )
+endif()
 
 add_inkscape_source("${ui_SRC}")
 
