@@ -46,8 +46,8 @@
 #include <gtkmm/sizegroup.h>
 #include <sigc++/adaptors/bind.h>
 #include <sigc++/functors/mem_fun.h>
+#include <2geom/angle.h>
 
-#include "angle.h"
 #include "rdf.h"
 #include "page-manager.h"
 #include "selection.h"
