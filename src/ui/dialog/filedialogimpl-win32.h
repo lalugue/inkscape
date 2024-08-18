@@ -58,7 +58,10 @@ protected:
 public:
 
     /// Get the path of the current directory
-    Glib::ustring getCurrentDirectory();
+    std::string getCurrentDirectory();
+    const std::string &getFilename() { return _filename; }
+    Glib::RefPtr<Gio::File> const get_file(); 
+
 
 protected:
     /// The dialog type
@@ -106,6 +109,10 @@ protected:
     /// filter in the list. NULL if no specific extension is
     /// specified/
     Inkscape::Extension::Extension **_extension_map;
+
+    // Filename that was given
+    std::string _filename;
+
 };
 
 
@@ -139,10 +146,15 @@ public:
     /// Gets a list of the selected file names
     /// @return Returns an STL vector filled with the
     /// GTK names of the selected files
-    std::vector<Glib::ustring> getFilenames();
+    std::vector<Glib::RefPtr<Gio::File>> getFiles() override; 
+    Glib::RefPtr<Gio::File> const getFile() override { return get_file(); }; 
+    void setSelectMultiple(bool value) final { }; // TODO
+    
+    void setCurrentName(const std::string &path) { _filename = path; };
+
 
     /// Get the path of the current directory
-    virtual Glib::ustring getCurrentDirectory()
+    virtual std::string getCurrentDirectory()
         { return FileDialogBaseWin32::getCurrentDirectory(); }
 
     /// Add a custom file filter menu item
@@ -325,13 +337,16 @@ public:
     bool show();
 
     /// Get the path of the current directory
-    virtual Glib::ustring getCurrentDirectory()
+    virtual std::string getCurrentDirectory()
         { return FileDialogBaseWin32::getCurrentDirectory(); }
 
     void addFileType(Glib::ustring name, Glib::ustring pattern);
     void addFilterMenu(const Glib::ustring &name, Glib::ustring pattern = "", Inkscape::Extension::Extension *mod = nullptr) override
     {
     }
+    
+    void setCurrentName(Glib::ustring path) override { _filename = path; };
+    Glib::RefPtr<Gio::File> const getFile() override { return get_file(); }; 
 
 private:
 	/// A handle to the title label and edit box

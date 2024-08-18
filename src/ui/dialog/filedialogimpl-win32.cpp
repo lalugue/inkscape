@@ -114,9 +114,9 @@ FileDialogBaseWin32::~FileDialogBaseWin32()
     g_free(_title);
 }
 
-Glib::ustring FileDialogBaseWin32::getCurrentDirectory()
+std::string FileDialogBaseWin32::getCurrentDirectory()
 {
-    return _current_directory;
+    return _current_directory.raw();
 }
 
 /*#########################################################################
@@ -485,7 +485,7 @@ void FileOpenDialogImplWin32::GetOpenFileName_thread()
     _extension = _extension_map[ofn.nFilterIndex - 1];
 
     // Copy the selected file name, converting from UTF-16 to UTF-8
-    setFilename(utf16_to_ustring(_path_string, _MAX_PATH));
+    setCurrentName(utf16_to_ustring(_path_string, _MAX_PATH));
 
     // Tidy up
     g_free(current_directory_string);
@@ -1522,13 +1522,17 @@ FileOpenDialogImplWin32::show()
 /**
  * To Get Multiple filenames selected at-once.
  */
-std::vector<Glib::ustring>FileOpenDialogImplWin32::getFilenames()
+std::vector<Glib::RefPtr<Gio::File>> FileOpenDialogImplWin32::getFiles()
 {
-    std::vector<Glib::ustring> result;
-    result.push_back(getFilename());
+    std::vector<Glib::RefPtr<Gio::File>> result;
+    result.push_back(getFile());
     return result;
 }
 
+Glib::RefPtr<Gio::File> const FileDialogBaseWin32::get_file()
+{
+    return Gio::File::create_for_path(getFilename());
+}
 
 /*#########################################################################
 ### F I L E    S A V E
@@ -1557,7 +1561,7 @@ FileSaveDialogImplWin32::FileSaveDialogImplWin32(Gtk::Window &parent,
         createFilterMenu();
 
     /* The code below sets the default file name */
-        setFilename("");
+        setCurrentName("");
         if (dir.size() > 0) {
             Glib::ustring udir(dir);
             Glib::ustring::size_type len = udir.length();
@@ -1568,12 +1572,12 @@ FileSaveDialogImplWin32::FileSaveDialogImplWin32(Gtk::Window &parent,
             // Remove the extension: remove everything past the last period found past the last slash
             // (not for CUSTOM_TYPE as we can not automatically add a file extension in that case yet)
             if (dialogType == CUSTOM_TYPE) {
-                setFilename(udir);
+                setCurrentName(udir);
             } else {
                 size_t last_slash_index = udir.find_last_of( '\\' );
                 size_t last_period_index = udir.find_last_of( '.' );
                 if (last_period_index > last_slash_index) {
-                    setFilename(udir.substr(0, last_period_index ));
+                    setCurrentName(udir.substr(0, last_period_index ));
                 }
             }
 
@@ -1582,7 +1586,7 @@ FileSaveDialogImplWin32::FileSaveDialogImplWin32(Gtk::Window &parent,
             if (1 + myFilename.find("\\\\",2)) {
                 myFilename.replace(myFilename.find("\\\\",2), 1, "");
             }
-            setFilename(myFilename);
+            setCurrentName(myFilename);
         }
 }
 
@@ -1778,7 +1782,7 @@ void FileSaveDialogImplWin32::GetSaveFileName_thread()
     _extension = _extension_map[ofn.nFilterIndex - 1];
 
     // Copy the selected file name, converting from UTF-16 to UTF-8
-    setFilename(utf16_to_ustring(_path_string, _MAX_PATH));
+    setCurrentName(utf16_to_ustring(_path_string, _MAX_PATH));
 
     // Tidy up
     g_free(current_directory_string);
@@ -1800,8 +1804,11 @@ FileSaveDialogImplWin32::show()
         std::thread thethread([this] { GetSaveFileName_thread(); });
         g_main_loop_run(_main_loop);
 
-        if(_result && _extension)
-            appendExtension(_filename, (Inkscape::Extension::Output*)_extension);
+        if(_result && _extension) {
+            Glib::ustring fn = getFilename();
+            appendExtension(fn, (Inkscape::Extension::Output*)_extension);
+            setCurrentName(fn);
+        }
 
         thethread.join();
     }
