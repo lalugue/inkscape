@@ -475,7 +475,7 @@ bool ToolBase::root_handler(CanvasEvent const &event)
                 if (panning_cursor == 0) {
                     panning_cursor = 1;
                     auto window = dynamic_cast<Gtk::Window *>(_desktop->getCanvas()->get_root());
-                    auto cursor = Gdk::Cursor::create("move");
+                    auto cursor = Gdk::Cursor::create(Glib::ustring("move"));
                     window->set_cursor(cursor);
                 }
 
