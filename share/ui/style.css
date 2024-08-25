@@ -554,6 +554,10 @@ button.close-button:hover{
     margin:12px;
 }
 
+#start-screen-window button.primary {
+    min-width: 4em;
+}
+
 #start-screen-window * {
     outline:0;
 }
