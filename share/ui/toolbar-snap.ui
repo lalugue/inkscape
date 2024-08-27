@@ -8,6 +8,7 @@
         <property name="halign">start</property>
         <property name="valign">start</property>
         <property name="margin-start">8</property>
+        <property name="margin-end">8</property>
         <property name="margin-top">8</property>
         <property name="margin-bottom">8</property>
         <child>
@@ -320,13 +321,13 @@
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="receives-default">True</property>
-            <property name="halign">end</property>
+            <property name="halign">center</property>
             <property name="relief">none</property>
           </object>
           <packing>
-            <property name="left-attach">1</property>
+            <property name="left-attach">0</property>
             <property name="top-attach">35</property>
-            <property name="width">2</property>
+            <property name="width">3</property>
           </packing>
         </child>
         <child>
@@ -798,6 +799,7 @@
         <property name="halign">start</property>
         <property name="valign">start</property>
         <property name="margin-start">8</property>
+        <property name="margin-end">8</property>
         <property name="margin-top">8</property>
         <property name="margin-bottom">8</property>
         <property name="row-spacing">4</property>
@@ -955,7 +957,6 @@
     <property name="visible">True</property>
     <property name="halign">start</property>
     <property name="spacing">4</property>
-    <property name="margin-end">4</property>
     <style>
         <class name="toolbar"/>
     </style>
