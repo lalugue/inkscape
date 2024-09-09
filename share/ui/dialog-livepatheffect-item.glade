@@ -62,7 +62,7 @@
             <child>
               <object class="GtkExpander" id="LPEExpander">
                 <property name="visible">True</property>
-                <property name="can-focus">True</property>
+                <property name="can-focus">False</property>
                 <property name="label-fill">True</property>
                 <child type="label">
                   <object class="GtkBox">
