@@ -176,12 +176,12 @@ bool SpinButton::on_popup_menu(PopupMenuOptionalClick)
     if (!_custom_popup) {
         return false;
     }
-    auto popover_menu = get_popover_menu();
+    update_popover_menu();
     popover_menu->popup_at_center(*this);
     return true;
 }
 
-std::shared_ptr<UI::Widget::PopoverMenu> SpinButton::get_popover_menu()
+void SpinButton::update_popover_menu()
 {
     auto adj = get_adjustment();
     auto adj_value = adj->get_value();
@@ -201,7 +201,9 @@ std::shared_ptr<UI::Widget::PopoverMenu> SpinButton::get_popover_menu()
     values.emplace(std::fmin(adj_value + page, upper), "");
     values.emplace(std::fmax(adj_value - page, lower), "");
 
-    static auto popover_menu = std::make_shared<UI::Widget::PopoverMenu>(*this, Gtk::POS_BOTTOM);
+    if (!popover_menu) {
+        popover_menu = std::make_unique<UI::Widget::PopoverMenu>(*this, Gtk::POS_BOTTOM);
+    }
     popover_menu->delete_all();
     Gtk::RadioButton::Group group;
 
@@ -218,8 +220,6 @@ std::shared_ptr<UI::Widget::PopoverMenu> SpinButton::get_popover_menu()
             sigc::bind(sigc::mem_fun(*this, &SpinButton::on_numeric_menu_item_activate), value.first));
         popover_menu->append(*item);
     }
-
-    return popover_menu;
 }
 
 void SpinButton::undo()
