@@ -1477,7 +1477,6 @@ void ObjectsPanel::on_motion_motion(GtkEventControllerMotion const * const contr
         if (auto row = *_store->get_iter(path)) {
             row[_model->_colHover] = true;
             _hovered_row_ref = Gtk::TreeModel::RowReference(_store, path);
-            _tree.set_cursor(path);
 
             if (col == _color_tag_column) {
                 row[_model->_colHoverColor] = true;
@@ -1563,6 +1562,11 @@ Gtk::EventSequenceState ObjectsPanel::on_click(Gtk::GestureMultiPress const &ges
     if (!_tree.get_path_at_pos(ex, ey, path, col, x, y)) {
         return Gtk::EVENT_SEQUENCE_NONE;
     }
+
+    // Setting the cursor on the clicked row so that later calls to selectCursorItem knows which
+    // item to select (via get_cursor).
+    // This used to be done in on_motion_motion but was moved here because of issue #5156.
+    _tree.set_cursor(path);
 
     if (auto row = *_store->get_iter(path)) {
         if (event_type == EventType::pressed) {
