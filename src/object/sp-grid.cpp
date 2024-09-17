@@ -764,19 +764,11 @@ void SPGrid::setUnit(const Glib::ustring &units)
 {
     if (units.empty()) return;
 
-    const Inkscape::Util::Unit *old = _display_unit;
-
-    getRepr()->setAttribute("units", units.c_str());
-    _display_unit = unit_table.getUnit(units);
-
-    // revert if invalid
-    if (!_display_unit) {
-        _display_unit = old;
+    if (auto new_unit = UnitTable::get().getUnit(units)) {
         getRepr()->setAttribute("units", units.c_str());
-        return;
+        _display_unit = new_unit;
+        requestDisplayUpdate(SP_OBJECT_MODIFIED_FLAG);
     }
-
-    requestDisplayUpdate(SP_OBJECT_MODIFIED_FLAG);
 }
 
 void SPGrid::setType(GridType type) {
