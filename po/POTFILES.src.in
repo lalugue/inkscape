@@ -292,6 +292,7 @@ ${_build_dir}/share/templates/templates.h
 ../src/ui/dialog/export.cpp
 ../src/ui/dialog/extensions-gallery.cpp
 ../src/ui/dialog/filedialogimpl-gtkmm.cpp
+../src/ui/dialog/filedialogimpl-win32.cpp
 ../src/ui/dialog/fill-and-stroke.cpp
 ../src/ui/dialog/filter-effects-dialog.cpp
 ../src/ui/dialog/find.cpp
@@ -347,6 +348,7 @@ ${_build_dir}/share/templates/templates.h
 ../src/ui/toolbar/box3d-toolbar.cpp
 ../src/ui/toolbar/calligraphy-toolbar.cpp
 ../src/ui/toolbar/connector-toolbar.cpp
+../src/ui/toolbar/eraser-toolbar.cpp
 ../src/ui/toolbar/gradient-toolbar.cpp
 ../src/ui/toolbar/lpe-toolbar.cpp
 ../src/ui/toolbar/measure-toolbar.cpp
@@ -358,10 +360,12 @@ ${_build_dir}/share/templates/templates.h
 ../src/ui/toolbar/rect-toolbar.cpp
 ../src/ui/toolbar/select-toolbar.cpp
 ../src/ui/toolbar/spiral-toolbar.cpp
+../src/ui/toolbar/spray-toolbar.cpp
 ../src/ui/toolbar/star-toolbar.cpp
 ../src/ui/toolbar/text-toolbar.cpp
 ../src/ui/toolbar/tool-toolbar.cpp
 ../src/ui/toolbar/toolbars.cpp
+../src/ui/toolbar/tweak-toolbar.cpp
 ../src/ui/tools/arc-tool.cpp
 ../src/ui/tools/booleans-tool.cpp
 ../src/ui/tools/box3d-tool.cpp

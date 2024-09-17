@@ -78,7 +78,7 @@ if(WIN32)
     ${MINGW_BIN}/libmpdec-[0-9]*.dll
     ${MINGW_BIN}/libmpfr-[0-9]*.dll
     ${MINGW_BIN}/libncursesw6.dll
-    ${MINGW_BIN}/libnghttp2*.dll
+    ${MINGW_BIN}/libnghttp[0-9]*.dll
     ${MINGW_BIN}/libnspr[0-9]*.dll
     ${MINGW_BIN}/libopenblas.dll
     ${MINGW_BIN}/libopenjp2-[0-9]*.dll
@@ -164,6 +164,7 @@ if(WIN32)
     file(GLOB MAGICK_LIBS
       ${MINGW_BIN}/libGraphicsMagick[+-]*.dll
       ${MINGW_BIN}/libjxl.dll
+      ${MINGW_BIN}/libjxl_cms.dll
       ${MINGW_BIN}/libjxl_threads.dll
       ${MINGW_BIN}/libltdl-[0-9]*.dll
       ${MINGW_BIN}/libhwy.dll
@@ -334,6 +335,7 @@ if(WIN32)
   # Python packages installed via pacman
   set(packages
       "python-lxml" "python-numpy" "python-pillow" "python-six" "python-cairo" "python-cssselect"
+      "python-webencodings" "python-tinycss2"
       "python-gobject" "python-coverage" "python-pyserial" "python-packaging" "python-zstandard" "scour")
   foreach(package ${packages})
     list_files_pacman(${package} paths)

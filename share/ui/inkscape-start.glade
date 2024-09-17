@@ -658,6 +658,7 @@ along with Inkscape Extensions Manager.  If not, see <http://www.gnu.org/license
             </child>
             <child>
               <object class="GtkButton" id="save">
+                <property name="label" translatable="yes">Save</property>
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="has-focus">True</property>
@@ -666,25 +667,6 @@ along with Inkscape Extensions Manager.  If not, see <http://www.gnu.org/license
                 <property name="halign">end</property>
                 <property name="valign">center</property>
                 <property name="border-width">5</property>
-                <child>
-                  <object class="GtkBox">
-                    <property name="visible">True</property>
-                    <property name="can-focus">False</property>
-                    <property name="spacing">4</property>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="can-focus">False</property>
-                        <property name="label">Save</property>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="position">1</property>
-                      </packing>
-                    </child>
-                  </object>
-                </child>
                 <style>
                   <class name="primary"/>
                 </style>
@@ -888,15 +870,12 @@ Fund Inkscape</property>
                 </style>
               </object>
               <packing>
-                <property name="expand">False</property>
+                <property name="expand">True</property>
                 <property name="fill">True</property>
                 <property name="position">2</property>
               </packing>
             </child>
           </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
         </child>
         <child type="tab">
           <object class="GtkLabel">
@@ -989,6 +968,7 @@ Fund Inkscape</property>
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
                 <property name="spacing">4</property>
+                <property name="margin">5</property>
                 <child>
                   <object class="GtkCheckButton" id="show_toggle">
                     <property name="label" translatable="yes">Show this every time</property>
@@ -996,13 +976,12 @@ Fund Inkscape</property>
                     <property name="can-focus">True</property>
                     <property name="focus-on-click">False</property>
                     <property name="receives-default">False</property>
-                    <property name="hexpand">True</property>
                     <property name="border-width">2</property>
                     <property name="active">True</property>
-                    <property name="draw-indicator">False</property>
+                    <property name="draw-indicator">True</property>
                   </object>
                   <packing>
-                    <property name="expand">False</property>
+                    <property name="expand">True</property>
                     <property name="fill">True</property>
                     <property name="position">0</property>
                   </packing>
@@ -1017,6 +996,7 @@ Fund Inkscape</property>
                     <property name="focus-on-click">False</property>
                     <property name="receives-default">True</property>
                     <property name="valign">center</property>
+                    <property name="width-request">160</property>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -1032,8 +1012,7 @@ Fund Inkscape</property>
                     <property name="focus-on-click">False</property>
                     <property name="receives-default">True</property>
                     <property name="valign">center</property>
-                    <property name="margin-right">5</property>
-                    <property name="margin-end">5</property>
+                    <property name="width-request">160</property>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -1089,27 +1068,6 @@ Fund Inkscape</property>
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="pixbuf">../screens/start-welcome.png</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkImage" id="welcome_text">
-                    <property name="width-request">700</property>
-                    <property name="height-request">220</property>
-                    <property name="visible">True</property>
-                    <property name="can-focus">False</property>
-                    <property name="pixbuf">../screens/start-welcome-text.svg</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="can-focus">False</property>
-                    <property name="label" translatable="yes" comments="Not automatic, but will be turned into start-welcome-text.svg">Welcome!</property>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="can-focus">False</property>
-                    <property name="label" translatable="yes" comments="Not automatic, but will be turned into start-welcome-text.svg">Let's set up a few things...</property>
                   </object>
                 </child>
               </object>

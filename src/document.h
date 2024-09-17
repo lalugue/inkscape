@@ -41,10 +41,7 @@
 
 #include "3rdparty/libcroco/src/cr-cascade.h"  // for CRCascade
 
-#include "gc-anchored.h"
-#include "gc-finalized.h"
-
-#include "inkgc/gc-managed.h"
+#include "inkgc/gc-managed.h" // TODO: Remove for 1.5
 
 #include "composite-undo-stack-observer.h"
 // XXX only for testing!
@@ -100,10 +97,7 @@ namespace Inkscape {
 } // namespace Inkscape
 
 /// Typed SVG document implementation.
-class SPDocument : public Inkscape::GC::Managed<>,
-                   public Inkscape::GC::Finalized,
-                   public Inkscape::GC::Anchored
-{
+class SPDocument : public Inkscape::GC::Managed<Inkscape::GC::SCANNED, Inkscape::GC::MANUAL> {
 
 public:
     /// For sanity check in SPObject::requestDisplayUpdate
@@ -113,7 +107,7 @@ public:
 
     // Fundamental ------------------------
     SPDocument();
-    ~SPDocument() override;
+    ~SPDocument();
     SPDocument(SPDocument const &) = delete; // no copy
     void operator=(SPDocument const &) = delete; // no assign
 
@@ -144,10 +138,6 @@ public:
     void setVirgin(bool Virgin) { virgin = Virgin; }
     bool getVirgin() { return virgin; }
     const SPDocument *getOriginalDocument() const { return _original_document; }
-
-    //! Increment reference count by one and return a self-dereferencing pointer.
-    std::unique_ptr<SPDocument> doRef();
-    std::unique_ptr<SPDocument const> doRef() const;
 
     bool isModifiedSinceSave() const { return modified_since_save; }
     bool isModifiedSinceAutoSave() const { return modified_since_autosave; }
@@ -508,20 +498,6 @@ public:
     void emitReconstructionFinish();
 };
 
-namespace std {
-template <>
-struct default_delete<SPDocument> {
-    void operator()(SPDocument *ptr) const {
-        Inkscape::GC::release(ptr);
-        if (ptr->_anchored_refcount() == 0) {
-            // Explicit delete required to free SPDocument
-            // see https://gitlab.com/inkscape/inkscape/-/issues/2723
-            delete ptr;
-        }
-    }
-};
-
-}; // namespace std
 
 /*
  * Ideas: How to overcome style invalidation nightmare

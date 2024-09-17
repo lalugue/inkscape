@@ -200,10 +200,11 @@ public:
      * Sets the transform_center_x and transform_center_y properties to retain the rotation center
      */
     void setCenter(Geom::Point const &object_centre);
+    bool updateCenterIfSet(Geom::Point const &center);
 
     void unsetCenter();
     bool isCenterSet() const;
-    Geom::Point getCenter() const;
+    Geom::Point getCenter(bool ensure_uptodate = true) const;
     void scaleCenter(Geom::Scale const &sc);
 
     bool isVisibleAndUnlocked() const;

@@ -554,6 +554,10 @@ button.close-button:hover{
     margin:12px;
 }
 
+#start-screen-window button.primary {
+    min-width: 4em;
+}
+
 #start-screen-window * {
     outline:0;
 }
@@ -695,6 +699,7 @@ button.square-button image {
 }
 
 .tag-box label {
+    min-width: 2em; /* don't let it collapse */
     margin-right: 1px;
     margin-left: 8px;
 }
@@ -760,8 +765,7 @@ button.square-button image {
 }
 
 .toolbar {
-    margin-top: 4px;
-    margin-bottom: 4px;
+    margin: 4px;
 }
 
 .toolbar > * {
@@ -810,6 +814,13 @@ button.menu-btn-tight {
 
 #DialogMenuButton:hover {
     opacity: 1;
+}
+
+.OpacityButton {
+    border: none;
+    border-radius: 0px;
+    margin: 0;
+    padding: 0;
 }
 
 #DesktopStatusBar {

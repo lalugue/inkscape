@@ -236,6 +236,7 @@ TextToolbar::TextToolbar(SPDesktop *desktop)
     , _cusor_numbers(0)
     , _builder(create_builder("toolbar-text.ui"))
     , _font_collections_list(get_widget<Gtk::ListBox>(_builder, "_font_collections_list"))
+    , _reset_button(get_widget<Gtk::Button>(_builder, "reset_btn"))
     , _line_height_item(get_derived_widget<UI::Widget::SpinButton>(_builder, "_line_height_item"))
     , _superscript_btn(get_widget<Gtk::ToggleButton>(_builder, "_superscript_btn"))
     , _subscript_btn(get_widget<Gtk::ToggleButton>(_builder, "_subscript_btn"))
@@ -270,6 +271,24 @@ TextToolbar::TextToolbar(SPDesktop *desktop)
     setup_derived_spin_button(_dy_item, "dy", 0.0, &TextToolbar::dy_value_changed);
     setup_derived_spin_button(_rotation_item, "rotation", 0.0, &TextToolbar::rotation_value_changed);
 
+    _line_height_item.set_custom_numeric_menu_data(   { {1, _("Single spaced")}, {1.25, _("Default")}, {1.5, ""}, {2, _("Double spaced")} });
+    _letter_spacing_item.set_custom_numeric_menu_data({ {0, C_("Text tool", "Normal")} });
+    _word_spacing_item.set_custom_numeric_menu_data(  { {0, C_("Text tool", "Normal")} });
+    _dx_item.set_custom_numeric_menu_data(            { {0, ""} });
+    _dy_item.set_custom_numeric_menu_data(            { {0, ""} });
+    _rotation_item.set_custom_numeric_menu_data({
+        {-90, ""},
+        {-45, ""},
+        {-30, ""},
+        {-15, ""},
+        {  0, ""},
+        { 15, ""},
+        { 30, ""},
+        { 45, ""},
+        { 90, ""}
+    });
+
+
     // Configure alignment mode buttons
     configure_mode_buttons(_alignment_buttons, get_widget<Gtk::Box>(_builder, "alignment_buttons_box"), "align_mode",
                            &TextToolbar::align_mode_changed);
@@ -280,10 +299,17 @@ TextToolbar::TextToolbar(SPDesktop *desktop)
     configure_mode_buttons(_direction_buttons, get_widget<Gtk::Box>(_builder, "direction_buttons_box"),
                            "direction_mode", &TextToolbar::direction_changed);
 
+    auto fontlister = Inkscape::FontLister::get_instance();
+    font_count_changed_connection = fontlister->connectUpdate([this, fontlister] {
+        bool all_fonts;
+        std::string label;
+        std::tie(all_fonts, label) = fontlister->get_font_count_label();
+        _reset_button.set_sensitive(!all_fonts);
+    });
+
     // Font family
     {
         // Font list
-        auto fontlister = Inkscape::FontLister::get_instance();
         fontlister->update_font_list(desktop->getDocument());
         auto store = fontlister->get_font_list();
 
@@ -320,7 +346,6 @@ TextToolbar::TextToolbar(SPDesktop *desktop)
 
     // Font styles
     {
-        auto fontlister = Inkscape::FontLister::get_instance();
         auto store = fontlister->get_style_list();
 
         _font_style_item = Gtk::manage(new UI::Widget::ComboBoxEntryToolItem(
@@ -461,9 +486,7 @@ TextToolbar::TextToolbar(SPDesktop *desktop)
         TextToolbar::on_fcm_button_pressed();
     });
 
-    get_widget<Gtk::Button>(_builder, "reset_btn").signal_clicked().connect([this]() {
-        TextToolbar::on_reset_button_pressed();
-    });
+    _reset_button.signal_clicked().connect([this]() { TextToolbar::on_reset_button_pressed(); });
 
     // We emit a selection change on tool switch to text.
     desktop->connectEventContextChanged(sigc::mem_fun(*this, &TextToolbar::watch_ec));

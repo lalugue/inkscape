@@ -62,9 +62,6 @@
             <property name="margin-start">3</property>
             <property name="margin-top">3</property>
             <property name="margin-bottom">3</property>
-            <style>
-              <class name="flat"/>
-            </style>
             <child>
               <object class="GtkListBox" id="_font_collections_list">
                 <property name="visible">True</property>
@@ -252,13 +249,23 @@
         <property name="can-focus">True</property>
         <property name="focus-on-click">False</property>
         <property name="receives-default">True</property>
-        <property name="relief">none</property>
         <property name="popover">popover1</property>
         <child>
-          <object class="GtkImage" id="image23">
-            <property name="visible">True</property>
-            <property name="icon-name">go-down</property>
-          </object>
+	  <object class="GtkBox">
+	    <property name="visible">True</property>
+	    <child>
+              <object class="GtkImage">
+		<property name="visible">True</property>
+		<property name="icon-name">text_line_spacing</property>
+              </object>
+	    </child>
+	    <child>
+              <object class="GtkImage">
+		<property name="visible">True</property>
+		<property name="icon-name">pan-down</property>
+              </object>
+	    </child>
+	  </object>
         </child>
       </object>
       <packing>
@@ -322,13 +329,23 @@
         <property name="can-focus">True</property>
         <property name="focus-on-click">False</property>
         <property name="receives-default">True</property>
-        <property name="relief">none</property>
         <property name="popover">popover2</property>
         <child>
-          <object class="GtkImage" id="image24">
-            <property name="visible">True</property>
-            <property name="icon-name">go-down</property>
-          </object>
+	  <object class="GtkBox">
+	    <property name="visible">True</property>
+	    <child>
+              <object class="GtkImage">
+		<property name="visible">True</property>
+		<property name="icon-name">format-justify-left</property>
+              </object>
+	    </child>
+	    <child>
+              <object class="GtkImage">
+		<property name="visible">True</property>
+		<property name="icon-name">pan-down</property>
+              </object>
+	    </child>
+	  </object>
         </child>
       </object>
       <packing>
@@ -482,13 +499,23 @@
         <property name="can-focus">True</property>
         <property name="focus-on-click">False</property>
         <property name="receives-default">True</property>
-        <property name="relief">none</property>
         <property name="popover">popover3</property>
         <child>
-          <object class="GtkImage" id="image25">
-            <property name="visible">True</property>
-            <property name="icon-name">text_horz_kern</property>
-          </object>
+	  <object class="GtkBox">
+	    <property name="visible">True</property>
+	    <child>
+              <object class="GtkImage">
+		<property name="visible">True</property>
+                <property name="icon-name">frmt-text-direction-horizontal</property>
+              </object>
+	    </child>
+	    <child>
+              <object class="GtkImage">
+		<property name="visible">True</property>
+		<property name="icon-name">pan-down</property>
+              </object>
+	    </child>
+	  </object>
         </child>
       </object>
       <packing>
@@ -579,13 +606,23 @@
         <property name="can-focus">True</property>
         <property name="focus-on-click">False</property>
         <property name="receives-default">True</property>
-        <property name="relief">none</property>
         <property name="popover">popover4</property>
         <child>
-          <object class="GtkImage" id="image26">
-            <property name="visible">True</property>
-            <property name="icon-name">go-down</property>
-          </object>
+	  <object class="GtkBox">
+	    <property name="visible">True</property>
+	    <child>
+              <object class="GtkImage">
+		<property name="visible">True</property>
+                <property name="icon-name">text-orientation-auto</property>
+              </object>
+	    </child>
+	    <child>
+              <object class="GtkImage">
+		<property name="visible">True</property>
+		<property name="icon-name">pan-down</property>
+              </object>
+	    </child>
+	  </object>
         </child>
       </object>
       <packing>
@@ -676,13 +713,23 @@
         <property name="can-focus">True</property>
         <property name="focus-on-click">False</property>
         <property name="receives-default">True</property>
-        <property name="relief">none</property>
         <property name="popover">popover5</property>
         <child>
-          <object class="GtkImage" id="image27">
-            <property name="visible">True</property>
-            <property name="icon-name">go-down</property>
-          </object>
+	  <object class="GtkBox">
+	    <property name="visible">True</property>
+	    <child>
+              <object class="GtkImage">
+		<property name="visible">True</property>
+                <property name="icon-name">frmt-text-direction-r2l</property>
+              </object>
+	    </child>
+	    <child>
+              <object class="GtkImage">
+		<property name="visible">True</property>
+		<property name="icon-name">pan-down</property>
+              </object>
+	    </child>
+	  </object>
         </child>
       </object>
       <packing>
@@ -753,13 +800,23 @@
         <property name="can-focus">True</property>
         <property name="focus-on-click">False</property>
         <property name="receives-default">True</property>
-        <property name="relief">none</property>
         <property name="popover">popover6</property>
         <child>
-          <object class="GtkImage" id="image28">
-            <property name="visible">True</property>
-            <property name="icon-name">go-down</property>
-          </object>
+	  <object class="GtkBox">
+	    <property name="visible">True</property>
+	    <child>
+              <object class="GtkImage">
+		<property name="visible">True</property>
+		<property name="icon-name">text_letter_spacing</property>
+              </object>
+	    </child>
+	    <child>
+              <object class="GtkImage">
+		<property name="visible">True</property>
+		<property name="icon-name">pan-down</property>
+              </object>
+	    </child>
+	  </object>
         </child>
       </object>
       <packing>

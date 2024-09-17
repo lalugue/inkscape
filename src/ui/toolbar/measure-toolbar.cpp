@@ -88,6 +88,12 @@ MeasureToolbar::MeasureToolbar(SPDesktop *desktop)
     setup_derived_spin_button(_scale_item, "scale", 100.0, &MeasureToolbar::scale_value_changed);
     setup_derived_spin_button(_offset_item, "offset", 5.0, &MeasureToolbar::offset_value_changed);
 
+    // Values auto-calculated.
+    _font_size_item.set_custom_numeric_menu_data({ });
+    _precision_item.set_custom_numeric_menu_data({ });
+    _scale_item.set_custom_numeric_menu_data({ });
+    _offset_item.set_custom_numeric_menu_data({ });
+
     // Fetch all the ToolbarMenuButtons at once from the UI file
     // Menu Button #1
     auto popover_box1 = &get_widget<Gtk::Box>(_builder, "popover_box1");

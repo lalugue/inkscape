@@ -46,7 +46,7 @@ enum FileSaveMethod {
     FILE_SAVE_METHOD_TEMPORARY,
 };
 
-SPDocument *open(Extension *key, gchar const *filename);
+SPDocument *open(Extension *key, gchar const *filename, bool is_importing = false);
 void save(Extension *key, SPDocument *doc, gchar const *filename,
           bool check_overwrite, bool official,
           Inkscape::Extension::FileSaveMethod save_method);

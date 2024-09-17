@@ -45,6 +45,7 @@
 #include "object/sp-page.h"
 #include "object/sp-shape.h"
 #include "object/sp-text.h"
+#include "object/sp-use.h"
 #include "ui/desktop/menu-set-tooltips-shift-icons.h"
 #include "ui/menuize.h"
 #include "ui/util.h"
@@ -101,7 +102,26 @@ void show_all_images(Gtk::Widget &parent)
     });
 }
 
-ContextMenu::ContextMenu(SPDesktop *desktop, SPObject *object, bool hide_layers_and_objects_menu_item)
+/// Check if the item is a clone of an image.
+bool is_clone_of_image(SPItem const *item)
+{
+    if (auto const *clone = cast<SPUse>(item)) {
+        return is<SPImage>(clone->trueOriginal());
+    }
+    return false;
+}
+
+static bool childrenIncludedInSelection(SPItem *item, Inkscape::Selection &selection)
+{
+    return std::any_of(item->children.begin(), item->children.end(), [&selection](auto &child) {
+        if (auto childItem = cast<SPItem>(&child)) {
+            return selection.includes(childItem) || childrenIncludedInSelection(childItem, selection);
+        }
+        return false;
+    });
+}
+
+ContextMenu::ContextMenu(SPDesktop *desktop, SPObject *object, std::vector<SPItem*> const &items, bool hide_layers_and_objects_menu_item)
 {
     set_name("ContextMenu");
 
@@ -120,9 +140,9 @@ ContextMenu::ContextMenu(SPDesktop *desktop, SPObject *object, bool hide_layers_
     auto layer = Inkscape::LayerManager::asLayer(item);  // Layers have their own context menu in the Object and Layers dialog.
     auto root = desktop->layerManager().currentRoot();
 
-    // Get a list of items under the cursor, used for unhiding and unlocking.
-    auto point_win = desktop->point() * desktop->d2w();
-    items_under_cursor = document->getItemsAtPoints(desktop->dkey, {point_win}, true, false, 0, false);
+    // Save the items in context
+    items_under_cursor = items;
+
     bool has_hidden_below_cursor = false;
     bool has_locked_below_cursor = false;
     for (auto item : items_under_cursor) {
@@ -164,11 +184,12 @@ ContextMenu::ContextMenu(SPDesktop *desktop, SPObject *object, bool hide_layers_
         // "item" is the object that was under the mouse when right-clicked. It determines what is shown
         // in the menu thus it makes the most sense that it is either selected or part of the current
         // selection.
-        auto selection = desktop->getSelection();
-        bool selection_under_cursor = std::any_of(items_under_cursor.begin(), items_under_cursor.end(),
-                [selection](auto item) { return selection->includes(item); });
-        if (object && !selection_under_cursor) {
-            selection->set(object);
+        auto &selection = *desktop->getSelection();
+
+        // Do not include this object in the selection if any of its
+        // children have been selected separately.
+        if (object && !selection.includesDescendant(object) && item && !childrenIncludedInSelection(item, selection)) {
+            selection.set(object);
         }
 
         if (!item) {
@@ -261,7 +282,7 @@ ContextMenu::ContextMenu(SPDesktop *desktop, SPObject *object, bool hide_layers_
 
                 // Clipping and Masking
                 gmenu_section = Gio::Menu::create();
-                if (selection->size() > 1) {
+                if (selection.size() > 1) {
                     AppendItemFromAction( gmenu_section, "app.object-set-clip",                 _("Set Cl_ip"),             ""                                );
                 }
                 if (item->getClipObject()) {
@@ -269,7 +290,7 @@ ContextMenu::ContextMenu(SPDesktop *desktop, SPObject *object, bool hide_layers_
                 } else {
                     AppendItemFromAction( gmenu_section, "app.object-set-clip-group",           _("Set Clip G_roup"),       ""                                );
                 }
-                if (selection->size() > 1) {
+                if (selection.size() > 1) {
                     AppendItemFromAction( gmenu_section, "app.object-set-mask",                 _("Set Mask"),              ""                                );
                 }
                 if (item->getMaskObject()) {

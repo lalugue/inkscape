@@ -175,7 +175,8 @@ public:
               gchar const *filename) override;
 
     SPDocument *open( Inkscape::Extension::Input *mod,
-                                const gchar *uri ) override;
+                                const gchar *uri,
+                                bool is_importing) override;
 
     static void init();//Initialize the class
 

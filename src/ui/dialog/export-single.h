@@ -22,6 +22,7 @@
 #include <gtkmm/entry.h>
 
 #include "helper/auto-connection.h"
+#include "ui/dialog/export-batch.h"
 #include "ui/widget/scrollprotected.h"
 
 namespace Gtk {
@@ -116,6 +117,8 @@ private:
 
     Gtk::CheckButton *show_export_area = nullptr;
 
+    BatchItems current_items;
+
     // In order of intialization
     Gtk::FlowBox &pages_list;
     Gtk::ScrolledWindow &pages_list_box;
@@ -191,7 +194,6 @@ private:
     /**
      * Page functions
      */
-    void clearPagePreviews();
     void onPagesChanged();
     void onPagesModified(SPPage *page);
     void onPagesSelected(SPPage *page);

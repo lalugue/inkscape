@@ -87,29 +87,20 @@ inline double NormalDistribution(double mu, double sigma)
   return mu + sigma * sqrt( -2.0 * log(g_random_double_range(0, 1)) ) * cos( 2.0*M_PI*g_random_double_range(0, 1) );
 }
 
-/* Method to rotate items */
-static void sp_spray_rotate_rel(Geom::Point c, Geom::Point &d, SPDesktop */*desktop*/, SPItem *item, Geom::Rotate const &rotation)
+/**
+ * Transform the affine around the point. For example if it's a rotation, scale and/or skew it will be applied relative to the center point.
+ */
+static Geom::Affine transform_around_point(Geom::Point center, Geom::Affine const &affine)
 {
-    Geom::Translate const s(c);
-    Geom::Affine affine = s.inverse() * rotation * s;
-    d *= s.inverse() * rotation * s;
-    // Rotate item.
-    item->set_i2d_affine(item->i2dt_affine() * affine);
-    // Use each item's own transform writer, consistent with sp_selection_apply_affine()
-    item->doWriteTransform(item->transform);
-    // Restore the center position (it's changed because the bbox center changed)
-    if (item->isCenterSet()) {
-        item->setCenter(c);
-        item->updateRepr();
-    }
+    auto const translate = Geom::Translate(center);
+    return translate.inverse() * affine * translate;
 }
 
-/* Method to scale items */
-static void sp_spray_scale_rel(Geom::Point c, Geom::Point &d, SPDesktop */*desktop*/, SPItem *item, Geom::Scale const &scale)
+static void transform_keep_center(SPItem *item, Geom::Affine const &affine, Geom::Point const &center)
 {
-    Geom::Translate const s(c);
-    d *= s.inverse() * scale * s;
-    item->set_i2d_affine(item->i2dt_affine() * s.inverse() * scale * s);
+    // This order allows us to avoid more reprUpdates than needed
+    item->set_i2d_affine(item->i2dt_affine() * affine);
+    item->updateCenterIfSet(center);
     item->doWriteTransform(item->transform);
 }
 
@@ -165,7 +156,6 @@ SprayTool::SprayTool(SPDesktop *desktop)
     if (prefs->getBool("/tools/spray/gradientdrag")) {
         this->enableGrDrag();
     }
-    desktop->getSelection()->setBackup();
     sp_event_context_read(this, "distrib");
     sp_event_context_read(this, "width");
     sp_event_context_read(this, "ratio");
@@ -190,13 +180,13 @@ SprayTool::SprayTool(SPDesktop *desktop)
     sp_event_context_read(this, "over_no_transparent");
     sp_event_context_read(this, "over_transparent");
     sp_event_context_read(this, "no_overlap");
+
+    // Construct the object_set we'll be using for this spray operation
+    auto const selected_objects = _desktop->getSelection()->objects();
+    object_set.add(selected_objects.begin(), selected_objects.end());
 }
 
 SprayTool::~SprayTool() {
-    if (!object_set.isEmpty()) {
-        object_set.clear();
-    }
-    _desktop->getSelection()->restoreBackup();
     this->enableGrDrag(false);
 }
 
@@ -204,8 +194,8 @@ void SprayTool::update_cursor(bool /*with_shift*/) {
     guint num = 0;
     gchar *sel_message = nullptr;
 
-    if (!_desktop->getSelection()->isEmpty()) {
-        num = (guint)boost::distance(_desktop->getSelection()->items());
+    if (!object_set.isEmpty()) {
+        num = object_set.size();
         sel_message = g_strdup_printf(ngettext("<b>%i</b> object selected","<b>%i</b> objects selected",num), num);
     } else {
         sel_message = g_strdup_printf("%s", _("<b>Nothing</b> selected"));
@@ -430,6 +420,7 @@ static void showHidden(std::vector<SPItem *> items_down){
 }
 //todo: maybe move same parameter to preferences
 static bool fit_item(SPDesktop *desktop,
+                     Inkscape::ObjectSet *set,
                      SPItem *item,
                      Geom::OptRect bbox,
                      Geom::Point &move,
@@ -461,6 +452,9 @@ static bool fit_item(SPDesktop *desktop,
                      double gamma_picked ,
                      double rand_picked)
 {
+    if (set->isEmpty()) {
+        return false;
+    }
     SPDocument *doc = item->document;
     double width = bbox->width();
     double height = bbox->height();
@@ -530,11 +524,6 @@ static bool fit_item(SPDesktop *desktop,
         offset_height = 0;
     }
     std::vector<SPItem*> items_down = desktop->getDocument()->getItemsPartiallyInBox(desktop->dkey, *bbox_procesed);
-    Inkscape::Selection *selection = desktop->getSelection();
-    if (selection->isEmpty()) {
-        return false;
-    }
-    std::vector<SPItem*> const items_selected(selection->items().begin(), selection->items().end());
     std::vector<SPItem*> items_down_erased;
     for (std::vector<SPItem*>::const_iterator i=items_down.begin(); i!=items_down.end(); ++i) {
         SPItem *item_down = *i;
@@ -543,7 +532,7 @@ static bool fit_item(SPDesktop *desktop,
         double bbox_top = bbox_down->top();
         gchar const * item_down_sharp = g_strdup_printf("#%s", item_down->getId());
         items_down_erased.push_back(item_down);
-        for (auto item_selected : items_selected) {
+        for (auto item_selected : set->items()) {
             gchar const * spray_origin;
             if(!item_selected->getAttribute("inkscape:spray-origin")){
                 spray_origin = g_strdup_printf("#%s", item_selected->getId());
@@ -555,7 +544,7 @@ static bool fit_item(SPDesktop *desktop,
                 strcmp(item_down->getAttribute("inkscape:spray-origin"),spray_origin) == 0 ))
             {
                 if(mode == SPRAY_MODE_ERASER) {
-                    if(strcmp(item_down_sharp, spray_origin) != 0 && !selection->includes(item_down) ){
+                    if(strcmp(item_down_sharp, spray_origin) != 0 && !set->includes(item_down) ){
                         item_down->deleteObject();
                         items_down_erased.pop_back();
                         break;
@@ -701,6 +690,7 @@ static bool fit_item(SPDesktop *desktop,
                         return false;
                     }
                     if(!fit_item(desktop
+                                 , set
                                  , item
                                  , bbox
                                  , move
@@ -853,11 +843,9 @@ static bool sp_spray_recursive(SPDesktop *desktop,
         // convert 3D boxes to ordinary groups before spraying their shapes
         // TODO: ideally the original object is preserved.
         if (auto box = cast<SPBox3D>(item)) {
-            desktop->getSelection()->remove(item);
             set->remove(item);
             item = box->convert_to_group();
             set->add(item);
-            desktop->getSelection()->add(item);
         }
     }
 
@@ -882,7 +870,7 @@ static bool sp_spray_recursive(SPDesktop *desktop,
                 } else {
                     spray_origin = item->getAttribute("inkscape:spray-origin");
                 }
-                Geom::Point center = item->getCenter();
+                Geom::Point center = item->getCenter(false);
                 Geom::Point move = (Geom::Point(cos(tilt)*cos(dp)*dr/(1-ratio)+sin(tilt)*sin(dp)*dr/(1+ratio), -sin(tilt)*cos(dp)*dr/(1-ratio)+cos(tilt)*sin(dp)*dr/(1+ratio)))+(p-bbox->midpoint());
                 if (single_click) {
                     move = p-bbox->midpoint();
@@ -896,6 +884,7 @@ static bool sp_spray_recursive(SPDesktop *desktop,
                 {
                     for (auto i : {0,1}) {
                         if (!fit_item(desktop
+                                    , set
                                     , item
                                     , bbox
                                     , move
@@ -971,22 +960,16 @@ static bool sp_spray_recursive(SPDesktop *desktop,
                 }
                 // Conversion object->item
                 
-                Geom::Point tcenter = center;
                 if (single_click && item->isCenterSet()) {
                     item_copied->unsetCenter();
                     item_copied->updateRepr();
                     center = bbox->midpoint();
                 }
-                sp_spray_scale_rel(center, tcenter, desktop, item_copied, Geom::Scale(_scale));
-                sp_spray_scale_rel(center, tcenter, desktop, item_copied, Geom::Scale(scale));
-                sp_spray_rotate_rel(center,tcenter, desktop,item_copied, Geom::Rotate(angle));
-                // Move the cursor p
+
                 auto translate = Geom::Translate(move * desktop->doc2dt().withoutTranslation());
-                item_copied->move_rel(translate);
-                if (single_click && item->isCenterSet()) {
-                    item_copied->setCenter(tcenter * translate);
-                    item_copied->updateRepr();
-                }
+                auto affine = transform_around_point(center, Geom::Scale(_scale * scale) * Geom::Rotate(angle));
+                transform_keep_center(item_copied, affine * translate, single_click ? center * translate : center);
+
                 if(picker){
                     sp_desktop_apply_css_recursive(item_copied, css, true);
                 }
@@ -1022,12 +1005,10 @@ static bool sp_spray_recursive(SPDesktop *desktop,
                     // Move around the cursor
                     Geom::Point move = (Geom::Point(cos(tilt)*cos(dp)*dr/(1-ratio)+sin(tilt)*sin(dp)*dr/(1+ratio), -sin(tilt)*cos(dp)*dr/(1-ratio)+cos(tilt)*sin(dp)*dr/(1+ratio)))+(p-bbox->midpoint());
 
-                    Geom::Point center = item->getCenter();
-                    Geom::Point tcenter = center; // dont use
-                    sp_spray_scale_rel(center, tcenter, desktop, item_copied, Geom::Scale(_scale, _scale));
-                    sp_spray_scale_rel(center, tcenter, desktop, item_copied, Geom::Scale(scale, scale));
-                    sp_spray_rotate_rel(center, tcenter,desktop, item_copied, Geom::Rotate(angle));
-                    item_copied->move_rel(Geom::Translate(move * desktop->doc2dt().withoutTranslation()));
+                    Geom::Point center = item->getCenter(false);
+                    auto translate = Geom::Translate(move * desktop->doc2dt().withoutTranslation());
+                    auto affine = transform_around_point(center, Geom::Scale(_scale * scale) * Geom::Rotate(angle));
+                    transform_keep_center(item_copied, affine * translate, center);
 
                     // Union
                     // only works if no groups in selection
@@ -1196,7 +1177,6 @@ bool SprayTool::root_handler(CanvasEvent const &event)
         },
         [&] (ButtonPressEvent const &event) {
             if (event.num_press == 1 && event.button == 1) {
-                _desktop->getSelection()->restoreBackup();
                 if (Inkscape::have_viable_layer(_desktop, defaultMessageContext())) {
                     xyp = event.pos.floor();
                     setCloneTilerPrefs();
@@ -1209,9 +1189,6 @@ bool SprayTool::root_handler(CanvasEvent const &event)
                     is_dilating = true;
                     has_dilated = false;
                     is_drawing = false;
-                    object_set.clear();
-                    auto const selected_objects = _desktop->getSelection()->objects();
-                    object_set.add(selected_objects.begin(), selected_objects.end());
                     if (mode == SPRAY_MODE_SINGLE_PATH) {
                         single_path_output = nullptr;
                     }
@@ -1232,18 +1209,10 @@ bool SprayTool::root_handler(CanvasEvent const &event)
             Geom::Point motion_dt(_desktop->w2d(event.pos));
             Geom::Point motion_doc(_desktop->dt2doc(motion_dt));
             if (!has_dilated && items.empty() && mode != SPRAY_MODE_SINGLE_PATH) {
-                _desktop->getSelection()->restoreBackup();
                 update_cursor(true);
-                object_set.clear();
-                auto const selected_objects = _desktop->getSelection()->objects();
-                object_set.add(selected_objects.begin(), selected_objects.end());
                 if (!object_set.isEmpty()) {
-                    _desktop->getSelection()->clear();
-                    items.clear();
-                    items.insert(items.end(), object_set.items().begin(), object_set.items().end());
                     // select a random item from the ones selected to spay to preview and apply on single click
-                    int pos = g_random_int_range(0, items.size());
-                    SPItem * randintem = items[pos];
+                    auto randintem = object_set.items_vector()[g_random_int_range(0, object_set.size())];
                     release_connection = randintem->connectRelease([this] (auto) { items.clear(); });
                     items.clear();
                     items.push_back(randintem);
@@ -1270,8 +1239,7 @@ bool SprayTool::root_handler(CanvasEvent const &event)
                 return;
             }
             if (!is_drawing && is_dilating) {
-                items.clear();
-                items.insert(items.end(), object_set.items().begin(), object_set.items().end());
+                items = object_set.items_vector();
             }
             
             // Once the user has moved farther than tolerance from
@@ -1383,8 +1351,6 @@ bool SprayTool::root_handler(CanvasEvent const &event)
                         break;
                 }
             }
-            _desktop->getSelection()->clear();
-            object_set.clear();
         },
         [&] (KeyPressEvent const &event) {
             switch (get_latin_keyval (event)) {

@@ -98,6 +98,85 @@ SprayToolbar::SprayToolbar(SPDesktop *desktop)
     setup_derived_spin_button(_mean_item, "mean", 0, &SprayToolbar::mean_value_changed);
     setup_derived_spin_button(_offset_item, "offset", 100, &SprayToolbar::offset_value_changed);
 
+    _width_item.set_custom_numeric_menu_data({
+        {  1, _("(narrow spray)")},
+        {  3, ""},
+        {  5, ""},
+        { 10, ""},
+        { 15, _("(default)")},
+        { 20, ""},
+        { 30, ""},
+        { 50, ""},
+        { 75, ""},
+        {100, _("(broad spray)")}
+    });
+
+    _population_item.set_custom_numeric_menu_data({
+        {  5, _("(low population)")},
+        { 10, ""},
+        { 35, ""},
+        { 50, ""},
+        { 70, _("(default)")},
+        { 85, ""},
+        {100, _("(high population)")}
+    });
+
+    _rotation_item.set_custom_numeric_menu_data({
+        {  0, _("(default)")},
+        { 10, ""},
+        { 20, ""},
+        { 35, ""},
+        { 50, ""},
+        { 60, ""},
+        { 80, ""},
+        {100, _("(high rotation variation)")}
+    });
+
+    _scale_item.set_custom_numeric_menu_data({
+        {  0, _("(default)")},
+        { 10, ""},
+        { 20, ""},
+        { 35, ""},
+        { 50, ""},
+        { 60, ""},
+        { 80, ""},
+        {100, _("(high scale variation)")}
+    });
+
+    // Scatter
+    _sd_item.set_custom_numeric_menu_data({
+        {  1, _("(minimum scatter)")},
+        {  5, ""},
+        { 10, ""},
+        { 20, ""},
+        { 30, ""},
+        { 50, ""},
+        { 70, _("(default)")},
+        {100, _("(maximum scatter)")}
+    });
+
+    _mean_item.set_custom_numeric_menu_data({
+        {  0, _("(default)")},
+        {  5, ""},
+        { 10, ""},
+        { 20, ""},
+        { 30, ""},
+        { 50, ""},
+        { 70, ""},
+        {100, _("(maximum mean)")}
+    });
+
+    _offset_item.set_custom_numeric_menu_data({
+        {  0, _("(minimum offset)")},
+        { 25, ""},
+        { 50, ""},
+        { 75, ""},
+        {100, _("(default)")},
+        {150, ""},
+        {200, ""},
+        {1000, _("(maximum offset)")}
+    });
+
     // Configure mode buttons
     int btn_index = 0;
     for_each_child(get_widget<Gtk::Box>(_builder, "mode_buttons_box"), [&](Gtk::Widget &item){
@@ -184,11 +263,11 @@ SprayToolbar::SprayToolbar(SPDesktop *desktop)
 
     // Menu Button #3
     auto popover_box3 = &get_widget<Gtk::Box>(_builder, "popover_box3");
-    auto menu_btn3 = &get_derived_widget<UI::Widget::ToolbarMenuButton>(_builder, "menu_btn3");
+    menu_btn3 = &get_derived_widget<UI::Widget::ToolbarMenuButton>(_builder, "menu_btn3");
 
     // Menu Button #4
     auto popover_box4 = &get_widget<Gtk::Box>(_builder, "popover_box4");
-    auto menu_btn4 = &get_derived_widget<UI::Widget::ToolbarMenuButton>(_builder, "menu_btn4");
+    menu_btn4 = &get_derived_widget<UI::Widget::ToolbarMenuButton>(_builder, "menu_btn4");
 
     // Initialize all the ToolbarMenuButtons only after all the children of the
     // toolbar have been fetched. Otherwise, the children to be moved in the
@@ -258,9 +337,12 @@ void SprayToolbar::init()
 
     bool show = true;
 
-    if(mode == 3 || mode == 2){
+    if (mode == 3 || mode == 2){
         show = false;
     }
+
+    menu_btn3->set_visible(show);
+    menu_btn4->set_visible(show);
 
     _over_no_transparent_btn.set_visible(show);
     _over_transparent_btn.set_visible(show);
@@ -274,7 +356,7 @@ void SprayToolbar::init()
     _pick_center_btn.set_visible(show);
     _offset_item.set_visible(show);
 
-    if(mode == 2){
+    if (mode == 2){
         show = true;
     }
 
@@ -345,7 +427,7 @@ void SprayToolbar::toggle_picker()
     auto prefs = Inkscape::Preferences::get();
     bool active = _picker_btn.get_active();
     prefs->setBool("/tools/spray/picker", active);
-    if(active){
+    if (active) {
         prefs->setBool("/dialogs/clonetiler/dotrace", false);
         SPDesktop *dt = _desktop;
         if (Inkscape::UI::Dialog::CloneTiler *ct = get_clone_tiler_panel(dt)){

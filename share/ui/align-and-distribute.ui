@@ -870,7 +870,7 @@
       </object>
     </child>
     <child>
-      <object class="GtkFrame">
+      <object class="GtkFrame" id="remove-overlap-frame">
         <property name="visible">True</property>
         <style>
           <class name="flat"/>

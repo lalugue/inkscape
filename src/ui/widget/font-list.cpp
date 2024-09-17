@@ -6,6 +6,7 @@
 #include <glibmm/priorities.h>
 #include <glibmm/ustring.h>
 #include <gtkmm/cellrenderertext.h>
+#include <gtkmm/enums.h>
 #include <gtkmm/label.h>
 #include <gtkmm/progressbar.h>
 #include <gtkmm/separator.h>
@@ -31,7 +32,6 @@
 #include <libnrtype/font-factory.h>
 #include <libnrtype/font-instance.h>
 #include <vector>
-
 #include "font-list.h"
 #include "preferences.h"
 #include "ui/builder-utils.h"
@@ -327,9 +327,18 @@ FontList::FontList(Glib::ustring preferences_path) :
         item.add(*hbox);
     }
     get_widget<Gtk::Button>(_builder, "id-reset-filter").signal_clicked().connect([=](){
+        bool modified = false;
         if (_font_tags.deselect_all()) {
-            add_categories(_font_tags.get_tags());
-            filter();
+            modified = true;
+        }
+        auto fc = Inkscape::FontCollections::get();
+        if (!fc->get_selected_collections().empty()) {
+            fc->clear_selected_collections();
+            modified = true;
+        }
+        if (modified) {
+            add_categories();
+            update_filterbar();
         }
     });
 
@@ -366,7 +375,9 @@ FontList::FontList(Glib::ustring preferences_path) :
         set_grid_cell_size(grid_renderer, font_size_percent, _ui_font_size);
     };
 
-    font_renderer->_font_size = Inkscape::Preferences::get()->getIntLimited(_prefs + "/preview-size", 200, 100, 800);
+    auto prefs = Inkscape::Preferences::get();
+    
+    font_renderer->_font_size = prefs->getIntLimited(_prefs + "/preview-size", 200, 100, 800);
     auto size = &get_widget<Gtk::Scale>(_builder, "preview-font-size");
     size->signal_format_value().connect([](double val){
         return Glib::ustring::format(std::fixed, std::setprecision(0), val) + "%";
@@ -376,42 +387,48 @@ FontList::FontList(Glib::ustring preferences_path) :
         auto font_size = size->get_value();
         set_row_height(font_size);
         set_grid_size(font_size);
-        Inkscape::Preferences::get()->setInt(_prefs + "/preview-size", font_size);
+        prefs->setInt(_prefs + "/preview-size", font_size);
         // resize
         filter();
     });
 
     auto show_names = &get_widget<Gtk::CheckButton>(_builder, "show-font-name");
-    show_names->signal_toggled().connect([=](){
-        bool show = show_names->get_active();
-        //TODO: refactor to fn
+    auto set_show_names = [=](bool show) {
         font_renderer->_show_font_name = show;
+        prefs->setBool(_prefs + "/show-font-names", show);
         set_row_height(font_renderer->_font_size);
         _font_list.set_grid_lines(show ? Gtk::TREE_VIEW_GRID_LINES_HORIZONTAL : Gtk::TREE_VIEW_GRID_LINES_NONE);
         // resize
         filter();
+    };
+    auto show = prefs->getBool(_prefs + "/show-font-names", true);
+    set_show_names(show);
+    show_names->set_active(show);
+    show_names->signal_toggled().connect([=](){
+        bool show = show_names->get_active();
+        set_show_names(show);
     });
 
     // sample text to show for each font; empty to show font name
     auto sample = &get_widget<Gtk::Entry>(_builder, "sample-text");
-    auto sample_text = Inkscape::Preferences::get()->getString(_prefs + "/sample-text");
+    auto sample_text = prefs->getString(_prefs + "/sample-text");
     sample->set_text(sample_text);
     font_renderer->_sample_text = sample_text;
     sample->signal_changed().connect([=](){
         auto text = sample->get_text();
         font_renderer->_sample_text = text;
-        Inkscape::Preferences::get()->setString(_prefs + "/sample-text", text);
+        prefs->setString(_prefs + "/sample-text", text);
         _font_list.queue_draw();
     });
     // sample text for grid
     auto grid_sample = &get_widget<Gtk::Entry>(_builder, "grid-sample");
-    auto sample_grid_text = Inkscape::Preferences::get()->getString(_prefs + "/grid-text", "Aa");
+    auto sample_grid_text = prefs->getString(_prefs + "/grid-text", "Aa");
     grid_sample->set_text(sample_grid_text);
     grid_renderer->_sample_text = sample_grid_text;
     grid_sample->signal_changed().connect([=](){
         auto text = grid_sample->get_text();
         grid_renderer->_sample_text = text.empty() ? "?" : text;
-        Inkscape::Preferences::get()->setString(_prefs + "/grid-text", text);
+        prefs->setString(_prefs + "/grid-text", text);
         _font_grid.queue_draw();
     });
 
@@ -509,7 +526,7 @@ FontList::FontList(Glib::ustring preferences_path) :
         _signal_changed.emit();
     };
 
-    _font_grid.signal_selection_changed().connect([=](){
+    _selection_changed = _font_grid.signal_selection_changed().connect([=](){
         auto sel = _font_grid.get_selected_items();
         if (sel.size() == 1) {
             auto it = _font_list_store->get_iter(sel.front());
@@ -537,9 +554,9 @@ FontList::FontList(Glib::ustring preferences_path) :
             grid.set_visible();
         }
         _view_mode_list = show_list;
-        Inkscape::Preferences::get()->setBool(_prefs + "/list-view-mode", show_list);
+        prefs->setBool(_prefs + "/list-view-mode", show_list);
     };
-    auto list_mode = Inkscape::Preferences::get()->getBool(_prefs + "/list-view-mode", true);
+    auto list_mode = prefs->getBool(_prefs + "/list-view-mode", true);
     if (list_mode) show_list->set_active(); else show_grid->set_active();
     set_list_view_mode(list_mode);
     show_list->signal_toggled().connect([=]() { set_list_view_mode(true); });
@@ -660,8 +677,20 @@ FontList::FontList(Glib::ustring preferences_path) :
     auto& filter_popover = get_widget<Gtk::Popover>(_builder, "filter-popover");
     filter_popover.signal_show().connect([=](){
         // update tag checkboxes
-        add_categories(_font_tags.get_tags());
+        add_categories();
+        update_filterbar();
     }, false);
+
+    _font_collections_update = Inkscape::FontCollections::get()->connect_update([this]() {
+        add_categories();
+        update_filterbar();
+        filter();
+    });
+    _font_collections_selection = Inkscape::FontCollections::get()->connect_selection_update([this](){
+        add_categories();
+        update_filterbar();
+        filter();
+    });
 }
 
 void FontList::sort_fonts(Inkscape::FontOrder order) {
@@ -759,6 +788,10 @@ void FontList::populate_font_store(Glib::ustring text, const Show& params) {
     auto active_categories = _font_tags.get_selected_tags();
     auto apply_categories = !active_categories.empty();
 
+    auto fc = Inkscape::FontCollections::get();
+    auto font_collections = fc->get_selected_collections();
+    auto apply_font_collections = !font_collections.empty();
+
     _font_list.set_visible(false); // hide tree view temporarily to speed up rebuild
     _font_grid.set_visible(false);
     _font_list_store->freeze_notify();
@@ -773,13 +806,23 @@ void FontList::populate_font_store(Glib::ustring text, const Show& params) {
             if (name1.lowercase().find(filter) == Glib::ustring::npos) continue;
         }
 
-        if (apply_categories) {
-            filter_in = false;
-            auto&& set = _font_tags.get_font_tags(f.face);
-            for (auto&& ftag : active_categories) {
-                if (set.count(ftag.tag) > 0) {
-                    filter_in = true;
-                    break;
+        if (apply_categories || apply_font_collections) {
+            if (apply_categories) {
+                auto&& set = _font_tags.get_font_tags(f.face);
+                for (auto&& ftag : active_categories) {
+                    if (set.contains(ftag.tag)) {
+                        filter_in = true;
+                        break;
+                    }
+                }
+            }
+
+            if (!filter_in && apply_font_collections) {
+                for (auto& col : font_collections) {
+                    if (fc->is_font_in_collection(col, f.ff->get_name())) {
+                        filter_in = true;
+                        break;
+                    }
                 }
             }
 
@@ -967,19 +1010,32 @@ void FontList::add_font(const Glib::ustring& fontspec, bool select) {
     update_font_count();
 }
 
-Gtk::Box* FontList::create_pill_box(const FontTag& ftag) {
+Gtk::Box* FontList::create_pill_box(const Glib::ustring& display_name, const Glib::ustring& tag, bool tags) {
     auto box = Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL);
-    auto text = Gtk::make_managed<Gtk::Label>(ftag.display_name);
+    auto text = Gtk::make_managed<Gtk::Label>(display_name);
+    text->set_ellipsize(Pango::EllipsizeMode::ELLIPSIZE_END);
+    text->set_max_width_chars(10);
+    text->set_tooltip_text(display_name);
     auto close = Gtk::make_managed<Gtk::Button>();
     close->set_relief(Gtk::RELIEF_NONE);
     close->set_image_from_icon_name("close-button-symbolic");
-    close->signal_clicked().connect([=](){
-        // remove category from current filter
-        update_categories(ftag.tag, false);
-    });
+    close->set_valign(Gtk::ALIGN_CENTER);
+    if (tags) {
+        close->signal_clicked().connect([=](){
+            // remove category from current filter
+            update_categories(tag, false);
+        });
+    }
+    else {
+        close->signal_clicked().connect([=](){
+            // remove collection from current filter
+            Inkscape::FontCollections::get()->update_selected_collections(tag);
+        });
+    }
     box->get_style_context()->add_class("tag-box");
     box->pack_start(*text, true, false);
     box->pack_end(*close, true, false);
+    box->set_valign(Gtk::ALIGN_CENTER);
     box->show_all();
     return box;
 }
@@ -992,7 +1048,12 @@ void FontList::update_filterbar() {
     }
 
     for (auto&& ftag : _font_tags.get_selected_tags()) {
-        auto pill = create_pill_box(ftag);
+        auto pill = create_pill_box(ftag.display_name, ftag.tag, true);
+        _tag_box.add(*pill);
+    }
+
+    for (auto&& collection : Inkscape::FontCollections::get()->get_selected_collections()) {
+        auto pill = create_pill_box(collection, collection, false);
         _tag_box.add(*pill);
     }
 }
@@ -1011,7 +1072,7 @@ void FontList::update_categories(const std::string& tag, bool select) {
     filter();
 }
 
-void FontList::add_categories(const std::vector<FontTag>& tags) {
+void FontList::add_categories() {
     for (auto row : _tag_list.get_children()) {
         if (row) _tag_list.remove(*row);
     }
@@ -1025,7 +1086,7 @@ void FontList::add_categories(const std::vector<FontTag>& tags) {
         _tag_list.append(*row);
     };
 
-    for (auto& tag : tags) {
+    for (auto& tag : _font_tags.get_tags()) {
         auto btn = Gtk::make_managed<Gtk::CheckButton>("");
         // automatic collections in italic
         dynamic_cast<Gtk::Label*>(btn->get_child())->set_markup("<i>" + tag.display_name + "</i>");
@@ -1061,7 +1122,7 @@ void FontList::add_categories(const std::vector<FontTag>& tags) {
 void FontList::sync_font_tag(const FontTag* ftag, bool selected) {
     if (!ftag) {
         // many/all tags changed
-        add_categories(_font_tags.get_tags());
+        add_categories();
         update_filterbar();
     }
     //todo as needed

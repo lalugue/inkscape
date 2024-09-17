@@ -41,19 +41,14 @@
 
 namespace Inkscape::UI::Widget {
 
-ComboBoxEntryToolItem::ComboBoxEntryToolItem(Glib::ustring name,
-                                             Glib::ustring label,
-                                             Glib::ustring tooltip,
-                                             Glib::RefPtr<Gtk::TreeModel> model,
-                                             int           entry_width,
-                                             int           extra_width,
-                                             CellDataFunc  cell_data_func,
-                                             SeparatorFunc separator_func,
-                                             Gtk::Widget  *focusWidget)
+ComboBoxEntryToolItem::ComboBoxEntryToolItem(Glib::ustring name, Glib::ustring label, Glib::ustring tooltip,
+                                             Glib::RefPtr<Gtk::TreeModel> model, int entry_width, int extra_width,
+                                             CellDataFunc cell_data_func, SeparatorFunc separator_func,
+                                             Gtk::Widget *focusWidget)
     : _label(std::move(label))
     , _tooltip(std::move(tooltip))
     , _model(std::move(model))
-    , _combobox(_model, true)
+    , _combobox(true)
     , _entry_width(entry_width)
     , _extra_width(extra_width)
     , _cell_data_func(std::move(cell_data_func))
@@ -69,6 +64,7 @@ ComboBoxEntryToolItem::ComboBoxEntryToolItem(Glib::ustring name,
     add(_combobox);
     _combobox.set_active(false); // ink_comboboxentry_action->active
     _combobox.signal_changed().connect([this] { combo_box_changed_cb(); });
+    _combobox.signal_realize().connect([this] { _combobox.set_model(_model); });
 
     // Optionally add separator function...
     if (separator_func) {
@@ -261,7 +257,8 @@ void ComboBoxEntryToolItem::popup_enable()
     _entry_completion->set_inline_completion(false);
     _entry_completion->set_inline_selection(true);
 
-    _entry_completion->signal_match_selected().connect(sigc::mem_fun(*this, &ComboBoxEntryToolItem::match_selected_cb));
+    _entry_completion->signal_match_selected().connect(sigc::mem_fun(*this, &ComboBoxEntryToolItem::match_selected_cb),
+                                                       false);
 }
 
 void ComboBoxEntryToolItem::popup_disable()

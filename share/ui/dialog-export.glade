@@ -134,6 +134,7 @@
                                     <child>
                                       <object class="GtkFlowBox" id="si_pages">
                                         <property name="visible">True</property>
+                                        <property name="valign">start</property>
                                         <property name="margin-left">5</property>
                                         <property name="margin-right">5</property>
                                         <property name="margin-start">6</property>
@@ -750,6 +751,7 @@
                                     <child>
                                       <object class="GtkFlowBox" id="b_preview_box">
                                         <property name="visible">True</property>
+                                        <property name="valign">start</property>
                                         <property name="margin-start">5</property>
                                         <property name="margin-end">5</property>
                                         <property name="margin-top">5</property>
@@ -941,8 +943,6 @@
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
                         <property name="hexpand">True</property>
-                        <property name="secondary-icon-tooltip-text" translatable="yes">Browse export directory</property>
-                        <property name="placeholder-text" translatable="yes">Filename</property>
                       </object>
                       <packing>
                         <property name="left-attach">1</property>
@@ -957,21 +957,50 @@
                       </object>
                       <packing>
                         <property name="left-attach">0</property>
-                        <property name="top-attach">1</property>
+                        <property name="top-attach">2</property>
                         <property name="width">2</property>
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkFileChooserButton" id="b_path">
+                      <object class="GtkEntry" id="b_path">
+                        <property name="visible">True</property>
+                        <property name="can-focus">True</property>
+                        <property name="hexpand">True</property>
+                        <property name="secondary-icon-name">folder-open</property>
+                        <property name="secondary-icon-tooltip-text" translatable="yes">Browse export directory</property>
+                        <property name="secondary-icon-tooltip-markup" translatable="yes">Browse export directory</property>
+                      </object>
+                      <packing>
+                        <property name="left-attach">1</property>
+                        <property name="top-attach">1</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
-                        <property name="hexpand">True</property>
-                        <property name="action">select-folder</property>
-                        <property name="title" translatable="yes"/>
+                        <property name="halign">end</property>
+                        <property name="margin-right">6</property>
+                        <property name="margin-end">6</property>
+                        <property name="label" translatable="yes">Prefix:</property>
                       </object>
                       <packing>
                         <property name="left-attach">0</property>
                         <property name="top-attach">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="halign">end</property>
+                        <property name="margin-right">6</property>
+                        <property name="margin-end">6</property>
+                        <property name="label" translatable="yes">Directory:</property>
+                      </object>
+                      <packing>
+                        <property name="left-attach">0</property>
+                        <property name="top-attach">1</property>
                       </packing>
                     </child>
                   </object>

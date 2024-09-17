@@ -781,7 +781,7 @@ void SPDesktopWidget::namedviewModified(SPObject *obj, guint flags)
     _canvas_grid->GetHRuler()->set_tooltip_text(gettext(nv->display_units->name_plural.c_str()));
     _canvas_grid->updateRulers();
 
-    /* This loops through all the grandchildren of tool toolbars,
+    /* This loops through all the children of tool toolbars,
      * and for each that it finds, it performs an Inkscape::UI::find_widget_by_name(*),
      * looking for widgets named "unit-tracker" (this is used by
      * all toolboxes to refer to the unit selector). The default document units
@@ -790,21 +790,19 @@ void SPDesktopWidget::namedviewModified(SPObject *obj, guint flags)
      * This should solve: https://bugs.launchpad.net/inkscape/+bug/362995
      */
     for (auto const i : Inkscape::UI::get_children(*tool_toolbars)) {
-        for (auto const j : Inkscape::UI::get_children(*i)) {
-            // Don't apply to text toolbar. We want to be able to
-            // use different units for text. (Bug 1562217)
-            const Glib::ustring name = j->get_name();
-            if ( name == "TextToolbar" || name == "MeasureToolbar" || name == "CalligraphicToolbar" )
-                continue;
+        // Don't apply to text toolbar. We want to be able to
+        // use different units for text. (Bug 1562217)
+        const Glib::ustring name = i->get_name();
+        if ( name == "TextToolbar" || name == "MeasureToolbar" || name == "CalligraphicToolbar" )
+            continue;
 
-            auto const tracker = dynamic_cast<Inkscape::UI::Widget::ComboToolItem*>
-                                             (Inkscape::UI::find_widget_by_name(*j, "unit-tracker"));
-            if (tracker) { // it's null when inkscape is first opened
-                if (auto ptr = static_cast<UnitTracker*>(tracker->get_data(Glib::Quark("unit-tracker")))) {
-                    ptr->setActiveUnit(nv->display_units);
-                }
+        auto const tracker = dynamic_cast<Inkscape::UI::Widget::ComboToolItem*>
+            (Inkscape::UI::find_widget_by_name(*i, "unit-tracker"));
+        if (tracker) { // it's null when inkscape is first opened
+            if (auto ptr = static_cast<UnitTracker*>(tracker->get_data(Glib::Quark("unit-tracker")))) {
+                ptr->setActiveUnit(nv->display_units);
             }
-        } // grandchildren
+        }
     } // children
 }
 

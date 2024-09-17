@@ -43,7 +43,7 @@ public:
     PreviewDrawing(SPDocument *document);
     ~PreviewDrawing();
 
-    bool render(ExportPreview *widget, std::uint32_t bg, SPItem const *item, unsigned size, Geom::OptRect const &dboxIn);
+    bool render(ExportPreview *widget, std::uint32_t bg, SPItem const *item, unsigned size, Geom::OptRect const &dboxIn, bool only_item = false);
     void set_shown_items(std::vector<SPItem const *> &&list = {});
 
 private:
@@ -68,7 +68,7 @@ public:
     ~ExportPreview() override;
 
     void setDrawing(std::shared_ptr<PreviewDrawing> drawing);
-    void setItem(SPItem const *item);
+    void setItem(SPItem const *item, bool is_layer = false);
     void setBox(Geom::Rect const &bbox);
     void queueRefresh();
     void resetPixels(bool new_size = false);
@@ -82,6 +82,7 @@ private:
     int size = 128; // size of preview image
     sigc::connection refresh_conn;
 
+    bool _is_layer = false;
     SPItem const *_item = nullptr;
     Geom::OptRect _dbox;
 

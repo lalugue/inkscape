@@ -51,7 +51,8 @@ public:
                                SPDocument *doc,
                                gchar const *filename ) override;
     SPDocument *open( Inkscape::Extension::Input *mod,
-                                const gchar *uri ) override;
+                                const gchar *uri,
+                                bool is_importing = false) override;
     static void         init( );
 };
 

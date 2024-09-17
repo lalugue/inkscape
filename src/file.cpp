@@ -33,48 +33,43 @@
 
 #include <gtkmm.h>
 
-#include "file.h"
-#include "inkscape-application.h"
-#include "inkscape-window.h"
-
 #include "desktop.h"
 #include "document-undo.h"
 #include "event-log.h"
-#include "id-clash.h"
-#include "inkscape-version.h"
-#include "inkscape.h"
-#include "layer-manager.h"
-#include "message-stack.h"
-#include "page-manager.h"
-#include "path-prefix.h"
-#include "print.h"
-#include "selection.h"
-#include "rdf.h"
-
 #include "extension/db.h"
 #include "extension/effect.h"
 #include "extension/input.h"
 #include "extension/output.h"
-
+#include "file.h"
+#include "id-clash.h"
+#include "inkscape-application.h"
+#include "inkscape-version.h"
+#include "inkscape-window.h"
+#include "inkscape.h"
 #include "io/file.h"
-#include "io/resource.h"
 #include "io/fix-broken-links.h"
+#include "io/resource.h"
 #include "io/sys.h"
-
+#include "layer-manager.h"
+#include "libnrtype/font-lister.h"
+#include "message-stack.h"
 #include "object/sp-defs.h"
 #include "object/sp-namedview.h"
 #include "object/sp-page.h"
 #include "object/sp-root.h"
 #include "object/sp-use.h"
 #include "page-manager.h"
+#include "path-prefix.h"
+#include "print.h"
+#include "rdf.h"
+#include "selection.h"
 #include "style.h"
-
+#include "svg/svg.h" // for sp_svg_transform_write, used in sp_import_document
 #include "ui/dialog/filedialog.h"
 #include "ui/icon-names.h"
 #include "ui/interface.h"
 #include "ui/tools/tool-base.h"
-
-#include "svg/svg.h" // for sp_svg_transform_write, used in sp_import_document
+#include "util/recently-used-fonts.h"
 #include "xml/rebase-hrefs.h"
 #include "xml/sp-css-attr.h"
 
@@ -333,6 +328,11 @@ file_save(Gtk::Window &parentWindow,
     } else {
         g_message("file_save: SP_ACTIVE_DESKTOP == NULL. please report to bug #967416");
     }
+
+    auto font_lister = Inkscape::FontLister::get_instance();
+    auto recently_used = Inkscape::RecentlyUsedFonts::get();
+    recently_used->prepend_to_list(font_lister->get_font_family());
+    recently_used->set_continuous_streak(false);
 
     doc->get_event_log()->rememberFileSave();
     Glib::ustring msg;
@@ -811,7 +811,6 @@ file_import(SPDocument *in_doc, const std::string &path, Inkscape::Extension::Ex
     SPDesktop *desktop = SP_ACTIVE_DESKTOP;
     bool cancelled = false;
     auto prefs = Inkscape::Preferences::get();
-    bool onimport = prefs->getBool("/options/onimport", true);
 
     // Store mouse pointer location before opening any dialogs, so we can drop the item where initially intended.
     auto pointer_location = desktop->point();
@@ -819,7 +818,7 @@ file_import(SPDocument *in_doc, const std::string &path, Inkscape::Extension::Ex
     //DEBUG_MESSAGE( fileImport, "file_import( in_doc:%p uri:[%s], key:%p", in_doc, uri, key );
     SPDocument *doc;
     try {
-        doc = Inkscape::Extension::open(key, path.c_str());
+        doc = Inkscape::Extension::open(key, path.c_str(), true);
     } catch (Inkscape::Extension::Input::no_extension_found &e) {
         doc = nullptr;
     } catch (Inkscape::Extension::Input::open_failed &e) {
@@ -829,9 +828,11 @@ file_import(SPDocument *in_doc, const std::string &path, Inkscape::Extension::Ex
         cancelled = true;
     }
 
-    if (onimport && !prefs->getBool("/options/onimport", true)) {
-        // Opened instead of imported (onimport set to false in Svg::open)
-        prefs->setBool("/options/onimport", true);
+    if (prefs->getString("/dialogs/import/import_mode_svg") == "new") {
+        // Opened instead of imported, open and return nothing
+        auto *app = InkscapeApplication::instance();
+        app->document_add(doc);
+        app->window_open(doc);
         return nullptr;
     } else if (doc != nullptr) {
         // Always preserve any imported text kerning / formatting

@@ -1037,15 +1037,26 @@ void Node::setType(NodeType type, bool update_handles)
                 // similar to auto handles but set the same length for both
                 Geom::Point vec_next = _next()->position() - position();
                 Geom::Point vec_prev = _prev()->position() - position();
+
+                if (vec_next.length() == 0 || vec_prev.length() == 0) {
+                    // Don't change a degenerate node if it overlaps a neighbor.
+                    // (One could, but it seems pointless. In this case the
+                    // calculation of 'dir' below needs to be special cased to
+                    // avoid divide by zero.)
+                    return;
+                }
+
                 double len_next = vec_next.length(), len_prev = vec_prev.length();
                 double len = (len_next + len_prev) / 6; // take 1/3 of average
-                if (len == 0) return;
+                if (len == 0) {
+                    return;
+                }
 
                 Geom::Point dir = Geom::unit_vector((len_prev / len_next) * vec_next - vec_prev);
                 _back.setRelativePos(-dir * len);
                 _front.setRelativePos(dir * len);
             } else {
-                // Both handles are extended. Compute average length, use direction from
+                // At least one handle is extended. Compute average length, use direction from
                 // back handle to front handle. This also works correctly for degenerates
                 double len = (_front.length() + _back.length()) / 2;
                 Geom::Point dir = direction(_back.position(), _front.position());

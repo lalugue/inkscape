@@ -49,13 +49,23 @@
         <property name="can-focus">True</property>
         <property name="focus-on-click">False</property>
         <property name="receives-default">True</property>
-        <property name="relief">none</property>
         <property name="popover">popover1</property>
         <child>
-          <object class="GtkImage" id="image10">
-            <property name="visible">True</property>
-            <property name="icon-name">go-down</property>
-          </object>
+	  <object class="GtkBox">
+	    <property name="visible">True</property>
+	    <child>
+              <object class="GtkLabel">
+		<property name="visible">True</property>
+		<property name="label" translatable="yes">Mode</property>
+              </object>
+	    </child>
+	    <child>
+              <object class="GtkImage">
+		<property name="visible">True</property>
+		<property name="icon-name">pan-down</property>
+              </object>
+	    </child>
+	  </object>
         </child>
       </object>
     </child>
@@ -64,7 +74,7 @@
         <property name="visible">True</property>
         <property name="tooltip-text" translatable="yes">Mode of new lines drawn by this tool</property>
         <property name="margin-start">3</property>
-        <property name="label" translatable="yes">Mode:</property>
+        <property name="label" translatable="yes">Mode</property>
         <style>
           <class name="tag1"/>
         </style>
@@ -250,7 +260,7 @@
               <object class="GtkSpinButton" id="_minpressure_item">
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
-                <property name="width-chars">5</property>
+                <property name="width-chars">4</property>
                 <property name="text" translatable="yes">0</property>
                 <property name="adjustment">_minpressure_adj</property>
                 <property name="climb-rate">1</property>
@@ -278,7 +288,7 @@
               <object class="GtkSpinButton" id="_maxpressure_item">
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
-                <property name="width-chars">5</property>
+                <property name="width-chars">4</property>
                 <property name="text" translatable="yes">0</property>
                 <property name="adjustment">_maxpressure_adj</property>
                 <property name="climb-rate">1</property>

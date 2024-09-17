@@ -97,10 +97,10 @@
           <object class="GtkSpinButton" id="_curvature_item">
             <property name="visible">True</property>
             <property name="can-focus">True</property>
-            <property name="width-chars">5</property>
-            <property name="text">0.000</property>
+            <property name="width-chars">3</property>
+            <property name="text">0</property>
             <property name="adjustment">_curvature_adj</property>
-            <property name="climb-rate">0.10</property>
+            <property name="climb-rate">1</property>
           </object>
           <packing>
             <property name="position">1</property>
@@ -125,10 +125,10 @@
           <object class="GtkSpinButton" id="_spacing_item">
             <property name="visible">True</property>
             <property name="can-focus">True</property>
-            <property name="width-chars">5</property>
+            <property name="width-chars">3</property>
             <property name="text" translatable="yes">0</property>
             <property name="adjustment">_spacing_adj</property>
-            <property name="climb-rate">0.10</property>
+            <property name="climb-rate">1</property>
             <property name="value">0.01</property>
           </object>
           <packing>
@@ -172,7 +172,7 @@
           <object class="GtkSpinButton" id="_length_item">
             <property name="visible">True</property>
             <property name="can-focus">True</property>
-            <property name="width-chars">7</property>
+            <property name="width-chars">4</property>
             <property name="text" translatable="yes">0</property>
             <property name="adjustment">_length_adj</property>
             <property name="climb-rate">0.10</property>

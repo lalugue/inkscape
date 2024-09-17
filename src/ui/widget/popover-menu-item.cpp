@@ -36,24 +36,23 @@ PopoverMenuItem::PopoverMenuItem(Glib::ustring const &text,
     get_style_context()->add_class("menuitem");
     set_relief(Gtk::RELIEF_NONE);
 
-    Gtk::Label *label = nullptr;
     Gtk::Image *image = nullptr;
 
     if (!text.empty()) {
-        label = Gtk::make_managed<Gtk::Label>(text, Gtk::ALIGN_START, Gtk::ALIGN_CENTER, mnemonic);
+        _label = Gtk::make_managed<Gtk::Label>(text, Gtk::ALIGN_START, Gtk::ALIGN_CENTER, mnemonic);
     }
 
     if (!icon_name.empty()) {
         image = Gtk::make_managed<Gtk::Image>(icon_name, icon_size);
     }
 
-    if (label && image) {
+    if (_label && image) {
         auto &hbox = *Gtk::make_managed<Gtk::Box>(Gtk::ORIENTATION_HORIZONTAL, 8);
         hbox.add(*image);
-        hbox.add(*label);
+        hbox.add(*_label);
         add(hbox);
-    } else if (label) {
-        add(*label);
+    } else if (_label) {
+        add(*_label);
     } else if (image) {
         add(*image);
     }
@@ -87,6 +86,17 @@ PopoverMenu *PopoverMenuItem::get_menu()
         return ForEachResult::_continue;
     });
     return result;
+}
+
+void PopoverMenuItem::set_label(Glib::ustring const &name)
+{
+    if (_label) {
+        _label->set_text(name);
+    } else {
+        _label = Gtk::make_managed<Gtk::Label>(name, Gtk::ALIGN_START, Gtk::ALIGN_CENTER);
+        add(*_label);
+        _label->set_visible(true);
+    }
 }
 
 } // namespace Inkscape::UI::Widget

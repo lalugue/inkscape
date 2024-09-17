@@ -15,6 +15,7 @@
 #include <string>
 #include <vector>
 #include <glibmm/i18n.h>
+#include <glibmm/main.h>         // SignalIdle
 #include <glibmm/markup.h>
 #include <gtkmm/targetentry.h>
 #include <memory>
@@ -162,15 +163,14 @@ FontSelector::FontSelector (bool with_size, bool with_variations)
 
 void FontSelector::on_realize_list() {
     family_treecolumn.set_cell_data_func (family_cell, &font_lister_cell_data_func);
-    g_idle_add(FontSelector::set_cell_markup, this);
+    _idle_connection = Glib::signal_idle().connect(sigc::mem_fun(*this, &FontSelector::set_cell_markup));
 }
 
-gboolean FontSelector::set_cell_markup(gpointer data)
+bool FontSelector::set_cell_markup()
 {
-    FontSelector *self = static_cast<FontSelector *>(data);
-    self->family_treeview.set_visible(false);
-    self->family_treecolumn.set_cell_data_func (self->family_cell, &font_lister_cell_data_func_markup);
-    self->family_treeview.set_visible(true);
+    family_treeview.set_visible(false);
+    family_treecolumn.set_cell_data_func (family_cell, &font_lister_cell_data_func_markup);
+    family_treeview.set_visible(true);
     return false;
 }
 
@@ -183,8 +183,8 @@ void FontSelector::hide_others()
     size_combobox.set_no_show_all();
     size_combobox.set_visible(false);
     font_variations.set_no_show_all();
-    font_variations_scroll.set_visible(false);
     font_variations_scroll.set_vexpand(false);
+    font_variations_scroll.set_visible(false);
 }
 
 // TODO:
@@ -541,7 +541,7 @@ FontSelector::changed_emit() {
         initial = false;
         family_treecolumn.unset_cell_data_func (family_cell);
         family_treecolumn.set_cell_data_func (family_cell, &font_lister_cell_data_func);
-        g_idle_add(FontSelector::set_cell_markup, this);
+        _idle_connection = Glib::signal_idle().connect(sigc::mem_fun(*this, &FontSelector::set_cell_markup));
     }
     signal_block = false;
 }
@@ -551,7 +551,7 @@ void FontSelector::update_variations(const Glib::ustring& fontspec) {
 
     // Check if there are any variations available; if not, don't expand font_variations_scroll
     bool hasContent = font_variations.variations_present();
-    font_variations_scroll.set_vexpand(hasContent);
+    font_variations_scroll.set_visible(hasContent);
 }
 
 } // namespace Inkscape::UI::Widget

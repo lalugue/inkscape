@@ -303,7 +303,10 @@ static void sp_shape_render(SPShape const *shape, CairoRenderContext *ctx, SPIte
 
     // TODO: Factor marker rendering out into a separate function; reduce code duplication.
     // START marker
+    bool has_stroke = style->stroke_width.computed > 0.0;
     for (int marker_type : {SP_MARKER_LOC, SP_MARKER_LOC_START}) {
+        if (!has_stroke)
+            continue;
         if (SPMarker *marker = shape->_marker[marker_type]) {
             Geom::Affine tr(sp_shape_marker_get_transform_at_start(pathv.begin()->front()));
             tr = marker->get_marker_transform(tr, style->stroke_width.computed, true);
@@ -313,7 +316,7 @@ static void sp_shape_render(SPShape const *shape, CairoRenderContext *ctx, SPIte
     // MID marker
     for (int marker_type : {SP_MARKER_LOC, SP_MARKER_LOC_MID}) {
         SPMarker *marker = shape->_marker[marker_type];
-        if (!marker) {
+        if (!marker || !has_stroke) {
             continue;
         }
         for(Geom::PathVector::const_iterator path_it = pathv.begin(); path_it != pathv.end(); ++path_it) {
@@ -353,6 +356,8 @@ static void sp_shape_render(SPShape const *shape, CairoRenderContext *ctx, SPIte
     }
     // END marker
     for (int marker_type : {SP_MARKER_LOC, SP_MARKER_LOC_END}) {
+        if (!has_stroke)
+            continue;
         if (SPMarker *marker = shape->_marker[marker_type]) {
             /* Get reference to last curve in the path.
              * For moveto-only path, this returns the "closing line segment". */
@@ -469,6 +474,13 @@ static void sp_anchor_render(SPAnchor const *a, CairoRenderContext *ctx, SPItem 
                 // So we link everything with a dest link instead.
                 link = Glib::ustring::compose("dest='%1'", obj->getId());
             }
+        }
+        // Write a box for this hyperlink so it's contained and positioned correctly.
+        if (auto vbox = a->visualBounds()) {
+            // Convert from 92dpi (svg) to 72dpi (pdf) and apply item transforms as we are writing out the box directly.
+            auto static doc_scale = Geom::Scale(72.0 / 96.0);
+            auto bbox = *vbox * ctx->getItemTransform() * doc_scale;
+            link += Glib::ustring::compose(" rect=[%1 %2 %3 %4]", bbox.left(), bbox.top(), bbox.width(), bbox.height());
         }
         ctx->tagBegin(link.c_str());
     }

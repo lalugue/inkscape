@@ -82,6 +82,7 @@ private:
     bool _dont_evaluate = false; ///< Don't attempt to evaluate expressions
     NumericMenuData _custom_menu_data;
     bool _custom_popup = false;
+    std::unique_ptr<UI::Widget::PopoverMenu> popover_menu;
     double _increment = 0.0;    // if > 0, key up/down will increment/decrement current value by this amount
 
     void construct();
@@ -110,7 +111,7 @@ private:
                         unsigned keyval, unsigned keycode, GdkModifierType state);
 
     bool on_popup_menu(PopupMenuOptionalClick);
-    std::shared_ptr<UI::Widget::PopoverMenu> get_popover_menu();
+    void update_popover_menu();
     void on_numeric_menu_item_activate(double value);
 
     /**

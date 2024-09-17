@@ -107,7 +107,7 @@ public:
 
     // ----- Input functions -----
     virtual SPDocument *open(Inkscape::Extension::Input * /*module*/,
-                             gchar const * /*filename*/) { return nullptr; }
+                             gchar const * /*filename*/, bool /*is_importing*/) { return nullptr; }
 
     // ----- Output functions -----
     /** Find out information about the file. */

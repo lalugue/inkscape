@@ -150,7 +150,7 @@ protected:
     Gtk::Label *stroke_width; // Stroke width
     RotateableStrokeWidth *stroke_width_rotateable;
 
-    Gtk::Label *opacity_label;
+    Gtk::Button *opacity_btn;
     Glib::RefPtr<Gtk::Adjustment> opacity_adjustment;
     Inkscape::UI::Widget::SpinButton *opacity_sb;
 

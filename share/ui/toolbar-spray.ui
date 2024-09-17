@@ -99,13 +99,23 @@
         <property name="can-focus">True</property>
         <property name="focus-on-click">False</property>
         <property name="receives-default">True</property>
-        <property name="relief">none</property>
         <property name="popover">popover1</property>
         <child>
-          <object class="GtkImage" id="image17">
-            <property name="visible">True</property>
-            <property name="icon-name">go-down</property>
-          </object>
+	  <object class="GtkBox">
+	    <property name="visible">True</property>
+	    <child>
+              <object class="GtkLabel">
+		<property name="visible">True</property>
+		<property name="label" translatable="yes">Mode:</property>
+              </object>
+	    </child>
+	    <child>
+              <object class="GtkImage">
+		<property name="visible">True</property>
+		<property name="icon-name">pan-down</property>
+              </object>
+	    </child>
+	  </object>
         </child>
       </object>
     </child>
@@ -118,9 +128,6 @@
           <class name="tag1"/>
         </style>
       </object>
-      <packing>
-        <property name="position">1</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="mode_buttons_box">
@@ -157,9 +164,6 @@
               </object>
             </child>
           </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
         </child>
         <child>
           <object class="GtkRadioButton">
@@ -176,9 +180,6 @@
               </object>
             </child>
           </object>
-          <packing>
-            <property name="position">2</property>
-          </packing>
         </child>
         <child>
           <object class="GtkRadioButton">
@@ -195,44 +196,16 @@
               </object>
             </child>
           </object>
-          <packing>
-            <property name="position">5</property>
-          </packing>
         </child>
         <style>
           <class name="tag1"/>
         </style>
       </object>
-      <packing>
-        <property name="position">2</property>
-      </packing>
     </child>
     <child>
       <object class="GtkSeparator">
         <property name="visible">True</property>
       </object>
-      <packing>
-        <property name="position">3</property>
-      </packing>
-    </child>
-    <child>
-      <object class="GtkMenuButton" id="menu_btn2">
-        <property name="visible">True</property>
-        <property name="can-focus">True</property>
-        <property name="focus-on-click">False</property>
-        <property name="receives-default">True</property>
-        <property name="relief">none</property>
-        <property name="popover">popover2</property>
-        <child>
-          <object class="GtkImage" id="image18">
-            <property name="visible">True</property>
-            <property name="icon-name">go-down</property>
-          </object>
-        </child>
-      </object>
-      <packing>
-        <property name="position">4</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="width_box">
@@ -254,17 +227,8 @@
             <property name="adjustment">_width_adj</property>
             <property name="climb-rate">1</property>
           </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
         </child>
-        <style>
-          <class name="tag2"/>
-        </style>
       </object>
-      <packing>
-        <property name="position">5</property>
-      </packing>
     </child>
     <child>
       <object class="GtkToggleButton" id="use_pressure_width_btn">
@@ -273,9 +237,6 @@
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Use the pressure of the input device to alter the width of spray area</property>
         <property name="relief">none</property>
-        <style>
-          <class name="tag2"/>
-        </style>
         <child>
           <object class="GtkImage" id="image5">
             <property name="visible">True</property>
@@ -283,9 +244,6 @@
           </object>
         </child>
       </object>
-      <packing>
-        <property name="position">6</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="population_box">
@@ -307,17 +265,8 @@
             <property name="adjustment">_population_adj</property>
             <property name="climb-rate">1</property>
           </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
         </child>
-        <style>
-          <class name="tag2"/>
-        </style>
       </object>
-      <packing>
-        <property name="position">7</property>
-      </packing>
     </child>
     <child>
       <object class="GtkToggleButton" id="use_pressure_population_btn">
@@ -326,9 +275,6 @@
         <property name="receives-default">True</property>
         <property name="tooltip-text" translatable="yes">Use the pressure of the input device to alter the width of spray area</property>
         <property name="relief">none</property>
-        <style>
-          <class name="tag2"/>
-        </style>
         <child>
           <object class="GtkImage" id="image6">
             <property name="visible">True</property>
@@ -336,17 +282,11 @@
           </object>
         </child>
       </object>
-      <packing>
-        <property name="position">8</property>
-      </packing>
     </child>
     <child>
       <object class="GtkSeparator">
         <property name="visible">True</property>
       </object>
-      <packing>
-        <property name="position">9</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="_rotation_box">
@@ -367,14 +307,8 @@
             <property name="adjustment">_rotation_adj</property>
             <property name="climb-rate">0.10</property>
           </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
         </child>
       </object>
-      <packing>
-        <property name="position">10</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="scale_box">
@@ -390,19 +324,13 @@
           <object class="GtkSpinButton" id="_scale_item">
             <property name="visible">True</property>
             <property name="can-focus">True</property>
-            <property name="width-chars">5</property>
+            <property name="width-chars">3</property>
             <property name="adjustment">_scale_adj</property>
             <property name="climb-rate">0.10</property>
             <property name="digits">2</property>
           </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
         </child>
       </object>
-      <packing>
-        <property name="position">11</property>
-      </packing>
     </child>
     <child>
       <object class="GtkToggleButton" id="_use_pressure_scale_btn">
@@ -418,17 +346,37 @@
           </object>
         </child>
       </object>
-      <packing>
-        <property name="position">12</property>
-      </packing>
     </child>
     <child>
       <object class="GtkSeparator">
         <property name="visible">True</property>
       </object>
-      <packing>
-        <property name="position">13</property>
-      </packing>
+    </child>
+    <child>
+      <object class="GtkMenuButton" id="menu_btn2">
+        <property name="visible">True</property>
+        <property name="can-focus">True</property>
+        <property name="focus-on-click">False</property>
+        <property name="receives-default">True</property>
+        <property name="popover">popover2</property>
+        <child>
+	  <object class="GtkBox">
+	    <property name="visible">True</property>
+	    <child>
+              <object class="GtkLabel">
+		<property name="visible">True</property>
+		<property name="label" translatable="yes">Parameters</property>
+              </object>
+	    </child>
+	    <child>
+              <object class="GtkImage">
+		<property name="visible">True</property>
+		<property name="icon-name">pan-down</property>
+              </object>
+	    </child>
+	  </object>
+        </child>
+      </object>
     </child>
     <child>
       <object class="GtkBox" id="sd_box">
@@ -445,18 +393,15 @@
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="width-chars">3</property>
-            <property name="text">0.000</property>
+            <property name="text">0</property>
             <property name="adjustment">_sd_adj</property>
             <property name="climb-rate">1</property>
           </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
         </child>
+        <style>
+          <class name="tag2"/>
+        </style>
       </object>
-      <packing>
-        <property name="position">14</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="mean_box">
@@ -472,27 +417,21 @@
           <object class="GtkSpinButton" id="_mean_item">
             <property name="visible">True</property>
             <property name="can-focus">True</property>
-            <property name="width-chars">5</property>
+            <property name="width-chars">3</property>
             <property name="text" translatable="yes">0</property>
             <property name="adjustment">_mean_adj</property>
             <property name="climb-rate">1</property>
           </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
         </child>
+        <style>
+          <class name="tag2"/>
+        </style>
       </object>
-      <packing>
-        <property name="position">15</property>
-      </packing>
     </child>
     <child>
       <object class="GtkSeparator">
         <property name="visible">True</property>
       </object>
-      <packing>
-        <property name="position">16</property>
-      </packing>
     </child>
     <child>
       <object class="GtkMenuButton" id="menu_btn3">
@@ -500,18 +439,25 @@
         <property name="can-focus">True</property>
         <property name="focus-on-click">False</property>
         <property name="receives-default">True</property>
-        <property name="relief">none</property>
         <property name="popover">popover3</property>
         <child>
-          <object class="GtkImage" id="image19">
-            <property name="visible">True</property>
-            <property name="icon-name">go-down</property>
-          </object>
+	  <object class="GtkBox">
+	    <property name="visible">True</property>
+	    <child>
+              <object class="GtkLabel">
+		<property name="visible">True</property>
+		<property name="label" translatable="yes">Apply</property>
+              </object>
+	    </child>
+	    <child>
+              <object class="GtkImage">
+		<property name="visible">True</property>
+		<property name="icon-name">pan-down</property>
+              </object>
+	    </child>
+	  </object>
         </child>
       </object>
-      <packing>
-        <property name="position">17</property>
-      </packing>
     </child>
     <child>
       <object class="GtkToggleButton" id="_over_no_transparent_btn">
@@ -530,9 +476,6 @@
           </object>
         </child>
       </object>
-      <packing>
-        <property name="position">18</property>
-      </packing>
     </child>
     <child>
       <object class="GtkToggleButton" id="_over_transparent_btn">
@@ -551,9 +494,6 @@
           </object>
         </child>
       </object>
-      <packing>
-        <property name="position">19</property>
-      </packing>
     </child>
     <child>
       <object class="GtkToggleButton" id="_pick_no_overlap_btn">
@@ -572,9 +512,6 @@
           </object>
         </child>
       </object>
-      <packing>
-        <property name="position">20</property>
-      </packing>
     </child>
     <child>
       <object class="GtkToggleButton" id="_no_overlap_btn">
@@ -593,15 +530,15 @@
           </object>
         </child>
       </object>
-      <packing>
-        <property name="position">21</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="_offset_box">
         <property name="visible">True</property>
         <property name="tooltip-text" translatable="yes">Increase to segregate objects more (value in percent)</property>
-        <child>
+        <style>
+          <class name="tag3"/>
+        </style>
+	<child>
           <object class="GtkLabel">
             <property name="visible">True</property>
             <property name="label" translatable="yes">Offset:</property>
@@ -611,27 +548,18 @@
           <object class="GtkSpinButton" id="_offset_item">
             <property name="visible">True</property>
             <property name="can-focus">True</property>
-            <property name="width-chars">5</property>
+            <property name="width-chars">4</property>
             <property name="text" translatable="yes">0</property>
-            <property name="adjustment">_mean_adj</property>
+            <property name="adjustment">_offset_adj</property>
             <property name="climb-rate">1</property>
           </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
         </child>
       </object>
-      <packing>
-        <property name="position">22</property>
-      </packing>
     </child>
     <child>
       <object class="GtkSeparator">
         <property name="visible">True</property>
       </object>
-      <packing>
-        <property name="position">23</property>
-      </packing>
     </child>
     <child>
       <object class="GtkMenuButton" id="menu_btn4">
@@ -639,18 +567,25 @@
         <property name="can-focus">True</property>
         <property name="focus-on-click">False</property>
         <property name="receives-default">True</property>
-        <property name="relief">none</property>
         <property name="popover">popover4</property>
         <child>
-          <object class="GtkImage" id="image20">
-            <property name="visible">True</property>
-            <property name="icon-name">go-down</property>
-          </object>
+	  <object class="GtkBox">
+	    <property name="visible">True</property>
+	    <child>
+              <object class="GtkLabel">
+		<property name="visible">True</property>
+		<property name="label" translatable="yes">Pick</property>
+              </object>
+	    </child>
+	    <child>
+              <object class="GtkImage">
+		<property name="visible">True</property>
+		<property name="icon-name">pan-down</property>
+              </object>
+	    </child>
+	  </object>
         </child>
       </object>
-      <packing>
-        <property name="position">24</property>
-      </packing>
     </child>
     <child>
       <object class="GtkToggleButton" id="_picker_btn">
@@ -669,9 +604,6 @@
           </object>
         </child>
       </object>
-      <packing>
-        <property name="position">27</property>
-      </packing>
     </child>
     <child>
       <object class="GtkToggleButton" id="_pick_fill_btn">
@@ -690,9 +622,6 @@
           </object>
         </child>
       </object>
-      <packing>
-        <property name="position">28</property>
-      </packing>
     </child>
     <child>
       <object class="GtkToggleButton" id="_pick_stroke_btn">
@@ -711,9 +640,6 @@
           </object>
         </child>
       </object>
-      <packing>
-        <property name="position">29</property>
-      </packing>
     </child>
     <child>
       <object class="GtkToggleButton" id="_pick_inverse_value_btn">
@@ -732,9 +658,6 @@
           </object>
         </child>
       </object>
-      <packing>
-        <property name="position">30</property>
-      </packing>
     </child>
     <child>
       <object class="GtkToggleButton" id="_pick_center_btn">
@@ -753,9 +676,6 @@
           </object>
         </child>
       </object>
-      <packing>
-        <property name="position">31</property>
-      </packing>
     </child>
     <style>
       <class name="toolbar"/>

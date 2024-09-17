@@ -182,14 +182,23 @@
         <property name="can-focus">True</property>
         <property name="focus-on-click">False</property>
         <property name="receives-default">True</property>
-        <property name="relief">none</property>
         <property name="popover">popover1</property>
         <child>
-          <object class="GtkImage" id="image5">
-            <property name="visible">True</property>
-            <property name="can-focus">False</property>
-            <property name="icon-name">go-down</property>
-          </object>
+	  <object class="GtkBox">
+	    <property name="visible">True</property>
+	    <child>
+              <object class="GtkLabel">
+		<property name="visible">True</property>
+		<property name="label" translatable="yes">Angles</property>
+              </object>
+	    </child>
+	    <child>
+              <object class="GtkImage">
+		<property name="visible">True</property>
+		<property name="icon-name">pan-down</property>
+              </object>
+	    </child>
+	  </object>
         </child>
       </object>
       <packing>
@@ -219,7 +228,7 @@
           <object class="GtkSpinButton" id="_start_item">
             <property name="visible">True</property>
             <property name="can-focus">True</property>
-            <property name="width-chars">10</property>
+            <property name="width-chars">8</property>
             <property name="text">0.000</property>
             <property name="adjustment">_start_adj</property>
             <property name="climb-rate">0.10</property>
@@ -262,7 +271,7 @@
           <object class="GtkSpinButton" id="_end_item">
             <property name="visible">True</property>
             <property name="can-focus">True</property>
-            <property name="width-chars">10</property>
+            <property name="width-chars">8</property>
             <property name="text">0.000</property>
             <property name="adjustment">_end_adj</property>
             <property name="climb-rate">0.10</property>
@@ -301,14 +310,23 @@
         <property name="can-focus">True</property>
         <property name="focus-on-click">False</property>
         <property name="receives-default">True</property>
-        <property name="relief">none</property>
         <property name="popover">popover2</property>
         <child>
-          <object class="GtkImage" id="image6">
-            <property name="visible">True</property>
-            <property name="can-focus">False</property>
-            <property name="icon-name">go-down</property>
-          </object>
+	  <object class="GtkBox">
+	    <property name="visible">True</property>
+	    <child>
+              <object class="GtkImage">
+		<property name="visible">True</property>
+		<property name="icon-name">draw-ellipse-segment</property>
+              </object>
+	    </child>
+	    <child>
+              <object class="GtkImage">
+		<property name="visible">True</property>
+		<property name="icon-name">pan-down</property>
+              </object>
+	    </child>
+	  </object>
         </child>
       </object>
       <packing>

@@ -750,16 +750,6 @@ SPDocument *SPDocument::createNewDocFromMem(gchar const *buffer, gint length, bo
     return doc;
 }
 
-std::unique_ptr<SPDocument> SPDocument::doRef()
-{
-    Inkscape::GC::anchor(this);
-    return std::unique_ptr<SPDocument>(this);
-}
-std::unique_ptr<SPDocument const> SPDocument::doRef() const
-{
-    return const_cast<SPDocument*>(this)->doRef();
-}
-
 /// guaranteed not to return nullptr
 Inkscape::Util::Unit const* SPDocument::getDisplayUnit()
 {

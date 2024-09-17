@@ -117,7 +117,7 @@ static int gr_drag_style_query(SPStyle *style, int property, gpointer data)
 {
     GrDrag *drag = (GrDrag *) data;
 
-    if (property != QUERY_STYLE_PROPERTY_FILL && property != QUERY_STYLE_PROPERTY_STROKE && property != QUERY_STYLE_PROPERTY_MASTEROPACITY) {
+    if (property != QUERY_STYLE_PROPERTY_FILL && property != QUERY_STYLE_PROPERTY_MASTEROPACITY) {
         return QUERY_STYLE_NOTHING;
     }
 
@@ -214,10 +214,12 @@ Glib::ustring GrDrag::makeStopSafeColor( gchar const *str, bool &isNull )
 bool GrDrag::styleSet( const SPCSSAttr *css, bool switch_style)
 {
     if (selected.empty()) {
-        if (draggers.empty()) {
-            return false;
-        }
-        setSelected(*draggers.begin(), true);
+        return false;
+    }
+
+    // Do not allow the stroke setter to be confused by the gradient selector
+    if (css->attribute("stroke") && !css->attribute("color") && !css->attribute("fill")) {
+        return false;
     }
 
     SPCSSAttr *stop = sp_repr_css_attr_new();
@@ -236,10 +238,6 @@ bool GrDrag::styleSet( const SPCSSAttr *css, bool switch_style)
 
     if (css->attribute("color")) {
         sp_repr_css_set_property (stop, "stop-color", css->attribute("color"));
-    }
-
-    if (css->attribute("stroke") && strcmp(css->attribute("stroke"), "none")) {
-        sp_repr_css_set_property (stop, "stop-color", css->attribute("stroke"));
     }
 
     if (css->attribute("fill") && strcmp(css->attribute("fill"), "none")) {
@@ -512,11 +510,23 @@ SPStop *GrDrag::addStopNearPoint(SPItem *item, Geom::Point mouse_p, double toler
                 next_stop = next_stop->getNextStop();
                 i++;
             }
-            if (!next_stop) {
+            if (vector->getStopCount() == 1) {
+                // Handle single stop vectors separately.
+                auto newstop = sp_gradient_add_stop_at(vector, new_stop_offset);
+                gradient->ensureVector();
+                updateDraggers();
+
+                // so that it does not automatically update draggers in idle loop, as this would deselect
+                local_change = true;
+
+                // select the newly created stop
+                selectByStop(newstop);
+
+                return newstop;
+            } else if (!next_stop) {
                 // logical error: the endstop should have offset 1 and should always be more than this offset here
                 return nullptr;
             }
-
 
             SPStop *newstop = sp_vector_add_stop (vector, prev_stop, next_stop, new_stop_offset);
             gradient->ensureVector();
@@ -1244,8 +1254,33 @@ static void gr_knot_doubleclicked_handler(SPKnot */*knot*/, guint /*state*/, gpo
 
     dragger->point_original = dragger->point;
 
-    if (dragger->draggables.empty())
+    if (dragger->draggables.empty()) {
         return;
+    } else {
+        auto drag = dragger->parent;
+        auto draggable = dragger->draggables[0];
+        auto gradient = getGradient(draggable->item, draggable->fill_or_stroke);
+        auto vector = sp_gradient_get_forked_vector_if_necessary(gradient, false);
+
+        // Treat single stop gradients separately.
+        if (vector->getStopCount() == 1) {
+            auto first_stop = vector->getFirstStop();
+            bool is_offset_zero = first_stop->offset < 1e-4;
+            bool is_first_dragger = dragger == drag->draggers[0];
+
+            // Do not add new stop if the double clicked dragger already has a stop.
+            if ((is_offset_zero && is_first_dragger) || (!is_offset_zero && !is_first_dragger)) {
+                return;
+            }
+
+            auto newstop = sp_gradient_add_stop(vector, first_stop);
+            gradient->ensureVector();
+            drag->updateDraggers();
+            drag->local_change = true;
+            drag->selectByStop(newstop);
+            DocumentUndo::done(gradient->document, _("Add gradient stop"), INKSCAPE_ICON("color-gradient"));
+        }
+    }
 }
 
 /**
@@ -2204,9 +2239,6 @@ void GrDrag::addDraggersMesh(SPMeshGradient *mg, SPItem *item, Inkscape::PaintTa
     guint icorner = 0;
     guint ihandle = 0;
     guint itensor = 0;
-    mg->array.corners.clear();
-    mg->array.handles.clear();
-    mg->array.tensors.clear();
 
     if( (fill_or_stroke == Inkscape::FOR_FILL   && !edit_fill) ||
         (fill_or_stroke == Inkscape::FOR_STROKE && !edit_stroke) ) {
@@ -2221,7 +2253,6 @@ void GrDrag::addDraggersMesh(SPMeshGradient *mg, SPItem *item, Inkscape::PaintTa
 
                 case MG_NODE_TYPE_CORNER:
                 {
-                    mg->array.corners.push_back( j );
                     GrDraggable *corner = new GrDraggable (item, POINT_MG_CORNER, icorner, fill_or_stroke);
                     addDragger ( corner );
                     j->draggable = icorner;
@@ -2231,7 +2262,6 @@ void GrDrag::addDraggersMesh(SPMeshGradient *mg, SPItem *item, Inkscape::PaintTa
 
                 case MG_NODE_TYPE_HANDLE:
                 {
-                    mg->array.handles.push_back( j );
                     GrDraggable *handle = new GrDraggable (item, POINT_MG_HANDLE, ihandle, fill_or_stroke);
                     GrDragger* dragger = addDragger ( handle );
 
@@ -2245,7 +2275,6 @@ void GrDrag::addDraggersMesh(SPMeshGradient *mg, SPItem *item, Inkscape::PaintTa
 
                 case MG_NODE_TYPE_TENSOR:
                 {
-                    mg->array.tensors.push_back( j );
                     GrDraggable *tensor = new GrDraggable (item, POINT_MG_TENSOR, itensor, fill_or_stroke);
                     GrDragger* dragger = addDragger ( tensor );
                     if( !show_handles || !j->set ) {
@@ -2262,8 +2291,6 @@ void GrDrag::addDraggersMesh(SPMeshGradient *mg, SPItem *item, Inkscape::PaintTa
             }
         }
     }
-
-    mg->array.draggers_valid = true;
 }
 
 /**

@@ -126,7 +126,7 @@ static Glib::ustring stop_svg(ColorRGBA const in_color, double const location)
     to Inkscape.
 */
 SPDocument *
-GimpGrad::open (Inkscape::Extension::Input */*module*/, gchar const *filename)
+GimpGrad::open (Inkscape::Extension::Input */*module*/, gchar const *filename, bool /*is_importing*/)
 {
     Inkscape::IO::dump_fopen_call(filename, "I");
     FILE *gradient = Inkscape::IO::fopen_utf8name(filename, "r");

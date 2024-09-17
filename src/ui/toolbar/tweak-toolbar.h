@@ -43,6 +43,7 @@ namespace Inkscape {
 namespace UI {
 namespace Widget {
 class SpinButton;
+class ToolbarMenuButton;
 }
 
 namespace Toolbar {
@@ -73,6 +74,8 @@ private:
     Gtk::ToggleButton &_dol_btn;
     Gtk::ToggleButton &_doo_btn;
 
+    UI::Widget::ToolbarMenuButton *menu_btn2 = nullptr;
+
     void setup_derived_spin_button(UI::Widget::SpinButton &btn, Glib::ustring const &name, double default_value,
                                    ValueChangedMemFun const value_changed_mem_fun);
     void width_value_changed();
@@ -87,7 +90,7 @@ private:
 };
 
 } // namespace Toolbar
-}
-}
+} // namespace UI
+} // namespace Inkscape
 
 #endif /* !SEEN_SELECT_TOOLBAR_H */

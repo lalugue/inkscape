@@ -86,6 +86,7 @@ public:
     ~PdfImportDialog() final;
 
     bool showDialog();
+    bool getImportPages();
     std::string getSelectedPages();
     PdfImportType getImportMethod();
     void getImportSettings(Inkscape::XML::Node *prefs);
@@ -107,6 +108,7 @@ private:
     Gtk::Entry &_page_numbers;
     Gtk::DrawingArea &_preview_area;
     Gtk::CheckButton &_embed_images;
+    Gtk::CheckButton &_import_pages;
     Gtk::Scale &_mesh_slider;
     Gtk::Label &_mesh_label;
     Gtk::Button &_next_page;
@@ -139,7 +141,8 @@ class PdfInput final: public Inkscape::Extension::Implementation::Implementation
 public:
     PdfInput() = default;
     SPDocument *open(Inkscape::Extension::Input *mod,
-                     const gchar *uri) final;
+                     const gchar *uri,
+                     bool is_importing) final;
     static void         init( );
 private:
     void add_builder_page(

@@ -559,7 +559,7 @@ SpellCheck::nextWord()
             g_slist_foreach(list, [](gpointer data, gpointer user_data) {
                 const gchar *suggestion = reinterpret_cast<const gchar*>(data);
                 std::vector<std::string> *suggs = reinterpret_cast<std::vector<std::string>*>(user_data);
-                suggs->push_back(suggestion);
+                suggs->emplace_back(suggestion);
             }, &suggs);
             g_slist_free_full(list, g_free);
 

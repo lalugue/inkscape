@@ -275,7 +275,6 @@ static void ink_drag_data_received(GtkWidget *widget,
         case SVG_DATA:
         case SVG_XML_DATA: {
             Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-            prefs->setBool("/options/onimport", true);
             gchar *svgdata = (gchar *)gtk_selection_data_get_data (data);
 
             Inkscape::XML::Document *rnewdoc = sp_repr_read_mem(svgdata, gtk_selection_data_get_length (data), SP_SVG_NS_URI);
@@ -320,16 +319,13 @@ static void ink_drag_data_received(GtkWidget *widget,
 
             Inkscape::GC::release(newgroup);
             DocumentUndo::done( doc, _("Drop SVG"), "" );
-            prefs->setBool("/options/onimport", false);
             break;
         }
 
         case URI_LIST: {
             Inkscape::Preferences *prefs = Inkscape::Preferences::get();
-            prefs->setBool("/options/onimport", true);
             gchar *uri = (gchar *)gtk_selection_data_get_data (data);
             sp_ui_import_files(uri);
-            prefs->setBool("/options/onimport", false);
             break;
         }
 

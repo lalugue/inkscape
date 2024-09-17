@@ -628,13 +628,13 @@ SPMeshNodeArray::SPMeshNodeArray(SPMeshNodeArray const &rhs)
 {
     built = false;
     mg = nullptr;
-    draggers_valid = false;
 
     for( unsigned i=0; i < nodes.size(); ++i ) {
         for( unsigned j=0; j < nodes[i].size(); ++j ) {
             nodes[i][j] = new SPMeshNode( *rhs.nodes[i][j] ); // Copy data.
         }
     }
+    update_node_vectors();
 }
 
 // Copy assignment operator
@@ -646,7 +646,6 @@ SPMeshNodeArray &SPMeshNodeArray::operator=(SPMeshNodeArray const &rhs)
 
     built = false;
     mg = nullptr;
-    draggers_valid = false;
 
     nodes = rhs.nodes; // This only copies the pointers but it does size the vector of vectors.
 
@@ -655,12 +654,40 @@ SPMeshNodeArray &SPMeshNodeArray::operator=(SPMeshNodeArray const &rhs)
             nodes[i][j] = new SPMeshNode( *rhs.nodes[i][j] ); // Copy data.
         }
     }
+    update_node_vectors();
     
     return *this;
 }
 
+// Fills in vectors that are used to map draggers to nodes.
+// This matches dragger creation in GdDrag::addDraggersMesh.
+void SPMeshNodeArray::update_node_vectors()
+{
+    corners.clear();
+    handles.clear();
+    tensors.clear();
+    for (auto &row : nodes) {
+        for (auto &node : row) {
+            switch (node->node_type) {
+                case MG_NODE_TYPE_CORNER:
+                    corners.push_back(node);
+                    break;
+                case MG_NODE_TYPE_HANDLE:
+                    handles.push_back(node);
+                    break;
+                case MG_NODE_TYPE_TENSOR:
+                    tensors.push_back(node);
+                    break;
+                default:
+                    std::cerr << "Bad Mesh draggable type" << std::endl;
+                    break;
+            }
+        }
+    }
+}
+
 // Fill array with data from mesh objects.
-// Returns true of array's dimensions unchanged.
+// Returns true if array's dimensions unchanged.
 bool SPMeshNodeArray::read(SPMeshGradient *mg_in)
 {
     mg = mg_in;
@@ -688,10 +715,8 @@ bool SPMeshNodeArray::read(SPMeshGradient *mg_in)
     }
     bool same_size = true;
     if (cols != patch_columns() || rows != patch_rows() ) {
-        // Draggers will be invalidated.
         same_size = false;
         clear();
-        draggers_valid = false;
     }
 
     Geom::Point current_p( mg->x.computed, mg->y.computed );
@@ -892,6 +917,7 @@ bool SPMeshNodeArray::read(SPMeshGradient *mg_in)
         }
     }
 
+    update_node_vectors();
     // std::cout << "SPMeshNodeArray::Read: result:" << std::endl;
     // print();
 
@@ -2437,12 +2463,6 @@ void SPMeshNodeArray::update_handles(unsigned corner,
                                      Geom::Point const &p_old,
                                      MeshNodeOperation /*op*/ )
 {
-    if (!draggers_valid) {
-        std::cerr << "SPMeshNodeArray::update_handles: Draggers not valid!" << std::endl;
-        return;
-    }
-    // assert( draggers_valid );
-
     // std::cout << "SPMeshNodeArray::update_handles: "
     //           << "  corner: " << corner
     //           << "  op: " << op

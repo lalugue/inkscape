@@ -147,7 +147,7 @@
             <property name="name">eraser-width</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
-            <property name="width-chars">5</property>
+            <property name="width-chars">3</property>
             <property name="text">0.000</property>
             <property name="adjustment">_width_adj</property>
             <property name="climb-rate">1</property>
@@ -193,7 +193,7 @@
           <object class="GtkSpinButton" id="_thinning_item">
             <property name="visible">True</property>
             <property name="can-focus">True</property>
-            <property name="width-chars">5</property>
+            <property name="width-chars">4</property>
             <property name="text">0.000</property>
             <property name="adjustment">_thinning_adj</property>
             <property name="climb-rate">0.10</property>
@@ -213,13 +213,23 @@
         <property name="can-focus">True</property>
         <property name="focus-on-click">False</property>
         <property name="receives-default">True</property>
-        <property name="relief">none</property>
         <property name="popover">popover1</property>
         <child>
-          <object class="GtkImage" id="image5">
-            <property name="visible">True</property>
-            <property name="icon-name">go-down</property>
-          </object>
+	  <object class="GtkBox">
+	    <property name="visible">True</property>
+	    <child>
+              <object class="GtkLabel">
+		<property name="visible">True</property>
+		<property name="label" translatable="yes">Parameters</property>
+              </object>
+	    </child>
+	    <child>
+              <object class="GtkImage">
+		<property name="visible">True</property>
+		<property name="icon-name">pan-down</property>
+              </object>
+	    </child>
+	  </object>
         </child>
       </object>
       <packing>
@@ -240,7 +250,7 @@
           <object class="GtkSpinButton" id="_cap_rounding_item">
             <property name="visible">True</property>
             <property name="can-focus">True</property>
-            <property name="width-chars">5</property>
+            <property name="width-chars">4</property>
             <property name="adjustment">_cap_rounding_adj</property>
             <property name="climb-rate">0.10</property>
             <property name="digits">2</property>
@@ -271,7 +281,7 @@
           <object class="GtkSpinButton" id="_tremor_item">
             <property name="visible">True</property>
             <property name="can-focus">True</property>
-            <property name="width-chars">5</property>
+            <property name="width-chars">3</property>
             <property name="text">0.000</property>
             <property name="adjustment">_tremor_adj</property>
             <property name="climb-rate">1</property>
@@ -302,7 +312,7 @@
           <object class="GtkSpinButton" id="_mass_item">
             <property name="visible">True</property>
             <property name="can-focus">True</property>
-            <property name="width-chars">5</property>
+            <property name="width-chars">3</property>
             <property name="text" translatable="yes">0</property>
             <property name="adjustment">_mass_adj</property>
             <property name="climb-rate">1</property>

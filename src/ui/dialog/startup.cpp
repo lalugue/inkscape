@@ -205,10 +205,6 @@ StartScreen::StartScreen()
     refresh_dark_switch();
 
     // Welcome! tab
-    auto const welcome_text_file = Resource::get_filename(Resource::SCREENS,
-                                                          "start-welcome-text.svg", true);
-    get_widget<Gtk::Image>(builder, "welcome_text").set(welcome_text_file);
-    
     canvas->signal_changed().connect(sigc::mem_fun(*this, &StartScreen::canvas_changed));
     keys->signal_changed().connect(sigc::mem_fun(*this, &StartScreen::keyboard_changed));
     themes.signal_changed().connect(sigc::mem_fun(*this, &StartScreen::theme_changed));

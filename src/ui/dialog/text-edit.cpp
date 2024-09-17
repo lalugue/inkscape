@@ -53,22 +53,22 @@
 #include "dialog-container.h"
 #include "document-undo.h"
 #include "inkscape.h"
-#include "selection.h"
-#include "style.h"
-#include "text-editing.h"
-
 #include "io/resource.h"
 #include "libnrtype/font-factory.h"
 #include "libnrtype/font-lister.h"
 #include "object/sp-flowtext.h"
 #include "object/sp-text.h"
+#include "selection.h"
+#include "style.h"
 #include "svg/css-ostringstream.h"
+#include "text-editing.h"
 #include "ui/builder-utils.h"
 #include "ui/controller.h"
 #include "ui/icon-names.h"
 #include "ui/pack.h"
 #include "ui/util.h"
 #include "util/font-collections.h"
+#include "util/recently-used-fonts.h"
 #include "util/units.h"
 
 namespace Inkscape::UI::Dialog {
@@ -173,7 +173,11 @@ TextEdit::TextEdit()
     collection_editor_button.signal_clicked().connect([=](){ on_fcm_button_clicked(); });
     Inkscape::FontLister::get_instance()->connectUpdate(sigc::mem_fun(*this, &TextEdit::change_font_count_label));
     fontCollectionsUpdate = font_collections->connect_update([=]() { display_font_collections(); });
-    fontCollectionsChangedSelection = font_collections->connect_selection_update([=]() { display_font_collections(); });
+    fontCollectionsChangedSelection = font_collections->connect_selection_update([=]() {
+        display_font_collections();
+        int selected_count = font_collections->get_selected_collections_count();
+        reset_button.set_sensitive(!(selected_count == 0));
+    });
 
     change_font_count_label();
 
@@ -502,10 +506,19 @@ void TextEdit::apply_changes(bool continuous) {
 
     // Update FontLister
     Glib::ustring fontspec = font_list->get_fontspec();
+    Inkscape::FontLister *fontlister = Inkscape::FontLister::get_instance();
     if( !fontspec.empty() ) {
-        Inkscape::FontLister *fontlister = Inkscape::FontLister::get_instance();
         fontlister->set_fontspec( fontspec, false );
     }
+
+    auto recent_fonts = Inkscape::RecentlyUsedFonts::get();
+
+    if (continuous && recent_fonts->get_continuous_streak()) {
+        recent_fonts->pop_front();
+    }
+
+    recent_fonts->prepend_to_list(fontlister->get_font_family());
+    recent_fonts->set_continuous_streak(continuous);
 
     // complete the transaction
     if (continuous) {
@@ -614,7 +627,10 @@ void TextEdit::on_reset_button_pressed()
 
 void TextEdit::change_font_count_label()
 {
-    auto label = Inkscape::FontLister::get_instance()->get_font_count_label();
+    bool all_fonts;
+    std::string label;
+    std::tie(all_fonts, label) = Inkscape::FontLister::get_instance()->get_font_count_label();
+
     font_count_label.set_label(label);
 }
 

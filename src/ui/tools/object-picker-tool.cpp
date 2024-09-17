@@ -1,13 +1,15 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 
 #include "object-picker-tool.h"
+
+#include <2geom/point.h>
+#include <2geom/rect.h>
+
 #include "actions/actions-tools.h"
 #include "desktop.h"
 #include "display/control/canvas-item-context.h"
 #include "display/control/canvas-item-text.h"
 #include "document.h"
-#include "point.h"
-#include "rect.h"
 #include "object/sp-page.h"
 #include "page-manager.h"
 #include "ui/tools/tool-base.h"

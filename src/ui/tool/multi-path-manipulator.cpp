@@ -688,34 +688,17 @@ bool MultiPathManipulator::event(Inkscape::UI::Tools::ToolBase *tool, CanvasEven
         case GDK_KEY_Delete:
         case GDK_KEY_KP_Delete:
         case GDK_KEY_BackSpace:
-            if (held_shift(event)) break;
             if (held_alt(event)) {
                 // Alt+Delete - delete segments
                 deleteSegments();
             } else {
                 Inkscape::Preferences *prefs = Inkscape::Preferences::get();
                 bool del_preserves_shape = prefs->getBool("/tools/nodes/delete_preserves_shape", true);
-                //MK: how can multi-path-manipulator know it is dealing with a bspline if it's checking tool mode???
-                /*
-                // pass keep_shape = true when:
-                // a) del preserves shape, and control is not pressed
-                // b) ctrl+del preserves shape (del_preserves_shape is false), and control is pressed
-                // Hence xor
-                guint mode = prefs->getInt("/tools/freehand/pen/freehand-mode", 0);
-                //if the trace is bspline ( mode 2)
-                if(mode==2){
-                    //  is this correct ?
-                    if(del_preserves_shape ^ held_control(event)){
-                        deleteNodes(false);
-                    } else {
-                        deleteNodes(true);
-                    }
-                } else {
-                */
-                auto mode =
-                    held_ctrl(event) ?
+                auto mode = held_ctrl(event) ? NodeDeleteMode::line_segment : (
+                    held_shift(event) ?
                         (del_preserves_shape ? NodeDeleteMode::inverse_auto : NodeDeleteMode::curve_fit) :
-                        (del_preserves_shape ? NodeDeleteMode::automatic : NodeDeleteMode::line_segment);
+                        (del_preserves_shape ? NodeDeleteMode::automatic : NodeDeleteMode::curve_fit)
+                    );
                 deleteNodes(mode);
 
                 // Delete any selected gradient nodes as well

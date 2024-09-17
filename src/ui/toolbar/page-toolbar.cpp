@@ -79,21 +79,6 @@ PageToolbar::PageToolbar(SPDesktop *desktop)
     , _margin_left(get_derived_widget<UI::Widget::MathSpinButton>(_builder, "_margin_left"))
 {
     _toolbar = &get_widget<Gtk::Box>(_builder, "page-toolbar");
-
-    // Fetch all the ToolbarMenuButtons at once from the UI file
-    // Menu Button #1
-    auto popover_box1 = &get_widget<Gtk::Box>(_builder, "popover_box1");
-    auto menu_btn1 = &get_derived_widget<UI::Widget::ToolbarMenuButton>(_builder, "menu_btn1");
-
-    // Initialize all the ToolbarMenuButtons only after all the children of the
-    // toolbar have been fetched. Otherwise, the children to be moved in the
-    // popover will get mapped to a different position and it will probably
-    // cause segfault.
-    auto children = _toolbar->get_children();
-
-    menu_btn1->init(1, "tag1", popover_box1, children);
-    addCollapsibleButton(menu_btn1);
-
     add(*_toolbar);
 
     _text_page_label.signal_changed().connect(sigc::mem_fun(*this, &PageToolbar::labelEdited));
@@ -112,7 +97,7 @@ PageToolbar::PageToolbar(SPDesktop *desktop)
 
     _text_page_bleeds.signal_activate().connect(sigc::mem_fun(*this, &PageToolbar::bleedsEdited));
     _text_page_margins.signal_activate().connect(sigc::mem_fun(*this, &PageToolbar::marginsEdited));
-    _text_page_margins.signal_icon_press().connect([=](Gtk::EntryIconPosition, const GdkEventButton *) {
+    _text_page_margins.signal_icon_press().connect([this](Gtk::EntryIconPosition, const GdkEventButton *) {
         if (auto page = _document->getPageManager().getSelected()) {
             auto const &margin = page->getMarginBox();
             auto unit = _document->getDisplayUnit()->abbr;
@@ -147,7 +132,7 @@ PageToolbar::PageToolbar(SPDesktop *desktop)
         _entry_page_sizes->get_style_context()->add_class("symbolic");
         _entry_page_sizes->signal_activate().connect(sigc::mem_fun(*this, &PageToolbar::sizeChanged));
 
-        _entry_page_sizes->signal_icon_press().connect([=](Gtk::EntryIconPosition, const GdkEventButton *) {
+        _entry_page_sizes->signal_icon_press().connect([this](Gtk::EntryIconPosition, const GdkEventButton *) {
             _document->getPageManager().changeOrientation();
             DocumentUndo::maybeDone(_document, "page-resize", _("Resize Page"), INKSCAPE_ICON("tool-pages"));
             setSizeText();
@@ -165,7 +150,7 @@ PageToolbar::PageToolbar(SPDesktop *desktop)
 
     // Watch for when the tool changes
     _ec_connection = _desktop->connectEventContextChanged(sigc::mem_fun(*this, &PageToolbar::toolChanged));
-    _doc_connection = _desktop->connectDocumentReplaced([=](SPDesktop *desktop, SPDocument *doc) {
+    _doc_connection = _desktop->connectDocumentReplaced([this](SPDesktop *desktop, SPDocument *doc) {
         if (doc) {
             toolChanged(desktop, desktop->getTool());
         }

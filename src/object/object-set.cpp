@@ -34,11 +34,12 @@ ObjectSet::ObjectSet(SPDesktop *desktop)
     }
 }
 
-bool ObjectSet::add(SPObject* object, bool nosignal) {
+bool ObjectSet::add(SPObject *object, bool nosignal, bool skipHierarchyChecks)
+{
     g_return_val_if_fail(object != nullptr, false);
 
     // any ancestor is in the set - do nothing
-    if (_anyAncestorIsInSet(object)) {
+    if (!skipHierarchyChecks && _anyAncestorIsInSet(object)) {
         return false;
     }
 
@@ -47,7 +48,9 @@ bool ObjectSet::add(SPObject* object, bool nosignal) {
 //    object = _getMutualAncestor(object);
 
     // remove all descendants from the set
-    _removeDescendantsFromSet(object);
+    if (!skipHierarchyChecks) {
+        _removeDescendantsFromSet(object);
+    }
 
     _add(object);
     if (!nosignal)
@@ -117,6 +120,16 @@ ObjectSet::includesAncestor(SPObject *object) {
         o = o->parent;
     }
     return nullptr;
+}
+
+bool ObjectSet::includesDescendant(SPObject *object)
+{
+    if (!object) {
+        return false;
+    }
+
+    return includes(object) || std::any_of(object->children.begin(), object->children.end(),
+                                           [this](auto &child) { return includesDescendant(&child); });
 }
 
 void ObjectSet::clear() {
@@ -328,32 +341,6 @@ void ObjectSet::set(XML::Node *repr)
         set(obj);
     }
 }
-
-int ObjectSet::setBetween(SPObject *obj_a, SPObject *obj_b)
-{
-    auto parent = obj_a->parent;
-    if (!obj_b)
-        obj_b = lastItem();
-
-    if (!obj_a || !obj_b || parent != obj_b->parent) {
-        return 0;
-    } else if (obj_a == obj_b) {
-        set(obj_a);
-        return 1;
-    }
-    clear();
-
-    int count = 0;
-    int min = std::min(obj_a->getPosition(), obj_b->getPosition());
-    int max = std::max(obj_a->getPosition(), obj_b->getPosition());
-    for (int i = min ; i <= max ; i++) {
-        if (auto child = parent->nthChild(i)) {
-            count += add(child);
-        }    
-    }
-    return count;
-}
-
 
 void ObjectSet::setReprList(std::vector<XML::Node*> const &list) {
     if(!document())

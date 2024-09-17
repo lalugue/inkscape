@@ -43,6 +43,7 @@
 #include <memory>
 #include <sigc++/signal.h>
 
+#include "helper/auto-connection.h"
 #include "ui/widget/font-selector-interface.h"
 #include "ui/widget/font-variations.h"
 #include "ui/widget/scrollprotected.h"
@@ -121,6 +122,8 @@ private:
     void changed_emit();
     bool signal_block;
 
+    auto_connection _idle_connection;
+
     // Variables
     double font_size;
 
@@ -129,7 +132,7 @@ private:
     // control font variations update and UI element size
     void update_variations(const Glib::ustring& fontspec);
 
-    static gboolean set_cell_markup(gpointer);
+    bool set_cell_markup();
     void on_realize_list();
     // For drag and drop.
     void on_drag_start(const Glib::RefPtr<Gdk::DragContext> &context);

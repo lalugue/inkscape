@@ -62,16 +62,6 @@
     <property name="step-increment">1</property>
     <property name="page-increment">10</property>
   </object>
-  <object class="GtkPopover" id="popover1">
-    <property name="modal">True</property>
-    <child>
-      <object class="GtkBox" id="popover_box1">
-        <property name="visible">True</property>
-        <property name="valign">center</property>
-        <property name="spacing">3</property>
-      </object>
-    </child>
-  </object>
   <object class="GtkBox" id="page-toolbar">
     <property name="visible">True</property>
     <property name="halign">start</property>
@@ -146,25 +136,6 @@
       </packing>
     </child>
     <child>
-      <object class="GtkMenuButton" id="menu_btn1">
-        <property name="visible">True</property>
-        <property name="can-focus">True</property>
-        <property name="focus-on-click">False</property>
-        <property name="receives-default">True</property>
-        <property name="relief">none</property>
-        <property name="popover">popover1</property>
-        <child>
-          <object class="GtkImage" id="image18">
-            <property name="visible">True</property>
-            <property name="icon-name">go-down</property>
-          </object>
-        </child>
-      </object>
-      <packing>
-        <property name="position">4</property>
-      </packing>
-    </child>
-    <child>
       <object class="GtkButton" id="_btn_page_backward">
         <property name="visible">True</property>
         <property name="can-focus">True</property>
@@ -172,9 +143,6 @@
         <property name="tooltip-text" translatable="yes">Make corners sharp</property>
         <property name="action-name">doc.page-move-backward</property>
         <property name="relief">none</property>
-        <style>
-          <class name="tag1"/>
-        </style>
         <child>
           <object class="GtkImage" id="image2">
             <property name="visible">True</property>
@@ -190,9 +158,6 @@
       <object class="GtkLabel" id="_label_page_pos">
         <property name="visible">True</property>
         <property name="label" translatable="yes">1/-</property>
-        <style>
-          <class name="tag1"/>
-        </style>
       </object>
       <packing>
         <property name="position">6</property>
@@ -206,9 +171,6 @@
         <property name="tooltip-text" translatable="yes">Make corners sharp</property>
         <property name="action-name">doc.page-move-forward</property>
         <property name="relief">none</property>
-        <style>
-          <class name="tag1"/>
-        </style>
         <child>
           <object class="GtkImage" id="image3">
             <property name="visible">True</property>

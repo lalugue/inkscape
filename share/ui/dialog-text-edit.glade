@@ -45,6 +45,21 @@
             <property name="position">1</property>
           </packing>
         </child>
+        <child>
+          <object class="GtkButton" id="reset_button">
+            <property name="label" translatable="yes">Clear all filters</property>
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+            <property name="tooltip-text" translatable="yes">Reset filters and show all available fonts</property>
+            <property name="margin-top">4</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">2</property>
+          </packing>
+        </child>
       </object>
     </child>
   </object>
@@ -76,24 +91,6 @@
                     <property name="primary-icon-activatable">False</property>
                     <property name="primary-icon-sensitive">False</property>
                   </object>
-                </child>
-                <child>
-                  <object class="GtkButton" id="reset_button">
-                    <property name="visible">True</property>
-                    <property name="can-focus">True</property>
-                    <property name="receives-default">True</property>
-                    <property name="tooltip-text" translatable="yes">Reset filters and show all available fonts</property>
-                    <property name="margin-start">2</property>
-                    <child>
-                      <object class="GtkImage" id="reset_image">
-                        <property name="visible">True</property>
-                        <property name="icon-name">view-refresh</property>
-                      </object>
-                    </child>
-                  </object>
-                  <packing>
-                    <property name="position">1</property>
-                  </packing>
                 </child>
                 <child>
                   <object class="GtkMenuButton" id="filter_menu_button">

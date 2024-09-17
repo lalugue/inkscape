@@ -379,10 +379,10 @@ bool CommandPalette::on_window_key_pressed(GtkEventControllerKey const * /*contr
 void CommandPalette::on_window_focus(Gtk::Widget const * const focus)
 {
     // TODO: GTK4: EventControllerFocus.property_contains_focus() should make this slightly nicer?
-    if (!focus || !is_descendant_of(*focus, _CPBase)) {
+    if (focus && !is_descendant_of(*focus, _CPBase)) {
         close();
-        }
-        }
+    }
+}
 
 void CommandPalette::on_activate_cpfilter()
 {
@@ -479,9 +479,7 @@ bool CommandPalette::operate_recent_file(Glib::ustring const &uri, bool const im
     }
 
     if (import) {
-        prefs->setBool("/options/onimport", true);
         file_import(SP_ACTIVE_DOCUMENT, uri, nullptr);
-        prefs->setBool("/options/onimport", true);
 
         if (write_to_history) {
             _history_xml.add_import(uri);

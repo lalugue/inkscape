@@ -1339,7 +1339,10 @@ void ToolBase::menu_popup(CanvasEvent const &event, SPObject *obj)
 
     auto const popup = [&](auto const &event)
     {
-        auto menu = std::make_shared<ContextMenu>(_desktop, obj);
+        // Get a list of items under the cursor, used for unhiding and unlocking.
+        auto point_win = _desktop->point() * _desktop->d2w();
+        auto items_under_cursor = _desktop->getItemsAtPoints({point_win}, true, false, 0, false);
+        auto menu = std::make_shared<ContextMenu>(_desktop, obj, items_under_cursor);
         UI::popup_at(*menu, *_desktop->getCanvas(), event.orig_pos);
         UI::on_hide_reset(std::move(menu));
     };

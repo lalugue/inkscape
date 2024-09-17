@@ -501,6 +501,10 @@ object_align_text(const Glib::VariantBase& value, InkscapeApplication *app)
 
     auto selection = app->get_active_selection();
 
+    if (selection->items().empty()) {
+        return;
+    }
+
     // We should not have to do this!
     auto document  = app->get_active_document();
     selection->setDocument(document);
