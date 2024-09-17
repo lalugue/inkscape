@@ -102,7 +102,7 @@ void DialogBase::on_map() {
     ensure_size();
 }
 
-bool DialogBase::on_window_key_pressed(GtkEventControllerKey const * const controller,
+gboolean DialogBase::on_window_key_pressed(GtkEventControllerKey const * const controller,
                                        unsigned const keyval, unsigned const keycode,
                                        GdkModifierType const state)
 {

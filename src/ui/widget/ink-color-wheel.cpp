@@ -164,7 +164,7 @@ void ColorWheel::focus_drawing_area()
     _drawing_area->grab_focus();
 }
 
-bool ColorWheel::on_key_released(GtkEventControllerKey const * /*controller*/,
+gboolean ColorWheel::on_key_released(GtkEventControllerKey const * /*controller*/,
                                  unsigned /*keyval*/, unsigned const keycode,
                                  GdkModifierType const state)
 {
@@ -669,7 +669,7 @@ void ColorWheelHSL::on_motion(GtkEventControllerMotion const * /*motion*/,
     }
 }
 
-bool ColorWheelHSL::on_key_pressed(GtkEventControllerKey const * /*controller*/,
+gboolean ColorWheelHSL::on_key_pressed(GtkEventControllerKey const * /*controller*/,
                                    unsigned /*keyval*/, unsigned const keycode,
                                    GdkModifierType const state)
 {
@@ -1166,7 +1166,7 @@ void ColorWheelHSLuv::on_motion(GtkEventControllerMotion const * /*motion*/,
     }
 }
 
-bool ColorWheelHSLuv::on_key_pressed(GtkEventControllerKey const * /*controller*/,
+gboolean ColorWheelHSLuv::on_key_pressed(GtkEventControllerKey const * /*controller*/,
                                      unsigned /*keyval*/, unsigned const keycode,
                                      GdkModifierType const state)
 {

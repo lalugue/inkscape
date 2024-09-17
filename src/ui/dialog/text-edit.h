@@ -100,7 +100,7 @@ protected:
      * This function would disable undo and redo if the text_view widget is in focus
      * It is to fix the issue: https://gitlab.com/inkscape/inkscape/-/issues/744
      */
-    bool captureUndo(GtkEventControllerKey const *controller,
+    gboolean captureUndo(GtkEventControllerKey const *controller,
                      unsigned keyval, unsigned keycode, GdkModifierType state);
 
     /**

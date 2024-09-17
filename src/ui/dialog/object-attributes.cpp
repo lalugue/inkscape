@@ -885,7 +885,7 @@ public:
     }
 
 private:
-    bool on_key_pressed(const GtkEventControllerKey* controller, unsigned keyval, unsigned keycode, GdkModifierType state) {
+    gboolean on_key_pressed(const GtkEventControllerKey* controller, unsigned keyval, unsigned keycode, GdkModifierType state) {
         switch (keyval) {
         case GDK_KEY_Return:
         case GDK_KEY_KP_Enter:

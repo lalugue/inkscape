@@ -468,7 +468,7 @@ void FontCollectionSelector::deletion_warning_message_dialog(Glib::ustring const
     dialog_show_modal_and_selfdestruct(std::move(dialog), get_toplevel());
 }
 
-bool FontCollectionSelector::on_key_pressed(GtkEventControllerKey const * const controller,
+gboolean FontCollectionSelector::on_key_pressed(GtkEventControllerKey const * const controller,
                                             unsigned const keyval, unsigned const keycode,
                                             GdkModifierType state)
 {

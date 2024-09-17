@@ -609,7 +609,7 @@ void SwatchesPanel::setup_selector_menu()
     Controller::add_key<&SwatchesPanel::on_selector_key_pressed>(_selector, *this);
 }
 
-bool SwatchesPanel::on_selector_key_pressed(GtkEventControllerKey const * controller,
+gboolean SwatchesPanel::on_selector_key_pressed(GtkEventControllerKey const * controller,
                                             unsigned const keyval, unsigned /*keycode*/,
                                             GdkModifierType const state)
 {

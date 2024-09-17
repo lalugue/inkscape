@@ -140,7 +140,7 @@ Gtk::EventSequenceState Rotateable::on_release(Gtk::GestureMultiPress const & /*
     return Gtk::EVENT_SEQUENCE_NONE;
 }
 
-bool Rotateable::on_scroll(GtkEventControllerScroll const * const scroll,
+gboolean Rotateable::on_scroll(GtkEventControllerScroll const * const scroll,
                            double /*dx*/, double const dy)
 {
     double change = 0.0;

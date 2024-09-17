@@ -1417,7 +1417,7 @@ void StyleDialog::_setEditingEntry(Gtk::Entry * const entry, Glib::ustring endCh
     entry->signal_editing_done().connect([this]{ _setEditingEntry(nullptr, {}); });
 }
 
-bool StyleDialog::_onTreeViewKeyReleased(GtkEventControllerKey const * /*controller*/,
+gboolean StyleDialog::_onTreeViewKeyReleased(GtkEventControllerKey const * /*controller*/,
                                          unsigned keyval, unsigned /*keycode*/,
                                          GdkModifierType /*state*/)
 {

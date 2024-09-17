@@ -667,7 +667,7 @@ protected:
     void add_highlight(Gtk::Label *label, Glib::ustring const &key);
 
     bool recursive_filter(Glib::ustring &key, Gtk::TreeModel::const_iterator const &row);
-    bool on_navigate_key_pressed(GtkEventControllerKey const *controller,
+    gboolean on_navigate_key_pressed(GtkEventControllerKey const *controller,
                                  unsigned keyval, unsigned keycode, GdkModifierType state);
 
     void initPageTools();
@@ -693,7 +693,7 @@ protected:
     void onKBListKeyboardShortcuts();
     void onKBTreeEdited (const Glib::ustring& path, guint accel_key, Gdk::ModifierType accel_mods, guint hardware_keycode);
     void onKBTreeCleared(const Glib::ustring& path_string);
-    bool onKBSearchKeyReleased(GtkEventControllerKey const *controller,
+    gboolean onKBSearchKeyReleased(GtkEventControllerKey const *controller,
                                unsigned keyval, unsigned keycode, GdkModifierType state);
     bool onKBSearchFilter(const Gtk::TreeModel::const_iterator& iter);
     static void onKBShortcutRenderer(Gtk::CellRenderer *renderer,

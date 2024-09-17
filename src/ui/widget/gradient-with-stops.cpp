@@ -284,7 +284,7 @@ void GradientWithStops::on_drawing_area_has_focus()
     }
 }
 
-bool GradientWithStops::on_key_pressed(GtkEventControllerKey const * /*controller*/,
+gboolean GradientWithStops::on_key_pressed(GtkEventControllerKey const * /*controller*/,
                                        unsigned /*keyval*/, unsigned const keycode,
                                        GdkModifierType const state)
 {

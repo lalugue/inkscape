@@ -76,7 +76,7 @@ private:
     Gtk::EventSequenceState on_click_released(Gtk::GestureMultiPress const &click,
                                               int n_press, double x, double y);
     void on_motion(GtkEventControllerMotion const *motion, double x, double y);
-    bool on_key_pressed(GtkEventControllerKey const *controller,
+    gboolean on_key_pressed(GtkEventControllerKey const *controller,
                         unsigned keyval, unsigned keycode, GdkModifierType state);
     bool on_focus(Gtk::DirectionType direction) final;
     void on_drawing_area_has_focus();

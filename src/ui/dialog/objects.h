@@ -159,13 +159,13 @@ private:
     Gtk::EventSequenceState on_click(Gtk::GestureMultiPress const &gesture,
                                      int n_press, double x, double y,
                                      EventType);
-    bool on_tree_key_pressed   (GtkEventControllerKey const *controller,
+    gboolean on_tree_key_pressed   (GtkEventControllerKey const *controller,
                                 unsigned keyval, unsigned keycode, GdkModifierType state);
-    bool on_window_key_pressed (GtkEventControllerKey const *controller,
+    gboolean on_window_key_pressed (GtkEventControllerKey const *controller,
                                 unsigned keyval, unsigned keycode, GdkModifierType state);
-    bool on_window_key_released(GtkEventControllerKey const *controller,
+    gboolean on_window_key_released(GtkEventControllerKey const *controller,
                                 unsigned keyval, unsigned keycode, GdkModifierType state);
-    bool on_window_key         (GtkEventControllerKey const *controller,
+    gboolean on_window_key         (GtkEventControllerKey const *controller,
                                 unsigned keyval, unsigned keycode, GdkModifierType state,
                                 EventType);
     void on_motion_enter (GtkEventControllerMotion const *controller, double x, double y);

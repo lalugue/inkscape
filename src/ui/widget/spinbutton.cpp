@@ -100,7 +100,7 @@ void SpinButton::on_has_focus_changed()
     }
 }
 
-bool SpinButton::on_key_pressed(GtkEventControllerKey const * const controller,
+gboolean SpinButton::on_key_pressed(GtkEventControllerKey const * const controller,
                                 unsigned const keyval, unsigned const keycode,
                                 GdkModifierType const state)
 {

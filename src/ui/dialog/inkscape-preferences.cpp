@@ -629,7 +629,7 @@ Gtk::TreePath InkscapePreferences::get_prev_result(Gtk::TreeModel::iterator &ite
  * @return Always returns False to label the key press event as handled, this
  * prevents the search bar from retaining focus for other keyboard event.
  */
-bool InkscapePreferences::on_navigate_key_pressed(GtkEventControllerKey const * /*controller*/,
+gboolean InkscapePreferences::on_navigate_key_pressed(GtkEventControllerKey const * /*controller*/,
                                                   unsigned keyval, unsigned /*keycode*/,
                                                   GdkModifierType state)
 {
@@ -3309,7 +3309,7 @@ void InkscapePreferences::onKBExport()
     Inkscape::Shortcuts::getInstance().export_shortcuts();
 }
 
-bool InkscapePreferences::onKBSearchKeyReleased(GtkEventControllerKey const * /*controller*/,
+gboolean InkscapePreferences::onKBSearchKeyReleased(GtkEventControllerKey const * /*controller*/,
                                                 unsigned /*keyval*/, unsigned /*keycode*/,
                                                 GdkModifierType /*state*/)
 {

@@ -49,7 +49,7 @@ private:
     Gtk::EventSequenceState on_release(Gtk::GestureMultiPress const &click,
                                        int n_press, double x, double y);
     void on_motion(GtkEventControllerMotion const *motion, double  x, double  y);
-    bool on_scroll(GtkEventControllerScroll const *scroll, double dx, double dy);
+    gboolean on_scroll(GtkEventControllerScroll const *scroll, double dx, double dy);
 
     virtual void do_motion (double /*by*/, unsigned /*state*/) {}
     virtual void do_release(double /*by*/, unsigned /*state*/) {}

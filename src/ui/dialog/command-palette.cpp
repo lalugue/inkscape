@@ -362,7 +362,7 @@ bool CommandPalette::on_filter_recent_file(Gtk::ListBoxRow *child, bool const is
     return false;
 }
 
-bool CommandPalette::on_window_key_pressed(GtkEventControllerKey const * /*controller*/,
+gboolean CommandPalette::on_window_key_pressed(GtkEventControllerKey const * /*controller*/,
                                            unsigned const keyval, unsigned /*keycode*/,
                                            GdkModifierType /*state*/)
 {

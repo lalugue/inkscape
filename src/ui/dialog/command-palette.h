@@ -150,7 +150,7 @@ private:
     bool on_filter_full_action_name(Gtk::ListBoxRow *child);
     bool on_filter_recent_file(Gtk::ListBoxRow *child, bool const is_import);
 
-    bool on_window_key_pressed(GtkEventControllerKey const *controller,
+    gboolean on_window_key_pressed(GtkEventControllerKey const *controller,
                                unsigned keyval, unsigned keycode, GdkModifierType state);
     void on_window_focus(Gtk::Widget const *focus);
 

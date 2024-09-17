@@ -134,7 +134,7 @@ private:
     void _addLayer(SPObject* layer, Gtk::TreeModel::Row* parentRow, SPObject* target, int level);
     SPObject* _selectedLayer();
 
-    bool on_key_pressed(GtkEventControllerKey const *controller,
+    gboolean on_key_pressed(GtkEventControllerKey const *controller,
                         unsigned keyval, unsigned keycode,
                         GdkModifierType state);
     Gtk::EventSequenceState on_click_pressed(Gtk::GestureMultiPress const &click,

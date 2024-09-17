@@ -268,7 +268,7 @@ void InkviewWindow::show_last()
     show_prev();
 }
 
-bool InkviewWindow::key_press(GtkEventControllerKey *, unsigned keyval, unsigned, GdkModifierType)
+gboolean InkviewWindow::key_press(GtkEventControllerKey *, unsigned keyval, unsigned, GdkModifierType)
 {
     switch (keyval) {
         case GDK_KEY_Up:

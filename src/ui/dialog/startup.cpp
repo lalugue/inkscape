@@ -448,7 +448,7 @@ StartScreen::notebook_next(Gtk::Widget *button)
 /**
  * When a key is pressed in the main window.
  */
-bool StartScreen::on_key_pressed(GtkEventControllerKey const * /*controller*/,
+gboolean StartScreen::on_key_pressed(GtkEventControllerKey const * /*controller*/,
                                  unsigned const keyval, unsigned /*keycode*/,
                                  GdkModifierType const state)
 {

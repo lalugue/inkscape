@@ -1300,7 +1300,7 @@ bool ObjectsPanel::toggleLocked(unsigned int state, Gtk::TreeModel::Row row)
  * Handles keyboard events on the TreeView
  * @return Whether the event should be eaten (om nom nom)
  */
-bool ObjectsPanel::on_tree_key_pressed(GtkEventControllerKey const * const controller,
+gboolean ObjectsPanel::on_tree_key_pressed(GtkEventControllerKey const * const controller,
                                        unsigned const keyval, unsigned const keycode,
                                        GdkModifierType const state)
 {
@@ -1388,21 +1388,21 @@ bool ObjectsPanel::on_tree_key_pressed(GtkEventControllerKey const * const contr
     return false;
 }
 
-bool ObjectsPanel::on_window_key_pressed(GtkEventControllerKey const * const controller,
+gboolean ObjectsPanel::on_window_key_pressed(GtkEventControllerKey const * const controller,
                                          unsigned const keyval, unsigned const keycode,
                                          GdkModifierType const state)
 {
     return on_window_key(controller, keyval, keycode, state, EventType::pressed);
 }
 
-bool ObjectsPanel::on_window_key_released(GtkEventControllerKey const * const controller,
+gboolean ObjectsPanel::on_window_key_released(GtkEventControllerKey const * const controller,
                                           unsigned const keyval, unsigned const keycode,
                                           GdkModifierType const state)
 {
     return on_window_key(controller, keyval, keycode, state, EventType::released);
 }
 
-bool ObjectsPanel::on_window_key(GtkEventControllerKey const * const controller,
+gboolean ObjectsPanel::on_window_key(GtkEventControllerKey const * const controller,
                                  unsigned const keyval, unsigned const keycode,
                                  GdkModifierType const state,
                                  EventType const event_type)

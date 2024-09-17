@@ -193,7 +193,7 @@ TextEdit::TextEdit()
 
 TextEdit::~TextEdit() = default;
 
-bool TextEdit::captureUndo(GtkEventControllerKey const * const controller,
+gboolean TextEdit::captureUndo(GtkEventControllerKey const * const controller,
                            unsigned const keyval, unsigned const keycode,
                            GdkModifierType const state)
 {

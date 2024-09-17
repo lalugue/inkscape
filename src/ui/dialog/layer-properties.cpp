@@ -384,7 +384,7 @@ SPObject* LayerPropertiesDialog::_selectedLayer()
     return obj;
 }
 
-bool LayerPropertiesDialog::on_key_pressed(GtkEventControllerKey const * const controller,
+gboolean LayerPropertiesDialog::on_key_pressed(GtkEventControllerKey const * const controller,
                                            unsigned const keyval, unsigned const keycode,
                                            GdkModifierType const state)
 {

@@ -119,9 +119,9 @@ private:
     auto_connection _message_changed_connection;
     void onCreateClicked();
     void onAttrDelete(Glib::ustring const &path);
-    bool onTreeViewKeyPressed (GtkEventControllerKey const *controller,
+    gboolean onTreeViewKeyPressed (GtkEventControllerKey const *controller,
                                unsigned keyval, unsigned keycode, GdkModifierType state);
-    bool onTreeViewKeyReleased(GtkEventControllerKey const *controller,
+    gboolean onTreeViewKeyReleased(GtkEventControllerKey const *controller,
                                unsigned keyval, unsigned keycode, GdkModifierType state);
     void truncateDigits() const;
     void popClosed();
@@ -153,7 +153,7 @@ private:
     auto_connection _close_popup;
     int _rounding_precision = 0;
 
-    bool onPopoverKeyPressed(GtkEventControllerKey const *controller,
+    gboolean onPopoverKeyPressed(GtkEventControllerKey const *controller,
                              unsigned keyval, unsigned keycode, GdkModifierType state);
     void setPrecision(int const n);
 

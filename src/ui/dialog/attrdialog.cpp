@@ -282,7 +282,7 @@ void AttrDialog::adjust_popup_edit_size()
     }
 }
 
-bool AttrDialog::onPopoverKeyPressed(GtkEventControllerKey const * /*controller*/,
+gboolean AttrDialog::onPopoverKeyPressed(GtkEventControllerKey const * /*controller*/,
                                      unsigned keyval, unsigned /*keycode*/,
                                      GdkModifierType state)
 {
@@ -638,7 +638,7 @@ void AttrDialog::notifyContentChanged(XML::Node & /*repr*/, Util::ptr_shared /*o
  * @brief AttrDialog::onTreeViewKeyPressed
  * Delete or create elements based on key presses
  */
-bool AttrDialog::onTreeViewKeyPressed(GtkEventControllerKey const * /*controller*/,
+gboolean AttrDialog::onTreeViewKeyPressed(GtkEventControllerKey const * /*controller*/,
                                       unsigned keyval, unsigned /*keycode*/, GdkModifierType state)
 {
     if (!_repr) {
@@ -671,7 +671,7 @@ bool AttrDialog::onTreeViewKeyPressed(GtkEventControllerKey const * /*controller
     return false;
 }
 
-bool AttrDialog::onTreeViewKeyReleased(GtkEventControllerKey const * /*controller*/,
+gboolean AttrDialog::onTreeViewKeyReleased(GtkEventControllerKey const * /*controller*/,
                                        unsigned keyval, unsigned /*keycode*/, GdkModifierType state)
 {
     if (_editingEntry == nullptr) return false;

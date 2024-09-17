@@ -272,7 +272,7 @@ void GradientSelector::moveSelection(int amount, bool down, bool toEnd)
     _treeview->scroll_to_row(_store->get_path(iter), 0.5);
 }
 
-bool GradientSelector::onKeyPressed(GtkEventControllerKey const * controller,
+gboolean GradientSelector::onKeyPressed(GtkEventControllerKey const * controller,
                                     unsigned /*keyval*/, unsigned const keycode,
                                     GdkModifierType const state)
 {

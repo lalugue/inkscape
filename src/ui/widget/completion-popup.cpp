@@ -80,7 +80,7 @@ CompletionPopup::CompletionPopup() :
 
 CompletionPopup::~CompletionPopup() = default;
 
-bool CompletionPopup::onPopoverKeyPressed(GtkEventControllerKey const * /*controller*/,
+gboolean CompletionPopup::onPopoverKeyPressed(GtkEventControllerKey const * /*controller*/,
                                      unsigned keyval, unsigned /*keycode*/,
                                      GdkModifierType state) {
     if (!_button.get_active()) {

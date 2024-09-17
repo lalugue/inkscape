@@ -171,14 +171,14 @@ auto constexpr is_gesture_handler = Detail::callable_or_null<Function, void,
 /// Whether Function is suitable to handle EventControllerKey::pressed|released.
 /// The arguments are the controller, keyval, hardware keycode & modifier state.
 template <typename Function, typename Listener>
-auto constexpr is_key_handler = Detail::callable_or_null<Function, bool,
+auto constexpr is_key_handler = Detail::callable_or_null<Function, gboolean,
     Listener *, GtkEventControllerKey *, unsigned, unsigned, GdkModifierType>;
 
 /// Whether Function is suitable to handle EventControllerKey::modifiers.
 /// The arguments are the controller & modifier state.
 /// Note that this signal seems buggy, i.e. gives wrong state, in GTK3. Beware!!
 template <typename Function, typename Listener>
-auto constexpr is_key_mod_handler = Detail::callable_or_null<Function, bool,
+auto constexpr is_key_mod_handler = Detail::callable_or_null<Function, gboolean,
     Listener *, GtkEventControllerKey *, GdkModifierType>;
 
 /// Whether Function is suitable to handle EventControllerKey::focus-(in|out).
@@ -206,11 +206,17 @@ template <typename Function, typename Listener>
 auto constexpr is_scroll_handler = Detail::callable_or_null<Function, void,
     Listener *, GtkEventControllerScroll *>;
 
-/// Whether Function is suitable for EventControllerScroll::scroll|decelerate.
-/// The arguments are controller & for scroll dx,dy; or decelerate: vel_x, vel_y
+/// Whether Function is suitable for EventControllerScroll::scroll.
+/// The arguments are controller & for scroll dx,dy
 template <typename Function, typename Listener>
-auto constexpr is_scroll_xy_handler = Detail::callable_or_null<Function, void,
+auto constexpr is_scroll_xy_handler = Detail::callable_or_null<Function, gboolean,
     Listener *, GtkEventControllerScroll *, double, double>;
+
+/// Whether Function is suitable for EventControllerScroll::decelerate.
+/// The arguments are controller & decelerate vel_x, vel_y
+template <typename Function, typename Listener>
+auto constexpr is_scroll_decelerate_handler =
+    Detail::callable_or_null<Function, void, Listener *, GtkEventControllerScroll *, double, double>;
 
 /// Whether Function is suitable for GestureZoom::scale-changed.
 /// The arguments are gesture & scale delta (initial state as 1)
@@ -296,7 +302,7 @@ Gtk::EventController &add_scroll(Gtk::Widget &widget  ,
     static_assert(is_scroll_handler   <decltype(on_scroll_begin), Listener>);
     static_assert(is_scroll_xy_handler<decltype(on_scroll      ), Listener>);
     static_assert(is_scroll_handler   <decltype(on_scroll_end  ), Listener>);
-    static_assert(is_scroll_xy_handler<decltype(on_decelerate  ), Listener>);
+    static_assert(is_scroll_decelerate_handler<decltype(on_decelerate), Listener>);
 
     auto const gcontroller = gtk_event_controller_scroll_new(widget.gobj(), flags);
     gtk_event_controller_set_propagation_phase(gcontroller, static_cast<GtkPropagationPhase>(phase));

@@ -122,10 +122,10 @@ private:
     virtual Gtk::EventSequenceState on_click_released(Gtk::GestureMultiPress const &click,
                                                       int n_press, double x, double y) = 0;
     virtual void on_motion(GtkEventControllerMotion const *motion, double x, double y) = 0;
-    virtual bool on_key_pressed(GtkEventControllerKey const *key_event,
+    virtual gboolean on_key_pressed(GtkEventControllerKey const *key_event,
                                 unsigned keyval, unsigned keycode, GdkModifierType state)
                                { return false; }
-    bool on_key_released(GtkEventControllerKey const *key_event,
+    gboolean on_key_released(GtkEventControllerKey const *key_event,
                          unsigned keyval, unsigned keycode, GdkModifierType state);
 };
 
@@ -171,7 +171,7 @@ private:
     Gtk::EventSequenceState on_click_released(Gtk::GestureMultiPress const &click,
                                               int n_press, double x, double y) final;
     void on_motion(GtkEventControllerMotion const *motion, double x, double y) final;
-    bool on_key_pressed(GtkEventControllerKey const *key_event,
+    gboolean on_key_pressed(GtkEventControllerKey const *key_event,
                         unsigned keyval, unsigned keycode, GdkModifierType state) final;
 
     // caches to speed up drawing
@@ -224,7 +224,7 @@ private:
     Gtk::EventSequenceState on_click_released(Gtk::GestureMultiPress const &click,
                                               int n_press, double x, double y) final;
     void on_motion(GtkEventControllerMotion const *motion, double x, double y) final;
-    bool on_key_pressed(GtkEventControllerKey const *key_event,
+    gboolean on_key_pressed(GtkEventControllerKey const *key_event,
                         unsigned keyval, unsigned keycode, GdkModifierType state) final;
 
     double _scale = 1.0;
