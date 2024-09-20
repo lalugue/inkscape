@@ -81,7 +81,7 @@ TEST_F(ColorXmlColor, test_icc_paint_xml)
 <paint>
   <color
      space="Artifex-CMYK-SWOP-Profile"
-     icc="f9185275b4d6bcee53bc48dddb70fce5"
+     icc="fd199526f0a7e0bceb294a777cd84252"
      c="0.5"
      m="0.2"
      y="0.1"
