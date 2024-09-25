@@ -28,7 +28,7 @@ if(EXISTS ${INKSCAPE_SOURCE_DIR}/.git)
         OUTPUT_VARIABLE INKSCAPE_SOURCE_MODIFIED
         OUTPUT_STRIP_TRAILING_WHITESPACE)
     if(NOT INKSCAPE_SOURCE_MODIFIED STREQUAL "")
-        set(INKSCAPE_REVISION "${INKSCAPE_REVISION}, custom")
+        set(INKSCAPE_REVISION "${INKSCAPE_REVISION}")
     endif()
 elseif(EXISTS ${INKSCAPE_SOURCE_DIR}/debian/git-build-recipe.manifest)
     # workaround for debian packaging in ppa (where we have no repo)
